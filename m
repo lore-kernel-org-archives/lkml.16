@@ -1,133 +1,96 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418BF22171B
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60FF515199A;
+	Wed, 14 May 2025 09:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747214665; cv=none; b=aisKZDsKK+qeb8v0jfvAbzhUNyCJ9VWiHQThJxNs6ZI1ast686M387ZiTHKUolXEBkE/E+gVQZAFTOgqoKyTma7TSNuja3HfYlOqMSnuXKl2cYh9wjK3p/90weuxzpeXBYDxALdkoTNsQAt838p+fGGf29aqzVk4Gyy/51PrnIs=
+	t=1747214715; cv=none; b=CFC/CsKgDsAyIY8tCr69Q5rvkhVjdctH0/UGTFP/R04y54OGa+QiWku9UfYogtXbLnKhtC2jZsWkjDwUGCKMwjdmQ/uyEC+CwnV157g/yJwsllzODRz5zEYPgBTb7O8ELjt/V6DYcz4hTCsffls3BOT5wcZcho2493NUNutYqRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747214665; c=relaxed/simple;
-	bh=fWZcBjIn6D9rWCR+7OXq+vuwXCYLtAxddM65kTRJJfs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ISzjQ5i2/bJysMIJLLFUv7o4g22xBOtnt8z1wUdplcwBIprumSHVpBNmg2YsEN1Gp5A3sQb0YzjkxkSoUBB3AT8U8Mr0WbnSA98G5n+SFpFVly3CnG4Th/BAoiL3mPWlfCw9xPlOLWCnzp+RG1bZlYJZ9HJE/x07At2wNIh4Kws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=yCbXE9ig; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="yCbXE9ig"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747214653; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=yjMo+3hO/FV1JWL2k0Av/+NkF5itKNAXmcU15iNakR4=;
-	b=yCbXE9igQg9q02wtlgHek+k6b1u2ccw5Ab/eH/zL3POF4YG6iVTxnPWMNQFHP2Oc2TCr2qeToqgLLDsAJy1opVoFqQ+Ec37vixoIJlZsLeZZpnlTQKObIoAvYEw5qx02sN6GDSWbmvDfpIJnf5nqi3CloKANWnCxapMDAm4yrQw=
-Received: from 30.74.144.106(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WalMTtq_1747214652 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 14 May 2025 17:24:13 +0800
-Message-ID: <b7b6d5d0-2c3f-43ba-b2a9-3c9669f3f96d@linux.alibaba.com>
-Date: Wed, 14 May 2025 17:24:12 +0800
+	s=arc-20240116; t=1747214715; c=relaxed/simple;
+	bh=YyTiOvLrUqqL7snvEKnX6X1ZZu9BKtWM9/Wi6+/Rokk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c69oiWKSKzAhy5uwGCqz7ABZr81gUvoMg2fcQl7QnO4FoKecmCVt/3T80RkH3bHvGgq7OadKM0bGfmnTAwHPAAAw1ECf6qI1T1MzPiruONlMjlDir6rjYRdiP5ooNEZRhUE6uwbzOF1dxumzVsVyzSDm1dzKFbZIqHRaKrz+5ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowABXkQluYSRoo5orFQ--.28100S2;
+	Wed, 14 May 2025 17:25:04 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: perex@perex.cz,
+	tiwai@suse.com
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] ALSA: es1968: Add error handling for snd_pcm_hw_constraint_pow2()
+Date: Wed, 14 May 2025 17:24:44 +0800
+Message-ID: <20250514092444.331-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] mm/shmem: Fix potential dead loop in shmem_unuse()
-To: Kemeng Shi <shikemeng@huaweicloud.com>, hughd@google.com,
- akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250514165047.946884-1-shikemeng@huaweicloud.com>
- <20250514165047.946884-4-shikemeng@huaweicloud.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250514165047.946884-4-shikemeng@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowABXkQluYSRoo5orFQ--.28100S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7CFyxur4rXFyfGry8Cr1ftFb_yoW8WFykpF
+	W8X34rKr97t3WIvF1qy3Z8Zr1fA34rKF1rt3s7Zw10vr4kWFnaqFW8Aa4YvFyFkr48ua13
+	Jr4vvwnxGr1fAFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUehL0UU
+	UUU
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwsCA2gkK5voJAABs8
 
+The function snd_es1968_capture_open() calls the function
+snd_pcm_hw_constraint_pow2(), but does not check its return
+value. A proper implementation can be found in snd_cx25821_pcm_open().
 
+Add error handling for snd_pcm_hw_constraint_pow2() and propagate its
+error code.
 
-On 2025/5/15 00:50, Kemeng Shi wrote:
-> If multi shmem_unuse() for different swap type is called concurrently,
-> a dead loop could occur as following:
-> shmem_unuse(typeA)               shmem_unuse(typeB)
->   mutex_lock(&shmem_swaplist_mutex)
->   list_for_each_entry_safe(info, next, ...)
->    ...
->    mutex_unlock(&shmem_swaplist_mutex)
->    /* info->swapped may drop to 0 */
->    shmem_unuse_inode(&info->vfs_inode, type)
-> 
->                                    mutex_lock(&shmem_swaplist_mutex)
->                                    list_for_each_entry(info, next, ...)
->                                     if (!info->swapped)
->                                      list_del_init(&info->swaplist)
-> 
->                                    ...
->                                    mutex_unlock(&shmem_swaplist_mutex)
-> 
->    mutex_lock(&shmem_swaplist_mutex)
->    /* iterate with offlist entry and encounter a dead loop */
->    next = list_next_entry(info, swaplist);
->    ...
-> 
-> Restart the iteration if the inode is already off shmem_swaplist list
-> to fix the issue.
-> 
-> Fixes: b56a2d8af9147 ("mm: rid swapoff of quadratic complexity")
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> ---
->   mm/shmem.c | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 495e661eb8bb..0fed94c2bc09 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -1505,6 +1505,7 @@ int shmem_unuse(unsigned int type)
->   		return 0;
->   
->   	mutex_lock(&shmem_swaplist_mutex);
-> +start_over:
->   	list_for_each_entry_safe(info, next, &shmem_swaplist, swaplist) {
->   		if (!info->swapped) {
->   			list_del_init(&info->swaplist);
-> @@ -1530,6 +1531,8 @@ int shmem_unuse(unsigned int type)
+Fixes: b942cf815b57 ("[ALSA] es1968 - Fix stuttering capture")
+Cc: stable@vger.kernel.org # v2.6.22
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ sound/pci/es1968.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-		next = list_next_entry(info, swaplist);
-		if (!info->swapped)
-			list_del_init(&info->swaplist);
-		if (atomic_dec_and_test(&info->stop_eviction))
-			wake_up_var(&info->stop_eviction);
+diff --git a/sound/pci/es1968.c b/sound/pci/es1968.c
+index c6c018b40c69..4e0693f0ab0f 100644
+--- a/sound/pci/es1968.c
++++ b/sound/pci/es1968.c
+@@ -1561,7 +1561,7 @@ static int snd_es1968_capture_open(struct snd_pcm_substream *substream)
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
+ 	struct es1968 *chip = snd_pcm_substream_chip(substream);
+ 	struct esschan *es;
+-	int apu1, apu2;
++	int err, apu1, apu2;
+ 
+ 	apu1 = snd_es1968_alloc_apu_pair(chip, ESM_APU_PCM_CAPTURE);
+ 	if (apu1 < 0)
+@@ -1605,7 +1605,9 @@ static int snd_es1968_capture_open(struct snd_pcm_substream *substream)
+ 	runtime->hw = snd_es1968_capture;
+ 	runtime->hw.buffer_bytes_max = runtime->hw.period_bytes_max =
+ 		calc_available_memory_size(chip) - 1024; /* keep MIXBUF size */
+-	snd_pcm_hw_constraint_pow2(runtime, 0, SNDRV_PCM_HW_PARAM_BUFFER_BYTES);
++	err = snd_pcm_hw_constraint_pow2(runtime, 0, SNDRV_PCM_HW_PARAM_BUFFER_BYTES);
++	if (err < 0)
++		return err;
+ 
+ 	spin_lock_irq(&chip->substream_lock);
+ 	list_add(&es->list, &chip->substream_list);
+-- 
+2.42.0.windows.2
 
-We may still hit the list warning when calling list_del_init() for the 
-off-list info->swaplist? So I hope we can add a check for the possible 
-off-list:
-
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 99327c30507c..f5ae5e2d6fb4 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -1523,9 +1523,11 @@ int shmem_unuse(unsigned int type)
-                 cond_resched();
-
-                 mutex_lock(&shmem_swaplist_mutex);
--               next = list_next_entry(info, swaplist);
--               if (!info->swapped)
--                       list_del_init(&info->swaplist);
-+               if (!list_empty(&info->swaplist)) {
-+                       next = list_next_entry(info, swaplist);
-+                       if (!info->swapped)
-+                               list_del_init(&info->swaplist);
-+               }
-                 if (atomic_dec_and_test(&info->stop_eviction))
-                         wake_up_var(&info->stop_eviction);
-                 if (error)
-
->   			wake_up_var(&info->stop_eviction);
->   		if (error)
->   			break;
-> +		if (list_empty(&info->swaplist))
-> +			goto start_over;
->   	}
->   	mutex_unlock(&shmem_swaplist_mutex);
->   
