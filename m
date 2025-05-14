@@ -1,81 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A7B2797AB;
-	Wed, 14 May 2025 16:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31C5113AA53
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:20:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747239572; cv=none; b=Tg/9uk74lPF+cdMSStfdFSHnV25ZYqE7q//NjigaMHdPnEhDmmqi5iC5/riGsWGGb6VRffyGGnDmUV9vW0uO2gw+6q+mZsx0dINR9JovZyB5GXndiNHZ35U7hoUB7BORU8vNktYhNaNGi9t7Or+N5bdTVgxDP7hctDZ0NpjYCLo=
+	t=1747239603; cv=none; b=oa0Bgr3zH8KAqNQN+vlTZ4D/s1QHiCEoWiUuc+KOGnlIwK1/coAhUAkzobODpTiZYmFio5sBqMClfrgssoCyhsNj11qEUiFKLHHVpyX61wh8UrLtDjIll3JfRtTZ6JcH1YaSueWk3zL2bgydTlQEnokczMiorbV6BDxTnjUZr3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747239572; c=relaxed/simple;
-	bh=TkcKReooaX7BWS/X7043yb29DlAjrU6sVJsBD2so59o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cFkxG69A4TujyYv/IRtZH5+cnIV6YNNFjnRH94XSjJT/QKv25q1NloRVsNuePXvkx2AleJoJz3J1HN7gAntqi9iTRVaHUVPmch/T5+9YttSS9x79zOOI5iS9xZcTtbw4LsyG16vcOBUgEdKQiQ7H5nWddabzfNRAF6D8L1yMxLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Va79Lqq/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Va79Lqq/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 496F9C4CEE3;
-	Wed, 14 May 2025 16:19:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747239571;
-	bh=TkcKReooaX7BWS/X7043yb29DlAjrU6sVJsBD2so59o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Va79Lqq/yhvHgFZ6MuuLDL2mVIHmbUPKMAmBOSwLwdT7Whr7v5fwOvh+ASzXy1k8I
-	 P7liWHi43ooRWLnCbZtmNWyBUDYPr+TnacRvr2xO6ZlMSK5Zy1aXiEjgTQla9A3E46
-	 wbTURDIBcs1q3/v8wuKJWgrzaT94YJJkL5H2TI3mNMqw/s2C63yVvkYQ/qiqnWS50I
-	 aaW+OcwoxFQiBEW+ZkO6OpRZG4JHeAt7sZculNzaDhMUmJtSgdQHbrjlfqe+/j80ir
-	 wcczzQM+oKa8Xax/hLgt5M/ddgH2mtuubMJTypAGzxyVrwGzbN6TBHwdwaw5DMIcLT
-	 XsuMgeMYpiErA==
-Date: Wed, 14 May 2025 17:19:27 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jianping.Shen@de.bosch.com
-Cc: jic23@kernel.org, lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, dima.fedrau@gmail.com,
-	marcelo.schmitt1@gmail.com, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Christian.Lorenz3@de.bosch.com, Ulrike.Frauendorf@de.bosch.com,
-	Kai.Dolde@de.bosch.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: imu: smi330: Add binding
-Message-ID: <20250514-deserve-marina-224bef5b2db3@spud>
-References: <20250513150028.42775-1-Jianping.Shen@de.bosch.com>
- <20250513150028.42775-2-Jianping.Shen@de.bosch.com>
+	s=arc-20240116; t=1747239603; c=relaxed/simple;
+	bh=P8DnB0gIJrwAy41V0jTm5jDLzgE8atqxVLPfzCoIUBw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FyUC7EWwn2FCy9lL9KPua83dN6hi44QhVyZjfNEELchXrAviemNUonr+at3LhxNyuVV2JgXKLYaJ74uv2X8YLKJoveEM7cQAm2/yHJqrg3LK4A9XBcwEg50t8u/Okh3dROjxj1lCZQ51ckLup84VnVo5qhlsRrqo01WZLbAkJDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 13A5D150C;
+	Wed, 14 May 2025 09:19:49 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F07143F63F;
+	Wed, 14 May 2025 09:19:58 -0700 (PDT)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: suzuki.poulose@arm.com,
+	mike.leach@linaro.org,
+	james.clark@linaro.org,
+	alexander.shishkin@linux.intel.com,
+	leo.yan@arm.com
+Cc: coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: [PATCH v6 0/3] coresight: prevent deactivate active config while enabling the config
+Date: Wed, 14 May 2025 17:19:48 +0100
+Message-Id: <20250514161951.3427590-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4s1uKMatRE6dYioR"
-Content-Disposition: inline
-In-Reply-To: <20250513150028.42775-2-Jianping.Shen@de.bosch.com>
+Content-Transfer-Encoding: 8bit
+
+While enable active config via cscfg_csdev_enable_active_config(),
+active config could be deactivated via configfs' sysfs interface.
+This could make UAF issue in below scenario:
+
+CPU0                                          CPU1
+(sysfs enable)                                load module
+                                              cscfg_load_config_sets()
+                                              activate config. // sysfs
+                                              (sys_active_cnt == 1)
+...
+cscfg_csdev_enable_active_config()
+lock(csdev->cscfg_csdev_lock)
+// here load config activate by CPU1
+unlock(csdev->cscfg_csdev_lock)
+
+                                              deactivate config // sysfs
+                                              (sys_activec_cnt == 0)
+                                              cscfg_unload_config_sets()
+                                              unload module
+
+// access to config_desc which freed
+// while unloading module.
+cfs_csdev_enable_config
+
+To address this,
+  Patch #1 fix missing disable config when etm4 device is disabled via sysfs
+  Patch #2 holding cscfg_csdev_lock while removing config from cscfg_csdsev_list
+  Patch #3 add wrapper to prevent deactivation of config whlie enabling it
+
+Patch History
+==============
+From v5 to v6:
+  - add fixes tag.
+  - using guard for locking.
+  - https://lore.kernel.org/all/20250513170622.3071637-1-yeoreum.yun@arm.com/
+
+From v4 to v5
+  - separate patch set (from Leo Yan)
+  - https://lore.kernel.org/all/20250324191740.64964-1-yeoreum.yun@arm.com/
 
 
---4s1uKMatRE6dYioR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yeoreum Yun (3):
+  coresight/etm4: fix missing disable active config
+  coresight: holding cscfg_csdev_lock while removing cscfg from csdev
+  coresight: prevent deactivate active config while enabling the config
 
-On Tue, May 13, 2025 at 05:00:27PM +0200, Jianping.Shen@de.bosch.com wrote:
-> From: Jianping Shen <Jianping.Shen@de.bosch.com>
->=20
-> Add devicetree binding for Bosch imu smi330.
-> The smi330 is a combined three axis angular rate and
-> three axis acceleration sensor module.
->=20
-> Signed-off-by: Jianping Shen <Jianping.Shen@de.bosch.com>
+ .../hwtracing/coresight/coresight-config.h    |  2 +-
+ .../coresight/coresight-etm4x-core.c          |  3 ++
+ .../hwtracing/coresight/coresight-syscfg.c    | 51 +++++++++++++------
+ 3 files changed, 40 insertions(+), 16 deletions(-)
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+--
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
---4s1uKMatRE6dYioR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCTCjwAKCRB4tDGHoIJi
-0lSKAP9XoBcsBcAdPPriU4TgFQX92hjMfjGf7mekfhfTPRNkrgD8D00B/qrlj8XA
-7fmpWz5WiL9b0XbGEhRbFScC7dmT0Qs=
-=jlLn
------END PGP SIGNATURE-----
-
---4s1uKMatRE6dYioR--
