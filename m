@@ -1,129 +1,208 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA5E1E1A20
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F55E1E98E0;
+	Wed, 14 May 2025 07:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747206634; cv=none; b=XFZQeF64AbWLjGT5KvuzIVmcls9XMOnpEQfHOBmge2MPpDpfWqJ36KXVVjz3O8aj6JNTPPcKJ7f7kCLD3bJxpO5DckKrueYBPQm0QbmNOAF0xkKepH2rp5Nv01Gqx+u570bwpACzydlFPf+6FeN+8h9YMrwrB+M3eCvwRw87mv0=
+	t=1747206717; cv=none; b=tlPlOIUM1BaYILY89lFcT0ZwnxvZCzK6mOfVPGIUcjs9WSsXJ9SjnaMhn8QN3NGaQWITNv69GfhD75xBFLUmldPQ8kYdZXe6A4iGdfSJdtHjIX9kMKqstUMON1u/w6S2CRxDMYOITm1gg8ThV+KFrylEjQq3Jv3cizkEuR5upWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747206634; c=relaxed/simple;
-	bh=/B+EwXmyrRAKb+rC7ELavWBH8AzZRPfvLMfeSNf7qgQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hb0s4EVPB3lT1uO901/VKmqy3H2+lDNltCb4OWV4aUqcI8ppm+4zRAeYsUbVLTYGJy/xBM7de90++2P4kJhdrcLvYfbtVaXN/vKRZAGPQfleHUfW9hzBXF4X7/LEw/pMw5UuWX2fPssyxrJKMFqlkK+LbOb+9ovFytDvDyHk54k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-879467794efso3698647241.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 00:10:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747206630; x=1747811430;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qEdCTK8Ua/3Kxw/UlKLJuxTv51uEZAV3qqkGRptSF+I=;
-        b=SqcMV4VsWn07J8IL75rOFoQgTyHNzN/Sp5GiIs/UoF+9GZqcaDhyRRS2ZydHn2U6FE
-         MtJEXAkb+DT/07Dc/QH+MOuNsnWNJ7Khc+pd7ixhWER2dJLU9NsBHI2cDUmRdq/O1lBJ
-         WlHQWF5FvqEIt3KCM2vnDu7FRWF7s8MPPk4ssD4CPnXSav/9HuZIZP80ArF+j5ma6IRS
-         ENVHU60xgDr+SmfnWHibz/Mfafk5uS6icQAnFNFlTxC8M6elc3ux/ZHFxkmuoCbtQ/rg
-         9M1CSclOFBQTZUNU0pZK1pKD3aPtJMqyKogvr7Y2h1hBN9CeJPcaH4dAKlD5B53yHpVK
-         asTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVU24kIhogvdX/vWU7k4AwUyVG97/jHJ8Ds/Bmxc5Gxk/DQVPrQVvrUv+XjXaTD7DViY0zssjviV0a/dSk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIJJlhJCHy/QVI9SFiWD1UEm4pS/vinbrQBj2lTr96vfPckidx
-	b7RSZFkVV6goExRbHHBlZA+CfQT/9KfQ8cMBCf2vAFOXz7As7B8CHqbsq0X6
-X-Gm-Gg: ASbGncvFmWpN4z/x7X2+oa4/EfJBrUTgqDK9eGVxF6zfEQAj/FI1+e8h7s3e1BHu5gx
-	ovSr4GqL7LDEPCgV7p0yYzmJGpB3dsz7H37V2ELWWcVA35/vh/K24roCRoOG6r5EIiAonY49UeT
-	/dLrb+p3WVvZK6VduVN/yu+rrKSYUvohWnObyAtziddH+GePAUgiQ8u4r9aYiExSbyzMIyzjxCY
-	1oQWvH3QIzel8aYTHiV6gZW3p3JLGkZHG2+OgYy1BDv53vmvQRsaW+yLctyGbvlVTua91pbuctS
-	GJi+GzI6PwFYhVJv8L4PAutn07e0Whw0wYd/PyOXBpHIQsTC4Pl5MnGGOqHva4G5fpdkkiC9gNE
-	Oi2IV98Hy3P35khcjGQ==
-X-Google-Smtp-Source: AGHT+IF8b3l2Hoh5XBKHxXkI29ADP3Wek8DeeBYNYlX726noSyN+NDSpP7XT6a4Hd8NH8TztfTCszw==
-X-Received: by 2002:a05:6102:4a96:b0:4bb:e14a:9451 with SMTP id ada2fe7eead31-4df7dd3fcbcmr2168213137.20.1747206630547;
-        Wed, 14 May 2025 00:10:30 -0700 (PDT)
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4deb2016d30sm7893611137.21.2025.05.14.00.10.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 00:10:30 -0700 (PDT)
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-52403e39a23so4303232e0c.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 00:10:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVgc88MsF+uT12axCP+mZevA1Cu0UcggjgqWIqOLRQVg+r/ZewWBaI1rO2GhAax1SRbKUTLp/XMcoSu3uQ=@vger.kernel.org
-X-Received: by 2002:a05:6122:8c2a:b0:52c:54fc:745 with SMTP id
- 71dfb90a1353d-52d9c5d8acamr1925737e0c.5.1747206629577; Wed, 14 May 2025
- 00:10:29 -0700 (PDT)
+	s=arc-20240116; t=1747206717; c=relaxed/simple;
+	bh=qlq2DuLcKvogzQRme/kBzz6mvvH+xii/LpWouaVhH8o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f+MQZkT50+52Wpsd4hGb2RjMoWhD66K4zXA/DOsp9bcb4+i2Jl9ouDRjbNTqjET7kPz7IMaqNzGjwzJJG3XL8lKzju3Bb7i5Q2Wi9AL7qfDvMvMBS1CB2ZnMcogCLEr5dqeetXIlCGXuqSb3hEOU10cvivXlLD1CSi2AOD0o5kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oC7vMgk+; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oC7vMgk+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=EFvseOXYys5kITisJ1qS0WFaJXYFq3Ac6sONg0UaglM=; b=oC7vMgk+wnSJF6DewHj87tRCxe
+	3cRn1Wp1stx5BqyOYvm+qSvY65/J7pAPeF4N16Ud9Q+78FIzTmx5M4wj2aO29pfmZWHhLE+XRIn0B
+	ivTv2XpYYyPw9ZuhqLaZyNLk+yhZSlKg2v/Fmc51mDktuvLIUbaWKQZ3oT7ynUE/GkYK9W+px1TpI
+	PR7ugF4g8BWDhhRZV2IIXX+iORDvARjoTlpAjcuVmV3BN+YYpv5iWChCBeetfFhp0z8pzO81sNTWs
+	WpbknI8uCulAXd7eHDNuhGjfct2nArqTuRkVbSWoH1YDOWhwInjKww+/mwCa201L+lilEvPk00eZU
+	3aIyPujA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uF6HJ-0000000H6V6-0WhV;
+	Wed, 14 May 2025 07:11:45 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 8D3B8300717; Wed, 14 May 2025 09:11:44 +0200 (CEST)
+Date: Wed, 14 May 2025 09:11:44 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	npiggin@gmail.com
+Subject: Re: [PATCH 0/4] memcg: nmi-safe kmem charging
+Message-ID: <20250514071144.GB24938@noisy.programming.kicks-ass.net>
+References: <20250509232859.657525-1-shakeel.butt@linux.dev>
+ <2e2f0568-3687-4574-836d-c23d09614bce@suse.cz>
+ <mzrsx4x5xluljyxy5h5ha6kijcno3ormac3sobc3k7bkj5wepr@cuz2fluc5m5d>
+ <07e4e8d9-2588-41bf-89d4-328ca6afd263@suse.cz>
+ <20250513114125.GE25763@noisy.programming.kicks-ass.net>
+ <ct2h2eyuepa2g2ltl5fucfegwyuqspvz6d4uugcs4szxwnggdc@6m4ks3hp3tjj>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514052327.96537-1-siddarthsgml@gmail.com>
-In-Reply-To: <20250514052327.96537-1-siddarthsgml@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 14 May 2025 09:10:17 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXxDPDQVwx_9Z6ngvs4sYro3cobE=YP0y-b0zs0ody2vg@mail.gmail.com>
-X-Gm-Features: AX0GCFtFiSkMy3thsoXl2i-HHS-GqeqxowX3AK-tXVsLRnHiROCSZrI6s0ya3Vc
-Message-ID: <CAMuHMdXxDPDQVwx_9Z6ngvs4sYro3cobE=YP0y-b0zs0ody2vg@mail.gmail.com>
-Subject: Re: [PATCH] m68k: apollo: replace strcpy() with strscpy()
-To: Siddarth Gundu <siddarthsgml@gmail.com>
-Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ct2h2eyuepa2g2ltl5fucfegwyuqspvz6d4uugcs4szxwnggdc@6m4ks3hp3tjj>
 
-Hi Siddarth,
+On Tue, May 13, 2025 at 03:17:00PM -0700, Shakeel Butt wrote:
 
-Thanks for your patch!
+> > IIRC Power64 has issues here, 'funnily' their local_t is NMI safe.
+> > Perhaps we could do the same for their this_cpu_*(), but ideally someone
+> > with actual power hardware should do this ;-)
+> > 
+> 
+> Is CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS the right config to
+> differentiate between such archs? I see Power64 does not have that
+> enabled.
 
-On Wed, 14 May 2025 at 07:23, Siddarth Gundu <siddarthsgml@gmail.com> wrote=
-:
-> strcpy() is deprecated; use strscpy() instead.
->
-> strscpy was chosen because the code expects a NUL-terminated string
-> without zero-padding.
+> > There is no config symbol for this presently.
+> 
+> Hmm what about CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS?
 
-... which are not sufficient reasons: there is no size information
-about the destination buffer.
+Hmm, I didn't know about that one, and it escaped my grep yesterday.
 
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Siddarth Gundu <siddarthsgml@gmail.com>
+Anyway, PPC is fixable, just not sure its worth it for them.
 
-> --- a/arch/m68k/apollo/config.c
-> +++ b/arch/m68k/apollo/config.c
-> @@ -218,7 +219,7 @@ static void dn_dummy_reset(void)
->
->  static void dn_get_model(char *model)
->  {
-> -    strcpy(model, "Apollo ");
-> +    strscpy(model, "Apollo ");
+> > 
+> > > - (if the above leaves any 64bit arch) its 64bit atomics implementation is safe
+> > 
+> > True, only because HPPA does not in fact have NMIs.
+> 
+> What is HPPA?
 
-include/linux/compiler.h:197:62: error: static assertion failed: "must be a=
-rray"
-[...]
-arch/m68k/apollo/config.c:222:5: note: in expansion of macro =E2=80=98strsc=
-py=E2=80=99
-  222 |     strscpy(model, "Apollo ");
-      |     ^~~~~~~
+arch/parisc the worst 64bit arch ever.
 
-Please try to (at least) test-compile your patches before submitting.
+They saw sparc32-smp and thought that was a great idea, or something
+along those lines. Both are quite terrible. Sparc64 realized the mistake
+and fixed it -- it has cmpxchg.
 
->      if (apollo_model >=3D APOLLO_DN3000 && apollo_model <=3D APOLLO_DN45=
-00)
->          strcat(model, apollo_models[apollo_model - APOLLO_DN3000]);
 
-FWIW, if the strscpy() would have prevented a buffer overflow, the
-strcat() would still cause one.  But none of these can happen for real.
->  }
+Nick, is this something that's useful for you guys?
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+---
+diff --git a/arch/powerpc/include/asm/percpu.h b/arch/powerpc/include/asm/percpu.h
+index ecf5ac70cfae..aa188db68ef5 100644
+--- a/arch/powerpc/include/asm/percpu.h
++++ b/arch/powerpc/include/asm/percpu.h
+@@ -25,6 +25,11 @@ DECLARE_STATIC_KEY_FALSE(__percpu_first_chunk_is_paged);
+ #define percpu_first_chunk_is_paged	false
+ #endif
+ 
++#ifdef CONFIG_PPC_BOOK3S_64
++#define __pcpu_local_irq_save(f) powerpc_local_irq_pmu_save(f)
++#define __pcpu_local_irq_restore(s) powerpc_local_irq_pmu_restore(f)
++#endif
++
+ #include <asm-generic/percpu.h>
+ 
+ #include <asm/paca.h>
+diff --git a/include/asm-generic/percpu.h b/include/asm-generic/percpu.h
+index 02aeca21479a..5c8376588dfb 100644
+--- a/include/asm-generic/percpu.h
++++ b/include/asm-generic/percpu.h
+@@ -75,6 +75,11 @@ extern void setup_per_cpu_areas(void);
+ #define PER_CPU_ATTRIBUTES
+ #endif
+ 
++#ifndef __pcpu_local_irq_save
++#define __pcpu_local_irq_save(x) raw_local_irq_save(x)
++#define __pcpu_local_irq_restore(x) raw_local_irq_restore(x)
++#endif
++
+ #define raw_cpu_generic_read(pcp)					\
+ ({									\
+ 	*raw_cpu_ptr(&(pcp));						\
+@@ -146,9 +151,9 @@ do {									\
+ ({									\
+ 	TYPEOF_UNQUAL(pcp) ___ret;					\
+ 	unsigned long ___flags;						\
+-	raw_local_irq_save(___flags);					\
++	__pcpu_local_irq_save(___flags);					\
+ 	___ret = raw_cpu_generic_read(pcp);				\
+-	raw_local_irq_restore(___flags);				\
++	__pcpu_local_irq_restore(___flags);				\
+ 	___ret;								\
+ })
+ 
+@@ -165,9 +170,9 @@ do {									\
+ #define this_cpu_generic_to_op(pcp, val, op)				\
+ do {									\
+ 	unsigned long __flags;						\
+-	raw_local_irq_save(__flags);					\
++	__pcpu_local_irq_save(__flags);					\
+ 	raw_cpu_generic_to_op(pcp, val, op);				\
+-	raw_local_irq_restore(__flags);					\
++	__pcpu_local_irq_restore(__flags);					\
+ } while (0)
+ 
+ 
+@@ -175,9 +180,9 @@ do {									\
+ ({									\
+ 	TYPEOF_UNQUAL(pcp) __ret;					\
+ 	unsigned long __flags;						\
+-	raw_local_irq_save(__flags);					\
++	__pcpu_local_irq_save(__flags);					\
+ 	__ret = raw_cpu_generic_add_return(pcp, val);			\
+-	raw_local_irq_restore(__flags);					\
++	__pcpu_local_irq_restore(__flags);					\
+ 	__ret;								\
+ })
+ 
+@@ -185,9 +190,9 @@ do {									\
+ ({									\
+ 	TYPEOF_UNQUAL(pcp) __ret;					\
+ 	unsigned long __flags;						\
+-	raw_local_irq_save(__flags);					\
++	__pcpu_local_irq_save(__flags);					\
+ 	__ret = raw_cpu_generic_xchg(pcp, nval);			\
+-	raw_local_irq_restore(__flags);					\
++	__pcpu_local_irq_restore(__flags);					\
+ 	__ret;								\
+ })
+ 
+@@ -195,9 +200,9 @@ do {									\
+ ({									\
+ 	bool __ret;							\
+ 	unsigned long __flags;						\
+-	raw_local_irq_save(__flags);					\
++	__pcpu_local_irq_save(__flags);					\
+ 	__ret = raw_cpu_generic_try_cmpxchg(pcp, ovalp, nval);		\
+-	raw_local_irq_restore(__flags);					\
++	__pcpu_local_irq_restore(__flags);					\
+ 	__ret;								\
+ })
+ 
+@@ -205,9 +210,9 @@ do {									\
+ ({									\
+ 	TYPEOF_UNQUAL(pcp) __ret;					\
+ 	unsigned long __flags;						\
+-	raw_local_irq_save(__flags);					\
++	__pcpu_local_irq_save(__flags);					\
+ 	__ret = raw_cpu_generic_cmpxchg(pcp, oval, nval);		\
+-	raw_local_irq_restore(__flags);					\
++	__pcpu_local_irq_restore(__flags);					\
+ 	__ret;								\
+ })
+ 
