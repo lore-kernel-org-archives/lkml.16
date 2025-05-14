@@ -1,76 +1,63 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7615275878
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27409224AED;
+	Wed, 14 May 2025 12:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747224651; cv=none; b=Zv211O8g5iekpqx0a/tH42MI1zsKeDV4oYRfi+iLIWeaXNVTy7UAx9pg+vCWI7dP0kqYX9kiMlbPxQBLaOE5m2+PGEIgROcuWH5gdpYgZ8BiWc/e1ab/mw3/axV7j6GKvU0Ye5VPM7SsuPxb/Uu6h6WwB8R1PuVgwH0te5+nN2Y=
+	t=1747224829; cv=none; b=YrnF2NID5Y+gBWj/b999CNdnYiv/GmzMFq5oE2fDFKalQi5tLcFKAHQY6lehEDH8oANNTn4KSyFSjnkL82Zju326MQjhPQ/z00k7i3ncwnBbxtuwLYEzytJm+yKtNmXuhJcC7Pp6dtrqInrk1yDNDngQDzX0aMa7bcXF0IoPfZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747224651; c=relaxed/simple;
-	bh=ujFU64lUnTiA1/QHpshqazoqqgK3H8Ez9VWMW+ljgu0=;
+	s=arc-20240116; t=1747224829; c=relaxed/simple;
+	bh=H2PRHzXAWxE9uMK6YCAjGgxQwKItUsBz6sbyztBIjFc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OcItK/nAc7xpo8izG4kDW94asDLX0i/ZyRA7I1MDAny5qyuWcKbrJw5toqtr1DdTsnN8t+jtWyoGAOjrfQagMEOhQB1Orb/poq2avQSn/zgFBBmCSDDfJSDKz/nCXMzO9zsMx9Txjhthfu3bmYjVzbL+S8NH19sJ9JqoxX67dKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mjLPrrgL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NaRt2/Uz; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=mjLPrrgL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NaRt2/Uz; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=VrIVs2B0uvzZ1VassLsPMtjLRVlK8D8ULCvus5cPMC4l54scTrej1GWh/E91s+kKX/GDxqA2VG9iHPeGcrFnZYhivm3jPoH5b+e/N9Fv+sfY/36lzeEjEN+Md4eRnnqvPaV79m1mCI208jNxaJ6lk9X1fliP3Eqy4I72DAt/p6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=dRHBEV2c; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mjLPrrgL";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NaRt2/Uz";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="mjLPrrgL";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NaRt2/Uz"
-Received: from kitsune.suse.cz (unknown [10.100.12.127])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D16A01F745;
-	Wed, 14 May 2025 12:10:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747224646; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lw+353Ca7lhmfXTfDio3C8efnVDU+1woQnWA/apBzB8=;
-	b=mjLPrrgLHlt+uXShOhyDAy/FpSMJaFSOUxmUDhtG0J+v+vjkmPwq8pne0bvJ6B3jc+qlyy
-	sqQfahb1UcC1AhI1m7QWS6vVEw4L4w1TnfObHfxFK3ETV/HxGA+uQ2lHc5w0In8WYnxt5p
-	YKV03EDbyAXtyulGCNjI2/F0H2psbOo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747224646;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lw+353Ca7lhmfXTfDio3C8efnVDU+1woQnWA/apBzB8=;
-	b=NaRt2/UziOA672AmZIuYg6dQ8m4AL5lbhAgC6p8eP2LKvjGiSmon2085un6zbIEa/hdMjz
-	nqbocSZWw+QOYtAQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747224646; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lw+353Ca7lhmfXTfDio3C8efnVDU+1woQnWA/apBzB8=;
-	b=mjLPrrgLHlt+uXShOhyDAy/FpSMJaFSOUxmUDhtG0J+v+vjkmPwq8pne0bvJ6B3jc+qlyy
-	sqQfahb1UcC1AhI1m7QWS6vVEw4L4w1TnfObHfxFK3ETV/HxGA+uQ2lHc5w0In8WYnxt5p
-	YKV03EDbyAXtyulGCNjI2/F0H2psbOo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747224646;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lw+353Ca7lhmfXTfDio3C8efnVDU+1woQnWA/apBzB8=;
-	b=NaRt2/UziOA672AmZIuYg6dQ8m4AL5lbhAgC6p8eP2LKvjGiSmon2085un6zbIEa/hdMjz
-	nqbocSZWw+QOYtAQ==
-Date: Wed, 14 May 2025 14:10:45 +0200
-From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jonathan McDowell <noodles@earth.li>,
-	Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: Re: [PATCH v3] tpm: tis: Double the timeout B to 4s
-Message-ID: <aCSIRS1fq_b9sByn@kitsune.suse.cz>
-References: <4e4640bd-0313-4594-9667-82340ed9368a@molgen.mpg.de>
- <20250404082325.13876-1-msuchanek@suse.de>
- <Z--d7Obw2UEk8Pve@kernel.org>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="dRHBEV2c"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=+AfK7MCkRVYWu8R51rsh6Q0jzO0vpYJ7OnABWuVAlLw=; b=dRHBEV2cEqxhfNzllZyhYafO0h
+	/hTgKWQXQn7JZ09jG5zYsbQMXqlUDve784VuWkNKz1emP/PBXlLZ30KvDz7bWFgoM3/oPy+uBpVjE
+	SjbfghHTiSnRM3iZf+nXifEOpdp47y3xmOahwnOA12NLahY7d+IzuTzHqoV1EehTa7VfFC6xJOxpg
+	9f5/xe7kkVs4jCEDy3ktJ26eYruBhzENT2hJPxPLAIG0nqxdnaDXgxzlqyZWynPyO5bcnFhP39k9r
+	urtICyboVUk0OcoE3KqPl0KUsfKFhxaNuRdyERMQwWYy2ew+yYBTxFtAfJWz5wvLdJlvWkLbODNqK
+	y2ia513A==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36192)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uFAzN-0007GH-1J;
+	Wed, 14 May 2025 13:13:33 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uFAzG-0004FD-2Z;
+	Wed, 14 May 2025 13:13:26 +0100
+Date: Wed, 14 May 2025 13:13:26 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Sky Huang <SkyLake.Huang@mediatek.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Qingfang Deng <dqfext@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	balika011 <balika011@gmail.com>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Steven Liu <Steven.Liu@mediatek.com>
+Subject: Re: [PATCH net-next v3 2/2] net: phy: mediatek: add driver for
+ built-in 2.5G ethernet PHY on MT7988
+Message-ID: <aCSI5k7uUgAlpSsy@shell.armlinux.org.uk>
+References: <20250514105738.1438421-1-SkyLake.Huang@mediatek.com>
+ <20250514105738.1438421-3-SkyLake.Huang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,117 +66,114 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z--d7Obw2UEk8Pve@kernel.org>
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_ZERO(0.00)[0];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmx.de];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[gmx.de,ziepe.ca,vger.kernel.org,earth.li,molgen.mpg.de];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
+In-Reply-To: <20250514105738.1438421-3-SkyLake.Huang@mediatek.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Hello,
+Hi,
 
-On Fri, Apr 04, 2025 at 11:53:00AM +0300, Jarkko Sakkinen wrote:
-> On Fri, Apr 04, 2025 at 10:23:14AM +0200, Michal Suchanek wrote:
-> > With some Infineon chips the timeouts in tpm_tis_send_data (both B and
-> > C) can reach up to about 2250 ms.
-> > 
-> > Timeout C is retried since
-> > commit de9e33df7762 ("tpm, tpm_tis: Workaround failed command reception on Infineon devices")
-> > 
-> > Timeout B still needs to be extended.
-> > 
-> > The problem is most commonly encountered with context related operation
-> > such as load context/save context. These are issued directly by the
-> > kernel, and there is no retry logic for them.
-> > 
-> > When a filesystem is set up to use the TPM for unlocking the boot fails,
-> > and restarting the userspace service is ineffective. This is likely
-> > because ignoring a load context/save context result puts the real TPM
-> > state and the TPM state expected by the kernel out of sync.
-> > 
-> > Chips known to be affected:
-> > tpm_tis IFX1522:00: 2.0 TPM (device-id 0x1D, rev-id 54)
-> > Description: SLB9672
-> > Firmware Revision: 15.22
-> > 
-> > tpm_tis MSFT0101:00: 2.0 TPM (device-id 0x1B, rev-id 22)
-> > Firmware Revision: 7.83
-> > 
-> > tpm_tis MSFT0101:00: 2.0 TPM (device-id 0x1A, rev-id 16)
-> > Firmware Revision: 5.63
-> > 
-> > Link: https://lore.kernel.org/linux-integrity/Z5pI07m0Muapyu9w@kitsune.suse.cz/
-> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> > ---
-> > v2: Only extend timeout B
-> > v3: Update commit message
-> > ---
-> >  drivers/char/tpm/tpm_tis_core.h | 2 +-
-> >  include/linux/tpm.h             | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
-> > index 970d02c337c7..6c3aa480396b 100644
-> > --- a/drivers/char/tpm/tpm_tis_core.h
-> > +++ b/drivers/char/tpm/tpm_tis_core.h
-> > @@ -54,7 +54,7 @@ enum tis_int_flags {
-> >  enum tis_defaults {
-> >  	TIS_MEM_LEN = 0x5000,
-> >  	TIS_SHORT_TIMEOUT = 750,	/* ms */
-> > -	TIS_LONG_TIMEOUT = 2000,	/* 2 sec */
-> > +	TIS_LONG_TIMEOUT = 4000,	/* 4 secs */
-> >  	TIS_TIMEOUT_MIN_ATML = 14700,	/* usecs */
-> >  	TIS_TIMEOUT_MAX_ATML = 15000,	/* usecs */
-> >  };
-> > diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> > index 6c3125300c00..3db0b6a87d45 100644
-> > --- a/include/linux/tpm.h
-> > +++ b/include/linux/tpm.h
-> > @@ -224,7 +224,7 @@ enum tpm2_const {
-> >  
-> >  enum tpm2_timeouts {
-> >  	TPM2_TIMEOUT_A          =    750,
-> > -	TPM2_TIMEOUT_B          =   2000,
-> > +	TPM2_TIMEOUT_B          =   4000,
-> >  	TPM2_TIMEOUT_C          =    200,
-> >  	TPM2_TIMEOUT_D          =     30,
-> >  	TPM2_DURATION_SHORT     =     20,
-> > -- 
-> > 2.47.1
-> > 
-> > 
-> 
-> Cc: stable@vger.kernel.org # v6.1+
-> 
-> Probably best that I'll piggyback a patch set for stable with the two
-> fixes, in order to cause least noise. I need to do this *after* an
-> ack'd PR to -rc2.
+On Wed, May 14, 2025 at 06:57:38PM +0800, Sky Huang wrote:
+> +#define MTK_2P5GPHY_ID_MT7988		(0x00339c11)
+> +
+> +#define MT7988_2P5GE_PMB_FW		"mediatek/mt7988/i2p5ge-phy-pmb.bin"
+> +#define MT7988_2P5GE_PMB_FW_SIZE	(0x20000)
+> +#define MT7988_2P5GE_PMB_FW_BASE	(0x0f100000)
+> +#define MT7988_2P5GE_PMB_FW_LEN		(0x20000)
+> +#define MTK_2P5GPHY_MCU_CSR_BASE	(0x0f0f0000)
+> +#define MTK_2P5GPHY_MCU_CSR_LEN		(0x20)
+> +#define MD32_EN_CFG			(0x18)
 
-While there is talk about stable this does not seem to be applied
-anywhere I could find. Is that expected?
+These parens are all unnecessary, as are ones below around a simple
+number.
 
-Thanks
+> +#define   MD32_EN			BIT(0)
+> +
+> +#define BASE100T_STATUS_EXTEND		(0x10)
+> +#define BASE1000T_STATUS_EXTEND		(0x11)
+> +#define EXTEND_CTRL_AND_STATUS		(0x16)
+> +
+> +#define PHY_AUX_CTRL_STATUS		(0x1d)
+> +#define   PHY_AUX_DPX_MASK		GENMASK(5, 5)
+> +#define   PHY_AUX_SPEED_MASK		GENMASK(4, 2)
+> +
+> +/* Registers on MDIO_MMD_VEND1 */
+> +#define MTK_PHY_LPI_PCS_DSP_CTRL		(0x121)
 
-Michal
+...
 
-> 
-> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> 
-> BR, Jarkko
+> +static int mt798x_2p5ge_phy_load_fw(struct phy_device *phydev)
+> +{
+> +	void __iomem *mcu_csr_base, *pmb_addr;
+> +	struct device *dev = &phydev->mdio.dev;
+
+This will attract a comment about reverse christmas tree.
+
+> +	const struct firmware *fw;
+> +	int ret, i;
+> +	u32 reg;
+
+...
+
+> +static int mt798x_2p5ge_phy_config_init(struct phy_device *phydev)
+> +{
+> +	struct pinctrl *pinctrl;
+> +
+> +	/* Check if PHY interface type is compatible */
+> +	if (phydev->interface != PHY_INTERFACE_MODE_INTERNAL)
+> +		return -ENODEV;
+> +
+> +	/* Setup LED */
+> +	phy_set_bits_mmd(phydev, MDIO_MMD_VEND2, MTK_PHY_LED0_ON_CTRL,
+> +			 MTK_PHY_LED_ON_POLARITY | MTK_PHY_LED_ON_LINK10 |
+> +			 MTK_PHY_LED_ON_LINK100 | MTK_PHY_LED_ON_LINK1000 |
+> +			 MTK_PHY_LED_ON_LINK2500);
+> +	phy_set_bits_mmd(phydev, MDIO_MMD_VEND2, MTK_PHY_LED1_ON_CTRL,
+> +			 MTK_PHY_LED_ON_FDX | MTK_PHY_LED_ON_HDX);
+> +
+> +	/* Switch pinctrl after setting polarity to avoid bogus blinking */
+> +	pinctrl = devm_pinctrl_get_select(&phydev->mdio.dev, "i2p5gbe-led");
+> +	if (IS_ERR(pinctrl))
+> +		dev_err(&phydev->mdio.dev, "Fail to set LED pins!\n");
+
+No, don't do this. config_init() can be called multiple times during
+the lifetime of the driver bound to the device, and each time it is,
+a new managed-dev structure will be allocated to release this action
+each time, thus consuming more and more memory, or possibly failing
+after the first depending on the pinctrl_get_select() behaviour.
+Please find a different way.
+
+...
+
+> +static int mt798x_2p5ge_phy_config_aneg(struct phy_device *phydev)
+> +{
+> +	bool changed = false;
+> +	u32 adv;
+> +	int ret;
+> +
+> +	ret = genphy_c45_an_config_aneg(phydev);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (ret > 0)
+> +		changed = true;
+> +
+> +	/* Clause 45 doesn't define 1000BaseT support. Use Clause 22 instead in
+> +	 * our design.
+> +	 */
+> +	adv = linkmode_adv_to_mii_ctrl1000_t(phydev->advertising);
+> +	ret = phy_modify_changed(phydev, MII_CTRL1000, ADVERTISE_1000FULL, adv);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (ret > 0)
+> +		changed = true;
+> +
+> +	return __genphy_config_aneg(phydev, changed);
+
+Do you want this (which will program EEE and the 10/100 advert) or do
+you want genphy_check_and_restart_aneg() here? Note that
+genphy_c45_an_config_aneg() will already have programmed both the EEE
+and 10/100 adverts via the C45 registers.
+
+Thanks.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
