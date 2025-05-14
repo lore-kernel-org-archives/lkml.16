@@ -1,115 +1,131 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0C625C71A;
-	Wed, 14 May 2025 12:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187F125C71A;
+	Wed, 14 May 2025 12:43:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747226595; cv=none; b=AmSwpuvyZY7QaS0kMWWvXuIi6l4N9wRTIGRqLW8GZtoRcXpOSvVXUq0ov5ce1/yC/qv9cyYABHZbqxq6Xbp3LaHLaeHU3vFyndNLZw5Zz9A3mytM9CwdCKWflQ29781pWmiFL93VQxBf/UiNl+sFqGYCUdlu0Mq1sVqBcNHB0Hw=
+	t=1747226599; cv=none; b=uiTOU/flSlSFOgiMXFZMGHrPCYlRoVHL8GCbqbxhbGNrDpzW0poa908Puc0FrNH0EdK2lyPaJxKKuhHXH8naEo6aMGelkwhJTNuDyjDWFUvI8caKz3EgNT4ulD4fqu/ULFh0ki9sstYgkvneTd7P0p2098c7QL2KG6EQtb9u3Yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747226595; c=relaxed/simple;
-	bh=UyGdIibVSOqSmBCOI28bfc7IbRGF7lf1cPNTd2CyAns=;
-	h=Content-Type:MIME-Version:Content-Disposition:In-Reply-To:
-	 References:Subject:From:Cc:To:Date:Message-ID; b=DWFx661hcahJ1QJgk6Rah1ubZ5crbytPLzzsMUpxL4uRzSmv+7/SMStYDFg4HyI8y8JhBlk3sSBX0GuKQ6Fl4A3ohOXXPFUPzThIStPH4RXakZKxP3WWl+fnuuD+Rm2HWN3Q+Nj7ZoWTH13fPYwcVKL1ffI8hEWyVm6zYC5NIHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=JJu+36tq; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1747226599; c=relaxed/simple;
+	bh=D/UhFncoTOD+fb3+ydS2upDmu7EB98QPAuGaj00u5jo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k80sEwtRUqq0cKZyja7EQ86FHB4Eh6C4m4xsWJn1BUe1kqH80n6tp0/lXh5cR+L6IM/UGbVq1dx0PFIE8Ex9lSVMd+E9R5N4UGQdlldQZ30wabLDQCdeX19Bm1AbtLEFUBNapr12Q5o942LwDQuBh1rD2rEVDPCAw8W0WQV04RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wlm2+c1W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JJu+36tq"
-Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:65db:9f82:d481:46e1:75d5:ff64])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9F9AF735;
-	Wed, 14 May 2025 14:42:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1747226575;
-	bh=UyGdIibVSOqSmBCOI28bfc7IbRGF7lf1cPNTd2CyAns=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=JJu+36tq1IYVxgGC+Ks0XsnOJXYLnul0pg1u/qmC4ZgDg+mHDF87F+UELy8vr0MWf
-	 ivUrQHezq4T4ZMKcqq8PXJRKCYwdUL2fJa7HqTljxEf44hXN0/+qWIot4cPBqteiVf
-	 z356sf3yn+bqglGI2wJ4GkKLlOxhL8RjUVu5imvo=
-Content-Type: multipart/signed; micalg="pgp-sha512"; protocol="application/pgp-signature"; boundary="===============2589365894410712436=="
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wlm2+c1W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AEA3C4CEF2;
+	Wed, 14 May 2025 12:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747226596;
+	bh=D/UhFncoTOD+fb3+ydS2upDmu7EB98QPAuGaj00u5jo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Wlm2+c1WoBARvxNkE2J1kIKh0KgE/rWg6Li4Br2uQjHmtItBVy2zt4/IUKcFs3W00
+	 F2GBZQAsjxI9SDdJ35sVDM0u4uJ4/BgahzwXyRDH/wqRSjM73wUPEHWJj6bL36E0/S
+	 TB95yXaRj5rnjesp/8I3aDcHBQM+dwVW+AUjbr7+ETW6QciXU6haseIO+BJzuTJZt/
+	 gCECTsv78TsN00uUeTmbjK6siPuSAdzWWyt5vIsM4K/5k+o7SjTUPwNHXlzcMRYJEZ
+	 R6t9+rXvS7jAxHMvcZyPv7J3gcSECd1BbBOnwTsuKDzZ5qMpxE49fnHfoL6usQkr8t
+	 PclJojWMhXjnw==
+Date: Wed, 14 May 2025 07:43:14 -0500
+From: Rob Herring <robh@kernel.org>
+To: dongxuyang@eswincomputing.com
+Cc: mturquette@baylibre.com, sboyd@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ningyu@eswincomputing.com, linmin@eswincomputing.com,
+	huangyifeng@eswincomputing.com
+Subject: Re: [PATCH 1/2] dt-bindings: clock: eswin: Documentation for eic7700
+ SoC
+Message-ID: <20250514124314.GA1770882-robh@kernel.org>
+References: <20250514002233.187-1-dongxuyang@eswincomputing.com>
+ <20250514002516.290-1-dongxuyang@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250514-imx415-v1-1-bb29fa622bb1@emfend.at>
-References: <20250514-imx415-v1-1-bb29fa622bb1@emfend.at>
-Subject: Re: [PATCH] media: i2c: imx415: Request the sensor clock without a name
-From: Jai Luthra <jai.luthra@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Fend <matthias.fend@emfend.at>
-To: Matthias Fend <matthias.fend@emfend.at>, Mauro Carvalho Chehab <mchehab@kernel.org>, Michael Riesch <michael.riesch@wolfvision.net>, Sakari Ailus <sakari.ailus@linux.intel.com>
-Date: Wed, 14 May 2025 14:42:57 +0200
-Message-ID: <174722657707.1845803.6950232855047026897@selene>
-User-Agent: alot/0.12.dev11+g1dd20f1f
+In-Reply-To: <20250514002516.290-1-dongxuyang@eswincomputing.com>
 
---===============2589365894410712436==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-
-Hi Matthias,
-
-Thanks for the patch.
-
-Quoting Matthias Fend (2025-05-14 12:51:01)
-> Request the sensor clock without specifying a name so that the driver
-> behaves as described in the imx415 bindings.
->=20
-> Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
-
-Reviewed-by: Jai Luthra <jai.luthra@ideasonboard.com>
-
+On Wed, May 14, 2025 at 08:25:16AM +0800, dongxuyang@eswincomputing.com wrote:
+> From: Xuyang Dong <dongxuyang@eswincomputing.com>
+> 
+> Add device tree binding documentation and header file for
+> the ESWIN EIC7700 clock controller module.
+> 
+> Signed-off-by: Yifeng Huang <huangyifeng@eswincomputing.com>
+> Signed-off-by: Xuyang Dong <dongxuyang@eswincomputing.com>
 > ---
->  drivers/media/i2c/imx415.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/media/i2c/imx415.c b/drivers/media/i2c/imx415.c
-> index 9f37779bd6111f434c198ad1cf70c14b80724042..278e743646ea15819d5a79577=
-e786b47c259dbfa 100644
-> --- a/drivers/media/i2c/imx415.c
-> +++ b/drivers/media/i2c/imx415.c
-> @@ -1251,7 +1251,7 @@ static int imx415_parse_hw_config(struct imx415 *se=
-nsor)
->                 return dev_err_probe(sensor->dev, PTR_ERR(sensor->reset),
->                                      "failed to get reset GPIO\n");
-> =20
-> -       sensor->clk =3D devm_clk_get(sensor->dev, "inck");
-> +       sensor->clk =3D devm_clk_get(sensor->dev, NULL);
->         if (IS_ERR(sensor->clk))
->                 return dev_err_probe(sensor->dev, PTR_ERR(sensor->clk),
->                                      "failed to get clock\n");
->=20
-> ---
-> base-commit: 9f35e33144ae5377d6a8de86dd3bd4d995c6ac65
-> change-id: 20250514-imx415-c65889e55211
->=20
-> Best regards,
-> --=20
-> Matthias Fend <matthias.fend@emfend.at>
->
---===============2589365894410712436==
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Description: signature
-Content-Type: application/pgp-signature; name="signature.asc"; charset="us-ascii"
+>  .../bindings/clock/eswin,eic7700-clock.yaml   |  43 ++
+>  .../dt-bindings/clock/eswin,eic7700-clock.h   | 588 ++++++++++++++++++
+>  2 files changed, 641 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/eswin,eic7700-clock.yaml
+>  create mode 100644 include/dt-bindings/clock/eswin,eic7700-clock.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/eswin,eic7700-clock.yaml b/Documentation/devicetree/bindings/clock/eswin,eic7700-clock.yaml
+> new file mode 100644
+> index 000000000000..c39fa99b503c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/eswin,eic7700-clock.yaml
+> @@ -0,0 +1,43 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/eswin,eic7700-clock.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Eswin EIC7700 SoC clock controller
+> +
+> +maintainers:
+> +  - Yifeng Huang <huangyifeng@eswincomputing.com>
+> +  - Xuyang Dong <dongxuyang@eswincomputing.com>
+> +
+> +description: |
 
------BEGIN PGP SIGNATURE-----
+Don't need '|'.
 
-iQIzBAABCgAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAmgkj9AACgkQQ96R+SSa
-cUUBBQ//WCo/WnrJIOXDyUFiyYWlz7WpTIjN7DMRKbXFaDseWL8Za6KijHU10hbK
-6B/H+rVGOi5OnwxyoxD0EmqxYldWitIu17nh0X5SShg+lq+ccRBmcgKobBhsTRtb
-0zzAo1ENDlePYc+RqtmTLowVc1kmeNDpI9B2uk84pfq1sqTTM2LOrGHnULi3h7vS
-hPNaMX+dH4E+Wo8u7WlNDqukPIAUd71fvTN8v+R55OcNM5AnJE0WuT3uPAbmLFgr
-9S1srWpnUhSL7XT/jOP+R5YbpbxtRqiYFfdjwU//JftGBlQmizSZ649kY7dUmeXZ
-+WzgClE6EXxEDyq1TOIK49pyBZCIgZSMwGop2wQJ+3wMlxEW+iAKUtiuTz5RYvc/
-y5Pv/PImh/GdZCMhrDI7gJ1EyFdEFOjv8569qao6QhmM4J4z14x4esIKWY05kyhF
-BrCc/AvdRKPedG9hHVZi1LkQgMHHCGnRUv3QNi07ad+1VOay2d7kNGzKs0764SpP
-yyJHk9ugv4wrOPnLb1Z061f0CveKIcY390h8cbaoobuFDtYJMyAP5nwu3aR3fpMa
-D+7s02a5ohyyAqJJtsCAM/U+oGhw+YBmUxuZcEfMS4J0kt3MgXziNd32WvjVm1BY
-lkvSN6H5sdeGIW6AgMAOOz5ul/AeSi8jCjLL6I1uLWOiTy8WSF4=
-=5KmA
------END PGP SIGNATURE-----
+> +  The clock controller registers are part of the syscrg block on
+> +  eic7700 SoC.
 
---===============2589365894410712436==--
+Wrap at 80
+
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - const: eswin,eic7700-clock
+
+Drop 'oneOf' and 'items'.
+
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - '#clock-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/eswin,eic7700-clock.h>
+> +
+> +    sys_crg: sys-crg@51828000 {
+> +        compatible = "syscon", "simple-mfd";
+
+Must have a specific compatible for the block.
+
+> +        reg = <0x000000 0x51828000 0x000000 0x80000>;
+> +        clock: clock-controller {
+> +            compatible = "eswin,eic7700-clock";
+> +            #clock-cells = <1>;
+
+There's no need for a child node here. Just add '#clock-cells' to the 
+parent node.
+
+> +        };
+> +    };
