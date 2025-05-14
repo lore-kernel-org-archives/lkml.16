@@ -1,221 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BBD221FF35;
-	Wed, 14 May 2025 08:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 821E1206F2A
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747210035; cv=none; b=thWBTlRw2HxWY1RIEB2f4kbuNo35pLpToNsreixUa4mIvpRT8/RhoIG3dsitMz5xtirb1EPisrXPiMLLeBzvpFY/WjCjuPQmM6iRlKS6EhhrGJrYsO2IgbPlFWGHupEs4+gSjz/LKSctbN/mq156FuwFNzvPswk4V7Sr+SCLPus=
+	t=1747210122; cv=none; b=R8vJ1EpwY1zSu1a5pnjIRV5Y0n6A1sNJvIO6iMBbzshoDvosvIHNfgu5+N4qR6d0NnotrSun4NyHjOM/74Y2c03twK4ez5xK203dqBSa8evgIFnMq5kqNXIJNgecCjthJi+Y3ubs9KshzhEXvYAcTwj14gxzCs0WVr/MsUK+L9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747210035; c=relaxed/simple;
-	bh=fOEZFM2FyPnab4TgEDY8lrYsnLTj0SuNcr34p3JVdik=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bjzoCwK2PIzfUTRmC4ilvFkunkv6awSsnLctO3IGt8P4oyHG2J+0eOA4UAc+U2Dgg7qpEgDHTPrihlcyEXziqpDnLTAPmghqqRYa/5tAuSIgHFnavHJr6EFz7D/FGoKbK8AbDavSD5e7dGfcqYLSzsQdqsdW7YEikpphV6A3HXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kC91pTGh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747210122; c=relaxed/simple;
+	bh=3iw0vx7AIT2wlzPokwDnRY5c+iOCJC9NuNU2SCSpKxs=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:Subject:Content-Type; b=AM3iHPvjSwVwtPceR0Qq3NXhJ5fxPn6vmUK9v/nZam0KU9a0SBEC8n6iaroMyLKee8Ph8el1Bsc2hFZEZXzdk/LVUurI5z/6sDgeqxUOfeVDEm9ZxfS9RQk6/m+0SywDYz6r1pMS6A+4XEbfYgQ9exMTj6VcLvRPGq0Z94kVQzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=j8lRNJgD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=a7lnlvvB; arc=none smtp.client-ip=103.168.172.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kC91pTGh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4190FC4CEF2;
-	Wed, 14 May 2025 08:07:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747210034;
-	bh=fOEZFM2FyPnab4TgEDY8lrYsnLTj0SuNcr34p3JVdik=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kC91pTGhB2njr5VNoOkir8Gc5DhgyU3qcb00RmqUp17fIvZUAQuXZpVZUJLrJmMwV
-	 Asr0jn30tAYTcuDhrggfk4PRBAtPo1DI/qECLY0gbi68TBFlpJYl9Uv7JgVhKcbxx4
-	 MrWIsN+bXx4dNFVCBTB22t5aHciF4JGPm4GpMwgR1NUsPwK+wInYII2EPmcu7jNckj
-	 g2TZTTpZW3zcvXDC0/EaQLagFzA5Wj4RzaFij96/e8Vk1u3bg1nHnP9u7XGLpjPDEL
-	 M8Is7OMW80/rv9oH2ijItbxvo2cvnRa4AsKfE8Rt9WBioR9XkbOLHLxngJUfqamQL0
-	 Zj8bVbw/bVVvA==
-Date: Wed, 14 May 2025 10:07:11 +0200
-From: Antoine Tenart <atenart@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, 
-	Richard Cochran <richardcochran@gmail.com>, Christopher Hall <christopher.s.hall@intel.com>, 
-	David Zage <david.zage@intel.com>, John Stultz <jstultz@google.com>, 
-	Frederic Weisbecker <frederic@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Miroslav Lichvar <mlichvar@redhat.com>, Werner Abt <werner.abt@meinberg-usa.com>, 
-	David Woodhouse <dwmw2@infradead.org>, Stephen Boyd <sboyd@kernel.org>, 
-	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, Kurt Kanzenbach <kurt@linutronix.de>, 
-	Nam Cao <namcao@linutronix.de>, Alex Gieringer <gieri@linutronix.de>
-Subject: Re: [patch 26/26] timekeeping: Provide interface to control
- independent PTP clocks
-Message-ID: <htnwor46q3435pddkafm7flmx4m2bs4553gq3mx4jzevtfgg2l@h4abniqo4dzf>
-References: <20250513144615.252881431@linutronix.de>
- <20250513145138.212062332@linutronix.de>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="j8lRNJgD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="a7lnlvvB"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 5588113801E0;
+	Wed, 14 May 2025 04:08:38 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-05.internal (MEProxy); Wed, 14 May 2025 04:08:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm2; t=1747210118; x=1747296518; bh=8k
+	HsaoCbnmz2MgVuxSTzK+1NmqxlS+HUS7BsLkQjvdo=; b=j8lRNJgDrN6R1Q14nZ
+	EVc593KlChl0krY9iCnvyayMu8QEFJyBiKo4h4DEGdOQHCs7I7W6fRMUHYaAnPtw
+	6TJALqVmKaNgsx8UXbOWvYlwgLfX179vpGHp+Wu6SthRruaFoE7oiqtv4PuGm2sc
+	D05w96tfxjL6c4XcDjbXXiiSJbfuYNjsORI6OKEd94Ahdy/ArvW5l+4eHBJudV7X
+	nX01GlOoQpvfK82Zw///vhIFV9jIp4V9MvVaF1xx4CmLOkpPiBe7MK3FfpcXVPzX
+	+OS30VRa+9sLwe/Oou4A7RhF7L3VNvbE1WbAofHi5gGCu+2n2fxuoUNJdeqsSLUQ
+	5m8w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1747210118; x=1747296518; bh=8kHsaoCbnmz2MgVuxSTzK+1Nmqxl
+	S+HUS7BsLkQjvdo=; b=a7lnlvvBAMzsWQ/9vZx+QqCKA150lWqlZOWwwQ2gfauz
+	RJMDo67lksD4cuEgAE/os45cUDk4gmwIPihQzBu2ZDYgbJ8Ptmsbk598ucc1T5I1
+	kzkmEXeQvZo8g1YwwJMmfLOIthfmqF6pNv5lde8n42UBeprmJ5vCnvhQVCFxEzdL
+	x0kr4tYTZ4pET0vlRVnTTCG1lEhVPEg25jXUgmoUin7UC0p4iohN/KLmcR/zygW6
+	XL42cpCw1JVQVtkkV2XuAjDUr2842ybrSM/mXZp3yn7xuD055/GvBR5pUsCAc2br
+	xVuwhnecVHViPq/XtbXKWWS/+YJa1IkxX/gbqEYY2g==
+X-ME-Sender: <xms:hU8kaNtOZaBO3FOFNuYklBiVq28n3MTZUiaLV-m9OkB4vKxjV3W9jA>
+    <xme:hU8kaGdx1TMerLYngZFPBNdsYDk8gohM_5T90xnS4OIJdZTJ5cu87t2UdDB4ndFuB
+    ZiU7kejN72rNhFjh9A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdeigeeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkffutgfgsehtqhertdertdej
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhepjefhgfeugfdvvdegffeifefgleefkeehjeefteei
+    ieelvdelgeelkefhtdehtdehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpghhith
+    hhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepgedpmhhouggvpe
+    hsmhhtphhouhhtpdhrtghpthhtohepshhotgeskhgvrhhnvghlrdhorhhgpdhrtghpthht
+    ohepthhorhhvrghlughssehlihhnuhigqdhfohhunhgurghtihhonhdrohhrghdprhgtph
+    htthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggr
+    ugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnh
+    gvlhdrohhrgh
+X-ME-Proxy: <xmx:hk8kaAwrGKqL2Q85bsl2nnDya_gNM7BUYD6iFTzSMPb-ImFqWsbQ_Q>
+    <xmx:hk8kaEOI6n7Hx_5g0gsa21Bo5rycuyTb7z6gzsVtcSVJy31QV1UjIA>
+    <xmx:hk8kaN_6T7RfTlhJb45vbVBsEcZiCxoIEXtQMZG9neCZeVZxPkRpQA>
+    <xmx:hk8kaEXH7MnZEMY4hdO1bsM28qq6nOZdX38u_U5hMBXXFz5PfZtDlA>
+    <xmx:hk8kaMelvn8oBydj7daLjhraacgjohhERTLNI79EPyS2ZvlcqZQnRvxb>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id E42701C20068; Wed, 14 May 2025 04:08:37 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250513145138.212062332@linutronix.de>
+Date: Wed, 14 May 2025 10:07:54 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Linus Torvalds" <torvalds@linux-foundation.org>
+Cc: soc@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <660e30e8-7ae7-4a55-a136-9b0aa4e5ad0b@app.fastmail.com>
+Subject: [GIT PULL] soc: fixes for 6.15, part 2
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 13, 2025 at 05:13:44PM +0200, Thomas Gleixner wrote:
-> Independent PTP clocks are disabled by default and attempts to access them
-> fail.
-> 
-> Provide an interface to enable/disable them at run-time.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  Documentation/ABI/stable/sysfs-kernel-time-ptp |    6 +
->  kernel/time/timekeeping.c                      |  125 +++++++++++++++++++++++++
->  2 files changed, 131 insertions(+)
-> 
-> --- /dev/null
-> +++ b/Documentation/ABI/stable/sysfs-kernel-time-ptp
-> @@ -0,0 +1,6 @@
-> +What:		/sys/kernel/time/ptp/<ID>/enable
+The following changes since commit 2ef5c66cba6171feab05e62e1b22df970b238=
+544:
 
-The path added below is /sys/kernel/time/ptp_clocks/<ID>/enable.
+  arm64: dts: st: Use 128kB size for aliased GIC400 register access on s=
+tm32mp23 SoCs (2025-04-29 18:16:28 +0200)
 
-> +Date:		May 2025
-> +Contact:	Thomas Gleixner <tglx@linutronix.de>
-> +Description:
-> +		Controls the enablement of independent PTP clock
-> +		timekeepers.
-> --- a/kernel/time/timekeeping.c
-> +++ b/kernel/time/timekeeping.c
-> @@ -14,6 +14,7 @@
->  #include <linux/sched/loadavg.h>
->  #include <linux/sched/clock.h>
->  #include <linux/syscore_ops.h>
-> +#include <linux/sysfs.h>
->  #include <linux/clocksource.h>
->  #include <linux/jiffies.h>
->  #include <linux/time.h>
-> @@ -2900,6 +2901,130 @@ const struct k_clock clock_ptp = {
->  	.clock_adj		= ptp_clock_adj,
->  };
->  
-> +static void ptp_clock_enable(unsigned int id)
-> +{
-> +	struct tk_read_base *tkr_raw = &tk_core.timekeeper.tkr_raw;
-> +	struct tk_data *tkd = ptp_get_tk_data(id);
-> +	struct timekeeper *tks = &tkd->shadow_timekeeper;
-> +
-> +	/* Prevent the core timekeeper from changing. */
-> +	guard(raw_spinlock_irq)(&tk_core.lock);
-> +
-> +	/*
-> +	 * Setup the PTP clock assuming that the raw core timekeeper clock
-> +	 * frequency conversion is close enough. PTP userspace has to
-> +	 * adjust for the deviation via clock_adjtime(2).
-> +	 */
-> +	guard(raw_spinlock_nested)(&tkd->lock);
-> +
-> +	/* Remove leftovers of a previous registration */
-> +	memset(tks, 0, sizeof(*tks));
-> +	/* Restore the timekeeper id */
-> +	tks->id = tkd->timekeeper.id;
-> +	/* Setup the timekeeper based on the current system clocksource */
-> +	tk_setup_internals(tks, tkr_raw->clock);
-> +
-> +	/* Mark it valid and set it live */
-> +	tks->clock_valid = true;
-> +	timekeeping_update_from_shadow(tkd, TK_UPDATE_ALL);
-> +}
-> +
-> +static void ptp_clock_disable(unsigned int id)
-> +{
-> +	struct tk_data *tkd = ptp_get_tk_data(id);
-> +
-> +	guard(raw_spinlock_irq)(&tkd->lock);
-> +	tkd->shadow_timekeeper.clock_valid = false;
-> +	timekeeping_update_from_shadow(tkd, TK_UPDATE_ALL);
-> +}
-> +
-> +static DEFINE_MUTEX(ptp_clock_mutex);
-> +
-> +static ssize_t ptp_clock_enable_store(struct kobject *kobj, struct kobj_attribute *attr,
-> +				      const char *buf, size_t count)
-> +{
-> +	/* Lazy atoi() as name is "0..7" */
-> +	int id = kobj->name[0] & 0x7;
-> +	bool enable;
-> +
-> +	if (!capable(CAP_SYS_TIME))
-> +		return -EPERM;
-> +
-> +	if (kstrtobool(buf, &enable) < 0)
-> +		return -EINVAL;
-> +
-> +	guard(mutex)(&ptp_clock_mutex);
-> +	if (enable == test_bit(id, &ptp_timekeepers))
-> +		return count;
-> +
-> +	if (enable) {
-> +		ptp_clock_enable(CLOCK_PTP + id);
-> +		set_bit(id, &ptp_timekeepers);
-> +	} else {
-> +		ptp_clock_disable(CLOCK_PTP + id);
-> +		clear_bit(id, &ptp_timekeepers);
-> +	}
-> +	return count;
-> +}
-> +
-> +static ssize_t ptp_clock_enable_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-> +{
-> +	unsigned long active = READ_ONCE(ptp_timekeepers);
-> +	/* Lazy atoi() as name is "0..7" */
-> +	int id = kobj->name[0] & 0x7;
-> +
-> +	return sysfs_emit(buf, "%d\n", test_bit(id, &active));
-> +}
-> +
-> +static struct kobj_attribute ptp_clock_enable_attr = __ATTR_RW(ptp_clock_enable);
-> +
-> +static struct attribute *ptp_clock_enable_attrs[] = {
-> +	&ptp_clock_enable_attr.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group ptp_clock_enable_attr_group = {
-> +	.attrs = ptp_clock_enable_attrs,
-> +};
-> +
-> +static int __init tk_ptp_sysfs_init(void)
-> +{
-> +	struct kobject *ptpo, *tko = kobject_create_and_add("time", kernel_kobj);
-> +
-> +	if (!tko) {
-> +		pr_warn("Unable to create /sys/kernel/time/. POSIX PTP clocks disabled.\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ptpo = kobject_create_and_add("ptp_clocks", tko);
-> +	if (!ptpo) {
-> +		pr_warn("Unable to create /sys/kernel/time/ptp_clocks. POSIX PTP clocks disabled.\n");
-> +		kobject_put(tko);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	for (int i = TIMEKEEPER_PTP; i <= TIMEKEEPER_PTP_LAST; i++) {
-> +		char id[2] = { [0] = '0' + (i - TIMEKEEPER_PTP), };
-> +		struct kobject *clk = kobject_create_and_add(id, ptpo);
-> +
-> +		if (!clk) {
-> +			pr_warn("Unable to create /sys/kernel/time/ptp_clocks/%d\n",
-> +				i - TIMEKEEPER_PTP);
-> +			return -ENOMEM;
-> +		}
-> +
-> +		int ret = sysfs_create_group(clk, &ptp_clock_enable_attr_group);
-> +
-> +		if (ret) {
-> +			pr_warn("Unable to create /sys/kernel/time/ptp_clocks/%d/enable\n",
-> +				i - TIMEKEEPER_PTP);
-> +			return ret;
-> +		}
-> +	}
-> +	return 0;
-> +}
-> +late_initcall(tk_ptp_sysfs_init);
-> +
->  static __init void tk_ptp_setup(void)
->  {
->  	for (int i = TIMEKEEPER_PTP; i <= TIMEKEEPER_PTP_LAST; i++)
-> 
-> 
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/soc-f=
+ixes-6.15-2
+
+for you to fetch changes up to 15eaaa71e8ef142b122942b35653d513cfb90050:
+
+  Merge tag 'imx-fixes-6.15-2' of https://git.kernel.org/pub/scm/linux/k=
+ernel/git/shawnguo/linux into arm/fixes (2025-05-10 11:10:38 +0200)
+
+----------------------------------------------------------------
+soc: fixes for 6.15, part 2
+
+These all address issues in devicetree files:
+
+- The Rockchip rk3588j are now limited the same way as the vendor
+  kernel, to allow room for the industrial-grade temperature
+  ranges.
+
+- Seven more Rockchip fixes address minor issues with
+  specific boards
+
+- Invalid clk controller references in multiple amlogic
+  chips, plus one accidentally disabled audio on clock
+
+- Two devicetree fixes for i.MX8MP boards, both for incorrect
+  regulator settings
+
+- A power domain change for apple laptop touchbar, fixing
+  suspend/resume problems
+
+- An incorrect DMA controller setting for sophgo cv18xx
+  chips
+
+----------------------------------------------------------------
+Ahmad Fatoum (1):
+      arm64: dts: imx8mp: use 800MHz NoC OPP for nominal drive mode
+
+Arnd Bergmann (5):
+      Merge tag 'v6.15-rockchip-dtsfixes1' of https://git.kernel.org/pub=
+/scm/linux/kernel/git/mmind/linux-rockchip into arm/fixes
+      Merge tag 'amlogic-fixes-for-v6.15' of https://git.kernel.org/pub/=
+scm/linux/kernel/git/amlogic/linux into arm/fixes
+      Merge tag 'riscv-sophgo-dt-fixes-for-v6.15-rc1' of https://github.=
+com/sophgo/linux into arm/fixes
+      Merge tag 'asahi-soc-fixes-6.15' of https://github.com/AsahiLinux/=
+linux into arm/fixes
+      Merge tag 'imx-fixes-6.15-2' of https://git.kernel.org/pub/scm/lin=
+ux/kernel/git/shawnguo/linux into arm/fixes
+
+Asahi Lina (1):
+      mailmap: Update email for Asahi Lina
+
+Christian Hewitt (1):
+      arm64: dts: amlogic: dreambox: fix missing clkc_audio node
+
+Dragan Simic (1):
+      arm64: dts: rockchip: Remove overdrive-mode OPPs from RK3588J SoC =
+dtsi
+
+Himanshu Bhavani (1):
+      arm64: dts: imx8mp-var-som: Fix LDO5 shutdown causing SD card time=
+out
+
+Janne Grunau (1):
+      arm64: dts: apple: touchbar: Mark ps_dispdfr_be as always-on
+
+Krzysztof Kozlowski (1):
+      arm64: dts: rockchip: Align wifi node name with bindings in CB2
+
+Martin Blumenstingl (4):
+      ARM: dts: amlogic: meson8: fix reference to unknown/untested PWM c=
+lock
+      ARM: dts: amlogic: meson8b: fix reference to unknown/untested PWM =
+clock
+      arm64: dts: amlogic: gx: fix reference to unknown/untested PWM clo=
+ck
+      arm64: dts: amlogic: g12: fix reference to unknown/untested PWM cl=
+ock
+
+Nicolas Frattaroli (1):
+      arm64: dts: rockchip: fix Sige5 RTC interrupt pin
+
+Rob Herring (Arm) (3):
+      arm64: dts: rockchip: Use "regulator-fixed" for btreg on px30-engi=
+cam for vcc3v3-btreg
+      arm64: dts: rockchip: Fix mmc-pwrseq clock name on rock-pi-4
+      arm64: dts: amazon: Fix simple-bus node name schema warnings
+
+Sam Edwards (1):
+      arm64: dts: rockchip: Allow Turing RK1 cooling fan to spin down
+
+Tom Vincent (1):
+      arm64: dts: rockchip: Assign RT5616 MCLK rate on rk3588-friendlyel=
+ec-cm3588
+
+Uwe Kleine-K=C3=B6nig (1):
+      arm64: dts: rockchip: Add pinmuxing for eMMC on QNAP TS433
+
+Wolfram Sang (1):
+      MAINTAINERS: delete email for Shiraz Hashim
+
+Ze Huang (1):
+      riscv: dts: sophgo: fix DMA data-width configuration for CV18xx
+
+ .mailmap                                           |  1 +
+ MAINTAINERS                                        |  1 -
+ arch/arm/boot/dts/amlogic/meson8.dtsi              |  6 +--
+ arch/arm/boot/dts/amlogic/meson8b.dtsi             |  6 +--
+ arch/arm64/boot/dts/amazon/alpine-v2.dtsi          |  2 +-
+ arch/arm64/boot/dts/amazon/alpine-v3.dtsi          |  2 +-
+ arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi  |  6 +--
+ .../boot/dts/amlogic/meson-g12b-dreambox.dtsi      |  4 ++
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |  6 +--
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |  6 +--
+ arch/arm64/boot/dts/apple/t8103-j293.dts           | 10 ++++
+ arch/arm64/boot/dts/apple/t8112-j493.dts           | 10 ++++
+ arch/arm64/boot/dts/freescale/imx8mp-nominal.dtsi  |  2 +
+ arch/arm64/boot/dts/freescale/imx8mp-var-som.dtsi  | 12 ++++-
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi          |  6 +++
+ .../boot/dts/rockchip/px30-engicam-common.dtsi     |  3 +-
+ .../boot/dts/rockchip/px30-engicam-ctouch2.dtsi    |  2 +-
+ .../rockchip/px30-engicam-px30-core-edimm2.2.dts   |  2 +-
+ arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi |  2 +-
+ .../boot/dts/rockchip/rk3566-bigtreetech-cb2.dtsi  |  2 +-
+ arch/arm64/boot/dts/rockchip/rk3568-qnap-ts433.dts |  2 +
+ .../boot/dts/rockchip/rk3576-armsom-sige5.dts      |  2 +-
+ .../dts/rockchip/rk3588-friendlyelec-cm3588.dtsi   |  4 ++
+ .../arm64/boot/dts/rockchip/rk3588-turing-rk1.dtsi |  2 +
+ arch/arm64/boot/dts/rockchip/rk3588j.dtsi          | 53 +++++++--------=
+-------
+ arch/riscv/boot/dts/sophgo/cv18xx.dtsi             |  2 +-
+ 26 files changed, 93 insertions(+), 63 deletions(-)
