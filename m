@@ -1,106 +1,123 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E597E25634
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 13:18:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2D225634;
+	Wed, 14 May 2025 13:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747228714; cv=none; b=hjTAH7JMT9TGgwKI+JQofRPzbE7kqhCUcOlH5E/T4A21g8HG6y4d99Yja1Ck5bgEhq8+hG1i2vmsVtakIMyCcOpk6Z17F5DpnzwT45HDQDlG1QDv2Yg0/b5to4evVurnhr3B9djMsbqxpkI2FmNulT7ByTpgkR+clcPtR+Y7oK0=
+	t=1747228842; cv=none; b=Qsib/8HDuoCLak26Gt+ldfkf+LQA0Xyu95SIIVrYa558DRfKsUhZ3zjdmbju8k/NwwP63Rc+N0Nl71Lawl7aRBAaPKepbEMhGdlAf3JmDRAjG1Ms+VrFVfhzgbajRWFV0BGrldsCNEM58Wzn+osqmSuLqqWgZKVLZuVpDOgAjPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747228714; c=relaxed/simple;
-	bh=1noKDeLhRTTVQNZL3sHPFk/SCxSZn2554AMJuECh1CU=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=gWSTCoXdhLTwzHLfZ/cCrtNaRljbol2jX8eff4kEfRgcA9/EeXSP56nhpBa9W6DXDhS+qQBWbHwULnojGa/l+UobuMEXfIc3ZWijyuhsrL5hytQXdyfK6hFIJgLWaZPbwkW5z/uT0HBadA4CUSwn8sz5IxZdKGSYF2aY5q8gXZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d91a0d3e15so74334235ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 06:18:32 -0700 (PDT)
+	s=arc-20240116; t=1747228842; c=relaxed/simple;
+	bh=ZWt19gJpyBxCO0Qx7giNrFfawsGCTWfq4f3xf3LJtvA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HFeMX/lZL9bsaULk7BYjqtHcoeoVeVwWEnaF+sIq+Ee4NJDaz28YWjj6ml4ah2idY1Nmn3ob6PiJh3fHDdDm9pUhBaFFt7YIZPH2p6Vf6knyruaWFzR0RCjfsofW1yRF/1l0cpSL+Ttlmw6OXfKwHO1DjxZGawRPes9C8WEphIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NgcrfvpD; arc=none smtp.client-ip=209.85.217.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NgcrfvpD"
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4ddb1173349so2476120137.2;
+        Wed, 14 May 2025 06:20:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747228840; x=1747833640; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fh+m4E+zucuQUlh7kBt8Qd3tic2gsjlPHHvbyOaxGzE=;
+        b=NgcrfvpDNaCXc6RLgtDhC9ZwP3Z4FLaFZ3hwy6OcQ00KYaZQ0ty3ooiBToIarJohdD
+         +9xEFi0AXpqeM1hF82QwWlGXkw39eOiRnIQ10d9KcdpaQSbCZlaDeIdDIpxQxwmYQnpb
+         LRssJKKzw3JW8Zc2OamaTmMBbA2y1wFLaG2YI78OcURwC8DXKBZVt8Id4oXbdQjvLr/W
+         nfX4b01JY3oMoX/lDBlqrwKbNXiZnfhhjmxQmMlFESkvi9C6TCXwJkffnRDLxk/Alomq
+         ZMwITj/jmhmJL+BlH1/4rOA2vOxSQ6O6n8syQTTqva17JjEWDt/29IUcRM8TPDRhcsRa
+         nEYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747228712; x=1747833512;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SgoHS6qkJPy8Y59B8RTWmb9wuJbrQKF5Fz2rzPXolfg=;
-        b=mGZE3QcagloEE/fT3eERBnaDZtCnntuqMpli7yzHNDlcOQvSxmOsVaLSnYFkC3YHTE
-         USwWQUJVQd910cstI1XqOfJQ8NYLU0/PR2/860mK4Jin7lcY8D3vk/XEtZcheUKvCZbI
-         JHuTQhsmp1/Agri92NUaalMFNofQ+NbA+jc1DNBgi9rWDipeyw4Gw9EkoohK+zCqhDfS
-         1Z/3WMVis0PBfiClBjrV8r7hDmshyzsciAXOVO6nLsOA32/gzSMvx/QYLa7NyMKlSikZ
-         kJDZfwzNBShvF0DB7B3cqmE91kaTHCd6fA3TOvPPmGUWH1tRrsyXwG4ZF8YJhU+64Xik
-         uCYg==
-X-Gm-Message-State: AOJu0YzpwBp8WY3FAlE2eeJBISdXlEcL/rJgsmLu+x3qM2A974GeNnqh
-	ljupRYy10bZspKkhnKKM7DiIAeG1g0yW9I8FqTZYT7HaV4Gk9x9yEY4kylsd5M6S7VESCt6EIow
-	IjGC8eCiruCYF5Z86ad4Ag+83ozKpxNPV9vw7Dfub2g7I5qalroht76E=
-X-Google-Smtp-Source: AGHT+IHEOm+mGCgtTz+kyR52qtXsmgCw0yF+YX2OZwBsnM1SN90AvyAYu8eOmkq+ejvZtj55qXzurqhJDwwEWmroF4752v1Duulc
+        d=1e100.net; s=20230601; t=1747228840; x=1747833640;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Fh+m4E+zucuQUlh7kBt8Qd3tic2gsjlPHHvbyOaxGzE=;
+        b=Cs0rUvMCyUHazr7SpsHCnp0N7Z7k3T1xwoYCT/0Wg51Pc6OK7WzcP9KFTkuP4obaqa
+         fFlZLlS0WhVvSQyfC5mJtrdDwkWNVdKoAYZ4ZrPMcB+qtbkQzUnDg9Ho2KjOIC7+uo+z
+         FRou9rx/TEKYoOo/RSJbxpSm94+oGxusbrLkJ3nF6rDx7akXJi2U6xgIP7TrHWzrM7ja
+         PFV9I7V/WYkLY58aP641gmXlZIolXv1oeVtgPEnZH7MgZbePCyfZWM4XRDsWhv8JxDI6
+         QgBNt2x4lK3TyTD0Dh+rr1yEft69fKsCqTbdQIGj/CBf38onhJw84+0V9DSjaqJ4Ru8Y
+         PaOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUP/BY/KOyHrglCRZOQdkfAVn/TlHjIHgI9+zmSRmjCd1mUN8JEs5rtpohDfHhuiPGFYO1A2ABNWslFWPA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrSVdM96lYbwvwMi4ww77M/xdhYgOrfh2gae9rGO7dBwBN0/57
+	5kToPrS7nuH4Y3ho+h0VHNAhtbpZwKGJYZ6LA55B3/bFD0JVD3n+ME4TJQ==
+X-Gm-Gg: ASbGncu3aj2kcY1Dmf1IIOYLK3xYH0P2aB129tREcNxg4KvRzTOujT++zSXu1biIinO
+	INFFoQbZnTUZUaauOs09ajoZ1q8JwMHkhNlAUZ/In4Uw+0TrZzEu+R5OSM7UI7Kzt1ZuC/meU89
+	uuDh2yHdEVZbEQAHW66fYjnRdfr99EIF3Pmg3F/0sDZqNAE2tfrtL/O/DeD9yofi/lo3lYXTusJ
+	fFwyWmDjSGsnA+vOLi9PXo9atKjdKRSfOPwM1wT8p288HSTzeX92k7bnNrG6RW77ZNoYFkbxumo
+	j3fJ2HQUVRK3IQOUY4pjllbZmPVtyX1KQgmRBjrXW763JKDKVoaT702W1EUzphH/mTc=
+X-Google-Smtp-Source: AGHT+IHpib3Vzj9xPKBQQRXmWA9Yet/IIH3Bc9NFE6IMw31mBiIiC/vReY9tT5T6ESniqt3i7d9cpQ==
+X-Received: by 2002:a17:902:da84:b0:22d:b305:e082 with SMTP id d9443c01a7336-231981b9729mr49477455ad.47.1747228829408;
+        Wed, 14 May 2025 06:20:29 -0700 (PDT)
+Received: from C11-068.mioffice.cn ([2408:8607:1b00:c:9e7b:efff:fe4e:6cff])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc7546b32sm99091275ad.11.2025.05.14.06.20.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 06:20:28 -0700 (PDT)
+From: Pengtao He <hept.hept.hept@gmail.com>
+To: borisp@nvidia.com,
+	john.fastabend@gmail.com,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	horms@kernel.org
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Pengtao He <hept.hept.hept@gmail.com>
+Subject: [PATCH] net/tls: fix kernel panic when alloc_page failed
+Date: Wed, 14 May 2025 21:20:13 +0800
+Message-ID: <20250514132013.17274-1-hept.hept.hept@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3f12:b0:3d9:65b6:d4db with SMTP id
- e9e14a558f8ab-3db6f7be2e1mr44266815ab.12.1747228712015; Wed, 14 May 2025
- 06:18:32 -0700 (PDT)
-Date: Wed, 14 May 2025 06:18:32 -0700
-In-Reply-To: <000000000000ffc5d80616fea23d@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68249828.a00a0220.104b28.000e.GAE@google.com>
-Subject: Re: [syzbot] Re: possible deadlock in team_del_slave (3)
-From: syzbot <syzbot+705c61d60b091ef42c04@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+We cannot set frag_list to NULL pointer when alloc_page failed.
+It will be used in tls_strp_check_queue_ok when the next time
+tls_strp_read_sock is called.
 
-***
+Unable to handle kernel NULL pointer dereference
+at virtual address 0000000000000028
+ Call trace:
+ tls_strp_check_rcv+0x128/0x27c
+ tls_strp_data_ready+0x34/0x44
+ tls_data_ready+0x3c/0x1f0
+ tcp_data_ready+0x9c/0xe4
+ tcp_data_queue+0xf6c/0x12d0
+ tcp_rcv_established+0x52c/0x798
 
-Subject: Re: possible deadlock in team_del_slave (3)
-Author: penguin-kernel@i-love.sakura.ne.jp
+Signed-off-by: Pengtao He <hept.hept.hept@gmail.com>
+---
+ net/tls/tls_strp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-#syz test
-
-diff --git a/net/wireless/core.c b/net/wireless/core.c
-index dcce326fdb8c..ad812d4be773 100644
---- a/net/wireless/core.c
-+++ b/net/wireless/core.c
-@@ -1236,6 +1236,21 @@ void wiphy_rfkill_set_hw_state_reason(struct wiphy *wiphy, bool blocked,
- }
- EXPORT_SYMBOL(wiphy_rfkill_set_hw_state_reason);
+diff --git a/net/tls/tls_strp.c b/net/tls/tls_strp.c
+index 77e33e1e340e..65b0da6fdf6a 100644
+--- a/net/tls/tls_strp.c
++++ b/net/tls/tls_strp.c
+@@ -396,7 +396,6 @@ static int tls_strp_read_copy(struct tls_strparser *strp, bool qshort)
+ 		return 0;
  
-+struct netdev_unregister_work {
-+	struct work_struct work;
-+	struct net_device *netdev;
-+};
-+
-+static void cfg80211_unregister_netdevice_work(struct work_struct *work)
-+{
-+	struct netdev_unregister_work *w = container_of(work, struct netdev_unregister_work, work);
-+
-+	rtnl_lock();
-+	unregister_netdevice(w->netdev);
-+	rtnl_unlock();
-+	kfree(w);
-+}
-+
- static void _cfg80211_unregister_wdev(struct wireless_dev *wdev,
- 				      bool unregister_netdev)
- {
-@@ -1252,8 +1267,14 @@ static void _cfg80211_unregister_wdev(struct wireless_dev *wdev,
+ 	shinfo = skb_shinfo(strp->anchor);
+-	shinfo->frag_list = NULL;
  
- 	if (wdev->netdev) {
- 		sysfs_remove_link(&wdev->netdev->dev.kobj, "phy80211");
--		if (unregister_netdev)
--			unregister_netdevice(wdev->netdev);
-+		if (unregister_netdev) {
-+			struct netdev_unregister_work *w
-+				= kmalloc(sizeof(*w), GFP_KERNEL | __GFP_NOFAIL);
-+
-+			INIT_WORK(&w->work, cfg80211_unregister_netdevice_work);
-+			w->netdev = wdev->netdev;
-+			schedule_work(&w->work);
-+		}
+ 	/* If we don't know the length go max plus page for cipher overhead */
+ 	need_spc = strp->stm.full_len ?: TLS_MAX_PAYLOAD_SIZE + PAGE_SIZE;
+@@ -412,6 +411,8 @@ static int tls_strp_read_copy(struct tls_strparser *strp, bool qshort)
+ 				   page, 0, 0);
  	}
  
- 	list_del_rcu(&wdev->list);
++	shinfo->frag_list = NULL;
++
+ 	strp->copy_mode = 1;
+ 	strp->stm.offset = 0;
+ 
+-- 
+2.37.1
 
