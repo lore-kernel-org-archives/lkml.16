@@ -1,284 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110E71DFE8
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 02:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747191375; cv=fail; b=efmo665+Ag4YzL9eLA2LBms0I3JRvyUgzmfpcG3pvGIPDJhqk5eP5moBg6ngkEUYveV+QBzthN45/4KMsLv/Uit5GfHrY3D7Av9fiEGM60IGSrUssVtEyqVSkXfy9JavB672Ey4pQYkll7RMAnn2ylP+RJu/jWMEzY8ms7JygtQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747191375; c=relaxed/simple;
-	bh=P132f2QDHNLfUIyqOobzLbalYoiUyKDEiEPLUQzQpz4=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Fkglq5Id93+Xp0LqZUOT1BNXKgoUMp2jgx4kei/SdhB/yerzTT1hhAbDjDAzACYNqvYfulKnqrEf8UgdvYQH7IMYaTl9FgLSWg1jrJ/kV5Y079pXeq6vsN1yjHZYquZ4BAvqrBP+q4Jh3gyYRDjdq5JfsdOLLT+Fxz/h+xsdNtM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TJJZUYji; arc=fail smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA811E3DDE
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 02:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747191405; cv=none; b=mvje0C1XaTNM6xs+i6cBUSavilX0zKzgCiZZhv9iyEZ2yCq77YiLAm9h6OUVzGDqDsSvEysQ9D79+MNrntan37Dy24SKFX8wRZ6WiEIsH3ZCbWX/d+6RUVmb+GhJoaxPJeFyzhosH8joBK6oQ5anUwPCgimKWaReTUZZ9gAMZuo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747191405; c=relaxed/simple;
+	bh=WNR4rmQkhH8cm0akBIJCGQqd7MFZmY4eLBIbdJ2nubI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eN2byCvDWvibQFICmq9xfkbcT5Zwq/NN9YDNzhAT/15nv21BMewHCGX1fc50dqev4dSQJ17ewcunL1dDLkaKA1NMEIQYicyvyaNCKFbBlMCM85bPPF/mVo4p3Uuimpr4BdmZXgOMoLrYmJtGOJXB7vGffQlaa4LguObnbvAXlZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=kEa68+Od; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TJJZUYji"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747191372; x=1778727372;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=P132f2QDHNLfUIyqOobzLbalYoiUyKDEiEPLUQzQpz4=;
-  b=TJJZUYjiYScmH7tzzZzcs9csVQCUVR7HR4jqW0DpeJZya0PDgrwPJcC6
-   e9NyhWRd9cF5NWLasHkaJYp/AwbKR8CDuSRxyUz0RkoNJejpup4wFRj+8
-   F3/58p8H8RDiFjt4djYsFg3s04IdGMGqIg9+7E71ovu8q1DSYQJ+GTqHD
-   hpS3KQCjS6WmS0Ql37KQ3NYlnG9M2kv5LqZmiCiEbYjhYDVff0WzqavX0
-   YcQWTboG8Px5j+glPaFqGQLvXSij2I1Smzyvmvi9f/JCzDek7sVzOiG4g
-   dDRfsPTPpgVPDA7nNJT46LiHfdR7sYpnqHKQEFRPDhwyPxXKSjjur70IP
-   Q==;
-X-CSE-ConnectionGUID: gYnoz/bXTRm8HBcKUL998A==
-X-CSE-MsgGUID: E/qc1LDXRVifHavueKB4TQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="48999515"
-X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
-   d="scan'208";a="48999515"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 19:56:11 -0700
-X-CSE-ConnectionGUID: JCmidxLwS9ubyfpVT79aMw==
-X-CSE-MsgGUID: 2uqxcTgcRt2KtfdaQYzErA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
-   d="scan'208";a="161196677"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 19:56:11 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Tue, 13 May 2025 19:56:10 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Tue, 13 May 2025 19:56:10 -0700
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.47) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 13 May 2025 19:56:10 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=v4xuLzE6qxJW6eB2CRT8rWKJHtyRXh8Darb7O7xq9oLNIgVtzq38hN5KoJJSWoPqRYpQTgM4h26N1G79qvq+9Ks3KSfk6WXU/E3f1LfdQeCz4s4JLT2FvIkIfD5Pm9kfJu2bGuqAqzzSvc1Id5y87klnX6Y96Z7LE6LDM8sB0WBHr+etdqmw5bo3nUByTAIU5NJAZ/Hcsgp8Q2mZjL1wwevwQywnRCMUNq9Scw5nRysL/UKm7sqbKrLXW4zCY/MZyr9NDpnBANAz+7tHFYU2wX3jFuuYu5M1Wogfb8cEGYiVU554ER4GI35Mar0bZ2+XAoiOtAGhFvNHqfop+goxKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tJZedQridFX7/CMWAJnl7ewNxsFzEmpmwXXAN/3UFaY=;
- b=CxuCPS0uJLdkyAhAIomtoU+50bxWFdQe+/5Arq3Br8NRwXcmc8sV2UW8R75DkmcPnj4uJHdS04o7F7ZQWPnMZX3zyI2/RuVW+LtFeyMOaUiZCcs09muEGKfiF69JTJz2F3rCcTaTVvUDnD4Scdj7Bh5MHyvEH3YfuOMIWMcWzv6Btkx9SMwiJKXIXhPHAmeS6K9sgsZHaaHloIGbt4sAe261AMlx8kdVxAxVQT3MBa9zUInIzzQu158DX03Jcs0s9uoXPjLx9jnQKPr0r47G1pj4n+ETes9AebwTAJ8FpPjSlJ00APzlxCHCKoL0JUF2OsakKzFvXrol2tNgVdgs9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BYAPR11MB3320.namprd11.prod.outlook.com (2603:10b6:a03:18::25)
- by DM3PPFE50071912.namprd11.prod.outlook.com (2603:10b6:f:fc00::f57) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Wed, 14 May
- 2025 02:56:08 +0000
-Received: from BYAPR11MB3320.namprd11.prod.outlook.com
- ([fe80::e8c4:59e3:f1d5:af3b]) by BYAPR11MB3320.namprd11.prod.outlook.com
- ([fe80::e8c4:59e3:f1d5:af3b%7]) with mapi id 15.20.8722.027; Wed, 14 May 2025
- 02:56:08 +0000
-Message-ID: <6e9286b1-6d76-4f30-97bd-8fcc3ca8f211@intel.com>
-Date: Tue, 13 May 2025 19:56:06 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 07/26] x86/cpuid: Introduce debugfs
- 'x86/scanned_cpuid/[0-ncpus]'
-Content-Language: en-US
-To: "Ahmed S. Darwish" <darwi@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
-CC: Thomas Gleixner <tglx@linutronix.de>, Andrew Cooper
-	<andrew.cooper3@citrix.com>, "H. Peter Anvin" <hpa@zytor.com>, John Ogness
-	<john.ogness@linutronix.de>, <x86@kernel.org>, <x86-cpuid@lists.linux.dev>,
-	LKML <linux-kernel@vger.kernel.org>
-References: <20250506050437.10264-1-darwi@linutronix.de>
- <20250506050437.10264-8-darwi@linutronix.de>
-From: Sohil Mehta <sohil.mehta@intel.com>
-In-Reply-To: <20250506050437.10264-8-darwi@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR08CA0039.namprd08.prod.outlook.com
- (2603:10b6:a03:117::16) To BYAPR11MB3320.namprd11.prod.outlook.com
- (2603:10b6:a03:18::25)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kEa68+Od"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22e45088d6eso79983675ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 13 May 2025 19:56:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1747191403; x=1747796203; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=F9C+Xfq4U1Sljo7NIsOF4pguHHrktMroZsBvAXTxAIs=;
+        b=kEa68+Od/vLgs71V2VkauixWyys5n6R8bRXBpX8mpdFhKm5vt1/xaeS9KgC5Q/kADV
+         yrcxq+zoiNlS0+aNla3lQuJFE3gD8MdzVnjV52CQVSmDcANlOlHyjP8DdU56xviNA7Nz
+         MgB4Q3HA5gB+oitqFVwJQxbxoBEZfjOH5ce4Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747191403; x=1747796203;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F9C+Xfq4U1Sljo7NIsOF4pguHHrktMroZsBvAXTxAIs=;
+        b=X4IYwMUnIPbDK7gOoErd1lKUZ3BUmBxGveQd2lOuzcTdnrdGaAPsenPSpLKzTcleun
+         Ypl/dQtTkAcJ0rqleQ2a/5skwiVrNHQOrt9WWGgn2nR+/8YCH9+7LzHeMvu+IlqHpP1H
+         YxKr2RIZkAogyI9eSs2/MMp5RxtzwYUAlYMjMzQ90lt8tfQ+d5BJkyqK6RCtk2dJVeCv
+         0cDsWSL2268Bk2zF8z+9yxPcGU5YY5OKW13M/GXRgfDTyyBNgTPlqGq2SE1gAQZkRMto
+         PWgF17A5AMkOS78GO/y9hpYxuX8xzjj0Hx3fWO3qQlHHqcKWx8MnPny93hdyc/zkzuTE
+         DGig==
+X-Forwarded-Encrypted: i=1; AJvYcCVtOUzLJgTy0RqB4Iq1OxuS1mXaXDM3jbv3S9vES/E8iDU+CoHbQCmcxBMtu7Fm4f1nOGf1tBYSeKVgGg0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6h00Bm2IxAdprBuRuop3GKHnMMrgY6Al3bAGA84lyUB7kTFwt
+	ZjEVnqJ+X+00jL9j19hvSCMfXlXF5ELVZfoPbj6LjNP5yc2HRZcX87HqicQKRQ==
+X-Gm-Gg: ASbGncsEgAQw5jV1cA5zpLGpzqD7+vTadsQDnxuXNZ+3E3QYpGeFtE0MXB9DLM4KF2W
+	lBh089+wj7SWto7sAes3IL/bNmo2C7yq+UNbIPFmqf5UXoF+1g3OqVVRXSSr5WiyGRcG6gboJkb
+	OKavMggXQ5ndQPAHlsCr1EviuP3bkHAKbqNsstmkCZR9uXCV/HbWE/kbA9rXNNk7N4qvWAaKugc
+	s0hzhdwSPcOWmheUQ/vA2z7WdCv8sxweJrQFLPbe+dNI6ymUU7AwqJ+7Lo7hK9Faf6INcHL3vSA
+	0Q6ZStkWvFEyUNfg2m+i4fh9V6OJtfKsRvJFFikZrf7gHEEtT9x0UxU=
+X-Google-Smtp-Source: AGHT+IHnt33PDOVeLKARfjA2RPfGeUvnWZ//Ehfi8/1HIv7yVrwZo8C+ZG2kmgKAOeQXjGIAxPqvaA==
+X-Received: by 2002:a17:902:e5c5:b0:223:f408:c3dc with SMTP id d9443c01a7336-231980bbf7bmr23676735ad.9.1747191403196;
+        Tue, 13 May 2025 19:56:43 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:d415:5e1d:3550:1855])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8271c38sm88444045ad.119.2025.05.13.19.56.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 May 2025 19:56:42 -0700 (PDT)
+Date: Wed, 14 May 2025 11:56:38 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Zaslonko Mikhail <zaslonko@linux.ibm.com>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Ilya Leoshkevich <iii@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, linux-s390@vger.kernel.org, 
+	Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCHv7 10/24] zram: add zlib compression backend support
+Message-ID: <jejqy2tqaasir7vtu633ns3nybrzxvjlpebfavxnmq7inq2shz@egfzio3p2wgt>
+References: <20240902105656.1383858-1-senozhatsky@chromium.org>
+ <20240902105656.1383858-11-senozhatsky@chromium.org>
+ <6046d139-2a46-4824-bdfc-687750c1ee5b@linux.ibm.com>
+ <gekqwhcpombpm2u3b4xl7zladuyzbxybeq5wcwt47k7tsgo4bh@rfrxaeqwzypi>
+ <df805c0e-bf25-4cf6-9601-aac594fa0f45@linux.ibm.com>
+ <uaxb7sbvrg3eqn2sp66sg77urjzr7jwi2m2bwigvj5n5cta2xu@qsks2da3zrha>
+ <3bd33a06-f8e2-4901-ada1-e970d18afcd4@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR11MB3320:EE_|DM3PPFE50071912:EE_
-X-MS-Office365-Filtering-Correlation-Id: 62ce5370-1231-4b6d-a109-08dd9292e010
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?aTg4OXBOKzZsTXhOUzFyQ29RYXdETmpKUlR0Z2RJaGtMa3FoYTdsay9GQ1ky?=
- =?utf-8?B?ZW93VTE4MHlmQklmdmRTcFBuUXBUNnNwcTl6TnQ0NG1WMGY0bEQrUGVQNC9Y?=
- =?utf-8?B?OUJBY0VMOFcxdUpQVnVsN0d2MlhqZVJVL0FCM3hOcTZ6ZmJKeHFOUDZaT1lY?=
- =?utf-8?B?ME5SclNrbUdocGo4bkVSNitmcXMyeml2Y2F1UzRCOVA5R3FnMVBCbE9PMllT?=
- =?utf-8?B?Zk9TQW5pdUtYV3NLblRUem82YW1xeENVbjJmZzhDL3VRRFo5UHBaeitMWisr?=
- =?utf-8?B?SVRwaFNPVE1QaG15K21LcTVQcDY5Ukk2MFB0bzlxSHYxT1FhR0YrVFJRRno0?=
- =?utf-8?B?T05TY3VOTXBtQnNNa2JsSk8yNWZvcGZzMFdtaXlReVp0MGp3bEJuVGpxRFdx?=
- =?utf-8?B?bTRxK1VCdXc1VnlrSURPenRWcjhSTjUrQVQ1N1UrZlFpQkpFaDJMWnQzMWU4?=
- =?utf-8?B?RmJWUE10V2VKSC9lSFZEVFMvNS9xRXI1U2ljRXJEYUVwT1hzSVd0QzJWK2cx?=
- =?utf-8?B?b0V3c2p2OXdaMHcyK0YrU1BiUmlSTCtUb0ZsU2IvU1RIZ2xiSUVXTlFCU0lu?=
- =?utf-8?B?cEJUV2srN0tlQ3kvN054NjFuOUNGR0Z5ZlA5UkJYczZZMWpEeHZDRXdzQjFw?=
- =?utf-8?B?bmwzN3VjUEprV01VMnArdHRuY001TDdzYmJKc09hMFNZcUJGRnV4aS9tZEhi?=
- =?utf-8?B?ZnNHTU9RaXVZb01ra3oyRExkcDlYbVBPV29HSDB2QnNLQjMrQ0RsSTdWays2?=
- =?utf-8?B?bUoyZVE1SXhLeU15NmdCUFIzeFg0cUxVaXE3TFlhKzB6NmZycVJMMUxqUERW?=
- =?utf-8?B?bjlLelZvdDM5WE9aQXFqSUlXdklFdnBEdEtPZEQzekZiRnNPTFNobXBiTmhn?=
- =?utf-8?B?R2dBbEZ6ZU16RnMraVRyOUhTZDIxc1lIMGVRVXB1SVMvRnZGUUtkanMwZElo?=
- =?utf-8?B?NlVhRUdZWjVId3l1VTRqWm83dEM0cEMxczhWbFNSbjNiQlhZZUZqWkQ5ZnZU?=
- =?utf-8?B?MU94ZVdaVlJFUll0aENqa3VWekdEUVhCekdHRXREVXRIUUQxQ0VxV0JsbEJQ?=
- =?utf-8?B?OVlPbkxkNHdTODNhMGJHZnM3T280SmlMekkyblhQZEErbTZCMVFmMWZaZFdY?=
- =?utf-8?B?bWlwcTgrYzlhOFR2Mjg3ZFhxYUw3Zmk4OERoblRPZ3hFRGNsRGhpYTR6elJu?=
- =?utf-8?B?dEk2Y2w2bEp0NnhERk9majZVOFZwN29qcGNYWms2YVduWnFWZHJDSFdEUURo?=
- =?utf-8?B?ZmRkOENyT0oxcHNYZTh4SGVmcExCa2FveEN0RVVlSGplSmpFR1QyOXR2VlhN?=
- =?utf-8?B?bXh6R2w4YSs5Y2YzY0RTMFZrMndMMHNjTk8vWUNYNVZxNVVwM2lJekF1RTBh?=
- =?utf-8?B?NGIzVElQZUw2cXlvYmZSQzE2bVhpcnhReUFteDhCTzFGWUhEenJLOUZzZlJx?=
- =?utf-8?B?K29LNDM3VlBUTTNlRXZObjlOTkpIQ3E1NHpBQW40b2tUVGpWRjQvdUtNQWs3?=
- =?utf-8?B?UFhuc2JQZStDeUtXa1hYb1VsSm53QW01M3IzWFZkREVoWVNYSFpXM1NUSlZi?=
- =?utf-8?B?bHFyamI1Zk9WcDE3Y0RvTm9RVWNoZ25Qc2RsSVBZZTJicVNlSytULzlqMmdq?=
- =?utf-8?B?b1ZRTnNud1k3YWIwcXVWNFo4ZUhKT1AxZVZQUUJZcUZudTJFWktHVzZ5a1Yx?=
- =?utf-8?B?dE85bWg3bFFBL2J6TU9pcnZYOFkxR3NodmpJYzZHQ21RWDRQVTlSMk1IZ1dS?=
- =?utf-8?B?SHB3c3VxNlAwYm9leVNHZ0pRR09jN1lCdi9jNmNSYzVkZHp4RFBmaFVMTlp5?=
- =?utf-8?B?R1VjSmQxQWR1aklRTEZISDJUU3cyYjZRdm9DejU2VmxBZHJCVlM1V3NhdENJ?=
- =?utf-8?B?ZU5BVDRhREVUeDlhT05LS0doRHp1V2hGcFlST2JpdEVwdlFXTkZlaWhQdVBF?=
- =?utf-8?Q?IojJFTBQbV8=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3320.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VkZNNkIzZ3NHL1JBOTZUWU0vRmRFbFc1dDZKakxnL2NsZUUxVDVrZ2tyWi8x?=
- =?utf-8?B?Q0xyYlduQ3lrb1YwZU1lZGxHRUUwMHBTajhzWlRLaWZTME9aN3pWMGZBWG9t?=
- =?utf-8?B?YUhsOU90UXNrS29KaTVPOStFdHA1UXJtNGNQWm9YYnY3UzNCTU9KVUxVd3Zy?=
- =?utf-8?B?WFQzb3UyTkFyRU5WaWJOOEl1cVVsZ253R1RhaHZIeFU4bWxlekxaZFpQSjJl?=
- =?utf-8?B?S2V2cWRIdTlpQ3lSMFRld0ZKTmZZUVdsNXhkN1pjNHdSeE1zd2dNSVpTWU1T?=
- =?utf-8?B?d0ZPZFlHZ2NHWWpGc2ZtVm1GSkhscXFWSGUrYUNqQkNSUC9nZFp1aU10a2Fs?=
- =?utf-8?B?ZEt6bnJBWk50QjZVS0lTR1l3SlF1Q2hMU09UUnRtVUxmUWNtbFZwbWM3bVlN?=
- =?utf-8?B?RERQZENvNHNGcFRNQ2lhZHVTcTU0N1RYVGFnY2dGa3kvQStKd2ZUQ3hpY3RU?=
- =?utf-8?B?MUdVM2xJM0N0OWxCL3lYaHhqNzJZZHJGcGkvTmtILytrZFZHNTdXTEtNQmU4?=
- =?utf-8?B?a0FScitVU3N4bU5rZ1ZkN0w1OFgvVmRzSkNwREcyemswTThpeFZmMHRiZC9E?=
- =?utf-8?B?ZWRTdU40bS9ZK1FXNU9hcVkrS3RhZG5Gdy9EeGx5bXl5eUlGWHBuZkRkWDR6?=
- =?utf-8?B?eXh5ZTJneUZrMDNPN2VmTlIyNHFaYmxFa1k3aVpxci84NU5TdmhCR3g3eS84?=
- =?utf-8?B?Y29ONXI5Q2k5ZnE1c29iMjZUUnQvbDJaV1lwT3JTalprZzZsQ0xvZGdSL3Z6?=
- =?utf-8?B?Wmh3dnVlMnpqRVVpS3Y4Zlg2SWZpaDk4a3pham43RDlSK1pGTmRJQmtITFNF?=
- =?utf-8?B?WXFyeHM4SlcwS21ISFJiaTA0SHJUMFB1Wkt0WTZJaVBHd3puclJzVXBLdnd1?=
- =?utf-8?B?dzhkNDhHNmNtNkxaWThMcXRlUDJiN28waHhUNXRSZ3l5RENHWEVYemsxME41?=
- =?utf-8?B?dHhBaWxOVGVjSENYZjdjOVUvcmJ0dW5FQlREWE5JTisyVUhBdE5lQkhaTlYy?=
- =?utf-8?B?dWMrV2RNLzJDSGZReVlucFVzZ2FzaUw4QmFTZ21rRC83Z1BHLzVrOGNYNkxS?=
- =?utf-8?B?SmMxd3FQdUlXMHhOV3JDRDgycm1DV3lFWXVvbVBqSlNPUUNMOFNocnBOakhN?=
- =?utf-8?B?UkRKU0RTd1hmY3ZHZXhJUy9qcmJCREx4MDIrTTF6UVFoNmMrV3BLdUdCaGdC?=
- =?utf-8?B?U1NnMXFuZ0FHOEh1UjEzdG1vWUY0a2pNdFJxN0hXcFN4dGNSc0NRekE0Zlh4?=
- =?utf-8?B?Lys4aWtHYU5zTG1DNExHdUFwOTVGbmlGTWFORGc3YkhYeFVrM0MvMlNtOG9i?=
- =?utf-8?B?RDFRTktmV0dhUkZCRCtDMlhwQmsxekpyN29ZRzdIallWVERRRzFRR2EwZGli?=
- =?utf-8?B?cmRhbHFKRTNxM2lpWTUvZmdwVWkwZXRDS0JEaWJFQlEyUWJ0dTNpYWJSOG8y?=
- =?utf-8?B?a2JqbnM1ZzZySTAycjAyRjZZUzhNQ1VlVWl4djZaYVRaVHhhcm5QRDhBOGV4?=
- =?utf-8?B?OEtTa25MRS82V05rMUNPclNucWNRK0xQVm1DRTVaQXpIeGpnWFE2Z0JQWURt?=
- =?utf-8?B?RjExb3c1aHMzWEQxTU12ZGZpVHBOK1VmOVk2V3dDUmpyNlA2SmRjemp6dnFJ?=
- =?utf-8?B?R284T3pZSXZvZ3duNnBTVThDRzJBM0w0bkwrR2VBdFM1SU5sWmJWVEFOOG5Z?=
- =?utf-8?B?NzNTZ2QveWhPd2cyQ1IyVDBQd0pkVVE0eGsvWWlTMjc4VTNDZ3MyMEF6bkYr?=
- =?utf-8?B?N2oveFFHK09jakd2M1dnWUpTWHdINFY1QnNtcURKZElqUE1tSGtLSjFDMDgv?=
- =?utf-8?B?U0hXTG82Y0NiT1NYeDQ1Y2k5eE9qV3FTUytJeGMvNlA0NXZyRkVVQVJxbkZS?=
- =?utf-8?B?aXIvNnNzOXUwRW9aS1V3YlVtNHg0aWNHc2YrbDhCL3RDaUhlbFpNRnNqQUdL?=
- =?utf-8?B?Z0xhNlF4SFRqVXQ1enZOdWF2Qm9Femc0VDVLaEZ5b09ISDd5c0hkVE4ya3hi?=
- =?utf-8?B?ZlF3LzNYM2xBWmpMRXRzdHNieUFFMUdaNTZSdytIZWp4SWpsRTVIWWlzUDJF?=
- =?utf-8?B?YWFlZlljNjh5YWdacnMvaG1rNTFzL0U3dlNMZk1DL2E5RVNHTkhCQnNtMU02?=
- =?utf-8?Q?LXCNqR5YbQNibH1jda0hYpd5S?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62ce5370-1231-4b6d-a109-08dd9292e010
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3320.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 02:56:08.2021
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: q0AqaXfWC5r+RXwtHVUl14U0d+nObvCMWQPAJ6i7IpSdqn0A5INaLkitZt76kio6V0q9z7Zep7835MsMeFg1/Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPFE50071912
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3bd33a06-f8e2-4901-ada1-e970d18afcd4@linux.ibm.com>
 
-On 5/5/2025 10:04 PM, Ahmed S. Darwish wrote:
-> Introduce the debugfs files 'x86/scanned_cpuid/[0-ncpus]' to dump the
-> scanned CPUID table for each CPU.
+On (25/05/13 14:58), Zaslonko Mikhail wrote:
+> On 13.05.2025 07:41, Sergey Senozhatsky wrote:
+> > Sorry for the delay,
+> > 
+> > On (25/05/09 17:18), Zaslonko Mikhail wrote:
+> >>> When zram transitioned from Crypto API (scomp) to custom compression
+> >>> API I picked the CryptoAPI deflate DEFLATE_DEF_WINBITS value:
+> >>>
+> >>> crypto/deflate.c: DEFLATE_DEF_WINBITS	11
+> >>>
+> >>> which is then passed to zlib_deflateInit2() and zlib_inflateInit2().
+> >>>
+> >>>> I tried to build the kernel with DEFLATE_DEF_WINBITS set to 15 and
+> >>>> verified that s390 hardware deflate acceleration works for zram devices
+> >>>> with a deflate compression.
+> >>>
+> >>> If we define it as 15 on non-s390 machines, will there be any
+> >>> consequences?  Increased memory usage?  By how much?
+> >>
+> >> On s390, setting windowBits to 15 would lead to zlib workarea size
+> >> increased by 120K (0x24dc8 -> 0x42dc8) per compression stream,
+> >> i.e. per online CPU. 
+> >> On non-s390 machine, that impact will be about 115K per stream. 
+> >> Increasing window size should improve deflate compression,
+> >> although the compression speed might be affected. Couldn't find any
+> >> relevant zlib benchmarks though.
+> >>
+> >> Not sure what other consequences might there be for zram. Do you see any?
+> > 
+> > The increased per-CPU memory usage is the only thing I can think of.
+> > I guess for zram we could turn this into a run-time parameter, but for
+> > Crypto API compile-time is the only option, I guess.
 > 
+> With 'run-time parameter' you mean adding 'windowBits' as another deflate compression
+> algorithm parameter for zram? Guess we could do this, using default value of 15 then.
 
-I tried out the patches. The debugfs hierarchy mentioned here doesn't
-match the code.
+I sent a simple patch set [1] that adds deflate.winbits parameter
+support, so that it can be configured at runtime.  E.g.:
 
-The code actually builds:
-  x86/scanned_cpuid/cpus/[0-ncpus].
+	echo "priority=1 deflate.winbits=15" > /sys/block/zram0/algorithm_params
 
-Can we simplify it to below? The "scanned_" part seems unnecessary.
-  x86/cpuid/[0-ncpus]
+Please take a look.
 
-I would also suggest slight changes to the formatting to make it easier
-to read.
-1) Indent for the printed register values.
-2) Move the * to the front of the value to make it more prominent.
-
-Current
--------
-Leaf 0x00000001, subleaf 0:
-cached: EAX=0x000306e4  EBX=0x00200800  ECX=0x77bee3ff* EDX=0xbfebfbff
-actual: EAX=0x000306e4  EBX=0x00200800  ECX=0x7fbee3ff  EDX=0xbfebfbff
-Leaf 0x00000002, subleaf 0:
-cached: EAX=0x76036301  EBX=0x00f0b2ff  ECX=0x00000000  EDX=0x00ca0000
-actual: EAX=0x76036301  EBX=0x00f0b2ff  ECX=0x00000000  EDX=0x00ca0000
-Leaf 0x00000004, subleaf 0:
-cached: EAX=0x3c004121  EBX=0x01c0003f  ECX=0x0000003f  EDX=0x00000000
-actual: EAX=0x3c004121  EBX=0x01c0003f  ECX=0x0000003f  EDX=0x00000000
-Leaf 0x00000004, subleaf 1:
-cached: EAX=0x3c004122  EBX=0x01c0003f  ECX=0x0000003f  EDX=0x00000000
-actual: EAX=0x3c004122  EBX=0x01c0003f  ECX=0x0000003f  EDX=0x00000000
-
-Suggested
----------
-Leaf 0x00000001, subleaf 0:
-  cached: EAX=0x000306e4  EBX=0x00200800 *ECX=0x77bee3ff  EDX=0xbfebfbff
-  actual: EAX=0x000306e4  EBX=0x00200800  ECX=0x7fbee3ff  EDX=0xbfebfbff
-Leaf 0x00000002, subleaf 0:
-  cached: EAX=0x76036301  EBX=0x00f0b2ff  ECX=0x00000000  EDX=0x00ca0000
-  actual: EAX=0x76036301  EBX=0x00f0b2ff  ECX=0x00000000  EDX=0x00ca0000
-Leaf 0x00000004, subleaf 0:
-  cached: EAX=0x3c004121  EBX=0x01c0003f  ECX=0x0000003f  EDX=0x00000000
-  actual: EAX=0x3c004121  EBX=0x01c0003f  ECX=0x0000003f  EDX=0x00000000
-Leaf 0x00000004, subleaf 1:
-  cached: EAX=0x3c004122  EBX=0x01c0003f  ECX=0x0000003f  EDX=0x00000000
-  actual: EAX=0x3c004122  EBX=0x01c0003f  ECX=0x0000003f  EDX=0x00000000
-
-
-> While dumping the tables, for each cached CPUID leaf/subleaf entry, run
-> the corresponding CPUID instruction on the target CPU.  Compare the live
-> hardware output with the cached register values.  If a cached register
-> differs, mark its cached value output entry with an asterisk.
+> > Can you send a patch series (for zram and Crypto API) that sets
+> > windowBits to 15?
 > 
-> This should help with tricky bug reports in the future, if/when the
-> scanned CPUID tables get (unexpectedly) out of sync with actual hardware
-> state.  It also simplifies the development and testing of adding new
-> CPUID leaves and custom read functions to the CPUID scanner.
-> 
-> Note, add an extern 'cpuid_common_scan_entries[]' declaration to the
-> "cpuid_scanner.h" internal header to allow the debugfs code to access the
-> CPUID scan entries directly.
-> 
-> Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
-> ---
->  arch/x86/kernel/cpu/Makefile        |  1 +
->  arch/x86/kernel/cpu/cpuid_debugfs.c | 98 +++++++++++++++++++++++++++++
->  arch/x86/kernel/cpu/cpuid_scanner.c |  6 +-
->  arch/x86/kernel/cpu/cpuid_scanner.h |  3 +
->  4 files changed, 106 insertions(+), 2 deletions(-)
->  create mode 100644 arch/x86/kernel/cpu/cpuid_debugfs.c
-> 
-> diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
-> index 994539fd0e17..eb9cd1dee58e 100644
-> --- a/arch/x86/kernel/cpu/Makefile
-> +++ b/arch/x86/kernel/cpu/Makefile
-> @@ -62,6 +62,7 @@ obj-$(CONFIG_HYPERVISOR_GUEST)		+= vmware.o hypervisor.o mshyperv.o
->  obj-$(CONFIG_ACRN_GUEST)		+= acrn.o
->  
->  obj-$(CONFIG_DEBUG_FS)			+= debugfs.o
-> +obj-$(CONFIG_DEBUG_FS)			+= cpuid_debugfs.o
->  
+> I can do it for zram. Not sure if Crypto should be changed as well. Or is it
+> supposed to have the same compression defaults as zram?
 
-How about reusing the same line since the config option is the same?
+Crypto API uses a hard-coded value of -11, which wouldn't work in your
+case.  However, if you don't use crypto API (e.g. zswap) in your setup
+then it probably doesn't need to be patched.  Cc-ed Herbert from the
+crypto API side, just in case.
 
->  obj-$(CONFIG_X86_BUS_LOCK_DETECT)	+= bus_lock.o
->  
-
+[1] https://lore.kernel.org/linux-kernel/20250514024825.1745489-1-senozhatsky@chromium.org
