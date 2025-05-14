@@ -1,170 +1,106 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2056.outbound.protection.outlook.com [40.107.244.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A920C201004;
-	Wed, 14 May 2025 07:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747207869; cv=fail; b=KGtaukGBl4A3CDnFBjZgWdRUr0Wd16kV5GSTTLjV/itrNI7jHswbrSke3hSKWtsxWaKhsdiNRP9C4kjdoZy4kALN1idOgY2pOnf4omsZQsH2eBqonp44xd0AWGQ/ckjs9ORS83AnUJxU4Pd6joLAOFbK3EXdUNZoP/2Aed93LiE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747207869; c=relaxed/simple;
-	bh=Kxked6GpdNjQn6w56wlfZiQ02LPP9HEViKJBP7VlHWQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TBvNQ7iDJ8Hd7r/v1dbBUmfS8Je+wc1K0brHroYWXZkIru6UXxaNPyx9Ocj+FAFJXGMPS5GEduMBkr0UsyTQMcry4qIA7/7uZAdcHOpXA/sHGTzEpy4ghw9ZmkrDu0fNKvRvxuBVLlsvzZTnY/DJONIZ3OMWG7/vxS9Ylr14+Do=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MsFLzbWH; arc=fail smtp.client-ip=40.107.244.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E17920B7F9;
+	Wed, 14 May 2025 07:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747207892; cv=none; b=SuZnb8KYRMjJi4uXvlV68Y/6YBKWMHpCSXbadXjMTChQdzwgTk7OCGrzSjRFqwAnL92sivHjZpCN/Oe9XG68pt+V12/yq/njyKHJfJOF48atMeYQ62ZJ4VysftxIC+fQzrJpRzussjZ9AZlO5wbX1IAnUl6QzaTCoW0qfXOU2tE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747207892; c=relaxed/simple;
+	bh=grntEt+7iBQCbJ+Tq8yJeFtGJyPGVZ5WX+xfwB8NxNU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pho2srTkAo9JerPQ5zjwzKXVdz3jh3ONCkZ6aO9zEjD7vBTp+5GKD08coqSvdIJ9Rs0SiAFmZbTviV6y5cTko4Kv9Au4DFZzY93odCt4CrPKgVD56pk/tso8BpeqeFepWpPzEIHdMxw2OzNGprb28aCKpwdHqsdTU4uH9eaehfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=mgYnKvoc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MsFLzbWH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=olPkuZHd69sRcTK2707cStU4xv/0688EJ1sRX2femXYsO9O3vqJ1sGbTD2tuAkZtS39qpPyce/+pJD5+eqMo0OoF/vgbTWm0nAp4XF2b29a+TX3GEf4PCNqFTi04k3AkCGFxnOKhz6BjftGMKvTpv5rrVOeHrtJdJMDJhkMYjviCQCwn29sXddILq+5y6pvCq/ChCUZouFcaTzTjA/pfC6kL+48yHR5iz27hJYwl2b4PAVW9AI1vhTXruuPfzd9DZCyH0LsHS8vpJ+HkV6Kkfm93oJn5hQV4LE1GOFANJwY2HUfx5asKgwmmW+IVlz48VX8VEH/cfMf8IfMuct4tlg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=g+8nxB3oRsXJgCaa+VM4P4ej1KjBvuIu98JVPnl27ZQ=;
- b=KLD4YthmsQF1V/W1IhrOF27KiBc1buPU59TWZJDhWuuWU5yLE8mYwt/aafeLGAeg/p/tQqzS+lmTFqtkEJJkgsPeZ1AR6L36y6G2Y26Bo167L0Qvpp8lJvAY/CfjPL2KdwfwodP1B2pQ3eKxgcxMApDovDj0PwXVymMxeXodcB3HnXt8gH8NHe2Aq4wI9rgHcjQibjK+jcLKmAW5JuPhKBDnBn6T9Aqf1iCYuejPDCzJduVic9SPwentEnKF4SVDtMctq7p0nBYXfWs5nXvWJUT/Db4dry+qZ8T3fMRABkrzlfIajbiguODTKkcHw1ZbuQFaeSxetnzLnUsHpxKp7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g+8nxB3oRsXJgCaa+VM4P4ej1KjBvuIu98JVPnl27ZQ=;
- b=MsFLzbWHQAhzJdKbnram1E6z6zCE90xf0cKU02IIumASB4vCB8EpttJzx+yoIi8UwJKu+d0UNHPG1KvKSkM+YvDDG28l/3d/qp+aeg9xCu9M4g1jQyrGjzhPVuaoxQ0XK0ZOumxm+b9+lDiHY+4BE81H34T0Lfz+JtekvalGaGU=
-Received: from CH2PR19CA0027.namprd19.prod.outlook.com (2603:10b6:610:4d::37)
- by DS7PR12MB9528.namprd12.prod.outlook.com (2603:10b6:8:252::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Wed, 14 May
- 2025 07:31:04 +0000
-Received: from CH1PEPF0000AD78.namprd04.prod.outlook.com
- (2603:10b6:610:4d:cafe::29) by CH2PR19CA0027.outlook.office365.com
- (2603:10b6:610:4d::37) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.29 via Frontend Transport; Wed,
- 14 May 2025 07:31:04 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH1PEPF0000AD78.mail.protection.outlook.com (10.167.244.56) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8722.18 via Frontend Transport; Wed, 14 May 2025 07:31:04 +0000
-Received: from BLR-L-NUPADHYA.xilinx.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Wed, 14 May 2025 02:30:51 -0500
-From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>, <nikunj@amd.com>,
-	<Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
-	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <peterz@infradead.org>, <seanjc@google.com>,
-	<pbonzini@redhat.com>, <kvm@vger.kernel.org>,
-	<kirill.shutemov@linux.intel.com>, <huibo.wang@amd.com>,
-	<naveen.rao@amd.com>, <francescolavra.fl@gmail.com>, <tiala@microsoft.com>
-Subject: [RFC PATCH v6 31/32] x86/sev: Prevent SECURE_AVIC_CONTROL MSR interception for Secure AVIC guests
-Date: Wed, 14 May 2025 12:48:02 +0530
-Message-ID: <20250514071803.209166-32-Neeraj.Upadhyay@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250514071803.209166-1-Neeraj.Upadhyay@amd.com>
-References: <20250514071803.209166-1-Neeraj.Upadhyay@amd.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="mgYnKvoc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBF30C4CEF0;
+	Wed, 14 May 2025 07:31:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747207891;
+	bh=grntEt+7iBQCbJ+Tq8yJeFtGJyPGVZ5WX+xfwB8NxNU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mgYnKvoc1rVMrGaa3ebTPFdoW/5VS3akc3E3mOlOeYBl5nj7NPa7yupsuBwomwDD8
+	 4o7MK+ooT/WUCAFpM2elAlTeN8xm80yAjTb5EKm6Cn6gHDQQ7/fUb/k7rKS0yTETB/
+	 jeQvl0YnB1iFUPeDC2aR5oe/CMTd7ubLa2txYkQo=
+Date: Wed, 14 May 2025 09:29:42 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: David Wang <00107082@163.com>
+Cc: mathias.nyman@intel.com, oneukum@suse.com, stern@rowland.harvard.edu,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] USB: core: add a memory pool to urb for
+ host-controller private data
+Message-ID: <2025051405-glare-crazily-a9fa@gregkh>
+References: <20250513113817.11962-1-00107082@163.com>
+ <20250514064455.5488-1-00107082@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD78:EE_|DS7PR12MB9528:EE_
-X-MS-Office365-Filtering-Correlation-Id: c796e2c0-071a-4f51-af8d-08dd92b94909
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?J0nDbLDLwbJrfKTgzOyhAVnH9rtM/rZFwkdrSKhv3txHtwyEqm21Ol7EueZp?=
- =?us-ascii?Q?bh+bRKDHHmhBHLJvkJIfDikHlgMS0NsfR2hXufnuX+3R9PzOXYGAtEs9ikgY?=
- =?us-ascii?Q?c496xEMX2FxiE3b6L6Pg3L5hx/42Xl+4cQAFyRPFeiC+HWGogwJ5lU+X3U/W?=
- =?us-ascii?Q?Y2WUvxsdgGHTNw+qyYMPAnETbPRxLZJlx8iv4NwLx1TKcG4SMUbFG2SZjS3H?=
- =?us-ascii?Q?6i0/EisknZNgngCick0CI8RRdtaQXsi/8k0UBf+QuxgLD3udlpiXvNhoxqcy?=
- =?us-ascii?Q?3vV44j6KowNGuSb8JjwIMfFpcBy1SvHYSgb78Ul6ddYQkPIq3WVIGgI2LPC1?=
- =?us-ascii?Q?hVWST3gP/8d0S9Jpm0bPm6Wv/ZxWGREXul0yW/XS9JS6oqso3RMr+px0XfQp?=
- =?us-ascii?Q?hCmKzYXCIoLeioxJA4S2xJJEspG3n5IbXiWFxll6aAk5otjlM1QWMgoTI72F?=
- =?us-ascii?Q?OamRVUAwqMpt0QsqkZxNro438+V/ib3h8ftMBfQY+k+x/r0Z3xXt1fvWBnsJ?=
- =?us-ascii?Q?Si5zUE5lVdO45Q0YFq/sk4+ah0Nz2f8ZPdwlDZHefO2aCNcytN9k9qqHnh5U?=
- =?us-ascii?Q?cChIrhNYe8qqfj9xYfw8RUBxuN2WrfKTwM62ShPL4gVC/Cpt0Lu395hdjUnK?=
- =?us-ascii?Q?cRARhAn0cMCb0FsyuJ2muy3i2iyLkuhgQU+m7Sne3J5NlOJg4qSLtiqePK8T?=
- =?us-ascii?Q?0SeRkMP9oQiX8f7HRtEf8EJH/DnT/fDHE5bIPZ1S3IjTQtMvxC0JkW/cPFmq?=
- =?us-ascii?Q?4SmoQhw+5q5dMAqL5GNhXiKjYHrORat83xAB47sufOkoGtG2xcdoZRmbIzVq?=
- =?us-ascii?Q?BRDS5XJ+t/9skEkhrS8h7sLRFaHPsR9wThoY7Ll0cqzMnkxZrtLHP+TrHf6x?=
- =?us-ascii?Q?QCWJfvBheasBacXPmNo2YjbKgOmq+38BYTYuZYU5xb5yF43VVa9+t+hl3zbt?=
- =?us-ascii?Q?qBOcwQYbHe+TbTUJBs5pHI5PrOoYZNNT2U/7Og2tjvJZE2EhWIdEdmRYDkgQ?=
- =?us-ascii?Q?gDap6WO0Ry9ZNnD/DTCoKrFNAUdOVVoyOHTbnKp+pQBLaF3N4DIKjOEbxA2/?=
- =?us-ascii?Q?DgMok6rk3PFHr7YS1lIuByr0C/EFTyv6RF7pvjMzuk2NcQCmWhXZLJv0mE9d?=
- =?us-ascii?Q?KubiU7lANV5+1AI3C3Mx9SH33xWB9qwYFj8TyjCDquLbnva+kjBOvv4rfS5R?=
- =?us-ascii?Q?VZYuJ2RZZUGOsQFi8dUiwxycXNJ8Z9vctXxI53wg680YfL2aHPyih36odPhl?=
- =?us-ascii?Q?yR16QmRhsgkcijUtRshyB5tTQ0VzQX9c8SFyw3nTB0LDg5bioF5Ji5iRgNAn?=
- =?us-ascii?Q?xR2Yibsk/zC4YBq0W7XSfA+i/LUVH49wFVKneCegdceREQStHxELpOhOnAxK?=
- =?us-ascii?Q?sib8dSELqE5H1QfqMulfyCAGH9yXkNSCGOBnF4oEeQvRhLjylClbAxrEG/To?=
- =?us-ascii?Q?hzDjmtTXhdfT0/ITSM/sIsc+rz0gg/FZegT1Yl2rQJSucGuQTUgOdiN0WMXI?=
- =?us-ascii?Q?IXIVky5BiFwbnM9jXpZd7YLN6jLa0Kpb9bxV?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2025 07:31:04.7894
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c796e2c0-071a-4f51-af8d-08dd92b94909
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH1PEPF0000AD78.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9528
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514064455.5488-1-00107082@163.com>
 
-The SECURE_AVIC_CONTROL MSR holds the GPA of the guest APIC backing
-page and bitfields to control enablement of Secure AVIC and NMI by
-guest vCPUs. This MSR is populated by the guest and the hypervisor
-should not intercept it. A #VC exception will be generated otherwise.
-If this occurs and Secure AVIC is enabled, terminate guest execution.
+On Wed, May 14, 2025 at 02:44:55PM +0800, David Wang wrote:
+> Hi, 
+> 
+> Update memory footprints after hours of USB devices usage
+> on my system:
+> (I have webcam/mic/keyboard/mouse/harddisk connected via USB,
+> a full picture of memory footprints is attached below)
+> +----------------------+----------------+-------------------------------------------+-----------------------+
+> | active memory(bytes) | active objects |               alloc location              | total objects created |
+> +----------------------+----------------+-------------------------------------------+-----------------------+
+> |        22912         |       24       | core/urb.c:1054:urb_hcpriv_mempool_zalloc |         10523         |
+> |        11776         |       31       |        core/urb.c:76:usb_alloc_urb        |         11027         |
+> +----------------------+----------------+-------------------------------------------+-----------------------+
+> 
+> The count for active URB objects remain at low level,
+> its peak is about 12KB when I copied 10G file to my harddisk.
+> The memory pool in this patch takes about 22KB, its peak is 23KB.
+> The patch meant to reuse memory via a mempool, the memory kept in pool is indeed
+> the "tradeoff" when the system is idle. (Well, we are talking about mempool anyway.)
+> How balance the tradeoff is depends on how well the mempool is managed.
+> This patch takes a easy approach: put faith in URB objects management and put
+> a single slot of mempool in URB on demands. And the changes, by counting lines
+> in this patch, are very simple.
+> Base on the profiling, the number of active URB objects are kept at a very low scale,
+> only several could have a very long lifecycle.
+> I think URB is a good candidate for caching those memory needed for private data.
+> But I could be very wrong, due simply to the lack of knowledge.
+> 
+> And before, without the patch, a 10 minutes webcam usage and copying 10G file to harddisk
+> would yield high rate of memory allocation for priviate data in xhci_urb_enqueue:
+> +----------------------+----------------+-----------------------------------+-----------------------+
+> | active memory(bytes) | active objects |           alloc location          | total objects created |
+> +----------------------+----------------+-----------------------------------+-----------------------+
+> |        22784         |       23       | host/xhci.c:1555:xhci_urb_enqueue |         894281 << grow|ing very quick
+> |        10880         |       31       |    core/urb.c:75:usb_alloc_urb    |          4028         |
+> +----------------------+----------------+-----------------------------------+-----------------------+
+> I observe a highest allocation rate of 1.5K/s in xhci_urb_enqueue
+> when I was copying 10G file, and had my webcam opened at the same time.
+> 
+> And again, to be honest, I did not observe any observable performance improvement from
+> an enduser's point of view with this patch. The only significant improvement is memory footprint
+> _numbers_.
+> I guess memory allocation is indeed "_really damn fast_", but I still have the mindset of
+> "the less allocation the better".
 
-Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
----
-Changes since v5:
+No, this isn't necessarily true at all.  Allocations are fast, and if we
+free/allocate things quickly, it's even faster.  USB is limited by the
+hardware throughput, which is _very_ slow compared to memory accesses of
+the allocator.
 
- - No change.
+So unless you can show that we are using less CPU time, or something
+else "real" that is measurable in a real way in userspace, that would
+justify the extra complexity, it's going to be hard to get me to agree
+that this is something that needs to be addressed at all.
 
- arch/x86/coco/sev/vc-handle.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Also, I'm totally confused as to what the "latest" version of this
+patchset is...
 
-diff --git a/arch/x86/coco/sev/vc-handle.c b/arch/x86/coco/sev/vc-handle.c
-index b6cfa18939d8..7a531aeeca99 100644
---- a/arch/x86/coco/sev/vc-handle.c
-+++ b/arch/x86/coco/sev/vc-handle.c
-@@ -407,6 +407,15 @@ enum es_result sev_es_ghcb_handle_msr(struct ghcb *ghcb, struct es_em_ctxt *ctxt
- 		if (sev_status & MSR_AMD64_SNP_SECURE_TSC)
- 			return __vc_handle_secure_tsc_msrs(regs, write);
- 		break;
-+	case MSR_AMD64_SECURE_AVIC_CONTROL:
-+		/*
-+		 * AMD64_SECURE_AVIC_CONTROL should not be intercepted when
-+		 * Secure AVIC is enabled. Terminate the Secure AVIC guest
-+		 * if the interception is enabled.
-+		 */
-+		if (cc_platform_has(CC_ATTR_SNP_SECURE_AVIC))
-+			return ES_VMM_ERROR;
-+		break;
- 	default:
- 		break;
- 	}
--- 
-2.34.1
+thanks,
 
+greg k-h
