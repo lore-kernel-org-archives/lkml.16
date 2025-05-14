@@ -1,359 +1,143 @@
-Received: from mail-io1-f73.google.com (mail-io1-f73.google.com [209.85.166.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender3-op-o12.zoho.com (sender3-op-o12.zoho.com [136.143.184.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434C82918FE
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747250529; cv=none; b=gWYvrdTf3SAjvG+Ai8kx6UrE4oU53CIG6TLE+jCn09rC1qL/Q+MAuQenec0/b3cdII1JX4EdXD7wdPfOQu9iUVTz9Bd3BynBnmIu1jBS7AzeHuPWUvPK6PVmOiNm56jiC1KAFwgB303LIAI8n5tgtWwsJ28VctfBDGjoyJ/bIig=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747250529; c=relaxed/simple;
-	bh=lOdxofayiKe/1Vjymgyk3XUfVBPe4mBc2wD0vdOwXzo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=SuaQCaFMIfdjIWjoOk5Fprj1SlhXJe5IMk852ws8EmJcmzEuSq7K+gVHkLDh4w/aIgWCraa14LTngwtix6A96jFscSvw0Jx+sPXSd6lNs5pY83+nssBN6vW2v/Uy1IbKnUqa/6gdDPrlvqGCW8isPE7ENu+JB8lU9FY5MLBZZYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UYNIA72q; arc=none smtp.client-ip=209.85.166.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46AE7293738;
+	Wed, 14 May 2025 19:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747250532; cv=pass; b=rUx+L/bLl0KXSBJyosqIGJ0Bok4CDspXWUgDvFEl4MgCh+m8JsaTBPWJgCkfXt4nOii/vPYoI43oMEF1SxTS6wDIzHFknFkmwqJglWRF+IeyMmu5WjymB34IQEjxYrPmK9fZoniFbuWROMM0/5CRCZ5g/Fsd0hxwnh1nATD8PaI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747250532; c=relaxed/simple;
+	bh=4RRKn4GkWqWDoFGZ7mAK796x8AcyWQihchUdkjJv1Jo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=PYw92/pWa/ix0FSs70ei/QdUOxG8DepENkFfsjGj91hMC6aHiK8RIeNTOLwiR6a4feBxxxTIXwPC1DPXuRCf7g3LWwcEXEtchzwyEJ9+KTR35fuyCCC46OjJx79+IxDmh1Jxx8rbU1UY7Kt6azRkw5JtK+++NEq+c7K/zcdiyo4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=eGCTYaL/; arc=pass smtp.client-ip=136.143.184.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UYNIA72q"
-Received: by mail-io1-f73.google.com with SMTP id ca18e2360f4ac-85dad56a6cbso11443639f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:22:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747250526; x=1747855326; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=W3MauCW+urlix1RrycVNh0XN4aZXJqzxAZQYVw1ClTM=;
-        b=UYNIA72qzxec5Ea+tNSxB2J0VRMAv24bTO35xidFweojbC8XBFbWOszN7CSx08Z6U4
-         NW7yp3WfesmtB5bdx+L808KRYayxSUL8EFLi90lWRgWPztL1PlLvBIuzvZBCxCfMU1D5
-         9hlRgx72r8ceSxvOUpZ8ADdy13vNxdoKMz0TiMJxKaGAeT4YDLNnctqKYhCBMbzSOR4u
-         oCjBt2gECDd7JsrcSDf0xGFFrEM9yOpJvyfPinSqnCjNZhAN+oZbIJrvpPHvhLCXWfP1
-         XVUirwY0ZFwlgiKXUaJfApr7iEFWrOCJeZzsNDhwDRUWUmroEhdCCPI1I57ADAsR5oiB
-         7wlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747250526; x=1747855326;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W3MauCW+urlix1RrycVNh0XN4aZXJqzxAZQYVw1ClTM=;
-        b=KzUY63tNQwqi26z3IxQghlybGKzEomKCtnZ8f3Ab/frD+URKDfYE/Gt7UE2Hpz1LYO
-         yIbQEBJ3xX4yygJTkr3d62yiTjHeoTU0GCB86gtMZswiGo8mHh03m8agzecqzMix1hg1
-         uwN0rJ/uN6fNPXe01iCh8Qy4AclomH1ltGqU7SbSKFXvXj4wa9JxLlpszZv4SxvM1NFq
-         us3qGKzTI1p9re7G9gNsk6CoAE66Ijmb6mpXHsZoTxfmuuu3EwndcnYdGm0jREWeZyK1
-         0QwQtahS4cctybeBCjVdoZFChMKBaRF2FhzcKbcuJL7yJpWS6jGgF9qm5lEYS4aTDtfT
-         RdsA==
-X-Forwarded-Encrypted: i=1; AJvYcCViy+D498x+/yvxc6uO2ympCgKDMIwAgXlBnZ6Wi+vbQuhgU6HGfKuKJvJyGAlHx6fNwT6Zj+cUCyPe2g8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEm6aXT+T1zjw0x+3dMAKJH2SLNDHRs0eKzjchQNl+aCn8Judr
-	cxNjhG6luiuRR3n0wK32NbhKCFIXeP2eUvVmtQEA2QMxxrC5NE5M1dgWqLx1xUpRjv4ifcAjBdX
-	qldvi4A==
-X-Google-Smtp-Source: AGHT+IEy09eku3jD263yCQYKQ2rr3/0cu+Cf3UzUC6jmBnOz4zk6Mpi7GLuEdzeaZ4KU1bn0EY+ScGzWk8y2
-X-Received: from ilsx3.prod.google.com ([2002:a05:6e02:743:b0:3d9:367f:729a])
- (user=rananta job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6e02:3784:b0:3d9:5d50:e3b1
- with SMTP id e9e14a558f8ab-3db6f7f1597mr60756865ab.18.1747250526441; Wed, 14
- May 2025 12:22:06 -0700 (PDT)
-Date: Wed, 14 May 2025 19:21:57 +0000
-In-Reply-To: <20250514192159.1751538-1-rananta@google.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="eGCTYaL/"
+ARC-Seal: i=1; a=rsa-sha256; t=1747250493; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=JLOH5Yv4FuZvJ6PrTg21EKEHz+BhSzu1Gx9WCrE4n9dQ2v2XwVV/3SxSlwdAgRpC//9xB+ck6zzGP9lSQZhtgv3m+1Exyn/3YqL2i9NOHmYKBXmXXl+YXcECimQpqb7odjWxrMtXotjQjPQiSG3Y7r4unHBKYt3sTcBwI/BCYPU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747250493; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=fa1qeH0DxE7j7jD+ZO1MGlSXV30kYX0Bz9i5YjBNL6w=; 
+	b=AtJN5l3SspdCd1m/rZ49UP6FAes4UjFXpw3Y10jX//NwhlfQ87nHPyCarflDTyPVRNbxAGiry79AfnMmVU2R1LfKA5yPyAt7mguzcJA8J0VVvLEabS1wStWFUtx7lM/l0yzs38xBXM2NY+g4xymuPsLoZbJiUhlKBR7gpDSPUSg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747250492;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=fa1qeH0DxE7j7jD+ZO1MGlSXV30kYX0Bz9i5YjBNL6w=;
+	b=eGCTYaL/jPXKtAyWCqtf2a2x3OmevOfNwxUMq/tVjUJZLIpj8V5GSnjmMnBukyxt
+	SydL0vG74yDMY4JKkma/F0qSlOoPphJqHj7mM9rJ9Q/oVIxDHOeiK4Ad72toLTlZlHi
+	rmv2WY1U5U4YwTfr4x0WaEaH3A7ZsWgqf8agHwn0=
+Received: by mx.zohomail.com with SMTPS id 17472504907271023.3741658857869;
+	Wed, 14 May 2025 12:21:30 -0700 (PDT)
+From: Daniel Almeida <daniel.almeida@collabora.com>
+Date: Wed, 14 May 2025 16:20:52 -0300
+Subject: [PATCH v3 2/2] rust: platform: add irq accessors
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250514192159.1751538-1-rananta@google.com>
-X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250514192159.1751538-2-rananta@google.com>
-Subject: [PATCH 1/3] kvm: arm64: Add support for KVM_DEV_ARM_VGIC_CONFIG_GICV4 attr
-From: Raghavendra Rao Ananta <rananta@google.com>
-To: Oliver Upton <oliver.upton@linux.dev>, Marc Zyngier <maz@kernel.org>
-Cc: Raghavendra Rao Anata <rananta@google.com>, Mingwei Zhang <mizhang@google.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250514-topics-tyr-request_irq-v3-2-d6fcc2591a88@collabora.com>
+References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com>
+In-Reply-To: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com>
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+ Daniel Almeida <daniel.almeida@collabora.com>
+X-Mailer: b4 0.14.2
+X-ZohoMailClient: External
 
-When kvm-arm.vgic_v4_enable=1, KVM adds support for direct interrupt
-injection by default to all the VMs in the system, aka GICv4. A
-shortcoming of the GIC architecture is that there's an absolute limit on
-the number of vPEs that can be tracked by the ITS. It is possible that
-an operator is running a mix of VMs on a system, only wanting to provide
-a specific class of VMs with hardware interrupt injection support.
+These accessors can be used to retrieve an IRQ from a platform device by
+index or name. The IRQ can then be used to request the line using
+irq::request::Registration::register() and
+irq::request::ThreadedRegistration::register().
 
-To support this, introduce a GIC attribute, KVM_DEV_ARM_VGIC_CONFIG_GICV4,
-for the userspace to enable or disable vGICv4 for a given VM. Make the
-interface backward compatible by leaving vGICv4 enabled by default.
-
-Suggested-by: Oliver Upton <oliver.upton@linux.dev>
-Signed-off-by: Raghavendra Rao Ananta <rananta@google.com>
+Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
 ---
- arch/arm64/include/uapi/asm/kvm.h     |  7 +++++
- arch/arm64/kvm/vgic/vgic-init.c       |  3 +++
- arch/arm64/kvm/vgic/vgic-its.c        |  2 +-
- arch/arm64/kvm/vgic/vgic-kvm-device.c | 39 +++++++++++++++++++++++++++
- arch/arm64/kvm/vgic/vgic-mmio-v3.c    | 12 ++++-----
- arch/arm64/kvm/vgic/vgic-v3.c         | 16 +++++++++--
- arch/arm64/kvm/vgic/vgic-v4.c         |  8 +++---
- include/kvm/arm_vgic.h                |  5 ++++
- 8 files changed, 79 insertions(+), 13 deletions(-)
+ rust/kernel/platform.rs | 52 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
-index af9d9acaf997..6762683f7e0f 100644
---- a/arch/arm64/include/uapi/asm/kvm.h
-+++ b/arch/arm64/include/uapi/asm/kvm.h
-@@ -428,6 +428,13 @@ enum {
- #define   KVM_DEV_ARM_ITS_RESTORE_TABLES        2
- #define   KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES	3
- #define   KVM_DEV_ARM_ITS_CTRL_RESET		4
-+#define   KVM_DEV_ARM_VGIC_CONFIG_GICV4	5
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index 4917cb34e2fe8027d3d861e90de51de85f006735..1acaebf38d99d06f93fa13b0b356671ea77ed97a 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -188,6 +188,58 @@ impl Device {
+     fn as_raw(&self) -> *mut bindings::platform_device {
+         self.0.get()
+     }
 +
-+enum {
-+	KVM_DEV_ARM_VGIC_CONFIG_GICV4_UNAVAILABLE = 0,
-+	KVM_DEV_ARM_VGIC_CONFIG_GICV4_DISABLE,
-+	KVM_DEV_ARM_VGIC_CONFIG_GICV4_ENABLE,
-+};
- 
- /* Device Control API on vcpu fd */
- #define KVM_ARM_VCPU_PMU_V3_CTRL	0
-diff --git a/arch/arm64/kvm/vgic/vgic-init.c b/arch/arm64/kvm/vgic/vgic-init.c
-index 1f33e71c2a73..cd345df2271f 100644
---- a/arch/arm64/kvm/vgic/vgic-init.c
-+++ b/arch/arm64/kvm/vgic/vgic-init.c
-@@ -132,6 +132,9 @@ int kvm_vgic_create(struct kvm *kvm, u32 type)
- 
- 	kvm->arch.vgic.in_kernel = true;
- 	kvm->arch.vgic.vgic_model = type;
-+	kvm->arch.vgic.gicv4_config = kvm_vgic_global_state.has_gicv4 ?
-+				      KVM_DEV_ARM_VGIC_CONFIG_GICV4_ENABLE :
-+				      KVM_DEV_ARM_VGIC_CONFIG_GICV4_UNAVAILABLE;
- 
- 	kvm->arch.vgic.vgic_dist_base = VGIC_ADDR_UNDEF;
- 
-diff --git a/arch/arm64/kvm/vgic/vgic-its.c b/arch/arm64/kvm/vgic/vgic-its.c
-index fb96802799c6..bba635e4e851 100644
---- a/arch/arm64/kvm/vgic/vgic-its.c
-+++ b/arch/arm64/kvm/vgic/vgic-its.c
-@@ -2242,7 +2242,7 @@ static int vgic_its_save_itt(struct vgic_its *its, struct its_device *device)
- 		 * have direct access to that state without GICv4.1.
- 		 * Let's simply fail the save operation...
- 		 */
--		if (ite->irq->hw && !kvm_vgic_global_state.has_gicv4_1)
-+		if (ite->irq->hw && !kvm_vm_has_gicv4_1(its->dev->kvm))
- 			return -EACCES;
- 
- 		ret = vgic_its_save_ite(its, device, ite, gpa);
-diff --git a/arch/arm64/kvm/vgic/vgic-kvm-device.c b/arch/arm64/kvm/vgic/vgic-kvm-device.c
-index 359094f68c23..f03b80fc816e 100644
---- a/arch/arm64/kvm/vgic/vgic-kvm-device.c
-+++ b/arch/arm64/kvm/vgic/vgic-kvm-device.c
-@@ -279,6 +279,33 @@ static int vgic_set_common_attr(struct kvm_device *dev,
- 			unlock_all_vcpus(dev->kvm);
- 			mutex_unlock(&dev->kvm->lock);
- 			return r;
-+		case KVM_DEV_ARM_VGIC_CONFIG_GICV4: {
-+			u8 __user *uaddr = (u8 __user *)(long)attr->addr;
-+			u8 val;
++    /// Returns an IRQ for the device by index.
++    pub fn irq_by_index(&self, index: u32) -> Result<u32> {
++        // SAFETY: `self.as_raw` returns a valid pointer to a `struct platform_device`.
++        let res = unsafe { bindings::platform_get_irq(self.as_raw(), index) };
 +
-+			if (!kvm_vgic_global_state.has_gicv4)
-+				return -ENXIO;
++        if res < 0 {
++            return Err(Error::from_errno(res));
++        }
 +
-+			if (get_user(val, uaddr))
-+				return -EFAULT;
++        Ok(res as u32)
++    }
 +
-+			if (vgic_initialized(dev->kvm) &&
-+				val != dev->kvm->arch.vgic.gicv4_config)
-+				return -EBUSY;
++    /// Same as [`Self::irq_by_index`] but does not print an error message if an IRQ
++    /// cannot be obtained.
++    pub fn optional_irq_by_index(&self, index: u32) -> Result<u32> {
++        // SAFETY: `self.as_raw` returns a valid pointer to a `struct platform_device`.
++        let res = unsafe { bindings::platform_get_irq_optional(self.as_raw(), index) };
 +
-+			switch (val) {
-+			case KVM_DEV_ARM_VGIC_CONFIG_GICV4_ENABLE:
-+			case KVM_DEV_ARM_VGIC_CONFIG_GICV4_DISABLE:
-+				mutex_lock(&dev->kvm->arch.config_lock);
-+				dev->kvm->arch.vgic.gicv4_config = val;
-+				mutex_unlock(&dev->kvm->arch.config_lock);
-+				break;
-+			default:
-+				return -EINVAL;
-+			}
++        if res < 0 {
++            return Err(Error::from_errno(res));
++        }
 +
-+			return 0;
-+		}
- 		}
- 		break;
- 	}
-@@ -309,6 +336,16 @@ static int vgic_get_common_attr(struct kvm_device *dev,
- 		r = put_user(dev->kvm->arch.vgic.mi_intid, uaddr);
- 		break;
- 	}
-+	case KVM_DEV_ARM_VGIC_GRP_CTRL: {
-+		switch (attr->attr) {
-+		case KVM_DEV_ARM_VGIC_CONFIG_GICV4: {
-+			u8 __user *uaddr = (u8 __user *)(long)attr->addr;
++        Ok(res as u32)
++    }
 +
-+			r = put_user(dev->kvm->arch.vgic.gicv4_config, uaddr);
-+			break;
-+		}
-+		}
-+	}
- 	}
- 
- 	return r;
-@@ -684,6 +721,8 @@ static int vgic_v3_has_attr(struct kvm_device *dev,
- 			return 0;
- 		case KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES:
- 			return 0;
-+		case KVM_DEV_ARM_VGIC_CONFIG_GICV4:
-+			return 0;
- 		}
- 	}
- 	return -ENXIO;
-diff --git a/arch/arm64/kvm/vgic/vgic-mmio-v3.c b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-index ae4c0593d114..66b365f59c51 100644
---- a/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-+++ b/arch/arm64/kvm/vgic/vgic-mmio-v3.c
-@@ -50,8 +50,8 @@ bool vgic_has_its(struct kvm *kvm)
- 
- bool vgic_supports_direct_msis(struct kvm *kvm)
- {
--	return (kvm_vgic_global_state.has_gicv4_1 ||
--		(kvm_vgic_global_state.has_gicv4 && vgic_has_its(kvm)));
-+	return kvm_vm_has_gicv4(kvm) &&
-+		(kvm_vgic_global_state.has_gicv4_1 || vgic_has_its(kvm));
++    /// Returns an IRQ for the device by name.
++    pub fn irq_by_name(&self, name: &CStr) -> Result<u32> {
++        // SAFETY: `self.as_raw` returns a valid pointer to a `struct platform_device`.
++        let res = unsafe { bindings::platform_get_irq_byname(self.as_raw(), name.as_char_ptr()) };
++
++        if res < 0 {
++            return Err(Error::from_errno(res));
++        }
++
++        Ok(res as u32)
++    }
++
++    /// Same as [`Self::irq_by_name`] but does not print an error message if an IRQ
++    /// cannot be obtained.
++    pub fn optional_irq_by_name(&self, name: &CStr) -> Result<u32> {
++        // SAFETY: `self.as_raw` returns a valid pointer to a `struct platform_device`.
++        let res = unsafe {
++            bindings::platform_get_irq_byname_optional(self.as_raw(), name.as_char_ptr())
++        };
++
++        if res < 0 {
++            return Err(Error::from_errno(res));
++        }
++
++        Ok(res as u32)
++    }
  }
  
- /*
-@@ -86,7 +86,7 @@ static unsigned long vgic_mmio_read_v3_misc(struct kvm_vcpu *vcpu,
- 		}
- 		break;
- 	case GICD_TYPER2:
--		if (kvm_vgic_global_state.has_gicv4_1 && gic_cpuif_has_vsgi())
-+		if (kvm_vm_has_gicv4_1(vcpu->kvm) && gic_cpuif_has_vsgi())
- 			value = GICD_TYPER2_nASSGIcap;
- 		break;
- 	case GICD_IIDR:
-@@ -119,7 +119,7 @@ static void vgic_mmio_write_v3_misc(struct kvm_vcpu *vcpu,
- 		dist->enabled = val & GICD_CTLR_ENABLE_SS_G1;
- 
- 		/* Not a GICv4.1? No HW SGIs */
--		if (!kvm_vgic_global_state.has_gicv4_1 || !gic_cpuif_has_vsgi())
-+		if (!kvm_vm_has_gicv4_1(vcpu->kvm) || !gic_cpuif_has_vsgi())
- 			val &= ~GICD_CTLR_nASSGIreq;
- 
- 		/* Dist stays enabled? nASSGIreq is RO */
-@@ -133,7 +133,7 @@ static void vgic_mmio_write_v3_misc(struct kvm_vcpu *vcpu,
- 		if (is_hwsgi != dist->nassgireq)
- 			vgic_v4_configure_vsgis(vcpu->kvm);
- 
--		if (kvm_vgic_global_state.has_gicv4_1 &&
-+		if (kvm_vm_has_gicv4_1(vcpu->kvm) &&
- 		    was_enabled != dist->enabled)
- 			kvm_make_all_cpus_request(vcpu->kvm, KVM_REQ_RELOAD_GICv4);
- 		else if (!was_enabled && dist->enabled)
-@@ -178,7 +178,7 @@ static int vgic_mmio_uaccess_write_v3_misc(struct kvm_vcpu *vcpu,
- 		}
- 	case GICD_CTLR:
- 		/* Not a GICv4.1? No HW SGIs */
--		if (!kvm_vgic_global_state.has_gicv4_1)
-+		if (!kvm_vm_has_gicv4_1(vcpu->kvm))
- 			val &= ~GICD_CTLR_nASSGIreq;
- 
- 		dist->enabled = val & GICD_CTLR_ENABLE_SS_G1;
-diff --git a/arch/arm64/kvm/vgic/vgic-v3.c b/arch/arm64/kvm/vgic/vgic-v3.c
-index b9ad7c42c5b0..bc8cb9184be9 100644
---- a/arch/arm64/kvm/vgic/vgic-v3.c
-+++ b/arch/arm64/kvm/vgic/vgic-v3.c
-@@ -20,6 +20,18 @@ static bool common_trap;
- static bool dir_trap;
- static bool gicv4_enable;
- 
-+int kvm_vm_has_gicv4(struct kvm *kvm)
-+{
-+	return kvm->arch.vgic.gicv4_config ==
-+		KVM_DEV_ARM_VGIC_CONFIG_GICV4_ENABLE;
-+}
-+
-+int kvm_vm_has_gicv4_1(struct kvm *kvm)
-+{
-+	return (kvm_vm_has_gicv4(kvm) &&
-+		kvm_vgic_global_state.has_gicv4_1);
-+}
-+
- void vgic_v3_set_underflow(struct kvm_vcpu *vcpu)
- {
- 	struct vgic_v3_cpu_if *cpuif = &vcpu->arch.vgic_cpu.vgic_v3;
-@@ -404,7 +416,7 @@ int vgic_v3_save_pending_tables(struct kvm *kvm)
- 	 * The above vgic initialized check also ensures that the allocation
- 	 * and enabling of the doorbells have already been done.
- 	 */
--	if (kvm_vgic_global_state.has_gicv4_1) {
-+	if (kvm_vm_has_gicv4_1(kvm)) {
- 		unmap_all_vpes(kvm);
- 		vlpi_avail = true;
- 	}
-@@ -581,7 +593,7 @@ int vgic_v3_map_resources(struct kvm *kvm)
- 		return -EBUSY;
- 	}
- 
--	if (kvm_vgic_global_state.has_gicv4_1)
-+	if (kvm_vm_has_gicv4_1(kvm))
- 		vgic_v4_configure_vsgis(kvm);
- 
- 	return 0;
-diff --git a/arch/arm64/kvm/vgic/vgic-v4.c b/arch/arm64/kvm/vgic/vgic-v4.c
-index c7de6154627c..814d54f4ce13 100644
---- a/arch/arm64/kvm/vgic/vgic-v4.c
-+++ b/arch/arm64/kvm/vgic/vgic-v4.c
-@@ -86,7 +86,7 @@ static irqreturn_t vgic_v4_doorbell_handler(int irq, void *info)
- 	struct kvm_vcpu *vcpu = info;
- 
- 	/* We got the message, no need to fire again */
--	if (!kvm_vgic_global_state.has_gicv4_1 &&
-+	if (!kvm_vm_has_gicv4_1(vcpu->kvm) &&
- 	    !irqd_irq_disabled(&irq_to_desc(irq)->irq_data))
- 		disable_irq_nosync(irq);
- 
-@@ -245,7 +245,7 @@ int vgic_v4_init(struct kvm *kvm)
- 
- 	lockdep_assert_held(&kvm->arch.config_lock);
- 
--	if (!kvm_vgic_global_state.has_gicv4)
-+	if (!kvm_vm_has_gicv4(kvm))
- 		return 0; /* Nothing to see here... move along. */
- 
- 	if (dist->its_vm.vpes)
-@@ -286,7 +286,7 @@ int vgic_v4_init(struct kvm *kvm)
- 		 * On GICv4.1, the doorbell is managed in HW and must
- 		 * be left enabled.
- 		 */
--		if (kvm_vgic_global_state.has_gicv4_1)
-+		if (kvm_vm_has_gicv4_1(kvm))
- 			irq_flags &= ~IRQ_NOAUTOEN;
- 		irq_set_status_flags(irq, irq_flags);
- 
-@@ -392,7 +392,7 @@ int vgic_v4_load(struct kvm_vcpu *vcpu)
- 	 * doorbell interrupt that would still be pending. This is a
- 	 * GICv4.0 only "feature"...
- 	 */
--	if (!kvm_vgic_global_state.has_gicv4_1)
-+	if (!kvm_vm_has_gicv4_1(vcpu->kvm))
- 		err = irq_set_irqchip_state(vpe->irq, IRQCHIP_STATE_PENDING, false);
- 
- 	return err;
-diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
-index 714cef854c1c..8883dc677674 100644
---- a/include/kvm/arm_vgic.h
-+++ b/include/kvm/arm_vgic.h
-@@ -296,6 +296,8 @@ struct vgic_dist {
- 	 * else.
- 	 */
- 	struct its_vm		its_vm;
-+
-+	u8			gicv4_config;
- };
- 
- struct vgic_v2_cpu_if {
-@@ -447,4 +449,7 @@ bool vgic_state_is_nested(struct kvm_vcpu *vcpu);
- void kvm_vgic_cpu_up(void);
- void kvm_vgic_cpu_down(void);
- 
-+int kvm_vm_has_gicv4(struct kvm *kvm);
-+int kvm_vm_has_gicv4_1(struct kvm *kvm);
-+
- #endif /* __KVM_ARM_VGIC_H */
+ impl Deref for Device<device::Core> {
+
 -- 
-2.49.0.1101.gccaa498523-goog
+2.49.0
 
