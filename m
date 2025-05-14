@@ -1,80 +1,111 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893B3187346;
-	Wed, 14 May 2025 11:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E512741A2;
+	Wed, 14 May 2025 11:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747220972; cv=none; b=Z9MAmoLLCzll3fqzvygOg6S1hysKv50ZbseWAzZZOKhCnMVBTDYwRQOxNV6k2+kaaRZGdiyPwZyeT6Qw/zEWcz43WdGLDn1I5VBeKB58Y74+lSwUA4LcmrmNKzmR+KR8UaDRfpHCfTollX70zTrolFwpKAKcO0Pzj9P0opyJehI=
+	t=1747221128; cv=none; b=meIR735MI0A7oTIuqFzY3AsLzI4bbph1lM3sgZ/FJ3mMh3MeMRBC444BF496VnrxECAy3xog+iRhvkalrjNrHkZQXKxRHueV/x6qGZv2xewEC/Kg9h0SZjzpbw1gZK+b32cJ+ytx3B02+kyAlHXLP0i5E9VJPQmVZqspqhhimpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747220972; c=relaxed/simple;
-	bh=gs6oVQZghPS4vPL6JjYWbVPJu95Py1bNj+u6Ia9TJRY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FWEsm3zLaID+E7/O7RLa/BHY8jChIk9XTQima3EBA5iqxN2QS64MdFSRP73w7W6dDt9q4CVqkj+DUiK0n/8D85LrfwqWezoNqJYTC9vPtTGB9qIRyrBX+CeiC1NnZhxUziWdzLAaOZpJoTVi9Dt58K9MUvmwxHio15svwIUQ0FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CX3AZRd2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ii2l2BLL; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747221128; c=relaxed/simple;
+	bh=qIKsBmMeIRm0mtg4YhqnYMEfOq9crW1n5Z+zB0LXN6c=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=r0PR/J7dyi4miShmFKFwZsmhYco00qeI7VY7ewqqKmpgNvYEfiJeo6wYw47G33huc6DsnM2fWny1kUEhyRODUWnGMVNPuIkFVUCgullyg5cKWEwzY5aL2Dl7v3Mt3ro/uCJu7WzZRVvSomzvFjJlItmrG4a+cLVHwGxhVmEJgqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Rt8Pti6C; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CX3AZRd2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ii2l2BLL"
-Date: Wed, 14 May 2025 13:09:27 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747220969;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=03vPXI9ofAu7xmrYXYtVxCHVRk/wSESU2ZQWVeOCLwU=;
-	b=CX3AZRd2reIxv0bRwhXGMfOC+DeuqFdSD96E+h0RVZR5gj3ZPYDeGTPFPqg82MuNhR3Lwk
-	XZ58aCiQfLHj9sv9ksEeVvYqwBBeyXkZQP1/rOWF/wUfgi+KvEblbNFWWkd+8IVx2JTnPW
-	zu3bbW2dCYNPlNalzqhsRep6XOgkdeYfTqveo5C5K5mxAnp+/Vev5WgRNflrYQ822NNClS
-	jEdqywlitgrAh2KH59T0NQeE0CCdrSPO9zl6sIcoByXLkKLh0vnAAB2EVKrDzFrcCNOe1F
-	vIRYPa/FBULE0cziLuWxRrXHiLsbDNya+sRaiZDWghLreGGNLVehsoHa0hnu8A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747220969;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=03vPXI9ofAu7xmrYXYtVxCHVRk/wSESU2ZQWVeOCLwU=;
-	b=Ii2l2BLLLc2LxtAsdtk70ZwjJyLSg37whUHMMhLEicnBgGDHjt0iQEfM/pqMhsRWMRlY36
-	zpvkFygs9uwGoGAw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev
-Cc: tglx@linutronix.de, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	linux-crypto@vger.kernel.org
-Subject: Re: [PATCH 2/2] cryptd: Use nested-BH locking for cryptd_cpu_queue
-Message-ID: <20250514110927.cwwZr3Sw@linutronix.de>
-References: <20250514110750.852919-1-bigeasy@linutronix.de>
- <20250514110750.852919-3-bigeasy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Rt8Pti6C"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EAv5NB016097;
+	Wed, 14 May 2025 11:12:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:date:from:message-id:subject:to; s=qcppdkim1; bh=k8AGjdOxKqPW
+	gTcyJDn9vk9FEZMsH7KU7E320Jy37As=; b=Rt8Pti6CCNy/teLcVjL2qgR0EKLa
+	1f6CZllC3dFj+sMLT5F9N8VwVD+RIhXvAXwwxkFXQLEyWSxUYaBiclqIjyFT352Z
+	6swhBQyawMc2sbjFNlN+GvaR8vKpk0NS58fKo5JRQtIkUJkCf14RDJmgEus7WvhE
+	pJfI/UHZPFL68PD5dNFD5pJ7BwjpmuiFOAzz8kdaydUwOUJSYmHxqYZPQyw/K9xy
+	w5WFMZYFUMTez4OpR4QlXrNn2eTpAptSe92GV+E/V4Kbmj8ji5rRBtfsRISQzBmF
+	1nR0uMRp1u0u6HJyb+56hGpvv8Gasqp/nd2zgeAsJG8tbasLJM9ON16qnQ==
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcmtfhd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 11:12:04 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 54EBC1cm008560;
+	Wed, 14 May 2025 11:12:01 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 46hyvm3g42-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 14 May 2025 11:12:01 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54EBC1NA008551;
+	Wed, 14 May 2025 11:12:01 GMT
+Received: from hu-maiyas-hyd.qualcomm.com (hu-sartgarg-hyd.qualcomm.com [10.213.105.147])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 54EBC0CR008550;
+	Wed, 14 May 2025 11:12:01 +0000
+Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 2339771)
+	id 172355000C0; Wed, 14 May 2025 16:42:00 +0530 (+0530)
+From: Sarthak Garg <quic_sartgarg@quicinc.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, quic_cang@quicinc.com,
+        quic_nguyenb@quicinc.com, quic_rampraka@quicinc.com,
+        quic_pragalla@quicinc.com, quic_sayalil@quicinc.com,
+        quic_nitirawa@quicinc.com, quic_bhaskarv@quicinc.com,
+        Sarthak Garg <quic_sartgarg@quicinc.com>
+Subject: [PATCH V2 0/2] Introduce new flag to force hardware reset
+Date: Wed, 14 May 2025 16:41:53 +0530
+Message-Id: <20250514111155.10896-1-quic_sartgarg@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: PEYtzUusOrfLQDeYvF_GBUFfeIbu37Yu
+X-Authority-Analysis: v=2.4 cv=HZ4UTjE8 c=1 sm=1 tr=0 ts=68247a84 cx=c_pps
+ a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=dt9VzEwgFbYA:10 a=ljxjnqOaEBNz7oqmFjIA:9
+X-Proofpoint-GUID: PEYtzUusOrfLQDeYvF_GBUFfeIbu37Yu
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDA5OCBTYWx0ZWRfX4gcVo1OT6WMq
+ 3e9K+mFRWar20Y1KrB0/c+1/WosRFtMiUAcjB4ii9hxOScbkBwH0fCY4Oj8ri72o2yyx0JVYgh2
+ HN66SALUjneP1MHfgNPfaVMSpHpEZ3EpeBtr09d8T/2yj63UOeQHi/CIN9a0TGR1lEITCoeY/Jg
+ 8dyRB/uHL0T7vK2jGdI4A0LifQ4yCHB4qE4vaWcO3xHI2qXrzEmmFvX8ABZObkTxKTM3eJ3jlec
+ PuKnAU/VfecVTh4BeLbyaM8FkYu61vsy1F79XVLNht69zTG/85nX4NouhtiuF2PAWcDQ9nmnHcb
+ 4aEZHmQkqWZhYVKmjlUpGjA596KbFyBq7RwbdJ76i2I4m1SmK6GPCkO/velIuBZbslmug3gYnIO
+ SvVo5+toP4mkAz9bwq52T85wzjnK+Ye1yr13pHowXwWyiS+zKZAs66DMD4D6t9rQOtM025jC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_03,2025-05-14_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 adultscore=0 spamscore=0 clxscore=1015 priorityscore=1501
+ suspectscore=0 mlxscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
+ bulkscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505140098
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250514110750.852919-3-bigeasy@linutronix.de>
 
-On 2025-05-14 13:07:50 [+0200], To linux-kernel@vger.kernel.org wrote:
-> cryptd_queue::cryptd_cpu_queue is a per-CPU variable and relies on
-> disabled BH for its locking. Without per-CPU locking in
-> local_bh_disable() on PREEMPT_RT this data structure requires explicit
-> locking.
-> 
-> Add a local_lock_t to the struct cryptd_cpu_queue and use
-> local_lock_nested_bh() for locking. This change adds only lockdep
-> coverage and does not alter the functional behaviour for !PREEMPT_RT.
-> 
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: linux-crypto@vger.kernel.org
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Introduce new flag cqe_recovery_reset_always in mmc_host to allow
+vendors to force hardware reset during cqe recovery as per their
+needs.
 
-This is meant as an example for #1 and should not be applied.
+- Changed from v1
+    - Rebase on tip as "mmc: block: Fix CQE recovery reset success"
+    is merged.
 
-Sebastian
+Sarthak Garg (2):
+  mmc: core: Introduce new flag to force hardware reset
+  mmc: sdhci-msm: Enable force hw reset during cqe recovery
+
+ drivers/mmc/core/block.c     | 2 +-
+ drivers/mmc/host/sdhci-msm.c | 3 +++
+ include/linux/mmc/host.h     | 1 +
+ 3 files changed, 5 insertions(+), 1 deletion(-)
+
+-- 
+2.17.1
+
