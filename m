@@ -1,163 +1,82 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4062063F0;
-	Wed, 14 May 2025 07:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3F12063F0
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747209015; cv=none; b=Dq+Wb7caF/5tQPDbqFThQ61c6XdDTjqHqT4k0a+JuU3GSLJK+JvSlpt6VpruL2h++iHMb+ghO5tSzUJZ831WJSGpV8q3camEettKvAFjTGmYzbfAZ4dqpaVWHGQj5XdQFAcMiS+qrckBF9nNITktXFlyYUgh44uCMMh2bnmZ6hc=
+	t=1747209044; cv=none; b=gkMAkBuXjkWTpranXxj2Y08f+Joa2Exb83WNG0/V8uNRPju7c+cWNWV2M0ZN+phkXKWwke6zIqYUMuEhO7n3/6jcRpav4rMUQUj2x5YmEccGG5rn7lsWw/xOKX4KcRdcrfF93GBKgpuJagVfchmFGnWmKx7YPlu69Xn2yrWTIAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747209015; c=relaxed/simple;
-	bh=/tF8K2NTeCCHaif76f7Ley4J0CpUJfvELhKFRVyp/KY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YzBT84kP6uSW7HuiS1wJkWdpRw+aCnTegtx1+s6XUvP197d/ib2Pu56kU28dK2inVWBuZUsSeihOt6UryPXqWnMwXAPE2EUp+TBadlvmqcV1w925zvXj2K25ggMgdZWJq1VYg3qe6+Xx8PLY+6yOd/ys5txqXERsF8STXXhVSQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Ke5CDRyt; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747209044; c=relaxed/simple;
+	bh=V1iOZdoMZHugSJlelk+uvJow+WTnaaFyaZ41KnihrRo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qwUhM14a/GaKLdBuh1SMWai8Os0S9fOzNURAJ9D8lqHvb6enGfxLzQuRf3Qz6ZNG2yt9emPOGgsjIhpheLkUNcKe0UFEYewK/WbxeFnDJqgJqUqMOnbuwGglILb8mpA9YPAud5ySDKekWE1KpF0fvr6tHTealWrz2vhk3sUNXIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gujf1BiJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Ke5CDRyt"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 691B0439D3;
-	Wed, 14 May 2025 07:50:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747209011;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v1aRf1qlofiLBTSf6ULbxEoBgoZVuSsMmJGqVz5ikGs=;
-	b=Ke5CDRyti81LkO2ACUXpk4vagGwlcXLNrl8rN9C5TOLXprgj4YkOj5Ox1mk16qRKEbM1r9
-	BehkrqDihpbBaXUI5vorvs2d4fkFNtjUcmQzuMeMJVyswTGZd/FFUeXNsIOBCklTHayGEc
-	UtxxyTqjY1UoYbdNoG9dkb2t75ashK7UrwnbZNT8+CLoZpuLpCumjqWxqSyJluVasFhyFQ
-	0415YcjVJxXNBwodVBbSF8VvwxAV5Zdkyjr4Sz9S44goJUE3UxmVHIukpQF5jx6J6DXsjv
-	NpJvLbVqJQA/Vhng3hU9CAv0K9nIM07lhTVwDUlsp0HncVDusLSE6MRpaDd2Ag==
-From: Romain Gantois <romain.gantois@bootlin.com>
-Date: Wed, 14 May 2025 09:49:59 +0200
-Subject: [PATCH net-next 3/3] net: phy: dp83869: Support 1000Base-X SFP
- modules
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gujf1BiJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19B64C4CEE9;
+	Wed, 14 May 2025 07:50:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747209043;
+	bh=V1iOZdoMZHugSJlelk+uvJow+WTnaaFyaZ41KnihrRo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gujf1BiJ2fzF3cb3dPHpvhREfd/7wDh/wbh3gD3cI/ZKPzZhPmYtHA6vm/vGcpEge
+	 RoSNu4ARjXMPkH5DbwPUpa2EhOi5usclzqE/7YHSEPMO/QODHJ1CYpv/JKI7o/g4m6
+	 ToXtaZqBBuONH+ifk8miO2xIH+3jSJ1zTlnefFaGIy0/DeuZG68RtMl1Sv/Y8eW45X
+	 VdljsApSenE10oBxY00saZL/IJdFblENeksEg5grx6AhIdwH2H+pbZmrNEfjEH5Fu/
+	 E0et+HikS9GZNwtPazCZw4L93EHWEAEXJl5M16VW1kxLe8eZee7/9JSMKy2Qg5du1V
+	 5MvT6vWMWssug==
+Date: Wed, 14 May 2025 09:50:39 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH] fixup! x86/sev: Share implementation of MSR-based page
+ state change
+Message-ID: <aCRLT3C9zthX9g5r@gmail.com>
+References: <20250512190834.332684-23-ardb%2Bgit%40google.com>
+ <20250513141744.905614-2-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250514-dp83869-1000basex-v1-3-1bdb3c9c3d63@bootlin.com>
-References: <20250514-dp83869-1000basex-v1-0-1bdb3c9c3d63@bootlin.com>
-In-Reply-To: <20250514-dp83869-1000basex-v1-0-1bdb3c9c3d63@bootlin.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Romain Gantois <romain.gantois@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -50
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdeigeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenufgrugcufihorhgushculdehtddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpeftohhmrghinhcuifgrnhhtohhishcuoehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkeelieefteelffeuheevtdetkefhfffhteffkefgtefhkeevudeutdeugfffheegnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrtddrudefngdpmhgrihhlfhhrohhmpehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdro
- hhrghdprhgtphhtthhopehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomh
-X-GND-Sasl: romain.gantois@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250513141744.905614-2-ardb+git@google.com>
 
-The DP83869 PHY supports multiple operational modes, including
-RGMII-to-1000Base-X, which can be used to link an RGMII-capable Ethernet
-MAC to a downstream fiber SFP module.
 
-+-------+          +---------+            +-----------------+
-|       |  RGMII   |         | 1000Base-X |                 |
-|  MAC  |<-------> | DP83869 |<---------->| fiber SFP module|
-|       |          |         |            |                 |
-+-------+          +---------+            +-----------------+
+* Ard Biesheuvel <ardb+git@google.com> wrote:
 
-Register the attach_port() callback, to set the supported downstream
-interface modes for SFP ports and provide the configure_mii() callback,
-which sets the correct DP83869 operational mode when a compatible SFP
-module is inserted.
+> From: Ard Biesheuvel <ardb@kernel.org>
+> 
+> This is a fixup for the mentioned patch in principle but it applies to
+> the end of the v3 series so all subsequent conflicts have already been
+> resolved.
+> 
+> Without it, PVALIDATE will be passed the PA instead of the VA, which
+> will break if the early page state API is used after the 1:1 mapping is
+> unmapped.
+> 
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
+>  arch/x86/boot/compressed/sev.c      | 6 +++---
+>  arch/x86/boot/startup/sev-shared.c  | 8 ++++----
+>  arch/x86/boot/startup/sev-startup.c | 2 +-
+>  3 files changed, 8 insertions(+), 8 deletions(-)
 
-Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
----
- drivers/net/phy/dp83869.c | 53 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+Thanks!
 
-diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
-index 000660aae16ed46166774e7235cd8a6df94be047..6d43c39ac525714a495327ec5a1a22b5e653b1cd 100644
---- a/drivers/net/phy/dp83869.c
-+++ b/drivers/net/phy/dp83869.c
-@@ -10,6 +10,7 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/phy.h>
-+#include <linux/phy_port.h>
- #include <linux/delay.h>
- #include <linux/bitfield.h>
- 
-@@ -876,6 +877,57 @@ static int dp83869_config_init(struct phy_device *phydev)
- 	return ret;
- }
- 
-+static int dp83869_port_configure_serdes(struct phy_port *port, bool enable,
-+					 phy_interface_t interface)
-+{
-+	struct phy_device *phydev = port_phydev(port);
-+	struct dp83869_private *dp83869;
-+	int ret;
-+
-+	if (!enable)
-+		return 0;
-+
-+	dp83869 = phydev->priv;
-+
-+	switch (interface) {
-+	case PHY_INTERFACE_MODE_1000BASEX:
-+		dp83869->mode = DP83869_RGMII_1000_BASE;
-+		break;
-+	default:
-+		phydev_err(phydev, "Incompatible SFP module inserted\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = dp83869_configure_mode(phydev, dp83869);
-+	if (ret)
-+		return ret;
-+
-+	/* Update advertisement */
-+	if (mutex_trylock(&phydev->lock)) {
-+		ret = dp83869_config_aneg(phydev);
-+		mutex_unlock(&phydev->lock);
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct phy_port_ops dp83869_serdes_port_ops = {
-+	.configure_mii = dp83869_port_configure_serdes,
-+};
-+
-+static int dp83869_attach_port(struct phy_device *phydev,
-+			       struct phy_port *port)
-+{
-+	if (!port->is_serdes)
-+		return 0;
-+
-+	port->ops = &dp83869_serdes_port_ops;
-+
-+	__set_bit(PHY_INTERFACE_MODE_1000BASEX, port->interfaces);
-+
-+	return 0;
-+}
-+
- static int dp83869_probe(struct phy_device *phydev)
- {
- 	struct dp83869_private *dp83869;
-@@ -931,6 +983,7 @@ static int dp83869_phy_reset(struct phy_device *phydev)
- 	.set_tunable	= dp83869_set_tunable,			\
- 	.get_wol	= dp83869_get_wol,			\
- 	.set_wol	= dp83869_set_wol,			\
-+	.attach_port    = dp83869_attach_port,                  \
- 	.suspend	= genphy_suspend,			\
- 	.resume		= genphy_resume,			\
- }
+I folded this fix back into the originating patch and rolled forward 
+the changes and resolved the conflicts, the updated series can be found 
+at:
 
--- 
-2.49.0
+   git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/boot
 
+Thanks,
+
+	Ingo
