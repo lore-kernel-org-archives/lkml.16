@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB9922AE7A
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:38:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEE422B8D4
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:39:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747215541; cv=none; b=g/LZxgobSeOfaDvsA/nV2FwGLlT4AnfWy+eGav40LAS1G2wMV1RPRO7hxFCnxtnBjlgHKzeW/t2nJTlZkTL814Yx8BAEP+qKRtQbax4EKP3ZrWQS3WhC5ryLw8OacHE3Q4cUk8MKX0AQW3h17c9Q05DUlhllCMjQeaAo3a1QeW4=
+	t=1747215542; cv=none; b=As47cOCh4oRPk6aNk4SLTmbcx6+3FomeMvJtnDKlaUCZFh4ikWlRhJwbkbmQU1AqHJAPl5P7HbhfdJs0N1YTvtFSnRMxKRkLWDvMIJgcPq/0nmMyipJ9Sc0PlLSX0DIQlFijMY7fnrb8uBWaiEraoMr7ZtCkNjZilDAtVdARN3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747215541; c=relaxed/simple;
-	bh=pp8rXHmAAbML37R1XE9nWT97fOfbqMxBcQMy5qEtWuw=;
+	s=arc-20240116; t=1747215542; c=relaxed/simple;
+	bh=bAf1KeQgY+S4odA+zjDMDASFtXQ3F/v+Z+z9pyisvBI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mOZrPTgYU7oGul0/7hnsDFjr2hYvw8/1nCrzEbANc8xYlha6rGtKWCmfbDWwkdZKK0Qj+/NXVhq1Ktp1fcqcAGwrrmYxQNze0Z5Md0nZiCOgkAlM1NFZiUxIgLZRULjIrAsABGbo/0Dr73rA9AEbWjHqF2IBihwTN9nOd9Lrxd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CjNOLa0k; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MREWsN+e; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=On0y+8qbHB0wvREWKFqFSS13TqyfDSwAkyNl9HFE1vV2wnLQD4WUKbMlJTOB4JDKBNrMsk12FuivUS26DDoJY5OwkGWXtqmBy075bd2bS4uFvkXgqYlryfEw5KvLnvcz8YC38t7xfhQIyTeJnZGA5FaXMZCO3lhfq38Nam5aktU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Cab2874f; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k6wzvEby; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CjNOLa0k";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MREWsN+e"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Cab2874f";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k6wzvEby"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747215537;
+	s=2020; t=1747215538;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LK+Og6CgstdynsfQmcoHpOPeAtyjebuHccUKvOXx7QM=;
-	b=CjNOLa0k4B30MmTLnXdLk3vjDzqeMwucYzVXriRYkskWy3Lx6AkhGPSMBz2sUka3u67E2r
-	QpCrGj1/ZcLI+GiMVBmyYw8pUGBRHHBRfAfLjFg3QvJ0bup0J/HMbkQKPrVe2sFODu1cpB
-	EQzigHl93WFISnE0JxMv4JlMwcwFjs18bgzjsMs1CI9bqTAxlVAYuQeOSsqTZxvUE0pc5q
-	0WN5uWelwOSlc7FJl21fGOGz+0uW2sdis0EjcqHsZM9iM37R5pFn1pjEtbzH8Tv2zpbb/b
-	+ePW8jwhhOs39cXAizEIbzj4wBnYGsjIs0m/AKhivUcrYxS5NUpoo+mYdLCxRA==
+	bh=yu9ObJyfNpp1PZ2rXY3qx0bjof6NU76pzsErYsbGgBo=;
+	b=Cab2874fldAN3ra0e1pMc6uH6YhYOkMAwYo3z/w2R7k0yplAtAXUAhc4YNrXPeNZoWCdLX
+	c6jmzzsfirM6B3JYyTGZ/FFoj6mEsr1NBtksf/c6UlQ6A555CEB7P0FLMTrepais4ab5ne
+	QD3zkkzV8pCP1Z0DbxvF3tMzIFxXS0ktb1EDDAjp7fSkM2H4Jr6pYh+errNwMjrtcDy+ZE
+	aL6WqarJ4PRZBDfJhCmzQtbnHNQp8blqUujp2kU0ZJD1CZVmfjd60CIupWxnPDAktMV3O5
+	UEd4rDGA7xYVW7JGfZYu5oYI2EyQ+ZamCr9el4ijL15kGK7U41sW7bync4oNlw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747215537;
+	s=2020e; t=1747215538;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LK+Og6CgstdynsfQmcoHpOPeAtyjebuHccUKvOXx7QM=;
-	b=MREWsN+eYcLWH45438eJ/TnM+IWRxtCMgbkxzsoS+xk3eUCQcnN7LOcxS40DEE7f5AYitS
-	0rg3tQ9Q65Kk8CCQ==
+	bh=yu9ObJyfNpp1PZ2rXY3qx0bjof6NU76pzsErYsbGgBo=;
+	b=k6wzvEbyUSNIta1mdsVubFmN6ByhJLT6afy2aP4N7pZC4OgPjMw3BoN9QYDvmgBNtAvDAk
+	ymX7B3MGb46v0ZDw==
 To: Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
 	Albert Ou <aou@eecs.berkeley.edu>,
@@ -47,9 +47,9 @@ To: Paul Walmsley <paul.walmsley@sifive.com>,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>,
 	Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v2 03/11] riscv: kprobes: Remove duplication of RV_EXTRACT_JTYPE_IMM
-Date: Wed, 14 May 2025 11:38:42 +0200
-Message-Id: <af502036738d381c6bdb96a236d21bab8c343f74.1747215274.git.namcao@linutronix.de>
+Subject: [PATCH v2 04/11] riscv: kprobes: Remove duplication of RV_EXTRACT_RS1_REG
+Date: Wed, 14 May 2025 11:38:43 +0200
+Message-Id: <b441038c991da11a7a48ea7140ab00e3bb119387.1747215274.git.namcao@linutronix.de>
 In-Reply-To: <cover.1747215274.git.namcao@linutronix.de>
 References: <cover.1747215274.git.namcao@linutronix.de>
 Precedence: bulk
@@ -60,43 +60,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Use RV_EXTRACT_JTYPE_IMM, instead of reimplementing it in simulate_jal().
+Use RV_EXTRACT_RS1_REG instead of reimplementing its code.
 
 Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- arch/riscv/kernel/probes/simulate-insn.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ arch/riscv/kernel/probes/simulate-insn.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/arch/riscv/kernel/probes/simulate-insn.c b/arch/riscv/kernel/p=
 robes/simulate-insn.c
-index d5f74fadbc3a..b76a691d0d9a 100644
+index b76a691d0d9a..625d514c4ada 100644
 --- a/arch/riscv/kernel/probes/simulate-insn.c
 +++ b/arch/riscv/kernel/probes/simulate-insn.c
-@@ -41,19 +41,16 @@ bool __kprobes simulate_jal(u32 opcode, unsigned long a=
-ddr, struct pt_regs *regs
- 	 *     1         10          1           8       5    JAL/J
- 	 */
- 	bool ret;
--	u32 imm;
-+	s32 imm;
- 	u32 index =3D (opcode >> 7) & 0x1f;
+@@ -66,7 +66,7 @@ bool __kprobes simulate_jalr(u32 opcode, unsigned long ad=
+dr, struct pt_regs *reg
+ 	unsigned long base_addr;
+ 	u32 imm =3D (opcode >> 20) & 0xfff;
+ 	u32 rd_index =3D (opcode >> 7) & 0x1f;
+-	u32 rs1_index =3D (opcode >> 15) & 0x1f;
++	u32 rs1_index =3D RV_EXTRACT_RS1_REG(opcode);
 =20
- 	ret =3D rv_insn_reg_set_val(regs, index, addr + 4);
+ 	ret =3D rv_insn_reg_get_val(regs, rs1_index, &base_addr);
  	if (!ret)
- 		return ret;
-=20
--	imm  =3D ((opcode >> 21) & 0x3ff) << 1;
--	imm |=3D ((opcode >> 20) & 0x1)   << 11;
--	imm |=3D ((opcode >> 12) & 0xff)  << 12;
--	imm |=3D ((opcode >> 31) & 0x1)   << 20;
-+	imm =3D RV_EXTRACT_JTYPE_IMM(opcode);
-=20
--	instruction_pointer_set(regs, addr + sign_extend32((imm), 20));
-+	instruction_pointer_set(regs, addr + imm);
-=20
- 	return ret;
+@@ -115,9 +115,6 @@ bool __kprobes simulate_auipc(u32 opcode, unsigned long=
+ addr, struct pt_regs *re
+ 	return true;
  }
+=20
+-#define branch_rs1_idx(opcode) \
+-	(((opcode) >> 15) & 0x1f)
+-
+ #define branch_imm(opcode) \
+ 	(((((opcode) >>  8) & 0xf ) <<  1) | \
+ 	 ((((opcode) >> 25) & 0x3f) <<  5) | \
+@@ -147,7 +144,7 @@ bool __kprobes simulate_branch(u32 opcode, unsigned lon=
+g addr, struct pt_regs *r
+ 	unsigned long rs1_val;
+ 	unsigned long rs2_val;
+=20
+-	if (!rv_insn_reg_get_val(regs, branch_rs1_idx(opcode), &rs1_val) ||
++	if (!rv_insn_reg_get_val(regs, RV_EXTRACT_RS1_REG(opcode), &rs1_val) ||
+ 	    !rv_insn_reg_get_val(regs, RV_EXTRACT_RS2_REG(opcode), &rs2_val))
+ 		return false;
+=20
 --=20
 2.39.5
 
