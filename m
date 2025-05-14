@@ -1,107 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E574E23CE;
-	Wed, 14 May 2025 16:08:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840FF1F1931
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747238939; cv=none; b=U1IB/X0FP6OFDzkONd+9sxx4n0Es4BIwXifJMLTUa8o5EBcKKDe9+DtZecpr4oNjxvGQpP28p0fCsi7m4N1Af3Qb8tRFtzvZA5VhrmApzLxpkmrXO+74ql1Z8c3ESoCHHlTANNGExp82TjsndkZdnJfEFawzBjLAV3vCE2eUtYs=
+	t=1747238994; cv=none; b=tdH3N65LKD0zihConSGJOKJ1dA5riet/+UBLJ4x+oEzIM26QF2YSKHLUKFxBf1sRyHiQeUcOq7eByh5P4kW6EAg4YaJuI2LMwWLprS+HIe9vD8n0zdVG4Rk5Aj52fGBHxR57vKyCP4eeUA/0o9BQqa1jRmlEWIGJr3Zf0aPuQps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747238939; c=relaxed/simple;
-	bh=WSQlp+Dh5QGr6EurTALLy9/PXCYuEoCNVlxnRZuV284=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nQl+XeCaweEuJri/uVoLn7jZsbKm1xXjfcb1VvtlVBhaaxZjLw2y/SxIA+Oq3YuNgFohFw1Cxb4/txY4USKdNB9CPjnWOXDTc4FbuD8ifmMUgDtC29etOcH1PwZNuMs07MHMBi3vgXoUzbn1PeQvnWE0wpK6b80wLTTIExXsgLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gpqj+bCO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747238994; c=relaxed/simple;
+	bh=dAFXgv/Th++PeeqT0mudyRhiM3RKBJOKB7qx9Gr+mJ0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=VaZfE8Bemv/WR5dut4K53tVnAeqLOdrmdFRTckTDYfrd/6SGTsJuSeoQKTntLpsPwXsXRODLNjzEphk+Sa5CW/l0VWzZjfJH1PoQqHMoz7PCprvw4akDkbxDnm+3k5rCd0SNoIKVPxsUPdJJPbdj5Ppmq3UVsTuMCaSrIOo99Vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=bqH+LKhU; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gpqj+bCO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1788C4CEE3;
-	Wed, 14 May 2025 16:08:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747238938;
-	bh=WSQlp+Dh5QGr6EurTALLy9/PXCYuEoCNVlxnRZuV284=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gpqj+bCOZePXoGUhl6GNYU+4uRTymJYRb1tLtydhiM2k+quJrJPO7O1l0oi83NBgB
-	 5NC1wmRjfA5qXQztQG7KTvBMUP6HjG9gDj8ZyUCcnoP3pxRVyVFAZtUPqOg/JkPokA
-	 tWWtRcXTk6ThbX8TXHU5C8VQVlsoPtcars+iAp3VawHIpOFgsNAw0S8VJ82ANTOIoO
-	 GMsmteGjhDuPgmRhoN7rjF8TY4s4GEgNSx3Olv0x/VimrLXypeW6ehEQbHJBU2enU4
-	 Y5SSO53qC57LUuU5YHgPGecIoG+TJYqdfQ2Fs0XvSreYo7gX7lZ+GEo/ybwbZTLG41
-	 c+lkhmFejK5Aw==
-Date: Wed, 14 May 2025 18:08:53 +0200
-From: Mark Brown <broonie@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
- abstraction
-Message-ID: <aCTAFY5USLIchVWL@finisterre.sirena.org.uk>
-References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
- <D9VATLUHDGU8.53I80TGVRV0J@kernel.org>
- <B288AFB1-BA0A-4383-9823-EAC9E5DCA59F@collabora.com>
- <D9VXPNT4HNXP.1PKET0Q1H7O9Y@kernel.org>
- <52CFFCA2-F253-49F1-9EA5-2865BD094B25@collabora.com>
- <D9VZV8APBYWU.2SWXJLHIQ18ZB@kernel.org>
- <aCS71sbQKn7zeosR@finisterre.sirena.org.uk>
- <D9W0FJ6MKPTE.1NI5HK0TJRHCM@kernel.org>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bqH+LKhU"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250514160948epoutp04e1d2097e27ed60ba6293cde6c972fa44~-cJpjs6Dr3098430984epoutp04d
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:09:48 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250514160948epoutp04e1d2097e27ed60ba6293cde6c972fa44~-cJpjs6Dr3098430984epoutp04d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1747238988;
+	bh=5ZASWR2F8/aLstx6zx2qdaQhNiFkyY03eKEnIDBlPMY=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=bqH+LKhUmbuvpHStQhZpv3R4meWUlwdJqguz5WHAZfR+RgIGQMYqvXOO7jx/WXIPD
+	 lFjp8MvurU4+2u/vrikwlmL/QTHMtX/f9U8BUmaqU8PgbjICkT6iAHJbBztR6qPWlJ
+	 T6Nn0m2/Qr+EP7B7jeNn0rZ4Njw1gy/5wogzanHY=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
+	20250514160947epcas5p1df70417edde2fa2ae8a55591eaefdb7b~-cJom4x1H3248132481epcas5p1P;
+	Wed, 14 May 2025 16:09:47 +0000 (GMT)
+Received: from epcas5p2.samsung.com (unknown [182.195.38.182]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4ZyJFk47ngz6B9m4; Wed, 14 May
+	2025 16:09:46 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250514135752epcas5p2c05acfa026f884fabb631bf15d20e4c6~-aWdBD1Zj1178911789epcas5p2k;
+	Wed, 14 May 2025 13:57:52 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250514135752epsmtrp2563895c03fb8aeb0acc1e67de5378004~-aWdAJ_nk1245012450epsmtrp2F;
+	Wed, 14 May 2025 13:57:52 +0000 (GMT)
+X-AuditID: b6c32a29-55afd7000000223e-a6-6824a16036dc
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	16.2D.08766.061A4286; Wed, 14 May 2025 22:57:52 +0900 (KST)
+Received: from bose.samsungds.net (unknown [107.108.83.9]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250514135750epsmtip2a7aee6cb8b0cbf9da77a2704dae5b760~-aWarW5jT0379903799epsmtip2d;
+	Wed, 14 May 2025 13:57:50 +0000 (GMT)
+From: Pritam Manohar Sutar <pritam.sutar@samsung.com>
+To: pritam.sutar@samsung.com, gregkh@linuxfoundation.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com,
+	Thinh.Nguyen@synopsys.com
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rosa.pila@samsung.com, dev.tailor@samsung.com,
+	faraz.ata@samsung.com, muhammed.ali@samsung.com, selvarasu.g@samsung.com
+Subject: [PATCH 0/2] initial usb support for ExynosAutov920 soc
+Date: Wed, 14 May 2025 19:37:39 +0530
+Message-Id: <20250514140741.415981-1-pritam.sutar@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="/SyjG8EBHfpAPEFc"
-Content-Disposition: inline
-In-Reply-To: <D9W0FJ6MKPTE.1NI5HK0TJRHCM@kernel.org>
-X-Cookie: Well begun is half done.
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMLMWRmVeSWpSXmKPExsWy7bCSvG7CQpUMg3dbZSwezNvGZrFm7zkm
+	i3s7lrFbzD9yjtXi2o2F7BbNi9ezWbycdY/NYtPja6wWl3fNYbOYcX4fk8WiZa3MFudfdLFa
+	PLu3gs3i/54d7BZffj5gtjiy/COTxaoFB9gdBD02repk89g/dw27x+Yl9R59W1YxemzZ/5nR
+	4/MmuQC2KC6blNSczLLUIn27BK6MXy9vMhe0cVbcfOnfwPiKrYuRk0NCwERi/t6TTF2MXBxC
+	ArsZJe7uOs0KkZCReDRtI5QtLLHy33N2EFtI4C2jxJ92oDgHB5uAqcTEPQkgvSICmxgljqw4
+	yQxSwyywmkni9NQMEFtYwF5i9/zlTCA2i4CqxO53E8Fm8grYSdyfv5EZYr68xP6DZ5kh4oIS
+	J2c+YYGYIy/RvHU28wRGvllIUrOQpBYwMq1ilEwtKM5Nzy02LDDMSy3XK07MLS7NS9dLzs/d
+	xAiOBy3NHYzbV33QO8TIxMF4iFGCg1lJhPd6lnKGEG9KYmVValF+fFFpTmrxIUZpDhYlcV7x
+	F70pQgLpiSWp2ampBalFMFkmDk6pBiaOn3pBewyyfyzKdX0S67fw4HGvqZUGv+b8NPU8pj3H
+	6Gx13YaeCsVFl1T2bLsXL+fZoBUZzb/0mkJKVswuzwMPXipPlTVxuuZUXe7cundWccL114er
+	V5xwm7pmp1zU5mSuOXcenhN7MME1bc7lx4sTvTU0/y7JP3Ww44i8b1Pgad3tjhkLj83guFn7
+	XcP2vvrbRTwbvv88O23Jr9BP8jcqOr5stBZ41S03J3rRzTviaR57WXbLpsy3n7T57cSVl+0k
+	WRoOO09Q/BcwbeHJBIeEh+WGDN+Ec38dFee1X/dt0WqmAg8Tdcm2y5td+Jtj5PbnZZ6K8rFq
+	yj3yb9FG3fCghDV8HSbnTrw5OlHcKj1OiaU4I9FQi7moOBEAYsMXc/YCAAA=
+X-CMS-MailID: 20250514135752epcas5p2c05acfa026f884fabb631bf15d20e4c6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250514135752epcas5p2c05acfa026f884fabb631bf15d20e4c6
+References: <CGME20250514135752epcas5p2c05acfa026f884fabb631bf15d20e4c6@epcas5p2.samsung.com>
 
+This SoC has a DWC3 compatible USB controller
 
---/SyjG8EBHfpAPEFc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The USB 3.1 DRD controller has the following features:
+    * compliant with both USB device 3.1 and USB device 2.0 standards
+    * compliant with USB host 3.1 and USB host 2.0 standards
+    * supports USB device 3.1 and USB device 2.0 interfaces
+    * supports USB host 3.1 and USB host 2.0 interfaces
+    * full-speed (12 Mbps) and high-speed (480 Mbps) modes with USB device
+      2.0 interface
+    * super-speed (5 Gbps) mode with USB device 3.1 Gen1 interface
+    * super-speed plus (10 Gbps) mode with USB device 3.1 Gen2 interface
+    * single USB port which can be used for USB 3.1 or USB 2.0
+    * on-chip USB PHY transceiver
+    * DWC3 compatible
+    * supports up to 16 bi-directional endpoints
+    * compliant with xHCI 1.1 specification
 
-On Wed, May 14, 2025 at 06:05:11PM +0200, Benno Lossin wrote:
+Pritam Manohar Sutar (2):
+  dt-bindings: usb: samsung,exynos-dwc3: add dt-schema ExynosAutov920
+  usb: dwc3-exynos: add support for ExynosAutov920
 
-> Gotcha. So calling `regulator_enable` twice on the same regulator is
-> fine?
+ .../bindings/usb/samsung,exynos-dwc3.yaml        | 16 ++++++++++++++++
+ drivers/usb/dwc3/dwc3-exynos.c                   |  9 +++++++++
+ 2 files changed, 25 insertions(+)
 
-Yes, absolutely.  You might potentially see this with a multi-function
-device where multiple functions on the device need the same supply in
-order to help reduce coordination requirements.
+-- 
+2.34.1
 
-> If that is the case -- and after re-reading the functions exposed on
-> both types `EnabledRegulator` and `Regulator` -- I am confused why we
-> even need two different type states? Both expose the same functions
-> (except `enable` and `disable`) and I don't otherwise see the purpose of
-> having two types.
-
-IIUC the point is to allow Rust's type system to keep track of the
-reference on the regulator, otherwise the user code has to keep track of
-the number of enables it's done like it currently does in C code.
-
---/SyjG8EBHfpAPEFc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgkwBQACgkQJNaLcl1U
-h9BJGAf9FQgChgXlHSQEhzdwlEizPZdPeQ6ua4OKfpaORUGdObaNFzP12L3qLbwH
-Zr1EMaDF1AZcNygWeLauyI5z+kXBegmu63Hr7pKhuwgAkxw/pq5nrvtMbIu8oM8m
-ajic8V2NsNHowlm/oJw16eDLTn/swjQ15RlRr45llf3nIfRE2NVxtXkvwZq6vmgw
-wcIflCDzDH/Nmxl0QBsFZo+TH31McUP7KmARzS8M83lTgV5w1ERBye1o0KYXliT0
-1F4OCUsoTNjZN/CGM2mZMzQADVayDJcRBxVs1u9VdAMu4jCi3XgimZDGK7q6AHWl
-Il5EDOTCw3mAZFWgNrNpvawhbb/9yA==
-=Mm35
------END PGP SIGNATURE-----
-
---/SyjG8EBHfpAPEFc--
