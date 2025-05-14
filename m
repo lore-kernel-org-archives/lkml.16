@@ -1,55 +1,55 @@
 Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED2E2356A3
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAFC239085
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:43:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747266196; cv=none; b=QzBZ4/PJXh5hpVy/xPbBNiXd7tKb/VYN3ZizcptoZcAEnw9lwdmuuhNPfgamS363koXRpdeXIA249z7+h9hkfmLVojJUHdU0k6KgTeD4HtPBnmawXbnuL57McGgx065rDX6ybY8MH5PQBzdknjsga+Fe+2EYoGi+mQ/dxnd+i6M=
+	t=1747266199; cv=none; b=oiz7gtxqWikNTnMBy/iK3IQgYfFxUi9vrl6HeRd3sI8yi9dMvEzPpMeEmJry23ZpIK13WsXb9r/WRXZr03mU1ugCcZ/wDgqfjkyV+s290m1viTFBVpZdcRAq1qe0CmIyUksOzaIylaUNmSl/85+L6PlSpv7V6rVVzMJp7zXmLjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747266196; c=relaxed/simple;
-	bh=LzJYk4b8YGsjuk791t5mKW865k0fPRkNXL8xs0fj9z0=;
+	s=arc-20240116; t=1747266199; c=relaxed/simple;
+	bh=W3kQvVjiVRdrC872LeW4B4Hq/K4Vu3vda0e9Fhub7Es=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=iwa8XhfK97+F00JKXJLGVXbAP9pt4PS9Ewiqx/SAsga9TotUP9AVLz6xdmS0+hy2dGr+BXnpbap08/rISyu/2yDc34sv47JNkzximYfETcYo+VWZMuQAIbCTN6XEYBkBW3CeWfjOaUgUv87mk9ATlQKgU7EOmdZNZXXSlnMeY2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dB7tNBjE; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=Yy16+3CFlAbSQgESf0oJgTfNJYgSSzZ60Aos9LKwze5Ry7ty6uAt/tXux71Y7YLDJ3tzzbtkQ/o/r6QBa/j3pVfjnMUkHNI+n7UmB6gLxtnSVXJjhp/13cRaOiyz7lzz257kR1vqfVZvwhd9C3OjPJ4ncunhBBYYigXh1uDs8Qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0Gv2gOpJ; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dB7tNBjE"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30abb33d1d2so654468a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0Gv2gOpJ"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ab450d918so524012a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:43:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747266194; x=1747870994; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747266197; x=1747870997; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mGWGFLne1bJyu7laipcwQPaVQw6rHvasb6OTJEqGffc=;
-        b=dB7tNBjEJawIvPmuM7S1FgBXGqOLhkGp0NooRcKZfKHaWFZ1OYviFEfSpa7T57Z2Qp
-         CN0uy9+GkzqpodzUbEYb33YDDLRQtM2LgTG9JgSBXwfdrDPQ0Y5RSXBO91/pBOTksTYN
-         rXzhtFhtZg+4vON2MK0ncyw5qKV94pKyHOaIbdZN4qNy5H14lCl4Nn5QyQu/8BX16/gY
-         jZqdaywDpq64YSVaDgDQD/bbH2RjOBJZ2Jpv5IleZUbT+rqU53RW+VlaIjMSi+2//x+8
-         ELyyPGaYNG4jEujDNIGxZgaLY3NmgnNxII8M/7i7FP0ljtwO/H3TpGoQuG9z/n8Hn2gb
-         gsBg==
+        bh=PRU0ZRfLQjg4VVDgrWE7a1sC3dOKBaDUonPKqBXfZi4=;
+        b=0Gv2gOpJPpQAk4AzrJ/7XJAFcnJMsEPsie8bZF9fQzpwfUJc4L8dyq/RwUSF08BEg/
+         sjqtYSRHBaLPNT/wK+6mtuLxpQ/gEXFiXwBYoM/QbDzLdVrPMjBzKdPBxuiQsb7eXvQn
+         8BHUCOb2v9seDLHOZmERG4YbzDSS+tMZ2Dx+oVkaqtNHGdQY4x2XxOCDlasr4QNJVlc2
+         /sH1Jz5COfNm58JtYrXqp1NGwnHVFW46HzSyghHBIUwOsfHw8WWYyr/qV6MemPsSMoRJ
+         ZTsv62ECrG5JOProNxaN6x/U9M/QyPOHlTvW3VasklLm3UD7KoJ8p+wDWfWXfEJ83o5m
+         TjiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747266194; x=1747870994;
+        d=1e100.net; s=20230601; t=1747266197; x=1747870997;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mGWGFLne1bJyu7laipcwQPaVQw6rHvasb6OTJEqGffc=;
-        b=iDxJYmR/UcIDqWsRX00/rpegY5QneMbp+xgqMa4ZIaovFvmv7AHLMDDzY9JHhAiiOa
-         jfjuxYXG6sM/GJGsGCpUbJIlZSphl+ald7aOtdQIPUHAqdBXZdDCI9+vH1ZxpGAJ4asV
-         1sDocFTkSjrUAqcZTbP0n5506G7PfKku3vHzotR0235kTWrsCjaR5n/A7Q6g3Iyspmep
-         uzYLqCBscszwGb8M5dus1lJ/xbFnrscx2vg+8UTq8Sm2QnqdPeRON/KmNipkviazTM2C
-         guvMD8Kaq6N98nuMEMIlUqfyQsxDvkT0SFSdICKLEUDEOaQJ/Y9qwWGLAaOF1kPfMn8T
-         r47g==
-X-Forwarded-Encrypted: i=1; AJvYcCWelt+wnuLcJxANY2AmguHQBWOv5+ATs1YbrS0wLGEUDQSnLRufW6KsAAFngkXW7v/VmO1nv+c58Otm0CM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWqMPuKxYx79xJ+0uGaJIvlCfIyADaLA6Af3g6MZuiUFFqR10r
-	E/E1dOQik6MK7+1awdqVtt8XfzrrmZFJt3ar8vnCFG5U/V6UAqzgmTs2swx5p1cZz5BtBoGRIIV
-	PTSY8JxU+Ota1fbl8emRkgg==
-X-Google-Smtp-Source: AGHT+IHW8Awj1az2kZDKXFyRTHzAsu7nHW73nuWNFHatSp354fmtn6egEeLp32OhYFxf0/BZ1Nce5gFMY5p11LmLng==
-X-Received: from pjbee14.prod.google.com ([2002:a17:90a:fc4e:b0:301:1bf5:2f07])
+        bh=PRU0ZRfLQjg4VVDgrWE7a1sC3dOKBaDUonPKqBXfZi4=;
+        b=R32P2VqhkDmKUmEe+NusfiiZBvOaeAtFn6mxzuy5uFc8JAgeN2xofopY0muBe75mwi
+         vX4ZAkUavTnPTEPgMyF7EJ9nRXNXUsrKeJh5JfWHLUF52xk3AtJTT2+K4Sx9uPuwjeZ3
+         Dha9xTBWvVG1sq0QV/cot81QrYdhz8QiocT3CG2FcPiCDVnARGvlfviWy/AjnuYkTgN7
+         mKV1axcXZg0VWeRK/oX+5VqT36j9NIJ3rGGOEmI1gtjEBr1Eecy+JOwBtU87ecWQMQlQ
+         LgkZ2No3ColgBmEm120MzagiRA6grw3KLFqcQuUi9vLUghmtGCDYZ3TSFPSQEY/hQCHJ
+         IkEA==
+X-Forwarded-Encrypted: i=1; AJvYcCW+FGxcrZMq/iVJX7TAH+SEvwNjXFLxiwVmyKTzsHMlTsPstyQsktyAOOzQurVS2v9muk7dI3v4EX1j7d0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyhh0Av05bMciIpVSaytrO2y1lNbAIwrLvTImOD9wvDtf6Vk0nK
+	T4X/kMZOV11cLi78E8Snyyz9d830768j2GqOnixDvx7mJzs+2wIgDCH4KWvnZBK2gdjwnR1dGYA
+	pxinr7hsO1yY2m+oSUw1mag==
+X-Google-Smtp-Source: AGHT+IHb7GIqu695NGHdx8kULM1l9ge1FyZ0eSB2cW4x76FAmN4jqpBALaAAXGXP8pOhY4vxYo06cCKYxIVDFuivmw==
+X-Received: from pjbsv3.prod.google.com ([2002:a17:90b:5383:b0:305:2d2a:dfaa])
  (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:5788:b0:2fe:baa3:b8bc with SMTP id 98e67ed59e1d1-30e51930f95mr563390a91.23.1747266194209;
- Wed, 14 May 2025 16:43:14 -0700 (PDT)
-Date: Wed, 14 May 2025 16:41:50 -0700
+ 2002:a17:90b:288b:b0:2ff:693a:7590 with SMTP id 98e67ed59e1d1-30e2e62ff9emr9683927a91.33.1747266197415;
+ Wed, 14 May 2025 16:43:17 -0700 (PDT)
+Date: Wed, 14 May 2025 16:41:52 -0700
 In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747264138.git.ackerleytng@google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <09e75529c3f844b1bb4dd5a096ed4160905fca7f.1747264138.git.ackerleytng@google.com>
-Subject: [RFC PATCH v2 11/51] KVM: selftests: Allow cleanup of ucall_pool from host
+Message-ID: <c4d4dcd297dea1eeded3f0c195f4a9767fe9c120.1747264138.git.ackerleytng@google.com>
+Subject: [RFC PATCH v2 13/51] KVM: selftests: Add script to exercise private_mem_conversions_test
 From: Ackerley Tng <ackerleytng@google.com>
 To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
 	x86@kernel.org, linux-fsdevel@vger.kernel.org
@@ -96,82 +96,104 @@ Cc: ackerleytng@google.com, aik@amd.com, ajones@ventanamicro.com,
 	yuzenghui@huawei.com, zhiquan1.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-Many selftests use GUEST_DONE() to signal the end of guest code, which
-is handled in userspace. In most tests, the test exits and there is no
-need to clean up the ucall_pool->in_use bitmap.
+Makes testing different combinations of private_mem_conversions_test
+flags easier.
 
-If there are many guest code functions using GUEST_DONE(), or of guest
-code functions are run many times, the ucall_pool->in_use bitmap will
-fill up, causing later runs of the same guest code function to fail.
-
-This patch allows ucall_free() to be called from userspace on uc.hva,
-which will unset and free the correct struct ucall in the pool,
-allowing ucalls to continue being used.
-
-Change-Id: I2cb2aeed4b291b1bfb2bece001d09c509cd10446
+Change-Id: I7647e92524baf09eb97e09bdbd95ad57ada44f4b
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
- .../testing/selftests/kvm/include/ucall_common.h |  1 +
- tools/testing/selftests/kvm/lib/ucall_common.c   | 16 ++++++++--------
- 2 files changed, 9 insertions(+), 8 deletions(-)
+ .../kvm/x86/private_mem_conversions_test.sh   | 82 +++++++++++++++++++
+ 1 file changed, 82 insertions(+)
+ create mode 100755 tools/testing/selftests/kvm/x86/private_mem_conversions_test.sh
 
-diff --git a/tools/testing/selftests/kvm/include/ucall_common.h b/tools/testing/selftests/kvm/include/ucall_common.h
-index d9d6581b8d4f..b6b850d0319a 100644
---- a/tools/testing/selftests/kvm/include/ucall_common.h
-+++ b/tools/testing/selftests/kvm/include/ucall_common.h
-@@ -40,6 +40,7 @@ __printf(5, 6) void ucall_assert(uint64_t cmd, const char *exp,
- 				 const char *fmt, ...);
- uint64_t get_ucall(struct kvm_vcpu *vcpu, struct ucall *uc);
- void ucall_init(struct kvm_vm *vm, vm_paddr_t mmio_gpa);
-+void ucall_free(struct ucall *uc);
- int ucall_nr_pages_required(uint64_t page_size);
- 
- /*
-diff --git a/tools/testing/selftests/kvm/lib/ucall_common.c b/tools/testing/selftests/kvm/lib/ucall_common.c
-index 42151e571953..9b6865c39ea7 100644
---- a/tools/testing/selftests/kvm/lib/ucall_common.c
-+++ b/tools/testing/selftests/kvm/lib/ucall_common.c
-@@ -21,24 +21,24 @@ int ucall_nr_pages_required(uint64_t page_size)
- 
- /*
-  * ucall_pool holds per-VM values (global data is duplicated by each VM), it
-- * must not be accessed from host code.
-+ * should generally not be accessed from host code other than via ucall_free(),
-+ * to cleanup after using GUEST_DONE()
-  */
- static struct ucall_header *ucall_pool;
- 
- void ucall_init(struct kvm_vm *vm, vm_paddr_t mmio_gpa)
- {
--	struct ucall_header *hdr;
- 	struct ucall *uc;
- 	vm_vaddr_t vaddr;
- 	int i;
- 
--	vaddr = vm_vaddr_alloc_shared(vm, sizeof(*hdr), KVM_UTIL_MIN_VADDR,
--				      MEM_REGION_DATA);
--	hdr = (struct ucall_header *)addr_gva2hva(vm, vaddr);
--	memset(hdr, 0, sizeof(*hdr));
-+	vaddr = vm_vaddr_alloc_shared(vm, sizeof(*ucall_pool),
-+				      KVM_UTIL_MIN_VADDR, MEM_REGION_DATA);
-+	ucall_pool = (struct ucall_header *)addr_gva2hva(vm, vaddr);
-+	memset(ucall_pool, 0, sizeof(*ucall_pool));
- 
- 	for (i = 0; i < KVM_MAX_VCPUS; ++i) {
--		uc = &hdr->ucalls[i];
-+		uc = &ucall_pool->ucalls[i];
- 		uc->hva = uc;
- 	}
- 
-@@ -73,7 +73,7 @@ static struct ucall *ucall_alloc(void)
- 	return NULL;
- }
- 
--static void ucall_free(struct ucall *uc)
-+void ucall_free(struct ucall *uc)
- {
- 	/* Beware, here be pointer arithmetic.  */
- 	clear_bit(uc - ucall_pool->ucalls, ucall_pool->in_use);
+diff --git a/tools/testing/selftests/kvm/x86/private_mem_conversions_test.sh b/tools/testing/selftests/kvm/x86/private_mem_conversions_test.sh
+new file mode 100755
+index 000000000000..76efa81114d2
+--- /dev/null
++++ b/tools/testing/selftests/kvm/x86/private_mem_conversions_test.sh
+@@ -0,0 +1,82 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0-only */
++#
++# Wrapper script which runs different test setups of
++# private_mem_conversions_test.
++#
++# Copyright (C) 2024, Google LLC.
++
++set -e
++
++num_vcpus_to_test=4
++num_memslots_to_test=$num_vcpus_to_test
++
++get_default_hugepage_size_in_kB() {
++	grep "Hugepagesize:" /proc/meminfo | grep -o '[[:digit:]]\+'
++}
++
++# Required pages are based on the test setup (see computation for memfd_size) in
++# test_mem_conversions() in private_mem_migrate_tests.c)
++
++# These static requirements are set to the maximum required for
++# num_vcpus_to_test, over all the hugetlb-related tests
++required_num_2m_hugepages=$(( 1024 * num_vcpus_to_test ))
++required_num_1g_hugepages=$(( 2 * num_vcpus_to_test ))
++
++# The other hugetlb sizes are not supported on x86_64
++[ "$(cat /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages 2>/dev/null || echo 0)" \
++  -ge "$required_num_2m_hugepages" ] && hugepage_2mb_enabled=1
++[ "$(cat /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages 2>/dev/null || echo 0)" \
++  -ge "$required_num_1g_hugepages" ] && hugepage_1gb_enabled=1
++
++case $(get_default_hugepage_size_in_kB) in
++	2048)
++		hugepage_default_enabled=$hugepage_2mb_enabled
++		;;
++	1048576)
++		hugepage_default_enabled=$hugepage_1gb_enabled
++		;;
++	*)
++		hugepage_default_enabled=0
++		;;
++esac
++
++backing_src_types=( anonymous )
++backing_src_types+=( anonymous_thp )
++[ -n "$hugepage_default_enabled" ] && \
++	backing_src_types+=( anonymous_hugetlb ) || \
++	echo "skipping anonymous_hugetlb backing source type"
++[ -n "$hugepage_2mb_enabled" ] && \
++	backing_src_types+=( anonymous_hugetlb_2mb ) || \
++	echo "skipping anonymous_hugetlb_2mb backing source type"
++[ -n "$hugepage_1gb_enabled" ] && \
++	backing_src_types+=( anonymous_hugetlb_1gb ) || \
++	echo "skipping anonymous_hugetlb_1gb backing source type"
++backing_src_types+=( shmem )
++[ -n "$hugepage_default_enabled" ] && \
++	backing_src_types+=( shared_hugetlb ) || \
++	echo "skipping shared_hugetlb backing source type"
++
++set +e
++
++TEST_EXECUTABLE="$(dirname "$0")/private_mem_conversions_test"
++
++(
++	set -e
++
++	for src_type in "${backing_src_types[@]}"; do
++
++		set -x
++
++                $TEST_EXECUTABLE -s "$src_type" -n $num_vcpus_to_test
++		$TEST_EXECUTABLE -s "$src_type" -n $num_vcpus_to_test -m $num_memslots_to_test
++
++		{ set +x; } 2>/dev/null
++
++		echo
++
++	done
++)
++RET=$?
++
++exit $RET
 -- 
 2.49.0.1045.g170613ef41-goog
 
