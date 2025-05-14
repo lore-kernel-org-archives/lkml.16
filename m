@@ -1,108 +1,150 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17801E9B1A;
-	Wed, 14 May 2025 16:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747239094; cv=pass; b=Q3fk5uJ0dbDnzuQs09gi/K6tRxqgcJfJf/N/+HdS/TJj6395RQB08gD7H6EffFS5m3KLK9PPI8CNVQYkbtEVWMozy0AvPD1nY36Ow+mhI4KooRlAVATTjuGnVuQgsdp71pca/IzYCZOxsBNZpkzwX699tbhogXsgsN4kCBrUPgo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747239094; c=relaxed/simple;
-	bh=lQHCQ80hYkI7tRsS4CYNGCZob1ejmy5HFD0OETYTAcc=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=JCtYDiJ8ZK8WmeKMq19l1kUCpPdM9//GQrrUac+2IqNiGU9RQwniFKgEZBWfyoO7lC5t3LQTgqsSC0rFz/BxGSqQomtsoHe0iVonz8QT1nVQ5hLvAc4qdbH5JNQ+Knun+VEDktmWWl1jlf0cT9Pu5P2xdSJ8AVF47HDfk1PbeDo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=ND9+wKun; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3582822A1E5
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747239132; cv=none; b=nlCLwfNoPd164WwNFOSZNhLYrzechCwxgk5bSr7g/Xv/GKDaGdUOS6SAOiwiIX1ybmBHziZKzfJS/lX3rSAmxeG5+IZ85cVdoOUow1jWZS+p9INDtYoni8zFL8CVFza9B0xGGfOFh67Uklq/GeVz+InoA/Bpwyx8+LgNIQpUAMM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747239132; c=relaxed/simple;
+	bh=Tc1WEC6mukBGISKXbX7oV3/8t3QATZkL0G9tUHp6EiI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nsxgtx/405PErIUCIdv/I8IkugmG6njV6Wfrofz2X7HvXwZ5RpJeLQA5bOZYEmLtaC2Bg8cgw97RbTE2HtcwzeKeWB2eh0FMk4RD4PprWYrg2SnGJKoOUlKz+n2hB9lQXG52T2LWac9H0csnZIBO8HZ0f7h0P25PBTLvYySlDiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EJmOGm9P; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lZHtHWmK; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EJmOGm9P; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lZHtHWmK; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="ND9+wKun"
-ARC-Seal: i=1; a=rsa-sha256; t=1747239070; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Q1kEt3vYykVudZA/dTsWLFYqzCv7YpU1k5tZLAD+bvbA2TwRjbaNth23/5txx4kges/BuAZFNELFqviLGdThokHqQsqDRoevjU6XjIDjFy0qCPW/ukFwL84Tf6mO7i78V6+TIuGZs5HJlfD4F/nEqB2Jj59C1DbVct2J1GGMfvU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1747239070; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=nv0IqvoJtsBRELJdGMAbLYGlK2WwW+8ndubCbm6OaW0=; 
-	b=PgRE70nldNbtQxYusCVK7vWz6Zs8TR25CMVe15pnTw/20BNMgrLtykZi7xb9l9Hv03+aZX84gW7r+INDmyg41z8tZLuaucSSCktRhy7xc9VVOqv0AWMATEtT9HRyS0faIe2RIjUhdTLHQLcfHAHZ9iWn0K9woSmXUD71m9Qqycg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747239070;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=nv0IqvoJtsBRELJdGMAbLYGlK2WwW+8ndubCbm6OaW0=;
-	b=ND9+wKundDUgTRxHuHRfEmmEbNtLBkElZK3Xp60NtdEP1gOUwpRVKmddxGFvTwW4
-	lfsBi9sCO3bqoQOSOxwEEExwyx0fpo4daREGGSgGnTi5WRCC1IELWASpgPrwrB/7yfH
-	NNhwdAaMBdnZ/87Na+vHL6AMhwadJ8IgNMNIWLog=
-Received: by mx.zohomail.com with SMTPS id 1747239068698495.8203448866441;
-	Wed, 14 May 2025 09:11:08 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EJmOGm9P";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lZHtHWmK";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EJmOGm9P";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lZHtHWmK"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 32D5A1F385;
+	Wed, 14 May 2025 16:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747239129; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=STZQ8x0gSAX9WjIt5SVFokSpCJQ8PbOmFgE/9PLLIhE=;
+	b=EJmOGm9PKixSH0pBR91qRqXYKq8qKdFnS6nqlcRpChmGnbpdfRKJgQdCHpXH9MTlBc9Vjn
+	GOfCAMklY65GzKhDbBpgJwKm/30lDEGJQ4j8j/e7pH5Zq4y5Wjy8NSad4HsAFEpfcOBdEv
+	ySZwBtHVBedzbw31oMKEZ6nZ8UZo130=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747239129;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=STZQ8x0gSAX9WjIt5SVFokSpCJQ8PbOmFgE/9PLLIhE=;
+	b=lZHtHWmK8s/xncFAvTbbHnL0HfsbqcJjLsrOs2UFu20Hk0aX881NBzWxAesZ590ueFCLn5
+	3CoWIMsnzTcSf2BQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747239129; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=STZQ8x0gSAX9WjIt5SVFokSpCJQ8PbOmFgE/9PLLIhE=;
+	b=EJmOGm9PKixSH0pBR91qRqXYKq8qKdFnS6nqlcRpChmGnbpdfRKJgQdCHpXH9MTlBc9Vjn
+	GOfCAMklY65GzKhDbBpgJwKm/30lDEGJQ4j8j/e7pH5Zq4y5Wjy8NSad4HsAFEpfcOBdEv
+	ySZwBtHVBedzbw31oMKEZ6nZ8UZo130=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747239129;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=STZQ8x0gSAX9WjIt5SVFokSpCJQ8PbOmFgE/9PLLIhE=;
+	b=lZHtHWmK8s/xncFAvTbbHnL0HfsbqcJjLsrOs2UFu20Hk0aX881NBzWxAesZ590ueFCLn5
+	3CoWIMsnzTcSf2BQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0BC6F13306;
+	Wed, 14 May 2025 16:12:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id g0F1AtnAJGhgNwAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Wed, 14 May 2025 16:12:09 +0000
+Date: Wed, 14 May 2025 18:12:04 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Ming Lei <ming.lei@redhat.com>
+Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Costa Shulyupin <costa.shul@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Valentin Schneider <vschneid@redhat.com>, 
+	Waiman Long <llong@redhat.com>, Frederic Weisbecker <frederic@kernel.org>, 
+	Mel Gorman <mgorman@suse.de>, Hannes Reinecke <hare@suse.de>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
+	linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
+	storagedev@microchip.com, virtualization@lists.linux.dev, 
+	GR-QLogic-Storage-Upstream@marvell.com
+Subject: Re: [PATCH v6 3/9] nvme-pci: use block layer helpers to calculate
+ num of queues
+Message-ID: <66cd13b0-3339-4495-8d1a-fae3211f92b9@flourine.local>
+References: <20250424-isolcpus-io-queues-v6-0-9a53a870ca1f@kernel.org>
+ <20250424-isolcpus-io-queues-v6-3-9a53a870ca1f@kernel.org>
+ <aB1eswAv6Tz2WDpc@fedora>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
- abstraction
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <aCS71sbQKn7zeosR@finisterre.sirena.org.uk>
-Date: Wed, 14 May 2025 13:10:52 -0300
-Cc: Benno Lossin <lossin@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Liam Girdwood <lgirdwood@gmail.com>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4EF1B72A-826A-4435-A586-B7E0EB2DCF84@collabora.com>
-References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
- <D9VATLUHDGU8.53I80TGVRV0J@kernel.org>
- <B288AFB1-BA0A-4383-9823-EAC9E5DCA59F@collabora.com>
- <D9VXPNT4HNXP.1PKET0Q1H7O9Y@kernel.org>
- <52CFFCA2-F253-49F1-9EA5-2865BD094B25@collabora.com>
- <D9VZV8APBYWU.2SWXJLHIQ18ZB@kernel.org>
- <aCS71sbQKn7zeosR@finisterre.sirena.org.uk>
-To: Mark Brown <broonie@kernel.org>
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aB1eswAv6Tz2WDpc@fedora>
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
 
+On Fri, May 09, 2025 at 09:47:31AM +0800, Ming Lei wrote:
+> On Thu, Apr 24, 2025 at 08:19:42PM +0200, Daniel Wagner wrote:
+> > Multiqueue devices should only allocate queues for the housekeeping CPUs
+> > when isolcpus=io_queue is set. This avoids that the isolated CPUs get
+> > disturbed with OS workload.
+> 
+> The commit log needs to be updated:
+> 
+> - io_queue isn't introduced yet
+> 
+> - this patch can only reduce nr_hw_queues, and queue mapping isn't changed
+> yet, so nothing to do with
+> 
+>  "This avoids that the isolated CPUs get disturbed with OS workload"
 
+What about:
 
-> On 14 May 2025, at 12:50, Mark Brown <broonie@kernel.org> wrote:
->=20
-> On Wed, May 14, 2025 at 05:38:40PM +0200, Benno Lossin wrote:
->> On Wed May 14, 2025 at 4:40 PM CEST, Daniel Almeida wrote:
->=20
->>> By the way, IIUC, regulator_disable() does not disable a regulator =
-necessarily.
->>> It just tells the system that you don't care about it being enabled =
-anymore. It can
->>> still remain on if there are other users.
->=20
->> Hmm, so a `struct regulator` might already be enabled and calling
->> `regulator_enable` doesn't do anything?
->=20
-> It takes a reference to the regulator.  This may or may not result in =
-a
-> change in an underlying physical regulator.
+  The calculation of the upper limit for queues does not depend solely on
+  the number of possible CPUs; for example, the isolcpus kernel
+  command-line option must also be considered.
 
+  To account for this, the block layer provides a helper function to
+  retrieve the maximum number of queues. Use it to set an appropriate
+  upper queue number limit.
 
-I assume these are two different reference counts, right? One for
-regulator_get()/regulator_put(), and one for
-regulator_enable()/regulator_disable().
-
-Looking at regulator_dev, I can see both "use_count" and "open_count" =
-for
-example.=
+I would use this version for the other patches as well,
+s/possible/online/ where necessary.
