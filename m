@@ -1,43 +1,46 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA91425634;
-	Wed, 14 May 2025 13:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE21425634;
+	Wed, 14 May 2025 13:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747228638; cv=none; b=SPvGVKVIq3BZzjlDOnlr61WYlcJ7p8MYeiANjrFlnMBDp4GLgF+lo7+cf5YNLTIxWvtOq6m07c1whEwt7PH0Lg7dQrQifJ9a9ncm0Jtm4Lk7VJ2tkCqyY/tvw85xmTbF3fjBDc/AjWgZzYePLdS5QUU+XRROElmaWjzaZjTsCFw=
+	t=1747228649; cv=none; b=QfAibU2ilI0rUjf3HVMdhDajFUbPsvUYjVDxjVgDX6RfXTeE0auqnfAkb4ew5umkeRDilH+97xeN45QcUm2F/n2faXogusfEM3NcFSAW4Bkem6N7E/bysMNwQ+ma2QT7Uv9+uxZNjAZ9yrUlAHm96roe/iiaIbP1qvg4akmdt38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747228638; c=relaxed/simple;
-	bh=TlV+NKH67PGf9gxkDHI2sLOV5qFf6K/4NX+8/e79RL4=;
+	s=arc-20240116; t=1747228649; c=relaxed/simple;
+	bh=KFzinwkrWZST4DdJl3OmxHW7o9uuxcvDd9uplO/go4c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G+Jr56NuvHLPBDFrXvC/JWcBWjqlKLDiYvlsS79IMJFi7h50l8zkNc+PozZexbcrWvarPeRvRAis5qCKw+dQbuGFsBm2KfTDfWv/3Ocyx/IxYnzXitO+Y32TtqYRYcEwOQcOkqL03ELP5lBdmzruaWVFgQNHNtCfXTm4kfn4CPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Pr30kmrt; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=gpKHdhh+Rni/KFxerT7z5x2ClFw/5gsWVIZ83pgmJzP2ri+YFJNx/pd+7GjpIa55lFcVLEUwrfoE2eJnUxowID1nnwgfxkQ/SMo82ZGYtsOkfC0rR2ZQ5zxsj5y47efQ2XNp4gWxDioV4t7pGNjy8/tYCkhykc8SGvTyNFNRolE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BEqGvBMo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Pr30kmrt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=1X9ftCU+PH7F6iWrji7vxb358Qokcjh6t1gidjnRqv8=; b=Pr30kmrtj3Dgtra0ObIAv9jxuF
-	ZDWB+z1qP9VNx15DgybA6MtjzDCuttfPpGjRHJz7xl9qAr756fUasai2/csGHNZogci2pXN6iypBG
-	Za9TUc0onEPBhr/7ThmHNdemcTTq5jvCtSzVz7UzYg5ikrEpinbJ8KRk3KEVIHFI7q/mOUyOK4u5N
-	emg14u1Wncfd1Or0LFh1acIX9EHjnyfZPKP3zwBceznD9ooDDqniIOBvjbG3q73MLokTrPawTist5
-	Tt7PAOtsJ4fSQMl2yfi9jVarrWXa7krxpithpgZPVBUssBlowBxESUuFODPdx7ThaKGuJJVQhyCDQ
-	Kgko7fdQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uFBz1-0000000FBNw-0VVi;
-	Wed, 14 May 2025 13:17:15 +0000
-Date: Wed, 14 May 2025 06:17:15 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: cen zhang <zzzccc427@gmail.com>
-Cc: cem@kernel.org, linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	baijiaju1990@gmail.com, zhenghaoran154@gmail.com
-Subject: Re: Subject: [BUG] Five data races in in XFS Filesystem,one
- potentially harmful
-Message-ID: <aCSX29o_xGAUWtIl@infradead.org>
-References: <CAFRLqsVtQ0CY-6gGCafMBJ1ORyrZtRiPUzsfwA2uNjOdfLHPLw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BEqGvBMo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 941ADC4CEE9;
+	Wed, 14 May 2025 13:17:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747228649;
+	bh=KFzinwkrWZST4DdJl3OmxHW7o9uuxcvDd9uplO/go4c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BEqGvBMoNykYxGNJSXD9vR5z0l0q2fW1trWACbkiWAHafySTV+R5+n57+MxH8Pq4+
+	 VqvdH8iaM0QiFADry9ZtL8QLTSVBb4AU7RKNeUEHLTtFV7s+YO+yrUaOdlor6i7kkd
+	 2UupwgZgUGfDk9O/CGsUFk1MWZ/VTSzmQG2N6nZQ9ukACVIkoowDlFKtCO2Kpx3TXG
+	 ViPu+mvZz13IbpiRZ73ZPW76tlpUdv/UZkUboL/ATTSZnfpmd7M2VZJinfdbJ8plT6
+	 3YtolpnndTyDERs69HpOdFFeBXLkIjTmvrclshXYs1CJMd534AaU7wvrpn4mJXfO/6
+	 ym0iWcA2fqz5Q==
+Date: Wed, 14 May 2025 14:17:26 +0100
+From: Vinod Koul <vkoul@kernel.org>
+To: Niklas Cassel <cassel@kernel.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+	robh@kernel.org, bhelgaas@google.com,
+	Vidya Sagar <vidyas@nvidia.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, treding@nvidia.com,
+	jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com,
+	sagar.tv@gmail.com
+Subject: Re: [PATCH V4] PCI: dwc: tegra194: Broaden architecture dependency
+Message-ID: <aCSX5gKsehupIC35@vaman>
+References: <20250417074607.2281010-1-vidyas@nvidia.com>
+ <20250508051922.4134041-1-vidyas@nvidia.com>
+ <174722268141.85510.14696275121588719556.b4-ty@kernel.org>
+ <aCSUfiwnZRTgMKGT@ryzen>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,51 +49,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFRLqsVtQ0CY-6gGCafMBJ1ORyrZtRiPUzsfwA2uNjOdfLHPLw@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <aCSUfiwnZRTgMKGT@ryzen>
 
-> 1. Race in `xfs_bmapi_reserve_delalloc()` and  `xfs_vn_getattr()`
-> ----------------------------------------------------------------
+On 14-05-25, 15:02, Niklas Cassel wrote:
+> Hello Vinod, Krzysztof,
 > 
-> A data race on `ip->i_delayed_blks`.
-
-This is indeed a case for data_race as getattr is just reporting without any
-locks.  Can you send a patch?
-
-> 2. Race on `xfs_trans_ail_update_bulk` in `xfs_inode_item_format`
-> -------------------------------------.
+> On Wed, May 14, 2025 at 12:38:01PM +0100, Vinod Koul wrote:
+> > 
+> > On Thu, 08 May 2025 10:49:22 +0530, Vidya Sagar wrote:
+> > > Replace ARCH_TEGRA_194_SOC dependency with a more generic ARCH_TEGRA
+> > > check for the Tegra194 PCIe controller, allowing it to be built on
+> > > Tegra platforms beyond Tegra194. Additionally, ensure compatibility
+> > > by requiring ARM64 or COMPILE_TEST.
+> > > 
+> > > 
+> > 
+> > Applied, thanks!
+> > 
+> > [1/1] PCI: dwc: tegra194: Broaden architecture dependency
+> >       (no commit info)
+> > [1/1] phy: tegra: p2u: Broaden architecture dependency
+> >       commit: 0c22287319741b4e7c7beaedac1f14fbe01a03b9
+> > 
+> > Best regards,
+> > -- 
 > 
-> We observed unsynchronized access to `lip->li_lsn`, which may exhibit
-> store/load tearing. However, we did not observe any symptoms
-> indicating harmful behavior.
-
-I think we'll need READ_ONCE/WRITE_ONCE here to be safe on 64-bit
-systems to avoid tearing/reordering.  But that still won't help
-with 32-bit systems.  Other lsn fields use an atomic64_t for, which
-is pretty heavy-handed.
-
-> Function: xfs_alloc_longest_free_extent+0x164/0x580
-
-> Function: xfs_alloc_update_counters+0x238/0x720 fs/xfs/libxfs/xfs_alloc.c:908
-
-Both of these should be called with b_sema held.  Does your tool
-treat a semaphore with an initial count of 1 as a lock?  That is still
-a pattern in Linux as mutexes don't allow non-owner unlocks.
-
-> 4. Race on `pag->pagf_longest`
-> ------------------------------
+> I see that Vinod has queued patch 1/2.
 > 
-> Similar to the previous race, this field appears to be safely used
-> under current access patterns.
-
-Same here I think.
+> Please don't forget that this series requires coordination.
 > 
-> Possibly Harmful Race
-> ======================
+> There are many ways to solve it.
 > 
-> 1. Race on `bp->b_addr` between `xfs_buf_map_pages()` and `xfs_buf_offset()`
-> ----------------------------------------------------------------------------
+> 1) One tree takes both patches.
+> 
+> 2) PHY tree puts the PHY patch on an immutable branch with just that
+> commit, and PCI merges that branch, so the same SHA1 of the PHY patch
+> is in both trees.
+> 
+> 3) Send PHY patch for the upcoming merge window. Send PCI patch for
+> merge window + 1.
 
-And I think this is another case of b_sema synchronization unless I'm
-missing something.
+1, 3 works for me, for 2 pls let me know, I need to prep a branch with
+this patch and tag on it...
 
+BR
+
+-- 
+~Vinod
