@@ -1,102 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C1719CCF5
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B9E19CCF5
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:52:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747237942; cv=none; b=bvSfr6Rv/Jg8VtXjD1DC8q6diSe6Vd2E6vOn38PBK2l/9bEQFTMADPjU2W+ajS9ZP84hy4YMAp9nTlyy0s8J1wNNDgizOIuEWV6kWJBbncBYWsDNRxIc0QMEU78KHHI6wOmOQBS+fj8NRaqkZFw1GG2JtkXL3Y/eoz37+BijaSQ=
+	t=1747237950; cv=none; b=URkaa3UGJd+ot4rh+LJHWhm3YtmGIsEV8Hqb9pTQnyBEglr5B5y7vagik07Ub7ZUuC0y7ltpP7wRTxxgo1dS8m6dFP+xM6Lr/zj5vBx+DdGwF/aE9S4g+J4G0/7FHOTaDWsIzRaJmh55aeLGHZ5l1qDdhpIxv4GDFBJKS9fzHIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747237942; c=relaxed/simple;
-	bh=Fdymo7U/XQEsHjtymqpQe81QQ1ZBEYcPOe4F2NEP0dA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DdAuOj6usV5yyDVNi53kmDhkfFDw/Z/jFWcGA2UYGXEwHBdTsqVZi8y5ksyg7oWq2DriKt58AKM/DqzN9naY2Q54yYpQcw79DbPh7y/uyVGsVkxjT0ag6nEscBY0PIQNxiR7WqwPwvD34NP0i/TQt9X0g84If09ERaJUZNCvUvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZH6D9Bpo; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1747237950; c=relaxed/simple;
+	bh=X4CKE5jwHff5AvjJ8izpnOfbIQaMYG4xNDaMlvlye4w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bTBGXrVL1YmtP1GECU5WI0UHO71fk6HPFH9LAz7b76sWBX5wHbs+TpDVlXRhGLlDdtvdsY5gT64jFE0vXApBiFR7442BOJf4xKZtyPqLXyWLE8tn0FzlazEsl+9fRygqtUk8/7WJWkK1Z/BqIahkIgjTK0md6Sf4EDJAJehXghs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DgeDh45V; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZH6D9Bpo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DgeDh45V"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747237940; x=1778773940;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Fdymo7U/XQEsHjtymqpQe81QQ1ZBEYcPOe4F2NEP0dA=;
-  b=ZH6D9BpoA6g/fMzCLsEWcg3stAUITwU50YSmC1/Xm73zn0rv56qiwLU0
-   ZiIcUL3MZ5zGcayTGj9ZKT6hxG3KCq6zwuo3PoYfRHPO3yyhpyIEUshbj
-   9I+K3MI3wYRoFNIg0qjhbW1eGoRQu4DD9gUDDV0sWGrNn4VltoEcAoEqe
-   6Uhd138mZsdo3lsStdH5v158YZaxRHWjgUyPG92DmN5QjI8u9ke1NXzUW
-   7Ej+rhYFor40uyKtLESCM4orsqldz9kAiRA8uZrthWxn4dfW7UYckXYY/
-   y+7CTbwlvfc8BeYOWkgiHAC0dkQAFnMxWPCVs/CqHruqHCfd4dEJcLTFt
-   A==;
-X-CSE-ConnectionGUID: ZQCw9QFIQK2lAkwUeGojIg==
-X-CSE-MsgGUID: b+LEqMVBTk64UIbQuf9sKg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="51782772"
+  t=1747237948; x=1778773948;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=X4CKE5jwHff5AvjJ8izpnOfbIQaMYG4xNDaMlvlye4w=;
+  b=DgeDh45VD/PuZlMap5Gzy9+MjubQpvjTa7j9FgOGHgx7uzzNIE6JXRuh
+   10scbb7Q1DLXoLYfgXh7Nmxs9FtdfOwQA6g9WUuj04Fr8ecOlzArJr1D/
+   H0/MQ0Mouy7VJg3BiNmRtdNX5bL65/9MCW2/g8nz6D3rFv+DMqj17cYxu
+   veuqqj19ttzHfAh8KHXYO7FQ+XTmFuNlAgf8GuGNy8LVvx3aIM6akTQ4E
+   acc99iJgahMoSAuAP2JSERN95dBQVupi/zPFYFIlnxVVDVgaTspvXeKZ3
+   clsCHDRZhLTtp55Z7aFE7ixc3kvQ/QRcpbD/cP3ff5XRQU7IN4oPtQOKa
+   Q==;
+X-CSE-ConnectionGUID: WljISb4ARhCNxXPoxJ87ow==
+X-CSE-MsgGUID: 3tf286+IT92rcvEOaxOvyw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="52952133"
 X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
-   d="scan'208";a="51782772"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 08:52:19 -0700
-X-CSE-ConnectionGUID: rQSTQNjNSJOC6i4n3g2xKw==
-X-CSE-MsgGUID: jqP9JqDoT+OHu+94y0EHDA==
+   d="scan'208";a="52952133"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 08:52:25 -0700
+X-CSE-ConnectionGUID: jv1HsYezQi6cL5v51Mjucg==
+X-CSE-MsgGUID: kmQ+AorYSCityTDL5VYLnQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,288,1739865600"; 
-   d="scan'208";a="161369778"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 08:52:16 -0700
-Date: Wed, 14 May 2025 18:52:13 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: david.m.ertman@intel.com, ira.weiny@intel.com, lee@kernel.org,
-	andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com,
-	heikki.krogerus@linux.intel.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] driver core: auxiliary bus: Introduce auxiliary
- device resource management
-Message-ID: <aCS8LThO37Vt26im@black.fi.intel.com>
-References: <20250514122432.4019606-1-raag.jadav@intel.com>
- <20250514122432.4019606-2-raag.jadav@intel.com>
- <2025051433-fade-flirt-d3e0@gregkh>
+   d="scan'208";a="142108939"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.124.222.101]) ([10.124.222.101])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 08:52:24 -0700
+Message-ID: <66f5b7f0-8109-4c10-80ef-783ba8bccae6@intel.com>
+Date: Wed, 14 May 2025 08:52:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025051433-fade-flirt-d3e0@gregkh>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2.1 2/5] x86/virt/tdx: Mark memory cache state incoherent
+ when making SEAMCALL
+To: Kai Huang <kai.huang@intel.com>, bp@alien8.de, tglx@linutronix.de,
+ peterz@infradead.org, mingo@redhat.com
+Cc: kirill.shutemov@linux.intel.com, hpa@zytor.com, x86@kernel.org,
+ linux-kernel@vger.kernel.org, pbonzini@redhat.com, seanjc@google.com,
+ rick.p.edgecombe@intel.com, reinette.chatre@intel.com,
+ isaku.yamahata@intel.com, dan.j.williams@intel.com, thomas.lendacky@amd.com,
+ ashish.kalra@amd.com, nik.borisov@suse.com, sagis@google.com
+References: <ab08a6a1f4d1873eb09d5ad625c42a51d29e5971.1746874095.git.kai.huang@intel.com>
+ <20250514101022.7537-1-kai.huang@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250514101022.7537-1-kai.huang@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 14, 2025 at 02:35:01PM +0200, Greg KH wrote:
-> On Wed, May 14, 2025 at 05:54:31PM +0530, Raag Jadav wrote:
-> > With more and more drivers adopting to auxiliary bus infrastructure comes
-> > the need for managing resources at auxiliary device level. This is useful
-> > for cases where parent device shares variable number and type of resources
-> > with auxiliary child device but doesn't require any active involvement in
-> > managing them.
-> > 
-> > This reduces potential duplication of resource APIs that may be required by
-> > parent device driver. With this in place parent driver will be responsible
-> > for filling up respective resources and its count in auxiliary device
-> > structure before registering it, so that the leaf drivers can utilize in
-> > their probe function. Lifecycle of these resources will be as long as the
-> > auxiliary device exists.
-> > 
-> > Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> > ---
-> >  drivers/base/auxiliary.c      | 145 ++++++++++++++++++++++++++++++++++
-> >  include/linux/auxiliary_bus.h |  18 +++++
-> >  2 files changed, 163 insertions(+)
-> 
-> Sorry, but again, you are not following the required rules for Intel
-> kernel submissions for this subsystem.  Please work with the Intel
-> kernel team to fix this up before you resend.
+On 5/14/25 03:10, Kai Huang wrote:
+> Turn on that boolean when the kernel does SEAMCALL so that kexec can
+> correctly flush cache.  Note not all SEAMCALL leaf functions generate
+> dirty cachelines of TDX private memory, but for simplicity, just treat
+> all of them do.
 
-Apologies again if I have broken any rules here. Since this is following
-the recommendations[1][2] of community maintainers, my understanding is
-that this needed their attention.
+It's not just for simplicity.
 
-[1] https://lore.kernel.org/r/2025032514-ipad-schilling-9928@gregkh
-[2] https://lore.kernel.org/r/20250501125028.GM1567507@google.com
+There's no contract in place for when the TDX module will dirty memory
+or not. A call that is "clean" today might dirty memory tomorrow.
 
-Thanks for guidance, let me fix this.
-
-Raag
+The _only_ thing we know is that SEAMCALLs can dirty cachelines. We
+don't know when or how they do it. This blurb makes it sound like it's
+possible to optimize this. It's not.
