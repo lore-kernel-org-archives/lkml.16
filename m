@@ -1,79 +1,118 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F5112B71
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 00:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0289478;
+	Wed, 14 May 2025 00:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747183510; cv=none; b=lYpm0fWqcDoSYxxoGOSutITFXPtH+is+zCdZlQ/ikdnPINtolzg0qFZz+FQzj9a6zqTYHcJ1cE/Ran/eDJuz4qBTwInVlrAkmHjMhUhBW16mjpsSCCC3nL1SCU7Bs4RJ06WG5XF7NXuC1e+28iqSQB3lfT9F2Gj8yPyRFErhnE0=
+	t=1747184011; cv=none; b=hGwQ+J+cAgMUN1CNszker1KAH81ELQnwf6T6btjnLqBF6bAY88BwHqyLW/Im/h9V9/QAiAu8cE2rI5D/7JoDePaSklahK9ZRJfxaFCMZINvclKqlyyYfAm+OGQPmFoqiA0iTcfAJNrtkgaq2Pc71uOpdL2lSEu8ub7tUAXXWvuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747183510; c=relaxed/simple;
-	bh=i+VUFNwWBt1Zt3XW0UIjXt4ZzP9tj/hKn9kj4HcXB40=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mm9KNvw9hlWLxVxOGLjGXvXPBXVLkd3V+0b4pWq6s2OwTwHdod33h4/LRg1Xw5X/49BNYwMgjnUfBN4Z7H0j9sBOBBxxzI6tJ7YD5S72Am68dxvJ4HO55hjK5uTROjvBTPJDX0+n1vB2k7VaXjfo3dgoTKH21bRDrqsLG10u9yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JPArT3yp; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747184011; c=relaxed/simple;
+	bh=MqMmIQzzVMmSTCGobUV65jzvWUs0pGVO5GSFKnSQesA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=lmmE9AvIQrGui0ZKDQV3Hv/Ej/wval9qPJM8M/vsWty3J1IKk8eD/lOBKCX/p+BgGIZy/S5S7joN/KfkbsxOvA7y+/9VZ9iYzMO2diLx7m50hPn+etCIk8b8kwA5Y3y5d83d7/PUz9zRiU8tFMt8gLSECb1ULroqb82hhAO8vxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=kWf2iTXm; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JPArT3yp"
-Date: Tue, 13 May 2025 20:44:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747183493;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lThS1DBm31ojH1vq3yVCCo0L8L1BVoisB5S+pm8qiUg=;
-	b=JPArT3yphW2mbTDfm4sFg0aMbpSnhCu4ykNEGcW7sHiUGWn2tHK6yEWQ0B4yKSbAtF04Bs
-	pyHNRt51bwaEj+AMKUc5yR6012hKqg1XwWU0IkY9hnWKRvmIKTn0xCmGXOXG2OpNSJANSd
-	i4PPXiDhTq4W8u4ZQBll30IZ/hwNVQE=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, 
-	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Jason Baron <jbaron@akamai.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH v2] params: Add support for static keys
-Message-ID: <jgdcnclxhw62rs2jb67n4wmmvnmc7l6mnnmlyhzkec3gb6zovp@rccwil2bi4bb>
-References: <20250513130734.370280-1-kent.overstreet@linux.dev>
- <zgifi763q2zdj2xn2535daboorumz4g64ospsukp4e6btmosir@xrbhtw777ytw>
- <tjqz5spozvd35egxtfn2n3csvqu2qsaobbkfzf52ovhsokq47y@eq5xl2ugyydq>
- <zljx4swb6eyhf67kwm32gcfboedxvikige3p5c7kt5lqo6c2jj@jjoa4g6375re>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kWf2iTXm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747183996;
+	bh=f11ZgLcGt+NtwI4ofpUR2yBdoXOkSHP3zWdsxt89vTk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=kWf2iTXmskEyyEWGJoLr+LBHmN23UoxzgavanLnCg9BGP7D/1oDxAI/OGtQssrK7m
+	 CTVT+XURfLfupcDRmCsWliDpIghlHyymEGdWHK4oX4vv+UTO/36QV1wjn9c386mOp8
+	 aVpJwIPFbjhkXHHTzcTPDobBnBRh3B+16eOJIgN/NnuPFaf0/nq3PfWSJIeqSqDZbt
+	 Rbu3ihw36b+yRd7J9cqGR6P7MAmIIvaapbyv6MOUoGeLjnEAIR2EY5SV4zfKXUYH+L
+	 s7M7CAcx0sLo8kEUBf0QZ/WUIszCfZUBCyfXTl6wW6i/pqM/iJoVXfKT5hRxjEoyto
+	 49AHs+BLoFHPQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZxvwC25sCz4xPf;
+	Wed, 14 May 2025 10:53:14 +1000 (AEST)
+Date: Wed, 14 May 2025 10:53:13 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Miklos Szeredi <miklos@szeredi.hu>, Andrew Morton
+ <akpm@linux-foundation.org>
+Cc: Joanne Koong <joannelkoong@gmail.com>, Kairui Song <kasong@tencent.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>, Miklos Szeredi
+ <mszeredi@redhat.com>
+Subject: linux-next: manual merge of the fuse tree with the mm-unstable tree
+Message-ID: <20250514105313.5e2c367a@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <zljx4swb6eyhf67kwm32gcfboedxvikige3p5c7kt5lqo6c2jj@jjoa4g6375re>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; boundary="Sig_/XeHL7JYcJiw+JgGAHL7Hh_m";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Tue, May 13, 2025 at 05:37:11PM -0700, Josh Poimboeuf wrote:
-> On Tue, May 13, 2025 at 07:34:59PM -0400, Kent Overstreet wrote:
-> > On Tue, May 13, 2025 at 02:24:46PM -0700, Josh Poimboeuf wrote:
-> > > > +++ b/include/linux/moduleparam.h
-> > > > @@ -122,6 +122,7 @@ struct kparam_array
-> > > >   *	charp: a character pointer
-> > > >   *	bool: a bool, values 0/1, y/n, Y/N.
-> > > >   *	invbool: the above, only sense-reversed (N = true).
-> > > > + *	static_key_t: same as bool, but updates a 'struct static_key'
-> > > 
-> > > The static_key_*() interfaces are deprecated because they're really easy
-> > > to use incorrectly.  I don't think we want to propagate that misuse to
-> > > modules.
-> > > 
-> > > It would be better to have type(s) based on static_key_false and/or
-> > > static_key_true, depending on whatever the default is.
-> > 
-> > Except those are just wrappers around struct static_key, so why does
-> > that matter here?
-> 
-> Those struct wrappers are needed to work with static_branch_likely() and
-> static_branch_unlikely().
+--Sig_/XeHL7JYcJiw+JgGAHL7Hh_m
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Sure, but this has no bearing on that - unless I've missed them, there
-aren't separate methods for just setting and checking the value, which
-is all we're doing here.
+Hi all,
+
+Today's linux-next merge of the fuse tree got a conflict in:
+
+  fs/fuse/file.c
+
+between commit:
+
+  04a1473f8ff0 ("fuse: drop usage of folio_index")
+
+from the mm-unstable tree and commits:
+
+  0c58a97f919c ("fuse: remove tmp folio for writebacks and internal rb tree=
+")
+  3a7d67252c63 ("fuse: support large folios for writeback")
+
+from the fuse tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc fs/fuse/file.c
+index 6f19a4daa559,b27cdbd4bffe..000000000000
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@@ -2349,7 -2145,7 +2145,7 @@@ static bool fuse_writepage_need_send(st
+  		return true;
+ =20
+  	/* Discontinuity */
+- 	if (data->orig_folios[ap->num_folios - 1]->index + 1 !=3D folio->index)
+ -	if (folio_next_index(ap->folios[ap->num_folios - 1]) !=3D folio_index(fo=
+lio))
+++	if (folio_next_index(ap->folios[ap->num_folios - 1]) !=3D folio->index)
+  		return true;
+ =20
+  	/* Need to grow the pages array?  If so, did the expansion fail? */
+
+--Sig_/XeHL7JYcJiw+JgGAHL7Hh_m
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgj6XkACgkQAVBC80lX
+0GyCjQgApV6uV/030wC5wQhsw6VXLRIJm1irE7LAlgEOXBIrt9VidkyRqHBMHxej
+4jMsOZsfX4/ji+sGX1OIPDpULGoD0hz8E5FBdRJDdzvBTyDZtF6BryXvm2/PcLbv
+TElA0tQ0LQ6Od22UxpRONZa9DNUWboXYY0GwX7lZ7hbmqJFHTIz447k6DfNynFiJ
+XGXKdEurTWUPa1Yw6nhxJA2a6HUfGeN7/CHIGLvf0VKAomZSes/uE7nKWfo/dIC0
+xKyZ0SpzgiYu7DOy19XQ6fnJV5582o4tsCqVyTtKz11QhWtrx1K57Q6wBYSY3Ksg
+Uiw1gSDPs4wB/o1tgezJVOk6pDxtrw==
+=UqhK
+-----END PGP SIGNATURE-----
+
+--Sig_/XeHL7JYcJiw+JgGAHL7Hh_m--
