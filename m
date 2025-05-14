@@ -1,36 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF11D223DE2;
-	Wed, 14 May 2025 09:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A961B222590
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 09:04:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747213442; cv=none; b=MxvzL3xAHcaK11eqf3PgYLnctX4vB3CswRBvyOSaVKLPBOSCWxhWr1OJr1Fmz3wrTMrRTkqVUDzMqCUbSBdnqNb3ZxUBsc5GJWjMLrjwSMX4RBt/vPMRjxcmMpG0eS2sPgYQdDkkEMcqYtZUbOGGiA0kf60m0BY+I6JeSYw3uNI=
+	t=1747213460; cv=none; b=TCPwbrS/gT1Db5IW6v8O5vAYxmnwsdso6C/uH/gpHLfL4DiRGs5TYSiGJ2HGL+6gETZYzGuxMDk3WVjQnsc87zzZ64Td7ydI5bPU0lSeFJIg8487krAlUhl9N4t/NHcA1l6z1SfLmBTuXuBw7vAf2vVKfQpnblKwCGuYYPKWbsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747213442; c=relaxed/simple;
-	bh=5qpSsK+H3gzRPOghIYm5gN4tAAK6Kr0/kVv8FugAqL0=;
+	s=arc-20240116; t=1747213460; c=relaxed/simple;
+	bh=C1LKllG2Fa8wm4iOWNMtcfEqU9DwZwq1MyCxxqcdV+M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bRAF14sz8tSbIjl9sMdjg6JMoQiPpl6/vvGX4bQUql2Ljc8s38OTp64BECT8Sf31msPY49ni72WhHq9T3KXLu6pqgg7S/GmkaTKPXhH69rBT2OoRU4wkdBPg18xBC9opjEBP7pxovGwhEaRCz3PR17Un9C0Xm+ajgr1zoHtykIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=jW0/NDZB; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LYmDL/jwaK23WZKYP01aspNKX9ogoE6YjnmJ2CjEzuYdzCMjHuc6IG64qe6ZzaMKS2Sem7c0vora3GxFM5h8KE5ro8psdNtqqXuyK5GBHcgVbd6xWURzJktz8jBy7DvfoahAnu/rbFNR9wEZkr0YaNwUpZL4Wv/2cLIthElyfuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vO9H0UFg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Nddhf0kz; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=vO9H0UFg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Nddhf0kz; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="jW0/NDZB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3EC3C4CEE9;
-	Wed, 14 May 2025 09:04:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747213441;
-	bh=5qpSsK+H3gzRPOghIYm5gN4tAAK6Kr0/kVv8FugAqL0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jW0/NDZB8Vc1uFZJQOrbT1TiSqzm8NEDDD2DJJfNn1tfobiuDzqf/f/g9oaOziOWZ
-	 +CKcuNvq4LEhkBdsGOzPiGfdjiwaG1qINUBtqh9V5bOMC0XA2Xe3MyHBJHg2gBEtHx
-	 MdJPUU8f81YgNlYouFSaI27M4Dg8o7FyIBwYBVUM=
-Date: Wed, 14 May 2025 11:02:13 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Tanav Chinthapatla <tanavc01@gmail.com>
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: rtl8723bs: fix spacing around '+' in
- rtw_cmd.c
-Message-ID: <2025051457-bath-region-1c5e@gregkh>
-References: <CAPGyJDMb0Ac7KtNc8AUTJ4E-Q4Vw-8JNoKWPMTFSuRU7QiFfdQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vO9H0UFg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Nddhf0kz";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="vO9H0UFg";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Nddhf0kz"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B44D01F455;
+	Wed, 14 May 2025 09:04:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747213456; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uil2b5IHzAypI/ph0mhKh3JmhrE9zgPSiFLLhXdGaQQ=;
+	b=vO9H0UFgUGPqAD7S9PR22XyYmZEo4xckkeaxaJy2QBBk19e+FlGmdCsHuHCdQrFO51dAN4
+	K1hyHUGgN4/RImC8hR4QHwnpOniqJ0dRR6JF0KeZeDfz3/k7RdD9faZGPYaX1yTC5Ydplb
+	kijPL7F+gCVhqt1Jg4H7vIlMIEpLoH4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747213456;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uil2b5IHzAypI/ph0mhKh3JmhrE9zgPSiFLLhXdGaQQ=;
+	b=Nddhf0kzJBh7W69czTE7u1ndGQPV5T9HrRdfSFAl72xwPjchGcqyXIzCOQwli2z7vIWld/
+	IZLdF+OQi3LUDaBg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=vO9H0UFg;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Nddhf0kz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747213456; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uil2b5IHzAypI/ph0mhKh3JmhrE9zgPSiFLLhXdGaQQ=;
+	b=vO9H0UFgUGPqAD7S9PR22XyYmZEo4xckkeaxaJy2QBBk19e+FlGmdCsHuHCdQrFO51dAN4
+	K1hyHUGgN4/RImC8hR4QHwnpOniqJ0dRR6JF0KeZeDfz3/k7RdD9faZGPYaX1yTC5Ydplb
+	kijPL7F+gCVhqt1Jg4H7vIlMIEpLoH4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747213456;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uil2b5IHzAypI/ph0mhKh3JmhrE9zgPSiFLLhXdGaQQ=;
+	b=Nddhf0kzJBh7W69czTE7u1ndGQPV5T9HrRdfSFAl72xwPjchGcqyXIzCOQwli2z7vIWld/
+	IZLdF+OQi3LUDaBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BEBE7137E8;
+	Wed, 14 May 2025 09:04:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id fySAK49cJGjpIAAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Wed, 14 May 2025 09:04:15 +0000
+Date: Wed, 14 May 2025 10:04:06 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v2 1/3] mm: introduce new .mmap_prepare() file callback
+Message-ID: <dqir4mv7twugxj6nstqziympxc6z3k5act4cwhgpg2naeqy3sx@wkn4wvnwbpih>
+References: <cover.1746792520.git.lorenzo.stoakes@oracle.com>
+ <adb36a7c4affd7393b2fc4b54cc5cfe211e41f71.1746792520.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,60 +92,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPGyJDMb0Ac7KtNc8AUTJ4E-Q4Vw-8JNoKWPMTFSuRU7QiFfdQ@mail.gmail.com>
+In-Reply-To: <adb36a7c4affd7393b2fc4b54cc5cfe211e41f71.1746792520.git.lorenzo.stoakes@oracle.com>
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: B44D01F455
+X-Spam-Flag: NO
+X-Spam-Score: -4.01
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,oracle.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Action: no action
 
-On Tue, May 13, 2025 at 10:11:51AM -0400, Tanav Chinthapatla wrote:
-> >From 25aa24c7cde7df5901674ec08090992b17afd5b4 Mon Sep 17 00:00:00 2001
-> From: Tanav Chinthapatla <tanavc01@gmail.com>
-> Date: Tue, 13 May 2025 00:16:29 -0500
-> Subject: [PATCH] staging: rtl8723bs: fix spacing around '+' in rtw_cmd.c
+On Fri, May 09, 2025 at 01:13:34PM +0100, Lorenzo Stoakes wrote:
+> Provide a means by which drivers can specify which fields of those
+> permitted to be changed should be altered to prior to mmap()'ing a
+> range (which may either result from a merge or from mapping an entirely new
+> VMA).
 > 
-> Signed-off-by: Tanav Chinthapatla <tanavc01@gmail.com>
-> ---
->  drivers/staging/rtl8723bs/core/rtw_cmd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Doing so is substantially safer than the existing .mmap() calback which
+> provides unrestricted access to the part-constructed VMA and permits
+> drivers and file systems to do 'creative' things which makes it hard to
+> reason about the state of the VMA after the function returns.
 > 
-> diff --git a/drivers/staging/rtl8723bs/core/rtw_cmd.c
-> b/drivers/staging/rtl8723bs/core/rtw_cmd.c
-> index 1c9e8b01d..98d89e836 100644
-> --- a/drivers/staging/rtl8723bs/core/rtw_cmd.c
-> +++ b/drivers/staging/rtl8723bs/core/rtw_cmd.c
-> @@ -1619,7 +1619,7 @@ static void rtw_btinfo_hdl(struct adapter
-> *adapter, u8 *buf, u16 buf_len)
->   buf[1] = 0;
->   else if (cmd_idx == BTINFO_BT_AUTO_RPT)
->   buf[1] = 2;
-> - hal_btcoex_BtInfoNotify(adapter, len+1, &buf[1]);
-> + hal_btcoex_BtInfoNotify(adapter, len + 1, &buf[1]);
->  }
+> The existing .mmap() callback's freedom has caused a great deal of issues,
+> especially in error handling, as unwinding the mmap() state has proven to
+> be non-trivial and caused significant issues in the past, for instance
+> those addressed in commit 5de195060b2e ("mm: resolve faulty mmap_region()
+> error path behaviour").
 > 
->  u8 rtw_c2h_packet_wk_cmd(struct adapter *padapter, u8 *pbuf, u16 length)
-> -- 
-> 2.34.1
+> It also necessitates a second attempt at merge once the .mmap() callback
+> has completed, which has caused issues in the past, is awkward, adds
+> overhead and is difficult to reason about.
 > 
+> The .mmap_prepare() callback eliminates this requirement, as we can update
+> fields prior to even attempting the first merge. It is safer, as we heavily
+> restrict what can actually be modified, and being invoked very early in the
+> mmap() process, error handling can be performed safely with very little
+> unwinding of state required.
+> 
+> The .mmap_prepare() and deprecated .mmap() callbacks are mutually
+> exclusive, so we permit only one to be invoked at a time.
+> 
+> Update vma userland test stubs to account for changes.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-Hi,
+Reviewed-by: Pedro Falcato <pfalcato@suse.de>
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+Neat idea, thanks. This should also help out with the insane proliferation of
+vm_flags_set in ->mmap() callbacks all over. Hopefully.
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+However, could we:
 
-- Your patch is malformed (tabs converted to spaces, linewrapped, etc.)
-  and can not be applied.  Please read the file,
-  Documentation/process/email-clients.rst in order to fix this.
+1) Add a small writeup to Documentation/filesystems/vfs.rst for this callback
 
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
+2) Possibly add a ->mmap_finish()? With a fully constructed vma at that point.
+   So things like remap_pfn_range can still be used by drivers' mmap()
+   implementation.
 
-thanks,
+1) is particularly important so our VFS and driver friends know this is supposed
+to be The Way Forward.
 
-greg k-h's patch email bot
+-- 
+Pedro
