@@ -1,63 +1,67 @@
-Received: from mail-il1-f202.google.com (mail-il1-f202.google.com [209.85.166.202])
+Received: from mail-io1-f74.google.com (mail-io1-f74.google.com [209.85.166.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E4328D8DF
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F472920B9
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747250529; cv=none; b=dTwxp/jLtB3zacUamYOFSuycnKyQcweZGkQOpVQKstROrxDDw6RdN+ZQzD1tpXrFfSFH9UU4nPOH3od6DfdF9n5TNvBetC8DgXBcYDyYBHW0yndROdvb/HUrgTGW+B9uJjpkmVIXrB5ozoYyYl75HdzQXqkBs6+hZseCQeqLPCQ=
+	t=1747250529; cv=none; b=qRrrWr3mroKmOsXJMOAMBC7svhl/znpTAHDPO2oqtNV/elI4nNByq+9NVAaxwHlw3ENW2zg8gB3gs9VLw6fF6cNM7GVbTHqejQES0yDdYwiI5DPBqsn5hPsAFuQK0t4h4Eg1zVpXivfVR1ytZKI0NBdaglpwWtq8uLj6qW7/tpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747250529; c=relaxed/simple;
-	bh=6GLh2vAUb131giOvQk8M/um3okSJGroCjyJghDkewc8=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=K1ukvOipv4x/EHSONeDOerPSk1vtt7Tx453V5BZ7WUtiAq50wnJDp+JsLrNKOXyRjjy10zypCgOUs3JNrfoyxLY8q8hfztjykBy+GgEyVmC5azNdtTUL9YXkBwth2107QXSeSiLgZSRaOS0ub+N6zsr/IDoAb749vJgt6zRB52E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UJ+nSYMP; arc=none smtp.client-ip=209.85.166.202
+	bh=jlT7oUjvJOznjnqnhNqTKsiR/OzaJm9QtnlVMZATBTo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=KJTbLDAm04JUEPlwWeAj2yqHTU5Nb+FQDZyxEmPEoDQuXR/YsqGltjNR7MBcsp1ZVgAza7Y0oJOLKf3O6b1D9qg9rxXlHiyBWPT7ghaQAEGgAPvVTBZyMuTnQtOIuoxtOU24lDL3OA2480Offe4j/qwEij32tVoujySqRODB+NM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OxXOlIQi; arc=none smtp.client-ip=209.85.166.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rananta.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UJ+nSYMP"
-Received: by mail-il1-f202.google.com with SMTP id e9e14a558f8ab-3db6f98ddf7so2665455ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:22:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OxXOlIQi"
+Received: by mail-io1-f74.google.com with SMTP id ca18e2360f4ac-85b3a6c37e2so16805639f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 12:22:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747250525; x=1747855325; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=c8ePtC5HFZo+bckSClZmheBHRBfYWwooCNAcmQiJQhY=;
-        b=UJ+nSYMPX7xyaXdluGbrLXYlIgkX+ncmsGE1ZoopKj/U8aYSeceM5ClmY34DUvOXyf
-         Jdf7ptUaJ8+ePDlJy+UNpxwSWbaxdASi+u0gYEZevbJVahqMlHbPtNGIvyJyiJ1zIBw1
-         dSbtIkKdfB49tj3Ew57ph7EyrrnZONv2FtVwdAWuNMFOkjTnhFxbKILXFkgPl289t+Ph
-         zYaKmTnc008o8tVFgk/ZMhj2Pyo869S3kj8OB1ownMrUBq+8X9XZwWSrcXNRaHaTmH1l
-         RIxJqTomrn1FuuB8GOENr6Jg68fjGwAiBToF29W0+JKRn2cvte4X5j3kCg4VhJYheNei
-         XTug==
+        d=google.com; s=20230601; t=1747250527; x=1747855327; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1yNW4zWWpO6G9+zdCVIjhXgj8P623/AU8qHzqkHrm1A=;
+        b=OxXOlIQigSM1ytETM0fe5z7nZL7SFX/c/E9UboQ5krTdx0cs81/7nb2+ol9ymt6Erx
+         PMlKr0HJlf8azTAbgF6O2M1d/GaLWcU+h/vJmZDELl1yLTd76BprWy6xFDj4/7bpoYlK
+         VNkkrty4zUc+wPe2PGEHU6vwY79LLW5SPiMWh7FWZ43DyIw8W4KSBU3rgycVych9q/0m
+         +dhmiHuWKDnRGag7bxjSWDfW159+KTfNgUVmk9ea0bi+1ntF+kXE42SiSVq0PI2vPFrA
+         TMjpQBMIvguku9hGWaMW1bs87OT6ZQfNzbD41naRVyTZ688bSzCWE/7sdouL8llRH7a+
+         NuVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747250525; x=1747855325;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=c8ePtC5HFZo+bckSClZmheBHRBfYWwooCNAcmQiJQhY=;
-        b=vxHfndI4ZeTv0lNnx2EpY1NiQU52GnC7TePO3pVMX5pTRJX7W83gHqozl/KUjPnL1/
-         19m6Yz+K7Bei/adVrG13xBtMDuetO1z0rHtPSoN+15IJvsqqpqYhfYIsZv4kIiYeC/Rb
-         I+d+ork0pKd5/LcvX6rkPzP7jKMfKRlPBwwTOfyo5J9UeRatYr50pKoKqNg5DdtGVbSP
-         m4dnPSla/E7MuxwHBOzamMq+q/KeYRiRX89p8w6S8mq9lzG0Sg4i1/wBH07+Np36l3Zq
-         ypuD0v9BMBnFA5sq/c3enztSv+rKaCGWk8UBzRKBWF4t8J0gWkuULsKx/Wk0FEntdYjC
-         Z6HA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7Tpka3Qrn4z98/LSPSEsW4YnoRhgFHgzUzXjFnXNMCP6NXPNgCgstr0CzpxmnSDbe28PlLK/VNKf042s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3uuCIpoMkSOJozYLohl9Up+7j/gPzMnQny4OLhK0Y7Ffhpvmu
-	t87biIYFCQaq7O0j3TiEpLyJsqbm55qfLg/GuFwQASHG73RTqXH0IQ5Dx+s3FV51rZS9cfNHVOq
-	WjMbcjQ==
-X-Google-Smtp-Source: AGHT+IF1ogsTmn2Q4LFsh6tOmFxWnhQ3nGtiA78U3XsyCpRhWXAptzz3zxmhkhTqbmqZ1kXN3wTOk6bikL9+
-X-Received: from ilbbt9.prod.google.com ([2002:a05:6e02:2489:b0:3d9:37ff:afd7])
- (user=rananta job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6e02:178f:b0:3d6:cbad:235c
- with SMTP id e9e14a558f8ab-3db6f7ad141mr53575415ab.6.1747250525722; Wed, 14
- May 2025 12:22:05 -0700 (PDT)
-Date: Wed, 14 May 2025 19:21:56 +0000
+        d=1e100.net; s=20230601; t=1747250527; x=1747855327;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1yNW4zWWpO6G9+zdCVIjhXgj8P623/AU8qHzqkHrm1A=;
+        b=iYZRnw/G9pjqtacrwf0Tu6xJ6My2TIfAFz09fIJu7Y4YCSfAMu1B8UyqVshzWz37i4
+         K5qjYa3IIaN69u+XNdUFhRtEJZPS6OrnBajbHzdAVO1CDT+y16mt3jIUnpJKe9tWu3AD
+         hfdf1/VJB3rSBLjl6kGZ2hgW25Rwe4d0/4VXNCqu6bV85OzichhHBnqlCrRXkHeyht5S
+         xIBGLLT6fU34zbKeoLdAfHXPeVXtFyYRJOByGfCdRh1axzDvMDO9awYFXAtyRiniU5SI
+         emVa0GJJoXD2RBsOmnaDdRjTxfKEiX6uwfbeZ1uV5PPz1kPCMvUH0pD8nJjInMfv+bYH
+         +ajA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBpCrFr2qu/9m0yJqSu+fk8nnpbbmqC7KcY9bn5x93JPl6PeLGknl5uZvDumNWZoSnYXlLgMuJ8Ke+yPg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yygi9s2QJCUlGhzGDWQm7gOvc9G3wMijX9tPrbnFQuhrtNz0lpM
+	qq2FD2eL4HM1u5mIR2FOJy7N5lHAlftPLk1uwciBa5sVYIkaL6vZjq/U00uWvOdau8fh2/0fZ1m
+	fFla6nQ==
+X-Google-Smtp-Source: AGHT+IFKQuF2BacC5AkCgJDM9pP+9hGGYSCBt0jtM4p1OPWuCYZziCJSB8eP4NMiOU8nR7NLUAah4kaGb+Oi
+X-Received: from ilbbs4.prod.google.com ([2002:a05:6e02:2404:b0:3db:6e7d:fedf])
+ (user=rananta job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6602:3997:b0:864:4b3a:9e3a
+ with SMTP id ca18e2360f4ac-86a08e6ef17mr571479539f.13.1747250527190; Wed, 14
+ May 2025 12:22:07 -0700 (PDT)
+Date: Wed, 14 May 2025 19:21:58 +0000
+In-Reply-To: <20250514192159.1751538-1-rananta@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250514192159.1751538-1-rananta@google.com>
 X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250514192159.1751538-1-rananta@google.com>
-Subject: [PATCH 0/3] KVM: arm64: Allow vGICv4 configuration per VM
+Message-ID: <20250514192159.1751538-3-rananta@google.com>
+Subject: [PATCH 2/3] docs: kvm: devices/arm-vgic-v3: Document
+ KVM_DEV_ARM_VGIC_CONFIG_GICV4 attr
 From: Raghavendra Rao Ananta <rananta@google.com>
 To: Oliver Upton <oliver.upton@linux.dev>, Marc Zyngier <maz@kernel.org>
 Cc: Raghavendra Rao Anata <rananta@google.com>, Mingwei Zhang <mizhang@google.com>, 
@@ -65,62 +69,57 @@ Cc: Raghavendra Rao Anata <rananta@google.com>, Mingwei Zhang <mizhang@google.co
 	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Document the KVM_DEV_ARM_VGIC_CONFIG_GICV4 attr under
+KVM_DEV_ARM_VGIC_GRP_CTRL, that includes the values supported to set/get
+and the expected error returns.
 
-When kvm-arm.vgic_v4_enable=1, KVM adds support for direct interrupt
-injection by default to all the VMs in the system, aka GICv4. A
-shortcoming of the GIC architecture is that there's an absolute limit on
-the number of vPEs that can be tracked by the ITS. It is possible that
-an operator is running a mix of VMs on a system, only wanting to provide
-a specific class of VMs with hardware interrupt injection support.
+Signed-off-by: Raghavendra Rao Ananta <rananta@google.com>
+---
+ .../virt/kvm/devices/arm-vgic-v3.rst          | 24 +++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
-To support this, introduce a GIC attribute, KVM_DEV_ARM_VGIC_CONFIG_GICV4,
-for the userspace to enable or disable vGICv4 for a given VM.
-
-The attribute allows the configuration only when vGICv4 is enabled in KVM,
-else it acts a read-only attribute returning
-KVM_DEV_ARM_VGIC_CONFIG_GICV4_UNAVAILABLE as the value.
-
-On the other hand, if KVM has the vGICv4 enabled via the cmdline, the
-VM absorbs this configuration by default to maintain the backward
-compatibility. Userspace can get the attribute's value to check if the VM
-has vGICv4 support if it sees KVM_DEV_ARM_VGIC_CONFIG_GICV4_ENABLE as the
-value. As required, it can disable vGICv4 by setting
-KVM_DEV_ARM_VGIC_CONFIG_GICV4_DISABLE as the value.
-
-The patches are distrubuted as:
-
-Patch-1 contains the KVM code that introduces the
-KVM_DEV_ARM_VGIC_CONFIG_GICV4 attr, and adds all the support around it.
-
-Patch-2 adds the documentation for the said attribute.
-
-Patch-3 extends the vgic_init kvm/arm64 selftest that tests the get and
-set of this attribute in various configurations.
-
-Thank you.
-Raghavendra
-
-Raghavendra Rao Ananta (3):
-  kvm: arm64: Add support for KVM_DEV_ARM_VGIC_CONFIG_GICV4 attr
-  docs: kvm: devices/arm-vgic-v3: Document KVM_DEV_ARM_VGIC_CONFIG_GICV4
-    attr
-  KVM: selftests: Extend vgic_init to test GICv4 config attr
-
- .../virt/kvm/devices/arm-vgic-v3.rst          | 24 ++++++--
- arch/arm64/include/uapi/asm/kvm.h             |  7 +++
- arch/arm64/kvm/vgic/vgic-init.c               |  3 +
- arch/arm64/kvm/vgic/vgic-its.c                |  2 +-
- arch/arm64/kvm/vgic/vgic-kvm-device.c         | 39 +++++++++++++
- arch/arm64/kvm/vgic/vgic-mmio-v3.c            | 12 ++--
- arch/arm64/kvm/vgic/vgic-v3.c                 | 16 ++++-
- arch/arm64/kvm/vgic/vgic-v4.c                 |  8 +--
- include/kvm/arm_vgic.h                        |  5 ++
- tools/testing/selftests/kvm/arm64/vgic_init.c | 58 +++++++++++++++++++
- 10 files changed, 157 insertions(+), 17 deletions(-)
-
-
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
---
+diff --git a/Documentation/virt/kvm/devices/arm-vgic-v3.rst b/Documentation/virt/kvm/devices/arm-vgic-v3.rst
+index e860498b1e35..2eed2ac13542 100644
+--- a/Documentation/virt/kvm/devices/arm-vgic-v3.rst
++++ b/Documentation/virt/kvm/devices/arm-vgic-v3.rst
+@@ -240,17 +240,33 @@ Groups:
+       save all LPI pending bits into guest RAM pending tables.
+ 
+       The first kB of the pending table is not altered by this operation.
++    KVM_DEV_ARM_VGIC_CONFIG_GICV4
++      attribute to enable/disable vGICv4 for a VM. It supports three values:
++      KVM_DEV_ARM_VGIC_CONFIG_GICV4_UNAVAILABLE: Kernel is not booted with
++      'kvm-arm.vgic_v4_enable=1' cmdline, and hence vGICv4 is unavailable to
++      the VM. The value can only be read by the userspace, but cannot be set.
++      KVM_DEV_ARM_VGIC_CONFIG_GICV4_ENABLE: Kernel is booted with
++      'kvm-arm.vgic_v4_enable=1' cmdline, and vGICv4 is available and enabled
++      for the VM (default config). Userspace can get and set this value.
++      KVM_DEV_ARM_VGIC_CONFIG_GICV4_DISABLE: Kernel is booted with
++      'kvm-arm.vgic_v4_enable=1' cmdline, and vGICv4 is available and disabled
++      for the VM. Userspace can get and set this value.
++
+ 
+   Errors:
+ 
+-    =======  ========================================================
++    =======  ==================================================================
+     -ENXIO   VGIC not properly configured as required prior to calling
+-             this attribute
++             this attribute or trying to enable/disable vGICv4 for the VM
++             on a vGICv3 configuration in the case of
++             KVM_DEV_ARM_VGIC_CONFIG_GICV4
++    -EINVAL  Invalid configuration supplied by userspace
+     -ENODEV  no online VCPU
+     -ENOMEM  memory shortage when allocating vgic internal data
+     -EFAULT  Invalid guest ram access
+-    -EBUSY   One or more VCPUS are running
+-    =======  ========================================================
++    -EBUSY   One or more VCPUS are running or vGIC has already been initialized
++             in the case of KVM_DEV_ARM_VGIC_CONFIG_GICV4
++    =======  ==================================================================
+ 
+ 
+   KVM_DEV_ARM_VGIC_GRP_LEVEL_INFO
+-- 
 2.49.0.1101.gccaa498523-goog
 
