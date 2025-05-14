@@ -1,322 +1,202 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CC91F4606;
-	Wed, 14 May 2025 17:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71331DE4E3
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747245097; cv=none; b=jDE/K3OiYXM/V4vO2UXdri5QfRrhc9OMSCNuhTNqUt0/QK6HhqoItCHsKMvCxPPFpYGlevHRf3jjXFKiVMggh91j4gt5oYCqo40A42HfvcBxWV0nYPRsUKURiWs4ldLOR0zkcRn4CVRPaBbQ3oN5gUXaZFiU/5RJ+zTcbg5ksb4=
+	t=1747245195; cv=none; b=uBzOaRBxOeYmXV6cacdBpLADN3HR3EbLYI8uDUThYnz2wG9eJwwiNvhUUlHIAUnsqvzqAlrsLBkRFq5MXi1wU9oEx5YsJHJbDTD8RRZkRnBbIMXtAam07qetr0G00dZe01zqEA1aUTxuhx9m+H2Co/ztPl2y6/0iK1CLoJZg9zA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747245097; c=relaxed/simple;
-	bh=adm//kuNrvGtPQxSm79vxqykA4sQsdq+MVRrOaF0a8U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jxm5Ju39sGqQxsLSqvCgsGNbScx85hmNHXis9RrRFnqjtZ32zrSKqO8y7Ezsert1lI6Be3EzyIImU0xGgvL5ZQxYq8lai1b5giKb6TONIl2k0uNfeXJHjpbG2DlxfSdyT8IJnJssCX44sngO1zlyJ3qDsb9QJvTm1he9M2dKJDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OZOAGIq7; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747245195; c=relaxed/simple;
+	bh=yyrmU6W8SSAQ69TGnG/eTlj7nlNV55pBc8ipgTcqAPo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=V691187o7l/O/2N4oCZFMpeuMQ4xxfxKodLTf57Wn1K28RPQ8kYMWwhe08dtksFwCwQSEKk2dIFY1mjoKK97uNF3YuiF2jHxuKA9eYCMNTcPzBRMg0E777C4xVvALwh6S1y25UpuXDDWht2ameDGboEWWolDyKcO+9VUYBDxGfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MK9+4SZ/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OZOAGIq7"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-3081f72c271so151153a91.0;
-        Wed, 14 May 2025 10:51:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747245095; x=1747849895; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6kt3M1VYDdsNbb9ezAmACuJ3OVyjLd4EiO1N2CSX51Q=;
-        b=OZOAGIq7SmaC1JOboM7jNzQKZ3lN1o9971Tumd+ra3VqzH60VxqP2LzVESO55gjo8s
-         DcG+H+unT+q9Zs9fMKCuUtneYGuuO5CSG6zS1hbQcuBNcCkMkmVRVd/V0F0VdVUD3qvu
-         MFAFxfwh01YaZjMQItO5lZJN6i1Zo96UcZNayZXG/3RtTu8yne5xKmOZHucVjsnmP1Nq
-         AdqgeOjGWoGUaEqTOBFDs3ky2k91d+vI5qHBgQCFXOlWVBSMDEY6VorWKikyc9/4mMdf
-         GI8GGORZPjkpojllRegkPSWyg7v8ug9or6pgj8bnTTZe1EUihHsNub9U3btLyJyLqXFo
-         aduA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MK9+4SZ/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747245192;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=T9gEkHcNNRGwG4zKAICU/T3iGmVhFST3CjssIJGy95U=;
+	b=MK9+4SZ/4zq/7KTGTHW4l89FCuUe/mgoSkA5OsC/aqaRLurNcT6M5DJeuP+EbTj06c7R5R
+	Z+rWDiCeDv0NIv/yumHT9H1eyfsNxwzQ8ionD8HLlh0IefKzc7l/Zf8Ig1hWErmF+RJ2nM
+	DR2KTvoCbM6eayOXWPbGcyEsPnqzzKk=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-379-Hy-hkAOHNH2iPsJHirFWfg-1; Wed, 14 May 2025 13:53:08 -0400
+X-MC-Unique: Hy-hkAOHNH2iPsJHirFWfg-1
+X-Mimecast-MFC-AGG-ID: Hy-hkAOHNH2iPsJHirFWfg_1747245187
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a1f9ddf04bso26124f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 10:53:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747245095; x=1747849895;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6kt3M1VYDdsNbb9ezAmACuJ3OVyjLd4EiO1N2CSX51Q=;
-        b=AdwO/eB5PP/y7NC/zlbRn/hYnKnxD0WOlMQ1flmKQDJQgyOpxNrMGzB2U4KQq31Tgy
-         KiC+5AxOUR5j9msud+8dLfJUMMXpPod+3mqzT8dAGel2eKKP0Z8/KvHCSebH5Ff3mcU6
-         hOz89DcgQCh6+GbelGyiB0NCSp+Fz30dl4yexfQHNoXbBfE/I6cBQCdE2YuE8kgt0Dng
-         kV9dvW2+5oXDSuqNS7PYnJFa44n823Scki1JHs9JExziSRAL7auG+ZxWeOynOZ2sTzXP
-         tU0yR5epsH9JWLYgvgkehBFFZeWlMshZmsa/0xHgtr2fHXk4KQBaRDjmhK6pkW8z8WMt
-         CAWw==
-X-Forwarded-Encrypted: i=1; AJvYcCUsVS9DTOgU2Gw7f5e8tlWoYORX60A6QaTsGfu4Q87EW11r/UAwknXcaK2zUJ+LaRUjeBJNJyO8e1JtA9U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1zd3CUN1+0obIlHc9ojnKojsrK/muUMAJ14GLReNqKmuRYhRk
-	6RlwqCU1+RPwuhv8A2BolzQhb53JGPsb4RNSbalPg2YsQ1QMdghjO3xZ17XnaDzo0uYPvmafejd
-	E8QDzmpn8XjvCK37luyzuq4ErkpE=
-X-Gm-Gg: ASbGnctJF634pK/4vV60nvulwkxd5U8Y/nO9ZtfRojU9rqaD3U07D/ATz7Lzq79Ef7w
-	4ShtJTs48DXuRnTCDuAc+MK6bB3O40y+tLViaTeVOpaVW1I9ikVUikQUYYCDa+dIo25D1gnuhSi
-	U7qK6S84Px9Wu7XCbSST/k120z6TM9yYFS
-X-Google-Smtp-Source: AGHT+IFu+DUDNEEfs3sD8J/mfyJbt0MjY/GqrLI+KyDEk6Cngsa98Ig1KB6JrvggZFtU1Omg/YQze1JSYmeUvmaJB7g=
-X-Received: by 2002:a17:90a:d64f:b0:30a:4ce4:5287 with SMTP id
- 98e67ed59e1d1-30e2e42b186mr9060946a91.0.1747245094712; Wed, 14 May 2025
- 10:51:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747245187; x=1747849987;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T9gEkHcNNRGwG4zKAICU/T3iGmVhFST3CjssIJGy95U=;
+        b=uGWD8KdI5G5H9AIqOIhVddavhmlQ7C6BYCXaTEeCpVWNqtSWAk9TmcU3fwNatnEnb+
+         3JUe4yhbK1r1mkvZB4vYSwKg1JV1VAgJ7/bd0+AxWErIC2KwowXHgyWpCS/4O+OT7SF1
+         LQcV7JYdKDI9yLNyy7+MIHp0ASNgiQuTUkvb+Pzx89atyp4h3fhw6M5LLNa+s2IIIG2l
+         UxDiu88ftdVF+osw1c6D1cC0PB84l97CHB3OyT0HEOwxs1REL5JaI3Y+tMcpntRRf3gc
+         csNUXTdtOnym6cV+joHR6SobUjwYm9gEEUWZ+OJ32bqt6lEMHs39Vg+gjl/XDN+Gzxh5
+         iQIA==
+X-Forwarded-Encrypted: i=1; AJvYcCW5jEAJVR8cWc8AezuxUx99Rbs1PeaX3igqUy2vk8lBR14ZG6B+3E4q6mv4ndwzGvwjs/rDYAn/PuWc2Nc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdTCeg1YkEodonktVVFS5Q4G0bWEgLifSlOjlH23Oe6ajAiYX7
+	GG0tG6kytx04+B++7254QdigYwPYmSbqjw7oeFMavjAv087yGpMcytEg86gBhOrPxKPNUrXaW/B
+	WgVX133FJVnmDOOXr5avi+9XjKTPnAFxXUh+JBPKjVOMmkOQ7ODM4gVbCe8SJAsV3ow3THw74
+X-Gm-Gg: ASbGncvBEboyGiGfEJLsO/onfh7z7P69GJMndc5PuX4sVV9twpyvbH0VJq+sLNyKWne
+	bxNfz9r54teLIvNItCn5L751iFrv3wqGXj/vGucauuLKVaG86g9z8doWCyNABB9kpCY4g+8SUNc
+	9NEA79G0TaNJkNt0e2B/W1IezrDfvx3jv2eWVi25zE3ur44iwQ7YUebURP1VX3Mp/2Pb/PbydhP
+	p8zIKSpFEKfUsfJm8uhFaEzUEXVgGQu6sxY28wJAxUaKjs5iG1awsJZQ41qGo7fgvJlhjGoa3ET
+	G0ojATj3AM0FW3HZGnQQNmEEGykBmF8AGIikbni0CJEMYy4D1I7ssYqRNKF3Lc/XJP/HrGgDn3L
+	mlPJSjkjN4YBHLTkHqFIDJ2bdsHdWa5aZZ+ozMgA=
+X-Received: by 2002:adf:f7cc:0:b0:3a2:2d6:4205 with SMTP id ffacd0b85a97d-3a349921da8mr3561079f8f.47.1747245187407;
+        Wed, 14 May 2025 10:53:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHI/rQoUNdarqySB6UGfLmR7K5cvW1c5VoY82rTRIWoLyPgqKa4z52Sz2Zo6d+MLUSeBgWoLg==
+X-Received: by 2002:adf:f7cc:0:b0:3a2:2d6:4205 with SMTP id ffacd0b85a97d-3a349921da8mr3561064f8f.47.1747245187062;
+        Wed, 14 May 2025 10:53:07 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f15:6200:d485:1bcd:d708:f5df? (p200300d82f156200d4851bcdd708f5df.dip0.t-ipconnect.de. [2003:d8:2f15:6200:d485:1bcd:d708:f5df])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ecccbsm20532621f8f.32.2025.05.14.10.53.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 May 2025 10:53:06 -0700 (PDT)
+Message-ID: <18d502c8-7bbe-470e-863c-7c2f42ea2487@redhat.com>
+Date: Wed, 14 May 2025 19:53:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250511173055.406906-1-cgoettsche@seltendoof.de> <20250511173055.406906-5-cgoettsche@seltendoof.de>
-In-Reply-To: <20250511173055.406906-5-cgoettsche@seltendoof.de>
-From: Stephen Smalley <stephen.smalley.work@gmail.com>
-Date: Wed, 14 May 2025 13:51:23 -0400
-X-Gm-Features: AX0GCFvgtrr2ig6hr2O21HeS8ktnNxOdmvFnNBtm-BvHQR9e9Z6HgOdJLHTyFFo
-Message-ID: <CAEjxPJ6OWqjhyMS47cwRUT3OphknTdmc1FXRMA130njxajjsKQ@mail.gmail.com>
-Subject: Re: [PATCH v3 05/14] selinux: validate constraints
-To: cgzones@googlemail.com
-Cc: selinux@vger.kernel.org, Paul Moore <paul@paul-moore.com>, 
-	Ondrej Mosnacek <omosnace@redhat.com>, linux-kernel@vger.kernel.org, 
-	=?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>, 
-	Casey Schaufler <casey@schaufler-ca.com>, Canfeng Guo <guocanfeng@uniontech.com>, 
-	Takaya Saeki <takayas@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 08/11] x86/mm/pat: remove MEMTYPE_*_MATCH
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-trace-kernel@vger.kernel.org, Dave Hansen
+ <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ "H. Peter Anvin" <hpa@zytor.com>, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>,
+ Ingo Molnar <mingo@kernel.org>
+References: <20250512123424.637989-1-david@redhat.com>
+ <20250512123424.637989-9-david@redhat.com>
+ <f2bxgy5tmb3cpk457lay3hl4wejj5dvttswnvzi2uudxtkkbsm@ktcytlgv64nn>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <f2bxgy5tmb3cpk457lay3hl4wejj5dvttswnvzi2uudxtkkbsm@ktcytlgv64nn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, May 11, 2025 at 1:31=E2=80=AFPM Christian G=C3=B6ttsche
-<cgoettsche@seltendoof.de> wrote:
->
-> From: Christian G=C3=B6ttsche <cgzones@googlemail.com>
->
-> Validate constraint expressions during reading the policy.
-> Avoid the usage of BUG() on constraint evaluation, to mitigate malformed
-> policies halting the system.
->
-> Closes: https://github.com/SELinuxProject/selinux-testsuite/issues/76
->
-> Signed-off-by: Christian G=C3=B6ttsche <cgzones@googlemail.com>
-> ---
->  security/selinux/ss/policydb.c | 61 ++++++++++++++++++++++++++++++++--
->  security/selinux/ss/services.c | 55 +++++++++++++++---------------
->  2 files changed, 88 insertions(+), 28 deletions(-)
->
-> diff --git a/security/selinux/ss/policydb.c b/security/selinux/ss/policyd=
-b.c
-> index 46c010afd44f..a8397ed66109 100644
-> --- a/security/selinux/ss/policydb.c
-> +++ b/security/selinux/ss/policydb.c
-> @@ -1288,15 +1290,70 @@ static int read_cons_helper(struct policydb *p, s=
-truct constraint_node **nodep,
->                                 depth--;
->                                 break;
->                         case CEXPR_ATTR:
-> -                               if (depth =3D=3D (CEXPR_MAXDEPTH - 1))
-> +                               if (depth >=3D (CEXPR_MAXDEPTH - 1))
+On 13.05.25 19:48, Liam R. Howlett wrote:
+> * David Hildenbrand <david@redhat.com> [250512 08:34]:
+>> The "memramp() shrinking" scenario no longer applies, so let's remove
+>> that now-unnecessary handling.
+>>
+>> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>> Acked-by: Ingo Molnar <mingo@kernel.org> # x86 bits
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+> 
+> small comment, but this looks good.
+> 
+> Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
 
-How would the > case be possible? If it isn't something that can be
-done by a malformed policy, drop it. Same applies later too.
+Thanks!
 
->                                         return -EINVAL;
->                                 depth++;
->                                 break;
-> +
-> +                               switch (e->op) {
+> 
+>> ---
+>>   arch/x86/mm/pat/memtype_interval.c | 44 ++++--------------------------
+>>   1 file changed, 6 insertions(+), 38 deletions(-)
+>>
+>> diff --git a/arch/x86/mm/pat/memtype_interval.c b/arch/x86/mm/pat/memtype_interval.c
+>> index 645613d59942a..9d03f0dbc4715 100644
+>> --- a/arch/x86/mm/pat/memtype_interval.c
+>> +++ b/arch/x86/mm/pat/memtype_interval.c
+>> @@ -49,26 +49,15 @@ INTERVAL_TREE_DEFINE(struct memtype, rb, u64, subtree_max_end,
+>>   
+>>   static struct rb_root_cached memtype_rbroot = RB_ROOT_CACHED;
+>>   
+>> -enum {
+>> -	MEMTYPE_EXACT_MATCH	= 0,
+>> -	MEMTYPE_END_MATCH	= 1
+>> -};
+>> -
+>> -static struct memtype *memtype_match(u64 start, u64 end, int match_type)
+>> +static struct memtype *memtype_match(u64 start, u64 end)
+>>   {
+>>   	struct memtype *entry_match;
+>>   
+>>   	entry_match = interval_iter_first(&memtype_rbroot, start, end-1);
+>>   
+>>   	while (entry_match != NULL && entry_match->start < end) {
+> 
+> I think this could use interval_tree_for_each_span() instead.
 
-Something went wrong here, probably a merge failure. Statement after a brea=
-k?
+Fancy, let me look at this. Probably I'll send another patch on top of 
+this series to do that conversion. (as you found, patch #9 moves that code)
 
-> +                               case CEXPR_EQ:
-> +                               case CEXPR_NEQ:
-> +                                       break;
-> +                               case CEXPR_DOM:
-> +                               case CEXPR_DOMBY:
-> +                               case CEXPR_INCOMP:
-> +                                       if ((e->attr & CEXPR_USER) || (e-=
->attr & CEXPR_TYPE))
-> +                                               return -EINVAL;
-> +                                       break;
-> +                               default:
-> +                                       return -EINVAL;
-> +                               }
-> +
-> +                               switch (e->attr) {
-> +                               case CEXPR_USER:
-> +                               case CEXPR_ROLE:
-> +                               case CEXPR_TYPE:
-> +                               case CEXPR_L1L2:
-> +                               case CEXPR_L1H2:
-> +                               case CEXPR_H1L2:
-> +                               case CEXPR_H1H2:
-> +                               case CEXPR_L1H1:
-> +                               case CEXPR_L2H2:
-> +                                       break;
-> +                               default:
-> +                                       return -EINVAL;
-> +                               }
-> +
-> +                               break;
->                         case CEXPR_NAMES:
->                                 if (!allowxtarget && (e->attr & CEXPR_XTA=
-RGET))
->                                         return -EINVAL;
-> -                               if (depth =3D=3D (CEXPR_MAXDEPTH - 1))
-> +                               if (depth >=3D (CEXPR_MAXDEPTH - 1))
-> +                                       return -EINVAL;
-> +
-> +                               switch (e->op) {
-> +                               case CEXPR_EQ:
-> +                               case CEXPR_NEQ:
-> +                                       break;
-> +                               default:
-> +                                       return -EINVAL;
-> +                               }
-> +
-> +                               switch (e->attr) {
-> +                               case CEXPR_USER:
-> +                               case CEXPR_USER | CEXPR_TARGET:
-> +                               case CEXPR_USER | CEXPR_XTARGET:
-> +                               case CEXPR_ROLE:
-> +                               case CEXPR_ROLE | CEXPR_TARGET:
-> +                               case CEXPR_ROLE | CEXPR_XTARGET:
-> +                               case CEXPR_TYPE:
-> +                               case CEXPR_TYPE | CEXPR_TARGET:
-> +                               case CEXPR_TYPE | CEXPR_XTARGET:
-> +                                       break;
-> +                               default:
->                                         return -EINVAL;
-> +                               }
-> +
->                                 depth++;
->                                 rc =3D ebitmap_read(&e->names, fp);
->                                 if (rc)
-> diff --git a/security/selinux/ss/services.c b/security/selinux/ss/service=
-s.c
-> index 0f67a030b49b..3fb971fe4fd9 100644
-> --- a/security/selinux/ss/services.c
-> +++ b/security/selinux/ss/services.c
-> @@ -279,22 +279,25 @@ static int constraint_expr_eval(struct policydb *po=
-licydb,
->         for (e =3D cexpr; e; e =3D e->next) {
->                 switch (e->expr_type) {
->                 case CEXPR_NOT:
-> -                       BUG_ON(sp < 0);
-> +                       if (unlikely(sp < 0))
-> +                               goto invalid;
+-- 
+Cheers,
 
-If you have ensured that this is not possible at policy load time,
-then we don't need to recheck it at runtime. Same applies later.
+David / dhildenb
 
->                         s[sp] =3D !s[sp];
->                         break;
->                 case CEXPR_AND:
-> -                       BUG_ON(sp < 1);
-> +                       if (unlikely(sp < 1))
-> +                               goto invalid;
->                         sp--;
->                         s[sp] &=3D s[sp + 1];
->                         break;
->                 case CEXPR_OR:
-> -                       BUG_ON(sp < 1);
-> +                       if (unlikely(sp < 1))
-> +                               goto invalid;
->                         sp--;
->                         s[sp] |=3D s[sp + 1];
->                         break;
->                 case CEXPR_ATTR:
-> -                       if (sp =3D=3D (CEXPR_MAXDEPTH - 1))
-> -                               return 0;
-> +                       if (unlikely(sp >=3D (CEXPR_MAXDEPTH - 1)))
-> +                               goto invalid;
->                         switch (e->attr) {
->                         case CEXPR_USER:
->                                 val1 =3D scontext->user;
-> @@ -370,13 +373,11 @@ static int constraint_expr_eval(struct policydb *po=
-licydb,
->                                         s[++sp] =3D mls_level_incomp(l2, =
-l1);
->                                         continue;
->                                 default:
-> -                                       BUG();
-> -                                       return 0;
-> +                                       goto invalid;
->                                 }
->                                 break;
->                         default:
-> -                               BUG();
-> -                               return 0;
-> +                               goto invalid;
->                         }
->
->                         switch (e->op) {
-> @@ -387,22 +388,19 @@ static int constraint_expr_eval(struct policydb *po=
-licydb,
->                                 s[++sp] =3D (val1 !=3D val2);
->                                 break;
->                         default:
-> -                               BUG();
-> -                               return 0;
-> +                               goto invalid;
->                         }
->                         break;
->                 case CEXPR_NAMES:
-> -                       if (sp =3D=3D (CEXPR_MAXDEPTH-1))
-> -                               return 0;
-> +                       if (unlikely(sp >=3D (CEXPR_MAXDEPTH-1)))
-> +                               goto invalid;
->                         c =3D scontext;
->                         if (e->attr & CEXPR_TARGET)
->                                 c =3D tcontext;
->                         else if (e->attr & CEXPR_XTARGET) {
->                                 c =3D xcontext;
-> -                               if (!c) {
-> -                                       BUG();
-> -                                       return 0;
-> -                               }
-> +                               if (unlikely(!c))
-> +                                       goto invalid;
->                         }
->                         if (e->attr & CEXPR_USER)
->                                 val1 =3D c->user;
-> @@ -410,10 +408,8 @@ static int constraint_expr_eval(struct policydb *pol=
-icydb,
->                                 val1 =3D c->role;
->                         else if (e->attr & CEXPR_TYPE)
->                                 val1 =3D c->type;
-> -                       else {
-> -                               BUG();
-> -                               return 0;
-> -                       }
-> +                       else
-> +                               goto invalid;
->
->                         switch (e->op) {
->                         case CEXPR_EQ:
-> @@ -423,18 +419,25 @@ static int constraint_expr_eval(struct policydb *po=
-licydb,
->                                 s[++sp] =3D !ebitmap_get_bit(&e->names, v=
-al1 - 1);
->                                 break;
->                         default:
-> -                               BUG();
-> -                               return 0;
-> +                               goto invalid;
->                         }
->                         break;
->                 default:
-> -                       BUG();
-> -                       return 0;
-> +                       goto invalid;
->                 }
->         }
->
-> -       BUG_ON(sp !=3D 0);
-> +       if (unlikely(sp !=3D 0))
-> +               goto invalid;
-> +
->         return s[0];
-> +
-> +invalid:
-> +       /* Should *never* be reached, cause malformed constraints should
-> +        * have been filtered by read_cons_helper().
-> +        */
-> +       WARN_ONCE(true, "SELinux: invalid constraint passed validation\n"=
-);
-> +       return 0;
->  }
->
->  /*
-> --
-> 2.49.0
->
