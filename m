@@ -1,105 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D847223DD3
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 06:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E9D223DD3
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 06:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747292223; cv=none; b=JItArf2mDehI5plPRM3+0YVFYrPJxd06cBfcGWFyzgpuJpB8ncmtG4Jnr0fYCmaTwUJ7VlmLFg+kl1g/Rkysn9m47kJN+tVe0CbcmOXPj5Ug57XOl54J4nqzKbhoBmHxZ52palnYYORKCU/rN9ckSyimZsSE9jkFU9Hjrf1GzCs=
+	t=1747292327; cv=none; b=BRuhIbval6ZTfkjztPvGq/yme3dpP1uRTh9DhQRgqwGxLq6OPGzXNFlh24XwT77mqqQvSce0Lm5mlJYiXvBSC1IpYF+WzKkzP0Yxv2ZPycn/1TJq9v33D6N6Lsfg4blZEtnwisI9HXlwngiA90pEsUk7yhZwqnADvKGYvgDOgQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747292223; c=relaxed/simple;
-	bh=Qll8diZjQKEQnp7Bq5ZY7hVG43EA47fwhWoEUnz+qdg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VMkeYLSHGC+kwWS1dE7vF6XAWpFstS2Z8eC0WrCK13RVGvHO+AEe9gm3BhPBYpVoT4nTiN+gC5U1VpBESc2QY3df9gR7kuN9mdvqKRS+ZiLaKI48IQ3QQ0ymKBpwsoE1ncIq4X1u9kqkId0M7rbHdsRQpobFQtPiXVSWcDUuOo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sYSAb5vA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747292327; c=relaxed/simple;
+	bh=6vIp4NzWmpkPXqP/aD1WmBM6BCLAGcKZVad9IgBArHM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=uOMy2a8UZsG+Vrl6HQFEkiz9KgQdz77TpT2Js2hNaFi7la4ZeI795B2zePwTsQKYhJmfxbPE4tU4xEym+klZWNKZiku1iVicAoya7X3zYOeItV26KMYgnw8xlrAO/rETs0V7DG+mqqLtQXGSFVgoRnk9KZqiUfcsnRXvwm005+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=gkjnkQNl; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sYSAb5vA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82458C4CEED;
-	Thu, 15 May 2025 06:57:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747292223;
-	bh=Qll8diZjQKEQnp7Bq5ZY7hVG43EA47fwhWoEUnz+qdg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sYSAb5vAzX3axD7HE+9pbRSZ4A0EklXtGTobFtDq2CMyLbpTNJd+evhktGfHRO3uH
-	 0DlPKGiAFxE9GHsPvhBjiyUIcPKn5BbX9x1HURAtwv8yR7ubO+80OyQ8d1uoJyjS2B
-	 NteJcptc+sa+4aE3SZs37hS9FieA0B8FtaeUcsQ4e3fT8DzZmZBAGY6NCYO6o9KQqk
-	 yxMHZT1XU4OCQiCOyUJRoDjLkKSGNjQ9LbMXe0FrTFPuZ+yyqQy32SCEaUf5pVnoN5
-	 UuwV+nsJguRVVHEz9ggR3m8LUx9e34aFE9k9GyR+KVM3hjo8wCWZkLqLYLarZLbT0z
-	 0oeeSyh4AF+GQ==
-Date: Thu, 15 May 2025 08:56:59 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Brian Gerst <brgerst@gmail.com>
-Subject: Re: [PATCH v3 2/7] x86/cpu: Allow caps to be set arbitrarily early
-Message-ID: <aCWQOzCla7i__iEl@gmail.com>
-References: <20250514104242.1275040-9-ardb+git@google.com>
- <20250514104242.1275040-11-ardb+git@google.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gkjnkQNl"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250515065843epoutp026d3f1331a339d8369e84af87461442cf~-oRxalRfA1407414074epoutp02-
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 06:58:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250515065843epoutp026d3f1331a339d8369e84af87461442cf~-oRxalRfA1407414074epoutp02-
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1747292323;
+	bh=T+tQKDNqFz0vrJcNWHZ7SWfrYWc8+05T1uWtrqP/8gg=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=gkjnkQNl/C6dvk+3lctfvTFGIxD5XWUnfpc6pxh3C0Ow/CxHtp9r5NDKQfMv6JVwr
+	 7ce5MTucoeqX/qrZxjaJY8WYwMtmZ5kfmwizEN1DFCuGziMdgB/bGykgp2KtAe8p/u
+	 9RZR0axNtI8cntL5J4ZwjsBqLKjPbGrYx7QG6QBM=
+Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250515065842epcas5p39299e3e0ccd1f6d0c9085f006a5b8bbe~-oRwyKJUF0043300433epcas5p3C;
+	Thu, 15 May 2025 06:58:42 +0000 (GMT)
+Received: from epcas5p4.samsung.com (unknown [182.195.38.182]) by
+	epsnrtp04.localdomain (Postfix) with ESMTP id 4ZygzP3YH2z6B9m6; Thu, 15 May
+	2025 06:58:41 +0000 (GMT)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250514133841epcas5p1993cdc39779e2e67790c84bdcb95a161~-aFskRMwc1651716517epcas5p1x;
+	Wed, 14 May 2025 13:38:41 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250514133841epsmtrp182ecc0d6f6db8ee036d95ebc3a602f8e~-aFsjOVMD2249722497epsmtrp1v;
+	Wed, 14 May 2025 13:38:41 +0000 (GMT)
+X-AuditID: b6c32a29-566fe7000000223e-d6-68249ce06e42
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	77.3C.08766.0EC94286; Wed, 14 May 2025 22:38:40 +0900 (KST)
+Received: from bose.samsungds.net (unknown [107.108.83.9]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250514133837epsmtip211d9cfffb87f564e51c11db6b8184519~-aFppGDet2568925689epsmtip2B;
+	Wed, 14 May 2025 13:38:37 +0000 (GMT)
+From: Pritam Manohar Sutar <pritam.sutar@samsung.com>
+To: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com,
+	andre.draszik@linaro.org, peter.griffin@linaro.org, kauschluss@disroot.org,
+	m.szyprowski@samsung.com, s.nawrocki@samsung.com
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, rosa.pila@samsung.com,
+	dev.tailor@samsung.com, faraz.ata@samsung.com, muhammed.ali@samsung.com,
+	selvarasu.g@samsung.com, Pritam Manohar Sutar <pritam.sutar@samsung.com>
+Subject: [PATCH 0/2] initial usbdrd phy support for Exynosautov920 soc
+Date: Wed, 14 May 2025 19:18:11 +0530
+Message-Id: <20250514134813.380807-1-pritam.sutar@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514104242.1275040-11-ardb+git@google.com>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHLMWRmVeSWpSXmKPExsWy7bCSvO6DOSoZBu/Omls8mLeNzWLLq80s
+	Fmv2nmOyuLdjGbvF/CPnWC2u3VjIbvHn33k2i6Ot/5ktXs66x2ax6fE1VovLu+awWUxY9Y3F
+	Ysb5fUwWa4/cZbc4/6KL1WLDjH8sFs/urWCz+L9nB7vFl58PmC0Ov2lntTiy/COTxc47J5gd
+	xDxOrtvM5LFpVSebx51re9g8Ni+p9+jbsorR4/MmuQC2KC6blNSczLLUIn27BK6MOXsnsBSc
+	Y63oXdLC1MB4gKWLkZNDQsBE4vKKScxdjFwcQgK7GSXeHm9kg0jISDyatpEVwhaWWPnvOTuI
+	LSTwllFi+TfLLkYODjYBU4mJexJAekUEepgknl79wQbiMAs8YpI4sOULWLOwgJvEybbZzCA2
+	i4CqxKvvTWCDeAXsJDZ+OQy1QF5i/8GzzBBxQYmTM5+AXccMFG/eOpt5AiPfLCSpWUhSCxiZ
+	VjFKphYU56bnFhsWGOallusVJ+YWl+al6yXn525iBEeRluYOxu2rPugdYmTiYDzEKMHBrCTC
+	ez1LOUOINyWxsiq1KD++qDQntfgQozQHi5I4r/iL3hQhgfTEktTs1NSC1CKYLBMHp1QD0/ke
+	SYefVdIWPxzPbfec9p+lQMA17vPV/ff0J/td7I+MXMv3oVb4SEF/1K6wBzmRLIlX+Lk+mHxO
+	fBstcMOiTO3Xntti5wO3ctlfcKjbfS61P9YwSdzqpeSu2ckPXcrSzH+pFqldMOfR/rarQdrs
+	aMpJm++zMjwYfsl/UPNdoTLX9FdG689Lj6+XVy4Omlgx/0T3+XCGGV3G6b7nTY9GporsuLRA
+	n1VcSsZ4ps3fiVuPvBJsnLXg/N3YwDdKr5/KTVC5pqrEtuKMYH9Gn6D6+psTzETeK8t1Jcy/
+	+Fum1kj570rJws5302SSXe+59sZeC+OyEjdKlfmqdUXgSMAz5gWH1p+L7jz0LGrCsXmtSizF
+	GYmGWsxFxYkAvrs9qhEDAAA=
+X-CMS-MailID: 20250514133841epcas5p1993cdc39779e2e67790c84bdcb95a161
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250514133841epcas5p1993cdc39779e2e67790c84bdcb95a161
+References: <CGME20250514133841epcas5p1993cdc39779e2e67790c84bdcb95a161@epcas5p1.samsung.com>
 
+This SoC has a single USB 3.1 DRD combo phy and three USB2.0
+DRD phy controllers that only support the UTMI+ interface. 
+This SoC is very similar to the existing Exynos850 support
+in this driver. We have supported only UTMI+ in this patchset.
 
-* Ard Biesheuvel <ardb+git@google.com> wrote:
+The difference is that combo phy supports both UTMI+(HS) and 
+PIPE3(SS) and is out of scope in this patchset.
 
-> From: Ard Biesheuvel <ardb@kernel.org>
-> 
-> cpu_feature_enabled() uses a ternary alternative, where the late variant
-> is based on code patching and the early variant accesses the capability
-> field in boot_cpu_data directly.
-> 
-> This allows cpu_feature_enabled() to be called quite early, but it still
-> requires that the CPU feature detection code runs before being able to
-> rely on the return value of cpu_feature_enabled().
-> 
-> This is a problem for the implementation of pgtable_l5_enabled(), which
-> is based on cpu_feature_enabled(X86_FEATURE_5LEVEL_PAGING), and may be
-> called extremely early. Currently, there is a hacky workaround where
-> some source files that may execute before (but also after) CPU feature
-> detection have a different version of pgtable_l5_enabled(), based on the
-> USE_EARLY_PGTABLE_L5 preprocessor macro.
-> 
-> Instead, let's make it possible to set CPU feature arbitrarily early, so
-> that the X86_FEATURE_5LEVEL_PAGING capability can be set before even
-> entering C code.
-> 
-> This involves relying on static initialization of boot_cpu_data and the
-> cpu_caps_set/cpu_caps_cleared arrays, so they all need to reside in
-> .data. This ensures that they won't be cleared along with the rest of
-> BSS.
-> 
-> Note that forcing a capability involves setting it in both
-> boot_cpu_data.x86_capability[] and cpu_caps_set[].
-> 
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  arch/x86/kernel/cpu/common.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-> index 6f7827015834..f6f206743d6a 100644
-> --- a/arch/x86/kernel/cpu/common.c
-> +++ b/arch/x86/kernel/cpu/common.c
-> @@ -704,8 +704,8 @@ static const char *table_lookup_model(struct cpuinfo_x86 *c)
->  }
->  
->  /* Aligned to unsigned long to avoid split lock in atomic bitmap ops */
-> -__u32 cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
-> -__u32 cpu_caps_set[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
-> +__u32 __read_mostly cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
-> +__u32 __read_mostly cpu_caps_set[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
+Pritam Manohar Sutar (2):
+  dt-bindings: phy: samsung,usb3-drd-phy: add dt-schema for
+    ExynosAutov920
+  phy: exyons5-usbdrd: support HS phy for ExynosAutov920
 
-This change is not mentioned in the changelog AFAICS, but it should be 
-in a separate patch anyway.
+ .../bindings/phy/samsung,usb3-drd-phy.yaml    | 27 ++++++
+ drivers/phy/samsung/phy-exynos5-usbdrd.c      | 85 +++++++++++++++++++
+ 2 files changed, 112 insertions(+)
 
-Thanks,
+-- 
+2.34.1
 
-	Ingo
