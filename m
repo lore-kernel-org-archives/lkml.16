@@ -1,94 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1201B414E;
-	Wed, 14 May 2025 08:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B9D9202F9A
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 08:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747211627; cv=none; b=RWocUHhdBMEu1tZLWcx+N8DM79DJhixkhddKOFD7EeuM3f6JwxMTxaaZbOCm/eRN7S0X4bt9zZKWgAeLcDShopNZnmul8shAXaIRSNjjfFgFzvRnxyFN9KpQ+FAWwQ2RWCuGus11BD/18H+TsMeK7m7PFVvk2yBbsuKgspMYwZE=
+	t=1747211678; cv=none; b=e+2SwIWsmQMbA/GWf6s76zaw93IHWEYLNw+K6vaHo0ePuaCcMCfQP7exBTs/XPC5i8JmCntz2JZcJ7qYQmIMUDdtoW2p4Lopm9Rdl5GOLiboihvNZWrBf/7o3UctiWmANMadV6IhBOeny1KrS2wykKpeXSIKUMEH4r3f8bq286U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747211627; c=relaxed/simple;
-	bh=AQgavCoFrn3p4kZpEsuTDbl2iBlKZHyz8RjR4wpvqDk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i7AixbaCa9N7+cYecOxQx8kJJIbGDgELCLHoumAHkts/Mymp6TRrFPT2lHpnfrf5dPA9HLJQ1KqINQ6oLNxbWzg/OpxfN80OCQq11TfF4NmHIQnvivjsr0GrZ9CS0o7+gikx9gpYzvjNinWeIEMkSrv3bl2bMh5wt7YY3u8cufo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H6ojRjkB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747211678; c=relaxed/simple;
+	bh=413HM5eboYj1vCQAGypKKKAbvRddV4u80mvB/tL2F9Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XbCYkkoqUvIFWl67NgyYgxE/5WhuEWBcSx2OF21dXxFOEQdYXIUivg09q7lRR5NhKNzf4ZlQ2pHiCFVf44BTS4enm/uO1bUcYA/6LSNmT+oShO1eOLciMg15pl1OF1vNy+bEGse2FsJcHqC94k7xbb/Qu3bT9ADC5KCfeJ9wA28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=SrUIcqaP; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H6ojRjkB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 175A2C4CEE9;
-	Wed, 14 May 2025 08:33:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747211626;
-	bh=AQgavCoFrn3p4kZpEsuTDbl2iBlKZHyz8RjR4wpvqDk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H6ojRjkBJnyhqb+fdGrlVbRl1CkZXo09J3lhjAkNtgbF2/3sDyisvQtaep8xxk1pW
-	 ql5we5PXROfoE98FkW1DiiOwAIzJo1305qx3HV1/ni1jCVKotrsYUv7l/0/2WC3lBW
-	 mvxVJ/sJGB05lrGoZ+Q+Iuq8NtBiIkOUoE0wdLdRx8KAXNuiA4IfkUgykcaPqKSiuE
-	 q6kj2RiFfrc6c+i/EbqPqCopFiQ4d9/z5Dpnd/3XErvvNwCs8mgtsDX0vQyuxA/Uii
-	 MapWBnhHlxRj22z4I5qLxoax3VfHiEc7ewatwW0LljFq6vymzZbP8Gjnz5aBmuBn7A
-	 0raE+KVU2WzDg==
-Date: Wed, 14 May 2025 09:33:44 +0100
-From: Vinod Koul <vkoul@kernel.org>
-To: Wesley Cheng <quic_wcheng@quicinc.com>
-Cc: Melody Olvera <melody.olvera@oss.qualcomm.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 06/10] phy: qcom: Add M31 based eUSB2 PHY driver
-Message-ID: <aCRVaNDQP/PdAXPR@vaman>
-References: <20250409-sm8750_usb_master-v4-0-6ec621c98be6@oss.qualcomm.com>
- <20250409-sm8750_usb_master-v4-6-6ec621c98be6@oss.qualcomm.com>
- <Z/exOF4T+0vNLQwg@vaman>
- <0517c37d-b1ba-466e-bffd-9f47b0d458d5@quicinc.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="SrUIcqaP"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-441ab63a415so68628945e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 01:34:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1747211673; x=1747816473; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pmPxzvplp27sf0Mh5TNQ3UmGJf69Of2vzLV4ej7YVkA=;
+        b=SrUIcqaPODojagnPoRW+EgNHSzbIpuBYPruB6ViPMGqoWp97FIvecSlIJ9uDylMavK
+         c+Gv4QFDYTXd5PTeupnbsBREDXj15BaTcDV9YTCvz2N98yQFV3v6M6oqsFqpsPkIslFJ
+         sIHjtvuuwsVzmNrfa9xXRCLBUL2k1YQ3EAl1bP0fBAgdEAVHsZ04GzYB0WHio/Gdv0PC
+         eLErMCCqLjeyEI6VCzzS+rKWhX8k4Uydyd/aCZLbhk4js22y1x9+oUULlKNqaq4+/l/7
+         4Xu2OMObHFjrvR4UEADeMmgGj0+2CoGpO5yUOvVIydLvWp8HmUq9LGZPHCiHNfI4Rs5X
+         xrYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747211673; x=1747816473;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pmPxzvplp27sf0Mh5TNQ3UmGJf69Of2vzLV4ej7YVkA=;
+        b=dmoeN2SmRTBAiiwG6o4T7rGA88GtynF+4Jvk9ggHJxa79dS0s+D6yBYmURwxTI7VKX
+         7AlkixyjHo/YI07/d7PDRWI2lbKG+N8cvKMxaAlgPNHI0QdmSURPl0GTny27Z4U+miq6
+         J0kyrAwCk0GnqWof6hNinYDHtXOECAvUXWdYc/ejr1NG/3ZYYDhL7UMzqF5ggb9nIn8I
+         jON6iVsJKravlEpEah3+Ohn48/VZtHYNwtwbqUBm+OUN5tSh+EGvuwvYZzXix7LSafcQ
+         q1AETMLiYzFf7mXL2UHe1sWKM89d+gDOkHMBIRtRyFbmkEWxVaZDMEJIiENjQXcDwSDq
+         2PAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUF3ALnarq0kzRJWFETnZzeK7YT3XquS/jcWwl0rlkfV3Q7HuusDxVxoziWh9CYuxmVI8dYrXKQEkdR+A0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTJ/tCXT9NgQTsLbB1YZmERHaB3GgBMEbpXqo+6jVQHMjCSIQh
+	jvtSsXoI8MXBsbXtDgZzI0ncLQCOWTdtmmEC5R3/fUdfz3LpMWz6/OTkb9L64F405ZLz4gbgn0L
+	B
+X-Gm-Gg: ASbGncukXfWG9Y2isRFj/IVeqmyc+cQIh5lgQtXJrncD4nGi7F0a4GSwhiXHQm0DqkD
+	yhccN34Y7Erj6B+gYkR6wYJcJEqN6zKBAmO5wUslnJibWNCsM6AfGLXQ14msSswqkAa2Zi4RWem
+	Z6Wgim0ltfiZ4TqD/LD1qG6C/+ixbMFxLMnxpHX92f4fg8j3f3kYhg8qrpHH/OzEG1smV+4yzSq
+	2paf77DUyQgv7N+NsSRkI6rwmhhrS+5H2pXwrTXD+qfu2OWK1UAT6RuvMUf82vM6k5fJlNOsFou
+	VJdXVJhuZRz5HXr+C3oWeSIYu+J7+qVvuPn2vrkKpWvm0PelLY2MNQ==
+X-Google-Smtp-Source: AGHT+IGMrizPwMYXPEGeYJfqWtlgiQDVjgsMQKbEsCq+MVhFWOKzPY77w7J6frRmGyePbOUN4M6Vhw==
+X-Received: by 2002:a05:6000:2dc4:b0:3a0:bb2b:14e3 with SMTP id ffacd0b85a97d-3a3496e7095mr1945171f8f.33.1747211673499;
+        Wed, 14 May 2025 01:34:33 -0700 (PDT)
+Received: from [10.100.51.48] ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-879f6297d9esm8160828241.28.2025.05.14.01.34.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 May 2025 01:34:33 -0700 (PDT)
+Message-ID: <81444b38-e0af-4278-89ad-e25cfe08179d@suse.com>
+Date: Wed, 14 May 2025 10:34:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0517c37d-b1ba-466e-bffd-9f47b0d458d5@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/5] module: Add module specific symbol namespace
+ support
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mcgrof@kernel.org, x86@kernel.org, hpa@zytor.com,
+ samitolvanen@google.com, da.gomez@samsung.com, masahiroy@kernel.org,
+ nathan@kernel.org, nicolas@fjasle.eu, linux-kernel@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ hch@infradead.org, gregkh@linuxfoundation.org, roypat@amazon.co.uk
+References: <20250502141204.500293812@infradead.org>
+ <20250502141844.046738270@infradead.org>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20250502141844.046738270@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 16-04-25, 15:45, Wesley Cheng wrote:
-> Hi Vinod,
+On 5/2/25 16:12, Peter Zijlstra wrote:
+> Designate the "module:${modname}" symbol namespace to mean: 'only
+> export to the named module'.
 > 
-> On 4/10/2025 4:53 AM, Vinod Koul wrote:
-> > On 09-04-25, 10:48, Melody Olvera wrote:
-> > 
-> >> +static int m31eusb2_phy_write_readback(void __iomem *base, u32 offset,
-> >> +					const u32 mask, u32 val)
-> >> +{
-> >> +	u32 write_val;
-> >> +	u32 tmp;
-> >> +
-> >> +	tmp = readl_relaxed(base + offset);
-> >> +	tmp &= ~mask;
-> >> +	write_val = tmp | val;
-> >> +
-> >> +	writel_relaxed(write_val, base + offset);
-> >> +
-> >> +	tmp = readl_relaxed(base + offset);
-> > 
-> > Why are you using _relaxed version here?
-> > 
+> Notably, explicit imports of anything in the "module:" space is
+> forbidden.
 > 
-> No particular reason.  I think someone pointed this out previously, and I
-> was open to use the non-relaxed variants, but I assume using the relaxed vs
-> non-relaxed apis comes down to preference in this case.
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Nope you cant! There _needs_ to be a specific reasons!
-When you are doing read, modify, write, it is very important to know the
-right version to use...
+Sorry, I thought this was already reviewed from the modules perspective,
+but I'll make it explicit.
+
+Looks ok to me, besides the already mentioned "strsmp" typo. I can fix
+it when picking up the series.
+
+Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
 
 -- 
-~Vinod
+Thanks,
+Petr
