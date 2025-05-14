@@ -1,154 +1,122 @@
-Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E21E18DB37;
-	Wed, 14 May 2025 17:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C6618DB37;
+	Wed, 14 May 2025 17:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747244439; cv=none; b=iJldxcg50a4cTCJ+G+cT3x4q50DYSeGigSKMeQj+tYs6NXll5uSlWfFu6baVnG8tXZGOsDczGEOsLg/lF+LAcf9AQ0jwb7niARVaeOPj4rD4UowI1y8c4wY3Kj4AMe6asyedZqObcfldo91oeZ03YBzuIUGYC39QvRpMBbHt470=
+	t=1747244471; cv=none; b=gcDU1Zjvp4b3EeR3Iw6DrFwSYHIpLeMZtGvNYZV0BxrS7/loBQowHUrIyQTlx217GpWZJVHFrNy49qbs+yxSS9+k/Yq054NdEfNhW48hb8TFoGyv51sFLHkF0qS/2cjG5IuwZcxGmNW8ZcGJ23dZ04LP/d/d5B3dE4cFQxwetPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747244439; c=relaxed/simple;
-	bh=hS9rND3wioY6eDbAy+sk/6+G1OWEbRvsk+fcHfxsxIo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=qHnX4TE84r/mP9xYYn3b4tKCs12BV1KJ6E0QH2ubTW0sERPQTELzrQj4VNZ7qPJ+8wrJU018UCB7hvyIRLknkJWnV3LBTtWLq5s4qv23gnR+wBX8WgVTj/eJBLhGrA/7UuO5eiGMIvy2hfaOQS7h+SVojQYvJlUYEtaWpnuzwXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=o/v9xMLo; arc=none smtp.client-ip=131.188.11.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
+	s=arc-20240116; t=1747244471; c=relaxed/simple;
+	bh=tG5D1sSTXJ379orrfW0ZwE5tB2wSt+gkXBmHSZaqVaQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=EZDlUDDoEnlO74yupweeMa7iXWQlcwPDs8HrmJ4yLYMJm1eQCqbupMj35C+ro3FPdJrOVraJyTmnBX8I5CtvsZhLVqXFcP0pY9XZOwddTMT8fuLeGJj2+CeOIUA3NDL5+J7cLcOBuHNXlygVi3USySm8s5xQeP3JBO370Vu+8SQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s1y/9xsL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="o/v9xMLo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
-	t=1747243854; bh=3e0BofRXBhWdxRuieDvo8KpaPQ4BE/s7KyUPUjxLUy0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From:To:CC:
-	 Subject;
-	b=o/v9xMLoLEt+/EY/F/2hiul7G9q9dVfTBoHsfj6PXfkZFOSFMdQQBavF/drmR4rpL
-	 DgVdmTvlc6POarsmEEmRDC8f9XB32EUFRahN2mBnDpa7EIkU+No5WrItvRHVwRezCY
-	 LhPzBIW1wHkJbx/Km70XS3uu5TohveXjPX5fj4gvBQwxLgO8a1kQjnOafENXDmRuH4
-	 q6MPQdadYlu5KmCBX7pTTw8KmkFCqSlRa1WuK/xH9t3y9PqHf/QQiXwkP/9m+FOyWQ
-	 l+IW74ia2BZt0gCbP7yqABiYtBCbon1DFCjotNmYpkRQSKuJCi97P1w28X0FIOQtg2
-	 BRdIPDkilXjDw==
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4ZyL3L0f4Kz8smT;
-	Wed, 14 May 2025 19:30:54 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at boeck2.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 2001:9e8:3603:f000:9789:61c6:ec86:c048
-Received: from localhost (unknown [IPv6:2001:9e8:3603:f000:9789:61c6:ec86:c048])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: U2FsdGVkX1/rt5rGkAuQIth1KALZmUps9hhST9T84As=)
-	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4ZyL3G4bZ7z8t8S;
-	Wed, 14 May 2025 19:30:50 +0200 (CEST)
-From: Luis Gerhorst <luis.gerhorst@fau.de>
-To: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,  Daniel Borkmann
- <daniel@iogearbox.net>,  Andrii Nakryiko <andrii@kernel.org>,  Martin
- KaFai Lau <martin.lau@linux.dev>,  Eduard Zingerman <eddyz87@gmail.com>,
-  Song Liu <song@kernel.org>,  Yonghong Song <yonghong.song@linux.dev>,
-  John Fastabend <john.fastabend@gmail.com>,  KP Singh
- <kpsingh@kernel.org>,  Stanislav Fomichev <sdf@fomichev.me>,  Hao Luo
- <haoluo@google.com>,  Jiri Olsa <jolsa@kernel.org>,  Puranjay Mohan
- <puranjay@kernel.org>,  Xu Kuohai <xukuohai@huaweicloud.com>,  Catalin
- Marinas <catalin.marinas@arm.com>,  Will Deacon <will@kernel.org>,  Hari
- Bathini <hbathini@linux.ibm.com>,  Christophe Leroy
- <christophe.leroy@csgroup.eu>,  Naveen N Rao <naveen@kernel.org>,
-  Madhavan Srinivasan <maddy@linux.ibm.com>,  Michael Ellerman
- <mpe@ellerman.id.au>,  Nicholas Piggin <npiggin@gmail.com>,  Mykola
- Lysenko <mykolal@fb.com>,  Shuah Khan <shuah@kernel.org>,  Henriette
- Herzog <henriette.herzog@rub.de>,  Saket Kumar Bhaskar
- <skb99@linux.ibm.com>,  Cupertino Miranda <cupertino.miranda@oracle.com>,
-  Jiayuan Chen <mrpre@163.com>,  Matan Shachnai <m.shachnai@gmail.com>,
-  Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,  Shung-Hsi Yu
- <shung-hsi.yu@suse.com>,  Daniel Xu <dxu@dxuuu.xyz>,  bpf@vger.kernel.org,
-  linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org,
-  linuxppc-dev@lists.ozlabs.org,  linux-kselftest@vger.kernel.org,
-  Maximilian Ott <ott@cs.fau.de>,  Milan Stephan <milan.stephan@fau.de>
-Subject: Re: [PATCH bpf-next v3 11/11] bpf: Fall back to nospec for
- sanitization-failures
-In-Reply-To: <CAP01T76jeSg3W-OyfBfSbAjpEhBr_h8rbS-Hubk6gDdrkeEj_Q@mail.gmail.com>
-	(Kumar Kartikeya Dwivedi's message of "Wed, 14 May 2025 02:47:44 -0400")
-References: <20250501073603.1402960-1-luis.gerhorst@fau.de>
-	<20250501073603.1402960-12-luis.gerhorst@fau.de>
-	<CAP01T76jeSg3W-OyfBfSbAjpEhBr_h8rbS-Hubk6gDdrkeEj_Q@mail.gmail.com>
-User-Agent: mu4e 1.12.8; emacs 30.1
-Date: Wed, 14 May 2025 19:30:50 +0200
-Message-ID: <87ecwr14mt.fsf@fau.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s1y/9xsL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FBC5C4CEE3;
+	Wed, 14 May 2025 17:41:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747244470;
+	bh=tG5D1sSTXJ379orrfW0ZwE5tB2wSt+gkXBmHSZaqVaQ=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=s1y/9xsLM05p3IB9cQ42LmF7l66fHLxBTxpSCJTTa5iqacfPzAUyC/W05UmtNtP+G
+	 ZU/t+u2XfrZDGr6a9EJtux7bV95aTThN6Ga0VmBivCIwAKjsb31B35RNAOe5diNyBz
+	 th208vPI0TLlGNaziOdTJyCERwrQmL2tLRjRgrpzR1bTRqQFUEuwjtstCAWU1lr8+Y
+	 I9hWrU9ZCfKau938QDski+z7Y2CGhOt0CGoChzMEEqpPxd5lK9zdQBb+E6FrktIS67
+	 +7biOPtrOZAtNGXLrU2ONdNaLI5Se0SjmsnyhLxQsYHMZKOVVPMyQJhu4r466i5Y93
+	 r2JKJi+rdFwxw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 14 May 2025 19:41:05 +0200
+Message-Id: <D9W2GYMMVKLV.WXCSH0FYL4QC@kernel.org>
+To: "Daniel Almeida" <daniel.almeida@collabora.com>
+Cc: "Mark Brown" <broonie@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>,
+ "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>,
+ "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
+ Krummrich" <dakr@kernel.org>, "Boris Brezillon"
+ <boris.brezillon@collabora.com>, "Sebastian Reichel"
+ <sebastian.reichel@collabora.com>, "Liam Girdwood" <lgirdwood@gmail.com>,
+ <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
+ abstraction
+From: "Benno Lossin" <lossin@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
+ <D9VATLUHDGU8.53I80TGVRV0J@kernel.org>
+ <B288AFB1-BA0A-4383-9823-EAC9E5DCA59F@collabora.com>
+ <D9VXPNT4HNXP.1PKET0Q1H7O9Y@kernel.org>
+ <52CFFCA2-F253-49F1-9EA5-2865BD094B25@collabora.com>
+ <D9VZV8APBYWU.2SWXJLHIQ18ZB@kernel.org>
+ <aCS71sbQKn7zeosR@finisterre.sirena.org.uk>
+ <D9W0FJ6MKPTE.1NI5HK0TJRHCM@kernel.org>
+ <B58EF4F3-6ADD-4311-BE9D-CCE82CBAEBF2@collabora.com>
+In-Reply-To: <B58EF4F3-6ADD-4311-BE9D-CCE82CBAEBF2@collabora.com>
 
-Kumar Kartikeya Dwivedi <memxor@gmail.com> writes:
-
-(including relevant part from other message)
-
-> On Thu, 1 May 2025 at 04:00, Luis Gerhorst <luis.gerhorst@fau.de> wrote:
-> 
->> +static bool error_recoverable_with_nospec(int err)
->> +{
->> +       /* Should only return true for non-fatal errors that are allowed to
->> +        * occur during speculative verification. For these we can insert a
->> +        * nospec and the program might still be accepted. Do not include
->> +        * something like ENOMEM because it is likely to re-occur for the next
->> +        * architectural path once it has been recovered-from in all speculative
->> +        * paths.
->> +        */
->> +       return err == -EPERM || err == -EACCES || err == -EINVAL;
->> +}
-> 
-> Why can't we unconditionally do this? So the path with speculation
-> that encounters an error (even if EFAULT) is not explored for the
-> remaining pushed speculative states. If the error remains regardless
-> of speculation normal symbolic execution will encounter it. The
-> instructions only explored as part of speculative execution are not
-> marked as seen (see: sanitize_mark_insn_seen), so they'll be dead code
-> eliminated and the code doesn't reach the JIT, so no "unsafe gadget"
-> remains in the program where execution can be steered.
-> 
-> So the simplest thing (without having to reason about these three
-> error codes, I'm sure things will get out of sync or we'll miss
-> potential candidates) is probably to just unconditionally mark
-> cur_aux(env)->nospec.
-
-[...]
-
-> Hm, now looking at this and thinking more about this, I think
-> recoverable error logic is probably ok as is.
-> Scratch my earlier suggestion about unconditional handling. I guess
-> what would be better would be
-> handling everything except fatal ones. In case of fatal ones we should
-> really quit verification and return.
-> We may make partial changes to verifier state / env and try to bail
-> out using -ENOMEM and -EFAULT.
-> So unconditional continuation would be problematic as we'd act in a
-> partial state never meant to be seen.
+On Wed May 14, 2025 at 6:19 PM CEST, Daniel Almeida wrote:
+>> On 14 May 2025, at 13:05, Benno Lossin <lossin@kernel.org> wrote:
+>> On Wed May 14, 2025 at 5:50 PM CEST, Mark Brown wrote:
+>>> On Wed, May 14, 2025 at 05:38:40PM +0200, Benno Lossin wrote:
+>>>> On Wed May 14, 2025 at 4:40 PM CEST, Daniel Almeida wrote:
+>>>>> By the way, IIUC, regulator_disable() does not disable a regulator ne=
+cessarily.
+>>>>> It just tells the system that you don't care about it being enabled a=
+nymore. It can
+>>>>> still remain on if there are other users.
+>>>=20
+>>>> Hmm, so a `struct regulator` might already be enabled and calling
+>>>> `regulator_enable` doesn't do anything?
+>>>=20
+>>> It takes a reference to the regulator.  This may or may not result in a
+>>> change in an underlying physical regulator.
+>>=20
+>> Gotcha. So calling `regulator_enable` twice on the same regulator is
+>> fine?
+>>=20
+>> If that is the case -- and after re-reading the functions exposed on
+>> both types `EnabledRegulator` and `Regulator` -- I am confused why we
+>> even need two different type states? Both expose the same functions
+>> (except `enable` and `disable`) and I don't otherwise see the purpose of
+>> having two types.
+>>=20
+>> ---
+>> Cheers,
+>> Benno
+>>=20
 >
-> The logic otherwise looks ok, so:
 >
-> Acked-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+> As Mark said:
+>
+>> IIUC the point is to allow Rust's type system to keep track of the
+>> reference on the regulator, otherwise the user code has to keep track of
+>> the number of enables it's done like it currently does in C code.
+>
+> So this all started because keeping track of the enables was rather clunk=
+y. See
+> v1 [0].
+>
+> [0] https://lore.kernel.org/rust-for-linux/20250219162517.278362-1-daniel=
+.almeida@collabora.com/
 
-Thank you very much for having a look, so then I will leave it as is if
-I understand you correctly.
+Ahh thanks for the pointer this makes much more sense now. Yeah that's a
+reason to have two types.
 
-Please let me know if "what would be better would be handling everything
-except fatal ones" was meant literally. Such a deny-list approach would
-likely be:
+Please document this properly. A good reference is
+`rust/kernel/fs/file.rs`. It also deals with different refcounts and
+ownership, so that might give you some idea for how to write the
+comments around changes in ownership. Also have a general comment about
+the two different refcounts in a `struct regulator` on the two regulator
+wrappers.
 
-  return err != -ENOMEM && err != -EFAULT;
-
-I initially decided to limit it to -EPERM, -EACCES, and -EINVAL as I was
-relatively confident all their cases were safe to "catch" and because it
-already had the desired effect for most real-world programs. However, if
-you find the deny-list approach easier to reason about, I can also do
-that. In that case, I will review the remaining errors (besides -EPERM,
--EACCES, and -EINVAL) and make sure they can be caught.
-
-Also, thanks for the pointer regarding sanitize_check_bounds() (sorry
-for the delay; the message is still on my to-do list). I will address it
-in v4 if it is safe or send a separate fix if it is indeed a bug.
+---
+Cheers,
+Benno
