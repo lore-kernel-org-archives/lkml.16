@@ -1,138 +1,164 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E69F25E823
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D2623CE;
+	Wed, 14 May 2025 16:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747239016; cv=none; b=G65nL6RvlRWVTe6ineHE7WoyEf8A38mPm/4hfRof3wbr751Kddr1gDqe7SQbbCuBLl/0jVZ6MsbA1RVP5JjvGcWxLWSkkIfVDlbYq0lmCTXnMtZTdXuCbokU0kdc/LPSl6jAZIQfjvnvzE473jopk4Q978tbIdW4SL59t2N8QjU=
+	t=1747239028; cv=none; b=OF7dNI7ull767oMNcsRTEFjENytj90QFe6qC4oVJUm1nSJq9f13URofA5zFX88w95dRdD7o7wydHafvBT1Gjv6EIQQGlU2c5XVTyleQHXuaSr76SnhisjAnXiXmXsU4UezoUYFbQ7PKo2EQ8CP3HQUch9FjGL4vJZHhuRHxgAJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747239016; c=relaxed/simple;
-	bh=+m+Ws1hVUDn95+efEJJAat5SuzKxMIXHCFMzpXQ1LC8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=FPZvYt2+uI+8x9cAxgguBwKQGdgK6c9eYez+U5W5xV4/r1Fec+/crWcdlKc6Jk6sV271rPDxBXF/VKtXaUmNfJ/3l+jzaWNEmExBmiWrLuy2LyNM1EsgbO27x4CQ3gKZQz0YslEIqv8F2jDgHtPELJ+f74XBgjy8CoMEumVWpPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=cCWUmzSI; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1747239028; c=relaxed/simple;
+	bh=gGwiUiW+HXiTkW5h4eGIohF0qoaEcQJpmzc0TrVJeeA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=u761uebkdrm8BBZBs8woOr2K7I++FyfNtgZi2IMNqUfZm8XVSIFHpAP38Kb/JpewIBvaloqa71s1NmUroohj/QuOsutWz2FIjEtDQLOqxIxyZbt0ZMVB+d+lbxPii6WBPcT0okpnXn+O8nKLBPG5NpkTusTdqYugoJ+/99GhdwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=b7fmcAP2; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cCWUmzSI"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250514161012epoutp034b42539b7707574fc19f1103f5926eb7~-cJ-skvCM1313713137epoutp03o
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:10:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250514161012epoutp034b42539b7707574fc19f1103f5926eb7~-cJ-skvCM1313713137epoutp03o
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1747239012;
-	bh=21Z8hzEVWJ04VpTjQEJcND13ywzNHRDWhqyQdMqHOxQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cCWUmzSImml8DiJBbF7PRt2U8YTyYSgKkQWNnfluCMpWXbH95Gnqb37k8AY+owWHZ
-	 OG1l67QdoCP3JcwN8ERYj/YbDg60Tz7BByu10qd1RcWaOp2sQ/v7yc6VhsAcppYvTs
-	 6DVmP9RiGXKxPCepnQY+nkyWQJzNLygVFWtkp+X4=
-Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250514161011epcas5p2158bf3817d9cbaa8c0b2bccc843a23e9~-cJ-Dxtqw3255432554epcas5p2E;
-	Wed, 14 May 2025 16:10:11 +0000 (GMT)
-Received: from epcas5p2.samsung.com (unknown [182.195.38.174]) by
-	epsnrtp02.localdomain (Postfix) with ESMTP id 4ZyJGB4g0xz2SSKX; Wed, 14 May
-	2025 16:10:10 +0000 (GMT)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250514135757epcas5p1aab0db4b4910b689f76ad00661f2a8e9~-aWhrpWc50678006780epcas5p1_;
-	Wed, 14 May 2025 13:57:57 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250514135757epsmtrp1a1dc0e4541e07c3fdf57b665c492725a~-aWhqyoWD0052600526epsmtrp1i;
-	Wed, 14 May 2025 13:57:57 +0000 (GMT)
-X-AuditID: b6c32a29-55afd7000000223e-b2-6824a1659b32
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	19.2D.08766.561A4286; Wed, 14 May 2025 22:57:57 +0900 (KST)
-Received: from bose.samsungds.net (unknown [107.108.83.9]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250514135755epsmtip2402140e03afcb2fa688801985af7b03e~-aWfYM9t80096800968epsmtip2u;
-	Wed, 14 May 2025 13:57:55 +0000 (GMT)
-From: Pritam Manohar Sutar <pritam.sutar@samsung.com>
-To: pritam.sutar@samsung.com, gregkh@linuxfoundation.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com,
-	Thinh.Nguyen@synopsys.com
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rosa.pila@samsung.com, dev.tailor@samsung.com,
-	faraz.ata@samsung.com, muhammed.ali@samsung.com, selvarasu.g@samsung.com
-Subject: [PATCH 2/2] usb: dwc3-exynos: add support for ExynosAutov920
-Date: Wed, 14 May 2025 19:37:41 +0530
-Message-Id: <20250514140741.415981-3-pritam.sutar@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250514140741.415981-1-pritam.sutar@samsung.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="b7fmcAP2"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EDn45X003568;
+	Wed, 14 May 2025 16:10:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Gx2b4Z
+	IlWG4aK2ZNItTwwPT+mm7hjHfKNLZ7/PvK6W0=; b=b7fmcAP2H+fmHZNZmAYAHW
+	6fmF5/CmNz6wG77TsK29vTYx/9JZgq3unTcnFoOU/9vHjz4Y4M9rsbM4IPbOTtC8
+	XpcZKMYMW5wehJLS4iulp7S5x50V5uKzMcEnYu6d1iNgiIfkz8iKAL7NaHpDTOE7
+	+VRUdtF09xtM0MtDNZSsQGpxjCZWS89SvghP9xdBdrdErNgDnoNzg0stwE8QXzPV
+	D+iNAxc3d2Oht8N4uYn5xSt1XgzDHyMJt+L1czqoOOt96CEBVxIoDnkufWJxy22s
+	zKbFXUrwOh8cVNRNYGua1e9ataus+rNLqFWZvAWeBocfKkZz+HDDUXi8AHfjFg/g
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46mvd38ugx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 16:10:10 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54EDZJBF021396;
+	Wed, 14 May 2025 16:10:10 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46mbfrn5kj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 16:10:09 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54EGA5vm19988794
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 14 May 2025 16:10:06 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DD038200B7;
+	Wed, 14 May 2025 16:10:05 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 456B4200B8;
+	Wed, 14 May 2025 16:10:05 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.152.224.66])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 14 May 2025 16:10:05 +0000 (GMT)
+Date: Wed, 14 May 2025 18:10:03 +0200
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Ignacio Moreno
+ Gonzalez <Ignacio.MorenoGonzalez@kuka.com>,
+        kernel test robot
+ <lkp@intel.com>, oe-kbuild-all@lists.linux.dev,
+        Andrew Morton
+ <akpm@linux-foundation.org>,
+        Linux Memory Management List
+ <linux-mm@kvack.org>,
+        Yang Shi <yang@os.amperecomputing.com>,
+        Janosch Frank
+ <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Heiko
+ Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander
+ Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com
+Subject: Re: [akpm-mm:mm-new 320/331] arch/s390/kvm/gaccess.c:321:2: error:
+ expected identifier
+Message-ID: <20250514181003.3b4caa3c@p-imbrenda>
+In-Reply-To: <6d415e22-9461-4434-9a0b-25423478674f@lucifer.local>
+References: <202505140943.IgHDa9s7-lkp@intel.com>
+	<63ddfc13-6608-4738-a4a2-219066e7a36d@kuka.com>
+	<8e506dd6-245f-4987-91de-496c4e351ace@lucifer.local>
+	<20250514162722.01c6c247@p-imbrenda>
+	<0da0f2fc-c97f-4e95-b28e-fa8e7bede9cb@linux.ibm.com>
+	<20250514164822.4b44dc5c@p-imbrenda>
+	<6f8f3780-902b-49d4-a766-ea2e1a8f85ea@linux.ibm.com>
+	<6d415e22-9461-4434-9a0b-25423478674f@lucifer.local>
+Organization: IBM
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDLMWRmVeSWpSXmKPExsWy7bCSvG7qQpUMg2Ub5S0ezNvGZrFm7zkm
-	i3s7lrFbzD9yjtXi2o2F7BbNi9ezWbycdY/NYtPja6wWl3fNYbOYcX4fk8WiZa3MFudfdLFa
-	PLu3gs3i/54d7BZffj5gtjiy/COTxaoFB9gdBD02repk89g/dw27x+Yl9R59W1YxemzZ/5nR
-	4/MmuQC2KC6blNSczLLUIn27BK6Mc5u+MBUs4azYvPMNWwPjRfYuRk4OCQETiTN7DrF0MXJx
-	CAnsZpR4c+8fC0RCRuLRtI2sELawxMp/z9khit4ySjQtfsDYxcjBwSZgKjFxTwJIXERgE6PE
-	kRUnmUEamAVWM0mcnpoBYgsLuErcPjUfbBCLgKrErOsnwRbwCthJfH95lw1igbzE/oNnwXo5
-	Bewltr+azQIyXwio5shSfYhyQYmTM5+wQIyXl2jeOpt5AqPALCSpWUhSCxiZVjFKphYU56bn
-	FhsWGOallusVJ+YWl+al6yXn525iBEeQluYOxu2rPugdYmTiYDzEKMHBrCTCez1LOUOINyWx
-	siq1KD++qDQntfgQozQHi5I4r/iL3hQhgfTEktTs1NSC1CKYLBMHp1QDU8Huve9qn0iertdW
-	ec3+P3nSKu3nM99MO2016YyItfyxjV8U1hz4z26oXmVjqHdydub0kpWGDw49FDKcPD/eYFKv
-	4Abuaq9tUS4tXxpV6jzClczz8/9c7LjCWPpfcQdb+h5Z++YzL0TWFqdVODUHVv3lzvntd0Rs
-	uoLm/9izR2UKWaqLUlcfyJTzY9qR/bFHleOfi1Ru3tu6Ew82aDzUdpftqF1qN2m/w5Nqkc0a
-	O35u3Nv5NbtAyXl2yxKPmtPdpVpdIVwWM/16BcpmbVliIGfKX5gfIL9HOCEx73z/wtt7H7yS
-	zH229/2v1WLcvA/6bjksdBGdsItnizQ3+5tzbRci035n7X06//dHxWMBSizFGYmGWsxFxYkA
-	6qFTzQ8DAAA=
-X-CMS-MailID: 20250514135757epcas5p1aab0db4b4910b689f76ad00661f2a8e9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250514135757epcas5p1aab0db4b4910b689f76ad00661f2a8e9
-References: <20250514140741.415981-1-pritam.sutar@samsung.com>
-	<CGME20250514135757epcas5p1aab0db4b4910b689f76ad00661f2a8e9@epcas5p1.samsung.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: NXX-GJsxG1skImeDNDQFWIh7c_4GFWUe
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDE0MCBTYWx0ZWRfX1/d3m/tOXQtF tzyxSEThKWfVNTi+WJgbIXOlxjmKHk5+dOT14LOsVr+x0xpgHJEy8fuQPB5YmHgTy0+IR2mo58s QmkS/QLJorv90PhXS6fbezdM0qtWXztw1unJIZZOeg8kvtBycaxQZpM96SWROoUcDaBcarUbzSj
+ oHG9QUWtDT4KdD4jZkVBbF7wcmcdVLkkXjUSR2+c+aKe7p0Cou7YZ/RuyrG34N0RQarn6YpfN8C uoVf2h1/jnsn5E7x3KReezSS0f/XJ+1Np2hsf9ds8+nk/LJOXc3Ttidp3W+NelDVKB0SLSerNHS j30Ubw/w6Hd2LtT8hc/+gISTQl/SH0xC9I6SU/U/oVWbkKAMluSHyowovz+PN4cQEEKf965f4jB
+ GTEen1yxYL1YbJxjsMC/VHg1ZFmxV5mkxfYbcBhdV312B3RyUj8m9HosWG1BJURdmrYihrci
+X-Proofpoint-ORIG-GUID: NXX-GJsxG1skImeDNDQFWIh7c_4GFWUe
+X-Authority-Analysis: v=2.4 cv=GbEXnRXL c=1 sm=1 tr=0 ts=6824c062 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=yPCof4ZbAAAA:8 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=OnEVUMqZS2F2_DRSUccA:9
+ a=CjuIK1q_8ugA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_04,2025-05-14_03,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ clxscore=1015 priorityscore=1501 lowpriorityscore=0 suspectscore=0
+ mlxlogscore=999 phishscore=0 bulkscore=0 malwarescore=0 mlxscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505140140
 
-This SoC has a DWC3 compatible controllers. It needs "ref" and
-"susp_clk" for it's operation.
+On Wed, 14 May 2025 17:01:55 +0100
+Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 
-Add required changes in exynos dwc3 glue layer to support this SoC.
+> On Wed, May 14, 2025 at 04:52:18PM +0200, Christian Borntraeger wrote:
+> >
+> >
+> > Am 14.05.25 um 16:48 schrieb Claudio Imbrenda:
+> >  
+> > > > > > > A possible fix for this would be to rename PROT_NONE in the enum to PROT_TYPE_NONE.  
+> > > > >
+> > > > > please write a patch to rename PROT_NONE in our enum to
+> > > > > PROT_TYPE_DUMMY, I can review it quickly.
+> > > > >
+> > > > > if Paolo has no objections, I'm fine with having the patch go through
+> > > > > the mm tree  
+> > > >
+> > > > Yes, lets do a quick fix and I can also do
+> > > > Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
+> > > >
+> > > > for a s/PROT_NONE/PROT_TYPE_NONE/g
+> > > > patch.  
+> > >
+> > > I'd rather have PROT_TYPE_DUMMY, since it's a dummy value and not
+> > > something that indicates "no protection"  
+> >
+> > makes sense.  
+> 
+> Thanks for the quick response guys, did you want us to write the patch?
 
-Signed-off-by: Pritam Manohar Sutar <pritam.sutar@samsung.com>
----
- drivers/usb/dwc3/dwc3-exynos.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+yes please
 
-diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
-index 20abc6a4e824..a8f97d2b31ae 100644
---- a/drivers/usb/dwc3/dwc3-exynos.c
-+++ b/drivers/usb/dwc3/dwc3-exynos.c
-@@ -187,6 +187,12 @@ static const struct dwc3_exynos_driverdata gs101_drvdata = {
- 	.suspend_clk_idx = 1,
- };
- 
-+static const struct dwc3_exynos_driverdata exynosautov920_drvdata = {
-+	.clk_names = { "ref", "susp_clk"},
-+	.num_clks = 2,
-+	.suspend_clk_idx = 1,
-+};
-+
- static const struct of_device_id exynos_dwc3_match[] = {
- 	{
- 		.compatible = "samsung,exynos2200-dwusb3",
-@@ -209,6 +215,9 @@ static const struct of_device_id exynos_dwc3_match[] = {
- 	}, {
- 		.compatible = "google,gs101-dwusb3",
- 		.data = &gs101_drvdata,
-+	}, {
-+		.compatible = "samsung,exynosautov920-dwusb3",
-+		.data = &exynosautov920_drvdata,
- 	}, {
- 	}
- };
--- 
-2.34.1
+please don't forget to also add the following tags:
+
+Fixes: b3cefd6bf16e ("KVM: s390: Pass initialized arg even if unused")
+Cc: stable@vger.kernel.org
+
+> 
+> We can put something together quickly if so and cc you on it.
+
+yep
+
+> 
+> Ack on the comment above, of course!
+> 
+> Cheers, Lorenzo
 
