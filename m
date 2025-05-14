@@ -1,99 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168CE4C9F;
-	Wed, 14 May 2025 23:30:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600E54C9F
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747265430; cv=none; b=ufPM2Ndka25jD2cg71Xbf53LuvzYtBkC+TXR/jC7pLzQMQ+MHvIKGxcd9EXRpnMDv5FT9HHiG6iqiKbfxwWqmj5nHCFnXbuN60ONEP7I7zz+UfSOqQLyby5LRoAgKBCHcQkH1qBxYMpBTYU4ZDLusiktN4St/rsnci8fNd7gaTw=
+	t=1747265455; cv=none; b=LJk+RcoC5bTgqJnLP9H9kaIiE+8lnTdim1DGurzebyN6pILDXMOzwaHCtYw7AinFuNNvK8XiAjJ/DqnKhUVhTwJWkO7O88Weray3uHh48XixMkt4uzYyW05dsAtEjdjWlI7DyZ3OzlatKFQFkjuAEe1WH5NghxSWWfa4XOyohU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747265430; c=relaxed/simple;
-	bh=Zbdtc9nGX/BlLp05VNDP53lvcblNsMgnV9hUlUHBtCY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hRBLsXK5bx8HzQ2TSo+OZKA7SvGeHjuzEouqTZgw/ewcazE65mbtzbCjx3AvtL4eGhiZ1Vj7YZJ72dH9kGC/9lRs3aaohePmtDzauezBNYO3S8QkJFSXOlTzMTHS2YXFAcqksrri/PGUt5PAKB/rguw+vcJEKIzUifaRFOkezkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aLeh2Mx+; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747265455; c=relaxed/simple;
+	bh=8IwAmJ0usLb0XmLJEmRAj1KQT7kUoSHh+GUD4ztFINU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=aZ7YbfT2QtTMQFw4D6bB2TwEp76m4gj1Vuqskdgr4S+uogMWdv2CBOka+7+jIjKa76tqE4T8fDwyhWsbvM12P1MVd5xGApnuYkzYsfTJqJKKWlWh6N13DU0+hixuh83flP4QShZPUINFGxNCChTmAIHVjdA3hDHQ5DaG7kc68dU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rhS8+rB6; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aLeh2Mx+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747265429; x=1778801429;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Zbdtc9nGX/BlLp05VNDP53lvcblNsMgnV9hUlUHBtCY=;
-  b=aLeh2Mx+6FJXryHNeXahlZ0skppzFvMGbTulb920/0fjk5L7vFqTvq4F
-   OZTLpWyl6QAOHFpy7Wiu+oml6bHuu+afBwrU6J+J1JYZLABcgsfVviFjY
-   muZgeB1WV5VtZiq7RN/xyesekFuB7zYCpP6Os6AZLjGEVMEFP3soppszE
-   jmqHhsamVv4VMfT5gpPgGWeZUMVhWBhR39g1mlP5Z8Al1kOUAkX2Ywycu
-   h8YFzWMAkYqrJyn8EjKAXk7AQITxxV5kTUDPIHcSqQz95G919ubcuOuRK
-   6A/N1rBDwSEwY3MQPKgWAa1B7eCzcK55pIS8i5pR12EqJwnl7lCBnXo9V
-   A==;
-X-CSE-ConnectionGUID: CUiP9ghbTSC8f2NPHwxzUQ==
-X-CSE-MsgGUID: 6y00/+28Rc6IP/J1tyMKWg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49120381"
-X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
-   d="scan'208";a="49120381"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 16:30:28 -0700
-X-CSE-ConnectionGUID: 9FjKg8P5Te63BRR62lCjag==
-X-CSE-MsgGUID: qlyIhVq3TIu/p+ImOQ56dg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
-   d="scan'208";a="137911897"
-Received: from mfrick-mobl2.amr.corp.intel.com (HELO desk) ([10.125.146.12])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 16:30:28 -0700
-Date: Wed, 14 May 2025 16:30:22 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Suraj Jitindar Singh <surajjs@amazon.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] x86/bugs: Don't warn when overwriting
- retbleed_return_thunk with srso_return_thunk
-Message-ID: <20250514233022.t72lijzi4ipgmmpj@desk>
-References: <20250514220835.370700-1-surajjs@amazon.com>
- <20250514222507.GKaCUYQ9TVadHl7zMv@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rhS8+rB6"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30c06465976so350464a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 16:30:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747265453; x=1747870253; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=K4/upwCU1p7ZhRZCIWHVB5zuv5a/gxQLx/KwiZLDsIs=;
+        b=rhS8+rB6n5ez4I56fUlA2ea8yo2iMu8mHM4munJorrMkjZ4JK0fe6kOQpePclO/gRM
+         LE8FWui0h6m8RKwc0n7dHRFM/H/lL5x+7xRFg6ALmnIL6k+oyWoGM3xGoB4MxX6ps6vS
+         fM7R1ORHSZquSl8kYImaTs+VcCvSgf+IbOihdLZbZLxsat3vfEZBKkvjUfL2ZYCcXKdx
+         9Q/jGgOLe3dEHLhW6D4TyNAsOofvZsbo7nKVs667kRgenKkZxkYqHIyHgc4kzRRGvfm3
+         R+tpC7hEnI84pJufBOZtD9rb6+uiwieEEmV3SLGvNE/jrKCQbMpxKDCNZ02bEMRhAZwo
+         Edaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747265453; x=1747870253;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K4/upwCU1p7ZhRZCIWHVB5zuv5a/gxQLx/KwiZLDsIs=;
+        b=tE3aTRyS9nJ1rZIAX1493YWPofiyd8NyFkQXRMsIHzDBIJMt8Q61fWh7X8wMcZj/WR
+         pQ1VdLAuyZa3WM4q37P8qnS80rZ//g2fkv96JJ+csFeA9srJMhSW8mhR2bDLUejg17Nm
+         lk4axXsMTmoLnNYE0GiIvSbWnhIyPVZAsAt71s2JjmJeQJzo+FNVduU/Zy3uxyQwEczA
+         xA/qYsEpqSFJO8O7157nO6ySJh8E6CaGkvCQaG4GD6I1SsdyVGiFmoTwpq6FWjlElNM0
+         nQ5tuQgFqpHafSj99+ksJA/zB6bUKGeBfDXxNkD6Fyt8XTvprxNhsl9AMna+dCw+vBUM
+         YE7w==
+X-Forwarded-Encrypted: i=1; AJvYcCWYY8Qpc/YU9KP6WYhFP/LnTsnfyINWTacPpo7Jb9f5fNCMBnv3v2HXixCfUeUihW5kp1DGNdDYODTUP2Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbYOrSpTDNP2WN1WOtTHh9V5108apKSll26wBILDxJBW8wOEOR
+	B6bsGE3uqyOo3Eg9UBTxxfZLfB4x9NDBHwZ5XjWqbF1gJQ3wN+qGoNEDAnmbuLABs0gwbj54Roc
+	evA==
+X-Google-Smtp-Source: AGHT+IFAtfFAcg5G+bktrxdFp1CjONIgOLPqtbYX0j8nNBPhJiLTtnFl1U1b1LHV+tCsNxvNYjV//Y0pDCQ=
+X-Received: from pjbee14.prod.google.com ([2002:a17:90a:fc4e:b0:301:1bf5:2f07])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5292:b0:2ff:5357:1c7f
+ with SMTP id 98e67ed59e1d1-30e2e64260bmr8268883a91.30.1747265453399; Wed, 14
+ May 2025 16:30:53 -0700 (PDT)
+Date: Wed, 14 May 2025 16:30:51 -0700
+In-Reply-To: <20250324173121.1275209-10-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514222507.GKaCUYQ9TVadHl7zMv@fat_crate.local>
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-10-mizhang@google.com>
+Message-ID: <aCUnq4M33yTj_t1F@google.com>
+Subject: Re: [PATCH v4 09/38] perf: Add switch_guest_ctx() interface
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
+	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, May 15, 2025 at 12:25:07AM +0200, Borislav Petkov wrote:
-> On Wed, May 14, 2025 at 03:08:35PM -0700, Suraj Jitindar Singh wrote:
-> > -	if (x86_return_thunk != __x86_return_thunk)
-> > +	/*
-> > +	 * There can only be one return thunk enabled at a time, so issue a
-> > +	 * warning when overwriting it. retbleed_return_thunk is a special case
-> > +	 * which is safe to be overwritten with srso_return_thunk since it
-> > +	 * provides a superset of the functionality and is handled correctly in
-> > +	 * entry_untrain_ret().
-> > +	 */
-> > +	if ((x86_return_thunk != __x86_return_thunk) &&
-> > +	    (thunk != srso_return_thunk ||
-> > +	     x86_return_thunk != retbleed_return_thunk))
+On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
 > 
-> Instead of making this an unreadable conditional, why don't we ...
+> When entering/exiting a guest, some contexts for a guest have to be
+> switched. For examples, there is a dedicated interrupt vector for
+> guests on Intel platforms.
 > 
-> >  		pr_warn("x86/bugs: return thunk changed\n");
+> When PMI switch into a new guest vector, guest_lvtpc value need to be
+> reflected onto HW, e,g., guest clear PMI mask bit, the HW PMI mask
+> bit should be cleared also, then PMI can be generated continuously
+> for guest. So guest_lvtpc parameter is added into perf_guest_enter()
+> and switch_guest_ctx().
 > 
-> ... turn this into a
+> Add a dedicated list to track all the pmus with the PASSTHROUGH cap, which
+> may require switching the guest context. It can avoid going through the
+> huge pmus list.
 > 
-> 	pr_info("set return thunk to: %ps\n", ...)
+> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> ---
+>  include/linux/perf_event.h | 17 +++++++++++--
+>  kernel/events/core.c       | 51 +++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 65 insertions(+), 3 deletions(-)
 > 
-> and simply say which thunk was set?
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 37187ee8e226..58c1cf6939bf 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -584,6 +584,11 @@ struct pmu {
+>  	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
+>  	 */
+>  	int (*check_period)		(struct perf_event *event, u64 value); /* optional */
+> +
+> +	/*
+> +	 * Switch guest context when a guest enter/exit, e.g., interrupt vectors.
+> +	 */
+> +	void (*switch_guest_ctx)	(bool enter, void *data); /* optional */
 
-This was discussed during the mitigation, and pr_warn() was chosen because
-it was not obvious that srso mitigation also mitigates retbleed. (On a
-retrospect, there should have been a comment about it).
+IMO, putting this in "struct pmu" is unnecessarily convoluted and complex, and a
+poor fit for what needs to be done.  The only usage of the hook is for the CPU to
+swap the LVTPC, and the @data payload communicates exactly that.  I.e. this has
+one user, and can't reasonably be extended to other users without some ugliness.
 
-The conclusion was to make the srso and retbleed relationship clear and
-then take care of the pr_warn().
+And if by some miracle there's no CPU pmu in perf, KVM's mediated PMU still needs
+to swap to its PMI IRQ.  So rather than per-PMU hook along with a list and a
+spinlock, just make this an arch hook.  And if all of the mediated PMU code is
+guarded by a Kconfig, then perf doesn't even needs __weak stubs.
