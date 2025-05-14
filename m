@@ -1,62 +1,129 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A69A4C7C
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA5E1E1A20
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747206604; cv=none; b=lpgQGQnqqaYX6i5NYmEoEOBb2V7wi0HysmFVR7v1bu4p1wYVTN/dQZfYdtMaju7sfVLNkFtx8Rwdp1J+bADDspBGfPMR+Q0FTXps98IPkREiozuchpixlcTNEwHB9bO5oaBImRBVmLrjIpyi719o1MqKsdcPOQO5nnuaeF3d6UU=
+	t=1747206634; cv=none; b=XFZQeF64AbWLjGT5KvuzIVmcls9XMOnpEQfHOBmge2MPpDpfWqJ36KXVVjz3O8aj6JNTPPcKJ7f7kCLD3bJxpO5DckKrueYBPQm0QbmNOAF0xkKepH2rp5Nv01Gqx+u570bwpACzydlFPf+6FeN+8h9YMrwrB+M3eCvwRw87mv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747206604; c=relaxed/simple;
-	bh=whbrueL2f+CVbs487z1KRBfvk2TS7NSfibrMlpkEvu8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=jXlDpEm4Gk+0LlLG2ZRXgyRX8WrentvLC/UUFFQqtPwtshKUXNbax2q70a1DVigtzUd97ebsmCopQ3JBA8u3NtPi+VGrCXAV4Yb7V9lyrFyhIW+pau/Ej6cLvvNo2cTr7C9MeJpBm2LKwCCxiEg4wdBNtrPEXKXSU06mHGJ/imE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ce8dadfb67so81609655ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 00:10:02 -0700 (PDT)
+	s=arc-20240116; t=1747206634; c=relaxed/simple;
+	bh=/B+EwXmyrRAKb+rC7ELavWBH8AzZRPfvLMfeSNf7qgQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hb0s4EVPB3lT1uO901/VKmqy3H2+lDNltCb4OWV4aUqcI8ppm+4zRAeYsUbVLTYGJy/xBM7de90++2P4kJhdrcLvYfbtVaXN/vKRZAGPQfleHUfW9hzBXF4X7/LEw/pMw5UuWX2fPssyxrJKMFqlkK+LbOb+9ovFytDvDyHk54k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-879467794efso3698647241.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 00:10:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747206601; x=1747811401;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=whbrueL2f+CVbs487z1KRBfvk2TS7NSfibrMlpkEvu8=;
-        b=Je0TJBAHamVFRBrszxmf1VJSgPEZvVEsZ9nCCiI8HowdStxFZ+pLsu+sBDM8SjF4Bb
-         N9bEOjuB1hjJU5Epyw+JLkeqYiOPiu+sXSR230tw5P0I565uiVY3dv6OBriUBITkgwD0
-         6rgjZ42PlEETbGJC/I4KHNpG9N0ZXEQ+Zq7YUDKCkNRAdXg94CoXQLPwPUMp7DaMFvHZ
-         J+BduVYLF+Q1EnUPKhnkhxmCJpXgXaSwy5YiYLvNxzq9H9JmbqUwgWdpKYfzR6tPJRrd
-         7bVPdwkhVaJ8KCyrGnHJxy9/07x9ayM3WMzBV2orxT4jGLB+ltQRAAxWqL5o19as9xfT
-         +LSg==
-X-Gm-Message-State: AOJu0Yz+MizXmyuxpSQFPc8n4Sr8dekW86rcVqALzpFVKcMhcHoNzhQX
-	P9kQYYo2fwR+j8OtaK6t1uV391rDE7vk+EdMgGgmbpEl8BbVA7uksx7OJyK25MMGu3ATXJVIaia
-	DDKPzFY8fCx08viz7gLroBFIh+fkqnngzBChmmm4TIxu1CWeh+A6dN88=
-X-Google-Smtp-Source: AGHT+IF+BDhfhl0qJh++3ulcjrG2ZcgCy3ZC1DDZpFc+yesMYk/289msFyskt3cOpQF3uAK5nIJq6ENF47cZXLKV45JkzcToOmhF
+        d=1e100.net; s=20230601; t=1747206630; x=1747811430;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qEdCTK8Ua/3Kxw/UlKLJuxTv51uEZAV3qqkGRptSF+I=;
+        b=SqcMV4VsWn07J8IL75rOFoQgTyHNzN/Sp5GiIs/UoF+9GZqcaDhyRRS2ZydHn2U6FE
+         MtJEXAkb+DT/07Dc/QH+MOuNsnWNJ7Khc+pd7ixhWER2dJLU9NsBHI2cDUmRdq/O1lBJ
+         WlHQWF5FvqEIt3KCM2vnDu7FRWF7s8MPPk4ssD4CPnXSav/9HuZIZP80ArF+j5ma6IRS
+         ENVHU60xgDr+SmfnWHibz/Mfafk5uS6icQAnFNFlTxC8M6elc3ux/ZHFxkmuoCbtQ/rg
+         9M1CSclOFBQTZUNU0pZK1pKD3aPtJMqyKogvr7Y2h1hBN9CeJPcaH4dAKlD5B53yHpVK
+         asTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVU24kIhogvdX/vWU7k4AwUyVG97/jHJ8Ds/Bmxc5Gxk/DQVPrQVvrUv+XjXaTD7DViY0zssjviV0a/dSk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIJJlhJCHy/QVI9SFiWD1UEm4pS/vinbrQBj2lTr96vfPckidx
+	b7RSZFkVV6goExRbHHBlZA+CfQT/9KfQ8cMBCf2vAFOXz7As7B8CHqbsq0X6
+X-Gm-Gg: ASbGncvFmWpN4z/x7X2+oa4/EfJBrUTgqDK9eGVxF6zfEQAj/FI1+e8h7s3e1BHu5gx
+	ovSr4GqL7LDEPCgV7p0yYzmJGpB3dsz7H37V2ELWWcVA35/vh/K24roCRoOG6r5EIiAonY49UeT
+	/dLrb+p3WVvZK6VduVN/yu+rrKSYUvohWnObyAtziddH+GePAUgiQ8u4r9aYiExSbyzMIyzjxCY
+	1oQWvH3QIzel8aYTHiV6gZW3p3JLGkZHG2+OgYy1BDv53vmvQRsaW+yLctyGbvlVTua91pbuctS
+	GJi+GzI6PwFYhVJv8L4PAutn07e0Whw0wYd/PyOXBpHIQsTC4Pl5MnGGOqHva4G5fpdkkiC9gNE
+	Oi2IV98Hy3P35khcjGQ==
+X-Google-Smtp-Source: AGHT+IF8b3l2Hoh5XBKHxXkI29ADP3Wek8DeeBYNYlX726noSyN+NDSpP7XT6a4Hd8NH8TztfTCszw==
+X-Received: by 2002:a05:6102:4a96:b0:4bb:e14a:9451 with SMTP id ada2fe7eead31-4df7dd3fcbcmr2168213137.20.1747206630547;
+        Wed, 14 May 2025 00:10:30 -0700 (PDT)
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4deb2016d30sm7893611137.21.2025.05.14.00.10.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 May 2025 00:10:30 -0700 (PDT)
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-52403e39a23so4303232e0c.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 00:10:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVgc88MsF+uT12axCP+mZevA1Cu0UcggjgqWIqOLRQVg+r/ZewWBaI1rO2GhAax1SRbKUTLp/XMcoSu3uQ=@vger.kernel.org
+X-Received: by 2002:a05:6122:8c2a:b0:52c:54fc:745 with SMTP id
+ 71dfb90a1353d-52d9c5d8acamr1925737e0c.5.1747206629577; Wed, 14 May 2025
+ 00:10:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a6b:b0:3d8:1d2d:60b0 with SMTP id
- e9e14a558f8ab-3db6f79b896mr27961105ab.5.1747206601560; Wed, 14 May 2025
- 00:10:01 -0700 (PDT)
-Date: Wed, 14 May 2025 00:10:01 -0700
-In-Reply-To: <68241bb2.a70a0220.3e9d8.0005.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <682441c9.a70a0220.3e9d8.0007.GAE@google.com>
-Subject: Re: [syzbot] #syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
- 9f35e33144ae5377d6a8de86dd3bd4d995c6ac65
-From: syzbot <syzbot+feb0dc579bbe30a13190@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <20250514052327.96537-1-siddarthsgml@gmail.com>
+In-Reply-To: <20250514052327.96537-1-siddarthsgml@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 14 May 2025 09:10:17 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXxDPDQVwx_9Z6ngvs4sYro3cobE=YP0y-b0zs0ody2vg@mail.gmail.com>
+X-Gm-Features: AX0GCFtFiSkMy3thsoXl2i-HHS-GqeqxowX3AK-tXVsLRnHiROCSZrI6s0ya3Vc
+Message-ID: <CAMuHMdXxDPDQVwx_9Z6ngvs4sYro3cobE=YP0y-b0zs0ody2vg@mail.gmail.com>
+Subject: Re: [PATCH] m68k: apollo: replace strcpy() with strscpy()
+To: Siddarth Gundu <siddarthsgml@gmail.com>
+Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
+Hi Siddarth,
 
-***
+Thanks for your patch!
 
-Subject: #syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 9f35e33144ae5377d6a8de86dd3bd4d995c6ac65
-Author: dmantipov@yandex.ru
+On Wed, 14 May 2025 at 07:23, Siddarth Gundu <siddarthsgml@gmail.com> wrote=
+:
+> strcpy() is deprecated; use strscpy() instead.
+>
+> strscpy was chosen because the code expects a NUL-terminated string
+> without zero-padding.
 
-#syz test: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 9f35e33144ae5377d6a8de86dd3bd4d995c6ac65
+... which are not sufficient reasons: there is no size information
+about the destination buffer.
+
+> Link: https://github.com/KSPP/linux/issues/88
+> Signed-off-by: Siddarth Gundu <siddarthsgml@gmail.com>
+
+> --- a/arch/m68k/apollo/config.c
+> +++ b/arch/m68k/apollo/config.c
+> @@ -218,7 +219,7 @@ static void dn_dummy_reset(void)
+>
+>  static void dn_get_model(char *model)
+>  {
+> -    strcpy(model, "Apollo ");
+> +    strscpy(model, "Apollo ");
+
+include/linux/compiler.h:197:62: error: static assertion failed: "must be a=
+rray"
+[...]
+arch/m68k/apollo/config.c:222:5: note: in expansion of macro =E2=80=98strsc=
+py=E2=80=99
+  222 |     strscpy(model, "Apollo ");
+      |     ^~~~~~~
+
+Please try to (at least) test-compile your patches before submitting.
+
+>      if (apollo_model >=3D APOLLO_DN3000 && apollo_model <=3D APOLLO_DN45=
+00)
+>          strcat(model, apollo_models[apollo_model - APOLLO_DN3000]);
+
+FWIW, if the strscpy() would have prevented a buffer overflow, the
+strcat() would still cause one.  But none of these can happen for real.
+>  }
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
