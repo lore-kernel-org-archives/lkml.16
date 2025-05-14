@@ -1,114 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C301FE45D;
-	Wed, 14 May 2025 04:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2051DFDE;
+	Wed, 14 May 2025 04:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747197124; cv=none; b=WWYIpLXqIEZsNA7A0kfRjoJEb4V4ETqCZTAtiWowELXDR1dMKSH7tkzyStjmWLrxfiiRx+u32fAN7U0gvPASgtw9FwglWqUr02NTAQOVhcwTqNnGQixltAsMOrxuu+R4b5dJmBJ4PIq2OQ/z1FBw+rT3UUfkz1xwRCKNeVDmmt8=
+	t=1747197210; cv=none; b=nV60xmCwekeQuUvhg3e1Aa96i4LILObo9tWeuPWO/LEmqrcxBi8CAR5OMGBFWfvZQVvWHYkfODFFacGjl1JOCsI7HizadCAGlUOZFRdTpvAdS7bEPxQ6/z8IoikcE8eaRrezw/iq5YosTfsfMEOMuNKMcOOGvIEfK3yMCAdyNmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747197124; c=relaxed/simple;
-	bh=0fgO+QvVf9+rVnYvZZT700A8z0ZC/9q1mzSMkC20Zdw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Df+lG4r8trNlWZQrbZVZdsyQT+hloh0PojkMnIgdlnVFBeP4JLmVrlSvsQ+Xmc2YtdhgoEBL37g2Z0tRqwoDHm5sbiGZdcA7NJ0QGCt+wldZEI/2N5H/RlO2KEHUBDQEZ1vJ56oebAoUXHDSvrTKb7TFL1qZGnbiqpH48hn5qxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KxXeNpXP; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747197210; c=relaxed/simple;
+	bh=rN85irsQW9HlYsGJzv0G1rv1gmgbe7VjR8v/qSXPP+U=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Sy9MYFPIZTUg0lC3sMMDIFU26p0R1nwAqbKdHd/NtCCkKTdd9vj9Zds9+r/VPkDzleVbtXeslU3y2jxVVshO0LnbZe9UWoac3YFxEqfC1kFfx/qYG0+iRsz6aQwjCtX5hUWPWLWu8Iag3/PexjpnCelFGMQhqrYz3nVcgyQr75M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hJhNeF/u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KxXeNpXP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747197123; x=1778733123;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=0fgO+QvVf9+rVnYvZZT700A8z0ZC/9q1mzSMkC20Zdw=;
-  b=KxXeNpXPw9KsbAhTaZB3dHf8ZOPLcabqGcenFpx17vpnyKlb6ENdL8NB
-   Kz8lvHZ4QBpWZt9EhTA5pQy2ZfsAZcaXvtfXqDovJtD7HZBHCt7P62XD0
-   uTyS9GoeDZqd1fWPqm6D1hfEebwT8Es6efx73ODrHIqwOB9IaayHgkMhy
-   TmnleyliH6KgUS+FEJc2jfrVRDL5tFlqtgEp+8Nj9AkNVsi45MfK9v+Z9
-   s/PP1AwEgdqLT3LAT/p7lOCZEaqGYjqrJ34mG+KlMVWdMrqoCMrr0LFGS
-   m6xHBibrAjQcifsJPSGrnCpZMloipejl0f+HZxGUpgrDroGG1huTwyxfn
-   A==;
-X-CSE-ConnectionGUID: OMc6FrEkSDWGIwmLeK7vsg==
-X-CSE-MsgGUID: HsNluePsTwOn5HTfXS4Idg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11432"; a="36699593"
-X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
-   d="scan'208";a="36699593"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2025 21:31:41 -0700
-X-CSE-ConnectionGUID: E7KPBRBrQEeKE/TbktqJvA==
-X-CSE-MsgGUID: s7PFcjVURUm1j9RdIQp0cg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,287,1739865600"; 
-   d="scan'208";a="142861962"
-Received: from mohdfai2-ilbpg12-1.png.intel.com ([10.88.227.73])
-  by orviesa004.jf.intel.com with ESMTP; 13 May 2025 21:31:31 -0700
-From: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Faizal Rahim <faizal.abdul.rahim@linux.intel.com>,
-	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
-	Chwee-Lin Choong <chwee.lin.choong@intel.com>
-Subject: [PATCH iwl-next v2 8/8] igc: SW pad preemptible frames for correct mCRC calculation
-Date: Wed, 14 May 2025 00:29:45 -0400
-Message-Id: <20250514042945.2685273-9-faizal.abdul.rahim@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250514042945.2685273-1-faizal.abdul.rahim@linux.intel.com>
-References: <20250514042945.2685273-1-faizal.abdul.rahim@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hJhNeF/u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16EE1C4CEED;
+	Wed, 14 May 2025 04:33:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747197209;
+	bh=rN85irsQW9HlYsGJzv0G1rv1gmgbe7VjR8v/qSXPP+U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hJhNeF/udnWhVaxBgXSG5/Wz8VTHPuQkci3zz2w2BVsSF+QaEDmQEaRb/8aBxhzeR
+	 ismZtWtMjoEFQ/V93QrIooirl62b2iePYy0xA7pBENBncS0tQTAW28OhNxYtm4CFgk
+	 0OquqEiTOrVbKIsifS9s/IxA0pF0bKMWDBFkZWEb/wglNlsyy6x6x4aqAj7PPuGgi+
+	 kKJOKxxAQnR5oKdjp4vABI9F6VAdCPfVIE2aks8NvP+NNCwGV4oI600FJZnnbfWluN
+	 ujWKKRxe2D3K9TH9l53ko9jgmuTKNEmZl3W+2odQEidaZBNV0M8oCHNLMjKxNkCx9s
+	 cZ2eoY6ttaoAA==
+Date: Wed, 14 May 2025 13:33:27 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] tracing: ring_buffer: Rewind persistent ring buffer
+ when reboot
+Message-Id: <20250514133327.3a6382e5aa0e9d5533fe690c@kernel.org>
+In-Reply-To: <20250513203647.524b1331@gandalf.local.home>
+References: <174709742769.1964496.18203163435305117893.stgit@mhiramat.tok.corp.google.com>
+	<20250513203237.0e7ff662@gandalf.local.home>
+	<20250513203647.524b1331@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Chwee-Lin Choong <chwee.lin.choong@intel.com>
+On Tue, 13 May 2025 20:36:47 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-A hardware-padded frame transmitted from the preemptible queue
-results in an incorrect mCRC computation by hardware, as the
-padding bytes are not included in the mCRC calculation.
+> On Tue, 13 May 2025 20:32:37 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > @@ -9628,6 +9636,14 @@ static void setup_trace_scratch(struct trace_array *tr,
+> >  
+> >  	/* Scan modules to make text delta for modules. */
+> >  	module_for_each_mod(make_mod_delta, tr);
+> > +
+> > +	/* Set trace_clock as the same of the previous boot. */
+> > +	if (tscratch->clock_id != tr->clock_id) {
+> > +		if (tracing_set_clock(tr, trace_clocks[tscratch->clock_id].name) < 0) {
+> > +			pr_info("the previous trace_clock info is not valid.");
+> > +			goto reset;
+> > +		}
+> > +	}
+> >  	return;
+> >   reset:
+> >  	/* Invalid trace modules */
+> 
+> 
+> Hmm, somehow I got your other patch in here :-D
 
-To address this, manually pad frames in preemptible queues to a
-minimum length of 60 bytes using skb_padto() before transmission.
-This ensures that the hardware includes the padding bytes in the
-mCRC computation, producing a correct mCRC value.
+Oops, good catch! I mixed other patch there :-(
 
-Signed-off-by: Chwee-Lin Choong <chwee.lin.choong@intel.com>
-Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
----
- drivers/net/ethernet/intel/igc/igc_main.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-index 4d748eca0c6c..509f95651f25 100644
---- a/drivers/net/ethernet/intel/igc/igc_main.c
-+++ b/drivers/net/ethernet/intel/igc/igc_main.c
-@@ -1685,6 +1685,15 @@ static netdev_tx_t igc_xmit_frame_ring(struct sk_buff *skb,
- 	first->tx_flags = tx_flags;
- 	first->protocol = protocol;
- 
-+	/* For preemptible queue, manually pad the skb so that HW includes
-+	 * padding bytes in mCRC calculation
-+	 */
-+	if (tx_ring->preemptible && skb->len < ETH_ZLEN) {
-+		if (skb_padto(skb, ETH_ZLEN))
-+			goto out_drop;
-+		skb_put(skb, ETH_ZLEN - skb->len);
-+	}
-+
- 	tso = igc_tso(tx_ring, first, launch_time, first_flag, &hdr_len);
- 	if (tso < 0)
- 		goto out_drop;
+> 
+> -- Steve
+
+
 -- 
-2.34.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
