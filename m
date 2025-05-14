@@ -1,30 +1,31 @@
 Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
 	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B121B6CF1
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 03:26:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E452118DB2F;
+	Wed, 14 May 2025 03:29:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747193223; cv=none; b=mBB5ANe+GcjBL7crRnQMS1RI3PLH4P5zeTtS1ewUegLvlipJddLEYqUoPI6bkTpJOGq2eX8J4XiCae3Khj8GJfga+KeUF5625dAlDLfkFU1IXlNnWk30GdTfeN+fLfz54601LvB85YJYHqcT+L4Un9aS1nap4BERAjgzhz0ap2Q=
+	t=1747193363; cv=none; b=f9je7F78l2lPnxvQbHHf3b2viJ85Llp/dYy4qXk06hBevfEIgABV+J4O5A8g6hEpXcJQW7edty36gM43IWOjDimcD8QPG2nqT7//k7Lt+FHWffkLeuAPNiN1CPw7MdQMEaOhO6+BIIyBO+d0hSC/k9F/JR7Rm2yixQA+5vApJEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747193223; c=relaxed/simple;
-	bh=nPnxniUkG96DoIzIVosQNdMaJPp0eBnr+bNWONHO/Q8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fKkmnTy1jPXmxK63BJCpBTiG/6E68vutJwQuyTYIAGIAdqjYvh4tz9Ejw22pJOfzrOr2yBLVPCROd+zyV+tUXEaxX3fUYX4IHgJt/c11Cj80VbH10wYhhPzx6M6rRtecI0Bt/p0mrSwuEMY+NFWr3eMlefKg5UbUxyKvk4cy308=
+	s=arc-20240116; t=1747193363; c=relaxed/simple;
+	bh=16457uxwp94fGvkWR9aM5nt/Py5P1phZ6IQiEBarvvU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QkXvvseJdZdWUzHNFIWs+vTSTdgg+RZHqEnnCQG9+qXcSTLLiHltzgkkdTb03Ud8faFccQ0YGAFvi2iIatgH2+Iv4Iy7WemGFkvJRbRGB0Hdh7kYh7lo5QzcnGKUKsxpWGuJm5JAx4D0zvADhlMOkP1b96olG8ECeV3CZkcSVXk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
 Received: from localhost (unknown [124.16.138.129])
-	by APP-05 (Coremail) with SMTP id zQCowABXkAh9DSRoaesFFQ--.21701S2;
-	Wed, 14 May 2025 11:26:54 +0800 (CST)
+	by APP-05 (Coremail) with SMTP id zQCowAAHPgYHDiRoBSgGFQ--.55114S2;
+	Wed, 14 May 2025 11:29:11 +0800 (CST)
 From: Chen Ni <nichen@iscas.ac.cn>
-To: clemens@ladisch.de,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org,
+To: dgilbert@interlog.com,
+	James.Bottomley@HansenPartnership.com,
+	martin.petersen@oracle.com
+Cc: linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] hpet: Remove unnecessary NULL check before unregister_sysctl_table()
-Date: Wed, 14 May 2025 11:26:37 +0800
-Message-Id: <20250514032637.2317639-1-nichen@iscas.ac.cn>
+Subject: [PATCH] scsi: sg: Remove unnecessary NULL check before unregister_sysctl_table()
+Date: Wed, 14 May 2025 11:28:45 +0800
+Message-Id: <20250514032845.2317700-1-nichen@iscas.ac.cn>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -33,10 +34,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowABXkAh9DSRoaesFFQ--.21701S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrtw18ZF4DKw4DtFWDZrWDJwb_yoWxtwb_CF
-	10qrnFgF95GrnxGa45Arn8ZryY9a15urn3Z3WjqwnxJa92vr4rWr1UZr17ZwnrG392kF9I
-	kry5tr9akr12kjkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+X-CM-TRANSID:zQCowAAHPgYHDiRoBSgGFQ--.55114S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrArWktF48WF4xKF47ur4rZrb_yoWxWrc_GF
+	Z2qrnrXr9Y9rnF93s8AF1Uury09a1UWrn3ZF1YqasxAF4xXrWDKryUZr1UZ39rXay8C3ZI
+	k34UWrySkrW7ujkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
 	9fnUUIcSsGvfJTRUUUb-xFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
 	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
 	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
@@ -47,8 +48,8 @@ X-Coremail-Antispam: 1UD129KBjvdXoWrtw18ZF4DKw4DtFWDZrWDJwb_yoWxtwb_CF
 	xwCY1x0262kKe7AKxVWUAVWUtwCY02Avz4vE14v_Gr4l42xK82IYc2Ij64vIr41l4I8I3I
 	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
 	GVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
-	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
+	0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
+	rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
 	4UJbIYCTnIWIevJa73UjIFyTuYvjTRErWFUUUUU
 X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
@@ -57,23 +58,23 @@ Remove unneeded NULL check here.
 
 Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
 ---
- drivers/char/hpet.c | 3 +--
+ drivers/scsi/sg.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-index e110857824fc..0713ea2b2a51 100644
---- a/drivers/char/hpet.c
-+++ b/drivers/char/hpet.c
-@@ -1023,8 +1023,7 @@ static int __init hpet_init(void)
+diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
+index effb7e768165..3c02a5f7b5f3 100644
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -1658,8 +1658,7 @@ static void register_sg_sysctls(void)
  
- 	result = acpi_bus_register_driver(&hpet_acpi_driver);
- 	if (result < 0) {
--		if (sysctl_header)
--			unregister_sysctl_table(sysctl_header);
-+		unregister_sysctl_table(sysctl_header);
- 		misc_deregister(&hpet_misc);
- 		return result;
- 	}
+ static void unregister_sg_sysctls(void)
+ {
+-	if (hdr)
+-		unregister_sysctl_table(hdr);
++	unregister_sysctl_table(hdr);
+ }
+ #else
+ #define register_sg_sysctls() do { } while (0)
 -- 
 2.25.1
 
