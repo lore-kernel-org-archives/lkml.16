@@ -1,99 +1,94 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A073DE552
-	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12CC9213259
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 07:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747209395; cv=none; b=BNcsilAFU74VFe0hW+g0z0KuQhOLJl3gI1ye2Tl9IWXMuJWsvL5GAS32PMRIr/PRI3yTQQIFggb+Rq+UtUcxjY0KFyHEFbwTyxTa6KWvu/tT6JfkkmO6lK+y/oLBj99L20Q9ADqcRNbkWfc4UY+q6eZjkn/cHvlGyeOU73FE0BU=
+	t=1747209398; cv=none; b=j0GePVwQ6/VYVi1Tx1VnELCDTC8CVD02l46gZqgaHjeA/4dM9LUNkta/R7o85nT61vFVgQmqOyXFhtUzqpgktNILGnc+1puzKqvsEDm0Qu6ktXubfTIHeSyjKRfHURGot/uRxm/HrnksGI0ofY3Mjkhq0w6/LLm5r16SsUfj+Ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747209395; c=relaxed/simple;
-	bh=+3wlSK6sNuj1hJ53vZwNck4GrD0vsQfa8KHIu+ZltUA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=i9gh9hJqgSmanq5q7ysOIOurQaqmrMbazDpUrq5wt1TPZXTUsqVNXpgtdeSn5BU8Mvy2qODLqlVEhM4YiIZTtSgpI6hEmyVaHgF8DJ1qdfFQP6fR6mswPAzC/zbR0Ce6e1beJMWSxLjtYJrtNPVN3vbIi3rUtaUh3yommN0L4C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oru04++C; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oru04++C"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-440668acbf3so3566425e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 00:56:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747209392; x=1747814192; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kzdTMooCqa1ypmINEmlgL2G2QWjmPcr5NoyztBa2Ur4=;
-        b=oru04++Ch4k9Jgno/Ksja/d/CPckpERKJSC9bHeQs4Xe7LiAaq+eGACkcZyO4+zt/g
-         5p4weSsO47Pryl6K1aBJ+EulOdbynhZYK3l4+35mzosxLyUm6RnjZ88HSMqmAnAGB2Z6
-         G5EtrUCE9W1xacM1peehVB94/Keeln5pxa+l8eJ/V1WGwNimpSX7Z+1LGp2Z0SngecC0
-         xplMzCOL28XR83u69UvmDn2IBR3zIelN3bqfJsck8ZkoN/wWodx8cubPdm/KFnUIidry
-         JvnWe2jRGvqDBAU9qoNnc8R+aDGaUWaLBkSfp2vqLJ6Fx0W2KpuvNxju7XIkKAzITyrx
-         lYsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747209392; x=1747814192;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kzdTMooCqa1ypmINEmlgL2G2QWjmPcr5NoyztBa2Ur4=;
-        b=BT/wk1hXv9c72MWVW/D+tbq0wyCP4Qkf4YCZts3pbLnuLLfUQXHugzD6beCbhmww1F
-         e3Jrne1fU39jtF1mZLiuVnQLc5Uxs/Ewcb5p3B/5p1GwOBIwDOehtjDNWGKONQPXBs/o
-         0htQRydnHzAbzf5Xpee6Nh2oZReFtJUx/RlUW86u6fChRTUVwUqPU7r6yjMggLBqFHO0
-         40l0zoh4vVns1uKy78+e72VBmBWs3uKlr+GXrLc+na8aD9u2ALQ7OJpnBo3ocgDpl0F7
-         uUuqKfjInStcEr2qrwQFuZKJECVgKZSjWuC6QdkykgEGIkAl/WWKgfe9htxdughMu8xv
-         erQQ==
-X-Gm-Message-State: AOJu0Yyy1sluVQQWDqIQisPCXGBQFVa4u/NPOZxISSu35hnzlapdPnMn
-	3yNWmGCwJD1AvjwelxRm9AtqCXhUScnFo/XKJl8GH9AfLULHzUY+4o8NS/tu+WM=
-X-Gm-Gg: ASbGncuvZdPPfXBaO3RgEy6T14pcmRIGDS5yvTTqazPyrEbT2Ohj/zBRP+UnF4Nnfrz
-	XvqljN8wrtMD0DWMeWTSWcBC06GP0gIj73W9e2xUWgnu4MW8Or9Gg/yf27dtQzJ2qvZFJZWDZnK
-	smVmO1kM7yNDSp+nlQ8OWICxhhB5lgx7TdnqFsci1AmPjH4FuglZhwkEa9PdEEzzJH31mmgMOCL
-	rvcxnUiZHZreYL1N/o5FTeEBzNsoRWenFeF+nMcmyijg1g1LiEXmn7JoEd3ENMh7Z3zdGMN0WBx
-	prPI8XVsoUMNBym/bPi39hpZsOR8YIKEWFXiVm87Hp6PAZoVE896g4kJxu+eTXn5sjZWbfsB8yh
-	WqPQ05jIuqXzWsCJfaw==
-X-Google-Smtp-Source: AGHT+IHHtmTfTDqpI8/MhLKS2/FzVY2p3LpVRtEE1jaQ17ol8rPj7ZAtenjeKA2K6/4xZEMzO4yRQg==
-X-Received: by 2002:a05:6000:4007:b0:3a0:75ff:2d94 with SMTP id ffacd0b85a97d-3a349699c5bmr668843f8f.1.1747209391885;
-        Wed, 14 May 2025 00:56:31 -0700 (PDT)
-Received: from [10.61.0.48] (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ebd75sm19067112f8f.34.2025.05.14.00.56.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 00:56:31 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Christophe Kerello <christophe.kerello@foss.st.com>, 
- Patrice Chotard <patrice.chotard@foss.st.com>
-Cc: linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20250513-stm32_omm_fix_typo-v1-1-5b90ec8b52e7@foss.st.com>
-References: <20250513-stm32_omm_fix_typo-v1-1-5b90ec8b52e7@foss.st.com>
-Subject: Re: [PATCH] memory: stm32_omm: Fix error handling in
- stm32_omm_disable_child()
-Message-Id: <174720939065.5575.14505161452787178403.b4-ty@linaro.org>
-Date: Wed, 14 May 2025 09:56:30 +0200
+	s=arc-20240116; t=1747209398; c=relaxed/simple;
+	bh=GbBIPCfUb7HcO4NYQXTMbrZDZp1iUrF7qwee23cm/0g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RkziYiy3wueafdFFpbFh0/IlaX/D+3EwFUNKHn8KnMVVXHYaa9PsHvohIRt1R8GpjhV8rlfBPW3/1Vnzc4mwu7QzSEO8NuoitdG1shiS05eHgz4aKjB8FISz3/8CGKn2rAFH+Tgs6bIR9QzKHRFl/IAiTjrDrkqXEOPrx0+eSv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4Zy5Jg1kYzzKHMq0
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:56:35 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id DD4181A1BAF
+	for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 15:56:33 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.6])
+	by APP1 (Coremail) with SMTP id cCh0CgDXOnuvTCRoTNWvMA--.62928S6;
+	Wed, 14 May 2025 15:56:33 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: hughd@google.com,
+	baolin.wang@linux.alibaba.com,
+	akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 4/5] mm: shmem: keep inode in swaplist when failed to allocate swap entry in shmem_writepage()
+Date: Thu, 15 May 2025 00:50:46 +0800
+Message-Id: <20250514165047.946884-5-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20250514165047.946884-1-shikemeng@huaweicloud.com>
+References: <20250514165047.946884-1-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgDXOnuvTCRoTNWvMA--.62928S6
+X-Coremail-Antispam: 1UD129KBjvdXoWrtw18Wr1rtw18WFWxJF15CFg_yoWDZwb_Xr
+	4Ut3W5WF43Wrs7Gw45Ka1fJrZ5Kws8Kr18CFs2yFW3Aas8tr4vyr98Aw4rXFW7Za15Xrn8
+	A3WkAFy7Cr1qgjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbqkYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl82
+	xGYIkIc2x26280x7IE14v26r126s0DM28IrcIa0xkI8VCY1x0267AKxVW8JVW5JwA2ocxC
+	64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM2
+	8EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq
+	3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8w
+	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
+	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7
+	AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jv
+	Wl9UUUUU=
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
+Even if we fail to allocate a swap entry, the inode might have previously
+allocated entry and we might take inode containing swap entry off swaplist.
+As a result, try_to_unuse() may enter a potential dead loop to repeatedly
+look for inode and clean it's swap entry.
+Address this by keeping inode in swaplist even if we fail to allocate
+swap entry as it does not pose significant problem to keep inode without
+swap entry in swaplist.
 
-On Tue, 13 May 2025 17:34:31 +0200, Patrice Chotard wrote:
-> Fix stm32_omm_toggle_child_clock() return value test, we should exit
-> only on non zero value.
-> 
-> 
+Fixes: b487a2da3575b ("mm, swap: simplify folio swap allocation")
+Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+---
+ mm/shmem.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Applied, thanks!
-
-[1/1] memory: stm32_omm: Fix error handling in stm32_omm_disable_child()
-      https://git.kernel.org/krzk/linux-mem-ctrl/c/388d0cc33cc6fc876e053644d6af694b9d5c639f
-
-Best regards,
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 0fed94c2bc09..dfd2f730833c 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -1651,8 +1651,6 @@ static int shmem_writepage(struct page *page, struct writeback_control *wbc)
+ 		BUG_ON(folio_mapped(folio));
+ 		return swap_writepage(&folio->page, wbc);
+ 	}
+-
+-	list_del_init(&info->swaplist);
+ 	mutex_unlock(&shmem_swaplist_mutex);
+ 	if (nr_pages > 1)
+ 		goto try_split;
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+2.30.0
 
