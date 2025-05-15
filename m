@@ -1,140 +1,135 @@
-Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5556626ACB;
-	Thu, 15 May 2025 16:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9465826ACB;
+	Thu, 15 May 2025 16:01:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747324839; cv=none; b=U5u/SqB53qvjvGWx9qfXXr3rNt8QmJK4PGqlR/8grP0wH7aH8HVFL5m3gwZ1eg3iOtS0WdKy8oTTUu9PqG1BnCE/lYT7w5cGEfRJBLQfVAVPG1GbNPW3q7wTdlOX5UAg0Oa/7O6KQN59Q1uL/BfEQB7CcfSbt/3M4Tjd/3ZXbd0=
+	t=1747324874; cv=none; b=dFybL9vsUGiAwO1vbzQxsVygECI+JNfmUyqYb6yu+dLBKC6jSJBi4rbtQBCH/ypZ6cgotOH36NZV8x61VYh1V7nV4LLhiE0GsDPUsuPhdgc2IYKl4CjDOg1VcCsdwx5LThmkl/ahNOr87ZCRjmwPFfFa+efDZZGacHMcgdAH/q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747324839; c=relaxed/simple;
-	bh=Ht8GrC1/WhiK6Zak+5S5UJso+Ncn4Dqne8cOnc7np9c=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=j7LkVQYEpZNhPoswFE0lW61lUzNy85bmUGrt1yKuEbEcf/udMM/Ppkg5zkhtRvYg1QOzUmoeT/XWNQdKS/II3ae0f/eveLkT3fU5sMnLShkd2qFrkiMgVlhpYlBXt2g1EtG0/Q57WFb+7b0tGmTHQcvCwv+4LELF396xVXnOlqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=ZTaDJrWO; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OGG4gtgv; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
+	s=arc-20240116; t=1747324874; c=relaxed/simple;
+	bh=mO2vcNgJs8+C51CBW2wKe8JPfH5wo/ZFqAzhliVrj1c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oQ8Wdx5Wk6Z9DYgRUPzSxebYj+hW0hXQmxj/p6onCMOQBB/N+Rmo+bE1CqAEOb6DAJ2PXXwJhbdexQlJSWp+MVXYErZHdr3sVLjnZEmHlcrV1+g7t2Fx8c61Uj6maHecz8M4/VVUlwL5tPLLBG2LlyR/GBFTNNPeqTGqfzu28LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MDi+M5+I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="ZTaDJrWO";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OGG4gtgv"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfout.phl.internal (Postfix) with ESMTP id 5F56C1380241;
-	Thu, 15 May 2025 12:00:36 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-04.internal (MEProxy); Thu, 15 May 2025 12:00:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm1;
-	 t=1747324836; x=1747411236; bh=Ht8GrC1/WhiK6Zak+5S5UJso+Ncn4Dqn
-	e8cOnc7np9c=; b=ZTaDJrWO3GosTmJ4laSKWarSByuF+hIC183G9SiDMXMK5D01
-	TkpaalyNd/ifGOS392Mjk6FV92jCkEfjGQnS2wCAHouIdy9zs/CPhZlWuS2UeAZe
-	htioNGQJwKBHn7Z9biJEI89g39d7EDyqf541fakoygcecSi0TAZMBM9Z2tUCr1O8
-	KHguMbnMyMeSMgtlPNt6B1+byP67LtC/0t+treW5MWUNtMu/P2EicaMz4qUI+6QV
-	wOZhjHLoUlNveuS8R6R2ywM/21Da+PWrJKAmmXRg1r1VWk0YyCJXwLNqAlpZocBw
-	bICREuq9ZxfY208QeXkYuryNy3dhsEH9BERvjw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747324836; x=
-	1747411236; bh=Ht8GrC1/WhiK6Zak+5S5UJso+Ncn4Dqne8cOnc7np9c=; b=O
-	GG4gtgvsg8QMgNK/JeA/j+Et2OBN8bbuCYugP1djZ7y5kwcW8FgWkxLukTPoJIRI
-	SIdqo4eJRWXOuKQC+yhtY4qDVpecs/lEx3H67sthOxdk/lZVUrjvl78Kl49jU3cC
-	gKAO4pylbEQcizzVHXGjfWPkGiVAOBuz2d1Hzclzq5aMyrfiAPkWGEcJeIEMAijy
-	g1Wp8DHhgPVRZlb2Kd82VKIKjbW9PY6hld2eieABDa6WPR8TZpiRxNo/GXzzNKhJ
-	0ML+hDe+T9XZnCL0+Z8QNXfP+Fdmvi264Ibj9VAUAxkX/UGq5Xa/OOwILIeHs9f7
-	ItitJRlJIcF7Q+HY3dP2A==
-X-ME-Sender: <xms:og8maDZwXPJh0JEZZ4U9e08ktN0ZBsSIzL59WRsOY7Dp_NMKtAHgQQ>
-    <xme:og8maCZn6stAOVhD0ckx_JCO5fX3j80FQJcT94WdeEp2WmSzPuZuHraxN_QbTRMJ0
-    RYXCuUpdpApTLrcZeg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefuddtfedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertder
-    tdejnecuhfhrohhmpedfufhvvghnucfrvghtvghrfdcuoehsvhgvnhesshhvvghnphgvth
-    gvrhdruggvvheqnecuggftrfgrthhtvghrnhepgeegheelffdujeduffevfefhieekgeef
-    fedukedtvdduhfffjeehleekfeehhfdtnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepshhvvghnsehsvhgvnhhpvghtvghrrdguvghvpdhnsggp
-    rhgtphhtthhopeduledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepvghrnhgvsh
-    htohestghorhgvlhhlihhumhdrtghomhdprhgtphhtthhopehslhgrvhgrseguuhgsvgih
-    khhordgtohhmpdhrtghpthhtohepvghthhgrnhesvghthhgrnhgtvggufigrrhgushdrtg
-    homhdprhgtphhtthhopegvrhhnvghsthhordhmnhgurdhfvghrnhgrnhguvgiisehgmhgr
-    ihhlrdgtohhmpdhrtghpthhtohepthhofihinhgthhgvnhhmihesghhmrghilhdrtghomh
-    dprhgtphhtthhopeifihhllhihsehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohep
-    sghrrghunhgvrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhdrtggrrhhpvg
-    hnthgvrheslhhinhgrrhhordhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhig
-    fhhouhhnuggrthhiohhnrdhorhhg
-X-ME-Proxy: <xmx:og8maF9n4m0XTvV5oBne8_Mlbelgg9HJg7713LGn_XjUWfxnidu5oA>
-    <xmx:og8maJrJvCRzR2oMTs27U5UhJORvxz2NXb1pGrGlcV51GvulupGhcg>
-    <xmx:og8maOr2veNZQTrBVoasOxlaSD0n076nlVfcEbAvpq1ScFvRI1EfFw>
-    <xmx:og8maPT5VrAYpd58WuUFjF3oG_P_EwNsHs7Khn9RllclgT_McPJU-w>
-    <xmx:pA8maKaQ0w7CPG4bPr-Hjww9ejNSnaHyYfBuLjxAQIEAroHfoAGxPS_U>
-Feedback-ID: i51094778:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 65288106005E; Thu, 15 May 2025 12:00:34 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MDi+M5+I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C1DBC4CEE7;
+	Thu, 15 May 2025 16:01:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747324874;
+	bh=mO2vcNgJs8+C51CBW2wKe8JPfH5wo/ZFqAzhliVrj1c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MDi+M5+IEOa8F8YxVPfRIoBbxDt0YTFoGBaBOVS70e9hMJCQ0t6D0ndEzpewYJOT4
+	 0NMokKbLnbBVGZ2NjAk56NaIzsHOCrGH9g3Dkm9lLgOZkl+oidWYj+Bufki1PKuU6V
+	 BZ1dWVFI2HgsVyeafoVJ7v3fDpSQrkqVE4KJ/1MJsDPZ3Q7gBM/S7Yn71c4payYMNU
+	 GdjEP1gNRNWE64PoCaWfmml/BtK+kvZUUIR/syw5QDzWCElTgaq2dQVDXbWbu8vWA7
+	 7+uGQV7mEUQwa4at9/shgXnShD5NLTQyz+MDO//3OCdjla0ypcgAnbgrHduR2zDMLx
+	 JX0B2yekJMZdw==
+Date: Thu, 15 May 2025 09:01:11 -0700
+From: Kees Cook <kees@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Shung-Hsi Yu <shung-hsi.yu@suse.com>, bpf@vger.kernel.org,
+	linux-mm@kvack.org, Andrii Nakryiko <andrii@kernel.org>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Uladzislau Rezki <urezki@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, regressions@lists.linux.dev,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Eduard Zingerman <eddyz87@gmail.com>
+Subject: Re: [REGRESSION] bpf verifier slowdown due to vrealloc() change
+ since 6.15-rc6
+Message-ID: <202505150900.13CFA05B7@keescook>
+References: <20250515-bpf-verifier-slowdown-vwo2meju4cgp2su5ckj@6gi6ssxbnfqg>
+ <202505150845.0F9E154@keescook>
+ <202505150850.6F3E261D67@keescook>
+ <CAEf4BzZbPMKwu49UDizqT_3ZuDPsNXvTa+Tp6pae0P_YkUT7JQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tf135b851f6ecbaa4
-Date: Thu, 15 May 2025 18:00:34 +0200
-From: "Sven Peter" <sven@svenpeter.dev>
-To: "Nick Chan" <towinchenmi@gmail.com>,
- =?UTF-8?Q?Ernesto_A=2E_Fern=C3=A1ndez?= <ernesto.mnd.fernandez@gmail.com>
-Cc: "Yangtao Li" <frank.li@vivo.com>,
- "Ethan Carter Edwards" <ethan@ethancedwards.com>, asahi@lists.linux.dev,
- brauner@kernel.org, dan.carpenter@linaro.org,
- "ernesto@corellium.com" <ernesto@corellium.com>,
- "Aditya Garg" <gargaditya08@live.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, jack@suse.cz,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-staging@lists.linux.dev, "Theodore Ts'o" <tytso@mit.edu>,
- viro@zeniv.linux.org.uk, willy@infradead.org, slava@dubeyko.com,
- glaubitz@physik.fu-berlin.de
-Message-Id: <47721ba1-2ffb-45df-aed0-ad0308f6d606@app.fastmail.com>
-In-Reply-To: <e6a5a737-ce64-4d31-aeea-2e6190da2ff5@gmail.com>
-References: <20250319-apfs-v2-0-475de2e25782@ethancedwards.com>
- <20250512101122.569476-1-frank.li@vivo.com> <20250512234024.GA19326@eaf>
- <63eb2228-dcec-40a6-ba02-b4f3a6e13809@gmail.com> <20250514201925.GA8597@eaf>
- <e6a5a737-ce64-4d31-aeea-2e6190da2ff5@gmail.com>
-Subject: Re: Subject: [RFC PATCH v2 0/8] staging: apfs: init APFS filesystem support
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzZbPMKwu49UDizqT_3ZuDPsNXvTa+Tp6pae0P_YkUT7JQ@mail.gmail.com>
 
-On Thu, May 15, 2025, at 07:08, Nick Chan wrote:
-> Ernesto A. Fern=C3=A1ndez =E6=96=BC 2025/5/15 =E5=87=8C=E6=99=A84:19 =E5=
-=AF=AB=E9=81=93:
->> Hi Nick,
->>
->> On Tue, May 13, 2025 at 12:13:23PM +0800, Nick Chan wrote:
->>> 2. When running Linux on iPhone, iPad, iPod touch, Apple TV (current=
-ly there are Apple A7-A11 SoC support in
->>> upstream), resizing the main APFS volume is not feasible especially =
-on A11 due to shenanigans with the encrypted
->>> data volume. So the safe ish way to store a file system on the disk =
-becomes a using linux-apfs-rw on a (possibly
->>> fixed size) volume that only has one file and that file is used as a=
- loopback device.
->> That's very interesting. Fragmentation will be brutal after a while t=
-hough.
->> Unless you are patching away the copy-on-write somehow?'
-> On a fixed size (preallocated size =3D=3D max size) volume with only a=20
-> single non-sparse file on it,
-> copy-on-write should not happen. I believe the xART volume is also the=20
-> same case with only
-> one non-sparse file.
+On Thu, May 15, 2025 at 08:55:47AM -0700, Andrii Nakryiko wrote:
+> On Thu, May 15, 2025 at 8:53 AM Kees Cook <kees@kernel.org> wrote:
+> >
+> > On Thu, May 15, 2025 at 08:47:47AM -0700, Kees Cook wrote:
+> > > On Thu, May 15, 2025 at 09:12:25PM +0800, Shung-Hsi Yu wrote:
+> > > > Bisect was done by Pawan and got to commit a0309faf1cb0 "mm: vmalloc:
+> > > > support more granular vrealloc() sizing"[2]. To further zoom in the
+> > >
+> > > Can you try this patch? It's a clear bug fix, but if it doesn't improve
+> > > things, I have another idea to rearrange the memset.
+> >
+> > Here's the patch (on top of the prior one) that relocates the memset:
+> >
+> >
+> > From 0bc71b78603500705aca77f82de8ed1fc595c4c3 Mon Sep 17 00:00:00 2001
+> > From: Kees Cook <kees@kernel.org>
+> > Date: Thu, 15 May 2025 08:48:24 -0700
+> > Subject: [PATCH] mm: vmalloc: Only zero-init on vrealloc shrink
+> >
+> > The common case is to grow reallocations, and since init_on_alloc will
+> > have already zeroed the whole allocation, we only need to zero when
+> > shrinking the allocation.
+> >
+> > Fixes: a0309faf1cb0 ("mm: vmalloc: support more granular vrealloc() sizing")
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Uladzislau Rezki <urezki@gmail.com>
+> > Cc: <linux-mm@kvack.org>
+> > ---
+> >  mm/vmalloc.c | 12 +++++++-----
+> >  1 file changed, 7 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index 74bd00fd734d..83bedb1559ac 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -4093,8 +4093,8 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
+> >          * would be a good heuristic for when to shrink the vm_area?
+> >          */
+> >         if (size <= old_size) {
+> > -               /* Zero out "freed" memory. */
+> > -               if (want_init_on_free())
+> > +               /* Zero out "freed" memory, potentially for future realloc. */
+> > +               if (want_init_on_free() || want_init_on_alloc(flags))
+> >                         memset((void *)p + size, 0, old_size - size);
+> >                 vm->requested_size = size;
+> >                 kasan_poison_vmalloc(p + size, old_size - size);
+> > @@ -4107,9 +4107,11 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
+> >         if (size <= alloced_size) {
+> >                 kasan_unpoison_vmalloc(p + old_size, size - old_size,
+> >                                        KASAN_VMALLOC_PROT_NORMAL);
+> > -               /* Zero out "alloced" memory. */
+> > -               if (want_init_on_alloc(flags))
+> > -                       memset((void *)p + old_size, 0, size - old_size);
+> > +               /*
+> > +                * No need to zero memory here, as unused memory will have
+> > +                * already been zeroed at initial allocation time or during
+> > +                * realloc shrink time.
+> > +                */
+> >                 vm->requested_size = size;
+> 
+> This vm->requested_size change you are adding should also fix the
+> kasan issue reported by syzbot ([0]).
+> 
+>   [0] https://lore.kernel.org/bpf/68213ddf.050a0220.f2294.0045.GAE@google.com/
 
-Yeah, the gigalocker file on the xART volume (which is the only file we =
-care about
-for eventual Secure Enclave support on M1+ macs) is stored contiguously =
-without
-copy-on-write on the disk.
+Yes, this looks very much like the kasan oops that motivated the initial
+patch:
 
+https://lore.kernel.org/all/20250408192503.6149a816@outsider.home/
 
-
-Sven
+-- 
+Kees Cook
