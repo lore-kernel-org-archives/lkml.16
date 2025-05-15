@@ -1,95 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D60D4B1E64;
-	Thu, 15 May 2025 02:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A539C25B1CE;
+	Thu, 15 May 2025 03:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747277998; cv=none; b=A5SdNU1bNL5PS3Cwp/KUEV4EmkVOevQGGIPd9t7zS0dtFVCdglruOQOoz1WLSN9WWsBNQPvxmjgzjlc6crswGQcozTV08yMQzeXAK/B2Hn6FGmpaRwLzJP9AOL6HU8moMXn0HgknApsiycrXyqPYpf4LIu7Dyb5dK+YcnETIO6w=
+	t=1747278037; cv=none; b=CKw+zJVBI64svjbf6WI/Ti7TqWihOYsNbxFjSINns3H7Z0SSN7TrcnoJbvFGzosm2bjlklgR9kxs8hugdyuEsI/FU/icVWnS96ZzuIyhj3p6gvNfDzilqhXVBpe6ZOuP8bbW361adge6QHKHO6GFlIH/J1lJEaZvNr79hnq9DLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747277998; c=relaxed/simple;
-	bh=PDLb/Z5CFapT4NGFtLlJZRiFyM6zo5sw4RC5O3pCj60=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=PvinJE3pEvDX3g7cjqYWxqfPlr4opROMMdOgJx30KbE38PL9X/FxBQRgixIz0R0btBOOuzA2faBbHnElSGx4kM/Mduv4qwkIYAVewZsZahDboWuiGuI5K9Si56RndU9LjTL2k8N4ym93QS2xrSQxXRk57tM07GmOpRE+XaASifY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V9DTHpJm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747278037; c=relaxed/simple;
+	bh=MX4LNaKBrDVEZrUWYZWvWYqe2KgUgHh6Z3+4zis1hDA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dqaSuNnIe2VYgHRuFfJS9yA31JuMWpiceGlCusrR5x7I5+KipU8goseGu+13DtnZDwWvwZvM9OAl5KyzBcpdL4ZkNp6ho3GPzSeWOHzYR8f5EhoiwfZ5KT6Z4Msk7bzuunM1pSVNzWNV5eaFni7txrySazwReIEUinjndSnQ0h4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gfxKF8eE; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V9DTHpJm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBC5FC4CEEB;
-	Thu, 15 May 2025 02:59:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747277997;
-	bh=PDLb/Z5CFapT4NGFtLlJZRiFyM6zo5sw4RC5O3pCj60=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=V9DTHpJmS1XdJOo7dTi7f7SBsTBdKs7B7n75z+ENLeHSUtQZgNpTNstGghGQUFP5K
-	 sWDX1QeIPCL9RWephFXnPsWqPZ2JXEKoTi6gkya1Agy7KlfNvH6CjWbUI6idmhT8Ao
-	 2gD7tm/ix4SJJCBsiQkG0P8Fho4t7vIuDwjf66CYz3rZn00jFZxeh6qx4FnMsNIQ85
-	 AsOk6n3MPNmp8Jnp/gGJmhMdGD8xpxhTNnlZMDYINBb/+vSC4yFdatZlLpiDf4IAdB
-	 +TWT8lBJIK/8/evfnk/91ncMR9Mab5VL1VrNCpguRFRuXO8Yi3QHw07bfGLhaUe93g
-	 ncZtNbubpVCGA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D20380AA66;
-	Thu, 15 May 2025 03:00:36 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gfxKF8eE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747278036; x=1778814036;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MX4LNaKBrDVEZrUWYZWvWYqe2KgUgHh6Z3+4zis1hDA=;
+  b=gfxKF8eESD20QffFxtoU9TxNHBdJUIVA0tD/dkhNkeUhSvlZTUiS5X1k
+   D15g3pqXoeQbYAg7JkVZwGnmLSamUEdBDRoxYdvlPRg62G79BAFcU19kV
+   q1pwuESuA3rElO6uRN7WaqAIgj5idHTo5eAsBIKtZbwDFdv5989d6O8u9
+   xz0CJJ3KypoWrU2RaCuMVUE/rFfQCv6Egh2oTQk5868IhYBGT1GXow52m
+   Qhig7DuzA+DqBfkj5b2PdSwqCNBpw4ZukHsw+MbODqrk+RuQ0aXWPe/gW
+   RbCSnxN5YCmbTPIzSpH2AdFbBVAM42W8MvYYbsLTCfOGqCPmjlUTHgtLK
+   Q==;
+X-CSE-ConnectionGUID: nDFmRNNBRoyUdvOEuoKnYg==
+X-CSE-MsgGUID: VURWxAVOQ/+f4XbK5ktUqw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="74599230"
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="74599230"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 20:00:31 -0700
+X-CSE-ConnectionGUID: 7HvFv9suQwiX+fgYU+tW8A==
+X-CSE-MsgGUID: X03XOVC2TAK4/mNQzvjD3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="138753225"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 20:00:19 -0700
+Message-ID: <d54e8654-d761-47aa-b9f7-10d8c44a07ec@linux.intel.com>
+Date: Thu, 15 May 2025 11:00:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/5] hv_netvsc: Fix error "nvsp_rndis_pkt_complete error
- status: 2"
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174727803505.2590892.12386533199392905169.git-patchwork-notify@kernel.org>
-Date: Thu, 15 May 2025 03:00:35 +0000
-References: <20250513000604.1396-1-mhklinux@outlook.com>
-In-Reply-To: <20250513000604.1396-1-mhklinux@outlook.com>
-To: Michael Kelley <mhkelley58@gmail.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
- decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, linux-scsi@vger.kernel.org, stable@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 15/38] KVM: x86/pmu: Check PMU cpuid configuration from
+ user space
+To: Sean Christopherson <seanjc@google.com>,
+ Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+ Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Yongwei Ma <yongwei.ma@intel.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
+ Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
+ Shukla Manali <Manali.Shukla@amd.com>,
+ Nikunj Dadhania <nikunj.dadhania@amd.com>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <20250324173121.1275209-16-mizhang@google.com> <aCUxWDaNKezTzJTV@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aCUxWDaNKezTzJTV@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello:
 
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+On 5/15/2025 8:12 AM, Sean Christopherson wrote:
+> On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+>> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>
+>> Check user space's PMU cpuid configuration and filter the invalid
+>> configuration.
+>>
+>> Either legacy perf-based vPMU or mediated vPMU needs kernel to support
+>> local APIC, otherwise PMI has no way to be injected into guest. If
+>> kernel doesn't support local APIC, reject user space to enable PMU
+>> cpuid.
+>>
+>> User space configured PMU version must be no larger than KVM supported
+>> maximum pmu version for mediated vPMU, otherwise guest may manipulate
+>> some unsupported or unallowed PMU MSRs, this is dangerous and harmful.
+>>
+>> If the pmu version is larger than 1 but smaller than 5, CPUID.AH.ECX
+>> must be 0 as well which is required by SDM.
+>>
+>> Suggested-by: Zide Chen <zide.chen@intel.com>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+>> ---
+>>  arch/x86/kvm/cpuid.c | 15 +++++++++++++++
+>>  arch/x86/kvm/pmu.c   |  7 +++++--
+>>  arch/x86/kvm/pmu.h   |  1 +
+>>  3 files changed, 21 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+>> index 8eb3a88707f2..f849ced9deba 100644
+>> --- a/arch/x86/kvm/cpuid.c
+>> +++ b/arch/x86/kvm/cpuid.c
+>> @@ -179,6 +179,21 @@ static int kvm_check_cpuid(struct kvm_vcpu *vcpu)
+>>  			return -EINVAL;
+>>  	}
+>>  
+>> +	best = kvm_find_cpuid_entry(vcpu, 0xa);
+>> +	if (vcpu->kvm->arch.enable_pmu && best) {
+>> +		union cpuid10_eax eax;
+>> +
+>> +		eax.full = best->eax;
+>> +		if (enable_mediated_pmu &&
+>> +		    eax.split.version_id > kvm_pmu_cap.version)
+>> +			return -EINVAL;
+>> +		if (eax.split.version_id > 0 && !vcpu_pmu_can_enable(vcpu))
+>> +			return -EINVAL;
+>> +		if (eax.split.version_id > 1 && eax.split.version_id < 5 &&
+>> +		    best->ecx != 0)
+>> +			return -EINVAL;
+> NAK, unless there is a really, *really* strong need for this.  I do not want to
+> get in the business of vetting the vCPU model presented to the guest.  If KVM
+> needs to constrain things for its own safety, then by all means, but AFAICT these
+> are nothing more than sanity checks on userspace.
 
-On Mon, 12 May 2025 17:05:59 -0700 you wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
-> 
-> Starting with commit dca5161f9bd0 in the 6.3 kernel, the Linux driver
-> for Hyper-V synthetic networking (netvsc) occasionally reports
-> "nvsp_rndis_pkt_complete error status: 2".[1] This error indicates
-> that Hyper-V has rejected a network packet transmit request from the
-> guest, and the outgoing network packet is dropped. Higher level
-> network protocols presumably recover and resend the packet so there is
-> no functional error, but performance is slightly impacted. Commit
-> dca5161f9bd0 is not the cause of the error -- it only added reporting
-> of an error that was already happening without any notice. The error
-> has presumably been present since the netvsc driver was originally
-> introduced into Linux.
-> 
-> [...]
+Ok.
 
-Here is the summary with links:
-  - [net,1/5] Drivers: hv: Allow vmbus_sendpacket_mpb_desc() to create multiple ranges
-    https://git.kernel.org/netdev/net/c/380b75d30786
-  - [net,2/5] hv_netvsc: Use vmbus_sendpacket_mpb_desc() to send VMBus messages
-    https://git.kernel.org/netdev/net/c/4f98616b855c
-  - [net,3/5] hv_netvsc: Preserve contiguous PFN grouping in the page buffer array
-    https://git.kernel.org/netdev/net/c/41a6328b2c55
-  - [net,4/5] hv_netvsc: Remove rmsg_pgcnt
-    https://git.kernel.org/netdev/net/c/5bbc644bbf4e
-  - [net,5/5] Drivers: hv: vmbus: Remove vmbus_sendpacket_pagebuffer()
-    https://git.kernel.org/netdev/net/c/45a442fe369e
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+>
+>> +	}
+>> +
+>>  	/*
+>>  	 * Exposing dynamic xfeatures to the guest requires additional
+>>  	 * enabling in the FPU, e.g. to expand the guest XSAVE state size.
+>> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+>> index 4f455afe4009..92c742ead663 100644
+>> --- a/arch/x86/kvm/pmu.c
+>> +++ b/arch/x86/kvm/pmu.c
+>> @@ -743,6 +743,10 @@ static void kvm_pmu_reset(struct kvm_vcpu *vcpu)
+>>  	kvm_pmu_call(reset)(vcpu);
+>>  }
+>>  
+>> +inline bool vcpu_pmu_can_enable(struct kvm_vcpu *vcpu)
+>> +{
+>> +	return vcpu->kvm->arch.enable_pmu && lapic_in_kernel(vcpu);
+> Again, the APIC check belongs in the VM enablement path, not here.  Hmm, that
+> may require more thought with respect to enabling the PMU by default.
+
+Sure.
 
 
