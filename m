@@ -1,98 +1,118 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7439429898C
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D50298CBE;
+	Thu, 15 May 2025 13:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747313958; cv=none; b=Ah6TkY/wFja77QOJs3+7uPxchBtKavdcgUes/I9V8w9bA379uDCDbAAMgZpLBwWqGf/c9KtIaRSWaGadgqyScy02UQJJICU3CcxfF935FBEvGcKNfgK+s+mZwNuf6kAowrXrmjLkEknQaK0aM2twm6Iuma6tqMEaVZRsXPUsAEM=
+	t=1747314019; cv=none; b=KUOtK/ePPwagfW//0HtCX4M8nxH2779qZts2sjMMzOhS2DqQbAOHzeuGTl2nMbg8XjZCoXVn40RT65awxZbI1LeDWcQznZ1yVMv5EAxv45JC0YoK9Pina3UQaxQqeWsPZ01UMaiSkFASSN47yw/wQYDBR5YZS6arl/2Hg+EW8Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747313958; c=relaxed/simple;
-	bh=OibAgO1lF+UrLS/2SrpwgUDc/nYn6zF9seSKQty2XPk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=pNPmg67YZXLoAhXWOzk6F8XgM/6bVA99jkpwQ2uFRGWIAo5A10VzZlOO31nf7ZdvSiRcZQL5BrR4seubZs6zcSd6mh1AWTNdAZnkOJGhX6fOT8hVr8VvrRKAhQzGM0GgVbks2ZkoBWspAV7lt+7TSq6dN/aN45/JnOz8NP0SxWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=SWJarbqB; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1747314019; c=relaxed/simple;
+	bh=Q13g0aWrsuqzk89AuygoyrM8D343SmJHNKTIC1D6zMM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G/iknqYCu25dxzkePAzGboQQovwfuDM6EWyJV8cEl6zjbACyeHodQsQduqSzsh7D4EAa6xlWGGOD2YcV7w4iST/BS5DUhOFZa5PoSTI3Dx1wITZfz08o+qTJ91HXg7r1LQMG5r4V+eBWo7YlHIr1xrsQj26XbU8eL1nl2xRsqwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c24Mrnlq; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="SWJarbqB"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-440685d6afcso9959885e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 05:59:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747313954; x=1747918754; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8Qawhlvmv36yrM5PLXHrynEKEEyc5YE0PdfccMvrE2Y=;
-        b=SWJarbqBBFHiPWCrYUdPCysLjD4CHx5I5ox6xTlD8puj8u6CIUmdLhxeoNqF5kGGq4
-         PiQrGVg6toZdaz6aKdgWzTnZ6nNlPxe8U46Hnu7MNmYx4/eYsMcvYAkwosx37MT4KkCW
-         F2fsezvj/QIFF9FQucom6LNfVAO6goDLcPT8E6JLK0k901Waq+AwUx53+K9jyu10w5X7
-         8XEJoJSVOGJPe+REkyREO8SriQdH9jpxB5Ji/55m5+YqyrJMLuqMEyynrKj3kH8oSkGV
-         C0/pSCCN7r6rc8VBdiWf2tpDv1eW4+zum65W4/eo+difKzxVinP0F32zB/ap1rRsdn06
-         3/xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747313954; x=1747918754;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8Qawhlvmv36yrM5PLXHrynEKEEyc5YE0PdfccMvrE2Y=;
-        b=BwkwATwx0mJ//30AyDJF7ElDskfLVwr0K0v7dMnqkI0E0yHGbzhmhgAK1ag5PaXtJ+
-         PvjzZHExMi0KC/lcHRZlNhKB5dC18ZiUOuye8X9rzJANs1HtIeBDNLgWIbOnxfZ93Mcc
-         jgsxJIBdXOmdaCpDbqRi73jo2xlTIxO9QRDardJquny+TVKrbgAwsuTwWvmmr1VhRJGC
-         /xRMRGz8nKdE3RR0ocBpTwObW9V+NVMcN+ERYgVNB/DD8sATtwVvdfgEX6q4FNCR/FK4
-         sHydocReRytfqsUL85W3tUCAewhbaVik2Tou8Ufwyx+49k/tToGY2bogexh1FN0N26Wx
-         /xzg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVFExeIYiZNiWfNQ9u9clZSTBqE1A5NtdonguviJjP/t7P2S8lPbRQbwyNUkaWpMonXpqNIKmhUu8ecY8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzOCkQXmN6yAWeBVkNHHkCm8rYpbwXyDUx9QeBRexLhUiRldD/
-	Z1EBxylvgM0pNyo/Nyq0NuUIFVsi4tT2i/RaUFKwAxD03eDCI7fbpHILu+widAc=
-X-Gm-Gg: ASbGnctDSHV8ihU4Y5UF2XN1u68iAi0PpuIiyftypXkliMFPEwjGxIGfudaDipDe6wr
-	FnDkF2cUsbYUiacqazCA4Wy7TJ8txScRkPIIVLtrZ1AvK09Ngl2UhWlAv5qPktL7Ci/pex2rUBf
-	J9egnL1Hzq2g4sA4xNOa/+m8EADFvxLZUuvlzAKz7DOZQULNMf2u53WGtKsP0jGo4A4HaRr+7Th
-	pVafnrOIUeChlFnkT5A0sAoFGcUizuML+bc7iq1k2a0CPTO4IMDAVfD2gZllUIUHiASTxC4lMGO
-	g74yhAFBj1SIZ2Z5F+8pDnBqgIW/HthyWzDknDCGLE53fD0bdicO3knprPhmZiiGqw==
-X-Google-Smtp-Source: AGHT+IFyeqD0A0IScg3QZihC1XrEVTucJipRcuMxEvf1pQxV8DR8pNFyFAx+gn85sF514EVzZ/V3/Q==
-X-Received: by 2002:a05:600c:3554:b0:442:e109:3032 with SMTP id 5b1f17b1804b1-442f970a9bfmr25956895e9.24.1747313953125;
-        Thu, 15 May 2025 05:59:13 -0700 (PDT)
-Received: from toaster.baylibre.com ([2a01:e0a:3c5:5fb1:82b8:c32f:4d8c:199e])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-442f39e8578sm71180475e9.29.2025.05.15.05.59.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 05:59:12 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>, 
- =?utf-8?q?Emilio_L=C3=B3pez?= <emilio@elopez.com.ar>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, linux-sunxi@lists.linux.dev
-In-Reply-To: <20250404-kconfig-defaults-clk-v1-0-4d2df5603332@linaro.org>
-References: <20250404-kconfig-defaults-clk-v1-0-4d2df5603332@linaro.org>
-Subject: Re: (subset) [PATCH 0/5] clk: Do not enable by default during
- compile testing
-Message-Id: <174731395227.3761659.8617180462546520115.b4-ty@baylibre.com>
-Date: Thu, 15 May 2025 14:59:12 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c24Mrnlq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747314018; x=1778850018;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Q13g0aWrsuqzk89AuygoyrM8D343SmJHNKTIC1D6zMM=;
+  b=c24MrnlqRkaJ761g5XSEJ39l0tSra3KzP7mmwVPqnKsxXV9TWArSuVCp
+   2oN7QNAqC9HiccXt2m59F1wFQa8wTP8gpoimZXgQ4PAWinJo43D6zcnZ4
+   Wu6zzBKlq4S3yn5tNSTbWZ2O//NiV2hZCFokrJ/Ob8gQArhMBihaLmAhI
+   9/Ov+AyVoGbWP88pn45IjxxHR31hPiRarrF47+/cX/X+hRVRL8o+ViPXL
+   ynA+PvWuluGvU1S/TgRJQnNOkAd0wlDD8J3gmvebq+5TWw1VVcSNGNjjt
+   VkOG0uKKxloNvfxFZ6EeRZPbACvBdW/uxVY9QmoN3jazJexGeecutPRkF
+   g==;
+X-CSE-ConnectionGUID: LKMUsSUQQv2zsY3P+LL2wQ==
+X-CSE-MsgGUID: M5YdPadFQ+WaZxOL6KD18Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="36864380"
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="36864380"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 06:00:16 -0700
+X-CSE-ConnectionGUID: sqiSQ7LKTeWbUoo6mz90kw==
+X-CSE-MsgGUID: 9355O8KdTMKe3md0O/9sjA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="138760565"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 06:00:14 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uFYC3-00000001qgJ-02mg;
+	Thu, 15 May 2025 16:00:11 +0300
+Date: Thu, 15 May 2025 16:00:10 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Philipp Stanner <phasta@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Yang Yingliang <yangyingliang@huawei.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 4/7] PCI: Remove request_flags relict from devres
+Message-ID: <aCXlWoPm2XVA5m7M@smile.fi.intel.com>
+References: <20250515124604.184313-2-phasta@kernel.org>
+ <20250515124604.184313-6-phasta@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515124604.184313-6-phasta@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Applied to clk-meson (clk-meson-next), thanks!
+On Thu, May 15, 2025 at 02:46:02PM +0200, Philipp Stanner wrote:
+> pcim_request_region_exclusive(), the only user in PCI devres that needed
+> exclusive region requests, has been removed.
+> 
+> All features related to exclusive requests can, therefore, be removed,
+> too. Remove them.
 
-[1/5] clk: meson: Do not enable by default during compile testing
-      https://github.com/BayLibre/clk-meson/commit/0afce85ed26c
+...
 
-Best regards,
---
-Jerome
+>  int pcim_request_region(struct pci_dev *pdev, int bar, const char *name)
+>  {
+> -	return _pcim_request_region(pdev, bar, name, 0);
+> +	int ret;
+> +	struct pcim_addr_devres *res;
+> +
+> +	if (!pci_bar_index_is_valid(bar))
+> +		return -EINVAL;
+> +
+> +	res = pcim_addr_devres_alloc(pdev);
+> +	if (!res)
+> +		return -ENOMEM;
+> +	res->type = PCIM_ADDR_DEVRES_TYPE_REGION;
+> +	res->bar = bar;
+> +
+> +	ret = __pcim_request_region(pdev, bar, name, 0);
+
+> +	if (ret != 0) {
+
+While at it, drop the  ' != 0' part?
+
+> +		pcim_addr_devres_free(res);
+> +		return ret;
+> +	}
+> +
+> +	devres_add(&pdev->dev, res);
+> +	return 0;
+>  }
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
