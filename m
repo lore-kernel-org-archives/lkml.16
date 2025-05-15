@@ -1,370 +1,171 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4181121B9F2;
-	Thu, 15 May 2025 16:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F98C6136;
+	Thu, 15 May 2025 16:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747326152; cv=none; b=IulH+VsX0JbjGhzpezMql/GXmezXapS5oDrUBvwDNp4iEyLOZ7EsVDsnSHTuOGDY/Hx/q8dSaNQm7TJFGZoSGTWDvMRvw3GNMuByo/ecWOtQUyvZG9rQRDC+SDgV7okEa5hWjTElAGwwPuegw/YcnOuJe14T66ezNzCsn0Ym1Hs=
+	t=1747326186; cv=none; b=NadK7Re6AeLpGqAzcbKb/bJRjWlKQRdRwPjA6hI5M8puibkznwlQmz11Hgrouv5XXpJl4B6g/U/IDcU3lRStl9IdvF2CmNn5OPrKls9Hlu3DkQzc1XN4TLMdNXyhGTm+jNSdt52ikhPct2muj0Vtyfq2AeGUtlF1NAe8ncd1ogo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747326152; c=relaxed/simple;
-	bh=Totwr5AE1JLC6FBOCEiRvnKMdfKTW0tWP2tyi0V1xqw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hqS10Ndx2lDfgoQHDUhetv9DXGodBinrgldSppsR0rMr++5OpI0iO21ZhaQkEdVwqA+K/RUAUJLjbO8pBrGixoQemdRlvIubDdJzBZKMP5urJK2e8zs92tXnKcHyYXdOUMA610Htq9dVL/T6CpjhFHCYEBOQxjjQbyVNmh9Y5UU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C8sF6GeV; arc=none smtp.client-ip=209.85.210.182
+	s=arc-20240116; t=1747326186; c=relaxed/simple;
+	bh=4PeltixS0ZjxoFdAg+eqlIc8IJMNXf6PIDLy8FRgSj8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=QEmBuny6kt5R6sJuQwXhdOsp1zAqJin9dyiKbscfGcgVIq7wtFXxlQP9FZaDfo4ltiEvUvhNVFZvOSu+7SU2ggqj0RDfXg66iTTLkbts0IOnT4NYznmEspjES098zWi56wk8J5m9BMPor2aDW8pTTodB3KgNrtvweaffI6BxafA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KDItQ5RO; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C8sF6GeV"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-737685eda9aso200097b3a.3;
-        Thu, 15 May 2025 09:22:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KDItQ5RO"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54fcb7e3474so1118354e87.2;
+        Thu, 15 May 2025 09:23:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747326149; x=1747930949; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2dnuHITISbZCryzcYYfJ1faiJN4OA5KhLLbpmpip+YE=;
-        b=C8sF6GeVpO4hongVifMpKd+eoJBTzPRDlUO98HJVmx65ip/I64+R7VEbMVmNEp0XeF
-         JeARpzmAwg7598xOjXXrQrVQhpYkNFRY27IztqMe1/Nyrd8BgYxBHOiSl3YyN+KXHuvp
-         iQn+4JDfK7aXw9G9DR/kF3uc9PnDxGNzDahnU3A3DJFT+QA3qwTAHRUb/TNrBOUhhUku
-         3Ah4t6Jc+ttGKrV2bfdfOu3ZchLUzBC3cYqyr20XsdjEQ4mD5/gmQLOAxzJ06KiOtZor
-         nAxLNbqbBmQ8zmtb32e4/sMDfJY5CA60kfGnBd0KqioclA1Y9zAQJsjiTqOmz61M2vt0
-         xb/Q==
+        d=gmail.com; s=20230601; t=1747326182; x=1747930982; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SCFjabn3SLWW2FICgQ4T2s8QKlbYsJc5jtTAjYixcjQ=;
+        b=KDItQ5RO1oESTvgDaJV1riR8IyJcWbW2aK38H6WCDJfhg8mgN0uC8CwqIKsMm7mwoa
+         /vr2B4/7DIHe7IglOiwvacJf0D1p3SbWhkg2plo/S6HxRY7f2N99/vwTCHmiSyCuvGiz
+         jv2Mbj1YKG5yndmnA+bnfjumCHNti0pgD+97Z5B6OBt9zasvw4LJNfxgPL7pkEkzJ+HO
+         D9GswCv5ri5+sz8s7S/YiQo0epVjnJCmosRcxh3g/hVsKsIc5qNO9lvpTzG7mjg6EGeN
+         +xoqUHUcKSW6bj+kxeUHmOZGOwO0+BwEF0GvRNfRrP5RoeK8gEm8p4P03VZmeZb/QH47
+         vPkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747326149; x=1747930949;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2dnuHITISbZCryzcYYfJ1faiJN4OA5KhLLbpmpip+YE=;
-        b=JugJURe4LQqksfjWi4BLjEOgZNW6exVEZt11jRIliR2sFl9aDPC4sdHUOOxhm5p6UW
-         apxPHOfUpUmvd24pPgenPqtbN5K/4PYFUl1xSt+J/Jj+xiqHjl15BdyGbmEm1pw0DuX6
-         IIQZPb0lsuAiKe6kesE5P3qAm/Wz2K9VgCFmX8zfNCfGEcrTyVSXcaidjpRI0qOLLWc8
-         isXj2ldK53fkSPFjZwozSnAWsfEphxI8oMS/pvfMsQ1FAShOWq9DdTWRVLU5r+CHHtq2
-         f5oxb6GtVEow2tY3k9/yvtybqYTA+T5sZ5fnWTwm2s2v3TeswCs5WYgBhOwsqrmss/WL
-         GeQg==
-X-Forwarded-Encrypted: i=1; AJvYcCVgYPvZGy8oXlaCCPdlJT26ihfPrIHzrKZsBRM5lsVeflzJ9/06Z1wJ5SJg21XKbHBd7t6GgIQpCEqv1PmA@vger.kernel.org, AJvYcCXFZ+iWLHtcChT5oUQ9Z7vl8jks/OLY8n2xYB2HnC0eY5KxeInnKOgzyLGoJR7Ynll/svDpTFG31Qa+7mgg@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKg7SFiSpcXgaSSwTT70SJdcZKCXB+jKxmDiH4F/idgcjisCaU
-	4+1LKk1PIli7QiS+QFKY9TSh/1p1IjOajOb/N8HAkZszfkWL7SSTu0Ig47xJgoXb+WDPqy6WLuV
-	BlVYMt2hgxBrMCYM5xYa6uTb3W3c=
-X-Gm-Gg: ASbGncv19Dzz0ZSIcnMxPpqjby9VfVu61BdZYLLy0unZPK6Y77duc8mRzOXVcUCtNA/
-	Ge7pHVl4jN2s6IHBFuQRRsg08Cf2zeWDZFlwiMtgaFNgEOgWDEhvua67qT7LVLkhmwu76TPLGk7
-	SlhRicu+79gc/fDH/hoH63nvlaBAbVDV/d
-X-Google-Smtp-Source: AGHT+IGDrppLeiEOAmcXZ4RatqM9xE1mB3QXgajVWSiOeBux307sSrkk+V8xrvG9oFf3pRfDxCa5jV0aozgF5xujnSA=
-X-Received: by 2002:a05:6a00:440f:b0:73e:2b50:426 with SMTP id
- d2e1a72fcca58-74289346a54mr3873105b3a.4.1747326149270; Thu, 15 May 2025
- 09:22:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747326182; x=1747930982;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SCFjabn3SLWW2FICgQ4T2s8QKlbYsJc5jtTAjYixcjQ=;
+        b=Z4proIC0e1zY7sR+0Ep6sAjSwK22/vvAWzPUQoaRt7NBbkbAxn1SJFBkRe5JlJiOFc
+         UsmteXKHc+m1PekjOueBjxTQl3AZFI/4Pj0A0nd20W0w9VlJGuKM/UbuUuK2dCLDJYnQ
+         kEo3KYIh594lPgmjr1I+q+ZGPZv8wN+50xs0K9Rl+PhvU7Pp7rU9Tyl9SGhMBbtjjQDB
+         F8wM3AORLao85u4MR2AR3EK+zy/ndM3M6dA7phB7jqLup5nutndi69L+rICAnnuOXTEH
+         M0ZbLH4p4O2tHiupgLY6d3TsKOH2bvAV+yS5Mrp9AtMYa9+xIUrFq1hiWzzkEBeRsdxK
+         08aw==
+X-Forwarded-Encrypted: i=1; AJvYcCUj8Uie0m5hKvdPjVFHJmyLtagcuNBuKG7oUpW7Vnr1IY0XpMvFuAhCLvswDPM5RPrlfUKp6buITE+Yn78=@vger.kernel.org, AJvYcCV5WAeQtCfPJVFPjG2W56ocqNPt9HVwG9nnt21dJdWOArnlGD1onjcm/hyCjKe8MBtvFkup83Gp5iZ5@vger.kernel.org, AJvYcCWR+47PlTc9mBtlW8ChudoIqoqznk4kzixjqn8Q8fQLHxpkxokM8RAOFwv6l+lzI0LxoSY/hzlT11t0rgOAtpX7@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6Ku0v+Oa0qC4ruzl1QEa5qlPt5+2vhgRPwWWBYTLoJ08qWlZy
+	K26jL/3UQJCqAhU6mtHwzT0EN1tB1uemLW7gdb9zIVF+O6cepUJjrIF9xr6ekrANr04=
+X-Gm-Gg: ASbGncsyziXdkpVwN07YzSGxHUR74dS7LU+/7PUqtlpmGVrIBYIyILYJeHS0ETo0KHH
+	U8AUe50G9AuC4jIIXzk+yBF6dllmjN7IwQsuBbZa8oJKUg2zcU31NP3pg8BCQQTG+cZn/XuQrMr
+	4V+yZ9vE4THw9+WvAypoKoyv9B71RKRhw2t0J0a3aXlAF9CqRrL1jOj1cjjmactxNC3ZqjT1/64
+	bWlTYZUsepunrdN/vgDHoP1yda10C1pinZUMxzZ2jWr8NaUnKwiJwGfffWNC3zmAun53EjvNRtx
+	17fQRWUgvUWHrar2yLlw7fJwK0CaupIqwRb4+lT9B+WcVK8Hbqs4TdbynMX+D6dIu6RDDwl41ja
+	4cV4SxxDUiNqx60OGEYOjN93ewyw7iVat/c9hlMZdIxAROmRuALYW+Hzj
+X-Google-Smtp-Source: AGHT+IHCegKWeqNw4OuOgqVeFqsnY+bgb7Wi7Ds+b9y3wDfqkRtj7JkJIMAmz/s2Ds/9mDj0Q2A0EQ==
+X-Received: by 2002:a05:6512:2614:b0:54f:c526:cb4f with SMTP id 2adb3069b0e04-550e7193e9dmr10237e87.1.1747326182178;
+        Thu, 15 May 2025 09:23:02 -0700 (PDT)
+Received: from uuba.fritz.box (2001-14ba-53-1500-40a0-caf2-378-9836.rev.dnainternet.fi. [2001:14ba:53:1500:40a0:caf2:378:9836])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f16236sm16554e87.42.2025.05.15.09.23.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 09:23:01 -0700 (PDT)
+From: =?UTF-8?q?Hanne-Lotta=20M=C3=A4enp=C3=A4=C3=A4?= <hannelotta@gmail.com>
+To: skhan@linuxfoundation.org,
+	shuah@kernel.org,
+	alexandre.belloni@bootlin.com,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rtc@vger.kernel.org
+Cc: =?UTF-8?q?Hanne-Lotta=20M=C3=A4enp=C3=A4=C3=A4?= <hannelotta@gmail.com>
+Subject: [PATCH] selftests: Improve test output grammar, code style
+Date: Thu, 15 May 2025 19:22:49 +0300
+Message-Id: <20250515162249.29510-1-hannelotta@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514170118.40555-1-robdclark@gmail.com> <20250514170118.40555-5-robdclark@gmail.com>
- <51f87f358fa1b7ef8db8b67ee6cde38ae071fbe8.camel@mailbox.org> <CAJs_Fx771FFVDVFMn8YJkR9f9Ad-UQspJ9KKQw4u6Cu4TA7YPA@mail.gmail.com>
-In-Reply-To: <CAJs_Fx771FFVDVFMn8YJkR9f9Ad-UQspJ9KKQw4u6Cu4TA7YPA@mail.gmail.com>
-From: Connor Abbott <cwabbott0@gmail.com>
-Date: Thu, 15 May 2025 12:22:18 -0400
-X-Gm-Features: AX0GCFt7Y11kBzniJeDYgnDSbJ3ImpGv0Tt7fACDmfGKpd_7Dr5U0_pV53pUE-A
-Message-ID: <CACu1E7EL+E-M0N-EAN9Bx7u9O6_pECQQdPE2ph575idhVb2Szg@mail.gmail.com>
-Subject: Re: [PATCH v4 04/40] drm/sched: Add enqueue credit limit
-To: Rob Clark <robdclark@chromium.org>
-Cc: phasta@kernel.org, Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	Matthew Brost <matthew.brost@intel.com>, Danilo Krummrich <dakr@kernel.org>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 15, 2025 at 12:15=E2=80=AFPM Rob Clark <robdclark@chromium.org>=
- wrote:
->
-> On Thu, May 15, 2025 at 2:28=E2=80=AFAM Philipp Stanner <phasta@mailbox.o=
-rg> wrote:
-> >
-> > Hello,
-> >
-> > On Wed, 2025-05-14 at 09:59 -0700, Rob Clark wrote:
-> > > From: Rob Clark <robdclark@chromium.org>
-> > >
-> > > Similar to the existing credit limit mechanism, but applying to jobs
-> > > enqueued to the scheduler but not yet run.
-> > >
-> > > The use case is to put an upper bound on preallocated, and
-> > > potentially
-> > > unneeded, pgtable pages.  When this limit is exceeded, pushing new
-> > > jobs
-> > > will block until the count drops below the limit.
-> >
-> > the commit message doesn't make clear why that's needed within the
-> > scheduler.
-> >
-> > From what I understand from the cover letter, this is a (rare?) Vulkan
-> > feature. And as important as Vulkan is, it's the drivers that implement
-> > support for it. I don't see why the scheduler is a blocker.
->
-> Maybe not rare, or at least it comes up with a group of deqp-vk tests ;-)
->
-> Basically it is a way to throttle userspace to prevent it from OoM'ing
-> itself.  (I suppose userspace could throttle itself, but it doesn't
-> really know how much pre-allocation will need to be done for pgtable
-> updates.)
+Add small grammar fixes in perf events and Real Time Clock tests'
+output messages.
 
-For some context, other drivers have the concept of a "synchronous"
-VM_BIND ioctl which completes immediately, and drivers implement it by
-waiting for the whole thing to finish before returning. But this
-doesn't work for native context, where everything has to be
-asynchronous, so we're trying a new approach where we instead submit
-an asynchronous bind for "normal" (non-sparse/driver internal)
-allocations and only attach its out-fence to the in-fence of
-subsequent submits to other queues. Once you do this then you need a
-limit like this to prevent memory usage from pending page table
-updates from getting out of control. Other drivers haven't needed this
-yet, but they will when they get native context support.
+Include braces around a single if statement, when there are multiple
+statements in the else branch, to align with the kernel coding style.
 
-Connor
+Signed-off-by: Hanne-Lotta Mäenpää <hannelotta@gmail.com>
+---
+ tools/testing/selftests/perf_events/watermark_signal.c |  7 ++++---
+ tools/testing/selftests/rtc/rtctest.c                  | 10 +++++-----
+ 2 files changed, 9 insertions(+), 8 deletions(-)
 
->
-> > All the knowledge about when to stop pushing into the entity is in the
-> > driver, and the scheduler obtains all the knowledge about that from the
-> > driver anyways.
-> >
-> > So you could do
-> >
-> > if (my_vulkan_condition())
-> >    drm_sched_entity_push_job();
-> >
-> > couldn't you?
->
-> It would need to reach in and use the sched's job_scheduled
-> wait_queue_head_t...  if that isn't too ugly, maybe the rest could be
-> implemented on top of sched.  But it seemed like a reasonable thing
-> for the scheduler to support directly.
->
-> > >
-> > > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > > ---
-> > >  drivers/gpu/drm/scheduler/sched_entity.c | 16 ++++++++++++++--
-> > >  drivers/gpu/drm/scheduler/sched_main.c   |  3 +++
-> > >  include/drm/gpu_scheduler.h              | 13 ++++++++++++-
-> > >  3 files changed, 29 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/scheduler/sched_entity.c
-> > > b/drivers/gpu/drm/scheduler/sched_entity.c
-> > > index dc0e60d2c14b..c5f688362a34 100644
-> > > --- a/drivers/gpu/drm/scheduler/sched_entity.c
-> > > +++ b/drivers/gpu/drm/scheduler/sched_entity.c
-> > > @@ -580,11 +580,21 @@ void drm_sched_entity_select_rq(struct
-> > > drm_sched_entity *entity)
-> > >   * under common lock for the struct drm_sched_entity that was set up
-> > > for
-> > >   * @sched_job in drm_sched_job_init().
-> > >   */
-> > > -void drm_sched_entity_push_job(struct drm_sched_job *sched_job)
-> > > +int drm_sched_entity_push_job(struct drm_sched_job *sched_job)
-> >
-> > Return code would need to be documented in the docstring, too. If we'd
-> > go for that solution.
-> >
-> > >  {
-> > >       struct drm_sched_entity *entity =3D sched_job->entity;
-> > > +     struct drm_gpu_scheduler *sched =3D sched_job->sched;
-> > >       bool first;
-> > >       ktime_t submit_ts;
-> > > +     int ret;
-> > > +
-> > > +     ret =3D wait_event_interruptible(
-> > > +                     sched->job_scheduled,
-> > > +                     atomic_read(&sched->enqueue_credit_count) <=3D
-> > > +                     sched->enqueue_credit_limit);
-> >
-> > This very significantly changes the function's semantics. This function
-> > is used in a great many drivers, and here it would be transformed into
-> > a function that can block.
-> >
-> > From what I see below those credits are to be optional. But even if, it
-> > needs to be clearly documented when a function can block.
->
-> Sure.  The behavior changes only for drivers that use the
-> enqueue_credit_limit, so other drivers should be unaffected.
->
-> I can improve the docs.
->
-> (Maybe push_credit or something else would be a better name than
-> enqueue_credit?)
->
-> >
-> > > +     if (ret)
-> > > +             return ret;
-> > > +     atomic_add(sched_job->enqueue_credits, &sched-
-> > > >enqueue_credit_count);
-> > >
-> > >       trace_drm_sched_job(sched_job, entity);
-> > >       atomic_inc(entity->rq->sched->score);
-> > > @@ -609,7 +619,7 @@ void drm_sched_entity_push_job(struct
-> > > drm_sched_job *sched_job)
-> > >                       spin_unlock(&entity->lock);
-> > >
-> > >                       DRM_ERROR("Trying to push to a killed
-> > > entity\n");
-> > > -                     return;
-> > > +                     return -EINVAL;
-> > >               }
-> > >
-> > >               rq =3D entity->rq;
-> > > @@ -626,5 +636,7 @@ void drm_sched_entity_push_job(struct
-> > > drm_sched_job *sched_job)
-> > >
-> > >               drm_sched_wakeup(sched);
-> > >       }
-> > > +
-> > > +     return 0;
-> > >  }
-> > >  EXPORT_SYMBOL(drm_sched_entity_push_job);
-> > > diff --git a/drivers/gpu/drm/scheduler/sched_main.c
-> > > b/drivers/gpu/drm/scheduler/sched_main.c
-> > > index 9412bffa8c74..1102cca69cb4 100644
-> > > --- a/drivers/gpu/drm/scheduler/sched_main.c
-> > > +++ b/drivers/gpu/drm/scheduler/sched_main.c
-> > > @@ -1217,6 +1217,7 @@ static void drm_sched_run_job_work(struct
-> > > work_struct *w)
-> > >
-> > >       trace_drm_run_job(sched_job, entity);
-> > >       fence =3D sched->ops->run_job(sched_job);
-> > > +     atomic_sub(sched_job->enqueue_credits, &sched-
-> > > >enqueue_credit_count);
-> > >       complete_all(&entity->entity_idle);
-> > >       drm_sched_fence_scheduled(s_fence, fence);
-> > >
-> > > @@ -1253,6 +1254,7 @@ int drm_sched_init(struct drm_gpu_scheduler
-> > > *sched, const struct drm_sched_init_
-> > >
-> > >       sched->ops =3D args->ops;
-> > >       sched->credit_limit =3D args->credit_limit;
-> > > +     sched->enqueue_credit_limit =3D args->enqueue_credit_limit;
-> > >       sched->name =3D args->name;
-> > >       sched->timeout =3D args->timeout;
-> > >       sched->hang_limit =3D args->hang_limit;
-> > > @@ -1308,6 +1310,7 @@ int drm_sched_init(struct drm_gpu_scheduler
-> > > *sched, const struct drm_sched_init_
-> > >       INIT_LIST_HEAD(&sched->pending_list);
-> > >       spin_lock_init(&sched->job_list_lock);
-> > >       atomic_set(&sched->credit_count, 0);
-> > > +     atomic_set(&sched->enqueue_credit_count, 0);
-> > >       INIT_DELAYED_WORK(&sched->work_tdr, drm_sched_job_timedout);
-> > >       INIT_WORK(&sched->work_run_job, drm_sched_run_job_work);
-> > >       INIT_WORK(&sched->work_free_job, drm_sched_free_job_work);
-> > > diff --git a/include/drm/gpu_scheduler.h
-> > > b/include/drm/gpu_scheduler.h
-> > > index da64232c989d..d830ffe083f1 100644
-> > > --- a/include/drm/gpu_scheduler.h
-> > > +++ b/include/drm/gpu_scheduler.h
-> > > @@ -329,6 +329,7 @@ struct drm_sched_fence *to_drm_sched_fence(struct
-> > > dma_fence *f);
-> > >   * @s_fence: contains the fences for the scheduling of job.
-> > >   * @finish_cb: the callback for the finished fence.
-> > >   * @credits: the number of credits this job contributes to the
-> > > scheduler
-> > > + * @enqueue_credits: the number of enqueue credits this job
-> > > contributes
-> > >   * @work: Helper to reschedule job kill to different context.
-> > >   * @id: a unique id assigned to each job scheduled on the scheduler.
-> > >   * @karma: increment on every hang caused by this job. If this
-> > > exceeds the hang
-> > > @@ -366,6 +367,7 @@ struct drm_sched_job {
-> > >
-> > >       enum drm_sched_priority         s_priority;
-> > >       u32                             credits;
-> > > +     u32                             enqueue_credits;
-> >
-> > What's the policy of setting this?
-> >
-> > drm_sched_job_init() and drm_sched_job_arm() are responsible for
-> > initializing jobs.
->
-> It should be set before drm_sched_entity_push_job().  I wouldn't
-> really expect drivers to know the value at drm_sched_job_init() time.
-> But they would by the time drm_sched_entity_push_job() is called.
->
-> > >       /** @last_dependency: tracks @dependencies as they signal */
-> > >       unsigned int                    last_dependency;
-> > >       atomic_t                        karma;
-> > > @@ -485,6 +487,10 @@ struct drm_sched_backend_ops {
-> > >   * @ops: backend operations provided by the driver.
-> > >   * @credit_limit: the credit limit of this scheduler
-> > >   * @credit_count: the current credit count of this scheduler
-> > > + * @enqueue_credit_limit: the credit limit of jobs pushed to
-> > > scheduler and not
-> > > + *                        yet run
-> > > + * @enqueue_credit_count: the current crdit count of jobs pushed to
-> > > scheduler
-> > > + *                        but not yet run
-> > >   * @timeout: the time after which a job is removed from the
-> > > scheduler.
-> > >   * @name: name of the ring for which this scheduler is being used.
-> > >   * @num_rqs: Number of run-queues. This is at most
-> > > DRM_SCHED_PRIORITY_COUNT,
-> > > @@ -518,6 +524,8 @@ struct drm_gpu_scheduler {
-> > >       const struct drm_sched_backend_ops      *ops;
-> > >       u32                             credit_limit;
-> > >       atomic_t                        credit_count;
-> > > +     u32                             enqueue_credit_limit;
-> > > +     atomic_t                        enqueue_credit_count;
-> > >       long                            timeout;
-> > >       const char                      *name;
-> > >       u32                             num_rqs;
-> > > @@ -550,6 +558,8 @@ struct drm_gpu_scheduler {
-> > >   * @num_rqs: Number of run-queues. This may be at most
-> > > DRM_SCHED_PRIORITY_COUNT,
-> > >   *        as there's usually one run-queue per priority, but may
-> > > be less.
-> > >   * @credit_limit: the number of credits this scheduler can hold from
-> > > all jobs
-> > > + * @enqueue_credit_limit: the number of credits that can be enqueued
-> > > before
-> > > + *                        drm_sched_entity_push_job() blocks
-> >
-> > Is it optional or not? Can it be deactivated?
-> >
-> > It seems to me that it is optional, and so far only used in msm. If
-> > there are no other parties in need for that mechanism, the right place
-> > to have this feature probably is msm, which has all the knowledge about
-> > when to block already.
-> >
->
-> As with the existing credit_limit, it is optional.  Although I think
-> it would be also useful for other drivers that use drm sched for
-> VM_BIND queues, for the same reason.
->
-> BR,
-> -R
->
-> >
-> > Regards
-> > P.
-> >
-> >
-> > >   * @hang_limit: number of times to allow a job to hang before
-> > > dropping it.
-> > >   *           This mechanism is DEPRECATED. Set it to 0.
-> > >   * @timeout: timeout value in jiffies for submitted jobs.
-> > > @@ -564,6 +574,7 @@ struct drm_sched_init_args {
-> > >       struct workqueue_struct *timeout_wq;
-> > >       u32 num_rqs;
-> > >       u32 credit_limit;
-> > > +     u32 enqueue_credit_limit;
-> > >       unsigned int hang_limit;
-> > >       long timeout;
-> > >       atomic_t *score;
-> > > @@ -600,7 +611,7 @@ int drm_sched_job_init(struct drm_sched_job *job,
-> > >                      struct drm_sched_entity *entity,
-> > >                      u32 credits, void *owner);
-> > >  void drm_sched_job_arm(struct drm_sched_job *job);
-> > > -void drm_sched_entity_push_job(struct drm_sched_job *sched_job);
-> > > +int drm_sched_entity_push_job(struct drm_sched_job *sched_job);
-> > >  int drm_sched_job_add_dependency(struct drm_sched_job *job,
-> > >                                struct dma_fence *fence);
-> > >  int drm_sched_job_add_syncobj_dependency(struct drm_sched_job *job,
-> >
+diff --git a/tools/testing/selftests/perf_events/watermark_signal.c b/tools/testing/selftests/perf_events/watermark_signal.c
+index 49dc1e831174..6176afd4950b 100644
+--- a/tools/testing/selftests/perf_events/watermark_signal.c
++++ b/tools/testing/selftests/perf_events/watermark_signal.c
+@@ -65,8 +65,9 @@ TEST(watermark_signal)
+ 
+ 	child = fork();
+ 	EXPECT_GE(child, 0);
+-	if (child == 0)
++	if (child == 0) {
+ 		do_child();
++	}
+ 	else if (child < 0) {
+ 		perror("fork()");
+ 		goto cleanup;
+@@ -75,7 +76,7 @@ TEST(watermark_signal)
+ 	if (waitpid(child, &child_status, WSTOPPED) != child ||
+ 	    !(WIFSTOPPED(child_status) && WSTOPSIG(child_status) == SIGSTOP)) {
+ 		fprintf(stderr,
+-			"failed to sycnhronize with child errno=%d status=%x\n",
++			"failed to synchronize with child errno=%d status=%x\n",
+ 			errno,
+ 			child_status);
+ 		goto cleanup;
+@@ -84,7 +85,7 @@ TEST(watermark_signal)
+ 	fd = syscall(__NR_perf_event_open, &attr, child, -1, -1,
+ 		     PERF_FLAG_FD_CLOEXEC);
+ 	if (fd < 0) {
+-		fprintf(stderr, "failed opening event %llx\n", attr.config);
++		fprintf(stderr, "failed to setup performance monitoring %llx\n", attr.config);
+ 		goto cleanup;
+ 	}
+ 
+diff --git a/tools/testing/selftests/rtc/rtctest.c b/tools/testing/selftests/rtc/rtctest.c
+index be175c0e6ae3..8fd4d5d3b527 100644
+--- a/tools/testing/selftests/rtc/rtctest.c
++++ b/tools/testing/selftests/rtc/rtctest.c
+@@ -138,10 +138,10 @@ TEST_F_TIMEOUT(rtc, date_read_loop, READ_LOOP_DURATION_SEC + 2) {
+ 		rtc_read = rtc_time_to_timestamp(&rtc_tm);
+ 		/* Time should not go backwards */
+ 		ASSERT_LE(prev_rtc_read, rtc_read);
+-		/* Time should not increase more then 1s at a time */
++		/* Time should not increase more than 1s per read */
+ 		ASSERT_GE(prev_rtc_read + 1, rtc_read);
+ 
+-		/* Sleep 11ms to avoid killing / overheating the RTC */
++		/* Sleep 11ms to avoid overheating the RTC */
+ 		nanosleep_with_retries(READ_LOOP_SLEEP_MS * 1000000);
+ 
+ 		prev_rtc_read = rtc_read;
+@@ -236,7 +236,7 @@ TEST_F(rtc, alarm_alm_set) {
+ 	if (alarm_state == RTC_ALARM_DISABLED)
+ 		SKIP(return, "Skipping test since alarms are not supported.");
+ 	if (alarm_state == RTC_ALARM_RES_MINUTE)
+-		SKIP(return, "Skipping test since alarms has only minute granularity.");
++		SKIP(return, "Skipping test since alarms have only minute granularity.");
+ 
+ 	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
+ 	ASSERT_NE(-1, rc);
+@@ -306,7 +306,7 @@ TEST_F(rtc, alarm_wkalm_set) {
+ 	if (alarm_state == RTC_ALARM_DISABLED)
+ 		SKIP(return, "Skipping test since alarms are not supported.");
+ 	if (alarm_state == RTC_ALARM_RES_MINUTE)
+-		SKIP(return, "Skipping test since alarms has only minute granularity.");
++		SKIP(return, "Skipping test since alarms have only minute granularity.");
+ 
+ 	rc = ioctl(self->fd, RTC_RD_TIME, &alarm.time);
+ 	ASSERT_NE(-1, rc);
+@@ -502,7 +502,7 @@ int main(int argc, char **argv)
+ 	if (access(rtc_file, R_OK) == 0)
+ 		ret = test_harness_run(argc, argv);
+ 	else
+-		ksft_exit_skip("[SKIP]: Cannot access rtc file %s - Exiting\n",
++		ksft_exit_skip("Cannot access RTC file %s - exiting\n",
+ 						rtc_file);
+ 
+ 	return ret;
+-- 
+2.39.5
+
