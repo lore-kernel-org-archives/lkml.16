@@ -1,139 +1,92 @@
-Received: from sendmail.purelymail.com (sendmail.purelymail.com [34.202.193.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C237260C
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:43:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.202.193.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFEC205E2F
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747320202; cv=none; b=aGBzFQ34v+7FA2XpdZ9oQyw4v7e7ycIfveolgU9S4jlQh38OSgojMUTjOwjg/6q4lxq9tCZ/v9Fj1CWNp51+NkH23I9EkX5QVXahhGn/bEYaolWatA7d49Oli7frIl5804SxJ+KgX/JUI0uEmMKfRPz+9LWMRlHFlgrmDnaO4D0=
+	t=1747320206; cv=none; b=K+HBZ6GO1Um8zRiK6jIdfFgRGgXhXtmvP61PV/uvCDhL01j68QAxoiPFzW90Q9LmL+9WYv1UAea2DrDxiRNAP54u9vHHI0QtOciqbmqDN6SukA4EHhQFAOsYS7IxjyxK2N+oaAT5BBRa7Y/wefgJ/jsLv+V8GazjRyjDIdV5U7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747320202; c=relaxed/simple;
-	bh=WVPCoGGyfPmMmWEeShsNZG/xt1N7me7E3wbQwMdON+Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YcquSnn/CkhQxICJ1L+lRjVZOmHH5LY+wt/dz50KQhT54D9fGR8aB4cW2765pjslYu2A3Bgy/66+P+wIJ1oGbsevh99vNVF8j44kds+B3SWtNy1yXA3g4tz3B0ujAm8tNgixEDqqQM4KbbHL+sLXVZmsVGy14JQ4sghzHptYQDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org; spf=pass smtp.mailfrom=mentallysanemainliners.org; dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b=p3S5oL+l; arc=none smtp.client-ip=34.202.193.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mentallysanemainliners.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mentallysanemainliners.org
+	s=arc-20240116; t=1747320206; c=relaxed/simple;
+	bh=k7+W0i39WdRl8+FNoIWV12spyCIOO2TyZ6JMN7brH0A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sHZknyNScvIf3hRWVEg9HikyXGcvimNJeo2xLXZmpwdknuD/VM0ctnQjxL68UZzfxh21xnCjRC2fdHmsDt6UXYp1tIQI8gxN/qCu3WzqYM+DFz8/aoKNPzXvaQd2r3vFcWUxcF6NqPOccO/dpu8/cob6Zn+TpuGn2cF505hSlhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=owiwUM2F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b="p3S5oL+l"
-Authentication-Results: purelymail.com; auth=pass
-DKIM-Signature: a=rsa-sha256; b=p3S5oL+l/Cpv09A2UkCSL/Lz/Q3hRzM3CDYT2Ts3UPEdsD0+kNqmoumyQQXTPZDWLrhdruTrKzEjehFfU5iQwG3NdQtKizno3k8CHX/Ab/wDrvOd7vQcXZ/w1Z/lXZamBwEKTYKMwqspY9IcRNwmD/E9Xk8uDRsMVrFwL1OzN8iUt7oW1//B6WIgsuifGdjNDfZE1vHjq0H4LOwvuuZMHaKtDuiqGtjB/t8RPixIDsHfVT2ioVRWzfPwIQ32UCJ+tjXMMQSDjcBfcfIj0uA+zzawepw7doh+dqy3peqta6aHXluepT6J0PGioidfm7oZRW34aGx+Ii/djOnvyUewgQ==; s=purelymail1; d=purelymail.com; v=1; bh=WVPCoGGyfPmMmWEeShsNZG/xt1N7me7E3wbQwMdON+Q=; h=Feedback-ID:Received:From:Date:Subject:To;
-Feedback-ID: 68247:10037:null:purelymail
-X-Pm-Original-To: linux-kernel@vger.kernel.org
-Received: by smtp.purelymail.com (Purelymail SMTP) with ESMTPSA id -1985443548;
-          (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
-          Thu, 15 May 2025 14:43:11 +0000 (UTC)
-From: Igor Belwon <igor.belwon@mentallysanemainliners.org>
-Date: Thu, 15 May 2025 16:43:02 +0200
-Subject: [PATCH v3 2/2] phy: exynos5-usbdrd: Add support for the Exynos990
- usbdrd phy
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="owiwUM2F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2637C4CEEB;
+	Thu, 15 May 2025 14:43:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747320205;
+	bh=k7+W0i39WdRl8+FNoIWV12spyCIOO2TyZ6JMN7brH0A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=owiwUM2FSn/6vaVrA/J63v3yjkt2QQdbuSJZblD8TbSnHVkm+28BB+EpIDWBpiQpg
+	 oOHV4kP1JZbgZmQIdw6g39FSnKlLOLnNelHSEgNDvXeqiCQTt4JcTI/mr0TjjjPUqs
+	 5CLKlEXFePrHCJaPh+wFvEgsH8Dl+KtPCi7md53fSjNnmfrwl1JgXDFKcOq+k+QSYq
+	 R6m9hol49/oFTpFOLSorrDLMfM6AIyVQEHYxDh7XMz/BNe3gclthPT+RyWwclXm5rQ
+	 F3vG2iLPk2TZjof3Wv9k/iofn4oaM1WqQTovU47vjWH5zqF6VijM4zqL6KY/me2J1N
+	 scf+WsCNbsOMg==
+Date: Thu, 15 May 2025 16:43:20 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: linux-kernel@vger.kernel.org, "Ahmed S . Darwish" <darwi@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH -v2 0/15] x86: Remove support for TSC-less and CX8-less
+ CPUs
+Message-ID: <aCX9iN5BxitdozwC@gmail.com>
+References: <20250515085708.2510123-1-mingo@kernel.org>
+ <ae2478d9-640f-4c42-86ec-31cbe5955a59@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250515-usb-resends-may-15-v3-2-ad33a85b6cee@mentallysanemainliners.org>
-References: <20250515-usb-resends-may-15-v3-0-ad33a85b6cee@mentallysanemainliners.org>
-In-Reply-To: <20250515-usb-resends-may-15-v3-0-ad33a85b6cee@mentallysanemainliners.org>
-To: Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Marek Szyprowski <m.szyprowski@samsung.com>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-phy@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- Igor Belwon <igor.belwon@mentallysanemainliners.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747320182; l=3097;
- i=igor.belwon@mentallysanemainliners.org; s=20241206;
- h=from:subject:message-id; bh=WVPCoGGyfPmMmWEeShsNZG/xt1N7me7E3wbQwMdON+Q=;
- b=Yz61+U+8P1tH3DzDCZgtCDCblx9usfa2Uyd5GUgxBLzmBXPk5GjHxcULalzJyOqd7m55pZsWt
- R29Pnv8SWwlCVsVL87dJ1Y+famYNT4y0zVNrFqg4Tuve7OQ/sHBQctS
-X-Developer-Key: i=igor.belwon@mentallysanemainliners.org; a=ed25519;
- pk=qKAuSTWKTaGQM0vwBxV0p6hPKMN4vh0CwZ+bozrG5lY=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ae2478d9-640f-4c42-86ec-31cbe5955a59@intel.com>
 
-The Exynos990 usbdrd PHY is a combo PHY which supports USB SS, HS and
-DisplayPort outputs. This commit adds support only for UTMI+ (USB HS).
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Igor Belwon <igor.belwon@mentallysanemainliners.org>
----
- drivers/phy/samsung/phy-exynos5-usbdrd.c    | 32 +++++++++++++++++++++++++++++
- include/linux/soc/samsung/exynos-regs-pmu.h |  3 +++
- 2 files changed, 35 insertions(+)
+* Dave Hansen <dave.hansen@intel.com> wrote:
 
-diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-index 917a76d584f0856f1e445630e2cf97b3c3e46b13..dd660ebe80458a13413ca9735339b4e1095af8ea 100644
---- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-+++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-@@ -2025,6 +2025,35 @@ static const struct exynos5_usbdrd_phy_drvdata exynos850_usbdrd_phy = {
- 	.n_regulators		= ARRAY_SIZE(exynos5_regulator_names),
- };
- 
-+static const struct exynos5_usbdrd_phy_tuning exynos990_tunes_utmi_postinit[] = {
-+	PHY_TUNING_ENTRY_PHY(EXYNOS850_DRD_HSPPARACON,
-+			     (HSPPARACON_TXVREF |
-+			      HSPPARACON_TXPREEMPAMP | HSPPARACON_SQRX |
-+			      HSPPARACON_COMPDIS),
-+			     (FIELD_PREP_CONST(HSPPARACON_TXVREF, 7) |
-+			      FIELD_PREP_CONST(HSPPARACON_TXPREEMPAMP, 3) |
-+			      FIELD_PREP_CONST(HSPPARACON_SQRX, 5) |
-+			      FIELD_PREP_CONST(HSPPARACON_COMPDIS, 7))),
-+	PHY_TUNING_ENTRY_LAST
-+};
-+
-+static const struct exynos5_usbdrd_phy_tuning *exynos990_tunes[PTS_MAX] = {
-+	[PTS_UTMI_POSTINIT] = exynos990_tunes_utmi_postinit,
-+};
-+
-+static const struct exynos5_usbdrd_phy_drvdata exynos990_usbdrd_phy = {
-+	.phy_cfg		= phy_cfg_exynos850,
-+	.phy_ops		= &exynos850_usbdrd_phy_ops,
-+	.phy_tunes		= exynos990_tunes,
-+	.pmu_offset_usbdrd0_phy	= EXYNOS990_PHY_CTRL_USB20,
-+	.clk_names		= exynos5_clk_names,
-+	.n_clks			= ARRAY_SIZE(exynos5_clk_names),
-+	.core_clk_names		= exynos5_core_clk_names,
-+	.n_core_clks		= ARRAY_SIZE(exynos5_core_clk_names),
-+	.regulator_names	= exynos5_regulator_names,
-+	.n_regulators		= ARRAY_SIZE(exynos5_regulator_names),
-+};
-+
- static const struct exynos5_usbdrd_phy_config phy_cfg_gs101[] = {
- 	{
- 		.id		= EXYNOS5_DRDPHY_UTMI,
-@@ -2228,6 +2257,9 @@ static const struct of_device_id exynos5_usbdrd_phy_of_match[] = {
- 	}, {
- 		.compatible = "samsung,exynos850-usbdrd-phy",
- 		.data = &exynos850_usbdrd_phy
-+	}, {
-+		.compatible = "samsung,exynos990-usbdrd-phy",
-+		.data = &exynos990_usbdrd_phy
- 	},
- 	{ },
- };
-diff --git a/include/linux/soc/samsung/exynos-regs-pmu.h b/include/linux/soc/samsung/exynos-regs-pmu.h
-index 1a2c0e0838f99821151661878f022f2129a0c19b..7754697e581077ec0fd60b63649728896ca145c9 100644
---- a/include/linux/soc/samsung/exynos-regs-pmu.h
-+++ b/include/linux/soc/samsung/exynos-regs-pmu.h
-@@ -662,6 +662,9 @@
- #define EXYNOS5433_PAD_RETENTION_UFS_OPTION			(0x3268)
- #define EXYNOS5433_PAD_RETENTION_FSYSGENIO_OPTION		(0x32A8)
- 
-+/* For Exynos990 */
-+#define EXYNOS990_PHY_CTRL_USB20				(0x72C)
-+
- /* For Tensor GS101 */
- /* PMU ALIVE */
- #define GS101_SYSIP_DAT0					(0x810)
+> On 5/15/25 01:56, Ingo Molnar wrote:
+> >  80 files changed, 47 insertions(+), 14117 deletions(-)
+> 
+> Thanks for doing this, Ingo. A lot of this code was sitting off on 
+> the side and not causing _too_ many problems. But that was (I think) 
+> mostly because it was being so lightly used.
+> 
+> I've been using Linux since the late 90's. The oldest systems I ever 
+> ran it on were i586's and they were old at the time.
+> 
+> I suspect this is going to throw a couple more compile issues at us 
+> to fix, that's par for the course on something like this. Ideally, 
+> we'd wait for v6.16-rc1 for applying something of this magnitude. 
+> What were your plans on when to apply it?
 
--- 
-2.47.2
+Yeah, so the good news is that the bots have been build-testing this 
+series for a few weeks, and besides an UML build issue that I fixed 
+there were very few problems. (knock on wood)
 
+And since Linus asked for this and semi-acked it, I might try sending 
+this in this merge window, if it's quiet enough from the x86 tree 
+perspective. The diffstat is large, but as you too alluded to, it's 
+99.9% obsolete code that got very little testing in practice, so I 
+don't think there's an elevated risk of regressions. But let's see how 
+the v6.16 merge window goes?
+
+> In any case:
+> 
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+
+Thanks!
+
+	Ingo
