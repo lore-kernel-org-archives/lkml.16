@@ -1,231 +1,88 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274931F153C;
-	Thu, 15 May 2025 20:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A2328032E;
+	Thu, 15 May 2025 20:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747339849; cv=none; b=dZwQoxIB2hVUaMeV2PesO2GMqKQ2wAYaRs8jI4MLGzwTnLQQcPWOf/RoDrfCNK8EWTkQk4elG+y1lBOoZ/wSzW8kzw1JmGmgHQJgwRcHToSlrgdlIAL0FrpzKSU1qX+Y7njQYMc9NMF3kAPxHxSwLWTZWHsDylIV28W/STGnw94=
+	t=1747339871; cv=none; b=FiLleZOPABVXi2W2Og9zZD9bNPRdzIlKJ7lPVnRJ85WSU6heM3i2ZqFZh04qxxerJGLQtFl+3VsX7OZPEkLD/jNMY1gMIdHt+CcQ8JJF/i8K4MlzLFenYBKhIE7VWq8fxWDD6zhoUsApRVuIdALNmZ+8gSHlgLZ3zj+0ZbakCuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747339849; c=relaxed/simple;
-	bh=4tMRLG1iTysE+h6YDnFBw48xymEqEUEbwTXY6WodhfM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R2nmO+qKiU2IHSsnx1DGCdKZ2dUZEf9+Npw0MyuObk9z6HW6OkP2lc3kuEYWG1kctBZ/+n10/96FdmQjRC/pnLyPy/2/CVtcnjSApQd2bqYA1zKBnVtIv7dz/hgCS0PcX22ynq0W0cDkGCA8PIjSh4GbRMSgVPtGG2jvYXqTML8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cYYFh8dN; arc=none smtp.client-ip=209.85.166.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747339871; c=relaxed/simple;
+	bh=+BV9gekqOKPyJUwsswQCTDO2tOWQYe22XaT4A9ldTMc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pMWMSy49C4qNI8UE8VtaCh+oTcq3s3zhb0gT3K/57xB0birrqxl+S7erfkthXGs9YRqBRL/T16XHmALm7LD40mrD/wDvodRc/elOdzDhyGcM8Xgrqa/Boi/J13NPNvxtoiWqnQzoI08e+A1WhigRwqho0VCPVspXT1RwrVxLM6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=iK26F75j; arc=none smtp.client-ip=198.37.111.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cYYFh8dN"
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-8644aa73dfcso40980139f.0;
-        Thu, 15 May 2025 13:10:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747339847; x=1747944647; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9fSgK7ssf2dm8Q7yOhdTUyMWZzsPLlNnfjUB0IW4r/o=;
-        b=cYYFh8dNQ76jCzr9xEYGV+RvzatqS75TalDwRZt57HG5Xk626xSBsVfEiqPfDkfp7q
-         fefzn9V00D423FK161prtWVf6rlH0p4aKyV9zH1O0hFm4Il8FikdTv/sQfP43d4WRnSb
-         UJeWTzOLwfGK0h0rX5FNbfHSe8UsLvLF8vU8YSJImb3VgoqG2M9jr+WgqPBhIDma7R62
-         w3Jaqh89jWeL+x3xUKWFDUQQZ2/hBpwHuQE/+emjBkkAI7aN/NsYLc22D0j7trNWuzpG
-         ii4Cs85yDSpYRDmSMXp1PB9hjoWaUCy1kko8Pcq4isK/8iGaMHrULtqL0QfYkusUmtbM
-         R4XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747339847; x=1747944647;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9fSgK7ssf2dm8Q7yOhdTUyMWZzsPLlNnfjUB0IW4r/o=;
-        b=aCcctUenJln+DQYymJoUHJOz5hXddnKn/pNS0Y8xPaD1FBATv+n0T7T7aAYmVxg1Sr
-         1ldk7MBVryb0q05mGBndAY6MKCD+piA16470eScVStl7oWq6OHL0umschnzdcgVvSM0q
-         S9X9r40Q1Mda1DSUo8rqQMHhUOQAuQKUJFk1v6uAYc+myD9SvOi+wZsRMkr/t48mAoGs
-         N1HzfDSEmh4jtU4gJSAqhCGghmT+q3xIBVYF4kiJ60ZJnZCI/Bmf+WkpHbk6c2t1s6ZY
-         /2sMKSq8mceMNMvaWho3K88bZhFXByVCuUb8B4rgpBZeUbr6o36hYST+FSCH8YFzcrAO
-         ui+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWf5mAmUrYGd2YNuVlBnk3mBA/h6t6g+rcMzvA8ogwYBE3pRJOC7i0BkpE3O5C8WRcBlBtWvAwDkKgnNInM@vger.kernel.org, AJvYcCXLowdQ/yWvxIXZLBvgssuWgCipf7US/D5DjwiutWyuKiCAFo/sXe/mzLZfaafmwHFRsymv2N/pY7HnF2he@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/tBqFoHAYVM8K8LNzf0Q2T5J6Yuynfdg8wnRz2kM58Ln7Rran
-	ZL1eg7EmwBcDdIshjB22Djy1wn0oVl9XQcBn1i+z0CGjsFL44ITaWpYnZvfM4MQF8yjdefIXmsV
-	4rq9nT56zHYkxOcSekXJOgWW0bbOuQI4=
-X-Gm-Gg: ASbGncu8iT/ZgCMCWLRwbodBYY3n7MvvT8Ypfcy5EJbAGAUFHHdTrGrZKyygBSTp1jH
-	Gzz1nZ97aervrAT7ZoWZbddNcb27Y7Vq6ldoY04iXs9qU9NBe/Uhciv9Lq9TyKZwiYbi6gdPl1e
-	IGst1lni2+YOpjRPitxc7igcZvg0gu3DuOENd3YwSYxSHbh7ljCGfWX9fNlPUbNbDmiWBZu4J4Q
-	A==
-X-Google-Smtp-Source: AGHT+IElYN1Rh6xvHEcxS29AOpeVEBIl+G958Hitti5xJMV3ss/DOnUlfOXj5cBcRSPr0KcHm1EawDhax9vJdzWBanE=
-X-Received: by 2002:a05:6602:2744:b0:861:c238:bf03 with SMTP id
- ca18e2360f4ac-86a231ce6cbmr170432639f.8.1747339847033; Thu, 15 May 2025
- 13:10:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="iK26F75j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1747339868;
+	bh=+BV9gekqOKPyJUwsswQCTDO2tOWQYe22XaT4A9ldTMc=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=iK26F75juTUmFeeN04uP7DY4JpQH/us4xJwXpb/qivzWr0XLTvmfJofgIYYh8YE2o
+	 VKI4ZDyUkAISqH8XZqfV1K9lHbJrJl+xjrVmECs2Ns6XLxS9HA5g84W61RJSGaOVxj
+	 CfBYvbuGnD9CGPmHOiz1YjXWJ67RTxdVuJMjd3ds=
+Received: from [IPv6:2601:5c4:4302:c21::a774] (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 5C4CE1C0016;
+	Thu, 15 May 2025 16:11:08 -0400 (EDT)
+Message-ID: <727641384722bbdbbf96176210a7899f1b9795eb.camel@HansenPartnership.com>
+Subject: Re: [PATCH] scsi: Add SCSI error events, sent as kobject uevents by
+ mid-layer
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Salomon Dushimirimana <salomondush@google.com>
+Cc: "Martin K . Petersen" <martin.petersen@oracle.com>, 
+	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 15 May 2025 16:11:07 -0400
+In-Reply-To: <CAPE3x16MrkQXFasVaaHBxhH2QvQ4H5cDiE3ae=-nYjuEKV-NBw@mail.gmail.com>
+References: <20250422181729.2792081-1-salomondush@google.com>
+	 <CAPE3x14-Tsm-2ThihT3a=h9a0L9Vi8J4BbiZiTV6=6Ctc1xryg@mail.gmail.com>
+	 <18aa42a73584fcf50b07d7a43073e55fb4c3159b.camel@HansenPartnership.com>
+	 <CAPE3x16MrkQXFasVaaHBxhH2QvQ4H5cDiE3ae=-nYjuEKV-NBw@mail.gmail.com>
+Autocrypt: addr=James.Bottomley@HansenPartnership.com;
+ prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514175527.42488-1-robdclark@gmail.com> <20250514175527.42488-3-robdclark@gmail.com>
- <aCWtINcOUWciwx8L@pollux> <CAF6AEGsm6JgK6QQe7se6bzv6QLnm-sxsJRmv=r3OWKhf6rfOSA@mail.gmail.com>
- <aCYIiJpMe1ljGxqz@pollux> <CAF6AEGvLpekBNLxVOavkXJtcZZQBH6WznKA=F0Jn9idxBMypkA@mail.gmail.com>
- <aCYpjJPvSOf2RzbU@pollux>
-In-Reply-To: <aCYpjJPvSOf2RzbU@pollux>
-From: Rob Clark <robdclark@gmail.com>
-Date: Thu, 15 May 2025 13:10:34 -0700
-X-Gm-Features: AX0GCFs_RUOGNUoophfLe_ZVT4ojoR2aoDzR_PRqcC6i1DAbUuDOdWeHDIPx-Z0
-Message-ID: <CAF6AEGuUH6nZCvb3Qayh7Z9ydOmPhTn6rqMifPyagLknbjerng@mail.gmail.com>
-Subject: Re: [PATCH v4 02/40] drm/gpuvm: Allow VAs to hold soft reference to BOs
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, 
-	Rob Clark <robdclark@chromium.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2025 at 10:51=E2=80=AFAM Danilo Krummrich <dakr@kernel.org>=
- wrote:
->
-> On Thu, May 15, 2025 at 10:34:07AM -0700, Rob Clark wrote:
-> > On Thu, May 15, 2025 at 8:30=E2=80=AFAM Danilo Krummrich <dakr@kernel.o=
-rg> wrote:
-> > >
-> > > On Thu, May 15, 2025 at 07:59:16AM -0700, Rob Clark wrote:
-> > >
-> > > Thanks for the detailed explanation!
-> > >
-> > > > On Thu, May 15, 2025 at 2:00=E2=80=AFAM Danilo Krummrich <dakr@kern=
-el.org> wrote:
-> > > > >
-> > > > > On Wed, May 14, 2025 at 10:53:16AM -0700, Rob Clark wrote:
-> > > > > > From: Rob Clark <robdclark@chromium.org>
-> > > > > >
-> > > > > > Eases migration for drivers where VAs don't hold hard reference=
-s to
-> > > > > > their associated BO, avoiding reference loops.
-> > > > > >
-> > > > > > In particular, msm uses soft references to optimistically keep =
-around
-> > > > > > mappings until the BO is distroyed.  Which obviously won't work=
- if the
-> > > > > > VA (the mapping) is holding a reference to the BO.
-> > > > >
-> > > > > Ick! This is all complicated enough. Allow drivers to bypass the =
-proper
-> > > > > reference counting for GEM objects in the context of VM_BO struct=
-ures seems like
-> > > > > an insane footgun.
-> > > > >
-> > > > > I don't understand why MSM would need weak references here. Why d=
-oes msm need
-> > > > > that, but nouveau, Xe, panthor, PowerVR do not?
-> > > >
-> > > > Most of those drivers were designed (and had their UABI designed) w=
-ith
-> > > > gpuvm, or at least sparse, in mind from the get go.  I'm not sure
-> > > > about nouveau, but I guess it just got lucky that it's UABI semanti=
-cs
-> > > > fit having the VMA hold a reference to the BO.
-> > > >
-> > > > Unfortunately, msm pre-dates sparse.. and in the beginning there wa=
-s
-> > > > only a single global VM, multiple VMs was something retrofitted ~6y=
-rs
-> > > > (?) back.  For existing msm, the VMA(s) are implicitly torn down wh=
-en
-> > > > the GEM obj is freed.  This won't work with the VMA(s) holding hard
-> > > > references to the BO.
-> > >
-> > > Ok, that makes sense to me, but why can't this be changed? I don't se=
-e how the
-> > > uAPI would be affected, this is just an implementation detail, no?
-> >
-> > It's about the behaviour of the API, there is no explicit VMA
-> > creation/destruction in the uAPI.
->
-> But that shouldn't matter? Userspace gives you a BO, the driver creates V=
-MAs
-> itself, which can have a reference on the VM_BO, which references the ori=
-ginal
-> BO. At this point you can drop the original reference of the BO and just =
-destroy
-> all corresponding VMAs once the driver fulfilled the request from userspa=
-ce?
+On Thu, 2025-05-15 at 13:03 -0700, Salomon Dushimirimana wrote:
+> Hi,
+>=20
+> I agree with the recommended use of ftrace or blktrace for tracing.
 
-Having the submit hold a reference to the VM_BO, and then this funny
-looking bit of code in gem_close() gets us part way there:
+Great; what made me think of tracing is that your event emits for every
+error or retry which seemed like quite an overhead.  Conditioning it on
+a config parameter really isn't useful to distributions, so using the
+tracepoint system would solve both the quantity and the activation
+problem.
 
-   vm_bo =3D drm_gpuvm_bo_find(ctx->vm, obj);
-   if (vm_bo) {
-      drm_gpuvm_bo_put(vm_bo);
-      drm_gpuvm_bo_put(vm_bo);
-  }
+> However, our primary goal for using uevents was not merely for
+> collecting trace information. We are using uevents as a notification
+> mechanism for userspace workflows to determine repair workflows (swap
+> / remove a failing device).
 
-But we still leak BO's used in other VMs.. scanout, and various other
-fw and other internal BOs... those would all have to be tracked down
-and to find _someplace_ to break the VM_BO  circular reference loop.
+If you're collecting stats for predictive failure, how is this proposed
+active mechanism more effective than the passive one of simply using
+the existing SMART monitor tools?
 
-> > > > When userspace opts-in to "VM_BIND" mode, which it has to do before
-> > > > the VM is created, then we don't set this flag, the VMA holds a har=
-d
-> > > > reference to the BO as it does with other drivers.  But consider th=
-is
-> > > > use-case, which is perfectly valid for old (existing) userspace:
-> > > >
-> > > > 1) Userspace creates a BO
-> > > > 2) Submits rendering referencing the BO
-> > > > 3) Immediately closes the BO handle, without waiting for the submit=
- to complete
-> > > >
-> > > > In this case, the submit holds a reference to the BO which holds a
-> > > > reference to the VMA.
-> > >
-> > > Can't you just instead create the VMAs, which hold a reference to the=
- VM_BO,
-> > > which holds a reference to the BO, then drop the drop the original BO=
- reference
-> > > and finally, when everything is completed, remove all VMAs of the VM_=
-BO?
-> >
-> > Perhaps the submit could hold a ref to the VM_BO instead of the BO to
-> > cover that particular case.
-> >
-> > But for the legacy world, the VMA is implicitly torn down when the BO
-> > is freed.  Which will never happen if the VM_BO holds a reference to
-> > the BO.
->
-> Sure, I get that; what I do not get is why it can't be changed, e.g. in t=
-he way
-> described above.
->
-> > > This should do exactly the same *and* be conformant with GPUVM design=
-.
-> > >
-> > > > Everything is torn down gracefully when the
-> > > > submit completes.  But if the VMA held a hard reference to the BO t=
-hen
-> > > > you'd have a reference loop.
-> > > >
-> > > > So there really is no other way to use gpuvm _and_ maintain backwar=
-ds
-> > > > compatibility with the semantics of the pre-VM_BIND UAPI without th=
-is
-> > > > flag.
-> > >
-> > > Again, how is this important for maintaining backwards compatibility =
-with the
-> > > uAPI? This all seems like a driver internal implementation detail to =
-me.
-> > >
-> > > So, is there a technical reason, or is it more that it would be more =
-effort on
-> > > the driver end to rework things accordingly?
-> >
-> > If there were a way to work without WEAK_REF, it seems like it would
-> > be harder and much less of a drop in change.
->
-> So, you're saying there is no technical blocker to rework it?
+Regards,
 
-Not clear.. it would certainly make conversion to gpuvm a much bigger
-flag-day, because without WEAK_REF the way gpuvm works is exactly
-backwards from how the thing it is replacing works.
+James
 
-BR,
--R
