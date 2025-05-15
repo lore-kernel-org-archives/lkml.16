@@ -1,131 +1,180 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F239719D07E;
-	Thu, 15 May 2025 16:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4985319D07E
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 16:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747328339; cv=none; b=t9NPouoxBnruAKBMSVLeNlE8ZzUrLBd4PKbWcPUGP/2wjbvw4DRkMRxtRrUr0Yao5kMV5hzT/9hvbklTVnehFSNiEUq8KY3iDCR+hNdnU4NKQ1196B5fxjuJBwl1n4qIelo1aO5yd6TQAf63i/gCFin1dcRWJUD/VwqfUt5D86s=
+	t=1747328351; cv=none; b=lo0VXqDYN+IGVwYsCtFsV0nW/h4aE7LbaWcMK/PwvVgtN2ubBKJ20AuuDhuI3GUSzXwAuZysriS/MY3VXbLLR/oHDS1qfuYCnE0FusPQxvpc7pT9r6cLjG8JXW1nXslNHSCdH4wE8SLYIFpk73QBPRG0zTjq9NKgoPvwFaJJf+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747328339; c=relaxed/simple;
-	bh=iAtQvWTdSGZneEP+K3adQdKa73rxxVoUasNSZAfZMFQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DlAhte4kDOGdmBg70RqVuff0mDvLUhTmzirVseXjodaKBPIsQdr8cDZ5+AzCdtzNHqHWeZEgOLhue+x8xqKpd7fLkkdB9E7BEoOFnoEPGNQRwoDsLchmnSe2DmkIx95fMxww9+YYoo3euk4YjRNucd1uqehv4kpQQrYLT85ir9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTPS id 4ZywsR1kfBz1HCN7;
-	Fri, 16 May 2025 00:39:23 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 5796F1402E0;
-	Fri, 16 May 2025 00:40:02 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP1 (Coremail) with SMTP id LxC2BwB3_kzYGCZoyALvBw--.63654S2;
-	Thu, 15 May 2025 17:40:01 +0100 (CET)
-Message-ID: <2993afd1b2b1553a75d1016ec2d06b6fb8e78e57.camel@huaweicloud.com>
-Subject: Re: [syzbot] [lsm?] [integrity?] KMSAN: uninit-value in
- ima_add_template_entry (3)
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: syzbot <syzbot+3f0b3970f154dfc95e6e@syzkaller.appspotmail.com>, 
- dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, jmorris@namei.org, 
- linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-security-module@vger.kernel.org, paul@paul-moore.com, 
- roberto.sassu@huawei.com, serge@hallyn.com,
- syzkaller-bugs@googlegroups.com,  zohar@linux.ibm.com,
- linux-bcachefs@vger.kernel.org
-Date: Thu, 15 May 2025 18:39:48 +0200
-In-Reply-To: <l7xs6ea7takb5yvyvobxoce3mudbgen5d7s47onksm4ujpdkib@tvstwbdpvm4o>
-References: <6824aea8.a00a0220.104b28.0011.GAE@google.com>
-	 <38c28bd4dc40b2e992c13a6fdba820a667861d8c.camel@huaweicloud.com>
-	 <rbab6axciiuomrann3uwvpks2zogx3xfntk7w4p2betq3morlf@5xnl5guhnaxj>
-	 <576e10238d83f725fbe23c4af63be6e83de9ce48.camel@huaweicloud.com>
-	 <l7xs6ea7takb5yvyvobxoce3mudbgen5d7s47onksm4ujpdkib@tvstwbdpvm4o>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1747328351; c=relaxed/simple;
+	bh=4S2oZfIYufXFoV6j6pgXjPu8KQIanx4frQ/Gx7eSm3w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rEPSerfY4kglJ7eV/JJKi6UfBRZ25k4YNXP72C3bUZScDYNaErgiZFmSRttZGjTQnEXQMR3RBAeNI0vIWyQSPdzuv/ZxPifQZ+Ad0cKKQOIG6o3NdcI4WXHGG1APq2Uzfu/bF7N/lKe2jOFuHpdy88kzRNhpncvkmMQGmpHYiQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E92A7106F;
+	Thu, 15 May 2025 09:58:56 -0700 (PDT)
+Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82B443F63F;
+	Thu, 15 May 2025 09:59:05 -0700 (PDT)
+From: James Morse <james.morse@arm.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>,
+	Babu Moger <Babu.Moger@amd.com>,
+	James Morse <james.morse@arm.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com,
+	lcherian@marvell.com,
+	bobo.shaobowang@huawei.com,
+	tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com,
+	Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>,
+	peternewman@google.com,
+	dfustini@baylibre.com,
+	amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>,
+	Dave Martin <dave.martin@arm.com>,
+	Koba Ko <kobak@nvidia.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>,
+	fenghuay@nvidia.com
+Subject: [PATCH v12 00/25] x86/resctrl: Move the resctrl filesystem code to /fs/resctrl
+Date: Thu, 15 May 2025 16:58:30 +0000
+Message-Id: <20250515165855.31452-1-james.morse@arm.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:LxC2BwB3_kzYGCZoyALvBw--.63654S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uw4DKF45tw1kuw13WF4xXrb_yoW8tFW3pa
-	42gF1UK3yvgFy7CrW2y3WYyFyFkrW8ta43W3yrXr92kF98XFn09FySkr4YgrnxWr1Fyw12
-	kr1vq343A3WDtFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUF1
-	v3UUUUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAJBGglkmQHswAAsD
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-05-15 at 12:37 -0400, Kent Overstreet wrote:
-> On Thu, May 15, 2025 at 04:30:09PM +0200, Roberto Sassu wrote:
-> > On Thu, 2025-05-15 at 10:18 -0400, Kent Overstreet wrote:
-> > > On Thu, May 15, 2025 at 04:06:02PM +0200, Roberto Sassu wrote:
-> > > > On Wed, 2025-05-14 at 07:54 -0700, syzbot wrote:
-> > > > > Hello,
-> > > >=20
-> > > > + Kent, bcachefs mailing list
-> > > >=20
-> > > > I have the feeling that this was recently fixed in one of the lates=
-t
-> > > > pull requests in bcachefs. I don't see it occurring anymore, and th=
-ere
-> > > > are more commits after the one reported by syzbot.
-> > >=20
-> > > I have no idea how any of the ima stuff works or even what it does, I=
-'m
-> > > not even sure where I'd start...
-> >=20
-> > Basically, I got a clue that bcachefs would be the cause from the
-> > bottom of the report:
-> >=20
-> >  page_cache_sync_ra+0x108a/0x13e0 mm/readahead.c:621
-> >  filemap_get_pages+0xfb3/0x3a70 mm/filemap.c:2591
-> >  filemap_read+0x5c6/0x2190 mm/filemap.c:2702
-> >  bch2_read_iter+0x559/0x21c0 fs/bcachefs/fs-io-direct.c:221
-> >  __kernel_read+0x750/0xda0 fs/read_write.c:528
-> >  integrity_kernel_read+0x77/0x90 security/integrity/iint.c:28
-> >=20
-> > This means that IMA is reading a file and calculating a digest over it:
-> >=20
-> >  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:498 [inline=
-]
-> >  ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
-> >  ima_calc_file_hash+0x240a/0x3fd0 security/integrity/ima/ima_crypto.c:5=
-68
-> >  ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api.c:2=
-93
-> >  process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.c:38=
-5
-> >  ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
-> >=20
-> > syzbot is complaining that the data the digest was calculated from was
-> > not initialized (e.g. zeroed).
-> >=20
-> > There is a reproducer, we would be probably able to do a bisection and
-> > find the commit that caused it (and maybe the one that fixed it).
->=20
-> Ok, that would be fixed by the - multiple - KMSAN fixes, most of those
-> were spurious but code was lacking annotations. Probably this one:
->=20
-> 9c3a2c9b471a bcachefs: Disable asm memcpys when kmsan enabled
+Hello!
 
-Perfect, thanks a lot!
+No code changes since v11 - this is the 'final' form of the series
+with patches v11:24-29 squashed together. See [v11] for the breakdown.
 
-Will check it and mark this report as fixed.
+The first four patches are a series from Yury which I've rebased onto.
 
-Roberto
+This series is based on rc5, and can be retrieved from:
+git://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git mpam/move_to_fs/v12
+
+With the exception of invalid configurations for the configurable-events, there
+should be no changes in behaviour caused by this series. It is now possible for
+throttle_mode to report 'undefined', but no known platform will do this.
+resctrl_exit() is now something that can be called, but x86 doesn't do this.
+
+The driving pattern is to make things like struct rdtgroup private to resctrl.
+Features like pseudo-lock aren't going to work on arm64, the ability to disable
+it at compile time is added.
+
+After this, I can start posting the MPAM driver to make use of resctrl on arm64.
+(What's MPAM? See the cover letter of the first series. [1])
+
+Bugs are still welcome!
+Thanks,
+
+James
+
+[v11] https://lore.kernel.org/all/20250513171547.15194-1-james.morse@arm.com
+[v10] https://lore.kernel.org/all/20250508171858.9197-1-james.morse@arm.com
+[v9] https://lore.kernel.org/all/20250425173809.5529-1-james.morse@arm.com
+[v8] https://lore.kernel.org/all/20250411164229.23413-1-james.morse@arm.com
+[v7] https://lore.kernel.org/all/20250228195913.24895-1-james.morse@arm.com/
+[v6] https://lore.kernel.org/lkml/20250207181823.6378-1-james.morse@arm.com/
+[v5] https://lore.kernel.org/r/20241004180347.19985-1-james.morse@arm.com
+[v4] https://lore.kernel.org/all/20240802172853.22529-1-james.morse@arm.com/
+[v3] https://lore.kernel.org/r/20240614150033.10454-1-james.morse@arm.com
+[v2] https://lore.kernel.org/r/20240426150537.8094-1-Dave.Martin@arm.com
+[v1] https://lore.kernel.org/r/20240321165106.31602-1-james.morse@arm.com
+[1] https://lore.kernel.org/lkml/20201030161120.227225-1-james.morse@arm.com/
+
+Amit Singh Tomar (1):
+  x86/resctrl: Remove the limit on the number of CLOSID
+
+Dave Martin (3):
+  x86/resctrl: Squelch whitespace anomalies in resctrl core code
+  x86/resctrl: Prefer alloc(sizeof(*foo)) idiom in rdt_init_fs_context()
+  x86/resctrl: Relax some asm #includes
+
+James Morse (17):
+  x86/resctrl: Rename resctrl_sched_in() to begin with "resctrl_arch_"
+  x86/resctrl: Check all domains are offline in resctrl_exit()
+  x86/resctrl: resctrl_exit() teardown resctrl but leave the mount point
+  x86/resctrl: Drop __init/__exit on assorted symbols
+  x86/resctrl: Move is_mba_sc() out of core.c
+  x86/resctrl: Add end-marker to the resctrl_event_id enum
+  x86/resctrl: Expand the width of domid by replacing mon_data_bits
+  x86/resctrl: Split trace.h
+  x86/resctrl: Add 'resctrl' to the title of the resctrl documentation
+  fs/resctrl: Add boiler plate for external resctrl code
+  x86/resctrl: Move the filesystem bits to headers visible to fs/resctrl
+  x86/resctrl: Move enum resctrl_event_id to resctrl.h
+  x86/resctrl: Fix types in resctrl_arch_mon_ctx_{alloc,free}() stubs
+  x86/resctrl: Move pseudo lock prototypes to include/linux/resctrl.h
+  x86/resctrl: Always initialise rid field in rdt_resources_all[]
+  x86,fs/resctrl: Move the resctrl filesystem code to live in
+    /fs/resctrl
+  MAINTAINERS: Add reviewers for fs/resctrl
+
+Yury Norov [NVIDIA] (4):
+  cpumask: relax cpumask_any_but()
+  find: add find_first_andnot_bit()
+  cpumask: add cpumask_{first,next}_andnot() API
+  x86/resctrl: Optimize cpumask_any_housekeeping()
+
+ Documentation/arch/x86/index.rst              |    1 -
+ Documentation/filesystems/index.rst           |    1 +
+ .../{arch/x86 => filesystems}/resctrl.rst     |    6 +-
+ MAINTAINERS                                   |    5 +-
+ arch/Kconfig                                  |    8 +
+ arch/x86/Kconfig                              |   11 +-
+ arch/x86/include/asm/resctrl.h                |   19 +-
+ arch/x86/kernel/cpu/resctrl/Makefile          |    2 +
+ arch/x86/kernel/cpu/resctrl/core.c            |   31 +-
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c     |  635 ---
+ arch/x86/kernel/cpu/resctrl/internal.h        |  399 +-
+ arch/x86/kernel/cpu/resctrl/monitor.c         |  918 +---
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c     | 1092 +----
+ .../resctrl/{trace.h => pseudo_lock_trace.h}  |   26 +-
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c        | 4164 +---------------
+ arch/x86/kernel/process_32.c                  |    2 +-
+ arch/x86/kernel/process_64.c                  |    2 +-
+ fs/Kconfig                                    |    1 +
+ fs/Makefile                                   |    1 +
+ fs/resctrl/Kconfig                            |   39 +
+ fs/resctrl/Makefile                           |    6 +
+ fs/resctrl/ctrlmondata.c                      |  661 +++
+ fs/resctrl/internal.h                         |  426 ++
+ fs/resctrl/monitor.c                          |  929 ++++
+ fs/resctrl/monitor_trace.h                    |   33 +
+ fs/resctrl/pseudo_lock.c                      | 1105 +++++
+ fs/resctrl/rdtgroup.c                         | 4353 +++++++++++++++++
+ include/linux/cpumask.h                       |   75 +-
+ include/linux/find.h                          |   25 +
+ include/linux/resctrl.h                       |   36 +-
+ include/linux/resctrl_types.h                 |   16 +-
+ lib/find_bit.c                                |   11 +
+ 32 files changed, 7772 insertions(+), 7267 deletions(-)
+ rename Documentation/{arch/x86 => filesystems}/resctrl.rst (99%)
+ rename arch/x86/kernel/cpu/resctrl/{trace.h => pseudo_lock_trace.h} (56%)
+ create mode 100644 fs/resctrl/Kconfig
+ create mode 100644 fs/resctrl/Makefile
+ create mode 100644 fs/resctrl/ctrlmondata.c
+ create mode 100644 fs/resctrl/internal.h
+ create mode 100644 fs/resctrl/monitor.c
+ create mode 100644 fs/resctrl/monitor_trace.h
+ create mode 100644 fs/resctrl/pseudo_lock.c
+ create mode 100644 fs/resctrl/rdtgroup.c
+
+-- 
+2.39.5
 
