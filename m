@@ -1,130 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F27242D61;
-	Thu, 15 May 2025 01:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A2C1F428F
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747271478; cv=none; b=BKjG0eWll4yXX+Q/UxQuhcLphF7pnraPSi23micrth0Qi+ZTRM9tlO42TKZWaZmpwnKVBBRaISWk7gIrXXUinHVnCydXC2mHOedtFdMRETyHLcB20hIIdTwZQ5fYH2V6fLw+yGa4GzRkLYmuprIY2xJAtkWS78nID9u8jKhapRs=
+	t=1747271529; cv=none; b=f96mDtxM5t8lAT05fFzNdnhMiFqDI7Ztk2iQyJECu9vXvHWUfBid6h9JavDtjsJjMD3W82NbaiQLjAuTTjdzFYBve+6kfRJIuPdgVFRmIY1ziZsycooBMmFz3fNgH0kG8PDjOX9FvWWIHad8f9oBPs+lZcTavsGeI0wv7xABmHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747271478; c=relaxed/simple;
-	bh=aYYX6/Kut38IE4Ji3iGpvGGHrQkkirCFw/76I17L7yI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yhoo8G3HtDNRAUVSOFQx16JQ4fB1qj18i+Ba15XgH0mzvvcunbDUEAcLwv0HSSHUbhUW0RQZOAj4hGKLJeiWXOpkU0M5MBnTJuxYuLCB/2EF7BnYGwyfoN0hBM+8mG7WKe3hLdW6n522PRTR0vRP04Il/v7j7YJtydWGB4d1K64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mql/u/g8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747271529; c=relaxed/simple;
+	bh=D1rx01yZKWZ6BsWNczdwodQ1O/T7byxtmJUNHsXsGHM=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=HAP+XEjkny6b3qA3FLwiJbWOTMuXGMH/gpQ8YHXQgaej46nYCN1VyIPyiqTKzp4H2Moa2zLYQPZuvs4dp6WgRAmhyrywZgLQ6t4L24oIqHbi5WISNHiJnRlEQIlZLZFh9Ogn6kCxOmOKK4fYIakqdSWRhNRFn5PU/kuQXQGJSUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qOPexvw7; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mql/u/g8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9690DC4CEE3;
-	Thu, 15 May 2025 01:11:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747271476;
-	bh=aYYX6/Kut38IE4Ji3iGpvGGHrQkkirCFw/76I17L7yI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mql/u/g81Ki2TNHN/Dnx1n/a7aZS6SnZhNp43wHsJZiWeTzgEpTxREhOEDpvWuCxc
-	 l3VbObvhq20ZOjKoNhbz24rlJR8Ghj63kfATOjkQaRWwe+gek02JsNWBYvibY10LE3
-	 R9nM88WPm8H92abqqWicD9WiaAVO2nDXwZstl+K/GWWAEK88nURceqrJjEcWbtrcS9
-	 wOp304UPiE0zANUhCZKsgWfI2Vqqo6mxpKvfTWe/d6FHz68HznxCgcKQgLWFQdAINh
-	 5ivazcPfWOHs8P/Jxxu4+VAaTBH4BF+dKe7H8q7HkqyETq0ewySy6foyJZkwITWWXK
-	 FMOADm6aKBbcw==
-Date: Thu, 15 May 2025 09:11:08 +0800
-From: "Peter Chen (CIX)" <peter.chen@kernel.org>
-To: Pawel Laszczak <pawell@cadence.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] usb: cdnsp: Fix issue with detecting command
- completion event
-Message-ID: <20250515011108.GA684089@nchen-desktop>
-References: <20250513052613.447330-1-pawell@cadence.com>
- <PH7PR07MB9538AA45362ACCF1B94EE9B7DD96A@PH7PR07MB9538.namprd07.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qOPexvw7"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH7PR07MB9538AA45362ACCF1B94EE9B7DD96A@PH7PR07MB9538.namprd07.prod.outlook.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747271523;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0lMzi0iMSCHBJmo12eN9sG015kcqrrRkSl3P+z3U2WA=;
+	b=qOPexvw76qTa8KiqLZQYBDMvMQLcI0Cnq8jrkM3k9Mq6JqgOByhUmxRWBl8r/eu7MkYNZ2
+	KGZe/Qf4OpmrE2DrnXcv/eA8NXwcaczxE3Z8jFmmCEEgNFnLEzajttroFDxXKCyZ4PwtdV
+	gYImluiQsqHZSZcYVnngFevVvLLqfG0=
+Date: Thu, 15 May 2025 01:11:59 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
+Message-ID: <52f83eb9cf83f9b09da785d77457db8a930d21ca@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH bpf-next v1] bpftool: Add support for custom BTF path in
+ prog load/loadall
+To: "Quentin Monnet" <qmo@kernel.org>, "Andrii Nakryiko"
+ <andrii.nakryiko@gmail.com>
+Cc: "Alexei Starovoitov" <alexei.starovoitov@gmail.com>, "bpf"
+ <bpf@vger.kernel.org>, "Alexei Starovoitov" <ast@kernel.org>, "Daniel
+ Borkmann" <daniel@iogearbox.net>, "Andrii Nakryiko" <andrii@kernel.org>,
+ "Martin KaFai Lau" <martin.lau@linux.dev>, "Eduard Zingerman"
+ <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>, "Yonghong Song"
+ <yonghong.song@linux.dev>, "John Fastabend" <john.fastabend@gmail.com>,
+ "KP Singh" <kpsingh@kernel.org>, "Stanislav Fomichev" <sdf@fomichev.me>,
+ "Hao Luo" <haoluo@google.com>, "Jiri Olsa" <jolsa@kernel.org>, "LKML"
+ <linux-kernel@vger.kernel.org>
+In-Reply-To: <988679f5-12ac-4288-87a9-bc0259bd0280@kernel.org>
+References: <20250513035853.75820-1-jiayuan.chen@linux.dev>
+ <CAADnVQJJ7pLsm0UTzPOj1H+rdaaY7Lv0As0Te-b+7zieQbntkw@mail.gmail.com>
+ <4741dfb9fa4cf32cef28d9f2b7e7c2e788430800@linux.dev>
+ <CAEf4BzZdAft9HUc2MOoQqC_SwkiBQgRTPZHB8MJmwVTY8N=sWQ@mail.gmail.com>
+ <988679f5-12ac-4288-87a9-bc0259bd0280@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On 25-05-13 05:30:09, Pawel Laszczak wrote:
-> In some cases, there is a small-time gap in which CMD_RING_BUSY
-> can be cleared by controller but adding command completion event
-> to event ring will be delayed. As the result driver will return
-> error code.
-> This behavior has been detected on usbtest driver (test 9) with
-> configuration including ep1in/ep1out bulk and ep2in/ep2out isoc
-> endpoint.
-> Probably this gap occurred because controller was busy with adding
-> some other events to event ring.
-> The CMD_RING_BUSY is cleared to '0' when the Command Descriptor
-> has been executed and not when command completion event has been
-> added to event ring.
-> 
-> To fix this issue for this test the small delay is sufficient
-> less than 10us) but to make sure the problem doesn't happen again
-> in the future the patch introduces 10 retries to check with delay
-> about 20us before returning error code.
-> 
-> Fixes: 3d82904559f4 ("usb: cdnsp: cdns3 Add main part of Cadence USBSSP DRD Driver")
-> cc: stable@vger.kernel.org
-> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+2025/5/15 24:52, "Quentin Monnet" <qmo@kernel.org> wrote:
 
-Acked-by: Peter Chen <peter.chen@kernel.org>
+>=20
+>=202025-05-14 09:39 UTC-0700 ~ Andrii Nakryiko <andrii.nakryiko@gmail.co=
+m>
+>=20
+>=20>=20
+>=20> On Tue, May 13, 2025 at 6:51 PM Jiayuan Chen <jiayuan.chen@linux.de=
+v> wrote:
+> >=20
+>=20> >=20
+>=20> > 2025/5/14 05:19, "Alexei Starovoitov" <alexei.starovoitov@gmail.c=
+om> wrote:
+> > >=20
+>=20>=20
+>=20>  On Mon, May 12, 2025 at 8:59 PM Jiayuan Chen <jiayuan.chen@linux.d=
+ev> wrote:
+> >=20
+>=20>  This patch exposes the btf_custom_path feature to bpftool, allowin=
+g users
+> >=20
+>=20>  to specify a custom BTF file when loading BPF programs using prog =
+load or
+> >=20
+>=20>  prog loadall commands. This feature is already supported by libbpf=
+, and
+> >=20
+>=20>  this patch makes it accessible through the bpftool command-line in=
+terface.
+> >=20
+>=20>  Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+> >=20
+>=20>  ---
+> >=20
+>=20>  tools/bpf/bpftool/prog.c | 11 ++++++++++-
+> >=20
+>=20>  1 file changed, 10 insertions(+), 1 deletion(-)
+> >=20
+>=20>  diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+> >=20
+>=20>  index f010295350be..63f84e765b34 100644
+> >=20
+>=20>  --- a/tools/bpf/bpftool/prog.c
+> >=20
+>=20>  +++ b/tools/bpf/bpftool/prog.c
+> >=20
+>=20>  @@ -1681,8 +1681,17 @@ static int load_with_options(int argc, char=
+ **argv, bool first_prog_only)
+> >=20
+>=20>  } else if (is_prefix(*argv, "autoattach")) {
+> >=20
+>=20>  auto_attach =3D true;
+> >=20
+>=20>  NEXT_ARG();
+> >=20
+>=20>  + } else if (is_prefix(*argv, "custom_btf")) {
+> >=20
+>=20>  + NEXT_ARG();
+> >=20
+>=20>  +
+> >=20
+>=20>  + if (!REQ_ARGS(1))
+> >=20
+>=20>  + goto err_free_reuse_maps;
+> >=20
+>=20>  +
+> >=20
+>=20>  + open_opts.btf_custom_path =3D GET_ARG();
+> >=20
+>=20>  I don't see a use case yet.
+> >=20
+>=20>  What exactly is the scenario where it's useful ?
+> >=20
+>=20> >=20
+>=20> > This patch just exposes the btf_custom_path feature of libbpf to =
+bpftool.
+> > >=20
+>=20> >  The argument 'btf_custom_path' in libbpf is used for those kerne=
+s that
+> > >=20
+>=20> >  don't have CONFIG_DEBUG_INFO_BTF enabled but still want to perfo=
+rm CO-RE
+> > >=20
+>=20> >  relocations. Specifically for older kernels, separate BTF files =
+are already
+> > >=20
+>=20> >  provided: https://github.com/aquasecurity/btfhub-archive/.
+> > >=20
+>=20> >  If we want load prog using bpftool on those systems, we have to =
+hack
+> > >=20
+>=20> >  btf__load_vmlinux_btf() before or write custom loader with libbp=
+f and specify
+> > >=20
+>=20> >  'btf_custom_path'.
+> > >=20
+>=20> >  I also found a the similar topic:
+> > >=20
+>=20> >  https://lore.kernel.org/bpf/20220215225856.671072-1-mauricio@kin=
+volk.io/
+> > >=20
+>=20> >  Additionally, pwru supports "--kernel-btf" which serves the same=
+ purpose as
+> > >=20
+>=20> >  this patch.
+> > >=20
+>=20> >  Therefore, using an external BTF file is a common practice.
+> > >=20
+>=20>=20
+>=20>=20=20
+>=20>=20
+>=20>  I think it's fine to expose this to bpftool. But maybe call the op=
+tion
+> >=20
+>=20>  "kernel_btf" to make it more obvious that this is BTF representing
+> >=20
+>=20>  kernel types, as opposed to program BTF itself.
+> >=20
+>=20
 
-Peter
-> ---
-> Changelog:
-> v2:
-> - replaced usleep_range with udelay
-> - increased retry counter and decreased the udelay value
-> 
->  drivers/usb/cdns3/cdnsp-gadget.c | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/cdns3/cdnsp-gadget.c b/drivers/usb/cdns3/cdnsp-gadget.c
-> index 4824a10df07e..58650b7f4173 100644
-> --- a/drivers/usb/cdns3/cdnsp-gadget.c
-> +++ b/drivers/usb/cdns3/cdnsp-gadget.c
-> @@ -547,6 +547,7 @@ int cdnsp_wait_for_cmd_compl(struct cdnsp_device *pdev)
->  	dma_addr_t cmd_deq_dma;
->  	union cdnsp_trb *event;
->  	u32 cycle_state;
-> +	u32 retry = 10;
->  	int ret, val;
->  	u64 cmd_dma;
->  	u32  flags;
-> @@ -578,8 +579,23 @@ int cdnsp_wait_for_cmd_compl(struct cdnsp_device *pdev)
->  		flags = le32_to_cpu(event->event_cmd.flags);
->  
->  		/* Check the owner of the TRB. */
-> -		if ((flags & TRB_CYCLE) != cycle_state)
-> +		if ((flags & TRB_CYCLE) != cycle_state) {
-> +			/*
-> +			 * Give some extra time to get chance controller
-> +			 * to finish command before returning error code.
-> +			 * Checking CMD_RING_BUSY is not sufficient because
-> +			 * this bit is cleared to '0' when the Command
-> +			 * Descriptor has been executed by controller
-> +			 * and not when command completion event has
-> +			 * be added to event ring.
-> +			 */
-> +			if (retry--) {
-> +				udelay(20);
-> +				continue;
-> +			}
-> +
->  			return -EINVAL;
-> +		}
->  
->  		cmd_dma = le64_to_cpu(event->event_cmd.cmd_trb);
->  
-> -- 
-> 2.43.0
-> 
+"kernel_btf" is better, thanks.
 
--- 
+> Hi Jiayuan, we'll also need to update the documentation (the man page,
+>=20
+>=20in the summary at the top and in the subcommand description), the
+>=20
+>=20interactive help message at the bottom of bpftool's prog.c, and the b=
+ash
+>=20
+>=20completion (I can help with it if necessary), please.
+>=20
+>=20Thanks,
+>=20
+>=20Quentin
+>
 
-Best regards,
-Peter
+Thank you for pointing that out. I did miss those parts, and I also
+noticed that others had overlooked similar issues. I will address all
+the subcommands of "load prog" in this update.
