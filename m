@@ -1,34 +1,65 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BECBC2063F3
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4880B2820CD;
+	Thu, 15 May 2025 08:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747296267; cv=none; b=KVaD95wVRbQgSa/0axduUjFRQca3UTUUaMffv6UiCAVTVihODSAfgPUrMlirvRoNt4iyjWGHTpq6ss4XsCkvOa9NW1gtx9a84W/COTRysf+dLBltUfsDJco2j95d39wDF3uhUK/DMlQFGDCkM9JKxzGri0F04sNVsnP6BFJYDRk=
+	t=1747296270; cv=none; b=TTaZAKvFFSPoVPNgYAmSp5y+gqnEI1Bw4DPJ+1CsdKyOhZsOypuHUuU9reo8EA01NIzrSXBq7Ny5zpnAL3ZrMwSMEgPPr/NXixE9+ymEFeAl7zyv5fy/sXozOY4yPoM47lDAqFF2FFzUqQbJZy/uq0L0Iaaizfe5SlbXdSQv518=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747296267; c=relaxed/simple;
-	bh=2tLlNfEtxEHQxa7jEbsw6A5HqqJrIe+CYDIn9siiqKk=;
+	s=arc-20240116; t=1747296270; c=relaxed/simple;
+	bh=1M9gFt8zcx9pxQgfErGrv96mAUW3gZ4D8dDvbtfNJCk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EiSdlNVZmBcgB0jojRe3u8fWnLUVM6yxVQ/0Fa5ED6ZIs+jznxiszB2prAjLhLEGifhXCTGWuLpvaAPDf+1pSQO6Li/laCFcXzzWqoScsJKZ8v7qi1YBdQzBZDYgrPmAPNkfTZrkzQUGTlV3NHK8+sAGrb3DDarI0QZD56NwTm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B3D314BF;
-	Thu, 15 May 2025 01:04:12 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 57E9C3F673;
-	Thu, 15 May 2025 01:04:23 -0700 (PDT)
-Date: Thu, 15 May 2025 09:04:21 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: suzuki.poulose@arm.com, mike.leach@linaro.org, james.clark@linaro.org,
-	alexander.shishkin@linux.intel.com, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 3/3] coresight: prevent deactivate active config while
- enabling the config
-Message-ID: <20250515080421.GB412060@e132581.arm.com>
-References: <20250514161951.3427590-1-yeoreum.yun@arm.com>
- <20250514161951.3427590-4-yeoreum.yun@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bizvqgcy/ZjTugV3DYlqQmofgROpUSaGL53iNxD9psW2U8iFVg+rcKIuOYUDeSSG5ANt9E3+Na1+DUpQHYC+Mx/uIGZYXaUUSZXNPqLgNKl3ZVi5V7MppYLEvVi2Hy7PDi7nH0aYo/O4dhlippzCtcmxAKKJKJdeMi4uk1Hhwdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ga1Q2mYI; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ga1Q2mYI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747296269; x=1778832269;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1M9gFt8zcx9pxQgfErGrv96mAUW3gZ4D8dDvbtfNJCk=;
+  b=ga1Q2mYIgvtV4Dw4YYM65s/Eh7uSlnrSLHPR2pNp8qZcZDG+2pbwWyDi
+   SDzQYE9+FSA9rQUokTWEZa/DqkmUesLYo19NR83Ljje4P4pET1zHJx6eQ
+   bjoHS/CV5Z4DaxfgTM3BaHFnfpuGezfjvjDjSeyW08Mwfwgpk5EtgCG5b
+   lEXsu5bavPxn8cJmVlZxKH5J5N9DbVspnwahr/iRH8c0Bx/JM7tFQ4vem
+   KqnRHYqCYroOS7drirYIkKiUD/69BnAtmb2untskHq3A0lTuHWCvtIX5a
+   accbOTaAQ11oO9HiQ8QfPzoCul8joP7ijCI/1/StxYlivzm2CX4O3WOh+
+   w==;
+X-CSE-ConnectionGUID: KRdKZPKnQPWDRwqLDXBOuA==
+X-CSE-MsgGUID: i/ETMfAZQLucowgCcqWNpQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49380465"
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="49380465"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 01:04:28 -0700
+X-CSE-ConnectionGUID: 8rn1t7pnS1+Vp/MKnVHVkg==
+X-CSE-MsgGUID: bIueTCnlQoWnbt5TSlsEaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="138340907"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 01:04:25 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uFTZm-00000001mmx-3BXQ;
+	Thu, 15 May 2025 11:04:22 +0300
+Date: Thu, 15 May 2025 11:04:22 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Mika Westerberg <westeri@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v1 0/4] gpiolib: acpi: Split quirks to its own file
+Message-ID: <aCWgBp4ZD5aesvRw@smile.fi.intel.com>
+References: <20250513100514.2492545-1-andriy.shevchenko@linux.intel.com>
+ <20250514155955.GS88033@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,174 +68,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250514161951.3427590-4-yeoreum.yun@arm.com>
+In-Reply-To: <20250514155955.GS88033@black.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, May 14, 2025 at 05:19:51PM +0100, Yeoreum Yun wrote:
-> While enable active config via cscfg_csdev_enable_active_config(),
-> active config could be deactivated via configfs' sysfs interface.
-> This could make UAF issue in below scenario:
+On Wed, May 14, 2025 at 06:59:55PM +0300, Mika Westerberg wrote:
+> On Tue, May 13, 2025 at 01:00:30PM +0300, Andy Shevchenko wrote:
+> > The GPIO ACPI helpers use a few quirks which consumes approximately 20%
+> > of the file. Besides that the necessary bits are sparse and being directly
+> > referred. Split them to a separate file. There is no functional change.
+> > 
+> > For the new file I used the Hans' authorship of Hans as he the author of
+> > all those bits (expect very tiny changes made by this series).
+> > 
+> > Hans, please check if it's okay and confirm, or suggest better alternative.
+> > 
+> > Andy Shevchenko (4):
+> >   gpiolib: acpi: Switch to use enum in acpi_gpio_in_ignore_list()
+> >   gpiolib: acpi: Handle deferred list via new API
+> >   gpiolib: acpi: Add acpi_gpio_need_run_edge_events_on_boot() getter
+> >   gpiolib: acpi: Move quirks to a separate file
+> > 
+> >  drivers/gpio/Makefile                         |   1 +
+> >  .../{gpiolib-acpi.c => gpiolib-acpi-core.c}   | 344 +----------------
+> >  drivers/gpio/gpiolib-acpi-quirks.c            | 363 ++++++++++++++++++
+> >  drivers/gpio/gpiolib-acpi.h                   |  15 +
 > 
-> CPU0                                          CPU1
-> (sysfs enable)                                load module
->                                               cscfg_load_config_sets()
->                                               activate config. // sysfs
->                                               (sys_active_cnt == 1)
-> ...
-> cscfg_csdev_enable_active_config()
-> lock(csdev->cscfg_csdev_lock)
-> // here load config activate by CPU1
-> unlock(csdev->cscfg_csdev_lock)
-> 
->                                               deactivate config // sysfs
->                                               (sys_activec_cnt == 0)
->                                               cscfg_unload_config_sets()
->                                               unload module
-> 
-> // access to config_desc which freed
-> // while unloading module.
-> cscfg_csdev_enable_config
-> 
-> To address this, use cscfg_config_desc's active_cnt as a reference count
->  which will be holded when
->     - activate the config.
->     - enable the activated config.
-> and put the module reference when config_active_cnt == 0.
-> 
-> Fixes: f8cce2ff3c04 ("coresight: syscfg: Add API to activate and enable configurations")
-> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> All this -foo-core things look redundant to me. Why not just split it out
+> and call it gpiolib-quirks.c and put there all the quirks not just ACPI? I
+> Don't think we want to have gpiolib-of-quirks.c and gpiolog-swnode-quirks.c
+> and so on.
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
+That's might be the next step to have for all of them, but these are ACPI
+specific. In any case they can't be put to gpiolib-quirks.c due to module
+parameters. If we do that we will need a dirty hack to support old module
+parameters (see 8250 how it's done there, and even author of that didn't like
+the approach).
 
-> ---
->  .../hwtracing/coresight/coresight-config.h    |  2 +-
->  .../hwtracing/coresight/coresight-syscfg.c    | 49 +++++++++++++------
->  2 files changed, 35 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-config.h b/drivers/hwtracing/coresight/coresight-config.h
-> index b9ebc9fcfb7f..90fd937d3bd8 100644
-> --- a/drivers/hwtracing/coresight/coresight-config.h
-> +++ b/drivers/hwtracing/coresight/coresight-config.h
-> @@ -228,7 +228,7 @@ struct cscfg_feature_csdev {
->   * @feats_csdev:references to the device features to enable.
->   */
->  struct cscfg_config_csdev {
-> -	const struct cscfg_config_desc *config_desc;
-> +	struct cscfg_config_desc *config_desc;
->  	struct coresight_device *csdev;
->  	bool enabled;
->  	struct list_head node;
-> diff --git a/drivers/hwtracing/coresight/coresight-syscfg.c b/drivers/hwtracing/coresight/coresight-syscfg.c
-> index 23017612f2ea..83dad24e0116 100644
-> --- a/drivers/hwtracing/coresight/coresight-syscfg.c
-> +++ b/drivers/hwtracing/coresight/coresight-syscfg.c
-> @@ -869,6 +869,25 @@ void cscfg_csdev_reset_feats(struct coresight_device *csdev)
->  }
->  EXPORT_SYMBOL_GPL(cscfg_csdev_reset_feats);
->  
-> +static bool cscfg_config_desc_get(struct cscfg_config_desc *config_desc)
-> +{
-> +	if (!atomic_fetch_inc(&config_desc->active_cnt)) {
-> +		/* must ensure that config cannot be unloaded in use */
-> +		if (unlikely(cscfg_owner_get(config_desc->load_owner))) {
-> +			atomic_dec(&config_desc->active_cnt);
-> +			return false;
-> +		}
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +static void cscfg_config_desc_put(struct cscfg_config_desc *config_desc)
-> +{
-> +	if (!atomic_dec_return(&config_desc->active_cnt))
-> +		cscfg_owner_put(config_desc->load_owner);
-> +}
-> +
->  /*
->   * This activate configuration for either perf or sysfs. Perf can have multiple
->   * active configs, selected per event, sysfs is limited to one.
-> @@ -892,22 +911,17 @@ static int _cscfg_activate_config(unsigned long cfg_hash)
->  			if (config_desc->available == false)
->  				return -EBUSY;
->  
-> -			/* must ensure that config cannot be unloaded in use */
-> -			err = cscfg_owner_get(config_desc->load_owner);
-> -			if (err)
-> +			if (!cscfg_config_desc_get(config_desc)) {
-> +				err = -EINVAL;
->  				break;
-> +			}
-> +
->  			/*
->  			 * increment the global active count - control changes to
->  			 * active configurations
->  			 */
->  			atomic_inc(&cscfg_mgr->sys_active_cnt);
->  
-> -			/*
-> -			 * mark the descriptor as active so enable config on a
-> -			 * device instance will use it
-> -			 */
-> -			atomic_inc(&config_desc->active_cnt);
-> -
->  			err = 0;
->  			dev_dbg(cscfg_device(), "Activate config %s.\n", config_desc->name);
->  			break;
-> @@ -922,9 +936,8 @@ static void _cscfg_deactivate_config(unsigned long cfg_hash)
->  
->  	list_for_each_entry(config_desc, &cscfg_mgr->config_desc_list, item) {
->  		if ((unsigned long)config_desc->event_ea->var == cfg_hash) {
-> -			atomic_dec(&config_desc->active_cnt);
->  			atomic_dec(&cscfg_mgr->sys_active_cnt);
-> -			cscfg_owner_put(config_desc->load_owner);
-> +			cscfg_config_desc_put(config_desc);
->  			dev_dbg(cscfg_device(), "Deactivate config %s.\n", config_desc->name);
->  			break;
->  		}
-> @@ -1049,7 +1062,7 @@ int cscfg_csdev_enable_active_config(struct coresight_device *csdev,
->  				     unsigned long cfg_hash, int preset)
->  {
->  	struct cscfg_config_csdev *config_csdev_active = NULL, *config_csdev_item;
-> -	const struct cscfg_config_desc *config_desc;
-> +	struct cscfg_config_desc *config_desc;
->  	unsigned long flags;
->  	int err = 0;
->  
-> @@ -1064,8 +1077,8 @@ int cscfg_csdev_enable_active_config(struct coresight_device *csdev,
->  	raw_spin_lock_irqsave(&csdev->cscfg_csdev_lock, flags);
->  	list_for_each_entry(config_csdev_item, &csdev->config_csdev_list, node) {
->  		config_desc = config_csdev_item->config_desc;
-> -		if ((atomic_read(&config_desc->active_cnt)) &&
-> -		    ((unsigned long)config_desc->event_ea->var == cfg_hash)) {
-> +		if (((unsigned long)config_desc->event_ea->var == cfg_hash) &&
-> +				cscfg_config_desc_get(config_desc)) {
->  			config_csdev_active = config_csdev_item;
->  			csdev->active_cscfg_ctxt = (void *)config_csdev_active;
->  			break;
-> @@ -1099,7 +1112,11 @@ int cscfg_csdev_enable_active_config(struct coresight_device *csdev,
->  				err = -EBUSY;
->  			raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
->  		}
-> +
-> +		if (err)
-> +			cscfg_config_desc_put(config_desc);
->  	}
-> +
->  	return err;
->  }
->  EXPORT_SYMBOL_GPL(cscfg_csdev_enable_active_config);
-> @@ -1138,8 +1155,10 @@ void cscfg_csdev_disable_active_config(struct coresight_device *csdev)
->  	raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
->  
->  	/* true if there was an enabled active config */
-> -	if (config_csdev)
-> +	if (config_csdev) {
->  		cscfg_csdev_disable_config(config_csdev);
-> +		cscfg_config_desc_put(config_csdev->config_desc);
-> +	}
->  }
->  EXPORT_SYMBOL_GPL(cscfg_csdev_disable_active_config);
->  
-> -- 
-> LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
