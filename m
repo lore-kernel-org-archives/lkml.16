@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D0C297B7A
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:57:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE575293B69
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:58:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299478; cv=none; b=U1s+znlqtnuEacrcOM5LsNKJ9h/y9j1dYo0Jc9WtX/Ck68Ywm+3QtnEZdjsp/IvVGPC3e61/YqXoJ8crLW/opt0+rkZVFgcXPlbOQMFHhBpRQWAd5p7NzuUyiQjGdJVLB6g53lVB/B/SkQbObWJLK+BP43bTDowZzIsA7eaEIpA=
+	t=1747299481; cv=none; b=ckguBk7gRtenOmMVUTWTg9Npl5uYQDEWZw5qYCT66uzM/MDnsOU7y4cR5LJYq4S40ApNpPf/X0PCRXPNox1AXbb+IdXS82Kdu1k/9vaoaju2azk/aI3IFgC7a/bYGygTWP9o1FwfdPN8jj8rqm4USjZDoX5AwhMzMjQyzwh8xFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299478; c=relaxed/simple;
-	bh=RgFtzq1KF65fDIuCa5gfr+hBpuL+//UQBKjyfmcX43o=;
+	s=arc-20240116; t=1747299481; c=relaxed/simple;
+	bh=vT91OralCxDf7tZj4Ytf33Vg6J6q4NXGQ0jCa9/KjeM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LOkHSXc5upzEJIq1/SBe/yi88NkkHK6VscMJmKLrgXw0PWUAKR42WL4nKGZwgU7j/hc0aWloiBc91haATveQkyPjRG8OzVhdS2iqWknQn1bcjrZcld2Ain80OkpRfxi2dT6t3B/OBztV4dk6YHR7QbclBtqC/Ep3BOSkFqwVypE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XPwM0HW0; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=eesmwMfLkw8bR7+G6XuScuE8QRW4R3EYEuqPomxKhuTw+hcbKGE42zM0xZMx4Y7FYOhju6u7ec5U/lunOeCr2qiDzCGF9MNDkI5EbCWm3lvNb7qZd/HySeJWI8HU2cwWKui0Uq1pe6XfGPfGXij/SzasbTwn+idYwboxvoCVzB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IlmvBLWk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XPwM0HW0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DF76C4CEED;
-	Thu, 15 May 2025 08:57:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IlmvBLWk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F3DFC4CEE7;
+	Thu, 15 May 2025 08:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747299477;
-	bh=RgFtzq1KF65fDIuCa5gfr+hBpuL+//UQBKjyfmcX43o=;
+	s=k20201202; t=1747299481;
+	bh=vT91OralCxDf7tZj4Ytf33Vg6J6q4NXGQ0jCa9/KjeM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XPwM0HW0p/lyRecLS/eiDPtcX+JVoJefd2IPPf6sRWEPAB2xfRRo7PgGFMbxV9EQp
-	 veC2e1sF7Pwcn/qrCr4S4rv+RTjp1oCTN75wvrrOTIc9zYK1/yoDPgSPsmjF5zZSq+
-	 LzHNRVEApBz0MU2iIvqpIrqwh84RNxhmO3jko8NKdUks2bOsdjmaVmSpnmk/P75Gru
-	 z85hxOWmlMwQpjFh1hkTO4yRrsS1RaZZ2zOTjgbSP5huuSuH2+y4ed9xqdhT0ZVnNX
-	 dwoqofY4KE+33wFE1hU+ko1jRxJTMHbztdy2PvKjIO0DQNlZHqevlwSKOY8dHXXc+T
-	 7VsDgZLONDssg==
+	b=IlmvBLWkjfSSubbX7HQmCZuqWfmAPCDiI5FEG35hDj6ugQddbIiIWGRzdhEnMlWCb
+	 EAJmnH368Ssu7BScuJqrLP1Y7qtdUm7hs+Di9fGdQhQ73RKSRde0+jwlyYWT5UaZTG
+	 1JK22i08IHw0CZlhW/K7Nxexnd9hb4naBfsTHmRwro/Riy/Pz0yuSxr1h7615OPU+r
+	 mCYTeSpIfBhq0G2YG9iITt4fiGI/eMunlkJUX2FnnjA+DCsrb3q5yJEBEjDwONo3Vi
+	 Jrk21mcALfDuVZ7mAiEUVgNa9N0qZqk+DcLp+941P4bgg8+/rUJy3HO5U0+gYM4hLH
+	 IwauUpC0r/x2Q==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -41,9 +41,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 12/15] x86: Remove !CONFIG_X86_TSC code
-Date: Thu, 15 May 2025 10:57:02 +0200
-Message-ID: <20250515085708.2510123-13-mingo@kernel.org>
+Subject: [PATCH 13/15] x86/cpu: Make CONFIG_X86_CX8 unconditional
+Date: Thu, 15 May 2025 10:57:03 +0200
+Message-ID: <20250515085708.2510123-14-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250515085708.2510123-1-mingo@kernel.org>
 References: <20250515085708.2510123-1-mingo@kernel.org>
@@ -55,12 +55,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Now that the Kconfig space always enables CONFIG_X86_TSC (on x86),
-remove !CONFIG_X86_TSC code.
-
-We still keep the Kconfig option to catch any eventual code still
-pending in maintainer or non-mainline trees, and it's also still
-possible to disable TSC support runtime.
+I.e. it's a boot time requirement for the CPU to support it.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Reviewed-by: Arnd Bergmann <arnd@arndb.de>
@@ -71,156 +66,59 @@ Cc: H . Peter Anvin <hpa@zytor.com>
 Cc: John Ogness <john.ogness@linutronix.de>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250425084216.3913608-13-mingo@kernel.org
+Link: https://lore.kernel.org/r/20250425084216.3913608-14-mingo@kernel.org
 ---
- arch/x86/include/asm/timex.h       |  3 +--
- arch/x86/include/asm/trace_clock.h |  8 --------
- arch/x86/include/asm/tsc.h         | 13 +------------
- arch/x86/kernel/Makefile           |  4 ++--
- arch/x86/kernel/i8253.c            |  2 +-
- arch/x86/kernel/tsc.c              | 13 -------------
- 6 files changed, 5 insertions(+), 38 deletions(-)
+ arch/x86/Kconfig             | 2 +-
+ arch/x86/Kconfig.cpu         | 3 +--
+ arch/x86/Kconfig.cpufeatures | 1 -
+ 3 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/timex.h b/arch/x86/include/asm/timex.h
-index 956e4145311b..6e57e3c0fdd2 100644
---- a/arch/x86/include/asm/timex.h
-+++ b/arch/x86/include/asm/timex.h
-@@ -7,8 +7,7 @@
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 3747efea6a31..a715f877e199 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -136,7 +136,7 @@ config X86
+ 	select ARCH_SUPPORTS_AUTOFDO_CLANG
+ 	select ARCH_SUPPORTS_PROPELLER_CLANG    if X86_64
+ 	select ARCH_USE_BUILTIN_BSWAP
+-	select ARCH_USE_CMPXCHG_LOCKREF		if X86_CX8
++	select ARCH_USE_CMPXCHG_LOCKREF
+ 	select ARCH_USE_MEMTEST
+ 	select ARCH_USE_QUEUED_RWLOCKS
+ 	select ARCH_USE_QUEUED_SPINLOCKS
+diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
+index 5f0e29d154a8..b3772d384fa0 100644
+--- a/arch/x86/Kconfig.cpu
++++ b/arch/x86/Kconfig.cpu
+@@ -245,7 +245,6 @@ config X86_HAVE_PAE
  
- static inline unsigned long random_get_entropy(void)
- {
--	if (!IS_ENABLED(CONFIG_X86_TSC) &&
--	    !cpu_feature_enabled(X86_FEATURE_TSC))
-+	if (!cpu_feature_enabled(X86_FEATURE_TSC))
- 		return random_get_entropy_fallback();
- 	return rdtsc();
- }
-diff --git a/arch/x86/include/asm/trace_clock.h b/arch/x86/include/asm/trace_clock.h
-index 7061a5650969..1efab284c32a 100644
---- a/arch/x86/include/asm/trace_clock.h
-+++ b/arch/x86/include/asm/trace_clock.h
-@@ -5,17 +5,9 @@
- #include <linux/compiler.h>
- #include <linux/types.h>
+ config X86_CX8
+ 	def_bool y
+-	depends on X86_HAVE_PAE || M586TSC || M586MMX || MK6 || MK7 || MGEODEGX1 || MGEODE_LX
  
--#ifdef CONFIG_X86_TSC
--
- extern u64 notrace trace_clock_x86_tsc(void);
+ # this should be set for all -march=.. options where the compiler
+ # generates cmov.
+@@ -257,7 +256,7 @@ config X86_MINIMUM_CPU_FAMILY
+ 	int
+ 	default "64" if X86_64
+ 	default "6" if X86_32 && (MPENTIUM4 || MPENTIUMM || MPENTIUMIII || MPENTIUMII || M686 || MVIAC3_2 || MVIAC7 || MEFFICEON || MATOM || MK7)
+-	default "5" if X86_32 && X86_CX8
++	default "5" if X86_32
  
- # define ARCH_TRACE_CLOCKS \
- 	{ trace_clock_x86_tsc,	"x86-tsc",	.in_ns = 0 },
+ config X86_DEBUGCTLMSR
+ 	def_bool y
+diff --git a/arch/x86/Kconfig.cpufeatures b/arch/x86/Kconfig.cpufeatures
+index cd551818f451..f04ae53435bc 100644
+--- a/arch/x86/Kconfig.cpufeatures
++++ b/arch/x86/Kconfig.cpufeatures
+@@ -42,7 +42,6 @@ config X86_REQUIRED_FEATURE_NOPL
  
--#else /* !CONFIG_X86_TSC */
--
--#define ARCH_TRACE_CLOCKS
--
--#endif
--
- #endif  /* _ASM_X86_TRACE_CLOCK_H */
-diff --git a/arch/x86/include/asm/tsc.h b/arch/x86/include/asm/tsc.h
-index 4f7f09f50552..4d2d2f21ff06 100644
---- a/arch/x86/include/asm/tsc.h
-+++ b/arch/x86/include/asm/tsc.h
-@@ -76,8 +76,7 @@ extern void disable_TSC(void);
+ config X86_REQUIRED_FEATURE_CX8
+ 	def_bool y
+-	depends on X86_CX8
  
- static inline cycles_t get_cycles(void)
- {
--	if (!IS_ENABLED(CONFIG_X86_TSC) &&
--	    !cpu_feature_enabled(X86_FEATURE_TSC))
-+	if (!cpu_feature_enabled(X86_FEATURE_TSC))
- 		return 0;
- 	return rdtsc();
- }
-@@ -94,25 +93,15 @@ extern unsigned long native_calibrate_tsc(void);
- extern unsigned long long native_sched_clock_from_tsc(u64 tsc);
- 
- extern int tsc_clocksource_reliable;
--#ifdef CONFIG_X86_TSC
- extern bool tsc_async_resets;
--#else
--# define tsc_async_resets	false
--#endif
- 
- /*
-  * Boot-time check whether the TSCs are synchronized across
-  * all CPUs/cores:
-  */
--#ifdef CONFIG_X86_TSC
- extern bool tsc_store_and_check_tsc_adjust(bool bootcpu);
- extern void tsc_verify_tsc_adjust(bool resume);
- extern void check_tsc_sync_target(void);
--#else
--static inline bool tsc_store_and_check_tsc_adjust(bool bootcpu) { return false; }
--static inline void tsc_verify_tsc_adjust(bool resume) { }
--static inline void check_tsc_sync_target(void) { }
--#endif
- 
- extern int notsc_setup(char *);
- extern void tsc_save_sched_clock_state(void);
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 84cfa179802c..abeca47b8225 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -94,7 +94,7 @@ apm-y				:= apm_32.o
- obj-$(CONFIG_APM)		+= apm.o
- obj-$(CONFIG_SMP)		+= smp.o
- obj-$(CONFIG_SMP)		+= smpboot.o
--obj-$(CONFIG_X86_TSC)		+= tsc_sync.o
-+obj-y				+= tsc_sync.o
- obj-$(CONFIG_SMP)		+= setup_percpu.o
- obj-$(CONFIG_X86_MPPARSE)	+= mpparse.o
- obj-y				+= apic/
-@@ -103,7 +103,7 @@ obj-$(CONFIG_DYNAMIC_FTRACE)	+= ftrace.o
- obj-$(CONFIG_FUNCTION_TRACER)	+= ftrace_$(BITS).o
- obj-$(CONFIG_FUNCTION_GRAPH_TRACER) += ftrace.o
- obj-$(CONFIG_FTRACE_SYSCALLS)	+= ftrace.o
--obj-$(CONFIG_X86_TSC)		+= trace_clock.o
-+obj-y				+= trace_clock.o
- obj-$(CONFIG_TRACING)		+= trace.o
- obj-$(CONFIG_RETHOOK)		+= rethook.o
- obj-$(CONFIG_VMCORE_INFO)	+= vmcore_info_$(BITS).o
-diff --git a/arch/x86/kernel/i8253.c b/arch/x86/kernel/i8253.c
-index cb9852ad6098..0b991035f127 100644
---- a/arch/x86/kernel/i8253.c
-+++ b/arch/x86/kernel/i8253.c
-@@ -31,7 +31,7 @@ struct clock_event_device *global_clock_event;
-  */
- static bool __init use_pit(void)
- {
--	if (!IS_ENABLED(CONFIG_X86_TSC) || !boot_cpu_has(X86_FEATURE_TSC))
-+	if (!boot_cpu_has(X86_FEATURE_TSC))
- 		return true;
- 
- 	/* This also returns true when APIC is disabled */
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index 5d3a764ba77c..4a7c8b969346 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -296,24 +296,11 @@ int check_tsc_unstable(void)
- }
- EXPORT_SYMBOL_GPL(check_tsc_unstable);
- 
--#ifdef CONFIG_X86_TSC
- int __init notsc_setup(char *str)
- {
- 	mark_tsc_unstable("boot parameter notsc");
- 	return 1;
- }
--#else
--/*
-- * disable flag for tsc. Takes effect by clearing the TSC cpu flag
-- * in cpu/common.c
-- */
--int __init notsc_setup(char *str)
--{
--	setup_clear_cpu_cap(X86_FEATURE_TSC);
--	return 1;
--}
--#endif
--
- __setup("notsc", notsc_setup);
- 
- static int no_sched_irq_time;
+ # this should be set for all -march=.. options where the compiler
+ # generates cmov.
 -- 
 2.45.2
 
