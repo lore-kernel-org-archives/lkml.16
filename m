@@ -1,103 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31429213E67;
-	Thu, 15 May 2025 15:29:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DD21E5B71;
+	Thu, 15 May 2025 15:30:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747322996; cv=none; b=s8kbzyL+rYrtKRBkk7VQYa7hsgImsLjVYDRFFtdJt+IZUuWp3lk7BleFZV12WopO/BYJn3SlT/hzFNCC3KbAD6Bb2bvsid5szzxTiH635M+HgL8luAp/2cF7MjN7WXrYC3fTwO9jaOBgWVCNEU+LYBwMyAxtBTq9Tt3HI+b45HM=
+	t=1747323021; cv=none; b=LFDv7yr06hePEeM3/zkMnp9en1OGahXJPBzmSwIVVgOWmqoQU34Eng7E5bFsD2Gj506XRlF2OSJwtxwHg3zKPVvfgER4IoZgW2GQywEf0My/nomPBugLoGkIkmqvh/lEPHBSGprUJaBsXaNcSePhaGeLFkqTjxUPMCP7PRl7wFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747322996; c=relaxed/simple;
-	bh=r+vgoHyPQBXrDnAequwJxZxOTi6XM4s7SidDK1toDMU=;
+	s=arc-20240116; t=1747323021; c=relaxed/simple;
+	bh=qQ/l3B45Y1pQHKzCCV+/Vez9fgS3wx9SjoH1DVsKDmY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nX94czfAn2YQXl0CrCi488J6Eq3+zPodR3J39F6UX4iN6vkkvM31u3V7ZsSOa2eaVidg6I2BVe/PTXaNQkT9BI0OqBPkWa5yFpgF3CC+5Bo3mk+dcDfbdnoubQ7K27tPtGJ6ZfJ/1356bFQXX4Q0gF+Qv1uzxbOGcIw8lnhnAB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UzEkXjNf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mhV8hCgFn66eQEdXlgt6R09x7kygXeFEpRutQt9L18SXb6rm7zcSST4HdqG43xT/8dGVRog958rDW3/icpKAMiA9X+2p1/9nV6CnE3SBA3YVYvwuwpcNHXIKSC5Ulk+qaFw1waPYw3L+n6NLSpEKZnuYGoaHtJAMxx86TlxYoyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O1LkOWgo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UzEkXjNf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88415C4CEE7;
-	Thu, 15 May 2025 15:29:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O1LkOWgo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAA01C4CEE7;
+	Thu, 15 May 2025 15:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747322995;
-	bh=r+vgoHyPQBXrDnAequwJxZxOTi6XM4s7SidDK1toDMU=;
+	s=k20201202; t=1747323021;
+	bh=qQ/l3B45Y1pQHKzCCV+/Vez9fgS3wx9SjoH1DVsKDmY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UzEkXjNfRDfzQ5GSc7NDBYXzLq2U2bw/Gp4vlC7jEmo5kdO/vJmkmRqKjBbvtvSHE
-	 IpmoYfwa4Yw2qifam3LOs0zBS1KEzYLQhiFDffdShYwPtRqVZdiEycadwv7r+PYk5h
-	 F4VQ5ffWzzIpOVhb5ugdL/SHgPikVYUBu3BQB8RlWW9b5RVdNuZdwYR/j3G2vIqYqj
-	 326h4/FYdiMslKMxeL1TVkHX4WyXFkMbVQsztMT2WgWln04f/pMRIiiyzSARV6zxqK
-	 9VzzFrxMxdRi85vDhkSPA6Gs6VcIhSvLUzfyL3pZKhpVKV1IfIDw4C5nguWIlY7ZYC
-	 lGmUajFVTt6Uw==
-Date: Thu, 15 May 2025 17:29:50 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-	linux-acpi@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	peterz@infradead.org, jgross@suse.com, boris.ostrovsky@oracle.com,
-	rafael@kernel.org, lenb@kernel.org
-Subject: Re: [PATCH v1 2/3] x86/xen/msr: Fix uninitialized symbol 'err'
-Message-ID: <aCYIblffvBGUuxWf@gmail.com>
-References: <20250512084552.1586883-1-xin@zytor.com>
- <20250512084552.1586883-3-xin@zytor.com>
+	b=O1LkOWgoK7FMQBfDQr2kI6NJ6OOK0E6KHymJOp9uXEyQNFNOolr0wSgurlIW6NR3e
+	 JskGu5uX4CZd9ODGAcni+zGK4XYlGod1wbGQLA2L9Z/4qLVN1Sl7f4lBva+BSuAfWn
+	 KQuKw/hZDtUjLXlrCTmFOf7TeBGfzUOqToZf6wVOPLh9EdAz2oFycJwYL3zqDJEipj
+	 NDG1Fwiag9r4fJN+wtHAR3Pzq7FXHCOi5V+iI4zdFQaDINe9haDo/9ZYnV/AHS4AMF
+	 tvZGw2GR548ruBQ8S/3SUs+56sfGkgCgvb4+AxhBp/Ls4Fopbe6UTuHt30y4ZgY2NM
+	 E/N2RaKR6rgYQ==
+Date: Thu, 15 May 2025 17:30:16 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Rob Clark <robdclark@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>,
+	Rob Clark <robdclark@chromium.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 02/40] drm/gpuvm: Allow VAs to hold soft reference to
+ BOs
+Message-ID: <aCYIiJpMe1ljGxqz@pollux>
+References: <20250514175527.42488-1-robdclark@gmail.com>
+ <20250514175527.42488-3-robdclark@gmail.com>
+ <aCWtINcOUWciwx8L@pollux>
+ <CAF6AEGsm6JgK6QQe7se6bzv6QLnm-sxsJRmv=r3OWKhf6rfOSA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250512084552.1586883-3-xin@zytor.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAF6AEGsm6JgK6QQe7se6bzv6QLnm-sxsJRmv=r3OWKhf6rfOSA@mail.gmail.com>
 
+On Thu, May 15, 2025 at 07:59:16AM -0700, Rob Clark wrote:
 
-* Xin Li (Intel) <xin@zytor.com> wrote:
+Thanks for the detailed explanation!
 
-> xen_read_msr_safe() currently passes an uninitialized argument err to
-> xen_do_read_msr().  But as xen_do_read_msr() may not set the argument,
-> xen_read_msr_safe() could return err with an unpredictable value.
+> On Thu, May 15, 2025 at 2:00 AM Danilo Krummrich <dakr@kernel.org> wrote:
+> >
+> > On Wed, May 14, 2025 at 10:53:16AM -0700, Rob Clark wrote:
+> > > From: Rob Clark <robdclark@chromium.org>
+> > >
+> > > Eases migration for drivers where VAs don't hold hard references to
+> > > their associated BO, avoiding reference loops.
+> > >
+> > > In particular, msm uses soft references to optimistically keep around
+> > > mappings until the BO is distroyed.  Which obviously won't work if the
+> > > VA (the mapping) is holding a reference to the BO.
+> >
+> > Ick! This is all complicated enough. Allow drivers to bypass the proper
+> > reference counting for GEM objects in the context of VM_BO structures seems like
+> > an insane footgun.
+> >
+> > I don't understand why MSM would need weak references here. Why does msm need
+> > that, but nouveau, Xe, panthor, PowerVR do not?
 > 
-> To ensure correctness, initialize err to 0 (representing success)
-> in xen_read_msr_safe().
+> Most of those drivers were designed (and had their UABI designed) with
+> gpuvm, or at least sparse, in mind from the get go.  I'm not sure
+> about nouveau, but I guess it just got lucky that it's UABI semantics
+> fit having the VMA hold a reference to the BO.
 > 
-> Because xen_read_msr_safe() is essentially a wrapper of xen_do_read_msr(),
-> the latter should be responsible for initializing the value of *err to 0.
-> Thus initialize *err to 0 in xen_do_read_msr().
+> Unfortunately, msm pre-dates sparse.. and in the beginning there was
+> only a single global VM, multiple VMs was something retrofitted ~6yrs
+> (?) back.  For existing msm, the VMA(s) are implicitly torn down when
+> the GEM obj is freed.  This won't work with the VMA(s) holding hard
+> references to the BO.
+
+Ok, that makes sense to me, but why can't this be changed? I don't see how the
+uAPI would be affected, this is just an implementation detail, no?
+
+> When userspace opts-in to "VM_BIND" mode, which it has to do before
+> the VM is created, then we don't set this flag, the VMA holds a hard
+> reference to the BO as it does with other drivers.  But consider this
+> use-case, which is perfectly valid for old (existing) userspace:
 > 
-> Fixes: 502ad6e5a619 ("x86/msr: Change the function type of native_read_msr_safe()")
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/xen-devel/aBxNI_Q0-MhtBSZG@stanley.mountain/
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> ---
->  arch/x86/xen/enlighten_pv.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> 1) Userspace creates a BO
+> 2) Submits rendering referencing the BO
+> 3) Immediately closes the BO handle, without waiting for the submit to complete
 > 
-> diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-> index 3be38350f044..01f1d441347e 100644
-> --- a/arch/x86/xen/enlighten_pv.c
-> +++ b/arch/x86/xen/enlighten_pv.c
-> @@ -1091,6 +1091,9 @@ static u64 xen_do_read_msr(u32 msr, int *err)
->  {
->  	u64 val = 0;	/* Avoid uninitialized value for safe variant. */
->  
-> +	if (err)
-> +		*err = 0;
-> +
->  	if (pmu_msr_chk_emulated(msr, &val, true))
->  		return val;
->  
-> @@ -1162,7 +1165,7 @@ static void xen_do_write_msr(u32 msr, u64 val, int *err)
->  
->  static int xen_read_msr_safe(u32 msr, u64 *val)
->  {
-> -	int err;
-> +	int err = 0;
->  
->  	*val = xen_do_read_msr(msr, &err);
->  	return err;
+> In this case, the submit holds a reference to the BO which holds a
+> reference to the VMA. 
 
-So why not initialize 'err' with 0 in both callers, xen_read_msr_safe() 
-and xen_read_msr(), and avoid all the initialization trouble in 
-xen_do_read_msr()?
+Can't you just instead create the VMAs, which hold a reference to the VM_BO,
+which holds a reference to the BO, then drop the drop the original BO reference
+and finally, when everything is completed, remove all VMAs of the VM_BO?
 
-Thanks,
+This should do exactly the same *and* be conformant with GPUVM design.
 
-	Ingo
+> Everything is torn down gracefully when the
+> submit completes.  But if the VMA held a hard reference to the BO then
+> you'd have a reference loop.
+> 
+> So there really is no other way to use gpuvm _and_ maintain backwards
+> compatibility with the semantics of the pre-VM_BIND UAPI without this
+> flag.
+
+Again, how is this important for maintaining backwards compatibility with the
+uAPI? This all seems like a driver internal implementation detail to me.
+
+So, is there a technical reason, or is it more that it would be more effort on
+the driver end to rework things accordingly?
+
+> Fortunately DRM_GPUVM_VA_WEAK_REF is minimally intrusive.  Otherwise I
+> probably would have had to fork my own copy of gpuvm.
+> 
+> BR,
+> -R
