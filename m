@@ -1,235 +1,187 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075E5299927;
-	Thu, 15 May 2025 12:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEAC7299925;
+	Thu, 15 May 2025 12:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747312864; cv=none; b=P2RhFKgcs5viuVSoOWPXShkz5OV9/Xim/UpCQF+uZnpgvHJGgiagSBLMTbJg3HP1rTj/QM3e1KOnra/NbJ/39l7At8EAZjEluhnhcj0VlF1wAptnsTXyGLlGs63u/2/WmbJC53y/GSBMCBHj8M93W+mwM+xWD2XczMx6LPu6fzQ=
+	t=1747312874; cv=none; b=pE+gk2P3b0R5X2caO45RBVvEY/SfvvR9HTFBf8M4q9aeX+a7nvlDP3dTIiCl9T96aj3a8ZqWUIp6PoeOupshxUDoQ61MafCg52qSv2EGPbNiv+sGiVzXefoStG14nWGYNGmIfH+zrd32luV9hVfBi9qu9dYZ7snx1uzQtUKsqZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747312864; c=relaxed/simple;
-	bh=3T0xW/Palmd6d3QVa6l03mYqggerddll7QaGqrYkVjE=;
+	s=arc-20240116; t=1747312874; c=relaxed/simple;
+	bh=dKGeHmuc0AMoqMd4c8uF73dFFuyhRt3JICyL+r37aFg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z+ZdUCTB1UmM1TvWm8ZqWXYEpqwlCUjYvRXH4pwBEpYyaRpi//6EOYJdrdLP7ndARYAG412Jtn0LEIKLzpCt6DK9GU1FaKx/wyKsEZXLqkSYL3B3ZUcN/OB8ynqZpWA+o8ac6I+1G01vmWv4krAiBOjempJKimDapvYpkJApvJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=hxCEZUW6; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=NyXJKEKwK/m9Ou6vthfch9MEzr5GhPng+PHHbwRWQgFLNqV2AqYp4DmIIO/tS0rqF8aZKAVSpR75eQwFNXVnUVei7nO094KnKIE4nUPPt7K08O/JqVMjsTxURn2DwcyltG1Z9r7lncl13TFYtx1Goo+5cSlfoCr5VZsFPMJXxb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=xLjzYB1o; arc=none smtp.client-ip=212.227.17.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="hxCEZUW6"
-Received: from pendragon.ideasonboard.com (85-76-100-182-nat.elisa-mobile.fi [85.76.100.182])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5C63F836;
-	Thu, 15 May 2025 14:40:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1747312842;
-	bh=3T0xW/Palmd6d3QVa6l03mYqggerddll7QaGqrYkVjE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hxCEZUW67EUR9e/VlF1itr+8qu4iihHjZiTQ59FY+1cfsGv/GfK0hmvm1YX/4K25D
-	 BGSA726FcmI/WV6xbCSer3QaUrk93pS79Ti2cujUq9uiBNsc5JF5pJPcG6qyq8OT6f
-	 7hy68aMZT0zxgTj+dAxpN4/hSCtWqe5XCqSrpQTE=
-Date: Thu, 15 May 2025 14:40:50 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Mehdi Djait <mehdi.djait@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, sakari.ailus@linux.intel.com,
-	tomi.valkeinen@ideasonboard.com, jacopo.mondi@ideasonboard.com,
-	hverkuil@xs4all.nl, kieran.bingham@ideasonboard.com,
-	naush@raspberrypi.com, mchehab@kernel.org,
-	dave.stevenson@raspberrypi.com, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v4] media: v4l2-common: Add a helper for obtaining
- the clock producer
-Message-ID: <20250515124050.GA12492@pendragon.ideasonboard.com>
-References: <20250321130329.342236-1-mehdi.djait@linux.intel.com>
- <f467e4a8-fcb2-4345-b8f7-7557c1a7552b@redhat.com>
- <20250515084403.GQ23592@pendragon.ideasonboard.com>
- <id2ikiio23ahslghpx56niwxrvaqdgmrgk3k647i3u27cptqgz@hwqrkdvljd3b>
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="xLjzYB1o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1747312827; x=1747917627; i=christian@heusel.eu;
+	bh=ACEh/F0PUTfCw1qiHO8MuM8t4bWtlvu/gCbC9vwARUM=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=xLjzYB1ojZAHcq4EWl9Jusxx70ThHfOMyNmlSQJBz9iOTQw4ThlYkKw3q4UJ671H
+	 kY6Z5b3gZIKjLoI33AQZrGAciiVcYX/cY6T93fr6VU1KKtKexW8plGurOMWBC2w52
+	 Rq5GrCM3QF3ojDybasqNTmO1qtzuJpz6W1mMSQ1sPapNw0yjc5HSMjDvupEHCxD34
+	 pZkximzOSWkzY5ps1R5q3N5RXq3DCbNP/gWt4aKb9PiQuo63eaAnf6k0oT8ibe5aJ
+	 yYYI4wxHBDUpohlNvkEfud28tykbiFWR5VYMy+BTzs0rQ4Mm+5GMno45H13g3ljiC
+	 Igv3wXrS6USl3hLV0w==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([80.187.66.114]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MV5KC-1uNhMq3oZy-00Yt9A; Thu, 15 May 2025 14:40:27 +0200
+Date: Thu, 15 May 2025 14:40:21 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Luna Jernberg <droidbittin@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	stable@vger.kernel.org, patches@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org, Mario Limonciello <mario.limonciello@amd.com>, 
+	Alex Deucher <alexander.deucher@amd.com>, Ray Wu <ray.wu@amd.com>, Wayne Lin <Wayne.Lin@amd.com>
+Subject: Re: [PATCH 6.14 000/197] 6.14.7-rc1 review
+Message-ID: <f727a009-a896-4eb5-8b1c-03417d48e545@heusel.eu>
+References: <20250512172044.326436266@linuxfoundation.org>
+ <32c592ea-0afd-4753-a81d-73021b8e193c@heusel.eu>
+ <CADo9pHgq2jzeVO4PFW6ObBj2bT9FSWcJUC5fRA9kVjMVah0J0g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="e535jvafayoassw5"
 Content-Disposition: inline
-In-Reply-To: <id2ikiio23ahslghpx56niwxrvaqdgmrgk3k647i3u27cptqgz@hwqrkdvljd3b>
+In-Reply-To: <CADo9pHgq2jzeVO4PFW6ObBj2bT9FSWcJUC5fRA9kVjMVah0J0g@mail.gmail.com>
+X-Provags-ID: V03:K1:SNlabFiPlNQTwGuUCxIXGH4/0d3iWUjlJ0EyZAtoCQ/RCBAhXdu
+ wFhITo/s+Jc/ndC8Giu1SBZPruJ9BaO7Nlk06qaomH5fpW8OU/l0cxeiIDan1h4ZhiaGHvy
+ Y36+2ke8mWkYhnjRm9cb+i1oKJVGEdykYsjQyB53ETeOd8aNCBqHnl/3ldy+YvyOTmsSokr
+ crkVXTJVf61ssTRXnmQ/w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:wwCeajMMog0=;vY3teL2xY5Nx/Oyj+fNIrB8mkhK
+ 3X25UwqhCnBDmY6y2lD8ZBbODrF+pLaHFQqgvM1OyZlrc17BCfJbJpr/uh6jkS+Xm0hOA7kQL
+ JDtS4NS1Y65SG+mKrzeQxwEK4QYespDppoq3QZzh0A2yL4XdV5t7d2J5f59O1cOR8hSp8RfzS
+ 2PhHa8puDDoZShSFfpCegsus0sR+6S+6WPI66uafh5lLjhmSMBKsyG8OzjaoOUQSY+NQvo37l
+ 6i0XXeccDZXvDe4tsVqEkQzU1M8Yrq/SwXi4eOBpdtLpLI6HfCfn5bzasi30neUa3EAYC5jlY
+ +evjNrQF9Zlrra8SfGRuDIGS1mOv8XnEHTqPbz6XfF1AHLB84v2ALVXcrBhU189xBqQ9RWQ7v
+ 9Q7wnVWT87lTMnz2o8/PJn2rK8AbOUFlD+2YJLQa3Ezgdr40xGrG2ZbpU7pd/Cap8/DHZvO28
+ 0rFyxg7HvKJPenItPTSdutOuTX5/fjvqUda6DyaubYMR73iVcZps6dW2DASl55uMpn5kkTUlA
+ KZTCi+CEUdyDY1iHdoycvM7XNP/Te+Cc2H+ZqjjS7JO0LXMj+oj6UeKtZlMyzLz2pMEnEqnPN
+ eCpMb34VsPod9NBJE0OaJoSKmEXUgoCbnpArudRylpcnddJmRO4CLUSOKRB8toT9AnnveKnMK
+ RjOEOh7GMY8KW7csAkJttJLDqEMHLu9X5+ZUKVDdFBqFlPsXzeHXJkAXT0jLt520xLbxmNshW
+ oeHD2zaduRvVXrccidMl7I6wn/vgwNDg7sWhO3leZNaolEm9sh2dG863R163PFfZ9WlTB/KnI
+ 3arVyxEPorZyYGmdFTmKenxJO2bppSpjDwPbf+Lz3ITM93MUykFXK4dNkuni1Ud6z8eujCvtL
+ wj3peNvVhbXxG1192zc5pqkEw8j4xEbQanfBtUm57SpdHf1Tzt4wsOl/h7eHSyTbBCwwfYXU0
+ ITfxCGjRe+Cyc7rMtYj6ByBCoyMOGWBYMrrZwDba5gM7gpOK+pb9utsNx+tc66YZDlGAIxSHg
+ L+rLwCV6i0l5i5QU/lGsP+yz5fl+SiUsUDkeJwQ6ZuPnyMQVCF7kLqN6uKBUy5WO83ryIKEKv
+ Ha/vGtgwUi0jp5s8xDET3k3m81J0PnPX8+FxkHGnvEpXM+CcPVSSSPIG+XgVed/aj83s4GJsi
+ 2EXdTu1wVPrVVlA6EMOxiqP9PoO3JOfiyra4x590Xtrvio3zFfzsg7ZBsWRNIyeaGPcJxP2DL
+ SN4nDsEeRsmy3S6ZMaZxnV/f4JGHgtj0ZDBqCCxKsypBBjC8Xvf1RmeXFt9eOhuC2/Yd/Hv4f
+ FFTzgGYFEhZFU/0nSLHtyQ5ucC/OJB++3ksFWIK4aFRy/j1ZZxiC7x61zR8ensuwqTSsczRgQ
+ bndZSpqhbNQRup5Iu6xcFSIbDmT5miQqZPrtUvXBWYiNCy/MyIrvy8aTgu42e0zScMem+dr70
+ JEm4pJw==
 
-On Thu, May 15, 2025 at 11:17:37AM +0200, Mehdi Djait wrote:
-> On Thu, May 15, 2025 at 10:44:03AM +0200, Laurent Pinchart wrote:
-> > On Sat, May 10, 2025 at 04:21:09PM +0200, Hans de Goede wrote:
-> > > On 21-Mar-25 2:03 PM, Mehdi Djait wrote:
-> > > > Introduce a helper for v4l2 sensor drivers on both DT- and ACPI-based
-> > > > platforms to retrieve a reference to the clock producer from firmware.
-> > > > 
-> > > > This helper behaves the same as clk_get_optional() except where there is
-> > > > no clock producer like in ACPI-based platforms.
-> > > > 
-> > > > For ACPI-based platforms the function will read the "clock-frequency"
-> > > > ACPI _DSD property and register a fixed frequency clock with the frequency
-> > > > indicated in the property.
-> > > > 
-> > > > Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
-> > > 
-> > > This certainly looks quite useful, thank you for working
-> > > on this.
-> > > 
-> > > Note on some IPU3 platforms where the clk is provided by
-> > > a clk-generator which is part of a special sensor-PMIC
-> > > the situation is a bit more complicated.
-> > > 
-> > > Basically if there is both a clk provider and a clock-frequency
-> > > property then the clock-frequency value should be set as freq
-> > > to the clk-provider, see:
-> > > 
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/media/i2c/ov8865.c#n3020
-> > > 
-> > > for an example of a driver which handles this case.
-> > 
-> > On a side note, the DT bindings for the OV8865 doesn't specify the
-> > clock-frequency property...
-> 
-> Is this wrong ?
-> 
-> The OV8865 driver was introduced for DT-based systems, where you will
-> get a reference to the "struct clk corresponding to the clock producer"
-> and then get the clock-rate/frequency with a call to:
-> 
-> 	rate = clk_get_rate(sensor->extclk);
-> 
-> The patch "73dcffeb2ff9 media: i2c: Support 19.2MHz input clock in ov8865"
-> adding support for clock-frequency came later to support ACPI-based
-> systems (IPU3 here)
 
-I'd expect all device properties to be documented in DT bindings. Is
-that an incorrect assumption ?
+--e535jvafayoassw5
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 6.14 000/197] 6.14.7-rc1 review
+MIME-Version: 1.0
 
-> > > IMHO it would be good if the generic helper would handle
-> > > this case too and if there is both a clk-provider and
-> > > a clock-frequency property then try to set the clock-frequency
-> > > value with clk_set_rate(), arguably you could just warn on
-> > > a failure to set the rate though, instead of the error
-> > > the ov8865 driver currently throws.
-> > > 
-> > > Sakari, Laurent any opinions on adding handling this case
-> > > to the generic helper ?
-> > 
-> > We really need to standardize the clock-frequency property, and document
-> > it accordingly. Some drivers use it to set the external clock rate,
-> > while others use it to inform themselves about the clock rate, without
-> > changing it, for platforms that have no CCF clock providers. Some
-> > drivers also set the clock rate to a fixed value, or to a value that
-> > depends on the link frequency selected by userspace. I don't like this
-> > situation much.
-> > 
-> > > > ---
-> > > > v1 -> v2:
-> > > > Suggested by Sakari:
-> > > >     - removed clk_name
-> > > >     - removed the IS_ERR() check
-> > > >     - improved the kernel-doc comment and commit msg
-> > > > Link v1: https://lore.kernel.org/linux-media/20250227092643.113939-1-mehdi.djait@linux.intel.com
-> > > > 
-> > > > v2 -> v3:
-> > > > - Added #ifdef CONFIG_COMMON_CLK for the ACPI case
-> > > > Link v2: https://lore.kernel.org/linux-media/20250310122305.209534-1-mehdi.djait@linux.intel.com/
-> > > > 
-> > > > v3 -> v4:
-> > > > Suggested by Laurent:
-> > > > 	- removed the #ifdef to use IS_REACHABLE(CONFIG_COMMON_CLK)
-> > > > 	- changed to kasprintf() to allocate the clk name when id is NULL and
-> > > > 	  used the __free(kfree) scope-based cleanup helper when
-> > > > 	  defining the variable to hold the allocated name
-> > > > Link v3: https://lore.kernel.org/linux-media/20250321093814.18159-1-mehdi.djait@linux.intel.com/
-> > > > 
-> > > > 
-> > > >  drivers/media/v4l2-core/v4l2-common.c | 40 +++++++++++++++++++++++++++
-> > > >  include/media/v4l2-common.h           | 18 ++++++++++++
-> > > >  2 files changed, 58 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
-> > > > index 0a2f4f0d0a07..b33152e2c3af 100644
-> > > > --- a/drivers/media/v4l2-core/v4l2-common.c
-> > > > +++ b/drivers/media/v4l2-core/v4l2-common.c
-> > > > @@ -34,6 +34,9 @@
-> > > >   * Added Gerd Knorrs v4l1 enhancements (Justin Schoeman)
-> > > >   */
-> > > >  
-> > > > +#include <linux/clk.h>
-> > > > +#include <linux/clkdev.h>
-> > > > +#include <linux/clk-provider.h>
-> > > >  #include <linux/module.h>
-> > > >  #include <linux/types.h>
-> > > >  #include <linux/kernel.h>
-> > > > @@ -636,3 +639,40 @@ int v4l2_link_freq_to_bitmap(struct device *dev, const u64 *fw_link_freqs,
-> > > >  	return 0;
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(v4l2_link_freq_to_bitmap);
-> > > > +
-> > > > +struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
-> > > > +{
-> > > > +	const char *clk_id __free(kfree) = NULL;
-> > > > +	struct clk_hw *clk_hw;
-> > > > +	struct clk *clk;
-> > > > +	u32 rate;
-> > > > +	int ret;
-> > > > +
-> > > > +	clk = devm_clk_get_optional(dev, id);
-> > > > +	if (clk)
-> > > > +		return clk;
-> > > > +
-> > > > +	if (!IS_REACHABLE(CONFIG_COMMON_CLK))
-> > > > +		return ERR_PTR(-ENOENT);
-> > > > +
-> > > > +	if (!is_acpi_node(dev_fwnode(dev)))
-> > > > +		return ERR_PTR(-ENOENT);
-> > > > +
-> > > > +	ret = device_property_read_u32(dev, "clock-frequency", &rate);
-> > > > +	if (ret)
-> > > > +		return ERR_PTR(ret);
-> > > > +
-> > > > +	if (!id) {
-> > > > +		clk_id = kasprintf(GFP_KERNEL, "clk-%s", dev_name(dev));
-> > > > +		if (!clk_id)
-> > > > +			return ERR_PTR(-ENOMEM);
-> > > > +		id = clk_id;
-> > > > +	}
-> > > > +
-> > > > +	clk_hw = devm_clk_hw_register_fixed_rate(dev, id, NULL, 0, rate);
-> > > > +	if (IS_ERR(clk_hw))
-> > > > +		return ERR_CAST(clk_hw);
-> > > > +
-> > > > +	return clk_hw->clk;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(devm_v4l2_sensor_clk_get);
-> > > > diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
-> > > > index 63ad36f04f72..35b9ac698e8a 100644
-> > > > --- a/include/media/v4l2-common.h
-> > > > +++ b/include/media/v4l2-common.h
-> > > > @@ -573,6 +573,24 @@ int v4l2_link_freq_to_bitmap(struct device *dev, const u64 *fw_link_freqs,
-> > > >  			     unsigned int num_of_driver_link_freqs,
-> > > >  			     unsigned long *bitmap);
-> > > >  
-> > > > +/**
-> > > > + * devm_v4l2_sensor_clk_get - lookup and obtain a reference to an optional clock
-> > > > + *			      producer for a camera sensor.
-> > > > + *
-> > > > + * @dev: device for v4l2 sensor clock "consumer"
-> > > > + * @id: clock consumer ID
-> > > > + *
-> > > > + * This function behaves the same way as clk_get_optional() except where there
-> > > > + * is no clock producer like in ACPI-based platforms.
-> > > > + * For ACPI-based platforms, the function will read the "clock-frequency"
-> > > > + * ACPI _DSD property and register a fixed-clock with the frequency indicated
-> > > > + * in the property.
-> > > > + *
-> > > > + * Return:
-> > > > + * * pointer to a struct clk on success or an error code on failure.
-> > > > + */
-> > > > +struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id);
-> > > > +
-> > > >  static inline u64 v4l2_buffer_get_timestamp(const struct v4l2_buffer *buf)
-> > > >  {
-> > > >  	/*
+On 25/05/15 02:34PM, Luna Jernberg wrote:
+> Same problem in rc2 just tested
 
--- 
-Regards,
+Yes the fix is still on the way to mainline (see the mail from Mario
+pointing to the patches posted to amd-gfx), but given that it's just
+some log entries that stop again and nothing serious it should not be of
+much issue.
 
-Laurent Pinchart
+Cheers,
+Chris
+
+> Den tis 13 maj 2025 kl 07:26 skrev Christian Heusel <christian@heusel.eu>:
+> >
+> > On 25/05/12 07:37PM, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 6.14.7 release.
+> > > There are 197 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, plea=
+se
+> > > let me know.
+> > >
+> > > Responses should be made by Wed, 14 May 2025 17:19:58 +0000.
+> > > Anything received after that time might be too late.
+> >
+> > Hello everyone,
+> >
+> > I have noticed that the following commit produces a whole bunch of lines
+> > in my journal, which looks like an error for me:
+> >
+> > > Wayne Lin <Wayne.Lin@amd.com>
+> > >     drm/amd/display: Fix wrong handling for AUX_DEFER case
+> >
+> > amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX reply command not ACK: 0=
+x01.
+> > amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX partially written
+> > amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX reply command not ACK: 0=
+x01.
+> > amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX partially written
+> > amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX reply command not ACK: 0=
+x01.
+> > amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX partially written
+> > amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX reply command not ACK: 0=
+x01.
+> > amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX partially written
+> > amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX reply command not ACK: 0=
+x01.
+> > amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX partially written
+> > amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX reply command not ACK: 0=
+x01.
+> > amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX partially written
+> > amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX reply command not ACK: 0=
+x01.
+> > amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX partially written
+> > amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX reply command not ACK: 0=
+x01.
+> > amdgpu 0000:04:00.0: amdgpu: [drm] amdgpu: AUX partially written
+> >
+> > this does not seem to be serious, i.e. the system otherwise works as
+> > intended but it's still noteworthy. Is there a dependency commit missing
+> > maybe? From the code it looks like it was meant to be this way =F0=9F=
+=A4=94
+> >
+> > You can find a full journal here, with the logspammed parts in
+> > highlight:
+> > https://gist.github.com/christian-heusel/e8418bbdca097871489a31d79ed166=
+d6#file-dmesg-log-L854-L981
+> >
+> > Cheers,
+> > Chris
+
+--e535jvafayoassw5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmgl4LUACgkQwEfU8yi1
+JYVVuRAA215yB3QegwDZsVFCIU5RTpcQpgDwt3maQYJFBoInHghVmIoVVVs55qEU
+I2eBdykmCpTenyWI6paJIKA1AfwoX4tFZumA3M7gZKYqhmWx7n9M3da6IDP2a+/t
+3GBZAmSn/DTGKsTcgaPzguyEFBJo1lAulBk0dWXd+X3FwmKcdgM39hE7TnR5lULz
+tqbad718ghHejBd0K5rK+1RarHH/rJ3IvL/wASdL8f/d+eez4Xg7PzJVSpwoGRQG
+3tD2zEu+mbWBXvD6RXeqlbLZwNHpBm92otxu+08QFOcsqv+6Wqt1SBq3nv1hLsxZ
+c9Ha9UxdgoFreKpRIyF5+hEt+Q53Vh8uGpiM1fM6qqC84vvPVBzOSg6jn5MjhLWx
+o0VQQgHkzXeVh3pQnX0EJ64vQR3VDREXoBw4vdweFcRXwT99/Lo/LTnUXUZ4MqVC
+nDaqWEWNUNwxAvO6J6PoJbFy7e45+J8k2CgOofc+GfHo/tV1gpD/GpDjOs+3pNui
+hFIaxPtVbgctdVhguvmJFs1yTrZgbD8ek97Lua9yDaXXgfuLpFwu8DuH2CQd8udY
+jzL8SmbqHjF8FYD2YyAIzPAsIPgaKY4ziIoCUyzv2Mreg6xxeWiwjJIcezphEWd0
+mJ8oYuYJsHI8ndb7FnKv4YM4v/mGlFJs1AV372ethNQGtjH5y58=
+=DPF9
+-----END PGP SIGNATURE-----
+
+--e535jvafayoassw5--
