@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB2628642D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBE8289800;
 	Thu, 15 May 2025 20:39:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747341544; cv=none; b=SriUZSR7j6oQQNddvybdx7e2PkMAamSyxwTKGuD/+l648AAypvNwgndOMZfVXijMlhHaG0vB+1bOGgW9nQmgf6+5FRI1KEHImpWITR+5kvJegoyX1YFlHM4FQ9y3zuZR5I7yEYxT6VXVj9t9utJTw07/xyqkULvLTmhQc0+94m4=
+	t=1747341544; cv=none; b=EteG87VwloAEYLZC9rTXr6KXX+vwOauR+h+uk3SfSNnn5jtGtEzuUngOSA6zmrMiBgUImpkDZH5WP7TtgXYK50JQ0SZKnVTU7oCbA8dGzy314jytjqsZ+AwC179L8hfOUnNiq7r8SbNMWcnkyBV+xpZ7zhsr1O5TpVD558l8nzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747341544; c=relaxed/simple;
-	bh=JEAXjyqVjM7avbq/uSoeI1NuN9BM8hJnV9U2bk99kHo=;
+	bh=7NYXxqUPC+8FJ33c9Hn8TrIB+g/kFzQtpqlZtADgg8g=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WspGPEEWNY8F12iSfyhoUSUyvA8JO5L478zsN1GoEIowsbvJ1xuYiiZEO04U30D1F7zgujpbGprDvHFPj7OECUbp+hFPZ4QqjUQbmbFL/zBfKVrELcbRjxVOjH4r1Mhy3udhgAGFsiYwszhH14OPAHl05XzFJnuyviiKaa7UZMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/LYG+JF; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=N1yNCzIQlT5iWYFGjxxzD5+N6UfoPjNNU6uldj1Tfh8Sn3Zo4oWI5uP77Vfgektemf3BGBLi/nYWdXoWXHR2HEGlGN3+dSK0KSSwVORUyZQohmMCf7omRlZ01Wfl3Z2h54t3TaYMItHRnfb6BxeOqQjRs6GPJ8f/vaFMZjENNYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/u5STCQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/LYG+JF"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E1413C4CEF3;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/u5STCQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D848FC4CEED;
 	Thu, 15 May 2025 20:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747341544;
-	bh=JEAXjyqVjM7avbq/uSoeI1NuN9BM8hJnV9U2bk99kHo=;
+	s=k20201202; t=1747341543;
+	bh=7NYXxqUPC+8FJ33c9Hn8TrIB+g/kFzQtpqlZtADgg8g=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=k/LYG+JFLo4MhIW87w1Y+JpA3zgfo5SW6YJW6Io66TiFDxb0zXgOAbNFGdO9W9zag
-	 wkL1PFBbA4YmEW+zY4Xta/nWKmwz7cayPeOikKZxRAxCisPI7GAC8Df8aQNkQ/2xz0
-	 Z87tIfTCoQr5f2CXG5s2VwM6Oq8CjUlYS/hVPrJsrs+lXAUAL3olBgrPeW/ci41sP0
-	 XJ41ujHgic7JL4Eoi+mfwIb0lTxTXr2HQkAnmKmAx/ArpWAVWF+Pawn5SqaCaESKqz
-	 qdlv6n8nqJjf8Qq2kh9ic1X0RhoXfxMf41eDclUSNmUWFXxZYv0v8A8t6yMqPwjVeb
-	 BRC15oLJLO8TA==
+	b=s/u5STCQaZb4AZPCraM8nyKkFcuB6eIePAeZvT4OiIwSX65mxYHdGKtm+TWD7uspe
+	 6JY/jwoiOToRUWZyj5TOoQgjMlWobJxgghJk8Lftsd9HQzqhGGrqxLl4sAgChXYVhz
+	 jPeFXOu360kahaQ0Hv+fAa/8DMRI2zdS3I9NlEdddP/epIq/nj7YaGOjEEQ4flPPTg
+	 g7DTwjufAymINao77rZ1SZu6tedMKOkyuHnzTIi3lJvlCTNFlz1/i+pvjguozuJIAs
+	 YGWiebLPgDl64fYDkQGJBWGEDnYJgEpLrWboj5zExuKNriaN+CztEJV3PpiPhNUxQp
+	 gqPozU4MKuUmw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D84E2C54755;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E3BC3DA6D;
 	Thu, 15 May 2025 20:39:03 +0000 (UTC)
 From: Jens Glathe via B4 Relay <devnull+jens.glathe.oldschoolsolutions.biz@kernel.org>
-Date: Thu, 15 May 2025 22:38:57 +0200
-Subject: [PATCH 3/4] arm64: dts: qcom: x1p42100: add Lenovo ThinkBook 16 G7
- QOY
+Date: Thu, 15 May 2025 22:38:56 +0200
+Subject: [PATCH 2/4] firmware: qcom: scm: Allow QSEECOM on Lenovo Thinkbook
+ 16
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250515-tb16-dt-v1-3-dc5846a25c48@oldschoolsolutions.biz>
+Message-Id: <20250515-tb16-dt-v1-2-dc5846a25c48@oldschoolsolutions.biz>
 References: <20250515-tb16-dt-v1-0-dc5846a25c48@oldschoolsolutions.biz>
 In-Reply-To: <20250515-tb16-dt-v1-0-dc5846a25c48@oldschoolsolutions.biz>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -53,12 +53,12 @@ Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
  Aleksandrs Vinarskis <alex.vinarskis@gmail.com>, 
  Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747341542; l=946;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747341542; l=871;
  i=jens.glathe@oldschoolsolutions.biz; s=20240919;
  h=from:subject:message-id;
- bh=etQdHXyoLuErHhEhjcOJ713jpC1/4AMxjblfzFJ1r/k=;
- b=hnqBEXEPyG9aeqmAS8/pbW33X5Ksq0cAY3VWsZb/HAIddeUvtOzEnCJwyVnqCTcH7kZ8/mnAm
- Ww9/WEva2dgDitElsx/GJ8kAFBE1igLz6sSeDRV/1AmXGIBUkyLDkjr
+ bh=qMpKHjKO2hgJNmWBGCeb19wutfZa9oDXfI5A36FWyC8=;
+ b=Kp1JZHczaR5mGFiByniqRukArQ+9q93CRzeo3/5kc6PxT9UKtm+QCcTtBP3war5I9p2nZtRjZ
+ f6FcZ136VuhCWP3kWwGnMItyDgvHC1HuRiJzhmf9EZuMpCJtRQxL7c5
 X-Developer-Key: i=jens.glathe@oldschoolsolutions.biz; a=ed25519;
  pk=JcRJqJc/y8LsxOlPakALD3juGfOKmFBWtO+GfELMJVg=
 X-Endpoint-Received: by B4 Relay for
@@ -68,24 +68,25 @@ Reply-To: jens.glathe@oldschoolsolutions.biz
 
 From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 
-The Thinkbook 16 appears to be an X1 / X1 Plus only design.
+Allow particular machine accessing eg. efivars.
 
 Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 ---
- arch/arm64/boot/dts/qcom/Makefile | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/firmware/qcom/qcom_scm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 4300b29397c6a0087e5c5909d756d733f308d373..345b13f50d433c3df1da6b20e4c5c4c415e63dbe 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -323,3 +323,6 @@ x1e80100-qcp-el2-dtbs	:= x1e80100-qcp.dtb x1-el2.dtbo
- dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-qcp.dtb x1e80100-qcp-el2.dtb
- x1p42100-crd-el2-dtbs	:= x1p42100-crd.dtb x1-el2.dtbo
- dtb-$(CONFIG_ARCH_QCOM)	+= x1p42100-crd.dtb x1p42100-crd-el2.dtb
-+x1p42100-lenovo-thinkbook-16-el2-dtbs	:= x1p42100-lenovo-thinkbook-16.dtb x1-el2.dtbo
-+dtb-$(CONFIG_ARCH_QCOM)	+= x1p42100-lenovo-thinkbook-16.dtb x1p42100-lenovo-thinkbook-16-el2.dtb
-+
+diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
+index 79128d11eb51f0efca71396338f7e7c8c913e457..ab63a04b044c42ff779588c11bd736a98735cc9e 100644
+--- a/drivers/firmware/qcom/qcom_scm.c
++++ b/drivers/firmware/qcom/qcom_scm.c
+@@ -1992,6 +1992,7 @@ static const struct of_device_id qcom_scm_qseecom_allowlist[] __maybe_unused = {
+ 	{ .compatible = "hp,omnibook-x14" },
+ 	{ .compatible = "huawei,gaokun3" },
+ 	{ .compatible = "lenovo,flex-5g" },
++	{ .compatible = "lenovo,thinkbook-16" },
+ 	{ .compatible = "lenovo,thinkpad-t14s" },
+ 	{ .compatible = "lenovo,thinkpad-x13s", },
+ 	{ .compatible = "lenovo,yoga-slim7x" },
 
 -- 
 2.48.1
