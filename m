@@ -1,88 +1,150 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F088C1F;
-	Thu, 15 May 2025 05:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 133E18C1F;
+	Thu, 15 May 2025 05:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747285824; cv=none; b=KMgE3Qh3cuDu1rU30lwjYC/+/MZnCOk5MSGvu4EOTrvAOQluAWRvm9zCVBuGJVkuUzUwJUL7lHsvXPvwsACvA7jxMr9Jfg4vlN7DwXJs4mD+1P2tlLMnuAgMEAMQLmJNKbf5EA7Rzne0/VVlq53kqwSkug1CBPfSEj4TI54acBY=
+	t=1747285857; cv=none; b=VQpAfoBgZ2yvphDBrF55VS9QQUMnAvsCBxRsYibnflSK8J3nsOThMiewmX6u00puuEzozLp6a+eknKB4wg7slNp9CZAXeFTh0y++29AECxRgCTjf2j2VguT4ZPaOb8ORj8Uky+O+lCYFgYkb5UgSDo5vPWmF7WXMuS0f/zx9NQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747285824; c=relaxed/simple;
-	bh=0XMZ8tuujHdepBgovBqsBf6wi9r6P7O6zU9Lk+ehLbU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QiFcXZ9XDi53FmQTQvVAH6Nq6Ga5mD2ITawt/zSv64KyRah9jLNu3soeNgwsHahvUO9l5T9I66TBRCAVhAcCAdW5HQbEpa0TMLSpCVmT63bZembLkKFOWxO4+4hJ64LEMiEecNx+QCJx80aHrm8Vod9trUcMWt/q283DusNU3GQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=DLDMmg/K; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+	s=arc-20240116; t=1747285857; c=relaxed/simple;
+	bh=N6w/HO6/hiIcVn8Mlbq1eqIktw/a+TpEjZyydRXBTT4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gy49P7M4gMSX129VMLfuJwPhlHU1UMyX37/kkS5/J6hgzJk9+OKp3aA++9ja3olVrZa5bsrZYQvVEt2FBK/rwssxXvLNPrAyNVWQMufHaatIEB1WnbfJ8MpJs/6TKFlsNVGqRD1oL1y6DNuv01IIcDeTAOvRfAP5nwcWHqd41Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=R19ToO3I; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="DLDMmg/K"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=jCVchJVcxo0HKLoKcLtSJi8O/dCfZtzD7m8N3jnrX9c=; t=1747285821; x=1747890621; 
-	b=DLDMmg/K5GDjga5yF2CHXaqMJL6OK+52cJjQsZGj7bjw5cmuox6gucC8yYEl2lJvNSl0ltvg1oA
-	O/X+3DcGFySRgzmV8DzxsxkmL+lvjSjEZnFai8az/C5Gq1dahqoH5mDFsQ2WZheJVfwoqW/4POSV/
-	Xir/ZkqmeRjIxZkLVw3p0ltXDTcZoY4jI3oY566y/e604dWPMw92f4E41jv2JGd7TYCW6dZwl3mEP
-	dB0Fr0FYnHvpGvRvQ2fY66ZT4/h8I+uMGkH30j5DPVR47GkRIZrE2YogJjTkvxKrxBoZtoiBjRFck
-	RYt8xyPNMsMBsdC9WGFoXNPf97Lif6DdVDBQ==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1uFQrC-00000002IZC-0H0z; Thu, 15 May 2025 07:10:10 +0200
-Received: from p5b13afe4.dip0.t-ipconnect.de ([91.19.175.228] helo=[192.168.178.61])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1uFQrB-000000031sB-3Kgy; Thu, 15 May 2025 07:10:09 +0200
-Message-ID: <05ed8008f9692916ff0b7f715a567b1dfe7eae81.camel@physik.fu-berlin.de>
-Subject: Re: Subject: [RFC PATCH v2 0/8] staging: apfs: init APFS filesystem
- support
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Yangtao Li <frank.li@vivo.com>, ethan@ethancedwards.com
-Cc: asahi@lists.linux.dev, brauner@kernel.org, dan.carpenter@linaro.org, 
-	ernesto.mnd.fernandez@gmail.com, ernesto@corellium.com,
- gargaditya08@live.com, 	gregkh@linuxfoundation.org, jack@suse.cz,
- linux-fsdevel@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- linux-staging@lists.linux.dev, sven@svenpeter.dev, 	tytso@mit.edu,
- viro@zeniv.linux.org.uk, willy@infradead.org, slava@dubeyko.com
-Date: Thu, 15 May 2025 07:10:08 +0200
-In-Reply-To: <20250512101122.569476-1-frank.li@vivo.com>
-References: <20250319-apfs-v2-0-475de2e25782@ethancedwards.com>
-	 <20250512101122.569476-1-frank.li@vivo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="R19ToO3I"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 8C73F201DB03; Wed, 14 May 2025 22:10:55 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8C73F201DB03
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747285855;
+	bh=3eGmczkQBBf0262xVEkapjIYwwsqXyJjSBXuy7w9jwg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R19ToO3IocROPgOcAGE+GebaOZ2vJmKlpZeMbpWSl7T2ShIImYCR2Rzq3YcMJBkqJ
+	 EeAT9Gmp1ojKGrijjV0gOvG2OboruWhh/ZFuPlpySJA2vHLDLahpRsksCNOpgHNQaj
+	 olQNrBxvxWg+w66YYqhjthnfAsYg5jCFWfb8Aclc=
+Date: Wed, 14 May 2025 22:10:55 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Michael Kelley <mhklinux@outlook.com>, Dexuan Cui <decui@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Nipun Gupta <nipun.gupta@amd.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Wilczy???~Dski <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v3 4/4] net: mana: Allocate MSI-X vectors dynamically
+Message-ID: <20250515051055.GC5681@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1746785566-4337-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <1746785637-4881-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <SN6PR02MB4157AD1A0BA2C0C9237FEAA3D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <aCTN4yfHBsJGXvnB@yury>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCTN4yfHBsJGXvnB@yury>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-Hi Yangtao,
+On Wed, May 14, 2025 at 01:07:47PM -0400, Yury Norov wrote:
+> On Wed, May 14, 2025 at 05:04:03AM +0000, Michael Kelley wrote:
+> > From: Shradha Gupta <shradhagupta@linux.microsoft.com> Sent: Friday, May 9, 2025 3:14 AM
+> > > 
+> > > Currently, the MANA driver allocates MSI-X vectors statically based on
+> > > MANA_MAX_NUM_QUEUES and num_online_cpus() values and in some cases ends
+> > > up allocating more vectors than it needs. This is because, by this time
+> > > we do not have a HW channel and do not know how many IRQs should be
+> > > allocated.
+> > > 
+> > > To avoid this, we allocate 1 MSI-X vector during the creation of HWC and
+> > > after getting the value supported by hardware, dynamically add the
+> > > remaining MSI-X vectors.
+> > 
+> > After this patch is applied, there are two functions for setting up IRQs:
+> > 1. mana_gd_setup_dyn_irqs()
+> > 2. mana_gd_setup_irqs()
+> > 
+> > #1 is about 78 lines of code and comments, while #2 is about 103 lines of
+> > code and comments. But the two functions have a lot of commonality,
+> > and that amount of commonality raises a red flag for me.
+> > 
+> > Have you looked at parameterizing things so a single function can serve
+> > both purposes? I haven't worked through all the details, but at first
+> > glance it looks very feasible, and without introducing unreasonable
+> > messiness. Saving 70 to 80 lines of fairly duplicative code is worth a bit
+> > of effort.
+> > 
+> > I have some other comments on the code. But if those two functions can
+> > be combined, I'd rather re-review the result before adding comments that
+> > may become irrelevant due to the restructuring.
+> > 
+> > Michael
+> 
+> On previous iteration I already mentioned that this patch is too big,
+> doesn't do exactly one thing and should be split to become a reviewable 
+> change. Shradha split-out the irq_setup() piece, and your review proves
+> that splitting helps to reviewability.
+> 
+> The rest of the change is still a mess. I agree that the functions you
+> mention likely duplicate each other. But overall, this patch bomb is
+> above my ability to review. Fortunately, I don't have to.
+> 
+> Thanks,
+> Yury
 
-On Mon, 2025-05-12 at 04:11 -0600, Yangtao Li wrote:
-> +cc Slava and Adrian
->=20
-> I'm interested in bringing apfs upstream to the community, and perhaps sl=
-ava and adrian too.
+Hi Michael, Yury,
 
-I don't have much experience with APFS yet other than using it on my
-Macs and maintaining the apfsprogs package in openSUSE, but adding
-APFS support to the kernel would certainly be a welcome improvement.
+My intentions for keeping all these changes in MANA initialization code
+together in a patch were to avoid multiple patches touching same
+functions throughout the patchset. I felt it would become error-prone and
+hamper reviewability.
 
-Adrian
+About having to combine mana_gd_setup_dyn_irqs() and
+mana_gd_setup_irqs(), we initially went ahead with a single function for
+this with multiple parameters to prevent code duplication. But it made the
+function very hard to read and caused a lot of confusion while reviewing
+it.
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+At the surface of it, it would like like just two conditions to be
+dealth with in the function but it actually has to deal with many more
+conditions, like -
+1. static allocation of all IRQs (IRQs < num_vCPUs)
+2. static allocation of all IRQs (IRQs > num_vCPUS)
+3. static allocation of 1 HWC IRQ
+4. dynamic allocation of remaining IRQs (IRQs < num_vCPUs)
+5. dynamic allocation of remaining IRQs (IRQs > num_vCPUs)
+
+Therefore, to keep the code more readable we decided to separate the
+functaionalities.
+
+Thanks,
+Shradha.
+
+Shradha.
