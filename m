@@ -1,67 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92B2202C2A;
-	Thu, 15 May 2025 07:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D0E234963
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 07:38:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747294692; cv=none; b=D/48kwESZlTtGexywamumvdyzqmxNCo6uQoAjaxNVvfGwpSRivvb+mRgPuw1zcnvAHTcLfhJZQWjhw8Li86tM924W4kH4eIgx+8XRBrs6SiMuwL9yXPwCtw3zni2J+O9jtm8fnMfBKK647ePM38V9uMajVGYmTI5lZB2u0SK0AE=
+	t=1747294714; cv=none; b=uIWG4ZDCDyXNYHt4Z0EaO+IPS9BWTMCPgYlFLw14dg3kjcB3cj8gOvPn6f/P/a97Oo5OupyA+X3n+SohOAsxhlA65/vidM2dIBGKifc8heKHluW3Pm+JcyddHJ3kxUK2Lgkd/mF9M/4teW42+4U3D9SyErwDJHef4CAR/k1sdpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747294692; c=relaxed/simple;
-	bh=R+oXMrFZiQAmHeF0XsyIUPrpLQVVx2PG/xBSC4ude1Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D8nUY1sjyeAf1Ot/XOuXlK5ro/JotElgBF10AtONQko57acFC0CiaH1dibX9pkej2ZReLJh+nuewvSc8AxI1qZwmOIv1FoEkD2sVTFj3rCHdwZ4bxhz/nrJsVnpDI9aKTH5KOBYnCZC+Krt10cWzGYZH91PusLaTNoczUn7YfyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=TQUnO3yi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747294714; c=relaxed/simple;
+	bh=A7YTQEvxzdjN/uPXGiOZhVl7xg2CZBthDtu/Z0dxqIM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oKg5nPqNBN1iHUYN2TfqdaJZusJsNTydTFOji6KjhZLbUjvbmVRmR9DGcmCUHxn5u/xLdHheITsNylIKyg7xj3ZnLFdFn9kCEfTgT/ZuKXf4esm5iTgzQfAWaMMdMm8MYmsblG3UYnlXqiLQCSFPEhGRn5xQTTEoYqxwtmV6xcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FlJFZoUE; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="TQUnO3yi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69CF3C4CEE7;
-	Thu, 15 May 2025 07:38:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747294692;
-	bh=R+oXMrFZiQAmHeF0XsyIUPrpLQVVx2PG/xBSC4ude1Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TQUnO3yiaI9kPB18R6cZkm3IQxY3CxZnzfBSOZhdtkeMgO8tR/gjr0nMyBtrzmM9p
-	 ld8DvAzhE0LB/5wmRwzxqqNnbFEiW6IhHCOt0M+Z3i1YQTVS1Ojs4oTJF/XR8d/l7M
-	 dS0vqOQH6YV+wxUkwaH3/rXfiBlm1kJG3tVibFrY=
-Date: Thu, 15 May 2025 09:36:23 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 1/3] samples: rust: select AUXILIARY_BUS instead of
- depending on it
-Message-ID: <2025051511-unstitch-familiar-e376@gregkh>
-References: <20250515-aux_bus-v1-0-1781b54424e4@nvidia.com>
- <20250515-aux_bus-v1-1-1781b54424e4@nvidia.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FlJFZoUE"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22e6344326dso6574905ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:38:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1747294712; x=1747899512; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UTuhmwgeL8CMgAtrwpyLwhvwNVYclkrjjEa64TIcJ/A=;
+        b=FlJFZoUExZGyDkT078gsEjRFHQuEePzz17LUtkpA+hBDPwzdfUEB7SFCrjwvbB+W1j
+         esFU+eBDq5KTa+z5O9so5Z3XcgS6jK1cMYrwWnkXd/zdPyZv5/vzZ11Y6s99x4Z6ppHo
+         PIf2rFY/XvKOaswkAJ5D0McLo7GlE3wH78CqA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747294712; x=1747899512;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UTuhmwgeL8CMgAtrwpyLwhvwNVYclkrjjEa64TIcJ/A=;
+        b=eXPJ5oNTXrxe1zcHGqD10hkCqhs5yBkASLv+DTl6C0IKPSGMY82J7lav2QFgTbSE8A
+         udXomQXMwmLpqtkG+XQfHMjrvaIDg6HY+4D4Ff7J9cJ0E8Q4kr8n3Qkvo2je8MxMnJKh
+         CC+pbHmLHL1zdZspYwM61dpqkquK36DoYpUPI9nAvxKA5fswQ9Ctg/s82FdAP6CaZ5JU
+         NhQx8wFSb+iF20cnaWarTqumjlPO1P+PVQXFoS8KPzdb0o5UmjGfWS8gKhN7vjyaKYAt
+         M2BvbRptfOVeTF9IQgugqQlEMxTDga7Fc8yZRU1zDev6xp4iNcLjAgURsskyclhVKpm1
+         uQsA==
+X-Forwarded-Encrypted: i=1; AJvYcCVuYEaZA47K508Tq1IBj1YtvLFXy1ijuT75PtjLunVgOs8EzEfrRCu6qNa/b0ynQbE1bWT7KpN2DnYyLQw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/dmZCOjBBgk5Y3C7O3CFMWVCnBigl3HFOjS31KVXWuoGSsL58
+	1Qid2oQD/cCJ46+g9qHUR2PXv7mcT50l+5coCoFXAvlCKNxlIRjbQ6ojCCxvUg==
+X-Gm-Gg: ASbGncu9pBgrq7GGR4UtpySZUxS7UPrjizuO4Ldk8PlqpSnFmuJnqbsF3VbeDTGyA99
+	YXj1YaiVabq5taANC3r8RkpFZm8VKiVlt8Nk69X4oxg6Im5SChig1LWhxGRrgFH9OCC1BAXnDUu
+	FlzJ6KgXmA8rlqhigR5Fk6qK7PLIy2OqO0DYdo6blHEnaNf2vwKbzmvfVxlJ9UCl2jeccAAb86g
+	eHDIkCt1pACgSjONIdE/spGlrETsWKLiuAQnpsTS4HIxi+E0RjS48I6XUtxiZfJOmxJ2bOrPAyG
+	f/wKDYgWZcCaIFa2akt4NxSMvTpD0XX1PheV6QPJoyKDglQD5XUcYKAKA0Yp5kwCODsiMbNzzyR
+	9yGKb
+X-Google-Smtp-Source: AGHT+IHd+tTQ1WkK+zV3TpgzWBvKz1U7eVTGR5TBqP6q/kPdJhkugAruaqhe6ky7C8X/88yU/ln4KA==
+X-Received: by 2002:a17:903:11c9:b0:223:3b76:4e22 with SMTP id d9443c01a7336-2319810ffa6mr73889445ad.6.1747294712457;
+        Thu, 15 May 2025 00:38:32 -0700 (PDT)
+Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:c43a:aaea:5f52:5763])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8271f61sm109750825ad.142.2025.05.15.00.38.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 00:38:32 -0700 (PDT)
+From: Chen-Yu Tsai <wenst@chromium.org>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Chen-Yu Tsai <wenst@chromium.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Jiaxin Yu <jiaxin.yu@mediatek.com>,
+	linux-sound@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Darren Ye <darren.ye@mediatek.com>
+Subject: [PATCH v2 0/3] ASoC: mediatek: mt8183-afe-pcm: Shorten source code
+Date: Thu, 15 May 2025 15:38:20 +0800
+Message-ID: <20250515073825.4155297-1-wenst@chromium.org>
+X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515-aux_bus-v1-1-1781b54424e4@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 15, 2025 at 03:26:13PM +0900, Alexandre Courbot wrote:
-> CONFIG_AUXILIARY_BUS cannot be enabled explicitly, and unless we select
-> it we have no way to include it (and thus to enable the auxiliary driver
-> sample) unless a driver happens to do it for us.
-> 
-> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-> ---
->  samples/rust/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Hi folks,
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Changes since v1:
+- Rebased on top of -next, dropping changes that cover the DMA address
+  MSB registers
+
+This series is meant as an example on how to use macros and range cases
+to shorten the MediaTek audio frontend drivers. The drivers have large
+tables describing the registers and register fields for every supported
+audio DMA interface. (Some are actually skipped!) There's a lot of
+duplication which can be eliminated using macros. This should serve as
+a reference for the MT8196 AFE driver that I had commented on.
+
+The three patches tackle separate tables in the driver. The remaining
+one that could be tackled is the list of DAIs; but that one has more
+differences between each entry, so I haven't done it yet.
+
+Please take a look.
+
+
+Thanks
+ChenYu
+
+
+Chen-Yu Tsai (3):
+  ASoC: mediatek: mt8183-afe-pcm: Shorten memif_data table using macros
+  ASoC: mediatek: mt8183-afe-pcm: Shorten irq_data table using macros
+  ASoC: mediatek: mt8183-afe-pcm: shorten mt8183_is_volatile_reg()
+
+ sound/soc/mediatek/mt8183/mt8183-afe-pcm.c | 571 +++++----------------
+ 1 file changed, 127 insertions(+), 444 deletions(-)
+
+-- 
+2.49.0.1045.g170613ef41-goog
+
