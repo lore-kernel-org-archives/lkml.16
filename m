@@ -1,139 +1,227 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16EC222586
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC4C293B6A
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747308847; cv=none; b=BIdaYsf38wmUSaO8EXGTy8bhodqGDgo1mYRcz9e2V6H3ixrcSHSH7mGQP+XQR4iKFQ4kUAy+cszHnIWkaUNaKW0oockBGbRyxrrigE4uJ7rwzXtK4cpWuQdBItYdjKQcZmSoU69BqyZ8keUJayU7oxceVm3qL8nqzM3vCafXR8Q=
+	t=1747308913; cv=none; b=Sjg0DKi9nFytRHodOKioy/nTksWiejLHP/30xwvC808PoNEKJz4Pzm6T6h27H4NAB1bWwHL/K/9bks4garSPq4qhZ1d+XpmZz9+FrL8IN//1vVLIDdfcfALtoh5/wli3zYCpJuy2zd/dPFmlGVf2CreQKRAc2mnfMixw9C4O1xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747308847; c=relaxed/simple;
-	bh=7+LcErtOI1nFXpZU0Rnztgx5X/pwtGQnCWrKPIFskJ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uJ6Au/dOs/4AMYFvsIggk210bQMMJV7EBjIS6YD7jLD1LPxLyAxZMoT5nz8s50xPGVebhnLPBUJt+WsAfabMTFdezHrczbMtyxWJLWitQL30cyeT6W6XALJR0xtKnqA6LZOOjsoWeYGKpVayimPxkirAJZTOrbi8K3sq5eabNiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BroJG+gb; arc=none smtp.client-ip=209.85.128.46
+	s=arc-20240116; t=1747308913; c=relaxed/simple;
+	bh=e0ABl9xopNqukayXAeP+VcBd3ZZCVfEEKInScyY3tig=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gG4y8t5TMeAN6UoAT7ayqtGxrzb8GFDvN9eLJkJQeLhWTyoWehGPM6B31LbrgFVlTJr5w1iEE1LLjlilk5oX2rN1AV9q6SklP3bZxITNlauQC8mf+sL2pN8jnCzBUznrVQ2Wv65j012s6GZgEiOIlNgGwOHVRLdFUSwCQaCGNQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BRGGWx4p; arc=none smtp.client-ip=209.85.221.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BroJG+gb"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so15006955e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 04:34:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BRGGWx4p"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-525da75d902so268405e0c.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 04:35:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747308844; x=1747913644; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=98/YbywBcXa3bCYk1LSZyotuk6UHXpn6YTL3rzPy1R4=;
-        b=BroJG+gbt8NPY47x3lrxw+r/0yZHgU0YoF+ACJ3UYElZwCtVby1cHB3hvEVf2gFRtc
-         UZQam4J+NGnXuwt0J07ZZPy4PyzQlGBhuwy+/rRWpNjTtoBMXqlzBhow5EPIxG/h9/7r
-         y9oV4MQRDitGvTU2mjTWh5LjDi4YnqKXMAE26CHZtSKhQ9RQGBPMBjYW7UDs+xr5KiIz
-         4qncH/LW+mUZHJV1/t5V3lU+ZpP05xnbULuy3Zvz6QfEaCOQOPXnWB1lY9tAuivzulJm
-         poRphBU+SjOpe7UBQmxWnGL4LWQ6yFspvI9EkwhNV/mzfZkGPM4c9/6uHoEsSPQHAaYa
-         QwAA==
+        d=linaro.org; s=google; t=1747308911; x=1747913711; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4bwmcjjtRVIYu/F7DCKBAun5RhjURvCxMohVScmjWck=;
+        b=BRGGWx4pmsudfvpvHps+Qw6YCCH/6RJKEXbgSKbToMCtPdUH6SvzVYYpw5JNAa2pEo
+         VsWJLMEiV+NFbOiRKNjgBCBECNU4jD327645YSS/kFW2l0Rf2gedyWbYsd68UWVDx8fc
+         Q7AxYqILD5sie6qYhturDGQBXOqUlWxd4zOi+Ze61QbdrtoFNwD++LTcF5bSJbdoE6iu
+         037+xvZQbwC1ODqYBFUuDcNi68j8XtGWwifcBIwfEl6m//jbFWdZIvYYGPeMWZiLlH/v
+         3TUBvGefVx42mp0vxSfgyuJMvJ4+YcQ39Alyrmlst/pm7eZZ2TRTPNWXdIId1TIX/9UX
+         cO9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747308844; x=1747913644;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=98/YbywBcXa3bCYk1LSZyotuk6UHXpn6YTL3rzPy1R4=;
-        b=OZ9p6ORzx9gbJ+gX/PK5yytG1lNoVoE52kGV50OpoaqS+zmgy0zzB+VyP+Vm83oPkg
-         PmKujGKeFAA6LCflyoxO0sCeSlAgnUxmcu21nl8MlxWhezmuzuru8nsVQwDRF02IEwnn
-         CVgpektAlwi2hXa0W02Wd1x/jFEX85EQL/pRZ6/8Evc8E/MGlNnxkEhqIQijDd7IOO/U
-         IWX33i8UkVfqQwUWFtj4JZm39h0djcEE8w8Zh1VdnacnsmYcGEeM0VlN4phXw/cElx/l
-         cxNEbAQAwqPr4YS9FgVylNp4IxVEVG74+CroTO4RT1yJYZXNbofiyr3O7ghVfqaKzFx3
-         AToA==
-X-Forwarded-Encrypted: i=1; AJvYcCVOBzDbh/pvbF9RHwMJgEGRjjoNnV1wJC+vwizbgQSFQnnFcKVPTcwIYJ9/BZVuUXYaXj3EkT8OUzDy/iw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjpwKKVb8ZJZ76BCgH2ieL935vrS34vDRL3Jh53ilGFfaNx5i3
-	yyPc4CA/ylxbxYTVoeAyiesjoq1ehSOw0A7K1fLIV+QduJHoEtNlyg7lkgdWDp0n5s456h/DEkO
-	qtQ==
-X-Gm-Gg: ASbGncsNHsMfF9yWvHmNwVvRVFL2hIudMvxJuxvI/5cgkWPJ4lOxOh6WauKct/lYAhS
-	OlQrck8Znfk23CTkb8qsoCWqSc4+8K5Qr0ZJbchFg9mIIp5e93RuRvaMSBwN921m6jmYcFPu1ov
-	ANGt8asVg3zmyXRivozWZdi0j/bjm2K6D2kgQ56P2UUKb7alZaPCUMUjY83qvXsIN8lyXsWATFm
-	GZ9/Swu1opKTlgX2bh57sjto99kFYIDLXPjoT5nHUgRU4o2pmgxgp/eWc6avhsKYS/7D/9o148S
-	/et7F40nuHJD4KXyfScxQQss1Z+0UfZNnyYCym5QJm5c15Qb/owETE1cfB28HlV0nTk3FOVF3b+
-	hYo1lC0B55fnBtw==
-X-Google-Smtp-Source: AGHT+IGS0y1s75v6MoXkkoAkzaCFl9AOH+xLlK5hMP3H1elKbtTAhzDq+G0r/OXCG71L82GXmpSfxw==
-X-Received: by 2002:a05:600c:828e:b0:442:f4a3:a2c0 with SMTP id 5b1f17b1804b1-442f850c4f5mr32380145e9.13.1747308844028;
-        Thu, 15 May 2025 04:34:04 -0700 (PDT)
-Received: from thinkpad (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f337db95sm67146915e9.10.2025.05.15.04.34.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 04:34:03 -0700 (PDT)
-Date: Thu, 15 May 2025 12:33:59 +0100
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Niklas Cassel <cassel@kernel.org>, lpieralisi@kernel.org, kw@linux.com, 
-	robh@kernel.org, bhelgaas@google.com, Vidya Sagar <vidyas@nvidia.com>, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, treding@nvidia.com, 
-	jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V4] PCI: dwc: tegra194: Broaden architecture dependency
-Message-ID: <6xtdhtiy7bypq36wx5pvaye6oc5wo4os4w37ylrmhcfhwrzcgb@55vxzrwrjh7r>
-References: <20250417074607.2281010-1-vidyas@nvidia.com>
- <20250508051922.4134041-1-vidyas@nvidia.com>
- <174722268141.85510.14696275121588719556.b4-ty@kernel.org>
- <aCSUfiwnZRTgMKGT@ryzen>
- <aCSX5gKsehupIC35@vaman>
+        d=1e100.net; s=20230601; t=1747308911; x=1747913711;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4bwmcjjtRVIYu/F7DCKBAun5RhjURvCxMohVScmjWck=;
+        b=XMYFocGsMOhgdzUcx4UyCWG7sRDaX0Dk7Srd8L3yx26qE5fPW+sGd6hMa6FTJvhD7X
+         EJlnIW1E4VmDvoFAPIbI7EW3DAZ3HLLu7rIuIbCRoMbruoZnR9727H9gKXhOaOY+vByc
+         a8BGJFYesL2f4PTrj4zI0rgF5WC98pLAAV95KDAGatikJx+SI+vWFCs59MUuu+Mvt5YV
+         BMZBn1wbuHNCi0o58ammsUbcZ6hgMwc82yX/2cViFbI14tRMWN+rZGoetB0hpn0Qm/Wc
+         GWA9WpjGzDn07zvjez/TFCpl7LjztSOpia/88oGb+PXYraujbwvK6sXFmhrFmW1W5YLx
+         ymAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWajdPNCylGunyC4iz3Oz0S81yNQiHQ4kV0ohthPz9LOhS2IRJpCfcT7Z3+EnYY2DFnIkf4ymJ1HH7+EaY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywj8rqFV35advYHpiTjPWJ/ldNr7+kDcWOCvMDgPYyp2trPvDSJ
+	ydPPSk3lVie0gPQPVyBFNSXWS+1GeHm1umjWh7mAPnJJdp6k/2UUE7aw3fo3MMhI68fhO1uc6Us
+	xyAGXOJ5H19QRpCaJhhUul6ZyNFVWB4bRr/wpvA==
+X-Gm-Gg: ASbGncu73s01Ssmws1aXg0Z7xFDFvAgbZqlhKADFCG/6jfXJPtfKMvm436RoqxYvXTg
+	Qt6wH1FRBIfLm4lRZ187BAGiy64VLLNylqTFBt0sjPeMmsDNxivMyPgTaWqDwJoCzS8B8pkkFX7
+	hKqcQSsdbdZ9HqD9WF45bHwjhwLH8AN7A=
+X-Google-Smtp-Source: AGHT+IEXBt+YS20PugXWgGdvZXWg4QYar57KBuwOezG55POCXBUJeFjT4clhig6AxSBLzZnRD/QYLMg49rFl9RV0knE=
+X-Received: by 2002:a05:6122:3104:b0:52a:cdda:f2a5 with SMTP id
+ 71dfb90a1353d-52d9c39dbd3mr5696291e0c.0.1747308910688; Thu, 15 May 2025
+ 04:35:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aCSX5gKsehupIC35@vaman>
+References: <20250514125624.330060065@linuxfoundation.org>
+In-Reply-To: <20250514125624.330060065@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 15 May 2025 12:34:59 +0100
+X-Gm-Features: AX0GCFv6UCZUdoZu1FXJUxjnlmxfS4W6iylVBxg-VffWfmUm0ltSi_upUSdvM3Y
+Message-ID: <CA+G9fYupqyDyHBg5x9k4YGwrwvBhTmVGBSXHWHHTByo_tCTj8w@mail.gmail.com>
+Subject: Re: [PATCH 6.12 000/184] 6.12.29-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 14, 2025 at 02:17:26PM +0100, Vinod Koul wrote:
-> On 14-05-25, 15:02, Niklas Cassel wrote:
-> > Hello Vinod, Krzysztof,
-> > 
-> > On Wed, May 14, 2025 at 12:38:01PM +0100, Vinod Koul wrote:
-> > > 
-> > > On Thu, 08 May 2025 10:49:22 +0530, Vidya Sagar wrote:
-> > > > Replace ARCH_TEGRA_194_SOC dependency with a more generic ARCH_TEGRA
-> > > > check for the Tegra194 PCIe controller, allowing it to be built on
-> > > > Tegra platforms beyond Tegra194. Additionally, ensure compatibility
-> > > > by requiring ARM64 or COMPILE_TEST.
-> > > > 
-> > > > 
-> > > 
-> > > Applied, thanks!
-> > > 
-> > > [1/1] PCI: dwc: tegra194: Broaden architecture dependency
-> > >       (no commit info)
-> > > [1/1] phy: tegra: p2u: Broaden architecture dependency
-> > >       commit: 0c22287319741b4e7c7beaedac1f14fbe01a03b9
-> > > 
-> > > Best regards,
-> > > -- 
-> > 
-> > I see that Vinod has queued patch 1/2.
-> > 
-> > Please don't forget that this series requires coordination.
-> > 
-> > There are many ways to solve it.
-> > 
-> > 1) One tree takes both patches.
-> > 
-> > 2) PHY tree puts the PHY patch on an immutable branch with just that
-> > commit, and PCI merges that branch, so the same SHA1 of the PHY patch
-> > is in both trees.
-> > 
-> > 3) Send PHY patch for the upcoming merge window. Send PCI patch for
-> > merge window + 1.
-> 
-> 1, 3 works for me, for 2 pls let me know, I need to prep a branch with
-> this patch and tag on it...
-> 
+On Wed, 14 May 2025 at 14:05, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.12.29 release.
+> There are 184 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 16 May 2025 12:55:38 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.12.29-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.12.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Feel free to take the patch 1 through PHY tree with:
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-I believe there should be no conflict with the PCI tree.
+## Build
+* kernel: 6.12.29-rc2
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: f7cb35cbafc541b97fad214f4254342dbf64a27f
+* git describe: v6.12.28-185-gf7cb35cbafc5
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12=
+.28-185-gf7cb35cbafc5
 
-- Mani
+## Test Regressions (compared to v6.12.26-167-g483b39c5e6de)
 
--- 
-மணிவண்ணன் சதாசிவம்
+## Metric Regressions (compared to v6.12.26-167-g483b39c5e6de)
+
+## Test Fixes (compared to v6.12.26-167-g483b39c5e6de)
+
+## Metric Fixes (compared to v6.12.26-167-g483b39c5e6de)
+
+## Test result summary
+total: 154373, pass: 127484, fail: 7099, skip: 19159, xfail: 631
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 139 total, 137 passed, 2 failed
+* arm64: 57 total, 56 passed, 1 failed
+* i386: 18 total, 16 passed, 2 failed
+* mips: 34 total, 33 passed, 1 failed
+* parisc: 4 total, 4 passed, 0 failed
+* powerpc: 40 total, 40 passed, 0 failed
+* riscv: 25 total, 23 passed, 2 failed
+* s390: 22 total, 21 passed, 1 failed
+* sh: 5 total, 5 passed, 0 failed
+* sparc: 4 total, 3 passed, 1 failed
+* x86_64: 49 total, 42 passed, 7 failed
+
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mm
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* lava
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+* rt-tests-cyclicdeadline
+* rt-tests-pi-stress
+* rt-tests-pmqtest
+* rt-tests-rt-migrate-test
+* rt-tests-signaltest
+
+--
+Linaro LKFT
+https://lkft.linaro.org
