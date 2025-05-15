@@ -1,139 +1,110 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176A12882DE;
-	Thu, 15 May 2025 08:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BB71FCFFC;
+	Thu, 15 May 2025 08:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299263; cv=none; b=hTGoPZuwmV6ElYRcKrJYStjAGBfB9pp3k3tS4GoUGEEZzzELtcBKn5ed4j99MtWzdl/PjQ3QYVmpamXCz+dIsNjRjsBQZYpIOsK/eY6iCSjHTzMmbeylqaFMPAewpcKk+zi187KH7CZUYAppYTM2YffD0w8vK3Pyrf/+Y/AOcwc=
+	t=1747299273; cv=none; b=D7l9udZxg7F+mj+9NsFvRzwAG7tgQJ9haxITfPF0NuCnahxPnZQqrEsaSW920g43Uc5KFmODEcX+yYbgy3CNafjI1wN0YT3ZNYS2/DrxNfgH+4Eoo1tin2U594ORCZ8sf+5gcCD5ArlAYN7MCHDvghbLyQIMew+4RAgj3TLSFIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299263; c=relaxed/simple;
-	bh=E1z5He3Wwd9ce7anNAAfQb1t4GFYDRY9FnjlwNIzh1g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FgG+/2toL7o+n9kxLioHHXAC+ZZHXqtyU0vNGHNtvAnHK9vPqC2Zr2xPlDjKQCArD8xVyMzZ8tTpcfQ1xR10Y66rmBBF5bsjTomZXP7y9JMW5Z3wMxl7NL6d58I64PO/ZmxMtuvgEVnU58R9wC4vP3ScgNU0/rGiEgjxZwwjBg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZF51bbuA; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747299273; c=relaxed/simple;
+	bh=h+VsUgSmErOy2grzt87OXyIDJW5HdE1chW0emZWQhC4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ADvv3CRrhPdhLtUkrzyZ0V4mdGf7W3IJajT0svI6onqXm5IFM9G6Hmq44Ksi08wpQNXMFLTLfC5xTprseDJHSB8swS2M127Zgdlc5dhkRwmtRHVuFG490aduINyIA8PIWQFDODS9jxJAEvpAX+eqTIUeObXAMWD+ex0YhChvM5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UtnPOeib; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZF51bbuA"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-3105ef2a08dso6307921fa.0;
-        Thu, 15 May 2025 01:54:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747299259; x=1747904059; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=a7JvnrWNRYAOhJGuJiHPvQ8RmC0zHeKbDlxT+TMUjbE=;
-        b=ZF51bbuAlW7Kvyo9CyxZ9rnkD2cKQpmWRlub/pU8RHRVA19b2gAlaSdAo46VB7n+7w
-         RptgBDII7LLM/9u5rKH5ZTSIt3UEWJ5XewpGhL/QgOsJEo+tX6PdwcEFEX4AkTfjfcJ9
-         fbRKBxGk8lvceq0mTBfEN+XD0r+q5xy1T6LoQUt0GvRrxIBomy2MFrfO6dAZaap/zeHQ
-         dbYJcMZVSij3lBOO43chm7BBF2uDG6I+w+4ziv0+WgHDBULT6rVm+YFMq8pCF51Cr9yN
-         bZRIlob7bl8XMNxXWkUvamGHjZM6fLgxJeUdtbgLlBH59Dwy1lDZDH23Zc37ho5vFpZD
-         lz7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747299259; x=1747904059;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a7JvnrWNRYAOhJGuJiHPvQ8RmC0zHeKbDlxT+TMUjbE=;
-        b=fVlo7P6vod9dYYxOUxtlS9tEuqkK8R0EhZZ7ekpsRn7nlSEPgOAW76BkMqMZCv3zS1
-         +V6Jcumbg8VzcDh2WDWvI5e1WqA3DiRRg1SpaJzch5mM07ur6rEJjeGIFxzYZJnIIcy7
-         +TWv9+cj3gJfuYx/X1wbJyR4jKkp2YuyHA1XyV0FA7yrqaDzx1y1qXB1aEc7upuLtFno
-         wYnM/3OB03vmirJq+XpNu6RMUqDXdVz9rza355i/7Q8E+LrbT97FF+jsHWXFiP1a+Qat
-         gcz1cW939FXt2AAEgjGWbdMk5mcK2K2kMTHVqwDaddYjvh36BJ9zWoc/vAtlvcG4J/xl
-         nH+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVgiHJVCYvuG7RQBgp4tEwWVoKRFZyAOrIoznlBLpRQixM0XP0Zl4enj/mI5+0UlvcUnEtYE3SRApBRsFtX@vger.kernel.org, AJvYcCXtnA46+jLSANondHahqhhP6Dmu9ifEabf/fXQ0i/gVCqE6kDoEPMEyy2fYu8c8UvF66bNbDxUa0v/D@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKZ2Az8B62AE8MrRImG+mdij4n469PvxMIDKaVX5qCS20UK5yU
-	q6JolH/DChMq3lnoLIyiMejNfWWzUtUm6akr+KwfJ4ji8kQ1QlP0
-X-Gm-Gg: ASbGncsJ9sHjB8larFgdNysejLZkgjq0no/dzsvA1HItzZPP5OB2k6YEDEy7IAx/zZB
-	scG8cRC2faoNfksrngRejQVa3EBou9of6e1qa5C3l1NN3d1bmcegUFJSXexQajLP/vsAzR0tUMd
-	rYR36nKAI7TIN5Fkda99KOEGdlrg0p6KXPr88cmwnR61uei7LikJ57y6kwFPzr9Kp3unocZhwcr
-	aPtDZ1seBCC4eg6yhUCk24iPCqFjSC54B5m/rhm+2+bYGxrVawHiIa1K87Zf+QWF+0vwTnHOCv7
-	dT7X8SUCR2Pj1utzKe5WjBFwYCJT/dAeVEw0sHVPKF1yMa6zvKx2RXVbTmy0v4SkOk7XQiEeUkl
-	3FvOm1sZZOS4YTPAFDMwGf8iBOkrNQt6p
-X-Google-Smtp-Source: AGHT+IHtcdpnhUlg72zfo7hWrvx0FJm1YaMSsnRsy3WAnb5OW4dErT+GY1iWZYdh7iEQuUQYLBOqVg==
-X-Received: by 2002:a2e:9fcb:0:b0:30b:ad2c:dfe4 with SMTP id 38308e7fff4ca-327ed1dedb9mr32145521fa.30.1747299258821;
-        Thu, 15 May 2025 01:54:18 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-326c33b7fe3sm22411401fa.24.2025.05.15.01.54.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 01:54:18 -0700 (PDT)
-Message-ID: <db3f6178-646b-4f42-983e-9004d61dabc2@gmail.com>
-Date: Thu, 15 May 2025 11:54:17 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UtnPOeib"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 993EAC4CEE7;
+	Thu, 15 May 2025 08:54:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747299273;
+	bh=h+VsUgSmErOy2grzt87OXyIDJW5HdE1chW0emZWQhC4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UtnPOeib6y06l+qlV9LfdW2QLTo13UdK1gBQz/g7xaT68XnvnR/KQyA3UswXqZN8C
+	 ZlBBZ5bPPyfll8IolsEuRy+E1tPBs/yBVsyDt4ijeB7GbCNnlyiW9/RGbD4rkNO1oh
+	 qNGp5nNKLC8yR+SPyCK9gzj8pwno6kweYcBc0Ne+Yf0kwetrO3J2aMZo3WfYo3uT22
+	 qNa/cvg9R5mpyzD4uEoAl0AkmODpatVQyXOCCNswt6HsXjQK1+cf4Cuwz6RxIMO/7z
+	 yiXh0Mgui0krxVSfYz++H+cEscRoZkf3g34tv2BzauqzgXCf5XZhBdU9w/23w+ehlN
+	 dxGHp+tDs2SbA==
+Date: Thu, 15 May 2025 10:54:27 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Rob Clark <robdclark@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>,
+	Rob Clark <robdclark@chromium.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 01/40] drm/gpuvm: Don't require obj lock in destructor
+ path
+Message-ID: <aCWrwz2IF6VBUi4e@pollux>
+References: <20250514175527.42488-1-robdclark@gmail.com>
+ <20250514175527.42488-2-robdclark@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/9] arm64: dts: imx8mn-bsh-smm-s2-common: Leave regulator
- under hw state machine
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>,
- linux-kernel@vger.kernel.org
-Cc: Simon Holesch <simon.holesch@bshg.com>,
- Karthikdatt Anantharamrao <karthikdatt.anantharamrao@in.bosch.com>,
- michael@amarulasolutions.com, linux-amarula@amarulasolutions.com,
- Wolfgang Birkner <wolfgang.birkner@bshg.com>,
- Conor Dooley <conor+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-References: <20250514082507.1983849-1-dario.binacchi@amarulasolutions.com>
- <20250514082507.1983849-3-dario.binacchi@amarulasolutions.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250514082507.1983849-3-dario.binacchi@amarulasolutions.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514175527.42488-2-robdclark@gmail.com>
 
-On 14/05/2025 11:24, Dario Binacchi wrote:
-> From: Michael Trimarchi <michael@amarulasolutions.com>
+Hi Rob,
+
+Can you please CC me on patches for GPUVM?
+
+On Wed, May 14, 2025 at 10:53:15AM -0700, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
 > 
-> Let regulator to be controlled by hardware state machine.
+> See commit a414fe3a2129 ("drm/msm/gem: Drop obj lock in
+> msm_gem_free_object()") for justification.
 
-Is it possible to add a note _why_ these regulators must be controlled 
-by the state machine and not by the software?
+Please write a proper commit message that explains the problem and the solution.
+Please don't just refer to another commit and leave it to the reviewer of the
+patch to figure this out.
 
-> 
-> Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
 > ---
-> 
->   arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi b/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi
-> index 5a1ec2f6a552..0d343ffdb7f9 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi
-> @@ -144,6 +144,7 @@ buck4_reg: BUCK4 {
->   				regulator-max-microvolt = <3300000>;
->   				regulator-boot-on;
->   				regulator-always-on;
-> +				rohm,no-regulator-enable-control;
->   			};
->   
->   			buck5_reg: BUCK5 {
-> @@ -153,6 +154,7 @@ buck5_reg: BUCK5 {
->   				regulator-max-microvolt = <1995000>;
->   				regulator-boot-on;
->   				regulator-always-on;
-> +				rohm,no-regulator-enable-control;
->   			};
->   
->   			buck6_reg: BUCK6 {
-> @@ -162,6 +164,7 @@ buck6_reg: BUCK6 {
->   				regulator-max-microvolt = <1400000>;
->   				regulator-boot-on;
->   				regulator-always-on;
-> +				rohm,no-regulator-enable-control;
->   			};
->   
->   			ldo1_reg: LDO1 {
+>  drivers/gpu/drm/drm_gpuvm.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 
-Yours,
-	-- Matti
 
+> diff --git a/drivers/gpu/drm/drm_gpuvm.c b/drivers/gpu/drm/drm_gpuvm.c
+> index f9eb56f24bef..1e89a98caad4 100644
+> --- a/drivers/gpu/drm/drm_gpuvm.c
+> +++ b/drivers/gpu/drm/drm_gpuvm.c
+> @@ -1511,7 +1511,9 @@ drm_gpuvm_bo_destroy(struct kref *kref)
+>  	drm_gpuvm_bo_list_del(vm_bo, extobj, lock);
+>  	drm_gpuvm_bo_list_del(vm_bo, evict, lock);
+>  
+> -	drm_gem_gpuva_assert_lock_held(obj);
+> +	if (kref_read(&obj->refcount) > 0)
+> +		drm_gem_gpuva_assert_lock_held(obj);
+> +
+>  	list_del(&vm_bo->list.entry.gem);
+
+This seems wrong.
+
+A VM_BO object keeps a reference of the underlying GEM object, so this should
+never happen.
+
+This function calls drm_gem_object_put() before it returns.
+
+>  
+>  	if (ops && ops->vm_bo_free)
+> @@ -1871,7 +1873,8 @@ drm_gpuva_unlink(struct drm_gpuva *va)
+>  	if (unlikely(!obj))
+>  		return;
+>  
+> -	drm_gem_gpuva_assert_lock_held(obj);
+> +	if (kref_read(&obj->refcount) > 0)
+> +		drm_gem_gpuva_assert_lock_held(obj);
+>  	list_del_init(&va->gem.entry);
+>  
+>  	va->vm_bo = NULL;
+> -- 
+> 2.49.0
+> 
