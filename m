@@ -1,205 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96721111BF;
-	Thu, 15 May 2025 22:09:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1E02857EE;
+	Thu, 15 May 2025 22:09:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747346945; cv=none; b=iFEIm7+4oz1XyiEmX9NV8uaLJTwny7JQdjoE0W9o8vteHCGnwRjTitYSbNnb+BHMf6emJ7X+L9aOu001acl7D43HdZV9DKVOwGFRM8VWqdgoLRrrxLFRS26ouvR99lnWSzshN/xpnAlFKDxURK5kGkJpMS4wJAen56e+G80G5r8=
+	t=1747346992; cv=none; b=Vz4PV7zZEnScQIyRXQlZ0JfGWMw+bSrIKAh9cu7lroUFw7cH2MnTJ6BlGKpahOg9BemFBCMY3ci2vQl5u4fxMe/Z/QT26d5FsGpdcM52wd8RCdY4AoYRcKVIQKjZstW7rhhHMqI67xDBVtFE9fB684e4SNVtuj56P81ouZjA+40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747346945; c=relaxed/simple;
-	bh=vTlG7bW65Ok7ET5LGiyJDLIbRa5aW61JZ/tK5bBDdSg=;
+	s=arc-20240116; t=1747346992; c=relaxed/simple;
+	bh=lJ9GhyZ7d/pQPuf/ZRHN6c50tK5ky1MMTFbT8ohhnaQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oSVPh7YE867JLnZmvE2V7URpgqbw1nk/B9QXqs5yCBGjiOURsvej3J2Pra6Czyc6epjKrBSuVHAprI/+L+laDMnUiEhcpiCWLkoPHBJe9llNfkyadID98D2uu66ad3mpO1RK0nNIYOoRQeh1+p0dbnLF2xNXXWP/E2gpaqTVX/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LooUBX7d; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=r+2cQUdLCU6ut1lVA90VKo1em03dab4mbeGjWeozJcKTU9Po/OYOZY/WETvbq27NDo9PDlNtEN0+2+2LP7C0cZBBCpYKONPp6HuZGLSoFQggzQZob1pWyqtXcMLVK+mpKAMlYC9rjvI9Jl7eYgWN/FpFd9xeLb/6bJ6y+Eh4GU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eYRSGEtd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LooUBX7d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2556DC4CEE7;
-	Thu, 15 May 2025 22:08:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eYRSGEtd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3930C4CEE7;
+	Thu, 15 May 2025 22:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747346945;
-	bh=vTlG7bW65Ok7ET5LGiyJDLIbRa5aW61JZ/tK5bBDdSg=;
+	s=k20201202; t=1747346991;
+	bh=lJ9GhyZ7d/pQPuf/ZRHN6c50tK5ky1MMTFbT8ohhnaQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LooUBX7dxfOwukJ8lPQw36DZUDAEOByaA7bTebM8sVgFtb/7kfH0H+4aHKsMD0VbL
-	 Z/M4glKWvaTjZF1pzVrzAywXUKh0anbklwF3zwLd3nlZbHLFH5TXA+8cC4q5j6PJSZ
-	 ecq9Nb1+03ekYnHfPJXZqVvTzzN6GnnVVsz21Tl/UaMEbFrx758XKuWh9sz/QW1nxF
-	 G7MN06x7jo0Y5TcLJfMH2nfrWMH7UUWjteAOKd8Dygil0y4to9XKnYBPlriQytMuSf
-	 zT0B6T/KnhMTq5i+0begaYcHwYDyLrHJhOycCYjZrSZ509d2fhLbEFECe4Ub4tpWa2
-	 VMYDsUHFYV+kA==
-Date: Fri, 16 May 2025 00:08:56 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, Song Liu <songliubraving@fb.com>, 
-	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, 
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, 
-	David Laight <David.Laight@aculab.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv2 22/22] man2: Add uprobe syscall page
-Message-ID: <6elp7g4ne2pk3kai6f72ggkpi2eje7haptdisoraopkpf54n26@4sr54ptnwpex>
-References: <20250515121121.2332905-1-jolsa@kernel.org>
- <20250515121121.2332905-23-jolsa@kernel.org>
+	b=eYRSGEtdEo8wKf0rDhDXvhxrifW3PxHPKUca7LB07N97BmyUcnlWjMxhlDBDARIEk
+	 H2iD7ChYQCSV0fB8VZDNiQ+YnS5K3h1Fx19rF2F0RFQR58Q3vlXq/38/ZnomzXljPT
+	 c/F5k8j1CHJSsra7FcIW3hCZ/+VQOOUXXDxBG5f2ZA1w000/pXHoN0ilztCZO1XEn1
+	 ZUq2OqYZVCD2NDMOObm+ZdNgL0ulxtVE/V0H5K64XtofmBWKrZ7xz6T7pFpGMuXJYE
+	 xQm2VoOOdP0iyIOgC3RyT3roIwpc8bMztydZebyTSSdiR80KPf2Xs3H8cmXua6rX2X
+	 Th25dOEMpa6TQ==
+Date: Thu, 15 May 2025 15:09:48 -0700
+From: Kees Cook <kees@kernel.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Max Kellermann <max.kellermann@ionos.com>,
+	"Serge E. Hallyn" <serge@hallyn.com>, paul@paul-moore.com,
+	jmorris@namei.org, Andy Lutomirski <luto@kernel.org>,
+	morgan@kernel.org, Christian Brauner <christian@brauner.io>,
+	Jann Horn <jannh@google.com>, linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] exec: Correct the permission check for unsafe exec
+Message-ID: <202505151451.638C22B@keescook>
+References: <20250306082615.174777-1-max.kellermann@ionos.com>
+ <878qmxsuy8.fsf@email.froward.int.ebiederm.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pifqnw6ycu3nbclf"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250515121121.2332905-23-jolsa@kernel.org>
+In-Reply-To: <878qmxsuy8.fsf@email.froward.int.ebiederm.org>
 
+On Thu, May 15, 2025 at 11:24:47AM -0500, Eric W. Biederman wrote:
+> I have condensed the logic from Linux-2.4.0-test12 to just:
+> 	id_changed = !uid_eq(new->euid, old->euid) || !in_group_p(new->egid);
+> 
+> This change is userspace visible, but I don't expect anyone to care.
+> [...]
+> -static inline bool __is_setuid(struct cred *new, const struct cred *old)
+> -{ return !uid_eq(new->euid, old->uid); }
+> -
+> -static inline bool __is_setgid(struct cred *new, const struct cred *old)
+> -{ return !gid_eq(new->egid, old->gid); }
+> -
+> [...]
+> -	is_setid = __is_setuid(new, old) || __is_setgid(new, old);
+> +	id_changed = !uid_eq(new->euid, old->euid) || !in_group_p(new->egid);
 
---pifqnw6ycu3nbclf
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, Song Liu <songliubraving@fb.com>, 
-	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, 
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, 
-	David Laight <David.Laight@aculab.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv2 22/22] man2: Add uprobe syscall page
-References: <20250515121121.2332905-1-jolsa@kernel.org>
- <20250515121121.2332905-23-jolsa@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20250515121121.2332905-23-jolsa@kernel.org>
+The core change here is testing for differing euid rather than
+mismatched uid/euid. (And checking for egid in the set of all groups.)
 
-Hi Jiri,
+Imagined situations:
 
-On Thu, May 15, 2025 at 02:11:19PM +0200, Jiri Olsa wrote:
-> Changing uretprobe syscall man page to be shared with new
-> uprobe syscall man page.
->=20
-> Cc: Alejandro Colomar <alx@kernel.org>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+- setuid process is sharing fs. We already believe this is a non-issue,
+  as Jann pointed out about Chrome's order of operations, so so changes
+  here are likely fine.
 
-LGTM.
+- somehow ptracing a process with uid!=euid, and it tries to exec a
+  different setuid==euid ELF. Is switching ELF images a security
+  boundary? Probably not realistically.
 
+- setuid process sets NNP and execs a setuid==euid ELF, expecting to
+  have euid stripped. That doesn't happen any more. This is the most
+  worrisome case, but a program like that should _really_ have dropped
+  euid first if it is depending on that behavior. Hmmm. Probably some
+  code searching is needed...
 
-Have a lovely night!
-Alex
+-Kees
 
-> ---
->  man/man2/uprobe.2    |  1 +
->  man/man2/uretprobe.2 | 36 ++++++++++++++++++++++++------------
->  2 files changed, 25 insertions(+), 12 deletions(-)
->  create mode 100644 man/man2/uprobe.2
->=20
-> diff --git a/man/man2/uprobe.2 b/man/man2/uprobe.2
-> new file mode 100644
-> index 000000000000..ea5ccf901591
-> --- /dev/null
-> +++ b/man/man2/uprobe.2
-> @@ -0,0 +1 @@
-> +.so man2/uretprobe.2
-> diff --git a/man/man2/uretprobe.2 b/man/man2/uretprobe.2
-> index bbbfb0c59335..df0e5d92e5ed 100644
-> --- a/man/man2/uretprobe.2
-> +++ b/man/man2/uretprobe.2
-> @@ -2,22 +2,28 @@
->  .\"
->  .\" SPDX-License-Identifier: Linux-man-pages-copyleft
->  .\"
-> -.TH uretprobe 2 (date) "Linux man-pages (unreleased)"
-> +.TH uprobe 2 (date) "Linux man-pages (unreleased)"
->  .SH NAME
-> +uprobe,
->  uretprobe
->  \-
-> -execute pending return uprobes
-> +execute pending entry or return uprobes
->  .SH SYNOPSIS
->  .nf
-> +.B int uprobe(void);
->  .B int uretprobe(void);
->  .fi
->  .SH DESCRIPTION
-> +.BR uprobe ()
-> +is an alternative to breakpoint instructions
-> +for triggering entry uprobe consumers.
-> +.P
->  .BR uretprobe ()
->  is an alternative to breakpoint instructions
->  for triggering return uprobe consumers.
->  .P
->  Calls to
-> -.BR uretprobe ()
-> +these system calls
->  are only made from the user-space trampoline provided by the kernel.
->  Calls from any other place result in a
->  .BR SIGILL .
-> @@ -26,22 +32,28 @@ The return value is architecture-specific.
->  .SH ERRORS
->  .TP
->  .B SIGILL
-> -.BR uretprobe ()
-> -was called by a user-space program.
-> +These system calls
-> +were called by a user-space program.
->  .SH VERSIONS
->  The behavior varies across systems.
->  .SH STANDARDS
->  None.
->  .SH HISTORY
-> +.TP
-> +.BR uprobe ()
-> +TBD
-> +.TP
-> +.BR uretprobe ()
->  Linux 6.11.
->  .P
-> -.BR uretprobe ()
-> -was initially introduced for the x86_64 architecture
-> -where it was shown to be faster than breakpoint traps.
-> -It might be extended to other architectures.
-> +These system calls
-> +were initially introduced for the x86_64 architecture
-> +where they were shown to be faster than breakpoint traps.
-> +They might be extended to other architectures.
->  .SH CAVEATS
-> -.BR uretprobe ()
-> -exists only to allow the invocation of return uprobe consumers.
-> -It should
-> +These system calls
-> +exist only to allow the invocation of
-> +entry or return uprobe consumers.
-> +They should
->  .B never
->  be called directly.
-> --=20
-> 2.49.0
->=20
-
---=20
-<https://www.alejandro-colomar.es/>
-
---pifqnw6ycu3nbclf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmgmZfcACgkQ64mZXMKQ
-wqkceQ/7Bb+KzoKdDAaf09Xgn3v/CKQZp6/++6O5NCi/XU9zW0gRKIAgqyuXjLdB
-ZxkIAJ8b8+6SQePuEJIHasZs5LRlKPIQyW/rf36IRIuOCSWE9k4RzKpm4ODxHOig
-Mss/Z288qN52D5j+3FYuoH+nRjv/Qq2Bc+DgYOwRN2FN2VzODIiDAxyh8rRSAqnB
-ySQrcPTOv1uTjcQ4dNQO82zd3TswFtspzGj+h4hd8h7IFOYv+smNckgZLHVcr9bT
-mVAjC5g3faAep/7i/jVMs6ZI0754sJrfWOdrXt7TrhnQPBots6vaYLjlpNnHbUn2
-4ymhTPEcKdhxGMl6RG0d5JSpFmmiLlX1d5PYSOrr9948ON0WFmIoblmaNFwKkrSP
-bQjLonBQUxGey5x0JxMFBiY4rvcuMJe5W5POaPT0Qfqb5yjjMSOvjFQAqv1TVY73
-CpO0xgiERzEA9qUwHYiOU3OswEIhn/TZerpQQFG6cUbVihFPkiCJtIgndzZ9t+Me
-pN1Q+a+S2kpYtR2bDrH21m+/1Ak9YGZaoEjHRB87Pz57Npk0SvLpqTUx0K/f0F9b
-0wd7IXbwXfbY9KWkAVKNxWnrfLRfWfFcB+JIrmIP5dULNWiRJap5mLOMQjn16huE
-Iapyp1diQhmx4O3KrqiNnc5rJs/p4mHPtkjXiRRjuh73x4/G7Q0=
-=5zr5
------END PGP SIGNATURE-----
-
---pifqnw6ycu3nbclf--
+-- 
+Kees Cook
