@@ -1,110 +1,192 @@
-Received: from mail-qk1-f201.google.com (mail-qk1-f201.google.com [209.85.222.201])
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66A74B1E4F
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 04:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82242E55B
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 04:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747281793; cv=none; b=ZVbrxJ5sVqgl2fHsr8bajSHR/u7+Z2R3JYcqjcHdbAiu13zREwpX3KczqenvXMRGVHptLeq6v5S5rPKWQXBS5Kp2zRUN6ws98pfTZBGjiOpk4O8EEYqNAkx+5NKEEsj+D7JeJLhtRjwiJ2bRRTd/qIS2HCBUvwSQnG1rFkMknLM=
+	t=1747281930; cv=none; b=Xe6jJz7VeNm172Ciw2rSS2/pXbak9wBFbOrMcC2FdFah4D7tbSDXNa/GlEyKH6/5jNRxlgE1NQ19IT1xR5DesxXW6uICmzM9+VcMrmEI8iH/cqwpN1M1hZBWqNoaljyWI3SgRQKi64WZDW5eoxRUQtd2hdd0HhSZoXTuDYUyuiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747281793; c=relaxed/simple;
-	bh=n4uExHzumO1fQwjk2io6q9vLPmqmud+oReW5kLsLRgA=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=OFQNI1C20tftrBRw1N5XlI9rMdoP7DutgD0kTVm20Xb6YjiD1uw34un+MJDyljaqHV/H9LRLCq/PjJBitQfWXTEpfWEV9TVzN0YPn1fiUQ27A2ji8qm40qtz432erFMBmhDPPmTBpvY2kSB8EJ4uNkYYgpfvugvrZdw+KsQflhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--royluo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zB9ixvAo; arc=none smtp.client-ip=209.85.222.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--royluo.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zB9ixvAo"
-Received: by mail-qk1-f201.google.com with SMTP id af79cd13be357-7c791987cf6so121839385a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 21:03:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747281791; x=1747886591; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=i+ZS0urdC4ZHS2t+t45gk4d+KxYXBTgibfbR8Pb/1O4=;
-        b=zB9ixvAoJI9yiq8v8uN0rU7luSkjWQQAa6iY+EFO0mbu+SRovpltn9ZLZcM75wzTu3
-         hK9rduvXfn1ET3HCG045yXpHXpM1DryqVZRyIX4eKxNfkvTfUC4OukIPszthw5PayQN1
-         oTXJoI3VsY8dE5zEoRe1TJvjHUQY4ne0UopqDDJaapFv6QRCCKHbXgU6+DvhB0mmNQ88
-         pd13glgVfDRrJX/2tCm6I9DzHEh5WcGOpb8q40RafMo2S1ghPyvstkyztwrWseXJBRUM
-         to5YX5ZJnYcIN5ZE1Ed6V0K87WaKHtlfJr9PoziUFj+Ei61vXser2U2l/mnv1o0WhUs2
-         Ny9Q==
+	s=arc-20240116; t=1747281930; c=relaxed/simple;
+	bh=WbaOjFqUgJEb48qtEbQ5iH6fpJ6aQ4/fjv+Msg5IOg4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Jm6y9YH3xeMZEebDK3c+WWvfOtWUJ7oNHM/kSgmFGJV9bUes//7GL1U8Ce5/RssHWX+NmjHLjimrvw3FGMKA7bW8gsCQgQpLzdLyZZo8k4wPpZ2KCIF/sfybRtYqq3afETuHSxZG6dsuu0PGYsB0UjPhZG5QC6n8CJBSaKyTwnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3db6dc76193so10086355ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 21:05:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747281791; x=1747886591;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=i+ZS0urdC4ZHS2t+t45gk4d+KxYXBTgibfbR8Pb/1O4=;
-        b=Bgdfqxry1nNTg4FvpZAGiwZBdUwFyyzKv69L3Xn3KyYUiaA+U19m+kKQft9h03pIBT
-         YnClElOTN944kde+bdUTuPrSJDLgWTxRpAqfkKVTVpVHUlfoWV2S0lDqqWNH7sYmDjYr
-         p5dVbuUZ45ZmfNXdFDu+bB0bB4O2I3UByRO9TeWPutPVpqK/9eN5lLYtnJeQQCsFF3Sg
-         KBlY+EhxNoavKft8zEexJ+EpwaMGpavn/wnubMo8+/p2XWR/XrEh5Mxl14CcLtstgqj9
-         Pkm0dA5j43ZcbpADAmsRQk+ch5d4J9EmcEoUH9sI93Qc6J+5CcZSN6tYLkbq3i5tRYu3
-         EXUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV8cvRmZGuq9pR2RQnlYxn9097w1LI0XfrmEKwk7QPOWpKG3lNQpQBF5mG82SOlLKY5fidSWpCUOb1HDBY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuIwLyjQoQK/tYkh0F9gbR4jpXQ2vMOrSjHJhc67qM1fMxSrKH
-	BwHrVE7d51zjttWVxlqK65K5O6GQtul2ASqpa1e1CUfBVnUqX/4/TK92ulgQ3edlrPL0Qurzr5n
-	lFg==
-X-Google-Smtp-Source: AGHT+IF3Wqyyndyy472LEFKDw4lbcut1iEeIAEVEaDeoESIchpMsKaRDtH0yEOmBJ/KsWHdtaPZ2JicfGs0=
-X-Received: from qkbee18.prod.google.com ([2002:a05:620a:8012:b0:7cc:ccf4:e8ca])
- (user=royluo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:620a:19aa:b0:7c7:bb07:af07
- with SMTP id af79cd13be357-7cd287e2236mr757842285a.22.1747281790848; Wed, 14
- May 2025 21:03:10 -0700 (PDT)
-Date: Thu, 15 May 2025 04:02:59 +0000
+        d=1e100.net; s=20230601; t=1747281927; x=1747886727;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+0bvqXSA1MWlQ0Tx3Jf5kQuYB868wAHWrRS3Kaz/YCg=;
+        b=TeVZHd+Br9FYlvug/YWS62JaZ29sO/oNA905jHn8aAA7OxI29vzsQ3L7DDT2kFDGiA
+         7EiOQV2k3EwrinZkO9rZ8a3AwUzXej7iOO4OXN2kgp6ORbPFP3jjqoYAqpH9EF9e2g2k
+         otIup36chjywUdbuZDyR3is3ec42I5Zll33cIVlQcOVXU79ZWgfWl8X6THpO53nWuOhY
+         vquFztoqn0vJQ6aPTFwxslr/PDlKg0c55F9VELYvF/w5TqaSUgvhiEkmHfVQA4/SI/nj
+         buEGN88ryAOoucZph69JDHhF9rDrqakiHUbYSjKI8clZS6wNf8hBlORk5/xNh+Rzr0CU
+         H6fQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUyMLxt0amT8O6E0a7CAt7WdIFnF9J8m7IAEOIJQGYT7XxeFM1LVvQMBiamGxsVM8AXFZVjT8LMZiRcFPk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCL3JzLvVI4CJ8dUHaN3/+pK1bThuY7CiMmWYk+UKfFt1BgPwo
+	8C3qsVkNOKEpdCuXCpFSXIIkE78Z+F1tNBPMC9JD8CAEFIGxllGdMDtVPFqy3fR7b+gKTP/gbZf
+	kN0VI7qUwJuiHGjZOwW2kRo06OjrqHIWTsDbDBY44jAeSLUMP6r8Tv1k=
+X-Google-Smtp-Source: AGHT+IEQomtYcnnBJIZkcRc9OIMIxUoG7c54+xqdEXfZ+RPlMV4LGkSmmNCctNYX0JZdKfesrvteFQdXHiDOkXiemRU4yb1kLGJm
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <20250515040259.1254356-1-royluo@google.com>
-Subject: [PATCH v1 2/2] usb: dwc3: Force full reset on xhci removal
-From: Roy Luo <royluo@google.com>
-To: royluo@google.com, Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org, 
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:3e8d:b0:3d0:4e0c:2c96 with SMTP id
+ e9e14a558f8ab-3db6f79a2demr72468195ab.2.1747281927482; Wed, 14 May 2025
+ 21:05:27 -0700 (PDT)
+Date: Wed, 14 May 2025 21:05:27 -0700
+In-Reply-To: <00000000000035b2ce06197bd027@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68256807.a00a0220.104b28.0018.GAE@google.com>
+Subject: Re: [syzbot] [block?] INFO: task hung in bdev_open
+From: syzbot <syzbot+5c6179f2c4f1e111df11@syzkaller.appspotmail.com>
+To: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-During an xhci host controller reset (via `USBCMD.HCRST`), reading DWC3
-registers can return zero instead of their actual values. This applies
-not only to registers within the xhci memory space but also those in
-the broader DWC3 IP block.
+syzbot has found a reproducer for the following issue on:
 
-By default, the xhci driver doesn't wait for the reset handshake to
-complete during teardown. This can cause problems when the DWC3 controller
-is operating as a dual role device and is switching from host to device
-mode, the invalid register read caused by ongoing HCRST could lead to
-gadget mode startup failures and unintended register overwrites.
+HEAD commit:    9f35e33144ae x86/its: Fix build errors when CONFIG_MODULES=n
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=10639af4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bc44e21a0b824ef8
+dashboard link: https://syzkaller.appspot.com/bug?extid=5c6179f2c4f1e111df11
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=115c4e70580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=166c2f68580000
 
-To mitigate this, enable xhci-full-reset-on-remove-quirk to ensure that
-xhci_reset() completes its full reset handshake during xhci removal.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/0143554b1db5/disk-9f35e331.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/ccf3a30abae2/vmlinux-9f35e331.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6e205d989271/bzImage-9f35e331.xz
 
-Signed-off-by: Roy Luo <royluo@google.com>
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5c6179f2c4f1e111df11@syzkaller.appspotmail.com
+
+INFO: task udevd:5194 blocked for more than 143 seconds.
+      Not tainted 6.15.0-rc6-syzkaller-00052-g9f35e33144ae #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:udevd           state:D stack:24824 pid:5194  tgid:5194  ppid:1      task_flags:0x400140 flags:0x00000002
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
+ __schedule_loop kernel/sched/core.c:6845 [inline]
+ schedule+0x165/0x360 kernel/sched/core.c:6860
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6917
+ __mutex_lock_common kernel/locking/mutex.c:678 [inline]
+ __mutex_lock+0x724/0xe80 kernel/locking/mutex.c:746
+ bdev_open+0xe0/0xd30 block/bdev.c:945
+ blkdev_open+0x3a8/0x510 block/fops.c:652
+ do_dentry_open+0xdf3/0x1970 fs/open.c:956
+ vfs_open+0x3b/0x340 fs/open.c:1086
+ do_open fs/namei.c:3880 [inline]
+ path_openat+0x2ee5/0x3830 fs/namei.c:4039
+ do_filp_open+0x1fa/0x410 fs/namei.c:4066
+ do_sys_openat2+0x121/0x1c0 fs/open.c:1429
+ do_sys_open fs/open.c:1444 [inline]
+ __do_sys_openat fs/open.c:1460 [inline]
+ __se_sys_openat fs/open.c:1455 [inline]
+ __x64_sys_openat+0x138/0x170 fs/open.c:1455
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fdfe28a7407
+RSP: 002b:00007ffefe105d00 EFLAGS: 00000202 ORIG_RAX: 0000000000000101
+RAX: ffffffffffffffda RBX: 00007fdfe2f55880 RCX: 00007fdfe28a7407
+RDX: 00000000000a0800 RSI: 000056326f6fe3e0 RDI: ffffffffffffff9c
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000000
+R13: 000056324ea0e100 R14: 0000000000000000 R15: 00007ffefe105f90
+ </TASK>
+INFO: task syz-executor268:5876 blocked for more than 143 seconds.
+      Not tainted 6.15.0-rc6-syzkaller-00052-g9f35e33144ae #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor268 state:D stack:27096 pid:5876  tgid:5872  ppid:5852   task_flags:0x400140 flags:0x00004006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
+ __schedule_loop kernel/sched/core.c:6845 [inline]
+ schedule+0x165/0x360 kernel/sched/core.c:6860
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6917
+ __mutex_lock_common kernel/locking/mutex.c:678 [inline]
+ __mutex_lock+0x724/0xe80 kernel/locking/mutex.c:746
+ bdev_release+0x1a9/0x650 block/bdev.c:1128
+ blkdev_release+0x15/0x20 block/fops.c:660
+ __fput+0x44c/0xa70 fs/file_table.c:465
+ task_work_run+0x1d4/0x260 kernel/task_work.c:227
+ ptrace_notify+0x281/0x2c0 kernel/signal.c:2520
+ ptrace_report_syscall include/linux/ptrace.h:415 [inline]
+ ptrace_report_syscall_exit include/linux/ptrace.h:477 [inline]
+ syscall_exit_work+0xc2/0x1d0 kernel/entry/common.c:173
+ syscall_exit_to_user_mode_prepare+0x6f/0xe0 kernel/entry/common.c:200
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:205 [inline]
+ syscall_exit_to_user_mode+0x12/0x120 kernel/entry/common.c:218
+ do_syscall_64+0x103/0x210 arch/x86/entry/syscall_64.c:100
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f4f6252f929
+RSP: 002b:00007f4f624e5218 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: 0000000000000000 RBX: 00007f4f625b7328 RCX: 00007f4f6252f929
+RDX: 0000000000000000 RSI: 000000000000ab03 RDI: 0000000000000003
+RBP: 00007f4f625b7320 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f4f6258435c
+R13: 64626e2f7665642f R14: 0000200000000040 R15: 0000000080000000
+ </TASK>
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/31:
+ #0: ffffffff8df3dce0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+ #0: ffffffff8df3dce0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
+ #0: ffffffff8df3dce0 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x2e/0x180 kernel/locking/lockdep.c:6764
+2 locks held by kworker/u8:3/53:
+ #0: ffff8880b8839b58 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:605
+ #1: ffff8880b8823b08 (&per_cpu_ptr(group->pcpu, cpu)->seq){-.-.}-{0:0}, at: psi_task_switch+0x318/0x6d0 kernel/sched/psi.c:975
+1 lock held by udevd/5194:
+ #0: ffff888024977358 (&disk->open_mutex){+.+.}-{4:4}, at: bdev_open+0xe0/0xd30 block/bdev.c:945
+2 locks held by getty/5587:
+ #0: ffff8880303d60a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
+ #1: ffffc90002ffe2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x43e/0x1400 drivers/tty/n_tty.c:2222
+1 lock held by udevd/5861:
+ #0: ffff888024977358 (&disk->open_mutex){+.+.}-{4:4}, at: bdev_open+0xe0/0xd30 block/bdev.c:945
+1 lock held by syz-executor268/5876:
+ #0: ffff888024977358 (&disk->open_mutex){+.+.}-{4:4}, at: bdev_release+0x1a9/0x650 block/bdev.c:1128
+
+=============================================
+
+NMI backtrace for cpu 1
+CPU: 1 UID: 0 PID: 31 Comm: khungtaskd Not tainted 6.15.0-rc6-syzkaller-00052-g9f35e33144ae #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ nmi_cpu_backtrace+0x39e/0x3d0 lib/nmi_backtrace.c:113
+ nmi_trigger_cpumask_backtrace+0x17a/0x300 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:158 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:274 [inline]
+ watchdog+0xfee/0x1030 kernel/hung_task.c:437
+ kthread+0x711/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x4e/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0 skipped: idling at constant_test_bit arch/x86/include/asm/bitops.h:206 [inline]
+NMI backtrace for cpu 0 skipped: idling at arch_test_bit arch/x86/include/asm/bitops.h:238 [inline]
+NMI backtrace for cpu 0 skipped: idling at tif_test_bit include/linux/thread_info.h:192 [inline]
+NMI backtrace for cpu 0 skipped: idling at tif_need_resched include/linux/thread_info.h:208 [inline]
+NMI backtrace for cpu 0 skipped: idling at current_clr_polling_and_test include/linux/sched/idle.h:79 [inline]
+NMI backtrace for cpu 0 skipped: idling at default_idle_call+0x1b/0xb0 kernel/sched/idle.c:111
+
+
 ---
- drivers/usb/dwc3/host.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
-index b48e108fc8fe..ea865898308f 100644
---- a/drivers/usb/dwc3/host.c
-+++ b/drivers/usb/dwc3/host.c
-@@ -126,7 +126,7 @@ static int dwc3_host_get_irq(struct dwc3 *dwc)
- 
- int dwc3_host_init(struct dwc3 *dwc)
- {
--	struct property_entry	props[6];
-+	struct property_entry	props[7];
- 	struct platform_device	*xhci;
- 	int			ret, irq;
- 	int			prop_idx = 0;
-@@ -182,6 +182,9 @@ int dwc3_host_init(struct dwc3 *dwc)
- 	if (DWC3_VER_IS_WITHIN(DWC3, ANY, 300A))
- 		props[prop_idx++] = PROPERTY_ENTRY_BOOL("quirk-broken-port-ped");
- 
-+	if (dwc->dr_mode == USB_DR_MODE_OTG)
-+		props[prop_idx++] = PROPERTY_ENTRY_BOOL("xhci-full-reset-on-remove-quirk");
-+
- 	if (prop_idx) {
- 		ret = device_create_managed_software_node(&xhci->dev, props, NULL);
- 		if (ret) {
--- 
-2.49.0.1045.g170613ef41-goog
-
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
