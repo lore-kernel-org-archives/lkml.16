@@ -1,104 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B9A282F1
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 07:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0E9282F1;
+	Thu, 15 May 2025 07:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747292812; cv=none; b=INu8y/pl8tPUBroo8F1fZhpFPXUh61ibPwIcJnzLizfywJjUTdC2fKDyHIR7BJJKob5qbKjSPTmg1TQXz/CT1QHokfK5YkVnEz1E7vl0FAV0kfP+sYkteJ5UXxFJtzsIpV/J2xfABsnGWV4/pvNqjn/aqR3tLo67yzSObn2uoF8=
+	t=1747292962; cv=none; b=PqEFRQXMU3eJZ57KuIZfAaJaBKG4r8DzVn4aQEaGOX1b/CA5+3rD1mtv9QfH1FiAByv0uqE6kkT6l8byaf+yrWoeTuG8fginKQh12MCCTpO0VXk+8tUmEiBYw1v52h8ekqtrL2Eb82OXnqz4pioatEOIUSqsx0EfEHIOcqyaVbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747292812; c=relaxed/simple;
-	bh=FqhhP9BuISrdWUtW7sIr4JmzsRFYmoCzpS8Ra43qoKE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AUwDt0l6tNlWhFKdlemCJUBsuX/joAbjzW5GPoglpSQ1MGbj9LuHSGU8lTKl7/h4QfJpsuWX02/QQQHO4VSIuY4HCkYbfxKQdyl8WuHL3tXPd9ksfmYBO3elNx7PNAPNfQIMklGhn1O7Nj5E6Z20ZySn7h3BbY9g8VbVMSJ3sbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ITdXUMKE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747292962; c=relaxed/simple;
+	bh=P7uzORak4z6dkJsi8YJLYbHfjxpb1Q7WLXSqJKnQegY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=cv0NR43dXfNGf2YiB+yy4BMUdEE8ZY6T/kDLgEFKG8Bp26PYIpKfBTnwN14/tNpdBePqs8dPfqLcLo8O2o3Qrl7giVgzr9gZPBis88NyzLI6F7nx9zTIwi3w/IvfTmVXQ0zs4eNLZOBP3jw1FosjJkfrGyjA6EvnOaq57JPW5Aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=PrI3akoJ; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ITdXUMKE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 027A3C4CEE7;
-	Thu, 15 May 2025 07:06:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747292811;
-	bh=FqhhP9BuISrdWUtW7sIr4JmzsRFYmoCzpS8Ra43qoKE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ITdXUMKEkEyoBlMn7ZHsVtK7QBY8+ygbw25WUPWf8LeqvAIuBqqA9J8+VkGZzAcI8
-	 grIDC4a2PQtLLpk6p0MNDFp5xeGfbMVuNysLUIn1/h2Mc/GUR2EQmYpifhYdl3tis8
-	 pvTOctuknlbux2zyMhzZJXpGcwKa5e3uovt11qUoN6V1PbSQYFZSqBVJoZuJGvDHVe
-	 GuNDlJRcBHdvIPx+CQFQBgeVOrSyG9Hs756YnAev35ZpjqRr5haUMqghXh6GtwFmWE
-	 JLPwEcoIzfGzKXYAW1Jt4LU8AE9UNGJhWdE+1/OUkZ/Fvne5hy6cNI0OmTk2uZ/zKn
-	 Igyuv3dbt2ktw==
-Date: Thu, 15 May 2025 09:06:47 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Brian Gerst <brgerst@gmail.com>
-Subject: Re: [PATCH v3 1/7] x86/cpu: Use a new feature flag for 5 level paging
-Message-ID: <aCWSh3P3RgoEkhqO@gmail.com>
-References: <20250514104242.1275040-9-ardb+git@google.com>
- <20250514104242.1275040-10-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PrI3akoJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747292953;
+	bh=rjMpuiuaguBr974R6yvDsvY66VN82ntY2Uw4nNKUVM0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=PrI3akoJz/G04abHDAByrJpnCmrHrBqV832c2Y/1TS2at8gq4gRA/YrYPxTMQoWdU
+	 12Higryq/w9gth1aFNJADmvFmfB662J2PBZI7yDSDB1v6Ut4Uic2V72Wzpt2qZRzzw
+	 7s/rNikTs4ZQCUPWCMWz8VnAkR4L+psGBZHzNHLm9MMZkh4FGBvduGoc03RCpwu3bV
+	 /yQU+LsG5D8Qri7zQsKtUkk8JXLfrn8O82Df5fnzaHbIK7hAP2WvjHhlmqX0zsiuYx
+	 iaDuuJExSlRtlvA6GdLkwsvHwjjoUyePfHmbrNGRAS4sqJhBUNwy93XNYjmodtEhwI
+	 T0gvb/o2F5u+g==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZyhCY14Yqz4xM5;
+	Thu, 15 May 2025 17:09:13 +1000 (AEST)
+Date: Thu, 15 May 2025 17:09:12 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Kishon Vijay Abraham I <kishon@kernel.org>, Vinod Koul
+ <vkoul@kernel.org>
+Cc: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, Lad Prabhakar
+ <prabhakar.mahadev-lad.rj@bp.renesas.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the phy-next tree with the phy tree
+Message-ID: <20250515170912.509a9751@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514104242.1275040-10-ardb+git@google.com>
+Content-Type: multipart/signed; boundary="Sig_//I9dMK3iq7KrmdumZGXbDtu";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_//I9dMK3iq7KrmdumZGXbDtu
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-* Ard Biesheuvel <ardb+git@google.com> wrote:
+Hi all,
 
-> From: Ard Biesheuvel <ardb@kernel.org>
-> 
-> Currently, the LA57 CPU feature flag is taken to mean two different
-> things at once:
-> - whether the CPU implements the LA57 extension, and is therefore
->   capable of supporting 5 level paging;
-> - whether 5 level paging is currently in use.
-> 
-> This means the LA57 capability of the hardware is hidden when a LA57
-> capable CPU is forced to run with 4 levels of paging. It also means the
-> the ordinary CPU capability detection code will happily set the LA57
-> capability and it needs to be cleared explicitly afterwards to avoid
-> inconsistencies.
-> 
-> Separate the two so that the CPU hardware capability can be identified
-> unambigously in all cases.
-> 
-> To avoid breaking existing users that might assume that 5 level paging
-> is being used when the "la57" string is visible in /proc/cpuinfo,
-> repurpose that string to mean that 5-level paging is in use, and add a
-> new string la57_capable to indicate that the CPU feature is implemented
-> by the hardware.
+Today's linux-next merge of the phy-next tree got a conflict in:
 
-So the new string ended up being "la57_hw", not "la57_capable". :-)
+  drivers/phy/renesas/phy-rcar-gen3-usb2.c
 
-> -#define X86_FEATURE_LA57		(16*32+16) /* "la57" 5-level page tables */
-> +#define X86_FEATURE_LA57		(16*32+16) /* "la57_hw" 5-level page tables */
+between commits:
 
-I fixed the changelog and kept la57_hw.
+  54c4c58713aa ("phy: renesas: rcar-gen3-usb2: Fix role detection on unbind=
+/bind")
+  55a387ebb921 ("phy: renesas: rcar-gen3-usb2: Lock around hardware registe=
+rs and driver data")
 
-BTW., I too was considering these variants for the new flag:
+from the phy tree and commit:
 
-	la57_support
-	la57_cap
-	la57_capable
+  3767474d7497 ("phy: renesas: phy-rcar-gen3-usb2: Add USB2.0 PHY support f=
+or RZ/V2H(P)")
 
-	  - These are easy to confuse with 5-level paging software 
-	    support in the kernel, ie. the name doesn't sufficiently 
-	    disambiguate that this flag is about hardware support.
+from the phy-next tree.
 
-	la57_cpu
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-	  - While this makes it clear that it's about the CPU, the _cpu 
-	    postfix often denotes something related to a specific CPU, 
-	    so it's a tiny bit confusing in this context.
+--=20
+Cheers,
+Stephen Rothwell
 
-... and each had disadvantages, as listed, and "la57_hw" seemed the 
-least ambiguous in this context.
+diff --cc drivers/phy/renesas/phy-rcar-gen3-usb2.c
+index 9fdf17e0848a,867f43132b7a..000000000000
+--- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+@@@ -467,16 -472,24 +477,24 @@@ static int rcar_gen3_phy_usb2_init(stru
+  	val =3D readl(usb2_base + USB2_INT_ENABLE);
+  	val |=3D USB2_INT_ENABLE_UCOM_INTEN | rphy->int_enable_bits;
+  	writel(val, usb2_base + USB2_INT_ENABLE);
+ -	writel(USB2_SPD_RSM_TIMSET_INIT, usb2_base + USB2_SPD_RSM_TIMSET);
+ -	writel(USB2_OC_TIMSET_INIT, usb2_base + USB2_OC_TIMSET);
+ =20
+ -	/* Initialize otg part */
+ -	if (channel->is_otg_channel) {
+ -		if (rcar_gen3_needs_init_otg(channel))
+ -			rcar_gen3_init_otg(channel);
+ -		rphy->otg_initialized =3D true;
+ +	if (!rcar_gen3_is_any_rphy_initialized(channel)) {
+ +		writel(USB2_SPD_RSM_TIMSET_INIT, usb2_base + USB2_SPD_RSM_TIMSET);
+ +		writel(USB2_OC_TIMSET_INIT, usb2_base + USB2_OC_TIMSET);
+  	}
+ =20
+ +	/* Initialize otg part (only if we initialize a PHY with IRQs). */
+ +	if (rphy->int_enable_bits)
+ +		rcar_gen3_init_otg(channel);
+ +
++ 	if (channel->utmi_ctrl) {
++ 		val =3D readl(usb2_base + USB2_REGEN_CG_CTRL) | USB2_REGEN_CG_CTRL_UPHY=
+_WEN;
++ 		writel(val, usb2_base + USB2_REGEN_CG_CTRL);
++=20
++ 		writel(USB2_UTMI_CTRL_INIT, usb2_base + USB2_UTMI_CTRL);
++ 		writel(val & ~USB2_REGEN_CG_CTRL_UPHY_WEN, usb2_base + USB2_REGEN_CG_CT=
+RL);
++ 	}
++=20
+  	rphy->initialized =3D true;
+ =20
+  	return 0;
+@@@ -764,7 -791,9 +792,9 @@@ static int rcar_gen3_phy_usb2_probe(str
+  	if (phy_data->no_adp_ctrl)
+  		channel->obint_enable_bits =3D USB2_OBINT_IDCHG_EN;
+ =20
++ 	channel->utmi_ctrl =3D phy_data->utmi_ctrl;
++=20
+ -	mutex_init(&channel->lock);
+ +	spin_lock_init(&channel->lock);
+  	for (i =3D 0; i < NUM_OF_PHYS; i++) {
+  		channel->rphys[i].phy =3D devm_phy_create(dev, NULL,
+  							phy_data->phy_usb2_ops);
 
-Thanks,
+--Sig_//I9dMK3iq7KrmdumZGXbDtu
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-	Ingo
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmglkxgACgkQAVBC80lX
+0GxcrAf/el+CIcMtd5eNjL3UbTW4cNDnBQ0KbF8OMcKi3SWdR6tT4DP+ny7AKAaY
+3NKF+t6y6/c8c/EljGsMPQFElnDEL2xACAmF3Abr5QRkdC/qlkLgvwBBh83Hbhu1
+jZAC4NXCOPwpdK4dshbqqMw41GWiuvzRwtHz9HifgPfiPKnEbtKWlE71oW7ZyElZ
+ThLLTQwraIun4fRS0ya6D7CckIrxLeF7Un99dRSQhEmdO1B/raF4sxHN4JDQof5Y
+vW64Fd4s971KzapMJeEXt1jVAzImDTi09Z0/DkInozjhOmrhbRtnRUucpzZ8yoiv
+QxEHJ/1HI2tuLKMI7NOdbJTnCYJysA==
+=Bv1d
+-----END PGP SIGNATURE-----
+
+--Sig_//I9dMK3iq7KrmdumZGXbDtu--
