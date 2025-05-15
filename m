@@ -1,77 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6141A275;
-	Thu, 15 May 2025 07:40:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1D72222BE;
+	Thu, 15 May 2025 07:42:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747294846; cv=none; b=lCqUY5VAnXM3yMNYww7axm0AFNaux4LL1uyHlxfof7lC8HP8VqMPaQFu8ZYQgV2yDEJRZl+qlREYd/l0JrPQ4GD8dkvdqJcoNvEyKs1axu7Qt/ARNqaSiA6LIU+cCiDm++30acLvfdc9OrDZADSPq/M0QJP2yTCDhlDppn/Yz9g=
+	t=1747294951; cv=none; b=D5eRrl28vcGUvDavuiR/AQH/sdHKcI6oZB5PJyQgWpSf0ljDvOKqbZD/XCNHn6y+LUONx1JFdw5abSAae15BTb7aPStj1o32X33MamGUqBVv+J4cwmvnjYe4rMFS8L7z/+ppsKuOYwbc8kV+iayFmQzu0FQzOLPX1CIim/i4o+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747294846; c=relaxed/simple;
-	bh=Kj0uKYjfZ6jFWB56rsStJK6eM7peE/Sx4m/1+5Iq2x8=;
+	s=arc-20240116; t=1747294951; c=relaxed/simple;
+	bh=GBbnWPBL5bu78J5Q9wv3xjjgq6DoTEwpwsTgPX3y324=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iQbtVIoYpwZH96lSYH8+2EvqfxZw07Iw1rHkPf3oZ9ssq9HgBr9frMOXo7gJaBDkNw4NpYjxARU232eLfQP+wHRQ0uZGgBI8iyKSAO4FIfBpTTlkW+klbQDokzBtCB1VhtrUGkeSMpP7fPUqjrZ7B1A1B3PdWavcqSlAAM3Nb90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=IcEgib+M; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qtI7UriHUHr8gp7v03L/+Yjf25ZOnIRWPQl1zrZw1B5NczD062/JZovfx3RmiOPDaCk/vWlSzivLDu3oKbw17RhE7MeZZDYDGxqf96AkvpUAs98OGSTRLjg3W0DNAiymaTpz5JaP0BIa3MlKIVOCCUgv1JE5xng90wkxlV9DhrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I1D1dnzq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IcEgib+M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD9E0C4CEE7;
-	Thu, 15 May 2025 07:40:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747294844;
-	bh=Kj0uKYjfZ6jFWB56rsStJK6eM7peE/Sx4m/1+5Iq2x8=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I1D1dnzq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D948C4CEE7;
+	Thu, 15 May 2025 07:42:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747294951;
+	bh=GBbnWPBL5bu78J5Q9wv3xjjgq6DoTEwpwsTgPX3y324=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IcEgib+MfOY/RWaUjU3hCCGOx13MYxm3hyli2+73ubkL12cP4pO7wY5K69mHX7bPy
-	 9LMPd7Ne4hsB6YmyccEYNH8JG6EaM0H5yk4IUmXANAoz9r7ApE0e5EtzX/Ee4PV3CB
-	 pMR/KUvUupFfUu/50uu6EC97BiWyAvMcjv/xUQII=
-Date: Thu, 15 May 2025 09:38:55 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH] rust: add basic ELF sections parser
-Message-ID: <2025051543-override-rockiness-3ead@gregkh>
-References: <20250515-elf-v1-1-4b53745453c0@nvidia.com>
+	b=I1D1dnzqnMNJ6OhYH8NlPYiZwkDsPl9R2rkIf2/d/s7gt/zWN5CWiMTfJP7DyZYx9
+	 h/XuHF8mp87nYfgUAOoTXY980KFzpODJxwabMp2JW7dnHtABC/Z9uRIRg5eWXaPXqC
+	 H9kL/37W3UgoIMT6TMx/35Q/8POL6Fd8DoPTNW/YAFKsXZKMmxRK1b3+C/duUameyv
+	 gK8WnYT148STshNkXzOe5vSY2WPashNGKSe2PXvKBQJiKSR1wgTr68ehwFRKOXlbJi
+	 08OChXGjWWJhrxJ2xUnRhDD5Br1zJRGH5xGvDecAr8t/Me5eGhCJCDm+ZDChl6+4w0
+	 fAWkkLigrlUaw==
+Date: Thu, 15 May 2025 09:42:26 +0200
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.12 000/184] 6.12.29-rc2 review
+Message-ID: <aCWa4oEr7PJNr3Y-@finisterre.sirena.org.uk>
+References: <20250514125624.330060065@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Ddso/KxKWhEitAKw"
+Content-Disposition: inline
+In-Reply-To: <20250514125624.330060065@linuxfoundation.org>
+X-Cookie: Well begun is half done.
+
+
+--Ddso/KxKWhEitAKw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250515-elf-v1-1-4b53745453c0@nvidia.com>
 
-On Thu, May 15, 2025 at 03:03:51PM +0900, Alexandre Courbot wrote:
-> Add a simple ELF sections parser for unpacking loaded binaries from
-> user-space. This is not intended to become a fully-fledged ELF parser,
-> just a helper to parse firmwares packaged in that format.
-> 
-> This parser is notably helpful for NVIDIA's GSP firmware, which is
-> provided as an ELF binary using sections to separate the firmware code
-> to its other components like chipset-specific signatures.
-> 
-> Since the data source is likely to be user-space, checked arithmetic
-> operations and strict bound checking are used.
-> 
-> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-> ---
-> This will soon be needed in order to load the GSP firmware in nova-core,
-> so sending this early for separate review.
-> ---
->  rust/kernel/elf.rs | 322 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+On Wed, May 14, 2025 at 03:03:56PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.29 release.
+> There are 184 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Why is this not just done in userspace and then have userspace feed the
-proper elf sections to the kernel through the firmware interface?
-Having to parse elf seems crazy for the kernel to be forced to do here
-as the kernel should NOT be touching anything in a firmware blob other
-than passing it off to the firmware directly.
+Tested-by: Mark Brown <broonie@kernel.org>
 
-thanks,
+--Ddso/KxKWhEitAKw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-greg k-h
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmglmuEACgkQJNaLcl1U
+h9B22Qf+NSb0zhapwhCnGigw74pXTbExdAsiMr6gCyLF333ubXHO3YrQslH99Rw3
+TPHLwU1FIPZvjdV23u4eglUPmqG/Ku22HfX2onz95V/iL2c9+YjT3nPUHaNVWOJr
+Vy6bEg0WUusYaLvKEgusfVhnMm9It+F5FFBn/FUYHkp6PKIoZM4OUJSUBB9nnztD
+TM/EkUkIUCSnfFQyk3q2JZpYD39FndC/ydLSRE2eGeL5PjkAGU174qKFBE+VeWYm
+bhTRudaASg22nPUj5Vk3W+HK6fRefKnadkZ3lhFr1VAXBYy6riHzs+cpd7bHev9I
+zCwjKNi9ZzsAKu1nzOnhvXdzqlg+3A==
+=hjdg
+-----END PGP SIGNATURE-----
+
+--Ddso/KxKWhEitAKw--
