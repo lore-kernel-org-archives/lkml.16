@@ -1,178 +1,157 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645A821B910
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7CB4254874
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747329011; cv=none; b=uIIGVpF5YFEHzRG0HUvATKl4dwllXRqT7GAWemHc3N27vCqiCryBAtY6fQ+pIPWTNkWScoqTNlKYwDjrp/SrFSJvQKhfpoBO/pBkudXL7/FbfSrsBvdz3udWuL7W01wdGjBDmn4zVeC2DorCIel1jrKkJQzTGXuc0ith4TsTsAc=
+	t=1747329074; cv=none; b=ieFbVXwWApLiYXOm7CBGNsbfnHnnRulTx+LX/OdPisg7LQ2TkJtkBn3RiYlGiXgrnOsTnC6RGDeHCo77iMaE0bXTYBErHbFS24AqEO68NOLTUKu2JfdIMAOlLKh0bzMZmDBhkTd0wQDh7nZ+EeIsJ5AhZqvSE6UispMtCi3YKMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747329011; c=relaxed/simple;
-	bh=7l959DDc7jBJh95vOkWz3tllgngyDo+k0XrFifMPGTE=;
+	s=arc-20240116; t=1747329074; c=relaxed/simple;
+	bh=S66ui8RplR1hUsEfL2yiUULr7ReEi7voeyYmjYi8kQM=;
 	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QeWaDQqHCDpEdZKAyJevsXJc+1ZH3JCltmDZMFZoEoHEBT7H8wDCjqRkIgzJzzA1iihYDuIv49fZe8C66pfjb45MwvRhDlbbFrfR1GT2Z0V79GATEA8NT88Vmf1jfjbaHcamStTL4+Lh+Vjx+E3UalnAyYPCbKrxZnXAbtQhMBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=n/1g+h6+; arc=none smtp.client-ip=185.125.188.122
+	 To:Cc:Content-Type; b=tepu4i6f7wzBT55o87Do9vkbtOd46PGu69aKzQt0BI3E44neyEGh9u1PtUxPXsUWBil8iuX4BlCfIq/pCUaoKO8o4PSYS1hmmoxGisbr21w62/6yT5WtS3coPbfdjoVxQTtXBF+NLA70Q74wuPW1CmgaBc6V5T96eOVvzjvAAls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=ROl/X5K2; arc=none smtp.client-ip=185.125.188.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="n/1g+h6+"
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com [209.85.161.71])
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="ROl/X5K2"
+Received: from mail-vk1-f200.google.com (mail-vk1-f200.google.com [209.85.221.200])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id A6047497A9
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:10:08 +0000 (UTC)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 655163F830
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1747329008;
-	bh=hc10wZlOZXdQSTbtiNrSV2vv5sB6wouwtdIbWrMrirQ=;
+	s=20210705; t=1747329069;
+	bh=JtByJyVo62jw0XHnA95uqk/ce1yHYsp6TEnfnoc5j1w=;
 	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
 	 To:Cc:Content-Type;
-	b=n/1g+h6+xEGwyMVYQHML0fkLRjN/999MtpfAj5h7byIauToL948Vp8WRUaTk6yI23
-	 QQ2+oqrDJTyXvt1fzMXs68FC/CJFuLYhz7vy/Iyxmd/NiZ2n6qP1XrzwjHot/hHjhX
-	 uXnJteiXFKh+rQK+TYcTM1v0Lb1UlNsTNhhVzfEAE2ZCwwvfrBYnJHfb3lbt6e+jPn
-	 JgU0XiCpMK/OB0QfP/Xc5HkYk+2LuHNytF5C3DuKVgOI2MwUpvfi6CClCycjcFRMU4
-	 U7dvyHXpH4QdxlJi1Ss2gQvtnRmCo0oXwQUI4xPcIXewA7mIwY9cuz/GRqe+2SIDM/
-	 CInsACzHL6Kog==
-Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-606691c2afdso1545823eaf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:10:08 -0700 (PDT)
+	b=ROl/X5K2DjNGRQGG39gm7pLDB+ZrOl6W+kl2UTHPPjAw5LcYeGOjLInbmAARgjMUh
+	 Gu4LIIF5zwLAkVsxmC5WcrOKRkRwfk0KeUxBA4Hw2T8bq/fxpXfVGembzWJc6bWO0u
+	 dCSCK1VEjZfenCn48ZhLSFtVWVDOyVaS1CCmlAhyP7TIRf4a569pDsy7S9qOLtzoft
+	 qo0TDxHxs4FSyr1cyqNjISjHPWa1QHfRZlEiIK4RX7Xb7V4SVJn4ZRchdCHVXjlmQ3
+	 p9u0o/Zk4CF47ZzYiYstfsdFltfD9BBvTVfztlrZ8NWXtqzkt6Xl1+id8X+c+Lv4Kd
+	 8aHwcJDoX2Urg==
+Received: by mail-vk1-f200.google.com with SMTP id 71dfb90a1353d-52a7458ad5aso317713e0c.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:11:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747329007; x=1747933807;
+        d=1e100.net; s=20230601; t=1747329067; x=1747933867;
         h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hc10wZlOZXdQSTbtiNrSV2vv5sB6wouwtdIbWrMrirQ=;
-        b=Qmy2Kxgl/+Bbcs4stkovmhaVYtZAawntP45gOW42TyPpyFsfs8Cig84suyI1+hUVFM
-         tZCgTxcXfbhAxJwl2mUX1vmybMlSTFTz1tq/351oFVMjVMNV8uM2kdbNhmzTDXNLmDbZ
-         uyMgXtsQ95AUari2/+sCW5OijRV1H5FaGZ0MLNLvdxpYas1daaNjBHHu7gblXGdBRTvs
-         u8Gn/fumtm6BBDeU8HqDBOWYN9ASkGavh+n3EHcK2565t5PuM3XjtHLaoUVu1yCt4Zmr
-         TTgCjiEAm5LOulP66iE0+pzAIUfSLOrI8MI9TB8XITic8pHVD/2YMlm4cXT+nGdUXMyj
-         nqdw==
-X-Gm-Message-State: AOJu0YxmAwLqJhTHg3zdeE7JFhU5LcpOym05vUwYYASbTBZeLcYftQnW
-	R/DF25GMd/s8uuySKBPZy/bVE+MZE7MroHM+GRl35tyG4CW4VnEG7ILm36Xea6Qd4dHwuYNRCni
-	NVPCZLM4tUWtj9PKh9+oD1SKopsGzoEZcmoJ9BWfCtQRts9e69eeTJ7aMLkqCHcqFcwb10DJxmy
-	2recvQJnmjGdVicPGwnlEpepBcgssonOH2DA2IROiG+dkqbAfbGuZsmJBE
-X-Gm-Gg: ASbGncsGXU2b0eMoVNRJdgSSBW5xhxOweEy80fepXqPIxILhIafx7DOjgFN2Q12Ezl5
-	TscCCKd10FyQth5/iVSZQ249K2EKo4lGcz9lu/1e+IIt5konN68UQ12SjZ2ifGL/ovdxNSw==
-X-Received: by 2002:a05:6820:1841:b0:606:107a:ebd8 with SMTP id 006d021491bc7-609f374ddb4mr117617eaf.5.1747329007175;
-        Thu, 15 May 2025 10:10:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFzb9VcV3Lnf5ruIIC6ey76hxyhG8TiKGAlKsdKpz4KyWmg3ddQXbaDSEZE53clpDxkh1hdWXrmr5qJP7/70kY=
-X-Received: by 2002:a05:6820:1841:b0:606:107a:ebd8 with SMTP id
- 006d021491bc7-609f374ddb4mr117595eaf.5.1747329006841; Thu, 15 May 2025
- 10:10:06 -0700 (PDT)
+        bh=JtByJyVo62jw0XHnA95uqk/ce1yHYsp6TEnfnoc5j1w=;
+        b=O6dyaevCZhxqNnL28pML3cdsqed4t+jTxyvyQebC0E71d+I0SMDq7nEec2RMU4Z2wD
+         MlTgcs/TDAC7deTaqrTykce3j3DGm44EgBp9DxrAO3sJIeEKX/4w6VeKqfxj/vbUZLqB
+         YqQeo8S5yLI2N4ze2JDtFcpiWc2uoFH491DSxP+CR86aVG0Rvi26mFcAVUlaNOiGG+iK
+         2SK9DoBon4UAFPtLtVt311+e9xeiEd4jvIvxU416R0brdOg5z4cvgGCJXtyZaEBw0iU5
+         350OjnbD0Pi1afRSiIBwHfhX0UOjsHIHH5TED2pecPqFJgaHfZJKbN5t5EN7L+PKTQal
+         y4iw==
+X-Gm-Message-State: AOJu0YypwaV2GZtKpzxMIy84Sf1teUfei3Iz4pLyyGuPODOhuAkTVwGg
+	NhUZeSN9HyAdKZTaX5fxu8XhV2aiV2z2Fo//wbUvAGfjtbcRg4t7dmo3aVC1Jn4K03iZXk/o0+Q
+	zAFZvpujSGDC+M3CbypXnWejzjybM6si0C9EvqQQ2sTRjVXN5nM35S0ZKlJJ9VBtOmT6TOFfUBd
+	2PUX8Z5BZ94PwlzY8HUiLmQMqmOPHNCHaZACaMEpK2g7RJr1ekpO8jLUoe2TY9rKRsizp/yvj8
+X-Gm-Gg: ASbGnculQu3E+OBtiItHzLcVFLIKya5Y9tn48B8R+OCqh1UB694foIAjNxC+9LoGYRt
+	3vyr0nX0LhZfdAqlkcBpPQVLJfinD3wufVxwifdsMlIIq6dLRNb1DMKR37H+MLOgYlpBF9Q==
+X-Received: by 2002:a05:6122:8c0f:b0:525:aecb:6306 with SMTP id 71dfb90a1353d-52dba970130mr818023e0c.11.1747329067033;
+        Thu, 15 May 2025 10:11:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHcaUH2N5muwkVDiIxEHWItA30nxiMYoNCDf2Wv2idVAmWCRr+uin/5sa1AilKtPRZiwiaH2QNVjHO7L9k7ddY=
+X-Received: by 2002:a05:6820:1841:b0:608:3ee9:13a4 with SMTP id
+ 006d021491bc7-609f37a4c25mr127767eaf.5.1747329055811; Thu, 15 May 2025
+ 10:10:55 -0700 (PDT)
 Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 15 May 2025 10:10:05 -0700
+ HTTPREST; Thu, 15 May 2025 10:10:55 -0700
 Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 15 May 2025 10:10:05 -0700
+ HTTPREST; Thu, 15 May 2025 10:10:55 -0700
 From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <20250502103101.957016-5-e@freeshell.de>
-References: <20250502103101.957016-1-e@freeshell.de> <20250502103101.957016-5-e@freeshell.de>
+In-Reply-To: <20250502103101.957016-1-e@freeshell.de>
+References: <20250502103101.957016-1-e@freeshell.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Date: Thu, 15 May 2025 10:10:05 -0700
-X-Gm-Features: AX0GCFsnIcyqJ3U7xBWuljucy5NCfIr9h3FNHYe_s9G96TiWFSA6H61K7riL4Vc
-Message-ID: <CAJM55Z8sqZ8g1zbphoKaqkZfFoh6GGCXF9dVPds5FydY3=46Gg@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] riscv: dts: starfive: jh7110-common:
- bootph-pre-ram hinting needed by boot loader
-To: E Shattow <e@freeshell.de>, Emil Renner Berthing <kernel@esmil.dk>, Conor Dooley <conor@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>
+Date: Thu, 15 May 2025 10:10:55 -0700
+X-Gm-Features: AX0GCFsMRCnrUVPh4GyhcmqGXz7TGDQn2DvhmQZjDAp9e_FqEd74NBSnaFQLito
+Message-ID: <CAJM55Z_ebHvpf=G9fMGctkPbAtVd6yco6joRNVbzcAtiEzD=ag@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] riscv: dts: starfive: jh7110-common: Sync
+ downstream U-Boot changes
+To: E Shattow <e@freeshell.de>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
 E Shattow wrote:
-> Add bootph-pre-ram hinting to jh7110-common.dtsi:
->   - i2c5_pins and i2c-pins subnode for connection to eeprom
->   - eeprom node
->   - qspi flash configuration subnode
->   - memory node
->   - mmc0 for eMMC
->   - mmc1 for SD Card
->   - uart0 for serial console
+> U-Boot boot loader has adopted using the Linux dt-rebasing tree for dts
+> with StarFive VisionFive2 board target (and related JH7110 common boards).
+> Sync the minimum changes from jh7110-common.dtsi needed for boot so these
+> can be dropped from U-Boot.
 >
->   With this the U-Boot SPL secondary program loader may drop such overrides.
+> Changes since v2:
 >
-> Signed-off-by: E Shattow <e@freeshell.de>
+> - 1/5 -> 1/4: Do not replace assigned CPU core or PLL0 clock when adding new
+>   assignments. Adjust patch name and commit message accordingly.
+> - 2/5 -> 2/4: Detail reason for qspi setting changes in commit message
+> - 3/5 -> Drop uart0 clock-frequency patch
+> - 4/5 -> 3/4: Add reviewed by tag (no change)
+> - 5/5 -> 4/4: Follow dts coding style sort order. Add bootph-pre-ram hint
+>   for mmc interfaces
+>
+> Note: mmc boot source modes of JH7110 loader on mask ROM are deprecated as
+> of StarFive JH7110 User Guide 1.2 revision. The loader expects data within
+> range of LBA 0 and LBA 1 in conflict with GUID Partition Table.
+>
+> SD Card and eMMC boot media are prepared as follows:
+>
+> # GPT partition SD Card or eMMC as
+> # 1: Secondary Program Loader @ 0x200000
+> # 2: Main payload area for use by SPL
+> # 3: EFI System Partition
+> sgdisk --clear \
+>   --new=1:2M:+2M --typecode=1:2E54B353-1271-4842-806F-E436D6AF6985 \
+>   --new=2:4M:+4M --typecode=2:5B193300-FC78-40CD-8002-E86C45580B47 \
+>   --new=3:8M:+100M --typecode=3:EF00 /dev/sdX
+>
+> # Write offset value in bytes of loader 'backup section' SPL as part1 @ 2M
+> python3 <<-EOF
+> with open("/dev/sdX", "r+b") as f:
+>   f.seek(0x0004)
+>   f.write((0x200000).to_bytes(4, "little"))
+> EOF
+>
+> # Write invalid CRC to trigger 'Main section boot fail,use backup section'
+> python3 <<-EOF
+> with open("/dev/sdX", "r+b") as f:
+>   f.seek(0x0290)
+>   f.write((0x5A5A5A5A).to_bytes(4, "little"))
+> EOF
 
-Acked-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+This series looks good to me now. Thank you.
 
-> ---
->  arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
+/Emil
+
 >
-> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-> index f1dc45b98e1d..d2cdb2f276c3 100644
-> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-> @@ -28,6 +28,7 @@ chosen {
->  	memory@40000000 {
->  		device_type = "memory";
->  		reg = <0x0 0x40000000 0x1 0x0>;
-> +		bootph-pre-ram;
->  	};
+> E Shattow (4):
+>   riscv: dts: starfive: jh7110-common: add CPU BUS PERH QSPI clocks to
+>     syscrg
+>   riscv: dts: starfive: jh7110-common: qspi flash setting read-delay 2
+>     cycles max 100MHz
+>   riscv: dts: starfive: jh7110-common: add eeprom node to i2c5
+>   riscv: dts: starfive: jh7110-common: bootph-pre-ram hinting needed by
+>     boot loader
 >
->  	gpio-restart {
-> @@ -249,6 +250,7 @@ emmc_vdd: aldo4 {
->  	eeprom@50 {
->  		compatible = "atmel,24c04";
->  		reg = <0x50>;
-> +		bootph-pre-ram;
->  		pagesize = <16>;
->  	};
->  };
-> @@ -268,6 +270,7 @@ &mmc0 {
->  	assigned-clocks = <&syscrg JH7110_SYSCLK_SDIO0_SDCARD>;
->  	assigned-clock-rates = <50000000>;
->  	bus-width = <8>;
-> +	bootph-pre-ram;
->  	cap-mmc-highspeed;
->  	mmc-ddr-1_8v;
->  	mmc-hs200-1_8v;
-> @@ -285,6 +288,7 @@ &mmc1 {
->  	assigned-clocks = <&syscrg JH7110_SYSCLK_SDIO1_SDCARD>;
->  	assigned-clock-rates = <50000000>;
->  	bus-width = <4>;
-> +	bootph-pre-ram;
->  	no-sdio;
->  	no-mmc;
->  	cd-gpios = <&sysgpio 41 GPIO_ACTIVE_LOW>;
-> @@ -323,6 +327,7 @@ &qspi {
->  	nor_flash: flash@0 {
->  		compatible = "jedec,spi-nor";
->  		reg = <0>;
-> +		bootph-pre-ram;
->  		cdns,read-delay = <2>;
->  		spi-max-frequency = <100000000>;
->  		cdns,tshsl-ns = <1>;
-> @@ -402,6 +407,8 @@ GPOEN_SYS_I2C2_DATA,
->  	};
+>  .../boot/dts/starfive/jh7110-common.dtsi      | 31 ++++++++++++++++---
+>  1 file changed, 27 insertions(+), 4 deletions(-)
 >
->  	i2c5_pins: i2c5-0 {
-> +		bootph-pre-ram;
-> +
->  		i2c-pins {
->  			pinmux = <GPIOMUX(19, GPOUT_LOW,
->  					      GPOEN_SYS_I2C5_CLK,
-> @@ -410,6 +417,7 @@ GPI_SYS_I2C5_CLK)>,
->  					      GPOEN_SYS_I2C5_DATA,
->  					      GPI_SYS_I2C5_DATA)>;
->  			bias-disable; /* external pull-up */
-> +			bootph-pre-ram;
->  			input-enable;
->  			input-schmitt-enable;
->  		};
-> @@ -638,6 +646,7 @@ GPOEN_DISABLE,
->  };
 >
->  &uart0 {
-> +	bootph-pre-ram;
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&uart0_pins>;
->  	status = "okay";
+> base-commit: ebd297a2affadb6f6f4d2e5d975c1eda18ac762d
 > --
 > 2.49.0
 >
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
