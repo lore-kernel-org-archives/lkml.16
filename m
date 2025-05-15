@@ -1,98 +1,117 @@
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CC61F3FE3;
-	Thu, 15 May 2025 17:36:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89267207DE2;
+	Thu, 15 May 2025 17:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747330602; cv=none; b=T5rhSMiuQcIamYxlyX4u22re+kw2jTyBDDMMF9pFhcIteDGYBjeEOTwtWUI3lygTkml123xqQ+sFuicOOgVh7olyIlIMWt8G0Dzmu5h8p0wH1fBr0U2i29a8TPS2hZrH1MxyYe3BIbSKzk82y0vE8CR/sX+F88Lo6oe1bVgSNvY=
+	t=1747330627; cv=none; b=bnnXK7mZYDHdjK9aizFqXrzX0OJ1JK2T8XE6ntDOrmejDhAvf3me+Fr7/iTj/rglS92GlKjwSDFk5zhSxTOSMxcZFNojBTadG8uogDv8124Y06Zc47PtBSiOdbYDyEc2YwFQ/ueNK+kauYkflJ/zTxCvdP1B4LbVtBtuTAlvmNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747330602; c=relaxed/simple;
-	bh=xtrztwEb7iUTYXp2R8jlDxuNMUUZt1rKnrYArZGNvVA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Phca+mQEP8rLvsWZFL9kpgmWkZy7ydWeA/604wP7X3zrd785WityUDnHUcMAl9EYLYg/ESJMxrWVGq7u0wjjwkKZ+9lHce9J2joxr1rqb1gIPjMcYwdJ/lvB6ns59DgyyTAe+iX7Gf1/mkMTGBRaLaS6hbRWRcc25pQJAaaZr+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dhpq4k+j; arc=none smtp.client-ip=209.85.166.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747330627; c=relaxed/simple;
+	bh=nlxANpg2iMYjjUATUblVQZtJXcfsP6FSXK2spRfUtCc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=faNpIv7jmxfGvvwP3eSgwsFVU9ZAQqSmX/yZvbJda6ZcF/vgtLAMpaunplN1SViClJySfqQFLk3lXMLZ8lxg/KSTDIDu2Ql/3x6r82izi0AJLDfzAa6qM5KNF8zms8b4P37AAgu+Px6HPPvXvbsWLhcckWBTGAk+/GPAbZQBbk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CNw/STc3; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhpq4k+j"
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-85db3475637so81193539f.1;
-        Thu, 15 May 2025 10:36:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747330600; x=1747935400; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vqHcNXrLgFH+FE/dQ/7Jqx//cnQWyh3PmPGZhUVuq2M=;
-        b=dhpq4k+jIFlUQVZexzbxYWDgnORQUTAYoCaEN+xuD0FCqJr8BF5ai5wWmkwRFTMmGR
-         pEoVk/fjcIbaNO4nQsHhwzYlFjOuNtZz0U7PvxR4xLt2cGHJAWnUnTsHBxnxhwG1xHNz
-         Vog3nnvQ5vtCn9nVLx7YhQr8vPWR6ZsfG1vJZQaN3LBjizlb6xgeZrE4cpQGbSyUvLJg
-         C1fypnHBYdzquXp9iym39zZDrAO5AunVRxsb3HSL44LhZ93lBXmmdhO2Go0GJkzyMpJD
-         vIGFaHBX12CN7ZvgCaV5X/nQHEzCargsX0UztxfYfPhJ+c7nny/i13W08AGT0VuHJdUC
-         IHmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747330600; x=1747935400;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vqHcNXrLgFH+FE/dQ/7Jqx//cnQWyh3PmPGZhUVuq2M=;
-        b=vyULIbWFGBvIFSkjmr0riOOjlDznfwkclIUmaRlumkDef8dSV1vKGmh7WS++u1Pf/6
-         PrO1+cNOSGzEgKMcvl2eSnODOTQEUy5lhW2+2u1lw/PVcWbOqryYnew+1stwPB4F5BCF
-         Oezoo5mVTqrj0eqyHfFSwVsB++BomdN+7tVFcHHkQqLimhY65CRiChqys61MWW8H1yOs
-         cpTfAwvg7pIYm4Gp7M6Gmv1yYtoleWZppQ3Hm+LA+rDv4LiEVXQrgoAi1sTgAb4O/MlS
-         0UwzNie5ft0XUi1orBM+fyRhP/D1I1IIrtxXnqVcNK2UBnVh0LX39Djkvb2op+9I805K
-         4pBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU2fgi4gx/xP90U+U/oK3oumKtNthDNo+ROJirwa9I5d8yPMwW6yb6uGJCAv/tBAlZ7t85no+dYLX1ztiYC@vger.kernel.org, AJvYcCVGJ1TudS4cr/2vfRMrC+UODatmTYYV1SUDRtiLM/q5pEFbvgBFCmfpRdpWEAd9UF3kkwfAyoTLOi70Z5AL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6jtZ8v9SoOAxDDWZbaS/7bs3KFjYLUGJUNwEZJUJicz04w+3d
-	NNt/SqkQhgwcH2Ofh6ZXIu7wM64woZOF7QyH3P5IQPoKIAa5RVDfFMuEWhKMCgPUtgB4kIz/cmu
-	aYNQmnn5KhKlUZ+ovTnOOwgwhgvH+YGU=
-X-Gm-Gg: ASbGncunzkmKvxJlHsF2ivWzTKVfLKnurnkUqVzKr9I3GO9nChiUdU2JkI5Hhrfp8yG
-	FojdtS80wH/t/zsJhG87Gkro4MRgg4PJqmps13tp1IlxVMW+YZFshn/pYaUsNvPTCM0vE6vSeU+
-	YQhBDEuQneU5pZhp/sb2+t1FrRGg2GiB2M9zEcodn/AZ/SmrUF7XALPiUaYTHgSZ+6pY+DYr4Al
-	A==
-X-Google-Smtp-Source: AGHT+IFE+JBnt1NPTvRR6pHLKFY0JDRYFTVuXW5ZgFpZdNHczNUdwTdzRDEMxhVRO9gP3eWJ4OQwNuIlrSKjsez6h/k=
-X-Received: by 2002:a05:6e02:1c07:b0:3db:7434:a8cc with SMTP id
- e9e14a558f8ab-3db8490530amr2645855ab.8.1747330600475; Thu, 15 May 2025
- 10:36:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CNw/STc3"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54FEFBbT018190;
+	Thu, 15 May 2025 17:36:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	28kQjLma94V279htA/iRUZ04/rNy/zv5ChEU82zgGeo=; b=CNw/STc3afD4WTn1
+	yh1dl7t7QFwPNjMuYDbE5m0vbCJNcQ2+kKFi+wmEQ6xllgQY7/s622i/BnsiTZsX
+	OVHEC9Tg4u1W6Ts6tJmda6GiIpOxRkdlIS6E7IKnIr+p7BKjkHIkXXcxAM/H34pM
+	prk5+iN520le/vuPo0/99hgTbjJdxSY/IfNHowzVvT5n0Rk84CA1amZLkoMnIA7K
+	5aWqA/MmoEX3wxcJCbvbpnS08KOph9Qvgs7RMEY7ywCtei6y61QeOOfZfiiWYNec
+	+xUB7LB51atfYoJrJhBirOXaIDuijD8Eo6QT2bQqXosTnX5d+9SGaVvlevnTp1+w
+	GP8AMw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcnq2qs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 May 2025 17:36:56 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54FHathE025188
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 May 2025 17:36:55 GMT
+Received: from [10.216.54.71] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 15 May
+ 2025 10:36:52 -0700
+Message-ID: <45758365-5f5a-6650-ed30-1c394b9b81de@quicinc.com>
+Date: Thu, 15 May 2025 23:06:48 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514170118.40555-1-robdclark@gmail.com> <20250514170118.40555-5-robdclark@gmail.com>
- <51f87f358fa1b7ef8db8b67ee6cde38ae071fbe8.camel@mailbox.org>
- <CAJs_Fx771FFVDVFMn8YJkR9f9Ad-UQspJ9KKQw4u6Cu4TA7YPA@mail.gmail.com> <aCYi_mkv47ckB6ox@pollux>
-In-Reply-To: <aCYi_mkv47ckB6ox@pollux>
-From: Rob Clark <robdclark@gmail.com>
-Date: Thu, 15 May 2025 10:36:27 -0700
-X-Gm-Features: AX0GCFtCmghLHobPptzNOWUCvf5wIEoct66-fDcHcf80I6aFdxoL6tqmJhNttBg
-Message-ID: <CAF6AEGt8LXUwCiin5Z0Tab-9U66N22aZBVXM5aLFw8pjMXRgNQ@mail.gmail.com>
-Subject: Re: [PATCH v4 04/40] drm/sched: Add enqueue credit limit
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Rob Clark <robdclark@chromium.org>, phasta@kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, 
-	Matthew Brost <matthew.brost@intel.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] wifi: ath11k: clean-up during wrong ath11k_crypto_mode
+Content-Language: en-US
+To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>, <jjohnson@kernel.org>
+CC: <~lkcamp/patches@lists.sr.ht>, <linux-wireless@vger.kernel.org>,
+        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20250515004258.87234-1-rodrigo.gobbi.7@gmail.com>
+From: Vasanthakumar Thiagarajan <quic_vthiagar@quicinc.com>
+In-Reply-To: <20250515004258.87234-1-rodrigo.gobbi.7@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: PReVneVIMXdp61uFzSqd7vfdKRfVb5QO
+X-Authority-Analysis: v=2.4 cv=aIbwqa9m c=1 sm=1 tr=0 ts=68262638 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=pGLkceISAAAA:8
+ a=FEClEzSTKUsJnvQcYz4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: PReVneVIMXdp61uFzSqd7vfdKRfVb5QO
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDE3NCBTYWx0ZWRfX8I8f056ANsqr
+ 89fH4uIJyLmC3HgoVn3Rvx6Zl36BTt/61BiOID4jxePEQCkmxYxnCD+G6iaJXrkt5tUqC5shWQM
+ ZUMMmMAO71IL2LJIwTeEaHwyKRKZEHJNzyyeKpxw4utPrrg0iUx/H1ntsfs5c5oitrIsCWAPGfg
+ WfYdFss4T8UaGhgyqdHvON1OzjFqOaLbfxK1btisN5S/Xnvc37NQyY+aeN9SbwKBNx+rxKnFfue
+ ATij+b85fLQ9uh2Y8/C9uFIq7iz1yy3CtQt8uh69AWthwR9O3bWtYpEUMtOrtOBcwLdurP3fmm2
+ hJjCh/Pvse8Qj1zXRwfiYqP7S6R5n6OQAZiacRNjePLmeRCP9yrdsh3VxYlQboWQlBm+XGhxh5H
+ 6gcIaJrmUgLpnGiPhGNgryOjGQyA7im7Qx7DJuTl+wpg6NmRtHeWr2x5ZVxnI5ImJy4qAmgt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-15_07,2025-05-15_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 mlxlogscore=957 malwarescore=0 bulkscore=0 impostorscore=0
+ clxscore=1011 phishscore=0 suspectscore=0 mlxscore=0 spamscore=0
+ lowpriorityscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505150174
 
-On Thu, May 15, 2025 at 10:23=E2=80=AFAM Danilo Krummrich <dakr@kernel.org>=
- wrote:
->
-> On Thu, May 15, 2025 at 09:15:08AM -0700, Rob Clark wrote:
-> > Basically it is a way to throttle userspace to prevent it from OoM'ing
-> > itself.  (I suppose userspace could throttle itself, but it doesn't
-> > really know how much pre-allocation will need to be done for pgtable
-> > updates.)
->
-> I assume you mean prevent a single process from OOM'ing itself by queuing=
- up
-> VM_BIND requests much faster than they can be completed and hence
-> pre-allocations for page tables get out of control?
 
-Yes
+
+On 5/15/2025 6:10 AM, Rodrigo Gobbi wrote:
+> if ath11k_crypto_mode is invalid (not ATH11K_CRYPT_MODE_SW/ATH11K_CRYPT_MODE_HW),
+> ath11k_core_qmi_firmware_ready() will not undo some actions that was previously
+> started/configured. It's reasonable to undo things during this condition, despite
+> the value used at ath11k_crypto_mode not being valid in this case.
+> 
+> Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+> ---
+> Smatch got the following error:
+> 
+> drivers/net/wireless/ath/ath11k/core.c:2166 ath11k_core_qmi_firmware_ready() warn: missing unwind goto?
+> 
+
+This warning message can be included in the commit message itself.
+
+> When the ath11k_crypto_mode, which is a module param, is not
+> ATH11K_CRYPT_MODE_SW/HW, clean-up actions are not triggered.
+> Considering the whole ath11k_core_qmi_firmware_ready() function,
+> during potential errors, those actions are properly triggered.
+> I'm suggesting a little change over the default case to clean things up.
+> Tks and regards.
+
+This can be dropped as it does not provide any additional information.
+
+Vasanth
