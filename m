@@ -1,195 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8098C1F09AD;
-	Thu, 15 May 2025 09:17:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3F0296157;
+	Thu, 15 May 2025 09:17:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747300629; cv=none; b=MnzbQKc7HQ6S4HCUeSbHzkFp1JpIOa+9hLW9Um9Gqx9tM2zfeoYExXU9ZuBSbY3y2yjxsgVKg2SwDZsQ0sKifZFa9ytC5A0GILnn4cl9STzDoF3wULqQ0Hh2kbxdYFnMCvziqIXLj1b6ZNAm5eepo88epzINPtMlzZI66v2+9fE=
+	t=1747300630; cv=none; b=D4WOD9FjXArHG/F8F3CaiIvbSv8F4uekaofkBxOfHvImxbloaiQIaxo62ILjSEYbAY12j+oxFKPLqdU4Dpp0QApJMjhyZFjoGRiXYByrX5EUcnOpX735rRtDYxA3zeE5cPyT6Ja/tvaCc4EJORhOfDmZfkB90xss9UPCmPXxnf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747300629; c=relaxed/simple;
-	bh=QVKOlT5ufDwX7I65S3zH6n+hABL8lXqI6aFRrHvjK7k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jZd2STN6IzOO0DuV2z5yc1hw5PKSWAdVC8s4cxuQcu1fdytOzzteZaxSjXrjV5YvICoE8RLhd+DzSK9Zk7K9OhrqBPsX47bszi7paYONv8eTBuEizdaVnGlkeb8V/yDMa+lXbKSFgT/lQgCnqOf1+6TNQxSsFWjpQcOn62bA6sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KdzhbpG3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747300630; c=relaxed/simple;
+	bh=aKQNALUFKpA2c4teux9nQkxq26FnVN2RV1olH/ka2YY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IVugZFwPfpnMVHyE3PaOHoFjN/gNdXFonOcVKhQy2sYqGq/aOjQTux1YBtLfJWv+V8zjMWjvXaJ3Xrk/7s5rChGSeqcqFtYu5YdMMwKPNcqhKxow+7ORlJEQOFd8O2ViUUJDJb00PwTzQ7A4rks9T91IJRMEwAYxOc/kdeO3+YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PvW+7QrB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KdzhbpG3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFC5BC4CEE9;
-	Thu, 15 May 2025 09:17:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PvW+7QrB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B5D8C4CEE7;
+	Thu, 15 May 2025 09:17:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747300629;
-	bh=QVKOlT5ufDwX7I65S3zH6n+hABL8lXqI6aFRrHvjK7k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KdzhbpG3zkVRx5Lyuw4wjB54O3iU36v1AdIu5FCTbZ6GO90HOSOUaEOkbY0ENXYLK
-	 u0YzV4pdXreYzzHNek1rZbTmse/RAJv9pRglfVY1+UPacLDTiW11ot5QH7he3810QV
-	 HsSjiwGzJ9/h7lgTxsPOve0zeWqaOsBujQzeHEhhdazyh33zHJAcQX1J/I9Xp4dW3F
-	 HMG3e96Y2uyZgUtlHhgUSH3FY5TaS91vq44gLDL4jSrTgHKnaIuLN9HsdfqlUA6xzG
-	 /tt3ZLiUsjzycxVZ8UgU0Cb5FGY3vNqA2k75m/1v/uLoRV+QYrFtgVAizbP8DebhVO
-	 mcuG4UKigfNSA==
-Message-ID: <d4e30634-b64e-47c7-9089-a37d20e29d2f@kernel.org>
-Date: Thu, 15 May 2025 10:17:05 +0100
+	s=k20201202; t=1747300630;
+	bh=aKQNALUFKpA2c4teux9nQkxq26FnVN2RV1olH/ka2YY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PvW+7QrBpbaH1XvqgG1/WZJhwkEwQcUSE+3Zgyyg24vHg+ddHxR5NL3P8qimfaJpq
+	 OvZM0nToS7P80zCPFEYV8LZPFIxuhWzieT2pM220FEntTCgU7VmR5y4rnN5eit+4TR
+	 2uZ3/VU/5F1I8Bu0HJopTyPCvJEXLh0QZCH1+5oCmA2LpoBxKT92DvvNTiHlIHqIQQ
+	 iul6qyI7i8/M0QSQek6LYND3yMotZrM06qvd1X3sd/L4K4TJiA380due5ZjEdRM/hi
+	 5e8dg6WhP3ZngSb3umZpEfVKjWtXJVMBEH6oFMmpy3e8D2NCb8fHlp3YTAoBBuOkk+
+	 FMzqKmMmALJOg==
+Date: Thu, 15 May 2025 11:17:03 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: linux-fsdevel@vger.kernel.org, Jann Horn <jannh@google.com>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: Eric Dumazet <edumazet@google.com>, Oleg Nesterov <oleg@redhat.com>, 
+	"David S. Miller" <davem@davemloft.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, David Rheinsberg <david@readahead.eu>, 
+	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, Alexander Mikhalitsyn <alexander@mihalicyn.com>
+Subject: Re: [PATCH v7 0/9] coredump: add coredump socket
+Message-ID: <20250515-ameisen-abmarsch-37b698f99847@brauner>
+References: <20250515-work-coredump-socket-v7-0-0a1329496c31@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v2] bpftool: Add support for custom BTF path in
- prog load/loadall
-To: Jiayuan Chen <jiayuan.chen@linux.dev>, bpf@vger.kernel.org
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Daniel Xu <dxu@dxuuu.xyz>,
- Mykyta Yatsenko <yatsenko@meta.com>, Tao Chen <chen.dylane@gmail.com>,
- linux-kernel@vger.kernel.org
-References: <20250515065018.240188-1-jiayuan.chen@linux.dev>
-From: Quentin Monnet <qmo@kernel.org>
-Content-Language: en-GB
-In-Reply-To: <20250515065018.240188-1-jiayuan.chen@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250515-work-coredump-socket-v7-0-0a1329496c31@kernel.org>
 
-2025-05-15 14:50 UTC+0800 ~ Jiayuan Chen <jiayuan.chen@linux.dev>
-> This patch exposes the btf_custom_path feature to bpftool, allowing users
-> to specify a custom BTF file when loading BPF programs using prog load or
-> prog loadall commands.
+On Thu, May 15, 2025 at 12:03:33AM +0200, Christian Brauner wrote:
+> Coredumping currently supports two modes:
 > 
-> The argument 'btf_custom_path' in libbpf is used for those kernes that
-
-
-Typo: "kernes"
-
-
-> don't have CONFIG_DEBUG_INFO_BTF enabled but still want to perform CO-RE
-> relocations.
+> (1) Dumping directly into a file somewhere on the filesystem.
+> (2) Dumping into a pipe connected to a usermode helper process
+>     spawned as a child of the system_unbound_wq or kthreadd.
 > 
-> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-> ---
->  tools/bpf/bpftool/Documentation/bpftool-prog.rst |  7 ++++++-
->  tools/bpf/bpftool/bash-completion/bpftool        |  2 +-
->  tools/bpf/bpftool/prog.c                         | 12 +++++++++++-
->  3 files changed, 18 insertions(+), 3 deletions(-)
+> For simplicity I'm mostly ignoring (1). There's probably still some
+> users of (1) out there but processing coredumps in this way can be
+> considered adventurous especially in the face of set*id binaries.
 > 
-> diff --git a/tools/bpf/bpftool/Documentation/bpftool-prog.rst b/tools/bpf/bpftool/Documentation/bpftool-prog.rst
-> index d6304e01afe0..e60a829ab8d0 100644
-> --- a/tools/bpf/bpftool/Documentation/bpftool-prog.rst
-> +++ b/tools/bpf/bpftool/Documentation/bpftool-prog.rst
-> @@ -127,7 +127,7 @@ bpftool prog pin *PROG* *FILE*
->      Note: *FILE* must be located in *bpffs* mount. It must not contain a dot
->      character ('.'), which is reserved for future extensions of *bpffs*.
->  
-> -bpftool prog { load | loadall } *OBJ* *PATH* [type *TYPE*] [map { idx *IDX* | name *NAME* } *MAP*] [{ offload_dev | xdpmeta_dev } *NAME*] [pinmaps *MAP_DIR*] [autoattach]
-> +bpftool prog { load | loadall } *OBJ* *PATH* [type *TYPE*] [map { idx *IDX* | name *NAME* } *MAP*] [{ offload_dev | xdpmeta_dev } *NAME*] [pinmaps *MAP_DIR*] [autoattach] [kernel_btf *BTF_DIR*]
->      Load bpf program(s) from binary *OBJ* and pin as *PATH*. **bpftool prog
->      load** pins only the first program from the *OBJ* as *PATH*. **bpftool prog
->      loadall** pins all programs from the *OBJ* under *PATH* directory. **type**
-> @@ -153,6 +153,11 @@ bpftool prog { load | loadall } *OBJ* *PATH* [type *TYPE*] [map { idx *IDX* | na
->      program does not support autoattach, bpftool falls back to regular pinning
->      for that program instead.
->  
-> +    The **kernel_btf** option allows specifying an external BTF file to replace
-> +    the system's own vmlinux BTF file for CO-RE relocations. NOTE that any
-> +    other feature (e.g., fentry/fexit programs, struct_ops, etc) will require
+> The most common option should be (2) by now. It works by allowing
+> userspace to put a string into /proc/sys/kernel/core_pattern like:
+> 
+>         |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h
+> 
+> The "|" at the beginning indicates to the kernel that a pipe must be
+> used. The path following the pipe indicator is a path to a binary that
+> will be spawned as a usermode helper process. Any additional parameters
+> pass information about the task that is generating the coredump to the
+> binary that processes the coredump.
+> 
+> In the example core_pattern shown above systemd-coredump is spawned as a
+> usermode helper. There's various conceptual consequences of this
+> (non-exhaustive list):
+> 
+> - systemd-coredump is spawned with file descriptor number 0 (stdin)
+>   connected to the read-end of the pipe. All other file descriptors are
+>   closed. That specifically includes 1 (stdout) and 2 (stderr). This has
+>   already caused bugs because userspace assumed that this cannot happen
+>   (Whether or not this is a sane assumption is irrelevant.).
+> 
+> - systemd-coredump will be spawned as a child of system_unbound_wq. So
+>   it is not a child of any userspace process and specifically not a
+>   child of PID 1. It cannot be waited upon and is in a weird hybrid
+>   upcall which are difficult for userspace to control correctly.
+> 
+> - systemd-coredump is spawned with full kernel privileges. This
+>   necessitates all kinds of weird privilege dropping excercises in
+>   userspace to make this safe.
+> 
+> - A new usermode helper has to be spawned for each crashing process.
+> 
+> This series adds a new mode:
+> 
+> (3) Dumping into an abstract AF_UNIX socket.
 
-
-Nit: No need for both "e.g." and "etc", they're redundant.
-
-
-> +    actual kernel BTF like /sys/kernel/btf/vmlinux.
-> +
-
-
-Can we rephrase the second part of the paragraph a little bit please?
-“Any other feature” could be clearer, how about:
-
-	Note that any other feature relying on BTF (such as fentry/fexit
-	programs, struct_ops) requires the BTF file for the actual
-	kernel running on the host, often exposed at
-	/sys/kernel/btf/vmlinux.
-
-
->      Note: *PATH* must be located in *bpffs* mount. It must not contain a dot
->      character ('.'), which is reserved for future extensions of *bpffs*.
->  
-> diff --git a/tools/bpf/bpftool/bash-completion/bpftool b/tools/bpf/bpftool/bash-completion/bpftool
-> index 1ce409a6cbd9..609938c287b7 100644
-> --- a/tools/bpf/bpftool/bash-completion/bpftool
-> +++ b/tools/bpf/bpftool/bash-completion/bpftool
-> @@ -511,7 +511,7 @@ _bpftool()
->                              ;;
->                          *)
->                              COMPREPLY=( $( compgen -W "map" -- "$cur" ) )
-> -                            _bpftool_once_attr 'type pinmaps autoattach'
-> +                            _bpftool_once_attr 'type pinmaps autoattach kernel_btf'
->                              _bpftool_one_of_list 'offload_dev xdpmeta_dev'
->                              return 0
->                              ;;
-
-
-Correct, but right before this could you also add the following, please:
-
-	@@ -505,13 +505,13 @@ _bpftool()
-	                             _bpftool_get_map_names
-	                             return 0
-	                             ;;
-	-                        pinned|pinmaps)
-	+                        pinned|pinmaps|kernel_btf)
-	                             _filedir
-	                             return 0
-	                             ;;
-	                         *)
-
-This will make the completion offer file names after the user has typed
-"kernel_btf".
-
-
-> diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
-> index f010295350be..3b6a361dd0f8 100644
-> --- a/tools/bpf/bpftool/prog.c
-> +++ b/tools/bpf/bpftool/prog.c
-> @@ -1681,8 +1681,17 @@ static int load_with_options(int argc, char **argv, bool first_prog_only)
->  		} else if (is_prefix(*argv, "autoattach")) {
->  			auto_attach = true;
->  			NEXT_ARG();
-> +		} else if (is_prefix(*argv, "kernel_btf")) {
-> +			NEXT_ARG();
-> +
-> +			if (!REQ_ARGS(1))
-> +				goto err_free_reuse_maps;
-> +
-> +			open_opts.btf_custom_path = GET_ARG();
->  		} else {
-> -			p_err("expected no more arguments, 'type', 'map' or 'dev', got: '%s'?",
-> +			p_err("expected no more arguments, "
-> +			      "'type', 'map', 'dev', 'offload_dev', 'xdpmeta_dev', 'pinmaps', "
-> +			      "'autoattach', or 'kernel_btf', got: '%s'?",
-
-
-Some of them were missing, thanks for this! Can you remove "dev" from
-the list, please? It's been deprecated in favour of "offload_dev", to
-avoid confusion with "xdpmeta_dev".
-
-pw-bot: cr
-
-
->  			      *argv);
->  			goto err_free_reuse_maps;
->  		}
-> @@ -2474,6 +2483,7 @@ static int do_help(int argc, char **argv)
->  		"                         [map { idx IDX | name NAME } MAP]\\\n"
->  		"                         [pinmaps MAP_DIR]\n"
->  		"                         [autoattach]\n"
-> +		"                         [kernel_btf BTF_DIR]\n"
->  		"       %1$s %2$s attach PROG ATTACH_TYPE [MAP]\n"
->  		"       %1$s %2$s detach PROG ATTACH_TYPE [MAP]\n"
->  		"       %1$s %2$s run PROG \\\n"
-
-
-Thanks,
-Quentin
+s/abstract//
+Forgot to remove that. Fixed in-tree.
