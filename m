@@ -1,272 +1,467 @@
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412AB17993
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 23:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC2021B910
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 00:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747353146; cv=none; b=VKxVVrdu18kWEsNbf2P6kkRKl+Lbx+8utbTiEiVsqPHY4LKpXQeIRGu5mziWqrdA/Pv3dcqw7m9UwMtpKjeXmhuuS3yZ1a9fIQWbQWMiX+/LH9bWIPWP/0VSHmUjU7KnbAmS5UmuqmGJfBOv1A5VVX2dXupU1JVCdURratG4o+Q=
+	t=1747353605; cv=none; b=h468LM1oe3YZ++Oh0rQnL5TRCWOt0eSBoKbOR4yiqVx1t621pQxoe2V6qLzaB2yvHurKh8C5CIt8y/O+QZUTwR1oY5ipgYcT25VExG2uvs/Cnq/RwXYy64rvCv0DOFHDWD0+VKMAt4Ea7W7KgbLlBhlfHZOYu1nP7swHrHyH5+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747353146; c=relaxed/simple;
-	bh=zIMM09LgwI+ahHDhun6Q+EKtJoN8+FU1uUTccg092Wk=;
+	s=arc-20240116; t=1747353605; c=relaxed/simple;
+	bh=6wFZgjz6aEN5togpOLyW6bp2BVhVsPc2KTJP118Xguw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mo7fPp2vEtIgU2rYMkjBjoqAYmlzT84otnZ9+eWgHL3KWNpnL34+JLJAZrqjawcrvR9Gl15SWBgKsRQCrwDI5lwZ5JlF+FH9wMBKw4IRuwQ+oesP2TYgWzVBJ+8QvVYgww00sTBM6c0qTBF1s8OOQmneeWywP2gd2RI4AEyDRHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OoShdByZ; arc=none smtp.client-ip=209.85.167.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=Oe5oj05pn2m8tvkINta9IZJHgn8PFdwGAlsnckrS0+zXa3kY+YA+o1hiYrA654hFebKnYk/BUqJIUPDSC1Zziwx337/5hE8n9oxXXDa9NyBchQxDAvF2Z3hpr34nhnvsTi6TtbDQHDl6Kn9g1HisKYeUCwu2yGXMJc2KEkSxZhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=DVZ+Z9Q2; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OoShdByZ"
-Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-401be80368fso721118b6e.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 16:52:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DVZ+Z9Q2"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-30c5a5839e3so327269a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:00:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747353144; x=1747957944; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1747353602; x=1747958402; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Dvu88ev1VdWU5DxXw0FZJRoIRYMo1iE9Ijw3Gfebd28=;
-        b=OoShdByZYZuRzwICGHVkjhWAAOe+redy/vOYp3/mPQCtsJDfeZoAHyCgSUKzc9k8Me
-         WcxrM5MXzmbENmT+i9qQyZKXUncEAU9y8gTg9zeoXpiicYAWECATqWNs8kFgOfSmhKAV
-         /mvH0zO+dQiFW39hiwjwyblt1lvms3gPUBV3CPv54liMyTG/cOUUXElApQEjfSGQVB2S
-         z2Vs/pSlYxglbV7yn7ac3YxwaVDucTeQfi7p89MBalqsSXJi+VSn6rj1Z/o3nr1N6eW3
-         FveMBTV0S35eESy1R76WLE0e985pkljh5BqdRDjua+BwQj2/c3R1l+EBJLOSOnZpKyo3
-         g1ZA==
+        bh=Ifl3v29Ei7qGP5DnHQRCWGNpzP72wsqZc2kAtN9QkPA=;
+        b=DVZ+Z9Q2yuh/hM8PE67s9qI1ot2A7ctp09FbuE/IJFznD55vihsBVLlEGymLrdy5h+
+         sIuOEjxIXhT9Kyky6yYVm/L7hh1eEoRQs9FF/13WeGBKm1tutP0NwruGg/wDwIeTVWbU
+         4NFvbW83IYOJObtMG10tIDMYYrZSXbookP/P8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747353144; x=1747957944;
+        d=1e100.net; s=20230601; t=1747353602; x=1747958402;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Dvu88ev1VdWU5DxXw0FZJRoIRYMo1iE9Ijw3Gfebd28=;
-        b=ECpjIaACd6DKdtWtRG3g7masTreLX5wICR8wbx9/UAH053CZdXIooOCO6sgEWSiSVO
-         SiQ+0sy+mJMCG8DIQ8k3Ld37ad9dS2IO/Xxh7XWYH3q85Ilm+HjMgA5OspzJV121RBYu
-         4HgiYYYgzMs8yGCTeItsENXqT/eyZ0tQ3899SydQ1CoX0uDa5gs/9XxZ8g9AcMaQ0LuR
-         JteLtZwe8AJZ6NKpbjjZOO013kbLc1R6JaU7cytGUBQpsWMtgAYuP+oGxUnkUHHkoqjZ
-         JW1jHVixwBlzyUmM1tOavWJqal4VbLEyiMus8sG4jsyobdn6bi+ITe38J+gnElJd9qlx
-         Nb7g==
-X-Forwarded-Encrypted: i=1; AJvYcCUI4dlaid6lJYtoOTGlb2k6hA4P88JyLA9fcIhMLkPVsWzejwG0fu2Wy2njTtVDCn+iBZXtECi48qR/6yE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzbit+hhicQwOYai5XR+zqS710FlQgQhl9Lf66JAYiRSpnvj7g+
-	zWqEKN9JS6A6GSaWuDZbMe/8D4lW6HJvn/Dca45sF8QLCq/Xr4DgUVXMdA5W90srRxnR9gkuNVV
-	o7PBRd2UxM9LQv76B/L2HU6qOY8+8Yo8=
-X-Gm-Gg: ASbGncvgjyVrs3cPtiXU/gF/Et/nOwSZ3rnYUPe9gxl5lY58UON2lm2/PCeXxKvyHIr
-	pzv+92XbfoOgbJaHyAqmgX3ME6rJrYJSL2xTGoUyWxkVsAbyp3n645jxs6OUhzn092PphbrsfDb
-	YV/rcoeDOMeEUPFluU1zb0T6PXOG16S34=
-X-Google-Smtp-Source: AGHT+IF7l+OfeWDxmtMQ/n0NGjONLriHzg84x+VxoXL/MEoU+nBi+ArpmI1jmKMqH8iuRgHL5o1427WBgaE5H/loxm8=
-X-Received: by 2002:a05:6808:2f18:b0:403:6fd2:d97c with SMTP id
- 5614622812f47-404d869dcc3mr1361963b6e.14.1747353144041; Thu, 15 May 2025
- 16:52:24 -0700 (PDT)
+        bh=Ifl3v29Ei7qGP5DnHQRCWGNpzP72wsqZc2kAtN9QkPA=;
+        b=IBJ0AQY3b9UwD7yaLNdiiq1qPGpTn2Wl6xtXL6lJq+9bmf3KGKYzv6VqW+cbqHd+X7
+         kY4IPX4HSm5259JCvfSxSfGygx6RDnQHf3mM8sRhfkkcQHZYa2QjfqUH9zLnV8S8HnCB
+         iKBfqTbzBc/hhs/rbYDJupKdqvUcQuze4eR69ThwlxhHChp/CWMHkQnvBIyLLB5U4nqu
+         z8BxwGP4oNmHwBe0LoCl0hTsYvPthQYXkwiGNcj4jbKBPPMZmNTpj8eW1u6X0qeIiOJo
+         L3DQ5gUIiiphoqoMdnXWeQ79HEfyeUajBN8e6B57cmJBrgxi9BgXsLZ0+5rYot5v6s6u
+         4oVA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzwTVuYLoNGn5/PB7lTC/C0dbwUa72UDP9F/29Wxm42OJknMB73rAwMGo1eQT7rly08QSYYQF8lsLELKE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvVzSRnAIYdDpc5s5+gXj9R61B/EZXvpExGC1XOmv69toGUBXr
+	/GI7bAQs5i9H7ux/vXDdTs1v4DVwahnS3hezvAD2gDkzraIYopkPX/oNUaEwe9hcWXa+umjCnl8
+	b3JTFM82NFRjuHYpuRhVGzxhAj/lJi5MbRhvdfkRJ
+X-Gm-Gg: ASbGncupIDJUejUxhT3QybXB0Qu2rvbD8nQLkDgOZL8KD3HUcc5fKG2jXzP6oLrM75I
+	ZlpTgYizdvmMzScvH/k2Rzz8k64djdgETQrryj+SE+yanEv08pPa01A67ot1wMBj49rGSXX6p6N
+	K+nZdwQxPojAtMGl43InyZphIGWrFfia5TNQ==
+X-Google-Smtp-Source: AGHT+IH9m7rZtOgTj9kt1A4BgEbCTwbV7Gfa8ppWM/DMG743Yx9SRn4TbQDRNRWkdUybZDbXdaj//0LolPfjuiPpZ5Y=
+X-Received: by 2002:a17:90b:4d10:b0:2fe:7f51:d2ec with SMTP id
+ 98e67ed59e1d1-30e7d2dcca2mr659702a91.0.1747353601984; Thu, 15 May 2025
+ 17:00:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1737644530.git.jani.nikula@intel.com> <dfe6e774883e6ef93cfaa2b6fe92b804061ab9d9.1737644530.git.jani.nikula@intel.com>
- <98201050-82eb-453d-a669-036eeefa354e@gmail.com>
-In-Reply-To: <98201050-82eb-453d-a669-036eeefa354e@gmail.com>
-From: Bill Wendling <isanbard@gmail.com>
-Date: Thu, 15 May 2025 16:52:12 -0700
-X-Gm-Features: AX0GCFsG1lMUbV8e9u6zQamu0DG4uq2UWcnglLtzwznz1X3UhF0PTDEVH-90KBk
-Message-ID: <CAEzuVAdfY-KiLF7AArQ2Wkw=qP1hnyuG1UmSsv_ZtgrUpfm-3A@mail.gmail.com>
-Subject: Re: [PATCH 5/5] drm/print: require struct drm_device for drm_err()
- and friends
-To: Jani Nikula <jani.nikula@intel.com>, dri-devel@lists.freedesktop.org
-Cc: intel-gfx@lists.freedesktop.org, gustavo.sousa@intel.com, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	airlied@gmail.com, simona@ffwll.ch, linux-kernel@vger.kernel.org, 
-	kees@kernel.org
+References: <20250514062341.774919-1-noltari@gmail.com> <b11623aeea01338715215084fc34107d@mail.gmail.com>
+ <CAKR-sGcg5yCiQFV5yriD+Lv1MiV1wXVQo1_q_Eh-=UNAP-idxA@mail.gmail.com> <1cc01fd7-79fd-462d-923e-5ff0bf61b489@broadcom.com>
+In-Reply-To: <1cc01fd7-79fd-462d-923e-5ff0bf61b489@broadcom.com>
+From: David Regan <dregan@broadcom.com>
+Date: Thu, 15 May 2025 16:59:51 -0700
+X-Gm-Features: AX0GCFsoh_2xbloNSQu0GbuyRicwlXiUa-SFXY8RsOXUH_Uq_yBYdyj237ZOXoY
+Message-ID: <CAA_RMS5vPa5euktwnPHcz0Td+eVfAj_Q9d9xzyk==jcGOGxYhQ@mail.gmail.com>
+Subject: Re: [PATCH v3] mtd: rawnand: brcmnand: legacy exec_op implementation
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, 
+	William Zhang <william.zhang@broadcom.com>, linux-mtd@lists.infradead.org, 
+	David Regan <dregan@broadcom.com>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	bcm-kernel-feedback-list@broadcom.com, rafal@milecki.pl, 
+	computersforpeace@gmail.com, Kamal Dasu <kamal.dasu@broadcom.com>, 
+	Dan Beygelman <dan.beygelman@broadcom.com>, frieder.schrempf@kontron.de, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>, 
+	Richard Weinberger <richard@nod.at>, Boris Brezillon <bbrezillon@kernel.org>, kdasu.kdev@gmail.com, 
+	JaimeLiao <jaimeliao.tw@gmail.com>, Adam Borowski <kilobyte@angband.pl>, jonas.gorski@gmail.com, 
+	dgcbueu@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2025 at 1:18=E2=80=AFPM Bill Wendling <isanbard@gmail.com> =
-wrote:
-> On 1/23/25 7:09 AM, Jani Nikula wrote:
-> > The expectation is that the struct drm_device based logging helpers get
-> > passed an actual struct drm_device pointer rather than some random
-> > struct pointer where you can dereference the ->dev member.
+Hi =C3=81lvaro,
+
+On Thu, May 15, 2025 at 12:52=E2=80=AFAM Florian Fainelli
+<florian.fainelli@broadcom.com> wrote:
+>
+>
+>
+> On 5/15/2025 7:06 AM, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
+> > Hi William
 > >
-> > Add a static inline helper to convert struct drm_device to struct
-> > device, with the main benefit being the type checking of the macro
-> > argument.
-> >
-> > As a side effect, this also reduces macro argument double references.
-> >
-> > Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-> > ---
-> >   include/drm/drm_print.h | 41 +++++++++++++++++++++++-----------------=
--
-> >   1 file changed, 23 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/include/drm/drm_print.h b/include/drm/drm_print.h
-> > index 9732f514566d..f31eba1c7cab 100644
-> > --- a/include/drm/drm_print.h
-> > +++ b/include/drm/drm_print.h
-> > @@ -584,9 +584,15 @@ void __drm_dev_dbg(struct _ddebug *desc, const str=
-uct device *dev,
-> >    * Prefer drm_device based logging over device or prink based logging=
-.
-> >    */
-> >
-> > +/* Helper to enforce struct drm_device type */
-> > +static inline struct device *__drm_to_dev(const struct drm_device *drm=
+> > El jue, 15 may 2025 a las 3:42, William Zhang
+> > (<william.zhang@broadcom.com>) escribi=C3=B3:
+> >>
+> >> Hi Alvaro,
+> >>
+> >>> -----Original Message-----
+> >>> From: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+> >>> Sent: Tuesday, May 13, 2025 11:24 PM
+> >>> To: linux-mtd@lists.infradead.org; dregan@broadcom.com;
+> >>> miquel.raynal@bootlin.com; bcm-kernel-feedback-list@broadcom.com;
+> >>> florian.fainelli@broadcom.com; rafal@milecki.pl;
+> >>> computersforpeace@gmail.com; kamal.dasu@broadcom.com;
+> >>> dan.beygelman@broadcom.com; william.zhang@broadcom.com;
+> >>> frieder.schrempf@kontron.de; linux-kernel@vger.kernel.org;
+> >>> vigneshr@ti.com;
+> >>> richard@nod.at; bbrezillon@kernel.org; kdasu.kdev@gmail.com;
+> >>> jaimeliao.tw@gmail.com; kilobyte@angband.pl; jonas.gorski@gmail.com;
+> >>> dgcbueu@gmail.com
+> >>> Cc: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+> >>> Subject: [PATCH v3] mtd: rawnand: brcmnand: legacy exec_op implementa=
+tion
+> >>>
+> >>> Commit 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation"=
 )
-> > +{
-> > +     return drm ? drm->dev : NULL;
-> > +}
-> > +
-> >   /* Helper for struct drm_device based logging. */
-> >   #define __drm_printk(drm, level, type, fmt, ...)                    \
-> > -     dev_##level##type((drm) ? (drm)->dev : NULL, "[drm] " fmt, ##__VA=
-_ARGS__)
-> > +     dev_##level##type(__drm_to_dev(drm), "[drm] " fmt, ##__VA_ARGS__)
+> >>> removed legacy interface functions, breaking < v5.0 controllers suppo=
+rt.
+> >>> In order to fix older controllers we need to add an alternative exec_=
+op
+> >>> implementation which doesn't rely on low level registers.
+> >>>
+> >>> Fixes: 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation"=
+)
+> >>> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+> >>> ---
+> >>>   drivers/mtd/nand/raw/brcmnand/brcmnand.c | 178
+> >>> ++++++++++++++++++++++-
+> >>>   1 file changed, 172 insertions(+), 6 deletions(-)
+> >>>
+> >>>   v3: add changes requested by Florian and other improvements:
+> >>>    - Add associative array for native command conversion.
+> >>>    - Add function pointer to brcmnand_controller for exec_instr
+> >>>      functionality.
+> >>>    - Fix CMD_BLOCK_ERASE address.
+> >>>    - Drop NAND_CMD_READOOB support.
+> >>>
+> >>>   v2: multiple improvements:
+> >>>    - Use proper native commands for checks.
+> >>>    - Fix NAND_CMD_PARAM/NAND_CMD_RNDOUT addr calculation.
+> >>>    - Remove host->last_addr usage.
+> >>>    - Remove sector_size_1k since it only applies to v5.0+ controllers=
+.
+> >>>    - Remove brcmnand_wp since it doesn't exist for < v5.0 controllers=
+.
+> >>>    - Use j instead of i for flash_cache loop.
+> >>>
+> >>> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> >>> b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> >>> index 17f6d9723df9..f4fabe7ffd9d 100644
+> >>> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> >>> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> >>> @@ -65,6 +65,7 @@ module_param(wp_on, int, 0444);
+> >>>   #define CMD_PARAMETER_READ           0x0e
+> >>>   #define CMD_PARAMETER_CHANGE_COL     0x0f
+> >>>   #define CMD_LOW_LEVEL_OP             0x10
+> >>> +#define CMD_NOT_SUPPORTED            0xff
+> >>>
+> >>>   struct brcm_nand_dma_desc {
+> >>>        u32 next_desc;
+> >>> @@ -199,6 +200,30 @@ static const u16 flash_dma_regs_v4[] =3D {
+> >>>        [FLASH_DMA_CURRENT_DESC_EXT]    =3D 0x34,
+> >>>   };
+> >>>
+> >>> +/* Native command conversion */
+> >>> +static const u8 native_cmd_conv[] =3D {
+> >>> +     [NAND_CMD_READ0]        =3D CMD_NOT_SUPPORTED,
+> >>> +     [NAND_CMD_READ1]        =3D CMD_NOT_SUPPORTED,
+> >>> +     [NAND_CMD_RNDOUT]       =3D CMD_PARAMETER_CHANGE_COL,
+> >>> +     [NAND_CMD_PAGEPROG]     =3D CMD_NOT_SUPPORTED,
+> >>> +     [NAND_CMD_READOOB]      =3D CMD_NOT_SUPPORTED,
+> >>> +     [NAND_CMD_ERASE1]       =3D CMD_BLOCK_ERASE,
+> >>> +     [NAND_CMD_STATUS]       =3D CMD_NOT_SUPPORTED,
+> >> Do we not need to support nand_status_op()?
+> >
+> > We do, but NAND_CMD_STATUS and NAND_CMD_RESET are handled in brcmnand_e=
+xec_op():
+> > https://github.com/torvalds/linux/blob/546bce579204685a0b204beebab98c3a=
+a496e651/drivers/mtd/nand/raw/brcmnand/brcmnand.c#L2506-L2523
 > >
 > >
-> >   #define drm_info(drm, fmt, ...)                                     \
-> > @@ -620,25 +626,25 @@ void __drm_dev_dbg(struct _ddebug *desc, const st=
-ruct device *dev,
 > >
-> >
-> >   #define drm_dbg_core(drm, fmt, ...)                                 \
-> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_CORE, fmt, ##__VA_A=
-RGS__)
-> > -#define drm_dbg_driver(drm, fmt, ...)                                 =
-               \
-> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_DRIVER, fmt, ##__VA=
-_ARGS__)
-> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_CORE, fmt, ##__VA_ARGS__)
-> > +#define drm_dbg_driver(drm, fmt, ...)                                 =
-       \
-> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_DRIVER, fmt, ##__VA_ARGS__)
-> >   #define drm_dbg_kms(drm, fmt, ...)                                  \
-> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_KMS, fmt, ##__VA_AR=
-GS__)
-> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_KMS, fmt, ##__VA_ARGS__)
-> >   #define drm_dbg_prime(drm, fmt, ...)                                 =
-       \
-> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_PRIME, fmt, ##__VA_=
-ARGS__)
-> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_PRIME, fmt, ##__VA_ARGS__)
-> >   #define drm_dbg_atomic(drm, fmt, ...)                                =
-       \
-> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_ATOMIC, fmt, ##__VA=
-_ARGS__)
-> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_ATOMIC, fmt, ##__VA_ARGS__)
-> >   #define drm_dbg_vbl(drm, fmt, ...)                                  \
-> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_VBL, fmt, ##__VA_AR=
-GS__)
-> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_VBL, fmt, ##__VA_ARGS__)
-> >   #define drm_dbg_state(drm, fmt, ...)                                 =
-       \
-> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_STATE, fmt, ##__VA_=
-ARGS__)
-> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_STATE, fmt, ##__VA_ARGS__)
-> >   #define drm_dbg_lease(drm, fmt, ...)                                 =
-       \
-> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_LEASE, fmt, ##__VA_=
-ARGS__)
-> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_LEASE, fmt, ##__VA_ARGS__)
-> >   #define drm_dbg_dp(drm, fmt, ...)                                   \
-> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_DP, fmt, ##__VA_ARG=
-S__)
-> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_DP, fmt, ##__VA_ARGS__)
-> >   #define drm_dbg_drmres(drm, fmt, ...)                                =
-       \
-> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_DRMRES, fmt, ##__VA=
-_ARGS__)
-> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_DRMRES, fmt, ##__VA_ARGS__)
-> >
-> >   #define drm_dbg(drm, fmt, ...)      drm_dbg_driver(drm, fmt, ##__VA_A=
-RGS__)
-> >
-> > @@ -727,10 +733,9 @@ void __drm_err(const char *format, ...);
-> >   #define __DRM_DEFINE_DBG_RATELIMITED(category, drm, fmt, ...)        =
-                               \
-> >   ({                                                                   =
-                       \
-> >       static DEFINE_RATELIMIT_STATE(rs_, DEFAULT_RATELIMIT_INTERVAL, DE=
-FAULT_RATELIMIT_BURST);\
-> > -     const struct drm_device *drm_ =3D (drm);                         =
-                         \
-> >                                                                        =
-                       \
-> >       if (drm_debug_enabled(DRM_UT_ ## category) && __ratelimit(&rs_)) =
-                       \
-> > -             drm_dev_printk(drm_ ? drm_->dev : NULL, KERN_DEBUG, fmt, =
-## __VA_ARGS__);       \
-> > +             drm_dev_printk(__drm_to_dev(drm), KERN_DEBUG, fmt, ## __V=
-A_ARGS__);             \
-> >   })
-> >
-> >   #define drm_dbg_ratelimited(drm, fmt, ...) \
-> > @@ -752,13 +757,13 @@ void __drm_err(const char *format, ...);
-> >   /* Helper for struct drm_device based WARNs */
-> >   #define drm_WARN(drm, condition, format, arg...)                    \
-> >       WARN(condition, "%s %s: [drm] " format,                         \
-> > -                     dev_driver_string((drm)->dev),                  \
-> > -                     dev_name((drm)->dev), ## arg)
-> > +                     dev_driver_string(__drm_to_dev(drm)),           \
-> > +                     dev_name(__drm_to_dev(drm)), ## arg)
-> >
-> >   #define drm_WARN_ONCE(drm, condition, format, arg...)                =
-       \
-> >       WARN_ONCE(condition, "%s %s: [drm] " format,                    \
-> > -                     dev_driver_string((drm)->dev),                  \
-> > -                     dev_name((drm)->dev), ## arg)
-> > +                     dev_driver_string(__drm_to_dev(drm)),           \
-> > +                     dev_name(__drm_to_dev(drm)), ## arg)
-> >
-> Hi Jani,
->
-> These two changes introduce undefined behavior into these macros. The fin=
-al
-> code generation becomes this (from 'bxt_port_to_phy_channel'):
->
->         __warn_printk("%s %s: [drm] " "PHY not found for PORT %c",
->                       dev_driver_string(__drm_to_dev(display->drm)),
->                       dev_name(__drm_to_dev(display->drm)),
->                       (port + 'A'));
->
-> The issue lies in 'dev_name(__drm_to_dev(display->drm))'. After inlining,=
- it
-> becomes this (pseudo code):
->
->         struct device *device =3D display->drm ? display->drm->dev : NULL=
-;
->         const char *name =3D device->init_name ? device->init_name
->                                              : kobject_name(&device->kobj=
-);
->
->         __warn_printk("%s %s: [drm] " "PHY not found for PORT %c",
->                       dev_driver_string(device), name, (port + 'A'));
->
-> The issue, of course, is that the 'device' may be NULL when attempting
-> to get
-> 'device->init_name'. The compiler sees this as undefined behavior, which =
-may
-> lead to unexpected outcomes, especially with Clang where paths
-> determined to be
-> undefined are removed entirely under certain conditions.
->
-> (Note, I'm working on making this behavior less draconian by adopting a G=
-CC
-> pass, but this will take time to filter out to Linux devs.)
->
-I potential fix for this would be something like this (untested). I'm
-not familiar with how 'dev_name' is used to know whether or not this
-could cause issues:
+> >>
+> >>> +     [NAND_CMD_SEQIN]        =3D CMD_NOT_SUPPORTED,
+> >>> +     [NAND_CMD_RNDIN]        =3D CMD_NOT_SUPPORTED,
+> >>> +     [NAND_CMD_READID]       =3D CMD_DEVICE_ID_READ,
+> >>> +     [NAND_CMD_ERASE2]       =3D CMD_NULL,
+> >>> +     [NAND_CMD_PARAM]        =3D CMD_PARAMETER_READ,
+> >>> +     [NAND_CMD_GET_FEATURES] =3D CMD_NOT_SUPPORTED,
+> >>> +     [NAND_CMD_SET_FEATURES] =3D CMD_NOT_SUPPORTED,
+> >>> +     [NAND_CMD_RESET]        =3D CMD_NOT_SUPPORTED,
+> >>> +     [NAND_CMD_READSTART]    =3D CMD_NOT_SUPPORTED,
+> >>> +     [NAND_CMD_READCACHESEQ] =3D CMD_NOT_SUPPORTED,
+> >>> +     [NAND_CMD_READCACHEEND] =3D CMD_NOT_SUPPORTED,
+> >>> +     [NAND_CMD_RNDOUTSTART]  =3D CMD_NULL,
+> >>> +     [NAND_CMD_CACHEDPROG]   =3D CMD_NOT_SUPPORTED,
+> >>> +};
+> >>> +
+> >>>   /* Controller feature flags */
+> >>>   enum {
+> >>>        BRCMNAND_HAS_1K_SECTORS                 =3D BIT(0),
+> >>> @@ -237,6 +262,10 @@ struct brcmnand_controller {
+> >>>        /* List of NAND hosts (one for each chip-select) */
+> >>>        struct list_head host_list;
+> >>>
+> >>> +     /* Function to be called from exec_op */
+> >>> +     int (*exec_instr)(struct nand_chip *chip,
+> >>> +                       const struct nand_operation *op);
+> >>> +
+> >>>        /* EDU info, per-transaction */
+> >>>        const u16               *edu_offsets;
+> >>>        void __iomem            *edu_base;
+> >>> @@ -2490,14 +2519,149 @@ static int brcmnand_op_is_reset(const struct
+> >>> nand_operation *op)
+> >>>        return 0;
+> >>>   }
+> >>>
+> >>> +static int brcmnand_exec_instructions(struct nand_chip *chip,
+> >>> +                                   const struct nand_operation *op)
+> >>> +{
+> >>> +     struct brcmnand_host *host =3D nand_get_controller_data(chip);
+> >>> +     unsigned int i;
+> >>> +     int ret =3D 0;
+> >>> +
+> >>> +     for (i =3D 0; i < op->ninstrs; i++) {
+> >>> +             ret =3D brcmnand_exec_instr(host, i, op);
+> >>> +             if (ret)
+> >>> +                     break;
+> >>> +     }
+> >>> +
+> >>> +     return ret;
+> >>> +}
+> >>> +
+> >>> +static int brcmnand_exec_instructions_legacy(struct nand_chip *chip,
+> >>> +                                          const struct nand_operatio=
+n *op)
+> >>> +{
+> >>> +     struct mtd_info *mtd =3D nand_to_mtd(chip);
+> >>> +     struct brcmnand_host *host =3D nand_get_controller_data(chip);
+> >>> +     struct brcmnand_controller *ctrl =3D host->ctrl;
+> >>> +     const struct nand_op_instr *instr;
+> >>> +     unsigned int i, j;
+> >>> +     u8 cmd =3D CMD_NULL, last_cmd =3D CMD_NULL;
+> >>> +     int ret =3D 0;
+> >>> +     u64 last_addr;
+> >>> +
+> >>> +     for (i =3D 0; i < op->ninstrs; i++) {
+> >>> +             instr =3D &op->instrs[i];
+> >>> +
+> >>> +             if (instr->type =3D=3D NAND_OP_CMD_INSTR) {
+> >>> +                     cmd =3D native_cmd_conv[instr->ctx.cmd.opcode];
+> >>> +                     if (cmd =3D=3D CMD_NOT_SUPPORTED) {
+> >>> +                             dev_err(ctrl->dev, "unsupported cmd=3D%=
+d\n",
+> >>> +                                     instr->ctx.cmd.opcode);
+> >>> +                             ret =3D -EOPNOTSUPP;
+> >>> +                             break;
+> >>> +                     }
+> >>> +             } else if (instr->type =3D=3D NAND_OP_ADDR_INSTR) {
+> >>> +                     u64 addr =3D 0;
+> >>> +
+> >>> +                     if (cmd =3D=3D CMD_NULL)
+> >>> +                             continue;
+> >>> +
+> >>> +                     if (instr->ctx.addr.naddrs > 8) {
+> >>> +                             dev_err(ctrl->dev, "unsupported naddrs=
+=3D%u\n",
+> >>> +                                     instr->ctx.addr.naddrs);
+> >>> +                             ret =3D -EOPNOTSUPP;
+> >>> +                             break;
+> >>> +                     }
+> >>> +
+> >>> +                     for (j =3D 0; j < instr->ctx.addr.naddrs; j++)
+> >>> +                             addr |=3D (instr->ctx.addr.addrs[j]) <<=
+ (j << 3);
+> >>> +
+> >>> +                     if (cmd =3D=3D CMD_BLOCK_ERASE)
+> >>> +                             addr <<=3D chip->page_shift;
+> >>> +                     else if (cmd =3D=3D CMD_PARAMETER_CHANGE_COL)
+> >>> +                             addr &=3D ~((u64)(FC_BYTES - 1));
+> >>> +
+> >>> +                     brcmnand_set_cmd_addr(mtd, addr);
+> >>> +                     brcmnand_send_cmd(host, cmd);
+> >>> +                     last_addr =3D addr;
+> >>> +                     last_cmd =3D cmd;
+> >>> +                     cmd =3D CMD_NULL;
+> >>> +                     brcmnand_waitfunc(chip);
+> >>> +
+> >>> +                     if (last_cmd =3D=3D CMD_PARAMETER_READ ||
+> >>> +                         last_cmd =3D=3D CMD_PARAMETER_CHANGE_COL) {
+> >>> +                             /* Copy flash cache word-wise */
+> >>> +                             u32 *flash_cache =3D (u32 *)ctrl->flash=
+_cache;
+> >>> +
+> >>> +                             brcmnand_soc_data_bus_prepare(ctrl->soc=
+, true);
+> >>> +
+> >>> +                             /*
+> >>> +                              * Must cache the FLASH_CACHE now, sinc=
+e
+> >>> changes in
+> >>> +                              * SECTOR_SIZE_1K may invalidate it
+> >>> +                              */
+> >>> +                             for (j =3D 0; j < FC_WORDS; j++)
+> >>> +                                     /*
+> >>> +                                      * Flash cache is big endian fo=
+r parameter
+> >>> pages, at
+> >>> +                                      * least on STB SoCs
+> >>> +                                      */
+> >>> +                                     flash_cache[j] =3D
+> >>> be32_to_cpu(brcmnand_read_fc(ctrl, j));
+> >>> +
+> >>> +                             brcmnand_soc_data_bus_unprepare(ctrl->s=
+oc,
+> >>> true);
+> >>> +                     }
+> >>> +             } else if (instr->type =3D=3D NAND_OP_DATA_IN_INSTR) {
+> >>> +                     u8 *in =3D instr->ctx.data.buf.in;
+> >>> +
+> >>> +                     if (last_cmd =3D=3D CMD_DEVICE_ID_READ) {
+> >>> +                             u32 val;
+> >>> +
+> >>> +                             if (instr->ctx.data.len > 8) {
+> >>> +                                     dev_err(ctrl->dev, "unsupported
+> >>> len=3D%u\n",
+> >>> +                                             instr->ctx.data.len);
+> >>> +                                     ret =3D -EOPNOTSUPP;
+> >>> +                                     break;
+> >>> +                             }
+> >>> +
+> >>> +                             for (j =3D 0; j < instr->ctx.data.len; =
+j++) {
+> >>> +                                     if (j =3D=3D 0)
+> >>> +                                             val =3D brcmnand_read_r=
+eg(ctrl,
+> >>> BRCMNAND_ID);
+> >>> +                                     else if (j =3D=3D 4)
+> >>> +                                             val =3D brcmnand_read_r=
+eg(ctrl,
+> >>> BRCMNAND_ID_EXT);
+> >>> +
+> >>> +                                     in[j] =3D (val >> (24 - ((j % 4=
+) << 3))) & 0xff;
+> >>> +                             }
+> >>> +                     } else if (last_cmd =3D=3D CMD_PARAMETER_READ |=
+|
+> >>> +                                last_cmd =3D=3D CMD_PARAMETER_CHANGE=
+_COL) {
+> >>> +                             u64 addr;
+> >>> +                             u32 offs;
+> >>> +
+> >>> +                             for (j =3D 0; j < instr->ctx.data.len; =
+j++) {
+> >>> +                                     addr =3D last_addr + j;
+> >>> +                                     offs =3D addr & (FC_BYTES - 1);
+> >>> +
+> >>> +                                     if (j > 0 && offs =3D=3D 0)
+> >>> +
+> >>>        nand_change_read_column_op(chip, addr, NULL, 0,
+> >>> +                                                                    =
+    false);
+> >>> +
+> >>> +                                     in[j] =3D ctrl->flash_cache[off=
+s];
+> >>> +                             }
+> >>> +                     }
+> >>> +             } else if (instr->type =3D=3D NAND_OP_WAITRDY_INSTR) {
+> >>> +                     ret =3D bcmnand_ctrl_poll_status(host, NAND_CTR=
+L_RDY,
+> >>> NAND_CTRL_RDY, 0);
+> >>> +             } else {
+> >>> +                     dev_err(ctrl->dev, "unsupported instruction typ=
+e: %d\n",
+> >>> instr->type);
+> >>> +                     ret =3D -EINVAL;
+> >>> +             }
+> >>> +     }
+> >>> +
+> >>> +     return ret;
+> >>> +}
+> >>> +
+> >>>   static int brcmnand_exec_op(struct nand_chip *chip,
+> >>>                            const struct nand_operation *op,
+> >>>                            bool check_only)
+> >>>   {
+> >>>        struct brcmnand_host *host =3D nand_get_controller_data(chip);
+> >>> +     struct brcmnand_controller *ctrl =3D host->ctrl;
+> >>>        struct mtd_info *mtd =3D nand_to_mtd(chip);
+> >>>        u8 *status;
+> >>> -     unsigned int i;
+> >>>        int ret =3D 0;
+> >>>
+> >>>        if (check_only)
+> >>> @@ -2525,11 +2689,7 @@ static int brcmnand_exec_op(struct nand_chip *=
+chip,
+> >>>        if (op->deassert_wp)
+> >>>                brcmnand_wp(mtd, 0);
+> >>>
+> >>> -     for (i =3D 0; i < op->ninstrs; i++) {
+> >>> -             ret =3D brcmnand_exec_instr(host, i, op);
+> >>> -             if (ret)
+> >>> -                     break;
+> >>> -     }
+> >>> +     ctrl->exec_instr(chip, op);
+> >>>
+> >>>        if (op->deassert_wp)
+> >>>                brcmnand_wp(mtd, 1);
+> >>> @@ -3142,6 +3302,12 @@ int brcmnand_probe(struct platform_device *pde=
+v,
+> >>> struct brcmnand_soc *soc)
+> >>>        if (ret)
+> >>>                goto err;
+> >>>
+> >>> +     /* Only v5.0+ controllers have low level ops support */
+> >>> +     if (ctrl->nand_version >=3D 0x0500)
 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 79e49fe494b7..ea20d439fe8e 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -778,6 +778,9 @@ static inline bool device_iommu_mapped(struct device *d=
-ev)
-  */
- static inline const char *dev_name(const struct device *dev)
- {
-+       if (!dev)
-+               return "default";
-+
-        /* Use the init name until the kobject becomes available */
-        if (dev->init_name)
-                return dev->init_name;
+We can probably change this to >=3D 0x0400 since as Florian mentioned
+LLOP was added
+with version 4.
 
--bw
+> >>> +             ctrl->exec_instr =3D brcmnand_exec_instructions;
+> >>> +     else
+> >>> +             ctrl->exec_instr =3D brcmnand_exec_instructions_legacy;
+> >>> +
+> >>>        /*
+> >>>         * Most chips have this cache at a fixed offset within 'nand' =
+block.
+> >>>         * Some must specify this region separately.
+> >>> --
+> >>> 2.39.5
+> >
+> > BTW, can anyone from Broadcom confirm any of the following?
+> > 1. There are no low level registers on v2.1 and v2.2 controllers.
+>
+> Correct.
+>
+> > 2. Do low level registers exist on v4.0 controllers? They are defined
+> > on 63268_map_part.h but the NAND drivers I could find never use them.
+>
+> They exist. The changelog for the NAND controller indicates that
+> starting from v4.0 onwards, the NAND LL operation is supported.
+>
+> > 3. Are the low level registers bugged on v4.0 controllers?
+> > 4. Should the low level registers be handled differently on v4.0 contro=
+llers?
+> > The issue is that trying to use them on v4.0 controllers for
+> > GET_FEATURES would leave the NAND controller in a weird state that
+> > results in hangs or timeouts while trying to read the NAND.
+> > This happens on the Sercomm H500-s, which is a BCM63268 with a
+> > Macronix NAND that tries to unlock through ONFI.
+
+I don't yet know the answer to this and not sure exactly which NAND
+part you are using
+but if you have just a regular standard NAND that doesn't do anything
+unusual does that
+work with a 63268 through the non-legacy brcmnand_exec_op
+brcmnand_exec_instructions
+path (>=3D 5) that you split out?
+
+Does the data that comes back from LLOP operations look legitimate?
+
+>
+> That I do not know however, William and David hopefully do know.
+> --
+> Florian
+>
+
+-Dave
