@@ -1,135 +1,146 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0581A704B;
-	Thu, 15 May 2025 08:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8CA1A704B;
+	Thu, 15 May 2025 08:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747296583; cv=none; b=sIkcc6LWnsmE3rCdmxaCtD7S9vaMPbBR6quQKUeTPt4z6B2DVIJzod+9exyE69y+MQoVyK+T5urjT9i5UpawnYuzSZu/9c0gzDlXLYSrpCT5KdXpBj19IBkxs4fF7Lg6JxQnOs/cE2jmqZ4QhFbRFkna1MvSk8DA8YP0BKcviIY=
+	t=1747296614; cv=none; b=B0KyVOcG6RvosGV6mPS0Z2Ed7DKo7iZlHBTFgf4xdsXa+GReHhTXEDnIRmrFWUHiRHNwaLDKrq4+w5co36dLz7ta4N2jclmCvGrbRQ7bsmINum1HYffZ9p0O0J6gy3LCNxe5g8SwHi7U48RM/wAazAHrGHUT1RtiE9Vd39nPGjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747296583; c=relaxed/simple;
-	bh=ZCOA+MikIJ6hz4BMNdhkme/PbBjRb6+ytIsn9YmKuBU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TWFlZ+HKYizgsFPHIJ/Z0mwNeaIuUVEWI+Zjh1yuZL+xbRJhPD45fXsCxpV9Swq7MG0SuusVB6Y9qEWnzk/bJcBrSc+DgdlrXKiLg1rK+Db75PzAS6sfaWNS5AtdUiJExS48w/Q6ye1mTBa9n7rBiTjg5xJKdrjbEXkCNNlBx/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dv4mu78Y; arc=none smtp.client-ip=209.85.210.171
+	s=arc-20240116; t=1747296614; c=relaxed/simple;
+	bh=RQc2H3wzfKeurFGucjVwx2n45yxv7JK3ptxwIE7kwfg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Fpjs7gRyPapgZYHKeEguHMj61ylDoS7kfb/RWm4q9PImfvcDqB+hPMxK2PtHjZX4MN24ea8dtoMGVYoFaHI7x8m1R8Ty9/iB7cLUIAEL4Wre4XKkHLCdZHzJUgq60DCgqsAU/5ZJ6kOIugJSNKorO9ldjBB7Kun3pw5mqP6AkNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gvynj9I4; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dv4mu78Y"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-74251cb4a05so952322b3a.3;
-        Thu, 15 May 2025 01:09:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gvynj9I4"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7423fadbe77so643795b3a.3;
+        Thu, 15 May 2025 01:10:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747296581; x=1747901381; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LIx4uJviRovv8kbekEvdBqRYIVxfNVVeRYilRDDQ9+k=;
-        b=Dv4mu78Y2RATlmG1Gs/WcIxo/MjGWqFVFn8XlSsPdk2q/kxHfw7FOGvjpK7vjfFUGO
-         aMnf2Qlm0/Vo7G9RipOqNAzHv0f7S1pn4HcGxMS/Y4JV77kFb1a0qhoj/ivuByxnwj3F
-         /3uE5VIv8jJ85jxbNc/q/UjTF2J0G3fu3JZheOJzI/YsFB7kr0mS38qcjX4I988qPhRj
-         BqfdSROQd9NSC5XGmBmitDyoPJXuyvx+8tgEg7az8OTvz2T4CdrhhDkAAaCHlIlN0qJz
-         g/k9XUHo+tIS+Z59m4nPv/qqDcDLH9ZHG/RB/FHG3sDSMYsaKOZWS49fiNfxeQR3BRUd
-         vTBg==
+        d=gmail.com; s=20230601; t=1747296611; x=1747901411; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=hkYmL7GiNnw+twcKceex7aJBPsWCYw83ZAJqdfN8BEw=;
+        b=gvynj9I4hwsqnb5skapFdNu3VYOJ5iOBlQP/TQj9fI+62uDjQf9RvP9ns5oKK3Xdkx
+         U/Xb4uYCmBGlRf2YJxuN13Kq4yGowiWNnebZ3uaJftpa2SSaKFIOojlmAvnhLNGMA9nV
+         5SJ3J3zwK+dkJ7FeoSmhKR89D9DMWGRDBgJPUGsmEc5MEtPRcJdvoB6+cHeieST8PBRA
+         sBd8bE3elGQfEXvic1VDqHRsDsMHum8fcYnDL1FkWnSgefSQDMYXEbUoa/uop/w0aANU
+         hMXHmBCbuZuxYtwBdPyAFlgBpPOqJp8URAoBo/5vTXZwEEHDtUB91zd/ycWRSttjk0rL
+         bCOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747296581; x=1747901381;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LIx4uJviRovv8kbekEvdBqRYIVxfNVVeRYilRDDQ9+k=;
-        b=V/M/3dvgfM+52n0+1cjgSCjWi/o753xl/WgBvb9d2bHuMW9BqTO6KZ+4lc3QU/n/GV
-         LHUgt5oJ4+ceouFgD+NIbNIwZibI2ZEtsVfH8Fg8Hv5yZNZlIT8BFl32qTySx7a3YYUl
-         mR6e+wa/4eRLUHPK7YsFR0jMyN+UbRZmFH0+iCzz+76gtouS5DdiBLYJWkaba60ksnZ9
-         2V6SxaXamAStiDWChmf/USyRlL4qy6iHA0RXkrAO1Zr/WS5cbUniRF9QMNsuHEVjyptp
-         kDOj1lsCYdmaV55J5Vlxs5AE6Ljl1zTQk5YjNcI7weG4Jwe8eQnQE/DOxNp5LmQLp9Fi
-         8l5g==
-X-Forwarded-Encrypted: i=1; AJvYcCXtXB/4Q6ashEEo5XwGP4lao4FqsGhlVu0jOT9Fdd8NA4absUq9MnLmzEeLIbGhb1xTuoQLBDOdwp8J0S4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCYcYFZHi+LKPGhpCcgXnhtCmu+tFU38wEp5xxDfJeRyin5B1q
-	UHJlbRZ129zgfXQ33md2bbWiUIr9TbMpIHerDke/tEGc2FJJRxRX
-X-Gm-Gg: ASbGnctaffD07OoNgpW/iqvhTBa4yEVXtHzpoNDe/zDXLMPH5WeY8kmtrIFAlfDO+h2
-	YDheCnm1IgziMu/CKL7+RLdVK3znUWYcI81H0j0t/XdBZQpjQNNdR79B8fBtIQhoZQT+mT6xQJ+
-	ejNp+Svh3JqOGg0PIhASTP6BdO69lz46I7BU+A6X5C/Ko+xMNYxxw6rH7E4+qjLoP9JE6v3L44J
-	O3HE560c8TzpqHsrC+Z7FkQ8tTFMWYnpTeEw/lZMoEfOMd9Vid8C+2AP47+egtTfFTEpFoTzNgU
-	0xuySNEhhgYTl9md2703nzhcUDNimeQDs95F22FWqNj+Vnb9TcjtaTTsLn0Ni9zBzMejB5tw8Tv
-	zPw0dJg==
-X-Google-Smtp-Source: AGHT+IG0/gYSxvm0WZhJh6VbHw9a4hSHTkDTo4s7bkEXS27qoiLuXCba2cYdN5XuvlWgPYq3Rudnww==
-X-Received: by 2002:a05:6a00:180e:b0:736:6d4d:ffa6 with SMTP id d2e1a72fcca58-74289345b9emr8118939b3a.15.1747296581500;
-        Thu, 15 May 2025 01:09:41 -0700 (PDT)
-Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a0cec0sm10881148b3a.95.2025.05.15.01.09.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 01:09:41 -0700 (PDT)
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: awalls@md.metrocast.net,
-	mchehab@kernel.org
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jserv@ccns.ncku.edu.tw,
-	Kuan-Wei Chiu <visitorckw@gmail.com>,
-	Yu-Chun Lin <eleanor15x@gmail.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCH v5] media: pci: cx18-av-vbi: Replace open-coded parity calculation with parity8()
-Date: Thu, 15 May 2025 16:09:33 +0800
-Message-Id: <20250515080933.774874-1-visitorckw@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1747296611; x=1747901411;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hkYmL7GiNnw+twcKceex7aJBPsWCYw83ZAJqdfN8BEw=;
+        b=P/4VIJM5lmTdLStZkKyCUt+sPQjzxL+JiaONWOOexUGH7p0Xsw/tjUUAKwlq/TzeL7
+         OHNJsIwz2PlB/YlsEzVXVnz2VD4S7xwPaAQeMnHg6s7o4yyCqUgXrLn8UMNKM+pdEvxZ
+         hp0v1TVkAJq0glQSTJOfbWhMyLVb3tB94eqBtuS6ggazUhp7cCQygnHkMtJuoRmfxMGa
+         kLhXFtYm5UCOFbEbFKWPaXOhTkTGU4h+N0QPquPCSA02BesDarIcNHktkFiF75vgpHot
+         goHvbFE3yB8au+m42cYZ6ttVd7qm9rZfakYelXE5U3IQSvRArwtn0zLacHiAbc+uWL/O
+         Itog==
+X-Forwarded-Encrypted: i=1; AJvYcCWNg+mrETjgzcHc/PZAGFtPwxg9yolN/JzsI/1pFSiwKk4zco5TLdTPrhjU3hOlI4oXqDLpIqtOqFU+zmY=@vger.kernel.org, AJvYcCXWu/0vleiXUaug5zJp2prteXsYIi2xIdMKUnpXDDAMQfAwHWapdRjtQ0mmYoEjn6veH/l7MxDt@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzq8Gqwj9NKNQKtHGrSlrNLZrI5VbxzABeOS7l4A8MOk81Vhtg1
+	p7qZSbAVPAeydjBO5K6qZ+eVVjqrYtYwGxCcTMffTFOqn15wLXcbFMvqVcIl
+X-Gm-Gg: ASbGncvjBvw0f4/CQDYAlC2qpLM8pEojMZMPXS3PcKkars5f7kq4YVDjy0mU6wWyU1y
+	X605mB3FXFssu80S7kKm9udOBaIO5VtJFr6mUMqT/KdF+LVtWfOrpH1JX1i0bI/YJzxhRAJHKd/
+	Y+ul+cGur3AMELlChnsF5P2FXIB8miWOoFJnji4AdkelAZl111v4Zkf7FGkp+UEFvd3Rz4Y83J1
+	T2ivPKVTQWm0zEZZ7xQs+De5/ubL7VERaYs07Uce8NPaeI7P2Wdlm7pBRcfk35mHGL90LL/0DtQ
+	/2NjTR8xv+eKoxjK2Tq3qa0zvYovasfLLcUkK753D1sxJ7OXNyo8sweNWns499JGMZZl/90Cml3
+	CiE7XhStGyNrIk4QVM//L3qfnpR1md/5JKVuVycK0HWQNUsj3
+X-Google-Smtp-Source: AGHT+IHaq3HlvQPD2bJNa3oBk4FJVvqL6doSsX07j6J4ytjuO2mOMBQO+tv0aHHRM2qExR+e2rNx1g==
+X-Received: by 2002:a05:6a20:6a20:b0:215:f26f:90e9 with SMTP id adf61e73a8af0-21611549c82mr2223817637.22.1747296611056;
+        Thu, 15 May 2025 01:10:11 -0700 (PDT)
+Received: from [192.168.48.133] (mobile-166-176-123-50.mycingular.net. [166.176.123.50])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2350ddb6e8sm10074271a12.57.2025.05.15.01.10.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 01:10:10 -0700 (PDT)
+Message-ID: <089c9c94-183c-4929-8669-b76b643a34ec@gmail.com>
+Date: Thu, 15 May 2025 10:10:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.6 000/113] 6.6.91-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250514125617.240903002@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250514125617.240903002@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Refactor parity calculations to use the standard parity8() helper.
-This change eliminates redundant implementations.
 
-Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
-Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
-Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
-Reviewed-by: Hans Verkuil <hverkuil@xs4all.nl>
----
-Changes in v5:
-- Dropped changes to bitops.h
-- Switched to using existing parity8()
-- Split parity8() conversion patch out of the series
 
- drivers/media/pci/cx18/cx18-av-vbi.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+On 5/14/2025 3:04 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.91 release.
+> There are 113 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 16 May 2025 12:55:38 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.91-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-diff --git a/drivers/media/pci/cx18/cx18-av-vbi.c b/drivers/media/pci/cx18/cx18-av-vbi.c
-index 65281d40c681..1a113aad9cd4 100644
---- a/drivers/media/pci/cx18/cx18-av-vbi.c
-+++ b/drivers/media/pci/cx18/cx18-av-vbi.c
-@@ -8,6 +8,7 @@
-  */
- 
- 
-+#include <linux/bitops.h>
- #include "cx18-driver.h"
- 
- /*
-@@ -56,15 +57,6 @@ struct vbi_anc_data {
- 	/* u8 fill[]; Variable number of fill bytes */
- };
- 
--static int odd_parity(u8 c)
--{
--	c ^= (c >> 4);
--	c ^= (c >> 2);
--	c ^= (c >> 1);
--
--	return c & 1;
--}
--
- static int decode_vps(u8 *dst, u8 *p)
- {
- 	static const u8 biphase_tbl[] = {
-@@ -278,7 +270,7 @@ int cx18_av_decode_vbi_line(struct v4l2_subdev *sd,
- 		break;
- 	case 6:
- 		sdid = V4L2_SLICED_CAPTION_525;
--		err = !odd_parity(p[0]) || !odd_parity(p[1]);
-+		err = !parity8(p[0]) || !parity8(p[1]);
- 		break;
- 	case 9:
- 		sdid = V4L2_SLICED_VPS;
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernel, build tested on 
+BMIPS_GENERIC:
+
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-2.34.1
+Florian
 
