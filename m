@@ -1,314 +1,235 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E1C1FAC54;
-	Thu, 15 May 2025 12:41:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075E5299927;
+	Thu, 15 May 2025 12:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747312860; cv=none; b=A8ZUsfDbkOEgLT6uKDV2HMaGRPN/oXfnMgGI1iTKaeiC4Q6E2EeBHxsytqpgdLbqdMPg42SSDWVrhA9K9PXB+O2b4vEbxIgRDn0LrrZz/ptZjOh0HtFWAsqOz768aYv3DBBmQWJBc13VmmKu5+W+up4UkqAutvqZF5OVDEaQTXg=
+	t=1747312864; cv=none; b=P2RhFKgcs5viuVSoOWPXShkz5OV9/Xim/UpCQF+uZnpgvHJGgiagSBLMTbJg3HP1rTj/QM3e1KOnra/NbJ/39l7At8EAZjEluhnhcj0VlF1wAptnsTXyGLlGs63u/2/WmbJC53y/GSBMCBHj8M93W+mwM+xWD2XczMx6LPu6fzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747312860; c=relaxed/simple;
-	bh=RecGXQhiOqbDDpm2sQZZw+q5gZOttaBUd0mcukO8v5E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=MZthhtqrI1gN8nCnVhQpF2nsCqw8NZCqM1IVNejVAYEUWqA8VQ/WRTO4vBH5TBg46Z7UWHiuTL8keXeRvYb/a4TcVJgyMbfl5DQfCGfTVchs16pOIBey/dH1C83l0NZd1Omf6Mx2vWkArwJUN8VqoHoxdKEX6q2XbTiIZrLlYQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YRSDH6hs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747312864; c=relaxed/simple;
+	bh=3T0xW/Palmd6d3QVa6l03mYqggerddll7QaGqrYkVjE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z+ZdUCTB1UmM1TvWm8ZqWXYEpqwlCUjYvRXH4pwBEpYyaRpi//6EOYJdrdLP7ndARYAG412Jtn0LEIKLzpCt6DK9GU1FaKx/wyKsEZXLqkSYL3B3ZUcN/OB8ynqZpWA+o8ac6I+1G01vmWv4krAiBOjempJKimDapvYpkJApvJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=hxCEZUW6; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YRSDH6hs"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 26B75C4CEEB;
-	Thu, 15 May 2025 12:41:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747312860;
-	bh=RecGXQhiOqbDDpm2sQZZw+q5gZOttaBUd0mcukO8v5E=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=YRSDH6hsJt2MB9LHRH2BhNyk/xDBatftzGAuhdMZsMUQauwcpQQmFjqD8GjynbT2L
-	 hGqYUWJFILwfOy3jimgneyynfXoY/FdHCQWhqOUn8/CXB30PuYGDhXFAbRCNzUgkk+
-	 dkBN7mlslSZ+OnlWsCb/3Qg9J1DJu36P5TS9RkSW5uYcTkFA0TvpBEYxWveRHEXWMz
-	 hpGO8RUNVKyKR5cqSReA20JeRyaLNuzXQwYNhtket9qzxAmQ1le5FESyIxFmncl2Tn
-	 fyAH7A1EiDn4GEDJFUwdQYygGNytWBTVQ0ZlKrAOQ5nz8N+6yq6Rh8WfxRHM7qmTsD
-	 UJT2CFbt4YXig==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C01FC2D0CD;
-	Thu, 15 May 2025 12:41:00 +0000 (UTC)
-From: Dimitri Fedrau via B4 Relay <devnull+dimitri.fedrau.liebherr.com@kernel.org>
-Date: Thu, 15 May 2025 14:40:54 +0200
-Subject: [PATCH v2] pwm: mc33xs2410: add support for temperature sensors
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="hxCEZUW6"
+Received: from pendragon.ideasonboard.com (85-76-100-182-nat.elisa-mobile.fi [85.76.100.182])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5C63F836;
+	Thu, 15 May 2025 14:40:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1747312842;
+	bh=3T0xW/Palmd6d3QVa6l03mYqggerddll7QaGqrYkVjE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hxCEZUW67EUR9e/VlF1itr+8qu4iihHjZiTQ59FY+1cfsGv/GfK0hmvm1YX/4K25D
+	 BGSA726FcmI/WV6xbCSer3QaUrk93pS79Ti2cujUq9uiBNsc5JF5pJPcG6qyq8OT6f
+	 7hy68aMZT0zxgTj+dAxpN4/hSCtWqe5XCqSrpQTE=
+Date: Thu, 15 May 2025 14:40:50 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Mehdi Djait <mehdi.djait@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, sakari.ailus@linux.intel.com,
+	tomi.valkeinen@ideasonboard.com, jacopo.mondi@ideasonboard.com,
+	hverkuil@xs4all.nl, kieran.bingham@ideasonboard.com,
+	naush@raspberrypi.com, mchehab@kernel.org,
+	dave.stevenson@raspberrypi.com, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v4] media: v4l2-common: Add a helper for obtaining
+ the clock producer
+Message-ID: <20250515124050.GA12492@pendragon.ideasonboard.com>
+References: <20250321130329.342236-1-mehdi.djait@linux.intel.com>
+ <f467e4a8-fcb2-4345-b8f7-7557c1a7552b@redhat.com>
+ <20250515084403.GQ23592@pendragon.ideasonboard.com>
+ <id2ikiio23ahslghpx56niwxrvaqdgmrgk3k647i3u27cptqgz@hwqrkdvljd3b>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250515-mc33xs2410-hwmon-v2-1-8d2e78f7e30d@liebherr.com>
-X-B4-Tracking: v=1; b=H4sIANXgJWgC/2WNwQ7CIBAFf6XZsxigEqwn/8P0QGGRTaQ0YGpN0
- 38XG28eZ5I3b4WCmbDApVkh40yF0lhBHhqwwYx3ZOQqg+RSccU1i7ZtlyJPgrPwimlkRnnfoUf
- LuYI6mzJ6Wvbkra8cqDxTfu8Ps/jaX0zI/9gsmGDGucFobfXZd9cH4RAw56NNEfpt2z52aYhYs
- wAAAA==
-X-Change-ID: 20250507-mc33xs2410-hwmon-a5ff9efec005
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hwmon@vger.kernel.org, Dimitri Fedrau <dima.fedrau@gmail.com>, 
- Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747312859; l=7130;
- i=dimitri.fedrau@liebherr.com; s=20241202; h=from:subject:message-id;
- bh=gA7zDwXiWTd8xg0+Xj9LCJz286VbanRc/qAT/ceC6j8=;
- b=jpXZejTJ7h9giZQBIT2GK8g/rUbED3gfWmU7XG48Ly0erh7RzibKfhlbRLKw1csn1ye4BSLC9
- 5kMAxJ1Y/wKCgULVNY/Ym/7uwgbNEqd2nXpCzFXWiqcuhwrVeEJPh17
-X-Developer-Key: i=dimitri.fedrau@liebherr.com; a=ed25519;
- pk=rT653x09JSQvotxIqQl4/XiI4AOiBZrdOGvxDUbb5m8=
-X-Endpoint-Received: by B4 Relay for dimitri.fedrau@liebherr.com/20241202
- with auth_id=290
-X-Original-From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-Reply-To: dimitri.fedrau@liebherr.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <id2ikiio23ahslghpx56niwxrvaqdgmrgk3k647i3u27cptqgz@hwqrkdvljd3b>
 
-From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+On Thu, May 15, 2025 at 11:17:37AM +0200, Mehdi Djait wrote:
+> On Thu, May 15, 2025 at 10:44:03AM +0200, Laurent Pinchart wrote:
+> > On Sat, May 10, 2025 at 04:21:09PM +0200, Hans de Goede wrote:
+> > > On 21-Mar-25 2:03 PM, Mehdi Djait wrote:
+> > > > Introduce a helper for v4l2 sensor drivers on both DT- and ACPI-based
+> > > > platforms to retrieve a reference to the clock producer from firmware.
+> > > > 
+> > > > This helper behaves the same as clk_get_optional() except where there is
+> > > > no clock producer like in ACPI-based platforms.
+> > > > 
+> > > > For ACPI-based platforms the function will read the "clock-frequency"
+> > > > ACPI _DSD property and register a fixed frequency clock with the frequency
+> > > > indicated in the property.
+> > > > 
+> > > > Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
+> > > 
+> > > This certainly looks quite useful, thank you for working
+> > > on this.
+> > > 
+> > > Note on some IPU3 platforms where the clk is provided by
+> > > a clk-generator which is part of a special sensor-PMIC
+> > > the situation is a bit more complicated.
+> > > 
+> > > Basically if there is both a clk provider and a clock-frequency
+> > > property then the clock-frequency value should be set as freq
+> > > to the clk-provider, see:
+> > > 
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/media/i2c/ov8865.c#n3020
+> > > 
+> > > for an example of a driver which handles this case.
+> > 
+> > On a side note, the DT bindings for the OV8865 doesn't specify the
+> > clock-frequency property...
+> 
+> Is this wrong ?
+> 
+> The OV8865 driver was introduced for DT-based systems, where you will
+> get a reference to the "struct clk corresponding to the clock producer"
+> and then get the clock-rate/frequency with a call to:
+> 
+> 	rate = clk_get_rate(sensor->extclk);
+> 
+> The patch "73dcffeb2ff9 media: i2c: Support 19.2MHz input clock in ov8865"
+> adding support for clock-frequency came later to support ACPI-based
+> systems (IPU3 here)
 
-The MC33XS2410 provides temperature sensors for the central die temperature
-and the four outputs. Additionally a common temperature warning threshold
-can be configured for the outputs. Add hwmon support for the sensors.
+I'd expect all device properties to be documented in DT bindings. Is
+that an incorrect assumption ?
 
-Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
----
-Changes in v2:
-- Remove helper mc33xs2410_hwmon_read_out_status and report the last
-  latched status.
-- Link to v1: https://lore.kernel.org/r/20250512-mc33xs2410-hwmon-v1-1-addba77c78f9@liebherr.com
----
- drivers/pwm/Kconfig          |   1 +
- drivers/pwm/pwm-mc33xs2410.c | 164 ++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 164 insertions(+), 1 deletion(-)
+> > > IMHO it would be good if the generic helper would handle
+> > > this case too and if there is both a clk-provider and
+> > > a clock-frequency property then try to set the clock-frequency
+> > > value with clk_set_rate(), arguably you could just warn on
+> > > a failure to set the rate though, instead of the error
+> > > the ov8865 driver currently throws.
+> > > 
+> > > Sakari, Laurent any opinions on adding handling this case
+> > > to the generic helper ?
+> > 
+> > We really need to standardize the clock-frequency property, and document
+> > it accordingly. Some drivers use it to set the external clock rate,
+> > while others use it to inform themselves about the clock rate, without
+> > changing it, for platforms that have no CCF clock providers. Some
+> > drivers also set the clock rate to a fixed value, or to a value that
+> > depends on the link frequency selected by userspace. I don't like this
+> > situation much.
+> > 
+> > > > ---
+> > > > v1 -> v2:
+> > > > Suggested by Sakari:
+> > > >     - removed clk_name
+> > > >     - removed the IS_ERR() check
+> > > >     - improved the kernel-doc comment and commit msg
+> > > > Link v1: https://lore.kernel.org/linux-media/20250227092643.113939-1-mehdi.djait@linux.intel.com
+> > > > 
+> > > > v2 -> v3:
+> > > > - Added #ifdef CONFIG_COMMON_CLK for the ACPI case
+> > > > Link v2: https://lore.kernel.org/linux-media/20250310122305.209534-1-mehdi.djait@linux.intel.com/
+> > > > 
+> > > > v3 -> v4:
+> > > > Suggested by Laurent:
+> > > > 	- removed the #ifdef to use IS_REACHABLE(CONFIG_COMMON_CLK)
+> > > > 	- changed to kasprintf() to allocate the clk name when id is NULL and
+> > > > 	  used the __free(kfree) scope-based cleanup helper when
+> > > > 	  defining the variable to hold the allocated name
+> > > > Link v3: https://lore.kernel.org/linux-media/20250321093814.18159-1-mehdi.djait@linux.intel.com/
+> > > > 
+> > > > 
+> > > >  drivers/media/v4l2-core/v4l2-common.c | 40 +++++++++++++++++++++++++++
+> > > >  include/media/v4l2-common.h           | 18 ++++++++++++
+> > > >  2 files changed, 58 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
+> > > > index 0a2f4f0d0a07..b33152e2c3af 100644
+> > > > --- a/drivers/media/v4l2-core/v4l2-common.c
+> > > > +++ b/drivers/media/v4l2-core/v4l2-common.c
+> > > > @@ -34,6 +34,9 @@
+> > > >   * Added Gerd Knorrs v4l1 enhancements (Justin Schoeman)
+> > > >   */
+> > > >  
+> > > > +#include <linux/clk.h>
+> > > > +#include <linux/clkdev.h>
+> > > > +#include <linux/clk-provider.h>
+> > > >  #include <linux/module.h>
+> > > >  #include <linux/types.h>
+> > > >  #include <linux/kernel.h>
+> > > > @@ -636,3 +639,40 @@ int v4l2_link_freq_to_bitmap(struct device *dev, const u64 *fw_link_freqs,
+> > > >  	return 0;
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(v4l2_link_freq_to_bitmap);
+> > > > +
+> > > > +struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
+> > > > +{
+> > > > +	const char *clk_id __free(kfree) = NULL;
+> > > > +	struct clk_hw *clk_hw;
+> > > > +	struct clk *clk;
+> > > > +	u32 rate;
+> > > > +	int ret;
+> > > > +
+> > > > +	clk = devm_clk_get_optional(dev, id);
+> > > > +	if (clk)
+> > > > +		return clk;
+> > > > +
+> > > > +	if (!IS_REACHABLE(CONFIG_COMMON_CLK))
+> > > > +		return ERR_PTR(-ENOENT);
+> > > > +
+> > > > +	if (!is_acpi_node(dev_fwnode(dev)))
+> > > > +		return ERR_PTR(-ENOENT);
+> > > > +
+> > > > +	ret = device_property_read_u32(dev, "clock-frequency", &rate);
+> > > > +	if (ret)
+> > > > +		return ERR_PTR(ret);
+> > > > +
+> > > > +	if (!id) {
+> > > > +		clk_id = kasprintf(GFP_KERNEL, "clk-%s", dev_name(dev));
+> > > > +		if (!clk_id)
+> > > > +			return ERR_PTR(-ENOMEM);
+> > > > +		id = clk_id;
+> > > > +	}
+> > > > +
+> > > > +	clk_hw = devm_clk_hw_register_fixed_rate(dev, id, NULL, 0, rate);
+> > > > +	if (IS_ERR(clk_hw))
+> > > > +		return ERR_CAST(clk_hw);
+> > > > +
+> > > > +	return clk_hw->clk;
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(devm_v4l2_sensor_clk_get);
+> > > > diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
+> > > > index 63ad36f04f72..35b9ac698e8a 100644
+> > > > --- a/include/media/v4l2-common.h
+> > > > +++ b/include/media/v4l2-common.h
+> > > > @@ -573,6 +573,24 @@ int v4l2_link_freq_to_bitmap(struct device *dev, const u64 *fw_link_freqs,
+> > > >  			     unsigned int num_of_driver_link_freqs,
+> > > >  			     unsigned long *bitmap);
+> > > >  
+> > > > +/**
+> > > > + * devm_v4l2_sensor_clk_get - lookup and obtain a reference to an optional clock
+> > > > + *			      producer for a camera sensor.
+> > > > + *
+> > > > + * @dev: device for v4l2 sensor clock "consumer"
+> > > > + * @id: clock consumer ID
+> > > > + *
+> > > > + * This function behaves the same way as clk_get_optional() except where there
+> > > > + * is no clock producer like in ACPI-based platforms.
+> > > > + * For ACPI-based platforms, the function will read the "clock-frequency"
+> > > > + * ACPI _DSD property and register a fixed-clock with the frequency indicated
+> > > > + * in the property.
+> > > > + *
+> > > > + * Return:
+> > > > + * * pointer to a struct clk on success or an error code on failure.
+> > > > + */
+> > > > +struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id);
+> > > > +
+> > > >  static inline u64 v4l2_buffer_get_timestamp(const struct v4l2_buffer *buf)
+> > > >  {
+> > > >  	/*
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 6faa8b2ec0a4844f667a84335f30bde44d52378e..0deaf8447f4302e7cfd3b4cb35c7d46ef19e006c 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -425,6 +425,7 @@ config PWM_LPSS_PLATFORM
- 
- config PWM_MC33XS2410
- 	tristate "MC33XS2410 PWM support"
-+	depends on HWMON || HWMON=n
- 	depends on OF
- 	depends on SPI
- 	help
-diff --git a/drivers/pwm/pwm-mc33xs2410.c b/drivers/pwm/pwm-mc33xs2410.c
-index a1ac3445ccdb4709d92e0075d424a8abc1416eee..c1b99b1143141242ce99782162ae05536dd88163 100644
---- a/drivers/pwm/pwm-mc33xs2410.c
-+++ b/drivers/pwm/pwm-mc33xs2410.c
-@@ -21,6 +21,7 @@
- #include <linux/bitfield.h>
- #include <linux/delay.h>
- #include <linux/err.h>
-+#include <linux/hwmon.h>
- #include <linux/math64.h>
- #include <linux/minmax.h>
- #include <linux/module.h>
-@@ -29,6 +30,8 @@
- 
- #include <linux/spi/spi.h>
- 
-+/* ctrl registers */
-+
- #define MC33XS2410_GLB_CTRL			0x00
- #define MC33XS2410_GLB_CTRL_MODE		GENMASK(7, 6)
- #define MC33XS2410_GLB_CTRL_MODE_NORMAL		FIELD_PREP(MC33XS2410_GLB_CTRL_MODE, 1)
-@@ -51,6 +54,21 @@
- 
- #define MC33XS2410_WDT				0x14
- 
-+#define MC33XS2410_TEMP_WT			0x29
-+#define MC33XS2410_TEMP_WT_MASK			GENMASK(7, 0)
-+
-+/* diag registers */
-+
-+/* chan in { 1 ... 4 } */
-+#define MC33XS2410_OUT_STA(chan)		(0x02 + (chan) - 1)
-+#define MC33XS2410_OUT_STA_OTW			BIT(8)
-+
-+#define MC33XS2410_TS_TEMP_DIE			0x26
-+#define MC33XS2410_TS_TEMP_MASK			GENMASK(9, 0)
-+
-+/* chan in { 1 ... 4 } */
-+#define MC33XS2410_TS_TEMP(chan)		(0x2f + (chan) - 1)
-+
- #define MC33XS2410_PWM_MIN_PERIOD		488282
- /* step in { 0 ... 3 } */
- #define MC33XS2410_PWM_MAX_PERIOD(step)		(2000000000 >> (2 * (step)))
-@@ -125,6 +143,11 @@ static int mc33xs2410_read_reg_ctrl(struct spi_device *spi, u8 reg, u16 *val)
- 	return mc33xs2410_read_reg(spi, reg, val, MC33XS2410_FRAME_IN_DATA_RD);
- }
- 
-+static int mc33xs2410_read_reg_diag(struct spi_device *spi, u8 reg, u16 *val)
-+{
-+	return mc33xs2410_read_reg(spi, reg, val, 0);
-+}
-+
- static int mc33xs2410_modify_reg(struct spi_device *spi, u8 reg, u8 mask, u8 val)
- {
- 	u16 tmp;
-@@ -140,6 +163,145 @@ static int mc33xs2410_modify_reg(struct spi_device *spi, u8 reg, u8 mask, u8 val
- 	return mc33xs2410_write_reg(spi, reg, tmp);
- }
- 
-+#if IS_ENABLED(CONFIG_HWMON)
-+static const struct hwmon_channel_info * const mc33xs2410_hwmon_info[] = {
-+	HWMON_CHANNEL_INFO(temp,
-+			   HWMON_T_LABEL | HWMON_T_INPUT,
-+			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
-+			   HWMON_T_ALARM,
-+			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
-+			   HWMON_T_ALARM,
-+			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
-+			   HWMON_T_ALARM,
-+			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
-+			   HWMON_T_ALARM),
-+	NULL,
-+};
-+
-+static umode_t mc33xs2410_hwmon_is_visible(const void *data,
-+					   enum hwmon_sensor_types type,
-+					   u32 attr, int channel)
-+{
-+	switch (attr) {
-+	case hwmon_temp_input:
-+	case hwmon_temp_alarm:
-+	case hwmon_temp_label:
-+		return 0444;
-+	case hwmon_temp_max:
-+		return 0644;
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static int mc33xs2410_hwmon_read(struct device *dev,
-+				 enum hwmon_sensor_types type,
-+				 u32 attr, int channel, long *val)
-+{
-+	struct spi_device *spi = dev_get_drvdata(dev);
-+	u16 reg_val;
-+	int ret;
-+	u8 reg;
-+
-+	switch (attr) {
-+	case hwmon_temp_input:
-+		reg = (channel == 0) ? MC33XS2410_TS_TEMP_DIE :
-+				       MC33XS2410_TS_TEMP(channel);
-+		ret = mc33xs2410_read_reg_diag(spi, reg, &reg_val);
-+		if (ret < 0)
-+			return ret;
-+
-+		/* LSB is 0.25 degree celsius */
-+		*val = FIELD_GET(MC33XS2410_TS_TEMP_MASK, reg_val) * 250 - 40000;
-+		return 0;
-+	case hwmon_temp_alarm:
-+		ret = mc33xs2410_read_reg_diag(spi, MC33XS2410_OUT_STA(channel),
-+					       &reg_val);
-+		if (ret < 0)
-+			return ret;
-+
-+		*val = FIELD_GET(MC33XS2410_OUT_STA_OTW, reg_val);
-+		return 0;
-+	case hwmon_temp_max:
-+		ret = mc33xs2410_read_reg_ctrl(spi, MC33XS2410_TEMP_WT, &reg_val);
-+		if (ret < 0)
-+			return ret;
-+
-+		/* LSB is 1 degree celsius */
-+		*val = FIELD_GET(MC33XS2410_TEMP_WT_MASK, reg_val) * 1000 - 40000;
-+		return 0;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int mc33xs2410_hwmon_write(struct device *dev,
-+				  enum hwmon_sensor_types type, u32 attr,
-+				  int channel, long val)
-+{
-+	struct spi_device *spi = dev_get_drvdata(dev);
-+
-+	switch (attr) {
-+	case hwmon_temp_max:
-+		val = clamp_val(val, -40000, 215000);
-+
-+		/* LSB is 1 degree celsius */
-+		val = (val / 1000) + 40;
-+		return mc33xs2410_modify_reg(spi, MC33XS2410_TEMP_WT,
-+					     MC33XS2410_TEMP_WT_MASK, val);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static const char *const mc33xs2410_temp_label[] = {
-+	"Central die temperature",
-+	"Channel 1 temperature",
-+	"Channel 2 temperature",
-+	"Channel 3 temperature",
-+	"Channel 4 temperature",
-+};
-+
-+static int mc33xs2410_read_string(struct device *dev,
-+				  enum hwmon_sensor_types type,
-+				  u32 attr, int channel, const char **str)
-+{
-+	*str = mc33xs2410_temp_label[channel];
-+
-+	return 0;
-+}
-+
-+static const struct hwmon_ops mc33xs2410_hwmon_hwmon_ops = {
-+	.is_visible = mc33xs2410_hwmon_is_visible,
-+	.read = mc33xs2410_hwmon_read,
-+	.read_string = mc33xs2410_read_string,
-+	.write = mc33xs2410_hwmon_write,
-+};
-+
-+static const struct hwmon_chip_info mc33xs2410_hwmon_chip_info = {
-+	.ops = &mc33xs2410_hwmon_hwmon_ops,
-+	.info = mc33xs2410_hwmon_info,
-+};
-+
-+static int mc33xs2410_hwmon_probe(struct spi_device *spi)
-+{
-+	struct device *dev = &spi->dev;
-+	struct device *hwmon;
-+
-+	hwmon = devm_hwmon_device_register_with_info(dev, NULL, spi,
-+						     &mc33xs2410_hwmon_chip_info,
-+						     NULL);
-+
-+	return PTR_ERR_OR_ZERO(hwmon);
-+}
-+
-+#else
-+static int mc33xs2410_hwmon_probe(struct spi_device *spi)
-+{
-+	return 0;
-+}
-+#endif
-+
- static u8 mc33xs2410_pwm_get_freq(u64 period)
- {
- 	u8 step, count;
-@@ -361,7 +523,7 @@ static int mc33xs2410_probe(struct spi_device *spi)
- 	if (ret < 0)
- 		return dev_err_probe(dev, ret, "Failed to add pwm chip\n");
- 
--	return 0;
-+	return mc33xs2410_hwmon_probe(spi);
- }
- 
- static const struct spi_device_id mc33xs2410_spi_id[] = {
-
----
-base-commit: 7395eb13e3a85067de3e083d3781630ea303c0c4
-change-id: 20250507-mc33xs2410-hwmon-a5ff9efec005
-
-Best regards,
 -- 
-Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+Regards,
 
-
+Laurent Pinchart
