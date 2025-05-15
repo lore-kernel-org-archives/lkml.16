@@ -1,189 +1,138 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B178F66
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11031374C4
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747310628; cv=none; b=bIADXJZNbpddLeJhr4Oi3s7BxIaWSwtdo9j57q4fVky5vKoAZRp82+SeRCgxKF4okX5uYvCEObAO+vkStRV/MktEad2Sj55cZ1llrGIFfVQiIUrygoalEsK97YJTYMdXhh6vaCZK2mktSH5h/GfvfqGrQD+kX5Q8MBEegBD53rc=
+	t=1747310659; cv=none; b=d0TB/JBTOVzaQosrQeNi0e9YnZl17fiSW7sG6Jbu5U6s7fsj6zoxeIPfYVwWaBa6Cs2Ea14XMWAR7ySuOHhq1CY6U23zYO2xSUWspbddZJd7cGz3no8+8C38/hEoqfFEA+YkV1bkL++GNIpq5PABIsR65v/mTU9yVxV+JQuwkio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747310628; c=relaxed/simple;
-	bh=nExWvVFyM7jIQZsP9axMrOTccp1iIIx/OKJJCBIt83A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mm4TI6mmG/mGlMaSGed3CfkOIh7iAidc4dyU66TcgpqpT8HSGbYF/4yji1Q15+BuQvu286CU/rWy3KRpTh/eaVGuKwpnQGnq1swnMsYi0nWEhXucWttw944J3kpZdPqqRF4nprzdNsxzzOaR5Ndfs9lrHBxSD0RIaGslsCijqFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D2cTpSzu; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747310659; c=relaxed/simple;
+	bh=EyJpXkdehfh1auuhWF9I8kU2/U0fgbfr4WDdkSgpv4A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XPdghDE5Pr09GWMIOxwNftF5qWO/ZWMqE11POkIi08LBHc5MPzxfan0Lohte4NWH75++U9pamWOR95qsDA85BCGQv4upQ+akoD3YDRed++JQ6OVXhSWqKgdLWszl/q+rEnZdGFcVj1N1C6jxV7Ztj5iL9gxsjOCbVzSG3kJyKZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=W30hH1L1; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D2cTpSzu"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e7311e66a8eso801663276.2
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 05:03:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="W30hH1L1"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-441d1ed82faso6822355e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 05:04:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747310626; x=1747915426; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3wJvNJM3iWYUox8bI9g2NYJL06xVVnQ0A08ak76PpHM=;
-        b=D2cTpSzu4IwpHtiEOOw4aT6LJ7fsOt60tXwv1YOAkxLeipRJ+Q9n/ONk34EVoc2lpS
-         KoisakSHFoG4kqIGSv29I4VZXHh6EZhnSuvC0yWksRS6VDEUzY0YGooxYiiI82dRmSmy
-         OZR/XmX0o86zQkKGU6/iDc59BMbQK3F8xBGbsxddpZq4cmcyH8E3iO+63hoYYnw+Hvgt
-         558y+1YEnOmFJK/MewYbw6sLmLkpLmp0YPsQCSaAwb1m4Ix4SnR8G/0m1Gd/wIkCA+Ci
-         VF3g3aLnm+5U97616sv5/wqC+QBwSTOayCH6/64/+cIeR2j942/iFc3i4DpuLVDiUj7k
-         z1EQ==
+        d=suse.com; s=google; t=1747310655; x=1747915455; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JtVqjc80kK6sCY9kafM0HVeU2C9ROGazwmNlgFnahQM=;
+        b=W30hH1L1mHPDaBRDjm823zou2uswuA7JSqIM51CUWXseq6jjmjSeiEy71NwM3dDYFL
+         IUyGCr4FRx0mSK5QBeZrgaykfaKDCApAF2kE39K0/bd2cnAioEeLguTThYiaBZ7F36Pw
+         wCoyj700BrMBzhS6nyNADKVA/zV3rPrs7/quubdbIqCMgCcinfHLholnKfaPILHOjopZ
+         wJ6eX08U/r8qYISPhJcrBjz7RmLOCy+3cvpQYVJ999qp0S3swcYO53ugT7HG6GOX1gge
+         Df0YCPdsH5hdQl7iAspMOPp+VAHK4VuXorr4axY/OzP6A+VUpfOKNZxb5CLCajuW03TA
+         jwfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747310626; x=1747915426;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3wJvNJM3iWYUox8bI9g2NYJL06xVVnQ0A08ak76PpHM=;
-        b=MdIdcgZrxjpy0LPjWvldEJ0n0PMZII4TgWr0MpS27obOBYgceWx9/oeERAZjiD/jra
-         bp0/IVhZY+qv6HJcyrkK70kX0+C6aWGH6dYmcZlveXlgnw7OQGc0qvExKziSddkdvw45
-         0cBPyvrGJEUyQryI1llrSOnvbeZIkLMgypIWrChgduy1NCARIRmuFmpqI/9in77eKKbU
-         he8Ejgk02QCaB2+BLCNs9SN1WKCQsp/R/BrY41IDE0KjT5KoBnk4gMJGs9b5TVNaBkSR
-         +IG+wMM9ypiyTKtdRpUmX6fOOA/sj9kb78IOBQVGhwyV2vBSn1SGLAz2Z6R5MoyWB4aj
-         ROwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXTMRWyDpNiAT9xe1k3A89kOcFkRha8SJHDARqVEyBCv4GAGQLKoNaX0whPYc9x3WrRgbM1y6T7wfkeaFM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQw24izA/qxObeu/tyTOfpCcDtlPA/BsxQPrwoGPxohrFKSBOp
-	KnExzRTa8XvEYfk9Tg464kBycbaDfIZwr65PwkGVhcKTdy0OqPuJU+Th1wblCuT+1U5SsjcvUfQ
-	+gTlaO8bl+EJl7qgLnFXza4eQme9OJE+zv5upycoNoPDYGOvmrQkG
-X-Gm-Gg: ASbGncuXCGNmWwndJmwjBHtz/VlBNR76sWBowNUQP92SC+bK7NDt/0qmSJZYCu61gfS
-	yXtnPsR4HPNl2GhNR+wKhqTdWDmrmY8VKDqDT1WaXHxHsriaH3V0LxAZztoigQ7Kxxu9QRe7hw2
-	vUUUfcXtZRviTRall9+wZvU81ww61PtO9+Xxus1PA94Q619YOOpOHKJAtMIDz2Bec=
-X-Google-Smtp-Source: AGHT+IH+MpBYSUJL7HryIdxv6rUra/ypIaLr4RiTqen/uVAAbevecSAeC/xuuasQV/4uRe2a/wkkAc0De5YPFRPk/B4=
-X-Received: by 2002:a17:903:1b0f:b0:22e:3b65:9265 with SMTP id
- d9443c01a7336-2319810fdcbmr77926775ad.8.1747310614801; Thu, 15 May 2025
- 05:03:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747310655; x=1747915455;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JtVqjc80kK6sCY9kafM0HVeU2C9ROGazwmNlgFnahQM=;
+        b=mIQJ0ForTcojgWNixsJhSwKYmCxA5KxsjJ2XdIix+baJ8wp4sLtebsAdhA+2GXCf9j
+         rj5RUg6OLQtgMGzV0LxiOi/tP8jah+QhtsReKVowVHeyDOwT0MVip3EvwTQGfGrlPEbG
+         ajQ/xewQxlM6eNQ/dVnB/Jw5BBhxro/qEVP5N/VuWJKTrVt34L6/1cS9t89O2TxCzYr+
+         9TwBErGMj/b3SE45g+WfYoW6TJ7xltuvbm6NuhAqa5KKWP0SZnd+FZpRH1JV85DVjZWy
+         aUXaNK8LY/e0k8gtC3wuaRw7Gf1GUF6lhyFJbauUs/8V7yq+xsvClVmRdxyO7Ewj48cL
+         pt3w==
+X-Forwarded-Encrypted: i=1; AJvYcCW5xTkAHuUUb4FW1hTfKggEY63FAceIGdqb5YfYfrg+o2hmJ9VdZQg3mWGG4sfqn/3s99VW15h242WDPTM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzI/HF+dIdf6wwksopls3x34p31Sgd2a2yPmYMY1ht2xDCeq67O
+	eWyuta9jhWF+qNF2usaqPEFqNK9zTo6ygaBEMhOTkTu5Kadzp0JY4Kv/t0OsVwo=
+X-Gm-Gg: ASbGncuCY7Ww0ZmoFUpwxg23CZ7VIXKb6DzipDj9c0FMnY8mm42mRaUbRqtIvKEkDBg
+	P40SYVLP/xPN66gwQgUYylsJFJVeYpQxWrVaZr04c2QldGs4M9gGMbWr3U0QfRrXhnUy3J4YEHT
+	RliczRJuO0sPY7XAQ4Lp2APin1yNe8hPsCZjiw8pr3whXEv8+lif4ZBymgUIaRyIk9GVusDWmaq
+	flAWeSOrjUDgy6eCev/TEVhTnCJde1Dw6BGcjsh08O+VSwzVcU4alOSzZ+ax/TjwzoNQNlJ/JsM
+	/YNMHeDIwy6L163qtN6n+ClRIaJafjNgRQul2RTfs/uxXXUdf5varouwwYaDeDzoV7qtppDmDRV
+	8nZ5k3pVqcDDFrVk6SqUj5AVXVVmQYrjCY3m0DQAWPoBJ
+X-Google-Smtp-Source: AGHT+IFVleGXWb394vxJ3g1TFClYBJH1ORxzbyUoB3lbpc/3PPg81qikPncaNTT+LnlATVlgCEOW0w==
+X-Received: by 2002:a5d:598f:0:b0:3a3:4a1a:de6f with SMTP id ffacd0b85a97d-3a353748601mr2088152f8f.26.1747310655226;
+        Thu, 15 May 2025 05:04:15 -0700 (PDT)
+Received: from u94a (2001-b011-fa04-b2d3-b2dc-efff-fee8-7e7a.dynamic-ip6.hinet.net. [2001:b011:fa04:b2d3:b2dc:efff:fee8:7e7a])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26e383cdaesm456300a12.33.2025.05.15.05.04.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 05:04:14 -0700 (PDT)
+Date: Thu, 15 May 2025 20:04:06 +0800
+From: Shung-Hsi Yu <shung-hsi.yu@suse.com>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, patches@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org, Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>, Kees Cook <kees@kernel.org>, 
+	Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH 6.14 000/197] 6.14.7-rc1 review
+Message-ID: <6cratgkqkq4lnln65bqjiqn4vle7uhtlvnmi5r2v3l4lug3g5p@n55v6sogh6x2>
+References: <20250512172044.326436266@linuxfoundation.org>
+ <g4fpslyse2s6hnprgkbp23ykxn67q5wabbkpivuc3rro5bivo4@sj2o3nd5vwwm>
+ <20250515041659.smhllyarxdwp7cav@desk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501-rust-kcov-v2-1-b71e83e9779f@google.com> <CACT4Y+Yzmd7BtrpqUPrbXAAGzMnO0YKZnhVxLgyyXEftscEUnQ@mail.gmail.com>
-In-Reply-To: <CACT4Y+Yzmd7BtrpqUPrbXAAGzMnO0YKZnhVxLgyyXEftscEUnQ@mail.gmail.com>
-From: Aleksandr Nogikh <nogikh@google.com>
-Date: Thu, 15 May 2025 14:03:22 +0200
-X-Gm-Features: AX0GCFstD_4uJYWfNb5g_AdONBqYpFEcU11UPC3GcRCSjJ-WcVpH60WtoBj7ozc
-Message-ID: <CANp29Y7+7Fa5_rAEwJYoWnKHXy+BS4mFWoMe=1J4ocnCuqYtfQ@mail.gmail.com>
-Subject: Re: [PATCH v2] kcov: rust: add flags for KCOV with Rust
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: Alice Ryhl <aliceryhl@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, kasan-dev@googlegroups.com, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev, 
-	Matthew Maurer <mmaurer@google.com>, Alexander Potapenko <glider@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515041659.smhllyarxdwp7cav@desk>
 
-+mm
+On Wed, May 14, 2025 at 09:17:45PM -0700, Pawan Gupta wrote:
+> On Wed, May 14, 2025 at 07:49:29PM +0800, Shung-Hsi Yu wrote:
+> > On Mon, May 12, 2025 at 07:37:30PM +0200, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 6.14.7 release.
+> > > There are 197 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> > 
+> > Running included BPF selftests with a BPF CI fork (i.e. running on
+> > GitHub Action x86-64 machines), I observe that that running the BPF
+> > selftests now takes about 2x the time (from ~25m to ~50m), and
+> > verif_scale_loop3_fail is timing out, taking more than 6 minutes to run
+> > compare to the usual single digit second runtime. See [1] for the log.
+...
+> > Compare to a day before when such behavior wasn't observed[2], the main
+> > difference being these additional patches:
+...
+> Not sure why but this commit seems to related to the failure.
+> 
+> Below is log of bisecting v6.14.6 and v6.14.7-rc2 with the test:
+> 
+>   ./tools/testing/selftests/bpf/vmtest.sh -i -- timeout 20 ./test_progs -t verif_scale_loop3_fail
+> 
+> # good: [e2d3e1fdb530198317501eb7ded4f3a5fb6c881c] Linux 6.14.6
+> git bisect good e2d3e1fdb530198317501eb7ded4f3a5fb6c881c
+...
+> git bisect bad 336f780075f36e0d1181ce44d6d4197e4a22babc
+> # bad: [665f26e5de2325e3bca107b632bc2ccac1b9806a] mm: vmalloc: support more granular vrealloc() sizing
+> git bisect bad 665f26e5de2325e3bca107b632bc2ccac1b9806a
+> # first bad commit: [665f26e5de2325e3bca107b632bc2ccac1b9806a] mm: vmalloc: support more granular vrealloc() sizing
 
-On Thu, May 15, 2025 at 2:01=E2=80=AFPM Dmitry Vyukov <dvyukov@google.com> =
-wrote:
->
-> On Thu, 1 May 2025 at 14:16, Alice Ryhl <aliceryhl@google.com> wrote:
-> >
-> > Rust code is currently not instrumented properly when KCOV is enabled.
-> > Thus, add the relevant flags to perform instrumentation correctly. This
-> > is necessary for efficient fuzzing of Rust code.
-> >
-> > The sanitizer-coverage features of LLVM have existed for long enough
-> > that they are available on any LLVM version supported by rustc, so we d=
-o
-> > not need any Kconfig feature detection. The coverage level is set to 3,
-> > as that is the level needed by trace-pc.
-> >
-> > We do not instrument `core` since when we fuzz the kernel, we are
-> > looking for bugs in the kernel, not the Rust stdlib.
-> >
-> > Co-developed-by: Matthew Maurer <mmaurer@google.com>
-> > Signed-off-by: Matthew Maurer <mmaurer@google.com>
-> > Reviewed-by: Alexander Potapenko <glider@google.com>
-> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
->
-> Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
->
-> > ---
-> > I did not pick up the Tested-by due to the changes. I verified that it
-> > looks right under objdump, but I don't have a syzkaller setup I can try
-> > it with.
-> > ---
-> > Changes in v2:
-> > - Ignore `core` in KCOV.
-> > - Link to v1: https://lore.kernel.org/r/20250430-rust-kcov-v1-1-b9ae941=
-48175@google.com
-> > ---
-> >  rust/Makefile         | 1 +
-> >  scripts/Makefile.kcov | 6 ++++++
-> >  scripts/Makefile.lib  | 3 +++
-> >  3 files changed, 10 insertions(+)
-> >
-> > diff --git a/rust/Makefile b/rust/Makefile
-> > index 3aca903a7d08cfbf4d4e0f172dab66e9115001e3..80c84749d734842774a3ac2=
-aabbc944a68d02484 100644
-> > --- a/rust/Makefile
-> > +++ b/rust/Makefile
-> > @@ -492,6 +492,7 @@ $(obj)/core.o: $(RUST_LIB_SRC)/core/src/lib.rs \
-> >  ifneq ($(or $(CONFIG_X86_64),$(CONFIG_X86_32)),)
-> >  $(obj)/core.o: scripts/target.json
-> >  endif
-> > +KCOV_INSTRUMENT_core.o :=3D n
-> >
-> >  $(obj)/compiler_builtins.o: private skip_gendwarfksyms =3D 1
-> >  $(obj)/compiler_builtins.o: private rustc_objcopy =3D -w -W '__*'
-> > diff --git a/scripts/Makefile.kcov b/scripts/Makefile.kcov
-> > index 67e8cfe3474b7dcf7552e675cffe356788e6c3a2..ddcc3c6dc513e1988aeaf07=
-b8efa106e8dffa640 100644
-> > --- a/scripts/Makefile.kcov
-> > +++ b/scripts/Makefile.kcov
-> > @@ -3,4 +3,10 @@ kcov-flags-$(CONFIG_CC_HAS_SANCOV_TRACE_PC)    +=3D -f=
-sanitize-coverage=3Dtrace-pc
-> >  kcov-flags-$(CONFIG_KCOV_ENABLE_COMPARISONS)   +=3D -fsanitize-coverag=
-e=3Dtrace-cmp
-> >  kcov-flags-$(CONFIG_GCC_PLUGIN_SANCOV)         +=3D -fplugin=3D$(objtr=
-ee)/scripts/gcc-plugins/sancov_plugin.so
-> >
-> > +kcov-rflags-y                                  +=3D -Cpasses=3Dsancov-=
-module
-> > +kcov-rflags-y                                  +=3D -Cllvm-args=3D-san=
-itizer-coverage-level=3D3
-> > +kcov-rflags-y                                  +=3D -Cllvm-args=3D-san=
-itizer-coverage-trace-pc
-> > +kcov-rflags-$(CONFIG_KCOV_ENABLE_COMPARISONS)  +=3D -Cllvm-args=3D-san=
-itizer-coverage-trace-compares
-> > +
-> >  export CFLAGS_KCOV :=3D $(kcov-flags-y)
-> > +export RUSTFLAGS_KCOV :=3D $(kcov-rflags-y)
-> > diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> > index 2fe73cda0bddb9dcf709d0a9ae541318d54754d2..520905f19a9b19631394cfb=
-5e129effb8846d5b8 100644
-> > --- a/scripts/Makefile.lib
-> > +++ b/scripts/Makefile.lib
-> > @@ -169,6 +169,9 @@ ifeq ($(CONFIG_KCOV),y)
-> >  _c_flags +=3D $(if $(patsubst n%,, \
-> >         $(KCOV_INSTRUMENT_$(target-stem).o)$(KCOV_INSTRUMENT)$(if $(is-=
-kernel-object),$(CONFIG_KCOV_INSTRUMENT_ALL))), \
-> >         $(CFLAGS_KCOV))
-> > +_rust_flags +=3D $(if $(patsubst n%,, \
-> > +       $(KCOV_INSTRUMENT_$(target-stem).o)$(KCOV_INSTRUMENT)$(if $(is-=
-kernel-object),$(CONFIG_KCOV_INSTRUMENT_ALL))), \
-> > +       $(RUSTFLAGS_KCOV))
-> >  endif
-> >
-> >  #
-> >
-> > ---
-> > base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
-> > change-id: 20250430-rust-kcov-6c74fd0f1f06
-> >
-> > Best regards,
-> > --
-> > Alice Ryhl <aliceryhl@google.com>
-> >
+Thanks! Just dawn on me after seeing this that I should try 6.15-rc6 as
+well (which has 665f26e5de23), turns out it also reproduce there. I'll
+report regression in a separate mail. 
+
+> ...
+> > No patches touch BPF's core component, and while the
+> > verif_scale_loop3_fail test did time out, the verifier is still
+> > correctly rejecting it, so shouldn't have anything to do with
+> > kernel/bpf/. The x86/arm64 BPF patches only affect JIT output, and only
+> > for cBPF.
+> > 
+> > In comparison, with 6.12.29-rc1 I don't observe any timeout or increase
+> > in runtime[3]. Below is a diff comparing the applied patches in
+> > 6.12.29-rc1 and 6.14.7-rc1. Seems like 6.14.7-rc1 does not have the
+> > CALL_NOSPEC patches, but I cannot tell whether that is what makes the
+> > difference.
+> 
+> Thats because CALL_NOSPEC patches were already part of v6.14.
+
+Ah yes indeed, sorry about the negligence.
