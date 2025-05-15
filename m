@@ -1,153 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9967028640E
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD521E0E08;
+	Thu, 15 May 2025 08:14:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747296819; cv=none; b=tcP9qz83hrNWOJ06TB0mGvvpjKtEUtrkN5veWmcAJ0L74EhMPsxzQdTAuxycrZhjCy84y21aOylL7STQDUJwg/n/qxLA3TIh0h1MSkx/H93uuQD5JdS0b7MCeaX9dfbGamB1jf8N+ACMjnVKta/qPIECL3MXatJZcXujhUKR8YY=
+	t=1747296863; cv=none; b=aCsIvU5FNOYpZh8ZtHpmDuVSisqOLl9x6rltckzMQ8S5L3ZenzG6YbTK2IbJILkRu7p2XgsmxRrJKDwZ/Id2ScZKYqawjkH6eWiI6mvA6hjt+7DNb29gCifQdN+RnaGSIZRouVMjNoRafxaTYcK9bzWnz1HtVxRMdhYq57JoZPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747296819; c=relaxed/simple;
-	bh=ZowWDfmRloQ4nTCGRFddCv40RiwmtUNVKXXEetQ0hME=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WaLoAcuH3Y4co0hdUY60z082BKUyQM/VLY3yBqCvqd6PvfKc2eVGCvbYCMe72g3o0Nh+dKgb841AM5MLInidWigCF0aZLsNI640PD0sNFO7aGJMfWOJiJVeUfdX2Yy1u8cBO3sN04N8ZSciIkoNisZAjl5gY0Ai6i8FKs4WZvTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i6DA1Si6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747296863; c=relaxed/simple;
+	bh=XM1eqMpcg+t2ZtQwuWYYjSlAcLCEY9gs2OBdffgmX74=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ME3onp+duzt2urYmcO7TnRxarcF7Y39QJ+UpDqLI9DqOF1/J+oOLRQqFqrehEAoXw/pKuvlvqTA1wtEtiLb9HacrLR8+IjQDYy9hdyKdDWfmwco8n8qVqhbx4AcElyPeTvhLf9qUCvPuqkf6mpT7p6yu8i9ZtBJNFmclT3NjMVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=F5AEXmFx; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i6DA1Si6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747296816;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=X82t4cLKTKnsRxCL8SUZOCcFI9aAbfLSXRgL2LQLe9Q=;
-	b=i6DA1Si627dfbWHVjUv0Qn8+NAu1HiuwuTwhNQL278AEIfvsUuahEqVzH+dMofdAKsIPVR
-	8N2jqidw3/ee04W4LjVyuLCLeJsgAj6BvJ35Kwwx6hAPGOl1FU6NG/7pKdggbGVHtdpuCA
-	7Su5ICa+ac2yYQaaRGJUGcDSVgj6vbE=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-3-p9WF2TwKPQSLTAPCK-BeJA-1; Thu, 15 May 2025 04:13:34 -0400
-X-MC-Unique: p9WF2TwKPQSLTAPCK-BeJA-1
-X-Mimecast-MFC-AGG-ID: p9WF2TwKPQSLTAPCK-BeJA_1747296813
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43ea256f039so5136905e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:13:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747296813; x=1747901613;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=X82t4cLKTKnsRxCL8SUZOCcFI9aAbfLSXRgL2LQLe9Q=;
-        b=AuDmb+vilT2wQQ/PeBwLeMsgb96K2gqrcWj66LRTTPfTtgUFvW/OJcytcpB8+dNqy+
-         uh1NDHXxAYu0fLNNrS5nb9vYM0xRGqJFBhCNg4SM4qItBsCB9QClgOFqQUwOAkcfy1n8
-         ZpzMbtq+uxZRavL/1h4ATJuy1kpmeNVbvgD1NMZOpLg0cmI5DYHhMXpk+PMmFes45N8S
-         2vUSmWKdPNoYrlbPE3YqSfmbTYYDx48R3M35Gk8NilSOn8TddQdEBa2xb2l9D+MNEtD0
-         cqodA5U4HXBgXDv75ecIzdtLx+tvsj0hEUiY6q7btRMvllyDrYTo7y9XNZqdermm7GuP
-         iM+g==
-X-Forwarded-Encrypted: i=1; AJvYcCXfwBgzWC2uZI9uN+1uNKUMPeeSRbtWrL/QP9y1yxPPbPj7OsmRtIHWdKHzRAmarXfVEmTBb1WDvik1LrI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRCeLH/iSiLRkB1hBwBw29kZpuy4mFcCEsm1ECLwewb5t5XiNh
-	y0vTKigrfA175TUyDH4cvBwWgOUar5k7PQSMFbUDZyav3+UC1kEouWBORoxi1YkuIBKqzqjVkXS
-	p74oOsHRPRcWfwmEAsl1PnfCv9ZOlzEAq6RCkoGak63kDAVsbw/YlllOwlYASWg==
-X-Gm-Gg: ASbGncupaZPm4lc0sw8JMHmCTLe4cOlJ/isEsgsP37/LZQgTvqwALrhu79X+J2w+iP7
-	WypDjOSD+ma1ECv1JMcfMf3QlTbDVYMEdnop/tsOtxy1lBC6LNusvpCgA/4pdEZ37ie9sP31P+9
-	PmMBNn1h7hwe1n4WMeBzzdR65OINygXaOAG/F1M4wPt8wgEeVtSaxTkyxjTdQqHA4IljoRRmzvG
-	tTU1EG1Y90ujDK38u/uzvSqC0/fUz6JA+o5t0IPE8qi+4duccMUuFHyT7ax4drMIrvbbact77Zq
-	NTV1q4UoKN7IwEvaHg+MIKsIQw+eZc/wevgBVPQ/xGo/4mNMzlCewsL0UdHsFq2ARqupWFxPX3i
-	XuOFv4h5By+lhbcvMyzkz9UWpvCpAyTl+Our/ppg=
-X-Received: by 2002:a05:600c:1e2a:b0:442:e109:3027 with SMTP id 5b1f17b1804b1-442f2168cefmr62635515e9.24.1747296813546;
-        Thu, 15 May 2025 01:13:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEQ4yEJ40Bte9/ZvoZPhXRQJk53rxk55y+uY5hjWVaM786EZ6ON9P8vWYAwiAFyikt62n6Dtw==
-X-Received: by 2002:a05:600c:1e2a:b0:442:e109:3027 with SMTP id 5b1f17b1804b1-442f2168cefmr62635265e9.24.1747296813191;
-        Thu, 15 May 2025 01:13:33 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f4a:8900:884a:b3af:e3c9:ec88? (p200300d82f4a8900884ab3afe3c9ec88.dip0.t-ipconnect.de. [2003:d8:2f4a:8900:884a:b3af:e3c9:ec88])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f8613704sm23624685e9.31.2025.05.15.01.13.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 01:13:32 -0700 (PDT)
-Message-ID: <332ecda7-14c4-4dc3-aeff-26801b74ca04@redhat.com>
-Date: Thu, 15 May 2025 10:13:31 +0200
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="F5AEXmFx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747296856;
+	bh=Usb534oc0GkUVSDJGUUCLoGE2h4LZ1RiACjkJpJzRcY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=F5AEXmFxj9x+3Md5/yxuxrosRSGdFNG0GGWp8enb+T1I/Pfxy9d07XNAgrIDKUFhz
+	 epc5ivZjP0yQdrKozpKe88P20OmpSkQY37wbXyFc1JJjwfO7bdw1VJjer8dDTp1tEf
+	 OeN11FjIoSMZkrDX//9D2sc2iNTtBfnAUTOKzUEhKh0WMlS04We3oixEByeIIsVstJ
+	 sfaAw3MKVr4COKFutoGzp1xSTA9/eE5/yPz76RSnDBIzVvLP3W21mzDa548+JYGGjH
+	 gJRzkAm5aveL8TjTrDZrG2oXGv5lNyQpB8/5gN789c/u3jjfwQSTEsaJsCXbwHLR6T
+	 cHBsqgbE8X9+w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zyjfb0wf2z4wcn;
+	Thu, 15 May 2025 18:14:15 +1000 (AEST)
+Date: Thu, 15 May 2025 18:14:14 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Wei Liu <wei.liu@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra
+ <peterz@infradead.org>
+Cc: Ashish Kalra <ashish.kalra@amd.com>, "Borislav Petkov (AMD)"
+ <bp@alien8.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>, Roman Kisel
+ <romank@linux.microsoft.com>
+Subject: linux-next: manual merge of the hyperv tree with the tip-fixes tree
+Message-ID: <20250515181414.354d8ef7@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: Check pxd_leaf() instead of !pxd_table() while
- tearing down page tables
-To: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com, will@kernel.org
-Cc: ryan.roberts@arm.com, anshuman.khandual@arm.com, mark.rutland@arm.com,
- yang@os.amperecomputing.com, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
-References: <20250515063450.86629-1-dev.jain@arm.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250515063450.86629-1-dev.jain@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/1li4/kuB_8W7c6j+4YPYNJ7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 15.05.25 08:34, Dev Jain wrote:
-> Commit 9c006972c3fe removes the pxd_present() checks because the caller
-> checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller only
-> checks pud_present(); pud_free_pmd_page() recurses on each pmd through
-> pmd_free_pte_page(), wherein the pmd may be none.
-The commit states: "The core code already has a check for pXd_none()", 
-so I assume that assumption was not true in all cases?
+--Sig_/1li4/kuB_8W7c6j+4YPYNJ7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Should that one problematic caller then check for pmd_none() instead?
+Hi all,
 
-If you were able to trigger this WARN, it's always a good idea to 
-include the splat in the commit.
+Today's linux-next merge of the hyperv tree got a conflict in:
 
--- 
+  arch/x86/coco/sev/core.c
+
+between commit:
+
+  d2062cc1b1c3 ("x86/sev: Do not touch VMSA pages during SNP guest memory k=
+dump")
+
+from the tip-fixes tree and commit:
+
+  266a5698a408 ("arch/x86: Provide the CPU number in the wakeup AP callback=
+")
+
+from the hyperv tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
 Cheers,
+Stephen Rothwell
 
-David / dhildenb
+diff --cc arch/x86/coco/sev/core.c
+index fae73ae5a486,7780d55d1833..000000000000
+--- a/arch/x86/coco/sev/core.c
++++ b/arch/x86/coco/sev/core.c
+@@@ -869,12 -1166,26 +869,12 @@@ static void *snp_alloc_vmsa_page(int cp
+  	return page_address(p + 1);
+  }
+ =20
+- static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
+ -static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
+ -{
+ -	int err;
+ -
+ -	err =3D snp_set_vmsa(vmsa, NULL, apic_id, false);
+ -	if (err)
+ -		pr_err("clear VMSA page failed (%u), leaking page\n", err);
+ -	else
+ -		free_page((unsigned long)vmsa);
+ -}
+ -
++ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip, un=
+signed int cpu)
+  {
+  	struct sev_es_save_area *cur_vmsa, *vmsa;
+ -	struct ghcb_state state;
+  	struct svsm_ca *caa;
+ -	unsigned long flags;
+ -	struct ghcb *ghcb;
+  	u8 sipi_vector;
+- 	int cpu, ret;
++ 	int ret;
+  	u64 cr4;
+ =20
+  	/*
 
+--Sig_/1li4/kuB_8W7c6j+4YPYNJ7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmglolYACgkQAVBC80lX
+0GzUwwf/QFrrv7GG5ZzvxQBf6XLjQ9pVqV1IUwihbAmX+3AkiFpcC3eg9CKEOviN
+/PGn47/RnGt0QIFVOenIrslN78gXSpkIR05TABveEF0B2Bt7Lj9LPHsKXbcCAlnS
+IMwhFg+dpfZpNpXfJQcZronGNDc+PdCmd9rDFVdUDKkwqA3uTDgQCRpl4/h6Hs1T
+uxtacQzZELSn+bVcznwcnGcXgbUK/SllXkDoSuhRtRcCTESckZT40tkrlQwi2AKu
+kMEuRp1S75WLtEPcav8lb3BxaP8GPGTDquYzAXmPnGjlCRuVQZs4Hv5KYF2X14lt
+1m3AUyKrzPc+3DQ3ZhmVUgW6HxAjlA==
+=WFb0
+-----END PGP SIGNATURE-----
+
+--Sig_/1li4/kuB_8W7c6j+4YPYNJ7--
