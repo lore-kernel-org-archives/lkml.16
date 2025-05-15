@@ -1,127 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8868D4B1E64
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 02:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D60D4B1E64;
+	Thu, 15 May 2025 02:59:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747277989; cv=none; b=IUtKxU2yrQcHPUJT7tSGNwIfnBPr425Fnz27GyMbD6lUE4gS/bQCnBo5nHmMpxLseKtYvHyOo7EgNW8bPHWoSXaCn/8ZsYf6hH5Z0vgDs3ZjKygkDybzZyqPQV8EzBXBwYMbK5Baf0eTeNqjC/IreqVtzDEnkePXdvQtvXzdU6g=
+	t=1747277998; cv=none; b=A5SdNU1bNL5PS3Cwp/KUEV4EmkVOevQGGIPd9t7zS0dtFVCdglruOQOoz1WLSN9WWsBNQPvxmjgzjlc6crswGQcozTV08yMQzeXAK/B2Hn6FGmpaRwLzJP9AOL6HU8moMXn0HgknApsiycrXyqPYpf4LIu7Dyb5dK+YcnETIO6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747277989; c=relaxed/simple;
-	bh=HsfreBSPTaUwvPo+a+UW0RwvFkDmhpcCnMej2+zMrZo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D+tCfUl/bDl9BTjuU9Q+y1rIx2xbMvYNM72NrfMD8rf9cCs+L9k3ZQb19YGqBs7TpAANWvoA6Uq/OETDdaswqWFL+KSFZyfDca51ArfyqtH5DWVTC+S9bjth4TD/3AK/VFRfBI3MCJXZt1OdfCYlPvb5lwafS5G+wQIeahdPg2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n+hSxxUv; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747277998; c=relaxed/simple;
+	bh=PDLb/Z5CFapT4NGFtLlJZRiFyM6zo5sw4RC5O3pCj60=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=PvinJE3pEvDX3g7cjqYWxqfPlr4opROMMdOgJx30KbE38PL9X/FxBQRgixIz0R0btBOOuzA2faBbHnElSGx4kM/Mduv4qwkIYAVewZsZahDboWuiGuI5K9Si56RndU9LjTL2k8N4ym93QS2xrSQxXRk57tM07GmOpRE+XaASifY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V9DTHpJm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n+hSxxUv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747277988; x=1778813988;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HsfreBSPTaUwvPo+a+UW0RwvFkDmhpcCnMej2+zMrZo=;
-  b=n+hSxxUvZtbkd9bII3gUFprAyP/RX2gqjjVX40Bj/pxq3I6KX1Dr0S+o
-   8E3YsCfSkrlDoyhahAN1dNIB0+NL67EDzTgEcru7b9w51b+nha/TPFPA/
-   mjxh3GbbY08jFzlsLFlRQql9O6yTGiBiJMMGas/Cw4tTwdyu956FSlKA0
-   xsURVrdDNFZV/alrus6tJELyXw0IiYE0fgGceMRJfNC/4Kb+4ywdsXj+q
-   bdHHBWo7kLuoWT+xndZfV8vZQE0SBn9yxmum/UZ8w2ivyMLi6ApErpZjy
-   WSiuy5+jNbiOk+Zbhaswovm6DzHoj+gYxxSdf8jPIG1q8Cy6pHpvD2hCw
-   w==;
-X-CSE-ConnectionGUID: 1NwuBLAMS2aqN0owCbUmyg==
-X-CSE-MsgGUID: LI+Uuw0ATu2TppDYuOmDZQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="59850499"
-X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
-   d="scan'208";a="59850499"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 19:59:47 -0700
-X-CSE-ConnectionGUID: 3bTV9dubTkq3H46JE5s/ZA==
-X-CSE-MsgGUID: 1nGSZBhDR2+oUzrzoyHjfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
-   d="scan'208";a="175363445"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 14 May 2025 19:59:45 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uFOow-000Hnz-2S;
-	Thu, 15 May 2025 02:59:42 +0000
-Date: Thu, 15 May 2025 10:59:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bo Liu <liubo03@inspur.com>, xiang@kernel.org, chao@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-erofs@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, Bo Liu <liubo03@inspur.com>
-Subject: Re: [PATCH v2] erofs: support deflate decompress by using Intel QAT
-Message-ID: <202505151023.ond6cMbi-lkp@intel.com>
-References: <20250514121709.2557-1-liubo03@inspur.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V9DTHpJm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBC5FC4CEEB;
+	Thu, 15 May 2025 02:59:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747277997;
+	bh=PDLb/Z5CFapT4NGFtLlJZRiFyM6zo5sw4RC5O3pCj60=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=V9DTHpJmS1XdJOo7dTi7f7SBsTBdKs7B7n75z+ENLeHSUtQZgNpTNstGghGQUFP5K
+	 sWDX1QeIPCL9RWephFXnPsWqPZ2JXEKoTi6gkya1Agy7KlfNvH6CjWbUI6idmhT8Ao
+	 2gD7tm/ix4SJJCBsiQkG0P8Fho4t7vIuDwjf66CYz3rZn00jFZxeh6qx4FnMsNIQ85
+	 AsOk6n3MPNmp8Jnp/gGJmhMdGD8xpxhTNnlZMDYINBb/+vSC4yFdatZlLpiDf4IAdB
+	 +TWT8lBJIK/8/evfnk/91ncMR9Mab5VL1VrNCpguRFRuXO8Yi3QHw07bfGLhaUe93g
+	 ncZtNbubpVCGA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D20380AA66;
+	Thu, 15 May 2025 03:00:36 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514121709.2557-1-liubo03@inspur.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/5] hv_netvsc: Fix error "nvsp_rndis_pkt_complete error
+ status: 2"
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174727803505.2590892.12386533199392905169.git-patchwork-notify@kernel.org>
+Date: Thu, 15 May 2025 03:00:35 +0000
+References: <20250513000604.1396-1-mhklinux@outlook.com>
+In-Reply-To: <20250513000604.1396-1-mhklinux@outlook.com>
+To: Michael Kelley <mhkelley58@gmail.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-scsi@vger.kernel.org, stable@vger.kernel.org
 
-Hi Bo,
+Hello:
 
-kernel test robot noticed the following build errors:
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-[auto build test ERROR on xiang-erofs/dev-test]
-[also build test ERROR on xiang-erofs/dev xiang-erofs/fixes linus/master v6.15-rc6 next-20250514]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On Mon, 12 May 2025 17:05:59 -0700 you wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
+> 
+> Starting with commit dca5161f9bd0 in the 6.3 kernel, the Linux driver
+> for Hyper-V synthetic networking (netvsc) occasionally reports
+> "nvsp_rndis_pkt_complete error status: 2".[1] This error indicates
+> that Hyper-V has rejected a network packet transmit request from the
+> guest, and the outgoing network packet is dropped. Higher level
+> network protocols presumably recover and resend the packet so there is
+> no functional error, but performance is slightly impacted. Commit
+> dca5161f9bd0 is not the cause of the error -- it only added reporting
+> of an error that was already happening without any notice. The error
+> has presumably been present since the netvsc driver was originally
+> introduced into Linux.
+> 
+> [...]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bo-Liu/erofs-support-deflate-decompress-by-using-Intel-QAT/20250514-202351
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-patch link:    https://lore.kernel.org/r/20250514121709.2557-1-liubo03%40inspur.com
-patch subject: [PATCH v2] erofs: support deflate decompress by using Intel QAT
-config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20250515/202505151023.ond6cMbi-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250515/202505151023.ond6cMbi-lkp@intel.com/reproduce)
+Here is the summary with links:
+  - [net,1/5] Drivers: hv: Allow vmbus_sendpacket_mpb_desc() to create multiple ranges
+    https://git.kernel.org/netdev/net/c/380b75d30786
+  - [net,2/5] hv_netvsc: Use vmbus_sendpacket_mpb_desc() to send VMBus messages
+    https://git.kernel.org/netdev/net/c/4f98616b855c
+  - [net,3/5] hv_netvsc: Preserve contiguous PFN grouping in the page buffer array
+    https://git.kernel.org/netdev/net/c/41a6328b2c55
+  - [net,4/5] hv_netvsc: Remove rmsg_pgcnt
+    https://git.kernel.org/netdev/net/c/5bbc644bbf4e
+  - [net,5/5] Drivers: hv: vmbus: Remove vmbus_sendpacket_pagebuffer()
+    https://git.kernel.org/netdev/net/c/45a442fe369e
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505151023.ond6cMbi-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> fs/erofs/sysfs.c:60:27: error: 'erofs_attr_crypto_enable' undeclared here (not in a function); did you mean 'attr_crypto_enable'?
-      60 | #define ATTR_LIST(name) (&erofs_attr_##name.attr)
-         |                           ^~~~~~~~~~~
-   fs/erofs/sysfs.c:103:9: note: in expansion of macro 'ATTR_LIST'
-     103 |         ATTR_LIST(crypto_enable),
-         |         ^~~~~~~~~
->> fs/erofs/sysfs.c:60:27: error: 'erofs_attr_crypto_disable' undeclared here (not in a function); did you mean 'attr_crypto_disable'?
-      60 | #define ATTR_LIST(name) (&erofs_attr_##name.attr)
-         |                           ^~~~~~~~~~~
-   fs/erofs/sysfs.c:104:9: note: in expansion of macro 'ATTR_LIST'
-     104 |         ATTR_LIST(crypto_disable),
-         |         ^~~~~~~~~
-
-
-vim +60 fs/erofs/sysfs.c
-
-168e9a76200c54 Huang Jianan 2021-12-01  47  
-168e9a76200c54 Huang Jianan 2021-12-01  48  #define EROFS_ATTR_RW(_name, _id, _struct)	\
-168e9a76200c54 Huang Jianan 2021-12-01  49  	EROFS_ATTR_OFFSET(_name, 0644, _id, _struct)
-168e9a76200c54 Huang Jianan 2021-12-01  50  
-168e9a76200c54 Huang Jianan 2021-12-01  51  #define EROFS_RO_ATTR(_name, _id, _struct)	\
-168e9a76200c54 Huang Jianan 2021-12-01  52  	EROFS_ATTR_OFFSET(_name, 0444, _id, _struct)
-168e9a76200c54 Huang Jianan 2021-12-01  53  
-168e9a76200c54 Huang Jianan 2021-12-01  54  #define EROFS_ATTR_RW_UI(_name, _struct)	\
-168e9a76200c54 Huang Jianan 2021-12-01  55  	EROFS_ATTR_RW(_name, pointer_ui, _struct)
-168e9a76200c54 Huang Jianan 2021-12-01  56  
-168e9a76200c54 Huang Jianan 2021-12-01  57  #define EROFS_ATTR_RW_BOOL(_name, _struct)	\
-168e9a76200c54 Huang Jianan 2021-12-01  58  	EROFS_ATTR_RW(_name, pointer_bool, _struct)
-168e9a76200c54 Huang Jianan 2021-12-01  59  
-168e9a76200c54 Huang Jianan 2021-12-01 @60  #define ATTR_LIST(name) (&erofs_attr_##name.attr)
-168e9a76200c54 Huang Jianan 2021-12-01  61  
-
+You are awesome, thank you!
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
