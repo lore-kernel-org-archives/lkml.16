@@ -1,134 +1,148 @@
-Received: from clean103.mxserver.ro (clean103.mxserver.ro [176.223.125.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7042949F9;
-	Thu, 15 May 2025 08:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.223.125.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C31B28C873;
+	Thu, 15 May 2025 08:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299133; cv=none; b=CdLvXfC7jLBVM3xPnmw86pAhzDWDdk1ftxcm3U4Pd6cz7FaR7UP8OZFKXaTdtBrZe+NoPdr1weAFw8/Y1c5c9vLrW8t+JeiLWRm0f+wKs7Iq3g3iKBarB3IupxuUu4bNGsMUUlJqlOSBhxMEjjJPZxNwbfRZ4+FCuA0h0MuBHi8=
+	t=1747299171; cv=none; b=GG+jHnGuoNjXYGWeMvPEvlnqYcQE3T3HsCVlcbajFNZUCtxUwmkaKcPJEjlE541oV1lqVjl32I5shn7+NFaQoKexZD5YnmVl4oFUU+lAs5epBBG/AUugoD6lvjdknsKvkbfR0Lsb/BmYMDWX+jTEaqGYzYcEF7DAbhrng90vsFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299133; c=relaxed/simple;
-	bh=q/hTLxGkevrKMP4/fm1sZBbPK6IIoosv/EPhSqzLYSo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bnhyiIM/5nOJqKCztLqClJVyaCmFjxhDKdaEGV2k5pQ1WBxRz1aDdC6wlXKjQCh3Yv0YShTwqKS2M3zx8XiJV5ZXqmt5kwEEcuI+mHyvNX2e4E2E7IB4bPufOepJ/1wd5bcJ+VeyakpiozjaT+bDQ53n6Md8l2t0y14kwDk8WFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro; spf=pass smtp.mailfrom=taladin.ro; dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b=I5GISWNL; arc=none smtp.client-ip=176.223.125.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=taladin.ro
+	s=arc-20240116; t=1747299171; c=relaxed/simple;
+	bh=baDU5OetjJx39/uqBkmmFjvG7V0MajD4w+Wf3Mhy0sI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YhwWbyhphHfQoxrWxLrvgzdRGpAji0bzGwvO7GBiKkmguDRPUwTL4fUuSV/HKKl8J84SJ7HASzpm4TfC66hISx77zUJkXmir6iA2+VTQoBRnrnKu1Sy92RX2I/YtkGKbyac02XYkMOJRZZB43sY/eXWf/kifJ3Sopby4yM4/veQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eciN1sUm; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b="I5GISWNL"
-Received: from cloud347.c-f.ro ([185.236.86.218])
-	by cleanserver1.mxserver.ro with esmtps (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <asoponar@taladin.ro>)
-	id 1uFTm5-00H1Ro-65; Thu, 15 May 2025 04:17:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=taladin.ro;
-	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=koakyKDUeUIeXFkt5kHFcp8R9b8v4EKGe5vzuuktP7U=; b=I5GISWNLK58PKla/LyJdEMylzb
-	pnP5NkUlRT1ZxS0cdp67LfIcRRV9pkS2JRrg1B9np0hpEU90qPExPVJck7HACbC0P21pKzfn95JvD
-	iiJmRVa6Qtj/X2PP24tJr/JcXtaicxxKbfQW1Nw6I7gCL66WHBdX9k2Q9GDv915sM4WAqXdxumagh
-	vzBUTzS8oNgaY9awb/miMx2SX8+Kn3W/43KA1KPzOfS+05huC60U0Gs6fvnkEaBmO2zB+/6Csi3xW
-	fLBhE29dkoUzDBtALBhlQe6WauOdpgVtc6Vp0Jdzek5ai4JrYNjUQGeEa9ILM+PaYABztHTb/HHOe
-	HsT64JgA==;
-Received: from [109.166.137.172] (port=39050 helo=localhost)
-	by cloud347.c-f.ro with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <asoponar@taladin.ro>)
-	id 1uFTlv-00000006qIN-0WJA;
-	Thu, 15 May 2025 11:17:04 +0300
-From: Alexandru Soponar <asoponar@taladin.ro>
-To: linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	linux-watchdog@vger.kernel.org
-Cc: jdelvare@suse.com,
-	linux@roeck-us.net,
-	jic23@kernel.org,
-	pavel@ucw.cz,
-	lee@kernel.org,
-	baocheng.su@siemens.com,
-	wim@linux-watchdog.org,
-	tobias.schaffner@siemens.com,
-	angelogioacchino.delregno@collabora.com,
-	benedikt.niedermayr@siemens.com,
-	matthias.bgg@gmail.com,
-	aardelean@baylibre.com,
-	contact@sopy.one,
-	Alexandru Soponar <asoponar@taladin.ro>
-Subject: [PATCH 12/16] iio: max44009: Fix type incompatibility with non-macro find_closest
-Date: Thu, 15 May 2025 11:13:28 +0300
-Message-ID: <20250515081332.151250-13-asoponar@taladin.ro>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250515081332.151250-1-asoponar@taladin.ro>
-References: <20250515081332.151250-1-asoponar@taladin.ro>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eciN1sUm"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54e8e5d2cf0so774622e87.2;
+        Thu, 15 May 2025 01:52:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747299167; x=1747903967; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+nMEUq5ozL3XCKx6Xei2teXG7hWWZhoXqA/EoccK2ek=;
+        b=eciN1sUmtr+oBCcIU3zv3Lgxl2s2fm2KqQSanLhwvAqdssKrTDn2Du+cGordkh7osW
+         FHMenCdTp3ZZGtrdBciHhVgRhYgztSKiobESTE/RDYH38NGcr/crmv9hUs/KCZKhu2DC
+         23a4jTgb2Tjg5QtIvQOjqoa/CAHKXNHUDWa01vDWULgdaI2k1IEFFjJeml4DwjE1R5Zt
+         09J1Rl3kBZPIn4emkXR2KB5B3fRmi4xtpp8OG1v+B04lVur+4wMbySrTR1+Bk3fa5FCr
+         3xpyUq2oNw/icAL+PL8UgWgj50GnB2kOHJzLvxF03CmO7zNVg0/mS0clGKhcE2/khGfr
+         diXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747299167; x=1747903967;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+nMEUq5ozL3XCKx6Xei2teXG7hWWZhoXqA/EoccK2ek=;
+        b=uNKYg/tLfsjfcueZaVccrVJmLE/ahs1iEAKHUOoMCafGPr4vd0Yv9E00icYnQu+yoL
+         rN0x3kuso2d1oW9VtFfRDoyaqns87tbEFHAdYRf91L9ivMTCdFnjcOjoQhZEQ+HosS6B
+         kAskiWPcjyGmCdk4mE2nPwao3qWKkLm3HOM0SQ/OFuhUH4xP4/3o7uJR5UQkh4owc062
+         49HxjSp0CHBBEbukYaKNDBAnKQWN7YFApLx4oI0z4YfM6rl79cMnwfxaQROwrXRFHz0z
+         iYRUAtc57OqVTkRkC/SqLAw1tcv3ClIgdrBp66lwmh5gsM6jl8onWjyK8xOZ+AwiMbej
+         FP0w==
+X-Forwarded-Encrypted: i=1; AJvYcCUGq0pPqBgT2+EsgJAO4ek1dgVdfzfxOnIVXzmPyWN3LYJoOB0QyXK9/x6Xi+kb7bwweOTlehVTf23n@vger.kernel.org, AJvYcCVeAh+GnByEBGAvQrC941wI3jwMKw1FEVzEFY0aqFnDBVFbULOgFp3SE4mcPXqaHsVMY/0DAi33KCc83pz9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9PxSlb2veXFic6hANKbIQsHFCMkSaO25MhaIkuAXnS++7znPh
+	hMzBAMvPtt02aLuRp6Obuwzmr5BaY1HZOXr+8OK8GBY99tTYqX0j
+X-Gm-Gg: ASbGncvMPCWkA0bdZl7MK2AunZI+8IX4PwfjXwsM+LO9EtFixds3MQ85+4q6DxtzCnH
+	Iy8d/60wQ+mfshKgHR624bLrPbGtVTnJxapz2QQy3VuAm+VhUu7xXmrf+bk+MYFx1lSxtTYmACN
+	5evbpuGxX3dmwGGw7O71J7bJue3UlFEJM3UCSBmjtY5sI0kYgRXS2zYdevAQEQXOpfKx4wBfliG
+	G961PN5cn8OLLXXwJA6YlW6D/cZtLj9PkQ0jOA2iK2YYGAqF1mHyRHExh+kKijkxHsNwEb1OV8S
+	fcEkDKfuSH1g4zIbMJqlqkCx8x09cLPxjtkGqXT8Q2erleJdrGnlvCzj0DumdR2sSA6BD6jXiuj
+	cMGL2WCUi8gcj2a04D2kg/GzQYWKg3psZ
+X-Google-Smtp-Source: AGHT+IFr+Zu/wdjpllwn3ZdGFMnTZxToomXEA+mKUOQn0Jm/AWko6eEHsQCUeWofLoc5bYC55wc4SQ==
+X-Received: by 2002:a05:6512:3b9b:b0:549:39d8:51ef with SMTP id 2adb3069b0e04-550dcffc1fbmr627657e87.6.1747299167217;
+        Thu, 15 May 2025 01:52:47 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64ccf20sm2530860e87.239.2025.05.15.01.52.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 01:52:46 -0700 (PDT)
+Message-ID: <057c6bc2-adf9-4160-9184-6438cbe6e9d4@gmail.com>
+Date: Thu, 15 May 2025 11:52:45 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SpamExperts-Domain: cloud347.c-f.ro
-X-SpamExperts-Username: 185.236.86.218
-Authentication-Results: mxserver.ro; auth=pass smtp.auth=185.236.86.218@cloud347.c-f.ro
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: SB/global_tokens (0.00920917721819)
-X-Recommended-Action: accept
-X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT9LmVb6q1/FaccTvM3orKErPUtbdvnXkggZ
- 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5w1OL79HMxE022P+rQy8YAdcSeERs4TOTnIH1kc1IWc5TSx
- S75yz9IFZiY7BarU/NrpK8SEOwGmfn6ucAKqn/OHRh3BqzFaEnAEj4UixLJBjVNiLZt/QXQnOBRD
- +jq1HsIBmHTFdhqXZEtguZY7iGKpkcJnJKaJfT+dw1udmv00tbIRNtoyOobb3xnDyRRylAVTYi2b
- f0F0JzgUQ/o6tR7C8pLPCtTiVLo0r89ClJHDKhDGKgJ+T00JeCnHBmMdB1eMZAyYlfUtEN4pUyes
- jVRntA/J5DcfwvG53FyVviDO9UET3GKmqv1jT0lY+AQz8YX4CVph7ctC7tRH2SPTQJ/0klTuXKq/
- B9rqRWsYzNfBLt79i78aPHyWnIqxGMxPZotYvH/es1vXuByXo2bkrYMqq0x5CzaUoJIoBUQayHle
- UvbvCQmh9x4kn6NeQcRkc6G+OgAcq5x+BzhRyg9rYO6I0H7Q2OEpckvWJAOmdJd77Z9vwc+QHB+X
- +u7aTqYHtT2CBuxNPBc9JM2jck1NnIBf0tvflhq7Xjhll72AYgnW/6M0ftSpvLIx+X1vKami8KF6
- jWQ71uVNIY/EFPWeDmcZuFRQy1vmjjPiYw8fUCp0/qY6cmSW9oUDdvKuTRfTGZ6f8nTXoYFaQ71l
- mMti8uxA0gKVmIzBXtbLDVvAQ/KVNQByWRrgu16SD9QRg+25pqKSAN5VcIfsMVILjVAz6RZsCHxD
- lgOJwEwCFaF+62b2lf1UUDu9jECN1V/lwmsioRLmNJoHOZOE/9e5UD715p61XAQw85DCXa0iAPEd
- fYyrF5wMRSLGyY+i0m2IxQLxQUxLMkCVXN63lz38Up+2UgeFSDBPqdRoFsq0hfzdx0oxkgNI/jhY
- WFhu7VV+HdWjdZLlmQ5z83qEVVG/6RJ+BW7FmGcwL889DSW2cZWGkIYVQAbHnYkWUz1gRIjAiMvi
- vM7um7t0SVa5NVZ2g1u6DnOpqk1nwAzTSgytNKIH5lfAuQc8I07FTFcjpdfX/Jcr87en7cKbI0NU
- afdkQMG+6qjtXoANVR89VM6f75a5kmRIbungV7ywXD8VtmM8wef5C6IkqMFhROX1HYRo9Sm1kZOW
- saz62DSUUd/fn3Ix/aSqJVglEtnFggTvi4y/qO0sxBxzHDeqqFz43py4SDhdaHkWxEWqfohU+1d2
- sh7IKZpXLgBCJ476nn5Gmr/PK603nEEtNszXdIHFite8wCT/ojMvxJYqN+GmyxwR+V15PgePOPPI
- vtB/lrJsWW29FRnUbXCk3//yGA2OaEkyEoP0Kl1YERWeKKG4PAQYNyavp7c49JwbmBalBK3QvTzZ
- aymz/kAx9sNOIdFDvUNZLdaRhCZanVD8rWRXHFnkJJ9VGpuX4LTQYyCuF2Axy3+5ga4Wzl9Zj2VA
- 3aW/vPi2AMAbWLs/EIKEbeDIxNYIJ7Ews1OEan6m+UeFXprlCOm3BAEbJtATHIdhc/Osc/lXM+l8
- 06U7GxUAPGlXms+D1TI22+vIvtmOpB8mDzWv8vBwVi5XkC8ewLVRqANj6mzlzL3VH5WM/aCyI5/o
- yhoezeIJy3L+cB4hBppwR1r+Bof9KZqCMQkUV4VT4TerS/vbL3R5w07g
-X-Report-Abuse-To: spam@cleanserver1.mxserver.ro
-X-Complaints-To: abuse@cleanserver1.mxserver.ro
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/9] arm64: dts: imx8mn-bsh-smm-s2-common: Define suspend
+ voltage threshold
+To: Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+ linux-kernel@vger.kernel.org
+Cc: Simon Holesch <simon.holesch@bshg.com>,
+ Karthikdatt Anantharamrao <karthikdatt.anantharamrao@in.bosch.com>,
+ michael@amarulasolutions.com, linux-amarula@amarulasolutions.com,
+ Wolfgang Birkner <wolfgang.birkner@bshg.com>,
+ Conor Dooley <conor+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+References: <20250514082507.1983849-1-dario.binacchi@amarulasolutions.com>
+ <20250514082507.1983849-2-dario.binacchi@amarulasolutions.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20250514082507.1983849-2-dario.binacchi@amarulasolutions.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The max44009_int_time_ns_array array was previously declared as u32 but
-used with find_closest(). With find_closest() now implemented as a
-function taking signed int parameters instead of a macro, passing unsigned
-arrays causes type incompatibility errors. This patch changes the arrays
-type from u32 to int to ensure compatibility with the function signature
-and prevent compilation errors.
+On 14/05/2025 11:24, Dario Binacchi wrote:
+> From: Michael Trimarchi <michael@amarulasolutions.com>
+> 
+> Voltage threshold should be adjust according to the worst case.
 
-Signed-off-by: Alexandru Soponar <asoponar@taladin.ro>
----
- drivers/iio/light/max44009.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I would love to understand why these voltages are set.
 
-diff --git a/drivers/iio/light/max44009.c b/drivers/iio/light/max44009.c
-index 8cd7f5664e5b..d274224fc210 100644
---- a/drivers/iio/light/max44009.c
-+++ b/drivers/iio/light/max44009.c
-@@ -55,7 +55,7 @@
- /* The fixed-point fractional multiplier for de-scaling threshold values */
- #define MAX44009_FRACT_MULT 1000000
- 
--static const u32 max44009_int_time_ns_array[] = {
-+static const int max44009_int_time_ns_array[] = {
- 	800000000,
- 	400000000,
- 	200000000,
--- 
-2.49.0
+Could you please explain a bit further why this change is done. What 
+worst case? What happens if voltages aren't adjusted? What is the 
+current voltage (before this patch is applied?).
 
+> Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> ---
+> 
+>   .../boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi  | 11 +++++++++++
+>   1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi b/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi
+> index bbb07c650da9..5a1ec2f6a552 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi
+> @@ -105,6 +105,12 @@ buck1_reg: BUCK1 {
+>   				regulator-boot-on;
+>   				regulator-always-on;
+>   				regulator-ramp-delay = <1250>;
+> +
+> +				/* enable autosuspend threshold */
+> +				rohm,dvs-run-voltage = <850000>;
+> +				rohm,dvs-idle-voltage = <850000>;
+> +				rohm,dvs-suspend-voltage = <850000>;
+> +				rohm,no-regulator-enable-control;
+
+The commit message does not explain why the software control of the 
+regulator's enable state is changed? Maybe this should be in the 2/9?
+
+>   			};
+>   
+>   			buck2_reg: BUCK2 {
+> @@ -115,6 +121,11 @@ buck2_reg: BUCK2 {
+>   				regulator-boot-on;
+>   				regulator-always-on;
+>   				regulator-ramp-delay = <1250>;
+> +
+> +				/* enable autosuspend threshold */
+> +				rohm,dvs-run-voltage = <960000>;
+> +				rohm,dvs-idle-voltage = <860000>;
+> +				rohm,no-regulator-enable-control;
+
+same here?
+
+>   			};
+>   
+>   			buck3_reg: BUCK3 {
+
+Yours,
+	-- Matti
