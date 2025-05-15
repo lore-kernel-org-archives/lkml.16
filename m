@@ -1,98 +1,146 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535892882CB
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8387928030E;
+	Thu, 15 May 2025 08:26:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747297585; cv=none; b=CBHZ4iq29IIIyNodl0w/A0SLc5giz+yBMl+FiNnsqKsZuZgGvUPZ+1B7QHj8P6STyscZHxJlnoldEygGEqrf9pKqu5rR1O4Lry1ho2uFH/ZObbaNZs6e+jdOzqhCs7nS4UAwhyTRhBwZDVZiuNdbCk5lwCVRTKMBVbl706JAH3k=
+	t=1747297608; cv=none; b=gt2SgY4BxSZMoBvhKtXW2Wlb1E09Bzjgmgu0U7n3RxXOl1JBzno/s9XdYR3zeFM8SBYXmeg9LzwxbrNahvkPvD5x70ZYY0wULZ5us1UG1OWy8nesZO0PWyCM4QTc5uTyPjZcOMaZJICDDcIqNl9nbjAWwbzPJWrIYaH+9NBd5oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747297585; c=relaxed/simple;
-	bh=ENrOJDgWFvKCQkM8U1+sfaS07Ost8oWCJy/AbU25QJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qlB4CugFgfTMjIoQ8+kgwLrytKhHF9cMcDDFNwhofWK8L6ji5tqyyIUu3+fjLYixnG4VZoxN/C1hkN1KwhPIC3rp5E+Zz2zhilL7mmBMRPfoVy+fo2PgTDaDJ0iGyrbAftJePyjU88sBNxiDMMdIjBCdElBuhTQRKwwEP8+tQEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QjHSl30S; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747297608; c=relaxed/simple;
+	bh=2AfOTLKyKA91L0u7Y+mM1Cl8GfPwvVtpcybRI2bgZCc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WAS9TLYZ6IVc7tqIaNCXY1P7HpjX20qecpOvrDUjABAXDC4u5i8oPXNpEl1e6AH9PgeUSRE//JA3aoVnuzA3ZdBIyNI9v6phJkYMIn7DsSzZ8gMbsOud2YqO1ygqBZKEy2bcpvYjEi5SnzCyENNRTb2oomNnhYF3HvIgIAKWicM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cs2WzXAm; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QjHSl30S"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a0bd7f4cd5so522152f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:26:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cs2WzXAm"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22e8461d872so5375355ad.3;
+        Thu, 15 May 2025 01:26:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747297581; x=1747902381; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=RZBT0B9JbAjbmvz5JEz72qClxMGhTZUJxqqtB//hBoY=;
-        b=QjHSl30SYhCVFpoIxhyhJPZyyu0pOpqpO5E8fbLKd+dqDZoGNhRYYWkBxas2KiqJNk
-         CcAQPxHusSLK9ehjxvxaIc7Dep8dBtKS5tYzvmEaswgZEtWFQFVp0hxVnD2AfC3iVWWq
-         Oqg0fdp2zJu0BwnVHhUdHtwAM7fYNW2HpWcnjaIVRo57NmotAzUfGfozTdoAUugQbzLo
-         0k++IioYPsa/VaMldshrKyM5SJPpROq0rHozLU05A4ut86G+Faa0vFwXWgu02JJAaDR+
-         IKs5WkOBIjbnmhT4Whx5hVyg12uB+Utsh9tH6ss7Bm3Ut9mfZbGu/3Q8RDg4A3Ckv5+p
-         H3LA==
+        d=gmail.com; s=20230601; t=1747297607; x=1747902407; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ubqS6fSXcl06M4fdo3pjkdES3Zvs+v1LHbBwrBKX57Q=;
+        b=Cs2WzXAmUVh8thmJdZ0BVvYcGdbDSJWbitdN8qO12tZeVsGbZUyxXpTVTgEE+kRRF/
+         D1dw1eu5zgSmrGY0OWBK5nTn5hlTadLdCpIkqMV5pSbZ5aLzHTHg2Diiowg+g9lLrfPf
+         qKu4YZeAhgoz/Rnnz7rTF08+tDNiTO0bWyLWXrFSwsF3dwoRYjdI2yOEOlgGSOlIT9FS
+         0ZX1HBGNQVmezbEDHM685nzpuMSLr6mG8NaO55sLyRoMFJhOUbYtdHGxAb2NU4OQX4ve
+         FMcyani1Tj1e3kgunQIpNaZFOnsppKlTRFJ7E3p7IVwFwo8lUo9fLrzGU/fyjgw0mJyk
+         Iftw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747297581; x=1747902381;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RZBT0B9JbAjbmvz5JEz72qClxMGhTZUJxqqtB//hBoY=;
-        b=aoGmZ0A9274sU5F+g9TNjiCQfl91ugXosvt4T4cKmT/8GzzzOtudNzpGxjHT2HQWVo
-         7uMCzpK9ycT+afWSpIfMvjOzhsbUd2UpQYz9yjtYUzk88hj62rzssNU3JbDM/FtkVRX1
-         J2zZAYXq6NM74vOOHKl8iO5CeO/NYCMXqj9AMyDz+j739JNSPAizJC2McdLVAgwJ4u1Z
-         O2DHItsOOLoiGkesdxQbHvjOYGcEXqfITWfXAMm+VH26iHOJRHGYpXypD7JgDeeYmGJQ
-         fLolvFT/ZeRwPn2WOG7POqbvifUo7Cp0P+XxMhwWme4hwO3wiTmAsUae1vhzNHe9DkQE
-         At3A==
-X-Forwarded-Encrypted: i=1; AJvYcCUuvniXMMQSpqOsmRjt2qMJisBYYJc65TCkYkG7raS11wC4TSvi47F/yPZbDWViqJfe2lMY1evGXcHHmtY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6X+3tt8C4H6Fxj7FGUTf3vdYvhrF6X6Rw1hsrdkuxffMEkJXQ
-	sWqtdAiCR3tSrNh8dB/PZknpblNXqq+tNe9IyRLMOJc6BMImy3fer2+d3LGiOHU=
-X-Gm-Gg: ASbGncviRXJdxwyNPF0bnkMjXUgFIXihj7sLzu79nSxONBOLZmS6fkR2ZnHanwoxqh1
-	t5TWcHn0v+yrJQekO+MHVu5nXAmz7wNzr7uef5EsYa+0hI6ASxkQQHpqNEkzWjA1YJBING0+EJZ
-	Z4lvRhH9C8evkK+DmvejmkL5M4xUSuEqPzhA83P/fAThPB/7iiqIrZYIt5N0ODxfP0uzvIC88F2
-	YO327O/7ey17xKnet8awHy01gbgsZQYmpZM6Kuyt7iQOxijQ4DD5qluykRC9FttW1lFWytmt8uN
-	RngBw++OzairLu8UHQN1k6VZZ/mNsyTdhBQh9KVvDEdn3C7JKTnk7AL8yn1JXbY98BrurFSFIwQ
-	o/E+Xnb855fFnr9vrtE0jtPhB
-X-Google-Smtp-Source: AGHT+IFutkGNvNOJLwoaYHsnazJI/e2XvuA6DWj8m8uba5Jv172Bohbp+P6ihvUbNwvbTK8YGNfiyw==
-X-Received: by 2002:a5d:5983:0:b0:3a1:f6fd:63fc with SMTP id ffacd0b85a97d-3a34994b188mr5793077f8f.47.1747297581580;
-        Thu, 15 May 2025 01:26:21 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3368d1csm62594915e9.8.2025.05.15.01.26.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 01:26:21 -0700 (PDT)
-Date: Thu, 15 May 2025 10:26:19 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Vineet Gupta <vgupta@synopsys.com>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: timer: Convert snps,archs-gfrc to DT schema
-Message-ID: <aCWlK8H7PtSwhY77@mai.linaro.org>
-References: <20250506022309.2588605-1-robh@kernel.org>
+        d=1e100.net; s=20230601; t=1747297607; x=1747902407;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ubqS6fSXcl06M4fdo3pjkdES3Zvs+v1LHbBwrBKX57Q=;
+        b=HNXZkIiEU9P80sM0djQHGsCbjD/9FFVe8i9a3mVCjPvrq6e9XZhJ676dpj4DX/5uZD
+         GLFGgUfFaK18OoywVkk6emJ9ksLYiZI8LNjxCCYE2U7ycszfJaeLvY7thV9jdijxvLaZ
+         BAdBoT4R92Zm+Emq5HtnyTS0nKsLi8lXcyg5nt9mImioZM0Woyeo4nrzEOVPCNTZgiuN
+         LDMNofQQuu9epIRrtMoYTuTpBuR8RPOa152Hsi+KMFXdGeVbAMiSIoCxgEm6N8tJA3Ie
+         jZEYc+BRsPqi9JpUyREGBJ7sVN19dTVE72rnS9UxlcjOIC4x/rTVsWloyAaqUAtc67Bz
+         VcHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVBDd9jUahjXG742cbSyBVd+icxXRdFb/+kAOYYN2Wwuich6ikpLniCBrU0vs01xzhfMSlZTnBkGBTtFs=@vger.kernel.org, AJvYcCX7350/cAqsLlTIJKTHaR04CiHllq7V9fFhMwn03MYL82oTK3zI+4whVtxxXi9SxAPmxJ/1E9+f@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywdmc401M0nKeTCWy1bAq0pjIyts9m0dM4zVGFdWsrU2X5XrubI
+	2wlkny7nZLzQvUl4hfaonYDIzNThAoP7ZqEZDf1lrMQ3kd1KUFZl
+X-Gm-Gg: ASbGncuqu4sMKeJEml4UgN3tcXTpE33bAxvKFe3866cyrS4q0dOAXx0J0PIMiVt0sxw
+	Gxrr4xFSg11OTArRKU8nAw0MNaf+xy3ufGHMi1BkNlyN9iGVNWXMgBIsLS2Jain+p6rmR3UmZCl
+	G0msiElncy1bFB/++Pz8fpwlOmW6Ln6s2AYCT47C1LE0UxeAWtQ87KDmfCGetMsm90dGZvkXeZl
+	YUgIUwOLMSAK0x9U7XAwhUQKVcbbOkykaL+WUBNJFdLJyKWr0lV3vf7OABuezW+hnKCXLubVXRN
+	dvLEaYGxGF7lOE3yA/edoaVmxnZiW19KeG6b9nO+TrdH7Oy0WIfUrbR5KsYb2ptYPBldEds0dOi
+	wYLLHGlp1BpAD92/wULIH9erxQqbePre2n5TaAQ==
+X-Google-Smtp-Source: AGHT+IGztOBHZcePEChliqTLM+tdfCoGVrDbkX31UFSNsSiZjvqUke5s4G1BPjH+B9gkK99KThXFdw==
+X-Received: by 2002:a17:903:2a8d:b0:220:d601:a704 with SMTP id d9443c01a7336-2319813a0f2mr81256345ad.18.1747297606735;
+        Thu, 15 May 2025 01:26:46 -0700 (PDT)
+Received: from [192.168.48.133] (mobile-166-176-123-50.mycingular.net. [166.176.123.50])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc82bd34bsm111901035ad.243.2025.05.15.01.26.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 01:26:46 -0700 (PDT)
+Message-ID: <b5eb8426-81c5-4bdf-8841-04e77294d9ed@gmail.com>
+Date: Thu, 15 May 2025 10:26:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250506022309.2588605-1-robh@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.14 000/197] 6.14.7-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250514125625.496402993@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250514125625.496402993@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 05, 2025 at 09:23:08PM -0500, Rob Herring wrote:
-> Convert the Synopsys ARC HS 64-bit Timer binding to DT schema format.
-> It's a straight-forward conversion.
+
+
+On 5/14/2025 3:04 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.14.7 release.
+> There are 197 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
+> Responses should be made by Fri, 16 May 2025 12:55:38 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.7-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Applied, thanks
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernel, build tested on 
+BMIPS_GENERIC:
 
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
+Florian
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
