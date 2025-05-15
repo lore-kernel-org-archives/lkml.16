@@ -1,182 +1,175 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A83274668;
-	Thu, 15 May 2025 07:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00AD23E334
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 07:14:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747293265; cv=none; b=CMAI8SYmvKOztingDWqX5UzYbrkDqjWeSarWwx0cuwPlFhFMMryvvKuAacALEZCRGZzqNmULWtELz7qNnBTf1PNtgdK4xqWgH0yghVqHSrqsq0rYF+IOzUnLwHtuwwzZ5C38W1gMH/ZqcAFhl4Tr9PeS6IG36ZvhBIw5UoLqfx8=
+	t=1747293280; cv=none; b=q+YGM5uwiphwwsz3y5p0+WX7qBdVw+lsgzRyixnxqb234RyM9cMHeOZAK/47XC0WLenZg1YilLai91HaRSV7aGzPA/Dn/nuvdfIMdBg1QWoHiR5+Aqz46esnWF/vTkZuhSsEg7jPl2X+9FkAc18EUKo5yM0tLlv1aZDjgSWffgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747293265; c=relaxed/simple;
-	bh=UYOjcr8r37pftyOuVur3meTGMqxlH5LARh5f88/RjUg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=rwFnhGO39/Egwkf5E4BghiZzp7TXuQ3eW866LwdFKaIKF/hK7MzVVdz72iR4crcvlXfC6JzPnrOR4dQzd7BhV/1m3yzrEcw7XWCzF4p67eMiP93tIAALEV8zl3H81TR9hDR0y8pPGqnPM3BfiHPYIG2lL7XJLL/kSJ69OSiCyOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Gg5Se6Ih; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1747293280; c=relaxed/simple;
+	bh=AdiOzKd1rAm178x2PI7l6wU3wLgZH0OiaXgsBhxCeMI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uIjfwxOi9EuIhgmHoCeg70B/dTVEhPAgputAqaIVGRqCB9Hx8mtpnRxDWM1eRX5WNZ1nDQ9WJN13W1MQzOQooqW4gx0bf1fy0j2DhFusavgF9sLRsr0xVUzsU1Bbe0RE8pXg7gHbonOQgPZz5/o6uPZ/ch1PwZ7zbpG6T7uys/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=MsqpcZxi; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Gg5Se6Ih"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747293261;
-	bh=lPh82ppR+L7qk2kCMnma62qVGERquGF+hvbmo4WkzAA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Gg5Se6IhpSFrbOLA1zhZK4M7Nj4JRL+bmeYlA2UueXZLQn1tuk5AfyHf7S+BZQq2q
-	 QdyCXTXzYY4FUB4IBsO0mGbWTdS7TnEX/suC5AthP3CubGyx4w9vFh+3yuyESMf7HZ
-	 SGlmerqkW9CHAeP7P7rIcDzehAPlTf0i6cyrqMNByUVt2/1lDr2HfaNyqQJ29EmHu2
-	 uCkROlbB4GaXiXmxBlmTZyGExDknU1iTyHf5O2JL802YZes9tK5QsWlNAiamXODPhx
-	 nlzgrF2Sc9yafC51WSGAP8svjDTWwrcJXb8aHwdN7K7SgQgxBC3gfK3/5ywD843CXe
-	 3CtKW3L3O9qFw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="MsqpcZxi"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZyhKS509tz4x8R;
-	Thu, 15 May 2025 17:14:20 +1000 (AEST)
-Date: Thu, 15 May 2025 17:14:20 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Kishon Vijay Abraham I <kishon@kernel.org>, Vinod Koul
- <vkoul@kernel.org>
-Cc: Algea Cao <algea.cao@rock-chips.com>, Cristian Ciocaltea
- <cristian.ciocaltea@collabora.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the phy-next tree with the phy tree
-Message-ID: <20250515171420.7c6a4e4b@canb.auug.org.au>
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4ZyhKd1Fhwz9sd7;
+	Thu, 15 May 2025 09:14:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1747293269; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tN/OjUP+F6ny/aTLHg6lQwqtubMOvdX5Usteik+4erk=;
+	b=MsqpcZxivPqCxu/8noY1ASy7Vgd+/guOaewqqIbACu92A1XqKqzTrFoY+vBT64jfkB5GNH
+	JqbPP1TrTWzUf/n8zYfaOM5ysHEkoCpCTPlmgHZLHbqywfZjIcryq02hh4PIZzQ5LQPZnq
+	BpvcMhUWBE8K2vdVXZmjHywsDn+LMrmtlOdlDuRWe5cWENSfDMtM2aqUURPkGoNW7+snZm
+	Q3r8LOoY0WFgPMxuA9hUZozhv+OMtvFc3zcWx4HDWbaSA3ehekYemNoV97+phv6i8jYVlP
+	ppUfNpEWxlbGCSwxMKD8FDE8myjdBPYqMlOpU2XpJXkZKb4ya4WTRpEP/5bysg==
+Message-ID: <f6e5e4c0f32f8ecb3be71181042082d2d8a9533b.camel@mailbox.org>
+Subject: Re: [PATCH v4] vdpa/octeon_ep: Control PCI dev enabling manually
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Philipp Stanner <phasta@kernel.org>, schalla@marvell.com, 
+ vattunuru@marvell.com, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
+ <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio
+ =?ISO-8859-1?Q?P=E9rez?= <eperezma@redhat.com>, Shijith Thotton
+ <sthotton@marvell.com>, Dan Carpenter <dan.carpenter@linaro.org>, Satha Rao
+ <skoteshwar@marvell.com>
+Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
+Date: Thu, 15 May 2025 09:14:22 +0200
+In-Reply-To: <20250508085134.24084-2-phasta@kernel.org>
+References: <20250508085134.24084-2-phasta@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/9iZqveLJCK1SITMZmgrwzRO";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-MBO-RS-META: 9qmrm7e38ipgezxi671tj9uij9ejszxe
+X-MBO-RS-ID: 53e957ff3b9784b003f
 
---Sig_/9iZqveLJCK1SITMZmgrwzRO
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 2025-05-08 at 10:51 +0200, Philipp Stanner wrote:
+> PCI region request functions such as pci_request_region() currently
+> have
+> the problem of becoming sometimes managed functions, if
+> pcim_enable_device() instead of pci_enable_device() was called. The
+> PCI
+> subsystem wants to remove this deprecated behavior from its
+> interfaces.
+>=20
+> octeopn_ep enables its device with pcim_enable_device() (for VF. PF
+> uses
+> manual management), but does so only to get automatic disablement.
+> The
+> driver wants to manage its PCI resources for VF manually, without
+> devres.
+>=20
+> The easiest way not to use automatic resource management at all is by
+> also handling device enable- and disablement manually.
+>=20
+> Replace pcim_enable_device() with pci_enable_device(). Add the
+> necessary
+> calls to pci_disable_device().
+>=20
+> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> Acked-by: Vamsi Attunuru <vattunuru@marvell.com>
 
-Hi all,
+Hi again,
 
-Today's linux-next merge of the phy-next tree got a conflict in:
+this is the last of 12 drivers blocking me from removing a few hundred
+lines of broken code from PCI. Would be great if it could be sent to
+Linus next merge window.
 
-  drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
+Can someone take this patch in?
 
-between commit:
+Thx
+P.
 
-  f9475055b11c ("phy: phy-rockchip-samsung-hdptx: Fix PHY PLL output 50.25M=
-Hz error")
+> ---
+> Changes in v4:
+> =C2=A0 - s/AF/PF
+> =C2=A0 - Add Vamsi's AB
+>=20
+> Changes in v3:
+> =C2=A0 - Only call pci_disable_device() for the PF version. For AF it
+> would
+> =C2=A0=C2=A0=C2=A0 cause a WARN_ON because pcim_enable_device()'s callbac=
+k will also
+> =C2=A0=C2=A0=C2=A0 try to disable.
+> ---
+> =C2=A0drivers/vdpa/octeon_ep/octep_vdpa_main.c | 17 ++++++++++++-----
+> =C2=A01 file changed, 12 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+> b/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+> index f3d4dda4e04c..9b49efd24391 100644
+> --- a/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+> +++ b/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+> @@ -454,6 +454,9 @@ static void octep_vdpa_remove_pf(struct pci_dev
+> *pdev)
+> =C2=A0		octep_iounmap_region(pdev, octpf->base,
+> OCTEP_HW_MBOX_BAR);
+> =C2=A0
+> =C2=A0	octep_vdpa_pf_bar_expand(octpf);
+> +
+> +	/* The pf version does not use managed PCI. */
+> +	pci_disable_device(pdev);
+> =C2=A0}
+> =C2=A0
+> =C2=A0static void octep_vdpa_vf_bar_shrink(struct pci_dev *pdev)
+> @@ -825,7 +828,7 @@ static int octep_vdpa_probe_pf(struct pci_dev
+> *pdev)
+> =C2=A0	struct octep_pf *octpf;
+> =C2=A0	int ret;
+> =C2=A0
+> -	ret =3D pcim_enable_device(pdev);
+> +	ret =3D pci_enable_device(pdev);
+> =C2=A0	if (ret) {
+> =C2=A0		dev_err(dev, "Failed to enable device\n");
+> =C2=A0		return ret;
+> @@ -834,15 +837,17 @@ static int octep_vdpa_probe_pf(struct pci_dev
+> *pdev)
+> =C2=A0	ret =3D dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+> =C2=A0	if (ret) {
+> =C2=A0		dev_err(dev, "No usable DMA configuration\n");
+> -		return ret;
+> +		goto disable_pci;
+> =C2=A0	}
+> =C2=A0	octpf =3D devm_kzalloc(dev, sizeof(*octpf), GFP_KERNEL);
+> -	if (!octpf)
+> -		return -ENOMEM;
+> +	if (!octpf) {
+> +		ret =3D -ENOMEM;
+> +		goto disable_pci;
+> +	}
+> =C2=A0
+> =C2=A0	ret =3D octep_iomap_region(pdev, octpf->base,
+> OCTEP_HW_MBOX_BAR);
+> =C2=A0	if (ret)
+> -		return ret;
+> +		goto disable_pci;
+> =C2=A0
+> =C2=A0	pci_set_master(pdev);
+> =C2=A0	pci_set_drvdata(pdev, octpf);
+> @@ -856,6 +861,8 @@ static int octep_vdpa_probe_pf(struct pci_dev
+> *pdev)
+> =C2=A0
+> =C2=A0unmap_region:
+> =C2=A0	octep_iounmap_region(pdev, octpf->base, OCTEP_HW_MBOX_BAR);
+> +disable_pci:
+> +	pci_disable_device(pdev);
+> =C2=A0	return ret;
+> =C2=A0}
+> =C2=A0
 
-from the phy tree and commit:
-
-  0edf9d2bb9b4 ("phy: rockchip: samsung-hdptx: Avoid Hz<->hHz unit conversi=
-on overhead")
-
-from the phy-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-index 77236f012a1f,bb49d69a6f17..000000000000
---- a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-+++ b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-@@@ -444,47 -412,45 +412,47 @@@ struct rk_hdptx_phy=20
-  };
- =20
-  static const struct ropll_config ropll_tmds_cfg[] =3D {
-- 	{ 5940000, 124, 124, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 62, 1, 16, 5, 0,
-+ 	{ 594000000ULL, 124, 124, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 62, 1, 16, 5, 0,
-  	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 3712500, 155, 155, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 62, 1, 16, 5, 0,
-+ 	{ 371250000ULL, 155, 155, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 62, 1, 16, 5, 0,
-  	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 2970000, 124, 124, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 62, 1, 16, 5, 0,
-+ 	{ 297000000ULL, 124, 124, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 62, 1, 16, 5, 0,
-  	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 1620000, 135, 135, 1, 1, 3, 1, 1, 0, 1, 1, 1, 1, 4, 0, 3, 5, 5, 0x10,
-+ 	{ 162000000ULL, 135, 135, 1, 1, 3, 1, 1, 0, 1, 1, 1, 1, 4, 0, 3, 5, 5, 0=
-x10,
-  	  1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 1856250, 155, 155, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 62, 1, 16, 5, 0,
-+ 	{ 185625000ULL, 155, 155, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 62, 1, 16, 5, 0,
-  	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 1540000, 193, 193, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 193, 1, 32, 2, 1,
-+ 	{ 154000000ULL, 193, 193, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 193, 1, 32, 2, 1,
-  	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 1485000, 0x7b, 0x7b, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 4, 0, 3, 5, 5,
-+ 	{ 148500000ULL, 0x7b, 0x7b, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 4, 0, 3, 5, 5,
-  	  0x10, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 1462500, 122, 122, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 244, 1, 16, 2, 1, 1,
-+ 	{ 146250000ULL, 122, 122, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 244, 1, 16, 2, 1=
-, 1,
-  	  1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 1190000, 149, 149, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 149, 1, 16, 2, 1, 1,
-+ 	{ 119000000ULL, 149, 149, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 149, 1, 16, 2, 1=
-, 1,
-  	  1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 1065000, 89, 89, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 89, 1, 16, 1, 0, 1,
-+ 	{ 106500000ULL, 89, 89, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 89, 1, 16, 1, 0, 1,
-  	  1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 1080000, 135, 135, 1, 1, 5, 1, 1, 0, 1, 0, 1, 1, 0x9, 0, 0x05, 0,
-+ 	{ 108000000ULL, 135, 135, 1, 1, 5, 1, 1, 0, 1, 0, 1, 1, 0x9, 0, 0x05, 0,
-  	  0x14, 0x18, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 855000, 214, 214, 1, 1, 11, 1, 1, 1, 1, 1, 1, 1, 214, 1, 16, 2, 1,
-+ 	{ 85500000ULL, 214, 214, 1, 1, 11, 1, 1, 1, 1, 1, 1, 1, 214, 1, 16, 2, 1,
-  	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 835000, 105, 105, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 42, 1, 16, 1, 0,
-+ 	{ 83500000ULL, 105, 105, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 42, 1, 16, 1, 0,
-  	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 928125, 155, 155, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 62, 1, 16, 5, 0,
-+ 	{ 92812500ULL, 155, 155, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 62, 1, 16, 5, 0,
-  	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 742500, 124, 124, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 62, 1, 16, 5, 0,
-+ 	{ 74250000ULL, 124, 124, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 62, 1, 16, 5, 0,
-  	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 650000, 162, 162, 1, 1, 11, 1, 1, 1, 1, 1, 1, 1, 54, 0, 16, 4, 1,
-+ 	{ 65000000ULL, 162, 162, 1, 1, 11, 1, 1, 1, 1, 1, 1, 1, 54, 0, 16, 4, 1,
-  	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 502500, 84, 84, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 11, 1, 4, 5,
-++	{ 50250000Ull, 84, 84, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 11, 1, 4, 5,
- +	  4, 11, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 337500, 0x70, 0x70, 1, 1, 0xf, 1, 1, 1, 1, 1, 1, 1, 0x2, 0, 0x01, 5,
-+ 	{ 33750000ULL, 0x70, 0x70, 1, 1, 0xf, 1, 1, 1, 1, 1, 1, 1, 0x2, 0, 0x01,=
- 5,
-  	  1, 1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 400000, 100, 100, 1, 1, 11, 1, 1, 0, 1, 0, 1, 1, 0x9, 0, 0x05, 0,
-+ 	{ 40000000ULL, 100, 100, 1, 1, 11, 1, 1, 0, 1, 0, 1, 1, 0x9, 0, 0x05, 0,
-  	  0x14, 0x18, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 270000, 0x5a, 0x5a, 1, 1, 0xf, 1, 1, 0, 1, 0, 1, 1, 0x9, 0, 0x05, 0,
-+ 	{ 27000000ULL, 0x5a, 0x5a, 1, 1, 0xf, 1, 1, 0, 1, 0, 1, 1, 0x9, 0, 0x05,=
- 0,
-  	  0x14, 0x18, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-- 	{ 251750, 84, 84, 1, 1, 0xf, 1, 1, 1, 1, 1, 1, 1, 168, 1, 16, 4, 1, 1,
-+ 	{ 25175000ULL, 84, 84, 1, 1, 0xf, 1, 1, 1, 1, 1, 1, 1, 168, 1, 16, 4, 1,=
- 1,
-  	  1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-  };
- =20
-
---Sig_/9iZqveLJCK1SITMZmgrwzRO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgllEwACgkQAVBC80lX
-0GzXegf/X3dXD9aq81mQWo/ix/uGm5qYS0GK6VnIXtUYjediajVK7F83dBCAZSSo
-7DDpoBRfjgc2AIvqfEk8AGO7XzMTNY3gbEaZVwuKgJKefVqW9diC5mlBOro7OcWc
-QUQ7wjqmdx66VDkYFgmyLUiryM5CZAJ6Ja9T9kOpU2TF1Q93QRGLUEwRj2I1diM3
-pAn7QvQAhKQBGTlGzB19voS8K3kg/qSTiz09If54fMkDaBF4DpAj85o4wo2/YRJ2
-PD9nSgxnLjKyQeKcHEs6Z9Pk7PIgSTyhWHFQQ5sIB1NxaC/dPMwMm9SwefR0dtpT
-+tMnMRAE78cWnpRvt6LyY+rEWku+Pg==
-=cFeX
------END PGP SIGNATURE-----
-
---Sig_/9iZqveLJCK1SITMZmgrwzRO--
