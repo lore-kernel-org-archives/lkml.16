@@ -1,154 +1,128 @@
-Received: from clean236.mxserver.ro (clean236.mxserver.ro [46.102.249.236])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9193E21773F;
-	Thu, 15 May 2025 08:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.102.249.236
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4352828A718
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747298076; cv=none; b=OCkuSAX43dEIA4gJT27r0W28p5ESutgh5mMRfvaRVBiZDD9w6+4wZpfVFF5CgJz/QNAapf+rW9dZspRXS7QGoyiSpmRX7Js9fzMlQNeUa3+buUJ64zmKe3ICHxqcWe/KaCs6S1yRhSKx32KlkmX6Aav0VFuzBzenl4xeXfQY+TE=
+	t=1747298086; cv=none; b=BpIIpOezzcmF6nCWuIan6nHeYWziMFtIIimEVav9UI5dLSdNU7Zpk6+RVMLnApxYUUQF6dEdYbR6ca7W6+3ywvRp5w6TfTH+XjiClEsCJfhdWKe/mGP993JaV6R4ZOOAGu9u9EVNZVNGdcybq+lSFjSQPS4cDjzyRKqKxmw0DSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747298076; c=relaxed/simple;
-	bh=sbh2TgozFx82F6G8POWcV7D4BCUYqhDfLYv1kZRr97c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mYa4bMjpSHUmrp9G060h6lOMdEHwq0nOPIR1Ea+w2K8set2ODwHCVLefRR2XpdTNj4JzJKg8W17qSmM1iPZRZWlA835ditDpf9juXLhxlcVVXpi2YQhvIYV08HwO78upA/bOCCJW4G/6dJYsR7aPiwVQcDLZPFvCfGmSo6u1YkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro; spf=pass smtp.mailfrom=taladin.ro; dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b=oZg/9LFI; arc=none smtp.client-ip=46.102.249.236
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=taladin.ro
+	s=arc-20240116; t=1747298086; c=relaxed/simple;
+	bh=5Cb6EQdZSJNvGfptwnny4AQlzpNOIDRdpBW0ds+Z9XI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r9+qSCGcgXTL8NDRTi5wUTMv+DWSTK6eBG6LgaWphUgU+KuwyoNW45RrCtRCGB1J51rAzvcAR7YIrlIWPdk/oZA4tRCg9X3I6tw0iZu6QntfridcdPgL5mgyKiH8ou9pRk0t1bEw0+hHsmoMX+38k2mqNRC+1MXoYrVjrnBDE0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L40qgghT; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b="oZg/9LFI"
-Received: from cloud347.c-f.ro ([185.236.86.218])
-	by cleanserver2.mxserver.ro with esmtps (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <asoponar@taladin.ro>)
-	id 1uFTly-001Vuu-IH; Thu, 15 May 2025 04:17:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=taladin.ro;
-	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=UFB0QqKFqo4QjZyGDVXEQR2DAdpo2Z7EMAgmApIGyy8=; b=oZg/9LFIGexOaI/olQutKUJGjM
-	3zhKyPZnp28xMCRBMmLuUYYr9Im60xxOlEfSk62kgrAG3mkQzjJWRZfAIjWR5JyUxonfcYqrOgwp3
-	3qqRUT/wkjAWJZf+9bRMvkYJT+wjQ6XTZGYC9nQjjmoAWqUZvk4lhLZs3f4upuCG4D5YTi5+h9mJP
-	nd2APBW7mPfOklJ/mj7OCvxlVrH8NChL+W7MRDwo+tV+vDXvieeu7ZFEGc34AG0tXpuCyYl36k7ys
-	LNdJYnY61Iyi03h0lCHKQBKdZpBF3I9WI8SkJ7qan8l7i3ogfaoMgeAKcwiv1wNpEOAQ26b245CgD
-	337agYew==;
-Received: from [109.166.137.172] (port=37888 helo=localhost)
-	by cloud347.c-f.ro with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <asoponar@taladin.ro>)
-	id 1uFTlm-00000006q8Q-3e7Y;
-	Thu, 15 May 2025 11:16:55 +0300
-From: Alexandru Soponar <asoponar@taladin.ro>
-To: linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	linux-watchdog@vger.kernel.org
-Cc: jdelvare@suse.com,
-	linux@roeck-us.net,
-	jic23@kernel.org,
-	pavel@ucw.cz,
-	lee@kernel.org,
-	baocheng.su@siemens.com,
-	wim@linux-watchdog.org,
-	tobias.schaffner@siemens.com,
-	angelogioacchino.delregno@collabora.com,
-	benedikt.niedermayr@siemens.com,
-	matthias.bgg@gmail.com,
-	aardelean@baylibre.com,
-	contact@sopy.one,
-	Alexandru Soponar <asoponar@taladin.ro>
-Subject: [PATCH 03/16] hwmon: ina3221: Fix type incompatibility with non-macro find_closest
-Date: Thu, 15 May 2025 11:13:19 +0300
-Message-ID: <20250515081332.151250-4-asoponar@taladin.ro>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250515081332.151250-1-asoponar@taladin.ro>
-References: <20250515081332.151250-1-asoponar@taladin.ro>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L40qgghT"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so4728485e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:34:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747298082; x=1747902882; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=NTNydlf5rwZIjCPw7zUm7fKdllwCFJguNUgD96Q4Uu8=;
+        b=L40qgghTU4C9HPRMXR0dQucVc4OCWdwSPFboKBszqDGafcoxYr5Btcf4udpSNyL4FQ
+         XSTLmv/wscKxS7H3zBRMRjOh6bt8vvDPuYzsSye7dOUUKGIlqAL0RDizWytPa98ZkiOj
+         9bb9WPAsUzrbrdjH45Vk9MmKEYAU9jmiivK2onHnI535MNOtCzIPtv1NO413TKO8pyC6
+         wbR3KDKHP2rUVCkTkAWfOFGAWCTxqsdZ2yo2lTsJxm2PbyUZcx4Lz43qJxfQyIybKUT6
+         PEPIscv9DzLxXdYSTpwnBcWaveb2+z/AfWzTEsB/eWH8zmMLQVEjS2K8y4jjxtvRoAt7
+         jbhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747298082; x=1747902882;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NTNydlf5rwZIjCPw7zUm7fKdllwCFJguNUgD96Q4Uu8=;
+        b=ScFwPxvqfi+0hp/N3u37Mey39UmiMUpi9gbUOsqsemNFHbXD4VKzFxXBNuxTCOr6CH
+         DgM3W9C/M8aNQj8ri2HtfxikLkZbVdSCJuQWe35AFLRn+p2qLRKxiS06X0hVVEmp8z4+
+         kFZjCv0EfmhtwcG5nFmTNSklFjbmoAULvPEFyXdGfj1uB8ljlHPCcvhzdgEYeGgfkJXv
+         9DEED/x/4cc/QD0xup8lPdpM6M3uQ/2B3zA/8iSvroUJdqTtmUEcrJX9fnFsZf2ujB3K
+         wzz3D9udJXLZfmp6pplZRfJH26FxkDeJNI8mqlFqSpEuOxjIy1+tno/BpF2iXHqVN5L0
+         PhkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWPkKocRBitdr7LOF6zmJ0REGwafVTt88VhatG4cI5kXNcpeM9+YXyA77jxXj+cfDYLbxhvEyfK5Q2mdlE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfzXuu1aVR4zfDmdQERt+aWurWpxrKOmcOvtzj1/Q2xrCsjZ1a
+	CFDQmb4Ki9rXihtFXKL/kwF0/eVLz/m/l2PW2kT3JjV/tB4r394Z1zBb7y8p7LZ6AbQ=
+X-Gm-Gg: ASbGncsNjjdhWBXvt+fk5Au08reocu4VSroGEizBfKOuLEU3lKPzxX5lvmBLa/RX3FJ
+	GL5kW3WLsOtdupXFmfzKvPIN8EzDZs1Y3ypx5NFcsYgtQVpsTHzxnu/LYPhODzKApsIkvAQf0l5
+	A/M2dV6uisG3GSDE4hfL8t0hesAYuQUmGUiGlrsSaJHj/mzhltfzMOwig0unFIXXj0LsK6Q9E82
+	ZXDSBw1n7uqpi0pmmTLvASXY28OUrUfqvo7ZwsuYXVJEFLeU+N8G0GIdHWZBNuBgdw2aTuV8ZMy
+	ZAFUTr/UXCzpbyrkPZ7kj/FkORyIl26+97GEOphRv1pMYduEpqXyo6hz1zVNuszoJl14EJ9F0Ue
+	gUUw2xQvGVdJtJQ==
+X-Google-Smtp-Source: AGHT+IG2bIbDRbPIb0zDXbKIFTjTwG3dmfj81Y0Pa+mphZgCx6Es+dFTY7SfBNrnVwGtvcAMyRjyQA==
+X-Received: by 2002:a05:600c:3d0d:b0:442:ea3b:9d72 with SMTP id 5b1f17b1804b1-442f84ca3ecmr23841765e9.5.1747298082371;
+        Thu, 15 May 2025 01:34:42 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f39794cdsm61538495e9.38.2025.05.15.01.34.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 01:34:41 -0700 (PDT)
+Date: Thu, 15 May 2025 10:34:40 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: timer: Convert marvell,armada-370-timer to
+ DT schema
+Message-ID: <aCWnIBAPBVqBHGHJ@mai.linaro.org>
+References: <20250506022301.2588282-1-robh@kernel.org>
+ <202505082358.dnIeqrs0-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SpamExperts-Domain: cloud347.c-f.ro
-X-SpamExperts-Username: 185.236.86.218
-Authentication-Results: mxserver.ro; auth=pass smtp.auth=185.236.86.218@cloud347.c-f.ro
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: SB/global_tokens (0.00179392393933)
-X-Recommended-Action: accept
-X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT8YP3XPz971hchIDSqEbakuPUtbdvnXkggZ
- 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5w1OL79HMxE022P+rQy8YAdcSeERs4TOTnIH1kc1IWc5TSx
- S75yz9IFZiY7BarU/NrpK8SEOwGmfn6ucAKqn/OHRh3BqzFaEnAEj4UixLJBjVNiLZt/QXQnOBRD
- +jq1HsIBmHTFdhqXZEtguZY7iGKpkcJnJKaJfT+dw1udmv00tbIRNtoyOobb3xnDyRRylAVTYi2b
- f0F0JzgUQ/o6tR7C8pLPCtTiVLo0r89ClJHDKhDGKgJ+T00JeCnHBmMdB1eMZAyYlfUtEN4pUyes
- jVRntA/J5DcfwvG53FyVviDO9UET3GKmqv1jT0lY+AQz8YX4CVph7ctC7tRH2SPTQJ/0klTuXKq/
- B9rqRWsYzNfBLt79i78aPHyWnIqxGMxPZotYvH/es1vXuByXo2bkrYMqq0x5CzaUoJIoBUQayHle
- UvbvCQmh9x4kn6NeQcRkc6G+OgAcq5x+BzhRyg9rYO6I0H7Q2OEpckvWJAOmdJd77Z9vwc+QHB+X
- +u7aTqYHtT2CBuxNPBc9JM2jck1NnIBf0tvflhq7Xjhll72AYgnW/6M0ftSpvLIx+X1vKami8KF6
- jWQ71uVNIY/EFPWeDmcZuFRQy1vmjjPiYw8fUCp0/qY6cmSW9oUDdvKuTRfTGZ6f8nTXoYFaQ71l
- mMti8uxA0gKVmIzBXtbLDVvAQ/KVNTP+CYrCDLMKtbUjADVLUfiSAN5VcIfsMVILjVAz6RZsCHxD
- lgOJwEwCFaF+62b2lf1UUDu9jECN1V/lwmsioRLmNJoHOZOE/9e5UD715p61XAQw85DCXa0iAPEd
- fYyrF5wMRSLGyY+i0m2IxQLxQUzTb3Mji+CrO1+NTWs5OBXbSDBPqdRoFsq0hfzdx0oxkgNI/jhY
- WFhu7VV+HdWjdZLlmQ5z83qEVVG/6RJ+BW7FmGcwL889DSW2cZWGkIYVQAbHnYkWUz1gRIjAiMvi
- vM7um7t0SVa5NVZ2g1u6DnOpqk1nwAzTSgytNKIH5lfAuQc8I07FTFcjpdfX/Jcr87en7cKbI0NU
- afdkQMG+6qjtXoANVR89VM6f75a5kmRIbungV7ywXD8VtmM8wef5C6IkqMFhROX1HYRo9Sm1kZOW
- saz62DSUUd/fn3Ix/aSqJVglEtnFggTvi4y/qO0sxBxzHDeqqFz43py4SDhdaHkWOGxZQgSAzbb+
- OB/nFYi5VbOv2oY4HXLSfAUu3sMpupZGSAJZedccoId9/9sBGfwPMvYnkNWjwSQDaUU9MqYUCeef
- 0nlkmUPzlfoLUG4g/XHuva4NQ7gH1kLtR+dZ31Wj92PNDpgLsd6Ddd/s7VM53twrVC8K+lj1c6e/
- tTmd6eMo8njYQeCXryE9YzCFXixhwvxmPq7Q0oK0JlkJQ2noHi2tPmCjLtpYrURqjuMqXHdr/yiP
- gGFyxS1LuwmPRAQzaEJVYkfhZXq/u54kZVCWtfUf9oDBqtClgM5jH/om1Q6gjkapWNvVA5HRyb3X
- trWYR6vnFpUUmgU46LTsHtrjRqVe/ojyw7bapws3danDDsxD6gvvWu5/Lf1bKbM1VroDfVYPkwIu
- /8x7KhILIr1IfwgT9kxT5f4reZBSMLp/jH4zvQRYQJnl3XNqRK2lK/zP
-X-Report-Abuse-To: spam@cleanserver1.mxserver.ro
-X-Complaints-To: abuse@cleanserver1.mxserver.ro
+In-Reply-To: <202505082358.dnIeqrs0-lkp@intel.com>
 
-The ina3221_conv_time array was previously declared as u16 but used with
-find_closest(). With find_closest() now implemented as a function taking
-signed int parameters instead of a macro, passing unsigned arrays causes
-type incompatibility errors. This patch changes the array type from
-u16 to int to ensure compatibility with the function signature and
-prevent compilation errors.
+On Thu, May 08, 2025 at 11:42:26PM +0800, kernel test robot wrote:
 
-Signed-off-by: Alexandru Soponar <asoponar@taladin.ro>
----
- drivers/hwmon/ina3221.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Hi Rob,
 
-diff --git a/drivers/hwmon/ina3221.c b/drivers/hwmon/ina3221.c
-index 1bf479a0f793..482ab8e53d5c 100644
---- a/drivers/hwmon/ina3221.c
-+++ b/drivers/hwmon/ina3221.c
-@@ -178,7 +178,7 @@ static inline int ina3221_summation_shunt_resistor(struct ina3221_data *ina)
- }
- 
- /* Lookup table for Bus and Shunt conversion times in usec */
--static const u16 ina3221_conv_time[] = {
-+static const int ina3221_conv_time[] = {
- 	140, 204, 332, 588, 1100, 2116, 4156, 8244,
- };
- 
-@@ -192,7 +192,7 @@ static inline u32 ina3221_interval_ms_to_conv_time(u16 config, int interval)
- {
- 	u32 channels = hweight16(config & INA3221_CONFIG_CHs_EN_MASK);
- 	u32 samples_idx = INA3221_CONFIG_AVG(config);
--	u32 samples = ina3221_avg_samples[samples_idx];
-+	int samples = ina3221_avg_samples[samples_idx];
- 
- 	/* Bisect the result to Bus and Shunt conversion times */
- 	return DIV_ROUND_CLOSEST(interval * 1000 / 2, channels * samples);
-@@ -204,8 +204,8 @@ static inline u32 ina3221_reg_to_interval_us(u16 config)
- 	u32 channels = hweight16(config & INA3221_CONFIG_CHs_EN_MASK);
- 	u32 vbus_ct_idx = INA3221_CONFIG_VBUS_CT(config);
- 	u32 vsh_ct_idx = INA3221_CONFIG_VSH_CT(config);
--	u32 vbus_ct = ina3221_conv_time[vbus_ct_idx];
--	u32 vsh_ct = ina3221_conv_time[vsh_ct_idx];
-+	int vbus_ct = ina3221_conv_time[vbus_ct_idx];
-+	int vsh_ct = ina3221_conv_time[vsh_ct_idx];
- 
- 	/* Calculate total conversion time */
- 	return channels * (vbus_ct + vsh_ct);
+> Hi Rob,
+> 
+> kernel test robot noticed the following build warnings:
+> 
+> [auto build test WARNING on tip/timers/core]
+> [also build test WARNING on linus/master v6.15-rc5 next-20250508]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Rob-Herring-Arm/dt-bindings-timer-Convert-marvell-armada-370-timer-to-DT-schema/20250506-144131
+> base:   tip/timers/core
+> patch link:    https://lore.kernel.org/r/20250506022301.2588282-1-robh%40kernel.org
+> patch subject: [PATCH] dt-bindings: timer: Convert marvell,armada-370-timer to DT schema
+> reproduce: (https://download.01.org/0day-ci/archive/20250508/202505082358.dnIeqrs0-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202505082358.dnIeqrs0-lkp@intel.com/
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    Warning: Documentation/translations/zh_CN/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
+>    Warning: Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
+>    Warning: Documentation/translations/zh_TW/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
+>    Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
+>    Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/backlight/ti,lp8864.yaml
+> >> Warning: drivers/clocksource/timer-armada-370-xp.c references a file that doesn't exist: Documentation/devicetree/bindings/timer/marvell,armada-370-xp-timer.txt
+
+Will you send a separate to fix the reference in the driver ?
+
 -- 
-2.49.0
 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
