@@ -1,190 +1,175 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180AA18FC91;
-	Thu, 15 May 2025 14:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 082F117B4EC;
+	Thu, 15 May 2025 14:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747318928; cv=none; b=nrBeaB+vbio3sWj+hPkByxOcc362qK5yrDPXK6FYLBBxfpUyzdOhElTTRgyZxjvTEGsbZb077tXCQ4UK3jUJ2oRYV5+DkKqZLAT8YqCUWU7ykRmI6Tp4HD9cUoiRWlTABDOQoNHcyHYw0JTJutW6YaKRhK560vVM/4I3fB4s+/U=
+	t=1747318950; cv=none; b=joM8RxkegyhMCueLHGyzHNzN0WtM/qPClssQjuR9VRawmvxkYH6BWajcq8fbudzuM9o0AS6PqvQ7S8friYjzQH8eLxOuuuqdNJffRycgPCZM4fLScTTA8kAHiTZHJz0UGfjJT6POZffoG5ZzVgHemAZZ8mGOkQALVxzgevIhw6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747318928; c=relaxed/simple;
-	bh=dHqEeggz/sGBQSp6+BlyRI5Po6EHhiF7PVmQa+VQnfI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L++8PbFvODQhz50SR/t1BRIoHtsTTUX2FMnlbUzlRKRSF0ACvHMjLpKQZMUFf4t9bjSZgq8YjXfpJGEO8GPgkSW2rnZ/KoZJCeah9FDX1Sm1R93dKZKghvBh/Dj1d552+XHlAmDz//Pyn/cChiEQMXDEXaFoG+N4RmX74H+0ULk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H0+PtxAP; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747318950; c=relaxed/simple;
+	bh=1EvE9OCT8E5lKaCBelG2B3aHzesGzPxE0dyR0c+6G8s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bJ4LQPkx5nMWLsu5cJu4wn8oTPgRR2ictyoqoyd0CUIoiEVvBwDWmjFQlGgeGmBUp0heIGI2H2KlvTAUbl0GPYJSashgsygEX4UhciPgmR8sCx173DO6BGctjZGSS6apDn5rE27/v81w726d1Qu81qgP8iJvBaiIe2L/ywYg2iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B2YAUcfb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H0+PtxAP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747318927; x=1778854927;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dHqEeggz/sGBQSp6+BlyRI5Po6EHhiF7PVmQa+VQnfI=;
-  b=H0+PtxAPNrRDZOpaYnR9hhLdZ3nqci8DuqeIfMSQSl3i5Ya+qEysN/gV
-   Fuou/inS1qi1pzfYOF3oyadCUw/u0dAGAeFtHH1hjBU8nFgKdW7QVyy6x
-   86HEaYGLfY09XvCL/QOpFJAiVBUl9rsrLKurpt8MecctqiOW1LPNLCWAy
-   dTC+vXBh5StECyo+BgNVaLs08IUqC6dzAWE0dTDiR9X3bWJV6qWBxRMwM
-   24UMGeEvT9CgSxqgJq2kt0X/bxK9E7ZKEMpHECVgweTeItrnbW4iITrQs
-   +NL9JWgXAaBjoB1jURZdLxTMRjkFoZPbFJsvpnoi4mBZIoEvKZghHLHy3
-   g==;
-X-CSE-ConnectionGUID: 8HjmMDMRQ/y/jfMUabLS8A==
-X-CSE-MsgGUID: EM5WIFYqT0KVPhAJ9HUiAw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="60597584"
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="60597584"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 07:22:06 -0700
-X-CSE-ConnectionGUID: 3Ica6LFpTe2/lrzVobNRMg==
-X-CSE-MsgGUID: scHxO3ftQwOEFQSNhwV6Vg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="138264488"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa006.fm.intel.com with ESMTP; 15 May 2025 07:22:02 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 0900238D; Thu, 15 May 2025 17:22:00 +0300 (EEST)
-Date: Thu, 15 May 2025 17:22:00 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: pbonzini@redhat.com, rick.p.edgecombe@intel.com, 
-	isaku.yamahata@intel.com, kai.huang@intel.com, yan.y.zhao@intel.com, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, kvm@vger.kernel.org, 
-	x86@kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [RFC, PATCH 00/12] TDX: Enable Dynamic PAMT
-Message-ID: <pla54zy4z27df57uxmzuog26mddiezbwsyrurnjxivdkg5dibx@574tcxdgjru2>
-References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
- <aCSddrn7D4J-9iUU@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B2YAUcfb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB8F9C4AF0B;
+	Thu, 15 May 2025 14:22:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747318949;
+	bh=1EvE9OCT8E5lKaCBelG2B3aHzesGzPxE0dyR0c+6G8s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=B2YAUcfbYZyp2Tjf0INenGzALuYbjnsSWkNybo1ET3lF5cfKU0sS3/fkC3ehneaeB
+	 hBPBcNj+NUeFhmSuVYkQFbaZQI0Xo3UjB0N+Dgtb90ex2PqVZoPppyikcAz/eYtRAA
+	 4SnEXpXssqOiLUniCGRdRD7/meDX2ABhsSmtC3MseoBemmldx0ry8Ws5EyJaOUvHZu
+	 GX20j/Q42URBnJW+9LcxBANAnBDUtV9y6IjFDOIQ6QBJrq/orhh84DxLQKaPPW7jzj
+	 dEANybJkQ/i9555roEVwyWDnPRkwUgGJSOqkfh/iElex4T7urHaDCNJTa/pwoGVL+s
+	 j+bg9WdkOEU1A==
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-3104ddb8051so10866341fa.1;
+        Thu, 15 May 2025 07:22:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU04sACW5kmgLs4NWQy01VOVvpvRIHW+ljLZXLgdxHGhbxNglpdTzz/hh1sReJfmmUQAE4izlhf4XnpsFt2@vger.kernel.org, AJvYcCVV2UdDKzBCSCpMJW5s2HASqU3qcu3qAx4fFrxEDFy1yiucTTXHyLyFfCr8xfTg8HJD0llw81CkRH8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw47rIz4evG0VUFc/jGWKjuymxC4ruV1yzr0FsnmSDORdw0h8V/
+	duFd0qSlH19CDasI7jGFXoP/gFE2eWk0FGYJjJhrqEzbW8ZDercONmEMMzUAdNBnTIQYmVsSMYJ
+	3aRl/dM1c/H5+AmG12KTIHaxb1pI=
+X-Google-Smtp-Source: AGHT+IEQUD4iN3LyOBcAAFU5TbPVzv65op3g5tPxcj0hmyEQvpFt0vwHfSf980AAeB81OQl80rUez6szs1q+xt2je2U=
+X-Received: by 2002:a2e:a9a6:0:b0:30b:bba5:ac18 with SMTP id
+ 38308e7fff4ca-327ed088399mr32723931fa.3.1747318948180; Thu, 15 May 2025
+ 07:22:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCSddrn7D4J-9iUU@google.com>
+References: <20250512190834.332684-23-ardb+git@google.com> <20250512190834.332684-24-ardb+git@google.com>
+ <20250515111000.GBaCXLiEi0_bG1qVzx@fat_crate.local>
+In-Reply-To: <20250515111000.GBaCXLiEi0_bG1qVzx@fat_crate.local>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 15 May 2025 15:22:14 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXFadOW5pHLWBEdw=wt+5WHpcjY5RdWgyA7pOW149ByEDg@mail.gmail.com>
+X-Gm-Features: AX0GCFvaQdItb8Yn0h0VLAkM9sCJ12in6suYlAfQoGDX5cgknSr4R7xsrmmgCP8
+Message-ID: <CAMj1kXFadOW5pHLWBEdw=wt+5WHpcjY5RdWgyA7pOW149ByEDg@mail.gmail.com>
+Subject: Re: [RFT PATCH v3 01/21] x86/sev: Separate MSR and GHCB based
+ snp_cpuid() via a callback
+To: Borislav Petkov <bp@alien8.de>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
+	linux-efi@vger.kernel.org, x86@kernel.org, Ingo Molnar <mingo@kernel.org>, 
+	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 14, 2025 at 06:41:10AM -0700, Sean Christopherson wrote:
-> On Fri, May 02, 2025, Kirill A. Shutemov wrote:
-> > This RFC patchset enables Dynamic PAMT in TDX. It is not intended to be
-> > applied, but rather to receive early feedback on the feature design and
-> > enabling.
-> 
-> In that case, please describe the design, and specifically *why* you chose this
-> particular design, along with the constraints and rules of dynamic PAMTs that
-> led to that decision.  It would also be very helpful to know what options you
-> considered and discarded, so that others don't waste time coming up with solutions
-> that you already rejected.
+On Thu, 15 May 2025 at 12:10, Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Mon, May 12, 2025 at 09:08:36PM +0200, Ard Biesheuvel wrote:
+> > From: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > There are two distinct callers of snp_cpuid(): one where the MSR
+> > protocol is always used, and one where the GHCB page based interface is
+> > always used.
+>
+> Yeah, let's stick to the nomenclature, pls: you have a GHCB protocol and a MSR
+> protocol. We call both protocols. :)
+>
+> > The snp_cpuid() logic does not care about the distinction, which only
+> > matters at a lower level. But the fact that it supports both interfaces
+> > means that the GHCB page based logic is pulled into the early startup
+> > code where PA to VA conversions are problematic, given that it runs from
+> > the 1:1 mapping of memory.
+> >
+> > So keep snp_cpuid() itself in the startup code, but factor out the
+> > hypervisor calls via a callback, so that the GHCB page handling can be
+> > moved out.
+> >
+> > Code refactoring only - no functional change intended.
+> >
+> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > ---
+> >  arch/x86/boot/startup/sev-shared.c | 58 ++++----------------
+> >  arch/x86/coco/sev/vc-shared.c      | 49 ++++++++++++++++-
+> >  arch/x86/include/asm/sev.h         |  3 +-
+> >  3 files changed, 61 insertions(+), 49 deletions(-)
+>
+> ...
+>
+> > @@ -484,21 +447,21 @@ snp_cpuid_get_validated_func(struct cpuid_leaf *leaf)
+> >       return false;
+> >  }
+> >
+> > -static void snp_cpuid_hv(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
+> > +static void snp_cpuid_hv_no_ghcb(void *ctx, struct cpuid_leaf *leaf)
+>
+> Uff, those suffixes make my head hurt. So this is the MSR prot CPUID. Let's
+> call it this way:
+>
+>         snp_cpuid_msr_prot()
+>
+> and the other one
+>
+>         snp_cpuid_ghcb_prot()
+>
+> All clear this way.
+>
+> >  {
+> > -     if (sev_cpuid_hv(ghcb, ctxt, leaf))
+> > +     if (__sev_cpuid_hv_msr(leaf))
+>
+> __sev_cpuid_msr_prot
+>
+> >               sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_CPUID_HV);
+> >  }
+> >
+> >  static int __heada
+>
+> Let's zap that ugly linebreak.
+>
+> > -snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
+> > -                   struct cpuid_leaf *leaf)
+> > +snp_cpuid_postprocess(void (*cpuid_hv)(void *ctx, struct cpuid_leaf *),
+>
+> Let's call that just "cpuid" now that it can be different things and it is
+> a pointer.
+>
+> > +                   void *ctx, struct cpuid_leaf *leaf)
+> >  {
+> >       struct cpuid_leaf leaf_hv = *leaf;
+> >
+> >       switch (leaf->fn) {
+> >       case 0x1:
+> > -             snp_cpuid_hv(ghcb, ctxt, &leaf_hv);
+> > +             cpuid_hv(ctx, &leaf_hv);
+> >
+> >               /* initial APIC ID */
+> >               leaf->ebx = (leaf_hv.ebx & GENMASK(31, 24)) | (leaf->ebx & GENMASK(23, 0));
+> > @@ -517,7 +480,7 @@ snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
+> >               break;
+> >       case 0xB:
+> >               leaf_hv.subfn = 0;
+> > -             snp_cpuid_hv(ghcb, ctxt, &leaf_hv);
+> > +             cpuid_hv(ctx, &leaf_hv);
+> >
+> >               /* extended APIC ID */
+> >               leaf->edx = leaf_hv.edx;
+> > @@ -565,7 +528,7 @@ snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
+> >               }
+> >               break;
+> >       case 0x8000001E:
+> > -             snp_cpuid_hv(ghcb, ctxt, &leaf_hv);
+> > +             cpuid_hv(ctx, &leaf_hv);
+> >
+> >               /* extended APIC ID */
+> >               leaf->eax = leaf_hv.eax;
+> > @@ -587,7 +550,8 @@ snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
+> >   * should be treated as fatal by caller.
+> >   */
+> >  int __head
+>
+> And that ugly linebreak too pls.
+>
+> ...
+>
+> Here's a diff ontop with my changes. I think it looks a lot saner now and one
+> can really differentiate which is which.
+>
 
-Dynamic PAMT support in TDX module
-==================================
-
-Dynamic PAMT is a TDX feature that allows VMM to allocate PAMT_4K as
-needed. PAMT_1G and PAMT_2M are still allocated statically at the time of
-TDX module initialization. At init stage allocation of PAMT_4K is replaced
-with PAMT_PAGE_BITMAP which currently requires one bit of memory per 4k.
-
-VMM is responsible for allocating and freeing PAMT_4K. There's a pair of
-new SEAMCALLs for it: TDH.PHYMEM.PAMT.ADD and TDH.PHYMEM.PAMT.REMOVE. They
-add/remove PAMT memory in form of page pair. There's no requirement for
-these pages to be contiguous.
-
-Page pair supplied via TDH.PHYMEM.PAMT.ADD will cover specified 2M region.
-It allows any 4K from the region to be usable by TDX module.
-
-With Dynamic PAMT, a number of SEAMCALLs can now fail due to missing PAMT
-memory (TDX_MISSING_PAMT_PAGE_PAIR):
-
- - TDH.MNG.CREATE
- - TDH.MNG.ADDCX 
- - TDH.VP.ADDCX
- - TDH.VP.CREATE
- - TDH.MEM.PAGE.ADD
- - TDH.MEM.PAGE.AUG 
- - TDH.MEM.PAGE.DEMOTE
- - TDH.MEM.PAGE.RELOCATE
-
-Basically, if you supply memory to a TD, this memory has to backed by PAMT
-memory.
-
-Once no TD uses the 2M range, the PAMT page pair can be reclaimed with
-TDH.PHYMEM.PAMT.REMOVE.
-
-TDX module track PAMT memory usage and can give VMM a hint that PAMT
-memory can be removed. Such hint is provided from all SEAMCALLs that
-removes memory from TD:
-
- - TDH.MEM.SEPT.REMOVE
- - TDH.MEM.PAGE.REMOVE
- - TDH.MEM.PAGE.PROMOTE
- - TDH.MEM.PAGE.RELOCATE
- - TDH.PHYMEM.PAGE.RECLAIM
-
-With Dynamic PAMT, TDH.MEM.PAGE.DEMOTE takes PAMT page pair as additional
-input to populate PAMT_4K on split. TDH.MEM.PAGE.PROMOTE returns no longer
-needed PAMT page pair.
-
-PAMT memory is global resource and not tied to a specific TD. TDX modules
-maintains PAMT memory in a radix tree addressed by physical address. Each
-entry in the tree can be locked with shared or exclusive lock. Any
-modification of the tree requires exclusive lock.
-
-Any SEAMCALL that takes explicit HPA as an argument will walk the tree
-taking shared lock on entries. It required to make sure that the page
-pointed by HPA is of compatible type for the usage.
-
-TDCALLs don't take PAMT locks as none of the take HPA as an argument.
-
-Dynamic PAMT enabling in kernel
-===============================
-
-Kernel maintains refcounts for every 2M regions with two helpers
-tdx_pamt_get() and tdx_pamt_put().
-
-The refcount represents number of users for the PAMT memory in the region.
-Kernel calls TDH.PHYMEM.PAMT.ADD on 0->1 transition and
-TDH.PHYMEM.PAMT.REMOVE on transition 1->0.
-
-PAMT memory gets allocated as part of TD init, VCPU init, on populating
-SEPT tree and adding guest memory (both during TD build and via AUG on
-accept).
-
-PAMT memory removed on reclaim of control pages and guest memory.
-
-Populating PAMT memory on fault is tricky as we cannot allocate memory
-from the context where it is needed. I introduced a pair of kvm_x86_ops to
-allocate PAMT memory from a per-VCPU pool from context where VCPU is still
-around and free it on failuire. This flow will likely be reworked in next
-versions.
-
-Previous attempt on Dynamic PAMT enabling
-=========================================
-
-My initial kernel enabling attempt was quite different. I wanted to make
-PAMT allocation lazy: only try to add PAMT page pair if a SEAMCALL fails
-due to missing PAMT and reclaim it back based on hint provided by the TDX
-module.
-
-The motivation was to avoid duplication of PAMT memory refcounting that
-TDX module does on kernel side.
-
-This approach is inherently more racy as we don't serialize PAMT memory
-add/remove against SEAMCALLs that uses add/remove memory for a TD. Such
-serialization would require global locking which is no-go.
-
-I made this approach work, but at some point I realized that it cannot be
-robust as long as we want to avoid TDX_OPERAND_BUSY loops.
-TDX_OPERAND_BUSY will pop up as result of the races I mentioned above.
-
-I gave up on this approach and went with the current one which uses
-explicit refcounting.
-
-
-Brain dumped.
-
-Let me know if anything is unclear.
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Thanks, I'll fold that in.
