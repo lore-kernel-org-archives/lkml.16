@@ -1,170 +1,145 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938E1278758;
-	Thu, 15 May 2025 18:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B99268FF4;
+	Thu, 15 May 2025 18:26:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747333573; cv=none; b=J9uw4GyDP8lR1ijL7X2cGpsBLXzRCxZYqti54GL/SzGvTyKN5tI/ao5948SUSgYQ6CEkqsUcvenPHN9577WdaHWVwAmY3MHHDUWvrT3LulEI+fNNBtXcBoZXNY3k0EeMWrd4974D5r8xIHESfo1gTNt4a1ct0Rd9PGzNJs8fn+o=
+	t=1747333585; cv=none; b=GkbwXlIDvFMvCQwzYhQVovhcNVWkBWwASikD9T8ruT6KF8/M0vbb1ioPHxaM5eMMIje9klDvtWu8R+fpw9Szkt8ttoKjcXKHTkj4GQL/cI8DLZj3IN7Cq8JYWzp57VeiXc43Nq+9Sy1Cg8PaUzVVsLs47FbUshLPubIG5rR0QXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747333573; c=relaxed/simple;
-	bh=Mpt2D5SW3J+JXAsIavOCVQrlEtSXBxBsbs2nOTFBqOw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=p5VQ6WuaWNvQ4x+Doeq02L2v0Z1lBWY0up0TKVy8xcMq5r0IQv0sX7Bt2i5NMOWzxDn5yjSsxHJowsewqH4ZPoa0JN89562Qt2fKOv5aoSFehNOoGeofBcxCxFpKBiNL3s/wlfDLWAt2//b/hXbjzucBUFcUVXspO9dHicaP+H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HMGHT2Lb; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747333585; c=relaxed/simple;
+	bh=Er8ny9lxCBgUWnz+sHHvT4Fhbs6msiuWaemw09FZeBw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yk2/dQlNruGk0GO13eu8NxRgAIKN+717xdn1/5DyONzgBsO2eIwMULjxqkawQXk1I/sS8tpxsiDG9GVXhAh7wfqNNbDH5RpYzI/eMDQ7KNL3B/NR7aSnU/1iYT38KkxabkX9v41BGSiht3PgfaCPYOK0hy7ppzeVAXpEqJYCmrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rby+fKUH; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HMGHT2Lb"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54FEFBvS014558;
-	Thu, 15 May 2025 18:26:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	XYwF+dxBGbym+utNkNA9FAO3g4d9P4COqwdlmhWtfzo=; b=HMGHT2Lbdwad1oAK
-	bwuFw6s24Oh1T3nlYBCrnGDO+aH2FqeiCI8W1qLi5ogfyRs//Y8rP38SuG1LdxP1
-	NkUAFb506vbJ2+f4JjoazuHZctGmHC7/5NlbDUKjGImJ/6KLoVYJVDuGaMj9hjk1
-	TDZeaLpAQBK1r/zhyOK2zYExN8vQXML9OYvDYvX21ilzSKj4nMeBLg7VMGPcuEXb
-	tX1dautjsAiiK6pCeBB1X29SLIyfZC/tPDs0fD5L+2eW8+LafGqAr+Krpr2owslC
-	LaF0R/6E5s9awSG1QQAcIfYoHidr9PELWkFyIvS7CcxkEKmFIVFO3QVqqRFZbY/m
-	y6Jnsw==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcpfby9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 May 2025 18:26:04 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54FIQ44f006684
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 May 2025 18:26:04 GMT
-Received: from [10.50.16.181] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 15 May
- 2025 11:26:00 -0700
-Message-ID: <13887de6-4f84-9d0c-bd48-de6f0472d9ef@quicinc.com>
-Date: Thu, 15 May 2025 23:55:57 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rby+fKUH"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7376e311086so1645610b3a.3;
+        Thu, 15 May 2025 11:26:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747333583; x=1747938383; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Uj0LtzRLhIFWXGcUWC5fKiB0khJM4entuRQ4J8wuno=;
+        b=Rby+fKUHTl7Rrnndcl3PbNcYQ9NBhQeq8mvguXOREGUZZwhso9jsafnbYuXqKBj5tV
+         icfF025TanXmTFqn7vc/7cfJ0der2o7AXrOQXGFL4Xvcrh0ZZdE1EiEkbj02aoCZrjmV
+         3Y+YmMdbXdvjA74iVvSKKDAy53n5tQeZmJKb/NYmsU32sF/AzVo5LL/HX8F2hiSspqn/
+         qTS47TK4Qh9f2QofXYi24hc3e3BhRh7zy1q8n76qUF3We7c9UnaPM48z1kBf6opTD2tg
+         w2aw1bNprMkrYGxQK6kiZFMvI0lDrNg98Ctd0Wf+rHnziwR3dKZdiSUGGr1EhqsWw8gU
+         qRLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747333583; x=1747938383;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2Uj0LtzRLhIFWXGcUWC5fKiB0khJM4entuRQ4J8wuno=;
+        b=DUF30jP+ogkQwnlf+8o1tebtEmubLwKFmNCdaWoPKRUfKs2J9n6M0qFI5TJMCRaZo1
+         O7n9ycSnKKfGItrLhQ13e24KQ8cSes6BqIO3knYTgsNfaD7SZaSx0knM8E1vbUqjif7/
+         XUR4t/IpM+OH9YpNnXebl+qBkHeyum3F8sCIspIgfghkzl/DdwaUoBYe+mmfrvfZA5r5
+         b6+DOBVY9cvENENi4QUDMBBT93le+KJAajVo0MoHZir7LlWOk5A34bfXwgKkNPdFHAlB
+         29VBZeUUsh3pLiO5RMGhEnEaa74MBd0GDG6ECdJYkwOaoN1KczjMHmXMszoOoAuYoEll
+         U33Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUo/4FdKHIobxlTJg+qD7iUZUQ4GVZnS57nWu7/EL4Pz1wrg2Wp0eLIChSt5SnZNQI//VEIeQNGhLthQ6Q=@vger.kernel.org, AJvYcCX2C0jKKMib7eFbw8E/e1zaWHIfbFSYgtShjeXdqGEovF3kvGLn1MxI7tchNfoxpVtDo0q/Xrpa@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYsvISDQIxEH1TPahL4Ig3JPDAF+6gi7O4O10fZ4L9FKcV7Asu
+	p0mwNa8Nn/ySyb1C0ZtQv7maHwv2ftM99//mUjXyVsglN3yRCxZ0fII=
+X-Gm-Gg: ASbGncv/QiR1cGOIR2CvOy4Dk3Ai61WYILfXvmoxRtgxgsfUF20wvnML30R3tUTEtbL
+	Bp5a0wjDKfF8EMnyqpTGZH7BPrG3ZpR+5MN1r4SvcGZRvvH7BVwXoOpnqAsvPqqGpuiWft+pXaD
+	D/ZCIypDooFEA5Vc/6MVgrIloj+fbjFydjQqWlDGClBIMWs+19+5bYbZWV7HUPmZaAK/UdfZHo9
+	NqLwaJ/OQIOf4ar/NOQ101/94iqreoMzWWWr0Sp+G5xfuBQpxMcIVgyKBovHKzunQAQ1hgorfAg
+	JrwUqYgGrZgfo8i5SmQnINoOz/ADYH9KELIhXHUgMnaOzzTZ8LPGOUVkZSucd3s9tKkUux3Kmdm
+	42AbjJ7TmEeKy
+X-Google-Smtp-Source: AGHT+IEyujidwhcs5yH88nlHnevAd0s2OHIa7bOr/AGAYmCSk71YOYn+TYoH6RSFnHZ5Wd0wf3fAvQ==
+X-Received: by 2002:a05:6a00:114e:b0:740:6fa3:e429 with SMTP id d2e1a72fcca58-742a9802ff9mr500996b3a.11.1747333583141;
+        Thu, 15 May 2025 11:26:23 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-742a970d7c5sm128599b3a.67.2025.05.15.11.26.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 11:26:22 -0700 (PDT)
+Date: Thu, 15 May 2025 11:26:21 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: Jay Vosburgh <jv@jvosburgh.net>
+Cc: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+	jiri@resnulli.us, andrew+netdev@lunn.ch, sdf@fomichev.me,
+	linux-kernel@vger.kernel.org,
+	syzbot+53485086a41dbb43270a@syzkaller.appspotmail.com
+Subject: Re: [PATCH net] team: grab team lock during team_change_rx_flags
+Message-ID: <aCYxzeCgsNI3AKSH@mini-arch>
+References: <20250514220319.3505158-1-stfomichev@gmail.com>
+ <20250515075626.43fbd0e0@kernel.org>
+ <aCYK_rVZ7Tl7uIbc@mini-arch>
+ <aCYUezCpbcadrQfu@mini-arch>
+ <47315.1747327157@vermin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 1/2] media: venus: fix TOCTOU vulnerability when
- reading packets from shared memory
-Content-Language: en-US
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Dikshita Agarwal
-	<quic_dikshita@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Hans Verkuil
-	<hans.verkuil@cisco.com>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Vedang Nagar <quic_vnagar@quicinc.com>
-References: <20250514-venus-fixes-v3-0-32298566011f@quicinc.com>
- <20250514-venus-fixes-v3-1-32298566011f@quicinc.com>
- <ad92cf06-636a-417a-b03b-0d90c9243446@linaro.org>
- <0c50c24a-35fa-acfb-a807-b4ed5394506b@quicinc.com>
- <b0c48989-4ce7-4338-b4bb-565ea8b6cd82@linaro.org>
- <b663539d-5ad6-399b-1e7b-0b8b9daca10d@quicinc.com>
- <bd704149-694f-4d89-90d9-a22307488743@linaro.org>
- <f7df808c-0724-3f4d-b910-6e44637c7aaf@quicinc.com>
- <767909a0-70ea-47d3-b6bf-b57e5d7e7c5c@linaro.org>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <767909a0-70ea-47d3-b6bf-b57e5d7e7c5c@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: HJSC8DRvi1wUVZtNB1-YMeXVPBfFsiYw
-X-Proofpoint-ORIG-GUID: HJSC8DRvi1wUVZtNB1-YMeXVPBfFsiYw
-X-Authority-Analysis: v=2.4 cv=cO7gskeN c=1 sm=1 tr=0 ts=682631bc cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=LHdP8VfB__zOBVWt8VYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDE4MSBTYWx0ZWRfXwEzwy6WIeaCS
- DYLOnHMxFIiQ0Vy2Cmwz6owdGc/sS6WbZdnrUTwj0j+dDN744VjTMmOh7ge1M5J+vGuS6aVZhVh
- xsY1z8TIATtj7Z56fD33xwREcAElE1wbRrGJm83iq53M9aw73bL0OHMZM/+VCjw2z8nu+eGaUks
- zhJhxHXb/XHMBxEnBvZo0Z5IWyS1WIwFkPLwA6pdwJ1ZMHSX4UJtjwbSbiUG9cLj3mo2NsosUGs
- N6Txh8iUGz3l9g0LeWsuVWjWTkLdDCxCzPZI9oL0KK6cmZFDbNLZS4psq5Ov6ma5eRQHIej6Uc5
- KRvN8RuueJuQS5pM6A68RJjz0T50HLsa2GgaizNA2S/knGh54q5V5btxD2ZY8s82ViGfviLYkeK
- 2N0lGpkurpoVYb0e+P9r+AWnQ4T1tG43qas1SgaPUe8/Wtm7SWpuAfiDh/xAjCKEOTAi0n79
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-15_08,2025-05-15_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=992 spamscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0
- adultscore=0 bulkscore=0 malwarescore=0 impostorscore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505150181
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <47315.1747327157@vermin>
 
+On 05/15, Jay Vosburgh wrote:
+> Stanislav Fomichev <stfomichev@gmail.com> wrote:
+> 
+> >On 05/15, Stanislav Fomichev wrote:
+> >> On 05/15, Jakub Kicinski wrote:
+> >> > On Wed, 14 May 2025 15:03:19 -0700 Stanislav Fomichev wrote:
+> >> > > --- a/drivers/net/team/team_core.c
+> >> > > +++ b/drivers/net/team/team_core.c
+> >> > > @@ -1778,8 +1778,8 @@ static void team_change_rx_flags(struct net_device *dev, int change)
+> >> > >  	struct team_port *port;
+> >> > >  	int inc;
+> >> > >  
+> >> > > -	rcu_read_lock();
+> >> > > -	list_for_each_entry_rcu(port, &team->port_list, list) {
+> >> > > +	mutex_lock(&team->lock);
+> >> > > +	list_for_each_entry(port, &team->port_list, list) {
+> >> > 
+> >> > I'm not sure if change_rx_flags is allowed to sleep.
+> >> > Could you try to test it on a bond with a child without IFF_UNICAST_FLT,
+> >> > add an extra unicast address to the bond and remove it?
+> >> > That should flip promisc on and off IIUC.
+> >> 
+> >> I see, looks like you're concerned about addr_list_lock spin lock in
+> >> dev_set_rx_mode? (or other callers of __dev_set_rx_mode) Let me try
+> >> to reproduce with your example, but seems like it's an issue, yes
+> >> and we have a lot of ndo_change_rx_flags callbacks that are sleepable :-(
+> >
+> >Hmm, both bond and team set IFF_UNICAST_FLT, so it seems adding/removing uc
+> >address on the bonding device should not flip promisc. But still will
+> >verify for real.
+> 
+> 	I think Jakub is saying that adding a unicast address to the
+> bond would change promisc on the underlying device that's part of the
+> bond (a not-IFF_UNICAST_FLT interface), not on the bond itself.  The
+> question is whether that change of promisc in turn generates a sleeping
+> function warning.
+> 
+> 	FWIW, I think an easy way to add a unicast MAC to a bond is to
+> configure a VLAN above the bond, then change the MAC address of the VLAN
+> interface (so it doesn't match the bond's).
 
+This seems to work (using teaming instead of bonding, but should not matter):
 
-On 5/15/2025 11:21 PM, Bryan O'Donoghue wrote:
-> On 15/05/2025 14:23, Vikash Garodia wrote:
->>> Re-reading to see if the firmware wrote new bad data to the transmitted packet
->>> in-memory is not a fix before or after the memcpy() because the time you do that
->>> re-read is not fixed - locked wrt the freerunning firmware.
->> It would be more meaningful if you can suggest the vulnerability you see with
->> the changes suggested i.e adding the check in local packet against the size read
->> from shared queue. Based on that we can see how to fix it, otherwise this
->> discussion in not leading to any conclusion.
-> 
-> So to re-iterate.
-> 
-> TOCTOU is this
-> 
-> if (*ptr_val >> 2 >= MAX)
->     return -EBAD;
-> 
-> memcpy(dst, src, *ptr_val >> 2);
-> 
-> Here a malicious actor can change *ptr_val between our check and our use.
-> 
-> not
-> 
-> data_value = *ptr_val >> 2;
-> 
-> if (data_value >= MAX)
->     return -EBAD;
-> 
-> memcpy(dst, src, data_value);
-> 
-> Here the taking a copy of the value and subsequently relying on that value
-> mitigates TOCTOU, because the value *ptr_val is latched - read into a local
-> variable which cannot be manipulated from an outside agent i.e. venus firmware.
-> 
-> The example in the commit log is not a TOCTOU for that reason.
-> 
-> Adding an additional check _after_ the memcpy() seems silly to me because
-> 
-> data_value = *ptr_val >> 2;
-> 
-> if (data_value >= MAX)
->     return -EBAD;
-> 
-> memcpy(dst, src, data_value);
-> 
-> // This statement could be false
-> if (data_value != *ptr_value >> 2)
->     return -EBAD;
-> 
-> // while this subsequent statement is true
-> if (data_value != *ptr_value >> 2)
->     return -EBAD;
-> 
-Check the pseudo code which i proposed earlier in this conversation [1]. It does
-not rely on ptr_val at all to check the sanity after memcpy.
+  ip link add name dummy1 type dummy
+  ip link add name team0 type team
+  #ip link set team0 down # hit team_port_add vs team_set_rx_mode
+  ip link set dev dummy1 master team0 # promisc enabled here
 
-[1] https://lore.kernel.org/all/0c50c24a-35fa-acfb-a807-b4ed5394506b@quicinc.com/
-> And in any case this is a post-use sanity check not a mitigation for TOCTOU
-> which we don't have.
-> 
-> ---
-> bod
+  ip link set dummy1 up
+  ip link set team0 up # or here (if was down previously)
+
+  ip link add link team0 name team0.100 type vlan id 100
+  ip link set dev team0.100 address 00:00:00:00:00:02
+  ip link set team0.100 up
+
+But mostly because promisc is enabled via team_port_add->dev_uc_sync_multiple
+(when team is up when adding a port) or via
+do_setlink->netif_change_flags->ndo_set_rx_mode->team_set_rx_mode (when
+upping team). The subsequent calls to __dev_set_rx_mode are noops
+because the device is already in promisc. IOW, I don't see how we can
+reach team_change_rx_flags from here.
