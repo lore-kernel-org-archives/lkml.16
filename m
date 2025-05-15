@@ -1,228 +1,166 @@
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74D42980BA
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E785DA926
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747306758; cv=none; b=n2xfN0f0WYH8ApznXbLP/OHpxrKFxoXjWPo9AY8vCUoyw0/7QyWp/RTzGEVT7V52e6UffT4YVfcMGielXPXt8Kn+rn6+czCykwLvjvL+lzq0g4rNcuLQNL+Tv/FAUCNa38ekfnNYVv7PkZ6Bb/szeVDEMKf3qujGDuRYB8YMhvk=
+	t=1747306821; cv=none; b=LtRmtgrc6SQKOY7DUhr46QS1oI+il/SUexe3hPc+DJa5TBdGASPUBd5/CuR9EahS87/RAKi5VEsbRCFt0gIcdJbxmFOxAhu0vSHtqc8gB6HU26lLR+hN/+U5S9GmgHifqa52CUIPDpxqB6AZhOAMdOR7csLWaowws/VW2BLn2fI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747306758; c=relaxed/simple;
-	bh=9QFwZcBibBVpLT6/+3sb4orxgmkhJC3pvmyLj05cBT0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CQK70K7LAHimIOiP1hYer5SWN8dpTEBA3S0PVfCrHQ6YUoT1ksFn/5LLNnATz18pzOVivW8s85ztR//K491ZgU+AQXEXM4msxlgBbTilwZ5Kcxp/dvlTdaEWfzkrN+90zj3jGMMFnH2iUP1dk3FgYYgNUlcUgS/C9okYZl3ONdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I6hoFOdQ; arc=none smtp.client-ip=209.85.217.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747306821; c=relaxed/simple;
+	bh=plJTIgnwLVBEUeN9TfSuX11pdlqOwA4bIN5xD+iMdg4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hFKuCVbSuQt0XtI/qbDhAZzBnKaZm+k6M7VIc1hrE8xT+80GgAQ44JJ4NPMAv2o1cfiXs2JbImmEVXzy0lJpHDdZkzEWkwlrM2SXgXMoFWKnzw6m2vhK3tqyw2bhpW3sA8FVbOCd6GVYZCjQmnf4JpeZi/RYhXfWcagB3lFRMo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SRMSItB0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I6hoFOdQ"
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-4def152384eso260131137.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 03:59:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747306754; x=1747911554; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qsRkLMqMxQwLJ0CXylasENbOTOGM70G82AyMvQWY+TA=;
-        b=I6hoFOdQ59qhAcnT0mIas9hwVybByso38oGhkD1LeZo6TD8DGntmaisLnrgFT4UZk0
-         cZPRp5rfvjjp9ZJsJPtrzwN1hZG8wT2FzwuvqSBZWL7iAjZTTxAcgrELaPXMN4noUNDr
-         VcHlR2tfFW6sbxbvl493yFMMn2Q1MD2XOvBQAo57WWVUlbF1lYFFHm83xxPVMSX14MRx
-         /z4gm0aY8WOomqzlZWg1E8HfHzwC30JD2nYZ6QbU4I8pvsLtDemi6ws9kjQaFeG5b0MQ
-         HvQ5A+c+sHOynyKEZZyItUlukxpCoiEneKZyYrlHJmZz/k7JnMOe2yFnLvPrVBJ2hClg
-         ZutQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747306754; x=1747911554;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qsRkLMqMxQwLJ0CXylasENbOTOGM70G82AyMvQWY+TA=;
-        b=slCwVb3AsXLp+AjNDAsKvZ34qSJbpIhzCkEPtcQ1BWwo0TSmTkegKV8Lp/JQtGL3ah
-         ADx326NHolaHubimj9ANpeQpVehXjrSe2Rlzg0qW3BOgfbjWaXywjzpj38wLIseTmcib
-         Sii2bhzRHFTKBQorU08XxQIJYXYviZS1EpcrtqlwvHD/kiMqLGGYdUIW7WW1gfcvP2Ic
-         T/wdRgfv0jQJaHR7u7ccnnnnUlMVmY8vzrCSelQqIRPHZVOuTpWB47OXLfEhOSQN8sck
-         aUecx6o++DGfw9A0SyXl/4ikB6qVhtP7p7UfaqPaSpuzUCn103XY4uR4Qh7l2y7wjhQq
-         fNNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVaiO/CrboIOuBMnKa1WQQ+t9FIK9sL1vdyEapuuQS+WNuLdIURIiZ9baOBi23FkEx0Hpy1ohMHpAAX6po=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlEZFUKlLCZVV2iC487YLubvMk7VeXIy2mNXjFSYS2YkVavSxs
-	YoSxUljZHpQN/h5NaWExTT7K1JBiteYxzmSNkL7erDTezeKafMcChZA9KS3Js8HQReWY10cJhx4
-	KmoDkmWvOaR8KyPb8w4ih+zRWScXUE5BOL8M94Q==
-X-Gm-Gg: ASbGncu8iGUQebgYdG/P5hZz+eR4AD5ygw0fmWpMkIWNxxL+KfWAH9oriFdP0HfUI4a
-	9GJyyNI+WKiPA+++q9JA4BM41HGJ8LyUiwve5jNxRbEJ7Ljxw+pI6RWHttx6eXcUBsRrCJec/JT
-	7/ftfj9dseeoITdrSV32rpR0fqdb18+KY=
-X-Google-Smtp-Source: AGHT+IEv0+U8fMqSqn1P6QHjlMbDnQk+8SzJmA6XFX5ro9DiGqlagEsie+ti2MXUCscCb1YsZKxDC9aSiVPPZ/dfOAY=
-X-Received: by 2002:a05:6102:3f91:b0:4de:b205:dd57 with SMTP id
- ada2fe7eead31-4df7de0e243mr6580002137.25.1747306754653; Thu, 15 May 2025
- 03:59:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SRMSItB0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AB18C4CEE7;
+	Thu, 15 May 2025 11:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747306819;
+	bh=plJTIgnwLVBEUeN9TfSuX11pdlqOwA4bIN5xD+iMdg4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SRMSItB0oRbFP5t/uJ3GQpJi7RwgFo+Ycu/8SKshQzM9doihPwuc7eJkpf36B8guo
+	 Dgj/PO5l5CGad1kveaElX2ZXggI4hUODk4oWFqXTpitpKKFYja+RCj430UUbgvXY/v
+	 YtB0guw4yhoPH7fs5NFdWTORXDlUtW6DrW1ub+OQQ5BiUJZWcKSoP4jCvbyvYRpRny
+	 AnORkdUvYXU7QsuiCYwDlq4KXvLBNcm+QyREE43mou8MY1brOyPpOp0Dk0Lsm6XXEm
+	 HjJ8fqYmj4Wj0uabLwULVaZN9mZUW/29ySVFJOwU+RlkfbXeQj3UDlZs0b9P+v/Zh1
+	 6dI34TB7+C41Q==
+Date: Thu, 15 May 2025 13:00:13 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+	Arnd Bergmann <arnd@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Juergen Gross <jgross@suse.com>, "H . Peter Anvin" <hpa@zytor.com>,
+	Kees Cook <keescook@chromium.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	David Woodhouse <dwmw@amazon.co.uk>
+Subject: Re: [PATCH 07/29] x86/boot/e820: Print out sizes of E820 memory
+ ranges
+Message-ID: <aCXJPUIX2TUwj8OS@gmail.com>
+References: <20250421185210.3372306-1-mingo@kernel.org>
+ <20250421185210.3372306-8-mingo@kernel.org>
+ <aAc83YZ8K08HYoyP@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514125625.496402993@linuxfoundation.org>
-In-Reply-To: <20250514125625.496402993@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 15 May 2025 11:59:02 +0100
-X-Gm-Features: AX0GCFsg1NpyeH5tPjvE5b6oOb4_UgehqJj_AJihIsI3-hwof02VM_YjwL2M-is
-Message-ID: <CA+G9fYtzWM6fb3OiosyQESPh2NxmwUwVVr-16FN-E4Y1GLNv5A@mail.gmail.com>
-Subject: Re: [PATCH 6.14 000/197] 6.14.7-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAc83YZ8K08HYoyP@kernel.org>
 
-On Wed, 14 May 2025 at 14:06, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.14.7 release.
-> There are 197 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 16 May 2025 12:55:38 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.14.7-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+* Mike Rapoport <rppt@kernel.org> wrote:
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> On Mon, Apr 21, 2025 at 08:51:47PM +0200, Ingo Molnar wrote:
+> > Before:
+> > 
+> >         BIOS-provided physical RAM map:
+> >         BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+> >         BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+> >         BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+> >         BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff] usable
+> >         BIOS-e820: [mem 0x000000007ffdc000-0x000000007fffffff] reserved
+> >         BIOS-e820: [mem 0x00000000b0000000-0x00000000bfffffff] reserved
+> >         BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed1ffff] reserved
+> >         BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+> >         BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+> >         BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff] reserved
+> > 
+> > After:
+> > 
+> > 	BIOS-provided physical RAM map:
+> > 	BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff]  639   KB kernel usable RAM
+> > 	BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff]    1   KB reserved
+> > 	BIOS-e820: [gap 0x00000000000a0000-0x00000000000effff]  320   KB ...
+> > 	BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff]   64   KB reserved
+> > 	BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff]    1.9 GB kernel usable RAM
+> > 	BIOS-e820: [mem 0x000000007ffdc000-0x000000007fffffff]  144   KB reserved
+> > 	BIOS-e820: [gap 0x0000000080000000-0x00000000afffffff]  768   MB ...
+> > 	BIOS-e820: [mem 0x00000000b0000000-0x00000000bfffffff]  256   MB reserved
+> > 	BIOS-e820: [gap 0x00000000c0000000-0x00000000fed1bfff] 1005.1 MB ...
+> > 	BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed1ffff]   16   KB reserved
+> > 	BIOS-e820: [gap 0x00000000fed20000-0x00000000feffbfff]    2.8 MB ...
+> > 	BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff]   16   KB reserved
+> > 	BIOS-e820: [gap 0x00000000ff000000-0x00000000fffbffff]   15.7 MB ...
+> > 	BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff]  256   KB reserved
+> > 	BIOS-e820: [gap 0x0000000100000000-0x000000fcffffffff] 1008   GB ...
+> > 	BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff]   12   GB reserved
+> > 
+> > Note how a 1-digit precision field is printed out if a range is
+> > fractional in its largest-enclosing natural size unit.
+> > 
+> > So the "256 MB" and "12 GB" fields above denote exactly 256 MB and
+> > 12 GB regions, while "1.9 GB" signals the region's fractional nature
+> > and it being just below 2GB.
+> > 
+> > Printing E820 maps with such details visualizes 'weird' ranges
+> > at a glance, and gives users a better understanding of how
+> > large the various ranges are, without having to perform hexadecimal
+> > subtraction in their minds.
+> > 
+> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> > Cc: Andy Shevchenko <andy@kernel.org>
+> > Cc: Arnd Bergmann <arnd@kernel.org>
+> > Cc: David Woodhouse <dwmw@amazon.co.uk>
+> > Cc: H. Peter Anvin <hpa@zytor.com>
+> > Cc: Kees Cook <keescook@chromium.org>
+> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > (cherry picked from commit d1ac6b8718575a7ea2f0a1ff347835a8879df673)
+> > ---
+> >  arch/x86/kernel/e820.c | 47 +++++++++++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 45 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+> > index 10bd10bd5672..8ee89962fcbf 100644
+> > --- a/arch/x86/kernel/e820.c
+> > +++ b/arch/x86/kernel/e820.c
+> > @@ -199,6 +199,41 @@ static void __init e820_print_type(enum e820_type type)
+> >  	}
+> >  }
+> >  
+> > +/*
+> > + * Print out the size of a E820 region, in human-readable
+> > + * fashion, going from KB, MB, GB to TB units.
+> > + *
+> > + * Print out fractional sizes with a single digit of precision.
+> > + */
+> > +static void e820_print_size(u64 size)
+> > +{
+> > +	if (size < SZ_1M) {
+> > +		if (size & (SZ_1K-1))
+> > +			pr_cont(" %4llu.%01llu KB", size/SZ_1K, 10*(size & (SZ_1K-1))/SZ_1K);
+> > +		else
+> > +			pr_cont(" %4llu   KB", size/SZ_1K);
+> > +		return;
+> > +	}
+> 
+> I'd make this a helper, e.g
+> 
+> static void __e820_print_size(u64 size, u64 unit, const char *unit_name)
+> {
+> 	if (size & (unit - 1)) {
+> 		u64 fraction = 10 * (size & (unit - 1))/unit;
+> 
+> 		pr_cont(" %4llu.%01llu %s", size/unit, fraction, unit_name);
+> 	} else {
+> 		pr_cont(" %4llu   %s", size/unit, unit_name);
+> 	}
+> }
 
-## Build
-* kernel: 6.14.7-rc2
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git
-* git commit: 6f7a299729d3dff3ffade04ad8fbddb3b172d637
-* git describe: v6.14.6-198-g6f7a299729d3
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14=
-.6-198-g6f7a299729d3
+While I like the helper in principle, it doesn't work on 32-bit: it's 
+an u64 with u64 division, while with the open coded literals the 
+compiler figures it out.
 
-## Test Regressions (compared to v6.14.5-184-ga33747967783)
+With div64_u64(), or a macro, it's not nearly as obvious a cleanup 
+IMHO.
 
-## Metric Regressions (compared to v6.14.5-184-ga33747967783)
+Thanks,
 
-## Test Fixes (compared to v6.14.5-184-ga33747967783)
-
-## Metric Fixes (compared to v6.14.5-184-ga33747967783)
-
-## Test result summary
-total: 151222, pass: 125346, fail: 6191, skip: 19127, xfail: 558
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 139 total, 137 passed, 2 failed
-* arm64: 56 total, 55 passed, 1 failed
-* i386: 18 total, 16 passed, 2 failed
-* mips: 34 total, 33 passed, 1 failed
-* parisc: 4 total, 4 passed, 0 failed
-* powerpc: 40 total, 40 passed, 0 failed
-* riscv: 25 total, 22 passed, 3 failed
-* s390: 22 total, 22 passed, 0 failed
-* sh: 5 total, 5 passed, 0 failed
-* sparc: 4 total, 3 passed, 1 failed
-* x86_64: 49 total, 42 passed, 7 failed
-
-## Test suites summary
-* boot
-* commands
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-kvm
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mm
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-rust
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* kvm-unit-tests
-* lava
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
-* rt-tests-cyclicdeadline
-* rt-tests-pi-stress
-* rt-tests-pmqtest
-* rt-tests-rt-migrate-test
-* rt-tests-signaltest
-
---
-Linaro LKFT
-https://lkft.linaro.org
+	Ingo
