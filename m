@@ -1,156 +1,245 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2064.outbound.protection.outlook.com [40.107.92.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70291B6D11
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 06:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747290110; cv=none; b=mjm8F9K9ZBEKVMzP1zA7toDr9w58LwcXqbhCDr7VHky3YThSyfpaqWs+pMInb2mCBuRW4BIYM0eYfKeGA8ARk32UEho6Rq39ToflPCzWSiUT2w0DwRYdJZO8Kg98SYx4ar2yue4Iw5JdjUhOwNA5WqPylNhcMI+sBYLEybOKZis=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747290110; c=relaxed/simple;
-	bh=gbtrw/D7gxH/6QMa/SyTc7C9lDva0Xx0PZks+pxDASA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EW8QkxNsWyh/qhc8Y88RCv+iSOyCcjrUqd0nRDRqUFrEPCrta3Lg8wf6jpQ8ySRTAdzy+1+z6s/U6R48eoAsLoJb0gWHPhgtiLJsBI6SBZkowink0pKbIaOy7DO1Ip8xDbjfCFZ/lDVf0iCi2T2lNzNlfinvsxhY7rPQlzIlFDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=IDRM9pki; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Ik/D1XMy reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064071CEAD6;
+	Thu, 15 May 2025 06:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747290124; cv=fail; b=IqSt2NXAmZ3w7ANqY9j+oG/cFqUujgm/1yxDANgfCfqRSzGgEkDkrGHHm8jrZavmJ4ihRZeUo2hyqFO8iS9M6PlhWAFlQFnrjuYR9Cp15ZeXj4+oI25QGrzSkYWFGd/P326oLNPhVOrYmCjzhe3i/TEDvgJuoPFFyBhw4Z+6jHQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747290124; c=relaxed/simple;
+	bh=nroq1w/PGMwX7Nkbqdq+hTk1WgYCMANLV5mqUQGwdZ8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=JnmfAnjvDiNuwR7bGQ8SEGWLRh7EY++Dh21r3LihdeN8SsfFK42hdRS0TBHxhjnaf1VkQm+FsZu8Ircr0eRVmUohe5kQiekpyz3nraXeqMSBPwch57Dn2OMP7eYDHWlIqXDdM2TMxaWWO7lw+wwMZePcR7sE1giR0GjQ/lPjr9Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=s4xE4lhO; arc=fail smtp.client-ip=40.107.92.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="IDRM9pki";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Ik/D1XMy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1747290107; x=1778826107;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=zvaqjaq2s2J7Vp+BItaHSMNz11n0rCofPVOKUb72ZdQ=;
-  b=IDRM9pkiteZ/U1fsjkefOsuaXgl+I2zTQWp+nFrpqlTqXSOkjn/VWKTD
-   LUuI0VDG6owKxYEx2eUszh7q1gc+dul9TWNWKTCfNMvrDkYoIDyjSyFeY
-   ZHQV1fEZoflQbsHJe+HB1rqJnqiwu6cqHmyK/oSEIMdw3bPsS/o7YNpEg
-   AJOBAaqsHdJRq12qhOlUKEa6UDfe5MQculs3XQtwV6EEXkIIvMxWBBD8d
-   AnHkQZZnIIv+5QeMkbZwWJYmPhShQXkN67zal7aDa2uXnY0fiG258xmbZ
-   wlZWiQ1ZM/dvaYh8MXVISM54oTluu5RIe7hanoVMSAmPCevT8UUcOQRFb
-   Q==;
-X-CSE-ConnectionGUID: ymgbScsyTImTixjB3tpFMw==
-X-CSE-MsgGUID: c47bUS/AQDirSUcuKPPxhg==
-X-IronPort-AV: E=Sophos;i="6.15,290,1739833200"; 
-   d="scan'208";a="44086124"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 15 May 2025 08:21:38 +0200
-X-CheckPoint: {682587F2-21-C7E25413-F4312D34}
-X-MAIL-CPID: 33C6A6DA3D81B7962B7B6E2E349BD329_4
-X-Control-Analysis: str=0001.0A006374.682587F0.0032,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 1B92916983A;
-	Thu, 15 May 2025 08:21:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1747290094;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zvaqjaq2s2J7Vp+BItaHSMNz11n0rCofPVOKUb72ZdQ=;
-	b=Ik/D1XMym9knRRj0CGwmE5kAGwr9f+K/FAQtrwwTlFfj5YDxt51d4kO2NqdcNocl5sYxXO
-	0YEsl1sOQx1GIzEgAdtZyX38QCiHA68YHmiQXMsMmV0OIbI5FyfesGC8+ZIKgpTkXefaOz
-	NTtIqXVD2Joop/2O8LPHU7OCK80qsUfYjq9iM1l3koCOPGQuin1OPDp88xbW0YplXlqcoA
-	50GDv7lAxylXeIXvcbj9EdxXiM5tok+PeX9QxgBVA+kTiajt5hdl54qkgb7iElw8OcS+qN
-	s7JUn/stDl1ObKxH1wRBCIqM2MuKBieCif2Z/XUyT37pO3iWclKWjOe+iH2R3A==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
- Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@gmail.com,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, simona@ffwll.ch, dri-devel@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel@pengutronix.de, Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH 2/3] drm/bridge: fsl-ldb: make use of dev_err_probe
-Date: Thu, 15 May 2025 08:21:30 +0200
-Message-ID: <6179238.lOV4Wx5bFT@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20250514222453.440915-3-m.felsch@pengutronix.de>
-References:
- <20250514222453.440915-1-m.felsch@pengutronix.de>
- <20250514222453.440915-3-m.felsch@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="s4xE4lhO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oO6ufkQazbvK5nrruEMEBPW8rjLVKKChp1vmqQIP2KGwEs5poDz1fcFAyMpbP6smNIfaBxNGRzFHF9pwQaMasSwe2hHkARtk6vXliyQEXBHRHnwOpQlcsJLTcuj4GEbznjTGmB0/VhB6y/koMcz6anJfEKBPYm9aq61GMGy1O5z1Oj+CyXlDBnIq2IGvs3stEXueKWFj6YTOEn7B3YzvYWjkKDcteFgu271KvEP9NyJ/Z7pdkaTi+ZPvxDX2i01GEkJ2xl2//z5kz/zrzOIO7vKXkJ2DxPF4zDTFLKhUT+KBOlO6eLb2GvZxxds9onPyowK9tTxCqv1r2Nt0ApRToA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Mr7/ClEL053tipYfYK+OEUU/0AILwmMO8W4zB9KKOVo=;
+ b=Lrgs3HOoNvxGnLwx3U8xi4sZi2Xqm+QziPV/4wJW1i4S8a6XQArNt+FcWldPCkrgTBBVdE57XfGax/Gch014tS0gGIgwnTuUvtT0qHgzDUvoFrdnrA2ln85aPbI3OUlhNFZmHJWkn6R1qMNhUq5gRpNkyInYCOosOAJ/+WlskjEA+WTDc+a6VNt44v501vNHWOs+lRK5++oZoKiPsU9bxgZA3BHnr7eTZM5U464F01LRRmmLMPbiyNgvkhSDx7yKn8Qq/6hCjjKlpWzq+xDvi+Bd3p6apf42vV7BHwOGWpoD3AXNBdumbN34dPVVc66VveFWZcUHCMgM4l9XU/uBNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mr7/ClEL053tipYfYK+OEUU/0AILwmMO8W4zB9KKOVo=;
+ b=s4xE4lhOdQUP3bNVzwTlf/XUiErIf8pG6NRoPVwa+hhlNeAKeP64KQ24bg3VFsg+NK+HTHfCvH9DtJV2GogiI9P0gBl48yTrF2ejrHOs7US8ynLcR2fpuou5BGKjUyi+2AgquxZAHI+F0+CdvvZbInr29z6LDe/Nz0RXLJ+1OVSPrLV69ntncsCLQrhB8+E9qULiYf07xzBGAcaVNfy/agtIAN2jnsJgtK6lfw5+yDmD3qLpyiCL7Yv0iQdDrmWLaVnvaUJFj9lpS9UiJNAS7yd1c7pqHSmDbyMGGlvo+pvIS/fwahA3IEiejCzEGF/wlWRp5Qo02gwkftfrUuPgdg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com (2603:10b6:a03:4d0::11)
+ by IA1PR12MB8537.namprd12.prod.outlook.com (2603:10b6:208:453::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Thu, 15 May
+ 2025 06:21:59 +0000
+Received: from SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9]) by SJ2PR12MB8784.namprd12.prod.outlook.com
+ ([fe80::1660:3173:eef6:6cd9%3]) with mapi id 15.20.8722.027; Thu, 15 May 2025
+ 06:21:59 +0000
+Message-ID: <4a9fe001-9104-4a11-986d-02651738d84d@nvidia.com>
+Date: Thu, 15 May 2025 07:21:54 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] cpufreq: tegra124: Allow building as a module
+To: Aaron Kling <webgeek1234@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+References: <20250508-tegra124-cpufreq-v4-0-d142bcbd0234@gmail.com>
+ <20250508-tegra124-cpufreq-v4-2-d142bcbd0234@gmail.com>
+ <da080e61-4e54-4334-a239-1619bf8fea0c@nvidia.com>
+ <CALHNRZ9DKf_p5y3K4yVF8wDm4S0jRB-NSF8aZB5CsYxk7GmyNQ@mail.gmail.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <CALHNRZ9DKf_p5y3K4yVF8wDm4S0jRB-NSF8aZB5CsYxk7GmyNQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO4P265CA0313.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:390::15) To SJ2PR12MB8784.namprd12.prod.outlook.com
+ (2603:10b6:a03:4d0::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB8784:EE_|IA1PR12MB8537:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6363e703-e204-41e7-9eb5-08dd9378cc29
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eTFpcFVYdVZtRFRkS2FWOWZsL29kc3pQdkoyZ0VEdEw1TUVIRUlhVHF2cm0r?=
+ =?utf-8?B?UE5IcHErdmkrc2Z1eEhwYS9jTCtWcmtONjA2M2pSNDdPQUlvVjdsaGZVNlQ4?=
+ =?utf-8?B?OFhTTXdId05oZzdZTEZUa1kwNWwraHI0SW1qNmJRYzhBaUNQdUx3ZzNWdzgz?=
+ =?utf-8?B?ZFBzUHkwNUgrVWlCNnE2TjNRa0tuZ3dBcm05UEZUdGEzeTl0Q1NwbnZYYk9r?=
+ =?utf-8?B?NFVtSXhXZ0dSYjhrOU5ZK2FXUGtycTRwbk5UVU9SUm1KTmhYMlMvT3huMjlh?=
+ =?utf-8?B?RmhXK3RvMUhjbCtrbVJaZDUwOE5nckI3WlgvL1JPS2VaU3ZNaDJGODBPTE4z?=
+ =?utf-8?B?cVN3QzE2aWcwdmFzV1BvT0NKMzdiYlVxQk5JbEtoMHBqMzlJY2Nhd0haaGVW?=
+ =?utf-8?B?UmxraytTL01RdHMwRmcxRkJka2QrSW1TMEFxSlBUUWM0SzBTWWlSUWhwWWRx?=
+ =?utf-8?B?MXhnVHllYnc1bGhlQ2dsNXVTaTVucFpaeGt4d1hmOTlSQ2VyeDJEN28vSkdS?=
+ =?utf-8?B?UzY3a2lweWFGcXhtbU16QkI1L0VwektiRkNMZ0VNeFFsOHgrY2I1Qm5qc1Jh?=
+ =?utf-8?B?K1c4aUFqREt3SVFvWXRLZ1hzRDVQbDV1WEJHZVNrTm1ubHdZc1pVY0EwbEFX?=
+ =?utf-8?B?b0Urc2dkNTVyRkFpVGhJajdNTGttNnU0NXJwNjA4Wk9uTW0yTXdWVmpmRlNp?=
+ =?utf-8?B?K0Q4SUptQmlIbC9JRVZPS3FRYkhPNmd2U0VPRXJ1bzFqQnovRlZiZksxeDkx?=
+ =?utf-8?B?QlRNb3hxTEdPc3N1QXBLRnlYSW0rZGFCSlNySEVYUWRTVE5PNzdpeHFqckYv?=
+ =?utf-8?B?QzR5aEpVSGk0Nmh5RmlGMytoSmZLWVg4dlZoMmZKR21LSkIvSU5TOTVGbWFZ?=
+ =?utf-8?B?QUl1TWFIamtRc1ZVVS9ZQmlZNSttSktZTnJEelVCanVVMmxuTXV4WWlUUUpu?=
+ =?utf-8?B?cDVQaGh3RXdaSE0xNGphU2ZEQndkdCtvZmpwTk13Zld1TFJJcXNxWjRlNEwx?=
+ =?utf-8?B?ZHVhSFcveGkycmErWCt1cDFKWld1ZlAzelEyQ2pxWTVYeG1NSHB5dFAvd2Ft?=
+ =?utf-8?B?K0xJRlB6VWI0UzA4K1dTK1Z4ZjVCM3VVY2ZpVytVUEp3N28rV2dZSE1ZWEYw?=
+ =?utf-8?B?WVk4a0IzZERudG9tdUFsdTZ2TzVGNERuL25kUTByRjBPcnVpWWNWWWx4ZzB1?=
+ =?utf-8?B?ZDl0d3c4TEE0T2tjQWI3Q1FHRlZhUld1R3g0WHIxZGNHTTJyUzJVbXhqcG9o?=
+ =?utf-8?B?NWdGbUl3UjhCSzlkNmRidDQza1JWOXZZYVM1UEhBd0hSbHdBS0VMUHAyTkU4?=
+ =?utf-8?B?Q3czc2ZKVnU2czlnb3pTNTU2MGhxVHJ1eDJFNFBjYU9TWVovS0FTejBRNTlP?=
+ =?utf-8?B?OGMxcXNDRVoxc3BwVGMrRW1nMFVTZWVJQVdxcVplOENmSEpLdllVUWR3STZm?=
+ =?utf-8?B?S3dZNmxDZkxJZk04TEJKbjFQc2RaRk5JT24rUUpZcDI5OUY2R05BeGROR09j?=
+ =?utf-8?B?eFhtZFdwMUJCWDVlU3RmMzh4Uy9rejV2ekVkV3lzS1VWdTlVWndGT3ZrNk95?=
+ =?utf-8?B?MjVUcFFqU2cwVFV3T2NHWWFJbENMenJETWZrU2lUbmlBcURQYjhiR0RGYVBk?=
+ =?utf-8?B?bFJNMEdtQWdGNWpidjcvZFBpKzNxYkwzTW1RQ251ZER0U25KdGoycVphM1Nt?=
+ =?utf-8?B?TmtTdmJBRlUxbzRad1VUZFBSdVIxanUrZC9WUFcwM0tHV1RGN3JpaXVSYW9k?=
+ =?utf-8?B?OEUwTk8xYnZLRGVjczlzQm5vYVBabDEwck1oeGpDTS9UdWt5VC9rNXpJRVEz?=
+ =?utf-8?B?OExKZTBuK3FkRm5iRUwxdVdmSzVkWVdDSWt4ZzY3aUZwRXNzZ0VoaThoWk83?=
+ =?utf-8?B?WGxobTJyM1RMRUFacnFVZEo5NnpGY1YrR0ZpeHJSSUhIc0NCYTZhV3o3cGZ6?=
+ =?utf-8?Q?JXx06E9FOd0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8784.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?T1lXd1Vzai91TFFubGF6TkZ2bnVXc0VKTERLWTVRSksyVE15Kzhqa0pBNU00?=
+ =?utf-8?B?ZGpBaUR2Rm9GamMrNVFNcFlrUWZLOGhQMk1uMUtJYXJBRnV4WkhGVzJqazd0?=
+ =?utf-8?B?d3NYWFpSUUt0VFNBQUc0V1ZmYjBJeHhLcSsxdHcvUzZJNDJ0ODI4elZrcldh?=
+ =?utf-8?B?Q0tXVWt5TDRhUG1Yd3pYTDhScERGLzZaVTg4TTUwWmZScEpFWnVyVUF6WUU2?=
+ =?utf-8?B?emtWc2tTRlhYcm9vSllucG9HN0xGOWhDcW5FeWVvSFBLMVkwVzZFalhzVVlD?=
+ =?utf-8?B?QmxQWEtOY2pHc1dGOG1waXNML01DSTVqcjQ5RzBzU3djUmtUQlA5TDlhZHQr?=
+ =?utf-8?B?emQxWFVrMGl5ZlZxbURqWVlrTVdJdjNXSDNlUTh1YUkrcHVleExBODl0MDF6?=
+ =?utf-8?B?c0h1STNKNjhLSGhHdkpHSkg0LzZLRmpJZGJBclRKamRZUktXam93L1BXSFNS?=
+ =?utf-8?B?NG5abG9URGkyT2padDlKZ3V4S0IwdmNRcjRvcnpvM09PbkJBZ1ZwZFg0MWlP?=
+ =?utf-8?B?ZDRLMzVjZ2NkNlU0cWVva2FHOWdacS95WHp5ZW9icVdmL1ZUUktKQ2pTSm1m?=
+ =?utf-8?B?dUJkQjRvMnpQYU9vWm0zbTdSR2NhbEFyM3pYbWhRRFZFQVNIS2I1RmM4dEtS?=
+ =?utf-8?B?U1l3dzNtWEhjUTFiVmVzYzd6WFNEbDBhR2xrZWlwUnJhV3JRaCsyNkRFeStS?=
+ =?utf-8?B?VFZvTnBtUUJBMXJrZGpjTjZldUtkNFB3dXYvR2VGakNhTGMzZERqZWh4Tk1E?=
+ =?utf-8?B?SWdQeWNUWUVqNi9CdlgvWE5vMnNmTHNCZGxhQ2VOQ3VJSktRVExadDVGdUp2?=
+ =?utf-8?B?V1dPSGphck9OeVFYMlFDSFo2VXlUa1FLVnNmRXVWLzZ5T3RsaGFDalU1Wjho?=
+ =?utf-8?B?ZjJEZDl4UkJHZVBhckQ0VjJNZWdwU3lrODBFV29WYXcrUGdyVUxxeTkzOFdP?=
+ =?utf-8?B?eU9OTjE2Tm9zUElvNVp3ZDhDUkliY3hvRWRXNmgvc3RmUG9iYjlkTGZHeTdU?=
+ =?utf-8?B?YkZROFIvN0F2OCt4N28vQ1o4OTFROU0zRVhxdW90VGhIUE9Ma3YzZ3ZLd1Qz?=
+ =?utf-8?B?UWpCWnA3SDlRS05lelBGRjNPSkthZE1odm55c29JNHZUNlFqZytLVW1EeWlo?=
+ =?utf-8?B?RlJiRHZrM0U4QUNRZDNXSSt0RE15RlFMZ3RkTkhFOUgzMTRLeDdPTnBwN0Yw?=
+ =?utf-8?B?aUJkSi9kNUlHU3NPQkdnME96TVN6Zm40UjZSK3M2azNTaUZCUGNHanlORWVp?=
+ =?utf-8?B?UU1MVW1CeWhLdXZoaXNYVzR0Q0ZQak1VRXhYejZuK1dTbWhRM0g4U0gvdWsx?=
+ =?utf-8?B?WEpNWHVpOEo4bUZPYlcxTWQvL2ZzajR4VEVYN1VjTTVEeFc1ZnozS290SjVK?=
+ =?utf-8?B?MzlGWGoyTUxMWS9tdXhUZzg4cHBiZ0JxZEZsSENBNjdBMHc2dUhjbzhmVk5T?=
+ =?utf-8?B?Z2cyMVNXS01QZTlNQWRJTlk3NW93QW1uK0NSeERvUHd1bmFjVXJ3d1lUMFN2?=
+ =?utf-8?B?aXNYSjR2dExsa213U240eWtSVzJjSnFicjh0bzJBTkdudXhpZ0tTcWNlUEdp?=
+ =?utf-8?B?NURsUFJvOGZVcTUwOG8rVzBNNnM0UVdCSkpOYUlTMnhGRDN5OWo4czRobXhH?=
+ =?utf-8?B?TGV5TkZrRFBhVkRFN2tnTmJUOVVrVWh5YmtUMmpzWG8rWHMrWlEwQUxmQVVY?=
+ =?utf-8?B?Uk9vTjJ4eHloYW03TGU2Tk1oTjBsSnFObU5uNENkdXgwWlFhZzYxcmNkMVlv?=
+ =?utf-8?B?QTAyTm1CcGpBU3AyRFB3RVlOdGZ3cHhuWGhVeDRpNCtLTHdOaXExRjZXVVd0?=
+ =?utf-8?B?OGFoenZibFg1bUtoVnZUYWU2dzJnN2g3RExmQzd4YXNjazl3Ym9rM3pZanI1?=
+ =?utf-8?B?TSt1bWJTQmRVb25kNzZJczFyN3c4dGEwSmpMbmM3czdmWXJ4aXFrS1F0Q0Zn?=
+ =?utf-8?B?ckZVWEZTekVRSEZoWGRyR3IrcEFSQmNMb0tpekhMYWYzellmTG81NU9vRm5o?=
+ =?utf-8?B?UE5kWGFvcmZrQS9BdVhSRTI1T2NLVVpvNDlzQzQwcVFrVnoveFMzQm1odW02?=
+ =?utf-8?B?L0p4dkd0RjZucndUU0RSNlhZd2pjWE1Ta2xqcUJVSmZrR205Vy8yMHU1aEhO?=
+ =?utf-8?B?SDUyRldhb1RkZnY0Z0pyeWE5T3ZMeGoybTllVitYSXdYaVVpbHFMUEdwb0Ro?=
+ =?utf-8?B?UmpuOC9jajZNZC9mRyt5YUJZRXF3cDl3WHVOSDUwTksxSWMxQ3kwQzIvOXlS?=
+ =?utf-8?B?RERxb2VzUk9ZSmczTEhVM2ZoaUpRPT0=?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6363e703-e204-41e7-9eb5-08dd9378cc29
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8784.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2025 06:21:58.9827
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cJ10uBgsOmnPQDqb06Ox+/TQToIbygzVxj7BV7i0eDwJxP406Z4MR7F4EIconZlrW+2zFGfGw+LH2BSCveYl+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8537
 
-Am Donnerstag, 15. Mai 2025, 00:24:52 CEST schrieb Marco Felsch:
-> Make use of dev_err_probe() to easily spot issues via the debugfs or
-> kernel log. No functional changes.
->=20
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 
-Reviewed-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+On 14/05/2025 17:30, Aaron Kling wrote:
+> On Wed, May 14, 2025 at 5:32 AM Jon Hunter <jonathanh@nvidia.com> wrote:
+>>
+>>
+>> On 09/05/2025 01:04, Aaron Kling via B4 Relay wrote:
+>>> From: Aaron Kling <webgeek1234@gmail.com>
+>>>
+>>> This requires three changes:
+>>> * A soft dependency on cpufreq-dt as this driver only handles power
+>>>     management and cpufreq-dt does the real operations
+>>> * Adding a remove routine to remove the cpufreq-dt device
+>>> * Adding a exit routine to handle cleaning up the driver
+>>>
+>>> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+>>> ---
+>>>    drivers/cpufreq/Kconfig.arm        |  2 +-
+>>>    drivers/cpufreq/tegra124-cpufreq.c | 36 ++++++++++++++++++++++++++++++++----
+>>>    2 files changed, 33 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+>>> index 4f9cb943d945c244eb2b29f543d14df6cac4e5d4..625f6fbdaaf5fd774e3b0bb996eb7ce980da41ee 100644
+>>> --- a/drivers/cpufreq/Kconfig.arm
+>>> +++ b/drivers/cpufreq/Kconfig.arm
+>>> @@ -238,7 +238,7 @@ config ARM_TEGRA20_CPUFREQ
+>>>          This adds the CPUFreq driver support for Tegra20/30 SOCs.
+>>>
+>>>    config ARM_TEGRA124_CPUFREQ
+>>> -     bool "Tegra124 CPUFreq support"
+>>> +     tristate "Tegra124 CPUFreq support"
+>>>        depends on ARCH_TEGRA || COMPILE_TEST
+>>>        depends on CPUFREQ_DT
+>>>        default y
+>>> diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra124-cpufreq.c
+>>> index bc0691e8971f9454def37f489e4a3e244100b9f4..b6059c91f2474c56809c403eca94eacf51df734f 100644
+>>> --- a/drivers/cpufreq/tegra124-cpufreq.c
+>>> +++ b/drivers/cpufreq/tegra124-cpufreq.c
+>>> @@ -16,6 +16,8 @@
+>>>    #include <linux/pm_opp.h>
+>>>    #include <linux/types.h>
+>>>
+>>> +static struct platform_device *platform_device;
+>>> +
+>>>    struct tegra124_cpufreq_priv {
+>>>        struct clk *cpu_clk;
+>>>        struct clk *pllp_clk;
+>>> @@ -176,6 +178,21 @@ static int __maybe_unused tegra124_cpufreq_resume(struct device *dev)
+>>>        return err;
+>>>    }
+>>>
+>>> +static void tegra124_cpufreq_remove(struct platform_device *pdev)
+>>> +{
+>>> +     struct tegra124_cpufreq_priv *priv = dev_get_drvdata(&pdev->dev);
+>>> +
+>>> +     if (!IS_ERR(priv->cpufreq_dt_pdev)) {
+>>> +             platform_device_unregister(priv->cpufreq_dt_pdev);
+>>> +             priv->cpufreq_dt_pdev = ERR_PTR(-ENODEV);
+>>> +     }
+>>> +
+>>> +     clk_put(priv->pllp_clk);
+>>> +     clk_put(priv->pllx_clk);
+>>> +     clk_put(priv->dfll_clk);
+>>> +     clk_put(priv->cpu_clk);
+>>
+>>
+>> If we use devm_clk_get() in probe, then we should be able to avoid this.
+> 
+> I can do that. There's a lot of other cleanup like this that the
+> driver could use based on newer kernel apis, but that's out of scope
+> of this series.
 
-> ---
->  drivers/gpu/drm/bridge/fsl-ldb.c | 19 ++++++++++---------
->  1 file changed, 10 insertions(+), 9 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/bridge/fsl-ldb.c b/drivers/gpu/drm/bridge/fs=
-l-ldb.c
-> index fa29f2bf4031..e0a229c91953 100644
-> --- a/drivers/gpu/drm/bridge/fsl-ldb.c
-> +++ b/drivers/gpu/drm/bridge/fsl-ldb.c
-> @@ -308,11 +308,13 @@ static int fsl_ldb_probe(struct platform_device *pd=
-ev)
-> =20
->  	fsl_ldb->clk =3D devm_clk_get(dev, "ldb");
->  	if (IS_ERR(fsl_ldb->clk))
-> -		return PTR_ERR(fsl_ldb->clk);
-> +		return dev_err_probe(dev, PTR_ERR(fsl_ldb->clk),
-> +				     "Failed to get ldb clk\n");
-> =20
->  	fsl_ldb->regmap =3D syscon_node_to_regmap(dev->of_node->parent);
->  	if (IS_ERR(fsl_ldb->regmap))
-> -		return PTR_ERR(fsl_ldb->regmap);
-> +		return dev_err_probe(dev, PTR_ERR(fsl_ldb->regmap),
-> +				     "Failed to get regmap\n");
-> =20
->  	/* Locate the remote ports and the panel node */
->  	remote1 =3D of_graph_get_remote_node(dev->of_node, 1, 0);
-> @@ -335,12 +337,12 @@ static int fsl_ldb_probe(struct platform_device *pd=
-ev)
->  	panel =3D of_drm_find_panel(panel_node);
->  	of_node_put(panel_node);
->  	if (IS_ERR(panel))
-> -		return PTR_ERR(panel);
-> +		return dev_err_probe(dev, PTR_ERR(panel), "drm panel not found\n");
-> =20
->  	fsl_ldb->panel_bridge =3D devm_drm_panel_bridge_add(dev, panel);
->  	if (IS_ERR(fsl_ldb->panel_bridge))
-> -		return PTR_ERR(fsl_ldb->panel_bridge);
-> -
-> +		return dev_err_probe(dev, PTR_ERR(fsl_ldb->panel_bridge),
-> +				     "drm panel-bridge add failed\n");
-> =20
->  	if (fsl_ldb_is_dual(fsl_ldb)) {
->  		struct device_node *port1, *port2;
-> @@ -356,10 +358,9 @@ static int fsl_ldb_probe(struct platform_device *pde=
-v)
->  					     "Error getting dual link configuration\n");
-> =20
->  		/* Only DRM_LVDS_DUAL_LINK_ODD_EVEN_PIXELS is supported */
-> -		if (dual_link =3D=3D DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS) {
-> -			dev_err(dev, "LVDS channel pixel swap not supported.\n");
-> -			return -EINVAL;
-> -		}
-> +		if (dual_link =3D=3D DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS)
-> +			return dev_err_probe(dev, -EINVAL,
-> +					     "LVDS channel pixel swap not supported.\n");
->  	}
-> =20
->  	platform_set_drvdata(pdev, fsl_ldb);
->=20
+I don't think that using devm_clk_get() is out the scope here, because 
+this would greatly simplify the remove.
 
+Jon
 
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
-
+-- 
+nvpublic
 
