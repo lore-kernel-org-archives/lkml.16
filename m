@@ -1,99 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3405A10E3;
-	Thu, 15 May 2025 00:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BB312E7F
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747268280; cv=none; b=mmRE+UdBahi6GrmOwaIBEHjkHCXYOqOWMvynZoOPzNSxqwjQX8exHRBfuOE/GdNVnYTsC8slF/bp1vruKoMwDJIyPBzywPFrfr0+5ybuyPtJSlzE7Zk53S/t5EO6ProExlCag7fDm731EzV3brU1Wdi8znLke7ktLN+jJkoR2l0=
+	t=1747268349; cv=none; b=I/tdLpeRz6e8KVaaXlAlkjFiyqqU1pb1dvXevOxJxrZzQT3YxZTAAklvF4k7A/qxdglLQYjPAAxILwnpB9j5664MheWO6oTgUu7lIwx4OsRC2P2rk+VPheHwe78VQU2WVZ8n3+vkV/0FpOO9iGp7WkP7oFyI9PGD68j6YJhZGhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747268280; c=relaxed/simple;
-	bh=ppDSPmOlcI1EuIFNI/saJdi1z4iWtdBVsF+tyMghoG8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dj5kIqJmIKA9IgugNh71dxY+4XDxa0HGTjWWUWdBX8rGzG9jmPz0UtnqIPeHa66/mPy/dAXEtiQ8MCOFeUC+fZxJ2c+vkfOl+CWf+BkESdMIlp+7JJrNmpJmG3VhUwzO9e8xRkLaukVtk1Rwsbc6N5pyvn3G8X36HcsP9d2hSj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RZhGiCOr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747268349; c=relaxed/simple;
+	bh=CwFN4BYKQFRQh/Xr76a4fW5WHqO7eX/lUR6egztCPsw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GMF245VQRK3FoKM9MdtwAPWDuXOyL4Sedd5xiguftiMRFTliREiy6RbPloNnBP7RKgleo+og5CY1lj8kznsQ0F+Ec0rkfnVci8ePqpG2xtUii4rlDlli+Jdu1XhB3dAXjjJBXAQCK2up8ks/ha0wajbeCyxe/nxbNvz+qrnKCV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yz+3mu+h; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RZhGiCOr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A0B1C4CEE9;
-	Thu, 15 May 2025 00:17:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747268279;
-	bh=ppDSPmOlcI1EuIFNI/saJdi1z4iWtdBVsF+tyMghoG8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RZhGiCOrdqbR8qAu7bNRM4kd3gnHsJDc10HaqGtlzktXawW7VpvKwYrXS3AyCn5LL
-	 +MeRVMYW2qmBqq7WzM5r8g8q2s1KfmB5K3SAyFVYqBXZZraqLm/VkJQBepoHY5YI3L
-	 sbgFBNNXNkjboNPZWWOQlzsa9fnGlU2KV8n58TlrJUj8nr/1grACy9X9cioyRNzUhp
-	 4MqT33rInfCmvzkQKxuCQZMY3HwcxjXmzl8eO32OMwxrpthaX4+5ResGIfFYTaWI6R
-	 fCnMKucvI6xbJCX8Yrw5ooqAgGF9hJaUgiRxL1+vFZ4+4Dq92xv5F9aU8FfwOpTJHl
-	 9+60FCifOc2Lg==
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-30aa8a259e0so381544a91.1;
-        Wed, 14 May 2025 17:17:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU0J3wdJ6G/Rs5lNgwSo4SVaqVD6+KTAtoGGUC/TgUT8fVQjfbkpqN1T+aw/XaKR5kpYfDvku2TmqlYEIHm@vger.kernel.org, AJvYcCV1ZPm0DN+dHBO5eZ6HsNv5cROHHdPgQjTrf6qmX6f9xjVITDprb3mKqS0JkzBRC7OTlUT6uuc9BuuffWH0@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzvTF56OQPqjcnJxGJhlAwsHuOSQqylKHJFPCiG9AHXOmOx1RD
-	qWQVSAd3rmhjTSZusTTpS8wqAezeW7AZ1tJVfJrT+GJssBxqbco7Q/7nBiG017P4uWAZTGDkdWi
-	XxHKuOmqKK70lxuc3jFi5b8pDaQI=
-X-Google-Smtp-Source: AGHT+IGNsbGjJq8Dz2ZQCS8Wh8/6+oFoCFbOfcGLbDjKt3An0usGoL8I1l5+JBXpJFUekYaPxio/w2jC/odyt4ldbKs=
-X-Received: by 2002:a17:90a:d64f:b0:30a:2196:e654 with SMTP id
- 98e67ed59e1d1-30e517853e7mr1036498a91.15.1747268279075; Wed, 14 May 2025
- 17:17:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yz+3mu+h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747268346;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xAdpM5Q7/vE/oYJJ+JI4td5zwc5mWcdORMBLORRPIA8=;
+	b=Yz+3mu+hmoQWLusMBoHTWjntBS8V4qkjomS+v92aKhGsh5PrcwkHgpHsoquaUbtiPElz/Q
+	KbeWF1nxHXbPvXkd6A/ybFWOhORY7m/8VuFM+/I2KK1/9s80T9lP/nKrF0+ubmGCPDTHQO
+	qR+r7O2Vgslvxk1ifBoUAIRnVGqJuao=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-675-aPJfMCl7O1iQwP8FwPjmDA-1; Wed, 14 May 2025 20:19:05 -0400
+X-MC-Unique: aPJfMCl7O1iQwP8FwPjmDA-1
+X-Mimecast-MFC-AGG-ID: aPJfMCl7O1iQwP8FwPjmDA_1747268345
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4768a1420b6so6490311cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:19:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747268345; x=1747873145;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xAdpM5Q7/vE/oYJJ+JI4td5zwc5mWcdORMBLORRPIA8=;
+        b=jEkmQzPB4NOXQUKuAv2uxVS0LrqSyG5q5tZYWoRyV5eGuqPe4Aa4658QMQHUKWkW3v
+         UHGoUDfDtA3zlPorw4dkB4gWcHg/+0RcJDjX4zR5LxcKoTgQclTYKpoKeRWemt0SZiiW
+         FsT5A+VJFhNUISx8ljGgTK1V7b8t9UXjYK/sI3D/WYtg+8nSURNJ2XJUlBxDK6F72DA3
+         xPrxVD4Zb9bxgQe+z//V0GFMSBymfFLQBLz4hucbvAVtmLPx2YMGiWls1lslwjQYE5lo
+         uyXZYfRVSxkOdVitpcH8R8KM5mvcUwTzVV5tfTY2F+Zb8rVTTRBOELKHzWWsL06dzsgk
+         OUcg==
+X-Forwarded-Encrypted: i=1; AJvYcCXV/VvMBZxIssv6MVma16m4oTCb0NQn4qEM5QlJ5s4Bb+dNCF0LIs3R46FjuIPR6r5itAj3/eJDPuztMHw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxd6+3gKtq36dueuBiffp3YRopoG8y/lytJWd43syetaTCucsuf
+	ZC7JWGDs855r7gxMBsb4+GBSFsDzmJftZXaSodjYNV2kUixgUROCnuExAeZfMPxJtxenGd0FeGD
+	yRIrAlmCLTYqxCAEslEeaAOVwrqOhXnHDRB+cwnM+S4MChAq/e4POBFeeRtouSA==
+X-Gm-Gg: ASbGnctLLVcP1m9X9BTuf52i7edYMfPCfsc0j+Ps47JeCds3VS7GUiHh378ZM7Cjt8r
+	p0wDRkeNc/hzv69bn4fcjL2/Hg+Z4K3ZHFKg3MVizm+HclEeKUMFi1hOx2rkifCVHj+Qwq+pH7g
+	8A1HHAcHUXen5if6nEDOwujBPi4sElpAeMpJ1xEnU+Hb7mbGxguzjMtmLVZF3bIgItltWxIaHZo
+	HmB90+SYyqRwhgMSCktODMpOtMYm6tN5tA/QM1SwIcyNYS93Fh3q6QFHZ5MGRXcm3uIQFthwf0R
+	WnQM1x/QHLoZybmnLW3yzSrdyKzJlWm5YvpedHEsL2psv0SYt88xnMWug2s=
+X-Received: by 2002:a05:622a:550f:b0:494:a4bc:3b4d with SMTP id d75a77b69052e-494a4bc3e86mr7310391cf.18.1747268345005;
+        Wed, 14 May 2025 17:19:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHm4JjYY+Nx9t9nYvk2Gm1RhK8ioZCZ7rNUtqRSWrSEgm9/4nzUsOnioaJrjwzl/vmuEc8f4g==
+X-Received: by 2002:a05:622a:550f:b0:494:a4bc:3b4d with SMTP id d75a77b69052e-494a4bc3e86mr7309901cf.18.1747268344579;
+        Wed, 14 May 2025 17:19:04 -0700 (PDT)
+Received: from ?IPv6:2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38? ([2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4945259fa0dsm85842911cf.80.2025.05.14.17.19.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 17:19:04 -0700 (PDT)
+Message-ID: <8e4e3a564b652a1dd402873fbf3d320c8fdc41f8.camel@redhat.com>
+Subject: Re: [PATCH 3/3] x86: KVM: VMX: preserve host's
+ DEBUGCTLMSR_FREEZE_IN_SMM while in the guest mode
+From: mlevitsk@redhat.com
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav
+ Petkov <bp@alien8.de>, Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+ linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Date: Wed, 14 May 2025 20:19:03 -0400
+In-Reply-To: <aByzGilzBiTa-43C@google.com>
+References: <20250416002546.3300893-1-mlevitsk@redhat.com>
+	 <20250416002546.3300893-4-mlevitsk@redhat.com>
+	 <aAgpD_5BI6ZcCN29@google.com>
+	 <2b1ec570a37992cdfa2edad325e53e0592d696c8.camel@redhat.com>
+	 <71af8435d2085b3f969cb3e73cff5bfacd243819.camel@redhat.com>
+	 <aBvmxjxUrXEBa3sc@google.com> <aByzGilzBiTa-43C@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514-max-mixer-width-v1-0-c8ba0d9bb858@oss.qualcomm.com> <20250514-max-mixer-width-v1-4-c8ba0d9bb858@oss.qualcomm.com>
-In-Reply-To: <20250514-max-mixer-width-v1-4-c8ba0d9bb858@oss.qualcomm.com>
-From: Dmitry Baryshkov <lumag@kernel.org>
-Date: Thu, 15 May 2025 03:17:48 +0300
-X-Gmail-Original-Message-ID: <CALT56yPxcsLhA2eigirjvNiWR5JBFW4jsOAi7QWkgmJgbMnKXw@mail.gmail.com>
-X-Gm-Features: AX0GCFuaEv9cpS42k1XF87YPo9WSvjg8iXOg6oOZGPtLNGJgkjMpQbVPpysTOVE
-Message-ID: <CALT56yPxcsLhA2eigirjvNiWR5JBFW4jsOAi7QWkgmJgbMnKXw@mail.gmail.com>
-Subject: Re: [PATCH 4/5] drm/msm/dpu: Filter writeback modes using writeback maxlinewidth
-To: Jessica Zhang <jessica.zhang@oss.qualcomm.com>
-Cc: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Abhinav Kumar <abhinav.kumar@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 15 May 2025 at 02:52, Jessica Zhang
-<jessica.zhang@oss.qualcomm.com> wrote:
->
-> Since the max mixer width is not a strict hardware limit, use the actual
+On Thu, 2025-05-08 at 06:35 -0700, Sean Christopherson wrote:
+> On Wed, May 07, 2025, Sean Christopherson wrote:
+> > On Thu, May 01, 2025, mlevitsk@redhat.com=C2=A0wrote:
+> > > Any ideas on how to solve this then? Since currently its the common c=
+ode that
+> > > reads the current value of the MSR_IA32_DEBUGCTLMSR and it doesn't le=
+ave any
+> > > indication about if it changed I can do either
+> > >=20
+> > > 1. store old value as well, something like 'vcpu->arch.host_debugctl_=
+old' Ugly IMHO.
+> > >=20
+> > > 2. add DEBUG_CTL to the set of the 'dirty' registers, e.g add new bit=
+ for kvm_register_mark_dirty
+> > > It looks a bit overkill to me
+> > >=20
+> > > 3. Add new x86 callback for something like .sync_debugctl(). I vote f=
+or this option.
+> > >=20
+> > > What do you think/prefer?
+> >=20
+> > I was going to say #3 as well, but I think I have a better idea.
+> >=20
+> > DR6 has a similar problem; the guest's value needs to be loaded into ha=
+rdware,
+> > but only somewhat rarely, and more importantly, never on a fastpath ree=
+ntry.
+> >=20
+> > Forced immediate exits also have a similar need: some control logic in =
+common x86
+> > needs instruct kvm_x86_ops.vcpu_run() to do something.
+> >=20
+> > Unless I've misread the DEBUGCTLMSR situation, in all cases, common x86=
+ only needs
+> > to a single flag to tell vendor code to do something.=C2=A0 The payload=
+ for that action
+> > is already available.
+> >=20
+> > So rather than add a bunch of kvm_x86_ops hooks that are only called im=
+mediately
+> > before kvm_x86_ops.vcpu_run(), expand @req_immediate_exit into a bitmap=
+ of flags
+> > to communicate what works needs to be done, without having to resort to=
+ a field
+> > in kvm_vcpu_arch that isn't actually persistent.
+> >=20
+> > The attached patches are relatively lightly tested, but the DR6 tests f=
+rom the
+> > recent bug[*] pass, so hopefully they're correct?
+> >=20
+> > The downside with this approach is that it would be difficult to backpo=
+rt to LTS
+> > kernels, but given how long this has been a problem, I'm not super conc=
+erned about
+> > optimizing for backports.
+> >=20
+> > If they look ok, feel free to include them in the next version.=C2=A0 O=
+r I can post
+> > them separately if you want.
+>=20
+> And of course I forgot to attach the patches...
 
-Is it? What is the actual max width that the mixer can support?
+There is one problem with this approach though: the common x86 code will st=
+ill have to decide if
+to set KVM_RUN_LOAD_DEBUGCTL flag.
 
-> hardware limit (the writeback maxlinewidth) to filter modes.
->
-> Signed-off-by: Jessica Zhang <jessica.zhang@oss.qualcomm.com>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c | 9 +--------
->  1 file changed, 1 insertion(+), 8 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c
-> index 8ff496082902..0a198896f656 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c
-> @@ -14,14 +14,7 @@ static int dpu_wb_conn_get_modes(struct drm_connector *connector)
->         struct msm_drm_private *priv = dev->dev_private;
->         struct dpu_kms *dpu_kms = to_dpu_kms(priv->kms);
->
-> -       /*
-> -        * We should ideally be limiting the modes only to the maxlinewidth but
-> -        * on some chipsets this will allow even 4k modes to be added which will
-> -        * fail the per SSPP bandwidth checks. So, till we have dual-SSPP support
-> -        * and source split support added lets limit the modes based on max_mixer_width
-> -        * as 4K modes can then be supported.
-> -        */
-> -       return drm_add_modes_noedid(connector, dpu_kms->catalog->caps->max_mixer_width,
-> +       return drm_add_modes_noedid(connector, dpu_kms->catalog->wb->maxlinewidth,
->                         dev->mode_config.max_height);
->  }
->
->
-> --
-> 2.49.0
->
+Checking that DEBUGCTLMSR_FREEZE_IN_SMM bit of 'vcpu->arch.host_debugctl' c=
+hanged is VMX specific,
+because AMD doesn't have this bit, and it might even in the future have a d=
+ifferent bit at that
+position for different purpose.
+
+I can set the KVM_RUN_LOAD_DEBUGCTL when any bit in DEBUGCTL changes instea=
+d, which should still be rare
+and then SVM code can ignore the KVM_RUN_LOAD_DEBUGCTL, while VMX code will=
+ reload the VMCS field.
+
+Is this OK?
+
+Best regards,
+	Maxim Levitsky
+
