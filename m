@@ -1,541 +1,564 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CD71F5849;
-	Thu, 15 May 2025 17:01:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE4B2550AD
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747328482; cv=none; b=Nl8rrtcOXm+Z007s7F0kQ7cjub+clZFhhxjkx+58UMZ8VmbvM1SXY4cis6YU1wG5bEyqeT0MxKu5ErTBysHavMkAeXlYcAiomIlDzpe1RZ6UTcvx0lVFngQr4A317/G8HkHEji6fljcWIBhetjZMoB/2n1hL+jz0TlF0cxz56c4=
+	t=1747328499; cv=none; b=guKcyg6WwxVoxvqUzQzqNJodwo6iHVKTDJcnEwvhbNCmu20mjJiaVrupG0/7DZJK2gwjKDmYj17cKecbwvg37V93V935uC/TD7N0kaaGMElYox+itNiUyCLVR5s0t7O/0Z1+zsCla+IKC4j+nihoVnI1EqbvbgMRpU5hKUh9uQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747328482; c=relaxed/simple;
-	bh=zCUqZaF//cXIHwa0sLcfpFFArG53hcVcDVzV51MpqG4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=p1xtWpnUJuAruAG8vmDO9tXJSvaEXEozoNQjykFOXmoNQ89GG9e3yyQHDuINSxfKNKn+vLGJwKzr8pE/L/qsCNPbNZFRFt7P52Q40NtdKj5F1aDNJM5BcIsLVzgj927LeFmJF6tk/3F788wc595oZwiDrn8cs7neg1aBMGbGl8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=VYN6rO8p; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1747328499; c=relaxed/simple;
+	bh=ZaUuu5sDYE82g5eRtyelATQ3QtWX8/G3oIE0+uijdt8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y9fJMCijQr48ymg8Z/y2Vk57ovxbCMo71NDkqypH5I7kTUrPyyTXtgKMLsuXpyzgFetyJFWUAxSIZbCxznjc68UK5rKH7JDcw/cZr0cv4BgLSCHadLp3W7Jbod85fphtrSQE98XAyIl4oo5A79t83/qQ8xBGeDPNFyZ2qitOKyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xs/ISmvB; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="VYN6rO8p"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xs/ISmvB"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3db82534852so12005ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:01:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1747328481; x=1778864481;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=WiGdij5nNkivbmSbA7JNidQW9frbngAVJFSP81M8sPE=;
-  b=VYN6rO8pDWSyPrmC1+j7Kz6+WS2dSnO91FjY6JjJ0sqZ31Cm04jdTKGf
-   HDEXJPkclbDhPzZhcq+EKMPdBznFYVqJbEugez34HTzyXm74MfAI8e/PQ
-   ninuqx7qhXbEYlltuAxxXimQPFok2KknzL2Excy6NAzvhXNk4yasYRoxJ
-   GVx4+jKs71lUcZE0c/kJUYRLcw3KWjhrosp2ohsRfntbmCjp4XPtNRATa
-   TwoECN5/6ifaMFnKEbBgVwFVGh0FhiZGsKDqVOoDbno7J9fhnGv7Gkpas
-   jPHiUtqO+aXn8nK4u4329N5CuTtBh0LO07kT4mUdH9vg5P2uchEc8dnIm
-   w==;
-X-IronPort-AV: E=Sophos;i="6.15,291,1739836800"; 
-   d="scan'208";a="744986109"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 17:01:15 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.21.151:47656]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.29.53:2525] with esmtp (Farcaster)
- id 8438c557-2276-403f-a02c-c7f77bb6bcbc; Thu, 15 May 2025 17:01:13 +0000 (UTC)
-X-Farcaster-Flow-ID: 8438c557-2276-403f-a02c-c7f77bb6bcbc
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 15 May 2025 17:01:10 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.170.35) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 15 May 2025 17:01:06 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <brauner@kernel.org>
-CC: <alexander@mihalicyn.com>, <bluca@debian.org>, <daan.j.demeyer@gmail.com>,
-	<daniel@iogearbox.net>, <davem@davemloft.net>, <david@readahead.eu>,
-	<edumazet@google.com>, <horms@kernel.org>, <jack@suse.cz>,
-	<jannh@google.com>, <kuba@kernel.org>, <kuniyu@amazon.com>,
-	<lennart@poettering.net>, <linux-fsdevel@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-security-module@vger.kernel.org>,
-	<me@yhndnzj.com>, <netdev@vger.kernel.org>, <oleg@redhat.com>,
-	<pabeni@redhat.com>, <viro@zeniv.linux.org.uk>, <zbyszek@in.waw.pl>
-Subject: Re: [PATCH v7 4/9] coredump: add coredump socket
-Date: Thu, 15 May 2025 10:00:43 -0700
-Message-ID: <20250515170057.50816-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250515-work-coredump-socket-v7-4-0a1329496c31@kernel.org>
-References: <20250515-work-coredump-socket-v7-4-0a1329496c31@kernel.org>
+        d=google.com; s=20230601; t=1747328496; x=1747933296; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UEXxcf8jVezm4hhZlGfp1oOcj9QgfqWp1O8soXS6zp8=;
+        b=xs/ISmvBiLW6jhSIKVFQjXxGd+Xl5McvBa2I5A1nBt4P5MVK2kZP6oS+Q0aKVyTTST
+         iJDCDZ+PnXH+jbKNMKAhGpEfMU63Dz+i77EgSzF6YCd4TV0ExbKilsKt9ICnBB4KlFvr
+         Y2kiVzIlH5BZHjIvrVBWIjWFhGtEOnXVyLWydgjdkD7yHIVWZLYChH7JRd0FAibDdpa6
+         5DZ9tEdsyIYfu/2AE0iv4H3hEjPo3LchxLFEnWVT4YKMqjtUIL5YD/pjPYvJNwDn32qI
+         TdbKT8cZWNMn171ngxgc5avq3bdmcf4Oj41TQKNauCX5kypb9Dw39eAMC4sFI7GQXNIv
+         gW8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747328496; x=1747933296;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UEXxcf8jVezm4hhZlGfp1oOcj9QgfqWp1O8soXS6zp8=;
+        b=gTWPD6A4kUr4ukLGwQi16K6J7HLeaCiJgrtj0io2WfarFdsvxVI3c1yWQPlLUEVagf
+         V5geOzqLFfivJz/Jnj/CMQZ7VGbC2xB4ZziG4OJbKcW41smzUXJvtzioe8SK2di/WFmk
+         CxWxDva15sxo4zKyCXL59B+eL2bUurj79Ja9TNfVl4VJoZscndWbk3C9tMiQK0Rs2bR4
+         vvqOM2gg0Ck16ivxfRz8f7W5MItUintDaEFI0KoTmAIAMxsl1+Gem4uTmDaNV/LNcAh8
+         sIC4VLLkb2djjTWmaWcxJAn5QZlHiZ7yHFrZOfS6Iz64hEYvwUWUEudJ72sGfeCmUMAv
+         Re9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXndFVEhUPr2kX3k0cEl2HyikrOSaqpz2OkM2vT7YxBWQH2DP1lc4iLwGQ/gSSiebHKVLZwGKLAB2Dyn/Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCT02BHiumQosGA4zidfSkr89hNPfbVwhCVY2BXrbTBsLQHPjX
+	HYAYxG/TmNvTZYhd+N0pnFz4kR9E2IioqpQrYf6t4HmwbmnAgDKMfpl7+MNnpMCiLhXOHtNymK+
+	/KwJtXWcb3nKOfUkiSotHdsXlqBo37rZak7mrYYDx
+X-Gm-Gg: ASbGnctyFwcTimwAaFLYHL7lUXDE8N7v268UCAo9FvJTD6EdT1RgITbo8vveyvP4tmv
+	bWW5PsuogSx4uI7n4pJ35hcjt0XksHGNTXkqWnmLA7XqQGwiX5eLAKf4JtNV4py6iEcuQ+J+tbP
+	tLBx/F7OFA+21o6QG/yL44m28mcM0h1TSJuLAb36iC3nYrOvCXK8j+MRjo7V5OTg==
+X-Google-Smtp-Source: AGHT+IHlnFsWr83+eL7jSyG5VQ49GP19H1yDohnU6rUJ++x3gcGbuMdKHC0HFKgKjm6+nk3PkKXkrhe4iSwVdk6lxrk=
+X-Received: by 2002:a05:6e02:2306:b0:3cf:f8c0:417a with SMTP id
+ e9e14a558f8ab-3db77f14049mr4476285ab.0.1747328495326; Thu, 15 May 2025
+ 10:01:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D038UWC004.ant.amazon.com (10.13.139.229) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+References: <20250515043818.236807-1-irogers@google.com> <909e988c-6e7c-4de1-b5b3-d5de119e4f35@linux.intel.com>
+In-Reply-To: <909e988c-6e7c-4de1-b5b3-d5de119e4f35@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 15 May 2025 10:01:23 -0700
+X-Gm-Features: AX0GCFu6kJCSuPZuCfi9gYV9C4GIihEsiHuC3dZ8IfGachhWZRZBJUOc_jIPW_Q
+Message-ID: <CAP-5=fUP=oENY8DFhGt4TFBJzyqbYaFRpj2huaJz4xfDu1GLmg@mail.gmail.com>
+Subject: Re: [PATCH v1] perf pmu intel: Adjust cpumaks for sub-NUMA clusters
+ on graniterapids
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Christian Brauner <brauner@kernel.org>
-Date: Thu, 15 May 2025 00:03:37 +0200
-> Coredumping currently supports two modes:
-> 
-> (1) Dumping directly into a file somewhere on the filesystem.
-> (2) Dumping into a pipe connected to a usermode helper process
->     spawned as a child of the system_unbound_wq or kthreadd.
-> 
-> For simplicity I'm mostly ignoring (1). There's probably still some
-> users of (1) out there but processing coredumps in this way can be
-> considered adventurous especially in the face of set*id binaries.
-> 
-> The most common option should be (2) by now. It works by allowing
-> userspace to put a string into /proc/sys/kernel/core_pattern like:
-> 
->         |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h
-> 
-> The "|" at the beginning indicates to the kernel that a pipe must be
-> used. The path following the pipe indicator is a path to a binary that
-> will be spawned as a usermode helper process. Any additional parameters
-> pass information about the task that is generating the coredump to the
-> binary that processes the coredump.
-> 
-> In the example core_pattern shown above systemd-coredump is spawned as a
-> usermode helper. There's various conceptual consequences of this
-> (non-exhaustive list):
-> 
-> - systemd-coredump is spawned with file descriptor number 0 (stdin)
->   connected to the read-end of the pipe. All other file descriptors are
->   closed. That specifically includes 1 (stdout) and 2 (stderr). This has
->   already caused bugs because userspace assumed that this cannot happen
->   (Whether or not this is a sane assumption is irrelevant.).
-> 
-> - systemd-coredump will be spawned as a child of system_unbound_wq. So
->   it is not a child of any userspace process and specifically not a
->   child of PID 1. It cannot be waited upon and is in a weird hybrid
->   upcall which are difficult for userspace to control correctly.
-> 
-> - systemd-coredump is spawned with full kernel privileges. This
->   necessitates all kinds of weird privilege dropping excercises in
->   userspace to make this safe.
-> 
-> - A new usermode helper has to be spawned for each crashing process.
-> 
-> This series adds a new mode:
-> 
-> (3) Dumping into an AF_UNIX socket.
-> 
-> Userspace can set /proc/sys/kernel/core_pattern to:
-> 
->         @/path/to/coredump.socket
-> 
-> The "@" at the beginning indicates to the kernel that an AF_UNIX
-> coredump socket will be used to process coredumps.
-> 
-> The coredump socket must be located in the initial mount namespace.
-> When a task coredumps it opens a client socket in the initial network
-> namespace and connects to the coredump socket.
-> 
-> - The coredump server uses SO_PEERPIDFD to get a stable handle on the
->   connected crashing task. The retrieved pidfd will provide a stable
->   reference even if the crashing task gets SIGKILLed while generating
->   the coredump.
-> 
-> - By setting core_pipe_limit non-zero userspace can guarantee that the
->   crashing task cannot be reaped behind it's back and thus process all
->   necessary information in /proc/<pid>. The SO_PEERPIDFD can be used to
->   detect whether /proc/<pid> still refers to the same process.
-> 
->   The core_pipe_limit isn't used to rate-limit connections to the
->   socket. This can simply be done via AF_UNIX sockets directly.
-> 
-> - The pidfd for the crashing task will grow new information how the task
->   coredumps.
-> 
-> - The coredump server should mark itself as non-dumpable.
-> 
-> - A container coredump server in a separate network namespace can simply
->   bind to another well-know address and systemd-coredump fowards
->   coredumps to the container.
-> 
-> - Coredumps could in the future also be handled via per-user/session
->   coredump servers that run only with that users privileges.
-> 
->   The coredump server listens on the coredump socket and accepts a
->   new coredump connection. It then retrieves SO_PEERPIDFD for the
->   client, inspects uid/gid and hands the accepted client to the users
->   own coredump handler which runs with the users privileges only
->   (It must of coure pay close attention to not forward crashing suid
->   binaries.).
-> 
-> The new coredump socket will allow userspace to not have to rely on
-> usermode helpers for processing coredumps and provides a safer way to
-> handle them instead of relying on super privileged coredumping helpers
-> that have and continue to cause significant CVEs.
-> 
-> This will also be significantly more lightweight since no fork()+exec()
-> for the usermodehelper is required for each crashing process. The
-> coredump server in userspace can e.g., just keep a worker pool.
-> 
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> ---
->  fs/coredump.c       | 133 ++++++++++++++++++++++++++++++++++++++++++++++++----
->  include/linux/net.h |   1 +
->  net/unix/af_unix.c  |  53 ++++++++++++++++-----
->  3 files changed, 166 insertions(+), 21 deletions(-)
-> 
-> diff --git a/fs/coredump.c b/fs/coredump.c
-> index a70929c3585b..e1256ebb89c1 100644
-> --- a/fs/coredump.c
-> +++ b/fs/coredump.c
-> @@ -44,7 +44,11 @@
->  #include <linux/sysctl.h>
->  #include <linux/elf.h>
->  #include <linux/pidfs.h>
-> +#include <linux/net.h>
-> +#include <linux/socket.h>
-> +#include <net/net_namespace.h>
->  #include <uapi/linux/pidfd.h>
-> +#include <uapi/linux/un.h>
->  
->  #include <linux/uaccess.h>
->  #include <asm/mmu_context.h>
-> @@ -79,6 +83,7 @@ unsigned int core_file_note_size_limit = CORE_FILE_NOTE_SIZE_DEFAULT;
->  enum coredump_type_t {
->  	COREDUMP_FILE = 1,
->  	COREDUMP_PIPE = 2,
-> +	COREDUMP_SOCK = 3,
->  };
->  
->  struct core_name {
-> @@ -232,13 +237,16 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
->  	cn->corename = NULL;
->  	if (*pat_ptr == '|')
->  		cn->core_type = COREDUMP_PIPE;
-> +	else if (*pat_ptr == '@')
-> +		cn->core_type = COREDUMP_SOCK;
->  	else
->  		cn->core_type = COREDUMP_FILE;
->  	if (expand_corename(cn, core_name_size))
->  		return -ENOMEM;
->  	cn->corename[0] = '\0';
->  
-> -	if (cn->core_type == COREDUMP_PIPE) {
-> +	switch (cn->core_type) {
-> +	case COREDUMP_PIPE: {
->  		int argvs = sizeof(core_pattern) / 2;
->  		(*argv) = kmalloc_array(argvs, sizeof(**argv), GFP_KERNEL);
->  		if (!(*argv))
-> @@ -247,6 +255,33 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
->  		++pat_ptr;
->  		if (!(*pat_ptr))
->  			return -ENOMEM;
-> +		break;
-> +	}
-> +	case COREDUMP_SOCK: {
-> +		/* skip the @ */
-> +		pat_ptr++;
-> +		err = cn_printf(cn, "%s", pat_ptr);
-> +		if (err)
-> +			return err;
-> +
-> +		/* Require absolute paths. */
-> +		if (cn->corename[0] != '/')
-> +			return -EINVAL;
-> +
-> +		/*
-> +		 * Currently no need to parse any other options.
-> +		 * Relevant information can be retrieved from the peer
-> +		 * pidfd retrievable via SO_PEERPIDFD by the receiver or
-> +		 * via /proc/<pid>, using the SO_PEERPIDFD to guard
-> +		 * against pid recycling when opening /proc/<pid>.
-> +		 */
-> +		return 0;
-> +	}
-> +	case COREDUMP_FILE:
-> +		break;
-> +	default:
-> +		WARN_ON_ONCE(true);
-> +		return -EINVAL;
->  	}
->  
->  	/* Repeat as long as we have more pattern to process and more output
-> @@ -393,11 +428,20 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
->  	 * If core_pattern does not include a %p (as is the default)
->  	 * and core_uses_pid is set, then .%pid will be appended to
->  	 * the filename. Do not do this for piped commands. */
-> -	if (!(cn->core_type == COREDUMP_PIPE) && !pid_in_pattern && core_uses_pid) {
-> -		err = cn_printf(cn, ".%d", task_tgid_vnr(current));
-> -		if (err)
-> -			return err;
-> +	if (!pid_in_pattern && core_uses_pid) {
-> +		switch (cn->core_type) {
-> +		case COREDUMP_FILE:
-> +			return cn_printf(cn, ".%d", task_tgid_vnr(current));
-> +		case COREDUMP_PIPE:
-> +			break;
-> +		case COREDUMP_SOCK:
-> +			break;
-> +		default:
-> +			WARN_ON_ONCE(true);
-> +			return -EINVAL;
-> +		}
->  	}
-> +
->  	return 0;
->  }
->  
-> @@ -801,6 +845,55 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->  		}
->  		break;
->  	}
-> +	case COREDUMP_SOCK: {
-> +#ifdef CONFIG_UNIX
-> +		struct file *file __free(fput) = NULL;
-> +		struct sockaddr_un addr = {
-> +			.sun_family = AF_UNIX,
-> +		};
-> +		ssize_t addr_len;
-> +		struct socket *socket;
-> +
-> +		retval = strscpy(addr.sun_path, cn.corename, sizeof(addr.sun_path));
-> +		if (retval < 0)
-> +			goto close_fail;
-> +		addr_len = offsetof(struct sockaddr_un, sun_path) + retval + 1;
-> +
-> +		/*
-> +		 * It is possible that the userspace process which is
-> +		 * supposed to handle the coredump and is listening on
-> +		 * the AF_UNIX socket coredumps. Userspace should just
-> +		 * mark itself non dumpable.
-> +		 */
-> +
-> +		retval = sock_create_kern(&init_net, AF_UNIX, SOCK_STREAM, 0, &socket);
-> +		if (retval < 0)
-> +			goto close_fail;
-> +
-> +		file = sock_alloc_file(socket, 0, NULL);
-> +		if (IS_ERR(file)) {
-> +			sock_release(socket);
-> +			goto close_fail;
-> +		}
-> +
-> +		retval = kernel_connect(socket, (struct sockaddr *)(&addr),
-> +					addr_len, O_NONBLOCK | SOCK_COREDUMP);
-> +		if (retval) {
-> +			if (retval == -EAGAIN)
-> +				coredump_report_failure("Coredump socket %s receive queue full", addr.sun_path);
-> +			else
-> +				coredump_report_failure("Coredump socket connection %s failed %d", addr.sun_path, retval);
-> +			goto close_fail;
-> +		}
-> +
-> +		cprm.limit = RLIM_INFINITY;
-> +		cprm.file = no_free_ptr(file);
-> +#else
-> +		coredump_report_failure("Core dump socket support %s disabled", cn.corename);
-> +		goto close_fail;
-> +#endif
-> +		break;
-> +	}
->  	default:
->  		WARN_ON_ONCE(true);
->  		goto close_fail;
-> @@ -838,8 +931,32 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->  		file_end_write(cprm.file);
->  		free_vma_snapshot(&cprm);
->  	}
-> -	if ((cn.core_type == COREDUMP_PIPE) && core_pipe_limit)
-> -		wait_for_dump_helpers(cprm.file);
-> +
-> +	/*
-> +	 * When core_pipe_limit is set we wait for the coredump server
-> +	 * or usermodehelper to finish before exiting so it can e.g.,
-> +	 * inspect /proc/<pid>.
-> +	 */
-> +	if (core_pipe_limit) {
-> +		switch (cn.core_type) {
-> +		case COREDUMP_PIPE:
-> +			wait_for_dump_helpers(cprm.file);
-> +			break;
-> +		case COREDUMP_SOCK: {
-> +			/*
-> +			 * We use a simple read to wait for the coredump
-> +			 * processing to finish. Either the socket is
-> +			 * closed or we get sent unexpected data. In
-> +			 * both cases, we're done.
-> +			 */
-> +			__kernel_read(cprm.file, &(char){ 0 }, 1, NULL);
-> +			break;
-> +		}
-> +		default:
-> +			break;
-> +		}
-> +	}
-> +
->  close_fail:
->  	if (cprm.file)
->  		filp_close(cprm.file, NULL);
-> @@ -1069,7 +1186,7 @@ EXPORT_SYMBOL(dump_align);
->  void validate_coredump_safety(void)
->  {
->  	if (suid_dumpable == SUID_DUMP_ROOT &&
-> -	    core_pattern[0] != '/' && core_pattern[0] != '|') {
-> +	    core_pattern[0] != '/' && core_pattern[0] != '|' && core_pattern[0] != '@') {
->  
->  		coredump_report_failure("Unsafe core_pattern used with fs.suid_dumpable=2: "
->  			"pipe handler or fully qualified core dump path required. "
-> diff --git a/include/linux/net.h b/include/linux/net.h
-> index 0ff950eecc6b..139c85d0f2ea 100644
-> --- a/include/linux/net.h
-> +++ b/include/linux/net.h
-> @@ -81,6 +81,7 @@ enum sock_type {
->  #ifndef SOCK_NONBLOCK
->  #define SOCK_NONBLOCK	O_NONBLOCK
->  #endif
-> +#define SOCK_COREDUMP	O_NOCTTY
->  
->  #endif /* ARCH_HAS_SOCKET_TYPES */
->  
-> diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
-> index 472f8aa9ea15..a9d1c9ba2961 100644
-> --- a/net/unix/af_unix.c
-> +++ b/net/unix/af_unix.c
-> @@ -85,10 +85,13 @@
->  #include <linux/file.h>
->  #include <linux/filter.h>
->  #include <linux/fs.h>
-> +#include <linux/fs_struct.h>
->  #include <linux/init.h>
->  #include <linux/kernel.h>
->  #include <linux/mount.h>
->  #include <linux/namei.h>
-> +#include <linux/net.h>
-> +#include <linux/pidfs.h>
->  #include <linux/poll.h>
->  #include <linux/proc_fs.h>
->  #include <linux/sched/signal.h>
-> @@ -100,7 +103,6 @@
->  #include <linux/splice.h>
->  #include <linux/string.h>
->  #include <linux/uaccess.h>
-> -#include <linux/pidfs.h>
->  #include <net/af_unix.h>
->  #include <net/net_namespace.h>
->  #include <net/scm.h>
-> @@ -1146,7 +1148,7 @@ static int unix_release(struct socket *sock)
->  }
->  
->  static struct sock *unix_find_bsd(struct sockaddr_un *sunaddr, int addr_len,
-> -				  int type)
-> +				  int type, unsigned int flags)
-  				      	    ^^^
-nit: int flags
+On Thu, May 15, 2025 at 9:06=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
+>
+>
+>
+> On 2025-05-15 12:38 a.m., Ian Rogers wrote:
+> > On graniterapids the cache home agent (CHA) and memory controller
+> > (IMC) PMUs all have their cpumask set to per-socket information. In
+> > order for per NUMA node aggregation to work correctly the PMUs cpumask
+> > needs to be set to CPUs for the relevant sub-NUMA grouping.
+> >
+> > For example, on a 2 socket graniterapids machine with sub NUMA
+> > clustering of 3, for uncore_cha and uncore_imc PMUs the cpumask is
+> > "0,120" leading to aggregation only on NUMA nodes 0 and 3:
+> > ```
+> > $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a slee=
+p 1
+> >
+> >  Performance counter stats for 'system wide':
+> >
+> > N0        1    277,835,681,344      UNC_CHA_CLOCKTICKS
+> > N0        1     19,242,894,228      UNC_M_CLOCKTICKS
+> > N3        1    277,803,448,124      UNC_CHA_CLOCKTICKS
+> > N3        1     19,240,741,498      UNC_M_CLOCKTICKS
+> >
+> >        1.002113847 seconds time elapsed
+> > ```
+> >
+> > By updating the PMUs cpumasks to "0,120", "40,160" and "80,200" then
+> > the correctly 6 NUMA node aggregations are achieved:
+> > ```
+> > $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a slee=
+p 1
+> >
+> >  Performance counter stats for 'system wide':
+> >
+> > N0        1     92,748,667,796      UNC_CHA_CLOCKTICKS
+> > N0        0      6,424,021,142      UNC_M_CLOCKTICKS
+> > N1        0     92,753,504,424      UNC_CHA_CLOCKTICKS
+> > N1        1      6,424,308,338      UNC_M_CLOCKTICKS
+> > N2        0     92,751,170,084      UNC_CHA_CLOCKTICKS
+> > N2        0      6,424,227,402      UNC_M_CLOCKTICKS
+> > N3        1     92,745,944,144      UNC_CHA_CLOCKTICKS
+> > N3        0      6,423,752,086      UNC_M_CLOCKTICKS
+> > N4        0     92,725,793,788      UNC_CHA_CLOCKTICKS
+> > N4        1      6,422,393,266      UNC_M_CLOCKTICKS
+> > N5        0     92,717,504,388      UNC_CHA_CLOCKTICKS
+> > N5        0      6,421,842,618      UNC_M_CLOCKTICKS
+> >
+> >        1.003406645 seconds time elapsed
+> > ```
+> >
+> > In general, having the perf tool adjust cpumasks isn't desirable as
+> > ideally the PMU driver would be advertising the correct cpumask.
+> >
+>
+> Strictly speaking, the information used here is the CHA and IMC topology
+> information, not a cpumask.
+>
+> The cpumask in the uncore driver implies the scope of the PMU. Usually,
+> it's the first CPU of each socket/die.
 
+I think it is understandable that things have diverged as previously
+socket and NUMA topologies were equivalent. Should cpumasks be
+documented like we have for the PMU names:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/Documentation/ABI/testing/sysfs-bus-event_source-devices?h=3Dperf-to=
+ols-next
+I think without documentation the behavior of the `perf tool` is the
+expected use of the file. If the perf tool isn't behaving correctly
+then it is a bug in the driver. I see a lot of such bugs, mainly not
+on Intel platforms, where the cpumask is missing and then taken by the
+perf tool to mean the cpumask is all online CPUs; which is very bad
+for uncore devices leading to counts multiplied by the number of CPUs
+and multiplexing. I think there is similar confusion over the meaning
+of the CPUs in the cpumask. They are the CPUs perf should open an
+event on, for uncore you can specify other CPUs and this may be a way
+to spread kernel overhead, for core the meaning is different. In the
+perf tool implementation we use cpumasks to guide setting the thread
+affinity to try to lower the system call overheads. I worry different
+people assume different things and then these things start fighting
+against each other - such as setting a CPU to try to lower overhead
+but instead incurring IPI overheads.
 
->  {
->  	struct inode *inode;
->  	struct path path;
-> @@ -1154,13 +1156,38 @@ static struct sock *unix_find_bsd(struct sockaddr_un *sunaddr, int addr_len,
->  	int err;
->  
->  	unix_mkname_bsd(sunaddr, addr_len);
-> -	err = kern_path(sunaddr->sun_path, LOOKUP_FOLLOW, &path);
-> -	if (err)
-> -		goto fail;
->  
-> -	err = path_permission(&path, MAY_WRITE);
-> -	if (err)
-> -		goto path_put;
-> +	if (flags & SOCK_COREDUMP) {
-> +		struct path root;
-> +		struct cred *kcred;
-> +		const struct cred *cred;
+> The topology information discloses how the uncore units connect to the
+> HW components, e.g., die, node...
+> There should be another interface for it. An example is the UPI topology
+> information.
+> https://lore.kernel.org/lkml/20221117122833.3103580-7-alexander.antonov@l=
+inux.intel.com/
+>
+> But I think utilizing the cpumask to imply the topology as this patch
+> does should be a good idea.
 
-nit: please keep these in the reverse xmas tree order.
-https://docs.kernel.org/process/maintainer-netdev.html#local-variable-ordering-reverse-xmas-tree-rcs
+I'm not sure how I'd hook up the topology information. On skylakex for
+a UPI device I see:
+```
+$ ls /sys/devices/uncore_upi_0/
+cpumask  die0  die1  format  perf_event_mux_interval_ms  power
+subsystem  type  uevent
+$ cat /sys/devices/uncore_upi_0/cpumask
+0,18
+$ cat /sys/devices/uncore_upi_0/die0
+upi_1,die_1
+$ cat /sys/devices/uncore_upi_0/die1
+upi_1,die_0
+```
+There's work to connect this up with NUMA.
 
+> But I still incline not to add it to the kernel at least for now. Because=
+,
+> - The current method is based on some assumptions, e.g., the hardware id
+> and logical id of Notes and CHAs follow the ascending order. It should
+> work for the vast majority of cases. But it's not reliable compared to
+> retrieving from a register.
+> - Perf tool is more flexible. It can be easily deployed on an old
+> environment without the need to update the kernel.
+> - The cpumask codes are shared among uncore PMUs in the uncore driver.
+> It requires a big refactor to support per uncore PMU specific cpumask.
+> It may not be worth doing it only for GNR.
+>
+> Let's support it in the perf tool x86 code for now. We may move it to
+> the uncore driver later once the above items have changed.
 
-> +
-> +		err = -ENOMEM;
+Agreed. At least this patch is a proof of concept that doing this
+fixes --per-node while keeping --per-socket also working.
 
-While at it, please move this in the "if (!kcred)" as it's only
-used for this.
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/arch/x86/util/pmu.c | 259 ++++++++++++++++++++++++++++++++-
+> >  1 file changed, 254 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/=
+pmu.c
+> > index 8712cbbbc712..38c800c6e9c8 100644
+> > --- a/tools/perf/arch/x86/util/pmu.c
+> > +++ b/tools/perf/arch/x86/util/pmu.c
+> > @@ -8,6 +8,8 @@
+> >  #include <linux/perf_event.h>
+> >  #include <linux/zalloc.h>
+> >  #include <api/fs/fs.h>
+> > +#include <api/io_dir.h>
+> > +#include <internal/cpumap.h>
+> >  #include <errno.h>
+> >
+> >  #include "../../../util/intel-pt.h"
+> > @@ -16,7 +18,247 @@
+> >  #include "../../../util/fncache.h"
+> >  #include "../../../util/pmus.h"
+> >  #include "mem-events.h"
+> > +#include "util/debug.h"
+> >  #include "util/env.h"
+> > +#include "util/header.h"
+> > +
+> > +static bool x86__is_intel_graniterapids(void)
+> > +{
+> > +     static bool checked_if_graniterapids;
+> > +     static bool is_graniterapids;
+> > +
+> > +     if (!checked_if_graniterapids) {
+> > +             const char *graniterapids_cpuid =3D "GenuineIntel-6-A[DE]=
+";
+> > +             char *cpuid =3D get_cpuid_str((struct perf_cpu){0});
+> > +
+> > +             is_graniterapids =3D cpuid && strcmp_cpuid_str(graniterap=
+ids_cpuid, cpuid) =3D=3D 0;
+> > +             free(cpuid);
+> > +             checked_if_graniterapids =3D true;
+> > +     }
+> > +     return is_graniterapids;
+> > +}
+> > +
+> > +static struct perf_cpu_map *read_sysfs_cpu_map(const char *sysfs_path)
+> > +{
+> > +     struct perf_cpu_map *cpus;
+> > +     char *buf =3D NULL;
+> > +     size_t buf_len;
+> > +
+> > +     if (sysfs__read_str(sysfs_path, &buf, &buf_len) < 0)
+> > +             return NULL;
+> > +
+> > +     cpus =3D perf_cpu_map__new(buf);
+> > +     free(buf);
+> > +     return cpus;
+> > +}
+> > +
+> > +static int snc_nodes_per_l3_cache(void)
+> > +{
+> > +     static bool checked_snc;
+> > +     static int snc_nodes;
+> > +
+> > +     if (!checked_snc) {
+> > +             struct perf_cpu_map *node_cpus =3D
+> > +                     read_sysfs_cpu_map("devices/system/node/node0/cpu=
+list");
+> > +             struct perf_cpu_map *cache_cpus =3D
+> > +                     read_sysfs_cpu_map("devices/system/cpu/cpu0/cache=
+/index3/shared_cpu_list");
+> > +
+> > +             snc_nodes =3D perf_cpu_map__nr(cache_cpus) / perf_cpu_map=
+__nr(node_cpus);
+> > +             perf_cpu_map__put(cache_cpus);
+> > +             perf_cpu_map__put(node_cpus);
+> > +             checked_snc =3D true;
+> > +     }
+> > +     return snc_nodes;
+> > +}
+> > +
+> > +static bool starts_with(const char *str, const char *prefix)
+> > +{
+> > +     return !strncmp(prefix, str, strlen(prefix));
+> > +}
+> > +
+> > +static int num_chas(void)
+> > +{
+> > +     static bool checked_chas;
+> > +     static int num_chas;
+> > +
+> > +     if (!checked_chas) {
+> > +             int fd =3D perf_pmu__event_source_devices_fd();
+> > +             struct io_dir dir;
+> > +             struct io_dirent64 *dent;
+> > +
+> > +             if (fd < 0)
+> > +                     return -1;
+> > +
+> > +             io_dir__init(&dir, fd);
+> > +
+> > +             while ((dent =3D io_dir__readdir(&dir)) !=3D NULL) {
+> > +                     /* Note, dent->d_type will be DT_LNK and so isn't=
+ a useful filter. */
+> > +                     if (starts_with(dent->d_name, "uncore_cha_"))
+> > +                             num_chas++;
+> > +             }
+> > +             close(fd);
+> > +             checked_chas =3D true;
+> > +     }
+> > +     return num_chas;
+> > +}
+> > +
+> > +#define MAX_SNCS 6
+> > +
+> > +static int uncore_cha_snc(struct perf_pmu *pmu)
+> > +{
+> > +     // CHA SNC numbers are ordered correspond to the CHAs number.
+> > +     unsigned int cha_num;
+> > +     int num_cha, chas_per_node, cha_snc;
+> > +     int snc_nodes =3D snc_nodes_per_l3_cache();
+> > +
+> > +     if (snc_nodes <=3D 1)
+> > +             return 0;
+> > +
+> > +     num_cha =3D num_chas();
+> > +     if (num_cha <=3D 0) {
+> > +             pr_warning("Unexpected: no CHAs found\n");
+> > +             return 0;
+> > +     }
+> > +
+> > +     /* Compute SNC for PMU. */
+> > +     if (sscanf(pmu->name, "uncore_cha_%u", &cha_num) !=3D 1) {
+> > +             pr_warning("Unexpected: unable to compute CHA number '%s'=
+\n", pmu->name);
+> > +             return 0;
+> > +     }
+> > +     chas_per_node =3D num_cha / snc_nodes;
+> > +     cha_snc =3D cha_num / chas_per_node;
+> > +
+> > +     /* Range check cha_snc. for unexpected out of bounds. */
+> > +     return cha_snc >=3D MAX_SNCS ? 0 : cha_snc;
+> > +}
+> > +
+> > +static int uncore_imc_snc(struct perf_pmu *pmu)
+> > +{
+> > +     // Compute the IMC SNC using lookup tables.
+> > +     unsigned int imc_num;
+> > +     int snc_nodes =3D snc_nodes_per_l3_cache();
+> > +     const u8 snc2_map[] =3D {1, 1, 0, 0, 1, 1, 0, 0};
+> > +     const u8 snc3_map[] =3D {1, 1, 0, 0, 2, 2, 1, 1, 0, 0, 2, 2};
+> > +     const u8 *snc_map;
+> > +     size_t snc_map_len;
+> > +
+> > +     switch (snc_nodes) {
+> > +     case 2:
+> > +             snc_map =3D snc2_map;
+> > +             snc_map_len =3D ARRAY_SIZE(snc2_map);
+> > +             break;
+> > +     case 3:
+> > +             snc_map =3D snc3_map;
+> > +             snc_map_len =3D ARRAY_SIZE(snc3_map);
+> > +             break;
+> > +     default:
+> > +             /* Error or no lookup support for SNC with >3 nodes. */
+> > +             return 0;
+> > +     }
+> > +
+> > +     /* Compute SNC for PMU. */
+> > +     if (sscanf(pmu->name, "uncore_imc_%u", &imc_num) !=3D 1) {
+> > +             pr_warning("Unexpected: unable to compute IMC number '%s'=
+\n", pmu->name);
+> > +             return 0;
+> > +     }
+> > +     if (imc_num >=3D snc_map_len) {
+> > +             pr_warning("Unexpected IMC %d for SNC%d mapping\n", imc_n=
+um, snc_nodes);
+> > +             return 0;
+> > +     }
+> > +     return snc_map[imc_num];
+> > +}
+> > +
+> > +static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
+> > +{
+> > +     static bool checked_cpu_adjust[MAX_SNCS];
+> > +     static int cpu_adjust[MAX_SNCS];
+> > +     struct perf_cpu_map *node_cpus;
+> > +     char node_path[] =3D "devices/system/node/node0/cpulist";
+> > +
+> > +     /* Was adjust already computed? */
+> > +     if (checked_cpu_adjust[pmu_snc])
+> > +             return cpu_adjust[pmu_snc];
+> > +
+> > +     /* SNC0 doesn't need an adjust. */
+> > +     if (pmu_snc =3D=3D 0) {
+> > +             cpu_adjust[0] =3D 0;
+> > +             checked_cpu_adjust[0] =3D true;
+> > +             return 0;
+> > +     }
+> > +
+> > +     /*
+> > +      * Use NUMA topology to compute first CPU of the NUMA node, we wa=
+nt to
+> > +      * adjust CPU 0 to be this and similarly for other CPUs if there =
+is >1
+> > +      * socket.
+> > +      */
+> > +     node_path[24] =3D pmu_snc; // Shift node0 to be node<pmu_snc>.
+>
+> I think scnprintf should be a prefer way to update the idx. E.g.,
+>
+> #define NODE_PATH       "devices/system/node/node%d/cpulist"
+>
+> scnprintf(node_path, MAX_PATH, NODE_PATH, pmu_snc);
 
-Otherwise looks good to me.  I think you can just fix up nits
-before pushing to the vfs tree unless there is any other feedback.
+I'm concerned throughout the code about making things slow when
+--per-node isn't a particular common option. Perhaps it will be for
+graniterapids. The values of pmu_snc are 0 to 6 so this is sound but I
+can cover this with an assert.
 
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+>
+> > +     node_cpus =3D read_sysfs_cpu_map(node_path);
+> > +     cpu_adjust[pmu_snc] =3D perf_cpu_map__cpu(node_cpus, 0).cpu;
+> > +     checked_cpu_adjust[pmu_snc] =3D true;
+> > +     perf_cpu_map__put(node_cpus);
+> > +     return cpu_adjust[pmu_snc];
+> > +}
+> > +
+> > +static void gnr_uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu =
+*pmu, bool cha)
+> > +{
+> > +     // With sub-NUMA clustering (SNC) there is a NUMA node per SNC in=
+ the
+> > +     // topology. For example, a two socket graniterapids machine may =
+be set
+> > +     // up with 3-way SNC meaning there are 6 NUMA nodes that should b=
+e
+> > +     // displayed with --per-node. The cpumask of the CHA and IMC PMUs
+> > +     // reflects per-socket information meaning, for example, uncore_c=
+ha_60
+> > +     // on a two socket graniterapids machine with 120 cores per socke=
+t will
+> > +     // have a cpumask of "0,120". This cpumask needs adjusting to "40=
+,160"
+> > +     // to reflect that uncore_cha_60 is used for the 2nd SNC of each
+> > +     // socket. Without the adjustment events on uncore_cha_60 will ap=
+pear in
+> > +     // node 0 and node 3 (in our example 2 socket 3-way set up), but =
+with
+> > +     // the adjustment they will appear in node 1 and node 4. The numb=
+er of
+> > +     // CHAs is typically larger than the number of cores. The CHA num=
+bers
+> > +     // are assumed to split evenly and inorder wrt core numbers. Ther=
+e are
+> > +     // fewer memory IMC PMUs than cores and mapping is handled using =
+lookup
+> > +     // tables.
+> > +     static struct perf_cpu_map *cha_adjusted[MAX_SNCS];
+> > +     static struct perf_cpu_map *imc_adjusted[MAX_SNCS];
+> > +     struct perf_cpu_map **adjusted =3D cha ? cha_adjusted : imc_adjus=
+ted;
+> > +     int idx, pmu_snc, cpu_adjust;
+> > +     struct perf_cpu cpu;
+> > +     bool alloc;
+> > +
+> > +     // Cpus from the kernel holds first CPU of each socket. e.g. 0,12=
+0
+> > +     assert(perf_cpu_map__cpu(pmu->cpus, 0).cpu =3D=3D 0);
+>
+> Can it just simply return if a non-0 is detected?
+> In case, the uncore driver is updated later. This can be treated as a
+> fallback solution.
 
-Thanks!
+Sure. The assert should fire in non-debug builds and was supposed to
+catch if the kernel driver had changed wrt expectations in the code
+here. Doing the return seems good as it should mean some level of
+compatibility between the perf tool and different kernel driver
+versions were the cpumask to change. I'll add it in v3.
 
+Thanks,
+Ian
 
-> +		kcred = prepare_kernel_cred(&init_task);
-> +		if (!kcred)
-> +			goto fail;
-> +
-> +		task_lock(&init_task);
-> +		get_fs_root(init_task.fs, &root);
-> +		task_unlock(&init_task);
-> +
-> +		cred = override_creds(kcred);
-> +		err = vfs_path_lookup(root.dentry, root.mnt, sunaddr->sun_path,
-> +				      LOOKUP_BENEATH | LOOKUP_NO_SYMLINKS |
-> +				      LOOKUP_NO_MAGICLINKS, &path);
-> +		put_cred(revert_creds(cred));
-> +		path_put(&root);
-> +		if (err)
-> +			goto fail;
-> +	} else {
-> +		err = kern_path(sunaddr->sun_path, LOOKUP_FOLLOW, &path);
-> +		if (err)
-> +			goto fail;
-> +
-> +		err = path_permission(&path, MAY_WRITE);
-> +		if (err)
-> +			goto path_put;
-> +	}
->  
->  	err = -ECONNREFUSED;
->  	inode = d_backing_inode(path.dentry);
-> @@ -1210,12 +1237,12 @@ static struct sock *unix_find_abstract(struct net *net,
->  
->  static struct sock *unix_find_other(struct net *net,
->  				    struct sockaddr_un *sunaddr,
-> -				    int addr_len, int type)
-> +				    int addr_len, int type, int flags)
->  {
->  	struct sock *sk;
->  
->  	if (sunaddr->sun_path[0])
-> -		sk = unix_find_bsd(sunaddr, addr_len, type);
-> +		sk = unix_find_bsd(sunaddr, addr_len, type, flags);
->  	else
->  		sk = unix_find_abstract(net, sunaddr, addr_len, type);
->  
-> @@ -1473,7 +1500,7 @@ static int unix_dgram_connect(struct socket *sock, struct sockaddr *addr,
->  		}
->  
->  restart:
-> -		other = unix_find_other(sock_net(sk), sunaddr, alen, sock->type);
-> +		other = unix_find_other(sock_net(sk), sunaddr, alen, sock->type, 0);
->  		if (IS_ERR(other)) {
->  			err = PTR_ERR(other);
->  			goto out;
-> @@ -1620,7 +1647,7 @@ static int unix_stream_connect(struct socket *sock, struct sockaddr *uaddr,
->  
->  restart:
->  	/*  Find listening sock. */
-> -	other = unix_find_other(net, sunaddr, addr_len, sk->sk_type);
-> +	other = unix_find_other(net, sunaddr, addr_len, sk->sk_type, flags);
->  	if (IS_ERR(other)) {
->  		err = PTR_ERR(other);
->  		goto out_free_skb;
-> @@ -2089,7 +2116,7 @@ static int unix_dgram_sendmsg(struct socket *sock, struct msghdr *msg,
->  	if (msg->msg_namelen) {
->  lookup:
->  		other = unix_find_other(sock_net(sk), msg->msg_name,
-> -					msg->msg_namelen, sk->sk_type);
-> +					msg->msg_namelen, sk->sk_type, 0);
->  		if (IS_ERR(other)) {
->  			err = PTR_ERR(other);
->  			goto out_free;
-> 
-> -- 
-> 2.47.2
-> 
+> Thanks,
+> Kan> +
+> > +     pmu_snc =3D cha ? uncore_cha_snc(pmu) : uncore_imc_snc(pmu);
+> > +     if (pmu_snc =3D=3D 0) {
+> > +             // No adjustment necessary for the first SNC.
+> > +             return;
+> > +     }
+> > +
+> > +     alloc =3D adjusted[pmu_snc] =3D=3D NULL;
+> > +     if (alloc) {
+> > +             // Hold onto the perf_cpu_map globally to avoid recomputa=
+tion.
+> > +             cpu_adjust =3D uncore_cha_imc_compute_cpu_adjust(pmu_snc)=
+;
+> > +             adjusted[pmu_snc] =3D perf_cpu_map__empty_new(perf_cpu_ma=
+p__nr(pmu->cpus));
+> > +             if (!adjusted[pmu_snc])
+> > +                     return;
+> > +     }
+> > +
+> > +     perf_cpu_map__for_each_cpu(cpu, idx, pmu->cpus) {
+> > +             // Compute the new cpu map values or if not allocating, a=
+ssert
+> > +             // that they match expectations. asserts will be removed =
+to
+> > +             // avoid overhead in NDEBUG builds.
+> > +             if (alloc) {
+> > +                     adjusted[pmu_snc]->map[idx].cpu =3D cpu.cpu + cpu=
+_adjust;
+> > +             } else if (idx =3D=3D 0) {
+> > +                     cpu_adjust =3D perf_cpu_map__cpu(adjusted[pmu_snc=
+], idx).cpu - cpu.cpu;
+> > +                     assert(uncore_cha_imc_compute_cpu_adjust(pmu_snc)=
+ =3D=3D cpu_adjust);
+> > +             } else {
+> > +                     assert(perf_cpu_map__cpu(adjusted[pmu_snc], idx).=
+cpu =3D=3D
+> > +                            cpu.cpu + cpu_adjust);
+> > +             }
+> > +     }
+> > +
+> > +     perf_cpu_map__put(pmu->cpus);
+> > +     pmu->cpus =3D perf_cpu_map__get(adjusted[pmu_snc]);
+> > +}
+> >
+> >  void perf_pmu__arch_init(struct perf_pmu *pmu)
+> >  {
+> > @@ -49,10 +291,17 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
+> >
+> >               perf_mem_events__loads_ldlat =3D 0;
+> >               pmu->mem_events =3D perf_mem_events_amd_ldlat;
+> > -     } else if (pmu->is_core) {
+> > -             if (perf_pmu__have_event(pmu, "mem-loads-aux"))
+> > -                     pmu->mem_events =3D perf_mem_events_intel_aux;
+> > -             else
+> > -                     pmu->mem_events =3D perf_mem_events_intel;
+> > +     } else {
+> > +             if (pmu->is_core) {
+> > +                     if (perf_pmu__have_event(pmu, "mem-loads-aux"))
+> > +                             pmu->mem_events =3D perf_mem_events_intel=
+_aux;
+> > +                     else
+> > +                             pmu->mem_events =3D perf_mem_events_intel=
+;
+> > +             } else if (x86__is_intel_graniterapids()) {
+> > +                     if (starts_with(pmu->name, "uncore_cha_"))
+> > +                             gnr_uncore_cha_imc_adjust_cpumask_for_snc=
+(pmu, /*cha=3D*/true);
+> > +                     else if (starts_with(pmu->name, "uncore_imc_"))
+> > +                             gnr_uncore_cha_imc_adjust_cpumask_for_snc=
+(pmu, /*cha=3D*/false);
+> > +             }
+> >       }
+> >  }
+>
