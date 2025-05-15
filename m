@@ -1,97 +1,105 @@
-Received: from mail-yb1-f195.google.com (mail-yb1-f195.google.com [209.85.219.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33404297A75;
-	Thu, 15 May 2025 06:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D847223DD3
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 06:57:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747292095; cv=none; b=MoAfyCPmkY/RXCtF7swr9bJHVW0ISYJe18BKvKLuBJTieZxk4SHNcoIlhkJaHBbcWmSimSFlGiwO7DtVjnRghiIQdFA6CvrDQeBymVaShRa4tnhjlH2jgI2lwKv+aS7DTkI4eId8TeVi0A/9Q7Sq56e/JHegqc+vUiqk5jVp2o4=
+	t=1747292223; cv=none; b=JItArf2mDehI5plPRM3+0YVFYrPJxd06cBfcGWFyzgpuJpB8ncmtG4Jnr0fYCmaTwUJ7VlmLFg+kl1g/Rkysn9m47kJN+tVe0CbcmOXPj5Ug57XOl54J4nqzKbhoBmHxZ52palnYYORKCU/rN9ckSyimZsSE9jkFU9Hjrf1GzCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747292095; c=relaxed/simple;
-	bh=t1cmxPP2lIC19qYJZZVCtSyQ5R5NNKHU/xitTTP2MSI=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=cNGM1661KZMz6OYRp6QRHD39ZCacYVd9XnlbrW2F70b0Fo7IhOFecJpHrF4kX7gX4gtDE3YTXOhTdnFwdAVv6y9ho9vQ3o0U+KqI+NmffRLM77sECT4wd6KAUlN2zaOcRdR/yYH1byHu/QQuVesEfInJY4OPph6H+Djgy/r3pz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YykKjdvd; arc=none smtp.client-ip=209.85.219.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747292223; c=relaxed/simple;
+	bh=Qll8diZjQKEQnp7Bq5ZY7hVG43EA47fwhWoEUnz+qdg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VMkeYLSHGC+kwWS1dE7vF6XAWpFstS2Z8eC0WrCK13RVGvHO+AEe9gm3BhPBYpVoT4nTiN+gC5U1VpBESc2QY3df9gR7kuN9mdvqKRS+ZiLaKI48IQ3QQ0ymKBpwsoE1ncIq4X1u9kqkId0M7rbHdsRQpobFQtPiXVSWcDUuOo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sYSAb5vA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YykKjdvd"
-Received: by mail-yb1-f195.google.com with SMTP id 3f1490d57ef6-e72a786b1b8so578411276.1;
-        Wed, 14 May 2025 23:54:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747292093; x=1747896893; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=t1cmxPP2lIC19qYJZZVCtSyQ5R5NNKHU/xitTTP2MSI=;
-        b=YykKjdvdVIdsPwaaAia73dhZ0e4ZidC2MnbeFnfnFvyOoJw9phM/XBVOAgQ6kBDTrG
-         nkFy8nkM/wCh6zn7C3BhevTDPh9YSU9d3TC6hjD9BVhJ1EIehVx3oPPa6uL06M8x2+WY
-         MVL/Jc+CkiaQ9I+WsMCjO1SLiOdkX3VmYU8GjWABO4id0eD7Mrtf8Qe4aQppKOqD3n9E
-         0JVqKH+94uAn0fNcuWWyq6N9sZlxJMDPu0IiITu5mfQjpqQt7B/Rf9XHZO1NpwK5QIOU
-         VZIp1c9kErmtiT0Jr5cxu8JCSsQJJuC6nqeg5nD0hUq01U+rg7ZA3WkghvJDvDAiD+4l
-         MxBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747292093; x=1747896893;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=t1cmxPP2lIC19qYJZZVCtSyQ5R5NNKHU/xitTTP2MSI=;
-        b=VUOMC3NwjfxpsdPUlFjzI1bZoESU6B9+oljOI7i7HFA3oIIdoxvKrs/2yCy5blwShX
-         8RwqrCZfqBBUjDYq7i2uDLRzUPcEr6OutRvjOwaQeKIoeBefbCYzeBf9HVkFh///xKei
-         M+hHMwFPB3vD/YDXIso3zGJ10nEBh0bxGSM0DMRsz6cJBlCBh9sOD6d8C2POVYTmpVUo
-         n6HtcEVqX32TZ2+lIYjhxNO282+b5+P1Dst8P9w/GQ1RthbM1jjUngQZ9So1WvOTlJIQ
-         ox6TpuLzUw8LqWcrSP4zlXYWPAVcwz4PQ+U4ZTNdmYqlhz+m1xWxoqXgFRr0/aUGocAK
-         aHTA==
-X-Forwarded-Encrypted: i=1; AJvYcCW/vbM5WeT3FQ1sMYRyO4h8VUkcDpBY+6xyaG0gT3x7v3X98mDISJirgeOyk/fxC9HGbeFHRdAO4qgs@vger.kernel.org, AJvYcCXaJCpmlA+6YqQKzy38LVcxZq0gmqApPJj49/lgI8Dfk48dKOs2X1Uu9UvlyKCpJ1S91Tgguaejl7Q26C2u@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0UF1RatGGF8bFxevfS8jowRO1/0wCsoruDmXsst/zzmXFtpPX
-	kmGEXXGoXXVFnFUu38EW05h3CnWDKEAv88bA1kGgdpjqZarO797YoBWexmDrdhMODCNd5YW1tKp
-	91qptvZqaR6v/V4JhvPCoeAb9X16lO1GD+/ssV/Z3nGGi
-X-Gm-Gg: ASbGncuJzecJ/wckCn85NoNQhICRF54SzIOdFGVKqB9ghperOz4XGTB9Ax7SZ98aTC9
-	Q786lEWmlkbI9GbcNZ4ExYZtdTtSGTJSnsef15tJPjcMupIb7HNUpuSyH4P3e0FquvgxLG1Dqn2
-	TuE2EZQ1qhr7PuegO3+BRntJJ+rOyQsmq5
-X-Google-Smtp-Source: AGHT+IFzNiJ+zUyWkZFPg4RNuORDWffWYwQyIa09PVZx9ngM+x8SyPMp78/380FkRNmPOgMgyItWbe+VIAUEsW4BcAc=
-X-Received: by 2002:a05:6902:c02:b0:e7a:3d4f:6355 with SMTP id
- 3f1490d57ef6-e7b4f87732emr3222858276.19.1747292093056; Wed, 14 May 2025
- 23:54:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sYSAb5vA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82458C4CEED;
+	Thu, 15 May 2025 06:57:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747292223;
+	bh=Qll8diZjQKEQnp7Bq5ZY7hVG43EA47fwhWoEUnz+qdg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sYSAb5vAzX3axD7HE+9pbRSZ4A0EklXtGTobFtDq2CMyLbpTNJd+evhktGfHRO3uH
+	 0DlPKGiAFxE9GHsPvhBjiyUIcPKn5BbX9x1HURAtwv8yR7ubO+80OyQ8d1uoJyjS2B
+	 NteJcptc+sa+4aE3SZs37hS9FieA0B8FtaeUcsQ4e3fT8DzZmZBAGY6NCYO6o9KQqk
+	 yxMHZT1XU4OCQiCOyUJRoDjLkKSGNjQ9LbMXe0FrTFPuZ+yyqQy32SCEaUf5pVnoN5
+	 UuwV+nsJguRVVHEz9ggR3m8LUx9e34aFE9k9GyR+KVM3hjo8wCWZkLqLYLarZLbT0z
+	 0oeeSyh4AF+GQ==
+Date: Thu, 15 May 2025 08:56:59 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Brian Gerst <brgerst@gmail.com>
+Subject: Re: [PATCH v3 2/7] x86/cpu: Allow caps to be set arbitrarily early
+Message-ID: <aCWQOzCla7i__iEl@gmail.com>
+References: <20250514104242.1275040-9-ardb+git@google.com>
+ <20250514104242.1275040-11-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Guoyu Yin <y04609127@gmail.com>
-Date: Thu, 15 May 2025 14:54:43 +0800
-X-Gm-Features: AX0GCFvmW-oCLyE_tglm61LLo5PTqhIE_ahHf0u84RbTzumcEHtp48MSObXmNfI
-Message-ID: <CAJNGr6uGfUpvHkPdE-OrWL4_cqd+_AG9Z4ZS9DB1KfYm3CzQAA@mail.gmail.com>
-Subject: [BUG] INFO: rcu_tasks_trace detected stalls on tasks:
-To: tytso@mit.edu, adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514104242.1275040-11-ardb+git@google.com>
 
-Hi,
 
-This crash can be triggered by repeatedly executing a syzkaller test
-case that stresses the signal handling path and EXT4 filesystem
-operations. The reproducer causes the kernel to process signals (e.g.,
-via do_group_exit) while performing delayed block allocation on a
-corrupted EXT4 filesystem.
+* Ard Biesheuvel <ardb+git@google.com> wrote:
 
-The call trace shows the task is stuck in get_signal
-(kernel/signal.c:3036) and exit_to_user_mode_prepare
-(include/linux/entry-common.h:329) while handling signals.I think the
-key failure occurs in ext4_validate_block_bitmap due to inconsistent
-block bitmap padding, combined with an ENOSPC error during delayed
-allocation. This leads to RCU stalls when the task (syz-executor.4)
-fails to exit the RCU read-side critical section during resource
-cleanup.
+> From: Ard Biesheuvel <ardb@kernel.org>
+> 
+> cpu_feature_enabled() uses a ternary alternative, where the late variant
+> is based on code patching and the early variant accesses the capability
+> field in boot_cpu_data directly.
+> 
+> This allows cpu_feature_enabled() to be called quite early, but it still
+> requires that the CPU feature detection code runs before being able to
+> rely on the return value of cpu_feature_enabled().
+> 
+> This is a problem for the implementation of pgtable_l5_enabled(), which
+> is based on cpu_feature_enabled(X86_FEATURE_5LEVEL_PAGING), and may be
+> called extremely early. Currently, there is a hacky workaround where
+> some source files that may execute before (but also after) CPU feature
+> detection have a different version of pgtable_l5_enabled(), based on the
+> USE_EARLY_PGTABLE_L5 preprocessor macro.
+> 
+> Instead, let's make it possible to set CPU feature arbitrarily early, so
+> that the X86_FEATURE_5LEVEL_PAGING capability can be set before even
+> entering C code.
+> 
+> This involves relying on static initialization of boot_cpu_data and the
+> cpu_caps_set/cpu_caps_cleared arrays, so they all need to reside in
+> .data. This ensures that they won't be cleared along with the rest of
+> BSS.
+> 
+> Note that forcing a capability involves setting it in both
+> boot_cpu_data.x86_capability[] and cpu_caps_set[].
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  arch/x86/kernel/cpu/common.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+> index 6f7827015834..f6f206743d6a 100644
+> --- a/arch/x86/kernel/cpu/common.c
+> +++ b/arch/x86/kernel/cpu/common.c
+> @@ -704,8 +704,8 @@ static const char *table_lookup_model(struct cpuinfo_x86 *c)
+>  }
+>  
+>  /* Aligned to unsigned long to avoid split lock in atomic bitmap ops */
+> -__u32 cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
+> -__u32 cpu_caps_set[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
+> +__u32 __read_mostly cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
+> +__u32 __read_mostly cpu_caps_set[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
 
-Maybe we can add sanity checks for block bitmap padding in
-ext4_validate_block_bitmap?
+This change is not mentioned in the changelog AFAICS, but it should be 
+in a separate patch anyway.
 
-This can be reproduced on:
-HEAD commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
+Thanks,
 
-report: https://pastebin.com/raw/A7yVpRQJ
-
-console output : https://pastebin.com/raw/Me02WbSY
-
-kernel config : https://pastebin.com/raw/u0Efyj5P
-
-C reproducer : https://pastebin.com/raw/TLx7rz0Q
+	Ingo
