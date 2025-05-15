@@ -1,113 +1,89 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010E627A935;
-	Thu, 15 May 2025 12:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54163299935;
+	Thu, 15 May 2025 12:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747313857; cv=none; b=sOCy7xCy/QD70SvCd8xvubKm3ohsorxDZRJ7m3LNdDoNG5Jro/MsnnVfsdwYKSWi9ZMzVWk3XYAI4nk4S+Tw1T0nnjHk42A1IiVI2v8+/vx4ORFNuFjDOgbPeVPjOal3fk5HisQrsfb7rzXLq9CtyBm5PMLYyTdTvqsaiFR9iyw=
+	t=1747313889; cv=none; b=lGfUrgDvAJlhPId88H2IdWWqc3+LqFdOsl25P/6+r+bEM+4eSbk6y/gQg+oT5esbZVTdeimvSVqp61G+ca/vSEadW+RYK2ZWnpIJ/iushe6FH7Lhshv8rCH+Hpl9zKJZGeAUO8JS19eiozqnshJQz9e0sEgzaGXMwO6yyOmUiNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747313857; c=relaxed/simple;
-	bh=XaKFKX1wryyv9mD5ofnIQ8ARck2qdPeXVeiAwmGRNzc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZXAYADAdbzdbysXQuShVF1zRZy1C0RZkp2H0lQleoLmHyFOa6js/DCfH9zXkHKJ41kBQcEmtyFLN5a1hoGtSlwPqMz7M0p24xt2VctVoTuOWoh6Vk8wLEodsgzoVjsSubWg3D1c1akDAHqupXWoEkNhMIMX3kgD7423FWwOnhIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mxPVOsPZ; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747313889; c=relaxed/simple;
+	bh=YvH7l4ehAhfE5INGzdDxqi8DIwYZ/l9vZTFBUZEEEYw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FDwV8cUBbZskMaXEReSuw5yRSrAp0dnvg20XMIqQUfkZVSpJkiWgkAKtFjMl4wdftllzBb6IZIk7n24XcIErhHFdjQ1E9kEw2mm+4nAAsEUYimeIqMXOlaFL729izL0ePkDtAdqhfpqQQzxsMnGON/QMHseiCrkuam151za7yCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XsyCy0GS; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mxPVOsPZ"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-73c17c770a7so1078884b3a.2;
-        Thu, 15 May 2025 05:57:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747313855; x=1747918655; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T1VJIKQzn3Eg+DR16k2/eGqGBeABAciO/xNJ6ACvdIA=;
-        b=mxPVOsPZ3nNHgTVYTDfvirZe0MyzMER+cjv0xm0y78aQPpdBNfp6GIwTKx9NbwYfSK
-         QlEhonLNP++/CW31GZ54BBToEsofb2YVOczB2cOntDwjxDSoUjEdbwvY97dhKgvonG09
-         OVC2O8aEbrL6/QY0KHCTGrpHKGvDtBLd66ATFMxe8gAsS9KShzInUt82yhSr4eKUYceq
-         f6ulD3B+U0YYZ641+W2NiBx9wFutAZ2wL3a5UMhvRWwwdPDEYfSGrEwQVGWFlpMjtOEx
-         JFaVXaqQsmELSjeE0ujEp0McBtgovx3VHRNY5FrJ58rL+hFmPTByfO8gcRerHye18Z/j
-         h1uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747313855; x=1747918655;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T1VJIKQzn3Eg+DR16k2/eGqGBeABAciO/xNJ6ACvdIA=;
-        b=Z31SOd1B4/S/6byKH1CQzp2qfgykWb+2l4svutbWqXaLfBen5RmTPSf2Vqc7C2a2Db
-         o79Xgaxp3Nz6eOCFu20zdXCivMeQmvKnNzfk79bP0XaQcFe3QfGjaNuFKULmRyAFvLrD
-         pD7alBQv1+ApKPcmNCzwmv9DhkCsRAeOrl8uxsK3zc29u8lOBTLBefl+JTy9XmVEGIU8
-         SDS82G/tkfep6aAvqd/jBjV4gaNQa7HcgrV0RHbgiNx8XMui+2oXxrvqMHAeVgQD5yRY
-         gM3lE+tK03Rh8ZgQSLJM7dsVQMf50s0JxNZRAZz9Y0gHCM6O24jI69QkgKsSujt4ZWri
-         8g9g==
-X-Forwarded-Encrypted: i=1; AJvYcCVpVE1oj7DQ6L45sTBTDSXuoeA3+VBpT5MQrKBkFNdj9q0X/gNpp1YXBJz4Ipqfj4TV4GZngke/0E6FQbI=@vger.kernel.org, AJvYcCXgWmExG5F7bG16/3MtSTTpcZ+PsYzpvay8ph+ZHfM0uTHYGF6lMjtZc1qU8ze/C2Iqhlmf+u1v5FIAz7TX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1HqsYVjoKiRZ3J3vrkB5P4ausD5oS+zb8YM2HxLJPryZWpcHY
-	uIu18iGFNLLDOV2j92PdYfJ9qKHHYBzbnSHdm/CZJj+wHDZuctDU8Hg7LWpkde9gcqnD4IxOSxQ
-	f5pFEBSm2RHxf03o+ZarsYyvKqII=
-X-Gm-Gg: ASbGncuU+8Iu6Mx4Mt5SdhdjhbyQN6KympJldMYsry7DisTxb9f9BnchrrsmxJoCz/O
-	avqYtGT5zlIzJIjmdHjFpnhPPaRV3sZzM98Ue7WinCafln4zRb/4tTVj1wRlsvcyNMVWFz7NABH
-	kxOHai8Nc9ryuRs4hWPlGcDWsQIxMUCO2L67pcWsv8FtaXjDow9oA=
-X-Google-Smtp-Source: AGHT+IFF0P1onBZ/hyhfFLv6g0B78R2i66luVTvTXL1v7kzBsCt3CfDJxhT1b6SXjzCdc+9iL4Nlc1feiRZw+OLLGpg=
-X-Received: by 2002:a17:902:d50d:b0:224:13a4:d61e with SMTP id
- d9443c01a7336-231983cefacmr95730245ad.51.1747313855162; Thu, 15 May 2025
- 05:57:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XsyCy0GS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747313889; x=1778849889;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YvH7l4ehAhfE5INGzdDxqi8DIwYZ/l9vZTFBUZEEEYw=;
+  b=XsyCy0GSFFpnO/sxAEQtkLZIkUhYBaWfGXN0NbWGwRvku1s6NrB2VU8g
+   PaLTSaawsB0gyUhjtSppf4VilaCd/nPOKsckY5IgHtkAgGZG6MgzJOtBV
+   sOsCGwDiyyJejxmnPPnSgNQ1JRCDjoAVeDHRC1ZGci1sOsCEsImW5I29L
+   gu7Cf8cknLI3OcNQUzlVw8+oCv6Ev3vclTqHa8ogLxO2dLf5WcihGIwzl
+   aUJipErIJi0+DCMkZbsv0Fcpu0/IzaJz5J8fyAJdeesRPtPXjWdQa4sAT
+   xWKa8ejBDV5nJEmo1nUzdAwYGtz9M58T1MabOaJH9J0jztNA39g1u3WeW
+   A==;
+X-CSE-ConnectionGUID: +ZmkQ+QUTziPcn4yhfq3ag==
+X-CSE-MsgGUID: bDmbRnJIR8qszmUKVCbbFA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="51883568"
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="51883568"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 05:58:08 -0700
+X-CSE-ConnectionGUID: 6ZGSrmLaQ4us4bwc/Y0FKA==
+X-CSE-MsgGUID: KCsBCjOmTOuxzrM5KV2Dzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="138863125"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 05:58:05 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uFY9y-00000001qer-0rjK;
+	Thu, 15 May 2025 15:58:02 +0300
+Date: Thu, 15 May 2025 15:58:01 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Philipp Stanner <phasta@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Yang Yingliang <yangyingliang@huawei.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/7] Docu: PCI: Update pcim_enable_device()
+Message-ID: <aCXk2eDUJF2UbQ47@smile.fi.intel.com>
+References: <20250515124604.184313-2-phasta@kernel.org>
+ <20250515124604.184313-4-phasta@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506130712.156583-1-ltykernel@gmail.com> <20250506130712.156583-2-ltykernel@gmail.com>
- <SN6PR02MB4157A5928B486CF5D43C50F8D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
-In-Reply-To: <SN6PR02MB4157A5928B486CF5D43C50F8D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
-From: Tianyu Lan <ltykernel@gmail.com>
-Date: Thu, 15 May 2025 20:56:58 +0800
-X-Gm-Features: AX0GCFugkEn3wtw4pmWDuOVpd7HhwrjuqmM_GwKvfoPaTH4qC8ia1Y50QUr2014
-Message-ID: <CAMvTesBnO2crBYRbZQS=2RWta-M1azvsv7Q9RR1-he+iR-4jOA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/6] x86/Hyper-V: Not use hv apic driver when Secure
- AVIC is available
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>, 
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>, 
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"hpa@zytor.com" <hpa@zytor.com>, "Neeraj.Upadhyay@amd.com" <Neeraj.Upadhyay@amd.com>, 
-	"yuehaibing@huawei.com" <yuehaibing@huawei.com>, "kvijayab@amd.com" <kvijayab@amd.com>, 
-	"jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>, "jpoimboe@kernel.org" <jpoimboe@kernel.org>, 
-	"tiala@microsoft.com" <tiala@microsoft.com>, 
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515124604.184313-4-phasta@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, May 15, 2025 at 12:54=E2=80=AFAM Michael Kelley <mhklinux@outlook.c=
-om> wrote:
->
-> From: Tianyu Lan <ltykernel@gmail.com> Sent: Tuesday, May 6, 2025 6:07 AM
-> >
-> >  void __init hv_apic_init(void)
-> >  {
-> > +     if (cc_platform_has(CC_ATTR_SNP_SECURE_AVIC))
-> > +             return;
-> > +
-> >       if (ms_hyperv.hints & HV_X64_CLUSTER_IPI_RECOMMENDED) {
-> >               pr_info("Hyper-V: Using IPI hypercalls\n");
-> >               /*
->
-> It seems like this patch will cause a bisect problem if a bisect includes
-> this patch but none of the subsequent patches in this series. The
-> Hyper-V guest VM could see Secure AVIC is enabled, but the VM
-> wouldn't boot because the code to allow Hyper-V to inject an interrupt
-> haven't been added yet.
->
-> This patch probably should come later in the patch series after Secure
-> AVIC can be functional in a Hyper-V guest.
->
+On Thu, May 15, 2025 at 02:46:00PM +0200, Philipp Stanner wrote:
+> pcim_enable_device() is not related anymore to switching the mode of
+> operation of any functions. It merely sets up a devres callback for
+> automatically disabling the PCI device on driver detach.
+> 
+> Adjust the function's documentation.
 
-Good idea! Will rework patch order.
+Is the "Docu" prefix in thew Subject aligned with the git history of this file?
 
---=20
-Thanks
-Tianyu Lan
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
