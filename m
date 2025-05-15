@@ -1,63 +1,177 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF482149DF0
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 16:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDDEA1E9B2F;
+	Thu, 15 May 2025 16:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747326762; cv=none; b=Ej2olnaQNZJdQTRK+hXtvEAhBi/fAK7Ty1QOrEQmW+qfn3RybcvRAerYhUzFm7Kc0C2GPl2AUX+c//QvHChuBzTFZ4dYAZTds0r14BNMTDjKAEdAVGw6Mbs0omeF4pAlSh/eJs8TjeqkISLaq11jLYonUBL37Als/AK8j6KCFcg=
+	t=1747326794; cv=none; b=Nsm7uA0+DNmKX5fVHC4H5d1Km3fVWkSu11sbs+5ul3E2kJ2IaV7yEhMLM+fPE406MnJCjH21Q2Twt2wTkMUeVPYm4U2TCgOUIJ4lsPfl9S2u9QQztDc9pmQu7UphuQE+A6hQgEAaco2epmoeiWyr0GfjwPqTEW8rqLvMCtudaXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747326762; c=relaxed/simple;
-	bh=iVepeN/PtbU8HavBrPI8KLPMURWxiETrybxcjDQyqng=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=bTJVC0NXC/G4sEShpHS23xc+isafXvtW9CO0zp75HEmkUuLCV6r6t7JPJ8IwKCF0HLzchrDPmbWiGhrGxPTWPNoc0dKjQvlp9Bcmr0ZtcuVhfLrwhaTYw4O6RzvmeZ02PliphflpWW2GRVqMTKag48NGKW+4GUh53ou1FFPGZFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 52C5392009C; Thu, 15 May 2025 18:32:32 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 4B9A492009B;
-	Thu, 15 May 2025 17:32:32 +0100 (BST)
-Date: Thu, 15 May 2025 17:32:32 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-    Konstantin Ryabitsev <konstantin@linuxfoundation.org>, 
-    Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, 
-    Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
-    "Ahmed S . Darwish" <darwi@linutronix.de>, 
-    Andrew Cooper <andrew.cooper3@citrix.com>, 
-    Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>, 
-    Dave Hansen <dave.hansen@linux.intel.com>, 
-    John Ogness <john.ogness@linutronix.de>, 
-    Peter Zijlstra <peterz@infradead.org>, 
-    Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH 0/15] x86: Remove support for TSC-less and CX8-less
- CPUs
-In-Reply-To: <CAHk-=wi3kX2BHU7ABRRE=8-XYYXe8+ZffoxycHYT4TNQee0nBg@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.2505150206120.27710@angie.orcam.me.uk>
-References: <alpine.DEB.2.21.2505050944230.31828@angie.orcam.me.uk> <98C88CE8-C3D5-4B75-8545-71DD47C67614@zytor.com> <alpine.DEB.2.21.2505051356340.31828@angie.orcam.me.uk> <1E50C160-EB89-4C5C-B9F0-6441026EE380@zytor.com> <20250505205405.GNaBklbdKLbadRATbr@fat_crate.local>
- <alpine.DEB.2.21.2505060059010.31828@angie.orcam.me.uk> <20250506141631.GEaBoZvzPCWh88xDzu@fat_crate.local> <alpine.DEB.2.21.2505062228200.21337@angie.orcam.me.uk> <8C172B63-38E1-427B-8511-25ECE5B9E780@alien8.de> <alpine.DEB.2.21.2505121225000.46553@angie.orcam.me.uk>
- <20250512134853.GGaCH8RUjJwgHq25qx@fat_crate.local> <alpine.DEB.2.21.2505121810040.46553@angie.orcam.me.uk> <CAADWXX8+-=pcOUeu_cwX_vkkkGp6jn0GQLUhZX8MxGGRjKz=Lg@mail.gmail.com> <a719b6ec1ccba2ecad7421a2cdf1660d1be16888.camel@physik.fu-berlin.de>
- <alpine.DEB.2.21.2505131735170.46553@angie.orcam.me.uk> <CAHk-=wi3kX2BHU7ABRRE=8-XYYXe8+ZffoxycHYT4TNQee0nBg@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1747326794; c=relaxed/simple;
+	bh=cAlTLdOnTQlSMWI9py+ZaIg48MiaSEwnK7HNn1m0ZSU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hQlXCcQKIj3zhRgnjpUVg29iWlfB3s4v8xnaXSD2CaLFfqnHPp3ppAVpjX+2lYoGIlmGn845TR09VuRIgEKQ50cS6EKQUCt4YzIhCU+zEA77PNt/V+W2LFxO0KODPyUrPPSO46GN9TyZilI/i7I9AyLPXqz0byPt4n9mpBHFQ1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=WmW8fGEb; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="WmW8fGEb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=/QeUO2a8NWeRstvM0b/MVvBVRNJC5JX4+Z5IQhDNQlQ=; b=WmW8fGEbBoAAvI1Q2qGznPJZG4
+	R+C0srqjRbCmcHCple2UZPwKRZRDdC2wEsVO6EtJC2XU18fzQUcQL1Um/0IYDb54M9d/+OR9gvPV4
+	k5XWYYsZD4SNQJQ1mS1Q+YDIwfGfYA6epoDym0567jJlJ1H7O0VDZQwr7s5p8UF+zkHE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uFbW8-00CgS8-Id; Thu, 15 May 2025 18:33:08 +0200
+Date: Thu, 15 May 2025 18:33:08 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Stefano Radaelli <stefano.radaelli21@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Xu Liang <lxu@maxlinear.com>
+Subject: Re: [PATCH] net: phy: add driver for MaxLinear MxL86110 PHY
+Message-ID: <2b2ef0bd-6491-41a0-b2e1-81e2b83167ef@lunn.ch>
+References: <20250515152432.77835-1-stefano.radaelli21@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515152432.77835-1-stefano.radaelli21@gmail.com>
 
-On Tue, 13 May 2025, Linus Torvalds wrote:
+> +/* only 1 page for MXL86110 */
+> +#define MXL86110_DEFAULT_PAGE	0
 
-> But I really don't think we've ever been *so* strict about pgp keys
-> having all the proper pgp key signature chains. Yes, it's the normal
-> rule and the regular way people identify themselves, but nothing
-> should ever be mindlessly black-and-white.
+> +/**
+> + * mxl86110_read_page - Read current page number
+> + * @phydev: Pointer to the PHY device
+> + *
+> + * Return: The currently selected page number, or negative errno on failure.
+> + */
+> +static int mxl86110_read_page(struct phy_device *phydev)
+> +{
+> +	return __phy_read(phydev, MXL86110_EXTD_REG_ADDR_OFFSET);
+> +};
 
- I agree about being reasonable.  However times are such that we need to 
-be extremely vigilant.  I wish we were back in the 1990s when the worst 
-threat online seemed to be unsolicited offers received via e-mail for 
-various enlargement treatments; sadly not for the brain.
+If there is only one page, does these make any sense?
 
-  Maciej
+> +static int mxl86110_write_page(struct phy_device *phydev, int page)
+> +{
+> +	return __phy_write(phydev, MXL86110_EXTD_REG_ADDR_OFFSET, page);
+> +};
+> +
+> +/**
+> + * mxl86110_write_extended_reg() - write to a PHY's extended register
+> + * @phydev: pointer to a &struct phy_device
+> + * @regnum: register number to write
+> + * @val: value to write to @regnum
+> + *
+> + * NOTE: This function assumes the caller already holds the MDIO bus lock
+> + * or otherwise has exclusive access to the PHY. If exclusive access
+> + * cannot be guaranteed, please use mxl86110_locked_write_extended_reg()
+> + * which handles locking internally.
+> + *
+> + * returns 0 or negative error code
+> + */
+> +static int mxl86110_write_extended_reg(struct phy_device *phydev, u16 regnum, u16 val)
+> +{
+> +	int ret;
+> +
+> +	ret = __phy_write(phydev, MXL86110_EXTD_REG_ADDR_OFFSET, regnum);
+
+This is confusing. It looks identical to mxl86110_write_page(). So
+regnum is actually page?
+
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return __phy_write(phydev, MXL86110_EXTD_REG_ADDR_DATA, val);
+
+And within that page, there is a single register at address
+MXL86110_EXTD_REG_ADDR_DATA?
+
+If you keep the write_page() and read_page(), it looks like you can
+replace this with
+
+	return phy_write_paged(phydev, regnum,
+	                       MXL86110_EXTD_REG_ADDR_DATA, 
+                               val);
+			       
+> +static int mxl86110_set_wol(struct phy_device *phydev, struct ethtool_wolinfo *wol)
+> +{
+> +	struct net_device *netdev;
+> +	int page_to_restore;
+> +	const u8 *mac;
+> +	int ret = 0;
+> +
+> +	if (wol->wolopts & WAKE_MAGIC) {
+> +		netdev = phydev->attached_dev;
+> +		if (!netdev)
+> +			return -ENODEV;
+> +
+> +		page_to_restore = phy_select_page(phydev, MXL86110_DEFAULT_PAGE);
+> +		if (page_to_restore < 0)
+> +			goto error;
+
+If there is only one page, i think this can be removed. And everywhere
+else in the driver.
+
+> +	/*
+> +	 * RX_CLK delay (RXDLY) enabled via CHIP_CFG register causes a fixed
+> +	 * delay of approximately 2 ns at 125 MHz or 8 ns at 25/2.5 MHz.
+> +	 * Digital delays in RGMII_CFG1 register are additive
+> +	 */
+> +	switch (phydev->interface) {
+> +	case PHY_INTERFACE_MODE_RGMII:
+> +		val = 0;
+> +		break;
+> +	case PHY_INTERFACE_MODE_RGMII_RXID:
+> +		val = MXL86110_EXT_RGMII_CFG1_RX_DELAY_150PS;
+
+This should be 2000ps, or the nearest you can get to it.
+
+> +		break;
+> +	case PHY_INTERFACE_MODE_RGMII_TXID:
+> +		val = MXL86110_EXT_RGMII_CFG1_TX_1G_DELAY_2250PS |
+> +			MXL86110_EXT_RGMII_CFG1_TX_10MB_100MB_DELAY_2250PS;
+> +		break;
+> +	case PHY_INTERFACE_MODE_RGMII_ID:
+> +		val = MXL86110_EXT_RGMII_CFG1_TX_1G_DELAY_2250PS |
+> +			MXL86110_EXT_RGMII_CFG1_TX_10MB_100MB_DELAY_2250PS;
+> +		val |= MXL86110_EXT_RGMII_CFG1_RX_DELAY_150PS;
+
+Same here.
+
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		goto err_restore_page;
+> +	}
+> +	ret = mxl86110_modify_extended_reg(phydev, MXL86110_EXT_RGMII_CFG1_REG,
+> +					   MXL86110_EXT_RGMII_CFG1_FULL_MASK, val);
+> +	if (ret < 0)
+> +		goto err_restore_page;
+> +
+> +	/* Configure RXDLY (RGMII Rx Clock Delay) to keep the default
+> +	 * delay value on RX_CLK (2 ns for 125 MHz, 8 ns for 25 MHz/2.5 MHz)
+> +	 */
+> +	ret = mxl86110_modify_extended_reg(phydev, MXL86110_EXT_CHIP_CFG_REG,
+> +					   MXL86110_EXT_CHIP_CFG_RXDLY_ENABLE, 1);
+
+So does the value 1 here mean 8ns? 0 would be 2ns?
+
+    Andrew
+
+---
+pw-bot: cr
