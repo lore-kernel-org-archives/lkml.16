@@ -1,32 +1,70 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from clean107.mxserver.ro (clean107.mxserver.ro [176.223.123.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE821F461A
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FDA0202F67;
+	Thu, 15 May 2025 08:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.223.123.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747298483; cv=none; b=EwWnj8NzwudqlHiNY2ddPStb081cmck8xeJudECtMugTlOtWeHijiC3AhRzQ83UcP1WJl4PNJB0D8w0Za84r52F9/8yiPzsZwc5F71wJyyVcZG4389Cu25S60YbNUpd77+lc7F8NTNGjc1zDxcr5cntFEa2LIYFbGYo9s5Pds2Q=
+	t=1747298497; cv=none; b=aWFmn/znpOZeN+e2HRGd4oNw6pAUSwL7+Hqm9euIDHI+Y+x3IF71jU+6ysNLF1ZON2itzn1hYkwUO8VQ6C2sAZfcVXSu37L2gE36hGvsUxFAHaoOomkFvoE66lfacWOFe7FeRRDNTJwavo61J91vUa8GIJwprmpFGWdaKf4wvxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747298483; c=relaxed/simple;
-	bh=3fbwG17g0zGe0WHDorq39S/ESe25tR5ldW0/jUF0+Lk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ae7rCR8K1NXyjS5WwwekzUcglP/WJ0oOBszbdzJS/Zd9xUF22pvCI4VaF0Ippb9jUWp27RIF63P2A7EXxPjVW/563hOWRpA+NFgniRRhduHgXyqIsMz71DqEE7nSGNsIuvjEpCTDE/8Ublf/eMJkccmJsQfS9BPctc17nFE0FZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-05 (Coremail) with SMTP id zQCowAA3dw+iqCVotbHaFQ--.49892S2;
-	Thu, 15 May 2025 16:41:06 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: qiang.zhao@nxp.com,
-	christophe.leroy@csgroup.eu
-Cc: linuxppc-dev@lists.ozlabs.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] soc: fsl: qe: Consolidate chained IRQ handler install/remove
-Date: Thu, 15 May 2025 16:39:19 +0800
-Message-Id: <20250515083919.3811473-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1747298497; c=relaxed/simple;
+	bh=bCbjH+cBqaaixa9+TY8w+NZGMFvMQ38v6+3wrV3dMy4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VuoAhaVh9vGkMVKeCcV0S+8Z9CUGZF/yZEZNGqaAt+o2PdxMoao/JX8Ogb+jQ6j30kOJ5MjJjmzGjKnoZgLiTGAqBR0pdTcDbvI3TOlQBiStsAXxuln332kvFBRpvGk/+UIQKP7yb+Y+xpDHQfHNRXWYLQ2YEvEOYvroDq5AfHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro; spf=pass smtp.mailfrom=taladin.ro; dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b=LHUUwW/G; arc=none smtp.client-ip=176.223.123.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=taladin.ro
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b="LHUUwW/G"
+Received: from cloud347.c-f.ro ([185.236.86.218])
+	by cleanserver1.mxserver.ro with esmtps (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <asoponar@taladin.ro>)
+	id 1uFTm7-00H1Wf-8B; Thu, 15 May 2025 04:17:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=taladin.ro;
+	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=1bK3x9Cf1janHuAyHMAjvkEWzTeVMVa5qbM6x9ETvWw=; b=LHUUwW/GPGI2EuBOSzr6OoZVt3
+	6LUBS3+ZuTMuYWoLCQ1NrGQ3AMkyhn5O389VsX+/o+b741lWVzclDVAG+6U8XfDB7Imo0YT/dWTwa
+	M8rM4ymvm6fSGQP/7mOp7glxAUPqBj2Wme73SgwS7hKA1ZxToPP5AfiXCrnPM1Uv/NikpxTrgtntC
+	PwAbBZKsXShfC3ooMb9DtyJPUcdrjGjH3NY/Tfd1VCEG0WdPKd5Ml6e5NHUZA7nj6WBbOzL/nq8r+
+	BpCyKGJHzw7v2G8+CfUE1/ov9D3OlC99QtSDKg8hLTm7lfTWCGBJo2Q5XCblWZglLagtWSDrOxh1L
+	8nJswmrA==;
+Received: from [109.166.137.172] (port=39052 helo=localhost)
+	by cloud347.c-f.ro with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.98.1)
+	(envelope-from <asoponar@taladin.ro>)
+	id 1uFTlx-00000006qJ7-0WAp;
+	Thu, 15 May 2025 11:17:06 +0300
+From: Alexandru Soponar <asoponar@taladin.ro>
+To: linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	linux-watchdog@vger.kernel.org
+Cc: jdelvare@suse.com,
+	linux@roeck-us.net,
+	jic23@kernel.org,
+	pavel@ucw.cz,
+	lee@kernel.org,
+	baocheng.su@siemens.com,
+	wim@linux-watchdog.org,
+	tobias.schaffner@siemens.com,
+	angelogioacchino.delregno@collabora.com,
+	benedikt.niedermayr@siemens.com,
+	matthias.bgg@gmail.com,
+	aardelean@baylibre.com,
+	contact@sopy.one,
+	Alexandru Soponar <asoponar@taladin.ro>
+Subject: [PATCH 13/16] leds: eds-mt6370-rgb: Fix type incompatibility with find_closest()
+Date: Thu, 15 May 2025 11:13:29 +0300
+Message-ID: <20250515081332.151250-14-asoponar@taladin.ro>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250515081332.151250-1-asoponar@taladin.ro>
+References: <20250515081332.151250-1-asoponar@taladin.ro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,56 +72,86 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAA3dw+iqCVotbHaFQ--.49892S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7GF1fZFWUWr1fAr17tr4UXFb_yoWkZFc_Ww
-	45X347Xr18ZasayF12ywsxAF4rZF4vqrnrCanYqFZay34fJ397AF1UtFnxur1kWF15ZF1k
-	Ary5ZrWfGrWUGjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbVxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AK
-	xVWUAVWUtwCY02Avz4vE14v_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
-	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-	73UjIFyTuYvjfU00eHDUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+X-SpamExperts-Domain: cloud347.c-f.ro
+X-SpamExperts-Username: 185.236.86.218
+Authentication-Results: mxserver.ro; auth=pass smtp.auth=185.236.86.218@cloud347.c-f.ro
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: Combined (0.02)
+X-Recommended-Action: accept
+X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT94YpnLF5SwLL9ehD3Nt/zePUtbdvnXkggZ
+ 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5w1OL79HMxE022P+rQy8YAdcSeERs4TOTnIH1kc1IWc5TSx
+ S75yz9IFZiY7BarU/NrpK8SEOwGmfn6ucAKqn/OHRh3BqzFaEnAEj4UixLJBjVNiLZt/QXQnOBRD
+ +jq1HsIBmHTFdhqXZEtguZY7iGKpkcJnJKaJfT+dw1udmv00tbIRNtoyOobb3xnDyRRylAVTYi2b
+ f0F0JzgUQ/o6tR7C8pLPCtTiVLo0r89ClJHDKhDGKgJ+T00JeCnHBmMdB1eMZAyYlfUtEN4pUyes
+ jVRntA/J5DcfwvG53FyVviDO9UET3GKmqv1jT0lY+AQz8YX4CVph7ctC7tRH2SPTQJ/0klTuXKq/
+ B9rqRWsYzNfBLt79i78aPHyWnIqxGMxPZotYvH/es1vXuByXo2bkrYMqq0x5CzaUoJIoBUQayHle
+ UvbvCQmh9x4kn6NeQcRkc6G+OgAcq5x+BzhRyg9rYO6I0H7Q2OEpckvWJAOmdJd77Z9vwc+QHB+X
+ +u7aTqYHtT2CBuxNPBc9JM2jck1NnIBf0tvflhq7Xjhll72AYgnW/6M0ftSpvLIx+X1vKami8KF6
+ jWQ71uVNIY/EFPWeDmcZuFRQy1vmjjPiYw8fUCp0/qY6cmSW9oUDdvKuTRfTGZ6f8nTXoYFaQ71l
+ mMti8uxA0gKVmIzBXtbLDVvAQ/KVNV9SVEyB9ej05/cIY4vdt8eSAN5VcIfsMVILjVAz6RZsCHxD
+ lgOJwEwCFaF+62b2lf1UUDu9jECN1V/lwmsioRLmNJoHOZOE/9e5UD715p61XAQw85DCXa0iAPEd
+ fYyrF5wMRSLGyY+i0m2IxQLxQUxLMkCVXN63lz38Up+2UgeFSDBPqdRoFsq0hfzdx0oxkgNI/jhY
+ WFhu7VV+HdWjdZLlmQ5z83qEVVG/6RJ+BW7FmGcwL889DSW2cZWGkIYVQAbHnYkWUz1gRIjAiMvi
+ vM7um7t0SVa5NVZ2g1u6DnOpQHYV3TsOFMmdrwGhqQDw/U3WHzWVE9linvPYkk5EbvNSKMKZZKIm
+ pSRiVj3Z6FeYyEA/4qyBWyM8TTC6Mg9RWQhL+FDRQ14qhQ8eQiedscRlw3yFXNuLqAW9V7zLFic5
+ yLycIETNRAvUQf+piJ7sPxqZR3KVQgqF/fPYYAfEfsiDGp7i4K9gmqREIfOEHv/AIZm2yoKIH61n
+ a1iNI9sJnsAUwzQCuiJPgIus2V/JZ5Ll9XC1Cx34YL7X+JLwYAm5ypSliZ75kJ0rTza8+YFWM4S1
+ 7lffY/fLNHsH8DeB1ciz42LgJIaeGQmuwKFVmHrkHiEGmnBHWv4Gh/0pmoIxCd7Wl7bcZf/Yjlgk
+ C5/TshV6p4LXFVs/AS6Qchyrp0WYcTQDm0YvDLW6j0ztAyPgv56IZdRxyG8ZeWMbNPZiNWdBqyRc
+ AYMRiF/tTJMpgiPRIHs6CS/Wfz+lGlAmDqpSODMqRVTYPdDe9fNkDTBGwLS7dfE8OG6V00DpgPHh
+ UdfSfqIJ3VUm2y3pNa2dBD3F+DFlJQxAtZlYB2ywONOJP1ekyl6c7Cq2HuJSCRWhvBtVdoCRStPj
+ NlKN8tqRiXqTYOVbu7qFs1k1cwrc0cM1w7Y=
+X-Report-Abuse-To: spam@cleanserver1.mxserver.ro
+X-Complaints-To: abuse@cleanserver1.mxserver.ro
 
-Chained irq handlers usually set up handler data as well.
-irq_set_chained_handler_and_data() can set both under irq_desc->lock.
-Replace the two calls with one.
+The common_tfreqs and mt6372_tfreqs arrays were previously declared as
+unsigned int but used with find_closest(), which now takes signed int
+parameters. Change these arrays from unsigned int to int to maintain type
+compatibility with the find_closest() function signature and prevent
+compilation errors.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+Signed-off-by: Alexandru Soponar <asoponar@taladin.ro>
 ---
- drivers/soc/fsl/qe/qe_ic.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/leds/rgb/leds-mt6370-rgb.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/soc/fsl/qe/qe_ic.c b/drivers/soc/fsl/qe/qe_ic.c
-index 17e6d2377c7c..4068b501a3a3 100644
---- a/drivers/soc/fsl/qe/qe_ic.c
-+++ b/drivers/soc/fsl/qe/qe_ic.c
-@@ -450,13 +450,11 @@ static int qe_ic_init(struct platform_device *pdev)
+diff --git a/drivers/leds/rgb/leds-mt6370-rgb.c b/drivers/leds/rgb/leds-mt6370-rgb.c
+index ebd3ba878dd5..6ce11432dd96 100644
+--- a/drivers/leds/rgb/leds-mt6370-rgb.c
++++ b/drivers/leds/rgb/leds-mt6370-rgb.c
+@@ -135,7 +135,7 @@ struct mt6370_led {
+ };
  
- 	qe_ic_write(qe_ic->regs, QEIC_CICR, 0);
+ struct mt6370_pdata {
+-	const unsigned int *tfreq;
++	const int *tfreq;
+ 	unsigned int tfreq_len;
+ 	u16 reg_rgb1_tr;
+ 	s16 reg_rgb_chrind_tr;
+@@ -212,11 +212,11 @@ static const struct linear_range mt6372_led_ranges[R_MAX_RANGES] = {
+ 	[R_LED_TOFF]	= { 250, 0, 15, 500 },
+ };
  
--	irq_set_handler_data(qe_ic->virq_low, qe_ic);
--	irq_set_chained_handler(qe_ic->virq_low, low_handler);
-+	irq_set_chained_handler_and_data(qe_ic->virq_low, low_handler, qe_ic);
+-static const unsigned int common_tfreqs[] = {
++static const int common_tfreqs[] = {
+ 	10000, 5000, 2000, 1000, 500, 200, 5, 1,
+ };
  
--	if (high_handler) {
--		irq_set_handler_data(qe_ic->virq_high, qe_ic);
--		irq_set_chained_handler(qe_ic->virq_high, high_handler);
--	}
-+	if (high_handler)
-+		irq_set_chained_handler_and_data(qe_ic->virq_high,
-+						 high_handler, qe_ic);
- 	return 0;
- }
- static const struct of_device_id qe_ic_ids[] = {
+-static const unsigned int mt6372_tfreqs[] = {
++static const int mt6372_tfreqs[] = {
+ 	8000, 4000, 2000, 1000, 500, 250, 8, 4,
+ };
+ 
+@@ -304,7 +304,8 @@ static int mt6370_set_led_freq(struct mt6370_priv *priv, unsigned int led_no, un
+ 	const struct mt6370_pdata *pdata = priv->pdata;
+ 	enum mt6370_led_field sel_field;
+ 	unsigned int tfreq_len = pdata->tfreq_len;
+-	unsigned int tsum, sel;
++	unsigned int sel;
++	int tsum;
+ 
+ 	tsum = ton + toff;
+ 
 -- 
-2.25.1
+2.49.0
 
