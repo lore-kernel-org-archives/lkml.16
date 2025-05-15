@@ -1,34 +1,47 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F8E47261A;
-	Thu, 15 May 2025 13:59:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED7842C0B;
+	Thu, 15 May 2025 14:00:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747317578; cv=none; b=W2ay7F5vnjeMxU449c9NCB9C41TBmAP5kQ2lUge+sbFlkS3ltwJ0psYGWp0w62a93s0eaH8VRJvWxeNm/lch9+tu3V4XGHDkh/SpD33iFWvVaa40CGJ3vYak+uh5HeKUf52FwSMADJVYjQIOUaY8MvDFK64QIN0sZQXZU2xsPZ0=
+	t=1747317637; cv=none; b=Nw5CEr+t+xTM7QKjTda5S1pIaRxS1IsWO5P3L7Y4JEJsgtVoekNz60gDjTrmqx6bf7q1Ldlvv7U/fyrVI4YVg9P26sT72wu2mq60i6AeF4jWYWh/8j++HhXv/VUsuxQP/eH6kWvfLjQTqxon2Vc5iablCJGFaBgToeBXEVBwcM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747317578; c=relaxed/simple;
-	bh=6JLKEghaGM1X6LutsUagYtpBfpLfq1WI0NDNTcCYrME=;
+	s=arc-20240116; t=1747317637; c=relaxed/simple;
+	bh=9cVRHoRN/FrnNoWySk3piyOU4+OkMbJBJ5DrHky7+/c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J9QZNsywMVL6vKGlFnQChwhocL8toUCcBsag80FdhrlDHXJKQKB9q9SqLMfHcmnUUv0ccUBN7RF5GXeuAF44mY5ln4IRlP1nGaAznBJqR/LZ6scbgU9L9viEqrn1QKN2qHbtkLYhZ/Wr9BMPpE4uZ64I90lqjF0e9jpMR0DkVb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D858C14BF;
-	Thu, 15 May 2025 06:59:22 -0700 (PDT)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F8C53F673;
-	Thu, 15 May 2025 06:59:32 -0700 (PDT)
-Date: Thu, 15 May 2025 14:59:24 +0100
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: long.yunjian@zte.com.cn
-Cc: sudeep.holla@arm.com, cristian.marussi@arm.com, peng.fan@nxp.com,
-	justin.chen@broadcom.com, florian.fainelli@broadcom.com,
-	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, fang.yumeng@zte.com.cn,
-	mou.yi@zte.com.cn, ouyang.maochun@zte.com.cn, xu.lifeng1@zte.com.cn
-Subject: Re: [PATCH] firmware: arm_scmi: Use dev_err_probe() simplify the code
-Message-ID: <aCXzPGvPayVyiMHG@pluto>
-References: <20250515203855146Sn9x-Uw9Teur35mOjn41C@zte.com.cn>
+	 Content-Type:Content-Disposition:In-Reply-To; b=hghY9A3SQUO2aPsWuTuHwNj/Q4sC5kzZKTfiFUG8f++Omo55KrN3t4Bd8tPJgthkLpkNLBJ/Mm8xltQk1TXVgymsrgGTXefeykdDf1N5yhP286M2JhunhuQg1x7nCvYvCEIxFDtWu3bHbNXKuQBsFNYJivQErgu5glYA2Ug4zmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nz70mEL9; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nz70mEL9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6154EC4CEE7;
+	Thu, 15 May 2025 14:00:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747317636;
+	bh=9cVRHoRN/FrnNoWySk3piyOU4+OkMbJBJ5DrHky7+/c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Nz70mEL9PtihqeV0OBw+bFKdG3eWXIZyGg04I4PiroVKRuVt+L1oveS6bP92kG0bv
+	 9UxedZRKQC4VssCMieZG6wma1kDOsmF0PEnwYTzRdYJZ820ZThPc96Z47aDbouIsXX
+	 geQq5kYXCKunMxzSn7XlsuGXJDXM85oOgdLfpmgHtrghFmDBfuxjS84sWEYpCxl+5M
+	 w4WRGAf8BAxwQxMeALPOgTGATjyUxlLr69C4JpvMBufc9rZgV3AZTTISNb9LsF+0Gf
+	 gfXlm1cQVFpT45bXevdjDFw7eA2LDA5UGGGtMK1htHLHtzRq539AzJsoDgbR8srIdz
+	 GL/QDYc29Ze4w==
+Date: Thu, 15 May 2025 23:00:34 +0900
+From: Krzysztof Wilczy??ski <kwilczynski@kernel.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>, linux-pci@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] PCI/bwctrl: Remove also pcie_bwctrl_lbms_rwsem
+Message-ID: <20250515140034.GC3596832@rocinante>
+References: <20250508090036.1528-1-ilpo.jarvinen@linux.intel.com>
+ <174724335628.23991.985637450230528945.b4-ty@kernel.org>
+ <aCTyFtJJcgorjzDv@wunner.de>
+ <20250515084346.GA51912@rocinante>
+ <aCXZdfOA8bme-qra@wunner.de>
+ <98fa31e7-db86-35f0-a71c-a1ebf27f93f0@linux.intel.com>
+ <aCXe_SMq6vsAIAin@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,31 +50,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250515203855146Sn9x-Uw9Teur35mOjn41C@zte.com.cn>
+In-Reply-To: <aCXe_SMq6vsAIAin@wunner.de>
 
-On Thu, May 15, 2025 at 08:38:55PM +0800, long.yunjian@zte.com.cn wrote:
-> From: Yumeng Fang <fang.yumeng@zte.com.cn>
+Hello,
+
+> > I'm a bit hesitant to mark "Accepted" state though, I did it this time 
+> > but in general I feel I might be overstepping my authority even if I know 
+> > some patches have been accepted.
 > 
+> Bjorn has encouraged submitters to mark their own patches as "Superseded":
+> 
+>    "If you're really gung-ho, you can go to Patchwork [2] and mark
+>     your superseded patches as "Superseded" so I don't have to do that
+>     myself."
+> 
+>     https://lore.kernel.org/r/20171026223701.GA25649@bhelgaas-glaptop.roam.corp.google.com/
+> 
+> ... and I was assuming that also applies to marking one's own patches
+> as "Accepted", but I might be jumping to the wrong conclusion.
 
-Hi,
+Between Bjorn, Lorenzo, Mani and I, we are getting better as leveraging
+Patchwork for a little bit of tracking and "project management", so to
+speak.
 
-> In the probe path, dev_err() can be replaced with dev_err_probe()
-> which will check if error code is -EPROBE_DEFER and prints the
-> error name. It also sets the defer probe reason which can be
-> checked later through debugfs.
+But, any help with the housekeeping always appreciated. :)
 
-All true...but...if you look at the main scmi_probe() function all of these
-failures are trapped at that level currently on the return path...
+Thank you!
 
-see the call chain from
-
-scmi_probe()
-	....
-	ret = scmi_channels_setup(info); 
-	...
-
-...so your probe errors will be overridden there with a more generic message
-left in debugfs at the top level.
-
-Thanks,
-Cristian
+	Krzysztof
