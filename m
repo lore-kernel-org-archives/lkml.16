@@ -1,131 +1,136 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from slateblue.cherry.relay.mailchannels.net (slateblue.cherry.relay.mailchannels.net [23.83.223.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9979218858;
-	Thu, 15 May 2025 17:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747330830; cv=none; b=BDRnfA6Isu4Z1xroQBTXGuqlOZY6N/tcTLfZCkcD09vRdDj+XN98y4mCGYELkOZFoHRW9JXSAbRm9nlZialAdoflZRyyjaYSj6rS5Zm0FFKSrYyjd5UdBl6FaaVCOs1fVScPta32OeX2C+/lSlMPobfoVc8Xx3/Z/D3VgNi5uak=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747330830; c=relaxed/simple;
-	bh=0IzJdOxR81ygQCmsqANdLatnRP0Wcuz+EfKUEkhkJEA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l1otjG/l9HSYM/dahDBKbBgxrAXMsgakUioZixh4itaVsfuVdGe3vrB8LwYTR74P9XKc1x5+dVMjVzFqa+IpOdRlZhmDYfW2dv1cLQ+lyNE3QU8XGwniY41v83UMpJ/rur73NBN+nqr4Um4Vay/dMgVteFjOVIGB724m9GzD1ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IEJ2ndro; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859BD258CD8;
+	Thu, 15 May 2025 17:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.168
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747330832; cv=pass; b=YHP2kn4rF74CtQH61+dWvDhp12/V2YtdcVcXDSXL8vL0H1aXhMbdoLwZ7jJoyVxF4dHQUYnzn133NxN7nL3yRKe1Vk/WcMBnX3hnU9qR69AXOzittVEMs9CYh9KEtgYJm0GQdJo3XBtT9AeC6q5U6KJaTS41LKXWe9yCI8zQIHA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747330832; c=relaxed/simple;
+	bh=nIQGRX6UAtGnH+6wMi7KPiX9z3GVkhYEGLi9WOg8CGw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KsfYfIe9+sSHPTB915sdBm1l0fX63o3K9vxb3AdfTElVv+0RDIuBsQdmjiLuqv95WKiyHrI+4P7rIpsRdxt4BltW1r42Wbfcgfp2NnvmqI3Ltwr8FM7lVPGUvlwu+GFB6ItMDYjEd3GTayvMi7qvS5/9lomdMybNsGu9ilTqwsU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=qCH8gG+U; arc=pass smtp.client-ip=23.83.223.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IEJ2ndro"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3da73e9cf17so8945435ab.2;
-        Thu, 15 May 2025 10:40:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747330828; x=1747935628; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9Gv+jyqF5iQ9QDCMmj+4HNiLTyap9tDvvCFpoRNaACI=;
-        b=IEJ2ndros5wAvfxAQmVcITjhyjVxyHMT9y6bVlUIqax36s/hwgJE6tZ6Bnuy2MKzIf
-         oxIpmjpcIJG8qGQv8OFNAFnbCiy1olDcFfCM+5cCQ0jd3m1Q8dBfn23jgbtHLjgKqLXP
-         IrmJqSwPmkAYvNiosEKFrWDltcQj4IjQf8v37pHk5V/7DN+RUwXsQZPjPV+axV+hHeXn
-         wp2SiGyn1nG5rYBroH0x84q65Owordgt88vzAHRACZhjTRYKoOJdR6WzyC+MiCBr5m0R
-         yZbTqnDVwDL+sIXh5r1O0M5U4qOrT077/C9cQ5P26mAiB49jSoUZdgbrCZ81IcQtFRlc
-         7AWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747330828; x=1747935628;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9Gv+jyqF5iQ9QDCMmj+4HNiLTyap9tDvvCFpoRNaACI=;
-        b=EIfF4eF08sw6T1rtdvQmOlT/oLTx5E60UpEqsAbNqacoPjnSGgltuV2QgdtPm1mF9y
-         fVdd6QkK29LfNsYVMBIvQniHGCstCpw9oGg5EGfu9wsZhGwZWNrJnuaB01LjlYrzVNxL
-         dFxODCbW6nvg3cgVoKf5HmbggQADNfXTe10mwFDJ63Rn0/IbqDmoi5rk6lpYFl3ZMzbS
-         8qC8iXfgSis/WMl7xWqQFNz7ua4KXjBnk/CrQ9mri/6rszV64DwIgocmrO9d/j7e++yO
-         b0MHckXrxcwccTs15Pct7Mjox4H/8iZnfq6Fud+kkdYBkrkUNxmyKhHKU9LUMN4DVpze
-         XFxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUyd2jmLa6yHmOjTwUbQdWkuP5S6yO2ZL+blPOr3ZgMiq3lkXL1oLgy5IA2r+8qcw93rRRl/VUHwABd8cPE@vger.kernel.org, AJvYcCVisMzaFlOQq72J3aQIzkin4YqErpIVxZaAF2qdEWXA9MEqKXIZL6/Eb08gcb0XNNhZ2w4MR79HtD/U7VKi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9k32Fulhldq81WbzQxX56vVjkKl5MpBMOGVdIclZ0EVvcTM5o
-	glADaAHQnMVgNrp21L/ALCmh09BIsLRlFDnqWeqdYozHixqAGYvG9tyVXGYt2PU+Q/2fYCDrh/D
-	3Ze7JWNKE/YKda36WeAaOJUOQIzppgVk=
-X-Gm-Gg: ASbGncu55MHQNSXY04MlmScBAoIS4YIFFC05y1RXNwojSkmcMw2F1H2PLOfZnSjsrbv
-	APwy61U4rpUaxKIcC+H4pwtAMs5ubxT8cxaEiPbzKSE7gKBAXOzcnB7+xM0RdD0pCTdoLyvZT7o
-	D5LrZ67bPspvhvDg95FXl3fGZPZ2S7Pg6kW0hu/3LurDd8kNd4vxCX7cwvGcEyrb0=
-X-Google-Smtp-Source: AGHT+IEJipXdl2VdU/Oec1bGlBvZGZ7tO6kaKvHUZEoNz8drXkpWOZVfZlKq5HOiApXq2RnjQWE/s2cZ189LZWiNKr4=
-X-Received: by 2002:a05:6e02:1a6c:b0:3d9:398f:b836 with SMTP id
- e9e14a558f8ab-3db84321988mr8926665ab.17.1747330827801; Thu, 15 May 2025
- 10:40:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="qCH8gG+U"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 3DF1225138;
+	Thu, 15 May 2025 17:40:24 +0000 (UTC)
+Received: from pdx1-sub0-mail-a272.dreamhost.com (trex-green-1.trex.outbound.svc.cluster.local [100.119.71.126])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id C12902515B;
+	Thu, 15 May 2025 17:40:23 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1747330823; a=rsa-sha256;
+	cv=none;
+	b=39M/fkEUYW5OXjo7JxwHwRPyxRqAFYswUUvjnidFL0vkorQIlDu2Rzw7lqt0W4rhtQjawO
+	+MBIUgZg+ES1szvVAT7DD5ziJNLNo9XnhxgH6p11zqhxiHX8RlVdVdw/hTT9Jv+1OLvYnB
+	Xi3N5C5KzieFrYdQa3C5rlQ9jjfmrZpBoMpGu+o0kgII8OxystDpkDIWjKEg+xh5UOrBqY
+	Ww0XMaLaHmYryMRI0WXPAh96Dc2vKNo79VHL02D+FuZayV9egfq9qvy5vE8Pa7imLs690l
+	idalcmWO3vCIx2iTsHEt+V25dvcTZJ5Wl1G1So2XVjcTIB+jceOrYZwYPw0lmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1747330823;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=wwgNvKmxgKM/DoKzTas8oxSOF7Xy+ypxu8y3KI5VZHU=;
+	b=F88/CLAV7s+0/Bi61JW3UBu8OLFF0L4xGuY4ZLM5aoB5C+2UUsCg4iqO+4gCO+OeyPZjcA
+	1gMgM0POLy2659Dubr+Y4mmkNjK4LM7BG7bo6zXBqocrrMc6hA0bcpM1+j5Epo4J5igWN+
+	n7UHyikDdQK1jW53PYU+rw0ZwPGoHLIo0cumDqaWZx3DpEjTL7CIXx/J7ZEgPM3pxLdRTD
+	OnAZi0yRcRGJjapFLhNCzXP2SROhB2zvw1wHNOytmoLn8Y9Dg8ZSMdJLQoWM/zbiz5/uBk
+	IemGVFtB/doNkSmwbdibZ86jnC9am3/BuVCwQtbvtM2lbXA7QfwknV6DUaEiig==
+ARC-Authentication-Results: i=1;
+	rspamd-57f676fcfb-gcktm;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Scare-Zesty: 71f35adf4cefdf28_1747330824122_2458218250
+X-MC-Loop-Signature: 1747330824122:1993011062
+X-MC-Ingress-Time: 1747330824122
+Received: from pdx1-sub0-mail-a272.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.119.71.126 (trex/7.0.3);
+	Thu, 15 May 2025 17:40:24 +0000
+Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a272.dreamhost.com (Postfix) with ESMTPSA id 4ZyyCq0r8pz6x;
+	Thu, 15 May 2025 10:40:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1747330823;
+	bh=wwgNvKmxgKM/DoKzTas8oxSOF7Xy+ypxu8y3KI5VZHU=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=qCH8gG+UrfkQHLT/ItnCsdJzsrkMYFRuQxjDMbhGyLslquz6nqRkUKU8HdCdGx7/7
+	 MtHcGcrSi7F1QsGZ9/28QxLqGLarKVtm/MBRj4vOUNrJHtMCoKazxYqTr50PLRl5Y1
+	 VI+fL/wv7DlKMWaHR4hBz7oq/inbxh/Dtc2hfIApg6TVisfFaAeFoY9FDJsgdzKDFO
+	 IcEw1zfLq32jn3fcPXbj+9MjFPg+KUPuWBn9PludqsuxeqBMk2TE2knOv7MkY79k+q
+	 mF3lB+NeAQMO0F0xibHf0BuLEy8F7ovoIPgKyVKBz8ZvODEMq6wqwkJZ0oylPEX7bJ
+	 mD0Oxbo1bVCJA==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: brauner@kernel.org
+Cc: jack@suse.cz,
+	viro@zeniv.linux.org.uk,
+	mcgrof@kernel.org,
+	dave@stgolabs.net,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 4/4] fs/buffer: optimize discard_buffer()
+Date: Thu, 15 May 2025 10:39:25 -0700
+Message-Id: <20250515173925.147823-5-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250515173925.147823-1-dave@stgolabs.net>
+References: <20250515173925.147823-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514170118.40555-1-robdclark@gmail.com> <20250514170118.40555-5-robdclark@gmail.com>
- <51f87f358fa1b7ef8db8b67ee6cde38ae071fbe8.camel@mailbox.org>
- <CAJs_Fx771FFVDVFMn8YJkR9f9Ad-UQspJ9KKQw4u6Cu4TA7YPA@mail.gmail.com>
- <CACu1E7EL+E-M0N-EAN9Bx7u9O6_pECQQdPE2ph575idhVb2Szg@mail.gmail.com> <aCYkk4Y7feltfp79@pollux>
-In-Reply-To: <aCYkk4Y7feltfp79@pollux>
-From: Rob Clark <robdclark@gmail.com>
-Date: Thu, 15 May 2025 10:40:15 -0700
-X-Gm-Features: AX0GCFtd_SrDNpGNgyp8XAQPhmBBmDgvcdrcdNZ8xnRlH3UestZq2hfK_c4xVuQ
-Message-ID: <CAF6AEGsoG_W3A3+BHV4n5EKZQazFubrCyfrtxVUH7+H4-j7i5A@mail.gmail.com>
-Subject: Re: [PATCH v4 04/40] drm/sched: Add enqueue credit limit
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Connor Abbott <cwabbott0@gmail.com>, Rob Clark <robdclark@chromium.org>, phasta@kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-arm-msm@vger.kernel.org, Matthew Brost <matthew.brost@intel.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	Boris Brezillon <boris.brezillon@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 15, 2025 at 10:30=E2=80=AFAM Danilo Krummrich <dakr@kernel.org>=
- wrote:
->
-> (Cc: Boris)
->
-> On Thu, May 15, 2025 at 12:22:18PM -0400, Connor Abbott wrote:
-> > For some context, other drivers have the concept of a "synchronous"
-> > VM_BIND ioctl which completes immediately, and drivers implement it by
-> > waiting for the whole thing to finish before returning.
->
-> Nouveau implements sync by issuing a normal async VM_BIND and subsequentl=
-y
-> waits for the out-fence synchronously.
+While invalidating, the clearing of the bits in discard_buffer()
+is done in one fully ordered CAS operation. In the past this was
+done via individual clear_bit(), until e7470ee89f0 (fs: buffer:
+do not use unnecessary atomic operations when discarding buffers).
+This implies that there were never strong ordering requirements
+outside of being serialized by the buffer lock.
 
-As Connor mentioned, we'd prefer it to be async rather than blocking,
-in normal cases, otherwise with drm native context for using native
-UMD in guest VM, you'd be blocking the single host/VMM virglrender
-thread.
+As such relax the ordering for archs that can benefit. Further,
+the implied ordering in buffer_unlock() makes current cmpxchg
+implied barrier redundant due to release semantics. And while in
+theory the unlock could be part of the bulk clearing, it is
+best to leave it explicit, but without the double barriers.
 
-The key is we want to keep it async in the normal cases, and not have
-weird edge case CTS tests blow up from being _too_ async ;-)
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ fs/buffer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> > But this
-> > doesn't work for native context, where everything has to be
-> > asynchronous, so we're trying a new approach where we instead submit
-> > an asynchronous bind for "normal" (non-sparse/driver internal)
-> > allocations and only attach its out-fence to the in-fence of
-> > subsequent submits to other queues.
->
-> This is what nouveau does and I think other drivers like Xe and panthor d=
-o this
-> as well.
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 210b43574a10..f0fc78910abf 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -1616,8 +1616,8 @@ static void discard_buffer(struct buffer_head * bh)
+ 	bh->b_bdev = NULL;
+ 	b_state = READ_ONCE(bh->b_state);
+ 	do {
+-	} while (!try_cmpxchg(&bh->b_state, &b_state,
+-			      b_state & ~BUFFER_FLAGS_DISCARD));
++	} while (!try_cmpxchg_relaxed(&bh->b_state, &b_state,
++				      b_state & ~BUFFER_FLAGS_DISCARD));
+ 	unlock_buffer(bh);
+ }
+ 
+-- 
+2.39.5
 
-No one has added native context support for these drivers yet
-
-> > Once you do this then you need a
-> > limit like this to prevent memory usage from pending page table
-> > updates from getting out of control. Other drivers haven't needed this
-> > yet, but they will when they get native context support.
->
-> What are the cases where you did run into this, i.e. which application in
-> userspace hit this? Was it the CTS, some game, something else?
-
-CTS tests that do weird things with massive # of small bind/unbind.  I
-wouldn't expect to hit the blocking case in the real world.
-
-BR,
--R
