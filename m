@@ -1,83 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CAC293744;
-	Thu, 15 May 2025 08:50:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687D829615C
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:50:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299055; cv=none; b=es7wuTZ9N8GTzk/cwFr6U2cBgvFDL6/NtM9znq9pbw1RQmOXXG9Hk83ntag8FCGs9xTiDHT6bcnTNgcuNNyp7ucg0hTEpjvlOFeoAZyIk7xE7xKfYEg41GrqsgOsFu2kg0C1bkQbPgA5PWPgNEAPvw4mvnvwi3d/VVQKGs0hux4=
+	t=1747299058; cv=none; b=Bj0/LT65SnNKEEjXb1PqJBsIhBlhXUGJqnnzID10EZ5FcKT+VQ3l4OKeCJ/HJ6lpOE6RcR4UL0E5YFEzetae12ak52qGB3nhApiNrzFljJ3LVpSWqww0d9gx6wqGATUITJphbeW43ZMQQ88gJm6xq8J6C3org9r9Mj1v9rGYyp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299055; c=relaxed/simple;
-	bh=OD8uQNJihkgCAC/Q6mW+TSj84arnClVm29wWN6+wils=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=m9VmCO9kP76x9dfJirtKRmSci2xYigluBAchIM01uxn6cgjhj6VKl95QCzISOHR77fmRo+FkFtv5uonZElFbAMLDh1Y5bl+oRQU3QNhSRZwXJcs/MX/hH9MxgwgoDuaK2HOKBmLz3djcngO+gvUY4YKahUothphgBCItQkxHJyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OpJqWS4Q; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OpJqWS4Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0F4CC4CEF0;
-	Thu, 15 May 2025 08:50:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747299054;
-	bh=OD8uQNJihkgCAC/Q6mW+TSj84arnClVm29wWN6+wils=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OpJqWS4QfUFtBCb8r1pWEhFUVu1OeYZqd+oN6noAP1tCtN+TsOzIrUEFAPSsxoQtG
-	 aUk/tkCJ+6KtnYw/qIYifx5+DoPuhANQLj3I3esNHGNjOmujDkIs54i5OVrqReQ65w
-	 gBZh5NR0R1ZnuKnGOf65q0aFKm9FltPpV2W4/duoEJ1jGx+Mtn6kuGWDwt5Ob02r+g
-	 c9c4d2vSmubGJ4WVKrI20DC8c+diRgCUuGwok+MndjxAIc/vv31XEZ/8QHA9HfQwF7
-	 RA2nVFiOZsORsjyi1i/KsQzcSYTugQc5h+v4TEDOHAYAeSODXkcLlMa5yBa5ReaR5B
-	 1jzotkm/1cUHA==
+	s=arc-20240116; t=1747299058; c=relaxed/simple;
+	bh=lYJ/o+eYx3AFY6l9ivqhg4tj8FWBMdEuTBwjzyp5C0A=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=q4mHimpwWt20jN39oPl+/Did6xz2Fxs86A43H6IhRcwPNoilxi2yBUAp/NVWwzUvP8riknjKOJzSihdvXv6Nh6EcCKPE6eI2uXxv3dGY8jcqB5V+4R7AwFisxH+uhpzivJhcIbaYgpabwNkTSO/L9pBL/wmAJcVwI9ucPuiB+xU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF090C4CEE9;
+	Thu, 15 May 2025 08:50:57 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1uFUJL-00000005XaD-0fGd;
+	Thu, 15 May 2025 04:51:27 -0400
+Message-ID: <20250515085127.011811382@goodmis.org>
+User-Agent: quilt/0.68
+Date: Thu, 15 May 2025 04:51:10 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Yury Norov <yury.norov@gmail.com>
+Subject: [for-next][PATCH 1/4] tracing: Cleanup upper_empty() in pid_list
+References: <20250515085109.352233527@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 15 May 2025 10:50:43 +0200
-Message-Id: <D9WLTFASYNN8.CDM0HJKG6RR9@kernel.org>
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Matthew Maurer" <mmaurer@google.com>
-Cc: "Danilo Krummrich" <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>,
- "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>,
- "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Sami Tolvanen" <samitolvanen@google.com>, "Timur
- Tabi" <ttabi@nvidia.com>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
-X-Mailer: aerc 0.20.1
-References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
- <20250505-debugfs-rust-v5-4-3e93ce7bb76e@google.com>
- <D9VPA1M45WBK.1TB4KOUXD24BD@kernel.org> <aCRdNJ2oq-REBotd@pollux>
- <D9VSJTPCSNXV.1LCXKGKVDGP96@kernel.org>
- <CAGSQo00Pj0qF90712K7xACNEvr2e0q=98b8-0VUcXLD5V+oDhg@mail.gmail.com>
-In-Reply-To: <CAGSQo00Pj0qF90712K7xACNEvr2e0q=98b8-0VUcXLD5V+oDhg@mail.gmail.com>
 
-On Thu May 15, 2025 at 12:08 AM CEST, Matthew Maurer wrote:
-> Yes, this is also an issue when it comes to attaching data to debugfs
-> if you look at the WIP patchset [1]. If we do end up deciding to try
-> to do self-referential structs for users (I'd rather not, but I
-> understand I don't have the deciding vote here), I'd strongly suggest
-> considering self_cell [2] as a model instead of ouroboros - there are
-> structural UB issues [3] with ouroboros that are unlikely to be
-> resolved, and the author of ouroboros encourages use of self_cell
-> instead [4]
+From: Yury Norov <yury.norov@gmail.com>
 
-I do not think we should add something that allows us to have
-self-referential structs. I only mentioned ouroboros, because in theory
-it's possible to do in Rust, but we shouldn't do it.
+Instead of find_first_bit() use the dedicated bitmap_empty(),
+and make upper_empty() a nice one-liner.
 
+While there, fix opencoded BITS_PER_TYPE().
+
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Link: https://lore.kernel.org/20250429195119.620204-1-yury.norov@gmail.com
+Signed-off-by: Yury Norov <yury.norov@gmail.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Cheers,
-Benno
+ kernel/trace/pid_list.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-> [1]: https://lore.kernel.org/all/20250506-debugfs-rust-attach-v2-0-c6f88b=
-e3890a@google.com/
-> [2]: https://docs.rs/self_cell/latest/self_cell/
-> [3]: https://github.com/rust-lang/miri/issues/2844#issuecomment-151057794=
-3
-> [4]: https://github.com/someguynamedjosh/ouroboros/issues/88
+diff --git a/kernel/trace/pid_list.c b/kernel/trace/pid_list.c
+index c62b9b3cfb3d..090bb5ea4a19 100644
+--- a/kernel/trace/pid_list.c
++++ b/kernel/trace/pid_list.c
+@@ -81,13 +81,9 @@ static inline bool upper_empty(union upper_chunk *chunk)
+ {
+ 	/*
+ 	 * If chunk->data has no lower chunks, it will be the same
+-	 * as a zeroed bitmask. Use find_first_bit() to test it
+-	 * and if it doesn't find any bits set, then the array
+-	 * is empty.
++	 * as a zeroed bitmask.
+ 	 */
+-	int bit = find_first_bit((unsigned long *)chunk->data,
+-				 sizeof(chunk->data) * 8);
+-	return bit >= sizeof(chunk->data) * 8;
++	return bitmap_empty((unsigned long *)chunk->data, BITS_PER_TYPE(chunk->data));
+ }
+ 
+ static inline int pid_split(unsigned int pid, unsigned int *upper1,
+-- 
+2.47.2
+
+
