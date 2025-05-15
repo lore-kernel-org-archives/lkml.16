@@ -1,211 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from baidu.com (mx22.baidu.com [220.181.50.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213D7298271;
-	Thu, 15 May 2025 11:58:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6643E1FF7CD
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:59:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.181.50.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747310321; cv=none; b=hc7M4Lh31mqeu2i2Egrx9Pi9kWMFnVY1+bkd6ewuE0FVznDhmgtLIT277sHy4O2vcDmp2mcvTQfW/NO2CQga/hTz3LeRU8k9D3DaDsAddwGo0Jz0YSHOBC6L07/50f0UO35qukIP+ZcrcQ4syGsiTdjxrvxbwbuIlVWgAhasIwM=
+	t=1747310379; cv=none; b=Esr+sXnUllTFOsWOeNnFROA9HEouW80xeivZGChQJpHUq3dZFWGiZqr4X5FSYCFb9gPO+j7m4tyVBbDxmQqsAEgGUJNSaQWWMxsB388TEWvyyidLKcmHyky5pshLVGV/XSAdR6AJc5yeAVnm31mRSp/cIQQ27nlxv7MpsLWgZuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747310321; c=relaxed/simple;
-	bh=Vzbg0N6Iq4k1P3M3nzi5F1PiOtlcXPSXgTwjX5upVls=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b3GQC3i1uyQwe7bYlaset9FEurexhbyNPPhw2CLEU5+Ct2t4opttbYYFeRhEcxm6o2eB22Jqu76OnsEH/qAc227z0gn+60HTRNq/qHSBkOYxWaxTHx+IUf/SCGpTYH0MPmFXxtaaujsrOp/a9jlYi28UMmk4RCX0f9VIA4FV+aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pc6bVOvq; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pc6bVOvq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747310320; x=1778846320;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Vzbg0N6Iq4k1P3M3nzi5F1PiOtlcXPSXgTwjX5upVls=;
-  b=Pc6bVOvqRgkXyNET4/+K3CdnVqCIfNv/VkxwHEPs12icwkollzXXxAdo
-   sM66xgUbx50eNhdINBwCWCMklCWiWiZq2v/hgHt/JlMgQfs4FaDAEpRBv
-   cPT0W1/okWsxB8wVG08VgFyAWMWLAjfAauIaBBH7292qM0+i0xhmgCwNl
-   ylOSH2bgkJbOFI4OSfbywES1bDLj9BSyoPb6AsnW6+zGnon5g1vKBh9u8
-   LJyx7jkNU5xl64Iv2YbWeIm35rh/TN92i39W8vlY4OnKyI032gCj3miyu
-   mNgjHL1+rB/JPESjEN0NzWb4zUHr3cBZRqhSh7B9p27xgHSYyjz3V8w3a
-   A==;
-X-CSE-ConnectionGUID: ODdQC628S0+nomopPCWXuA==
-X-CSE-MsgGUID: nCH2mGZWRf+m7xQCJj1f4w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="71751202"
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="71751202"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 04:58:31 -0700
-X-CSE-ConnectionGUID: l7KTccinQTK6rJaTTQ5cfg==
-X-CSE-MsgGUID: REzV7ZHQR3KuaTioUqVMzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="142360904"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 04:58:27 -0700
-Date: Thu, 15 May 2025 14:58:25 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: Denis Benato <benato.denis96@gmail.com>
-Cc: Mario Limonciello <superm1@kernel.org>, rafael@kernel.org,
-	mahesh@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com, lukas@wunner.de,
-	aravind.iddamsetty@linux.intel.com
-Subject: Re: [PATCH v3] PCI: Prevent power state transition of erroneous
- device
-Message-ID: <aCXW4c-Ocly4t6yF@black.fi.intel.com>
-References: <20250504090444.3347952-1-raag.jadav@intel.com>
- <7dbb64ee-3683-4b47-b17d-288447da746e@gmail.com>
- <384a2c60-2f25-4a1d-b8a6-3ea4ea34e2c2@kernel.org>
- <350f35dd-757e-459f-81f7-666a4457e736@gmail.com>
+	s=arc-20240116; t=1747310379; c=relaxed/simple;
+	bh=W5tQpGezyACQ07x3k8e9Qln0LgPn+x2pDoFNSogLARM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Mv8533QlBUu1Ne3MCt69ugh1RKVJzKc1BYgkBSzvIbluIAEypm+4fsWZEiELT3066WOazlJf4/pPMIDvFDgSqfYdTEOOr1No7MKqtcEuTmms78jmmkjQSh+wPJdMENHydW+QHKZxyN4FZ2hyJ5zlN06EZBNvJ1auEtNl8fnRw7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=220.181.50.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
+From: Wenjie Xu <xuwenjie04@baidu.com>
+To: <muchun.song@linux.dev>, <osalvador@suse.de>, <akpm@linux-foundation.org>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, Wenjie Xu
+	<xuwenjie04@baidu.com>, Li RongQing <lirongqing@baidu.com>
+Subject: [PATCH] hugetlb: Show nr_huge_pages in report_hugepages()
+Date: Thu, 15 May 2025 19:42:31 +0800
+Message-ID: <20250515114231.65824-1-xuwenjie04@baidu.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <350f35dd-757e-459f-81f7-666a4457e736@gmail.com>
+Content-Type: text/plain
+X-ClientProxiedBy: BJHW-Mail-Ex13.internal.baidu.com (10.127.64.36) To
+ BJHW-MAIL-EX28.internal.baidu.com (10.127.64.43)
+X-Baidu-BdMsfe-DateCheck: 1_BJHW-Mail-Ex12_2025-05-15 19:42:40:672
+X-FEAS-Client-IP: 10.127.64.35
+X-FE-Policy-ID: 52:10:53:SYSTEM
 
-On Wed, May 14, 2025 at 11:25:36PM +0200, Denis Benato wrote:
-> On 5/14/25 21:53, Mario Limonciello wrote:
-> > On 5/14/2025 11:29 AM, Denis Benato wrote:
-> >> Hello,
-> >>
-> >> Lately I am experiencing a few problems related to either (one of or both) PCI and/or thunderbolt and Mario Limonciello pointed me to this patch.
-> >>
-> >> you can follow an example of my problems in this [1] bug report.
-> >>
-> >> I tested this patch on top of 6.14.6 and this patch comes with a nasty regression: s2idle resume breaks all my three GPUs, while for example the sound of a YT video resumes fine.
-> >>
-> >> You can see the dmesg here: https://pastebin.com/Um7bmdWi
+The number of pre-allocated huge pages should be nr_huge_pages, not
+free_huge_pages, although they are same during booting stage
 
-Thanks for the report. From logs it looks like a hotplug event is triggered
-for presence detect which is disabling the slot and in turn loosing the device
-on resume. The cause of it is unclear though (assuming it is not a manual
-intervention).
+Signed-off-by: Wenjie Xu <xuwenjie04@baidu.com>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+---
+ mm/hugetlb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> >> I will also say that, on the bright side, this patch makes my laptop behave better on boot as the amdgpu plugged on the thunderbolt port is always enabled on power on, while without this patch it is random if it will be active immediately after laptop has been turned on.
-> >>
-> >
-> > Just for clarity - if you unplug your eGPU enclosure before suspend is everything OK?  IE this patch only has an impact to the USB4/TBT3 PCIe tunnels?
-> >
-> Laptop seems to enter and exit s2idle with the thunderbolt amdgpu disconnected using this patch too.
-> 
-> Probably this either unveils a pre-existing thunderbolt bug or creates a new one.  If you need assistance in finding the bug or investigating in any other mean let me know as I want to see this patch merged once it stops regressing sleep with egpu.
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 6ea1be71aa42..2a4d4551749a 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3740,7 +3740,7 @@ static void __init report_hugepages(void)
+ 
+ 		string_get_size(huge_page_size(h), 1, STRING_UNITS_2, buf, 32);
+ 		pr_info("HugeTLB: registered %s page size, pre-allocated %ld pages\n",
+-			buf, h->free_huge_pages);
++			buf, h->nr_huge_pages);
+ 		if (nrinvalid)
+ 			pr_info("HugeTLB: %s page size: %lu invalid page%s discarded\n",
+ 					buf, nrinvalid, nrinvalid > 1 ? "s" : "");
+-- 
+2.41.0
 
-If you're observing this only on thunderbolt port, one experiment I could
-think of is to configure the port power delivery to be always on during suspend
-and observe. Perhaps enable both thunderbolt and PCI logging to help figure out
-what's really happening.
-
-> I will add that as a visible effect entering and exiting s2idle, even without the egpu connected (so when sleep works), makes the screen backlight to turn off and on rapidly about 6 times and it's a bit "concerning" to see, also I have the impression that it takes slightly longer to enter/exit s2idle.
-
-Yes, I'm expecting a lot of hidden issues to be surfaced by this patch. Since
-you've confirmed the machine itself is working fine, I'm hoping there are no
-serious regressions.
-
-Raag
-
-> > The errors after resume in amdgpu /look/ like the device is "missing" from the bus or otherwise not responding.
-> >
-> > I think it would be helpful to capture the kernel log with a baseline of 6.14.6 but without this patch for comparison of what this patch is actually causing.
-> >
-> I have a dmesg of the same 6.14.6 minus this patch ready: https://pastebin.com/kLZtibcD
-> >>
-> >> [1] https://lore.kernel.org/all/965c9753-f14b-4a87-9f6d-8798e09ad6f5@gmail.com/
-> >>
-> >> On 5/4/25 11:04, Raag Jadav wrote:
-> >>
-> >>> If error flags are set on an AER capable device, most likely either the
-> >>> device recovery is in progress or has already failed. Neither of the
-> >>> cases are well suited for power state transition of the device, since
-> >>> this can lead to unpredictable consequences like resume failure, or in
-> >>> worst case the device is lost because of it. Leave the device in its
-> >>> existing power state to avoid such issues.
-> >>>
-> >>> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> >>> ---
-> >>>
-> >>> v2: Synchronize AER handling with PCI PM (Rafael)
-> >>> v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
-> >>>      Elaborate "why" (Bjorn)
-> >>>
-> >>> More discussion on [1].
-> >>> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
-> >>>
-> >>>   drivers/pci/pci.c      | 12 ++++++++++++
-> >>>   drivers/pci/pcie/aer.c | 11 +++++++++++
-> >>>   include/linux/aer.h    |  2 ++
-> >>>   3 files changed, 25 insertions(+)
-> >>>
-> >>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> >>> index 4d7c9f64ea24..25b2df34336c 100644
-> >>> --- a/drivers/pci/pci.c
-> >>> +++ b/drivers/pci/pci.c
-> >>> @@ -9,6 +9,7 @@
-> >>>    */
-> >>>     #include <linux/acpi.h>
-> >>> +#include <linux/aer.h>
-> >>>   #include <linux/kernel.h>
-> >>>   #include <linux/delay.h>
-> >>>   #include <linux/dmi.h>
-> >>> @@ -1539,6 +1540,17 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool
-> >>>          || (state == PCI_D2 && !dev->d2_support))
-> >>>           return -EIO;
-> >>>   +    /*
-> >>> +     * If error flags are set on an AER capable device, most likely either
-> >>> +     * the device recovery is in progress or has already failed. Neither of
-> >>> +     * the cases are well suited for power state transition of the device,
-> >>> +     * since this can lead to unpredictable consequences like resume
-> >>> +     * failure, or in worst case the device is lost because of it. Leave the
-> >>> +     * device in its existing power state to avoid such issues.
-> >>> +     */
-> >>> +    if (pci_aer_in_progress(dev))
-> >>> +        return -EIO;
-> >>> +
-> >>>       pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> >>>       if (PCI_POSSIBLE_ERROR(pmcsr)) {
-> >>>           pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
-> >>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> >>> index a1cf8c7ef628..4040770df4f0 100644
-> >>> --- a/drivers/pci/pcie/aer.c
-> >>> +++ b/drivers/pci/pcie/aer.c
-> >>> @@ -237,6 +237,17 @@ int pcie_aer_is_native(struct pci_dev *dev)
-> >>>   }
-> >>>   EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
-> >>>   +bool pci_aer_in_progress(struct pci_dev *dev)
-> >>> +{
-> >>> +    u16 reg16;
-> >>> +
-> >>> +    if (!pcie_aer_is_native(dev))
-> >>> +        return false;
-> >>> +
-> >>> +    pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &reg16);
-> >>> +    return !!(reg16 & PCI_EXP_AER_FLAGS);
-> >>> +}
-> >>> +
-> >>>   static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
-> >>>   {
-> >>>       int rc;
-> >>> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> >>> index 02940be66324..e6a380bb2e68 100644
-> >>> --- a/include/linux/aer.h
-> >>> +++ b/include/linux/aer.h
-> >>> @@ -56,12 +56,14 @@ struct aer_capability_regs {
-> >>>   #if defined(CONFIG_PCIEAER)
-> >>>   int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
-> >>>   int pcie_aer_is_native(struct pci_dev *dev);
-> >>> +bool pci_aer_in_progress(struct pci_dev *dev);
-> >>>   #else
-> >>>   static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
-> >>>   {
-> >>>       return -EINVAL;
-> >>>   }
-> >>>   static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
-> >>> +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return false; }
-> >>>   #endif
-> >>>     void pci_print_aer(struct pci_dev *dev, int aer_severity,
-> >
