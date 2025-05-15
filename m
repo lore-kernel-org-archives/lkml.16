@@ -1,168 +1,137 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B336C2798E7
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CB52798EA;
+	Thu, 15 May 2025 01:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747273211; cv=none; b=azAXheRbl5SoC8f/SBPeK7IhrU+PqGmWIxuqvdb5Tbe/JLFzfIKfpA8dJ+CMzRgEXAyyyfUTqoCfufoe6niDI/G+p8/dihLdGLberga4HDl151/0sUaeoWtTKb5251gSzkxaQGc0vsUmPrTxiDREKvHkZayUiQ+dEEdapjVP4Lo=
+	t=1747273258; cv=none; b=OYWcGdCyoyxGoS77tUKV6Ew7zpEiUbpUr6e/yiXh+j6FsRp+Rkdg4wxC4mfQMMr+6QQukRFHstwh3gjSKhUs4ZB6b9JUS5bg9jLk3Dux08oyI+404JHspB8XqzYFPoSSWsZ+QeCTeojqy5BrKuRzIMS6ANZANMZ9SUfy6Jhc00A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747273211; c=relaxed/simple;
-	bh=j3AQqh2bF+a1tTBBmMb6vQqukFWdDH12NEK3gDZ/zHw=;
-	h=Date:Mime-Version:Message-ID:Subject:From:Cc:Content-Type; b=murHr4gM3ZJxYevgBZn/hjdaFKB/O6k6D4ibIuKfKI7R8k4cgqAPphY9JmPjGUedrWizvbyt1+8LqMSYl92nKhQPWXjQbR9oXPzRyeawlCBmtBrh0D4AP3ANGv5K8I4PLayFaDnJghWmL4Nq49wS03NcgHOUKkGR+2lIu1uZrDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rdbabiera.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mY4yBTIz; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rdbabiera.bounces.google.com
+	s=arc-20240116; t=1747273258; c=relaxed/simple;
+	bh=1ihtGtHpTM6gYPrx8yeOkrO0mE1WK1KqAeqrzwHP8to=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WiGErs59VKMDoV3q4zIhPeMZ/9tjCGfNULw1xZ1NX/h4D7Ceeamg4mZMW6DnhqbR58s1v2r/DBE+lKPzECXzkctJcI2jR2Hj9EMxUz6cQaquKg5oJrKrMyTk3z7iKcwcgXRJoS5qJ3JIEG6t4ftD+wtzoNl1KZEn+7P3cme/PlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FIEWLPTj; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mY4yBTIz"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b0e0c573531so228705a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:40:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747273209; x=1747878009; darn=vger.kernel.org;
-        h=cc:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IakyZJkj7nOlvLL2uNc9irIZAgoOcA1vyttW9qbfPnU=;
-        b=mY4yBTIzgZmK5j5zGfnDvG6JQm/gN6JTEo1tXzzkXxZy8vDFMgJp0S9V0JplwDYdgh
-         T4Jt3D116pUj+P2fqsBkLLf76tUCi97li2me8oSvwN3cYRwM0pBHF+08U4sWrCUK08DR
-         MVBalcLuDWN5kuXObLpRrWrb5UFrfqzmMtVJqHW554zbg7Dsfg2lVP5NmE46TWMoxGpn
-         YSEw6+P7scu6QlQOfOnHTuKFxmZFRrxK8PxwRW1KWtZWWZfPRab/ImDge4bQlrIMC/gB
-         saASXtqZrDZJfGvI5Hw/VuD4gCsa6MWb4k+rnuBslKRcCzzCLf2URUNQzNgtLnAZ2HXe
-         gKRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747273209; x=1747878009;
-        h=cc:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IakyZJkj7nOlvLL2uNc9irIZAgoOcA1vyttW9qbfPnU=;
-        b=HUGQkDn72x9gZt4Z2M/dcaz5hp83doeKrH/dp66r0bzq30ZagJfOgwgHxNZ2y+mUlc
-         3V4zM8CCRDvs2xqZd2ypGhdDruGMfP/pyzwP03ZuFT05+fo/dqVTsRC1+JuiCsn6p+59
-         /qhrXpm+fjYibuHJcRLxmgPHQO3eyo9secYWzRQnVASM19nPYhlQetAXYdWVsyNeTLUi
-         xFo/FRneapnvc8mku+yiyBn7moVlEME1+yrcSWuka28W70H+FWhBr/EZ+EpKLzaZM21r
-         PIH0nEbhh/UuUQdIctl3p1jAE7xmkbvaTHIbg5h+RUvRL6/H4sR5HSQCd3kQ2dWO5Rt7
-         cdPA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZvQf1OyFcRqphM9ASdOHX2VCah7sfqZEM664aEYSnlRZvuodu/rY8w9UCzdeopkhn2nl7lPWDALOdqkY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHcQ5fSatTcPFs/glprFdWE6fLJnYKdB636LIRx0HsnlT+eSpS
-	WB9n/qwiKKl3lRV1qrPQXORP2A8vNDYIQBN8wR1gKu+yG9fE2pupXSwBzsSEPPsYOhCwr0sciFz
-	BmjSzBxFs1+KKKg==
-X-Google-Smtp-Source: AGHT+IEyLvp3ghttpO9cVp/ndy7EDcY+GfCBT+shK3xrBkQdK1whbMrygpWLNQikJyJ78DDaeVfQrWnuBB9FBDk=
-X-Received: from pjbsu3.prod.google.com ([2002:a17:90b:5343:b0:2fc:3022:36b8])
- (user=rdbabiera job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:3949:b0:2ea:a9ac:eee1 with SMTP id 98e67ed59e1d1-30e2e5e5a63mr9196895a91.10.1747273209002;
- Wed, 14 May 2025 18:40:09 -0700 (PDT)
-Date: Thu, 15 May 2025 01:40:02 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FIEWLPTj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747273257; x=1778809257;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=1ihtGtHpTM6gYPrx8yeOkrO0mE1WK1KqAeqrzwHP8to=;
+  b=FIEWLPTjHy6WQhy+Y6JD0pZY5HbeUB2FteWjRhm0HKA5GVn7KxjmvZE6
+   iS/G4mMhZB2mxqDKg9lVpAh6nG3BhM6TLS5YLU6TjT3rx0iONTj6I19Hk
+   BGiyyoOUfUCECBpkOT7YfpXntkaRqkiHAd1HSrWdkmWnyAOqQnyt6UpRO
+   D1+MLXE7vDl0BWJ8cVlRYyZOrBjmN12xmsXWUCKOBFRXQqkt3efU8kCA3
+   rmJJMB80TqDXnkosz7OV6TpHwywcfhzJNhJium0k+Hk6HE/s2Pf6e8Cr5
+   AqkB98a52BQAG8HrifzuQKmVeHJH4kU2ndRC5k1jGHLs6xx8LR5RaCSFj
+   A==;
+X-CSE-ConnectionGUID: gnyYzFRvQMGFnkYmtyYSGQ==
+X-CSE-MsgGUID: pIU57DDCQoCXIj+BFa43cg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="36814739"
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="36814739"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 18:40:56 -0700
+X-CSE-ConnectionGUID: kKkn4OnxR+6SQ+bZFGWRDw==
+X-CSE-MsgGUID: uO0QduhKREGse4orvz/lbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="143090670"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 18:40:50 -0700
+Message-ID: <e8e8ed55-7614-49be-9a1e-069738dbb2ef@linux.intel.com>
+Date: Thu, 15 May 2025 09:40:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Developer-Key: i=rdbabiera@google.com; a=openpgp; fpr=639A331F1A21D691815CE090416E17CA2BBBD5C8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2883; i=rdbabiera@google.com;
- h=from:subject; bh=j3AQqh2bF+a1tTBBmMb6vQqukFWdDH12NEK3gDZ/zHw=;
- b=owGbwMvMwCFW0bfok0KS4TbG02pJDBmqrp+nexnMyP91YvlDq4/t5j/2nvGYyf91ySyXoOzNO
- wrbRPRedZSyMIhxMMiKKbLo+ucZ3LiSumUOZ40xzBxWJpAhDFycAjCR9GqGf+ZF/zoNwq07ZgSm
- T7kyi9fm3pke0cUXr2TuN+VPPdd+VouRYeGMU16hm0Oenr75ZWHY7xdHmLpWdb378D6Jx/ix99t jRzkA
-X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-Message-ID: <20250515014003.1681068-2-rdbabiera@google.com>
-Subject: [PATCH v2] usb: typec: tcpm: apply vbus before data bringup in tcpm_src_attach
-From: RD Babiera <rdbabiera@google.com>
-Cc: heikki.krogerus@linux.intel.com, badhri@google.com, 
-	gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, RD Babiera <rdbabiera@google.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 07/38] perf: core/x86: Register a new vector for KVM
+ GUEST PMI
+To: Sean Christopherson <seanjc@google.com>,
+ Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+ Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Yongwei Ma <yongwei.ma@intel.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
+ Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
+ Shukla Manali <Manali.Shukla@amd.com>,
+ Nikunj Dadhania <nikunj.dadhania@amd.com>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <20250324173121.1275209-8-mizhang@google.com> <aCUmGC45Pg6qC6FR@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aCUmGC45Pg6qC6FR@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This patch fixes Type-C compliance test TD 4.7.6 - Try.SNK DRP Connect
-SNKAS.
 
-tVbusON has a limit of 275ms when entering SRC_ATTACHED. Compliance
-testers can interpret the TryWait.Src to Attached.Src transition after
-Try.Snk as being in Attached.Src the entire time, so ~170ms is lost
-to the debounce timer.
+On 5/15/2025 7:24 AM, Sean Christopherson wrote:
+> On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+>> diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
+>> index ad5c68f0509d..b0cb3220e1bb 100644
+>> --- a/arch/x86/include/asm/idtentry.h
+>> +++ b/arch/x86/include/asm/idtentry.h
+>> @@ -745,6 +745,7 @@ DECLARE_IDTENTRY_SYSVEC(IRQ_WORK_VECTOR,		sysvec_irq_work);
+>>  DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_VECTOR,		sysvec_kvm_posted_intr_ipi);
+>>  DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_WAKEUP_VECTOR,	sysvec_kvm_posted_intr_wakeup_ipi);
+>>  DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_NESTED_VECTOR,	sysvec_kvm_posted_intr_nested_ipi);
+>> +DECLARE_IDTENTRY_SYSVEC(KVM_GUEST_PMI_VECTOR,	        sysvec_kvm_guest_pmi_handler);
+> I would prefer to keep KVM out of the name, and as mentioned in the previous patch,
+> route this through perf.
 
-Setting the data role can be a costly operation in host mode, and when
-completed after 100ms can cause Type-C compliance test check TD 4.7.5.V.4
-to fail.
+Sure.
 
-Turn VBUS on before tcpm_set_roles to meet timing requirement.
 
-Fixes: f0690a25a140 ("staging: typec: USB Type-C Port Manager (tcpm)")
-Cc: stable@vger.kernel.org
-Signed-off-by: RD Babiera <rdbabiera@google.com>
-Reviewed-by: Badhri Jagan Sridharan <badhri@google.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
-Changes since v1:
-* Rebased on top of usb-linus for v6.15
----
- drivers/usb/typec/tcpm/tcpm.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+>
+>>  #else
+>>  # define fred_sysvec_kvm_posted_intr_ipi		NULL
+>>  # define fred_sysvec_kvm_posted_intr_wakeup_ipi		NULL
+> Y'all forgot to wire up the FRED handling.  I.e. the mediated PMI IRQs would get
+> treated as spurious when running with FRED.
 
-diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-index 8adf6f954633..05c62a1673af 100644
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -4353,16 +4353,6 @@ static int tcpm_src_attach(struct tcpm_port *port)
- 
- 	tcpm_enable_auto_vbus_discharge(port, true);
- 
--	ret = tcpm_set_roles(port, true, TYPEC_SOURCE, tcpm_data_role_for_source(port));
--	if (ret < 0)
--		return ret;
--
--	if (port->pd_supported) {
--		ret = port->tcpc->set_pd_rx(port->tcpc, true);
--		if (ret < 0)
--			goto out_disable_mux;
--	}
--
- 	/*
- 	 * USB Type-C specification, version 1.2,
- 	 * chapter 4.5.2.2.8.1 (Attached.SRC Requirements)
-@@ -4372,12 +4362,22 @@ static int tcpm_src_attach(struct tcpm_port *port)
- 	    (polarity == TYPEC_POLARITY_CC2 && port->cc1 == TYPEC_CC_RA)) {
- 		ret = tcpm_set_vconn(port, true);
- 		if (ret < 0)
--			goto out_disable_pd;
-+			return ret;
- 	}
- 
- 	ret = tcpm_set_vbus(port, true);
- 	if (ret < 0)
- 		goto out_disable_vconn;
-+	
-+	ret = tcpm_set_roles(port, true, TYPEC_SOURCE, tcpm_data_role_for_source(port));
-+	if (ret < 0)
-+		goto out_disable_vbus;
-+
-+	if (port->pd_supported) {
-+		ret = port->tcpc->set_pd_rx(port->tcpc, true);
-+		if (ret < 0)
-+			goto out_disable_mux;
-+	}
- 
- 	port->pd_capable = false;
- 
-@@ -4389,14 +4389,14 @@ static int tcpm_src_attach(struct tcpm_port *port)
- 
- 	return 0;
- 
--out_disable_vconn:
--	tcpm_set_vconn(port, false);
--out_disable_pd:
--	if (port->pd_supported)
--		port->tcpc->set_pd_rx(port->tcpc, false);
- out_disable_mux:
- 	tcpm_mux_set(port, TYPEC_STATE_SAFE, USB_ROLE_NONE,
- 		     TYPEC_ORIENTATION_NONE);
-+out_disable_vbus:
-+	tcpm_set_vbus(port, false);
-+out_disable_vconn:
-+	tcpm_set_vconn(port, false);
-+
- 	return ret;
- }
- 
+Oh, yes. we missed that. we would look at it. Thanks for reminding.
 
-base-commit: 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
--- 
-2.49.0.1045.g170613ef41-goog
 
+>
+>> diff --git a/arch/x86/include/asm/irq_vectors.h b/arch/x86/include/asm/irq_vectors.h
+>> index 47051871b436..250cdab11306 100644
+>> --- a/arch/x86/include/asm/irq_vectors.h
+>> +++ b/arch/x86/include/asm/irq_vectors.h
+>> @@ -77,7 +77,10 @@
+>>   */
+>>  #define IRQ_WORK_VECTOR			0xf6
+>>  
+>> -/* 0xf5 - unused, was UV_BAU_MESSAGE */
+>> +#if IS_ENABLED(CONFIG_KVM)
+>> +#define KVM_GUEST_PMI_VECTOR		0xf5
+>> +#endif
+> Conditionally defining the vector sounds good on paper, but its problematic, e.g.
+> for connecting the handler to FRED's array, and doesn't really add much value.
+>
+>>  #define DEFERRED_ERROR_VECTOR		0xf4
+>>  
+>>  /* Vector on which hypervisor callbacks will be delivered */
+>> diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+>> index f445bec516a0..0bec4c7e2308 100644
+>> --- a/arch/x86/kernel/idt.c
+>> +++ b/arch/x86/kernel/idt.c
+>> @@ -157,6 +157,7 @@ static const __initconst struct idt_data apic_idts[] = {
+>>  	INTG(POSTED_INTR_VECTOR,		asm_sysvec_kvm_posted_intr_ipi),
+>>  	INTG(POSTED_INTR_WAKEUP_VECTOR,		asm_sysvec_kvm_posted_intr_wakeup_ipi),
+>>  	INTG(POSTED_INTR_NESTED_VECTOR,		asm_sysvec_kvm_posted_intr_nested_ipi),
