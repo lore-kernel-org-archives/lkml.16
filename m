@@ -1,57 +1,57 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C9035970;
-	Thu, 15 May 2025 10:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747305222; cv=none; b=HLWHHwhGXHGNoNU59wGBzH2xtDpikIklGiIyilxYzjNi2qCc5otMS5GLXClLqK97fNsHkrRT9/BFEUF2bINYmuyMII/acMY1l0iME+8yRVkEUXIT1SxMgMe8mnGNwlnjAQ9fG6usriGPZGCvgDZV4ab9HRDaMXdLnCs8v6UbQKw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747305222; c=relaxed/simple;
-	bh=jOy+gdB5snTg+AWaYBwU4zrEGtaSgqQCzCFFbsWkaZ4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HDWrW7X7dOCs2SXd2SNsR/yXz0AKkaF0MbDnIVV8TeiRA+2RQYAJqzKvlMSmzWUYBh2fEMGDcOuvorJiuUlBvJbLgPFnu/3gN60xzAHDzwMGYpRBQZbUMPpX93/+AVAdt+JZ7rPjsaVtaXBHCTSXGqtGT69NAkY9gkDv+qoX8Qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=SK+GnLaa; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BE92980CB
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747305225; cv=pass; b=fsrQ4Qzho8rdVBJa6qhKBqte5/U3z39afM2lJP67WA4mvVH8/PMgpFw6E7h8qrM9XoxSIxQi9UCVTuE1dROlu9azpSDLQkqv2DLawzH0Mz+X4xYtkGBCC8TbwCyCbqT36vT3mXz6bttQ8wzZA8WuNVzqk38KDj8lY8KZWYUkNtw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747305225; c=relaxed/simple;
+	bh=AuXV2jwOCHMscCJn2RyQB7FBqzDAhg9Fd3mBP4tnuzQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eV7lzXcTDsUPtzdkzizgPcevGhiaK+SSoF7GxOJIQSclHrObbpBvgm17GYGq7DFNy6Be22aH3oi1y81/PLS4JRhAh3pIrUDq33PjTi+ZRq3m1E3QKaqjVB9rp4UPAqAJiQJDWoCShLKVXOAVo+IQSzsnoJHY2y0Uga+us8j84FE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ashley.smith@collabora.com header.b=kj00T6U1; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="SK+GnLaa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1747305220; x=1778841220;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=jOy+gdB5snTg+AWaYBwU4zrEGtaSgqQCzCFFbsWkaZ4=;
-  b=SK+GnLaaH07XxhL8iGW5yt/cXtd+Lr8IboOxqctj0X/ujAW5j3gogUrV
-   /W5LpNLRVa63MrSfBuNyJhhRwHldp3vnklRqAFNV063ruyhfKJSdc9vbz
-   7/lJH8TV2WujghT3bEbpeGQYbCMBOWyLAbHwf8JFN9PCFArP/SqFkRqts
-   t/A/tjtCsLNKXekQ3L7gX/2uEMJEgyLCKPlxfw73kWGZO2+NdeiUwmdld
-   o6dF4E0y7SMo+mZjQ7FK+1Fl7eG4YhDNU3zfekU8JIdFAmQu9YpZ5PZhF
-   FCQ0N/YPezAgVZ5MHB+lVPvDIF4nq3TTxjaTEkfS8xNeSncaDk+jvBKfR
-   A==;
-X-CSE-ConnectionGUID: YDYKtXNcQOipD744zTQ15A==
-X-CSE-MsgGUID: ZMEcAudjRRmAFgfZqoRjuQ==
-X-IronPort-AV: E=Sophos;i="6.15,290,1739862000"; 
-   d="scan'208";a="209126771"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 May 2025 03:33:39 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 15 May 2025 03:33:08 -0700
-Received: from che-lt-i67131.microchip.com (10.10.85.11) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Thu, 15 May 2025 03:33:04 -0700
-From: Manikandan Muralidharan <manikandan.m@microchip.com>
-To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC: Manikandan Muralidharan <manikandan.m@microchip.com>
-Subject: [PATCH] ARM: dts: microchip: rename spi-cs-setup-ns property to spi-cs-setup-delay-ns
-Date: Thu, 15 May 2025 16:02:51 +0530
-Message-ID: <20250515103251.210468-1-manikandan.m@microchip.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=ashley.smith@collabora.com header.b="kj00T6U1"
+ARC-Seal: i=1; a=rsa-sha256; t=1747305204; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=eNaZ7RWGgKlEcIpnXfQASf7ZtEaVuagBnyKCwWMynDnDtXoIiiHPgtoG7fsVxByQGNVIih74aBxGXeKzcExCLCxm23nykdS/PjbC+eCeNlaIDyQzate45f0tDWB2tHsbwPuR/huY/G/l529z4j4OF46XvSmDzPtqzqrSWcRjTqI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747305204; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=IzhJq/KI+z8Y+0dsDs/7LMPucBSPLRXhlb7t+uypEPE=; 
+	b=PvqiFdV+SisuTA+4b7ioQHkOq/LlIQPMzdwhSgGkR5F2A9s1V9CPRSjCVUcN3tpZFG5hFnMw3iHOvudLxxNTvMZE+3UAwk3y3Ee6JX758N6zLnZCTYmt2G5+19IAuH0qRNEhaj+1uLpckZST+C4GtDKk5fCkDMQsBgJcVnDaYGU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=ashley.smith@collabora.com;
+	dmarc=pass header.from=<ashley.smith@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747305204;
+	s=zohomail; d=collabora.com; i=ashley.smith@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=IzhJq/KI+z8Y+0dsDs/7LMPucBSPLRXhlb7t+uypEPE=;
+	b=kj00T6U1H9gIyY2OZkB3vvNTxkKvzcLfF0gAvoZYQZ1cQgLevinPfwaQor8mYI5W
+	sJLE3IaAR0+PQ4Kat7qCFFZe38YVwr4X9eaBZLiYuz0aVH/G/tOG/3/AUGTdmkwKatj
+	WekdMzgtVxFv83nA/8wjLEltWgQoSYZaBI3crfOs=
+Received: by mx.zohomail.com with SMTPS id 174730520201961.4224475817598;
+	Thu, 15 May 2025 03:33:22 -0700 (PDT)
+From: Ashley Smith <ashley.smith@collabora.com>
+To: Boris Brezillon <boris.brezillon@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: kernel@collabora.com,
+	Ashley Smith <ashley.smith@collabora.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/panthor: Reset queue slots if termination fails
+Date: Thu, 15 May 2025 11:33:05 +0100
+Message-ID: <20250515103314.1682471-1-ashley.smith@collabora.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,72 +59,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-ZohoMailClient: External
 
-The naming scheme for delay properties includes "delay" in the name,
-so renaming spi-cs-setup-ns property to spi-cs-setup-delay-ns to keep
-that consistent.
+This fixes a bug where if we timeout after a suspend and the termination
+fails, due to waiting on a fence that will never be signalled for
+example, we do not resume the group correctly. The fix forces a reset
+for groups that are not terminated correctly.
 
-Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
+Signed-off-by: Ashley Smith <ashley.smith@collabora.com>
 ---
- arch/arm/boot/dts/microchip/at91-sam9x60ek.dts        | 2 +-
- arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi   | 2 +-
- arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi | 2 +-
- arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts      | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/panthor/panthor_sched.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts b/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts
-index cdc56b53299d..c1ff3248bd8f 100644
---- a/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts
-+++ b/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts
-@@ -609,7 +609,7 @@ flash@0 {
- 		compatible = "jedec,spi-nor";
- 		reg = <0>;
- 		spi-max-frequency = <104000000>;
--		spi-cs-setup-ns = <7>;
-+		spi-cs-setup-delay-ns = <7>;
- 		spi-tx-bus-width = <4>;
- 		spi-rx-bus-width = <4>;
- 		m25p,fast-read;
-diff --git a/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi b/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi
-index 8ac85dac5a96..13c28e92b17e 100644
---- a/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi
-+++ b/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi
-@@ -44,7 +44,7 @@ flash@0 {
- 					compatible = "jedec,spi-nor";
- 					reg = <0>;
- 					spi-max-frequency = <104000000>;
--					spi-cs-setup-ns = <7>;
-+					spi-cs-setup-delay-ns = <7>;
- 					spi-tx-bus-width = <4>;
- 					spi-rx-bus-width = <4>;
- 					m25p,fast-read;
-diff --git a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
-index ef11606a82b3..9543214adc9f 100644
---- a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
-+++ b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
-@@ -234,7 +234,7 @@ qspi1_flash: flash@0 {
- 		compatible = "jedec,spi-nor";
- 		reg = <0>;
- 		spi-max-frequency = <104000000>;
--		spi-cs-setup-ns = <7>;
-+		spi-cs-setup-delay-ns = <7>;
- 		spi-rx-bus-width = <4>;
- 		spi-tx-bus-width = <4>;
- 		m25p,fast-read;
-diff --git a/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts b/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts
-index 9fa6f1395aa6..fbae6a9af6c3 100644
---- a/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts
-+++ b/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts
-@@ -714,7 +714,7 @@ flash@0 {
- 		compatible = "jedec,spi-nor";
- 		reg = <0>;
- 		spi-max-frequency = <104000000>;
--		spi-cs-setup-ns = <7>;
-+		spi-cs-setup-delay-ns = <7>;
- 		spi-tx-bus-width = <4>;
- 		spi-rx-bus-width = <4>;
- 		m25p,fast-read;
+diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
+index 43ee57728de5..1f4a5a103975 100644
+--- a/drivers/gpu/drm/panthor/panthor_sched.c
++++ b/drivers/gpu/drm/panthor/panthor_sched.c
+@@ -2727,8 +2727,17 @@ void panthor_sched_suspend(struct panthor_device *ptdev)
+ 			 * automatically terminate all active groups, so let's
+ 			 * force the state to halted here.
+ 			 */
+-			if (csg_slot->group->state != PANTHOR_CS_GROUP_TERMINATED)
++			if (csg_slot->group->state != PANTHOR_CS_GROUP_TERMINATED) {
+ 				csg_slot->group->state = PANTHOR_CS_GROUP_TERMINATED;
++
++				/* Reset the queue slots manually if the termination
++				 * request failed.
++				 */
++				for (i = 0; i queue_count; i++) {
++					if (group->queues[i])
++						cs_slot_reset_locked(ptdev, csg_id, i);
++				}
++			}
+ 			slot_mask &= ~BIT(csg_id);
+ 		}
+ 	}
+
+base-commit: 9934ab18051118385c7ea44d8e14175edbe6dc9c
 -- 
-2.25.1
+2.43.0
 
