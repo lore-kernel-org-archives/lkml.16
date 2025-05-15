@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A8E297A6B
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:57:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE882297A6B
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:57:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299445; cv=none; b=fsFuOtH5XoMoeivk4QKO3BDO9bQnDFihIrzIWjyBiq7Bj7J1zVoogmBZCHtLjbiGZhH1eW4oVrHLjj6UesYmVgJLY4D69u3B2BjRXVyCVm9+gveRSbCrrmwVItBXCB87Y2k6lfDjZD3yANBnNdkiM/hytje9JpO9IcYeFTeCegw=
+	t=1747299449; cv=none; b=u9W9RpxgPPnKte0KtwxXixLaE9j4CPiHhcX9fuK3D9na6rva2P8fk037jsinSttWTyh84dak3kmTXgb6nxGVljjAe4+Lxf8zTJ+AKQLgcS05514nEyjXZmSESJEGxjVSD33Qp5CcSPnOFxnE3+LwnBvuMKPMlpYyjQcpwvQCrIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299445; c=relaxed/simple;
-	bh=2tk4H+fk/LrLZYsMn8ozSeweIE7ZBdN4wJXiE7egGzg=;
+	s=arc-20240116; t=1747299449; c=relaxed/simple;
+	bh=sT3vfi0x4wXLV/8seHmEtDP0ilzDxriliPmKFVTOD28=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UifxBPbN2N7pRBfbOZVUZybJM4WBjTJf2ARDlwKahMZhSVWCQLIxXj1h2kll4lkFB5FqrB/zZ8yhr901TrxZU2nzwOwgQGBc3OaYxQo3eF7jrVc6YoAI75Jh8Rw+gzZ7mlZXF5U4Pw23U38syQnB2r4v/tvbJYlDEY0wYIhjQrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TdmM97pF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=VbY58iAckeel29Vt5qaJ56GjDRVtb1ua52Sl2u8/PSx4gdofrn/yh8ZOWBH0mwU6dvwhAOTkVRgMRE3YYOp5hWqpRcyb/Q0UpYg8EJ8hhEPyDvkbXmqHVuoElk8wS6r1sLt9nwgijPbh0hRqOWPFIz6oplfUd26fFcYlSLxvwOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K8qhUp8Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TdmM97pF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BF23C4CEE9;
-	Thu, 15 May 2025 08:57:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K8qhUp8Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4937C4CEE7;
+	Thu, 15 May 2025 08:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747299445;
-	bh=2tk4H+fk/LrLZYsMn8ozSeweIE7ZBdN4wJXiE7egGzg=;
+	s=k20201202; t=1747299448;
+	bh=sT3vfi0x4wXLV/8seHmEtDP0ilzDxriliPmKFVTOD28=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TdmM97pFP3IIhx1JbJeiDkNO9ys7wAIpdqadWORw9ZOgbIcp4MJxAkKeoAUl7cGFd
-	 Cfr7K7ziBO6zHszwtqGNTDUR3Xh60jWXX1QgnEW3UQ+P5HKHxO9xqSIp4xnNd2udET
-	 6QT3MT9otavKbiByti5esmkE0PyfyGwfJHOUF9con0vNxEDF/PfmPNqOrb/QbimqRF
-	 Kg8xdumj/RyCPNSsm1a7hJMtjVpGjQLvJb9/pAMo9tYY8C+hLV6hUMpCFTyI1l6Twt
-	 geTPTTdVkL2ITwx5E2BQ1iKpFcr8Suy2qvGmYzV6bwv2aZAv4e4dZXIP13uxGS3UVf
-	 5cpgIhjsbhzXA==
+	b=K8qhUp8QFEjaXfdmtTVhkoWdlIRD8nHezV8FjaLgTFmvTho0oWNBCoZXVSXufx9Bl
+	 xDrrQAa11hKf1CmcpDhO4riZm1xl6ag7s+2wzhlzQM0ZDxVu8Z+i/LUKl9QyjxnlW8
+	 1Qp1LffAY/1AkEm4Rin128yZ8rG0k6DuvDoDXsIn9dEb98JH4Ad/DbtIc02cqbc++U
+	 0JLl8q80Dc1iLo6zWZP10hzGzMyprrVzLLhZk+BWwnz6xP2XQmvlHPgyGBgItY85RK
+	 67HbptkYAe1o5uFkO0EWtOsIyn0jrSRY3V7ku96cnPRalIksCUyUvIdhU47Grqx9Qd
+	 wp8xlUR/ai72A==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -41,9 +41,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 03/15] x86/cpu: Remove CPU_SUP_UMC_32 support
-Date: Thu, 15 May 2025 10:56:53 +0200
-Message-ID: <20250515085708.2510123-4-mingo@kernel.org>
+Subject: [PATCH 04/15] x86/cpu: Remove TSC-less CONFIG_M586 support
+Date: Thu, 15 May 2025 10:56:54 +0200
+Message-ID: <20250515085708.2510123-5-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250515085708.2510123-1-mingo@kernel.org>
 References: <20250515085708.2510123-1-mingo@kernel.org>
@@ -55,7 +55,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-These are 486 based CPUs.
+Remove support for TSC-less Pentium variants.
+
+All TSC-capable Pentium variants, derivatives and
+clones should still work under the M586TSC or M586MMX
+options.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Reviewed-by: Arnd Bergmann <arnd@arndb.de>
@@ -66,69 +70,66 @@ Cc: H . Peter Anvin <hpa@zytor.com>
 Cc: John Ogness <john.ogness@linutronix.de>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250425084216.3913608-4-mingo@kernel.org
+Link: https://lore.kernel.org/r/20250425084216.3913608-5-mingo@kernel.org
 ---
- arch/x86/Kconfig.cpu      | 14 --------------
- arch/x86/kernel/cpu/umc.c | 26 --------------------------
- 2 files changed, 40 deletions(-)
+ arch/x86/Kconfig.cpu            | 10 +---------
+ arch/x86/Makefile_32.cpu        |  1 -
+ arch/x86/include/asm/vermagic.h |  2 --
+ 3 files changed, 1 insertion(+), 12 deletions(-)
 
 diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
-index 97bffa97df41..68788de88b1d 100644
+index 68788de88b1d..abe4596ffa47 100644
 --- a/arch/x86/Kconfig.cpu
 +++ b/arch/x86/Kconfig.cpu
-@@ -375,20 +375,6 @@ config CPU_SUP_TRANSMETA_32
+@@ -43,14 +43,6 @@ choice
+ 	  See each option's help text for additional details. If you don't know
+ 	  what to do, choose "Pentium-Pro".
  
- 	  If unsure, say N.
- 
--config CPU_SUP_UMC_32
--	default y
--	bool "Support UMC processors" if PROCESSOR_SELECT
--	depends on M486SX || M486 || (EXPERT && !64BIT)
+-config M586
+-	bool "586/K5/5x86/6x86/6x86MX"
+-	depends on X86_32
 -	help
--	  This enables detection, tunings and quirks for UMC processors
+-	  Select this for an 586 or 686 series processor such as the AMD K5,
+-	  the Cyrix 5x86, 6x86 and 6x86MX.  This choice does not
+-	  assume the RDTSC (Read Time Stamp Counter) instruction.
 -
--	  You need this enabled if you want your kernel to run on a
--	  UMC CPU. Disabling this option on other types of CPUs
--	  makes the kernel a tiny bit smaller. Disabling it on a UMC
--	  CPU might render the kernel unbootable.
--
--	  If unsure, say N.
--
- config CPU_SUP_ZHAOXIN
- 	default y
- 	bool "Support Zhaoxin processors" if PROCESSOR_SELECT
-diff --git a/arch/x86/kernel/cpu/umc.c b/arch/x86/kernel/cpu/umc.c
-deleted file mode 100644
-index 65a58a390fc3..000000000000
---- a/arch/x86/kernel/cpu/umc.c
-+++ /dev/null
-@@ -1,26 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <linux/kernel.h>
--#include <asm/processor.h>
--#include "cpu.h"
--
--/*
-- * UMC chips appear to be only either 386 or 486,
-- * so no special init takes place.
-- */
--
--static const struct cpu_dev umc_cpu_dev = {
--	.c_vendor	= "UMC",
--	.c_ident	= { "UMC UMC UMC" },
--	.legacy_models	= {
--		{ .family = 4, .model_names =
--		  {
--			  [1] = "U5D",
--			  [2] = "U5S",
--		  }
--		},
--	},
--	.c_x86_vendor	= X86_VENDOR_UMC,
--};
--
--cpu_dev_register(umc_cpu_dev);
--
+ config M586TSC
+ 	bool "Pentium-Classic"
+ 	depends on X86_32
+@@ -226,7 +218,7 @@ config X86_L1_CACHE_SHIFT
+ 	default "7" if MPENTIUM4
+ 	default "6" if MK7 || MPENTIUMM || MATOM || MVIAC7 || X86_GENERIC || X86_64
+ 	default "4" if MGEODEGX1
+-	default "5" if MCRUSOE || MEFFICEON || MCYRIXIII || MK6 || MPENTIUMIII || MPENTIUMII || M686 || M586MMX || M586TSC || M586 || MVIAC3_2 || MGEODE_LX
++	default "5" if MCRUSOE || MEFFICEON || MCYRIXIII || MK6 || MPENTIUMIII || MPENTIUMII || M686 || M586MMX || M586TSC || MVIAC3_2 || MGEODE_LX
+ 
+ config X86_F00F_BUG
+ 	def_bool y
+diff --git a/arch/x86/Makefile_32.cpu b/arch/x86/Makefile_32.cpu
+index 2dda0a19b06a..43226c9fe795 100644
+--- a/arch/x86/Makefile_32.cpu
++++ b/arch/x86/Makefile_32.cpu
+@@ -10,7 +10,6 @@ else
+ align		:= -falign-functions=0 -falign-jumps=0 -falign-loops=0
+ endif
+ 
+-cflags-$(CONFIG_M586)		+= -march=i586
+ cflags-$(CONFIG_M586TSC)	+= -march=i586
+ cflags-$(CONFIG_M586MMX)	+= -march=pentium-mmx
+ cflags-$(CONFIG_M686)		+= -march=i686
+diff --git a/arch/x86/include/asm/vermagic.h b/arch/x86/include/asm/vermagic.h
+index b3a8beb32dfd..e26061df0c9b 100644
+--- a/arch/x86/include/asm/vermagic.h
++++ b/arch/x86/include/asm/vermagic.h
+@@ -5,8 +5,6 @@
+ 
+ #ifdef CONFIG_X86_64
+ /* X86_64 does not define MODULE_PROC_FAMILY */
+-#elif defined CONFIG_M586
+-#define MODULE_PROC_FAMILY "586 "
+ #elif defined CONFIG_M586TSC
+ #define MODULE_PROC_FAMILY "586TSC "
+ #elif defined CONFIG_M586MMX
 -- 
 2.45.2
 
