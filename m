@@ -1,132 +1,82 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E23028751D
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:03:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4DC12CD96;
+	Thu, 15 May 2025 08:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747296195; cv=none; b=cf4TEiSlNzk+cAqZoulcoRVzCS/XdbIijSSsC+6Te+7SOADUg03CZXsLTnCotIeAL8TwXhpGwzd9VP8SzaZUrplNhcUCtL2qZIwdypHn3ZvonRSh8Sk4VcNwcXk2iMGQ1GBowJu82IRp2+aDoe6/sj/AcmcR9MaUXj3WeFb0FPU=
+	t=1747296244; cv=none; b=YI4ZEPHdRxczdW1IMk20x3MgWn9FwX+XUaMiZTwSq4X3hkLHjkN6oEGKD257LRA91CL9qUrZvnGmlLmjkoJHqAG/s5+qZu2jMZAdkKcp2UYwdB2ha10MHHMmKReJ8dbihwsZXHoEpIQf54qCXORQH8T5aaH5quMGhK4gt3BMBqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747296195; c=relaxed/simple;
-	bh=EyGor6XVIMq7J+WDI1N7ciU1xsKQCdfgZtKjtEldfQg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=gY5GYZikdx4rKPhUR9pHSy/6redcTEsTan7zcWcL29qgEqd8TNGyeMV4Nq44AY7rpiAXBVOJrIU7kx3Sm1Muox8iNkTHhYzQWfxqgAVCavuki5keKQpSAVoi/utZ12l9wMxbU2MeS+fNsn/OBsIL4Xc3Bu2E5f+u9/80ZkzFLrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=pmYFseS5; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1747296244; c=relaxed/simple;
+	bh=WmqB1+cthIKwEpGtMECz8g5q4Pu16sIckWCMguzEaTk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MlK0hyOZc15NeRI9hn8PUmxIO4lHEbUT/12gsY2eX/MxN5e/dIp4VNdeMescafXo5xZJyKevmBnUSyYk7wQOEHHnBGJ7K77lmbUiUnFOsvfSjrHvbvNh2QOKeNvKl447RYn8I/iePy6yuomee3Wa0A7v4pi8b1HemKEn9V4eYZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gBm9Byqx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pmYFseS5"
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250515080311epoutp0263da2d4bea99f3361eee22396cccace3~-pKD_cM-K1656316563epoutp02R
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:03:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250515080311epoutp0263da2d4bea99f3361eee22396cccace3~-pKD_cM-K1656316563epoutp02R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1747296191;
-	bh=6E+pV7n6F1eiQsjNgSMeovGhdczmhV6c5wMuEuVtyBs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pmYFseS5N4H5pnvdK01BIqDgEPdkLbvewVptfUh5Fm17MgtQKW60Djm8m2yMvEQH3
-	 mHwLJ1AzgqUoIGf7KbfJBEDb1hg3LGGwujszqKPyHBZRsPb0FFl4BYIpuqn76ISwkl
-	 0UDXurBYrUF+AgSjqWCBnhjX0NVlyQNoDmAg/i/k=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250515080311epcas2p37c9372ba816747ad9656a31ce32f9b3f~-pKDlpvx90512805128epcas2p3N;
-	Thu, 15 May 2025 08:03:11 +0000 (GMT)
-Received: from epcas2p3.samsung.com (unknown [182.195.36.102]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4ZyjPq0RPgz6B9mS; Thu, 15 May
-	2025 08:03:11 +0000 (GMT)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250515080310epcas2p3e045327d03d031d38614464e881957d1~-pKCtzKMG0512805128epcas2p3J;
-	Thu, 15 May 2025 08:03:10 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250515080310epsmtrp251f35ed8e6bc7e92010376c57bc1c705~-pKCsNObh0272802728epsmtrp29;
-	Thu, 15 May 2025 08:03:10 +0000 (GMT)
-X-AuditID: b6c32a52-40bff70000004c16-08-68259fbe1191
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	FD.77.19478.EBF95286; Thu, 15 May 2025 17:03:10 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.229.9.126]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250515080310epsmtip2d6c9b47d2e65d4be8635ae76e0ab739b~-pKCeOpfZ1291412914epsmtip23;
-	Thu, 15 May 2025 08:03:10 +0000 (GMT)
-From: Sangwook Shin <sw617.shin@samsung.com>
-To: krzk@kernel.org, alim.akhtar@samsung.com, wim@linux-watchdog.org,
-	linux@roeck-us.net
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, Sangwook Shin
-	<sw617.shin@samsung.com>
-Subject: [PATCH v3 5/5] watchdog: s3c2410_wdt: exynosautov9: Enable
- supported features
-Date: Thu, 15 May 2025 16:53:50 +0900
-Message-Id: <20250515075350.3368635-6-sw617.shin@samsung.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250515075350.3368635-1-sw617.shin@samsung.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gBm9Byqx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87913C4CEED;
+	Thu, 15 May 2025 08:04:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747296243;
+	bh=WmqB1+cthIKwEpGtMECz8g5q4Pu16sIckWCMguzEaTk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gBm9Byqx8+B1s6DylV7uj6qPgIpAf6a5OggRfCkyBWZVqDQ2p5WyONmwmyUz6QE9v
+	 namUu1Q7xzh97Rd425+S46wSQLov32S+AVY6SBbXh3lYG3oD68HeZxdYLD4Wl2yUMG
+	 cTmeVXZRpDn20mf4zgcBrEDC858HGzF68RGNPaI9wj90+SXTT+FF/VFBxH+C6fogjY
+	 71eJjDyIrIRlqqun4RUp1yUKiuOAn9fOt0abXhIlaOXnKjcFQbwL5Fvi8jibtmZ8OI
+	 mTRfKLbl7BB3Z3m0dnv6Hpqu5T0TSGyNiN3zRKQlqtHxsEwhAApDmqmA7oowiGppbz
+	 Ov8y/pbksE1MA==
+Date: Thu, 15 May 2025 10:03:58 +0200
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.6 000/113] 6.6.91-rc2 review
+Message-ID: <aCWf7r4ZNqXw0Mzu@finisterre.sirena.org.uk>
+References: <20250514125617.240903002@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrALMWRmVeSWpSXmKPExsWy7bCSvO6++aoZBscvCVk8mLeNzeL8+Q3s
-	FpseX2O1uLxrDpvFjPP7mCxurNvHbvFk4RkmixmLT7JZPH75j9mB02PTqk42j5Vr1rB6bF5S
-	77HzewO7R9+WVYwenzfJBbBFcdmkpOZklqUW6dslcGVMfTObpeA9V8Xe263MDYwLOLsYOTkk
-	BEwkmt9sZ+xi5OIQEtjOKLFp8R32LkYOoISUxLtnlhA1whL3W46wQtR8YJT41PWfESTBJqAj
-	Mf3fbRYQW0QgTuJY+2ZmkCJmgZ2MEi3TfzODJIQFwiRevP/LBGKzCKhK/Nl0gBlkAa+ArcSy
-	WXUQC+QlZl76zg5icwrYSUy8uAtsvhBQyeE9T9hAbF4BQYmTM5+A7WIGqm/eOpt5AqPALCSp
-	WUhSCxiZVjGKphYU56bnJhcY6hUn5haX5qXrJefnbmIEB7pW0A7GZev/6h1iZOJgPMQowcGs
-	JMJ7PUs5Q4g3JbGyKrUoP76oNCe1+BCjNAeLkjivck5nipBAemJJanZqakFqEUyWiYNTqoFp
-	cX9q4vrq1qslwjMnr5nH0f+S92yvjdIK8yb2AwdEn6zOvcffNKWi7mi18LsnLcdCY16nB93m
-	q+TeqrrQPYNtpeUkG2bhjaxBLq8vaH9ZUn8j2u3dLPa1f1mEQ/RsFyjMmTzrz+Krtz5s8Fq+
-	Sv2nbeWeekO1Ei13TYPO2gOCmtfeGG5nsPv/MdiAU9JelkVk4k2e0xnNV2eHJvbeSeR8ev38
-	lnMfQn7t/s7ZZvWYlzOzytSaN3PN/HX77H9xhsiovp+tv9f6eJOZVWYA06z4Z2t4p2esvFav
-	t9Kw8KDW7UUuxreWqRzoFnnc48RyueNzweYLf8t4p6lsfBE06Yip8Ob911oi5pw5fzzvGPde
-	JZbijERDLeai4kQAlpDYcuMCAAA=
-X-CMS-MailID: 20250515080310epcas2p3e045327d03d031d38614464e881957d1
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-cpgsPolicy: CPGSC10-234,N
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250515080310epcas2p3e045327d03d031d38614464e881957d1
-References: <20250515075350.3368635-1-sw617.shin@samsung.com>
-	<CGME20250515080310epcas2p3e045327d03d031d38614464e881957d1@epcas2p3.samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="aMyE9AdpZuxFQRjJ"
+Content-Disposition: inline
+In-Reply-To: <20250514125617.240903002@linuxfoundation.org>
+X-Cookie: Well begun is half done.
 
-Enable supported features for ExynosAutov9 SoC.
-- QUIRK_HAS_DBGACK_BIT
-- QUIRK_HAS_32BIT_MAXCNT
 
-Signed-off-by: Sangwook Shin <sw617.shin@samsung.com>
----
- drivers/watchdog/s3c2410_wdt.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+--aMyE9AdpZuxFQRjJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/watchdog/s3c2410_wdt.c b/drivers/watchdog/s3c2410_wdt.c
-index 3c12a3ae50f8..bbc1d9916f67 100644
---- a/drivers/watchdog/s3c2410_wdt.c
-+++ b/drivers/watchdog/s3c2410_wdt.c
-@@ -275,7 +275,8 @@ static const struct s3c2410_wdt_variant drv_data_exynosautov9_cl0 = {
- 	.cnt_en_reg = EXYNOS850_CLUSTER0_NONCPU_OUT,
- 	.cnt_en_bit = 7,
- 	.quirks = QUIRK_HAS_WTCLRINT_REG | QUIRK_HAS_PMU_MASK_RESET |
--		  QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_CNT_EN,
-+		  QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_CNT_EN |
-+		  QUIRK_HAS_DBGACK_BIT | QUIRK_HAS_32BIT_MAXCNT,
- };
- 
- static const struct s3c2410_wdt_variant drv_data_exynosautov9_cl1 = {
-@@ -287,7 +288,8 @@ static const struct s3c2410_wdt_variant drv_data_exynosautov9_cl1 = {
- 	.cnt_en_reg = EXYNOSAUTOV9_CLUSTER1_NONCPU_OUT,
- 	.cnt_en_bit = 7,
- 	.quirks = QUIRK_HAS_WTCLRINT_REG | QUIRK_HAS_PMU_MASK_RESET |
--		  QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_CNT_EN,
-+		  QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_CNT_EN |
-+		  QUIRK_HAS_DBGACK_BIT | QUIRK_HAS_32BIT_MAXCNT,
- };
- 
- static const struct s3c2410_wdt_variant drv_data_gs101_cl0 = {
--- 
-2.40.1
+On Wed, May 14, 2025 at 03:04:06PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.91 release.
+> There are 113 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
+Tested-by: Mark Brown <broonie@kernel.org>
+
+--aMyE9AdpZuxFQRjJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgln+4ACgkQJNaLcl1U
+h9CZ+Af9FPdXvM9w91FTbsCUW58ywAahUY/4rCcjlEOrWrSx4QzItz1mdX+7lNUh
+B8182vS1F1hLw692Vzccr3vPEuWqd4Fg6uAQEDU3TNq483bWKv23JxXiGvvta+1b
+50LwDaTpf50ci5yRyNwqtZ2fL8FfSIKxivPIYFsuHE9HG2tnw/wXA9ghR6/ob2FY
+3JBJOXainddqNBedmModojIeN8YIF5oCQhoNIJwWRpjJnRTa7E4sCZj1B73RrH+1
+YJsYxvzkbMkTbSCWBNdwpneMrrfCgyVy9IJVywh7ArdUzGRGXhDQT3i7feIxU8gh
+2HzHq+63rTbcPXbtKDWFUAzQEErsQg==
+=uwlm
+-----END PGP SIGNATURE-----
+
+--aMyE9AdpZuxFQRjJ--
