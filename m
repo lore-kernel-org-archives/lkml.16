@@ -1,99 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B33E17993;
-	Thu, 15 May 2025 10:48:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D86A298255;
+	Thu, 15 May 2025 10:48:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747306100; cv=none; b=OJKaVQpiLA9eNqa19gF8/yskURsdycbPfA5wBC73wl3Fh+qG1agD13j9Fk1eiCrdUiYpejXPHCEVDIrMhPFPNo2PSuoyX2AsJ9vr3xJpsNFr+FSL04VPIz/uTeXJDQ8kPpbWWgz3bi01YGVERbUb3uPoQeTdktb/CAvIsjKg15Q=
+	t=1747306102; cv=none; b=BpYN3HhRfCGoQVRJhCNYEsAqzvgsyVyQVxXtg7LSUHmqCBq2GjIkh8qjU4Xc4s61RSJ3oiNWUhIRR3Ae1V2pjN9xBnY4myzuQ/2ke8WlwjfMCg0KfgcBZM4F0KKu4NkgNhsvEe2s87glgY7Z063hpXZZdJpa4Mv1bb9ucD3063o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747306100; c=relaxed/simple;
-	bh=ZM2IaWkndpSY9YYKLqBne0P30sJu/8RnGzA74WDbB7I=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XTt1Z65QEkIM0v2CEvH1qodUDt44CUWy1FLcV6/u4yQob5/7RECrH+Uyqvim5WCRicT/3FapfyypkIUEMHNN0Hs/RRlO9g0RHA1x92QIlBAPht34WNhkFV/rRPfAmV5++T+3QW7H7uPNGOp/BWmCWGvw5G4+9nv9se1DT02mMVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NZlkmiqV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747306102; c=relaxed/simple;
+	bh=eBPgvvsvHseuwOOxm/fxnYlTjdO4X6W/Sa724t+OOxQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NLhYvcvlyyN/7B/6SPtjChDJ9o+6EGT8Z8Qa2r9z0N/jbk+wvIqFGWq9aRjcOtbBdW7dO/r87aXR48K2BV1AwoOzOYQMMTdP9xf4m81Hdp/Nb4nJheneWh12SIjW1jI6T1gmVPDrMNInF5DjV/Yo4ubaq49QzF+V6FftzGJ8LKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FfTLTM9L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NZlkmiqV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0689C4CEE7;
-	Thu, 15 May 2025 10:48:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FfTLTM9L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92D8BC4AF09;
+	Thu, 15 May 2025 10:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747306100;
-	bh=ZM2IaWkndpSY9YYKLqBne0P30sJu/8RnGzA74WDbB7I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NZlkmiqVCoiGlAyCHq/uRm6Ti6BPAEvuRWb9pm21vgLFNQzAlSzZxDI7Ag4rBBrhg
-	 hG/KA7ZuiWGPY3IikuYGESrDrBa3lxnUEpchzP6KSICzZTYuZgqDO0jRSSLMIHuPEw
-	 p5Z+Usz57kaMWBTwMewezNKMGdlQIBC+mUgilZpe9R9NvLIxVspHscebg0FWOgfSPq
-	 nWIUhSTGkDDXKhVjxGHA8cctjwiUxWDhK7QAdUmmxdBd9QkdoDWbQ1vEwXkyOg+BLv
-	 YUJYB8kHe86veN8Vrf6+SJ+4IvlY0mif+RT2ak6rFlA04hnJKauCa+p8WN1p9KhgCD
-	 WXaeyiq2cEGfw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uFW8P-00FCGc-Kj;
-	Thu, 15 May 2025 11:48:17 +0100
-Date: Thu, 15 May 2025 11:48:17 +0100
-Message-ID: <86jz6if8um.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Ben Horgan <ben.horgan@arm.com>
-Cc: Raghavendra Rao Ananta <rananta@google.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Mingwei Zhang <mizhang@google.com>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: Re: [PATCH 0/3] KVM: arm64: Allow vGICv4 configuration per VM
-In-Reply-To: <5d204cf7-c6a0-455c-8706-753e1fce3777@arm.com>
-References: <20250514192159.1751538-1-rananta@google.com>
-	<5d204cf7-c6a0-455c-8706-753e1fce3777@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1747306102;
+	bh=eBPgvvsvHseuwOOxm/fxnYlTjdO4X6W/Sa724t+OOxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FfTLTM9LTMC6SzJrgtYs00OrUofyFCHezGXXKViJVYeakcCCqqgEHbDdKFA4YWZ5/
+	 D4e8z6eujMyUzh9UDkfyRG6xci9BE2e5NELK0o2qkHEqyRgF4guWxYrDgMQ7mp6Jax
+	 dX9Al8qFAmCCDRt/IFsVADWDEmsPo47xycvazkQtEIHxKjD5uMkki8opEHo7rFtfeE
+	 tayB9CBSMBI+GXA/6/Uw9IYGDAFWUnxU5Q6Anl3Ol9yiWQuUWMR7pz/Mh9BUUFaghI
+	 /g6gdCG4HBB7chLiUq58JT+ctMJmwkR22aDRIqoZxUFbOev/PIQv54P1LibHnaVC4m
+	 LnaGTHKPOScFA==
+Date: Thu, 15 May 2025 11:48:19 +0100
+From: Vinod Koul <vkoul@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+	dma <dmaengine@vger.kernel.org>
+Cc: Qiu-ji Chen <chenqiuji666@gmail.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the dmaengine-fixes tree
+Message-ID: <aCXGc21rVab7ZuDG@vaman>
+References: <20250515093325.4e29e8a6@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: ben.horgan@arm.com, rananta@google.com, oliver.upton@linux.dev, mizhang@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515093325.4e29e8a6@canb.auug.org.au>
 
-On Thu, 15 May 2025 11:30:33 +0100,
-Ben Horgan <ben.horgan@arm.com> wrote:
+On 15-05-25, 09:33, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Hi,
+> After merging the dmaengine-fixes tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
 > 
-> On 5/14/25 20:21, Raghavendra Rao Ananta wrote:
-> > Hello,
-> > 
-> > When kvm-arm.vgic_v4_enable=1, KVM adds support for direct interrupt
-> > injection by default to all the VMs in the system, aka GICv4. A
-> > shortcoming of the GIC architecture is that there's an absolute limit on
-> > the number of vPEs that can be tracked by the ITS. It is possible that
-> > an operator is running a mix of VMs on a system, only wanting to provide
-> > a specific class of VMs with hardware interrupt injection support.
-> > 
-> > To support this, introduce a GIC attribute, KVM_DEV_ARM_VGIC_CONFIG_GICV4,
-> > for the userspace to enable or disable vGICv4 for a given VM.
-> > 
-> > The attribute allows the configuration only when vGICv4 is enabled in KVM,
-> > else it acts a read-only attribute returning
-> > KVM_DEV_ARM_VGIC_CONFIG_GICV4_UNAVAILABLE as the value.
-> What's the reason for the cmdline enable continuing to be absolute in
-> the disable case? I wonder if this is unnecessarily restrictive.
+> drivers/dma/mediatek/mtk-cqdma.c: In function 'mtk_cqdma_find_active_desc':
+> drivers/dma/mediatek/mtk-cqdma.c:423:23: error: unused variable 'flags' [-Werror=unused-variable]
+>   423 |         unsigned long flags;
+>       |                       ^~~~~
+> 
+> Caused by commit
+> 
+>   157ae5ffd76a ("dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()")
+> 
+> I have used the dmaengine-fixes tree from next-20250514 for today.
 
-Because there are a number of GICv4 implementations that are
-absolutely terrible out there, and that will happily lock-up under
-some undisclosed circumstances.
+Thanks, I have fixed it up and applied below:
 
-So unless you find a good way to retire that HW, GICv4 will continue
-to be a buy-in.
+-- >8 --
 
-	M.
+
+From 811d6a923b40fc130f91abf49151f57cf9ac2a6f Mon Sep 17 00:00:00 2001
+From: Vinod Koul <vkoul@kernel.org>
+Date: Thu, 15 May 2025 11:42:13 +0100
+Subject: [PATCH] dmaengine: mediatek: drop unused variable
+
+Commit 157ae5ffd76a dmaengine: mediatek: Fix a possible deadlock error
+in mtk_cqdma_tx_status() fixed locks but kept unused varibale leading to
+warning and build failure (due to warning treated as errors)
+
+drivers/dma/mediatek/mtk-cqdma.c: In function 'mtk_cqdma_find_active_desc':
+drivers/dma/mediatek/mtk-cqdma.c:423:23: error: unused variable 'flags' [-Werror=unused-variable]
+  423 |         unsigned long flags;
+      |                       ^~~~~
+
+Fix by dropping this unused flag
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Fixes: 157ae5ffd76a ("dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()")
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ drivers/dma/mediatek/mtk-cqdma.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
+index e35271ac1eed..47c8adfdc155 100644
+--- a/drivers/dma/mediatek/mtk-cqdma.c
++++ b/drivers/dma/mediatek/mtk-cqdma.c
+@@ -420,7 +420,6 @@ static struct virt_dma_desc *mtk_cqdma_find_active_desc(struct dma_chan *c,
+ {
+ 	struct mtk_cqdma_vchan *cvc = to_cqdma_vchan(c);
+ 	struct virt_dma_desc *vd;
+-	unsigned long flags;
+ 
+ 	list_for_each_entry(vd, &cvc->pc->queue, node)
+ 		if (vd->tx.cookie == cookie) {
+-- 
+2.34.1
+
 
 -- 
-Without deviation from the norm, progress is not possible.
+~Vinod
