@@ -1,94 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C0029995F;
-	Thu, 15 May 2025 12:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614F82989B8;
+	Thu, 15 May 2025 12:09:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747310930; cv=none; b=oMCtjUDwYfVToOppPStxnkQsXfD2UdLk8shRatJiPjH5Bh/2x3WpE3hkZBb/kt+mDnGyk9Ua7U+ekAhzKUC3kjEK1PUXdimSBgeSJ6J35hVNn9A1iLzstoWLkcVqstdz1jgoJWyqSFTvWTIXgmD02RZGEk1NVtj/SRtDa44CtwM=
+	t=1747310972; cv=none; b=LsWrJ4VNjn+8IKCkAO5Dm49cNGn1fApL9nzmqo1RJT8//l1xhBufdvwzXSlZsCakzimSlOooTCsFFTZejSBX7sdGFbHOBqhKV7+unHt8+OBeB9DTB9TiaSzUStqhYy9pJX/S2JNQL9X+MnzpIUOA8jsOdLsm5zAo6A85x/X05jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747310930; c=relaxed/simple;
-	bh=86NXsxwr9vhZEYlXZBFK/v1h1nZ5Erj4W+GuIw278PM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=kf5fSp2G9VGvsocVQHvuJj8qMM/KnfstGmsxGEPHhJHfDFyoc47/yrC1AU8wpCnZ3utbNOh7SIQe3SK4oRTm5m0LyGnC8PAgzu/iYr+jvtcA1cVOCUF8TSZP91zIowMg9IPbD7MJj9N8RiCm6Gc3AaHDSH5r2YX0MAD/AGSu9eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YN7ffb7y; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YN7ffb7y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8E17C4CEE7;
-	Thu, 15 May 2025 12:08:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747310929;
-	bh=86NXsxwr9vhZEYlXZBFK/v1h1nZ5Erj4W+GuIw278PM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=YN7ffb7yFwts5GmI1ng/AB94u1hmc4IJfOr//UwNihrDPbdf1RL66PDyfkEsTRend
-	 uXZ0qjJFA8hKpIb4ePz3pd8aiK2euR3+gaWBmuoVIyyIWlNiw9JftL6B95wJ4zp02l
-	 Uqi47/SBXfked9k/CYtfePmfXdxSUYKSaPKDVfGPm3ii3YqHIsQ8VIgid5eR7LqSJM
-	 uFS0eLxvUF0AWZNfQwea6fBAwJa/qWvPFGlFY2OFox+X5O5zZBqnjapeRUSjRAJF9P
-	 aD7tynfWiYUPYHCFNOvXsweHlE7RTJyescQwtdh3xvtCl3kz5tMB5WaFJm4E3t/7/2
-	 J2WXFWO7ZhqxQ==
-From: Mark Brown <broonie@kernel.org>
-To: linux-sound@vger.kernel.org, Tavian Barnes <tavianator@tavianator.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, 
- Bard Liao <yung-chuan.liao@linux.intel.com>, 
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
- Daniel Baluta <daniel.baluta@nxp.com>, 
- Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Peter Zijlstra <peterz@infradead.org>, sound-open-firmware@alsa-project.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <570b15570b274520a0d9052f4e0f064a29c950ef.1747229716.git.tavianator@tavianator.com>
-References: <570b15570b274520a0d9052f4e0f064a29c950ef.1747229716.git.tavianator@tavianator.com>
-Subject: Re: [PATCH v5] ASoC: SOF: Intel: hda: Fix UAF when reloading
- module
-Message-Id: <174731092440.350483.15391857686536607897.b4-ty@kernel.org>
-Date: Thu, 15 May 2025 14:08:44 +0200
+	s=arc-20240116; t=1747310972; c=relaxed/simple;
+	bh=5YSTM2cg0G+we0OL+Krxk1NE3KwiMAQeiNzwu890rPU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qFYhvy+AKWtC7idy8wGGj3YMo/EAR8AGzf/PLgls/Vs6AWtrgr6P2nCpPCZIsLe+wxDWKnrQ3BtQA7V4C5dojrZWjT7r6AxMTZRQ0KXHdnjy9bp2C+nll3mQRSKi4kvKCkFWlalCg7NuCXoBJOQrGcOok2EzrBSFSpH41NHx4zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 84AC32C06846;
+	Thu, 15 May 2025 14:08:51 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 7673B26E80; Thu, 15 May 2025 14:09:25 +0200 (CEST)
+Date: Thu, 15 May 2025 14:09:25 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Krzysztof Wilczy??ski <kwilczynski@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI/bwctrl: Remove also pcie_bwctrl_lbms_rwsem
+Message-ID: <aCXZdfOA8bme-qra@wunner.de>
+References: <20250508090036.1528-1-ilpo.jarvinen@linux.intel.com>
+ <174724335628.23991.985637450230528945.b4-ty@kernel.org>
+ <aCTyFtJJcgorjzDv@wunner.de>
+ <20250515084346.GA51912@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250515084346.GA51912@rocinante>
 
-On Wed, 14 May 2025 09:37:49 -0400, Tavian Barnes wrote:
-> hda_generic_machine_select() appends -idisp to the tplg filename by
-> allocating a new string with devm_kasprintf(), then stores the string
-> right back into the global variable snd_soc_acpi_intel_hda_machines.
-> When the module is unloaded, this memory is freed, resulting in a global
-> variable pointing to freed memory.  Reloading the module then triggers
-> a use-after-free:
+On Thu, May 15, 2025 at 05:43:46PM +0900, Krzysztof Wilczy??ski wrote:
+> Done.  Squashed with the first commit from Ilpo, see:
 > 
-> [...]
+>   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=bwctrl&id=2389d8dc38fee18176c49e9c4804f5ecc55807fa
 
-Applied to
+Awesome, thank you!
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> Let me know if there is anything else needed.
 
-Thanks!
+Actually, two small things:
 
-[1/1] ASoC: SOF: Intel: hda: Fix UAF when reloading module
-      commit: 7dd7f39fce0022b386ef1ea5ffef92ecc7dfc6af
+- That patch on the pci/bwctrl topic branch is still marked "New"
+  in patchwork, even though it's been applied:
+  https://patchwork.kernel.org/project/linux-pci/patch/20250422115548.1483-1-ilpo.jarvinen@linux.intel.com/
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+- Version 1 of the same patch is likewise marked "New", even though
+  it's been superseded:
+  https://patchwork.kernel.org/project/linux-pci/patch/20250417124633.11470-1-ilpo.jarvinen@linux.intel.com/
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Unfortunately I can't update it myself because I'm not the submitter.
+(Ilpo could do it if he has a patchwork.kernel.org account.)
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Something unrelated (only if you feel like doing it):
+
+On the pci/enumeration branch, Bjorn queued up a revert which was
+waiting to be ack'ed by AMD IOMMU maintainers:
+https://lore.kernel.org/r/20250425163259.GA546441@bhelgaas/
+
+In the meantime the ack has arrived:
+https://lore.kernel.org/r/aCLv7cN_s1Z4abEl@8bytes.org/
+
+So the remaining housekeeping items are:
+
+- Add Jörg's Acked-by to commit e86c7278eba8 on pci/enumeration
+- Remove the "XXX" marker from the subject line
+- Remove "Needs AMD IOMMU ack" from the commit message
+
+Again, only if you feel like doing it.  No urgency.
 
 Thanks,
-Mark
 
+Lukas
