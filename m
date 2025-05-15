@@ -1,59 +1,59 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FAFA28313E
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 07:38:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42EF0285419
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 07:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747294720; cv=none; b=uFetQhO1OJG3oJ5c4j1fqvi30YLY7CCQlqRHSEK7V5KGH83l0JQugUnA9YEzwKCGgQLIhYCCved/YTgyWSM1+n5HxQYAdnymyRk7nx3Q5vFE0fmwTA9TczQXkc1wBJQYuF4kvapFZpQ5A9aLlIRLolKOhJmbYQEPmE+snihDSjQ=
+	t=1747294723; cv=none; b=T1Ao+4HzyapcIguIZjZApQyocMRrAGif6WW+7NcLqh5PbjxdrZ3OaIhLwLvBmCC7sIs5x87y4lMhxk85bxJ84j/k9Mn8DjBBtZiBopwh789Ebw5vBex+htBHJ9zBIFBpxcA+5fDQNsp4qJO3o7csyO+JcgwhTPS55F/mM4FSh3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747294720; c=relaxed/simple;
-	bh=Aamm8tMZwvmn+zCf/R9rzd5Zoo8sxxgYpgtnjGEXVhM=;
+	s=arc-20240116; t=1747294723; c=relaxed/simple;
+	bh=HJFU1pobyGKIRjhv6sWs+4KE/Eb7e+JkMbmBP8ECP0M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cFVBlepVJcqMnazDq/vXhfmRRzff00PqzQD3mkvdbaUsM3PA95EUj2ldCw/1wF3Wc/NyifUbcZk9vNnTVWJOwcS1ClemOHEuLeWFI8SvT5zimNEhKUMU/bngJGUZ5UzLUuKGo1CGOvLzOrOt8D8blMKUeMUjuqzUNlapgfdJ5Qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=crWfwblc; arc=none smtp.client-ip=209.85.214.174
+	 MIME-Version; b=nPs+7Wtjk6dxdsEXqOIhhFw4rapVadkhKpzRBwKlPglw8ghCelsjeKnwlWDf1mB9bQ+0CB2GPmMMhIfMfOh+ZCejuGEhkdAuPM9bmmzNcULi+mYdfeJCJm7lACDwz4QZQ4o8zQnjHBmO0sIJ/TlvOPvKfmD8XEkMFKc97/KZlm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Ns0JczSi; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="crWfwblc"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22e7eff58a0so6551985ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:38:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ns0JczSi"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-231bf5851b7so1307465ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:38:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1747294718; x=1747899518; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1747294720; x=1747899520; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Cuw9i37af/1ORneMvev0+QG19FsjaSUWkPdlSl+CJ68=;
-        b=crWfwblcKg/5SHeLmCmACv/za6xJ4iegdz1eUnsZLhOYnlyUrr5Pr/4oMb5Bp+iZKl
-         Fxy5T7VKPQE4CI3kX4Q5g4qv2eR3qETY6PSk1pRH+eaOcfLZYp7kwdwFI4PPYhhnQR9+
-         JBe2Mh3mMvWEPgBGfG/hiE+wWJgjP3vNKn8Bk=
+        bh=RlgroavkFNmhZvJ2omBGrXCrXVWCsbUHz4C2BYIxmqs=;
+        b=Ns0JczSi53YZeZenB2k2D6/CVD8GsSNtn9HlzYyo3ujvAAhXk92uKNEzKtDj5Nlemt
+         Yaf95u98jQigNOMWy5+FaIHLphlIZXASooiGTJzr/Wb+upA6qGSg1+WIgTOtQRH/jvoo
+         5W0WdsBVuenjWHjRaIRMEutggw+GcSO7JLDK0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747294718; x=1747899518;
+        d=1e100.net; s=20230601; t=1747294720; x=1747899520;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Cuw9i37af/1ORneMvev0+QG19FsjaSUWkPdlSl+CJ68=;
-        b=PGwKtDQM4GBvnu8vRSJdoUGmwwGmRU4gdjRz5GGFykoWm0KBObC+jw0NBqd4IEL36J
-         xCYdCfbvxJcQXnbvsMsu/y/7pKVcacY5JT/0FnPVrdfCbsFhsrpTib8h6LXcPIU2Zggh
-         6UoJdHvDyz44N4CBkP5T6l7fEBWhZNbhXPxa0OB8bV/rKd1rYsNRg4xp7yNgtNwpQ0AZ
-         YcbC5VmmH62L1IndQWIRz8TDZ3SCmz8pKPZvCQW2/Nm4hdFtkVfHtg1EZ2cUtPdhUoj+
-         iShaMyaWPxHNKft3OCf2feqPdZBTFFTmOyTAQ5UCEUMzbEnu6mfRm3RY7gScs1J/QNFV
-         xTwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUSht0GPoqJU2sr5Z70St7RWsn6njSUErdmtq3SRqPt/IXSbRXuMAF75tYEJjtaKfVSXrW/tRTW9rUbUfw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyO6PATQuYPdzHqHzvekL2hJA3JJSex+4bGd19pQ5QVdESjyI3j
-	1InLMvGaCK+jzqXlxMDW6Fhh/Ec8qjuepNjDLBcCROWXnu6TELSAp60nVRyz6g==
-X-Gm-Gg: ASbGncvUHW1W/6AWPjHVyLwV/thjVcvwOvqOJqZQ52UNBMIFz9Bj/VivtCWNUdWsUJ4
-	iix4qOtB/uO65MP1SOI65DLjnG32mRjGImTzP5niL4/Fn2/dnfWAzX9SLr2F7rqBb2fbN8LVjyJ
-	XMRpAELJ/tNA0EDlGa7ILqVi/F5OTNapnRM42wAJaboEEO1kUViaEpfl3w1gIbkXJWSe3aXvqZ5
-	vXBdjoEzm8woQekIZPq1oi1W3Uygg+DT1P6LWT4UqC6ufODbOL3tLERF60CYtE3tyHj0dze8ISt
-	tya5a8r1zvwupEpfCB2NB7qXJNmNQ3GFR0TgoyIcmkL+bFav0qpJYJy+4InUqEwKAe3hkw==
-X-Google-Smtp-Source: AGHT+IHe6IzxFNkLauCy9bZU1Uvquc1KSUc5NpKfBLs8LJxHMC9d6kRf1QOHhUOkDzpc6Nk9gUSZew==
-X-Received: by 2002:a17:903:3bc6:b0:224:18bb:44c2 with SMTP id d9443c01a7336-231b5e51feemr15907235ad.6.1747294717753;
-        Thu, 15 May 2025 00:38:37 -0700 (PDT)
+        bh=RlgroavkFNmhZvJ2omBGrXCrXVWCsbUHz4C2BYIxmqs=;
+        b=ip5/c88S9PXh+rmwR21se8CHD18s50+MQ9YuXyGlJIUwna2oyjq1ITTRDvtTWVJjxO
+         IGTukfIw8bVeI2PdZCneg82A97uS17XaBBSDBvxJ4MPT6MJ7PbJibVnog2ymnxLDDP19
+         S+Nj8b51yQGO+liCQ+Hkx6hnvkHa0KzEAro5CSg+YrVDAx8p6nE6QBvA0H1DyvvkpNVx
+         fD07TDvSVm/QGM+97xmZirGYtuXRo4tKQorudAKSoovasAJepiTlCy/Aw6OSBa+nl0aN
+         4TAjXIuA9vDaHl4Adp2LEaCgW1U+pbLAiHbdpzFzRL2I5aSdNDvJro/+gj2FusL9Y/Xj
+         zLOA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSKR++FDcivWto0BYD4s9H7oLdT6xYr5xfwRLDInAeyWTc+507hMgFXmzgBwZMS12uvQzdesQUxLPR5ow=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYa8JLvAL0EduxMG/YhCwK/DqtdqNIaWsxgUO/yh0B2ON37e+W
+	jWwDHUAVhj7WNCi4knDWwb3ong2onYv7fJXrEzb+qOkrGFXj79SdnC17HnErKQ==
+X-Gm-Gg: ASbGncv9yYdOew0ATkmrg3hNSVlthquaMhW38L/fMi4hmE49nampEzLbmGGvEix63fP
+	Ql1ucN0bkhnEIblyIH1/pOM9KxhB1rDdlrl2kNgRUwgiwfJ6yIC5mzjFUa6JnZggrD/tAuDc0ps
+	/OJOh3emv3RlIFDEuejHXDyp4Ahbp8ngOPSPiiAo8Yg/Oa6KIymeQpZ6icZGatbGfqRAQSFyVCZ
+	Q3yBiWrV61iawuiI2uHzXg+Arf5na8oC3Oo9DLstlOVJbMMyrdDZzNoKeOL622VRqiP+CkmiLPn
+	QgijDq7P8JfCaIBOd4H/YPo3lSiQpKrDcFx6EsbGhhJI8CAj1qApajZDsKyF4vR4ddnE0w==
+X-Google-Smtp-Source: AGHT+IGzxgKY4oRrN3kg0KvYeYGnTZCcfiHd8Yeu2SNTcwdxoN/9aBTg+QD8HzFianQMbmpb40NBpg==
+X-Received: by 2002:a17:903:190d:b0:223:669f:ca2d with SMTP id d9443c01a7336-231981453e0mr102895825ad.35.1747294720320;
+        Thu, 15 May 2025 00:38:40 -0700 (PDT)
 Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:c43a:aaea:5f52:5763])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8271f61sm109750825ad.142.2025.05.15.00.38.35
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8271f61sm109750825ad.142.2025.05.15.00.38.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 00:38:37 -0700 (PDT)
+        Thu, 15 May 2025 00:38:39 -0700 (PDT)
 From: Chen-Yu Tsai <wenst@chromium.org>
 To: Liam Girdwood <lgirdwood@gmail.com>,
 	Mark Brown <broonie@kernel.org>,
@@ -67,9 +67,9 @@ Cc: Chen-Yu Tsai <wenst@chromium.org>,
 	linux-mediatek@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Darren Ye <darren.ye@mediatek.com>
-Subject: [PATCH v2 2/3] ASoC: mediatek: mt8183-afe-pcm: Shorten irq_data table using macros
-Date: Thu, 15 May 2025 15:38:22 +0800
-Message-ID: <20250515073825.4155297-3-wenst@chromium.org>
+Subject: [PATCH v2 3/3] ASoC: mediatek: mt8183-afe-pcm: shorten mt8183_is_volatile_reg()
+Date: Thu, 15 May 2025 15:38:23 +0800
+Message-ID: <20250515073825.4155297-4-wenst@chromium.org>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
 In-Reply-To: <20250515073825.4155297-1-wenst@chromium.org>
 References: <20250515073825.4155297-1-wenst@chromium.org>
@@ -81,207 +81,213 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The irq_data table describes all the supported interrupts for the audio
-frontend. The parameters are either the same or can be derived from the
-interrupt number. This results in a very long table (in source code)
-that can be shortened with macros.
+mt8183_is_volatile_reg() is a large switch-case block that lists out
+every register that is volatile. Since many pairs of registers have
+consecutive addresses, the cases can be compressed down with the
+ellipsis, i.e. GCC extension "case ranges" [1] to cover more addresses
+in one case, shortening the source code.
 
-Do just that.
+This is not completely the same, since the addresses are 4-byte aligned,
+and using the case ranges feature adds all unaligned addresses in
+between. In practice this doesn't matter since the unaligned addresses
+are blocked by the regmap core. This also ends up compiling slightly
+smaller with a reduction of 128 bytes in the text section.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Case-Ranges.html
 
 Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- sound/soc/mediatek/mt8183/mt8183-afe-pcm.c | 176 ++++-----------------
- 1 file changed, 33 insertions(+), 143 deletions(-)
+ sound/soc/mediatek/mt8183/mt8183-afe-pcm.c | 152 ++++++---------------
+ 1 file changed, 40 insertions(+), 112 deletions(-)
 
 diff --git a/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c b/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c
-index a4bed8e335d8..fe315224a259 100644
+index fe315224a259..e8884354995c 100644
 --- a/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c
 +++ b/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c
-@@ -481,150 +481,40 @@ static const struct mtk_base_memif_data memif_data[MT8183_MEMIF_NUM] = {
- 	MT8183_MEMIF_BASE(HDMI, -1, -1, -1),
- };
- 
-+#define MT8183_AFE_IRQ_BASE(_id, _fs_reg, _fs_shift, _fs_maskbit)	\
-+	[MT8183_IRQ_##_id] = {	\
-+		.id = MT8183_IRQ_##_id,			\
-+		.irq_cnt_reg = AFE_IRQ_MCU_CNT##_id,	\
-+		.irq_cnt_shift = 0,			\
-+		.irq_cnt_maskbit = 0x3ffff,		\
-+		.irq_fs_reg = _fs_reg,			\
-+		.irq_fs_shift = _fs_shift,		\
-+		.irq_fs_maskbit = _fs_maskbit,		\
-+		.irq_en_reg = AFE_IRQ_MCU_CON0,		\
-+		.irq_en_shift = IRQ##_id##_MCU_ON_SFT,	\
-+		.irq_clr_reg = AFE_IRQ_MCU_CLR,		\
-+		.irq_clr_shift = IRQ##_id##_MCU_CLR_SFT,	\
-+	}
-+
-+#define MT8183_AFE_IRQ(_id) \
-+	MT8183_AFE_IRQ_BASE(_id, AFE_IRQ_MCU_CON1 + _id / 8 * 4,	\
-+			    IRQ##_id##_MCU_MODE_SFT,	\
-+			    IRQ##_id##_MCU_MODE_MASK)
-+
-+#define MT8183_AFE_IRQ_NOFS(_id) MT8183_AFE_IRQ_BASE(_id, -1, -1, -1)
-+
- static const struct mtk_base_irq_data irq_data[MT8183_IRQ_NUM] = {
--	[MT8183_IRQ_0] = {
--		.id = MT8183_IRQ_0,
--		.irq_cnt_reg = AFE_IRQ_MCU_CNT0,
--		.irq_cnt_shift = 0,
--		.irq_cnt_maskbit = 0x3ffff,
--		.irq_fs_reg = AFE_IRQ_MCU_CON1,
--		.irq_fs_shift = IRQ0_MCU_MODE_SFT,
--		.irq_fs_maskbit = IRQ0_MCU_MODE_MASK,
--		.irq_en_reg = AFE_IRQ_MCU_CON0,
--		.irq_en_shift = IRQ0_MCU_ON_SFT,
--		.irq_clr_reg = AFE_IRQ_MCU_CLR,
--		.irq_clr_shift = IRQ0_MCU_CLR_SFT,
--	},
--	[MT8183_IRQ_1] = {
--		.id = MT8183_IRQ_1,
--		.irq_cnt_reg = AFE_IRQ_MCU_CNT1,
--		.irq_cnt_shift = 0,
--		.irq_cnt_maskbit = 0x3ffff,
--		.irq_fs_reg = AFE_IRQ_MCU_CON1,
--		.irq_fs_shift = IRQ1_MCU_MODE_SFT,
--		.irq_fs_maskbit = IRQ1_MCU_MODE_MASK,
--		.irq_en_reg = AFE_IRQ_MCU_CON0,
--		.irq_en_shift = IRQ1_MCU_ON_SFT,
--		.irq_clr_reg = AFE_IRQ_MCU_CLR,
--		.irq_clr_shift = IRQ1_MCU_CLR_SFT,
--	},
--	[MT8183_IRQ_2] = {
--		.id = MT8183_IRQ_2,
--		.irq_cnt_reg = AFE_IRQ_MCU_CNT2,
--		.irq_cnt_shift = 0,
--		.irq_cnt_maskbit = 0x3ffff,
--		.irq_fs_reg = AFE_IRQ_MCU_CON1,
--		.irq_fs_shift = IRQ2_MCU_MODE_SFT,
--		.irq_fs_maskbit = IRQ2_MCU_MODE_MASK,
--		.irq_en_reg = AFE_IRQ_MCU_CON0,
--		.irq_en_shift = IRQ2_MCU_ON_SFT,
--		.irq_clr_reg = AFE_IRQ_MCU_CLR,
--		.irq_clr_shift = IRQ2_MCU_CLR_SFT,
--	},
--	[MT8183_IRQ_3] = {
--		.id = MT8183_IRQ_3,
--		.irq_cnt_reg = AFE_IRQ_MCU_CNT3,
--		.irq_cnt_shift = 0,
--		.irq_cnt_maskbit = 0x3ffff,
--		.irq_fs_reg = AFE_IRQ_MCU_CON1,
--		.irq_fs_shift = IRQ3_MCU_MODE_SFT,
--		.irq_fs_maskbit = IRQ3_MCU_MODE_MASK,
--		.irq_en_reg = AFE_IRQ_MCU_CON0,
--		.irq_en_shift = IRQ3_MCU_ON_SFT,
--		.irq_clr_reg = AFE_IRQ_MCU_CLR,
--		.irq_clr_shift = IRQ3_MCU_CLR_SFT,
--	},
--	[MT8183_IRQ_4] = {
--		.id = MT8183_IRQ_4,
--		.irq_cnt_reg = AFE_IRQ_MCU_CNT4,
--		.irq_cnt_shift = 0,
--		.irq_cnt_maskbit = 0x3ffff,
--		.irq_fs_reg = AFE_IRQ_MCU_CON1,
--		.irq_fs_shift = IRQ4_MCU_MODE_SFT,
--		.irq_fs_maskbit = IRQ4_MCU_MODE_MASK,
--		.irq_en_reg = AFE_IRQ_MCU_CON0,
--		.irq_en_shift = IRQ4_MCU_ON_SFT,
--		.irq_clr_reg = AFE_IRQ_MCU_CLR,
--		.irq_clr_shift = IRQ4_MCU_CLR_SFT,
--	},
--	[MT8183_IRQ_5] = {
--		.id = MT8183_IRQ_5,
--		.irq_cnt_reg = AFE_IRQ_MCU_CNT5,
--		.irq_cnt_shift = 0,
--		.irq_cnt_maskbit = 0x3ffff,
--		.irq_fs_reg = AFE_IRQ_MCU_CON1,
--		.irq_fs_shift = IRQ5_MCU_MODE_SFT,
--		.irq_fs_maskbit = IRQ5_MCU_MODE_MASK,
--		.irq_en_reg = AFE_IRQ_MCU_CON0,
--		.irq_en_shift = IRQ5_MCU_ON_SFT,
--		.irq_clr_reg = AFE_IRQ_MCU_CLR,
--		.irq_clr_shift = IRQ5_MCU_CLR_SFT,
--	},
--	[MT8183_IRQ_6] = {
--		.id = MT8183_IRQ_6,
--		.irq_cnt_reg = AFE_IRQ_MCU_CNT6,
--		.irq_cnt_shift = 0,
--		.irq_cnt_maskbit = 0x3ffff,
--		.irq_fs_reg = AFE_IRQ_MCU_CON1,
--		.irq_fs_shift = IRQ6_MCU_MODE_SFT,
--		.irq_fs_maskbit = IRQ6_MCU_MODE_MASK,
--		.irq_en_reg = AFE_IRQ_MCU_CON0,
--		.irq_en_shift = IRQ6_MCU_ON_SFT,
--		.irq_clr_reg = AFE_IRQ_MCU_CLR,
--		.irq_clr_shift = IRQ6_MCU_CLR_SFT,
--	},
--	[MT8183_IRQ_7] = {
--		.id = MT8183_IRQ_7,
--		.irq_cnt_reg = AFE_IRQ_MCU_CNT7,
--		.irq_cnt_shift = 0,
--		.irq_cnt_maskbit = 0x3ffff,
--		.irq_fs_reg = AFE_IRQ_MCU_CON1,
--		.irq_fs_shift = IRQ7_MCU_MODE_SFT,
--		.irq_fs_maskbit = IRQ7_MCU_MODE_MASK,
--		.irq_en_reg = AFE_IRQ_MCU_CON0,
--		.irq_en_shift = IRQ7_MCU_ON_SFT,
--		.irq_clr_reg = AFE_IRQ_MCU_CLR,
--		.irq_clr_shift = IRQ7_MCU_CLR_SFT,
--	},
--	[MT8183_IRQ_8] = {
--		.id = MT8183_IRQ_8,
--		.irq_cnt_reg = AFE_IRQ_MCU_CNT8,
--		.irq_cnt_shift = 0,
--		.irq_cnt_maskbit = 0x3ffff,
--		.irq_fs_reg = -1,
--		.irq_fs_shift = -1,
--		.irq_fs_maskbit = -1,
--		.irq_en_reg = AFE_IRQ_MCU_CON0,
--		.irq_en_shift = IRQ8_MCU_ON_SFT,
--		.irq_clr_reg = AFE_IRQ_MCU_CLR,
--		.irq_clr_shift = IRQ8_MCU_CLR_SFT,
--	},
--	[MT8183_IRQ_11] = {
--		.id = MT8183_IRQ_11,
--		.irq_cnt_reg = AFE_IRQ_MCU_CNT11,
--		.irq_cnt_shift = 0,
--		.irq_cnt_maskbit = 0x3ffff,
--		.irq_fs_reg = AFE_IRQ_MCU_CON2,
--		.irq_fs_shift = IRQ11_MCU_MODE_SFT,
--		.irq_fs_maskbit = IRQ11_MCU_MODE_MASK,
--		.irq_en_reg = AFE_IRQ_MCU_CON0,
--		.irq_en_shift = IRQ11_MCU_ON_SFT,
--		.irq_clr_reg = AFE_IRQ_MCU_CLR,
--		.irq_clr_shift = IRQ11_MCU_CLR_SFT,
--	},
--	[MT8183_IRQ_12] = {
--		.id = MT8183_IRQ_12,
--		.irq_cnt_reg = AFE_IRQ_MCU_CNT12,
--		.irq_cnt_shift = 0,
--		.irq_cnt_maskbit = 0x3ffff,
--		.irq_fs_reg = AFE_IRQ_MCU_CON2,
--		.irq_fs_shift = IRQ12_MCU_MODE_SFT,
--		.irq_fs_maskbit = IRQ12_MCU_MODE_MASK,
--		.irq_en_reg = AFE_IRQ_MCU_CON0,
--		.irq_en_shift = IRQ12_MCU_ON_SFT,
--		.irq_clr_reg = AFE_IRQ_MCU_CLR,
--		.irq_clr_shift = IRQ12_MCU_CLR_SFT,
--	},
-+	MT8183_AFE_IRQ(0),
-+	MT8183_AFE_IRQ(1),
-+	MT8183_AFE_IRQ(2),
-+	MT8183_AFE_IRQ(3),
-+	MT8183_AFE_IRQ(4),
-+	MT8183_AFE_IRQ(5),
-+	MT8183_AFE_IRQ(6),
-+	MT8183_AFE_IRQ(7),
-+	MT8183_AFE_IRQ_NOFS(8),
-+	MT8183_AFE_IRQ(11),
-+	MT8183_AFE_IRQ(12),
- };
- 
- static bool mt8183_is_volatile_reg(struct device *dev, unsigned int reg)
+@@ -522,86 +522,46 @@ static bool mt8183_is_volatile_reg(struct device *dev, unsigned int reg)
+ 	/* these auto-gen reg has read-only bit, so put it as volatile */
+ 	/* volatile reg cannot be cached, so cannot be set when power off */
+ 	switch (reg) {
+-	case AUDIO_TOP_CON0:	/* reg bit controlled by CCF */
+-	case AUDIO_TOP_CON1:	/* reg bit controlled by CCF */
++	case AUDIO_TOP_CON0 ... AUDIO_TOP_CON1:	/* reg bit controlled by CCF */
+ 	case AUDIO_TOP_CON3:
+-	case AFE_DL1_CUR:
+-	case AFE_DL1_END:
+-	case AFE_DL2_CUR:
+-	case AFE_DL2_END:
+-	case AFE_AWB_END:
+-	case AFE_AWB_CUR:
+-	case AFE_VUL_END:
+-	case AFE_VUL_CUR:
+-	case AFE_MEMIF_MON0:
+-	case AFE_MEMIF_MON1:
+-	case AFE_MEMIF_MON2:
+-	case AFE_MEMIF_MON3:
+-	case AFE_MEMIF_MON4:
+-	case AFE_MEMIF_MON5:
+-	case AFE_MEMIF_MON6:
+-	case AFE_MEMIF_MON7:
+-	case AFE_MEMIF_MON8:
+-	case AFE_MEMIF_MON9:
+-	case AFE_ADDA_SRC_DEBUG_MON0:
+-	case AFE_ADDA_SRC_DEBUG_MON1:
+-	case AFE_ADDA_UL_SRC_MON0:
+-	case AFE_ADDA_UL_SRC_MON1:
++	case AFE_DL1_CUR ... AFE_DL1_END:
++	case AFE_DL2_CUR ... AFE_DL2_END:
++	case AFE_AWB_END ... AFE_AWB_CUR:
++	case AFE_VUL_END ... AFE_VUL_CUR:
++	case AFE_MEMIF_MON0 ... AFE_MEMIF_MON9:
++	case AFE_ADDA_SRC_DEBUG_MON0 ... AFE_ADDA_SRC_DEBUG_MON1:
++	case AFE_ADDA_UL_SRC_MON0 ... AFE_ADDA_UL_SRC_MON1:
+ 	case AFE_SIDETONE_MON:
+-	case AFE_SIDETONE_CON0:
+-	case AFE_SIDETONE_COEFF:
++	case AFE_SIDETONE_CON0 ... AFE_SIDETONE_COEFF:
+ 	case AFE_BUS_MON0:
+-	case AFE_MRGIF_MON0:
+-	case AFE_MRGIF_MON1:
+-	case AFE_MRGIF_MON2:
+-	case AFE_I2S_MON:
++	case AFE_MRGIF_MON0 ... AFE_I2S_MON:
+ 	case AFE_DAC_MON:
+-	case AFE_VUL2_END:
+-	case AFE_VUL2_CUR:
+-	case AFE_IRQ0_MCU_CNT_MON:
+-	case AFE_IRQ6_MCU_CNT_MON:
+-	case AFE_MOD_DAI_END:
+-	case AFE_MOD_DAI_CUR:
+-	case AFE_VUL_D2_END:
+-	case AFE_VUL_D2_CUR:
+-	case AFE_DL3_CUR:
+-	case AFE_DL3_END:
++	case AFE_VUL2_END ... AFE_VUL2_CUR:
++	case AFE_IRQ0_MCU_CNT_MON ... AFE_IRQ6_MCU_CNT_MON:
++	case AFE_MOD_DAI_END ... AFE_MOD_DAI_CUR:
++	case AFE_VUL_D2_END ... AFE_VUL_D2_CUR:
++	case AFE_DL3_CUR ... AFE_DL3_END:
+ 	case AFE_HDMI_OUT_CON0:
+-	case AFE_HDMI_OUT_CUR:
+-	case AFE_HDMI_OUT_END:
+-	case AFE_IRQ3_MCU_CNT_MON:
+-	case AFE_IRQ4_MCU_CNT_MON:
+-	case AFE_IRQ_MCU_STATUS:
+-	case AFE_IRQ_MCU_CLR:
++	case AFE_HDMI_OUT_CUR ... AFE_HDMI_OUT_END:
++	case AFE_IRQ3_MCU_CNT_MON... AFE_IRQ4_MCU_CNT_MON:
++	case AFE_IRQ_MCU_STATUS ... AFE_IRQ_MCU_CLR:
+ 	case AFE_IRQ_MCU_MON2:
+-	case AFE_IRQ1_MCU_CNT_MON:
+-	case AFE_IRQ2_MCU_CNT_MON:
+-	case AFE_IRQ1_MCU_EN_CNT_MON:
+-	case AFE_IRQ5_MCU_CNT_MON:
++	case AFE_IRQ1_MCU_CNT_MON ... AFE_IRQ5_MCU_CNT_MON:
+ 	case AFE_IRQ7_MCU_CNT_MON:
+ 	case AFE_GAIN1_CUR:
+ 	case AFE_GAIN2_CUR:
+ 	case AFE_SRAM_DELSEL_CON0:
+-	case AFE_SRAM_DELSEL_CON2:
+-	case AFE_SRAM_DELSEL_CON3:
+-	case AFE_ASRC_2CH_CON12:
+-	case AFE_ASRC_2CH_CON13:
++	case AFE_SRAM_DELSEL_CON2 ... AFE_SRAM_DELSEL_CON3:
++	case AFE_ASRC_2CH_CON12 ... AFE_ASRC_2CH_CON13:
+ 	case PCM_INTF_CON2:
+-	case FPGA_CFG0:
+-	case FPGA_CFG1:
+-	case FPGA_CFG2:
+-	case FPGA_CFG3:
+-	case AUDIO_TOP_DBG_MON0:
+-	case AUDIO_TOP_DBG_MON1:
+-	case AFE_IRQ8_MCU_CNT_MON:
+-	case AFE_IRQ11_MCU_CNT_MON:
+-	case AFE_IRQ12_MCU_CNT_MON:
++	case FPGA_CFG0 ... FPGA_CFG1:
++	case FPGA_CFG2 ... FPGA_CFG3:
++	case AUDIO_TOP_DBG_MON0 ... AUDIO_TOP_DBG_MON1:
++	case AFE_IRQ8_MCU_CNT_MON ... AFE_IRQ12_MCU_CNT_MON:
+ 	case AFE_CBIP_MON0:
+-	case AFE_CBIP_SLV_MUX_MON0:
+-	case AFE_CBIP_SLV_DECODER_MON0:
++	case AFE_CBIP_SLV_MUX_MON0 ... AFE_CBIP_SLV_DECODER_MON0:
+ 	case AFE_ADDA6_SRC_DEBUG_MON0:
+-	case AFE_ADD6A_UL_SRC_MON0:
+-	case AFE_ADDA6_UL_SRC_MON1:
++	case AFE_ADD6A_UL_SRC_MON0... AFE_ADDA6_UL_SRC_MON1:
+ 	case AFE_DL1_CUR_MSB:
+ 	case AFE_DL2_CUR_MSB:
+ 	case AFE_AWB_CUR_MSB:
+@@ -611,55 +571,23 @@ static bool mt8183_is_volatile_reg(struct device *dev, unsigned int reg)
+ 	case AFE_VUL_D2_CUR_MSB:
+ 	case AFE_DL3_CUR_MSB:
+ 	case AFE_HDMI_OUT_CUR_MSB:
+-	case AFE_AWB2_END:
+-	case AFE_AWB2_CUR:
++	case AFE_AWB2_END ... AFE_AWB2_CUR:
+ 	case AFE_AWB2_CUR_MSB:
+-	case AFE_ADDA_DL_SDM_FIFO_MON:
+-	case AFE_ADDA_DL_SRC_LCH_MON:
+-	case AFE_ADDA_DL_SRC_RCH_MON:
+-	case AFE_ADDA_DL_SDM_OUT_MON:
+-	case AFE_CONNSYS_I2S_MON:
+-	case AFE_ASRC_2CH_CON0:
+-	case AFE_ASRC_2CH_CON2:
+-	case AFE_ASRC_2CH_CON3:
+-	case AFE_ASRC_2CH_CON4:
+-	case AFE_ASRC_2CH_CON5:
+-	case AFE_ASRC_2CH_CON7:
+-	case AFE_ASRC_2CH_CON8:
+-	case AFE_MEMIF_MON12:
+-	case AFE_MEMIF_MON13:
+-	case AFE_MEMIF_MON14:
+-	case AFE_MEMIF_MON15:
+-	case AFE_MEMIF_MON16:
+-	case AFE_MEMIF_MON17:
+-	case AFE_MEMIF_MON18:
+-	case AFE_MEMIF_MON19:
+-	case AFE_MEMIF_MON20:
+-	case AFE_MEMIF_MON21:
+-	case AFE_MEMIF_MON22:
+-	case AFE_MEMIF_MON23:
+-	case AFE_MEMIF_MON24:
+-	case AFE_ADDA_MTKAIF_MON0:
+-	case AFE_ADDA_MTKAIF_MON1:
++	case AFE_ADDA_DL_SDM_FIFO_MON ... AFE_ADDA_DL_SDM_OUT_MON:
++	case AFE_CONNSYS_I2S_MON ... AFE_ASRC_2CH_CON0:
++	case AFE_ASRC_2CH_CON2 ... AFE_ASRC_2CH_CON5:
++	case AFE_ASRC_2CH_CON7 ... AFE_ASRC_2CH_CON8:
++	case AFE_MEMIF_MON12 ... AFE_MEMIF_MON24:
++	case AFE_ADDA_MTKAIF_MON0 ... AFE_ADDA_MTKAIF_MON1:
+ 	case AFE_AUD_PAD_TOP:
+ 	case AFE_GENERAL1_ASRC_2CH_CON0:
+-	case AFE_GENERAL1_ASRC_2CH_CON2:
+-	case AFE_GENERAL1_ASRC_2CH_CON3:
+-	case AFE_GENERAL1_ASRC_2CH_CON4:
+-	case AFE_GENERAL1_ASRC_2CH_CON5:
+-	case AFE_GENERAL1_ASRC_2CH_CON7:
+-	case AFE_GENERAL1_ASRC_2CH_CON8:
+-	case AFE_GENERAL1_ASRC_2CH_CON12:
+-	case AFE_GENERAL1_ASRC_2CH_CON13:
++	case AFE_GENERAL1_ASRC_2CH_CON2 ... AFE_GENERAL1_ASRC_2CH_CON5:
++	case AFE_GENERAL1_ASRC_2CH_CON7 ... AFE_GENERAL1_ASRC_2CH_CON8:
++	case AFE_GENERAL1_ASRC_2CH_CON12 ... AFE_GENERAL1_ASRC_2CH_CON13:
+ 	case AFE_GENERAL2_ASRC_2CH_CON0:
+-	case AFE_GENERAL2_ASRC_2CH_CON2:
+-	case AFE_GENERAL2_ASRC_2CH_CON3:
+-	case AFE_GENERAL2_ASRC_2CH_CON4:
+-	case AFE_GENERAL2_ASRC_2CH_CON5:
+-	case AFE_GENERAL2_ASRC_2CH_CON7:
+-	case AFE_GENERAL2_ASRC_2CH_CON8:
+-	case AFE_GENERAL2_ASRC_2CH_CON12:
+-	case AFE_GENERAL2_ASRC_2CH_CON13:
++	case AFE_GENERAL2_ASRC_2CH_CON2 ... AFE_GENERAL2_ASRC_2CH_CON5:
++	case AFE_GENERAL2_ASRC_2CH_CON7 ... AFE_GENERAL2_ASRC_2CH_CON8:
++	case AFE_GENERAL2_ASRC_2CH_CON12 ... AFE_GENERAL2_ASRC_2CH_CON13:
+ 		return true;
+ 	default:
+ 		return false;
 -- 
 2.49.0.1045.g170613ef41-goog
 
