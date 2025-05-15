@@ -1,82 +1,111 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED67198823
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 22:24:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D311C198823;
+	Thu, 15 May 2025 22:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747347897; cv=none; b=Z+nQ84a+E+R+O5kh1Et1ucAj/d9oBbNMqaBwTtvlYiSzbuSEu8Im8WyQtybzheaQFFQS5L3+kOIhm5wfCab1STIhIFfBhV2s+M5GCe9sUC7Vv+qFpOJuGkO7KlKtFh3RK19G2fXLZCPXqke66FYtAwjHsGvTowUwT6j/cEZ4oIM=
+	t=1747347931; cv=none; b=Xg15XnHoXU8iZtX/hG/cLFq2FrmS5pz0rns0JPfHPAClxlP2GPmkKnc9o8YtuByP6nTFUcCYVR8KiPJHLgHTSDbt6c03UiFsLgUWVYUYRUsCOdYKOqWQFZHFVIr799TrkyW3LpCJNhDvcpKDgzoRGxe9/PBUK2co5KyN5blCdbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747347897; c=relaxed/simple;
-	bh=TLJPHWe7UMhZiT0n6XrFXrKP5yl9e1QIEBFASh6EgA4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=nrvHZ71OMwI+m5okp2wKPMWx6P4EIEtFlezd7syCqcw/BTSoci4UCPbaSev6aMhVNl3ChMes2Xjulp+EJSCDnTP/+qpgSWw2swUR8i351FrHW63T/iom6To8OYysxCPtMaiqzB2HSXgDw/DPd98liH/3w5r9EDpMHza9u6s0sA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q7tYoI7u; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qH29ssUe; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747347931; c=relaxed/simple;
+	bh=6FSa4xzac07nTKUuiZ5eHBluODj2JOGzX6Wf+8IItKE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iSyxm1n/0JtLzKDdlNTQbSWZSuNx8ZmTf0Ez8YCr5wJ82Ug/ffwhBJSGUkLYVbaplpmXowbzzTFs9ilwIVu7v6dJIj5S2GiXa8NDxz11YkAOLMdJKIZZryZgmeIFyNMXrrtG+wtkZmokZr0JOZTWUObXazj67AuflWVs62uAk2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SGGaY4Dm; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q7tYoI7u";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qH29ssUe"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747347893;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DPAUpnXzVSfXtutaNaPrgF9RzAR06Xkkh91/D39/wUo=;
-	b=Q7tYoI7uB3pGBbzyOh8tk85JGkzVS3bmjfAeErXUA2LtVuanRiejE+cPm2BEJDokoexn1x
-	szDuBIz6DCQcjdbR2mCYAuoH6X95dXykDfoJUpXXBYPHrAY5SgS2FLNr5YrQSuJmQxpUki
-	mdzB5Plu5DunZCt2laSCRRDmb86Z3Lo0AyEL/VO078AnnGRJi1qWXNcqCbCy0FBXEJ5TH0
-	tdi1WI2JUtMsBKeWBwKpvwCGomYfqHs/BApSmJurD355+jRdIi34IHMj2Er7AhgIFnFPzN
-	ja+hyWuHFjxiUXVElQV+AFY9XufXZM+N2CcgL93vjlmyCGLduqPSQVwbvav29A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747347893;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DPAUpnXzVSfXtutaNaPrgF9RzAR06Xkkh91/D39/wUo=;
-	b=qH29ssUe8lxuwc2zkh0RPjZDmeXKA1leu3D4amLJvvyR2IYyNc8GbMl9O1LF2dyTQM+plV
-	kdavssER1wB1HbCA==
-To: Brian Norris <briannorris@chromium.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, Tsai Sung-Fu
- <danielsftsai@google.com>, Douglas Anderson <dianders@chromium.org>,
- linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v2 2/2] genirq: Add kunit tests for depth counts
-In-Reply-To: <aCYit48N85WpjmiN@google.com>
-References: <20250514201353.3481400-3-briannorris@chromium.org>
- <202505152136.y04AHovS-lkp@intel.com> <aCYit48N85WpjmiN@google.com>
-Date: Fri, 16 May 2025 00:24:52 +0200
-Message-ID: <87ldqxikaz.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SGGaY4Dm"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-52403e39a23so762610e0c.2;
+        Thu, 15 May 2025 15:25:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747347928; x=1747952728; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IKoACcwZvqB4hjAADhBiXrdtznQVIY5lA2O4xWzuOU0=;
+        b=SGGaY4Dmo16/+p+eDrwILWSAMvyFixfdTXOo0vk6y5TnjLfGtRA8QpWsFdXrdPkvOg
+         g5g5o4ZUKWPWHPwP0NVgFG4UkRT0Jc5UkTU3uLyKsctC5MXkyoWbnQYICnj4xsUHgfKy
+         xyG1Z9t0FMZOLxvu4nSfw146gx2iACBbmk+FoLzyV2To616Q/S4m7zCIUvwWz6TpWMQ6
+         N7DHzpm3+x/B6fyFIBceLEykk+jcgF56euObJtZNGqtQvy2wO7ve+QhsytGLDoCRl0uq
+         Q6pvdcisgAyENOoNB/kvobp+gUVoRGyxrLkjbxF3gpWQ35ozwIhhjqr1uf2fyn9w+O9j
+         JTug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747347928; x=1747952728;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IKoACcwZvqB4hjAADhBiXrdtznQVIY5lA2O4xWzuOU0=;
+        b=mUdqWTS/GgbeWyPoYDEJEyIEMecWVJgeqOVgmyta2HmlC1euPzkxGmTNOUREl1shBN
+         GvMvlxaM0772dTe1BH40h3I09IzDaukiWdi8nzbAqnTWHwOTwU7BwZJk1lBWVuw0JW6C
+         fOtef4VfDqdIINvHnYxzTuV0DVhUQoTw3YJrHQuiPnLzeS941/3EtUdXILU3wFZp/KCf
+         5SuwzjUPTQjtM+mFoPztqhh1ehsYXrxSZ/cUk+U0bbEsygAeZp4JMfqmoDVh5t5hku8q
+         2ztl2UfXw9aUUgMTai3M01KFClYFY+g3QUplxxC303bMmWlMMSRSNrIyFGCc9jywG7f6
+         3YjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUmLSNgjvKiOipG+AapKrE/PopcMK2ElRvHWfV3ZJgXyZmsjX60XFyBju2QbZbP7MGKcZWru9jhko6+WKsRuiQ=@vger.kernel.org, AJvYcCV4HJKtuYL9aS+YKAv8VKvq62FtfTPxN5ur8E1MWaKSp7DOVUXa1Nx34JKwssJEtOeR17tPxAwSigU0/eA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYfounRe81ng91Obxg2TrulPvCEfuZbdEjUxokztWkoKDgPRK5
+	UbWN1iFZje1c5WNMS+mwiLapshNWaJjV+Q+BDjig4lmKSWaiZdYbfrtLjW8+fJUl
+X-Gm-Gg: ASbGncv85ao/R02cVraH28J/2Da1A46/kvvtBBP3A3Yk8pNZQ9vTtILYm68ocouKoje
+	Z6yN9UTMtm7MhV0tQcJoVpF4Tddl7oK73Qyn/vE85SwAvY6sy7U7aT3evVqFvH5PRLTR3hyCjjB
+	n5v96fmbmgMug03Sizy9MpCUBaMhMTBAACtfhSqnlFjoIj95v20khiAHx9sCWIvIKeaRP8bWg1W
+	ELVgwwugpEZFJwWnTmWNK1n+GaF6uGrE6ZuIA5V8+8v6uMqtfVLu8yN3iNTWYYsaOG2sahhpCJX
+	Jio3qncxSpirQxZygCpW7pJ2EKLwgwuS/sHoskd2TOyka6HG8PQ+MTtmanxkwCiJHyUJe+a5rg8
+	=
+X-Google-Smtp-Source: AGHT+IH0Tx0zRc430b72Scg4pBsmQupJJ3uqemf4Bh0+E2crHEPLAfCrR3/q35Bega+vTcWuytGTlQ==
+X-Received: by 2002:a05:6122:88c:b0:52a:cdd8:fc33 with SMTP id 71dfb90a1353d-52dba614e02mr2282226e0c.0.1747347928588;
+        Thu, 15 May 2025 15:25:28 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14d:4c64:81ec:7409:107a:a63b:a3da])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52dba9408f5sm724417e0c.15.2025.05.15.15.25.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 15:25:28 -0700 (PDT)
+From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+To: jjohnson@kernel.org
+Cc: ~lkcamp/patches@lists.sr.ht,
+	linux-wireless@vger.kernel.org,
+	ath11k@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] wifi: ath11k: clean-up during wrong ath11k_crypto_mode
+Date: Thu, 15 May 2025 19:22:48 -0300
+Message-ID: <20250515222520.4922-1-rodrigo.gobbi.7@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 15 2025 at 10:21, Brian Norris wrote:
-> On Thu, May 15, 2025 at 10:01:18PM +0800, kernel test robot wrote:
->> patch link:    https://lore.kernel.org/r/20250514201353.3481400-3-briannorris%40chromium.org
->> patch subject: [PATCH v2 2/2] genirq: Add kunit tests for depth counts
->
-> First of all, thanks for the help, and for applying patch 1. I see that:
-> 1) this bot noticed a trivial problem with patch 2; and
-> 2) I received notification that patch 2 was applied to tip/irq/core, but
-> 3) I can't find it there any more.
->
-> I'm not sure if #3 is because you dropped it (e.g., due to #1's report)
-> or some other reason, so I'm not sure what to do next. Possibilities:
+if ath11k_crypto_mode is invalid (not ATH11K_CRYPT_MODE_SW/ATH11K_CRYPT_MODE_HW),
+ath11k_core_qmi_firmware_ready() will not undo some actions that was previously
+started/configured. It's reasonable to undo things during this condition, fixing
+the following smatch warning:
 
-#3 because I dropped it.
+drivers/net/wireless/ath/ath11k/core.c:2166 ath11k_core_qmi_firmware_ready()
+warn: missing unwind goto?
 
-> (a) send the trivial fix separately, as a fixup (against what tree?)
-> (b) resend an improved patch 2 on its own, against tip/irq/core
-> (c) just drop it, because you have deeper reasons to not want these
->     tests.
+Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+---
+Changelog:
+v2: add smatch warn at commit msg
+v1: https://lore.kernel.org/linux-wireless/20250515004258.87234-1-rodrigo.gobbi.7@gmail.com/
+---
+ drivers/net/wireless/ath/ath11k/core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-#b please
+diff --git a/drivers/net/wireless/ath/ath11k/core.c b/drivers/net/wireless/ath/ath11k/core.c
+index 2e9f8a5e61e4..fd3017c444a4 100644
+--- a/drivers/net/wireless/ath/ath11k/core.c
++++ b/drivers/net/wireless/ath/ath11k/core.c
+@@ -2163,7 +2163,9 @@ int ath11k_core_qmi_firmware_ready(struct ath11k_base *ab)
+ 		break;
+ 	default:
+ 		ath11k_info(ab, "invalid crypto_mode: %d\n", ath11k_crypto_mode);
+-		return -EINVAL;
++		ret = -EINVAL;
++		ath11k_dp_free(ab);
++		goto err_firmware_stop;
+ 	}
+ 
+ 	if (ath11k_frame_mode == ATH11K_HW_TXRX_RAW)
+-- 
+2.49.0
 
-Thanks,
-
-        tglx
