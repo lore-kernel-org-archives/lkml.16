@@ -1,192 +1,102 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4328F2980D2
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DD4297B60;
+	Thu, 15 May 2025 11:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747308632; cv=none; b=gTl/SCSo9xMdtCSoNYNp6IUrDa7EzVT7h1VvX7oXTiwKoZiofcYMqOs4lfQ4DCgxV32pEgmOSwp37QGuiqKp+SGUt+U1WrbTt/LcJ2879RdPHwKCFYk8u+Yp5uIFn4Hxj14XosqylADMZk8/xXsghDB5I+p2yMoNv4a9sIdEmvE=
+	t=1747308634; cv=none; b=X7SpzmWlXlK+mLtAVFyV5784Yl0sc3jqbSA8Vg9pT5n5BtfdQdUTDzHIwyBo4HQQyAKXu1PbEtVHmzI/SWk2OKBxP6/nzoWVSq4PztDbwQP7AfUuaFo159iFL6CbHf4SSxlXwGEx7dfk1uQXzP1QcCnzopv6nGZgTBCSit9A8BA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747308632; c=relaxed/simple;
-	bh=UxmxWDtTNxz4UkuAhMesCDbToXhLDINegkNSlIWcX+s=;
+	s=arc-20240116; t=1747308634; c=relaxed/simple;
+	bh=qs/HCp/tuPqxoIZBhL/5F24zhipN07IbjkxVJVKrgz0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=orCkUDgW7aQkXyh4GclvjJ6y2j15gh7jAkCOk+vCLJvgWHUaBU19F1xTvSD85OB0jO9xlNvU25CkC1PcWa+ogub7Uit9wyOoHHumzpay2eAmOY9KscyB0s8mMuxs0kw3HVhauHVCGe4wEBtYBV79wcd/uABq2OiLQjateL4EilY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MvWNruar; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=RUICd+rYl96X6NMZOkQ6E49n3GTsBUhH77yMNy6uTqsHsesMeA+GXTMgUyknf00oNgz7CsjDXDagA6dAekCPzCyfUq7TIKNeC4PGrkaXDKvpJBotcFngBYa3M3V+QzDyPZwDf/y88SXslsVJSYmJ7uMh0lpzf70t7qhwB5oXghM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OGtrEPQ+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MvWNruar"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a0b9625662so705087f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 04:30:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747308628; x=1747913428; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=cxppJmf9UDttPWLLLNWxW9/hdmIXIIsGflBYvlk55PI=;
-        b=MvWNruarb3bF56bdPtbZWFyWsrye3rm9Bl0+YZCxK69bxDp32Ay1I34dAAhpVsnGIn
-         dSOmJYLT8UTbp6iU2ddozqhvd61+KxYDQCkYVgWBIFF2JGNZY+WgPsWqbRph23dmslHv
-         UvGBebu6rS/VQxxJAGbgzKo+sIGYBETkOncKvRj8ZCI2p8tYnikzmCAv5/5rKjTJZNop
-         V6iCbXPVf+32J0ZELwJ/jiLICyXNj2m/QsmA6yu6Ha/tYFaLofsbjhN5FgKPZzqp0IPN
-         ppgBI4cQp/1iWRC0si1u3j2jbyODHjm1rLEDQo6M1fSaHyhWE3S5vgBHr09xS5ZpN+NF
-         3K9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747308628; x=1747913428;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cxppJmf9UDttPWLLLNWxW9/hdmIXIIsGflBYvlk55PI=;
-        b=mmGb/KMgYXvKNYS4tO1zl+L3LyrGVdK8tEW4rPqyFSC+FusY5qMnBoy1jxtspHH7Bp
-         teoh9GHJQc4qtiwJ9Bq2jKGuD8rgAtZ9NvEcCeAeDHFBYmdRq06RCRk3BgyUhS6jSq/c
-         cmv9djN48JJKAngfyQgKnBzfEzw328V1L3DcYDgzfzXsA9DpAlNAK9Yph0twzeuw9Jcv
-         gZu6TaB16Ytom6PBhslaVFJIGEKXpNPmBss1QBuOO02S/VleBwH8T98cLli876ZZyQX0
-         xVzjZuYVbstELexs2GtJTX5LWxDMImLQ3fmTgMZkbqaW18h4Rppzx6DJoNXZ4qEkieX+
-         K2bQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWsAUD/mdwaOmZFPbEIHA2uzByFqYczJ8nLG+daMlvMn5gWywBys9WFCH+iEdzHxsYhowf6W5BGl5zREVI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhTp2Y+db/QH8jROgdIKU/xHOrFrBcCoezYSCBNnENKBVRlFo5
-	xWu5qnuexKK7kwSlGyrQ4ZZTWRA1TQ6cuiqcJSATJfts20PBKfuN9r4MmgOf1g==
-X-Gm-Gg: ASbGnctBBNngg2WPLXJ25PSuB5Pult7Xk23skCjZk6P4ipLjlbCfA4x6RZ1En6ZL1zu
-	lXh7NFlHR30QOFP8HGOgWN9vagos/hjTmKgfw7P9XW+jg9IHKqAvj9l7a0tZUn9nSrle+lrZsMe
-	TYhDaZ6hqskRgaheESufsA8Dnc8fo7SeZQny+XeDavZq59Vihzc2w4YcclEVARzOF3z7LGiws4O
-	J954mB1PYUnBqsDlnMtJtCoOc5tpeOBxIgyd2EWxP1t9KTdqKZU9S+RqA9gfEa48dZKlvEvRPVT
-	YIOWiWrzJ8SHarpu38QVc+C7vFflT96qjf6bzO7xYsNWLLiQsl+u1rxV7JbF9O/gBtfhMJH5Uyj
-	lhuz1fMbLFHSRAA==
-X-Google-Smtp-Source: AGHT+IFjyhky0WjJzQJQ5Ed1Oysv28o+Tx9PsLGNR0Eb6F+Ar6MSQ3hQvGlBY2Vc8Vp6DQEa27in4A==
-X-Received: by 2002:a5d:5983:0:b0:3a1:f6fd:63fc with SMTP id ffacd0b85a97d-3a34994b188mr6493795f8f.47.1747308628493;
-        Thu, 15 May 2025 04:30:28 -0700 (PDT)
-Received: from thinkpad (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a22ea7a53asm10520669f8f.23.2025.05.15.04.30.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 04:30:27 -0700 (PDT)
-Date: Thu, 15 May 2025 12:30:24 +0100
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Christian Bruel <christian.bruel@foss.st.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
-	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, p.zabel@pengutronix.de, 
-	thippeswamy.havalige@amd.com, shradha.t@samsung.com, quic_schintav@quicinc.com, 
-	cassel@kernel.org, johan+linaro@kernel.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 0/9] Add STM32MP25 PCIe drivers
-Message-ID: <ey7s64iavsb64eavu7i55b7nflqexn7nb65wcrlrqgo63mv6jt@ueut7quj6qpp>
-References: <20250514091530.3249364-1-christian.bruel@foss.st.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OGtrEPQ+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BE78C4CEF1;
+	Thu, 15 May 2025 11:30:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747308631;
+	bh=qs/HCp/tuPqxoIZBhL/5F24zhipN07IbjkxVJVKrgz0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OGtrEPQ+qNi7DwYEWf9t2kIgX0yUK9xH93+d7phxdg0AhZpJL8Q23vTkPWBpbdZcQ
+	 bXze78eHqzJvcVEJvTQ2pj8RI/dkYek4k8UgyOEAIX8Xuw9EC425OWr8HuwHsmonBH
+	 nHp80i5JXzG4g5CyMBuV1HhHd3ml37j7IsdMZWVTt8G+QEtWmOhbj8nlE8lTFZT5BE
+	 DT6MEcUk901uV5LINbw5MeQPPKiGMt1wcItLUgErooF2+a+BCOFi9bFR7ZwcoTHpJq
+	 ydt825eVVBdziEPDl5HSeK+IsiheqlUYUprKVeLYqZxZDhVs3c9t7zixf4Au5pU6pG
+	 P73SeOiIC+Mig==
+Date: Thu, 15 May 2025 13:30:26 +0200
+From: Mark Brown <broonie@kernel.org>
+To: Artur Weber <aweber.kernel@gmail.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Stanislav Jakubek <stano.jakubek@gmail.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v8 4/9] mfd: bcm590xx: Add support for multiple device
+ types + BCM59054 compatible
+Message-ID: <aCXQUu97HL_yrH89@finisterre.sirena.org.uk>
+References: <20250430-bcm59054-v8-0-e4cf638169a4@gmail.com>
+ <20250430-bcm59054-v8-4-e4cf638169a4@gmail.com>
+ <20250509140957.GD2492385@google.com>
+ <aCRZzwW0w8oVWLUp@finisterre.sirena.org.uk>
+ <20250515071357.GD2936510@google.com>
+ <aCWfre2-n_PSuhxR@finisterre.sirena.org.uk>
+ <20250515092000.GF2936510@google.com>
+ <aCW0822BVpfKV2NL@finisterre.sirena.org.uk>
+ <8beeddcf-1dc7-4af8-b287-4c896852b258@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="EfsCzTWB3diViB+9"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250514091530.3249364-1-christian.bruel@foss.st.com>
+In-Reply-To: <8beeddcf-1dc7-4af8-b287-4c896852b258@gmail.com>
+X-Cookie: Well begun is half done.
 
-On Wed, May 14, 2025 at 11:15:21AM +0200, Christian Bruel wrote:
-> Changes in v9:
->    - Describe atu and dbi2 shadowed registers in pcie_ep node
->    Address RC and EP drivers comments from Manivanna:
->    - Use dev_error_probe() for pm_runtime_enable() calls
->    - Reword Kconfig help message
->    - Move pm_runtime_get_noresume() before devm_pm_runtime_enable()
 
-Please do not post the next revision without resolving all the comments for the
-previous one. It just adds more noise.
+--EfsCzTWB3diViB+9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-- Mani
+On Thu, May 15, 2025 at 01:28:15PM +0200, Artur Weber wrote:
+> On 5/15/25 11:33, Mark Brown wrote:
+> > On Thu, May 15, 2025 at 10:20:00AM +0100, Lee Jones wrote:
 
-> 
-> Changes in v8:
->    - Whitespace in comment
->    
-> Changes in v7:
->    - Use device_init_wakeup to enable wakeup
->    - Fix comments (Bjorn)
-> 
-> Changes in v6:
->    - Call device_wakeup_enable() to fix WAKE# wakeup.
->    Address comments from Manivanna:
->    - Fix/Add Comments
->    - Fix DT indents
->    - Remove dw_pcie_ep_linkup() in EP start link
->    - Add PCIE_T_PVPERL_MS delay in RC PERST# deassert
->    
-> Changes in v5:
->    Address driver comments from Manivanna:
->    - Use dw_pcie_{suspend/resume}_noirq instead of private ones.
->    - Move dw_pcie_host_init() to probe
->    - Add stm32_remove_pcie_port cleanup function
->    - Use of_node_put in stm32_pcie_parse_port
->    - Remove wakeup-source property
->    - Use generic dev_pm_set_dedicated_wake_irq to support wake# irq
->    
-> Changes in v4:
->    Address bindings comments Rob Herring
->    - Remove phy property form common yaml
->    - Remove phy-name property
->    - Move wake_gpio and reset_gpio to the host root port
->    
-> Changes in v3:
->    Address comments from Manivanna, Rob and Bjorn:
->    - Move host wakeup helper to dwc core (Mani)
->    - Drop num-lanes=<1> from bindings (Rob)
->    - Fix PCI address of I/O region (Mani)
->    - Moved PHY to a RC rootport subsection (Bjorn, Mani)
->    - Replaced dma-limit quirk by dma-ranges property (Bjorn)
->    - Moved out perst assert/deassert from start/stop link (Mani)
->    - Drop link_up test optim (Mani)
->    - DT and comments rephrasing (Bjorn)
->    - Add dts entries now that the combophy entries has landed
->    - Drop delaying Configuration Requests
-> 
-> Changes in v2:
->    - Fix st,stm32-pcie-common.yaml dt_binding_check	
-> 
-> Changes in v1:
->    Address comments from Rob Herring and Bjorn Helgaas:
->    - Drop st,limit-mrrs and st,max-payload-size from this patchset
->    - Remove single reset and clocks binding names and misc yaml cleanups
->    - Split RC/EP common bindings to a separate schema file
->    - Use correct PCIE_T_PERST_CLK_US and PCIE_T_RRS_READY_MS defines
->    - Use .remove instead of .remove_new
->    - Fix bar reset sequence in EP driver
->    - Use cleanup blocks for error handling
->    - Cosmetic fixes
-> 
-> Christian Bruel (9):
->   dt-bindings: PCI: Add STM32MP25 PCIe Root Complex bindings
->   PCI: stm32: Add PCIe host support for STM32MP25
->   dt-bindings: PCI: Add STM32MP25 PCIe Endpoint bindings
->   PCI: stm32: Add PCIe Endpoint support for STM32MP25
->   MAINTAINERS: add entry for ST STM32MP25 PCIe drivers
->   arm64: dts: st: add PCIe pinctrl entries in stm32mp25-pinctrl.dtsi
->   arm64: dts: st: Add PCIe Root Complex mode on stm32mp251
->   arm64: dts: st: Add PCIe Endpoint mode on stm32mp251
->   arm64: dts: st: Enable PCIe on the stm32mp257f-ev1 board
-> 
->  .../bindings/pci/st,stm32-pcie-common.yaml    |  33 ++
->  .../bindings/pci/st,stm32-pcie-ep.yaml        |  67 +++
->  .../bindings/pci/st,stm32-pcie-host.yaml      | 112 +++++
->  MAINTAINERS                                   |   7 +
->  arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi |  20 +
->  arch/arm64/boot/dts/st/stm32mp251.dtsi        |  57 +++
->  arch/arm64/boot/dts/st/stm32mp257f-ev1.dts    |  21 +
->  drivers/pci/controller/dwc/Kconfig            |  24 +
->  drivers/pci/controller/dwc/Makefile           |   2 +
->  drivers/pci/controller/dwc/pcie-stm32-ep.c    | 411 ++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-stm32.c       | 364 ++++++++++++++++
->  drivers/pci/controller/dwc/pcie-stm32.h       |  16 +
->  12 files changed, 1134 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-common.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-ep.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-host.yaml
->  create mode 100644 drivers/pci/controller/dwc/pcie-stm32-ep.c
->  create mode 100644 drivers/pci/controller/dwc/pcie-stm32.c
->  create mode 100644 drivers/pci/controller/dwc/pcie-stm32.h
-> 
-> -- 
-> 2.34.1
-> 
+> > > I can go with 2 in this case.  Applying in dribs-and-drabs as Acks come
+> > > in would be sub-optimal and would likely end up in a mess.
 
--- 
-மணிவண்ணன் சதாசிவம்
+> > Well, then just going a head and applying them on a branch with a tag
+> > seems easier than delaying then.
+
+> I can split the patchset into two parts (one for MFD, one for regulator)
+> if it helps.
+
+There's still a dependency on the MFD bits whatever happens.
+
+--EfsCzTWB3diViB+9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgl0FIACgkQJNaLcl1U
+h9CRQQf/Wx34agRsQjJ2L7RzP4M/Z0iU+/Xw0es0YHN1eDqCFQ7368/GShTJ7J4U
+utqRkkzJTWqNvk0DQeHY4GsMCk6yPIrIR6cOENq8gUciYHzdm66JombPUN2mnqFs
+z89Yg5kvAjbqoMjMAvppNzwgkTfMH/TtGFByO8+C8AdgXiepwJuNWKQTvMELoJ6A
+Uy3wTygq9HlCCgguqG4p0CZJF+f3wNbDaRc2J9aes3GifYM95AOa46rdaUhz4EhV
+2hDqSxBUnFIMHpFnWKaMr2o8nfWf29UY2TsqjOvoDhXnCsKSKuGvzIgZSk0FxCpG
+v+6XIegFtSG6KQfjGQKcIH3V7sGk9w==
+=G2Oh
+-----END PGP SIGNATURE-----
+
+--EfsCzTWB3diViB+9--
