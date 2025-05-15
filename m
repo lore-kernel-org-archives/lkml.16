@@ -1,62 +1,287 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04C461FCE;
-	Thu, 15 May 2025 13:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E8472634;
+	Thu, 15 May 2025 13:55:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747317288; cv=none; b=IdSHSa7nVB46mZWugUtwq10IdpfA0YpTkeL05dymh7IrOlptPkcacuL/09LOD10As/koG4mGJPBAbJV/ifhAWXNeBiV5YyDOobwttO0ZlJeONhpvtXW3CTTrjxfaPzzzR+DXvRnUqpYrRIshuz1R5gcFzcY+WRl3IoW6k8O+97s=
+	t=1747317352; cv=none; b=GxFiy9fG2IpwafQFhQfBR7C5ss4DYLN3sxbCJ41Jiy3Df+ko+JW8p77rYwUwFKdwAOMpzCdZ/FTdbiHVgMVGnk8vJadv90FhpQky09T+DjqkwXHgVjjQddqT5g0HM+1RHPNWQjm3zP1PaRM1Jtlie03bzD4eX2SZxxfTAuVEyE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747317288; c=relaxed/simple;
-	bh=DwYIY8Z+5lq41YhvHpTSD/sEClinlMmnggDNbzx1XNM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uvXPoVgkDYkZV27YyMO6E7BgtrCmlu/qptoBU7lo6bTPuUH9MMSGPrUsRWKV32jZaoMgAFNohFcAX0pHdVyUt2qcDesgl0ygHKGgH4c9+szFo5j8c/+MjRgq/+5IEyQntgd62Sj9KvpfyAVBxtBPu06lMJwDhlbs3ApGn+i4xKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=blNXYurc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747317352; c=relaxed/simple;
+	bh=7AM5ztg5r7bEVlB2/ZPiT2ZrAH5zEW5ZObUZgEbwg3Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FNDno9ALABjsQV3z4BJw1Y1+Tvb8j+D31SFrpq070Vt7igB1rlwppaZo4+nbqGnQ+K/7qdijCYHwUnO0HfMRwglj2F7Bea07DsJzNUy5dlpnbslFB7M2I0zGdgr+hJbHu/GAn5BUC1sNUo//RpEtCtd0N/yLt32PEbn8Ji4b3sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=afCfW+f1; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="blNXYurc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D329FC4CEE7;
-	Thu, 15 May 2025 13:54:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747317286;
-	bh=DwYIY8Z+5lq41YhvHpTSD/sEClinlMmnggDNbzx1XNM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=blNXYurckmoVa7fjtLKqzP4GpQD3MnKv0TLSmG9kBhBdQqoC53jG4Q0O+3Q2osPDX
-	 Tu4laPQ7r+qqdNxuWL7x6aGzcu4y1kYhnP2U6/xnx6THfxHuHt9n0LBTbo5/jk6mVS
-	 w0/rE5i9QwH9kqesD52Yj+a7Wt/uvGsk+Vk+KC4subwNbe61+bvAaNV7Ab2oQzP5ud
-	 4jCDeMisWKSC/ysuZxvk1vGDPQgoaarwK368FryFDMyIrL0PaZS8vXOKfP/5BLinCf
-	 fCem7KE6BKs498nZlrVBHD7aXZxHWG+g+qrE9bUU508/+icqY7VIheV4nFh+nHJHYM
-	 JZiu2mwtPFh2A==
-Date: Thu, 15 May 2025 06:54:44 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Ronak Doshi <ronak.doshi@broadcom.com>
-Cc: netdev@vger.kernel.org, Guolin Yang <guolin.yang@broadcom.com>, Broadcom
- internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew
- Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Ronghua
- Zhang <ronghua@vmware.com>, Bhavesh Davda <bhavesh@vmware.com>, Shreyas
- Bhatewara <sbhatewara@vmware.com>, linux-kernel@vger.kernel.org (open list)
-Subject: Re: [PATCH net] vmxnet3: update MTU after device quiesce
-Message-ID: <20250515065444.60df21c0@kernel.org>
-In-Reply-To: <20250513210243.1828-1-ronak.doshi@broadcom.com>
-References: <20250513210243.1828-1-ronak.doshi@broadcom.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="afCfW+f1"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54FCgCBY002495;
+	Thu, 15 May 2025 13:55:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=D8Zkzg6+jShC5MWa9
+	L+V8BhRRKNe9yq/QHgWeXrDV7M=; b=afCfW+f1xs56qKpDIXBnNj+gwFlLLZYSB
+	QqDGS4h/eAIF0Cso/aPm9Hfeeh0hWryb82ZztUiC0NrIe4fFBoSpvXwyBIkJTkHq
+	nh+kQrhsXQ+ut2iyQAuaVTokJfwzNt7YI29ftzTf8U5yAJFXHOsTL2JkWiVo6tEr
+	gU6zU7O+4kTP+O88/nUwWxuzn6xGI1XCkNKz+B2ovxIAp99fS7CP2sV8AEu5ruaT
+	jf2pr/Jt6+05PvRmDWSUfiCtIhFbQelAOFXkmZ/AMY3ly8zAVGRkebwsdEaTGGXn
+	p8lyJr8gRLEsd4Pq0fzqKdKOnS60Nvd29RuQolj3piePMuuV9Nj+Q==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46n0v6msmr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 May 2025 13:55:42 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54FDoYnB008311;
+	Thu, 15 May 2025 13:55:41 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46n0v6msmn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 May 2025 13:55:41 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54FAmrwW026961;
+	Thu, 15 May 2025 13:55:41 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46mbfpjgv4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 May 2025 13:55:40 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54FDtdaJ51708328
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 15 May 2025 13:55:39 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 45DF720043;
+	Thu, 15 May 2025 13:55:39 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2E81F20040;
+	Thu, 15 May 2025 13:55:39 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 15 May 2025 13:55:39 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
+	id D23D6E0F9B; Thu, 15 May 2025 15:55:38 +0200 (CEST)
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Daniel Axtens <dja@axtens.net>, Harry Yoo <harry.yoo@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        kasan-dev@googlegroups.com, linux-s390@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH v9 1/1] kasan: Avoid sleepable page allocation from atomic context
+Date: Thu, 15 May 2025 15:55:38 +0200
+Message-ID: <c61d3560297c93ed044f0b1af085610353a06a58.1747316918.git.agordeev@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <cover.1747316918.git.agordeev@linux.ibm.com>
+References: <cover.1747316918.git.agordeev@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=IqAecK/g c=1 sm=1 tr=0 ts=6825f25e cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=dt9VzEwgFbYA:10 a=pGLkceISAAAA:8 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=JPUNfvWgwyJmovPnq6kA:9
+X-Proofpoint-ORIG-GUID: ydPVqpzFxPM0z_9oTLGhcjSKAdHNRpLv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDEzNCBTYWx0ZWRfXypSuCdgFy7aN Vf7FcabpAUzJk0DkkGwvfW1LvTvwzakjaP2vcAdfxEdOcTao1f5bKPukFCEguAKsZGrsk1Z+TKL rsU01iPRECJ5ZH8rPGzacTasePzv7VGWe8OLFo6zdNAeLWgpCGpd1BLU6ZtZ0Wfz9revA072y2q
+ uhrKQlakcujuMbbZD0KfiDLEWjo+c9S/kxji3HDqmOtwcdm+BP+fMYblpBzWRSvM1Qr/LEB7ei/ ypUWjMYAN3vRrM27Kspl24jwZtNmLk38h8A5PnTnU+E9RtE9+3DJHBgwexHvN4ku+G7VHNT0+Kb PyhLP4cMGUEjKxJ9U0YV39sEAS0bPEJp0QNEkLYVKYlmp8zA8fvfR/E6r3iy1YrmyTZEN8jlbsH
+ FKtiUyE6Yf8j9JEDI5LUvEOCvsrgANYFEEhEiMmPl+pp7F1HGJvrH2oDj1TACtQDZDU0JtUV
+X-Proofpoint-GUID: h3dLozVcWtnqxc6yylykVEyeIFyaqAnC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-15_06,2025-05-14_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ adultscore=0 lowpriorityscore=0 phishscore=0 impostorscore=0
+ priorityscore=1501 clxscore=1015 spamscore=0 mlxlogscore=598 bulkscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505150134
 
-On Tue, 13 May 2025 21:02:40 +0000 Ronak Doshi wrote:
-> @@ -3619,6 +3617,7 @@ vmxnet3_change_mtu(struct net_device *netdev, int new_mtu)
->  	if (netif_running(netdev)) {
->  		vmxnet3_quiesce_dev(adapter);
->  		vmxnet3_reset_dev(adapter);
-> +		WRITE_ONCE(netdev->mtu, new_mtu);
->  
->  		/* we need to re-create the rx queue based on the new mtu */
->  		vmxnet3_rq_destroy_all(adapter);
+apply_to_pte_range() enters the lazy MMU mode and then invokes
+kasan_populate_vmalloc_pte() callback on each page table walk
+iteration. However, the callback can go into sleep when trying
+to allocate a single page, e.g. if an architecutre disables
+preemption on lazy MMU mode enter.
 
-Maybe a nit pick but wouldn't it make the most sense to place the write
-after all teardown related code? So after vmxnet3_rq_destroy_all() ?
+On s390 if make arch_enter_lazy_mmu_mode() -> preempt_enable()
+and arch_leave_lazy_mmu_mode() -> preempt_disable(), such crash
+occurs:
+
+[    0.663336] BUG: sleeping function called from invalid context at ./include/linux/sched/mm.h:321
+[    0.663348] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 2, name: kthreadd
+[    0.663358] preempt_count: 1, expected: 0
+[    0.663366] RCU nest depth: 0, expected: 0
+[    0.663375] no locks held by kthreadd/2.
+[    0.663383] Preemption disabled at:
+[    0.663386] [<0002f3284cbb4eda>] apply_to_pte_range+0xfa/0x4a0
+[    0.663405] CPU: 0 UID: 0 PID: 2 Comm: kthreadd Not tainted 6.15.0-rc5-gcc-kasan-00043-gd76bb1ebb558-dirty #162 PREEMPT
+[    0.663408] Hardware name: IBM 3931 A01 701 (KVM/Linux)
+[    0.663409] Call Trace:
+[    0.663410]  [<0002f3284c385f58>] dump_stack_lvl+0xe8/0x140
+[    0.663413]  [<0002f3284c507b9e>] __might_resched+0x66e/0x700
+[    0.663415]  [<0002f3284cc4f6c0>] __alloc_frozen_pages_noprof+0x370/0x4b0
+[    0.663419]  [<0002f3284ccc73c0>] alloc_pages_mpol+0x1a0/0x4a0
+[    0.663421]  [<0002f3284ccc8518>] alloc_frozen_pages_noprof+0x88/0xc0
+[    0.663424]  [<0002f3284ccc8572>] alloc_pages_noprof+0x22/0x120
+[    0.663427]  [<0002f3284cc341ac>] get_free_pages_noprof+0x2c/0xc0
+[    0.663429]  [<0002f3284cceba70>] kasan_populate_vmalloc_pte+0x50/0x120
+[    0.663433]  [<0002f3284cbb4ef8>] apply_to_pte_range+0x118/0x4a0
+[    0.663435]  [<0002f3284cbc7c14>] apply_to_pmd_range+0x194/0x3e0
+[    0.663437]  [<0002f3284cbc99be>] __apply_to_page_range+0x2fe/0x7a0
+[    0.663440]  [<0002f3284cbc9e88>] apply_to_page_range+0x28/0x40
+[    0.663442]  [<0002f3284ccebf12>] kasan_populate_vmalloc+0x82/0xa0
+[    0.663445]  [<0002f3284cc1578c>] alloc_vmap_area+0x34c/0xc10
+[    0.663448]  [<0002f3284cc1c2a6>] __get_vm_area_node+0x186/0x2a0
+[    0.663451]  [<0002f3284cc1e696>] __vmalloc_node_range_noprof+0x116/0x310
+[    0.663454]  [<0002f3284cc1d950>] __vmalloc_node_noprof+0xd0/0x110
+[    0.663457]  [<0002f3284c454b88>] alloc_thread_stack_node+0xf8/0x330
+[    0.663460]  [<0002f3284c458d56>] dup_task_struct+0x66/0x4d0
+[    0.663463]  [<0002f3284c45be90>] copy_process+0x280/0x4b90
+[    0.663465]  [<0002f3284c460940>] kernel_clone+0xd0/0x4b0
+[    0.663467]  [<0002f3284c46115e>] kernel_thread+0xbe/0xe0
+[    0.663469]  [<0002f3284c4e440e>] kthreadd+0x50e/0x7f0
+[    0.663472]  [<0002f3284c38c04a>] __ret_from_fork+0x8a/0xf0
+[    0.663475]  [<0002f3284ed57ff2>] ret_from_fork+0xa/0x38
+
+Instead of allocating single pages per-PTE, bulk-allocate the
+shadow memory prior to applying kasan_populate_vmalloc_pte()
+callback on a page range.
+
+Suggested-by: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: stable@vger.kernel.org
+Fixes: 3c5c3cfb9ef4 ("kasan: support backing vmalloc space with real shadow memory")
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+---
+ mm/kasan/shadow.c | 92 +++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 78 insertions(+), 14 deletions(-)
+
+diff --git a/mm/kasan/shadow.c b/mm/kasan/shadow.c
+index 88d1c9dcb507..d2c70cd2afb1 100644
+--- a/mm/kasan/shadow.c
++++ b/mm/kasan/shadow.c
+@@ -292,33 +292,99 @@ void __init __weak kasan_populate_early_vm_area_shadow(void *start,
+ {
+ }
+ 
++struct vmalloc_populate_data {
++	unsigned long start;
++	struct page **pages;
++};
++
+ static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+-				      void *unused)
++				      void *_data)
+ {
+-	unsigned long page;
++	struct vmalloc_populate_data *data = _data;
++	struct page *page;
+ 	pte_t pte;
++	int index;
+ 
+ 	if (likely(!pte_none(ptep_get(ptep))))
+ 		return 0;
+ 
+-	page = __get_free_page(GFP_KERNEL);
+-	if (!page)
+-		return -ENOMEM;
+-
+-	__memset((void *)page, KASAN_VMALLOC_INVALID, PAGE_SIZE);
+-	pte = pfn_pte(PFN_DOWN(__pa(page)), PAGE_KERNEL);
++	index = PFN_DOWN(addr - data->start);
++	page = data->pages[index];
++	__memset(page_to_virt(page), KASAN_VMALLOC_INVALID, PAGE_SIZE);
++	pte = pfn_pte(page_to_pfn(page), PAGE_KERNEL);
+ 
+ 	spin_lock(&init_mm.page_table_lock);
+ 	if (likely(pte_none(ptep_get(ptep)))) {
+ 		set_pte_at(&init_mm, addr, ptep, pte);
+-		page = 0;
++		data->pages[index] = NULL;
+ 	}
+ 	spin_unlock(&init_mm.page_table_lock);
+-	if (page)
+-		free_page(page);
++
+ 	return 0;
+ }
+ 
++static void ___free_pages_bulk(struct page **pages, int nr_pages)
++{
++	int i;
++
++	for (i = 0; i < nr_pages; i++) {
++		if (pages[i]) {
++			__free_pages(pages[i], 0);
++			pages[i] = NULL;
++		}
++	}
++}
++
++static int ___alloc_pages_bulk(struct page **pages, int nr_pages)
++{
++	unsigned long nr_populated, nr_total = nr_pages;
++	struct page **page_array = pages;
++
++	while (nr_pages) {
++		nr_populated = alloc_pages_bulk(GFP_KERNEL, nr_pages, pages);
++		if (!nr_populated) {
++			___free_pages_bulk(page_array, nr_total - nr_pages);
++			return -ENOMEM;
++		}
++		pages += nr_populated;
++		nr_pages -= nr_populated;
++	}
++
++	return 0;
++}
++
++static int __kasan_populate_vmalloc(unsigned long start, unsigned long end)
++{
++	unsigned long nr_pages, nr_total = PFN_UP(end - start);
++	struct vmalloc_populate_data data;
++	int ret = 0;
++
++	data.pages = (struct page **)__get_free_page(GFP_KERNEL | __GFP_ZERO);
++	if (!data.pages)
++		return -ENOMEM;
++
++	while (nr_total) {
++		nr_pages = min(nr_total, PAGE_SIZE / sizeof(data.pages[0]));
++		ret = ___alloc_pages_bulk(data.pages, nr_pages);
++		if (ret)
++			break;
++
++		data.start = start;
++		ret = apply_to_page_range(&init_mm, start, nr_pages * PAGE_SIZE,
++					  kasan_populate_vmalloc_pte, &data);
++		___free_pages_bulk(data.pages, nr_pages);
++		if (ret)
++			break;
++
++		start += nr_pages * PAGE_SIZE;
++		nr_total -= nr_pages;
++	}
++
++	free_page((unsigned long)data.pages);
++
++	return ret;
++}
++
+ int kasan_populate_vmalloc(unsigned long addr, unsigned long size)
+ {
+ 	unsigned long shadow_start, shadow_end;
+@@ -348,9 +414,7 @@ int kasan_populate_vmalloc(unsigned long addr, unsigned long size)
+ 	shadow_start = PAGE_ALIGN_DOWN(shadow_start);
+ 	shadow_end = PAGE_ALIGN(shadow_end);
+ 
+-	ret = apply_to_page_range(&init_mm, shadow_start,
+-				  shadow_end - shadow_start,
+-				  kasan_populate_vmalloc_pte, NULL);
++	ret = __kasan_populate_vmalloc(shadow_start, shadow_end);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.45.2
+
