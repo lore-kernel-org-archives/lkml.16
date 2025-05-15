@@ -1,115 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935731DE3D6;
-	Thu, 15 May 2025 09:31:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3831C36
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747301491; cv=none; b=I0hvQGE+yJperAOkt5V0A466Iv11g0CZLp9gUodEqYeoqtKjgYrVM3npSHCM4JzS5nMpsRkQ0KIA9ApXlr/G10OjRLynqmnrOb4uFqGhZ/8+S5IZjvytPSzZ/CgcgsAu7KDa0kz8ShxN60oe1dgM4XrDdZG8PfbO+cgUivebSbM=
+	t=1747301507; cv=none; b=klkSwTnX5Y09zh+HI7c9TRYFCrIJ4E4T9KQTb/bHqBrRYv7qG3q26OC+FfQo5gdE67GjUpr+SZerBxAvr3VEsSwXD/elmkmmbQ1mQRMabWBSOErP9bcrwvk75LJ0J0X7zkSnXm2R2IfJr+yifGBTu8JHNP8rtssWdDJ+IJS6U/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747301491; c=relaxed/simple;
-	bh=UFT4P0cp/ZjCmSXOpyEwfGN0zN+xz7+ZNg6QoBKfLvM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hUmjWA73Dufu3qfsxVAgFGxEawSlfh12GVaIrDRP0Jda66+HDsIWvhjVHaH+NW/W8n0Cq8KU2YzCsVvNEyIr4xo7BT2vngUNpECyfdFovUQ54p0mRX80y1Acb9JXR/+T8+NZXe+z/yajp6fdoEJRXCMQX+/ZwJv8kGsNe2r+9fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GwczLDKf; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747301507; c=relaxed/simple;
+	bh=YcwcSP4GpUhbon0JNK8WVl9Ad7krJOLYr8vo8j/dyfA=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=ub8YpO/JvWulndoAdkFaN/eeM3YfGucMCUbObUOeyWLI57PV4oWO8tHjIY5/Bz7eMLIQG86eut4utkSOR+5HteO0bu+AkTd+Pf6ooVIKvcMf45DXn9cfvKVz7r7IXOTA/WGT0OvqiM/HgM7Hg/8iNUX6NMiSz4yPfSMUxXMeddY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=bLTfuhwU; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GwczLDKf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747301490; x=1778837490;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=UFT4P0cp/ZjCmSXOpyEwfGN0zN+xz7+ZNg6QoBKfLvM=;
-  b=GwczLDKfC2ElslEZ7l4nFPsEl6ad92po1TvxahDvHTQWr5GvjgGFE5FA
-   wRn71EONbD2LG8Mey/7nmttyQHEjZXSB+IDSBuxARjCokhsZS9m236yFy
-   51kRSa++C86mdBrSj0ip8Ox/yPXh2m2nA+gkfidmdUgDoXgI41MCqVbQ8
-   SaPzwfTILOXpVLOWKsA+sCmMAc5esP8N9Zy8McqwmWDsG0Z5NCBhol+vg
-   QMLEl+OmMEZ2Gf8CKxoMzszQpWDGpSw2XY3AeisLftss6so1QZPKkrh+6
-   kHCBgx52Lpwg6yhEVWIR50fMjld5PwY1L4z73ID0/+/vuuqf9c/vVsJid
-   Q==;
-X-CSE-ConnectionGUID: ymMKqKXcS3uIxN8rmNiolw==
-X-CSE-MsgGUID: xoDbyUt4Q8OskFk9Jm02hg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="53030456"
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="53030456"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 02:31:29 -0700
-X-CSE-ConnectionGUID: d7me3l+tSr+6XOUx9LHvIQ==
-X-CSE-MsgGUID: lE2z+msuTB+buviNfU9KIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="169248108"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa002.jf.intel.com with ESMTP; 15 May 2025 02:31:27 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 0921923F; Thu, 15 May 2025 12:31:24 +0300 (EEST)
-Date: Thu, 15 May 2025 12:31:24 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Mika Westerberg <westeri@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v1 0/4] gpiolib: acpi: Split quirks to its own file
-Message-ID: <20250515093124.GV88033@black.fi.intel.com>
-References: <20250513100514.2492545-1-andriy.shevchenko@linux.intel.com>
- <20250514155955.GS88033@black.fi.intel.com>
- <aCWgBp4ZD5aesvRw@smile.fi.intel.com>
- <20250515083451.GT88033@black.fi.intel.com>
- <aCWo19FjcvZzP1H7@smile.fi.intel.com>
- <20250515084727.GU88033@black.fi.intel.com>
- <aCWsuRc5ggJJFc5u@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bLTfuhwU"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250515093143epoutp04dad58384cb3b301c75d0d99505964424~-qXXHfES91195711957epoutp04P
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:31:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250515093143epoutp04dad58384cb3b301c75d0d99505964424~-qXXHfES91195711957epoutp04P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1747301503;
+	bh=P5VLAojzpnIxDBE6zPAULs5TyBvsQa4MKoJmkjGV5zA=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=bLTfuhwUoi/ZOLE1iXg+ioM4p54mZsCMui4ElYk/ZqXxGrIR6KbgqLLl2whkcHo7A
+	 E8qrxu7SmfAVCZ6Ha+lEnud404Fk4TPK3QGdQQDa+w+aCYQjA8yAoREeppZ54DEHFk
+	 hChpcvRxgG+pWvvDL6AkdAaODuWtaDqmYcPH0Jks=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250515093143epcas5p2409f7bc212f1f6c8fbe25b72f73f6208~-qXWuzwPM1138511385epcas5p2Q;
+	Thu, 15 May 2025 09:31:43 +0000 (GMT)
+Received: from epcas5p2.samsung.com (unknown [182.195.38.177]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4ZylMx0zR3z3hhT8; Thu, 15 May
+	2025 09:31:41 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250515093140epcas5p1c735205578916f52954430b1db18f5e2~-qXUKreQ80539905399epcas5p18;
+	Thu, 15 May 2025 09:31:40 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250515093140epsmtrp2e3c56fd7433b4343ddad05abbccc6505~-qXUJ1cDK2264422644epsmtrp2G;
+	Thu, 15 May 2025 09:31:40 +0000 (GMT)
+X-AuditID: b6c32a52-40bff70000004c16-78-6825b47c083d
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	23.34.19478.C74B5286; Thu, 15 May 2025 18:31:40 +0900 (KST)
+Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250515093138epsmtip21ebcf2ce07b9046da78413250900fa0d~-qXR--lqR0096500965epsmtip2y;
+	Thu, 15 May 2025 09:31:38 +0000 (GMT)
+From: "Alim Akhtar" <alim.akhtar@samsung.com>
+To: "'Pritam Manohar Sutar'" <pritam.sutar@samsung.com>,
+	<gregkh@linuxfoundation.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <Thinh.Nguyen@synopsys.com>
+Cc: <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <rosa.pila@samsung.com>,
+	<dev.tailor@samsung.com>, <faraz.ata@samsung.com>,
+	<muhammed.ali@samsung.com>, <selvarasu.g@samsung.com>
+In-Reply-To: <20250514140741.415981-2-pritam.sutar@samsung.com>
+Subject: RE: [PATCH 1/2] dt-bindings: usb: samsung,exynos-dwc3: add
+ dt-schema ExynosAutov920
+Date: Thu, 15 May 2025 15:01:37 +0530
+Message-ID: <0efe01dbc57c$29955270$7cbff750$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aCWsuRc5ggJJFc5u@smile.fi.intel.com>
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQHb4atmIwpdDAkGWt442tTNHGskkAKMImHcAsHMHkuzqMU0AA==
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrEIsWRmVeSWpSXmKPExsWy7bCSvG7NFtUMg9V9shZr9p5jsri3Yxm7
+	xfwj51gtrt1YyG7RvHg9m8XLWffYLDY9vsZqcXnXHDaLGef3MVksWtbKbHH+RRerxbN7K9gs
+	/u/ZwW7x5ecDZosjyz8yWaxacIDdQcBj06pONo/9c9ewe2xeUu/Rt2UVo8eW/Z8ZPT5vkgtg
+	i+KySUnNySxLLdK3S+DKOP5Zu2ASe0XDqj7mBsZFbF2MnBwSAiYSOyf/Zu9i5OIQEtjOKLF8
+	0nlGiIS0xPWNE9ghbGGJlf+eQxU9Z5R4cucpWBGbgK7EjsVtbCAJEYE9jBIdCx8ygjjMAvuZ
+	JKb9XsYE0XKYUeLO5vssIC2cAvYSP66dAlsuLBAj0XJuOhOIzSKgKjG56STYWF4BS4mFR9vY
+	IGxBiZMzn4D1MgtoS/Q+bGWEsOUltr+dwwxxn4LEz6fLWEFsEQEniTP7+lkhasQlXh49wj6B
+	UXgWklGzkIyahWTULCQtCxhZVjGKphYU56bnJhcY6hUn5haX5qXrJefnbmIER6tW0A7GZev/
+	6h1iZOJgPMQowcGsJMJ7PUs5Q4g3JbGyKrUoP76oNCe1+BCjNAeLkjivck5nipBAemJJanZq
+	akFqEUyWiYNTqoFpcS+zi/KnTk1PAY77wq97osJz5NcvFWjKapWe4TQleLXWlt4ZnD1iKx1c
+	+zZyzenZJ7I8JDpr+mXb2PVJT88//PW7dpe5xH7fxXEmGY0BCQLnTGL13q/+XrDw4LWvq1UF
+	Fyd6rdv5af11iwupa0Nnz5hjevjYlYgTmw7MYZ3+SfDBjL2O/7WPHCo4NP2NcMeeX35bgzP3
+	li7I5hdOXWppOe9c949G9y8fr1hXuluUSdlGNUWkNP97N2211Y7YFx+XLn6/bsnLUma7gxIy
+	28O+V66Yyv+xx7p4RkdUTtF935x1ezvcHDszzfgntf7k+jLnE/MchZjT+/ffsfkd+ulwmrUc
+	6/lVziZu+x+9OL/9lhJLcUaioRZzUXEiAPTyNRRFAwAA
+X-CMS-MailID: 20250515093140epcas5p1c735205578916f52954430b1db18f5e2
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250514135755epcas5p41291579e7eb266d92b91b82621e0fa5d
+References: <20250514140741.415981-1-pritam.sutar@samsung.com>
+	<CGME20250514135755epcas5p41291579e7eb266d92b91b82621e0fa5d@epcas5p4.samsung.com>
+	<20250514140741.415981-2-pritam.sutar@samsung.com>
 
-On Thu, May 15, 2025 at 11:58:33AM +0300, Andy Shevchenko wrote:
-> On Thu, May 15, 2025 at 11:47:27AM +0300, Mika Westerberg wrote:
-> > On Thu, May 15, 2025 at 11:41:59AM +0300, Andy Shevchenko wrote:
-> > > On Thu, May 15, 2025 at 11:34:51AM +0300, Mika Westerberg wrote:
-> > > > On Thu, May 15, 2025 at 11:04:22AM +0300, Andy Shevchenko wrote:
-> > > > > On Wed, May 14, 2025 at 06:59:55PM +0300, Mika Westerberg wrote:
+Hi Pritam
+
+> -----Original Message-----
+> From: Pritam Manohar Sutar <pritam.sutar@samsung.com>
+> Sent: Wednesday, May 14, 2025 7:38 PM
+> To: pritam.sutar@samsung.com; gregkh@linuxfoundation.org;
+> robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
+> alim.akhtar@samsung.com; Thinh.Nguyen@synopsys.com
+> Cc: linux-usb@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.org; linux-
+> kernel@vger.kernel.org; rosa.pila@samsung.com; dev.tailor@samsung.com;
+> faraz.ata@samsung.com; muhammed.ali@samsung.com;
+> selvarasu.g@samsung.com
+> Subject: [PATCH 1/2] dt-bindings: usb: samsung,exynos-dwc3: add dt-
+> schema ExynosAutov920
 > 
-> ...
+> Add a dedicated compatible for USB controller found in this SoC
 > 
-> > > > > That's might be the next step to have for all of them, but these are ACPI
-> > > > > specific. In any case they can't be put to gpiolib-quirks.c due to module
-> > > > > parameters. If we do that we will need a dirty hack to support old module
-> > > > > parameters (see 8250 how it's done there, and even author of that didn't like
-> > > > > the approach).
-> > > > 
-> > > > Hmm, how does it affect module paremeters? I thought they are
-> > > > gpiolib.something as all these object files are linked to it?
-> > > 
-> > > gpiolib_acpi.FOO because the object file is gpiolib-acpi.o.
-> > 
-> > Ah okay.
-> > 
-> > > > At least can we drop the gpiolib-acpi-core.c rename?
-> > > 
-> > > Unfortunately no due to the above.
-> > 
-> > This does not work?
-> > 
-> > gpiolib-acpi-y                 := gpiolib-acpi.o gpiolib-acpi-quirks.o
-> 
-> No. You can't use the same name on left and right parts.
+> Signed-off-by: Pritam Manohar Sutar <pritam.sutar@samsung.com>
+> ---
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
 
-I see :( Okay then I guess there are no other options than name it like
-this.
-
-[ Ideally we would drop the while gpiolib- prefix from all these so you have
-acpi.c, sysfs.c and so on without the redundancy but that's outside of
-scope of this work anyways ;-) ]
-
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
