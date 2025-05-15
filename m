@@ -1,97 +1,133 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DEA20C492
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:02:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5529E1F8BC6
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747321328; cv=none; b=tco1op76RhYTO+kB++Pi3tJVmDRkmzGCZ6Go1iFjN10+/Pz2CpujKpSauwUcI6kx9VjMJhryHwPUI5rCnjG68zN3BKsgrwQpBYic0J/X3VFFNAd5NDbRXBs0VwhWmcIpL8ws+Tn55dZ/5v5vCMYguUHGAu08SVTX7Am6YOQ2g5g=
+	t=1747321383; cv=none; b=e6zX7pNUZUB6ioeTrXitvCphLFpshHKzoCmGFUHX24Y9qDcMvTggEvyrBFXXtooZd+ErpYNQHPxSUfqkJ32+5TRB+tRWT9H8SAa+0OA6YPPcX7048L95qwEo4cbKPbJecZZr+2Al3yEn5iuCuwMBvpxcUld3vQrFsbcf4IugeOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747321328; c=relaxed/simple;
-	bh=rX0s2QYnVYFJWqRAuYNWPcSnMx3/HZszG7QwJ/X9lD0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UMtURldJBgfmdJDEsDwObek5KtJ8vGvL3TWQMvEQcv7ICxnL/AIWX0HtNOtUW/6PE/Ytneq4XDV9K7THGQDVDbxbk0uBhxNXWh4w5jkk9JzsC+ddMW2ziWonQaH8cIDh4wK4kzdHhscChDE6ZVA6eNRtPRsy/WJqrt68jkGaHEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lPRg3cyT; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747321383; c=relaxed/simple;
+	bh=RjN4yIlj0arsZ7ZteAOHwkzgOTyLc93krkDfvT8tzcs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ur3ZbfTQCx+L2WOlJYFK7L5ap/3zv6LI5sK6/hk3OPnw1JB4uniL6EjD4hYKtRqO3fE0JWA5nda6PdL5o0IguzIvC6GOvLyMjAjbsGg0kbM1qX80/VlFLa2YXkxpSQVTKa/IHYI8F5XGc/OR7nxBk1RRLjGLC48v36g1VX4/6No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pe8X5LfK; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lPRg3cyT"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4774611d40bso318291cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:02:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pe8X5LfK"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so5708305e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:03:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747321325; x=1747926125; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747321379; x=1747926179; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rX0s2QYnVYFJWqRAuYNWPcSnMx3/HZszG7QwJ/X9lD0=;
-        b=lPRg3cyThW15+x2pe3WxNZhZ2EMSy9wb5xQjZVdyLGl5+Hgo9ufR91mmycLm6SlIpw
-         5M7hmvR1q+zfofajQSAHvTyuUai7VCdDpD6HBSbMv0aD5i4tZt2f95coyHTjMbZ8jBSh
-         6Ii4pMhDv5SzPCeAL2JRZ88CDHhvy50u3LMSRFH1evPpXmDdKuSJt5CTksKmMIwoTeNY
-         fNCPWV6pyT0vFzWiuUmRsFrg7tfLsgxgg/BWh9SMRf1rE7Wzzgw+ikZKhPefCXP0HFL/
-         tEBK93zxfps5d7t7/BW+3d0FjdDEB3dM3TkVrmnFPkb+QXF2lFeWltaFWSvOY0pOIdVN
-         eAhg==
+        bh=yxsp6oGjuNOX+xuFU08PlzO35fGhJ/ry3v7K7kSTtzM=;
+        b=pe8X5LfK9+vs1FlWyAThGSvNpSUAiayXY5s30jZX1C+C1Lx5vleD+8OGbRZIALmkTm
+         0GEDg3Jb05sXdkRg604pPnn09RP1exc5N9PhWjdWY+Rer+SXbNPHN4qKOG1Mi4Jhqed3
+         1RxAZeqkXMthUXwM5eHdjKNwIPa2FpDzjaghIbC9XjU80MQNhUmKEi7noCd4TUYyQNAS
+         CRtGpvUDJeNx32oGEuwG1ssLYyQKivMAZUmPj/95kPVY7rUyYM8crj7RZbTMqIxlzaoC
+         +l2yaiVCE/Cqg+QO10sx+uGKheAP0a5fCGbtMSkl16NKgcuvHNV9TMFPtCHezdH+hOgq
+         Yg6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747321325; x=1747926125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1747321379; x=1747926179;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rX0s2QYnVYFJWqRAuYNWPcSnMx3/HZszG7QwJ/X9lD0=;
-        b=OdCJv3LopvVcLJLZARm14DfTPgyLmTJLmSLTUJBs+GSyCNj9GpFbPj0ajAX9MFEKYY
-         On1i8xvBEiIIcafOc34dYY16Tz26yo15bI2zdUXeDe3S12Qy/+ew93RY+opr1tUiMVXk
-         4Oqn/1uTekYvXutNVBD0bVvraW/uje8Boplk4VUHzA4JYKgArMVMezvGRw4LD4jtPDYy
-         2fJ1y7YwwWDHyBk4ZH5a2cmihyElor6EqDPd9YYuUeQlHrMLGLL/puXuMmoiaRhFdCAp
-         y0mcuFPwwD3iXmBmwypqpTZVp64+Myk06C9JBhxdqZI+0Khot/oNBQVertGRP4cl+uDJ
-         nCxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ2lmbeV1x+Hs0tHvxbQ5iVQeGvU+n3fJIQCe1GgDHmfYwESXLBraJ4Oq9xJ0/q9Xi6K/ojDTy49BZCs4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwC/Ov18Hh52H4BscY/Kt1abfOSX9bx6uCz7k3Ms+LCiPFQNQBa
-	JV3ayvMSqHeOY5PsvxbbReDFqTvIu/H7TQ/ye/VjnVo9kXsLqLwJt7LGwqSIKgw68N3/hPHd3it
-	IH95gYhPzHsbGQZJ3KmsKhXDSLjr0TTtiZbMkNuwt
-X-Gm-Gg: ASbGncvOByBdAobPM2vh7LYybv7cJuAgVPESqn2bCJuJgQTY6wyhgLVlCfKgMwkUV+k
-	0DPTepLlYZfHWl/n9+QLpb9479usRQhVkIheSLZS86pW6eJB+IoVSP3srhMpsaDg/WGS1CJaXUa
-	GHakelE1gcqXPLx57mOJorDVgNR6A0+p2UzEMplHD+2N0MS+bwRAeeOmxLDPndnQ==
-X-Google-Smtp-Source: AGHT+IHlN4zcoE/AVgqKFO6PNyDAs0OJWk7DAZ9l630dsKTZOK6vvHYJigslJVBGvvhholDbFz4KBp/F2GL3Hwxq5G4=
-X-Received: by 2002:a05:622a:243:b0:48a:7cd7:7e02 with SMTP id
- d75a77b69052e-494a1dc992amr3943931cf.18.1747321325103; Thu, 15 May 2025
- 08:02:05 -0700 (PDT)
+        bh=yxsp6oGjuNOX+xuFU08PlzO35fGhJ/ry3v7K7kSTtzM=;
+        b=uvEgJpPe8ichDtui/6qKpoEoEnP6poEeL8Ij4c8VVu16HVfxA0FKlfYZE/b4sTUKzR
+         SaQzr6x7q7fcE8AGAVT1q9aCWDgpUsbzaCBrPaO7YqMnrCZRSmuXNEYpiz0i2FrA7ZeE
+         SLAAbyzKy3PyHmfIvLilmm9AtMbMXjOnlI0jK/vAgWfiKywudn5jqAh2W3vaEVzNsU0m
+         bYF6+qHOi3xSxYIMoNc3PQSPHJW7g0C6C4fnfwVWLqc/teLdS1+rMFIshPb/MZclNyXi
+         bRcpp3bqoyJYrKGb+Apz4Qp4ckcH08fSRf5+19GisaOO0YZmUZO9KzKDttuRVrOY7MY+
+         g04g==
+X-Forwarded-Encrypted: i=1; AJvYcCW0Ec9F9BCfA62T5+0H3MCFqnUrrPy8J3dyiXae8kz2IgFOCyBgTTE8lYR3wiWWtlfJDZuZgNoyZxxISwE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynwZ1QIECMwVuQoj0MxMx/ZQP79PNas9OzpCkU/XW4LQNjPVNK
+	SzEXGyoh0eSz4ICbAP/EujUDb1zCYwe1+/Bw6cSsBXEu2VVYlhHhqwkojjzJsi8=
+X-Gm-Gg: ASbGnctppqYtlOos1NngQ3Pj92hVyPNio3vHAwgETDgob0JtWQRU5ggtqUsujBwK2vM
+	MXhc+x9XANa6j56WBrIJ8fJEKsBVSSF5Ti7u8EUH8dD3QL2ixp5WapD9SO/e54NIsoCxrNB7YWO
+	27JwbQhg/foLqCzrU1CUf2QW330fVi4M3Q+VgBa6LZMXp0Jd84XFy3SkGeZw95cv+lKIcpA9MqH
+	9/Sm8m5SlFBLKIZuZB9gamdPrIHhRxGR8z5Qh/x0lqDR3oW1jrRsdIHq3Bp703I/lASD49HG1Si
+	VBQb22RIVBNs7QoyFnscsOOPSKJtziYvgwWI9tyyU+MndROyukvySydOXIUWnZk9rISM2IjFi48
+	jbgmpOOc+FPCH1TVwgSHYPoGA
+X-Google-Smtp-Source: AGHT+IGdEWIBywfQs4PZp4JdP7brwhiYv1KCdKAMM4y/BZUvPvXwZEzy3DFDz/jA4oHanSe7ld+P5Q==
+X-Received: by 2002:a05:600c:358b:b0:43d:42b:e186 with SMTP id 5b1f17b1804b1-442f20e8141mr72625715e9.8.1747321378848;
+        Thu, 15 May 2025 08:02:58 -0700 (PDT)
+Received: from brgl-uxlite.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3368e3fsm74756025e9.2.2025.05.15.08.02.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 08:02:58 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Ray Jui <rjui@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Keerthy <j-keerthy@ti.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH RFC 0/9] gpio: make irq_chip immutable
+Date: Thu, 15 May 2025 17:02:53 +0200
+Message-ID: <174732137152.17517.12381683522631139304.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250509-gpio-v1-0-639377c98288@nxp.com>
+References: <20250509-gpio-v1-0-639377c98288@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425-slub-percpu-caches-v4-0-8a636982b4a4@suse.cz> <266cb5e2-f946-414a-bc08-193c7e6e5f19@suse.cz>
-In-Reply-To: <266cb5e2-f946-414a-bc08-193c7e6e5f19@suse.cz>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Thu, 15 May 2025 08:01:54 -0700
-X-Gm-Features: AX0GCFt0yj9GDMcdc4GBxWZEFJDfafuu_5skAXnZcVY2juBksjM63TxLUcwCVqc
-Message-ID: <CAJuCfpHFnx=XskV3driqyY6pSeOFgYzgwepVS3MudeQ50Vv2Mg@mail.gmail.com>
-Subject: Re: [PATCH v4 0/9] SLUB percpu sheaves
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Christoph Lameter <cl@linux.com>, 
-	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Harry Yoo <harry.yoo@oracle.com>, Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, rcu@vger.kernel.org, 
-	maple-tree@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 15, 2025 at 5:46=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
->
-> On 4/25/25 10:27, Vlastimil Babka wrote:
-> > Hi,
-> >
-> > This is the v4 and first non-RFC series to add an opt-in percpu
-> > array-based caching layer to SLUB, following the LSF/MM discussions.
-> > Since v3 I've also made changes to achieve full compatibility with
-> > slub_debug, and IRC discussions led to the last patch intended to
-> > improve NUMA locality (the patch remains separate for evaluation
-> > purposes).
->
-> I've pushed the changes based on the feedback here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/vbabka/linux.git/log/?h=
-=3Db4/slub-percpu-sheaves
->
-> You can use that for testing/benchmarking. Thanks!
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Thanks! I'll give it a spin this weekend.
+
+On Fri, 09 May 2025 12:45:31 +0800, Peng Fan (OSS) wrote:
+> This might be a bit late to post this patchset, since it is almost rc6,
+> but no rush here. Not expect this patchset be in 6.16.
+> 
+> This is an effort to make irq_chip immutable to elimnate the kernel
+> warning "not an immutable chip, please consider fixing!"
+> 
+> The major changes
+> - add "gpiochip_disable_irq(gc, hwirq)" to end of mask hook
+> - add "gpiochip_enable_irq(gc, hwirq)" to start of unmask hook
+> - add IMMUTABLE flag
+> - add GPIOCHIP_IRQ_RESOURCE_HELPERS
+> 
+> [...]
+
+Applied, thanks!
+
+[1/9] gpio: bcm-kona: make irq_chip immutable
+      https://git.kernel.org/brgl/linux/c/7b04f98027afd2cc329d00191dfc8284b382565d
+[2/9] gpio: grgpio: Make irq_chip immutable
+      https://git.kernel.org/brgl/linux/c/a30be40bf1d4437646b6885e7e4e71530e6f82c1
+[3/9] gpio: lpc18xx: Make irq_chip immutable
+      https://git.kernel.org/brgl/linux/c/289e42df1358abf85e49a140f7224c2abd170b2e
+[4/9] gpio: mpc8xxx: Make irq_chip immutable
+      https://git.kernel.org/brgl/linux/c/7688a54d5b53f2e3160c00f19b00bc601fa3ec98
+[5/9] gpio: davinci: Update irq chip data
+      https://git.kernel.org/brgl/linux/c/62be72bdb00ef52a0d0f02ce077e36b1f48ef0ae
+[6/9] gpio: davinci: Make irq_chip immutable
+      https://git.kernel.org/brgl/linux/c/3f50bb3124d76653de0bcfe251faa357711e3ae6
+[7/9] gpio: xgene-sb: Make irq_chip immutable
+      https://git.kernel.org/brgl/linux/c/580b3264cb252cae00fa62d58443af09c25f7d61
+[8/9] gpio: timberdale: Make irq_chip immutable
+      https://git.kernel.org/brgl/linux/c/2993d2dd8ff4e8257a88d4d3f8ffc6df95928b94
+[9/9] gpio: pxa: Make irq_chip immutable
+      https://git.kernel.org/brgl/linux/c/20117cf426b677e7aced4e7a1b2b37f6080a46dc
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
