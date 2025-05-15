@@ -1,132 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A22C2192EB
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 22:02:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D382192EB;
+	Thu, 15 May 2025 22:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747346575; cv=none; b=AE2p7BR6AW17uOsNlV/ckHFLeArQFh0hOG3hqJhYW449OCdNUeCIz8A7B95QnkuteGh6N6AC/lUYYgVFdk46ROYO/un07gyzYCKVmEc4yPJ5X2qRRia5ZAJROVDzqcF6ivLo6FYIDhH5SbwEnaj919xxZU3NDC17s8iAihYsaFw=
+	t=1747346642; cv=none; b=AXCs4a5FiSQLTngTloisBf5HrW5KN2+zQCPbDXPi6njk7XDbkdWH7dJDVPBeJ94RfoLt9MQi6ny3m5VR3pNQXKJXy67Hr7TabsoZzBArDKtHvx9dE4nIJos5Eb1KmOevDZzWh7YlKpGt62FcF5UJC6lfQAscxgFzrf9WDik5Qh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747346575; c=relaxed/simple;
-	bh=Wpi1y51hGjRQmOPEdKddEeCkBUbhfg86pbv2pJmpZQ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a9CLgNY8s2Z/LVLR2j+HoIVOPDTNao4P/u4JmyxYrKrfrbCdYfBZwe+DqQy6pNjzBlhkhcNOhfO5Nfc5j8PLg4LfxYs9RHugZiUfwvlhily28QTycTVLb5KzSs5P3ooTZrdPHUcoE9IpGgGQFoSGLUu3enOy/7m8gT9eunCQ5qI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fnv34oAX; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747346642; c=relaxed/simple;
+	bh=myqbMmuISLBc8NWdxpmMnZmTWdPoef+ZJQqAK75OSMA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dEUEdJYD/k5Tcjie3mr3F8wOPet648kTIGMarhcqVzL9aTDSXv0V7rjH0yk8qigYeZQY68mBWHQNEx/leNEM8Pcz9ISygf48B80Pw37QriNQyu+3SNdKJMgwRqFAybetuqZa8T7nWtniw5xEX3vvOotJe+MzSAqP2PIP8q1G3hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MbwBTVo2; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fnv34oAX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747346571; x=1778882571;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Wpi1y51hGjRQmOPEdKddEeCkBUbhfg86pbv2pJmpZQ4=;
-  b=Fnv34oAX0e3VW51dR844FCEdGyE37kndA9P9vIBNj7xJFdOwa1yuaERQ
-   FedMvEIRt6G+qCyEJoKIR/wR99S//v4JOervb/Nu0it8/iBjpLhAUb/Q1
-   EgT+BcPLw9tvblenlTVr9THAGjMfXScV/TrlHWSs5uX+A1uMdh8BvHCMJ
-   S266EU8DFP+UZ4XB9k8fXcvOOVhtI1ctw1LoGb/8acDgjIpTddheS3uq+
-   J8fspYpJ52dCCfM4W9FvO1pRitcMFeSg6IXZjc6oq25k6F0bWGNxgc1Qw
-   O6iCxFRtWyPqQz2b7SfUlyV5C64TyvsF+qf1s5fsuWTyie3Eq6b0YwrKk
-   A==;
-X-CSE-ConnectionGUID: NdFrUe36Qt6CtbXAaS49pQ==
-X-CSE-MsgGUID: qJAIWYldTw6bXpQrBdQ4nQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49000594"
-X-IronPort-AV: E=Sophos;i="6.15,292,1739865600"; 
-   d="scan'208";a="49000594"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 15:02:51 -0700
-X-CSE-ConnectionGUID: XpfqRAKzRQSKMWA8venlGw==
-X-CSE-MsgGUID: dGJEbi+TRQm43ajJCTpANw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,292,1739865600"; 
-   d="scan'208";a="138898238"
-Received: from gkhatri-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.13])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 15:02:50 -0700
-Date: Thu, 15 May 2025 15:02:43 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: "Kaplan, David" <David.Kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/bugs: Restructure ITS mitigation
-Message-ID: <20250515220243.fk4z7rifcxdm2e7h@desk>
-References: <20250515134756.93274-1-david.kaplan@amd.com>
- <20250515211159.njyxgxuxmyhqx46m@desk>
- <LV3PR12MB92655C23DF46F1F3B88139009490A@LV3PR12MB9265.namprd12.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MbwBTVo2"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-73bf5aa95e7so1539367b3a.1;
+        Thu, 15 May 2025 15:04:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747346640; x=1747951440; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CLZVl59i+cLGSuNYnHKizgt3XCFfJAE/Fk11Cib4KvY=;
+        b=MbwBTVo2euxlb1eP0FC6kpidutOfrlXMq1ntuG50B/bT9u/86NMGbdqWg1RxE+yMMV
+         2Yvje8OoMRXghWUqp0hK4t64VJgP0u6ZXC43/K/VkEZfjpEoq+rmcOh6ELkqvKjfzNPT
+         1neISC9snX/siowBR/BG6vqIj6ZTvML0iVgAoTQP1C7GVZJYNk5GLWm53/3CB6FKjaWQ
+         ISEgOyRTS/VDL+qCoo43/n7hHF9Wi7zcBR9J+L2IxxhCfiPYQryIoGir0xhADD3t3fh9
+         vxCzORCDZ0gh5i6vsXctsbYLQYkPRiCf//JK//JAvtCVmmMJQf8UOTZdCe6qdcngADtc
+         j0kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747346640; x=1747951440;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CLZVl59i+cLGSuNYnHKizgt3XCFfJAE/Fk11Cib4KvY=;
+        b=t8Qo76/QEPoN/mPBOtkn7Er5p1qrVwoqoL56P8Xkscil9Qpk7AQCOFfcjBRJU7CR7y
+         Q/24ky0koRHulVhEZSBiB33XjL5cwuv+6q0p6+fP2qsw4PNr8oPP4be5MFfuAHJSce8L
+         nO6/+gShA3CUSuE7uwFhcqz8kq6wm2Xu9pvqWFHEQCVCNCkFyY299xJ/FMgnbHBUPxPX
+         8YVIL38bX5Bth3MDIXXapfB+I1/sfY+6ADpf3byKjX1VHvgxw25KNj7RjtSHTstymiWX
+         lnjsZ00Q0QH32eZnwN2LYXXhmIY+HsGxc3KxW+zQkYe6xouzxTUHQ3SosGHtqKcBqv1v
+         eHUg==
+X-Forwarded-Encrypted: i=1; AJvYcCUvyLfdgDEh8fd7jCYul78LmOj7er5DqZE6Md7SLNO6T74ExGB9Wwr9rMqV51hxR5YHjzSGfnUwDE40XLA5@vger.kernel.org, AJvYcCW7IiIDS+sBMfdoy+FNhJHqW5/5zf5SYIc6aDIh6XyNCd4HH6e6ekAyL76MuB/Y+Z07/X9dHOT+aarG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxesha33Xz5lt3OfHJNB8kZGuXZRccX6e6kufekwghH9Urf/ZcU
+	ZaNOhlXRo5u2pRjADiKf2CCpKfLtx9dNhJHhm7JdI5wJwd+duSHhsK0A
+X-Gm-Gg: ASbGnctwjrtiU5Qz72/excR280G26u96zrwII9rb0UbEom977dg6nKWx2Z4QTIlV5D1
+	YrgI6IAgcJp180QT50l62Cs7ouW5lFfOEBSuvPbkJaNXsndtXSWg9fvuUC801SuWX3ji3M2/bqG
+	CoBIGpyCGAnXsncA6uowp4yUxZ4KPM3cDSUL15vD5u+1pDoHjSxakZIB2htzHiJkancjn4H+LM6
+	CWnS/Vu1rPaNMRKAllTUGypvEyYqWSxIGkbHPMvf5p8iSt5tWyBq/bwHyOoUPRmlg/RimUXvBIB
+	CwVl1yxmTGO+02g900W7RT3omphZppSWhX4ZMlStKkGIuRX/qMTm4cZisfpUfB9KrA==
+X-Google-Smtp-Source: AGHT+IFBtph9fv+7fKDEC6nUWw7uIsIzzIOwz1cYir/tCyC84UZwVDLtqukgWlfF7ed346exY4Vk/g==
+X-Received: by 2002:a05:6a00:21c3:b0:73e:10ea:b1e9 with SMTP id d2e1a72fcca58-742a979672dmr1193531b3a.6.1747346640178;
+        Thu, 15 May 2025 15:04:00 -0700 (PDT)
+Received: from localhost.localdomain ([50.46.184.91])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a986d8d7sm284352b3a.130.2025.05.15.15.03.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 15:03:59 -0700 (PDT)
+From: Joseph Kogut <joseph.kogut@gmail.com>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Steve deRosier <derosier@cal-sierra.com>,
+	Joseph Kogut <joseph.kogut@gmail.com>
+Subject: [PATCH v2 1/2] dt-bindings: arm: rockchip: Add Radxa CM5 IO board
+Date: Thu, 15 May 2025 15:00:33 -0700
+Message-ID: <20250515220034.393303-1-joseph.kogut@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <LV3PR12MB92655C23DF46F1F3B88139009490A@LV3PR12MB9265.namprd12.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 15, 2025 at 09:15:59PM +0000, Kaplan, David wrote:
-> [AMD Official Use Only - AMD Internal Distribution Only]
-> 
-> > -----Original Message-----
-> > From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> > Sent: Thursday, May 15, 2025 4:12 PM
-> > To: Kaplan, David <David.Kaplan@amd.com>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>; Borislav Petkov <bp@alien8.de>; Peter
-> > Zijlstra <peterz@infradead.org>; Josh Poimboeuf <jpoimboe@kernel.org>; Ingo
-> > Molnar <mingo@redhat.com>; Dave Hansen <dave.hansen@linux.intel.com>;
-> > x86@kernel.org; H. Peter Anvin <hpa@zytor.com>; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH] x86/bugs: Restructure ITS mitigation
-> >
-> > Caution: This message originated from an External Source. Use proper caution
-> > when opening attachments, clicking links, or responding.
-> >
-> >
-> > On Thu, May 15, 2025 at 08:47:56AM -0500, David Kaplan wrote:
-> > ...
-> > > +static void __init its_apply_mitigation(void) {
-> > > +     /* its=stuff forces retbleed stuffing and is enabled there. */
-> > > +     if (its_mitigation != ITS_MITIGATION_ALIGNED_THUNKS)
-> > > +             return;
-> > > +
-> > > +     if (!boot_cpu_has(X86_FEATURE_RETPOLINE))
-> > > +             setup_force_cpu_cap(X86_FEATURE_INDIRECT_THUNK_ITS);
-> > > +
-> > > +     setup_force_cpu_cap(X86_FEATURE_RETHUNK);
-> > > +     set_return_thunk(its_return_thunk);
-> > > +}
-> > > +
-> > >  #undef pr_fmt
-> > >  #define pr_fmt(fmt)     "Spectre V2 : " fmt
-> > >
-> > >
-> > > base-commit: 04bdd560124ec4d02d1d11ee3abc88d51954d7b8
-> >
-> > I am having trouble applying this patch to upstream and tip/master. I can't seem to
-> > find this base-commit in Linus's or tip tree. Please let me know what am I missing?
-> 
-> Hmm.  I was working off origin/master on tip.  This was the base commit in my git log from this morning:
-> 
-> commit 04bdd560124ec4d02d1d11ee3abc88d51954d7b8 (origin/master, origin/HEAD)
-> Merge: 61e94712bb24 e59236b5a09e
-> Author: Ingo Molnar <mingo@kernel.org>
-> Date:   Thu May 15 10:16:23 2025 +0200
-> 
-> Not sure if something happened to it since?
+Add device tree binding for the Radxa CM5 IO board.
 
-Likely yes. I am getting:
+This board is based on the rk3588s.
 
-	Notice: this object is not reachable from any branch.
+Signed-off-by: Joseph Kogut <joseph.kogut@gmail.com>
+---
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-when I go to this link:
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index 650fb833d96e..d9ca282c0b4f 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -840,6 +840,13 @@ properties:
+           - const: radxa,cm3
+           - const: rockchip,rk3566
+ 
++      - description: Radxa Compute Module 5 (CM5)
++        items:
++          - enum:
++            - radxa,cm5-io
++          - const: radxa,cm5
++          - const: rockchip,rk3588s
++
+       - description: Radxa CM3 Industrial
+         items:
+           - enum:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit?id=04bdd560124ec4d02d1d11ee3abc88d51954d7b8
+base-commit: c94d59a126cb9a8d1f71e3e044363d654dcd7af8
+-- 
+2.49.0
 
-> Or is there something else I can provide to help?
-
-No, I am able to apply now. Earlier my b4 based script failed because it
-couldn't find the base-commit. It works when I am apply manually, sorry to
-bother you.
