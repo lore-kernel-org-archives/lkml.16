@@ -1,108 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206224A24;
-	Thu, 15 May 2025 13:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D0561FCE;
+	Thu, 15 May 2025 13:51:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747317065; cv=none; b=B3LDm3Oz3dHezzmfaJi3RD8Hehn3b0e/3DymFflu3wyCD8/YeHApvWYgA07nZ833f08T88T8/SXTySmra2IBak3ljPRhXxyRjmN/A+NwiqSOUQ5uG17CaA4ndJN4Mg2AF1lw/UDcHr3ZQzkpYiiUaFAjvxC8rPitjX8jyMnJw6w=
+	t=1747317106; cv=none; b=HuDOysybKkHRTPmndNVGKMM90xXNCc5sTOuUSbuKpd+itAQwdxlpW4hw6+uv7VUKjh60XlsJe1S9ptTuGar0TQp1DqCqZQMd338fk5NIecISQejIrAZGtXkW3wCpZNQqCefW/I+8nlwdEaOEyjxsduGQkOhzFbB6P0584CwoUOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747317065; c=relaxed/simple;
-	bh=7SR+pCTlePTZVEP3G9ZrogSNkG0kFVs8m73DIu5eyaA=;
+	s=arc-20240116; t=1747317106; c=relaxed/simple;
+	bh=DrqOcpYY6iSo+bqo7rbRmtWp3pEawZuMUwYrphaP4OQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OV2LzVqy2NGMy4XgrBEB/KA2wF7jNW97lpxol1wiWKuBzSAaF9kDbsU9sgnI9t03VXAgtWXFyIiOakvNVa7LTA1DN/hkCHof0BqIdwBCZr/ESXXFw5CVFoKoIYJAsUdH2f+xjL4/QjZvdac7Mj76vQau/7evRuVxAilTO1sIbsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oFK2sYYF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=q8r6spm64n5qWZFdCkVZj6VNXF5egvdPZF8L0qc9jqa3AkyB+7f1jBheecfVvAMnCZjUzgRlF06u2xKP8X//rft98fx/NS9CXyQ1kZoTZA2V8OlhWhU1Ng2D45NFzYm64ciTiYJqzg2rsgeoWkua8RqFYvlV8Ru13PuL9C4+oWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BgtnVlkF; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oFK2sYYF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BC62C4CEE7;
-	Thu, 15 May 2025 13:51:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747317064;
-	bh=7SR+pCTlePTZVEP3G9ZrogSNkG0kFVs8m73DIu5eyaA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oFK2sYYFcjzu9QO33iuHPO3Yk/3TorRaj6hIrmG6fbDB70o3WpWYMQa3qHic26QHz
-	 eqpqeHSvLm5IIrGbBguNRKtxJfOFXWNDkb4e6C8gn15ZUYRfb8blkDiLNYWc1j+WZv
-	 PicBvs47Aucx9wQY2CBeROvPIDRbJEDEywzel8UH1opUNjpNbqb4RuTi3vly+Z1e8M
-	 a+Mc39gPEuofekX9Xrp25A4Se+eJD81FXnA11fX9AkiXcoKaNH3u35jK5KRmILeFIV
-	 xyBuM+z48oUmhRNa7jpnHlMx48xhkX3bHq+ok/ZIetlrwcLUrStSpvnAFCJujv7bp1
-	 O8SY21eI2Qtiw==
-Date: Thu, 15 May 2025 22:51:02 +0900
-From: Krzysztof Wilczy??ski <kwilczynski@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] PCI/bwctrl: Remove also pcie_bwctrl_lbms_rwsem
-Message-ID: <20250515135102.GA3596832@rocinante>
-References: <20250508090036.1528-1-ilpo.jarvinen@linux.intel.com>
- <174724335628.23991.985637450230528945.b4-ty@kernel.org>
- <aCTyFtJJcgorjzDv@wunner.de>
- <20250515084346.GA51912@rocinante>
- <aCXZdfOA8bme-qra@wunner.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BgtnVlkF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747317105; x=1778853105;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DrqOcpYY6iSo+bqo7rbRmtWp3pEawZuMUwYrphaP4OQ=;
+  b=BgtnVlkF+w9YZPzFcs3PtSv40pvQAz+jZeb44ZEzcvrH9Q4GIK3WFwXR
+   6pm8fbdRwE3aqgpowDsNjvb8fmd6rDAKSe3s3zezgbyvWjD/xX/DrnUla
+   7UTU8LJDXp9piNBT1daI8dLP1esOdhWPQ1+K2Qi8ITdmNu0je+KYhFtuI
+   B+Wu6wHPIStALYpQdud8CnFi/7uUDaKOtvd01/dhtDL1HUlD8euMOGk4D
+   GPsKrL4E07dwXPOqHGRIPJkEv7spL0sEqExtdtt2schvL/sBxkWcTt7cp
+   31XU1hsvh3M/JA2LFVpwQQ5RGpUVO8c+vkxCDPRyAuihDSda7S+1N397H
+   g==;
+X-CSE-ConnectionGUID: KALY+lD8Q/CppssPxoMAAA==
+X-CSE-MsgGUID: TIlKxcEgSIesL0sDE79+Dw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="59907351"
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="59907351"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 06:51:44 -0700
+X-CSE-ConnectionGUID: +hI/IbhwRSO5IY0GtRV8Ew==
+X-CSE-MsgGUID: ff/CqJhVSHauVZUCBDtDxw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="143262650"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO mdjait-mobl) ([10.245.245.5])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 06:51:40 -0700
+Date: Thu, 15 May 2025 15:51:33 +0200
+From: Mehdi Djait <mehdi.djait@linux.intel.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, sakari.ailus@linux.intel.com, 
+	tomi.valkeinen@ideasonboard.com, jacopo.mondi@ideasonboard.com, hverkuil@xs4all.nl, 
+	kieran.bingham@ideasonboard.com, naush@raspberrypi.com, mchehab@kernel.org, 
+	dave.stevenson@raspberrypi.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v4] media: v4l2-common: Add a helper for obtaining
+ the clock producer
+Message-ID: <2egx7hakxleahk5o3ngydrcgtlnpgpdj4kgcijfij2bmss7u4d@2yho4udpzjtm>
+References: <20250321130329.342236-1-mehdi.djait@linux.intel.com>
+ <f467e4a8-fcb2-4345-b8f7-7557c1a7552b@redhat.com>
+ <20250515084403.GQ23592@pendragon.ideasonboard.com>
+ <id2ikiio23ahslghpx56niwxrvaqdgmrgk3k647i3u27cptqgz@hwqrkdvljd3b>
+ <20250515124050.GA12492@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aCXZdfOA8bme-qra@wunner.de>
+In-Reply-To: <20250515124050.GA12492@pendragon.ideasonboard.com>
 
-Hello,
+Hi Laurent,
 
-[...]
-> > Done.  Squashed with the first commit from Ilpo, see:
+On Thu, May 15, 2025 at 02:40:50PM +0200, Laurent Pinchart wrote:
+> On Thu, May 15, 2025 at 11:17:37AM +0200, Mehdi Djait wrote:
+> > On Thu, May 15, 2025 at 10:44:03AM +0200, Laurent Pinchart wrote:
+> > > On Sat, May 10, 2025 at 04:21:09PM +0200, Hans de Goede wrote:
+> > > > On 21-Mar-25 2:03 PM, Mehdi Djait wrote:
+> > > > > Introduce a helper for v4l2 sensor drivers on both DT- and ACPI-based
+> > > > > platforms to retrieve a reference to the clock producer from firmware.
+> > > > > 
+> > > > > This helper behaves the same as clk_get_optional() except where there is
+> > > > > no clock producer like in ACPI-based platforms.
+> > > > > 
+> > > > > For ACPI-based platforms the function will read the "clock-frequency"
+> > > > > ACPI _DSD property and register a fixed frequency clock with the frequency
+> > > > > indicated in the property.
+> > > > > 
+> > > > > Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
+> > > > 
+> > > > This certainly looks quite useful, thank you for working
+> > > > on this.
+> > > > 
+> > > > Note on some IPU3 platforms where the clk is provided by
+> > > > a clk-generator which is part of a special sensor-PMIC
+> > > > the situation is a bit more complicated.
+> > > > 
+> > > > Basically if there is both a clk provider and a clock-frequency
+> > > > property then the clock-frequency value should be set as freq
+> > > > to the clk-provider, see:
+> > > > 
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/media/i2c/ov8865.c#n3020
+> > > > 
+> > > > for an example of a driver which handles this case.
+> > > 
+> > > On a side note, the DT bindings for the OV8865 doesn't specify the
+> > > clock-frequency property...
 > > 
-> >   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=bwctrl&id=2389d8dc38fee18176c49e9c4804f5ecc55807fa
+> > Is this wrong ?
+> > 
+> > The OV8865 driver was introduced for DT-based systems, where you will
+> > get a reference to the "struct clk corresponding to the clock producer"
+> > and then get the clock-rate/frequency with a call to:
+> > 
+> > 	rate = clk_get_rate(sensor->extclk);
+> > 
+> > The patch "73dcffeb2ff9 media: i2c: Support 19.2MHz input clock in ov8865"
+> > adding support for clock-frequency came later to support ACPI-based
+> > systems (IPU3 here)
 > 
-> Awesome, thank you!
+> I'd expect all device properties to be documented in DT bindings. Is
+> that an incorrect assumption ?
 > 
-> > Let me know if there is anything else needed.
-> 
-> Actually, two small things:
-> 
-> - That patch on the pci/bwctrl topic branch is still marked "New"
->   in patchwork, even though it's been applied:
->   https://patchwork.kernel.org/project/linux-pci/patch/20250422115548.1483-1-ilpo.jarvinen@linux.intel.com/
-> 
-> - Version 1 of the same patch is likewise marked "New", even though
->   it's been superseded:
->   https://patchwork.kernel.org/project/linux-pci/patch/20250417124633.11470-1-ilpo.jarvinen@linux.intel.com/
-> 
-> Unfortunately I can't update it myself because I'm not the submitter.
-> (Ilpo could do it if he has a patchwork.kernel.org account.)
 
-I had a look and I think Ilpo beat me to it.  Thank you Ilpo!
+I am actually genuinely asking, is the clock-frequency a device property
+of the ov8865 camera sensor or the clock source, which is a separate device ?
 
-Also, thank you for chasing after this.  Much appreciated.  Good to know
-people use Patchwork to track what is up with our tree. :)
+Example the imx258 with a fixed-clock, which has its own compatible
+and DT bindings under bindings/clock/fixed-clock.yaml
 
-> Something unrelated (only if you feel like doing it):
-> 
-> On the pci/enumeration branch, Bjorn queued up a revert which was
-> waiting to be ack'ed by AMD IOMMU maintainers:
-> https://lore.kernel.org/r/20250425163259.GA546441@bhelgaas/
-> 
-> In the meantime the ack has arrived:
-> https://lore.kernel.org/r/aCLv7cN_s1Z4abEl@8bytes.org/
-> 
-> So the remaining housekeeping items are:
-> 
-> - Add Jörg's Acked-by to commit e86c7278eba8 on pci/enumeration
-> - Remove the "XXX" marker from the subject line
-> - Remove "Needs AMD IOMMU ack" from the commit message
+So when adding support for ACPI-based systems, the DT bindings should
+not be changed because getting the clock-frequency from the ACPI _DSD
+property is a workaround only needed on ACPI-based systems.
 
-Done.  Have a look to make sure that things look correct now:
+    i2c {
+        #address-cells = <1>;
+        #size-cells = <0>;
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=enumeration&id=3be5fa236649da6404f1bca1491bf02d4b0d5cce
+        sensor@6c {
+            compatible = "sony,imx258";
+            reg = <0x6c>;
+            clocks = <&imx258_clk>;
 
-> Again, only if you feel like doing it.  No urgency.
+            port {
+                endpoint {
+                    remote-endpoint = <&csi1_ep>;
+                    data-lanes = <1 2 3 4>;
+                    link-frequencies = /bits/ 64 <320000000>;
+                };
+            };
+        };
+    };
 
-No problem!  Any time. :)
+    /* Oscillator on the camera board */
+    imx258_clk: clk {
+        compatible = "fixed-clock";
+        #clock-cells = <0>;
+        clock-frequency = <19200000>;
+    };
 
-Thank you!
-
-	Krzysztof
+--
+Kind Regards
+Mehdi Djait
