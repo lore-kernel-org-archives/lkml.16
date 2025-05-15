@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD0F029B792
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:07:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F1529B79A
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:07:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747310829; cv=none; b=LCsqUUCeIjlQGPF4CVa+V5iSK7z+Y6henjovuXWoOO16QlkNmrEGRhKFRu404QOIgrzDltbSVDgObWtRouSTqE9H7lR2J27EUiqXrjh7Ia0qEK1ws/Ct2e6LtcDEsd21SiBgKzG5dnXfoq1ji/XUXmXpFX7x3fdHAvX+SzO1+XI=
+	t=1747310833; cv=none; b=QDe6CRpjy6QnWhH6iVRhjBFfI3+SkZ2yqeulUt+q+ie2oVEvNGDpsrs0o9boJXL/uEfqwCvCX/SXb61Qyl+yEBjjhW+hB+E5ETtgQNkzToyN3Mc9mLCHcF6eNFMldinGgOIhQRpzdCZzYLz6SsTSX1i7nPaD5HCOwnLgfzO8a8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747310829; c=relaxed/simple;
-	bh=0bVLepRmSf4x42XCWjSkvidF6vxwDbzkDvwqQdZ6Yjo=;
+	s=arc-20240116; t=1747310833; c=relaxed/simple;
+	bh=6SLHwAUM+btkcB2mBfsCr4BZVFt3PSCOic7YPAKPi2Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EkUNIa6VsLFCgORyk48eyZlg8U1QUHtOmXHk2A7enW3vRErSY2UVLg/0qH3cL1p9t0r4q+FxWsrNtgl7s4pDSLbHzoMYygg3CK0BZ6UcJc8S0TSDYvds7LrH7sxHRWgkTZTI7GmTycKDpsBS34wEy13hoNlIt7EH/42qDNZ5NB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cmz/Dffe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JUgzQNtHg+2tgPmFzfjrzZ8Zx+3t2Nz17FRPDSUEUNoizq5b+Dd5Eoi7YrjjC6Z9ECKYcVzuBLLFgy2qci2u+qSXjh4KUbSQyelsx4nABw2vPwzQkafU6S593bjBMCqdwkG5EG1dFz0mksR0k4SJQ+lRI6wdCatc/FXLKkamGlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YSiiALgF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cmz/Dffe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CBE2C4CEE9;
-	Thu, 15 May 2025 12:07:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YSiiALgF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3763C4CEED;
+	Thu, 15 May 2025 12:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747310829;
-	bh=0bVLepRmSf4x42XCWjSkvidF6vxwDbzkDvwqQdZ6Yjo=;
+	s=k20201202; t=1747310832;
+	bh=6SLHwAUM+btkcB2mBfsCr4BZVFt3PSCOic7YPAKPi2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Cmz/DffeKKpKIicL52xP7tQz7bi5fjZsxgdh2m9n4LvmmEeDwm8/fZFfqp3Ocqrnc
-	 fT+hKgwkwJAa6TH8mYlx1fPa/65KpIGMote3OZTIz4AaWrkv73yWg2eMeeT8Ujdbyt
-	 iPWfUMto5FmZVw79MLvUOU8RCa4bD5QgnGebGA3RDAqbYsG9dnOrE7hkfP5kskb3Pl
-	 zDpLDO4Y9PzDgFryVRJQzR9i7xrvYXY3VCWvpQAz9FesGPnbwklVbzuyhDrQw7ns04
-	 QMORKDrDf9VgjzOetR4HGQMFCHaqE6MHdCxsWlnMnSiQVzQUaAk5El16IsfpgufkME
-	 WNfFzvt7fUS3Q==
+	b=YSiiALgFOU0cuDpivGfNQorZvkaDRiXlauriTFhJLBI3IxW8Puj99quPban2aT6b2
+	 RIKrEDr/XISSUXc2WubCkqzEOqEpXZQOKxB1rnezIwGJN5JGAjWuP5Lyn+v7A+b0Kq
+	 ImSNi0kzWc0ay1ozx5Ofg5ef9Hr1JFO/L+f4ut8yCbp1V8hGRmRzODO8lp7j7MlO5W
+	 hFn96g54qo8eBxR51Do4RSWpaSNo3Y8HF/2RNtMG/67D2jNLaKMMVEEiLD2TaxDC8t
+	 43gtvQ5xXC9gj75h/6vF5ZK+oIgqqcJNxi/JnNMU4lz0VW89SeFFp/JlxFPELaTIIU
+	 Sob++HOsJSpsw==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -41,9 +41,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	David Woodhouse <dwmw@amazon.co.uk>
-Subject: [PATCH 21/32] x86/boot/e820: Change e820_search_gap() to search for the highest-address PCI gap
-Date: Thu, 15 May 2025 14:05:37 +0200
-Message-ID: <20250515120549.2820541-22-mingo@kernel.org>
+Subject: [PATCH 22/32] x86/boot/e820: Rename gap_start/gap_size to max_gap_start/max_gap_start in e820_search_gap() et al
+Date: Thu, 15 May 2025 14:05:38 +0200
+Message-ID: <20250515120549.2820541-23-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250515120549.2820541-1-mingo@kernel.org>
 References: <20250515120549.2820541-1-mingo@kernel.org>
@@ -55,47 +55,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Right now the main x86 function that determines the position and size
-of the 'PCI gap', e820_search_gap(), has this curious property:
+The PCI gap searching functions pass around pointers to the
+gap_start/gap_size variables, which refer to the maximum
+size gap found so far.
 
-        while (--idx >= 0) {
-	...
-			if (gap >= *gap_size) {
-
-I.e. it will iterate the E820 table backwards, from its end to the beginning,
-and will search for larger and larger gaps in the memory map below 4GB,
-until it finishes with the table.
-
-This logic will, should there be two gaps with the same size, pick the
-one with the lower physical address - which is contrary to usual
-practice that the PCI gap is just below 4GB.
-
-Furthermore, the commit that introduced this weird logic 16 years ago:
-
-  3381959da5a0 ("x86: cleanup e820_setup_gap(), add e820_search_gap(), v2")
-
-  -                       if (gap > gapsize) {
-  +                       if (gap >= *gapsize) {
-
-didn't even declare this change, the title says it's a cleanup,
-and the changelog declares it as a preparatory refactoring
-for a later bugfix:
-
-  809d9a8f93bd ("x86/PCI: ACPI based PCI gap calculation")
-
-which bugfix was reverted only 1 day later without much of an
-explanation, and was never reintroduced:
-
-  58b6e5538460 ("Revert "x86/PCI: ACPI based PCI gap calculation"")
-
-So based on the Git archeology and by the plain reading of the
-code I declare this '>=' change an unintended bug and side effect.
-
-Change it to '>' again.
-
-It should not make much of a difference in practice, as the
-likelihood of having *two* largest gaps with exactly the same
-size are very low outside of weird user-provided memory maps.
+Rename the variables to say so, and disambiguate their namespace
+from 'current gap' variables.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Andy Shevchenko <andy@kernel.org>
@@ -106,22 +71,72 @@ Cc: Kees Cook <keescook@chromium.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- arch/x86/kernel/e820.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/e820.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index d00ca2dd20b7..b2e2ada50adb 100644
+index b2e2ada50adb..1eb5afbdd9e6 100644
 --- a/arch/x86/kernel/e820.c
 +++ b/arch/x86/kernel/e820.c
-@@ -697,7 +697,7 @@ static int __init e820_search_gap(unsigned long *gap_start, unsigned long *gap_s
+@@ -680,7 +680,7 @@ static void __init e820__update_table_kexec(void)
+ /*
+  * Search for a gap in the E820 memory space from 0 to MAX_GAP_END (4GB).
+  */
+-static int __init e820_search_gap(unsigned long *gap_start, unsigned long *gap_size)
++static int __init e820_search_gap(unsigned long *max_gap_start, unsigned long *max_gap_size)
+ {
+ 	u64 last = MAX_GAP_END;
+ 	int idx = e820_table->nr_entries;
+@@ -697,9 +697,9 @@ static int __init e820_search_gap(unsigned long *gap_start, unsigned long *gap_s
  		if (last > end) {
  			unsigned long gap = last - end;
  
--			if (gap >= *gap_size) {
-+			if (gap > *gap_size) {
- 				*gap_size = gap;
- 				*gap_start = end;
+-			if (gap > *gap_size) {
+-				*gap_size = gap;
+-				*gap_start = end;
++			if (gap > *max_gap_size) {
++				*max_gap_size = gap;
++				*max_gap_start = end;
  				found = 1;
+ 			}
+ 		}
+@@ -719,29 +719,29 @@ static int __init e820_search_gap(unsigned long *gap_start, unsigned long *gap_s
+  */
+ __init void e820__setup_pci_gap(void)
+ {
+-	unsigned long gap_start, gap_size;
++	unsigned long max_gap_start, max_gap_size;
+ 	int found;
+ 
+-	gap_size = SZ_4M;
+-	found  = e820_search_gap(&gap_start, &gap_size);
++	max_gap_size = SZ_4M;
++	found  = e820_search_gap(&max_gap_start, &max_gap_size);
+ 
+ 	if (!found) {
+ #ifdef CONFIG_X86_64
+-		gap_start = (max_pfn << PAGE_SHIFT) + SZ_1M;
++		max_gap_start = (max_pfn << PAGE_SHIFT) + SZ_1M;
+ 		pr_err("Cannot find an available gap in the 32-bit address range\n");
+ 		pr_err("PCI devices with unassigned 32-bit BARs may not work!\n");
+ #else
+-		gap_start = 0x10000000;
++		max_gap_start = 0x10000000;
+ #endif
+ 	}
+ 
+ 	/*
+ 	 * e820__reserve_resources_late() protects stolen RAM already:
+ 	 */
+-	pci_mem_start = gap_start;
++	pci_mem_start = max_gap_start;
+ 
+ 	pr_info("[gap %#010lx-%#010lx] available for PCI devices\n",
+-		gap_start, gap_start + gap_size - 1);
++		max_gap_start, max_gap_start + max_gap_size - 1);
+ }
+ 
+ /*
 -- 
 2.45.2
 
