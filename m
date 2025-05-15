@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D912820A0;
-	Thu, 15 May 2025 02:40:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA52B286D5A;
+	Thu, 15 May 2025 02:49:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747276803; cv=none; b=lBvSJPm8RDUOJ7NnY1li0Gbrq5ApA2TnleN3vp1GLuHn/iN6Zwdoqh6NHnGQGiJo5fX4PQOFOLBcHNgyBsJcwT0FRLDFEcT3FkpSyQwkfxx5gJvBC4lJWG+jBG9knSG3XAXhYXJ1bHKFuHYtzuhLTJkz+RbX21F83m59qw4vQI0=
+	t=1747277400; cv=none; b=V1D7DCoL/reSKEY3Nazm3VURhZ7q+LfRDu6XpjWSm0USUCpXEJTqpZlkY+EVJDvk1P6IdTcR2e6fU1XJF5M9oegJG9hMYBY8wayIXU5t8h17RhZ89VdT1Szmmou5OZ0GKAn5E9p17QiPEMUHNJi/mU/kcGHlEHyJKjCxneS5FmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747276803; c=relaxed/simple;
-	bh=lrEamcmK20W/gtuxO3aHJagod68XsFUEPjGcfYzxcfI=;
+	s=arc-20240116; t=1747277400; c=relaxed/simple;
+	bh=C3MVzZ0jJOmH+trVeZZpz6flDf2bB3KzR/hbvOSRzH8=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=emAWEjETnO5pyeFnT+wc5krg8k6z1/lAcZpJjh4zRlyZJT1uEFf5P6rKfh2T61yB7r5Mcd3c2q0s7OzIoZw+gZ2hbP2hrn1KvF49jxZgnw23dbxgDa0nDggzbW/CdXM8YgeQCAfLKONVF5FO2eW/gUokNuQjwTmbF4CdgVnocUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BnepMtQj; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=mZ3JCOZJzyZhQczkO1tTrwljBXvgiU++4GER2w7vBVQifn8PtNBU/SM0WvgqBXuBtGkLV8xPoR2VlW2Y98QQCSpttiPtoQH+J+fojRJFt6bTZfLiSC06TvFmaPut5y/lN8PCPZi3VlF7mWVszp+6fmed/yCLZgSfCa15FxE6HIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sm3FWyXI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BnepMtQj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8528C4CEE3;
-	Thu, 15 May 2025 02:40:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sm3FWyXI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE49C4CEE3;
+	Thu, 15 May 2025 02:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747276801;
-	bh=lrEamcmK20W/gtuxO3aHJagod68XsFUEPjGcfYzxcfI=;
+	s=k20201202; t=1747277399;
+	bh=C3MVzZ0jJOmH+trVeZZpz6flDf2bB3KzR/hbvOSRzH8=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=BnepMtQjO9C84Nood7lwGeUpSiG055lgXjyxJj76jaoq4SSwM6/Ibq0uNIHHBJKuT
-	 +CJZC3fS/qPJmhMjTTZms3ptrsExAYDrjS42BMzdlGeVBBXG8kGuxmexWtTj/52JFB
-	 5H4kakn75HmqktEKlj80RIlfsBTXna7RjBM5iR8/Az07GhO61lDsbJpbXrOhBYfcuq
-	 +26RNZujKIDJC3/dn1ZwFKNkJHqG9cPY+qJXJyOeCCBkMwTNGqm0ERUwGyei1Fn2an
-	 EgSjhDzk9N8kAQcOcqMQKWr3+meF5mj5BoGN3EXUKbcE267J/9uI20kn3c57RHQtiB
-	 RoGD9sjsgVa1g==
+	b=sm3FWyXI2URv1hDb2WPxnVccl1IK8m+ScDuSOfAVMrPsQGgKUAJ7LDGSmrwdQM5Rl
+	 wJxpqp0S6cPdWnUJWiszOhdANvOdlMkaki5ZZLRwZ7jcPd1+tZurh+P/9MalRBi2yT
+	 r3Yoguj2F0NmYdXjP++QrO8WNrTNXyJjEIfSeLkLjB3d4J83DRd7p4KeUxh2HENrLn
+	 oM95Njg31aphyCYtOKGehTakw3if0+g26notOW587cUlNCMML+EG4bQuPqwKufwBkx
+	 iJX9tP/PWxZ/x3heM7CCnSm6pW6puZWnALrtxdZUjCPVE5Y6H8sT/ywClbGGZUEVis
+	 BAwIAWA4RqD4A==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33DBA380AA66;
-	Thu, 15 May 2025 02:40:40 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADF15380AA66;
+	Thu, 15 May 2025 02:50:37 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,43 +37,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] net: ethernet: mtk_eth_soc: fix typo for declaration
- MT7988 ESW capability
+Subject: Re: [PATCH v2 net-next 1/2] net: cpsw: convert to ndo_hwtstamp_get() and
+ ndo_hwtstamp_set()
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <174727683900.2587108.2642829871364981642.git-patchwork-notify@kernel.org>
-Date: Thu, 15 May 2025 02:40:39 +0000
-References: <b8b37f409d1280fad9c4d32521e6207f63cd3213.1747110258.git.daniel@makrotopia.org>
-In-Reply-To: <b8b37f409d1280fad9c4d32521e6207f63cd3213.1747110258.git.daniel@makrotopia.org>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: nbd@nbd.name, sean.wang@mediatek.com, lorenzo@kernel.org,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, matthias.bgg@gmail.com,
- angelogioacchino.delregno@collabora.com, linux@armlinux.org.uk,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+ <174727743626.2588817.4499781279428820169.git-patchwork-notify@kernel.org>
+Date: Thu, 15 May 2025 02:50:36 +0000
+References: <20250512114422.4176010-1-vladimir.oltean@nxp.com>
+In-Reply-To: <20250512114422.4176010-1-vladimir.oltean@nxp.com>
+To: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: netdev@vger.kernel.org, kory.maincent@bootlin.com, andrew@lunn.ch,
+ s-vadapalli@ti.com, rogerq@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ richardcochran@gmail.com, linux@armlinux.org.uk, vadim.fedorenko@linux.dev,
+ linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 
 Hello:
 
-This patch was applied to netdev/net.git (main)
+This series was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Tue, 13 May 2025 05:27:30 +0100 you wrote:
-> From: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
+On Mon, 12 May 2025 14:44:21 +0300 you wrote:
+> New timestamping API was introduced in commit 66f7223039c0 ("net: add
+> NDOs for configuring hardware timestamping") from kernel v6.6. It is
+> time to convert the two cpsw drivers to the new API, so that the
+> ndo_eth_ioctl() path can be removed completely.
 > 
-> Since MTK_ESW_BIT is a bit number rather than a bitmap, it causes
-> MTK_HAS_CAPS to produce incorrect results. This leads to the ETH
-> driver not declaring MAC capabilities correctly for the MT7988 ESW.
-> 
-> Fixes: 445eb6448ed3 ("net: ethernet: mtk_eth_soc: add basic support for MT7988 SoC")
-> Signed-off-by: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> The cpsw_hwtstamp_get() and cpsw_hwtstamp_set() methods (and their shim
+> definitions, for the case where CONFIG_TI_CPTS is not enabled) must have
+> their prototypes adjusted.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net] net: ethernet: mtk_eth_soc: fix typo for declaration MT7988 ESW capability
-    https://git.kernel.org/netdev/net/c/1bdea6fad6fb
+  - [v2,net-next,1/2] net: cpsw: convert to ndo_hwtstamp_get() and ndo_hwtstamp_set()
+    https://git.kernel.org/netdev/net-next/c/36d9b5425809
+  - [v2,net-next,2/2] net: cpsw: isolate cpsw_ndo_ioctl() to just the old driver
+    https://git.kernel.org/netdev/net-next/c/4cde0e4224ce
 
 You are awesome, thank you!
 -- 
