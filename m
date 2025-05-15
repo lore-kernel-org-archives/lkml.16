@@ -1,48 +1,48 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792A2298C1F;
-	Thu, 15 May 2025 09:35:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FBE297B68;
+	Thu, 15 May 2025 09:35:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747301718; cv=none; b=MYoTWtJyMxP+Optm0LCFs+Yxcr1t33ApRfe/wC5T51mOdqs23Zrc0hFunHF7KBBHPxJJtx3wzjeFM8C36FZocU7cqBEsg3vVDUulK/mtbd81Wb8MUyU/Cj6Slp5WoRqAtc5qNU6uvRCWwipZ1AVGD9FrV7PuEDirZyiyfUOsC7w=
+	t=1747301719; cv=none; b=bYmFwhQMXYfvXzwFi/ytYwyB1bePqgFnV1es+fanMPaD0f6N4wS0WpSVSpVtDmCau4C2/cVrYdBOuZFoPz9FfuPLh26QYr2ueL2TUyKh+rcQp8h4R9d330wiLK76n/hDNffOJ44g83wbK538559pQobWaGCuOPEC3je8ghcCNzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747301718; c=relaxed/simple;
-	bh=3pbN4Dszrb002npCWLEp/tkSnuzB1/DPj5YzvimkpCo=;
+	s=arc-20240116; t=1747301719; c=relaxed/simple;
+	bh=QC9Zp9J2W3Q0wci0hJ6ilKwMww3FezZZA+qV4mfHTY0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MIXkWBXYQWsF5zla240tay84Wcv9I9sMgUsd+ea13RAK4FIlpnc9tgZRXoorJUyXlMo5ne1W+4h34tDW8riOePR23TQd9yxBqDdRIHSaKkSlJyS49mDyGJIapbQn+H5y73/KWjMctsedmxQuVzqV9XzG4OGeEHrJrHjZTF4c9jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=pDRCgd+A; arc=none smtp.client-ip=210.61.82.184
+	 MIME-Version:Content-Type; b=MLlS9vIKsP0nnzaVfK10tC0yIErfKK7zXsVWf1XSK45TSqjteFsl5NPDa1cz10uMreAyUkSErhqy1WLXSosqpdfbf631Lqta+xBpsI2plwtqSdnma6LmXwvVINQLYo2pzWPdJ5h1P+P6eJ+C+Z7jdmjPWSIOclTjYdt8bpsecq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=GTBeaLGh; arc=none smtp.client-ip=60.244.123.138
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pDRCgd+A"
-X-UUID: e54b0726316f11f082f7f7ac98dee637-20250515
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GTBeaLGh"
+X-UUID: e7113b70316f11f0813e4fe1310efc19-20250515
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=u/+0dwJEixmbwzYEuP2QfiyZsxMQa+r+ZFjKbyOO3Rs=;
-	b=pDRCgd+AohafdBjCw9ogFIfIdjzFx5Q4khv2/BxTx8+VEhYluKLachaLJ3LSdWxNtdbvv1K6ItCFsxW5fq3TEZLZ1rSlQRzSBm3E7pid0NXoWjj2IBkwlC/W4HljzShn6+GcoCSOjCQGk8J+7VqsNXEOdTDqIkG6stcIn0Svb2Q=;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=UpijhnmjCocVgZygncOLU49SwbbjYQwSUZZ1BwdKB8s=;
+	b=GTBeaLGhXSl+TBStrztr+y7/ADESzFEDNVaSmjpTdVvIOx80mdnLd5xKgk16yf0L0Cx3huWYeijyAePmqccP4RNxJKgkkeDo6T0qWSGEfE0gMgS3mkKCfaFVqrEiXH0GE0e+vxy5h5+BBIoDvH+RLodTrUOW9LNgmUDFAumh6rI=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:5119fa08-23f6-4ce4-bbe5-5bb11ac5b293,IP:0,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:-5
-X-CID-META: VersionHash:0ef645f,CLOUDID:abe504c0-eade-4d5b-9f81-31d7b5452436,B
+X-CID-O-INFO: VERSION:1.2.1,REQID:2a0195a6-a980-4a0e-9504-00c87b5a0379,IP:0,UR
+	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-25
+X-CID-META: VersionHash:0ef645f,CLOUDID:afe504c0-eade-4d5b-9f81-31d7b5452436,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
 	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
 	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0,NGT
 X-CID-BAS: 0,NGT,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: e54b0726316f11f082f7f7ac98dee637-20250515
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
+X-UUID: e7113b70316f11f0813e4fe1310efc19-20250515
+Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw01.mediatek.com
 	(envelope-from <paul-pl.chen@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1771164103; Thu, 15 May 2025 17:35:10 +0800
+	with ESMTP id 156120095; Thu, 15 May 2025 17:35:13 +0800
 Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Thu, 15 May 2025 17:35:09 +0800
+ 15.2.1258.39; Thu, 15 May 2025 17:35:12 +0800
 Received: from mtksitap99.mediatek.inc (10.233.130.16) by
  mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Thu, 15 May 2025 17:35:09 +0800
+ 15.2.1258.39 via Frontend Transport; Thu, 15 May 2025 17:35:12 +0800
 From: paul-pl.chen <paul-pl.chen@mediatek.com>
 To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
 	<chunkuang.hu@kernel.org>, <angelogioacchino.delregno@collabora.com>
@@ -55,9 +55,9 @@ CC: <matthias.bgg@gmail.com>, <p.zabel@pengutronix.de>,
 	<dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
 	<linux-arm-kernel@lists.infradead.org>,
 	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH v3 11/17] drm/mediatek: drm/mediatek: Export OVL ignore pixel alpha function
-Date: Thu, 15 May 2025 17:34:23 +0800
-Message-ID: <20250515093454.1729720-12-paul-pl.chen@mediatek.com>
+Subject: [PATCH v3 17/17] drm/mediatek: Add support for MT8196 multiple mmsys
+Date: Thu, 15 May 2025 17:34:29 +0800
+Message-ID: <20250515093454.1729720-18-paul-pl.chen@mediatek.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250515093454.1729720-1-paul-pl.chen@mediatek.com>
 References: <20250515093454.1729720-1-paul-pl.chen@mediatek.com>
@@ -72,84 +72,165 @@ Content-Type: text/plain
 
 From: Nancy Lin <nancy.lin@mediatek.com>
 
-For the new BLENDER component, the OVL ignore pixel alpha logic
-should be exported as a function and reused it.
+Add code to support MT8196 SOC Multi MMSYS Driver
 
 Signed-off-by: Nancy Lin <nancy.lin@mediatek.com>
 Signed-off-by: Paul-pl Chen <paul-pl.chen@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 24 ++++++++++++++++++++++--
- drivers/gpu/drm/mediatek/mtk_disp_ovl.h |  1 +
- 2 files changed, 23 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c | 119 ++++++++++++++++++++++++-
+ 1 file changed, 115 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-index a516b7c82b5a..747898a574da 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-@@ -211,6 +211,23 @@ void mtk_ovl_disable_vblank(struct device *dev)
- 	writel_relaxed(0x0, ovl->regs + DISP_REG_OVL_INTEN);
- }
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+index 1e49ca3fef80..229f84a4e59c 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -193,6 +193,10 @@ static const struct mtk_drm_route mt8188_mtk_ddp_main_routes[] = {
+ 	{0, DDP_COMPONENT_DSI0},
+ };
  
-+bool mtk_ovl_is_ignore_pixel_alpha(struct mtk_plane_state *state, unsigned int blend_mode)
-+{
-+	if (!state->base.fb)
-+		return false;
-+	/*
-+	 * Although the alpha channel can be ignored, CONST_BLD must be enabled
-+	 * for XRGB format, otherwise OVL will still read the value from memory.
-+	 * For RGB888 related formats, whether CONST_BLD is enabled or not won't
-+	 * affect the result. Therefore we use !has_alpha as the condition.
-+	 */
++static const struct mtk_drm_route mt8196_mtk_ddp_routes[] = {
++	{2, DDP_COMPONENT_DSI0},
++};
 +
-+	if (blend_mode == DRM_MODE_BLEND_PIXEL_NONE || !state->base.fb->format->has_alpha)
-+		return true;
+ static const unsigned int mt8192_mtk_ddp_main[] = {
+ 	DDP_COMPONENT_OVL0,
+ 	DDP_COMPONENT_OVL_2L0,
+@@ -231,6 +235,50 @@ static const unsigned int mt8195_mtk_ddp_ext[] = {
+ 	DDP_COMPONENT_DP_INTF1,
+ };
+ 
++static const unsigned int mt8196_mtk_ddp_ovl0_main[] = {
++	DDP_COMPONENT_DRM_OVLSYS_ADAPTOR0,
++	DDP_COMPONENT_OVL0_DLO_ASYNC5,
++};
 +
-+	return false;
-+}
++static const unsigned int mt8196_mtk_ddp_disp0_main[] = {
++	DDP_COMPONENT_DLI_ASYNC0,
++	DDP_COMPONENT_DLO_ASYNC1,
++};
 +
- u32 mtk_ovl_get_blend_modes(struct device *dev)
- {
- 	struct mtk_disp_ovl *ovl = dev_get_drvdata(dev);
-@@ -539,7 +556,7 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
- 	unsigned int rotation = pending->rotation;
- 	unsigned int offset = (pending->y << 16) | pending->x;
- 	unsigned int src_size = (pending->height << 16) | pending->width;
--	unsigned int blend_mode = state->base.pixel_blend_mode;
-+	unsigned int blend_mode = mtk_ovl_get_blend_mode(state, ovl->data->blend_modes);
- 	unsigned int ignore_pixel_alpha = 0;
- 	unsigned int con;
- 
-@@ -557,7 +574,7 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
- 		 * For blend_modes supported SoCs, always enable alpha blending.
- 		 * For blend_modes unsupported SoCs, enable alpha blending when has_alpha is set.
- 		 */
--		if (blend_mode || state->base.fb->format->has_alpha)
-+		if (state->base.pixel_blend_mode || state->base.fb->format->has_alpha)
- 			con |= OVL_CON_AEN;
- 	}
- 
-@@ -584,6 +601,9 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
- 
- 	mtk_ddp_write_relaxed(cmdq_pkt, con, &ovl->cmdq_reg, ovl->regs,
- 			      DISP_REG_OVL_CON(idx));
++static const unsigned int mt8196_mtk_ddp_disp1_main[] = {
++	DDP_COMPONENT_DLI_ASYNC21,
++	DDP_COMPONENT_DVO0,
++};
 +
-+	if (mtk_ovl_is_ignore_pixel_alpha(state, blend_mode))
-+		ignore_pixel_alpha = OVL_CONST_BLEND;
- 	mtk_ddp_write_relaxed(cmdq_pkt, pitch_lsb | ignore_pixel_alpha,
- 			      &ovl->cmdq_reg, ovl->regs, DISP_REG_OVL_PITCH(idx));
- 	mtk_ddp_write_relaxed(cmdq_pkt, src_size, &ovl->cmdq_reg, ovl->regs,
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.h b/drivers/gpu/drm/mediatek/mtk_disp_ovl.h
-index 3f7d7d54479d..431567538eb5 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.h
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.h
-@@ -20,6 +20,7 @@ extern const u32 mt8195_ovl_formats[];
- extern const size_t mt8195_ovl_formats_len;
++static const unsigned int mt8196_mtk_ddp_ovl0_ext[] = {
++	DDP_COMPONENT_DRM_OVLSYS_ADAPTOR1,
++	DDP_COMPONENT_OVL0_DLO_ASYNC6,
++};
++
++static const unsigned int mt8196_mtk_ddp_disp0_ext[] = {
++	DDP_COMPONENT_DLI_ASYNC1,
++	DDP_COMPONENT_DLO_ASYNC2,
++};
++
++static const unsigned int mt8196_mtk_ddp_disp1_ext[] = {
++	DDP_COMPONENT_DLI_ASYNC22,
++	DDP_COMPONENT_DP_INTF0,
++};
++
++static const unsigned int mt8196_mtk_ddp_ovl1_third[] = {
++	DDP_COMPONENT_DRM_OVLSYS_ADAPTOR2,
++	DDP_COMPONENT_OVL1_DLO_ASYNC5,
++};
++
++static const unsigned int mt8196_mtk_ddp_disp0_third[] = {
++	DDP_COMPONENT_DLI_ASYNC8,
++	DDP_COMPONENT_DLO_ASYNC3,
++};
++
++static const unsigned int mt8196_mtk_ddp_disp1_third[] = {
++	DDP_COMPONENT_DLI_ASYNC23,
++};
++
+ static const struct mtk_mmsys_driver_data mt2701_mmsys_driver_data = {
+ 	.main_path = mt2701_mtk_ddp_main,
+ 	.main_len = ARRAY_SIZE(mt2701_mtk_ddp_main),
+@@ -327,8 +375,65 @@ static const struct mtk_mmsys_driver_data mt8195_vdosys1_driver_data = {
+ 	.min_height = 1,
+ };
  
- bool mtk_ovl_is_10bit_rgb(unsigned int fmt);
-+bool mtk_ovl_is_ignore_pixel_alpha(struct mtk_plane_state *state, unsigned int blend_mode);
- unsigned int mtk_ovl_get_blend_mode(struct mtk_plane_state *state, unsigned int blend_modes);
- unsigned int mtk_ovl_fmt_convert(unsigned int fmt, unsigned int blend_mode,
- 				 bool fmt_rgb565_is_0, bool color_convert,
+-static const struct mtk_mmsys_driver_data mt8365_mmsys_driver_data = {
+-	.mmsys_dev_num = 1,
++static const struct mtk_mmsys_driver_data mt8196_dispsys0_driver_data = {
++	.main_path = mt8196_mtk_ddp_disp0_main,
++	.main_len = ARRAY_SIZE(mt8196_mtk_ddp_disp0_main),
++	.main_order = 1,
++	.ext_path = mt8196_mtk_ddp_disp0_ext,
++	.ext_len = ARRAY_SIZE(mt8196_mtk_ddp_disp0_ext),
++	.ext_order = 1,
++	.third_path = mt8196_mtk_ddp_disp0_third,
++	.third_len = ARRAY_SIZE(mt8196_mtk_ddp_disp0_third),
++	.third_order = 1,
++	.mmsys_id = DISPSYS0,
++	.mmsys_dev_num = 4,
++	.max_width = 8191,
++	.min_width = 2, /* 2-pixel align when ethdr is bypassed */
++	.min_height = 1,
++};
++
++static const struct mtk_mmsys_driver_data mt8196_dispsys1_driver_data = {
++	.main_path = mt8196_mtk_ddp_disp1_main,
++	.main_len = ARRAY_SIZE(mt8196_mtk_ddp_disp1_main),
++	.main_order = 2,
++	.ext_path = mt8196_mtk_ddp_disp1_ext,
++	.ext_len = ARRAY_SIZE(mt8196_mtk_ddp_disp1_ext),
++	.ext_order = 2,
++	.third_path = mt8196_mtk_ddp_disp1_third,
++	.third_len = ARRAY_SIZE(mt8196_mtk_ddp_disp1_third),
++	.conn_routes = mt8196_mtk_ddp_routes,
++	.num_conn_routes = ARRAY_SIZE(mt8196_mtk_ddp_routes),
++	.third_order = 2,
++	.mmsys_id = DISPSYS1,
++	.mmsys_dev_num = 4,
++	.max_width = 8191,
++	.min_width = 2, /* 2-pixel align when ethdr is bypassed */
++	.min_height = 1,
++};
++
++static const struct mtk_mmsys_driver_data mt8196_ovlsys0_driver_data = {
++	.main_path = mt8196_mtk_ddp_ovl0_main,
++	.main_len = ARRAY_SIZE(mt8196_mtk_ddp_ovl0_main),
++	.main_order = 0,
++	.ext_path = mt8196_mtk_ddp_ovl0_ext,
++	.ext_len = ARRAY_SIZE(mt8196_mtk_ddp_ovl0_ext),
++	.ext_order = 0,
++	.mmsys_id = OVLSYS0,
++	.mmsys_dev_num = 4,
++	.max_width = 8191,
++	.min_width = 2, /* 2-pixel align when ethdr is bypassed */
++	.min_height = 1,
++};
++
++static const struct mtk_mmsys_driver_data mt8196_ovlsys1_driver_data = {
++	.third_path = mt8196_mtk_ddp_ovl1_third,
++	.third_len = ARRAY_SIZE(mt8196_mtk_ddp_ovl1_third),
++	.third_order = 0,
++	.mmsys_id = OVLSYS1,
++	.mmsys_dev_num = 4,
++	.max_width = 8191,
++	.min_width = 2, /* 2-pixel align when ethdr is bypassed */
++	.min_height = 1,
+ };
+ 
+ static const struct of_device_id mtk_drm_of_ids[] = {
+@@ -358,8 +463,14 @@ static const struct of_device_id mtk_drm_of_ids[] = {
+ 	  .data = &mt8195_vdosys0_driver_data},
+ 	{ .compatible = "mediatek,mt8195-vdosys1",
+ 	  .data = &mt8195_vdosys1_driver_data},
+-	{ .compatible = "mediatek,mt8365-mmsys",
+-	  .data = &mt8365_mmsys_driver_data},
++	{ .compatible = "mediatek,mt8196-dispsys0",
++	  .data = &mt8196_dispsys0_driver_data},
++	{ .compatible = "mediatek,mt8196-dispsys1",
++	  .data = &mt8196_dispsys1_driver_data},
++	{ .compatible = "mediatek,mt8196-ovlsys0",
++	  .data = &mt8196_ovlsys0_driver_data},
++	{ .compatible = "mediatek,mt8196-ovlsys1",
++	  .data = &mt8196_ovlsys1_driver_data},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, mtk_drm_of_ids);
 -- 
 2.45.2
 
