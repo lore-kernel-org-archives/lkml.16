@@ -1,238 +1,405 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF43E21FF33
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 16:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BA621FF3E;
+	Thu, 15 May 2025 16:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747326814; cv=none; b=CTnLQPd+YA4yRpbnpLBLp1lgUpCjU+cwiQXTB/iMHEIbBIx43Y906hvjsUFKNKPyxx/1Ut6Jkn1QPTFrlZHXtSZUyed48jRwPEcGgdRO4AoScC9othX0S5xS2ZiC9f92YvxzfKqoztOEWxekYEaf5U3fSU18q0Nc1YJvTDon72E=
+	t=1747326904; cv=none; b=frnhaUbujUSBItwtSVs4eokk4pBjXSOzrTVAFUoOzfCkZsQgkJvXsFkpfKl2dd2EIK+1cCp39Ds1D3CK/dB3iWeXYQnFBSVNfuJs62waK37LusOO/Ysll7/+TqXX0eAwEA6mJ8Awlj2fsaSvSDMRq7FNErgJLymNBE/pxxrZZT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747326814; c=relaxed/simple;
-	bh=vfsPo6kqmoyc6t4RDCZRubbTIjpZOLVaBI3BRmArROw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DaeC3fdGOelSPEF1Ng3mz2OqGDJyopuB1u11BelxhahKc/9Bu1SpMsPDFC/HaJVgyfhCi4fbM447VNz2Ingmy7/wKmriKgXC2FrjSG3yUCcco6Z3w0ixnR83Y5o7UX51tu/nnHP6qxLcS/hQgW7BUaAFuTPHmRL3mZQ00Iye09g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=U3IkSFIw; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="U3IkSFIw"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54FEF914016622
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 16:33:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	862jGz73qlWJ7n8nlKWUcwMkWwMBWWvd7YMchYZdOp4=; b=U3IkSFIwni0+8jPw
-	3kt9k1RvvxZOnwblZ42CI0zG/ean0/BUNKo6oo0xYcDCo250o9aMOROr2TJipmMu
-	K4KwVQ9qOg54gY6rrBrTmkygLc+dNdoQ/nUftCRmVGgiS1L3Hu0wgCP+5rE3Lr0L
-	jDdJYpiGG1n0EY6T34cYOKbfTRVSoi/G4BuVxScyyWoUEPpvPfkXqLhEeulK0pDA
-	cfMIvnD2GToP0C7bQTtY4fR2foyMlborZkvoTUMZ+iEti39qVRBm08ZMvgE+EyTb
-	7zYOfEwGK0LMS3GCuZZmMqtOiAGjPjP2tPN/2YXNA8msdkIZzNKSNFQ4KW2Hhz2p
-	hJdEfA==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcmq1bd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 16:33:31 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-22aa75e6653so9124265ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:33:31 -0700 (PDT)
+	s=arc-20240116; t=1747326904; c=relaxed/simple;
+	bh=/wYBKwb1OUxzZsfClXqfSuJhz7Sq52vo6cckxtTJkHU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=auHPmvEYpFfFlh8mHDvPNHOnxBXPWKuBQrATKFI5vsUmCP20/FxzH0l3wRU+zqH7nl94y+ZY3Gyk1sbr+IardtlpvcSPCwIKslDeDJD+x3oP27gc2K15TyhnLIZtYR406M6ANOyMnGg19Cm07fwNperqrqJs5DyA/0dB5gSibiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a108684f90so766271f8f.1;
+        Thu, 15 May 2025 09:35:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747326811; x=1747931611;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=862jGz73qlWJ7n8nlKWUcwMkWwMBWWvd7YMchYZdOp4=;
-        b=d+12gbenf1Zph0Lp2qiJCKzkGKGkokZZEuF2Ye5WTSkshbehFWRvFi+DNjRNXfOLP0
-         /pCtb5oWC9l31E9TewoYt+QJ7UomX/ChAahSz2bdFvoiiT5vuMH+agXEi4oXEFRo1aUM
-         sg7GNcnCcO5u3taUGLUOjPRGv1hALS/LtQyPrABQlf0FOAb0+ZFFnDoom9E6ux6mUzQN
-         2eaOZaNIlynhANoryos3dXMHi85vJMaw4lx9x9kQiqIpNe1MwNhXTSJ8EFkl5+9K5sAp
-         thXaDzC444uj8tS0sdQUwFml2XyHKl7Za1DUo7UpF0SfqK7po/hB1j+Cp6jSk1EMnc5d
-         5iAg==
-X-Forwarded-Encrypted: i=1; AJvYcCVyjQYxNJ4HcthFXGtqogP6wUEeZdqMwxECTV482iCysRavp6v1ypFHSTlEDFLX2uGaLJacy7e4QkYtMXA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFs55wfM//wRMaX4u9mu0ftnxTjCKJ4xnOgPkzF59orsUqVnfl
-	X5sQccORi2l7/esY4a/+CbphVhaBDkVUOKz0ogmC2aGFiGkbymaygVaSggYjxDyEnXJaVylF1YF
-	GKKSY6746HaVBYXO9+QNa5uL+JiACYFwQ5IVbWGNyB35eQJ90CgmyV2KTYILtpx1S5rw=
-X-Gm-Gg: ASbGncvhcm70y4knLlHknnHGv8qKVRWb21Gh6DR9gBLOMBJTCE/y2qyt5nExF/kxfu7
-	OZRZjQNstD9GDf4wMGWiFoLTC99CtEHuKQWCIF0svn+7iYP02s86wS6uxSmuUfUAwfocVqLEw+9
-	iDp/+EOAASifcXbcOxQbqtoTun5EhkrxlOaWM13qzkP2rbVzxKJ518wAYdDjOQnrFaLwNHL6PrI
-	WVKQQUJV53bfWw/1gvxcSJwfxYr1jPsypJwNlWUeNeMy25Xmqm+npfoI46q+qSQ2XiUXtfObkwA
-	g5m1CMQ/9yVKNtoqDVKT0Plec9eQ98bkUuLp1k5bj+01PNT10vsvEhVzVY5Vo+TRgcA=
-X-Received: by 2002:a17:903:2ece:b0:223:432b:593d with SMTP id d9443c01a7336-231d4599a7amr1470065ad.42.1747326810618;
-        Thu, 15 May 2025 09:33:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH4winHiJbc+0IhMnMet2XZCLQUA+UOfrUcc7trJErFRppvnj05B0//ijXWpNHLurqvAGyknA==
-X-Received: by 2002:a17:903:2ece:b0:223:432b:593d with SMTP id d9443c01a7336-231d4599a7amr1469915ad.42.1747326810095;
-        Thu, 15 May 2025 09:33:30 -0700 (PDT)
-Received: from [10.227.110.203] (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231c38d2fb4sm10421385ad.228.2025.05.15.09.33.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 09:33:29 -0700 (PDT)
-Message-ID: <2b0a1115-b75f-491b-b2e3-85b6f433b9d9@oss.qualcomm.com>
-Date: Thu, 15 May 2025 09:33:28 -0700
+        d=1e100.net; s=20230601; t=1747326901; x=1747931701;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=syyAJcOs6Ta0VHvxjwld6+DDJxWneemMl4TKeTCSxUI=;
+        b=bEF2inFD719T3EKMgxaayoxoGEr1XLWHY3p8znh9gHXvQ72rA8/I2PXv1kjtS4nUdN
+         k8453y9wcHhbX/p9MVVqjmVIS2yoyfT605g8z6vOL1en7u5ryzncTwCwP1vveDSu2p91
+         Z3Vc2uCYtEfUSQRX8WIth3xBTOYucWCBh50Acos1YM3eglTTjkK5L4UT9HG5iAq1Wwp5
+         pkYZvpVsjsD7mrRRKowQoQijO4RWZdPJ5O8+ZYMxypr1fFP9omSlUj7OmubuAffK+TaG
+         ecL3FWwqtuyDZEArdELBaOJjcLoJ6u5AC/9FMRyq6QNXl2N/qE9Ll5H92pLlnBfB+yFW
+         Br/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUffHNT5vqSVnnDcwyTh0Pk8zlzAk+32Q+oa10H5yDxqxGSd0YcOgJYrIjt1GWCPD1tcACe9DLKNX2MDjHDPUpdLvgg@vger.kernel.org, AJvYcCUvSkuQ+R/H5uRPmlmdKHNX/L/pC67JMnbS3l6ZIhS7fQDmk1JuEtO3eY+hXYwvw2z/Q3ecy4AdA7hqcw82@vger.kernel.org, AJvYcCWhIXcgJu47eGbW6uHzdI9i6Y/LctQbA1RcdGSLcJ1vB/7NXjzAydivjZoctO+ISd6kOFMduNUA3G8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8PAA3tzb0M5gW5x7ThAwQlZWAzCAX/PqC3quIO3GX6e77dHMi
+	A+3CeuxEjo07TS/tNvvsdncgTamW/kAzRTrJ32vsbx0F3YSLgaoH6KuX
+X-Gm-Gg: ASbGnctE/s1Zf8Bj8WHKsZRh05UxRglHa2xAGahKd8fFU2HNczJvPErxATip/i8Uo+D
+	FrfBRQHmwGk8dQiLKVwecap3TEWsDuxYDCYvhhaPrxqChx0jeuAobgMdYIcanGq/1jywqnod3VV
+	7KWSzW7dt9EV4eJgggZoXh2FhGx/DghUM5n32C9CyOqx+vWQf4F6CqQQ9A7dqBRoW15lfIfbyGT
+	9ZWAhtvbu4dSZOr7t7kXlDMLfWy5NzJqsVYjXNKwvAqURdfGFfebhrIEYh2oIqYCXPj8dxXPZAn
+	Z/LkF+n8cinjVEIG8br1taFAdIJMWaQql26sM15RnRBrDJdwZnd7WOe3hTZLce6Qyg==
+X-Google-Smtp-Source: AGHT+IGZW7mB608zuIBsXjfOJOOnzPlTRp/POpeXOjwDDDHLSfRMyw4ONIM21jGHoK7Via7ZU/Re+A==
+X-Received: by 2002:a05:6000:2012:b0:3a0:ad33:c1b3 with SMTP id ffacd0b85a97d-3a35c834d5amr469597f8f.3.1747326900430;
+        Thu, 15 May 2025 09:35:00 -0700 (PDT)
+Received: from costa-tp.bos2.lab ([2a00:a041:e280:5300:9068:704e:a31a:c135])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca5a87fsm10016f8f.29.2025.05.15.09.34.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 09:35:00 -0700 (PDT)
+From: Costa Shulyupin <costa.shul@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Tomas Glozar <tglozar@redhat.com>,
+	John Kacur <jkacur@redhat.com>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	Eder Zulian <ezulian@redhat.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Jan Stancek <jstancek@redhat.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] rtla: Set distinctive exit value for failed tests
+Date: Thu, 15 May 2025 19:20:05 +0300
+Message-ID: <20250515162133.29507-1-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 9/9] CodingStyle: flip the rule about curlies
-To: Alexey Dobriyan <adobriyan@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc: corbet@lwn.net, workflows@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250509203430.3448-1-adobriyan@gmail.com>
- <20250509203430.3448-9-adobriyan@gmail.com>
- <2025051001-undertow-unsolved-3aee@gregkh>
- <433d5f82-3ca9-40b8-82e8-acd647f55d67@oss.qualcomm.com>
- <2025051204-runt-mobility-6fbc@gregkh>
- <d21af9bc-baec-4b13-b0e0-d02829822682@p183>
-From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Content-Language: en-US
-In-Reply-To: <d21af9bc-baec-4b13-b0e0-d02829822682@p183>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDE2NCBTYWx0ZWRfX2RdNxaXzEZrw
- 3Gk9HcrtJ2wzOXdPDhP+oDt5utp9I/IFLU8S0LtkbrMRpA/ZXPv6B+QfgCqp1h2TrDGIafZlj81
- g53dYNt82j8sEVBzo2LK5Y5ITnmCS1LjT7USclxnNhip+VmcU1ddwRvinFibneLxz3BGXQ8uQmq
- 8XPP78Vt2g0kiSDDJc7MWbXoxLlDLHiCXtUbwqzTvAaBu3KPU2eCUit0/rWDNcrdv9TjAGUiSaE
- /6AVYWOlE2BqfpIw7cOIhEmowgHwh8+vOjUsTpYovJsL9qlPptLoidn/1VQpDpGJEe2gIegRRVV
- u1AMG2OzXrwtRrXHVrIVTgJWXm4+KnV1lVGz4ZOqQfvDPRARl5425+PI3d2jHuZ+C3hIX4rg6DL
- p+rOsaADOsGU0u1HFU2KoXqMGcwPVJ+n1Tb/zS643Hw2FqZL4oVXtIARuE1Rg94SM/gTHncN
-X-Authority-Analysis: v=2.4 cv=G5scE8k5 c=1 sm=1 tr=0 ts=6826175b cx=c_pps
- a=JL+w9abYAAE89/QcEU+0QA==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=nLmYZ6Dm7FMJzT2TopcA:9
- a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
-X-Proofpoint-GUID: CFZEBpW0kKf0saOESFGqiAijbVOmvcQM
-X-Proofpoint-ORIG-GUID: CFZEBpW0kKf0saOESFGqiAijbVOmvcQM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-15_07,2025-05-15_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 mlxlogscore=712 clxscore=1015 phishscore=0 bulkscore=0
- suspectscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0
- malwarescore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505150164
+Content-Transfer-Encoding: 8bit
 
-On 5/13/2025 12:06 PM, Alexey Dobriyan wrote:
-> On Mon, May 12, 2025 at 06:56:56PM +0200, Greg KH wrote:
->> On Mon, May 12, 2025 at 09:43:10AM -0700, Jeff Johnson wrote:
->>> On 5/9/2025 11:18 PM, Greg KH wrote:
->>>> On Fri, May 09, 2025 at 11:34:30PM +0300, Alexey Dobriyan wrote:
->>>>> Require set of curlies {} in all if/else branches and all loops
->>>>> not matter how simple.
->>>>
->>>> Sorry, but no, we are not going to change this long-term coding style
->>>> rule for no real reason at this point in time.
->>>
->>> Is the infamous Apple SSL bug (CVE-2014-1266) a good reason?
-> 
-> Indeed.
-> 
-> Thanks, curlies were inspired by this CVE but I forgot to mention it.
-> 
->> One bug in 2014 will require us to touch 30+ million lines of code?
-> 
-> Nobody is proposing to reformat 30 mil lines at one commit
-> (as much as I'd like it).
-> 
-> Old code will stay old, new code will be formatted per new rules.
-> 
->> Please be reasonable.
-> 
-> I'm very reasonable. Each patch details rationale why specific style is
-> better.
-> 
->> And everyone, remember _why_ we have a coding style.  It's not so much
->> the specifics of _what_ the coding style is,
-> 
-> What? When was the last time you read it? It is very much about specifics:
-> 8 spaces, opening curly on the same line except at function scope,
-> 80 columns, recent rule about to format function attributes.
-> 
-> It could have even more specific if there is pre-commit hook forcing
-> formatting like commercial companies do.
-> 
->> one at all.  Don't argue the specifics of the coding style without a
->> really really good reason why, with real details and proof.
-> 
-> What is "really really good"?
-> 
-> How do you know when it is good reason or not?
-> 
-> I think I have good reason: I programmed a little in another languages
-> where some of the rules don't apply. In particular C++/Rust don't have
-> a rule about declaring variables upfront. Nor does any popular programming
-> language designed in the last 35 years (?).
-> 
-> Such experience made me realize that linux-kernel CodingStyle in this
-> regard is pointless at best and counter-productive. It was so obvious.
-> 
->> It took us a long time to increase the default line length, and that too
->> is still argued about for very good and valid reasons.
-> 
-> It still 80 columns in CodingStyle.
-> 
->> That was discussed in detail, not just thrown at us like this patch series was.
-> 
-> Oh come on. In Russia we say "not my first year of marriage".
-> 
-> One of the unwritten rules of linux-kernel is to NEVER post [RFC]
-> as it will be ignored, but to post a [PATCH] and Cc specific people
-> to force a discussion.
-> 
-> I don't want to look like a thief who sneaks in occasional declaration
-> in the middle of a function or set of curlies and get yelled by compilers
-> or maintainers (especially those armed with checkpatch.pl).
-> 
-> I'll codify this first in CodingStyle, then delete relevant checks from
-> checkpatch.pl (citing CodingStyle of course).
+A test is considered failed when a sample trace exceeds the threshold.
+Failed tests return the same exit code as passed tests, requiring test
+frameworks to determine the result by searching for "hit stop tracing"
+in the output.
 
-I replied only this patch in the series because, when I first started
-programming using the Linux Coding Style in 2004, the single statement brace
-rule was the only rule I disagreed with. And that was in part due to the fact
-that, at three of my previous employers, the C coding style had dictated
-mandatory use of braces. So the explicit prohibition of braces for single
-statement conditionals really surprised me.
+Assign a distinct exit code for failed tests to enable the use of shell
+expressions and seamless integration with testing frameworks without the
+need to parse the output.
 
-And note the rule, as written, is not what actually seems to be enforced (at
-least by checkpatch.pl). What seems to be enforced is to not use braces where
-the conditional is a single line and there is a single line statement. In
-other words, if either the conditional or the single statement span multiple
-lines, then braces are allowed (or encouraged?). As examples, checkpatch.pl
-does not complain about any of the following (either to recommend adding
-braces or removing braces):
+Add enum type for return value.
 
-	if (a_really_long_line_function_name(a_really_long_identifier) ||
-	    another_really_long_function_name(another_long_identifier)) {
-		braced();
-	}
+Update `make check`.
 
-	if (a_really_long_line_function_name(a_really_long_identifier) ||
-	    another_really_long_function_name(another_long_identifier))
-		not_braced();
+Add documentation
+- update Documentation/tools/rtla/common_appendix.rst.
+  add SPDX-License-Identifier
+  add section 'EXIT STATUS'
+- include common_appendix.rst into
+  Documentation/tools/rtla/rtla-timerlat-hist.rst - the only file of
+  rtla-*.rst still without common_appendix.rst.
 
-	if (a)
-		call_a_really_long_function(with_long_argument,
-					    another_log_argument);
+Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
 
-	if (a) {
-		call_a_really_long_function(with_long_argument,
-					    another_log_argument);
-	}
+---
+Changes since v2:
+- No changes in patch
+- Add documentation
+Changes since v1:
+- Expanded the patch description as requested by Tomas
 
-I'll also note that the popular style guide published by Michael Barr as well
-as the MISRA C standard also dictate braces (but I'll admit that both of these
-have other rules which contradict the Linux style and where I agree with the
-Linux style).
+---
+ Documentation/tools/rtla/common_appendix.rst    | 10 ++++++++++
+ Documentation/tools/rtla/rtla-timerlat-hist.rst |  2 ++
+ tools/tracing/rtla/src/osnoise_hist.c           |  5 +++--
+ tools/tracing/rtla/src/osnoise_top.c            |  5 +++--
+ tools/tracing/rtla/src/timerlat_hist.c          |  5 +++--
+ tools/tracing/rtla/src/timerlat_top.c           |  5 +++--
+ tools/tracing/rtla/src/utils.h                  |  6 ++++++
+ tools/tracing/rtla/tests/engine.sh              |  7 +++++--
+ tools/tracing/rtla/tests/hwnoise.t              |  4 ++--
+ tools/tracing/rtla/tests/osnoise.t              |  6 +++---
+ tools/tracing/rtla/tests/timerlat.t             | 12 ++++++------
+ 11 files changed, 46 insertions(+), 21 deletions(-)
 
-All of that said, ultimately, the Coding Style is supposed to be enforce
-consistent style that is readable and maintainable. I get that. I personally
-believe that requiring braces makes the code more maintainable, and doesn't
-detract from readability. However I'm also agree that changing the rule would
-need to eventually lead to changing all the code that doesn't conform (since
-one of the reasons for having a style is to have consistency), so I'm also
-swayed by admonition to not "argue the specifics of the coding style without a
-really really good reason why, with real details and proof," so I'll let
-others have their say.
-
-/jeff
+diff --git a/Documentation/tools/rtla/common_appendix.rst b/Documentation/tools/rtla/common_appendix.rst
+index b5cf2dc223df..a6233ca8e6d6 100644
+--- a/Documentation/tools/rtla/common_appendix.rst
++++ b/Documentation/tools/rtla/common_appendix.rst
+@@ -1,3 +1,13 @@
++.. SPDX-License-Identifier: GPL-2.0
++EXIT STATUS
++===========
++
++::
++
++ 0  Passed: the test did not hit the stop tracing condition
++ 1  Error: invalid argument
++ 2  Failed: the test hit the stop tracing condition
++
+ REPORTING BUGS
+ ==============
+ Report bugs to <linux-kernel@vger.kernel.org>
+diff --git a/Documentation/tools/rtla/rtla-timerlat-hist.rst b/Documentation/tools/rtla/rtla-timerlat-hist.rst
+index 03b7f3deb069..b2d8726271b3 100644
+--- a/Documentation/tools/rtla/rtla-timerlat-hist.rst
++++ b/Documentation/tools/rtla/rtla-timerlat-hist.rst
+@@ -107,3 +107,5 @@ SEE ALSO
+ AUTHOR
+ ======
+ Written by Daniel Bristot de Oliveira <bristot@kernel.org>
++
++.. include:: common_appendix.rst
+diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
+index d9d15c8f27c7..8d579bcee709 100644
+--- a/tools/tracing/rtla/src/osnoise_hist.c
++++ b/tools/tracing/rtla/src/osnoise_hist.c
+@@ -766,8 +766,8 @@ int osnoise_hist_main(int argc, char *argv[])
+ 	struct osnoise_params *params;
+ 	struct osnoise_tool *record = NULL;
+ 	struct osnoise_tool *tool = NULL;
++	enum result return_value = ERROR;
+ 	struct trace_instance *trace;
+-	int return_value = 1;
+ 	int retval;
+ 
+ 	params = osnoise_hist_parse_args(argc, argv);
+@@ -889,12 +889,13 @@ int osnoise_hist_main(int argc, char *argv[])
+ 
+ 	osnoise_print_stats(params, tool);
+ 
+-	return_value = 0;
++	return_value = PASSED;
+ 
+ 	if (osnoise_trace_is_off(tool, record)) {
+ 		printf("rtla osnoise hit stop tracing\n");
+ 		save_trace_to_file(record ? record->trace.inst : NULL,
+ 				   params->trace_output);
++		return_value = FAILED;
+ 	}
+ 
+ out_hist:
+diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
+index 3455ee73e2e6..2c12780c8aa9 100644
+--- a/tools/tracing/rtla/src/osnoise_top.c
++++ b/tools/tracing/rtla/src/osnoise_top.c
+@@ -594,8 +594,8 @@ int osnoise_top_main(int argc, char **argv)
+ 	struct osnoise_params *params;
+ 	struct osnoise_tool *record = NULL;
+ 	struct osnoise_tool *tool = NULL;
++	enum result return_value = ERROR;
+ 	struct trace_instance *trace;
+-	int return_value = 1;
+ 	int retval;
+ 
+ 	params = osnoise_top_parse_args(argc, argv);
+@@ -715,12 +715,13 @@ int osnoise_top_main(int argc, char **argv)
+ 
+ 	osnoise_print_stats(params, tool);
+ 
+-	return_value = 0;
++	return_value = PASSED;
+ 
+ 	if (osnoise_trace_is_off(tool, record)) {
+ 		printf("osnoise hit stop tracing\n");
+ 		save_trace_to_file(record ? record->trace.inst : NULL,
+ 				   params->trace_output);
++		return_value = FAILED;
+ 	}
+ 
+ out_top:
+diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
+index 9d9efeedc4c2..36d2294c963d 100644
+--- a/tools/tracing/rtla/src/timerlat_hist.c
++++ b/tools/tracing/rtla/src/timerlat_hist.c
+@@ -1141,11 +1141,11 @@ int timerlat_hist_main(int argc, char *argv[])
+ 	struct timerlat_params *params;
+ 	struct osnoise_tool *record = NULL;
+ 	struct timerlat_u_params params_u;
++	enum result return_value = ERROR;
+ 	struct osnoise_tool *tool = NULL;
+ 	struct osnoise_tool *aa = NULL;
+ 	struct trace_instance *trace;
+ 	int dma_latency_fd = -1;
+-	int return_value = 1;
+ 	pthread_t timerlat_u;
+ 	int retval;
+ 	int nr_cpus, i;
+@@ -1378,7 +1378,7 @@ int timerlat_hist_main(int argc, char *argv[])
+ 
+ 	timerlat_print_stats(params, tool);
+ 
+-	return_value = 0;
++	return_value = PASSED;
+ 
+ 	if (osnoise_trace_is_off(tool, record) && !stop_tracing) {
+ 		printf("rtla timerlat hit stop tracing\n");
+@@ -1388,6 +1388,7 @@ int timerlat_hist_main(int argc, char *argv[])
+ 
+ 		save_trace_to_file(record ? record->trace.inst : NULL,
+ 				   params->trace_output);
++		return_value = FAILED;
+ 	}
+ 
+ out_hist:
+diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
+index 79cb6f28967f..7365e08fe986 100644
+--- a/tools/tracing/rtla/src/timerlat_top.c
++++ b/tools/tracing/rtla/src/timerlat_top.c
+@@ -985,12 +985,12 @@ int timerlat_top_main(int argc, char *argv[])
+ 	struct timerlat_params *params;
+ 	struct osnoise_tool *record = NULL;
+ 	struct timerlat_u_params params_u;
++	enum result return_value = ERROR;
+ 	struct osnoise_tool *top = NULL;
+ 	struct osnoise_tool *aa = NULL;
+ 	struct trace_instance *trace;
+ 	int dma_latency_fd = -1;
+ 	pthread_t timerlat_u;
+-	int return_value = 1;
+ 	char *max_lat;
+ 	int retval;
+ 	int nr_cpus, i;
+@@ -1197,7 +1197,7 @@ int timerlat_top_main(int argc, char *argv[])
+ 
+ 	timerlat_print_stats(params, top);
+ 
+-	return_value = 0;
++	return_value = PASSED;
+ 
+ 	if (osnoise_trace_is_off(top, record) && !stop_tracing) {
+ 		printf("rtla timerlat hit stop tracing\n");
+@@ -1207,6 +1207,7 @@ int timerlat_top_main(int argc, char *argv[])
+ 
+ 		save_trace_to_file(record ? record->trace.inst : NULL,
+ 				   params->trace_output);
++		return_value = FAILED;
+ 	} else if (params->aa_only) {
+ 		/*
+ 		 * If the trace did not stop with --aa-only, at least print the
+diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/utils.h
+index 101d4799a009..a2a6f89f342d 100644
+--- a/tools/tracing/rtla/src/utils.h
++++ b/tools/tracing/rtla/src/utils.h
+@@ -83,3 +83,9 @@ int auto_house_keeping(cpu_set_t *monitored_cpus);
+ 
+ #define ns_to_usf(x) (((double)x/1000))
+ #define ns_to_per(total, part) ((part * 100) / (double)total)
++
++enum result {
++	PASSED = 0, /* same as EXIT_SUCCESS */
++	ERROR = 1,  /* same as EXIT_FAILURE, an error in arguments */
++	FAILED = 2, /* test hit the stop tracing condition */
++};
+diff --git a/tools/tracing/rtla/tests/engine.sh b/tools/tracing/rtla/tests/engine.sh
+index b1697b3e3f52..f2616a8e4179 100644
+--- a/tools/tracing/rtla/tests/engine.sh
++++ b/tools/tracing/rtla/tests/engine.sh
+@@ -39,6 +39,7 @@ reset_osnoise() {
+ }
+ 
+ check() {
++	expected_exitcode=${3:-0}
+ 	# Simple check: run rtla with given arguments and test exit code.
+ 	# If TEST_COUNT is set, run the test. Otherwise, just count.
+ 	ctr=$(($ctr + 1))
+@@ -49,7 +50,7 @@ check() {
+ 		# Run rtla; in case of failure, include its output as comment
+ 		# in the test results.
+ 		result=$(stdbuf -oL $TIMEOUT "$RTLA" $2 2>&1); exitcode=$?
+-		if [ $exitcode -eq 0 ]
++		if [ $exitcode -eq $expected_exitcode ]
+ 		then
+ 			echo "ok $ctr - $1"
+ 		else
+@@ -68,12 +69,14 @@ check_with_osnoise_options() {
+ 	# Save original arguments
+ 	arg1=$1
+ 	arg2=$2
++	arg3=$3
+ 
+ 	# Apply osnoise options (if not dry run)
+ 	if [ -n "$TEST_COUNT" ]
+ 	then
+ 		[ "$NO_RESET_OSNOISE" == 1 ] || reset_osnoise
+ 		shift
++		shift
+ 		while shift
+ 		do
+ 			[ "$1" == "" ] && continue
+@@ -84,7 +87,7 @@ check_with_osnoise_options() {
+ 		done
+ 	fi
+ 
+-	NO_RESET_OSNOISE=1 check "$arg1" "$arg2"
++	NO_RESET_OSNOISE=1 check "$arg1" "$arg2" "$arg3"
+ }
+ 
+ set_timeout() {
+diff --git a/tools/tracing/rtla/tests/hwnoise.t b/tools/tracing/rtla/tests/hwnoise.t
+index bbed17580537..5f71401a139e 100644
+--- a/tools/tracing/rtla/tests/hwnoise.t
++++ b/tools/tracing/rtla/tests/hwnoise.t
+@@ -10,11 +10,11 @@ check "verify help page" \
+ check "detect noise higher than one microsecond" \
+ 	"hwnoise -c 0 -T 1 -d 5s -q"
+ check "set the automatic trace mode" \
+-	"hwnoise -a 5 -d 30s"
++	"hwnoise -a 5 -d 30s" 2
+ check "set scheduling param to the osnoise tracer threads" \
+ 	"hwnoise -P F:1 -c 0 -r 900000 -d 1M -q"
+ check "stop the trace if a single sample is higher than 1 us" \
+-	"hwnoise -s 1 -T 1 -t -d 30s"
++	"hwnoise -s 1 -T 1 -t -d 30s" 2
+ check "enable a trace event trigger" \
+ 	"hwnoise -t -e osnoise:irq_noise trigger=\"hist:key=desc,duration:sort=desc,duration:vals=hitcount\" -d 1m"
+ 
+diff --git a/tools/tracing/rtla/tests/osnoise.t b/tools/tracing/rtla/tests/osnoise.t
+index e5995c03c790..44908fc01abf 100644
+--- a/tools/tracing/rtla/tests/osnoise.t
++++ b/tools/tracing/rtla/tests/osnoise.t
+@@ -10,9 +10,9 @@ check "verify help page" \
+ check "verify the --priority/-P param" \
+ 	"osnoise top -P F:1 -c 0 -r 900000 -d 1M -q"
+ check "verify the --stop/-s param" \
+-	"osnoise top -s 30 -T 1 -t"
++	"osnoise top -s 30 -T 1 -t" 2
+ check "verify the  --trace param" \
+-	"osnoise hist -s 30 -T 1 -t"
++	"osnoise hist -s 30 -T 1 -t" 2
+ check "verify the --entries/-E param" \
+ 	"osnoise hist -P F:1 -c 0 -r 900000 -d 1M -b 10 -E 25"
+ 
+@@ -20,6 +20,6 @@ check "verify the --entries/-E param" \
+ # and stopping on threshold.
+ # If default period is not set, this will time out.
+ check_with_osnoise_options "apply default period" \
+-	"osnoise hist -s 1" period_us=600000000
++	"osnoise hist -s 1" 2 period_us=600000000
+ 
+ test_end
+diff --git a/tools/tracing/rtla/tests/timerlat.t b/tools/tracing/rtla/tests/timerlat.t
+index e939ff71d6be..579c12a85e8f 100644
+--- a/tools/tracing/rtla/tests/timerlat.t
++++ b/tools/tracing/rtla/tests/timerlat.t
+@@ -21,21 +21,21 @@ export RTLA_NO_BPF=$option
+ check "verify help page" \
+ 	"timerlat --help"
+ check "verify -s/--stack" \
+-	"timerlat top -s 3 -T 10 -t"
++	"timerlat top -s 3 -T 10 -t" 2
+ check "verify -P/--priority" \
+ 	"timerlat top -P F:1 -c 0 -d 1M -q"
+ check "test in nanoseconds" \
+-	"timerlat top -i 2 -c 0 -n -d 30s"
++	"timerlat top -i 2 -c 0 -n -d 30s" 2
+ check "set the automatic trace mode" \
+-	"timerlat top -a 5 --dump-tasks"
++	"timerlat top -a 5 --dump-tasks" 2
+ check "print the auto-analysis if hits the stop tracing condition" \
+-	"timerlat top --aa-only 5"
++	"timerlat top --aa-only 5" 2
+ check "disable auto-analysis" \
+-	"timerlat top -s 3 -T 10 -t --no-aa"
++	"timerlat top -s 3 -T 10 -t --no-aa" 2
+ check "verify -c/--cpus" \
+ 	"timerlat hist -c 0 -d 30s"
+ check "hist test in nanoseconds" \
+-	"timerlat hist -i 2 -c 0 -n -d 30s"
++	"timerlat hist -i 2 -c 0 -n -d 30s" 2
+ done
+ 
+ test_end
+-- 
+2.48.1
 
