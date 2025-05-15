@@ -1,80 +1,120 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3AD253923
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:04:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B8E4B1E70;
+	Thu, 15 May 2025 12:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747310703; cv=none; b=cZBAeNlsNZANJFbB9ND2Hj6wNP6bZc6zhMo1MFH0eMMpdSnkLr6JjwyH6+suuGzDwVl6L6LlRMAq2VsjpA99hRfoIUj+O6siVmN+WIA6PpzgwIYV2r0z1KZy7fx7fY8Da0i3YkIEdul/tMtsEC1vtjdyrzaXoNd46qujrCePXzs=
+	t=1747310702; cv=none; b=XM8D7HyINUBxW6euUwBFcwASPQpQXZHL2qI8qdJi/zCu/CYldkt6/Lia4g8WgO/xnB2Yp7FWV2A0VA8QzhlwaX727IMiZ0aUmEb6zQAcGDYfMAKTGRTe3Y1HVwR63EGqtwB3c8PGE+s53nQjJqzY8DBZiIhkJ/5GDbi4xrRlTbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747310703; c=relaxed/simple;
-	bh=Nkyee3R9G4pTa9zOBSPFpwFne9Xd6LTkmNOrdy04vBU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XpJ27kMLlisbd6pJyAbs0ZeQ5lOq9j8gmZNwu2g1+uFQBNYEL8L0TLYClk0FvI61JC6JMfJPbpZ2RXxyRQTXvRCdeEfAojqdWjXYAxc/oKcrDqX7Y91B1u+HpNAYnqw61op3Gu1IeOqaA6dD9zdABmsIAlhFRH/PNZnCh7ppxAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZypmF4CZ4z4f3kvt
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 20:04:29 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id DA0D71A018D
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 20:04:55 +0800 (CST)
-Received: from [10.67.109.79] (unknown [10.67.109.79])
-	by APP1 (Coremail) with SMTP id cCh0CgBH+Xlm2CVoBMQkMQ--.56407S2;
-	Thu, 15 May 2025 20:04:55 +0800 (CST)
-Message-ID: <d8e88314-c31f-4132-a4b0-aad7eeb0f082@huaweicloud.com>
-Date: Thu, 15 May 2025 20:04:53 +0800
+	s=arc-20240116; t=1747310702; c=relaxed/simple;
+	bh=62OwTFjCUryg+sOCfQpoiPdxoz3pueMjuZ3KrIe1EF0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U6FYPQzzs2Wc3q25ESSeuwzvZVfCu1DhoauAqpNk9XcNUZ8NqtVoQ0LwR2OHBQHLrefOxNIm92bHL0SQwtqQrOiqFXS5eTAxpCUnpCQlq/v38gWZ9NI8lumfZF/o72q1wMW9AXyjhd62JKTcsROuReZtQn1zSTaI7RrU8GX42kY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JquxQaQP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JquxQaQP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBD1DC4CEE7;
+	Thu, 15 May 2025 12:04:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747310701;
+	bh=62OwTFjCUryg+sOCfQpoiPdxoz3pueMjuZ3KrIe1EF0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JquxQaQPRxUQxbg4cmaB62CrxYLU+x41RaL5QMNLbi2ZRp652hH/Vyk7orXgDc6RE
+	 deVlhyY3CARISbOapaCWPZPt8UPzA+bOcdlBMAeWym4vfDQpfCeZJOBSgs/CjAzrek
+	 qyKnpjNxY/B1V7l/zeCUAzCAUOY0yBNSrCfzQgGM12nUIcvbuvbljYpHCdFOmEAJ9V
+	 rn0nAGRhx3P5E6zTaIXAQ39vFu7ukcnhfeQVZCHdG1VaYDKxj/TR/nQhzyV36L2hs4
+	 /WwSxRCOw5ieJhM1AarY3iR2VJR+G1gZwnhoL5z7TIQfFYyGi+RWFND77fn9NuhruT
+	 smoI/MPpScqXw==
+Date: Thu, 15 May 2025 14:04:56 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] rust: irq: add support for request_irq()
+Message-ID: <aCXYaCGvO_tI1OOh@pollux>
+References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com>
+ <20250514-topics-tyr-request_irq-v3-1-d6fcc2591a88@collabora.com>
+ <aCUQ0VWgoxdmIUaS@pollux>
+ <A7E3A124-AF77-4A4A-B4E2-AE7DDB1CE007@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC next v2 0/5] ucount: add rlimit cache for ucount
-To: Christian Brauner <brauner@kernel.org>
-Cc: akpm@linux-foundation.org, paulmck@kernel.org, bigeasy@linutronix.de,
- legion@kernel.org, roman.gushchin@linux.dev, tglx@linutronix.de,
- frederic@kernel.org, peterz@infradead.org, oleg@redhat.com,
- joel.granados@kernel.org, viro@zeniv.linux.org.uk,
- lorenzo.stoakes@oracle.com, avagin@google.com, mengensun@tencent.com,
- linux@weissschuh.net, jlayton@kernel.org, ruanjinjie@huawei.com,
- kees@kernel.org, linux-kernel@vger.kernel.org, lujialin4@huawei.com
-References: <20250509072054.148257-1-chenridong@huaweicloud.com>
- <20250515-server-reformieren-b2fd91846538@brauner>
-Content-Language: en-US
-From: Chen Ridong <chenridong@huaweicloud.com>
-In-Reply-To: <20250515-server-reformieren-b2fd91846538@brauner>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgBH+Xlm2CVoBMQkMQ--.56407S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYV7kC6x804xWl14x267AKxVW5JVWrJwAF
-	c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
-	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
-	wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
-	x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
-	64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r
-	1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kI
-	c2xKxwCF04k20xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AKxVW8ZVWrXwCFx2IqxVCFs4
-	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
-	MI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
-	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j
-	6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
-	BIdaVFxhVjvjDU0xZFpf9x07UZ18PUUUUU=
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <A7E3A124-AF77-4A4A-B4E2-AE7DDB1CE007@collabora.com>
 
+On Thu, May 15, 2025 at 08:54:35AM -0300, Daniel Almeida wrote:
+> Hi Danilo,
+> 
+> > On 14 May 2025, at 18:53, Danilo Krummrich <dakr@kernel.org> wrote:
+> > 
+> > On Wed, May 14, 2025 at 04:20:51PM -0300, Daniel Almeida wrote:
+> >> +/// // This is running in process context.
+> >> +/// fn register_irq(irq: u32, handler: Handler) -> Result<Arc<Registration<Handler>>> {
+> >> +///     let registration = Registration::register(irq, flags::SHARED, c_str!("my-device"), handler);
+> >> +///
+> >> +///     // You can have as many references to the registration as you want, so
+> >> +///     // multiple parts of the driver can access it.
+> >> +///     let registration = Arc::pin_init(registration, GFP_KERNEL)?;
+> > 
+> > This makes it possible to arbitrarily extend the lifetime of an IRQ
+> > registration. However, we must guarantee that the IRQ is unregistered when the
+> > corresponding device is unbound. We can't allow drivers to hold on to device
+> > resources after the corresponding device has been unbound.
+> > 
+> > Why does the data need to be part of the IRQ registration itself? Why can't we
+> > pass in an Arc<T> instance already when we register the IRQ?
+> > 
+> > This way we'd never have a reason to ever access the Registration instance
+> > itself ever again and we can easily wrap it as Devres<irq::Registration> -
+> > analogously to devm_request_irq() on the C side - without any penalties.
+> > 
+> >> +///     // The handler may be called immediately after the function above
+> >> +///     // returns, possibly in a different CPU.
+> >> +///
+> >> +///     {
+> >> +///         // The data can be accessed from the process context too.
+> >> +///         let mut data = registration.handler().0.lock();
+> >> +///         *data = 42;
+> >> +///     }
+> >> +///
+> >> +///     Ok(registration)
+> >> +/// }
+> > 
+> 
+> Up until this point, there was no need for the data to not be inline with the
+> registration. This new design would force an Arc, which, apart from the
+> heap-allocation, is restrictive for users.
 
+Does the current design not also imply a heap allocation heap allocation? With
+my proposal irq::Registration::new() can just return an irq::Registration
+instance, not an impl PinInit that you need to stuff into a Box or Arc instead.
+Hence, there shouldn't be a difference.
 
-On 2025/5/15 18:29, Christian Brauner wrote:
-> Woah, I don't think we want to go down that route. That sounds so overly
-> complex. We should only do that if we absolutely have to. If we can get
-> away with the percpu counter and some optimizations we might be better
-> off in the long run.
+> Can’t we use Devres with the current implementation?
+> 
+> IIUC from a very cursory glance, all that would mean is that you'd have to call
+> try_access() on your handler, which should be fine?
 
-Thank you for your reply, I will send the next version with percpu_counter.
+Well, that would work indeed.
 
-Thanks,
-Ridong
+But people will - with good reason - be upset that every access to the handler's
+data needs to be guarded with the RCU read side critical section implied by
+Revocable and hence Devres.
+
+We can easily avoid that in this case, hence we should do it.
+
 
