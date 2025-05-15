@@ -1,201 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B3FA1D5CDD;
-	Thu, 15 May 2025 15:53:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4A72063FD;
+	Thu, 15 May 2025 15:54:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747324438; cv=none; b=laVg5q3KSAyoPtjW2gg6yYJvYdARTZdqhnJZiPyc+1QO8YW6YvUQrVWwPlT/5xb40/oz3pblzdymNrAfdZgqoe8Yiq7yeCImCha7xyE8pzyMXSRBqTclrI91vG1z2nGtR1FjiI9WSZ+8tdxB58NPX1MjBMzIr3H8b6Le4iIQrYA=
+	t=1747324452; cv=none; b=EIFWddbjz4+bO1XaJ0oE5n4gcoOOgfXziLcckwQCb6K1YoGwrC4o4WKQwTSBNu0x3xItN1Gj9p5a4VHT1CKy303H9z3aSIg4AHRPf+PAFusHFn3mzYti6g4xHfR69nVbc5ZUB+wda7lACvOVtVht/OHStr7ndGK932Qprxc4HyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747324438; c=relaxed/simple;
-	bh=oQtR/k1mAclk4uJV1KOw+qqxCmz293wRmRjMSGxcXd8=;
+	s=arc-20240116; t=1747324452; c=relaxed/simple;
+	bh=8hI1qe2hxBqeFh6uUNoLq9a1bdmjOHivnrCUFrEcMfk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LW2gLKbmcAXobA4sI9tjQwHDgFbVkmFk3TL+4sGHD7TiiT4LU2l3b28Fz3KkNyA1MS9fDOfjJ8S94hsS0zGkTCHnSpcgwTph7Wt4RH7rfPyEsf7Y0nImm1gWqVNeRn1LuAQt4BAdx9fdsWa8ua4OzRafmCVtRU4PZxFl58MOZz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O6Za27OL; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=c+aVsqWH94KZ0QthBoTqWNMTfGQxV5gK58EXVZYGkD6J4/kI1X16K/DFCQmDmQHW7kjKe/tiBhD5PeHyvTv7lrPYSFyRTyz7PC/IcJJAr7vJqEhhVo7JJc+2Bavh36CGDOGQgbb1Bz8Lj4YmwQSDDH1XOcchA/rvwnjdMKRCEKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NI/+t4av; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O6Za27OL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 847A9C4CEE7;
-	Thu, 15 May 2025 15:53:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NI/+t4av"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34634C4CEE7;
+	Thu, 15 May 2025 15:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747324437;
-	bh=oQtR/k1mAclk4uJV1KOw+qqxCmz293wRmRjMSGxcXd8=;
+	s=k20201202; t=1747324452;
+	bh=8hI1qe2hxBqeFh6uUNoLq9a1bdmjOHivnrCUFrEcMfk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O6Za27OLflHibhD4ws8FWtzHc9u4v9TX6qfFNWqc6vetO9AAvwvQHqBRUZ1MbcGUT
-	 LBk879KeMQeO7xsy0vxFeJu7tHG0PnNgHmZRXREEP66Zq7w5BovG7rTwT7ivJnkr2w
-	 jLKsRZnUv/S4NNiJaZf+vTo5gRgoYJytfbJWyJvs0fsyVVWOE35Mup963P5254DPka
-	 LjlMjxjrfK83OLXgDoyDqyqT9njQBHqo4Y6QcMZ+1ZVdOHcUJ131ZbrxV2lXaZpyfP
-	 c/H+4n1RCiIGLFOdrHGtWOouv7rdHLvDsaCVpNHj1D7reLW3QJfFioltvrvFV1Avkh
-	 124gyKnz1c3xw==
-Date: Thu, 15 May 2025 12:53:55 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	namhyung@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com,
-	sumanthk@linux.ibm.com, hca@linux.ibm.com, irogers@google.com
-Subject: Re: [PATCH V4] perf test: Allow tolerance for leader sampling test
-Message-ID: <aCYOEwgBLWyK7g3q@x1>
-References: <20250430140611.599078-1-tmricht@linux.ibm.com>
- <aBT0a5lGzUSLpWpX@x1>
- <CAJpZYjWW07J8J40ygx6-5q_rfKEoz2g0VYCC=Go3PM2pBKvDRw@mail.gmail.com>
- <aBUY-zaI6BxRvWWS@x1>
+	b=NI/+t4avubeyf6S8afXk7WaFKgpu0T6ypfHSXP5Bcybt9fxwj4W03EoflMXiazQ1y
+	 6vbGyGKHMLLwBf6TmlOvpGG0i90iXt7CzgRq5oCL5390/Tiycr9oZZDTlBTDkZELcq
+	 BgIBFMQPMJg6riN6O7153Q46oEsS1IxR8qrLoH24B1Yg7A3x08v5Cok85aZHZk1Eon
+	 Xec5HZL91WbakSVH8/gUztdWY0TuioT1QTJNKcAxI3NoVbI8S0hO+aCA6Kld+piLMv
+	 lV2jHzzqO9hSZFUTPIwR4K/40+AOIubP3Cs4k3+X6KQ50yJ6Tmj+cWbYDVliKNW6/t
+	 q6UG4ZGzAUf4g==
+Date: Thu, 15 May 2025 17:53:57 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Ying Huang <huang.ying.caritas@gmail.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	Fiona Behrens <me@kloenk.dev>
+Subject: Re: [PATCH v8 1/3] rust: io: add resource abstraction
+Message-ID: <aCYOFbVn8LcOpWPf@pollux>
+References: <20250509-topics-tyr-platform_iomem-v8-0-e9f1725a40da@collabora.com>
+ <20250509-topics-tyr-platform_iomem-v8-1-e9f1725a40da@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aBUY-zaI6BxRvWWS@x1>
+In-Reply-To: <20250509-topics-tyr-platform_iomem-v8-1-e9f1725a40da@collabora.com>
 
-On Fri, May 02, 2025 at 04:11:55PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Fri, May 02, 2025 at 11:21:07AM -0700, Chun-Tse Shao wrote:
-> > Hi Arnaldo,
-> > 
-> > I submitted the patch v1 and Thomas helped me to modify and submit v2
-> > and v3 while I was OOO. In this case I am not sure which one should be
-> > the author, maybe just keep it as Thomas.
-> 
-> >From the tags provided, I think it would be best to list you as the
-> author and Thomas a a Co-developer, like mentioned in:
-> 
-> Documentation/process/submitting-patches.rst
-> 
-> Co-developed-by: states that the patch was co-created by multiple developers;
-> it is used to give attribution to co-authors (in addition to the author
-> attributed by the From: tag) when several people work on a single patch.  Since
-> Co-developed-by: denotes authorship, every Co-developed-by: must be immediately
-> followed by a Signed-off-by: of the associated co-author.  Standard sign-off
-> procedure applies, i.e. the ordering of Signed-off-by: tags should reflect the
-> chronological history of the patch insofar as possible, regardless of whether
-> the author is attributed via From: or Co-developed-by:.  Notably, the last
-> Signed-off-by: must always be that of the developer submitting the patch.
-> 
-> Note, the From: tag is optional when the From: author is also the person (and
-> email) listed in the From: line of the email header.
-> 
-> Example of a patch submitted by the From: author::
-> 
->         <changelog>
-> 
->         Co-developed-by: First Co-Author <first@coauthor.example.org>
->         Signed-off-by: First Co-Author <first@coauthor.example.org>
->         Co-developed-by: Second Co-Author <second@coauthor.example.org>
->         Signed-off-by: Second Co-Author <second@coauthor.example.org>
->         Signed-off-by: From Author <from@author.example.org>
-> 
-> Example of a patch submitted by a Co-developed-by: author::
-> 
->         From: From Author <from@author.example.org>
-> 
->         <changelog>
-> 
->         Co-developed-by: Random Co-Author <random@coauthor.example.org>
->         Signed-off-by: Random Co-Author <random@coauthor.example.org>
->         Signed-off-by: From Author <from@author.example.org>
->         Co-developed-by: Submitting Co-Author <sub@coauthor.example.org>
->         Signed-off-by: Submitting Co-Author <sub@coauthor.example.org>
+On Fri, May 09, 2025 at 05:29:46PM -0300, Daniel Almeida wrote:
+> +#[cfg(CONFIG_HAS_IOPORT)]
+> +/// Returns a reference to the global `ioport_resource` variable.
+> +pub fn ioport_resource() -> &'static Resource {
+> +    // SAFETY: `bindings::ioport_resoure` has global lifetime and is of type Resource.
+> +    unsafe { Resource::from_ptr(core::ptr::addr_of_mut!(bindings::ioport_resource)) }
 
-I was expecting some reaction from you or Thomas, but since I got a ping
-from Thomas for this not being processed, I'll process it according to
-my assessment of this thread.
+Should be possible to use `&raw mut`.
 
-Thanks,
+> +}
+> +
+> +#[cfg(CONFIG_HAS_IOMEM)]
+> +/// Returns a reference to the global `iomem_resource` variable.
+> +pub fn iomem_resource() -> &'static Resource {
+> +    // SAFETY: `bindings::iomem_resoure` has global lifetime and is of type Resource.
+> +    unsafe { Resource::from_ptr(core::ptr::addr_of_mut!(bindings::iomem_resource)) }
 
-- Arnaldo
+Same here.
 
+> +/// A resource abstraction.
+> +///
+> +/// # Invariants
+> +///
+> +/// `Resource` is a transparent wrapper around a valid `bindings::resource`.
+> +#[repr(transparent)]
+> +pub struct Resource(Opaque<bindings::resource>);
+> +
+> +impl Resource {
+> +    /// Creates a reference to a [`Resource`] from a valid pointer.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// The caller must ensure that for the duration of 'a, the pointer will
+> +    /// point at a valid `bindings::resource`
+> +    ///
+> +    /// The caller must also ensure that the `Resource` is only accessed via the
+> +    /// returned reference for the duration of 'a.
+> +    pub(crate) const unsafe fn from_ptr<'a>(ptr: *mut bindings::resource) -> &'a Self {
 
->  
-> > Thanks,
-> > CT
-> > 
-> > On Fri, May 2, 2025 at 9:35 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > >
-> > > On Wed, Apr 30, 2025 at 04:06:11PM +0200, Thomas Richter wrote:
-> > > > V4: Update to be applied onto linux-next
-> > > > V3: Added check for missing samples as suggested by Chun-Tse.
-> > > > V2: Changed bc invocation to return 0 on success and 1 on error.
-> > > >
-> > > > There is a known issue that the leader sampling is inconsistent, since
-> > > > throttle only affect leader, not the slave. The detail is in [1]. To
-> > > > maintain test coverage, this patch sets a tolerance rate of 80% to
-> > > > accommodate the throttled samples and prevent test failures due to
-> > > > throttling.
-> > > >
-> > > > [1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
-> > > >
-> > > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > > > Suggested-by: Ian Rogers <irogers@google.com>
-> > > > Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
-> > >
-> > > But who is the author? As-is this patch states Thomas Richter as the
-> > > author, but since there is also a Suggested-by and Tested-by Thomas
-> > > Richter, it makes me believe the author is Chun-Tse Shao, is that the
-> > > case?
-> > >
-> > > - Arnaldo
-> > >
-> > > > Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-> > > > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> > > > ---
-> > > >  tools/perf/tests/shell/record.sh | 33 ++++++++++++++++++++++++++------
-> > > >  1 file changed, 27 insertions(+), 6 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> > > > index 05d91a663fda..587f62e34414 100755
-> > > > --- a/tools/perf/tests/shell/record.sh
-> > > > +++ b/tools/perf/tests/shell/record.sh
-> > > > @@ -240,22 +240,43 @@ test_leader_sampling() {
-> > > >      err=1
-> > > >      return
-> > > >    fi
-> > > > +  perf script -i "${perfdata}" | grep brstack > $script_output
-> > > > +  # Check if the two instruction counts are equal in each record.
-> > > > +  # However, the throttling code doesn't consider event grouping. During throttling, only the
-> > > > +  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
-> > > > +  # let's set the tolerance rate to 80%.
-> > > > +  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
-> > > >    index=0
-> > > > -  perf script -i "${perfdata}" > "${script_output}"
-> > > > +  valid_counts=0
-> > > > +  invalid_counts=0
-> > > > +  tolerance_rate=0.8
-> > > >    while IFS= read -r line
-> > > >    do
-> > > > -    # Check if the two instruction counts are equal in each record
-> > > >      cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
-> > > >      if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
-> > > >      then
-> > > > -      echo "Leader sampling [Failed inconsistent cycles count]"
-> > > > -      err=1
-> > > > -      return
-> > > > +      invalid_counts=$(($invalid_counts+1))
-> > > > +    else
-> > > > +      valid_counts=$(($valid_counts+1))
-> > > >      fi
-> > > >      index=$(($index+1))
-> > > >      prev_cycles=$cycles
-> > > >    done < "${script_output}"
-> > > > -  echo "Basic leader sampling test [Success]"
-> > > > +  total_counts=$(bc <<< "$invalid_counts+$valid_counts")
-> > > > +  if (( $(bc <<< "$total_counts <= 0") ))
-> > > > +  then
-> > > > +    echo "Leader sampling [No sample generated]"
-> > > > +    err=1
-> > > > +    return
-> > > > +  fi
-> > > > +  isok=$(bc <<< "scale=2; if (($invalid_counts/$total_counts) < (1-$tolerance_rate)) { 0 } else { 1 };")
-> > > > +  if [ $isok -eq 1 ]
-> > > > +  then
-> > > > +     echo "Leader sampling [Failed inconsistent cycles count]"
-> > > > +     err=1
-> > > > +  else
-> > > > +    echo "Basic leader sampling test [Success]"
-> > > > +  fi
-> > > >  }
-> > > >
-> > > >  test_topdown_leader_sampling() {
-> > > > --
-> > > > 2.45.2
+Throughout the tree, functions with this signature are usually called as_ref().
