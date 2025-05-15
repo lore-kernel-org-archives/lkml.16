@@ -1,37 +1,70 @@
-Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3596E1F428C;
-	Thu, 15 May 2025 08:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
+Received: from clean103.mxserver.ro (clean103.mxserver.ro [176.223.125.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7042949F9;
+	Thu, 15 May 2025 08:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.223.125.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299113; cv=none; b=g25EA8+3RfVjv0eJSIq010FuzIqfqUGDaZVnjDN0mrzwuk8hNRmtXZljqNK5zbKKBy2HcHKZbbVuFdLkaEs86C1RDjAldkaNeAcKO8k2mrK/l8ruuPUk5zZ9dfG29IKgi0Co9veXC7LSJy9IiOh4TcvnwHGVKiRDraewdoE91Bs=
+	t=1747299133; cv=none; b=CdLvXfC7jLBVM3xPnmw86pAhzDWDdk1ftxcm3U4Pd6cz7FaR7UP8OZFKXaTdtBrZe+NoPdr1weAFw8/Y1c5c9vLrW8t+JeiLWRm0f+wKs7Iq3g3iKBarB3IupxuUu4bNGsMUUlJqlOSBhxMEjjJPZxNwbfRZ4+FCuA0h0MuBHi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299113; c=relaxed/simple;
-	bh=SeDdOef3yDkOgcGIcb3LONYBgYdCqryApP+EmNYzoxw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TBgACT1Yg4ey++H2tsj8khaKiIFaNWcZngaLBAzEMzAuKzoGAHBByHdFZUNjnu9AEVAZ1yzCnvdoUE0/ClWwsqLDtkCUNaUIJHvkmVSnpQS8Ky9LSa/oE29wAZWIPHAlJj6pwBzmFiA8UjoC9IpT/F7yhhUBAJjE9pV22S//MtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.21.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0005154LT.eswin.cn (unknown [10.12.96.103])
-	by app2 (Coremail) with SMTP id TQJkCgAnuZINqyVotTx8AA--.47783S2;
-	Thu, 15 May 2025 16:51:29 +0800 (CST)
-From: hehuan1@eswincomputing.com
-To: dlemoal@kernel.org,
-	cassel@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-ide@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	p.zabel@pengutronix.de
-Cc: ningyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	luyulin@eswincomputing.com,
-	Huan He <hehuan1@eswincomputing.com>
-Subject: [PATCH v1 0/2] ESWIN EIC7700 sata driver
-Date: Thu, 15 May 2025 16:51:14 +0800
-Message-ID: <20250515085114.1692-1-hehuan1@eswincomputing.com>
-X-Mailer: git-send-email 2.49.0.windows.1
+	s=arc-20240116; t=1747299133; c=relaxed/simple;
+	bh=q/hTLxGkevrKMP4/fm1sZBbPK6IIoosv/EPhSqzLYSo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bnhyiIM/5nOJqKCztLqClJVyaCmFjxhDKdaEGV2k5pQ1WBxRz1aDdC6wlXKjQCh3Yv0YShTwqKS2M3zx8XiJV5ZXqmt5kwEEcuI+mHyvNX2e4E2E7IB4bPufOepJ/1wd5bcJ+VeyakpiozjaT+bDQ53n6Md8l2t0y14kwDk8WFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro; spf=pass smtp.mailfrom=taladin.ro; dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b=I5GISWNL; arc=none smtp.client-ip=176.223.125.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=taladin.ro
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b="I5GISWNL"
+Received: from cloud347.c-f.ro ([185.236.86.218])
+	by cleanserver1.mxserver.ro with esmtps (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <asoponar@taladin.ro>)
+	id 1uFTm5-00H1Ro-65; Thu, 15 May 2025 04:17:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=taladin.ro;
+	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=koakyKDUeUIeXFkt5kHFcp8R9b8v4EKGe5vzuuktP7U=; b=I5GISWNLK58PKla/LyJdEMylzb
+	pnP5NkUlRT1ZxS0cdp67LfIcRRV9pkS2JRrg1B9np0hpEU90qPExPVJck7HACbC0P21pKzfn95JvD
+	iiJmRVa6Qtj/X2PP24tJr/JcXtaicxxKbfQW1Nw6I7gCL66WHBdX9k2Q9GDv915sM4WAqXdxumagh
+	vzBUTzS8oNgaY9awb/miMx2SX8+Kn3W/43KA1KPzOfS+05huC60U0Gs6fvnkEaBmO2zB+/6Csi3xW
+	fLBhE29dkoUzDBtALBhlQe6WauOdpgVtc6Vp0Jdzek5ai4JrYNjUQGeEa9ILM+PaYABztHTb/HHOe
+	HsT64JgA==;
+Received: from [109.166.137.172] (port=39050 helo=localhost)
+	by cloud347.c-f.ro with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.98.1)
+	(envelope-from <asoponar@taladin.ro>)
+	id 1uFTlv-00000006qIN-0WJA;
+	Thu, 15 May 2025 11:17:04 +0300
+From: Alexandru Soponar <asoponar@taladin.ro>
+To: linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	linux-watchdog@vger.kernel.org
+Cc: jdelvare@suse.com,
+	linux@roeck-us.net,
+	jic23@kernel.org,
+	pavel@ucw.cz,
+	lee@kernel.org,
+	baocheng.su@siemens.com,
+	wim@linux-watchdog.org,
+	tobias.schaffner@siemens.com,
+	angelogioacchino.delregno@collabora.com,
+	benedikt.niedermayr@siemens.com,
+	matthias.bgg@gmail.com,
+	aardelean@baylibre.com,
+	contact@sopy.one,
+	Alexandru Soponar <asoponar@taladin.ro>
+Subject: [PATCH 12/16] iio: max44009: Fix type incompatibility with non-macro find_closest
+Date: Thu, 15 May 2025 11:13:28 +0300
+Message-ID: <20250515081332.151250-13-asoponar@taladin.ro>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250515081332.151250-1-asoponar@taladin.ro>
+References: <20250515081332.151250-1-asoponar@taladin.ro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,53 +72,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TQJkCgAnuZINqyVotTx8AA--.47783S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrZF47Wr1fJF1xZF4rurW3KFg_yoWkXwc_Cr
-	yxZayDG345uFZ0y3WjyrZ7uFyYka1rAF92vF4UtFn8Kryvq3y3JFyqyasrZFn7tFWrXr9x
-	CrnYyr1rCFy3ujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbhxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK6svPMxAIw2
-	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
-	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrw
-	CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI
-	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
-	80aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbknY7UUUUU==
-X-CM-SenderInfo: 5khk3tzqr6v25zlqu0xpsx3x1qjou0bp/
+X-SpamExperts-Domain: cloud347.c-f.ro
+X-SpamExperts-Username: 185.236.86.218
+Authentication-Results: mxserver.ro; auth=pass smtp.auth=185.236.86.218@cloud347.c-f.ro
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: SB/global_tokens (0.00920917721819)
+X-Recommended-Action: accept
+X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT9LmVb6q1/FaccTvM3orKErPUtbdvnXkggZ
+ 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5w1OL79HMxE022P+rQy8YAdcSeERs4TOTnIH1kc1IWc5TSx
+ S75yz9IFZiY7BarU/NrpK8SEOwGmfn6ucAKqn/OHRh3BqzFaEnAEj4UixLJBjVNiLZt/QXQnOBRD
+ +jq1HsIBmHTFdhqXZEtguZY7iGKpkcJnJKaJfT+dw1udmv00tbIRNtoyOobb3xnDyRRylAVTYi2b
+ f0F0JzgUQ/o6tR7C8pLPCtTiVLo0r89ClJHDKhDGKgJ+T00JeCnHBmMdB1eMZAyYlfUtEN4pUyes
+ jVRntA/J5DcfwvG53FyVviDO9UET3GKmqv1jT0lY+AQz8YX4CVph7ctC7tRH2SPTQJ/0klTuXKq/
+ B9rqRWsYzNfBLt79i78aPHyWnIqxGMxPZotYvH/es1vXuByXo2bkrYMqq0x5CzaUoJIoBUQayHle
+ UvbvCQmh9x4kn6NeQcRkc6G+OgAcq5x+BzhRyg9rYO6I0H7Q2OEpckvWJAOmdJd77Z9vwc+QHB+X
+ +u7aTqYHtT2CBuxNPBc9JM2jck1NnIBf0tvflhq7Xjhll72AYgnW/6M0ftSpvLIx+X1vKami8KF6
+ jWQ71uVNIY/EFPWeDmcZuFRQy1vmjjPiYw8fUCp0/qY6cmSW9oUDdvKuTRfTGZ6f8nTXoYFaQ71l
+ mMti8uxA0gKVmIzBXtbLDVvAQ/KVNQByWRrgu16SD9QRg+25pqKSAN5VcIfsMVILjVAz6RZsCHxD
+ lgOJwEwCFaF+62b2lf1UUDu9jECN1V/lwmsioRLmNJoHOZOE/9e5UD715p61XAQw85DCXa0iAPEd
+ fYyrF5wMRSLGyY+i0m2IxQLxQUxLMkCVXN63lz38Up+2UgeFSDBPqdRoFsq0hfzdx0oxkgNI/jhY
+ WFhu7VV+HdWjdZLlmQ5z83qEVVG/6RJ+BW7FmGcwL889DSW2cZWGkIYVQAbHnYkWUz1gRIjAiMvi
+ vM7um7t0SVa5NVZ2g1u6DnOpqk1nwAzTSgytNKIH5lfAuQc8I07FTFcjpdfX/Jcr87en7cKbI0NU
+ afdkQMG+6qjtXoANVR89VM6f75a5kmRIbungV7ywXD8VtmM8wef5C6IkqMFhROX1HYRo9Sm1kZOW
+ saz62DSUUd/fn3Ix/aSqJVglEtnFggTvi4y/qO0sxBxzHDeqqFz43py4SDhdaHkWxEWqfohU+1d2
+ sh7IKZpXLgBCJ476nn5Gmr/PK603nEEtNszXdIHFite8wCT/ojMvxJYqN+GmyxwR+V15PgePOPPI
+ vtB/lrJsWW29FRnUbXCk3//yGA2OaEkyEoP0Kl1YERWeKKG4PAQYNyavp7c49JwbmBalBK3QvTzZ
+ aymz/kAx9sNOIdFDvUNZLdaRhCZanVD8rWRXHFnkJJ9VGpuX4LTQYyCuF2Axy3+5ga4Wzl9Zj2VA
+ 3aW/vPi2AMAbWLs/EIKEbeDIxNYIJ7Ews1OEan6m+UeFXprlCOm3BAEbJtATHIdhc/Osc/lXM+l8
+ 06U7GxUAPGlXms+D1TI22+vIvtmOpB8mDzWv8vBwVi5XkC8ewLVRqANj6mzlzL3VH5WM/aCyI5/o
+ yhoezeIJy3L+cB4hBppwR1r+Bof9KZqCMQkUV4VT4TerS/vbL3R5w07g
+X-Report-Abuse-To: spam@cleanserver1.mxserver.ro
+X-Complaints-To: abuse@cleanserver1.mxserver.ro
 
-From: Huan He <hehuan1@eswincomputing.com>
+The max44009_int_time_ns_array array was previously declared as u32 but
+used with find_closest(). With find_closest() now implemented as a
+function taking signed int parameters instead of a macro, passing unsigned
+arrays causes type incompatibility errors. This patch changes the arrays
+type from u32 to int to ensure compatibility with the function signature
+and prevent compilation errors.
 
-  Implements support for the Eswin eic7700 SoC sata controller.
-  Provides basic functionality to initialize and manage the sata
-  controller  for the eic7700 SoC. Integrates with the Linux AHCI subsystem
-  for standardized SATA host control and scalability.
+Signed-off-by: Alexandru Soponar <asoponar@taladin.ro>
+---
+ drivers/iio/light/max44009.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  Supported chips:
-    Eswin eic7700 SoC.
-
-  Test:
-    I tested this patch on the Sifive HiFive Premier P550 (which uses the EIC7700 SoC),
-    Ensure the hard drive is properly connected via the SATA interface on the hardware,
-    and confirm that the SATA controller within the chip can read/write to the hard drive
-    normally. The SATA driver patch is working properly.
-
-Huan He (2):
-  dt-bindings: sata: eswin: Document for EIC7700 SoC
-  sata: eswin: Add eic7700 sata driver
-
- .../bindings/ata/eswin,eic7700-sata.yaml      |  80 ++++++
- drivers/ata/Kconfig                           |  12 +
- drivers/ata/Makefile                          |   1 +
- drivers/ata/ahci_eic7700.c                    | 248 ++++++++++++++++++
- 4 files changed, 341 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/ata/eswin,eic7700-sata.yaml
- create mode 100644 drivers/ata/ahci_eic7700.c
-
+diff --git a/drivers/iio/light/max44009.c b/drivers/iio/light/max44009.c
+index 8cd7f5664e5b..d274224fc210 100644
+--- a/drivers/iio/light/max44009.c
++++ b/drivers/iio/light/max44009.c
+@@ -55,7 +55,7 @@
+ /* The fixed-point fractional multiplier for de-scaling threshold values */
+ #define MAX44009_FRACT_MULT 1000000
+ 
+-static const u32 max44009_int_time_ns_array[] = {
++static const int max44009_int_time_ns_array[] = {
+ 	800000000,
+ 	400000000,
+ 	200000000,
 -- 
-2.25.1
+2.49.0
 
