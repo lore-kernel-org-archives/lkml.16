@@ -1,86 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0C22F2F;
-	Thu, 15 May 2025 22:16:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277B9218593
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 22:20:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747347376; cv=none; b=er4zNkoWjlIBPsNl92krAEC+Ligi5RRi1SlzYybdhl/O4CZb3FjkzTf+4fBHiXzb5q81fgqknd0O3ro7hy2EErqu5teQ6rYnnHV1L3UulAtRPuMxzdEOSamOgkDaChjiUFC5bPg20VhlqvYKXWzf3a8Zi+NnPKGdTYXzX7kSdVg=
+	t=1747347633; cv=none; b=DTeFAkfJIUc+OyDqUi+2kRftV2guJ78oV4iVwSig921+a+EP6zMK1twv+RaTRvIEOZiXOlzrwQ+uiGjplvx9MpSOiVmN9Z7aFiY1o/a8Z5O0QHjvWNDOlwWUs8TIErYsWtuLFq6bgguJI8b0djagBXNrOgRrIQ/VbyQ/sfOYedM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747347376; c=relaxed/simple;
-	bh=dTJqCmfcwYRLr/DgjdtG3mRSyp7XhGxLyWrkppntvV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JJr6aNHZEuhBea8idrFNy20JAxF5Jd7gOqPWuQzjnR1UrYuyeGW3g9yHBQWAhk1565Wq4RT9QlTFXeOObw1KF51NK0pLq4afKsEV+SkqOdtDXXtm2u/bRUj5/Eignkj+QhZpa4d6UyTSgkbM4YDNWugVCtoXcncpazV5abdbN8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQBgwCaf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747347633; c=relaxed/simple;
+	bh=8zNoaA7Fiehsj/vnC6Gwn3zvk4qINoWhnug44tgqCJ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=f+AAv10reFKoXkiybuLGlxVu0Z3bmrd7wTcJv+l0AZRllJdIjuqeKF6f8RpXa/gwNGLbg9IAbomE2g8rjKz9HdfLf1Sf/oJxYxXvzcoiSly3aydVjkcX/W5FWx9cf6tnEjNuD2zkJMDrD2OIC2V4o15Tk9Ii9URNxl/PlVyGLww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=daGN+awk; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQBgwCaf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF891C4CEE7;
-	Thu, 15 May 2025 22:16:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747347374;
-	bh=dTJqCmfcwYRLr/DgjdtG3mRSyp7XhGxLyWrkppntvV0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qQBgwCaf+PKaRfYwvgPcmir6P94WwVb4sJsINFR//0FkJjcsUwLaJGx46viZBbf3E
-	 LMn1UcIiqyptjLQiqeMK/GWuQzDzsa7XGo4RqZCDT/0cAUNE0Fw1DnfCuMZ7YECZAc
-	 nLTBF81rfkZXgpnq0vOY3ZWsNcSTte2Imw+9Y3C5ZxcHW+mrBJe49PxI+KplitRSFh
-	 z+IpM5C/UE4amE+YHP1dIDAbnlTJ3IGjIPOic7LKRL1PwaSX18L/gu1Wwl/JCUB1Ce
-	 MkbS+kHw+TlKfP7VG/LABU0rueKmheu7tJ635LQWuKJub4DGR1yWKVhbN5h+ZmiH1b
-	 Ix3cgJ/3Z9Lbw==
-Date: Thu, 15 May 2025 15:16:11 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Timur Tabi <ttabi@nvidia.com>
-Cc: "dakr@kernel.org" <dakr@kernel.org>, 
-	"a.hindborg@kernel.org" <a.hindborg@kernel.org>, "ojeda@kernel.org" <ojeda@kernel.org>, 
-	"boqun.feng@gmail.com" <boqun.feng@gmail.com>, "patches@lists.linux.dev" <patches@lists.linux.dev>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, "tmgross@umich.edu" <tmgross@umich.edu>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alex.gaynor@gmail.com" <alex.gaynor@gmail.com>, 
-	"benno.lossin@proton.me" <benno.lossin@proton.me>, John Hubbard <jhubbard@nvidia.com>, 
-	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>, "bjorn3_gh@protonmail.com" <bjorn3_gh@protonmail.com>, 
-	"peterz@infradead.org" <peterz@infradead.org>, Joel Fernandes <joelagnelf@nvidia.com>, 
-	"aliceryhl@google.com" <aliceryhl@google.com>, "gary@garyguo.net" <gary@garyguo.net>, 
-	Alexandre Courbot <acourbot@nvidia.com>, Alistair Popple <apopple@nvidia.com>
-Subject: Re: [PATCH 1/5] objtool/rust: add one more `noreturn` Rust function
- for Rust 1.87.0
-Message-ID: <i7he6uxzzna7abu46xl3la5ix5t7psodns7k44bllgcq6lusty@wlcjvp7rhoo3>
-References: <20250502140237.1659624-2-ojeda@kernel.org>
- <20250513180757.GA1295002@joelnvbox>
- <20250513215833.GA1353208@joelnvbox>
- <38a7d3f8-3e75-4a1f-bc93-9b301330d898@nvidia.com>
- <f4c946b2988d63a26aff2d03fe73fbfe1f52f31b.camel@nvidia.com>
- <723f7ae8-bb36-4a4c-a1d8-733d131ca222@nvidia.com>
- <grdfkevm4nnovdefhn7thydixjtdt2w2aybuvnrtot2jolyte3@pmvcv3vbmmll>
- <554965650ac2aaa210028d495b06e1ede6aab74d.camel@nvidia.com>
- <devk5empq6e3fy4vp5mhxaznzrxfso6d4bqqzpzachlwy5w567@32tvtoddkn6p>
- <097a4926cebc9030469d42cc7a3392b39dfd703d.camel@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="daGN+awk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747347632; x=1778883632;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=8zNoaA7Fiehsj/vnC6Gwn3zvk4qINoWhnug44tgqCJ0=;
+  b=daGN+awkAxjjpL5S5/oKrCfwnaXn2gxk2G8KCsD3rUKhWodWj2GKxA3B
+   o+4Ppr0mIJXjbm3zOakdElhImyn+wnLUqw435TxzA9uk8VPVQ6iGrXsoG
+   NrlBXWK4Xvk8Or1+LGOZ3sCp6JD3LsIcxICbxzLty6EauOUq9noMCdwl/
+   jM3AkOTTwBDVkC18udJJVAiNTbBlPd3jMHgoDI9U7rbonc21z/APa3IC2
+   dcizz6jmalH5YOXUrE1F69xjq3XBVqJgTlBT1/ORg3hr75n1T/S0uoZgu
+   nodGx2oC1D/SNMxuau6y5xDd5b9IYBy81/fRBgLPBXBfj0+sXZ5xaKQ/i
+   A==;
+X-CSE-ConnectionGUID: Q4AA7xngRnC4ME+bTTWQnw==
+X-CSE-MsgGUID: iq4Zy6dxRfCQ1fImPBvG+g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="48561604"
+X-IronPort-AV: E=Sophos;i="6.15,292,1739865600"; 
+   d="scan'208";a="48561604"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 15:20:31 -0700
+X-CSE-ConnectionGUID: mVd3tXRjSaiqGAGNGp5D3g==
+X-CSE-MsgGUID: M5m+sniQQhW6ZJDxdaENbg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,292,1739865600"; 
+   d="scan'208";a="138406430"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 15 May 2025 15:20:30 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uFgwG-000Ind-1z;
+	Thu, 15 May 2025 22:20:28 +0000
+Date: Fri, 16 May 2025 06:20:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: arm-linux-gnueabi-ld: error: .tmp_vmlinux1.btf.o is already in final
+ BE8 format
+Message-ID: <202505160647.ZJxuP2IQ-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <097a4926cebc9030469d42cc7a3392b39dfd703d.camel@nvidia.com>
 
-On Thu, May 15, 2025 at 07:06:10PM +0000, Timur Tabi wrote:
-> On Thu, 2025-05-15 at 09:18 -0700, Josh Poimboeuf wrote:
-> > > Since I build with LLVM=1, I'm assuming the answer is 18.1.3
-> > 
-> > I'm not able to recreate, can you run with OBJTOOL_VERBOSE=1 and paste
-> > the output?
-> 
-> You probably can't repro because it includes code that hasn't been merged upstream yet.  Try this:
-> 
-> https://github.com/ttabi/linux/commits/alex
-> 
->   CHK     kernel/kheaders_data.tar.xz
-> drivers/gpu/nova-core/nova_core.o: warning: objtool:
-> _RNvXsa_NtCs8S3917Wilyo_9nova_core5vbiosNtB5_14PciAtBiosImageINtNtCsgK88DPai1lC_4core7convert7TryFro
+Hi Masahiro,
 
-I'm not yet qualified to look at the rust warning, I was actually
-wondering about the C one you reported:
+FYI, the error/warning still remains.
 
-  drivers/media/pci/solo6x10/solo6x10-tw28.o: error: objtool: tw28_set_ctrl_val() falls through to next function tw28_get_ctrl_val()
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   fee3e843b309444f48157e2188efa6818bae85cf
+commit: b1a9a5e04767e2a78783e19c9e55c25812ceccc3 kbuild: merge temporary vmlinux for BTF and kallsyms
+date:   10 months ago
+config: arm-randconfig-001-20250516 (https://download.01.org/0day-ci/archive/20250516/202505160647.ZJxuP2IQ-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250516/202505160647.ZJxuP2IQ-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505160647.ZJxuP2IQ-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> arm-linux-gnueabi-ld: error: .tmp_vmlinux1.btf.o is already in final BE8 format
+   arm-linux-gnueabi-ld: failed to merge target specific data of file .tmp_vmlinux1.btf.o
 
 -- 
-Josh
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
