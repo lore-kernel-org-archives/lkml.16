@@ -1,65 +1,65 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65443295DB8
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5EA8295DB5;
+	Thu, 15 May 2025 09:20:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747300807; cv=none; b=Mvp2E51l0iBt7aK7PIPC29cOp8WACRUoqUzlx3m1RtboGv//pejuYjALg5g1lMyb7X/DxL72++lSh5OlIrhO877botXdt3DAekMkF1Kb3En8WSMWYZd/NnapwUKKQGmYaTTn9i2J9pyJdSpkAGhuCw/S+FGJ9WSCvGdsiUW+G20=
+	t=1747300834; cv=none; b=KMQtmw4x6WHhuz8Zlmg19SZfy4TP/bIARGtUdN8s0l4hOnOYc/yN77R07/WRgZ/NHLgdlbmA+Rnqj7efSgTVaI7qLdjR12/2SYJzeWSL+vbGCiSE/0HDIqnRHCtBYOa3OjYPC0qXifft+OF5O6qiDBczYysq3J8k5zxGxX0LZn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747300807; c=relaxed/simple;
-	bh=AMvDqQYGnDnGb/sl2sVntr4FQ/Pvxle3go/Gh6vbtZo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pbSZvypGcH3OjyrCwmJU0ypXGWsyZTEMEvdMExT5euD9C+lNMtY8CCm020jcLu/1KNvN5RNIRgWwXXKgadflmLjUe/tV8X/zWin9481OS9VBUt5+/MU77QR7wx5wLZb4D01I8x3bVnLbAIs6cgPPiIoJhsioXKRExGHd4DK/OBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FjYhesQM; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747300834; c=relaxed/simple;
+	bh=T0xIs53YyMGsPIFPEWuTJKQwtqyUkFoPGQIbHPbvpOc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e0cJIIgt9SnaPiknhbNppDyTYMCVwIaUse+P5URRnlmt4bupP7Z6f8QCGCKLs2tiGYg8mqEn7eziGzorBExRa3hlAEp/S6FYTzHUt9cW8u5P1XCZNmokFoykMRLTbCLXakw2wydQfPodCplMzA0uuyuQcxebN6xFuyF0Pmbm1XA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d1ipIkpy; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FjYhesQM"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a064a3e143so304096f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 02:20:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d1ipIkpy"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54d3ee30af1so744623e87.0;
+        Thu, 15 May 2025 02:20:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747300804; x=1747905604; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=x2lMP2sWq3+4XRD9R5jQk8nu8eG7GVwKsI/4ygBP9qA=;
-        b=FjYhesQMn/Z5Y7c8sL8r3NBxstvMIZyWfs8aP1qg631WOd7Ch/wulDb0roLXsNVzuB
-         olisVbJXVbHwCZ3551FuPUonlFAu4WosMAc71RFUWvynIDMiYiOqHgMQhYqIzd94f5vD
-         3OZbpA0h5louGMNsvOypikHWVzNeXcg0joLYw/5LBE6vsVGp586b8Uu+YDoj3n94743f
-         1zDVrIf21hwhz7BoYQ2lTF4a/hz5OIldrZ11Q07BZ2y3X1sU82atzTbmUvuM5e6i83TX
-         Y9dDY0R8V2006gTUQeyvZuxgcyVyGCuq8wia6OtizAPABYMnrU++brtIPxmg0FrtEvFw
-         HWgg==
+        d=gmail.com; s=20230601; t=1747300831; x=1747905631; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Gr8YDjeShMs5Dbf0Xg1ibXjoeWLBh6KvIWOpPkgrAjM=;
+        b=d1ipIkpyvfr3cPvSkw8MWolysLm9zavbxJfieEfSDgT4sFOik+sJ1WHFOwp2C55N3c
+         jgOjtedqdy1MiLzITNgifK89Hjr+c2agepVLSRtO1JCOL4XxGGYdNpNoL32Ge0E+J3KX
+         0tHuFE3A+0gkl1qPH0xLQDHZImp4rs21Kd4Iw/2OyNcaOt4fYmDoAISrPq1lKi2YM+EN
+         xRGVRW0gjwrFJVlxCY99oq9sYuevEh1DFwXCPUfGIyM1GPEk1o6jOU5FN2XS4p53i0AQ
+         qZ2mIfAlv04zxO4I06J+99JwwNPHnLqrygpvQ0RX/HB9KXfos0o6D4wMI/2URiOFCKLE
+         c5LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747300804; x=1747905604;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1747300831; x=1747905631;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x2lMP2sWq3+4XRD9R5jQk8nu8eG7GVwKsI/4ygBP9qA=;
-        b=Bh0Ib/Kbl/8D7BMyqLFjd72zi5FewBPqHCx1PIUXbp0xzBEaljfEccC3GydRLZQLWZ
-         af/uaJXnX2fZOyN7MkfQBticHXtwmKftdqlTXRytoVBmQJTZM+o3AkUc3XJjSrc1Vt0T
-         v2eRpI5lJE1OrV3gcOF81I+B/P/R6+BY7osgiOplMRNpk0PvSIkK2FbjjbBDNU6JW+yB
-         volI9K8e05MjKI7PdKo3XiVnx0P8pE1YJSVdwLMhTPNb/LWFNzgzQrGtGeJUP5YbHHMC
-         meE9KUt8XosPv3Er95ZqQcokDJkqYSsbFTQCYPB7HGViID5+JcgSU9ycZsPYnh3BfL6u
-         AUrQ==
-X-Gm-Message-State: AOJu0YyVB/dQgKlxXkqaF25mgHWkWF/pNZ1OB8S4Xi+I33R7QscMDZUe
-	hEUwmcnbDxo4YQ9xvzcfah1T7optb2OvQmHtTOSV5vb79DGEN85/g6dHKpMWGGOCB1/GjeCKibF
-	0pSkM+Q==
-X-Gm-Gg: ASbGncsUZXUOeGpEDgCEomqvKBP5FzW1bDMfch0hzOcqo9n9aGYQESnoPANIFm9kkeb
-	E2VzRty8CCyh+QiEbFoJJkkL5ZfTgs24+ZlgYZgDh+bBuxbHvji1a82YqElgp/HcI3ayVabI6AC
-	ImMgfYfA7i8kKzSDOIWNFy12og+g8niOHpL5o7TvI54PO8MUhbzgrrt2KY9PesOJtz+9XQfJhtp
-	U8oTEMiMRSu1NLxh/YRSLFNArX3UXqFLsSzOM66+MeCrCA3X+JZTf1Ysz506s16OUT2NPen8o8v
-	zK9cG1eISGdsiTRVbd7O4fJkrIn04MQi0sYJfsqph0kGcYijPCV1QQduQGugC4R+NUT7L1bLyhG
-	1PR1nYSLWmCht
-X-Google-Smtp-Source: AGHT+IEROeBcQLXaeEtKAeBz3Fs2jZereQNJ6BQ+vtNCHT5Y13IsuxKCN1ufBhmMDuFZWcOb5S2qTA==
-X-Received: by 2002:a5d:584c:0:b0:391:3aab:a7d0 with SMTP id ffacd0b85a97d-3a3496a66cfmr5384359f8f.19.1747300803712;
-        Thu, 15 May 2025 02:20:03 -0700 (PDT)
-Received: from [192.168.2.1] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a1f57dde6bsm22420509f8f.13.2025.05.15.02.20.02
+        bh=Gr8YDjeShMs5Dbf0Xg1ibXjoeWLBh6KvIWOpPkgrAjM=;
+        b=E2F1L0QsYF933U+4fbqtGZX0yOvx3SseWRO4GESlfgLi/Jf0qGCnVZK8jK7bwHAxzB
+         Wxk18rWcQIcL8WB/kdJTn0BVhiQFn94fdJ82KK0juVnxrXJcN0N5KXp7h0DfKtkKof8l
+         eZMmjwW/epN2x8tXM3AeUBXOrcDZI/SC4zVseoDrDpC9wF0k/SEznvCFPapnVibyHazo
+         fCvP5G3d599+w7X0dTT3ATdej6Wr57Mla2ngVBfTVMNCKeWQokXB4O08q36JFldPlFOZ
+         MZurvBXBRwKBjod9Kp5qHA4SNA/s5ljn/BfybwgKTAoNzzLxqEhhgRcncE3U9xnXUbT5
+         z1Aw==
+X-Forwarded-Encrypted: i=1; AJvYcCWN/ICEFVbDbD4r+4XHqBubSM0hE4hdI5/d4Wi84I1HW9kbZlFxzHdjF3j1cF/HE6Gy36H66N4/fyst9bTG@vger.kernel.org, AJvYcCX80N0H6lIREN62/9KO45Lct4wmVwOSQ90S3/sh+W0LCcwJw/A9UNCgC8HQPGRwGugLwEecEhfi0D8Q@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgzTYRbPgxvCm3WzVjgLQbddrw9EenJl5ESePBtDCMqnlUiqqh
+	/dNpmzLopAq6HKAQRcxtfQqu5BDXATfsQ4rOV+zqlQ+BWUG0W1hk
+X-Gm-Gg: ASbGnctjCeiKJ0Sq+cCVPMigcEU1xc0QsD9Kf1+/JTaXiliHpbMjgmk7QZU5DLsghYu
+	Y3WlTUyBFRJSHPSIkFaW0qVQ+ebEDFyjVs0Xb1moKU3tlg7tnxT0cuzkiTm1BrvfPzP2rjYFez6
+	jLXfSgVRII4hAq1WVD9SjqYoxd/N5A64dJBeDror5X4OBjRnNJRBnPt8HDd5E8EUgva5YmjWliq
+	KuLGnZsZJWnQUcixgL3L6ATPNvPjx98Z3qVub6e+ePciVX6Pj2axsAUJD7vqoWvBpWxQif8AlsQ
+	lFx3p7p4UyZpQtkgth7XxvYNI+MJ6nO4es+FgZDPuWljKYujFMhRYeSYVD6+mkzqfdFQQS2Ixe7
+	BHnPbMifY4Gnx4CFLUpQbcPDVnhIMEufzC3nJIXvQHkU=
+X-Google-Smtp-Source: AGHT+IF1K2xmstWUKqRXQKvNfbx1fHA8kSSO7L0hXYxzd9u70VeGhf6RRP23AYcOT1vimL6BWWt6aw==
+X-Received: by 2002:a05:6512:2392:b0:545:944:aae1 with SMTP id 2adb3069b0e04-550dcffc298mr627839e87.12.1747300830765;
+        Thu, 15 May 2025 02:20:30 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc645d082sm2579696e87.76.2025.05.15.02.20.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 02:20:03 -0700 (PDT)
-Message-ID: <ba3ff719-ce60-4c0f-a215-fa332b614b82@linaro.org>
-Date: Thu, 15 May 2025 11:20:01 +0200
+        Thu, 15 May 2025 02:20:30 -0700 (PDT)
+Message-ID: <a44cad65-1f23-43cd-83b7-bc128e9f858f@gmail.com>
+Date: Thu, 15 May 2025 12:20:29 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,48 +67,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: error trying to fetch the clockevents tree
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250429082047.4af75695@canb.auug.org.au>
- <db7fce1c-c051-41d9-9cf1-ef015b0f7fb4@linaro.org>
-Content-Language: en-US
-In-Reply-To: <db7fce1c-c051-41d9-9cf1-ef015b0f7fb4@linaro.org>
+Subject: Re: [PATCH 7/9] arm64: dts: imx8mn-bsh-smm-s2-common: Set minimum
+ value for VDD_3V3
+To: Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+ linux-kernel@vger.kernel.org
+Cc: Simon Holesch <simon.holesch@bshg.com>,
+ Karthikdatt Anantharamrao <karthikdatt.anantharamrao@in.bosch.com>,
+ michael@amarulasolutions.com, linux-amarula@amarulasolutions.com,
+ Wolfgang Birkner <wolfgang.birkner@bshg.com>,
+ Conor Dooley <conor+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+References: <20250514082507.1983849-1-dario.binacchi@amarulasolutions.com>
+ <20250514082507.1983849-8-dario.binacchi@amarulasolutions.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20250514082507.1983849-8-dario.binacchi@amarulasolutions.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-
-Hi Stephen,
-
-
-On 4/29/25 00:35, Daniel Lezcano wrote:
-> On 29/04/2025 00:20, Stephen Rothwell wrote:
->> Hi all,
->>
->> Fetching the clockevents tree produces this error:
->>
->> fatal: unable to access 'https://git.linaro.org/people/daniel.lezcano/ 
->> linux.git/': The requested URL returned error: 503
+On 14/05/2025 11:25, Dario Binacchi wrote:
+> From: Wolfgang Birkner <wolfgang.birkner@bshg.com>
 > 
-> Seems like there is some issues with the servers recently.
+> Buck4 is called Buck6 in the BD71847 datasheet. This buck supports
+> 2.6...3.3V. Set the minimum allowed value.
+
+Same comment as for 6/9. Please provide better rationale than the PMIC's 
+limits.
+
 > 
-> Could you please disable the tree while I migrate it to kernel.org ?
+> Signed-off-by: Wolfgang Birkner <wolfgang.birkner@bshg.com>
+> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> ---
+> 
+>   arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi b/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi
+> index 81fa0a8767e2..04112a83b1d3 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi
+> @@ -144,7 +144,7 @@ buck3_reg: BUCK3 {
+>   			buck4_reg: BUCK4 {
+>   				/* PMIC_BUCK6 - VDD_3V3 */
+>   				regulator-name = "buck4";
+> -				regulator-min-microvolt = <3000000>;
+> +				regulator-min-microvolt = <2600000>;
+>   				regulator-max-microvolt = <3300000>;
+>   				regulator-boot-on;
+>   				regulator-always-on;
 
-I had no time yet to migrate the git tree to kernel.org but the servers 
-seem to work correctly now.
-
-Is it possible to enable back the tree so its content gets some round in 
-linux-next before the PR ?
-
-Thanks
-
-   -- Daniel
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Yours,
+	-- Matti
