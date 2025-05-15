@@ -1,138 +1,171 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275C14B1E71
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2CD33E1
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747269423; cv=none; b=QixoC55my3TnT9oix2qqP+0RLrO4NNnuX5ryFEBuWfiFZfhN3msp1pk3hqH5N0l6dTBNQwcelHXFvraaL1y+XLOHvPb0iJDQAA/mFlsqHGA7GDY08YxZWRR4LLfE3lAm+Cj+KP5N8toLSV0Az29iODUSnnEb61dl4y7l1AB7ItE=
+	t=1747269449; cv=none; b=U0Wh1YPapImm6TL5TDFcutmo7sWgGMCyqsiO/TDBw6FfE/eNjvJfA+Zo5f5uEWduAFyQh8xNSvKU9e89T83mz2cGIQfwcuatHBp0LO7INvq85+P7sP8Yamw4DAh6ldOUSTkFPbdeLcNG/9erVZH2irrBBTxzVle3QKTdQ73s1DA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747269423; c=relaxed/simple;
-	bh=R/KTtLcVCLq4HotDTprznhI9mZetxBKlV8FYMYXcYaE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RlODPjonGCOdn6feayO7jP8NaJYUgDs3h5rFfZobemYYiKfN1tr7l0EcXkL2s3xZgAShLmzBvf+ndi9RKqY1Gx909EzZ/x+zf/RwsrYDJvrXTcDk4uzv0pjLzPX2Ah/lSaYu7VLQh/AiemXhFHuc3I+hP7SzdAt5hY20HO3TUTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=JLKQt/Rk; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=JLKQt/Rk; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1747269449; c=relaxed/simple;
+	bh=20JZZATn2xYn8yCBr4Nu5Nw8VR/pgtNNgy1qu7hFmHY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ZAGApQ+gEieS0wUgqJb5DUJ7KPUNcjVJztwuB9SNa/Kw5prf3cT2y/f1hEb4IylK4XAbTF5jK+QvhJSIVhTfH97KmAtYG+01YsjN8dIeD1IQNJpYCytEtcV9mV0NSy5y68BlcteV+nK1CpKR+i+MKFMvlmoLpFEEHuQB5aA4g+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=urR8CUfh; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="JLKQt/Rk";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="JLKQt/Rk"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id F40151F7B7;
-	Thu, 15 May 2025 00:36:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1747269419; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=/3KFUj+OwqPHSSKglOH74QOPDn6c2feGMbVTaZP1XrI=;
-	b=JLKQt/RkPXk5DkWKTBvN7bbBwTuSXKTMofQKAXMAgBUPC5RczX1Fq3y3Ec+Yebse3btwPf
-	ymqNJbGxkN/ZecI1PrqGarnLiU2/SgJrZM/4SK5mhgx+W+/OIHqzU3ZekbEXrJfUrQGL2s
-	CwWpbezbTSbO6/420L4ciss/4X80PF0=
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b="JLKQt/Rk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1747269419; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=/3KFUj+OwqPHSSKglOH74QOPDn6c2feGMbVTaZP1XrI=;
-	b=JLKQt/RkPXk5DkWKTBvN7bbBwTuSXKTMofQKAXMAgBUPC5RczX1Fq3y3Ec+Yebse3btwPf
-	ymqNJbGxkN/ZecI1PrqGarnLiU2/SgJrZM/4SK5mhgx+W+/OIHqzU3ZekbEXrJfUrQGL2s
-	CwWpbezbTSbO6/420L4ciss/4X80PF0=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E8E8C136E0;
-	Thu, 15 May 2025 00:36:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id TWWUOCo3JWhBPAAAD6G6ig
-	(envelope-from <dsterba@suse.com>); Thu, 15 May 2025 00:36:58 +0000
-From: David Sterba <dsterba@suse.com>
-To: torvalds@linux-foundation.org
-Cc: David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixes for 6.15-rc7
-Date: Thu, 15 May 2025 02:36:50 +0200
-Message-ID: <cover.1747268650.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="urR8CUfh"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ac9855e35so465878a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:37:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747269447; x=1747874247; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2QJBCuK1Gmwp843LF9HX9up42dO/Q8RSynscXuV78Hc=;
+        b=urR8CUfht/kxJEmiPUzudfpInfP0vDOH9AUkUO5PFtkjxO3REUOnYrD3RHzN1cNAsq
+         /lCA2oriXCJ6NBkMc9TvG7dlThoOYcTMdVvACUEpxQFQO9Oq5dfE04sLssjkOJNFSHmx
+         4CJjAqFxPAe6hMkgud535k67q+q3Letyv3bpPc4wibj4ZT8X6BBTSAK55Js6YGNNeKMB
+         qsmOEiDTq7ozhfcPdQY2lw2tusd1GBJiT0ZD0E8B3vmJLu5HmF5Wo3dIZcPSGG+MUztG
+         /XrSHt4ehJ/eG/3EznurxSGzCdcGJM+2odczdvY43OE3LjOGe4sZUQcxSCloWJDAdZSJ
+         fiGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747269447; x=1747874247;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2QJBCuK1Gmwp843LF9HX9up42dO/Q8RSynscXuV78Hc=;
+        b=oJawzLBduWan6kdFwA3ylrFzby3qGnEW5RJkA/b/cp+JzFc70XyOkMOEKC3L6M8sjm
+         P6mcc6B/sBUqtN9NHpMS1+R2MHd4mgLfxWnLSC9wUvX4wNomiQbvQuAKVJFOsRT1YyaE
+         6BTZiKZ+H2ZUu/gWSix0vu9vzlKyVU8J9dSc+yLwVSiXUnzLYaEGSY+g3UwGAK4Jkz2w
+         DYRVDR9WQaZ/vqjjFDD44hxhpzqZiYIRRpXlW//tM4zB6daLPjHhShTH3iiJbHHWHrz/
+         J72Ik+kf9HAVhPvwTyyfFlUeb2I8Cf1WEbUA38UGL/+KDA/a7d5OPRzCYkVeUqCYAvN/
+         BlFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV6oKaoV3GgDlTl68OEPb0DRVA1fYcJA2m7ce/LCWuH4f3mzuJ5/mC3KvUnyhwlLgaiza1WMTUSunjN5v4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhFzUvMl05VgRma55zM4bkBYkhyamMtlMEn0OYePIvv0VQwlBI
+	d1rkMFYwblyrM//QqhW/PGD9GLghV+irYeKqYhvB+Ln2IZ26xO2Yng7MX70utncx88jwllfJZoC
+	P0w==
+X-Google-Smtp-Source: AGHT+IEwfm+Du4RUeKdC/ksRMikSeXOxPtIXncZ5f2NEIIJa2t/AKg6M6lFZyNG4z4xRSqoFUoMMpIdmjzY=
+X-Received: from pjbsk9.prod.google.com ([2002:a17:90b:2dc9:b0:308:64af:7bb9])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4c0a:b0:303:703f:7f8
+ with SMTP id 98e67ed59e1d1-30e2e633642mr7091539a91.34.1747269447560; Wed, 14
+ May 2025 17:37:27 -0700 (PDT)
+Date: Wed, 14 May 2025 17:37:26 -0700
+In-Reply-To: <20250324173121.1275209-23-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: F40151F7B7
-X-Spam-Flag: NO
-X-Spam-Score: -3.01
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:dkim];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	DKIM_TRACE(0.00)[suse.com:+]
-X-Rspamd-Action: no action
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-23-mizhang@google.com>
+Message-ID: <aCU3Ri0iz0aDBDup@google.com>
+Subject: Re: [PATCH v4 22/38] KVM: x86/pmu: Optimize intel/amd_pmu_refresh() helpers
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
+	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Hi,
+This is not an optimization in any sane interpretation of that word.
 
-please pull a few more fixes, thanks.
+On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> 
+> Currently pmu->global_ctrl is initialized in the common kvm_pmu_refresh()
+> helper since both Intel and AMD CPUs set enable bits for all GP counters
+> for PERF_GLOBAL_CTRL MSR. But it may be not the best place to initialize
+> pmu->global_ctrl. Strictly speaking, pmu->global_ctrl is vendor specific
 
-- fix potential endless loop when discarding a block group when
-  disabling discard
+And?  There's mounds of KVM code that show it's very, very easy to manage
+global_ctrl in common code.
 
-- reinstate message when setting a large value of mount option 'commit'
+> and there are lots of global_ctrl related processing in
+> intel/amd_pmu_refresh() helpers, so better handle them in same place.
+> Thus move pmu->global_ctrl initialization into intel/amd_pmu_refresh()
+> helpers.
+> 
+> Besides, intel_pmu_refresh() doesn't handle global_ctrl_rsvd and
+> global_status_rsvd properly and fix it.
 
-- fix a folio leak when async extent submission fails
+Really?  You mention a bug fix in passing, and squash it into an opinionated
+refactoring that is advertised as "optimizations" without even stating what the
+bug is?  C'mon.
 
-----------------------------------------------------------------
-The following changes since commit 38e541051e1d19e8b1479a6af587a7884653e041:
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> ---
+>  arch/x86/kvm/pmu.c           | 10 -------
+>  arch/x86/kvm/svm/pmu.c       | 14 +++++++--
+>  arch/x86/kvm/vmx/pmu_intel.c | 55 ++++++++++++++++++------------------
+>  3 files changed, 39 insertions(+), 40 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> index 4e8cefcce7ab..2ac4c039de8b 100644
+> --- a/arch/x86/kvm/pmu.c
+> +++ b/arch/x86/kvm/pmu.c
+> @@ -843,16 +843,6 @@ void kvm_pmu_refresh(struct kvm_vcpu *vcpu)
+>  		return;
+>  
+>  	kvm_pmu_call(refresh)(vcpu);
+> -
+> -	/*
+> -	 * At RESET, both Intel and AMD CPUs set all enable bits for general
+> -	 * purpose counters in IA32_PERF_GLOBAL_CTRL (so that software that
+> -	 * was written for v1 PMUs don't unknowingly leave GP counters disabled
+> -	 * in the global controls).  Emulate that behavior when refreshing the
+> -	 * PMU so that userspace doesn't need to manually set PERF_GLOBAL_CTRL.
+> -	 */
+> -	if (kvm_pmu_has_perf_global_ctrl(pmu) && pmu->nr_arch_gp_counters)
+> -		pmu->global_ctrl = GENMASK_ULL(pmu->nr_arch_gp_counters - 1, 0);
 
-  btrfs: open code folio_index() in btree_clear_folio_dirty_tag() (2025-05-02 13:20:56 +0200)
+Absolutely not, this code stays where it is.
 
-are available in the Git repository at:
+>  }
+>  
+>  void kvm_pmu_init(struct kvm_vcpu *vcpu)
+> diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
+> index 153972e944eb..eba086ef5eca 100644
+> --- a/arch/x86/kvm/svm/pmu.c
+> +++ b/arch/x86/kvm/svm/pmu.c
+> @@ -198,12 +198,20 @@ static void __amd_pmu_refresh(struct kvm_vcpu *vcpu)
+>  	pmu->nr_arch_gp_counters = min_t(unsigned int, pmu->nr_arch_gp_counters,
+>  					 kvm_pmu_cap.num_counters_gp);
+>  
+> -	if (pmu->version > 1) {
+> -		pmu->global_ctrl_rsvd = ~((1ull << pmu->nr_arch_gp_counters) - 1);
+> +	if (kvm_pmu_cap.version > 1) {
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.15-rc6-tag
+It's not just global_ctrl.  PEBS and the fixed counters also depend on v2+ (the
+SDM contradicts itself; KVM's ABI is that they're v2+).
 
-for you to fetch changes up to 4ce2affc6ef9f84b4aebbf18bd5c57397b6024eb:
+> +		/*
+> +		 * At RESET, AMD CPUs set all enable bits for general purpose counters in
+> +		 * IA32_PERF_GLOBAL_CTRL (so that software that was written for v1 PMUs
+> +		 * don't unknowingly leave GP counters disabled in the global controls).
+> +		 * Emulate that behavior when refreshing the PMU so that userspace doesn't
+> +		 * need to manually set PERF_GLOBAL_CTRL.
+> +		 */
+> +		pmu->global_ctrl = BIT_ULL(pmu->nr_arch_gp_counters) - 1;
+> +		pmu->global_ctrl_rsvd = ~pmu->global_ctrl;
+>  		pmu->global_status_rsvd = pmu->global_ctrl_rsvd;
+>  	}
+>  
+> -	pmu->counter_bitmask[KVM_PMC_GP] = ((u64)1 << 48) - 1;
+> +	pmu->counter_bitmask[KVM_PMC_GP] = BIT_ULL(48) - 1;
 
-  btrfs: add back warning for mount option commit values exceeding 300 (2025-05-12 21:39:34 +0200)
+I like these cleanups, but they too belong in a separate patch.
 
-----------------------------------------------------------------
-Boris Burkov (1):
-      btrfs: fix folio leak in submit_one_async_extent()
-
-Filipe Manana (1):
-      btrfs: fix discard worker infinite loop after disabling discard
-
-Kyoji Ogasawara (1):
-      btrfs: add back warning for mount option commit values exceeding 300
-
- fs/btrfs/discard.c | 17 +++++++++++++++--
- fs/btrfs/fs.h      |  1 +
- fs/btrfs/inode.c   |  7 +++++++
- fs/btrfs/super.c   |  4 ++++
- 4 files changed, 27 insertions(+), 2 deletions(-)
+>  	pmu->reserved_bits = 0xfffffff000280000ull;
+>  	pmu->raw_event_mask = AMD64_RAW_EVENT_MASK;
+>  	/* not applicable to AMD; but clean them to prevent any fall out */
