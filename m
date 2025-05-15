@@ -1,294 +1,138 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB9317C91
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275C14B1E71
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747269220; cv=none; b=tuxwUnpkmduiPzeCnAK3WoXx4uADT/BSph4/RaeRpP0lUOoXaQLiPNDofiUJoZzpPH6e7fQWFFpB1cNi5/jrWhQ0bCpiMsVsiUMKYylhv8TlYUnd/rY1FuespMoSc9/woycqJfL9Y6EmeKcuatYCvub/D8BwTQhhElDG+KCS4G4=
+	t=1747269423; cv=none; b=QixoC55my3TnT9oix2qqP+0RLrO4NNnuX5ryFEBuWfiFZfhN3msp1pk3hqH5N0l6dTBNQwcelHXFvraaL1y+XLOHvPb0iJDQAA/mFlsqHGA7GDY08YxZWRR4LLfE3lAm+Cj+KP5N8toLSV0Az29iODUSnnEb61dl4y7l1AB7ItE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747269220; c=relaxed/simple;
-	bh=kWsTqq0lhBMvBNJ0ZtIHiTgXO8OwzpD8p2bSnfGsB4c=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Kb/WUl1fkQNRXsVG/pjPEzPa+kGIn0MLiAKmQWQWPIpaMvLG8vHY4NZzT0FvczKofEr0PDFK8htKGiscyA/r7cWgz+gUuODYDsh5iRUjzmzJy6RoHqPmcKHEhB/lKz8naEpxbfXYh8j7aUijzqBqWsRQN/hsc1IsVJd+JVE+GuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dVQ9JN6W; arc=none smtp.client-ip=209.85.215.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747269423; c=relaxed/simple;
+	bh=R/KTtLcVCLq4HotDTprznhI9mZetxBKlV8FYMYXcYaE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RlODPjonGCOdn6feayO7jP8NaJYUgDs3h5rFfZobemYYiKfN1tr7l0EcXkL2s3xZgAShLmzBvf+ndi9RKqY1Gx909EzZ/x+zf/RwsrYDJvrXTcDk4uzv0pjLzPX2Ah/lSaYu7VLQh/AiemXhFHuc3I+hP7SzdAt5hY20HO3TUTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=JLKQt/Rk; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=JLKQt/Rk; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dVQ9JN6W"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2431e45064so314251a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:33:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747269218; x=1747874018; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rglF/R5KGMHdjiJ2t6dRwR5H/A5Ey37gucnisvzxi0s=;
-        b=dVQ9JN6WuOjMcxel8aEUJzlHkH6MCVPTDm7b18SyF/CwUChE49fMCr1C8I48ag/PwH
-         Is2mL3EBGGsbm2GvJpL1qS5PlZ8wfMi8fnvNmSLsow05W5hIAaemnpLqgTinOMO1IH4Z
-         Y56ysH++uvrZ/3qlgLjiC+MHJTFb2aYH/WzrbOL4FH7G5cpBp/TkI9Eq9RwmlVSzIbun
-         RJkREqPM703c6y82wFRmNEFFPjZaPzsH+R0fwCQK/xbwqxiJ/8nClSu4+6rBVOLChMzC
-         1/DKKnQub04X1NCsb9bBitytLdYxhzOqZ/OOL744aqhbGtCz+9M20nKH0QP+Ee7144NX
-         Hc0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747269218; x=1747874018;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=rglF/R5KGMHdjiJ2t6dRwR5H/A5Ey37gucnisvzxi0s=;
-        b=nJEELzSnqWBHrSmeJFKRfXYXAgyk0zpHH3WkAnHDpnsNXiqan2Yof2H7fFf72pUUIu
-         W7xMmQ7sNlScNG6gOAzc5yeaiCdm/G3/4/ipQ2wEvfye6MgCSRIcJkk/UljYw8hcmq4F
-         pFsdwt72gbyiq3fpGJbJ5Mft4wUiqoEZzkd3slu9NF5StnljW7E64QynDwPj6AoWba1i
-         y1V1d3MjgpcJAsOqEcvi2IasMuUPmGjHCvdFqaVwO2y+wlyvGvwBnXkSZHuX3NA7cR9E
-         /P3enlJJd8GzboCnD4CV8m+26v4INPBNT9+nUTVE8eI1ZtunN1VWo6szaR4QWIrIw4kC
-         G+Sw==
-X-Forwarded-Encrypted: i=1; AJvYcCVjVWqxPm+4UL8eKQKzpGqk732aJu037a0HahwMv46JKa59DlPh+3nEojATOD5FYQ44EQGR3O+E0F9h+G4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbJjLHexarUw1pPsZXRLTZCaMyCUnVDmq2pwrQ8OjxUiBBuitP
-	D3rOnAUA2iMUqfKQBVaup4lCR8delNpds0UIAxeXU071V7wcYiC/Tr0n24CIvcmy6RUE/5obNh6
-	t+g==
-X-Google-Smtp-Source: AGHT+IFk5amrAydk8MqHTBzn+9OeH6tHjtTovD4ZDO0wIQz+gLvtk/uGbMGbdXJBPpjYoOvEfN2C4N4FPJ8=
-X-Received: from plblm5.prod.google.com ([2002:a17:903:2985:b0:223:fb3a:ac08])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d4cf:b0:220:e5be:29c7
- with SMTP id d9443c01a7336-231981a2d5fmr72176585ad.39.1747269218174; Wed, 14
- May 2025 17:33:38 -0700 (PDT)
-Date: Wed, 14 May 2025 17:33:36 -0700
-In-Reply-To: <CAL715WLfr5k=Rz0cQ08xS=eHEyRn83PBTiqQ5H7iX4qH=jiS8A@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="JLKQt/Rk";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="JLKQt/Rk"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id F40151F7B7;
+	Thu, 15 May 2025 00:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1747269419; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=/3KFUj+OwqPHSSKglOH74QOPDn6c2feGMbVTaZP1XrI=;
+	b=JLKQt/RkPXk5DkWKTBvN7bbBwTuSXKTMofQKAXMAgBUPC5RczX1Fq3y3Ec+Yebse3btwPf
+	ymqNJbGxkN/ZecI1PrqGarnLiU2/SgJrZM/4SK5mhgx+W+/OIHqzU3ZekbEXrJfUrQGL2s
+	CwWpbezbTSbO6/420L4ciss/4X80PF0=
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b="JLKQt/Rk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1747269419; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=/3KFUj+OwqPHSSKglOH74QOPDn6c2feGMbVTaZP1XrI=;
+	b=JLKQt/RkPXk5DkWKTBvN7bbBwTuSXKTMofQKAXMAgBUPC5RczX1Fq3y3Ec+Yebse3btwPf
+	ymqNJbGxkN/ZecI1PrqGarnLiU2/SgJrZM/4SK5mhgx+W+/OIHqzU3ZekbEXrJfUrQGL2s
+	CwWpbezbTSbO6/420L4ciss/4X80PF0=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E8E8C136E0;
+	Thu, 15 May 2025 00:36:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id TWWUOCo3JWhBPAAAD6G6ig
+	(envelope-from <dsterba@suse.com>); Thu, 15 May 2025 00:36:58 +0000
+From: David Sterba <dsterba@suse.com>
+To: torvalds@linux-foundation.org
+Cc: David Sterba <dsterba@suse.com>,
+	linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Btrfs fixes for 6.15-rc7
+Date: Thu, 15 May 2025 02:36:50 +0200
+Message-ID: <cover.1747268650.git.dsterba@suse.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-22-mizhang@google.com>
- <4d55c919-92ab-4bfe-a8c2-c0a756546f7c@intel.com> <CAL715WLfr5k=Rz0cQ08xS=eHEyRn83PBTiqQ5H7iX4qH=jiS8A@mail.gmail.com>
-Message-ID: <aCU2YEpU0dOk7RTk@google.com>
-Subject: Re: [PATCH v4 21/38] KVM: x86/pmu/vmx: Save/load guest
- IA32_PERF_GLOBAL_CTRL with vm_exit/entry_ctrl
-From: Sean Christopherson <seanjc@google.com>
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Eranian Stephane <eranian@google.com>, 
-	Shukla Manali <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: F40151F7B7
+X-Spam-Flag: NO
+X-Spam-Score: -3.01
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	MIME_TRACE(0.00)[0:+];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:dkim];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	DKIM_TRACE(0.00)[suse.com:+]
+X-Rspamd-Action: no action
 
-On Wed, Mar 26, 2025, Mingwei Zhang wrote:
-> On Wed, Mar 26, 2025 at 9:51=E2=80=AFAM Chen, Zide <zide.chen@intel.com> =
-wrote:
-> > > diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> > > index 6ad71752be4b..4e8cefcce7ab 100644
-> > > --- a/arch/x86/kvm/pmu.c
-> > > +++ b/arch/x86/kvm/pmu.c
-> > > @@ -646,6 +646,30 @@ void kvm_pmu_deliver_pmi(struct kvm_vcpu *vcpu)
-> > >       }
-> > >  }
-> > >
-> > > +static void kvm_pmu_sync_global_ctrl_from_vmcs(struct kvm_vcpu *vcpu=
-)
-> > > +{
-> > > +     struct msr_data msr_info =3D { .index =3D MSR_CORE_PERF_GLOBAL_=
-CTRL };
-> > > +
-> > > +     if (!kvm_mediated_pmu_enabled(vcpu))
-> > > +             return;
-> > > +
-> > > +     /* Sync pmu->global_ctrl from GUEST_IA32_PERF_GLOBAL_CTRL. */
-> > > +     kvm_pmu_call(get_msr)(vcpu, &msr_info);
-> > > +}
-> > > +
-> > > +static void kvm_pmu_sync_global_ctrl_to_vmcs(struct kvm_vcpu *vcpu, =
-u64 global_ctrl)
-> > > +{
-> > > +     struct msr_data msr_info =3D {
-> > > +             .index =3D MSR_CORE_PERF_GLOBAL_CTRL,
-> > > +             .data =3D global_ctrl };
-> > > +
-> > > +     if (!kvm_mediated_pmu_enabled(vcpu))
-> > > +             return;
-> > > +
-> > > +     /* Sync pmu->global_ctrl to GUEST_IA32_PERF_GLOBAL_CTRL. */
-> > > +     kvm_pmu_call(set_msr)(vcpu, &msr_info);
+Hi,
 
-Eh, just add a dedicated kvm_pmu_ops hook.  Feeding this through set_msr() =
-avoids
-adding another hook, but makes the code hard to follow and requires the abo=
-ve
-ugly boilerplate.
+please pull a few more fixes, thanks.
 
-> > > +}
-> > > +
-> > >  bool kvm_pmu_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
-> > >  {
-> > >       switch (msr) {
-> > > @@ -680,7 +704,6 @@ int kvm_pmu_get_msr(struct kvm_vcpu *vcpu, struct=
- msr_data *msr_info)
-> > >               msr_info->data =3D pmu->global_status;
-> > >               break;
-> > >       case MSR_AMD64_PERF_CNTR_GLOBAL_CTL:
-> > > -     case MSR_CORE_PERF_GLOBAL_CTRL:
-> > >               msr_info->data =3D pmu->global_ctrl;
-> > >               break;
-> > >       case MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR:
-> > > @@ -731,6 +754,9 @@ int kvm_pmu_set_msr(struct kvm_vcpu *vcpu, struct=
- msr_data *msr_info)
-> >
-> >
-> > pmu->global_ctrl doesn't always have the up-to-date guest value, need t=
-o
-> > sync from vmcs/vmbc before comparing it against 'data'.
-> >
-> > +               kvm_pmu_sync_global_ctrl_from_vmcs(vcpu);
-> >                 if (pmu->global_ctrl !=3D data) {
->=20
-> Good catch. Thanks!
->=20
-> This is why I really prefer just unconditionally syncing the global
-> ctrl from VMCS to pmu->global_ctrl and vice versa.
->=20
-> We might get into similar problems as well in the future.
+- fix potential endless loop when discarding a block group when
+  disabling discard
 
-The problem isn't conditional synchronization, it's that y'all reinvented t=
-he
-wheel, poorly.  This is a solved problem via EXREG and wrappers.
+- reinstate message when setting a large value of mount option 'commit'
 
-That said, I went through the exercise of adding a PERF_GLOBAL_CTRL EXREG a=
-nd
-associated wrappers, and didn't love the result.  Host writes should be rar=
-e, so
-the dirty tracking is overkill.  For reads, the cost of VMREAD is lower tha=
-n
-VMWRITE (doesn't trigger consistency check re-evaluation on VM-Enter), and =
-is
-dwarfed by the cost of switching all other PMU state.
+- fix a folio leak when async extent submission fails
 
-So I think for the initial implementation, it makes sense to propagated wri=
-tes
-to the VMCS on demand, but do VMREAD after VM-Exit (if VM-Enter was success=
-ful).
-We can always revisit the optimization if/when we optimize the PMU world sw=
-itches,
-e.g. to defer them if there are no active host events.
+----------------------------------------------------------------
+The following changes since commit 38e541051e1d19e8b1479a6af587a7884653e041:
 
-> > > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> > > index 8a7af02d466e..ecf72394684d 100644
-> > > --- a/arch/x86/kvm/vmx/nested.c
-> > > +++ b/arch/x86/kvm/vmx/nested.c
-> > > @@ -7004,7 +7004,8 @@ static void nested_vmx_setup_exit_ctls(struct v=
-mcs_config *vmcs_conf,
-> > >               VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR |
-> > >               VM_EXIT_LOAD_IA32_EFER | VM_EXIT_SAVE_IA32_EFER |
-> > >               VM_EXIT_SAVE_VMX_PREEMPTION_TIMER | VM_EXIT_ACK_INTR_ON=
-_EXIT |
-> > > -             VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL;
-> > > +             VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
-> > > +             VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL;
+  btrfs: open code folio_index() in btree_clear_folio_dirty_tag() (2025-05-02 13:20:56 +0200)
 
-This is completely wrong.  Stuffing VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL here
-advertises support for KVM emulation of the control, and that support is no=
-n-existent
-in this patch (and series).
+are available in the Git repository at:
 
-Just drop this, emulation of VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL can be done
-separately.
+  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.15-rc6-tag
 
-> > > +     mediated =3D kvm_mediated_pmu_enabled(vcpu);
-> > > +     if (cpu_has_load_perf_global_ctrl()) {
-> > > +             vm_entry_controls_changebit(vmx,
-> > > +                     VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL, mediated);
-> > > +             /*
-> > > +              * Initialize guest PERF_GLOBAL_CTRL to reset value as =
-SDM rules.
-> > > +              *
-> > > +              * Note: GUEST_IA32_PERF_GLOBAL_CTRL must be initialize=
-d to
-> > > +              * "BIT_ULL(pmu->nr_arch_gp_counters) - 1" instead of p=
-mu->global_ctrl
-> > > +              * since pmu->global_ctrl is only be initialized when g=
-uest
-> > > +              * pmu->version > 1. Otherwise if pmu->version is 1, pm=
-u->global_ctrl
-> > > +              * is 0 and guest counters are never really enabled.
-> > > +              */
-> > > +             if (mediated)
-> > > +                     vmcs_write64(GUEST_IA32_PERF_GLOBAL_CTRL,
-> > > +                                  BIT_ULL(pmu->nr_arch_gp_counters) =
-- 1);
+for you to fetch changes up to 4ce2affc6ef9f84b4aebbf18bd5c57397b6024eb:
 
-This belongs in common code, as a call to the aforementioned hook to propag=
-ate
-PERF_GLOBAL_CTRL to hardware.
+  btrfs: add back warning for mount option commit values exceeding 300 (2025-05-12 21:39:34 +0200)
 
-> > > +     }
-> > > +
-> > > +     if (cpu_has_save_perf_global_ctrl())
-> > > +             vm_exit_controls_changebit(vmx,
-> > > +                     VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
-> > > +                     VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL, mediated);
-> > >  }
-> > >
-> > >  static void intel_pmu_init(struct kvm_vcpu *vcpu)
-> > > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > > index ff66f17d6358..38ecf3c116bd 100644
-> > > --- a/arch/x86/kvm/vmx/vmx.c
-> > > +++ b/arch/x86/kvm/vmx/vmx.c
-> > > @@ -4390,6 +4390,13 @@ void vmx_set_constant_host_state(struct vcpu_v=
-mx *vmx)
-> > >
-> > >       if (cpu_has_load_ia32_efer())
-> > >               vmcs_write64(HOST_IA32_EFER, kvm_host.efer);
-> > > +
-> > > +     /*
-> > > +      * Initialize host PERF_GLOBAL_CTRL to 0 to disable all counter=
-s
-> > > +      * immediately once VM exits. Mediated vPMU then call perf_gues=
-t_exit()
-> > > +      * to re-enable host perf events.
-> > > +      */
-> > > +     vmcs_write64(HOST_IA32_PERF_GLOBAL_CTRL, 0);
+----------------------------------------------------------------
+Boris Burkov (1):
+      btrfs: fix folio leak in submit_one_async_extent()
 
-This needs to be conditioned on the mediated PMU being enabled, because thi=
-s field
-is not constant when using the emulated PMU (or no vPMU).
+Filipe Manana (1):
+      btrfs: fix discard worker infinite loop after disabling discard
 
-> > > @@ -8451,6 +8462,15 @@ __init int vmx_hardware_setup(void)
-> > >               enable_sgx =3D false;
-> > >  #endif
-> > >
-> > > +     /*
-> > > +      * All CPUs that support a mediated PMU are expected to support=
- loading
-> > > +      * and saving PERF_GLOBAL_CTRL via dedicated VMCS fields.
-> > > +      */
-> > > +     if (enable_mediated_pmu &&
-> > > +         (WARN_ON_ONCE(!cpu_has_load_perf_global_ctrl() ||
-> > > +                       !cpu_has_save_perf_global_ctrl())))
+Kyoji Ogasawara (1):
+      btrfs: add back warning for mount option commit values exceeding 300
 
-This needs to be conditioned on !HYPERVISOR, or it *will* fire.
-
-And placing this check here, without *any* mention of *why* you did so, is =
-evil
-and made me very grumpy.  I had to discover the hard way that you checked t=
-he
-VMCS fields here, instead of in kvm_init_pmu_capability() where it logicall=
-y
-belongs, because the VMCS configuration isn't yet initialized.
-
-Grumpiness aside, I don't like this late clear of enable_mediated_pmu, as i=
-t risks
-a variation of the problem you're trying to avoid, i.e. risks consuming the=
- variable
-between kvm_init_pmu_capability() and here.
-
-I don't see any reason why setup_vmcs_config() can't be called before
-kvm_x86_vendor_init(), so unless I'm missing/forgetting something, let's ju=
-st do
-that, and move these checks where they belong.
+ fs/btrfs/discard.c | 17 +++++++++++++++--
+ fs/btrfs/fs.h      |  1 +
+ fs/btrfs/inode.c   |  7 +++++++
+ fs/btrfs/super.c   |  4 ++++
+ 4 files changed, 27 insertions(+), 2 deletions(-)
