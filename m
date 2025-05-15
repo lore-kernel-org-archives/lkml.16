@@ -1,141 +1,107 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C6A211A0D
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:00:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC08D1EDA23
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:01:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747321247; cv=none; b=sPznhd4IY0vyP63PKh5hNDJr6MZ+F4nhBMSfKy7qenuI7JPaHNYg0iiShxy6u2wsMCNkbhQbUTHih13B3gzqLl6nIK7oLQihMK3qtpQhVAaSK04U/HJ8fMm0Pd9UE1sdBPGze1L7miWKrf6lfOhFwCHzD7tE3rX1BOzAXJ1xQbU=
+	t=1747321300; cv=none; b=RTwfBRMAlzWftPw+MgvcbHwEUdYcFM55RSvBiXaYBhhEIiychSZqeUbRkZ5wmrVpUIAEaBXIz+DEuNmGSDGDGqPlbTCjN+5yARdsjGGQK+2MDiH461FNNUJbqczdMJMcbC60L191dM29zy6+vxeVIZ5dnbNgmnlK67WzQQm38qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747321247; c=relaxed/simple;
-	bh=6zLV7/Flv0Q6ihpP1MvipdkgtA9z8ybqScItcI7FQTg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FZ72bRaZXyXmLz9uvpyiA9FJjviAYvX6yVMRZlz7XXCJymqqTgHKX4+gMN5tmqzxtRDcPnN8Jdax1ZzvOVreMRV/R/e4JjaHIteQb4boeCz6wmO2rdKlZuYFmDCwPjTnLEUpiV9lFkGnuRRaRxUo9+5YvIbWEdQbqE/AGlkmay4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=AR1x3qDW; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=AR1x3qDW; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1747321300; c=relaxed/simple;
+	bh=0bpgmELm9pb0sTqZLHy84T/BAyd8bl3vq21w2L/4rbY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=r2nrLutfZaJyknRlgD4r0hX6ukLiDkpPiH3pv4QQctr9r9MbOWGVwW38Dmg7BnriPtGBDHEUWn4qqzjq58DIHxqVSpb2n5nbaerNwoR9MWgumV5mkLVBUmRyqGJsxX/N41uOMpi0Ptpsma6pFV8mCl4YZtpJiMgh/dCg1jW/URk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=RbKW1qQ+; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="AR1x3qDW";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="AR1x3qDW"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D58FA2123D;
-	Thu, 15 May 2025 15:00:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1747321242; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6zLV7/Flv0Q6ihpP1MvipdkgtA9z8ybqScItcI7FQTg=;
-	b=AR1x3qDWJNA249aVvWbj16f+1cRCKJIQe5FZbqJVQkErDOn84tA/dzv6uI4OxD1OibfOrt
-	MG5q7QwBr037qPI7EEogvADCHMDc/V0R0bcvy1VruAZ90a2bMH9d69YlCzNb+u0hdUL7I7
-	m8JSYjtwG84xCu9RE3uRkhfJ9NxY8aQ=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1747321242; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6zLV7/Flv0Q6ihpP1MvipdkgtA9z8ybqScItcI7FQTg=;
-	b=AR1x3qDWJNA249aVvWbj16f+1cRCKJIQe5FZbqJVQkErDOn84tA/dzv6uI4OxD1OibfOrt
-	MG5q7QwBr037qPI7EEogvADCHMDc/V0R0bcvy1VruAZ90a2bMH9d69YlCzNb+u0hdUL7I7
-	m8JSYjtwG84xCu9RE3uRkhfJ9NxY8aQ=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 787FB139D0;
-	Thu, 15 May 2025 15:00:42 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 6ELUG5oBJmhWPQAAD6G6ig
-	(envelope-from <mwilck@suse.com>); Thu, 15 May 2025 15:00:42 +0000
-Message-ID: <5911e91974db637d4a3395e60244c2c52b27b4b4.camel@suse.com>
-Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
- paths
-From: Martin Wilck <mwilck@suse.com>
-To: Benjamin Marzinski <bmarzins@redhat.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Christoph Hellwig
- <hch@infradead.org>,  Kevin Wolf <kwolf@redhat.com>,
- dm-devel@lists.linux.dev, Hanna Czenczek <hreitz@redhat.com>, Mikulas
- Patocka <mpatocka@redhat.com>, snitzer@kernel.org, "Kernel Mailing List,
- Linux"	 <linux-kernel@vger.kernel.org>, Hannes Reinecke <hare@suse.com>
-Date: Thu, 15 May 2025 17:00:41 +0200
-In-Reply-To: <aCX6Ys9mOc441ydA@redhat.com>
-References: <20250429165018.112999-1-kwolf@redhat.com>
-	 <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
-	 <aCIRUwt5BueQmlMZ@redhat.com> <aCLe5UT2kfzI96TQ@infradead.org>
-	 <aCMQ5S-gI6vZJxmq@redhat.com> <aCQiz88HksKg791Z@infradead.org>
-	 <aCTDiHMuMncwdp_X@redhat.com>
-	 <50beb356b4dc000446fd186ab754c87f386eaeae.camel@suse.com>
-	 <CABgObfaEiMN=YANk02EWini+jAXU1MxSvo8_jYWaMiu3ds7hgQ@mail.gmail.com>
-	 <2f0fc8ef7d04c590893bd6d54a6c0c842c4b21d7.camel@suse.com>
-	 <aCX6Ys9mOc441ydA@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="RbKW1qQ+"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a1fb17a9beso599782f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:01:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747321296; x=1747926096; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R+ExZLPgDVqN/4FPN7RMRww8CSWWl502tOiZJcg9SzU=;
+        b=RbKW1qQ+wXt5d6fGV19WSyFsSdtGy1xU2SR7jN8WdHqmQvuI+5HKHJM5pE4gDH5MCQ
+         qZl69AWj+lzhciGLw8V+Lah84JQUvPmGYbQCehrC4SHxnvP5VG2cq7d3lrIxYqEcQH3R
+         bwNXHxYfuHD6Sh7kPaWF8UzkFm+bUs0ThAZhrE3Ttgk/En7jpiO1jYCQveAhMjUZhRgl
+         s1iQjl1qfPgDxFqaavEy7TZieg8GSixaqlaIoOB9838IcdBcVCzriYuf0We/0wvKA1v8
+         L9W77xtW2zZwT7FlB6p8XV+lVZPgruXLlPiSAsBURbs8hY32tSI8Xv6ooWYs+jcQuAta
+         f/UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747321296; x=1747926096;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R+ExZLPgDVqN/4FPN7RMRww8CSWWl502tOiZJcg9SzU=;
+        b=WHwqfUyF0Mm2rbDHFimTWuAYZzAjqt0TyybeDsmHGNbYg40pBIOpQKoe+z6z7d+1s5
+         6dGgvrvcyuX61A9bKPfLP/zqvMv2UyrmefK37sC3JBpCqGBozuR0vrZwmJS6gZh2VZD6
+         sSop/LRS8q2KKgQbYv13VV6JISxd7ase5KD05dBNMn2/rncHSqwH64seuA0jaSMcQQcB
+         3ALFNgc6UrBKrvw3RsJAFRJAvDhRbWWpoQ2hEr1nZFSnzkbusttLR2fVR68GMkwvLKbL
+         awuESSOwp7eO8NszwAPIBT9o+Ma5s1zqSCfWQOm9ZnedTIKKsJSz8W9Kmd/IqCWkE+dT
+         JeqA==
+X-Forwarded-Encrypted: i=1; AJvYcCUayIu25syaF7vrT40aO2X6/2SmddvJre5+kwsjgpRuc02ACdEn0lw7P3YyvN1BoU7QJzarDmKGSsX6gmE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxqyZDEBqMpZzpmheLjk/KVxz2JnEMSvtKx6LieXDGGsfuyFCz
+	pQCk/ILqS5M96ZnTE0kbPsZPY9GRgUCRHxQ02ElU7PB7NH1azgnABgElTSt6xehO+Xs=
+X-Gm-Gg: ASbGncvENwNZVjjTedlPDEnLDv8vFjk5g3KrbwAvPirYD6LXBAfseV5WgCAo39g1idB
+	KmgOjLOcZifCa2NiZ1QON9hrvko97sovZU2BjwrYVrw1SZvzxdmKW2NqSRC2JdD57loSwhHj/FA
+	YhD8GsEqN9V/eUE1u5oOSaFOkJa8Em8Di7tbYaZcVANZTuXb22StoS29g4epf1mNo3574XKYnv1
+	cN1KKCQLpt/YFm+yYMihtgOZ0+FoQY/fulX55pH4+SnklQFTQ0c5Zt229jhsKBxTcsC3MQ0/Elt
+	4c5istF+qogCXz9w7CiSmYktKlj6iNaoeeTaPuCcOYkTw+5hSe+kfklRsDP87E0HFMu/KFdroIl
+	4GdVa/BwAK5mHhnHgkwjeLgIO
+X-Google-Smtp-Source: AGHT+IEaP32P+mtGWKd+DTEdhUkGNIOD6/Ha+Kt5yoVGB1vbS+3gB2gBhfdgIpL/XkzyzcsRFJdbcA==
+X-Received: by 2002:a05:6000:188d:b0:3a3:5c7c:1889 with SMTP id ffacd0b85a97d-3a35c84fc73mr60948f8f.52.1747321294274;
+        Thu, 15 May 2025 08:01:34 -0700 (PDT)
+Received: from brgl-uxlite.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57dde01sm23388046f8f.15.2025.05.15.08.01.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 08:01:33 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Ahmad Fatoum <a.fatoum@pengutronix.de>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Ludovic Desroches <ludovic.desroches@microchip.com>,
+	linux-gpio@vger.kernel.org,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: (subset) [PATCH 0/2] gpio: TODO: add item about GPIO drivers reading struct gpio_chip::base
+Date: Thu, 15 May 2025 17:01:28 +0200
+Message-ID: <174732127891.17102.13995153594267301956.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250507-gpio-chip-base-readback-v1-0-ade56e38480b@pengutronix.de>
+References: <20250507-gpio-chip-base-readback-v1-0-ade56e38480b@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-05-15 at 10:29 -0400, Benjamin Marzinski wrote:
-> On Thu, May 15, 2025 at 12:34:13PM +0200, Martin Wilck wrote:
-> >=20
-> > However, I suppose that depends on the permissions with which the
-> > qemu
-> > process is started, no? Wouldn't qemu need CAP_SYS_RAWIO for PCI
-> > passthrough as well?=20
-> >=20
-> > I admit that I'm confused by the many indirections in qemu's scsi-
-> > block
-> > code flow. AFAICS qemu forwards everything except PRIN/PROUT to the
-> > kernel block device in "scsi-block" mode. Correct me if I'm wrong.
-> >=20
-> > Anwyway, let's not forget that we're talking about the kernel here.
-> > While qemu is the main target application for this feature is
-> > created,
-> > any application can use it, and it may or may not run with
-> > CAP_SYS_RAWIO.
->=20
-> Maybe I'm missing your issue, but QEMU is just using DM's existing
-> ioctl
-> forwarding code, which was already designed for general use, and I
-> don't
-> see any capability issues with this patchset itself.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-I didn't mean it this way. I was rather musing about the question
-whether doing SG_IO on multipath devices by forwarding them to the
-current path makes sense.
 
-Sorry for the confusing post.
+On Wed, 07 May 2025 19:28:00 +0200, Ahmad Fatoum wrote:
+> Bartosz requested that I add this to the TODO, so here goes.
+> While at it, I also added a FIXME into the driver.
+> 
+> I'll be away most of the month, so feel free to squash changes as
+> appropriate.
+> 
 
-Regards
-Martin
+Applied, thanks!
+
+[1/2] gpio: TODO: add item about GPIO drivers reading struct gpio_chip::base
+      https://git.kernel.org/brgl/linux/c/833c086f22ecebe576af42051733796d1690dd71
+
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
