@@ -1,98 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E461DF990
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA89AD51;
+	Thu, 15 May 2025 17:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747329406; cv=none; b=VPm2zEPye9BlIkxx5099rPr9MgmteMbzSpaX3e8/g8hOsGvL9X9mYPaHtfUeNQxtXHiamDz6pPN66IRH4uIKtVfGTzDQAS532iKhXmsFyp+zaDUBQK/AWY5KL8cDJtJC2L6lmC/1Z3wpY8mPY3ul6A91s4w9sHZvoyXfG+hah8U=
+	t=1747329430; cv=none; b=JyLEtEnLFNeBnQEpKQa+nDQUAzpnQLC2KeoDxWq8HyXFVdcE3uEf8xERRK7F5r6rZXmrWAwVnOdZXTeGZljl7M0BtIJWGxiBUnWkWnsSMPOBj/hjjF6xnMEzgZktRmE9ZFqxx5PpaMDuaW7ZgKt5vJ0D4ongLEPhKRz9sNI3RfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747329406; c=relaxed/simple;
-	bh=MvM60ZObbi/BQVbSgnG85/LiAIUeh4VIT7d3zsx/4vA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QiDIn/Gg4wFnUsBczNLOIcePPT2ROpYcFc1VHvc0evFjSR1E9uK0WO1FfUZi7xGlJ+AW2cOR/R9K8b6a8tbN35K975O3QSHNmS8J0ZmjYcHyMIHlJgNccsG+vP/kLIzHvW+D+v4YXvIUPb3IZfrqmLH61O4KPkZK8ytP3gECdVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E3J0h3oa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747329430; c=relaxed/simple;
+	bh=YIej14svbynVNJ7oV8uJDQT+RCz/8iduQcehqThmXLg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IGkMJjMHJwm8JWThzAWJJpOKoUFYYp2TgESgaT/JolubhoRrE+32bV3koBOFFaSiiuhQB+lqDX4D1+fKl/GmInF71G2ryI7GVDKK3bNLCEpsZ7l3mUjE7r/uMt4uHR+ySzJ6wthb2ufd+6ge0huX6h0aHyFQ9TimzFl6wgqXaGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=THU64+Xk; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E3J0h3oa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37654C4CEE7;
-	Thu, 15 May 2025 17:16:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747329405;
-	bh=MvM60ZObbi/BQVbSgnG85/LiAIUeh4VIT7d3zsx/4vA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=E3J0h3oaws/CHN4PmzdBqfzAuyTMX7bSoNjnAoQIuchPx9GRgltNMTyPHv6wvDeS8
-	 fq7/nikzGeZob5Y7/meLFo5EGoAQfG9/J267zK6f5rE8/hFHnW9xlYaB//oYEgzI/8
-	 gf5neSdCDOTamym3bkK9flQPT6TWlRPogAU3PJzPmehgit6S/+6IIiZwh/dVKZIlum
-	 ZVy9w51SmhBxoAGfYpsG7czHvh0nkXFf0AtxV5/z3XyYRYLnXwgzHzccN8pgF6HMHi
-	 LCw2XCAsT7KkIz1tr14KvoLsQ5rNQVqbQ5kVKFdAwHCtJ2HZobCwqb7T7fsVVwxZmf
-	 pu1+XcdYhPnKQ==
-From: Borislav Petkov <bp@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: X86 ML <x86@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>
-Subject: [PATCH] fitex: Fix kernel-doc comments
-Date: Thu, 15 May 2025 19:16:41 +0200
-Message-ID: <20250515171641.24073-1-bp@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THU64+Xk"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad23c20f977so166465866b.2;
+        Thu, 15 May 2025 10:17:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747329427; x=1747934227; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=N/fwEcu64Y1kuqYfRsZYEnm9+ArZFqH26eYEtd1UgQY=;
+        b=THU64+XkHPxaDowNZmDd9rojfJT4GyWvgMIGbCA0UKEc3ln56/yZOMbw7XynCvf/C3
+         oE2bW1CUvALpIKAvrT4NzW0WVIzByl26W7qBH5291ZyksR76r2g3IWok9CmA4TBG6nTX
+         iGdEUmJOGE0UGBZ+ZhAjBKzskGn7aLN5UZLeGuxWB+7bLq5rmQ2Uj8gv+PY/W1jHOJKE
+         +fMFBsXAz2koypdEe67qFBjv/mk5dZ8KmB6TjkJxn/ELYUA077mSL69vg+Nt+rE4RybM
+         /A9wuQbUhllCR2nKB41a9EZ5+oPW4MJ6/ao75H2bDebw6NniJVzajdpxeM6ZCmxRTCDF
+         I1QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747329427; x=1747934227;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=N/fwEcu64Y1kuqYfRsZYEnm9+ArZFqH26eYEtd1UgQY=;
+        b=HR7M/+EVdAAh5vdK4zMJ4FHwuuz1Fcff1M9P5mrPO6KkfZTfn3tymy7jpWaeR3F0Xu
+         RTgmaSfYgjdII0U70AOmu2w2+ncc5FBEhjUq/WRS1thDzik7Wamomp7ilQ6MifF465Ml
+         hGZXA1ZSNA6l8xJ2DUNR6SoBAYP1TelgCqvHzPLfDR5GyOqoOfdaqolQ6rDcHehZyVHG
+         eaqCuMCCB1HWx1pM52OLoavayOSxO6afPRuF/0zEYVYeRoCKfzHZflZD9TXn2ZPWANDa
+         cjaX/lWOSRrYVJm3K+gacyAH8CalrqSRZPFTJT8aqJiUdLH2y+1MYZdFOusxtzNcItbB
+         KKxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUdbRW9at9i9DhLAZoHJx6/OeDsKORtv0Qxufgug1TNHjgncEZQi7hX/eNQrkhRjC/0N9E9V1lqDudEBoSVsGk=@vger.kernel.org, AJvYcCXzJdRQioXCIAGbsZOa/B+4KH78tNSpnd3loh4msubvqJYLj18mOrNjTYf0rnfstv6g/T9fiYuCd+Zg1Gc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxq0xGwwUYMEZ61awRVMA3MFNhCIciNR+0zuMACTcg32tbf8G/H
+	V6nTXawaSWpDcBMAtWhMPr/myoT3PlrJWS6woaBXEgjFMRSqDWeUvqSF
+X-Gm-Gg: ASbGncvZyWkqOzPgOKBY7B/UtyM4QCIF38COe+XvLJ/X+Owz899pJhPGuYTixoJVXsK
+	UhgfYf79/zsTJu7KUUHpbGlDHALyWd6vQER0mQORSDNF8n875TtkinqexfDWecdOb24e3FYVW9Y
+	QVqBAVd2i7aZWC5fwSR7/bi8IC14inUYpQC8sGiTSL8MGb7jm4pShpcuptm82X63R++B3dLLySB
+	LjPkt0nJQQ4EF3aMJI2RWEjXemWFa/4sWKinE/QhbH/Nu0yNu2ZE9dtID2Bh+PNVKxM2vgi9EYR
+	jgfClkPF75hGEdbramNUPmGJPo/P8B+WEHrUi5i7nb4IUSKm1k2pwuqi7BNo
+X-Google-Smtp-Source: AGHT+IFgOYVrkyAZ2u0WfrrawTMEd2jWr9TwcmhkKNUZgt57lfdu4okQTmuCJuwmhGUEMYxpKUsgFg==
+X-Received: by 2002:a17:907:948c:b0:ad5:2a11:efa7 with SMTP id a640c23a62f3a-ad52d4ea530mr56862966b.29.1747329426929;
+        Thu, 15 May 2025 10:17:06 -0700 (PDT)
+Received: from [10.5.1.156] ([193.170.134.247])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6005ac35e33sm107683a12.60.2025.05.15.10.17.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 10:17:06 -0700 (PDT)
+Message-ID: <42820306-3a94-4c47-be9b-c3f89de34866@gmail.com>
+Date: Thu, 15 May 2025 19:17:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] rust: irq: add support for request_irq()
+To: Daniel Almeida <daniel.almeida@collabora.com>,
+ Alice Ryhl <aliceryhl@google.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>, ojeda@kernel.org,
+ alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+ benno.lossin@proton.me, a.hindborg@kernel.org, tmgross@umich.edu,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250122163932.46697-1-daniel.almeida@collabora.com>
+ <Z5HtHVMipAdNvOcj@boqun-archlinux>
+ <CAH5fLggSET--eSW=rA_hw2jAyAO6_fa82gm0X3qeanXEvmZscA@mail.gmail.com>
+ <3753EBEB-8538-403A-BEFC-768390EB2D9E@collabora.com>
+Content-Language: en-US, de-DE
+From: Christian Schrefl <chrisi.schrefl@gmail.com>
+In-Reply-To: <3753EBEB-8538-403A-BEFC-768390EB2D9E@collabora.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: "Borislav Petkov (AMD)" <bp@alien8.de>
+Hi Daniel
 
-Fix those:
+On 14.05.25 4:44 PM, Daniel Almeida wrote:
+> Hi Alice,
+> 
+>> On 23 Jan 2025, at 06:07, Alice Ryhl <aliceryhl@google.com> wrote:
+>>
+>> On Thu, Jan 23, 2025 at 8:18 AM Boqun Feng <boqun.feng@gmail.com> wrote:
+>>>
+>>> On Wed, Jan 22, 2025 at 01:39:30PM -0300, Daniel Almeida wrote:
+>>>> Add support for registering IRQ handlers in Rust.
+>>>>
+>>>> IRQ handlers are extensively used in drivers when some peripheral wants to
+>>>> obtain the CPU attention. Registering a handler will make the system invoke the
+>>>> passed-in function whenever the chosen IRQ line is triggered.
+>>>>
+>>>> Both regular and threaded IRQ handlers are supported through a Handler (or
+>>>> ThreadedHandler) trait that is meant to be implemented by a type that:
+>>>>
+>>>> a) provides a function to be run by the system when the IRQ fires and,
+>>>>
+>>>> b) holds the shared data (i.e.: `T`) between process and IRQ contexts.
+>>>>
+>>>> The requirement that T is Sync derives from the fact that handlers might run
+>>>> concurrently with other processes executing the same driver, creating the
+>>>> potential for data races.
+>>>>
+>>>> Ideally, some interior mutability must be in place if T is to be mutated. This
+>>>> should usually be done through the in-flight SpinLockIrq type.
+>>>>
+>>>> Co-developed-by: Alice Ryhl <aliceryhl@google.com>
+>>>> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+>>>> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+>>>> ---
+>>>>
+>>>> Changes from v1:
+>>>>
+>>>> - Added Co-developed-by tag to account for the work that Alice did in order to
+>>>> figure out how to do this without Opaque<T> (Thanks!)
+>>>> - Removed Opaque<T> in favor of plain T
+>>>
+>>> Hmmm...
+>>>
+>>> [...]
+>>>
+>>>> +#[pin_data(PinnedDrop)]
+>>>> +pub struct Registration<T: Handler> {
+>>>> +    irq: u32,
+>>>> +    #[pin]
+>>>> +    handler: T,
+>>>
+>>> I think you still need to make `handler` as `!Unpin` because compilers
+>>> can assume a `&mut T` from a `Pin<&mut Registration>`, am I missing
+>>> something here?
+>>
+>> The current version operates under the assumption that PhantomPinned
+>> is enough. But I'm happy to add Aliased here.
+>>
+>> Alice
+> 
+> Aliased? What is this? I can’t find that trait or type anywhere.
 
-  ./kernel/futex/futex.h:208: warning: Function parameter or struct member 'drop_hb_ref' not described in 'futex_q'
-  ./kernel/futex/waitwake.c:343: warning: expecting prototype for futex_wait_queue(). Prototype was for futex_do_wait() instead
-  ./kernel/futex/waitwake.c:594: warning: Function parameter or struct member 'task' not described in 'futex_wait_setup'
+Aliased was a name previously considered for `UnsafePinned` [0].
+I believe that was what Alice referred to here.
 
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
----
- kernel/futex/futex.h    | 1 +
- kernel/futex/waitwake.c | 5 ++---
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Just marking the type as !Unpin should be fine on current
+Rust versions, but on some future rust versions `UnsafePinned`
+might be the only way to make this sound.
 
-diff --git a/kernel/futex/futex.h b/kernel/futex/futex.h
-index 069fc2a83080..fcd1617212ee 100644
---- a/kernel/futex/futex.h
-+++ b/kernel/futex/futex.h
-@@ -175,6 +175,7 @@ typedef void (futex_wake_fn)(struct wake_q_head *wake_q, struct futex_q *q);
-  * @requeue_pi_key:	the requeue_pi target futex key
-  * @bitset:		bitset for the optional bitmasked wakeup
-  * @requeue_state:	State field for futex_requeue_pi()
-+ * @drop_hb_ref:	Waiter should drop the extra hash bucket reference if true
-  * @requeue_wait:	RCU wait for futex_requeue_pi() (RT only)
-  *
-  * We use this hashed waitqueue, instead of a normal wait_queue_entry_t, so
-diff --git a/kernel/futex/waitwake.c b/kernel/futex/waitwake.c
-index bd8fef0f8d18..b3738fbe83c6 100644
---- a/kernel/futex/waitwake.c
-+++ b/kernel/futex/waitwake.c
-@@ -334,8 +334,7 @@ int futex_wake_op(u32 __user *uaddr1, unsigned int flags, u32 __user *uaddr2,
- static long futex_wait_restart(struct restart_block *restart);
- 
- /**
-- * futex_wait_queue() - futex_queue() and wait for wakeup, timeout, or signal
-- * @hb:		the futex hash bucket, must be locked by the caller
-+ * futex_do_wait() - wait for wakeup, timeout, or signal
-  * @q:		the futex_q to queue up on
-  * @timeout:	the prepared hrtimer_sleeper, or null for no timeout
-  */
-@@ -578,7 +577,7 @@ int futex_wait_multiple(struct futex_vector *vs, unsigned int count,
-  * @flags:	futex flags (FLAGS_SHARED, etc.)
-  * @q:		the associated futex_q
-  * @key2:	the second futex_key if used for requeue PI
-- * task:	Task queueing this futex
-+ * @task:	Task queueing this futex
-  *
-  * Setup the futex_q and locate the hash_bucket.  Get the futex value and
-  * compare it with the expected value.  Handle atomic faults internally.
--- 
-2.43.0
+[0]: https://lore.kernel.org/rust-for-linux/D9VBVURZLSNT.4BTQQ8UCTGPJ@kernel.org/
+
+Cheers
+Christian
 
