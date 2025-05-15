@@ -1,133 +1,97 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DEC4B1E6A
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB2F41C71
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747273738; cv=none; b=i3N+HklJdmwqQEg8P940N+yKXZ+FWnHDBjwawOHRE5A+udJoNTrFzimbfGULqQ0YfnvO+6PShDCUTvLnXHDI/l6zO1TLCqYjfGA4Ohrt8mnpZcgGeA/rFU+TOz21JgwE/sDxt2/83MgxRSqb8kR1VfrwzGu42ATB/vY9QZGFRe4=
+	t=1747273796; cv=none; b=SKq6k5+hPUWyAHfu0eRiyYnga/xfIQLqWlH/TYq4jpdB0q86kKD8xLkvBUNtPhEns1rCaPgXPduHnvHTAgpxS1Qla7aRwDh3N4zpQhcXMysH0uTBrIm9rWNmOerVkeEM1dxG8mEp0CWitTvYT/9oVFjycfiV++A7rZFpTBy3NxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747273738; c=relaxed/simple;
-	bh=KiR8YbpKmTMr2x69SUwQJPdzWTL9nSX+JSmjJuCOWqU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hFZmPEaxxd9V2wRcRYcvGp8bGpgTbBP/8LAxWeP6km3eOTK4x0CaZcARRtfqeTA1CAdB8L4+Fmk48/T3qOuPKLAyISKC7fGKfM8ZtcJqiu0XkQPGtJ1GC/Z3QXw5Fs8RD8/gjtunfNpKxtT0bepbnPUi8gpt6/tVTy19GQlbMAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RiPauSWQ; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747273796; c=relaxed/simple;
+	bh=NjYefZJ+G12d8ZbQGjEoN4hKEc0qOfGCUdQw7dcIbHA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rXRQkUud6aNtc6nE50vQvmB+tdoo8P+Fvmguy2JTimjfqHbw89Dr48rQZwC5F5yRqa4ZxhTmRAlJVEYRyuE+FTjbMKoOLFoRv1b1xfdIU5/kAqL10VNnyUz9mkOMShn98CChyOKS/kSbnICwVBIRHoAGgNnabZPBUjLNGHjhOuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZY2twBwc; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RiPauSWQ"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-30a8c929220so433485a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:48:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747273735; x=1747878535; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oOEnV/2KMJC3wgwepaDuF55brmVsBP86jOYmmGA/5KU=;
-        b=RiPauSWQiWIjgn2rqtXtA9oLTPBXGj2f2rZJUlwyMj7VOK/hcPDEInlE0oTXq72KDY
-         fknKeWSZ0DbaXMhwQMw7U9w98g7FglE8WUecWQ3cE/HF7YlepMEef9fmP1nF5cO2Tof7
-         v5piOm8x/4OgtU4vECTVcg4MXNf5zgzWze4KC0V+XDnth6HwtsetxcvO9M/mxibroLy8
-         WKq6ZrslZGrlbSw7u72RJ7TSTva0YCjVStoxps1KZThgh43ADOxIpfmARWWk2PLGzmU6
-         hMK9ZpxqPfl8TrBk8F/Q6wh48+XNlDB6JQjRXdDuQjK6hyDi5PBFLU02wdjhynoYSsw6
-         l3Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747273735; x=1747878535;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oOEnV/2KMJC3wgwepaDuF55brmVsBP86jOYmmGA/5KU=;
-        b=F8Tpv69lr6fAdWQSlDPG2AN7Log7lHAimAdj844itj6Gjb1V9WstoEdBAQ08q9T3/n
-         TqhyuCLUIS/4LoKxSrBut/BFPqUMph/Ne2X0hR/SwmsuameQz7K1r6dNk9A4T4fS+JL6
-         6P9vCaUswp4zxpJSOWvauQIxy66EQ3H7jgYMSwjfIBPcWsjoJAYDLJ/euhmPK/3WOVAJ
-         dFk9i/+FkIRxFI12zWIJwB3GPwVo1Ep7Bc2ZuB9Ng5nqpg2LWV2Wsaq8Ysr4HDCsMFaJ
-         AuMF+hhI6FLtTuJ5tXe7Ezdjr93MeJlq4NBPXMSuR2Ntfq0fFoG8a6KU1tL+4Xszsmlj
-         8u2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVG7rqtIEfQHktHatdpmHJ9Y4gbHAtHGj0tfkd3vR2vnw80ijerZ+pxGKOsyNerMFhfT9xN/Qr1Dpxs6Ug=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziRThZyaPG2g088mAbmFz96ulvGv2q5gwtPJoL8SJ2H2ak3Due
-	LGjm8qjMPHjzmGwIOapD7+6hFZc+kbaJqY5aaDg2jN7Yh5+dRJUX
-X-Gm-Gg: ASbGncspSsHp3S1W/hwLz0yfRncZAvhxaCzqSRs4iXgtQqM4cYz/vJemgY5LaJyzI0C
-	+ibkWrgPSXMnxcJYKg/hlrwqQlI9oKCafGz9CNzf80acMJfAVcsUWVi0U2JAHiSf3aGk+8IEtLK
-	1jYckjPImL9Xy2qKhLWWZmY6T2V//mrGhofdvFX3AmNSPw53J4cINf2yTyzYm6nJnbppFJ7KzMW
-	mpkU7Tcu6z2hGBPwDC41LxKf5Eg4TO2VYuEghNnLZx+898vPfXwnvOpzzWcuuac8TIS8S8mpvP5
-	lL4ryaIq/6uibgLsyqbpoEH5jTVspF3fITngt0gQy7fPH0QKmyXEydyC2w==
-X-Google-Smtp-Source: AGHT+IHDMnY/v97x5w5dxSCupgCGTWPSnEAHWOQ8uK2Hd+mELF4fFkK2eG87nVkTfnkhyBrcXM+YWA==
-X-Received: by 2002:a17:90b:4a85:b0:305:2d28:e435 with SMTP id 98e67ed59e1d1-30e2e59bcf2mr8591859a91.7.1747273734936;
-        Wed, 14 May 2025 18:48:54 -0700 (PDT)
-Received: from PC.mioffice.cn ([43.224.245.249])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e33460e16sm2292606a91.30.2025.05.14.18.48.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 18:48:54 -0700 (PDT)
-From: Sheng Yong <shengyong2021@gmail.com>
-X-Google-Original-From: Sheng Yong <shengyong1@xiaomi.com>
-To: xiang@kernel.org,
-	hsiangkao@linux.alibaba.com,
-	chao@kernel.org,
-	zbestahu@gmail.com,
-	jefflexu@linux.alibaba.com,
-	dhavale@google.com,
-	lihongbo22@huawei.com
-Cc: linux-erofs@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	Sheng Yong <shengyong1@xiaomi.com>
-Subject: [PATCH v2] erofs: avoid using multiple devices with different type
-Date: Thu, 15 May 2025 09:48:37 +0800
-Message-ID: <20250515014837.3315886-1-shengyong1@xiaomi.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZY2twBwc"
+Date: Wed, 14 May 2025 18:49:47 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747273792;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FS/yE07A4Cv6zJAjjeYcVdij2I9QfJ/UEHQCtSmp7sw=;
+	b=ZY2twBwc4USR7Gw2dEDffmf4FeaE58904GvYVMl8BBdMJ5qN/u0DfcmyYma+K6jrE7PiC0
+	oPgNdcW/JD4cXwgyOTJdig85MQLmkbDAzNvKm2gopHzIhI34ha3xipM565sjzzo1GG1FCa
+	SBsKU99aiO6NoMDwptx09g8x6aZMbig=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Peter Zijlstra <peterz@infradead.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, Alexei Starovoitov <ast@kernel.org>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH 0/4] memcg: nmi-safe kmem charging
+Message-ID: <mezzzvbplz2jtt6wjel7dwic25owtydcu3hp2mkqlhp2q3zb7x@js2bm7oheljs>
+References: <20250509232859.657525-1-shakeel.butt@linux.dev>
+ <2e2f0568-3687-4574-836d-c23d09614bce@suse.cz>
+ <mzrsx4x5xluljyxy5h5ha6kijcno3ormac3sobc3k7bkj5wepr@cuz2fluc5m5d>
+ <07e4e8d9-2588-41bf-89d4-328ca6afd263@suse.cz>
+ <20250513114125.GE25763@noisy.programming.kicks-ass.net>
+ <ct2h2eyuepa2g2ltl5fucfegwyuqspvz6d4uugcs4szxwnggdc@6m4ks3hp3tjj>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ct2h2eyuepa2g2ltl5fucfegwyuqspvz6d4uugcs4szxwnggdc@6m4ks3hp3tjj>
+X-Migadu-Flow: FLOW_OUT
 
-From: Sheng Yong <shengyong1@xiaomi.com>
+On Tue, May 13, 2025 at 03:17:00PM -0700, Shakeel Butt wrote:
+[...]
+> 
+> Thanks a lot Vlastimil & Peter for the suggestions. Let me summarize
+> what I plan to do and please point out if I am doing something wrong:
+> 
+> 
+> #if defined(CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS) || !defined(CONFIG_HAVE_NMI)
+> 
+> // Do normal this_cpu* ops
+> 
+> #elif defined(ARCH_HAVE_NMI_SAFE_CMPXCHG)
+> 
+> // Do 32 bit atomic ops with in_nmi() checks
+> 
+> #else
+> 
+> // Build error or ignore nmi stats??
+> 
+> #endif
+> 
+> 
 
-For multiple devices, both primary and extra devices should be the
-same type. `erofs_init_device` has already guaranteed that if the
-primary is a file-backed device, extra devices should also be
-regular files.
+Just wanted to circle back on the updated plan:
 
-However, if the primary is a block device while the extra device
-is a file-backed device, `erofs_init_device` will get an ENOTBLK,
-which is not treated as an error in `erofs_fc_get_tree`, and that
-leads to an UAF:
+#if defined(CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS) || !defined(CONFIG_HAVE_NMI)
 
-  erofs_fc_get_tree
-    get_tree_bdev_flags(erofs_fc_fill_super)
-      erofs_read_superblock
-        erofs_init_device  // sbi->dif0 is not inited yet,
-                           // return -ENOTBLK
-      deactivate_locked_super
-        free(sbi)
-    if (err is -ENOTBLK)
-      sbi->dif0.file = filp_open()  // sbi UAF
+- Allow memcg charging in nmi context
+- Use this_cpu_ops for memcg stats even in nmi context
 
-So if -ENOTBLK is hitted in `erofs_init_device`, it means the
-primary device must be a block device, and the extra device
-is not a block device. The error can be converted to -EINVAL.
+#elif defined(ARCH_HAVE_NMI_SAFE_CMPXCHG)
 
-Fixes: fb176750266a ("erofs: add file-backed mount support")
-Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
----
- fs/erofs/super.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+- Allow memcg charging in nmi context
+- Use atomic* ops for selected memcg stats in nmi context
 
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 512877d7d855..6b998a49b61e 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -165,8 +165,11 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
- 				filp_open(dif->path, O_RDONLY | O_LARGEFILE, 0) :
- 				bdev_file_open_by_path(dif->path,
- 						BLK_OPEN_READ, sb->s_type, NULL);
--		if (IS_ERR(file))
-+		if (IS_ERR(file)) {
-+			if (file == ERR_PTR(-ENOTBLK))
-+				return -EINVAL;
- 			return PTR_ERR(file);
-+		}
- 
- 		if (!erofs_is_fileio_mode(sbi)) {
- 			dif->dax_dev = fs_dax_get_by_bdev(file_bdev(file),
--- 
-2.43.0
+#else
 
+- Do not allow memcg charging in nmi context
+
+#endif
