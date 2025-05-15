@@ -1,142 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE722298C1C;
-	Thu, 15 May 2025 12:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31893295DB8;
+	Thu, 15 May 2025 12:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747313772; cv=none; b=a18eCi0cUpuMokREWy1QDNDQBQMgb5CS4ExtVgUEpnlObvQXVXgdEmkZfRX3SinEDSSssG72g8QhhMg+lc0Bg+Yr7iPLSR0lsqo84AbNrslAV0vgZcNNFDwb6N6cu0F71/G51kJ55tERZFXfxw/csIcTnT7kHn44OBLYd9ekeO0=
+	t=1747313795; cv=none; b=lWOGM9+n+mL/SDunT8K4ukQsYCWJ1lmA1SJAE7E+6BY0RrCWj6+2EBO1FUX9DM2tyPhmrji/VhKQa+HBAK81HpgJt8WJVSF7EFJpFjYkRbTv8lyAWeoQgQ2rtbl7YLZWzE6bqRR7Cdj4WdVLfk3jclMxSdEblpa49bgIi3eKeO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747313772; c=relaxed/simple;
-	bh=XjaA4euigQSgEh5o8KfHZkKho3kN1DiJAA1xWUvIMWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WCkOd14vg8x0DzI+tHSlq0lh2KIZqGpO4u97OLrGhTXGYUwjKRnfDNSS/j3Z/FzhCsIqsPB+M5J36Iwq7JXuV37nadUKUZR6ObEY9s5+zUFCVAeMxIzc4Nn9Eht6uNefccqBvFAGpTGR+xXjNnVDWu6U1SYzq30o4hm3LU8OeDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EM12WOIa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747313795; c=relaxed/simple;
+	bh=JQQmCigDTGGR3Yhow6axIFhvc3Eoa8D0gOt7/pasBOE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VH9PPxQqW9o9or2MpFGrLdjazoBrgJ1MiMwf31H0yOANul4LYmB31AlgNKY03zfInzDhhzU12xeZ7glyvRZMMalh8R9UaxUYo+RJwuCscwpQnojDzCmLTE1kJ3xvfj4VH39cOJeKcioCV2HpxKPcptmGnqswcM/FErUEWEJz2no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=NKbjC4UT; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EM12WOIa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47426C4CEEB;
-	Thu, 15 May 2025 12:56:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747313772;
-	bh=XjaA4euigQSgEh5o8KfHZkKho3kN1DiJAA1xWUvIMWo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EM12WOIao1+ZILoI/QChBsE2hjpGrOwBOP9fd0v/f9IsoWMv+o9xrViP/7wSm/ch8
-	 QkdBxpSwxwAFduwPN42UnsAWCQ9Ip7zqEAr9QtkIifmAwju7VsOBW7K5/cyC83O/i2
-	 nedqpvu0TdLW/7S3ke7oVUnDCdaiSZ8+I+XkAqDFmrEN0QAbNSf4cFKsUuorF0wgQ+
-	 dnPd1jw7r5vIS+1dTk2kZyrQSxl5QngYSwA8UEg0nFu6F8FiJFAMDQp0+o7AbaP9MH
-	 HmHULpthiu+owl4gZdu6JfpFUHFGrmlrSDi8VSG/hkcwuz+vM3UBZCW5k4W+xzH7yL
-	 ydOEAJutUySaQ==
-Date: Thu, 15 May 2025 13:56:07 +0100
-From: Will Deacon <will@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com,
-	ryan.roberts@arm.com, anshuman.khandual@arm.com,
-	mark.rutland@arm.com, yang@os.amperecomputing.com,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] arm64: Check pxd_leaf() instead of !pxd_table() while
- tearing down page tables
-Message-ID: <20250515125606.GA11878@willie-the-truck>
-References: <20250515063450.86629-1-dev.jain@arm.com>
- <332ecda7-14c4-4dc3-aeff-26801b74ca04@redhat.com>
- <4904d02f-6595-4230-a321-23327596e085@arm.com>
- <6fe7848c-485e-4639-b65c-200ed6abe119@redhat.com>
- <35ef7691-7eac-4efa-838d-c504c88c042b@arm.com>
- <c06930f0-f98c-4089-aa33-6789b95fd08f@redhat.com>
- <91fc96c3-4931-4f07-a0a9-507ac7b5ae6d@arm.com>
- <a005b0c3-861f-4e73-a747-91e0a15c85de@redhat.com>
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="NKbjC4UT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=n4nOOBXE7v6odPR/BwwmCDAbwuJ53Fu89h6EfppGY7A=; t=1747313792; x=1747918592; 
+	b=NKbjC4UTCSNu7sntJ7D8MuFHWwWLPr4AoyEE85HRbgXyp21Utqp+6HMezmZBbWjc8zcTnWf1vG5
+	t/EUIRq/jiD7dvmzv42TxSFDF0dppptlDzAorEdk0P8R4V+JK8iwQwddIMEoYBRACxjX+QPCZmGf8
+	VW6P64aK62IMDJFiPS/k/KaE9ACerkiLN5FcLAaeTV8b4MiOKUsLXFPj+yfz9Po9apFYV7dBznAu/
+	SPvveyDif8JADCmc2V9z3d5w3xvYuhYTsvrncxVSqH5k0hPcYp1y4eF5J5FT90l77AF+raJeL6mqI
+	e9FVfT4yxgs1ppwNGwKNSofifUykOXy4e4CA==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.98)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1uFY8S-00000002b5K-2MpM; Thu, 15 May 2025 14:56:28 +0200
+Received: from p5b13afe4.dip0.t-ipconnect.de ([91.19.175.228] helo=[192.168.178.61])
+          by inpost2.zedat.fu-berlin.de (Exim 4.98)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1uFY8S-00000000y68-1RYs; Thu, 15 May 2025 14:56:28 +0200
+Message-ID: <ba1e1ae6824f47bcb49387ae4f2c70dfd45209bc.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH 14/15] bugs/sh: Concatenate 'cond_str' with '__FILE__'
+ in __WARN_FLAGS(), to extend WARN_ON/BUG_ON output
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra
+	 <peterz@infradead.org>, linux-arch@vger.kernel.org, Yoshinori Sato
+	 <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
+	linux-sh@vger.kernel.org
+Date: Thu, 15 May 2025 14:56:27 +0200
+In-Reply-To: <20250515124644.2958810-15-mingo@kernel.org>
+References: <20250515124644.2958810-1-mingo@kernel.org>
+	 <20250515124644.2958810-15-mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a005b0c3-861f-4e73-a747-91e0a15c85de@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-On Thu, May 15, 2025 at 11:32:22AM +0200, David Hildenbrand wrote:
-> On 15.05.25 11:27, Dev Jain wrote:
-> > 
-> > 
-> > On 15/05/25 2:23 pm, David Hildenbrand wrote:
-> > > On 15.05.25 10:47, Dev Jain wrote:
-> > > > 
-> > > > 
-> > > > On 15/05/25 2:06 pm, David Hildenbrand wrote:
-> > > > > On 15.05.25 10:22, Dev Jain wrote:
-> > > > > > 
-> > > > > > 
-> > > > > > On 15/05/25 1:43 pm, David Hildenbrand wrote:
-> > > > > > > On 15.05.25 08:34, Dev Jain wrote:
-> > > > > > > > Commit 9c006972c3fe removes the pxd_present() checks because the
-> > > > > > > > caller
-> > > > > > > > checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller
-> > > > > > > > only
-> > > > > > > > checks pud_present(); pud_free_pmd_page() recurses on each pmd
-> > > > > > > > through
-> > > > > > > > pmd_free_pte_page(), wherein the pmd may be none.
-> > > > > > > The commit states: "The core code already has a check for pXd_none()",
-> > > > > > > so I assume that assumption was not true in all cases?
-> > > > > > > 
-> > > > > > > Should that one problematic caller then check for pmd_none() instead?
-> > > > > > 
-> > > > > >     From what I could gather of Will's commit message, my
-> > > > > > interpretation is
-> > > > > > that the concerned callers are vmap_try_huge_pud and vmap_try_huge_pmd.
-> > > > > > These individually check for pxd_present():
-> > > > > > 
-> > > > > > if (pmd_present(*pmd) && !pmd_free_pte_page(pmd, addr))
-> > > > > >       return 0;
-> > > > > > 
-> > > > > > The problem is that vmap_try_huge_pud will also iterate on pte entries.
-> > > > > > So if the pud is present, then pud_free_pmd_page -> pmd_free_pte_page
-> > > > > > may encounter a none pmd and trigger a WARN.
-> > > > > 
-> > > > > Yeah, pud_free_pmd_page()->pmd_free_pte_page() looks shaky.
-> > > > > 
-> > > > > I assume we should either have an explicit pmd_none() check in
-> > > > > pud_free_pmd_page() before calling pmd_free_pte_page(), or one in
-> > > > > pmd_free_pte_page().
-> > > > > 
-> > > > > With your patch, we'd be calling pte_free_kernel() on a NULL pointer,
-> > > > > which sounds wrong -- unless I am missing something important.
-> > > > 
-> > > > Ah thanks, you seem to be right. We will be extracting table from a none
-> > > > pmd. Perhaps we should still bail out for !pxd_present() but without the
-> > > > warning, which the fix commit used to do.
-> > > 
-> > > Right. We just make sure that all callers of pmd_free_pte_page() already
-> > > check for it.
-> > > 
-> > > I'd just do something like:
-> > > 
-> > > diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> > > index 8fcf59ba39db7..e98dd7af147d5 100644
-> > > --- a/arch/arm64/mm/mmu.c
-> > > +++ b/arch/arm64/mm/mmu.c
-> > > @@ -1274,10 +1274,8 @@ int pmd_free_pte_page(pmd_t *pmdp, unsigned long
-> > > addr)
-> > > 
-> > >           pmd = READ_ONCE(*pmdp);
-> > > 
-> > > -       if (!pmd_table(pmd)) {
-> > > -               VM_WARN_ON(1);
-> > > -               return 1;
-> > > -       }
-> > > +       VM_WARN_ON(!pmd_present(pmd));
-> > > +       VM_WARN_ON(!pmd_table(pmd));
-> > 
-> > And also return 1?
-> 
-> I'll leave that to Catalin + Will.
-> 
-> I'm not a friend for adding runtime-overhead for soemthing that should not
-> happen and be caught early during testing -> VM_WARN_ON_ONCE().
+Hi Ingo,
 
-I definitely think we should return early if the pmd isn't a table.
-Otherwise, we could end up descending into God-knows-what!
+On Thu, 2025-05-15 at 14:46 +0200, Ingo Molnar wrote:
+> Extend WARN_ON and BUG_ON style output from:
+>=20
+>   WARNING: CPU: 0 PID: 0 at kernel/sched/core.c:8511 sched_init+0x20/0x41=
+0
+>=20
+> to:
+>=20
+>   WARNING: CPU: 0 PID: 0 at [idx < 0 && ptr] kernel/sched/core.c:8511 sch=
+ed_init+0x20/0x410
+>=20
+> Note that the output will be further reorganized later in this series.
+>=20
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+> Cc: Rich Felker <dalias@libc.org>
+> Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> Cc: linux-sh@vger.kernel.org
+> Cc: <linux-arch@vger.kernel.org>
+> ---
+>  arch/sh/include/asm/bug.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/sh/include/asm/bug.h b/arch/sh/include/asm/bug.h
+> index 834c621ab249..891276687355 100644
+> --- a/arch/sh/include/asm/bug.h
+> +++ b/arch/sh/include/asm/bug.h
+> @@ -59,7 +59,7 @@ do {							\
+>  		 _EMIT_BUG_ENTRY			\
+>  		 :					\
+>  		 : "n" (TRAPA_BUG_OPCODE),		\
+> -		   "i" (__FILE__),			\
+> +		   "i" (WARN_CONDITION_STR(cond_str) __FILE__),	\
+>  		   "i" (__LINE__),			\
+>  		   "i" (BUGFLAG_WARNING|(flags)),	\
+>  		   "i" (sizeof(struct bug_entry)));	\
 
-Will
+Looks good to me, however I'm not happy with the summary line.
+
+It's too long and the prefix "bugs/sh:" is very confusing. I usually just
+use "sh:" to mark anything that affects arch/sh.
+
+Can I pick this patch for my sh-linux tree?
+
+Thanks,
+Adrian
+
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
