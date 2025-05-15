@@ -1,174 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50CA7225A2C
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E4F225A2C
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747311583; cv=none; b=MA/RA53caofImb1q6wkKjAcAr37ZGEMUFUhPt0yJx8B20OQl4fhyQg3Yy4AaHp4uK4XWBAp4+H6CYTQFkvDgny1Wclixfkd099s8/k2/dLj5WKyhCRGW90wumyzdde7YsJ0qX7rRQ2DtVHfc0ekjqIJsbSyXSqH3i+39LIHzH7k=
+	t=1747311648; cv=none; b=GynoCVcTApDortxN4LLv4AzErznQPdJJJYXyQhsEddbdQrzbaM03qOj4fKVbRKvRPOom5prhi4COgpNAcAieonbTchJ0w8P5S3RbPXY1yaG9w8jbLuKciozQMiOqom+jhs6tbGdgLnpfCuEFqhA76ABT9jGIe4xVEYOcVXz6mPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747311583; c=relaxed/simple;
-	bh=wFAQ3NK4nPQd0IHrWUbmpnTo8qjx6xZhrLCMhXW/F14=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bwzyJzFs6NZ1pTn2icRXju4LpMNJi9eYudeS6HPsn0vKJk7/Amp8NksH4Op+TvcsymdhcJQrMnQMWv4zJ55Geck7m7POTfl2Y8iVKHfQLm4wmyEouZKgjZAre2d/SJYQtbcDUe749IiABL5OGQkxcNSIkGhIMqaHoNPYBz626O8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cclYx5Y5; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747311648; c=relaxed/simple;
+	bh=ySi+0M+CVuWfwFeLu3PPC0j4nsW75CVo4AF4TCbTxnI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B3jbhubRp9YdTEGfC0X4iZ5HWiTujlFWN5zODEXOjYCGrnaUF1dTxIPnqQZoH+1ddBavrGLmEO+/PDT1Zth3U6ZXxZ/vEuupW2Jc6NwJHlVLNQI0Tn/7otMM1qG7VELmxYxK8HNYWyMQWkthT+jbLznZiEfzDtLS+ahS8A2ODFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vkwlCqZ0; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cclYx5Y5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747311581; x=1778847581;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wFAQ3NK4nPQd0IHrWUbmpnTo8qjx6xZhrLCMhXW/F14=;
-  b=cclYx5Y5KL3wU4ZJ4t9xOurmgD8kEO9mw+rCCQHFWcKbh3zrAosfpwnR
-   pnY1nv7QNoh3PReuFehIuPD5jbNhQvXke3NaMCKw2twQ8fLRq3EXuDbAY
-   7bGuG6384dGAAoj3j/txAquT9AcMqP/Xwe92HZj5+40JIACjTxjYoya9x
-   vf55AUwjBY5V3mLOZsahzglsLPpHjEflZfq7wwkOx+85/ymSrc/7qvDCE
-   A2qEfIZCu4D/mowM93TRnlX9yePVb0oB5HPeSOlUUSCYZBNH2vxx9D5HA
-   QcwTjZHFQrNQul782BFylZHGfIGeUUYG6Xs/ADoe0uZ3YQmsqOl9INpJX
-   g==;
-X-CSE-ConnectionGUID: 8WoOCdIgRLOmdMFbMNx/ZQ==
-X-CSE-MsgGUID: raIIPn+pRHqIB7WA70zROg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49402658"
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="49402658"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 05:19:40 -0700
-X-CSE-ConnectionGUID: yuRuvhS8TrOvZRAiYDej+Q==
-X-CSE-MsgGUID: TYMuvsbVQ/aKlzbvndqzBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="143553856"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 05:19:36 -0700
-Date: Thu, 15 May 2025 15:19:32 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: "Usyskin, Alexander" <alexander.usyskin@intel.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	"De Marchi, Lucas" <lucas.demarchi@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	"Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	"Poosa, Karthik" <karthik.poosa@intel.com>,
-	"Abliyev, Reuven" <reuven.abliyev@intel.com>,
-	"Weil, Oren jer" <oren.jer.weil@intel.com>,
-	"linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Tomas Winkler <tomasw@gmail.com>
-Subject: Re: [PATCH v9 03/12] mtd: intel-dg: implement region enumeration
-Message-ID: <aCXb1NjwGquN6vGN@black.fi.intel.com>
-References: <20250424132536.3043825-1-alexander.usyskin@intel.com>
- <20250424132536.3043825-4-alexander.usyskin@intel.com>
- <aBCfbaYs9CnXL2h1@black.fi.intel.com>
- <CY5PR11MB6366AACB5EA494893CA8D16DED90A@CY5PR11MB6366.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vkwlCqZ0"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso9302375e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 05:20:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747311645; x=1747916445; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UYYmwpP0MAwsA931NniE7DuDU5H48aT0XrSHju++1ic=;
+        b=vkwlCqZ0SwyVN+cPtAK9kv43zZeGM4qFKReGHN7DGwZd7emjYjPH1vUi8xhrbRCcAw
+         kJ6Q4FsCxiwN/HMxHllvoG4N532uzrQQnYf3ubwNePu6lqcMxgjxrA3KEcq3TSudUtW9
+         E5Hpvls5kJA3DfCmjyES1anB5cVdKL7JbvZzdn4iqVUuWibMPnqFcBtMoGzqOsfscvAT
+         an0nxyeZ4ogjVTZKCbU7T7J6xyu1WwqKLjcI8UXRTruBHPslrHRNILhZZqMiQEW+HLvY
+         EoqE8Mg32OKjtoEWCzdmDazHkkWymizXLq7/Y/U6L69aTTthnV/gDj3QDFY8z7r09lzK
+         QLLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747311645; x=1747916445;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UYYmwpP0MAwsA931NniE7DuDU5H48aT0XrSHju++1ic=;
+        b=Xpacq7q8ZctFO+4iF2FtA7A4xr/woq3uM+PQGwMd0QAo2mdvhYfYtFpR3x0XItmTaX
+         LaqzYiJZt5OcA6lwnvy5V9Ke1zUz+o2gncwHYwRjLW59u9udP4SnKRD4zNwqeh3jchkE
+         ogZwpkmY5EhBDiqu2faUbezzFLzxXt/4bZdoHup9VAFO40dWXjqHm8zoyLgOqZcosoUU
+         CMlWxMFZEQ2Xz+7iOlTAVCwWUiJknuZ+2EaR1Pu2+vn3BnUyWniEr83oW5jxjbXVCwKt
+         tB+/SbzxI1WSzm8ZxwCNuTVLKMehYtf9hcRSLh5MTPIskJ1u7u17Pn+RAMfj/4sjQVUJ
+         c5pA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUcbQh/ZiQihpbVhnGpT2duJpHj/9cECm9wnsSJekXqGZZBQ4q/X2NaIkZMep11QxEEPU04y8zSax6UEg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4BsN+WOvmPg6Z+8vcNGDRW2iCYYNWDyHqKbGR7utHbVN9b9Cb
+	oOa71QfTv2bzhcBWFYPmZbPAqFz8Qyz/+/FnsRhVta4VIPBgBLtWkRCuCl3w0JI=
+X-Gm-Gg: ASbGncuozwgoMAqHdu8hllPtJUJSb5fLvIjZW1CI0HUY+kzwNiiGxQP1LYaqgKBSQ7b
+	2wAtAfu9WqKKGlOcqUeyU8GbNGZkCULZ8ZgI9FPorSrUWDjnheebvAp892kzthghtVP5Nc6F9ML
+	W1OjLisjwFd9g9wOT93Br3AQyc5jqFbk1tNAxFuSWeJ9MA0jPC75FJ+I289gAG8r9StUFSIeYXW
+	EImaGCgiYE2ZwTHWf9kwQz/cx4AkHFRIuc9dIes/1sAEGCPVEFFNBQ8BEN8WQOUBjgOvGJE8kQD
+	poLjumrzNFbpZOrggzYrq4j2lSJfT2iSnqMyNziaQBCi2UvNfEFyZdmJ8lcSkDVx2e8tqF3/Uj1
+	vTJJqLDQ1
+X-Google-Smtp-Source: AGHT+IFf5pIVLw9OgzawdBaBFW6KZvXprzzPf2JHeKzZZEBmezUo1iUF8T/ujeptaHHKPw8LeA0tyA==
+X-Received: by 2002:a05:600c:3e88:b0:43c:fb95:c76f with SMTP id 5b1f17b1804b1-442f20e33b0mr74335285e9.9.1747311644763;
+        Thu, 15 May 2025 05:20:44 -0700 (PDT)
+Received: from [10.61.2.175] (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57dde01sm22985463f8f.15.2025.05.15.05.20.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 05:20:44 -0700 (PDT)
+Message-ID: <586c877d-0d0a-48bf-9c55-97bd24e86638@linaro.org>
+Date: Thu, 15 May 2025 13:20:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CY5PR11MB6366AACB5EA494893CA8D16DED90A@CY5PR11MB6366.namprd11.prod.outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 10/14] spi: spi-fsl-dspi: Enable modified transfer
+ protocol
+To: Mark Brown <broonie@kernel.org>
+Cc: Vladimir Oltean <olteanv@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+ Chester Lin <chester62515@gmail.com>, Matthias Brugger <mbrugger@suse.com>,
+ Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
+ NXP S32 Linux Team <s32@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, larisa.grigore@nxp.com, arnd@linaro.org,
+ andrei.stefanescu@nxp.com, dan.carpenter@linaro.org,
+ linux-spi@vger.kernel.org, imx@lists.linux.dev,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Andra-Teodora Ilie
+ <andra.ilie@nxp.com>, Bogdan-Gabriel Roman <bogdan-gabriel.roman@nxp.com>
+References: <20250509-james-nxp-spi-v1-0-32bfcd2fea11@linaro.org>
+ <20250509-james-nxp-spi-v1-10-32bfcd2fea11@linaro.org>
+ <aB6pa9m0emX2vMH8@finisterre.sirena.org.uk>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <aB6pa9m0emX2vMH8@finisterre.sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 15, 2025 at 04:53:38PM +0530, Usyskin, Alexander wrote:
-> > On Thu, Apr 24, 2025 at 04:25:27PM +0300, Alexander Usyskin wrote:
-> > > In intel-dg, there is no access to the spi controller,
-> > > the information is extracted from the descriptor region.
-> > 
-> > ...
-> > 
-> > > @@ -22,9 +24,199 @@ struct intel_dg_nvm {
-> > >  		u8 id;
-> > >  		u64 offset;
-> > >  		u64 size;
-> > > +		unsigned int is_readable:1;
-> > > +		unsigned int is_writable:1;
-> > >  	} regions[] __counted_by(nregions);
-> > >  };
-> > >
-> > > +#define NVM_TRIGGER_REG       0x00000000
-> > > +#define NVM_VALSIG_REG        0x00000010
-> > > +#define NVM_ADDRESS_REG       0x00000040
-> > > +#define NVM_REGION_ID_REG     0x00000044
-> > > +/*
-> > > + * [15:0]-Erase size = 0x0010 4K 0x0080 32K 0x0100 64K
-> > > + * [23:16]-Reserved
-> > > + * [31:24]-Erase MEM RegionID
-> > > + */
-> > > +#define NVM_ERASE_REG         0x00000048
-> > > +#define NVM_ACCESS_ERROR_REG  0x00000070
-> > > +#define NVM_ADDRESS_ERROR_REG 0x00000074
-> > > +
-> > > +/* Flash Valid Signature */
-> > > +#define NVM_FLVALSIG          0x0FF0A55A
-> > > +
-> > > +#define NVM_MAP_ADDR_MASK     GENMASK(7, 0)
-> > > +#define NVM_MAP_ADDR_SHIFT    0x00000004
-> > > +
-> > > +#define NVM_REGION_ID_DESCRIPTOR  0
-> > > +/* Flash Region Base Address */
-> > > +#define NVM_FRBA      0x40
-> > > +/* Flash Region __n - Flash Descriptor Record */
-> > > +#define NVM_FLREG(__n) (NVM_FRBA + ((__n) * 4))
-> > > +/*  Flash Map 1 Register */
-> > > +#define NVM_FLMAP1_REG  0x18
-> > > +#define NVM_FLMSTR4_OFFSET 0x00C
-> > > +
-> > > +#define NVM_ACCESS_ERROR_PCIE_MASK 0x7
-> > > +
-> > > +#define NVM_FREG_BASE_MASK GENMASK(15, 0)
-> > > +#define NVM_FREG_ADDR_MASK GENMASK(31, 16)
-> > > +#define NVM_FREG_ADDR_SHIFT 12
-> > > +#define NVM_FREG_MIN_REGION_SIZE 0xFFF
-> > 
-> > Should we move these to a header?
-> They are used only in this file, not shared to anyone, why to put in header?
 
-If we know we won't be further expanding/splitting, sure.
 
-...
-
-> > > +static bool idg_nvm_region_readable(u32 access_map, u8 region)
-> > > +{
-> > > +	if (region < 12)
-> > 
-> > Anything special about 12? Should it have a macro def somewhere?
-> > 
+On 10/05/2025 02:18, Mark Brown wrote:
+> On Fri, May 09, 2025 at 12:05:57PM +0100, James Clark wrote:
+>> From: Andra-Teodora Ilie <andra.ilie@nxp.com>
+>>
+>> Set MTFE bit in MCR register for frequencies higher than 25MHz.
 > 
-> The access bits are separated for first 12 regions and last 4.
-> My feeling that making below numbers #define will make
-> code less readable.
+> Is this a bug fix?
 
-Then perhaps a small comment would be useful.
+Not this one as it's only supported for s32g which isn't enabled until 
+later. The commit message is lacking though so I will elaborate.
 
-> > > +		return access_map & BIT(region + 8); /* [19:8] */
-> > > +	else
-> > > +		return access_map & BIT(region - 12); /* [3:0] */
-> > > +}
-> > > +
-> > > +static bool idg_nvm_region_writable(u32 access_map, u8 region)
-> > > +{
-> > > +	if (region < 12)
+For the other bug fixes it looks like they are, so I'll put them at the 
+beginning and add fixes tags.
 
-Ditto.
-
-> > > +		return access_map & BIT(region + 20); /* [31:20] */
-> > > +	else
-> > > +		return access_map & BIT(region - 8); /* [7:4] */
-> > > +}
-
-Raag
+Thanks
+James
