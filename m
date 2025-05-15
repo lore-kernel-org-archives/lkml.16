@@ -1,109 +1,86 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E8E34CF9;
-	Thu, 15 May 2025 14:34:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F373234CF9;
+	Thu, 15 May 2025 14:36:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747319645; cv=none; b=pJjpHuihf7JEtehp0k0dRPjuwOxRIKCMoMGDNXM+KHD1rp3G3kvQTnqP1EQhOc/AuZT6VFb058fxrpVutpl+d4AG43zb022fLMGgYW9eDdDeOzNFYC5Zf84aTYfik4t8/2i5weNjZwxSnQN0iOrHLbmffzDjH3DejwRwRnLlaY4=
+	t=1747319767; cv=none; b=Ta19SQri9lWOrmfnP2U8SZxc9VmFPWqN5P8NktKDeKYaDYdDR7kDYPDId9AEmjMBFapqorVRGDmmVC4i3Xwg3Y2Mze6Rpv36uBRJRGhSGcVya7TNeMiw41EQgsBbF9koGFxKzkgFMTUFlrCcUBx4TN6QoGt4jW+GpCA3HAXQFRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747319645; c=relaxed/simple;
-	bh=hp6heb/+3LzooOsmeQDNwwZhhzYyMV9j3qJgJJ2V3Zw=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=smG81fWR5/RvTXHjGTqt1Q4TSKJ4txJViqAV8dCCojw1lTz5UMA14eSBhIy2DOjDcNgz1Jc+8891FQQSgFbOiCuAiUzUXWlX1c3xU4CSspilxUzrDproVcUoZ/BFrp+T1ORocTvpPcwDaMGag2KptIaUYvzIqOFP30TFRY+rHuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EAstEY3n; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QEormMYw; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747319767; c=relaxed/simple;
+	bh=3Cf88rjCTOty5cvepo7/cysSSiqOnFTy6g8DckcCqCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uo85J2Qw00vhDuNWPB6UU8piiJpA/1Fnn+llkzx5b3YBm5S2OTAS0JVlT3g7qngjK2Xf0GmHHpiWi05NOVwbDPf2c/JqjQ2llr5ZCeH3/5Y4k0lzttXP/iM9urh52sdbA63BbSUOZum8fTmkeI4Kh7s/QaNhQ1N17/iQpfaLv7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fw+4GbqY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EAstEY3n";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QEormMYw"
-Date: Thu, 15 May 2025 14:33:54 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747319635;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qms05hQIOpL1+FqXJPXoWtSJACNQob/yriFKf5Ddr80=;
-	b=EAstEY3n109u7mo2d8+LDZQNfvB5XigacfSzP8mAYppPhILvAJDRppex9TxBXVyyhMgIia
-	+3PJ4Trj9CqgdeM0UIq40xmRRXpSodLAaayCQu8eZKd+Gxfzab2ZEhl9RZS3PJ3js12Z8B
-	b7NNGMv6PvXRL/MvU9fersVTRCXmGeoWs71KNr5DhsWqg4SIMdw10zS6FnBibAyXo4CA5F
-	bBxQDNLy4cO2xs1Vp/6yW0YA9A8TvwYUWBYUPIjH2p2KOY5L5Og8YhbbZ54PLEojKO8wae
-	bsdzx4Zi+2foGhktt9y7nzSky5U3i9XAnfiRjh+9SuPNlEmD9u48BgAzkODd7Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747319635;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qms05hQIOpL1+FqXJPXoWtSJACNQob/yriFKf5Ddr80=;
-	b=QEormMYw4BE8wK8+DrMK72977HUxgTJJFizt0OlkHptkWjk6GT42+BSBwItqHW4b9guN7X
-	+hz0FMjvb/Mzn2BQ==
-From: "tip-bot2 for Andy Shevchenko" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: irq/core] genirq: Bump the size of the local variable for sprintf()
-Cc: kernel test robot <lkp@intel.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20250515085516.2913290-1-andriy.shevchenko@linux.intel.com>
-References: <20250515085516.2913290-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fw+4GbqY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D214C4CEE7;
+	Thu, 15 May 2025 14:36:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747319766;
+	bh=3Cf88rjCTOty5cvepo7/cysSSiqOnFTy6g8DckcCqCU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Fw+4GbqYJZodcAcgtdrenBcRdqmP/OPhmmvbHPpQF9CVtK4NXmyOYGT8UGkrinMfi
+	 EC2vSnQRPJbz6Xv9COkAnLqRc+Bg+HaXGAEy1X1bhWSaqR0reG7U62AAuKjSe30ASc
+	 +sNtie9FPvd/ovSuX276CxEscPRTzzlB7GYD6QTPEEneqwy1wyZKWV8gMU0g0AuiG0
+	 h79/6A9BZKsVlcu/Aw1RVu1e49NeaC7iBkWMATtzK7dLW3k0lmRb9ryGunHyOs/WYN
+	 x9R7AXgbEtnQc1Y86cpBhtsDXPqc/tXV7vH/MOEC/UT914lkaZGbXXI3ZxcdPKUPti
+	 C9Wl1Flu+AITw==
+Date: Thu, 15 May 2025 15:36:02 +0100
+From: Will Deacon <will@kernel.org>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Daniel Mentz <danielmentz@google.com>, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Mostafa Saleh <smostafa@google.com>,
+	Pranjal Shrivastava <praan@google.com>, robin.murphy@arm.com
+Subject: Re: [PATCH] iommu/io-pgtable-arm: Support contiguous bit in
+ translation tables
+Message-ID: <20250515143600.GB12165@willie-the-truck>
+References: <20250430231924.1481493-1-danielmentz@google.com>
+ <20250506154014.GM2260621@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174731963480.406.8669837030668986806.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506154014.GM2260621@ziepe.ca>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-The following commit has been merged into the irq/core branch of tip:
+[+Robin]
 
-Commit-ID:     a4a39c81e1043b153bde3ef5cb3cf94222ffd918
-Gitweb:        https://git.kernel.org/tip/a4a39c81e1043b153bde3ef5cb3cf94222ffd918
-Author:        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-AuthorDate:    Thu, 15 May 2025 11:55:16 +03:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 15 May 2025 16:28:09 +02:00
+On Tue, May 06, 2025 at 12:40:14PM -0300, Jason Gunthorpe wrote:
+> On Wed, Apr 30, 2025 at 11:19:24PM +0000, Daniel Mentz wrote:
+> > The contiguous bit in translation table entries can be used as a hint to
+> > SMMU that a group of adjacent translation table entries have consistent
+> > attributes and point to a contiguous and properly aligned output address
+> > range. This enables SMMU to predict the properties of the remaining
+> > translation table entries in the same group without accessing them. It
+> > also allows an SMMU implementation to make more efficient use of its TLB
+> > by using a single TLB entry to cover all translation table entries in
+> > the same group.
+> > 
+> > In the case of 4KB granule size, there are 16 translation table entries
+> > in one group.
+> > 
+> > This change sets the contiguous bit for such groups of entries that are
+> > completely covered by a single call to map_pages. As it stands, the code
+> > wouldn't set the contiguous bit if a group of adjacent descriptors is
+> > completed by separate calls to map_pages.
+> 
+> Nor should it
+> 
+> This seems like a pretty hacky implementation, it doesn't set the
+> pgsize bitmap to indicate support and it doesn't have a safety check
+> on unmap to protect against partial unmap of a huge page.
+> 
+> Wouldn't it be better to use the pgsize bit map and rely on the core
+> code to tell a contig page size is being used and then it can
+> trivially set the PTE bit without having to do all this extra work?
 
-genirq: Bump the size of the local variable for sprintf()
+That sounds like it would be quite a bit cleaner and I think it aligns
+with the "Large page" support in io-pgtable-arm-v7s.c which is doing
+something extremely similar.
 
-GCC is not happy about a sprintf() call on a buffer that might be too small
-for the given formatting string.
-
-kernel/irq/debugfs.c:233:26: warning: 'sprintf' may write a terminating nul past the end of the destination [-Wformat-overflow=]
-
-Fix this by bumping the size of the local variable for sprintf().
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250515085516.2913290-1-andriy.shevchenko@linux.intel.com
-Closes: https://lore.kernel.org/oe-kbuild-all/202505151057.xbyXAbEn-lkp@intel.com/
----
- kernel/irq/debugfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/irq/debugfs.c b/kernel/irq/debugfs.c
-index 3d6a5b3..3527def 100644
---- a/kernel/irq/debugfs.c
-+++ b/kernel/irq/debugfs.c
-@@ -225,7 +225,7 @@ void irq_debugfs_copy_devname(int irq, struct device *dev)
- 
- void irq_add_debugfs_entry(unsigned int irq, struct irq_desc *desc)
- {
--	char name [10];
-+	char name [12];
- 
- 	if (!irq_dir || !desc || desc->debugfs_file)
- 		return;
+Will
