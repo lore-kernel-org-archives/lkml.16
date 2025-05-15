@@ -1,212 +1,205 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B582980DB;
-	Thu, 15 May 2025 10:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF512980C6
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747305229; cv=none; b=bz7a7XcZS3t1tQj+10vlX/dG6bX7fzicGFyJrQICvS0CQLjV3vMIxmRyXq6dzLWWRZygP07AQ/HRy/coOszmdkFf0qVDfWPkIywxoLG0c06z5Bpo2A0tsUt/UYII0fs1wkX2BLOScPeVhoqAwrYtJDEAJG425vAqeMe4FbjaQGo=
+	t=1747305259; cv=none; b=RqQs7NBGLHb5PVRn08QVZEKTNTU9qzRX+QPNaZbS0lNKOyfHZxAzUpdIhj6LtU46ljsq22B+Rw4R2kxTeMtavQI4e3AQvJNQ0YWzglSNA6w4AXDzwDO1FTd47X9d+vGqLNMQ/bGBhS5Z10mWKRfCEQ0H7XA8Vi4BOGL0bfpDgyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747305229; c=relaxed/simple;
-	bh=0Ca4GoXXMXx6cHQk8bHNd0lNmpQHYfAdXnzIxwgHL3k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c+nFs+e+8CatHm1vNJsGCo9zbaC8oui+kdPu4zQjXRq0FiXLjmcpCSWa/D2IBa3pIW9DVK53RAbYZ56or7gWTWadHro9t6eZ5p++3Sni1xX8ITx9nqcLxJyVjWUuIYUyPgCc6M/kmxzJUJRbM3I3W5baK2PD0yW7DTQyxBrMVeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dNFFvB7+; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747305259; c=relaxed/simple;
+	bh=RD4Ye3A/BClSx0ngveQIAD++ZNWmt0zK+L/tPyHgig0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dO8HlM3+/BUtKpN6iGswT89H/a5Bu0gytq4yweEmkcUEudCCqHabV0z0Lt8jUan58SLDiaX8+icLVzZDHAD96Rxo6frCirSSDcLs2W/xLh/mylOR5uHM7EhpxefbmQMJjUwCE/Tr0mIyKJbzvR948q82hmKi7goLDaZgaGR6Uaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=VMg7sALZ; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Q+lKCKop; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dNFFvB7+"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad228552355so145728266b.3;
-        Thu, 15 May 2025 03:33:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747305224; x=1747910024; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ix0mN7yylNXsLKVIXpa3RC7XyXUMorhAJgZhoj08KZI=;
-        b=dNFFvB7+F4bQnqRGDE2+4A7yMNRNci41ukf9sM1SpKoP5h6okqXiIXRFAcqooe9hEw
-         kaUx/tV81EFC+u0mn6Le+CyrNFLvbaOH4AXXbD96ikKi9eBWkXm6lXyTTVx9+F+WvxCu
-         QCLbC65KNrv3b1DAyGVaQLBS/5VUvLZa8GdDj9+o7gsJWgRA2NbkaPUIEMKDfrnrXuBQ
-         aMvr2s7eu23v2L952PmkdrtcWQYLg5s3TlFFyLZ66piMmmNg7QbAgTREsF+8BDzzEj++
-         3/6IIvVKq4OoaPc3OmCt1SGq3n8VlTJFyCc2nT6YvaJt6JmzAHI1yEJTRH0PRwdkOLPn
-         YAiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747305224; x=1747910024;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ix0mN7yylNXsLKVIXpa3RC7XyXUMorhAJgZhoj08KZI=;
-        b=tHazuhTolEjm0AwedGQNaIwGVTICJQraA9S1nB7s9UJfjJtJcYpG2vEh+UxLGyWuw7
-         rAJMoSlIvp9HJt9U1OUSjs5O7myGMotXVYUpvoy/nP9zhogP140G7SZh2kaBZVb9lJKf
-         XzY6W0GPzKciXy3YHpttbxKMSovd4Gmh8Bxu8ogetrTGwWLS5J+yFKc2e2MH3AD9Qj4y
-         MCCFSqOWPxhwQkIVNFAeZJ+zvXeF9e/hhMyBR0YVh8KaOjKbZSB3l4c/iQsIm0yZZzUb
-         f1SHf5CH/Lde4hO8rArc7eIf2kCCXNM2bUCG90l+ySxIDMbaDQyA71MIwTYJuA6/xjKV
-         XlSg==
-X-Forwarded-Encrypted: i=1; AJvYcCUFnl18yK4fF8ZN2ucDTSkBtzfngOZ4W/Zb+AtLsGqpz4K3M7veduiKInDo13KpvYiJXoHkcDXTeh90xRC3YQ==@vger.kernel.org, AJvYcCUw/v0IOYfEKGhI5+PaJVUhjKZ7tN2HyFQ0iyjDsYmm6oiwhN1OoRkPrGGYwfDshbHCMvomAustbIVKq9ybvmOHfBImhqxZ@vger.kernel.org, AJvYcCV9z144RUR25t3aFg1JFeKuxmt3naFBbyv3tFPUNz3ve32dI/QuVr+k82PQL32ALdaUPURR4FJC3d5vpQ==@vger.kernel.org, AJvYcCVTr+YXfhfhWbVErezEaAdibon47HFbxkBSwd0L7a7b+ksE7LdIUWBlwMeYlLWA7YEU0QjsSlUWli9R0fAC@vger.kernel.org, AJvYcCVek3fQdptbsYZYs2oTWrZX8O/3F/GUbA9UVDvn0xntkcIuCgAgsgL4NsDuYQKBwWsq5LssXIC2X69I@vger.kernel.org, AJvYcCVps06mw7zk4bPdVN9Yv0+Ojg5M7awKR+XyXkPrZsyIDdXNnUGoLjCq5YOW4BmkxLpPtlBACTeKHLUaOiHn@vger.kernel.org, AJvYcCVsMxP8v6PDjt17331Nq8v25vO5ZRD2nB8rOnxTKEZlRI4NVSB/oBu6lmtH8OG/1ZKEBCDgIVhAz5ldcA==@vger.kernel.org, AJvYcCVv8csgEV2RJWy4XYXB0ZMv00S/ClXPdRJB8I80WrnXQCuhvexd6DQsUhYnVPePww51QU75xzVgRnA=@vger.kernel.org, AJvYcCW0F1JF43hz5eSJTXNoegIXA+RVMAgnJIiQXbTipAexlxh4iNhjELEC2iXqnyXmRdQR/4QXnMcSwh39XB2sBA==@vger.kernel.org, AJvYcCW18UDiAGv/4LOj3FNHdH3GSZNyBcI+jPZ4NVz6NORooYjdCOj2SChcjPvfjFyb8fgkjTQc4ZynhSI3AQ==@vger.kernel.org, AJvYcCW5jRkhGpM9gTLCfchk227w/7h2IKaZ0puV91k5iVX3Btl5kae+ywOqejl7MEoxxCZsrBf72PxbEg==@vger.kernel.org, AJvYcCWBoIgk+CVxvl2GSIdNKDKaBKfqA9ZlYws3gueo/jWH5ZXkzxQCbcu147xz1MNz3709XASbHT59EA==@vger.kernel.org, AJvYcCWUrm8XEOKGZJy3WAofc8WaI8Pk+8+JfgKsTXAw5huAhOLpPYobdqp15LMARaxNEbYwPdssmelvyJgNADM=@vger.kernel.org, AJvYcCWgu3aDI8Fl1QgcZi/LKLhCchAO1ENL1XEKHya4jDvdFC+3yRchmE2pcuxiEM0ts9LmbyPxYchwVMh+@vger.kernel.org, AJvYcCXDdGMbqYtbvTkGvKFJ9OZRQ1Dfqh5BWlwKfnXMpyIkBoS78woO5K1w8mWyL2pbNtc0AbI9uyh19XGGVQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAhg0fRi2y/4LqaTxIBOyX0h6jMOVDsV+qkOx8Y33cZHfUOxq1
-	xrRJJD+6a7oNRV0phyM/DJAUrxtFsomp7aFlMZfNKdzUU3uAZpywkR1lSGQ47Hs7pl13vEi2gYb
-	yQVDVOloSRrg4NGi1eSonwE9w9RY=
-X-Gm-Gg: ASbGncvgp+pMrYhwTDQZSDhHzNtbh29X5xDM/VKsLFbS/BaFNH5zYfxYT/k7bHjMq83
-	xb5QRifdRF59rQNAS0SxCj3zrGWRbACLTsYNaMnzhA9bBhoC5QDF6ylCS11E4PVEDQvY7IPyhZ8
-	aBRX+yXuYhY1uhDFh/H8D47JGosgkkMN1J
-X-Google-Smtp-Source: AGHT+IH/YFjWiUa7Oe6APhoaMiAXM+TxOKXzzX9IOWrtv4bcH+n6gSWZSohhovEJvJss7Wr0el1TN6Dn7PUuhUUlRKw=
-X-Received: by 2002:a17:907:72c1:b0:ad2:e683:a76c with SMTP id
- a640c23a62f3a-ad515d79f17mr198604066b.7.1747305223832; Thu, 15 May 2025
- 03:33:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="VMg7sALZ";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Q+lKCKop"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id EF42A1F387;
+	Thu, 15 May 2025 10:34:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1747305255; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RD4Ye3A/BClSx0ngveQIAD++ZNWmt0zK+L/tPyHgig0=;
+	b=VMg7sALZY4M5YuD+DEtiMwnIrSlgBpALsLrXF8zBN/S3OQD2ecuVUHN3oNuYc2/RQePEJV
+	1suT9qoFms6dh9wyvZP4zzXwvmaSbZmxA0RO+e9rRykyytbuqQuRZndw00kbJlHJJiIik3
+	Tdm6VcdxGPRl+3tmMT44pQytfrb1IqE=
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=Q+lKCKop
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1747305253; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RD4Ye3A/BClSx0ngveQIAD++ZNWmt0zK+L/tPyHgig0=;
+	b=Q+lKCKopHg9CyOifjfSbomKlXOQhSanE3gQS94QeOYKFlfDjN154iA3h0c4n4oQ+QkI3GP
+	WvvNoiOVuPpFqX6klVdV5YA+PlLsqmesma2MP/YMuXXdrNJJiqCNC+uxuUrgLNiSws81ED
+	luWuf8o8kjLBkEgyqdAOzF/C2w7yO10=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 95519137E8;
+	Thu, 15 May 2025 10:34:13 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id TU7+IiXDJWivYwAAD6G6ig
+	(envelope-from <mwilck@suse.com>); Thu, 15 May 2025 10:34:13 +0000
+Message-ID: <2f0fc8ef7d04c590893bd6d54a6c0c842c4b21d7.camel@suse.com>
+Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
+ paths
+From: Martin Wilck <mwilck@suse.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Benjamin Marzinski <bmarzins@redhat.com>, Christoph Hellwig	
+ <hch@infradead.org>, Kevin Wolf <kwolf@redhat.com>,
+ dm-devel@lists.linux.dev,  Hanna Czenczek <hreitz@redhat.com>, Mikulas
+ Patocka <mpatocka@redhat.com>, snitzer@kernel.org, "Kernel Mailing List,
+ Linux" <linux-kernel@vger.kernel.org>, Hannes Reinecke <hare@suse.com>
+Date: Thu, 15 May 2025 12:34:13 +0200
+In-Reply-To: <CABgObfaEiMN=YANk02EWini+jAXU1MxSvo8_jYWaMiu3ds7hgQ@mail.gmail.com>
+References: <20250429165018.112999-1-kwolf@redhat.com>
+	 <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
+	 <aCIRUwt5BueQmlMZ@redhat.com> <aCLe5UT2kfzI96TQ@infradead.org>
+	 <aCMQ5S-gI6vZJxmq@redhat.com> <aCQiz88HksKg791Z@infradead.org>
+	 <aCTDiHMuMncwdp_X@redhat.com>
+	 <50beb356b4dc000446fd186ab754c87f386eaeae.camel@suse.com>
+	 <CABgObfaEiMN=YANk02EWini+jAXU1MxSvo8_jYWaMiu3ds7hgQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513-xattrat-syscall-v5-0-22bb9c6c767f@kernel.org>
- <399fdabb-74d3-4dd6-9eee-7884a986dab1@app.fastmail.com> <20250515-bedarf-absagen-464773be3e72@brauner>
-In-Reply-To: <20250515-bedarf-absagen-464773be3e72@brauner>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 15 May 2025 12:33:31 +0200
-X-Gm-Features: AX0GCFv6VzJTt0PbxjVfcfLF_B5PjKPMcuhdvqJqoMNLfQeCg9Kk1MZMyM5NBko
-Message-ID: <CAOQ4uxicuEkOas2UR4mqfus9Q2RAeKKYTwbE2XrkcE_zp8oScQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/7] fs: introduce file_getattr and file_setattr syscalls
-To: Christian Brauner <brauner@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Andrey Albershteyn <aalbersh@redhat.com>, 
-	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	"David S . Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	=?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	Ondrej Mosnacek <omosnace@redhat.com>, Tyler Hicks <code@tyhicks.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, linux-alpha@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, 
-	Linux-Arch <linux-arch@vger.kernel.org>, selinux@vger.kernel.org, 
-	ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: EF42A1F387
+X-Spam-Flag: NO
+X-Spam-Score: -4.51
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MID_RHS_MATCH_FROM(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:email,suse.com:dkim,suse.com:mid];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	DKIM_TRACE(0.00)[suse.com:+]
+X-Rspamd-Action: no action
 
-On Thu, May 15, 2025 at 11:02=E2=80=AFAM Christian Brauner <brauner@kernel.=
-org> wrote:
->
-> On Tue, May 13, 2025 at 11:53:23AM +0200, Arnd Bergmann wrote:
-> > On Tue, May 13, 2025, at 11:17, Andrey Albershteyn wrote:
-> >
-> > >
-> > >     long syscall(SYS_file_getattr, int dirfd, const char *pathname,
-> > >             struct fsxattr *fsx, size_t size, unsigned int at_flags);
-> > >     long syscall(SYS_file_setattr, int dirfd, const char *pathname,
-> > >             struct fsxattr *fsx, size_t size, unsigned int at_flags);
-> >
-> > I don't think we can have both the "struct fsxattr" from the uapi
-> > headers, and a variable size as an additional argument. I would
-> > still prefer not having the extensible structure at all and just
->
-> We're not going to add new interfaces that are fixed size unless for the
-> very basic cases. I don't care if we're doing that somewhere else in the
-> kernel but we're not doing that for vfs apis.
->
-> > use fsxattr, but if you want to make it extensible in this way,
-> > it should use a different structure (name). Otherwise adding
-> > fields after fsx_pad[] would break the ioctl interface.
->
-> Would that really be a problem? Just along the syscall simply add
-> something like:
->
-> diff --git a/fs/ioctl.c b/fs/ioctl.c
-> index c91fd2b46a77..d3943805c4be 100644
-> --- a/fs/ioctl.c
-> +++ b/fs/ioctl.c
-> @@ -868,12 +868,6 @@ static int do_vfs_ioctl(struct file *filp, unsigned =
-int fd,
->         case FS_IOC_SETFLAGS:
->                 return ioctl_setflags(filp, argp);
->
-> -       case FS_IOC_FSGETXATTR:
-> -               return ioctl_fsgetxattr(filp, argp);
-> -
-> -       case FS_IOC_FSSETXATTR:
-> -               return ioctl_fssetxattr(filp, argp);
-> -
->         case FS_IOC_GETFSUUID:
->                 return ioctl_getfsuuid(filp, argp);
->
-> @@ -886,6 +880,20 @@ static int do_vfs_ioctl(struct file *filp, unsigned =
-int fd,
->                 break;
->         }
->
-> +       switch (_IOC_NR(cmd)) {
-> +       case _IOC_NR(FS_IOC_FSGETXATTR):
-> +               if (WARN_ON_ONCE(_IOC_TYPE(cmd) !=3D _IOC_TYPE(FS_IOC_FSG=
-ETXATTR)))
-> +                       return SOMETHING_SOMETHING;
-> +               /* Only handle original size. */
-> +               return ioctl_fsgetxattr(filp, argp);
-> +
-> +       case _IOC_NR(FFS_IOC_FSSETXATTR):
-> +               if (WARN_ON_ONCE(_IOC_TYPE(cmd) !=3D _IOC_TYPE(FFS_IOC_FS=
-SETXATTR)))
-> +                       return SOMETHING_SOMETHING;
-> +               /* Only handle original size. */
-> +               return ioctl_fssetxattr(filp, argp);
-> +       }
-> +
+On Thu, 2025-05-15 at 04:53 +0200, Paolo Bonzini wrote:
+> Il mer 14 mag 2025, 13:37 Martin Wilck <mwilck@suse.com> ha scritto:
+> >=20
+> > I'd go one step further. Christoph is right to say that what we're
+> > currently doing in qemu =E2=80=93 passing through every command except =
+the
+> > PRIN/PROUT to a multipath device =E2=80=93 is a dangerous thing to do.
+> >=20
+> > Passthrough from a dm-multipath device to a SCSI device makes sense
+> > only for a small subset of the SCSI command set. Basically just for
+> > the
+> > regular IO commands like the various READ and WRITE variants and
+> > the
+> > occasional UNMAP. The fact that customers
+> > have been running these setups in large deployments over many years
+> > suggests that, if other commands ever get passed through to member
+> > devices, it has rarely had fatal consequences.
+> >=20
+> > Nobody would seriously consider sending ALUA commands to the
+> > multipath
+> > devices. TUR and REQUEST SENSE are other examples for commands that
+> > can't be reasonably passed through to random member devices of a
+> > multipath map.
+>=20
+> Yes, as usual things are a bit more complicated. First, a handful of
+> commands are special (REQUEST SENSE would be for HBAs that don't use
+> auto sense, but that is fortunately not something you encounter).
+> Second, there's already a filter in the kernel in
+> drivers/scsi/scsi_ioctl.c for commands that are allowed without
+> CAP_SYS_RAWIO. QEMU is subject to that so the commands you'll see are
+> mostly I/O, INQUIRY, TUR, MODE SENSE/SELECT and that's it.
 
-I think what Arnd means is that we will not be able to change struct
-sfxattr in uapi
-going forward, because we are not going to deprecate the ioctls and
-certainly not
-the XFS specific ioctl XFS_IOC_FSGETXATTRA.
+Thanks for mentioning this.
 
-This struct is part of XFS uapi:
-https://man7.org/linux/man-pages/man2/ioctl_xfs_fsgetxattr.2.html
+However, I suppose that depends on the permissions with which the qemu
+process is started, no? Wouldn't qemu need CAP_SYS_RAWIO for PCI
+passthrough as well?=20
 
-Should we will need to depart from this struct definition and we might
-as well do it for the initial release of the syscall rather than later on, =
-e.g.:
+I admit that I'm confused by the many indirections in qemu's scsi-block
+code flow. AFAICS qemu forwards everything except PRIN/PROUT to the
+kernel block device in "scsi-block" mode. Correct me if I'm wrong.
 
---- a/include/uapi/linux/fs.h
-+++ b/include/uapi/linux/fs.h
-@@ -148,6 +148,17 @@ struct fsxattr {
-        unsigned char   fsx_pad[8];
- };
+Anwyway, let's not forget that we're talking about the kernel here.
+While qemu is the main target application for this feature is created,
+any application can use it, and it may or may not run with
+CAP_SYS_RAWIO.
 
-+/*
-+ * Variable size structure for file_[sg]et_attr().
-+ */
-+struct fsx_fileattr {
-+       __u32           fsx_xflags;     /* xflags field value (get/set) */
-+       __u32           fsx_extsize;    /* extsize field value (get/set)*/
-+       __u32           fsx_nextents;   /* nextents field value (get)   */
-+       __u32           fsx_projid;     /* project identifier (get/set) */
-+       __u32           fsx_cowextsize; /* CoW extsize field value (get/set=
-)*/
-+};
-+
-+#define FSXATTR_SIZE_VER0 20
-+#define FSXATTR_SIZE_LATEST FSXATTR_SIZE_VER0
-+
+> Any command that the kernel doesn't filter would be rejected, or
+> handled specially in the case of PR commands (PR commands use a
+> separate privileged helper to send them down to the device; the
+> helper
+> also knows about multipath and uses the userspace libmpathpersist if
+> it receives a dm-mpath file descriptor via SCM_RIGHTS).
+>=20
+> > AFAIK the only commands that we really need to pass through (except
+> > the standard ones) are the reservation commands, which get special
+> > handling
+> > by qemu anyway. @Ben, @Kevin, are you aware of anything else?
+>=20
+> .Of the ones that aren't simple I/O, mode parameters and TUR are the
+> important cases. A TUR failure would be handled by the ioctl that
+> Kevin proposed here by forcing a path switch. Mode parameters might
+> not be shared(*) and would need to be sent down all the paths in that
+> case; that can be fixed in userspace if necessary.
 
-Right?
+Passing TUR from a multipath device to a random member doesn't make
+much sense to me. qemu would need to implement some logic to determine
+whether the map has any usable paths.
 
-Thanks,
-Amir.
+> > I'd also be interested in understanding this better. As noted
+> > above,
+> > I'm aware that passing through everything is dangerous and wrong in
+> > principle. But in practice, we haven't observed anything serious
+> > except
+> > (as Ben already said) the failure to do path failover in the SG_IO
+> > code
+> > path, which both this patch set and my set from the past are
+> > intended
+> > to fix.
+>=20
+> Yes, the kernel filter is a PITA in the normal single path case but
+> here it helps not doing something overly wrong.
+
+This seems coincidental to me. Filtering by permissions and filtering
+for commands that make sense on multipath devices are orthogonal
+problems.
+
+Regards,
+Martin
