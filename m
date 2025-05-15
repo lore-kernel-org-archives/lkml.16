@@ -1,115 +1,147 @@
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD808F66;
-	Thu, 15 May 2025 00:43:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FAEF1DDE9
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747269789; cv=none; b=SJmUURFhBO1WKbOlmXhMztPaFdBvLrk/Wts0Bcsa5wpx7b76QJmIFHJe4sa3gwG0EoCj29Y7+Q+xSg+p/2EW7661edD2evHCaU/irrR9KwZqg0H1nPZO9WllXu5taiPEKGSyNhS0K6zBl/Q3SBwTH1N5uyTLqw263i7o5dXUiCI=
+	t=1747269804; cv=none; b=ZrwgJr5WzHerG+4WZgaiPQhLMWyr70nsKAoT4Qsp9Djh3cxTJb5+azwhl2e5royUB2iyDKrP8OIjjpOIX+E+7uBJf7I0lFx01s3qVQ2K8npUpabUsAQmoQJZxj2gFWlhX32Zo81CeOLIrdTPEqA806ZyGt/I9b5Zrd+nB/KHsas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747269789; c=relaxed/simple;
-	bh=CaZ4C3YksYVpPo32yraBL2f0bTtgs+Duayou0LWapfY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZW2iUNkXG7uZjUqRlLyRxrCRPuhDCVtK09Zulorb9eWKLM33kPLe2MdWxdrU+DpQI+SmVds/jdZHgWSihjVwX0pBsZHqJ1Q9PCEc9wFUMWwomCnVlpXw4ddO1XqV4aDsNM3XoTt+shOsW0yGBrmy6NGXdmJ0vXsgliFxrsuVmMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lvYn/i4W; arc=none smtp.client-ip=209.85.222.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747269804; c=relaxed/simple;
+	bh=sh3HU8ZTmV1xK08ux3gq1GamRBC3N2HLZmWvZ+uSV+c=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=DGknJT/cB7VmbGHFF4jKCt4NCUzEWoa84TzWv1n1ed6j2peDoNTjljk8gx/u4JZ9eXFU2kS7m2HrtuL5/7rNAwowQCUBAEd1q+vJt+Fi9ttb9vgd+QH9hqkBlJc27e67bHBrYESUxIbdLKSXSif3TpnlXiSz8WFzLQw5EHDOS2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WtR2M5CK; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lvYn/i4W"
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-879c44a1dc4so86297241.3;
-        Wed, 14 May 2025 17:43:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WtR2M5CK"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30c50f130d9so357760a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:43:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747269786; x=1747874586; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cueXC2hlZsQuDhrii/uQD0jplPg4hNH073llC7Ktm+A=;
-        b=lvYn/i4WzfCA3U8fecyOhYOTzQXW2Otj5/d/nA7JP1s5v2dkHUwvpDCA7wKWJntx94
-         dI6VmnIWvWJyAAolJdga/rKXRy45kHv8sdLBpEzfzf/CuyrvOLbcBllvuYNmsMDKviPH
-         v6uuiqexM4iykGfICRMEXJfW9YO++ESmmqBQouJB+MFgILZSgw4TDZICOqAFURkdQrdr
-         +iUAae0xMpQiSF+fdr6XN8gvWB508p+9jsCZ9jC/7u+mlyO1nVfEZrruzzJqTrhNtd9X
-         VutqTco8HIx1+UlvqMlNk7XIOXasUrpkDHR5Eo2zEvyGFMRmGA0ajzzoRMnT+KFQQJ+S
-         Fouw==
+        d=google.com; s=20230601; t=1747269802; x=1747874602; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qi9rXvGS+iuUqtWdNSRUfqShbIMa2mNBIlT2w7H0VXw=;
+        b=WtR2M5CKMjkgGJ4SKGK+yCNMe0Wchq/D2uZw4ojjOmLAmbmXBi/Nn53Q0WNbg1OvRW
+         +ZbwAVx0fl4W8uTvhAt+xW3Zsc54gEheCN9rzsrc4iFeteIGHuqJEu7a5cpOvL1jRRkY
+         N22ISRp7gZQoUNfNPUFiTtYLVqCqK8LUHHMgVVuXkFHwX8aWvQ+4gYfTaGbqgZws70EI
+         +4BVMUpfBW7vtrn+DSC/aVEJ4NmgqMfRTZBuxV9ccYS0Pivd3oCK3YRnKLCRFOJnbKUc
+         tH+DifyV/7yUfZ+3+1kLYI8Dfnd52TBcA67lkve1NO9/rO8SGHvjqtDIhzjUpkn4+QkH
+         TS4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747269786; x=1747874586;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cueXC2hlZsQuDhrii/uQD0jplPg4hNH073llC7Ktm+A=;
-        b=fsDcRVCsZKpoOrZI7og8PLk1EJ3QWYMuVQ+dZP6j3xgTY1/p24jBiuD/1P40XGEjKr
-         X1XTaOoV9XwUoG1Ek518Uds50k0JVIDg44bbJLHxndzlFdYbC3LelF18Q1WnlqqwbeQd
-         7eQjbBBnVhuqWRhC36Dk20iaml8fi9fqIwW99hhUUU6RSI3tY0so42iiaKh5A+Bnpugl
-         KI83y/l24IQzyzkADVfocNsnLIt1Qh9dGuqQIJmO2/2lJ7a5B9OB8r5qcDvwm5awnp4K
-         OSvRKOHhJYWcOI2SL+cedVNMUvPDvGoFD2ZDeuuawifKAj33++jCo/E6d0joPuzkzXA+
-         a0Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCUD7badEAns5F0lyPfNtORT7++D1NuLsILIEEVA7TrKkujGOXsiePGt+bAzZGwZmdySvcmKyOJkzxEI+4w=@vger.kernel.org, AJvYcCWfFo828+TY4Efj4vcvTK5zJ76/HE+hGZKTEC0pAiuisF9ZHEXRiLiVKs+gzGidguDiBN4GKsG9ldCPFau7IEY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9M2xCma1TJV6wVoXDbELn5E7up5rvo2sxSuGR09PkkAn0j9FO
-	iAX6kSGgt93HxvX+D4aGlw/hLLMxTOrreQTB1N1yvfxvYGFbU7Yd
-X-Gm-Gg: ASbGncsk0Mlp2dIGBl3s2V7LGf/98v6HfU6YIi00qjQttvb/ETb/Huiuybb7upX7Ipm
-	haxSVKQ+yqX1uCN6crXWUPioHykoa/Vnna6+Nrg364SKsFcy9aJpKna31q14sPEbNUXBEYgOWWO
-	hOoLZkQG789uAwQ6myGPFR4enzLb8hEnkcSMC5eSjOIRAIL4G3EzDVs6N+UfxzNKaEYQdiY6aZx
-	fU3JGRYZ+R+jZ1j6tyn9mt75VhSTvKr+ifVjI8aVXdsWgVWftCRSfQcSGb6/DdPL+ah5hdJH/R8
-	GsgxUcBySWlrqRaXx4GWUH4nLZoiM2Ptq19mVBkibfTtkBoY8Y8xvfWAqrAqgnJE/CHOjCYuWdU
-	=
-X-Google-Smtp-Source: AGHT+IGMCVTHaTAAEE9TyxMrC1UkOXyDv9xgn/r9jfFGP1Q8+03YjUg0MM1rRdEdZGDUJNxnohsoQA==
-X-Received: by 2002:a05:6102:4b82:b0:4c5:505a:c1f5 with SMTP id ada2fe7eead31-4df7de00c28mr6031983137.24.1747269786465;
-        Wed, 14 May 2025 17:43:06 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14d:4c64:81ec:7409:107a:a63b:a3da])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-879f603551dsm9775065241.0.2025.05.14.17.43.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 17:43:06 -0700 (PDT)
-From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-To: jjohnson@kernel.org
-Cc: ~lkcamp/patches@lists.sr.ht,
-	linux-wireless@vger.kernel.org,
-	ath11k@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] wifi: ath11k: clean-up during wrong ath11k_crypto_mode
-Date: Wed, 14 May 2025 21:40:54 -0300
-Message-ID: <20250515004258.87234-1-rodrigo.gobbi.7@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1747269802; x=1747874602;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qi9rXvGS+iuUqtWdNSRUfqShbIMa2mNBIlT2w7H0VXw=;
+        b=PuPol5WHIhFNFBHwZyW0r9OhmXo2Hdv2J2FT6GXUpLgFqvBbfnLnBcQEKPjZFuXQxi
+         5VhnR7+coxTzyNLflwwJB06/+qWR8gdA04Qi6AgwV0JDBEdQEr63sG3NqbWSQKFlQfcP
+         LR73/4rJAdYZZ0zvjlcXis46yznh1XDwIielEKjfy+YVGcQN9jGQknrSIbCSKqW/jGSC
+         g+jaWloCwraCdXv72QagkFH9makE0WD76VIKPwOkl4pJZC76ugKi2sBhJApbau3UTHVM
+         U8XQlbwk0/al5pL8mjq2XLtDmeG4fGeB23F2B21iVcGx1lDslpVM9cnzSd9JMjZ9piUb
+         82aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUgcihi5BlZ0nah0ZozYmDmaDi2gwwlwPDzVuey9c1Fw6+u+nWa1g68O3GOVW2LErSFXo+GD0W+cAzEEPg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMe30aWyPTRMgePT8Crv8oFZKr+stVvhb/I7+EdPf/2SjqjaLs
+	jAhBBGs10qne7zgXt9WkFJa5o8VzNiIZtppmjIS0hCa61WNG8vc0Xz3231G2YDGdYMCXBUbZ1fI
+	kEQ==
+X-Google-Smtp-Source: AGHT+IFzn6XtXG9DycxGfH/GbFRwVV8EVW6xOATWhl7aoIWCLbu6lw861vOtGGbJ05KZULEzBclxkjJPHDY=
+X-Received: from pjbsr12.prod.google.com ([2002:a17:90b:4e8c:b0:30a:2020:e2bd])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2d84:b0:2ee:e518:c1cb
+ with SMTP id 98e67ed59e1d1-30e5156edcbmr1131216a91.7.1747269801886; Wed, 14
+ May 2025 17:43:21 -0700 (PDT)
+Date: Wed, 14 May 2025 17:43:20 -0700
+In-Reply-To: <20250324173121.1275209-28-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-28-mizhang@google.com>
+Message-ID: <aCU4qAjgUCUa5Mgz@google.com>
+Subject: Re: [PATCH v4 27/38] KVM: x86/pmu: Handle PMU MSRs interception and
+ event filtering
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
+	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-if ath11k_crypto_mode is invalid (not ATH11K_CRYPT_MODE_SW/ATH11K_CRYPT_MODE_HW),
-ath11k_core_qmi_firmware_ready() will not undo some actions that was previously
-started/configured. It's reasonable to undo things during this condition, despite
-the value used at ath11k_crypto_mode not being valid in this case.
+Again, be more precise.
 
-Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
----
-Smatch got the following error:
+On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> 
+> Mediated vPMU needs to intercept EVENTSELx and FIXED_CNTR_CTRL MSRs to
+> filter out guest malicious perf events. Either writing these MSRs or
+> updating event filters would call reprogram_counter() eventually. Thus
+> check if the guest event should be filtered out in reprogram_counter().
+> If so, clear corresponding EVENTSELx MSR or FIXED_CNTR_CTRL field to
+> ensure the guest event won't be really enabled at vm-entry.
+> 
+> Besides, mediated vPMU intercepts the MSRs of these guest not owned
+> counters and it just needs simply to read/write from/to pmc->counter.
+> 
+> Suggested-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Co-developed-by: Mingwei Zhang <mizhang@google.com>
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> ---
+>  arch/x86/kvm/pmu.c | 27 +++++++++++++++++++++++++++
+>  arch/x86/kvm/pmu.h |  3 +++
+>  2 files changed, 30 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> index 63143eeb5c44..e9100dc49fdc 100644
+> --- a/arch/x86/kvm/pmu.c
+> +++ b/arch/x86/kvm/pmu.c
+> @@ -305,6 +305,11 @@ static void pmc_update_sample_period(struct kvm_pmc *pmc)
+>  
+>  void pmc_write_counter(struct kvm_pmc *pmc, u64 val)
+>  {
+> +	if (kvm_mediated_pmu_enabled(pmc->vcpu)) {
+> +		pmc->counter = val & pmc_bitmask(pmc);
+> +		return;
+> +	}
+> +
+>  	/*
+>  	 * Drop any unconsumed accumulated counts, the WRMSR is a write, not a
+>  	 * read-modify-write.  Adjust the counter value so that its value is
+> @@ -455,6 +460,28 @@ static int reprogram_counter(struct kvm_pmc *pmc)
+>  	bool emulate_overflow;
+>  	u8 fixed_ctr_ctrl;
+>  
+> +	if (kvm_mediated_pmu_enabled(pmu_to_vcpu(pmu))) {
+> +		bool allowed = check_pmu_event_filter(pmc);
+> +
+> +		if (pmc_is_gp(pmc)) {
+> +			if (allowed)
+> +				pmc->eventsel_hw |= pmc->eventsel &
+> +						    ARCH_PERFMON_EVENTSEL_ENABLE;
+> +			else
+> +				pmc->eventsel_hw &= ~ARCH_PERFMON_EVENTSEL_ENABLE;
+> +		} else {
+> +			int idx = pmc->idx - KVM_FIXED_PMC_BASE_IDX;
+> +
+> +			if (allowed)
+> +				pmu->fixed_ctr_ctrl_hw = pmu->fixed_ctr_ctrl;
+> +			else
+> +				pmu->fixed_ctr_ctrl_hw &=
+> +					~intel_fixed_bits_by_idx(idx, 0xf);
+> +		}
+> +
+> +		return 0;
 
-drivers/net/wireless/ath/ath11k/core.c:2166 ath11k_core_qmi_firmware_ready() warn: missing unwind goto?
-
-When the ath11k_crypto_mode, which is a module param, is not
-ATH11K_CRYPT_MODE_SW/HW, clean-up actions are not triggered. 
-Considering the whole ath11k_core_qmi_firmware_ready() function,
-during potential errors, those actions are properly triggered. 
-I'm suggesting a little change over the default case to clean things up.
-Tks and regards.
----
- drivers/net/wireless/ath/ath11k/core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/ath/ath11k/core.c b/drivers/net/wireless/ath/ath11k/core.c
-index 2e9f8a5e61e4..fd3017c444a4 100644
---- a/drivers/net/wireless/ath/ath11k/core.c
-+++ b/drivers/net/wireless/ath/ath11k/core.c
-@@ -2163,7 +2163,9 @@ int ath11k_core_qmi_firmware_ready(struct ath11k_base *ab)
- 		break;
- 	default:
- 		ath11k_info(ab, "invalid crypto_mode: %d\n", ath11k_crypto_mode);
--		return -EINVAL;
-+		ret = -EINVAL;
-+		ath11k_dp_free(ab);
-+		goto err_firmware_stop;
- 	}
- 
- 	if (ath11k_frame_mode == ATH11K_HW_TXRX_RAW)
--- 
-2.49.0
-
+I think it's worth adding a helper for this, as it makes things a bit more
+self-documenting in terms of when KVM needs to "reprogram" mediated PMU PMCs.
