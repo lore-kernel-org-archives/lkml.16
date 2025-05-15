@@ -1,178 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D848A2135A0
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E099D42A82
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:16:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747322036; cv=none; b=EmdEQjn/tn+lbLdJ9Lj+OOUXsCt6kDEOJVkPgxTw+YYLrEg/5NbZaWu9FnG5pygea86XVLEo+KtWURGFvLWBMQsvk2HvGQB//hf+rRkvfNybS2yv+/v1AUrJ32RQPCgyeMayoqAqKjNuIaH7Dl7EFSLrnVNckmLsOgKolhD/7mc=
+	t=1747322181; cv=none; b=i9XyrQwzEC/06WFiCtuYAW9WGiLILhDM0uHEJB0o6mQLeIMIkRo52FRkLJX+J2FBIii78cdBjMSc3jcMeVD2qIs1+wOCNE5giAd3eLvHIEUB7VdM6Vni6kTz+/TSYzg4PDiS2GmErenTJ8dTlT2j18asHnS5LUOGbgAY2hmpuSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747322036; c=relaxed/simple;
-	bh=Qa+E+Tw3MAUEolB+WyJwkw0Lxoh7PjGvs+rmzCkZwpk=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=AZ4Ro6z5gpvZ/2mYVW7e5ntckwqGKBrq1qRirgTNcoQw38K7QBTNQwXIFzjOnunyFnxZQ9aCWse+A0ktfecVkai1lvOBgMiN3xiFdB5WFBLb+0OKGaTcUu0CfCMDauYmnnXU2nETL3YnW1EQIwgHnRCRRJS+ym+7OKMTMWUXeg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DR3+DtF8; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747322181; c=relaxed/simple;
+	bh=sPyAVycxcJ0D1C/UAD2TstnPXUFKGB6F6fjmwgb+N4U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WtUVQ8yZpUTitDsYmaY6P8pRZ87otEo3TroOHs1iZJi+1BRiMtg6lQQKHMw3g95PwQvcC4PRvi26Yo2QRez6sbnTraO0ccEVdwh/OFmkW9+wVEUsKr2u5zjWQe7S0F4/CBF7HxQCBHmyMwko63JRl/CeWYGnwtrZUj9W9fK/yig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=lSw2baZ5; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DR3+DtF8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747322034; x=1778858034;
-  h=date:from:to:cc:subject:message-id;
-  bh=Qa+E+Tw3MAUEolB+WyJwkw0Lxoh7PjGvs+rmzCkZwpk=;
-  b=DR3+DtF8/uc5DwREB8mfztcaO1V6MIGEF4uj0fEaNOux92hMDGySzziD
-   9sRhaxAf/D7pjK8d+Xs4eDj3188gNAexRzfjlTlvcEur+1O0Gl4lGpmoF
-   04uNuELCtKRQWdD33FZ/zN/u+MWKLnc0ZwmPlc5OnnPWQcLzESnKiT1pR
-   mI4cy2xAYoWg6oz7+eIy1o0AGeYBNPXvsf3D0GQTsSrktPA2kyuukMjz3
-   t5Gc7s7f8dr5Jb8gWNJlCr1bEv2oOqLfR8kU4UQAIzs3ejJ/Xw42842tS
-   yCP3Iuk+g1QHpxH74hSsY0xHHMbDt0rrXA6S38ZOjWrfqTReHL7J+FbSa
-   w==;
-X-CSE-ConnectionGUID: GrRQH0leS2qfqyEwhvruSA==
-X-CSE-MsgGUID: 7XzQpKwgSlab7VyLM9I0Fw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="66671723"
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="66671723"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 08:13:53 -0700
-X-CSE-ConnectionGUID: fVybb9QaTcKxpOp733CItA==
-X-CSE-MsgGUID: jpAxyJ0XSjGPCiMOupop9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="143171156"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 15 May 2025 08:13:52 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uFaHO-000IUF-0L;
-	Thu, 15 May 2025 15:13:50 +0000
-Date: Thu, 15 May 2025 23:13:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:irq/urgent] BUILD SUCCESS
- fb0ea6e4878a45b1ac81972027907fc424a792e6
-Message-ID: <202505152339.jnRfpvcN-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="lSw2baZ5"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5F74A40E0222;
+	Thu, 15 May 2025 15:16:16 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id qDhr6EV5YsTV; Thu, 15 May 2025 15:16:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747322173; bh=lzbgCcnq7yzl/KudcdPAeH53uYqWbFn4WHR1nkY/0zM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lSw2baZ5BWEuGQe+deamInwfX1pxlIOXahSUMcWjWEXwYbR1l3Zv6pIcFjUBhaNae
+	 OkCgaoDXi/7wCQyfFZl8l6ExSCuky6tNqfqI/m7PM7AMeecerAQ0I8HpimN5LxW6vI
+	 xi/xq4RFBkxaBjtu423GuVQOVN0vGRjwraPbN7OPC7xcxORGbJXBgMAKbhnm4lmFlH
+	 kJSajgIV3V978kOtArowzbhBbmHBEeVwJcwNLo3PMfc8wzfMQNLDqE5cFliyTvUICA
+	 ccDKsmg0ZRVNH89aXLuze3T191M3pfIg42e7SRtc+gEVHYjRhLsekcTw3RMzHkMp3H
+	 QmywFVKVdUJHX/i1umcp/K0ZzceIGvwj2sC3LvQtBX60ZdZDl6oWMUHH88KNC98KGf
+	 TBLrqzvMvitdu6m1crseHlq0xEQ+cEoY41eiOK9+T2OoiwGi9mC8t49I0Lq9OR3M24
+	 WnJTD2hmjnhygkfllHjlC+28Ec+pyKpPPdw+PIm0yPP3bwXefU33i+p18LB2DpH/tY
+	 CopBXk+SvVw6/5PzYYEwMr+1bvW69E0bObgPKcJ9ohOoqR4Oc5xbtjrplTnLyLcCCL
+	 ikm/+Jn1xiUGfDZU2dIHug1dHfTt8c/OmDUqPlDidWCHLWHk4DMUom9d8PGpkQ28f1
+	 hrXjh/bHVCnaOVqSd1bES6B8=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C0D6A40E0196;
+	Thu, 15 May 2025 15:16:02 +0000 (UTC)
+Date: Thu, 15 May 2025 17:16:01 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: David Kaplan <david.kaplan@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/bugs: Restructure ITS mitigation
+Message-ID: <20250515151601.GHaCYFMdcyIUmFgCNx@fat_crate.local>
+References: <20250515134756.93274-1-david.kaplan@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250515134756.93274-1-david.kaplan@amd.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/urgent
-branch HEAD: fb0ea6e4878a45b1ac81972027907fc424a792e6  irqchip: Drop MSI_CHIP_FLAG_SET_ACK from unsuspecting MSI drivers
+On Thu, May 15, 2025 at 08:47:56AM -0500, David Kaplan wrote:
+> @@ -1242,11 +1261,19 @@ static void __init retbleed_update_mitigation(void)
+>  	/*
+>  	 * retbleed=stuff is only allowed on Intel.  If stuffing can't be used
+>  	 * then a different mitigation will be selected below.
+> +	 *
+> +	 * its=stuff will also attempt to enable stuffing.
+>  	 */
+> -	if (retbleed_mitigation == RETBLEED_MITIGATION_STUFF) {
+> +	if (retbleed_mitigation == RETBLEED_MITIGATION_STUFF ||
+> +	    its_mitigation == ITS_MITIGATION_RETPOLINE_STUFF) {
+>  		if (spectre_v2_enabled != SPECTRE_V2_RETPOLINE) {
+>  			pr_err("WARNING: retbleed=stuff depends on spectre_v2=retpoline\n");
+>  			retbleed_mitigation = RETBLEED_MITIGATION_AUTO;
+> +		} else {
+> +			if (retbleed_mitigation != RETBLEED_MITIGATION_STUFF)
+> +				pr_info("Retbleed mitigation updated to stuffing\n");
 
-elapsed time: 1449m
+I've seen this patch offlist already so only one thing about this here above
+which is already there in the current tree.
 
-configs tested: 101
-configs skipped: 1
+Let's zap it. One can see to what the retbleed mitigation was updated by other
+means. No need to add more spaghetti to the code.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+-- 
+Regards/Gruss,
+    Boris.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                   randconfig-001-20250515    gcc-12.4.0
-arc                   randconfig-002-20250515    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                   randconfig-001-20250515    clang-21
-arm                   randconfig-002-20250515    gcc-8.5.0
-arm                   randconfig-003-20250515    gcc-8.5.0
-arm                   randconfig-004-20250515    clang-21
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250515    clang-21
-arm64                 randconfig-002-20250515    clang-21
-arm64                 randconfig-003-20250515    clang-20
-arm64                 randconfig-004-20250515    gcc-6.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250515    gcc-14.2.0
-csky                  randconfig-002-20250515    gcc-14.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250515    clang-16
-hexagon               randconfig-002-20250515    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250515    gcc-11
-i386        buildonly-randconfig-002-20250515    gcc-12
-i386        buildonly-randconfig-003-20250515    clang-20
-i386        buildonly-randconfig-004-20250515    clang-20
-i386        buildonly-randconfig-005-20250515    gcc-12
-i386        buildonly-randconfig-006-20250515    gcc-11
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250515    gcc-12.4.0
-loongarch             randconfig-002-20250515    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250515    gcc-12.4.0
-nios2                 randconfig-002-20250515    gcc-6.5.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250515    gcc-13.3.0
-parisc                randconfig-002-20250515    gcc-13.3.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc               randconfig-001-20250515    gcc-8.5.0
-powerpc               randconfig-002-20250515    gcc-6.5.0
-powerpc               randconfig-003-20250515    clang-21
-powerpc64             randconfig-001-20250515    clang-21
-powerpc64             randconfig-002-20250515    gcc-8.5.0
-powerpc64             randconfig-003-20250515    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                 randconfig-001-20250515    gcc-8.5.0
-riscv                 randconfig-002-20250515    gcc-14.2.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250515    clang-21
-s390                  randconfig-002-20250515    gcc-9.3.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250515    gcc-14.2.0
-sh                    randconfig-002-20250515    gcc-10.5.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250515    gcc-6.5.0
-sparc                 randconfig-002-20250515    gcc-10.3.0
-sparc64               randconfig-001-20250515    gcc-9.3.0
-sparc64               randconfig-002-20250515    gcc-9.3.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250515    gcc-12
-um                    randconfig-002-20250515    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250515    clang-20
-x86_64      buildonly-randconfig-002-20250515    clang-20
-x86_64      buildonly-randconfig-003-20250515    clang-20
-x86_64      buildonly-randconfig-004-20250515    clang-20
-x86_64      buildonly-randconfig-005-20250515    clang-20
-x86_64      buildonly-randconfig-006-20250515    gcc-12
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-18
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250515    gcc-14.2.0
-xtensa                randconfig-002-20250515    gcc-13.3.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+https://people.kernel.org/tglx/notes-about-netiquette
