@@ -1,110 +1,128 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575224B1E44
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 20:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6839F4B1E44;
+	Thu, 15 May 2025 20:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747339415; cv=none; b=CUVRSOrW7ndKpRcymNQLrPQ43lNVoWHUEE7LtUYPxs1F+nT5u/UpIdJUm9wyeHcZiHDy1ug2JDhmff+kaq4uhF74kGCHPAhNbMWqs2NlksXs6r+gUTLqTxRk9kAqiBjScCRv8VuxAYv4mr6dgCRfPNvajokz5qtZLE4ZQ4TcFY0=
+	t=1747339505; cv=none; b=mtWTSE7R7MAfv3JqMUOIPqzYQzt+olZ2a7fjNhfeNDmaK6QIrM8/alhaEZql9bvYFmuShf9NojSPkiLBCHXRsSQgJivMjqVl9NFea+WPTimdR4bdGL8GTGUss7pUGSuImDQXek+3lCWdWf/Mdkfr6Wo2Ww3w5kfVyNONtOmJUsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747339415; c=relaxed/simple;
-	bh=sCWBCil7pb7kxTCcpgTJG5V5Xzq7C7Xue3LLDzZUlhQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lDqmprrq7sVWq4LPJVzxRR8ZO6zOjIl922eIT8+n82hVg+DarSFLniquolcf7bChnh29qtljbkr6hv+C4TNA1hqfPhBQB4AGDbGX/6MY2O+ou7bo7PqJAuEJTrrlOWGDx542HuJp3NVxpJ1Q5cGEl2ichkSwoWYqdB4t5jTxJ10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EupDt8b+; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747339505; c=relaxed/simple;
+	bh=SKBHDrkAv6HI41+T61x4+kTjy7+6vSJRsrsYVNkeUOE=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=CfmaL1gSFITzRUFIXsny/R1Nnl2E4smkThNRDrQHAyIEXJ733ZwrKV6SlWcxL3inuMl1g3py1AKMajmhyNymF7HxQhUBrTM6KSZT+p8kcCqYNs5VhDMQUuZ2P6B7kAoqxJg/0QrVkYKdibdDkRWCgDQKBqAoRc2vg2A9jjUdHoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=h6IgwPNA; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EupDt8b+"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4774611d40bso65251cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 13:03:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747339413; x=1747944213; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sCWBCil7pb7kxTCcpgTJG5V5Xzq7C7Xue3LLDzZUlhQ=;
-        b=EupDt8b+8EhCuuCJHf3v9NzWC/r6/x5Bv20CX/UVoggqgmAd59lGNkNtlcDD1evkAZ
-         X8R7pQ4qWzKH9bDUkezAZ9pskVLHs8s8q6qA39UrQ8bQgyQhAlDbkrtP9I85bHOX/YGo
-         WiEnCk8UPm+7YuEQCF+9gGNND5lvFKCTASNFVZtmmm+YEECekJ8aiWBREsAlms1XG39k
-         /RfXxWaER/KN5ERBWt+EQ+QD7sHc47AxwIFk00zq2lC68esKWXojw9EdLe5xgFZxEu66
-         0ym1ypwZV6v4mkYzaQWeeF5bqHzIlUTAvFy0ite+tOjK9T6HXRZVSN2JL/hzVMHmlGfQ
-         2Arg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747339413; x=1747944213;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sCWBCil7pb7kxTCcpgTJG5V5Xzq7C7Xue3LLDzZUlhQ=;
-        b=Q6+bUz9g/xMG4NW9zhYVV6u7x2ziRlf0RAiFf9z+vJvEUE1dOLcXfFNzlLhE8w0Ze+
-         Jl38Jcyy0D3qlJjMEXrwZGF725kJ6tKOv4xQeE75EZoc5bA2m+yWXninMpD4rj9KF/o0
-         mIz1u/Fy69XwdGC2eZAo24X70efH/cCoA4n4pnbsPL1wPkGMRMmvEOYEK18bmxufKKxy
-         4tquYn5idXCznJCrkEY+ZOy44/eWkZv85b003TnI2Q6qyDc2EXawNvVWt2OosQ7cYjyR
-         44598nDSFfnmlHaWDShv0yJ2qkIeKaWK76lmWJsuh7xetx7xyvDsOpkH34Ivsjby7+jA
-         wWOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUjBEOU0Xj0MgEyOJpQaCufBrJpRjMsy5WFTOFPWcdnVfjb7ANjtLP1+5dwUxzE/hyEd80nsUftCn4qbFQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywr04vqxN9ki+kzedg38510aVKWJRtBjUXu0+m5dKm5ri5lYHI6
-	uQFryYVO1FHZPR2blucMNWUkR4f3RbwMvJgfe7S9TXpx3TRrQyr3LWm0M1S7PwWAbyoRqdFfRAW
-	ItYkAAp8toRX6ym47Ai4/xJmATlUNrjVVBsnmTPRB
-X-Gm-Gg: ASbGncvXnjmqz+BZ1JADbR4DZ3KUFYDxhv5Lw5EWf+r7X9Kcw0jOzbEfJw9A9j1deg6
-	I98Ib7u3O/EfZXUb7fCepd1RDPYw3apryY6RXmn10cgg3JoemU0VouYzIO5UU56hUPflF5cOxTh
-	OO/EvgwlgrIzYc+6cYrQBfEMv83CsWTTu2/F5B+C6iy74naXZg4tkaA9B1+93I
-X-Google-Smtp-Source: AGHT+IFx+em8XfEeGLyD7f/98BnU3d6CKECWGW3OqkghqanJcCJmF9byttNgyRFlCJsaVOHAdBjfs+z3bGSZBoxwJn8=
-X-Received: by 2002:ac8:7c4c:0:b0:486:a185:2b8f with SMTP id
- d75a77b69052e-494a1cff1afmr6072521cf.8.1747339412843; Thu, 15 May 2025
- 13:03:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="h6IgwPNA"
+Received: from [172.27.3.244] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54FK4qMB3672567
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 15 May 2025 13:04:54 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54FK4qMB3672567
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1747339494;
+	bh=UgNmHzWW4X0bZb4Guomhh4etUesHhtEoB4gbOyjUxrE=;
+	h=Date:To:From:Subject:From;
+	b=h6IgwPNAydNf9R+sRGasHln/kezpG1tcgT9MlPDQKwe3jz7XrHKGYb//rDy3J6VvV
+	 /A2BA2prwttd5ize9QzxXvP+DfufUXReekF2l1rRoNui1/uKI3zRSPlp0ufx+VexOt
+	 l22ZySyKgIYQ6QH1BGDSMUm+8aLvwBX9gUTcSlYUH4Stn1OOJKYfHOde/cjtA6nzP7
+	 2CmsXtpdux9F/7tZ3uIXeEbeKGG3RzQ/ybzLlePFidOW45HL/sR3XhF6k1aGo41hUW
+	 4uWyNZKmAoucoQnqSodP3xsCASs8+pL9L/4OsUwxteY/dKrM1yNabPZi6wqS3SAQ79
+	 VF+erJh/2VsOw==
+Message-ID: <feb98a0f-8d17-495c-b556-b4fe19446d5d@zytor.com>
+Date: Thu, 15 May 2025 13:04:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422181729.2792081-1-salomondush@google.com>
- <CAPE3x14-Tsm-2ThihT3a=h9a0L9Vi8J4BbiZiTV6=6Ctc1xryg@mail.gmail.com> <18aa42a73584fcf50b07d7a43073e55fb4c3159b.camel@HansenPartnership.com>
-In-Reply-To: <18aa42a73584fcf50b07d7a43073e55fb4c3159b.camel@HansenPartnership.com>
-From: Salomon Dushimirimana <salomondush@google.com>
-Date: Thu, 15 May 2025 13:03:22 -0700
-X-Gm-Features: AX0GCFsCV1sb00fFgZAMaeeyCnu0EqKHlroVAnK-IBJHOTTo1bvieTMgGMV1pvU
-Message-ID: <CAPE3x16MrkQXFasVaaHBxhH2QvQ4H5cDiE3ae=-nYjuEKV-NBw@mail.gmail.com>
-Subject: Re: [PATCH] scsi: Add SCSI error events, sent as kobject uevents by mid-layer
-To: James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        libc-alpha@sourceware.org, linux-arch@vger.kernel.org
+From: "H. Peter Anvin" <hpa@zytor.com>
+Subject: Metalanguage for the Linux UAPI
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
+OK, so this is something I have been thinking about for quite a while. 
+It would be a quite large project, so I would like to hear people's 
+opinions on it before even starting.
 
-I agree with the recommended use of ftrace or blktrace for tracing.
-However, our primary goal for using uevents was not merely for
-collecting trace information. We are using uevents as a notification
-mechanism for userspace workflows to determine repair workflows (swap
-/ remove a failing device).
+We have finally succeeded in divorcing the Linux UAPI from the general 
+kernel headers, but even so, there are a lot of things in the UAPI that 
+means it is not possible for an arbitrary libc to use it directly; for 
+example "struct termios" is not the glibc "struct termios", but 
+redefining it breaks the ioctl numbering unless the ioctl headers are 
+changed as well, and so on. However, other libcs want to use the struct 
+termios as defined in the kernel, or, more likely, struct termios2.
 
-We are open to any feedback on other notification recommendations for
-such use cases.
+Furthermore, I was looking further into how C++ templates could be used 
+to make user pointers inherently safe and probably more efficient, but 
+ran into the problem that you really want to be able to convert a 
+user-tagged structure to a structure with "safe-user-tagged" members 
+(after access_ok), which turned out not to be trivially supportable even 
+after the latest C++ modernizations (without which I don't consider C++ 
+viable at all; I would not consider versions of C++ before C++17 worthy 
+of even looking at; C++20 preferred.)
 
+And it is not just generation of in-kernel versus out-of-kernel headers 
+that is an issue (which we have managed to deal with pretty well.) There 
+generally isn't enough information in C headers alone to do well at 
+creating bindings for other languages, *especially* given how many 
+constants are defined in terms of macros.
 
+The use of C also makes it hard to mangle the headers for user space. 
+For example, glibc has to add __extension__ before anonymous struct or 
+union members in order to be able to compile in strict C90 mode.
 
+I have been considering if it would make sense to create more of a 
+metalanguage for the Linux UAPI. This would be run through a more 
+advanced preprocessor than cpp written in C and yacc/bison. (It could 
+also be done via a gcc plugin or a DWARF parser, but I do not like tying 
+this to compiler internals, and DWARF parsing is probably more complex 
+and less versatile.)
 
-Salomon Dushimirimana
+It could thus provide things like "true" constants (constexpr for C++11 
+or C23, or enums), bitfield macro explosions and so on, depending on 
+what the backend user would like: namespacing, distributed enumerations, 
+and assembly offset constants, and even possibly syscall stubs.
 
-On Tue, May 13, 2025 at 1:27=E2=80=AFPM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
->
-> On Tue, 2025-05-13 at 12:00 -0700, Salomon Dushimirimana wrote:
-> > Hi James and Martin
-> >
-> > I wanted to follow up on this patch! It's a decently sized patch, so
-> > it might take some time, but I'd love to hear your thoughts and
-> > address any feedback!!
->
-> I think the first fundamental question should be why is this a uevent?
-> It looks like what you're obtaining is really tracing information on
-> the retry and we could simply add it as another tracepoint in the
-> existing blktrace infrastructure SCSI already has.
->
-> Regards,
->
-> James
->
+There is of course no reason such a generator couldn't be used for 
+kernel-only headers at some point, but I am concentrating on the
+
+Another major motivation is to be able to include one named struct 
+anonymously inside another, without having to repeat the definition. 
+(This is not supported in standard C or GNU C; MS C supports it as an 
+extension, and I have requested that it be added into GNU C which would 
+also allow it to be used with __extension__, and perhaps get folded into 
+a future C standard since it would now fit the criterion of more than 
+one implementation; however, the runway for being able to use that in 
+UAPI headers is quite long.)
+
+I obviously want to keep a C-like syntax for this, which is a major 
+reason for using a parser like yacc/bison.
+
+I have done such a project in the past, with some good success. That 
+being said, the requirements for the Linux UAPI language are obviously 
+much more complex. A few things I have considered are wanting to be able 
+to namespace constants or, more or less equivalently, create 
+enumerations in bits and pieces (consider ioctl constants, for example) 
+and have them coalesce into a single definition if appropriate for the 
+target language.
+
+Speaking of ioctl constants: one of the current problems is that a fair 
+number of ioctl constants do not have the size/type annotations, and 
+perhaps worse, it is impossible to tell from just the numeric value 
+(since _IOC_NONE expands to 0, an _IO() ioctl ends up having no type 
+information at all.) This is something that *definitely* ought to be 
+added, even if a certain backend cannot preserve that information
+
+Thoughts?
+
+	-hpa
+
