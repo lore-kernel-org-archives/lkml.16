@@ -1,388 +1,155 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FD11298267;
-	Thu, 15 May 2025 09:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792A2298C1F;
+	Thu, 15 May 2025 09:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747301715; cv=none; b=GOKoiSjiUYJdjZWkw6PTgOFB6epi8bJC68rYO5ui5BS7VWlJt6CEsOEAWh8WZ/FnwwZLl+kYqkBQDj/S13v/x32kzPgFRCwIWEF26OAFBT7Wj1aoBn0Xtw7IXqJilIFDr/6lplFM8J/YQF2eLuM54m1+hZWeq3MBmM2NubENap4=
+	t=1747301718; cv=none; b=MYoTWtJyMxP+Optm0LCFs+Yxcr1t33ApRfe/wC5T51mOdqs23Zrc0hFunHF7KBBHPxJJtx3wzjeFM8C36FZocU7cqBEsg3vVDUulK/mtbd81Wb8MUyU/Cj6Slp5WoRqAtc5qNU6uvRCWwipZ1AVGD9FrV7PuEDirZyiyfUOsC7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747301715; c=relaxed/simple;
-	bh=freysB+g9fhe+V62LUYiA97zFZ0MZ3scrNYKCoebgEY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aduoDP60DjvxZUn1x2KmwRWasCO++xPtWCEK2t1ps6Ri6V7+ceHEHpuJerg01L1CyPCWw886nUUPBEGglu6KQMkn0UKdxl4QaXLyM/fRd53JfD84nfnoJ/s7D67/rCNm1Z4ADuD1T8IM2p84z/IpR6rXIPs3ChHTWGAo4NSn4L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECF6314BF;
-	Thu, 15 May 2025 02:35:00 -0700 (PDT)
-Received: from [10.162.40.26] (K4MQJ0H1H2.blr.arm.com [10.162.40.26])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 95A7E3F5A1;
-	Thu, 15 May 2025 02:35:10 -0700 (PDT)
-Message-ID: <7c2f66f9-a928-4fda-bf3e-4180c7525fef@arm.com>
-Date: Thu, 15 May 2025 15:05:07 +0530
+	s=arc-20240116; t=1747301718; c=relaxed/simple;
+	bh=3pbN4Dszrb002npCWLEp/tkSnuzB1/DPj5YzvimkpCo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MIXkWBXYQWsF5zla240tay84Wcv9I9sMgUsd+ea13RAK4FIlpnc9tgZRXoorJUyXlMo5ne1W+4h34tDW8riOePR23TQd9yxBqDdRIHSaKkSlJyS49mDyGJIapbQn+H5y73/KWjMctsedmxQuVzqV9XzG4OGeEHrJrHjZTF4c9jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=pDRCgd+A; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pDRCgd+A"
+X-UUID: e54b0726316f11f082f7f7ac98dee637-20250515
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=u/+0dwJEixmbwzYEuP2QfiyZsxMQa+r+ZFjKbyOO3Rs=;
+	b=pDRCgd+AohafdBjCw9ogFIfIdjzFx5Q4khv2/BxTx8+VEhYluKLachaLJ3LSdWxNtdbvv1K6ItCFsxW5fq3TEZLZ1rSlQRzSBm3E7pid0NXoWjj2IBkwlC/W4HljzShn6+GcoCSOjCQGk8J+7VqsNXEOdTDqIkG6stcIn0Svb2Q=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:5119fa08-23f6-4ce4-bbe5-5bb11ac5b293,IP:0,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:-5
+X-CID-META: VersionHash:0ef645f,CLOUDID:abe504c0-eade-4d5b-9f81-31d7b5452436,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
+	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
+	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: e54b0726316f11f082f7f7ac98dee637-20250515
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
+	(envelope-from <paul-pl.chen@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1771164103; Thu, 15 May 2025 17:35:10 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Thu, 15 May 2025 17:35:09 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Thu, 15 May 2025 17:35:09 +0800
+From: paul-pl.chen <paul-pl.chen@mediatek.com>
+To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+	<chunkuang.hu@kernel.org>, <angelogioacchino.delregno@collabora.com>
+CC: <matthias.bgg@gmail.com>, <p.zabel@pengutronix.de>,
+	<jason-jh.lin@mediatek.com>, <nancy.lin@mediatek.com>,
+	<singo.chang@mediatek.com>, <xiandong.wang@mediatek.com>,
+	<sirius.wang@mediatek.com>, <paul-pl.chen@mediatek.com>,
+	<sunny.shen@mediatek.com>, <fshao@chromium.org>, <treapking@chromium.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
+	<linux-arm-kernel@lists.infradead.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>
+Subject: [PATCH v3 11/17] drm/mediatek: drm/mediatek: Export OVL ignore pixel alpha function
+Date: Thu, 15 May 2025 17:34:23 +0800
+Message-ID: <20250515093454.1729720-12-paul-pl.chen@mediatek.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250515093454.1729720-1-paul-pl.chen@mediatek.com>
+References: <20250515093454.1729720-1-paul-pl.chen@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/mm: Fix test result reporting in gup_longterm
-To: Mark Brown <broonie@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
-Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250515-selftests-mm-gup-longterm-dups-v1-1-05f8f731cf63@kernel.org>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <20250515-selftests-mm-gup-longterm-dups-v1-1-05f8f731cf63@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+From: Nancy Lin <nancy.lin@mediatek.com>
 
+For the new BLENDER component, the OVL ignore pixel alpha logic
+should be exported as a function and reused it.
 
-On 15/05/25 2:27 pm, Mark Brown wrote:
-> The kselftest framework uses the string logged when a test result is
-> reported as the unique identifier for a test, using it to track test
-> results between runs. The gup_longterm test completely fails to follow
-> this pattern, it runs a single test function repeatedly with various
-> parameters but each result report is a string logging an error message
-> which is fixed between runs.
-> 
-> Since the code already logs each test uniquely before it starts refactor
-> to also print this to a buffer, then use that name as the test result.
-> This isn't especially pretty, really this test could use a more
-> substantial cleanup.
-> 
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->   tools/testing/selftests/mm/gup_longterm.c | 163 ++++++++++++++++++++----------
->   1 file changed, 107 insertions(+), 56 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/mm/gup_longterm.c b/tools/testing/selftests/mm/gup_longterm.c
-> index 21595b20bbc3..a849537f9372 100644
-> --- a/tools/testing/selftests/mm/gup_longterm.c
-> +++ b/tools/testing/selftests/mm/gup_longterm.c
-> @@ -35,6 +35,8 @@ static int nr_hugetlbsizes;
->   static size_t hugetlbsizes[10];
->   static int gup_fd;
->   
-> +static char test_name[1024];
-> +
->   static __fsword_t get_fs_type(int fd)
->   {
->   	struct statfs fs;
-> @@ -93,33 +95,48 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
->   	__fsword_t fs_type = get_fs_type(fd);
->   	bool should_work;
->   	char *mem;
-> +	int result = KSFT_PASS;
->   	int ret;
->   
-> +	if (fd < 0) {
-> +		result = KSFT_FAIL;
-> +		goto report;
-> +	}
-> +
->   	if (ftruncate(fd, size)) {
->   		if (errno == ENOENT) {
->   			skip_test_dodgy_fs("ftruncate()");
->   		} else {
-> -			ksft_test_result_fail("ftruncate() failed (%s)\n", strerror(errno));
-> +			ksft_print_msg("ftruncate() failed (%s)\n",
-> +				       strerror(errno));
-> +			result = KSFT_FAIL;
-> +			goto report;
->   		}
->   		return;
->   	}
->   
->   	if (fallocate(fd, 0, 0, size)) {
-> -		if (size == pagesize)
-> -			ksft_test_result_fail("fallocate() failed (%s)\n", strerror(errno));
-> -		else
-> -			ksft_test_result_skip("need more free huge pages\n");
-> -		return;
-> +		if (size == pagesize) {
-> +			ksft_print_msg("fallocate() failed (%s)\n", strerror(errno));
-> +			result = KSFT_FAIL;
-> +		} else {
-> +			ksft_print_msg("need more free huge pages\n");
-> +			result = KSFT_SKIP;
-> +		}
-> +		goto report;
->   	}
->   
->   	mem = mmap(NULL, size, PROT_READ | PROT_WRITE,
->   		   shared ? MAP_SHARED : MAP_PRIVATE, fd, 0);
->   	if (mem == MAP_FAILED) {
-> -		if (size == pagesize || shared)
-> -			ksft_test_result_fail("mmap() failed (%s)\n", strerror(errno));
-> -		else
-> -			ksft_test_result_skip("need more free huge pages\n");
-> -		return;
-> +		if (size == pagesize || shared) {
-> +			ksft_print_msg("mmap() failed (%s)\n", strerror(errno));
-> +			result = KSFT_FAIL;
-> +		} else {
-> +			ksft_print_msg("need more free huge pages\n");
-> +			result = KSFT_SKIP;
-> +		}
-> +		goto report;
->   	}
->   
->   	/* Fault in the page such that GUP-fast can pin it directly. */
-> @@ -134,7 +151,8 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
->   		 */
->   		ret = mprotect(mem, size, PROT_READ);
->   		if (ret) {
-> -			ksft_test_result_fail("mprotect() failed (%s)\n", strerror(errno));
-> +			ksft_print_msg("mprotect() failed (%s)\n", strerror(errno));
-> +			result = KSFT_FAIL;
->   			goto munmap;
->   		}
->   		/* FALLTHROUGH */
-> @@ -147,12 +165,14 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
->   				type == TEST_TYPE_RW_FAST;
->   
->   		if (gup_fd < 0) {
-> -			ksft_test_result_skip("gup_test not available\n");
-> +			ksft_print_msg("gup_test not available\n");
-> +			result = KSFT_SKIP;
->   			break;
->   		}
->   
->   		if (rw && shared && fs_is_unknown(fs_type)) {
-> -			ksft_test_result_skip("Unknown filesystem\n");
-> +			ksft_print_msg("Unknown filesystem\n");
-> +			result = KSFT_SKIP;
->   			return;
->   		}
->   		/*
-> @@ -169,14 +189,19 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
->   		args.flags |= rw ? PIN_LONGTERM_TEST_FLAG_USE_WRITE : 0;
->   		ret = ioctl(gup_fd, PIN_LONGTERM_TEST_START, &args);
->   		if (ret && errno == EINVAL) {
-> -			ksft_test_result_skip("PIN_LONGTERM_TEST_START failed (EINVAL)n");
-> +			ksft_print_msg("PIN_LONGTERM_TEST_START failed (EINVAL)n");
-> +			result = KSFT_SKIP;
->   			break;
->   		} else if (ret && errno == EFAULT) {
-> -			ksft_test_result(!should_work, "Should have failed\n");
-> +			if (should_work)
-> +				result = KSFT_FAIL;
-> +			else
-> +				result = KSFT_PASS;
->   			break;
->   		} else if (ret) {
-> -			ksft_test_result_fail("PIN_LONGTERM_TEST_START failed (%s)\n",
-> -					      strerror(errno));
-> +			ksft_print_msg("PIN_LONGTERM_TEST_START failed (%s)\n",
-> +				       strerror(errno));
-> +			result = KSFT_FAIL;
->   			break;
->   		}
->   
-> @@ -189,7 +214,10 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
->   		 * some previously unsupported filesystems, we might want to
->   		 * perform some additional tests for possible data corruptions.
->   		 */
-> -		ksft_test_result(should_work, "Should have worked\n");
-> +		if (should_work)
-> +			result = KSFT_PASS;
+Signed-off-by: Nancy Lin <nancy.lin@mediatek.com>
+Signed-off-by: Paul-pl Chen <paul-pl.chen@mediatek.com>
+---
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 24 ++++++++++++++++++++++--
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.h |  1 +
+ 2 files changed, 23 insertions(+), 2 deletions(-)
 
-Missed printing "Should have worked" here.
-
-> +		else
-> +			result = KSFT_FAIL;
->   		break;
->   	}
->   #ifdef LOCAL_CONFIG_HAVE_LIBURING
-> @@ -199,8 +227,9 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
->   
->   		/* io_uring always pins pages writable. */
->   		if (shared && fs_is_unknown(fs_type)) {
-> -			ksft_test_result_skip("Unknown filesystem\n");
-> -			return;
-> +			ksft_print_msg("Unknown filesystem\n");
-> +			result = KSFT_SKIP;
-> +			goto report;
->   		}
->   		should_work = !shared ||
->   			      fs_supports_writable_longterm_pinning(fs_type);
-> @@ -208,8 +237,9 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
->   		/* Skip on errors, as we might just lack kernel support. */
->   		ret = io_uring_queue_init(1, &ring, 0);
->   		if (ret < 0) {
-> -			ksft_test_result_skip("io_uring_queue_init() failed (%s)\n",
-> -					      strerror(-ret));
-> +			ksft_print_msg("io_uring_queue_init() failed (%s)\n",
-> +				       strerror(-ret));
-> +			result = KSFT_SKIP;
->   			break;
->   		}
->   		/*
-> @@ -222,17 +252,28 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
->   		/* Only new kernels return EFAULT. */
->   		if (ret && (errno == ENOSPC || errno == EOPNOTSUPP ||
->   			    errno == EFAULT)) {
-> -			ksft_test_result(!should_work, "Should have failed (%s)\n",
-> -					 strerror(errno));
-> +			if (should_work) {
-> +				ksft_print_msg("Should have failed (%s)\n",
-> +					       strerror(errno));
-> +				result = KSFT_FAIL;
-> +			} else {
-> +				result = KSFT_PASS;
-> +			}
->   		} else if (ret) {
->   			/*
->   			 * We might just lack support or have insufficient
->   			 * MEMLOCK limits.
->   			 */
-> -			ksft_test_result_skip("io_uring_register_buffers() failed (%s)\n",
-> -					      strerror(-ret));
-> +			ksft_print_msg("io_uring_register_buffers() failed (%s)\n",
-> +				       strerror(-ret));
-> +			result = KSFT_SKIP;
->   		} else {
-> -			ksft_test_result(should_work, "Should have worked\n");
-> +			if (should_work) {
-> +				result = KSFT_PASS;
-> +			} else {
-> +				ksft_print_msg("Should have worked\n");
-> +				result = KSFT_FAIL;
-> +			}
->   			io_uring_unregister_buffers(&ring);
->   		}
->   
-> @@ -246,21 +287,32 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
->   
->   munmap:
->   	munmap(mem, size);
-> +report:
-> +	ksft_test_result(result, "%s\n", test_name);
->   }
->   
->   typedef void (*test_fn)(int fd, size_t size);
->   
-> +static void log_test_start(const char *name, ...)
-> +{
-> +	va_list args;
-> +	va_start(args, name);
-> +
-> +	vsnprintf(test_name, sizeof(test_name), name, args);
-> +	ksft_print_msg("[RUN] %s\n", test_name);
-> +
-> +	va_end(args);
-> +}
-> +
->   static void run_with_memfd(test_fn fn, const char *desc)
->   {
->   	int fd;
->   
-> -	ksft_print_msg("[RUN] %s ... with memfd\n", desc);
-> +	log_test_start("%s ... with memfd", desc);
->   
->   	fd = memfd_create("test", 0);
-> -	if (fd < 0) {
-> -		ksft_test_result_fail("memfd_create() failed (%s)\n", strerror(errno));
-> -		return;
-> -	}
-> +	if (fd < 0)
-> +		ksft_print_msg("memfd_create() failed (%s)\n", strerror(errno));
->   
->   	fn(fd, pagesize);
->   	close(fd);
-> @@ -271,23 +323,23 @@ static void run_with_tmpfile(test_fn fn, const char *desc)
->   	FILE *file;
->   	int fd;
->   
-> -	ksft_print_msg("[RUN] %s ... with tmpfile\n", desc);
-> +	log_test_start("%s ... with tmpfile", desc);
->   
->   	file = tmpfile();
->   	if (!file) {
-> -		ksft_test_result_fail("tmpfile() failed (%s)\n", strerror(errno));
-> -		return;
-> -	}
-> -
-> -	fd = fileno(file);
-> -	if (fd < 0) {
-> -		ksft_test_result_fail("fileno() failed (%s)\n", strerror(errno));
-> -		goto close;
-> +		ksft_print_msg("tmpfile() failed (%s)\n", strerror(errno));
-> +		fd = -1;
-> +	} else {
-> +		fd = fileno(file);
-> +		if (fd < 0) {
-> +			ksft_print_msg("fileno() failed (%s)\n", strerror(errno));
-> +		}
->   	}
->   
->   	fn(fd, pagesize);
-> -close:
-> -	fclose(file);
-> +
-> +	if (file)
-> +		fclose(file);
->   }
->   
->   static void run_with_local_tmpfile(test_fn fn, const char *desc)
-> @@ -295,22 +347,22 @@ static void run_with_local_tmpfile(test_fn fn, const char *desc)
->   	char filename[] = __FILE__"_tmpfile_XXXXXX";
->   	int fd;
->   
-> -	ksft_print_msg("[RUN] %s ... with local tmpfile\n", desc);
-> +	log_test_start("%s ... with local tmpfile", desc);
->   
->   	fd = mkstemp(filename);
-> -	if (fd < 0) {
-> -		ksft_test_result_fail("mkstemp() failed (%s)\n", strerror(errno));
-> -		return;
-> -	}
-> +	if (fd < 0)
-> +		ksft_print_msg("mkstemp() failed (%s)\n", strerror(errno));
->   
->   	if (unlink(filename)) {
-> -		ksft_test_result_fail("unlink() failed (%s)\n", strerror(errno));
-> -		goto close;
-> +		ksft_print_msg("unlink() failed (%s)\n", strerror(errno));
-> +		close(fd);
-> +		fd = -1;
->   	}
->   
->   	fn(fd, pagesize);
-> -close:
-> -	close(fd);
-> +
-> +	if (fd >= 0)
-> +		close(fd);
->   }
->   
->   static void run_with_memfd_hugetlb(test_fn fn, const char *desc,
-> @@ -319,15 +371,14 @@ static void run_with_memfd_hugetlb(test_fn fn, const char *desc,
->   	int flags = MFD_HUGETLB;
->   	int fd;
->   
-> -	ksft_print_msg("[RUN] %s ... with memfd hugetlb (%zu kB)\n", desc,
-> +	log_test_start("%s ... with memfd hugetlb (%zu kB)", desc,
->   		       hugetlbsize / 1024);
->   
->   	flags |= __builtin_ctzll(hugetlbsize) << MFD_HUGE_SHIFT;
->   
->   	fd = memfd_create("test", flags);
->   	if (fd < 0) {
-> -		ksft_test_result_skip("memfd_create() failed (%s)\n", strerror(errno));
-> -		return;
-> +		ksft_print_msg("memfd_create() failed (%s)\n", strerror(errno));
->   	}
->   
->   	fn(fd, hugetlbsize);
-> 
-> ---
-> base-commit: 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
-> change-id: 20250514-selftests-mm-gup-longterm-dups-68aa4e0fcc88
-> 
-> Best regards,
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+index a516b7c82b5a..747898a574da 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
++++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+@@ -211,6 +211,23 @@ void mtk_ovl_disable_vblank(struct device *dev)
+ 	writel_relaxed(0x0, ovl->regs + DISP_REG_OVL_INTEN);
+ }
+ 
++bool mtk_ovl_is_ignore_pixel_alpha(struct mtk_plane_state *state, unsigned int blend_mode)
++{
++	if (!state->base.fb)
++		return false;
++	/*
++	 * Although the alpha channel can be ignored, CONST_BLD must be enabled
++	 * for XRGB format, otherwise OVL will still read the value from memory.
++	 * For RGB888 related formats, whether CONST_BLD is enabled or not won't
++	 * affect the result. Therefore we use !has_alpha as the condition.
++	 */
++
++	if (blend_mode == DRM_MODE_BLEND_PIXEL_NONE || !state->base.fb->format->has_alpha)
++		return true;
++
++	return false;
++}
++
+ u32 mtk_ovl_get_blend_modes(struct device *dev)
+ {
+ 	struct mtk_disp_ovl *ovl = dev_get_drvdata(dev);
+@@ -539,7 +556,7 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
+ 	unsigned int rotation = pending->rotation;
+ 	unsigned int offset = (pending->y << 16) | pending->x;
+ 	unsigned int src_size = (pending->height << 16) | pending->width;
+-	unsigned int blend_mode = state->base.pixel_blend_mode;
++	unsigned int blend_mode = mtk_ovl_get_blend_mode(state, ovl->data->blend_modes);
+ 	unsigned int ignore_pixel_alpha = 0;
+ 	unsigned int con;
+ 
+@@ -557,7 +574,7 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
+ 		 * For blend_modes supported SoCs, always enable alpha blending.
+ 		 * For blend_modes unsupported SoCs, enable alpha blending when has_alpha is set.
+ 		 */
+-		if (blend_mode || state->base.fb->format->has_alpha)
++		if (state->base.pixel_blend_mode || state->base.fb->format->has_alpha)
+ 			con |= OVL_CON_AEN;
+ 	}
+ 
+@@ -584,6 +601,9 @@ void mtk_ovl_layer_config(struct device *dev, unsigned int idx,
+ 
+ 	mtk_ddp_write_relaxed(cmdq_pkt, con, &ovl->cmdq_reg, ovl->regs,
+ 			      DISP_REG_OVL_CON(idx));
++
++	if (mtk_ovl_is_ignore_pixel_alpha(state, blend_mode))
++		ignore_pixel_alpha = OVL_CONST_BLEND;
+ 	mtk_ddp_write_relaxed(cmdq_pkt, pitch_lsb | ignore_pixel_alpha,
+ 			      &ovl->cmdq_reg, ovl->regs, DISP_REG_OVL_PITCH(idx));
+ 	mtk_ddp_write_relaxed(cmdq_pkt, src_size, &ovl->cmdq_reg, ovl->regs,
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.h b/drivers/gpu/drm/mediatek/mtk_disp_ovl.h
+index 3f7d7d54479d..431567538eb5 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.h
++++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.h
+@@ -20,6 +20,7 @@ extern const u32 mt8195_ovl_formats[];
+ extern const size_t mt8195_ovl_formats_len;
+ 
+ bool mtk_ovl_is_10bit_rgb(unsigned int fmt);
++bool mtk_ovl_is_ignore_pixel_alpha(struct mtk_plane_state *state, unsigned int blend_mode);
+ unsigned int mtk_ovl_get_blend_mode(struct mtk_plane_state *state, unsigned int blend_modes);
+ unsigned int mtk_ovl_fmt_convert(unsigned int fmt, unsigned int blend_mode,
+ 				 bool fmt_rgb565_is_0, bool color_convert,
+-- 
+2.45.2
 
