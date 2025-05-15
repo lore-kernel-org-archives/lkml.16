@@ -1,154 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491DB28152F;
-	Thu, 15 May 2025 01:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AEDE286424;
+	Thu, 15 May 2025 01:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747273543; cv=none; b=RmkZ+Dmo46ohPLA5GY3LoEjWsFko2yirDXF/qKA1FdIfz/e9m7oyfWQVdI+ppbKr+MsihGVLG5X/JMKxe/Np2h6FdkobqDdIrEwI0l1x33ERmzhvjuZuzJI1LuY/SWuEUxlOrkBE6+ObcAtfCEljhXFGx0p99r73oSQqnKOmjOU=
+	t=1747273559; cv=none; b=GQR5W5skFfwnyeeOusBtSp6aIJAKSge05rMKH/baY+lfoGxvRVKUruIfJOKoK0NZ9KHD99keHBXvmcIpkJonf9vrq1jxHa0sg7pdhT3T27Pa3023xfUaAmZfFvIKJ8sWwMT2W2+rVZST/h2vNed+ENBaHGSDNNix/24hz4zv5fE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747273543; c=relaxed/simple;
-	bh=pnNBST+c9YzDalNQ25GoKXrq/N4ZaCLn+kBAH2QlzYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m7vtxql1llS1n6vLVwfwvh9sG2bHMFYPr5aKqrXTEnYAKIPuMrGo/lU+nvMc3HYiapE5dMfgKVTpEZENQbykplstBnQFC50KlGo6bZFn+YbtKtTZWRT8RZDK4W1MKa2+PapSFJT87EQyOWIm1Ea2gZJaX63DagreOyY/GhB6NHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aNc4tPUl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747273559; c=relaxed/simple;
+	bh=liCH3ST2rSNtb6kq11X873N09bmPyJxZKgearEG0g8M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uy43w3cf5gQoXvS2O0+oPKobxedlkw7AvafRtjLMJtgRzJ49VxiWr1hRws++iWvJ5wMsdiSqJ4+dllqmR1ZGlqKviG2Z+hNWNWH3OtxYru308mvGY4rLAkKd+o1xKJ9kVJIZ/EuLTzemR6sgyMbRRTTv16eIkn5QN8paQs3ePS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O0LABGRf; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aNc4tPUl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72AEEC4CEE3;
-	Thu, 15 May 2025 01:45:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747273542;
-	bh=pnNBST+c9YzDalNQ25GoKXrq/N4ZaCLn+kBAH2QlzYY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aNc4tPUliPhaLP8MScTBz9lzD/DbFYbrmeQrGDWpJqBK+OQTnINZVdKbioHL6ZlaG
-	 7B0bXpM5nFKBFsjTFtIARi8xIxPPdsGvR8QSEjkD0LDsPK7paj3VIDwNhiy8qLmeS2
-	 Q4vSfcc1Q/MFQqHCSTZoL1YNd65JA6kq/y1Q4LlKsawjEVMBJatGqzWHgfCc0MW7Zm
-	 8aNhLfenXAcGTnLGqlfUzpCqVjZ+e8uT3pusUg7EVriHSdUSomg0SBSri09+p3jmmA
-	 eO5c/aiw0dn9R0/3bGlvru/Yo86J8ScWuzWm/R7NXvtQsxml1nU8VoDc2tJu0iKAur
-	 xuSFgNziuESLA==
-Date: Thu, 15 May 2025 04:45:39 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: linuxppc-dev@lists.ozlabs.org, Peter Huewe <peterhuewe@gmx.de>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	linux-integrity@vger.kernel.org,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Sumit Garg <sumit.garg@kernel.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v5 4/4] tpm/tpm_svsm: support TPM_CHIP_FLAG_SYNC
-Message-ID: <aCVHQ-LRqHeEVEAW@kernel.org>
-References: <20250514134630.137621-1-sgarzare@redhat.com>
- <20250514134630.137621-5-sgarzare@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O0LABGRf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747273558; x=1778809558;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=liCH3ST2rSNtb6kq11X873N09bmPyJxZKgearEG0g8M=;
+  b=O0LABGRfhRA7Rns61UlzYRqds3qV8btfdZHsjCqU21Pd8nuQ1YxQ3Hru
+   3TjJ1b2s/vROCMpe1LXbWslmLZo7jNbwTnibYi4xyBo9Wy73QsAjouZxO
+   BDToqTUkh2IvMf6IKY0DLaUo+mZjxAA79hUYvoHWLrYviQTiwGiVD5CEA
+   Ebdy545P7L1Ri5o9V2eyLE9/947tnXeOZDQPGf49OfJd8agLNkKjQ6CG4
+   5YhthoBXCYs/iyDHGNoZpfmkDBuQu3bdrmp9EzAsgex9PMRSUWIb7m0O1
+   WYh6oMDxJqBj4k8FmT32B/hxhKPe5OM84L8sKkm9cwzj0w/0RjdDMfofn
+   g==;
+X-CSE-ConnectionGUID: EB3ddolgTkelvoORcAm11g==
+X-CSE-MsgGUID: TwP1XFQOTD6AysaVALzB/w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="52998986"
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="52998986"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 18:45:57 -0700
+X-CSE-ConnectionGUID: eB/Db9DSS7GZY7p8XF0YIw==
+X-CSE-MsgGUID: f9eHd5xKRDyloNKLzvnxAA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="161500287"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 18:45:50 -0700
+Message-ID: <0355f4e5-e458-457e-ad74-d4dc26331671@linux.intel.com>
+Date: Thu, 15 May 2025 09:45:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514134630.137621-5-sgarzare@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 09/38] perf: Add switch_guest_ctx() interface
+To: Sean Christopherson <seanjc@google.com>,
+ Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+ Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Yongwei Ma <yongwei.ma@intel.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
+ Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
+ Shukla Manali <Manali.Shukla@amd.com>,
+ Nikunj Dadhania <nikunj.dadhania@amd.com>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <20250324173121.1275209-10-mizhang@google.com> <aCUnq4M33yTj_t1F@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aCUnq4M33yTj_t1F@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 14, 2025 at 03:46:30PM +0200, Stefano Garzarella wrote:
-> From: Stefano Garzarella <sgarzare@redhat.com>
-> 
-> This driver does not support interrupts, and receiving the response is
-> synchronous with sending the command.
-> 
-> Enable synchronous send() with TPM_CHIP_FLAG_SYNC, which implies that
-> ->send() already fills the provided buffer with a response, and ->recv()
-> is not implemented.
-> 
-> Keep using the same pre-allocated buffer to avoid having to allocate
-> it for each command. We need the buffer to have the header required by
-> the SVSM protocol and the command contiguous in memory.
-> 
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
-> v5:
-> - changed order and parameter names to match tpm_try_transmit() [Jarkko]
-> v4:
-> - reworked commit description [Jarkko]
-> ---
->  drivers/char/tpm/tpm_svsm.c | 27 +++++++++++----------------
->  1 file changed, 11 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.c
-> index 0847cbf450b4..f5ba0f64850b 100644
-> --- a/drivers/char/tpm/tpm_svsm.c
-> +++ b/drivers/char/tpm/tpm_svsm.c
-> @@ -26,37 +26,31 @@ struct tpm_svsm_priv {
->  };
->  
->  static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
-> -			 size_t len)
-> +			 size_t cmd_len)
->  {
->  	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
->  	int ret;
->  
-> -	ret = svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, len);
-> +	ret = svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, cmd_len);
->  	if (ret)
->  		return ret;
->  
->  	/*
->  	 * The SVSM call uses the same buffer for the command and for the
-> -	 * response, so after this call, the buffer will contain the response
-> -	 * that can be used by .recv() op.
-> +	 * response, so after this call, the buffer will contain the response.
-> +	 *
-> +	 * Note: we have to use an internal buffer because the device in SVSM
-> +	 * expects the svsm_vtpm header + data to be physically contiguous.
->  	 */
-> -	return snp_svsm_vtpm_send_command(priv->buffer);
-> -}
-> -
-> -static int tpm_svsm_recv(struct tpm_chip *chip, u8 *buf, size_t len)
-> -{
-> -	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
-> +	ret = snp_svsm_vtpm_send_command(priv->buffer);
-> +	if (ret)
-> +		return ret;
->  
-> -	/*
-> -	 * The internal buffer contains the response after we send the command
-> -	 * to SVSM.
-> -	 */
-> -	return svsm_vtpm_cmd_response_parse(priv->buffer, buf, len);
-> +	return svsm_vtpm_cmd_response_parse(priv->buffer, buf, bufsiz);
->  }
->  
->  static struct tpm_class_ops tpm_chip_ops = {
->  	.flags = TPM_OPS_AUTO_STARTUP,
-> -	.recv = tpm_svsm_recv,
->  	.send = tpm_svsm_send,
->  };
->  
-> @@ -85,6 +79,7 @@ static int __init tpm_svsm_probe(struct platform_device *pdev)
->  
->  	dev_set_drvdata(&chip->dev, priv);
->  
-> +	chip->flags |= TPM_CHIP_FLAG_SYNC;
->  	err = tpm2_probe(chip);
->  	if (err)
->  		return err;
-> -- 
-> 2.49.0
-> 
-> 
 
-I can pick this for 6.16.
+On 5/15/2025 7:30 AM, Sean Christopherson wrote:
+> On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> When entering/exiting a guest, some contexts for a guest have to be
+>> switched. For examples, there is a dedicated interrupt vector for
+>> guests on Intel platforms.
+>>
+>> When PMI switch into a new guest vector, guest_lvtpc value need to be
+>> reflected onto HW, e,g., guest clear PMI mask bit, the HW PMI mask
+>> bit should be cleared also, then PMI can be generated continuously
+>> for guest. So guest_lvtpc parameter is added into perf_guest_enter()
+>> and switch_guest_ctx().
+>>
+>> Add a dedicated list to track all the pmus with the PASSTHROUGH cap, which
+>> may require switching the guest context. It can avoid going through the
+>> huge pmus list.
+>>
+>> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+>> ---
+>>  include/linux/perf_event.h | 17 +++++++++++--
+>>  kernel/events/core.c       | 51 +++++++++++++++++++++++++++++++++++++-
+>>  2 files changed, 65 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+>> index 37187ee8e226..58c1cf6939bf 100644
+>> --- a/include/linux/perf_event.h
+>> +++ b/include/linux/perf_event.h
+>> @@ -584,6 +584,11 @@ struct pmu {
+>>  	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
+>>  	 */
+>>  	int (*check_period)		(struct perf_event *event, u64 value); /* optional */
+>> +
+>> +	/*
+>> +	 * Switch guest context when a guest enter/exit, e.g., interrupt vectors.
+>> +	 */
+>> +	void (*switch_guest_ctx)	(bool enter, void *data); /* optional */
+> IMO, putting this in "struct pmu" is unnecessarily convoluted and complex, and a
+> poor fit for what needs to be done.  The only usage of the hook is for the CPU to
+> swap the LVTPC, and the @data payload communicates exactly that.  I.e. this has
+> one user, and can't reasonably be extended to other users without some ugliness.
+>
+> And if by some miracle there's no CPU pmu in perf, KVM's mediated PMU still needs
+> to swap to its PMI IRQ.  So rather than per-PMU hook along with a list and a
+> spinlock, just make this an arch hook.  And if all of the mediated PMU code is
+> guarded by a Kconfig, then perf doesn't even needs __weak stubs.
 
-BR, Jarkko
+Sounds good for me.
 
-BR, Jarkko
+
+>
