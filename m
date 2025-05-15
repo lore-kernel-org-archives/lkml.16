@@ -1,107 +1,135 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E58D28B50C;
-	Thu, 15 May 2025 09:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15B928C02E
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:05:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299861; cv=none; b=KUKIA75HdVXhbljJG9+fo4hKkJUzARSRLNcM2LwB4lqcwAFgCCEdqh/ACKs8CcmBAu4rysEZE4ihzPyy0KoaxSAH5pJNqcy3Uh1dItfuj8KqtXYXkL/Pxtuy0HD3TktXuWoklHyGtRhuY2epEESbUX2sOO0SJF8oaP7u6G7L3k8=
+	t=1747299929; cv=none; b=iYwXdGbp16u4bS0mV0JYcdaZlBglSyVharEoc+77FwNn+B84jy865SasIB5dRaxQrgUYXh2VMwj/Owa1FhHsVj9p13EGAF8fcntMtR42c45gn5oV3bYLLH1xZgSD6UyFb28sJJl/w8eUUyyg6yWKLZbiFdfWdbmqJtRLDI2aWfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299861; c=relaxed/simple;
-	bh=W6IDOr6SEMFsf+ug6nMYdbCBpnZGhInsUS21olC7uWs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y2urHBb6W2UM52IBUFzGcolbKz7M438+SseVnV/8FQTqsZ5bpL8cmbi/mv401hCl8JgqYLMgh+kP9pAVFJwpmc0Kxf/VZhT7kp1BvRDdHMw5RCVJ4HybdcTpy89/YOp6bP/g4o2DuK1aW4nGeB9hjsDU3343/kXmTdkiw+2SBPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M6LPuYVk; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747299929; c=relaxed/simple;
+	bh=d/o7Mz3sAp8md6UzDFd0xwUYBNcPpwQbc3zYFVW6fsk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KFZ1rMEFMvF0+MELie8z9JKOS/TmyxQdS3H2lrD91gj7bEY9p475YBZNEJ0pGzC+thojVXzN/uISHVxuHXs8Gf7Lz9q+HFfmyK815E29p2sBcJOtOk5qKVFl7l1DWozkCgSR8mMq2nEjro+VNTOAxnXcpED6kAUf0GPA/ddIces=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=A6h6YO9k; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M6LPuYVk"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32803984059so752591fa.2;
-        Thu, 15 May 2025 02:04:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747299855; x=1747904655; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=W6IDOr6SEMFsf+ug6nMYdbCBpnZGhInsUS21olC7uWs=;
-        b=M6LPuYVkKSbzqQs66HdOjEeH797DjVF27Zpntla9tKYsYCIBLRu8n6I4G1/v/Gouue
-         YUbqZFgC9fydBaz52WQ3NwjxVuw8bn42Q5tRZLIHl0ZZltx3n9rTXc5reiGZpdC2s+nA
-         71NOZZ/OwW1GjH6RgiUO2C83rjSKfmRzayCFhKRZkjabpdQBU/CfJZMaZB3dRQqBJMie
-         xmV+4MRsPAc5gXjjwC0QwWifKg0UBZG+P3be0YwZaVZEin6Ezg1++9PGW7vf92mrUu03
-         az0BnaO3JuZWVT0nTVURMrdETuJp99f73JEW3894u9HR0tESdM+jTPJrNw9O/5eIOMYT
-         C0uA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="A6h6YO9k"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54F93T72002608
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:05:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=0YoUGwDFzZJBnV+f8ZJ21xbDmwwcBNjqe86
+	lZSuKbew=; b=A6h6YO9kEG6PFhPqn2UQS2MlPIOgGgIfWURMZNbMDsJsPMwakAn
+	mkR61avif1PXE9zNA5Vzxoutz8Z02s+s5e+jiU31h5uxy4Yt1UosK8eQiH+4MioX
+	mdvtQ98XnglIhU+IMIvl7EDxs3tJPdQGXhxbEvXRKv4cGQcio1zfiH01mtdBWqzI
+	U9bbp5GYcnx+uadWFmdPNnjwrgAETPeylWgaRRCRw/xX+bufy79Y0uyxoiEOmq2l
+	qsd6A9zZUtsBpjc+KPZ7do9rnXr513czMaw/h54ksch9wBGKyjkalZraSgyIPG/Y
+	cc4D1upxYxUQugHvLKcSAoUEERl8mxFywyg==
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbex5k6y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:05:26 +0000 (GMT)
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-7410079c4a6so708270b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 02:05:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747299855; x=1747904655;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W6IDOr6SEMFsf+ug6nMYdbCBpnZGhInsUS21olC7uWs=;
-        b=d4yzgM4OD2BCZfO6lJzcZJPJZe62wV6kPW6VUM6NKZkvaNGOlaTlpc0Jbg3sJDu7XY
-         xfYD8Vi4kZ9ASM/GUYZTclZ2fQzdHqsFUQCW0Gi/7NfbRKbPgaSgYMjLw3gxBiuXs2T/
-         5RWLkL2wCV/pnK3MxGBNAsAUkhYM6GG5BP4kvP7NdCgo6txJJQ3c3mlCN8GTm/q9vwlt
-         CLA3/X/Dh0AmUjawtBVuMa0LQqz914RBo60xjClxA8XOvcPJLPtXeLbR7RS6J3dpZvDY
-         1mzp2MbWJ/VzWeIGyTQ2Dq2IPgMP2rdG3E9fPfxqcj40NSszPI42AAes54H/XJ3JMEHQ
-         E5eA==
-X-Forwarded-Encrypted: i=1; AJvYcCULOgqHE1646Svh3J1A6ypg/y5dycpcUtTSpCtXioz5282qob9P7S5d/hF0jDFXQMwOOJUHtNh+@vger.kernel.org, AJvYcCVmCiIR9/s+w3eNZECJfwyFrCNE5KOv9VeYh4ZsUFP9cpMGfkxB9ZCjhLGV0s1NgXnqJk30iO/DXMVy9eI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwI2USeZAXSsLB2JiR0q3MRPIoMEPLVCCFTw5IRZ9HqBZG7E+Oe
-	MiqsFYuPYCayM81bxM5dZK58q131YEoCIyiF7V12VQfgK1YIlu1uSiw2qw==
-X-Gm-Gg: ASbGncvXAAeIH/2QwOxUa2Ewa6ffyvRaV/Ux7hxHLJZCqKyP264t/a+fpxaHyJNR/3d
-	GeeZ1vh6XpPEt9jFDAj1uOPXsSRuONKqYS9FBA389k0NkKKLEYBRwFLbsJ4P9QaoN2MYHyU4Jc3
-	62Gp9RninLSO4xWkspV4HvvwsAJAfYk3y7R1bftQ7NW+/XMiQUdcJggEEKJR0gyNg0yOOG7+Xpv
-	piuMCCZ7EhrkBIilQQti62OBw3YIw4MDxAZSvLaP4A6jAbTWA+qCnnVPuemW5VVrNFwtwIN3O/H
-	+9E/AHuZ1cEQEtaVGj0sckZPzIllANrEAKIrO8kLwkFEJhLzTHivZmnfyja7ebutSQ==
-X-Google-Smtp-Source: AGHT+IFOFCKDbmDkxjyzWMrePZt7te9M6n7FOlOgj1hzkBCyLRszuUcglAS+kj2UxU4pG6BnKsLhHA==
-X-Received: by 2002:a05:651c:2222:b0:30c:1fc4:418e with SMTP id 38308e7fff4ca-327ed1ee262mr27670421fa.26.1747299855139;
-        Thu, 15 May 2025 02:04:15 -0700 (PDT)
-Received: from home.paul.comp (paulfertser.info. [2001:470:26:54b:226:9eff:fe70:80c2])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-326c339a303sm22891961fa.9.2025.05.15.02.04.14
+        d=1e100.net; s=20230601; t=1747299926; x=1747904726;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0YoUGwDFzZJBnV+f8ZJ21xbDmwwcBNjqe86lZSuKbew=;
+        b=viBtayKWWv9PNtxgF2NVZq3bIP0mb+JkMvLoINwMv0P5ZgdfRhFjj7qwyMef7Abexd
+         ELTXhYmoP3u5XLuW8ntzEbaRpOtLhRKtnNGTEyonkfDVLPsza6Z37RPrM+T1G2KCaQPp
+         CD9m9M2FioE8aE8eqIOG3iVXpCWCWp9hF+XnmbGrTqaDdSeMeST+uqPShkMdNwARd/EJ
+         AzniEWX4BS6Nu+i7K1zQqKw0EjjK6pS+Uvv6yjA6OinPHnFngnz/Z6V0u3KwOH7if1eh
+         UqzXC+4l82aIDgJ11+RDUysFAt9V3265baBBy4kx9S0hpzKkJ/aNkc3XfH4AlBIAcuh1
+         jaKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXec0l0Ct5PmzYfkYQJMaZhWSEdPRkZr040YL77k2cs/Bk2EhYr660asBA4J+w3cFK3/d3LxIQ3+z7VJAw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxC/EbvdRR67vH/5Q1S711SJzg18tOk2qSS6evCXaEW+rUnwe2x
+	2PpRrQhSvQBcKFH+7OktZ+2pQ8UhK9Ipz7PbULDfRmlCgSZAtods0EceppFzELjItcHIGY/2Oka
+	j6SrACFAYP1hqAnzXxVu5nldmI/weoAuUHYPoc8PNxcTotOYZCeT1V8tKRt7TzDk=
+X-Gm-Gg: ASbGncuhZfN/nQQTVWd5/pPwRkiFd1+wKTyP+eTcS7r00AoSKNiArn5PEgVK7YGroIe
+	7NaNEnGgslsx3mf5/l13prrxqFmW67mvKNdaCsEHLgIdAL5EzaxFYZybsIOewlUNXhM7hbUGCZE
+	jvPEHT+sw97icBcREKHJOoL5/0sva08Jdqed13vhhXA0SZFGqN25dB4q6l3JBLEdp/RuNkDXYMl
+	xNeclHCfGFzK9XJJkLXpOsp0xbcnhPPclIQmQjofj4tvwnxi8EHGJWpA03Rdz2AeIk44CouYmQG
+	cUHowFT2KVFzczbgqM6Epy7g/cDlkNdQn/xL/H3XAeiv+4w=
+X-Received: by 2002:a05:6a00:b4c:b0:73c:b86:b47f with SMTP id d2e1a72fcca58-742984c25damr2428803b3a.4.1747299926098;
+        Thu, 15 May 2025 02:05:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHCFMufWAFO9NdsfiHbNKngrTVhvlxFVYN/2LnoJXLvaE75D+Kk58BJpsD/u0hFFioSfscu5Q==
+X-Received: by 2002:a05:6a00:b4c:b0:73c:b86:b47f with SMTP id d2e1a72fcca58-742984c25damr2428776b3a.4.1747299925720;
+        Thu, 15 May 2025 02:05:25 -0700 (PDT)
+Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742944e32a0sm1378000b3a.20.2025.05.15.02.05.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 02:04:14 -0700 (PDT)
-Received: from home.paul.comp (home.paul.comp [IPv6:0:0:0:0:0:0:0:1])
-	by home.paul.comp (8.15.2/8.15.2/Debian-22+deb11u3) with ESMTP id 54F94BDN005942;
-	Thu, 15 May 2025 12:04:12 +0300
-Received: (from paul@localhost)
-	by home.paul.comp (8.15.2/8.15.2/Submit) id 54F9486U005941;
-	Thu, 15 May 2025 12:04:08 +0300
-Date: Thu, 15 May 2025 12:04:08 +0300
-From: Paul Fertser <fercerpav@gmail.com>
-To: Jerry C Chen <Jerry_C_Chen@wiwynn.com>
-Cc: patrick@stwcx.xyz, Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] net/ncsi: fix buffer overflow in getting version id
-Message-ID: <aCWuCPsm+G5EBOt/@home.paul.comp>
-References: <20250515083448.3511588-1-Jerry_C_Chen@wiwynn.com>
+        Thu, 15 May 2025 02:05:25 -0700 (PDT)
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+To: andersson@kernel.org, robh@kernel.org, dmitry.baryshkov@linaro.org,
+        manivannan.sadhasivam@linaro.org, krzk@kernel.org, helgaas@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        lpieralisi@kernel.org, kw@linux.com, conor+dt@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree-spec@vger.kernel.org, quic_vbadigan@quicinc.com,
+        sherry.sun@nxp.com,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Subject: [PATCH] schemas: PCI: Add standard PCIe WAKE# signal
+Date: Thu, 15 May 2025 14:35:17 +0530
+Message-Id: <20250515090517.3506772-1-krishna.chundru@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515083448.3511588-1-Jerry_C_Chen@wiwynn.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDA4OCBTYWx0ZWRfXy2MBsMziAOf9
+ d2PE4kCg7TPit2GhdaVpDDsb6pwjkdYi1t7BhbZPzldVfgpjr//8M4RCHrujt95mi48I9I6NlDC
+ Wu7GE81yXt3pTevKktVoFLi4Y4fFKGJ6+fx2OR0H+5txngr9ZgBd9peIqDCNdkaLn49Cxo2/hgJ
+ QOrGjyX4Ro0RoWxUN6jPg3QBEFNKGmiq+qRHCT/uJBW2F0n+X4I6S7TRrptv4ZlHgyw8WgXyyjN
+ ZjYqjHSte0pM3rOIeeCurQuOBNggX40e3CRhhk/DByEkyB60pk16B53OJnRc9Rdwm/Rj7frbzvW
+ pGNbQFdwChSxxUB39ZyeDdqT9F3BjjOnrITCkqEYPtW7DEQrlcyl8UGBnFzjyRqHij2CG2jyFnE
+ TZMUdeTlTEdN5QuqjsDsofa4Dm++QcJpRlj8oKkVhaLFld2NUVhaa1Va9tx0O280ScD3Ayge
+X-Proofpoint-ORIG-GUID: dmuKgjZGjQhE0FN7FvBbwRYCNHXj6bKZ
+X-Proofpoint-GUID: dmuKgjZGjQhE0FN7FvBbwRYCNHXj6bKZ
+X-Authority-Analysis: v=2.4 cv=IcuHWXqa c=1 sm=1 tr=0 ts=6825ae57 cx=c_pps
+ a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=aeoR8HoxK4P27VDVSowA:9
+ a=2VI0MkxyNR6bbpdq8BZq:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-15_04,2025-05-14_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 mlxscore=0 adultscore=0 mlxlogscore=908 bulkscore=0
+ clxscore=1015 spamscore=0 impostorscore=0 phishscore=0 lowpriorityscore=0
+ priorityscore=1501 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505150088
 
-Hello Jerry,
+As per PCIe spec 6, sec 5.3.3.2 document PCI standard WAKE# signal,
+which is used to re-establish power and reference clocks to the
+components within its domain.
 
-This looks like an updated version of your previous patch[0] but you
-have forgotten to increase the number in the Subject. You have also
-forgotten to reply and take into account /some/ of the points I raised
-in the review.
+Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+---
+ dtschema/schemas/pci/pci-bus-common.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-On Thu, May 15, 2025 at 04:34:47PM +0800, Jerry C Chen wrote:
-> In NC-SI spec v1.2 section 8.4.44.2, the firmware name doesn't
-> need to be null terminated while its size occupies the full size
-> of the field. Fix the buffer overflow issue by adding one
-> additional byte for null terminator.
-...
+diff --git a/dtschema/schemas/pci/pci-bus-common.yaml b/dtschema/schemas/pci/pci-bus-common.yaml
+index ca97a00..a39fafc 100644
+--- a/dtschema/schemas/pci/pci-bus-common.yaml
++++ b/dtschema/schemas/pci/pci-bus-common.yaml
+@@ -142,6 +142,10 @@ properties:
+     description: GPIO controlled connection to PERST# signal
+     maxItems: 1
+ 
++  wake-gpios:
++    description: GPIO controlled connection to WAKE# signal
++    maxItems: 1
++
+   slot-power-limit-milliwatt:
+     description:
+       If present, specifies slot power limit in milliwatts.
+-- 
+2.34.1
 
-Please give an answer to every comment I made for your previous patch
-version and either make a corresponding change or explain why exactly
-you disagree.
-
-Also please stop sending any and all "proprietary or confidential
-information".
-
-[0] https://patchwork.kernel.org/project/netdevbpf/patch/20250227055044.3878374-1-Jerry_C_Chen@wiwynn.com/
