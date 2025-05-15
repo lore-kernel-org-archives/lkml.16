@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCFA291144;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBF328153C;
 	Thu, 15 May 2025 06:22:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747290134; cv=none; b=eqHaQVAm58bI8HgmUnkuX/e2rWKD4TErCUfc/gbQaOntY6D1GWpHENywhWc4Gzczgx2lFAGURNgSxuw59YV0Dgs7lQPb3rBRs5Hy0L0R4dbZE+zuDUSk3Kf4UVQoxHH6z/pWmq66xP6acWnSUdeYAdVh7IttO242zSLANx0tHis=
+	t=1747290134; cv=none; b=DEYcANiIV5dZcDbew8pKTOzE+V6XeqGNRx6SnVt+RnbE5QA0y7FTvkJjgss2owOQk5FJkeisKkrdeVAri90ErPmKE5dP4r7UVqdTb05q/Vu9WSrMWSyZgqlbF0j/QWVM5+d+dimIJuxC2VA/2FddrFPk3RMQpVbpaZC8EPV/bkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747290134; c=relaxed/simple;
-	bh=rk8j/Cmwc/wa16L9N0+5mRLDR8x8/Ue92XMxES+t57g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=b//GTZXmGtE5TXUoDdzt1BeBUQptG/3f9yVwZpodetHTaaci24o0ht5mHq7ZCOqGVgPZZyS3pgxUcPJPENIk0v9nNRiFSyxku0A4qNiqfVkEkt9CToAZ9Z+PFAuBcyX9x9jOb2azPrfF2sLOkE9m9wkPANjGqQVw3/kl+UmeOHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hgSNLiGK; arc=none smtp.client-ip=10.30.226.201
+	bh=4zeGaBUvC1Q9ojCS6BwilpI7jNLQBxZR8OQzD04olA4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=aZlcfSXT5CbRIMu7VzrNjfVnNpoYKAF8GFVGRQPClmxVNhYzNp9GV5h7mUUIWkabRUK8jOmu50bMLTGwCQfKnvfqfkfF2ql9TVyPeEmwz4hqrZeRbpaJgW4A88XU4hMx6wQx0KC0J63X0maijNprTSJudN2XXvgkDfLeYTYyWjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=csVn2Z6A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hgSNLiGK"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4F25CC4CEF2;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="csVn2Z6A"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2371DC4CEE7;
 	Thu, 15 May 2025 06:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1747290134;
-	bh=rk8j/Cmwc/wa16L9N0+5mRLDR8x8/Ue92XMxES+t57g=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=hgSNLiGKEwrUV7xoXuj81eIMbpXkBr2MufXDFW5GOaSVp7f766L3J04dMsT8nqVOX
-	 Iumld148DoGgbf59PUXfcfpucb0NyyuzlzhWfjP8NzUgd4ZVaz5UKZu3gS5bVqRNH2
-	 obxPhXpWHfrqYqx3fcS8ZjZ+kI7WVw3Bd613BUZTmDmDBRxY3tVOjElQLwAfqSI8xl
-	 Xk/sV1VDagjDyyJH3qDeyeCsCB7aqg/Al/JKcjf70ABTX1E4F8jviEg/+iaJcbhBFO
-	 iWY+JZhjdl6PXVPWMtF7XGupzUN4qTSZONC+9C7GqYa4rAkuntYZl13lpT0PpFkOkC
-	 tNPAbUdNCgqGQ==
+	bh=4zeGaBUvC1Q9ojCS6BwilpI7jNLQBxZR8OQzD04olA4=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=csVn2Z6A8Sl3SqKO3MI5MubdJCB8umTAnTFO5SMw/elfFoZzdsYdpt/RDZBpzTS+D
+	 b750TEKmduBW/BRISjdWknmxjvrJAYeRR44lbMSBNOUpiYAsSnBENfmfAX3ObU7JVQ
+	 eNW5xm5MtIbtcwh1+Z7tidGqaTMKf9Iqz2SRS7bDVweaSYrkAilHX91qq8m+CeeUiQ
+	 RNHfqKizr6VUkCFuk6znR7+3fICDvCWnHSYmIugJsJl+3L+WwdHZX9flrmZvjfN9Sg
+	 n6So2U4wZNplCdbAxlEe+FGj0Tz64KBRC80c7riOnfTgdIGurersTsNtpn4AP0Od6A
+	 QJMsL2mWgXgPA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461A2C54756;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C3EC2D0CD;
 	Thu, 15 May 2025 06:22:14 +0000 (UTC)
 From: Sven Peter via B4 Relay <devnull+sven.svenpeter.dev@kernel.org>
-Date: Thu, 15 May 2025 06:21:15 +0000
-Subject: [PATCH v6 03/10] dt-bindings: mfd: Add Apple Mac System Management
- Controller
+Subject: [PATCH v6 00/10] Apple Mac System Management Controller
+Date: Thu, 15 May 2025 06:21:12 +0000
+Message-Id: <20250515-smc-6-15-v6-0-c47b1ef4b0ae@svenpeter.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +40,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250515-smc-6-15-v6-3-c47b1ef4b0ae@svenpeter.dev>
-References: <20250515-smc-6-15-v6-0-c47b1ef4b0ae@svenpeter.dev>
-In-Reply-To: <20250515-smc-6-15-v6-0-c47b1ef4b0ae@svenpeter.dev>
+X-B4-Tracking: v=1; b=H4sIANmHJWgC/13MQQ6CMBCF4auQWVszhU4DrriHcWHpVLoQSEsaD
+ eHuFlxIXL7J/N8CkYPnCJdigcDJRz8OeehTAV1/Hx4svM0bSiwJK1QiPjuhhSThkK2WDVfSKsj
+ vU2DnXzt1veXd+ziP4b3LSW3XL5KZH5KUQEGIpjGalHZdGxMPE88czpYTbFCiQyzlIaYcO2pqN
+ NbI2tj/eF3XD+K8fWjhAAAA
+X-Change-ID: 20250304-smc-6-15-f0ed619e31d4
 To: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
  Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
  Hector Martin <marcan@marcan.st>, Linus Walleij <linus.walleij@linaro.org>, 
@@ -57,13 +58,13 @@ Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
  linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3518; i=sven@svenpeter.dev;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7511; i=sven@svenpeter.dev;
  h=from:subject:message-id;
- bh=24GvFN6ibXD4G73jz0oF1G3/fyuiC8WVouHqMv8StLw=;
- b=owGbwMvMwCHmIlirolUq95LxtFoSQ4ZqB9fBZ2K12x/ufr+hQvX0tV3KPwXPvvxe+DexTnOPx
- ZEbS6N+dZSyMIhxMMiKKbJs329v+uThG8Glmy69h5nDygQyhIGLUwAmcusoI8PzBWcnPbpvrOZg
- sbQ06MOZY/W/j+UWMR5SqCt8Y72t+2I3w38nTdHf0+PLAt6uXb0o8rVEwH72ypx1Okbv2peYyNW
- ls7ACAA==
+ bh=4zeGaBUvC1Q9ojCS6BwilpI7jNLQBxZR8OQzD04olA4=;
+ b=owGbwMvMwCHmIlirolUq95LxtFoSQ4ZqB1vgt88/QjfM+n7KTPLoEil3G/Gj/DdOiTiFbHRXb
+ +BXtbzZUcrCIMbBICumyLJ9v73pk4dvBJduuvQeZg4rE8gQBi5OAZhI+RKG/2GGJdFRj9jNJ55j
+ 9PSXe3i7dBmTxo+YV0G7/W+y2gQe3c/w3z28aVtD+4H+FX17jrrN3eP3p0Neq+tAh/LX2mX6/eu
+ aOQA=
 X-Developer-Key: i=sven@svenpeter.dev; a=openpgp;
  fpr=A1E3E34A2B3C820DBC4955E5993B08092F131F93
 X-Endpoint-Received: by B4 Relay for sven@svenpeter.dev/default with
@@ -71,120 +72,156 @@ X-Endpoint-Received: by B4 Relay for sven@svenpeter.dev/default with
 X-Original-From: Sven Peter <sven@svenpeter.dev>
 Reply-To: sven@svenpeter.dev
 
-From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Hi,
 
-Add a DT binding for the Apple Mac System Management Controller.
+This series adds support for the System Management Controller found in
+Apple Silicon devices which we model as a mfd. It also includes support
+for the GPIO block and the power/reset block as sub-devices.
 
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Reviewed-by: Neal Gompa <neal@gompa.dev>
-Signed-off-by: Sven Peter <sven@svenpeter.dev>
+Changes between v5 and v6:
+  - Actually reorder struct members this time, start comments with an
+    uppercase letter, and use devm_ for mfd_register_devices instead of
+    dropping those fixup commits by accident
+  - Stefan's comment: Renamed ret to bfr in the reboot driver
+  - Sebastian's comments on the reboot driver:
+    - Moved Kconfig dependencies to MFD device and made reboot only
+      depend on that one
+    - Removed sysfs file to configure "reboot after power loss" for now
+      since this probably belongs in a userspace tool that directly
+      writes to nvmem instead
+    - Dropped setting pdev->dev.of_node since that's already done
+      automatically and adjusted #include to linux/mod_devicetable.h
+    - Dropped MODULE_ALIAS which was probably a leftover from a previous
+      version that did not use of_match_table
+  - Rob's comments to the dt-bindings
+    - Removed examples from sub-devices and added them to the main smc
+      binding
+    - Removed a spurious |
+
+Changes between v4 and v5:
+  - Alyssa's comments:
+    - Made the WARN_ON in the reboot driver more obvious
+    - Added missing brackets around a for loop in the reboot driver
+    - Used min instead of open-coded variant inside the gpio driver
+    - Reoder struct memebers to prevent padding inside the mfd driver
+  - Lee's comments:
+    - All comments now start with an uppercase letter
+    - Removed apple_smc_read_ioft_scaled and apple_smc_read_f32_scaled
+      since these are not yet used and likely don't belong into
+      drivers/mfd
+    - Relaced if (ret != 0) with if (ret) when possible
+    - Used devm_platform_get_and_ioremap_resource to get and map the
+      SRAM resource
+    - Used reverse Christmas-tree formating when declaring variables
+    - Dropped _platform left-overs from probe and remove functions
+    - Removed dev_dbg prints which are no long required after
+      development
+    - Reworked is_alive/is_initialized so that it's obvious how errors
+      during boot are propagated from the callback to the probe function
+    - Used dev_warn instead of dev_err in a few places
+    - Removed no-op apple_smc_rtkit_shmem_destroy; this required an
+      additional change in rtkit.c because we had a check there that's a
+      bit too strict
+    - Removed struct resource in apple_smc_rtkit_shmem_setup and
+      open-coded resource_contains instead
+    - Unwrapped lines with less than 100 chars
+    - Made sure to compile with W=1 and ran scripts/kernel-doc -v
+      on macsmc.h once and fixed any fallout
+  - Removed first_key/last_key from struct smc and moved
+    apple_smc_find_first_key_index to the gpio driver since it's only
+    used there anyway to find the index of the first GPIO key (gP00)
+  - Return -EIO when a command fails instead of whatever SMC returns
+    which does not map to Linux errnos on errors
+
+Changes between v3 and v4:
+  - Added documentation for all functions and structs
+  - Fixed dt-bindings and re-ordered commits so that the mfd one comes
+    last and can include the gpio subdevice
+  - Added the reset driver and corresponding bindings
+  - Reworked the atomic mode inside SMC since the previous implementation
+    called mutex_lock from atomic context
+  - Removed the backend split for now which lead to a quite intense discussion
+    for the previous versions which hadn't been solved as far as I could tell
+    from the old threads.
+    It's also been 2+ years and I haven't heard of any backend implementation
+    for T2 or even older macs. It's also unclear to me which sub-devices
+    are actually useful there because at least GPIO and shutdown/reboot
+    from this series will not work as-is there.
+    I'd rather have this initial version which only supports M1+ macs upstream
+    and then iterate there if any other backend is developed.
+    I'll gladly help to re-introduce backend support if it's ever required.
+
+Dependencies:
+The code and dt-bindings themselves apply cleanly to 6.15-rc1 but
+the device tree changes require the already merged SPMI controller
+and SPMI NVMEM series which will be part of 6.16.
+The series is also using the printf format specifiers which will
+land in 6.16 via the drm-misc tree.
+A tree with all dependencies for testing is available at
+https://github.com/AsahiLinux/linux/commits/smc-v6/.
+
+Merging:
+The dt-binding patches all depend on each other such that they all
+should probably go together with the mfd device itself.
+The following commits also depend on mfd due to the new header file and
+will either have to go through the mfd tree as well or we'll need an
+immutable branch there or we just wait one kernel release and I'll
+re-submit the rest then.
+I'll take the device tree updates through our tree which also has the
+previous device tree updates these depend on.
+
+v5: https://lore.kernel.org/asahi/20250511-smc-6-15-v5-0-f5980bdb18bd@svenpeter.dev/
+v4: https://lore.kernel.org/asahi/20250503-smc-6-15-v4-0-500b9b6546fc@svenpeter.dev/
+v3: https://lore.kernel.org/asahi/Y2qEpgIdpRTzTQbN@shell.armlinux.org.uk/
+v2: https://lore.kernel.org/asahi/YxdInl2qzQWM+3bs@shell.armlinux.org.uk/
+v1: https://lore.kernel.org/asahi/YxC5eZjGgd8xguDr@shell.armlinux.org.uk/
+
+Best,
+
+Sven
+
 ---
- .../devicetree/bindings/mfd/apple,smc.yaml         | 79 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 80 insertions(+)
+Hector Martin (5):
+      gpio: Add new gpio-macsmc driver for Apple Macs
+      power: reset: macsmc-reboot: Add driver for rebooting via Apple SMC
+      arm64: dts: apple: t8103: Add SMC node
+      arm64: dts: apple: t8112: Add SMC node
+      arm64: dts: apple: t600x: Add SMC node
 
-diff --git a/Documentation/devicetree/bindings/mfd/apple,smc.yaml b/Documentation/devicetree/bindings/mfd/apple,smc.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..1937fb3d2578dcf69991e83095e3e1e29958ef37
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/apple,smc.yaml
-@@ -0,0 +1,79 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/apple,smc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Apple Mac System Management Controller
-+
-+maintainers:
-+  - Sven Peter <sven@svenpeter.dev>
-+
-+description:
-+  Apple Mac System Management Controller implements various functions
-+  such as GPIO, RTC, power, reboot.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - apple,t6000-smc
-+          - apple,t8103-smc
-+          - apple,t8112-smc
-+      - const: apple,smc
-+
-+  reg:
-+    items:
-+      - description: SMC area
-+      - description: SRAM area
-+
-+  reg-names:
-+    items:
-+      - const: smc
-+      - const: sram
-+
-+  mboxes:
-+    maxItems: 1
-+
-+  gpio:
-+    $ref: /schemas/gpio/apple,smc-gpio.yaml
-+
-+  reboot:
-+    $ref: /schemas/power/reset/apple,smc-reboot.yaml
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - mboxes
-+
-+examples:
-+  - |
-+    soc {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+
-+      smc@23e400000 {
-+        compatible = "apple,t8103-smc", "apple,smc";
-+        reg = <0x2 0x3e400000 0x0 0x4000>,
-+               <0x2 0x3fe00000 0x0 0x100000>;
-+        reg-names = "smc", "sram";
-+        mboxes = <&smc_mbox>;
-+
-+        smc_gpio: gpio {
-+          compatible = "apple,smc-gpio";
-+          gpio-controller;
-+          #gpio-cells = <2>;
-+        };
-+
-+        reboot {
-+          compatible = "apple,smc-reboot";
-+          nvmem-cells = <&shutdown_flag>, <&boot_stage>,
-+                        <&boot_error_count>, <&panic_count>;
-+          nvmem-cell-names = "shutdown_flag", "boot_stage",
-+                             "boot_error_count", "panic_count";
-+        };
-+      };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3f32d028ab49994a0da9f3882f37b9c3b183f5b4..27caedc40262ee9b9fdb6478f7624422517375a7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2275,6 +2275,7 @@ F:	Documentation/devicetree/bindings/iommu/apple,dart.yaml
- F:	Documentation/devicetree/bindings/iommu/apple,sart.yaml
- F:	Documentation/devicetree/bindings/leds/backlight/apple,dwi-bl.yaml
- F:	Documentation/devicetree/bindings/mailbox/apple,mailbox.yaml
-+F:	Documentation/devicetree/bindings/mfd/apple,smc.yaml
- F:	Documentation/devicetree/bindings/net/bluetooth/brcm,bcm4377-bluetooth.yaml
- F:	Documentation/devicetree/bindings/nvme/apple,nvme-ans.yaml
- F:	Documentation/devicetree/bindings/nvmem/apple,efuses.yaml
+Russell King (Oracle) (2):
+      dt-bindings: gpio: Add Apple Mac SMC GPIO block
+      dt-bindings: mfd: Add Apple Mac System Management Controller
 
+Sven Peter (3):
+      dt-bindings: power: reboot: Add Apple Mac SMC Reboot Controller
+      soc: apple: rtkit: Make shmem_destroy optional
+      mfd: Add Apple Silicon System Management Controller
+
+ .../devicetree/bindings/gpio/apple,smc-gpio.yaml   |  29 ++
+ .../devicetree/bindings/mfd/apple,smc.yaml         |  79 ++++
+ .../bindings/power/reset/apple,smc-reboot.yaml     |  40 ++
+ MAINTAINERS                                        |   7 +
+ arch/arm64/boot/dts/apple/t600x-die0.dtsi          |  35 ++
+ arch/arm64/boot/dts/apple/t8103.dtsi               |  35 ++
+ arch/arm64/boot/dts/apple/t8112.dtsi               |  35 ++
+ drivers/gpio/Kconfig                               |  10 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-macsmc.c                         | 292 ++++++++++++
+ drivers/mfd/Kconfig                                |  18 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/macsmc.c                               | 498 +++++++++++++++++++++
+ drivers/power/reset/Kconfig                        |   9 +
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/macsmc-reboot.c                | 294 ++++++++++++
+ drivers/soc/apple/rtkit.c                          |   3 +-
+ include/linux/mfd/macsmc.h                         | 279 ++++++++++++
+ 18 files changed, 1664 insertions(+), 2 deletions(-)
+---
+base-commit: 5abab6ab4ebacfff5857b63bd349902a6568d2e8
+change-id: 20250304-smc-6-15-f0ed619e31d4
+
+Best regards,
 -- 
-2.34.1
+Sven Peter <sven@svenpeter.dev>
 
 
