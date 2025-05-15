@@ -1,144 +1,105 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642251A0B08;
-	Thu, 15 May 2025 15:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECB21A0B08;
+	Thu, 15 May 2025 15:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747321777; cv=none; b=aOAk+vTsYFq1Muit3WiTaDnDktFFf4ZGMvl2F2Yf9KDlpztCyMoMA/T00aLpo13CJju4Ws4qIE6+WZszNLiQf5Run0KRzyQY3zIbk05b0U9fiMWJK286zi3SWIzcaPczr17MZi3CN5rL2Kf8P8EIrf9ZgUqGxO7K3x41wGeJgIE=
+	t=1747321791; cv=none; b=bJ0T8E3MeTxvHCeNI1KJM7OAvKzzBTb7JZGiX7ZqsdpxjA52+1HfXZM1IsEa016TNdhCx8d/goLBEWdCkjnAfvs9fQjjY7NYHuttocVD0iy6xyOxPH9Jl2LRZ6MaT7LkCwajbO+wkDsMLNsd1IzKvYXjDV2Hfpr4J/UPSCY/7TI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747321777; c=relaxed/simple;
-	bh=w44A4dLjrd4Yidtbmwllfd+kSKFs/nM/K7Ucl6ZDugA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S4AiFx7DgfFcg3mn/vQE1R68jH6WjyUjClLaow5EHnwh8FmavngPcbGJzol2lMgkR54G1m+wzQF+CiNgE5ikjGk0zTbNd4ZxV/TAp7B5c/t1zw1/Ye8JLqBiOAlj8feTt+QFSWcQxy+6fviqLh7Slwdh4rc51TPukMkY1Pl7hvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=bkAFMqMH; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=gsNWknRE reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1747321791; c=relaxed/simple;
+	bh=6R+4QOJDrRWUDayZX/bkkK6mKOhZFv9yOswdoJNl1r0=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=c9Vr0iItuzh1OKodlHyyd7wMycwR/BqVMTAF5ZEjC9L4B9giK0PdBGBUBqvZytAVUqLy1F5gQeFWxtDhok/Kce9OrdLcBPQGUzPdjb/hmve8ByIMGzd4YaeHhk/LzqlDO7VSixFFgeO0mSb4HnFwNeSjDY+G4fpWuBSRMKgHj+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xvA3ASyf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yAyynYCr; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="bkAFMqMH";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="gsNWknRE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1747321774; x=1778857774;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=OKO1o7AXgboNWVrjuNu0zS6tMTQ0M3cqjX6LCKpPtBs=;
-  b=bkAFMqMHT1cttXb40o5NdJsLUXvOCO8vHvoSkcWaAVc2Wn9aFPIOkCy0
-   NfN1kiMtuj9o77lYULu+Ithw0Jd/o32pUILVrvHzWXBds9Ymh9Jm7v1CH
-   No9+tfOzs6AEcwEISAKf5ZENIlihacO5yfzR/WUn0BQC2aUCBpDQo9/Bd
-   dUW4/kq4G/rHb2NfmWWq/gGTZfoiZotyfKtEm9jDUextO10H/LCQxWqtd
-   ioa8anWwew8qUzKBmRQqxeM+P+/B0+4sH04hwXm2yBMDQ1B6J1H5wIY8C
-   t9jYfJifDshn5onAZFh9i+ssmok0E8WZb4h9HJzlZCQjIRNNc2FC6v9iI
-   g==;
-X-CSE-ConnectionGUID: 6W4+I+s4QBeJAKSgWpMqVA==
-X-CSE-MsgGUID: OborI3dyS9yfad95ooZ86Q==
-X-IronPort-AV: E=Sophos;i="6.15,291,1739833200"; 
-   d="scan'208";a="44103160"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 15 May 2025 17:09:30 +0200
-X-CheckPoint: {682603A9-32-BF62DDF1-CB8BF55F}
-X-MAIL-CPID: F957553CC4C182DE8056D3848055452E_1
-X-Control-Analysis: str=0001.0A006377.682603AC.003A,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5E0F2169B79;
-	Thu, 15 May 2025 17:09:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1747321765;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xvA3ASyf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yAyynYCr"
+Date: Thu, 15 May 2025 15:09:46 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747321787;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OKO1o7AXgboNWVrjuNu0zS6tMTQ0M3cqjX6LCKpPtBs=;
-	b=gsNWknREq/+YpiCH7AfQW36IRqv/5SjPHth37HoJcFvYvI10tDQMO8NIuLhx80nZHG+XoC
-	VTVwcCbauyVxlQ6uGKXVmFTPpvR0yI56JBzxb2wRoa4PaSYX4yNn9ffvUrR9j1mARRa4Rt
-	rNkswIyAHY9syxarsQ3n7LfYSEoWApbcM/NRLaBp1eUXe62ouj5T89P5b2hHaqTErpne3k
-	GaPdC20+aSeGbs2VS1emFa/FoupHBNwkafpnPoYlYUN0KpG9M5HTz2EboVFMU8wk2tFgMk
-	rw5KlLwTYyoSutqTCGDq9E4HVlqtdGqGR4cl6NXfnt+MVD3g0aBqXUshJ2vcvg==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Conor Dooley <conor+dt@kernel.org>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Jai Luthra <jai.luthra@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] media: dt-bindings: sony,
- imx219: Allow props from video-interface-devices
-Date: Thu, 15 May 2025 17:09:24 +0200
-Message-ID: <2247039.irdbgypaU6@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <174732159526.2108882.8905658469049267620@selene>
-References:
- <20250515142945.1348722-1-alexander.stein@ew.tq-group.com>
- <174732159526.2108882.8905658469049267620@selene>
+	bh=7Au29+eyyLbjjd8srM1d/tRQaOdYqULWJK/n1vpIf/c=;
+	b=xvA3ASyfkNlFBKtsoXUdc40/ja76NadpDldAxIqrBXg4Ke4jWaF2tYaMHSwbnWULFm3bEO
+	9ij5kljKaEMobZdK5iI4wviOStFzaYSZeL8RLL+hNngaRmg4/+1W9ZR8KVN5FGDWvsGREC
+	q4PaRBCqLjYWAOXKsT+072SrAgcX4gVt5os8gu1qH9tw9p83mwfMO7z1vVWdsrdYYTNzUC
+	7HUJHLZBnwYdDjHg6tgL7bl+zXuGsNWL0CMKp5Cgb1QJi1sFsfqndpSAcP22Xp6pn8iaKE
+	cuxt0h2IDh3HsBXlJz15/gHss7+xW66oq3RdZ3rltWhK4Qr5wahsJLiftJfKww==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747321787;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7Au29+eyyLbjjd8srM1d/tRQaOdYqULWJK/n1vpIf/c=;
+	b=yAyynYCrWXRrvSt9YsKOi0vyoPoif6q58NB0tte1UMCs4P0qdFZPSDtuvQPYtbElPOLd+E
+	kef/INfamqkkJ4Aw==
+From: "tip-bot2 for Chen Ni" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/drivers] irqchip/irq-pruss-intc: Simplify chained interrupt
+ handler setup
+Cc: Chen Ni <nichen@iscas.ac.cn>, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250515083450.3811411-1-nichen@iscas.ac.cn>
+References: <20250515083450.3811411-1-nichen@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+Message-ID: <174732178684.406.1124313007424946758.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi,
+The following commit has been merged into the irq/drivers branch of tip:
 
-Am Donnerstag, 15. Mai 2025, 17:06:35 CEST schrieb Jai Luthra:
-> Quoting Alexander Stein (2025-05-15 16:29:42)
-> > Allow properties from video-interface-devices. The change is identical =
-to
-> > commit b6339ecfd0865 ("media: dt-bindings: sony,imx290: Allow props from
-> > video-interface-devices")
-> >=20
-> > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
->=20
-> Reviewed-by: Jai Luthra <jai.luthra@ideasonboard.com>
->=20
-> Are there any driver changes coming for the new properties?
+Commit-ID:     3e402acd5c4f9d447849b9bfb5a5c61f10668b7e
+Gitweb:        https://git.kernel.org/tip/3e402acd5c4f9d447849b9bfb5a5c61f10668b7e
+Author:        Chen Ni <nichen@iscas.ac.cn>
+AuthorDate:    Thu, 15 May 2025 16:34:50 +08:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 15 May 2025 17:06:48 +02:00
 
-No. This is a standard property and is already handled in v4l2_fwnode_devic=
-e_parse(),
-same as orientation.
+irqchip/irq-pruss-intc: Simplify chained interrupt handler setup
 
-Best regards,
-Alexander
+The chained interrupt handler setup installs the handler and handler data
+with two function call.s
 
-> > ---
-> >  Documentation/devicetree/bindings/media/i2c/sony,imx219.yaml | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx219.ya=
-ml b/Documentation/devicetree/bindings/media/i2c/sony,imx219.yaml
-> > index 8b23e5fc6a24f..38c3759bcd9f5 100644
-> > --- a/Documentation/devicetree/bindings/media/i2c/sony,imx219.yaml
-> > +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx219.yaml
-> > @@ -16,6 +16,9 @@ description: |-
-> >    Image data is sent through MIPI CSI-2, which is configured as either=
- 2 or
-> >    4 data lanes.
-> > =20
-> > +allOf:
-> > +  - $ref: /schemas/media/video-interface-devices.yaml#
-> > +
-> >  properties:
-> >    compatible:
-> >      const: sony,imx219
-> > @@ -79,7 +82,7 @@ required:
-> >    - VDDL-supply
-> >    - port
-> > =20
-> > -additionalProperties: false
-> > +unevaluatedProperties: false
-> > =20
-> >  examples:
-> >    - |
-> >
->=20
+irq_set_chained_handler_and_data() can set both in one operation. Replace
+the two calls with one.
 
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250515083450.3811411-1-nichen@iscas.ac.cn
+---
+ drivers/irqchip/irq-pruss-intc.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
-
-
+diff --git a/drivers/irqchip/irq-pruss-intc.c b/drivers/irqchip/irq-pruss-intc.c
+index bee0198..af76847 100644
+--- a/drivers/irqchip/irq-pruss-intc.c
++++ b/drivers/irqchip/irq-pruss-intc.c
+@@ -581,8 +581,7 @@ static int pruss_intc_probe(struct platform_device *pdev)
+ 		host_data->intc = intc;
+ 		host_data->host_irq = i;
+ 
+-		irq_set_handler_data(irq, host_data);
+-		irq_set_chained_handler(irq, pruss_intc_irq_handler);
++		irq_set_chained_handler_and_data(irq, pruss_intc_irq_handler, host_data);
+ 	}
+ 
+ 	return 0;
