@@ -1,109 +1,111 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10C678F26
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 13:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE297481C4;
+	Thu, 15 May 2025 13:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747315918; cv=none; b=QT4RzEwhTNc2MNxg/HOsjm2aIBISKGrcsOcx9mHGL64109yqScKRnhFZ1ldEfbopurtdIEfKdSGN/uLsV3KDE05h8/h3vYpPR3/b2cQLc3wU0rkdKxac1TbUMu+NReVrTtujQiP6PzOYKB+hAQolN73lQD9+ewfBUzAmysf3RIU=
+	t=1747315999; cv=none; b=SLpbSRM/1/bziRzKTg5v36u+uYP7nuSpQZTNHCKFrs7jlwSRtM1WkgiKqRh0kS0Fv3CiZc3Q5Vers8iakYQEBoo/fLgaubMX5DLRLHRiS2WHQQsDLT8Vxha71wDsRgPj/SlsI3iU+mkKiQfNq3zxXj1yrBkIr0RyZz+Q4fE8w44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747315918; c=relaxed/simple;
-	bh=Y8GGo2AMVQLbxKDyPRfMjRfAQBjFC7gN/PCZcDvLNIo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TA3xwhm+sDtMk0Q4FyipISCIMlBeUCLx0TIUQ8F6B7zjPnCSlfVH3j09R+SOZ5GfXYGyvMRMHVnSV3AgFqSyO69XWrx7oPEPxmLQULl7KuUaIQiV3KDBie2E2E28IPWl6VDmXQ3Jvshq2fpTFf5IpGbmNE/3dkp0efzv9W1mJ24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ciq.com; spf=pass smtp.mailfrom=ciq.com; dkim=pass (2048-bit key) header.d=ciq.com header.i=@ciq.com header.b=EGM4ScRm; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ciq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ciq.com
+	s=arc-20240116; t=1747315999; c=relaxed/simple;
+	bh=wQzWtzFVbRLSyT1kOVfalNa0l6P3QoYKfG6IeKaYSd4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=htRNJxvyOCsu6kbVtP3ZlDyUEFMbOMZa8QpEqX1NhsKKHI2Ykh9z2d9Ss05QUPhUKlJw5tf+n8JfNeo/1gQ1qgd4xoyw5AZEGP00OfTwoeqnrs+lszIrnDfNzljHWyaKjqBK/6EtbSYdIJ+d/HURfnwjTJdP0EFu9Ptd85+gMQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=axIJY2qZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ciq.com header.i=@ciq.com header.b="EGM4ScRm"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c5568355ffso76931785a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 06:31:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ciq.com; s=s1; t=1747315916; x=1747920716; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=idQ7sd0YlO6Ua6mQ5kuc0PUAbrEds8+KAPjDg8rCdTM=;
-        b=EGM4ScRmj1n/VlfczGUQ5cHVcYCC+BIk19rooYOGJRVROie3Do3pZ2Ri7j72vmyZmJ
-         7xtWF78/oO15hpoBEEtWfxy18UtVRE3npxpuKGGy12NctkfAOn0hf4dEUYds4Bwe8UGC
-         lIReRIQ12AhEQT/Qw/kIIjZK60VnuDpvB2olS4Pcc6tkXuMBQN13WYkBZO9HpR1lEiB5
-         /VobMaDmnpGygaUzGMxIc8ztKjvrL8m9w7jrEws4l2+ta8b/PLKBMGuHx4oi62eXuDGZ
-         jpCLEiduTnPE2vOrdapI+Uy4dQjya1Kww5LAHlCTPhZyAdHdOqZKiodUrncE7LcP0SbC
-         fXRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747315916; x=1747920716;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=idQ7sd0YlO6Ua6mQ5kuc0PUAbrEds8+KAPjDg8rCdTM=;
-        b=vopimpiW6kH/jv2s4+XYt9doOL+qE9NjN0LTceIucMAcrXxSniGstwH04v7wv1QnIC
-         Wj/35fOKycWWT47os7mxLCi7xOSnjTuHfD6URdzpy0Lk5qyG/9w8kDzhe6Pbe6ro3gaw
-         BPl9G1Z0znfN2x5E8qdeXFJHy2QG3R6ciZfjkYyXfkkBsvbES/jOQB7rDpEgaZClnQjV
-         CrZustQdIRUTWXcs/tJNniO+m5r2xTUmoHaX9zTrQFOr1AeRSouwrutENcxx4g0HlTfJ
-         tMk3TF7yA2LVKpMpCylQ0IaF07PnIp8BpECWxCOxgmJ/lzfOxIXk0GJlXqCxb4RlDOm2
-         JP2g==
-X-Forwarded-Encrypted: i=1; AJvYcCV2o89OIEwbl3RlCvOO/0kQU+hWWSAbLc4E5PbMwp+FnUYEUYIEG3xy66TgH+LgaYf6PnZF33+y6EUU/to=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMBqK7U8I7yx0JlomLtnKQlMcxwdtg8s/loY4oPRcR7d72/VEG
-	G3R1SAfeZrJm9lTV1RKQWe8jafCaY74FNCvjHitB7BECtApvvikxLdYfrfsusLB4HBnhOxnL9MC
-	+qCNtirzxQ1XHpqYh4EhS1N5Q0x056fpFnvxmjA==
-X-Gm-Gg: ASbGncuaoHw+FDoIhy9oAm3okg/QCq2cXIZEB7DF5B7n0DImhPVtEl0BzjGt5f+LSXe
-	5GDo00b1cneecLxWiexBHTQ3EO6DATnXc8kKMcjMBBtpp4YaSIYfc2q5sZjSnYtd7nWBwa60SSu
-	cwxN4gDEpyDBvyIVvX2/35fFhvdC+/keln
-X-Google-Smtp-Source: AGHT+IFftrViizvwzo527CdaZ+aGd3PB2+/eA4itoniQfclfljSm+WYpnBXwFNoTgGMvKSyjqiFv6xwETd/kIumJRy0=
-X-Received: by 2002:a05:620a:2445:b0:7c7:b4ba:ebf9 with SMTP id
- af79cd13be357-7cd287e16bemr972802585a.22.1747315915661; Thu, 15 May 2025
- 06:31:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="axIJY2qZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 403C6C4CEE7;
+	Thu, 15 May 2025 13:33:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747315998;
+	bh=wQzWtzFVbRLSyT1kOVfalNa0l6P3QoYKfG6IeKaYSd4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=axIJY2qZ51keUz71syARwcRIoH8q/2hvAUPBST+E9n8yHtI92gFEc7bsA/4AS7nEJ
+	 RhYobVI1Efx2MUouRhi5JQ8XvIgckDgPkkqqIzIwUfWw0IzWPcNk1D3SmGZIS/nYd7
+	 7/TwwNn/sKQuJG82uyE6Kq2bPfIj1dR4Mr8dYgpQRocOnWGbdEAp5PIv537ySnASNe
+	 2PsRy/A7Lx2S04HyQh1ULH3pgMEFRkMXU9u5Fve3YutlE/E56t+fE5WeAw3QIVD+fG
+	 mR4teecHQGRoP1kfoDy0Jtf2Nsmt8mO0gjCJtOgj4s+RAL/LU2GbAYEd3vOfQ0CcqR
+	 bi0JioNvo9Y9Q==
+Date: Thu, 15 May 2025 15:33:13 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>, linux-arch@vger.kernel.org,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org
+Subject: Re: [PATCH 14/15] bugs/sh: Concatenate 'cond_str' with '__FILE__' in
+ __WARN_FLAGS(), to extend WARN_ON/BUG_ON output
+Message-ID: <aCXtGRr5pSLKoKg8@gmail.com>
+References: <20250515124644.2958810-1-mingo@kernel.org>
+ <20250515124644.2958810-15-mingo@kernel.org>
+ <ba1e1ae6824f47bcb49387ae4f2c70dfd45209bc.camel@physik.fu-berlin.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514125624.330060065@linuxfoundation.org>
-In-Reply-To: <20250514125624.330060065@linuxfoundation.org>
-From: Brett Mastbergen <bmastbergen@ciq.com>
-Date: Thu, 15 May 2025 09:31:44 -0400
-X-Gm-Features: AX0GCFt_T4qmlAP_NoDOQdZAbnEbFphd6WaqCYxvy8tpdv3fkVAu8JdgYSY-VoQ
-Message-ID: <CAOBMUvhtrfhJ7s2s6nL3dSoq2a3YwrHV60eRQ5e4si6Qhu3tdA@mail.gmail.com>
-Subject: Re: [PATCH 6.12 000/184] 6.12.29-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ba1e1ae6824f47bcb49387ae4f2c70dfd45209bc.camel@physik.fu-berlin.de>
 
-On Wed, May 14, 2025 at 9:06=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.12.29 release.
-> There are 184 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 16 May 2025 12:55:38 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.12.29-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.12.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
 
-Builds successfully.  Boots and works on qemu and Dell XPS 15 9520 w/
-Intel Core i7-12600H
+* John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de> wrote:
 
-Tested-by: Brett Mastbergen <bmastbergen@ciq.com>
+> Hi Ingo,
+> 
+> On Thu, 2025-05-15 at 14:46 +0200, Ingo Molnar wrote:
+> > Extend WARN_ON and BUG_ON style output from:
+> > 
+> >   WARNING: CPU: 0 PID: 0 at kernel/sched/core.c:8511 sched_init+0x20/0x410
+> > 
+> > to:
+> > 
+> >   WARNING: CPU: 0 PID: 0 at [idx < 0 && ptr] kernel/sched/core.c:8511 sched_init+0x20/0x410
+> > 
+> > Note that the output will be further reorganized later in this series.
+> > 
+> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> > Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+> > Cc: Rich Felker <dalias@libc.org>
+> > Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> > Cc: linux-sh@vger.kernel.org
+> > Cc: <linux-arch@vger.kernel.org>
+> > ---
+> >  arch/sh/include/asm/bug.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/sh/include/asm/bug.h b/arch/sh/include/asm/bug.h
+> > index 834c621ab249..891276687355 100644
+> > --- a/arch/sh/include/asm/bug.h
+> > +++ b/arch/sh/include/asm/bug.h
+> > @@ -59,7 +59,7 @@ do {							\
+> >  		 _EMIT_BUG_ENTRY			\
+> >  		 :					\
+> >  		 : "n" (TRAPA_BUG_OPCODE),		\
+> > -		   "i" (__FILE__),			\
+> > +		   "i" (WARN_CONDITION_STR(cond_str) __FILE__),	\
+> >  		   "i" (__LINE__),			\
+> >  		   "i" (BUGFLAG_WARNING|(flags)),	\
+> >  		   "i" (sizeof(struct bug_entry)));	\
+> 
+> Looks good to me, however I'm not happy with the summary line.
+> 
+> It's too long and the prefix "bugs/sh:" is very confusing. I usually just
+> use "sh:" to mark anything that affects arch/sh.
+
+Fair enough, I've changed the title to and pushed out the new tree:
+
+  sh: Concatenate 'cond_str' with '__FILE__' in __WARN_FLAGS(), to extend WARN_ON/BUG_ON output
+
+> Can I pick this patch for my sh-linux tree?
+
+So since it depends on the previous patches, in isolation this would 
+break the build.
+
+Can I add your Reviewed-by or Acked-by?
 
 Thanks,
-Brett
+
+	Ingo
