@@ -1,123 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8181B2063FD;
-	Thu, 15 May 2025 16:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E21121E0B2;
+	Thu, 15 May 2025 16:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747326447; cv=none; b=mPSA1Ozs8rde7kds/sXsH4WrSmDryXS2Tno8+pwhlQsKaf/XU80L+d74BEEQuv8VuU9qNrRIyG7b9Cy54zseml9O4R/12hieOVZRVVlaq4TeaV+dq7+fvTx/pdUDeBifkhsJSBCGUzuTA2a3XSDDwAF8zwWyC9oFQOs43oPWnVg=
+	t=1747326473; cv=none; b=dFXFnTmj0n3OXPA8CiIsIW479gFJaUvI37Dg3p5t9zTiAOe7RffYA0OySgwXSD/nKLDOG7slr7QHCTaSuPtj7iUaVmhgceM3skiMkAW2XZXkf7L+q5MB0glZZrKN3cT6ggW20iVvTmSRbJLFdo+QjbeTapzoISfwoKS7sFArfQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747326447; c=relaxed/simple;
-	bh=hMT+7QupmrxipNkJnoQmLl5rT3S9TSgbD3WmZ3JQOnM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aa/ymL0nyJkL/aZd6k1m/uhDBWVLq39E/U6egVUaG1EgvTkclLK0+mOn1X1KGgIVFRNrbPxmRARFc5JY/gApXsHRzlW7ovSdUO6mHuo4F9DAUpwIJH4Bvjvgw7EA4QZyXar+AaaUKDOHWeLTOBp3JOilg6A6b3XOVHIGuQLbtW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iS3K194J; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747326473; c=relaxed/simple;
+	bh=ODlwDn7mWOdHaZi9LQuUdkrRueBSs4irntnvUW0Kw64=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jrJGDUwzJo7gOVLuuiPIltDe5Bnn+hsHHEgPmNFmVYqZCrm+AwS9E02fb5k4U0AfveoiyZ+cdhtSpodhUVcfj8yF2hEu1+gDVQHwd87Hflm25XFQQg9BibzX6hfqMFtuvoW8qqpoNd2ueODEfwbPjMHIFGb2bikNABGgUNwu7wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LbM1pP7+; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iS3K194J"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747326445; x=1778862445;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=hMT+7QupmrxipNkJnoQmLl5rT3S9TSgbD3WmZ3JQOnM=;
-  b=iS3K194JaBxbP41LLVqIBWfbLorI754504jL8WTkO7WvKu3FU8vxKIqU
-   Ichwk+ivI9h3ZGIqYLeID1hnUYiEsYK1sWQ1Q9bY0NvVXVMXuEFUEuqG7
-   WJCaSGrkZU1NG7norXW0ea2WDX+D2sRv/VdXKRxj8Viup3Oa0k/tka8Qe
-   X8kx85ITw/6DDlWDJbAlM0YrxUPrCl1mFLdJyegtwKeVxo/34fjayaV95
-   jJWObUkNx22FCCj8QuEsoA9YHCV3tlxqj5VkLkHhh6lbJTLGlpCT4kB55
-   AxAvXNjTC2odkjGPeoEryaqfK9n2QXBy8BVQWXyHN0IuOWh6vu2vzV84h
-   g==;
-X-CSE-ConnectionGUID: cZccHFx5Qtyq+bS/qDhxvw==
-X-CSE-MsgGUID: qSkeF2n5SHeLItyG4dyINg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="71786475"
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="71786475"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 09:27:25 -0700
-X-CSE-ConnectionGUID: TympqMTwTkGysx7S/A+w+Q==
-X-CSE-MsgGUID: c+Z4kUg6QWyeLka3DD/SGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="143374641"
-Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.109.45]) ([10.125.109.45])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 09:27:25 -0700
-Message-ID: <448598e9-972f-4807-ba54-fc1f7e141b4f@intel.com>
-Date: Thu, 15 May 2025 09:27:21 -0700
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LbM1pP7+"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54FEFCJH007843;
+	Thu, 15 May 2025 16:27:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=IgDWW+Mz5cI
+	QlJCaHgPvgdL6vfBP0EnLvWOEhSUxXzg=; b=LbM1pP7+3qjoXVb5RcMQtmClNnC
+	Uq4JFKId0y4YjtFBUVmhiKkEmhq253SuTNHcyFCSOa4I2uucnllAFs7UCNaXsm2Y
+	cQ/KnECnFLjcwVM5lJNfZn6gH/yOnZGtYTVmOzkVUuLyz+1kjBBdtlogFwmeFqk/
+	/TrxYfJTj7vmA6ZErZnHFB6gDEZsZt1ihltmq3hIL/gh5Ti4X3yvd9nkBrJivWe5
+	T7MxDL6gbxW2NlICQ/QQDHYydjbPewsVasURxhv1QSeuU0KGg1w5UhW2A9AEWTjd
+	tA5pIy3qGrBsReWg2pj19fWaLtmGUPagsuQRJz3YTSLlAn2OWGTVnmxoJRw==
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcpxuv4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 May 2025 16:27:29 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 54FGRQMa023545;
+	Thu, 15 May 2025 16:27:26 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 46hyvmvnn5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Thu, 15 May 2025 16:27:26 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54FGRQjp023540;
+	Thu, 15 May 2025 16:27:26 GMT
+Received: from hu-maiyas-hyd.qualcomm.com (hu-nitirawa-hyd.qualcomm.com [10.213.109.152])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 54FGRPtD023537;
+	Thu, 15 May 2025 16:27:26 +0000
+Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 2342877)
+	id 681F25015B1; Thu, 15 May 2025 21:57:25 +0530 (+0530)
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
+To: vkoul@kernel.org, kishon@kernel.org, manivannan.sadhasivam@linaro.org,
+        James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
+        bvanassche@acm.org, andersson@kernel.org, neil.armstrong@linaro.org,
+        dmitry.baryshkov@oss.qualcomm.com, konrad.dybcio@oss.qualcomm.com
+Cc: quic_rdwivedi@quicinc.com, quic_cang@quicinc.com,
+        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Nitin Rawat <quic_nitirawa@quicinc.com>
+Subject: [PATCH V5 01/11] scsi: ufs: qcom: add a new phy calibrate API call
+Date: Thu, 15 May 2025 21:57:12 +0530
+Message-ID: <20250515162722.6933-2-quic_nitirawa@quicinc.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250515162722.6933-1-quic_nitirawa@quicinc.com>
+References: <20250515162722.6933-1-quic_nitirawa@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] x86/sgx: Prevent attempts to reclaim poisoned pages
-To: Andrew Zaborowski <andrew.zaborowski@intel.com>, x86@kernel.org,
- linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Dave Hansen <dave.hansen@linux.intel.com>, Tony Luck
- <tony.luck@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
- "H . Peter Anvin" <hpa@zytor.com>, balrogg@gmail.com
-References: <20250508230429.456271-1-andrew.zaborowski@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250508230429.456271-1-andrew.zaborowski@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: aFlGPPMjhHrkYxKD2E3BB3X0AJWSaUDh
+X-Proofpoint-ORIG-GUID: aFlGPPMjhHrkYxKD2E3BB3X0AJWSaUDh
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDE2MyBTYWx0ZWRfXz//8jwHEEef8
+ 8r9K6GeDLEVzayLS1M0kKe5yvUPYTTrvA3ljS5bTu+kCdhlJgZhc1ly4jA8vy65ENoEO+JPaAbT
+ XL/48fcdaMhRZWX+HdKrr/VYUCgYEV4MIb8BHzAA5M9fcCExgKUSDD20QnanG0H+yZnbhQX/lyG
+ BPAyX/UTjHVvUXPMuPaUj5KnBqXCR0Xfkn2K8KiUVsznZcO5MoUGfLNO+Om5U/buPOMdlWwHJAT
+ QT7eT5rP1Z80JxMOfsQJw7WxRdkdEagx7XgN3yeq0QDbjaZqTygax3/8QEfqFkzYh5ZhwP/lVyU
+ Rs3OmV5IIYJSjkgTd4FtNbPmzPL0H3Tdd8TnOtkI1vN0gkkhXbaXWyIl8pSoqaILZHb7XDfFnAU
+ Z2nfWA1sCEcDQuFNZ3EtvaTS8u/zb4ISNnrMRrJxPHvm6kwxCdaRrxTH+5o1usSO9rOMedOj
+X-Authority-Analysis: v=2.4 cv=KcvSsRYD c=1 sm=1 tr=0 ts=682615f1 cx=c_pps
+ a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=jLEhXYc_IhqhhXrxegcA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-15_07,2025-05-15_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 adultscore=0 phishscore=0
+ lowpriorityscore=0 mlxlogscore=999 spamscore=0 malwarescore=0 impostorscore=0
+ mlxscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505150163
 
-Thanks for sending this, Andrew!
+Introduce a new phy calibrate API call in the UFS Qualcomm driver to
+separate phy calibration from phy power-on. This change is a precursor
+to the next patchset in this series, which requires these two operations
+to be distinct.
 
-I think I'll probably add a slightly shorter summary:
+Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+---
+ drivers/ufs/host/ufs-qcom.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-tl;dr: SGX page reclaim touches the page to copy its contents to
-secondary storage. SGX instructions do not gracefully handle machine
-checks. Despite this, the existing SGX code will try to reclaim pages
-that it _knows_ are poisoned. Avoid even trying to reclaim poisoned pages.
+diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+index 37887ec68412..23b4fc84dc8c 100644
+--- a/drivers/ufs/host/ufs-qcom.c
++++ b/drivers/ufs/host/ufs-qcom.c
+@@ -531,6 +531,12 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
+ 		goto out_disable_phy;
+ 	}
+ 
++	ret = phy_calibrate(phy);
++	if (ret) {
++		dev_err(hba->dev, "Failed to calibrate PHY: %d\n", ret);
++		goto out_disable_phy;
++	}
++
+ 	ufs_qcom_select_unipro_mode(host);
+ 
+ 	return 0;
+-- 
+2.48.1
 
-But otherwise it looks great:
-
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
