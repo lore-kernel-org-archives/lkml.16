@@ -1,140 +1,114 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B000929B761;
-	Thu, 15 May 2025 19:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73BB29B215;
+	Thu, 15 May 2025 19:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747337987; cv=none; b=X3xTpZMVtV1eiUMzdrLVHc0PpLb9jFAqROWI1JzE4o19TJwky2mPR6hiiLvy6WehV/hnkIZ3hzy7wuL8CAfVTGpL3GbrYyDWSeJ8hAWVvymkuyX+xTfMghLrIDcAzPlBq9JoXMYmYqV+uB2SogxSiFN043FFf3bjByk36+/5x1g=
+	t=1747338019; cv=none; b=fsy72pUVKG5e8tWNADYoR7zGyVKCp6J3xtqe9uEbgiwAT2XL0txWR677PYT+4RSxBcFO+jz/z4bBEd+HbPfgbp10NbWMkQCWnUmqRq7fa2QiPxubO4f++SDit3cj4pO9z4cI3TkR1vnyM+n+1IvwGQfGFKcsZPc0ZkwfH0nnmsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747337987; c=relaxed/simple;
-	bh=DSJDp1z7Pob8W8/VBKGX9pG7ZPkhnhBiDbakz3e1J+w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ariTawi0Z5D8VTMlGFQ3eKw89Bc6Ya++0sCZhcbopyyXPgecQs4M6AbXnCyu4n0DneTw4AFR+JtL7we3nhgqOri6tq/PTi1u8TDpq/6R3Al5pLsYQn7utmVioB44f2RTEBwue4ZPzYBt8PhXleXf1s+FcQDYz2sqcUu85nOqckU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l4YPuvab; arc=none smtp.client-ip=209.85.167.46
+	s=arc-20240116; t=1747338019; c=relaxed/simple;
+	bh=q2fii1TNd8FQwF7ZkVGmdhiOTgRMqmaoTUEG7puOjJk=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Ac5sRZ2Zd2s0LU4txn2J0/c7pV+S3uldrEi+QmIhk3Xx5OIIKrKJJ+Jf/+JwxbhYfXJMvw6KObKkPy8i7Bsu8ycE4l9EEqf+HLABkt0vxbtcpQa9IhU6DoMciVOxVRL8bEqjgo+iqhOo0gYAI448DPSjGH7m1396HcYhF8CjZlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UU+HIqB2; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l4YPuvab"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54b09cb06b0so1611592e87.1;
-        Thu, 15 May 2025 12:39:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UU+HIqB2"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-550d6e7c563so1554968e87.3;
+        Thu, 15 May 2025 12:40:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747337984; x=1747942784; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7kPip897cJRA1ZyK07OQSKvEd5nXI23QmwVusagPdyo=;
-        b=l4YPuvabGF7nF+imjnCMYbv7HKfrFUYjvAJegsPOXdtQ5TLYpqXzQ+bW97RO4WI7Ah
-         DMkaTLwBAiotkZ0lGt0gSRlyR2lpN6eIqfJ4gpimjn1gJAIDuci9GU+gUqEM9nJhualh
-         KXLMqIPT5MxChBcXqiqXgU8OMkeg+5WFYo04akW8mo9cxotNLv3Zlpxom9chlsIpOEgT
-         HbxTmZ7dE5TEKZ6Cdt7pnjstIqO6XZWqSHsJhR5L+v+7oTaZEeZGXhOBKAy6h9BQNN6C
-         gUpDlMbx4qNqLiux93YqxJr6Ehyf/2DSBBlzI/lKzVRuzhFpzro3vuhoJv71UXZbFdxU
-         e0lA==
+        d=gmail.com; s=20230601; t=1747338016; x=1747942816; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=x9hf1pY/E40EfpOzBfn/r3vdhfrUtuW8Q8jEK1DP9OY=;
+        b=UU+HIqB2jmC0qks6tj3dGVjPoZJijNSHnZU40MzAfU7qGvnBSY9YdnTorIIGRpI1z5
+         2AL3a/ZJapAMk4f5uCsBNOdCjnTcleDdnKZEN0CtplP41+92kX5dSZe3R/zTcZpdCRSF
+         Qwdv+Qjj5t4yv6iatabkvnJrRXn3wAKyoepZd4sYlKnttU6hrhUpyGlMz5H1V5xL8IwC
+         dd5UYd8D38ZNAA2RYAwQ3jmx8TQy4zm7RA/RDasyUVURAAoMB/iCEbXdwKXST9xoYYAp
+         s++63OaHoWGhVd1FBNlnTUhufYw5WJXpgdIzkAHJjAWCF+MVzXpBzUU3v58vrnyDMndL
+         UT+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747337984; x=1747942784;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7kPip897cJRA1ZyK07OQSKvEd5nXI23QmwVusagPdyo=;
-        b=JGuddTVtC2S1iOC47zi8VPKIh8a7+FWOnZVa8LIleLFOuYoseJ/y2PtzXoni15CYto
-         1QvUUJS64mS+GC7CibfD6oBRgcVKKQpx3POL3YcYhAlcJVYgfoe+OkxAxM521RBghvMT
-         EPbTasfQRzclDf/1MLDGZc0u6icr5xnh4VlMcqLxqvkBlelVr9dcBqvh2KHFIVXX1uEk
-         +wWa6ejFnOn/UWfU9HmmXfvL5KrZIm01PWONYL7xj5qUt1FO0UocS1OGftyKPAC5CVlC
-         Vld86dIapNEbG3lpE7OllOrWaeRUaWFd2wIduKXZ/CQTo0b/1ONajEJ22leRC8eznIce
-         R7Cw==
-X-Forwarded-Encrypted: i=1; AJvYcCVDkak+r02aN531cN3F8LZKGqqssvku+cx5PxDzgU8XfKLYc+O7adH7UVJJvFFuiW5odcHiUi/V7Fqj@vger.kernel.org, AJvYcCXwYEVuO70fkN9QUoepc6HJWAcX0G2YaPJDyr3Jmy0HjGcZD8xeLJ4ZS4E0jtNOmMGdVJaDtI9TwNssqXaa@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3mNM31NYbae3zxPpf2jOIAyOynj1Da/edgCUBJwaOvlnh0BGo
-	LM4i4l+2HTeFcEqb1eh3CdCx8D/BOPPlJ3CCZfQWqeCEYe3G6wrlqXGp
-X-Gm-Gg: ASbGncsLvPR89h+iccDWDwdHyd3aIdcVdEmi5ABxrmvXZBhRbnr5K8M96PrnQDHJhx1
-	tVKa/viY+7jM10gOG48YarTvrtkmRWYwcClU2T6SxqMMaZqMNzKkAF7DpydSL81bMBsvx9wMosy
-	1MTqs6WBDw75uAEtBe6eNcEOkdxUduo2WxBkfAhFUaiCGy5Va/gnQ1qYCXigC1oHrNvb/mNCC55
-	kSv6t+IB6cJYbgXQzhpYLpYQi3LtUMBL3+SOerVP+5Bac3FZM6CmaNK9Wn0LkKrrrhBhohqUsL9
-	f80Rar7JRMVP+PkDN03NZSnljG2/fbkmBRzUwbr/jlm9uIzlfE574Iex8L9pnkyY
-X-Google-Smtp-Source: AGHT+IGN9dWtAS1fQY6SOJ3fdKPGUo+dS3MzUROaHS6AFlbQQs/x4ruOrI7j3gsIpxrEv1h3EVxcnA==
-X-Received: by 2002:a05:6512:6301:b0:545:2a7f:8f79 with SMTP id 2adb3069b0e04-550e71b4a93mr230229e87.16.1747337983574;
-        Thu, 15 May 2025 12:39:43 -0700 (PDT)
-Received: from NB-GIGA003.letovo.school ([95.167.212.10])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e703f544sm72297e87.235.2025.05.15.12.39.42
+        d=1e100.net; s=20230601; t=1747338016; x=1747942816;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=x9hf1pY/E40EfpOzBfn/r3vdhfrUtuW8Q8jEK1DP9OY=;
+        b=de/eKbqQI7rRGuBmq0HIwBBpzVtuwkjnVNdHx5Yzcb7kBHLSEkbneVojiZBMj5blTt
+         eUUoQM9AvmPCBKW3jOqAxydc0PtoY1dMOVAqA1F1TJpbAaPQcEM6yGfHSWmWxSfvEZu+
+         g7jSoYF4V2N+kIDo1Bu+qCtKPt9QipmIxQNfscCUO11LU9V6LmaC84OCvOAJRwz5AJmR
+         bQJFhrDWuM9t6joczBi85zC2t7VKbFJQhno84st7EV/LOtIkjTIN9TB+JENkJ4B2yd6U
+         VOI0UIzLp8ci7JgTewn+S9hH1HK4x+Gx6WmJyInr3s8IIDiOXzDakqEOwooWR1nwYlTQ
+         PvWA==
+X-Forwarded-Encrypted: i=1; AJvYcCU9XBk4Ueib8X5hL9ses8W0/h5qarIWL/WEzj+o4b36U0BUGN32Q+gSKpBR//26iS5Be2LnbRv9juxtNUDA@vger.kernel.org, AJvYcCUbUTmumpLKV1mQgpdeUpzhAGeit05dosCoSOs8EbQIY/3HeTvVRgjcuGqcMJ9dPIkKsEw8KSpYCxzoL5xWxuE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyS9jdqTHUOTzFLnZU93iZmLynJ+rv3lnJ5lCqB5Fa7BF4L6AeJ
+	IGhzgO6iEcrKlVAaP5ZYLT6ltt5TGGiCO5rtUdmn1Ml9Z/dyqry0ZRWQDxSaamnc
+X-Gm-Gg: ASbGncvNYvWMEt6TMYcvoAWFxDJ7XKhWB7TqxgIcqsGJawJmlBLmTTMCQ0eQjzYa4ZN
+	GHjfcF+O7ANyY8jD+mldwWSZszXyTkzCqHaQup8LpxXxbpQAfdO3bD+bkHVdlMRjzD9tMcwi5fW
+	13Ll4bcu2SU6D3EKkFgG9MX/JbOm248Py4hBfvT9c81oisBzdYqdQDM+QA2ckZqr7kPFmlox7m7
+	KFksbxlREhEHveLrpPDfs4Jr8rUK9GStGv/3EN8fcxo6TWpWTZPTc/kVc2hNoseL0ZEB+KUDd1E
+	qmYqb8ahBw4q5zMSLEE7orRJcs0McFa33Dnt8W/MoUTij/tzjZbm/47Xy4jctfvFUmsrI0+oGNo
+	XBXpKyMPqrGCszECvqDFwK+rYPT/EkIAgvnY6DqpRSMUm3Y8dZjZa+yEfgYs=
+X-Google-Smtp-Source: AGHT+IGeDQ/reVYdGrk3Ixycu5e5TUYCKh6cEoMm/K3M5xzTNaAwDZD90DyJeJrbM6gCLc9SyHeq9Q==
+X-Received: by 2002:a05:6512:6505:b0:550:e648:1822 with SMTP id 2adb3069b0e04-550e7232577mr206286e87.43.1747338015527;
+        Thu, 15 May 2025 12:40:15 -0700 (PDT)
+Received: from Lappari.v6.elisa-laajakaista.fi (nzckegddy2ah4yxpld5-1.v6.elisa-laajakaista.fi. [2001:99a:20b9:a000:5c04:23bc:16da:4169])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-328084dbc32sm426221fa.50.2025.05.15.12.40.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 12:39:43 -0700 (PDT)
-From: Alexey Charkov <alchark@gmail.com>
-Date: Thu, 15 May 2025 22:38:44 +0300
-Subject: [PATCH v2 5/5] ARM: dts: vt8500: Add L2 cache controller on
- WM8850/WM8950
+        Thu, 15 May 2025 12:40:15 -0700 (PDT)
+Date: Thu, 15 May 2025 22:40:13 +0300
+From: Heikki Huttu <heissendo88@gmail.com>
+To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev, kernel-janitors@vger.kernel.org
+Subject: [PATCH] staging: vme_user: add missing includes
+Message-ID: <aCZDHXJTyfJRseho@Lappari.v6.elisa-laajakaista.fi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250515-wmt-dts-updates-v2-5-246937484cc8@gmail.com>
-References: <20250515-wmt-dts-updates-v2-0-246937484cc8@gmail.com>
-In-Reply-To: <20250515-wmt-dts-updates-v2-0-246937484cc8@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Alexey Charkov <alchark@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747337978; l=1530;
- i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
- bh=DSJDp1z7Pob8W8/VBKGX9pG7ZPkhnhBiDbakz3e1J+w=;
- b=hwJTzNQJOYQCe6IRsbCMKSqAddv28lmp6tN7TrwXhYQbbq4z3f6Q9twes4NDmNZJw2jId1sHU
- p2D3+CloCBlBq/z1wjmefdnxS2S56XFF7QDJQ2TmC5JX5bqi5hoVDi/
-X-Developer-Key: i=alchark@gmail.com; a=ed25519;
- pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-WonderMedia WM8850/WM8950 uses an ARM PL310 cache controller for its
-L2 cache, add it.
+Header files use u32, size_t, dma_addr_t, struct device, struct list_head.
+Add direct includes to make the headers self-contained.
 
-The parameters have been deduced from vendor's U-boot environment
-variables, which the downstream code uses to initialize the
-controller. They set the following register values:
-
-aux = 0x3e440000
-prefetch_ctrl = 0x70000007
-
-Their initialization code also unconditionally sets the flags
-L2X0_DYNAMIC_CLK_GATING_EN | L2X0_STNDBY_MODE_EN, so encode those too
-
-Signed-off-by: Alexey Charkov <alchark@gmail.com>
+Signed-off-by: Heikki Huttu <heissendo88@gmail.com>
 ---
- arch/arm/boot/dts/vt8500/wm8850.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/staging/vme_user/vme.h      | 5 +++++
+ drivers/staging/vme_user/vme_user.h | 2 ++
+ 2 files changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/vt8500/wm8850.dtsi b/arch/arm/boot/dts/vt8500/wm8850.dtsi
-index f741a3e88d74ab4740f200b9b96201b3dc799bad..58109aa05f74b67cda82b5ebd0127662e475ded6 100644
---- a/arch/arm/boot/dts/vt8500/wm8850.dtsi
-+++ b/arch/arm/boot/dts/vt8500/wm8850.dtsi
-@@ -18,6 +18,7 @@ cpu@0 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			reg = <0x0>;
-+			next-level-cache = <&l2_cache>;
- 		};
- 	};
+diff --git a/drivers/staging/vme_user/vme.h b/drivers/staging/vme_user/vme.h
+index 7753e736f9fd..55499b240dc3 100644
+--- a/drivers/staging/vme_user/vme.h
++++ b/drivers/staging/vme_user/vme.h
+@@ -3,6 +3,11 @@
+ #define _VME_H_
  
-@@ -308,5 +309,18 @@ ethernet@d8004000 {
- 			reg = <0xd8004000 0x100>;
- 			interrupts = <10>;
-                 };
+ #include <linux/bitops.h>
++#include <linux/types.h>
++#include <linux/device.h>
++#include <linux/list.h>
++#include <linux/mm.h>
++#include <linux/dma-mapping.h>
+ 
+ /* Resource Type */
+ enum vme_resource_type {
+diff --git a/drivers/staging/vme_user/vme_user.h b/drivers/staging/vme_user/vme_user.h
+index 19ecb05781cc..297b25fab164 100644
+--- a/drivers/staging/vme_user/vme_user.h
++++ b/drivers/staging/vme_user/vme_user.h
+@@ -2,6 +2,8 @@
+ #ifndef _VME_USER_H_
+ #define _VME_USER_H_
+ 
++#include <linux/types.h>
 +
-+		l2_cache: cache-controller@d9000000 {
-+			compatible = "arm,pl310-cache";
-+			reg = <0xd9000000 0x1000>;
-+			arm,double-linefill = <1>;
-+			arm,dynamic-clock-gating = <1>;
-+			arm,shared-override;
-+			arm,standby-mode = <1>;
-+			cache-level = <2>;
-+			cache-unified;
-+			prefetch-data = <1>;
-+			prefetch-instr = <1>;
-+		};
- 	};
- };
-
+ #define VME_USER_BUS_MAX	1
+ 
+ /*
 -- 
-2.49.0
+2.47.2
 
