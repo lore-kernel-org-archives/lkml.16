@@ -1,143 +1,96 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8EC629672F;
-	Thu, 15 May 2025 09:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05E529673D;
+	Thu, 15 May 2025 09:27:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747301246; cv=none; b=l0epWatkgoqywYETvaor5nDWqm6LR/CgJDP6j7lr+4Cz2zIzFaOiT8ZHeQ3h9amj6teMKInmqgEjUIqA/FrCPzm/Zfv61fVU+OmFBMJTbmBhsmaGnOSebRTLE32HekOjzKOT0Dq3yPJ4Rb/HiL3cyHZD3OSJxfovwYtThusvkr0=
+	t=1747301253; cv=none; b=fco+P7baH0pkPz+rGIZJi5FUMLZvixadA/NRwgxBy2lQEDR+Wv2Pg9g95cylAmlUZhjUAE7++/ANTGkU/FeI9ZkXiz966fOM+v0aJGtpY3wdV/HEr7FEjqMJ9TpXM9tbX/GF/Q6oSCefMxtRPYIsPozwC1plUTW7IHuHtXS7OV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747301246; c=relaxed/simple;
-	bh=CG/LZ+w1W61yrSttG7fYTJQ0VMdFcH9K/FubTccL+i8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FI/EH6zN9lhop2JGEbCApCTeknrfeM0QddvMHfTmJzrsrgYhMjtp2yAUBN4/70siO+6ms1v5DAZhajWvIOL+GHqyb1NuOLgmA/reY75nGObwGy4nGlX32bQp+fUMyY9dJU/6Ekpb+UemxVEHJqsqyIqTc67NO3pGarxoTXP6tJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B583314BF;
-	Thu, 15 May 2025 02:27:10 -0700 (PDT)
-Received: from [10.162.40.26] (K4MQJ0H1H2.blr.arm.com [10.162.40.26])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 54E303F5A1;
-	Thu, 15 May 2025 02:27:19 -0700 (PDT)
-Message-ID: <91fc96c3-4931-4f07-a0a9-507ac7b5ae6d@arm.com>
-Date: Thu, 15 May 2025 14:57:16 +0530
+	s=arc-20240116; t=1747301253; c=relaxed/simple;
+	bh=6PmBf/DsE0wy+xDq3yf/Of2lMkBikecvmpMZM32RNVw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UDZWBy9pZnZ0Eohu5G+LoTZs1h02Fq8fXDWyC9z5c78VlHDbzZpFklBDM5T3awR3vt432WU5cpj0mchDp4ZxnjIcr07CDZDyPd2vTuTccI10I7GpRbw+Q3fbjfAbyS/E4pAbXjB5J5cYbG6YEsDlWAVMWD7xvGkX4NhYBCqay5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ha46NoQL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ha46NoQL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC22AC4CEE7;
+	Thu, 15 May 2025 09:27:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747301253;
+	bh=6PmBf/DsE0wy+xDq3yf/Of2lMkBikecvmpMZM32RNVw=;
+	h=From:Date:Subject:To:Cc:From;
+	b=ha46NoQLAucxNyE6bG9Y9s4myH8b0Vk2ClGK6ishRVkKSHqsvQoyfgy+S2a441Kjg
+	 qAo5A23E7eFq2Cbzj43uOcOGq0TViBnvYewM2dtp5W3E+t11pn3TacR5YiQXRHlqLB
+	 o+myAf4h0Okdsj7KXPeCgO+fRYg7K81Mf2yESezcdWE7C7KBmQfx0yiPtiP5Ki9KOO
+	 o5ZPGMo2FRbqRyzbTV9RZvb8bkjfqsovcsh49UQP6QgtQFkLkYen+yrA3T855MtEFS
+	 7gddqo/K9ArdY46vDAp9prV5SE1x3Nqmdt1DU6HUkAzSQmT4eUaypgeV3zG72ERQR8
+	 j6+ZKcG8eA0KA==
+From: Mark Brown <broonie@kernel.org>
+Date: Thu, 15 May 2025 11:27:14 +0200
+Subject: [PATCH] selftests/mm: Deduplicate test logging in
+ test_mlock_lock()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: Check pxd_leaf() instead of !pxd_table() while
- tearing down page tables
-To: David Hildenbrand <david@redhat.com>, catalin.marinas@arm.com,
- will@kernel.org
-Cc: ryan.roberts@arm.com, anshuman.khandual@arm.com, mark.rutland@arm.com,
- yang@os.amperecomputing.com, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
-References: <20250515063450.86629-1-dev.jain@arm.com>
- <332ecda7-14c4-4dc3-aeff-26801b74ca04@redhat.com>
- <4904d02f-6595-4230-a321-23327596e085@arm.com>
- <6fe7848c-485e-4639-b65c-200ed6abe119@redhat.com>
- <35ef7691-7eac-4efa-838d-c504c88c042b@arm.com>
- <c06930f0-f98c-4089-aa33-6789b95fd08f@redhat.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <c06930f0-f98c-4089-aa33-6789b95fd08f@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250515-selftest-mm-mlock2-dup-v1-1-963d5d7d243a@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAHGzJWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDU0MT3eLUnLSS1OIS3dxc3dyc/ORsI92U0gJdI3PzFFMLs6QkI8sUJaD
+ mgqLUtMwKsMHRsbW1AMKRyWRoAAAA
+X-Change-ID: 20250514-selftest-mm-mlock2-dup-277d586bb29d
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1344; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=6PmBf/DsE0wy+xDq3yf/Of2lMkBikecvmpMZM32RNVw=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoJbOBo/lCc8vlSJhQthtHCWl0Eh1VWbTIdBk3r
+ X1Zbc/+Il2JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaCWzgQAKCRAk1otyXVSH
+ 0LMaB/0cfyKQqtwkrhPB7AFDCu2alGaCqjYw20vyqDs+2WTcyFCFnC+PG4ukQGZnoCLKSOSd0D2
+ k6iTG3OitMsCtJMAYOpZ0sdYH8v9ao0TWlEDfwzBFUEsWtTXgRVsbsc3gyPtETtre0KB24XL4sZ
+ Vc51UG2Ump4zFtGKME2w/E0c0lH2sj9cwxl8FcKCj0BYHipy/cq8p4Tt66nfL2emZyl9j2qME2m
+ xIEj88GUHxQ64a7NSy9JIFyuU+8Bmd7QmD4Flg+3ERAO5qSx+oovcisEmhf8d/f3nO+ilz2wZ3Q
+ ELuwB/CpMWFKzNV9mQXhKyWEDUXf1Zvoq6En1Db9ySwJjyuj
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
+The mlock2-tests test_mlock_lock() test reports two test results with
+an identical string, one reporitng if it successfully locked a block of
+memory and another reporting if the lock is still present after doing an
+unlock (following a similar pattern to other tests in the same program).
+This confuses test automation since the test string is used to deduplicate
+tests, change the post unlock test to report "Unlocked" instead like the
+other tests to fix this.
 
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ tools/testing/selftests/mm/mlock2-tests.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 15/05/25 2:23 pm, David Hildenbrand wrote:
-> On 15.05.25 10:47, Dev Jain wrote:
->>
->>
->> On 15/05/25 2:06 pm, David Hildenbrand wrote:
->>> On 15.05.25 10:22, Dev Jain wrote:
->>>>
->>>>
->>>> On 15/05/25 1:43 pm, David Hildenbrand wrote:
->>>>> On 15.05.25 08:34, Dev Jain wrote:
->>>>>> Commit 9c006972c3fe removes the pxd_present() checks because the 
->>>>>> caller
->>>>>> checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller
->>>>>> only
->>>>>> checks pud_present(); pud_free_pmd_page() recurses on each pmd 
->>>>>> through
->>>>>> pmd_free_pte_page(), wherein the pmd may be none.
->>>>> The commit states: "The core code already has a check for pXd_none()",
->>>>> so I assume that assumption was not true in all cases?
->>>>>
->>>>> Should that one problematic caller then check for pmd_none() instead?
->>>>
->>>>    From what I could gather of Will's commit message, my 
->>>> interpretation is
->>>> that the concerned callers are vmap_try_huge_pud and vmap_try_huge_pmd.
->>>> These individually check for pxd_present():
->>>>
->>>> if (pmd_present(*pmd) && !pmd_free_pte_page(pmd, addr))
->>>>      return 0;
->>>>
->>>> The problem is that vmap_try_huge_pud will also iterate on pte entries.
->>>> So if the pud is present, then pud_free_pmd_page -> pmd_free_pte_page
->>>> may encounter a none pmd and trigger a WARN.
->>>
->>> Yeah, pud_free_pmd_page()->pmd_free_pte_page() looks shaky.
->>>
->>> I assume we should either have an explicit pmd_none() check in
->>> pud_free_pmd_page() before calling pmd_free_pte_page(), or one in
->>> pmd_free_pte_page().
->>>
->>> With your patch, we'd be calling pte_free_kernel() on a NULL pointer,
->>> which sounds wrong -- unless I am missing something important.
->>
->> Ah thanks, you seem to be right. We will be extracting table from a none
->> pmd. Perhaps we should still bail out for !pxd_present() but without the
->> warning, which the fix commit used to do.
-> 
-> Right. We just make sure that all callers of pmd_free_pte_page() already 
-> check for it.
-> 
-> I'd just do something like:
-> 
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index 8fcf59ba39db7..e98dd7af147d5 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -1274,10 +1274,8 @@ int pmd_free_pte_page(pmd_t *pmdp, unsigned long 
-> addr)
-> 
->          pmd = READ_ONCE(*pmdp);
-> 
-> -       if (!pmd_table(pmd)) {
-> -               VM_WARN_ON(1);
-> -               return 1;
-> -       }
-> +       VM_WARN_ON(!pmd_present(pmd));
-> +       VM_WARN_ON(!pmd_table(pmd));
+diff --git a/tools/testing/selftests/mm/mlock2-tests.c b/tools/testing/selftests/mm/mlock2-tests.c
+index 7f0d50fa361d..3e90ff37e336 100644
+--- a/tools/testing/selftests/mm/mlock2-tests.c
++++ b/tools/testing/selftests/mm/mlock2-tests.c
+@@ -196,7 +196,7 @@ static void test_mlock_lock(void)
+ 		ksft_exit_fail_msg("munlock(): %s\n", strerror(errno));
+ 	}
+ 
+-	ksft_test_result(!unlock_lock_check(map), "%s: Locked\n", __func__);
++	ksft_test_result(!unlock_lock_check(map), "%s: Unlocked\n", __func__);
+ 	munmap(map, 2 * page_size);
+ }
+ 
 
-And also return 1?
-Also we should BUG_ON(!pmd_present(pmd)) to avoid the null dereference?
+---
+base-commit: 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
+change-id: 20250514-selftest-mm-mlock2-dup-277d586bb29d
 
-> 
->          table = pte_offset_kernel(pmdp, addr);
->          pmd_clear(pmdp);
-> @@ -1305,7 +1303,8 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long 
-> addr)
->          next = addr;
->          end = addr + PUD_SIZE;
->          do {
-> -               pmd_free_pte_page(pmdp, next);
-> +               if (pmd_present(*pmdp))
-> +                       pmd_free_pte_page(pmdp, next);
-
-Ah yes, the "caller" of pmd_free_pte_page() is not only 
-vmap_try_huge_pmd but this also...my mind has been foggy lately...
-need to solve a math problem or two to sharpen it :)
-
->          } while (pmdp++, next += PMD_SIZE, next != end);
-> 
->          pud_clear(pudp);
-> 
-> 
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
 
