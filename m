@@ -1,175 +1,158 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BB312E7F
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F781B960
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747268349; cv=none; b=I/tdLpeRz6e8KVaaXlAlkjFiyqqU1pb1dvXevOxJxrZzQT3YxZTAAklvF4k7A/qxdglLQYjPAAxILwnpB9j5664MheWO6oTgUu7lIwx4OsRC2P2rk+VPheHwe78VQU2WVZ8n3+vkV/0FpOO9iGp7WkP7oFyI9PGD68j6YJhZGhQ=
+	t=1747268398; cv=none; b=Q6niPHqoB597VPkgm9Ex4yrU6+0PR2wkyJivlJggU72ZvPUDGVtcMlq0BudnYV/k+2YifCTkIMZzz0cQJKIK1VCJ+BhjRBKKiQERrlAY0R0R/v+lCzvth2zauIrGbPHn2q9lLRumsDYFCm9jlw8p1wNt8UWk7V3JI4NeoKQzcms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747268349; c=relaxed/simple;
-	bh=CwFN4BYKQFRQh/Xr76a4fW5WHqO7eX/lUR6egztCPsw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GMF245VQRK3FoKM9MdtwAPWDuXOyL4Sedd5xiguftiMRFTliREiy6RbPloNnBP7RKgleo+og5CY1lj8kznsQ0F+Ec0rkfnVci8ePqpG2xtUii4rlDlli+Jdu1XhB3dAXjjJBXAQCK2up8ks/ha0wajbeCyxe/nxbNvz+qrnKCV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yz+3mu+h; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747268398; c=relaxed/simple;
+	bh=LjpMuPJLWL/kSD36VWNs6Nv8CF2pnWpxWtkNafcX8qI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Hf/86/GxT3CssirNcJgzD+8GAF4PQcOsARUxbhL2W6ZVtCil07OxwXJ5Geu/9sGCkhQWMq/pXLorKiRHezXofttKK3AGAeKf15TNY/TTBF1TzjBvwMsshBq5l0LYkQ4z/OMcJXvW7sAYAKUXyrcz2zrL4c5NphlN71aW44HouBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cGpN0wsC; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yz+3mu+h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747268346;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xAdpM5Q7/vE/oYJJ+JI4td5zwc5mWcdORMBLORRPIA8=;
-	b=Yz+3mu+hmoQWLusMBoHTWjntBS8V4qkjomS+v92aKhGsh5PrcwkHgpHsoquaUbtiPElz/Q
-	KbeWF1nxHXbPvXkd6A/ybFWOhORY7m/8VuFM+/I2KK1/9s80T9lP/nKrF0+ubmGCPDTHQO
-	qR+r7O2Vgslvxk1ifBoUAIRnVGqJuao=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-675-aPJfMCl7O1iQwP8FwPjmDA-1; Wed, 14 May 2025 20:19:05 -0400
-X-MC-Unique: aPJfMCl7O1iQwP8FwPjmDA-1
-X-Mimecast-MFC-AGG-ID: aPJfMCl7O1iQwP8FwPjmDA_1747268345
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4768a1420b6so6490311cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:19:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cGpN0wsC"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30ad109bc89so400486a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:19:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747268396; x=1747873196; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NillZDQHMGkN8gsEINGl9IIKhPwgteKU+AMr08jxx80=;
+        b=cGpN0wsCVFBG33lcBz1uHs+nfwzzkqv1AUTvfuyePYLl6tcU2yuHeZrzftncdn8jT4
+         BZ+3ZwPjobA6iOUU1hg4ImgJyS5gruDKuu1hc7OwR48XAH4OYB/4W9xz0frZXmVQBuDH
+         sgeqxSTGRh/7p+pzLbPa+D7Vb3cgia/uBpq3qfCccR7oYlvktKdtad/qdtB64E7g1X49
+         J1Q3K/oIFcoax6ehIu0OzrVyPEOJ2SkkLEoqvfxrgtkYqGQ/wfzDnZWqGqNUhjzRE8J7
+         B6Zd0cE40p7TJYsV+WYsCaW2dMdsX+4bU3N+QK44raVLYHT8g0fmuYvjuXZcqjgOpFh8
+         HOkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747268345; x=1747873145;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xAdpM5Q7/vE/oYJJ+JI4td5zwc5mWcdORMBLORRPIA8=;
-        b=jEkmQzPB4NOXQUKuAv2uxVS0LrqSyG5q5tZYWoRyV5eGuqPe4Aa4658QMQHUKWkW3v
-         UHGoUDfDtA3zlPorw4dkB4gWcHg/+0RcJDjX4zR5LxcKoTgQclTYKpoKeRWemt0SZiiW
-         FsT5A+VJFhNUISx8ljGgTK1V7b8t9UXjYK/sI3D/WYtg+8nSURNJ2XJUlBxDK6F72DA3
-         xPrxVD4Zb9bxgQe+z//V0GFMSBymfFLQBLz4hucbvAVtmLPx2YMGiWls1lslwjQYE5lo
-         uyXZYfRVSxkOdVitpcH8R8KM5mvcUwTzVV5tfTY2F+Zb8rVTTRBOELKHzWWsL06dzsgk
-         OUcg==
-X-Forwarded-Encrypted: i=1; AJvYcCXV/VvMBZxIssv6MVma16m4oTCb0NQn4qEM5QlJ5s4Bb+dNCF0LIs3R46FjuIPR6r5itAj3/eJDPuztMHw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd6+3gKtq36dueuBiffp3YRopoG8y/lytJWd43syetaTCucsuf
-	ZC7JWGDs855r7gxMBsb4+GBSFsDzmJftZXaSodjYNV2kUixgUROCnuExAeZfMPxJtxenGd0FeGD
-	yRIrAlmCLTYqxCAEslEeaAOVwrqOhXnHDRB+cwnM+S4MChAq/e4POBFeeRtouSA==
-X-Gm-Gg: ASbGnctLLVcP1m9X9BTuf52i7edYMfPCfsc0j+Ps47JeCds3VS7GUiHh378ZM7Cjt8r
-	p0wDRkeNc/hzv69bn4fcjL2/Hg+Z4K3ZHFKg3MVizm+HclEeKUMFi1hOx2rkifCVHj+Qwq+pH7g
-	8A1HHAcHUXen5if6nEDOwujBPi4sElpAeMpJ1xEnU+Hb7mbGxguzjMtmLVZF3bIgItltWxIaHZo
-	HmB90+SYyqRwhgMSCktODMpOtMYm6tN5tA/QM1SwIcyNYS93Fh3q6QFHZ5MGRXcm3uIQFthwf0R
-	WnQM1x/QHLoZybmnLW3yzSrdyKzJlWm5YvpedHEsL2psv0SYt88xnMWug2s=
-X-Received: by 2002:a05:622a:550f:b0:494:a4bc:3b4d with SMTP id d75a77b69052e-494a4bc3e86mr7310391cf.18.1747268345005;
-        Wed, 14 May 2025 17:19:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHm4JjYY+Nx9t9nYvk2Gm1RhK8ioZCZ7rNUtqRSWrSEgm9/4nzUsOnioaJrjwzl/vmuEc8f4g==
-X-Received: by 2002:a05:622a:550f:b0:494:a4bc:3b4d with SMTP id d75a77b69052e-494a4bc3e86mr7309901cf.18.1747268344579;
-        Wed, 14 May 2025 17:19:04 -0700 (PDT)
-Received: from ?IPv6:2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38? ([2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4945259fa0dsm85842911cf.80.2025.05.14.17.19.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 17:19:04 -0700 (PDT)
-Message-ID: <8e4e3a564b652a1dd402873fbf3d320c8fdc41f8.camel@redhat.com>
-Subject: Re: [PATCH 3/3] x86: KVM: VMX: preserve host's
- DEBUGCTLMSR_FREEZE_IN_SMM while in the guest mode
-From: mlevitsk@redhat.com
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav
- Petkov <bp@alien8.de>, Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
- Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
- linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Date: Wed, 14 May 2025 20:19:03 -0400
-In-Reply-To: <aByzGilzBiTa-43C@google.com>
-References: <20250416002546.3300893-1-mlevitsk@redhat.com>
-	 <20250416002546.3300893-4-mlevitsk@redhat.com>
-	 <aAgpD_5BI6ZcCN29@google.com>
-	 <2b1ec570a37992cdfa2edad325e53e0592d696c8.camel@redhat.com>
-	 <71af8435d2085b3f969cb3e73cff5bfacd243819.camel@redhat.com>
-	 <aBvmxjxUrXEBa3sc@google.com> <aByzGilzBiTa-43C@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+        d=1e100.net; s=20230601; t=1747268396; x=1747873196;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NillZDQHMGkN8gsEINGl9IIKhPwgteKU+AMr08jxx80=;
+        b=bCIrscfNwx+wYnK3NjJzuTYUnQTYus62cY5uhns0TTMIKiolFOCU7Kw02NdPr+Ciau
+         4HzberrnAVvbHcYzZW1F1oT86Te/LezaKqOfttNMzC6UGOSBb3B0FhKT7IZ/s4vxDx58
+         A0QFbrcCXv3PaXNl6174qNeHs6AQ4pOXpg4Xd198QEIgiAG1KNVlpAoUXGTj6lRBz7zK
+         4MI+76cK22/p0X6b/HkZFov3cp8uzVfyoKicyTQWkKKC2yd7GB74It2irbi+WHDPypAN
+         X9L+epdmAYWU2mHwoVb2TvKEvHW6nTaka8HwOAEYzycOYJkIMaWM+G31kgXYK/+YKEfl
+         uYNw==
+X-Forwarded-Encrypted: i=1; AJvYcCXhK1AfzRe7I+qeyUezVRNAo+wyG2kKbrYbvS+Fx1lwx9ZgpTnRM+P+eeNFGEi78xoqeqMdGDetiJJjesM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLsp+/NIPA08Xkp6KWF6bxvV06i2cVGW3E5XYBpMuMxJ2t9g/i
+	hVt3qHVJ+1O5O/S6xV75AWfJrnr/pa2ObKNv5CR4uE+xEB/1foNCzI8wFt5ixP1k+ufdmn4/OJW
+	aGg==
+X-Google-Smtp-Source: AGHT+IFQjq1PCKOnQWifSwkYyIBpWTwDXTf5nA7iDlW/f85riVF6j0D/YJzRcqSnGliIoEN7myQuTor4ttY=
+X-Received: from pjn12.prod.google.com ([2002:a17:90b:570c:b0:2ef:8055:93d9])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:35c4:b0:30a:4700:ca91
+ with SMTP id 98e67ed59e1d1-30e5156e9e0mr777959a91.1.1747268395729; Wed, 14
+ May 2025 17:19:55 -0700 (PDT)
+Date: Wed, 14 May 2025 17:19:54 -0700
+In-Reply-To: <20250324173121.1275209-21-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-21-mizhang@google.com>
+Message-ID: <aCUzKp1uhMsn-g_u@google.com>
+Subject: Re: [PATCH v4 20/38] KVM: x86/pmu: Check if mediated vPMU can
+ intercept rdpmc
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
+	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, 2025-05-08 at 06:35 -0700, Sean Christopherson wrote:
-> On Wed, May 07, 2025, Sean Christopherson wrote:
-> > On Thu, May 01, 2025, mlevitsk@redhat.com=C2=A0wrote:
-> > > Any ideas on how to solve this then? Since currently its the common c=
-ode that
-> > > reads the current value of the MSR_IA32_DEBUGCTLMSR and it doesn't le=
-ave any
-> > > indication about if it changed I can do either
-> > >=20
-> > > 1. store old value as well, something like 'vcpu->arch.host_debugctl_=
-old' Ugly IMHO.
-> > >=20
-> > > 2. add DEBUG_CTL to the set of the 'dirty' registers, e.g add new bit=
- for kvm_register_mark_dirty
-> > > It looks a bit overkill to me
-> > >=20
-> > > 3. Add new x86 callback for something like .sync_debugctl(). I vote f=
-or this option.
-> > >=20
-> > > What do you think/prefer?
-> >=20
-> > I was going to say #3 as well, but I think I have a better idea.
-> >=20
-> > DR6 has a similar problem; the guest's value needs to be loaded into ha=
-rdware,
-> > but only somewhat rarely, and more importantly, never on a fastpath ree=
-ntry.
-> >=20
-> > Forced immediate exits also have a similar need: some control logic in =
-common x86
-> > needs instruct kvm_x86_ops.vcpu_run() to do something.
-> >=20
-> > Unless I've misread the DEBUGCTLMSR situation, in all cases, common x86=
- only needs
-> > to a single flag to tell vendor code to do something.=C2=A0 The payload=
- for that action
-> > is already available.
-> >=20
-> > So rather than add a bunch of kvm_x86_ops hooks that are only called im=
-mediately
-> > before kvm_x86_ops.vcpu_run(), expand @req_immediate_exit into a bitmap=
- of flags
-> > to communicate what works needs to be done, without having to resort to=
- a field
-> > in kvm_vcpu_arch that isn't actually persistent.
-> >=20
-> > The attached patches are relatively lightly tested, but the DR6 tests f=
-rom the
-> > recent bug[*] pass, so hopefully they're correct?
-> >=20
-> > The downside with this approach is that it would be difficult to backpo=
-rt to LTS
-> > kernels, but given how long this has been a problem, I'm not super conc=
-erned about
-> > optimizing for backports.
-> >=20
-> > If they look ok, feel free to include them in the next version.=C2=A0 O=
-r I can post
-> > them separately if you want.
->=20
-> And of course I forgot to attach the patches...
+The shortlog is wildly inaccurate.  KVM is not simply checking, KVM is actively
+disabling RDPMC interception.  *That* needs to be the focus of the shortlog and
+changelog.
 
-There is one problem with this approach though: the common x86 code will st=
-ill have to decide if
-to set KVM_RUN_LOAD_DEBUGCTL flag.
+> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> index 92c742ead663..6ad71752be4b 100644
+> --- a/arch/x86/kvm/pmu.c
+> +++ b/arch/x86/kvm/pmu.c
+> @@ -604,6 +604,40 @@ int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
+>  	return 0;
+>  }
+>  
+> +inline bool kvm_rdpmc_in_guest(struct kvm_vcpu *vcpu)
 
-Checking that DEBUGCTLMSR_FREEZE_IN_SMM bit of 'vcpu->arch.host_debugctl' c=
-hanged is VMX specific,
-because AMD doesn't have this bit, and it might even in the future have a d=
-ifferent bit at that
-position for different purpose.
+Strongly prefer kvm_need_rdpmc_intercept(), e.g. to follow vmx_need_pf_intercept(),
+and because it makes the users more obviously correct.  The "in_guest" terminology
+from kvm_{hlt,mwait,pause,cstate}_in_guest() isn't great, but at least in those
+flows it's not awful because they are very direct reflections of knobs that control
+interception, whereas this helper is making a variety of runtime checks.
 
-I can set the KVM_RUN_LOAD_DEBUGCTL when any bit in DEBUGCTL changes instea=
-d, which should still be rare
-and then SVM code can ignore the KVM_RUN_LOAD_DEBUGCTL, while VMX code will=
- reload the VMCS field.
+> +{
+> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> +
+> +	if (!kvm_mediated_pmu_enabled(vcpu))
+> +		return false;
+> +
+> +	/*
+> +	 * VMware allows access to these Pseduo-PMCs even when read via RDPMC
+> +	 * in Ring3 when CR4.PCE=0.
+> +	 */
+> +	if (enable_vmware_backdoor)
+> +		return false;
+> +
+> +	/*
+> +	 * FIXME: In theory, perf metrics is always combined with fixed
+> +	 *	  counter 3. it's fair enough to compare the guest and host
+> +	 *	  fixed counter number and don't need to check perf metrics
+> +	 *	  explicitly. However kvm_pmu_cap.num_counters_fixed is limited
+> +	 *	  KVM_MAX_NR_FIXED_COUNTERS (3) as fixed counter 3 is not
+> +	 *	  supported now. perf metrics is still needed to be checked
+> +	 *	  explicitly here. Once fixed counter 3 is supported, the perf
+> +	 *	  metrics checking can be removed.
+> +	 */
 
-Is this OK?
+And then what happens when hardware supported fixed counter #4?  KVM has the same
+problem, and we can't check for features that KVM doesn't know about.
 
-Best regards,
-	Maxim Levitsky
+The entire problem is that this code is checking for *KVM* support, but what the
+guest can see and access needs to be checked against *hardware* support.  Handling
+that is simple, just take a snapshot of the host PMU capabilities before KVM
+generates kvm_pmu_cap, and use the unadulterated snapshot here (and everywhere
+else with similar checks).
 
+> +	return pmu->nr_arch_gp_counters == kvm_pmu_cap.num_counters_gp &&
+> +	       pmu->nr_arch_fixed_counters == kvm_pmu_cap.num_counters_fixed &&
+> +	       vcpu_has_perf_metrics(vcpu) == kvm_host_has_perf_metrics() &&
+> +	       pmu->counter_bitmask[KVM_PMC_GP] ==
+> +				(BIT_ULL(kvm_pmu_cap.bit_width_gp) - 1) &&
+> +	       pmu->counter_bitmask[KVM_PMC_FIXED] ==
+> +				(BIT_ULL(kvm_pmu_cap.bit_width_fixed) - 1);
+> +}
+> @@ -212,6 +212,18 @@ static void amd_pmu_refresh(struct kvm_vcpu *vcpu)
+>  	bitmap_set(pmu->all_valid_pmc_idx, 0, pmu->nr_arch_gp_counters);
+>  }
+>  
+> +static void amd_pmu_refresh(struct kvm_vcpu *vcpu)
+> +{
+> +	struct vcpu_svm *svm = to_svm(vcpu);
+> +
+> +	__amd_pmu_refresh(vcpu);
+
+To better communicate the roles of the two paths to refresh():
+
+	amd_pmu_refresh_capabilities(vcpu);
+
+	amd_pmu_refresh_controls(vcpu);
+
+Ditto for Intel.
