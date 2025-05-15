@@ -1,115 +1,205 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24902192EB
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 22:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96721111BF;
+	Thu, 15 May 2025 22:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747346823; cv=none; b=ePYf6RDpCgolomiIFGok6hUJUHT+U4+HBtyOtE6F4QY/t4QBbufdFiVJC7fEf1/CjCFsgW2tQa8AodXI0EI1PKIEgCsM7ggWg63edrZqEtjr5cbvBAZSrSjG82EBoi45CHPvdRdbFo/UeXDIGF67llv/32eD374UYXyIgrIj/+Y=
+	t=1747346945; cv=none; b=iFEIm7+4oz1XyiEmX9NV8uaLJTwny7JQdjoE0W9o8vteHCGnwRjTitYSbNnb+BHMf6emJ7X+L9aOu001acl7D43HdZV9DKVOwGFRM8VWqdgoLRrrxLFRS26ouvR99lnWSzshN/xpnAlFKDxURK5kGkJpMS4wJAen56e+G80G5r8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747346823; c=relaxed/simple;
-	bh=VOcjrs308B52KT52vs0HhqeVrWy1UWSL98594xsdx2A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jnHegwd+fPRVTCY0cvr1pzAxbwxD3BpPGlS+eaTjvOlj/EcuKcoOJmRHUgaPdZAp88G6piUWlbet1lqWKCLwl+oMFc+DQPq0PFznAlL2bOZwyGI5kXwG+b6T2BbnG9QKVc3e6BEp64VdNDnMO5QWAaLeNxA3UZ61CUj2zgFhAsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=e8AmbK4j; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1747346945; c=relaxed/simple;
+	bh=vTlG7bW65Ok7ET5LGiyJDLIbRa5aW61JZ/tK5bBDdSg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oSVPh7YE867JLnZmvE2V7URpgqbw1nk/B9QXqs5yCBGjiOURsvej3J2Pra6Czyc6epjKrBSuVHAprI/+L+laDMnUiEhcpiCWLkoPHBJe9llNfkyadID98D2uu66ad3mpO1RK0nNIYOoRQeh1+p0dbnLF2xNXXWP/E2gpaqTVX/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LooUBX7d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="e8AmbK4j"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5fd0d383b32so2400268a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:07:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1747346818; x=1747951618; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qhGwuGRW61usYD00HViI9ouZ/RQSyG12rMjq3gQRknY=;
-        b=e8AmbK4jTG8yLMdRreaJLMRFzQQiW/sThiRUDyixI93VdOed/emfNZ4gJsGgWccDQR
-         xiR2aaGGHqq5zirbxq7FMYY2pexZgsuejdWI8vki1ShmfaaIQjVp0cdvPSzAtn0lc5ui
-         sN//8gJvhAj42tS3eUDUYUyfm28gYh1SfyjNg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747346818; x=1747951618;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qhGwuGRW61usYD00HViI9ouZ/RQSyG12rMjq3gQRknY=;
-        b=Y5u3MRq1TyF3OXx0RMPRA+7GfUXq3wtN4GcxkB89W8132AYB3TqPxBAgYDlF17zQXz
-         nv+Gm64elkwp6U6r7X8ipUGntWGv1uKwdiAEzlkJAxZ/aog1SHxI1yp5mlJNYogUTbkt
-         UnRv+Av35NVhPQHmauxGmjhreCO73dr6mZUYyv8zghBcxvEBSB9JxIvFNgy/RNccGLVi
-         u3gJbBy1TI5pRAmYLUyEX1Osq/prXWAxiAZT7tfa5RAKe5QSXNKEeSw1cf8DUiAEGn1S
-         9nOIfwoGS4ZhlyTuBX32b/V97gaQommOJedOAyFg9xOOyKE/SIwIGF8I67VWnSe+/Lj2
-         WHsg==
-X-Forwarded-Encrypted: i=1; AJvYcCWCEuwtK5HydXJg6w7+ZYhJ/QDBFluMBpKEOvR8FDIx2Azp+4cFIL3U4sAchGgVFu+nrBFEuAxjjpRs5hY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmkFhTN5U5UOfy3kNT8k4GQNX1ycih6P0DTCIVLRs/ncu7v1Hh
-	MG3x9AydksgSXNGzC3ruego9tT67dtZviLcdPFHxesL4b+tJC3e9Y3S144Sb95TFSRl4veStMKC
-	73rnojTs=
-X-Gm-Gg: ASbGncv6aOG95AoR9C/qxUpnmRBcM5DgQ1dp5/jmpflGEO+/MmGZefRKkKfaNVOF7sr
-	5D9bbQExNNy/K+QaoLenYhGISbe8r7jZ1p/MIzDPnRiqVcJz5kun59K3r7CjOCkVBwTSx1bu40w
-	Qc11eS35Kd5Tjsi2avgs0diJMrmqRLImDweXtU9Ru+MNzrc/8ds5dvy+c+muMMlyuuHiIluXXUN
-	C7/qngQ3xIkWUuyjec5AnNf12fOC6LEAV7ghqVzum4SCl2LuNugYK339IJubDTzpE2A/DLr7tmj
-	E0ehle3UNM6091E9c5BOEo7wLaERi61t/PWRJYMoHZi2hHKomqG+NllF3m2D9nkXvr4zk07PiYM
-	MgFTbDET2gsS/sOq54HvnvWbh/A==
-X-Google-Smtp-Source: AGHT+IFgoFKMfs7Fm1smak9uUz62lV2HvEu3d/CaQKBQy9F6qY9IndawmouRBHrbuCrpY1C6ls+9gQ==
-X-Received: by 2002:a05:6402:1d4c:b0:5ff:7175:a6f6 with SMTP id 4fb4d7f45d1cf-600900f54eamr819686a12.19.1747346818571;
-        Thu, 15 May 2025 15:06:58 -0700 (PDT)
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6004d502adbsm367705a12.27.2025.05.15.15.06.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 15:06:57 -0700 (PDT)
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5fbfa0a7d2cso2383568a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:06:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU84CYwsMiWvyooMR7ZA6Dch2XNcUQQQ/07IS77gqLiVrUhQxMRyX7f9+htspOa/+cV5ZGhVaJpIirvD+0=@vger.kernel.org
-X-Received: by 2002:a05:6402:35d1:b0:5ff:b5f9:c646 with SMTP id
- 4fb4d7f45d1cf-600900a5281mr695948a12.1.1747346817439; Thu, 15 May 2025
- 15:06:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LooUBX7d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2556DC4CEE7;
+	Thu, 15 May 2025 22:08:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747346945;
+	bh=vTlG7bW65Ok7ET5LGiyJDLIbRa5aW61JZ/tK5bBDdSg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LooUBX7dxfOwukJ8lPQw36DZUDAEOByaA7bTebM8sVgFtb/7kfH0H+4aHKsMD0VbL
+	 Z/M4glKWvaTjZF1pzVrzAywXUKh0anbklwF3zwLd3nlZbHLFH5TXA+8cC4q5j6PJSZ
+	 ecq9Nb1+03ekYnHfPJXZqVvTzzN6GnnVVsz21Tl/UaMEbFrx758XKuWh9sz/QW1nxF
+	 G7MN06x7jo0Y5TcLJfMH2nfrWMH7UUWjteAOKd8Dygil0y4to9XKnYBPlriQytMuSf
+	 zT0B6T/KnhMTq5i+0begaYcHwYDyLrHJhOycCYjZrSZ509d2fhLbEFECe4Ub4tpWa2
+	 VMYDsUHFYV+kA==
+Date: Fri, 16 May 2025 00:08:56 +0200
+From: Alejandro Colomar <alx@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, Song Liu <songliubraving@fb.com>, 
+	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, 
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, 
+	David Laight <David.Laight@aculab.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCHv2 22/22] man2: Add uprobe syscall page
+Message-ID: <6elp7g4ne2pk3kai6f72ggkpi2eje7haptdisoraopkpf54n26@4sr54ptnwpex>
+References: <20250515121121.2332905-1-jolsa@kernel.org>
+ <20250515121121.2332905-23-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <feb98a0f-8d17-495c-b556-b4fe19446d5d@zytor.com>
- <CAHk-=wi7sLm+zHUkyFO8V6QNghLQn0yiWsHfm8WU=V15K7K07Q@mail.gmail.com> <425880dd-e694-4428-999e-a787a666de5f@zytor.com>
-In-Reply-To: <425880dd-e694-4428-999e-a787a666de5f@zytor.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 15 May 2025 15:06:40 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whivBr0xME3h1Po9aJK8FE-+EhmL11ojT6hSLioGr4okw@mail.gmail.com>
-X-Gm-Features: AX0GCFsqqthU2uUT1mopyAu0bi9uStWBYXDmLmZRvLj9PURyJOI3EnXwFtx9NyA
-Message-ID: <CAHk-=whivBr0xME3h1Po9aJK8FE-+EhmL11ojT6hSLioGr4okw@mail.gmail.com>
-Subject: Re: Metalanguage for the Linux UAPI
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>, 
-	libc-alpha@sourceware.org, linux-arch@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pifqnw6ycu3nbclf"
+Content-Disposition: inline
+In-Reply-To: <20250515121121.2332905-23-jolsa@kernel.org>
 
-On Thu, 15 May 2025 at 14:42, H. Peter Anvin <hpa@zytor.com> wrote:
->
-> Building it on top of sparse might still very well be The Right Thing.
 
-You can look at the 'ctags.c' file in the sparse code, it basically
-does a lot of this kind of thing: it parses the file, then walks
-through all the symbols and #defines that it found.
+--pifqnw6ycu3nbclf
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+From: Alejandro Colomar <alx@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, Song Liu <songliubraving@fb.com>, 
+	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, 
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, 
+	David Laight <David.Laight@aculab.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCHv2 22/22] man2: Add uprobe syscall page
+References: <20250515121121.2332905-1-jolsa@kernel.org>
+ <20250515121121.2332905-23-jolsa@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <20250515121121.2332905-23-jolsa@kernel.org>
 
-It then obviously prints out filenames and line numbers rather than
-converting the result into something else, so I'm not claiming it's
-useful as-is, but from a "how to parse a file and walk the symbols it
-declares" standpoint it does almost everything.
+Hi Jiri,
 
-I just tested, and it looks like it hates the kernel headers because
-it hasn't been updated to understand about the bitwise type and dies
-with a
+On Thu, May 15, 2025 at 02:11:19PM +0200, Jiri Olsa wrote:
+> Changing uretprobe syscall man page to be shared with new
+> uprobe syscall man page.
+>=20
+> Cc: Alejandro Colomar <alx@kernel.org>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 
-    builtin:0:0: error: unknown symbol __le16 namespace:0 type:13
+LGTM.
 
-but when I just made it not die it seems to actually do its thing, and
-knows about how sparse considers preprocessor symbols to be symbols
-just like C symbols are, just in a different namespace.
 
-Obviously for things like ioctl numbers, you'd need to then make it
-also actually *evaluate* the #define etc after you list them. You
-could do that in sparse itself, or you could do it by just creating a
-list of #define's from within sparse, and then have a separate pass
-that evaluates their values. That 'ctags' thing doesn't do any of
-that, of course.
+Have a lovely night!
+Alex
 
-              Linus
+> ---
+>  man/man2/uprobe.2    |  1 +
+>  man/man2/uretprobe.2 | 36 ++++++++++++++++++++++++------------
+>  2 files changed, 25 insertions(+), 12 deletions(-)
+>  create mode 100644 man/man2/uprobe.2
+>=20
+> diff --git a/man/man2/uprobe.2 b/man/man2/uprobe.2
+> new file mode 100644
+> index 000000000000..ea5ccf901591
+> --- /dev/null
+> +++ b/man/man2/uprobe.2
+> @@ -0,0 +1 @@
+> +.so man2/uretprobe.2
+> diff --git a/man/man2/uretprobe.2 b/man/man2/uretprobe.2
+> index bbbfb0c59335..df0e5d92e5ed 100644
+> --- a/man/man2/uretprobe.2
+> +++ b/man/man2/uretprobe.2
+> @@ -2,22 +2,28 @@
+>  .\"
+>  .\" SPDX-License-Identifier: Linux-man-pages-copyleft
+>  .\"
+> -.TH uretprobe 2 (date) "Linux man-pages (unreleased)"
+> +.TH uprobe 2 (date) "Linux man-pages (unreleased)"
+>  .SH NAME
+> +uprobe,
+>  uretprobe
+>  \-
+> -execute pending return uprobes
+> +execute pending entry or return uprobes
+>  .SH SYNOPSIS
+>  .nf
+> +.B int uprobe(void);
+>  .B int uretprobe(void);
+>  .fi
+>  .SH DESCRIPTION
+> +.BR uprobe ()
+> +is an alternative to breakpoint instructions
+> +for triggering entry uprobe consumers.
+> +.P
+>  .BR uretprobe ()
+>  is an alternative to breakpoint instructions
+>  for triggering return uprobe consumers.
+>  .P
+>  Calls to
+> -.BR uretprobe ()
+> +these system calls
+>  are only made from the user-space trampoline provided by the kernel.
+>  Calls from any other place result in a
+>  .BR SIGILL .
+> @@ -26,22 +32,28 @@ The return value is architecture-specific.
+>  .SH ERRORS
+>  .TP
+>  .B SIGILL
+> -.BR uretprobe ()
+> -was called by a user-space program.
+> +These system calls
+> +were called by a user-space program.
+>  .SH VERSIONS
+>  The behavior varies across systems.
+>  .SH STANDARDS
+>  None.
+>  .SH HISTORY
+> +.TP
+> +.BR uprobe ()
+> +TBD
+> +.TP
+> +.BR uretprobe ()
+>  Linux 6.11.
+>  .P
+> -.BR uretprobe ()
+> -was initially introduced for the x86_64 architecture
+> -where it was shown to be faster than breakpoint traps.
+> -It might be extended to other architectures.
+> +These system calls
+> +were initially introduced for the x86_64 architecture
+> +where they were shown to be faster than breakpoint traps.
+> +They might be extended to other architectures.
+>  .SH CAVEATS
+> -.BR uretprobe ()
+> -exists only to allow the invocation of return uprobe consumers.
+> -It should
+> +These system calls
+> +exist only to allow the invocation of
+> +entry or return uprobe consumers.
+> +They should
+>  .B never
+>  be called directly.
+> --=20
+> 2.49.0
+>=20
+
+--=20
+<https://www.alejandro-colomar.es/>
+
+--pifqnw6ycu3nbclf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmgmZfcACgkQ64mZXMKQ
+wqkceQ/7Bb+KzoKdDAaf09Xgn3v/CKQZp6/++6O5NCi/XU9zW0gRKIAgqyuXjLdB
+ZxkIAJ8b8+6SQePuEJIHasZs5LRlKPIQyW/rf36IRIuOCSWE9k4RzKpm4ODxHOig
+Mss/Z288qN52D5j+3FYuoH+nRjv/Qq2Bc+DgYOwRN2FN2VzODIiDAxyh8rRSAqnB
+ySQrcPTOv1uTjcQ4dNQO82zd3TswFtspzGj+h4hd8h7IFOYv+smNckgZLHVcr9bT
+mVAjC5g3faAep/7i/jVMs6ZI0754sJrfWOdrXt7TrhnQPBots6vaYLjlpNnHbUn2
+4ymhTPEcKdhxGMl6RG0d5JSpFmmiLlX1d5PYSOrr9948ON0WFmIoblmaNFwKkrSP
+bQjLonBQUxGey5x0JxMFBiY4rvcuMJe5W5POaPT0Qfqb5yjjMSOvjFQAqv1TVY73
+CpO0xgiERzEA9qUwHYiOU3OswEIhn/TZerpQQFG6cUbVihFPkiCJtIgndzZ9t+Me
+pN1Q+a+S2kpYtR2bDrH21m+/1Ak9YGZaoEjHRB87Pz57Npk0SvLpqTUx0K/f0F9b
+0wd7IXbwXfbY9KWkAVKNxWnrfLRfWfFcB+JIrmIP5dULNWiRJap5mLOMQjn16huE
+Iapyp1diQhmx4O3KrqiNnc5rJs/p4mHPtkjXiRRjuh73x4/G7Q0=
+=5zr5
+-----END PGP SIGNATURE-----
+
+--pifqnw6ycu3nbclf--
