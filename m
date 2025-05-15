@@ -1,81 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C87028540B;
-	Thu, 15 May 2025 10:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9283284662;
+	Thu, 15 May 2025 10:07:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747303474; cv=none; b=QOe0/mabRIixQIb6J2DYpGoUgGHu/z2aPr7QACkfAqNhwHl39y7d5tZEKYwYhClqcWSvBpSv8U2ORWMLylnvsSPfAIEgnX8BOVryiSYbc93nO/CU6+StPe/JosTk06nnqw9/ibTJAnHjt+LPh/u8V0UGAd+ccWwTs7tCO8wZW3s=
+	t=1747303629; cv=none; b=Kw/Lg4CtmMr7lIdbhubwzCQwl1fC7/UUcgr0PB0wh1Rod+qHWoSmA7gpXrOlQj5t1mv3sIjCOgYJ8C2x9mdZbdbnrsWYe1o1p7BHwmsSt6+sOywwF6WIGhTR175LW583/CF6WvMzlTserwslh0GFOcC/xxXKxG/HP5K31fPSPcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747303474; c=relaxed/simple;
-	bh=4fv5s1gQ9Teikm9yrf0w4UpJvAG//n1htCUJx+4nq4A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OCVNQiJ/XY9RLOXTYeVLmp02pbX/Uotzxs5Rorv7H17hyIdtuPpS6SJ0Bg7YrA+MBhni8K70P48OagXpEkUywcfKm7UWP7XcGHqrJ0b0CwLpBFSTqJthZOKqxqsGH25IlTqwwdWhwoQVM1A+gZiRi7HHD8k0UFMIA0fzwkG0dm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uin2Rz/q; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uin2Rz/q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24DF5C4CEE7;
-	Thu, 15 May 2025 10:04:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747303473;
-	bh=4fv5s1gQ9Teikm9yrf0w4UpJvAG//n1htCUJx+4nq4A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uin2Rz/qjU+at2D7epdPaUL2iL/qvJqvVs0nND1g6/bF/hfb+bI5E7sokurf10GZ3
-	 zSPC6A2BstdjDnGsWx8xu1z313IwWKwhNfuptYz73qVOJ2ankAdOimymnEh8NGwIBW
-	 x5+E2oOTfk8uXUBzhjCep7R9Ic59pZztKV5hdg5cEZy55MWFCPCkoLQAuSJ8IKSGhq
-	 irm5XJIC1C9AnQQLP0nbEJhBjq027B3RcU0/o/lrCrpWExlJKDPmeXNjmh4tF4yQ02
-	 gxtfQwCnW27axXw5yzJ47/RhQxOQjItN8MpXP7ErhlUH2iQSLZ2/0T4Q9V/F0aapCt
-	 hZlItVXccSOAA==
-From: Christian Brauner <brauner@kernel.org>
-To: Max Kellermann <max.kellermann@ionos.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] include/linux/fs.h: add inode_lock_killable()
-Date: Thu, 15 May 2025 12:04:20 +0200
-Message-ID: <20250515-wettrennen-zweisamkeit-5493081baee2@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250513150327.1373061-1-max.kellermann@ionos.com>
-References: <20250513150327.1373061-1-max.kellermann@ionos.com>
+	s=arc-20240116; t=1747303629; c=relaxed/simple;
+	bh=IG4wFVTijQlszqMFKwdjV9K2k4N/Z+mxGNA1k/olemk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P6V3G+g7rcGqi/+byPfiq5h3xBtHD6mzG8v/F133pLHBdlP1UOUSump73NDkIZfn5qkfWITttDxbFC39vHtFPnvPX+0On5GRTQ/AORUhEYubXjG9zpJi/NjSiDObUM/ejH0hjrrwpLvTycFR4Q/c/cckIeP8vI1W1/4NxSNIT70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5097114BF;
+	Thu, 15 May 2025 03:06:55 -0700 (PDT)
+Received: from [10.1.32.187] (XHFQ2J9959.cambridge.arm.com [10.1.32.187])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73AA93F673;
+	Thu, 15 May 2025 03:07:05 -0700 (PDT)
+Message-ID: <bac0d8e2-6219-4eb2-b4c8-b82b208808b5@arm.com>
+Date: Thu, 15 May 2025 11:07:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1246; i=brauner@kernel.org; h=from:subject:message-id; bh=4fv5s1gQ9Teikm9yrf0w4UpJvAG//n1htCUJx+4nq4A=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSo7tGZc/PIkzX5Zn9mMm67V58RnWq3yUCJq1LN8ztH2 +n/oazhHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABOp5WRkeMH7KE3Xt9j59ySH o3IrHZtvTTNUL2o/zb+CT2K3/bmjZYwMW3adP2L5NmXvo8sFi9Pu+lS+sXN6018f8OF79/xnzL1 zWQA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: Check pxd_leaf() instead of !pxd_table() while
+ tearing down page tables
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>, Dev Jain <dev.jain@arm.com>,
+ catalin.marinas@arm.com, will@kernel.org
+Cc: anshuman.khandual@arm.com, mark.rutland@arm.com,
+ yang@os.amperecomputing.com, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
+References: <20250515063450.86629-1-dev.jain@arm.com>
+ <332ecda7-14c4-4dc3-aeff-26801b74ca04@redhat.com>
+ <4904d02f-6595-4230-a321-23327596e085@arm.com>
+ <6fe7848c-485e-4639-b65c-200ed6abe119@redhat.com>
+ <35ef7691-7eac-4efa-838d-c504c88c042b@arm.com>
+ <c06930f0-f98c-4089-aa33-6789b95fd08f@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <c06930f0-f98c-4089-aa33-6789b95fd08f@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Tue, 13 May 2025 17:03:24 +0200, Max Kellermann wrote:
-> Prepare for making inode operations killable while they're waiting for
-> the lock.
+On 15/05/2025 09:53, David Hildenbrand wrote:
+> On 15.05.25 10:47, Dev Jain wrote:
+>>
+>>
+>> On 15/05/25 2:06 pm, David Hildenbrand wrote:
+>>> On 15.05.25 10:22, Dev Jain wrote:
+>>>>
+>>>>
+>>>> On 15/05/25 1:43 pm, David Hildenbrand wrote:
+>>>>> On 15.05.25 08:34, Dev Jain wrote:
+>>>>>> Commit 9c006972c3fe removes the pxd_present() checks because the caller
+>>>>>> checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller
+>>>>>> only
+>>>>>> checks pud_present(); pud_free_pmd_page() recurses on each pmd through
+>>>>>> pmd_free_pte_page(), wherein the pmd may be none.
+>>>>> The commit states: "The core code already has a check for pXd_none()",
+>>>>> so I assume that assumption was not true in all cases?
+>>>>>
+>>>>> Should that one problematic caller then check for pmd_none() instead?
+>>>>
+>>>>    From what I could gather of Will's commit message, my interpretation is
+>>>> that the concerned callers are vmap_try_huge_pud and vmap_try_huge_pmd.
+>>>> These individually check for pxd_present():
+>>>>
+>>>> if (pmd_present(*pmd) && !pmd_free_pte_page(pmd, addr))
+>>>>      return 0;
+>>>>
+>>>> The problem is that vmap_try_huge_pud will also iterate on pte entries.
+>>>> So if the pud is present, then pud_free_pmd_page -> pmd_free_pte_page
+>>>> may encounter a none pmd and trigger a WARN.
+>>>
+>>> Yeah, pud_free_pmd_page()->pmd_free_pte_page() looks shaky.
+>>>
+>>> I assume we should either have an explicit pmd_none() check in
+>>> pud_free_pmd_page() before calling pmd_free_pte_page(), or one in
+>>> pmd_free_pte_page().
+>>>
+>>> With your patch, we'd be calling pte_free_kernel() on a NULL pointer,
+>>> which sounds wrong -- unless I am missing something important.
+>>
+>> Ah thanks, you seem to be right. We will be extracting table from a none
+>> pmd. Perhaps we should still bail out for !pxd_present() but without the
+>> warning, which the fix commit used to do.
+> 
+> Right. We just make sure that all callers of pmd_free_pte_page() already check
+> for it.
+> 
+> I'd just do something like:
+
+I just reviewed the patch and had the same feedback as David. I agree with the
+patch below, with some small mods...
+
+> 
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 8fcf59ba39db7..e98dd7af147d5 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -1274,10 +1274,8 @@ int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
+>  
+>         pmd = READ_ONCE(*pmdp);
+>  
+> -       if (!pmd_table(pmd)) {
+> -               VM_WARN_ON(1);
+> -               return 1;
+> -       }
+> +       VM_WARN_ON(!pmd_present(pmd));
+> +       VM_WARN_ON(!pmd_table(pmd));
+
+You don't need both of these warnings; pmd_table() is only true if the pmd is
+present (well actually only if it's _valid_ which is more strict than present),
+so the second one is sufficient on its own.
+
+>  
+>         table = pte_offset_kernel(pmdp, addr);
+>         pmd_clear(pmdp);
+> @@ -1305,7 +1303,8 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
+
+Given you are removing the runtime check and early return in
+pmd_free_pte_page(), I think you should modify this function to use the same
+style too.
+
+>         next = addr;
+>         end = addr + PUD_SIZE;
+>         do {
+> -               pmd_free_pte_page(pmdp, next);
+> +               if (pmd_present(*pmdp))
+
+question: I wonder if it is better to use !pmd_none() as the condition here? It
+should either be none or a table at this point, so this allows the warning in
+pmd_free_pte_page() to catch more error conditions. No strong opinion though.
+
+Thanks,
+Ryan
+
+> +                       pmd_free_pte_page(pmdp, next);
+>         } while (pmdp++, next += PMD_SIZE, next != end);
+>  
+>         pud_clear(pudp);
 > 
 > 
 
-Applied to the vfs-6.16.misc branch of the vfs/vfs.git tree.
-Patches in the vfs-6.16.misc branch should appear in linux-next soon.
-
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.16.misc
-
-[1/4] include/linux/fs.h: add inode_lock_killable()
-      https://git.kernel.org/vfs/vfs/c/d8c5507cd140
-[2/4] fs/open: make chmod_common() and chown_common() killable
-      https://git.kernel.org/vfs/vfs/c/28a3f6ab2fe0
-[3/4] fs/open: make do_truncate() killable
-      https://git.kernel.org/vfs/vfs/c/d68687564280
-[4/4] fs/read_write: make default_llseek() killable
-      https://git.kernel.org/vfs/vfs/c/2e1a8fbff51b
