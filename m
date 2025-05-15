@@ -1,232 +1,159 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CE172600
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 13:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E100221348;
+	Thu, 15 May 2025 13:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747315189; cv=none; b=BeHzy58EyMIljBWmu88RyZ250FbtTs3IiF3NdzsKGrcNBs70lIjKtcgHDXd7XWYsfdG2vMah8FLtl/VOSf8sMlOGnR2JMcO6veMZIK/LWWHjT9qsdE07Lda6Z/oILuFa/rs3ZvQdKCxZJnh+lG7vmGR9SBXsSmnTAuTyRkh7hzU=
+	t=1747315267; cv=none; b=D0UwC92HgP64VEQeN4kpLR7zxLTyoG5TlQISgZOgXcEscexWYC8yVzZA9YFrmec9HdH+b322ydgX71hWNwsATYb9o3N5oK/XN0hm948fxksH43Gd2Y32NtbZb50/h3ve+7f+Bh/UhDtenAshva7fTyt31Vx76mUDWXZheV7KcFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747315189; c=relaxed/simple;
-	bh=zdw58KYBsWdL9BjnNQJ46Sy3sZuoLDF6pEtcYu2REY4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hev1SxBKRTvruyfzZyWI4v25UWnzXKni3pEO5pq6qd3iC/UKhcK1WxZVLMCtTXCvSb0NFbpPioP9OoR40oFi8YShl74GUXCcv45RSoh6mAvNqBCR4qMMSHeUjpWmhJun/SSH674c/iuLi5NjoTzgpZGTn8JSALpsYnGi3EW9hoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mihalicyn.com; spf=pass smtp.mailfrom=mihalicyn.com; dkim=pass (1024-bit key) header.d=mihalicyn.com header.i=@mihalicyn.com header.b=ipLse8c/; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mihalicyn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mihalicyn.com
+	s=arc-20240116; t=1747315267; c=relaxed/simple;
+	bh=JPkYbeCC/0+2C7oAcLkVgxvwJCw1QU+wPgbrczN6A7U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NXbELUT4/K71cMjdb+ZSj333H0bxoYO1lquNBuhQdSzTyCsgHxlt0i41FhitytDYJYnp7hAWWBbxUPD/K0ghDynOhQh8YmO8d+Bb/RxN99wDtTxJev634q1bemwSxAXcrf/+coQkQZYvLLu9VyyN+cfs+zo1yQdj495qtciSFi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ULXEX8Kv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mihalicyn.com header.i=@mihalicyn.com header.b="ipLse8c/"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5f3f04b5dbcso1368258a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 06:19:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mihalicyn.com; s=mihalicyn; t=1747315186; x=1747919986; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=72YGls/wmZumucGNN0maR/XQvib0UmG7AVEkYhDNH34=;
-        b=ipLse8c/RyqGZjtk57S+m0waJaS3VV5xM2hg09yArZA1S81si+GY9qLXmBJd6ZzMTm
-         VY6KZi7D2z5yJEvnJhRdygGMlf+bMAuCrvF74/RWdipe46/Ahr3eVB9f0oV2VrcfMKe6
-         PWD+nsoJTlfCjg4pQfHh7h4DS3c1cnLjL3ANg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747315186; x=1747919986;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=72YGls/wmZumucGNN0maR/XQvib0UmG7AVEkYhDNH34=;
-        b=B23BdEw9Of6guYAE10yytdq0FuRaWJMC0/paI5BFFxOZqi4lqzeJwrjCuMlS5kiess
-         FZ+t8ZfqO/COQbFQ50r7b3vvzvbe2K/9YvGgeVebVd7js70pE4wyLtJCEXBQBwOluY+Y
-         3pljZS/bpUdQ3Wt/dBzCi/+9nGvLGtm5bmtbjV35jdCzf51rJpNZKRo1Xw4nty5WaV+b
-         4dOS6mDaVzXGh0IFGYT1NylM5FEYNrRZYKmm7ts/Jj6evMvs0AxBdEM76IqcbYL9FXjF
-         HeKe/I4BrC6JzWcDgtFEMg5yHpKGUqJOMD395T9xKVLqOHBNtiVa9BQEDgn1jWdKcm7K
-         kGfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXC7Ma6jdFGMyxTOAhyfYQrHGAEba1Nqu9MDZNS06iGuzMO2ieDGD5UFuZiCb/ntgWevtK20549wHI2k54=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBSy4NjQYEd+gWLUTwxvbrRGsci+YB/nGPoWhURj1eh7Ips5jd
-	YdFiVviQlQ/zVYuH5BS0g3uZy/UQo1pUBueW3yFGxOA2XhhH+0fB07mf7U9UHREqldj/igppMCF
-	RCnPDtubiPnEaaFh4WrrnRJ1cJBpRsPkEknEKZqstShJeriH0lf8y69Tt
-X-Gm-Gg: ASbGncv7FcdCBkMGFcHMC5VUKO4Fz+zPUHzcxXtP/CZdYmFKQ0ckRlZUUhqWUEm7JK5
-	/1zUbtzEzWW21aJYDe0iTmGVoKf6HY73pfLfn25gGcKAnxSvcqe+OAIfciVbjPnSrwJmnrb0kNJ
-	dOMI77e8DCZPruGP82SCSgqgQHuEjOT1SU1b/seg9OfGUt
-X-Google-Smtp-Source: AGHT+IGNyWKiGAcDc21zS2n5oJ3Sv5jjJvor1bjNLonysQPufNFoL1blELIM8hkLoTTF1EMx4KAbwrCBiaYKUHi/YOU=
-X-Received: by 2002:a05:6512:6403:b0:54b:ed9:2d00 with SMTP id
- 2adb3069b0e04-550d5f97849mr2639384e87.2.1747315175318; Thu, 15 May 2025
- 06:19:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ULXEX8Kv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9334CC4CEEF;
+	Thu, 15 May 2025 13:21:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747315266;
+	bh=JPkYbeCC/0+2C7oAcLkVgxvwJCw1QU+wPgbrczN6A7U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ULXEX8KvfmKzhiJTB9Hd7eAwANfC1BZlgWUM6t1hJ0bRn630MAm6VurvIy9r8jpMv
+	 P8420bwYR5nxut2GfVXVQDFMKw37eb5L9zAC+Lvc2MjADIccHILfOZidJCg4zVrg9d
+	 ztlRyJp81Y8h9GJBQ8F7MtMW/l5FFlq2R6LHEytAK8hJO4D52qmjNYozDkFgO5xZTU
+	 7XpeOkZCSYTjUvUkUIch2iogvEw/HV/kp2nPW8sWvO38mtWsKti/L661hX7Bdi/18x
+	 p0vUB79T0gzxVtl8orIGPgtsS0rbb95U71ta/kVU9w0UWbwMMSBU2H25ROQ1jxHDHR
+	 GX1Ig7sE95TZw==
+Date: Thu, 15 May 2025 14:21:01 +0100
+From: Will Deacon <will@kernel.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com,
+	ryan.roberts@arm.com, anshuman.khandual@arm.com,
+	mark.rutland@arm.com, yang@os.amperecomputing.com,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] arm64: Check pxd_leaf() instead of !pxd_table() while
+ tearing down page tables
+Message-ID: <20250515132059.GA12038@willie-the-truck>
+References: <20250515063450.86629-1-dev.jain@arm.com>
+ <332ecda7-14c4-4dc3-aeff-26801b74ca04@redhat.com>
+ <4904d02f-6595-4230-a321-23327596e085@arm.com>
+ <6fe7848c-485e-4639-b65c-200ed6abe119@redhat.com>
+ <35ef7691-7eac-4efa-838d-c504c88c042b@arm.com>
+ <c06930f0-f98c-4089-aa33-6789b95fd08f@redhat.com>
+ <91fc96c3-4931-4f07-a0a9-507ac7b5ae6d@arm.com>
+ <a005b0c3-861f-4e73-a747-91e0a15c85de@redhat.com>
+ <20250515125606.GA11878@willie-the-truck>
+ <23042cdf-e0fc-4b3a-92f6-688689728cc7@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515-work-coredump-socket-v7-0-0a1329496c31@kernel.org> <20250515-work-coredump-socket-v7-1-0a1329496c31@kernel.org>
-In-Reply-To: <20250515-work-coredump-socket-v7-1-0a1329496c31@kernel.org>
-From: Alexander Mikhalitsyn <alexander@mihalicyn.com>
-Date: Thu, 15 May 2025 15:19:23 +0200
-X-Gm-Features: AX0GCFuQ_HXhhcRwS2YBk813kZ6rMjXII-JyogoSIhCBQ_Aa68UbV4_Ng2TdrMw
-Message-ID: <CAJqdLrq5n28zKPFnXdVRtzQn7Mb0tmvrNf_NRRUWNPukRP5z3g@mail.gmail.com>
-Subject: Re: [PATCH v7 1/9] coredump: massage format_corname()
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, Jann Horn <jannh@google.com>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
-	Eric Dumazet <edumazet@google.com>, Oleg Nesterov <oleg@redhat.com>, 
-	"David S. Miller" <davem@davemloft.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Daan De Meyer <daan.j.demeyer@gmail.com>, David Rheinsberg <david@readahead.eu>, 
-	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <23042cdf-e0fc-4b3a-92f6-688689728cc7@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Am Do., 15. Mai 2025 um 00:04 Uhr schrieb Christian Brauner
-<brauner@kernel.org>:
->
-> We're going to extend the coredump code in follow-up patches.
-> Clean it up so we can do this more easily.
->
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
+On Thu, May 15, 2025 at 03:04:50PM +0200, David Hildenbrand wrote:
+> On 15.05.25 14:56, Will Deacon wrote:
+> > On Thu, May 15, 2025 at 11:32:22AM +0200, David Hildenbrand wrote:
+> > > On 15.05.25 11:27, Dev Jain wrote:
+> > > > 
+> > > > 
+> > > > On 15/05/25 2:23 pm, David Hildenbrand wrote:
+> > > > > On 15.05.25 10:47, Dev Jain wrote:
+> > > > > > 
+> > > > > > 
+> > > > > > On 15/05/25 2:06 pm, David Hildenbrand wrote:
+> > > > > > > On 15.05.25 10:22, Dev Jain wrote:
+> > > > > > > > 
+> > > > > > > > 
+> > > > > > > > On 15/05/25 1:43 pm, David Hildenbrand wrote:
+> > > > > > > > > On 15.05.25 08:34, Dev Jain wrote:
+> > > > > > > > > > Commit 9c006972c3fe removes the pxd_present() checks because the
+> > > > > > > > > > caller
+> > > > > > > > > > checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller
+> > > > > > > > > > only
+> > > > > > > > > > checks pud_present(); pud_free_pmd_page() recurses on each pmd
+> > > > > > > > > > through
+> > > > > > > > > > pmd_free_pte_page(), wherein the pmd may be none.
+> > > > > > > > > The commit states: "The core code already has a check for pXd_none()",
+> > > > > > > > > so I assume that assumption was not true in all cases?
+> > > > > > > > > 
+> > > > > > > > > Should that one problematic caller then check for pmd_none() instead?
+> > > > > > > > 
+> > > > > > > >      From what I could gather of Will's commit message, my
+> > > > > > > > interpretation is
+> > > > > > > > that the concerned callers are vmap_try_huge_pud and vmap_try_huge_pmd.
+> > > > > > > > These individually check for pxd_present():
+> > > > > > > > 
+> > > > > > > > if (pmd_present(*pmd) && !pmd_free_pte_page(pmd, addr))
+> > > > > > > >        return 0;
+> > > > > > > > 
+> > > > > > > > The problem is that vmap_try_huge_pud will also iterate on pte entries.
+> > > > > > > > So if the pud is present, then pud_free_pmd_page -> pmd_free_pte_page
+> > > > > > > > may encounter a none pmd and trigger a WARN.
+> > > > > > > 
+> > > > > > > Yeah, pud_free_pmd_page()->pmd_free_pte_page() looks shaky.
+> > > > > > > 
+> > > > > > > I assume we should either have an explicit pmd_none() check in
+> > > > > > > pud_free_pmd_page() before calling pmd_free_pte_page(), or one in
+> > > > > > > pmd_free_pte_page().
+> > > > > > > 
+> > > > > > > With your patch, we'd be calling pte_free_kernel() on a NULL pointer,
+> > > > > > > which sounds wrong -- unless I am missing something important.
+> > > > > > 
+> > > > > > Ah thanks, you seem to be right. We will be extracting table from a none
+> > > > > > pmd. Perhaps we should still bail out for !pxd_present() but without the
+> > > > > > warning, which the fix commit used to do.
+> > > > > 
+> > > > > Right. We just make sure that all callers of pmd_free_pte_page() already
+> > > > > check for it.
+> > > > > 
+> > > > > I'd just do something like:
+> > > > > 
+> > > > > diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> > > > > index 8fcf59ba39db7..e98dd7af147d5 100644
+> > > > > --- a/arch/arm64/mm/mmu.c
+> > > > > +++ b/arch/arm64/mm/mmu.c
+> > > > > @@ -1274,10 +1274,8 @@ int pmd_free_pte_page(pmd_t *pmdp, unsigned long
+> > > > > addr)
+> > > > > 
+> > > > >            pmd = READ_ONCE(*pmdp);
+> > > > > 
+> > > > > -       if (!pmd_table(pmd)) {
+> > > > > -               VM_WARN_ON(1);
+> > > > > -               return 1;
+> > > > > -       }
+> > > > > +       VM_WARN_ON(!pmd_present(pmd));
+> > > > > +       VM_WARN_ON(!pmd_table(pmd));
+> > > > 
+> > > > And also return 1?
+> > > 
+> > > I'll leave that to Catalin + Will.
+> > > 
+> > > I'm not a friend for adding runtime-overhead for soemthing that should not
+> > > happen and be caught early during testing -> VM_WARN_ON_ONCE().
+> > 
+> > I definitely think we should return early if the pmd isn't a table.
+> > Otherwise, we could end up descending into God-knows-what!
+> 
+> The question is: how did something that is not a table end up here, and why
+> is it valid to check exactly that at runtime. Not strong opinion, it just
+> feels a bit arbitrary to test for exactly that at runtime if it is
+> completely unexpected.
 
-Reviewed-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+I see it a little bit like type-checking: we could see an invalid entry,
+a leaf entry or a table entry and we should only ever dereference the
+latter. If the VM_WARN_ON() is justified, then I find it jarring to go
+ahead with the dereference regardless of the type.
 
-> ---
->  fs/coredump.c | 41 ++++++++++++++++++++++++-----------------
->  1 file changed, 24 insertions(+), 17 deletions(-)
->
-> diff --git a/fs/coredump.c b/fs/coredump.c
-> index d740a0411266..368751d98781 100644
-> --- a/fs/coredump.c
-> +++ b/fs/coredump.c
-> @@ -76,9 +76,15 @@ static char core_pattern[CORENAME_MAX_SIZE] = "core";
->  static int core_name_size = CORENAME_MAX_SIZE;
->  unsigned int core_file_note_size_limit = CORE_FILE_NOTE_SIZE_DEFAULT;
->
-> +enum coredump_type_t {
-> +       COREDUMP_FILE = 1,
-> +       COREDUMP_PIPE = 2,
-> +};
-> +
->  struct core_name {
->         char *corename;
->         int used, size;
-> +       enum coredump_type_t core_type;
->  };
->
->  static int expand_corename(struct core_name *cn, int size)
-> @@ -218,18 +224,21 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
->  {
->         const struct cred *cred = current_cred();
->         const char *pat_ptr = core_pattern;
-> -       int ispipe = (*pat_ptr == '|');
->         bool was_space = false;
->         int pid_in_pattern = 0;
->         int err = 0;
->
->         cn->used = 0;
->         cn->corename = NULL;
-> +       if (*pat_ptr == '|')
-> +               cn->core_type = COREDUMP_PIPE;
-> +       else
-> +               cn->core_type = COREDUMP_FILE;
->         if (expand_corename(cn, core_name_size))
->                 return -ENOMEM;
->         cn->corename[0] = '\0';
->
-> -       if (ispipe) {
-> +       if (cn->core_type == COREDUMP_PIPE) {
->                 int argvs = sizeof(core_pattern) / 2;
->                 (*argv) = kmalloc_array(argvs, sizeof(**argv), GFP_KERNEL);
->                 if (!(*argv))
-> @@ -247,7 +256,7 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
->                  * Split on spaces before doing template expansion so that
->                  * %e and %E don't get split if they have spaces in them
->                  */
-> -               if (ispipe) {
-> +               if (cn->core_type == COREDUMP_PIPE) {
->                         if (isspace(*pat_ptr)) {
->                                 if (cn->used != 0)
->                                         was_space = true;
-> @@ -353,7 +362,7 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
->                                  * Installing a pidfd only makes sense if
->                                  * we actually spawn a usermode helper.
->                                  */
-> -                               if (!ispipe)
-> +                               if (cn->core_type != COREDUMP_PIPE)
->                                         break;
->
->                                 /*
-> @@ -384,12 +393,12 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
->          * If core_pattern does not include a %p (as is the default)
->          * and core_uses_pid is set, then .%pid will be appended to
->          * the filename. Do not do this for piped commands. */
-> -       if (!ispipe && !pid_in_pattern && core_uses_pid) {
-> +       if (!(cn->core_type == COREDUMP_PIPE) && !pid_in_pattern && core_uses_pid) {
->                 err = cn_printf(cn, ".%d", task_tgid_vnr(current));
->                 if (err)
->                         return err;
->         }
-> -       return ispipe;
-> +       return 0;
->  }
->
->  static int zap_process(struct signal_struct *signal, int exit_code)
-> @@ -583,7 +592,6 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->         const struct cred *old_cred;
->         struct cred *cred;
->         int retval = 0;
-> -       int ispipe;
->         size_t *argv = NULL;
->         int argc = 0;
->         /* require nonrelative corefile path and be extra careful */
-> @@ -632,19 +640,18 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->
->         old_cred = override_creds(cred);
->
-> -       ispipe = format_corename(&cn, &cprm, &argv, &argc);
-> +       retval = format_corename(&cn, &cprm, &argv, &argc);
-> +       if (retval < 0) {
-> +               coredump_report_failure("format_corename failed, aborting core");
-> +               goto fail_unlock;
-> +       }
->
-> -       if (ispipe) {
-> +       if (cn.core_type == COREDUMP_PIPE) {
->                 int argi;
->                 int dump_count;
->                 char **helper_argv;
->                 struct subprocess_info *sub_info;
->
-> -               if (ispipe < 0) {
-> -                       coredump_report_failure("format_corename failed, aborting core");
-> -                       goto fail_unlock;
-> -               }
-> -
->                 if (cprm.limit == 1) {
->                         /* See umh_coredump_setup() which sets RLIMIT_CORE = 1.
->                          *
-> @@ -695,7 +702,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->                         coredump_report_failure("|%s pipe failed", cn.corename);
->                         goto close_fail;
->                 }
-> -       } else {
-> +       } else if (cn.core_type == COREDUMP_FILE) {
->                 struct mnt_idmap *idmap;
->                 struct inode *inode;
->                 int open_flags = O_CREAT | O_WRONLY | O_NOFOLLOW |
-> @@ -823,13 +830,13 @@ void do_coredump(const kernel_siginfo_t *siginfo)
->                 file_end_write(cprm.file);
->                 free_vma_snapshot(&cprm);
->         }
-> -       if (ispipe && core_pipe_limit)
-> +       if ((cn.core_type == COREDUMP_PIPE) && core_pipe_limit)
->                 wait_for_dump_helpers(cprm.file);
->  close_fail:
->         if (cprm.file)
->                 filp_close(cprm.file, NULL);
->  fail_dropcount:
-> -       if (ispipe)
-> +       if (cn.core_type == COREDUMP_PIPE)
->                 atomic_dec(&core_dump_count);
->  fail_unlock:
->         kfree(argv);
->
-> --
-> 2.47.2
->
+That said, maybe the VM_WARN_ON() should either be deleted or moved out
+to the callers in mm/vmalloc.c?
+
+Will
