@@ -1,185 +1,220 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C422F259CBE;
-	Thu, 15 May 2025 17:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9438E1A316D
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747330463; cv=none; b=Z5jBHi+FNYBC/0b6+DgSXUHhc4dubUsnZgywC5ld/BvnuVTKwwOaEd5UTzctcQ1eXPoIHIcST0u8rIkPewWSnPhWxwIOR6PGBoIP0NsaQdTSM97xgIiodrIr/X805NRv/IpBTwpoM6AvaYdaU3caxZSxD6rFSdmCBRyyzkuG8o8=
+	t=1747330493; cv=none; b=nGxx/tEbiN9mndp8hWnG+x5Eeoylf3q7x/7PT3iLxfz/SMxKUVwFP6LBI2QVB1SDkPvkrIRRfpzaGwz5OIQEYIuvTpGYg4CLgUQcqGbt4RdIMB+/q/frIyIl0M/mcm19yTiHBZ4TShhur/QVU73u4yyu3D3qWEUA4n02KtItrtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747330463; c=relaxed/simple;
-	bh=1rYqW+oT2EB+8Mj8UgMcXgu50r6mqg0ahSQdN67crks=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Enus+BPdkXNbHPK7VfjE0bT8tyE+T+BEI6oxbH1Z7BDs4zeg4HaTIaxcGLa0Lg5h0FnyXJfXOXV3woqU7i6wXl+IFbrbUt1Laz8FQQE2MeY0KtntR0lH2BfxHkKmQnX7caGfrP0UuyGNwnCvlRUeIafMzqZjbM8LBKz5pIfwhPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dt92vZcI; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747330493; c=relaxed/simple;
+	bh=v6Yplf9F/SzmgJjaA1g6672jrTn/Q0LxWGAFr+ZyanQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TlM4tWMSIIHKUOcAvaa4aahMYPhK/NbGfkoG9H9ALDQ5XdxIBtEuXZe9vifCKZ1c5NkO4WjxH0B6j8jJ+qO+Y47+ydGGOmLRkt5v8Ywh2I936GIdNfFVy+uoKghEHBADFho6++lwqxmBJRZp02hlJZM2sFWkPAIkwXZHnWRb7SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=facQrcDD; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dt92vZcI"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3d91db4f0c3so5950305ab.3;
-        Thu, 15 May 2025 10:34:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747330461; x=1747935261; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oBvq9UI2sATIO55B70P6yA+6iJUThTyZYQiqWABHx6U=;
-        b=dt92vZcI8uM9QIyTUV/9MKsx/RLy6WzRrA4nqqflMsQ797qibiXLl4oRfN5nBHNTyj
-         RI4aAfiS9BYMGhAS0MvUe56H6tIhY2ZLY4klUjTtYi/3WNbu1SmUf3T6md7kmZ1yQqjY
-         d7heWeaYzUUPqXSnCl3whzYzFQHVBYHHYkOs2wHb3Oe/V01FkUpx4S8cLPN20jud7y8d
-         gNUXGBmXFIBC/3LpMgy6o3YVR8nNAD/ZwrNof79Hv1LT3GUK+nh71ZTpz3euOHutECTc
-         U62G37VO0Mv9s1FNmkPRvXOBuQAcf9/g2AJ5EcLufhvwkpklK4Jm+ZQXm45/9D893y+0
-         gS6g==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="facQrcDD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747330490;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JzW1ncmGIssHd/HfDZiOZGsvu/9kuBuxxssqGBqcsRw=;
+	b=facQrcDDp6j9RJqzVBf4LAdTZ1N1VnlbM+eSuqgoRdd5KoaUNS82cI8vmW4mEwbuWTjTM4
+	N88V08zlVFNayVIrEbMHFYGFmh5d4rNV3D6fHChKS455fAPSD3O9CK2EbF9OpoqUCC7i9/
+	bD4QmfFKLUcbKZkLLpBeB5xm2Z82kqc=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-691-rmPjlGt8Mdmxn5-iu-aw-g-1; Thu, 15 May 2025 13:34:49 -0400
+X-MC-Unique: rmPjlGt8Mdmxn5-iu-aw-g-1
+X-Mimecast-MFC-AGG-ID: rmPjlGt8Mdmxn5-iu-aw-g_1747330488
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-22de54b0b97so12092525ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:34:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747330461; x=1747935261;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oBvq9UI2sATIO55B70P6yA+6iJUThTyZYQiqWABHx6U=;
-        b=iex19q2tFgBaCdufVim2JbBNjAhVErPgvkIMpvBgVOx/WHYmmgyaDMt9OjeW6jJ3BR
-         Z4SaJnfolWi7nKaGqaS2QJQ1zrtwUyX/AtLqZ7tNxlWhLJfbubeGxCrZS+awgKyFjsnv
-         CztjcRauH4wXgJfJs/hg0TsW+h6tnMJ12wA/XQbLhB19a5kQqexFJv622s5GBD0Sm+Qe
-         7ubdTYqggLZUFfwrXEm11wDcF5IVKvnHuYHJCoIl2WJ3QrXXsDAGd18dE8+xjWstlYd+
-         92sD0yq7/qsbBwVmqOwBjdvIt7KbTMbfyBxyTyjII4cHW/yL+trCae6kszPYRR48FokD
-         Cwww==
-X-Forwarded-Encrypted: i=1; AJvYcCUkBSlQSMx4EEAX1BdKNKomCBTuqODcyxHGTQj0zp5tt12HaSeEfSGF+6w3SLYJhRc3LAK/0qF9Lqe6G1hj@vger.kernel.org, AJvYcCXaSJSw+PQNd/hY9kl7xQZU2X5e0d4miv2o4INA3nm3nhpGBUcgj9NsBzgphXyau4fGnXO/VWbD9/8Szqal@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKlOyeqYD/iRbCbt4hoJmxHZjueC6v8fouF4iSgivIlDoRlzZI
-	yWQHjtqVNvYxgasjn2yzSdsugAXxuZo5x98MfN6GkEopbxwlrOronryhXUGgt03qKU9eF/clZZk
-	BXpvpqzMItGr9untMaN4uhSaKoQ/angE=
-X-Gm-Gg: ASbGncsXfkGk9nwVprETyh2Zk+q/Xf3H9+sX++d/oFc7oNiixkkVfB7DEMBSWSixISd
-	nhIlGepjpyBarx4k3276y3JN5Xxe9mhlC2magPpVDTHZx20RuICXlEk5a9mp7PbtYGGdv4zIVW6
-	i3lWfyI8suFiMPDXvQWul6NYeRSSCoeCyAij+yNnimMub+5TLVJ6HCWd2MoitSzJM=
-X-Google-Smtp-Source: AGHT+IFo7dA4rLp6ykvkJGelKTIBK/jYm2mycq9pSqylADODrZL4vePtqwPyU+VeHrif1+6q3HNeRs0zSX7JtstjEZM=
-X-Received: by 2002:a05:6e02:1a27:b0:3d4:3fbf:967d with SMTP id
- e9e14a558f8ab-3db842b9d5amr9264885ab.7.1747330460697; Thu, 15 May 2025
- 10:34:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747330488; x=1747935288;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JzW1ncmGIssHd/HfDZiOZGsvu/9kuBuxxssqGBqcsRw=;
+        b=tg27d45XBT761sEJyfsuyHWfnWmNv/xJ0F7cADw9l7vgK/u8oKtHbqVUJU1TopHsGA
+         AY/A+uo6+sorc9UU74wjYIgpxoYAT82ZAT3yNFxxzu7YIAtVFVYLFoLytHzTszljp25u
+         ZdohCcCHEwpN2iL7daMeTiZl/w7WWK9dsy/qtKUCsUWwKrx+kpwopSBZo/QkKqKgp7MY
+         dJuNyy9yjkGuaLRISvmyJ1wUcVn547kQvtPloFikGebne96qgsByCRn4Hm78eA5tD5Rm
+         92Gqnx80TFmCqeJOzsyJKhOPO7ZMeASpMRa1qcue/WS5xuwfAIs4idLkm57dcDr2PGkK
+         0oVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX/jl9Hvexjcobuvf7UKyUGZ0o+eGRD0Nyyckf1lniTpy33o5kpkr6GhrkHN6g7QP79Q0W5VqKYVeV/Jbs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx20lqoMnQusNmgpboe3tqSe3HCZWJ+xwmnD4M5oxsUCeIX17PT
+	xu3on4zVQWvpEXNzK9Va7vMFEcXq0+OA/ypXcefIcgL2St0zk0zjBFKP9SkioXrr0CoDkMenpqQ
+	JboUNirOGycx5vXw65LKhfgv7JfNCeLwEGEubEEOsaYgF0kQYbvaI9njJRgwy+JmWiQ==
+X-Gm-Gg: ASbGnctWeKRMa3l71+4QukFvndyPPkRwJvBCIXfMrxyukIrBiKK0XBjYne2/3ESQdxX
+	G2o0MBqm/0p0DJpnM4TaWFZZ/An1Ygq0QJoRwTaTEn7X9wb8t4sNycZ5vTRyOff6SVG/RWPRVK0
+	n6TvNqH3MEiOnrpykKlDjLeShKfVFBmXLT6foilRkq8WNIHw6SgRsVnWbqz/BLunSBFPLzzJUfY
+	+MqLWAlo6vDVc8V5Omi5diZuEl6AUc4KN/rydJ4xFKK+N0qeNbyNmaQWO8Vb8zxyk2NgvbMGopR
+	d5JnEDOFVB7jw8JQciYPBC+Jtz5s9kDtJt7RXbPKxX8=
+X-Received: by 2002:a17:902:da82:b0:22e:4db1:bab6 with SMTP id d9443c01a7336-231d4393f02mr4180825ad.7.1747330488251;
+        Thu, 15 May 2025 10:34:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFBe+Ke/qwyU6fFT7oBxlEVHfXyA2MrJZn7X/qjBoNpqR62jEkXEDjFmblbWpUDJxPVZ8WEsQ==
+X-Received: by 2002:a17:902:da82:b0:22e:4db1:bab6 with SMTP id d9443c01a7336-231d4393f02mr4180605ad.7.1747330487850;
+        Thu, 15 May 2025 10:34:47 -0700 (PDT)
+Received: from jkangas-thinkpadp1gen3.rmtuswa.csb ([2601:1c2:4301:5e20:98fe:4ecb:4f14:576b])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ac9fbdsm566145ad.50.2025.05.15.10.34.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 10:34:47 -0700 (PDT)
+Date: Thu, 15 May 2025 10:34:45 -0700
+From: Jared Kangas <jkangas@redhat.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: willy@infradead.org, akpm@linux-foundation.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Liam Howlett <liam.howlett@oracle.com>,
+	Sidhartha Kumar <sidhartha.kumar@oracle.com>
+Subject: Re: [PATCH] XArray: fix kmemleak false positive in xas_shrink()
+Message-ID: <aCYIAD_6c__jwcu8@jkangas-thinkpadp1gen3.rmtuswa.csb>
+References: <20250512191707.245153-1-jkangas@redhat.com>
+ <053ad5f9-3eee-486e-ac29-3104517b674a@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514175527.42488-1-robdclark@gmail.com> <20250514175527.42488-3-robdclark@gmail.com>
- <aCWtINcOUWciwx8L@pollux> <CAF6AEGsm6JgK6QQe7se6bzv6QLnm-sxsJRmv=r3OWKhf6rfOSA@mail.gmail.com>
- <aCYIiJpMe1ljGxqz@pollux>
-In-Reply-To: <aCYIiJpMe1ljGxqz@pollux>
-From: Rob Clark <robdclark@gmail.com>
-Date: Thu, 15 May 2025 10:34:07 -0700
-X-Gm-Features: AX0GCFuIl_V8-qE_5cvk8OrrV6aLtTAWInICihd0L8AvsvwbHBJVwOGaN3l2YtI
-Message-ID: <CAF6AEGvLpekBNLxVOavkXJtcZZQBH6WznKA=F0Jn9idxBMypkA@mail.gmail.com>
-Subject: Re: [PATCH v4 02/40] drm/gpuvm: Allow VAs to hold soft reference to BOs
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, 
-	Rob Clark <robdclark@chromium.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <053ad5f9-3eee-486e-ac29-3104517b674a@lucifer.local>
 
-On Thu, May 15, 2025 at 8:30=E2=80=AFAM Danilo Krummrich <dakr@kernel.org> =
-wrote:
->
-> On Thu, May 15, 2025 at 07:59:16AM -0700, Rob Clark wrote:
->
-> Thanks for the detailed explanation!
->
-> > On Thu, May 15, 2025 at 2:00=E2=80=AFAM Danilo Krummrich <dakr@kernel.o=
-rg> wrote:
-> > >
-> > > On Wed, May 14, 2025 at 10:53:16AM -0700, Rob Clark wrote:
-> > > > From: Rob Clark <robdclark@chromium.org>
-> > > >
-> > > > Eases migration for drivers where VAs don't hold hard references to
-> > > > their associated BO, avoiding reference loops.
-> > > >
-> > > > In particular, msm uses soft references to optimistically keep arou=
-nd
-> > > > mappings until the BO is distroyed.  Which obviously won't work if =
-the
-> > > > VA (the mapping) is holding a reference to the BO.
-> > >
-> > > Ick! This is all complicated enough. Allow drivers to bypass the prop=
-er
-> > > reference counting for GEM objects in the context of VM_BO structures=
- seems like
-> > > an insane footgun.
-> > >
-> > > I don't understand why MSM would need weak references here. Why does =
-msm need
-> > > that, but nouveau, Xe, panthor, PowerVR do not?
+Hi Lorenzo,
+
+On Thu, May 15, 2025 at 03:01:56PM +0100, Lorenzo Stoakes wrote:
+> +cc Liam, Sid.
+> 
+> Andrew - please drop this patch until this is fixed.
+> 
+> Hi Jared,
+> 
+> This breaks the xarray and vma userland testing. Please ensure that any
+> required stub are set up there to allow for your fix to work correctly.
+> 
+> Once moved to mm-unstable, or at least -next this would get caught by bots
+> (hopefully :) so this is a mandatory pre-requisite to this being merged.
+
+Ouch, my bad! I'll make sure this is covered in v2. Thanks for catching
+that.
+
+Jared
+
+> 
+> Cheers, Lorenzo
+> 
+> P.S. Liam, Sid - do you think it might be useful to add us 3 as reviewers
+> to the xarray entry in MAINTAINERS so we pick up on this sooner?
+> 
+> $ cd tools/testing/radix-tree
+> $ make
+> cp ../shared/autoconf.h generated/autoconf.h
+> cc -I../shared -I. -I../../include -I../../../lib -g -Og -Wall -D_LGPL_SOURCE -fsanitize=address -fsanitize=undefined   -c -o main.o main.c
+> cc -c -I../shared -I. -I../../include -I../../../lib -g -Og -Wall -D_LGPL_SOURCE -fsanitize=address -fsanitize=undefined ../shared/xarray-shared.c -o xarray-shared.o
+> In file included from ../shared/xarray-shared.c:5:
+> ../shared/../../../lib/xarray.c: In function ‘xas_shrink’:
+> ../shared/../../../lib/xarray.c:480:17: error: implicit declaration of function ‘kmemleak_transient_leak’ [-Wimplicit-function-declaration]
+>   480 |                 kmemleak_transient_leak(node);
+>       |                 ^~~~~~~~~~~~~~~~~~~~~~~
+> make: *** [../shared/shared.mk:37: xarray-shared.o] Error 1
+> $ cd ../vma
+> $ make
+> cc -c -I../shared -I. -I../../include -I../../../lib -g -Og -Wall -D_LGPL_SOURCE -fsanitize=address -fsanitize=undefined ../shared/xarray-shared.c -o xarray-shared.o
+> In file included from ../shared/xarray-shared.c:5:
+> ../shared/../../../lib/xarray.c: In function ‘xas_shrink’:
+> ../shared/../../../lib/xarray.c:480:17: error: implicit declaration of function ‘kmemleak_transient_leak’ [-Wimplicit-function-declaration]
+>   480 |                 kmemleak_transient_leak(node);
+>       |                 ^~~~~~~~~~~~~~~~~~~~~~~
+> make: *** [../shared/shared.mk:37: xarray-shared.o] Error 1
+> 
+> On Mon, May 12, 2025 at 12:17:07PM -0700, Jared Kangas wrote:
+> > Kmemleak periodically produces a false positive report that resembles
+> > the following:
 > >
-> > Most of those drivers were designed (and had their UABI designed) with
-> > gpuvm, or at least sparse, in mind from the get go.  I'm not sure
-> > about nouveau, but I guess it just got lucky that it's UABI semantics
-> > fit having the VMA hold a reference to the BO.
+> > unreferenced object 0xffff0000c105ed08 (size 576):
+> >   comm "swapper/0", pid 1, jiffies 4294937478
+> >   hex dump (first 32 bytes):
+> >     00 00 03 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> >     d8 e7 0a 8b 00 80 ff ff 20 ed 05 c1 00 00 ff ff  ........ .......
+> >   backtrace (crc 69e99671):
+> >     kmemleak_alloc+0xb4/0xc4
+> >     kmem_cache_alloc_lru+0x1f0/0x244
+> >     xas_alloc+0x2a0/0x3a0
+> >     xas_expand.constprop.0+0x144/0x4dc
+> >     xas_create+0x2b0/0x484
+> >     xas_store+0x60/0xa00
+> >     __xa_alloc+0x194/0x280
+> >     __xa_alloc_cyclic+0x104/0x2e0
+> >     dev_index_reserve+0xd8/0x18c
+> >     register_netdevice+0x5e8/0xf90
+> >     register_netdev+0x28/0x50
+> >     loopback_net_init+0x68/0x114
+> >     ops_init+0x90/0x2c0
+> >     register_pernet_operations+0x20c/0x554
+> >     register_pernet_device+0x3c/0x8c
+> >     net_dev_init+0x5cc/0x7d8
 > >
-> > Unfortunately, msm pre-dates sparse.. and in the beginning there was
-> > only a single global VM, multiple VMs was something retrofitted ~6yrs
-> > (?) back.  For existing msm, the VMA(s) are implicitly torn down when
-> > the GEM obj is freed.  This won't work with the VMA(s) holding hard
-> > references to the BO.
->
-> Ok, that makes sense to me, but why can't this be changed? I don't see ho=
-w the
-> uAPI would be affected, this is just an implementation detail, no?
-
-It's about the behaviour of the API, there is no explicit VMA
-creation/destruction in the uAPI.
-
-> > When userspace opts-in to "VM_BIND" mode, which it has to do before
-> > the VM is created, then we don't set this flag, the VMA holds a hard
-> > reference to the BO as it does with other drivers.  But consider this
-> > use-case, which is perfectly valid for old (existing) userspace:
+> > This transient leak can be traced to xas_shrink(): when the xarray's
+> > head is reassigned, kmemleak may have already started scanning the
+> > xarray. When this happens, if kmemleak fails to scan the new xa_head
+> > before it moves, kmemleak will see it as a leak until the xarray is
+> > scanned again.
 > >
-> > 1) Userspace creates a BO
-> > 2) Submits rendering referencing the BO
-> > 3) Immediately closes the BO handle, without waiting for the submit to =
-complete
+> > The report can be reproduced by running the xdp_bonding BPF selftest,
+> > although it doesn't appear consistently due to the bug's transience.
+> > In my testing, the following script has reliably triggered the report in
+> > under an hour on a debug kernel with kmemleak enabled, where KSELFTESTS
+> > is set to the install path for the kernel selftests:
 > >
-> > In this case, the submit holds a reference to the BO which holds a
-> > reference to the VMA.
->
-> Can't you just instead create the VMAs, which hold a reference to the VM_=
-BO,
-> which holds a reference to the BO, then drop the drop the original BO ref=
-erence
-> and finally, when everything is completed, remove all VMAs of the VM_BO?
-
-Perhaps the submit could hold a ref to the VM_BO instead of the BO to
-cover that particular case.
-
-But for the legacy world, the VMA is implicitly torn down when the BO
-is freed.  Which will never happen if the VM_BO holds a reference to
-the BO.
-
-> This should do exactly the same *and* be conformant with GPUVM design.
->
-> > Everything is torn down gracefully when the
-> > submit completes.  But if the VMA held a hard reference to the BO then
-> > you'd have a reference loop.
+> >         #!/bin/sh
+> >         set -eu
 > >
-> > So there really is no other way to use gpuvm _and_ maintain backwards
-> > compatibility with the semantics of the pre-VM_BIND UAPI without this
-> > flag.
->
-> Again, how is this important for maintaining backwards compatibility with=
- the
-> uAPI? This all seems like a driver internal implementation detail to me.
->
-> So, is there a technical reason, or is it more that it would be more effo=
-rt on
-> the driver end to rework things accordingly?
-
-If there were a way to work without WEAK_REF, it seems like it would
-be harder and much less of a drop in change.
-
-BR,
--R
-
-> > Fortunately DRM_GPUVM_VA_WEAK_REF is minimally intrusive.  Otherwise I
-> > probably would have had to fork my own copy of gpuvm.
+> >         echo 1 >/sys/module/kmemleak/parameters/verbose
+> >         echo scan=1 >/sys/kernel/debug/kmemleak
 > >
-> > BR,
-> > -R
+> >         while :; do
+> >                 $KSELFTESTS/bpf/test_progs -t xdp_bonding
+> >         done
+> >
+> > To prevent this false positive report, mark the new xa_head in
+> > xas_shrink() as a transient leak.
+> >
+> > Signed-off-by: Jared Kangas <jkangas@redhat.com>
+> > ---
+> >  lib/xarray.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/lib/xarray.c b/lib/xarray.c
+> > index 9644b18af18d1..51314fa157b31 100644
+> > --- a/lib/xarray.c
+> > +++ b/lib/xarray.c
+> > @@ -8,6 +8,7 @@
+> >
+> >  #include <linux/bitmap.h>
+> >  #include <linux/export.h>
+> > +#include <linux/kmemleak.h>
+> >  #include <linux/list.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/xarray.h>
+> > @@ -476,6 +477,7 @@ static void xas_shrink(struct xa_state *xas)
+> >  			break;
+> >  		node = xa_to_node(entry);
+> >  		node->parent = NULL;
+> > +		kmemleak_transient_leak(node);
+> >  	}
+> >  }
+> >
+> > --
+> > 2.49.0
+> >
+> >
+> >
+> 
+
