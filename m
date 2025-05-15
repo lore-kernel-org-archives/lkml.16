@@ -1,149 +1,208 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50870482FF
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E121288C33
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747298212; cv=none; b=iQ1cI8SixoJeFU92jYwLCSMef9ufmW3xLYDY3SkNQ4jz7I6cjjqVcuCiaX5+01hPFskFoR9g8s+OO0w54crg+YR8UJteGgxzkXy+W1g/ESvOcbPkIgmHwlk/shuLfLexKb1Wupb60xDACdqh6et57rXaPwjTAPQ5dKcUOUUacmE=
+	t=1747298230; cv=none; b=sl5ZVQvnyANe3w1oYrPznUbMyQ7rpLakFQ7JcEq2FAz6wPKBe3j9qANtLkiSHyngPF3Euy23rj+H34tew8MjhfsLjvzhVmDecCPfzviCYvrW3gd2sT2HpL931AgMOPvsIv4urVRPhD+vQKrqUEhhpMwS5eoCGZpc3FE+JjsOIE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747298212; c=relaxed/simple;
-	bh=+c9NGYmiEkqdCnm5003uXEFhtfdeTB7uo/kvDiYpTHE=;
+	s=arc-20240116; t=1747298230; c=relaxed/simple;
+	bh=pfZEqn7xS5lSMrZ8BWmE+kx91wUR5qeBCgiElHGM9kk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YiIrBthklsRSbGSaQbQC9zH4RlddMYjA6JTx1h7Dub+WebP3rHwa1prUsQFbZc/7/rZlgmdJbjioYIMGNBRNs+BZZ9cw+eNkJXMOjSoOrJulX39bF98uaf/L0hlFBsVZYEbY+qJo8kuD+BAtVCXHMj5rSFHbLh5I9brsG4uWiyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aqC1eiDN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=J/xY8Bkn; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=aqC1eiDN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=J/xY8Bkn; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=jCYXMcwaTFUIiuMtMgPR30WvTJGlS899v34Z3U8U9paAATsf0AgGE7oP36EFao6bw4W6y/Jz03A11XOK+WqkcGj4E1Fhl3cZ+Z3OcJheyNJ1zN7AQG04HmXq/cWeN7qtrygwgJNbbfWrI4Qz3z3MEPzltEsVpSg7ctzkSfNFlT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fus1si1P; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aqC1eiDN";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="J/xY8Bkn";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="aqC1eiDN";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="J/xY8Bkn"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 709EE211B5;
-	Thu, 15 May 2025 08:36:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747298209; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kvzf/cT7kFTGGu4qe+BKuApOCbvOUKO36BdytQuX9bg=;
-	b=aqC1eiDNM7x3s6EozlAR5OWCQviVaAtCIVVgIiVqcB5WImfCQcQSz6EKUql/QHKN5ac2ld
-	bqwy15BWMFuXP6q/FvItc1ldfOdTVkAafcpVQ2xzORslHnbLpp4moQX3Z7VPcHwnkoO917
-	WandeC9N+tQ+ikWVdzmqhgEDCjiAF7I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747298209;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kvzf/cT7kFTGGu4qe+BKuApOCbvOUKO36BdytQuX9bg=;
-	b=J/xY8BknbdxEFblaXLWVlGBNQFfjNKxZQlySvLAf7Ew69O48nQxw0BiCJEwyMZTGwEUpIE
-	S+1f4MolWlZmm2Cg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=aqC1eiDN;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="J/xY8Bkn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747298209; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kvzf/cT7kFTGGu4qe+BKuApOCbvOUKO36BdytQuX9bg=;
-	b=aqC1eiDNM7x3s6EozlAR5OWCQviVaAtCIVVgIiVqcB5WImfCQcQSz6EKUql/QHKN5ac2ld
-	bqwy15BWMFuXP6q/FvItc1ldfOdTVkAafcpVQ2xzORslHnbLpp4moQX3Z7VPcHwnkoO917
-	WandeC9N+tQ+ikWVdzmqhgEDCjiAF7I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747298209;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Kvzf/cT7kFTGGu4qe+BKuApOCbvOUKO36BdytQuX9bg=;
-	b=J/xY8BknbdxEFblaXLWVlGBNQFfjNKxZQlySvLAf7Ew69O48nQxw0BiCJEwyMZTGwEUpIE
-	S+1f4MolWlZmm2Cg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4A0B6137E8;
-	Thu, 15 May 2025 08:36:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id uh33EKGnJWgzPAAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Thu, 15 May 2025 08:36:49 +0000
-Date: Thu, 15 May 2025 10:36:40 +0200
-From: Daniel Wagner <dwagner@suse.de>
-To: Ming Lei <ming.lei@redhat.com>
-Cc: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
-	Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Costa Shulyupin <costa.shul@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Valentin Schneider <vschneid@redhat.com>, 
-	Waiman Long <llong@redhat.com>, Frederic Weisbecker <frederic@kernel.org>, 
-	Mel Gorman <mgorman@suse.de>, Hannes Reinecke <hare@suse.de>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-nvme@lists.infradead.org, megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org, 
-	storagedev@microchip.com, virtualization@lists.linux.dev, 
-	GR-QLogic-Storage-Upstream@marvell.com
-Subject: Re: [PATCH v6 8/9] blk-mq: use hk cpus only when isolcpus=io_queue
- is enabled
-Message-ID: <8c162a99-05f5-408c-b513-4005690d56a2@flourine.local>
-References: <20250424-isolcpus-io-queues-v6-0-9a53a870ca1f@kernel.org>
- <20250424-isolcpus-io-queues-v6-8-9a53a870ca1f@kernel.org>
- <aB1qqNDEnHMlpMH_@fedora>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fus1si1P"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-441ab63a415so6798365e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:37:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747298227; x=1747903027; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BIzrdar4Xr4Yn7VJnhohVXle0hMXzlUPEm7nDd/YT8M=;
+        b=fus1si1Pi0hyoEVHP3FCUGmD79gWURkYafihm72nZLhYkuqxV34yN95Xm39PrjVrZQ
+         3aE+zBacuVXNZB73FGknc8DMQ6M6wAJ3b451bMKcGCgLZEDYGzrLV3uYYM1fZXyPh4BS
+         k0T/3DxmidAPbYjAWrQ0gPCQpDXe9RHonhQ/MD7Xk5buxbrk4JThqXr8xBXYxdVSp161
+         U1jqIOpWpnDcYzcMZ1lZcheQuZLu+fDEQ6dVT4NNrWiQOCHKFaNBBa9KOjKojdbjYEDW
+         7ZbOdsr+uRN/Bl27GYkyFdHRkIjjxhzcDYRRSqTNr2cV9Cu6UcYsz4qjOsjkwoGaOX+e
+         eKdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747298227; x=1747903027;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BIzrdar4Xr4Yn7VJnhohVXle0hMXzlUPEm7nDd/YT8M=;
+        b=foGGRmMeZ7Z4H8CN3EVoT9g8y0x973YgAlA997dOZPjuFfEa8fcB8myrdoLeqzoAWi
+         aKgaBklGNJBcAz5VEDZAkcVIerLH0VxI4tHEiYmwbUUGbQgE4ebin3Tb5MVphoShB+QK
+         UaW8raV+pQSBqp5rBumNQTweuYY0qKhYXwVhDWozStU+8hXdIqdmqmcR3qmzU1uUnIpa
+         uPP8kS0pKJr0VGWp3cB019YRQ0WtVd9X2MBtiwnqH8GlHb5KxZMl5dmurAMhD/8+gJPU
+         kd97OI7NvWqvlurGPCrg9zm0UXXJgmO3Pi2cWLrLkYn8WHndVFkEps13S8nVasyRbrHh
+         hK+g==
+X-Forwarded-Encrypted: i=1; AJvYcCXiu6YH3wgXQZQRf/20HRjlXKISEk7Xr2YKyo8yDebRU94KR1SFRsUBnWjYywJt2PrJlC/YRpHurgBeErQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUzP46IIHotDb4yoYHT6Wy5skgtr2Ld0SLVlJJ9+a5BnJ/SNp6
+	7U/fjUBrSgC9KySTOMxiEC5lZaWiO+53aj9pUTZBTQZmawqGz5QCyh29R7tMRhI=
+X-Gm-Gg: ASbGncs29SxNxOroEBCQQM+p1fp7JUiVk9pCwN0G4RMtmASP7SUt7mNllUN8AneC7Kd
+	sXfv4JIHvfxn62ws6e2cy8zSZBsKwmqngiaBcN1Puv7xYJNcnfwOxNi2x3dAkVthCRDJYp4lq/i
+	1eujmYRfAcfKkLZqB5vQfyvFHSFmxpW24Kz0MLe1aRDoI70pb5rpb2J3DjQR9NN7AKuVucVwYnN
+	VfEK2EBe7VgvUKy1zK+IT79HUkOzRq3e2hGSovmQCTSccPpXl1+C1IKA6Vg4fBVtT7JrtNg02Y+
+	hvZ2LL2N6UR5W2Z4cAAvQLJi1uyPuj1crX0/IloZwzLtRxD0pmHT9zaCpO1CfYjpfKRSq+v/AzS
+	ay9BFxLWhFrrwrw==
+X-Google-Smtp-Source: AGHT+IEKNMiZ/Dao4WCMOpQoN5MHi4xf5XJixRA3rQXwHPXJ4hB04Gl/HkzVD/DYYMWEmopMe9nRTg==
+X-Received: by 2002:a05:600c:4ecf:b0:442:e011:7eb with SMTP id 5b1f17b1804b1-442f2179993mr74502955e9.30.1747298226647;
+        Thu, 15 May 2025 01:37:06 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f397926asm59378265e9.36.2025.05.15.01.37.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 01:37:06 -0700 (PDT)
+Date: Thu, 15 May 2025 10:37:04 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: timer: Convert fsl,gtm to DT schema
+Message-ID: <aCWnsIpMal8_m9Y8@mai.linaro.org>
+References: <20250506022245.2587662-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aB1qqNDEnHMlpMH_@fedora>
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 709EE211B5
-X-Spam-Flag: NO
-X-Spam-Score: -4.51
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Action: no action
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250506022245.2587662-1-robh@kernel.org>
 
-On Fri, May 09, 2025 at 10:38:32AM +0800, Ming Lei wrote:
-> > +static bool blk_mq_map_hk_queues(struct blk_mq_queue_map *qmap)
-> > +{
-> > +	struct cpumask *hk_masks;
-> > +	cpumask_var_t isol_mask;
-> > +	unsigned int queue, cpu, nr_masks;
-> > +
-> > +	if (!housekeeping_enabled(HK_TYPE_IO_QUEUE))
-> > +		return false;
+On Mon, May 05, 2025 at 09:22:43PM -0500, Rob Herring wrote:
+> Convert the Freescale General Purpose Timer binding to DT schema format.
+> Add the specific compatibles in use. Drop the "fsl,cpm2-gtm" compatible
+> which is not used. The examples are all similar, so just leave 1
+> example.
 > 
-> It could be more readable to move the above check to the caller.
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
 
-I wanted to avoid checking if housekeeping is enabled twice in a row.
-I'll post the next version with your suggestion and see if this approach
-is better.
+I'm not applying this one, it was already converted by patch:
+
+https://lore.kernel.org/r/20250412-gtm-yaml-v2-1-e4d2292ffefc@posteo.net
+
+>  .../devicetree/bindings/timer/fsl,gtm.txt     | 30 ----------
+>  .../devicetree/bindings/timer/fsl,gtm.yaml    | 55 +++++++++++++++++++
+>  2 files changed, 55 insertions(+), 30 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/timer/fsl,gtm.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/fsl,gtm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/fsl,gtm.txt b/Documentation/devicetree/bindings/timer/fsl,gtm.txt
+> deleted file mode 100644
+> index fc1c571f7412..000000000000
+> --- a/Documentation/devicetree/bindings/timer/fsl,gtm.txt
+> +++ /dev/null
+> @@ -1,30 +0,0 @@
+> -* Freescale General-purpose Timers Module
+> -
+> -Required properties:
+> -  - compatible : should be
+> -    "fsl,<chip>-gtm", "fsl,gtm" for SOC GTMs
+> -    "fsl,<chip>-qe-gtm", "fsl,qe-gtm", "fsl,gtm" for QE GTMs
+> -    "fsl,<chip>-cpm2-gtm", "fsl,cpm2-gtm", "fsl,gtm" for CPM2 GTMs
+> -  - reg : should contain gtm registers location and length (0x40).
+> -  - interrupts : should contain four interrupts.
+> -  - clock-frequency : specifies the frequency driving the timer.
+> -
+> -Example:
+> -
+> -timer@500 {
+> -	compatible = "fsl,mpc8360-gtm", "fsl,gtm";
+> -	reg = <0x500 0x40>;
+> -	interrupts = <90 8 78 8 84 8 72 8>;
+> -	interrupt-parent = <&ipic>;
+> -	/* filled by u-boot */
+> -	clock-frequency = <0>;
+> -};
+> -
+> -timer@440 {
+> -	compatible = "fsl,mpc8360-qe-gtm", "fsl,qe-gtm", "fsl,gtm";
+> -	reg = <0x440 0x40>;
+> -	interrupts = <12 13 14 15>;
+> -	interrupt-parent = <&qeic>;
+> -	/* filled by u-boot */
+> -	clock-frequency = <0>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/timer/fsl,gtm.yaml b/Documentation/devicetree/bindings/timer/fsl,gtm.yaml
+> new file mode 100644
+> index 000000000000..31d8534ac868
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/fsl,gtm.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/timer/fsl,gtm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale General-purpose Timers Module
+> +
+> +maintainers:
+> +  - Rob Herring <robh@kernel.org>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - fsl,mpc8308-gtm
+> +              - fsl,mpc8313-gtm
+> +              - fsl,mpc8315-gtm
+> +          - const: fsl,gtm
+> +      - items:
+> +          - enum:
+> +              - fsl,mpc8569-qe-gtm
+> +              - fsl,mpc8360-qe-gtm
+> +          - const: fsl,qe-gtm
+> +          - const: fsl,gtm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 4
+> +    description:
+> +      One interrupt for each timer
+> +
+> +  clock-frequency:
+> +    description: Specifies the frequency driving the timer.
+> +    default: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clock-frequency
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    timer@440 {
+> +        compatible = "fsl,mpc8360-qe-gtm", "fsl,qe-gtm", "fsl,gtm";
+> +        reg = <0x440 0x40>;
+> +        interrupts = <12>, <13>, <14>, <15>;
+> +        clock-frequency = <0>;
+> +    };
+> -- 
+> 2.47.2
+> 
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
