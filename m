@@ -1,237 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3811E834B
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F04E17993
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747305852; cv=none; b=lfI9KdW8WoTjNPXTPoykdEL4nZ9XLNUOws9YfniHUHrb35V+qJX5lEhvqC+9+ft3BEciPYiR1CFdP8gEb6VGA1HyusjoENI0KFFTnMP3BPjFRLIoeirzfqP9Zqqqh8K/Z9OuuKlA0o0rlwKDDLfdxYpkD8j9QJA5EjjBYD065EI=
+	t=1747306095; cv=none; b=cUm5QkP5jNOn/S9T28D4R0q60RzQtQtJty24/IrO29eNZCOFMSDGt+6h2MxyWCqvyLBcvAgUm5UcSXgvz5fFU7+F752cb5fX3XmyjivEQ06UyKWebci3vEdqe2Y8tMFyu+qGjTl5rYGpb2L5fbaoOaK8SNzvPOhUDbW+yRCBnfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747305852; c=relaxed/simple;
-	bh=mOO9QS74is4tkJjF///0zapNGyi6/5x8zmHUHUc+3DI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YU+rFxe8MtdY+7HAjj7BrvKCKuX5rmYUPhbFmrMixANthTCWXtPHqH/FG5Oi7OJGHExc5+M4ffyfsd/DKYw6wwAKy5gDgVk9S0aQybs6m20tYDZTlgc1vZHIflPM+30uW0/5QaVHaXVzJO6zbMOIr6MKlnocsVxfyvpysDFUnLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BbLlhzTB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747306095; c=relaxed/simple;
+	bh=HSHAc1esZ7JGsghsuy8H2Bqb4SKoBoPV4DVt5e5AQzY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tsxihwP/1C9m1HN2oRg7EexrclmUbrPqds+r8+LunGDtWK31PyLXXZ8tzJtv8z7E6ccgzoGp4nq5r3eaR5HBDD7tUmcBQCvueceNDpg0OzfWYC5vLsmd6miMcBJKg++58W2Zs0uFQHeiJxYHjbEFCerxLyMKqb9BURK2/ffZclY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=W19INCcK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=r1ZTN2ys; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zLyRDf5b; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lkp2QJLL; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BbLlhzTB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 173F8C4CEE9;
-	Thu, 15 May 2025 10:44:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747305852;
-	bh=mOO9QS74is4tkJjF///0zapNGyi6/5x8zmHUHUc+3DI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BbLlhzTBGc5HsUDEOHRR/pzimVSUx+hkFV0uB3QbJM9yWY5dV/P0fFKpRSURT96Ce
-	 wSbefFqbLWS8IN1or6qOObV9J6uaO33zNf4fiHNSBfvkS7IbVTeGXJjNlIXvQv8hc2
-	 H7ZMZilvkzwKvKOt80P+6DnIGbivJj5bX08sLe6mfQoYp6IyexHoxLBAcOeZ1No+l7
-	 27PrwvVDCowL2aa55iZIV6am4vxipdVySKompaZwVcE0d9vAOwmpR5M9qtXJtVtJKL
-	 iLcXqQEcP1yqqoa2yw4r3Ix/9pO8LcSGYdQ6/BkfedOWzBq33vIAgN/bVzbVFM1DDO
-	 9FYK1M5HRyvlw==
-Date: Thu, 15 May 2025 12:44:06 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-	Arnd Bergmann <arnd@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Juergen Gross <jgross@suse.com>, "H . Peter Anvin" <hpa@zytor.com>,
-	Kees Cook <keescook@chromium.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	David Woodhouse <dwmw@amazon.co.uk>
-Subject: Re: [PATCH 07/29] x86/boot/e820: Print out sizes of E820 memory
- ranges
-Message-ID: <aCXFdvWiNW94F24R@gmail.com>
-References: <20250421185210.3372306-1-mingo@kernel.org>
- <20250421185210.3372306-8-mingo@kernel.org>
- <aAc5Wlwj4gaBApIy@surfacebook.localdomain>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="W19INCcK";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="r1ZTN2ys";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zLyRDf5b";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lkp2QJLL"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 8E659211EB;
+	Thu, 15 May 2025 10:48:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747306091; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HxihgeIkFF/rHdS4s6GW49xNqzW9yrSrX50YJnkKkME=;
+	b=W19INCcKMU0cm1jbKIcq3MNJwuidUTyN6mqfMl4C4sHfkDXbIDop1030mBRAVj+kWEQREt
+	UlP2HALnjEmIObe3G1opjfrKaUM3rdy5srgBXoOVaR/GVwPPGeDUjV20fsPTNwyujEwtIm
+	GJMGb0VgpxO9eB93YxQa6u18WwN+OGg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747306091;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HxihgeIkFF/rHdS4s6GW49xNqzW9yrSrX50YJnkKkME=;
+	b=r1ZTN2ysZtn+sQTHBpO2VA81MsO4mL2VZ5KYluF+/HzOb8P8mEL8QR7MwaR3o8RYgtlT6c
+	qqITH2vUydsrdbBg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=zLyRDf5b;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=lkp2QJLL
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747306090; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HxihgeIkFF/rHdS4s6GW49xNqzW9yrSrX50YJnkKkME=;
+	b=zLyRDf5barxYam1WigUEvSI4oBX5+kb04uTjPyO3LkFBt6gcc36dNuxDym7d4aP0QqXchs
+	30X+tixwai45imR5yoKXdwoW2GMmuwcNY2zJ6ag208/vqkXUTS49ODVeuZ6AsLKXLFFxjG
+	MBkY1kJWSdAqJ1V42QEpVr4xhytJ9c8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747306090;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HxihgeIkFF/rHdS4s6GW49xNqzW9yrSrX50YJnkKkME=;
+	b=lkp2QJLLaQ7SBT8+8MqXoC9dcranJYUti3dAGzkSUYYuyZNd6CgPbDdD+IdElLE/MRXPWe
+	J5ksK9zkW+nkavBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2A3B8137E8;
+	Thu, 15 May 2025 10:48:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id +igNCWrGJWjRZwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 15 May 2025 10:48:10 +0000
+Date: Thu, 15 May 2025 12:48:09 +0200
+Message-ID: <87msbervyu.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: "Sheetal ." <sheetal@nvidia.com>
+Cc: <lgirdwood@gmail.com>,
+	<broonie@kernel.org>,
+	<robh@kernel.org>,
+	<krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>,
+	<linux-sound@vger.kernel.org>,
+	<devicetree@vger.kernel.org>,
+	<linux-tegra@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>,
+	<thierry.reding@gmail.com>,
+	<jonathanh@nvidia.com>,
+	<perex@perex.cz>,
+	<tiwai@suse.com>
+Subject: Re: [PATCH 0/2] HDA: Add Tegra264 support
+In-Reply-To: <20250512064258.1028331-1-sheetal@nvidia.com>
+References: <20250512064258.1028331-1-sheetal@nvidia.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAc5Wlwj4gaBApIy@surfacebook.localdomain>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 8E659211EB
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-2.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[gmail.com,kernel.org,vger.kernel.org,nvidia.com,perex.cz,suse.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dt];
+	DKIM_TRACE(0.00)[suse.de:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,nvidia.com:email]
+X-Spam-Score: -2.01
 
-
-* Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-
-> Mon, Apr 21, 2025 at 08:51:47PM +0200, Ingo Molnar kirjoitti:
-> > Before:
-> > 
-> >         BIOS-provided physical RAM map:
-> >         BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
-> >         BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
-> >         BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
-> >         BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff] usable
-> >         BIOS-e820: [mem 0x000000007ffdc000-0x000000007fffffff] reserved
-> >         BIOS-e820: [mem 0x00000000b0000000-0x00000000bfffffff] reserved
-> >         BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed1ffff] reserved
-> >         BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
-> >         BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
-> >         BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff] reserved
-> > 
-> > After:
-> > 
-> > 	BIOS-provided physical RAM map:
-> > 	BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff]  639   KB kernel usable RAM
-> > 	BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff]    1   KB reserved
-> > 	BIOS-e820: [gap 0x00000000000a0000-0x00000000000effff]  320   KB ...
-> > 	BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff]   64   KB reserved
-> > 	BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff]    1.9 GB kernel usable RAM
-> > 	BIOS-e820: [mem 0x000000007ffdc000-0x000000007fffffff]  144   KB reserved
-> > 	BIOS-e820: [gap 0x0000000080000000-0x00000000afffffff]  768   MB ...
-> > 	BIOS-e820: [mem 0x00000000b0000000-0x00000000bfffffff]  256   MB reserved
-> > 	BIOS-e820: [gap 0x00000000c0000000-0x00000000fed1bfff] 1005.1 MB ...
-> > 	BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed1ffff]   16   KB reserved
-> > 	BIOS-e820: [gap 0x00000000fed20000-0x00000000feffbfff]    2.8 MB ...
-> > 	BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff]   16   KB reserved
-> > 	BIOS-e820: [gap 0x00000000ff000000-0x00000000fffbffff]   15.7 MB ...
-> > 	BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff]  256   KB reserved
-> > 	BIOS-e820: [gap 0x0000000100000000-0x000000fcffffffff] 1008   GB ...
-> > 	BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff]   12   GB reserved
-> > 
-> > Note how a 1-digit precision field is printed out if a range is
-> > fractional in its largest-enclosing natural size unit.
-> > 
-> > So the "256 MB" and "12 GB" fields above denote exactly 256 MB and
-> > 12 GB regions, while "1.9 GB" signals the region's fractional nature
-> > and it being just below 2GB.
-> > 
-> > Printing E820 maps with such details visualizes 'weird' ranges
-> > at a glance, and gives users a better understanding of how
-> > large the various ranges are, without having to perform hexadecimal
-> > subtraction in their minds.
+On Mon, 12 May 2025 08:42:55 +0200,
+Sheetal . wrote:
 > 
-> ...
+> From: Sheetal <sheetal@nvidia.com>
 > 
-> > +/*
-> > + * Print out the size of a E820 region, in human-readable
-> > + * fashion, going from KB, MB, GB to TB units.
-> > + *
-> > + * Print out fractional sizes with a single digit of precision.
-> > + */
-> > +static void e820_print_size(u64 size)
-> > +{
-> > +	if (size < SZ_1M) {
-> > +		if (size & (SZ_1K-1))
-> > +			pr_cont(" %4llu.%01llu KB", size/SZ_1K, 10*(size & (SZ_1K-1))/SZ_1K);
-> > +		else
-> > +			pr_cont(" %4llu   KB", size/SZ_1K);
+> The patch series is to add support for Tegra264 in HDA driver.
 > 
-> I would add some spaces here and there for the sake of readability.
-
-I think it's perfectly readable, skipping the whitespace for numeric 
-literals is standard style. Linus himself does that occasionally, see:
-
-  94a2bc0f611c ("arm64: add 'runtime constant' support")
-
-  static inline void __runtime_fixup_ptr(void *where, unsigned long val)
-  {
-           __le32 *p = lm_alias(where);
-           __runtime_fixup_16(p, val);
-           __runtime_fixup_16(p+1, val >> 16);
-           __runtime_fixup_16(p+2, val >> 32);
-           __runtime_fixup_16(p+3, val >> 48);
-           __runtime_fixup_caches(where, 4);
-  }
-
-Or:
-
-  938df695e98d ("vsprintf: associate the format state with the format pointer")
-
-  +       unsigned int shift = 32 - size*8;
-
-which uses visual grouping to make arithmethic expressions more 
-readable.
-
+> Mohan Kumar D (1):
+>   ALSA: hda/tegra: Add Tegra264 support
 > 
-> > +		return;
-> > +	}
-> > +	if (size < SZ_1G) {
-> 
-> Can be written in one line as
-> 
-> 	} else if (...) {
+> Sheetal (2):
+>   dt-bindings: hda: Update Tegra compatible requirements
+>   dt-bindings: Document Tegra264 HDA Support
 
-Done. (See delta patch below.)
+Applied all patches now to for-next branch.
 
-> 
-> Ditto for the rest.
-> 
-> > +		if (size & (SZ_1M-1))
-> > +			pr_cont(" %4llu.%01llu MB", size/SZ_1M, 10*(size & (SZ_1M-1))/SZ_1M);
-> > +		else
-> > +			pr_cont(" %4llu   MB", size/SZ_1M);
-> > +		return;
-> > +	}
-> > +	if (size < SZ_1T) {
-> > +		if (size & (SZ_1G-1))
-> > +			pr_cont(" %4llu.%01llu GB", size/SZ_1G, 10*(size & (SZ_1G-1))/SZ_1G);
-> > +		else
-> > +			pr_cont(" %4llu   GB", size/SZ_1G);
-> > +		return;
-> > +	}
-> > +	if (size & (SZ_1T-1))
-> > +		pr_cont(" %4llu.%01llu TB", size/SZ_1T, 10*(size & (SZ_1T-1))/SZ_1T);
-> > +	else
-> > +		pr_cont(" %4llu   TB", size/SZ_1T);
-> > +}
-> 
-> Don't you want to use string_helpers.h provided API? 
-> string_get_size().
 
-I don't think string_get_size() knows the fine distinction between:
+thanks,
 
-    BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff]  256   KB device reserved
-
-and:
-
-    BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff]  256.0 KB device reserved
-
-"256 KB" is exactly 256 KB, while "256.0 KB" denotes a value that is a 
-bit larger than 256 KB but rounds down to 256 KB at 1 KB granularity.
-
-When reading platform boot logs it's useful to know when such values 
-are exact, at a glance.
-
-Thanks,
-
-	Ingo
-
-====================>
- arch/x86/kernel/e820.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 7f600d32a999..67a477203c97 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -213,22 +213,19 @@ static void e820_print_size(u64 size)
- 		else
- 			pr_cont(" %4llu   KB", size/SZ_1K);
- 		return;
--	}
--	if (size < SZ_1G) {
-+	} else if (size < SZ_1G) {
- 		if (size & (SZ_1M-1))
- 			pr_cont(" %4llu.%01llu MB", size/SZ_1M, 10*(size & (SZ_1M-1))/SZ_1M);
- 		else
- 			pr_cont(" %4llu   MB", size/SZ_1M);
- 		return;
--	}
--	if (size < SZ_1T) {
-+	} else if (size < SZ_1T) {
- 		if (size & (SZ_1G-1))
- 			pr_cont(" %4llu.%01llu GB", size/SZ_1G, 10*(size & (SZ_1G-1))/SZ_1G);
- 		else
- 			pr_cont(" %4llu   GB", size/SZ_1G);
- 		return;
--	}
--	if (size & (SZ_1T-1))
-+	} else if (size & (SZ_1T-1))
- 		pr_cont(" %4llu.%01llu TB", size/SZ_1T, 10*(size & (SZ_1T-1))/SZ_1T);
- 	else
- 		pr_cont(" %4llu   TB", size/SZ_1T);
+Takashi
