@@ -1,40 +1,52 @@
-Received: from zg8tmja2lje4os43os4xodqa.icoremail.net (zg8tmja2lje4os43os4xodqa.icoremail.net [206.189.79.184])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C735F297B80;
-	Thu, 15 May 2025 08:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.79.184
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20052980B5
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299468; cv=none; b=SwE7ePcjrfrXhUfbcdMQuS/yIrDe53ODiwMg5z0iGOyUmgheXMKqY6GGezEM8MLhWu6M75xsr3cgDof9ILdXPGm0kciFK9zhGtOyUpL+2vx2AIyRvVa9wM4xoqYVO3soHnya0fWrrhvdtVY8DK3oiMS2Lo3cTI7Qdb4RZOLm7pM=
+	t=1747299468; cv=none; b=SysAFbT08zjtYaXesObJDHdJjrcjQ7/WLhe36lT0fTP2cDou0NjPRiSJU5QEe+oEneTSS5GohEE1sy/Ne/yEI7Eyat+ZA26O6cTrrZ+c4yUliprFq9n/uVrsRVoW2BSgE6Br3rJhJjSRZKjZAbDg55zrPu9esCx6LQFwXv3LjgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747299468; c=relaxed/simple;
-	bh=Uacy/T85NjrYqwsVAcBXza0n7x8SpTrfY2clvu2Ph4c=;
+	bh=5iShoFeNRgDVmEFMgRIhhGEkEjFE5sRIS9jH53sfYnY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YQIFdpIJJRPOPeLse3h7RU3XQGYWx0LRbQQXMgQH+ygJiyHZS/RXd0pPT7biBAh+gi12Bt6bDoCV98Iy8MEke64hiDpQcm96B1ccfwMBn/+aMUEoUnJ8t6gq/Xwvai94RB/3rJ9aGgo8YWjsNqDPHlGZWjsOAsgZnzo3sHi0cL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.79.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0005154LT.eswin.cn (unknown [10.12.96.103])
-	by app1 (Coremail) with SMTP id TAJkCgAXOxF3rCVoMDV8AA--.55791S2;
-	Thu, 15 May 2025 16:57:29 +0800 (CST)
-From: hehuan1@eswincomputing.com
-To: dlemoal@kernel.org,
-	cassel@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-ide@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	p.zabel@pengutronix.de
-Cc: ningyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	luyulin@eswincomputing.com,
-	Huan He <hehuan1@eswincomputing.com>
-Subject: [PATCH v1 1/2] dt-bindings: sata: eswin: Document for EIC7700 SoC
-Date: Thu, 15 May 2025 16:57:23 +0800
-Message-ID: <20250515085723.1706-1-hehuan1@eswincomputing.com>
-X-Mailer: git-send-email 2.49.0.windows.1
-In-Reply-To: <20250515085114.1692-1-hehuan1@eswincomputing.com>
-References: <20250515085114.1692-1-hehuan1@eswincomputing.com>
+	 MIME-Version; b=kbNN24BGYLv+cxTuR+MH3q3Tx/xEbh8PxpQ6groYMNHU5/NmUPpKsWSWqWqPAZ6q//K7JmEoekmFXcrM23XG8w/xbWQmyDUS8PaT5xxC6bNGA5U7OMCsbfBNFp9MiSe5F2/ma04m0N8Ti1sePfsqYsRqIQTQWUhLTuHI1aqWIrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihJ/n4e6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihJ/n4e6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63A25C4CEE7;
+	Thu, 15 May 2025 08:57:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747299466;
+	bh=5iShoFeNRgDVmEFMgRIhhGEkEjFE5sRIS9jH53sfYnY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ihJ/n4e6U/YFj/zGxO6jEG+XLoAaq8lhzKRlLv837tKiN8FBdESttHvsAOvSRXr2S
+	 Jg5qpY1rFgjWaKI+TL+3OtEAlLY0GgN7JiNJD+76Aum5XFtQK+chkG23wYn5BaUS6d
+	 N3ERjfhKczZchP7WweFkp4IfCfhxK0A971WK4eOMjuhwtfQAxboolwlLqaYUyQC8JF
+	 9fsRfrXXjP99Ys5egoBQ27+FCIzCQes1nh6FuyUbyKNRDyZcHQ/GqkWO7sV3pIUDSl
+	 PD1AfhVV4F5d5NPyu+2Xwq/LVj6+ae0coiJF/+dWnsm3pCYo+fyahrGIE94rez45A0
+	 jjth56mF4Yosg==
+From: Ingo Molnar <mingo@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>,
+	"Ahmed S . Darwish" <darwi@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Arnd Bergmann <arnd@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 09/15] x86/fpu: Remove the 'no387' boot option
+Date: Thu, 15 May 2025 10:56:59 +0200
+Message-ID: <20250515085708.2510123-10-mingo@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250515085708.2510123-1-mingo@kernel.org>
+References: <20250515085708.2510123-1-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,126 +54,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TAJkCgAXOxF3rCVoMDV8AA--.55791S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxGw4UuF1DWF1UCw4fXF4rGrg_yoW5Xw13pF
-	4kGryDJF4fXr17Wa17XF10kF13Xan7uF1Ykrn2qF15twn0ga4Yqw4akF15Ca4UCr1xXa43
-	WF4Fg343Aw47AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-wCF04
-	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
-	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
-	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
-	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
-	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUXJ5wUUUUU=
-X-CM-SenderInfo: 5khk3tzqr6v25zlqu0xpsx3x1qjou0bp/
 
-From: Huan He <hehuan1@eswincomputing.com>
+Without math emulation there's no point to this option.
 
-Add eic7700 AHCI SATA controller device with single port support.
-For the eic7700 SATA registers, it supports AHCI standard interface,
-interrupt modes (INTx/MSI/PME), APB reset control,
-and HSP_SP_CSR register configuration.
-
-Co-developed-by: Yulin Lu <luyulin@eswincomputing.com>
-Signed-off-by: Yulin Lu <luyulin@eswincomputing.com>
-Signed-off-by: Huan He <hehuan1@eswincomputing.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Ahmed S . Darwish <darwi@linutronix.de>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: H . Peter Anvin <hpa@zytor.com>
+Cc: John Ogness <john.ogness@linutronix.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20250425084216.3913608-10-mingo@kernel.org
 ---
- .../bindings/ata/eswin,eic7700-sata.yaml      | 80 +++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/ata/eswin,eic7700-sata.yaml
+ Documentation/admin-guide/kernel-parameters.txt |  4 ----
+ arch/x86/Kconfig                                | 20 +++++++++-----------
+ arch/x86/kernel/cpu/common.c                    |  7 -------
+ 3 files changed, 9 insertions(+), 22 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/ata/eswin,eic7700-sata.yaml b/Documentation/devicetree/bindings/ata/eswin,eic7700-sata.yaml
-new file mode 100644
-index 000000000000..71e1b865ed2a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ata/eswin,eic7700-sata.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/ata/eswin,eic7700-sata.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Eswin EIC7700 SoC SATA Controller
-+
-+maintainers:
-+  - Yulin Lu <luyulin@eswincomputing.com>
-+  - Huan He <hehuan1@eswincomputing.com>
-+
-+description: |
-+  This binding describes the SATA controller integrated in the Eswin EIC7700 SoC.
-+  The controller is compatible with the AHCI (Advanced Host Controller Interface)
-+  specification and supports up to 1 port.
-+
-+properties:
-+  compatible:
-+    const: eswin,eic7700-ahci
-+
-+  reg:
-+    maxItems: 1
-+    description: Address range of the SATA registers
-+
-+  interrupt-names:
-+    items:
-+      - const: intrq
-+      - const: msi
-+      - const: pme
-+
-+  interrupts:
-+    maxItems: 3
-+    description: The SATA interrupt numbers
-+
-+  ports-implemented:
-+    maximum: 0x1
-+
-+  resets:
-+    maxItems: 1
-+    description: resets to be used by the controller.
-+
-+  reset-names:
-+    const: apb
-+
-+  '#address-cells':
-+    const: 2
-+
-+  '#size-cells':
-+    const: 2
-+
-+  eswin,hsp_sp_csr:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: hsp_sp_csr regs to be used by the controller.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupt-names
-+  - interrupts
-+  - resets
-+  - reset-names
-+  - eswin,hsp_sp_csr
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    sata: sata@50420000 {
-+      compatible = "eswin,eic7700-ahci";
-+      reg = <0x50420000 0x10000>;
-+      interrupt-parent = <&plic>;
-+      interrupt-names = "intrq", "msi", "pme";
-+      interrupts = <58>, <59>, <60>;
-+      ports-implemented = <0x1>;
-+      resets = <&reset 7 (1 << 27)>;
-+      reset-names = "apb";
-+      #size-cells = <2>;
-+      eswin,hsp_sp_csr = <&hsp_sp_csr 0x1050>;
-+    };
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 8f75ec177399..e380fff281a9 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4067,10 +4067,6 @@
+ 			These settings can be accessed at runtime via
+ 			the nmi_watchdog and hardlockup_panic sysctls.
+ 
+-	no387		[BUGS=X86-32] Tells the kernel to use the 387 maths
+-			emulation library even if a 387 maths coprocessor
+-			is present.
+-
+ 	no4lvl		[RISCV,EARLY] Disable 4-level and 5-level paging modes.
+ 			Forces kernel to use 3-level paging instead.
+ 
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index e983705a4fe3..be5f9be532a9 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2739,18 +2739,16 @@ menuconfig APM
+ 	  1) make sure that you have enough swap space and that it is
+ 	  enabled.
+ 	  2) pass the "idle=poll" option to the kernel
+-	  3) switch on floating point emulation in the kernel and pass
+-	  the "no387" option to the kernel
+-	  4) pass the "floppy=nodma" option to the kernel
+-	  5) pass the "mem=4M" option to the kernel (thereby disabling
++	  3) pass the "floppy=nodma" option to the kernel
++	  4) pass the "mem=4M" option to the kernel (thereby disabling
+ 	  all but the first 4 MB of RAM)
+-	  6) make sure that the CPU is not over clocked.
+-	  7) read the sig11 FAQ at <http://www.bitwizard.nl/sig11/>
+-	  8) disable the cache from your BIOS settings
+-	  9) install a fan for the video card or exchange video RAM
+-	  10) install a better fan for the CPU
+-	  11) exchange RAM chips
+-	  12) exchange the motherboard.
++	  5) make sure that the CPU is not over clocked.
++	  6) read the sig11 FAQ at <http://www.bitwizard.nl/sig11/>
++	  7) disable the cache from your BIOS settings
++	  8) install a fan for the video card or exchange video RAM
++	  9) install a better fan for the CPU
++	  10) exchange RAM chips
++	  11) exchange the motherboard.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called apm.
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 114aaaf6ae8a..a996915f763f 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1655,13 +1655,6 @@ static void __init cpu_parse_early_param(void)
+ 	int arglen;
+ 
+ #ifdef CONFIG_X86_32
+-	if (cmdline_find_option_bool(boot_command_line, "no387"))
+-#ifdef CONFIG_MATH_EMULATION
+-		setup_clear_cpu_cap(X86_FEATURE_FPU);
+-#else
+-		pr_err("Option 'no387' required CONFIG_MATH_EMULATION enabled.\n");
+-#endif
+-
+ 	if (cmdline_find_option_bool(boot_command_line, "nofxsr"))
+ 		setup_clear_cpu_cap(X86_FEATURE_FXSR);
+ #endif
 -- 
-2.25.1
+2.45.2
 
