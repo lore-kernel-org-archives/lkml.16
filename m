@@ -1,82 +1,110 @@
-Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0184B1E44;
-	Thu, 15 May 2025 20:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575224B1E44
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 20:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747339355; cv=none; b=sG53XRXbqzDH85DglOZbJquk3z0Q1l6Q3Yn5vF7vOqPuCg9OIeQTWqP6afJJqiHPdRnaXxqDe2Ge47Wu1yhpqeGlYXOo/kA02LNOuHu2/lbnvKK8VnzGrefZeJR+CyE6hXeFN8crLJbr1q+OfNrEn29IAJfX4kp9Pm2ktq4JP34=
+	t=1747339415; cv=none; b=CUVRSOrW7ndKpRcymNQLrPQ43lNVoWHUEE7LtUYPxs1F+nT5u/UpIdJUm9wyeHcZiHDy1ug2JDhmff+kaq4uhF74kGCHPAhNbMWqs2NlksXs6r+gUTLqTxRk9kAqiBjScCRv8VuxAYv4mr6dgCRfPNvajokz5qtZLE4ZQ4TcFY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747339355; c=relaxed/simple;
-	bh=A0QsmtopcLeIANInXiUpTfS18F2vXDiKcYXRPkJjXvM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tEq7Pq+IBblKyLGEBrEApwB1Q7fAFSOY1GyzjJRGtv5NQZZUW6/EITfPQwhoPO24KXBaBGq9mW0oOsVZNbeXO71U0HCo4zYlXUYB83PlUl1myx1L9eCC39kbooISnGTa1v+9OGmxzEVmkzeCccIGK5egkYRroH8CxVp76/i0UlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=aKcj9GWg; arc=none smtp.client-ip=199.89.3.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1747339415; c=relaxed/simple;
+	bh=sCWBCil7pb7kxTCcpgTJG5V5Xzq7C7Xue3LLDzZUlhQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lDqmprrq7sVWq4LPJVzxRR8ZO6zOjIl922eIT8+n82hVg+DarSFLniquolcf7bChnh29qtljbkr6hv+C4TNA1hqfPhBQB4AGDbGX/6MY2O+ou7bo7PqJAuEJTrrlOWGDx542HuJp3NVxpJ1Q5cGEl2ichkSwoWYqdB4t5jTxJ10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EupDt8b+; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="aKcj9GWg"
-Received: from localhost (localhost [127.0.0.1])
-	by 003.mia.mailroute.net (Postfix) with ESMTP id 4Zz1Mr2tZQzltNPr;
-	Thu, 15 May 2025 20:02:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1747339350; x=1749931351; bh=B9oIwMKcBufveYc9ju8oUFp2
-	RqO/sfgU8Fa2ydk0QLw=; b=aKcj9GWg8ob8btrWjZQvv0QBqnsP73vAIZ5E+ASO
-	x9Yhy9gzQ4YxC+0vKPq+lZTOkLuXPlyOib1yd9p9BNBufSC+NYqFKCusKrobTsts
-	0mGZgCsq2wTZkID84zE8w9PSUp9W0MtrfFpfL6OL64WfSw0vftSvZIgmzie7ybvw
-	yei8qNCjd2enGtQQOSzqtsexcdAXo3TMhA235xtBzKO3ob6dwTv0To2w9faaJ0TS
-	MSp+I3RN0t+rPF+a0meReYCv8Vkbc0lGWShCeBQ2yfoRwdvHh7/SgH/P7cvNg1rP
-	1qsF95gyonUymwo0yzey+3aSprvUj3hWjjbDD0LsDYWPKg==
-X-Virus-Scanned: by MailRoute
-Received: from 003.mia.mailroute.net ([127.0.0.1])
- by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id WeYH8QwpxN3W; Thu, 15 May 2025 20:02:30 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4Zz1Mf6pCZzlvt1v;
-	Thu, 15 May 2025 20:02:21 +0000 (UTC)
-Message-ID: <69341806-3ffd-41f0-95d6-6c8b750a6b45@acm.org>
-Date: Thu, 15 May 2025 13:02:20 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EupDt8b+"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4774611d40bso65251cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 13:03:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747339413; x=1747944213; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sCWBCil7pb7kxTCcpgTJG5V5Xzq7C7Xue3LLDzZUlhQ=;
+        b=EupDt8b+8EhCuuCJHf3v9NzWC/r6/x5Bv20CX/UVoggqgmAd59lGNkNtlcDD1evkAZ
+         X8R7pQ4qWzKH9bDUkezAZ9pskVLHs8s8q6qA39UrQ8bQgyQhAlDbkrtP9I85bHOX/YGo
+         WiEnCk8UPm+7YuEQCF+9gGNND5lvFKCTASNFVZtmmm+YEECekJ8aiWBREsAlms1XG39k
+         /RfXxWaER/KN5ERBWt+EQ+QD7sHc47AxwIFk00zq2lC68esKWXojw9EdLe5xgFZxEu66
+         0ym1ypwZV6v4mkYzaQWeeF5bqHzIlUTAvFy0ite+tOjK9T6HXRZVSN2JL/hzVMHmlGfQ
+         2Arg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747339413; x=1747944213;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sCWBCil7pb7kxTCcpgTJG5V5Xzq7C7Xue3LLDzZUlhQ=;
+        b=Q6+bUz9g/xMG4NW9zhYVV6u7x2ziRlf0RAiFf9z+vJvEUE1dOLcXfFNzlLhE8w0Ze+
+         Jl38Jcyy0D3qlJjMEXrwZGF725kJ6tKOv4xQeE75EZoc5bA2m+yWXninMpD4rj9KF/o0
+         mIz1u/Fy69XwdGC2eZAo24X70efH/cCoA4n4pnbsPL1wPkGMRMmvEOYEK18bmxufKKxy
+         4tquYn5idXCznJCrkEY+ZOy44/eWkZv85b003TnI2Q6qyDc2EXawNvVWt2OosQ7cYjyR
+         44598nDSFfnmlHaWDShv0yJ2qkIeKaWK76lmWJsuh7xetx7xyvDsOpkH34Ivsjby7+jA
+         wWOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjBEOU0Xj0MgEyOJpQaCufBrJpRjMsy5WFTOFPWcdnVfjb7ANjtLP1+5dwUxzE/hyEd80nsUftCn4qbFQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywr04vqxN9ki+kzedg38510aVKWJRtBjUXu0+m5dKm5ri5lYHI6
+	uQFryYVO1FHZPR2blucMNWUkR4f3RbwMvJgfe7S9TXpx3TRrQyr3LWm0M1S7PwWAbyoRqdFfRAW
+	ItYkAAp8toRX6ym47Ai4/xJmATlUNrjVVBsnmTPRB
+X-Gm-Gg: ASbGncvXnjmqz+BZ1JADbR4DZ3KUFYDxhv5Lw5EWf+r7X9Kcw0jOzbEfJw9A9j1deg6
+	I98Ib7u3O/EfZXUb7fCepd1RDPYw3apryY6RXmn10cgg3JoemU0VouYzIO5UU56hUPflF5cOxTh
+	OO/EvgwlgrIzYc+6cYrQBfEMv83CsWTTu2/F5B+C6iy74naXZg4tkaA9B1+93I
+X-Google-Smtp-Source: AGHT+IFx+em8XfEeGLyD7f/98BnU3d6CKECWGW3OqkghqanJcCJmF9byttNgyRFlCJsaVOHAdBjfs+z3bGSZBoxwJn8=
+X-Received: by 2002:ac8:7c4c:0:b0:486:a185:2b8f with SMTP id
+ d75a77b69052e-494a1cff1afmr6072521cf.8.1747339412843; Thu, 15 May 2025
+ 13:03:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 04/10] RDMA/siw: use skb_crc32c() instead of
- __skb_checksum()
-To: Eric Biggers <ebiggers@kernel.org>, netdev@vger.kernel.org,
- Bernard Metzler <bmt@zurich.ibm.com>
-Cc: linux-nvme@lists.infradead.org, linux-sctp@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- Daniel Borkmann <daniel@iogearbox.net>,
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
- Sagi Grimberg <sagi@grimberg.me>, Ard Biesheuvel <ardb@kernel.org>
-References: <20250511004110.145171-1-ebiggers@kernel.org>
- <20250511004110.145171-5-ebiggers@kernel.org>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250511004110.145171-5-ebiggers@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250422181729.2792081-1-salomondush@google.com>
+ <CAPE3x14-Tsm-2ThihT3a=h9a0L9Vi8J4BbiZiTV6=6Ctc1xryg@mail.gmail.com> <18aa42a73584fcf50b07d7a43073e55fb4c3159b.camel@HansenPartnership.com>
+In-Reply-To: <18aa42a73584fcf50b07d7a43073e55fb4c3159b.camel@HansenPartnership.com>
+From: Salomon Dushimirimana <salomondush@google.com>
+Date: Thu, 15 May 2025 13:03:22 -0700
+X-Gm-Features: AX0GCFsCV1sb00fFgZAMaeeyCnu0EqKHlroVAnK-IBJHOTTo1bvieTMgGMV1pvU
+Message-ID: <CAPE3x16MrkQXFasVaaHBxhH2QvQ4H5cDiE3ae=-nYjuEKV-NBw@mail.gmail.com>
+Subject: Re: [PATCH] scsi: Add SCSI error events, sent as kobject uevents by mid-layer
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: "Martin K . Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/10/25 5:41 PM, Eric Biggers wrote:
-> Instead of calling __skb_checksum() with a skb_checksum_ops struct that
-> does CRC32C, just call the new function skb_crc32c().  This is faster
-> and simpler.
-Bernard, since you are the owner and author of the siw driver, please 
-help with reviewing this patch.
+Hi,
 
-Eric, do you already have a test case for the siw driver? If not,
-multiple tests in the blktests framework use this driver intensively,
-including the SRP tests that I wrote myself. See also
-https://github.com/osandov/blktests.
+I agree with the recommended use of ftrace or blktrace for tracing.
+However, our primary goal for using uevents was not merely for
+collecting trace information. We are using uevents as a notification
+mechanism for userspace workflows to determine repair workflows (swap
+/ remove a failing device).
 
-Bart.
+We are open to any feedback on other notification recommendations for
+such use cases.
+
+
+
+
+Salomon Dushimirimana
+
+On Tue, May 13, 2025 at 1:27=E2=80=AFPM James Bottomley
+<James.Bottomley@hansenpartnership.com> wrote:
+>
+> On Tue, 2025-05-13 at 12:00 -0700, Salomon Dushimirimana wrote:
+> > Hi James and Martin
+> >
+> > I wanted to follow up on this patch! It's a decently sized patch, so
+> > it might take some time, but I'd love to hear your thoughts and
+> > address any feedback!!
+>
+> I think the first fundamental question should be why is this a uevent?
+> It looks like what you're obtaining is really tracing information on
+> the retry and we could simply add it as another tracepoint in the
+> existing blktrace infrastructure SCSI already has.
+>
+> Regards,
+>
+> James
+>
