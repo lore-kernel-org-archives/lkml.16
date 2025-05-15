@@ -1,165 +1,232 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4CA21A435
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3698F6E;
+	Thu, 15 May 2025 17:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747330207; cv=none; b=sPJ8A/JWPDvQQXwq1M3e+Bi4WX6pADb8fkYRSCSkpOdk2MO1imTX6ot9dxmnTO8r5BB8pIMtl8axBgJK/0Mg+Gxmu5S7I/R8mmy7pcm6nY6XpYAHfYuK7N/6m77NoSzlyNehPn8Q3jXPgf7VxU7JeFeBEH4tgb3L21bM61ktHzY=
+	t=1747330302; cv=none; b=QjV1I0GY0Sw+JpJ1i/j0LEUTxIg2BcVcrDsCS6AtqCmQ19QMZ/CBXURs0aTf6d4KP7DjFR2Ix7lyoTpgzB7DyyxNqM82l0NjZGgArWfeyX8DQdxPBc7SW/Ne8OZrcpMHtl/P2H2hTQAXFejNEhOt1Z/PunYdIYYEMJQfAu1R8Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747330207; c=relaxed/simple;
-	bh=Wu9CN8cU2eIJLPbkclunjDQBHOB1LGeNCMobWcJMl74=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=naZgd+m4rTaEVS2IQNnwyWZag2du9arV1EH6heuAqm5s+jbDnmgvVn8qIksyVybGX71B0YLY1iU60Zc9q94Tgs+BFHTW3oJYXUOEBXW02HpVmLuWWJOUABBh8l4uCXUk9X7THo93dQBfdnrrqCMXN8Gf28T0dent1wGmLZtnAes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M0o5uutB; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747330302; c=relaxed/simple;
+	bh=578yBCCF9YgD1A2zHQsbxBb6nOWkxV7xhBGHlUk1Zc4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NXCHBqexB/9snrpoA13Y7hRI2lkhGBAQ83p9G/cmHjG0/bgg/WQOxY3+cZZQG8LTEFWR+TkCLFkLorOEfQ+ub8lIbQ6GaPRTq/1t4g7c3+zCS5yoisJJ5pGa85JuBjh1XS6jDHIbr0GvcwodFvIH746z4ArTltco+Pyf1MtECWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kDJFcJM1; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M0o5uutB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747330204;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=iAWWIGzcWMSzmzl7vBt9br5Ej4p9kIiuncRmzg0hyns=;
-	b=M0o5uutB3r84n8jPHeYEhcy3+Ca9svhjsbbbB63XQ5bTbOHA50Rc2kRV4NjIr3P2oDMqcu
-	TeCtYKEy5tHiLf8MUN9v5pIN4sXhcdkcQmd/3xHSHBxsSAYnESkt7VETlrfO0H+EZMvs+k
-	CjWCmxwUMLlJ3ipW/qCjk9pz/vFDBmk=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-507-AdzzaSvKNJ6m2mEbEkjvyQ-1; Thu, 15 May 2025 13:30:02 -0400
-X-MC-Unique: AdzzaSvKNJ6m2mEbEkjvyQ-1
-X-Mimecast-MFC-AGG-ID: AdzzaSvKNJ6m2mEbEkjvyQ_1747330202
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a0ba24d233so576271f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:30:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kDJFcJM1"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-30c47918d84so1220437a91.3;
+        Thu, 15 May 2025 10:31:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747330300; x=1747935100; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=prxVvoM1ErB3/Q5EAy9SY19xCRr1qk2RFrDCUh/b+3k=;
+        b=kDJFcJM1AyG5SSO8+bT2+5MYNbpdO7Mbx09E/xP6iyRk4kChuGV3flWltaR0KJF6Ih
+         tcoPMb2IEeo+ASqwhMUzHgy9YuZwHsnIavKpJ146LxRW8wjZ9LIUIEUutDhvkOGut30I
+         eYfpfQoauFnNh+UXCJhy/caF0uEfVQWWq7bmSQPFr+neRoXtIyhDm12AJ+W1/1Uk/xqy
+         JBBSS8IJGsE9i1DY8nbHXTZtMMv8OeKcBativto/OFOgX1j+W6i2W3omvQT+TuLgEoo+
+         JFObxU+Uic+2LTKiYPUlIFhiECAa8osa71zTn0JBON+2k05FD5MBWV+tr28i5EO1CGqI
+         bf0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747330202; x=1747935002;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=iAWWIGzcWMSzmzl7vBt9br5Ej4p9kIiuncRmzg0hyns=;
-        b=TbrW/FOwuYvPCWZc6GQPl4xzaf+Y8wdz2LW7e0S43B6jn9unSMK2Ugm/kU7Xt4iwSt
-         6NGbWnazDgg+cBo70a19V21q6UqdgFa4t35bpITMpNkatCmB/0veO7j0hll5imEv372W
-         0D2XzGOSJZIlZwh9qwcl+cjA6HY0LurNPX0feA6cWfQK/Yp74Ic7vtL2k7x354HcKaaF
-         Dx0/5zraQskvfs2Ue7B/5kO129t90D1UYqIjuPD4YWJsWwpQtOnx2ryrpqfjSgKCoJpV
-         WLfONjXAIYLmOS9x4i0yfavRJJhywnxDmgMzUL62tXSD0ARj2uOOyNv/pTrSFl0oQzDb
-         rEvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVUiYYwBifSONrnJFTz32wkPwM5Pj661R80o4WLzirwtCTDToyhzLX8Ke5xRuQUmrv7vvrcoAU6X9vU2ow=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAOqk+eGopuPm83wa8LlaunZhiOv2dpk+V/cVDyKv++Mzvdqjc
-	nWtnUOaAF7rm3qL5F7QaGvozuuxfHhr8xJA/GzGz8aRFs7/4S0uh7MtFY4khVHt/IINCDL46BoG
-	lyMcJzifBztmsZOZnFRO35F/RyQNnPu437/C708VWEwvLG4YMd8E1hxM3KqtyCkfWYQ==
-X-Gm-Gg: ASbGncu1sY0j1yiMMF8Usvi4UxhIZ95CbPqm3LxEVFK23/dGMk2a2zsN3//kaHzUexz
-	IfR6i4dzBNamw7fIa3csZZp+QvZ/shwaPtekkVJSC7vA2NcBmulr/1NPB1hpwFoWgh7+U20GQMv
-	covfXDEk0Cr9sTGuCknQSKVJYT1ocJYepu0MJNbmYxzYAXB3CdNwznrp3HHF2QVEnKRBI0kFw9O
-	LBbfVmY1MKulU512RrdGXgWGri9zr7Sl2gB0Dg3Z4icEvZnwuigcicq9D0WzYXLoKr+mPRFHatg
-	7jTnhaN7u8R604QD4yRv/W4aCnBs4kCUC/LHhnIf8wosx/V3pL3i2jS78Hl6UXyAu0DLFwzoU+c
-	vbQ8PdrSek5rn+tlgl5OsUDd7aU3oULi9skHuozg=
-X-Received: by 2002:a5d:51c4:0:b0:3a1:f653:85dc with SMTP id ffacd0b85a97d-3a35c856484mr504158f8f.58.1747330201755;
-        Thu, 15 May 2025 10:30:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE7V3L1qf75ISjjrGSygFxMC/TtU6voWp5U8Jdrr9RczingKOOFm/9Uku/YhzmIMea37oxWgg==
-X-Received: by 2002:a5d:51c4:0:b0:3a1:f653:85dc with SMTP id ffacd0b85a97d-3a35c856484mr504137f8f.58.1747330201343;
-        Thu, 15 May 2025 10:30:01 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f4a:8900:884a:b3af:e3c9:ec88? (p200300d82f4a8900884ab3afe3c9ec88.dip0.t-ipconnect.de. [2003:d8:2f4a:8900:884a:b3af:e3c9:ec88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca62b1bsm140134f8f.53.2025.05.15.10.30.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 10:30:00 -0700 (PDT)
-Message-ID: <c3c264fa-b74c-42ba-a3ad-615715c8fa80@redhat.com>
-Date: Thu, 15 May 2025 19:29:59 +0200
+        d=1e100.net; s=20230601; t=1747330300; x=1747935100;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=prxVvoM1ErB3/Q5EAy9SY19xCRr1qk2RFrDCUh/b+3k=;
+        b=pnwFqjuR8kojT+bzjAeLr3r5og4mBiE2MDAxTSST/wMoXKAf6ZVLzDy70jSoGJUh7g
+         8ndaJenAl5whXNGKojY7txQaiY4+mTHtW7su4LudNwBZwA5gqQ6Ls3b4ouILsaJGhYl1
+         isOHq29tkuxwZZXOYDcyzn7T1U4wnUX+ShnEGWBicpj7s+vgKf4C9Sa0OMksr3CqoKFD
+         7zqzgc7JpqFOQ9qCOKvS2k/LBbi0AVU6Bgt1LrINfooe1uC3r9x2IQtx7t9I6xljbhdv
+         Pr/uowf/wO5FKrrKMZsnF/WxAYMJXb9bR6+gQU6eaGmmvpdr9Gd5SQV8CSipkP392dJu
+         poXA==
+X-Forwarded-Encrypted: i=1; AJvYcCUIqSY9PdmRbX7M/qJ4/PJ3MR8R4RUf5HyxoIJCIE28FoP+8p2bDijLXRC0PNrzkt+ocds=@vger.kernel.org, AJvYcCVHMRPr4WRiKz2No4g4ILckcGx1rm6ODkojVSCOD7gMWUFQ1r512tg7+GoJgQXhuS/K+2opwTfqLNWKP7GQumoz8x9j@vger.kernel.org, AJvYcCXoLoFDhMA2NZGEjYqYL7/FK7pLiMFCDVIUyEUW1dsX6qTurUaAnoctxR4pxx63nAxwdamNOub5DO0ClK/l@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNzNgf4ghSkZvp78BjYlrth25623o5G9HvdUsIBNTb27FtvOeW
+	MLmtkkUUGtFunKpukKxh4cwfSnQIArMz1cmZYWiStPFanY4l81dPyTHv79aCHShXLRqbwMXl6/s
+	02AM9NhkoZc6mVV7jLoUqpRT/hYSpkSI=
+X-Gm-Gg: ASbGnctnvoimSEUECWDwglJ4SMbTcc4yLW0tZBtld2X84rHp+KC1oGBdNxOAcKYVCRn
+	oLfi4EGvq0bD2VFbmT0pg0M48F8VCwNBl/bJVQDO4cDX+fXeyVmxx/EFSHQHAJC1bKXKOr0XJBh
+	UMlBuP4G4Lt0KjFPI407cGOnGkwW016UfqpliY6UY+eVogdFuD
+X-Google-Smtp-Source: AGHT+IEWJEP4JHBPYv3pIhsvQT0yFk8+vd0BQ6h8BcUdT6+/B+8a0NIRqXbe5Kc4av7UTEAWeTX24BqqBVmsR9UY+K0=
+X-Received: by 2002:a17:90b:48ce:b0:30a:a50e:349c with SMTP id
+ 98e67ed59e1d1-30e7d5b77f2mr300399a91.30.1747330300315; Thu, 15 May 2025
+ 10:31:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] prctl: introduce PR_THP_POLICY_DEFAULT_HUGE for the
- process
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Usama Arif <usamaarif642@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- hannes@cmpxchg.org, shakeel.butt@linux.dev, riel@surriel.com,
- ziy@nvidia.com, laoar.shao@gmail.com, baolin.wang@linux.alibaba.com,
- npache@redhat.com, ryan.roberts@arm.com, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, kernel-team@meta.com
-References: <20250515133519.2779639-1-usamaarif642@gmail.com>
- <20250515133519.2779639-2-usamaarif642@gmail.com>
- <c0af0eb2-d10f-4ee3-87dd-c23cca6cfd1a@lucifer.local>
- <2d30bcce-6f80-468f-945d-b63eff726db5@redhat.com>
- <kuxzxh4r6fapb5tjbhvm7fsw7p2g6vlasdv46j2ggedmbbsec2@zgt445q4oob2>
- <360bac52-2cda-41fd-a674-89b113fef918@redhat.com>
- <7a255984-7c9b-46f1-b73b-f85b5b571a92@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <7a255984-7c9b-46f1-b73b-f85b5b571a92@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250515121121.2332905-1-jolsa@kernel.org> <20250515121121.2332905-16-jolsa@kernel.org>
+In-Reply-To: <20250515121121.2332905-16-jolsa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 15 May 2025 10:31:28 -0700
+X-Gm-Features: AX0GCFsYXtZK-ThNHMZx5N7UZfuuIZHTCObzi1QJtMdvlRR1bBbVItHq81V6p8c
+Message-ID: <CAEf4Bza3cd5cMRvouUiVNrt5MRU4Nhpo7i0KEy1Gm5DTgOFszw@mail.gmail.com>
+Subject: Re: [PATCHv2 perf/core 15/22] selftests/bpf: Add hit/attach/detach
+ race optimized uprobe test
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
+	Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->>
-> 
-> Did we document all this? :)
-> 
-> It'd be good to be super explicit about these sorts of 'dependency chains'.
-> 
+On Thu, May 15, 2025 at 5:15=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Adding test that makes sure parallel execution of the uprobe and
+> attach/detach of optimized uprobe on it works properly.
+>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  .../selftests/bpf/prog_tests/uprobe_syscall.c | 94 +++++++++++++++++++
+>  1 file changed, 94 insertions(+)
+>
+> diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/to=
+ols/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> index b9152ca8cdf5..a83abbe91b01 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+> @@ -15,6 +15,7 @@
+>  #include <asm/prctl.h>
+>  #include "uprobe_syscall.skel.h"
+>  #include "uprobe_syscall_executed.skel.h"
+> +#include "bpf/libbpf_internal.h"
+>
+>  #define USDT_NOP .byte 0x0f, 0x1f, 0x44, 0x00, 0x00
+>  #include "usdt.h"
+> @@ -634,6 +635,97 @@ static void test_uretprobe_shadow_stack(void)
+>         ARCH_PRCTL(ARCH_SHSTK_DISABLE, ARCH_SHSTK_SHSTK);
+>  }
+>
+> +static volatile bool race_stop;
+> +
+> +static USDT_DEFINE_SEMA(race);
+> +
+> +static void *worker_trigger(void *arg)
+> +{
+> +       unsigned long rounds =3D 0;
+> +
+> +       while (!race_stop) {
+> +               uprobe_test();
+> +               rounds++;
+> +       }
+> +
+> +       printf("tid %d trigger rounds: %lu\n", gettid(), rounds);
+> +       return NULL;
+> +}
+> +
+> +static void *worker_attach(void *arg)
+> +{
+> +       LIBBPF_OPTS(bpf_uprobe_opts, opts);
+> +       struct uprobe_syscall_executed *skel;
+> +       unsigned long rounds =3D 0, offset;
+> +       const char *sema[2] =3D {
+> +               __stringify(USDT_SEMA(race)),
+> +               NULL,
+> +       };
+> +       unsigned long *ref;
+> +       int err;
+> +
+> +       offset =3D get_uprobe_offset(&uprobe_test);
+> +       if (!ASSERT_GE(offset, 0, "get_uprobe_offset"))
+> +               return NULL;
+> +
+> +       err =3D elf_resolve_syms_offsets("/proc/self/exe", 1, (const char=
+ **) &sema, &ref, STT_OBJECT);
+> +       if (!ASSERT_OK(err, "elf_resolve_syms_offsets_sema"))
+> +               return NULL;
+> +
+> +       opts.ref_ctr_offset =3D *ref;
+> +
+> +       skel =3D uprobe_syscall_executed__open_and_load();
+> +       if (!ASSERT_OK_PTR(skel, "uprobe_syscall_executed__open_and_load"=
+))
+> +               return NULL;
+> +
+> +       while (!race_stop) {
+> +               skel->links.test_uprobe =3D bpf_program__attach_uprobe_op=
+ts(skel->progs.test_uprobe,
+> +                                       0, "/proc/self/exe", offset, &opt=
+s);
+> +               if (!ASSERT_OK_PTR(skel->links.test_uprobe, "bpf_program_=
+_attach_uprobe_opts"))
+> +                       break;
+> +
+> +               bpf_link__destroy(skel->links.test_uprobe);
+> +               skel->links.test_uprobe =3D NULL;
+> +               rounds++;
+> +       }
+> +
+> +       printf("tid %d attach rounds: %lu hits: %d\n", gettid(), rounds, =
+skel->bss->executed);
+> +       uprobe_syscall_executed__destroy(skel);
+> +       free(ref);
+> +       return NULL;
+> +}
+> +
+> +static void test_uprobe_race(void)
+> +{
+> +       int err, i, nr_threads;
+> +       pthread_t *threads;
+> +
+> +       nr_threads =3D libbpf_num_possible_cpus();
+> +       if (!ASSERT_GT(nr_threads, 0, "libbpf_num_possible_cpus"))
+> +               return;
+> +       nr_threads =3D max(2, nr_threads);
+> +
+> +       threads =3D malloc(sizeof(*threads) * nr_threads);
 
-Documentation/admin-guide/mm/transhuge.rst has under "Global THP 
-controls" quite some stuff about all that, yes.
+leaking this? maybe just use `pthread_t thread[nr_threads];`? or alloca()?
 
-The whole document needs an overhaul, to clarify on the whole 
-terminology, make it consistent, and better explain how the pagecache 
-behaves etc. On my todo list, but I'm afraid it will be a bit of work to 
-get it right / please most people.
+> +       if (!ASSERT_OK_PTR(threads, "malloc"))
+> +               return;
+> +
+> +       for (i =3D 0; i < nr_threads; i++) {
+> +               err =3D pthread_create(&threads[i], NULL, i % 2 ? worker_=
+trigger : worker_attach,
+> +                                    NULL);
+> +               if (!ASSERT_OK(err, "pthread_create"))
+> +                       goto cleanup;
+> +       }
+> +
+> +       sleep(4);
 
--- 
-Cheers,
+4 seconds... can we make it much shorter and allow to define the
+actual runtime with envvar? So for thorough testing you'll define
+something multi-second, but once things land and settle we can run it
+for 100ms at most and not slow down CI significantly? All these slow
+tests do add up :(
 
-David / dhildenb
-
+> +
+> +cleanup:
+> +       race_stop =3D true;
+> +       for (nr_threads =3D i, i =3D 0; i < nr_threads; i++)
+> +               pthread_join(threads[i], NULL);
+> +
+> +       ASSERT_FALSE(USDT_SEMA_IS_ACTIVE(race), "race_semaphore");
+> +}
+> +
+>  static void __test_uprobe_syscall(void)
+>  {
+>         if (test__start_subtest("uretprobe_regs_equal"))
+> @@ -652,6 +744,8 @@ static void __test_uprobe_syscall(void)
+>                 test_uprobe_session();
+>         if (test__start_subtest("uprobe_usdt"))
+>                 test_uprobe_usdt();
+> +       if (test__start_subtest("uprobe_race"))
+> +               test_uprobe_race();
+>  }
+>  #else
+>  static void __test_uprobe_syscall(void)
+> --
+> 2.49.0
+>
