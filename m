@@ -1,89 +1,185 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C054D25B675
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8213E25B697
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:20:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747333176; cv=none; b=hzzwcnb8xjSJo7ejITQNwAohfwdOK5lUoEt+mAp3D+oAwdaEWzaYK565/tlnoIHV08heTm0z7A61z6rZvd3ekciV9n5QkEWLPV3TcwvXLXkTt+99SHqJVP7ZqaQHQDZlsd3ukQGBSDTQOsv4bvSmyMH6iV9b9QKLBoxVEC/Fb7s=
+	t=1747333225; cv=none; b=crytt/WccdZ3HohmXbgPPExAG83vZN99MiGsFMS8RUmP9tk9QcG/QxsoWL8Q8665OTnsiuXQ15qDJOb08Rf05MbPdb2NsnSmi1HK3xoql5QR3PpuKEsLKraQWJvGLrTTTtp5/nc3FMlguUxslAKRkpla8glbSgR8qFWIcSYTbzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747333176; c=relaxed/simple;
-	bh=s/QjyZzY/EnfUUvNKb7Q7l8bqIG7rG8gTYAL2oTY5W4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SLbKurSazXjp6QBFfsbwp2sDFwhZDZ+L6LDu8LGdzkuKTgBJYvvrFdIc9H7VUfydyDVjBlGSKYzh9WtKA0oWUqggMrdQ97rMyhwf1avqGeZPhQjgASrTFuSpPClcKhuJV/kjHWjP1722uilr8uZl7pCdi7snGOeA3LqgutJVxJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=kcVrGY0w; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1747333225; c=relaxed/simple;
+	bh=OFQJFxNEJqELWJaBN8ZVm02CI2xaoxqAGDZdrfqhTII=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=brZmZuLspSld0QyNCC6v/D0mjVHRYxpZNNoI64GaE8BfP94tJFLwTmd7yvavIhrK93Pi982Qiu+aWE26crhevZZkjlvmTP2h3ND0IB1WGc7UZqf8XQcvHeRFGS27eTCKxopqhCMpt2z1YZ024vIAYw7vKsMDlF//CA1DFdtVZN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XPMh+X0M; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="kcVrGY0w"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-85dac9728cdso46172739f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:19:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XPMh+X0M"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3da73d35c11so14915ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:20:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1747333174; x=1747937974; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=96xY6/n/0fhqAkgNUIqk6HeWQCuRjQ3BV7nB9J6drQA=;
-        b=kcVrGY0wNLRo1y5Cwo33gWpbq5GjPez55xOZNbREb37HEmycAbB7rVLVpCxbACLB5q
-         cgzwssAQwJCD4OvEfySDH5KN0D1R40rE4pde8RnGubvGHUFuZH0lX2tstOEFfazio8M0
-         uKrICjXQimEoCY/pxavBVSwdp3jXxct+N5voc71YYvCkv/QmHyQONfGgBd2NZTDxnhYb
-         V5Jv81v1nvCxH+tjUShYTI5XgDQAUIZrSsIZsPdNA0eJt3wsAMU+gHy5wJrc0DtRENzN
-         ebjFCFOz07QnJss4w6HZ0V7aGAuIhoghl58bRoIPL0rECc97S2WAyG0VryWtXUsF21rq
-         ueKA==
+        d=google.com; s=20230601; t=1747333222; x=1747938022; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O63afm2VlIQSQza7BQRIQ/xdhW0az9PDJoewqUEykng=;
+        b=XPMh+X0M1f7nJarUW9bgqZh+OIjpwpXY5/HunbmqJCc8NsY4IYGe5NzwXRa4rIpDe/
+         wcAOje8nWRhHS1aXEgLpfpMPeghUkPfar5F0FGIfAC843FBhisglIUX/jiclH/qaMiMW
+         z0aqmrIEOpl9ieBfjyd4G6D1UNaynEvO+zJNusS644OhCcZVyEUKSlkr+61mRt7n1+wj
+         8eqV/mlLc4nbKR52/gIIJOUHqGTZZx+NrMr/KNgWeQIHV0pQJu4AG/ngvuj4/NHVtf/q
+         fmtMp8aRem8rGscS5hFSkIfJ0SVFTHnKW56Pe+IhvL3/UTupWosqs7O5cMffTD3JmbrW
+         NrtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747333174; x=1747937974;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=96xY6/n/0fhqAkgNUIqk6HeWQCuRjQ3BV7nB9J6drQA=;
-        b=dQESb+HmPFiIhnqUh5gIhT2epVL6fR8KTNB/Bn0bZg7J88zJdYQSkshdXNjrWMH5S+
-         iFhqng+kYB831EX5hczXtUXX4vGXePaZddK5ZSsfwNLKcPXaF1nyJz1cRxCJskV5luzq
-         t9Jm2Z0yxPKBKb59p6LtJ9hRzKpU8MLyo4/gJ30LF4vtCz6+vJ5Y6EpNfyJi0DV6ID3t
-         myExlVKNSxD/uWr/7uI/6w32IxeoNFColy1OfJtyoFFqCKOrKqF/X9Hh5D0Unc4LSeO1
-         QIvbKpqaVDoW4pOHnybt5CtBFROsCzV9mRuqrniqdvqzsEw9XFHeyocDoliYXd//KR9b
-         aG4g==
-X-Gm-Message-State: AOJu0Yy2jMuWN6S2i7YsR71QYFPP4YjMOsvcnC2tkv2tPxQ9BZxMErre
-	hKqYWEbR2dW2tNcFEF15te0RXyZPdye3V22hIy1D5b37tgazL8crNSxebq98xiYg6gg=
-X-Gm-Gg: ASbGncsl9eHxGCA2Z68ate0jgrdz8g5CqQI8mZi75p1HlzWP56SFzyu6bdU95WA0Hae
-	A0qGmN/JZFuTsd0h2I6llUgjPRf6sbSMgLMf/RDQdPH0iPQwm2ewBXRftZYCxvxJ7+dU4NrTAfA
-	iaRszhD9wIUM7GGLOqRq79FxT8iVLT4JIawvLT5F2cuxWXPf40SkaIkvhdaPELrnTzrHMkVF7oM
-	TJmPVSBVCK6D6TyOXB3/AD4+tRGLTFD2ZDdFg5oHUrrmEST33/PrT2Vzw5f50SJtCK6t/7kVX4j
-	STq6KPUUbcv+XdKc9RnQatQ7LfruN8okiLnRj9Zm53Yha7g=
-X-Google-Smtp-Source: AGHT+IH5rh3RaD+mXxl/U/ED5r/PqNk+HsLHF/ipKK7WOh4aSk3GsClD76p331wCOo6l3ZpGehK4jQ==
-X-Received: by 2002:a05:6602:6a48:b0:85b:3791:b2ed with SMTP id ca18e2360f4ac-86a231c3ee4mr95598639f.8.1747333173762;
-        Thu, 15 May 2025 11:19:33 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc4b1715sm30431173.123.2025.05.15.11.19.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 11:19:33 -0700 (PDT)
-Message-ID: <e65279dc-3054-42bc-8365-2065769d5898@kernel.dk>
-Date: Thu, 15 May 2025 12:19:32 -0600
+        d=1e100.net; s=20230601; t=1747333222; x=1747938022;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O63afm2VlIQSQza7BQRIQ/xdhW0az9PDJoewqUEykng=;
+        b=gqJJTS/cHLT5H0xCwlXjrKEqTWOY0DTM/6dlEkq29hYJSLLWSsU3p9uJH1Y9qQCwa4
+         c4RE0YFxpLQc0LZVGGSBTMx3xC6q5yHDUgjG8E0Oqdes2ifgKhGc6mEssqiQ6qOsqlET
+         wLC/DadhbJ9DBX12C9rd7YU5+qFykRErb4MC+QMeAIC/Vgmy7NejdkZhppnDt2CrjSqN
+         Lc8AIRfYqsT0h53b9OXwPhP2nrmADcbSvYLbzsT4pVyBkyI3tpcUARVMhnf84DYaw/zh
+         pPJVc27d8bifYi/bi0GQh0L+ys+6tggakJHr/1hsx4VPLp6g8JhuzHMOte4eMJ/jgVSP
+         ds+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWZxEnYOVhLykB2C+Hh/IPzwhidVlHQRdmMSnluZn3rgNbvMW7KTDvE5/AdGPPkLGCk8KtNIYEJThmOVRg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbmG56/YE+3qk+HXyORYFd5Q0M6EZ1xYCMi2QDd72tuoyx+DsK
+	FUcp/FedE6oTtOvn39lWr2E8OyZ2yNlJvg22oA8nBq/GSRFt6rNfqBj0ZbHKTz5IelVBV5SHTBY
+	NGDbFVfwQw68ugheXbrVetgbXC37lnvDhbHWnV3Rf
+X-Gm-Gg: ASbGncsSkON+kFRbr6oHPzE+LJejtN6ZuKHBpENEwqLmktQRTHBo1KD6JRJNNjd4/nu
+	S+a2ZwCcPjaXBEDGOuWaVSVnYRX7tyIh9+omGoTgt6q2crtIMUnbfmWKMozAx7qu/PdS09EVMQx
+	2voxhWRmXQTqB7fvtfWAM01ZXEhLn3p7h9r/2Skdqk6rCCBj0r4PrCD3kat4yeu0DbuMh2Xkbq
+X-Google-Smtp-Source: AGHT+IHxywpS3vYTcikvJFkskiAkXcjtoKimej+IX3453AjHRldxM8Iu/0iE5TCAiDL7Ohn6Vyr2bCnr89AIycM2SlY=
+X-Received: by 2002:a05:6e02:3399:b0:3d9:6e55:2aae with SMTP id
+ e9e14a558f8ab-3db77f13930mr5539735ab.0.1747333222382; Thu, 15 May 2025
+ 11:20:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] blktrace: use rbuf->stats.full as a drop indicator
- in relayfs
-To: Jason Xing <kerneljasonxing@gmail.com>, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>,
- Yushan Zhou <katrinzhou@tencent.com>
-References: <20250515061643.31472-1-kerneljasonxing@gmail.com>
- <20250515061643.31472-4-kerneljasonxing@gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20250515061643.31472-4-kerneljasonxing@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250515043818.236807-1-irogers@google.com> <aCYTG12gSmv0OtXN@x1>
+ <aCYTaveeziFiF3kw@x1> <CAP-5=fWBdCVSM_QLcLJ66g+LC0ykrJbZA6mQUsH_++xLormFzQ@mail.gmail.com>
+ <aCYv9KBA0fYlT143@x1>
+In-Reply-To: <aCYv9KBA0fYlT143@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 15 May 2025 11:20:10 -0700
+X-Gm-Features: AX0GCFvn9tLQx10HojBrW8CVpvMI5SDjtSE51P_ZxB_B3dIPMWecGGXiaF440uE
+Message-ID: <CAP-5=fX2UfyCLwxDzvt=xy_2yA9-450x0gGVebrhzXwWH4-b7g@mail.gmail.com>
+Subject: Re: [PATCH v1] perf pmu intel: Adjust cpumaks for sub-NUMA clusters
+ on graniterapids
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Weilin Wang <weilin.wang@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Looks fine:
+On Thu, May 15, 2025 at 11:18=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Thu, May 15, 2025 at 10:02:44AM -0700, Ian Rogers wrote:
+> > On Thu, May 15, 2025 at 9:16=E2=80=AFAM Arnaldo Carvalho de Melo
+> > <acme@kernel.org> wrote:
+> > >
+> > > On Thu, May 15, 2025 at 01:15:26PM -0300, Arnaldo Carvalho de Melo wr=
+ote:
+> > > > On Wed, May 14, 2025 at 09:38:18PM -0700, Ian Rogers wrote:
+> > > > > On graniterapids the cache home agent (CHA) and memory controller
+> > > > > (IMC) PMUs all have their cpumask set to per-socket information. =
+In
+> > > > > order for per NUMA node aggregation to work correctly the PMUs cp=
+umask
+> > > > > needs to be set to CPUs for the relevant sub-NUMA grouping.
+> > > >
+> > > > I'm blindly applying it as I can't test these changes, and I think =
+this
+> > > > is bad.
+> > >
+> > > In the end the only review/action I could do was to turn:
+> > >
+> > > Subject: Re: [PATCH v1] perf pmu intel: Adjust cpumaks for sub-NUMA c=
+lusters
+> > >
+> > > Into:
+> > >
+> > > Subject: Re: [PATCH v1] perf pmu intel: Adjust cpumasks for sub-NUMA =
+clusters
+> > >
+> > > :-(
+> > >
+> > > Besides the build tests, etc.
+> >
+> > It isn't the easiest to test. Let me add Weilin Wang on v3 as I think
+> > she has a graniterapids and could hopefully provide a tested-by tag
+> > :-)
+>
+> But, one more review action, will wait for v2:
+>
+>          make_refcnt_check_O: cd . && make EXTRA_CFLAGS=3D-DREFCNT_CHECKI=
+NG=3D1 FEATURES_DUMP=3D/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST=
+_FEATURE_DUMP -j32 O=3D/tmp/tmp.HAAu6nXJ16 DESTDIR=3D/tmp/tmp.NpycD5uTsi
+> cd . && make EXTRA_CFLAGS=3D-DREFCNT_CHECKING=3D1 FEATURES_DUMP=3D/home/a=
+cme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=3D/tmp/tm=
+p.HAAu6nXJ16 DESTDIR=3D/tmp/tmp.NpycD5uTsi
+>   BUILD:   Doing 'make -j32' parallel build
+> Warning: Kernel ABI header differences:
+>   diff -u tools/include/uapi/linux/bits.h include/uapi/linux/bits.h
+>   diff -u tools/include/linux/bits.h include/linux/bits.h
+>   diff -u tools/include/vdso/unaligned.h include/vdso/unaligned.h
+>   diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/c=
+putype.h
+>   diff -u tools/perf/trace/beauty/include/uapi/linux/vhost.h include/uapi=
+/linux/vhost.h
+> Makefile.config:968: No libllvm 13+ found, slower source file resolution,=
+ please install llvm-devel/llvm-dev
+> Makefile.config:1147: No openjdk development package found, please instal=
+l JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
+>
+>   GEN     /tmp/tmp.HAAu6nXJ16/common-cmds.h
+> <SNIP>
+>   CC      /tmp/tmp.HAAu6nXJ16/arch/x86/util/pmu.o
+>   TEST    /tmp/tmp.HAAu6nXJ16/pmu-events/empty-pmu-events.log
+>   GEN     /tmp/tmp.HAAu6nXJ16/pmu-events/pmu-events.c
+>   CC      /tmp/tmp.HAAu6nXJ16/arch/x86/tests/hybrid.o
+>   CC      /tmp/tmp.HAAu6nXJ16/arch/x86/tests/intel-pt-test.o
+>   CC      /tmp/tmp.HAAu6nXJ16/util/block-info.o
+>   CC      /tmp/tmp.HAAu6nXJ16/util/block-range.o
+>   CC      /tmp/tmp.HAAu6nXJ16/util/build-id.o
+>   CC      /tmp/tmp.HAAu6nXJ16/tests/pmu.o
+>   MKDIR   /tmp/tmp.HAAu6nXJ16/ui/browsers/
+>   CC      /tmp/tmp.HAAu6nXJ16/ui/browsers/annotate-data.o
+>   CC      /tmp/tmp.HAAu6nXJ16/bench/futex-wake.o
+>   CC      /tmp/tmp.HAAu6nXJ16/arch/x86/util/kvm-stat.o
+>   CC      /tmp/tmp.HAAu6nXJ16/builtin-help.o
+>   MKDIR   /tmp/tmp.HAAu6nXJ16/ui/tui/
+>   MKDIR   /tmp/tmp.HAAu6nXJ16/ui/tui/
+>   CC      /tmp/tmp.HAAu6nXJ16/ui/tui/setup.o
+>   CC      /tmp/tmp.HAAu6nXJ16/ui/browsers/hists.o
+>   CC      /tmp/tmp.HAAu6nXJ16/ui/tui/util.o
+> arch/x86/util/pmu.c: In function =E2=80=98gnr_uncore_cha_imc_adjust_cpuma=
+sk_for_snc=E2=80=99:
+> arch/x86/util/pmu.c:249:42: error: =E2=80=98struct perf_cpu_map=E2=80=99 =
+has no member named =E2=80=98map=E2=80=99
+>   249 |                         adjusted[pmu_snc]->map[idx].cpu =3D cpu.c=
+pu + cpu_adjust;
+>       |                                          ^~
+>   CC      /tmp/tmp.HAAu6nXJ16/builtin-buildid-list.o
+> make[8]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:8=
+6: /tmp/tmp.HAAu6nXJ16/arch/x86/util/pmu.o] Error 1
+> make[8]: *** Waiting for unfinished jobs....
+>   CC      /tmp/tmp.HAAu6nXJ16/arch/x86/tests/bp-modify.o
+>   LD      /tmp/tmp.HAAu6nXJ16/scripts/python/Perf-Trace-Util/perf-util-in=
+.o
+>
 
-Reviewed-by: Jens Axboe <axboe@kernel.dk>
+Yep asan/refcnt checker was fixed in v2. I just sent v3 to hopefully
+address Kan's feedback:
+https://lore.kernel.org/lkml/20250515181417.491401-1-irogers@google.com/
 
--- 
-Jens Axboe
+Thanks,
+Ian
