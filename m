@@ -1,247 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35F829615A
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB101E990B;
+	Thu, 15 May 2025 09:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747301550; cv=none; b=DvZ2ZWN13ukin+RqEZ1O54kHCcZK2P83EGDpmspaa7ld/jPR2i+c15MlZwQ2X3bHXwfdds6Y6wTVHLxfgJgOJ1vMYgIpD2Lt7X9kDTGVypfTsoKgVOd307LsuRpPsmbA4huAOiVbOzThFPihMOXqKTwuI+VMUAjfs8m6y6xAB1Y=
+	t=1747301624; cv=none; b=sS1aJ5gzDXShTw2WvyGAsTanB66uqZpWdLdEBZgGJIYpXtumgJ12HbHZJUf7N6A0yYE746rSKYI00a3fWHEI14UC08rfehMqrjWW7iz0dnEZ1rBV1ivr35PkPathw8HuucE7eB2T68VlClHn8BfB6K+NVfG7shMvGLYgVF62eH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747301550; c=relaxed/simple;
-	bh=SaMLanRwRbiuoI6sV8y2cQ0VCP4NMzTzL+AqFQvBHpc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rdTaQek5oBps8+ODLGIgOrf92KIoci3y6joPPLGmdcqHRVlzGLYhbTU9fkNlU2psRqWZqyrb/8lFwK1ExdcIOLMyNeRknTatTnIfrcLPvYZ3quBq2hRf5Tq6mVoivjUn0j3ZbmlNN1osqgHcaMaynzKSNX/mYNUmF8DKixtGj88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MVKZozNq; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747301624; c=relaxed/simple;
+	bh=U+tPnOpL3m607kNEaHvTgUEJzEiFqUT9VJpj4Anya/k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xrq0Kb1EwKMjeHukNhq2U811Wbxs8FkIupC+CYYgEykHvUDio4PDbkeAmlsVBJsfBXgdEfltpNpiJ+tEQyKTYIkikICQXIo1ZvCprxu00QuJbqERpnr7lW8lOyUxPSwysMqnDaexzYq0gSRDb53vU1XRjp01PbxIsCFks7CXZ+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UXNjgnWA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MVKZozNq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747301547;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=oItitg8Z5dZXMX4qx++KSjKZ15vTx3/yC4NQ+s35qp4=;
-	b=MVKZozNqppwRdGwTWS38151eF/fdlpwfg+DuAVQZN+C7APF3t8tH1D6/kFsgCPT7rIS47k
-	Ep4nBlPfIOMrbMHTEzGOPMONIpU/NK6t7i2p7PtdymZMG3GbpAigapGRh9m6fQK6TltjVK
-	ADzi5z19tN4DU6/seUmeDfW14oO249g=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-70-zQnfFFchPLaOKELJXwszEQ-1; Thu, 15 May 2025 05:32:26 -0400
-X-MC-Unique: zQnfFFchPLaOKELJXwszEQ-1
-X-Mimecast-MFC-AGG-ID: zQnfFFchPLaOKELJXwszEQ_1747301545
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a0b6cb5606so411788f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 02:32:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747301545; x=1747906345;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=oItitg8Z5dZXMX4qx++KSjKZ15vTx3/yC4NQ+s35qp4=;
-        b=JQ5JRHAyrX6N1c492Fg4rP9kDvKETlShg6dMVlhvdCWjFt8MI6nW8++UQ1BgTvLim1
-         hfr/FsyPomVkycGVvmJU/Btoip2awtWB0LPoQcGkqaF6A7kznHzxEa5GUBsuTHAzsxmJ
-         KnLwiyrngmJ9lmGa0aAtfOLgN/hT9a3IQNM/xVJrIktRDBHz/wN669SX8EWGmTpOIrta
-         EgrYgZeshhQmcKqlW08s5oaC1HDKY/6ae0QvH/ybff4N9kaiSTuC9bNt8OUIleerX0jx
-         a/XHkk5dUEhWPJYsKNJLk1LkhLEnqS7/wvAgK/o/I5rVHixbj+QqTq8bmuA16ZDtIaal
-         SRkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXbC1qng8MXPIm646Jhb3D1ZsDmLyF4u5I7dGfiOEcjioI6ZrlumG1fISUntCF5uj6Cm6J0cPWW1x3rjz8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQO0KSQb/bxXTQnkIyOwtw3ip+0yWg9r5NBoSSi2TEqmupM5zO
-	46AZBdjhToy2plbShi3FqgsNKtMm0EFUWtCRe7LteOQI3gnpNWanHPKBD8WHBikvLtwW8a/iChM
-	zavaRA/0vc2eM6T7OoYYQVEft7ycNaFjOwNIc/FcduUNTfgp6Bv56DkpTm6Fx5g==
-X-Gm-Gg: ASbGnctFCxq1N0r/+POiskKwZHFHEM7j8nqGX6uEbvKx9pmeXBogAW7VD973JNBk+ha
-	2mzonhKYU8v+Dsm+vv8Sltt9eJCzcjizdbl7zID8K7OAJLdF2PwVl4El20/33Yh1W1shxcyS6eh
-	9EuSlafQJUfq+3t8hNEzfdueoHxFTHOcJr52OfnAQzLHoveVJkXgmuR0nuaaEyXPRnL6tz1DET+
-	HMdOg/WfLZWNchtLzVUaLyzOmK8bCVkZjpcFJjcm48nXj9k81c3IJvYz6HIdX438q8FMWjihlnB
-	ht5Qn9JBn4n/L6iZ4JsSOlZ97n3kzAhkx37stwVN5Ef8EDdszCPDFzJ0b1X7jg6c3XXBm4pnX/B
-	1hBdkYkN7xCkvPaC2CjBU9u9bArTfxehXotpDLjA=
-X-Received: by 2002:a05:6000:430d:b0:3a0:b9a8:b94c with SMTP id ffacd0b85a97d-3a34994c044mr5395634f8f.50.1747301544826;
-        Thu, 15 May 2025 02:32:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFcItxdHzBx5QzO1HhO++1GGOSuhmIUBDGjEXVSFkIcYwc4ODVC6maoVYAxWIGFcYbGfTAGAw==
-X-Received: by 2002:a05:6000:430d:b0:3a0:b9a8:b94c with SMTP id ffacd0b85a97d-3a34994c044mr5395607f8f.50.1747301544379;
-        Thu, 15 May 2025 02:32:24 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f4a:8900:884a:b3af:e3c9:ec88? (p200300d82f4a8900884ab3afe3c9ec88.dip0.t-ipconnect.de. [2003:d8:2f4a:8900:884a:b3af:e3c9:ec88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57ddd53sm22111507f8f.1.2025.05.15.02.32.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 02:32:23 -0700 (PDT)
-Message-ID: <a005b0c3-861f-4e73-a747-91e0a15c85de@redhat.com>
-Date: Thu, 15 May 2025 11:32:22 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UXNjgnWA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0F04C4CEE7;
+	Thu, 15 May 2025 09:33:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747301623;
+	bh=U+tPnOpL3m607kNEaHvTgUEJzEiFqUT9VJpj4Anya/k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UXNjgnWA+H9nCoRF2qGohiFrM+9FMPSMyzLbuKMGzSIut6SneQ5AYUcvMaR4mY8zs
+	 5rZ2AQ0wyVGpNGFJXsr1fU4zR+9Uzk66i7NnFVaQlkhcQaXpo67AMgy/qYLD628N0f
+	 faFIQ9MSqNnmIyNl2evCqzqXt9Cx69CBb+nnunbzBgUGY2wu4gDEYlKPFCElm+ZzUF
+	 oI0ZEebDwChS2GbD3vAcnmmT5D/eugikStnnPtMeePAKnCR5P+RTAK6fWefc5ukQ28
+	 r/ilLS4EEcMC6h9BU9inlZuFI2WrvRWCrPtFi1hDuFnefN8qxXICkIoQUMdd4YRTaZ
+	 pExzq0Nm0S3/g==
+Date: Thu, 15 May 2025 11:33:39 +0200
+From: Mark Brown <broonie@kernel.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Artur Weber <aweber.kernel@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Stanislav Jakubek <stano.jakubek@gmail.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH v8 4/9] mfd: bcm590xx: Add support for multiple device
+ types + BCM59054 compatible
+Message-ID: <aCW0822BVpfKV2NL@finisterre.sirena.org.uk>
+References: <20250430-bcm59054-v8-0-e4cf638169a4@gmail.com>
+ <20250430-bcm59054-v8-4-e4cf638169a4@gmail.com>
+ <20250509140957.GD2492385@google.com>
+ <aCRZzwW0w8oVWLUp@finisterre.sirena.org.uk>
+ <20250515071357.GD2936510@google.com>
+ <aCWfre2-n_PSuhxR@finisterre.sirena.org.uk>
+ <20250515092000.GF2936510@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: Check pxd_leaf() instead of !pxd_table() while
- tearing down page tables
-To: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com, will@kernel.org
-Cc: ryan.roberts@arm.com, anshuman.khandual@arm.com, mark.rutland@arm.com,
- yang@os.amperecomputing.com, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
-References: <20250515063450.86629-1-dev.jain@arm.com>
- <332ecda7-14c4-4dc3-aeff-26801b74ca04@redhat.com>
- <4904d02f-6595-4230-a321-23327596e085@arm.com>
- <6fe7848c-485e-4639-b65c-200ed6abe119@redhat.com>
- <35ef7691-7eac-4efa-838d-c504c88c042b@arm.com>
- <c06930f0-f98c-4089-aa33-6789b95fd08f@redhat.com>
- <91fc96c3-4931-4f07-a0a9-507ac7b5ae6d@arm.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <91fc96c3-4931-4f07-a0a9-507ac7b5ae6d@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ejBQO6RFNOdfKSiv"
+Content-Disposition: inline
+In-Reply-To: <20250515092000.GF2936510@google.com>
+X-Cookie: Well begun is half done.
 
-On 15.05.25 11:27, Dev Jain wrote:
-> 
-> 
-> On 15/05/25 2:23 pm, David Hildenbrand wrote:
->> On 15.05.25 10:47, Dev Jain wrote:
->>>
->>>
->>> On 15/05/25 2:06 pm, David Hildenbrand wrote:
->>>> On 15.05.25 10:22, Dev Jain wrote:
->>>>>
->>>>>
->>>>> On 15/05/25 1:43 pm, David Hildenbrand wrote:
->>>>>> On 15.05.25 08:34, Dev Jain wrote:
->>>>>>> Commit 9c006972c3fe removes the pxd_present() checks because the
->>>>>>> caller
->>>>>>> checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller
->>>>>>> only
->>>>>>> checks pud_present(); pud_free_pmd_page() recurses on each pmd
->>>>>>> through
->>>>>>> pmd_free_pte_page(), wherein the pmd may be none.
->>>>>> The commit states: "The core code already has a check for pXd_none()",
->>>>>> so I assume that assumption was not true in all cases?
->>>>>>
->>>>>> Should that one problematic caller then check for pmd_none() instead?
->>>>>
->>>>>     From what I could gather of Will's commit message, my
->>>>> interpretation is
->>>>> that the concerned callers are vmap_try_huge_pud and vmap_try_huge_pmd.
->>>>> These individually check for pxd_present():
->>>>>
->>>>> if (pmd_present(*pmd) && !pmd_free_pte_page(pmd, addr))
->>>>>       return 0;
->>>>>
->>>>> The problem is that vmap_try_huge_pud will also iterate on pte entries.
->>>>> So if the pud is present, then pud_free_pmd_page -> pmd_free_pte_page
->>>>> may encounter a none pmd and trigger a WARN.
->>>>
->>>> Yeah, pud_free_pmd_page()->pmd_free_pte_page() looks shaky.
->>>>
->>>> I assume we should either have an explicit pmd_none() check in
->>>> pud_free_pmd_page() before calling pmd_free_pte_page(), or one in
->>>> pmd_free_pte_page().
->>>>
->>>> With your patch, we'd be calling pte_free_kernel() on a NULL pointer,
->>>> which sounds wrong -- unless I am missing something important.
->>>
->>> Ah thanks, you seem to be right. We will be extracting table from a none
->>> pmd. Perhaps we should still bail out for !pxd_present() but without the
->>> warning, which the fix commit used to do.
->>
->> Right. We just make sure that all callers of pmd_free_pte_page() already
->> check for it.
->>
->> I'd just do something like:
->>
->> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
->> index 8fcf59ba39db7..e98dd7af147d5 100644
->> --- a/arch/arm64/mm/mmu.c
->> +++ b/arch/arm64/mm/mmu.c
->> @@ -1274,10 +1274,8 @@ int pmd_free_pte_page(pmd_t *pmdp, unsigned long
->> addr)
->>
->>           pmd = READ_ONCE(*pmdp);
->>
->> -       if (!pmd_table(pmd)) {
->> -               VM_WARN_ON(1);
->> -               return 1;
->> -       }
->> +       VM_WARN_ON(!pmd_present(pmd));
->> +       VM_WARN_ON(!pmd_table(pmd));
-> 
-> And also return 1?
 
-I'll leave that to Catalin + Will.
+--ejBQO6RFNOdfKSiv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'm not a friend for adding runtime-overhead for soemthing that should 
-not happen and be caught early during testing -> VM_WARN_ON_ONCE().
+On Thu, May 15, 2025 at 10:20:00AM +0100, Lee Jones wrote:
+> On Thu, 15 May 2025, Mark Brown wrote:
 
-> Also we should BUG_ON(!pmd_present(pmd)) to avoid the null dereference?
+> > Well, you choose 3 - I do think it'd be a lot easier to go with option
+> > 2, or with applying the rest to your tree as acks come in.  There seemed
+> > to still be a reasonable amount of discussion on the MFD bits (eg,
+> > there's some formatting comments still) so I was expecting this series
+> > to churn some more and was waiting for a resend.
 
-Definitely no BUG_ON :)
+> Yes, I expected to apply v9 with your Ack.
 
-> 
->>
->>           table = pte_offset_kernel(pmdp, addr);
->>           pmd_clear(pmdp);
->> @@ -1305,7 +1303,8 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long
->> addr)
->>           next = addr;
->>           end = addr + PUD_SIZE;
->>           do {
->> -               pmd_free_pte_page(pmdp, next);
->> +               if (pmd_present(*pmdp))
->> +                       pmd_free_pte_page(pmdp, next);
-> 
-> Ah yes, the "caller" of pmd_free_pte_page() is not only
-> vmap_try_huge_pmd but this also...my mind has been foggy lately...
-> need to solve a math problem or two to sharpen it :)
+OK, that's about where I was expecting - at least one more respin before
+the MFD bits are stable.
 
-Haha.
+> I can go with 2 in this case.  Applying in dribs-and-drabs as Acks come
+> in would be sub-optimal and would likely end up in a mess.
 
--- 
-Cheers,
+Well, then just going a head and applying them on a branch with a tag
+seems easier than delaying then.
 
-David / dhildenb
+--ejBQO6RFNOdfKSiv
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgltPIACgkQJNaLcl1U
+h9DkqQf/REpQxgWVfq8b7aQzalvyecOuF4kgL/JR9uyKEG8EDkwpLRnT/+yxJmCX
+Dkw4A53gNv/cD2E1UWI2AYs6i4/rUScPzGsjtiUV5AUoDJ91LB2uxgHiSk/xFpck
+x6A37s+FfJYLx9Gmq8cfwVrl103CH7er2kqiadxUL0db4mPXvq/g1EPk2XmuP/Lz
+/dkbZtw92fLqWkofr/kiGGoKV9TKa0vlcVmunnaF1Pm14oN+cpTU3aAT58Ogi6Vn
+1AuIHpgbH1fae6uL52xialrE8H3PVQF0KkkxyMPrSj+mSL17DDN3jDCXoz6Ypw2Y
+eJFtfBiL5D0nmaE7Z2CtBkgLq3LMow==
+=U5xD
+-----END PGP SIGNATURE-----
+
+--ejBQO6RFNOdfKSiv--
