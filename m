@@ -1,95 +1,121 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B10297129
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 06:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835A6295D89;
+	Thu, 15 May 2025 06:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747292039; cv=none; b=DhZafiaDozzdZuo6JfGzuQQIVTzwEg8Omdg1bkhQKr4Nd1WmdX/Jek7l8CMSW4zS81B4HMNx4KwJ4hrw9kp20CskayMmGwKS2YYbTtHioomxfsS1Y6+7Sx/r4Sh29CCUKlouX+Q6w923EFvzdq6w4tNhDMBsU5SuY3Tol9xowFM=
+	t=1747292079; cv=none; b=TFvH3PS69wT720Jhd2IPn2FaoWxZzHJ0q9tBVDlhGmo5PdcxyTs3FG+Z1xCrtXD862oQwKse9MY6iqa2GIIhyb7SUklPBFndA6MinuabL8jCJwIpaIanMN3QTfGcq0mC7dHNdnk/exlnPBvWDcCcg+Om2qGwEcCO4u6+UgCfsQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747292039; c=relaxed/simple;
-	bh=IvviUiMfFa2Il5r7kiUngPBt19pjIZJAasz6QAnn2r4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mDtdFnPlf/sBz3LGSIiaOzQXOznG0sJIyuF6BDIg2/BeMAJVursfyqu73EI6I9HAaR2lM68GoL19hxAl1gHipph8KFI82NEsApdC+xFH+FUHIjT0tT83UUJS2EtMunFRbrKeQLr2NKVYbk3pjuPx4J77pHd6lEsUXHZER4VN2yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZygsF6pnKz4f3jd1
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:53:21 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id BC5A81A0359
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:53:46 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP4 (Coremail) with SMTP id gCh0CgAHbGB3jyVoyDnbMQ--.29023S6;
-	Thu, 15 May 2025 14:53:46 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: hughd@google.com,
-	baolin.wang@linux.alibaba.com,
-	akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/5] mm: shmem: only remove inode from swaplist when it's swapped page count is 0
-Date: Thu, 15 May 2025 23:47:57 +0800
-Message-Id: <20250515154758.956521-5-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20250515154758.956521-1-shikemeng@huaweicloud.com>
-References: <20250515154758.956521-1-shikemeng@huaweicloud.com>
+	s=arc-20240116; t=1747292079; c=relaxed/simple;
+	bh=2W8v5Gdhm+xnSWlzDaIimqr2v2xWvhPz810ej4BlwHE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JECi3w5062j6tfRTIcU/KdrPgZ8V/KD5svpfcnNJsTkQgdlIc32K+d3QoPSepH5jaSfJUO9KzYGhBZiZCLkJMJ5fY8MleM5ILJnRXSO/Vwytm4I1v17fMicWgHWvEGKbo5IL+YQLJ7LSbHt20qxj8Xahqtxy49T7Z88DT0vI6nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gq/pCxjf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gq/pCxjf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 347FFC4CEE7;
+	Thu, 15 May 2025 06:54:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747292079;
+	bh=2W8v5Gdhm+xnSWlzDaIimqr2v2xWvhPz810ej4BlwHE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gq/pCxjfX6mGmuXzyMRIfxOX4elFRSCNmBy7cdeJgUJ33gGLHj1HwHR82HMFdDPaF
+	 Itmn53oheVwh+KYS3jmmOAQe4tsr6+h1uQLF4DBAHe1gDFuThYW0tyTJHvDakrheX8
+	 8EsZ5REZ4rDo8+xFxQ564SyoLpowEL2ap8g068TTp6Mf998kOiDttJYhXPwVlfj+LP
+	 W7OPLjs6C5TAveGNsNU0GDNFKdbrFv2WUpRuAf42hUEbnNQ5lUEwiL5N1DFqdEopR8
+	 5p2lQLExDhfwP+m1+o2nWxFCyC10Dr9GqeARwrvDI75rx5x2bG02m5r618oEI5osiz
+	 WYW52mzq9Oe+w==
+Date: Thu, 15 May 2025 08:54:31 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Shivank Garg <shivankg@amd.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	luto@kernel.org, peterz@infradead.org, rafael@kernel.org,
+	pavel@kernel.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	sohil.mehta@intel.com, rui.zhang@intel.com, yuntao.wang@linux.dev,
+	kai.huang@intel.com, xiaoyao.li@intel.com, peterx@redhat.com,
+	sandipan.das@amd.com, ak@linux.intel.com, rostedt@goodmis.org
+Subject: Re: [PATCH RESEND 1/4] x86/mm: pgtable: Fix W=1 build kernel-doc
+ warnings
+Message-ID: <aCWPp4wYwauSuTed@gmail.com>
+References: <20250514062637.3287779-1-shivankg@amd.com>
+ <aCRMT0TlpFvpRGYk@gmail.com>
+ <6c4b227e-abdd-4e7f-8abd-d85cae0f0ec3@amd.com>
+ <aCRgRxmO6rsR-0k3@gmail.com>
+ <c5ad88e9-434a-4399-8e21-3c41e9295e93@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAHbGB3jyVoyDnbMQ--.29023S6
-X-Coremail-Antispam: 1UD129KBjvdXoWrtw18Wr1rtw18WFyUWrWxWFg_yoWDZFb_Wa
-	10qw15WrW7Wrs7uF42kas3tF9Yg3y8Kr1DCF93tFW7CF9Igr4kZan8X3yfWayxuay5XFn8
-	G3WkAr12krnFgjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbqkYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl82
-	xGYIkIc2x26280x7IE14v26r126s0DM28IrcIa0xkI8VCY1x0267AKxVW8JVW5JwA2ocxC
-	64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM2
-	8EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq
-	3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7
-	AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
-	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
-	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jv
-	Wl9UUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c5ad88e9-434a-4399-8e21-3c41e9295e93@amd.com>
 
-Even if we fail to allocate a swap entry, the inode might have previously
-allocated entry and we might take inode containing swap entry off swaplist.
-As a result, try_to_unuse() may enter a potential dead loop to repeatedly
-look for inode and clean it's swap entry.
-Only take inode off swaplist when it's swapped page count is 0 to fix the
-issue.
 
-Fixes: b487a2da3575b ("mm, swap: simplify folio swap allocation")
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
----
- mm/shmem.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+* Shivank Garg <shivankg@amd.com> wrote:
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index aeeddf612baa..07b8e1400c67 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -1651,8 +1651,8 @@ static int shmem_writepage(struct page *page, struct writeback_control *wbc)
- 		BUG_ON(folio_mapped(folio));
- 		return swap_writepage(&folio->page, wbc);
- 	}
--
--	list_del_init(&info->swaplist);
-+	if (!info->swapped)
-+		list_del_init(&info->swaplist);
- 	mutex_unlock(&shmem_swaplist_mutex);
- 	if (nr_pages > 1)
- 		goto try_split;
--- 
-2.30.0
+> 
+> 
+> On 5/14/2025 2:50 PM, Ingo Molnar wrote:
+> > 
+> > * Shivank Garg <shivankg@amd.com> wrote:
+> > 
+> >>>> @@ -665,6 +665,9 @@ void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
+> >>>>  #ifdef CONFIG_X86_5LEVEL
+> >>>>  /**
+> >>>>   * p4d_set_huge - setup kernel P4D mapping
+> >>>> + * @p4d: Pointer to a p4d entry.
+> >>>> + * @addr: Virtual Address associated with p4d.
+> >>>> + * @prot: Protection bits to use.
+> >>>
+> >>> How about using the same capitalization you already see in this 
+> >>> description?
+> > 
+> >> Please review the revised patch with suggested changes.
+> > 
+> > I think you misunderstood: why are you using 'p4d', while a line before 
+> > it's 'P4D'? It's an acronym, and only used lowercase when it's a local 
+> > variable. 'p4d is a pointer to a p4d entry' is doubly confusing in that 
+> > regard ...
+> > 
+> > Same for PMD/PUD etc.
+> > 
+> 
+> Thank you for the clarification. I understand it now.
+> I hope the attached patch looks good now.
 
+No. Please re-read your patches and see whether you caught everything, 
+not just the things I pointed out ...
+
+>  /**
+>   * reserve_top_address - reserves a hole in the top of kernel address space
+> - * @reserve - size of hole to reserve
+> + * @reserve: size of hole to reserve.
+
+And here the original capitalization in your -v1 patch was better.
+
+>   * p4d_set_huge - setup kernel P4D mapping
+> + * @p4d: pointer to a P4D entry.
+> + * @addr: virtual Address associated with p4d.
+> + * @prot: protection bits to use.
+
+Why is 'address' capitalized here?
+
+>  /**
+>   * pud_set_huge - setup kernel PUD mapping
+> + * @pud: pointer to a PUD entry.
+> + * @addr: virtual Address associated with pud.
+> + * @prot: protection bits to use.
+
+s/pud
+ /the PUD entry
+
+Also, similar errors are elsewhere as well.
+
+Thanks,
+
+	Ingo
