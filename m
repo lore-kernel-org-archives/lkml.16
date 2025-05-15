@@ -1,427 +1,103 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+Received: from mail-yb1-f193.google.com (mail-yb1-f193.google.com [209.85.219.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EB42749C0;
-	Thu, 15 May 2025 07:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC21C221F0A
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 07:36:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747294546; cv=none; b=o/hEN4A4alL98Rl6pvwAm7ULutEyV/cP6PnqlKiGhcsrzuM0uBf74fCFDhLVWQivXlujd/9UTWrHe6FQhEsGjZJx/XXIsqHtSFVNfrFKovS1BWmXMYRFBQaR6EnKifuzy2Z1X4RpqTFqsL3LZME5EZUSxnSdRsV/I6hbr5i4I9I=
+	t=1747294578; cv=none; b=WDv6zixXSpA/Acsp3DNvTGyVuP7U5kBhZddCqEHxns/DGdPZP+CFEhkWrDkh/qavQBssDhQeLva1zk9TCSY6tjgoOjAMTRiY1t1s27Qy7Dl/TEQatl86/T2JD1WhyswNCbM5ueufdR/2x9lLt4N9iA+ko7SQDRxJpGYwV7TK5BE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747294546; c=relaxed/simple;
-	bh=zClRaKQdUXGC0UaJH2EaGNCbySr1fs44a9f7xGw5akk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qFJ/hHTKREAe7SOJqmYSnZJS8usvv7EqAJdI/FUtDiahC7EZuyIDutlk/0YQmkBLRSr73HwnEpBMN8JdZ7wUh6hN4lbksdzPNZD9d/3s5a6vXcUhe2q39RveBPcDcXLuSt1uqqGVFBBnpM0Ik5tqHCCvjI0qoxTVgdGOa8xK+Nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uniontech.com
+	s=arc-20240116; t=1747294578; c=relaxed/simple;
+	bh=szsR6cUA/KBk1A+1+MXOmIwq7e5nLTeC1bHAQuEP98Q=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=sETyuI6tNwjyv/gCD+eCtxdZKdFdNBynvdQaWruMNWCaivvnWkztab5WfgAj3NkOafOliyWKQ/o4btyxbH7XhpCCSMZAeNOj700PD2yOUhFytTHTi+gJ+rWTpXQ50+2oSl8r9W/+GR2rn7tvV1016WBjAHT1fFxBESqhr1CpMk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UQC2ylE/; arc=none smtp.client-ip=209.85.219.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c55500cf80so51346085a.1;
-        Thu, 15 May 2025 00:35:43 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UQC2ylE/"
+Received: by mail-yb1-f193.google.com with SMTP id 3f1490d57ef6-e7ab544d5efso566487276.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:36:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747294575; x=1747899375; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=szsR6cUA/KBk1A+1+MXOmIwq7e5nLTeC1bHAQuEP98Q=;
+        b=UQC2ylE/xhcdBiKK6rDtwypkF7vcrbccfBZ6ascfZ3HCdnvQQtJiOkkQc5d+DJmv8h
+         YyQJgfQtUl1eelbYKu/NTfG4wzRrWfjjgy09i/zqS5GH1Lo/mlE+WLexP/GijLLzCGbi
+         iKwnKJawy65vaqWCKUt1RyJVCG2nS8b+ooHN3bZGDG6sQnkSfL+RTwrR30qxbH8To80M
+         /+QbiDRb9C3sXw14v5RQ/WWZHEk5DkHYDFNAyGI3UgtoDIWBISC8AFLtzkO1o7zid213
+         /aTyAzE2LcjxgWe/zlQfPx+dJBupA6tmkBpahw3usOXzvO3LB+YXyiO2SGdM6emiEBPi
+         d5sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747294542; x=1747899342;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1747294575; x=1747899375;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=harYvwBRn7GyyYvuKyey4/F9XcHEoNQ/j36WaB/W8s4=;
-        b=W1ff+uHI9Y/rrZZX36FnENsRndT1qM/n3+GqcwCcuUgE7LRGV8ToNXNXLlhyukA4br
-         l1RE8+g0EK6zcfwH5HsLlmvprUUbSEK6XHSfb4vNyoht+N0bsU1Jxz1lWGPwRkdliWPR
-         dAEOF4QT3IJKVW7zF5caos1FTVRrE6w4zOXUlMFfSx7KLVXj6V9k53jVqlIcZ9QCpcMM
-         2TAj+fYuYeWo5+3q5fGvyHwISfik8oDZ4BCrpe9cKKc9OuyGNvBx0qqIHx6Lxk/g5JdM
-         IvSpm1pQs8oVhgtkohdzShHdMwAcVfAM7/z61HWJtHLA3NZR0fBuTfeqgfhGCFIaenL4
-         iPJw==
-X-Forwarded-Encrypted: i=1; AJvYcCU0MvyfwBEz6q3IJEoUF3FCnPUKfN1fVzYZOC1WTn7GI+iNFRCAXYyLT77IhAjAO4JfA4XbrxJer5ZkdIxY@vger.kernel.org, AJvYcCVR9QJ+9ENBUU5QTXJXyqzyK538XvwecWo4lR+ZnsUkVkh8F9IQbBZ9J4Bhdb+UEz2zI5RFYLUGRy8cNAvD8uEl@vger.kernel.org, AJvYcCX1sNfyLwAr8DorNvhkJXj1Cdj82m16srfAFNO+Tq/4gaTXOI3za0BiCGA+a98l6F6i+MYhkcsayThYCwwl@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6kbuPXloCyoWThV2MkS9BBUvoVegkx9d2iQh3vxeYZPWjJ0Cm
-	OQPFXjVq3Bo+7kaPiMn5eqpigBZq51Y9H1aCZL4SmFYov74tsXHe
-X-Gm-Gg: ASbGncvG8V1UdVyR9vWf3m7qbNEnpmdPbfBhbF2NhuvLwXnajcvV8K7A21zZc+oZlHS
-	0YBuSZH5OYdBdN0BKTxyAYUneFzwIVfDnltLc0JkDI4FdbQE/52LkJbJvBGgBqlhGFvN0JMVr00
-	UOODOMAmjrcol4GiUT/U8llDAWUMtHDzBIFk85Wqa1r+a0LVWAn6EpnCNAMwJcYlLhGXaGU1kwk
-	4m19lEXVNh0bV2DLvU3H7dXSe0pB2/KmrxF0tLY3oJ8dzNw0FXGiR9qa/Zlo8p3IHxLQj9RhACD
-	CtXNH6XoewjT+U3XznH4ObagIOBsj69rWHb4Bj+B+lSWMmhGg52/Hg/GjmqPLM/yowaxvVkDYR4
-	h87n94iENvBCLbRfso613Sw==
-X-Google-Smtp-Source: AGHT+IHtkzbOPMQiJ/VBBAm81blRK95Sq3tOLA7DixsT4IsjRcY/JSG1nSmQlWrlkIYbyiLRfv0Hcg==
-X-Received: by 2002:a05:6214:400c:b0:6e4:4011:9df7 with SMTP id 6a1803df08f44-6f896e3fdc3mr110865726d6.16.1747294542421;
-        Thu, 15 May 2025 00:35:42 -0700 (PDT)
-Received: from localhost.localdomain (ip171.ip-51-81-44.us. [51.81.44.171])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f6e39f588asm91036526d6.49.2025.05.15.00.35.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 00:35:41 -0700 (PDT)
-From: Chen Linxuan <chenlinxuan@uniontech.com>
-To: Shuah Khan <shuah@kernel.org>,
-	Miklos Szeredi <miklos@szeredi.hu>
-Cc: zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	wentao@uniontech.com,
-	Chen Linxuan <chenlinxuan@uniontech.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH] selftests: Add functional test for the abort file in fusectl
-Date: Thu, 15 May 2025 15:34:45 +0800
-Message-ID: <20250515073449.346774-2-chenlinxuan@uniontech.com>
-X-Mailer: git-send-email 2.43.0
+        bh=szsR6cUA/KBk1A+1+MXOmIwq7e5nLTeC1bHAQuEP98Q=;
+        b=bjO2Uu79lPb8IvMtHSdAEoJdjFhnL5ITsP0xfMqkTbgqpqdxLGcteEvgw1wrwcDGdI
+         1d4RFva3R+iJAWo2xd90bXFnL/JjwqoNB7UnKMl2rhRentjtWkzc8mLtJxE18SO14GwU
+         vX7Iwmbq1OAv63UzR0UnwC0h0acTYuvu3VvktQgMMxqFbsFcA9mVn7buoGQjfc3OH7QT
+         vkwiFuMT9/izG94p/R5A+huNHilzKSogRK1bAAs+tShwuqZwUeHarj9cqloe083bcPFl
+         ucKt380anahhquZkphnYcTsIccQ6VKjcJqOxU0h3jrCRvGVG4n9dtD/7t92ia2FmatT/
+         2k4g==
+X-Forwarded-Encrypted: i=1; AJvYcCWKkfXiCPKt5u99G9uKs4oI8WEbuKZ40y+pkNsCo8O2QdzCy2BDqzQhWm3WmefPITHZpedpPRY1TdMy3xY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxmp2Q1Vr5ruPZzLKCGizvCfgYlS8eVvoB2N+ycpKbB0ckpNsOn
+	eK3kOEMxUm3r+Te5OuwFkDYVriHQHNEYQXMmajvoTbcG7aPCD5C9uSKSQh9XnMTO+pH2mTGmO93
+	LVTLyBsS6WYgCCAjoOm2HQZtC77M=
+X-Gm-Gg: ASbGnct3XwT9L39/nAVJhQmCfHQTeDsm6UJFRk3nQR++lDbjS0bWVF68CJlOi/zQYz+
+	QBAkkooGTEZS3Yr8/ySJO5GllMrTLMpswi/LEUnv0hNivDelH+yNNNE0hRJFKLwea25krtc7HLr
+	sOYWINYP1G3lc2HFSfYQon7AmBPOqi4dMhoZBn0bmVkTo=
+X-Google-Smtp-Source: AGHT+IG8opHlVFnveV6TiQeURD6a+n3enll8lWBn546ETe3NrD2IJ5PQV2MZ9ReruHPc7XhuXvimqgjVj7A1AZfCbXA=
+X-Received: by 2002:a05:6902:2483:b0:e72:9612:f78c with SMTP id
+ 3f1490d57ef6-e7b3d5ecb32mr7878678276.40.1747294574780; Thu, 15 May 2025
+ 00:36:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Guoyu Yin <y04609127@gmail.com>
+Date: Thu, 15 May 2025 15:36:04 +0800
+X-Gm-Features: AX0GCFt2pwByeaCyYPSlsoCOUmmtgbUEuL0FPS9I2GL2H_SPAs4BqIugp1TYGtQ
+Message-ID: <CAJNGr6uG6h=dBLjfB5ajZjv4qdf8-LjcW-i8L3_oqhbvBosSuA@mail.gmail.com>
+Subject: [BUG] INFO: rcu_tasks_trace detected stalls? (Late IPI?)
+To: ericvh@kernel.org
+Cc: lucho@ionkov.net, asmadeus@codewreck.org, linux_oss@crudebyte.com, 
+	v9fs@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch add a simple functional test for the "about" file
-in fusectlfs (/sys/fs/fuse/connections/ID/about).
+Hi,
 
-A simple fuse daemon is added for testing.
+I discovered a kernel crash with the description "INFO:
+rcu_tasks_trace detected stalls? (Late IPI?)". Analysis of the logs
+suggests that the issue may be related to numerous 9P network file
+system connection failures and high system load.
 
-Related discussion can be found in the link below.
+Specifically, the p9_fd_create_tcp function repeatedly fails when
+attempting to connect to 127.0.0.1, with the error "problem connecting
+socket to 127.0.0.1". This could lead to resource exhaustion,
+affecting CPU scheduling and interrupt handling, ultimately triggering
+the RCU stall. The logs also show EXT4 file system errors (e.g., block
+bitmap inconsistencies and delayed block allocation failures), likely
+a side effect of Syzkaller testing.
 
-Link: https://lore.kernel.org/all/CAOQ4uxjKFXOKQxPpxtS6G_nR0tpw95w0GiO68UcWg_OBhmSY=Q@mail.gmail.com/
-Cc: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
----
- MAINTAINERS                                   |   1 +
- tools/testing/selftests/Makefile              |   1 +
- .../selftests/filesystems/fusectl/.gitignore  |   3 +
- .../selftests/filesystems/fusectl/Makefile    |  21 +++
- .../selftests/filesystems/fusectl/fuse_mnt.c  | 146 ++++++++++++++++++
- .../filesystems/fusectl/fusectl_test.c        | 115 ++++++++++++++
- 6 files changed, 287 insertions(+)
- create mode 100644 tools/testing/selftests/filesystems/fusectl/.gitignore
- create mode 100644 tools/testing/selftests/filesystems/fusectl/Makefile
- create mode 100644 tools/testing/selftests/filesystems/fusectl/fuse_mnt.c
- create mode 100644 tools/testing/selftests/filesystems/fusectl/fusectl_test.c
+I recommend investigating the 9P network file system=E2=80=99s connection
+logic (particularly the socket connection part in p9_fd_create_tcp)
+and system resource usage to pinpoint the root cause of the connection
+failures and high load.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f21f1dabb5fe1..efc6c89113b95 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9740,6 +9740,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git
- F:	Documentation/filesystems/fuse.rst
- F:	fs/fuse/
- F:	include/uapi/linux/fuse.h
-+F:	tools/testing/selftests/filesystems/fusectl
- 
- FUTEX SUBSYSTEM
- M:	Thomas Gleixner <tglx@linutronix.de>
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index 80fb84fa3cfcb..a9bfefa961889 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -36,6 +36,7 @@ TARGETS += filesystems/fat
- TARGETS += filesystems/overlayfs
- TARGETS += filesystems/statmount
- TARGETS += filesystems/mount-notify
-+TARGETS += filesystems/fusectl
- TARGETS += firmware
- TARGETS += fpu
- TARGETS += ftrace
-diff --git a/tools/testing/selftests/filesystems/fusectl/.gitignore b/tools/testing/selftests/filesystems/fusectl/.gitignore
-new file mode 100644
-index 0000000000000..3e72e742d08e8
---- /dev/null
-+++ b/tools/testing/selftests/filesystems/fusectl/.gitignore
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+fuse_mnt
-+fusectl_test
-diff --git a/tools/testing/selftests/filesystems/fusectl/Makefile b/tools/testing/selftests/filesystems/fusectl/Makefile
-new file mode 100644
-index 0000000000000..612aad69a93aa
---- /dev/null
-+++ b/tools/testing/selftests/filesystems/fusectl/Makefile
-@@ -0,0 +1,21 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+
-+CFLAGS += -Wall -O2 -g $(KHDR_INCLUDES)
-+
-+TEST_GEN_PROGS := fusectl_test
-+TEST_GEN_FILES := fuse_mnt
-+
-+include ../../lib.mk
-+
-+VAR_CFLAGS := $(shell pkg-config fuse --cflags 2>/dev/null)
-+ifeq ($(VAR_CFLAGS),)
-+VAR_CFLAGS := -D_FILE_OFFSET_BITS=64 -I/usr/include/fuse
-+endif
-+
-+VAR_LDLIBS := $(shell pkg-config fuse --libs 2>/dev/null)
-+ifeq ($(VAR_LDLIBS),)
-+VAR_LDLIBS := -lfuse -pthread
-+endif
-+
-+$(OUTPUT)/fuse_mnt: CFLAGS += $(VAR_CFLAGS)
-+$(OUTPUT)/fuse_mnt: LDLIBS += $(VAR_LDLIBS)
-diff --git a/tools/testing/selftests/filesystems/fusectl/fuse_mnt.c b/tools/testing/selftests/filesystems/fusectl/fuse_mnt.c
-new file mode 100644
-index 0000000000000..d12b17f30fadc
---- /dev/null
-+++ b/tools/testing/selftests/filesystems/fusectl/fuse_mnt.c
-@@ -0,0 +1,146 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * fusectl test file-system
-+ * Creates a simple FUSE filesystem with a single read-write file (/test)
-+ */
-+
-+#define FUSE_USE_VERSION 26
-+
-+#include <fuse.h>
-+#include <stdio.h>
-+#include <string.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+
-+#define MAX(a, b) ((a) > (b) ? (a) : (b))
-+
-+static char *content;
-+static size_t content_size = 0;
-+static const char test_path[] = "/test";
-+
-+static int test_getattr(const char *path, struct stat *st)
-+{
-+	memset(st, 0, sizeof(*st));
-+
-+	if (!strcmp(path, "/")) {
-+		st->st_mode = S_IFDIR | 0755;
-+		st->st_nlink = 2;
-+		return 0;
-+	}
-+
-+	if (!strcmp(path, test_path)) {
-+		st->st_mode = S_IFREG | 0664;
-+		st->st_nlink = 1;
-+		st->st_size = content_size;
-+		return 0;
-+	}
-+
-+	return -ENOENT;
-+}
-+
-+static int test_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
-+			off_t offset, struct fuse_file_info *fi)
-+{
-+	if (strcmp(path, "/"))
-+		return -ENOENT;
-+
-+	filler(buf, ".", NULL, 0);
-+	filler(buf, "..", NULL, 0);
-+	filler(buf, test_path + 1, NULL, 0);
-+
-+	return 0;
-+}
-+
-+static int test_open(const char *path, struct fuse_file_info *fi)
-+{
-+	if (strcmp(path, test_path))
-+		return -ENOENT;
-+
-+	return 0;
-+}
-+
-+static int test_read(const char *path, char *buf, size_t size, off_t offset,
-+		     struct fuse_file_info *fi)
-+{
-+	if (strcmp(path, test_path) != 0)
-+		return -ENOENT;
-+
-+	if (!content || content_size == 0)
-+		return 0;
-+
-+	if (offset >= content_size)
-+		return 0;
-+
-+	if (offset + size > content_size)
-+		size = content_size - offset;
-+
-+	memcpy(buf, content + offset, size);
-+
-+	return size;
-+}
-+
-+static int test_write(const char *path, const char *buf, size_t size,
-+		      off_t offset, struct fuse_file_info *fi)
-+{
-+	size_t new_size;
-+
-+	if (strcmp(path, test_path) != 0)
-+		return -ENOENT;
-+
-+	if(offset > content_size)
-+		return -EINVAL;
-+
-+	new_size = MAX(offset + size, content_size);
-+
-+	if (new_size > content_size)
-+		content = realloc(content, new_size);
-+
-+	content_size = new_size;
-+
-+	if (!content)
-+		return -ENOMEM;
-+
-+	memcpy(content + offset, buf, size);
-+
-+	return size;
-+}
-+
-+static int test_truncate(const char *path, off_t size)
-+{
-+	if (strcmp(path, test_path) != 0)
-+		return -ENOENT;
-+
-+	if (size == 0) {
-+		free(content);
-+		content = NULL;
-+		content_size = 0;
-+		return 0;
-+	}
-+
-+	content = realloc(content, size);
-+
-+	if (!content)
-+		return -ENOMEM;
-+
-+	if (size > content_size)
-+		memset(content + content_size, 0, size - content_size);
-+
-+	content_size = size;
-+	return 0;
-+}
-+
-+static struct fuse_operations memfd_ops = {
-+	.getattr = test_getattr,
-+	.readdir = test_readdir,
-+	.open = test_open,
-+	.read = test_read,
-+	.write = test_write,
-+	.truncate = test_truncate,
-+};
-+
-+int main(int argc, char *argv[])
-+{
-+	return fuse_main(argc, argv, &memfd_ops, NULL);
-+}
-diff --git a/tools/testing/selftests/filesystems/fusectl/fusectl_test.c b/tools/testing/selftests/filesystems/fusectl/fusectl_test.c
-new file mode 100644
-index 0000000000000..8ff130ae43122
---- /dev/null
-+++ b/tools/testing/selftests/filesystems/fusectl/fusectl_test.c
-@@ -0,0 +1,115 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// Copyright (c) 2025 Chen Linxuan <chenlinxuan@uniontech.com>
-+
-+#define _GNU_SOURCE
-+
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/mount.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <sys/wait.h>
-+#include <unistd.h>
-+#include <dirent.h>
-+#include <linux/limits.h>
-+
-+#include "../../kselftest_harness.h"
-+
-+#define FUSECTL_MOUNTPOINT "/sys/fs/fuse/connections"
-+#define FUSE_MOUNTPOINT "/tmp/fuse_mnt_XXXXXX"
-+#define FUSE_DEVICE "/dev/fuse"
-+#define FUSECTL_TEST_VALUE "1"
-+
-+FIXTURE(fusectl){
-+	char fuse_mountpoint[sizeof(FUSE_MOUNTPOINT)];
-+	int connection;
-+};
-+
-+FIXTURE_SETUP(fusectl)
-+{
-+	const char *fuse_mnt_prog = "./fuse_mnt";
-+	int status, pid;
-+	struct stat statbuf;
-+
-+	strcpy(self->fuse_mountpoint, FUSE_MOUNTPOINT);
-+
-+	if (!mkdtemp(self->fuse_mountpoint))
-+		SKIP(return,
-+		     "Failed to create FUSE mountpoint %s",
-+		     strerror(errno));
-+
-+	if (access(FUSECTL_MOUNTPOINT, F_OK))
-+		SKIP(return,
-+		     "FUSE control filesystem not mounted");
-+
-+	pid = fork();
-+	if (pid < 0)
-+		SKIP(return,
-+		     "Failed to fork FUSE daemon process: %s",
-+		     strerror(errno));
-+
-+	if (pid == 0) {
-+		execlp(fuse_mnt_prog, fuse_mnt_prog, self->fuse_mountpoint, NULL);
-+		exit(errno);
-+	}
-+
-+	waitpid(pid, &status, 0);
-+	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0) {
-+		SKIP(return,
-+		     "Failed to start FUSE daemon %s",
-+		     strerror(WEXITSTATUS(status)));
-+	}
-+
-+	if (stat(self->fuse_mountpoint, &statbuf))
-+		SKIP(return,
-+		     "Failed to stat FUSE mountpoint %s",
-+		     strerror(errno));
-+
-+	self->connection = statbuf.st_dev;
-+}
-+
-+FIXTURE_TEARDOWN(fusectl)
-+{
-+	umount(self->fuse_mountpoint);
-+	rmdir(self->fuse_mountpoint);
-+}
-+
-+TEST_F(fusectl, abort)
-+{
-+	char path_buf[PATH_MAX];
-+	int abort_fd, test_fd, ret;
-+
-+	sprintf(path_buf, "/sys/fs/fuse/connections/%d/abort", self->connection);
-+
-+	ASSERT_EQ(0, access(path_buf, F_OK));
-+
-+	abort_fd = open(path_buf, O_WRONLY);
-+	ASSERT_GE(abort_fd, 0);
-+
-+	sprintf(path_buf, "%s/test", self->fuse_mountpoint);
-+
-+	test_fd = open(path_buf, O_RDWR);
-+	ASSERT_GE(test_fd, 0);
-+
-+	ret = read(test_fd, path_buf, sizeof(path_buf));
-+	ASSERT_EQ(ret, 0);
-+
-+	ret = write(test_fd, "test", sizeof("test"));
-+	ASSERT_EQ(ret, sizeof("test"));
-+
-+	ret = lseek(test_fd, 0, SEEK_SET);
-+	ASSERT_GE(ret, 0);
-+
-+	ret = write(abort_fd, FUSECTL_TEST_VALUE, sizeof(FUSECTL_TEST_VALUE));
-+	ASSERT_GT(ret, 0);
-+
-+	close(abort_fd);
-+
-+	ret = read(test_fd, path_buf, sizeof(path_buf));
-+	ASSERT_LT(ret, 0);
-+}
-+
-+TEST_HARNESS_MAIN
--- 
-2.43.0
+This can be reproduced on:
 
+HEAD commit:
+
+38fec10eb60d687e30c8c6b5420d86e8149f7557
+
+report: https://pastebin.com/raw/0LB0VhWw
+
+console output : https://pastebin.com/raw/EtnaHBBq
+
+kernel config : https://pastebin.com/raw/u0Efyj5P
+
+C reproducer : https://pastebin.com/raw/WzZ023uX
