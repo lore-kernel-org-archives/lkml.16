@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B05929C35B
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:07:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5234829CB37
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:07:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747310854; cv=none; b=PhIkaMJElULPVRM5Oi3s5McdRdbNGKMtCjY9blOocIe8XobScwf6thBOnMI0wfZiNMUPaLDsHfFAwYgTpuqbgpIbFPricOgyB0aDV6i2mUDtdSfOx/H24Zofn8RdFPY8F85xragv+S0719GaA8mabfIG/63Fj08M8+YDK0nN7mg=
+	t=1747310857; cv=none; b=jgjyRGcT4nB8vP+QqFDvxr36wvPVd0NfpX8Rsj48onBekjhRDW4EgZMJuxqCRxeaFNyuTFyomBD9kxACeMgr8hoCU6qaDMzRyzZ2GHHVInhXJclxZE88RI1Qa11CTeUdYFJu4DV0yp3BCnHlSGrtCxMdRcTWPUGrzkNu6UtTBZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747310854; c=relaxed/simple;
-	bh=VgVnHh1c7rhPJCchELKiTUN2OXkQW1yRKPkHQDPQf7w=;
+	s=arc-20240116; t=1747310857; c=relaxed/simple;
+	bh=2SO7mjIYcRnFjMw60iUgeObaAMHDHhAGqTDKiGyMZyI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c/+Zt2lwO1NM/AwJgsvPCjEa+XDUZC5RzfrzOY9Av7MhBv9RUrDzhkDTCYaKc+nWd9qqEROYSIH/LRKsqZfQJW4bmJDbHjkEOrUXR7XD+nP2CF/K5rMDZqzVUuHmpHLhOIw1I5Lj89MaA4wUp94/rZDnAiPYHFGnU7/nGIyyTAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R5F33Esq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KKwID2MtirT/m2NIJOqc+6BCWlsTlWlL2Gr+vgw1qtdq1yXwDIhtr+6eqH391GCya/BfsMLrpBt8KqoeFnMdBs9a2LPbiivT/IKM/bw3LlX2XurX/2KxJin5jwpV3cRGBGn+0vSHPqrlKJ4PGdBcc5iPOaxH6C5Bm/4IBVcPbsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sWTY4/Nh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R5F33Esq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE331C4CEE7;
-	Thu, 15 May 2025 12:07:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sWTY4/Nh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F7B4C4CEE9;
+	Thu, 15 May 2025 12:07:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747310853;
-	bh=VgVnHh1c7rhPJCchELKiTUN2OXkQW1yRKPkHQDPQf7w=;
+	s=k20201202; t=1747310857;
+	bh=2SO7mjIYcRnFjMw60iUgeObaAMHDHhAGqTDKiGyMZyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=R5F33EsqdUTJ9oWJtElxMkSAN+Ev8+STh1paLnnMLOB80n/X36ukMfuEiLj9Oo3OR
-	 m425Ktoic8wCzRNnN9C8Ag9Bedd4sjA1PMD6x7MKPAMNT4jf6NIhAFAPDquuGU1/LA
-	 pVirEuhctiO8HBfs6PkXlulTHv2iZkHysik726D9b8Y5zPDIM7KdLO6+yqDUc+V443
-	 X5DzJwKhT8RkXGHZNPUkRz8TvgK7vHa+GYtdBWKzsLj4WNmzls6VA72oL57NSoV/UV
-	 K85+/vI1QrxgxwwO+U4hdadvMBMseR/tDg7xCJfo1yBfy64u84ntDgaBtBqIaePahw
-	 hrVWOXPutbQww==
+	b=sWTY4/NhI/uWJr+dvofDTbvGPJpk+5SQXQ1/vxi2W09sh78e5QtAsOdpfBuphQNOp
+	 kiDL+MmAJKBla6N7qcDt6bHDgDSmkiqoOvYm/jfecS/o2scW+BUJ/Kf01hs2KI8tWl
+	 n8UZ6ozadzDMPjj2EV/MurzRYYNtfmYDNW/+BXEl+5Cf15CpZkSVMIhzt4KUFPsxf6
+	 u3i29UNmxQI/jiX2qhWflJC/KYf1R2OwzyJS/YExdGurvnyw33mgqg2V8nniP8F7op
+	 ls0qQqrJE4xfvd15YlGYlrUgD4Xc2f6SZvUC1NLXong8rdGm8iK6mVc4nknNeDDugI
+	 K65QR5Da586cQ==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -41,9 +41,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	David Woodhouse <dwmw@amazon.co.uk>
-Subject: [PATCH 28/32] x86/boot/e820: Make sure e820_search_gap() finds all gaps
-Date: Thu, 15 May 2025 14:05:44 +0200
-Message-ID: <20250515120549.2820541-29-mingo@kernel.org>
+Subject: [PATCH 29/32] x86/boot/e820: Introduce E820_TYPE_13 and treat it as a device region
+Date: Thu, 15 May 2025 14:05:45 +0200
+Message-ID: <20250515120549.2820541-30-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250515120549.2820541-1-mingo@kernel.org>
 References: <20250515120549.2820541-1-mingo@kernel.org>
@@ -55,32 +55,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The current implementation of e820_search_gap() searches gaps
-in a reverse search from MAX_GAP_END back to 0, contrary to
-what its main comment claims:
+Paul Menzel pointed out that ACPI specification 6.3 defines 'reserved'
+E820 region types as E820_TYPE_RESERVED (type 2):
 
-    * Search for a gap in the E820 memory space from 0 to MAX_GAP_END (4GB).
+ > Table 15-374 *Address Range Types* in the ACPI specification 6.3 says:
+ >
+ > > Reserved for future use. OSPM must treat any range of this type as if
+ > > the type returned was AddressRangeReserved.
 
-But gaps can not only be beyond E820 RAM ranges, they can be below
-them as well. For example this function will not find the proper
-PCI gap for simplified memory map layouts that have a single RAM
-range that crosses the 4GB boundary.
+This has relevance for device address regions, which on some firmware such
+as CoreBoot, get passed to Linux as type-13 - which the kernel
+treats as system regions and registers them as unavailable to drivers:
 
-Rework the function to have a proper forward search of
-E820 table entries.
+	static bool __init e820_device_region(enum e820_type type, struct resource *res)
 
-This makes the code somewhat bigger:
+	...
 
-   text       data        bss        dec        hex    filename
-   7613      44072          0      51685       c9e5    e820.o.before
-   7645      44072          0      51717       ca05    e820.o.after
+        case E820_TYPE_ACPI:
+        case E820_TYPE_NVS:
+        case E820_TYPE_UNUSABLE:
+        default:
+                return false;
 
-but it now both implements what it claims to do, and is more
-straightforward to read.
+Users of such systems will see device breakage on Linux, which they
+have to work around with iomem=relaxed kind of boot time hacks to
+turn off resource conflict checking.
 
-( This also allows 'idx' to be the regular u32 again, not an 'int'
-  underflowing to -1. )
+Partially follow the ACPI spec and add a limited quirk for the
+E820_TYPE_13 type, and allow it to be claimed by device drivers
+(similarly to E820_TYPE_RESERVED).
 
+Don't change behavior for other unknown types.
+
+Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Suggested-by: H. Peter Anvin <hpa@zytor.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Andy Shevchenko <andy@kernel.org>
 Cc: Arnd Bergmann <arnd@kernel.org>
@@ -90,100 +98,75 @@ Cc: Kees Cook <keescook@chromium.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- arch/x86/kernel/e820.c | 59 +++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 41 insertions(+), 18 deletions(-)
+ arch/x86/include/asm/e820/types.h |  4 ++++
+ arch/x86/kernel/e820.c            | 11 +++++++++--
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
+diff --git a/arch/x86/include/asm/e820/types.h b/arch/x86/include/asm/e820/types.h
+index df12f7ee75d3..2430120c2528 100644
+--- a/arch/x86/include/asm/e820/types.h
++++ b/arch/x86/include/asm/e820/types.h
+@@ -27,6 +27,10 @@ enum e820_type {
+ 	 *   6 was assigned differently. Some time they will learn... )
+ 	 */
+ 	E820_TYPE_PRAM		= 12,
++	/*
++	 * Certain firmware such as CoreBoot uses this type:
++	 */
++	E820_TYPE_13		= 13,
+ 
+ 	/*
+ 	 * Special-purpose memory is indicated to the system via the
 diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 0d7e9794cd52..5260ce6ad466 100644
+index 5260ce6ad466..6c9c00ce8db9 100644
 --- a/arch/x86/kernel/e820.c
 +++ b/arch/x86/kernel/e820.c
-@@ -666,30 +666,52 @@ __init static void e820__update_table_kexec(void)
-  */
- __init static int e820_search_gap(unsigned long *max_gap_start, unsigned long *max_gap_size)
- {
--	u64 last = MAX_GAP_END;
--	int idx = e820_table->nr_entries;
-+	struct e820_entry *entry;
-+	u64 range_end_prev = 0;
- 	int found = 0;
-+	u32 idx;
- 
--	while (--idx >= 0) {
--		u64 start = e820_table->entries[idx].addr;
--		u64 end = start + e820_table->entries[idx].size;
-+	for (idx = 0; idx < e820_table->nr_entries; idx++) {
-+		u64 range_start, range_end;
- 
--		/*
--		 * Since "last" is at most 4GB, we know we'll
--		 * fit in 32 bits if this condition is true:
--		 */
--		if (last > end) {
--			unsigned long gap = last - end;
-+		entry = e820_table->entries + idx;
-+		range_start = entry->addr;
-+		range_end   = entry->addr + entry->size;
- 
--			if (gap > *max_gap_size) {
--				*max_gap_size = gap;
--				*max_gap_start = end;
--				found = 1;
-+		/* Process any gap before this entry: */
-+		if (range_start > range_end_prev) {
-+			u64 gap_start = range_end_prev;
-+			u64 gap_end = range_start;
-+			u64 gap_size;
-+
-+			if (gap_start < MAX_GAP_END) {
-+				/* Make sure the entirety of the gap is below MAX_GAP_END: */
-+				gap_end = min(gap_end, MAX_GAP_END);
-+				gap_size = gap_end-gap_start;
-+
-+				if (gap_size >= *max_gap_size) {
-+					*max_gap_start = gap_start;
-+					*max_gap_size = gap_size;
-+					found = 1;
-+				}
- 			}
- 		}
--		if (start < last)
--			last = start;
-+
-+		range_end_prev = range_end;
-+	}
-+
-+	/* Is there a usable gap beyond the last entry: */
-+	if (entry->addr + entry->size < MAX_GAP_END) {
-+		u64 gap_start = entry->addr + entry->size;
-+		u64 gap_size = MAX_GAP_END-gap_start;
-+
-+		if (gap_size >= *max_gap_size) {
-+			*max_gap_start = gap_start;
-+			*max_gap_size = gap_size;
-+			found = 1;
-+		}
+@@ -1075,7 +1075,7 @@ __init static const char * e820_type_to_string(struct e820_entry *entry)
+ 	case E820_TYPE_PRAM:		return "Persistent Memory (legacy)";
+ 	case E820_TYPE_PMEM:		return "Persistent Memory";
+ 	case E820_TYPE_RESERVED:	return "Reserved";
+-	case E820_TYPE_SOFT_RESERVED:	return "Soft Reserved";
++	case E820_TYPE_13:		return "Type 13";
+ 	default:			return "Unknown E820 type";
  	}
-+
- 	return found;
  }
- 
-@@ -706,6 +728,7 @@ __init void e820__setup_pci_gap(void)
- 	unsigned long max_gap_start, max_gap_size;
- 	int found;
- 
-+	/* The minimum eligible gap size is 4MB: */
- 	max_gap_size = SZ_4M;
- 	found  = e820_search_gap(&max_gap_start, &max_gap_size);
- 
-@@ -725,7 +748,7 @@ __init void e820__setup_pci_gap(void)
- 	pci_mem_start = max_gap_start;
- 
- 	pr_info("[gap %#010lx-%#010lx] available for PCI devices\n",
--		max_gap_start, max_gap_start + max_gap_size - 1);
-+		max_gap_start, max_gap_start + max_gap_size-1);
- }
- 
- /*
+@@ -1090,6 +1090,7 @@ __init static unsigned long e820_type_to_iomem_type(struct e820_entry *entry)
+ 	case E820_TYPE_PRAM:		/* Fall-through: */
+ 	case E820_TYPE_PMEM:		/* Fall-through: */
+ 	case E820_TYPE_RESERVED:	/* Fall-through: */
++	case E820_TYPE_13:		/* Fall-through: */
+ 	case E820_TYPE_SOFT_RESERVED:	/* Fall-through: */
+ 	default:			return IORESOURCE_MEM;
+ 	}
+@@ -1102,7 +1103,8 @@ __init static unsigned long e820_type_to_iores_desc(struct e820_entry *entry)
+ 	case E820_TYPE_NVS:		return IORES_DESC_ACPI_NV_STORAGE;
+ 	case E820_TYPE_PMEM:		return IORES_DESC_PERSISTENT_MEMORY;
+ 	case E820_TYPE_PRAM:		return IORES_DESC_PERSISTENT_MEMORY_LEGACY;
+-	case E820_TYPE_RESERVED:	return IORES_DESC_RESERVED;
++	case E820_TYPE_RESERVED:	/* Fall-through: */
++	case E820_TYPE_13:		return IORES_DESC_RESERVED;
+ 	case E820_TYPE_SOFT_RESERVED:	return IORES_DESC_SOFT_RESERVED;
+ 	case E820_TYPE_RAM:		/* Fall-through: */
+ 	case E820_TYPE_UNUSABLE:	/* Fall-through: */
+@@ -1132,6 +1134,7 @@ __init static bool e820_device_region(enum e820_type type, struct resource *res)
+ 	 */
+ 	switch (type) {
+ 	case E820_TYPE_RESERVED:
++	case E820_TYPE_13:
+ 	case E820_TYPE_SOFT_RESERVED:
+ 	case E820_TYPE_PRAM:
+ 	case E820_TYPE_PMEM:
+@@ -1140,6 +1143,10 @@ __init static bool e820_device_region(enum e820_type type, struct resource *res)
+ 	case E820_TYPE_ACPI:
+ 	case E820_TYPE_NVS:
+ 	case E820_TYPE_UNUSABLE:
++	/*
++	 * Unknown E820 types should be treated passively, here we
++	 * don't allow them to be claimed by device drivers:
++	 */
+ 	default:
+ 		return false;
+ 	}
 -- 
 2.45.2
 
