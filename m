@@ -1,71 +1,142 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFF61FC7CB;
-	Wed, 14 May 2025 23:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEF221B9F2
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747266991; cv=none; b=FqzwcjU7Y92AD7qyICZ1ggucIf09pBlmqyJUC72xdQFU7z9JQY/kktTFywumcOs4lniTADqsJCxRGhLdAoVNyZlPiI8eZLoiwu7gM9xmk4Ds8cxLEMxx3jRkQXA/Oq/uZJpIV3FUKRgeWC/ZUeN+gobexerVFTRGypQfo8PkoPs=
+	t=1747267221; cv=none; b=t3iQMSAbuG57X9wIt91azpXohhjuaeiabcxaVhB+wD70QoKK5aCPpWoBOUUGBtn4xVbkl84NZ405jCigfOxQK8I0biIFPVI86NEu1zmF4EsxwK8inIg7b0InIaU9+O1AnsyR7OqVXb8AaQlwNSJ9IbQCCh01PyKt4KUb67Oj4T0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747266991; c=relaxed/simple;
-	bh=YjuDc20yD3zYfkam5SCRBrQenV5e7Hx0huQEmIbUDQc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yio4tQFDG4xtuU8oyCBqfFoaDVCC4dqAInAHHMmsb8FDUydKeSfLP3ejAvpWaSF+Il7pgV1WknxkJ6VrteqPgz84e8WsbrY3Uw1Kb6+QdhNJZkqGMYxPAf+cPuzZ6OWaF30C6rJOHfuZ3dySmAnjOBpaREDGFmYuNRY6W5CoM9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=fkuXlE2g; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1747267221; c=relaxed/simple;
+	bh=XUwDyLw5/4WxSPmLB0tULktlt1YSPQcfNDFK4JJ3UgI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=VtNrQZ7MRjmjSHN2piB22395h1tBk/rRyHCsGd4SspGnYwD1ldvv60IBIdfHpHeucstqQlZ+ZLvoZLBbQr1UBaRWGC7uXLvNslnc+wW7rClqtQ31cEfD1o63TuWvUSytCwZWEWCQnCrRoiJXzESx/ixxzZnKOFwvLQc2nvZZyd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4PgPaJEs; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="fkuXlE2g"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=c/kmfchyOtnnD9armwcuETD5tHj5mjd7I0LLNz2Cgc4=; b=fkuXlE2gzjJAlv6f7SwVqYYu7b
-	s6yIImsurhqMtm1tCOuUE1/S2tmHTQULWr/yQvXPcsEwVrY8iVz1wuKfnLNOFGOKZRHb6uLrdds1j
-	D5JzfkA6kG7visCVX30AKWeGWZJvVzkExMQbSy7N2foVsvMnMgp16G0UDJQ4mySEyvQs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uFLxW-00CcDJ-Va; Thu, 15 May 2025 01:56:22 +0200
-Date: Thu, 15 May 2025 01:56:22 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Stefano Radaelli <stefano.radaelli21@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Xu Liang <lxu@maxlinear.com>
-Subject: Re: [PATCH v2] net: phy: mxl-8611: add support for MaxLinear
- MxL86110/MxL86111 PHY
-Message-ID: <d994cff7-e960-41fa-9ce6-c35cee3a2560@lunn.ch>
-References: <20250512191901.73823-1-stefano.radaelli21@gmail.com>
- <20250514173511.158088-1-stefano.radaelli21@gmail.com>
- <4c64695a-fb98-4b77-a886-3a056e6b229f@lunn.ch>
- <CAK+owoid1woDTiCxcGiEmdvKNHJeCnaKBjPEHyNrtHt_hKqi9g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4PgPaJEs"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-742360cec7eso291615b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:00:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747267219; x=1747872019; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TlJJVY9lFXBl5aa6vrGZ3X+o2Y5gO/1RKuzRIMBedTA=;
+        b=4PgPaJEsMv2EiQpQrpehalu77nU95qUo+MY5mjpFxwEmNW7JS/LVVWaI1mv70jpJEQ
+         pic5urODW8wECi11VfN59nDobOLqwrKDSd5kUydmUfZidnM1oDu4qdvqnKACWrsxbmLu
+         Tg8PdHNS2K6ywPIEKr+uU2IYmy2NBQQ20CyvmQrKBbwJRy4nJqtp8oahM5hK8t5iWFm0
+         WWttAjhiDcQ3h/Vt1wVuwzTn3vRJm2KZT8wMCswD/mTwvAD7coddYc5BPmWfvdzFN+UQ
+         wOGcYMGDJJU1RhWD4fmvgxfi/mgpA5//omluwLQACy9Kzu5IUaVZi8a6zlj6EUzLJOe0
+         manw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747267219; x=1747872019;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TlJJVY9lFXBl5aa6vrGZ3X+o2Y5gO/1RKuzRIMBedTA=;
+        b=Qbx6mRtK+rvNQlNkWgsms78X16RaARixFCeSsP4T/5mz8yxh/1+LuOYBNfvnbT2Gu6
+         trPT+30SvQzyvPuWF5KT5OXXasU0EAeYTuv2nhREMcz8CNxA+SnI1nR/f7jenuHpHM/U
+         pg+usfjzdgSAavrVyGsmfJXDZd71nX+xyCAy4PpiwlQStzphYdYcl8BJgQA+j/XGLXsF
+         mFvcF7Za+vck8YcNDYKLHT1kzqGSJN93Y1i3AGyp9ohZrN1g2dtwDrudA6T+ZChciegh
+         IFOUp5eToRqUKFQS58y/gvwV5+bUOlXOestMoem690h9a/hv2Wmdupp36QN+Gk5fSf2n
+         720w==
+X-Forwarded-Encrypted: i=1; AJvYcCVFYqi8eW5vmwXKakTvkE3aTlHSO9O2A5x/CV0vcMz3djYTF5R8zhY535lBWYCxgXWG3S+rn6t6Zr0jTmI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvEibRP1ld4OGdahxYPXcVXjy1Lt28Ns3d5tPvmqDvf6x3xJ5X
+	CK+2g3n8YVpbTGqYfxFZYua2pfkyDrF00LSMg5c2wPg3BOb6rabrqvOOjUU7xYRAA319sZnXr5z
+	g4A==
+X-Google-Smtp-Source: AGHT+IEHBbPUeQde2g3FySUvI+0JlrKcjlKZyfOpIZMlkRvVqTwOi/0XchtIZWlB6QuVKlDRiXI5fZZvczI=
+X-Received: from pgam17.prod.google.com ([2002:a05:6a02:2b51:b0:af9:5717:cfbb])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6d88:b0:1f5:5ca4:2744
+ with SMTP id adf61e73a8af0-215ff0d4647mr6806295637.17.1747267218995; Wed, 14
+ May 2025 17:00:18 -0700 (PDT)
+Date: Wed, 14 May 2025 17:00:17 -0700
+In-Reply-To: <20250324173121.1275209-12-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK+owoid1woDTiCxcGiEmdvKNHJeCnaKBjPEHyNrtHt_hKqi9g@mail.gmail.com>
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-12-mizhang@google.com>
+Message-ID: <aCUukXIC_9cxHQd3@google.com>
+Subject: Re: [PATCH v4 11/38] perf/x86: Forbid PMI handler when guest own PMU
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
+	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, May 15, 2025 at 12:29:48AM +0200, Stefano Radaelli wrote:
-> Hi Andrew,
+On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+> If a guest PMI is delivered after VM-exit, the KVM maskable interrupt will
+> be held pending until EFLAGS.IF is set. In the meantime, if the logical
+> processor receives an NMI for any reason at all, perf_event_nmi_handler()
+> will be invoked. If there is any active perf event anywhere on the system,
+> x86_pmu_handle_irq() will be invoked, and it will clear
+> IA32_PERF_GLOBAL_STATUS. By the time KVM's PMI handler is invoked, it will
+> be a mystery which counter(s) overflowed.
 > 
-> Thanks again for your detailed review and suggestions,
-> I really appreciate the time you took to go through the patch.
+> When LVTPC is using KVM PMI vecotr, PMU is owned by guest, Host NMI let
+> x86_pmu_handle_irq() run, x86_pmu_handle_irq() restore PMU vector to NMI
+> and clear IA32_PERF_GLOBAL_STATUS, this breaks guest vPMU passthrough
+> environment.
 > 
-> After reviewing your feedback, I realized that most of the more complex issues
-> are specific to the MXL86111. The MXL86110 side, on the other hand, seems much
-> closer to being ready once I address the points you raised.
+> So modify perf_event_nmi_handler() to check perf_in_guest per cpu variable,
+> and if so, to simply return without calling x86_pmu_handle_irq().
+> 
+> Suggested-by: Jim Mattson <jmattson@google.com>
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> ---
+>  arch/x86/events/core.c | 27 +++++++++++++++++++++++++--
+>  1 file changed, 25 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 28161d6ff26d..96a173bbbec2 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -54,6 +54,8 @@ DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events) = {
+>  	.pmu = &pmu,
+>  };
+>  
+> +static DEFINE_PER_CPU(bool, pmi_vector_is_nmi) = true;
 
-I did not look too close. Does the MXL86110 not have this dual
-Copper/Fibre setup? Removing that will make the driver a lot
-simpler. So yes, submitting a simpler, more restricted driver is fine.
+I strongly prefer guest_ctx_loaded.  pmi_vector_is_nmi very inflexible and
+doesn't communicate *why* perf's NMI handler needs to ignore NMIs
 
-	Andrew
+>  DEFINE_STATIC_KEY_FALSE(rdpmc_never_available_key);
+>  DEFINE_STATIC_KEY_FALSE(rdpmc_always_available_key);
+>  DEFINE_STATIC_KEY_FALSE(perf_is_hybrid);
+> @@ -1737,6 +1739,24 @@ perf_event_nmi_handler(unsigned int cmd, struct pt_regs *regs)
+>  	u64 finish_clock;
+>  	int ret;
+>  
+> +	/*
+> +	 * When guest pmu context is loaded this handler should be forbidden from
+> +	 * running, the reasons are:
+> +	 * 1. After perf_guest_enter() is called, and before cpu enter into
+> +	 *    non-root mode, host non-PMI NMI could happen, but x86_pmu_handle_irq()
+> +	 *    restore PMU to use NMI vector, which destroy KVM PMI vector setting.
+> +	 * 2. When VM is running, host non-PMI NMI causes VM exit, KVM will
+> +	 *    call host NMI handler (vmx_vcpu_enter_exit()) first before KVM save
+> +	 *    guest PMU context (kvm_pmu_put_guest_context()), as x86_pmu_handle_irq()
+> +	 *    clear global_status MSR which has guest status now, then this destroy
+> +	 *    guest PMU status.
+> +	 * 3. After VM exit, but before KVM save guest PMU context, host non-PMI NMI
+> +	 *    could happen, x86_pmu_handle_irq() clear global_status MSR which has
+> +	 *    guest status now, then this destroy guest PMU status.
+> +	 */
+
+This *might* be useful for a changelog, but even then it's probably overkill.
+NMIs can happen at any time, that's the full the story.  Enumerating the exact
+edge cases adds a lot of noise and not much value.
