@@ -1,71 +1,71 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F5629B8C1
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 20:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A9F29B784
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 20:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747342413; cv=none; b=ddNfRF5HEIUtqlDe3247ibRIEnxvNkArS0XrwRyNHikzmV+Rfo7B1soqJGUkY+OVSfm34eb+V9bAEx8lSX8rQoK05swN0Ba+W6e3LQHaV3XXh9U9TOi6p8FgQZuGvc25ig4NlwLREpGfsZ8QvIysrdvwqWeQP50us2a0GCm6knk=
+	t=1747342421; cv=none; b=P6h2RqzDsiLYqQMHb8/QmY47sYkRJDCXdbXLZGLYKHfwt59SYq98hiAVSxIEYY3ALz2LGZgja1aOVFr3PvRYnP1Jz2DTbPLG6HIC9lBxQ1qUkcN71K2TjkArdh1TRDPP0Xdq+62HK7emR7BKngraL/TMPogR770xQIYH+wJXbFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747342413; c=relaxed/simple;
-	bh=XMok27LeyvPMVk1wsLnM/8/aHhDw0CNgdmZ28O9DrS0=;
+	s=arc-20240116; t=1747342421; c=relaxed/simple;
+	bh=tRv9EmETRWPXZVHYTT7h73M1bxh8y8TuRvMu5qA/7F0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cu217KfNbVG8bdjsBuyZIVq8RFWx2q1veofk2Mqg1UArh9U6H6kLkNpGsW406XeRH8OOqRaqFXTsZLbQWOoWtmbBmoiAHeH5xLlSJLNo1nwuL/rB5COEt5cozSBQA4VAj8ghAzCjrvKVx8myjIsQPs20Q1bO0MZDWke8b32fcbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dgMIKSY7; arc=none smtp.client-ip=209.85.208.45
+	 To:Cc:Content-Type; b=t3dMnA8eXORUmyBV/jq9i5d+wEFjwLMAvLe0/GsgXklKe/B4Caeen5q0hweNlYBUedrCmxXUfYcKcOsEh/xwFSMVDHnyd5sWSYN6ayDTiGG27E1fK05Bi4L++gpVoKFdn3phx1iLVc2GN/qekn3iPKsvbHCj1FDUpvSeo0/bXX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2nKKaXMq; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dgMIKSY7"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5fab85c582fso3727a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 13:53:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2nKKaXMq"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6000791e832so1214a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 13:53:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747342410; x=1747947210; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747342417; x=1747947217; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XMok27LeyvPMVk1wsLnM/8/aHhDw0CNgdmZ28O9DrS0=;
-        b=dgMIKSY7qCR1OgW5sBb03YdJPEHN5kAbtkaWQVcH9WAE6tvRKU0b5McF0GAeW3i8Uu
-         TE8jbF2GWjNVROICmloT9YchArTuGtOJzbxD+xoHm4xIT8CZFxNzjQ/jdzBh193hsnCt
-         BR+5IQnWqWuc3yOF0d78xp1JlCN1zRAS2HjDMYEvaAGQH8ImRdcfr//cwhGs7YLtBxxk
-         E4KsoHt7mMgD4GYCoyfD4lScnqrAw7KKzbQSTJrYD/mxKjKRDzSZSYi3EKZQhVT4mVU2
-         PfW7PXj7jh7RZs7LM2QYR6pcfB4FIIHa6/cOA9h02RsBaLoBl8EtzulbNM19ve4q6QmD
-         aqPA==
+        bh=tRv9EmETRWPXZVHYTT7h73M1bxh8y8TuRvMu5qA/7F0=;
+        b=2nKKaXMqiU+Y6HP+xLOkg9rKEusnHOmOeXkq5h/Lhxw2Q5GjKRUQzRj0ZWR+ijlJZi
+         puAiKjv1EPimoohXSmZNbBrrwhMe8MUBiZB8yMz7p1tbx7cu0H6lSylVQldX2FmrKOeL
+         R+9adWGLo8XvTiMS2VuZevsKr+JFhFDC5bWMsCu2tiL8l+ITcqOWfvoMyDO3VmhE57lg
+         9Fb9xr/GIKkVsBl3ivleppN8dMfE+18jhgv9Obr+yCyjBTHUB2QTmso1wprAeKhn+0TW
+         YpcMF5PSUrq+OkYDsycdVPNbhSu8VacQOHAEG0Axm7VsikxPJ/q9GYm5cc1n3Mo741a/
+         nmyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747342410; x=1747947210;
+        d=1e100.net; s=20230601; t=1747342417; x=1747947217;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XMok27LeyvPMVk1wsLnM/8/aHhDw0CNgdmZ28O9DrS0=;
-        b=iupKXm2oyLhdpTVgrxPlp6viU3LJ2PdPFiQIhsR4gu2RQtSBATf1m8J9ptH42df9wf
-         l1/fkDaZYmvam3EKRKzCbzygjxaHMOn5dQ8LbNL0oF6uMzomnEzzBcRL7+BNhOXcRv0F
-         zz/G9I1ahbgbOS6dV9R0glQTvotJViOvRML5F0GjubFyZvz0TMskXugF+cp3NOUZYZ5l
-         f2HwLKoo7TPr/WqH3zvc7sdFrj7Y6Kj3Gmwz7K7GIclQh27hzXpY/mQpaO09VPaWf86O
-         CR5wesB0F9hSGzYbHp7nGid4g5shFtQh0kxJk3UvY7znyxyC/rTLUWRsAQLBeRq9B2O/
-         8KbA==
-X-Forwarded-Encrypted: i=1; AJvYcCULQBOMYH2jUBdRQao52XQ9i5n6Le08AAYYkHaivKI0CS3/yySRRw2jGZKIWI0QEpOou5rCLCkQlGoEzTA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPFnXb1/qoFcKluflhJjOMJ6LAR/ppP85PdiHxLFBQktFh88gY
-	6b7I40GaE6Q1usud2BmWny9AhlQOjL47OnP12w/bxdlEJMcxP7EHwdsfZtvP1ifeZVIjQ2QRgyx
-	xF24oJxP3pSIH80zVlD4J4b9xBCeqgkpV4IhFHyR0
-X-Gm-Gg: ASbGncvtfipnu5wlqFl6pGSqeg83/PAWnn+gujonpUF9hmNWGUlboZnpIcR+FvnaIio
-	B+iXSbGWA0H5s2RNB7snZHk6glBmtnxUvALLIg+4NBELcCwbOO+UQW7agl0+KcBKcJIUF9ekavQ
-	3hIpovruTDOzYdr5PRxcCoeksACXDpnGYxkImimXTmdpyOOYD/l367JbOoaAGXh71wkOvG+j4=
-X-Google-Smtp-Source: AGHT+IECLHFWIrRiZUC7O4hqEBDUksv17PKckJK1rnL5QMtfgaSKVKKd7QPmPRV/LqJk6d0BzJrKKJ5nDtiVXyuVaB4=
-X-Received: by 2002:a50:fa8e:0:b0:600:77b:5a5a with SMTP id
- 4fb4d7f45d1cf-600077b6b0dmr89509a12.1.1747342410107; Thu, 15 May 2025
- 13:53:30 -0700 (PDT)
+        bh=tRv9EmETRWPXZVHYTT7h73M1bxh8y8TuRvMu5qA/7F0=;
+        b=gVOK0mSWGbnXJLMGhwd2DutJdkmjspktl62EWbjd++MY/s07nPEaj5gNiBS8zKIY0x
+         bH2YnuLuDXMSXr5b0IN67rI8krG9lgO/u3zEVXDAEErx0gymUe9J/GQMwQbdvsiN2U/V
+         8S+gVMLgZQ14pQBZyV905qTCTOKSH4eBRubU/di3jnNadeLfTdAXRVcFfowZfj+OAaiV
+         TivumvoJ/mwRApCqhgBHfVRLICQ7MkGOOj19ztooGxcZ/FyNJFABZhLJH1U5UJX+9Uwj
+         4ermSc67EfYWbl93enGqUK4CH6Xje16WJ2yaRddhjQm2rtLxn7Hzm/DQJlcpWQ56lvK1
+         0JGg==
+X-Forwarded-Encrypted: i=1; AJvYcCVks4cvGHgpnnSAeMPI3FY1DV7UcU3k+Utgq5VJR+nJzUyE5aT+41xeosUmgT+imwZmqMbzx/SXZ1OUFa8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz62a68CPRDN2YHLRpCVZUw+Ld62OlegjKUg1ocZsB3ZuHv9N/F
+	QE7sN22iicGWOWsnMAQzGjT0vwLrx2YMtRtOg597SyjsTciTsvQNYH6xlZV1QT8e4iqaMmgAttj
+	pvZP+LgfYDZgDA11JJRDJJZDA3qZKqSqabxTAU+IS
+X-Gm-Gg: ASbGncvYmhG8NzP+CBZhPcNeBrGx0jEj26Ff0QfU4d5VZO2ky2ExzNKwd4XYtQKx5Aq
+	izWbZIJYYv31vaDZTsHXkVoBNNyrdxp8CAEmESdBax8rK41lUElDEfTd2aTyw0reeNRVWbO4SLt
+	0JSGkPNX+2VM4NySXOZf+IUDT3jW6XJAa/kO0f0ve2zxF/Q+IJ7c2xwF9+J3/k
+X-Google-Smtp-Source: AGHT+IHZ9jFIvkL3s/WhGIrI4IThR5QXdM3cICdVMwLZGSJ4WKA5W38ar/Q+P8ZFLrgmTwdP5BUbeE+U40I1JEI8RSQ=
+X-Received: by 2002:aa7:c392:0:b0:601:233a:4f4d with SMTP id
+ 4fb4d7f45d1cf-601233a4fc5mr3186a12.2.1747342415935; Thu, 15 May 2025 13:53:35
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515-work-coredump-socket-v7-0-0a1329496c31@kernel.org> <20250515-work-coredump-socket-v7-2-0a1329496c31@kernel.org>
-In-Reply-To: <20250515-work-coredump-socket-v7-2-0a1329496c31@kernel.org>
+References: <20250515-work-coredump-socket-v7-0-0a1329496c31@kernel.org> <20250515-work-coredump-socket-v7-3-0a1329496c31@kernel.org>
+In-Reply-To: <20250515-work-coredump-socket-v7-3-0a1329496c31@kernel.org>
 From: Jann Horn <jannh@google.com>
-Date: Thu, 15 May 2025 22:52:54 +0200
-X-Gm-Features: AX0GCFvZyxY7ct4_THeym5x5LEYv3lsYRODqj4j24boe3WIKlaAJKd5VKjymUt4
-Message-ID: <CAG48ez2HPOmWgY1riBJbt6tFzAJbJv_N5XnPwhAbVBfA1-sRBA@mail.gmail.com>
-Subject: Re: [PATCH v7 2/9] coredump: massage do_coredump()
+Date: Thu, 15 May 2025 22:53:00 +0200
+X-Gm-Features: AX0GCFv4nrwtDZxOQKAFnOch8tVFv6sz1vCJIdy3HEL5SN0W7L19J7ev9XtxuAM
+Message-ID: <CAG48ez00GnBZZDjpYBmccgztaW+0206_X8__UiFxtBQhm7rvhg@mail.gmail.com>
+Subject: Re: [PATCH v7 3/9] coredump: reflow dump helpers a little
 To: Christian Brauner <brauner@kernel.org>
 Cc: linux-fsdevel@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>, 
 	Kuniyuki Iwashima <kuniyu@amazon.com>, Eric Dumazet <edumazet@google.com>, Oleg Nesterov <oleg@redhat.com>, 
@@ -83,8 +83,7 @@ Content-Transfer-Encoding: quoted-printable
 
 On Thu, May 15, 2025 at 12:04=E2=80=AFAM Christian Brauner <brauner@kernel.=
 org> wrote:
-> We're going to extend the coredump code in follow-up patches.
-> Clean it up so we can do this more easily.
+> They look rather messy right now.
 >
 > Signed-off-by: Christian Brauner <brauner@kernel.org>
 
