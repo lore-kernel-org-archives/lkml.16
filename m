@@ -1,31 +1,31 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FD01E480;
-	Thu, 15 May 2025 19:58:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 457A7266B66;
+	Thu, 15 May 2025 19:58:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747339103; cv=none; b=gImD4lzuXElw+WromB9Yfe25tUodzAYY/eOPwS7gwAlFa6KIrMugiPZTEio3BCthJOHvbljj6LSqAmb5DaPKmV9YI54FyMHV+FlzAYimNQIX+smvy6+B/KcDXibFHKHIb/HYZz1nhCJqONr40fz3uKG9j/dY6QJeFvDYGkrwKgk=
+	t=1747339104; cv=none; b=L5rs4H1rr9UO3fyhTigLLuSPVeJ0USJIzjcCrb6mH7M1Wykh1GLBzStWig+1XOM8t8InJWL+dywhoPoQhLCEXFDDL0Ge1soCMi2Qhuq0P07fjF0XyELuRp6oGlBL82RB/ojsQr0/MCCfttEbEnc1044oerBTIWzOtmEP+z4eKFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747339103; c=relaxed/simple;
-	bh=TvfFTWUEfp0HIUC1UiK0IdPOdFMzIQJdjD0UUr/+o0E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KTg11gh8NpbGoFBGYomH3vQgst2ytH+ajWu/F7ezeBPvf2Vn+U5599YjGIyWZNqZaJCzAOkDFc+kSnuPTAyaHB6PuiFiLhRT+pYLfELywl556lcuN331TRBm6jhUGbPRmf65n29hLzzPHerE7vzOfIAD4qMeD4mnwcz6iuc8Wa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=onIOrrC/; arc=none smtp.client-ip=159.69.126.157
+	s=arc-20240116; t=1747339104; c=relaxed/simple;
+	bh=Pv6heOT9UmeA55wMy+71ZBKnB9ucEogSTxcfgwAQDFE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FrJC5UT7AQeZB2Hl5wwA2+mteUUHweBo4OH4ypPxYQzEEGlRgjvEinThX8OY87mOGPIc2JTFeYGS02zzKn+aSWtHsyDUTEvUnuoKVJgeVr8MdtFG0wE/1t7TjH/4hibSYOJW+SlSZloML6acxdyN/orPWTH6SYp1DQR7po3KxeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=hr4hFdA9; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="onIOrrC/"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="hr4hFdA9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
 	s=mail; t=1747339092;
-	bh=TvfFTWUEfp0HIUC1UiK0IdPOdFMzIQJdjD0UUr/+o0E=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=onIOrrC/+PZ1lzbUoLwawy8U4RH/ZtuU/8dRKSoWIXcADDuulEl2wcEjKtUwJZ58A
-	 OQ4w8PzPRkUZIqmEOxP6Aph1pMFtoBqwmjgZ887ipTHWbH4wtPHFEi3I7p10WsGHIg
-	 zw4YVkf7Z7XQQprD82QR/dbZrLbx+DSHkstElIFg=
+	bh=Pv6heOT9UmeA55wMy+71ZBKnB9ucEogSTxcfgwAQDFE=;
+	h=From:Subject:Date:To:Cc:From;
+	b=hr4hFdA9Sea6WWrNOAcFqG8DVZ1l1kV+TqI6DokCiwFaSfyQk8vdP8Jsi7Xn2I2Q8
+	 ALxXrQgo2g3Zy9vDvo+8SAdc0KIqCiWk/SEkqItbnkGMBRrcW617ypZTGlTYUhywr+
+	 FwjSakednEV6Rz48b7vtITmicM0qhqSRjKciAsRo=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Thu, 15 May 2025 21:57:48 +0200
-Subject: [PATCH 2/9] tools/nolibc: move mount() to sys/mount.h
+Subject: [PATCH 0/9] tools/nolibc: split out more headers
+Date: Thu, 15 May 2025 21:57:46 +0200
+Message-Id: <20250515-nolibc-sys-v1-0-74f82eea3b59@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,130 +34,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250515-nolibc-sys-v1-2-74f82eea3b59@weissschuh.net>
-References: <20250515-nolibc-sys-v1-0-74f82eea3b59@weissschuh.net>
-In-Reply-To: <20250515-nolibc-sys-v1-0-74f82eea3b59@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIADpHJmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDU0NT3bz8nMykZN3iymJdY8NEk7QUc7MUC0tzJaCGgqLUtMwKsGHRsbW
+ 1AJcEB3hcAAAA
+X-Change-ID: 20250515-nolibc-sys-31a4fd76d897
 To: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747339091; l=3542;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747339091; l=1811;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=TvfFTWUEfp0HIUC1UiK0IdPOdFMzIQJdjD0UUr/+o0E=;
- b=3/DdAFeh3tu/36+3/jAUkeF62jqtj70ad4s9nUWZmK/Uc1wpKjwUdm10kEnVnEN/OOD+FAhGG
- /sqeusOOkUDBl2wShHHSSINDHBnZdH0TaucQ+jK6TMgT0G7BUpMjaGl
+ bh=Pv6heOT9UmeA55wMy+71ZBKnB9ucEogSTxcfgwAQDFE=;
+ b=7d2d2iZYEdkfWC7w5wl8CXdtX2aHF8pwjmNqLKhd0yLSRnWQg+0NQJvQEmNSkLmKAwurFKMJ3
+ 9vW0VJfhxxYAFef4bWbmCuwotUwiC9o6xMunKhbWs2UNTNNrZOT2cxG
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-This is the location regular userspace expects this definition.
+Split out all headers which are used by nolibc-test.c.
+This makes it easier to port existing applications to nolibc.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- tools/include/nolibc/Makefile    |  1 +
- tools/include/nolibc/nolibc.h    |  1 +
- tools/include/nolibc/sys.h       | 20 --------------------
- tools/include/nolibc/sys/mount.h | 37 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 39 insertions(+), 20 deletions(-)
+Thomas Weißschuh (9):
+      tools/nolibc: move ioctl() to sys/ioctl.h
+      tools/nolibc: move mount() to sys/mount.h
+      tools/nolibc: move prctl() to sys/prctl.h
+      tools/nolibc: move reboot() to sys/reboot.h
+      tools/nolibc: move getrlimit() and friends to sys/resource.h
+      tools/nolibc: move makedev() and friends to sys/sysmacros.h
+      tools/nolibc: move uname() and friends to sys/utsname.h
+      tools/nolibc: move NULL and offsetof() to sys/stddef.h
+      selftests/nolibc: drop include guards around standard headers
 
-diff --git a/tools/include/nolibc/Makefile b/tools/include/nolibc/Makefile
-index 7d66847df91a94ca784c04ced278eb6d7099bab4..aa14dfddd77deb5442a6be65dee5684b6d218da7 100644
---- a/tools/include/nolibc/Makefile
-+++ b/tools/include/nolibc/Makefile
-@@ -51,6 +51,7 @@ all_files := \
- 		sys/auxv.h \
- 		sys/ioctl.h \
- 		sys/mman.h \
-+		sys/mount.h \
- 		sys/random.h \
- 		sys/stat.h \
- 		sys/syscall.h \
-diff --git a/tools/include/nolibc/nolibc.h b/tools/include/nolibc/nolibc.h
-index d6048d1e9ea5d4b5d504e156aafc5651dcd6b8c1..690368f8e46c33df37c824429cf89dd0e95bb806 100644
---- a/tools/include/nolibc/nolibc.h
-+++ b/tools/include/nolibc/nolibc.h
-@@ -99,6 +99,7 @@
- #include "sys/auxv.h"
- #include "sys/ioctl.h"
- #include "sys/mman.h"
-+#include "sys/mount.h"
- #include "sys/random.h"
- #include "sys/stat.h"
- #include "sys/syscall.h"
-diff --git a/tools/include/nolibc/sys.h b/tools/include/nolibc/sys.h
-index 313c210173c804f728b0be4ab8e67542bb3a7219..e66dd6e760557333353d98da2627b038dffe7f93 100644
---- a/tools/include/nolibc/sys.h
-+++ b/tools/include/nolibc/sys.h
-@@ -672,26 +672,6 @@ int mknod(const char *path, mode_t mode, dev_t dev)
- 	return __sysret(sys_mknod(path, mode, dev));
- }
- 
--/*
-- * int mount(const char *source, const char *target,
-- *           const char *fstype, unsigned long flags,
-- *           const void *data);
-- */
--static __attribute__((unused))
--int sys_mount(const char *src, const char *tgt, const char *fst,
--                     unsigned long flags, const void *data)
--{
--	return my_syscall5(__NR_mount, src, tgt, fst, flags, data);
--}
--
--static __attribute__((unused))
--int mount(const char *src, const char *tgt,
--          const char *fst, unsigned long flags,
--          const void *data)
--{
--	return __sysret(sys_mount(src, tgt, fst, flags, data));
--}
--
- 
- /*
-  * int pipe2(int pipefd[2], int flags);
-diff --git a/tools/include/nolibc/sys/mount.h b/tools/include/nolibc/sys/mount.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..5129420e716d0a7e75c32a5bbc8f4e9f0e21b03b
---- /dev/null
-+++ b/tools/include/nolibc/sys/mount.h
-@@ -0,0 +1,37 @@
-+/* SPDX-License-Identifier: LGPL-2.1 OR MIT */
-+/*
-+ * Mount definitions for NOLIBC
-+ * Copyright (C) 2017-2021 Willy Tarreau <w@1wt.eu>
-+ */
-+
-+/* make sure to include all global symbols */
-+#include "nolibc.h"
-+
-+#ifndef _NOLIBC_SYS_MOUNT_H
-+#define _NOLIBC_SYS_MOUNT_H
-+
-+#include "../sys.h"
-+
-+#include <linux/mount.h>
-+
-+/*
-+ * int mount(const char *source, const char *target,
-+ *           const char *fstype, unsigned long flags,
-+ *           const void *data);
-+ */
-+static __attribute__((unused))
-+int sys_mount(const char *src, const char *tgt, const char *fst,
-+	      unsigned long flags, const void *data)
-+{
-+	return my_syscall5(__NR_mount, src, tgt, fst, flags, data);
-+}
-+
-+static __attribute__((unused))
-+int mount(const char *src, const char *tgt,
-+	  const char *fst, unsigned long flags,
-+	  const void *data)
-+{
-+	return __sysret(sys_mount(src, tgt, fst, flags, data));
-+}
-+
-+#endif /* _NOLIBC_SYS_MOUNT_H */
+ tools/include/nolibc/Makefile                |   8 ++
+ tools/include/nolibc/nolibc.h                |   7 ++
+ tools/include/nolibc/std.h                   |   6 +-
+ tools/include/nolibc/stddef.h                |  24 +++++
+ tools/include/nolibc/sys.h                   | 136 ---------------------------
+ tools/include/nolibc/sys/ioctl.h             |  29 ++++++
+ tools/include/nolibc/sys/mount.h             |  37 ++++++++
+ tools/include/nolibc/sys/prctl.h             |  36 +++++++
+ tools/include/nolibc/sys/reboot.h            |  34 +++++++
+ tools/include/nolibc/sys/resource.h          |  53 +++++++++++
+ tools/include/nolibc/sys/sysmacros.h         |  20 ++++
+ tools/include/nolibc/sys/utsname.h           |  42 +++++++++
+ tools/include/nolibc/types.h                 |  11 ---
+ tools/testing/selftests/nolibc/nolibc-test.c |   5 -
+ 14 files changed, 291 insertions(+), 157 deletions(-)
+---
+base-commit: 6a25f787912a73613f12e7eefbebd72ee3d43f85
+change-id: 20250515-nolibc-sys-31a4fd76d897
 
+Best regards,
 -- 
-2.49.0
+Thomas Weißschuh <linux@weissschuh.net>
 
