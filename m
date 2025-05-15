@@ -1,106 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF49298C37;
-	Thu, 15 May 2025 12:37:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BFA1FAC54;
+	Thu, 15 May 2025 12:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747312659; cv=none; b=lxyoid1MkqOpjhZoUgfJdPt9I/rT7Fu3QA7kxkL5Ph7UogZ3iC7OCOkfL0pnPBlwtzBKaoAczwYCE5MDhauKiNSFWl/bo6AkQo1+DAJBYWak+2Q6d2IgXnNn3quNyzGwm+hJSByWA+VFFqZu2mH7LP1BVWj1l/lQtfIrx69HYEw=
+	t=1747312748; cv=none; b=HFYLyym2nqqEs4bdhc1Y5bzx/42vftokc2MHF3dacMDwYmmQylUGhONqWpRQo4oMPh1hoG5upyhe793AVoTPfuyZhqqr51yaQ2T6XBOIZ754fT7F6nLF7UxZ24KFOyNn2unau7CzX/TemQecbgdJBCoTTbzeikGyxx1kxDhI7m8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747312659; c=relaxed/simple;
-	bh=V7NGCpEoGaOGQDfebTYdttgeG8ku2izNigxgicjHoT8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FV5PKfWQ3LlSX6EgqvJ8BCHg+CLXjcRp8MJWpizjyWkE57fVkiUlPuoe57GEGqvXRwsfabZv+Xi+znnYkOyQmLYo6omSbywiG+GZRdC8BwLIEGwtCUk28xlIaw1vHXasoC2iy5HRhIcq14jI5RPMk9I+2szrqFdUngotg2y1QMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gqr8v2TC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gqr8v2TC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4119C4CEE7;
-	Thu, 15 May 2025 12:37:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747312659;
-	bh=V7NGCpEoGaOGQDfebTYdttgeG8ku2izNigxgicjHoT8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gqr8v2TCWC/a7oTUMHIbZYMulY59gpgtxv+sQvQfAXE+UoOYS14AFy8C1Xot+4Uy1
-	 FM8MUgcLemOpbdpTVfylNuYp2CbSqOPJ5FJnAAJv9DWfSmcvJYPTYe+i+SNCAtAwRb
-	 HbJvrhP6ePOZS2jf0NOA/9SX/v7nQHqAS8ni9o50WGNcTHWhh1hJ+90/xgBMzTBtVs
-	 H/+kQQL3EBqhXV7EHUGgyZHXygRXgfzYIB64I1wxYNsPOwonJL3NdPWw2IF533IvM3
-	 Ri9ZYP8TaD8a/hXxzvBU6PwcFxccoh9tiFCBhopCYIBjdhRzHEJvYSL+sW3XGR/Cmf
-	 ej3piM20Sia2Q==
-Date: Thu, 15 May 2025 14:37:32 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Benno Lossin <lossin@kernel.org>, Matthew Maurer <mmaurer@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
-Message-ID: <aCXgDHtdXb7Wf92P@pollux>
-References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
- <20250505-debugfs-rust-v5-4-3e93ce7bb76e@google.com>
- <D9VPA1M45WBK.1TB4KOUXD24BD@kernel.org>
- <aCRdNJ2oq-REBotd@pollux>
- <CAGSQo0204_Dz65G33pAN3_iY=ejPXJRdAiB4ioM-nvMkAh0YXQ@mail.gmail.com>
- <D9WM0BP5446N.1NVNDCZ4Y2QN1@kernel.org>
- <2025051524-festival-afterglow-8483@gregkh>
+	s=arc-20240116; t=1747312748; c=relaxed/simple;
+	bh=i/OuoCo9ZLE71h8UzRmnY7oMH9WVI3VPq2h1PMLRgF8=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=qJFWXWjiY0RqYdlTw5sceu/tdVSrhdAATklRdRnw49+reQykWP9trOOLjkYJWc9esos1yf4YGZMA3TAw1M/Ix8oZTGD5LGvdFNbHHeBKtJN3YOFmOgzU39St7rQoNjhqlpCMSuDGvkfDK30JOhtVZFCxJx15wmitedyQaXszc6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZyqX72j6Yz5B1Gr;
+	Thu, 15 May 2025 20:39:03 +0800 (CST)
+Received: from njb2app05.zte.com.cn ([10.55.22.121])
+	by mse-fl1.zte.com.cn with SMTP id 54FCcpcj026959;
+	Thu, 15 May 2025 20:38:51 +0800 (+08)
+	(envelope-from long.yunjian@zte.com.cn)
+Received: from mapi (njy2app01[null])
+	by mapi (Zmail) with MAPI id mid201;
+	Thu, 15 May 2025 20:38:55 +0800 (CST)
+Date: Thu, 15 May 2025 20:38:55 +0800 (CST)
+X-Zmail-TransId: 2af96825e05f469-cbfdd
+X-Mailer: Zmail v1.0
+Message-ID: <20250515203855146Sn9x-Uw9Teur35mOjn41C@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2025051524-festival-afterglow-8483@gregkh>
+Mime-Version: 1.0
+From: <long.yunjian@zte.com.cn>
+To: <sudeep.holla@arm.com>
+Cc: <cristian.marussi@arm.com>, <peng.fan@nxp.com>, <justin.chen@broadcom.com>,
+        <florian.fainelli@broadcom.com>, <arm-scmi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <fang.yumeng@zte.com.cn>, <mou.yi@zte.com.cn>,
+        <ouyang.maochun@zte.com.cn>, <xu.lifeng1@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIXSBmaXJtd2FyZTogYXJtX3NjbWk6IFVzZSBkZXZfZXJyX3Byb2JlKCkgc2ltcGxpZnkgdGhlIGNvZGU=?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 54FCcpcj026959
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6825E067.002/4ZyqX72j6Yz5B1Gr
 
-On Thu, May 15, 2025 at 01:43:09PM +0200, Greg Kroah-Hartman wrote:
-> On Thu, May 15, 2025 at 10:59:44AM +0200, Benno Lossin wrote:
-> > On Wed May 14, 2025 at 11:55 PM CEST, Matthew Maurer wrote:
-> > > On Wed, May 14, 2025 at 2:07 AM Danilo Krummrich <dakr@kernel.org> wrote:
-> > >> However, I really think we should keep the code as it is in this version and
-> > >> just don't provide an example that utilizes ManuallyDrop and forget().
-> > >>
-> > >> I don't see how the idea of "manually dropping" (sub-)directories and files
-> > >> provides any real value compared to just storing their instance in a driver
-> > >> structure as long as they should stay alive, which is much more intuitive
-> > >> anyways.
-> > >
-> > > We can't easily do this, because dropping a root directory recursively
-> > > drops everything underneath it. This means that if I have
-> > >
-> > > foo/
-> > >   - bar/
-> > >   - baz/
-> > >
-> > > Then my directory handle for `bar` have to be guaranteed to outlive my
-> > > directory handle for `foo` so that I know it's didn't get deleted
-> > > under me. This is why they have a borrow onto their parent directory.
-> > > This borrow means that you can't (without `unsafe`, or something like
-> > > `yoke`) keep handles to `foo` and `bar` in the same struct.
-> > 
-> > Is there no refcount that we can use instead of borrowing? I guess not,
-> > since one can call `debugfs_remove`. What about a refcount on the rust
-> > side? or is debugfs not used for "debugging" and needs to have the
-> > performance of no refcount?
-> 
-> debugfs should never have any performance issues (i.e. you don't use it
-> for performant things.)
-> 
-> So refcount away!  That should never be an issue.
+From: Yumeng Fang <fang.yumeng@zte.com.cn>
 
-Reference counting (parent) directories should lead to a much cleaner solution.
+In the probe path, dev_err() can be replaced with dev_err_probe()
+which will check if error code is -EPROBE_DEFER and prints the
+error name. It also sets the defer probe reason which can be
+checked later through debugfs.
 
-I mentioned that previously, but also said in that context that it's a bit
-contrary to how the C API is utilized currently, which usually isn't desired.
+Signed-off-by: Yumeng Fang <fang.yumeng@zte.com.cn>
+---
+ drivers/firmware/arm_scmi/transports/mailbox.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-However, if we're fine with that I think it's superior to the borrowing
-solution, which requires keep(). IMHO keep() is a footgun in general, even if
-not callable for "root" directories.
+diff --git a/drivers/firmware/arm_scmi/transports/mailbox.c b/drivers/firmware/arm_scmi/transports/mailbox.c
+index bd041c99b92b..816e79537935 100644
+--- a/drivers/firmware/arm_scmi/transports/mailbox.c
++++ b/drivers/firmware/arm_scmi/transports/mailbox.c
+@@ -13,6 +13,7 @@
+ #include <linux/of_address.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
++#include <linux/dev_printk.h>
+
+ #include "../common.h"
+
+@@ -215,10 +216,8 @@ static int mailbox_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
+ 	smbox->chan = mbox_request_channel(cl, tx ? 0 : p2a_chan);
+ 	if (IS_ERR(smbox->chan)) {
+ 		ret = PTR_ERR(smbox->chan);
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(cdev,
+-				"failed to request SCMI %s mailbox\n", desc);
+-		return ret;
++		return dev_err_probe(cdev, ret,
++				     "failed to request SCMI %s mailbox\n", desc);
+ 	}
+
+ 	/* Additional unidirectional channel for TX if needed */
+@@ -226,9 +225,8 @@ static int mailbox_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
+ 		smbox->chan_receiver = mbox_request_channel(cl, a2p_rx_chan);
+ 		if (IS_ERR(smbox->chan_receiver)) {
+ 			ret = PTR_ERR(smbox->chan_receiver);
+-			if (ret != -EPROBE_DEFER)
+-				dev_err(cdev, "failed to request SCMI Tx Receiver mailbox\n");
+-			return ret;
++			return dev_err_probe(cdev, ret,
++					     "failed to request SCMI Tx Receiver mailbox\n");
+ 		}
+ 	}
+
+@@ -236,9 +234,8 @@ static int mailbox_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
+ 		smbox->chan_platform_receiver = mbox_request_channel(cl, p2a_rx_chan);
+ 		if (IS_ERR(smbox->chan_platform_receiver)) {
+ 			ret = PTR_ERR(smbox->chan_platform_receiver);
+-			if (ret != -EPROBE_DEFER)
+-				dev_err(cdev, "failed to request SCMI P2A Receiver mailbox\n");
+-			return ret;
++			return dev_err_probe(cdev, ret,
++					     "failed to request SCMI P2A Receiver mailbox\n");
+ 		}
+ 	}
+
+-- 
+2.25.1
