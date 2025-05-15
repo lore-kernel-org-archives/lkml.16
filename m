@@ -1,41 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D82A2797BB
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 07:35:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F05262797BB;
+	Thu, 15 May 2025 07:35:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747294535; cv=none; b=GFmzWzHv1WrOLxyB0U/8W9WVFmmGCJkJRVt5Bd9mgRQIrbejZRkExSiGcD5u3+7XMr7W0s/MYufnjFnBx5PhPte07wmUVICxTKwJmFUFsjf3Uj7it+WJPNciu0O2KNjXbCeiQ64AZJUpuzA0ImO1OdOnyk7yVYNx9iAQt1jojKA=
+	t=1747294544; cv=none; b=ExwzDXv7HEsIlYJ9LLKlCxn3v13Bb1xrLi8BthHcKUyg+hRcPxgPI2j8LLMoft7nBcizyJeXG9eEUdww34fluIuCFyHI4aDxHhVO92d5LoyTRjZFWw3v0rz78O7nlJ91Sa95tS+lJmFYutWZ6SCXTuJihFCG76FDnw41u2qY53A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747294535; c=relaxed/simple;
-	bh=Ds8KGfm5bbLD5tihgkQnqH94C+3aiFQ2p6EGCGRpO/U=;
+	s=arc-20240116; t=1747294544; c=relaxed/simple;
+	bh=ZGqhlVU+6Emh7nm8gXe/l4szD7AQKdUsT7UjppTo/Hc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=IzjxH5mVmipO1WjPxw9yZPr4aEVBEDaS4/jVXiDuu8xeGC8Xl9SI8J69Jd89E9DzLPMicxCYVbqzr2G+DbWSH0sRqij2N2izZxxN9JrfqZEM9O62cNVRtWbapmOcQizI6W+vDwSE3oyYbe4E8bwjBQj9YguFvNHQJejGCclYQLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RhU3abXE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=gQlu+izxfd1VhGZs0KyACn+jKZlTxTVw2JAJGK4DhKjZQP+KECetyMYhZBFNaklMo9tQyP4bIae2ePtJjNhDmSsy2+BbbfYpdjAUsi8M/xMhz+WOM5vWbhBE2hZcNXUnidIfeqekNvgSmynpUPwVI6ZFvSWQtYdotVLeMeMxcjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bRoFcG1S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RhU3abXE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2193EC4CEE9;
-	Thu, 15 May 2025 07:35:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bRoFcG1S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A7B9C4CEE7;
+	Thu, 15 May 2025 07:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747294535;
-	bh=Ds8KGfm5bbLD5tihgkQnqH94C+3aiFQ2p6EGCGRpO/U=;
+	s=k20201202; t=1747294543;
+	bh=ZGqhlVU+6Emh7nm8gXe/l4szD7AQKdUsT7UjppTo/Hc=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=RhU3abXEJqZQfZVN5c/rlOhasBm5QA/7p6gsdiOQnYObvr2LuZLfIpgaTzJimbMgK
-	 UHHZ2eoEW4xO88G1I9lhl7Kqphw/9DGtKAj+30t9ewKupqyw7m+dJn91uMimX3fDSJ
-	 EwaoXVXAlQy78kV3A0GFWUVfkVPg6UmISEd+M9sRqs5l+RsKj6hY0QP+KGiDp5VjOQ
-	 YguuuOHyJ/mK8n9q3aOuz441NZfEsGCw54sRGuq9Jl8dqs/qcioaxwvLXrN6kPtllV
-	 0rWiZfya5N6RNXzzgenxpNugAXytoL295oLkkSAqT9puaiJ1RSfjvvEsjpP66o+Gr7
-	 6u4inAJHl3mJA==
+	b=bRoFcG1SGszUdhO8yF6/iWM2ASI88v+yD+FMjtga4NajMtvxYMmKnhSadVU6m6YZB
+	 fMJP7UuJNH3o2CWQx59nSf7vHBEJhe+ra1CRbL+0vg4zOdBYXibpiwSbN9eu/m8GQ3
+	 jrECyqJ5tNOesY5uVqwc2IPM6hRTOyRhmsxe85VyqnbjOO9O5EKPtva5SMvo5iZwmG
+	 1WPp3WyeNmvuJzgrYpEv79LXOX2Nxrm5NaTs3rnkWqe5O/LKvWdDgFywLzlo45kpA0
+	 rGOgT88iJCt6yT5Nn0qtfk4t58bFfikBKx2RMlIqQTHmGsGakldAQzdSGYZrQiqLgp
+	 LMbP/Y8oUeyXQ==
 From: Mark Brown <broonie@kernel.org>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Watson Chow <watson.chow@avnet.com>, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250508064947.2567255-1-demonsingur@gmail.com>
-References: <20250508064947.2567255-1-demonsingur@gmail.com>
-Subject: Re: [PATCH] regulator: max20086: fix invalid memory access
-Message-Id: <174729453162.272608.16147377004794102016.b4-ty@kernel.org>
-Date: Thu, 15 May 2025 09:35:31 +0200
+To: Varadarajan Narayanan <quic_varada@quicinc.com>, 
+ Md Sadre Alam <quic_mdalam@quicinc.com>, 
+ Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
+ Gabor Juhos <j4g8y7@gmail.com>
+Cc: linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250501-qpic-snand-validate-ecc-v1-1-532776581a66@gmail.com>
+References: <20250501-qpic-snand-validate-ecc-v1-1-532776581a66@gmail.com>
+Subject: Re: [PATCH next] spi: spi-qpic-snand: validate user/chip specific
+ ECC properties
+Message-Id: <174729453999.272648.10698524382095396308.b4-ty@kernel.org>
+Date: Thu, 15 May 2025 09:35:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,25 +49,27 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Thu, 08 May 2025 09:49:43 +0300, Cosmin Tanislav wrote:
-> max20086_parse_regulators_dt() calls of_regulator_match() using an
-> array of struct of_regulator_match allocated on the stack for the
-> matches argument.
+On Thu, 01 May 2025 18:19:16 +0200, Gabor Juhos wrote:
+> The driver only supports 512 bytes ECC step size and 4 bit ECC strength
+> at the moment, however it does not reject unsupported step/strength
+> configurations. Due to this, whenever the driver is used with a flash
+> chip which needs stronger ECC protection, the following warning is shown
+> in the kernel log:
 > 
-> of_regulator_match() calls devm_of_regulator_put_matches(), which calls
-> devres_alloc() to allocate a struct devm_of_regulator_matches which will
-> be de-allocated using devm_of_regulator_put_matches().
+>   [    0.574648] spi-nand spi0.0: GigaDevice SPI NAND was found.
+>   [    0.635748] spi-nand spi0.0: 256 MiB, block size: 128 KiB, page size: 2048, OOB size: 128
+>   [    0.649079] nand: WARNING: (null): the ECC used on your system is too weak compared to the one required by the NAND chip
 > 
 > [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/1] regulator: max20086: fix invalid memory access
-      commit: 6b0cd72757c69bc2d45da42b41023e288d02e772
+[1/1] spi: spi-qpic-snand: validate user/chip specific ECC properties
+      commit: 65cb56d49f6edea409600a3c61effc70ee5d43d8
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
