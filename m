@@ -1,124 +1,185 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD69F1A704B;
-	Thu, 15 May 2025 08:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07416286D5D
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747296649; cv=none; b=gE2+5ZAqOBUTiZ1KrsirJJqdNcaRlPB5bZyF0rGB+u+3bQGszEhpTKJrLTBdSc0jyJDHyRqJ27jvRwUxjGtCFq1EucrxzXDZx7FwTHb1TU4bsD84KX228xzZZoS9n8JbyydCnTt5MsK9uCzPhgDTfDB3IZubAMuPpM4adq1xrp0=
+	t=1747296655; cv=none; b=P5hYsP+w9+GutAs3MtWgDsMW/m8BG1DFqSeEhZuLPFQ+CS28QD95piSDkMX8o3/9MwnZ64v9Vl5x9ZYG5291yBLjFljWGMypSmV8f7kucMigR1KvUjikqRv/4km1RlN7XWqp4OXStu8A5VTz4gE5yqLPKnetWMKfc65YRZjZHTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747296649; c=relaxed/simple;
-	bh=gnZyYamsKRs1mXWJmt8R1pUvw1fIQ115hLDfkIZy6e8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AXOBF5GnMro/Jpa3g3MOsBb6Xna0mh+m6KanaNrt8Y8VSS85vqCYH+3W306vw2cI+9+gCBv+IHjYpbi8Y9QrGrSxT36IoxsI3xno+YDMZTqgsMgGhktEIgcxiLXaechm5/jWl4XgVW13yetSz+qjPacSv6iS4HaeaMnChrsYT2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GiC4dWdg; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GiC4dWdg"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so4788765e9.1;
-        Thu, 15 May 2025 01:10:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747296646; x=1747901446; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hy2qXGW5KXMzxxjud7orCi4omTEJipbX7lKkxc7gJx8=;
-        b=GiC4dWdg+9SY9bTRUOiiViuG/z5ieGAPra8r7S/hnapt8MzoudL/O09L6/KwLFl0jL
-         Z0Ppbgeyue5XNWwfCw2cGvq+30wRXl+wH+jtWEZN3HlSAq7GrgpkGkhMWxZ7SGTmQHn6
-         3R/0ERyTY/vFwdZeKF6B7Jus3nFnaX7w4W18oxg5VhYYr8LzSRfST9qU+RGZU/yktWxK
-         u6Wa83UMItY1VqjSzyZO4emY5wiFYoSccqhyT7LgJ86o/m3yCHS3KZv2/ENMkGDbwYHX
-         4sX1dkszJuwbzd+/q5/PKFq4kYpfnkbzjinjHklQ+Z+d1CAaNm/1ZIHpW1WGr8w3e5yq
-         iR6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747296646; x=1747901446;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hy2qXGW5KXMzxxjud7orCi4omTEJipbX7lKkxc7gJx8=;
-        b=TMYEZpI1wbCSd9xlEoVatiCdGIlYZasfH1cyQeWq0xoDAtRyawHTA4o++xWn0PAKHl
-         tKcxrN6HGKn2V+blxo9q3CqJeJHZ/mAnyJpb+bhNg7XAZRda5eydCJf5Y+igKF1BB/Zs
-         eMaMt8OE2dOLFfhJWSpp5cV9CtX4ObrfK9wZmJXOdM2lIv/CwBZymU8Rpk8JRI1/GJFJ
-         0GKDCgbi/p0613BmBANBfRfaWE9QErRcGWkqqx53eTHMVYQwS1bxD0xFSfeTmPJxO4WH
-         YtUIE6UzlZOXygQ55OMqcYWIv3ua7CZcN+1eXJmafGSaBWx91bJZOdZS+GJDAfOGgN0a
-         xmaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU4opqsAc+Em5ytvKFKTZa6N6d+l9IcJB3CzoVzfFh+6kyi+hXuEoLkQH9EemF80jg5k+xMwoYIqsDsY0Q=@vger.kernel.org, AJvYcCVS2FXCQcXnYfWPdXWkDnLtLFzwXjhGs9sN7dGaO2wGGMilMRNFPHN/prXTjaKSrxlUMB36WZjUq6ZJ@vger.kernel.org, AJvYcCViM/rY11jHgGD6/Mdu56tdil1jXvcQGFJ1mu8eSEKY8xcz+HInpJnBuDxCZoiiz98xyT5hxyqSASW26qDX@vger.kernel.org, AJvYcCVkBp8n3vZsgqthKPxmktZAZ7whv472vjrZSBS5K8R+XeJPvQAWMpXoBdc9dqV4Utsaze7fPoELaaCE@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHzY9q42k/2m6RzODyzHj2lrC4o/pR49ZaPTaLxCK11jR6fdl5
-	r9su4jvPfFa+8cdX1rZvWEEOKsa4Jzaco/ZsVoganz2pWU1yaDxEmZtORA==
-X-Gm-Gg: ASbGncvdiN92vfAkBcOb5Dl+LhM+cMq9a53dMsQtkTG/2cW08GH63x5djojKDDja1/a
-	6n1SdXj5nGKVlWhXgmdrOUsjY20zZGdPb3xPi4i/tybE9qPMm+I4zUbheLfjjBgE0ves7lejrOm
-	PbhrYEHG6Uiy2oy0jpMMg2SW/In1kVAWG64lgrye1Y+lkdOewtYQDtXP9MuGWSJtnL3Bt3pIBIP
-	Mj5QwIDY8KxCxOFSWNGeD/ZuXyFhhF7sXJGyAAY3/UMJOAr9vP4+hycK/fAcAapTG1dLFU4uHv8
-	a1wTcsPcS0W2Gn3rXqKmenUZ52+RXIQ/frdqTJ/w3lepxSk1Dqf28Vjv1q/s/5ZbLktjD1GomMi
-	aievL4iBwxNX45ohPW64rGpAINQJ0M/zsLAi6hXlQdleO3qI1
-X-Google-Smtp-Source: AGHT+IEGyyG/LNEAKuRtS2A62/7HsPhFAX86kklkRBv74EAtipUbgt7otHFs31JFx7YXeS0Ae+rpWA==
-X-Received: by 2002:a05:600c:609a:b0:43c:e70d:4504 with SMTP id 5b1f17b1804b1-442f210f700mr57426795e9.19.1747296645706;
-        Thu, 15 May 2025 01:10:45 -0700 (PDT)
-Received: from orome (p200300e41f281b00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f28:1b00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f8ab839esm21120775e9.17.2025.05.15.01.10.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 01:10:44 -0700 (PDT)
-Date: Thu, 15 May 2025 10:10:42 +0200
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Vishwaroop A <va@nvidia.com>
-Cc: krzk@kernel.org, broonie@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, jonathanh@nvidia.com, 
-	skomatineni@nvidia.com, ldewangan@nvidia.com, kyarlagadda@nvidia.com, 
-	smangipudi@nvidia.com, bgriffis@nvidia.com, linux-spi@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4 2/2] spi: tegra210-quad: Add support for internal DMA
-Message-ID: <abbrh34e5ysybbijdyyxut6af4to5mlzbd5idxjj65gtuldnnl@3jqotvz765lg>
-References: <20250513200043.608292-1-va@nvidia.com>
- <20250513200043.608292-2-va@nvidia.com>
+	s=arc-20240116; t=1747296655; c=relaxed/simple;
+	bh=LguIhDbbq9020BNM4hdGYiXTe8mSfXMCGO8AWMozp8Q=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=up0sVBOw90X7EFGg9+dVx+NrPct8k1DOKkrJRltYl2bof6yuZ9DrVJksHYA5VDRTWX5C0j2bJZWKkZDWGM4o+uvLh5djhGdpReRCULCWGsS9TpHGCOnxkUrrrSI1VhsW7io5/pcI5o4FHf3ezKBn8lCbG2Q+sUBkInMjAhRTv54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4ZyjXx6Knwz1DKb1;
+	Thu, 15 May 2025 16:09:21 +0800 (CST)
+Received: from kwepemk200016.china.huawei.com (unknown [7.202.194.82])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2B59F180B55;
+	Thu, 15 May 2025 16:10:49 +0800 (CST)
+Received: from [10.67.108.122] (10.67.108.122) by
+ kwepemk200016.china.huawei.com (7.202.194.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 15 May 2025 16:10:48 +0800
+Subject: Re: [PATCH] ipmi: fix underflow in ipmi_create_user()
+To: <corey@minyard.net>
+CC: <openipmi-developer@lists.sourceforge.net>,
+	<linux-kernel@vger.kernel.org>, <lujialin4@huawei.com>
+References: <20250513081622.125071-1-yiyang13@huawei.com>
+ <aCMrg1wqUVi2iCMk@mail.minyard.net>
+From: "yiyang (D)" <yiyang13@huawei.com>
+Message-ID: <d3d50ad3-19e7-7822-f22a-3deb57758ab7@huawei.com>
+Date: Thu, 15 May 2025 16:10:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xha6jhnwhahixu33"
-Content-Disposition: inline
-In-Reply-To: <20250513200043.608292-2-va@nvidia.com>
+In-Reply-To: <aCMrg1wqUVi2iCMk@mail.minyard.net>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemk200016.china.huawei.com (7.202.194.82)
 
 
---xha6jhnwhahixu33
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH V4 2/2] spi: tegra210-quad: Add support for internal DMA
-MIME-Version: 1.0
 
-On Tue, May 13, 2025 at 08:00:43PM +0000, Vishwaroop A wrote:
-> Add support for internal DMA in Tegra234 devices. Tegra234 has an
-> internal DMA controller, while Tegra241 continues to use an external
-> DMA controller (GPCDMA). This patch adds support for both internal
-> and external DMA controllers.
->=20
-> Signed-off-by: Vishwaroop A <va@nvidia.com>
-> ---
->  drivers/spi/spi-tegra210-quad.c | 225 +++++++++++++++++++-------------
->  1 file changed, 131 insertions(+), 94 deletions(-)
+On 2025/5/13 19:22, Corey Minyard wrote:
+> On Tue, May 13, 2025 at 08:16:22AM +0000, Yi Yang wrote:
+>> Syzkaller reported this bug:
+>> ==================================================================
+>> BUG: KASAN: global-out-of-bounds in instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
+>> BUG: KASAN: global-out-of-bounds in atomic_dec include/linux/atomic/atomic-instrumented.h:592 [inline]
+>> BUG: KASAN: global-out-of-bounds in ipmi_create_user.part.0+0x5e5/0x790 drivers/char/ipmi/ipmi_msghandler.c:1291
+>> Write of size 4 at addr ffffffff8fc6a438 by task syz.5.1074/5888
+> 
+> This code has been completely rewritten in the next tree and already
+> fixed.
+> 
+> -corey
+> 
+>>
+>> CPU: 0 PID: 5888 Comm: syz.5.1074 Not tainted 6.6.0+ #60
+>> ......
+>> Call Trace:
+>>   <TASK>
+>>   __dump_stack lib/dump_stack.c:88 [inline]
+>>   dump_stack_lvl+0x72/0xa0 lib/dump_stack.c:106
+>>   print_address_description.constprop.0+0x6b/0x3d0 mm/kasan/report.c:364
+>>   print_report+0xba/0x280 mm/kasan/report.c:475
+>>   kasan_report+0xa9/0xe0 mm/kasan/report.c:588
+>>   check_region_inline mm/kasan/generic.c:181 [inline]
+>>   kasan_check_range+0x100/0x1c0 mm/kasan/generic.c:187
+>>   instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
+>>   atomic_dec include/linux/atomic/atomic-instrumented.h:592 [inline]
+>>   ipmi_create_user.part.0+0x5e5/0x790 drivers/char/ipmi/ipmi_msghandler.c:1291
+>>   ipmi_create_user+0x56/0x80 drivers/char/ipmi/ipmi_msghandler.c:1236
+>>   ipmi_open+0xac/0x2b0 drivers/char/ipmi/ipmi_devintf.c:97
+>>   chrdev_open+0x276/0x700 fs/char_dev.c:414
+>>   do_dentry_open+0x6a7/0x1410 fs/open.c:929
+>>   vfs_open+0xd1/0x440 fs/open.c:1060
+>>   do_open+0x957/0x10d0 fs/namei.c:3671
+>>   path_openat+0x258/0x770 fs/namei.c:3830
+>>   do_filp_open+0x1c7/0x410 fs/namei.c:3857
+>>   do_sys_openat2+0x5bd/0x6a0 fs/open.c:1428
+>>   do_sys_open fs/open.c:1443 [inline]
+>>   __do_sys_openat fs/open.c:1459 [inline]
+>>   __se_sys_openat fs/open.c:1454 [inline]
+>>   __x64_sys_openat+0x17a/0x210 fs/open.c:1454
+>>   do_syscall_x64 arch/x86/entry/common.c:51 [inline]
+>>   do_syscall_64+0x59/0x110 arch/x86/entry/common.c:81
+>>   entry_SYSCALL_64_after_hwframe+0x78/0xe2
+>> RIP: 0033:0x54d2cd
+>> Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+>> RSP: 002b:00007f4751920048 EFLAGS: 00000246 ORIG_RAX: 0000000000000101
+>> RAX: ffffffffffffffda RBX: 0000000000796080 RCX: 000000000054d2cd
+>> RDX: 0000000000000000 RSI: 0000000020004280 RDI: ffffffffffffff9c
+>> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+>> R10: 000000000000001e R11: 0000000000000246 R12: 000000000079608c
+>> R13: 0000000000000000 R14: 0000000000796080 R15: 00007f4751900000
+>>   </TASK>
+>>
+>> The buggy address belongs to the variable:
+>>   ipmi_interfaces+0x38/0x40
+>>
+>> The buggy address belongs to the physical page:
+>> page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x45a6a
+>> flags: 0x3fffff00004000(reserved|node=0|zone=1|lastcpupid=0x1fffff)
+>> raw: 003fffff00004000 ffffea0001169a88 ffffea0001169a88 0000000000000000
+>> raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+>> page dumped because: kasan: bad access detected
+>>
+>> Memory state around the buggy address:
+>>   ffffffff8fc6a300: 00 00 00 00 f9 f9 f9 f9 00 00 00 00 f9 f9 f9 f9
+>>   ffffffff8fc6a380: 00 00 f9 f9 f9 f9 f9 f9 00 00 00 00 f9 f9 f9 f9
+>>> ffffffff8fc6a400: 00 00 f9 f9 f9 f9 f9 f9 00 00 00 00 f9 f9 f9 f9
+>>                                          ^
+>>   ffffffff8fc6a480: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>>   ffffffff8fc6a500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 f9 f9
+>> ==================================================================
+>>
+>> In the ipmi_create_user() function, the intf->nr_users variable has an
+>> underflow issue. Specifically, on the exception path (goto out_kfree;)
+>> before atomic_add_return(), calling atomic_dec() when intf->nr_users has
+>> not been incremented will result in an underflow.
+>>
+>> Fixes: 8e76741c3d8b ("ipmi: Add a limit on the number of users that may use IPMI")
+>> Signed-off-by: Yi Yang <yiyang13@huawei.com>
+>> ---
+>>   drivers/char/ipmi/ipmi_msghandler.c | 9 +++++----
+>>   1 file changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+>> index 3ba9d7e9a6c7..27a12b31cfb6 100644
+>> --- a/drivers/char/ipmi/ipmi_msghandler.c
+>> +++ b/drivers/char/ipmi/ipmi_msghandler.c
+>> @@ -1246,18 +1246,18 @@ int ipmi_create_user(unsigned int          if_num,
+>>    found:
+>>   	if (atomic_add_return(1, &intf->nr_users) > max_users) {
+>>   		rv = -EBUSY;
+>> -		goto out_kfree;
+>> +		goto out_dec;
+>>   	}
+>>   
+>>   	INIT_WORK(&new_user->remove_work, free_user_work);
+>>   
+>>   	rv = init_srcu_struct(&new_user->release_barrier);
+>>   	if (rv)
+>> -		goto out_kfree;
+>> +		goto out_dec;
+>>   
+>>   	if (!try_module_get(intf->owner)) {
+>>   		rv = -ENODEV;
+>> -		goto out_kfree;
+>> +		goto out_dec;
+>>   	}
+>>   
+>>   	/* Note that each existing user holds a refcount to the interface. */
+>> @@ -1281,8 +1281,9 @@ int ipmi_create_user(unsigned int          if_num,
+>>   	*user = new_user;
+>>   	return 0;
+>>   
+>> -out_kfree:
+>> +out_dec:
+>>   	atomic_dec(&intf->nr_users);
+>> +out_kfree:
+>>   	srcu_read_unlock(&ipmi_interfaces_srcu, index);
+>>   	vfree(new_user);
+>>   	return rv;
+>> -- 
+>> 2.25.1
+>>
+> 
+> .
+> 
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+I see that you resolved this issue through code refactoring in the Linux 
+next tree. How do you plan to address it in the stable 6.6 tree?
 
---xha6jhnwhahixu33
-Content-Type: application/pgp-signature; name="signature.asc"
+--yiyang
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmgloYEACgkQ3SOs138+
-s6E9/Q//VNWMZH6vwHGacDuSUg00hKDi7gl3PJ0AYCQiBgDDJCF8JDvDLQ+Vs6EY
-sYjT1OcyHjjStOKsHWUCuCvnmvdRnRx+fzMMqqG9EnuYdKmPns+yxYcoJ06FcWq5
-0rzo7vlUdWWU/Jdy303cHALCxzFjSgJy64k5YWMLwMKHszjYdsM3Td+SANJQecNO
-yvI7CuSyw95OsK5zax4skuCYMRbit8clJK1mjvhbxdwGoBRVU+VevJNp28/dArL9
-Sib4Ue1HGyaV6Qf5hIID9OdjTEt04+cGdrotaIzpmpMP91FtJ14hlGCwXg9tHSpw
-24xytSZIxlfuvtcwlza87ezZgVSncli0OmMaOIagsR+9KgCtqXYycj7mklUrTgDe
-wmgR71PayVSWKPzUpJx/du8zrEIy4oheY0tbgf+gIOuLn1khzzJ2O9jABdDDKmBs
-4hB9Pi7FLsV5FFD5eeGhVGcxDvpbwEJ2huNx770kAoBCk8xnsTK3SolNV1Ws3B6x
-6UD8pohC/vXrNf5OkJ8jrgkVYfRLxNGGn1Snhu+acdoSt9RELBCQJlEf9Qy+mzdV
-JqcIu8ew+zbgbilDJZbssPg8Em/tf2Vcq73t8UNDcfzj1frR1i0FiZMuPskpBDSN
-mzkC2lELFs2XjcHyrXPERYj61dwsBn1FMO3ajF4J2c5N4x9O/os=
-=oqYJ
------END PGP SIGNATURE-----
-
---xha6jhnwhahixu33--
