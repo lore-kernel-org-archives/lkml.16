@@ -1,226 +1,237 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011016.outbound.protection.outlook.com [40.107.130.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B486D1E7C12;
-	Thu, 15 May 2025 14:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747320112; cv=none; b=bWpR1kerlxAP/q8OUEgoOEpLxS2emj06hO+ztb7yc8AeJNZ+paEhvzBAVwdRkKW/IWS3JLREskXYOP5QhygHufbRns4Icj3zYr7/psqa7W08tI/KMCiLT56TnBojRgCKhwWjZsQsZPCg7Ba9Sd85/YCYnpXUwxRnBYTOBPGoomA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747320112; c=relaxed/simple;
-	bh=GQKD8W+HfoucYlyeLM5Jc8z1Le5x9+RIie3hPdXwux0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hs0cqmdU/UXjTzSlTFWlOpyVAksF2j+NBVOE5XYHBXEZziXSQNJQ0g+Nw97/VH3qOiq6NmlfOzJUJO9qChuHwCGtpSzeahEVmdyvHlCJd7nEn5UFN6vE79zb7QuKP+A6HOIP6T9SqcBHM7yR5FDLbzp+hp6kv8QvQfnFMhWVX9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q2IStRE9; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFDA51E0DFE
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:42:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747320138; cv=fail; b=KQAzxRSUXODOvlH6xpsuWwo0e87+v/MqzbM/c3AVp0gPsTbA+G48nZpKSSGTsO1rHjoa5VKRyR0pEW5kPpM5PxcLkhwqx+imXQseV+w2jJ6HHKNDch5mIX7kthT7YrprCA4C8R9i/gRV8E9TJp5ilRy4DdQ1cP6HxK8U/cxkpzY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747320138; c=relaxed/simple;
+	bh=klXsN093VYRh+89l3FdC2CYFU6zlH4dYxLIyXNEO2mo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=peSEPA0UhpR9xjJhChYnPU3I9HSprc0xvaI723NiVOFDALVMOBXV5rZPW8zoQzmm9yi7tDZIfXCCPnniRU/D5Dp0wyejZwnW00yd7lMXhd0H0vbTHB6/HWV0o1deRx60r8L/42Pt4K9lfqkqEw3xaREIbB9LI9s3v27IoFYlFL8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kuka.com; spf=pass smtp.mailfrom=kuka.com; dkim=pass (2048-bit key) header.d=kuka.com header.i=@kuka.com header.b=AO3gAuvF; arc=fail smtp.client-ip=40.107.130.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kuka.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kuka.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q2IStRE9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D159C4CEE7;
-	Thu, 15 May 2025 14:41:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747320112;
-	bh=GQKD8W+HfoucYlyeLM5Jc8z1Le5x9+RIie3hPdXwux0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=q2IStRE9OVo793Krp2GyyQPHGpXBVkBxTuu3jAq5AXNOUhwhk5U5r+TB8IIllMw80
-	 oAnG5JrqHPZaTO6gtyUqM360tsG88DciDdz6Iti58UR1mZhap233iomIpO+UZHI6ow
-	 6WY7lO3B5XdjYzH+r/siRy1q0KJ5XtBR7gwCv46Q7f3MRAnVPvfuxYBH/yP7xRkQ/f
-	 lTqIjGWQppwBenKX7rMKhuTDUNJbw4rJa8A1FNWPeawbP/R2ZzqM+GDza3SJHJ6hkL
-	 NFhe1323PTrGGhk7+ytC1GMwImtcoSpSpDlPwX/brMk7uLx4yX03kfSazO5NyDFtQ6
-	 O4CaeqksDzJaQ==
-Message-ID: <66e377ea-4fd1-40dd-822b-081b56a3e155@kernel.org>
-Date: Thu, 15 May 2025 09:41:50 -0500
+	dkim=pass (2048-bit key) header.d=kuka.com header.i=@kuka.com header.b="AO3gAuvF"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oV+opyvWNUhZ21tAMu/kV0xVll8P3trMDvVxj05YvscezOCys2cueRcyj4AVjGNVQrN6jIdtXqDhlwVKv1Okum/dunBylYLlOjD21bmrZAI7XIzsNDzlCpMgfy9u+zTUG8TrgG1xjmzzZ6bH8mM24u0wjkg/CpRFYniRfg1trBcBTtQ0ntvTSwxUcPEbHVw3vJnfMQbrfwA4R95oqEhU87KAV93b3dk7wso1bfPYNf8fFG3gzBaiC1PySyo9nmpM7+kP9M5P1TD2njYnY8r6XPBuOyR7USbQCoMPOBhg823xCrwwtN08eZBEwKSMQPcvdXXL5/M5d3f+go1KEuC8Ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ax5CUbSsMlaYCgUX7w/x6n/ZaY9+J9wlT17WIg7xruQ=;
+ b=Yzc5cZ1D7/3CpjlCOf8xMMiTs+DFQG3bF1X6JO8O0kS5do7CDslxmvTVFd4Y+lPAZWKOm/btjLHZ3HmD6/+klqeD4WeW6dK0JeJFY9yWyMwJ7ldMlTq7uHJyA7qqnLmth+Ab9Q8vUScenaOw/EwwTN9qEzTDQGvKfs7f6ld7LfiuSnB7qR077BSWBNXHRqTybhcEMm4SDFKV8uoHgKe01bUfwxDjNeAh+1lMpd2O2XgPRoXDdeskXHI/+0aha5uk95uxjKe2/QuCGei4qwbjO2eojQX+h5j37noNNJv6x5i4v3O3qbZC6gsUf0cz+f9QIFjrfq3EtP2ifGHVO1nefQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=kuka.com; dmarc=pass action=none header.from=kuka.com;
+ dkim=pass header.d=kuka.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kuka.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ax5CUbSsMlaYCgUX7w/x6n/ZaY9+J9wlT17WIg7xruQ=;
+ b=AO3gAuvFWYSwu9yzYl5tHcPfZf5HtafhMyZSiICAr4PqJ1e3JEUx9R7C84mrk7h47WBclNRmNIMYCvOfippmXxbeV/sOROL4I4/OFwFKYcSPgjMe5KCBLL6LDQjroDcLh/M5Er07T9C3QEdxrAQslx8eMSQata6TIHdGejcycvJRjOF9iiHc7YRRmVfrQOn0pBgFagzXl2gvqlybWY4uAfUZ0XESQJs2Nh5SjFhi6kLOkBrTZSmG9Nk8JPWTZA2ut8lqsHXP2I9R105iLy7Ao1IvU5iVTJ9evYsmFQMb08AwP3VelMTfinUNz2EV2JSHPCANu9EN04k09Wfg0kLjlw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=kuka.com;
+Received: from VE1PR01MB5696.eurprd01.prod.exchangelabs.com
+ (2603:10a6:803:123::12) by PA4PR01MB7453.eurprd01.prod.exchangelabs.com
+ (2603:10a6:102:d6::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.32; Thu, 15 May
+ 2025 14:42:13 +0000
+Received: from VE1PR01MB5696.eurprd01.prod.exchangelabs.com
+ ([fe80::ac38:4740:6a66:b5ba]) by VE1PR01MB5696.eurprd01.prod.exchangelabs.com
+ ([fe80::ac38:4740:6a66:b5ba%5]) with mapi id 15.20.8722.027; Thu, 15 May 2025
+ 14:42:13 +0000
+Message-ID: <5bfcc692-3e71-4f3e-ad39-7ea77383f377@kuka.com>
+Date: Thu, 15 May 2025 16:42:12 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: madvise: make MADV_NOHUGEPAGE a no-op if !THP
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: James Houghton <jthoughton@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, yang@os.amperecomputing.com,
+ willy@infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250508-madvise-nohugepage-noop-without-thp-v1-1-e7ceffb197f3@kuka.com>
+ <CADrL8HVja-8J1vcW0RLbsJVaLQENwo_LJ2mTj10uHeV06STxMQ@mail.gmail.com>
+ <2044a883-d80d-4673-971d-d46f47532680@kuka.com>
+ <59165861-b6b5-4b10-8b04-f33c51a2debe@lucifer.local>
+Content-Language: en-US
+From: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
+In-Reply-To: <59165861-b6b5-4b10-8b04-f33c51a2debe@lucifer.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR2P281CA0107.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:9c::10) To VE1PR01MB5696.eurprd01.prod.exchangelabs.com
+ (2603:10a6:803:123::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] PCI: Prevent power state transition of erroneous
- device
-To: Denis Benato <benato.denis96@gmail.com>, Raag Jadav <raag.jadav@intel.com>
-Cc: rafael@kernel.org, mahesh@linux.ibm.com, oohall@gmail.com,
- bhelgaas@google.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- lukas@wunner.de, aravind.iddamsetty@linux.intel.com
-References: <20250504090444.3347952-1-raag.jadav@intel.com>
- <7dbb64ee-3683-4b47-b17d-288447da746e@gmail.com>
- <384a2c60-2f25-4a1d-b8a6-3ea4ea34e2c2@kernel.org>
- <350f35dd-757e-459f-81f7-666a4457e736@gmail.com>
- <aCXW4c-Ocly4t6yF@black.fi.intel.com>
- <54a46e8a-1584-4282-b3a6-09f22e18d4a8@gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <54a46e8a-1584-4282-b3a6-09f22e18d4a8@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VE1PR01MB5696:EE_|PA4PR01MB7453:EE_
+X-MS-Office365-Filtering-Correlation-Id: a295b6fa-fbfc-4336-6cab-08dd93beae4c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bnpwWmNYSkRSRmdwTkRIWTBiaXN2YXZRYzM3TkZ5YVNwNHlIOEZVdml1dXI2?=
+ =?utf-8?B?WWRGTDBGOFRXa0QzUmhrNlUzaFZsMTlFNkpqbnB4VFRNSHMvbEhWVWxNaG1F?=
+ =?utf-8?B?SHVKbDlRbUxlZ1BaUDlwcXdNWHpUdThXbnpSNVhKRG1PU1V6cFJ1R2s3NklC?=
+ =?utf-8?B?WWtSN1RzWnRNRytGejB1djZBanlQaEJIbFNBOGxLcUNMZDhNMTUwckxqZnZw?=
+ =?utf-8?B?bmZ4SGNGK3ZrNDQ3N2xuM1NZai9ORGR3UDQ4MnYzNWQ2NHZ5UnltTjRqcVBw?=
+ =?utf-8?B?a0poQlVrK1M1QVQ0L0ZhbVlCcGhQNjdla0FyeDBkNGNHK2x2b2tNNGZkWm5B?=
+ =?utf-8?B?ejdoeCtyOExJenZzZUc1M0Q5aWQ4V1dXSHViZVV0Wms3Vm9NblptdDNudzFZ?=
+ =?utf-8?B?STB1cXNDcHc4QWsyZVArY0x3czZyVmRLQWtjOStjQ25FRlA2S0JvNVIzY3Ix?=
+ =?utf-8?B?S0hUbVZha2E2UkhoVG90NHlZSWFhSDBONFBPWGdmQXJtYTVxNHdQMXlVc3Ny?=
+ =?utf-8?B?Y25maUZUUXVvbzREMDdmaE5nNXZOMi83V09lcmtjQms4R2JvOGZ2cGpWdThQ?=
+ =?utf-8?B?dGhYd1Nua21JdTlOVWRpd1JibzZYbnJUckk4dDJDUkdIaEJIRXBlcGI2WnVL?=
+ =?utf-8?B?NVdLdWdadSt6TTJWWVRiRVZ0RkNPZERoMFhCc1YxaVlTb1RRV3V5bmJSeXRm?=
+ =?utf-8?B?cEwyVlAzUjVpaTdwQUdEenNQYS9BTWdqeGFqWm5sM3BrSVdQa090SjFDaW45?=
+ =?utf-8?B?QWZ5Y2l5VTFLS01SbDd3anpaSnpQUEZkZUVLSGhiYllzaGxJeVdaNHMxZXNX?=
+ =?utf-8?B?bDZ1c2hjaUlvaE1EOWpKbk5UQmZYNnZlcnFzQXo2MjRoRVRWc1dKRVZrbXBv?=
+ =?utf-8?B?aEorbmhSdUtKZWhjOUJrK05zQm5sVzNabCs0enJyU1N5K0Juclc0MnRka0Rk?=
+ =?utf-8?B?V0doazNYTC96d2c1cFcyM3d2cmhpRFZlaFpXOFZtd3JtbWxua0tsZmhFa2xh?=
+ =?utf-8?B?Y3lwYjZaeFJjVXhaQ0hObVpQaFlQZ2lKZmMxTWxhb24xajh4TEhMWHVoczRX?=
+ =?utf-8?B?ejZaTzhkNXl3OTdRaDVNdno0ZnU0OWF3T1VieG9SeGNaU2tRU3VCc01MUzZz?=
+ =?utf-8?B?OFQ2dXhHNlNYN1Fxc2g1dkZiTEpJQkNxMVFJekVBb1pzWUV5L2g1dldPeWZS?=
+ =?utf-8?B?QVNmRmt1cHBwcHNjSVJhMWZUT1J0bXZ4Um1FT1NSU3ZaQ0RWVmthU3h2SnM1?=
+ =?utf-8?B?bzk5bk1TaG9WSFhTTlUzdC9LTDR1UVVpQmtUUXFXbEVCZGZsM3QxcWhVWFlx?=
+ =?utf-8?B?czZ0OW4wNU9Pa3ladVplYkFtQmtLQkpYbURmSHpDaUlhMlYwR3JVWGJ6ZlV6?=
+ =?utf-8?B?YmFDWWRtUC9SbkFxejE3SVBwb1NuQ210ejJyUWx4d3JCZUwxbWdNVkxCRzVt?=
+ =?utf-8?B?TlF1WTUvT0NGb0pMdlY4QnZ5WmlhUW93azBoVUZoeGZsTjU3cE9GS3RlTEJP?=
+ =?utf-8?B?Uld4TG5VV0FQT1hZQ3crbGxHOUZ3bThMUmtqc1RaTFcvejhxSVlZVC9uRUNo?=
+ =?utf-8?B?VEdHNmpZZUtoTUJPVlU1cm5MUVJ5by9uUE4vTndZYXluTlJSdkEvT1E5aGZI?=
+ =?utf-8?B?Tk5LeFc0L0JkcG9XZFR0QlVuM1FiQk1oNnpObC9qeENPd0g3eWJmUmhDcnFq?=
+ =?utf-8?B?VjlLV3RCU24zWUlXakdtRXJYNk9VbnNrbythQjVFeElnNnpRU2k2Q3hHeHgz?=
+ =?utf-8?B?ZW5HelFHNHpzWTZrUk5RTExwZzN5bWgveVNKOGcxMFJheDFaY3ExeTRmVEdw?=
+ =?utf-8?B?eGNZT3BYQTF1Qy9yNTJCNUR4TWZ1WXQ5MlNzZ3d2YlNNaVJOMTdoQ0FBdEZj?=
+ =?utf-8?B?WnV0WThkNmRLaGwvdzJYUWk3SkhwSGJOdWp1U2NpNUJ4VklwQlRMbERMVmd6?=
+ =?utf-8?Q?Bwmy+wXssA4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR01MB5696.eurprd01.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NVgwdXF0RE1PU3NROExXZE4wK2ZYZVNQbzdlbWQ0ZWFXR3VVKzdBNExGKzVi?=
+ =?utf-8?B?aTJKT2ZBRVlMb1crTEsvUVVES0RVY0NZSm9IUXArcGRXWVVVT3hzUVM2RHZa?=
+ =?utf-8?B?dWhqa1ltaHFNWkd1blJQTm5Pa2NqdFBacVlaZFRuTmxaQXVBYmQzaU5hRE5w?=
+ =?utf-8?B?YTVnRWo0WHNuOUhvUXdaZnJFeENNMGZweXpvMlhqaDhiWjYzTUtoazNOS1hY?=
+ =?utf-8?B?U0tlUGJ5RXJpeDdtMWZvMlNINlhIcDJmSW10cEVGa2ErOVltbUw3OHFNRUdq?=
+ =?utf-8?B?R0t6SU52a3ZVTWF4cXl4U2hhUVFBcjRLaEYzTi9aLytKSE8rQTQ0bHB2Sjds?=
+ =?utf-8?B?bWU2VmdYcjNLbWVNNXNuTHpldGZwaDBkc2MxUno3MzM0cW41ZHBFWUZOelJy?=
+ =?utf-8?B?cjJqZjA4SlBVUkxUaVJyT2dNeDErdndPb1doMXhvNVd5eitCMlhyY1AwVHpV?=
+ =?utf-8?B?ZzVaQzErcFNSRk5sVUd5MlVoMmxUWmhiKzJFbVVlL3B4SFV1T2VHLzJwb2VL?=
+ =?utf-8?B?SzBnSjVWNjBoTmpsYnc0ZXUyOHBQODJ3cVF4VGFOR0R0Mm4zbHFjekszSVRw?=
+ =?utf-8?B?czNabUdMY0NGSWR6aXBjZElKdXZNOTNOcGtONFR4M2dQSEJTT2lKektmd1F4?=
+ =?utf-8?B?OEY0eENac1QycGFOU1dxb3l0REpjUkYyNnZhaXp4b2RIYjhNMmtGUnBoMGlq?=
+ =?utf-8?B?eVNYMEptdkNrTURFYlJ2dFFvQXBkbk1oTVBOR25RZkVhNTlvcTZ3SDZVcGdi?=
+ =?utf-8?B?QjhlNFRJQmJZUEZMUjVsMEozbUtQS3pGWE5Vb1d1TmJSYVV1aEd3bHlGSGFh?=
+ =?utf-8?B?UkNEVFJlYW9nL2wvTFE0NnVmNlZ3eTJiOTc0UFJzOGpzZ0xXMlV1aEV4WWVG?=
+ =?utf-8?B?WFdJZEF6YXpQUnVKcU4xMGdTdUpUbFlxWHZ1dENhQS80cVN0YXY2d3pJNzY5?=
+ =?utf-8?B?cExXcjlrSFpiM3UyeklIUkhGM1NVR20wajV0K000dGIza0gwR2lDbDB2akVT?=
+ =?utf-8?B?SjdSS0txVnkveDFjVGl4aVh5UXNwTXFjT0dBZ25SRFZELzFYTVFEbmhnQjJO?=
+ =?utf-8?B?SC9Zd1ZXVjVCMG5qdHF5L2d3NjRhZGN2aklHNVV2dDRGd3BDZFI3T3poRi9E?=
+ =?utf-8?B?NWtYWllGQitjT0pTUTV6dXBSTCt2Q3JWNlBIc0o4a000R2xZWm9hajhOb1JH?=
+ =?utf-8?B?dFc0azRnOFpNbzhlaTM0eGh5VmZDbUpBMTBQTnZFcDl6VHRYbG8yZ09OSmtG?=
+ =?utf-8?B?djc4N1cyVDNocUo0NTF5NTBNL2NHSTkyL2lUTlg1Yi9YeHN5Umk3L2JTSG1w?=
+ =?utf-8?B?elN6aGJOOHVScmVrNVViMlZ5TmhZMUVibE1JVy9qWG1reXQ0dUQ2LzFLTW5X?=
+ =?utf-8?B?aGJIT2dFQXQyY3lTenJlbmRLbzAxOFJINkNFMjVvSnlsNlVxVmhtYkVYTFZG?=
+ =?utf-8?B?U0lTVzcvVGxIMXRsOUZSUE9qR3NwTkhwUHBMclRkMDZVUHZKNTN5ci84VHhR?=
+ =?utf-8?B?ZHlKWXdZdkREamxpcDNHQ3pNSXlwOXFET21IU0R4aUhESExteXU0b0EwZVVl?=
+ =?utf-8?B?Y1YxT3krUGNVSWU0SnVDY09EdEorcjhDb1lQanExUDI1Zld1Smh1L2ZVVzdq?=
+ =?utf-8?B?c3hlTlRMZUZ5cjNlNDNpMWpoazQyaUtkYUdyM0RFd2F5QittK25TemlrUjda?=
+ =?utf-8?B?ZC9TU1J6WTVRY0dLUE91Z3lsdVZQV0JmekY3UFMzSVl6QUJpRDYyckVwK3Fa?=
+ =?utf-8?B?SUsxbkpta044ckZsanBQdk5QdVpTVEsreGxiTjFOMzlrdUZIaWZabVZOalNz?=
+ =?utf-8?B?M01CbndyZzRSSU9qN1M2aGJrWjJDTzkvYTJjSEdtaWMvVWU4Q29BTEhyU0ZZ?=
+ =?utf-8?B?Y0pzRG9janpmdnhEdUpEekRnZndFL1Erbk5aRXl0bEFaQytvNDh0Z2FQRUlW?=
+ =?utf-8?B?ajdOam1OMTd1d0JFT1Z5TjFjT3NiNkt1ZVJUbXRaaXNEQ05yQ1lkazRzVno3?=
+ =?utf-8?B?MGM5elBCUUU3QU1JWE4zWjNIUDRTajNyYzN6Q0JhZmU0dTVYbWJGd1h3SVdv?=
+ =?utf-8?B?TUVvVjh3VjhoRzFuNkpRSmd1RCtZeXhpMFJybkFEUU9YeFFCay9tVVRGVmN3?=
+ =?utf-8?B?Y3FETkljK1VVTHRmTGZTVWVEZTErWmYvYnYxeWJCcDFpOGtYSHVqQ3BPSGhi?=
+ =?utf-8?Q?22pExccuSJuBiM9pNExlBqE=3D?=
+X-OriginatorOrg: kuka.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a295b6fa-fbfc-4336-6cab-08dd93beae4c
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR01MB5696.eurprd01.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2025 14:42:13.5303
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5a5c4bcf-d285-44af-8f19-ca72d454f6f7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: E2+iMafwc8MYENhV+3D6cAx0Vu6+e0WGSZi7b97gBorJxTUmkH9mrYZwaPRHL+zfoEVe8uZ2OYanGXf6bAmLf+9/aHG770Hlrw/xJzIQYp4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR01MB7453
 
-On 5/15/2025 9:11 AM, Denis Benato wrote:
+On 5/15/2025 3:03 PM, Lorenzo Stoakes wrote:
+> Hi Igancio,
 > 
-> On 5/15/25 13:58, Raag Jadav wrote:
->> On Wed, May 14, 2025 at 11:25:36PM +0200, Denis Benato wrote:
->>> On 5/14/25 21:53, Mario Limonciello wrote:
->>>> On 5/14/2025 11:29 AM, Denis Benato wrote:
->>>>> Hello,
->>>>>
->>>>> Lately I am experiencing a few problems related to either (one of or both) PCI and/or thunderbolt and Mario Limonciello pointed me to this patch.
->>>>>
->>>>> you can follow an example of my problems in this [1] bug report.
->>>>>
->>>>> I tested this patch on top of 6.14.6 and this patch comes with a nasty regression: s2idle resume breaks all my three GPUs, while for example the sound of a YT video resumes fine.
->>>>>
->>>>> You can see the dmesg here: https://pastebin.com/Um7bmdWi
->> Thanks for the report. From logs it looks like a hotplug event is triggered
->> for presence detect which is disabling the slot and in turn loosing the device
->> on resume. The cause of it is unclear though (assuming it is not a manual
->> intervention).
-> No manual intervention: I do "sudo systemctl suspend", wait for the led pattern of sleep and press space. Nothing more than this.
+> I can package this up in a series with the fix below and with the
+> appropriate tags (signed-off by you) to enforce the correct ordering
+> between the s390 patch and this one if that works for you?
 > 
-> I also noticed that with this patch, while sleeping, the amd gpu has fans on, while this is not the case sleeping without the patch.
+> Let me know if my sending this revised patch in series with these changes
+> and your signed-off works for you?
+
+Hi Lorenzo,
+
+Yes, that's fine :) Thanks!
+
+> Cheers, Lorenzo
 > 
->>>>> I will also say that, on the bright side, this patch makes my laptop behave better on boot as the amdgpu plugged on the thunderbolt port is always enabled on power on, while without this patch it is random if it will be active immediately after laptop has been turned on.
->>>>>
->>>> Just for clarity - if you unplug your eGPU enclosure before suspend is everything OK?  IE this patch only has an impact to the USB4/TBT3 PCIe tunnels?
+> On Thu, May 15, 2025 at 09:03:19AM +0200, Ignacio Moreno Gonzalez wrote:
+>> On 5/14/2025 10:15 PM, James Houghton wrote:
+>>> On Thu, May 8, 2025 at 3:20 AM Ignacio Moreno Gonzalez via B4 Relay
+>>> <devnull+Ignacio.MorenoGonzalez.kuka.com@kernel.org> wrote:
 >>>>
->>> Laptop seems to enter and exit s2idle with the thunderbolt amdgpu disconnected using this patch too.
+>>>> From: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
+>>>>
+>>>> VM_NOHUGEPAGE is a no-op if CONFIG_TRANSPARENT_HUGEPAGE is disabled. So
+>>>> it makes no sense to return an error when calling madvise() with
+>>>> MADV_NOHUGEPAGE in that case.
+>>>>
+>>>> Suggested-by: Matthew Wilcox <willy@infradead.org>
+>>>> Signed-off-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
+>>>> ---
+>>>> https://lore.kernel.org/linux-mm/20250502-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v1-1-113cc634cd51@kuka.com
+>>>>
+>>>> Here it is presented as a separate thread to avoid mixing stable and
+>>>> non-stable patches.
+>>>>
+>>>> This change makes calling madvise(addr, size, MADV_NOHUGEPAGE) on !THP
+>>>> kernels to return 0 instead of -EINVAL.
+>>>> ---
+>>>>  include/linux/huge_mm.h | 5 +++++
+>>>>  1 file changed, 5 insertions(+)
+>>>>
+>>>> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+>>>> index e893d546a49f464f7586db639fe216231f03651a..5fca742dc5ba784ffccea055b07247707d16cc67 100644
+>>>> --- a/include/linux/huge_mm.h
+>>>> +++ b/include/linux/huge_mm.h
+>>>> @@ -509,6 +509,8 @@ bool unmap_huge_pmd_locked(struct vm_area_struct *vma, unsigned long addr,
+>>>>
+>>>>  #else /* CONFIG_TRANSPARENT_HUGEPAGE */
+>>>>
+>>>> +#include <uapi/asm/mman.h>
+>>>> +
+>>>>  static inline bool folio_test_pmd_mappable(struct folio *folio)
+>>>>  {
+>>>>         return false;
+>>>> @@ -598,6 +600,9 @@ static inline bool unmap_huge_pmd_locked(struct vm_area_struct *vma,
+>>>>  static inline int hugepage_madvise(struct vm_area_struct *vma,
+>>>>                                    unsigned long *vm_flags, int advice)
+>>>>  {
+>>>> +       /* On a !THP kernel, MADV_NOHUGEPAGE is a no-op, but MADV_NOHUGEPAGE is not supported */
 >>>
->>> Probably this either unveils a pre-existing thunderbolt bug or creates a new one.  If you need assistance in finding the bug or investigating in any other mean let me know as I want to see this patch merged once it stops regressing sleep with egpu.
->> If you're observing this only on thunderbolt port, one experiment I could
->> think of is to configure the port power delivery to be always on during suspend
->> and observe. Perhaps enable both thunderbolt and PCI logging to help figure out
->> what's really happening.
+>>> Do you mean "but MADV_HUGEPAGE is not supported"? Just want to make
+>>> sure; it seems like no one else has asked about this yet.
+>>>
 >>
-> I have compiled the kernel with CONFIG_PCI_DEBUG=y and added to kernel cmdline "thunderbolt.dyndbg=+p pm_debug_messages" and here is the dmesg of a failed resume: https://pastebin.com/RsxXQQTm
-
-What's really notable to me about this log is these two lines:
-
-amdgpu 0000:09:00.0: PCI PM: Suspend power state: D0
-amdgpu 0000:09:00.0: PCI PM: Skipped
-
-The callpath is basically:
-
-pci_pm_suspend_noirq()
-->pci_prepare_to_sleep()
-->->pci_set_power_state()
-->->->__pci_set_power_state()
-->->->->pci_set_low_power_state()
-
-So the new pci_aer_in_progress() flags an error here and causes the dGPU 
-in the eGPU enclosure to not go to suspend.
-
-A simple W/A to ignore this could be to ignore when 
-pm_suspend_target_state is not PM_SUSPEND_ON in pci_aer_in_progress(), 
-but it sounds like it's masking a problem.
-
-> 
-> Please let me know if this is not detailed enough, and how to enable more logging if you need it.
->>> I will add that as a visible effect entering and exiting s2idle, even without the egpu connected (so when sleep works), makes the screen backlight to turn off and on rapidly about 6 times and it's a bit "concerning" to see, also I have the impression that it takes slightly longer to enter/exit s2idle.
->> Yes, I'm expecting a lot of hidden issues to be surfaced by this patch. Since
->> you've confirmed the machine itself is working fine, I'm hoping there are no
->> serious regressions.
-> Except that for thunderbolt nothing major stands out, but once that is solved I would conduct a test about s2idle power consumption because, as noted above, the amdgpu remains on during sleep and it might not be the only component.
-> 
-> Anyway thanks for your work and if you need more info just ask.
-> 
-> Denis
-> 
->> Raag
+>> Yes, this is a typo. It should be MADV_HUGEPAGE. Thanks!
 >>
->>>> The errors after resume in amdgpu /look/ like the device is "missing" from the bus or otherwise not responding.
->>>>
->>>> I think it would be helpful to capture the kernel log with a baseline of 6.14.6 but without this patch for comparison of what this patch is actually causing.
->>>>
->>> I have a dmesg of the same 6.14.6 minus this patch ready: https://pastebin.com/kLZtibcD
->>>>> [1] https://lore.kernel.org/all/965c9753-f14b-4a87-9f6d-8798e09ad6f5@gmail.com/
->>>>>
->>>>> On 5/4/25 11:04, Raag Jadav wrote:
->>>>>
->>>>>> If error flags are set on an AER capable device, most likely either the
->>>>>> device recovery is in progress or has already failed. Neither of the
->>>>>> cases are well suited for power state transition of the device, since
->>>>>> this can lead to unpredictable consequences like resume failure, or in
->>>>>> worst case the device is lost because of it. Leave the device in its
->>>>>> existing power state to avoid such issues.
->>>>>>
->>>>>> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
->>>>>> ---
->>>>>>
->>>>>> v2: Synchronize AER handling with PCI PM (Rafael)
->>>>>> v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
->>>>>>       Elaborate "why" (Bjorn)
->>>>>>
->>>>>> More discussion on [1].
->>>>>> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
->>>>>>
->>>>>>    drivers/pci/pci.c      | 12 ++++++++++++
->>>>>>    drivers/pci/pcie/aer.c | 11 +++++++++++
->>>>>>    include/linux/aer.h    |  2 ++
->>>>>>    3 files changed, 25 insertions(+)
->>>>>>
->>>>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>>>>> index 4d7c9f64ea24..25b2df34336c 100644
->>>>>> --- a/drivers/pci/pci.c
->>>>>> +++ b/drivers/pci/pci.c
->>>>>> @@ -9,6 +9,7 @@
->>>>>>     */
->>>>>>      #include <linux/acpi.h>
->>>>>> +#include <linux/aer.h>
->>>>>>    #include <linux/kernel.h>
->>>>>>    #include <linux/delay.h>
->>>>>>    #include <linux/dmi.h>
->>>>>> @@ -1539,6 +1540,17 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool
->>>>>>           || (state == PCI_D2 && !dev->d2_support))
->>>>>>            return -EIO;
->>>>>>    +    /*
->>>>>> +     * If error flags are set on an AER capable device, most likely either
->>>>>> +     * the device recovery is in progress or has already failed. Neither of
->>>>>> +     * the cases are well suited for power state transition of the device,
->>>>>> +     * since this can lead to unpredictable consequences like resume
->>>>>> +     * failure, or in worst case the device is lost because of it. Leave the
->>>>>> +     * device in its existing power state to avoid such issues.
->>>>>> +     */
->>>>>> +    if (pci_aer_in_progress(dev))
->>>>>> +        return -EIO;
->>>>>> +
->>>>>>        pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
->>>>>>        if (PCI_POSSIBLE_ERROR(pmcsr)) {
->>>>>>            pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
->>>>>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->>>>>> index a1cf8c7ef628..4040770df4f0 100644
->>>>>> --- a/drivers/pci/pcie/aer.c
->>>>>> +++ b/drivers/pci/pcie/aer.c
->>>>>> @@ -237,6 +237,17 @@ int pcie_aer_is_native(struct pci_dev *dev)
->>>>>>    }
->>>>>>    EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
->>>>>>    +bool pci_aer_in_progress(struct pci_dev *dev)
->>>>>> +{
->>>>>> +    u16 reg16;
->>>>>> +
->>>>>> +    if (!pcie_aer_is_native(dev))
->>>>>> +        return false;
->>>>>> +
->>>>>> +    pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &reg16);
->>>>>> +    return !!(reg16 & PCI_EXP_AER_FLAGS);
->>>>>> +}
->>>>>> +
->>>>>>    static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
->>>>>>    {
->>>>>>        int rc;
->>>>>> diff --git a/include/linux/aer.h b/include/linux/aer.h
->>>>>> index 02940be66324..e6a380bb2e68 100644
->>>>>> --- a/include/linux/aer.h
->>>>>> +++ b/include/linux/aer.h
->>>>>> @@ -56,12 +56,14 @@ struct aer_capability_regs {
->>>>>>    #if defined(CONFIG_PCIEAER)
->>>>>>    int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
->>>>>>    int pcie_aer_is_native(struct pci_dev *dev);
->>>>>> +bool pci_aer_in_progress(struct pci_dev *dev);
->>>>>>    #else
->>>>>>    static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->>>>>>    {
->>>>>>        return -EINVAL;
->>>>>>    }
->>>>>>    static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
->>>>>> +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return false; }
->>>>>>    #endif
->>>>>>      void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>>>> +       if (advice == MADV_NOHUGEPAGE)
+>>>> +               return 0;
+>>>>         return -EINVAL;
+>>>>  }
+>>>
+>>
+> 
 
