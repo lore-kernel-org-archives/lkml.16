@@ -1,112 +1,61 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689EF298CB5
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64312222CB;
+	Thu, 15 May 2025 12:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747312561; cv=none; b=qGAtwnX5xUOxXCgYY96ehiu0LvBFJKPZrZjXlnY++QXhP3rpsE/T1gmZQYtgzadoqars2wlJvIPvvIl14F/IlwozPb/L2iVWTlhZPNzBZueY8RNfP+dJRkbFj/dhCExooQfAWRtpWGbpMfKyET6OvGOHTMvvZ1ROIYs22cr0qnQ=
+	t=1747312582; cv=none; b=pUR+AlO/Cg+VnC7RGLUpBRHnROmkkO7d7rQ9gAfiS7ka81N5fyuzG2RbzF1mxYYudY30n0GZZMrhoiputHcbpD3UXkL85+B5gjcqVr2GFjmQlDTRpcZ452g4q6uDW/1zT+DQBMR1PA5Q1Nne6XBxRk4TJTqWi95twKuF+ajVlw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747312561; c=relaxed/simple;
-	bh=tMetwyoL7MO+iOcOlC9mb58Fnfsph+qqYQSZDiowRrA=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=d9MEnharT5bruDvxYn5Z0MuTGtqCWCZZK3KL7pDiSDLYaUVupmTLMj1chcix5KgWya7rqPgspvK+ZVLC7vb/9zdFJEwwtuRNkShMFtJYasn9+YPXZbcoVkbsga0alEJdRPB4WLCHaNlGmhOlB249Yb026nSCgrpAgPP/567jx0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZyqSY3sJvz5B1Gq;
-	Thu, 15 May 2025 20:35:57 +0800 (CST)
-Received: from njy2app04.zte.com.cn ([10.40.12.64])
-	by mse-fl1.zte.com.cn with SMTP id 54FCZoE7025362;
-	Thu, 15 May 2025 20:35:50 +0800 (+08)
-	(envelope-from long.yunjian@zte.com.cn)
-Received: from mapi (njy2app01[null])
-	by mapi (Zmail) with MAPI id mid201;
-	Thu, 15 May 2025 20:35:54 +0800 (CST)
-Date: Thu, 15 May 2025 20:35:54 +0800 (CST)
-X-Zmail-TransId: 2af96825dfaaffffffffa32-c85aa
-X-Mailer: Zmail v1.0
-Message-ID: <20250515203554564-j1jBXUXR6bdiN6zARicC@zte.com.cn>
+	s=arc-20240116; t=1747312582; c=relaxed/simple;
+	bh=GWuWXPf+Al/gDQ1STMocGcMVo0JocNTWRjrrAr0INos=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qx3mpvbXWZMxF5bIPefRH4eww3LmCSPQOd0Gy7/NV7rwvaloDCuRwAbUjA8yPWwiMxpaVFz0IjDh4LWaCoDcpE5og2F52V8+O5TEsXM+6ozgE8SfB6V6Rql0YXue1UsZGa5fN6ssD0qa8dygJdiRpcD9mJyryvbX73M+6ecEew8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ri8X1V/R; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ri8X1V/R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 835D6C4CEEF;
+	Thu, 15 May 2025 12:36:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747312582;
+	bh=GWuWXPf+Al/gDQ1STMocGcMVo0JocNTWRjrrAr0INos=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ri8X1V/RAdNFG4RQr0G9E9/8sZSuKU9+1lsAQ6So3eV41+iKfVhM1KOqJbnednF//
+	 QNtzlq9JEhMtCzPX5wFWsboKTaExaGauwdrSwn7pq8d9Zf4e04mGGvimOhq06ilo+I
+	 VIQqcK50nMp84eYDtF1TbJSRNlzt7Fp0o7QnCroVONqaZuHt8QqPgAWGLF0CV47X/+
+	 sGB+OU+jvV6LNsSmZdBhp70pxwQKI8/LqYXt0yOb+ycJWCFOJNBHYooYblDTMu6zA4
+	 2APICHdsyF/swqhGENdFENXhULH7KA3ZxsUoX7aL839Rv3WIBuvWzXcK2Y5zajYkkN
+	 8L31CODkjLfBQ==
+Message-ID: <919e357c-729e-45a9-82ab-6c2fdaa31288@kernel.org>
+Date: Thu, 15 May 2025 14:36:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <long.yunjian@zte.com.cn>
-To: <hjc@rock-chips.com>
-Cc: <heiko@sntech.de>, <andy.yan@rock-chips.com>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <fang.yumeng@zte.com.cn>, <mou.yi@zte.com.cn>, <xu.lifeng1@zte.com.cn>,
-        <ouyang.maochun@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIXSBkcm0vcm9ja2NoaXA6IFVzZSBkZXZfZXJyX3Byb2JlKCkgdG8gc2ltcGxpZnkgY29kZQ==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 54FCZoE7025362
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6825DFAD.000/4ZyqSY3sJvz5B1Gq
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: ata: Convert apm,xgene-ahci to DT schema
+To: "Rob Herring (Arm)" <robh@kernel.org>, Niklas Cassel <cassel@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250512215731.4178567-1-robh@kernel.org>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <20250512215731.4178567-1-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Yumeng Fang <fang.yumeng@zte.com.cn>
+On 5/12/25 23:57, Rob Herring (Arm) wrote:
+> Convert the APM X-Gene AHCI SATA Controller to DT schema format. It's a
+> straight-forward conversion.
+> 
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-In the probe path, dev_err() can be replaced with dev_err_probe()
-which will check if error code is -EPROBE_DEFER and prints the
-error name. It also sets the defer probe reason which can be
-checked later through debugfs.
+Applied to for-6.16. Thanks !
 
-Signed-off-by: Yumeng Fang <fang.yumeng@zte.com.cn>
----
- drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-index f737e7d46e66..acb59b25d928 100644
---- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-@@ -213,17 +213,13 @@ static int rockchip_hdmi_parse_dt(struct rockchip_hdmi *hdmi)
-
- 	if (IS_ERR(hdmi->ref_clk)) {
- 		ret = PTR_ERR(hdmi->ref_clk);
--		if (ret != -EPROBE_DEFER)
--			dev_err(hdmi->dev, "failed to get reference clock\n");
--		return ret;
-+		return dev_err_probe(hdmi->dev, ret, "failed to get reference clock\n");
- 	}
-
- 	hdmi->grf_clk = devm_clk_get_optional(hdmi->dev, "grf");
- 	if (IS_ERR(hdmi->grf_clk)) {
- 		ret = PTR_ERR(hdmi->grf_clk);
--		if (ret != -EPROBE_DEFER)
--			dev_err(hdmi->dev, "failed to get grf clock\n");
--		return ret;
-+		return dev_err_probe(hdmi->dev, ret, "failed to get grf clock\n");
- 	}
-
- 	ret = devm_regulator_get_enable(hdmi->dev, "avdd-0v9");
-@@ -573,17 +569,13 @@ static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
-
- 	ret = rockchip_hdmi_parse_dt(hdmi);
- 	if (ret) {
--		if (ret != -EPROBE_DEFER)
--			dev_err(hdmi->dev, "Unable to parse OF data\n");
--		return ret;
-+		return dev_err_probe(hdmi->dev, ret, "Unable to parse OF data\n");
- 	}
-
- 	hdmi->phy = devm_phy_optional_get(dev, "hdmi");
- 	if (IS_ERR(hdmi->phy)) {
- 		ret = PTR_ERR(hdmi->phy);
--		if (ret != -EPROBE_DEFER)
--			dev_err(hdmi->dev, "failed to get phy\n");
--		return ret;
-+		return dev_err_probe(hdmi->dev, ret, "failed to get phy\n");
- 	}
-
- 	if (hdmi->phy) {
 -- 
-2.25.1
+Damien Le Moal
+Western Digital Research
