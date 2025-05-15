@@ -1,103 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073951B043A;
-	Thu, 15 May 2025 09:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583C4297B6A
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747301792; cv=none; b=i/WvCMXreIPshV6piwdJbg2F6c2dw+y2RMlKKMH/2N0NA741qurkJ0U0Ibpu26yBL0/adi/o2uu0WlGdieA2FgItoPi46rRhU6nDZBvUjTG0swzHTxGu6YFNqooypJcKTp7RY2rYPkR/VVGHTCdaKRNnrSgd8aurzn4IvMrEaFs=
+	t=1747301809; cv=none; b=XoFs9EjF5bKX8+PFw0r4iAJKC/R6P3Fi76z3Eyfk5RcT14DKZYmxGatzufgFZc4e0xwyh12Axy9we0h/ZrrjxosKHojYUGv42C1pMl4fgjDJCfjGlb0Ubhs+3mWjzl902nPwqb4tW8m2BOXvQ3vIsu60tUxKdecMs4hInQmksbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747301792; c=relaxed/simple;
-	bh=RNbOB4JssaWHI9LRCsaHw4fkLJsTr5HaZucQ0Gj185E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Mkc2vXloNNH6nfRIJ3CM+9bf3M/ctToo6EJpql8URnjM3Uxc1sYqs/hdIJvOaT7bj/sle6Kt8Ii+VJW2/DPEfen/0y+aBYT5vGcErBCXIAsYjH5DZc1ObvUlzHE0jrUZqHGoMfbWM2Qktqjb7wM3I1pqZHfJ6suVWp9H0GXntbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MkSkCvv/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747301809; c=relaxed/simple;
+	bh=djpDvvX/7HFh8gDgjiZXIm9sq02IazDn9C1NLqrTLqA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ck+YYEuM2Ms+TOZcZHt7A0ByjbHGrzjofuiGoZzYJTfvnkWZmhQ0hujHMBCH4Ey7ZgK8y6vPUXk2ZbKsGfheYuwIzVrVDZvbmixZfWVQxo/Cd1eDZ2Otlbh/4e+OqcWVf0YW8yM9wg6zPtgCKJJtl7lXiqavVUrbNXJoe/u2Z1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com; spf=pass smtp.mailfrom=futuring-girl.com; dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b=n5JDdPqi; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MkSkCvv/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC8F8C4CEED;
-	Thu, 15 May 2025 09:36:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747301791;
-	bh=RNbOB4JssaWHI9LRCsaHw4fkLJsTr5HaZucQ0Gj185E=;
-	h=From:Date:Subject:To:Cc:From;
-	b=MkSkCvv//G0bHIZ/pvx/W2loDBZtzmQB3ShRugy4ISTGqlHAmv/y+ri6AmYdxjz1+
-	 uuRtyO/jNbZOQtMpP8AfUYlQREHF7TeAlWwFjKCpUS7RolPif66sujI675DWdodO3U
-	 wcnWMCHPYuNpp2sq8DLeDWkA3TRkDgIqEcI8d5qokGAjIuaaMq+RgFWrSGjmIrSyDO
-	 bNWBLksEJzy5Utqdkl8qHQPOpP6fB1CgHJCl9/D+kfrW2V2MnFnSWBsowhkrh/YgyY
-	 zIytmKALyhfhzG1UcyIlGGlk/+OzoNLWhFrFer9PViKZ6MFC0O+Z0xV/L9Ki5FQiVb
-	 nkL56OvrUl88g==
-From: Mark Brown <broonie@kernel.org>
-Date: Thu, 15 May 2025 11:36:14 +0200
-Subject: [PATCH] selftests/mm: Deduplicate default page size test results
- in thuge-gen
+	dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b="n5JDdPqi"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22e4d235811so8944345ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 02:36:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=futuring-girl.com; s=google; t=1747301807; x=1747906607; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vsn3tSS0YIiAYkn/3PtEEaMquElK/Qt1xrI8n22o3uE=;
+        b=n5JDdPqiTuLhrMVcEJ5HpUOH8uneWrOv1ryIlOMNylRJKjXLv0Ix4XHHgsza0Pwxhp
+         U2ej+SEWw/ErMlkISpP0uWr13ux47iEOtsVqAOAGgkfwe2PQy8Z9pp6IMGFHLT/kANz5
+         1p6nNwTIxzrlbZ4DW3ViOSlRutY5n4gGP08Af2dGbCbgJ2Wrim2TmWScTHZG5MgnL+g4
+         FBAlNWUCDKeaaiQOHzbg3+9KksceckBuilPSV+muPc0haBJ2LlDh7CVH1krr36i07CQN
+         hvMIozMExgk9z2FkwRsH9QvsbYHRatYtmCQ8LYbzT4B4kttTCtW9f2DUiQy6h7VBRl7A
+         losA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747301807; x=1747906607;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vsn3tSS0YIiAYkn/3PtEEaMquElK/Qt1xrI8n22o3uE=;
+        b=BtK6CCw9b6U+xBm6mlUKMIc1HTh1o3nTIp+si7RM9sWDbaqNtatFfq9Wo/Z6GT+bkT
+         hXShjLtJ332qo+bLEewmI2NBsVR1wSP4GG9vWa3C2zrugX+qIBn/9YtUc8kx7Q8eRzY/
+         09dkhnT198BWc/Bcq2i+sxhWNNIwietthhQsjsZJhH5b1eNHOz9rLg+h4RGPNQvaj2Jr
+         UVv9NjIudkVSKwb0vy0qeH5CjOzs9E/t8Q5gEqeqL05kmnfJN5PRu0IyCwA2abh9EgjS
+         SRyTgNowJ8rwYnTHqgBJ3NQ8DY1yoOYHvsFII9bVewfukhD7+g12KXeQl1S0VhgJ9t/s
+         0krw==
+X-Forwarded-Encrypted: i=1; AJvYcCUxU5t8zxuP/uUwHp7wO0+ScDp4ug8Ow1fVuVBM6uUHaxf8eS1nuEZDYIHJN4pf3sV1poHajZR2/YkgGPQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFMum64Q9SSgR4PqVAE0bBDH7zwfcULtR5H2YidW1lOpHVzwNb
+	iP6icKf7W6/RzWYyA0+hCWhWPugQbHYQPSq1ZtflkAm2vbz0Im3+40CWKo85eFx0q+p7+9vZaqd
+	l3KzKBM+/r8HCDKoo1ep04GaHegR8+Z6fVanI0w==
+X-Gm-Gg: ASbGncvxabbjY7hArPXrSS2NoaVSOXLU1yrOAzqwKK0AH1HFTTqa+IOTOK1/sxF88ht
+	j5jj/z3i8+zaZxrAhMNq/cLdzIgvhJfNOy4FKnzkLTUa7gvI+msvLRYUdTEblUg5ZJbJT/XDUFD
+	A/wS0rzfJ8ItDC0RkCZ/5CxgGDRbZZRMUPaNcbzIqKMTc=
+X-Google-Smtp-Source: AGHT+IHjX0X5C3EUWrGSjnnmKk8PWbWMvSh1PDfyYwywMuB1EdID9s2hTSa4xV5KaOkCcMVL9ob0s0DSTPTzbHdCtvA=
+X-Received: by 2002:a17:902:da8b:b0:224:2717:7993 with SMTP id
+ d9443c01a7336-231981c916emr92027985ad.45.1747301807523; Thu, 15 May 2025
+ 02:36:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250515-selfests-mm-thuge-gen-dup-v1-1-057d2836553f@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAI21JWgC/x2MwQqEMAwFf0Vy3kAjuqK/InsQfWpgrdKoCMV/t
- 3gcmJlIhqAwarJIAaearj6BfDLq585PYB0SU+7y0pVSsOE/wnbjZeF9PpIwwfNwbFxB+sJV8nW
- 1UOq3gFGv993+7vsBjUNIs2sAAAA=
-X-Change-ID: 20250514-selfests-mm-thuge-gen-dup-7e1c40716091
-To: Andrew Morton <akpm@linux-foundation.org>, 
- Shuah Khan <shuah@kernel.org>
-Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1606; i=broonie@kernel.org;
- h=from:subject:message-id; bh=RNbOB4JssaWHI9LRCsaHw4fkLJsTr5HaZucQ0Gj185E=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoJbWbwn6i0obh2WWDI5f8olJqBS4gtUHQKPSiX
- fToM2oZTlKJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaCW1mwAKCRAk1otyXVSH
- 0GUXB/9JSb3quOlK8ePYtzQPVfMLMa8CQqWcFy/79iTsgLUtwboO0Q/raM2DX//eysClDbMKREz
- 8L6XmJV1kOtFN+RAJjAXTWZaUmSekleVHvxe6dqFW9xHrumKAA0dBEUNRiPhhK4D9sQuW9/GjsQ
- H90yjRlYibmIYQM7WMKNGuzmJaqc5mOZsJ57XwYCicfMuJsfH0lV131Oi7hA7cf4RO0WA06L0uY
- G+mCC9bLwqlXSqOIhAUphnEWcbR/fVHfN/9NQ2vVNdrP9TP+jM9iULRLNp4Ng/s9/SzYkq4j5ko
- EI64CBoRv4GicBlmj+aAlC5pmOzN6SY58rti7IIzVvahjgHP
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+References: <20250514125625.496402993@linuxfoundation.org>
+In-Reply-To: <20250514125625.496402993@linuxfoundation.org>
+From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
+Date: Thu, 15 May 2025 18:36:31 +0900
+X-Gm-Features: AX0GCFv7LM6xHGOMDQ0YP04y9Es-FYO33imw6SrXtOdgeyWmqPX2PDvxohw74N0
+Message-ID: <CAKL4bV5fxuXaCcfB+omQEj=XuK40VO2XdUj3Gwu=EwuSLn0j=g@mail.gmail.com>
+Subject: Re: [PATCH 6.14 000/197] 6.14.7-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The thuge-gen test program runs mmap() and shmget() tests for both every
-available page size and the default page size, resulting in two tests for
-the default size. These tests are distinct since the flags in the default
-case do not specify an explicit size, add the flags to the test name that
-is logged to deduplicate.
+Hi Greg
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/mm/thuge-gen.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Wed, May 14, 2025 at 10:06=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.14.7 release.
+> There are 197 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 16 May 2025 12:55:38 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.14.7-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-diff --git a/tools/testing/selftests/mm/thuge-gen.c b/tools/testing/selftests/mm/thuge-gen.c
-index cd5174d735be..a41bc1234b37 100644
---- a/tools/testing/selftests/mm/thuge-gen.c
-+++ b/tools/testing/selftests/mm/thuge-gen.c
-@@ -127,7 +127,7 @@ void test_mmap(unsigned long size, unsigned flags)
- 
- 	show(size);
- 	ksft_test_result(size == getpagesize() || (before - after) == NUM_PAGES,
--			 "%s mmap %lu\n", __func__, size);
-+			 "%s mmap %lu %x\n", __func__, size, flags);
- 
- 	if (munmap(map, size * NUM_PAGES))
- 		ksft_exit_fail_msg("%s: unmap %s\n", __func__, strerror(errno));
-@@ -165,7 +165,7 @@ void test_shmget(unsigned long size, unsigned flags)
- 
- 	show(size);
- 	ksft_test_result(size == getpagesize() || (before - after) == NUM_PAGES,
--			 "%s: mmap %lu\n", __func__, size);
-+			 "%s: mmap %lu %x\n", __func__, size, flags);
- 	if (shmdt(map))
- 		ksft_exit_fail_msg("%s: shmdt: %s\n", __func__, strerror(errno));
- }
+6.14.7-rc2 tested.
 
----
-base-commit: 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
-change-id: 20250514-selfests-mm-thuge-gen-dup-7e1c40716091
+Build successfully completed.
+Boot successfully completed.
+No dmesg regressions.
+Video output normal.
+Sound output normal.
 
-Best regards,
--- 
-Mark Brown <broonie@kernel.org>
+Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
 
+[    0.000000] Linux version 6.14.7-rc2rv-g6f7a299729d3
+(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 15.1.1 20250425, GNU ld (GNU
+Binutils) 2.44.0) #1 SMP PREEMPT_DYNAMIC Thu May 15 12:03:02 JST 2025
+
+Thanks
+
+Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
