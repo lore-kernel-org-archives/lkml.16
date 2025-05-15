@@ -1,63 +1,63 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B025C265CC5
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:23:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D6E266B66
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747333423; cv=none; b=l4ULq89kZ2wyJMPBu3Sfx4lzTNhLLEAkK1dSIMDuj8qpo9NhRn2/t5RKe0edsQCp2au7MVs+hQ0UGrPBXu78ggQ3KjVXzSjgWb/C+7aRBu4UTSynoevCwA9uBtdzLXKxKIqmUGEq6DbAp+Z3goV1/fm+lbxDk+Ab+cnrKAbQLT8=
+	t=1747333425; cv=none; b=OSpV21vRD7JFK3PbOBkN80+k/TWUd5ISKzat5/Sx4Yfm59q0U7II56ARPvJHooJcgf6E/gFDeqRQ/vJSN0+Mmib1ckdBAVprqmmYLkx3O9+it0OaUf5qjiKpCfBzFwj46GxAnaTHaprcMXKc4cgXOHW1MidbBlZfTpKim0qq4wU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747333423; c=relaxed/simple;
-	bh=LNJ7Yn25BV+W1LC7/VlfM1LG6ohTFEm6NdrbazXB0S0=;
+	s=arc-20240116; t=1747333425; c=relaxed/simple;
+	bh=tFxT665V5hUDbhIWRElPYRYvVhS6iYWIrOgZou05mwI=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W0gCT7D5aWU3jufmGs0PxtJwaisrJDd0Rv5ggx/qXqInr55TsY33LlzgGLWklOk1urymkJSSr9iAPCS7N09pweA8d0+fEtTH/K1hYFGbegeD6H/k+T3z7b2+xKOuBpjnW+O/DyvvlcF9VDWDbma0BuDKAaFxqigdX5SPiM/UFDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=yfKrWokI; arc=none smtp.client-ip=209.85.222.170
+	 MIME-Version; b=fFQ1Rr399BMlONFUgUlIsxkh1n7FLmNe2vbu6cQGRfe+YPSULNdoiXOUP9mnHhRweoIBM7HGIFtVg1gkxQ8YM0SgFc1mwpxefSDIbljqfHe1XgeJjo/XPK75sth3BKAqF237jH1dsqCkkLQS5PZpEFELq6OuN5Wq6lvnhI1RAJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=ts4wLMsA; arc=none smtp.client-ip=209.85.222.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="yfKrWokI"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c5b2472969so126964085a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:23:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="ts4wLMsA"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c5b2472969so126970385a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:23:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1747333418; x=1747938218; darn=vger.kernel.org;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1747333421; x=1747938221; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=n9X5I0ERJIQ3sR+dONy6m+vwr4x0n0wOEhUsfS8F8y4=;
-        b=yfKrWokIELvJKsaB94A729Qpw8DkOPO6B7vGDmpsNwRzGz5P1SpqK0MCne7OhRERM3
-         +URkADbiSGCEFdX3XpmT3sB9IzDPAxpYKOUWsPQJqrF+Wi2v0RDssjtEISzILEe8Xikk
-         hcyDBBXe900+5VV04iBx4QMMr5/iHJVQFyfBhi7TqoohkDxdfFE23+jdKXTJ7iOgTwl2
-         wx7EgNLjyhgfHNUoTKdvAamvoJXyyOkVa1fL/exFeNt9e/35gXo8+f/iIbS5G8SR8mGe
-         wBxxmRWW2XmH5tQvwmi0XWvO8fpODz3SQBaSsWaJZH3G1guJWJ05SNZDKZhDD7lrd/Ep
-         HXFA==
+        bh=cWCx6GGcEP/Bhmxu59BlBlBS7y0637Vw+qLeLaDOFgQ=;
+        b=ts4wLMsAB93fVBZ7Zxr41MgE5x0bXHqxEaKCtCa5huK4B35/CPB0z9lfuy3SAXUs+1
+         X65Qv5Ntj0uioi9r2iqps/gtKUYsSuB4O2prZaGnJirD4p9h25iQZm1xC+zrD2JHqhIq
+         c+SGfGHhYW5/PfUUYlHpNo5RNR8bJ+b8OQI4hFTf/1VgsyQ6NBLyuBYlYKSgVQcLm4qJ
+         EE1HkCcJzMpLAVppWCl/pfI1RY25kqRu3yNIrlC6htO6LC6mIKfHKtkb0Q1HnaC98Vdu
+         n4Ibzt0t28moS1sdPg9zyfMPdbCN3S6hnIuuop2DFDV6dOni+j8VflZxMLxf1OcNK7R+
+         R4tA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747333418; x=1747938218;
+        d=1e100.net; s=20230601; t=1747333421; x=1747938221;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=n9X5I0ERJIQ3sR+dONy6m+vwr4x0n0wOEhUsfS8F8y4=;
-        b=GKR6u3Td6oRiMhoqcxvuvyKcqSHwETj3b94a/AWVjYGJ6YFYCEh0ljy+3IvxX/rdy2
-         vWmtz1JGxSwPkzKNEKoGuTfmPc0y2sIjQf4BkgXsDB3yoTfFPYO8J43gV/tJlqxW0q0T
-         rduwyE2g7lnR1VFjtC/z/iGGP/R+B5U6+NWu8ofJqtRn2JomKMLwygZxQKNt1asrJrle
-         1/ZqFgY6SWuYepsm0McdfxVcuqMCKhifxFwaZGnXLdmriSFC01eWXjFxUn+w5F1SZPQT
-         EBv9cOgTd0/3H9S9PEEgDGp/GKG2aMldxawLrvRLhzBAKNMTSsfAiw2rZ5pXCF/eUMme
-         ullQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCKvLKO6nKexnR0WnS0lvWHAblMzZ5/7pWwCilabZuAmHJW5wI/mo+S/yzvoikHDXgllrtvF9asAnwj4E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3ZBFdECiXxozvV6BfT+YEF2wkNyYmZ5OTuvHkxXDzVFfNI8BY
-	WNOReW/2GHbJ9fDCXi8ZFJv92ahdABWg/IAglSXmgubmYUFNES/+0dEChuxWE4SLQrQ=
-X-Gm-Gg: ASbGnctoghHFph9Z5bQ8MyfHyVu1+H6K2SMNoDwItGL8VUGTonAiKK3czOW0/ws6pdu
-	tsMEwwD7H/98IATvvbKf881cKK0tCBrgsJ6YiU0g5G/JSKRrt0caXZPtAwag6sGQGehVFbVZa11
-	ZMk3jjx0W1oAGOycYhQUQxL4S+9hr04WdCh5/ptZuNQipLJ/f7+pxvhG+vr4UZFW0MfRz+5oQE0
-	IZBjNjL60YfuTfWd8xcjDgeRVAfwovvNhrzWLiy2dulitPL2jlmV93S5hWtYnDMqlCgKOT+t4Em
-	+mMgZQVOujc3Pn0UjNi/5u4gcJKopCewxQtPbWgY6m3aKfA3gbVa1G78X1cEfKSsr50sbzgdCRW
-	BtRqQkVTMdcrJeWTgKpS42c9V/Lv6AuaW+th9npA5dV52
-X-Google-Smtp-Source: AGHT+IHjVBt8H6HfJ0JCB/KGKK5fDmLxLCaQwGuXFQZwwfyBbHpU4K4wMmeetHkz+S+qBh3MPxccnw==
-X-Received: by 2002:a05:620a:261b:b0:7ca:e8cc:5f08 with SMTP id af79cd13be357-7cd467241fbmr93206085a.23.1747333418244;
-        Thu, 15 May 2025 11:23:38 -0700 (PDT)
+        bh=cWCx6GGcEP/Bhmxu59BlBlBS7y0637Vw+qLeLaDOFgQ=;
+        b=HFSfo+5RBNURCX59hln534F1x3A0HwxJxA+GI+ZB7bwNnCt0oThMMKkYVLhfkK91md
+         qAlmqjjOSIarO1B2YPg+FKoP9cyDZtCcw8HWQAFI9JKNYsScKTiu6s9FQlyrHvH+PnqD
+         vMuwEYSYl9O/sTTlSMLPStcByykfy8qRxu8SslVB66Z3nDx924nOj8xRzOUN5CuCr2sA
+         grIYdYqFMQ09ztkkpWFQG6tJTaJlSSeCIO29lPI4h7H4T5kujdfBqqj9dnd4HAz5fuPa
+         0SeePZaNYJvUeDfmSVOpuZG0jUqxvqN3f0vLb6ZXkimHwxgIk6yQRaq9pspLr9+aCHFR
+         K2kw==
+X-Forwarded-Encrypted: i=1; AJvYcCWys/NTXWd6Ky4kONDUImllqp0RPehbG8YjBYSbJIERMWlpm9yx1U6Z8I0GDnce4fHFHpvOhqFHe4Dxh48=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQ/eoXtoymFGV2WONvQ7tFAadA9xb1J5NjjUrgs2gV2FElJ0eg
+	B4a1IzsrPutEyMb9VPlNZ9D5AIIXd3le9UORddnjXGwp8OTYrdTu15j2oHXB1k1/jCo=
+X-Gm-Gg: ASbGncv7kWLKv/0xh9YSGui9pauxaScuDnBLpuGHLNyuEIqAUdBkyacKOqZElGvUMLl
+	cg3ZkUCi1WWmXE8vXu76Z1sHQVtzrL3YxvEQzKKAMsFxqGEeiNnuYvevzm8gkc6ySwCO6GaYzzU
+	L6ksjyW0PZ70Kz2rI93upP29cJAYrz/zcHQN8l9yTPEe9sInWz6z6/4kQU4qzsbtaBVSWQfB3v/
+	m2o6LdsVlngvVgOXxfnj+2zzAtuQWYZ7ioU2YxxTqeSFa6wnWlquOsTBBgwa+skxlDLSGx5Nqxz
+	LUyiOAcIKGxQ3YVWBISygewYcgARgQ2VUuX1cdicsad+29AfwZotaK2uU587B/56Ep89eJ9Ht54
+	0Ma0p06+d1AXHLAAp2E4MOI6MEDAH/0ctgiLgDw/3vDZ7
+X-Google-Smtp-Source: AGHT+IEWhdlfPNILwzbLIqumfGzpcWA+Jmu5BcE2C+Ogk2n1GuY+lHsyTfj1P93f5W7qlh3TnbUPDA==
+X-Received: by 2002:a05:620a:2592:b0:7cd:3b02:b6e4 with SMTP id af79cd13be357-7cd46707fcfmr70839885a.1.1747333420931;
+        Thu, 15 May 2025 11:23:40 -0700 (PDT)
 Received: from soleen.c.googlers.com.com (138.200.150.34.bc.googleusercontent.com. [34.150.200.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd466fc2afsm18218685a.0.2025.05.15.11.23.37
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd466fc2afsm18218685a.0.2025.05.15.11.23.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 11:23:37 -0700 (PDT)
+        Thu, 15 May 2025 11:23:40 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: pratyush@kernel.org,
 	jasonmiu@google.com,
@@ -121,9 +121,9 @@ To: pratyush@kernel.org,
 	djeffery@redhat.com,
 	stuart.w.hayes@gmail.com,
 	ptyadav@amazon.de
-Subject: [RFC v2 08/16] luo: luo_files: add infrastructure for FDs
-Date: Thu, 15 May 2025 18:23:12 +0000
-Message-ID: <20250515182322.117840-9-pasha.tatashin@soleen.com>
+Subject: [RFC v2 10/16] luo: luo_ioctl: add ioctl interface
+Date: Thu, 15 May 2025 18:23:14 +0000
+Message-ID: <20250515182322.117840-11-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
 In-Reply-To: <20250515182322.117840-1-pasha.tatashin@soleen.com>
 References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
@@ -135,107 +135,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce the framework within LUO to support preserving specific types
-of file descriptors across a live update transition. This allows
-stateful FDs (like memfds or vfio FDs used by VMs) to be recreated in
-the new kernel.
+Introduce the user-space interface for the Live Update Orchestrator
+via ioctl commands, enabling external control over the live update
+process and management of preserved resources.
 
-Note: The core logic for iterating through the luo_files_list and
-invoking the handler callbacks (prepare, freeze, cancel, finish)
-within luo_do_files_*_calls, as well as managing the u64 data
-persistence via the FDT for individual files, is currently implemented
-as stubs in this patch. This patch sets up the registration, FDT layout,
-and retrieval framework.
+Create a misc character device at /dev/liveupdate. Access
+to this device requires the CAP_SYS_ADMIN capability.
+
+A new UAPI header, <uapi/linux/liveupdate.h>, defines the necessary
+structures. The magic number is registered in
+Documentation/userspace-api/ioctl/ioctl-number.rst.
 
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- drivers/misc/liveupdate/Makefile       |   1 +
- drivers/misc/liveupdate/luo_core.c     |  19 +
- drivers/misc/liveupdate/luo_files.c    | 563 +++++++++++++++++++++++++
- drivers/misc/liveupdate/luo_internal.h |  11 +
- include/linux/liveupdate.h             |  62 +++
- 5 files changed, 656 insertions(+)
- create mode 100644 drivers/misc/liveupdate/luo_files.c
+ .../userspace-api/ioctl/ioctl-number.rst      |   1 +
+ drivers/misc/liveupdate/Makefile              |   1 +
+ drivers/misc/liveupdate/luo_ioctl.c           | 199 ++++++++++++
+ include/linux/liveupdate.h                    |  34 +-
+ include/uapi/linux/liveupdate.h               | 300 ++++++++++++++++++
+ 5 files changed, 502 insertions(+), 33 deletions(-)
+ create mode 100644 drivers/misc/liveupdate/luo_ioctl.c
+ create mode 100644 include/uapi/linux/liveupdate.h
 
+diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+index 7a1409ecc238..279c124048f2 100644
+--- a/Documentation/userspace-api/ioctl/ioctl-number.rst
++++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+@@ -375,6 +375,7 @@ Code  Seq#    Include File                                           Comments
+ 0xB8  01-02  uapi/misc/mrvl_cn10k_dpi.h                              Marvell CN10K DPI driver
+ 0xB8  all    uapi/linux/mshv.h                                       Microsoft Hyper-V /dev/mshv driver
+                                                                      <mailto:linux-hyperv@vger.kernel.org>
++0xBA  all    uapi/linux/liveupdate.h                                 <mailto:Pasha Tatashin <pasha.tatashin@soleen.com>
+ 0xC0  00-0F  linux/usb/iowarrior.h
+ 0xCA  00-0F  uapi/misc/cxl.h                                         Dead since 6.15
+ 0xCA  10-2F  uapi/misc/ocxl.h
 diff --git a/drivers/misc/liveupdate/Makefile b/drivers/misc/liveupdate/Makefile
-index df1c9709ba4f..b4cdd162574f 100644
+index b4cdd162574f..7a0cd08919c9 100644
 --- a/drivers/misc/liveupdate/Makefile
 +++ b/drivers/misc/liveupdate/Makefile
-@@ -1,3 +1,4 @@
+@@ -1,4 +1,5 @@
  # SPDX-License-Identifier: GPL-2.0
++obj-y					+= luo_ioctl.o
  obj-y					+= luo_core.o
-+obj-y					+= luo_files.o
+ obj-y					+= luo_files.o
  obj-y					+= luo_subsystems.o
-diff --git a/drivers/misc/liveupdate/luo_core.c b/drivers/misc/liveupdate/luo_core.c
-index 417e7f6bf36c..ab1d76221fe2 100644
---- a/drivers/misc/liveupdate/luo_core.c
-+++ b/drivers/misc/liveupdate/luo_core.c
-@@ -110,6 +110,10 @@ static int luo_fdt_setup(struct kho_serialization *ser)
- 	if (ret)
- 		goto exit_free;
- 
-+	ret = luo_files_fdt_setup(fdt_out);
-+	if (ret)
-+		goto exit_free;
-+
- 	ret = luo_subsystems_fdt_setup(fdt_out);
- 	if (ret)
- 		goto exit_free;
-@@ -145,7 +149,13 @@ static int luo_do_prepare_calls(void)
- {
- 	int ret;
- 
-+	ret = luo_do_files_prepare_calls();
-+	if (ret)
-+		return ret;
-+
- 	ret = luo_do_subsystems_prepare_calls();
-+	if (ret)
-+		luo_do_files_cancel_calls();
- 
- 	return ret;
- }
-@@ -154,18 +164,26 @@ static int luo_do_freeze_calls(void)
- {
- 	int ret;
- 
-+	ret = luo_do_files_freeze_calls();
-+	if (ret)
-+		return ret;
-+
- 	ret = luo_do_subsystems_freeze_calls();
-+	if (ret)
-+		luo_do_files_cancel_calls();
- 
- 	return ret;
- }
- 
- static void luo_do_finish_calls(void)
- {
-+	luo_do_files_finish_calls();
- 	luo_do_subsystems_finish_calls();
- }
- 
- static void luo_do_cancel_calls(void)
- {
-+	luo_do_files_cancel_calls();
- 	luo_do_subsystems_cancel_calls();
- }
- 
-@@ -436,6 +454,7 @@ static int __init luo_startup(void)
- 	}
- 
- 	__luo_set_state(LIVEUPDATE_STATE_UPDATED);
-+	luo_files_startup(luo_fdt_in);
- 	luo_subsystems_startup(luo_fdt_in);
- 
- 	return 0;
-diff --git a/drivers/misc/liveupdate/luo_files.c b/drivers/misc/liveupdate/luo_files.c
+diff --git a/drivers/misc/liveupdate/luo_ioctl.c b/drivers/misc/liveupdate/luo_ioctl.c
 new file mode 100644
-index 000000000000..953fc40db3d7
+index 000000000000..76c687ff650b
 --- /dev/null
-+++ b/drivers/misc/liveupdate/luo_files.c
-@@ -0,0 +1,563 @@
++++ b/drivers/misc/liveupdate/luo_ioctl.c
+@@ -0,0 +1,199 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
 +/*
@@ -244,669 +193,555 @@ index 000000000000..953fc40db3d7
 + */
 +
 +/**
-+ * DOC: LUO file descriptors
++ * DOC: LUO ioctl Interface
 + *
-+ * LUO provides the infrastructure necessary to preserve
-+ * specific types of stateful file descriptors across a kernel live
-+ * update transition. The primary goal is to allow workloads, such as virtual
-+ * machines using vfio, memfd, or iommufd to retain access to their essential
-+ * resources without interruption after the underlying kernel is  updated.
-+ *
-+ * The framework operates based on handler registration and instance tracking:
-+ *
-+ * 1. Handler Registration: Kernel modules responsible for specific file
-+ * types (e.g., memfd, vfio) register a &struct liveupdate_filesystem
-+ * handler. This handler contains callbacks (&liveupdate_filesystem.prepare,
-+ * &liveupdate_filesystem.freeze, &liveupdate_filesystem.finish, etc.)
-+ * and a unique 'compatible' string identifying the file type.
-+ * Registration occurs via liveupdate_register_filesystem().
-+ *
-+ * 2. File Instance Tracking: When a potentially preservable file needs to be
-+ * managed for live update, the core LUO logic (luo_register_file()) finds a
-+ * compatible registered handler using its &liveupdate_filesystem.can_preserve
-+ * callback. If found,  an internal &struct luo_file instance is created,
-+ * assigned a unique u64 'token', and added to a list.
-+ *
-+ * 3. State Persistence (FDT): During the LUO prepare/freeze phases, the
-+ * registered handler callbacks are invoked for each tracked file instance.
-+ * These callbacks can generate a u64 data payload representing the minimal
-+ * state needed for restoration. This payload, along with the handler's
-+ * compatible string and the unique token, is stored in a dedicated
-+ * '/file-descriptors' node within the main LUO FDT blob passed via
-+ * Kexec Handover (KHO).
-+ *
-+ * 4. Restoration: In the new kernel, the LUO framework parses the incoming
-+ * FDT to reconstruct the list of &struct luo_file instances. When the
-+ * original owner requests the file, luo_retrieve_file() uses the corresponding
-+ * handler's &liveupdate_filesystem.retrieve callback, passing the persisted
-+ * u64 data, to recreate or find the appropriate &struct file object.
++ * The IOCTL user-space control interface for the LUO subsystem.
++ * It registers a misc character device, typically found at ``/dev/liveupdate``,
++ * which allows privileged userspace applications (requiring %CAP_SYS_ADMIN) to
++ * manage and monitor the LUO state machine and associated resources like
++ * preservable file descriptors.
 + */
 +
 +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 +
-+#include <linux/err.h>
-+#include <linux/libfdt.h>
-+#include <linux/liveupdate.h>
-+#include <linux/mutex.h>
-+#include <linux/rwsem.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+#include <linux/xarray.h>
++#include <linux/errno.h>
++#include <linux/file.h>
++#include <linux/fs.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/miscdevice.h>
++#include <linux/module.h>
++#include <linux/uaccess.h>
++#include <uapi/linux/liveupdate.h>
 +#include "luo_internal.h"
 +
-+#define LUO_FILES_NODE_NAME	"file-descriptors"
-+#define LUO_FILES_COMPATIBLE	"file-descriptors-v1"
-+
-+static DEFINE_XARRAY(luo_files_xa_in);
-+static DEFINE_XARRAY(luo_files_xa_out);
-+static bool luo_files_xa_in_recreated;
-+
-+/* Regestred filesystems. */
-+static DECLARE_RWSEM(luo_filesystems_list_rwsem);
-+static LIST_HEAD(luo_filesystems_list);
-+
-+static void *luo_fdt_out;
-+static void *luo_fdt_in;
-+
-+static u64 luo_next_file_token;
-+
-+/**
-+ * struct luo_file - Represents a file descriptor instance preserved
-+ * across live update.
-+ * @fs:            Pointer to the &struct liveupdate_filesystems containing
-+ *                 the implementation of prepare, freeze, cancel, and finish
-+ *                 operations specific to this file's type.
-+ * @file:          A pointer to the kernel's &struct file object representing
-+ *                 the open file descriptor that is being preserved.
-+ * @private_data:  Internal storage used by the live update core framework
-+ *                 between phases.
-+ * @reclaimed:     Flag indicating whether this preserved file descriptor has
-+ *                 been successfully 'reclaimed' (e.g., requested via an ioctl)
-+ *                 by user-space or the owning kernel subsystem in the new
-+ *                 kernel after the live update.
-+ * @state:         The current state of file descriptor, it is allowed to
-+ *                 prepare, freeze, and finish FDs before the global state
-+ *                 switch.
-+ * @mutex:          Lock to protect FD state, and allow independently to change
-+ *                 the FD state compared to global state.
-+ *
-+ * This structure holds the necessary callbacks and context for managing a
-+ * specific open file descriptor throughout the different phases of a live
-+ * update process. Instances of this structure are typically allocated,
-+ * populated with file-specific details (&file, &arg, callbacks, compatibility
-+ * string, token), and linked into a central list managed by the LUO. The
-+ * private_data field is used internally by the core logic to store state
-+ * between phases.
-+ */
-+struct luo_file {
-+	struct liveupdate_filesystem *fs;
++static int luo_ioctl_fd_preserve(struct liveupdate_fd *luo_fd)
++{
 +	struct file *file;
-+	u64 private_data;
-+	bool reclaimed;
++	int ret;
++
++	file = fget(luo_fd->fd);
++	if (!file) {
++		pr_err("Bad file descriptor\n");
++		return -EBADF;
++	}
++
++	ret = luo_register_file(&luo_fd->token, file);
++	if (ret)
++		fput(file);
++
++	return ret;
++}
++
++static int luo_ioctl_fd_unpreserve(u64 token)
++{
++	return luo_unregister_file(token);
++}
++
++static int luo_ioctl_fd_restore(struct liveupdate_fd *luo_fd)
++{
++	struct file *file;
++	int ret;
++	int fd;
++
++	fd = get_unused_fd_flags(O_CLOEXEC);
++	if (fd < 0) {
++		pr_err("Failed to allocate new fd: %d\n", fd);
++		return fd;
++	}
++
++	ret = luo_retrieve_file(luo_fd->token, &file);
++	if (ret < 0) {
++		put_unused_fd(fd);
++
++		return ret;
++	}
++
++	fd_install(fd, file);
++	luo_fd->fd = fd;
++
++	return 0;
++}
++
++static int luo_open(struct inode *inodep, struct file *filep)
++{
++	if (!capable(CAP_SYS_ADMIN))
++		return -EACCES;
++
++	if (filep->f_flags & O_EXCL)
++		return -EINVAL;
++
++	return 0;
++}
++
++static long luo_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
++{
++	void __user *argp = (void __user *)arg;
++	struct liveupdate_fd luo_fd;
 +	enum liveupdate_state state;
-+	struct mutex mutex;
-+};
-+
-+/**
-+ * luo_files_startup - Validates the LUO file-descriptors FDT node at startup.
-+ * @fdt: Pointer to the LUO FDT blob passed from the previous kernel.
-+ *
-+ * This __init function checks the existence and validity of the
-+ * '/file-descriptors' node in the FDT. This node is considered mandatory. It
-+ * calls panic() if the node is missing, inaccessible, or invalid (e.g., missing
-+ * compatible, wrong compatible string), indicating a critical configuration
-+ * error for LUO.
-+ */
-+void __init luo_files_startup(void *fdt)
-+{
-+	int ret, node_offset;
-+
-+	node_offset = fdt_subnode_offset(fdt, 0, LUO_FILES_NODE_NAME);
-+	if (node_offset < 0)
-+		panic("Failed to find /file-descriptors node\n");
-+
-+	ret = fdt_node_check_compatible(fdt, node_offset,
-+					LUO_FILES_COMPATIBLE);
-+	if (ret) {
-+		panic("FDT '%s' is incompatible with '%s' [%d]\n",
-+		      LUO_FILES_NODE_NAME, LUO_FILES_COMPATIBLE, ret);
-+	}
-+	luo_fdt_in = fdt;
-+}
-+
-+static void luo_files_recreate_luo_files_xa_in(void)
-+{
-+	int parent_node_offset, file_node_offset;
-+	const char *node_name, *fdt_compat_str;
-+	struct liveupdate_filesystem *fs;
-+	struct luo_file *luo_file;
-+	const void *data_ptr;
 +	int ret = 0;
-+
-+	if (luo_files_xa_in_recreated || !luo_fdt_in)
-+		return;
-+
-+	/* Take write in order to gurantee that we re-create list once */
-+	down_write(&luo_filesystems_list_rwsem);
-+	if (luo_files_xa_in_recreated)
-+		goto exit_unlock;
-+
-+	parent_node_offset = fdt_subnode_offset(luo_fdt_in, 0,
-+						LUO_FILES_NODE_NAME);
-+
-+	fdt_for_each_subnode(file_node_offset, luo_fdt_in, parent_node_offset) {
-+		bool handler_found = false;
-+		u64 token;
-+
-+		node_name = fdt_get_name(luo_fdt_in, file_node_offset, NULL);
-+		if (!node_name) {
-+			panic("Skipping FDT subnode at offset %d: Cannot get name\n",
-+			      file_node_offset);
-+		}
-+
-+		ret = kstrtou64(node_name, 0, &token);
-+		if (ret < 0) {
-+			panic("Skipping FDT node '%s': Failed to parse token\n",
-+			      node_name);
-+		}
-+
-+		fdt_compat_str = fdt_getprop(luo_fdt_in, file_node_offset,
-+					     "compatible", NULL);
-+		if (!fdt_compat_str) {
-+			panic("Skipping FDT node '%s': Missing 'compatible' property\n",
-+			      node_name);
-+		}
-+
-+		data_ptr = fdt_getprop(luo_fdt_in, file_node_offset, "data",
-+				       NULL);
-+		if (!data_ptr) {
-+			panic("Can't recover property 'data' for FDT node '%s'\n",
-+			      node_name);
-+		}
-+
-+		list_for_each_entry(fs, &luo_filesystems_list, list) {
-+			if (!strcmp(fs->compatible, fdt_compat_str)) {
-+				handler_found = true;
-+				break;
-+			}
-+		}
-+
-+		if (!handler_found) {
-+			panic("Skipping FDT node '%s': No registered handler for compatible '%s'\n",
-+			      node_name, fdt_compat_str);
-+		}
-+
-+		luo_file = kmalloc(sizeof(*luo_file),
-+				   GFP_KERNEL | __GFP_NOFAIL);
-+		luo_file->fs = fs;
-+		luo_file->file = NULL;
-+		memcpy(&luo_file->private_data, data_ptr, sizeof(u64));
-+		luo_file->reclaimed = false;
-+		mutex_init(&luo_file->mutex);
-+		luo_file->state = LIVEUPDATE_STATE_UPDATED;
-+		ret = xa_err(xa_store(&luo_files_xa_in, token, luo_file,
-+				      GFP_KERNEL | __GFP_NOFAIL));
-+		if (ret < 0) {
-+			panic("Failed to store luo_file for token %llu in XArray: %d\n",
-+			      token, ret);
-+		}
-+	}
-+	luo_files_xa_in_recreated = true;
-+
-+exit_unlock:
-+	up_write(&luo_filesystems_list_rwsem);
-+}
-+
-+/**
-+ * luo_files_fdt_setup - Adds and populates the 'file-descriptors' node in the
-+ * FDT.
-+ * @fdt: Pointer to the LUO FDT blob.
-+ *
-+ * Add file-descriptors node and each FD node to the LUO FDT blob.
-+ *
-+ * Returns: 0 on success, negative errno on failure.
-+ */
-+int luo_files_fdt_setup(void *fdt)
-+{
-+	int ret, files_node_offset, node_offset;
-+	const u64 zero_data = 0;
-+	unsigned long token;
-+	struct luo_file *h;
-+	char token_str[19];
-+
-+	ret = fdt_add_subnode(fdt, 0, LUO_FILES_NODE_NAME);
-+	if (ret < 0)
-+		goto exit_error;
-+
-+	files_node_offset = ret;
-+	ret = fdt_setprop_string(fdt, files_node_offset, "compatible",
-+				 LUO_FILES_COMPATIBLE);
-+	if (ret < 0)
-+		goto exit_error;
-+
-+	xa_for_each(&luo_files_xa_out, token, h) {
-+		snprintf(token_str, sizeof(token_str), "%#0llx", (u64)token);
-+
-+		ret = fdt_add_subnode(fdt, files_node_offset, token_str);
-+		if (ret < 0)
-+			goto exit_error;
-+
-+		node_offset = ret;
-+		ret = fdt_setprop_string(fdt, node_offset, "compatible",
-+					 h->fs->compatible);
-+		if (ret < 0)
-+			goto exit_error;
-+
-+		ret = fdt_setprop(fdt, node_offset, "data",
-+				  &zero_data, sizeof(zero_data));
-+	}
-+
-+	luo_fdt_out = fdt;
-+
-+	return 0;
-+exit_error:
-+	pr_err("Failed to setup 'file-descriptors' node to FDT: %s\n",
-+	       fdt_strerror(ret));
-+	return -ENOSPC;
-+}
-+
-+/**
-+ * luo_do_files_prepare_calls - Calls prepare callbacks and updates FDT
-+ * if all prepares succeed. Handles cancellation on failure.
-+ *
-+ * Phase 1: Calls 'prepare' for all files and stores results temporarily.
-+ * If any 'prepare' fails, calls 'cancel' on previously prepared files
-+ * and returns the error.
-+ * Phase 2: If all 'prepare' calls succeeded, writes the stored data to the FDT.
-+ * If any FDT write fails, calls 'cancel' on *all* prepared files and
-+ * returns the FDT error.
-+ *
-+ * Returns: 0 on success. Negative errno on failure.
-+ */
-+int luo_do_files_prepare_calls(void)
-+{
-+	return 0;
-+}
-+
-+/**
-+ * luo_do_files_freeze_calls - Calls freeze callbacks and updates FDT
-+ * if all calls succeed. Handles cancellation on failure.
-+ *
-+ * Phase 1: Calls 'freeze' for all files and stores results temporarily.
-+ * If any 'freeze' fails, calls 'cancel' on previously called files.
-+ * and returns the error.
-+ * Phase 2: If all 'freeze' calls succeeded, writes the stored data to the FDT.
-+ * If any FDT write fails, calls 'cancel' on *all* files and returns the FDT
-+ * error.
-+ *
-+ * Returns: 0 on success. Negative errno on failure.
-+ */
-+int luo_do_files_freeze_calls(void)
-+{
-+	return 0;
-+}
-+
-+/**
-+ * luo_do_files_finish_calls - Calls finish callbacks for all file descriptors.
-+ *
-+ * This function is called at the end of live update cycle to do the final
-+ * clean-up or housekeeping of the post-live update states.
-+ */
-+void luo_do_files_finish_calls(void)
-+{
-+	luo_files_recreate_luo_files_xa_in();
-+}
-+
-+/**
-+ * luo_do_files_cancel_calls - Calls cancel callbacks for all file descriptors.
-+ *
-+ * This function is typically called when the live update process needs to be
-+ * aborted externally, for example, after the prepare phase may have run but
-+ * before actual reboot. It iterates through all registered files and calls
-+ * the 'cancel' callback for those that implement it and likely completed
-+ * prepare.
-+ */
-+void luo_do_files_cancel_calls(void)
-+{
-+}
-+
-+/**
-+ * luo_register_file - Register a file descriptor for live update management.
-+ * @tokenp: Return argument for the token value.
-+ * @file: Pointer to the struct file to be preserved.
-+ *
-+ * Context: Must be called when LUO is in 'normal' state.
-+ *
-+ * Return: 0 on success. Negative errno on failure.
-+ */
-+int luo_register_file(u64 *tokenp, struct file *file)
-+{
-+	struct liveupdate_filesystem *fs;
-+	bool found = false;
-+	int ret = -ENOENT;
 +	u64 token;
 +
-+	luo_state_read_enter();
-+	if (!liveupdate_state_normal() && !liveupdate_state_updated()) {
-+		pr_warn("File can be registered only in normal or prepared state\n");
-+		luo_state_read_exit();
-+		return -EBUSY;
-+	}
++	if (_IOC_TYPE(cmd) != LIVEUPDATE_IOCTL_TYPE)
++		return -ENOTTY;
 +
-+	down_read(&luo_filesystems_list_rwsem);
-+	list_for_each_entry(fs, &luo_filesystems_list, list) {
-+		if (fs->can_preserve(file, fs->arg)) {
-+			found = true;
++	switch (cmd) {
++	case LIVEUPDATE_IOCTL_GET_STATE:
++		state = READ_ONCE(luo_state);
++		if (copy_to_user(argp, &state, sizeof(luo_state)))
++			ret = -EFAULT;
++		break;
++
++	case LIVEUPDATE_IOCTL_EVENT_PREPARE:
++		ret = luo_prepare();
++		break;
++
++	case LIVEUPDATE_IOCTL_EVENT_FREEZE:
++		ret = luo_freeze();
++		break;
++
++	case LIVEUPDATE_IOCTL_EVENT_FINISH:
++		ret = luo_finish();
++		break;
++
++	case LIVEUPDATE_IOCTL_EVENT_CANCEL:
++		ret = luo_cancel();
++		break;
++
++	case LIVEUPDATE_IOCTL_FD_PRESERVE:
++		if (copy_from_user(&luo_fd, argp, sizeof(luo_fd))) {
++			ret = -EFAULT;
 +			break;
 +		}
-+	}
 +
-+	if (found) {
-+		struct luo_file *luo_file = kmalloc(sizeof(*luo_file),
-+						    GFP_KERNEL);
++		ret = luo_ioctl_fd_preserve(&luo_fd);
++		if (!ret && copy_to_user(argp, &luo_fd, sizeof(luo_fd)))
++			ret = -EFAULT;
++		break;
 +
-+		if (!luo_file) {
-+			ret = -ENOMEM;
-+			goto exit_unlock;
++	case LIVEUPDATE_IOCTL_FD_UNPRESERVE:
++		if (copy_from_user(&token, argp, sizeof(u64))) {
++			ret = -EFAULT;
++			break;
 +		}
 +
-+		token = luo_next_file_token;
-+		luo_next_file_token++;
++		ret = luo_ioctl_fd_unpreserve(token);
++		break;
 +
-+		luo_file->private_data = 0;
-+		luo_file->reclaimed = false;
-+
-+		luo_file->file = file;
-+		luo_file->fs = fs;
-+		mutex_init(&luo_file->mutex);
-+		luo_file->state = LIVEUPDATE_STATE_NORMAL;
-+		ret = xa_err(xa_store(&luo_files_xa_out, token, luo_file,
-+				      GFP_KERNEL));
-+		if (ret < 0) {
-+			pr_warn("Failed to store file for token %llu in XArray: %d\n",
-+				token, ret);
-+			kfree(luo_file);
-+			goto exit_unlock;
++	case LIVEUPDATE_IOCTL_FD_RESTORE:
++		if (copy_from_user(&luo_fd, argp, sizeof(luo_fd))) {
++			ret = -EFAULT;
++			break;
 +		}
-+		*tokenp = token;
-+	}
 +
-+exit_unlock:
-+	up_read(&luo_filesystems_list_rwsem);
-+	luo_state_read_exit();
++		ret = luo_ioctl_fd_restore(&luo_fd);
++		if (!ret && copy_to_user(argp, &luo_fd, sizeof(luo_fd)))
++			ret = -EFAULT;
++		break;
++
++	default:
++		pr_warn("ioctl: unknown command nr: 0x%x\n", _IOC_NR(cmd));
++		ret = -ENOTTY;
++		break;
++	}
 +
 +	return ret;
 +}
 +
-+/**
-+ * luo_unregister_file - Unregister a file instance using its token.
-+ * @token: The unique token of the file instance to unregister.
-+ *
-+ * Finds the &struct luo_file associated with the @token in the
-+ * global list and removes it. This function *only* removes the entry from the
-+ * list; it does *not* free the memory allocated for the &struct luo_file
-+ * itself. The caller is responsible for freeing the structure after this
-+ * function returns successfully.
-+ *
-+ * Context: Can be called when a preserved file descriptor is closed or
-+ * no longer needs live update management. Uses down_write_killable
-+ * for list modification.
-+ *
-+ * Return: 0 on success. Negative errno on failure.
-+ */
-+int luo_unregister_file(u64 token)
-+{
-+	struct luo_file *luo_file;
-+	int ret = 0;
-+
-+	luo_state_read_enter();
-+	if (!liveupdate_state_normal() && !liveupdate_state_updated()) {
-+		pr_warn("File can be unregistered only in normal or updates state\n");
-+		luo_state_read_exit();
-+		return -EBUSY;
-+	}
-+
-+	luo_file = xa_erase(&luo_files_xa_out, token);
-+	if (luo_file) {
-+		kfree(luo_file);
-+	} else {
-+		pr_warn("Failed to unregister: token %llu not found.\n",
-+			token);
-+		ret = -ENOENT;
-+	}
-+	luo_state_read_exit();
-+
-+	return ret;
-+}
-+
-+/**
-+ * luo_retrieve_file - Find a registered file instance by its token.
-+ * @token: The unique token of the file instance to retrieve.
-+ * @file: Output parameter. On success (return value 0), this will point
-+ * to the retrieved "struct file".
-+ *
-+ * Searches the global list for a &struct luo_file matching the @token. Uses a
-+ * read lock, allowing concurrent retrievals.
-+ *
-+ * Return: 0 on success. Negative errno on failure.
-+ */
-+int luo_retrieve_file(u64 token, struct file **file)
-+{
-+	struct luo_file *luo_file;
-+	int ret = 0;
-+
-+	luo_files_recreate_luo_files_xa_in();
-+	luo_state_read_enter();
-+	if (!liveupdate_state_updated()) {
-+		pr_warn("File can be retrieved only in updated state\n");
-+		luo_state_read_exit();
-+		return -EBUSY;
-+	}
-+
-+	luo_file = xa_load(&luo_files_xa_in, token);
-+	if (luo_file && !luo_file->reclaimed) {
-+		luo_file->reclaimed = true;
-+		ret = luo_file->fs->retrieve(luo_file->fs->arg,
-+					     luo_file->private_data,
-+					     file);
-+		if (!ret)
-+			luo_file->file = *file;
-+	} else if (luo_file && luo_file->reclaimed) {
-+		pr_err("The file descriptor for token %lld has already been retrieved\n",
-+		       token);
-+		ret = -EINVAL;
-+	} else {
-+		ret = -ENOENT;
-+	}
-+
-+	luo_state_read_exit();
-+
-+	return ret;
-+}
-+
-+/**
-+ * liveupdate_register_filesystem - Register a filesystem handler with LUO.
-+ * @fs: Pointer to a caller-allocated &struct liveupdate_filesystem.
-+ * The caller must initialize this structure, including a unique
-+ * 'compatible' string and a valid 'fs' callbacks. This function adds the
-+ * handler to the global list of supported filesystem handlers.
-+ *
-+ * Context: Typically called during module initialization for filesystems or
-+ * file types that support live update preservation.
-+ *
-+ * Return: 0 on success. Negative errno on failure.
-+ */
-+int liveupdate_register_filesystem(struct liveupdate_filesystem *fs)
-+{
-+	struct liveupdate_filesystem *fs_iter;
-+	int ret = 0;
-+
-+	luo_state_read_enter();
-+	if (!liveupdate_state_normal() && !liveupdate_state_updated()) {
-+		luo_state_read_exit();
-+		return -EBUSY;
-+	}
-+
-+	down_write(&luo_filesystems_list_rwsem);
-+	list_for_each_entry(fs_iter, &luo_filesystems_list, list) {
-+		if (!strcmp(fs_iter->compatible, fs->compatible)) {
-+			pr_err("Filesystem handler registration failed: Compatible string '%s' already registered.\n",
-+			       fs->compatible);
-+			ret = -EEXIST;
-+			goto exit_unlock;
-+		}
-+	}
-+
-+	INIT_LIST_HEAD(&fs->list);
-+	list_add_tail(&fs->list, &luo_filesystems_list);
-+
-+exit_unlock:
-+	up_write(&luo_filesystems_list_rwsem);
-+	luo_state_read_exit();
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(liveupdate_register_filesystem);
-+
-+/**
-+ * liveupdate_unregister_filesystem - Unregister a filesystem handler.
-+ * @fs: Pointer to the specific &struct liveupdate_filesystem instance
-+ * that was previously returned by or passed to liveupdate_register_filesystem.
-+ *
-+ * Removes the specified handler instance @fs from the global list of
-+ * registered filesystem handlers. This function only removes the entry from the
-+ * list; it does not free the memory associated with @fs itself. The caller
-+ * is responsible for freeing the structure memory after this function returns
-+ * successfully.
-+ *
-+ * Return: 0 on success. Negative errno on failure.
-+ */
-+int liveupdate_unregister_filesystem(struct liveupdate_filesystem *fs)
-+{
-+	int ret = 0;
-+
-+	luo_state_read_enter();
-+	if (!liveupdate_state_normal() && !liveupdate_state_updated()) {
-+		luo_state_read_exit();
-+		return -EBUSY;
-+	}
-+
-+	down_write(&luo_filesystems_list_rwsem);
-+	list_del_init(&fs->list);
-+	up_write(&luo_filesystems_list_rwsem);
-+	luo_state_read_exit();
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(liveupdate_unregister_filesystem);
-diff --git a/drivers/misc/liveupdate/luo_internal.h b/drivers/misc/liveupdate/luo_internal.h
-index 63a8b93254a6..b7a0f31ddc99 100644
---- a/drivers/misc/liveupdate/luo_internal.h
-+++ b/drivers/misc/liveupdate/luo_internal.h
-@@ -23,6 +23,17 @@ int luo_do_subsystems_freeze_calls(void);
- void luo_do_subsystems_finish_calls(void);
- void luo_do_subsystems_cancel_calls(void);
- 
-+void luo_files_startup(void *fdt);
-+int luo_files_fdt_setup(void *fdt);
-+int luo_do_files_prepare_calls(void);
-+int luo_do_files_freeze_calls(void);
-+void luo_do_files_finish_calls(void);
-+void luo_do_files_cancel_calls(void);
-+
-+int luo_retrieve_file(u64 token, struct file **file);
-+int luo_register_file(u64 *token, struct file *file);
-+int luo_unregister_file(u64 token);
-+
- extern const char *const luo_state_str[];
- 
- /* Get the current state as a string */
-diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
-index 7a130680b5f2..7afe0aac5ce4 100644
---- a/include/linux/liveupdate.h
-+++ b/include/linux/liveupdate.h
-@@ -86,6 +86,55 @@ enum liveupdate_state  {
- 	LIVEUPDATE_STATE_UPDATED = 3,
- };
- 
-+/* Forward declaration needed if definition isn't included */
-+struct file;
-+
-+/**
-+ * struct liveupdate_filesystem - Represents a handler for a live-updatable
-+ * filesystem/file type.
-+ * @prepare:       Optional. Saves state for a specific file instance (@file,
-+ *                 @arg) before update, potentially returning value via @data.
-+ *                 Returns 0 on success, negative errno on failure.
-+ * @freeze:        Optional. Performs final actions just before kernel
-+ *                 transition, potentially reading/updating the handle via
-+ *                 @data.
-+ *                 Returns 0 on success, negative errno on failure.
-+ * @cancel:        Optional. Cleans up state/resources if update is aborted
-+ *                 after prepare/freeze succeeded, using the @data handle (by
-+ *                 value) from the successful prepare. Returns void.
-+ * @finish:        Optional. Performs final cleanup in the new kernel using the
-+ *                 preserved @data handle (by value). Returns void.
-+ * @retrieve:      Retrieve the preserved file. Must be called before finish.
-+ * @can_preserve:  callback to determine if @file with associated context (@arg)
-+ *                 can be preserved by this handler.
-+ *                 Return bool (true if preservable, false otherwise).
-+ * @compatible:    The compatibility string (e.g., "memfd-v1", "vfiofd-v1")
-+ *                 that uniquely identifies the filesystem or file type this
-+ *                 handler supports. This is matched against the compatible
-+ *                 string associated with individual &struct liveupdate_file
-+ *                 instances.
-+ * @arg:           An opaque pointer to implementation-specific context data
-+ *                 associated with this filesystem handler registration.
-+ * @list:          used for linking this handler instance into a global list of
-+ *                 registered filesystem handlers.
-+ *
-+ * Modules that want to support live update for specific file types should
-+ * register an instance of this structure. LUO uses this registration to
-+ * determine if a given file can be preserved and to find the appropriate
-+ * operations to manage its state across the update.
-+ */
-+struct liveupdate_filesystem {
-+	int (*prepare)(struct file *file, void *arg, u64 *data);
-+	int (*freeze)(struct file *file, void *arg, u64 *data);
-+	void (*cancel)(struct file *file, void *arg, u64 data);
-+	void (*finish)(struct file *file, void *arg, u64 data, bool reclaimed);
-+	int (*retrieve)(void *arg, u64 data, struct file **file);
-+	bool (*can_preserve)(struct file *file, void *arg);
-+	const char *compatible;
-+	void *arg;
-+	struct list_head list;
++static const struct file_operations fops = {
++	.owner          = THIS_MODULE,
++	.open           = luo_open,
++	.unlocked_ioctl = luo_ioctl,
 +};
 +
++static struct miscdevice liveupdate_miscdev = {
++	.minor = MISC_DYNAMIC_MINOR,
++	.name  = "liveupdate",
++	.fops  = &fops,
++};
++
++static int __init liveupdate_init(void)
++{
++	int err;
++
++	err = misc_register(&liveupdate_miscdev);
++	if (err < 0) {
++		pr_err("Failed to register misc device '%s': %d\n",
++		       liveupdate_miscdev.name, err);
++	}
++
++	return err;
++}
++module_init(liveupdate_init);
++
++static void __exit liveupdate_exit(void)
++{
++	misc_deregister(&liveupdate_miscdev);
++}
++module_exit(liveupdate_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Pasha Tatashin");
++MODULE_DESCRIPTION("Live Update Orchestrator");
++MODULE_VERSION("0.1");
+diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
+index 7afe0aac5ce4..ff4f2ab5c673 100644
+--- a/include/linux/liveupdate.h
++++ b/include/linux/liveupdate.h
+@@ -10,6 +10,7 @@
+ #include <linux/bug.h>
+ #include <linux/types.h>
+ #include <linux/list.h>
++#include <uapi/linux/liveupdate.h>
+ 
  /**
-  * struct liveupdate_subsystem - Represents a subsystem participating in LUO
-  * @prepare:      Optional. Called during LUO prepare phase. Should perform
-@@ -142,6 +191,9 @@ int liveupdate_register_subsystem(struct liveupdate_subsystem *h);
- int liveupdate_unregister_subsystem(struct liveupdate_subsystem *h);
- int liveupdate_get_subsystem_data(struct liveupdate_subsystem *h, u64 *data);
+  * enum liveupdate_event - Events that trigger live update callbacks.
+@@ -53,39 +54,6 @@ enum liveupdate_event {
+ 	LIVEUPDATE_CANCEL,
+ };
  
-+int liveupdate_register_filesystem(struct liveupdate_filesystem *h);
-+int liveupdate_unregister_filesystem(struct liveupdate_filesystem *h);
-+
- #else /* CONFIG_LIVEUPDATE */
+-/**
+- * enum liveupdate_state - Defines the possible states of the live update
+- * orchestrator.
+- * @LIVEUPDATE_STATE_NORMAL:         Default state, no live update in progress.
+- * @LIVEUPDATE_STATE_PREPARED:       Live update is prepared for reboot; the
+- *                                   LIVEUPDATE_PREPARE callbacks have completed
+- *                                   successfully.
+- *                                   Devices might operate in a limited state
+- *                                   for example the participating devices might
+- *                                   not be allowed to unbind, and also the
+- *                                   setting up of new DMA mappings might be
+- *                                   disabled in this state.
+- * @LIVEUPDATE_STATE_FROZEN:         The final reboot event
+- *                                   (%LIVEUPDATE_FREEZE) has been sent, and the
+- *                                   system is performing its final state saving
+- *                                   within the "blackout window". User
+- *                                   workloads must be suspended. The actual
+- *                                   reboot (kexec) into the next kernel is
+- *                                   imminent.
+- * @LIVEUPDATE_STATE_UPDATED:        The system has rebooted into the next
+- *                                   kernel via live update the system is now
+- *                                   running the next kernel, awaiting the
+- *                                   finish event.
+- *
+- * These states track the progress and outcome of a live update operation.
+- */
+-enum liveupdate_state  {
+-	LIVEUPDATE_STATE_NORMAL = 0,
+-	LIVEUPDATE_STATE_PREPARED = 1,
+-	LIVEUPDATE_STATE_FROZEN = 2,
+-	LIVEUPDATE_STATE_UPDATED = 3,
+-};
+-
+ /* Forward declaration needed if definition isn't included */
+ struct file;
  
- static inline int liveupdate_reboot(void)
-@@ -180,5 +232,15 @@ static inline int liveupdate_get_subsystem_data(struct liveupdate_subsystem *h,
- 	return -ENODATA;
- }
- 
-+static inline int liveupdate_register_filesystem(struct liveupdate_filesystem *h)
-+{
-+	return 0;
-+}
+diff --git a/include/uapi/linux/liveupdate.h b/include/uapi/linux/liveupdate.h
+new file mode 100644
+index 000000000000..c673d08a29ea
+--- /dev/null
++++ b/include/uapi/linux/liveupdate.h
+@@ -0,0 +1,300 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 +
-+static inline int liveupdate_unregister_filesystem(struct liveupdate_filesystem *h)
-+{
-+	return 0;
-+}
++/*
++ * Userspace interface for /dev/liveupdate
++ * Live Update Orchestrator
++ *
++ * Copyright (c) 2025, Google LLC.
++ * Pasha Tatashin <pasha.tatashin@soleen.com>
++ */
 +
- #endif /* CONFIG_LIVEUPDATE */
- #endif /* _LINUX_LIVEUPDATE_H */
++#ifndef _UAPI_LIVEUPDATE_H
++#define _UAPI_LIVEUPDATE_H
++
++#include <linux/ioctl.h>
++#include <linux/types.h>
++
++/**
++ * enum liveupdate_state - Defines the possible states of the live update
++ * orchestrator.
++ * @LIVEUPDATE_STATE_NORMAL:         Default state, no live update in progress.
++ * @LIVEUPDATE_STATE_PREPARED:       Live update is prepared for reboot; the
++ *                                   LIVEUPDATE_PREPARE callbacks have completed
++ *                                   successfully.
++ *                                   Devices might operate in a limited state
++ *                                   for example the participating devices might
++ *                                   not be allowed to unbind, and also the
++ *                                   setting up of new DMA mappings might be
++ *                                   disabled in this state.
++ * @LIVEUPDATE_STATE_FROZEN:         The final reboot event
++ *                                   (%LIVEUPDATE_FREEZE) has been sent, and the
++ *                                   system is performing its final state saving
++ *                                   within the "blackout window". User
++ *                                   workloads must be suspended. The actual
++ *                                   reboot (kexec) into the next kernel is
++ *                                   imminent.
++ * @LIVEUPDATE_STATE_UPDATED:        The system has rebooted into the next
++ *                                   kernel via live update the system is now
++ *                                   running the next kernel, awaiting the
++ *                                   finish event.
++ *
++ * These states track the progress and outcome of a live update operation.
++ */
++enum liveupdate_state  {
++	LIVEUPDATE_STATE_NORMAL = 0,
++	LIVEUPDATE_STATE_PREPARED = 1,
++	LIVEUPDATE_STATE_FROZEN = 2,
++	LIVEUPDATE_STATE_UPDATED = 3,
++};
++
++/**
++ * struct liveupdate_fd - Holds parameters for preserving and restoring file
++ * descriptors across live update.
++ * @fd:    Input for %LIVEUPDATE_IOCTL_FD_PRESERVE: The user-space file
++ *         descriptor to be preserved.
++ *         Output for %LIVEUPDATE_IOCTL_FD_RESTORE: The new file descriptor
++ *         representing the fully restored kernel resource.
++ * @flags: Unused, reserved for future expansion, must be set to 0.
++ * @token: Output for %LIVEUPDATE_IOCTL_FD_PRESERVE: An opaque, unique token
++ *         generated by the kernel representing the successfully preserved
++ *         resource state.
++ *         Input for %LIVEUPDATE_IOCTL_FD_RESTORE: The token previously
++ *         returned by the preserve ioctl for the resource to be restored.
++ *
++ * This structure is used as the argument for the %LIVEUPDATE_IOCTL_FD_PRESERVE
++ * and %LIVEUPDATE_IOCTL_FD_RESTORE ioctls. These ioctls allow specific types
++ * of file descriptors (for example memfd, kvm, iommufd, and VFIO) to have their
++ * underlying kernel state preserved across a live update cycle.
++ *
++ * To preserve an FD, user space passes this struct to
++ * %LIVEUPDATE_IOCTL_FD_PRESERVE with the @fd field set. On success, the
++ * kernel populates the @token field.
++ *
++ * After the live update transition, user space passes the struct populated with
++ * the *same* @token to %LIVEUPDATE_IOCTL_FD_RESTORE. The kernel uses the @token
++ * to find the preserved state and, on success, populates the @fd field with a
++ * new file descriptor referring to the fully restored resource.
++ */
++struct liveupdate_fd {
++	int		fd;
++	__u32		flags;
++	__u64		token;
++};
++
++/* The ioctl type, documented in ioctl-number.rst */
++#define LIVEUPDATE_IOCTL_TYPE		0xBA
++
++/**
++ * LIVEUPDATE_IOCTL_FD_PRESERVE - Validate and initiate preservation for a file
++ * descriptor.
++ *
++ * Argument: Pointer to &struct liveupdate_fd.
++ *
++ * User sets the @fd field identifying the file descriptor to preserve
++ * (e.g., memfd, kvm, iommufd, VFIO). The kernel validates if this FD type
++ * and its dependencies are supported for preservation. If validation passes,
++ * the kernel marks the FD internally and *initiates the process* of preparing
++ * its state for saving. The actual snapshotting of the state typically occurs
++ * during the subsequent %LIVEUPDATE_IOCTL_EVENT_PREPARE execution phase, though
++ * some finalization might occur during %LIVEUPDATE_IOCTL_EVENT_FREEZE.
++ * On successful validation and initiation, the kernel populates the @token
++ * field with an opaque identifier representing the resource being preserved.
++ * This token confirms the FD is targeted for preservation and is required for
++ * the subsequent %LIVEUPDATE_IOCTL_FD_RESTORE call after the live update. This
++ * is an I/O read/write operation.
++ *
++ * Return: 0 on success (validation passed, preservation initiated), negative
++ * error code on failure (e.g., unsupported FD type, dependency issue,
++ * validation failed).
++ */
++#define LIVEUPDATE_IOCTL_FD_PRESERVE					\
++	_IOWR(LIVEUPDATE_IOCTL_TYPE, 0x00, struct liveupdate_fd)
++
++/**
++ * LIVEUPDATE_IOCTL_FD_UNPRESERVE - Remove a file descriptor from the
++ * preservation list.
++ *
++ * Argument: Pointer to __u64 token.
++ *
++ * Allows user space to explicitly remove a file descriptor from the set of
++ * items marked as potentially preservable. User space provides a pointer to the
++ * __u64 @token that was previously returned by a successful
++ * %LIVEUPDATE_IOCTL_FD_PRESERVE call (potentially from a prior, possibly
++ * cancelled, live update attempt). The kernel reads the token value from the
++ * provided user-space address.
++ *
++ * On success, the kernel removes the corresponding entry (identified by the
++ * token value read from the user pointer) from its internal preservation list.
++ * The provided @token (representing the now-removed entry) becomes invalid
++ * after this call.
++ *
++ * This operation can only be called when the live update orchestrator is in the
++ *  %LIVEUPDATE_STATE_NORMAL state.**
++ *
++ * This is an I/O write operation (_IOW), signifying the kernel reads data (the
++ * token) from the user-provided pointer.
++ *
++ * Return: 0 on success, negative error code on failure (e.g., -EBUSY or -EINVAL
++ * if not in %LIVEUPDATE_STATE_NORMAL, bad address provided, invalid token value
++ * read, token not found).
++ */
++#define LIVEUPDATE_IOCTL_FD_UNPRESERVE					\
++	_IOW(LIVEUPDATE_IOCTL_TYPE, 0x01, __u64)
++
++/**
++ * LIVEUPDATE_IOCTL_FD_RESTORE - Restore a previously preserved file descriptor.
++ *
++ * Argument: Pointer to &struct liveupdate_fd.
++ *
++ * User sets the @token field to the value obtained from a successful
++ * %LIVEUPDATE_IOCTL_FD_PRESERVE call before the live update. On success,
++ * the kernel restores the state (saved during the PREPARE/FREEZE phases)
++ * associated with the token and populates the @fd field with a new file
++ * descriptor referencing the restored resource in the current (new) kernel.
++ * This operation must be performed *before* signaling completion via
++ * %LIVEUPDATE_IOCTL_EVENT_FINISH. This is an I/O read/write operation.
++ *
++ * Return: 0 on success, negative error code on failure (e.g., invalid token).
++ */
++#define LIVEUPDATE_IOCTL_FD_RESTORE					\
++	_IOWR(LIVEUPDATE_IOCTL_TYPE, 0x02, struct liveupdate_fd)
++
++/**
++ * LIVEUPDATE_IOCTL_GET_STATE - Query the current state of the live update
++ * orchestrator.
++ *
++ * Argument: Pointer to &enum liveupdate_state.
++ *
++ * The kernel fills the enum value pointed to by the argument with the current
++ * state of the live update subsystem. Possible states are:
++ *
++ * - %LIVEUPDATE_STATE_NORMAL:   Default state; no live update operation is
++ *                               currently in progress.
++ * - %LIVEUPDATE_STATE_PREPARED: The preparation phase (triggered by
++ *                               %LIVEUPDATE_IOCTL_EVENT_PREPARE) has completed
++ *                               successfully. The system is ready for the
++ *                               reboot transition initiated by
++ *                               %LIVEUPDATE_IOCTL_EVENT_FREEZE. Note that some
++ *                               device operations (e.g., unbinding, new DMA
++ *                               mappings) might be restricted in this state.
++ * - %LIVEUPDATE_STATE_UPDATED:  The system has successfully rebooted into the
++ *                               new kernel via live update. It is now running
++ *                               the new kernel code and is awaiting the
++ *                               completion signal from user space via
++ *                               %LIVEUPDATE_IOCTL_EVENT_FINISH after
++ *                               restoration tasks are done.
++ *
++ * See the definition of &enum liveupdate_state for more details on each state.
++ * This is an I/O read operation (kernel writes to the user-provided pointer).
++ *
++ * Return: 0 on success, negative error code on failure.
++ */
++#define LIVEUPDATE_IOCTL_GET_STATE					\
++	_IOR(LIVEUPDATE_IOCTL_TYPE, 0x03, enum liveupdate_state)
++
++/**
++ * LIVEUPDATE_IOCTL_EVENT_PREPARE - Initiate preparation phase and trigger state
++ * saving.
++ *
++ * Argument: None.
++ *
++ * Initiates the live update preparation phase. This action corresponds to
++ * the internal %LIVEUPDATE_PREPARE kernel event and can also be triggered
++ * by writing '1' to ``/sys/kernel/liveupdate/prepare``. This typically
++ * triggers the main state saving process for items marked via the PRESERVE
++ * ioctls. This occurs *before* the main "blackout window", while user
++ * applications (e.g., VMs) may still be running. Kernel subsystems
++ * receiving the %LIVEUPDATE_PREPARE event should serialize necessary state.
++ * This command does not transfer data.
++ *
++ * Return: 0 on success, negative error code on failure. Transitions state
++ * towards %LIVEUPDATE_STATE_PREPARED on success.
++ */
++#define LIVEUPDATE_IOCTL_EVENT_PREPARE					\
++	_IO(LIVEUPDATE_IOCTL_TYPE, 0x04)
++
++/**
++ * LIVEUPDATE_IOCTL_EVENT_FREEZE - Notify subsystems of imminent reboot
++ * transition.
++ *
++ * Argument: None.
++ *
++ * Notifies the live update subsystem and associated components that the kernel
++ * is about to execute the final reboot transition into the new kernel (e.g.,
++ * via kexec). This action triggers the internal %LIVEUPDATE_FREEZE kernel
++ * event. This event provides subsystems a final, brief opportunity (within the
++ * "blackout window") to save critical state or perform last-moment quiescing.
++ * Any remaining or deferred state saving for items marked via the PRESERVE
++ * ioctls typically occurs in response to the %LIVEUPDATE_FREEZE event.
++ *
++ * This ioctl should only be called when the system is in the
++ * %LIVEUPDATE_STATE_PREPARED state. This command does not transfer data.
++ *
++ * Return: 0 if the notification is successfully processed by the kernel (but
++ * reboot follows). Returns a negative error code if the notification fails
++ * or if the system is not in the %LIVEUPDATE_STATE_PREPARED state.
++ */
++#define LIVEUPDATE_IOCTL_EVENT_FREEZE					\
++	_IO(LIVEUPDATE_IOCTL_TYPE, 0x05)
++
++/**
++ * LIVEUPDATE_IOCTL_EVENT_CANCEL - Cancel the live update preparation phase.
++ *
++ * Argument: None.
++ *
++ * Notifies the live update subsystem to abort the preparation sequence
++ * potentially initiated by %LIVEUPDATE_IOCTL_EVENT_PREPARE. This action
++ * typically corresponds to the internal %LIVEUPDATE_CANCEL kernel event,
++ * which might also be triggered automatically if the PREPARE stage fails
++ * internally.
++ *
++ * When triggered, subsystems receiving the %LIVEUPDATE_CANCEL event should
++ * revert any state changes or actions taken specifically for the aborted
++ * prepare phase (e.g., discard partially serialized state). The kernel
++ * releases resources allocated specifically for this *aborted preparation
++ * attempt*.
++ *
++ * This operation cancels the current *attempt* to prepare for a live update
++ * but does **not** remove previously validated items from the internal list
++ * of potentially preservable resources. Consequently, preservation tokens
++ * previously generated by successful %LIVEUPDATE_IOCTL_FD_PRESERVE or calls
++ * generally **remain valid** as identifiers for those potentially preservable
++ * resources. However, since the system state returns towards
++ * %LIVEUPDATE_STATE_NORMAL, user space must initiate a new live update sequence
++ * (starting with %LIVEUPDATE_IOCTL_EVENT_PREPARE) to proceed with an update
++ * using these (or other) tokens.
++ *
++ * This command does not transfer data. Kernel callbacks for the
++ * %LIVEUPDATE_CANCEL event must not fail.
++ *
++ * Return: 0 on success, negative error code on failure. Transitions state back
++ * towards %LIVEUPDATE_STATE_NORMAL on success.
++ */
++#define LIVEUPDATE_IOCTL_EVENT_CANCEL					\
++	_IO(LIVEUPDATE_IOCTL_TYPE, 0x06)
++
++/**
++ * LIVEUPDATE_IOCTL_EVENT_FINISH - Signal restoration completion and trigger
++ * cleanup.
++ *
++ * Argument: None.
++ *
++ * Signals that user space has completed all necessary restoration actions in
++ * the new kernel (after a live update reboot). This action corresponds to the
++ * internal %LIVEUPDATE_FINISH kernel event and may also be triggerable via
++ * sysfs (e.g., writing '1' to ``/sys/kernel/liveupdate/finish``)
++ * Calling this ioctl triggers the cleanup phase: any resources that were
++ * successfully preserved but were *not* subsequently restored (reclaimed) via
++ * the RESTORE ioctls will have their preserved state discarded and associated
++ * kernel resources released. Involved devices may be reset. All desired
++ * restorations *must* be completed *before* this. Kernel callbacks for the
++ * %LIVEUPDATE_FINISH event must not fail. Successfully completing this phase
++ * transitions the system state from %LIVEUPDATE_STATE_UPDATED back to
++ * %LIVEUPDATE_STATE_NORMAL. This command does not transfer data.
++ *
++ * Return: 0 on success, negative error code on failure.
++ */
++#define LIVEUPDATE_IOCTL_EVENT_FINISH					\
++	_IO(LIVEUPDATE_IOCTL_TYPE, 0x07)
++
++#endif /* _UAPI_LIVEUPDATE_H */
 -- 
 2.49.0.1101.gccaa498523-goog
 
