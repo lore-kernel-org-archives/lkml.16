@@ -1,154 +1,158 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from clean210.mxserver.ro (clean210.mxserver.ro [176.223.125.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDA5288C80
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21CF2797A1;
+	Thu, 15 May 2025 08:49:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.223.125.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747298920; cv=none; b=XG4twYTr/3cGtMTo1bYjvaDxLaRCOVqEsbOjVEdVqOuJ7UMK87ii2R/PhAXVnkujL7Yjshsz9J1dW0jk6MlfCjfAHMmAqlXiINYEVLcYTZ8sxh42m14R3WjB3SsjWcBDm+9GqUqKjoqHAcEUIyLlLp0X+EDDmE6XTt8PpQC6IMA=
+	t=1747298950; cv=none; b=Uok8MLWrLsw9wNwDEPg6v7iy/wY0QUA5BeMvzZNZBix0rZXx7tNSGurZ7KuA7Yoe8v+hOu7JmxwUwV56hIBwiJhf8rGukOnSYRVneDorTcSfCsSjwHips/bUjcG12qDUbmqfx80jGDUYRqu8Z0Yh052ev/cIY8sx+63XVrA0aQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747298920; c=relaxed/simple;
-	bh=uafTKsLt5Y6vI+2YJVWbCoVLU1+w6d1TN41/6GcJe8w=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=PuqnDwql+kJs77QHgkm/I+tsLUSclujk9gGX+Q3Y5i4Xdt5c51TX0KISpjslwQb42VQVLOTLGXBiAZrnVhV58W2iuywhyfUCY05nJNsxwZXIaRtFfVahm/zkaB1aswUbsemRIG/OQ3iSFngDmzJD2j0cVW9ihZywo3dIj4vRIPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=I+o+mqOr; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1747298950; c=relaxed/simple;
+	bh=afSHaI5eP32dQE5fXMwmOmDmg8JFKckh+LAOUTVscFA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Pd1rCwZjMbgjpL2TTnZR+nHlaIEVbxLshTZmkP6e08JxO/P+MPh/37RqIm/PIbwT2SOdzVALz2piQ+H30WgOSFa9kXgzgZISL8DHMzsvKteUTK6aet62KUeBKPY5fstiRS2TmF8UHJuvrhMXYcmiWipWRYm/neryjJGia159NjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro; spf=pass smtp.mailfrom=taladin.ro; dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b=Qv8AGPej; arc=none smtp.client-ip=176.223.125.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=taladin.ro
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="I+o+mqOr"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a0b4907a28so89429f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:48:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1747298916; x=1747903716; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bdVLI+IKJQCwIaBP/4ipGt86DAIuj3sOKMK9lc4aqFc=;
-        b=I+o+mqOrLwb6wAy3fZ6S3zjKPSqaM3CwDCRIeUdIay3/UdKVnn2nqClHp2i280eIJo
-         tZyO0jy8xMq7nzDk/AqEDzGLQA6Av8h5IUIrV+E9571R5E2Zid8XpZXo6RayFQu3J9Et
-         F/GBqCB1+3SvxUlFk0JZ8KNMo3Pt8iiTg8MJGPAZ2Y7gQJZL9F5OGqKptUTpV1kwK24L
-         EOlzSCCEVIi2oevOVj9yLa8GrSIWcCDBU4NLrVldY0U3XkdWSWI2ytaUJ8Sq3ZQqb4cs
-         u1f0G8OtL1VTWuMsykX7Bwk74nyGnyworNNU6w3awX+4DK4SlJeRIYuANTsjnT//Pq4q
-         lnrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747298916; x=1747903716;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=bdVLI+IKJQCwIaBP/4ipGt86DAIuj3sOKMK9lc4aqFc=;
-        b=o03GV143v8n/QlzXyHZAZvxTJapS7KA7a70v6s7YcWZlN2xe8srYKoQAjaS0FdVdPX
-         US1+XSw120lHCg6hNgAC8R+8WAjcleH9nUeGhDVmYgI5B+fxxAnu7PIUuIAYY9THa7J7
-         oWT8yeNr5rueb+03BSymvE3ppnxOKVkPyc8sUw85wG3tYEMt7LzAgdevzxI6KrKW9AGm
-         zXROls0Vddn3RZbMPQqZgiHUUOsnoLO0+6QjSRhUjen69LHnm7wYKwsd7FLIWiU9s5xt
-         etijEFDRm8Fy6HbQYYXYCO8yo2NzD/Y3Ti0C4BPLk73nbBaOKMM3H0CfXcbxKbl3IMHQ
-         F2+w==
-X-Gm-Message-State: AOJu0YyKckhUiujnvM6eWWYR0yh3XwNrcCiF4q78AELymgEFv/efsuow
-	7USP6MQHJyM2uD+V34iYFLkX3RKlp1hCOqSr7Ht/NYQwTALxiQqDmGLMoPjsMFU=
-X-Gm-Gg: ASbGncuzTj1fesDp5gINPKoeCcKAFlwm892SQf33fiux4VkUBcCs2DxpnlYAzHYujXZ
-	QxRCAFrVpqat5AHDdbxjesDYpwNP1jtbuKWUS91au2ETg5kS/ZyreofH1GtGiGhvVXXUCn2udeR
-	BDyLjGWhFaUPxeb5DXbm9IVwbKPi6k+cZWij2P/G2EJZiCov81w+4krADPruyv5cSxJAowqrUT8
-	LRxEHd8Vyt3f4guRMM0qfRifj0bG5RbsnvK2Ca+NM5GsXS+EUg0MIlGDycfQhsgBLT6ODipCqWY
-	iExI47OR32rZ9ZP1q1AEZ+2zlMjJSmbGHwMHJoTSdfGqAga3woo/U6OrUqmtnB8KITruHN3V/Yu
-	elKaOUW6uI0U=
-X-Google-Smtp-Source: AGHT+IFl5ofT8H2ymocVMBID7uffI6yQBoHWwntFgE3AOdsNMnKtMdzBwHwHlEbKzThnIcYnf09dKg==
-X-Received: by 2002:a5d:4311:0:b0:3a3:55b4:1abb with SMTP id ffacd0b85a97d-3a355b41b8emr294033f8f.12.1747298916300;
-        Thu, 15 May 2025 01:48:36 -0700 (PDT)
-Received: from localhost (ip-89-103-73-235.bb.vodafone.cz. [89.103.73.235])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2cf2bsm21822557f8f.80.2025.05.15.01.48.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 01:48:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b="Qv8AGPej"
+Received: from cloud347.c-f.ro ([185.236.86.218])
+	by cleanserver2.mxserver.ro with esmtps (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <asoponar@taladin.ro>)
+	id 1uFTm4-001W25-Vt; Thu, 15 May 2025 04:17:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=taladin.ro;
+	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=IcwQOeAopjJk4D833aLWPS/i3EpXTNhJ5OpQyTYtqcU=; b=Qv8AGPejwyTt2HEAh8UKzOQGTy
+	gPmmaCA6DYGC/iC13lIUwKL1zddUJLqr6qnYqcMa5WfG5C6/b5OpxTtI5c8Bg5G28qqqnG/UGqpZq
+	vZLFJuAnLQaSk9Xc5ch9k9vWGl65OTWWC4nA+z1V8At6CP3LzjtL+EB6CfaDvEFNr4gqH9058lkgX
+	yMoGouH1h0fVjeH8fCnx+1FJzPFaHFBqSmMx33ieECLYMW+ZEoTJxQ+8v2ywGHWpTRvf4CCSni/yT
+	5f/uXagpUd8Q5h+mjQlYae8yG7bC6um6cJPuPgse3acq9LZoEMEqDYSGhvF4NEgk3SZxEVRQ6N96n
+	AXOLwhqw==;
+Received: from [109.166.137.172] (port=39024 helo=localhost)
+	by cloud347.c-f.ro with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.98.1)
+	(envelope-from <asoponar@taladin.ro>)
+	id 1uFTlt-00000006qFv-0sEf;
+	Thu, 15 May 2025 11:17:02 +0300
+From: Alexandru Soponar <asoponar@taladin.ro>
+To: linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	linux-watchdog@vger.kernel.org
+Cc: jdelvare@suse.com,
+	linux@roeck-us.net,
+	jic23@kernel.org,
+	pavel@ucw.cz,
+	lee@kernel.org,
+	baocheng.su@siemens.com,
+	wim@linux-watchdog.org,
+	tobias.schaffner@siemens.com,
+	angelogioacchino.delregno@collabora.com,
+	benedikt.niedermayr@siemens.com,
+	matthias.bgg@gmail.com,
+	aardelean@baylibre.com,
+	contact@sopy.one,
+	Alexandru Soponar <asoponar@taladin.ro>
+Subject: [PATCH 10/16] iio: ad7606: Fix type incompatibility with non-macro find_closest
+Date: Thu, 15 May 2025 11:13:26 +0300
+Message-ID: <20250515081332.151250-11-asoponar@taladin.ro>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250515081332.151250-1-asoponar@taladin.ro>
+References: <20250515081332.151250-1-asoponar@taladin.ro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 15 May 2025 10:48:35 +0200
-Message-Id: <D9WLRSAB63M5.3DZD4ND3WVZ6F@ventanamicro.com>
-Subject: Re: [PATCH v15 05/27] riscv: usercfi state for task and
- save/restore of CSR_SSP on trap entry/exit
-Cc: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
- <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
- <devicetree@vger.kernel.org>, <linux-arch@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
- <alistair.francis@wdc.com>, <richard.henderson@linaro.org>,
- <jim.shu@sifive.com>, <andybnac@gmail.com>, <kito.cheng@sifive.com>,
- <charlie@rivosinc.com>, <atishp@rivosinc.com>, <evan@rivosinc.com>,
- <cleger@rivosinc.com>, <alexghiti@rivosinc.com>, <samitolvanen@google.com>,
- <broonie@kernel.org>, <rick.p.edgecombe@intel.com>,
- <rust-for-linux@vger.kernel.org>, "Zong Li" <zong.li@sifive.com>,
- "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-To: "Alexandre Ghiti" <alex@ghiti.fr>, "Deepak Gupta" <debug@rivosinc.com>,
- "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Borislav Petkov" <bp@alien8.de>, "Dave Hansen"
- <dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
- <hpa@zytor.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Liam R.
- Howlett" <Liam.Howlett@oracle.com>, "Vlastimil Babka" <vbabka@suse.cz>,
- "Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>, "Paul Walmsley"
- <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert
- Ou" <aou@eecs.berkeley.edu>, "Conor Dooley" <conor@kernel.org>, "Rob
- Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Arnd Bergmann" <arnd@arndb.de>, "Christian Brauner" <brauner@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>, "Oleg Nesterov" <oleg@redhat.com>,
- "Eric Biederman" <ebiederm@xmission.com>, "Kees Cook" <kees@kernel.org>,
- "Jonathan Corbet" <corbet@lwn.net>, "Shuah Khan" <shuah@kernel.org>, "Jann
- Horn" <jannh@google.com>, "Conor Dooley" <conor+dt@kernel.org>, "Miguel
- Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun
- Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-References: <20250502-v5_user_cfi_series-v15-0-914966471885@rivosinc.com>
- <20250502-v5_user_cfi_series-v15-5-914966471885@rivosinc.com>
- <D9OZVNOGLU4T.2XOUPX27HN0W8@ventanamicro.com>
- <122fc6cd-2e21-4fca-979d-bcf558107b81@ghiti.fr>
-In-Reply-To: <122fc6cd-2e21-4fca-979d-bcf558107b81@ghiti.fr>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SpamExperts-Domain: cloud347.c-f.ro
+X-SpamExperts-Username: 185.236.86.218
+Authentication-Results: mxserver.ro; auth=pass smtp.auth=185.236.86.218@cloud347.c-f.ro
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: SB/global_tokens (0.00322122345698)
+X-Recommended-Action: accept
+X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT+K+F6pHTdOPZZqI+fEkVaAPUtbdvnXkggZ
+ 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5w1OL79HMxE022P+rQy8YAdcSeERs4TOTnIH1kc1IWc5TSx
+ S75yz9IFZiY7BarU/NrpK8SEOwGmfn6ucAKqn/OHRh3BqzFaEnAEj4UixLJBjVNiLZt/QXQnOBRD
+ +jq1HsIBmHTFdhqXZEtguZY7iGKpkcJnJKaJfT+dw1udmv00tbIRNtoyOobb3xnDyRRylAVTYi2b
+ f0F0JzgUQ/o6tR7C8pLPCtTiVLo0r89ClJHDKhDGKgJ+T00JeCnHBmMdB1eMZAyYlfUtEN4pUyes
+ jVRntA/J5DcfwvG53FyVviDO9UET3GKmqv1jT0lY+AQz8YX4CVph7ctC7tRH2SPTQJ/0klTuXKq/
+ B9rqRWsYzNfBLt79i78aPHyWnIqxGMxPZotYvH/es1vXuByXo2bkrYMqq0x5CzaUoJIoBUQayHle
+ UvbvCQmh9x4kn6NeQcRkc6G+OgAcq5x+BzhRyg9rYO6I0H7Q2OEpckvWJAOmdJd77Z9vwc+QHB+X
+ +u7aTqYHtT2CBuxNPBc9JM2jck1NnIBf0tvflhq7Xjhll72AYgnW/6M0ftSpvLIx+X1vKami8KF6
+ jWQ71uVNIY/EFPWeDmcZuFRQy1vmjjPiYw8fUCp0/qY6cmSW9oUDdvKuTRfTGZ6f8nTXoYFaQ71l
+ mMti8uxA0gKVmIzBXtbLDVvAQ/KVNa6nAbYGixTbx4sXUH4WPL6SAN5VcIfsMVILjVAz6RZsCHxD
+ lgOJwEwCFaF+62b2lf1UUDu9jECN1V/lwmsioRLmNJoHOZOE/9e5UD715p61XAQw85DCXa0iAPEd
+ fYyrF5wMRSLGyY+i0m2IxQLxQUzTb3Mji+CrO1+NTWs5OBXbSDBPqdRoFsq0hfzdx0oxkgNI/jhY
+ WFhu7VV+HdWjdZLlmQ5z83qEVVG/6RJ+BW7FmGcwL889DSW2cZWGkIYVQAbHnYkWUz1gRIjAiMvi
+ vM7um7t0SVa5NVZ2g1u6DnOpqk1nwAzTSgytNKIH5lfAuQc8I07FTFcjpdfX/Jcr87en7cKbI0NU
+ afdkQMG+6qjtXoANVR89VM6f75a5kmRIbungV7ywXD8VtmM8wef5C6IkqMFhROX1HYRo9Sm1kZOW
+ saz62DSUUd/fn3Ix/aSqJVglEtnFggTvi4y/qO0sxBxzHDeqqFz43py4SDhdaHkWOGxZQgSAzbb+
+ OB/nFYi5VbOv2oY4HXLSfAUu3sMpupagJz67c6+2AaKYGhiMiXWGMvYnkNWjwSQDaUU9MqYUCeef
+ 0nlkmUPzlfoLUG4g/XHuva4NQ7gH1kLtR+dZ31Wj92PNDpgLsd6Ddd/s7VM53twrVC8K+lj1c6e/
+ tTmd6eMo8njYQeCXryE9YzCFXixhT7FVIMQwRWLn0yVyqUMOeb6+5/5oQUTrIe1XMSXJ58tr/yiP
+ gGFyxS1LuwmPRAQzaEJVYkfhZXq/u54kZVCWtfUf9oDBqtClgM5jH/om1Q6gjkapWNvVA5HRyb3X
+ trWYR6vnFpUUmgU46LTsHtrjRqVe/ojyw7bapws3danDDsxD6gvvWu5/Lf1bKbM1VroDfVYPkwIu
+ /8x7KhILIr1IfwgT9kxT5f4reZBSMLp/jH4zvQRYQJnl3XNqRK2lK/zP
+X-Report-Abuse-To: spam@cleanserver1.mxserver.ro
+X-Complaints-To: abuse@cleanserver1.mxserver.ro
 
-2025-05-15T09:28:25+02:00, Alexandre Ghiti <alex@ghiti.fr>:
-> On 06/05/2025 12:10, Radim Kr=C4=8Dm=C3=A1=C5=99 wrote:
->> 2025-05-02T16:30:36-07:00, Deepak Gupta <debug@rivosinc.com>:
->>> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
->>> @@ -91,6 +91,32 @@
->>> +.macro restore_userssp tmp
->>> +	ALTERNATIVE("nops(2)",
->>> +		__stringify(				\
->>> +		REG_L \tmp, TASK_TI_USER_SSP(tp);	\
->>> +		csrw CSR_SSP, \tmp),
->>> +		0,
->>> +		RISCV_ISA_EXT_ZICFISS,
->>> +		CONFIG_RISCV_USER_CFI)
->>> +.endm
->> Do we need to emit the nops when CONFIG_RISCV_USER_CFI isn't selected?
->>
->> (Why not put #ifdef CONFIG_RISCV_USER_CFI around the ALTERNATIVES?)
->
-> The alternatives are used to create a generic kernel that contains the=20
-> code for a large number of extensions and only enable it at runtime=20
-> depending on the platform capabilities. This way distros can ship a=20
-> single kernel that works on all platforms.
+The ad7606_oversampling_avail and ad7616_oversampling_avail arrays were
+previously declared as unsigned int but used with find_closest(). With
+find_closest() now implemented as a function taking signed int parameters
+instead of a macro, passing unsigned arrays causes type incompatibility
+errors. This patch changes the arrays type from unsigned int to int to
+ensure compatibility with the function signature and prevent compilation
+errors.
 
-Yup, and if a kernel is compiled without CONFIG_RISCV_USER_CFI, the nops
-will only enlarge the binary and potentially slow down execution.
-In other words, why we don't do something like this
+Signed-off-by: Alexandru Soponar <asoponar@taladin.ro>
+---
+ drivers/iio/adc/ad7606.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
- (!CONFIG_RISCV_USER_CFI ? "" :
-   (RISCV_ISA_EXT_ZICFISS ? __stringify(...) : "nops(x)"))
+diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+index d8e3c7a43678..41b477ea386d 100644
+--- a/drivers/iio/adc/ad7606.c
++++ b/drivers/iio/adc/ad7606.c
+@@ -81,11 +81,11 @@ static const unsigned int ad7609_hw_scale_avail[2][2] = {
+ 	{ 0, 152588 }, { 0, 305176 }
+ };
+ 
+-static const unsigned int ad7606_oversampling_avail[7] = {
++static const int ad7606_oversampling_avail[7] = {
+ 	1, 2, 4, 8, 16, 32, 64,
+ };
+ 
+-static const unsigned int ad7616_oversampling_avail[8] = {
++static const int ad7616_oversampling_avail[8] = {
+ 	1, 2, 4, 8, 16, 32, 64, 128,
+ };
+ 
+@@ -835,7 +835,7 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
+ 			    long mask)
+ {
+ 	struct ad7606_state *st = iio_priv(indio_dev);
+-	unsigned int scale_avail_uv[AD760X_MAX_SCALES];
++	int scale_avail_uv[AD760X_MAX_SCALES];
+ 	struct ad7606_chan_scale *cs;
+ 	int i, ret, ch = 0;
+ 
+@@ -884,7 +884,7 @@ static ssize_t ad7606_oversampling_ratio_avail(struct device *dev,
+ {
+ 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+ 	struct ad7606_state *st = iio_priv(indio_dev);
+-	const unsigned int *vals = st->oversampling_avail;
++	const int *vals = st->oversampling_avail;
+ 	unsigned int i;
+ 	size_t len = 0;
+ 
+-- 
+2.49.0
 
-instead of the current
-
- (CONFIG_RISCV_USER_CFI &&
-    RISCV_ISA_EXT_ZICFISS ? __stringify(...) : "nops(x)")
-
-It could be a new preprocessor macro in case we wanted to make it nice,
-but it's probably not a common case, so an ifdef could work as well.
-
-Do we just generally not care about such minor optimizations?
-
-(If we wanted to go an extra mile, we could also keep the nops when both
- CONFIG_RISCV_USER_CFI and RISCV_ISA_EXT_ZICFISS are present, but
- command line riscv_nousercfi disabled backward cfi.)
-
-Thanks.
