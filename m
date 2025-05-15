@@ -1,179 +1,320 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4324729B786
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 20:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D25299933
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 20:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747340515; cv=none; b=T7RmhUH+IvXscxWSNuyUyZfrPUnndp3so3Z6rrYxhftp3iUoMY0wFK2LHwbfWUKOYGlxSaEORwAeWbuHWGhg/RoPeh+4lcGusacpIuTC581OTaJrwFSGsjqnAnNgRxy8gVadi5Ua6BnEY8nU8KuH8BpYHIj0lYUlQSUrpOaVae0=
+	t=1747340649; cv=none; b=KLhjz8M4ikCAAvRk1kH92Se2cHElj2UYPSjtdqVURzwUlKPgVNX4Ttajn3lDBMS7X7TDlmaDo0DbLTu/XdG1LkZM66k1/WIs2WrIDdR2gIeOpGmd766dL7kvuu1eWBoeRUErHJNqezG3/9qyhGhYzwqGge8As6neAheO6ubvbC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747340515; c=relaxed/simple;
-	bh=mJfCC/iRmdk2M7MvZLIWog78RJ8ElfIQyxW4zW2+VQ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a8SlIA8MV47sSBDyZKc4hZMj6ZJ/MpeBaT9aUJN46lvj1u6VKiLz3CrU0KTowd45v57qCq0S5IYe+Dy+um4ZevlzwLsFAOSzQ/PZrrNGCjsiqFO0Ks0Eb3VtwjOvwa4AqTWB32UgDB2n3n8C4AXdmYfthD/0w+6PUjOLmtxEosM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N9omGqi/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eaNcOIgz; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747340649; c=relaxed/simple;
+	bh=+kMqPl0JDQX7QaGiLL+7LffY8No4gEZI/PY3gX1O+3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rRwoHK8QkYTmrT8fg7fCPPDkwcVF+b8ACx07C1ZD9fvLdPRtfspKB3Cl3WkeIbgdeQWyjL/bRMe4aF/xsF/gVX8O5JO0N6abCWfEScE7dRqJJjvPQcxGSXEKdAsbPwwoHlh+GqmRAhaWQ9ytTMA9peeF6GUKXV58rZUbAsa1rko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vR31NpxZ; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N9omGqi/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eaNcOIgz"
-From: "Ahmed S. Darwish" <darwi@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747340511;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HoF1rv0y4osaBn1doVAbQf/kbyat3/wfg/xnJwdsyfA=;
-	b=N9omGqi/zjnrKBhcHLykxO4+HAUpCZcOQ0V3XHHYV6EvYUI0u7q+Gqk55w54UB9QKA1Q6b
-	Q2Kve/nRypdYVr6vu5p+FL3nAkRcNnUB5dEnDz6VtAmhGtDLOU1TnOwmadk4NQ/rNVeeDU
-	7I5kAjNS6QH1au2CVx27fbMYEtjVda/gy4mCKziou+HMp6yZXwRcX8WaX7PKJ9GU7fTFdg
-	gmDjXXj+2Av4lznceuvs01WGczq9FBtjTgLq1BpaJn8R69Bjx10vSNxl/MJEZqlmXZbxAc
-	KVXRD1Fjw3a5S17WBtSbEOd6bIZWw+CfShoitikLtWbjly2kkEwRXdsck3kXoA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747340511;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HoF1rv0y4osaBn1doVAbQf/kbyat3/wfg/xnJwdsyfA=;
-	b=eaNcOIgzD2aIyZRLU9+dakO2rnoBRDD9OQ3W3JENFmSW1Yhz0YSPLz2j+8e1XCAONdoDn8
-	WQY08vW5GVlixJAw==
-To: Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	x86@kernel.org,
-	x86-cpuid@lists.linux.dev,
-	LKML <linux-kernel@vger.kernel.org>,
-	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v2 2/2] x86/cpuid: Rename hypervisor_cpuid_base() to cpuid_hypervisor_base()
-Date: Thu, 15 May 2025 22:21:42 +0200
-Message-ID: <20250515202143.34448-3-darwi@linutronix.de>
-In-Reply-To: <20250515202143.34448-1-darwi@linutronix.de>
-References: <20250515202143.34448-1-darwi@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vR31NpxZ"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-30e7bfef27dso295043a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 13:24:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747340647; x=1747945447; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=V2VSQyhTZNV0jvE/2WckSMtS0BAnsxh057td4KI4roM=;
+        b=vR31NpxZu4LV64sFMxPKBqLZ+9y+SSKZxWVxHeusVkHcDu5dT10QZKZx1+vaGlngZg
+         UXCFikaqCNIg1M8GsfRWXZj9MmZBVH1NbMSLE54OdXehyoATD15boYIb/ZelZwrtNK8m
+         7r+TOWfE0CqOd0jJ5+O1qKxshvBa/hYDzZENc66sp9orB6eBT1M7qG3xjVDtifADklFe
+         8opgwi1+XkdSbc/RvtcKNYE5+AXBtZ1CzpIuKhoI1q6zkAhZXZApzbkTRggdR384bRhF
+         l4ita13wBQrJ6Byo4UqWMI0FShyhfc4GzKIM8RWFrnDw6c6E8Kzs2Uchs92+rzMxhTGS
+         +orA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747340647; x=1747945447;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V2VSQyhTZNV0jvE/2WckSMtS0BAnsxh057td4KI4roM=;
+        b=nY3DHkHfWtBwqweSiPXUeRLOtHHk1LevbcHNTd1zKy23I0LAowULUPv6VbZWpnkFi/
+         5KmtpD3jcua4sqr12TcoE85fPcEikbHqsuoXdnvB8QbcFswoi1NGGC3dLZzybyW7Dzmn
+         Y0UitsRClsdpp6hN3TFmpS6xURDHR8opjflohu3/IdljUvd7R6aidQ35RDUn47zJGLCX
+         pkI2UTRYaQb4ishxILUOI/C/q/y+uRZcrpX0dzlt6Ho0s+T9ghlLmXeuZGwvL5TFl0ys
+         IN1KHcKEr3Gj/i9QzZffIJs844R7D4UuhSZhS7fO4IkDGYLuAKA2lJ+qYTTJPlYP+zpe
+         ocaw==
+X-Forwarded-Encrypted: i=1; AJvYcCUz+SHqmDd80sMMaCoaJnWw5ReWqkx48NnFVDIE1y8t7jpXCsdKt8iEaqhWvJuOOQ61PK4RRVNb5jUcPdw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzL1P/td4WpisLZPBKrF/bJQSc7fYSe4JOjF03YQ4hs3eUtGHvE
+	Nwcg5GiVfYO/hyfKGIQVXQ9T/SQCfB9XI0t6Z1lPir4tRG0uM6fS3VghVUSLFqkiQfk=
+X-Gm-Gg: ASbGnct2izD1+9VdhkuNpowBrEdy42w9ljAHKQ+8OYB3euyS4ktJDU6Gkd2PsUArJE4
+	ixZ5NEjRRvocqWFRvpN9kgB8eiNVZH2B6BEAikeGdoN3hlY+7kAmfLV/QBf9E0ydq+WFzZOUE/o
+	YkpswZrJNGL+5aP62MPG6xN6ZwiKwwfGTYnZiEaWfW/hZhdfz7hQsAHP5o/4xZbLKSP9BKdxTNE
+	cRecCUV4LlHyfVVMUjxABp+BCetCS3TxW9dCUsFN9FREPm7n8+V1bAtJ4YTwIceKu0gds/JQbq+
+	k5ugC5CdXqgdXHrro7zM40z6H6CJOoNMIDrQM9EsvIQCUpGiFvvf8evnR5Et025hYQ==
+X-Google-Smtp-Source: AGHT+IEUFKVx7oIa2XqCPU17O56pYWL4lei0a4c8lfjHEvBMewyutxU8qjTgh8IMG0LEf2+RATTOXg==
+X-Received: by 2002:a17:90b:3a88:b0:30e:7b3b:b901 with SMTP id 98e67ed59e1d1-30e7d558c1emr1000521a91.18.1747340646700;
+        Thu, 15 May 2025 13:24:06 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:1d7a:b4f2:fe56:fa4e])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e334fb0d0sm3879347a91.41.2025.05.15.13.24.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 13:24:06 -0700 (PDT)
+Date: Thu, 15 May 2025 14:24:04 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Dawei Li <dawei.li@linux.dev>
+Cc: andersson@kernel.org, linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, set_pte_at@outlook.com
+Subject: Re: [PATCH v2 1/3] rpmsg: char: Reuse eptdev logic for anon device
+Message-ID: <aCZNZPkb5oPZiz9G@p14s>
+References: <20250509155927.109258-1-dawei.li@linux.dev>
+ <20250509155927.109258-2-dawei.li@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509155927.109258-2-dawei.li@linux.dev>
 
-In order to let all the APIs under <cpuid/api.h> have a shared "cpuid_"
-namespace, rename hypervisor_cpuid_base() to cpuid_base_hypervisor().
+Hi,
 
-To align with the new style, also rename:
+On Fri, May 09, 2025 at 11:59:25PM +0800, Dawei Li wrote:
+> Current uAPI implementation for rpmsg ctrl & char device manipulation is
+> abstracted in procedures below:
+> 
+> Current uAPI implementation for rpmsg ctrl & char device manipulation is
+> abstracted in procedures below:
+> - fd = open("/dev/rpmsg_ctrlX")
+> - ioctl(fd, RPMSG_CREATE_EPT_IOCTL, &info); /dev/rpmsgY devnode is
+>   generated.
+> - fd_ep = open("/dev/rpmsgY", O_RDWR)
+> - operations on fd_ep(write, read, poll ioctl)
+> - ioctl(fd_ep, RPMSG_DESTROY_EPT_IOCTL)
+> - close(fd_ep)
+> - close(fd)
+> 
+> This /dev/rpmsgY abstraction is less favorable for:
+> - Performance issue: It's time consuming for some operations are
+> invovled:
+>   - Device node creation.
+>     Depends on specific config, especially CONFIG_DEVTMPFS, the overall
+>     overhead is based on coordination between DEVTMPFS and userspace
+>     tools such as udev and mdev.
+> 
+>   - Extra kernel-space switch cost.
+> 
+>   - Other major costs brought by heavy-weight logic like device_add().
+> 
+> - /dev/rpmsgY node can be opened only once. It doesn't make much sense
+>     that a dynamically created device node can be opened only once.
+> 
+> - For some container application such as docker, a client can't access
+>   host's dev unless specified explicitly. But in case of /dev/rpmsgY, which
+>   is generated dynamically and whose existence is unknown for clients in
+>   advance, this uAPI based on device node doesn't fit well.
+> 
+> An anon inode based approach is introduced to address the issues above.
+> Rather than generating device node and opening it, rpmsg code just make
+> a anon inode representing eptdev and return the fd to userspace.
 
-    for_each_possible_hypervisor_cpuid_base(function)
+Please change occurences of "anon" for "anonyous".  "Anon" was used to avoid
+writing "anonymous" all the time in the code, but description should not use the
+shorthand.  In the title, this patch and all other patches.
 
-to:
+> 
+> The legacy abstraction based on struct dev and struct cdev is honored
+> for:
+> - Avoid legacy uAPI break(RPMSG_CREATE_EPT_IOCTL)
+> - Reuse existing logic:
+>   -- dev_err() and friends.
+>   -- Life cycle management of struct device.
+> 
+> Signed-off-by: Dawei Li <dawei.li@linux.dev>
+> ---
+>  drivers/rpmsg/rpmsg_char.c | 80 ++++++++++++++++++++++++++------------
+>  1 file changed, 56 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/rpmsg/rpmsg_char.c b/drivers/rpmsg/rpmsg_char.c
+> index eec7642d2686..5b2a883d6236 100644
+> --- a/drivers/rpmsg/rpmsg_char.c
+> +++ b/drivers/rpmsg/rpmsg_char.c
+> @@ -91,7 +91,8 @@ int rpmsg_chrdev_eptdev_destroy(struct device *dev, void *data)
+>  	/* wake up any blocked readers */
+>  	wake_up_interruptible(&eptdev->readq);
+>  
+> -	cdev_device_del(&eptdev->cdev, &eptdev->dev);
+> +	if (eptdev->dev.devt)
+> +		cdev_device_del(&eptdev->cdev, &eptdev->dev);
+>  	put_device(&eptdev->dev);
+>  
+>  	return 0;
+> @@ -132,21 +133,17 @@ static int rpmsg_ept_flow_cb(struct rpmsg_device *rpdev, void *priv, bool enable
+>  	return 0;
+>  }
+>  
+> -static int rpmsg_eptdev_open(struct inode *inode, struct file *filp)
+> +static int __rpmsg_eptdev_open(struct rpmsg_eptdev *eptdev)
+>  {
+> -	struct rpmsg_eptdev *eptdev = cdev_to_eptdev(inode->i_cdev);
+>  	struct rpmsg_endpoint *ept;
+>  	struct rpmsg_device *rpdev = eptdev->rpdev;
+>  	struct device *dev = &eptdev->dev;
+>  
+> -	mutex_lock(&eptdev->ept_lock);
+>  	if (eptdev->ept) {
+> -		mutex_unlock(&eptdev->ept_lock);
+>  		return -EBUSY;
+>  	}
+>  
+>  	if (!eptdev->rpdev) {
+> -		mutex_unlock(&eptdev->ept_lock);
+>  		return -ENETRESET;
+>  	}
+>  
+> @@ -164,21 +161,32 @@ static int rpmsg_eptdev_open(struct inode *inode, struct file *filp)
+>  	if (!ept) {
+>  		dev_err(dev, "failed to open %s\n", eptdev->chinfo.name);
+>  		put_device(dev);
+> -		mutex_unlock(&eptdev->ept_lock);
+>  		return -EINVAL;
+>  	}
+>  
+>  	ept->flow_cb = rpmsg_ept_flow_cb;
+>  	eptdev->ept = ept;
+> -	filp->private_data = eptdev;
+> -	mutex_unlock(&eptdev->ept_lock);
+>  
+>  	return 0;
+>  }
+>  
+> -static int rpmsg_eptdev_release(struct inode *inode, struct file *filp)
+> +static int rpmsg_eptdev_open(struct inode *inode, struct file *filp)
+>  {
+>  	struct rpmsg_eptdev *eptdev = cdev_to_eptdev(inode->i_cdev);
+> +	int ret;
+> +
+> +	mutex_lock(&eptdev->ept_lock);
+> +	ret = __rpmsg_eptdev_open(eptdev);
+> +	if (!ret)
+> +		filp->private_data = eptdev;
+> +	mutex_unlock(&eptdev->ept_lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static int rpmsg_eptdev_release(struct inode *inode, struct file *filp)
+> +{
+> +	struct rpmsg_eptdev *eptdev = filp->private_data;
+>  	struct device *dev = &eptdev->dev;
+>  
+>  	/* Close the endpoint, if it's not already destroyed by the parent */
+> @@ -400,12 +408,13 @@ static void rpmsg_eptdev_release_device(struct device *dev)
+>  	struct rpmsg_eptdev *eptdev = dev_to_eptdev(dev);
+>  
+>  	ida_free(&rpmsg_ept_ida, dev->id);
+> -	ida_free(&rpmsg_minor_ida, MINOR(eptdev->dev.devt));
+> +	if (eptdev->dev.devt)
+> +		ida_free(&rpmsg_minor_ida, MINOR(eptdev->dev.devt));
+>  	kfree(eptdev);
+>  }
+>  
+> -static struct rpmsg_eptdev *rpmsg_chrdev_eptdev_alloc(struct rpmsg_device *rpdev,
+> -						      struct device *parent)
+> +static struct rpmsg_eptdev *__rpmsg_chrdev_eptdev_alloc(struct rpmsg_device *rpdev,
+> +							struct device *parent, bool cdev)
 
-    for_each_possible_cpuid_base_hypervisor(function)
 
-Adjust call-sites accordingly.
+I would simply rename this rpmsg_eptdev_alloc() and then use is in
+rpmsg_chrdev_eptdev_alloc() and rpmsg_anonynous_eptdev_alloc()
 
-Suggested-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
----
- arch/x86/include/asm/acrn.h           | 2 +-
- arch/x86/include/asm/cpuid/api.h      | 6 +++---
- arch/x86/include/asm/xen/hypervisor.h | 2 +-
- arch/x86/kernel/jailhouse.c           | 2 +-
- arch/x86/kernel/kvm.c                 | 2 +-
- arch/x86/kvm/cpuid.c                  | 2 +-
- 6 files changed, 8 insertions(+), 8 deletions(-)
+>  {
+>  	struct rpmsg_eptdev *eptdev;
+>  	struct device *dev;
+> @@ -428,33 +437,50 @@ static struct rpmsg_eptdev *rpmsg_chrdev_eptdev_alloc(struct rpmsg_device *rpdev
+>  	dev->groups = rpmsg_eptdev_groups;
+>  	dev_set_drvdata(dev, eptdev);
+>  
+> -	cdev_init(&eptdev->cdev, &rpmsg_eptdev_fops);
+> -	eptdev->cdev.owner = THIS_MODULE;
+> +	if (cdev) {
+> +		cdev_init(&eptdev->cdev, &rpmsg_eptdev_fops);
+> +		eptdev->cdev.owner = THIS_MODULE;
+> +	}
+>  
+>  	return eptdev;
+>  }
+>  
+> -static int rpmsg_chrdev_eptdev_add(struct rpmsg_eptdev *eptdev, struct rpmsg_channel_info chinfo)
+> +static struct rpmsg_eptdev *rpmsg_chrdev_eptdev_alloc(struct rpmsg_device *rpdev,
+> +						      struct device *parent)
+> +{
+> +	return __rpmsg_chrdev_eptdev_alloc(rpdev, parent, true);
+> +}
+> +
+> +static int __rpmsg_chrdev_eptdev_add(struct rpmsg_eptdev *eptdev,
+> +				     struct rpmsg_channel_info chinfo, bool cdev)
 
-diff --git a/arch/x86/include/asm/acrn.h b/arch/x86/include/asm/acrn.h
-index 1dd14381bcb6..fab11192c60a 100644
---- a/arch/x86/include/asm/acrn.h
-+++ b/arch/x86/include/asm/acrn.h
-@@ -25,7 +25,7 @@ void acrn_remove_intr_handler(void);
- static inline u32 acrn_cpuid_base(void)
- {
- 	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
--		return hypervisor_cpuid_base("ACRNACRNACRN", 0);
-+		return cpuid_base_hypervisor("ACRNACRNACRN", 0);
- 
- 	return 0;
- }
-diff --git a/arch/x86/include/asm/cpuid/api.h b/arch/x86/include/asm/cpuid/api.h
-index ccf20c62b89f..44fa82e1267c 100644
---- a/arch/x86/include/asm/cpuid/api.h
-+++ b/arch/x86/include/asm/cpuid/api.h
-@@ -188,14 +188,14 @@ static __always_inline bool cpuid_function_is_indexed(u32 function)
- 	return false;
- }
- 
--#define for_each_possible_hypervisor_cpuid_base(function) \
-+#define for_each_possible_cpuid_base_hypervisor(function) \
- 	for (function = 0x40000000; function < 0x40010000; function += 0x100)
- 
--static inline u32 hypervisor_cpuid_base(const char *sig, u32 leaves)
-+static inline u32 cpuid_base_hypervisor(const char *sig, u32 leaves)
- {
- 	u32 base, eax, signature[3];
- 
--	for_each_possible_hypervisor_cpuid_base(base) {
-+	for_each_possible_cpuid_base_hypervisor(base) {
- 		cpuid(base, &eax, &signature[0], &signature[1], &signature[2]);
- 
- 		/*
-diff --git a/arch/x86/include/asm/xen/hypervisor.h b/arch/x86/include/asm/xen/hypervisor.h
-index bd0fc69a10a7..c2fc7869b996 100644
---- a/arch/x86/include/asm/xen/hypervisor.h
-+++ b/arch/x86/include/asm/xen/hypervisor.h
-@@ -43,7 +43,7 @@ extern struct start_info *xen_start_info;
- 
- static inline uint32_t xen_cpuid_base(void)
- {
--	return hypervisor_cpuid_base(XEN_SIGNATURE, 2);
-+	return cpuid_base_hypervisor(XEN_SIGNATURE, 2);
- }
- 
- struct pci_dev;
-diff --git a/arch/x86/kernel/jailhouse.c b/arch/x86/kernel/jailhouse.c
-index cd8ed1edbf9e..9e9a591a5fec 100644
---- a/arch/x86/kernel/jailhouse.c
-+++ b/arch/x86/kernel/jailhouse.c
-@@ -49,7 +49,7 @@ static uint32_t jailhouse_cpuid_base(void)
- 	    !boot_cpu_has(X86_FEATURE_HYPERVISOR))
- 		return 0;
- 
--	return hypervisor_cpuid_base("Jailhouse\0\0\0", 0);
-+	return cpuid_base_hypervisor("Jailhouse\0\0\0", 0);
- }
- 
- static uint32_t __init jailhouse_detect(void)
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index f3642226e0a5..921c1c783bc1 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -875,7 +875,7 @@ static noinline uint32_t __kvm_cpuid_base(void)
- 		return 0;	/* So we don't blow up on old processors */
- 
- 	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
--		return hypervisor_cpuid_base(KVM_SIGNATURE, 0);
-+		return cpuid_base_hypervisor(KVM_SIGNATURE, 0);
- 
- 	return 0;
- }
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 7f43d8d24fbe..ecd85f4801cc 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -236,7 +236,7 @@ static struct kvm_hypervisor_cpuid kvm_get_hypervisor_cpuid(struct kvm_vcpu *vcp
- 	struct kvm_cpuid_entry2 *entry;
- 	u32 base;
- 
--	for_each_possible_hypervisor_cpuid_base(base) {
-+	for_each_possible_cpuid_base_hypervisor(base) {
- 		entry = kvm_find_cpuid_entry(vcpu, base);
- 
- 		if (entry) {
--- 
-2.49.0
+Same here, rpmsg_eptdev_add()
 
+>  {
+>  	struct device *dev = &eptdev->dev;
+>  	int ret;
+>  
+>  	eptdev->chinfo = chinfo;
+>  
+> -	ret = ida_alloc_max(&rpmsg_minor_ida, RPMSG_DEV_MAX - 1, GFP_KERNEL);
+> -	if (ret < 0)
+> -		goto free_eptdev;
+> -	dev->devt = MKDEV(MAJOR(rpmsg_major), ret);
+> +	if (cdev) {
+> +		ret = ida_alloc_max(&rpmsg_minor_ida, RPMSG_DEV_MAX - 1, GFP_KERNEL);
+> +		if (ret < 0)
+> +			goto free_eptdev;
+>  
+> +		dev->devt = MKDEV(MAJOR(rpmsg_major), ret);
+> +	}
+> +
+> +	/* Anon inode device still need dev name for dev_err() and friends */
+>  	ret = ida_alloc(&rpmsg_ept_ida, GFP_KERNEL);
+>  	if (ret < 0)
+>  		goto free_minor_ida;
+>  	dev->id = ret;
+>  	dev_set_name(dev, "rpmsg%d", ret);
+>  
+> -	ret = cdev_device_add(&eptdev->cdev, &eptdev->dev);
+> -	if (ret)
+> -		goto free_ept_ida;
+> +	ret = 0;
+> +
+> +	if (cdev) {
+> +		ret = cdev_device_add(&eptdev->cdev, &eptdev->dev);
+> +		if (ret)
+> +			goto free_ept_ida;
+> +	}
+>  
+>  	/* We can now rely on the release function for cleanup */
+>  	dev->release = rpmsg_eptdev_release_device;
+> @@ -464,7 +490,8 @@ static int rpmsg_chrdev_eptdev_add(struct rpmsg_eptdev *eptdev, struct rpmsg_cha
+>  free_ept_ida:
+>  	ida_free(&rpmsg_ept_ida, dev->id);
+>  free_minor_ida:
+> -	ida_free(&rpmsg_minor_ida, MINOR(dev->devt));
+> +	if (cdev)
+> +		ida_free(&rpmsg_minor_ida, MINOR(dev->devt));
+>  free_eptdev:
+>  	put_device(dev);
+>  	kfree(eptdev);
+> @@ -472,6 +499,11 @@ static int rpmsg_chrdev_eptdev_add(struct rpmsg_eptdev *eptdev, struct rpmsg_cha
+>  	return ret;
+>  }
+>  
+> +static int rpmsg_chrdev_eptdev_add(struct rpmsg_eptdev *eptdev, struct rpmsg_channel_info chinfo)
+> +{
+> +	return __rpmsg_chrdev_eptdev_add(eptdev, chinfo, true);
+> +}
+> +
+>  int rpmsg_chrdev_eptdev_create(struct rpmsg_device *rpdev, struct device *parent,
+>  			       struct rpmsg_channel_info chinfo)
+>  {
+> -- 
+> 2.25.1
+> 
