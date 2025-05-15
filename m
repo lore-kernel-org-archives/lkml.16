@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C300725C6F7
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:14:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5FE25C6FC;
+	Thu, 15 May 2025 18:14:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747332873; cv=none; b=Z9geepWAW0pxpsOlihskTtQYtgQtjOaw9A5r+uTx0zqHUzbQqwO9DsYyHdz0fFKGenpgARJvsV6yTEaM5iDiLtyJOaplA/8P/Lz12ujS8rEMSb0U6s9DLzc/AzNs4v2RcZBfsx7cozrCS/VOuVzKuuc3Yw6x9/rFVbtdEmr6CPA=
+	t=1747332875; cv=none; b=nBV+ufmSyVE8XcE+gOdTEGbNdL2ziK6fJnVuVR4FFa7b8GgMGv0OQI2S46bLOHArCMuu6JM9svyFDeeL6Hda4is/eN3Z5fQg6t+am+J5UGevo2pbxfVcDd3MOVQfh1/3a4djsgavOTiocCdc1JpItleT9Cp+ETvr6F2vpeO8w80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747332873; c=relaxed/simple;
-	bh=VYeU6qPsYu6HjzI8Yk3UV6tP3FBzyeKXxEuAf7Ol7c4=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=TK5h3adBb+sbfvgkAtGfycyFau5GBktokyujmu09RyA3YV+Pdo0wgs6LuQY5/i407icVxxDeTwU0ouTzEtGGH+UwcgAU6tKT9cqQM3Vc8b0kq9mvdpmwCQFZQFemT1U6rXa5AWfrlRDZn1kEw3HqUbX5Kw9+Iwj3OsXuRslpxeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kKiZ+72p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747332875; c=relaxed/simple;
+	bh=4tBnniYi+YQkP1AOF85HwrvW0U1jTKjeKxBUh3u94cA=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=iFQSetw3+nJ7lmDYY5T2NlQ/F8IAtXOzGbXePAkYX6TLkUWAXzpMgA1I1wTNfjPNvxoDFnogFu0nwZGCJ5NLppHRb0I0k8PW/4HXBFS03SEEnwrL79GHABUGLF5BK1bzcuKqIOfSYkLLr56ii7f/kUUed36NL+OgeEvxc6qiPPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZzU1eOlm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kKiZ+72p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1458C4CEE7;
-	Thu, 15 May 2025 18:14:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZzU1eOlm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DCF7C4AF0B;
+	Thu, 15 May 2025 18:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747332873;
-	bh=VYeU6qPsYu6HjzI8Yk3UV6tP3FBzyeKXxEuAf7Ol7c4=;
+	s=k20201202; t=1747332875;
+	bh=4tBnniYi+YQkP1AOF85HwrvW0U1jTKjeKxBUh3u94cA=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=kKiZ+72p5q7+kxC27FnNBZrk6QOxOZ7u5V8kXPerA5tFgUFc7DtrKx/J0pDh/vCqi
-	 z6VzC3342CUgJ3dzF89eE4f0mU4JkgZenaXOydOp4Y8O8nDkFgB6KekmfMQEaWM8F5
-	 AXz6Wk+f34M3CrCWjpk/j6sqE97rohWXx2cCagDz/PrI9mUzzb/F3ARI/xR/ZIAu23
-	 7sn6Bu0SIx35GouDtHq+IVNPGiGxCmM5W6aI65FapW9afUCIOgdqGl7o15PMlG8Ywg
-	 J0z9RKygRUJPUZI240U998u2VeRg3GXr+0Mflsf7pf5JDmRRZrcSz/zcZLy1zZQ30e
-	 86HYUXQj7nk7A==
+	b=ZzU1eOlme6KNK0zhlikIStPppHUHrvV9GJbFveTjdk06SEO7gcN9EXeYmdTjDX20K
+	 92cGZXk8Ppj+a8++oTd4/vMKL9E4B5Bgp2kY5tTj1WrPUZ7l0m9wl3mAahDiXyyWtr
+	 q4kToTB0ozpqg9CIxUtZKncqHUTKqieeSrdTTM6nabKGTAPRQgpytUjm5I3KHdzqXV
+	 GcdiWlkbl3m+og391bfuL/G6GHu+ykudqgS/0pkpjlxmVnil4ta3nl2vux+5Q13w5j
+	 nJQHTPKNCqIsojmpeScQY4FbjsEWaDDy2BRuD66AKaUL3N6tRYizGxwpyX4JLSozzI
+	 lvhm99FioftbQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EADCF3806659;
-	Thu, 15 May 2025 18:15:11 +0000 (UTC)
-Subject: Re: [GIT PULL] HID fixes for 6.15
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D213806659;
+	Thu, 15 May 2025 18:15:13 +0000 (UTC)
+Subject: Re: [GIT PULL] Landlock fix for v6.15-rc7
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <regsgbllbtki5tyqbk3evkergys42lnuvle4t4t3rtnnogi7ki@ezutqcj2p4bu>
-References: <regsgbllbtki5tyqbk3evkergys42lnuvle4t4t3rtnnogi7ki@ezutqcj2p4bu>
+In-Reply-To: <20250515175203.2434864-1-mic@digikod.net>
+References: <20250515175203.2434864-1-mic@digikod.net>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <regsgbllbtki5tyqbk3evkergys42lnuvle4t4t3rtnnogi7ki@ezutqcj2p4bu>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git tags/hid-for-linus-2025051501
-X-PR-Tracked-Commit-Id: 578e1b96fad7402ff7e9c7648c8f1ad0225147c8
+X-PR-Tracked-Message-Id: <20250515175203.2434864-1-mic@digikod.net>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/mic/linux.git tags/landlock-6.15-rc7
+X-PR-Tracked-Commit-Id: 3039ed432745f8fdf5cbb43fdc60b2e1aad624c1
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fe661d01ab40eb4d1e7c6a8ace699901e6aef77b
-Message-Id: <174733291062.3202874.3482955857332801727.pr-tracker-bot@kernel.org>
-Date: Thu, 15 May 2025 18:15:10 +0000
-To: Benjamin Tissoires <bentiss@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>
+X-PR-Merge-Commit-Id: f1f2797f8a2478b6b2f731b4f70a87d313f9b41a
+Message-Id: <174733291210.3202874.5564790663282781849.pr-tracker-bot@kernel.org>
+Date: Thu, 15 May 2025 18:15:12 +0000
+To: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>, =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>, Tingmao Wang <m@maowtm.org>, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Thu, 15 May 2025 18:15:00 +0200:
+The pull request you sent on Thu, 15 May 2025 19:52:03 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git tags/hid-for-linus-2025051501
+> https://git.kernel.org/pub/scm/linux/kernel/git/mic/linux.git tags/landlock-6.15-rc7
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fe661d01ab40eb4d1e7c6a8ace699901e6aef77b
+https://git.kernel.org/torvalds/c/f1f2797f8a2478b6b2f731b4f70a87d313f9b41a
 
 Thank you!
 
