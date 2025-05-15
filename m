@@ -1,523 +1,138 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11334B1E49
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 05:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9C81F76A5;
+	Thu, 15 May 2025 05:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747285948; cv=none; b=tenHvmoIvM4u9HB/mlkvkDZ0JW/mtX4CNK3shzQcaC3lNei+8cVgBiGTLyHWc/CiCNqlMQCBtoAm/L90TUc7yMOcmKdOxQESke2CGRW1iK/oFEVC7vqzZhdLU2OokpIBeMJpIo6oJj43nY9mjt3dphenfeniDQ3i1VOpQ9ai1vM=
+	t=1747286104; cv=none; b=lWARCmlcsKFwcrWOMZ17FjfQ85esLo8YMhAg4e7NlcZtCEZbVbXgjw2hskRLg+hebi0MrYZrl+D6oEE/XPgXT0aw8ALlLfHKD60OVfiuyV65le6yJ4PuKj1H5vOW1qtrTtAza1/MKUE/g+jdm/0XhtUpj3LJZ0AUsUCj8LbFCco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747285948; c=relaxed/simple;
-	bh=mCW4x+MJ/4NRd9XqYzUjNxozHsTqopdOqzySd2fKVVA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=da9Ikn/Zrq0K2bCzAK13cYv8EGBFSVj2nim68qw5hMdRHeeOz1Y7ZZykgfF11EQs6zODtJOhyz+GrsQfq1VAvoHjBrjABYm8dp1cPmVMmZ2cFXbhjX+87R4L2C9AiKWh96Vp7z/K9Sy8EB4T87IRwMD7FiNaV6+HDm0jScftSrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=LKPXeL27; arc=none smtp.client-ip=115.124.30.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1747286104; c=relaxed/simple;
+	bh=5quPDZLRFjcNPqqzS24oX9XnH0WvFmarr2c80Q87cts=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=qqSx/UY5GAiBm2CNAjz9lMBHj91OLMJFRYOccpRxB9rjcD89oAH8ajlFGldvgFIwc29H2njTVJ4IOoEbMIou6efonbDc+bagNT8/NSkxuaKSnUb+O2pzmbsUW02hDY0ckwk3WS2VsoHByXe7ZDwtkdJgWKX4w0f2HUP+eX4vrrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aq7oSFMJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="LKPXeL27"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747285936; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=5yywUV/xiFcY4OeZNBUwTIwtLax520drbbajaHqkS7Q=;
-	b=LKPXeL27/VUaaoZ2WHjA41eyuMHINdn8RJbxWz68y295hIz/10FzucCrfeYPPh28st5BUakyHCDMOCdkAGuCnqAob+mcu0Tu3Ff1hIEnBykbDjmT7XAs+dq+tHrnqQT+P+VCWE+u15fE5cmm9sT/Q84pYhIAiNci65FVlPLxUd4=
-Received: from 30.221.131.36(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WapPNdi_1747285935 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 15 May 2025 13:12:15 +0800
-Message-ID: <b1c5c075-4835-4380-a1d4-29391e761459@linux.alibaba.com>
-Date: Thu, 15 May 2025 13:12:14 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aq7oSFMJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E72F2C4CEE7;
+	Thu, 15 May 2025 05:15:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747286103;
+	bh=5quPDZLRFjcNPqqzS24oX9XnH0WvFmarr2c80Q87cts=;
+	h=From:Date:Subject:To:Cc:From;
+	b=Aq7oSFMJOGMhULmvMfgBaGBgWPo8mOxz63bRIPjUCdBR2D1QzN88J0q3LmwcMGiZ8
+	 /Pg9CJuLhByCHRds1yCkQSN6lvaEaPbyNFbe1nweyzqS50SJom0NoMjPCBUXFi6H4p
+	 3txniRjSDjTIsxkkLTPpmVQcmyg9WzK9r3Uu3Kj3MWjYWrYeA61TCAU0anlyazQZmN
+	 k4EufOrxM9XW8yU/AwgXO3NaIYncOnSVWC2v6J4zAI822wxCf4eB5ZKhNXhghPm+no
+	 V1keS9/byHa9zhcJhteJ1H0EXcs3kKNeuC6P4+/gP/6ufEuuxLbbbq/3L7oijU2+IQ
+	 qzxM5cKsoBkHw==
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-326c1f3655eso4651011fa.1;
+        Wed, 14 May 2025 22:15:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVhHgiY9yNw6GFkLd4rFrqTfwBE4LF51B3elpna+j7E7ewdnXE4NkkF29+tgXqMlbh/Qfc7EbAHkDpquPA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySaushT4veOqr9oRKFY+du2kNVotzEL25VEahD86AgIG6KOB6H
+	BBa3aEGTeEin3MZMlmBHln4pHfr3JLnfuCtDIinZXQCQRH3Qi2pyhqiI9TBD6+eWYaiJuzcQ/k7
+	eSbfkWnKL6yc/AGq5ENvX52qxj10=
+X-Google-Smtp-Source: AGHT+IES1YEFu2FmFdTy8giE8yO6mxguW2QIbPQ+zmM605jl4KGIGuXSVYI+ZISxxcHVtOYp5ZdpdGmFjeXCezAO7H4=
+X-Received: by 2002:a2e:bc05:0:b0:309:1fee:378d with SMTP id
+ 38308e7fff4ca-327fabffbacmr4108641fa.19.1747286102623; Wed, 14 May 2025
+ 22:15:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] erofs: support deflate decompress by using Intel QAT
-To: Hongbo Li <lihongbo22@huawei.com>, linux-erofs@lists.ozlabs.org,
- Bo Liu <liubo03@inspur.com>, LKML <linux-kernel@vger.kernel.org>
-References: <20250514121709.2557-1-liubo03@inspur.com>
- <001d2160-e999-43cd-8bf1-2507e4a4eb1d@huawei.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <001d2160-e999-43cd-8bf1-2507e4a4eb1d@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Thu, 15 May 2025 14:14:26 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQezLBpYLqJ+=ONqoYKwdaw0_eywN9O26LTnifGq_g+tg@mail.gmail.com>
+X-Gm-Features: AX0GCFsVWAlFc78NCzefbym3f3XYHOMbrgX-CSSxcc6sTaFkIB71yPk8BxAGX-I
+Message-ID: <CAK7LNAQezLBpYLqJ+=ONqoYKwdaw0_eywN9O26LTnifGq_g+tg@mail.gmail.com>
+Subject: [GIT PULL] Kbuild fixes for v6.15-rc7
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hello Linus,
+
+Please pull some Kbuild fixes.
+
+Thank you.
 
 
 
-On 2025/5/15 11:08, Hongbo Li wrote:
-> 
-> 
-> On 2025/5/14 20:17, Bo Liu wrote:
->> This patch introdueces the use of the Intel QAT to decompress compressed
->> data in the EROFS filesystem, aiming to improve the decompression speed
->> of compressed datea.
->>
->> We created a 285MiB compressed file and then used the following command to
->> create EROFS images with different cluster size.
->>       # mkfs.erofs -zdeflate,level=9 -C16384
->>
->> fio command was used to test random read and small random read(~5%) and
->> sequential read performance.
->>       # fio -filename=testfile  -bs=4k -rw=read -name=job1
->>       # fio -filename=testfile  -bs=4k -rw=randread -name=job1
->>       # fio -filename=testfile  -bs=4k -rw=randread --io_size=14m -name=job1
->>
->> Here are some performance numbers for reference:
->>
->> Processors: Intel(R) Xeon(R) 6766E(144 core)
->> Memory:     521 GiB
->>
->> |-----------------------------------------------------------------------------|
->> |           | Cluster size | sequential read | randread  | small randread(5%) |
->> |-----------|--------------|-----------------|-----------|--------------------|
->> | Intel QAT |    4096      |    538  MiB/s   | 112 MiB/s |     20.76 MiB/s    |
->> | Intel QAT |    16384     |    699  MiB/s   | 158 MiB/s |     21.02 MiB/s    |
->> | Intel QAT |    65536     |    917  MiB/s   | 278 MiB/s |     20.90 MiB/s    |
->> | Intel QAT |    131072    |    1056 MiB/s   | 351 MiB/s |     23.36 MiB/s    |
->> | Intel QAT |    262144    |    1145 MiB/s   | 431 MiB/s |     26.66 MiB/s    |
->> | deflate   |    4096      |    499  MiB/s   | 108 MiB/s |     21.50 MiB/s    |
->> | deflate   |    16384     |    422  MiB/s   | 125 MiB/s |     18.94 MiB/s    |
->> | deflate   |    65536     |    452  MiB/s   | 159 MiB/s |     13.02 MiB/s    |
->> | deflate   |    131072    |    452  MiB/s   | 177 MiB/s |     11.44 MiB/s    |
->> | deflate   |    262144    |    466  MiB/s   | 194 MiB/s |     10.60 MiB/s    |
->>
->> Signed-off-by: Bo Liu <liubo03@inspur.com>
->> ---
->> v1: https://lore.kernel.org/linux-erofs/20250410042048.3044-1-liubo03@inspur.com/
->> Changes since v1:
->>   - Move the code to the decompress_crypto.c file.
->>   - Add a struct z_erofs_crypto_engine to maintain accelerator information.
->>   - Add a sysfs interface to enable/disable the accelerator.
->>
->>   fs/erofs/Makefile               |   2 +-
->>   fs/erofs/compress.h             |  13 ++
->>   fs/erofs/decompressor_crypto.c  | 219 ++++++++++++++++++++++++++++++++
->>   fs/erofs/decompressor_deflate.c |  14 +-
->>   fs/erofs/sysfs.c                |  19 +++
->>   5 files changed, 265 insertions(+), 2 deletions(-)
->>   create mode 100644 fs/erofs/decompressor_crypto.c
->>
->> diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
->> index 4331d53c7109..8462e16a8356 100644
->> --- a/fs/erofs/Makefile
->> +++ b/fs/erofs/Makefile
->> @@ -3,7 +3,7 @@
->>   obj-$(CONFIG_EROFS_FS) += erofs.o
->>   erofs-objs := super.o inode.o data.o namei.o dir.o sysfs.o
->>   erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
->> -erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o zutil.o
->> +erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o zutil.o decompressor_crypto.o
->>   erofs-$(CONFIG_EROFS_FS_ZIP_LZMA) += decompressor_lzma.o
->>   erofs-$(CONFIG_EROFS_FS_ZIP_DEFLATE) += decompressor_deflate.o
->>   erofs-$(CONFIG_EROFS_FS_ZIP_ZSTD) += decompressor_zstd.o
->> diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
->> index 2704d7a592a5..909fab195d93 100644
->> --- a/fs/erofs/compress.h
->> +++ b/fs/erofs/compress.h
->> @@ -70,10 +70,23 @@ struct z_erofs_stream_dctx {
->>       bool bounced;            /* is the bounce buffer used now? */
->>   };
->> +struct z_erofs_crypto_engine {
->> +    char *crypto_name;
->> +    bool enabled;
->> +    struct crypto_acomp *erofs_tfm;
->> +};
->> +
->> +extern struct z_erofs_crypto_engine *z_erofs_crypto[];
->> +
->>   int z_erofs_stream_switch_bufs(struct z_erofs_stream_dctx *dctx, void **dst,
->>                      void **src, struct page **pgpl);
->>   int z_erofs_fixup_insize(struct z_erofs_decompress_req *rq, const char *padbuf,
->>                unsigned int padbufsize);
->>   int __init z_erofs_init_decompressor(void);
->>   void z_erofs_exit_decompressor(void);
->> +int z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
->> +                        struct crypto_acomp *erofs_tfm, struct page **pgpl);
->> +struct crypto_acomp *z_erofs_crypto_get_enbale_engine(int type);
->> +int z_erofs_crypto_enable_engine(const char *name);
->> +int z_erofs_crypto_disable_engine(const char *name);
->>   #endif
->> diff --git a/fs/erofs/decompressor_crypto.c b/fs/erofs/decompressor_crypto.c
->> new file mode 100644
->> index 000000000000..500cff5e9b17
->> --- /dev/null
->> +++ b/fs/erofs/decompressor_crypto.c
->> @@ -0,0 +1,219 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +
-
-Unnecessary new line.
-
->> +#include <linux/scatterlist.h>
->> +#include <crypto/acompress.h>
->> +
->> +#include "compress.h"
->> +
->> +static int z_erofs_crypto_decompress_mem(struct z_erofs_decompress_req *rq,
->> +                struct crypto_acomp *erofs_tfm)
->> +{
->> +    unsigned int nrpages_out = rq->outpages, nrpages_in = rq->inpages;
-
-Could you just drop `nrpages_out` and `nrpages_in`? see below.
-
->> +    struct sg_table st_src, st_dst;
->> +    struct scatterlist *sg_src, *sg_dst;
->> +    struct acomp_req *req;
->> +    struct crypto_wait wait;
->> +    int ret, i;
->> +    u8 *headpage;
->> +
->> +
 
 
-Unnecessary new line.
+The following changes since commit 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3=
+:
 
->> +    WARN_ON(!*rq->in);
+  Linux 6.15-rc6 (2025-05-11 14:54:11 -0700)
 
-Unnecessary WARN_ON since kmap_local_page() will oops otherwise.
+are available in the Git repository at:
 
->> +    headpage = kmap_local_page(*rq->in);
->> +    ret = z_erofs_fixup_insize(rq, headpage + rq->pageofs_in,
->> +                min_t(unsigned int, rq->inputsize,
->> +                            rq->sb->s_blocksize - rq->pageofs_in));
->> +    kunmap_local(headpage);
->> +    if (ret)
->> +        return ret;
->> +
->> +    req = acomp_request_alloc(erofs_tfm);
->> +    if (!req) {
->> +        erofs_err(rq->sb, "failed to alloc decompress request");
->> +        return -ENOMEM;
->> +    }
->> +
->> +    if (sg_alloc_table(&st_src, nrpages_in, GFP_KERNEL)) {
->> +        acomp_request_free(req);
->> +        return -ENOMEM;
->> +    }
->> +
->> +    if (sg_alloc_table(&st_dst, nrpages_out, GFP_KERNEL)) {
->> +        acomp_request_free(req);
->> +        sg_free_table(&st_src);
->> +        return -ENOMEM;
->> +    }
->> +
->> +    for_each_sg(st_src.sgl, sg_src, nrpages_in, i) {
->> +        if (i == 0)
->> +            sg_set_page(sg_src, rq->in[0],
->> +                PAGE_SIZE - rq->pageofs_in, rq->pageofs_in);
->> +        else if (i == nrpages_in - 1)
->> +            sg_set_page(sg_src, rq->in[i],
->> +                rq->pageofs_in + rq->inputsize - (nrpages_in - 1) * PAGE_SIZE, 0);
->> +        else
->> +            sg_set_page(sg_src, rq->in[i], PAGE_SIZE, 0);
->> +    }
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+tags/kbuild-fixes-v6.15
 
-Can we just use sg_alloc_table_from_pages_segment() here?
+for you to fetch changes up to e0cd396d899805d56df91b989f8efad3a36df0da:
 
->> +
->> +    i = 0;
+  kbuild: fix typos "module.builtin" to "modules.builtin" (2025-05-12
+15:04:52 +0900)
 
-Unnecessary `i = 0;`
+----------------------------------------------------------------
+Kbuild fixes for v6.15
 
->> +    for_each_sg(st_dst.sgl, sg_dst, nrpages_out, i) {
->> +        if (i == 0)
->> +            sg_set_page(sg_dst, rq->out[0],
->> +                PAGE_SIZE - rq->pageofs_out, rq->pageofs_out);
->> +        else if (i == nrpages_out)
->> +            sg_set_page(sg_dst, rq->out[i],
->> +                rq->pageofs_out + rq->outputsize - (nrpages_out - 1) * PAGE_SIZE, 0);
->> +        else
->> +            sg_set_page(sg_dst, rq->out[i], PAGE_SIZE, 0);
->> +    }
+ - Add proper pahole version dependency to CONFIG_GENDWARFKSYMS to avoid
+   module loading errors
 
+ - Fix UAPI header tests for the OpenRISC architecture
 
-Can we just use sg_alloc_table_from_pages_segment() here?
+ - Add dependency on the libdw package in Debian and RPM packages
 
->> +
->> +    acomp_request_set_params(req, st_src.sgl,
->> +        st_dst.sgl, rq->inputsize, rq->outputsize);
->> +
->> +    crypto_init_wait(&wait);
->> +    acomp_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
->> +                crypto_req_done, &wait);
->> +
->> +    ret = crypto_wait_req(crypto_acomp_decompress(req), &wait);
->> +    if (ret < 0) {
->> +        erofs_err(rq->sb, "failed to decompress %d in[%u, %u] out[%u]",
->> +                    ret, rq->inputsize, rq->pageofs_in, rq->outputsize);
->> +        ret = -EIO;
->> +    } else
->> +        ret = 0;
->> +
->> +    acomp_request_free(req);
->> +    sg_free_table(&st_src);
->> +    sg_free_table(&st_dst);
->> +    return ret;
->> +}
->> +
->> +int z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
->> +                struct crypto_acomp *erofs_tfm, struct page **pgpl)
->> +{
->> +    const unsigned int nrpages_out =
->> +        PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
+ - Disable -Wdefault-const-init-unsafe warnings on Clang
 
-You could change here too.
+ - Make "make clean ARCH=3Dum" also clean the arch/x86/ directory
+
+ - Revert the use of -fmacro-prefix-map=3D, which causes issues with
+   debugger usability
+
+----------------------------------------------------------------
+Masahiro Yamada (4):
+      um: let 'make clean' properly clean underlying SUBARCH as well
+      init: remove unused CONFIG_CC_CAN_LINK_STATIC
+      kbuild: fix dependency on sorttable
+      kbuild: fix typos "module.builtin" to "modules.builtin"
+
+Nathan Chancellor (1):
+      kbuild: Disable -Wdefault-const-init-unsafe
+
+Randy Dunlap (1):
+      usr/include: openrisc: don't HDRTEST bpf_perf_event.h
+
+Sami Tolvanen (1):
+      kbuild: Require pahole <v1.28 or >v1.29 with GENDWARFKSYMS on X86
+
+Thomas Wei=C3=9Fschuh (2):
+      Revert "kbuild: make all file references relative to source root"
+      Revert "kbuild, rust: use -fremap-path-prefix to make paths relative"
+
+WangYuli (2):
+      kbuild: deb-pkg: Add libdw-dev:native to Build-Depends-Arch
+      kbuild: rpm-pkg: Add (elfutils-devel or libdw-devel) to BuildRequires
+
+ Documentation/kbuild/reproducible-builds.rst | 17 +++++++++++++++++
+ Makefile                                     |  3 +--
+ arch/um/Makefile                             |  1 +
+ init/Kconfig                                 |  5 -----
+ kernel/module/Kconfig                        |  5 +++++
+ scripts/Makefile.extrawarn                   | 12 ++++++++++++
+ scripts/Makefile.vmlinux                     |  4 ++--
+ scripts/Makefile.vmlinux_o                   |  4 ++--
+ scripts/package/kernel.spec                  |  1 +
+ scripts/package/mkdebian                     |  2 +-
+ usr/include/Makefile                         |  4 ++++
+ 11 files changed, 46 insertions(+), 12 deletions(-)
 
 
->> +    int i;
->> +
->> +    /* one optimized fast path only for non bigpcluster cases yet */
->> +    if (rq->inputsize <= PAGE_SIZE && nrpages_out == 1 && !rq->inplace_io) {
->> +        WARN_ON(!*rq->out);
->> +        goto dstmap_out;
->> +    }
->> +
->> +    for (i = 0; i < rq->outpages; i++) {
->> +        struct page *const page = rq->out[i];
->> +        struct page *victim;
->> +
->> +        if (!page) {
->> +            victim = __erofs_allocpage(pgpl, rq->gfp, true);
->> +            if (!victim)
->> +                return -ENOMEM;
->> +            set_page_private(victim, Z_EROFS_SHORTLIVED_PAGE);
->> +            rq->out[i] = victim;
->> +        }
->> +    }
->> +
->> +dstmap_out:
->> +    return z_erofs_crypto_decompress_mem(rq, erofs_tfm);
->> +}
->> +
->> +struct crypto_acomp *z_erofs_crypto_get_enbale_engine(int type)
-
-
-z_erofs_crypto_get_engine()
-
->> +{
->> +    int i = 0;
->> +
->> +    while (z_erofs_crypto[type][i].crypto_name) {
-
-	for (i = 0; z_erofs_crypto[type][i].crypto_name; ++i) {
-		...
-	}
-
->> +        if (z_erofs_crypto[type][i].enabled)
->> +            return z_erofs_crypto[type][i].erofs_tfm;
->> +        i++;
->> +    }
->> +
-
-I don't like the meaningless newline here.
-
->> +    return NULL;
->> +}
->> +
->> +static int z_erofs_crypto_get_compress_type(const char *name)
->> +{
->> +    int i, j;
->> +
->> +    for (i = 0; i < Z_EROFS_COMPRESSION_MAX; i++) {
->> +        j = 0;
->> +        while (z_erofs_crypto[i][j].crypto_name) {
->> +            if (!strncmp(name, z_erofs_crypto[i][j].crypto_name,
->> +                    strlen(z_erofs_crypto[i][j].crypto_name))) {
->> +                return i;
->> +            }
->> +            j++;
->> +        }
->> +    }
->> +
->> +    return -EINVAL;
->> +}
->> +
->> +int z_erofs_crypto_enable_engine(const char *name)
->> +{
->> +    int i = 0, type;
->> +
->> +    type = z_erofs_crypto_get_compress_type(name);
->> +    if (type < 0)
->> +        return -EINVAL;
->> +
->> +    while (z_erofs_crypto[type][i].crypto_name) {
-
-Use for loop...
-
->> +        if (!strncmp(z_erofs_crypto[type][i].crypto_name, name,
->> +                strlen(z_erofs_crypto[type][i].crypto_name))) {
-
-Why not just use strcmp?
-
->> +            if (z_erofs_crypto[type][i].enabled)
->> +                break;
->> +
->> +            z_erofs_crypto[type][i].erofs_tfm =
->> +                crypto_alloc_acomp(z_erofs_crypto[type][i].crypto_name, 0, 0);
->> +            if (IS_ERR(z_erofs_crypto[type][i].erofs_tfm)) {
->> +                z_erofs_crypto[type][i].erofs_tfm = NULL;
->> +                break;
->> +            }
->> +            z_erofs_crypto[type][i].enabled = true;
->> +        } else if (z_erofs_crypto[type][i].enabled) {
->> +            if (z_erofs_crypto[type][i].erofs_tfm)
->> +                crypto_free_acomp(z_erofs_crypto[type][i].erofs_tfm);
->> +            z_erofs_crypto[type][i].enabled = false;
->> +        }
->> +        i++;
->> +    }
->> +
-
-Redundent new line again.
-
->> +    return 0;
->> +}
->> +
->> +int z_erofs_crypto_disable_engine(const char *name)
->> +{
->> +    int i = 0, type;
->> +
->> +    type = z_erofs_crypto_get_compress_type(name);
->> +    if (type < 0)
->> +        return -EINVAL;
->> +
->> +    while (z_erofs_crypto[type][i].crypto_name) {
->> +        if (!strncmp(z_erofs_crypto[type][i].crypto_name, name,
->> +                strlen(z_erofs_crypto[type][i].crypto_name))) {
->> +            if (z_erofs_crypto[type][i].enabled &&
->> +                    z_erofs_crypto[type][i].erofs_tfm) {
->> +                crypto_free_acomp(z_erofs_crypto[type][i].erofs_tfm);
->> +                z_erofs_crypto[type][i].erofs_tfm = NULL;
->> +                z_erofs_crypto[type][i].enabled = false;
->> +            }
->> +        }
->> +        i++;
->> +    }
->> +
->> +    return 0;
->> +
->> +}
->> +
->> +struct z_erofs_crypto_engine *z_erofs_crypto[] = {
->> +    [Z_EROFS_COMPRESSION_LZ4] = &(struct z_erofs_crypto_engine) {NULL},
->> +    [Z_EROFS_COMPRESSION_LZMA] = &(struct z_erofs_crypto_engine) {NULL},
->> +    [Z_EROFS_COMPRESSION_DEFLATE] = {&(struct z_erofs_crypto_engine) {
->> +            .crypto_name = "qat_deflate",
->> +            .enabled = false,
->> +            .erofs_tfm = NULL,
->> +        },
->> +        &(const struct z_erofs_crypto_engine) { NULL },
->> +    },
->> +    [Z_EROFS_COMPRESSION_ZSTD] = &(struct z_erofs_crypto_engine) {NULL},
->> +};
->> diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_deflate.c
->> index c6908a487054..35a5889880f4 100644
->> --- a/fs/erofs/decompressor_deflate.c
->> +++ b/fs/erofs/decompressor_deflate.c
->> @@ -97,7 +97,7 @@ static int z_erofs_load_deflate_config(struct super_block *sb,
->>       return -ENOMEM;
->>   }
->> -static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
->> +static int __z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
->>                         struct page **pgpl)
->>   {
->>       struct super_block *sb = rq->sb;
->> @@ -178,6 +178,18 @@ static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
->>       return err;
->>   }
->> +static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
->> +                struct page **pgpl)
->> +{
->> +    struct crypto_acomp *erofs_tfm = NULL;
->> +
->> +    erofs_tfm = z_erofs_crypto_get_enbale_engine(Z_EROFS_COMPRESSION_DEFLATE);
->> +    if (erofs_tfm && !rq->partial_decoding)
->> +        return z_erofs_crypto_decompress(rq, erofs_tfm, pgpl);
->> +    else
->> +        return __z_erofs_deflate_decompress(rq, pgpl);
->> +}
->> +
->>   const struct z_erofs_decompressor z_erofs_deflate_decomp = {
->>       .config = z_erofs_load_deflate_config,
->>       .decompress = z_erofs_deflate_decompress,
->> diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
->> index dad4e6c6c155..a9c0aad01264 100644
->> --- a/fs/erofs/sysfs.c
->> +++ b/fs/erofs/sysfs.c
->> @@ -7,12 +7,15 @@
->>   #include <linux/kobject.h>
->>   #include "internal.h"
->> +#include "compress.h"
->>   enum {
->>       attr_feature,
->>       attr_drop_caches,
->>       attr_pointer_ui,
->>       attr_pointer_bool,
->> +    attr_crypto_enable,
->> +    attr_crypto_disable,
->>   };
->>   enum {
->> @@ -59,6 +62,8 @@ static struct erofs_attr erofs_attr_##_name = {            \
->>   #ifdef CONFIG_EROFS_FS_ZIP
->>   EROFS_ATTR_RW_UI(sync_decompress, erofs_mount_opts);
->>   EROFS_ATTR_FUNC(drop_caches, 0200);
->> +EROFS_ATTR_FUNC(crypto_enable, 0644);
->> +EROFS_ATTR_FUNC(crypto_disable, 0644);
->>   #endif
->>   static struct attribute *erofs_attrs[] = {
->> @@ -95,6 +100,8 @@ static struct attribute *erofs_feat_attrs[] = {
->>       ATTR_LIST(fragments),
->>       ATTR_LIST(dedupe),
->>       ATTR_LIST(48bit),
->> +    ATTR_LIST(crypto_enable),
->> +    ATTR_LIST(crypto_disable),
->>       NULL,
->>   };
->>   ATTRIBUTE_GROUPS(erofs_feat);
->> @@ -181,6 +188,18 @@ static ssize_t erofs_attr_store(struct kobject *kobj, struct attribute *attr,
->>           if (t & 1)
->>               invalidate_mapping_pages(MNGD_MAPPING(sbi), 0, -1);
->>           return len;
->> +    case attr_crypto_enable:
->> +        buf = skip_spaces(buf);
->> +        if (z_erofs_crypto_enable_engine(buf))
->> +            return -EINVAL;
-> 
-> Hi, Bo
-> I wonder why we should need both enable and disable. If the crypto method is not set into enable, it will be disabled. So may be these two could probably be combined into one, right?
-
-
-After rethinking, I agree with Hongbo too, how about
-
-cat xxx/crypto -> show available engines in lines.
-
-
-echo "qat_deflate" >> xxx/crypto -> enable "qat_deflate"
-
-echo "" > xxx/crypto -> disable all engines.
-
-
-> 
-> Another one, is it possible to support multiple crypto methods instead of just one? If so, maybe we could join them with comma, such as echo -n "qat_deflate,xxx" > xxx/crypto_enable.
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> Hongbo
-> 
-> 
->> +
->> +        return len;
->> +    case attr_crypto_disable:
->> +        buf = skip_spaces(buf);
->> +        if (z_erofs_crypto_disable_engine(buf))
->> +            return -EINVAL;
->> +
->> +        return len;
->>   #endif
->>       }
->>       return 0;
-
+--=20
+Best Regards
+Masahiro Yamada
