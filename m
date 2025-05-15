@@ -1,216 +1,127 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9487B293B44
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:59:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184FA297A6D;
+	Thu, 15 May 2025 08:59:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299558; cv=none; b=dnSj2q+Zmgd5fsguiwpA+oIAADL1akIqjCsm2H/JdggUMnebfHQ+Vk10SJqpuP4RI04SLUQn4YNP1OWAAXK32nVYvJliUoZDOAOtA7QCnvbelF2Ja7NgJXp7kSFivTOwEtZ7gbiIGboDWb7Wa3+X0YIZINzWqK/Yq0uqGR40IfM=
+	t=1747299567; cv=none; b=EeJaVIrwUjS8wA4e6t4owVBvawBPtl+JhAC0CQgUHcz4231RTPkW3lOSD/R0hC/xo5M3mE11UAJj7tXhXJpVYY0DwmNQ3b+AbpQ2vjMYF5/faP0UtOb0trBRNHS6s51IsAXBMSeSg+3xy2aG41ZyKT4C50cuZlVKI3u7k8yWHTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299558; c=relaxed/simple;
-	bh=3NDHBRjrO56wPFSmrP/tqbVPNtVqcsNX3LEYFCznarY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XWpNMdTEx8P+1pmUYqtYMxWZKrVDBgVjzFUXG7tnB5mEC9FgVSkebtftSPmMjKykGEdxjsel/usLYe7hDT8h85KuIzmiMQF7dnBrAWk6hxqOS6wg4pQfTT/yS7Y9Xt868PzeF6Y3E0P7LdY0PnesTf9CFb0qTs6+3PtcWXL6ezo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Pnphta3p; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=NmIXdFnU; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Pnphta3p; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=NmIXdFnU; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Pnphta3p";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="NmIXdFnU";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Pnphta3p";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="NmIXdFnU"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B45651F391;
-	Thu, 15 May 2025 08:59:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747299554; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QFkGUgAQs5DlUjM0ydlG9GUUFq/7KcW6NX7M7pmvjeQ=;
-	b=Pnphta3pj/hPd36vEObXKs7oZ0yRXLXPve+d4n7PRI8BWxbpSlvygZrWnAcKZ3FH9Xl2c1
-	Be8QO7NDCZVnPH+8GY5eKp+0IXQbjQVeZqJw169CCHTYPbe+EqedilZ9Qqzsq/lb3ybn3C
-	LZkD6mMSDDZZ+dUG0KyyHODqR+TR9VI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747299554;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QFkGUgAQs5DlUjM0ydlG9GUUFq/7KcW6NX7M7pmvjeQ=;
-	b=NmIXdFnUXuSNu01AoL3nca3Ijs1g4XLQ1IEDXnBpVbRnnWbWWz48AeD2HD4wmnz+mbOu+O
-	5dBO7cFrMvmfO4Cw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=Pnphta3p;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=NmIXdFnU
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747299554; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QFkGUgAQs5DlUjM0ydlG9GUUFq/7KcW6NX7M7pmvjeQ=;
-	b=Pnphta3pj/hPd36vEObXKs7oZ0yRXLXPve+d4n7PRI8BWxbpSlvygZrWnAcKZ3FH9Xl2c1
-	Be8QO7NDCZVnPH+8GY5eKp+0IXQbjQVeZqJw169CCHTYPbe+EqedilZ9Qqzsq/lb3ybn3C
-	LZkD6mMSDDZZ+dUG0KyyHODqR+TR9VI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747299554;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QFkGUgAQs5DlUjM0ydlG9GUUFq/7KcW6NX7M7pmvjeQ=;
-	b=NmIXdFnUXuSNu01AoL3nca3Ijs1g4XLQ1IEDXnBpVbRnnWbWWz48AeD2HD4wmnz+mbOu+O
-	5dBO7cFrMvmfO4Cw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9DBEB139D0;
-	Thu, 15 May 2025 08:59:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id D5A2JuKsJWgTRAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 15 May 2025 08:59:14 +0000
-Message-ID: <938fa0c7-86c3-44d4-b583-0612458aed98@suse.cz>
-Date: Thu, 15 May 2025 10:59:14 +0200
+	s=arc-20240116; t=1747299567; c=relaxed/simple;
+	bh=U8Gms1unVLaYGMPmJgh5mvgST4RNp4pyfwxfbuqpqZ0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=NIWf8Vp/lPJAQtV2OTHPC3IjrPlk22rT5d6Ie3fFU0nO7JiY0VvpWSeio0E6nn9METq8zLLwFalIVVgs2I3owxjgqNKNb6OBF/um63TofmnWuwPOgHIdI77QpbPd7ORDVqsTCcNuNXrI1DgSn5m8c/jdMCd2T25fpDsGcjoTWRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fejes.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fejes.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-441ab63a415so7022885e9.3;
+        Thu, 15 May 2025 01:59:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747299563; x=1747904363;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+wY3EMb5JxEbCY3HNeRXG9ydmvJmQVNydYXnk83cuGg=;
+        b=qBN4E3ORgyDjGyN5X7r2BqybCfqi0NH9FpRqzqXKYzoIWd+cM7kNJDU7eMDiiPYPWY
+         9f3m1JIunUfDwENp8rT9d3RZV/eQM2IGXn1HlMQswpdA8dAMa5IXSQZF2wDNCSFSjilK
+         pY5Tau8gDo0VMs5jz6H9TBjfm/4BkqoPNbr47W42p9130XbMa9xBIKtSAkwFeJ0mbzfs
+         oBRSEyjrgez88eOP/hFTaDYs/Xr9Gt8Tlg9XXxozOo7FoObQ0aRXbgizcAhO1CRVko+k
+         rQ7+S6IvePN1f42/Q0RsNzvNPv7I/Vzwa7v+csSJv5ynROFROUZLf/u+HDXOwaILOYXR
+         rqoA==
+X-Forwarded-Encrypted: i=1; AJvYcCUw9k2YqkGItpVhYsMm/LihhEOUrCr6nyLGktP/VsGU11I7y2T+66RVDVtGcjGzBXHkqgmFf/3mi37nk3s2@vger.kernel.org, AJvYcCWWBBOA+zQA9DMkWALf4ah+BnPxlwJDUNlNrS2T4O1CppH85V6M3HF8n76iCOJTblj7ckI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywl3/LChk947W48u2FHn3+Tf949S9kvDY1nTpedCjTRYLHBEaBI
+	LTEi1I+/hh/TWU69LVUOS3HYAFnyNS0IDHtfMyVPvxzLXNNZqOgo
+X-Gm-Gg: ASbGncuVvhhobDr+wc3RHXyMPQcPPmRU/CBydTS7Yr3q6G82yraHmCiSIBQAxQHt56M
+	YVDsH102Y0O+wf/oq5W4PB3KTX5bzTWFHul/ZR5WdTua/yCdysggwTt/lJDC2UvPCwJGAzIYNfa
+	IFJNnIIOAgDysymockqC61eOekXAqKW9WsW0PxlJutGx1QPvm9pXrBAF5AzHmB4sQbViHRwErZE
+	rMGbPnbx5MY7HmdM0TOSa7qq97QeB6cIFD4yi5dGMyCMKyzLbN4j5Yd3Wq8+/dOg/VOLaQfyUFC
+	gsnYbCicYTthCDxbo9y8HOFJunTu03dWzbPfV9F8G973BwE0PZrNh9BrOtnreGU6JRv0gGQj1un
+	H06U64RD//9AwkgI4I4VB6/8A1g==
+X-Google-Smtp-Source: AGHT+IHSMBOis1LN9zZB8Ns1QMfbY61wSCNeknS/nXCa2UvoEyCLR8YwmUUu5xG/+nbb3Bg0E/FFdQ==
+X-Received: by 2002:a05:600d:1b:b0:43d:4686:5cfb with SMTP id 5b1f17b1804b1-442f4735a8bmr43794115e9.27.1747299563102;
+        Thu, 15 May 2025 01:59:23 -0700 (PDT)
+Received: from [10.148.85.1] (business-89-135-192-225.business.broadband.hu. [89.135.192.225])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f337db8asm62665355e9.9.2025.05.15.01.59.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 01:59:22 -0700 (PDT)
+Message-ID: <eefad549e3d0568b523305252b6ec3a468502d2d.camel@fejes.dev>
+Subject: Re: [PATCHv2] bpf: add bpf_msleep_interruptible() kfunc
+From: Ferenc Fejes <ferenc@fejes.dev>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>, Alexei Starovoitov
+	 <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
+	 <john.fastabend@gmail.com>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+	 <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Matt Bobrowski
+	 <mattbobrowski@google.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 15 May 2025 10:59:21 +0200
+In-Reply-To: <20250515064800.2201498-1-senozhatsky@chromium.org>
+References: <20250515064800.2201498-1-senozhatsky@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 9/9] mm, slub: skip percpu sheaves for remote object
- freeing
-Content-Language: en-US
-To: Harry Yoo <harry.yoo@oracle.com>
-Cc: Suren Baghdasaryan <surenb@google.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Christoph Lameter
- <cl@linux.com>, David Rientjes <rientjes@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
- maple-tree@lists.infradead.org
-References: <20250425-slub-percpu-caches-v4-0-8a636982b4a4@suse.cz>
- <20250425-slub-percpu-caches-v4-9-8a636982b4a4@suse.cz>
- <aBs4WvzJb4X50Sr2@harry>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <aBs4WvzJb4X50Sr2@harry>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: B45651F391
-X-Spam-Flag: NO
-X-Spam-Score: -4.51
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[google.com,oracle.com,linux.com,linux.dev,gmail.com,kvack.org,vger.kernel.org,lists.infradead.org];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.cz:dkim,suse.cz:mid]
-X-Rspamd-Action: no action
 
-On 5/7/25 12:39, Harry Yoo wrote:
-> On Fri, Apr 25, 2025 at 10:27:29AM +0200, Vlastimil Babka wrote:
->> Since we don't control the NUMA locality of objects in percpu sheaves,
->> allocations with node restrictions bypass them. Allocations without
->> restrictions may however still expect to get local objects with high
->> probability, and the introduction of sheaves can decrease it due to
->> freed object from a remote node ending up in percpu sheaves.
->> 
->> The fraction of such remote frees seems low (5% on an 8-node machine)
->> but it can be expected that some cache or workload specific corner cases
->> exist. We can either conclude that this is not a problem due to the low
->> fraction, or we can make remote frees bypass percpu sheaves and go
->> directly to their slabs. This will make the remote frees more expensive,
->> but if if's only a small fraction, most frees will still benefit from
->> the lower overhead of percpu sheaves.
->> 
->> This patch thus makes remote object freeing bypass percpu sheaves,
->> including bulk freeing, and kfree_rcu() via the rcu_free sheaf. However
->> it's not intended to be 100% guarantee that percpu sheaves will only
->> contain local objects. The refill from slabs does not provide that
->> guarantee in the first place, and there might be cpu migrations
->> happening when we need to unlock the local_lock. Avoiding all that could
->> be possible but complicated so we can leave it for later investigation
->> whether it would be worth it. It can be expected that the more selective
->> freeing will itself prevent accumulation of remote objects in percpu
->> sheaves so any such violations would have only short-term effects.
->> 
->> Another possible optimization to investigate is whether it would be
->> beneficial for node-restricted or strict_numa allocations to attempt to
->> obtain an object from percpu sheaves if the node or mempolicy (i.e.
->> MPOL_LOCAL) happens to want the local node of the allocating cpu. Right
->> now such allocations bypass sheaves, but they could probably look first
->> whether the first available object in percpu sheaves is local, and with
->> high probability succeed - and only bypass the sheaves in cases it's
->> not local.
->> 
->> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
->> ---
->>  mm/slab_common.c |  7 +++++--
->>  mm/slub.c        | 43 +++++++++++++++++++++++++++++++++++++------
->>  2 files changed, 42 insertions(+), 8 deletions(-)
->> 
->> diff --git a/mm/slub.c b/mm/slub.c
->> index cc273cc45f632e16644355831132cdc391219cec..2bf83e2b85b23f4db2b311edaded4bef6b7d01de 100644
->> --- a/mm/slub.c
->> +++ b/mm/slub.c
->> @@ -5924,8 +5948,15 @@ void slab_free(struct kmem_cache *s, struct slab *slab, void *object,
->>  	if (unlikely(!slab_free_hook(s, object, slab_want_init_on_free(s), false)))
->>  		return;
->>  
->> -	if (!s->cpu_sheaves || !free_to_pcs(s, object))
->> -		do_slab_free(s, slab, object, object, 1, addr);
->> +	if (s->cpu_sheaves) {
->> +		if (likely(!IS_ENABLED(CONFIG_NUMA) ||
->> +			   slab_nid(slab) == numa_node_id())) {
->> +			free_to_pcs(s, object);
-> 
-> Shouldn't it call do_slab_free() when free_to_pcs() failed?
+Hi,
 
-Oops yes, thanks!
+On Thu, 2025-05-15 at 15:47 +0900, Sergey Senozhatsky wrote:
+> bpf_msleep_interruptible() puts a calling context into an
+> interruptible sleep.=C2=A0 This function is expected to be used
+> for testing only (perhaps in conjunction with fault-injection)
+> to simulate various execution delays or timeouts.
+>=20
+> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> ---
+>=20
+> v2:
+> -- switched to kfunc (Matt)
+>=20
+> =C2=A0kernel/bpf/helpers.c | 7 +++++++
+> =C2=A01 file changed, 7 insertions(+)
+>=20
+> diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+> index fed53da75025..a7404ab3b0b8 100644
+> --- a/kernel/bpf/helpers.c
+> +++ b/kernel/bpf/helpers.c
+> @@ -24,6 +24,7 @@
+> =C2=A0#include <linux/bpf_mem_alloc.h>
+> =C2=A0#include <linux/kasan.h>
+> =C2=A0#include <linux/bpf_verifier.h>
+> +#include <linux/delay.h>
+> =C2=A0
+> =C2=A0#include "../../lib/kstrtox.h"
+> =C2=A0
+> @@ -3283,6 +3284,11 @@ __bpf_kfunc void bpf_local_irq_restore(unsigned lo=
+ng
+> *flags__irq_flag)
+> =C2=A0	local_irq_restore(*flags__irq_flag);
+> =C2=A0}
+> =C2=A0
+> +__bpf_kfunc unsigned long bpf_msleep_interruptible(unsigned int msecs)
+> +{
+> +	return msleep_interruptible(msecs);
 
-> 
->> +			return;
->> +		}
->> +	}
->> +
->> +	do_slab_free(s, slab, object, object, 1, addr);
->>  }
->>  
->>  #ifdef CONFIG_MEMCG
->> 
->> -- 
->> 2.49.0
->> 
->> 
-> 
+Perhaps exposing fsleep instead of msleep? fsleep might fallback to msleep =
+if no
+better mechanism exists or if the sleep duration is >1000us.
 
+> +}
+> +
+> =C2=A0__bpf_kfunc_end_defs();
+> =C2=A0
+> =C2=A0BTF_KFUNCS_START(generic_btf_ids)
+> @@ -3388,6 +3394,7 @@ BTF_ID_FLAGS(func, bpf_iter_kmem_cache_next,
+> KF_ITER_NEXT | KF_RET_NULL | KF_SLE
+> =C2=A0BTF_ID_FLAGS(func, bpf_iter_kmem_cache_destroy, KF_ITER_DESTROY |
+> KF_SLEEPABLE)
+> =C2=A0BTF_ID_FLAGS(func, bpf_local_irq_save)
+> =C2=A0BTF_ID_FLAGS(func, bpf_local_irq_restore)
+> +BTF_ID_FLAGS(func, bpf_msleep_interruptible, KF_SLEEPABLE)
+> =C2=A0BTF_KFUNCS_END(common_btf_ids)
+> =C2=A0
+> =C2=A0static const struct btf_kfunc_id_set common_kfunc_set =3D {
