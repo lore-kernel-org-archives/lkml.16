@@ -1,185 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BEC8F58;
-	Thu, 15 May 2025 08:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62E7F19CC3D;
+	Thu, 15 May 2025 08:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747296964; cv=none; b=r6msumgq6d6yiEC0jphAqibXmVEmPDhx8CZdPvE9iLl+HlbjXC6c95G3am1X6viztrKr9wCOSWA8rO4GsEDPIK5FryL7izIqw0VGvkLoG8DuFDTzwbOGqowRAGw1lUf2tyIS3aqpRDaYqfO15+l1vVgxlgZChr/gfe0CgHwJlr8=
+	t=1747297025; cv=none; b=UbhOf7t9TxmDJSMFBf+fawOEh1vL1fjrmRjMCnML1lYNx+flRvYQUCwByI5z3cbg28hvjsCRTUeluX2EnNEYXu6n8UGHPl780rATC1hPoc7Mjf/wPPuyCATq87m0q9AwIlVTeo3yUMT+hJsjjklrFmplmIZczv/mbG6hNlK4SNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747296964; c=relaxed/simple;
-	bh=R0EFqKLDLT6J3UP/BdZNpD7merVLGkoQ8JVBy5Ut2rc=;
+	s=arc-20240116; t=1747297025; c=relaxed/simple;
+	bh=jeEOhZKOTAjkhdwPFYNHsRf8Tq3rBS2geVYhdvnggwU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PsxLaEtlNyBruCPkBxNZH3pYaYL3hCftQH7wl69saLofAANF1OQm78Z3Po2RO22BfHdFh8owdvEp6pTZOYKvW1DBSfpNohSoBnl0A1i4lS9HnACbVt5aYHBOKIbNXqpkz4Gosc97RMzNowgG5E/oofZpkQvY70SiMNK+WmyEm6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L4jUvVcY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=g0l+zQwSf0C0qoHLdA0KXhI7sie2BZPZZ/7lSnALVhScDNZOCbxGszAieL4R9ZKBvso8dTKSfjhA0kuSc3rc5k0G9M5LaMZ+EXgiTYAatsFI/zQXjY11ZIQAlxPlXnCi4N9EboPWvMRrEqTjSarle2Ne6KAyxC0fx2vzx5jOnAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dh08Z4iF; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L4jUvVcY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7DD6C4CEE7;
-	Thu, 15 May 2025 08:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747296963;
-	bh=R0EFqKLDLT6J3UP/BdZNpD7merVLGkoQ8JVBy5Ut2rc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L4jUvVcYzKM+FQUmZLYtlkcg83dszd6q/t7Yfky44mUWpMvVTRJ/nnmvsgGAWUvWQ
-	 IzT7GN8JjvIxgsVlErA4BTqvzH6V9QHm1cbZLOvF1TMWasaJvg8ze4bUa0J90T1PIt
-	 3MBxH/H8+ddC0kF8DwPHkCNL5j3MWTgvw3V/PAjriI1d6u/q7yAnEKKAmdcQxMGEEX
-	 ojSmLyQ/bklJOSH/GecLC8EIhQCn+h0xjU9Sez6nqpfvPOjIOYg9OUXQnycU80C67B
-	 54RXSAoM1WTACcDQs0MOdUYywIDB/X6IjMpiq19pe76Ra+uKE5afHy5tMQkZCL5Im3
-	 pTFq16Hi1ll/w==
-Date: Thu, 15 May 2025 10:15:56 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Shivank Garg <shivankg@amd.com>, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	luto@kernel.org, peterz@infradead.org, rafael@kernel.org,
-	pavel@kernel.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	sohil.mehta@intel.com, rui.zhang@intel.com, yuntao.wang@linux.dev,
-	kai.huang@intel.com, xiaoyao.li@intel.com, peterx@redhat.com,
-	sandipan.das@amd.com, ak@linux.intel.com, rostedt@goodmis.org
-Subject: [PATCH] x86/apic: Better document spurious_interrupt() and
- __spurious_interrupt()
-Message-ID: <aCWivMggS9mektCu@gmail.com>
-References: <20250514062637.3287779-1-shivankg@amd.com>
- <20250514062637.3287779-4-shivankg@amd.com>
- <aCRMpba5mp5YvmY3@gmail.com>
- <51fbdbcd-a895-43b0-bb59-aa3361d77cad@amd.com>
- <87o6vuibnu.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dh08Z4iF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747297025; x=1778833025;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=jeEOhZKOTAjkhdwPFYNHsRf8Tq3rBS2geVYhdvnggwU=;
+  b=Dh08Z4iF3F/BAJGTXAZ51G8GYXJJH4xY/5MWWWn7LlvKD7iXT7hh+8XG
+   5vIT7iyw+y2vJkxER67AcL4ToN96mah6kJ8ZP/liVVEwiPcRhXK7WYSBH
+   kXAkrZTJFas9tzbTiza9SA2uUvWhuc8B3fWo5hN5/gdzi+BG3pnFBlzym
+   +BNtuwe2E4y2d5eH5LWMGw2038NAmSXZao+0Wis9CZel7BsdAbNg2wfFw
+   OTdy/slWbhzQSknuCNLGg4xIynLProzDaJykC8S6GrjDdPgU5iZTO8Ti9
+   0jgPX0W17XFWpU2pFR81lbunkkUDhse13D9CvZaczgvJ8gL0XWSRBmC8d
+   A==;
+X-CSE-ConnectionGUID: YXInKZt8RVq3ODNO0Ayn7g==
+X-CSE-MsgGUID: A+keISg8SGKnC4zPFFgv7w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="60559058"
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="60559058"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 01:17:04 -0700
+X-CSE-ConnectionGUID: IGj+2oH3TUCYIKHgL0A8uQ==
+X-CSE-MsgGUID: tM7oZ2QpT1uNtBRbqMFzJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="143256362"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 01:17:01 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uFTly-00000001mwN-16vI;
+	Thu, 15 May 2025 11:16:58 +0300
+Date: Thu, 15 May 2025 11:16:58 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Mika Westerberg <westeri@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v1 0/4] gpiolib: acpi: Split quirks to its own file
+Message-ID: <aCWi-oUsCrbS0AiI@smile.fi.intel.com>
+References: <20250513100514.2492545-1-andriy.shevchenko@linux.intel.com>
+ <20250514155955.GS88033@black.fi.intel.com>
+ <CACRpkdbhnoffwtwVTMRaUAGVEpLfAESQNOb1PvYOer=V+og97Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87o6vuibnu.ffs@tglx>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdbhnoffwtwVTMRaUAGVEpLfAESQNOb1PvYOer=V+og97Q@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-
-* Thomas Gleixner <tglx@linutronix.de> wrote:
-
-> On Thu, May 15 2025 at 12:03, Shivank Garg wrote:
-> > On 5/14/2025 1:26 PM, Ingo Molnar wrote:
-> >> This is incorrect and is based on a misunderstanding of what the code 
-> >> does:
-> >> 
-> >> DEFINE_IDTENTRY_IRQ(spurious_interrupt)
-> >> {
-> >>         handle_spurious_interrupt(vector);
-> >> }
-> >
-> > The kernel-doc tool doesn't handle macros properly.
-> > Can I change it to a normal comment instead?
-> > or if a kernel-doc comment is required how should I make it correct?
+On Thu, May 15, 2025 at 09:21:10AM +0200, Linus Walleij wrote:
+> On Wed, May 14, 2025 at 6:00 PM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
 > 
-> Fix the stupid tool and leave the comment alone.
+> > >  drivers/gpio/Makefile                         |   1 +
+> > >  .../{gpiolib-acpi.c => gpiolib-acpi-core.c}   | 344 +----------------
+> > >  drivers/gpio/gpiolib-acpi-quirks.c            | 363 ++++++++++++++++++
+> > >  drivers/gpio/gpiolib-acpi.h                   |  15 +
+> >
+> > All this -foo-core things look redundant to me. Why not just split it out
+> > and call it gpiolib-quirks.c and put there all the quirks not just ACPI? I
+> > Don't think we want to have gpiolib-of-quirks.c and gpiolog-swnode-quirks.c
+> > and so on.
+> 
+> For OF/device tree the quirks are in gpiolib-of.c and we probably do
+> not want to put these into a shared file with ACPI (and swnode?)
+> quirks as systems with OF compile objects (Makefile entries)
+> and ACPI compile objects are not always included in the same build,
+> so having them per-hw-config-principle cuts down compiletime
+> overhead. Also it's pretty clear separation of concerns I think.
 
-Yeah, so the problem is that the kernel-doc tool is partially right to 
-complain about the status quo:
+Yes, gpiolib-quirks.c would make sense for the shared code, but I don't
+expect we will have any reasonable amount of those that are shared between
+ACPI, DT, swnode cases.
 
-	/**
-	 * spurious_interrupt - Catch all for interrupts raised on unused vectors
-	 * @regs:       Pointer to pt_regs on stack
-	 * @vector:     The vector number
-	 *
-	 * This is invoked from ASM entry code to catch all interrupts which
-	 * trigger on an entry which is routed to the common_spurious idtentry
-	 * point.
-	 */
-	DEFINE_IDTENTRY_IRQ(spurious_interrupt)
-	{
-	        handle_spurious_interrupt(vector);
-	}
+But main problem here is the module parameters that are already exist,
+there is no clean way in Linux kernel to provide an aliases table when
+renaming files (AFAIK, otherwise tell me how to achieve that).
 
-This description is incorrect as-is: the parameters described are not 
-that of the main 'spurious_interrupt()' handler, which is:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-        extern __visible noinstr void spurious_interrupt(struct pt_regs *regs, unsigned long error_code);
-
-Note that it has an 'error_code', not 'vector'. (Which, of course, are 
-the same actual numeric value in this case, but are in different 
-functions and different prototypes.)
-
-But the description is that of the __spurious_interrupt() lower level 
-(sub-)handler function:
-
-	static void __spurious_interrupt(struct pt_regs *regs, u32 vector);
-
-So yeah, this documention is arguably a bit messy, and not just because 
-kernel-doc is confused about macros.
-
-So I'd fix it like this:
-
-	/*
-	 * spurious_interrupt(): Catch all for interrupts raised on unused vectors
-	 * @regs:	Pointer to pt_regs on stack
-	 * @error_code: Hardware exception/interrupt data
-	 *
-	 * The spurious_interrupt() high level function is invoked from ASM entry code
-	 * to catch all interrupts which trigger on an entry which is routed to the
-	 * common_spurious idtentry point.
-	 *
-	 * __spurious_interrupt(): Catch all for interrupts raised on unused vectors
-	 * @regs:	Pointer to pt_regs on stack
-	 * @vector:	The IRQ vector number
-	 *
-	 * This is the lower level spurious interrupts handler function.
-	 */
-	DEFINE_IDTENTRY_IRQ(spurious_interrupt)
-	{
-		handle_spurious_interrupt(vector);
-	}
-	
-... or so.
-
-Which also moves it out of kernel-doc style, and should thus avoid 
-kernel-doc's confusion. Patch below.
-
-Or we could:
-
-  s/spurious_interrupt
-   /__spurious_interrupt
-
-and remove the kernel-doc trigger line.
-
-Whichever your preference is.
-
-Thanks,
-
-	Ingo
-
-=============>
- arch/x86/kernel/apic/apic.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index d73ba5a7b623..462dcdb3af85 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -2128,14 +2128,20 @@ static noinline void handle_spurious_interrupt(u8 vector)
- 	trace_spurious_apic_exit(vector);
- }
- 
--/**
-- * spurious_interrupt - Catch all for interrupts raised on unused vectors
-+/*
-+ * spurious_interrupt(): Catch all for interrupts raised on unused vectors
-+ * @regs:	Pointer to pt_regs on stack
-+ * @error_code: Hardware exception/interrupt data
-+ *
-+ * The spurious_interrupt() high level function is invoked from ASM entry code
-+ * to catch all interrupts which trigger on an entry which is routed to the
-+ * common_spurious idtentry point.
-+ *
-+ * __spurious_interrupt(): Catch all for interrupts raised on unused vectors
-  * @regs:	Pointer to pt_regs on stack
-  * @vector:	The IRQ vector number
-  *
-- * This is invoked from ASM entry code to catch all interrupts which
-- * trigger on an entry which is routed to the common_spurious idtentry
-- * point.
-+ * This is the lower level spurious interrupts handler function.
-  */
- DEFINE_IDTENTRY_IRQ(spurious_interrupt)
- {
 
