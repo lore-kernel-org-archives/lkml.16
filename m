@@ -1,60 +1,63 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34F925C6EE
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B287B25D20D
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747333409; cv=none; b=ZiZFAanoAVi+CMJUcSjTMCSlkH7i3V9Cpd80SzcGz0qYHjhYC9Wq34AFPaPj5raOG9O1fzYapUKI/kRltAciRKzG2rrnCvZ1qOdE5CzX77cI4s4wYHraLOkWfgjJikjKWUJSihZd5/vgwMhtGYKrzkhA9vBtna1Q8BNsQXr2y3g=
+	t=1747333412; cv=none; b=suRq5AnuxmKyNPUhgCGoecJFeCH2QYPl7esYkTpwzcnFNvRhOb4v2HDeBL4OnYdGA+XyL4sHn4UpMlV7LWUY0Ps00iNvYef2LFAyS1Mbf2deLVFxzekVTa3OZxqDSuHQmLIkQA9HKwKrgDI92gbR/Lpkbb4pSXSTMeD0yD8I3/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747333409; c=relaxed/simple;
-	bh=AV1mdLMhttAbVzj/bEmj7uxlWqhHoC7CT2QcgUdf6KA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=Q0cZo6cChfJ/ywjk0nHhh7ttpIVzRzmkN1rJU3JBYbUfYWpmowlB4+ixysr3lQDTp6INIeNTMx4UGFbWFUL9mW1XCbUkhCvXJm59hLd+LCMFkJ9AG5kmlqDhbBw3bY18z85V7YyxCwynk5rmQagYMhu5F4b60/MZ1+Dubs/C96Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=A50TEbb8; arc=none smtp.client-ip=209.85.222.172
+	s=arc-20240116; t=1747333412; c=relaxed/simple;
+	bh=1rYzlB4jt+NgzrmG5MLloEzusBe5IEirmGPBVFDNYcI=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=M3evkC27OsBDi7Cr9T0fDLiNOdL7exGvMKzce6dYQ2dmCA8OKHpmesLeBVd4pcZUfOMnqgV8LPIstQFCtWM2xgnwBAmC/1z7GynnKiMAzhf+Vs739dlpvM23uWitYaVOj5S3TffHGmB+m8qCreXxlz8vu3mgcE4d3FjYpGsyWp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=u9AQ1qIa; arc=none smtp.client-ip=209.85.160.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="A50TEbb8"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c9376c4bddso142065185a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:23:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="u9AQ1qIa"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-476f4e9cf92so10049241cf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:23:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1747333406; x=1747938206; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=A0jheAFoxaIUcUfzIFzIBnTjDodf4OGSNMDK16pdaY4=;
-        b=A50TEbb8iLZf6b/jde0hVvOvy/AKPzFinoQ2AaOrv95EA9d4J5ElfyzoG8Vo/ifheW
-         XbV2qEOaCkIqXPOC458G79nPDIjAQ5AWNUZJKL3H+gapWfmlQh7CKYPfDYRI6Xz4VAdW
-         Ca3s/KP0sTiPNF4dYpCTM732pLVczHDjbclQPxLidsDrQFPVPu9sYVu24BlFbCc2fKUk
-         mnit44OpInCv81nkwwbquP3P7zsbIVQApTXT07mL0fUIOnmR+GNDLNl7V5WiFQ3l9+DW
-         8S2JE4qgMxw4ErKi9CSc4KsvKHKOsH2vGKsxg27scNBor80cZGU2X1bek3XQqcyImLJx
-         qe9Q==
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1747333409; x=1747938209; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/1cQld6s+fHhsQGRDIn5qKXAP1aMOMnCGujzp2H2Sb8=;
+        b=u9AQ1qIapwgr8HRYKUxb2EmTswFXhzvguFJGm3MZfOmRXRFWYIEU0KMHJcvMGj4S8j
+         Ixj9TQjQfElegZuG1vbLDlA/T5cVuJzs8ajiibWPo/RDiLN+D6JD8s7l1azqXwKOyeGR
+         29ZiCWHCGzLyUOh5V0+WmMWXTCE7A0PBcGibfHS2hN3pn1cFrMqNV11UmjDQMjRGZr1c
+         Kp3d3JdAe038R3M9QsGqeMganAGGN5POuPGJNHmT66nxA3Tx5tMIPlK47T50M+IXdRWN
+         iQZCamTKWedAyBVHcmR5+5a+uhuhkAsgQodpaJH5hPXigx+FoimPa4rTZ1l3GWiczZpU
+         iNgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747333406; x=1747938206;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A0jheAFoxaIUcUfzIFzIBnTjDodf4OGSNMDK16pdaY4=;
-        b=DS1Fnf84ON2wReRL/NrS6Cndn6+C1TL2OQv2kIJpgoklBf+9PVHhqG3arHxwT5KfOw
-         Z1CeRmC8V7MQvHQbclnM2JeFt8/rrMEwXSrVm5vfyQLyNpF2vDejQ1DfXNMZZxh80LSn
-         1p1g4Ja+qnsphWuMhkjLA+dl99fBpKMccKR0BfKFDaBLoAEUmu04rseZjEIYXetHlKOU
-         mA1/QGEPAWdSw24J72gtBgAnd2Mib5dDj3koXdUJ/gRRhlOPRAEskrahnUbW3QN9zQEV
-         MP/pRIEkkhnBl9uNsWxSmHw89+U4rz1gXYcpCSRc59bGsIhEy2SGaxS+ejXbJjOasFyQ
-         MFbg==
-X-Forwarded-Encrypted: i=1; AJvYcCX82T+ZbCY3366B2ywJxXLegYotxjtJQoMQlJ1p931m0xWB41qEj4xdWgrKDNOR5ftTkVjS1JNpCttlUFg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBjdfjLjqda2BKUSmteIpOeMJ0NRf+phUKYpFqR787LWt5jlhz
-	lQ/HijYg8H21XVD4diiHkBcRGi2exQh3sMKVX3/7byFXDE50Y+H6pJGzkoulYcmcyTg=
-X-Gm-Gg: ASbGncuh3KlppkMGcMbuprop85wJ3AKUnH8Vtjd/jWgffX+tCWegM5jSCyLgXQs9xjw
-	16SsyBikkis861EGa76cqvRYkuIibXuqhTIzqS017yT0v4Fee9yiklpWgL42ncv6LV9C3V7Aijk
-	dGVS2JFmDEVFY7SQtKiY0RgY7APuobN2qzfib9hcQACFAQPBZFM/u5Jy2WJ2UUT+DEWRLPtDpI0
-	O+HhLVLWUMil1foJfTOC4OqrdXAio/W8rMKlWsTRsK57ADS23YGTfFfprfOAoo73fWmi1PPdDgd
-	hGli1Jb4l6h+1Ff5Py0n65RQ7/WphvYreQa0NqafMh+g4Tq4ALDK0Yh+EV/xb4aHspCKoGRo2/A
-	UseDEtIkdaZDFxBZOiqQRWOKM8A0TpkJRu/zCtSg9+FAn
-X-Google-Smtp-Source: AGHT+IGaP37dLC0NYarBXoAi3DGllHD5VhY+J/RcWIfEL0jL4jdfyJMjPFWTgN13G/j982eFmRP46g==
-X-Received: by 2002:a05:620a:3199:b0:7c9:6707:b466 with SMTP id af79cd13be357-7cd46718950mr63091585a.11.1747333406587;
-        Thu, 15 May 2025 11:23:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747333409; x=1747938209;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/1cQld6s+fHhsQGRDIn5qKXAP1aMOMnCGujzp2H2Sb8=;
+        b=QRHDKQYoBx4dLk+UOfssFcW8EThmuaCMff/YycsizLIpbo0QaBTdNeiH2ziU5ZFVOZ
+         SOvyRsytoqVSzKaYkIsylvvYzJJclZuH8zFhGXql0bZxiAMw4t9i8VzqULvXSCL+jw7L
+         vA+bcelE5q33fd0dcLUn//qYz0Q7X7BCuzk8CXPddKfoXomvyrCqQlxn3oOy5x4Y/E+x
+         8hJ+js0QvKfzgpY5ZTKxsJkWnalqNhzTcS782X3Lf+ymP8xojc+dQLMog8ZrEijjFs7d
+         56m5qL2ZWqxYe2vBYkygEq9RXBGa08qaddoo0eHxZsB9sAoDeUZvVpOMC8I1TyOlM4NL
+         Pxnw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3f72Dx6fEjoLiiZgW0TQPBX2pvbvb76j21FUY2ielRhtm4Lyenh6U9G77faN513Sf96fKV68HgX/fl8w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyT0ftAX61uFh9exi4DhQqZYF/mNf3u0HKijvtCynoIDrDuxsvl
+	CD9cVcBS3a01VXIsh8KYIPWAfRpGyUJxjLz8XXYZXklwoE+N9Gpy+/wLkl8n2tyjTY0=
+X-Gm-Gg: ASbGncsXkVLA35r9Izs1HN22pqnfRHDsYTSn+Mgy2/J6VMddQq8KzJ8llYcVgCR/mL9
+	vDAbhPwhXNCtj6U4/82CcmUhNKFeY98BQRVtEwiwkQgQqd5ksXc0gNuBQ8hK3u8uDb3nqPXB+Ay
+	v/fp7MyO7jAkJmPxUa10D5k9YT5PjrAnt/0nM3VL8sNV1MHgzSyv5BseVrcVRszeVrt9WHtrKAH
+	qKxdvCpIJX3uftHPw8sHcEKTyc7cVAble0xgR1cad+lFT1AWwqfJ0v/tOwsswxh+r2lLGLjlZfY
+	DMFeUSdMKoWE1yp4ygQcMn73I51adfhdAwR6aq21lG4MHIk7rjmHUfSJyfINHwVqm5v8e038SV/
+	AzyXmG/u7cKk8NR3E+l9zb4AJbR3cvnrp80Hzsofg/rwQ
+X-Google-Smtp-Source: AGHT+IHMdR7jltadwLx3md1mkyCXtwpjmFH9FzZ/ZTOjwdYm/5D6IYoCeXD8qKkrvwmgbOc0uZ2I7w==
+X-Received: by 2002:a05:622a:4ccc:b0:491:18c2:2d1 with SMTP id d75a77b69052e-494ae34b351mr5878641cf.7.1747333409292;
+        Thu, 15 May 2025 11:23:29 -0700 (PDT)
 Received: from soleen.c.googlers.com.com (138.200.150.34.bc.googleusercontent.com. [34.150.200.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd466fc2afsm18218685a.0.2025.05.15.11.23.25
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd466fc2afsm18218685a.0.2025.05.15.11.23.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 11:23:26 -0700 (PDT)
+        Thu, 15 May 2025 11:23:28 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: pratyush@kernel.org,
 	jasonmiu@google.com,
@@ -118,10 +121,12 @@ To: pratyush@kernel.org,
 	djeffery@redhat.com,
 	stuart.w.hayes@gmail.com,
 	ptyadav@amazon.de
-Subject: [RFC v2 00/16] Live Update Orchestrator
-Date: Thu, 15 May 2025 18:23:04 +0000
-Message-ID: <20250515182322.117840-1-pasha.tatashin@soleen.com>
+Subject: [RFC v2 02/16] kho: allow to drive kho from within kernel
+Date: Thu, 15 May 2025 18:23:06 +0000
+Message-ID: <20250515182322.117840-3-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
+In-Reply-To: <20250515182322.117840-1-pasha.tatashin@soleen.com>
+References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -130,181 +135,148 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This v2 series introduces the LUO, a kernel subsystem designed to
-facilitate live kernel updates with minimal downtime,
-particularly in cloud delplyoments aiming to update without fully
-disrupting running virtual machines.
+Allow to do finalize and abort from kernel modules, so LUO could
+drive the KHO sequence via its own state machine.
 
-This series builds upon KHO framework [1] by adding programmatic
-control over KHO's lifecycle and leveraging KHO for persisting LUO's
-own metadata across the kexec boundary. The git branch for this series
-can be found at:
-https://github.com/googleprodkernel/linux-liveupdate/tree/luo/rfc-v2
+Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+---
+ include/linux/kexec_handover.h   | 15 +++++++++
+ kernel/kexec_handover.c          | 54 ++++++++++++++++++++++++++++++++
+ kernel/kexec_handover_debug.c    |  2 +-
+ kernel/kexec_handover_internal.h |  2 ++
+ 4 files changed, 72 insertions(+), 1 deletion(-)
 
-Changelog from v1:
-- Control Interface: Shifted from sysfs-based control
-  (/sys/kernel/liveupdate/{prepare,finish}) to an ioctl interface
-  (/dev/liveupdate). Sysfs is now primarily for monitoring the state.
-- Event/State Renaming: LIVEUPDATE_REBOOT event/phase is now
-  LIVEUPDATE_FREEZE.
-- FD Preservation: A new component for preserving file descriptors.
-  Subsystem Registration: A formal mechanism for kernel subsystems
-  to participate.
-- Device Layer: removed device list handling from this series, it is
-  going to be added separately.
-- Selftests: Kernel-side selftest hooks and userspace selftests are
-  now included.
-KHO Enhancements:
-- KHO debugfs became optional, and kernel APIs for finalize/abort
-  were added (driven by LUO's needs).
-- KHO unpreserve functions were also added.
-
-What is Live Update?
-Live Update is a specialized reboot process where selected kernel
-resources (memory, file descriptors, and eventually devices) are kept
-operational or their state preserved across a kernel transition (e.g.,
-via kexec). For certain resources, DMA and interrupt activity might
-continue with minimal interruption during the kernel reboot.
-
-LUO v2 Overview:
-LUO v2 provides a framework for coordinating live updates. It features:
-State Machine: Manages the live update process through states:
-NORMAL, PREPARED, FROZEN, UPDATED.
-
-KHO Integration:
-
-LUO programmatically drives KHO's finalization and abort sequences.
-KHO's debugfs interface is now optional configured via
-CONFIG_KEXEC_HANDOVER_DEBUG.
-
-LUO preserves its own metadata via KHO's kho_add_subtree and
-kho_preserve_phys() mechanisms.
-
-Subsystem Participation: A callback API liveupdate_register_subsystem()
-allows kernel subsystems (e.g., KVM, IOMMU, VFIO, PCI) to register
-handlers for LUO events (PREPARE, FREEZE, FINISH, CANCEL) and persist a
-u64 payload via the LUO FDT.
-
-File Descriptor Preservation: Infrastructure
-liveupdate_register_filesystem, luo_register_file, luo_retrieve_file to
-allow specific types of file descriptors (e.g., memfd, vfio) to be
-preserved and restored.
-
-Handlers for specific file types can be registered to manage their
-preservation and restoration, storing a u64 payload in the LUO FDT.
-
-Example WIP for memfd preservation can be found here [2].
-
-User-space Interface:
-
-ioctl (/dev/liveupdate): The primary control interface for
-triggering LUO state transitions (prepare, freeze, finish, cancel)
-and managing the preservation/restoration of file descriptors.
-Access requires CAP_SYS_ADMIN.
-
-sysfs (/sys/kernel/liveupdate/state): A read-only interface for
-monitoring the current LUO state. This allows userspace services to
-track progress and coordinate actions.
-
-Selftests: Includes kernel-side hooks and userspace selftests to
-verify core LUO functionality, particularly subsystem registration and
-basic state transitions.
-
-LUO State Machine and Events:
-
-NORMAL:   Default operational state.
-PREPARED: Initial preparation complete after LIVEUPDATE_PREPARE
-          event. Subsystems have saved initial state.
-FROZEN:   Final "blackout window" state after LIVEUPDATE_FREEZE
-          event, just before kexec. Workloads must be suspended.
-UPDATED:  Next kernel has booted via live update. Awaiting restoration
-          and LIVEUPDATE_FINISH.
-
-Events:
-LIVEUPDATE_PREPARE: Prepare for reboot, serialize state.
-LIVEUPDATE_FREEZE:  Final opportunity to save state before kexec.
-LIVEUPDATE_FINISH:  Post-reboot cleanup in the next kernel.
-LIVEUPDATE_CANCEL:  Abort prepare or freeze, revert changes.
-
-[1] https://lore.kernel.org/all/20250509074635.3187114-1-changyuanl@google.com
-    https://github.com/googleprodkernel/linux-liveupdate/tree/luo/kho-v8
-[2] https://github.com/googleprodkernel/linux-liveupdate/tree/luo/memfd-v0.1
-
-RFC v1: https://lore.kernel.org/all/20250320024011.2995837-1-pasha.tatashin@soleen.com
-
-Changyuan Lyu (1):
-  kho: add kho_unpreserve_folio/phys
-
-Pasha Tatashin (15):
-  kho: make debugfs interface optional
-  kho: allow to drive kho from within kernel
-  luo: luo_core: Live Update Orchestrator
-  luo: luo_core: integrate with KHO
-  luo: luo_subsystems: add subsystem registration
-  luo: luo_subsystems: implement subsystem callbacks
-  luo: luo_files: add infrastructure for FDs
-  luo: luo_files: implement file systems callbacks
-  luo: luo_ioctl: add ioctl interface
-  luo: luo_sysfs: add sysfs state monitoring
-  reboot: call liveupdate_reboot() before kexec
-  luo: add selftests for subsystems un/registration
-  selftests/liveupdate: add subsystem/state tests
-  docs: add luo documentation
-  MAINTAINERS: add liveupdate entry
-
- .../ABI/testing/sysfs-kernel-liveupdate       |  51 ++
- Documentation/admin-guide/index.rst           |   1 +
- Documentation/admin-guide/liveupdate.rst      |  62 ++
- .../userspace-api/ioctl/ioctl-number.rst      |   1 +
- MAINTAINERS                                   |  14 +-
- drivers/misc/Kconfig                          |   1 +
- drivers/misc/Makefile                         |   1 +
- drivers/misc/liveupdate/Kconfig               |  60 ++
- drivers/misc/liveupdate/Makefile              |   7 +
- drivers/misc/liveupdate/luo_core.c            | 547 +++++++++++++++
- drivers/misc/liveupdate/luo_files.c           | 664 ++++++++++++++++++
- drivers/misc/liveupdate/luo_internal.h        |  59 ++
- drivers/misc/liveupdate/luo_ioctl.c           | 203 ++++++
- drivers/misc/liveupdate/luo_selftests.c       | 283 ++++++++
- drivers/misc/liveupdate/luo_selftests.h       |  23 +
- drivers/misc/liveupdate/luo_subsystems.c      | 413 +++++++++++
- drivers/misc/liveupdate/luo_sysfs.c           |  92 +++
- include/linux/kexec_handover.h                |  27 +
- include/linux/liveupdate.h                    | 214 ++++++
- include/uapi/linux/liveupdate.h               | 324 +++++++++
- kernel/Kconfig.kexec                          |  10 +
- kernel/Makefile                               |   1 +
- kernel/kexec_handover.c                       | 343 +++------
- kernel/kexec_handover_debug.c                 | 237 +++++++
- kernel/kexec_handover_internal.h              |  74 ++
- kernel/reboot.c                               |   4 +
- tools/testing/selftests/Makefile              |   1 +
- tools/testing/selftests/liveupdate/.gitignore |   1 +
- tools/testing/selftests/liveupdate/Makefile   |   7 +
- tools/testing/selftests/liveupdate/config     |   6 +
- .../testing/selftests/liveupdate/liveupdate.c | 440 ++++++++++++
- 31 files changed, 3933 insertions(+), 238 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-kernel-liveupdate
- create mode 100644 Documentation/admin-guide/liveupdate.rst
- create mode 100644 drivers/misc/liveupdate/Kconfig
- create mode 100644 drivers/misc/liveupdate/Makefile
- create mode 100644 drivers/misc/liveupdate/luo_core.c
- create mode 100644 drivers/misc/liveupdate/luo_files.c
- create mode 100644 drivers/misc/liveupdate/luo_internal.h
- create mode 100644 drivers/misc/liveupdate/luo_ioctl.c
- create mode 100644 drivers/misc/liveupdate/luo_selftests.c
- create mode 100644 drivers/misc/liveupdate/luo_selftests.h
- create mode 100644 drivers/misc/liveupdate/luo_subsystems.c
- create mode 100644 drivers/misc/liveupdate/luo_sysfs.c
- create mode 100644 include/linux/liveupdate.h
- create mode 100644 include/uapi/linux/liveupdate.h
- create mode 100644 kernel/kexec_handover_debug.c
- create mode 100644 kernel/kexec_handover_internal.h
- create mode 100644 tools/testing/selftests/liveupdate/.gitignore
- create mode 100644 tools/testing/selftests/liveupdate/Makefile
- create mode 100644 tools/testing/selftests/liveupdate/config
- create mode 100644 tools/testing/selftests/liveupdate/liveupdate.c
-
+diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
+index 348844cffb13..f98565def593 100644
+--- a/include/linux/kexec_handover.h
++++ b/include/linux/kexec_handover.h
+@@ -54,6 +54,10 @@ void kho_memory_init(void);
+ 
+ void kho_populate(phys_addr_t fdt_phys, u64 fdt_len, phys_addr_t scratch_phys,
+ 		  u64 scratch_len);
++
++int kho_finalize(void);
++int kho_abort(void);
++
+ #else
+ static inline bool kho_is_enabled(void)
+ {
+@@ -104,6 +108,17 @@ static inline void kho_populate(phys_addr_t fdt_phys, u64 fdt_len,
+ 				phys_addr_t scratch_phys, u64 scratch_len)
+ {
+ }
++
++static inline int kho_finalize(void)
++{
++	return -EOPNOTSUPP;
++}
++
++static inline int kho_abort(void)
++{
++	return -EOPNOTSUPP;
++}
++
+ #endif /* CONFIG_KEXEC_HANDOVER */
+ 
+ #endif /* LINUX_KEXEC_HANDOVER_H */
+diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
+index 5b65970e9746..8ff561e36a87 100644
+--- a/kernel/kexec_handover.c
++++ b/kernel/kexec_handover.c
+@@ -734,6 +734,60 @@ int __kho_finalize(void)
+ 	return err;
+ }
+ 
++int kho_finalize(void)
++{
++	int ret = 0;
++
++	if (!kho_enable)
++		return -EOPNOTSUPP;
++
++	mutex_lock(&kho_out.lock);
++
++	if (kho_out.finalized) {
++		ret = -EEXIST;
++		goto unlock;
++	}
++
++	ret = __kho_finalize();
++	if (ret)
++		goto unlock;
++
++	kho_out.finalized = true;
++	ret = kho_out_update_debugfs_fdt();
++
++unlock:
++	mutex_unlock(&kho_out.lock);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(kho_finalize);
++
++int kho_abort(void)
++{
++	int ret = 0;
++
++	if (!kho_enable)
++		return -EOPNOTSUPP;
++
++	mutex_lock(&kho_out.lock);
++
++	if (!kho_out.finalized) {
++		ret = -ENOENT;
++		goto unlock;
++	}
++
++	ret = __kho_abort();
++	if (ret)
++		goto unlock;
++
++	kho_out.finalized = false;
++	ret = kho_out_update_debugfs_fdt();
++
++unlock:
++	mutex_unlock(&kho_out.lock);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(kho_abort);
++
+ struct kho_in kho_in = {
+ 	.fdt_list = LIST_HEAD_INIT(kho_in.fdt_list),
+ };
+diff --git a/kernel/kexec_handover_debug.c b/kernel/kexec_handover_debug.c
+index 696131a3480f..a15c238ec98e 100644
+--- a/kernel/kexec_handover_debug.c
++++ b/kernel/kexec_handover_debug.c
+@@ -55,7 +55,7 @@ int kho_debugfs_fdt_add(struct kho_serialization *ser, const char *name,
+ 				     fdt);
+ }
+ 
+-static int kho_out_update_debugfs_fdt(void)
++int kho_out_update_debugfs_fdt(void)
+ {
+ 	int err = 0;
+ 	struct fdt_debugfs *ff, *tmp;
+diff --git a/kernel/kexec_handover_internal.h b/kernel/kexec_handover_internal.h
+index 65ff0f651192..0b534758d39d 100644
+--- a/kernel/kexec_handover_internal.h
++++ b/kernel/kexec_handover_internal.h
+@@ -60,6 +60,7 @@ void kho_in_debugfs_init(const void *fdt);
+ int kho_out_debugfs_init(void);
+ int kho_debugfs_fdt_add(struct kho_serialization *ser, const char *name,
+ 			const void *fdt);
++int kho_out_update_debugfs_fdt(void);
+ #else
+ static inline int kho_debugfs_init(void) { return 0; }
+ static inline void kho_in_debugfs_init(const void *fdt) { }
+@@ -67,6 +68,7 @@ static inline int kho_out_debugfs_init(void) { return 0; }
+ static inline int kho_debugfs_fdt_add(struct kho_serialization *ser,
+ 				      const char *name,
+ 				      const void *fdt) { return 0; }
++static inline int kho_out_update_debugfs_fdt(void) { return 0; }
+ #endif /* CONFIG_KEXEC_HANDOVER_DEBUG */
+ 
+ #endif /* LINUX_KEXEC_HANDOVER_INTERNAL_H */
 -- 
 2.49.0.1101.gccaa498523-goog
 
