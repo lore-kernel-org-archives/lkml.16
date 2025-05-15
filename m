@@ -1,149 +1,102 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C951297B9B
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6837028C5D9
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747301949; cv=none; b=uvqJNSSp6pcmh1619E3sDPNbw+yRSHZVV/dPRuUrLE8o1yzX57WCiaiLLg82/Y7XtulHWrYsVt+1At+ZrQmhXd+Vld/qrx5xC/Uw1pi+DYDECf8SKxQc2gV3sRwjseqEJUaNHAZKMvic3qrBNIQNUHj2knVDNdH6iSWre8TzIwQ=
+	t=1747302010; cv=none; b=C/EUta0Ig2zIc9bx25HT75YtnkXHfa9bOtg26rcVSdeDV6RrxIujRvs75B7V8LIE3RikFE2cfxgRV76xWTQPcdFMDC7J2j0+3bhF+gxGvrMUf4NWiOB3gxIwDNLC61YVWCRYuyGaojgFeaLQOo85g640itr5DWZKrLaOova20eU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747301949; c=relaxed/simple;
-	bh=9ejqJdAfRQgrUf9I1IYQ+fYB+UCPA4s+oqy2FZnf1gQ=;
+	s=arc-20240116; t=1747302010; c=relaxed/simple;
+	bh=1CrClsb6m6KfVqR6MgsSYcZDNxWG+Jal4kU8wCuMksk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YnQIc/YkShVVmV0rqoxlvU9yUihxPZTEbA7u6HYQp4gCt2tmZggzSeThMtJQ2WPPr7N7KYMP85ljqGrx7pJ1Lyfg+IW9n5B/kvVGBFE3olqm0tBj2yeAu9rxi/W7da7I9NNZ89M6bl+6GlSselHvFXwUsGLa3VtuY8UuygM6NkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=D1ohjsAJ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 To:Cc:Content-Type; b=LmSCdc3XV58UX693x87wZXG6o1IJxVWB6aVYUJMqi25tMmzLnm8jw/K9ks0nD96ljDMRqvbJgfgePLeVCEPqg2YgWOlU4eKgbys/uqp6rtMSFjeX7BozeWQBJnE/HeIoWZs5IjB0ox31dcKcLxswqC+HuQur2OuZBeAl6IEPkBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VIiBSl5e; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="D1ohjsAJ"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54F7AeNl002715
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:39:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	bL9+c2xXU5k5XoAxcTRicJ96o6n46XiZLKCVzMJ4Od4=; b=D1ohjsAJx7vnpRqQ
-	nGtnDlFfvcIfk6C/3pGEO21BzjJSfKyVo6zgi1coRu3y2gJFEn76Hl6k5V/Y+Qbn
-	XXOlj8k58IvLrA5g0syv3b0LjqPxhCB2jAkWsw1K4L9UiJceBiv81aP7M7YdbcDn
-	7kv7nNS5w1Q+zaRzFp55JRrtv/RxN/SOs5AP1k6SZssSMblF3tKybnq6iBgBZ8kz
-	lmLOAStyNJBaYAUctQV1wST952ZzCMeek7cJHkZP7RtH1JPXMHBfw2uhB/OjZPc7
-	Y+9J0Crvf5TQdZA547FWi/Ri7DBagpgJ54ArULHIXouf9/m7wdYst1Q2zearaqaa
-	HF5RhQ==
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcpdrfs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:39:06 +0000 (GMT)
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-47693206f16so14822831cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 02:39:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VIiBSl5e"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-550d4b7a076so771847e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 02:40:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747302006; x=1747906806; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1CrClsb6m6KfVqR6MgsSYcZDNxWG+Jal4kU8wCuMksk=;
+        b=VIiBSl5ekbxSdUcHufhLQogJQbKLAoXNpHlSke3pqqtf2aAh2YiuBpSd4hpnQ9pp2/
+         PfRoikEH1uEyodcqiDlYDFO9t3WO75gUQhWFYZGcJXCSN7D/3SSZLIvR3nfpg9C6v9EK
+         1MKstOs41aIe9zNEHGct9oZTTaX0HWEjJ5NplDOV8CfWS2lYfbRTux9Ir7pK6j81a2tM
+         +0qUnGoBauEV1qKZqzUssFJxts0SuvJUEesvjYR2jAWIpSS0+NlrZoLYC84/VSuNEnr6
+         cS4sQV/Bmn5IBZ9SXZ8ujSlEJRS7LVC9wobyZMWbdZ1E5cymQHRQ3CMoHh4EQnARoRYq
+         adEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747301945; x=1747906745;
+        d=1e100.net; s=20230601; t=1747302006; x=1747906806;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bL9+c2xXU5k5XoAxcTRicJ96o6n46XiZLKCVzMJ4Od4=;
-        b=f547RncpErNAnGxQ7/ae7MetrALSG07ATWfV1/pZWTADPVTNlnADiKtCWxsPom+J4+
-         cnUAOy2CieHLW2Es76eYmtIffLG6CPd57WfldgZxD2KvrWLIpt/E17Enor4nt2v4Bp1Z
-         3HWZkOuWcRcLfVZfVOfi6u1oPwI9KVMEFW49XuCJoyuDPhMYmS2NyVvBK9Id7hcusPxI
-         uEUaEomFFlIWgJUglIiccJZYKy2DblqK/XcbPS0g1q8Vh7M1GqkWgBD5QONmBc7B0SUE
-         cWKR93Lh2WIyLADZ9qmhCQUepI9A1HdXIJE1evEWkSBldMBvPINdi/aeU/I+sf4k1hKx
-         a21w==
-X-Forwarded-Encrypted: i=1; AJvYcCWTUZidmEvJxiESTzdPQX94ksMs01eCm+1QcJM91nz3TT7p8S4wK3bEjZP+pxcSdosKfObFwW0LxnUfCg8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz39pRNVnSbsMRsCpvb5dNK195nPPdc0oaTPdABGfO4N5HQbxFR
-	/rEwZTNZLNYuE6hpb+C0xppvhQAwPeoMSbeF2Su/fR00824CXix8GXj4W3KuRwVmOSpfGOMsWVy
-	0EJdxhrciYlO7Cn42oSh52fV5fkSbAh9givg9Q6Xm2N1KS+G03aBLpHdalLeBQ/OQXDroeENfc9
-	YkslZUTbxXXeMb4P8LswaFIjig0RqODX48gKtfp7BgztyEgO0H
-X-Gm-Gg: ASbGncsdXS39nHHn2j97G4y8HIycylTl7FcEyFy7TMCFQ2s/um1RflvlPh5DGB6jJ4u
-	316jxgJoVU1prdfqgTvyWJon3E5ugr5z+ZOgVlvyT5OQmvCdF/r5wGZ0d+3DaPmaKu08EyA==
-X-Received: by 2002:a05:622a:1f91:b0:48e:5cda:d04e with SMTP id d75a77b69052e-49495d17d7bmr101050051cf.36.1747301944981;
-        Thu, 15 May 2025 02:39:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGyV62VENdLqtRSifrIKA6KP6Y3yTlks4d5BUqQHnKQG6N7iNSmmL8F8/t3ZkGxdMz6pGca1xp710WlixBqn6M=
-X-Received: by 2002:ad4:5c4a:0:b0:6e8:9dfa:d932 with SMTP id
- 6a1803df08f44-6f896e43ddemr99261156d6.15.1747301934332; Thu, 15 May 2025
- 02:38:54 -0700 (PDT)
+        bh=1CrClsb6m6KfVqR6MgsSYcZDNxWG+Jal4kU8wCuMksk=;
+        b=tB+ii07R163Zi2XOSvqSmRuX0xx8GQEcxfNySjGC4Xk6fF7LSfxeqg/XsoCsrrDKoS
+         oL8m+61S7qKshg5uG3CEtrE8QXRZfNtQNl+4YmbMOcYPTha8ljNUN9IwFzhhsWbjJ2K3
+         5jJ/mNvHvyDBwte1NOFcGzANqEjXbFw4JMQhSPVoffoCVJgAjhBHDFvgU4jMvRVUyYtu
+         3QD766lkW456SmwgCx0P4GtIRMovtjoBdXWi/EuaKZZ2u1N20nfbUoxeoOYp1UUtmzjk
+         A13+xFprgeLs/JxL6htFskR6uxJmOfCFxtJcGX/9k8Q3soG2ghqFvb12ewTB7Z+CJKX5
+         WdgA==
+X-Forwarded-Encrypted: i=1; AJvYcCU1r7gpvTXHIX0A8FrORVrlKFh/MDA3LxXvEWP7YJNl1xN8O5gMcXmLuQ9h38e64UyB8HhJb7E6dS21Mkw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxslCh2e2NezMG/Zh9TpuRSs4d021g6wG/qrDh9xOhYWXriGxXB
+	neMZrJgzjUxtVKBjJJtXfR5LQtscBmdxton2IGWUG3frkwbhZigNvhs+28fbRS39HkymPG+YZ2V
+	8TAe50P8oxyuNiS6/NUbbPg8aTM4=
+X-Gm-Gg: ASbGnctnglBFyfugKL5SHS6DZeJL1iquxIEzVCZcu/kFJDzT/8v/as3Ue1x/VGuRdEX
+	MNlYPMa4uWu32DplDzoeUwsiCma0ucEZF7cPZKer6Hj3CoIi/W6RhTljGG1jX5CWmwBFjYIz/Hu
+	dB0MSQUrIp09iTiEONQRiDxVtm+e6/QrGI
+X-Google-Smtp-Source: AGHT+IF+92TDlD1jx6r/Kz+tLgIx4K+eyBpvWWHyz2ybulLqnfTzi1ZhRuPADWJY3IipWXvGSjpHtEkPLlAL+Cr3RyA=
+X-Received: by 2002:a2e:8a8d:0:b0:328:19:f6d0 with SMTP id 38308e7fff4ca-3280019f977mr1951621fa.6.1747302006096;
+ Thu, 15 May 2025 02:40:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515092523.1724845-1-alexander.wilhelm@westermo.com>
-In-Reply-To: <20250515092523.1724845-1-alexander.wilhelm@westermo.com>
-From: Loic Poulain <loic.poulain@oss.qualcomm.com>
-Date: Thu, 15 May 2025 11:38:43 +0200
-X-Gm-Features: AX0GCFsOZFI3I3BpJIcmBKNgB5jKB8lh3ycdGBJIaVElQBON7ejoXw8NyllxZxo
-Message-ID: <CAFEp6-3-25sRUvPbeX0oH1pVyRt49gvdVw5eMi1_azzPdYUjDw@mail.gmail.com>
-Subject: Re: [PATCH] bus: mhi: host: fix endianness of BHI vector table
-To: Alexander Wilhelm <alexander.wilhelm@westermo.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <20250514201729.48420-1-ryncsn@gmail.com> <20250514201729.48420-12-ryncsn@gmail.com>
+ <iqcrqzvoqt7dcmboh75u5g5cwgzaevlota3izpsfmaeotdnnzw@f7udsv2gghwa>
+In-Reply-To: <iqcrqzvoqt7dcmboh75u5g5cwgzaevlota3izpsfmaeotdnnzw@f7udsv2gghwa>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Thu, 15 May 2025 17:39:48 +0800
+X-Gm-Features: AX0GCFubmipqPTGXVkf0OAolayEXRfOSmtVjA5Chsvxfnh3knv8D6XTQVwK4SpI
+Message-ID: <CAMgjq7AuyTCRymHA3wZ6hp7ui9_LrwM4jq0cyAkqGjgG39erOw@mail.gmail.com>
+Subject: Re: [PATCH 11/28] mm, swap: clean up and consolidate helper for mTHP
+ swapin check
+To: Klara Modin <klarasmodin@gmail.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Matthew Wilcox <willy@infradead.org>, Hugh Dickins <hughd@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Hildenbrand <david@redhat.com>, Yosry Ahmed <yosryahmed@google.com>, 
+	"Huang, Ying" <ying.huang@linux.alibaba.com>, Nhat Pham <nphamcs@gmail.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, 
+	Kalesh Singh <kaleshsingh@google.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Tim Chen <tim.c.chen@linux.intel.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-GUID: XxVaFh-sy3zxlrU8lF3eY4WUO2VU5diG
-X-Proofpoint-ORIG-GUID: XxVaFh-sy3zxlrU8lF3eY4WUO2VU5diG
-X-Authority-Analysis: v=2.4 cv=cO7gskeN c=1 sm=1 tr=0 ts=6825b63a cx=c_pps
- a=JbAStetqSzwMeJznSMzCyw==:117 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=N9GNhs4bAAAA:8 a=r3g6jp7oTuNtImPevnoA:9 a=QEXdDO2ut3YA:10
- a=uxP6HrT_eTzRwkO_Te1X:22 a=PZhj9NlD-CKO8hVp7yCs:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDA5NCBTYWx0ZWRfX+lZvsn6+IbpC
- 0y7ZIf8SglFzp1mBTNDz6RBDzaO1F5aaBiDOvCMhv4MjWm0LLfGU5LzQd+rIX4df+CPHRgqtjL7
- iXOSrgeIyBsk+QyjUFfLWYyZsPak4/KX5lbvdMLS6e2bA4cTo9L5SDGipl77WLujmeNgewQpH8s
- YkmXUhP25TgI1oZmMUE1Ng1cG0sC0VYTizCh8vYCH26RjvYWa3guv0uk0u9EFM0jecHz60a4hSV
- 3/rSiovkNX3Vzetkws2cGetApACJ2StL4GBOMgJf20zojYIa5QG8JZ56yQQogsY5eyC7D8GMLN5
- aWv3ks4wCry0H+DfLEL6vw7oesBp/vTjSzC2c8TnAfEdMOAEuZw6afNVEuBZiqB49YxPp2U/eLG
- qEz0f5JQKW7YK/sf85cdeL/usFyOW57sMuw2DTOlxtSOZF96z/QhbaaI3DwngPxVcro36wd/
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-15_04,2025-05-14_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 spamscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0
- adultscore=0 bulkscore=0 malwarescore=0 impostorscore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505150094
 
-On Thu, May 15, 2025 at 11:26=E2=80=AFAM Alexander Wilhelm
-<alexander.wilhelm@westermo.com> wrote:
+On Thu, May 15, 2025 at 5:31=E2=80=AFPM Klara Modin <klarasmodin@gmail.com>=
+ wrote:
 >
-> On big endian platforms like PowerPC the DMA address and size are require=
-d
-> to be swapped. Otherwise the MHI bus does not start properly. The followi=
-ng
-> example shows the error messages by using qcn9274 wireless radio module
-> with ath12k driver:
+> Hi,
 >
->     ath12k_pci 0001:01:00.0: BAR 0: assigned [mem 0xc00000000-0xc001fffff=
- 64bit]
->     ath12k_pci 0001:01:00.0: MSI vectors: 1
->     ath12k_pci 0001:01:00.0: Hardware name: qcn9274 hw2.0
->     ath12k_pci 0001:01:00.0: failed to set mhi state: POWER_ON(2)
->     ath12k_pci 0001:01:00.0: failed to start mhi: -110
->     ath12k_pci 0001:01:00.0: failed to power up :-110
->     ath12k_pci 0001:01:00.0: failed to create soc core: -110
->     ath12k_pci 0001:01:00.0: failed to init core: -110
->     ath12k_pci: probe of 0001:01:00.0 failed with error -110
+> On 2025-05-15 04:17:11 +0800, Kairui Song wrote:
+> > From: Kairui Song <kasong@tencent.com>
+> >
+> > Move all mTHP swapin check into can_swapin_thp and use it for both pre
+> > IO check and post IO check. This way the code is more consolidated and
+> > make later commit easier to maintain.
 >
-> Signed-off-by: Alexander Wilhelm <alexander.wilhelm@westermo.com>
-> ---
->  drivers/bus/mhi/host/boot.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/bus/mhi/host/boot.c b/drivers/bus/mhi/host/boot.c
-> index efa3b6dddf4d..205d83ac069f 100644
-> --- a/drivers/bus/mhi/host/boot.c
-> +++ b/drivers/bus/mhi/host/boot.c
-> @@ -31,8 +31,8 @@ int mhi_rddm_prepare(struct mhi_controller *mhi_cntrl,
->         int ret;
->
->         for (i =3D 0; i < img_info->entries - 1; i++, mhi_buf++, bhi_vec+=
-+) {
-> -               bhi_vec->dma_addr =3D mhi_buf->dma_addr;
-> -               bhi_vec->size =3D mhi_buf->len;
-> +               bhi_vec->dma_addr =3D cpu_to_le64(mhi_buf->dma_addr);
-> +               bhi_vec->size =3D cpu_to_le64(mhi_buf->len);
+> From what I can see, can_swapin_thp is gated behind
+> CONFIG_TRANSPARENT_HUGEPAGE and this fails to build when it's not
+> enabled.
 
-Ok, but then I think the bhi_vec_entry struct should be fixed as well,
-using __le64 fields.
+Thanks for the review.
 
-Regards,
-Loic
+Right, I might have to add an empty one for
+!CONFIG_TRANSPARENT_HUGEPAGE to pass the build.
