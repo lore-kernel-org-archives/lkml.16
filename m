@@ -1,48 +1,48 @@
 Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FBE297B68;
-	Thu, 15 May 2025 09:35:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D2A298CAA;
+	Thu, 15 May 2025 09:35:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747301719; cv=none; b=bYmFwhQMXYfvXzwFi/ytYwyB1bePqgFnV1es+fanMPaD0f6N4wS0WpSVSpVtDmCau4C2/cVrYdBOuZFoPz9FfuPLh26QYr2ueL2TUyKh+rcQp8h4R9d330wiLK76n/hDNffOJ44g83wbK538559pQobWaGCuOPEC3je8ghcCNzw=
+	t=1747301720; cv=none; b=iJNjKweS3hOkF3XFKEKYcz9u1NDY5MPLASyqVDFuQkzevfYvH8VAuM8heRJF+29OGALC4nZE5j6jJjX5YVMmu3djyh5D8mjHnNpl+QKIxEYV0jfXfoAkwV2Ka8cXQqGv1ccq69Fu61eTwZse42EO4U5YlLpgpXqvG1nPgh0av6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747301719; c=relaxed/simple;
-	bh=QC9Zp9J2W3Q0wci0hJ6ilKwMww3FezZZA+qV4mfHTY0=;
+	s=arc-20240116; t=1747301720; c=relaxed/simple;
+	bh=+uglDuLhx5rk1KKAS5+DteUBlDTVj1TpRUf45A4bgF8=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MLlS9vIKsP0nnzaVfK10tC0yIErfKK7zXsVWf1XSK45TSqjteFsl5NPDa1cz10uMreAyUkSErhqy1WLXSosqpdfbf631Lqta+xBpsI2plwtqSdnma6LmXwvVINQLYo2pzWPdJ5h1P+P6eJ+C+Z7jdmjPWSIOclTjYdt8bpsecq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=GTBeaLGh; arc=none smtp.client-ip=60.244.123.138
+	 MIME-Version:Content-Type; b=VNHHSjq4RX06K67ydmnBsqAua0ItzYP9jyT+IdQtP3d2B9SazI2t6vx7V/G9b5YvmWKr4K9wNEfYC+xQhOiyQ+odi6hg34oYOuCsSEntp0k/OmIkXeDl3H/1ejtYfzlif1e56x4Ec/u47a1RhL52wtJZyRvOzWGq0yptcn52BIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=BzG3gSuu; arc=none smtp.client-ip=60.244.123.138
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GTBeaLGh"
-X-UUID: e7113b70316f11f0813e4fe1310efc19-20250515
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BzG3gSuu"
+X-UUID: e5afd91c316f11f0813e4fe1310efc19-20250515
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=UpijhnmjCocVgZygncOLU49SwbbjYQwSUZZ1BwdKB8s=;
-	b=GTBeaLGhXSl+TBStrztr+y7/ADESzFEDNVaSmjpTdVvIOx80mdnLd5xKgk16yf0L0Cx3huWYeijyAePmqccP4RNxJKgkkeDo6T0qWSGEfE0gMgS3mkKCfaFVqrEiXH0GE0e+vxy5h5+BBIoDvH+RLodTrUOW9LNgmUDFAumh6rI=;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=OPM8nhqf4L9SWcrLMVk2agWBmm8gPjgZer2l0aTPrF4=;
+	b=BzG3gSuukb4JvqmWTHcKq2ucj5D1xc+mOjfiwtPScGVvEM81WoM5CNO63ACk2SuRqg329A/7wJMLXJjrBsIDW/1z6tZQSE1/Xu75JHy1hPC7YjENY73mXecnZhwLAonN57TcvPKHKJ3UzEDoMoC4/VqBvbHvLh8e4W2emj56Z9o=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:2a0195a6-a980-4a0e-9504-00c87b5a0379,IP:0,UR
-	L:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-25
-X-CID-META: VersionHash:0ef645f,CLOUDID:afe504c0-eade-4d5b-9f81-31d7b5452436,B
+X-CID-O-INFO: VERSION:1.2.1,REQID:5e405a2e-d11b-47cd-8e39-68c30e286bcb,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:9795cb73-805e-40ad-809d-9cec088f3bd8,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
 	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
 	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0,NGT
 X-CID-BAS: 0,NGT,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: e7113b70316f11f0813e4fe1310efc19-20250515
-Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw01.mediatek.com
+X-UUID: e5afd91c316f11f0813e4fe1310efc19-20250515
+Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw01.mediatek.com
 	(envelope-from <paul-pl.chen@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 156120095; Thu, 15 May 2025 17:35:13 +0800
+	with ESMTP id 557445935; Thu, 15 May 2025 17:35:11 +0800
 Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
+ mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Thu, 15 May 2025 17:35:12 +0800
+ 15.2.1258.39; Thu, 15 May 2025 17:35:07 +0800
 Received: from mtksitap99.mediatek.inc (10.233.130.16) by
  mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Thu, 15 May 2025 17:35:12 +0800
+ 15.2.1258.39 via Frontend Transport; Thu, 15 May 2025 17:35:07 +0800
 From: paul-pl.chen <paul-pl.chen@mediatek.com>
 To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
 	<chunkuang.hu@kernel.org>, <angelogioacchino.delregno@collabora.com>
@@ -55,9 +55,9 @@ CC: <matthias.bgg@gmail.com>, <p.zabel@pengutronix.de>,
 	<dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
 	<linux-arm-kernel@lists.infradead.org>,
 	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH v3 17/17] drm/mediatek: Add support for MT8196 multiple mmsys
-Date: Thu, 15 May 2025 17:34:29 +0800
-Message-ID: <20250515093454.1729720-18-paul-pl.chen@mediatek.com>
+Subject: [PATCH v3 08/17] soc: mediatek: mutex: refactor SOF settings for output components
+Date: Thu, 15 May 2025 17:34:20 +0800
+Message-ID: <20250515093454.1729720-9-paul-pl.chen@mediatek.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250515093454.1729720-1-paul-pl.chen@mediatek.com>
 References: <20250515093454.1729720-1-paul-pl.chen@mediatek.com>
@@ -70,167 +70,140 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-From: Nancy Lin <nancy.lin@mediatek.com>
+From: Paul-pl Chen <paul-pl.chen@mediatek.com>
 
-Add code to support MT8196 SOC Multi MMSYS Driver
+Refactor SOF settings by adding mtk_mutex_get_output_comp_sof()
+and extracting SOF logic from mtk_mutex_add_comp()
+and mtk_mutex_remove_comp().
 
 Signed-off-by: Nancy Lin <nancy.lin@mediatek.com>
 Signed-off-by: Paul-pl Chen <paul-pl.chen@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c | 119 ++++++++++++++++++++++++-
- 1 file changed, 115 insertions(+), 4 deletions(-)
+ drivers/soc/mediatek/mtk-mutex.c       | 60 +++++++++++++++++++++-----
+ include/linux/soc/mediatek/mtk-mutex.h |  4 ++
+ 2 files changed, 53 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index 1e49ca3fef80..229f84a4e59c 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -193,6 +193,10 @@ static const struct mtk_drm_route mt8188_mtk_ddp_main_routes[] = {
- 	{0, DDP_COMPONENT_DSI0},
- };
+diff --git a/drivers/soc/mediatek/mtk-mutex.c b/drivers/soc/mediatek/mtk-mutex.c
+index 47f4d9ae4bfc..b2a9992fb232 100644
+--- a/drivers/soc/mediatek/mtk-mutex.c
++++ b/drivers/soc/mediatek/mtk-mutex.c
+@@ -879,19 +879,57 @@ static int mtk_mutex_get_output_comp_sof(enum mtk_ddp_comp_id id)
+ 	return -EINVAL;
+ }
  
-+static const struct mtk_drm_route mt8196_mtk_ddp_routes[] = {
-+	{2, DDP_COMPONENT_DSI0},
-+};
++void mtk_mutex_add_comp_sof(struct mtk_mutex *mutex, enum mtk_ddp_comp_id id)
++{
++	struct mtk_mutex_ctx *mtx = container_of(mutex, struct mtk_mutex_ctx,
++						 mutex[mutex->id]);
++	int sof_id = mtk_mutex_get_output_comp_sof(id);
++	unsigned int offset;
 +
- static const unsigned int mt8192_mtk_ddp_main[] = {
- 	DDP_COMPONENT_OVL0,
- 	DDP_COMPONENT_OVL_2L0,
-@@ -231,6 +235,50 @@ static const unsigned int mt8195_mtk_ddp_ext[] = {
- 	DDP_COMPONENT_DP_INTF1,
- };
++	if (sof_id < 0 || sof_id >= DDP_MUTEX_SOF_MAX)
++		return;
++
++	WARN_ON(&mtx->mutex[mutex->id] != mutex);
++
++	offset = DISP_REG_MUTEX_SOF(mtx->data->mutex_sof_reg, mutex->id);
++
++	writel_relaxed(mtx->data->mutex_sof[sof_id], mtx->regs + offset);
++}
++EXPORT_SYMBOL_GPL(mtk_mutex_add_comp_sof);
++
++void mtk_mutex_remove_comp_sof(struct mtk_mutex *mutex, enum mtk_ddp_comp_id id)
++{
++	struct mtk_mutex_ctx *mtx = container_of(mutex, struct mtk_mutex_ctx,
++						 mutex[mutex->id]);
++	unsigned int reg;
++	int sof_id = mtk_mutex_get_output_comp_sof(id);
++	unsigned int offset;
++
++	if (sof_id < 0 || sof_id >= DDP_MUTEX_SOF_MAX)
++		return;
++
++	WARN_ON(&mtx->mutex[mutex->id] != mutex);
++
++	offset = DISP_REG_MUTEX_SOF(mtx->data->mutex_sof_reg, mutex->id);
++	reg = readl_relaxed(mtx->regs + offset);
++	reg &= ~(1 << mtx->data->mutex_sof[id]);
++
++	writel_relaxed(reg, mtx->regs + offset);
++}
++EXPORT_SYMBOL_GPL(mtk_mutex_remove_comp_sof);
++
+ void mtk_mutex_add_comp(struct mtk_mutex *mutex,
+ 			enum mtk_ddp_comp_id id)
+ {
+ 	struct mtk_mutex_ctx *mtx = container_of(mutex, struct mtk_mutex_ctx,
+ 						 mutex[mutex->id]);
+ 	unsigned int reg;
+-	unsigned int sof_id;
+ 	unsigned int offset;
+-	int sof_id = mtk_mutex_get_output_comp_sof(id);
++	bool is_output_comp = (mtk_mutex_get_output_comp_sof(id) > 0);
  
-+static const unsigned int mt8196_mtk_ddp_ovl0_main[] = {
-+	DDP_COMPONENT_DRM_OVLSYS_ADAPTOR0,
-+	DDP_COMPONENT_OVL0_DLO_ASYNC5,
-+};
-+
-+static const unsigned int mt8196_mtk_ddp_disp0_main[] = {
-+	DDP_COMPONENT_DLI_ASYNC0,
-+	DDP_COMPONENT_DLO_ASYNC1,
-+};
-+
-+static const unsigned int mt8196_mtk_ddp_disp1_main[] = {
-+	DDP_COMPONENT_DLI_ASYNC21,
-+	DDP_COMPONENT_DVO0,
-+};
-+
-+static const unsigned int mt8196_mtk_ddp_ovl0_ext[] = {
-+	DDP_COMPONENT_DRM_OVLSYS_ADAPTOR1,
-+	DDP_COMPONENT_OVL0_DLO_ASYNC6,
-+};
-+
-+static const unsigned int mt8196_mtk_ddp_disp0_ext[] = {
-+	DDP_COMPONENT_DLI_ASYNC1,
-+	DDP_COMPONENT_DLO_ASYNC2,
-+};
-+
-+static const unsigned int mt8196_mtk_ddp_disp1_ext[] = {
-+	DDP_COMPONENT_DLI_ASYNC22,
-+	DDP_COMPONENT_DP_INTF0,
-+};
-+
-+static const unsigned int mt8196_mtk_ddp_ovl1_third[] = {
-+	DDP_COMPONENT_DRM_OVLSYS_ADAPTOR2,
-+	DDP_COMPONENT_OVL1_DLO_ASYNC5,
-+};
-+
-+static const unsigned int mt8196_mtk_ddp_disp0_third[] = {
-+	DDP_COMPONENT_DLI_ASYNC8,
-+	DDP_COMPONENT_DLO_ASYNC3,
-+};
-+
-+static const unsigned int mt8196_mtk_ddp_disp1_third[] = {
-+	DDP_COMPONENT_DLI_ASYNC23,
-+};
-+
- static const struct mtk_mmsys_driver_data mt2701_mmsys_driver_data = {
- 	.main_path = mt2701_mtk_ddp_main,
- 	.main_len = ARRAY_SIZE(mt2701_mtk_ddp_main),
-@@ -327,8 +375,65 @@ static const struct mtk_mmsys_driver_data mt8195_vdosys1_driver_data = {
- 	.min_height = 1,
- };
+ 	WARN_ON(&mtx->mutex[mutex->id] != mutex);
  
--static const struct mtk_mmsys_driver_data mt8365_mmsys_driver_data = {
--	.mmsys_dev_num = 1,
-+static const struct mtk_mmsys_driver_data mt8196_dispsys0_driver_data = {
-+	.main_path = mt8196_mtk_ddp_disp0_main,
-+	.main_len = ARRAY_SIZE(mt8196_mtk_ddp_disp0_main),
-+	.main_order = 1,
-+	.ext_path = mt8196_mtk_ddp_disp0_ext,
-+	.ext_len = ARRAY_SIZE(mt8196_mtk_ddp_disp0_ext),
-+	.ext_order = 1,
-+	.third_path = mt8196_mtk_ddp_disp0_third,
-+	.third_len = ARRAY_SIZE(mt8196_mtk_ddp_disp0_third),
-+	.third_order = 1,
-+	.mmsys_id = DISPSYS0,
-+	.mmsys_dev_num = 4,
-+	.max_width = 8191,
-+	.min_width = 2, /* 2-pixel align when ethdr is bypassed */
-+	.min_height = 1,
-+};
-+
-+static const struct mtk_mmsys_driver_data mt8196_dispsys1_driver_data = {
-+	.main_path = mt8196_mtk_ddp_disp1_main,
-+	.main_len = ARRAY_SIZE(mt8196_mtk_ddp_disp1_main),
-+	.main_order = 2,
-+	.ext_path = mt8196_mtk_ddp_disp1_ext,
-+	.ext_len = ARRAY_SIZE(mt8196_mtk_ddp_disp1_ext),
-+	.ext_order = 2,
-+	.third_path = mt8196_mtk_ddp_disp1_third,
-+	.third_len = ARRAY_SIZE(mt8196_mtk_ddp_disp1_third),
-+	.conn_routes = mt8196_mtk_ddp_routes,
-+	.num_conn_routes = ARRAY_SIZE(mt8196_mtk_ddp_routes),
-+	.third_order = 2,
-+	.mmsys_id = DISPSYS1,
-+	.mmsys_dev_num = 4,
-+	.max_width = 8191,
-+	.min_width = 2, /* 2-pixel align when ethdr is bypassed */
-+	.min_height = 1,
-+};
-+
-+static const struct mtk_mmsys_driver_data mt8196_ovlsys0_driver_data = {
-+	.main_path = mt8196_mtk_ddp_ovl0_main,
-+	.main_len = ARRAY_SIZE(mt8196_mtk_ddp_ovl0_main),
-+	.main_order = 0,
-+	.ext_path = mt8196_mtk_ddp_ovl0_ext,
-+	.ext_len = ARRAY_SIZE(mt8196_mtk_ddp_ovl0_ext),
-+	.ext_order = 0,
-+	.mmsys_id = OVLSYS0,
-+	.mmsys_dev_num = 4,
-+	.max_width = 8191,
-+	.min_width = 2, /* 2-pixel align when ethdr is bypassed */
-+	.min_height = 1,
-+};
-+
-+static const struct mtk_mmsys_driver_data mt8196_ovlsys1_driver_data = {
-+	.third_path = mt8196_mtk_ddp_ovl1_third,
-+	.third_len = ARRAY_SIZE(mt8196_mtk_ddp_ovl1_third),
-+	.third_order = 0,
-+	.mmsys_id = OVLSYS1,
-+	.mmsys_dev_num = 4,
-+	.max_width = 8191,
-+	.min_width = 2, /* 2-pixel align when ethdr is bypassed */
-+	.min_height = 1,
- };
+-	if (sof_id < 0) {
++	if (!is_output_comp) {
+ 		if (mtx->data->mutex_mod[id] < 32) {
+ 			offset = DISP_REG_MUTEX_MOD(mtx->data->mutex_mod_reg,
+ 						    mutex->id);
+@@ -904,11 +942,10 @@ void mtk_mutex_add_comp(struct mtk_mutex *mutex,
+ 			reg |= 1 << (mtx->data->mutex_mod[id] - 32);
+ 			writel_relaxed(reg, mtx->regs + offset);
+ 		}
+-		return;
+ 	}
  
- static const struct of_device_id mtk_drm_of_ids[] = {
-@@ -358,8 +463,14 @@ static const struct of_device_id mtk_drm_of_ids[] = {
- 	  .data = &mt8195_vdosys0_driver_data},
- 	{ .compatible = "mediatek,mt8195-vdosys1",
- 	  .data = &mt8195_vdosys1_driver_data},
--	{ .compatible = "mediatek,mt8365-mmsys",
--	  .data = &mt8365_mmsys_driver_data},
-+	{ .compatible = "mediatek,mt8196-dispsys0",
-+	  .data = &mt8196_dispsys0_driver_data},
-+	{ .compatible = "mediatek,mt8196-dispsys1",
-+	  .data = &mt8196_dispsys1_driver_data},
-+	{ .compatible = "mediatek,mt8196-ovlsys0",
-+	  .data = &mt8196_ovlsys0_driver_data},
-+	{ .compatible = "mediatek,mt8196-ovlsys1",
-+	  .data = &mt8196_ovlsys1_driver_data},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, mtk_drm_of_ids);
+-	writel_relaxed(mtx->data->mutex_sof[sof_id], mtx->regs +
+-		       DISP_REG_MUTEX_SOF(mtx->data->mutex_sof_reg, mutex->id));
++	if (is_output_comp)
++		mtk_mutex_add_comp_sof(mutex, id);
+ }
+ EXPORT_SYMBOL_GPL(mtk_mutex_add_comp);
+ 
+@@ -919,10 +956,11 @@ void mtk_mutex_remove_comp(struct mtk_mutex *mutex,
+ 						 mutex[mutex->id]);
+ 	unsigned int reg;
+ 	unsigned int offset;
+-	int sof_id = mtk_mutex_get_output_comp_sof(id);
++	bool is_output_comp = (mtk_mutex_get_output_comp_sof(id) > 0);
++
+ 	WARN_ON(&mtx->mutex[mutex->id] != mutex);
+ 
+-	if (sof_id < 0) {
++	if (!is_output_comp) {
+ 		if (mtx->data->mutex_mod[id] < 32) {
+ 			offset = DISP_REG_MUTEX_MOD(mtx->data->mutex_mod_reg,
+ 						    mutex->id);
+@@ -938,9 +976,9 @@ void mtk_mutex_remove_comp(struct mtk_mutex *mutex,
+ 		return;
+ 	}
+ 
+-	writel_relaxed(MUTEX_SOF_SINGLE_MODE,
+-		       mtx->regs + DISP_REG_MUTEX_SOF(mtx->data->mutex_sof_reg,
+-		       mutex->id));
++	if (is_output_comp)
++		mtk_mutex_remove_comp_sof(mutex, id);
++
+ }
+ EXPORT_SYMBOL_GPL(mtk_mutex_remove_comp);
+ 
+diff --git a/include/linux/soc/mediatek/mtk-mutex.h b/include/linux/soc/mediatek/mtk-mutex.h
+index 635218e3ac68..515e2d8bfc90 100644
+--- a/include/linux/soc/mediatek/mtk-mutex.h
++++ b/include/linux/soc/mediatek/mtk-mutex.h
+@@ -69,6 +69,10 @@ enum mtk_mutex_sof_index {
+ 
+ struct mtk_mutex *mtk_mutex_get(struct device *dev);
+ int mtk_mutex_prepare(struct mtk_mutex *mutex);
++void mtk_mutex_add_comp_sof(struct mtk_mutex *mutex,
++			    enum mtk_ddp_comp_id id);
++void mtk_mutex_remove_comp_sof(struct mtk_mutex *mutex,
++			       enum mtk_ddp_comp_id id);
+ void mtk_mutex_add_comp(struct mtk_mutex *mutex,
+ 			enum mtk_ddp_comp_id id);
+ void mtk_mutex_enable(struct mtk_mutex *mutex);
 -- 
 2.45.2
 
