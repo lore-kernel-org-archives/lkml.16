@@ -1,82 +1,85 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC08D1EDA23
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:01:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B91F204592
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747321300; cv=none; b=RTwfBRMAlzWftPw+MgvcbHwEUdYcFM55RSvBiXaYBhhEIiychSZqeUbRkZ5wmrVpUIAEaBXIz+DEuNmGSDGDGqPlbTCjN+5yARdsjGGQK+2MDiH461FNNUJbqczdMJMcbC60L191dM29zy6+vxeVIZ5dnbNgmnlK67WzQQm38qM=
+	t=1747321301; cv=none; b=O/xEeZ245/+Bft1TidEAhocJWKDpltH/gN9rPmuGW9+I1HnNc8h4QvbJtHcSM7X/rdj/I1CYOl5C9fL66RAaeHrlctl8vEijyA+ZxZaBuHqHXlS70vZdVhCo5G4GLuon8ZuLWbcuVnm2BPsYHO+2GK8SKb/75Md/Pr7ICQ/rzCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747321300; c=relaxed/simple;
-	bh=0bpgmELm9pb0sTqZLHy84T/BAyd8bl3vq21w2L/4rbY=;
+	s=arc-20240116; t=1747321301; c=relaxed/simple;
+	bh=gwvgls2VA7YH6b1HH+79Y0OYUFtcsjeEGBTt2xXU8y8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r2nrLutfZaJyknRlgD4r0hX6ukLiDkpPiH3pv4QQctr9r9MbOWGVwW38Dmg7BnriPtGBDHEUWn4qqzjq58DIHxqVSpb2n5nbaerNwoR9MWgumV5mkLVBUmRyqGJsxX/N41uOMpi0Ptpsma6pFV8mCl4YZtpJiMgh/dCg1jW/URk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=RbKW1qQ+; arc=none smtp.client-ip=209.85.221.44
+	 MIME-Version:Content-Type; b=E54p/VRIJlkM/jrDJc4CXLYSNaZMBjHX3DBRBDrHJ3cuq8yJKDoymAc0XBYRg0CSLuxmrMowC9ia5JgHLVldvyHYKMt1xlZ4zfYZWkZaGZDAppDlndq7DKhNxFIRKG/07lPP3gxQptSKVurKbRgXNKlc7QIn42yC/LO5Xjid7II=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Y0QEaw2K; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="RbKW1qQ+"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a1fb17a9beso599782f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:01:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Y0QEaw2K"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a1d8c09683so702329f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:01:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747321296; x=1747926096; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747321297; x=1747926097; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=R+ExZLPgDVqN/4FPN7RMRww8CSWWl502tOiZJcg9SzU=;
-        b=RbKW1qQ+wXt5d6fGV19WSyFsSdtGy1xU2SR7jN8WdHqmQvuI+5HKHJM5pE4gDH5MCQ
-         qZl69AWj+lzhciGLw8V+Lah84JQUvPmGYbQCehrC4SHxnvP5VG2cq7d3lrIxYqEcQH3R
-         bwNXHxYfuHD6Sh7kPaWF8UzkFm+bUs0ThAZhrE3Ttgk/En7jpiO1jYCQveAhMjUZhRgl
-         s1iQjl1qfPgDxFqaavEy7TZieg8GSixaqlaIoOB9838IcdBcVCzriYuf0We/0wvKA1v8
-         L9W77xtW2zZwT7FlB6p8XV+lVZPgruXLlPiSAsBURbs8hY32tSI8Xv6ooWYs+jcQuAta
-         f/UA==
+        bh=kLqMkFSPNEN1hS2qnrOzMpkhN6pHh1aoC/AzKLBLV/4=;
+        b=Y0QEaw2KJsrhW2agUQoy+ViVYVnkIBHTpnn/nzdmiG/PbGIMAzkkdc5Ku/N+IXqL9d
+         STNr2Y3zqe1QLwVxEivYRZF26iRYlNMjMpoWKFTCaP7zUSknW/ey2dAOAYdYk6KwN0LK
+         yArS5VFfNaLHH3anDHdDAihG4GLQCtIYEH+WrxrJ124LHRyIzLtymn/raxz4FgBVqZi5
+         F6Fl7PKF6tIxwRO76TuwwPmtme49mWwmEMVUMaLDIBGc2JntROICp+VTt/Vit3uUN7Ds
+         rGurBsuCEYUc6lB8U8p/rQMjqh+fOOR185m1m9+HGsgN/RVVqsTeQdQvgwBmY8SPa7+h
+         jo5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747321296; x=1747926096;
+        d=1e100.net; s=20230601; t=1747321297; x=1747926097;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=R+ExZLPgDVqN/4FPN7RMRww8CSWWl502tOiZJcg9SzU=;
-        b=WHwqfUyF0Mm2rbDHFimTWuAYZzAjqt0TyybeDsmHGNbYg40pBIOpQKoe+z6z7d+1s5
-         6dGgvrvcyuX61A9bKPfLP/zqvMv2UyrmefK37sC3JBpCqGBozuR0vrZwmJS6gZh2VZD6
-         sSop/LRS8q2KKgQbYv13VV6JISxd7ase5KD05dBNMn2/rncHSqwH64seuA0jaSMcQQcB
-         3ALFNgc6UrBKrvw3RsJAFRJAvDhRbWWpoQ2hEr1nZFSnzkbusttLR2fVR68GMkwvLKbL
-         awuESSOwp7eO8NszwAPIBT9o+Ma5s1zqSCfWQOm9ZnedTIKKsJSz8W9Kmd/IqCWkE+dT
-         JeqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUayIu25syaF7vrT40aO2X6/2SmddvJre5+kwsjgpRuc02ACdEn0lw7P3YyvN1BoU7QJzarDmKGSsX6gmE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxqyZDEBqMpZzpmheLjk/KVxz2JnEMSvtKx6LieXDGGsfuyFCz
-	pQCk/ILqS5M96ZnTE0kbPsZPY9GRgUCRHxQ02ElU7PB7NH1azgnABgElTSt6xehO+Xs=
-X-Gm-Gg: ASbGncvENwNZVjjTedlPDEnLDv8vFjk5g3KrbwAvPirYD6LXBAfseV5WgCAo39g1idB
-	KmgOjLOcZifCa2NiZ1QON9hrvko97sovZU2BjwrYVrw1SZvzxdmKW2NqSRC2JdD57loSwhHj/FA
-	YhD8GsEqN9V/eUE1u5oOSaFOkJa8Em8Di7tbYaZcVANZTuXb22StoS29g4epf1mNo3574XKYnv1
-	cN1KKCQLpt/YFm+yYMihtgOZ0+FoQY/fulX55pH4+SnklQFTQ0c5Zt229jhsKBxTcsC3MQ0/Elt
-	4c5istF+qogCXz9w7CiSmYktKlj6iNaoeeTaPuCcOYkTw+5hSe+kfklRsDP87E0HFMu/KFdroIl
-	4GdVa/BwAK5mHhnHgkwjeLgIO
-X-Google-Smtp-Source: AGHT+IEaP32P+mtGWKd+DTEdhUkGNIOD6/Ha+Kt5yoVGB1vbS+3gB2gBhfdgIpL/XkzyzcsRFJdbcA==
-X-Received: by 2002:a05:6000:188d:b0:3a3:5c7c:1889 with SMTP id ffacd0b85a97d-3a35c84fc73mr60948f8f.52.1747321294274;
-        Thu, 15 May 2025 08:01:34 -0700 (PDT)
+        bh=kLqMkFSPNEN1hS2qnrOzMpkhN6pHh1aoC/AzKLBLV/4=;
+        b=bpLr550mXjlgGYaDGFrSTMr4qIlYW0izpwjLtN8yrD7G4BDs87J1uRmzWTeQFuRAy5
+         Wc/46f7kqI4vWa8EMVEhcQsUxDwok35D69GLgCMPZXVR0Gs3KIwvFbF8Gv1Bc+24JBOw
+         +/9A+wLB7dpBl+CERj12bUCTXOkDFNu+JW+DHIV6fFiNErdTgpb1bfQUA41Z0HU77PYH
+         apOiyjl4xPpiaVwVpVyoe9QTSGRz+n4MmiLx50HDqnC10ydzh2RU4fjWec703hrqtJiO
+         oTF1xDsxw4YpL22f/mSBqH63xhhgm1uXalraJtqFD0kQPpn8+em5zZkfKBPtYL7Cw+Oo
+         QhEA==
+X-Forwarded-Encrypted: i=1; AJvYcCWl0JogtQzz/FHow/3N33/0gjLLFgGTqANmyfJ+8j0CIgisyTpXqebPF79H1mSB6O6GeAHKAkpK2g7hrdc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGpi+AHF7F5gnjmdQSWZd7EgEohfspZAqh3oSMBgRDYHjb4fx7
+	equE2QgLvku1t3g9KkyQKhGSQGvF0sJ5CZenWE7FaXivZ2tEZEvjksa+WiepY3/ixHk=
+X-Gm-Gg: ASbGncvZMdiVtjBJn4IBFeup9e2ZRkIii0LXS37vgHcgbDSC4gcqfoj8a6TXZXZWlFr
+	daBrRYeKp6vG9aiWRKrJfpBHSMZFUEwsJQ90nm8HpsOWn/EUjDw7UCq+9duaATO4HmmMHAyBy5h
+	LuZXfEOeX77L35ikNK1R6HuF5CVmlAnIk7iZBRUE4j5mPTG7aGM4Ko6SEB6fIf19M4uOauqVIaa
+	WD8Stsck7Wz/6moPCdEHMoHhkBZ4gUnZjkY28HGM2cxUhOUncqSW2jAwaZV5qnaJkdyltdxx4V7
+	nGyiwyzelK+ebSCC+Q/Gxd1whZx7rdmMdtHy8I6YiS1SkOUXIMh0A+4ciysjWxobYPVj2E5Qtf+
+	K6EMT0RVzw7U/UAUDoVXYrbF4
+X-Google-Smtp-Source: AGHT+IGsAKFgjs66CEclWGo2OAGE7x2yF/O4CZXrBnVvBqkKBdDXu1lvcu3um1VWUo4w6Oo4wz8SIA==
+X-Received: by 2002:a05:6000:4313:b0:3a1:f67e:37bc with SMTP id ffacd0b85a97d-3a35c7dca79mr128071f8f.0.1747321295486;
+        Thu, 15 May 2025 08:01:35 -0700 (PDT)
 Received: from brgl-uxlite.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57dde01sm23388046f8f.15.2025.05.15.08.01.33
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57dde01sm23388046f8f.15.2025.05.15.08.01.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 08:01:33 -0700 (PDT)
+        Thu, 15 May 2025 08:01:35 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
 	Ahmad Fatoum <a.fatoum@pengutronix.de>
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Ludovic Desroches <ludovic.desroches@microchip.com>,
 	linux-gpio@vger.kernel.org,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: (subset) [PATCH 0/2] gpio: TODO: add item about GPIO drivers reading struct gpio_chip::base
-Date: Thu, 15 May 2025 17:01:28 +0200
-Message-ID: <174732127891.17102.13995153594267301956.b4-ty@linaro.org>
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Haibo Chen <haibo.chen@nxp.com>,
+	Catalin Popescu <catalin.popescu@leica-geosystems.com>,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] gpio: mxc: configure dynamic GPIO base for CONFIG_GPIO_SYSFS=n
+Date: Thu, 15 May 2025 17:01:29 +0200
+Message-ID: <174732127889.17102.8532614606603162153.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250507-gpio-chip-base-readback-v1-0-ade56e38480b@pengutronix.de>
-References: <20250507-gpio-chip-base-readback-v1-0-ade56e38480b@pengutronix.de>
+In-Reply-To: <20250507-b4-imx-gpio-base-warning-v2-1-d43d09e2c6bf@pengutronix.de>
+References: <20250507-b4-imx-gpio-base-warning-v2-1-d43d09e2c6bf@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,18 +92,23 @@ Content-Transfer-Encoding: 8bit
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Wed, 07 May 2025 19:28:00 +0200, Ahmad Fatoum wrote:
-> Bartosz requested that I add this to the TODO, so here goes.
-> While at it, I also added a FIXME into the driver.
+On Wed, 07 May 2025 15:07:25 +0200, Ahmad Fatoum wrote:
+> i.MX GPIO numbering has been deterministic since commit 7e6086d9e54a
+> ("gpio/mxc: specify gpio base for device tree probe"), a year after
+> device tree support was first added back in 2011.
 > 
-> I'll be away most of the month, so feel free to squash changes as
-> appropriate.
+> Reverting to dynamically allocated GPIO base now would break most
+> systems making use of the sysfs API. These systems will be eventually
+> broken by the removal of the sysfs API, but that would result in GPIO
+> scripts not working instead of essentially toggling at random according
+> to probe order, which would happen if we unconditionally set base to -1.
 > 
+> [...]
 
 Applied, thanks!
 
-[1/2] gpio: TODO: add item about GPIO drivers reading struct gpio_chip::base
-      https://git.kernel.org/brgl/linux/c/833c086f22ecebe576af42051733796d1690dd71
+[1/1] gpio: mxc: configure dynamic GPIO base for CONFIG_GPIO_SYSFS=n
+      https://git.kernel.org/brgl/linux/c/0a45c1a002705c8622738fbd2a2913acf886ea27
 
 Best regards,
 -- 
