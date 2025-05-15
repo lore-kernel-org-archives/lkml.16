@@ -1,64 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07EA91E3DF2;
-	Thu, 15 May 2025 08:35:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A3D1E3DF2
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747298106; cv=none; b=mPauFHpMTtU+3IdaXiwzcTP42sYI4J/JhU1Zvjuw7Ltm61goMDqlf0FO38hQh0PIhwJD3n/u0hmMumottkUbDQkMNoOEg6ccIhovdRgobDmLnYvvH3GK1Sobuy5RVUFEm1U10GQni/f1ckgd8Nh+9zAevF5hnIIdGH95i7PDj60=
+	t=1747298123; cv=none; b=qeQLwelBSTI2znndFL9le9D5+VQ7he/FiFKv6aJ2RQaqL4ZwFpKXYpCGqer1F3J0n7ru79XGfh98oyPxU3t44I72QuTGxaPZRFwvpy3FXsIDZCj/cvzxAt3VeflMFZERpb7C1TUWl0vJ41wEory5/VyU0HhsM3U6WTage3+reGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747298106; c=relaxed/simple;
-	bh=FK3yPomqB3AyvPfrkHg1IFjEg251mn7RzPP8c3HpRfo=;
+	s=arc-20240116; t=1747298123; c=relaxed/simple;
+	bh=9pbatmL7aL/vj8ZUFAV6MU/4LtyoSBW0BcKNN8jXnCM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ltEQYIF9xENFWmJmFHPYKDPbr4TTzlzoIebw+oT3KeI7kbI+pCdtDQjkYVIApYmpLnwGiJwalAtt2rRJIiUO29/DxnlI4qcNjLzEfCkwut31i/l+384m2fIYPHgrZ1WdgvX3jt0AKb8LoZZtjl/hD3J1BBNL89V0FyVWARqCMDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P8vduhZX; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=CxNIBMl1JQnPa7OlfzlnNLSlYMcOa7JsQcUUpON353E2Nq9eeneKzn7vJzxsO4RoPBljw5Kqnd4NQfaLfk/p7iIjuUr3MmhJrspu0RmfskvGKd9ZwRzDROHfWJ3+oOa2zVIUCkW1da6SeyRc9vdKppLZ1afIJ4XM1RlVODF8fFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pyMAA+tf; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P8vduhZX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747298105; x=1778834105;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FK3yPomqB3AyvPfrkHg1IFjEg251mn7RzPP8c3HpRfo=;
-  b=P8vduhZX+11gIsAeiYQ5OQOKBEXmxXT6SGza62e5nHYZPp9fnN815DY9
-   JE5VCRIWBgf1wqwcgGRp3IyEZDSRSMbj9x//9GgTuLV7fIfNzow4hRTus
-   E3oTZgGqet4wga0l2dVr+pJpVIxp6eG1F/Lt0F/Y3/BbRMURmBz18qT1P
-   ve4H4qSOPS4rq8FzlvWwYM1HQmMnp8Q3GHukZFF00S4Zx6L0LrWtiWINR
-   H9O8NwJU8EWFMVfdm+SY/k1KC24NBOdrdRBZOnBz3UJRDsXyjDV9vwu3r
-   JsvhasCgRseKLywhDLa1cWBPfFdu4VvNi+nx/J1X4TdXUd9SdtTU6y+ZM
-   A==;
-X-CSE-ConnectionGUID: ehf+1qvYS7ut2i9FgT3ePg==
-X-CSE-MsgGUID: sxOwZAzNSfCaimo3Z1GM1A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="59876277"
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="59876277"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 01:34:55 -0700
-X-CSE-ConnectionGUID: fc7RY3fkSfCRqe1D51bxkQ==
-X-CSE-MsgGUID: WikHw8PaRLGewwVY4zXkVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="161591005"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa002.fm.intel.com with ESMTP; 15 May 2025 01:34:53 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id B2C7B23F; Thu, 15 May 2025 11:34:51 +0300 (EEST)
-Date: Thu, 15 May 2025 11:34:51 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Mika Westerberg <westeri@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v1 0/4] gpiolib: acpi: Split quirks to its own file
-Message-ID: <20250515083451.GT88033@black.fi.intel.com>
-References: <20250513100514.2492545-1-andriy.shevchenko@linux.intel.com>
- <20250514155955.GS88033@black.fi.intel.com>
- <aCWgBp4ZD5aesvRw@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pyMAA+tf"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso6984695e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:35:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747298120; x=1747902920; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=06fYRQosONYXgKhGU9k/rO3oNTjga5PPDQkysxE6Iro=;
+        b=pyMAA+tf4Jfw/LMBzsN2hYO2y0UsNgxojDpw3cX2zyLNmBfDxe2HgHsRwE7iQDpo7c
+         D66gx9GD3wIJgUhwR0so5EaQtNqVPo31cWLBRFzesrpKDQHqcEyDVttBATAkpuDPtEF1
+         gO6cct/M44rOGONA9JKESjBEWzZyFRHNaKls7eKHaLjcPElGvsReCGQy+4OAj/V4K+Hb
+         zd74JE6GhVc3Pz0xBjFQG9Y4x221kwo2dxkEZIE28v7GgteWvIdSf3wZrlLhHHnCqHU6
+         CzRbrjQmpnWDlP7RQhSxJS45NqbwV9KQVn9jqNq6BBKtmj9JPkPXXq/gzQ1Kg01ORVKs
+         awTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747298120; x=1747902920;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=06fYRQosONYXgKhGU9k/rO3oNTjga5PPDQkysxE6Iro=;
+        b=BD8sQGlASYyt4gUEpEeuozDZ/mcj8lT3yn6nY7msbqxg7kYQFew+US/+xlO2qpxbud
+         4fmqHF3KM7NDCxex0rW/qaLcpZOoeY+cb4f31DvQPsc8wz3MnqPnsNPU+6z5KB26H6ZB
+         ph5j5YJ9vkQcmAeSrB5zPi5P+/71SP8cod6CgjSQ6k6gGFCX55MiaTKf3NkvzUUNc5Rl
+         WwFXb0I+4qDbX4VHoG2Dp1dHjDW+UZ9ZBcijfMNkK68S5GTLLhE+YEqXK5ZwWfV4qux1
+         Pz708htEjV0Mzu8bYHXrMwQBCd8VWCirj7PRYrLqmjgGy02fq/n/tvM1cPwzNi372WqL
+         JoAA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2lW+5yiKzczRK+vTo8CUKRMiCg3J0CcO6Yvv/2ecA6oW6+5eOgnZYnJVJAe+/NThYFTuelubR2xfq/qo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8dv6Bae/1kADEYdX+KLaDu2EXxuRL1T1XCsqBSxgILBdEIrBZ
+	1u84Pa/KBBBo56IW0T2DRKEqE3V+bD6Pux4D56UZMpcQ9/V0ggc5qdOiTVXCppo=
+X-Gm-Gg: ASbGncvZD8xsEl9VNRvZxliFW6+V/3YRtc1bjG8Sy8mQA7yfGIm6xPYD8uvTUhNSD1q
+	SvQHYcNz4/JF0vcBSo4yrL0+fAsm/7cCIgtAu6Tu3q3jHVjvC9E601Pg1i3TB3D/MYVLLB5AQhY
+	9TxL7fjWB3GElpOZn/62sZWRLSr64C6zwG4jrMahQndb69Duow8lzuIaGVV9JpYA/ItOMGi26g1
+	Na3Lqdsg5yKhXl/1SguKL7SyDGgzfr55DUL1HYJkMoBJ7qndcuOAA1bAYV+k2DiRisdocaq+p6h
+	XjtONtruAnGvyUD9M8aEkm3WR3elAFHGDtBDsajNT4vHK390jOQiQq9cQWFxdEP/JW95y0y1UCM
+	DU1K2IvTLFKJQeg==
+X-Google-Smtp-Source: AGHT+IHu2s9sa92qmesl5veI+oAS03nFjtQ47vH11ArCbrSF0HDjcyh6IGTJen7CR8wkKp03sRpn5g==
+X-Received: by 2002:a05:600c:c0f:b0:43c:fbbf:7bf1 with SMTP id 5b1f17b1804b1-442f2179271mr73566765e9.30.1747298120445;
+        Thu, 15 May 2025 01:35:20 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2cf0esm22131999f8f.79.2025.05.15.01.35.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 01:35:20 -0700 (PDT)
+Date: Thu, 15 May 2025 10:35:18 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: timer: Convert marvell,armada-370-timer to
+ DT schema
+Message-ID: <aCWnRtoXHfDKqOSP@mai.linaro.org>
+References: <20250506022301.2588282-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,43 +78,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aCWgBp4ZD5aesvRw@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250506022301.2588282-1-robh@kernel.org>
 
-On Thu, May 15, 2025 at 11:04:22AM +0300, Andy Shevchenko wrote:
-> On Wed, May 14, 2025 at 06:59:55PM +0300, Mika Westerberg wrote:
-> > On Tue, May 13, 2025 at 01:00:30PM +0300, Andy Shevchenko wrote:
-> > > The GPIO ACPI helpers use a few quirks which consumes approximately 20%
-> > > of the file. Besides that the necessary bits are sparse and being directly
-> > > referred. Split them to a separate file. There is no functional change.
-> > > 
-> > > For the new file I used the Hans' authorship of Hans as he the author of
-> > > all those bits (expect very tiny changes made by this series).
-> > > 
-> > > Hans, please check if it's okay and confirm, or suggest better alternative.
-> > > 
-> > > Andy Shevchenko (4):
-> > >   gpiolib: acpi: Switch to use enum in acpi_gpio_in_ignore_list()
-> > >   gpiolib: acpi: Handle deferred list via new API
-> > >   gpiolib: acpi: Add acpi_gpio_need_run_edge_events_on_boot() getter
-> > >   gpiolib: acpi: Move quirks to a separate file
-> > > 
-> > >  drivers/gpio/Makefile                         |   1 +
-> > >  .../{gpiolib-acpi.c => gpiolib-acpi-core.c}   | 344 +----------------
-> > >  drivers/gpio/gpiolib-acpi-quirks.c            | 363 ++++++++++++++++++
-> > >  drivers/gpio/gpiolib-acpi.h                   |  15 +
-> > 
-> > All this -foo-core things look redundant to me. Why not just split it out
-> > and call it gpiolib-quirks.c and put there all the quirks not just ACPI? I
-> > Don't think we want to have gpiolib-of-quirks.c and gpiolog-swnode-quirks.c
-> > and so on.
+On Mon, May 05, 2025 at 09:23:00PM -0500, Rob Herring wrote:
+> Convert the Marvell Armada 37x/380/XP Timer binding to DT schema format.
+> Update the compatible entries to match what is in use.
+> "marvell,armada-380-timer" in particular was missing.
 > 
-> That's might be the next step to have for all of them, but these are ACPI
-> specific. In any case they can't be put to gpiolib-quirks.c due to module
-> parameters. If we do that we will need a dirty hack to support old module
-> parameters (see 8250 how it's done there, and even author of that didn't like
-> the approach).
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
 
-Hmm, how does it affect module paremeters? I thought they are
-gpiolib.something as all these object files are linked to it?
+Applied, thanks
 
-At least can we drop the gpiolib-acpi-core.c rename?
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
