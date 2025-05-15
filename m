@@ -1,273 +1,303 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from clean103.mxserver.ro (clean103.mxserver.ro [176.223.125.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51CA1ADFFE;
-	Thu, 15 May 2025 08:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251F22874F6;
+	Thu, 15 May 2025 08:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.223.125.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747297041; cv=none; b=mo1+aV4GpXrXxIfLzfSgUfMmn4Kegc5MfObZDxd7GMLHmla9btxz0qWCs4GmL0+qjSh25rKvQHu6bHx+PeqMDnLEWz3CJ5vRuV8HW0FaJF0aXkcgdqNhbW11MuNBoko1tKc1+eTiQyn9Iw9VKLvzDVwFZ5NjxKnSEhRJYzBYv2A=
+	t=1747297048; cv=none; b=XTqIKe4qnuIAai7EXUWnWAX/aiMmTf5nTSvqGIzRCBHOsFC5pMKKsdJVrj0HB9UGSFv/N6Xx4BOlV9iU/qYeICkayRz/HRWywq0OoFgE6KjMAukA5DgtNxyJKSgukSB9LIbEorUyvKhhO2fWvrgMQnOszehL8vSoDhNxKsxYCpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747297041; c=relaxed/simple;
-	bh=vGi9THXEDpvT76QZd9G6tEugzqGz/38PnjMXAVERiPs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s+8KpYMHKvCdrVHHYaQ59LpUzpQmQAk9xDRrMTuZPlCx29jM4AwrYFIm09HOc7NAH6YXpYgsQWpkxL2lBryrItIuC9R/Zkjs5RoqOo6EMNgjRI0LZwhJ3a6VIXq9x3ArOXkKJFEfKDH3akSupUG2PVXGPz3v1f8j0SKlXKLwgP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WNX9VG11; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747297048; c=relaxed/simple;
+	bh=59EvuJKTItg/MQf3XkZzL1WEDvsOtpA/YLaURewi72g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SYPIwsCLWj0W6J99xTF6Qoo77EN0ru72AvIxq4SnyCHfNa3kKDROyygwLlpnKAKJOwkiqpPwCmnO35DcY+xYq/3CB35abvpCLezcO3uGwN7WkfgMJZgfG93r+LgxNa3daTF6og+OxUqYuSZroVo+4cDJ79hGs4aORIhE8n3TRg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro; spf=pass smtp.mailfrom=taladin.ro; dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b=KRYbtfwK; arc=none smtp.client-ip=176.223.125.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=taladin.ro
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WNX9VG11"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C94C6C4CEE9;
-	Thu, 15 May 2025 08:17:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747297041;
-	bh=vGi9THXEDpvT76QZd9G6tEugzqGz/38PnjMXAVERiPs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WNX9VG11602jl0A9wuZQi5Jbi8Xwlq4eCDH55qz1Ak5yKnMKSmMWzQOOc5ggf/NkX
-	 BtJ3kHTzKG3JL16emyTiXFkH8xm/YEg6VPNLi+jCL0nJy6C+ZlEabL4acFidGClz6B
-	 0i/GPSIuPT/8iTEfThxTC3+MUGtTVF2flIAaVyzUQZmVpP8pAntkqlDrp4Al8X7ay8
-	 flLbOElwgktnPgUKmmhD1hnxaPqkgy42ivu8rQzGg9ulCI1GLn+F550xXRLzqhDdiS
-	 ZkUg72C209ESXzEPQZbihyYUTyi6SWHzvQKZQ8DUiVCht47SMO9fmxNoRrhYI0pJGV
-	 t9SBzISOLtYzA==
-Date: Thu, 15 May 2025 10:17:15 +0200
-From: Joel Granados <joel.granados@kernel.org>
-To: syzbot <syzbot+0b62957894976d747660@syzkaller.appspotmail.com>
-Cc: kees@kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [fs?] BUG: unable to handle kernel paging request in
- drop_sysctl_table
-Message-ID: <xftkeek5ydwgnfc3x3nhwzhawbe5blucnuatw5hcnm3gp75scs@nhwpxyh6phjo>
-References: <68251af1.a70a0220.3e9d8.001f.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b="KRYbtfwK"
+Received: from cloud347.c-f.ro ([185.236.86.218])
+	by cleanserver1.mxserver.ro with esmtps (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <asoponar@taladin.ro>)
+	id 1uFTmD-00H1kv-CP; Thu, 15 May 2025 04:17:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=taladin.ro;
+	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=5qQNra+2Cp8u7mp46CFqnKOn4bpY4tOymWLSppXXVgQ=; b=KRYbtfwKrP5JWyHDZyJ+LsM4TM
+	ko5g12ztP9SwDdjndz/buqYuuXqDtqQKnyiflgq1UFxBOSmPhitIHUzGy7mnvtCpjhWfUFb4HS/tJ
+	42duJd6hAlw30bu+iN8P2nlho9hCXMaOZRAr2n5UDKEXPuNynFscveZyrfzzFXNsIFO/7gD3iA8ah
+	6q5P4UCrT4W51CgWGbrMQt8l9K9UUD2b/O4TrMOVwzdr+cCYBeOKx827YWv6uPZdNtR9lu9Yeznpo
+	xU4hKjixEQ3bnAo/kHGe6LBvh3j5b4IDagHVH4teVi4MqB7Pq1UaomwKl/5hiUEDLeyiDWHRT5TNA
+	UTH0G8mA==;
+Received: from [109.166.137.172] (port=55940 helo=localhost)
+	by cloud347.c-f.ro with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.98.1)
+	(envelope-from <asoponar@taladin.ro>)
+	id 1uFTm3-00000006qMV-1X5D;
+	Thu, 15 May 2025 11:17:12 +0300
+From: Alexandru Soponar <asoponar@taladin.ro>
+To: linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	linux-watchdog@vger.kernel.org
+Cc: jdelvare@suse.com,
+	linux@roeck-us.net,
+	jic23@kernel.org,
+	pavel@ucw.cz,
+	lee@kernel.org,
+	baocheng.su@siemens.com,
+	wim@linux-watchdog.org,
+	tobias.schaffner@siemens.com,
+	angelogioacchino.delregno@collabora.com,
+	benedikt.niedermayr@siemens.com,
+	matthias.bgg@gmail.com,
+	aardelean@baylibre.com,
+	contact@sopy.one,
+	Alexandru Soponar <asoponar@taladin.ro>
+Subject: [PATCH 16/16] lib: move find_closest() and find_closest_descending() to lib functions
+Date: Thu, 15 May 2025 11:13:32 +0300
+Message-ID: <20250515081332.151250-17-asoponar@taladin.ro>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250515081332.151250-1-asoponar@taladin.ro>
+References: <20250515081332.151250-1-asoponar@taladin.ro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="m66n6mjpc65tnocx"
-Content-Disposition: inline
-In-Reply-To: <68251af1.a70a0220.3e9d8.001f.GAE@google.com>
+Content-Transfer-Encoding: 8bit
+X-SpamExperts-Domain: cloud347.c-f.ro
+X-SpamExperts-Username: 185.236.86.218
+Authentication-Results: mxserver.ro; auth=pass smtp.auth=185.236.86.218@cloud347.c-f.ro
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: SB/global_tokens (0.000242666053139)
+X-Recommended-Action: accept
+X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT98ZpYtbjLMlHLIMLfKiMBSPUtbdvnXkggZ
+ 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5w1OL79HMxE022P+rQy8YAdcSeERs4TOTnIH1kc1IWc5TSx
+ S75yz9IFZiY7BarU/NrpK8SEOwGmfn6ucAKqn/OHRh3BqzFaEnAEj4UixLJBjVNiLZt/QXQnOBRD
+ +jq1HsIBmHTFdhqXZEtguZY7iGKpkcJnJKaJfT+dw1udmv00tbIRNtoyOobb3xnDyRRylAVTYi2b
+ f0F0JzgUQ/o6tR7C8pLPCtTiVLo0r89ClJHDKhDGKgJ+T00JeCnHBmMdB1eMZAyYlfUtEN4pUyes
+ jVRntA/J5DcfwvG53FyVviDO9UET3GKmqv1jT0lY+AQz8YX4CVph7ctC7tRH2SPTQJ/0klTuXKq/
+ B9rqRWsYzNfBLt79i78aPHyWnIqxGMxPZotYvH/es1vXuByXo2bkrYMqq0x5CzaUoJIoBUQayHle
+ UvbvCQmh9x4kn6NeQcRkc6G+OgAcq5x+BzhRyg9rYO6I0H7Q2OEpckvWJAOmdJd77Z9vwc+QHB+X
+ +u7aTqYHtT2CBuxNPBc9JM2jck1NnIBf0tvflhq7Xjhll72AYgnW/6M0ftSpvLIx+X1vKami8KF6
+ jWQ71uVNIY/EFPWeDmcZuFRQy1vmjjPiYw8fUCp0/qY6cmSW9oUDdvKuTRfTGZ6f8nTXoYFaQ71l
+ mMti8uxA0gKVmIzBXtbLDVvAQ/KVNbF0n38s4PnjIiWSgo0iehuSAN5VcIfsMVILjVAz6RZsCHxD
+ lgOJwEwCFaF+62b2lf1UUDu9jECN1V/lwmsioRLmNJoHOZOE/9e5UD715p61XAQw85DCXa0iAPEd
+ fYyrF5wMRSLGyY+i0m2IxQLxQUxLMkCVXN63lz38Up+2UgeFSDBPqdRoFsq0hfzdx0oxkgNI/jhY
+ WFhu7VV+HdWjdZLlmQ5z83qEVVG/6RJ+BW7FmGcwL889DSW2cZWGkIYVQAbHnYkWUz1gRIjAiMvi
+ vM7um7t0SVa5NVZ2g1u6DnOpqk1nwAzTSgytNKIH5lfAuQc8I07FTFcjpdfX/Jcr87en7cKbI0NU
+ afdkQMG+6qjtXoANVR89VM6f75a5kmRIbungV7ywXD8VtmM8wef5C6IkqMFhROX1HYRo9Sm1kZOW
+ saz62DSUUd/fn3Ix/aSqJVglEtnFggTvi4y/qO0sxBxzHDeqqFz43py4SDhdaHkWxEWqfohU+1d2
+ sh7IKZpXLgBCJ476nn5Gmr/PK603nEEgvmn7Dzq8wsrwxhZMoHvqxJYqN+GmyxwR+V15PgePOPPI
+ vtB/lrJsWW29FRnUbXCk3//yGA2OaEkyEoP0Kl1YERWeKKG4PAQYNyavp7c49JwbmBalBK3QvTzZ
+ aymz/kAx9sNOIdFDvUNZLdaRhCZaMx8xtwV1+Gg8ihl6LJV8o3nXKu/l5TM8iMLe4AKyoGlZj2VA
+ 3aW/vPi2AMAbWLs/EIKEbeDIxNYIJ7Ews1OEan6m+UeFXprlCOm3BAEbJtATHIdhc/Osc/lXM+l8
+ 06U7GxUAPGlXms+D1TI22+vIvtmOpB8mDzWv8vBwVi5XkC8ewLVRqANj6mzlzL3VH5WM/aCyI5/o
+ yhoezeIJy3L+cB4hBppwR1r+Bof9KZqCMQkUV4VT4TerS/vbL3R5w07g
+X-Report-Abuse-To: spam@cleanserver1.mxserver.ro
+X-Complaints-To: abuse@cleanserver1.mxserver.ro
 
+Move the utility macros find_closest() and find_closest_descending()
+from inline macros to proper library functions in lib/.
 
---m66n6mjpc65tnocx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Alexandru Soponar <asoponar@taladin.ro>
+---
+ include/linux/find_closest.h | 13 +++++++
+ include/linux/util_macros.h  | 61 +------------------------------
+ lib/Makefile                 |  2 +-
+ lib/find_closest.c           | 71 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 86 insertions(+), 61 deletions(-)
+ create mode 100644 include/linux/find_closest.h
+ create mode 100644 lib/find_closest.c
 
-On Wed, May 14, 2025 at 03:36:33PM -0700, syzbot wrote:
-> Hello,
->=20
-> syzbot found the following issue on:
->=20
-> HEAD commit:    1a33418a69cc Merge tag '6.15-rc5-smb3-client-fixes' of gi=
-t..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D15c0ccf4580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D925afd2bdd38a=
-581
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3D0b62957894976d7=
-47660
-> compiler:       arm-linux-gnueabi-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (=
-GNU Binutils for Debian) 2.40
-> userspace arch: arm
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D160eecf4580=
-000
->=20
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/9=
-8a89b9f34e4/non_bootable_disk-1a33418a.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/1b719c768f61/vmlinu=
-x-1a33418a.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/37b85c3e7f3b/z=
-Image-1a33418a.xz
->=20
-> IMPORTANT: if you fix the issue, please add the following tag to the comm=
-it:
-> Reported-by: syzbot+0b62957894976d747660@syzkaller.appspotmail.com
->=20
-> veth1_macvtap: left promiscuous mode
-> veth0_macvtap: left promiscuous mode
-> veth1_vlan: left promiscuous mode
-> veth0_vlan: left promiscuous mode
-> 8<--- cut here ---
-> Unable to handle kernel paging request at virtual address 74756f78 when r=
-ead
-> [74756f78] *pgd=3D80000080005003, *pmd=3D00000000
-> Internal error: Oops: 206 [#1] SMP ARM
-> Modules linked in:
-> CPU: 1 UID: 0 PID: 3143 Comm: kworker/u8:2 Not tainted 6.15.0-rc5-syzkall=
-er #0 PREEMPT=20
-> Hardware name: ARM-Versatile Express
-> Workqueue: netns cleanup_net
-> PC is at __rb_change_child include/linux/rbtree_augmented.h:199 [inline]
-> PC is at __rb_erase_augmented include/linux/rbtree_augmented.h:242 [inlin=
-e]
-> PC is at rb_erase+0x270/0x394 lib/rbtree.c:443
-> LR is at 0x0
-> pc : [<81a3fb58>]    lr : [<00000000>]    psr: 200f0013
-> sp : df9e5d80  ip : 74756f70  fp : df9e5d94
-> r10: 82c1f980  r9 : 829d1ec4  r8 : 00000004
-> r7 : 838d8b00  r6 : 00000001  r5 : 8517c348  r4 : 8517c300
-> r3 : 74756f72  r2 : 00000000  r1 : 838d8b34  r0 : 8517c368
-> Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-> Control: 30c5387d  Table: 850515c0  DAC: 00000000
-> Register r0 information: slab kmalloc-128 start 8517c300 pointer offset 1=
-04 size 128
-> Register r1 information: slab kmalloc-128 start 838d8b00 pointer offset 5=
-2 size 128
-> Register r2 information: NULL pointer
-> Register r3 information: non-paged memory
-> Register r4 information: slab kmalloc-128 start 8517c300 pointer offset 0=
- size 128
-> Register r5 information: slab kmalloc-128 start 8517c300 pointer offset 7=
-2 size 128
-> Register r6 information: non-paged memory
-> Register r7 information: slab kmalloc-128 start 838d8b00 pointer offset 0=
- size 128
-> Register r8 information: non-paged memory
-> Register r9 information: non-slab/vmalloc memory
-> Register r10 information: non-slab/vmalloc memory
-> Register r11 information: 2-page vmalloc region starting at 0xdf9e4000 al=
-located at kernel_clone+0xac/0x3e4 kernel/fork.c:2844
-> Register r12 information: non-paged memory
-> Process kworker/u8:2 (pid: 3143, stack limit =3D 0xdf9e4000)
-> Stack: (0xdf9e5d80 to 0xdf9e6000)
-> 5d80: 8517c300 8517c348 df9e5dd4 df9e5d98 80610d54 81a3f8f4 0000000c 600f=
-0013
-> 5da0: ddde099c 600f0013 00000000 03710a8b 8517cb00 84813a00 8517cb00 0000=
-0001
-> 5dc0: 8517c300 00000004 df9e5e14 df9e5dd8 80610d88 80610c90 816f4260 829d=
-1ec4
-> 5de0: 829d1ec4 82aca2a8 df9e5e90 03710a8b df9e5e14 84813a00 df9e5e90 829e=
-0224
-> 5e00: df9e5e90 829d1ec4 df9e5e2c df9e5e18 80610e58 80610c90 8517cb00 df9e=
-5e90
-> 5e20: df9e5e3c df9e5e30 81980b1c 80610e3c df9e5e54 df9e5e40 816f45b0 8198=
-0b18
-> 5e40: 84951b00 df9e5e90 df9e5e74 df9e5e58 81539cdc 816f45a4 829e0224 82c1=
-f940
-> 5e60: 829d1e80 df9e5e90 df9e5ed4 df9e5e78 8153c160 81539ca8 81a5bd14 8029=
-ce24
-> 5e80: 82c1f940 829d1e80 808c99b0 81539d04 84951b20 84951b20 00000100 0000=
-0122
-> 5ea0: 00000000 03710a8b 81c01f84 83b83d80 829d1e98 8301bc00 8300e600 8418=
-6000
-> 5ec0: 8301bc15 8300f070 df9e5f2c df9e5ed8 802873bc 8153bebc 81c01a44 8418=
-6000
-> 5ee0: df9e5f14 df9e5ef0 829d1e9c 829d1e98 829d1e9c 829d1e98 df9e5f2c 0000=
-0000
-> 5f00: 80282cf8 83b83d80 8300e620 8300e600 82804d40 83b83dac 84186000 61c8=
-8647
-> 5f20: df9e5f6c df9e5f30 80288004 80287214 81a5bd14 8029ce24 df9e5f6c df9e=
-5f48
-> 5f40: 8028eb98 00000001 84186000 83b83e00 e4935e60 80287e08 83b83d80 0000=
-0000
-> 5f60: df9e5fac df9e5f70 8028f07c 80287e14 80274ea8 81a5bc9c 84186000 0371=
-0a8b
-> 5f80: df9e5fac 84986300 8028ef50 00000000 00000000 00000000 00000000 0000=
-0000
-> 5fa0: 00000000 df9e5fb0 80200114 8028ef5c 00000000 00000000 00000000 0000=
-0000
-> 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 0000=
-0000
-> 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 0000=
-0000
-> Call trace:=20
-> [<81a3f8e8>] (rb_erase) from [<80610d54>] (erase_entry fs/proc/proc_sysct=
-l.c:189 [inline])
-> [<81a3f8e8>] (rb_erase) from [<80610d54>] (erase_header fs/proc/proc_sysc=
-tl.c:225 [inline])
-> [<81a3f8e8>] (rb_erase) from [<80610d54>] (start_unregistering fs/proc/pr=
-oc_sysctl.c:322 [inline])
-> [<81a3f8e8>] (rb_erase) from [<80610d54>] (drop_sysctl_table+0xd0/0x1ac f=
-s/proc/proc_sysctl.c:1514)
->  r5:8517c348 r4:8517c300
-> [<80610c84>] (drop_sysctl_table) from [<80610d88>] (drop_sysctl_table+0x1=
-04/0x1ac fs/proc/proc_sysctl.c:1521)
->  r8:00000004 r7:8517c300 r6:00000001 r5:8517cb00 r4:84813a00
-> [<80610c84>] (drop_sysctl_table) from [<80610e58>] (unregister_sysctl_tab=
-le fs/proc/proc_sysctl.c:1539 [inline])
-> [<80610c84>] (drop_sysctl_table) from [<80610e58>] (unregister_sysctl_tab=
-le+0x28/0x38 fs/proc/proc_sysctl.c:1531)
->  r8:829d1ec4 r7:df9e5e90 r6:829e0224 r5:df9e5e90 r4:84813a00
-> [<80610e30>] (unregister_sysctl_table) from [<81980b1c>] (unregister_net_=
-sysctl_table+0x10/0x14 net/sysctl_net.c:177)
->  r5:df9e5e90 r4:8517cb00
-> [<81980b0c>] (unregister_net_sysctl_table) from [<816f45b0>] (sysctl_rout=
-e_net_exit+0x18/0x38 net/ipv4/route.c:3632)
-> [<816f4598>] (sysctl_route_net_exit) from [<81539cdc>] (ops_exit_list+0x4=
-0/0x68 net/core/net_namespace.c:172)
->  r5:df9e5e90 r4:84951b00
-> [<81539c9c>] (ops_exit_list) from [<8153c160>] (cleanup_net+0x2b0/0x49c n=
-et/core/net_namespace.c:654)
->  r7:df9e5e90 r6:829d1e80 r5:82c1f940 r4:829e0224
-> [<8153beb0>] (cleanup_net) from [<802873bc>] (process_one_work+0x1b4/0x4f=
-4 kernel/workqueue.c:3238)
->  r10:8300f070 r9:8301bc15 r8:84186000 r7:8300e600 r6:8301bc00 r5:829d1e98
->  r4:83b83d80
-> [<80287208>] (process_one_work) from [<80288004>] (process_scheduled_work=
-s kernel/workqueue.c:3319 [inline])
-> [<80287208>] (process_one_work) from [<80288004>] (worker_thread+0x1fc/0x=
-3d8 kernel/workqueue.c:3400)
->  r10:61c88647 r9:84186000 r8:83b83dac r7:82804d40 r6:8300e600 r5:8300e620
->  r4:83b83d80
-> [<80287e08>] (worker_thread) from [<8028f07c>] (kthread+0x12c/0x280 kerne=
-l/kthread.c:464)
->  r10:00000000 r9:83b83d80 r8:80287e08 r7:e4935e60 r6:83b83e00 r5:84186000
->  r4:00000001
-> [<8028ef50>] (kthread) from [<80200114>] (ret_from_fork+0x14/0x20 arch/ar=
-m/kernel/entry-common.S:137)
+diff --git a/include/linux/find_closest.h b/include/linux/find_closest.h
+new file mode 100644
+index 000000000000..28a5c4d0c768
+--- /dev/null
++++ b/include/linux/find_closest.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Find closest element functions
++ */
++#ifndef _LINUX_FIND_CLOSEST_H_
++#define _LINUX_FIND_CLOSEST_H_
++
++#include <linux/types.h>
++
++unsigned int find_closest(int x, const int *a, unsigned int as);
++unsigned int find_closest_descending(int x, const int *a, unsigned int as);
++
++#endif /* _LINUX_FIND_CLOSEST_H_ */
+diff --git a/include/linux/util_macros.h b/include/linux/util_macros.h
+index 825487fb66fa..478d4821f2d1 100644
+--- a/include/linux/util_macros.h
++++ b/include/linux/util_macros.h
+@@ -3,66 +3,7 @@
+ #define _LINUX_HELPER_MACROS_H_
+ 
+ #include <linux/math.h>
+-
+-/**
+- * find_closest - locate the closest element in a sorted array
+- * @x: The reference value.
+- * @a: The array in which to look for the closest element. Must be sorted
+- *  in ascending order.
+- * @as: Size of 'a'.
+- *
+- * Returns the index of the element closest to 'x'.
+- * Note: If using an array of negative numbers (or mixed positive numbers),
+- *       then be sure that 'x' is of a signed-type to get good results.
+- */
+-#define find_closest(x, a, as)						\
+-({									\
+-	typeof(as) __fc_i, __fc_as = (as) - 1;				\
+-	long __fc_mid_x, __fc_x = (x);					\
+-	long __fc_left, __fc_right;					\
+-	typeof(*a) const *__fc_a = (a);					\
+-	for (__fc_i = 0; __fc_i < __fc_as; __fc_i++) {			\
+-		__fc_mid_x = (__fc_a[__fc_i] + __fc_a[__fc_i + 1]) / 2;	\
+-		if (__fc_x <= __fc_mid_x) {				\
+-			__fc_left = __fc_x - __fc_a[__fc_i];		\
+-			__fc_right = __fc_a[__fc_i + 1] - __fc_x;	\
+-			if (__fc_right < __fc_left)			\
+-				__fc_i++;				\
+-			break;						\
+-		}							\
+-	}								\
+-	(__fc_i);							\
+-})
+-
+-/**
+- * find_closest_descending - locate the closest element in a sorted array
+- * @x: The reference value.
+- * @a: The array in which to look for the closest element. Must be sorted
+- *  in descending order.
+- * @as: Size of 'a'.
+- *
+- * Similar to find_closest() but 'a' is expected to be sorted in descending
+- * order. The iteration is done in reverse order, so that the comparison
+- * of '__fc_right' & '__fc_left' also works for unsigned numbers.
+- */
+-#define find_closest_descending(x, a, as)				\
+-({									\
+-	typeof(as) __fc_i, __fc_as = (as) - 1;				\
+-	long __fc_mid_x, __fc_x = (x);					\
+-	long __fc_left, __fc_right;					\
+-	typeof(*a) const *__fc_a = (a);					\
+-	for (__fc_i = __fc_as; __fc_i >= 1; __fc_i--) {			\
+-		__fc_mid_x = (__fc_a[__fc_i] + __fc_a[__fc_i - 1]) / 2;	\
+-		if (__fc_x <= __fc_mid_x) {				\
+-			__fc_left = __fc_x - __fc_a[__fc_i];		\
+-			__fc_right = __fc_a[__fc_i - 1] - __fc_x;	\
+-			if (__fc_right < __fc_left)			\
+-				__fc_i--;				\
+-			break;						\
+-		}							\
+-	}								\
+-	(__fc_i);							\
+-})
++#include <linux/find_closest.h>
+ 
+ /**
+  * is_insidevar - check if the @ptr points inside the @var memory range.
+diff --git a/lib/Makefile b/lib/Makefile
+index f1c6e9d76a7c..e8e738c9ced8 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -35,7 +35,7 @@ lib-y := ctype.o string.o vsprintf.o cmdline.o \
+ 	 is_single_threaded.o plist.o decompress.o kobject_uevent.o \
+ 	 earlycpio.o seq_buf.o siphash.o dec_and_lock.o \
+ 	 nmi_backtrace.o win_minmax.o memcat_p.o \
+-	 buildid.o objpool.o iomem_copy.o
++	 buildid.o objpool.o iomem_copy.o find_closest.o
+ 
+ lib-$(CONFIG_UNION_FIND) += union_find.o
+ lib-$(CONFIG_PRINTK) += dump_stack.o
+diff --git a/lib/find_closest.c b/lib/find_closest.c
+new file mode 100644
+index 000000000000..d481625cae9d
+--- /dev/null
++++ b/lib/find_closest.c
+@@ -0,0 +1,71 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Find closest element functions
++ *
++ * Based on previous util_macros.h implementation
++ */
++
++#include <linux/find_closest.h>
++#include <linux/module.h>
++
++/**
++ * find_closest - locate the closest element in a sorted array
++ * @x: The reference value.
++ * @a: The array in which to look for the closest element. Must be sorted
++ *  in ascending order.
++ * @as: Size of 'a'.
++ *
++ * Returns the index of the element closest to 'x'.
++ */
++unsigned int find_closest(int x, const int *a, unsigned int as)
++{
++	unsigned int array_size = as - 1;
++	int mid_x, left, right;
++	unsigned int i;
++
++	for (i = 0; i < array_size; i++) {
++		mid_x = (a[i] + a[i + 1]) / 2;
++		if (x <= mid_x) {
++			left = x - a[i];
++			right = a[i + 1] - x;
++			if (right < left)
++				i++;
++			break;
++		}
++	}
++
++	return i;
++}
++EXPORT_SYMBOL_GPL(find_closest);
++
++/**
++ * find_closest_descending - locate the closest element in a sorted array
++ * @x: The reference value.
++ * @a: The array in which to look for the closest element. Must be sorted
++ *  in descending order.
++ * @as: Size of 'a'.
++ *
++ * Similar to find_closest() but 'a' is expected to be sorted in descending
++ * order. The iteration is done in reverse order, so that the comparison
++ * of 'right' & 'left' also works for unsigned numbers.
++ */
++unsigned int find_closest_descending(int x, const int *a, unsigned int as)
++{
++	unsigned int array_size = as - 1;
++	int mid_x, left, right;
++	unsigned int i;
++
++	for (i = array_size; i >= 1; i--) {
++		mid_x = (a[i] + a[i - 1]) / 2;
++		if (x <= mid_x) {
++			left = x - a[i];
++			right = a[i - 1] - x;
++			if (right < left)
++				i--;
++			break;
++		}
++	}
++
++	return i;
++}
++EXPORT_SYMBOL_GPL(find_closest_descending);
+-- 
+2.49.0
 
-I'm looking at https://syzkaller.appspot.com/text?tag=3DReproLog&x=3D11a1b4=
-d4580000
-and I see that a test failed in neigh_parms_release before all this happened
-(output here [1]). Questions:
-
-1. Could the previous test have caused this to show in sysctl
-   erase_entry? How do I find out?
-
-2. I don't have clear what commit introduced this. I see a head commit,
-   but I cant find the subcommit related to this failure.
-
-Help appreciated.
-
-[1]
-  program crashed: BUG: corrupted list in neigh_parms_release
-  a never seen crash title: BUG: corrupted list in neigh_parms_release, ign=
-ore
-  testing program (duration=3D22m39.514192312s, {Threaded:true Repeat:true =
-RepeatTimes:0 Procs:1 Slowdown:10 Sandbox:none SandboxArg:0 Leak:false NetI=
-njection:true NetDevices:true NetReset:true Cgroups:true BinfmtMisc:true Cl=
-oseFDs:true KCSAN:false DevlinkPCI:false NicVF:false USB:true VhciInjection=
-:false Wifi:false IEEE802154:false Sysctl:true Swap:true UseTmpDir:true Han=
-dleSegv:true Trace:false LegacyOptions:{Collide:false Fault:false FaultCall=
-:0 FaultNth:0}}): openat$binderfs-syz_clone
-  detailed listing:
-  executing program 0:
-  openat$binderfs(0xffffffffffffff9c, &(0x7f0000000380)=3D'./binderfs/binde=
-r0\x00', 0x0, 0x0)
-  syz_clone(0x0, 0x0, 0x0, 0x0, 0x0, 0x0)
-
-
-Best
---=20
-
-Joel Granados
-
---m66n6mjpc65tnocx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmglovgACgkQupfNUreW
-QU9RVQv7Bus7sJbRzD8N2jAwJEPxk/2i6aB4JSACBGlUv1FZXD2x9gUq3EomrW9A
-SiQ2SxspUtTWrdxFhhXGbYABFTKAWGY2PDXRE8TYwARcq6/QDRCSTCT3MRU3zJnl
-BIuKHzeBDyMJl8ZeMy0QszKfhLIIFujOend9A+CkCn/fvK7/4WFpzeR0mr+ZToiS
-GfKvt0NUcT7fgICceU7wlyR4gnvjdL0zqKy/ZpoYvoH63PKru7i1s8XbTmd1ZWxD
-fRqpQs7S8DTNEFL6fUYlNi0xdZg9lQhnm1g9zMCfDVJJ66DwmSj2aOqtA8DGyj0S
-11IjDavqVfD4u9IJc8eC7J8Z4SOjRC5AtH8HYypu3efcllbFY2Ud1FFn7zQO41IE
-EwYtf8S957w2jIE3NyGWY/I3HhlCndq1LaLPLq3pV7SCJJEyb+oGSHJq8rBhKpWP
-NDl4BtaOy/c23QwT5c/h1yIs27m41QxGXdRItiZ/lzIO5laE4dCufYgD0oNpX6Np
-ULnwA0yC
-=QYTf
------END PGP SIGNATURE-----
-
---m66n6mjpc65tnocx--
