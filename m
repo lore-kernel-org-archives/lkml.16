@@ -1,95 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A710D1B043A;
-	Thu, 15 May 2025 09:36:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073951B043A;
+	Thu, 15 May 2025 09:36:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747301765; cv=none; b=tYPMZFvmFev2RMGueqjPxakvSREEDq3Gze80Vwp2/ypK47nZqM4plrbgQxEflo45fGLm/y9fdJZGR9A9G9FUz7w4qXgGOF9O+GwPwrIc0yMd6H/kkcD5mPsW+hngZkM9uDgUl1675KMkNn1roTO3O/KnH5rOqzKlB7l+QxfDSow=
+	t=1747301792; cv=none; b=i/WvCMXreIPshV6piwdJbg2F6c2dw+y2RMlKKMH/2N0NA741qurkJ0U0Ibpu26yBL0/adi/o2uu0WlGdieA2FgItoPi46rRhU6nDZBvUjTG0swzHTxGu6YFNqooypJcKTp7RY2rYPkR/VVGHTCdaKRNnrSgd8aurzn4IvMrEaFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747301765; c=relaxed/simple;
-	bh=jMrgzyHH+4V9t/iPtHENc2OSX0TATtWm0B0KKLwDmC8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=elIs1Sec5C1zTHQf6LUSr8+P+HXkbCxdqMWH7PzBcQHAjnF30pWFU+dphUHQ7DCCmvd592uQHKdlcTj4LaKwPWHLvMlsIGQyo//iHAVFv9yExZnZWlJZ8fxqwxSfAFpSEREjGv96W9x1zVf7DTgfdm0zxKj2xt2cy5m9b23mQAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r4gfy4j4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747301792; c=relaxed/simple;
+	bh=RNbOB4JssaWHI9LRCsaHw4fkLJsTr5HaZucQ0Gj185E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Mkc2vXloNNH6nfRIJ3CM+9bf3M/ctToo6EJpql8URnjM3Uxc1sYqs/hdIJvOaT7bj/sle6Kt8Ii+VJW2/DPEfen/0y+aBYT5vGcErBCXIAsYjH5DZc1ObvUlzHE0jrUZqHGoMfbWM2Qktqjb7wM3I1pqZHfJ6suVWp9H0GXntbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MkSkCvv/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r4gfy4j4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E3EDC4CEED;
-	Thu, 15 May 2025 09:36:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MkSkCvv/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC8F8C4CEED;
+	Thu, 15 May 2025 09:36:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747301765;
-	bh=jMrgzyHH+4V9t/iPtHENc2OSX0TATtWm0B0KKLwDmC8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=r4gfy4j4xEx5H9jAzEyhxdiQ9ifxSASjtba1zdKjs1BNs98NwIFL0NIaHt3U/9+xM
-	 csrpFI4J6CbH9YwJECNPaCUZC4NKipnyDyPt8sJa3iiVMg9IllfvP9ePu6fgV+TEwr
-	 03SEi6uwBRS7M8AiK1neXCTeK0ReaVBsfU1rqZvrR41QwpcS59b1VYvRYxm6lFi+8f
-	 2uo/25Jg8fUkgKwEph20KLl1mCtM2CtzceS41jXwjug05/g3X77TJ7Basi2la/whFy
-	 fBQB0w5JQFW/uTaIUCgCqosD1N8ICNuzx/wAxCNzQebwRupXzWZd541z3MYZsIgg9r
-	 SzsCaFDsdbvkQ==
-Date: Thu, 15 May 2025 11:36:01 +0200
+	s=k20201202; t=1747301791;
+	bh=RNbOB4JssaWHI9LRCsaHw4fkLJsTr5HaZucQ0Gj185E=;
+	h=From:Date:Subject:To:Cc:From;
+	b=MkSkCvv//G0bHIZ/pvx/W2loDBZtzmQB3ShRugy4ISTGqlHAmv/y+ri6AmYdxjz1+
+	 uuRtyO/jNbZOQtMpP8AfUYlQREHF7TeAlWwFjKCpUS7RolPif66sujI675DWdodO3U
+	 wcnWMCHPYuNpp2sq8DLeDWkA3TRkDgIqEcI8d5qokGAjIuaaMq+RgFWrSGjmIrSyDO
+	 bNWBLksEJzy5Utqdkl8qHQPOpP6fB1CgHJCl9/D+kfrW2V2MnFnSWBsowhkrh/YgyY
+	 zIytmKALyhfhzG1UcyIlGGlk/+OzoNLWhFrFer9PViKZ6MFC0O+Z0xV/L9Ki5FQiVb
+	 nkL56OvrUl88g==
 From: Mark Brown <broonie@kernel.org>
-To: =?iso-8859-1?B?Q3Pza+Fz?= Bence <csokas.bence@prolan.hu>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Vinod Koul <vkoul@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: Re: [PATCH v6 0/2] Add `devm_dma_request_chan()` to simplify probe
- path in atmel-quadspi.c
-Message-ID: <aCW1geupMxr8Ft_k@finisterre.sirena.org.uk>
-References: <20250515083132.255410-1-csokas.bence@prolan.hu>
- <aCWpjplhAXUvr9fj@finisterre.sirena.org.uk>
- <e4e6c7a9-9b7a-4012-8bda-75804229ec95@prolan.hu>
- <aCWyXsJ2iRXRUmOi@finisterre.sirena.org.uk>
- <9d384301-3f73-4120-a82b-580eb5f1a4ed@prolan.hu>
+Date: Thu, 15 May 2025 11:36:14 +0200
+Subject: [PATCH] selftests/mm: Deduplicate default page size test results
+ in thuge-gen
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="NxtmzHfUyS5BkEzS"
-Content-Disposition: inline
-In-Reply-To: <9d384301-3f73-4120-a82b-580eb5f1a4ed@prolan.hu>
-X-Cookie: Well begun is half done.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250515-selfests-mm-thuge-gen-dup-v1-1-057d2836553f@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAI21JWgC/x2MwQqEMAwFf0Vy3kAjuqK/InsQfWpgrdKoCMV/t
+ 3gcmJlIhqAwarJIAaearj6BfDLq585PYB0SU+7y0pVSsOE/wnbjZeF9PpIwwfNwbFxB+sJV8nW
+ 1UOq3gFGv993+7vsBjUNIs2sAAAA=
+X-Change-ID: 20250514-selfests-mm-thuge-gen-dup-7e1c40716091
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1606; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=RNbOB4JssaWHI9LRCsaHw4fkLJsTr5HaZucQ0Gj185E=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoJbWbwn6i0obh2WWDI5f8olJqBS4gtUHQKPSiX
+ fToM2oZTlKJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaCW1mwAKCRAk1otyXVSH
+ 0GUXB/9JSb3quOlK8ePYtzQPVfMLMa8CQqWcFy/79iTsgLUtwboO0Q/raM2DX//eysClDbMKREz
+ 8L6XmJV1kOtFN+RAJjAXTWZaUmSekleVHvxe6dqFW9xHrumKAA0dBEUNRiPhhK4D9sQuW9/GjsQ
+ H90yjRlYibmIYQM7WMKNGuzmJaqc5mOZsJ57XwYCicfMuJsfH0lV131Oi7hA7cf4RO0WA06L0uY
+ G+mCC9bLwqlXSqOIhAUphnEWcbR/fVHfN/9NQ2vVNdrP9TP+jM9iULRLNp4Ng/s9/SzYkq4j5ko
+ EI64CBoRv4GicBlmj+aAlC5pmOzN6SY58rti7IIzVvahjgHP
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
+The thuge-gen test program runs mmap() and shmget() tests for both every
+available page size and the default page size, resulting in two tests for
+the default size. These tests are distinct since the flags in the default
+case do not specify an explicit size, add the flags to the test name that
+is logged to deduplicate.
 
---NxtmzHfUyS5BkEzS
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ tools/testing/selftests/mm/thuge-gen.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On Thu, May 15, 2025 at 11:26:57AM +0200, Cs=F3k=E1s Bence wrote:
-> On 2025. 05. 15. 11:22, Mark Brown wrote:
+diff --git a/tools/testing/selftests/mm/thuge-gen.c b/tools/testing/selftests/mm/thuge-gen.c
+index cd5174d735be..a41bc1234b37 100644
+--- a/tools/testing/selftests/mm/thuge-gen.c
++++ b/tools/testing/selftests/mm/thuge-gen.c
+@@ -127,7 +127,7 @@ void test_mmap(unsigned long size, unsigned flags)
+ 
+ 	show(size);
+ 	ksft_test_result(size == getpagesize() || (before - after) == NUM_PAGES,
+-			 "%s mmap %lu\n", __func__, size);
++			 "%s mmap %lu %x\n", __func__, size, flags);
+ 
+ 	if (munmap(map, size * NUM_PAGES))
+ 		ksft_exit_fail_msg("%s: unmap %s\n", __func__, strerror(errno));
+@@ -165,7 +165,7 @@ void test_shmget(unsigned long size, unsigned flags)
+ 
+ 	show(size);
+ 	ksft_test_result(size == getpagesize() || (before - after) == NUM_PAGES,
+-			 "%s: mmap %lu\n", __func__, size);
++			 "%s: mmap %lu %x\n", __func__, size, flags);
+ 	if (shmdt(map))
+ 		ksft_exit_fail_msg("%s: shmdt: %s\n", __func__, strerror(errno));
+ }
 
-> > Wouldn't it be simpler for me to just apply both
-> > patches at this point if there's no conflicts with the DMA tree?  We're
-> > at -rc6 now...
+---
+base-commit: 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
+change-id: 20250514-selfests-mm-thuge-gen-dup-7e1c40716091
 
-> That also works for me. I should send 1/2 to you as well, correct?
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
 
-I think at this point with the merge window likely to open on Sunday
-it's probably easiest to just resend the SPI patch after the merge
-window, it'll likely take more time/effort to work out what to do than
-it will for the reset changes to land in Linus' tree.
-
---NxtmzHfUyS5BkEzS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgltYAACgkQJNaLcl1U
-h9BBaQf/Y2QB39oFyw1a8a615Yo/UKKHjc5SIVYLNpWPvaUCfqwEMIDB3TIb0cz3
-3EfT+LI7v7qk0Fzz7n0f+t/zy6pPD2MjhO7Fd3KH1K+v7hmRmJMe7Nz9iaUM6OLQ
-1A6p5SIr67X/AgQM4+whaAoR6ZWuRfNYv02Qg5b9jPF57Ih0YWym6x0HfwHJHUoC
-nSpTAHjL3ZNlcNc5PprSsjXRo/i8rhbUWZ2+Lzkx5e0PsYILC5Tw2TZ/iHK0PjVz
-5k5kroQd4xBiVLcWpBloLrH7zUOz7ti1rODFes28up/FStyALrKVzZj4nr3E9DiZ
-XgFw3I8px7JESImWR9zH1H0C3rRtcA==
-=tWy1
------END PGP SIGNATURE-----
-
---NxtmzHfUyS5BkEzS--
