@@ -1,118 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3CBA819;
-	Thu, 15 May 2025 11:43:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA4626AD0;
+	Thu, 15 May 2025 11:44:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747309434; cv=none; b=gc2TU/oZZfZ7PCplj+VceDeV9Hlm2W0mDZ8KtSAJBGCabQYpkl23E90cnZ7vyMQ0ewWmh4rWERZYHGtTC8/jGWa9CAW7ic0SlKvKScim44JujGL4I4VMDWzOCvV0DuFcjcioc65wWv4GVWXva60WxJGFjNZVJmRkQiut/eEDeKk=
+	t=1747309450; cv=none; b=fATB9+YNk/lZdWH7MsdSVL7jl/xgZkOpU5lmAXrSqsGUC1GtTXuMLKMKUGsiZ+cdwpN0WcveBsc6R/LZPCOkh9vUgGTEDCnkFZ/dRyA3WjLTRjAsUZt/9C9hNAcGTOCGmlKy+Qw1X8S1TZwkqSUz5PiGJz0Jc5m64sPeV3ZpTf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747309434; c=relaxed/simple;
-	bh=cqZmizesdV382UCWkAJvVk+InOvjAczf6ib7rBZjAsY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W1bo5Gw1Zl4+pYverix2sWsn7G0VQI0ZYrlgYL1w/mW2nQx9v4xW+Gahkb50ZViPht+PdYxyuQpnXTEyZdH8wBZxkeKaQGeOO5hqNmEWqzfovo2wITLTBmmMURHbJWAj9esJdG+zorYdnRLSzOtED4Qr/TycAM3Tq6mY516Nrk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OU2NTZIG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747309450; c=relaxed/simple;
+	bh=2H5KIqNQmBmyDV57fqFZKvELSZdXowmg5XqoG7ZDEIA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Jkatl/wiUWH/JPOGID4arqTs7HP10wOP3dZA53dUg7RhBlTkg6g1JZVF3QkyMhy0MAziDabtzVq4TA2fJRyZUnIwaMlOkN0amrQIDJGE8ElsBEENxMFOoOkezrj3tHJ0o4hADGOe4BxuZdT+GT8T/CeRRLdnWnLKlqBzlMS1J2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=geJHtel/; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OU2NTZIG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BA6FC4CEE7;
-	Thu, 15 May 2025 11:43:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747309434;
-	bh=cqZmizesdV382UCWkAJvVk+InOvjAczf6ib7rBZjAsY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OU2NTZIGHmokuMikpj91WMhvhyCz0MgzU98cEhvJWzdS3i87rxoxK1kHrGWv97hRH
-	 3Xwj/nOWKMfnUpNvIkk9N660xcTSSR2DJx7FN+obqBpZNIxoQBwee5eJJ/ojcOy9Tt
-	 auz8T46jDdETzBwpst9dXqrt+XgvLAr7swC+PwD4=
-Date: Thu, 15 May 2025 13:42:05 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH] rust: add basic ELF sections parser
-Message-ID: <2025051532-gentleman-reset-58f2@gregkh>
-References: <20250515-elf-v1-1-4b53745453c0@nvidia.com>
- <2025051543-override-rockiness-3ead@gregkh>
- <D9WLFTPRB9FJ.OL6I760HKALZ@nvidia.com>
- <D9WP3YU31199.Q8IEDBJZ87LU@nvidia.com>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="geJHtel/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=4EIg5oOs7ULbz83N09ZfXxoK0Xg+DnktC4ZDSGogzJ0=; b=geJHtel/NTEFLCETukj4rEru8f
+	DTcZfviPipN15Ne5XDBQH8OUbGglWEzeo30JTmc/NxYBd8B2Jwg8Z/YMY2mo32dq6LSJbjG4ZHShg
+	zAYen0uU7oRU1wdt+XxzqVn9F3dQhLqF8lGawb/3OV2F7wpAXttMVVieGreabNCKeuB/UlmrUrGKG
+	rTkkNogBaE54a2XY0j95OxPeMmyOxcdC4Cueiy5aSACulINIA2cd2msTbgKF7YcSPRVfpVvBcNqmD
+	a04Hn7lckIgU5AdmUTdV7BGlD6jNOOkwCsI4NacH0Mk0v7WF42ooxarWhvnl0/fc5TUjl5i1S4D5e
+	wiQIqPUg==;
+Received: from i53875a50.versanet.de ([83.135.90.80] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uFX0K-0003eK-ND; Thu, 15 May 2025 13:44:00 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Matthias Kaehlcke <mka@chromium.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Benjamin Bara <benjamin.bara@skidata.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Klaus Goger <klaus.goger@theobroma-systems.com>,
+ Lukasz Czechowski <lukasz.czechowski@thaumatec.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org,
+ Lukasz Czechowski <lukasz.czechowski@thaumatec.com>, stable@vger.kernel.org
+Subject:
+ Re: [PATCH v2 2/5] dt-bindings: usb: cypress,hx3: Add support for all
+ variants
+Date: Thu, 15 May 2025 13:43:59 +0200
+Message-ID: <3784948.RUnXabflUD@diego>
+In-Reply-To: <20250425-onboard_usb_dev-v2-2-4a76a474a010@thaumatec.com>
+References:
+ <20250425-onboard_usb_dev-v2-0-4a76a474a010@thaumatec.com>
+ <20250425-onboard_usb_dev-v2-2-4a76a474a010@thaumatec.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D9WP3YU31199.Q8IEDBJZ87LU@nvidia.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Thu, May 15, 2025 at 08:25:33PM +0900, Alexandre Courbot wrote:
-> On Thu May 15, 2025 at 5:32 PM JST, Alexandre Courbot wrote:
-> > Hi Greg,
-> >
-> > On Thu May 15, 2025 at 4:38 PM JST, Greg KH wrote:
-> >> On Thu, May 15, 2025 at 03:03:51PM +0900, Alexandre Courbot wrote:
-> >>> Add a simple ELF sections parser for unpacking loaded binaries from
-> >>> user-space. This is not intended to become a fully-fledged ELF parser,
-> >>> just a helper to parse firmwares packaged in that format.
-> >>> 
-> >>> This parser is notably helpful for NVIDIA's GSP firmware, which is
-> >>> provided as an ELF binary using sections to separate the firmware code
-> >>> to its other components like chipset-specific signatures.
-> >>> 
-> >>> Since the data source is likely to be user-space, checked arithmetic
-> >>> operations and strict bound checking are used.
-> >>> 
-> >>> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-> >>> ---
-> >>> This will soon be needed in order to load the GSP firmware in nova-core,
-> >>> so sending this early for separate review.
-> >>> ---
-> >>>  rust/kernel/elf.rs | 322 +++++++++++++++++++++++++++++++++++++++++++++++++++++
-> >>
-> >> Why is this not just done in userspace and then have userspace feed the
-> >> proper elf sections to the kernel through the firmware interface?
-> >> Having to parse elf seems crazy for the kernel to be forced to do here
-> >> as the kernel should NOT be touching anything in a firmware blob other
-> >> than passing it off to the firmware directly.
-> >
-> > FWIW, the GSP firmware in question is already in linux-firmware and
-> > loaded by e.g. Nouveau.
-> >
-> > I am not sure how userspace could feed the proper ELF sections otherwise
-> > than by splitting the ELF binary into as many files as there are
-> > sections. Is that what you imply, or is there another means that would
-> > preserve the current firmware format?
-> >
-> > Note also that in this particular case, the kernel cannot just pass the
-> > firmware without modifying it anyway since the signatures relevant to
-> > the chipset need to be patched into the right place before it is loaded.
-> 
-> Quick nit, as that last statement was not entirely correct: while we do
-> patch some loaded firmware with signatures, this is not the case for the
-> GSP (the one in ELF format). Not that it changes the point, but for the
-> sake of accuracy. :)
-> 
-> The point being that even without using ELF as a container format, we do
-> need to parse header structures in loaded firmware files anyway, so the
-> kernel cannot simply act as a dumb pipe for firmware. And since we need
-> to add structure, let's at least use a format that is simple, well
-> accepted and which layout is already in the kernel.
-> 
-> Or if ELF is the problem, I don't mind introducing a WAD loader. ;)
+Am Freitag, 25. April 2025, 17:18:07 Mitteleurop=C3=A4ische Sommerzeit schr=
+ieb Lukasz Czechowski:
+> The Cypress HX3 hubs use different default PID value depending
+> on the variant. Update compatibles list.
+> Becasuse all hub variants use the same driver data, allow the
+> dt node to have two compatibles: leftmost which matches the HW
+> exactly, and the second one as fallback.
+>=20
+> Fixes: 1eca51f58a10 ("dt-bindings: usb: Add binding for Cypress HX3 USB 3=
+=2E0 family")
+> Cc: stable@vger.kernel.org # 6.6
+> Cc: stable@vger.kernel.org # Backport of the patch ("dt-bindings: usb: us=
+b-device: relax compatible pattern to a contains") from list: https://lore.=
+kernel.org/linux-usb/20250418-dt-binding-usb-device-compatibles-v2-1-b3029f=
+14e800@cherry.de/
+> Cc: stable@vger.kernel.org # Backport of the patch in this series fixing =
+product ID in onboard_dev_id_table in drivers/usb/misc/onboard_usb_dev.c dr=
+iver
+> Signed-off-by: Lukasz Czechowski <lukasz.czechowski@thaumatec.com>
 
-The "problem" I'm not understanding is why does the kernel have to do
-any of this parsing at all?  What does it do with these segments that
-userspace can't do instead?  Why does patching have to be done within
-the kernel at all?  What prevents all of this from being done elsewhere?
+Looking at linux-next, it seems like patch1 of this series was applied [0].
+The general convention would be for the binding (this patch) also going
+through a driver tree.
 
-And ELF parsing is "tricky" in places, and you aren't using the existing
-elf parser, as proof of needing a new parser in rust :)
+I guess I _could_ apply it together with the board-level patches, but
+for that would need an Ack from Greg .
 
-thanks,
+@Greg, do you want to merge this patch ?
 
-greg k-h
+
+Thanks a lot
+Heiko
+
+
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/com=
+mit/?id=3D9f657a92805cfc98e11cf5da9e8f4e02ecff2260
+
+> ---
+>  .../devicetree/bindings/usb/cypress,hx3.yaml          | 19 +++++++++++++=
++++---
+>  1 file changed, 16 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/usb/cypress,hx3.yaml b/Doc=
+umentation/devicetree/bindings/usb/cypress,hx3.yaml
+> index 1033b7a4b8f953424cc3d31d561992c17f3594b2..d6eac1213228d2acb50ebc959=
+d1ff15134c5a91c 100644
+> --- a/Documentation/devicetree/bindings/usb/cypress,hx3.yaml
+> +++ b/Documentation/devicetree/bindings/usb/cypress,hx3.yaml
+> @@ -14,9 +14,22 @@ allOf:
+> =20
+>  properties:
+>    compatible:
+> -    enum:
+> -      - usb4b4,6504
+> -      - usb4b4,6506
+> +    oneOf:
+> +      - enum:
+> +          - usb4b4,6504
+> +          - usb4b4,6506
+> +      - items:
+> +          - enum:
+> +              - usb4b4,6500
+> +              - usb4b4,6508
+> +          - const: usb4b4,6504
+> +      - items:
+> +          - enum:
+> +              - usb4b4,6502
+> +              - usb4b4,6503
+> +              - usb4b4,6507
+> +              - usb4b4,650a
+> +          - const: usb4b4,6506
+> =20
+>    reg: true
+> =20
+>=20
+>=20
+
+
+
+
