@@ -1,50 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD32193402
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CA8222586
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747308768; cv=none; b=Dr7Zp10cJ1DLNtyZZKrmit1ydqIsjT8pogaK2REZzTPPNZivFQ9MCmxXeY5FqEA54jeL6SfYIZFrvsmAh8bTo69eoj+UbRR3fj0DfT11UAOgyZa/Cyt4F/HPb69cVpRMcyXGLX96VLDpPV8KqgC/NRoBLxMa0Dmdpkq/qgHKxVc=
+	t=1747308776; cv=none; b=rTcbyWiVkeHYZZCURt8nXuD6ncBc+jfwB+3QNu+AKnkFHI4psgNXq/9I3paXLBDZDVLbZ1fu81WV70Qvb5QIZY5GYI2wZoEvqI/DAVb0fbB48xqNTwOtAbhuXWRPL5I20bBTaxEBGZM6W5yEUXbEDakAYigp5Vyrm9hLe+WYK6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747308768; c=relaxed/simple;
-	bh=h7yXW5eUEUuPRPWiXCPJh096dbx6vh64+bt9w79poI0=;
+	s=arc-20240116; t=1747308776; c=relaxed/simple;
+	bh=ElMXO/T4zoIZ2d20Nku5GnZ9Mq/F6htR0kFRYtgorvI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DAzgijjjawblqSeCEWZ7N5YEddbILyzdW+imfWk+V+3ElavMO7qNmpuFMeATnIGNC/atOaNoBeXYlVRhjv1BDdtc31AcjqfV1/Ez/QTvbJQOrMlwVg7ICXi03JlAoIexl6W4DD9UIxzB1vwLcv4Gm/j5JVRUqFtKznispVxnmK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kiP6jdc8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tgaiz2syo7V2R8KGUeqZ/YA26BWLhwoi0ZS7wGS0tO8EMPE3n7we7mTjOGcpFaHZnIwzqBSBo9azgjZXSgQC2YEAF8nOsykNg1y+hPQGi/4Kc2F6gFlgL8j5xo9IclJrY03FdG9+e7ssUCVRdRYrgybGj4UaK+OoiSBjmfyBI9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=fjasle.eu; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=gDF++vmu; arc=none smtp.client-ip=194.63.252.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fjasle.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kiP6jdc8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3B8BC4CEE7;
-	Thu, 15 May 2025 11:32:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747308767;
-	bh=h7yXW5eUEUuPRPWiXCPJh096dbx6vh64+bt9w79poI0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kiP6jdc8rbWrZ4Jw2V56mdD1DpaSSTGdnbO7ZcTyMWw9/dKrPxES/UjGOzqWgb6+G
-	 uHr2PGqzY1ZdD0JOjGc8A5UbFCzw7cEPBmJe2OfU6yBCTylGufRvIbKIkPdAHZ3kzO
-	 PuT0S4cuWe0i/nZijWEXAo2w3Kpb7O7dSQ1CiRaumv9jAli1pXhcrmMJUETKGhdHNW
-	 ph8Qi3dKvo+/5ux7daxjRASvkTVdXVtbJJPKjBBaDB07jMvu1b4D5tXsre2A3ncYBe
-	 2zRqyn14Y/L46XhjrQxDafEIq3OQwlqnbCEeWNehZx1viEDF5vfDeV80gUedbAvDYm
-	 QuhqVxHZXxvsQ==
-Date: Thu, 15 May 2025 13:32:42 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-	Borislav Petkov <bp@alien8.de>, Juergen Gross <jgross@suse.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Kees Cook <keescook@chromium.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	David Woodhouse <dwmw@amazon.co.uk>
-Subject: [PATCH 31/29] x86/boot/e820: Move index increments outside accessors
- in e820__update_table()
-Message-ID: <aCXQ2mdVU_D4tFiS@gmail.com>
-References: <20250421185210.3372306-1-mingo@kernel.org>
- <20250421185210.3372306-18-mingo@kernel.org>
- <aAduCoINHUkFwIzR@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="gDF++vmu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=fjasle.eu;
+	s=ds202307; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:
+	MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Sl3OIA3EmpqLMK5V9bpgYMX6d1risB6uqFtthLMl3Dg=; b=gDF++vmufHR3B8efx5NA0vNLgK
+	Ta86v/7ubqhgEHWMUW55ReBSywF23BEAdjOapC58G6dUEAnfeqIagBS99bUNliAEZBzQp1UbVysvh
+	PWXFQj/ofGad53iKlzCGWZeTsKZzS7AOtqX8JB+hY1ekbEzaTpRatSbnpXt4QSgByJzWjezQHiyqX
+	9CV/pIOu+duMd1hU6W0phdw6W6ZL6wCbq5QjNNPOxWLCEV6MltwFhXQIHwkwfxo7NxzEenAmNkX0H
+	f3ttCp4vxsqGQFPyWDVEaWn7A0LifY7HfoacknfmEE/mQsKYwYnlfsUcp2J+G2fRxfoNiszYc6fTP
+	EwVPyUNg==;
+Received: from smtp
+	by smtp.domeneshop.no with esmtpsa (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	id 1uFWpL-004VlC-MN;
+	Thu, 15 May 2025 13:32:40 +0200
+Date: Thu, 15 May 2025 13:32:35 +0200
+From: Nicolas Schier <nicolas@fjasle.eu>
+To: Wen Yang <wen.yang@linux.dev>
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scripts: headers_install: fix a false positive
+Message-ID: <20250515-magpie-of-ideal-pluck-c6e323@bergen>
+References: <20250513160056.7576-1-wen.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,87 +51,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aAduCoINHUkFwIzR@smile.fi.intel.com>
+In-Reply-To: <20250513160056.7576-1-wen.yang@linux.dev>
 
-
-* Andy Shevchenko <andy@kernel.org> wrote:
-
-> On Mon, Apr 21, 2025 at 08:51:57PM +0200, Ingo Molnar wrote:
+On Wed, May 14, 2025 at 12:00:56AM +0800, Wen Yang wrote:
+> The current implementation only handles C89 style comments (/*... */) in
+> the code, and there are false positives for C99 style comments (//...).
 > 
-> ...
+> This patch fixes this issue.
 > 
-> > +	int idx;
+> Signed-off-by: Wen Yang <wen.yang@linux.dev>
+> ---
+>  scripts/headers_install.sh | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> > +	u32 idx, chg_idx, chg_nr;
-> 
-> What about sanitizing the type as well to be let's say unsigned int idx in all cases?
+> diff --git a/scripts/headers_install.sh b/scripts/headers_install.sh
+> index 6bbccb43f7e7..41722bcc8668 100755
+> --- a/scripts/headers_install.sh
+> +++ b/scripts/headers_install.sh
+> @@ -44,6 +44,7 @@ scripts/unifdef -U__KERNEL__ -D__EXPORTED_HEADERS__ $TMPFILE > $OUTFILE
+>  # Remove /* ... */ style comments, and find CONFIG_ references in code
+>  configs=$(sed -e '
+>  :comment
+> +	s://.*::
+>  	s:/\*[^*][^*]*:/*:
+>  	s:/\*\*\**\([^/]\):/*\1:
+>  	t comment
+> -- 
+> 2.25.1
 
-Not sure - I kind of like the brevity of 'u32' here, and it's also the 
-type of the originating ABI interface.
+thanks.  The patch looks good to me, but I cannot find any false
+positives.  Have you found any concrete?
 
-
-> ...
-> 
-> > +			change_point[chg_idx]->addr	= entries[idx].addr;
-> > +			change_point[chg_idx++]->entry	= &entries[idx];
-> > +			change_point[chg_idx]->addr	= entries[idx].addr + entries[idx].size;
-> > +			change_point[chg_idx++]->entry	= &entries[idx];
-> 
-> Does GCC 15 not produce any warnings here? Linus recently complain on some code
-> with index increment inside the accessor. Perhaps just
-> 
-> 			change_point[chg_idx]->entry	= &entries[idx];
-> 			chg_idx++;
-> 
-> ?
-
-Yeah, good point - patch attached.
-
-Thanks,
-
-	Ingo
-
-===================================>
-From: Ingo Molnar <mingo@kernel.org>
-Date: Thu, 15 May 2025 13:26:46 +0200
-Subject: [PATCH] x86/boot/e820: Move index increments outside accessors in e820__update_table()
-
-This kind of code:
-
-	change_point[chg_idx++]->entry  = &entries[idx];
-
-Can be a bit confusing to human readers, and GCC-15 started
-warning about these patterns.
-
-Move the index increment outside the accessor.
-
-Suggested-by: Andy Shevchenko <andy@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Arnd Bergmann <arnd@kernel.org>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
- arch/x86/kernel/e820.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index aadc46f3d074..b758c0632d0c 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -421,9 +421,11 @@ __init int e820__update_table(struct e820_table *table)
- 	for (idx = 0; idx < table->nr_entries; idx++)	{
- 		if (entries[idx].size != 0) {
- 			change_point[chg_idx]->addr	= entries[idx].addr;
--			change_point[chg_idx++]->entry	= &entries[idx];
-+			change_point[chg_idx]->entry	= &entries[idx];
-+			chg_idx++;
- 			change_point[chg_idx]->addr	= entries[idx].addr + entries[idx].size;
--			change_point[chg_idx++]->entry	= &entries[idx];
-+			change_point[chg_idx]->entry	= &entries[idx];
-+			chg_idx++;
- 		}
- 	}
- 	chg_nr = chg_idx;
+Kind regards,
+Nicolas
