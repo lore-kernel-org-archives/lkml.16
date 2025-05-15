@@ -1,166 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E785DA926
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93AA910E5;
+	Thu, 15 May 2025 11:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747306821; cv=none; b=LtRmtgrc6SQKOY7DUhr46QS1oI+il/SUexe3hPc+DJa5TBdGASPUBd5/CuR9EahS87/RAKi5VEsbRCFt0gIcdJbxmFOxAhu0vSHtqc8gB6HU26lLR+hN/+U5S9GmgHifqa52CUIPDpxqB6AZhOAMdOR7csLWaowws/VW2BLn2fI=
+	t=1747306833; cv=none; b=lFJjTw0YjPASBmC5517drymvs7DLS6dHdvE7hAlaX2Kh+wR6by0ntUslI47qA+onBa6nFIzVlwU45GZ9kXxSyXW/WqTLKeRpnB6lhuLZmDQqNoX+5j2UIUy4icLFGhW3QE7fmfvUPN6t+l/tcuHHJ14itwtt78MtcGQjebZSCOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747306821; c=relaxed/simple;
-	bh=plJTIgnwLVBEUeN9TfSuX11pdlqOwA4bIN5xD+iMdg4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hFKuCVbSuQt0XtI/qbDhAZzBnKaZm+k6M7VIc1hrE8xT+80GgAQ44JJ4NPMAv2o1cfiXs2JbImmEVXzy0lJpHDdZkzEWkwlrM2SXgXMoFWKnzw6m2vhK3tqyw2bhpW3sA8FVbOCd6GVYZCjQmnf4JpeZi/RYhXfWcagB3lFRMo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SRMSItB0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747306833; c=relaxed/simple;
+	bh=9wXc0Y6ONkjmcPVhgvZpxOyZFLhEYSEFw8irgO7zawo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=F6RoQS5LruCW5v8WfMdb50qCkbHdIistOiZ1Y/36QhhuLvh+NDZ5TpocKz9fjbOhJcXG2VDIJuLZA81KxIDmXo05MZ6toV6ah5X6LY3VXtnnwd98z+6mF9Vpi7GjXR2khvr9tnsu48fhXkOz5Q3d7xPM5p11p5ddV74NvFmioLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=BSIwJEs7 reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SRMSItB0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AB18C4CEE7;
-	Thu, 15 May 2025 11:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747306819;
-	bh=plJTIgnwLVBEUeN9TfSuX11pdlqOwA4bIN5xD+iMdg4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SRMSItB0oRbFP5t/uJ3GQpJi7RwgFo+Ycu/8SKshQzM9doihPwuc7eJkpf36B8guo
-	 Dgj/PO5l5CGad1kveaElX2ZXggI4hUODk4oWFqXTpitpKKFYja+RCj430UUbgvXY/v
-	 YtB0guw4yhoPH7fs5NFdWTORXDlUtW6DrW1ub+OQQ5BiUJZWcKSoP4jCvbyvYRpRny
-	 AnORkdUvYXU7QsuiCYwDlq4KXvLBNcm+QyREE43mou8MY1brOyPpOp0Dk0Lsm6XXEm
-	 HjJ8fqYmj4Wj0uabLwULVaZN9mZUW/29ySVFJOwU+RlkfbXeQj3UDlZs0b9P+v/Zh1
-	 6dI34TB7+C41Q==
-Date: Thu, 15 May 2025 13:00:13 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-	Arnd Bergmann <arnd@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Juergen Gross <jgross@suse.com>, "H . Peter Anvin" <hpa@zytor.com>,
-	Kees Cook <keescook@chromium.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	David Woodhouse <dwmw@amazon.co.uk>
-Subject: Re: [PATCH 07/29] x86/boot/e820: Print out sizes of E820 memory
- ranges
-Message-ID: <aCXJPUIX2TUwj8OS@gmail.com>
-References: <20250421185210.3372306-1-mingo@kernel.org>
- <20250421185210.3372306-8-mingo@kernel.org>
- <aAc83YZ8K08HYoyP@kernel.org>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="BSIwJEs7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=wgA5p1KMNjDu91thD7De1NuKFHa5lkaeczPZ6UzaBts=; b=B
+	SIwJEs7MfqcsoiVVHKZ2OBTP3KmtW4vYq2R8y+f9zslpNZhTn0F0x3T29QrsLXXR
+	/OIumOciqrS9kTcp5YWjmKOtGrkodoNA5MDwf8IOcno1YXdwKehb1DVSbsF5lujE
+	i+tmz0M2GEBp+Tqv0zQzECKvFYFmD22ccAhLqH7E7o=
+Received: from ccc194101$163.com ( [116.128.244.169] ) by
+ ajax-webmail-wmsvr-40-129 (Coremail) ; Thu, 15 May 2025 18:59:53 +0800
+ (CST)
+Date: Thu, 15 May 2025 18:59:53 +0800 (CST)
+From: =?GBK?B?19S8ug==?= <ccc194101@163.com>
+To: "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>
+Cc: "Ricardo Ribalda" <ribalda@chromium.org>, hdegoede@redhat.com,
+	mchehab@kernel.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	chenchangcheng <chenchangcheng@kylinos.cn>
+Subject: Re:Re: [PATCH v10] media: uvcvideo: Fix bandwidth issue for Alcor
+ camera.
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <20250515081202.GA8748@pendragon.ideasonboard.com>
+References: <20250510061803.811433-1-ccc194101@163.com>
+ <CANiDSCsXPgQZVtq9RL_TkXCAW9Bt3kMO3-cR4X8GZaQvmYCQyA@mail.gmail.com>
+ <20250515081202.GA8748@pendragon.ideasonboard.com>
+X-NTES-SC: AL_Qu2fBf+buU8i5SaebOkfmkwQhuk+XsG5u/gm2IBUOp9xjADpwyshUGVSAGbz4OO0Kz62mgmGVz9i9cNiRYNDZYg6HxhDLwdne6LcsxJlOCf+/A==
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAc83YZ8K08HYoyP@kernel.org>
+Message-ID: <3b644a8c.9fa7.196d399cac8.Coremail.ccc194101@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:gSgvCgD3P0oqySVoY3gFAA--.41876W
+X-CM-SenderInfo: 5fffimiurqiqqrwthudrp/1tbiTg5O3mglnk6GtgACs-
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-
-* Mike Rapoport <rppt@kernel.org> wrote:
-
-> On Mon, Apr 21, 2025 at 08:51:47PM +0200, Ingo Molnar wrote:
-> > Before:
-> > 
-> >         BIOS-provided physical RAM map:
-> >         BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
-> >         BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
-> >         BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
-> >         BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff] usable
-> >         BIOS-e820: [mem 0x000000007ffdc000-0x000000007fffffff] reserved
-> >         BIOS-e820: [mem 0x00000000b0000000-0x00000000bfffffff] reserved
-> >         BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed1ffff] reserved
-> >         BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
-> >         BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
-> >         BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff] reserved
-> > 
-> > After:
-> > 
-> > 	BIOS-provided physical RAM map:
-> > 	BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff]  639   KB kernel usable RAM
-> > 	BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff]    1   KB reserved
-> > 	BIOS-e820: [gap 0x00000000000a0000-0x00000000000effff]  320   KB ...
-> > 	BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff]   64   KB reserved
-> > 	BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff]    1.9 GB kernel usable RAM
-> > 	BIOS-e820: [mem 0x000000007ffdc000-0x000000007fffffff]  144   KB reserved
-> > 	BIOS-e820: [gap 0x0000000080000000-0x00000000afffffff]  768   MB ...
-> > 	BIOS-e820: [mem 0x00000000b0000000-0x00000000bfffffff]  256   MB reserved
-> > 	BIOS-e820: [gap 0x00000000c0000000-0x00000000fed1bfff] 1005.1 MB ...
-> > 	BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed1ffff]   16   KB reserved
-> > 	BIOS-e820: [gap 0x00000000fed20000-0x00000000feffbfff]    2.8 MB ...
-> > 	BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff]   16   KB reserved
-> > 	BIOS-e820: [gap 0x00000000ff000000-0x00000000fffbffff]   15.7 MB ...
-> > 	BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff]  256   KB reserved
-> > 	BIOS-e820: [gap 0x0000000100000000-0x000000fcffffffff] 1008   GB ...
-> > 	BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff]   12   GB reserved
-> > 
-> > Note how a 1-digit precision field is printed out if a range is
-> > fractional in its largest-enclosing natural size unit.
-> > 
-> > So the "256 MB" and "12 GB" fields above denote exactly 256 MB and
-> > 12 GB regions, while "1.9 GB" signals the region's fractional nature
-> > and it being just below 2GB.
-> > 
-> > Printing E820 maps with such details visualizes 'weird' ranges
-> > at a glance, and gives users a better understanding of how
-> > large the various ranges are, without having to perform hexadecimal
-> > subtraction in their minds.
-> > 
-> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> > Cc: Andy Shevchenko <andy@kernel.org>
-> > Cc: Arnd Bergmann <arnd@kernel.org>
-> > Cc: David Woodhouse <dwmw@amazon.co.uk>
-> > Cc: H. Peter Anvin <hpa@zytor.com>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> > (cherry picked from commit d1ac6b8718575a7ea2f0a1ff347835a8879df673)
-> > ---
-> >  arch/x86/kernel/e820.c | 47 +++++++++++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 45 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-> > index 10bd10bd5672..8ee89962fcbf 100644
-> > --- a/arch/x86/kernel/e820.c
-> > +++ b/arch/x86/kernel/e820.c
-> > @@ -199,6 +199,41 @@ static void __init e820_print_type(enum e820_type type)
-> >  	}
-> >  }
-> >  
-> > +/*
-> > + * Print out the size of a E820 region, in human-readable
-> > + * fashion, going from KB, MB, GB to TB units.
-> > + *
-> > + * Print out fractional sizes with a single digit of precision.
-> > + */
-> > +static void e820_print_size(u64 size)
-> > +{
-> > +	if (size < SZ_1M) {
-> > +		if (size & (SZ_1K-1))
-> > +			pr_cont(" %4llu.%01llu KB", size/SZ_1K, 10*(size & (SZ_1K-1))/SZ_1K);
-> > +		else
-> > +			pr_cont(" %4llu   KB", size/SZ_1K);
-> > +		return;
-> > +	}
-> 
-> I'd make this a helper, e.g
-> 
-> static void __e820_print_size(u64 size, u64 unit, const char *unit_name)
-> {
-> 	if (size & (unit - 1)) {
-> 		u64 fraction = 10 * (size & (unit - 1))/unit;
-> 
-> 		pr_cont(" %4llu.%01llu %s", size/unit, fraction, unit_name);
-> 	} else {
-> 		pr_cont(" %4llu   %s", size/unit, unit_name);
-> 	}
-> }
-
-While I like the helper in principle, it doesn't work on 32-bit: it's 
-an u64 with u64 division, while with the open coded literals the 
-compiler figures it out.
-
-With div64_u64(), or a macro, it's not nearly as obvious a cleanup 
-IMHO.
-
-Thanks,
-
-	Ingo
+RGVhciBSaWNhcmRvIFJpYmFsZGEgJiBMYXVyZW50IFBpbmNoYXJ0OgoKCkF0IDIwMjUtMDUtMTUg
+MTY6MTI6MDIsICJMYXVyZW50IFBpbmNoYXJ0IiA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9h
+cmQuY29tPiB3cm90ZToKPk9uIFdlZCwgTWF5IDE0LCAyMDI1IGF0IDExOjE3OjA2QU0gKzAyMDAs
+IFJpY2FyZG8gUmliYWxkYSB3cm90ZToKPj4gSGkgY2hlbmNoYW5nY2hlbmcKPj4gCj4+IFRoYW5r
+cyBmb3IgeW91ciBwYXRpZW5jZSBmaXhpbmcgdGhlIHdhcm5pbmdzIGZyb20gbWVkaWEtY2kgOikK
+Pj4gCj4+IFJlZ2FyZHMKPj4gCj4+IE9uIFNhdCwgMTAgTWF5IDIwMjUgYXQgMDg6MTgsIGNoZW5j
+aGFuZ2NoZW5nIDxjY2MxOTQxMDFAMTYzLmNvbT4gd3JvdGU6Cj4+ID4KPj4gPiBGcm9tOiBjaGVu
+Y2hhbmdjaGVuZyA8Y2hlbmNoYW5nY2hlbmdAa3lsaW5vcy5jbj4KPj4gPgo+PiA+IFNvbWUgYnJv
+a2VuIGRldmljZSByZXR1cm4gd3JvbmcgZHdNYXhQYXlsb2FkVHJhbnNmZXJTaXplIGZpZWxkcwo+
+PiA+IGFzIGZvbGxvd3M6Cj4+ID4gICAgIFsgIDIxOC42MzI1MzddIFtwaWQ6MjA0MjcsY3B1Nixn
+dXZjdmlldyw4XXV2Y3ZpZGVvOiBEZXZpY2UgcmVxdWVzdGVkIDI3NTI1MTIgQi9mcmFtZSBiYW5k
+d2lkdGguCj4+ID4gICAgIFsgIDIxOC42MzI1OThdIFtwaWQ6MjA0MjcsY3B1NixndXZjdmlldyw5
+XXV2Y3ZpZGVvOiBObyBmYXN0IGVub3VnaCBhbHQgc2V0dGluZyBmb3IgcmVxdWVzdGVkIGJhbmR3
+aWR0aC4KPj4gPgo+PiA+IFdoZW4gZHdNYXhQYXlsb2FkVHJhbnNmZXJTaXplIGlzIGdyZWF0ZXIg
+dGhhbiBtYXhwc2l6ZSwKPj4gPiBpdCB3aWxsIHByZXZlbnQgdGhlIGNhbWVyYSBmcm9tIHN0YXJ0
+aW5nLgo+PiA+IFNvIHVzZSB0aGUgYmFuZHdpZHRoIG9mIG1heHBzaXplLgo+PiA+Cj4+ID4gU2ln
+bmVkLW9mZi1ieTogY2hlbmNoYW5nY2hlbmcgPGNoZW5jaGFuZ2NoZW5nQGt5bGlub3MuY24+Cj4K
+Pj4gUmV2aWV3ZWQtYnk6IFJpY2FyZG8gUmliYWxkYSA8cmliYWxkYUBjaHJvbWl1bS5vcmc+Cj4+
+Cj4+ID4gLS0tCj4+ID4gIGRyaXZlcnMvbWVkaWEvdXNiL3V2Yy91dmNfdmlkZW8uYyB8IDkgKysr
+KysrKysrCj4+ID4gIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKykKPj4gPgo+PiA+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3VzYi91dmMvdXZjX3ZpZGVvLmMgYi9kcml2ZXJzL21l
+ZGlhL3VzYi91dmMvdXZjX3ZpZGVvLmMKPj4gPiBpbmRleCBlMzU2N2FlYjAwMDcuLmE3NGNmODk4
+NTJkMSAxMDA2NDQKPj4gPiAtLS0gYS9kcml2ZXJzL21lZGlhL3VzYi91dmMvdXZjX3ZpZGVvLmMK
+Pj4gPiArKysgYi9kcml2ZXJzL21lZGlhL3VzYi91dmMvdXZjX3ZpZGVvLmMKPj4gPiBAQCAtMjYy
+LDYgKzI2MiwxNSBAQCBzdGF0aWMgdm9pZCB1dmNfZml4dXBfdmlkZW9fY3RybChzdHJ1Y3QgdXZj
+X3N0cmVhbWluZyAqc3RyZWFtLAo+PiA+Cj4+ID4gICAgICAgICAgICAgICAgIGN0cmwtPmR3TWF4
+UGF5bG9hZFRyYW5zZmVyU2l6ZSA9IGJhbmR3aWR0aDsKPj4gPiAgICAgICAgIH0KPj4gPiArCj4+
+ID4gKyAgICAgICBpZiAoc3RyZWFtLT5pbnRmLT5udW1fYWx0c2V0dGluZyA+IDEgJiYKPj4gPiAr
+ICAgICAgICAgICBjdHJsLT5kd01heFBheWxvYWRUcmFuc2ZlclNpemUgPiBzdHJlYW0tPm1heHBz
+aXplKSB7Cj4+ID4gKyAgICAgICAgICAgICAgIGRldl93YXJuX3JhdGVsaW1pdGVkKCZzdHJlYW0t
+PmludGYtPmRldiwKPj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInRo
+ZSBtYXggcGF5bG9hZCB0cmFuc21pc3Npb24gc2l6ZSAoJWQpIGV4Y2VlZGVkcyB0aGUgc2l6ZSBv
+ZiB0aGUgZXAgbWF4IHBhY2tldCAoJWQpLiBVc2luZyB0aGUgbWF4IHNpemUuXG4iLAo+PiA+ICsg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjdHJsLT5kd01heFBheWxvYWRUcmFu
+c2ZlclNpemUsCj4+IAo+PiBNaW5vciBuaXRwaWNrLiBJIGFtIHRyeWluZyB0byBzdGFuZGFyaXpl
+ICJVVkMgbm9uIGNvbXBsaWFuY2UiIGhlYWRlcgo+PiBpbiB0aGUgbG9ncyBmb3IgdGhpcyBraW5k
+IG9mIHRoaW5ncy4KPj4gCj4+ICJVVkMgbm9uIGNvbXBsaWFuY2U6IHRoZSBtYXggcGF5bG9hZCB0
+cmFuc21pc3Npb24gc2l6ZSAoJWQpIGV4Y2VlZGVkcwo+PiB0aGUgc2l6ZSBvZiB0aGUgZXAgbWF4
+IHBhY2tldCAoJWQpLiBVc2luZyB0aGUgbWF4IHNpemUuXG4iCj4KPnMvZXhjZWVkZWRzL2V4Y2Vl
+ZHMvCj4KPkkgd2lsbCBhbHNvIHJlcGxhdWNlICVkIHdpdGggJXUgYXMgYm90aCB2YXJpYWJsZXMg
+YXJlIHVuc2lnbmVkLgo+Cj5SZXZpZXdlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5w
+aW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgo+Cj4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHN0cmVhbS0+bWF4cHNpemUpOwo+PiA+ICsgICAgICAgICAgICAgICBjdHJs
+LT5kd01heFBheWxvYWRUcmFuc2ZlclNpemUgPSBzdHJlYW0tPm1heHBzaXplOwo+PiA+ICsgICAg
+ICAgfQo+PiA+ICB9Cj4+ID4KPj4gPiAgc3RhdGljIHNpemVfdCB1dmNfdmlkZW9fY3RybF9zaXpl
+KHN0cnVjdCB1dmNfc3RyZWFtaW5nICpzdHJlYW0pCj4+ID4KPj4gPiBiYXNlLWNvbW1pdDogZDc2
+YmIxZWJiNTU4N2Y2NmIwZjhiODA5OWJmYmI0NDcyMmJjMDhiMwo+Cj4tLSAKPlJlZ2FyZHMsCj4K
+PkxhdXJlbnQgUGluY2hhcnQKCgogICAgICBUaGFuayB5b3UgZm9yIHlvdXIgZ3VpZGFuY2UuCiAg
+ICAgIEkgd2lsbCBzdWJtaXQgYSBuZXcgdmVyc2lvbiBhZnRlciB0aGUgbW9kaWZpY2F0aW9ucy4K
+Ci0tIApSZWdhcmRzLAoKQ2hhbmdjaGVuZyBDaGVu
