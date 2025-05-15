@@ -1,52 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8906023BE;
-	Thu, 15 May 2025 15:06:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E4718B47D;
+	Thu, 15 May 2025 15:06:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747321571; cv=none; b=mL9RHTXnqbWrqZDyt2TAWCyF93bcTOs+KX2Ht21mbxulvEmHR5i0JnJ9aJQ7ncnQNu1hphm7kyhTPpUaMf5VEjuRMqMG2EyYiXC+5pdptoTUHa0n1Fi3+XXGF17BlppLtW3hsFWH7A6zA4L6B5GL+uK+a3HPgcc6C6NSl8xQEQ0=
+	t=1747321599; cv=none; b=tp01gozppDlHaSsPxpMRS7p2fs51Ny3O0Y/REFIyk537RNQGZkvunK7I7ZtRNmHD92hfkcq8jSSdgLOTABT+RAs9DOYO7mbmXKH8ggtHvG8hVGAXjsj9EK5rtzP/ooglDB5fjPguZVGqYXgeWqw7SRx6bltATgc6MltPWhukTDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747321571; c=relaxed/simple;
-	bh=FlUH0o0HQ8UiYkcGGiHz4cGt/8yWibv5yobf4uyVa+o=;
+	s=arc-20240116; t=1747321599; c=relaxed/simple;
+	bh=urKXtVF+8OQ4aIsSMiNubACGLVMonPp+yOm8unTAuRk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DfO2nmKg6DTmwTRMMV76P6TgSDg+Zs7hL+mC4avhg07q0ZOzOu9uHg3eHOlwheCKWs+UqthI/15I0BMa3bjh1y43ExgGm71TnFvJsZ3fUgkjAviI8qRbk1nXekYB4F8zwjryaoow2hk5gT6/GmQXmlcI51ZlS1tmy1deEyHWG2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I8Orkj+A; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DHFRhy+Wklw3U+p7cHrvvHz0sqQXfFDp/sLcxE0bltuCpgFn7ATNn0aTWoyfzZAYux3eHX8U9tbyeDN4vxDOl5wZXmnXXWGfl0TOEFevlSIfu2fCqYTKay9e9/u0Gbyhcjh6mvN6EuJby0TCNSOrG0U2hM+yNJzbjo0ol14jPZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fa2XDMuI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I8Orkj+A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CE10C4CEE7;
-	Thu, 15 May 2025 15:06:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fa2XDMuI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53B3DC4CEE7;
+	Thu, 15 May 2025 15:06:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747321570;
-	bh=FlUH0o0HQ8UiYkcGGiHz4cGt/8yWibv5yobf4uyVa+o=;
+	s=k20201202; t=1747321598;
+	bh=urKXtVF+8OQ4aIsSMiNubACGLVMonPp+yOm8unTAuRk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=I8Orkj+ANvhMbwsaCNLZt60rhU9KMAaCGgsKGDDrBag7kjHaqmVHJO0lRN616nRyl
-	 Qj4mz/Ent+beYHVvHBlMLC5iWpWsMXC3u17fC6u16XMiO9VGReG9nK36AR6ans60Pf
-	 VABOa0ZZw6ZtH8EdVtT0ftFuTLOI5WpZlzknv4AaWHuptaxZswfeX+WMq66sD+Zi3i
-	 0E4Xq9l662KgLIWCG5TQ4aHLI10IyRMgCumO9B1GIDi5x8+j15lbHQPkSso5QzaVd3
-	 YVUGQg0e4BsjDzs3RsZIxs7hfv8wqKMUmRuT2Wbsc0ZU+ENSFkeP2XtBJTaIAS8t0X
-	 Q4FCtK/jIBL9A==
-Date: Thu, 15 May 2025 17:06:02 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Shivank Garg <shivankg@amd.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	luto@kernel.org, peterz@infradead.org, rafael@kernel.org,
-	pavel@kernel.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	sohil.mehta@intel.com, rui.zhang@intel.com, yuntao.wang@linux.dev,
-	kai.huang@intel.com, xiaoyao.li@intel.com, peterx@redhat.com,
-	sandipan.das@amd.com, ak@linux.intel.com, rostedt@goodmis.org
-Subject: Re: [PATCH RESEND 1/4] x86/mm: pgtable: Fix W=1 build kernel-doc
- warnings
-Message-ID: <aCYC2pYpXeYVlxA1@gmail.com>
-References: <20250514062637.3287779-1-shivankg@amd.com>
- <aCRMT0TlpFvpRGYk@gmail.com>
- <6c4b227e-abdd-4e7f-8abd-d85cae0f0ec3@amd.com>
- <aCRgRxmO6rsR-0k3@gmail.com>
- <c5ad88e9-434a-4399-8e21-3c41e9295e93@amd.com>
- <aCWPp4wYwauSuTed@gmail.com>
- <eddc986d-62be-425c-8065-3cd5a3922026@amd.com>
+	b=fa2XDMuI4w/GYS2stX9qIHl+35V28XFvu7nOBJp9mxJXYV1AFJiYvOrFcpP9SV+HF
+	 FDlr+DdlQ9RYF/jAKrmEoWinAR3oY5m9uAE60GqvjJiXPQkjB0WB03wkuBin1KolUx
+	 EmhBA2plJeO7bBikqw3fC3X9oSywbdpR4X3xPSM1VJUZyr8W/tzyBWnI+aIb+ZVmV4
+	 bgb8Y160ka65deKyfWq+OGRAYUAFyGOx2j9SmLjPrgCnn5NTPx38OpurquG5mYWI+c
+	 nUG4NAdUdncQtsRq0Az8JqiEGU5+wk5tABnHUasE+b9g8UvurDNIktXOxTk9b2N497
+	 rQDgsbTwsksAw==
+Date: Thu, 15 May 2025 16:06:32 +0100
+From: Will Deacon <will@kernel.org>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: robin.murphy@arm.com, jgg@nvidia.com, joro@8bytes.org,
+	kevin.tian@intel.com, praan@google.com, nathan@kernel.org,
+	yi.l.liu@intel.com, peterz@infradead.org, mshavit@google.com,
+	jsnitsel@redhat.com, smostafa@google.com,
+	jeff.johnson@oss.qualcomm.com, zhangzekun11@huawei.com,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, shameerali.kolothum.thodi@huawei.com
+Subject: Re: [PATCH v2 02/11] iommu/arm-smmu-v3: Pass in smmu/iommu_domain to
+ __arm_smmu_tlb_inv_range()
+Message-ID: <20250515150629.GD12165@willie-the-truck>
+References: <cover.1744692494.git.nicolinc@nvidia.com>
+ <ed8b2837e5ea63f6ee98663761d4f1ebe66a6d41.1744692494.git.nicolinc@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,155 +49,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <eddc986d-62be-425c-8065-3cd5a3922026@amd.com>
+In-Reply-To: <ed8b2837e5ea63f6ee98663761d4f1ebe66a6d41.1744692494.git.nicolinc@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-
-* Shivank Garg <shivankg@amd.com> wrote:
-
-> > Also, similar errors are elsewhere as well.
+On Mon, Apr 14, 2025 at 09:57:37PM -0700, Nicolin Chen wrote:
+> What __arm_smmu_tlb_inv_range() really needs is the smmu and iommu_domain
+> pointers from the smmu_domain.
 > 
-> I'm sorry for missing these details in the previous revision.
-> I'm changing the first letter of variable description to capital.
+> For a nest_parent smmu_domain, it will no longer store an smmu pointer as
+> it can be shared across vSMMU instances. A vSMMU structure sharing the S2
+> smmu_domain instead would hold the smmu pointer.
 > 
-> https://docs.kernel.org/doc-guide/kernel-doc.html
-> /**
->  * function_name() - Brief description of function.
->  * @arg1: Describe the first argument.
->  * @arg2: Describe the second argument.
->  *        One can provide multiple line descriptions
->  *        for arguments.
+> Pass them in explicitly to fit both !nest_parent and nest_parent cases.
 > 
-> Function description also starts with capital letter in the doc-guide
-> and other kernel places so this should make it consistent.
+> While changing it, share it in the header with arm-smmu-v3-iommmufd that
+> will call it too.
+> 
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> ---
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h |  4 ++++
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 17 +++++++++--------
+>  2 files changed, 13 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> index d4837a33fb81..5dbdc61558a9 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> @@ -955,6 +955,10 @@ void arm_smmu_tlb_inv_range_asid(unsigned long iova, size_t size, int asid,
+>  				 struct arm_smmu_domain *smmu_domain);
+>  int arm_smmu_atc_inv_domain(struct arm_smmu_domain *smmu_domain,
+>  			    unsigned long iova, size_t size);
+> +void __arm_smmu_tlb_inv_range(struct arm_smmu_device *smmu,
+> +			      struct arm_smmu_cmdq_ent *cmd, unsigned long iova,
+> +			      size_t size, size_t granule,
+> +			      struct iommu_domain *domain);
 
-Thank you! This version is much more complete. There were a few other 
-things missing, quite a few of them pre-existing, which I fixed up in 
-the commit (see the delta patch below).
+I don't think this function makes a particularly good "public" API --
+the caller even sets the cmd opcode!
 
-Note that I standardized on a kernel-doc style variant without full 
-stops for simple singular sentences. This is what most of the x86 code 
-and the core kernel is doing, and it's contrary to the kernel-doc.html 
-recommendation - but you couldn't really have known that.
+Can we expose some TLB invalidation helpers instead rather than the
+low-level helpers?
 
-Thanks,
-
-	Ingo
-
-=====================>
- arch/x86/mm/pgtable.c | 50 +++++++++++++++++++++++++-------------------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
-
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index 9aa3c60c6afa..59c42dec7076 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -543,11 +543,11 @@ pud_t pudp_invalidate(struct vm_area_struct *vma, unsigned long address,
- #endif
- 
- /**
-- * reserve_top_address - Reserves a hole in the top of kernel address space
-- * @reserve: Size of hole to reserve.
-+ * reserve_top_address - Reserve a hole in the top of the kernel address space
-+ * @reserve: Size of hole to reserve
-  *
-  * Can be used to relocate the fixmap area and poke a hole in the top
-- * of kernel address space to make room for a hypervisor.
-+ * of the kernel address space to make room for a hypervisor.
-  */
- void __init reserve_top_address(unsigned long reserve)
- {
-@@ -594,10 +594,10 @@ void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
- #ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
- #ifdef CONFIG_X86_5LEVEL
- /**
-- * p4d_set_huge - Setup kernel P4D mapping
-- * @p4d: Pointer to the P4D entry.
-- * @addr: Virtual address associated with the P4D entry.
-- * @prot: Protection bits to use.
-+ * p4d_set_huge - Set up kernel P4D mapping
-+ * @p4d: Pointer to the P4D entry
-+ * @addr: Virtual address associated with the P4D entry
-+ * @prot: Protection bits to use
-  *
-  * No 512GB pages yet -- always return 0
-  */
-@@ -608,7 +608,7 @@ int p4d_set_huge(p4d_t *p4d, phys_addr_t addr, pgprot_t prot)
- 
- /**
-  * p4d_clear_huge - Clear kernel P4D mapping when it is set
-- * @p4d: Pointer to the P4D entry to clear.
-+ * @p4d: Pointer to the P4D entry to clear
-  *
-  * No 512GB pages yet -- do nothing
-  */
-@@ -618,10 +618,10 @@ void p4d_clear_huge(p4d_t *p4d)
- #endif
- 
- /**
-- * pud_set_huge - Setup kernel PUD mapping
-- * @pud: Pointer to the PUD entry.
-- * @addr: Virtual address associated with the PUD entry.
-- * @prot: Protection bits to use.
-+ * pud_set_huge - Set up kernel PUD mapping
-+ * @pud: Pointer to the PUD entry
-+ * @addr: Virtual address associated with the PUD entry
-+ * @prot: Protection bits to use
-  *
-  * MTRRs can override PAT memory types with 4KiB granularity. Therefore, this
-  * function sets up a huge page only if the complete range has the same MTRR
-@@ -652,10 +652,10 @@ int pud_set_huge(pud_t *pud, phys_addr_t addr, pgprot_t prot)
- }
- 
- /**
-- * pmd_set_huge - Setup kernel PMD mapping
-- * @pmd: Pointer to the PMD entry.
-- * @addr: Virtual address associated with the PMD entry.
-- * @prot: Protection bits to use.
-+ * pmd_set_huge - Set up kernel PMD mapping
-+ * @pmd: Pointer to the PMD entry
-+ * @addr: Virtual address associated with the PMD entry
-+ * @prot: Protection bits to use
-  *
-  * See text over pud_set_huge() above.
-  *
-@@ -717,11 +717,11 @@ int pmd_clear_huge(pmd_t *pmd)
- 
- #ifdef CONFIG_X86_64
- /**
-- * pud_free_pmd_page - Clear pud entry and free pmd page.
-- * @pud: Pointer to a PUD.
-- * @addr: Virtual address associated with pud.
-+ * pud_free_pmd_page - Clear PUD entry and free PMD page
-+ * @pud: Pointer to a PUD
-+ * @addr: Virtual address associated with PUD
-  *
-- * Context: The pud range has been unmapped and TLB purged.
-+ * Context: The PUD range has been unmapped and TLB purged.
-  * Return: 1 if clearing the entry succeeded. 0 otherwise.
-  *
-  * NOTE: Callers must allow a single page allocation.
-@@ -764,11 +764,11 @@ int pud_free_pmd_page(pud_t *pud, unsigned long addr)
- }
- 
- /**
-- * pmd_free_pte_page - Clear pmd entry and free pte page.
-- * @pmd: Pointer to a PMD.
-- * @addr: Virtual address associated with pmd.
-+ * pmd_free_pte_page - Clear PMD entry and free PTE page.
-+ * @pmd: Pointer to the PMD
-+ * @addr: Virtual address associated with PMD
-  *
-- * Context: The pmd range has been unmapped and TLB purged.
-+ * Context: The PMD range has been unmapped and TLB purged.
-  * Return: 1 if clearing the entry succeeded. 0 otherwise.
-  */
- int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
-@@ -790,7 +790,7 @@ int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
- 
- /*
-  * Disable free page handling on x86-PAE. This assures that ioremap()
-- * does not update sync'd pmd entries. See vmalloc_sync_one().
-+ * does not update sync'd PMD entries. See vmalloc_sync_one().
-  */
- int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
- {
+Will
