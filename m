@@ -1,136 +1,209 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B4C13E41A
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8906023BE;
+	Thu, 15 May 2025 15:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747321551; cv=none; b=QVT0zp7t953SXv0UWuRTZMSWzK9wWkdeN95GuSoVzyAlbyWhrmQf3VGh4TfAJlRHBJ8j2rEaOxhvEq0UmOc42A8IQ4/9/hr5+hB1wnLVtidoAEG9bOAcKNU/Ls1EZU1lz/chaci4H8nTfce3IF3cfW8AsUZ5mNrmzXm1H3XLrBg=
+	t=1747321571; cv=none; b=mL9RHTXnqbWrqZDyt2TAWCyF93bcTOs+KX2Ht21mbxulvEmHR5i0JnJ9aJQ7ncnQNu1hphm7kyhTPpUaMf5VEjuRMqMG2EyYiXC+5pdptoTUHa0n1Fi3+XXGF17BlppLtW3hsFWH7A6zA4L6B5GL+uK+a3HPgcc6C6NSl8xQEQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747321551; c=relaxed/simple;
-	bh=8D7OlMDCA2M/nh6euFq106UQJpUJ1S0Yl6xP627hfCA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=em4C8vYpSpzZ8y/yMhGGogKgwEAP4Wl9wxQo4lGLBAHGVme2uEiGBHqlYrmfQlxRONfTSZ84WW1wxB0YXKCGubiQMIW1+yuGQXvYhCNYTIhHkF+bWMADmPI9D/vD8V7188AYLl1wi1de/vbvG2JUWB5gSiqXWrPMKKl0XYnPFLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=uuXjy6nL; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=M+MwKNeB; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1747321571; c=relaxed/simple;
+	bh=FlUH0o0HQ8UiYkcGGiHz4cGt/8yWibv5yobf4uyVa+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DfO2nmKg6DTmwTRMMV76P6TgSDg+Zs7hL+mC4avhg07q0ZOzOu9uHg3eHOlwheCKWs+UqthI/15I0BMa3bjh1y43ExgGm71TnFvJsZ3fUgkjAviI8qRbk1nXekYB4F8zwjryaoow2hk5gT6/GmQXmlcI51ZlS1tmy1deEyHWG2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I8Orkj+A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="uuXjy6nL";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="M+MwKNeB"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D18FC1F7B7;
-	Thu, 15 May 2025 15:05:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1747321548; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8D7OlMDCA2M/nh6euFq106UQJpUJ1S0Yl6xP627hfCA=;
-	b=uuXjy6nLn4/IB9kBLplBXHo61XI3TQrx4GLZYyzoJp1u+ybbkMl5La8d8EQFuiIXXnAO77
-	hGqYa79HAeDe37U497TfxpNBtz7BAYeH8EUdUXaV2XSt0buAfOxsp0+lDBMq/Rd74grbKD
-	zQWQqEHUoD/vB7cF8BGjxeskdYRnS8Q=
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=M+MwKNeB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1747321547; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8D7OlMDCA2M/nh6euFq106UQJpUJ1S0Yl6xP627hfCA=;
-	b=M+MwKNeB1/2ssYtC0c7xr+YW7sh1RsyJ7MAzMkM1MvNqbeFHEI29hwDPuOaKdOuPf9yK9P
-	BUH84OJfGKqgyjPR1DLnNkB8IxLyUKm3HCjtw9O6PgrOY1j/tGEok2L/GZqvHcjaHpMSSA
-	R8FlbUQp1dc118X627hfINsbGf95K8E=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8CEA5139D0;
-	Thu, 15 May 2025 15:05:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Yp7dIMsCJmjwPgAAD6G6ig
-	(envelope-from <mwilck@suse.com>); Thu, 15 May 2025 15:05:47 +0000
-Message-ID: <603d15940074b2d4756dea613e834bf37ea1aafd.camel@suse.com>
-Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
- paths
-From: Martin Wilck <mwilck@suse.com>
-To: Kevin Wolf <kwolf@redhat.com>
-Cc: Christoph Hellwig <hch@infradead.org>, Benjamin Marzinski
-	 <bmarzins@redhat.com>, dm-devel@lists.linux.dev, hreitz@redhat.com, 
-	mpatocka@redhat.com, snitzer@kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 15 May 2025 17:05:47 +0200
-In-Reply-To: <aCW95f8RGpLJZwSA@redhat.com>
-References: <20250429165018.112999-1-kwolf@redhat.com>
-	 <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
-	 <aCIRUwt5BueQmlMZ@redhat.com>
-	 <d51d6f85b5728648fe9c584f9cb3acee12c4873f.camel@suse.com>
-	 <cc2ec011cf286cb5d119f2378ecbd7b818e46769.camel@suse.com>
-	 <aCW95f8RGpLJZwSA@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I8Orkj+A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CE10C4CEE7;
+	Thu, 15 May 2025 15:06:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747321570;
+	bh=FlUH0o0HQ8UiYkcGGiHz4cGt/8yWibv5yobf4uyVa+o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I8Orkj+ANvhMbwsaCNLZt60rhU9KMAaCGgsKGDDrBag7kjHaqmVHJO0lRN616nRyl
+	 Qj4mz/Ent+beYHVvHBlMLC5iWpWsMXC3u17fC6u16XMiO9VGReG9nK36AR6ans60Pf
+	 VABOa0ZZw6ZtH8EdVtT0ftFuTLOI5WpZlzknv4AaWHuptaxZswfeX+WMq66sD+Zi3i
+	 0E4Xq9l662KgLIWCG5TQ4aHLI10IyRMgCumO9B1GIDi5x8+j15lbHQPkSso5QzaVd3
+	 YVUGQg0e4BsjDzs3RsZIxs7hfv8wqKMUmRuT2Wbsc0ZU+ENSFkeP2XtBJTaIAS8t0X
+	 Q4FCtK/jIBL9A==
+Date: Thu, 15 May 2025 17:06:02 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Shivank Garg <shivankg@amd.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	luto@kernel.org, peterz@infradead.org, rafael@kernel.org,
+	pavel@kernel.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	sohil.mehta@intel.com, rui.zhang@intel.com, yuntao.wang@linux.dev,
+	kai.huang@intel.com, xiaoyao.li@intel.com, peterx@redhat.com,
+	sandipan.das@amd.com, ak@linux.intel.com, rostedt@goodmis.org
+Subject: Re: [PATCH RESEND 1/4] x86/mm: pgtable: Fix W=1 build kernel-doc
+ warnings
+Message-ID: <aCYC2pYpXeYVlxA1@gmail.com>
+References: <20250514062637.3287779-1-shivankg@amd.com>
+ <aCRMT0TlpFvpRGYk@gmail.com>
+ <6c4b227e-abdd-4e7f-8abd-d85cae0f0ec3@amd.com>
+ <aCRgRxmO6rsR-0k3@gmail.com>
+ <c5ad88e9-434a-4399-8e21-3c41e9295e93@amd.com>
+ <aCWPp4wYwauSuTed@gmail.com>
+ <eddc986d-62be-425c-8065-3cd5a3922026@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: D18FC1F7B7
-X-Spam-Flag: NO
-X-Spam-Score: -4.51
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:dkim];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.com:+]
-X-Rspamd-Action: no action
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eddc986d-62be-425c-8065-3cd5a3922026@amd.com>
 
-On Thu, 2025-05-15 at 12:11 +0200, Kevin Wolf wrote:
-> Am 14.05.2025 um 23:21 hat Martin Wilck geschrieben:
 
->=20
-> > In the long term,=C2=A0we should evaluate alternatives. If my conjectur=
-e
-> > in
-> > my previous post is correct we need only PRIN/PROUT commands, there
-> > might be a better solution than scsi-block for our customers. Using
-> > regular block IO should actually also improved performance.
->=20
-> If you're talking about SG_IO in dm-mpath, then PRIN/PROUT commands
-> are
-> actually the one thing that we don't need. libmpathpersist sends the
-> commands to the individual path devices, so dm-mpath will never see
-> those. It's mostly about getting the full results on the SCSI level
-> for
-> normal I/O commands.
+* Shivank Garg <shivankg@amd.com> wrote:
 
-I know. I meant "need" from the PoV of the guest, in the sense "which
-commands need to be passed from the guessed to the device (in some
-reasonable way) except the normal READ and WRITE commands?".
+> > Also, similar errors are elsewhere as well.
+> 
+> I'm sorry for missing these details in the previous revision.
+> I'm changing the first letter of variable description to capital.
+> 
+> https://docs.kernel.org/doc-guide/kernel-doc.html
+> /**
+>  * function_name() - Brief description of function.
+>  * @arg1: Describe the first argument.
+>  * @arg2: Describe the second argument.
+>  *        One can provide multiple line descriptions
+>  *        for arguments.
+> 
+> Function description also starts with capital letter in the doc-guide
+> and other kernel places so this should make it consistent.
 
-Regards
-Martin
+Thank you! This version is much more complete. There were a few other 
+things missing, quite a few of them pre-existing, which I fixed up in 
+the commit (see the delta patch below).
+
+Note that I standardized on a kernel-doc style variant without full 
+stops for simple singular sentences. This is what most of the x86 code 
+and the core kernel is doing, and it's contrary to the kernel-doc.html 
+recommendation - but you couldn't really have known that.
+
+Thanks,
+
+	Ingo
+
+=====================>
+ arch/x86/mm/pgtable.c | 50 +++++++++++++++++++++++++-------------------------
+ 1 file changed, 25 insertions(+), 25 deletions(-)
+
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index 9aa3c60c6afa..59c42dec7076 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -543,11 +543,11 @@ pud_t pudp_invalidate(struct vm_area_struct *vma, unsigned long address,
+ #endif
+ 
+ /**
+- * reserve_top_address - Reserves a hole in the top of kernel address space
+- * @reserve: Size of hole to reserve.
++ * reserve_top_address - Reserve a hole in the top of the kernel address space
++ * @reserve: Size of hole to reserve
+  *
+  * Can be used to relocate the fixmap area and poke a hole in the top
+- * of kernel address space to make room for a hypervisor.
++ * of the kernel address space to make room for a hypervisor.
+  */
+ void __init reserve_top_address(unsigned long reserve)
+ {
+@@ -594,10 +594,10 @@ void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
+ #ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
+ #ifdef CONFIG_X86_5LEVEL
+ /**
+- * p4d_set_huge - Setup kernel P4D mapping
+- * @p4d: Pointer to the P4D entry.
+- * @addr: Virtual address associated with the P4D entry.
+- * @prot: Protection bits to use.
++ * p4d_set_huge - Set up kernel P4D mapping
++ * @p4d: Pointer to the P4D entry
++ * @addr: Virtual address associated with the P4D entry
++ * @prot: Protection bits to use
+  *
+  * No 512GB pages yet -- always return 0
+  */
+@@ -608,7 +608,7 @@ int p4d_set_huge(p4d_t *p4d, phys_addr_t addr, pgprot_t prot)
+ 
+ /**
+  * p4d_clear_huge - Clear kernel P4D mapping when it is set
+- * @p4d: Pointer to the P4D entry to clear.
++ * @p4d: Pointer to the P4D entry to clear
+  *
+  * No 512GB pages yet -- do nothing
+  */
+@@ -618,10 +618,10 @@ void p4d_clear_huge(p4d_t *p4d)
+ #endif
+ 
+ /**
+- * pud_set_huge - Setup kernel PUD mapping
+- * @pud: Pointer to the PUD entry.
+- * @addr: Virtual address associated with the PUD entry.
+- * @prot: Protection bits to use.
++ * pud_set_huge - Set up kernel PUD mapping
++ * @pud: Pointer to the PUD entry
++ * @addr: Virtual address associated with the PUD entry
++ * @prot: Protection bits to use
+  *
+  * MTRRs can override PAT memory types with 4KiB granularity. Therefore, this
+  * function sets up a huge page only if the complete range has the same MTRR
+@@ -652,10 +652,10 @@ int pud_set_huge(pud_t *pud, phys_addr_t addr, pgprot_t prot)
+ }
+ 
+ /**
+- * pmd_set_huge - Setup kernel PMD mapping
+- * @pmd: Pointer to the PMD entry.
+- * @addr: Virtual address associated with the PMD entry.
+- * @prot: Protection bits to use.
++ * pmd_set_huge - Set up kernel PMD mapping
++ * @pmd: Pointer to the PMD entry
++ * @addr: Virtual address associated with the PMD entry
++ * @prot: Protection bits to use
+  *
+  * See text over pud_set_huge() above.
+  *
+@@ -717,11 +717,11 @@ int pmd_clear_huge(pmd_t *pmd)
+ 
+ #ifdef CONFIG_X86_64
+ /**
+- * pud_free_pmd_page - Clear pud entry and free pmd page.
+- * @pud: Pointer to a PUD.
+- * @addr: Virtual address associated with pud.
++ * pud_free_pmd_page - Clear PUD entry and free PMD page
++ * @pud: Pointer to a PUD
++ * @addr: Virtual address associated with PUD
+  *
+- * Context: The pud range has been unmapped and TLB purged.
++ * Context: The PUD range has been unmapped and TLB purged.
+  * Return: 1 if clearing the entry succeeded. 0 otherwise.
+  *
+  * NOTE: Callers must allow a single page allocation.
+@@ -764,11 +764,11 @@ int pud_free_pmd_page(pud_t *pud, unsigned long addr)
+ }
+ 
+ /**
+- * pmd_free_pte_page - Clear pmd entry and free pte page.
+- * @pmd: Pointer to a PMD.
+- * @addr: Virtual address associated with pmd.
++ * pmd_free_pte_page - Clear PMD entry and free PTE page.
++ * @pmd: Pointer to the PMD
++ * @addr: Virtual address associated with PMD
+  *
+- * Context: The pmd range has been unmapped and TLB purged.
++ * Context: The PMD range has been unmapped and TLB purged.
+  * Return: 1 if clearing the entry succeeded. 0 otherwise.
+  */
+ int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
+@@ -790,7 +790,7 @@ int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
+ 
+ /*
+  * Disable free page handling on x86-PAE. This assures that ioremap()
+- * does not update sync'd pmd entries. See vmalloc_sync_one().
++ * does not update sync'd PMD entries. See vmalloc_sync_one().
+  */
+ int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
+ {
