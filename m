@@ -1,140 +1,106 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE741EA7F9;
-	Thu, 15 May 2025 18:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E101A316D
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747332343; cv=none; b=VwYTt1ktSxzNH6oCji2jz0nq5KVJi6hz4GO+a6PBsl1PPqgV4FFmVPEFlPSDzg7PJSK3DhOL57G9sWHrLikN7rxELdLCq10aBkxJduuo0EgMvIRH3xbtZM30c1TQ0EAFIfZvOL238aOJUi1tX3vvR7YefrZKOp691mylVgjrAQs=
+	t=1747332419; cv=none; b=lKj7GQmFNtFZKn+vVSI3aTVkb+1EvK0SBd3Vf0I43HYc2mYqdrYismGOfO8hiLQVlEA/TPpWWYxTSpzT+d5d4mpwwLSjusyqUBmAp0cwoUaiJ0L+cEevJsjrYDecR2tBgvH2H0KyEsQKQmf4fe4OHwz5E0sYfC22HyvWHg7hdh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747332343; c=relaxed/simple;
-	bh=qoH6LccZOlhTi7y76NH6szhTMUifU4ew3xvC7+xhRr8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mTZhbnvDHTH1+vtexn8ZhIe4DP13k1eHlXUXfdfZmjPCXCFQfrnoH3Km+wZY6+LuiUlDwUrOrLUNANSZDoo5XezoXBW62VwDw5N7frUK4wJYkqUQ2cBaAyYNZpnlLg0Pbtu2RBQFIVwB0RcB42dzLCm57eJXfPFn9WKoNeyeiIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=md5Rt4ES; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747332419; c=relaxed/simple;
+	bh=i0662vX1DTCTKYAn0Fswg4HZTfUsAKUbdi/4cKn2K2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fDQyI1SteCdAZ0gWFXEsjMnM0JSHauFcSz2LCzGMAhwDrg5BGX9W0Seuw5+8bYc882v9ayPj1fQo1oyC820OXUhSq6QOToCvSuOd0IaO4V3z7ebRSR3fgKdMBKOSjSZaLqHwqfU3BmkHcAglnXB25LdGMeYi3xanlIfdHPojeVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=O6LZqX79; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="md5Rt4ES"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf848528aso10337395e9.2;
-        Thu, 15 May 2025 11:05:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747332340; x=1747937140; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=4THNUf1uXf81C9jvxSlBYnSoxyqZaGOpOTb4vLyxUPk=;
-        b=md5Rt4ESPXCzQaEyuulZMmaCn0Xg+ILgR+/BUsbE5SDuNkwp9H0V3HijYIyIQG6qRU
-         572aTNiTDMO1jqdbdQJghDO/Z38ihXnVIp60juLj+JMxnSFKcwQGrPlmm0qa3qfic/2w
-         Nhl8FhBNi/tOOn3SzKMgcJW6jK2M+wcEE1Ml0SWQ/sWE90YJaYgJFtalptHHxIg7mUd/
-         BoANLeHAH+crySHgrPc7kWofbPGDYXHyQdC15JehTP1iTKmt39S8y/qwVUFB++qMZ7np
-         EKAsXOCAZHAzQKJQZiKsnS7rM1kMiyloowWKxZFPOvV7+uWtMlwWy2spFKfJQ/rSSS3Z
-         ixqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747332340; x=1747937140;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4THNUf1uXf81C9jvxSlBYnSoxyqZaGOpOTb4vLyxUPk=;
-        b=ZgqEOk+9HvewUBL8rlSX0y5A2P1VRQmpJEg8ijOohD+wYomBk08lumodUjdDx+9tXp
-         oIQmTh91LTneCMcAP6WcYS0F7BmK/WMPmBc+//KNKpmIuSb36DZivClUl9wsJ6inrlHM
-         nazHAB/iLWPbyBALQ8tygPau+SixQ2Xssq4CFP5cW3YzuuGmoDmOvM8CQcrfHQZwKQEe
-         upLBSCaK9so0WdvF8WdZLhKPhaVg1PS+eMLLt8zkATYJA1UVbD9k9qq5/VEJYoIWKz37
-         Pdcq117c7kPkk9HGGOgdxoGnTz4jQk8Q2ZQSpMd+0P3bMqu4Y33aDU1xwdodOgIrydrl
-         FZ1A==
-X-Forwarded-Encrypted: i=1; AJvYcCViGskOvtc/pFl2PujVSujvaqe1SIdo1fXdh7VvKTy6GuJjyCrziBhm+GzGekTxQ+qokhHTzSsRgXPaRYE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZGDJ6+ZAoWla2er3mpBEvb01wr7jXgzV9maZcsrF4mEKlINVU
-	thJp3W2V8xyi33ihFZYAqtGeVthdITiI7wCBPqa9QTUtnBBRKcbYmEDN
-X-Gm-Gg: ASbGncvq1UpZrPY/b3gKyN1CsVLyVRNwWC2FqjgNeJfxFAC+0JMjYXa95ihiyWrvaKR
-	AN/qnqAulJgc42SPJ9zy8gG1xDuHkkhAeOYXgkk9taxRxqVLij/17/UPvHdZfImrNfyd0jX+BY/
-	NG/VbKlfb8Mj3Uk+QvKniqKhTvJftPkRbDBSVE0LwYZ+9BNCneXHkrMuRReh1ZdE2/BfIwQivkz
-	EWz5dm70JBbxZsSrV6YJtyxUIhRLTYgTY4R2dRRFroHrchuk3/XNPY5KLKwSFu2bHsXE+cLKcoR
-	c2UAHum7pOeJ8wBveOpQfwijnOMJPhClykjphmGSgx6O3wY85IiqXdYduQT69iXjq8bg1SXRu6Q
-	yiye45wkATGr/Vqen07NIEwquhYPremcHTv5A/dnBykg/0E9p3yUEQj1O5V7m+wjsnFBolxTInf
-	2zZRKzvJrtaw==
-X-Google-Smtp-Source: AGHT+IEAMZI0gYj6jUL1XNnD21cZordm0Cbrsc9of7B1lYW2lChuusSGJbdvOqSY1ZAdEKpZBYJs0w==
-X-Received: by 2002:a05:6000:4285:b0:3a0:b990:ab72 with SMTP id ffacd0b85a97d-3a35c847d18mr690722f8f.42.1747332339783;
-        Thu, 15 May 2025 11:05:39 -0700 (PDT)
-Received: from ?IPV6:2003:ea:8f4a:2300:ec36:b14d:f12:70b? (p200300ea8f4a2300ec36b14d0f12070b.dip0.t-ipconnect.de. [2003:ea:8f4a:2300:ec36:b14d:f12:70b])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a35ca4d1easm231079f8f.5.2025.05.15.11.05.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 11:05:39 -0700 (PDT)
-Message-ID: <9714d7a5-196d-4f7f-ab01-dcbbf883f064@gmail.com>
-Date: Thu, 15 May 2025 20:06:05 +0200
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="O6LZqX79"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1AA2840E0222;
+	Thu, 15 May 2025 18:06:54 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id kpXTsgG6MJyS; Thu, 15 May 2025 18:06:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747332410; bh=mgZAKCEffvt/GriTK42rIIXANkTBZtqAKQg87Sq3LuI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O6LZqX79iB0Bme5Jowg9nL3FXG6EVaVzQcPPDnGCmYZvCS1aQ+a7pc/aBAjPCRb4c
+	 lyj1yfBrdfEWEmvkbyeG8m5T19FQcpuySp+2aHpIKrsVSw7axIV7A/G4SocQBmL7SG
+	 AJsHFoiQEWHT4S+VYL2+sbdX+XY7tLOvDNGm3L/N3bZWnqPOugzU90z1xn1+yliKXo
+	 66Nk6bNHI9GGelAU4PDxr8/8EzldyZdOpNWgnX3uItO+6Qdo0SrlcAQcWlV1XnmHmc
+	 8jeOLYMbBslXqsCyfhGmDuO1voeKFgTeOhS7PDFdguyiUJHIsDCVsFiwQQx7v8GnBX
+	 WOiznSrqTWqjUXI+XMCc6nB6PvVzTnk85ys9d6eFdsUcaHi1RxRvAn7JJ3a43DJba4
+	 gP8XSKeHMFMcz6ojrLGuCBFxD72B2o0UXedU0uO/+y3ru+44YhOCLljACUOGGL7lPf
+	 Z8hVBzr6uTMuh1LiFWp7b4xfL6jtt32EzBSy7Ez0u+FyxJPc37mTxGrOHjCwLSSQzW
+	 iJpf4jfJGZhVW/kjTjAGRHpPyWHqqsxJYwugrU+duhi/d2WJv0uZUAu8Q6GBB8ZYZS
+	 V1n9npWlFKJyIcbHZ0UbgalRKXyPGSQcgusvSGqWkzLq23dzMdJrDZccrSL3XhUdEt
+	 GeYh5sQRxjIru5jnEIEifplA=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 810F840E015E;
+	Thu, 15 May 2025 18:06:24 +0000 (UTC)
+Date: Thu, 15 May 2025 20:06:23 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Fenghua Yu <fenghuay@nvidia.com>
+Cc: James Morse <james.morse@arm.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+	Babu Moger <Babu.Moger@amd.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com, lcherian@marvell.com,
+	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+	dfustini@baylibre.com, amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>,
+	Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>
+Subject: Re: [PATCH v12 00/25] x86/resctrl: Move the resctrl filesystem code
+ to /fs/resctrl
+Message-ID: <20250515180623.GMaCYtH84bauHWs44X@fat_crate.local>
+References: <20250515165855.31452-1-james.morse@arm.com>
+ <20250515175054.GKaCYpfoCe0b7QyIqL@fat_crate.local>
+ <f42b0165-092a-4e58-abb4-a8d59bba5cab@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2] r8169: add support for RTL8127A
-To: ChunHao Lin <hau@realtek.com>, nic_swsd@realtek.com,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250515095303.3138-1-hau@realtek.com>
-Content-Language: en-US
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Autocrypt: addr=hkallweit1@gmail.com; keydata=
- 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
-In-Reply-To: <20250515095303.3138-1-hau@realtek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <f42b0165-092a-4e58-abb4-a8d59bba5cab@nvidia.com>
 
-On 15.05.2025 11:53, ChunHao Lin wrote:
-> This adds support for 10Gbs chip RTL8127A.
+On Thu, May 15, 2025 at 11:00:04AM -0700, Fenghua Yu wrote:
 > 
-> Signed-off-by: ChunHao Lin <hau@realtek.com>
-> ---
-> v1 -> v2: update phy parameters
-> 
->  drivers/net/ethernet/realtek/r8169.h          |   1 +
->  drivers/net/ethernet/realtek/r8169_main.c     |  29 ++-
->  .../net/ethernet/realtek/r8169_phy_config.c   | 166 ++++++++++++++++++
->  3 files changed, 193 insertions(+), 3 deletions(-)
-> 
+> On 5/15/25 10:50, Borislav Petkov wrote:
+> > On Thu, May 15, 2025 at 04:58:30PM +0000, James Morse wrote:
+> > > Hello!
+> > > 
+> > > No code changes since v11 - this is the 'final' form of the series
+> > > with patches v11:24-29 squashed together. See [v11] for the breakdown.
+> > Thx, lemme see if I can queue them...
+> > 
+> I build and test this series. Everything looks good to me.
 
-Reviewed-by: Heiner Kallweit <hkallweit1@gmail.com>
+Is that you giving a 
+
+Tested-by: you
+
+tag?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
