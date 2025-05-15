@@ -1,107 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53DEF10E3;
-	Thu, 15 May 2025 00:16:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3405A10E3;
+	Thu, 15 May 2025 00:17:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747268168; cv=none; b=NltY7d/gJNO98sMhsnRkhiuRlp+tQH+Yflp7BA3+NVjYyekDZck4mTYdZzyvVJJO6EFenXrryz8R73e2/dTHAZV63KkqD8fY4TLrAMmJUN6vc1xRdD4rAcFGalnT5f/G+70KxCfx49wZk8xutzevv4tqarVjXjcLHq2JOavkXgg=
+	t=1747268280; cv=none; b=mmRE+UdBahi6GrmOwaIBEHjkHCXYOqOWMvynZoOPzNSxqwjQX8exHRBfuOE/GdNVnYTsC8slF/bp1vruKoMwDJIyPBzywPFrfr0+5ybuyPtJSlzE7Zk53S/t5EO6ProExlCag7fDm731EzV3brU1Wdi8znLke7ktLN+jJkoR2l0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747268168; c=relaxed/simple;
-	bh=uW+M74PgZ3HUM5ZEy0wgLlqjqjzVMkF8sZFdMOczPhU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o3Nkg0dhThbIxhdPaiEJRHF/Z0RzAhxIqF0YGhXtHYPOUzz3Ps5BGlmo4dQIjho7dSGGzw4Fxu1yCLQRF7eEIVLwLwatBUB3R6I6Myofv3nZUEpWBKf5jDhE9TOjKx9mmVj5LSvrETpGEI3JtmxShbuAY9Chw9S6Xwe927PNRhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RIuWhMx4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747268280; c=relaxed/simple;
+	bh=ppDSPmOlcI1EuIFNI/saJdi1z4iWtdBVsF+tyMghoG8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Dj5kIqJmIKA9IgugNh71dxY+4XDxa0HGTjWWUWdBX8rGzG9jmPz0UtnqIPeHa66/mPy/dAXEtiQ8MCOFeUC+fZxJ2c+vkfOl+CWf+BkESdMIlp+7JJrNmpJmG3VhUwzO9e8xRkLaukVtk1Rwsbc6N5pyvn3G8X36HcsP9d2hSj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RZhGiCOr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RIuWhMx4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 235B7C4CEED;
-	Thu, 15 May 2025 00:16:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RZhGiCOr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A0B1C4CEE9;
+	Thu, 15 May 2025 00:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747268167;
-	bh=uW+M74PgZ3HUM5ZEy0wgLlqjqjzVMkF8sZFdMOczPhU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RIuWhMx4JqXHZhe2E9bp6Vc1XY9dfVCBB++H6KbySgeSdUtzfusiMCGBnctJKEq3p
-	 17OVJRcKrv2iBQ8f6WfGuEeSn6Vy/jEoQFZcxtU2kn+skcX00xLYtYTpAi/hybtPIS
-	 X3UaDxNvm2qpl2xD6KAOWxCAIlGFxjtSrcEpS0oJ/oj/2Tfjwom7kTg9Dn1R5RBCq3
-	 qITvNErXeKTO1GYC85vUUhMll/tcXxP5SBQTIudYtKfUnacXiGcAMjoB123frXVFT3
-	 Z2vtEr/zZRnLe48T9ba+7n8l09dG8bcJ4oVK8+WonJCPkQsPmToFVoHNu51hP9sere
-	 ZW3DkRPAJx12Q==
-Date: Thu, 15 May 2025 09:16:01 +0900
-From: William Breathitt Gray <wbg@kernel.org>
-To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-Cc: jic23@kernel.org, alexandre.torgue@foss.st.com, lee@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	catalin.marinas@arm.com, will@kernel.org,
-	devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	olivier.moysan@foss.st.com, ukleinek@kernel.org
-Subject: Re: [PATCH v3 3/8] counter: stm32-timer-cnt: add support for
- stm32mp25
-Message-ID: <aCUyQbDj6pDdRYuL@ishi>
-References: <20250110091922.980627-1-fabrice.gasnier@foss.st.com>
- <20250110091922.980627-4-fabrice.gasnier@foss.st.com>
- <euiZ0AkHt7QXbUa8SgT5b2zrUV2Ha-llURWKhlOUH0BhTlbbIBTELC3Uk_sQGpTMSy4vS3j66xs83vKXnJjrgA==@protonmail.internalid>
- <5268ec60-ae2e-425e-a4af-a55cb0c3a1f9@foss.st.com>
+	s=k20201202; t=1747268279;
+	bh=ppDSPmOlcI1EuIFNI/saJdi1z4iWtdBVsF+tyMghoG8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RZhGiCOrdqbR8qAu7bNRM4kd3gnHsJDc10HaqGtlzktXawW7VpvKwYrXS3AyCn5LL
+	 +MeRVMYW2qmBqq7WzM5r8g8q2s1KfmB5K3SAyFVYqBXZZraqLm/VkJQBepoHY5YI3L
+	 sbgFBNNXNkjboNPZWWOQlzsa9fnGlU2KV8n58TlrJUj8nr/1grACy9X9cioyRNzUhp
+	 4MqT33rInfCmvzkQKxuCQZMY3HwcxjXmzl8eO32OMwxrpthaX4+5ResGIfFYTaWI6R
+	 fCnMKucvI6xbJCX8Yrw5ooqAgGF9hJaUgiRxL1+vFZ4+4Dq92xv5F9aU8FfwOpTJHl
+	 9+60FCifOc2Lg==
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-30aa8a259e0so381544a91.1;
+        Wed, 14 May 2025 17:17:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU0J3wdJ6G/Rs5lNgwSo4SVaqVD6+KTAtoGGUC/TgUT8fVQjfbkpqN1T+aw/XaKR5kpYfDvku2TmqlYEIHm@vger.kernel.org, AJvYcCV1ZPm0DN+dHBO5eZ6HsNv5cROHHdPgQjTrf6qmX6f9xjVITDprb3mKqS0JkzBRC7OTlUT6uuc9BuuffWH0@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzvTF56OQPqjcnJxGJhlAwsHuOSQqylKHJFPCiG9AHXOmOx1RD
+	qWQVSAd3rmhjTSZusTTpS8wqAezeW7AZ1tJVfJrT+GJssBxqbco7Q/7nBiG017P4uWAZTGDkdWi
+	XxHKuOmqKK70lxuc3jFi5b8pDaQI=
+X-Google-Smtp-Source: AGHT+IGNsbGjJq8Dz2ZQCS8Wh8/6+oFoCFbOfcGLbDjKt3An0usGoL8I1l5+JBXpJFUekYaPxio/w2jC/odyt4ldbKs=
+X-Received: by 2002:a17:90a:d64f:b0:30a:2196:e654 with SMTP id
+ 98e67ed59e1d1-30e517853e7mr1036498a91.15.1747268279075; Wed, 14 May 2025
+ 17:17:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Xd2tMiRaS48NlvBR"
-Content-Disposition: inline
-In-Reply-To: <5268ec60-ae2e-425e-a4af-a55cb0c3a1f9@foss.st.com>
+References: <20250514-max-mixer-width-v1-0-c8ba0d9bb858@oss.qualcomm.com> <20250514-max-mixer-width-v1-4-c8ba0d9bb858@oss.qualcomm.com>
+In-Reply-To: <20250514-max-mixer-width-v1-4-c8ba0d9bb858@oss.qualcomm.com>
+From: Dmitry Baryshkov <lumag@kernel.org>
+Date: Thu, 15 May 2025 03:17:48 +0300
+X-Gmail-Original-Message-ID: <CALT56yPxcsLhA2eigirjvNiWR5JBFW4jsOAi7QWkgmJgbMnKXw@mail.gmail.com>
+X-Gm-Features: AX0GCFuaEv9cpS42k1XF87YPo9WSvjg8iXOg6oOZGPtLNGJgkjMpQbVPpysTOVE
+Message-ID: <CALT56yPxcsLhA2eigirjvNiWR5JBFW4jsOAi7QWkgmJgbMnKXw@mail.gmail.com>
+Subject: Re: [PATCH 4/5] drm/msm/dpu: Filter writeback modes using writeback maxlinewidth
+To: Jessica Zhang <jessica.zhang@oss.qualcomm.com>
+Cc: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Abhinav Kumar <abhinav.kumar@oss.qualcomm.com>, linux-arm-msm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Thu, 15 May 2025 at 02:52, Jessica Zhang
+<jessica.zhang@oss.qualcomm.com> wrote:
+>
+> Since the max mixer width is not a strict hardware limit, use the actual
 
---Xd2tMiRaS48NlvBR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Is it? What is the actual max width that the mixer can support?
 
-On Wed, May 14, 2025 at 11:30:14AM +0200, Fabrice Gasnier wrote:
-> On 1/10/25 10:19, Fabrice Gasnier wrote:
-> > Add support for STM32MP25 SoC. There are new counter modes that may be
-> > implemented in later. Still, use newly introduced compatible to handle
-> > this new HW variant and avoid being blocked with existing compatible
-> > in SoC dtsi file. Modes supported currently still remains compatible.
-> > New timer 20 has encoder capability, add it to the list.
-> >
-> > Acked-by: William Breathitt Gray <wbg@kernel.org>
-> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-> > ---
-> >  drivers/counter/stm32-timer-cnt.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
->=20
-> Hi,
->=20
-> The first patches of this series have been merged.
->=20
-> I'm not sure who shall pick this one ? (I think there's no dependency).
-> Or do I need to resend it separately ?
->=20
-> Please advise,
-> BR,
-> Fabrice
-
-I don't know if anyone has already picked up this patch, but I'll take
-it through the counter tree regardless. No need to resend.
-
-Thanks,
-
-William Breathitt Gray
-
---Xd2tMiRaS48NlvBR
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCaCUyQQAKCRC1SFbKvhIj
-K0SEAQCczNPjoor1o37cz8SqvsdN/7HtNNlaPrWLW1dpooqMnwEAgbin0MfIxTCj
-Kw1ZtOOoP37+0SshTS2OcPlXqohQYAY=
-=B/SX
------END PGP SIGNATURE-----
-
---Xd2tMiRaS48NlvBR--
+> hardware limit (the writeback maxlinewidth) to filter modes.
+>
+> Signed-off-by: Jessica Zhang <jessica.zhang@oss.qualcomm.com>
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c | 9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c
+> index 8ff496082902..0a198896f656 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_writeback.c
+> @@ -14,14 +14,7 @@ static int dpu_wb_conn_get_modes(struct drm_connector *connector)
+>         struct msm_drm_private *priv = dev->dev_private;
+>         struct dpu_kms *dpu_kms = to_dpu_kms(priv->kms);
+>
+> -       /*
+> -        * We should ideally be limiting the modes only to the maxlinewidth but
+> -        * on some chipsets this will allow even 4k modes to be added which will
+> -        * fail the per SSPP bandwidth checks. So, till we have dual-SSPP support
+> -        * and source split support added lets limit the modes based on max_mixer_width
+> -        * as 4K modes can then be supported.
+> -        */
+> -       return drm_add_modes_noedid(connector, dpu_kms->catalog->caps->max_mixer_width,
+> +       return drm_add_modes_noedid(connector, dpu_kms->catalog->wb->maxlinewidth,
+>                         dev->mode_config.max_height);
+>  }
+>
+>
+> --
+> 2.49.0
+>
