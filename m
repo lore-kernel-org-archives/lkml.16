@@ -1,84 +1,115 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889B364A98;
-	Thu, 15 May 2025 13:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782287262D;
+	Thu, 15 May 2025 13:38:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747316242; cv=none; b=h9+dwYnobRgFpTpJ+/aOmU1T7LCyh74bRPhw0xswrjd+kizhPv2sGZssdlP4QESY4WwMXIerh3S4mxbUjYsezPaxh2saKF5k7TEIjFxZg4CHD5D8sEojxOMkbP9mRejNmrvgO5U8efG3yI7ieReFEAXTJHLwA1nlX9QhDIZRnFg=
+	t=1747316297; cv=none; b=E97hPtpOfa6NXhvcVSwdsvxtV18JBrH7dUyjKhxIPG5o30JttUvL8o3Y2Ge21bvbF8pHWAKuXq4s6bJKiRm6LLDoiX6RQS0g1Xi/m9bdswoQNtKl7flHc55oVjsvE3FGg4qoqYjD/O7bRD/U6KF/HioCHAHFOELb4Or5+W+0ubk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747316242; c=relaxed/simple;
-	bh=tRYLw6tBTvAhc6J6URyjrQDPh6UpNCTh6BvndupisvQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eiNRzT/rS9ov4iuCfiBZsplWfExpnv3BJXYGMD/nkfSqxxvmO6iZvAzqUx2uDY6tcCe2TJGZLs9Y52SY1xtlOOzCCqwtI+XzonWnCm8dAloB4ENKKXYuyBA1BHI+4inq/ko/QJr4wsEygd3FJ99KouCTSLQh14QrPv+OtT3bnaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=p+83h6oP; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1747316297; c=relaxed/simple;
+	bh=PXKxDhViUIcxC3KUkZHCixiArZ3XlYY3kxB+rdl/gio=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=CiPxyqpbqK+85WkTZb51/EkXM2DnkUwKpEWRmo6v4zTEImoM6Bx9dsoDja46W5lX0jgT2CE9g6zRq6wv+M+ly1VHSHTJPoXgA5vbolY5ZRAes3h5o6yvTtZP5L9SPhwEtEj+RprGbr+60iEjjcuAmIgUBRu65foWVSmnOdrb5a4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YK/kYzYh; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="p+83h6oP"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4ZyrqB2szvz9st4;
-	Thu, 15 May 2025 15:37:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1747316230; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tRYLw6tBTvAhc6J6URyjrQDPh6UpNCTh6BvndupisvQ=;
-	b=p+83h6oP8n05gWvIrxLrvf/Vx7c7IO0T6BpuOE6OveQXll7sNsHd6uGiBmT9RNm29JeMz/
-	0G2Ozr5ZVmvT/Ad7/GjjtL5PiJwXQUrvYAH7yTr8ZKw4qiX6TpH+vWaJ6h1IhHlkZJybEZ
-	UHgmorSamGSBpRIaTX6ap6rJN/MM27pizkMryER1QiF+VW7ytKP0inDoXEyk7ID2Ga5emr
-	MmJyzwBvghYadWic137i59KnkWHbrvQswNDXHmesVkT/V8s+Y+eA1BLVgy3NlgFyNjHwqJ
-	qlkpn0ut3DtDWovLqVq5cmidkS4q1qTpvbcPm+d6ibbq+T3D1ERuYquiTQcQ8w==
-Message-ID: <3f1140397e628cfdf4156f02f5454f844003dc6d.camel@mailbox.org>
-Subject: Re: [PATCH 6/7] PCI: Remove unnecessary prototype from pci.h
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Philipp Stanner
-	 <phasta@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas <bhelgaas@google.com>, 
- Mark Brown <broonie@kernel.org>, David Lechner <dlechner@baylibre.com>,
- Zijun Hu <quic_zijuhu@quicinc.com>,  Yang Yingliang
- <yangyingliang@huawei.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-pci@vger.kernel.org
-Date: Thu, 15 May 2025 15:37:06 +0200
-In-Reply-To: <aCXl-U5Dsv3hdCWa@smile.fi.intel.com>
-References: <20250515124604.184313-2-phasta@kernel.org>
-	 <20250515124604.184313-8-phasta@kernel.org>
-	 <aCXl-U5Dsv3hdCWa@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YK/kYzYh"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7425bd5a83aso1072163b3a.0;
+        Thu, 15 May 2025 06:38:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747316296; x=1747921096; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qVf819sirg3kVreUfa/4iH86ct1h9QFKS6LDxRK2VpM=;
+        b=YK/kYzYhegEvbEmvOI692CA6hY6fZNbQqtg8f2Lr82gBDIGQkEMknOp2wY4oh170qi
+         q/t6HJqZXigxGECGmw6VZlK29WvrF4I7NjuOtKVWkP9JdgTtZCA4o2boVNASekrCDUsj
+         zBPbvdfcrCfuPJYxoAGn7tGQNNyIGAAzgMs0y1/ET/hzFRNQesfLRvx4a4z4KlJwIR0F
+         yLyqunme2pGEcT5CkJyV6rxTpJiMgvtaxFZNULxYmh2ceZEKgIpIgJduVbLcRmijAxq5
+         oGIa2tOUc++bXwKcTyja0RunwViY4EPJq5ZB1HbM6phCEtE0WmC6T1D12iUWeFe1VJQX
+         9j1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747316296; x=1747921096;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qVf819sirg3kVreUfa/4iH86ct1h9QFKS6LDxRK2VpM=;
+        b=epNqqVcQeB6er6Wvc8uGM1/FCns67vr6yi0qPuEgKML3eF0dOX8DRJbYECCIABZHJ6
+         cQv6uF/4NH5SoMKOkI09krrgjm6V/36VIQjcEk3mJMB+mCs+5XUinBEs8X/Y79c3KMgz
+         4xeqJ90H/SXtLjgoPdntLM2VQrw4FBPO1iguga78aLq5LQesZypIF4sqoBlWkGoHPaqu
+         Hf8Y8/saPK9CLHOdIzaqYldTCWNzv+GcyS5/GVC+xlXmqjOb7rR0uN3VQSUfNzfqKYBu
+         KfgiXlah6uoxbp0J0BdeOJd36rZHcOodA8JDzvwbC1S7y3x7h9xgliVW4wkBSkwjS+QN
+         POFg==
+X-Forwarded-Encrypted: i=1; AJvYcCVVjJKfXD6sy3ZAowj4qu1iNcc7YEuFfI4EZXm7wp1Nhxv5ZlAvTnPI1HaszUIbwHQkodElTYqE8wcnHQ==@vger.kernel.org, AJvYcCVzCH8LCUEd4G1HwVAAa8EVfvOBw3YQquKs4Li5Le2n/H5BqPkZqp6DjT8E+ZmPUvKJ3okyQWCEYlIsoSc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5IIWnpZQ9THZHZLmE14Tcjv64IsLPY5ZFANbWzi2RzwJ/ZF8s
+	NH7Hf/n3AfUhfKqilgYCnqlc3ZJs99ipyFCl4Ym0ZcIv0GYBq4X+
+X-Gm-Gg: ASbGncsYcbhBTsxdOdjbZOHAeszOJa9VkMv4s7fWM7apkEmTRkHWmvjkIRRiYcreExj
+	tyAQG5TA8q3cD1ISpXhMZ0eif1+r/eRgv36IEpykDsK+ZrkGkpsNwMu+A9Vb6iDE231xUOTfS0j
+	RZwshpDo5TZlu5deJA3q2cikX8TRzuxFMpqMlLqFlfXfs/9nsfi6GSL6CokP5eeJJW+JHsMJpdI
+	EnJ2SkSELaLuxy1NMMH0L5zx1djNaOQWTXtutdJq6R+O65sMKDRXFsXbNReZKa6sy8c0JykMUrq
+	mdvD00eSYm9gLjByiVtoj9FnNTqeNYDVrpltm+zH70BkZZ6B5v8=
+X-Google-Smtp-Source: AGHT+IHmq4AYLXRLdQqbBREfC/3/3V7ZOrM9bmoGqUjVhH9gyGLkXnYBF9r5Lq+r6xdwPiaWMnweUw==
+X-Received: by 2002:a05:6a20:1611:b0:215:dfd0:fd21 with SMTP id adf61e73a8af0-215ff191342mr12229403637.34.1747316295630;
+        Thu, 15 May 2025 06:38:15 -0700 (PDT)
+Received: from [127.0.0.1] ([103.56.52.49])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237a3dbfesm11552273b3a.138.2025.05.15.06.38.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 06:38:15 -0700 (PDT)
+Date: Thu, 15 May 2025 21:38:06 +0800
+From: Yu Kuai <yukuai1994@gmail.com>
+To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
+CC: xni@redhat.com, colyli@kernel.org, agk@redhat.com, snitzer@kernel.org,
+ mpatocka@redhat.com, song@kernel.org, linux-kernel@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
+ yangerkun@huawei.com, johnny.chenyi@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_RFC_md-6=2E16_v3_15/19=5D_md/md-llbitma?=
+ =?US-ASCII?Q?p=3A_implement_APIs_to_dirty_bits_and_clear_bits?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <20250514051747.GA24503@lst.de>
+References: <20250512051722.GA1667@lst.de> <0de7efeb-6d4a-2fa5-ed14-e2c0bec0257b@huaweicloud.com> <20250512132641.GC31781@lst.de> <20250512133048.GA32562@lst.de> <69dc5ab6-542d-dcc2-f4ec-0a6a8e49b937@huaweicloud.com> <03f64fc7-4e57-2f32-bffc-04836a9df790@huaweicloud.com> <20250513064803.GA1508@lst.de> <87a53ae0-c4d6-adff-8272-c49d63bf30db@huaweicloud.com> <20250513074304.GA2696@lst.de> <d5ae7af0-dd73-7d6b-f520-c25e411f8f06@huaweicloud.com> <20250514051747.GA24503@lst.de>
+Message-ID: <7B4FF58E-BCF5-4997-8006-CEC5A3EDEB85@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-ID: 5f02b5a74fc86c15c8d
-X-MBO-RS-META: 69d664s196o43ritmth8fyiyacshbjyn
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2025-05-15 at 16:02 +0300, Andy Shevchenko wrote:
-> On Thu, May 15, 2025 at 02:46:04PM +0200, Philipp Stanner wrote:
-> > pcim_intx() once was an internal PCI function, but since then has
-> > been
-> > published and is used by drivers, and, therefore, available in
-> > include/linux/pci.h. The function is not used within PCI anymore.
-> >=20
-> > Remove pcim_intx()'s prototype from drivers/pci/pci.h
->=20
-> Can this be moved up in the series? Or is there other dependencies?
-> I.o.w. this
-> looks like a leftover from something of the previous work.
->=20
+Hi
 
-That can be moved to anywhere, including a separate patch. It's an
-independent patch, a leftover from last year. But it's related to
-devres, because it was also added because of the problem with
-pcim_enable_device().
+=E4=BA=8E 2025=E5=B9=B45=E6=9C=8814=E6=97=A5 GMT+08:00 13:17:47=EF=BC=8CCh=
+ristoph Hellwig <hch@lst=2Ede> =E5=86=99=E9=81=93=EF=BC=9A
+>On Tue, May 13, 2025 at 05:32:13PM +0800, Yu Kuai wrote:
+>> I was thinking about record a stack dev depth in mddev to handle the
+>> weird case inside raid=2E Is there other stack device have the same
+>> problem? AFAIK, some dm targets like dm-crypt are using workqueue
+>> to handle all IO=2E
+>
+>I guess anything that might have to read in metadata to serve a
+>data I/O=2E  bcache, dm-snapshot and dm-thinkp would be candidates for
+>that, but I haven't checked the implementation=2E
+>
+>> I'm still interested because this can improve first write latency=2E
+>>
+>>>
+>>> So instead just write a comment documenting why you switch to a
+>>> different stack using the workqueue=2E
+>>
+>> Ok, I'll add comment if we keep using the workqueue=2E
+>
+>Maybe do that for getting the new bitmap code in ASAP and then
+>revisit the above separately?
+>
+>
 
-P.
+Sure, sorry that I am in a business travel suddenly=2E I will get back to
+ this ASAP I return=2E
+
+Thanks
+Kuai
