@@ -1,36 +1,40 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2BB170A26;
-	Thu, 15 May 2025 14:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DC6A1DED69;
+	Thu, 15 May 2025 14:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747318702; cv=none; b=oCpc5uq8X45KFRZjhuSVON95Glie5u86dwLhqnFwzrx6VQyszNEmO1bv0sjN0yBlYH0prYaIhJHCl0V1GO4aCxQ726QpO/nYSljdYXPEDFXNLmwbSuSzPrsBA8B07zIAzr3zMxVUsilI6Lcb3IKJ78czVJ9+HDePu+WfbqyRr38=
+	t=1747318729; cv=none; b=Rqq0nb3EjUEcvrGK3mKoUgIiOsRItUE4qrV/Oi2DdzGqFJ6fuaIkkdwVQgTlTrQR+60Vb/idYW5Ahuh1lsbe3wY1Fg1nTt/WgRZXtrPqCNZoqU2Z5GFDGN8IJtmsIaJeNJ5OGgq1VgScb5b1o3A6EPfX776yIEeUGGF3HGlpwYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747318702; c=relaxed/simple;
-	bh=C8h6LmLlmJ3uMh+AH6IRCULCPy29XRdKk0CG2VXp8wA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uMer10jYa+LMN1vSYWNFzjtf7Pym5qDD5NS2QnCpknL8UVL4MQ5+Kb3kIPAOBesOQ3TRFHiZ/SZu1zbwp8xEbbmubnMkBNH5LpsYyOLxtbsvzXUxwCZSWv6k/lMA2nF+pLd+1X5Q4BlAsCQgUe/T3Lkcc38qvn3b3tpcJz+ECzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-01 (Coremail) with SMTP id qwCowADni_yb9yVoS_LMFQ--.6807S2;
-	Thu, 15 May 2025 22:18:05 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
+	s=arc-20240116; t=1747318729; c=relaxed/simple;
+	bh=JNcndCMCg3DsXhurxCt49i2J12i7f5avcOBkiu526og=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ceEwwwGb23/S4usCX8aZnVaUFPcv9CMkMiTSTqzbYb4D8C3XyUrr0GcB4RHDnfPxRYdBpaDmFAt2N3xql6kn/BcuAdTOS57f/Mx6Hyl1+6H2HypANZEvGXmYSnelmkPh7Ns+IoTdZHkBdmV2mgzQkE0LPmDh9F9sYYKVUsjUugI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-CSE-ConnectionGUID: uEWTIOByQxqIHQVdoXLT+Q==
+X-CSE-MsgGUID: ZLX3n8YeT7GaacYoZyYqtA==
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 15 May 2025 23:18:38 +0900
+Received: from superbuilder.administration.lan (unknown [10.226.93.187])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 285B4401A460;
+	Thu, 15 May 2025 23:18:34 +0900 (JST)
+From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+To: thierry.bultel@linatsea.fr
+Cc: linux-renesas-soc@vger.kernel.org,
+	geert@linux-m68k.org,
+	paul.barker.ct@bp.renesas.com,
+	Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
 	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] drm: radeon: ci_dpm: Add error handling for ci_send_msg_to_smc_with_parameter()
-Date: Thu, 15 May 2025 22:17:40 +0800
-Message-ID: <20250515141740.1324-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	linux-serial@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v9 01/10] dt-bindings: serial: Added secondary clock for RZ/T2H RSCI
+Date: Thu, 15 May 2025 16:18:16 +0200
+Message-ID: <20250515141828.43444-2-thierry.bultel.yh@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250515141828.43444-1-thierry.bultel.yh@bp.renesas.com>
+References: <20250515141828.43444-1-thierry.bultel.yh@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,86 +42,71 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowADni_yb9yVoS_LMFQ--.6807S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cw1kKFW5uw4Utw4rJw4kCrg_yoW8KFW8pa
-	yxCFyYyrZ5AayrWwsFyw4UAryrAwsrXFWxJrsrKw43Z34ayFyrJF13uryayFW0yryvgFya
-	vrn2y3W8Zr4UCF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjfU52NtDUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCQ4DA2glvjTL+AAAsz
 
-The ci_enable_uvd_dpm() calls ci_send_msg_to_smc_with_parameter()
-but does not check the return value. This could lead to the execution
-with potentially invalid data. A proper implementation can be found
-in the ci_fan_ctrl_start_smc_fan_control().
+At boot, the default clock is the PCLKM core clock (synchronous
+clock, which is enabled by the bootloader).
+For different baudrates, the asynchronous clock input must be used.
+Clock selection is made by an internal register of RCSI.
 
-Add a check after calling ci_send_msg_to_smc_with_parameter(), return
--EINVAL if the sending fails.
+Also remove the unneeded serial0 alias from the dts example.
 
-Fixes: cc8dbbb4f62a ("drm/radeon: add dpm support for CI dGPUs (v2)")
-Cc: stable@vger.kernel.org # v3.12
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
 ---
- drivers/gpu/drm/radeon/ci_dpm.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+Changes v8->v9:
+ - typo in description
+ - named clocks 'operational' and 'bus', and added optional 'sck' clock
+ - uses value of 2nd core clock in example to break the dependency on cpg patch
+---
+ .../bindings/serial/renesas,rsci.yaml         | 21 +++++++++++--------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/ci_dpm.c b/drivers/gpu/drm/radeon/ci_dpm.c
-index abe9d65cc460..3877863c6893 100644
---- a/drivers/gpu/drm/radeon/ci_dpm.c
-+++ b/drivers/gpu/drm/radeon/ci_dpm.c
-@@ -3889,6 +3889,7 @@ static int ci_enable_uvd_dpm(struct radeon_device *rdev, bool enable)
- 	struct ci_power_info *pi = ci_get_pi(rdev);
- 	const struct radeon_clock_and_voltage_limits *max_limits;
- 	int i;
-+	PPSMC_Result result;
+diff --git a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+index ea879db5f485..e966d2b5f16d 100644
+--- a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
++++ b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+@@ -35,10 +35,17 @@ properties:
+       - const: tei
  
- 	if (rdev->pm.dpm.ac_power)
- 		max_limits = &rdev->pm.dpm.dyn_state.max_clock_voltage_on_ac;
-@@ -3907,24 +3908,30 @@ static int ci_enable_uvd_dpm(struct radeon_device *rdev, bool enable)
- 			}
- 		}
+   clocks:
+-    maxItems: 1
++    minItems: 2
++    maxItems: 3
  
--		ci_send_msg_to_smc_with_parameter(rdev,
-+		result = ci_send_msg_to_smc_with_parameter(rdev,
- 						  PPSMC_MSG_UVDDPM_SetEnabledMask,
- 						  pi->dpm_level_enable_mask.uvd_dpm_enable_mask);
-+		if (result != PPSMC_Result_OK)
-+			return -EINVAL;
+   clock-names:
+-    const: fck # UART functional clock
++    minItems: 2
++    maxItems: 3
++    items:
++      enum:
++        - operation
++        - bus
++        - sck # optional external clock input
  
- 		if (pi->last_mclk_dpm_enable_mask & 0x1) {
- 			pi->uvd_enabled = true;
- 			pi->dpm_level_enable_mask.mclk_dpm_enable_mask &= 0xFFFFFFFE;
--			ci_send_msg_to_smc_with_parameter(rdev,
-+			result = ci_send_msg_to_smc_with_parameter(rdev,
- 							  PPSMC_MSG_MCLKDPM_SetEnabledMask,
- 							  pi->dpm_level_enable_mask.mclk_dpm_enable_mask);
-+			if (result != PPSMC_Result_OK)
-+				return -EINVAL;
- 		}
- 	} else {
- 		if (pi->last_mclk_dpm_enable_mask & 0x1) {
- 			pi->uvd_enabled = false;
- 			pi->dpm_level_enable_mask.mclk_dpm_enable_mask |= 1;
--			ci_send_msg_to_smc_with_parameter(rdev,
-+			result = ci_send_msg_to_smc_with_parameter(rdev,
- 							  PPSMC_MSG_MCLKDPM_SetEnabledMask,
- 							  pi->dpm_level_enable_mask.mclk_dpm_enable_mask);
-+			if (result != PPSMC_Result_OK)
-+				return -EINVAL;
- 		}
- 	}
+   power-domains:
+     maxItems: 1
+@@ -58,11 +65,7 @@ unevaluatedProperties: false
+ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+-    #include <dt-bindings/clock/renesas-cpg-mssr.h>
+-
+-    aliases {
+-        serial0 = &sci0;
+-    };
++    #include <dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h>
  
+     sci0: serial@80005000 {
+         compatible = "renesas,r9a09g077-rsci";
+@@ -72,7 +75,7 @@ examples:
+                      <GIC_SPI 592 IRQ_TYPE_EDGE_RISING>,
+                      <GIC_SPI 593 IRQ_TYPE_LEVEL_HIGH>;
+         interrupt-names = "eri", "rxi", "txi", "tei";
+-        clocks = <&cpg CPG_MOD 108>;
+-        clock-names = "fck";
++        clocks = <&cpg CPG_MOD 8>, <&cpg CPG_CORE 13>;
++        clock-names = "operation", "bus";
+         power-domains = <&cpg>;
+     };
 -- 
-2.42.0.windows.2
+2.43.0
 
