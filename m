@@ -1,120 +1,147 @@
-Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AEB01EBFE0;
-	Thu, 15 May 2025 14:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D166B1DDA0C
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747319026; cv=none; b=XxmSUT9W3BlAqfo6c2HLZGLxFdqFlWUge/NRvpRadYEJJ9tVfZ5zFvR+od+ds0G8vgU1dqXmY2x+ftybzQ1ruE3UCf0oPuvEw86uSIy1rkpGsc56wd8ZXdkLjNDLch45BXmsvTOHPqcE/VizlybwTcgNO2lIH3Pz+2qq2d/0m6U=
+	t=1747319048; cv=none; b=TtZx0TxpdbrYAnLIXnWZ03eJ99w2Hq1YyqNlQ0CFhclL5KIFzfpC9FUZLQQfbGX3uOpzmTCh5AcYmou/0uyIKGeki86vmUju1DrVKxm79XCBp/viSo7CTY/TsLJ1frfiWse4j0NXNN03iEgsWOHlxDuTPL9eBVApBw3Ujrdw5nc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747319026; c=relaxed/simple;
-	bh=OVYj5OrIfo0hCfybiV1HY1UX5AWBWt1M6sqG61wAFTY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X9iUH2D5TzoFiVyhDIBbWYDJAbd8mQcRAqQTg0QfRC7BHemay3QRnOvUxFWQT8YWLtgacHAFB8foVqtxsf8iji4MPJ5untqh0ZgESIYdFVOC0F2vnPnO7w2a6tgDpztnWhnpPbCH1FMgCFEuhSHYs40A3AvRVC6I14mFP4uuyTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X4nsZVDU; arc=none smtp.client-ip=209.85.208.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747319048; c=relaxed/simple;
+	bh=VZtLi41nrdrlH0WLSGh9zP7FBrQwt7KlH8yLUw1Qss4=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I9B9adJpIV718EjSon57vOkZZ8o/5X6zvf44/qFfAhvCuZx1dU9ETkxD9QmBFbo5tNdV1lTx0+8D91mpreOCpbRNrNKdilf9iJHv2wNjDJWGa9sYdzpHyNo7fPlrP5jw1D2XYmIolaw9BsUsOWaIy8g0QPrVJlIautNtLuq7sFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=VS+BT1qk; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X4nsZVDU"
-Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-5fbda5a8561so1483064a12.2;
-        Thu, 15 May 2025 07:23:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747319023; x=1747923823; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LT683tMosy0oNpKUwK8IDmqDNbDuA00iOvAYnalXVsU=;
-        b=X4nsZVDUqDNSPvwzd2ZBnew7VT9vN9KECsC3P9bkM0CynS/aEyl2wRvY99DqKbo0hB
-         GybvxLvYd5I0F3mzg9tnau2r9496jLRFIuoOXbArBZH4u5RaQ+8DmrLOF7D8Yl27GFBC
-         W5a0+SpkwanBkoBo1DNM0S2ajPJsYoECzGJdp4rajy+ggvEEQJEZeMuwSQPr59ziw7+P
-         1NXGzaYYQjmZYT25TGPh736F4nd6tp5FyyeaJ2eAOBocgP06ZD63hX3BMP58gh6cNRdd
-         VV6lVadUHykEIoNOcRDJawZ1gAAQSX44Zqgcitd0OY5Xc2roPkME6g9ZXaHQeYFeu+Mn
-         Z0LA==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="VS+BT1qk"
+Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com [209.85.161.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id AD7473F51A
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1747319044;
+	bh=xlwQ+aA+muSzpaYiE0SvHYS1AnyEjU4h0g/olbACMZ4=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=VS+BT1qklvjmbZoYginr9JGhwH1v/JeFE+etjPy+OxXOPZP3To8fi7MOaCIkt6iEp
+	 tKqEH1COkpFtt0lzGVEmp873IbAsUQN9ISgNZS6J1r6EerFg7kW1LqdVxVfwXiTK3R
+	 lD2mlK00A2jKSkdOVh8H82wVIwYq51pxP6CkyVVxXxk7CKF9VYsEqI/QntkUDu5TZv
+	 obmpTFtTIfllYui+qw4ZE3bC0QXaNQuqERd+cSIxLvGcNG4GXQnXgSyVI9PJG2fq2p
+	 pa7iP6kXjNmjDiFeYFVRpPhjwKboqIIrxZ9YS2PYqWI4Ne7tLdzd4f9EcTfL3OSwkm
+	 /B8Frl8EUs2dw==
+Received: by mail-oo1-f69.google.com with SMTP id 006d021491bc7-6064d0103f8so1822086eaf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 07:24:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747319023; x=1747923823;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LT683tMosy0oNpKUwK8IDmqDNbDuA00iOvAYnalXVsU=;
-        b=lsoDmEVGLIUHiHyC0aQHgoKsVNxaRlwiwt5ZxBRQd1UlXtoPDbOqZedTHbN8od2K+a
-         aVHkdWqjQoI+Wv5NSoMuXLHMPGJGp/ffacz4DsSwr+jIfyVC4Xe8WV4l1cNFrFxli1dJ
-         f+8fEmj8iH021eZnYNSkH4kc+MWYHAUVsVPurwMm9sPIiel5Dh8GSVsehcZ3fkzUyyb6
-         +qDLW3RdcHU+OnZUVXIbSzfRqkOx5ilDVh0UPfIcAURZpmb72aVcbn0PsDm0CCiKXiXR
-         lxFKLxvRoBePaVzviCduBBSH/UqKBBW4NrQiuRcaQCRqwS9tmvjOa8d+GFnSegX9Oqr2
-         jTOA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCrB7zH7uts35qnoDLeeWuy2LUXRjxrNiuNH696OGhYa02swGnaa6hpP7NqVnXIgjLjEiIub1HgOoU+hdA@vger.kernel.org, AJvYcCURfcoSyoW4pr489iz37nuN230GAazNUUXpfkN4fc10VxA0SgXj6pgi/iGYRTCdcemkGvZTMxF8hLH5ZRE=@vger.kernel.org, AJvYcCWI3Ex7j0tX/Ma3SKnkeRjnQtHNcSGn+sR7osXCSPOUcArz+D7rXkbtIZygdrN/4Re4vfMO6sm+csms@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIzkuwPRRC6NrdfirEhgpyZm0GudNBvc91j2ndaeC8oAkBk7dl
-	P8z7L1IPljxu3tdPAGYAn/MraTG0RU5FnbIr82Vegcbezb7J7A6xWgVkFAlFRudNRIU1QBadQ+y
-	o/y+1wnXL89faF3S5rr1CS6cN4fM=
-X-Gm-Gg: ASbGncvKdcyRlQe33Ia1NZxgAqy77dDESh/+XxJdxUxTpynB0r/6Lf09bpfIdgzeqPf
-	AwJsB8pURz2fSy7ZLcsPPmwM/rFrLtUo37w1l8vOk2KlpuaUXmx1PziMU1s6eiQGezYyIruja1r
-	8qvxyWZbFLJr3E4todtn6fWtj6bgFUcuhSCyA=
-X-Google-Smtp-Source: AGHT+IFyEAJq81bagI9zZEfc+JJTkgD9y2OwydxnaIK+5su8U5juDUOSuSgm09M2wmLVuHC+zB8LE0qSsQdS2C5gsxI=
-X-Received: by 2002:a05:6402:1e94:b0:5ee:486:9d4b with SMTP id
- 4fb4d7f45d1cf-5ff988def34mr5826953a12.34.1747319022496; Thu, 15 May 2025
- 07:23:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747319042; x=1747923842;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xlwQ+aA+muSzpaYiE0SvHYS1AnyEjU4h0g/olbACMZ4=;
+        b=ZNsbdbGQR7KkxlAfuUeod6KWqTnYOD6nDFLnft+WE5qaA9/n+gt7lw+NJJ/sN5+rfL
+         +48dCYWyNxINSdbkcvKGgyG/uxojoObfO8vEZp+A3zZ6y0Np9QeiRS1+MZkeDecHU05s
+         QfqeimWbfoN52chF2o8ytrbW0eulkpBuNVoEQE0wcRs3jqYYOk1GbuYmyWz9Hq8bizC1
+         GDOE6gkHbgGvElr+kReSdvZ/RIyLF8CNhznMzuozmZ2gLUZUr5xV0PFau5QboJFY2EwU
+         sZw9E7OB06BbKA0CPqwkLW/6ft3DNnw3qWjgs6KwyKmFB3EJ6cRSFBeCZ6xHp3UKNgB4
+         yNfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUHnuMGTVokNDgAXctmScbv2tmZSd59PO2XxBUJdXANa8amIcIlXrReoWwPhJUO0zMW4L/A/ym3WMLWg7o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6Dg/qPcMWWebYgRrEvgT6OWe9NbByTxK0xLJzH2wDJWkTqEGZ
+	nJtUIDkJA+3Po+cXINK8BheCD4VZZcWPTYKM/wZprs6Rr0FVI9WvSRF717tRvsWntrntl7IL4T5
+	hbFlR83Bf8+ggodKw3F9M4fMMj9bNp1dDJ0TSCq2UvcXRWD1l8iFzeieJ2HzMjo+/vo6oE08K73
+	ydtk7bN57QwU5gQJSyc3lMUumztPpTJ1PbENM/N9iaSaLWki85kyOk
+X-Gm-Gg: ASbGncsU1gN0g5Tms1F0+ILqFXVIroA7MOmvNVo5lBvNDT0SjYUWFSPw3lVHcBNQEex
+	6yFw5BS2L2Tt37+mBfB0qXFnKmMq3EbR/+Y3ZvpzzDDWKPyoZeuIXtv9+jUN7nNnsogmDxg==
+X-Received: by 2002:a05:6870:e994:b0:2d6:246:dbe0 with SMTP id 586e51a60fabf-2e32b05a78bmr4002226fac.1.1747319042101;
+        Thu, 15 May 2025 07:24:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH68dbr1tbLB515+jsbfah2xc7Zu3SzKVdWkjm3J29LlL6eUYcwXlX8tIrhIm/6dFYUiLHb9w4URfADfddYLgE=
+X-Received: by 2002:a05:6870:e994:b0:2d6:246:dbe0 with SMTP id
+ 586e51a60fabf-2e32b05a78bmr4002200fac.1.1747319041629; Thu, 15 May 2025
+ 07:24:01 -0700 (PDT)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 15 May 2025 07:24:00 -0700
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 15 May 2025 07:24:00 -0700
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <20250409-pulsate-buccaneer-ae996b6ff98e@spud>
+References: <20250324020958.2235802-1-sandie.cao@deepcomputing.io> <20250409-pulsate-buccaneer-ae996b6ff98e@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250514182015.163117-1-siddarthsgml@gmail.com> <9c69fb88-d4e1-4567-93ec-ed303b9ba01a@ieee.org>
-In-Reply-To: <9c69fb88-d4e1-4567-93ec-ed303b9ba01a@ieee.org>
-From: Siddarth Gundu <siddarthsgml@gmail.com>
-Date: Thu, 15 May 2025 19:53:31 +0530
-X-Gm-Features: AX0GCFu78zQ8IorGVkwNh6gSrwg83AW3tOwNEzVPhP1R15BtgpzFD40XhY_AJwg
-Message-ID: <CAKWSiC6avoZNd+3qYMbmaT-ZM4=YpRb8N6frMA5+jbHhd4DyNA@mail.gmail.com>
-Subject: Re: [PATCH] rbd: replace strcpy() with strscpy()
-To: Alex Elder <elder@ieee.org>
-Cc: idryomov@gmail.com, dongsheng.yang@easystack.cn, axboe@kernel.dk, 
-	ceph-devel@vger.kernel.org, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+Date: Thu, 15 May 2025 07:24:00 -0700
+X-Gm-Features: AX0GCFsniAbL8_iKhnPgXtKsmiLymV-zKuO-sYpzDWWvy82kMaCJo5ZnWZlRl1A
+Message-ID: <CAJM55Z8J49VBr0WWcwBJvDnxnfX2UjGcC5egqjNu-oqqAjHcnA@mail.gmail.com>
+Subject: Re: [PATCH v2 RESEND] riscv: dts: starfive: fml13v01: enable USB 3.0 port
+To: Conor Dooley <conor@kernel.org>, Sandie Cao <sandie.cao@deepcomputing.io>
+Cc: Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Maud Spierings <maud_spierings@hotmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2025 at 12:22=E2=80=AFAM Alex Elder <elder@ieee.org> wrote:
+Conor Dooley wrote:
+> On Mon, Mar 24, 2025 at 10:09:58AM +0800, Sandie Cao wrote:
+> > Add usb_cdns3 and usb0_pins configuration to support super speed USB
+> > device on the FML13V01 board.
+> >
+> > Signed-off-by: Sandie Cao <sandie.cao@deepcomputing.io>
+> > Tested-by: Maud Spierings <maud_spierings@hotmail.com>
 >
-> On 5/14/25 1:20 PM, Siddarth Gundu wrote:
-> > strcpy() is deprecated; use strscpy() instead.
-> >
-> > Both the destination and source buffer are of fixed length
-> > so strscpy with 2-arguments is used.
-> >
-> > Link: https://github.com/KSPP/linux/issues/88
-> > Signed-off-by: Siddarth Gundu <siddarthsgml@gmail.com>
+> Emil, can I grab this one?
+
+Yes, please do.
+
+Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+
+>
 > > ---
-> >   drivers/block/rbd.c | 3 ++-
-> >   1 file changed, 2 insertions(+), 1 deletion(-)
 > >
-> > diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-> > index faafd7ff43d6..92b38972db1c 100644
-> > --- a/drivers/block/rbd.c
-> > +++ b/drivers/block/rbd.c
-> > @@ -39,6 +39,7 @@
+> > Changes in v2:
+> > - Remove space to pass checkpatch.pl.
+> > - Add usb0_pins and pass test on board.
 > >
-> >   #include <linux/kernel.h>
-> >   #include <linux/device.h>
-> > +#include <linux/string.h>
-> >   #include <linux/module.h>
-> >   #include <linux/blk-mq.h>
-> >   #include <linux/fs.h>
-> > @@ -3654,7 +3655,7 @@ static void __rbd_lock(struct rbd_device *rbd_dev=
-, const char *cookie)
->
-> Could the cookie argument possibly be defined with
-> its size?  I.e.:
->    __rbd_lock(struct rbd_device *rbd_dev, const char cookie[32])
->
-> I see all the callers pass an array that's 32 characters,
-> but the function argument doesn't guarantee that.
->
-> You could also abstract the cookie with a typedef and
-> operations on it.
-
-I see, I will send a v2 patch soon creating a typedef
-local to rbd.c Thanks a lot for the review.
-
---
-With Gratitude
-Siddarth
+> >  .../jh7110-deepcomputing-fml13v01.dts         | 19 +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> >
+> > diff --git a/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts b/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts
+> > index 8d9ce8b69a71..f2857d021d68 100644
+> > --- a/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts
+> > +++ b/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts
+> > @@ -43,9 +43,28 @@ GPOEN_DISABLE,
+> >  			slew-rate = <0>;
+> >  		};
+> >  	};
+> > +
+> > +	usb0_pins: usb0-0 {
+> > +		vbus-pins {
+> > +			pinmux = <GPIOMUX(25,  GPOUT_SYS_USB_DRIVE_VBUS,
+> > +					       GPOEN_ENABLE,
+> > +					       GPI_NONE)>;
+> > +			bias-disable;
+> > +			input-disable;
+> > +			input-schmitt-disable;
+> > +			slew-rate = <0>;
+> > +		};
+> > +	};
+> >  };
+> >
+> >  &usb0 {
+> >  	dr_mode = "host";
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&usb0_pins>;
+> >  	status = "okay";
+> >  };
+> > +
+> > +&usb_cdns3 {
+> > +	phys = <&usbphy0>, <&pciephy0>;
+> > +	phy-names = "cdns3,usb2-phy", "cdns3,usb3-phy";
+> > +};
+> >
+> > base-commit: 38818f7c9c179351334b1faffc4d40bd28cc9c72
+> > --
+> > 2.34.1
