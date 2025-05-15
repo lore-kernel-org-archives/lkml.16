@@ -1,284 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0471361;
-	Thu, 15 May 2025 03:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8911361;
+	Thu, 15 May 2025 03:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747280745; cv=none; b=BrCSrkvzIJkeHjolFJN726lIUQuO+Y+oHtwdXhxI7GbnPa7x2DKXnXgElV6Qo5IeuWTTry4kLX3oVsOb938EB7bALw/KeNq6yF29gSQu6yRTx7W+tZJZtIehs4NsYC3NMsSC5/evGPvJwagvazqHJan//bEEDcKuEvwOFOERxy0=
+	t=1747280858; cv=none; b=BH3aB1/CZLkK2bi8j07Qy30XLdCOtmRMJLk1HSzvE91pBcPy0tjTKq09SRX6Y2NLGOHyRI6+Qvj13ZBLQJ+0SozaWLozbQABHgzctYv9UFqlVU+JlLklIllp+dk1+DNnADr4YYZZG9+Y+JwP+oT3XSOzN7YIp2zTBHluDVMFHGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747280745; c=relaxed/simple;
-	bh=tGr307HCw1T+7zsfEplVXFrFlJlzWpsW+UUf+2EEZuE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dawcT0PoGxxI3RYZR7vRzYqj/OVG1AjZ5CLG1omg6MJEV90XrfAKhd8RtG3I2mks9RqIPdsHyj3Y//nqx3UD/iQXyie1QB1+sHusXkThnSAhwWtpqHbPA1qHdlChDSiRTiJR42JrAgcoPyhsodJJX20hEZAkxDJ+oldKDVclaMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j7/YF4ns; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747280858; c=relaxed/simple;
+	bh=jusEkXQPdT+EmYOtbUapz0vfxgv/rJOyiAD+Rz2I7p4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rk4bH+bvJ/dPlT4tjTI2AhOad8J15WVEtaNQSHocKlITBoXiML2SMmQRqC1KY6FJ51nQJygF2i5MeGj6FhuvM8t4YChrXFw84a8nB6j/MqRzZwkL5IvPN0zOnQLerV3+Jg5fHiyPJIwNa8fNo2B8VHpxmpaOiBZNrTBxLdYVrBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZW0JM7Wn; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j7/YF4ns"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747280744; x=1778816744;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=tGr307HCw1T+7zsfEplVXFrFlJlzWpsW+UUf+2EEZuE=;
-  b=j7/YF4nsYgkDrKzdOECNfIRraJDpOx1AcPjm5meVpT/KLWTqxwshqiq8
-   mrfEmLK/PafBSBPpiSfep6yx4wxNcGWqhBL7a9LDPKnlIwtUJaBasj39l
-   fAUlPUDhOORlako81SEnXTSBLHTNYhEP2k+mo8PtKYgX3E8tjncDtr+9F
-   t3xkoJrEuOMhSDSefyjUkwww3MU+Mz9We02JBQ2G1r2GMOho0MFbqyokv
-   wk3zV7iC5CAc+X5X6U9vT6+LKkZAtOShxEl/v/bH5vsYuwQqEU5cwAbAf
-   yF2M+b7Bax00MqaNdUwEQNJmNG3teSJftPT/D2ESu8K8UiEwByJW3BuKY
-   w==;
-X-CSE-ConnectionGUID: QwzhmUINTraTcypjHi5KKQ==
-X-CSE-MsgGUID: IYTjXIzwQNiXNkoDff/cNQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="66606431"
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="66606431"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 20:45:42 -0700
-X-CSE-ConnectionGUID: xMo36eKQQ32U3Z83uPI5/Q==
-X-CSE-MsgGUID: JyCMxJ5xRFqaIG/rFzkziw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="143339351"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 20:45:35 -0700
-Message-ID: <d585c449-19f0-4a07-9223-82d892f7d3e0@linux.intel.com>
-Date: Thu, 15 May 2025 11:45:32 +0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZW0JM7Wn"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EKPAuj013086;
+	Thu, 15 May 2025 03:47:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=zGTC0pl80cZTRh+KrVwQmdum
+	JQlUqqo0pnHsL1UmezI=; b=ZW0JM7Wnr+AfhIkQ6S1RyA3LKAoI6FRjwkPhf3wH
+	HBFyvz8gxywzhYX208+3o6xZUhgm7VIxcJXR8eTxiecJs0ZyEGqC/48mHel+4VWI
+	Szi3Si0pG9M4M12nPX1nSEW81epCwCNOZG8oxjHUSPvBit5bne6kZqHN1+Q4M4qS
+	JsgjrIHVpoK25BydioheTjM3Q+KJxO90LBfhNsEFAIsX0IDsHqNyzZbG4cHio7oP
+	1gbqEe5+NvGhMbUOeADWjFt6ttUDwCk2ylQ9uYYWCjfmi+A4EAOruKdwdoQ8R/Ng
+	35PbWXc7ylmkW32czePTuBbIWcgdTWNccy9LPdHr4Eu7gQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcmmv4r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 May 2025 03:47:19 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54F3lIIg000483
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 May 2025 03:47:18 GMT
+Received: from hu-mdtipton-lv.qualcomm.com (10.49.16.6) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 14 May 2025 20:47:18 -0700
+Date: Wed, 14 May 2025 20:47:16 -0700
+From: Mike Tipton <quic_mdtipton@quicinc.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+CC: Cristian Marussi <cristian.marussi@arm.com>,
+        "Rafael J . Wysocki"
+	<rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>, <arm-scmi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Peng Fan
+	<peng.fan@oss.nxp.com>,
+        Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v3] cpufreq: scmi: Skip SCMI devices that aren't used by
+ the CPUs
+Message-ID: <aCVjxJB6dUzIAyPJ@hu-mdtipton-lv.qualcomm.com>
+References: <20250428144728.871404-1-quic_mdtipton@quicinc.com>
+ <aBtLMYqcnwacGJuy@pluto>
+ <20250507-analytic-practical-carp-5cddaf@sudeepholla>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 21/38] KVM: x86/pmu/vmx: Save/load guest
- IA32_PERF_GLOBAL_CTRL with vm_exit/entry_ctrl
-To: Sean Christopherson <seanjc@google.com>,
- Mingwei Zhang <mizhang@google.com>
-Cc: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
- Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Yongwei Ma <yongwei.ma@intel.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
- Eranian Stephane <eranian@google.com>, Shukla Manali
- <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
-References: <20250324173121.1275209-1-mizhang@google.com>
- <20250324173121.1275209-22-mizhang@google.com>
- <4d55c919-92ab-4bfe-a8c2-c0a756546f7c@intel.com>
- <CAL715WLfr5k=Rz0cQ08xS=eHEyRn83PBTiqQ5H7iX4qH=jiS8A@mail.gmail.com>
- <aCU2YEpU0dOk7RTk@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aCU2YEpU0dOk7RTk@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250507-analytic-practical-carp-5cddaf@sudeepholla>
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDAzNCBTYWx0ZWRfXzGvfqREIeNlu
+ mK6PGnMZr0Z3NEH+vaH9JvW+HwiRH1nF5lnM4DuOSxGqcVLb07N1qD0AaDACMjg18rUGUa/VEeY
+ S7ldd1wxFSZ2rmHAYKaRn9jwD7W2ERYr5xTH/iL5VFWrP/e12oxkXSa4zZj1kX5NStmlVpS3h7U
+ 4cn+1c0z0C8XkQeNHOfTAPANWIOcP/MmE0ORIMdNB452CtjyOk5kADIsrlp0wHemX6gGPSODK+b
+ eO1LordZDsYUl0HQJlhFmXavKtP1I3bXescCjbuLf+jARaLqdCYIy7E5QXMSVw/KW8tmWr62Jb5
+ RmDYsB7Fw+a6VFnQu0aL1XTNgvsWbulChQjTdpyMKaZyzuLK10wLYdOtuLW2RONpT0rO9O7AHhi
+ /jyn97wi1tSxi/XE/kOW9w73p0Gm6OzaenUSomuMtxtoDC/xKf0EEaJq6ETAbBCMT/e6n2xZ
+X-Authority-Analysis: v=2.4 cv=G5scE8k5 c=1 sm=1 tr=0 ts=682563c7 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=3H110R4YSZwA:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=7CQSdrXTAAAA:8
+ a=Ml6eQ6jI9tVgauyEpOUA:9 a=CjuIK1q_8ugA:10 a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-GUID: 5PJ48GxnBVuJhvW7hiJVMppIztQxFO7i
+X-Proofpoint-ORIG-GUID: 5PJ48GxnBVuJhvW7hiJVMppIztQxFO7i
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-15_01,2025-05-14_03,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 mlxlogscore=717 clxscore=1015 phishscore=0 bulkscore=0
+ suspectscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0
+ malwarescore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505150034
 
+On Wed, May 07, 2025 at 02:12:36PM +0100, Sudeep Holla wrote:
+> On Wed, May 07, 2025 at 12:59:45PM +0100, Cristian Marussi wrote:
+> > On Mon, Apr 28, 2025 at 07:47:28AM -0700, Mike Tipton wrote:
+> > > +static bool scmi_dev_used_by_cpus(struct device *scmi_dev)
+> > > +{
+> > > +	struct device_node *scmi_np = dev_of_node(scmi_dev);
+> > > +	struct device_node *np;
+> > > +	struct device *cpu_dev;
+> > > +	int cpu, idx;
+> > > +
+> > > +	if (!scmi_np)
+> > > +		return false;
+> > > +
+> > > +	for_each_possible_cpu(cpu) {
+> > > +		cpu_dev = get_cpu_device(cpu);
+> > > +		if (!cpu_dev)
+> > > +			continue;
+> > > +
+> > > +		np = dev_of_node(cpu_dev);
+> > > +
+> > > +		if (of_parse_phandle(np, "clocks", 0) == scmi_np)
+> > 
+> > Shouldn't this, on Success, be released by an of_node_put() (or, BETTER,
+> > by some OF-related cleanup.h magic...)
+> > 
+> 
+> Good catch, I missed this.
+> 
+> With the above issue fixed, you can add and post new version:
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
 
-On 5/15/2025 8:33 AM, Sean Christopherson wrote:
-> On Wed, Mar 26, 2025, Mingwei Zhang wrote:
->> On Wed, Mar 26, 2025 at 9:51 AM Chen, Zide <zide.chen@intel.com> wrote:
->>>> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
->>>> index 6ad71752be4b..4e8cefcce7ab 100644
->>>> --- a/arch/x86/kvm/pmu.c
->>>> +++ b/arch/x86/kvm/pmu.c
->>>> @@ -646,6 +646,30 @@ void kvm_pmu_deliver_pmi(struct kvm_vcpu *vcpu)
->>>>       }
->>>>  }
->>>>
->>>> +static void kvm_pmu_sync_global_ctrl_from_vmcs(struct kvm_vcpu *vcpu)
->>>> +{
->>>> +     struct msr_data msr_info = { .index = MSR_CORE_PERF_GLOBAL_CTRL };
->>>> +
->>>> +     if (!kvm_mediated_pmu_enabled(vcpu))
->>>> +             return;
->>>> +
->>>> +     /* Sync pmu->global_ctrl from GUEST_IA32_PERF_GLOBAL_CTRL. */
->>>> +     kvm_pmu_call(get_msr)(vcpu, &msr_info);
->>>> +}
->>>> +
->>>> +static void kvm_pmu_sync_global_ctrl_to_vmcs(struct kvm_vcpu *vcpu, u64 global_ctrl)
->>>> +{
->>>> +     struct msr_data msr_info = {
->>>> +             .index = MSR_CORE_PERF_GLOBAL_CTRL,
->>>> +             .data = global_ctrl };
->>>> +
->>>> +     if (!kvm_mediated_pmu_enabled(vcpu))
->>>> +             return;
->>>> +
->>>> +     /* Sync pmu->global_ctrl to GUEST_IA32_PERF_GLOBAL_CTRL. */
->>>> +     kvm_pmu_call(set_msr)(vcpu, &msr_info);
-> Eh, just add a dedicated kvm_pmu_ops hook.  Feeding this through set_msr() avoids
-> adding another hook, but makes the code hard to follow and requires the above
-> ugly boilerplate.
+Thanks Cristian / Sudeep.
 
-Sure. I originally thought if it's worthy to add a new kvm_pmu_ops hook
-since only Intel platforms need it.
+The cleanup.h __free() logic gets a bit cumbersome here, especially with
+two struct *device_node to free in the same scope. And since there isn't
+any complicated cleanup logic to unwind, then I'll just go with the
+direct calls to of_node_put().
 
+Also note we aren't calling of_node_put() in scmi_cpu_domain_id(),
+either. I can fix that in a follow up patch.
 
->
->>>> +}
->>>> +
->>>>  bool kvm_pmu_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
->>>>  {
->>>>       switch (msr) {
->>>> @@ -680,7 +704,6 @@ int kvm_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>>>               msr_info->data = pmu->global_status;
->>>>               break;
->>>>       case MSR_AMD64_PERF_CNTR_GLOBAL_CTL:
->>>> -     case MSR_CORE_PERF_GLOBAL_CTRL:
->>>>               msr_info->data = pmu->global_ctrl;
->>>>               break;
->>>>       case MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR:
->>>> @@ -731,6 +754,9 @@ int kvm_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>>
->>> pmu->global_ctrl doesn't always have the up-to-date guest value, need to
->>> sync from vmcs/vmbc before comparing it against 'data'.
->>>
->>> +               kvm_pmu_sync_global_ctrl_from_vmcs(vcpu);
->>>                 if (pmu->global_ctrl != data) {
->> Good catch. Thanks!
->>
->> This is why I really prefer just unconditionally syncing the global
->> ctrl from VMCS to pmu->global_ctrl and vice versa.
->>
->> We might get into similar problems as well in the future.
-> The problem isn't conditional synchronization, it's that y'all reinvented the
-> wheel, poorly.  This is a solved problem via EXREG and wrappers.
->
-> That said, I went through the exercise of adding a PERF_GLOBAL_CTRL EXREG and
-> associated wrappers, and didn't love the result.  Host writes should be rare, so
-> the dirty tracking is overkill.  For reads, the cost of VMREAD is lower than
-> VMWRITE (doesn't trigger consistency check re-evaluation on VM-Enter), and is
-> dwarfed by the cost of switching all other PMU state.
->
-> So I think for the initial implementation, it makes sense to propagated writes
-> to the VMCS on demand, but do VMREAD after VM-Exit (if VM-Enter was successful).
-> We can always revisit the optimization if/when we optimize the PMU world switches,
-> e.g. to defer them if there are no active host events.
-
-Sure.
-
-
->
->>>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
->>>> index 8a7af02d466e..ecf72394684d 100644
->>>> --- a/arch/x86/kvm/vmx/nested.c
->>>> +++ b/arch/x86/kvm/vmx/nested.c
->>>> @@ -7004,7 +7004,8 @@ static void nested_vmx_setup_exit_ctls(struct vmcs_config *vmcs_conf,
->>>>               VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR |
->>>>               VM_EXIT_LOAD_IA32_EFER | VM_EXIT_SAVE_IA32_EFER |
->>>>               VM_EXIT_SAVE_VMX_PREEMPTION_TIMER | VM_EXIT_ACK_INTR_ON_EXIT |
->>>> -             VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL;
->>>> +             VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
->>>> +             VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL;
-> This is completely wrong.  Stuffing VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL here
-> advertises support for KVM emulation of the control, and that support is non-existent
-> in this patch (and series).
->
-> Just drop this, emulation of VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL can be done
-> separately.
-
-Sure.
-
-
->
->>>> +     mediated = kvm_mediated_pmu_enabled(vcpu);
->>>> +     if (cpu_has_load_perf_global_ctrl()) {
->>>> +             vm_entry_controls_changebit(vmx,
->>>> +                     VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL, mediated);
->>>> +             /*
->>>> +              * Initialize guest PERF_GLOBAL_CTRL to reset value as SDM rules.
->>>> +              *
->>>> +              * Note: GUEST_IA32_PERF_GLOBAL_CTRL must be initialized to
->>>> +              * "BIT_ULL(pmu->nr_arch_gp_counters) - 1" instead of pmu->global_ctrl
->>>> +              * since pmu->global_ctrl is only be initialized when guest
->>>> +              * pmu->version > 1. Otherwise if pmu->version is 1, pmu->global_ctrl
->>>> +              * is 0 and guest counters are never really enabled.
->>>> +              */
->>>> +             if (mediated)
->>>> +                     vmcs_write64(GUEST_IA32_PERF_GLOBAL_CTRL,
->>>> +                                  BIT_ULL(pmu->nr_arch_gp_counters) - 1);
-> This belongs in common code, as a call to the aforementioned hook to propagate
-> PERF_GLOBAL_CTRL to hardware.
-
-Sure.
-
-
->
->>>> +     }
->>>> +
->>>> +     if (cpu_has_save_perf_global_ctrl())
->>>> +             vm_exit_controls_changebit(vmx,
->>>> +                     VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
->>>> +                     VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL, mediated);
->>>>  }
->>>>
->>>>  static void intel_pmu_init(struct kvm_vcpu *vcpu)
->>>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->>>> index ff66f17d6358..38ecf3c116bd 100644
->>>> --- a/arch/x86/kvm/vmx/vmx.c
->>>> +++ b/arch/x86/kvm/vmx/vmx.c
->>>> @@ -4390,6 +4390,13 @@ void vmx_set_constant_host_state(struct vcpu_vmx *vmx)
->>>>
->>>>       if (cpu_has_load_ia32_efer())
->>>>               vmcs_write64(HOST_IA32_EFER, kvm_host.efer);
->>>> +
->>>> +     /*
->>>> +      * Initialize host PERF_GLOBAL_CTRL to 0 to disable all counters
->>>> +      * immediately once VM exits. Mediated vPMU then call perf_guest_exit()
->>>> +      * to re-enable host perf events.
->>>> +      */
->>>> +     vmcs_write64(HOST_IA32_PERF_GLOBAL_CTRL, 0);
-> This needs to be conditioned on the mediated PMU being enabled, because this field
-> is not constant when using the emulated PMU (or no vPMU).
-
-Yes.
-
-
->
->>>> @@ -8451,6 +8462,15 @@ __init int vmx_hardware_setup(void)
->>>>               enable_sgx = false;
->>>>  #endif
->>>>
->>>> +     /*
->>>> +      * All CPUs that support a mediated PMU are expected to support loading
->>>> +      * and saving PERF_GLOBAL_CTRL via dedicated VMCS fields.
->>>> +      */
->>>> +     if (enable_mediated_pmu &&
->>>> +         (WARN_ON_ONCE(!cpu_has_load_perf_global_ctrl() ||
->>>> +                       !cpu_has_save_perf_global_ctrl())))
-> This needs to be conditioned on !HYPERVISOR, or it *will* fire.
-
-Ok.
-
-
->
-> And placing this check here, without *any* mention of *why* you did so, is evil
-> and made me very grumpy.  I had to discover the hard way that you checked the
-> VMCS fields here, instead of in kvm_init_pmu_capability() where it logically
-> belongs, because the VMCS configuration isn't yet initialized.
->
-> Grumpiness aside, I don't like this late clear of enable_mediated_pmu, as it risks
-> a variation of the problem you're trying to avoid, i.e. risks consuming the variable
-> between kvm_init_pmu_capability() and here.
-
-Yes.
-
-
->
-> I don't see any reason why setup_vmcs_config() can't be called before
-> kvm_x86_vendor_init(), so unless I'm missing/forgetting something, let's just do
-> that, and move these checks where they belong.
-
-I'm not quite sure about this. Let me double check.
-
-
+I'll send v4 of this patch shortly.
