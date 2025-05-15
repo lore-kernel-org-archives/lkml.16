@@ -1,135 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AEDE286424;
-	Thu, 15 May 2025 01:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DEC4B1E6A
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:48:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747273559; cv=none; b=GQR5W5skFfwnyeeOusBtSp6aIJAKSge05rMKH/baY+lfoGxvRVKUruIfJOKoK0NZ9KHD99keHBXvmcIpkJonf9vrq1jxHa0sg7pdhT3T27Pa3023xfUaAmZfFvIKJ8sWwMT2W2+rVZST/h2vNed+ENBaHGSDNNix/24hz4zv5fE=
+	t=1747273738; cv=none; b=i3N+HklJdmwqQEg8P940N+yKXZ+FWnHDBjwawOHRE5A+udJoNTrFzimbfGULqQ0YfnvO+6PShDCUTvLnXHDI/l6zO1TLCqYjfGA4Ohrt8mnpZcgGeA/rFU+TOz21JgwE/sDxt2/83MgxRSqb8kR1VfrwzGu42ATB/vY9QZGFRe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747273559; c=relaxed/simple;
-	bh=liCH3ST2rSNtb6kq11X873N09bmPyJxZKgearEG0g8M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uy43w3cf5gQoXvS2O0+oPKobxedlkw7AvafRtjLMJtgRzJ49VxiWr1hRws++iWvJ5wMsdiSqJ4+dllqmR1ZGlqKviG2Z+hNWNWH3OtxYru308mvGY4rLAkKd+o1xKJ9kVJIZ/EuLTzemR6sgyMbRRTTv16eIkn5QN8paQs3ePS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O0LABGRf; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747273738; c=relaxed/simple;
+	bh=KiR8YbpKmTMr2x69SUwQJPdzWTL9nSX+JSmjJuCOWqU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hFZmPEaxxd9V2wRcRYcvGp8bGpgTbBP/8LAxWeP6km3eOTK4x0CaZcARRtfqeTA1CAdB8L4+Fmk48/T3qOuPKLAyISKC7fGKfM8ZtcJqiu0XkQPGtJ1GC/Z3QXw5Fs8RD8/gjtunfNpKxtT0bepbnPUi8gpt6/tVTy19GQlbMAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RiPauSWQ; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O0LABGRf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747273558; x=1778809558;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=liCH3ST2rSNtb6kq11X873N09bmPyJxZKgearEG0g8M=;
-  b=O0LABGRfhRA7Rns61UlzYRqds3qV8btfdZHsjCqU21Pd8nuQ1YxQ3Hru
-   3TjJ1b2s/vROCMpe1LXbWslmLZo7jNbwTnibYi4xyBo9Wy73QsAjouZxO
-   BDToqTUkh2IvMf6IKY0DLaUo+mZjxAA79hUYvoHWLrYviQTiwGiVD5CEA
-   Ebdy545P7L1Ri5o9V2eyLE9/947tnXeOZDQPGf49OfJd8agLNkKjQ6CG4
-   5YhthoBXCYs/iyDHGNoZpfmkDBuQu3bdrmp9EzAsgex9PMRSUWIb7m0O1
-   WYh6oMDxJqBj4k8FmT32B/hxhKPe5OM84L8sKkm9cwzj0w/0RjdDMfofn
-   g==;
-X-CSE-ConnectionGUID: EB3ddolgTkelvoORcAm11g==
-X-CSE-MsgGUID: TwP1XFQOTD6AysaVALzB/w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="52998986"
-X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
-   d="scan'208";a="52998986"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 18:45:57 -0700
-X-CSE-ConnectionGUID: eB/Db9DSS7GZY7p8XF0YIw==
-X-CSE-MsgGUID: f9eHd5xKRDyloNKLzvnxAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
-   d="scan'208";a="161500287"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 18:45:50 -0700
-Message-ID: <0355f4e5-e458-457e-ad74-d4dc26331671@linux.intel.com>
-Date: Thu, 15 May 2025 09:45:48 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RiPauSWQ"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-30a8c929220so433485a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747273735; x=1747878535; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oOEnV/2KMJC3wgwepaDuF55brmVsBP86jOYmmGA/5KU=;
+        b=RiPauSWQiWIjgn2rqtXtA9oLTPBXGj2f2rZJUlwyMj7VOK/hcPDEInlE0oTXq72KDY
+         fknKeWSZ0DbaXMhwQMw7U9w98g7FglE8WUecWQ3cE/HF7YlepMEef9fmP1nF5cO2Tof7
+         v5piOm8x/4OgtU4vECTVcg4MXNf5zgzWze4KC0V+XDnth6HwtsetxcvO9M/mxibroLy8
+         WKq6ZrslZGrlbSw7u72RJ7TSTva0YCjVStoxps1KZThgh43ADOxIpfmARWWk2PLGzmU6
+         hMK9ZpxqPfl8TrBk8F/Q6wh48+XNlDB6JQjRXdDuQjK6hyDi5PBFLU02wdjhynoYSsw6
+         l3Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747273735; x=1747878535;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oOEnV/2KMJC3wgwepaDuF55brmVsBP86jOYmmGA/5KU=;
+        b=F8Tpv69lr6fAdWQSlDPG2AN7Log7lHAimAdj844itj6Gjb1V9WstoEdBAQ08q9T3/n
+         TqhyuCLUIS/4LoKxSrBut/BFPqUMph/Ne2X0hR/SwmsuameQz7K1r6dNk9A4T4fS+JL6
+         6P9vCaUswp4zxpJSOWvauQIxy66EQ3H7jgYMSwjfIBPcWsjoJAYDLJ/euhmPK/3WOVAJ
+         dFk9i/+FkIRxFI12zWIJwB3GPwVo1Ep7Bc2ZuB9Ng5nqpg2LWV2Wsaq8Ysr4HDCsMFaJ
+         AuMF+hhI6FLtTuJ5tXe7Ezdjr93MeJlq4NBPXMSuR2Ntfq0fFoG8a6KU1tL+4Xszsmlj
+         8u2w==
+X-Forwarded-Encrypted: i=1; AJvYcCVG7rqtIEfQHktHatdpmHJ9Y4gbHAtHGj0tfkd3vR2vnw80ijerZ+pxGKOsyNerMFhfT9xN/Qr1Dpxs6Ug=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziRThZyaPG2g088mAbmFz96ulvGv2q5gwtPJoL8SJ2H2ak3Due
+	LGjm8qjMPHjzmGwIOapD7+6hFZc+kbaJqY5aaDg2jN7Yh5+dRJUX
+X-Gm-Gg: ASbGncspSsHp3S1W/hwLz0yfRncZAvhxaCzqSRs4iXgtQqM4cYz/vJemgY5LaJyzI0C
+	+ibkWrgPSXMnxcJYKg/hlrwqQlI9oKCafGz9CNzf80acMJfAVcsUWVi0U2JAHiSf3aGk+8IEtLK
+	1jYckjPImL9Xy2qKhLWWZmY6T2V//mrGhofdvFX3AmNSPw53J4cINf2yTyzYm6nJnbppFJ7KzMW
+	mpkU7Tcu6z2hGBPwDC41LxKf5Eg4TO2VYuEghNnLZx+898vPfXwnvOpzzWcuuac8TIS8S8mpvP5
+	lL4ryaIq/6uibgLsyqbpoEH5jTVspF3fITngt0gQy7fPH0QKmyXEydyC2w==
+X-Google-Smtp-Source: AGHT+IHDMnY/v97x5w5dxSCupgCGTWPSnEAHWOQ8uK2Hd+mELF4fFkK2eG87nVkTfnkhyBrcXM+YWA==
+X-Received: by 2002:a17:90b:4a85:b0:305:2d28:e435 with SMTP id 98e67ed59e1d1-30e2e59bcf2mr8591859a91.7.1747273734936;
+        Wed, 14 May 2025 18:48:54 -0700 (PDT)
+Received: from PC.mioffice.cn ([43.224.245.249])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e33460e16sm2292606a91.30.2025.05.14.18.48.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 18:48:54 -0700 (PDT)
+From: Sheng Yong <shengyong2021@gmail.com>
+X-Google-Original-From: Sheng Yong <shengyong1@xiaomi.com>
+To: xiang@kernel.org,
+	hsiangkao@linux.alibaba.com,
+	chao@kernel.org,
+	zbestahu@gmail.com,
+	jefflexu@linux.alibaba.com,
+	dhavale@google.com,
+	lihongbo22@huawei.com
+Cc: linux-erofs@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	Sheng Yong <shengyong1@xiaomi.com>
+Subject: [PATCH v2] erofs: avoid using multiple devices with different type
+Date: Thu, 15 May 2025 09:48:37 +0800
+Message-ID: <20250515014837.3315886-1-shengyong1@xiaomi.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 09/38] perf: Add switch_guest_ctx() interface
-To: Sean Christopherson <seanjc@google.com>,
- Mingwei Zhang <mizhang@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
- Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Yongwei Ma <yongwei.ma@intel.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
- Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
- Shukla Manali <Manali.Shukla@amd.com>,
- Nikunj Dadhania <nikunj.dadhania@amd.com>
-References: <20250324173121.1275209-1-mizhang@google.com>
- <20250324173121.1275209-10-mizhang@google.com> <aCUnq4M33yTj_t1F@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aCUnq4M33yTj_t1F@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: Sheng Yong <shengyong1@xiaomi.com>
 
-On 5/15/2025 7:30 AM, Sean Christopherson wrote:
-> On Mon, Mar 24, 2025, Mingwei Zhang wrote:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> When entering/exiting a guest, some contexts for a guest have to be
->> switched. For examples, there is a dedicated interrupt vector for
->> guests on Intel platforms.
->>
->> When PMI switch into a new guest vector, guest_lvtpc value need to be
->> reflected onto HW, e,g., guest clear PMI mask bit, the HW PMI mask
->> bit should be cleared also, then PMI can be generated continuously
->> for guest. So guest_lvtpc parameter is added into perf_guest_enter()
->> and switch_guest_ctx().
->>
->> Add a dedicated list to track all the pmus with the PASSTHROUGH cap, which
->> may require switching the guest context. It can avoid going through the
->> huge pmus list.
->>
->> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> Signed-off-by: Mingwei Zhang <mizhang@google.com>
->> ---
->>  include/linux/perf_event.h | 17 +++++++++++--
->>  kernel/events/core.c       | 51 +++++++++++++++++++++++++++++++++++++-
->>  2 files changed, 65 insertions(+), 3 deletions(-)
->>
->> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->> index 37187ee8e226..58c1cf6939bf 100644
->> --- a/include/linux/perf_event.h
->> +++ b/include/linux/perf_event.h
->> @@ -584,6 +584,11 @@ struct pmu {
->>  	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
->>  	 */
->>  	int (*check_period)		(struct perf_event *event, u64 value); /* optional */
->> +
->> +	/*
->> +	 * Switch guest context when a guest enter/exit, e.g., interrupt vectors.
->> +	 */
->> +	void (*switch_guest_ctx)	(bool enter, void *data); /* optional */
-> IMO, putting this in "struct pmu" is unnecessarily convoluted and complex, and a
-> poor fit for what needs to be done.  The only usage of the hook is for the CPU to
-> swap the LVTPC, and the @data payload communicates exactly that.  I.e. this has
-> one user, and can't reasonably be extended to other users without some ugliness.
->
-> And if by some miracle there's no CPU pmu in perf, KVM's mediated PMU still needs
-> to swap to its PMI IRQ.  So rather than per-PMU hook along with a list and a
-> spinlock, just make this an arch hook.  And if all of the mediated PMU code is
-> guarded by a Kconfig, then perf doesn't even needs __weak stubs.
+For multiple devices, both primary and extra devices should be the
+same type. `erofs_init_device` has already guaranteed that if the
+primary is a file-backed device, extra devices should also be
+regular files.
 
-Sounds good for me.
+However, if the primary is a block device while the extra device
+is a file-backed device, `erofs_init_device` will get an ENOTBLK,
+which is not treated as an error in `erofs_fc_get_tree`, and that
+leads to an UAF:
 
+  erofs_fc_get_tree
+    get_tree_bdev_flags(erofs_fc_fill_super)
+      erofs_read_superblock
+        erofs_init_device  // sbi->dif0 is not inited yet,
+                           // return -ENOTBLK
+      deactivate_locked_super
+        free(sbi)
+    if (err is -ENOTBLK)
+      sbi->dif0.file = filp_open()  // sbi UAF
 
->
+So if -ENOTBLK is hitted in `erofs_init_device`, it means the
+primary device must be a block device, and the extra device
+is not a block device. The error can be converted to -EINVAL.
+
+Fixes: fb176750266a ("erofs: add file-backed mount support")
+Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
+---
+ fs/erofs/super.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 512877d7d855..6b998a49b61e 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -165,8 +165,11 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
+ 				filp_open(dif->path, O_RDONLY | O_LARGEFILE, 0) :
+ 				bdev_file_open_by_path(dif->path,
+ 						BLK_OPEN_READ, sb->s_type, NULL);
+-		if (IS_ERR(file))
++		if (IS_ERR(file)) {
++			if (file == ERR_PTR(-ENOTBLK))
++				return -EINVAL;
+ 			return PTR_ERR(file);
++		}
+ 
+ 		if (!erofs_is_fileio_mode(sbi)) {
+ 			dif->dax_dev = fs_dax_get_by_bdev(file_bdev(file),
+-- 
+2.43.0
+
