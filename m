@@ -1,341 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777564B1E44;
-	Thu, 15 May 2025 02:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7105292901
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 02:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747277630; cv=none; b=iFUs4reMIGVhWZaHkDfjXY5sFbyc79wEwz9861r0wXFruMpZI9lxzU5Q8YefWkkXv1bgmX9TCGPx5fSIDp63W/Cz1UW+4y55SFXFx21Xxc5f16KVhrdp1uJHQW8uoXe4x9xPWPM2he67zKW+o1dw9+wjOINvozH5PrL+/jFcjIk=
+	t=1747277635; cv=none; b=UZoYWq0m/r/X+TRUVzOzg5iRZF2P8YLmLWW0NTVGavKAjBmJ0e8ldv8vJMjr/TuuxA8FudB197iwFLxQoecttR+0StorQ9ncRMWzlyCI+sBiOVVKlRgOqGvMuwFg6EKpzQyExaSP8H+mGGPxg4RZYT6OZfbpk2n0ZH8PtleSWjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747277630; c=relaxed/simple;
-	bh=gTnT9tsByGMmefYHI0pCyNdM8i4PA2xC4p36UkNk7SM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W+IdrNAm/E9fY0SOGygiPG/U2fS9B0vzlR2KJkv1hM69IFHvn1P82NPhrHItmOofRfetUcfjfynbxsSMuUoCx3UiyVIBh620JqNXurOMGRlg2Xc/nlJ14rRWyU0C/lEgeAfpMqB4LtQsNyXCoVXYf6U6zm/xFPK+fexD/tP+WZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EqEWnzPl; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747277635; c=relaxed/simple;
+	bh=q12jZzf376ffdLkRqcNfDFxYC6noHOaDM9SLBX3Cpfo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SGYZ1dPgXdY++BwYRuehDTNiiolPOET5kCO7dg9Afw55O47Qf0hqMoozC17s7OnH1hhdv7LRPVY63w/UyzPPkPTzl4Tf7mmbm2VaHC2SYLyp0MSIhRTSvuxmSveJcnKBOv5nHZdgj/PFTwWbVLkIEKKBLm7znucUWoMTAH7j9pU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FJt3yfQ+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EqEWnzPl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747277629; x=1778813629;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=gTnT9tsByGMmefYHI0pCyNdM8i4PA2xC4p36UkNk7SM=;
-  b=EqEWnzPlgui2oq+bkDg+Ts3WtLxGQ8AoGjKIemLg5P+5hZLlZqDYAiUt
-   3AYgeLxxp4SMZrLuckZQisqXcJ6h84b2EBdIkzHSez96zQxFUZJgGnfhb
-   v8b+mRFcazG2VtvFWeGye5LRVTT3aTXFwmSp4gC7QIyyVtvIWR/STi0PA
-   KFPgv2zu2sNeOrrDxIOFvIPYF2kfdT1DcyJQ1JYcKwZtTBkk27ClM2igS
-   Xwtz5XY0Cp6cywH6Pf4EihB4T2YB95Hx13+Xm/k9k/W4kPf84h6F07ZF8
-   fWcHv0HF/T3uGBaY2wK93pbQsCQSDeJ1M/ZD53QpOxGGDJ3MxTLCMdd6K
-   w==;
-X-CSE-ConnectionGUID: 25413maKRHy5HGb4j7PLTg==
-X-CSE-MsgGUID: m2J/4vuASw+9XfFaLi4AkQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49272321"
-X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
-   d="scan'208";a="49272321"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 19:53:48 -0700
-X-CSE-ConnectionGUID: 77qO3U+pT4Wp0Xelp6vp6g==
-X-CSE-MsgGUID: Mo42WKnwTjeIMIUgKav2rg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
-   d="scan'208";a="143420967"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 19:53:42 -0700
-Message-ID: <1d024d71-0b02-4481-a0d4-f1786313c1e7@linux.intel.com>
-Date: Thu, 15 May 2025 10:53:39 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FJt3yfQ+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747277632;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q12jZzf376ffdLkRqcNfDFxYC6noHOaDM9SLBX3Cpfo=;
+	b=FJt3yfQ+V6ACb63Xqi+Yx+9BEVWPgrBM9AsnC1E0kawni7byA0r1GmOHdlaAZPV9BDZqDG
+	Ged4ZTBqDPrewc5B2no7vexzQEXBufkcySz0s1uBjvKFvkScKc00rMOiel/gVGBiHDvlct
+	2Sama80zG58YUl3r/H7cwdJfHCY5/8s=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-295-QLoDLax2N4KBwY7y9eOpVg-1; Wed, 14 May 2025 22:53:51 -0400
+X-MC-Unique: QLoDLax2N4KBwY7y9eOpVg-1
+X-Mimecast-MFC-AGG-ID: QLoDLax2N4KBwY7y9eOpVg_1747277630
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a0b7124b5fso279515f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:53:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747277630; x=1747882430;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=q12jZzf376ffdLkRqcNfDFxYC6noHOaDM9SLBX3Cpfo=;
+        b=sCQUJo91vrq3M10xPxe9QNx8I6z4ptlhCYfgU0LI59YlBEmYTyuP5sVKoFoW0CYywJ
+         2pU0cbIB5lnQeDkjE9KBhdEGKxregafF7esl+pZnN63yDOEgQFIz6g4S7A+oCOQfREst
+         BCpVr07ATccvcOBv4jWp2O8fXlZ9z9J3h3M5MqYBy/GViUU3Qjrodi6bzSf8PEQ971sl
+         Fd2C6FCKRhvlblURAqiXtPBZgyz7TXiFvhuBQf9OmxCuXbyw1gppmwv3IIXqmJh7s+CN
+         J37I1AvDZUYVSuNZd2VbB8h8RmIjEwbId7Hq0zbFX3fWxHbMC3LxefCAaGx9Wx/D3juu
+         20Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCUl+cylCdMr5ip7pXmffrDBjeJxuqmC9ZHRcmuNKTN22+WCvoan57u2u0CnUtT4LtFlHsEq+veKSOz0ClI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCIM3qQTsHQtDG0p4V/6aDs9Ied5NEjJg9ZwOCXA1/73UzxaYZ
+	SSeWGll6J2pijyoj4S4qkaOoscnrwGk1rw7VKIXmHLELsqRfIcl7ES4dZRuWw7PhENPg2Iw60pC
+	/Em4xjo5D6lGdz9xztQzh7Hbxd1IDJvdH75rY9/47byNtdMPc1IWGk6NkIPf1UY6D4yXqEzZEja
+	jkYDxuY4nX7fvoWdcweYxKq40Zs9X99CmRLWsZ
+X-Gm-Gg: ASbGncvBOaA4/w3AzDgJCzdI7b7YMMFWPlIrqExHtQRorL8ag0fJy1nGuwCqUk+i3yY
+	TqaNCOsBUj5pXUzOfDZaUqQq90fuXNHIY92s9dUYBOco2uG4o3Ngl8YWlHUfVRDbtIOh9Ew==
+X-Received: by 2002:a05:6000:1a8e:b0:3a0:9f24:7762 with SMTP id ffacd0b85a97d-3a3496a3a96mr4942172f8f.15.1747277630244;
+        Wed, 14 May 2025 19:53:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF9IZ9Mn8+/PFqfgbQu1f0XDTJNKLuy4Jh6/XcvK4Q6rmMeFaFK+bsIgyF+xuruV1LHo9BO7J8jSam+bSy3TCU=
+X-Received: by 2002:a05:6000:1a8e:b0:3a0:9f24:7762 with SMTP id
+ ffacd0b85a97d-3a3496a3a96mr4942165f8f.15.1747277629923; Wed, 14 May 2025
+ 19:53:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 14/38] KVM: x86/pmu: Introduce enable_mediated_pmu
- global parameter
-To: Sean Christopherson <seanjc@google.com>,
- Mingwei Zhang <mizhang@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
- Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Yongwei Ma <yongwei.ma@intel.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
- Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
- Shukla Manali <Manali.Shukla@amd.com>,
- Nikunj Dadhania <nikunj.dadhania@amd.com>
-References: <20250324173121.1275209-1-mizhang@google.com>
- <20250324173121.1275209-15-mizhang@google.com> <aCUwvXPKD0ANKFb7@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aCUwvXPKD0ANKFb7@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250429165018.112999-1-kwolf@redhat.com> <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
+ <aCIRUwt5BueQmlMZ@redhat.com> <aCLe5UT2kfzI96TQ@infradead.org>
+ <aCMQ5S-gI6vZJxmq@redhat.com> <aCQiz88HksKg791Z@infradead.org>
+ <aCTDiHMuMncwdp_X@redhat.com> <50beb356b4dc000446fd186ab754c87f386eaeae.camel@suse.com>
+In-Reply-To: <50beb356b4dc000446fd186ab754c87f386eaeae.camel@suse.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Thu, 15 May 2025 04:53:38 +0200
+X-Gm-Features: AX0GCFvTEPU5IZpr4lmzI_rpOrj66AYnp0fHsjgkFGdjVSKfaoKh2h6IWIGfP7I
+Message-ID: <CABgObfaEiMN=YANk02EWini+jAXU1MxSvo8_jYWaMiu3ds7hgQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active paths
+To: Martin Wilck <mwilck@suse.com>
+Cc: Benjamin Marzinski <bmarzins@redhat.com>, Christoph Hellwig <hch@infradead.org>, 
+	Kevin Wolf <kwolf@redhat.com>, dm-devel@lists.linux.dev, 
+	Hanna Czenczek <hreitz@redhat.com>, Mikulas Patocka <mpatocka@redhat.com>, snitzer@kernel.org, 
+	"Kernel Mailing List, Linux" <linux-kernel@vger.kernel.org>, Hannes Reinecke <hare@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 5/15/2025 8:09 AM, Sean Christopherson wrote:
-> On Mon, Mar 24, 2025, Mingwei Zhang wrote:
->> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>
->> Introduce enable_mediated_pmu global parameter to control if mediated
->> vPMU can be enabled on KVM level. Even enable_mediated_pmu is set to
->> true in KVM, user space hypervisor still need to enable mediated vPMU
->> explicitly by calling KVM_CAP_PMU_CAPABILITY ioctl. This gives
->> hypervisor flexibility to enable or disable mediated vPMU for each VM.
->>
->> Mediated vPMU depends on some PMU features on higher PMU version, like
->> PERF_GLOBAL_STATUS_SET MSR in v4+ for Intel PMU. Thus introduce a
->> pmu_ops variable MIN_MEDIATED_PMU_VERSION to indicates the minimum host
->> PMU version which mediated vPMU needs.
->>
->> Currently enable_mediated_pmu is not exposed to user space as a module
->> parameter until all mediated vPMU code are in place.
->>
->> Suggested-by: Sean Christopherson <seanjc@google.com>
->> Co-developed-by: Mingwei Zhang <mizhang@google.com>
->> Signed-off-by: Mingwei Zhang <mizhang@google.com>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  arch/x86/kvm/pmu.c              |  3 ++-
->>  arch/x86/kvm/pmu.h              | 11 +++++++++
->>  arch/x86/kvm/svm/pmu.c          |  1 +
->>  arch/x86/kvm/vmx/capabilities.h |  3 ++-
->>  arch/x86/kvm/vmx/pmu_intel.c    |  5 ++++
->>  arch/x86/kvm/vmx/vmx.c          |  3 ++-
->>  arch/x86/kvm/x86.c              | 44 ++++++++++++++++++++++++++++++---
->>  arch/x86/kvm/x86.h              |  1 +
->>  8 files changed, 64 insertions(+), 7 deletions(-)
->>
->> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
->> index 75e9cfc689f8..4f455afe4009 100644
->> --- a/arch/x86/kvm/pmu.c
->> +++ b/arch/x86/kvm/pmu.c
->> @@ -775,7 +775,8 @@ void kvm_pmu_refresh(struct kvm_vcpu *vcpu)
->>  	pmu->pebs_data_cfg_rsvd = ~0ull;
->>  	bitmap_zero(pmu->all_valid_pmc_idx, X86_PMC_IDX_MAX);
->>  
->> -	if (!vcpu->kvm->arch.enable_pmu)
->> +	if (!vcpu->kvm->arch.enable_pmu ||
->> +	    (!lapic_in_kernel(vcpu) && enable_mediated_pmu))
-> This check belongs in KVM_CAP_PMU_CAPABILITY, i.e. KVM needs to reject enabling
-> a mediated PMU without an in-kernel local APIC, not silently drop the PMU.
-
-Good idea.
-
-
+Il mer 14 mag 2025, 13:37 Martin Wilck <mwilck@suse.com> ha scritto:
 >
->>  		return;
->>  
->>  	kvm_pmu_call(refresh)(vcpu);
->> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
->> index ad89d0bd6005..dd45a0c6be74 100644
->> --- a/arch/x86/kvm/pmu.h
->> +++ b/arch/x86/kvm/pmu.h
->> @@ -45,6 +45,7 @@ struct kvm_pmu_ops {
->>  	const u64 EVENTSEL_EVENT;
->>  	const int MAX_NR_GP_COUNTERS;
->>  	const int MIN_NR_GP_COUNTERS;
->> +	const int MIN_MEDIATED_PMU_VERSION;
-> I like the idea, but simply checking the PMU version is insufficient on Intel,
-> i.e. just add a callback.
-
-sure.
-
-
+> I'd go one step further. Christoph is right to say that what we're
+> currently doing in qemu =E2=80=93 passing through every command except th=
+e
+> PRIN/PROUT to a multipath device =E2=80=93 is a dangerous thing to do.
 >
->>  };
->>  
->>  void kvm_pmu_ops_update(const struct kvm_pmu_ops *pmu_ops);
->> @@ -63,6 +64,12 @@ static inline bool kvm_pmu_has_perf_global_ctrl(struct kvm_pmu *pmu)
->>  	return pmu->version > 1;
->>  }
->>  
->> +static inline bool kvm_mediated_pmu_enabled(struct kvm_vcpu *vcpu)
-> kvm_vcpu_has_mediated_pmu() to align with e.g. guest_cpu_cap_has(), and because
-> kvm_mediated_pmu_enabled() sounds like a VM-scoped or module-scoped helper.
-
-exactly.
-
-
+> Passthrough from a dm-multipath device to a SCSI device makes sense
+> only for a small subset of the SCSI command set. Basically just for the
+> regular IO commands like the various READ and WRITE variants and the
+> occasional UNMAP. The fact that customers
+> have been running these setups in large deployments over many years
+> suggests that, if other commands ever get passed through to member
+> devices, it has rarely had fatal consequences.
 >
->> +{
->> +	return vcpu->kvm->arch.enable_pmu &&
-> This is superfluous, pmu->version should never be non-zero without the PMU being
-> enabled at the VM level.
+> Nobody would seriously consider sending ALUA commands to the multipath
+> devices. TUR and REQUEST SENSE are other examples for commands that
+> can't be reasonably passed through to random member devices of a
+> multipath map.
 
-Strictly speaking, "arch.enable_pmu" and pmu->version doesn't indicates
-fully same thing.  "arch.enable_pmu" indicates whether PMU function is
-enabled in KVM, but the "pmu->version" comes from user space configuration.
-In theory user space could configure a "0"  PMU version just like
-pmu_counters_test does. Currently I'm not sure if the check for
-"pmu->version" can be removed, let me have a double check.
+Yes, as usual things are a bit more complicated. First, a handful of
+commands are special (REQUEST SENSE would be for HBAs that don't use
+auto sense, but that is fortunately not something you encounter).
+Second, there's already a filter in the kernel in
+drivers/scsi/scsi_ioctl.c for commands that are allowed without
+CAP_SYS_RAWIO. QEMU is subject to that so the commands you'll see are
+mostly I/O, INQUIRY, TUR, MODE SENSE/SELECT and that's it.
 
+Any command that the kernel doesn't filter would be rejected, or
+handled specially in the case of PR commands (PR commands use a
+separate privileged helper to send them down to the device; the helper
+also knows about multipath and uses the userspace libmpathpersist if
+it receives a dm-mpath file descriptor via SCM_RIGHTS).
 
->
->> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
->> index 77012b2eca0e..425e93d4b1c6 100644
->> --- a/arch/x86/kvm/vmx/pmu_intel.c
->> +++ b/arch/x86/kvm/vmx/pmu_intel.c
->> @@ -739,4 +739,9 @@ struct kvm_pmu_ops intel_pmu_ops __initdata = {
->>  	.EVENTSEL_EVENT = ARCH_PERFMON_EVENTSEL_EVENT,
->>  	.MAX_NR_GP_COUNTERS = KVM_MAX_NR_INTEL_GP_COUNTERS,
->>  	.MIN_NR_GP_COUNTERS = 1,
->> +	/*
->> +	 * Intel mediated vPMU support depends on
->> +	 * MSR_CORE_PERF_GLOBAL_STATUS_SET which is supported from 4+.
->> +	 */
->> +	.MIN_MEDIATED_PMU_VERSION = 4,
->>  };
->> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->> index 00ac94535c21..a4b5b6455c7b 100644
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -7916,7 +7916,8 @@ static __init u64 vmx_get_perf_capabilities(void)
->>  	if (boot_cpu_has(X86_FEATURE_PDCM))
->>  		rdmsrl(MSR_IA32_PERF_CAPABILITIES, host_perf_cap);
->>  
->> -	if (!cpu_feature_enabled(X86_FEATURE_ARCH_LBR)) {
->> +	if (!cpu_feature_enabled(X86_FEATURE_ARCH_LBR) &&
->> +	    !enable_mediated_pmu) {
->>  		x86_perf_get_lbr(&vmx_lbr_caps);
->>  
->>  		/*
-> There's a bit too much going on in this patch.  I think it makes sense to split
-> the vendor chunks out to separate patches, so that each can elaborate on the
-> exact requirements.
+> AFAIK the only commands that we really need to pass through (except the s=
+tandard ones) are the reservation commands, which get special handling
+> by qemu anyway. @Ben, @Kevin, are you aware of anything else?
 
-Sure.
+.Of the ones that aren't simple I/O, mode parameters and TUR are the
+important cases. A TUR failure would be handled by the ioctl that
+Kevin proposed here by forcing a path switch. Mode parameters might
+not be shared(*) and would need to be sent down all the paths in that
+case; that can be fixed in userspace if necessary.
 
+> I'd also be interested in understanding this better. As noted above,
+> I'm aware that passing through everything is dangerous and wrong in
+> principle. But in practice, we haven't observed anything serious except
+> (as Ben already said) the failure to do path failover in the SG_IO code
+> path, which both this patch set and my set from the past are intended
+> to fix.
 
->
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index 72995952978a..1ebe169b88b6 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -188,6 +188,14 @@ bool __read_mostly enable_pmu = true;
->>  EXPORT_SYMBOL_GPL(enable_pmu);
->>  module_param(enable_pmu, bool, 0444);
->>  
->> +/*
->> + * Enable/disable mediated passthrough PMU virtualization.
->> + * Don't expose it to userspace as a module paramerter until
->> + * all mediated vPMU code is in place.
->> + */
-> No need for the comment, documenting this in the changelog is sufficient.
+Yes, the kernel filter is a PITA in the normal single path case but
+here it helps not doing something overly wrong.
 
-Sure.
+Paolo
 
-
->
->> +bool __read_mostly enable_mediated_pmu;
->> +EXPORT_SYMBOL_GPL(enable_mediated_pmu);
->> +
->>  bool __read_mostly eager_page_split = true;
->>  module_param(eager_page_split, bool, 0644);
->>  
->> @@ -6643,9 +6651,28 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
->>  			break;
->>  
->>  		mutex_lock(&kvm->lock);
->> -		if (!kvm->created_vcpus) {
->> -			kvm->arch.enable_pmu = !(cap->args[0] & KVM_PMU_CAP_DISABLE);
->> -			r = 0;
->> +		/*
->> +		 * To keep PMU configuration "simple", setting vPMU support is
->> +		 * disallowed if vCPUs are created, or if mediated PMU support
->> +		 * was already enabled for the VM.
->> +		 */
->> +		if (!kvm->created_vcpus &&
->> +		    (!enable_mediated_pmu || !kvm->arch.enable_pmu)) {
->> +			bool pmu_enable = !(cap->args[0] & KVM_PMU_CAP_DISABLE);
->> +
->> +			if (enable_mediated_pmu && pmu_enable) {
-> Local APIC check goes here.
-
-Yes.
-
-
->
->> +				char *err_msg = "Fail to enable mediated vPMU, " \
->> +					"please disable system wide perf events or nmi_watchdog " \
->> +					"(echo 0 > /proc/sys/kernel/nmi_watchdog).\n";
->> +
->> +				r = perf_get_mediated_pmu();
->> +				if (r)
->> +					kvm_err("%s", err_msg);
->
-> #define MEDIATED_PMU_MSG "Fail to enable mediated vPMU, disable system wide perf events and nmi_watchdog.\n"
-
-Sure.
-
-
->
-> 				r = perf_create_mediated_pmu();
-> 				if (r)
-> 					kvm_err(MEDIATED_PMU_MSG);
->
->> +			} else
->> +				r = 0;
->> +
->> +			if (!r)
->> +				kvm->arch.enable_pmu = pmu_enable;
->>  		}
->>  		mutex_unlock(&kvm->lock);
->>  		break;
->> @@ -12723,7 +12750,14 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
->>  	kvm->arch.default_tsc_khz = max_tsc_khz ? : tsc_khz;
->>  	kvm->arch.apic_bus_cycle_ns = APIC_BUS_CYCLE_NS_DEFAULT;
->>  	kvm->arch.guest_can_read_msr_platform_info = true;
->> -	kvm->arch.enable_pmu = enable_pmu;
->> +
->> +	/*
->> +	 * PMU virtualization is opt-in when mediated PMU support is enabled.
->> +	 * KVM_CAP_PMU_CAPABILITY ioctl must be called explicitly to enable
->> +	 * mediated vPMU. For legacy perf-based vPMU, its behavior isn't changed,
->> +	 * KVM_CAP_PMU_CAPABILITY ioctl is optional.
->> +	 */
-> Again, too much extraneous info, the exception proves the rule.  I.e. by calling
-> out that mediated PMU is special, it's clear the rule is that PMUs are enabled by
-> default in the !mediated case.
-
-Sure.
-
-
->
-> 	/*
-> 	 * Userspace must explicitly opt-in to PMU virtualization when mediated
-> 	 * PMU support is enabled (see KVM_CAP_PMU_CAPABILITY).
-> 	 */
->
->> +	kvm->arch.enable_pmu = enable_pmu && !enable_mediated_pmu;
-> So I tried to run a QEMU with this and it failed, because QEMU expected the PMU
-> to be enabled and tried to write to PMU MSRs.  I haven't dug through the QEMU
-> code, but I assume that QEMU rightly expects that passing in PMU in CPUID when
-> KVM_GET_SUPPORTED_CPUID says its supported will result in the VM having a PMU.
-
-As long as the module parameter "enable_mediated_pmu" is enabled, qemu
-needs below extra code to enable mediated vPMU, otherwise PMU is disabled
-in KVM.
-
-https://lore.kernel.org/all/20250324123712.34096-1-dapeng1.mi@linux.intel.com/
-
-> I.e. by trying to get cute with backwards compatibility, I think we broke backwards
-> compatiblity.  At this point, I'm leaning toward making the module param off-by-default,
-> but otherwise not messing with the behavior of kvm->arch.enable_pmu.  Not sure if
-> that has implications for KVM_PMU_CAP_DISABLE though.
-
-I'm not sure if it's a kind of break for backwards compatibility.  As long
-as "enable_mediated_pmu" is not enabled, the qemu doesn't need any changes,
-the legacy vPMU can still be enabled by old qemu version. But if user want
-to enable mediated vPMU, so they should use the new version qemu which has
-the capability to enable mediated vPMU, it sounds reasonable for me.
-
+(*) in theory there's a Mode Page Policy VPD page to tell the
+initiator whether they are. I'm not sure if anyone supports it in the
+real world...
 
