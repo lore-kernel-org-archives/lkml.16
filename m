@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21962298C24
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:05:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3672D298C24
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:06:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747310760; cv=none; b=OfK3B6MjDRIG9NL57hwVAXdc/5oCLajiduow7dMpZGlG1jaETaglPK7TSUWLIo78cx/K4E0WdkGQd3Zrm+ocF81WnR7fIh4/Gc5uksv+LDGQ+GDVikMyYUwTnOcJ04/jiVUxd0k1CSHFvjvX9UjTXeNnJw3SvXsUUitz8pIuqRw=
+	t=1747310763; cv=none; b=hP1DxF9Y+XM/N/o6s615vU4EdsvHmDwC/dW3iFeXde/YNOut/Yk25z1NYCU2aOnsvp+oukTtTxKCt8ODqAVXS5pGr1O78IGT565WRioDJAOHoETR2WT6LPUzQbWZK6IRoH4hLuUBTMshBp5WPVET2WSIcED8n1F2GJc05hwyaNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747310760; c=relaxed/simple;
-	bh=PkxFxlS2ufBqBcCmqi1+E4bmWxFN2KmJBbEKLEdB5CE=;
+	s=arc-20240116; t=1747310763; c=relaxed/simple;
+	bh=Driw6whNzZPzvROzbR0jpYx5SAkwmYkvQXz66nnFPnM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s2U5piu/PhPN3ULSS1mPMa5es0dzlAOZFkA/mxdItQ1/JMl9YAVLB14gnja+/Ev8kZaG9DIbcKc3XpepDxsCyvCURI2S3+SINkuLTjEuK2FinQKen1AHhqWeUvqXgvj7HB9XnnD/Ou9VctRZ/cSmGZ+NwyBNEdKU6IKGR77ULvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UA6HRVsd; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=eEi+Y9jE06qprsfaopmLgKlOX6yc58xHjkI/Yl+opunIIz0bmW/WnP33sn/CYz7cH1T/QTMDQHSImBnGmARN4dPuuQgn6iRaVbmnBjc4fQPNGnZIMijQlqt1Ltovqog3VRul89HYmhxUWe1OF3fTRLxveKeAm13LomrZOIC+L8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mfMFQdO4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UA6HRVsd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92F28C4CEED;
-	Thu, 15 May 2025 12:05:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mfMFQdO4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14547C4CEE9;
+	Thu, 15 May 2025 12:05:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747310759;
-	bh=PkxFxlS2ufBqBcCmqi1+E4bmWxFN2KmJBbEKLEdB5CE=;
+	s=k20201202; t=1747310763;
+	bh=Driw6whNzZPzvROzbR0jpYx5SAkwmYkvQXz66nnFPnM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UA6HRVsdE7xAJH5aNceAFHGRdupWaIU6tBLXi7RyRIf/YlZ4nLhwsRt5rIXYCaZMk
-	 Jlda4RtjlU5fLMGU3Xja+5/dGvbhV6F4tvQc/9CSfquTf269kRML7hYGZFffv/wFh3
-	 S7tDcHKUfsSHrtFmPsCj0r+iNmCexAAA0N4UQHtiBqcJGJVFIUOw0v8+emWj64RXg9
-	 UW//NKUvP/bC65OF5dsAHxQlS0QtFkkywXb6dejFH/rAXzdDCFGzPGWKkGjxmLG9f9
-	 EglCnQEBJJYIwV865rPyil/e/PlNR9+JPj6h0bUBBvE44YOIyEra7w+jo1Y1+uho8n
-	 2m9X0PLe3L7Ww==
+	b=mfMFQdO4zFf1eQco3Vplfu63m7/R6APTfaAQKB1pxC0qeBaBDrp5DKkOPY+W3+//M
+	 jVmr0HzfGwt7sbHIqvoMF91/Mf+jXhSHBhEwfu3EAoW8RMgknB9v4MAw2E17asM2Pk
+	 DSXgF2P6KCDkvp6aZgUR4XzH4YzNbdc8y5gDobFZke55lxWRqetLRInZc8W4J8ecb6
+	 87enNC43O4untweQng35BzHQ1HkjG/LUKTOQBr+cRDUlNx6CN/7LFW9/QyduyIvfon
+	 JPcYSHIMqhZEMw9ZFIL/hXfQ8UkxW3jENuDx0a/aY8waPB+eDUl8dteameCjvkdB2u
+	 6QbxStdhI2ZwQ==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -41,9 +41,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	David Woodhouse <dwmw@amazon.co.uk>
-Subject: [PATCH 01/32] x86/boot/e820: Remove inverted boolean logic from the e820_nomerge() function name, rename it to e820_type_mergeable()
-Date: Thu, 15 May 2025 14:05:17 +0200
-Message-ID: <20250515120549.2820541-2-mingo@kernel.org>
+Subject: [PATCH 02/32] x86/boot/e820: Simplify e820__print_table() a bit
+Date: Thu, 15 May 2025 14:05:18 +0200
+Message-ID: <20250515120549.2820541-3-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250515120549.2820541-1-mingo@kernel.org>
 References: <20250515120549.2820541-1-mingo@kernel.org>
@@ -55,10 +55,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It's a bad practice to put inverted logic into function names,
-flip it back and rename it to e820_type_mergeable().
-
-Add/update a few comments about this function while at it.
+Introduce 'entry' for the current table entry and shorten
+repetitious use of e820_table->entries[i].
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Andy Shevchenko <andy@kernel.org>
@@ -69,50 +67,31 @@ Cc: Kees Cook <keescook@chromium.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- arch/x86/kernel/e820.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ arch/x86/kernel/e820.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 9920122018a0..b95f0519a877 100644
+index b95f0519a877..904925159560 100644
 --- a/arch/x86/kernel/e820.c
 +++ b/arch/x86/kernel/e820.c
-@@ -304,18 +304,22 @@ static int __init cpcompare(const void *a, const void *b)
- 	return (ap->addr != ap->entry->addr) - (bp->addr != bp->entry->addr);
- }
+@@ -204,12 +204,14 @@ void __init e820__print_table(char *who)
+ 	int i;
  
--static bool e820_nomerge(enum e820_type type)
-+/*
-+ * Can two consecutive E820 entries of this same E820 type be merged?
-+ */
-+static bool e820_type_mergeable(enum e820_type type)
- {
- 	/*
- 	 * These types may indicate distinct platform ranges aligned to
--	 * numa node, protection domain, performance domain, or other
-+	 * NUMA node, protection domain, performance domain, or other
- 	 * boundaries. Do not merge them.
- 	 */
- 	if (type == E820_TYPE_PRAM)
--		return true;
-+		return false;
- 	if (type == E820_TYPE_SOFT_RESERVED)
--		return true;
--	return false;
-+		return false;
+ 	for (i = 0; i < e820_table->nr_entries; i++) {
++		struct e820_entry *entry = e820_table->entries + i;
 +
-+	return true;
+ 		pr_info("%s: [mem %#018Lx-%#018Lx] ",
+ 			who,
+-			e820_table->entries[i].addr,
+-			e820_table->entries[i].addr + e820_table->entries[i].size - 1);
++			entry->addr,
++			entry->addr + entry->size-1);
+ 
+-		e820_print_type(e820_table->entries[i].type);
++		e820_print_type(entry->type);
+ 		pr_cont("\n");
+ 	}
  }
- 
- int __init e820__update_table(struct e820_table *table)
-@@ -393,7 +397,7 @@ int __init e820__update_table(struct e820_table *table)
- 		}
- 
- 		/* Continue building up new map based on this information: */
--		if (current_type != last_type || e820_nomerge(current_type)) {
-+		if (current_type != last_type || !e820_type_mergeable(current_type)) {
- 			if (last_type) {
- 				new_entries[new_nr_entries].size = change_point[chg_idx]->addr - last_addr;
- 				/* Move forward only if the new size was non-zero: */
 -- 
 2.45.2
 
