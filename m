@@ -1,163 +1,98 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE1E298C21;
-	Thu, 15 May 2025 12:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE3B298CDD
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747313511; cv=none; b=qq/3JNJuglA/xui6ZL6ULaC1DBqOcMqmsVM/vf/3eGy380Sa7BLNVB39nmrVGmoq14l8q3fBoIlpD0nhbL+o5ZLWW/kowFGujjEUByRaMVQ/M31DuTsXjIObWKNc9Mo4skItEp6YP51+ta0O6NSQhsis8qpFltHMhzaXk7rsS+E=
+	t=1747313544; cv=none; b=eUZmze4YykgT3tLkv3t2y4tZg8yiY3kj/u6NqsClT/1pauBzE+7A+cssPkSyE6OxoF0UtFxPajFTDdpVOQ+51RGUnml5ok6NHUfLnuDMPEyFkzfaghJTBlQIXRyab2GKHJdq6dIHWmKObaoSbz1lywWybDVKrmgXqREKysxBo8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747313511; c=relaxed/simple;
-	bh=UfCtjCjLMy3EXaRycOntxcaM3apBDdPoyB7FMimlPQk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Inx6BhVwAWtAuqzuVCyL2qqKR/+ogJx+VC5c+/zJfYgKY6IHQWyjfdVbIN5N15wKsoVd/Ij4q2PD6lLU7vjKI21Fh05YHJIaQDB7lqW9FzOaiBMlTbNcjTEwmwj03vKfoxbY5R6TUguDEUqEYsFh0wuvs16BPAFRFJGXM/m49F4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K8SOZwAc; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747313544; c=relaxed/simple;
+	bh=CPkuAWMDXEB5UuZ6HlFfiQZ87mvHOAlAeOGYVCqenus=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cbWSsIAjNoBlBAaKKYZo4kVzI34Wmub2F3N4H83z4LYEqjDO2g4UmK89cRr4UZz7Kx+UdD6oGKgMpvFRCbv8wd540WIIow2cQV6Vv8d0Z2PixYmbYBnH4NF4Plh4Wko1viS2goGM+tVz9jqSMsVnrsAXeXRlEhVQGzt4DNw9lV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RR8++vlc; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K8SOZwAc"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b0db0b6a677so644934a12.2;
-        Thu, 15 May 2025 05:51:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RR8++vlc"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-442ec3ce724so7217685e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 05:52:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747313509; x=1747918309; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NsUnEpTB9TgvbJe08iwx+kPzreYFJA/xHaoOoYwMSYw=;
-        b=K8SOZwAc2TTrrdOmXiFJtLzlE33mifPPJIWtbMAwkp3YJ1sMeUy6bXhE62J9x87/E7
-         5Ul3Dai8MWaZ8GqMjQCUtj7LHoYA5KfXvqNaP4BE1pxYgwLyIKO/NR9v3KLoGy/TayTP
-         l6anXLbL8hHm9F2z3TstalR1GF1ciB5QocKg6iFEOH+CWdEsDxkH8a8dZhiY8AwW16an
-         gH2hBJEgmlkNEs2Z7s7SRwwQKkJUCgZDmcOoMOMS+eOW90h43BQDwDJKlGSqem48rQwi
-         Q6GWNqzFIKeyYX0zL/+hqQ6cWtwO/DMd/35rJ4gqWmxmcYxDahiWK4hO3WyoE1UYSMFz
-         KT8Q==
+        d=linaro.org; s=google; t=1747313540; x=1747918340; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fK3aTKI5/68JTESvc/oXGZyIBHmOFX8dt6G+gKVeWWw=;
+        b=RR8++vlclrR7mSnYYWcClj7379hRTHpvCAatuSGIK+PKgt1QaQeYIsRM9A9IVH+8NR
+         gzJbRVdAwYEptf40X5KvRYyS4KNTzVWHnFtI4+2/bkszInITcI5M1xlUsJnX5r15UX95
+         mzvu/WtaR5mjaJD5KmI0NvQo+b3EJy2O6NcdwUXExaT0nvbLcEj3ppkOrce+asojVmHE
+         28M4jxXWP7RgbQPTZtOc7raTyVlo9gk5jBMO+CgjoREyNLxrdafWi3CljnHf+Ky3QAB3
+         EZmjaHLOvEHRp6LGWyi8LJqzU9ivfnjPo2tG7NrXaoXHKNOzVGAI73ISEo3o92qVjq67
+         s38g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747313509; x=1747918309;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NsUnEpTB9TgvbJe08iwx+kPzreYFJA/xHaoOoYwMSYw=;
-        b=WBNxtFsBmzcN0arRmknX73lZjTo5USswpuQOBjxlCUqok4+dE15pCsLqyEKD968kS0
-         ludIgWFfjCVqVkY31y58RuDx35HlWjbCW3aGNRZApc24QwSv3QywhWtfIYDbXZiRKzB1
-         2sEp5Jn9fpJMD+iQOyxkvXP26KN+Fpnj7zyVSfp2el4+DvQ43Y8G1JKNpMCkkFdyOFBl
-         /f8VmtTfUamhsCI15B/KnyKLvtWnQLFwJ/mi1nG186wnKuMbJUGtZBNwics9HM5J/EHJ
-         /xUczf5PSYFu0boZxcCy9VnLBKyTOlv3cDJ1gFEDue8k6cF06gIuHB6CXCW83k4uj1H/
-         MOWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6Ylg3QpwgGjCjdJ4IVrl9WlYcvDuQPFJ/wwY8CXtNZFO6+Ud/yRs2RpFHK56lecMoHpcy4NUapwMBEKs=@vger.kernel.org, AJvYcCX9DVQ1/VZIttfDKoBW51hjjcqHwF6614rYwOfmMKkQvppXCr3qHTTk7fNfa0m2NMwwoaUhtBr4a5tM1h43@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDJ0vXyGAN60jE2mr8LLrEnwoO7EsP1dBPlWOPa0Sl/AHVXk8O
-	G04ZdqkE2Z/kNU0ipNJGbj67UD5EbH/AJlAAU9f5fqIefYcNZ6/dbCdumXsaK8FXPVlT3RDNBpp
-	BQa3rVlxY0wogH8G7WDMPp2IOc7E=
-X-Gm-Gg: ASbGnct+ykpZb3PDCInPLWR4JxlY5p09twAEde27Ha6kEaoTpMUWj9N6UILOv2DIRmZ
-	j/9w3LhcO7s7BJMACXFulF5yUx4YukgYJYQ2k1vigFzwHm4FSNvH+pQDtWpWRZD22atzU5aZCcA
-	6JszAT9fZUIqP+mVa5YH/P3V9mIGKVpG5nahErUUbhoxQWplU3RF4=
-X-Google-Smtp-Source: AGHT+IHmtTntsE+sfyZwvw5nINLePGfaCPfUPxiD3EwklQw3lSH9rnreveUf94kj+UB+XCwKB297vGNrhQeqiaUwzxM=
-X-Received: by 2002:a17:90b:560f:b0:308:7270:d6ea with SMTP id
- 98e67ed59e1d1-30e2e633452mr10796896a91.30.1747313508929; Thu, 15 May 2025
- 05:51:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747313540; x=1747918340;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fK3aTKI5/68JTESvc/oXGZyIBHmOFX8dt6G+gKVeWWw=;
+        b=WnwHtu/NDQk1catcnjoPm0JhXSGB8ZS2852vbnb6Zj7uhBdEQRsoekap82Lf4s3OgS
+         9zXjb9g6Cd95g1oycOQ60EB1Q1Q/BEH7Vax4z7alLBmpHZo+cmO0a1sb40JRUuKIcy19
+         4/pHztkPV8cPtMsgoBadAFk8k/q8UHvES1n/IIy0jrkbtUnMAd1lU4L2CVOmm19rIc8k
+         ac7hMshYzTPFr5lTj566uGe1qRKo2oNJERqlh0rGrRkKj98EVe3GkQoxdFPkG1/isFqm
+         oIq/dLQrON+XiD+n+/sx90n2XUkepx7NHK5uwJAMTTEDsfeFnXfdyELNjLOtP8Oz8lvJ
+         KZnw==
+X-Forwarded-Encrypted: i=1; AJvYcCXpNWgwBKHycz0XvgwSMGfRdGaBwn46Bk225RHgs+lAQlB4qIMcC+ksHjgfdRys3QOul+qED15bBF5+uAc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKGae6W2N7OrGijL3OMv64ptcmwnxpgt1bkt/q8VnoI8nWc89J
+	zULvHqQERp5/92aCelMCUS067SU3dlDxhcIZmwdbdGUvq872bYeZFjFD/EDH96w=
+X-Gm-Gg: ASbGnct7bE6LAv6yRd+UvK4SYx+v1WLMW2JQmNlaNWYwyAR1WRWeMU/G0RCQThQ3ya/
+	3t5o1Zz8wx6nAZf4r6lV1W1Um3RyXvHgmv653yTsMIkOkMCf5FxywcbWJ+XU3Pdc2IvPnYc2DhL
+	lcFtFtE9cqfTuo2yrPXs0f4Asd/OoFKzkfjqj2yFUsAFhR5zCoVVRfn1oK5QI09EVsYClZc1jiI
+	gpDhs3YlJXwQtdH4XTBwS7KHhFuuHzHS2EegNjXHIUXpx/d0BOBvJy1Izzi2raw5AXU+430JhdK
+	Ykg13EQRuU7onxJgm4bXpInBLmmDLXIvowlLh2eM9T+dIjR1eniWse/NaUEDox/VcPaNBNq89LH
+	LeFlauMbgmLZYfA==
+X-Google-Smtp-Source: AGHT+IHS2/j9+N7xSaRjAkIWps6mxeAYqws1hdNZCTv0XgJraew6abe5Y67oztqEy7hekjalJ6mCwg==
+X-Received: by 2002:a05:6000:2501:b0:3a3:55e6:eac6 with SMTP id ffacd0b85a97d-3a355e6f03fmr1782764f8f.17.1747313540359;
+        Thu, 15 May 2025 05:52:20 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57ddd2dsm22638932f8f.9.2025.05.15.05.52.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 05:52:19 -0700 (PDT)
+Date: Thu, 15 May 2025 14:52:18 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ALOK TIWARI <alok.a.tiwari@oracle.com>
+Subject: Re: [PATCH] thermal: airoha: Fix spelling mistake
+Message-ID: <aCXjgj-3kmcCqLpT@mai.linaro.org>
+References: <20250514213919.2321490-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506130712.156583-1-ltykernel@gmail.com> <SN6PR02MB4157DD818BB2269809AEBBC0D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
-In-Reply-To: <SN6PR02MB4157DD818BB2269809AEBBC0D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
-From: Tianyu Lan <ltykernel@gmail.com>
-Date: Thu, 15 May 2025 20:51:11 +0800
-X-Gm-Features: AX0GCFsIeyWW9s8zrkVlSWBSWiwDw-5SaUxpUcvOQ76LvVHr0Sci75eMLxZmNkw
-Message-ID: <CAMvTesCjTTO4S9wYRNw2BprHJ-+rCnQjZOJBXtBiK3810onT5Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/6] x86/Hyper-V: Add AMD Secure AVIC for Hyper-V platform
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>, 
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>, 
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"hpa@zytor.com" <hpa@zytor.com>, "Neeraj.Upadhyay@amd.com" <Neeraj.Upadhyay@amd.com>, 
-	"kvijayab@amd.com" <kvijayab@amd.com>, "yuehaibing@huawei.com" <yuehaibing@huawei.com>, 
-	"peterz@infradead.org" <peterz@infradead.org>, "jpoimboe@kernel.org" <jpoimboe@kernel.org>, 
-	"jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>, "tiala@microsoft.com" <tiala@microsoft.com>, 
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250514213919.2321490-1-ansuelsmth@gmail.com>
 
-On Thu, May 15, 2025 at 12:54=E2=80=AFAM Michael Kelley <mhklinux@outlook.c=
-om> wrote:
->
-> From: Tianyu Lan <ltykernel@gmail.com> Sent: Tuesday, May 6, 2025 6:07 AM
-> >
->
-> For consistency with other patches, use "x86/hyperv" as the Subject prefi=
-x.
-> I'd suggest being slightly more precise and saying "Hyper-V guests" inste=
-ad
-> of "Hyper-V platform". So,
->
-> x86/hyperv: Add AMD Secure AVIC support for Hyper-V guests
->
-Hi Michael:
-       Thanks for your review.  Good idea ! Will update in the next version=
-.
+On Wed, May 14, 2025 at 11:39:12PM +0200, Christian Marangi wrote:
+> Fix various spelling mistake in airoha_thermal_setup_monitor() and
+> define.
+> 
+> Reported-by: ALOK TIWARI <alok.a.tiwari@oracle.com>
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> ---
 
-> > Secure AVIC is a new hardware feature in the AMD64
-> > architecture to allow SEV-SNP guests to prevent the
-> > hypervisor from generating unexpected interrupts to
-> > a vCPU or otherwise violate architectural assumptions
-> > around APIC behavior.
-> >
-> > Each vCPU has a guest-allocated APIC backing page of
-> > size 4K, which maintains APIC state for that vCPU.
-> > APIC backing page's ALLOWED_IRR field indicates the
->
-> s/APIC backing/The APIC backing/
->
-> > interrupt vectors which the guest allows the hypervisor
-> > to send.
-> >
-> > This patchset is to enable the feature for Hyper-V
-> > platform. Patch "Expose x2apic_savic_update_vector()"
->
-> s/platform/guests/
->
-> > is to expose new fucntion and device driver and arch
->
-> "is to expose the new function. Device driver and arch"
->
-> > code may update AVIC backing page ALLOWED_IRR field to
->
-> s/update AVIC/update the AVIC/
->
-> > allow Hyper-V inject associated vector.
->
-> s/Hyper-V inject associated/Hyper-V to inject the associated/
->
-> >
-> > This patchset is based on the AMD patchset "AMD: Add
-> > Secure AVIC Guest Support"
-> > https://lkml.org/lkml/2025/4/17/585
-> >
-> > Tianyu Lan (6):
-> >   x86/Hyper-V: Not use hv apic driver when Secure AVIC is available
-> >   x86/x2apic-savic: Expose x2apic_savic_update_vector()
-> >   drivers/hv: Allow vmbus message synic interrupt injected from Hyper-V
-> >   x86/Hyper-V: Allow Hyper-V to inject Hyper-V vectors
-> >   x86/Hyper-V: Not use auto-eoi when Secure AVIC is available
-> >   x86/x2apic-savic: Not set APIC backing page if Secure AVIC is not
-> >     enabled.
-> >
-> >  arch/x86/hyperv/hv_apic.c           |  3 +++
-> >  arch/x86/hyperv/hv_init.c           | 12 ++++++++++++
-> >  arch/x86/include/asm/apic.h         |  9 +++++++++
-> >  arch/x86/kernel/apic/x2apic_savic.c | 13 ++++++++++++-
-> >  arch/x86/kernel/cpu/mshyperv.c      |  3 +++
-> >  drivers/hv/hv.c                     |  2 ++
-> >  6 files changed, 41 insertions(+), 1 deletion(-)
-> >
-> > --
-> > 2.25.1
-> >
->
+Applied, thanks
 
+-- 
 
---=20
-Thanks
-Tianyu Lan
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
