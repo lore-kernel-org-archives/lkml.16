@@ -1,53 +1,40 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C802D1C27
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 06:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E238E295D89
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 06:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747291944; cv=none; b=BJrUj1yERvD9o2+VF+OayBtXsJH8ef/xE+UY5V70Do/Qf0/Q6iCOqRQxCoRZ2hqbIpYzFjK0nkiY3KJRegKcucxj7zyIvkhnfUbSsh4/Czv1bO/jQDw9yTNK1xiMgNsDVBQqIMpj9o2yeuvUoHIivDP2FOqdWmvKfndEwXT9qPs=
+	t=1747292036; cv=none; b=u68NfP9yFEh44jkVk1Xtboh3a6DouX6j86THO2ubXNbmktH+syGjSCoCiAa1CQK2yiadM34VROAonPYi1Fvod7TMQeY9GW5heqEU56mELel3tTaiGVERATU2MB3X/2RFwhezViEzA7q8PiUc+hq4zDRWGhb7RY1y/RM3+zK4w44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747291944; c=relaxed/simple;
-	bh=v3rJUJA3VnQscDRiQtRpypekAON6aWpisMA013rym3Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lyea4cS466WdekQlJW+K5Gu9a8AcayGn81TCBkJZYTt5DuHz/pu6tUm5wYY0yGTiTaUEHMxFTPbK/TG6ONM9BDSwv1hJi2N+Ogn0OJTIYfZBTZ/v+ApKYKamiy6RXo+ikuX7ru3nCqoxgvH+kHuNo1dF6aUIAHGfeQRe58hsH2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hbejOnLx; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hbejOnLx"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747291929;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=GCTwaTwDhG28ATyJHv4EIMQid3ICTTX78fEuCxTG/VI=;
-	b=hbejOnLxKOWSzaXgeVPzO5L2LvuY8xqvuBUa6rQnI+e523VjqPbCsHcJBMVGEOHIwHKJPs
-	yVTxbyrgfQJPTxqo3zquuVl9Lwu/ti7bD4aNSAMv3OyQfaV77vw0IJXpGF7iqzjQOjq2T/
-	NJUnpkfIli8/u9m68oK83qoxZZExrLo=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: bpf@vger.kernel.org
-Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
-	Quentin Monnet <qmo@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Daniel Xu <dxu@dxuuu.xyz>,
-	Mykyta Yatsenko <yatsenko@meta.com>,
-	Tao Chen <chen.dylane@gmail.com>,
+	s=arc-20240116; t=1747292036; c=relaxed/simple;
+	bh=cktv4CITdACV+eHzgXvFw72qwUohYgukS+pZ/hDTUdc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=N29XIuVx4F+jaks/nxr4m/r+Ti8gjfZtaiy5XlE9R1pMYjMzUPSH52Tn8K5sIFjhN2cX2FY2VRGcUteocDvGUP4L/zmU4JlJHzZl6hooLwwoEv0Tq4QG2YWlnecoY6hoHcztWlPJbBiuhCKJrUfYhwBiYso931H0sCjbzzuLCr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZygsL1ZDXz4f3jtT
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:53:26 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id CC7BA1A07BD
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:53:45 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.6])
+	by APP4 (Coremail) with SMTP id gCh0CgAHbGB3jyVoyDnbMQ--.29023S3;
+	Thu, 15 May 2025 14:53:45 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: hughd@google.com,
+	baolin.wang@linux.alibaba.com,
+	akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v2] bpftool: Add support for custom BTF path in prog load/loadall
-Date: Thu, 15 May 2025 14:50:11 +0800
-Message-ID: <20250515065018.240188-1-jiayuan.chen@linux.dev>
+Subject: [PATCH v2 1/5] mm: shmem: avoid unpaired folio_unlock() in shmem_swapin_folio()
+Date: Thu, 15 May 2025 23:47:54 +0800
+Message-Id: <20250515154758.956521-2-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20250515154758.956521-1-shikemeng@huaweicloud.com>
+References: <20250515154758.956521-1-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,92 +42,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:gCh0CgAHbGB3jyVoyDnbMQ--.29023S3
+X-Coremail-Antispam: 1UD129KBjvdXoWrZw15CF17tw4xWw13tF47Arb_yoWfZFgEvF
+	1kt34UWw4Igwn29r1jkFW3X34F93yFvwn8uFyxKFy3A3s8tr4kZFWktr1Yqr9rWFy29rsI
+	kF1qqrZIvry2gjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbDAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl82
+	xGYIkIc2x26280x7IE14v26r18M28IrcIa0xkI8VCY1x0267AKxVWUXVWUCwA2ocxC64kI
+	II0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7
+	xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2
+	z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxV
+	WUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
+	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIx
+	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAF
+	wI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j3ManU
+	UUUU=
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-This patch exposes the btf_custom_path feature to bpftool, allowing users
-to specify a custom BTF file when loading BPF programs using prog load or
-prog loadall commands.
+If we get a folio from swap_cache_get_folio() successfully but encounter
+a failure before the folio is locked, we will unlock the folio which was
+not previously locked.
+Put the folio and set it to NULL when a failure occurs before the folio
+is locked to fix the issue.
 
-The argument 'btf_custom_path' in libbpf is used for those kernes that
-don't have CONFIG_DEBUG_INFO_BTF enabled but still want to perform CO-RE
-relocations.
-
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+Fixes: 058313515d5aa ("mm: shmem: fix potential data corruption during shmem swapin")
+Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 ---
- tools/bpf/bpftool/Documentation/bpftool-prog.rst |  7 ++++++-
- tools/bpf/bpftool/bash-completion/bpftool        |  2 +-
- tools/bpf/bpftool/prog.c                         | 12 +++++++++++-
- 3 files changed, 18 insertions(+), 3 deletions(-)
+ mm/shmem.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/bpf/bpftool/Documentation/bpftool-prog.rst b/tools/bpf/bpftool/Documentation/bpftool-prog.rst
-index d6304e01afe0..e60a829ab8d0 100644
---- a/tools/bpf/bpftool/Documentation/bpftool-prog.rst
-+++ b/tools/bpf/bpftool/Documentation/bpftool-prog.rst
-@@ -127,7 +127,7 @@ bpftool prog pin *PROG* *FILE*
-     Note: *FILE* must be located in *bpffs* mount. It must not contain a dot
-     character ('.'), which is reserved for future extensions of *bpffs*.
- 
--bpftool prog { load | loadall } *OBJ* *PATH* [type *TYPE*] [map { idx *IDX* | name *NAME* } *MAP*] [{ offload_dev | xdpmeta_dev } *NAME*] [pinmaps *MAP_DIR*] [autoattach]
-+bpftool prog { load | loadall } *OBJ* *PATH* [type *TYPE*] [map { idx *IDX* | name *NAME* } *MAP*] [{ offload_dev | xdpmeta_dev } *NAME*] [pinmaps *MAP_DIR*] [autoattach] [kernel_btf *BTF_DIR*]
-     Load bpf program(s) from binary *OBJ* and pin as *PATH*. **bpftool prog
-     load** pins only the first program from the *OBJ* as *PATH*. **bpftool prog
-     loadall** pins all programs from the *OBJ* under *PATH* directory. **type**
-@@ -153,6 +153,11 @@ bpftool prog { load | loadall } *OBJ* *PATH* [type *TYPE*] [map { idx *IDX* | na
-     program does not support autoattach, bpftool falls back to regular pinning
-     for that program instead.
- 
-+    The **kernel_btf** option allows specifying an external BTF file to replace
-+    the system's own vmlinux BTF file for CO-RE relocations. NOTE that any
-+    other feature (e.g., fentry/fexit programs, struct_ops, etc) will require
-+    actual kernel BTF like /sys/kernel/btf/vmlinux.
-+
-     Note: *PATH* must be located in *bpffs* mount. It must not contain a dot
-     character ('.'), which is reserved for future extensions of *bpffs*.
- 
-diff --git a/tools/bpf/bpftool/bash-completion/bpftool b/tools/bpf/bpftool/bash-completion/bpftool
-index 1ce409a6cbd9..609938c287b7 100644
---- a/tools/bpf/bpftool/bash-completion/bpftool
-+++ b/tools/bpf/bpftool/bash-completion/bpftool
-@@ -511,7 +511,7 @@ _bpftool()
-                             ;;
-                         *)
-                             COMPREPLY=( $( compgen -W "map" -- "$cur" ) )
--                            _bpftool_once_attr 'type pinmaps autoattach'
-+                            _bpftool_once_attr 'type pinmaps autoattach kernel_btf'
-                             _bpftool_one_of_list 'offload_dev xdpmeta_dev'
-                             return 0
-                             ;;
-diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
-index f010295350be..3b6a361dd0f8 100644
---- a/tools/bpf/bpftool/prog.c
-+++ b/tools/bpf/bpftool/prog.c
-@@ -1681,8 +1681,17 @@ static int load_with_options(int argc, char **argv, bool first_prog_only)
- 		} else if (is_prefix(*argv, "autoattach")) {
- 			auto_attach = true;
- 			NEXT_ARG();
-+		} else if (is_prefix(*argv, "kernel_btf")) {
-+			NEXT_ARG();
-+
-+			if (!REQ_ARGS(1))
-+				goto err_free_reuse_maps;
-+
-+			open_opts.btf_custom_path = GET_ARG();
- 		} else {
--			p_err("expected no more arguments, 'type', 'map' or 'dev', got: '%s'?",
-+			p_err("expected no more arguments, "
-+			      "'type', 'map', 'dev', 'offload_dev', 'xdpmeta_dev', 'pinmaps', "
-+			      "'autoattach', or 'kernel_btf', got: '%s'?",
- 			      *argv);
- 			goto err_free_reuse_maps;
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 99327c30507c..980fa15f393e 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2335,6 +2335,8 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 		 */
+ 		split_order = shmem_split_large_entry(inode, index, swap, gfp);
+ 		if (split_order < 0) {
++			folio_put(folio);
++			folio = NULL;
+ 			error = split_order;
+ 			goto failed;
  		}
-@@ -2474,6 +2483,7 @@ static int do_help(int argc, char **argv)
- 		"                         [map { idx IDX | name NAME } MAP]\\\n"
- 		"                         [pinmaps MAP_DIR]\n"
- 		"                         [autoattach]\n"
-+		"                         [kernel_btf BTF_DIR]\n"
- 		"       %1$s %2$s attach PROG ATTACH_TYPE [MAP]\n"
- 		"       %1$s %2$s detach PROG ATTACH_TYPE [MAP]\n"
- 		"       %1$s %2$s run PROG \\\n"
 -- 
-2.47.1
+2.30.0
 
