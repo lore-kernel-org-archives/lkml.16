@@ -1,88 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD2629A9CC;
-	Thu, 15 May 2025 13:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 532191BC4E;
+	Thu, 15 May 2025 13:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747314808; cv=none; b=oCFNOuQY8gaKihjyJ5PdwPPKn5Y5f3y6Mk/aLIDuPutEOb1+rEVErn9vwWJ/ZyRcdh+j3DcMHtt44DkFoAExPZsfe/TscCK8ReRRsFmAuf42nHyznUz8nonXSlPsKoXaAVw4X6fjDxciP0XAwWdaHy3VJxFdYF5ICuuRGvKxvZk=
+	t=1747314869; cv=none; b=D1wezY7J659P9W6T9uaO0K+0sNt/wow6MqDXpQydn5WsxflF8U+66Qpt5HZoNqFsium1ETXvdBhAAEldvZCZevhiGZKi/fQn4MnBJkh/6d/9xYh6PbKmB9wQsg46j+YOSWQAZlPBeTNRkOOr/EPHBAiQoWEn5n99N2891xL2TVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747314808; c=relaxed/simple;
-	bh=Y5x0Q5wwhg5x4WNJLlfJSj3Na3CIMpE00k8kQT2PRPI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VkCCj0VGqXviD5VQjJ8HjLFb7qzK1YDyIRy38Re2wUwIHD4nW8Xex4R0j2GUys0kNhCPt117z9MiFZ16v5H5+7mkRy+MZBoogBYqimT1vlXI79PpiWAU3H3t6x8eO9jBWVyfkNhdvsyH7079m3IAOxia94JbcVnK8eo4Zj/f88Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CwdgySrB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CwdgySrB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79970C4CEE7;
-	Thu, 15 May 2025 13:13:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747314807;
-	bh=Y5x0Q5wwhg5x4WNJLlfJSj3Na3CIMpE00k8kQT2PRPI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CwdgySrBFpBknjowQX5Hoxv6LObSUmuFtYmiMRQUWj5s+X6Oy28kwmAvXM9dgeFUh
-	 aMypFFt2AEPp2VpYL84MmhfFffQ/5mBFY4/cVxpYuBxhdiHpsZ0EcTn2DhcDowf1ub
-	 qmUW/bBpIMjI2vN/rIBFu8dEt9FgLc5HUQwIBkumjALsrJLzuK4EeqFya30Fpn17c6
-	 zLBIDd5DOyFcuLW5bNPAiNaGxfyDxX3X45eFzAQWxZtUtXk3YN8u1ZeJqeNKWv9LwL
-	 9rPgr6PcheBYjnKRyQ71wIieMzBIChgrPx17FUGtbor72kdQ3ci2DtM5UZWXKSRH6n
-	 sbolT6KimcIaQ==
-Date: Thu, 15 May 2025 14:13:21 +0100
-From: Lee Jones <lee@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Artur Weber <aweber.kernel@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Stanislav Jakubek <stano.jakubek@gmail.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v8 4/9] mfd: bcm590xx: Add support for multiple device
- types + BCM59054 compatible
-Message-ID: <20250515131321.GG2936510@google.com>
-References: <20250430-bcm59054-v8-0-e4cf638169a4@gmail.com>
- <20250430-bcm59054-v8-4-e4cf638169a4@gmail.com>
- <20250509140957.GD2492385@google.com>
- <aCRZzwW0w8oVWLUp@finisterre.sirena.org.uk>
- <20250515071357.GD2936510@google.com>
- <aCWfre2-n_PSuhxR@finisterre.sirena.org.uk>
- <20250515092000.GF2936510@google.com>
- <aCW0822BVpfKV2NL@finisterre.sirena.org.uk>
- <8beeddcf-1dc7-4af8-b287-4c896852b258@gmail.com>
- <aCXQUu97HL_yrH89@finisterre.sirena.org.uk>
+	s=arc-20240116; t=1747314869; c=relaxed/simple;
+	bh=/hLA+6nCAyhMG0wsMlOqsGR2pq4/83HOduMcfHlrHlE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hOp21qmv/YuKbD85qo+d8juGiZe5sgUwW62YSPTqyjzL3z656VzXaN+A6SFib1OJyVgVBt5RwSCKeQiRKA+K2j7XgJY5Ak6r5HhTDWxZoE4al8bDeIkXo8ep7rsIr+AaXtCM+drpVZPZRBagJLXH+JYlYG9/lNCtzfB3WtF7iM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C99E91595;
+	Thu, 15 May 2025 06:14:14 -0700 (PDT)
+Received: from [10.1.32.187] (XHFQ2J9959.cambridge.arm.com [10.1.32.187])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A4AC3F5A1;
+	Thu, 15 May 2025 06:14:25 -0700 (PDT)
+Message-ID: <bfd07631-fece-48fe-90a3-778ce9abfbf1@arm.com>
+Date: Thu, 15 May 2025 14:14:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: Check pxd_leaf() instead of !pxd_table() while
+ tearing down page tables
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>, Dev Jain <dev.jain@arm.com>,
+ catalin.marinas@arm.com, will@kernel.org
+Cc: anshuman.khandual@arm.com, mark.rutland@arm.com,
+ yang@os.amperecomputing.com, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
+References: <20250515063450.86629-1-dev.jain@arm.com>
+ <332ecda7-14c4-4dc3-aeff-26801b74ca04@redhat.com>
+ <4904d02f-6595-4230-a321-23327596e085@arm.com>
+ <6fe7848c-485e-4639-b65c-200ed6abe119@redhat.com>
+ <35ef7691-7eac-4efa-838d-c504c88c042b@arm.com>
+ <c06930f0-f98c-4089-aa33-6789b95fd08f@redhat.com>
+ <bac0d8e2-6219-4eb2-b4c8-b82b208808b5@arm.com>
+ <3aeb6b8e-040c-47ae-8b46-1ef66d5f11e4@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <3aeb6b8e-040c-47ae-8b46-1ef66d5f11e4@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aCXQUu97HL_yrH89@finisterre.sirena.org.uk>
 
-On Thu, 15 May 2025, Mark Brown wrote:
+On 15/05/2025 14:01, David Hildenbrand wrote:
+> On 15.05.25 12:07, Ryan Roberts wrote:
+>> On 15/05/2025 09:53, David Hildenbrand wrote:
+>>> On 15.05.25 10:47, Dev Jain wrote:
+>>>>
+>>>>
+>>>> On 15/05/25 2:06 pm, David Hildenbrand wrote:
+>>>>> On 15.05.25 10:22, Dev Jain wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 15/05/25 1:43 pm, David Hildenbrand wrote:
+>>>>>>> On 15.05.25 08:34, Dev Jain wrote:
+>>>>>>>> Commit 9c006972c3fe removes the pxd_present() checks because the caller
+>>>>>>>> checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller
+>>>>>>>> only
+>>>>>>>> checks pud_present(); pud_free_pmd_page() recurses on each pmd through
+>>>>>>>> pmd_free_pte_page(), wherein the pmd may be none.
+>>>>>>> The commit states: "The core code already has a check for pXd_none()",
+>>>>>>> so I assume that assumption was not true in all cases?
+>>>>>>>
+>>>>>>> Should that one problematic caller then check for pmd_none() instead?
+>>>>>>
+>>>>>>     From what I could gather of Will's commit message, my interpretation is
+>>>>>> that the concerned callers are vmap_try_huge_pud and vmap_try_huge_pmd.
+>>>>>> These individually check for pxd_present():
+>>>>>>
+>>>>>> if (pmd_present(*pmd) && !pmd_free_pte_page(pmd, addr))
+>>>>>>       return 0;
+>>>>>>
+>>>>>> The problem is that vmap_try_huge_pud will also iterate on pte entries.
+>>>>>> So if the pud is present, then pud_free_pmd_page -> pmd_free_pte_page
+>>>>>> may encounter a none pmd and trigger a WARN.
+>>>>>
+>>>>> Yeah, pud_free_pmd_page()->pmd_free_pte_page() looks shaky.
+>>>>>
+>>>>> I assume we should either have an explicit pmd_none() check in
+>>>>> pud_free_pmd_page() before calling pmd_free_pte_page(), or one in
+>>>>> pmd_free_pte_page().
+>>>>>
+>>>>> With your patch, we'd be calling pte_free_kernel() on a NULL pointer,
+>>>>> which sounds wrong -- unless I am missing something important.
+>>>>
+>>>> Ah thanks, you seem to be right. We will be extracting table from a none
+>>>> pmd. Perhaps we should still bail out for !pxd_present() but without the
+>>>> warning, which the fix commit used to do.
+>>>
+>>> Right. We just make sure that all callers of pmd_free_pte_page() already check
+>>> for it.
+>>>
+>>> I'd just do something like:
+>>
+>> I just reviewed the patch and had the same feedback as David. I agree with the
+>> patch below, with some small mods...
+>>
+>>>
+>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>>> index 8fcf59ba39db7..e98dd7af147d5 100644
+>>> --- a/arch/arm64/mm/mmu.c
+>>> +++ b/arch/arm64/mm/mmu.c
+>>> @@ -1274,10 +1274,8 @@ int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
+>>>            pmd = READ_ONCE(*pmdp);
+>>>   -       if (!pmd_table(pmd)) {
+>>> -               VM_WARN_ON(1);
+>>> -               return 1;
+>>> -       }
+>>> +       VM_WARN_ON(!pmd_present(pmd));
+>>> +       VM_WARN_ON(!pmd_table(pmd));
+>>
+>> You don't need both of these warnings; pmd_table() is only true if the pmd is
+>> present (well actually only if it's _valid_ which is more strict than present),
+>> so the second one is sufficient on its own.
+> 
+> Ah, right.
+> 
+>>
+>>>            table = pte_offset_kernel(pmdp, addr);
+>>>          pmd_clear(pmdp);
+>>> @@ -1305,7 +1303,8 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
+>>
+>> Given you are removing the runtime check and early return in
+>> pmd_free_pte_page(), I think you should modify this function to use the same
+>> style too.
+> 
+> BTW, the "return 1" is weird. But looking at x86, we seem to be making a private
+> copy of the page table first, to defer freeing the page tables after the TLB flush.
+> 
+> I wonder if there isn't a better way (e.g., clear PUDP + flush tlb, then walk
+> over the effectively-disconnected page table). But I'm sure there is a good
+> reason for that.
 
-> On Thu, May 15, 2025 at 01:28:15PM +0200, Artur Weber wrote:
-> > On 5/15/25 11:33, Mark Brown wrote:
-> > > On Thu, May 15, 2025 at 10:20:00AM +0100, Lee Jones wrote:
-> 
-> > > > I can go with 2 in this case.  Applying in dribs-and-drabs as Acks come
-> > > > in would be sub-optimal and would likely end up in a mess.
-> 
-> > > Well, then just going a head and applying them on a branch with a tag
-> > > seems easier than delaying then.
-> 
-> > I can split the patchset into two parts (one for MFD, one for regulator)
-> > if it helps.
-> 
-> There's still a dependency on the MFD bits whatever happens.
+As I understand it, the actual TLB entries should have been invalidated when the
+previous mappings we vfree'd. So the single page __flush_tlb_kernel_pgtable()
+calls here are to zap any table entries that may be in the walk cache. We could
+do an all-levels TLBI for the entire range, but for a system that doesn't
+support the tlbi-range operations, we would end up issuing a tlbi per page
+across the whole range which I think would be much slower than the one tlbi per
+pgtable we have here.
 
-Right.  That won't help since you need to describe the deps.  Submitting
-them as a set was the correct thing to do.
+Things could be rearranged a bit so that we issue all the tlbis with only a
+single set of barriers (currently each __flush_tlb_kernel_pgtable() issues it's
+own barriers), but I'm not sure how important that micro-optimization is given I
+guess we never even call pud_free_pmd_page() in practice given we have had no
+reports of the warning tripping.
 
--- 
-Lee Jones [李琼斯]
+> 
+>>
+>>>          next = addr;
+>>>          end = addr + PUD_SIZE;
+>>>          do {
+>>> -               pmd_free_pte_page(pmdp, next);
+>>> +               if (pmd_present(*pmdp))
+>>
+>> question: I wonder if it is better to use !pmd_none() as the condition here? It
+>> should either be none or a table at this point, so this allows the warning in
+>> pmd_free_pte_page() to catch more error conditions. No strong opinion though.
+> 
+> Same here. The existing callers check pmd_present().
+
+Yeah fair let's be consistent and use pmd_present().
+
+Thanks,
+Ryan
+
