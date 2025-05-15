@@ -1,95 +1,84 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01A92101AE;
-	Thu, 15 May 2025 10:49:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E082980AE
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747306174; cv=none; b=j1r2BfA2m0sf/plJR6nkHQ4JW2ZJAEJ+MuANn2Z4auwdLXTN928VeRfO+KTgpBTiNHoDU+sRkDLz7cDDtWFepyr/dFazS6SaE/WcAUbEnW1zC9FDQVxN3peFIPNp839xyVcR7i+AlUx/UYv/KirelTUf7XlNMH2MeDGvmg9Brfk=
+	t=1747306212; cv=none; b=rKEmjsLSoehLq3ixf4O7awMVd3QCKMi3BCGZ11pOVJaYyf9TfZDGyfLUcAMjuVodjiA0y9Rupy5/0FvjXcQMrW8KyuBBkfD89UIn2Gzwp8Aqb6uEiju8ufbmElAaRFtGZXMdvAzOD8GjZ+tMHK6V47zmbDEuABkSnJhxFutmQLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747306174; c=relaxed/simple;
-	bh=tFsaYwqq/XOzOdN/T6tvc0f3OJ5+Koygucog5fYi5MM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DJjWHmkbcVSJlu9dQ6eR8v7sPNECFe5L10jsgIFP6aqn0Sd3gPST1ljbe12LVkUqBC2nUbaGcR3TY0n6V7EYFj1uEapmHRi2dkChTQmes88YE8MSw1SUIkW0hIkEuIO++4oStQ0MB21tW+VEDOGaiseyLAvIZOGyKqoyR5xJuyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=rSbTnGeO; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1747306212; c=relaxed/simple;
+	bh=+IEuG948LXrMZMS5OGNBPOGxqd54s2Puls6YfPlNeVw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K45u+UxINo3TF2aqRe+RA+c82MwAEdATT9+SYZGuLqHwLM7RqkJoS/desBmWxj6zhHTsVLkHAmyfmEtJogd0J2+p2O+JngDeItt9COC7SqNf/GhNv5tobuoqC5Cs5d7CJIZQ4Q4uTxTV9o+zI4mN26dAyXmqcmwYQkf7BxHUUMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=twQ5YpDO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="rSbTnGeO"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uFW9R-003Sxf-5e; Thu, 15 May 2025 12:49:21 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
-	bh=V6U6TgHHp/PrCB7JP5WcdZvqqmCnTPEWOC9eHJ6fj7g=; b=rSbTnGeOXgUUZBXM8rnA+9aHVC
-	CSmRTGuKx/AjREk3ptDoi8ce4/ca0+IsQCpOJBsMLp4XwtIz49eYXWP1ZTy+yFPJTxApv0LpjNfGT
-	RpgZaSo/yCMcbnQbI1ecLwlwOYEvtvLvn2J8Z3bfWf1KicGz/EoE2Ll4Z9eRAGO+z+OrA6MiOvQ1e
-	EjoeCGvslArs21ree5Nhd4eUqWnACocdgg/vBlQvp11l8fVDosoJPhpfGa6+XDWzYBTX2xQISP+0N
-	/T9snvZJm07zovXMVlB+jP+fua4ntxwJT3h8G/YmZ+X8y3dHS/rRMzAxJ053DdamXJO9G8lOCd6QE
-	bUlqYSIg==;
-Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uFW9Q-0004ip-56; Thu, 15 May 2025 12:49:20 +0200
-Received: by submission01.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uFW9F-008WYe-MC; Thu, 15 May 2025 12:49:09 +0200
-Message-ID: <069def19-1a77-4677-9bc9-70a44215cd05@rbox.co>
-Date: Thu, 15 May 2025 12:49:08 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="twQ5YpDO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E011C4CEE7;
+	Thu, 15 May 2025 10:50:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747306211;
+	bh=+IEuG948LXrMZMS5OGNBPOGxqd54s2Puls6YfPlNeVw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=twQ5YpDOJFzAVHXlp2V2orlFbGTYwXT5xp7GAc9XnYAmwQceib6jxQbYq2k8UCAYW
+	 a46QokaiLAK1ynq85b8nI0juQC9OTOj8lhC+whUucgcCKt6AP3rreaC3r+0lOB/vod
+	 f8+lW/cAGp+C3QmZcsfUeFyFhmdftNst+gloZxivKsQDm21r13xW5fC+x7YQwDQQXg
+	 5j2puOfSfYOGchzmn8NnfKRU/nZQhzWHNL3trSv2rOeM2IuSjv7nip5psz0C9WLEHZ
+	 gQTOUEvX781Osjb7HYjeNE/XmjZ4x/on3nA0P6WLJzpyZUChQAwSZI15kivj2hNI6y
+	 qnCLm8WApkMIw==
+Date: Thu, 15 May 2025 12:50:05 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+	Arnd Bergmann <arnd@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Juergen Gross <jgross@suse.com>, "H . Peter Anvin" <hpa@zytor.com>,
+	Kees Cook <keescook@chromium.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	David Woodhouse <dwmw@amazon.co.uk>
+Subject: Re: [PATCH 07/29] x86/boot/e820: Print out sizes of E820 memory
+ ranges
+Message-ID: <aCXG3XwU4cmlmcM3@gmail.com>
+References: <20250421185210.3372306-1-mingo@kernel.org>
+ <20250421185210.3372306-8-mingo@kernel.org>
+ <aAc5Wlwj4gaBApIy@surfacebook.localdomain>
+ <aCXFdvWiNW94F24R@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v3 4/8] selftests/bpf: Introduce verdict programs
- for sockmap_redir
-To: John Fastabend <john.fastabend@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman
- <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
- Jiayuan Chen <mrpre@163.com>
-References: <20250515-selftests-sockmap-redir-v3-0-a1ea723f7e7e@rbox.co>
- <20250515-selftests-sockmap-redir-v3-4-a1ea723f7e7e@rbox.co>
- <20250515042900.5dox2mozx455tekm@gmail.com>
-Content-Language: pl-PL, en-GB
-From: Michal Luczaj <mhal@rbox.co>
-In-Reply-To: <20250515042900.5dox2mozx455tekm@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCXFdvWiNW94F24R@gmail.com>
 
-On 5/15/25 06:29, John Fastabend wrote:
-> On 2025-05-15 00:15:27, Michal Luczaj wrote:
->> Instead of piggybacking on test_sockmap_listen, introduce
->> test_sockmap_redir especially for sockmap redirection tests.
->>
->> Suggested-by: Jiayuan Chen <mrpre@163.com>
->> Acked-by: John Fastabend <john.fastabend@gmail.com>
->> Signed-off-by: Michal Luczaj <mhal@rbox.co>
->> ---
+
+* Ingo Molnar <mingo@kernel.org> wrote:
+
+> > > +	}
+> > > +	if (size < SZ_1G) {
+> > 
+> > Can be written in one line as
+> > 
+> > 	} else if (...) {
 > 
-> LGTM, this is a net new patch in v3 though correct? In the future
-> only carry the Acks into patches that are from the previous version
-> and not substantially changed.
+> Done. (See delta patch below.)
 
-Will do, sorry.
+Actually, I take this back, as there's a return in the branch above:
 
-Note that I wasn't being sneaky, I asked about it in the cover letter :)
+                        pr_cont(" %4llu   MB", size/SZ_1M);
+                return;
+        }
+        if (size < SZ_1T) {
+
+Which makes the plain 'if' more readable: the previous 'if' branches 
+off entirely and control flow never gets back, so mix the blocks with 
+'else if' looks a bit weird.
 
 Thanks,
-Michal
 
-> All the same thanks for doing this. For this patch.
-> 
-> Acked-by: John Fastabend <john.fastabend@gmail.com>
-
+	Ingo
