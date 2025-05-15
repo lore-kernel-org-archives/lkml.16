@@ -1,110 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BB71FCFFC;
-	Thu, 15 May 2025 08:54:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B60028F95B;
+	Thu, 15 May 2025 08:55:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299273; cv=none; b=D7l9udZxg7F+mj+9NsFvRzwAG7tgQJ9haxITfPF0NuCnahxPnZQqrEsaSW920g43Uc5KFmODEcX+yYbgy3CNafjI1wN0YT3ZNYS2/DrxNfgH+4Eoo1tin2U594ORCZ8sf+5gcCD5ArlAYN7MCHDvghbLyQIMew+4RAgj3TLSFIs=
+	t=1747299302; cv=none; b=L3HxVEgQY6hrpmSEVhpD6c7Nz0VDexLNzCgSrI9mUkv3Z2m/f2VdB8NwHM8xPZh3TUBp1dRHgUac5yJO2d2NCB8iFqt38Q7Wd2qVxhxi12jm7kQXo+FkX2n0bAJVuyvGed3eU0DTUThqY0fcZKTRBeVCB/IitDfqh09TOiuPSyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299273; c=relaxed/simple;
-	bh=h+VsUgSmErOy2grzt87OXyIDJW5HdE1chW0emZWQhC4=;
+	s=arc-20240116; t=1747299302; c=relaxed/simple;
+	bh=LBRCYx6yEYw3JtcZjfSpiVcbjCjzsGhvOmR/nBYptGc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ADvv3CRrhPdhLtUkrzyZ0V4mdGf7W3IJajT0svI6onqXm5IFM9G6Hmq44Ksi08wpQNXMFLTLfC5xTprseDJHSB8swS2M127Zgdlc5dhkRwmtRHVuFG490aduINyIA8PIWQFDODS9jxJAEvpAX+eqTIUeObXAMWD+ex0YhChvM5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UtnPOeib; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GXby/bQ/Q5HVWpm4qH9oO7lBiFjdr0qw3+1vAVzk1v0uT7aQSi3z5vqrEXCs0IeMORgsgSaboBUqs3eQbPBuLJ252MIsWZNNUOOmsGDMFHiAEoS3jJx0ssqnXVjVJT8jpJw8MXKwX6f19FwJUJFMoypl0V5vl+YUUOCBuSTgG24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gkmu0CWP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UtnPOeib"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 993EAC4CEE7;
-	Thu, 15 May 2025 08:54:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gkmu0CWP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8211DC4CEE7;
+	Thu, 15 May 2025 08:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747299273;
-	bh=h+VsUgSmErOy2grzt87OXyIDJW5HdE1chW0emZWQhC4=;
+	s=k20201202; t=1747299301;
+	bh=LBRCYx6yEYw3JtcZjfSpiVcbjCjzsGhvOmR/nBYptGc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UtnPOeib6y06l+qlV9LfdW2QLTo13UdK1gBQz/g7xaT68XnvnR/KQyA3UswXqZN8C
-	 ZlBBZ5bPPyfll8IolsEuRy+E1tPBs/yBVsyDt4ijeB7GbCNnlyiW9/RGbD4rkNO1oh
-	 qNGp5nNKLC8yR+SPyCK9gzj8pwno6kweYcBc0Ne+Yf0kwetrO3J2aMZo3WfYo3uT22
-	 qNa/cvg9R5mpyzD4uEoAl0AkmODpatVQyXOCCNswt6HsXjQK1+cf4Cuwz6RxIMO/7z
-	 yiXh0Mgui0krxVSfYz++H+cEscRoZkf3g34tv2BzauqzgXCf5XZhBdU9w/23w+ehlN
-	 dxGHp+tDs2SbA==
-Date: Thu, 15 May 2025 10:54:27 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Rob Clark <robdclark@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>,
-	Rob Clark <robdclark@chromium.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 01/40] drm/gpuvm: Don't require obj lock in destructor
- path
-Message-ID: <aCWrwz2IF6VBUi4e@pollux>
-References: <20250514175527.42488-1-robdclark@gmail.com>
- <20250514175527.42488-2-robdclark@gmail.com>
+	b=Gkmu0CWPpNp86K/Euz/Dm/e9t+19BBJ4AZWRaMDphQEk3US7k8Zey8c0olpWuVXM8
+	 ZnipbUJLdpq/d4XbppKnYptDpShQmqzMqaVK5fY3RwEryRp3G5m9N4FilTcq2v6NdY
+	 lHL3ByJ8wjGe5fczpts9EydsGOjjRTsoaCPg3MbVoJuxHxi8bHCU6UmUi9xFGatMpk
+	 xpqNDhskY4sklfMIIaL8ZTog9/30KFvuwS5UnvetQqGl5imNwCKyP/8XEr6hsugkgp
+	 76AIm57wcqumpg2zAvGvdj5vSm+PdbKgoAEtmK1/qWx43HX9XpxVHmu4Q5k4F/ULmu
+	 XxNmuiDI4VUVQ==
+Date: Thu, 15 May 2025 10:54:56 +0200
+From: Mark Brown <broonie@kernel.org>
+To: Chen-Yu Tsai <wenst@chromium.org>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	"Darren.Ye" <darren.ye@mediatek.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 03/10] ASoC: mediatek: mt8196: support audio clock
+ control
+Message-ID: <aCWr4HDpEOr_jn3C@finisterre.sirena.org.uk>
+References: <20250514081125.24475-1-darren.ye@mediatek.com>
+ <20250514081125.24475-4-darren.ye@mediatek.com>
+ <be75ac83-5421-4bb0-a28a-57be639f427c@collabora.com>
+ <CAGXv+5Hj358gOBomY=KdwYojgpwxFP-tiM38Z18b63ie=922mg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pqANQ8hKcxHdPm61"
 Content-Disposition: inline
-In-Reply-To: <20250514175527.42488-2-robdclark@gmail.com>
-
-Hi Rob,
-
-Can you please CC me on patches for GPUVM?
-
-On Wed, May 14, 2025 at 10:53:15AM -0700, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
-> 
-> See commit a414fe3a2129 ("drm/msm/gem: Drop obj lock in
-> msm_gem_free_object()") for justification.
-
-Please write a proper commit message that explains the problem and the solution.
-Please don't just refer to another commit and leave it to the reviewer of the
-patch to figure this out.
-
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
->  drivers/gpu/drm/drm_gpuvm.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+In-Reply-To: <CAGXv+5Hj358gOBomY=KdwYojgpwxFP-tiM38Z18b63ie=922mg@mail.gmail.com>
+X-Cookie: Well begun is half done.
 
 
-> diff --git a/drivers/gpu/drm/drm_gpuvm.c b/drivers/gpu/drm/drm_gpuvm.c
-> index f9eb56f24bef..1e89a98caad4 100644
-> --- a/drivers/gpu/drm/drm_gpuvm.c
-> +++ b/drivers/gpu/drm/drm_gpuvm.c
-> @@ -1511,7 +1511,9 @@ drm_gpuvm_bo_destroy(struct kref *kref)
->  	drm_gpuvm_bo_list_del(vm_bo, extobj, lock);
->  	drm_gpuvm_bo_list_del(vm_bo, evict, lock);
->  
-> -	drm_gem_gpuva_assert_lock_held(obj);
-> +	if (kref_read(&obj->refcount) > 0)
-> +		drm_gem_gpuva_assert_lock_held(obj);
-> +
->  	list_del(&vm_bo->list.entry.gem);
+--pqANQ8hKcxHdPm61
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This seems wrong.
+On Thu, May 15, 2025 at 04:50:33PM +0800, Chen-Yu Tsai wrote:
+> On Thu, May 15, 2025 at 4:40=E2=80=AFPM AngeloGioacchino Del Regno
+> <angelogioacchino.delregno@collabora.com> wrote:
+> >
+> > Il 14/05/25 10:11, Darren.Ye ha scritto:
+> > > From: Darren Ye <darren.ye@mediatek.com>
+> > >
+> > > Add audio clock wrapper and audio tuner control.
 
-A VM_BO object keeps a reference of the underlying GEM object, so this should
-never happen.
+Please delete unneeded context from mails when replying.  Doing this
+makes it much easier to find your reply in the message, helping ensure
+it won't be missed by people scrolling through the irrelevant quoted
+material.
 
-This function calls drm_gem_object_put() before it returns.
+--pqANQ8hKcxHdPm61
+Content-Type: application/pgp-signature; name="signature.asc"
 
->  
->  	if (ops && ops->vm_bo_free)
-> @@ -1871,7 +1873,8 @@ drm_gpuva_unlink(struct drm_gpuva *va)
->  	if (unlikely(!obj))
->  		return;
->  
-> -	drm_gem_gpuva_assert_lock_held(obj);
-> +	if (kref_read(&obj->refcount) > 0)
-> +		drm_gem_gpuva_assert_lock_held(obj);
->  	list_del_init(&va->gem.entry);
->  
->  	va->vm_bo = NULL;
-> -- 
-> 2.49.0
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmglq98ACgkQJNaLcl1U
+h9B/xQf/WCgax1XZIrHI7sRyhwZ6FlzcWWzC/96GoahlhlHRo6AwJ7ves1riScIY
+iWfySDDylRMd2YfjjtoaKosS1N3/jAK8cHbUwFhap4h1WSGltSq+V55v17AzaO+k
+tn1SDdLEjA2pMy5+fatN3uVR2PheWLbi5mjxhXzxYTJW/lxfZ22kPl67IGqCFkpu
+uh9U74kyhK2m7NnZvjAdwW8is3GrihqtIS7zoqcT3R4DLc3hYEQbJdFTjXzUFyZm
+gG/cWOUHko4BbpK5jXfBEgFSDiOT6bzhnHZ1uE4S8ckah7tmctIdVZZ19mwZ5UWI
+QAnFFOIaD+7/KimjanojcgHqkusz3g==
+=hJfD
+-----END PGP SIGNATURE-----
+
+--pqANQ8hKcxHdPm61--
