@@ -1,150 +1,174 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31AF1A8F8A
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F2E19CC0E
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747317846; cv=none; b=iDceZyWfNnWNG9NQLqrso2du2/4fyQgUeIvWURxMrYJoeeyMydhLgYpdpBhYE9FavxbUyNFlzIp9azeozSvg2Gvwwt7QDZz+cEjwAV4XSCbUCLP4OUVPfiaX8g0+P/wmpSEjhpU9xThgBcBYaAmDwj5Y5h6JA7ny6+tII1KZILQ=
+	t=1747317903; cv=none; b=HgUVNBihPBHk3Xod9CCw6R4qlXnEDHe/C2ou1Ip7JF/O22LNgBWErgtaJyD6vGXt9AhmRo4NsNvMRApZi0qHYb5uiSjHcvG4tMz4TsD3IBdhoY9zwCGwTe20E6ggyJLrPbj/bdCfKP6QUi7lsoVfkk/8HguhvL5Gsg1O4hA0Uss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747317846; c=relaxed/simple;
-	bh=DsRj+jneIY2sA6r65luroD5vKWTeHga6pT4b93go548=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PG5FVH1HJOOkMakgfZa72rc4kecBCfTpDpdypRRbRULAd/MWNXT8Uae0SfKvrYqDxdNu1VPFKc4wbw99Cw7QR0MxrW+vteSseDl4zM77dEwhxofbBISjQIrn0atoq9B40FzWabIfTTIkqOySRf9QPjfhwmTWo9qwGPVFckkCD1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mihalicyn.com; spf=pass smtp.mailfrom=mihalicyn.com; dkim=pass (1024-bit key) header.d=mihalicyn.com header.i=@mihalicyn.com header.b=Z72aYsf6; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mihalicyn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mihalicyn.com
+	s=arc-20240116; t=1747317903; c=relaxed/simple;
+	bh=i8tlY/LbfI0ZDQSrDItL+NiokGBk6h8Vq0LsxV2KBrU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IDgIsZJLumKRdQHQBvaDKs4YiRnocTozHTkxp+lEk92hkBb+C41C2NW+QjAq+7Q+u8KRrwlQTfLEaKL8yIvhYM4Ljbm2dS4FVUg7KZHQlZmMkBwSgfo96SQBQ73x4dKvyd5v+ozbUhPwgl0wExcaIoo/Sd+PCmjXxgcAspVdgYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Z7pwWEil; arc=none smtp.client-ip=209.85.210.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mihalicyn.com header.i=@mihalicyn.com header.b="Z72aYsf6"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54fcffd6b9dso1089972e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 07:04:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Z7pwWEil"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-72c172f1de1so754283a34.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 07:05:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mihalicyn.com; s=mihalicyn; t=1747317842; x=1747922642; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=d35JeSz60cGLvBbWCEkXPoHFgobJD8TSYk4oLoUb8Jc=;
-        b=Z72aYsf6Ur4NaGzBtnAtynfQr3+i9KM4Xnp1WCWPuNIHQUDl16SIHxXORgRmGZ9qhl
-         xepheZq23ouhWZRD1IEywpYuaz5sGdHufi7p0sidQAmuoeAFfHQkxlUyZnrLaRbYkcrN
-         49ktLs39h8GK+f1MT4bXn7454rnhG6EXOylKU=
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747317900; x=1747922700; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9K77ZU3+im9NvK6fucyyQ4XpbTRkWMjyw12HrfwTZqs=;
+        b=Z7pwWEiltQ7ovS77kfVNfs+mxU8th+aD84I2nMsFmNNtyX7Apij1J3/lT+X0Lry8ng
+         GkW3fq9HbaQAfJ4YnUL2puCafh88xDUAv0hEV1ALrx2Ql3mBXmGNwyFD6g9Ksajv+/4z
+         iKF1bHFe8BZzz7J70RpoOtQ55+jLc25bQdZDdPjC4lKLY4sbp1Sh8svOleLndqY2kPrs
+         /uKsJqwBNo0ZWkp9HVbC1q3OmFfDlVhSJmMK9831958aiQdc24q4kVzdGmI10xPysXrS
+         3gdwo+W8UJE+0e3Zlw0qXi1++zNiiRB1BL2Otq1UaYZfjSSOCsjZbCU9b8JsEB3KzYvl
+         Of5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747317842; x=1747922642;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=d35JeSz60cGLvBbWCEkXPoHFgobJD8TSYk4oLoUb8Jc=;
-        b=ifiVVCPRG/z6twUawyrRtcXBIm3H61itPjnrb3E8r4KrQ+2+ZhnmG/96P4V2b1DYCf
-         AqjQVWFCKxZJX1IdXgD2ODEeV6tRs/bJy9bEdBNXzrJ18MvEqQURJDtPc9nesF4mEt15
-         fEnDEV6lduFcEcprgrH89u/nUr7AimGXgwcmtq3l3jxfHO9GCXRbjf1q/mvsBP14ec/K
-         PvYKaR+D/jnA3m/vb9uq9sHQOlAwV2rkcpRHrHkRcv1zPL7HBuUArfCEXwHXDwXFtPuh
-         5NPzHeOFvJT4dgz1b6pUprL3aFR7/7fJmqEmx6PmdGoxtLNzH2p/rDRQDs/TwRNojgmw
-         1Nww==
-X-Forwarded-Encrypted: i=1; AJvYcCVeIXytsDj6l0YGXiaZZpQ4fnUQXZu0sO/EXCZLR16wMR2pVgqpAL8sHtbkKnMJsN4JSKtZDwNUFjszORo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVJXJH8dKAFghuIZIKjomvmirR67YIgaoTRt3gYFPhpYhOlZig
-	lZkHikscGRMlTZMEEUiBA8XVfdcdJPhNLzIC8jEmEmb4DvyI5U9lOiu0i2sKFpZCOdMepJJyORn
-	CazL5eWTUxGANhpSins2w+Xi1ioEeAkp5vxz71Q==
-X-Gm-Gg: ASbGnctiGpP1Dbi5xSJh7HTpKwgBbnIFsoRMeyS4L2lHdxmeL6oNM1tWAifys7GJnu7
-	8mH+OQmM28od6yu0mMVCKRV6hvSsz8AwS4KzUqwMNpbH+QgJMsy9CklEx9/NXXhx0VolMdYvXta
-	kq76lyepAe32mEQbIAlxHEeXCu9oYeTLUqdvruKUM+giUB
-X-Google-Smtp-Source: AGHT+IFL9ojUwqLTPuSTYsHfs2cnzH8sa00mdSfBUjswRLfNB8BX2UwMPe5/nMKCpf2uCx4jaw02E7zhcwzkR4jIXnc=
-X-Received: by 2002:a05:6512:2618:b0:54e:86f3:5e54 with SMTP id
- 2adb3069b0e04-550d5fae056mr2628304e87.5.1747317840276; Thu, 15 May 2025
- 07:04:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747317900; x=1747922700;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9K77ZU3+im9NvK6fucyyQ4XpbTRkWMjyw12HrfwTZqs=;
+        b=fa5kvF1/mmvZ6lPh6g6V4v1RF3DU5FA2OOXJysb2BDmMUVUcvroJGHSy+E5a55YRB8
+         c4JmoayB7j+eqoBiPC0b0ee6ErwS6Q0PnQC+lz2JASNuN+BTl9THWvYQGtNg7qtGcFgH
+         IEY1jbS90bIPV1QlgmMzinh4P4csc0ZqNJwz6IqSI5ML7T809Rm6pzlCCKyjVk4XJZcc
+         uLZEUXXSvOlO3GMjXzVGzqSZp/16AFW11749sTHqpatYn8MwhMC5D/dvZWKt6Gl6yW/T
+         hhdZ0CaK4WTctISvtuND/B69Qo757FpqfEkLY7xa/eGi+/Scq+TJ1GIpZM65icJIG30F
+         l8Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCUUh5dIKVMWjtX4VLIMLFw02RE9e9204DNorZKSeRULZMiPtGR3UBnkxv+RBn0oP0zqpH5BzMf4oasEwTI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzx6wcOpmqGG8bqZYpatqg5I0ZtfAk+dQUvulsr/fjgqAozcico
+	Ib343uAnO1TgWyxDUXwjqs21tQosSqC+u5X63sRToGe/NiPIAp9dV1oiv68Ti6M=
+X-Gm-Gg: ASbGncvBBE5MUB9w/C7hAqz2TgIZuzqZtSGFax76HKBdCuMi2/qO44m5eCflgCChkKQ
+	+bP4TTJzw5nYEELBAcYzPwHG/UoWGdtGAeS9UOXOPbF9rixu18XAjFchYWru076EhaImehQun9z
+	KGFWhQeC1vWwi9t0Ngnueqiq08Faev2k2tmSUdj/7zfK4KeAeS2trV+hT752oc2v9zTKaBYkZx6
+	STM/JeERkYaInPJfjC+6NvqD0ThZTLODdLEsVmSnxw37lhgFNfH2tg3rD6L6EOlppDjX0pAXpJ1
+	dIj/81D6z4/D+Wg+zWsHlmRRQVDNSqkReqUabYqxZh+V571+i3bc1XFJKVj8M8D7KrtORoNL/PB
+	bRBCfugC+EKVwSFlPJraFoXeE1NWX
+X-Google-Smtp-Source: AGHT+IE5zLtoEtrW+oFDBQ1zy1uWy5TOgC1cPAyin7uJmHiCiE/9u6LzX2kphTwBuNw2dfLO3Zn//g==
+X-Received: by 2002:a05:6830:4109:b0:731:cac7:3634 with SMTP id 46e09a7af769-734e13d0966mr4171455a34.3.1747317899864;
+        Thu, 15 May 2025 07:04:59 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:bb18:367a:73d3:5230? ([2600:8803:e7e4:1d00:bb18:367a:73d3:5230])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-732264d78fbsm2733023a34.32.2025.05.15.07.04.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 07:04:59 -0700 (PDT)
+Message-ID: <81b2a499-1927-4fb3-b581-a533c64507a6@baylibre.com>
+Date: Thu, 15 May 2025 09:04:57 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515-work-coredump-socket-v7-0-0a1329496c31@kernel.org> <20250515-work-coredump-socket-v7-7-0a1329496c31@kernel.org>
-In-Reply-To: <20250515-work-coredump-socket-v7-7-0a1329496c31@kernel.org>
-From: Alexander Mikhalitsyn <alexander@mihalicyn.com>
-Date: Thu, 15 May 2025 16:03:49 +0200
-X-Gm-Features: AX0GCFsHLEGADAYqPdli5zm43751kHI-Zre11GNAREbwlvpOpR_Hl8TIVXvYN_M
-Message-ID: <CAJqdLroQx3v-xD279phQB1ToF70T-2cAbAA0SC-nbnAK+EHGmA@mail.gmail.com>
-Subject: Re: [PATCH v7 7/9] coredump: validate socket name as it is written
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, Jann Horn <jannh@google.com>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
-	Eric Dumazet <edumazet@google.com>, Oleg Nesterov <oleg@redhat.com>, 
-	"David S. Miller" <davem@davemloft.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Daan De Meyer <daan.j.demeyer@gmail.com>, David Rheinsberg <david@readahead.eu>, 
-	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings:iio:gyroscope:invensense,itg3200: add binding
+To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, nuno.sa@analog.com, andy@kernel.org
+Cc: ~lkcamp/patches@lists.sr.ht, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250515002817.81863-1-rodrigo.gobbi.7@gmail.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250515002817.81863-1-rodrigo.gobbi.7@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Am Do., 15. Mai 2025 um 00:04 Uhr schrieb Christian Brauner
-<brauner@kernel.org>:
->
-> In contrast to other parameters written into
-> /proc/sys/kernel/core_pattern that never fail we can validate enabling
-> the new AF_UNIX support. This is obviously racy as hell but it's always
-> been that way.
->
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-
-Reviewed-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
-
+On 5/14/25 7:21 PM, Rodrigo Gobbi wrote:
+> There is no txt file for it, add yaml for invensense,itg3200 gyroscope.
+> 
+> Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
 > ---
->  fs/coredump.c | 37 ++++++++++++++++++++++++++++++++++---
->  1 file changed, 34 insertions(+), 3 deletions(-)
->
-> diff --git a/fs/coredump.c b/fs/coredump.c
-> index 6ee38e3da108..d4ff08ef03e5 100644
-> --- a/fs/coredump.c
-> +++ b/fs/coredump.c
-> @@ -1228,13 +1228,44 @@ void validate_coredump_safety(void)
->         }
->  }
->
-> +static inline bool check_coredump_socket(void)
-> +{
-> +       if (core_pattern[0] != '@')
-> +               return true;
+> Added @Jonathan as the maintainer here due a suggestion in a
+> different thread for a different binding file.
+> Created this yaml using the driver probe and comparing with other gyro bindings.
+> Tks and regards.
+> ---
+>  .../iio/gyroscope/invensense,itg3200.yaml     | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml b/Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml
+> new file mode 100644
+> index 000000000000..0656dbb58cf2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/gyroscope/invensense,itg3200.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +       /*
-> +        * Coredump socket must be located in the initial mount
-> +        * namespace. Don't give the that impression anything else is
-> +        * supported right now.
-> +        */
-> +       if (current->nsproxy->mnt_ns != init_task.nsproxy->mnt_ns)
-> +               return false;
+> +title: Invensense ITG-3200 Gyroscope
 > +
-> +       /* Must be an absolute path. */
-> +       if (*(core_pattern + 1) != '/')
-> +               return false;
+> +maintainers:
+> +  - Jonathan Cameron <jic23@kernel.org>
 > +
-> +       return true;
-> +}
+> +description: |
+> +  Triple-axis, digital output gyroscope with a three 16-bit analog-to-digital
+> +  converters (ADCs) for digitizing the gyro outputs, a user-selectable internal
+> +  low-pass filter bandwidth, and a Fast-Mode I2C . Datasheet can be found here:
+> +  https://invensense.tdk.com/wp-content/uploads/2015/02/ITG-3200-Register-Map.pdf
+
+This is only the register map, not a proper datasheet, so isn't useful
+for the devicetree bindings.
+
 > +
->  static int proc_dostring_coredump(const struct ctl_table *table, int write,
->                   void *buffer, size_t *lenp, loff_t *ppos)
->  {
-> -       int error = proc_dostring(table, write, buffer, lenp, ppos);
-> +       int error;
-> +       ssize_t retval;
-> +       char old_core_pattern[CORENAME_MAX_SIZE];
+> +properties:
+> +  compatible:
+> +    const: invensense,itg3200
 > +
-> +       retval = strscpy(old_core_pattern, core_pattern, CORENAME_MAX_SIZE);
+> +  reg:
+> +    maxItems: 1
 > +
-> +       error = proc_dostring(table, write, buffer, lenp, ppos);
-> +       if (error)
-> +               return error;
-> +       if (!check_coredump_socket()) {
-> +               strscpy(core_pattern, old_core_pattern, retval + 1);
-> +               return -EINVAL;
-> +       }
->
-> -       if (!error)
-> -               validate_coredump_safety();
-> +       validate_coredump_safety();
->         return error;
->  }
->
->
-> --
-> 2.47.2
->
+
+Missing vdd-supply and vlogic-supply properties. These should be
+required.
+
+Missing clocks property for optional external clock.
+
+We always try to make the DT bindings as complete as possible
+even if the driver doesn't use all of it.
+
+> +  interrupts:
+> +    minItems: 1
+> +
+> +  mount-matrix:
+> +    description: an optional 3x3 mounting rotation matrix.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        itg3200@68 {
+
+           gyro@68
+
+Generic names are preferred.
+
+> +            compatible = "invensense,itg3200";
+> +            reg = <0x68>;
+> +            pinctrl-names = "default";
+> +            pinctrl-0 = <&itg3200_pins>;
+
+Probably don't need pinctrl stuff in the example.
+
+> +            interrupt-parent = <&gpio2>;
+> +            interrupts = <24 IRQ_TYPE_EDGE_FALLING>;
+> +        };
+> +    };
+
