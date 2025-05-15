@@ -1,82 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A3E1C862D;
-	Thu, 15 May 2025 08:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D2427CCF6
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747296292; cv=none; b=nSJ72TY+eaDMuB1ZrSzjghmjKlECwn9ukJzNSMVJtQq7NweYzStYIbKm6k9mZSrBlkoYnPFZ8hTDm+KNCdDsU8XVKmJ0o4BSDSiR4qpuL83Pio9rb/nM4ZbgsAzBfVfEV/zHI+1B0CDn8ii12TLsTIkh6D9lXbLepsfAHkR1VFQ=
+	t=1747296315; cv=none; b=H+MrkkG4yom8tm71n2xbSMnO7SZyiaCmVIOPWi7ZToFyZvt95veDerHsgM23WGv5pM+Op/fbKfGU7CfqXXFMcLrja1AKUQ9Ueyyx0dclG2M2u71mtfa2zpeUo/ICaiXVuEgqW4DpRhCzYMRznYp3/CAyDP+3Ct5MRxYJNxbvcy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747296292; c=relaxed/simple;
-	bh=ty0IDKnnmR8p8z94Fij8gOadvYL2Zq0dAMs8I1xCWOU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KkmkW7nycUUyLdtebzPRnL6t6LgpX8ac5kKKiOqUp+D/InxapccL0nGdlkNAi7HYuR0DX5HWs2pE4XhjwRc+GLLbfks1IgZXJnG7KYJ6MqWHP05Hn7YcXgs8gEJY8IjPxFKKSa7xbbfMPSZGxzCVtDvtNIWVl42Swy8zqg89Sos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uCpBL1tt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747296315; c=relaxed/simple;
+	bh=0tGKkkemugSf6qbz3gshaWCoVsCRbxCI+SQBbX3dIFY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=COcuADjP9JN/tbu/pT0tqJ77Ds5lNh3ISzjaTc0zwlnyMKbxJ2XcFkyFvmM/KboGII4uPltDlLJSYVMwDQ8aHEUBaD1pJpta/uknxRlQYuZDcrFzVfH11M4DPD2PsVh/eMDy2sXa8zD2gnJuwNY1AW17QJYFb5liNh5bN0zKRbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=QleRWDJ1; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uCpBL1tt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47FF8C4CEE9;
-	Thu, 15 May 2025 08:04:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747296292;
-	bh=ty0IDKnnmR8p8z94Fij8gOadvYL2Zq0dAMs8I1xCWOU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uCpBL1tthvB7RQhyphDgK7R5PRZbPQ4JnJnp1G4ZBARD3XYdQi8QdAKD5g62ixqVh
-	 KRyzWYwOBg+NuLw9AUjgRAE4Dihh4GIEmtTwlJCeGzqs2MJI7qOqIYIi5aLDMr3TrE
-	 LYMwlfnwGEntV2xJj2P+EaG3tjjGHn4Tj2K5H8gi7BYblyOMGgrFABfMD2D8Mw6XZ6
-	 J5L6wD3lei/2YyCNDrfPu4p2ctIGYvfeXIqZb3QkufP1Ex8h/5TAnsCdCVv8+oEh1p
-	 kuJWgAzqF9rFzJtwshH375DLztzJdttIbKJ85cEdv2ZSGmpUXxH2Jvf21NM7HP5SKb
-	 CVKS/ZVc8xogw==
-Date: Thu, 15 May 2025 10:04:47 +0200
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 6.1 00/96] 6.1.139-rc2 review
-Message-ID: <aCWgH6bec0nxse9I@finisterre.sirena.org.uk>
-References: <20250514125614.705014741@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="QleRWDJ1"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a064a3e143so264747f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:05:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1747296311; x=1747901111; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=edff1LhptN7FQ5Bq2oruaEckY3n2IP7/Je81wTRfspE=;
+        b=QleRWDJ1MjKGuTARD+JMrNkTAxf4HJRsTFLkXkCVtL9CbWW4H8867e4gRrYe6EwAgm
+         XPMtN/ccgxu1Iakt4TGULyjyPIWkeK++REj8S0mb+Lp0Y5BdRQJ1RgMKofZ+1rn3lsyW
+         bxi4phbRhYV5kVMHXtDrnLPMbUHaadKUFkpJh31Uhr5GNhzN3CoyH06OzrvpRMWIGd1p
+         lPNsa58+0OPS7jisV6aHdqQaXvnPOoiqqmJRmt4T6k338Xqel0OrIM7fT7Wlbtpc6I1K
+         tJpyOs9c9HSn4DpSUK56f70L5Bp4sMOeG4KS6HeQFC/D8fEHOlBzkrpRaFUFsy+XNvVH
+         FJ7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747296311; x=1747901111;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=edff1LhptN7FQ5Bq2oruaEckY3n2IP7/Je81wTRfspE=;
+        b=ggEXyymHcwsZoyO2UB0vdHVP1Rt0WNHZclfCyb9TuzXnouSH68sOUslhl05XcGxB5W
+         qiKef9i7gTR8XsTvNoTlJPpKY2KYvT7i2+rjUz5Quni0doZqUkhnPZK1DnrEMmvqRiq0
+         L34aX+w7pYkTxOkaYKZHPucgrb3Ri+SmFItn4QH/J7QNidh9jv1A9IVtZECt6fBjWtfN
+         1lF1aTHUE8OH5OuFCneZSuaOTUDgo7RbGB9rnJuKUQ178nBy6563IlAkQZR0gDqHfsy6
+         IwD15cWk4Zjr23eMUJTtHnfMggjzYQgTdlHlXNfpvMVWEBl6nWxkK2V8JbcSkZQ1cb+X
+         LIhA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/Bgo5Jm0tCshbaaCbpR79ojY++2aNBnE7W1sH0Qeuzs76RGqXwtULQ7sPww+8atbvIrJmPnXDtS0VmPQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeC7UKT1NaGlPBEiiKD8EjNWNr4TSsl5gW1YDnplCwH8haJiBt
+	7jreu4vJ3UPy4rpCDbPz8q2MpmzBzC5n86c60g+gw0tCBI8J7eIXM9khCXkihUY=
+X-Gm-Gg: ASbGncvOxXvgOa6P063DY2T9zpl+dBHAbZeQOfVLqn/5YtjCaLIHI4SmW0PLX4LbcT3
+	y0+eNy32qMnls1/3nSEtI6x2jKSTk5Zqi3NSJ6AB1EuyXi+H1Jlh5FtNSKMNrkJVtuAlSJ4BtsU
+	W6wKiNjM7i1X8sxq7rYIiMH/TAeg6hvnBWdkWUdK1Ol9Don8eGnVRd8iVbgKx+gpYueScCOuL6j
+	RugA2ybcy1frF8Rdpu23yNPtNFDLs6FosI1kmH41QRaPzA5rLraNI/e5qL3uRYmR+D1VSN/fYDr
+	84JoT9bYOBlEjF3beIrvYs8E9TdMp45ndiz296JqD3GxwdDQ6nDt8A==
+X-Google-Smtp-Source: AGHT+IGXvziHODCht+twr6uozgFfTyAclIKdnZuTVey4CsU1/XVbIcw96mTLNhe3rmJT4ESA13CsYg==
+X-Received: by 2002:a05:6000:2911:b0:39e:dbb0:310f with SMTP id ffacd0b85a97d-3a34992746amr5945525f8f.39.1747296311397;
+        Thu, 15 May 2025 01:05:11 -0700 (PDT)
+Received: from [10.100.51.48] ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4dea85df68fsm9441727137.18.2025.05.15.01.04.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 01:05:10 -0700 (PDT)
+Message-ID: <e2ebf88d-46a2-4f38-a0c8-940c3d3bee49@suse.com>
+Date: Thu, 15 May 2025 10:04:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="TGrf15Nb218DgonB"
-Content-Disposition: inline
-In-Reply-To: <20250514125614.705014741@linuxfoundation.org>
-X-Cookie: Well begun is half done.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/12] module: Move modprobe_path and modules_disabled
+ ctl_tables into the module subsys
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+ Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
+ <da.gomez@samsung.com>, Kees Cook <kees@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Waiman Long <longman@redhat.com>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Uladzislau Rezki <urezki@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Helge Deller <deller@gmx.de>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>,
+ linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, rcu@vger.kernel.org, linux-mm@kvack.org,
+ linux-parisc@vger.kernel.org, linux-serial@vger.kernel.org
+References: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
+ <20250509-jag-mv_ctltables_iter2-v1-1-d0ad83f5f4c3@kernel.org>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20250509-jag-mv_ctltables_iter2-v1-1-d0ad83f5f4c3@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 5/9/25 14:54, Joel Granados wrote:
+> Move module sysctl (modprobe_path and modules_disabled) out of sysctl.c
+> and into the modules subsystem. Make the modprobe_path variable static
+> as it no longer needs to be exported. Remove module.h from the includes
+> in sysctl as it no longer uses any module exported variables.
+> 
+> This is part of a greater effort to move ctl tables into their
+> respective subsystems which will reduce the merge conflicts in
+> kernel/sysctl.c.
+> 
+> Signed-off-by: Joel Granados <joel.granados@kernel.org>
+> [...]
+> --- a/kernel/module/kmod.c
+> +++ b/kernel/module/kmod.c
+> @@ -60,7 +60,7 @@ static DEFINE_SEMAPHORE(kmod_concurrent_max, MAX_KMOD_CONCURRENT);
+>  /*
+>  	modprobe_path is set via /proc/sys.
+>  */
+> -char modprobe_path[KMOD_PATH_LEN] = CONFIG_MODPROBE_PATH;
+> +static char modprobe_path[KMOD_PATH_LEN] = CONFIG_MODPROBE_PATH;
+>  
+>  static void free_modprobe_argv(struct subprocess_info *info)
+>  {
+> @@ -177,3 +177,33 @@ int __request_module(bool wait, const char *fmt, ...)
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL(__request_module);
+> +
+> +#ifdef CONFIG_MODULES
+> +static const struct ctl_table kmod_sysctl_table[] = {
+> +	{
+> +		.procname	= "modprobe",
+> +		.data		= &modprobe_path,
+> +		.maxlen		= KMOD_PATH_LEN,
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dostring,
+> +	},
+> +	{
+> +		.procname	= "modules_disabled",
+> +		.data		= &modules_disabled,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		/* only handle a transition from default "0" to "1" */
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ONE,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
 
---TGrf15Nb218DgonB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is minor.. but the file kernel/module/kmod.c contains the logic to
+request direct modprobe invocation by the kernel. Registering the
+modprobe_path sysctl here is appropriate. However, the modules_disabled
+setting affects the entire module loader so I don't think it's best to
+register it here.
 
-On Wed, May 14, 2025 at 03:03:45PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.139 release.
-> There are 96 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+I suggest keeping a single table for the module sysctl values but moving
+it to kernel/module/main.c. This means the variable modprobe_path must
+retain external linkage, on the other hand, modules_disabled can be made
+static.
 
-Tested-by: Mark Brown <broonie@kernel.org>
+-- 
+Thanks,
+Petr
 
---TGrf15Nb218DgonB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgloB4ACgkQJNaLcl1U
-h9BFvQf/TZ/2gGHjYWTXvkypDcyopzNZrahO+NJRSe9vkdvX2EfbZSlOpD9m65nR
-jUo2ii/R3z41QlhOsXErM/6DfWKPcQDI+tR6IhmGTterEFCc1iGudbe/v3GLRI/5
-Dofua7UUpG+A7DvHjO7IH+wj+DqyHF4aED+Dov7K/g/X3DU7HjdlLhtbN/0PsT+F
-/GqUO9M6fDcTTAyYoAFUOrd1rT735JhBQVX+SGFXE0I6nMY6+cWECTkrd9QOsTuw
-ZasCDHGAahK1WyZ11H90ywarjuUNK5Ew85iIbv/sfkojkBEWIh79l2z/FCai2EBb
-aZnYajYKrBbdCuJyAPHzyV4JcBh2Wg==
-=QhUV
------END PGP SIGNATURE-----
-
---TGrf15Nb218DgonB--
+> +};
+> +
+> +static int __init init_kmod_sysctl(void)
+> +{
+> +	register_sysctl_init("kernel", kmod_sysctl_table);
+> +	return 0;
+> +}
+> +
+> +subsys_initcall(init_kmod_sysctl);
+> +#endif
