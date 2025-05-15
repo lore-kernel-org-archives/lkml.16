@@ -1,180 +1,648 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2074.outbound.protection.outlook.com [40.107.95.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFAB2690E0;
-	Thu, 15 May 2025 18:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747333432; cv=fail; b=P7dD5pWSwNV2uHRw2vaGRvhetvHex8D2dhIJfyl01Fva2U42ESNOMVzdoVZYHH4W/q7FnrD201cZFjcR1nF8U66RHPQ/JnHhdZHn1o2151UU0YFrogPFjJuN0ncc7gYJSnLSj0r+0qtwa32OjcH2cxbFnJoxlHXHvqSogCmPh+8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747333432; c=relaxed/simple;
-	bh=czCK0Xu6RDK3HbMlOrugI+oeZnHHxM4HA6722mvk7dU=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=THmGiTxWsJRM0UNf3T7iQArOjsB8aBKuO22AIJIcFwMbU4E3Ch0onl+jvy1pZ0suat72QSA+lbpsLQbi5LqM9mQEYT8L7ly09KdP4MxYfTxGSsWl2xboTb9y91PYMo7QOuWwB1rGo4KRCFVtF9y5kLJga94KHwOVriQE8Nbmbmk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=j8OS3Ctg; arc=fail smtp.client-ip=40.107.95.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7C9268C6B
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747333430; cv=none; b=mtwu48aKTVs+5ai9w3/gmz3FaMVdf+qaqAp9aGXAvRzzjvmj9vPeWdPMbU+NFgNFGSXgMkGxndnk0bSCQ65bZnwPacTBAQaZXtaWXcrmu8Nq4LLetWpGP49ets0N9OCel933Hn2/tTB7hW3qFSnDU3WyXeq4f4NGaRV+u+QWIJg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747333430; c=relaxed/simple;
+	bh=e4Bwg9sSIKzn/lkP2knt8ta1KGa8xV4kwB0HY1L9R14=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KOdCa+EolSDqBNtl/aYdGtOZGMqCGOWgvd4DFL2L5daClhR/kCHXGe71X/js8dxoOOWHvfBEz4QGKeSKb5L0FeMaefTmQy4RBHEuylQHEFILXmHYJW8yr5k5+VBndaqjMq9zSeadNaf+saMqYiLj9RK9A6hc+Xq32V1hKlOmfuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=je/w6cCD; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="j8OS3Ctg"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=f6pQ1TfbC/S8BDocaf1L2VnFBOhEzyMChC2y6AF8lzkOKJA7qC2c8tqFDTj3YcBPu6p1RTaJNcjMa4yaKk+J4ks8zpfrnMAw9D/hq+JIk/1/3sUzUZ3vaoQ3GyRdBeBSfGtBV2fMlJE+opq9mOvCIynRq9AXpahMfIsjixnDjejVBT4AUAfCCMAcdV8R2W5s8wcq67rrjtBzGsbC2k/Wy3CWbUW5lxESZb6sE+wcOwp2ux370eMO0DWoQNYOaeqOh0IrIjCe06gTECRZ+6BdwPuKS+YdYYPMefSsMTvwuVR/5BF4NqPrk+gyExZ1EHzeqqtd2/y7WxBrrcPUXOqKbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GftCIezhei8KSImkLcQ6tbJqQm8TqDLH8Y6mKOJtJj4=;
- b=AEtp3U0ZK4CkNFdjNCekLSTwyPUZz6cjAunF+kI3aACtDoHTohwQ/jTYci+SqSaXyqBSKYqzLc+Ng2OKYClzX5acmZ6b1IEJyH9nEHvcHxPjhKLQ3yJ7vrhS1gAPmsklei84+6B+RC1z6MJkuFa66gQGObM3EFb7OL5hrrBNfr18PQtSXsk4ZZ5NGMaTxG1zl/AixeGXX1F8QQ/8urGlmEL8GuKCLhtbR5Td2+e+5c5DliLxkWSpdPttAumeDHzw0GbB4CnMSGJefpMfq3A4ZEUCOokJANBrmAJd/7+Tk3WR5NK4dDPvf0GQv6aL4JmjlkgqHN/Bq1VoiBz481SUVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GftCIezhei8KSImkLcQ6tbJqQm8TqDLH8Y6mKOJtJj4=;
- b=j8OS3CtgXxERQ9xZ/BooQi2euSgGokpzGzNDYHHUGI5hMhAkgEJgmbGCWvoy9zPMDLe/9lzxp7bUZ761WkfLS5sIOKx/IJk0llHSRKxRyKnpKQFTm73DnbudmDYHff6nusz4C+XC6QK9i4dNT2S1Mv21JYLoy+CRgjziJEPXa/EXiN/3W7Om49kAgerGTf+lVv48wO1bRn1wEq2pEAQdj+4csKCe6MYDPUCIdSeb1AzX0uWd7Wzy8ENNaXe7YkhYRE3yUZUYbE1dAULPqT/iuPXoP0TczRGF6kMMFE7VuLwT4l6HzYJDnEpwXun046G+2Ti3fBRaFsz6MLiS9YjEZg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- SJ1PR12MB6340.namprd12.prod.outlook.com (2603:10b6:a03:453::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Thu, 15 May
- 2025 18:23:45 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8722.027; Thu, 15 May 2025
- 18:23:44 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Pedro Falcato <pfalcato@suse.de>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Adam Sindelar <adam@wowsignal.io>,
-	linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	linux-kselftest@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="je/w6cCD"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c597760323so130476685a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:23:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1747333427; x=1747938227; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OgbqJ8uAFqaQzUPM6Yfuc1QdySf2ZJmkbP3YXxkM1A8=;
+        b=je/w6cCDZnzaRU8t9hz7F5XPYe1b6Ponu/25FoV43HYxxgBIUH6e4cYr+/AcxDxita
+         GXfFYDrIveinvrOYccHqxXWAWdneE+1h++jAADH2PTaXAK4INaIcGst14oAFaRBRqlco
+         IXj+AhBgYVX3nN5YHMZ2DmL0O1rWOYq+kb1W230Tukq+6CeufVrtDWg+oBtR9zca3S54
+         5+X2besUdNh9bl7ANqQUNy3bqPve2pRrmOSSDSECAQNxoGEzqMXIiAGMGKChqWBWGiil
+         n5d0feorzjlV0fgJ3C0qPDNtwWDUCyKM3Awwfu1qm4UE0EhPMHauxppONOBWFV1kLWG/
+         q4SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747333427; x=1747938227;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OgbqJ8uAFqaQzUPM6Yfuc1QdySf2ZJmkbP3YXxkM1A8=;
+        b=qhQXVPU0TJQUOixqo4WrT0oMOT6PM+jscLgyM2yIbABOUWojPeuk1cMp32s6Er/98E
+         LCoZcP7bcbtEmuoUtHAwkCVviiIVm48l6vfH3WSuoPCuVPwvcL5Rc0jz80gOPoaUdh+0
+         PCYCZG6Qou156ATdUcMi963X/yJEZmIMyMBs7IG97Mmbd/Yb5GkwdesxBuTxf5kf5UT3
+         GT0s6MrEelTlBVsy2QB0ZIzwMn2TKtru54lE+VAfSGw+OPYX1btV99t2Vrdlp4R2AxEt
+         C8i4qwB4edjr+kIPrQU7/B0BE2iVY3NFfMiNqPjTKJf53NXEiY7u+t0fkMNwPjji+aGJ
+         YngA==
+X-Forwarded-Encrypted: i=1; AJvYcCWlbuv1zhJROyKllrJbx/VlNaF4kFbkhkmLRHF+JVW6W8oSIrKJDaOFzLMxYhIuMJIoPUJcDu1S6DFquDk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZYXZ99MS1Zm3gb6RcAuC/H8NtVoIfmzSGmr2+1FSVMrKi2+zG
+	peMgAXxtgevopEGZX2Yk1noLggdKg72sSU7js48E3UtB+uOWxIKBUd6z4OA9rJCWZ2g=
+X-Gm-Gg: ASbGncvVPiSmIU9EaJfJoDSWgsDrl101H+kDhKTPdNGrFTFkO1kWuN7wArLB7vogYBo
+	tIr4bnIkEzAU+DNgxRQ8DhEesRm1TNh5k2R6YcaOtC3Vn7eBG7TkBRl8+GU5K2leBkgnVkaApRC
+	xbxUr4DMzXBfx/bDrVoex0R4VS4HMQAfIPbyDlSku3vCHbTilcoD6yrDCa34bo4s8Lu5JDPDKmI
+	qN3pOwmJ9FMBVF0JruKfWJROI1BjBdzR2UGo8XI0FzSfRsCGoAJUsUY/pRCqVyHcQAvaaOzVlam
+	j5tF/two3pchuHJ0tqftZkuqbhVDW4oadaYX7s7QS6epaEc7c3KIJqZERtLVBa4V5pVL0g1xFdv
+	Xh7F0tAwV+Ir/ASd5eQWrj1lMLphFVkxbH/m7GqdjLMRQ
+X-Google-Smtp-Source: AGHT+IHbo0BqjSV7553DLTOcjGLoeCOmefHo9uBHE4Z501wh+amUmwMVZNZST76DsyUEX0+3rFyCYg==
+X-Received: by 2002:a05:620a:2886:b0:7c5:562d:ccf8 with SMTP id af79cd13be357-7cd46707fe4mr91925285a.8.1747333426761;
+        Thu, 15 May 2025 11:23:46 -0700 (PDT)
+Received: from soleen.c.googlers.com.com (138.200.150.34.bc.googleusercontent.com. [34.150.200.138])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd466fc2afsm18218685a.0.2025.05.15.11.23.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 11:23:46 -0700 (PDT)
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+To: pratyush@kernel.org,
+	jasonmiu@google.com,
+	graf@amazon.com,
+	changyuanl@google.com,
+	pasha.tatashin@soleen.com,
+	rppt@kernel.org,
+	dmatlack@google.com,
+	rientjes@google.com,
+	corbet@lwn.net,
+	rdunlap@infradead.org,
+	ilpo.jarvinen@linux.intel.com,
+	kanie@linux.alibaba.com,
+	ojeda@kernel.org,
+	aliceryhl@google.com,
+	masahiroy@kernel.org,
+	akpm@linux-foundation.org,
+	tj@kernel.org,
+	yoann.congal@smile.fr,
+	mmaurer@google.com,
+	roman.gushchin@linux.dev,
+	chenridong@huawei.com,
+	axboe@kernel.dk,
+	mark.rutland@arm.com,
+	jannh@google.com,
+	vincent.guittot@linaro.org,
+	hannes@cmpxchg.org,
+	dan.j.williams@intel.com,
+	david@redhat.com,
+	joel.granados@kernel.org,
+	rostedt@goodmis.org,
+	anna.schumaker@oracle.com,
+	song@kernel.org,
+	zhangguopeng@kylinos.cn,
+	linux@weissschuh.net,
 	linux-kernel@vger.kernel.org,
-	Zi Yan <ziy@nvidia.com>
-Subject: [PATCH 1/2] selftests/mm: skip uffd tests in madv_guard if uffd is not present.
-Date: Thu, 15 May 2025 14:23:32 -0400
-Message-ID: <20250515182333.346587-1-ziy@nvidia.com>
-X-Mailer: git-send-email 2.47.2
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MN0P222CA0027.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:208:531::35) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	linux-doc@vger.kernel.org,
+	linux-mm@kvack.org,
+	gregkh@linuxfoundation.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	rafael@kernel.org,
+	dakr@kernel.org,
+	bartosz.golaszewski@linaro.org,
+	cw00.choi@samsung.com,
+	myungjoo.ham@samsung.com,
+	yesanishhere@gmail.com,
+	Jonathan.Cameron@huawei.com,
+	quic_zijuhu@quicinc.com,
+	aleksander.lobakin@intel.com,
+	ira.weiny@intel.com,
+	andriy.shevchenko@linux.intel.com,
+	leon@kernel.org,
+	lukas@wunner.de,
+	bhelgaas@google.com,
+	wagi@kernel.org,
+	djeffery@redhat.com,
+	stuart.w.hayes@gmail.com,
+	ptyadav@amazon.de
+Subject: [RFC v2 14/16] selftests/liveupdate: add subsystem/state tests
+Date: Thu, 15 May 2025 18:23:18 +0000
+Message-ID: <20250515182322.117840-15-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
+In-Reply-To: <20250515182322.117840-1-pasha.tatashin@soleen.com>
+References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|SJ1PR12MB6340:EE_
-X-MS-Office365-Filtering-Correlation-Id: d3bf193f-2100-4b90-acdd-08dd93dda037
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?R/W15aQ4efgL3xlaIHX8KHn268rDvl+HU141fX6XG8t62/YMk/uy8a+l9w8T?=
- =?us-ascii?Q?0ot0nvRhBklkKmb57wThCtVSJs7AHnFoxe5mXabINxg3vnGZ7cJFMnOexF45?=
- =?us-ascii?Q?NwqZ/ETF7D63SpP4K8lZB8M1Fx06v1HWsS41tycl/wI6FNDvXTFpKSK2K6GW?=
- =?us-ascii?Q?Jw1+7Pw4awqyX1AEZpPNxqjsWQBRa0/vPBrFmzybtYRCDdRXwyRoIg+FGh2K?=
- =?us-ascii?Q?pd5N/QhHHZMFDc6L5NI2gNFVzIJovVAmlHtsIgQ84u1oi9Y2pWx1IcZpvGxb?=
- =?us-ascii?Q?5sKhZ/YvG52wpaylvsVErvGV1v5Xzvq2urCJBvAQK9HooOKQes7K3kr+XdJM?=
- =?us-ascii?Q?sI3wA9WsqwQWxF/pF47Qqy3Y3PVOi8R+xW51X9XQug2/ZPCyGhoCB3hAiQs3?=
- =?us-ascii?Q?SyyPSYhxYNGMBw/UaYaIaH0C5SK0FFFUhREi61NESytmoLfyB/GHHd5Zy33W?=
- =?us-ascii?Q?9IC0TZrTBvTj6V42skdAO5yoSmHhx86k3qZei6V+yYUiN9pfb/Se7JiL+KMQ?=
- =?us-ascii?Q?aVIkWVD2uep2M3irKp2+cN4Ww38JzED3yv4ODIlxu1ygUEmd4dFbye+stDCu?=
- =?us-ascii?Q?H5i8b06dFhaVAtUHP6jQsE/CXn4B67gQqhoSxGeJIF8NW5LKXP5PTf1tSw49?=
- =?us-ascii?Q?6BNMXrku7+/oJ7keULsSuQ/2PtTaPc+MdJM1h8OiSy9nvi86n9gIuml8P+Zk?=
- =?us-ascii?Q?N/AoZyA26YX5kzU+Q4ci9mNHB9+U+2KYCEpCQ7FNdTzMWuIhF647rE+5cKPS?=
- =?us-ascii?Q?zuw0RwnpiiR/G6fNazjCTwPJQsVuEz7O1SpI6e9KBNEYBXopj7afVv0ipNIc?=
- =?us-ascii?Q?tCmVxRUOsgWzFHWvJqxnIRbxdFxC6UA68HvLJo4/1GOKr+a+J6+C0ppE+Bqo?=
- =?us-ascii?Q?aSY9zgNCfnSfQeZ0r0A72Uk61a3qdnCHFybHH53uhdUF4JtMwaet+FLgfpVU?=
- =?us-ascii?Q?ueDRfrrlWep87ntKe3N5MpIyaSbVu3Pg3qUq4f73O0ZKMZ9EDs/dF7Pd8i5U?=
- =?us-ascii?Q?WIb35crFuKBgUIbu/hgwydUcCyILCifCmvchBxbJ7BGG5dAWQObVbhSAETWo?=
- =?us-ascii?Q?jyEEwInAy7b6CtORyqlAcg6MVza5X2pt4sbzdZ5rGY0V8C7UvXHq6DSVQlre?=
- =?us-ascii?Q?UHKvyCqBHgVJJ1iTDyaAE3NlEzNHsg6cDzB+fGMrTTnZLCG/7qwd4iSJmVG0?=
- =?us-ascii?Q?MFHuWWVSlglRHyoWdJGVEVSvgVagXHo84QeH2jTSTyhLBpDAZF/ZkOje/iP+?=
- =?us-ascii?Q?xvM90KRYjLuk1Zyv8ry/NHtfrd+IBxPE9oFurhkL+xYcZz9n3OkKSfF2ITqB?=
- =?us-ascii?Q?Pm/rqRTHo6K9eAcXuoBhVcnD5uuHxY1+FgObx9mogIAsiZjNoNaXyR0UJq6F?=
- =?us-ascii?Q?uGJxjHDozoUe6ZAVjcdCZSkzGeCSMJ7VzEwj9tpuegkqWlsqmg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?izx89IzdMfV6icido1h+LCinQyUpo9b18tUWF3AASVpUtDPEbh2hC5uH3FWT?=
- =?us-ascii?Q?bn7OaVY2gkyZfagLacUJWonpNiS1uYugyFCutYtYwC/iShMJQqcmtInS9di1?=
- =?us-ascii?Q?91oXxYPNGzW65BHvrsr/r6VWvTTHvPinDwJEJfKbbRI29zSD7Dz5TGPwTNl/?=
- =?us-ascii?Q?W3D65MkMOKn+QIs+zNNhvWxhIugUF2KsEgrPYIAgUpox1E0fI/NX+JuGZ7Tm?=
- =?us-ascii?Q?2DtJChCCMlDy3sQAZ6ZGYmygCIDYOkVffy7XnLYZ3178gtm8ZuQZ3BdNGXDb?=
- =?us-ascii?Q?71QcCwH8TLHFNB7gFV3OT49LH91Jc0Yd80HIIdW8GoCzlPA1GTezu5NGOtHP?=
- =?us-ascii?Q?8qkMDVZziyo5IStb7YfXRhSVXiZDd49sd4ya0/r2UAeKMmBC04NkB4InvxZU?=
- =?us-ascii?Q?5E0Gi4YUBz3id6Wwg/WRT9xnz5/mU+tva3pszftJaddcYDZuYZq1oPznvqzh?=
- =?us-ascii?Q?K0TaM8ivrEjDAfUkc3iqaK2Mo0sL1BgWP7oUGWjWOCWfKVlJ4rU+3MLHRMAq?=
- =?us-ascii?Q?sQfNmJZucisV+HqFhX5nCqRV87lLBi8QXMqRKF6Z0Rvbfeb9DlEvXlZu01j6?=
- =?us-ascii?Q?ZGyhRAv/YVQQuX2ObDB5hGtFKETjfUT9EjnvVB0eeS8BxmRRW6QeTuBK7wxT?=
- =?us-ascii?Q?XtlIbqgMD3e/Eev1NzRnMIfous303WxlqSnbOAAyi6MGEc0DYWdMCKe5uujk?=
- =?us-ascii?Q?seQF18oh5kKZS2XGcENqB+povE6x3oXk+Us5kGUskNajMLmP1UitU5BGj1zw?=
- =?us-ascii?Q?T6UO6xhY12SzScN/LAA1y0zrQwbWQl7P1oXnE3LqDql5MtwJSjfSLBfU+rot?=
- =?us-ascii?Q?42Rnkv+KtlOWDA1p8uhfRvXtmo2zyHU040mqLZv9JZPQEgoNsnWnWWPN2cSF?=
- =?us-ascii?Q?XcaeQVUl+hcZj+OJCxqNg5FQNHpw/AtUIduyVLZ5kG3XNUEU1wZ88KgFuDyC?=
- =?us-ascii?Q?QNep25c5x8I3U2wd9/YwqdfgdTtKoGZ4VJP6QG+ESbIm56fipbnI2a6iv2/X?=
- =?us-ascii?Q?u2KEbe2UP9KqgRQX4kYwQ+9lo2kPpM4CuOZq4JAUqKa6pmy/0BW/8vewWOtI?=
- =?us-ascii?Q?6HwEJUpD5Ixukg3nzWfkCn6Xk/hSa3k0aV6UTAOKcdu+MhOYKIyQtsZpKd+j?=
- =?us-ascii?Q?YKdPl22JQC8pZ6Yomh8lrx8UOCFakpUXKS6zdribY5vmOuz3iSRC6kRYde7T?=
- =?us-ascii?Q?nUMFe7jsZiZJGZhKXZNKl+ZE2Oj7tNatibGJcg3USlmPnKy9lI4xfgiicykr?=
- =?us-ascii?Q?PyyiUeCK4QVLqSLLPRzYGb2wqPqxj2gYIArOIiEJmmc8aQpdKZdwj6Al1L87?=
- =?us-ascii?Q?Mpoyl/mC9W586XNwaJ2GYM2wjXYo77UmrPgWDaNrXo/cr0+FJ+CCdlMPA4Q6?=
- =?us-ascii?Q?ANGmyVl0GJA7rGo5eWmmQ3k8SguZ8VUj2GAE8maixaHcERt4/oaqkg4sXPd0?=
- =?us-ascii?Q?uYz8a2HL6AlNpuS8O+ii1LCuOGs2n2u173zbNMTt7VW2IZkIHl+nTeW1Ea8z?=
- =?us-ascii?Q?V5In2Gkq1zJg8U4sIwX6G+Dyrmj6M29w5wneeshzgr8orsQluiHWkdSzGOoj?=
- =?us-ascii?Q?craMn7rgKmTDWcc84Fm0xgN7uaEuRaA/EN3dtIjh?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3bf193f-2100-4b90-acdd-08dd93dda037
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2025 18:23:44.3493
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IV2lT9+7Pmfb7xAEXwlbaOHSioJxCI/c+f8h0eHKKRSEpg/VceKzE+7lFZIBBpq8
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6340
+Content-Transfer-Encoding: 8bit
 
-When userfaultfd is not compiled into kernel, userfaultfd() returns -1,
-causing uffd tests in madv_guard fail. Skip the tests instead.
+Introduces a new set of userspace selftests for the LUO. These tests
+verify the functionality LUO by using the kernel-side selftest ioctls
+provided by the LUO module, primarily focusing on subsystem management
+and basic LUO state transitions.
 
-Signed-off-by: Zi Yan <ziy@nvidia.com>
+Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- tools/testing/selftests/mm/guard-regions.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ tools/testing/selftests/Makefile              |   1 +
+ tools/testing/selftests/liveupdate/.gitignore |   1 +
+ tools/testing/selftests/liveupdate/Makefile   |   7 +
+ tools/testing/selftests/liveupdate/config     |   6 +
+ .../testing/selftests/liveupdate/liveupdate.c | 440 ++++++++++++++++++
+ 5 files changed, 455 insertions(+)
+ create mode 100644 tools/testing/selftests/liveupdate/.gitignore
+ create mode 100644 tools/testing/selftests/liveupdate/Makefile
+ create mode 100644 tools/testing/selftests/liveupdate/config
+ create mode 100644 tools/testing/selftests/liveupdate/liveupdate.c
 
-diff --git a/tools/testing/selftests/mm/guard-regions.c b/tools/testing/selftests/mm/guard-regions.c
-index 0cd9d236649d..93af3d3760f9 100644
---- a/tools/testing/selftests/mm/guard-regions.c
-+++ b/tools/testing/selftests/mm/guard-regions.c
-@@ -1453,8 +1453,21 @@ TEST_F(guard_regions, uffd)
- 
- 	/* Set up uffd. */
- 	uffd = userfaultfd(0);
--	if (uffd == -1 && errno == EPERM)
--		ksft_exit_skip("No userfaultfd permissions, try running as root.\n");
-+	if (uffd == -1) {
-+		switch (errno) {
-+		case EPERM:
-+			SKIP(return, "No userfaultfd permissions, try running as root.");
-+			break;
-+		case ENOSYS:
-+			SKIP(return, "userfaultfd is not supported/not enabled.");
-+			break;
-+		default:
-+			ksft_exit_fail_msg("userfaultfd failed with %s\n",
-+					   strerror(errno));
-+			break;
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index 80fb84fa3cfc..1a96e806a5dd 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -52,6 +52,7 @@ TARGETS += kvm
+ TARGETS += landlock
+ TARGETS += lib
+ TARGETS += livepatch
++TARGETS += liveupdate
+ TARGETS += lkdtm
+ TARGETS += lsm
+ TARGETS += membarrier
+diff --git a/tools/testing/selftests/liveupdate/.gitignore b/tools/testing/selftests/liveupdate/.gitignore
+new file mode 100644
+index 000000000000..af6e773cf98f
+--- /dev/null
++++ b/tools/testing/selftests/liveupdate/.gitignore
+@@ -0,0 +1 @@
++/liveupdate
+diff --git a/tools/testing/selftests/liveupdate/Makefile b/tools/testing/selftests/liveupdate/Makefile
+new file mode 100644
+index 000000000000..2a573c36016e
+--- /dev/null
++++ b/tools/testing/selftests/liveupdate/Makefile
+@@ -0,0 +1,7 @@
++# SPDX-License-Identifier: GPL-2.0-only
++CFLAGS += -Wall -O2 -Wno-unused-function
++CFLAGS += $(KHDR_INCLUDES)
++
++TEST_GEN_PROGS += liveupdate
++
++include ../lib.mk
+diff --git a/tools/testing/selftests/liveupdate/config b/tools/testing/selftests/liveupdate/config
+new file mode 100644
+index 000000000000..382c85b89570
+--- /dev/null
++++ b/tools/testing/selftests/liveupdate/config
+@@ -0,0 +1,6 @@
++CONFIG_KEXEC_FILE=y
++CONFIG_KEXEC_HANDOVER=y
++CONFIG_KEXEC_HANDOVER_DEBUG=y
++CONFIG_LIVEUPDATE=y
++CONFIG_LIVEUPDATE_SYSFS_API=y
++CONFIG_LIVEUPDATE_SELFTESTS=y
+diff --git a/tools/testing/selftests/liveupdate/liveupdate.c b/tools/testing/selftests/liveupdate/liveupdate.c
+new file mode 100644
+index 000000000000..0007085e2b96
+--- /dev/null
++++ b/tools/testing/selftests/liveupdate/liveupdate.c
+@@ -0,0 +1,440 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++/*
++ * Copyright (c) 2025, Google LLC.
++ * Pasha Tatashin <pasha.tatashin@soleen.com>
++ */
++
++#include <errno.h>
++#include <fcntl.h>
++#include <stdbool.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <unistd.h>
++
++#include <sys/ioctl.h>
++#include <sys/mman.h>
++
++#include <linux/liveupdate.h>
++
++#include "../kselftest.h"
++#include "../kselftest_harness.h"
++#include "../../../../drivers/misc/liveupdate/luo_selftests.h"
++
++struct subsystem_info {
++	void *data_page;
++	void *verify_page;
++	char test_name[LUO_NAME_LENGTH];
++	bool registered;
++};
++
++FIXTURE(subsystem) {
++	enum liveupdate_state state;
++	int fd;
++	struct subsystem_info si[LUO_MAX_SUBSYSTEMS];
++};
++
++FIXTURE(state) {
++	enum liveupdate_state state;
++	int fd;
++};
++
++#define LUO_DEVICE	"/dev/liveupdate"
++#define LUO_SYSFS_STATE	"/sys/kernel/liveupdate/state"
++static size_t page_size;
++
++const char *const luo_state_str[] = {
++	[LIVEUPDATE_STATE_NORMAL]   = "normal",
++	[LIVEUPDATE_STATE_PREPARED] = "prepared",
++	[LIVEUPDATE_STATE_FROZEN]   = "frozen",
++	[LIVEUPDATE_STATE_UPDATED]  = "updated",
++};
++
++static int run_luo_selftest_cmd(int fd, __u64 cmd_code,
++				struct luo_arg_subsystem *subsys_arg)
++{
++	struct liveupdate_selftest k_arg;
++
++	if (fd < 0) {
++		errno = EBADF;
++		return -1;
++	}
++
++	k_arg.cmd = cmd_code;
++	k_arg.arg = (__u64)(unsigned long)subsys_arg;
++
++	return ioctl(fd, LIVEUPDATE_IOCTL_SELFTESTS, &k_arg);
++}
++
++static int __register_subsystem(int fd, char *name, void *data_page)
++{
++	struct luo_arg_subsystem subsys_arg;
++
++	memset(&subsys_arg, 0, sizeof(subsys_arg));
++	snprintf(subsys_arg.name, LUO_NAME_LENGTH, "%s", name);
++	subsys_arg.data_page = data_page;
++
++	return run_luo_selftest_cmd(fd, LUO_CMD_SUBSYSTEM_REGISTER,
++				    &subsys_arg);
++}
++
++static int __unregister_subsystem(int fd, char *name)
++{
++	struct luo_arg_subsystem subsys_arg;
++
++	memset(&subsys_arg, 0, sizeof(subsys_arg));
++	snprintf(subsys_arg.name, LUO_NAME_LENGTH, "%s", name);
++
++	return run_luo_selftest_cmd(fd, LUO_CMD_SUBSYSTEM_UNREGISTER,
++				    &subsys_arg);
++}
++
++static int get_sysfs_state(void)
++{
++	char buf[64];
++	ssize_t len;
++	int fd, i;
++
++	fd = open(LUO_SYSFS_STATE, O_RDONLY);
++	if (fd < 0) {
++		ksft_print_msg("Failed to open sysfs state file '%s': %s\n",
++			       LUO_SYSFS_STATE, strerror(errno));
++		return -errno;
++	}
++
++	len = read(fd, buf, sizeof(buf) - 1);
++	close(fd);
++
++	if (len <= 0) {
++		ksft_print_msg("Failed to read sysfs state file '%s': %s\n",
++			       LUO_SYSFS_STATE, strerror(errno));
++		return -errno;
++	}
++	if (buf[len - 1] == '\n')
++		buf[len - 1] = '\0';
++	else
++		buf[len] = '\0';
++
++	for (i = 0; i < ARRAY_SIZE(luo_state_str); i++) {
++		if (!strcmp(buf, luo_state_str[i]))
++			return i;
++	}
++
++	return -EIO;
++}
++
++FIXTURE_SETUP(state)
++{
++	page_size = sysconf(_SC_PAGE_SIZE);
++	self->fd = open(LUO_DEVICE, O_RDWR);
++	if (self->fd < 0) {
++		ksft_exit_skip("Setup: Cannot open %s (errno %d).\n",
++			       LUO_DEVICE, errno);
++	}
++	self->state = LIVEUPDATE_STATE_NORMAL;
++}
++
++FIXTURE_TEARDOWN(state)
++{
++	page_size = sysconf(_SC_PAGE_SIZE);
++	if (self->state != LIVEUPDATE_STATE_NORMAL)
++		ioctl(self->fd, LIVEUPDATE_IOCTL_EVENT_CANCEL, NULL);
++	close(self->fd);
++}
++
++FIXTURE_SETUP(subsystem)
++{
++	int i;
++
++	page_size = sysconf(_SC_PAGE_SIZE);
++	memset(&self->si, 0, sizeof(self->si));
++	self->fd = open(LUO_DEVICE, O_RDWR);
++	if (self->fd < 0) {
++		ksft_exit_skip("Setup: Cannot open %s (errno %d).\n",
++			       LUO_DEVICE, errno);
++	}
++	self->state = LIVEUPDATE_STATE_NORMAL;
++
++	for (i = 0; i < LUO_MAX_SUBSYSTEMS; i++) {
++		snprintf(self->si[i].test_name, LUO_NAME_LENGTH,
++			 "ksft_luo_%d.%d", getpid(), i);
++
++		self->si[i].data_page = mmap(NULL, page_size,
++					     PROT_READ | PROT_WRITE,
++					     MAP_PRIVATE | MAP_ANONYMOUS,
++					     -1, 0);
++
++		if (self->si[i].data_page == MAP_FAILED) {
++			ksft_print_msg("Setup: mmap data_page failed\n");
++			goto exit_fail;
++		}
++		memset(self->si[i].data_page, 'A' + i, page_size);
++
++		self->si[i].verify_page = mmap(NULL, page_size,
++					       PROT_READ | PROT_WRITE,
++					       MAP_PRIVATE | MAP_ANONYMOUS,
++					       -1, 0);
++		if (self->si[i].verify_page == MAP_FAILED) {
++			ksft_print_msg("Setup: mmap verify_page failed\n");
++			goto exit_fail;
++		}
++		memset(self->si[i].verify_page, 0, page_size);
++	}
++
++	return;
++exit_fail:
++	close(self->fd);
++
++	for (i = 0; i < LUO_MAX_SUBSYSTEMS; i++) {
++		void *page;
++
++		page = self->si[i].data_page;
++		if (page && page != MAP_FAILED)
++			munmap(page, page_size);
++
++		page = self->si[i].verify_page;
++		if (page && page != MAP_FAILED)
++			munmap(page, page_size);
++	}
++	ksft_exit_fail();
++}
++
++FIXTURE_TEARDOWN(subsystem)
++{
++	int i;
++
++	if (self->state != LIVEUPDATE_STATE_NORMAL)
++		ioctl(self->fd, LIVEUPDATE_IOCTL_EVENT_CANCEL, NULL);
++
++	for (i = 0; i < LUO_MAX_SUBSYSTEMS; i++) {
++		if (self->si[i].registered) {
++			struct luo_arg_subsystem subsys_arg;
++
++			memset(&subsys_arg, 0, sizeof(subsys_arg));
++			snprintf(subsys_arg.name, LUO_NAME_LENGTH, "%s",
++				 self->si[i].test_name);
++			subsys_arg.data_page = NULL;
++			run_luo_selftest_cmd(self->fd, LUO_CMD_SUBSYSTEM_UNREGISTER,
++					     &subsys_arg);
++		}
++		munmap(self->si[i].data_page, page_size);
++		munmap(self->si[i].verify_page, page_size);
++	}
++
++	close(self->fd);
++}
++
++TEST_F(state, normal)
++{
++	enum liveupdate_state state;
++	int ret;
++
++	ret = ioctl(self->fd, LIVEUPDATE_IOCTL_GET_STATE, &state);
++	ASSERT_EQ(0, ret);
++	ASSERT_EQ(state, LIVEUPDATE_STATE_NORMAL);
++}
++
++TEST_F(state, prepared)
++{
++	enum liveupdate_state state;
++	int ret;
++
++	ret = ioctl(self->fd, LIVEUPDATE_IOCTL_EVENT_PREPARE, NULL);
++	ASSERT_EQ(0, ret);
++	self->state = LIVEUPDATE_STATE_PREPARED;
++
++	ret = ioctl(self->fd, LIVEUPDATE_IOCTL_GET_STATE, &state);
++	ASSERT_EQ(0, ret);
++	ASSERT_EQ(state, LIVEUPDATE_STATE_PREPARED);
++
++	ret = ioctl(self->fd, LIVEUPDATE_IOCTL_EVENT_CANCEL, NULL);
++	ASSERT_EQ(0, ret);
++	self->state = LIVEUPDATE_STATE_NORMAL;
++
++	ret = ioctl(self->fd, LIVEUPDATE_IOCTL_GET_STATE, &state);
++	ASSERT_EQ(0, ret);
++	ASSERT_EQ(state, LIVEUPDATE_STATE_NORMAL);
++}
++
++TEST_F(state, sysfs_normal)
++{
++	int state = get_sysfs_state();
++
++	if (state < 0) {
++		if (state == -ENOENT || state == -EACCES) {
++			ksft_test_result_skip("Sysfs state file not accessible (%d)\n",
++					      state);
++			return;
 +		}
 +	}
 +
- 	ASSERT_NE(uffd, -1);
- 
- 	ASSERT_EQ(ioctl(uffd, UFFDIO_API, &api), 0);
++	ASSERT_EQ(LIVEUPDATE_STATE_NORMAL, state);
++}
++
++TEST_F(state, sysfs_prepared)
++{
++	int ret, state;
++
++	ret = ioctl(self->fd, LIVEUPDATE_IOCTL_EVENT_PREPARE, NULL);
++	ASSERT_EQ(0, ret);
++	self->state = LIVEUPDATE_STATE_PREPARED;
++
++	state = get_sysfs_state();
++	if (state < 0) {
++		if (state == -ENOENT || state == -EACCES) {
++			ksft_test_result_skip("Sysfs state file not accessible (%d)\n",
++					      state);
++			ioctl(self->fd, LIVEUPDATE_IOCTL_EVENT_CANCEL, NULL);
++			self->state = LIVEUPDATE_STATE_NORMAL;
++			return;
++		}
++	}
++	ASSERT_EQ(LIVEUPDATE_STATE_PREPARED, state);
++
++	ret = ioctl(self->fd, LIVEUPDATE_IOCTL_EVENT_CANCEL, NULL);
++	ASSERT_EQ(0, ret);
++	self->state = LIVEUPDATE_STATE_NORMAL;
++	state = get_sysfs_state();
++	ASSERT_EQ(LIVEUPDATE_STATE_NORMAL, state);
++}
++
++TEST_F(state, sysfs_frozen)
++{
++	int ret, state;
++
++	ret = ioctl(self->fd, LIVEUPDATE_IOCTL_EVENT_PREPARE, NULL);
++	ASSERT_EQ(0, ret);
++	self->state = LIVEUPDATE_STATE_PREPARED;
++
++	state = get_sysfs_state();
++	if (state < 0) {
++		if (state == -ENOENT || state == -EACCES) {
++			ksft_test_result_skip("Sysfs state file not accessible (%d)\n", state);
++			ioctl(self->fd, LIVEUPDATE_IOCTL_EVENT_CANCEL, NULL);
++			self->state = LIVEUPDATE_STATE_NORMAL;
++			return;
++		}
++	}
++	ASSERT_EQ(LIVEUPDATE_STATE_PREPARED, state);
++
++	ret = ioctl(self->fd, LIVEUPDATE_IOCTL_EVENT_FREEZE, NULL);
++	ASSERT_EQ(0, ret);
++	self->state = LIVEUPDATE_STATE_FROZEN;
++	state = get_sysfs_state();
++	ASSERT_EQ(LIVEUPDATE_STATE_FROZEN, state);
++
++	ret = ioctl(self->fd, LIVEUPDATE_IOCTL_EVENT_CANCEL, NULL);
++	ASSERT_EQ(0, ret);
++	self->state = LIVEUPDATE_STATE_NORMAL;
++	state = get_sysfs_state();
++	ASSERT_EQ(LIVEUPDATE_STATE_NORMAL, state);
++}
++
++TEST_F(subsystem, register_unregister)
++{
++	int ret;
++
++	ret = __register_subsystem(self->fd, self->si[0].test_name,
++				   self->si[0].data_page);
++	ASSERT_EQ(0, ret);
++	self->si[0].registered = true;
++
++	ret = __unregister_subsystem(self->fd, self->si[0].test_name);
++	ASSERT_EQ(0, ret);
++	self->si[0].registered = false;
++}
++
++TEST_F(subsystem, double_unregister)
++{
++	int ret;
++
++	ret = __register_subsystem(self->fd, self->si[0].test_name,
++				   self->si[0].data_page);
++	ASSERT_EQ(0, ret);
++	self->si[0].registered = true;
++
++	ret = __unregister_subsystem(self->fd, self->si[0].test_name);
++	ASSERT_EQ(0, ret);
++	self->si[0].registered = false;
++
++	ret = __unregister_subsystem(self->fd, self->si[0].test_name);
++	EXPECT_NE(0, ret);
++	EXPECT_TRUE(errno == EINVAL || errno == ENOENT);
++	self->si[0].registered = false;
++}
++
++TEST_F(subsystem, register_unregister_many)
++{
++	int ret;
++	int i;
++
++	for (i = 0; i < LUO_MAX_SUBSYSTEMS; i++) {
++		ret = __register_subsystem(self->fd, self->si[i].test_name,
++					   self->si[i].data_page);
++		ASSERT_EQ(0, ret);
++		self->si[i].registered = true;
++	}
++
++	for (i = 0; i < LUO_MAX_SUBSYSTEMS; i++) {
++		ret = __unregister_subsystem(self->fd, self->si[i].test_name);
++		ASSERT_EQ(0, ret);
++		self->si[i].registered = false;
++	}
++
++}
++
++TEST_F(subsystem, getdata_verify)
++{
++	enum liveupdate_state state;
++	int ret;
++	int i;
++
++	for (i = 0; i < LUO_MAX_SUBSYSTEMS; i++) {
++		ret = __register_subsystem(self->fd, self->si[i].test_name,
++					   self->si[i].data_page);
++		ASSERT_EQ(0, ret);
++		self->si[i].registered = true;
++	}
++
++	ret = ioctl(self->fd, LIVEUPDATE_IOCTL_EVENT_PREPARE, NULL);
++	ASSERT_EQ(0, ret);
++	self->state = LIVEUPDATE_STATE_PREPARED;
++
++	ret = ioctl(self->fd, LIVEUPDATE_IOCTL_GET_STATE, &state);
++	ASSERT_EQ(0, ret);
++	ASSERT_EQ(state, LIVEUPDATE_STATE_PREPARED);
++
++	for (i = 0; i < LUO_MAX_SUBSYSTEMS; i++) {
++		struct luo_arg_subsystem subsys_arg;
++
++		memset(&subsys_arg, 0, sizeof(subsys_arg));
++		snprintf(subsys_arg.name, LUO_NAME_LENGTH, "%s",
++			 self->si[i].test_name);
++		subsys_arg.data_page = self->si[i].verify_page;
++
++		ret = run_luo_selftest_cmd(self->fd, LUO_CMD_SUBSYSTEM_GETDATA,
++					   &subsys_arg);
++
++		ASSERT_EQ(0, ret);
++		ASSERT_EQ(0, memcmp(self->si[i].data_page,
++				    self->si[i].verify_page,
++				    page_size));
++	}
++
++	ret = ioctl(self->fd, LIVEUPDATE_IOCTL_EVENT_CANCEL, NULL);
++	ASSERT_EQ(0, ret);
++	self->state = LIVEUPDATE_STATE_NORMAL;
++
++	ret = ioctl(self->fd, LIVEUPDATE_IOCTL_GET_STATE, &state);
++	ASSERT_EQ(0, ret);
++	ASSERT_EQ(state, LIVEUPDATE_STATE_NORMAL);
++
++	for (i = 0; i < LUO_MAX_SUBSYSTEMS; i++) {
++		ret = __unregister_subsystem(self->fd, self->si[i].test_name);
++		ASSERT_EQ(0, ret);
++		self->si[i].registered = false;
++	}
++}
++
++TEST_HARNESS_MAIN
 -- 
-2.47.2
+2.49.0.1101.gccaa498523-goog
 
