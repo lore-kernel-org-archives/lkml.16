@@ -1,148 +1,160 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C31B28C873;
-	Thu, 15 May 2025 08:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A99A28EA46
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299171; cv=none; b=GG+jHnGuoNjXYGWeMvPEvlnqYcQE3T3HsCVlcbajFNZUCtxUwmkaKcPJEjlE541oV1lqVjl32I5shn7+NFaQoKexZD5YnmVl4oFUU+lAs5epBBG/AUugoD6lvjdknsKvkbfR0Lsb/BmYMDWX+jTEaqGYzYcEF7DAbhrng90vsFk=
+	t=1747299174; cv=none; b=t0Jh1jK1vSfdaPfmyjSlxW/KHQDT/3jIlDjhmUB/ReHTE5hZy9yVkXzG2wwK6YfPOxFt/hK1GduXXQW1w/eMcMLKnH9nAsKRRzKPrcoP7u6JF5ZXGpf7SAeaJcejjfbNDOXHUqhq1W3Gi7ehLDqhwMGnSgtfG5BQY0uPnIeIQ/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299171; c=relaxed/simple;
-	bh=baDU5OetjJx39/uqBkmmFjvG7V0MajD4w+Wf3Mhy0sI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YhwWbyhphHfQoxrWxLrvgzdRGpAji0bzGwvO7GBiKkmguDRPUwTL4fUuSV/HKKl8J84SJ7HASzpm4TfC66hISx77zUJkXmir6iA2+VTQoBRnrnKu1Sy92RX2I/YtkGKbyac02XYkMOJRZZB43sY/eXWf/kifJ3Sopby4yM4/veQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eciN1sUm; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747299174; c=relaxed/simple;
+	bh=FI7sGTrB08Zo/oscENddwqf8I3VuN6qo18yWXr+NkPw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jxcbaq+hgWeIJjghK/jMpi+cB7iPcbAMjTU2adSPVhsVAlih2z/gyKEVukwbPtj00fEEkedCzN9iZuvA9fBUM/YAMru+XWNJ/WW0jqNWRz3Yvs3Q+Dp6uiYrRK23feVOvmY1PTsXxiK8x7foZCvxi91/in0XMhPef52tevAZn0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pvZyz1WA; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eciN1sUm"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54e8e5d2cf0so774622e87.2;
-        Thu, 15 May 2025 01:52:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747299167; x=1747903967; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+nMEUq5ozL3XCKx6Xei2teXG7hWWZhoXqA/EoccK2ek=;
-        b=eciN1sUmtr+oBCcIU3zv3Lgxl2s2fm2KqQSanLhwvAqdssKrTDn2Du+cGordkh7osW
-         FHMenCdTp3ZZGtrdBciHhVgRhYgztSKiobESTE/RDYH38NGcr/crmv9hUs/KCZKhu2DC
-         23a4jTgb2Tjg5QtIvQOjqoa/CAHKXNHUDWa01vDWULgdaI2k1IEFFjJeml4DwjE1R5Zt
-         09J1Rl3kBZPIn4emkXR2KB5B3fRmi4xtpp8OG1v+B04lVur+4wMbySrTR1+Bk3fa5FCr
-         3xpyUq2oNw/icAL+PL8UgWgj50GnB2kOHJzLvxF03CmO7zNVg0/mS0clGKhcE2/khGfr
-         diXg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pvZyz1WA"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EL4NVA025420
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:52:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=hwaZDQYsVUdsi74SztNN08gE
+	i0Qf+CiwpH9GUcd8v0w=; b=pvZyz1WABqrH3iWFcaH6vQ1u/BofwUf+zlSTmbca
+	/dtZ75XMShxjLA7z3o2km1eX32eTFN3vj7WWo64gD97nTJc5Iq5VrS9M1fKNeqnV
+	L6aaBdTaCEvItdmB3GwXe2Ko9erqm3IasMhQOE+BBz6v9GC+TCRcYSs1OFL22qfx
+	sEIXlO/YIHA27Zrt/wlS0uRU011F2tM8BKF9AvgnG30bRL2s2pbM15YYTP/dajJQ
+	ekTECu0A/5rS8GyIb8H5UrnAVWTkdx9V5j9i/64Uls0XU8Fysev5EBPC+k6F+6Rn
+	IC7iaOxArCCBDLRUCsQ46y2SOYLHldXTjTK1MZS0/eJr9w==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbew5emj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:52:51 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5c9abdbd3so67198185a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:52:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747299167; x=1747903967;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+nMEUq5ozL3XCKx6Xei2teXG7hWWZhoXqA/EoccK2ek=;
-        b=uNKYg/tLfsjfcueZaVccrVJmLE/ahs1iEAKHUOoMCafGPr4vd0Yv9E00icYnQu+yoL
-         rN0x3kuso2d1oW9VtFfRDoyaqns87tbEFHAdYRf91L9ivMTCdFnjcOjoQhZEQ+HosS6B
-         kAskiWPcjyGmCdk4mE2nPwao3qWKkLm3HOM0SQ/OFuhUH4xP4/3o7uJR5UQkh4owc062
-         49HxjSp0CHBBEbukYaKNDBAnKQWN7YFApLx4oI0z4YfM6rl79cMnwfxaQROwrXRFHz0z
-         iYRUAtc57OqVTkRkC/SqLAw1tcv3ClIgdrBp66lwmh5gsM6jl8onWjyK8xOZ+AwiMbej
-         FP0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUGq0pPqBgT2+EsgJAO4ek1dgVdfzfxOnIVXzmPyWN3LYJoOB0QyXK9/x6Xi+kb7bwweOTlehVTf23n@vger.kernel.org, AJvYcCVeAh+GnByEBGAvQrC941wI3jwMKw1FEVzEFY0aqFnDBVFbULOgFp3SE4mcPXqaHsVMY/0DAi33KCc83pz9@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9PxSlb2veXFic6hANKbIQsHFCMkSaO25MhaIkuAXnS++7znPh
-	hMzBAMvPtt02aLuRp6Obuwzmr5BaY1HZOXr+8OK8GBY99tTYqX0j
-X-Gm-Gg: ASbGncvMPCWkA0bdZl7MK2AunZI+8IX4PwfjXwsM+LO9EtFixds3MQ85+4q6DxtzCnH
-	Iy8d/60wQ+mfshKgHR624bLrPbGtVTnJxapz2QQy3VuAm+VhUu7xXmrf+bk+MYFx1lSxtTYmACN
-	5evbpuGxX3dmwGGw7O71J7bJue3UlFEJM3UCSBmjtY5sI0kYgRXS2zYdevAQEQXOpfKx4wBfliG
-	G961PN5cn8OLLXXwJA6YlW6D/cZtLj9PkQ0jOA2iK2YYGAqF1mHyRHExh+kKijkxHsNwEb1OV8S
-	fcEkDKfuSH1g4zIbMJqlqkCx8x09cLPxjtkGqXT8Q2erleJdrGnlvCzj0DumdR2sSA6BD6jXiuj
-	cMGL2WCUi8gcj2a04D2kg/GzQYWKg3psZ
-X-Google-Smtp-Source: AGHT+IFr+Zu/wdjpllwn3ZdGFMnTZxToomXEA+mKUOQn0Jm/AWko6eEHsQCUeWofLoc5bYC55wc4SQ==
-X-Received: by 2002:a05:6512:3b9b:b0:549:39d8:51ef with SMTP id 2adb3069b0e04-550dcffc1fbmr627657e87.6.1747299167217;
-        Thu, 15 May 2025 01:52:47 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64ccf20sm2530860e87.239.2025.05.15.01.52.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 01:52:46 -0700 (PDT)
-Message-ID: <057c6bc2-adf9-4160-9184-6438cbe6e9d4@gmail.com>
-Date: Thu, 15 May 2025 11:52:45 +0300
+        d=1e100.net; s=20230601; t=1747299171; x=1747903971;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hwaZDQYsVUdsi74SztNN08gEi0Qf+CiwpH9GUcd8v0w=;
+        b=BLeFqJzEoO2psqCdqyiCg0u2purFi1GD7kJTEftL+M/xoEK9gdExQXkCkBXknhyBgJ
+         XHhTYQdwVaQcO+78A8HwEDagJN+tL8jloX4qdyDuP4G7N5+YnASv6/i/Y6hld/aHWHne
+         bo05pvcadKlmPXfgKhfiuhENKdq5qvOD72HIu5nqIOd6z1+mPUjNVpJi2qtcR0z6MU7o
+         X6LCk2EC2rZMo29q1GWyXWUilLPGWNs6f9P2KB5KKxQjC7BzkMaUF+sdBNhg6wOnjSiu
+         JusB3rGlJg7Vd/TyZoWO6Z29kGoB3mWducs+o0tjetNwzUl9Ng+ULdqU+iFA07xKqLB2
+         B60Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWEFJJTCYBptIffebRqYHcKmfH/8ZViJhZBpTfURf01Yl/AXxL+9jyz+XUjMN0MPS0KoRHOBqZzt0ehMi8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQlmz2o5IFGVrPG+pDM/PeFuDE/d77mH99lonR+PdCP4MFTr9e
+	NlqlWOAhdlcIMyrh/he/iiyfH9SqSnj8LpEuWIBDzEDqtbJkn9njF+j/HFmTa/t6ishMzKtM05U
+	yowwC/UWvq6G2+jtbzaBYpW7uuorNdx7p8GNhYxdmZYj3vZ+wiT2J+F4iLK2sIpM=
+X-Gm-Gg: ASbGncv/G02e+5rsM2GcWetS6t3Ywb9Pg2QkkU0epi9Uc34lnFhIfGq04V3XaA39X/a
+	BBI6KL688lugGDNhgidE4Faz2P/AdXkrZlsZonnNJu1cfTrAtVICBBzvdlQ9WrlGq812GZN+9Oa
+	jJ8J/G/AKRI30fJ+6Y+78J+qPkfksFAkD5rmTEIzyNzT+KeBO4RU3PfhA7rYgrUnY/LHxFkk7fO
+	0YJHkgtThPcvgRDeY4WaDCFM6Vpyd9OXgmwWBKrtejx05sF0akLcQe5C9IHRrCYFR+VM+GCSEdY
+	7ZvCbybdZCqoEnphQ7/CCqVjMDAkpXZZenNmVU+WBMk5aapORvFcpsHTaFzNclt9J3yxtU+3x9o
+	=
+X-Received: by 2002:a05:620a:c52:b0:7c5:464b:6718 with SMTP id af79cd13be357-7cd2888faf1mr1253264085a.54.1747299170893;
+        Thu, 15 May 2025 01:52:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGQ+BiR4gB9vfsEDZ2lofj7FH/2yViqW+rJhsM6lLhCtfcarFZ22RLGIEcYHdLuh4PfJ1Riig==
+X-Received: by 2002:a05:620a:c52:b0:7c5:464b:6718 with SMTP id af79cd13be357-7cd2888faf1mr1253260385a.54.1747299170523;
+        Thu, 15 May 2025 01:52:50 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64504c1sm2555886e87.52.2025.05.15.01.52.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 01:52:49 -0700 (PDT)
+Date: Thu, 15 May 2025 11:52:48 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Sarthak Garg <quic_sartgarg@quicinc.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        quic_cang@quicinc.com, quic_nguyenb@quicinc.com,
+        quic_rampraka@quicinc.com, quic_pragalla@quicinc.com,
+        quic_sayalil@quicinc.com, quic_nitirawa@quicinc.com,
+        quic_bhaskarv@quicinc.com
+Subject: Re: [PATCH V2 1/2] mmc: core: Introduce new flag to force hardware
+ reset
+Message-ID: <rkmqeiyha2wldtm64ndcs7hssqvwsrqr66kwh6w3exbsyc6c6n@xhqdh65af7hx>
+References: <20250514111155.10896-1-quic_sartgarg@quicinc.com>
+ <20250514111155.10896-2-quic_sartgarg@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/9] arm64: dts: imx8mn-bsh-smm-s2-common: Define suspend
- voltage threshold
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>,
- linux-kernel@vger.kernel.org
-Cc: Simon Holesch <simon.holesch@bshg.com>,
- Karthikdatt Anantharamrao <karthikdatt.anantharamrao@in.bosch.com>,
- michael@amarulasolutions.com, linux-amarula@amarulasolutions.com,
- Wolfgang Birkner <wolfgang.birkner@bshg.com>,
- Conor Dooley <conor+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-References: <20250514082507.1983849-1-dario.binacchi@amarulasolutions.com>
- <20250514082507.1983849-2-dario.binacchi@amarulasolutions.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250514082507.1983849-2-dario.binacchi@amarulasolutions.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514111155.10896-2-quic_sartgarg@quicinc.com>
+X-Proofpoint-GUID: MNJQGFTrjjGZmLxSuUFj_PIFMIAQEdoo
+X-Proofpoint-ORIG-GUID: MNJQGFTrjjGZmLxSuUFj_PIFMIAQEdoo
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDA4NiBTYWx0ZWRfX6HXllDN+1L9i
+ K6XZydBGYtGtyGM4wOBS0bQTjQoi8P+x41GcPIvqY9T7Kfhw2APQ7X5Bfd3/byYgK+ykVgRwiaa
+ nRjHdBylt9KE2Ddutg6FxrBFwtJSzxgMk3STJTzFyzaC6eFbzJ0Kei+yHbVw8maJwOIsdsGhRnD
+ BJUC7kvIgCPvauFNv5gwE9K6edlAJgnOnL505d0HndladpyTNoaARn60wQll69BtkVAW2ewvN30
+ tPiK+dfeD5iQ08o2b+b9gGYpc0rNoXXufUJP9TdoU32aypc29DQ4EESo7LVbkxP+q9QF++8oeC7
+ zULz4mDkVSlyZ1fxtvjeBWxqpDufxC2wmGxXNejH3CZODRTCZtFLcqAngb7ba1jrYI07Nng1ZQN
+ gw9AwC1kfBA7VY5Y4ySJpC9jOLet+Ak2htTsVMzoKAp2qm1Zs6IGqQ7rWav66876/IT5FJ3Z
+X-Authority-Analysis: v=2.4 cv=LOFmQIW9 c=1 sm=1 tr=0 ts=6825ab63 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=QyXUC8HyAAAA:8 a=Dw_yFD_fkBKW1skOv8gA:9
+ a=CjuIK1q_8ugA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-15_03,2025-05-14_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 spamscore=0 adultscore=0 priorityscore=1501 suspectscore=0
+ mlxscore=0 malwarescore=0 mlxlogscore=999 impostorscore=0 bulkscore=0
+ clxscore=1015 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505150086
 
-On 14/05/2025 11:24, Dario Binacchi wrote:
-> From: Michael Trimarchi <michael@amarulasolutions.com>
+On Wed, May 14, 2025 at 04:41:54PM +0530, Sarthak Garg wrote:
+> Introduce new flag cqe_recovery_reset_always to allow vendors to force
+> hardware reset during cqe recovery.
+
+Nit: CQE
+
 > 
-> Voltage threshold should be adjust according to the worst case.
-
-I would love to understand why these voltages are set.
-
-Could you please explain a bit further why this change is done. What 
-worst case? What happens if voltages aren't adjusted? What is the 
-current voltage (before this patch is applied?).
-
-> Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+> Signed-off-by: Sarthak Garg <quic_sartgarg@quicinc.com>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 > ---
+>  drivers/mmc/core/block.c | 2 +-
+>  include/linux/mmc/host.h | 1 +
+>  2 files changed, 2 insertions(+), 1 deletion(-)
 > 
->   .../boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi  | 11 +++++++++++
->   1 file changed, 11 insertions(+)
+> diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+> index 585c2b274d98..dce2fb762260 100644
+> --- a/drivers/mmc/core/block.c
+> +++ b/drivers/mmc/core/block.c
+> @@ -1622,7 +1622,7 @@ void mmc_blk_cqe_recovery(struct mmc_queue *mq)
+>  	pr_debug("%s: CQE recovery start\n", mmc_hostname(host));
+>  
+>  	err = mmc_cqe_recovery(host);
+> -	if (err)
+> +	if (err || host->cqe_recovery_reset_always)
+>  		mmc_blk_reset(mq->blkdata, host, MMC_BLK_CQE_RECOVERY);
+>  	mmc_blk_reset_success(mq->blkdata, MMC_BLK_CQE_RECOVERY);
+>  
+> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+> index 68f09a955a90..d686adf75293 100644
+> --- a/include/linux/mmc/host.h
+> +++ b/include/linux/mmc/host.h
+> @@ -554,6 +554,7 @@ struct mmc_host {
+>  	int			cqe_qdepth;
+>  	bool			cqe_enabled;
+>  	bool			cqe_on;
+> +	bool			cqe_recovery_reset_always;
+>  
+>  	/* Inline encryption support */
+>  #ifdef CONFIG_MMC_CRYPTO
+> -- 
+> 2.17.1
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi b/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi
-> index bbb07c650da9..5a1ec2f6a552 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi
-> @@ -105,6 +105,12 @@ buck1_reg: BUCK1 {
->   				regulator-boot-on;
->   				regulator-always-on;
->   				regulator-ramp-delay = <1250>;
-> +
-> +				/* enable autosuspend threshold */
-> +				rohm,dvs-run-voltage = <850000>;
-> +				rohm,dvs-idle-voltage = <850000>;
-> +				rohm,dvs-suspend-voltage = <850000>;
-> +				rohm,no-regulator-enable-control;
 
-The commit message does not explain why the software control of the 
-regulator's enable state is changed? Maybe this should be in the 2/9?
-
->   			};
->   
->   			buck2_reg: BUCK2 {
-> @@ -115,6 +121,11 @@ buck2_reg: BUCK2 {
->   				regulator-boot-on;
->   				regulator-always-on;
->   				regulator-ramp-delay = <1250>;
-> +
-> +				/* enable autosuspend threshold */
-> +				rohm,dvs-run-voltage = <960000>;
-> +				rohm,dvs-idle-voltage = <860000>;
-> +				rohm,no-regulator-enable-control;
-
-same here?
-
->   			};
->   
->   			buck3_reg: BUCK3 {
-
-Yours,
-	-- Matti
+-- 
+With best wishes
+Dmitry
