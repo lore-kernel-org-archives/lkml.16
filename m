@@ -1,113 +1,138 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E4F225A2C
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27CAC2253B5;
+	Thu, 15 May 2025 12:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747311648; cv=none; b=GynoCVcTApDortxN4LLv4AzErznQPdJJJYXyQhsEddbdQrzbaM03qOj4fKVbRKvRPOom5prhi4COgpNAcAieonbTchJ0w8P5S3RbPXY1yaG9w8jbLuKciozQMiOqom+jhs6tbGdgLnpfCuEFqhA76ABT9jGIe4xVEYOcVXz6mPE=
+	t=1747311706; cv=none; b=k6tiITZi6sYl6wo+gpc6M+idezYCahGh3ndH3UbUlGgc/3jOwNCbyfoNqyxHaX4Zt1N5GVecB0w6jYJxQcR+RKjszRaikW5zFYvYftarerTqcbLu9xVPYDj6T4cmSMqiSRUArvKizSlui3NEFdPURYam0XUHX0GhxwRFTZizo4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747311648; c=relaxed/simple;
-	bh=ySi+0M+CVuWfwFeLu3PPC0j4nsW75CVo4AF4TCbTxnI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B3jbhubRp9YdTEGfC0X4iZ5HWiTujlFWN5zODEXOjYCGrnaUF1dTxIPnqQZoH+1ddBavrGLmEO+/PDT1Zth3U6ZXxZ/vEuupW2Jc6NwJHlVLNQI0Tn/7otMM1qG7VELmxYxK8HNYWyMQWkthT+jbLznZiEfzDtLS+ahS8A2ODFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vkwlCqZ0; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747311706; c=relaxed/simple;
+	bh=H5OUDY4VUdGZ+JC9sKFI1wmGIEcMLTNEvBIbA1UBAV8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jxmNKiwnALfFI6xF/amz3v0gvBPlXXMaSCSIYKggJHGiTsj+g0ls1tf9gU6OMEwG2y2BAebi9qlGr+xpN7UFLCpRFQqbx43+GFftmL6sqKoQcgaFJFuo3o1iC7c5Yp4k8BMuzrAlOBNi4vNvfwv7hzy9456q1gHzLjV4+eVHiGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WCwb5CRf; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vkwlCqZ0"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso9302375e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 05:20:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747311645; x=1747916445; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UYYmwpP0MAwsA931NniE7DuDU5H48aT0XrSHju++1ic=;
-        b=vkwlCqZ0SwyVN+cPtAK9kv43zZeGM4qFKReGHN7DGwZd7emjYjPH1vUi8xhrbRCcAw
-         kJ6Q4FsCxiwN/HMxHllvoG4N532uzrQQnYf3ubwNePu6lqcMxgjxrA3KEcq3TSudUtW9
-         E5Hpvls5kJA3DfCmjyES1anB5cVdKL7JbvZzdn4iqVUuWibMPnqFcBtMoGzqOsfscvAT
-         an0nxyeZ4ogjVTZKCbU7T7J6xyu1WwqKLjcI8UXRTruBHPslrHRNILhZZqMiQEW+HLvY
-         EoqE8Mg32OKjtoEWCzdmDazHkkWymizXLq7/Y/U6L69aTTthnV/gDj3QDFY8z7r09lzK
-         QLLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747311645; x=1747916445;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UYYmwpP0MAwsA931NniE7DuDU5H48aT0XrSHju++1ic=;
-        b=Xpacq7q8ZctFO+4iF2FtA7A4xr/woq3uM+PQGwMd0QAo2mdvhYfYtFpR3x0XItmTaX
-         LaqzYiJZt5OcA6lwnvy5V9Ke1zUz+o2gncwHYwRjLW59u9udP4SnKRD4zNwqeh3jchkE
-         ogZwpkmY5EhBDiqu2faUbezzFLzxXt/4bZdoHup9VAFO40dWXjqHm8zoyLgOqZcosoUU
-         CMlWxMFZEQ2Xz+7iOlTAVCwWUiJknuZ+2EaR1Pu2+vn3BnUyWniEr83oW5jxjbXVCwKt
-         tB+/SbzxI1WSzm8ZxwCNuTVLKMehYtf9hcRSLh5MTPIskJ1u7u17Pn+RAMfj/4sjQVUJ
-         c5pA==
-X-Forwarded-Encrypted: i=1; AJvYcCWUcbQh/ZiQihpbVhnGpT2duJpHj/9cECm9wnsSJekXqGZZBQ4q/X2NaIkZMep11QxEEPU04y8zSax6UEg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4BsN+WOvmPg6Z+8vcNGDRW2iCYYNWDyHqKbGR7utHbVN9b9Cb
-	oOa71QfTv2bzhcBWFYPmZbPAqFz8Qyz/+/FnsRhVta4VIPBgBLtWkRCuCl3w0JI=
-X-Gm-Gg: ASbGncuozwgoMAqHdu8hllPtJUJSb5fLvIjZW1CI0HUY+kzwNiiGxQP1LYaqgKBSQ7b
-	2wAtAfu9WqKKGlOcqUeyU8GbNGZkCULZ8ZgI9FPorSrUWDjnheebvAp892kzthghtVP5Nc6F9ML
-	W1OjLisjwFd9g9wOT93Br3AQyc5jqFbk1tNAxFuSWeJ9MA0jPC75FJ+I289gAG8r9StUFSIeYXW
-	EImaGCgiYE2ZwTHWf9kwQz/cx4AkHFRIuc9dIes/1sAEGCPVEFFNBQ8BEN8WQOUBjgOvGJE8kQD
-	poLjumrzNFbpZOrggzYrq4j2lSJfT2iSnqMyNziaQBCi2UvNfEFyZdmJ8lcSkDVx2e8tqF3/Uj1
-	vTJJqLDQ1
-X-Google-Smtp-Source: AGHT+IFf5pIVLw9OgzawdBaBFW6KZvXprzzPf2JHeKzZZEBmezUo1iUF8T/ujeptaHHKPw8LeA0tyA==
-X-Received: by 2002:a05:600c:3e88:b0:43c:fb95:c76f with SMTP id 5b1f17b1804b1-442f20e33b0mr74335285e9.9.1747311644763;
-        Thu, 15 May 2025 05:20:44 -0700 (PDT)
-Received: from [10.61.2.175] (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57dde01sm22985463f8f.15.2025.05.15.05.20.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 05:20:44 -0700 (PDT)
-Message-ID: <586c877d-0d0a-48bf-9c55-97bd24e86638@linaro.org>
-Date: Thu, 15 May 2025 13:20:42 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WCwb5CRf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747311704; x=1778847704;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=H5OUDY4VUdGZ+JC9sKFI1wmGIEcMLTNEvBIbA1UBAV8=;
+  b=WCwb5CRfHk4kYEutc/ZArfViw93AdppDmXE/UcNEAdOydhma0NlzrLim
+   2TXYdtTDpO2o4UKy2EKNmZOJ63Bk12/lVv5xZKnW9RPjYRetbyivYTEwR
+   DsJGFABJ7bxn88BecTpSUdhcbaQJ82Q7VCotN2vNnDtIhAJu55aneBx3u
+   2Z+/Ve5fLKmiM/7RN9/jtogxlTHYnnDk9ZlYpt0Geg8fVq0geiqWdTtI/
+   oocVV+J1MevPEFtcOzznddMRKSkzzmLwICsegOgsR1ilpQbcYJIVEzeir
+   zlAXqYWxpTDNyaaReZx8jss5hnMMig1O7lZEJoAxWw5ck0oNobCVyY9Gf
+   w==;
+X-CSE-ConnectionGUID: VGsph2AFRUOF45G3S1f6Kw==
+X-CSE-MsgGUID: jOPnrJYSQ9OLILEdKgn3Uw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="66648996"
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="66648996"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 05:21:44 -0700
+X-CSE-ConnectionGUID: jwl3g36KT8mu57b9DLQk9g==
+X-CSE-MsgGUID: DBnZdkS3R+6ikPr8oO/BXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="138218107"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.157])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 05:21:42 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 15 May 2025 15:21:39 +0300 (EEST)
+To: Lukas Wunner <lukas@wunner.de>
+cc: Krzysztof Wilczy??ski <kwilczynski@kernel.org>, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    "Paul E. McKenney" <paulmck@kernel.org>, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] PCI/bwctrl: Remove also pcie_bwctrl_lbms_rwsem
+In-Reply-To: <aCXZdfOA8bme-qra@wunner.de>
+Message-ID: <98fa31e7-db86-35f0-a71c-a1ebf27f93f0@linux.intel.com>
+References: <20250508090036.1528-1-ilpo.jarvinen@linux.intel.com> <174724335628.23991.985637450230528945.b4-ty@kernel.org> <aCTyFtJJcgorjzDv@wunner.de> <20250515084346.GA51912@rocinante> <aCXZdfOA8bme-qra@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/14] spi: spi-fsl-dspi: Enable modified transfer
- protocol
-To: Mark Brown <broonie@kernel.org>
-Cc: Vladimir Oltean <olteanv@gmail.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>,
- Chester Lin <chester62515@gmail.com>, Matthias Brugger <mbrugger@suse.com>,
- Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
- NXP S32 Linux Team <s32@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, larisa.grigore@nxp.com, arnd@linaro.org,
- andrei.stefanescu@nxp.com, dan.carpenter@linaro.org,
- linux-spi@vger.kernel.org, imx@lists.linux.dev,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Andra-Teodora Ilie
- <andra.ilie@nxp.com>, Bogdan-Gabriel Roman <bogdan-gabriel.roman@nxp.com>
-References: <20250509-james-nxp-spi-v1-0-32bfcd2fea11@linaro.org>
- <20250509-james-nxp-spi-v1-10-32bfcd2fea11@linaro.org>
- <aB6pa9m0emX2vMH8@finisterre.sirena.org.uk>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <aB6pa9m0emX2vMH8@finisterre.sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-897030319-1747311132=:1298"
+Content-ID: <47489e41-ed37-3c1f-1e17-a553084d6fa9@linux.intel.com>
+
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-897030319-1747311132=:1298
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <386129cc-51a7-2100-9e0c-9f28fd6cea44@linux.intel.com>
+
+On Thu, 15 May 2025, Lukas Wunner wrote:
+
+> On Thu, May 15, 2025 at 05:43:46PM +0900, Krzysztof Wilczy??ski wrote:
+> > Done.  Squashed with the first commit from Ilpo, see:
+
+Thanks Krzysztof for handling this, I should have put the note about=20
+squashing it to the resubmission but I forgot (this time I didn't do=20
+the diff against the previous version before sending it which I normally=20
+do).
+
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=
+=3Dbwctrl&id=3D2389d8dc38fee18176c49e9c4804f5ecc55807fa
+>=20
+> Awesome, thank you!
+>=20
+> > Let me know if there is anything else needed.
+>=20
+> Actually, two small things:
+>=20
+> - That patch on the pci/bwctrl topic branch is still marked "New"
+>   in patchwork, even though it's been applied:
+>   https://patchwork.kernel.org/project/linux-pci/patch/20250422115548.148=
+3-1-ilpo.jarvinen@linux.intel.com/
+>=20
+> - Version 1 of the same patch is likewise marked "New", even though
+>   it's been superseded:
+>   https://patchwork.kernel.org/project/linux-pci/patch/20250417124633.114=
+70-1-ilpo.jarvinen@linux.intel.com/
+>=20
+> Unfortunately I can't update it myself because I'm not the submitter.
+> (Ilpo could do it if he has a patchwork.kernel.org account.)
+
+I'm a pdx86 maintainer so I do have an account, yes. I actually had the=20
+patchwork page listing my PCI patches already open, but I just hadn't hit=
+=20
+"update" button yet.
+
+I've done those two changes now.
+
+I'm a bit hesitant to mark "Accepted" state though, I did it this time=20
+but in general I feel I might be overstepping my authority even if I know=
+=20
+some patches have been accepted.
+
+> Something unrelated (only if you feel like doing it):
+>=20
+> On the pci/enumeration branch, Bjorn queued up a revert which was
+> waiting to be ack'ed by AMD IOMMU maintainers:
+> https://lore.kernel.org/r/20250425163259.GA546441@bhelgaas/
+>=20
+> In the meantime the ack has arrived:
+> https://lore.kernel.org/r/aCLv7cN_s1Z4abEl@8bytes.org/
+>=20
+> So the remaining housekeeping items are:
+>=20
+> - Add J=F6rg's Acked-by to commit e86c7278eba8 on pci/enumeration
+> - Remove the "XXX" marker from the subject line
+> - Remove "Needs AMD IOMMU ack" from the commit message
+>=20
+> Again, only if you feel like doing it.  No urgency.
 
 
-
-On 10/05/2025 02:18, Mark Brown wrote:
-> On Fri, May 09, 2025 at 12:05:57PM +0100, James Clark wrote:
->> From: Andra-Teodora Ilie <andra.ilie@nxp.com>
->>
->> Set MTFE bit in MCR register for frequencies higher than 25MHz.
-> 
-> Is this a bug fix?
-
-Not this one as it's only supported for s32g which isn't enabled until 
-later. The commit message is lacking though so I will elaborate.
-
-For the other bug fixes it looks like they are, so I'll put them at the 
-beginning and add fixes tags.
-
-Thanks
-James
+--=20
+ i.
+--8323328-897030319-1747311132=:1298--
