@@ -1,162 +1,89 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E8B2989A3;
-	Thu, 15 May 2025 11:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414A9298CAB;
+	Thu, 15 May 2025 11:27:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747308474; cv=none; b=rBmb61h/1EkeYfggi1kLWrSEZfloYF8S9GF4z3LHldx3lAOWwPYxhDGX4SZJC80TYcE1ZCPOEPjdfZdNNo7eOreOj6tuuaL/sDq9rcoCiqYM7JWuQgGrd8nNVjTTFyJmLvzlJo9zpc/RYPO2+D7aMFlx3Hosm2FOWBtA1E+tCN4=
+	t=1747308475; cv=none; b=GaqJiLPB8+f/1geJYy8K7WcoZ1HLW/sBXj57Z4LEOnsfm11BYfRBaswjV1Asq9+tIuiXDJRVYL+iiEL4A8JWr9o/ZfjEb75zlsnFt/xSRuGRLfOa6UqhEFdMAPnPZHCy9i2i7wNbARsIDGC/g1jt99FhX7Js6w9bisskwiKrHso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747308474; c=relaxed/simple;
-	bh=9G4ubJ6lV4V2dWOs0FNh/K1YDBBBYb3K8frA6VqI9G8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WYenVyvZSABinPZ2Pn+5XUOZq0YbYuRH88jh1VOXXoWhEG12FPkly3gtwrY5AcJA6jiUv7d+hM0Fl9yFpC3G/yevXxwEvXGmPZbGVbboTSOeoHdNuaQMgpcnslOCRBVGauaprTkxq9XovgkNh+ITti5yLMC/QQ2tI+OTvlXDNTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nVqdw+DT; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747308475; c=relaxed/simple;
+	bh=hEdn/KMFnQYxoJkipPDpMMQgvm9AX3Cj0DehCIJCKdU=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=XORt4Kgy5m/HPNUCfyzVyH2Mc/MJqdbsWA8o8+AXEb4ltz0JpNbKxfqJ9uFSbi8K3OxqTBwUJPsSalN6TtujOqTp+9LdMWk2fyWMH8c6CKjfDjkX72BI78Clh+OeCFG0/3OLls+MBENHbMfBw/d881blk7QjiL37x+JDevJRHO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oCAoqxMF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVqdw+DT"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so8120085e9.1;
-        Thu, 15 May 2025 04:27:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747308471; x=1747913271; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pvRhcUvsur4qZV9ZsxMG2pchOpKzL3rOM+elE1weNSU=;
-        b=nVqdw+DTTbRAcLUDwhDVk4MNWqtOVqGHLYPnpeaK07URmDOB0Pm7yM98XZX8fYwXq7
-         7qbh7s840M2LiILT0dYa/QkM0fQqUJ/3iF5RyXPuMZGUXyrwbgIuauwbdtruKrkcqc/G
-         iBWrq0O38nC19JnOn9LVvLffg5H3b1vKbafQUArAJEEMYZkdIGBLYN9vtYmXo5x4yAu2
-         k3QfWp0IGkRQW9ZSjFg+GIcD3oOh8YRnwKAQPUDjgjeXyUVpMDrqnaukcvtdMyxmKpwc
-         o7/Z0uoLj2QdAi0w6RtTVe8R10F6LCP63EBOVo+fVqvI+3pUvO0USHGzMlcPlVbLXqHX
-         qRkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747308471; x=1747913271;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pvRhcUvsur4qZV9ZsxMG2pchOpKzL3rOM+elE1weNSU=;
-        b=NwSw/bATiLjDYKtwEbBE3eO02sVvXWZRRnMdA3ODZ1mbGIrM7PO223I2L4BM8lkKcL
-         lgdwATvG/CWezj/q7TwP911XqjqHa8Jnr68Dwz5wRLhw2q2b/qdr9FU7DeFVVyAvdtaC
-         UGPSxzew405it5+j8ZfbbZX/0Ph97b3CEbSyf77+KYgPHIefGXWp1Fg37OdDhvgIcfeT
-         Tf+3rmPOlSOo8nAmzT/IZExb/0LeKVu8nc1vJeKjrl6OhWtz342zMPxh0tdQyUxkAPv5
-         jH07AAApKypn+vD9uw8X3igFVouDrQugNpF7GUH9FeW6o6S+iSq3fzq6WRWBwy7abi5m
-         X0RQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7bejAuiWWarkOU5PryVOirtUI2ZjgbqHpkYPrSJckRBMV9h3cGPHLEHLbR0TChWbwrDwSqhGZVE4iXj8VP4M=@vger.kernel.org, AJvYcCVd7KZvn1s7WL/pjTDZmKlcdFrPcgMcIU30clqHMunmcLfp4AsffeSKQFWLzZCquSvBv5TO6K9lxOBm7imI@vger.kernel.org, AJvYcCWPPYF0X8kKSRfco5wuvZB2AhlXhp4T1cM9b9sDsF+KfAOEbbFOlHj+Lry5AsN8rLU7ozhnK/Ht@vger.kernel.org, AJvYcCXvbZ045DnVBJpu+1fKwZc539yiC+B4DBmZHLCa+COQiTruAOd392ibE/MDP8zIDqzxxwMB+jht8HAU@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx86RCM55jtNuE0mhQrdnnhfEx1AuQ2GCNDCTtOad6oI+mzF9Vs
-	AJVr1qeUBqDVVvVj8jU6k2523WJ43az6i8er+tCKSaQLuC0Lbbks
-X-Gm-Gg: ASbGnctCFnrs6eIiOwEIdDhRmvEne5yEcjBFqTcnJBC5i71Xy3k6+5cfH4i9UE+1WbR
-	vcoDmWaYlmX7SZlEUyacbIoTeUSYwudYy1IOykzsUjwl+YltgbCg9lqHIER9NDe+cmuaX0uTjej
-	smKH6tdXkxxglXfbGN4MSXKGuDMDg9x3uO8nfbijyzW7PosP6TmMZeR4Y7kNZ7XZLeZIqnVDiBr
-	xdOifP84tQsL4/Qj8+dAzDo3JKpSOA5tOuqBWWxKLijh9/1gpyFQbrrYavyAxKuAlLR02jMYaM6
-	PbClTJbxRwaMBufSF9sfF7CsVV2EeCQAJWdwoO6FX6zNkikPXrnuXXvNkzMBNsCpekHbrRTz455
-	6BQ84AP2AOTp2e1hlx9si
-X-Google-Smtp-Source: AGHT+IEkqgA3KuxI0j3sKFIFR48+izICIU8GG93b8j4McLqorypMq5wxXe+mpsB0UwxTxMHRa4MPkQ==
-X-Received: by 2002:a05:600c:5298:b0:43c:ec0a:ddfd with SMTP id 5b1f17b1804b1-442f20bb1a4mr62974175e9.6.1747308470994;
-        Thu, 15 May 2025 04:27:50 -0700 (PDT)
-Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-442f39517f7sm64497795e9.20.2025.05.15.04.27.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 04:27:50 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Christian Marangi <ansuelsmth@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-	Andrei Botila <andrei.botila@oss.nxp.com>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Sabrina Dubroca <sd@queasysnail.net>,
-	Michael Klein <michael@fossekall.de>,
-	Daniel Golle <daniel@makrotopia.org>,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-Subject: [net-next PATCH v10 2/7] net: phy: bcm87xx: simplify .match_phy_device OP
-Date: Thu, 15 May 2025 13:27:07 +0200
-Message-ID: <20250515112721.19323-3-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250515112721.19323-1-ansuelsmth@gmail.com>
-References: <20250515112721.19323-1-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oCAoqxMF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1596C4CEE7;
+	Thu, 15 May 2025 11:27:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747308474;
+	bh=hEdn/KMFnQYxoJkipPDpMMQgvm9AX3Cj0DehCIJCKdU=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=oCAoqxMFxd3Bx0asZewMNTXIS25QhnO6ODsfMvFLIsmjndLHZ7bdSw4BcsK5RsZut
+	 2sekFmetTmFFinIZgtukwnC2uuDACqJbdvglxitv/sXMGz1mhduwLxXRZBjfAM7l7n
+	 UQCAxHkAyBRBYkURCkBxKAtIWU7iZe72b62NQAGOP9eSie6PB9y7iE/xcze8OKWmgT
+	 GNELujMQ/fr41mmdOGVMhbCSM8ZPWhIi7R7K523m8qtGd3yhiECpYSSUgRCufLAirA
+	 j4Oh6jAR62jNmPgmLLkhq3lNJZQQJwnd5C1oc8EbN8CwiAT28aMmI15y3BcIT6F6ml
+	 iDEx4J4OXR7dA==
+From: Mark Brown <broonie@kernel.org>
+To: krzk@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+ conor+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com, 
+ skomatineni@nvidia.com, ldewangan@nvidia.com, kyarlagadda@nvidia.com, 
+ smangipudi@nvidia.com, bgriffis@nvidia.com, linux-spi@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Vishwaroop A <va@nvidia.com>
+In-Reply-To: <20250513200043.608292-1-va@nvidia.com>
+References: <20250513200043.608292-1-va@nvidia.com>
+Subject: Re: [PATCH V4 1/2] dt-bindings: spi: tegra: Document IOMMU
+ property for Tegra234 QSPI
+Message-Id: <174730846801.345421.6379001926087017421.b4-ty@kernel.org>
+Date: Thu, 15 May 2025 13:27:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-Simplify .match_phy_device OP by using a generic function and using the
-new phy_id PHY driver info instead of hardcoding the matching PHY ID.
+On Tue, 13 May 2025 20:00:42 +0000, Vishwaroop A wrote:
+> Add the 'iommus' property to the Tegra QSPI device tree binding.
+> The property is needed for Tegra234 when using the internal DMA
+> controller, and is not supported on other Tegra chips, as DMA is
+> handled by an external controller.
+> 
+> 
 
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
- drivers/net/phy/bcm87xx.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+Applied to
 
-diff --git a/drivers/net/phy/bcm87xx.c b/drivers/net/phy/bcm87xx.c
-index 1e1e2259fc2b..299f9a8f30f4 100644
---- a/drivers/net/phy/bcm87xx.c
-+++ b/drivers/net/phy/bcm87xx.c
-@@ -185,16 +185,10 @@ static irqreturn_t bcm87xx_handle_interrupt(struct phy_device *phydev)
- 	return IRQ_HANDLED;
- }
- 
--static int bcm8706_match_phy_device(struct phy_device *phydev,
-+static int bcm87xx_match_phy_device(struct phy_device *phydev,
- 				    const struct phy_driver *phydrv)
- {
--	return phydev->c45_ids.device_ids[4] == PHY_ID_BCM8706;
--}
--
--static int bcm8727_match_phy_device(struct phy_device *phydev,
--				    const struct phy_driver *phydrv)
--{
--	return phydev->c45_ids.device_ids[4] == PHY_ID_BCM8727;
-+	return phydev->c45_ids.device_ids[4] == phydrv->phy_id;
- }
- 
- static struct phy_driver bcm87xx_driver[] = {
-@@ -208,7 +202,7 @@ static struct phy_driver bcm87xx_driver[] = {
- 	.read_status	= bcm87xx_read_status,
- 	.config_intr	= bcm87xx_config_intr,
- 	.handle_interrupt = bcm87xx_handle_interrupt,
--	.match_phy_device = bcm8706_match_phy_device,
-+	.match_phy_device = bcm87xx_match_phy_device,
- }, {
- 	.phy_id		= PHY_ID_BCM8727,
- 	.phy_id_mask	= 0xffffffff,
-@@ -219,7 +213,7 @@ static struct phy_driver bcm87xx_driver[] = {
- 	.read_status	= bcm87xx_read_status,
- 	.config_intr	= bcm87xx_config_intr,
- 	.handle_interrupt = bcm87xx_handle_interrupt,
--	.match_phy_device = bcm8727_match_phy_device,
-+	.match_phy_device = bcm87xx_match_phy_device,
- } };
- 
- module_phy_driver(bcm87xx_driver);
--- 
-2.48.1
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+
+Thanks!
+
+[1/2] dt-bindings: spi: tegra: Document IOMMU property for Tegra234 QSPI
+      commit: 4614fd6342ab69feebb067d5db84a9bfb9aada9f
+[2/2] spi: tegra210-quad: Add support for internal DMA
+      commit: 017f1b0bae08e8b456cf35cbdaae93ec19b50f0a
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
