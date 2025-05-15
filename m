@@ -1,100 +1,109 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CAC78F26;
-	Thu, 15 May 2025 13:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10C678F26
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 13:31:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747315912; cv=none; b=Tj6+oZsAfw8aHM46J/i5DSUbFH532cAlT0FSW0am51+sjGvl4U0sSSDdA5Z5nZKsdLQBVnHFWm5ZDPHkKEDYiUjNWT9wCql+MWQ2YVad8734VRFlLxFX60DzcOBA4khp3MokRXbYvlCnGqQp8nLrV0LoQMUwSzL9mk8TjKvOyhI=
+	t=1747315918; cv=none; b=QT4RzEwhTNc2MNxg/HOsjm2aIBISKGrcsOcx9mHGL64109yqScKRnhFZ1ldEfbopurtdIEfKdSGN/uLsV3KDE05h8/h3vYpPR3/b2cQLc3wU0rkdKxac1TbUMu+NReVrTtujQiP6PzOYKB+hAQolN73lQD9+ewfBUzAmysf3RIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747315912; c=relaxed/simple;
-	bh=8VVU8NVRnTpjcLWUjqNAgSssaH4toawfwMWnPXvh4zU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DV86/D7xuh0/6LBnlJgVqKxic5Vtk6WistAukQ4Xlce0Q41+yakyo9V5zsuJ9LpjXWucHUSYScExGSKlEFQYgj0J3Nz9om1T2i9FLaGXnE4i/Po1THUCxdZQK2dcED5AkyCUiRxFasLNtAcMKW7v6lVUA32P1GrEVFAuaqKqJHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=n1iegtna; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1747315918; c=relaxed/simple;
+	bh=Y8GGo2AMVQLbxKDyPRfMjRfAQBjFC7gN/PCZcDvLNIo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TA3xwhm+sDtMk0Q4FyipISCIMlBeUCLx0TIUQ8F6B7zjPnCSlfVH3j09R+SOZ5GfXYGyvMRMHVnSV3AgFqSyO69XWrx7oPEPxmLQULl7KuUaIQiV3KDBie2E2E28IPWl6VDmXQ3Jvshq2fpTFf5IpGbmNE/3dkp0efzv9W1mJ24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ciq.com; spf=pass smtp.mailfrom=ciq.com; dkim=pass (2048-bit key) header.d=ciq.com header.i=@ciq.com header.b=EGM4ScRm; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ciq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ciq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="n1iegtna"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1747315909;
-	bh=8VVU8NVRnTpjcLWUjqNAgSssaH4toawfwMWnPXvh4zU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=n1iegtnaJRMXTSutf212UUiX+v9k41CzAhn8UMiV+FHxiMozVyEhPasaFgmbDOXsf
-	 9ydE7VuFRNJi1ESO2sIOqYlgRl6+8RTzkX7XfldCKOjiPq8ZO8ZTn4iAgr7+oPxzOX
-	 zve5KuPj+UOEp8gvbWnf54YcCdK5jTUDlOb8nhAHzQwGy6WbfwE7kxUWkQMtWVbXHj
-	 tNYd9woATMW8GSRsV+4FioHg9JzBhxemu9srWBt+VZtAFVGF7n74y6g4kOdskW6c4y
-	 WK6uxnrAqQdS8joyiXWnp492ZS2TqCL18WnJ6prwN+6S6VD688b5mYZQHXxkBPHyaZ
-	 1CbpZrR9RTRTg==
-Received: from apertis-1.home (2a01cb0892f2D600c8F85cf092D4Af51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: jmassot)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 77B4017E00F0;
-	Thu, 15 May 2025 15:31:48 +0200 (CEST)
-From: Julien Massot <julien.massot@collabora.com>
-Date: Thu, 15 May 2025 15:31:45 +0200
-Subject: [PATCH 3/3] arm64: dts: mediatek: mt8188: gce: add missing
- 'clock-names'
+	dkim=pass (2048-bit key) header.d=ciq.com header.i=@ciq.com header.b="EGM4ScRm"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c5568355ffso76931785a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 06:31:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ciq.com; s=s1; t=1747315916; x=1747920716; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=idQ7sd0YlO6Ua6mQ5kuc0PUAbrEds8+KAPjDg8rCdTM=;
+        b=EGM4ScRmj1n/VlfczGUQ5cHVcYCC+BIk19rooYOGJRVROie3Do3pZ2Ri7j72vmyZmJ
+         7xtWF78/oO15hpoBEEtWfxy18UtVRE3npxpuKGGy12NctkfAOn0hf4dEUYds4Bwe8UGC
+         lIReRIQ12AhEQT/Qw/kIIjZK60VnuDpvB2olS4Pcc6tkXuMBQN13WYkBZO9HpR1lEiB5
+         /VobMaDmnpGygaUzGMxIc8ztKjvrL8m9w7jrEws4l2+ta8b/PLKBMGuHx4oi62eXuDGZ
+         jpCLEiduTnPE2vOrdapI+Uy4dQjya1Kww5LAHlCTPhZyAdHdOqZKiodUrncE7LcP0SbC
+         fXRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747315916; x=1747920716;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=idQ7sd0YlO6Ua6mQ5kuc0PUAbrEds8+KAPjDg8rCdTM=;
+        b=vopimpiW6kH/jv2s4+XYt9doOL+qE9NjN0LTceIucMAcrXxSniGstwH04v7wv1QnIC
+         Wj/35fOKycWWT47os7mxLCi7xOSnjTuHfD6URdzpy0Lk5qyG/9w8kDzhe6Pbe6ro3gaw
+         BPl9G1Z0znfN2x5E8qdeXFJHy2QG3R6ciZfjkYyXfkkBsvbES/jOQB7rDpEgaZClnQjV
+         CrZustQdIRUTWXcs/tJNniO+m5r2xTUmoHaX9zTrQFOr1AeRSouwrutENcxx4g0HlTfJ
+         tMk3TF7yA2LVKpMpCylQ0IaF07PnIp8BpECWxCOxgmJ/lzfOxIXk0GJlXqCxb4RlDOm2
+         JP2g==
+X-Forwarded-Encrypted: i=1; AJvYcCV2o89OIEwbl3RlCvOO/0kQU+hWWSAbLc4E5PbMwp+FnUYEUYIEG3xy66TgH+LgaYf6PnZF33+y6EUU/to=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMBqK7U8I7yx0JlomLtnKQlMcxwdtg8s/loY4oPRcR7d72/VEG
+	G3R1SAfeZrJm9lTV1RKQWe8jafCaY74FNCvjHitB7BECtApvvikxLdYfrfsusLB4HBnhOxnL9MC
+	+qCNtirzxQ1XHpqYh4EhS1N5Q0x056fpFnvxmjA==
+X-Gm-Gg: ASbGncuaoHw+FDoIhy9oAm3okg/QCq2cXIZEB7DF5B7n0DImhPVtEl0BzjGt5f+LSXe
+	5GDo00b1cneecLxWiexBHTQ3EO6DATnXc8kKMcjMBBtpp4YaSIYfc2q5sZjSnYtd7nWBwa60SSu
+	cwxN4gDEpyDBvyIVvX2/35fFhvdC+/keln
+X-Google-Smtp-Source: AGHT+IFftrViizvwzo527CdaZ+aGd3PB2+/eA4itoniQfclfljSm+WYpnBXwFNoTgGMvKSyjqiFv6xwETd/kIumJRy0=
+X-Received: by 2002:a05:620a:2445:b0:7c7:b4ba:ebf9 with SMTP id
+ af79cd13be357-7cd287e16bemr972802585a.22.1747315915661; Thu, 15 May 2025
+ 06:31:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250515-dtb-check-mt8188-v1-3-cda383cbeb4f@collabora.com>
-References: <20250515-dtb-check-mt8188-v1-0-cda383cbeb4f@collabora.com>
-In-Reply-To: <20250515-dtb-check-mt8188-v1-0-cda383cbeb4f@collabora.com>
-To: kernel@collabora.com, Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Garmin Chang <garmin.chang@mediatek.com>, 
- Friday Yang <friday.yang@mediatek.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- Julien Massot <julien.massot@collabora.com>
-X-Mailer: b4 0.14.2
+References: <20250514125624.330060065@linuxfoundation.org>
+In-Reply-To: <20250514125624.330060065@linuxfoundation.org>
+From: Brett Mastbergen <bmastbergen@ciq.com>
+Date: Thu, 15 May 2025 09:31:44 -0400
+X-Gm-Features: AX0GCFt_T4qmlAP_NoDOQdZAbnEbFphd6WaqCYxvy8tpdv3fkVAu8JdgYSY-VoQ
+Message-ID: <CAOBMUvhtrfhJ7s2s6nL3dSoq2a3YwrHV60eRQ5e4si6Qhu3tdA@mail.gmail.com>
+Subject: Re: [PATCH 6.12 000/184] 6.12.29-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The 'clock-names' property is required by the dt binding.
+On Wed, May 14, 2025 at 9:06=E2=80=AFAM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.12.29 release.
+> There are 184 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 16 May 2025 12:55:38 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.12.29-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.12.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Fix the following dtb-check error:
-arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: mailbox@10320000: 'clock-names' is a required property
-from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
+Builds successfully.  Boots and works on qemu and Dell XPS 15 9520 w/
+Intel Core i7-12600H
 
-Fixes: 45682a4fffdd ("arm64: dts: mediatek: mt8188: Add Global Command Engine mailboxes")
-Signed-off-by: Julien Massot <julien.massot@collabora.com>
----
- arch/arm64/boot/dts/mediatek/mt8188.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+Tested-by: Brett Mastbergen <bmastbergen@ciq.com>
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8188.dtsi b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-index dec6ce3e94e92c8e1e2c3680cb3584394d9058bd..d5892ca35bc29f830d7894ba592aca3f58dc3bdc 100644
---- a/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-@@ -1372,6 +1372,7 @@ gce0: mailbox@10320000 {
- 			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH 0>;
- 			#mbox-cells = <2>;
- 			clocks = <&infracfg_ao CLK_INFRA_AO_GCE>;
-+			clock-names = "gce";
- 		};
- 
- 		gce1: mailbox@10330000 {
-@@ -1380,6 +1381,7 @@ gce1: mailbox@10330000 {
- 			interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_HIGH 0>;
- 			#mbox-cells = <2>;
- 			clocks = <&infracfg_ao CLK_INFRA_AO_GCE2>;
-+			clock-names = "gce";
- 		};
- 
- 		scp_cluster: scp@10720000 {
-
--- 
-2.49.0
-
+Thanks,
+Brett
