@@ -1,70 +1,41 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180A31DF990
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E461DF990
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747329393; cv=none; b=nW97TogTJ7PHMcyVSTMZxI9Pud8T2BnFmHktGy2qodNtUC+epileBR/cSdrOFAgcw8fcDU08HYP6KFwO9cnHRpdL7kz1xpvvXqL1kOFfgV5hQAw1uAQxE3+tf1k/nVp75G03pb0W3DamsBddnQGNkEe0g9L5gIVQaQUNkLQBQ6M=
+	t=1747329406; cv=none; b=VPm2zEPye9BlIkxx5099rPr9MgmteMbzSpaX3e8/g8hOsGvL9X9mYPaHtfUeNQxtXHiamDz6pPN66IRH4uIKtVfGTzDQAS532iKhXmsFyp+zaDUBQK/AWY5KL8cDJtJC2L6lmC/1Z3wpY8mPY3ul6A91s4w9sHZvoyXfG+hah8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747329393; c=relaxed/simple;
-	bh=HAgq5TsL2J5W1qSWohscDi0sEpw741h+gH1OrIGfCW4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RRX5aYL/1STFlf5iYNCxiMfiVbNw85OJXdolUW9qZ/oR2Np0WEF/iIZp6rdwLoo8EscPFmDBHm+wR2Qy5s5tUKp4QzOprhDW0d5p8+oo1M47F3iiyDL9sspw+56AuNtbIvpaOhoKR3s1L3yjriLylvcDD1ULgNf8ZyrIAUa2Q88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tu3mGpa2; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747329406; c=relaxed/simple;
+	bh=MvM60ZObbi/BQVbSgnG85/LiAIUeh4VIT7d3zsx/4vA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QiDIn/Gg4wFnUsBczNLOIcePPT2ROpYcFc1VHvc0evFjSR1E9uK0WO1FfUZi7xGlJ+AW2cOR/R9K8b6a8tbN35K975O3QSHNmS8J0ZmjYcHyMIHlJgNccsG+vP/kLIzHvW+D+v4YXvIUPb3IZfrqmLH61O4KPkZK8ytP3gECdVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E3J0h3oa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tu3mGpa2"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7caeeef95d4so115228485a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:16:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747329390; x=1747934190; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WodONXQd65P/c0ED7hKX8l21r+p4b/r4p9198gArTno=;
-        b=Tu3mGpa2qepzDTwwqZO/3dHzXyuroBI+Xmh9QXC30mrr/AnE4oIeXVceauXdGGpyLS
-         BesBcqHGMwFwBn1dUS+1W2teHe3j4A1K65p8uzxPE8Yziz6O7TZl+6KaRt9EYs/2KlnX
-         20U9NHbr8wQVkH9cG6BgnS+vQFmunQWRxb5A4VSW0DxNj1piznnEQZ2WOYaQKcBfvqd5
-         wS1SqqCFjfKqP2f4O6cCCgJNoJrDMlviQkqW+zxvdn55CJ/PPAbcDMJPPYWZkp+bs1nf
-         BHynwa9YfD9RPLj4SI2O10k8hHlKkGyKcbUDItOcfckJmMgfiUJoaWh/JMFqIoJRakmF
-         SAJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747329390; x=1747934190;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WodONXQd65P/c0ED7hKX8l21r+p4b/r4p9198gArTno=;
-        b=q6JnESoXJAbP+zV24m2dI8RHVh8FfBTmAhW5bJhsGKoLl9dxjwFD+vlcULIL5Sfb3f
-         5V1XyLvsnsYpKt8+Wn7BuBbPBIxV0IiLraUIF/Qv1HYBtObPu8kBcHeoRSvqSSX6Ugoy
-         dHR+5HDbkSH8hfuWXVhfU//ow4fYs+PpZl9bjqe5+igcOm1BCh/sGxMF7EMwMKi4cY+M
-         RRUm5q+91DoN/CRqASmk0U1D3NVKPePa9I8/uQ/ph5IP061HLqWjJE5A+F3f1Jx5Ao1N
-         rZ96HBwjOpZ6juHqAXxcXfAQ4Vqu2W2qsIc7kmCq2ryKcme6VkTnWrMYjCCEbzGCt6GX
-         pOUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWj4AYvjFj1rRWviWb0yvw4S3a/yWUdWceruX5mEBivskI37TlOWtathQGZ+RYaRAWZAw2MiAObwGO+/hU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKQ7Uu/cxQvy2aZTk24Ko5S4Q1vnwBQNL1/bHoNVQx2dCZw1xC
-	C2f4HT9N2RPWYNtRDPnCcU6xByIfQe1BrDh1bEqx5pzVOZjTTmKVSo3Q
-X-Gm-Gg: ASbGncu+ag/Kl/WIO3kSM7oAkFwxKCLGnDM5GkbKx3whwVoVjBQ3ErGHaW3b2RyWPU7
-	1AAqMlEgMLriwPwCxsmm17gAuvpof/DCi0MfH4c2n+/R3mANyplamgoHS3ddGjAoMxTXWecG3+4
-	eeokWpFvvmpH4fHlidlIVCluglvio/PvSl5DoJzMRDMG+x+7XQR3BbRjMT606w4SQYcYsyqoNP9
-	etBPNvoQUBEZxNoPq7Bgt/cpFkup48gknbsPFcanqLm+A4oH3JEvO+nmtCyDv8jgxVDF80rFouc
-	A0smjPZVp43c2EPzfk9ns8wb8zdcIWvVgkiiDuLoNh+2UWNtGLHmf9KYsrxRri4w8cCTsFq6r6W
-	u+8YBDOqLRldoku9NbWp1hTJgo4F7
-X-Google-Smtp-Source: AGHT+IGBIt5ADRN2ko2Y/bSo2YzdOgjYQbooGlhBSnGM0XLl4mv1yIyOiDT13nx1ErQ3x4cJwuQPOg==
-X-Received: by 2002:a05:622a:5081:b0:494:a31b:c3ac with SMTP id d75a77b69052e-494ae33623bmr2581021cf.1.1747329388435;
-        Thu, 15 May 2025 10:16:28 -0700 (PDT)
-Received: from gmail.com (pool-173-48-161-18.bstnma.fios.verizon.net. [173.48.161.18])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-494ae3f89a9sm409611cf.20.2025.05.15.10.16.27
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 15 May 2025 10:16:28 -0700 (PDT)
-From: Tanav Chinthapatla <tanavc01@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: tanavc01@gmail.com,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: fix spacing around '+' in rtw_cmd.c
-Date: Thu, 15 May 2025 13:11:48 -0400
-Message-ID: <20250515171148.22735-1-tanavc01@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E3J0h3oa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37654C4CEE7;
+	Thu, 15 May 2025 17:16:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747329405;
+	bh=MvM60ZObbi/BQVbSgnG85/LiAIUeh4VIT7d3zsx/4vA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=E3J0h3oaws/CHN4PmzdBqfzAuyTMX7bSoNjnAoQIuchPx9GRgltNMTyPHv6wvDeS8
+	 fq7/nikzGeZob5Y7/meLFo5EGoAQfG9/J267zK6f5rE8/hFHnW9xlYaB//oYEgzI/8
+	 gf5neSdCDOTamym3bkK9flQPT6TWlRPogAU3PJzPmehgit6S/+6IIiZwh/dVKZIlum
+	 ZVy9w51SmhBxoAGfYpsG7czHvh0nkXFf0AtxV5/z3XyYRYLnXwgzHzccN8pgF6HMHi
+	 LCw2XCAsT7KkIz1tr14KvoLsQ5rNQVqbQ5kVKFdAwHCtJ2HZobCwqb7T7fsVVwxZmf
+	 pu1+XcdYhPnKQ==
+From: Borislav Petkov <bp@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: X86 ML <x86@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>
+Subject: [PATCH] fitex: Fix kernel-doc comments
+Date: Thu, 15 May 2025 19:16:41 +0200
+Message-ID: <20250515171641.24073-1-bp@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,24 +44,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Tanav Chinthapatla <tanavc01@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_cmd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+From: "Borislav Petkov (AMD)" <bp@alien8.de>
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_cmd.c b/drivers/staging/rtl8723bs/core/rtw_cmd.c
-index 1c9e8b01d..98d89e836 100644
---- a/drivers/staging/rtl8723bs/core/rtw_cmd.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_cmd.c
-@@ -1619,7 +1619,7 @@ static void rtw_btinfo_hdl(struct adapter *adapter, u8 *buf, u16 buf_len)
- 		buf[1] = 0;
- 	else if (cmd_idx == BTINFO_BT_AUTO_RPT)
- 		buf[1] = 2;
--	hal_btcoex_BtInfoNotify(adapter, len+1, &buf[1]);
-+	hal_btcoex_BtInfoNotify(adapter, len + 1, &buf[1]);
- }
+Fix those:
+
+  ./kernel/futex/futex.h:208: warning: Function parameter or struct member 'drop_hb_ref' not described in 'futex_q'
+  ./kernel/futex/waitwake.c:343: warning: expecting prototype for futex_wait_queue(). Prototype was for futex_do_wait() instead
+  ./kernel/futex/waitwake.c:594: warning: Function parameter or struct member 'task' not described in 'futex_wait_setup'
+
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+---
+ kernel/futex/futex.h    | 1 +
+ kernel/futex/waitwake.c | 5 ++---
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/futex/futex.h b/kernel/futex/futex.h
+index 069fc2a83080..fcd1617212ee 100644
+--- a/kernel/futex/futex.h
++++ b/kernel/futex/futex.h
+@@ -175,6 +175,7 @@ typedef void (futex_wake_fn)(struct wake_q_head *wake_q, struct futex_q *q);
+  * @requeue_pi_key:	the requeue_pi target futex key
+  * @bitset:		bitset for the optional bitmasked wakeup
+  * @requeue_state:	State field for futex_requeue_pi()
++ * @drop_hb_ref:	Waiter should drop the extra hash bucket reference if true
+  * @requeue_wait:	RCU wait for futex_requeue_pi() (RT only)
+  *
+  * We use this hashed waitqueue, instead of a normal wait_queue_entry_t, so
+diff --git a/kernel/futex/waitwake.c b/kernel/futex/waitwake.c
+index bd8fef0f8d18..b3738fbe83c6 100644
+--- a/kernel/futex/waitwake.c
++++ b/kernel/futex/waitwake.c
+@@ -334,8 +334,7 @@ int futex_wake_op(u32 __user *uaddr1, unsigned int flags, u32 __user *uaddr2,
+ static long futex_wait_restart(struct restart_block *restart);
  
- u8 rtw_c2h_packet_wk_cmd(struct adapter *padapter, u8 *pbuf, u16 length)
+ /**
+- * futex_wait_queue() - futex_queue() and wait for wakeup, timeout, or signal
+- * @hb:		the futex hash bucket, must be locked by the caller
++ * futex_do_wait() - wait for wakeup, timeout, or signal
+  * @q:		the futex_q to queue up on
+  * @timeout:	the prepared hrtimer_sleeper, or null for no timeout
+  */
+@@ -578,7 +577,7 @@ int futex_wait_multiple(struct futex_vector *vs, unsigned int count,
+  * @flags:	futex flags (FLAGS_SHARED, etc.)
+  * @q:		the associated futex_q
+  * @key2:	the second futex_key if used for requeue PI
+- * task:	Task queueing this futex
++ * @task:	Task queueing this futex
+  *
+  * Setup the futex_q and locate the hash_bucket.  Get the futex value and
+  * compare it with the expected value.  Handle atomic faults internally.
 -- 
-2.34.1
+2.43.0
 
