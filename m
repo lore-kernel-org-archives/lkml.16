@@ -1,114 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C37C28935D;
-	Thu, 15 May 2025 08:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE89295DB5;
+	Thu, 15 May 2025 08:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299524; cv=none; b=BJkMugXrwy8Y9jK3W22Joq4BQLcWBwW0noAUYXRyoY+tgjJigH32qwQqohW3w9Rfa9MdD98n7xoKIDZ0SijywciNhUhh+s6EIhhulAPUDNFk6YTLqoOJYsnZ+Xg73vc9cH8HU5Su4Yy0KbFIch1nRZvHk0cUHLRCp93xM1lHg/0=
+	t=1747299540; cv=none; b=ktAdOnVnlWpY4BfeFL08egQIUaggK+8+9fIkpw0cpfrlR/+5XQsBXZlRvuQ2RYva63tbAd9sWYK0wPm8DzsjyZo3BEKbIxievYeppT54l/YPjt4pdYZvAWAuLhicNb7p32CKe6tvVOXqRL+Sz+p3woyt1Z90Ikdw1fLTEFvmoEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299524; c=relaxed/simple;
-	bh=fQT9k3Da6Wvq0TYDDTvmlNbPMwESEq76o0FhaDKPx84=;
+	s=arc-20240116; t=1747299540; c=relaxed/simple;
+	bh=WKED9sw9AaRYnOXYd8MFwqseZ6zJJk0qej3Fm79ffHY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T0ruvsfHSg6zsuTDPyZBQHdD7eMNqz+z8yBd+RJcYNxFEItMzFGcUw5TxvO1J3UPf5wRy0j7dEosKxKcCNfh4vK/PXniziZPH6A2xKf2m2Ktup4gwP0URsUsR994vWNIVEpdAmeoAOjDUV8zzy8NuqHmL54yzNjazcM+GEabQWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SEgR28s3; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=owF01NJDP4X7OCOE1gwZO+B/2mjZyAceupwVMSEVj9CDGepMPzWeHSETaK6L0E+xqyG8yjMhQsUJ2Pt4gUZscZL6j57ADWSaRlaw2Xvvn8rsXTy4rzCzy54l7jXQ0xFGEJtzzOXYEZ6K9017MbfZbvYc/6rQnPN8HEY1JR3dJKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=XoovOdPm; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SEgR28s3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747299523; x=1778835523;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fQT9k3Da6Wvq0TYDDTvmlNbPMwESEq76o0FhaDKPx84=;
-  b=SEgR28s3BUJd2Ap0Z7O9hnQ7VBpZcK9Sl7mXzDTzEHzOkHi4dbDQj3S+
-   lfIkxGM0qApn7yQGwEW2S1SfnyScIkZ6C0aA6xcXC0ZnUXGUtGmwd494M
-   wMQQXvxa/TN+hzChbwPd3U+rlSatu4omTTZn1AJlHUNe2+wfi0RQYPr9J
-   qd/hfIPemioF9lkKdPtfAgm+CZZAZbSF+3WBxdEH+ZooKWHcRw+CyEc9m
-   bTXeKynvFSUTp0NGGIaBj2zjnzzLD7ZYOhcB5LYQk55JuPUrUREVQh9ry
-   YTF15OmxOpp4JNya/1zAmdC9Tvl2Mr7H1ocV05KpB9cqjWcWJ7YaGbBan
-   Q==;
-X-CSE-ConnectionGUID: 4E/mgJunStCK5r584E9nDQ==
-X-CSE-MsgGUID: H0SXvrBjQ8O9QHBLiaq4Aw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="66776490"
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="66776490"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 01:58:42 -0700
-X-CSE-ConnectionGUID: fmompXI5SUO4bQqfMyjuig==
-X-CSE-MsgGUID: jh2Nv7BFQI2pjUFKDv76eQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="139206406"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 01:58:37 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uFUQD-00000001nTF-477r;
-	Thu, 15 May 2025 11:58:33 +0300
-Date: Thu, 15 May 2025 11:58:33 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Mika Westerberg <westeri@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v1 0/4] gpiolib: acpi: Split quirks to its own file
-Message-ID: <aCWsuRc5ggJJFc5u@smile.fi.intel.com>
-References: <20250513100514.2492545-1-andriy.shevchenko@linux.intel.com>
- <20250514155955.GS88033@black.fi.intel.com>
- <aCWgBp4ZD5aesvRw@smile.fi.intel.com>
- <20250515083451.GT88033@black.fi.intel.com>
- <aCWo19FjcvZzP1H7@smile.fi.intel.com>
- <20250515084727.GU88033@black.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XoovOdPm"
+Received: from pendragon.ideasonboard.com (85-76-100-138-nat.elisa-mobile.fi [85.76.100.138])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E6F63836;
+	Thu, 15 May 2025 10:58:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1747299519;
+	bh=WKED9sw9AaRYnOXYd8MFwqseZ6zJJk0qej3Fm79ffHY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XoovOdPmyr7EB445fvejvr2nyZaScEJvqwiKsjwNym3vmDqJOIzk/MfyDdOaW+oFz
+	 emds7U4TpJy29QfZsIQkKa1/MsUvu35Rd4aQCilY7ATdXI06m7rKE1oQmZt4FTjukU
+	 SVpZR+o5hknWEWFHUFNF1KpL/tCl+BOZFkGyF2+8=
+Date: Thu, 15 May 2025 10:58:46 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: git@apitzsch.eu, Ricardo Ribalda <ribalda@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] media: i2c: imx214: Remove hard-coded external
+ clock frequency
+Message-ID: <20250515085846.GR23592@pendragon.ideasonboard.com>
+References: <20250505-imx214_ccs_pll-v2-0-f50452061ff1@apitzsch.eu>
+ <20250505-imx214_ccs_pll-v2-4-f50452061ff1@apitzsch.eu>
+ <aBnHI1APgjfcj2xG@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250515084727.GU88033@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aBnHI1APgjfcj2xG@kekkonen.localdomain>
 
-On Thu, May 15, 2025 at 11:47:27AM +0300, Mika Westerberg wrote:
-> On Thu, May 15, 2025 at 11:41:59AM +0300, Andy Shevchenko wrote:
-> > On Thu, May 15, 2025 at 11:34:51AM +0300, Mika Westerberg wrote:
-> > > On Thu, May 15, 2025 at 11:04:22AM +0300, Andy Shevchenko wrote:
-> > > > On Wed, May 14, 2025 at 06:59:55PM +0300, Mika Westerberg wrote:
+Hi Sakari,
 
-...
-
-> > > > That's might be the next step to have for all of them, but these are ACPI
-> > > > specific. In any case they can't be put to gpiolib-quirks.c due to module
-> > > > parameters. If we do that we will need a dirty hack to support old module
-> > > > parameters (see 8250 how it's done there, and even author of that didn't like
-> > > > the approach).
-> > > 
-> > > Hmm, how does it affect module paremeters? I thought they are
-> > > gpiolib.something as all these object files are linked to it?
+On Tue, May 06, 2025 at 08:24:03AM +0000, Sakari Ailus wrote:
+> On Mon, May 05, 2025 at 11:05:56PM +0200, André Apitzsch via B4 Relay wrote:
+> > From: André Apitzsch <git@apitzsch.eu>
 > > 
-> > gpiolib_acpi.FOO because the object file is gpiolib-acpi.o.
-> 
-> Ah okay.
-> 
-> > > At least can we drop the gpiolib-acpi-core.c rename?
+> > Instead rely on the rate set on the clock (using assigned-clock-rates
+> > etc.)
 > > 
-> > Unfortunately no due to the above.
+> > Signed-off-by: André Apitzsch <git@apitzsch.eu>
+> > ---
+> >  drivers/media/i2c/imx214.c | 6 ------
+> >  1 file changed, 6 deletions(-)
+> > 
+> > diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
+> > index 9e9be47394ec768a5b34d44b06b5bbb0988da5a1..c12996e294dccebb18c608254f1e0d14dc064423 100644
+> > --- a/drivers/media/i2c/imx214.c
+> > +++ b/drivers/media/i2c/imx214.c
+> > @@ -32,7 +32,6 @@
+> >  
+> >  #define IMX214_REG_FAST_STANDBY_CTRL	CCI_REG8(0x0106)
+> >  
+> > -#define IMX214_DEFAULT_CLK_FREQ	24000000
+> >  #define IMX214_DEFAULT_LINK_FREQ	600000000
+> >  /* Keep wrong link frequency for backward compatibility */
+> >  #define IMX214_DEFAULT_LINK_FREQ_LEGACY	480000000
+> > @@ -1405,11 +1404,6 @@ static int imx214_probe(struct i2c_client *client)
+> >  		return dev_err_probe(dev, PTR_ERR(imx214->xclk),
+> >  				     "failed to get xclk\n");
+> >  
+> > -	ret = clk_set_rate(imx214->xclk, IMX214_DEFAULT_CLK_FREQ);
+> > -	if (ret)
+> > -		return dev_err_probe(dev, ret,
+> > -				     "failed to set xclk frequency\n");
+> > -
 > 
-> This does not work?
+> Oops. I missed this is what the driver was doing already. Indeed, this is
+> one of the historic sensor drivers that do set the frequency in DT systems.
 > 
-> gpiolib-acpi-y                 := gpiolib-acpi.o gpiolib-acpi-quirks.o
+> The driver never used the clock-frequency property and instead used a fixed
+> frequency. Changing the behaviour now could be problematic.
+> 
+> There are options here that I think we could do:
+> 
+> 1) use your v1 patch (4) which uses "clock-frequency" if it exists and
+> otherwise uses the default, fixed frequency or
+> 
+> 2) set the frequency only if the "clock-frequency" property exists. The DT
+> currently requires clock-frequency and the YAML conversion was done in 2020
+> whereas the driver is from 2018. If we do this, the clock-frequency should
+> be deprecated (or even removed from bingings).
+> 
+> I wonder what others think. Cc'd Laurent in any case.
 
-No. You can't use the same name on left and right parts.
+Maybe I'm missing something, but I don't really see the issue here. The
+clock-frequency DT property is currently ignored, and this patch doesn't
+change that situation, does it ?
 
+The change of behaviour here is related to the assigned-clock-rates
+property. If that property is specified today, it will set the clock
+rate, and the driver will override it to 24MHz right after. With this
+patch, the clock rate won't be overridden. I think the risk of
+regression is very low here, as I don't expect systems to set
+assigned-clock-rates in DT to a value different than 24MHz and expect
+the driver to override it.
+
+> >  	ret = imx214_get_regulators(dev, imx214);
+> >  	if (ret < 0)
+> >  		return dev_err_probe(dev, ret, "failed to get regulators\n");
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards,
 
-
+Laurent Pinchart
