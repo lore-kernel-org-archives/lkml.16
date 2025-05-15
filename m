@@ -1,609 +1,379 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C14A520B80A;
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505A420C47C;
 	Thu, 15 May 2025 14:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747318743; cv=none; b=FJuiW04GaL2c1rFCaqUEzhOFVFkkPnwfWlZ3rRKVoW4LZZMLdw7XyKSudEumdaiV/fTLpEhcuhmc8cFHQFjyAzyJ95Z+iJof8S8q724S9Z3673qjUzsxz19+mBtcNrDZnLR03biCcSkX4RsVb9FVXNH9g1eQK3lNxDARguqzLoc=
+	t=1747318744; cv=none; b=YFb6gkm8CBzytNnFXq6zFiOMITlLhtjInKZJTVhARVSdICa9BeHz6tRGkiKEACv0+8AG6WhY0s1JT2c84eBZdzNkkeGq2+1xwjqKkToHsvVgbgY6Dg/xC2KN5BGDqVPlKMLzlcpx4SflqpH2EIll6YRiLLzR8A0fbvpba82Pwhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747318743; c=relaxed/simple;
-	bh=ezh+XH1azkxtWEIh5iABAS4JuFBBhzL0JRhyxzKbex0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rbFEnPy0FMEHbONFCNtz00IIoGqSXv/CVNU3VaI1X6F/JzIu4c+/KqFpPjz0+/vVOJpoZzEVMijC3nJWXXo3uJ9gNZjhnHFhJeN+68m0vlkGGedeDkOH03BWWrJdfSvvdcEn0WXxfiyIRznTbvbMbOsrcN+mUbRze//+StQmf7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: nqB5wWvYS12tC5hItEquDA==
-X-CSE-MsgGUID: xUT2woRCRD2jdhiS2F4s0Q==
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 15 May 2025 23:18:58 +0900
-Received: from superbuilder.administration.lan (unknown [10.226.93.187])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 080AE401E452;
-	Thu, 15 May 2025 23:18:55 +0900 (JST)
-From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-To: thierry.bultel@linatsea.fr
-Cc: linux-renesas-soc@vger.kernel.org,
-	geert@linux-m68k.org,
-	paul.barker.ct@bp.renesas.com,
-	Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: [PATCH v9 06/10] serial: sh-sci: Use private port ID
-Date: Thu, 15 May 2025 16:18:21 +0200
-Message-ID: <20250515141828.43444-7-thierry.bultel.yh@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250515141828.43444-1-thierry.bultel.yh@bp.renesas.com>
-References: <20250515141828.43444-1-thierry.bultel.yh@bp.renesas.com>
+	s=arc-20240116; t=1747318744; c=relaxed/simple;
+	bh=7RP6wYucKH7UVbjeTDkM6PaR7e4TAM0tP0XV+/ob1H8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ldFz2G9hGz4BOx+5zP+oVqqI3PU0wxeMrhiVQQIH8tfmHPA5CJNuIYzz3nk/vJ0DN4s2N6gOJUSRjfAfcnk42VlmHecQTOfz4a5IQSV8yYKQDdeXn2cJ4AtBM0b94o705fe8So3YMdip9vgSsUKAA9urMUD+n+Jijgh6mgy6qwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oCbMRyZ0; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oCbMRyZ0"
+Date: Thu, 15 May 2025 10:18:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747318727;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lprUvIDml9cRgjBHOPyVJqtirYwrYrEUi6NIpGywWC4=;
+	b=oCbMRyZ0lRsOVNhs/m7bKNLx4aSx3bNLZK1w1TMlvE8LJl8mZHoRacMfQPZV4ClBlkzNXO
+	rCU3lk4olXDhSZxrG8m9DUWRk2xQhbccOOVRFdFXXVhcJ5/2NRf4SKgq0flxUsosLOqa24
+	PxdDIHTYGogwMnbgzrtyX0tVx6oKFvE=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>
+Cc: syzbot <syzbot+3f0b3970f154dfc95e6e@syzkaller.appspotmail.com>, 
+	dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, jmorris@namei.org, 
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, paul@paul-moore.com, roberto.sassu@huawei.com, serge@hallyn.com, 
+	syzkaller-bugs@googlegroups.com, zohar@linux.ibm.com, linux-bcachefs@vger.kernel.org
+Subject: Re: [syzbot] [lsm?] [integrity?] KMSAN: uninit-value in
+ ima_add_template_entry (3)
+Message-ID: <rbab6axciiuomrann3uwvpks2zogx3xfntk7w4p2betq3morlf@5xnl5guhnaxj>
+References: <6824aea8.a00a0220.104b28.0011.GAE@google.com>
+ <38c28bd4dc40b2e992c13a6fdba820a667861d8c.camel@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <38c28bd4dc40b2e992c13a6fdba820a667861d8c.camel@huaweicloud.com>
+X-Migadu-Flow: FLOW_OUT
 
-New port types cannot be added in serial_core.h, which is shared with
-userspace.
-In order to support new port types, the coming new ones will have
-BIT(7) set in the id value, and in this case, uartport->type is
-set to PORT_GENERIC.
-This commit therefore changes all the places where the port type is
-read, by not relying on uartport->type but on the private
-value stored in struct sci_port.
+On Thu, May 15, 2025 at 04:06:02PM +0200, Roberto Sassu wrote:
+> On Wed, 2025-05-14 at 07:54 -0700, syzbot wrote:
+> > Hello,
+> 
+> + Kent, bcachefs mailing list
+> 
+> I have the feeling that this was recently fixed in one of the latest
+> pull requests in bcachefs. I don't see it occurring anymore, and there
+> are more commits after the one reported by syzbot.
 
-Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
----
-Changes v8->v9:
- - Shrunk length od type & regtype
- - Uses BIT(7) in id value
- - Set sci_ports[0].type & sci_ports[0].regtype in scix_early_console_setup
- drivers/tty/serial/sh-sci-common.h |   3 +
- drivers/tty/serial/sh-sci.c        | 159 ++++++++++++++++-------------
- 2 files changed, 92 insertions(+), 70 deletions(-)
+I have no idea how any of the ima stuff works or even what it does, I'm
+not even sure where I'd start...
 
-diff --git a/drivers/tty/serial/sh-sci-common.h b/drivers/tty/serial/sh-sci-common.h
-index bd9d9cfac1c8..fcddf66780c9 100644
---- a/drivers/tty/serial/sh-sci-common.h
-+++ b/drivers/tty/serial/sh-sci-common.h
-@@ -142,6 +142,9 @@ struct sci_port {
- 	int				rx_fifo_timeout;
- 	u16				hscif_tot;
- 
-+	u8				type;
-+	u8				regtype;
-+
- 	const struct sci_port_ops *ops;
- 
- 	bool has_rtscts;
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index ff1986dc6af3..be719c0db64a 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -75,6 +75,8 @@
- 
- #define SCI_NPORTS CONFIG_SERIAL_SH_SCI_NR_UARTS
- 
-+#define SCI_PUBLIC_PORT_ID(port) (((port) & BIT(7)) ? PORT_GENERIC : (port))
-+
- static struct sci_port sci_ports[SCI_NPORTS];
- static unsigned long sci_ports_in_use;
- static struct uart_driver sci_uart_driver;
-@@ -580,7 +582,7 @@ static void sci_start_tx(struct uart_port *port)
- 	unsigned short ctrl;
- 
- #ifdef CONFIG_SERIAL_SH_SCI_DMA
--	if (port->type == PORT_SCIFA || port->type == PORT_SCIFB) {
-+	if (s->type == PORT_SCIFA || s->type == PORT_SCIFB) {
- 		u16 new, scr = sci_serial_in(port, SCSCR);
- 		if (s->chan_tx)
- 			new = scr | SCSCR_TDRQE;
-@@ -592,7 +594,7 @@ static void sci_start_tx(struct uart_port *port)
- 
- 	if (s->chan_tx && !kfifo_is_empty(&port->state->port.xmit_fifo) &&
- 	    dma_submit_error(s->cookie_tx)) {
--		if (s->cfg->regtype == SCIx_RZ_SCIFA_REGTYPE)
-+		if (s->regtype == SCIx_RZ_SCIFA_REGTYPE)
- 			/* Switch irq from SCIF to DMA */
- 			disable_irq_nosync(s->irqs[SCIx_TXI_IRQ]);
- 
-@@ -601,8 +603,8 @@ static void sci_start_tx(struct uart_port *port)
- 	}
- #endif
- 
--	if (!s->chan_tx || s->cfg->regtype == SCIx_RZ_SCIFA_REGTYPE ||
--	    port->type == PORT_SCIFA || port->type == PORT_SCIFB) {
-+	if (!s->chan_tx || s->regtype == SCIx_RZ_SCIFA_REGTYPE ||
-+	    s->type == PORT_SCIFA || s->type == PORT_SCIFB) {
- 		/* Set TIE (Transmit Interrupt Enable) bit in SCSCR */
- 		ctrl = sci_serial_in(port, SCSCR);
- 
-@@ -611,7 +613,7 @@ static void sci_start_tx(struct uart_port *port)
- 		 * (transmit interrupt enable) or in the same instruction to start
- 		 * the transmit process.
- 		 */
--		if (port->type == PORT_SCI)
-+		if (s->type == PORT_SCI)
- 			ctrl |= SCSCR_TE;
- 
- 		sci_serial_out(port, SCSCR, ctrl | SCSCR_TIE);
-@@ -620,12 +622,13 @@ static void sci_start_tx(struct uart_port *port)
- 
- static void sci_stop_tx(struct uart_port *port)
- {
-+	struct sci_port *s = to_sci_port(port);
- 	unsigned short ctrl;
- 
- 	/* Clear TIE (Transmit Interrupt Enable) bit in SCSCR */
- 	ctrl = sci_serial_in(port, SCSCR);
- 
--	if (port->type == PORT_SCIFA || port->type == PORT_SCIFB)
-+	if (s->type == PORT_SCIFA || s->type == PORT_SCIFB)
- 		ctrl &= ~SCSCR_TDRQE;
- 
- 	ctrl &= ~SCSCR_TIE;
-@@ -633,21 +636,22 @@ static void sci_stop_tx(struct uart_port *port)
- 	sci_serial_out(port, SCSCR, ctrl);
- 
- #ifdef CONFIG_SERIAL_SH_SCI_DMA
--	if (to_sci_port(port)->chan_tx &&
--	    !dma_submit_error(to_sci_port(port)->cookie_tx)) {
--		dmaengine_terminate_async(to_sci_port(port)->chan_tx);
--		to_sci_port(port)->cookie_tx = -EINVAL;
-+	if (s->chan_tx &&
-+	    !dma_submit_error(s->cookie_tx)) {
-+		dmaengine_terminate_async(s->chan_tx);
-+		s->cookie_tx = -EINVAL;
- 	}
- #endif
- }
- 
- static void sci_start_rx(struct uart_port *port)
- {
-+	struct sci_port *s = to_sci_port(port);
- 	unsigned short ctrl;
- 
- 	ctrl = sci_serial_in(port, SCSCR) | port_rx_irq_mask(port);
- 
--	if (port->type == PORT_SCIFA || port->type == PORT_SCIFB)
-+	if (s->type == PORT_SCIFA || s->type == PORT_SCIFB)
- 		ctrl &= ~SCSCR_RDRQE;
- 
- 	sci_serial_out(port, SCSCR, ctrl);
-@@ -655,11 +659,12 @@ static void sci_start_rx(struct uart_port *port)
- 
- static void sci_stop_rx(struct uart_port *port)
- {
-+	struct sci_port *s = to_sci_port(port);
- 	unsigned short ctrl;
- 
- 	ctrl = sci_serial_in(port, SCSCR);
- 
--	if (port->type == PORT_SCIFA || port->type == PORT_SCIFB)
-+	if (s->type == PORT_SCIFA || s->type == PORT_SCIFB)
- 		ctrl &= ~SCSCR_RDRQE;
- 
- 	ctrl &= ~port_rx_irq_mask(port);
-@@ -669,10 +674,12 @@ static void sci_stop_rx(struct uart_port *port)
- 
- static void sci_clear_SCxSR(struct uart_port *port, unsigned int mask)
- {
--	if (port->type == PORT_SCI) {
-+	struct sci_port *s = to_sci_port(port);
-+
-+	if (s->type == PORT_SCI) {
- 		/* Just store the mask */
- 		sci_serial_out(port, SCxSR, mask);
--	} else if (to_sci_port(port)->params->overrun_mask == SCIFA_ORER) {
-+	} else if (s->params->overrun_mask == SCIFA_ORER) {
- 		/* SCIFA/SCIFB and SCIF on SH7705/SH7720/SH7721 */
- 		/* Only clear the status bits we want to clear */
- 		sci_serial_out(port, SCxSR, sci_serial_in(port, SCxSR) & mask);
-@@ -742,13 +749,13 @@ static void sci_init_pins(struct uart_port *port, unsigned int cflag)
- 		return;
- 	}
- 
--	if (port->type == PORT_SCIFA || port->type == PORT_SCIFB) {
-+	if (s->type == PORT_SCIFA || s->type == PORT_SCIFB) {
- 		u16 data = sci_serial_in(port, SCPDR);
- 		u16 ctrl = sci_serial_in(port, SCPCR);
- 
- 		/* Enable RXD and TXD pin functions */
- 		ctrl &= ~(SCPCR_RXDC | SCPCR_TXDC);
--		if (to_sci_port(port)->has_rtscts) {
-+		if (s->has_rtscts) {
- 			/* RTS# is output, active low, unless autorts */
- 			if (!(port->mctrl & TIOCM_RTS)) {
- 				ctrl |= SCPCR_RTSC;
-@@ -765,7 +772,7 @@ static void sci_init_pins(struct uart_port *port, unsigned int cflag)
- 		}
- 		sci_serial_out(port, SCPDR, data);
- 		sci_serial_out(port, SCPCR, ctrl);
--	} else if (sci_getreg(port, SCSPTR)->size && s->cfg->regtype != SCIx_RZV2H_SCIF_REGTYPE) {
-+	} else if (sci_getreg(port, SCSPTR)->size && s->regtype != SCIx_RZV2H_SCIF_REGTYPE) {
- 		u16 status = sci_serial_in(port, SCSPTR);
- 
- 		/* RTS# is always output; and active low, unless autorts */
-@@ -852,7 +859,7 @@ static void sci_transmit_chars(struct uart_port *port)
- 			c = port->x_char;
- 			port->x_char = 0;
- 		} else if (stopped || !kfifo_get(&tport->xmit_fifo, &c)) {
--			if (port->type == PORT_SCI &&
-+			if (s->type == PORT_SCI &&
- 				   kfifo_is_empty(&tport->xmit_fifo)) {
- 				ctrl = sci_serial_in(port, SCSCR);
- 				ctrl &= ~SCSCR_TE;
-@@ -873,7 +880,7 @@ static void sci_transmit_chars(struct uart_port *port)
- 	if (kfifo_len(&tport->xmit_fifo) < WAKEUP_CHARS)
- 		uart_write_wakeup(port);
- 	if (kfifo_is_empty(&tport->xmit_fifo)) {
--		if (port->type == PORT_SCI) {
-+		if (s->type == PORT_SCI) {
- 			ctrl = sci_serial_in(port, SCSCR);
- 			ctrl &= ~SCSCR_TIE;
- 			ctrl |= SCSCR_TEIE;
-@@ -904,7 +911,7 @@ static void sci_receive_chars(struct uart_port *port)
- 		if (count == 0)
- 			break;
- 
--		if (port->type == PORT_SCI) {
-+		if (s->type == PORT_SCI) {
- 			char c = sci_serial_in(port, SCxRDR);
- 			if (uart_handle_sysrq_char(port, c))
- 				count = 0;
-@@ -914,8 +921,8 @@ static void sci_receive_chars(struct uart_port *port)
- 			for (i = 0; i < count; i++) {
- 				char c;
- 
--				if (port->type == PORT_SCIF ||
--				    port->type == PORT_HSCIF) {
-+				if (s->type == PORT_SCIF ||
-+				    s->type == PORT_HSCIF) {
- 					status = sci_serial_in(port, SCxSR);
- 					c = sci_serial_in(port, SCxRDR);
- 				} else {
-@@ -1052,6 +1059,7 @@ static int sci_handle_breaks(struct uart_port *port)
- 
- static int scif_set_rtrg(struct uart_port *port, int rx_trig)
- {
-+	struct sci_port *s = to_sci_port(port);
- 	unsigned int bits;
- 
- 	if (rx_trig >= port->fifosize)
-@@ -1065,7 +1073,7 @@ static int scif_set_rtrg(struct uart_port *port, int rx_trig)
- 		return rx_trig;
- 	}
- 
--	switch (port->type) {
-+	switch (s->type) {
- 	case PORT_SCIF:
- 		if (rx_trig < 4) {
- 			bits = 0;
-@@ -1150,7 +1158,7 @@ static ssize_t rx_fifo_trigger_store(struct device *dev,
- 		return ret;
- 
- 	sci->rx_trigger = sci->ops->set_rtrg(port, r);
--	if (port->type == PORT_SCIFA || port->type == PORT_SCIFB)
-+	if (sci->type == PORT_SCIFA || sci->type == PORT_SCIFB)
- 		sci->ops->set_rtrg(port, 1);
- 
- 	return count;
-@@ -1166,7 +1174,7 @@ static ssize_t rx_fifo_timeout_show(struct device *dev,
- 	struct sci_port *sci = to_sci_port(port);
- 	int v;
- 
--	if (port->type == PORT_HSCIF)
-+	if (sci->type == PORT_HSCIF)
- 		v = sci->hscif_tot >> HSSCR_TOT_SHIFT;
- 	else
- 		v = sci->rx_fifo_timeout;
-@@ -1188,7 +1196,7 @@ static ssize_t rx_fifo_timeout_store(struct device *dev,
- 	if (ret)
- 		return ret;
- 
--	if (port->type == PORT_HSCIF) {
-+	if (sci->type == PORT_HSCIF) {
- 		if (r < 0 || r > 3)
- 			return -EINVAL;
- 		sci->hscif_tot = r << HSSCR_TOT_SHIFT;
-@@ -1229,11 +1237,11 @@ static void sci_dma_tx_complete(void *arg)
- 		schedule_work(&s->work_tx);
- 	} else {
- 		s->cookie_tx = -EINVAL;
--		if (port->type == PORT_SCIFA || port->type == PORT_SCIFB ||
--		    s->cfg->regtype == SCIx_RZ_SCIFA_REGTYPE) {
-+		if (s->type == PORT_SCIFA || s->type == PORT_SCIFB ||
-+		    s->regtype == SCIx_RZ_SCIFA_REGTYPE) {
- 			u16 ctrl = sci_serial_in(port, SCSCR);
- 			sci_serial_out(port, SCSCR, ctrl & ~SCSCR_TIE);
--			if (s->cfg->regtype == SCIx_RZ_SCIFA_REGTYPE) {
-+			if (s->regtype == SCIx_RZ_SCIFA_REGTYPE) {
- 				/* Switch irq from DMA to SCIF */
- 				dmaengine_pause(s->chan_tx_saved);
- 				enable_irq(s->irqs[SCIx_TXI_IRQ]);
-@@ -1315,10 +1323,10 @@ static void sci_dma_rx_reenable_irq(struct sci_port *s)
- 
- 	/* Direct new serial port interrupts back to CPU */
- 	scr = sci_serial_in(port, SCSCR);
--	if (port->type == PORT_SCIFA || port->type == PORT_SCIFB ||
--	    s->cfg->regtype == SCIx_RZ_SCIFA_REGTYPE) {
-+	if (s->type == PORT_SCIFA || s->type == PORT_SCIFB ||
-+	    s->regtype == SCIx_RZ_SCIFA_REGTYPE) {
- 		enable_irq(s->irqs[SCIx_RXI_IRQ]);
--		if (s->cfg->regtype == SCIx_RZ_SCIFA_REGTYPE)
-+		if (s->regtype == SCIx_RZ_SCIFA_REGTYPE)
- 			s->ops->set_rtrg(port, s->rx_trigger);
- 		else
- 			scr &= ~SCSCR_RDRQE;
-@@ -1558,8 +1566,8 @@ static enum hrtimer_restart sci_dma_rx_timer_fn(struct hrtimer *t)
- 			tty_flip_buffer_push(&port->state->port);
- 	}
- 
--	if (port->type == PORT_SCIFA || port->type == PORT_SCIFB ||
--	    s->cfg->regtype == SCIx_RZ_SCIFA_REGTYPE)
-+	if (s->type == PORT_SCIFA || s->type == PORT_SCIFB ||
-+	    s->regtype == SCIx_RZ_SCIFA_REGTYPE)
- 		sci_dma_rx_submit(s, true);
- 
- 	sci_dma_rx_reenable_irq(s);
-@@ -1682,8 +1690,8 @@ static void sci_request_dma(struct uart_port *port)
- 
- 		s->chan_rx_saved = s->chan_rx = chan;
- 
--		if (port->type == PORT_SCIFA || port->type == PORT_SCIFB ||
--		    s->cfg->regtype == SCIx_RZ_SCIFA_REGTYPE)
-+		if (s->type == PORT_SCIFA || s->type == PORT_SCIFB ||
-+		    s->regtype == SCIx_RZ_SCIFA_REGTYPE)
- 			sci_dma_rx_submit(s, false);
- 	}
- }
-@@ -1753,10 +1761,10 @@ static irqreturn_t sci_rx_interrupt(int irq, void *ptr)
- 		u16 ssr = sci_serial_in(port, SCxSR);
- 
- 		/* Disable future Rx interrupts */
--		if (port->type == PORT_SCIFA || port->type == PORT_SCIFB ||
--		    s->cfg->regtype == SCIx_RZ_SCIFA_REGTYPE) {
-+		if (s->type == PORT_SCIFA || s->type == PORT_SCIFB ||
-+		    s->regtype == SCIx_RZ_SCIFA_REGTYPE) {
- 			disable_irq_nosync(s->irqs[SCIx_RXI_IRQ]);
--			if (s->cfg->regtype == SCIx_RZ_SCIFA_REGTYPE) {
-+			if (s->regtype == SCIx_RZ_SCIFA_REGTYPE) {
- 				s->ops->set_rtrg(port, 1);
- 				scr |= SCSCR_RIE;
- 			} else {
-@@ -1820,7 +1828,7 @@ static irqreturn_t sci_tx_end_interrupt(int irq, void *ptr)
- 	unsigned long flags;
- 	u32 ctrl;
- 
--	if (port->type != PORT_SCI)
-+	if (s->type != PORT_SCI)
- 		return sci_tx_interrupt(irq, ptr);
- 
- 	uart_port_lock_irqsave(port, &flags);
-@@ -1867,7 +1875,7 @@ static irqreturn_t sci_er_interrupt(int irq, void *ptr)
- 	}
- 
- 	/* Handle errors */
--	if (port->type == PORT_SCI) {
-+	if (s->type == PORT_SCI) {
- 		if (sci_handle_errors(port)) {
- 			/* discard character in rx buffer */
- 			sci_serial_in(port, SCxSR);
-@@ -2091,7 +2099,9 @@ static unsigned int sci_tx_empty(struct uart_port *port)
- 
- static void sci_set_rts(struct uart_port *port, bool state)
- {
--	if (port->type == PORT_SCIFA || port->type == PORT_SCIFB) {
-+	struct sci_port *s = to_sci_port(port);
-+
-+	if (s->type == PORT_SCIFA || s->type == PORT_SCIFB) {
- 		u16 data = sci_serial_in(port, SCPDR);
- 
- 		/* Active low */
-@@ -2118,7 +2128,9 @@ static void sci_set_rts(struct uart_port *port, bool state)
- 
- static bool sci_get_cts(struct uart_port *port)
- {
--	if (port->type == PORT_SCIFA || port->type == PORT_SCIFB) {
-+	struct sci_port *s = to_sci_port(port);
-+
-+	if (s->type == PORT_SCIFA || s->type == PORT_SCIFB) {
- 		/* Active low */
- 		return !(sci_serial_in(port, SCPDR) & SCPDR_CTSD);
- 	} else if (sci_getreg(port, SCSPTR)->size) {
-@@ -2164,21 +2176,21 @@ static void sci_set_mctrl(struct uart_port *port, unsigned int mctrl)
- 
- 	if (!(mctrl & TIOCM_RTS)) {
- 		/* Disable Auto RTS */
--		if (s->cfg->regtype != SCIx_RZV2H_SCIF_REGTYPE)
-+		if (s->regtype != SCIx_RZV2H_SCIF_REGTYPE)
- 			sci_serial_out(port, SCFCR,
- 				       sci_serial_in(port, SCFCR) & ~SCFCR_MCE);
- 
- 		/* Clear RTS */
- 		sci_set_rts(port, 0);
- 	} else if (s->autorts) {
--		if (port->type == PORT_SCIFA || port->type == PORT_SCIFB) {
-+		if (s->type == PORT_SCIFA || s->type == PORT_SCIFB) {
- 			/* Enable RTS# pin function */
- 			sci_serial_out(port, SCPCR,
- 				sci_serial_in(port, SCPCR) & ~SCPCR_RTSC);
- 		}
- 
- 		/* Enable Auto RTS */
--		if (s->cfg->regtype != SCIx_RZV2H_SCIF_REGTYPE)
-+		if (s->regtype != SCIx_RZV2H_SCIF_REGTYPE)
- 			sci_serial_out(port, SCFCR,
- 				       sci_serial_in(port, SCFCR) | SCFCR_MCE);
- 	} else {
-@@ -2315,7 +2327,7 @@ static int sci_sck_calc(struct sci_port *s, unsigned int bps,
- 	int err, min_err = INT_MAX;
- 	unsigned int sr;
- 
--	if (s->port.type != PORT_HSCIF)
-+	if (s->type != PORT_HSCIF)
- 		freq *= 2;
- 
- 	for_each_sr(sr, s) {
-@@ -2342,7 +2354,7 @@ static int sci_brg_calc(struct sci_port *s, unsigned int bps,
- 	int err, min_err = INT_MAX;
- 	unsigned int sr, dl;
- 
--	if (s->port.type != PORT_HSCIF)
-+	if (s->type != PORT_HSCIF)
- 		freq *= 2;
- 
- 	for_each_sr(sr, s) {
-@@ -2375,7 +2387,7 @@ static int sci_scbrr_calc(struct sci_port *s, unsigned int bps,
- 	unsigned int sr, br, prediv, scrate, c;
- 	int err, min_err = INT_MAX;
- 
--	if (s->port.type != PORT_HSCIF)
-+	if (s->type != PORT_HSCIF)
- 		freq *= 2;
- 
- 	/*
-@@ -2460,8 +2472,8 @@ static void sci_reset(struct uart_port *port)
- 			s->ops->set_rtrg(port, 1);
- 			timer_setup(&s->rx_fifo_timer, rx_fifo_timer_fn, 0);
- 		} else {
--			if (port->type == PORT_SCIFA ||
--			    port->type == PORT_SCIFB)
-+			if (s->type == PORT_SCIFA ||
-+			    s->type == PORT_SCIFB)
- 				s->ops->set_rtrg(port, 1);
- 			else
- 				s->ops->set_rtrg(port, s->rx_trigger);
-@@ -2521,8 +2533,8 @@ static void sci_set_termios(struct uart_port *port, struct ktermios *termios,
- 	 */
- 
- 	/* Optional Undivided External Clock */
--	if (s->clk_rates[SCI_SCK] && port->type != PORT_SCIFA &&
--	    port->type != PORT_SCIFB) {
-+	if (s->clk_rates[SCI_SCK] && s->type != PORT_SCIFA &&
-+	    s->type != PORT_SCIFB) {
- 		err = sci_sck_calc(s, baud, &srr1);
- 		if (abs(err) < abs(min_err)) {
- 			best_clk = SCI_SCK;
-@@ -2607,7 +2619,7 @@ static void sci_set_termios(struct uart_port *port, struct ktermios *termios,
- 		sci_serial_out(port, SEMR, 0);
- 
- 	if (best_clk >= 0) {
--		if (port->type == PORT_SCIFA || port->type == PORT_SCIFB)
-+		if (s->type == PORT_SCIFA || s->type == PORT_SCIFB)
- 			switch (srr + 1) {
- 			case 5:  smr_val |= SCSMR_SRC_5;  break;
- 			case 7:  smr_val |= SCSMR_SRC_7;  break;
-@@ -2692,12 +2704,12 @@ static void sci_set_termios(struct uart_port *port, struct ktermios *termios,
- 	 * (transmit interrupt enable) or in the same instruction to
- 	 * start the transmitting process. So skip setting TE here for SCI.
- 	 */
--	if (port->type != PORT_SCI)
-+	if (s->type != PORT_SCI)
- 		scr_val |= SCSCR_TE;
- 	scr_val |= SCSCR_RE | (s->cfg->scscr & ~(SCSCR_CKE1 | SCSCR_CKE0));
- 	sci_serial_out(port, SCSCR, scr_val | s->hscif_tot);
- 	if ((srr + 1 == 5) &&
--	    (port->type == PORT_SCIFA || port->type == PORT_SCIFB)) {
-+	    (s->type == PORT_SCIFA || s->type == PORT_SCIFB)) {
- 		/*
- 		 * In asynchronous mode, when the sampling rate is 1/5, first
- 		 * received data may become invalid on some SCIFA and SCIFB.
-@@ -2741,7 +2753,9 @@ void sci_pm(struct uart_port *port, unsigned int state,
- 
- static const char *sci_type(struct uart_port *port)
- {
--	switch (port->type) {
-+	struct sci_port *s = to_sci_port(port);
-+
-+	switch (s->type) {
- 	case PORT_IRDA:
- 		return "irda";
- 	case PORT_SCI:
-@@ -2825,8 +2839,7 @@ void sci_config_port(struct uart_port *port, int flags)
- {
- 	if (flags & UART_CONFIG_TYPE) {
- 		struct sci_port *sport = to_sci_port(port);
--
--		port->type = sport->cfg->type;
-+		port->type = SCI_PUBLIC_PORT_ID(sport->type);
- 		sci_request_port(port);
- 	}
- }
-@@ -2964,7 +2977,7 @@ static int sci_init_clocks(struct sci_port *sci_port, struct device *dev)
- 	struct clk *clk;
- 	unsigned int i;
- 
--	if (sci_port->cfg->type == PORT_HSCIF)
-+	if (sci_port->type == PORT_HSCIF)
- 		clk_names[SCI_SCK] = "hsck";
- 
- 	for (i = 0; i < SCI_NUM_CLKS; i++) {
-@@ -3050,6 +3063,9 @@ static int sci_init_single(struct platform_device *dev,
- 
- 	sci_port->cfg	= p;
- 
-+	sci_port->type	= p->type;
-+	sci_port->regtype = p->regtype;
-+
- 	port->iotype	= UPIO_MEM;
- 	port->line	= index;
- 	port->has_sysrq = IS_ENABLED(CONFIG_SERIAL_SH_SCI_CONSOLE);
-@@ -3128,11 +3144,11 @@ static int sci_init_single(struct platform_device *dev,
- 			return ret;
- 	}
- 
--	port->type		= p->type;
-+	port->type		= SCI_PUBLIC_PORT_ID(p->type);
- 	port->flags		= UPF_FIXED_PORT | UPF_BOOT_AUTOCONF | p->flags;
- 	port->fifosize		= sci_port->params->fifosize;
- 
--	if (port->type == PORT_SCI && !dev->dev.of_node) {
-+	if (p->type == PORT_SCI && !dev->dev.of_node) {
- 		if (sci_port->reg_size >= 0x20)
- 			port->regshift = 2;
- 		else
-@@ -3322,13 +3338,13 @@ static struct uart_driver sci_uart_driver = {
- 
- static void sci_remove(struct platform_device *dev)
- {
--	struct sci_port *port = platform_get_drvdata(dev);
--	unsigned int type = port->port.type;	/* uart_remove_... clears it */
-+	struct sci_port *s = platform_get_drvdata(dev);
-+	unsigned int type = s->type;	/* uart_remove_... clears it */
- 
--	sci_ports_in_use &= ~BIT(port->port.line);
--	uart_remove_one_port(&sci_uart_driver, &port->port);
-+	sci_ports_in_use &= ~BIT(s->port.line);
-+	uart_remove_one_port(&sci_uart_driver, &s->port);
- 
--	if (port->port.fifosize > 1)
-+	if (s->port.fifosize > 1)
- 		device_remove_file(&dev->dev, &dev_attr_rx_fifo_trigger);
- 	if (type == PORT_SCIFA || type == PORT_SCIFB || type == PORT_HSCIF)
- 		device_remove_file(&dev->dev, &dev_attr_rx_fifo_timeout);
-@@ -3682,8 +3698,8 @@ static int sci_probe(struct platform_device *dev)
- 		if (ret)
- 			return ret;
- 	}
--	if (sp->port.type == PORT_SCIFA || sp->port.type == PORT_SCIFB ||
--	    sp->port.type == PORT_HSCIF) {
-+	if (sp->type == PORT_SCIFA || sp->type == PORT_SCIFB ||
-+	    sp->type == PORT_HSCIF) {
- 		ret = device_create_file(&dev->dev, &dev_attr_rx_fifo_timeout);
- 		if (ret) {
- 			if (sp->port.fifosize > 1) {
-@@ -3799,8 +3815,11 @@ int __init scix_early_console_setup(struct earlycon_device *device,
- 	if (!device->port.membase)
- 		return -ENODEV;
- 
--	device->port.type = data->type;
-+	device->port.type = SCI_PUBLIC_PORT_ID(data->type);
-+
- 	sci_ports[0].port = device->port;
-+	sci_ports[0].type = data->type;
-+	sci_ports[0].regtype = data->regtype;
- 
- 	port_cfg.type = data->type;
- 	port_cfg.regtype = data->regtype;
--- 
-2.43.0
-
+> 
+> Roberto
+> 
+> > syzbot found the following issue on:
+> > 
+> > HEAD commit:    02ddfb981de8 Merge tag 'scsi-fixes' of git://git.kernel.or..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=11169670580000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=9dc42c34a3f5c357
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=3f0b3970f154dfc95e6e
+> > compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1574d768580000
+> > 
+> > Downloadable assets:
+> > disk image: https://storage.googleapis.com/syzbot-assets/5ca57f5a3f77/disk-02ddfb98.raw.xz
+> > vmlinux: https://storage.googleapis.com/syzbot-assets/3f23cbc11e68/vmlinux-02ddfb98.xz
+> > kernel image: https://storage.googleapis.com/syzbot-assets/73e63afac354/bzImage-02ddfb98.xz
+> > mounted in repro: https://storage.googleapis.com/syzbot-assets/0afd18737aed/mount_2.gz
+> > 
+> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > Reported-by: syzbot+3f0b3970f154dfc95e6e@syzkaller.appspotmail.com
+> > 
+> > bcachefs (loop2): going read-write
+> > bcachefs (loop2): done starting filesystem
+> > =====================================================
+> > BUG: KMSAN: uninit-value in ima_lookup_digest_entry security/integrity/ima/ima_queue.c:64 [inline]
+> > BUG: KMSAN: uninit-value in ima_add_template_entry+0x7a5/0x8d0 security/integrity/ima/ima_queue.c:191
+> >  ima_lookup_digest_entry security/integrity/ima/ima_queue.c:64 [inline]
+> >  ima_add_template_entry+0x7a5/0x8d0 security/integrity/ima/ima_queue.c:191
+> >  ima_store_template security/integrity/ima/ima_api.c:122 [inline]
+> >  ima_store_measurement+0x388/0x970 security/integrity/ima/ima_api.c:383
+> >  process_measurement+0x3075/0x40e0 security/integrity/ima/ima_main.c:393
+> >  ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
+> >  security_file_post_open+0xbf/0x530 security/security.c:3130
+> >  do_open fs/namei.c:3882 [inline]
+> >  path_openat+0x5ac3/0x6760 fs/namei.c:4039
+> >  do_filp_open+0x280/0x660 fs/namei.c:4066
+> >  do_sys_openat2+0x1bb/0x2f0 fs/open.c:1429
+> >  do_sys_open fs/open.c:1444 [inline]
+> >  __do_sys_openat fs/open.c:1460 [inline]
+> >  __se_sys_openat fs/open.c:1455 [inline]
+> >  __x64_sys_openat+0x240/0x300 fs/open.c:1455
+> >  x64_sys_call+0x213/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:258
+> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >  do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> > 
+> > <Zero or more stacks not recorded to save memory>
+> > 
+> > Uninit was stored to memory at:
+> >  sha256_transform lib/crypto/sha256.c:117 [inline]
+> >  sha256_transform_blocks+0x276d/0x2880 lib/crypto/sha256.c:127
+> >  lib_sha256_base_do_finalize include/crypto/sha256_base.h:101 [inline]
+> >  __sha256_final lib/crypto/sha256.c:142 [inline]
+> >  sha256_final+0x169/0x460 lib/crypto/sha256.c:148
+> >  crypto_sha256_final+0xca/0x120 crypto/sha256_generic.c:49
+> >  crypto_shash_final+0x72/0xa0 crypto/shash.c:58
+> >  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:498 [inline]
+> >  ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
+> >  ima_calc_file_hash+0x240a/0x3fd0 security/integrity/ima/ima_crypto.c:568
+> >  ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api.c:293
+> >  process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.c:385
+> >  ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
+> >  security_file_post_open+0xbf/0x530 security/security.c:3130
+> >  do_open fs/namei.c:3882 [inline]
+> >  path_openat+0x5ac3/0x6760 fs/namei.c:4039
+> >  do_filp_open+0x280/0x660 fs/namei.c:4066
+> >  do_sys_openat2+0x1bb/0x2f0 fs/open.c:1429
+> >  do_sys_open fs/open.c:1444 [inline]
+> >  __do_sys_openat fs/open.c:1460 [inline]
+> >  __se_sys_openat fs/open.c:1455 [inline]
+> >  __x64_sys_openat+0x240/0x300 fs/open.c:1455
+> >  x64_sys_call+0x213/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:258
+> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >  do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> > 
+> > Uninit was stored to memory at:
+> >  sha256_transform lib/crypto/sha256.c:117 [inline]
+> >  sha256_transform_blocks+0x276d/0x2880 lib/crypto/sha256.c:127
+> >  lib_sha256_base_do_update include/crypto/sha256_base.h:63 [inline]
+> >  sha256_update+0x392/0x410 lib/crypto/sha256.c:136
+> >  crypto_sha256_update+0x35/0x60 crypto/sha256_generic.c:39
+> >  crypto_shash_update+0x7a/0xb0 crypto/shash.c:52
+> >  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:491 [inline]
+> >  ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
+> >  ima_calc_file_hash+0x20d7/0x3fd0 security/integrity/ima/ima_crypto.c:568
+> >  ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api.c:293
+> >  process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.c:385
+> >  ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
+> >  security_file_post_open+0xbf/0x530 security/security.c:3130
+> >  do_open fs/namei.c:3882 [inline]
+> >  path_openat+0x5ac3/0x6760 fs/namei.c:4039
+> >  do_filp_open+0x280/0x660 fs/namei.c:4066
+> >  do_sys_openat2+0x1bb/0x2f0 fs/open.c:1429
+> >  do_sys_open fs/open.c:1444 [inline]
+> >  __do_sys_openat fs/open.c:1460 [inline]
+> >  __se_sys_openat fs/open.c:1455 [inline]
+> >  __x64_sys_openat+0x240/0x300 fs/open.c:1455
+> >  x64_sys_call+0x213/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:258
+> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >  do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> > 
+> > Uninit was stored to memory at:
+> >  BLEND_OP lib/crypto/sha256.c:61 [inline]
+> >  sha256_transform lib/crypto/sha256.c:91 [inline]
+> >  sha256_transform_blocks+0xded/0x2880 lib/crypto/sha256.c:127
+> >  lib_sha256_base_do_update include/crypto/sha256_base.h:63 [inline]
+> >  sha256_update+0x392/0x410 lib/crypto/sha256.c:136
+> >  crypto_sha256_update+0x35/0x60 crypto/sha256_generic.c:39
+> >  crypto_shash_update+0x7a/0xb0 crypto/shash.c:52
+> >  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:491 [inline]
+> >  ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
+> >  ima_calc_file_hash+0x20d7/0x3fd0 security/integrity/ima/ima_crypto.c:568
+> >  ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api.c:293
+> >  process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.c:385
+> >  ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
+> >  security_file_post_open+0xbf/0x530 security/security.c:3130
+> >  do_open fs/namei.c:3882 [inline]
+> >  path_openat+0x5ac3/0x6760 fs/namei.c:4039
+> >  do_filp_open+0x280/0x660 fs/namei.c:4066
+> >  do_sys_openat2+0x1bb/0x2f0 fs/open.c:1429
+> >  do_sys_open fs/open.c:1444 [inline]
+> >  __do_sys_openat fs/open.c:1460 [inline]
+> >  __se_sys_openat fs/open.c:1455 [inline]
+> >  __x64_sys_openat+0x240/0x300 fs/open.c:1455
+> >  x64_sys_call+0x213/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:258
+> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >  do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> > 
+> > Uninit was stored to memory at:
+> >  BLEND_OP lib/crypto/sha256.c:61 [inline]
+> >  sha256_transform lib/crypto/sha256.c:92 [inline]
+> >  sha256_transform_blocks+0xe00/0x2880 lib/crypto/sha256.c:127
+> >  lib_sha256_base_do_update include/crypto/sha256_base.h:63 [inline]
+> >  sha256_update+0x392/0x410 lib/crypto/sha256.c:136
+> >  crypto_sha256_update+0x35/0x60 crypto/sha256_generic.c:39
+> >  crypto_shash_update+0x7a/0xb0 crypto/shash.c:52
+> >  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:491 [inline]
+> >  ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
+> >  ima_calc_file_hash+0x20d7/0x3fd0 security/integrity/ima/ima_crypto.c:568
+> >  ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api.c:293
+> >  process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.c:385
+> >  ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
+> >  security_file_post_open+0xbf/0x530 security/security.c:3130
+> >  do_open fs/namei.c:3882 [inline]
+> >  path_openat+0x5ac3/0x6760 fs/namei.c:4039
+> >  do_filp_open+0x280/0x660 fs/namei.c:4066
+> >  do_sys_openat2+0x1bb/0x2f0 fs/open.c:1429
+> >  do_sys_open fs/open.c:1444 [inline]
+> >  __do_sys_openat fs/open.c:1460 [inline]
+> >  __se_sys_openat fs/open.c:1455 [inline]
+> >  __x64_sys_openat+0x240/0x300 fs/open.c:1455
+> >  x64_sys_call+0x213/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:258
+> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >  do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> > 
+> > Uninit was stored to memory at:
+> >  BLEND_OP lib/crypto/sha256.c:61 [inline]
+> >  sha256_transform lib/crypto/sha256.c:93 [inline]
+> >  sha256_transform_blocks+0xe15/0x2880 lib/crypto/sha256.c:127
+> >  lib_sha256_base_do_update include/crypto/sha256_base.h:63 [inline]
+> >  sha256_update+0x392/0x410 lib/crypto/sha256.c:136
+> >  crypto_sha256_update+0x35/0x60 crypto/sha256_generic.c:39
+> >  crypto_shash_update+0x7a/0xb0 crypto/shash.c:52
+> >  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:491 [inline]
+> >  ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
+> >  ima_calc_file_hash+0x20d7/0x3fd0 security/integrity/ima/ima_crypto.c:568
+> >  ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api.c:293
+> >  process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.c:385
+> >  ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
+> >  security_file_post_open+0xbf/0x530 security/security.c:3130
+> >  do_open fs/namei.c:3882 [inline]
+> >  path_openat+0x5ac3/0x6760 fs/namei.c:4039
+> >  do_filp_open+0x280/0x660 fs/namei.c:4066
+> >  do_sys_openat2+0x1bb/0x2f0 fs/open.c:1429
+> >  do_sys_open fs/open.c:1444 [inline]
+> >  __do_sys_openat fs/open.c:1460 [inline]
+> >  __se_sys_openat fs/open.c:1455 [inline]
+> >  __x64_sys_openat+0x240/0x300 fs/open.c:1455
+> >  x64_sys_call+0x213/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:258
+> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >  do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> > 
+> > Uninit was stored to memory at:
+> >  LOAD_OP lib/crypto/sha256.c:56 [inline]
+> >  sha256_transform lib/crypto/sha256.c:82 [inline]
+> >  sha256_transform_blocks+0x268b/0x2880 lib/crypto/sha256.c:127
+> >  lib_sha256_base_do_update include/crypto/sha256_base.h:63 [inline]
+> >  sha256_update+0x392/0x410 lib/crypto/sha256.c:136
+> >  crypto_sha256_update+0x35/0x60 crypto/sha256_generic.c:39
+> >  crypto_shash_update+0x7a/0xb0 crypto/shash.c:52
+> >  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:491 [inline]
+> >  ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
+> >  ima_calc_file_hash+0x20d7/0x3fd0 security/integrity/ima/ima_crypto.c:568
+> >  ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api.c:293
+> >  process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.c:385
+> >  ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
+> >  security_file_post_open+0xbf/0x530 security/security.c:3130
+> >  do_open fs/namei.c:3882 [inline]
+> >  path_openat+0x5ac3/0x6760 fs/namei.c:4039
+> >  do_filp_open+0x280/0x660 fs/namei.c:4066
+> >  do_sys_openat2+0x1bb/0x2f0 fs/open.c:1429
+> >  do_sys_open fs/open.c:1444 [inline]
+> >  __do_sys_openat fs/open.c:1460 [inline]
+> >  __se_sys_openat fs/open.c:1455 [inline]
+> >  __x64_sys_openat+0x240/0x300 fs/open.c:1455
+> >  x64_sys_call+0x213/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:258
+> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >  do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> > 
+> > Uninit was stored to memory at:
+> >  memcpy_to_iter lib/iov_iter.c:65 [inline]
+> >  iterate_kvec include/linux/iov_iter.h:86 [inline]
+> >  iterate_and_advance2 include/linux/iov_iter.h:306 [inline]
+> >  iterate_and_advance include/linux/iov_iter.h:328 [inline]
+> >  _copy_to_iter+0x176c/0x32f0 lib/iov_iter.c:185
+> >  copy_page_to_iter+0x43c/0x8b0 lib/iov_iter.c:362
+> >  copy_folio_to_iter include/linux/uio.h:198 [inline]
+> >  filemap_read+0xced/0x2190 mm/filemap.c:2753
+> >  bch2_read_iter+0x559/0x21c0 fs/bcachefs/fs-io-direct.c:221
+> >  __kernel_read+0x750/0xda0 fs/read_write.c:528
+> >  integrity_kernel_read+0x77/0x90 security/integrity/iint.c:28
+> >  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:480 [inline]
+> >  ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
+> >  ima_calc_file_hash+0x1ff9/0x3fd0 security/integrity/ima/ima_crypto.c:568
+> >  ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api.c:293
+> >  process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.c:385
+> >  ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
+> >  security_file_post_open+0xbf/0x530 security/security.c:3130
+> >  do_open fs/namei.c:3882 [inline]
+> >  path_openat+0x5ac3/0x6760 fs/namei.c:4039
+> >  do_filp_open+0x280/0x660 fs/namei.c:4066
+> >  do_sys_openat2+0x1bb/0x2f0 fs/open.c:1429
+> >  do_sys_open fs/open.c:1444 [inline]
+> >  __do_sys_openat fs/open.c:1460 [inline]
+> >  __se_sys_openat fs/open.c:1455 [inline]
+> >  __x64_sys_openat+0x240/0x300 fs/open.c:1455
+> >  x64_sys_call+0x213/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:258
+> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >  do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> > 
+> > Uninit was created at:
+> >  __alloc_frozen_pages_noprof+0x689/0xf00 mm/page_alloc.c:4993
+> >  alloc_pages_mpol+0x328/0x860 mm/mempolicy.c:2301
+> >  alloc_frozen_pages_noprof mm/mempolicy.c:2372 [inline]
+> >  alloc_pages_noprof mm/mempolicy.c:2392 [inline]
+> >  folio_alloc_noprof+0x109/0x360 mm/mempolicy.c:2402
+> >  filemap_alloc_folio_noprof+0x9d/0x420 mm/filemap.c:1007
+> >  ractl_alloc_folio mm/readahead.c:186 [inline]
+> >  ra_alloc_folio mm/readahead.c:441 [inline]
+> >  page_cache_ra_order+0x93f/0x14f0 mm/readahead.c:509
+> >  page_cache_sync_ra+0x108a/0x13e0 mm/readahead.c:621
+> >  filemap_get_pages+0xfb3/0x3a70 mm/filemap.c:2591
+> >  filemap_read+0x5c6/0x2190 mm/filemap.c:2702
+> >  bch2_read_iter+0x559/0x21c0 fs/bcachefs/fs-io-direct.c:221
+> >  __kernel_read+0x750/0xda0 fs/read_write.c:528
+> >  integrity_kernel_read+0x77/0x90 security/integrity/iint.c:28
+> >  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:480 [inline]
+> >  ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inline]
+> >  ima_calc_file_hash+0x1ff9/0x3fd0 security/integrity/ima/ima_crypto.c:568
+> >  ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api.c:293
+> >  process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.c:385
+> >  ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
+> >  security_file_post_open+0xbf/0x530 security/security.c:3130
+> >  do_open fs/namei.c:3882 [inline]
+> >  path_openat+0x5ac3/0x6760 fs/namei.c:4039
+> >  do_filp_open+0x280/0x660 fs/namei.c:4066
+> >  do_sys_openat2+0x1bb/0x2f0 fs/open.c:1429
+> >  do_sys_open fs/open.c:1444 [inline]
+> >  __do_sys_openat fs/open.c:1460 [inline]
+> >  __se_sys_openat fs/open.c:1455 [inline]
+> >  __x64_sys_openat+0x240/0x300 fs/open.c:1455
+> >  x64_sys_call+0x213/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:258
+> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> >  do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> > 
+> > CPU: 0 UID: 0 PID: 7337 Comm: syz.2.106 Not tainted 6.15.0-rc3-syzkaller-00094-g02ddfb981de8 #0 PREEMPT(undef) 
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+> > =====================================================
+> > 
+> > 
+> > ---
+> > This report is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > 
+> > syzbot will keep track of this issue. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > 
+> > If the report is already addressed, let syzbot know by replying with:
+> > #syz fix: exact-commit-title
+> > 
+> > If you want syzbot to run the reproducer, reply with:
+> > #syz test: git://repo/address.git branch-or-commit-hash
+> > If you attach or paste a git patch, syzbot will apply it before testing.
+> > 
+> > If you want to overwrite report's subsystems, reply with:
+> > #syz set subsystems: new-subsystem
+> > (See the list of subsystem names on the web dashboard)
+> > 
+> > If the report is a duplicate of another one, reply with:
+> > #syz dup: exact-subject-of-another-report
+> > 
+> > If you want to undo deduplication, reply with:
+> > #syz undup
+> 
