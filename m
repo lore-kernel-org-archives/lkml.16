@@ -1,167 +1,161 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C651D54EF
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 22:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C31027A461
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 22:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747348557; cv=none; b=s8DAZP2f8mos0qBlduB9U/fzW7fMOzdp6vETaCO8mXRlacV9D7gTQKciZZj72YAZiQLcutqYd6H9X20/6rSDO2lQoZAP+AjJ6MdYXA7G2CDhoNXYdDQQp1EU93qhfoNrCO0MA5w00CAfyfGFV7oqubi2P5DcHks0Xo96Dtzt3ik=
+	t=1747348857; cv=none; b=Io247c/KOiDomUY5d6E4IMJ8OXSpATMW/dTH8wgoqiNri9qnAYKtNf/j1PXvbJz94I5AzwVoNo7Q8WcwlHpIZlOULEmOYmbo+a0yDKbQcT6fHSr79Z1KaC42lhTVVfbrOf1ivacCTktVitnel5xiCED9LtTsje4csODwCTY5Aao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747348557; c=relaxed/simple;
-	bh=yhSVuxDAeN6/JexVyGTwdgu/3rvrClhhHDwV7NvryjM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=idVKsSJlDUWtUrYXTGNIcRQDCB/Cz+HXv4BLHNMCl2Xd3YXUQwfKtKRXOLpBMDXz6nEEfOws/n6GlUzYaoo1jNp/VwrdFg/KUFJou2Yo6m/zqRrVOn0LZ6MUOMn6FUqs49aSwm3bLmnUeb2Jablc0yByyUt4uQyic47wB568rPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QBOULKvs; arc=none smtp.client-ip=209.85.166.171
+	s=arc-20240116; t=1747348857; c=relaxed/simple;
+	bh=gAwcrn7C3OtzQnccbEtzwNEUv9I14BWeIkkCpTqjRkU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=qD5ng25pDhBnmTT0f40frdkRtswHJyvLwP7n3VSncpMASUwWuh7VwPQME+6F2oYTvmdfSIhD8AgCwt/TKJ1uEAKHUysO+zxkcUbXZXIAVSH3VnME98VoiHoSO1koxSHdhgclXpppIMCJ5lv4zrnvtnQ1Gp7gDGr4GX/UBmhlxWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zR+BVJSs; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QBOULKvs"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3da73d35c11so25125ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:35:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zR+BVJSs"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30e48854445so1157732a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:40:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747348554; x=1747953354; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OBwbRvTZaf1mj20nujKN59HMwobtiT5fyAFRk1Y3Iu0=;
-        b=QBOULKvsWPtj48iU8xpO3fDLRIV/PVCMAS54WlTZguVPPxZlHgSCO5eE3yFyfwR7uV
-         FVz5S+nxksL1nmeGWb4FbTPu8Mk8s3Ylb+DI8iUuFKZeffvDlq2KAuoqjZZ/J9AZJh7Y
-         3/0/qJSysU1sboDjKQL2FV7U7dt2+lehKO1trl4JVRiXcVorMjlJkZ9TMtpLyeeZmi5K
-         004lxQCCnt05xzmi751Wkdj0vt4FLDOeTMuP7oGnH9ZRQXc0yfswEnz4Ny4e8rzcvxcP
-         IsgLVvlyvUS62wR4P3eszTPKPd8PeRcsewbcoF4VwpEDTFBLEbXrzgElSfgQyB1kv3KJ
-         egTg==
+        d=google.com; s=20230601; t=1747348854; x=1747953654; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QzbQSdflaHCK3ugNtNk4sqO5eX+TPn6H7YDD2IwnvfQ=;
+        b=zR+BVJSs2sHv65D4jksJG9URE1HWMRVvutsEm7K6rVaNNd9KowUeO1/+MQulb/ML4r
+         OsAy8X8rGWH4sRcENXjv1wdsmTOGDm6pjxzWS7Uv5kUZ2dGG3ifrne8GPx8D0I/l8nI5
+         2MLlXVf1KF8m8FJnkDcnq5oV6mYav1Ywo0JW2O13ikMd6hoV6MVNiu0+SvtZQ+1j6rVy
+         gLyxw2iL+LCsKa81rs9bQxgV9DFJ2hbY7l82pEjixn4yIKIgnU7JWAcr7KXPcE1GPrA/
+         T9pBecZzZIRPsWxuhqg8WODqCAzBGxUz8cFxD6v30Xoc6+icyADHDCVX2HL25GgqrQ6B
+         B5JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747348554; x=1747953354;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OBwbRvTZaf1mj20nujKN59HMwobtiT5fyAFRk1Y3Iu0=;
-        b=Kirz+OMHCQad7wP+80PfvlQ45eTI0ONhblqcWnxks5IQqqNQcrsQy807kJAx+L8mp1
-         RA25aRXP5TmMFX9rbAM7LF2ew8xnN1xFL8B026Do8t8snyGXO9MCPR50ZDY6PR01g5FG
-         YdcElvVSe3U3mSpceEET6bjn88YeEOell4nKWsw+RrffTB0gAjRG6mbYXXGXxINJ8hTs
-         XhchmIkj+sBzVCpu4PQjCGzDUwPAgi0WX41M421RylZJZq+4zEZQ9ZXkUBxax++N+LTz
-         +itVLh8S1P/QgdY+z5kKgGZu9VAITi1amBZBNo5+PeLaqbDKnAiaBb/7SG6puwkT24EN
-         pBXg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9zja+8R0p1ypDEBYRHNLdQ/+2qgi4HmeXnIVlQ4v0Bz16YS3+V/DJcf0mWQ8jXFxbLV5O5Ykestk8yU4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYDq5nMzMDKmEHQ8isVplBcQoQXoXOb6hxU6DrYAYaRrQWkZOG
-	WBR6yKQKsiCGRw4N0ncruoJgbm7Mo8inDvA6h1k4k+JOjlZDrTrDgY+eQqelH+4PrrKOTI3q9dh
-	9FBCx2HuDZT6mcG3xI4q5Zf0lrH4aekhGBPR3JQqE
-X-Gm-Gg: ASbGncud0Up31DyKOqYlUfEgJpqCBJd123jNAUJPbQY4Au6MWkiaP0ctg1beGlr2oEb
-	7gT6Rqduilv/vPPqlBTW+ZWnoMgc2nInN0k3VJQymRBL2fSB1kKPWIq97a25uqgVu1laz2fxF4b
-	qw0wz6tQzs6oS0sakjS2F2Acf6E0EJc8JdqKsA/z3WeyMEGubTscslEXmFBgLbyA==
-X-Google-Smtp-Source: AGHT+IFXVN6djINl8YP62wn5MPMzvUo+Dxjr7AAyx4YxZcB/3yjDq0GkJHqwF1gWj6Y5la0VPjyrI6xlejgjgoTds5c=
-X-Received: by 2002:a05:6e02:2582:b0:3da:7cc0:77de with SMTP id
- e9e14a558f8ab-3db7800af7cmr6704905ab.8.1747348552908; Thu, 15 May 2025
- 15:35:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747348854; x=1747953654;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QzbQSdflaHCK3ugNtNk4sqO5eX+TPn6H7YDD2IwnvfQ=;
+        b=UkbMe/5jrI/UJmwCte+yddbXqbaqQmgRXatNPLMjwvnSZCEuToa4HrPkPt2HprnnaO
+         Ok1ObFyW1BSNCHXe/ErjiI9o4ysmw45WQQV6nLP2Cfa4iNjikJyXFrOK0gYYxcDczsC5
+         eRJnuwl9XjqX88Y597LNRauBJFYxPGYlpPVK1Z3Z3HdvzNsqolktVIpe9pLFL2CdSsRh
+         YuYbnlBm4RvIJqmlOSaIeA5gzPAzTWMnKzRNePK8vUcPXfqh3Kxl1WEsmbLELIKfKJNC
+         P761vGYRYsOOHTbXybkzYK3EhbF8zY9m3xbrxtAKlIH4/Xxtr8dT9PuVT9d2PTkjTyBA
+         3aRA==
+X-Forwarded-Encrypted: i=1; AJvYcCXD1BQ5p4qbheDQiMTQ6NxYPp21W13blTZVNsDjZSP4kGaSYX4HIV9havBnRctkov3W0i68qP14PnWnt4o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrEXlc17IXlOqckjjNFZNv8P5/O73O9fKTUAPZiBfAUUse8Hek
+	QTGiE8W36V+9/HWyJmyv+SkkPhT6qaRivtZ5W1gJJ3Qn2LTXCEflsLIpxSqaaSAfkIMn6pLpk9T
+	vkeDBoQ==
+X-Google-Smtp-Source: AGHT+IHhpbVQYCulfsGsx71Tw2jSSQWwT4/3osOtwdZFSgnfe66APRY0T7q2w4vwHNkAbfsnzNQMQ2bPnv4=
+X-Received: from pja11.prod.google.com ([2002:a17:90b:548b:b0:30e:65cf:2614])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1f8b:b0:30a:2007:65b6
+ with SMTP id 98e67ed59e1d1-30e83235af7mr236409a91.34.1747348854468; Thu, 15
+ May 2025 15:40:54 -0700 (PDT)
+Date: Thu, 15 May 2025 15:40:52 -0700
+In-Reply-To: <20250515220400.1096945-2-dionnaglaze@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250515181417.491401-1-irogers@google.com> <96c8fae8-b8f9-4094-b03a-9dba3ca234c2@linux.intel.com>
-In-Reply-To: <96c8fae8-b8f9-4094-b03a-9dba3ca234c2@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 15 May 2025 15:35:41 -0700
-X-Gm-Features: AX0GCFuiE3r5RQOp0iXTL7uOycTf1581WMksuSxRhpH_o7_xLst5DQolbvw-bA0
-Message-ID: <CAP-5=fVDF4-qYL1Lm7efgiHk7X=_nw_nEFMBZFMcsnOOJgX4Kg@mail.gmail.com>
-Subject: Re: [PATCH v3] perf pmu intel: Adjust cpumaks for sub-NUMA clusters
- on graniterapids
-To: "Liang, Kan" <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: Weilin Wang <weilin.wang@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250515220400.1096945-1-dionnaglaze@google.com> <20250515220400.1096945-2-dionnaglaze@google.com>
+Message-ID: <aCZtdN0LhkRqm1Vn@google.com>
+Subject: Re: [PATCH v5 1/2] kvm: sev: Add SEV-SNP guest request throttling
+From: Sean Christopherson <seanjc@google.com>
+To: Dionna Glaze <dionnaglaze@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-coco@lists.linux.dev, Thomas Lendacky <Thomas.Lendacky@amd.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <jroedel@suse.de>, Peter Gonda <pgonda@google.com>, 
+	Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, May 15, 2025 at 2:01=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
-> On 2025-05-15 2:14 p.m., Ian Rogers wrote:
-> > On graniterapids the cache home agent (CHA) and memory controller
-> > (IMC) PMUs all have their cpumask set to per-socket information. In
-> > order for per NUMA node aggregation to work correctly the PMUs cpumask
-> > needs to be set to CPUs for the relevant sub-NUMA grouping.
-> >
-> > For example, on a 2 socket graniterapids machine with sub NUMA
-> > clustering of 3, for uncore_cha and uncore_imc PMUs the cpumask is
-> > "0,120" leading to aggregation only on NUMA nodes 0 and 3:
-> > ```
-> > $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a slee=
-p 1
-> >
-> >  Performance counter stats for 'system wide':
-> >
-> > N0        1    277,835,681,344      UNC_CHA_CLOCKTICKS
-> > N0        1     19,242,894,228      UNC_M_CLOCKTICKS
-> > N3        1    277,803,448,124      UNC_CHA_CLOCKTICKS
-> > N3        1     19,240,741,498      UNC_M_CLOCKTICKS
-> >
-> >        1.002113847 seconds time elapsed
-> > ```
-> >
-> > By updating the PMUs cpumasks to "0,120", "40,160" and "80,200" then
-> > the correctly 6 NUMA node aggregations are achieved:
-> > ```
-> > $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a slee=
-p 1
-> >
-> >  Performance counter stats for 'system wide':
-> >
-> > N0        1     92,748,667,796      UNC_CHA_CLOCKTICKS
-> > N0        0      6,424,021,142      UNC_M_CLOCKTICKS
-> > N1        0     92,753,504,424      UNC_CHA_CLOCKTICKS
-> > N1        1      6,424,308,338      UNC_M_CLOCKTICKS
-> > N2        0     92,751,170,084      UNC_CHA_CLOCKTICKS
-> > N2        0      6,424,227,402      UNC_M_CLOCKTICKS
-> > N3        1     92,745,944,144      UNC_CHA_CLOCKTICKS
-> > N3        0      6,423,752,086      UNC_M_CLOCKTICKS
-> > N4        0     92,725,793,788      UNC_CHA_CLOCKTICKS
-> > N4        1      6,422,393,266      UNC_M_CLOCKTICKS
-> > N5        0     92,717,504,388      UNC_CHA_CLOCKTICKS
-> > N5        0      6,421,842,618      UNC_M_CLOCKTICKS
->
-> Is the second coloum  the number of units?
-> If so, it's wrong.
->
-> On my GNR with SNC-2, I observed the similar issue.
->
-> $ sudo ./perf stat -e 'UNC_M_CLOCKTICKS' --per-node -a sleep 1
->  Performance counter stats for 'system wide':
->
-> N0        0      6,405,811,284      UNC_M_CLOCKTICKS
-> N1        1      6,405,895,988      UNC_M_CLOCKTICKS
-> N2        0      6,152,906,692      UNC_M_CLOCKTICKS
-> N3        1      6,063,415,630      UNC_M_CLOCKTICKS
->
-> It's supposed to be 4?
+On Thu, May 15, 2025, Dionna Glaze wrote:
+> The AMD-SP is a precious resource that doesn't have a scheduler other
+> than a mutex lock queue. To avoid customers from causing a DoS, a
+> mem_enc_ioctl command for rate limiting guest requests is added.
+> 
+> Recommended values are {.interval_ms = 1000, .burst = 1} or
+> {.interval_ms = 2000, .burst = 2} to average 1 request every second.
+> You may need to allow 2 requests back to back to allow for the guest
+> to query the certificate length in an extended guest request without
+> a pause. The 1 second average is our target for quality of service
+> since empirical tests show that 64 VMs can concurrently request an
+> attestation report with a maximum latency of 1 second. We don't
 
-Agreed it is weird, but it is what has historically been displayed.
-The number is the aggregation number:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/stat-display.c?h=3Dperf-tools-next#n307
-which comes from:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/stat-display.c?h=3Dperf-tools-next#n135
-which comes from:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/stat.c?h=3Dperf-tools-next#n435
-However, I think it is missing updates from:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/stat.c?h=3Dperf-tools-next#n526
-but there is a comment there saying "don't increase aggr.nr for
-aliases" and all the uncore events are aliases. I don't understand
-what the aggregation number is supposed to be, it is commented as
-"number of entries (CPUs) aggregated":
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/stat.h?h=3Dperf-tools-next#n26
-it would seem to make sense in the CHA case with SNC3 and 42 evsels
-per NUMA node that the value should be 42. Maybe Namhyung (who did the
-evsel__merge_aggr_counters clean up) knows why it is this way but in
-my eyes it just seems like something that has been broken for a long
-time.
+Who is we?
 
-Thanks,
-Ian
+> anticipate more concurrency than that for a seldom used request for
+> a majority well-behaved set of VMs. The majority point is decided as
+> >64 VMs given the assumed 128 VM count for "extreme load".
+> 
+> Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Joerg Roedel <jroedel@suse.de>
+> Cc: Peter Gonda <pgonda@google.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Sean Christopherson <seanjc@google.com>
+> 
+> Signed-off-by: Dionna Glaze <dionnaglaze@google.com>
+> ---
+>  .../virt/kvm/x86/amd-memory-encryption.rst    | 23 +++++++++++++
+>  arch/x86/include/uapi/asm/kvm.h               |  7 ++++
+>  arch/x86/kvm/svm/sev.c                        | 33 +++++++++++++++++++
+>  arch/x86/kvm/svm/svm.h                        |  3 ++
+>  4 files changed, 66 insertions(+)
+> 
+> diff --git a/Documentation/virt/kvm/x86/amd-memory-encryption.rst b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+> index 1ddb6a86ce7f..1b5b4fc35aac 100644
+> --- a/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+> +++ b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
+> @@ -572,6 +572,29 @@ Returns: 0 on success, -negative on error
+>  See SNP_LAUNCH_FINISH in the SEV-SNP specification [snp-fw-abi]_ for further
+>  details on the input parameters in ``struct kvm_sev_snp_launch_finish``.
+>  
+> +21. KVM_SEV_SNP_SET_REQUEST_THROTTLE_RATE
+> +-----------------------------------------
+> +
+> +The KVM_SEV_SNP_SET_REQUEST_THROTTLE_RATE command is used to set a per-VM rate
+> +limit on responding to requests for AMD-SP to process a guest request.
+> +The AMD-SP is a global resource with limited capacity, so to avoid noisy
+> +neighbor effects, the host may set a request rate for guests.
+> +
+> +Parameters (in): struct kvm_sev_snp_set_request_throttle_rate
+> +
+> +Returns: 0 on success, -negative on error
+> +
+> +::
+> +
+> +	struct kvm_sev_snp_set_request_throttle_rate {
+> +		__u32 interval_ms;
+> +		__u32 burst;
+> +	};
+> +
+> +The interval will be translated into jiffies, so if it after transformation
+
+I assume this is a limitation of the __ratelimit() interface?
+
+> +the interval is 0, the command will return ``-EINVAL``. The ``burst`` value
+> +must be greater than 0.
+
+Ugh, whose terribly idea was a per-VM capability?  Oh, mine[*].  *sigh*
+
+Looking at this again, a per-VM capability doesn't change anything.  In fact,
+it's far, far worse.  At least with a module param there's guaranteed to be some
+amount of ratelimiting.  Relying on the VMM to opt-in to ratelimiting its VM if
+userspace is compromised is completely nonsensical.
+
+Unless someone has a better idea, let's just go with a module param.  
+
+[*] https://lore.kernel.org/all/Y8rEFpbMV58yJIKy@google.com
+
+> @@ -4015,6 +4042,12 @@ static int snp_handle_guest_req(struct vcpu_svm *svm, gpa_t req_gpa, gpa_t resp_
+>  
+>  	mutex_lock(&sev->guest_req_mutex);
+>  
+> +	if (!__ratelimit(&sev->snp_guest_msg_rs)) {
+> +		svm_vmgexit_no_action(svm, SNP_GUEST_ERR(SNP_GUEST_VMM_ERR_BUSY, 0));
+> +		ret = 1;
+> +		goto out_unlock;
+
+Can you (or anyone) explain what a well-behaved guest will do in in response to
+BUSY?  And/or explain why KVM injecting an error into the guest is better than
+exiting to userspace.
