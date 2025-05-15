@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4985319D07E
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 16:59:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5CF91D79A6
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 16:59:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747328351; cv=none; b=lo0VXqDYN+IGVwYsCtFsV0nW/h4aE7LbaWcMK/PwvVgtN2ubBKJ20AuuDhuI3GUSzXwAuZysriS/MY3VXbLLR/oHDS1qfuYCnE0FusPQxvpc7pT9r6cLjG8JXW1nXslNHSCdH4wE8SLYIFpk73QBPRG0zTjq9NKgoPvwFaJJf+E=
+	t=1747328357; cv=none; b=s8SxUoJK9o5Za7Igx5EPwZnDfAJnkvjCWj5YsRL5bmfhfYESnkhVsbqfmXEDjgdb8fR1/0ET1QsxlfNyWXCODngCXrunY+V+C54I8PuH4QDJYQtZLDtFvWuiXrpZvGnzZHAW6nP549aqRwTZbZdel8LeOm18KQtjB+ghTupCmQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747328351; c=relaxed/simple;
-	bh=4S2oZfIYufXFoV6j6pgXjPu8KQIanx4frQ/Gx7eSm3w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rEPSerfY4kglJ7eV/JJKi6UfBRZ25k4YNXP72C3bUZScDYNaErgiZFmSRttZGjTQnEXQMR3RBAeNI0vIWyQSPdzuv/ZxPifQZ+Ad0cKKQOIG6o3NdcI4WXHGG1APq2Uzfu/bF7N/lKe2jOFuHpdy88kzRNhpncvkmMQGmpHYiQI=
+	s=arc-20240116; t=1747328357; c=relaxed/simple;
+	bh=vtEX+tby2YJ2pOPcdR51Y1KkK1mbVViW56g/GcRwsqM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=jfnjd2X8qVwMRupPd/gXgl8CA3gN6vRpthDmSCqXVRCrxYI2KTAaF0qx+f4/1CJ0G/00GNXmJA6UXVsQtXeRvRipzvUewGFweSe/Rw+MOYjoKGRS8srcEvsaNZTaY06rBwRDponvHHFUUiRPHwl1/u5ut3e/QzgGTV5z38n/tgE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E92A7106F;
-	Thu, 15 May 2025 09:58:56 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 87D4B1595;
+	Thu, 15 May 2025 09:59:03 -0700 (PDT)
 Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82B443F63F;
-	Thu, 15 May 2025 09:59:05 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E318E3F63F;
+	Thu, 15 May 2025 09:59:11 -0700 (PDT)
 From: James Morse <james.morse@arm.com>
 To: x86@kernel.org,
 	linux-kernel@vger.kernel.org
@@ -44,11 +45,15 @@ Cc: Reinette Chatre <reinette.chatre@intel.com>,
 	Dave Martin <dave.martin@arm.com>,
 	Koba Ko <kobak@nvidia.com>,
 	Shanker Donthineni <sdonthineni@nvidia.com>,
-	fenghuay@nvidia.com
-Subject: [PATCH v12 00/25] x86/resctrl: Move the resctrl filesystem code to /fs/resctrl
-Date: Thu, 15 May 2025 16:58:30 +0000
-Message-Id: <20250515165855.31452-1-james.morse@arm.com>
+	fenghuay@nvidia.com,
+	"Yury Norov [NVIDIA]" <yury.norov@gmail.com>,
+	Tony Luck <tony.luck@intel.com>
+Subject: [PATCH v12 01/25] cpumask: relax cpumask_any_but()
+Date: Thu, 15 May 2025 16:58:31 +0000
+Message-Id: <20250515165855.31452-2-james.morse@arm.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20250515165855.31452-1-james.morse@arm.com>
+References: <20250515165855.31452-1-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,124 +62,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello!
+From: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
 
-No code changes since v11 - this is the 'final' form of the series
-with patches v11:24-29 squashed together. See [v11] for the breakdown.
+Similarly to other cpumask search functions, accept -1, and consider
+it as 'any cpu' hint. This helps users to avoid coding special cases.
 
-The first four patches are a series from Yury which I've rebased onto.
+Tested-by: James Morse <james.morse@arm.com>
+Tested-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: James Morse <james.morse@arm.com>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
+Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+---
+ include/linux/cpumask.h | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-This series is based on rc5, and can be retrieved from:
-git://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git mpam/move_to_fs/v12
-
-With the exception of invalid configurations for the configurable-events, there
-should be no changes in behaviour caused by this series. It is now possible for
-throttle_mode to report 'undefined', but no known platform will do this.
-resctrl_exit() is now something that can be called, but x86 doesn't do this.
-
-The driving pattern is to make things like struct rdtgroup private to resctrl.
-Features like pseudo-lock aren't going to work on arm64, the ability to disable
-it at compile time is added.
-
-After this, I can start posting the MPAM driver to make use of resctrl on arm64.
-(What's MPAM? See the cover letter of the first series. [1])
-
-Bugs are still welcome!
-Thanks,
-
-James
-
-[v11] https://lore.kernel.org/all/20250513171547.15194-1-james.morse@arm.com
-[v10] https://lore.kernel.org/all/20250508171858.9197-1-james.morse@arm.com
-[v9] https://lore.kernel.org/all/20250425173809.5529-1-james.morse@arm.com
-[v8] https://lore.kernel.org/all/20250411164229.23413-1-james.morse@arm.com
-[v7] https://lore.kernel.org/all/20250228195913.24895-1-james.morse@arm.com/
-[v6] https://lore.kernel.org/lkml/20250207181823.6378-1-james.morse@arm.com/
-[v5] https://lore.kernel.org/r/20241004180347.19985-1-james.morse@arm.com
-[v4] https://lore.kernel.org/all/20240802172853.22529-1-james.morse@arm.com/
-[v3] https://lore.kernel.org/r/20240614150033.10454-1-james.morse@arm.com
-[v2] https://lore.kernel.org/r/20240426150537.8094-1-Dave.Martin@arm.com
-[v1] https://lore.kernel.org/r/20240321165106.31602-1-james.morse@arm.com
-[1] https://lore.kernel.org/lkml/20201030161120.227225-1-james.morse@arm.com/
-
-Amit Singh Tomar (1):
-  x86/resctrl: Remove the limit on the number of CLOSID
-
-Dave Martin (3):
-  x86/resctrl: Squelch whitespace anomalies in resctrl core code
-  x86/resctrl: Prefer alloc(sizeof(*foo)) idiom in rdt_init_fs_context()
-  x86/resctrl: Relax some asm #includes
-
-James Morse (17):
-  x86/resctrl: Rename resctrl_sched_in() to begin with "resctrl_arch_"
-  x86/resctrl: Check all domains are offline in resctrl_exit()
-  x86/resctrl: resctrl_exit() teardown resctrl but leave the mount point
-  x86/resctrl: Drop __init/__exit on assorted symbols
-  x86/resctrl: Move is_mba_sc() out of core.c
-  x86/resctrl: Add end-marker to the resctrl_event_id enum
-  x86/resctrl: Expand the width of domid by replacing mon_data_bits
-  x86/resctrl: Split trace.h
-  x86/resctrl: Add 'resctrl' to the title of the resctrl documentation
-  fs/resctrl: Add boiler plate for external resctrl code
-  x86/resctrl: Move the filesystem bits to headers visible to fs/resctrl
-  x86/resctrl: Move enum resctrl_event_id to resctrl.h
-  x86/resctrl: Fix types in resctrl_arch_mon_ctx_{alloc,free}() stubs
-  x86/resctrl: Move pseudo lock prototypes to include/linux/resctrl.h
-  x86/resctrl: Always initialise rid field in rdt_resources_all[]
-  x86,fs/resctrl: Move the resctrl filesystem code to live in
-    /fs/resctrl
-  MAINTAINERS: Add reviewers for fs/resctrl
-
-Yury Norov [NVIDIA] (4):
-  cpumask: relax cpumask_any_but()
-  find: add find_first_andnot_bit()
-  cpumask: add cpumask_{first,next}_andnot() API
-  x86/resctrl: Optimize cpumask_any_housekeeping()
-
- Documentation/arch/x86/index.rst              |    1 -
- Documentation/filesystems/index.rst           |    1 +
- .../{arch/x86 => filesystems}/resctrl.rst     |    6 +-
- MAINTAINERS                                   |    5 +-
- arch/Kconfig                                  |    8 +
- arch/x86/Kconfig                              |   11 +-
- arch/x86/include/asm/resctrl.h                |   19 +-
- arch/x86/kernel/cpu/resctrl/Makefile          |    2 +
- arch/x86/kernel/cpu/resctrl/core.c            |   31 +-
- arch/x86/kernel/cpu/resctrl/ctrlmondata.c     |  635 ---
- arch/x86/kernel/cpu/resctrl/internal.h        |  399 +-
- arch/x86/kernel/cpu/resctrl/monitor.c         |  918 +---
- arch/x86/kernel/cpu/resctrl/pseudo_lock.c     | 1092 +----
- .../resctrl/{trace.h => pseudo_lock_trace.h}  |   26 +-
- arch/x86/kernel/cpu/resctrl/rdtgroup.c        | 4164 +---------------
- arch/x86/kernel/process_32.c                  |    2 +-
- arch/x86/kernel/process_64.c                  |    2 +-
- fs/Kconfig                                    |    1 +
- fs/Makefile                                   |    1 +
- fs/resctrl/Kconfig                            |   39 +
- fs/resctrl/Makefile                           |    6 +
- fs/resctrl/ctrlmondata.c                      |  661 +++
- fs/resctrl/internal.h                         |  426 ++
- fs/resctrl/monitor.c                          |  929 ++++
- fs/resctrl/monitor_trace.h                    |   33 +
- fs/resctrl/pseudo_lock.c                      | 1105 +++++
- fs/resctrl/rdtgroup.c                         | 4353 +++++++++++++++++
- include/linux/cpumask.h                       |   75 +-
- include/linux/find.h                          |   25 +
- include/linux/resctrl.h                       |   36 +-
- include/linux/resctrl_types.h                 |   16 +-
- lib/find_bit.c                                |   11 +
- 32 files changed, 7772 insertions(+), 7267 deletions(-)
- rename Documentation/{arch/x86 => filesystems}/resctrl.rst (99%)
- rename arch/x86/kernel/cpu/resctrl/{trace.h => pseudo_lock_trace.h} (56%)
- create mode 100644 fs/resctrl/Kconfig
- create mode 100644 fs/resctrl/Makefile
- create mode 100644 fs/resctrl/ctrlmondata.c
- create mode 100644 fs/resctrl/internal.h
- create mode 100644 fs/resctrl/monitor.c
- create mode 100644 fs/resctrl/monitor_trace.h
- create mode 100644 fs/resctrl/pseudo_lock.c
- create mode 100644 fs/resctrl/rdtgroup.c
-
+diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+index f9a868384083..a3ee875df508 100644
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -413,14 +413,18 @@ unsigned int cpumask_next_wrap(int n, const struct cpumask *src)
+  * @cpu: the cpu to ignore.
+  *
+  * Often used to find any cpu but smp_processor_id() in a mask.
++ * If @cpu == -1, the function is equivalent to cpumask_any().
+  * Return: >= nr_cpu_ids if no cpus set.
+  */
+ static __always_inline
+-unsigned int cpumask_any_but(const struct cpumask *mask, unsigned int cpu)
++unsigned int cpumask_any_but(const struct cpumask *mask, int cpu)
+ {
+ 	unsigned int i;
+ 
+-	cpumask_check(cpu);
++	/* -1 is a legal arg here. */
++	if (cpu != -1)
++		cpumask_check(cpu);
++
+ 	for_each_cpu(i, mask)
+ 		if (i != cpu)
+ 			break;
+@@ -433,16 +437,20 @@ unsigned int cpumask_any_but(const struct cpumask *mask, unsigned int cpu)
+  * @mask2: the second input cpumask
+  * @cpu: the cpu to ignore
+  *
++ * If @cpu == -1, the function is equivalent to cpumask_any_and().
+  * Returns >= nr_cpu_ids if no cpus set.
+  */
+ static __always_inline
+ unsigned int cpumask_any_and_but(const struct cpumask *mask1,
+ 				 const struct cpumask *mask2,
+-				 unsigned int cpu)
++				 int cpu)
+ {
+ 	unsigned int i;
+ 
+-	cpumask_check(cpu);
++	/* -1 is a legal arg here. */
++	if (cpu != -1)
++		cpumask_check(cpu);
++
+ 	i = cpumask_first_and(mask1, mask2);
+ 	if (i != cpu)
+ 		return i;
 -- 
 2.39.5
 
