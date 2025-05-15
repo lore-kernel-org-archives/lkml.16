@@ -1,74 +1,101 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FFF0263F32
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1AA928469D;
+	Thu, 15 May 2025 18:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747333756; cv=none; b=XxAYHbKu+ThHkiKa3iIEmdmiHFvisJ7rkKL4sjCDnsFKbOhUEE6Xn8gfz26gImg44Drt7Dbq/nZq2348MtE/bQQ1lTaH8SU/TqsRlKFPz0/xkacW03Ei30HCVQClds/tTVT5VNebAOE3doEqVviwGNJHC8wJd54k9Xn6Ro61wqY=
+	t=1747333875; cv=none; b=UIeOi6wx4CtpnRb0CnNCcuRbP/2MKWpB+v5Ym6Gk3PewFElnBFHTyYPDYgYiFj1BBgycG9Rb6E+JXD4deJue32xLPT5FAW188Hjpz/xjtJ8ksJi+FvUFhIp8c+B0WcLhp3J3TOPVzKSnBQD8i/U/Ue/o3zJQGlHAzR3Cg9Ix5ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747333756; c=relaxed/simple;
-	bh=005V1DnsI9qlRExZs5lNJ+THFIVv++44qnw0+WY3jis=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bOq3jOvhAhQPQrXY0kqXaRMJ5mkzhFnG/L9xW+nkFybUFK7vz5VolCDhxxfkO0wk4eQAO3GwY+YiXcjuZ+BY7k84O7T/kh3bFJxvIDryAjyRV8n46UPw88ibeq70FyUxxG9fUQU77A0J0Me49ABI1l3rQ6ngrwjrpPYtI7pMcmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s0bgzWeA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zyNoS4PZ; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747333875; c=relaxed/simple;
+	bh=V6rVl2MUL74b08/nShEq7cCkERzRMRshlzLbhmNnQ+M=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Xl/Plvux5QTSviR14IPcrEzUkhvIygTntfS0TV/anrWs6E02/5LlJzMFB414d0QC3q/y0tjuW0cd+miuGvZJsj/oL3WJXmECw335pnSoqlj9jQHllc9AR8SNPMh8+zdGsee0rHSpT+fmHquBArytdfz1mtQ22Wa3cCPl3WJJ5YA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mc2c4Pth; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s0bgzWeA";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zyNoS4PZ"
-Date: Thu, 15 May 2025 20:29:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747333752;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=005V1DnsI9qlRExZs5lNJ+THFIVv++44qnw0+WY3jis=;
-	b=s0bgzWeAkttlp+ZFUWnbW+XzonbeYCB2sR0OuAmpICl9IiklKI3lEy/M800poV6p+SK67u
-	9CFRQPITTNCt5PBM3f5lNiSM/Q9tOUBtwlbPOPxdVPYVhB62pqmD1FAXweNgzCdUOqy8qr
-	MoaNOXlIAZhnsYMgCzDSjY/5zmsiNzWYK+oQ24/il8pig7mwIAA4niupaA4XIiPEWJrKdP
-	UCaWNxtLDoSCR7HLMVTX4Q8Ww0v7zrJ+YJIsYKHePvFmaKjWxRw1QKbO+Gs91r9JwqnmaG
-	STA3KsduHhmNHDQGbuqz8qFcfjvTcWn13obxPQiuIA1KmW5c9yLHmXRDQvqMRQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747333752;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=005V1DnsI9qlRExZs5lNJ+THFIVv++44qnw0+WY3jis=;
-	b=zyNoS4PZfJSg9w5EVwVBgCogDgBXqg7CnXTOuRc9TuTM6i6yOIYAwCI+1HV1vo3V6Y9Vqm
-	2UTNrOZLmlVOCrDg==
-From: "Ahmed S. Darwish" <darwi@linutronix.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
-	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 2/9] x86/cpuid: Set <asm/cpuid/api.h> as the main
- CPUID header
-Message-ID: <aCYyd1ss7c67Ms1P@lx-t490>
-References: <20250508150240.172915-1-darwi@linutronix.de>
- <20250508150240.172915-3-darwi@linutronix.de>
- <aCYVlLgDNE4fs3yU@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mc2c4Pth"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so1015344a12.2;
+        Thu, 15 May 2025 11:31:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747333873; x=1747938673; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=V6rVl2MUL74b08/nShEq7cCkERzRMRshlzLbhmNnQ+M=;
+        b=Mc2c4PthL7zLQimOWfiOzdY/66hta7ybX42W94Ogk+5scBNUV4VyTie6MuIKNSz6BQ
+         GxfNRBcYAzJRPP2lBlhAekadEeA4ytD4dP5v3xTozVd5P3qaS5c7+LCIjewAZUPVSBH4
+         +0NzQ3cUhgi2B1AE/09Dnfo938pcVHpF8mndFMmCwC4BE5vzJ/gPl6ycPM9FdL+1jflm
+         krN8NcvnLVBwkBc8MLd5vYIn0Wkyfs34NLiY7RzESIpHUR/iEw+/qqQvYPZHzNu9EQWN
+         ulW1Isa6OVdAME8u1nmgvYFaGXb6Bwgo+L5hM3IUACiB/U5yJI2D4jr9KO4142MTsikZ
+         wrKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747333873; x=1747938673;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V6rVl2MUL74b08/nShEq7cCkERzRMRshlzLbhmNnQ+M=;
+        b=noo3aWR7Asoy28VkTX7IdhU5HisFmTBrRDreMaHhnAQzoZdQxkemeniAL0sHwwIh6o
+         PN09OWdJ4Cq/3CHsS7bD5uvKSvtUMh53yZmSxWZ9N4RKdz8vmjcw3MrHfiXdJyz/h4UR
+         6XSUiZXwui7mGLQkKLn6LLWfNXVzTCUZLaE5AktNl59JzZGG1sKyw2aur4RJ/9LktO5R
+         7/u5aV8ICf25hIEpfqWjXZtrrjUQue8c7Cfksp3bcUtY1lC/9KXDQQmjclDRCMTYAVre
+         AsAssVWhEMLAP6DmA4ceqoAIbVw8acxZAGe7UYnHZZd2ockfH94ENQdrHxzeJn5dZ2lo
+         4L2A==
+X-Forwarded-Encrypted: i=1; AJvYcCU1dZt4PQJdhV1zsS/mzlX+oUYf8y7NiSnl1QuNsG59OSS0XF4A4EcFbPSs7LF1IRZSyRbyK5syklyGPtsl@vger.kernel.org, AJvYcCV+lEmAt3ZO1mpxUMCUsnaP1sPk89Ae01+JrKD4WplvQJLCAonaubBbU1Ri0pzIC6ynDFUD9srdmrYd/l2tRfU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRAT27R8/AVT4xspNQf+srCMcgnspUaZeapjVjULJqTDCEMW3v
+	rW03qZ6pxb6HjdhGBEp9Vk8WanL7XLYnPpU5Od1t2c5wmg7ZZpQ17/JU
+X-Gm-Gg: ASbGnctPnPEeORZSoNvHfoEi7XSY/xuYjW0XbZ/Wto1mMNGdD5KRv39xemZJS4uZwHo
+	jgzYVnLcuxQa9/fIPSgc5XYO6bcof//IozEDYEOpi6BFS4syVVAIn/aX2n7Nng5sPwhoKwx+vWt
+	nhqL08hV4AfLYU80cMctrlIfBIteaxA7CBcEBuLrlK5OCcjKfnZQhkIjuWqSrGp9sCNyd7+Dt4I
+	IK5eVgfIdxHdCA9gFM9Ab10zGcDr5k/BK8aHLz97YmHwep5e+gFaSvVtrykeCu96dsmlHPL/qpJ
+	Qt6YIhnwsfNPfs2kUiTGcVITAU+gneGewmAh4CwyZkoqXvM7OW5cfTTKdg==
+X-Google-Smtp-Source: AGHT+IH6OY+7lX78qJzXX8XUmWkJnOnPaGJh9q4L+Bcz6Vd9CB0IOhsuPWAb1U3MJhxd+KmPtBkNvg==
+X-Received: by 2002:a17:902:ce87:b0:223:653e:eb09 with SMTP id d9443c01a7336-231d438a294mr6291995ad.7.1747333872812;
+        Thu, 15 May 2025 11:31:12 -0700 (PDT)
+Received: from [192.168.0.56] ([38.34.87.7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e98018sm917875ad.155.2025.05.15.11.31.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 11:31:12 -0700 (PDT)
+Message-ID: <c36245a48149a12180ec710c65d317a12cdfa020.camel@gmail.com>
+Subject: Re: [REGRESSION] bpf verifier slowdown due to vrealloc() change
+ since 6.15-rc6
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Kees Cook <kees@kernel.org>, Shung-Hsi Yu <shung-hsi.yu@suse.com>
+Cc: bpf@vger.kernel.org, linux-mm@kvack.org, Andrii Nakryiko
+ <andrii@kernel.org>,  Ihor Solodrai <ihor.solodrai@linux.dev>, Andrew
+ Morton <akpm@linux-foundation.org>, Michal Hocko	 <mhocko@suse.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Uladzislau Rezki	 <urezki@gmail.com>,
+ linux-kernel@vger.kernel.org, 	linux-hardening@vger.kernel.org,
+ regressions@lists.linux.dev, Greg Kroah-Hartman	
+ <gregkh@linuxfoundation.org>, Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Pawan Gupta
+ <pawan.kumar.gupta@linux.intel.com>
+Date: Thu, 15 May 2025 11:31:09 -0700
+In-Reply-To: <202505150845.0F9E154@keescook>
+References: 
+	<20250515-bpf-verifier-slowdown-vwo2meju4cgp2su5ckj@6gi6ssxbnfqg>
+	 <202505150845.0F9E154@keescook>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCYVlLgDNE4fs3yU@gmail.com>
 
-On Thu, 15 May 2025, Ingo Molnar wrote:
->
-> Note that in the tip:x86/core commit I've applied today I've delayed
-> this removal of <asm/cpuid.h>, in case there's something in -next that
-> started using it. I've adjusted the changelog accordingly.
->
-> We can remove it later on, shortly after -rc1 or so.
->
+On Thu, 2025-05-15 at 08:47 -0700, Kees Cook wrote:
+> On Thu, May 15, 2025 at 09:12:25PM +0800, Shung-Hsi Yu wrote:
+> > Bisect was done by Pawan and got to commit a0309faf1cb0 "mm: vmalloc:
+> > support more granular vrealloc() sizing"[2]. To further zoom in the
+>=20
+> Can you try this patch? It's a clear bug fix, but if it doesn't improve
+> things, I have another idea to rearrange the memset.
 
-Yup, thanks a lot.
+I tried this patch on top of the commit 82f2b0b97b36 ("Linux 6.15-rc6").
+W/o the patch I observe the slowdown, test times out after 120 seconds,
+with the patch test finishes in 3 seconds.
+
+[...]
