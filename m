@@ -1,188 +1,148 @@
-Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21CF10E5
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143AC223DE2
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747307153; cv=none; b=oLSCjz+UKlx1ysh3kqCR2OyoQXTktarIgm6v+vikQ4/mdcF/CPMqzegJYstBQM1oEvlAhYvOqBjdunaFk3xWlfOUQ6sfT59oGLJjTQgJG1tjV1iLTF8PRW08Onn00o9ujra9s/5BB8f+go0GbDP5N6MBTUKx53+HEFB40hD61ic=
+	t=1747307374; cv=none; b=BfOXcvDitfY0RSF3LLLPTwM6OxtA//QM1hnoJKM8wuKkNAkAAQUSYiXlfGoabtDldPQn/+SYNfwnDvIgqjOLYsVnDRbgmiEWTuQ2z+jmhuzyzGdZhQQamK0Bzq6XuFd/7TqDaeT3AOhaUsFJ66+SxAbkM4yZ3OYjWTKWHAT4nwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747307153; c=relaxed/simple;
-	bh=4Y1B7yEUMwN8Yi4EnTP1B1Mj+kWnL8dJZYt6BzSnYHU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RVhZdDuGmtYjETVt2DxsOoTfBuQMewAR6zYKjS8U4nSQtmZ1x0ejTkMHexdsO83oGzzJcOj9eDN3gVYd3ZNyBDc6aUGhPCwWrDb4Z0NZNghk9g1lssrumEeCOMCIYfKGrK+csrVO7CfLI7F3JT2m8OOWnDOrsBj2nskXxGsxZUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=A94Eb/lZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=V2s81PiK; arc=none smtp.client-ip=202.12.124.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
+	s=arc-20240116; t=1747307374; c=relaxed/simple;
+	bh=2j84STCDm0vREYtgZ6xSL2ryhUkBXmMAz8HL1cnzyQY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=trSTK8ak1aVmqbsTZ4xL4TjNHnTW9DFMiORjS9ToYC8bVnWAA/dNPq/f8QwbdxqgTugK72MIFDdvEIm0p32bREy1VkVLQ8P2geA9JVUcUQLRdKeuzXoqFtgKx+1rSH6S+L+FZ9IeJ3Jqecpmy90x7ZdVY0QbPq0cbvqlzpVGvoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LWU8HLSZ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="A94Eb/lZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="V2s81PiK"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfout.stl.internal (Postfix) with ESMTP id 788DC1140189;
-	Thu, 15 May 2025 07:05:49 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-11.internal (MEProxy); Thu, 15 May 2025 07:05:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1747307149; x=
-	1747393549; bh=c1dvWW4gQyzSKfq4Kp8HqCWRioZZ6Lyhd8KNO5uJE7Y=; b=A
-	94Eb/lZ/EEx+pEYXi+N9Z4vlXLH6QC/ZS/nLW6EJRoAtT2TJzad85DJA01d7N65K
-	FSl5ISDQQ/nXYTQmkC+oZMFdi1OlmHoRXOrNbfu4Xa4rt9gVV3ipsJGzAyxz7sEN
-	5jkIISbHJCEX984ww4+thonxS4RInjUDYFz7dkCSk/34KdP8s57UHANrf3W53rN8
-	l8NXVcr42Tbai4esFWquODcUM7w60+AKWPGe+1dGrpeUGlm+e0sJl+TZFNdCsqqu
-	URwMGFFuEtOebNO2F732bCjANzi0KKOxBzz+xaZrLaNuhHYfgW6F82ydgLH/S++J
-	vrM1wg66U5QeVivkduQqQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1747307149; x=1747393549; bh=c1dvWW4gQyzSKfq4Kp8HqCWRioZZ6Lyhd8K
-	NO5uJE7Y=; b=V2s81PiKeaWH9uuRLSDHKm5WUFIf3mXl/oWsHvvgqtYB6jhdgUP
-	U5aV1OxmDkweHZTlEW1D7YLWQXJBbBbsKDTUTT+7fu/e3GmBz2Xn3w8wzXFnvKQC
-	sYIqdwj2mMHgiFTRgOJdkcUHeBtoW3WhdscapdjSOkRisBMeWs2PVu0PWoNz5/bd
-	DuqPm4KUUC6ybhqWTeAREoEjJ8NCdv1aBxGNc5TooaYG30yrnZx1UDwTqfuZEyAd
-	FXYpkjXu3w9hIUrOfqVV+hxldL8RTpUxiVk7+9V1mxENLF3qkLG6TUcwOgo5HI5e
-	aIAL20mkeREsKIee1EyTHWanEc45yVUWUSA==
-X-ME-Sender: <xms:jMolaGQ6mxCMnGs2XGrQXTNDBmDA4VhnsYmFLyIEaDQP-gVasj6rbg>
-    <xme:jMolaLzQs1wKLwJXaUNIiBqucM51N0yz_7eX799sNYpseXoZLvF0a5kX2P6aJIK1b
-    GOOKkEdAZ1fQhEeavw>
-X-ME-Received: <xmr:jMolaD0gyXLgz2CPzaszQLpb8oJkX2Z5xncnmKSs13SuoBFXg5TyaSBFlx-CtIjgOaCYmw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdeljedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddt
-    vdenucfhrhhomhepfdfmihhrihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilh
-    hlsehshhhuthgvmhhovhdrnhgrmhgvqeenucggtffrrghtthgvrhhnpeeukedttefgkedv
-    keejhfegvdeuhffhgeeihfeulefffedtueejhffgheegtdevvdenucffohhmrghinhephh
-    gvrggupgeigedrshgsnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepkhhirhhilhhlsehshhhuthgvmhhovhdrnhgrmhgvpdhnsggprhgtphhtth
-    hopeejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrrhgusgeskhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtoheprghruggsodhgihhtsehgohhoghhlvgdrtghomhdprhgtph
-    htthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopeigkeeisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmihhnghhosehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugidqfhhouhhn
-    uggrthhiohhnrdhorhhgpdhrtghpthhtohepsghrghgvrhhsthesghhmrghilhdrtghomh
-X-ME-Proxy: <xmx:jMolaCD0uHXt9d60scSxNF6255qE6yNMAMubWPdM1NejPAerSph58w>
-    <xmx:jMolaPh12FSZ2jHtx5_Oblt5vzrSdhD5Ngwrcza39_C661OrIQACfw>
-    <xmx:jMolaOqmres3_83wgp1Bhry9nb1ogNnwDTPW6vdpTTlpyFNxFDBVUA>
-    <xmx:jMolaCjfO5td0u4Z1JWs1vr19t3cUwXxEWIUa0uWlcP26gWnwE__WQ>
-    <xmx:jcolaCsfdAx60VIsMceH_GnBo7maOIgl5STmi96nAMfvP11Q_wH_9-xP>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 15 May 2025 07:05:46 -0400 (EDT)
-Date: Thu, 15 May 2025 14:05:42 +0300
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, Ingo Molnar <mingo@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Brian Gerst <brgerst@gmail.com>
-Subject: Re: [PATCH v3 4/7] x86/boot: Set 5-level paging CPU cap before
- entering C code
-Message-ID: <4ul6frw5heovjirf73hygxc2ncfgd3ssb4m2nyef4catd5zasl@dqy5d7z3eknr>
-References: <20250514104242.1275040-9-ardb+git@google.com>
- <20250514104242.1275040-13-ardb+git@google.com>
- <loshl2p4k2p7pvgwsympb3f5jisv4cnt5eh4gqabd3cdaifoeu@bahujxd4qvrl>
- <CAMj1kXGUmmBuho7PM3iQAjY33kjxT2qwM7jNoNvLHf6rmTdDYg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LWU8HLSZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747307371;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=JRR/RELLFaGmt5TsP7eVtXUVpGFQlMlBD6NeI0Bmw3Y=;
+	b=LWU8HLSZFVSulCNVF+NNfX/HRkVtYtOCJsUV7DeKmtNAY6zU33JKcdcrWqZJ6yPhsOMW+T
+	W1FHlBklkfiBQCqr/Q3VQR2aqBeID+thIU7MGgWomhFp3XFRQZ4v4Btq5x57yVzQ5Mo2qA
+	Yyfy57aMohCHeDgr4ja/ZAQl58X+Y4A=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-528-v8su1HgIMDacP1eP6JAwsw-1; Thu, 15 May 2025 07:09:30 -0400
+X-MC-Unique: v8su1HgIMDacP1eP6JAwsw-1
+X-Mimecast-MFC-AGG-ID: v8su1HgIMDacP1eP6JAwsw_1747307370
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-47689968650so8937641cf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 04:09:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747307370; x=1747912170;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JRR/RELLFaGmt5TsP7eVtXUVpGFQlMlBD6NeI0Bmw3Y=;
+        b=ZFlLvNgvu+OvLbv3dNxYwp2H3RMCtyXw/0CH+wq9YsQINsmjdEpiIB5rGtyxnKvB/w
+         U0Z2D/U8V1rSS76UVkvKWLbVlXWez1T6qbiQTTSAF96/j7VK8zJ7SHWO4WxBUJMgYpSu
+         g2j7LxZCf3iYgFVvQJasWHyHbtcxdoX5wn+SHH2PWMyQl+wsrZhMTO3rmENINHmWpYFi
+         n+i+sFcDaS1RVRRJiRvcpvWFnHaTd6VXkVybNKsIeiD/zbzpXSgQDjAphp7xF1F+hcHu
+         21x1g+U7c5j2cqKy4iGLtY7ngvL7CgxiWE9abcBKleKpwiKpuDKkCaBcJq0BdjUH5x7j
+         HThg==
+X-Forwarded-Encrypted: i=1; AJvYcCWdexYXjSDWMwoLFXD6iPkTqsB1W4ItuVIJvshYuXCGdKY67kiVhD+P4T/uOpfm3X61nyca3PlSTxKNa84=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yygp5cuGST4b9WSeVw9cVcjDEyhzd2bxWnm2wYyRmtb3QxcyP4U
+	OrKdaCKxe5OC33kNSIt0fOEfyvQGAaf5eYBAG3Cai5d6PTlbQ/TbfLPcTuamcfzWVazzPlN4HNB
+	zGlD9GpETz6LOXBlx6Bgg950jk1a8FkobMv+O/Myo2kBKMkJerOiNNE90xnM5aQ==
+X-Gm-Gg: ASbGncuMI47xTZybELoJ8Iu3w8XdMWEHZzvY2GFLBLV9QrqVwQrpQLgJntbZSiOeLkv
+	l53vwo8gKAmsAe7PzSZecYUwijadKotbZCoCJy2FXjRl/C1+i4P/PFY77rhVLLC+UOVJWcpLIMk
+	y6IG8S8VigZBLutGxnWi1jyLNM4ztBL/n5Y9g98dGx5RTk+UZ4FPwhBHK6HXyftB/ZsHilKSuCO
+	FC9oxrgpWlm1Y3wrTi5KgUTCmKoeqCA4dkrw9V8U5mJdVE+SzVZCXZPescpzPvV4plzMico9tmV
+	U7jh1biNmDvVw/SyYg==
+X-Received: by 2002:a05:622a:1e11:b0:476:c650:9839 with SMTP id d75a77b69052e-49495d020ecmr104492801cf.51.1747307370124;
+        Thu, 15 May 2025 04:09:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFms0SmEnYQMTyDvj/1zyQ6HJJbttnxjklBEGCUrbonquaTHXDdozao+AhCWetPjvq3/uAuhQ==
+X-Received: by 2002:a05:622a:1e11:b0:476:c650:9839 with SMTP id d75a77b69052e-49495d020ecmr104492411cf.51.1747307369613;
+        Thu, 15 May 2025 04:09:29 -0700 (PDT)
+Received: from [192.168.21.214] ([69.164.134.123])
+        by smtp.googlemail.com with ESMTPSA id d75a77b69052e-494a4facf77sm6054871cf.59.2025.05.15.04.09.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 04:09:29 -0700 (PDT)
+Message-ID: <22f811d4-d327-41dc-9daa-7c4aa75a5cba@redhat.com>
+Date: Thu, 15 May 2025 13:09:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXGUmmBuho7PM3iQAjY33kjxT2qwM7jNoNvLHf6rmTdDYg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
+ paths
+To: Kevin Wolf <kwolf@redhat.com>, Martin Wilck <mwilck@suse.com>
+Cc: Christoph Hellwig <hch@infradead.org>,
+ Benjamin Marzinski <bmarzins@redhat.com>, dm-devel@lists.linux.dev,
+ hreitz@redhat.com, mpatocka@redhat.com, snitzer@kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250429165018.112999-1-kwolf@redhat.com>
+ <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
+ <aCIRUwt5BueQmlMZ@redhat.com>
+ <d51d6f85b5728648fe9c584f9cb3acee12c4873f.camel@suse.com>
+ <cc2ec011cf286cb5d119f2378ecbd7b818e46769.camel@suse.com>
+ <aCW95f8RGpLJZwSA@redhat.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <aCW95f8RGpLJZwSA@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 15, 2025 at 10:43:27AM +0100, Ard Biesheuvel wrote:
-> On Thu, 15 May 2025 at 09:00, Kirill A. Shutemov <kirill@shutemov.name> wrote:
-> >
-> > On Wed, May 14, 2025 at 12:42:47PM +0200, Ard Biesheuvel wrote:
-> > > From: Ard Biesheuvel <ardb@kernel.org>
-> > >
-> > > In order for pgtable_l5_enabled() to be reliable wherever it is used and
-> > > however early, set the associated CPU capability from asm code before
-> > > entering the startup C code.
-> > >
-> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > > ---
-> > >  arch/x86/include/asm/cpufeature.h | 12 +++++++++---
-> > >  arch/x86/kernel/cpu/common.c      |  3 ---
-> > >  arch/x86/kernel/head_64.S         | 15 +++++++++++++++
-> > >  3 files changed, 24 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-> > > index 893cbca37fe9..1b5de40e7bf7 100644
-> > > --- a/arch/x86/include/asm/cpufeature.h
-> > > +++ b/arch/x86/include/asm/cpufeature.h
-> > > @@ -2,10 +2,10 @@
-> > >  #ifndef _ASM_X86_CPUFEATURE_H
-> > >  #define _ASM_X86_CPUFEATURE_H
-> > >
-> > > +#ifdef __KERNEL__
-> > > +#ifndef __ASSEMBLER__
-> > >  #include <asm/processor.h>
-> > >
-> > > -#if defined(__KERNEL__) && !defined(__ASSEMBLER__)
-> > > -
-> > >  #include <asm/asm.h>
-> > >  #include <linux/bitops.h>
-> > >  #include <asm/alternative.h>
-> > > @@ -137,5 +137,11 @@ static __always_inline bool _static_cpu_has(u16 bit)
-> > >  #define CPU_FEATURE_TYPEVAL          boot_cpu_data.x86_vendor, boot_cpu_data.x86, \
-> > >                                       boot_cpu_data.x86_model
-> > >
-> > > -#endif /* defined(__KERNEL__) && !defined(__ASSEMBLER__) */
-> > > +#else /* !defined(__ASSEMBLER__) */
-> > > +     .macro  setup_force_cpu_cap, cap:req
-> > > +     btsl    $\cap % 32, boot_cpu_data+CPUINFO_x86_capability+4*(\cap / 32)(%rip)
-> > > +     btsl    $\cap % 32, cpu_caps_set+4*(\cap / 32)(%rip)
-> > > +     .endm
-> > > +#endif /* !defined(__ASSEMBLER__) */
-> > > +#endif /* defined(__KERNEL__) */
-> > >  #endif /* _ASM_X86_CPUFEATURE_H */
-> > > diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-> > > index f6f206743d6a..c8954dc2fb26 100644
-> > > --- a/arch/x86/kernel/cpu/common.c
-> > > +++ b/arch/x86/kernel/cpu/common.c
-> > > @@ -1752,9 +1752,6 @@ static void __init early_identify_cpu(struct cpuinfo_x86 *c)
-> > >       setup_clear_cpu_cap(X86_FEATURE_PCID);
-> > >  #endif
-> > >
-> > > -     if (IS_ENABLED(CONFIG_X86_5LEVEL) && (native_read_cr4() & X86_CR4_LA57))
-> > > -             setup_force_cpu_cap(X86_FEATURE_5LEVEL_PAGING);
-> > > -
-> > >       detect_nopl();
-> > >  }
-> > >
-> > > diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-> > > index 069420853304..191d5947a762 100644
-> > > --- a/arch/x86/kernel/head_64.S
-> > > +++ b/arch/x86/kernel/head_64.S
-> > > @@ -27,6 +27,7 @@
-> > >  #include <asm/fixmap.h>
-> > >  #include <asm/smp.h>
-> > >  #include <asm/thread_info.h>
-> > > +#include <asm/cpufeature.h>
-> > >
-> > >  /*
-> > >   * We are not able to switch in one step to the final KERNEL ADDRESS SPACE
-> > > @@ -58,6 +59,20 @@ SYM_CODE_START_NOALIGN(startup_64)
-> > >        */
-> > >       mov     %rsi, %r15
-> > >
-> > > +#ifdef CONFIG_X86_5LEVEL
-> >
-> > Is #ifdef really needed?
-> >
-> 
-> 'Really needed' no but setting this capability is semantically murky
-> if the kernel is not configured to support it. But you wouldn't get
-> far in that case, so it doesn't matter much in practice.
+On 5/15/25 12:11, Kevin Wolf wrote:
+> The thing that we need to make sure, though, is that the emulated status
+> we can expose to the guest is actually good enough. That Paolo said that
+> the problem with reservation conflicts was mostly because -EBADE wasn't
+> a thing yet gives me some hope that at least this wouldn't be a problem
+> any more today.
 
-If we get here with CR4.LA57=1 and CONFIG_X86_5LEVEL=n, we are screwed.
-Something is very broken in stub or decompressor.
+Hmm I'm not sure about that anymore...  I was confused because some of 
+the refactoring of block errors was done in 2017, which is around the 
+same time I was working on persistent reservations in QEMU.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+However, EBADE handling dates back to 2011 (commit 63583cca745f, "[SCSI] 
+Add detailed SCSI I/O errors", 2011-02-12) and yet the Windows tests for 
+PR were failing before QEMU switched to SG_IO for reads and writes.  I 
+guess I have to try reverting that and retest, though.
+
+Paolo
+
