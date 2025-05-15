@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD40253923
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:06:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD392989A0
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:06:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747310784; cv=none; b=aDPrJbhFPBJEcaHA8Wt5pBSkeJwIuGAD1P6XYzXtaeM7MkjhKgLP6c9pHWOsodY5JSugkFgSIAqoJzdG7p3PmshXXKcjcVjAUbCQBfNGsWyXiU1UqcEVz4w+Utn34PmCCN4VdQPC/Vp2QOUrBQM2YD4xjH4uDfRIYIRsxWUK93M=
+	t=1747310788; cv=none; b=auBqjADogW2KlPqFChEI8bVadAGJkDQPowM7tfsQK2y9xfhxIkyzpO7d6iFLrohfNAfKMFNqSc9oKrlOv/zPJXy7Ky9XQUh5NT4PW8nJ15ykT4XU4wWrKUF+N1FmVJ9+KfzRV/nSQRNxXSeKe8LP6WOobRM4jr4ShR7RhbunaWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747310784; c=relaxed/simple;
-	bh=zp7SIN7s30Adozj+y2qmFjn+RbOfC2rbFOJHPlbNL5U=;
+	s=arc-20240116; t=1747310788; c=relaxed/simple;
+	bh=UCbsGHgeAVdQRwSUcWCgwKGnxF0ODFn4ZhmD0uVukdk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ra9MWI8Nu6ocIT8BicIoNYc+Wf/J1+YJsPC1pzI8YxcWkanqAlj+VAT9kJrftBR8r676kaOzTinuHzU6jvYVcqHoawvHHy2+VXH4nYIj0magWC08InYokkQbK5vRLvf4dwi5mcLZKPco6EMAypW8/ypD5IlrQt28GQYwTvMsD28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V6M3EDwO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=EEoTDugMXEq5ZpvFmbOAE4DLEtUeWogqTvRb47fony7ye1oDJCSIn8S6zJhe0dfkXvDCRcmp50ggB67jpbMjoWlJF2Wsnp050GQFpUU3hsLX+6vNe5aKv2uUQWFJODewl+gjhRFuuXqxsDX7iy8XfKfs1sqH3yzAjGaYwdYXgts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RSKJhPcp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V6M3EDwO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE229C4CEF0;
-	Thu, 15 May 2025 12:06:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RSKJhPcp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71E35C4CEE7;
+	Thu, 15 May 2025 12:06:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747310784;
-	bh=zp7SIN7s30Adozj+y2qmFjn+RbOfC2rbFOJHPlbNL5U=;
+	s=k20201202; t=1747310787;
+	bh=UCbsGHgeAVdQRwSUcWCgwKGnxF0ODFn4ZhmD0uVukdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=V6M3EDwOhdniVLWLwIiDZ4RxKI8mkbcmcrkKwqOtAzwQLhdWJAnhQBGi5DKj4ULI+
-	 ewtWr1n/LH5hFCZd0uJrBq126AIDxdPYacOHq+yFT4g+FxHERg0pXW90oVGrXwBumT
-	 IpO09lUpxLkWIfxfcUUMx5eux95ORLMJozjFjBaH9v+BvEwd8p7t+msvIJSLNxESMV
-	 XaDVcl6vf/3sSPBIQqusM+xiorjqHxVBkk7qmLn3rTnd1jgnhpGpJlncIwRGz9r61H
-	 t5AUYXzDpYZJyuaEJp07ls1A+1f9x9na+/JF9bvvJo00zLzJyZ/EtrRdLQ0Z7IcI6O
-	 5mmwEBBGFelmw==
+	b=RSKJhPcpa0fwuCP03pcH3en5doWhK7bZVjjz2I5oy+ZKljVlJOfiBQRPcMPR6pqz9
+	 NeMXPBop4iKv9aT/ZE4fT/3flrpaW4RSJ4hKP3L1BoA3OzjxdMRYzoowb11DyQuhle
+	 HKysW9Z3aw3eD3fxJJb5y4mydWLlmBRAq0ToQt3kLJDuFGqii5WWG7RbJ5HQW9wY3c
+	 nA0Jg7TU/7sWXZl00w12nFOIwLewuHhwl+VP6h2l7IlKo8zkFIioT9du/4mBgwXk11
+	 KAVVMgee6VUGTW+cQHcAbFmR9B8bPKP1R004anHOfU+hO8+U0GfPJSaEUgxlKF1hu3
+	 ao5kzugGtU0Jg==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -41,9 +41,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	David Woodhouse <dwmw@amazon.co.uk>
-Subject: [PATCH 08/32] x86/boot/e820: Print E820_TYPE_RAM entries as ... RAM entries
-Date: Thu, 15 May 2025 14:05:24 +0200
-Message-ID: <20250515120549.2820541-9-mingo@kernel.org>
+Subject: [PATCH 09/32] x86/boot/e820: Call the PCI gap a 'gap' in the boot log printout
+Date: Thu, 15 May 2025 14:05:25 +0200
+Message-ID: <20250515120549.2820541-10-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250515120549.2820541-1-mingo@kernel.org>
 References: <20250515120549.2820541-1-mingo@kernel.org>
@@ -55,19 +55,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-So it is a bit weird that the actual RAM entries of the E820 table
-are not actually called RAM, but 'usable':
+It is a bit weird and inconsistent that the PCI gap is
+advertised during bootup as 'mem'ory:
 
-	BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff]    1.9 GB usable
+  [mem 0xc0000000-0xfed1bfff] available for PCI devices
+   ^^^
 
-'usable' is pretty passive-aggressive in that context and ambiguous,
-most E820 entries denote 'usable' address ranges - reserved ranges
-may be used by devices, or the platform.
+It's not really memory, it's a gap that PCI devices can decode
+and use and they often do not map it to any memory themselves.
 
-Clarify and disambiguate this by making the boot log entry
-explicitly say 'System RAM', like in /proc/iomem:
+So advertise it for what it is, a gap:
 
-	BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff]    1.9 GB System RAM
+  [gap 0xc0000000-0xfed1bfff] available for PCI devices
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Andy Shevchenko <andy@kernel.org>
@@ -82,18 +81,18 @@ Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 7f600d32a999..0a324d0db60e 100644
+index 0a324d0db60e..d85623c9ee1b 100644
 --- a/arch/x86/kernel/e820.c
 +++ b/arch/x86/kernel/e820.c
-@@ -187,7 +187,7 @@ void __init e820__range_add(u64 start, u64 size, enum e820_type type)
- static void __init e820_print_type(enum e820_type type)
- {
- 	switch (type) {
--	case E820_TYPE_RAM:		pr_cont(" usable");			break;
-+	case E820_TYPE_RAM:		pr_cont(" System RAM");			break;
- 	case E820_TYPE_RESERVED:	pr_cont(" reserved");			break;
- 	case E820_TYPE_SOFT_RESERVED:	pr_cont(" soft reserved");		break;
- 	case E820_TYPE_ACPI:		pr_cont(" ACPI data");			break;
+@@ -741,7 +741,7 @@ __init void e820__setup_pci_gap(void)
+ 	 */
+ 	pci_mem_start = gapstart;
+ 
+-	pr_info("[mem %#010lx-%#010lx] available for PCI devices\n",
++	pr_info("[gap %#010lx-%#010lx] available for PCI devices\n",
+ 		gapstart, gapstart + gapsize - 1);
+ }
+ 
 -- 
 2.45.2
 
