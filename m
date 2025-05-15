@@ -1,55 +1,55 @@
-Received: from mail-vs1-f74.google.com (mail-vs1-f74.google.com [209.85.217.74])
+Received: from mail-ua1-f73.google.com (mail-ua1-f73.google.com [209.85.222.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2850626A1DE
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0619D29B237
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:52:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747335164; cv=none; b=V+kQ9CSGB/kqE6lJFHirrpFvZn/I0TCdhi71wxLiG6uwNBJeh0zKK4pxSg0EQmXw6Zre42nDg23v4Vds7zhpQ1LmgYGusLjIVJU9NtlvsQBbu+kv5BsSlIl3NdNQWlHpsWTjXYjJQdj394/vhtenpb32Fo26ERvyDvObJqgSgVs=
+	t=1747335168; cv=none; b=H2x27ZBhE8CcmTzQjJ/n0Kj0XEGia7oSnKyuMEsN5gu1SOh8Zx3Ze4UY0bjC9GrjHDhlCoh69SgK4FjoMqMtsOZMJKvKFKmol7Q3j6UZlMLZw92sGb8Glp8dxq+iq3e3gKHDALIrfpawSGy5xl48maYEnyh9Ma3yJNmzmTHPxqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747335164; c=relaxed/simple;
-	bh=K63IL0wd/AKdNf65nemBDPL4UNxLf79dzeti/LRO/dc=;
+	s=arc-20240116; t=1747335168; c=relaxed/simple;
+	bh=0LjNKhbfmAib3/bCGGrxaNTDj6/FhN1QTzDXt9i+2Dg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=N7I+l6IKnznrvY1WuMzwZTzY1GAQlDq4loBZ+8qOx+ttUeh2BFV1GID4vQ95gV6ZwkyrfCJKW9IF8n8/Io/X1VdUywfzxFnHS7X3xhIhWUL4r6QKmaNfcQqe4TdlX2PbgHIHBaDjuWtdeD0nTHYsWGLBHR1sBdtm8yiragKunS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--royluo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RLas4Hmf; arc=none smtp.client-ip=209.85.217.74
+	 To:Cc:Content-Type; b=WczgvTkEnFrCm/KjrzDbgE+QcRUW0vVpPX94QH8kg6ppn9VST1mzdbUb3tsCGQCfDTWsEftgG8BQeOBMxhKrXTqErp40g7antyxqFt/3+TVeFPKVomlWOsvb9rWUL9rjCJhyg9OmVi4778QskpFOFgSgDYwc0ycFoL0hVGjIomA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--royluo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M37H/kvt; arc=none smtp.client-ip=209.85.222.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--royluo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RLas4Hmf"
-Received: by mail-vs1-f74.google.com with SMTP id ada2fe7eead31-4df5143c87aso1776121137.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:52:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M37H/kvt"
+Received: by mail-ua1-f73.google.com with SMTP id a1e0cc1a2514c-8738ca25ecbso172104241.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:52:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747335162; x=1747939962; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747335165; x=1747939965; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tL75l/1ix6yb8tbp2dmZra7s66c/0nxAmQo/67QfY1c=;
-        b=RLas4HmfZdBgXec0iVl9utjTrnZwrjBuxziIyXoYb9G5IBY5hNXLf7WqvI9MCWSCNs
-         6Oj4PoTdn6RCgs2eILDJD5DbnUC0k11WkeeK99oQdR0Uqbigz4adZ7CvWBj5JOVsD0fN
-         6aL1sKGDSwdmOeF1bhb0PYf+StEZTAeRM94yX4UpUWQ4E80oTV8ydrc0a/tGyEeVoV7P
-         W6fQ09nwugMXQIgokTvofz8OUx1nAJAZd7LIaaibsJ+qYp4tdZeU7SLPa/BEODozD3CE
-         bv3n3tIQfgWcR1BTMRZCmi4Rshzz7yutYedXREuyCT21JkJqZdJWPsYC3KoJoF0oI8oU
-         LJhg==
+        bh=DWyXRAdP87qgljLxl+HMaPV4zDEKZVcFQ9p3OniQnHM=;
+        b=M37H/kvt3HAzYxRy423MGjcicT9FxMy76qDD9tflwllQp1ur6qZIwOIs+p2hnYdtvL
+         /o2PAOGLM1aSU8tBsctPeuJoP6Svs7wwJ4XGflNFLOQPpuHrG82MXffzYuGPjcNsPxRw
+         SUrek7mTeAsfOA9JjCjPUjPnY8XeuHeABA2luMC8AzwjtaUdPBuGdLY2Bmbr0jX0UIvr
+         F18s3C+D5V1+lI6FKVLOnmyb+sks5gAgyBR86o14311U+hfGNG/xtm58wI2h4Bagh3e+
+         wXT78oA1D8XqUiZ38NS6dhflqUp4ELMYiSO4su7bc7xybvoBi0Q4sh1y8IJ/qFvA+up3
+         GR2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747335162; x=1747939962;
+        d=1e100.net; s=20230601; t=1747335165; x=1747939965;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tL75l/1ix6yb8tbp2dmZra7s66c/0nxAmQo/67QfY1c=;
-        b=g1Kb5jwWDrcbPSLsjHTEYZvRBWDVW+lw7m1RgeD+2UDytOGmueu+AaLh4QkKssPvne
-         HW9v8Ho0CemeUHRVc0X5+6qqljC096cZodfZjBY1uekguXMAUivZHSHaBx2hoGbVmr7p
-         1tWbGYWM+7P8nJalKr8429AYrkDxst6FM17ieSqYo1lWQxaH4WFLcHPmx2WBl6tJqQhN
-         xFBUhxqfB7NI7RioVxDPQlhcDEreDCD5ZLF1LAHIwh+rNsAyZwyFSzwj1boWu3KzFnxz
-         uM6y7k3Ek85mkpGNlO4v3d09CjYVnkU7Hghg00syIHC0wpvPqGZ1OkeeGGBq//D3wPS4
-         al+A==
-X-Forwarded-Encrypted: i=1; AJvYcCXuqfs371LfPP3REXWQdTrWrYFFRSXOs+hSN9aR8JCTqKsoE4v9kvT6qJJ+gRo1NGO2bvjY5K/3y4ooYbY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyM5gpU0YyGM+Uv4RNZcZQIfQzVj7ZRh63NX5tEXL0KSKALX21r
-	Jdp+/OMYi+T/P4KGHbZSZ0XEH9GFe8dolOUKN5OpVMDAdq78H0JzamGf2ctKsp2W4xxb2Stz2Is
-	7UvzVfQ==
-X-Google-Smtp-Source: AGHT+IHwuQNwb0vPJPmRY4g+OzhIySpP7oIxTudeED3uvgNH9M4u5I7QlZs6oj9hjEmhqlFSDJT1BU6HPfA=
-X-Received: from uabjd12.prod.google.com ([2002:a05:6130:678c:b0:879:ee02:ddc8])
- (user=royluo job=prod-delivery.src-stubby-dispatcher) by 2002:a67:ff90:0:b0:4db:10bf:6f2c
- with SMTP id ada2fe7eead31-4df900f5181mr5384781137.11.1747335161968; Thu, 15
- May 2025 11:52:41 -0700 (PDT)
-Date: Thu, 15 May 2025 18:52:26 +0000
+        bh=DWyXRAdP87qgljLxl+HMaPV4zDEKZVcFQ9p3OniQnHM=;
+        b=LkThW3PYYJJ1TkQda4D9fF4VWzPC4nsfEhwCCzKdytmyQRlqJGEZf7Wv5nYzwmnBi7
+         g3NCyK8jUubT9jXm5FEUxFXwuwB4tfchy+dK6zgWMBJ7Jntalmy1T2amOK6yTCznNXSq
+         1BX0eIwHMVEMhd9vH0p1R2ugZ/T+/dDqkZpFSJLKfItWSow3O1Lqyzee91ZvNRmQyKAe
+         ggOe7h0uQkRCnDKRsEI+oOYfJ/Q7aOMTEsxp/pmg4sdG6qs55oMsP0tqsircqrFkxivZ
+         VXlE8OGyOnsC2i+qkeOeBYg++eLLFtAyylDn+/donp2aNuaujO1b1Z9EdaijhiBCYsXx
+         EyKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUnzWMBxs0aG4P7E7t9ifGaURTHsgO4mNpjGfYPWMKcOn3IPTgf2YZlmWyCyZg3IPccL41JTPnpJ7XAYx4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvHm3xdruUk7OftdkyuzbBbQJKL3DxV6bvAMZKxdd8lpmJxOls
+	q0s2xm2vB9qR9wyZ81C9n3u07NLcElXAdOUyXVeyT04N7iDC8NkyH1SU75RT6v2K1hUg2XON/nG
+	l01OcDg==
+X-Google-Smtp-Source: AGHT+IG22pOiWebGnpFU30OwudK3lZF8XV0VjtcFcbirfzEnZEJ1trZz38ISLvHcqDC7fMy1q+bzyq8op8g=
+X-Received: from uabji15.prod.google.com ([2002:a05:6130:694f:b0:862:24ba:d6a3])
+ (user=royluo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6102:a54:b0:4df:8259:e99
+ with SMTP id ada2fe7eead31-4dfa6aa8d4emr1466532137.1.1747335164831; Thu, 15
+ May 2025 11:52:44 -0700 (PDT)
+Date: Thu, 15 May 2025 18:52:27 +0000
 In-Reply-To: <20250515185227.1507363-1-royluo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250515185227.1507363-1-royluo@google.com>
 X-Mailer: git-send-email 2.49.0.1112.g889b7c5bd8-goog
-Message-ID: <20250515185227.1507363-2-royluo@google.com>
-Subject: [PATCH v2 1/2] xhci: Add a quirk for full reset on removal
+Message-ID: <20250515185227.1507363-3-royluo@google.com>
+Subject: [PATCH v2 2/2] usb: dwc3: Force full reset on xhci removal
 From: Roy Luo <royluo@google.com>
 To: royluo@google.com, mathias.nyman@intel.com, quic_ugoswami@quicinc.com, 
 	Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org, 
@@ -68,85 +68,50 @@ To: royluo@google.com, mathias.nyman@intel.com, quic_ugoswami@quicinc.com,
 Cc: stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Commit 6ccb83d6c497 ("usb: xhci: Implement xhci_handshake_check_state()
-helper") introduced an optimization to xhci_reset() during xhci removal,
-allowing it to bail out early without waiting for the reset to complete.
+During an xhci host controller reset (via `USBCMD.HCRST`), reading DWC3
+registers can return zero instead of their actual values. This applies
+not only to registers within the xhci memory space but also those in
+the broader DWC3 IP block.
 
-This behavior can cause issues on SNPS DWC3 USB controller with dual-role
-capability. When the DWC3 controller exits host mode and removes xhci
-while a reset is still in progress, and then tries to configure its
-hardware for device mode, the ongoing reset leads to register access
-issues; specifically, all register reads returns 0. These issues extend
-beyond the xhci register space (which is expected during a reset) and
-affect the entire DWC3 IP block, causing the DWC3 device mode to
-malfunction.
+By default, the xhci driver doesn't wait for the reset handshake to
+complete during teardown. This can cause problems when the DWC3 controller
+is operating as a dual role device and is switching from host to device
+mode, the invalid register read caused by ongoing HCRST could lead to
+gadget mode startup failures and unintended register overwrites.
 
-To address this, introduce the `XHCI_FULL_RESET_ON_REMOVE` quirk. When this
-quirk is set, xhci_reset() always completes its reset handshake, ensuring
-the controller is in a fully reset state before proceeding.
+To mitigate this, enable xhci-full-reset-on-remove-quirk to ensure that
+xhci_reset() completes its full reset handshake during xhci removal.
 
 Cc: stable@vger.kernel.org
 Fixes: 6ccb83d6c497 ("usb: xhci: Implement xhci_handshake_check_state() helper")
 Signed-off-by: Roy Luo <royluo@google.com>
 ---
- drivers/usb/host/xhci-plat.c | 3 +++
- drivers/usb/host/xhci.c      | 8 +++++++-
- drivers/usb/host/xhci.h      | 1 +
- 3 files changed, 11 insertions(+), 1 deletion(-)
+ drivers/usb/dwc3/host.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 3155e3a842da..19c5c26a8e63 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -265,6 +265,9 @@ int xhci_plat_probe(struct platform_device *pdev, struct device *sysdev, const s
- 		if (device_property_read_bool(tmpdev, "xhci-skip-phy-init-quirk"))
- 			xhci->quirks |= XHCI_SKIP_PHY_INIT;
+diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
+index b48e108fc8fe..ea865898308f 100644
+--- a/drivers/usb/dwc3/host.c
++++ b/drivers/usb/dwc3/host.c
+@@ -126,7 +126,7 @@ static int dwc3_host_get_irq(struct dwc3 *dwc)
  
-+		if (device_property_read_bool(tmpdev, "xhci-full-reset-on-remove-quirk"))
-+			xhci->quirks |= XHCI_FULL_RESET_ON_REMOVE;
+ int dwc3_host_init(struct dwc3 *dwc)
+ {
+-	struct property_entry	props[6];
++	struct property_entry	props[7];
+ 	struct platform_device	*xhci;
+ 	int			ret, irq;
+ 	int			prop_idx = 0;
+@@ -182,6 +182,9 @@ int dwc3_host_init(struct dwc3 *dwc)
+ 	if (DWC3_VER_IS_WITHIN(DWC3, ANY, 300A))
+ 		props[prop_idx++] = PROPERTY_ENTRY_BOOL("quirk-broken-port-ped");
+ 
++	if (dwc->dr_mode == USB_DR_MODE_OTG)
++		props[prop_idx++] = PROPERTY_ENTRY_BOOL("xhci-full-reset-on-remove-quirk");
 +
- 		device_property_read_u32(tmpdev, "imod-interval-ns",
- 					 &xhci->imod_interval);
- 	}
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 90eb491267b5..4f091d618c01 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -198,6 +198,7 @@ int xhci_reset(struct xhci_hcd *xhci, u64 timeout_us)
- 	u32 command;
- 	u32 state;
- 	int ret;
-+	unsigned int exit_state;
- 
- 	state = readl(&xhci->op_regs->status);
- 
-@@ -226,8 +227,13 @@ int xhci_reset(struct xhci_hcd *xhci, u64 timeout_us)
- 	if (xhci->quirks & XHCI_INTEL_HOST)
- 		udelay(1000);
- 
-+	if (xhci->quirks & XHCI_FULL_RESET_ON_REMOVE)
-+		exit_state = 0;
-+	else
-+		exit_state = XHCI_STATE_REMOVING;
-+
- 	ret = xhci_handshake_check_state(xhci, &xhci->op_regs->command,
--				CMD_RESET, 0, timeout_us, XHCI_STATE_REMOVING);
-+				CMD_RESET, 0, timeout_us, exit_state);
- 	if (ret)
- 		return ret;
- 
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 242ab9fbc8ae..ac65af788298 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1637,6 +1637,7 @@ struct xhci_hcd {
- #define XHCI_WRITE_64_HI_LO	BIT_ULL(47)
- #define XHCI_CDNS_SCTX_QUIRK	BIT_ULL(48)
- #define XHCI_ETRON_HOST	BIT_ULL(49)
-+#define XHCI_FULL_RESET_ON_REMOVE	BIT_ULL(50)
- 
- 	unsigned int		num_active_eps;
- 	unsigned int		limit_active_eps;
+ 	if (prop_idx) {
+ 		ret = device_create_managed_software_node(&xhci->dev, props, NULL);
+ 		if (ret) {
 -- 
 2.49.0.1112.g889b7c5bd8-goog
 
