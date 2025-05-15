@@ -1,100 +1,205 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5231364A98;
-	Thu, 15 May 2025 13:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8ADF64A98;
+	Thu, 15 May 2025 13:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.66.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747316165; cv=none; b=i2R9RciQmIJvqgUv0tNbOVjf4fYDE/2g7Rwi41IaibO1OlP9yX2Upc3qN7Mwk4vJS32vj28i+ZUFVTLwSBf8UP9W9rtonc6ly8dxzm1hKF+tOtrn95T+SzbNGKM3mDKKzP4mOvG96WRsnzTgRpzNd+VPuRUWP2Mdy/z3VBPGyRc=
+	t=1747316176; cv=none; b=j9BkSsarfdKCWqJDV26HRLwH2NycMQHUdDRKlUU3amACkb7lIjWJxGObPxNsbbpU184eXVbPGlNDbYwtZ7b58t5DigVJEigFmF8pDswtWiOTQ7ckz+HdAdDC5Kd0vOsqQfPuQeHHlD5UBm1iGakrqq7f1khX7pa3Sx4ywe6QLKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747316165; c=relaxed/simple;
-	bh=KaBzi8GlO0ydrK58TdXSHZV40FFlwy0hZ5i+G89tUIM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JsST7dtLM6UbqBEi4AqnFnI6j2dfhTchE+c84OzAJe6ZyOYkC8iLtl5BlPoxInTnxoqVfwk1bvZrUmyQ6VkyYT9ZFuGFs3B3QN/I7h8ZWjrJ39QVS0TnTjRJ/uImvw103eHSm2Nyxuie94lHikcdZPhd7/rDthiMTweRggH1u24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=mJwAAXQZ; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="mJwAAXQZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=LxU48+H4Hfyu4/QZlEGDNTeaj6+P5jUaE2mhOPfHXmk=; t=1747316161; x=1747920961; 
-	b=mJwAAXQZJ1xsRSSGCYtdywW9RZ7shW6oa56HUMwgYWPP0rxBXm0s2iKliauJVsQloJ7Yf9BpV3T
-	fEABFu79LhXcVeqxC4ysw2ekXO0y4UiynjJOErBXB/a+kgXXdaa1VMiW/ifPJa1az7CtCxFxXuIDG
-	22YYzK6Yk4U9j/VXQViOH6xoQscHM1YsgDxXtga0YKkZbOyA6KQgQ9XHQt04lTXCjHej9cnlLE1ye
-	zXguFWcNrHFyq20nlGyk+vCPOo3B3wdkknTEVTeUn9cedZyu5BFjq5uGvTBQGjhjzXPELom4/R0mL
-	WJkyPUEUv0rAgap+02l79DzG2xrHKr9jtAAw==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1uFYkg-00000003IlY-3zCZ; Thu, 15 May 2025 15:35:58 +0200
-Received: from p5b13afe4.dip0.t-ipconnect.de ([91.19.175.228] helo=[192.168.178.61])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1uFYkg-00000001DsV-307F; Thu, 15 May 2025 15:35:58 +0200
-Message-ID: <bb170eb0524d04de13cb5b2a1cca9467bc2def87.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH 14/15] bugs/sh: Concatenate 'cond_str' with '__FILE__'
- in __WARN_FLAGS(), to extend WARN_ON/BUG_ON output
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Linus Torvalds
- <torvalds@linux-foundation.org>,  Peter Zijlstra <peterz@infradead.org>,
- linux-arch@vger.kernel.org, Yoshinori Sato <ysato@users.sourceforge.jp>, 
- Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org
-Date: Thu, 15 May 2025 15:35:57 +0200
-In-Reply-To: <aCXtGRr5pSLKoKg8@gmail.com>
-References: <20250515124644.2958810-1-mingo@kernel.org>
-	 <20250515124644.2958810-15-mingo@kernel.org>
-	 <ba1e1ae6824f47bcb49387ae4f2c70dfd45209bc.camel@physik.fu-berlin.de>
-	 <aCXtGRr5pSLKoKg8@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	s=arc-20240116; t=1747316176; c=relaxed/simple;
+	bh=xaDmKt3RfeiiCoNmS8bhgDEBGsYhQ0B0xi9U4HGaC6A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hnp8L7KOSbeVit/ix3ITEG1VCTJ3xUxMtIPcwMYvm9vFQMRTvgzb7SC1E4Lm5mClnOJJ1FwvAetWOC9o/Tcq5Q3TLoy8TBxbcInapDNhKSio/ziv+P9vi35C91Y7tnMleJlyMKEClziF5IiARAw+RVI59DpIIpTAyJzSTIndgf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com; spf=pass smtp.mailfrom=mail.hallyn.com; arc=none smtp.client-ip=178.63.66.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hallyn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.hallyn.com
+Received: by mail.hallyn.com (Postfix, from userid 1001)
+	id 431CB8BF; Thu, 15 May 2025 08:36:06 -0500 (CDT)
+Date: Thu, 15 May 2025 08:36:06 -0500
+From: "Serge E. Hallyn" <serge@hallyn.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, Jann Horn <jannh@google.com>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Eric Dumazet <edumazet@google.com>, Oleg Nesterov <oleg@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Daan De Meyer <daan.j.demeyer@gmail.com>,
+	David Rheinsberg <david@readahead.eu>,
+	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>,
+	Lennart Poettering <lennart@poettering.net>,
+	Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>,
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>
+Subject: Re: [PATCH v7 1/9] coredump: massage format_corname()
+Message-ID: <20250515133606.GA740869@mail.hallyn.com>
+References: <20250515-work-coredump-socket-v7-0-0a1329496c31@kernel.org>
+ <20250515-work-coredump-socket-v7-1-0a1329496c31@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515-work-coredump-socket-v7-1-0a1329496c31@kernel.org>
 
-On Thu, 2025-05-15 at 15:33 +0200, Ingo Molnar wrote:
-> > It's too long and the prefix "bugs/sh:" is very confusing. I usually ju=
-st
-> > use "sh:" to mark anything that affects arch/sh.
->=20
-> Fair enough, I've changed the title to and pushed out the new tree:
->=20
->   sh: Concatenate 'cond_str' with '__FILE__' in __WARN_FLAGS(), to extend=
- WARN_ON/BUG_ON output
+On Thu, May 15, 2025 at 12:03:34AM +0200, Christian Brauner wrote:
+> We're going to extend the coredump code in follow-up patches.
+> Clean it up so we can do this more easily.
+> 
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
 
-Thanks! Minor nitpick: I think that comma is wrong and should be removed
-(I'm not a native speaker though ;-)).
+Not my wheelhouse, but this is a nice cleanup.
 
-> > Can I pick this patch for my sh-linux tree?
->=20
-> So since it depends on the previous patches, in isolation this would=20
-> break the build.
->=20
-> Can I add your Reviewed-by or Acked-by?
+Acked-by: Serge Hallyn <serge@hallyn.com>
 
-Yes, sure.
-
-Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-
-Adrian
-
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+> ---
+>  fs/coredump.c | 41 ++++++++++++++++++++++++-----------------
+>  1 file changed, 24 insertions(+), 17 deletions(-)
+> 
+> diff --git a/fs/coredump.c b/fs/coredump.c
+> index d740a0411266..368751d98781 100644
+> --- a/fs/coredump.c
+> +++ b/fs/coredump.c
+> @@ -76,9 +76,15 @@ static char core_pattern[CORENAME_MAX_SIZE] = "core";
+>  static int core_name_size = CORENAME_MAX_SIZE;
+>  unsigned int core_file_note_size_limit = CORE_FILE_NOTE_SIZE_DEFAULT;
+>  
+> +enum coredump_type_t {
+> +	COREDUMP_FILE = 1,
+> +	COREDUMP_PIPE = 2,
+> +};
+> +
+>  struct core_name {
+>  	char *corename;
+>  	int used, size;
+> +	enum coredump_type_t core_type;
+>  };
+>  
+>  static int expand_corename(struct core_name *cn, int size)
+> @@ -218,18 +224,21 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
+>  {
+>  	const struct cred *cred = current_cred();
+>  	const char *pat_ptr = core_pattern;
+> -	int ispipe = (*pat_ptr == '|');
+>  	bool was_space = false;
+>  	int pid_in_pattern = 0;
+>  	int err = 0;
+>  
+>  	cn->used = 0;
+>  	cn->corename = NULL;
+> +	if (*pat_ptr == '|')
+> +		cn->core_type = COREDUMP_PIPE;
+> +	else
+> +		cn->core_type = COREDUMP_FILE;
+>  	if (expand_corename(cn, core_name_size))
+>  		return -ENOMEM;
+>  	cn->corename[0] = '\0';
+>  
+> -	if (ispipe) {
+> +	if (cn->core_type == COREDUMP_PIPE) {
+>  		int argvs = sizeof(core_pattern) / 2;
+>  		(*argv) = kmalloc_array(argvs, sizeof(**argv), GFP_KERNEL);
+>  		if (!(*argv))
+> @@ -247,7 +256,7 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
+>  		 * Split on spaces before doing template expansion so that
+>  		 * %e and %E don't get split if they have spaces in them
+>  		 */
+> -		if (ispipe) {
+> +		if (cn->core_type == COREDUMP_PIPE) {
+>  			if (isspace(*pat_ptr)) {
+>  				if (cn->used != 0)
+>  					was_space = true;
+> @@ -353,7 +362,7 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
+>  				 * Installing a pidfd only makes sense if
+>  				 * we actually spawn a usermode helper.
+>  				 */
+> -				if (!ispipe)
+> +				if (cn->core_type != COREDUMP_PIPE)
+>  					break;
+>  
+>  				/*
+> @@ -384,12 +393,12 @@ static int format_corename(struct core_name *cn, struct coredump_params *cprm,
+>  	 * If core_pattern does not include a %p (as is the default)
+>  	 * and core_uses_pid is set, then .%pid will be appended to
+>  	 * the filename. Do not do this for piped commands. */
+> -	if (!ispipe && !pid_in_pattern && core_uses_pid) {
+> +	if (!(cn->core_type == COREDUMP_PIPE) && !pid_in_pattern && core_uses_pid) {
+>  		err = cn_printf(cn, ".%d", task_tgid_vnr(current));
+>  		if (err)
+>  			return err;
+>  	}
+> -	return ispipe;
+> +	return 0;
+>  }
+>  
+>  static int zap_process(struct signal_struct *signal, int exit_code)
+> @@ -583,7 +592,6 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+>  	const struct cred *old_cred;
+>  	struct cred *cred;
+>  	int retval = 0;
+> -	int ispipe;
+>  	size_t *argv = NULL;
+>  	int argc = 0;
+>  	/* require nonrelative corefile path and be extra careful */
+> @@ -632,19 +640,18 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+>  
+>  	old_cred = override_creds(cred);
+>  
+> -	ispipe = format_corename(&cn, &cprm, &argv, &argc);
+> +	retval = format_corename(&cn, &cprm, &argv, &argc);
+> +	if (retval < 0) {
+> +		coredump_report_failure("format_corename failed, aborting core");
+> +		goto fail_unlock;
+> +	}
+>  
+> -	if (ispipe) {
+> +	if (cn.core_type == COREDUMP_PIPE) {
+>  		int argi;
+>  		int dump_count;
+>  		char **helper_argv;
+>  		struct subprocess_info *sub_info;
+>  
+> -		if (ispipe < 0) {
+> -			coredump_report_failure("format_corename failed, aborting core");
+> -			goto fail_unlock;
+> -		}
+> -
+>  		if (cprm.limit == 1) {
+>  			/* See umh_coredump_setup() which sets RLIMIT_CORE = 1.
+>  			 *
+> @@ -695,7 +702,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+>  			coredump_report_failure("|%s pipe failed", cn.corename);
+>  			goto close_fail;
+>  		}
+> -	} else {
+> +	} else if (cn.core_type == COREDUMP_FILE) {
+>  		struct mnt_idmap *idmap;
+>  		struct inode *inode;
+>  		int open_flags = O_CREAT | O_WRONLY | O_NOFOLLOW |
+> @@ -823,13 +830,13 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+>  		file_end_write(cprm.file);
+>  		free_vma_snapshot(&cprm);
+>  	}
+> -	if (ispipe && core_pipe_limit)
+> +	if ((cn.core_type == COREDUMP_PIPE) && core_pipe_limit)
+>  		wait_for_dump_helpers(cprm.file);
+>  close_fail:
+>  	if (cprm.file)
+>  		filp_close(cprm.file, NULL);
+>  fail_dropcount:
+> -	if (ispipe)
+> +	if (cn.core_type == COREDUMP_PIPE)
+>  		atomic_dec(&core_dump_count);
+>  fail_unlock:
+>  	kfree(argv);
+> 
+> -- 
+> 2.47.2
+> 
