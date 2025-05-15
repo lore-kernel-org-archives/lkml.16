@@ -1,76 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9507541C71;
-	Thu, 15 May 2025 01:59:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65D692367C4;
+	Thu, 15 May 2025 02:00:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747274395; cv=none; b=UnHnUyXNUsyyPWERy+bYPAtGKQkXW5ryRsu9bKDiHYDs9NFAdHjiIKGla1dVbSol1jpo+06ueAH3fjaqfc3OY2y3dFzuaEpe9D1FYspra412Et4s5FH/bRGch7cT1UtfCrsiuu+f898J+D5iXK9VvgUBlUKHOOq4XfE+1CGn2MQ=
+	t=1747274409; cv=none; b=mCG2WPv0rPlnk+foFoeNcjRIbL8fzhAZPSWJ8lmtx5c0RkA6aNXSAFz6gmA4qobzbanb0skTfKTjfAxPY1zl+Hoy7Znw30O5trRePNTmeAf2Nr6+S1nOq0ZN4qBDPThYlZJ943CMNmVYAFt52H3CMN8H7qy2VCXSgs8VSwwObrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747274395; c=relaxed/simple;
-	bh=ZSaRSMY8mrF5Lr9Z0tBd7ntXVliJF47zo9znQaJcDQM=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=gG1N/fbvSl0XMrwlv6ibVEkBZ7xZbYJI238iC4nLpyliig87qu/6DUF4Umw1sAevPiVTmbo/DoxQNwqHIoAWw/4JRHgkAnvhY04FOlcA/uQWH4UptxSwiKN2fSqfbJCvrYzgSrxbqeKFX9nYg9YvZDEPFFpyDWI2OwqjptIvzmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KT97T3sq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747274409; c=relaxed/simple;
+	bh=+5hCB7PmCmZ0EaLxPYUbEWrfqZk+o3hUvq+oXXZpfJ8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To; b=FG51fWw6eN1MhHpYBu05zZhDLbMb/tzTy+ypKzzpYIAArzPRGjAnX9AMph6qsIPsBj1stpKXVpI1ltQKVh1tKQQmqW1J4aEqtJQXK0WZzKQe09JLTQx+QD32jhZ2dxObYAKReHlz48s/IpJzU7a2WtDASv7nsqZ03Ua2Rr57dAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YpZcvMPR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KT97T3sq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F4160C4CEE3;
-	Thu, 15 May 2025 01:59:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YpZcvMPR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 469F4C4CEEB;
+	Thu, 15 May 2025 02:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747274395;
-	bh=ZSaRSMY8mrF5Lr9Z0tBd7ntXVliJF47zo9znQaJcDQM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=KT97T3sqA4Fc1SwOCkloHXWNkQt6F6fKE7R009N4JQEaQ7jSeQdmAG/uTR2LaHcEw
-	 ppoFHkK9H3nYH4EoJAgw44fxIjdTnmtbn+Cr2A5GdhrX6pgNPQXj4uvsUsLkFEfGdf
-	 KCqMCsw5BKmXwdvQOKoqkTSDlPSnNQEAyrvEJUTq6TPMuFf7iD1ZLdtgOQhLZAuIfW
-	 Vme/+U2V+G6Qy7eyHsvm/2fqg3TYnDoStWTsRCG09sgjFXdl3z/8isB3B8KvgKjMCX
-	 CYLewiLoFj2EPrjKxxigxBHYXhPgWdIuwBaiO4lA49B2l1EuNxPy34XGHxRX1jvNbj
-	 3zVtLrIwhHLcw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70C9E380AA66;
-	Thu, 15 May 2025 02:00:33 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1747274408;
+	bh=+5hCB7PmCmZ0EaLxPYUbEWrfqZk+o3hUvq+oXXZpfJ8=;
+	h=Date:Cc:Subject:From:To:From;
+	b=YpZcvMPRF6ikrYqEDwfQLxa5GWYOIFcaRFStUvCJNS1YGwy9SNBw2UYydX7H9FJ7E
+	 8Ltr/eZOsjLW1oBQfOS7M3Sq3FvpumfS18qa1JfP4+P27hUlNG1r6XakCwyXcBrT6+
+	 nD2YU3B1JCqSp1jR0zrGWJa/rS9XCGPNg6y5PT9PGHkhOzKWuW0+4wW9WaMx8bmCsd
+	 VckrZeOSqAsKU4HGlyrBQApM7N9lvLxUJbOAchxvWgyCqipsK+FlZUSlf+vuxMVR65
+	 MivZZJYNoAFzEKuXjgWlCQEqpjy7R1lXg3DHmHVFg/4R1SiNmd3zaNEE+kPxIemVRq
+	 v5UlFfteacxaA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3] documentation: networking: devlink: Fix a typo in
- devlink-trap.rst
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174727443200.2577794.627412956587602762.git-patchwork-notify@kernel.org>
-Date: Thu, 15 May 2025 02:00:32 +0000
-References: <20250513092451.22387-1-alperyasinak1@gmail.com>
-In-Reply-To: <20250513092451.22387-1-alperyasinak1@gmail.com>
-To: Alper Ak <alperyasinak1@gmail.com>
-Cc: kuba@kernel.org, jiri@resnulli.us, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com, horms@kernel.org, corbet@lwn.net,
- netdev@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 15 May 2025 05:00:04 +0300
+Message-Id: <D9WD3016M557.1ZXO3GLKGUIIF@kernel.org>
+Cc: "Peter Huewe" <peterhuewe@gmx.de>, "Jason Gunthorpe" <jgg@ziepe.ca>,
+ "David Howells" <dhowells@redhat.com>, <keyrings@vger.kernel.org>,
+ <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Sasha
+ Levin" <sashal@kernel.org>, =?utf-8?q?Michal_Such=C3=A1nek?=
+ <msuchanek@suse.de>
+Subject: [GIT PULL] TPM DEVICE DRIVER: tpmdd-next-6.15-rc7
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Linus Torvalds" <torvalds@linux-foundation.org>
+X-Mailer: aerc 0.20.0
 
-Hello:
+The following changes since commit 74a6325597464e940a33e56e98f6899ef77728d8=
+:
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+  Merge tag 'for-6.15-rc6-tag' of git://git.kernel.org/pub/scm/linux/kernel=
+/git/kdave/linux (2025-05-14 18:39:12 -0700)
 
-On Tue, 13 May 2025 12:24:51 +0300 you wrote:
-> Fix a typo in the documentation: "errorrs" -> "errors".
-> 
-> Signed-off-by: Alper Ak <alperyasinak1@gmail.com>
-> ---
->  Documentation/networking/devlink/devlink-trap.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+are available in the Git repository at:
 
-Here is the summary with links:
-  - [v3] documentation: networking: devlink: Fix a typo in devlink-trap.rst
-    https://git.kernel.org/netdev/net-next/c/4abc1f14e2b8
+  git://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git tags=
+/tpmdd-next-6.15-rc7
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+for you to fetch changes up to 2f661f71fda1fc0c42b7746ca5b7da529eb6b5be:
 
+  tpm: tis: Double the timeout B to 4s (2025-05-15 04:49:15 +0300)
 
+----------------------------------------------------------------
+Hi,
+
+Contains a few last minute fixes for v6.15.
+
+BR, Jarkko
+
+----------------------------------------------------------------
+Jarkko Sakkinen (1):
+      tpm: Mask TPM RC in tpm2_start_auth_session()
+
+Michal Suchanek (1):
+      tpm: tis: Double the timeout B to 4s
+
+Purva Yeshi (1):
+      char: tpm: tpm-buf: Add sanity check fallback in read helpers
+
+ drivers/char/tpm/tpm-buf.c       |  6 +++---
+ drivers/char/tpm/tpm2-sessions.c | 20 ++++++--------------
+ drivers/char/tpm/tpm_tis_core.h  |  2 +-
+ include/linux/tpm.h              | 21 ++++++++++++++++++++-
+ 4 files changed, 30 insertions(+), 19 deletions(-)
