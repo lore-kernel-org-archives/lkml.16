@@ -1,94 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7415288508;
-	Thu, 15 May 2025 08:45:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6881FF5F3
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:45:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747298707; cv=none; b=im1Y2vwu6t4b9Ukt9bS7JSKQqqLMbGL8MJZscJ2w9jdAasvVZCw/UsgQ1l6rrmXs92tCJ1xGTjK7gt7EtnpRsRRXUx8hVMXZnry4/J1RFQilkkyXzj7KsnmfnmrWJtY+0Toyo7ULGIojBr7n+xl5eSvzVVc8iBArWq4O/KcBlNc=
+	t=1747298740; cv=none; b=gPtrMXEWTNpS5UBf3O0VcS2lnifCImwvwFgWql1NWzOoQ8lTbtZluEPmMIszLy//2S/NRj0cNnQc6jL7ijmnwgLCVlswnvE1xDhJIKL8fkzbWW/SPGC5RD7ilh1gvZ/lSlxf9fqCb5UOgWwpqnKKU4v0ENNvywr2HsCL/m/5/A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747298707; c=relaxed/simple;
-	bh=SEgT+ObynvSN+V3bQsdKbGCKxjclg4N/cQwSPBeFXNk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SiNHNWplZrncsPnkcbGJOAvqAjkeYRZvz825FDOrGRKyFehbsmMuG/8Vs8UZztCJL80GKKiwtI/kzEcmwUhxgplnmWW/NyDPaWvE3ikICeyrVHsAWFMXPQyqcF6zaT4JcXW9JguGUToC/ukey9mOf4tGmoC0m6ZjgyzQMVCaiG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RFv3CN6R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747298740; c=relaxed/simple;
+	bh=vSsNhJiyAn3s3OhcgAxNKV1C08rwcm+xP8znhvNGVVs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=gEPEDcc4wTF0QAjQR/KXQsVPE0P+C2kSWQnR/v3UZ7zM5MXkgYyAxXr0YWgWdLPiRLZ+RnZA4u8WLBvamSWBB70d2Cbs/g8KIx20SSkZLP70WVRI8Kexsf+EyAsD++ZtYdm7/Q99zd1mNmukrLdq+cXWxwVsF6qCW7Ay6JIhH4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=W+Du45ot; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=392r+Jex; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=W+Du45ot; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=392r+Jex; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RFv3CN6R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76B22C4CEE7;
-	Thu, 15 May 2025 08:45:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747298707;
-	bh=SEgT+ObynvSN+V3bQsdKbGCKxjclg4N/cQwSPBeFXNk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RFv3CN6RVuD3ZWfspaJ6Nbe4PN+U/ZhA10RKSVE21YGj3E/0I5Jv+9TR+YVUdUAUC
-	 xSEGqo2J3PayIZLfGF8jIfq7LB7VJdgOiqVy6NJ2ldnAfkv/xnBg+ArFnTXJwOcLNS
-	 MNyJCtcDvhnQPfAmcNz445xrxRJh7yLA1h04kLSrJiLGVrPGr6Lav4jdjyp2VBPPW+
-	 G2RXqtm06alizQnWHnBxVs5TbuS2Qu/DW1jXqf7siUs0v87yyel8qVtAjpzrpwHeAQ
-	 Paz449iCB4bMwoSkIdjz3DW3ooWQJtwpsbdN0nKkE4Cy4/3qVDNyViE1wjRSv7YeEs
-	 tgX+yGPozcc4A==
-Date: Thu, 15 May 2025 10:45:02 +0200
-From: Mark Brown <broonie@kernel.org>
-To: Bence =?iso-8859-1?B?Q3Pza+Fz?= <csokas.bence@prolan.hu>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Vinod Koul <vkoul@kernel.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: Re: [PATCH v6 0/2] Add `devm_dma_request_chan()` to simplify probe
- path in atmel-quadspi.c
-Message-ID: <aCWpjplhAXUvr9fj@finisterre.sirena.org.uk>
-References: <20250515083132.255410-1-csokas.bence@prolan.hu>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="W+Du45ot";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="392r+Jex";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="W+Du45ot";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="392r+Jex"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E475C2115E;
+	Thu, 15 May 2025 08:45:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747298736; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VumhYrRKD4m6/mW6n6DUnExU9MsUD1DrmUJaXs125Mg=;
+	b=W+Du45otPPQRaFkRaLYmcz7ggB6BCAlpE/zVfwtlsWAPIP3ON+1StnIgtZrga7yadtRdfq
+	U8K4trvMAxchBtiReYjdE8L1eCpyrdyRgQAqINXsHZkoMlGnv/pUS/4YI3sEN/1EuiJgSN
+	miaVemQzC4zTXlkE8LbJrhgXLuVaTeM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747298736;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VumhYrRKD4m6/mW6n6DUnExU9MsUD1DrmUJaXs125Mg=;
+	b=392r+JexXT9DmX8Q0iB8+hJXlgQxtamR/qGkLsIhys0UPMnz3m4UE0VjVifL7hJuTjiN/g
+	vyt71YdzetYB9xCg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747298736; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VumhYrRKD4m6/mW6n6DUnExU9MsUD1DrmUJaXs125Mg=;
+	b=W+Du45otPPQRaFkRaLYmcz7ggB6BCAlpE/zVfwtlsWAPIP3ON+1StnIgtZrga7yadtRdfq
+	U8K4trvMAxchBtiReYjdE8L1eCpyrdyRgQAqINXsHZkoMlGnv/pUS/4YI3sEN/1EuiJgSN
+	miaVemQzC4zTXlkE8LbJrhgXLuVaTeM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747298736;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VumhYrRKD4m6/mW6n6DUnExU9MsUD1DrmUJaXs125Mg=;
+	b=392r+JexXT9DmX8Q0iB8+hJXlgQxtamR/qGkLsIhys0UPMnz3m4UE0VjVifL7hJuTjiN/g
+	vyt71YdzetYB9xCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CFEF4137E8;
+	Thu, 15 May 2025 08:45:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id lHp0MrCpJWjcPwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Thu, 15 May 2025 08:45:36 +0000
+Message-ID: <07f321d5-4416-4be4-9696-00f0d83895f5@suse.cz>
+Date: Thu, 15 May 2025 10:45:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="/tGn05cm9PgSmYgZ"
-Content-Disposition: inline
-In-Reply-To: <20250515083132.255410-1-csokas.bence@prolan.hu>
-X-Cookie: Well begun is half done.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/9] slab: add sheaf support for batching kfree_rcu()
+ operations
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>,
+ Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+ maple-tree@lists.infradead.org
+References: <20250425-slub-percpu-caches-v4-0-8a636982b4a4@suse.cz>
+ <20250425-slub-percpu-caches-v4-2-8a636982b4a4@suse.cz>
+ <CAJuCfpGVx2jG+S2ch2hqK=sAdmTcs9dW0kOdopxgLtH4V_wNXQ@mail.gmail.com>
+ <f181285e-4167-4581-a712-8e444a0ab2bb@suse.cz>
+In-Reply-To: <f181285e-4167-4581-a712-8e444a0ab2bb@suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[oracle.com,linux.com,google.com,linux.dev,gmail.com,kvack.org,vger.kernel.org,lists.infradead.org];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_SOME(0.00)[]
 
+On 5/14/25 16:01, Vlastimil Babka wrote:
+> On 5/6/25 23:34, Suren Baghdasaryan wrote:
+>> On Fri, Apr 25, 2025 at 1:27 AM Vlastimil Babka <vbabka@suse.cz> wrote:
+>>> @@ -2631,6 +2637,24 @@ static void sheaf_flush_unused(struct kmem_cache *s, struct slab_sheaf *sheaf)
+>>>         sheaf->size = 0;
+>>>  }
+>>>
+>>> +static void __rcu_free_sheaf_prepare(struct kmem_cache *s,
+>>> +                                    struct slab_sheaf *sheaf);
+>> 
+>> I think you could safely move __rcu_free_sheaf_prepare() here and
+>> avoid the above forward declaration.
+> 
+> Right, done.
+> 
+>>> @@ -5304,6 +5340,140 @@ bool free_to_pcs(struct kmem_cache *s, void *object)
+>>>         return true;
+>>>  }
+>>>
+>>> +static void __rcu_free_sheaf_prepare(struct kmem_cache *s,
+>>> +                                    struct slab_sheaf *sheaf)
+>> 
+>> This function seems to be an almost exact copy of free_to_pcs_bulk()
+>> from your previous patch. Maybe they can be consolidated?
+> 
+> True, I've extracted it to __kmem_cache_free_bulk_prepare().
 
---/tGn05cm9PgSmYgZ
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, May 15, 2025 at 10:31:28AM +0200, Bence Cs=F3k=E1s wrote:
-
-> Change in v4:
-> * split PM imbalance fix (now merged) and DMA cleanup (this series)
-> Change in v6:
-> * rebase to spi/for-next, see note below:
->=20
-> There is currently no difference in drivers/dma/dmaengine.c between it and
-> dma/next [1], therefore PATCH 1/2 should be safe for Vinod to apply. But
-> this way PATCH 2/2 is trivial to apply. I didn't want to pull the whole
-> linux-next tree, but if any ofyou run into problems, let me know, and I'll
-> rebase the series on it instead.
-
-I can't tell what the plan is here, or what the status is for the first
-patch (since I'm not CCed).  The second patch depends on a new API
-introduced in the first patch so it can't be merged independently.
-
---/tGn05cm9PgSmYgZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmglqY0ACgkQJNaLcl1U
-h9DFVQf/RG3qVgLW9iXPcAUZnHYKemB71ZgR+Yrj0yChBw9ccK7Ns8JmX1XBzjJ6
-KHRzwnny3bbg2tsX5/n66nch3/Xfl98SRYHNnmeQQsKDAuehwMGDnCr7i5QNNzJ3
-m0H0qoCgYrjoye1vqrIWHqzYnU8lhZS5ywzOKZfzS8UXs+I+6ZIc/u2AzSMg7f+f
-YEaKmv2tch11ks57fRmyI9cqVu1nSBUrEHbn+/wxsleBaed2LURNQz0pO1547z+V
-P6Y8zAxD4wGLQvSIPlU8+/b58zLeZmhIBf3eBKFNk2pXAHI3GpBmr68i9YbmrRGz
-tH3l2/oUsumQn6krkGQ42z0TOmIddQ==
-=HOSf
------END PGP SIGNATURE-----
-
---/tGn05cm9PgSmYgZ--
+... and that was a mistake as free_to_pcs_bulk() diverges in patch 9/9 in a
+way that this makes it too infeasible
