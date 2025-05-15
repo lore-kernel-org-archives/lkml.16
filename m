@@ -1,303 +1,146 @@
-Received: from clean103.mxserver.ro (clean103.mxserver.ro [176.223.125.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251F22874F6;
-	Thu, 15 May 2025 08:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.223.125.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D89F1FFC59;
+	Thu, 15 May 2025 08:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747297048; cv=none; b=XTqIKe4qnuIAai7EXUWnWAX/aiMmTf5nTSvqGIzRCBHOsFC5pMKKsdJVrj0HB9UGSFv/N6Xx4BOlV9iU/qYeICkayRz/HRWywq0OoFgE6KjMAukA5DgtNxyJKSgukSB9LIbEorUyvKhhO2fWvrgMQnOszehL8vSoDhNxKsxYCpM=
+	t=1747297118; cv=none; b=hCB0/6L0OZO0VsalWFje2pY4PSrGLIwhd4JQSEWNGsh1F8VlaPiiCOwZ5CHrnzqRbPeceXuZw0kchhq1cJ0g2PnFHQ9ZgHHwP5i4/+8Nr2/ib4uL9CnIi5Nvcj4yQB8VuBOD2gEnbGVA+KqvKPhe4vk8cfVSKXtrlT9nUr/NTuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747297048; c=relaxed/simple;
-	bh=59EvuJKTItg/MQf3XkZzL1WEDvsOtpA/YLaURewi72g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SYPIwsCLWj0W6J99xTF6Qoo77EN0ru72AvIxq4SnyCHfNa3kKDROyygwLlpnKAKJOwkiqpPwCmnO35DcY+xYq/3CB35abvpCLezcO3uGwN7WkfgMJZgfG93r+LgxNa3daTF6og+OxUqYuSZroVo+4cDJ79hGs4aORIhE8n3TRg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro; spf=pass smtp.mailfrom=taladin.ro; dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b=KRYbtfwK; arc=none smtp.client-ip=176.223.125.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=taladin.ro
+	s=arc-20240116; t=1747297118; c=relaxed/simple;
+	bh=kARTLmU5kuLFfhOtdN/ZSLfUtl52NOdzWPJwjF3ngTQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e60DAlUNtQv1NVQmzIznfB7QGSx7b9gDsfJ1MJGK6lujArJoMOkqgXtCh0pVBorhr3MUHaxn7gDJ9i6icW7Pn0nYbrEUlEojsCOtRisimZZcmCsQfM/LYIWIuIOEu96uvjgH3AtAh0dwdOsmXNePD2vRUvcz/gze0Yv2NQ38N1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U7ecSAX8; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b="KRYbtfwK"
-Received: from cloud347.c-f.ro ([185.236.86.218])
-	by cleanserver1.mxserver.ro with esmtps (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <asoponar@taladin.ro>)
-	id 1uFTmD-00H1kv-CP; Thu, 15 May 2025 04:17:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=taladin.ro;
-	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=5qQNra+2Cp8u7mp46CFqnKOn4bpY4tOymWLSppXXVgQ=; b=KRYbtfwKrP5JWyHDZyJ+LsM4TM
-	ko5g12ztP9SwDdjndz/buqYuuXqDtqQKnyiflgq1UFxBOSmPhitIHUzGy7mnvtCpjhWfUFb4HS/tJ
-	42duJd6hAlw30bu+iN8P2nlho9hCXMaOZRAr2n5UDKEXPuNynFscveZyrfzzFXNsIFO/7gD3iA8ah
-	6q5P4UCrT4W51CgWGbrMQt8l9K9UUD2b/O4TrMOVwzdr+cCYBeOKx827YWv6uPZdNtR9lu9Yeznpo
-	xU4hKjixEQ3bnAo/kHGe6LBvh3j5b4IDagHVH4teVi4MqB7Pq1UaomwKl/5hiUEDLeyiDWHRT5TNA
-	UTH0G8mA==;
-Received: from [109.166.137.172] (port=55940 helo=localhost)
-	by cloud347.c-f.ro with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <asoponar@taladin.ro>)
-	id 1uFTm3-00000006qMV-1X5D;
-	Thu, 15 May 2025 11:17:12 +0300
-From: Alexandru Soponar <asoponar@taladin.ro>
-To: linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	linux-watchdog@vger.kernel.org
-Cc: jdelvare@suse.com,
-	linux@roeck-us.net,
-	jic23@kernel.org,
-	pavel@ucw.cz,
-	lee@kernel.org,
-	baocheng.su@siemens.com,
-	wim@linux-watchdog.org,
-	tobias.schaffner@siemens.com,
-	angelogioacchino.delregno@collabora.com,
-	benedikt.niedermayr@siemens.com,
-	matthias.bgg@gmail.com,
-	aardelean@baylibre.com,
-	contact@sopy.one,
-	Alexandru Soponar <asoponar@taladin.ro>
-Subject: [PATCH 16/16] lib: move find_closest() and find_closest_descending() to lib functions
-Date: Thu, 15 May 2025 11:13:32 +0300
-Message-ID: <20250515081332.151250-17-asoponar@taladin.ro>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250515081332.151250-1-asoponar@taladin.ro>
-References: <20250515081332.151250-1-asoponar@taladin.ro>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U7ecSAX8"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-231c86bffc1so125685ad.0;
+        Thu, 15 May 2025 01:18:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747297116; x=1747901916; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=488WlQhNXKWBMBMiHUKNjpxHao5V1ORTjyvAiWEOJDg=;
+        b=U7ecSAX8Zv6/kzxX0G9t5pauYnRFtaIaLSq6qc7oi9Qrb2rzrp++sqO4NF8bDybRMD
+         edDaEsCQUa7eHUzSyyDdojCFf+nBE//Xj+G0Cgf59bpHtLOyGDsZ0TFuiJyySokpB6+a
+         y9JQ9nxrvb3Bd6Kp3FHVaE+ejecdZISaVnCJo8SBQMVTNfCmlRpZAkLxv+rgsK+oVILP
+         F6OIscBbbzh/yEZrA5t1jq2XMMUgg+zEY4GsmYHcqXaEb2jtkYVWzi0q1vUQtYoiw/Vj
+         cREP/R08dqvGQPZOOHwNdef5zmOVmxCjFwth6LiwRhKbHoxQjSDinQs8xAIACdNi1Nu1
+         542w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747297116; x=1747901916;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=488WlQhNXKWBMBMiHUKNjpxHao5V1ORTjyvAiWEOJDg=;
+        b=SE/BCJuF7zgVUKLJqejDHsALHoh3i0kJ0pEbue810d1Yle4mLO9s/GYS/DWgyLmPD/
+         SA7Lu7iIkGIcbpcNBWPq0GRsiKV0SVnpsimyUPZZscqE1oSIs10j9VyAYfyOND+n10uo
+         aCbHJkNNxB6t8ueVThhzmC1ixJtt95YnjmARuhmCIvRkHMWI5BVOmPQt+NFmDWDeKFe9
+         BVYYxBk5Q1WUfbPxPHk4E5/PvLpQ1JFPuuz7lrz1g7hdPlpAvcSf46n137mO6ujNCVw9
+         o6dE1F7ua15smpYcw/B2kvR53kqCeZOfpakoOgvnA4pkejPcyNIm9w4HAPbYpiDpiaB6
+         0mFA==
+X-Forwarded-Encrypted: i=1; AJvYcCURBQxl9bOVKlXLwv/68bQB4eqTELuxWVJu6WtciJ3cOhYrT7W8RIl/SolFGd+OiHSoHnXlqLJC@vger.kernel.org, AJvYcCUzFHBMNsAbuQafdqgElelKm7sRYshiYE++NEgtIFx9eRMm02tPhX5HNTFq41X26oM/qZ99+rFkWg34Zs8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrEfBwUIiAyWqrp3DnV5ZR/e92psDS8O5RVYI1H/BVirwN+d1p
+	HJllAJF7KAAbu0eaq6QzQgH1D+sALZhVF0e/ctBBMy0HYP/iKPVY
+X-Gm-Gg: ASbGncs1wplKTxMCjC2JK8g1iOwaA3AlNY+hp8bHdBKzM4nw7eraExqxDIhct10YBJC
+	Tew3a8SWUJwWpBoeDromcT09H/ytPfJoMn8slTjr3vgdR+6im80F54diZabV7JU2/hoVpswXMkB
+	SnxqvfXrI8iFgWewCwqqzx8ILLW0dAEn+BHjyKSBMZZzk+ykM4x1D7UmK1tq9649JbwBNh96ooZ
+	qonxtv8YDy4Oo+0BU90Yt8cJ+KE0t/TB0zq5+ypUz6kc5ApX0ETr2AK1+mWl9/TnwDyhuG56fkj
+	gKWRz/wWlE6YWtbWIXAVB35j5WfCyTW5SiFp/15780xvXcs52YtR6giQJc7oVjtSK/pxJGYar8o
+	j2uLPM/QPvfAVGPvhpubfSE7YK4nwnu9Zs9QqkQ==
+X-Google-Smtp-Source: AGHT+IEmHYGzIw5wI4zfX6bwzFtPTL6OX67lRx08pliFgQuw/ue8uTDF6c+KrkOx8EmMyB5MZh2OzA==
+X-Received: by 2002:a17:903:22ca:b0:22e:7e9d:9529 with SMTP id d9443c01a7336-231b6073bbbmr17655425ad.20.1747297116247;
+        Thu, 15 May 2025 01:18:36 -0700 (PDT)
+Received: from [192.168.48.133] (mobile-166-176-123-50.mycingular.net. [166.176.123.50])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231b92e1c3bsm5755665ad.252.2025.05.15.01.18.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 01:18:35 -0700 (PDT)
+Message-ID: <7c2c06c6-d1b9-403a-a7ab-ac879a3fa08c@gmail.com>
+Date: Thu, 15 May 2025 10:18:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SpamExperts-Domain: cloud347.c-f.ro
-X-SpamExperts-Username: 185.236.86.218
-Authentication-Results: mxserver.ro; auth=pass smtp.auth=185.236.86.218@cloud347.c-f.ro
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: SB/global_tokens (0.000242666053139)
-X-Recommended-Action: accept
-X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT98ZpYtbjLMlHLIMLfKiMBSPUtbdvnXkggZ
- 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5w1OL79HMxE022P+rQy8YAdcSeERs4TOTnIH1kc1IWc5TSx
- S75yz9IFZiY7BarU/NrpK8SEOwGmfn6ucAKqn/OHRh3BqzFaEnAEj4UixLJBjVNiLZt/QXQnOBRD
- +jq1HsIBmHTFdhqXZEtguZY7iGKpkcJnJKaJfT+dw1udmv00tbIRNtoyOobb3xnDyRRylAVTYi2b
- f0F0JzgUQ/o6tR7C8pLPCtTiVLo0r89ClJHDKhDGKgJ+T00JeCnHBmMdB1eMZAyYlfUtEN4pUyes
- jVRntA/J5DcfwvG53FyVviDO9UET3GKmqv1jT0lY+AQz8YX4CVph7ctC7tRH2SPTQJ/0klTuXKq/
- B9rqRWsYzNfBLt79i78aPHyWnIqxGMxPZotYvH/es1vXuByXo2bkrYMqq0x5CzaUoJIoBUQayHle
- UvbvCQmh9x4kn6NeQcRkc6G+OgAcq5x+BzhRyg9rYO6I0H7Q2OEpckvWJAOmdJd77Z9vwc+QHB+X
- +u7aTqYHtT2CBuxNPBc9JM2jck1NnIBf0tvflhq7Xjhll72AYgnW/6M0ftSpvLIx+X1vKami8KF6
- jWQ71uVNIY/EFPWeDmcZuFRQy1vmjjPiYw8fUCp0/qY6cmSW9oUDdvKuTRfTGZ6f8nTXoYFaQ71l
- mMti8uxA0gKVmIzBXtbLDVvAQ/KVNbF0n38s4PnjIiWSgo0iehuSAN5VcIfsMVILjVAz6RZsCHxD
- lgOJwEwCFaF+62b2lf1UUDu9jECN1V/lwmsioRLmNJoHOZOE/9e5UD715p61XAQw85DCXa0iAPEd
- fYyrF5wMRSLGyY+i0m2IxQLxQUxLMkCVXN63lz38Up+2UgeFSDBPqdRoFsq0hfzdx0oxkgNI/jhY
- WFhu7VV+HdWjdZLlmQ5z83qEVVG/6RJ+BW7FmGcwL889DSW2cZWGkIYVQAbHnYkWUz1gRIjAiMvi
- vM7um7t0SVa5NVZ2g1u6DnOpqk1nwAzTSgytNKIH5lfAuQc8I07FTFcjpdfX/Jcr87en7cKbI0NU
- afdkQMG+6qjtXoANVR89VM6f75a5kmRIbungV7ywXD8VtmM8wef5C6IkqMFhROX1HYRo9Sm1kZOW
- saz62DSUUd/fn3Ix/aSqJVglEtnFggTvi4y/qO0sxBxzHDeqqFz43py4SDhdaHkWxEWqfohU+1d2
- sh7IKZpXLgBCJ476nn5Gmr/PK603nEEgvmn7Dzq8wsrwxhZMoHvqxJYqN+GmyxwR+V15PgePOPPI
- vtB/lrJsWW29FRnUbXCk3//yGA2OaEkyEoP0Kl1YERWeKKG4PAQYNyavp7c49JwbmBalBK3QvTzZ
- aymz/kAx9sNOIdFDvUNZLdaRhCZaMx8xtwV1+Gg8ihl6LJV8o3nXKu/l5TM8iMLe4AKyoGlZj2VA
- 3aW/vPi2AMAbWLs/EIKEbeDIxNYIJ7Ews1OEan6m+UeFXprlCOm3BAEbJtATHIdhc/Osc/lXM+l8
- 06U7GxUAPGlXms+D1TI22+vIvtmOpB8mDzWv8vBwVi5XkC8ewLVRqANj6mzlzL3VH5WM/aCyI5/o
- yhoezeIJy3L+cB4hBppwR1r+Bof9KZqCMQkUV4VT4TerS/vbL3R5w07g
-X-Report-Abuse-To: spam@cleanserver1.mxserver.ro
-X-Complaints-To: abuse@cleanserver1.mxserver.ro
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.12 000/184] 6.12.29-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250514125624.330060065@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250514125624.330060065@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Move the utility macros find_closest() and find_closest_descending()
-from inline macros to proper library functions in lib/.
 
-Signed-off-by: Alexandru Soponar <asoponar@taladin.ro>
----
- include/linux/find_closest.h | 13 +++++++
- include/linux/util_macros.h  | 61 +------------------------------
- lib/Makefile                 |  2 +-
- lib/find_closest.c           | 71 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 86 insertions(+), 61 deletions(-)
- create mode 100644 include/linux/find_closest.h
- create mode 100644 lib/find_closest.c
 
-diff --git a/include/linux/find_closest.h b/include/linux/find_closest.h
-new file mode 100644
-index 000000000000..28a5c4d0c768
---- /dev/null
-+++ b/include/linux/find_closest.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Find closest element functions
-+ */
-+#ifndef _LINUX_FIND_CLOSEST_H_
-+#define _LINUX_FIND_CLOSEST_H_
-+
-+#include <linux/types.h>
-+
-+unsigned int find_closest(int x, const int *a, unsigned int as);
-+unsigned int find_closest_descending(int x, const int *a, unsigned int as);
-+
-+#endif /* _LINUX_FIND_CLOSEST_H_ */
-diff --git a/include/linux/util_macros.h b/include/linux/util_macros.h
-index 825487fb66fa..478d4821f2d1 100644
---- a/include/linux/util_macros.h
-+++ b/include/linux/util_macros.h
-@@ -3,66 +3,7 @@
- #define _LINUX_HELPER_MACROS_H_
- 
- #include <linux/math.h>
--
--/**
-- * find_closest - locate the closest element in a sorted array
-- * @x: The reference value.
-- * @a: The array in which to look for the closest element. Must be sorted
-- *  in ascending order.
-- * @as: Size of 'a'.
-- *
-- * Returns the index of the element closest to 'x'.
-- * Note: If using an array of negative numbers (or mixed positive numbers),
-- *       then be sure that 'x' is of a signed-type to get good results.
-- */
--#define find_closest(x, a, as)						\
--({									\
--	typeof(as) __fc_i, __fc_as = (as) - 1;				\
--	long __fc_mid_x, __fc_x = (x);					\
--	long __fc_left, __fc_right;					\
--	typeof(*a) const *__fc_a = (a);					\
--	for (__fc_i = 0; __fc_i < __fc_as; __fc_i++) {			\
--		__fc_mid_x = (__fc_a[__fc_i] + __fc_a[__fc_i + 1]) / 2;	\
--		if (__fc_x <= __fc_mid_x) {				\
--			__fc_left = __fc_x - __fc_a[__fc_i];		\
--			__fc_right = __fc_a[__fc_i + 1] - __fc_x;	\
--			if (__fc_right < __fc_left)			\
--				__fc_i++;				\
--			break;						\
--		}							\
--	}								\
--	(__fc_i);							\
--})
--
--/**
-- * find_closest_descending - locate the closest element in a sorted array
-- * @x: The reference value.
-- * @a: The array in which to look for the closest element. Must be sorted
-- *  in descending order.
-- * @as: Size of 'a'.
-- *
-- * Similar to find_closest() but 'a' is expected to be sorted in descending
-- * order. The iteration is done in reverse order, so that the comparison
-- * of '__fc_right' & '__fc_left' also works for unsigned numbers.
-- */
--#define find_closest_descending(x, a, as)				\
--({									\
--	typeof(as) __fc_i, __fc_as = (as) - 1;				\
--	long __fc_mid_x, __fc_x = (x);					\
--	long __fc_left, __fc_right;					\
--	typeof(*a) const *__fc_a = (a);					\
--	for (__fc_i = __fc_as; __fc_i >= 1; __fc_i--) {			\
--		__fc_mid_x = (__fc_a[__fc_i] + __fc_a[__fc_i - 1]) / 2;	\
--		if (__fc_x <= __fc_mid_x) {				\
--			__fc_left = __fc_x - __fc_a[__fc_i];		\
--			__fc_right = __fc_a[__fc_i - 1] - __fc_x;	\
--			if (__fc_right < __fc_left)			\
--				__fc_i--;				\
--			break;						\
--		}							\
--	}								\
--	(__fc_i);							\
--})
-+#include <linux/find_closest.h>
- 
- /**
-  * is_insidevar - check if the @ptr points inside the @var memory range.
-diff --git a/lib/Makefile b/lib/Makefile
-index f1c6e9d76a7c..e8e738c9ced8 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -35,7 +35,7 @@ lib-y := ctype.o string.o vsprintf.o cmdline.o \
- 	 is_single_threaded.o plist.o decompress.o kobject_uevent.o \
- 	 earlycpio.o seq_buf.o siphash.o dec_and_lock.o \
- 	 nmi_backtrace.o win_minmax.o memcat_p.o \
--	 buildid.o objpool.o iomem_copy.o
-+	 buildid.o objpool.o iomem_copy.o find_closest.o
- 
- lib-$(CONFIG_UNION_FIND) += union_find.o
- lib-$(CONFIG_PRINTK) += dump_stack.o
-diff --git a/lib/find_closest.c b/lib/find_closest.c
-new file mode 100644
-index 000000000000..d481625cae9d
---- /dev/null
-+++ b/lib/find_closest.c
-@@ -0,0 +1,71 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Find closest element functions
-+ *
-+ * Based on previous util_macros.h implementation
-+ */
-+
-+#include <linux/find_closest.h>
-+#include <linux/module.h>
-+
-+/**
-+ * find_closest - locate the closest element in a sorted array
-+ * @x: The reference value.
-+ * @a: The array in which to look for the closest element. Must be sorted
-+ *  in ascending order.
-+ * @as: Size of 'a'.
-+ *
-+ * Returns the index of the element closest to 'x'.
-+ */
-+unsigned int find_closest(int x, const int *a, unsigned int as)
-+{
-+	unsigned int array_size = as - 1;
-+	int mid_x, left, right;
-+	unsigned int i;
-+
-+	for (i = 0; i < array_size; i++) {
-+		mid_x = (a[i] + a[i + 1]) / 2;
-+		if (x <= mid_x) {
-+			left = x - a[i];
-+			right = a[i + 1] - x;
-+			if (right < left)
-+				i++;
-+			break;
-+		}
-+	}
-+
-+	return i;
-+}
-+EXPORT_SYMBOL_GPL(find_closest);
-+
-+/**
-+ * find_closest_descending - locate the closest element in a sorted array
-+ * @x: The reference value.
-+ * @a: The array in which to look for the closest element. Must be sorted
-+ *  in descending order.
-+ * @as: Size of 'a'.
-+ *
-+ * Similar to find_closest() but 'a' is expected to be sorted in descending
-+ * order. The iteration is done in reverse order, so that the comparison
-+ * of 'right' & 'left' also works for unsigned numbers.
-+ */
-+unsigned int find_closest_descending(int x, const int *a, unsigned int as)
-+{
-+	unsigned int array_size = as - 1;
-+	int mid_x, left, right;
-+	unsigned int i;
-+
-+	for (i = array_size; i >= 1; i--) {
-+		mid_x = (a[i] + a[i - 1]) / 2;
-+		if (x <= mid_x) {
-+			left = x - a[i];
-+			right = a[i - 1] - x;
-+			if (right < left)
-+				i--;
-+			break;
-+		}
-+	}
-+
-+	return i;
-+}
-+EXPORT_SYMBOL_GPL(find_closest_descending);
+On 5/14/2025 3:03 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.29 release.
+> There are 184 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 16 May 2025 12:55:38 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.29-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernel, build tested on 
+BMIPS_GENERIC:
+
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-2.49.0
+Florian
 
