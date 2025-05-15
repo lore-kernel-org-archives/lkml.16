@@ -1,62 +1,99 @@
-Received: from baidu.com (mx22.baidu.com [220.181.50.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6643E1FF7CD
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.181.50.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415511F16B;
+	Thu, 15 May 2025 12:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747310379; cv=none; b=Esr+sXnUllTFOsWOeNnFROA9HEouW80xeivZGChQJpHUq3dZFWGiZqr4X5FSYCFb9gPO+j7m4tyVBbDxmQqsAEgGUJNSaQWWMxsB388TEWvyyidLKcmHyky5pshLVGV/XSAdR6AJc5yeAVnm31mRSp/cIQQ27nlxv7MpsLWgZuY=
+	t=1747310499; cv=none; b=nZY+5x/zZCNsgqLkr/tmJib4B/nPuinIdN7v9Qd8udsP1sYqcKqp4ErLCrNRa6qrG48RvSMZQuDXSbI+gHOI6SxGThjzixBX3BmAIPoq0KLrLq75yRPXD1iCFjVOYAsJZj4fxl+cm4o57X9BsyYYQzSEh+VUXl+5Oc6pY79Ml+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747310379; c=relaxed/simple;
-	bh=W5tQpGezyACQ07x3k8e9Qln0LgPn+x2pDoFNSogLARM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Mv8533QlBUu1Ne3MCt69ugh1RKVJzKc1BYgkBSzvIbluIAEypm+4fsWZEiELT3066WOazlJf4/pPMIDvFDgSqfYdTEOOr1No7MKqtcEuTmms78jmmkjQSh+wPJdMENHydW+QHKZxyN4FZ2hyJ5zlN06EZBNvJ1auEtNl8fnRw7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=220.181.50.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
-From: Wenjie Xu <xuwenjie04@baidu.com>
-To: <muchun.song@linux.dev>, <osalvador@suse.de>, <akpm@linux-foundation.org>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, Wenjie Xu
-	<xuwenjie04@baidu.com>, Li RongQing <lirongqing@baidu.com>
-Subject: [PATCH] hugetlb: Show nr_huge_pages in report_hugepages()
-Date: Thu, 15 May 2025 19:42:31 +0800
-Message-ID: <20250515114231.65824-1-xuwenjie04@baidu.com>
-X-Mailer: git-send-email 2.41.0
+	s=arc-20240116; t=1747310499; c=relaxed/simple;
+	bh=e5G8NoyYejh7bIRIp3fd5xF4gR7mdTNrW8fJ14jg26o=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=IgJfWQlqyYkXLg4Em23hejn+jTtenUNPX96vtTTVzTsO6BGxpd5w9ZNdg2+U5rRAI6mBBXp8vEaMSUQ51qr+Nz8DVmUSx9lnR2H6Bb78auhwwf0Rz8iayBSzAh0KGP3kULyDNrzVJL3UnzWxV/rCGPiponAWuc0s5ebt5XN/66Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sbbkFEfq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sbbkFEfq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B4F0C4CEE7;
+	Thu, 15 May 2025 12:01:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747310498;
+	bh=e5G8NoyYejh7bIRIp3fd5xF4gR7mdTNrW8fJ14jg26o=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=sbbkFEfqIp+hUc6URcnxYNfrYG91eGJsW2BvjonemLcKnpIdN/KdEmlXBO3EHBGtl
+	 mAj5fHbMojfpZveQLTI+dQD3Y9jn+3DiVDYKy4ezjcgq6EN3I6JiDKbvS6po9M2lBO
+	 qm7EFzbW/6vuj/9zUi2CxxQiRJ1fvMUxrQZeZzQq91Qc9zCzZPbIixh2okUuj42QgD
+	 EeOIpghHfGkKAo/z54CHl5qSNymy7xZTZZrxTyC7IJNIIKJqHvUYB045uk38GPFu9I
+	 t9sEKZ0FJboQmuXpgahifkx6UQIGokUa/uDm7z0MsX+QntMkFPgzkd6LSR0d3pDZhr
+	 ietuPLmcRnYOg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BJHW-Mail-Ex13.internal.baidu.com (10.127.64.36) To
- BJHW-MAIL-EX28.internal.baidu.com (10.127.64.43)
-X-Baidu-BdMsfe-DateCheck: 1_BJHW-Mail-Ex12_2025-05-15 19:42:40:672
-X-FEAS-Client-IP: 10.127.64.35
-X-FE-Policy-ID: 52:10:53:SYSTEM
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 15 May 2025 14:01:22 +0200
+Message-Id: <D9WPVECZK7GQ.2HAJ6JDN7M3LQ@kernel.org>
+Cc: "Andrew Lunn" <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Rob
+ Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "Heiner Kallweit"
+ <hkallweit1@gmail.com>, "Russell King" <linux@armlinux.org.uk>, "Florian
+ Fainelli" <florian.fainelli@broadcom.com>, "Broadcom internal kernel review
+ list" <bcm-kernel-feedback-list@broadcom.com>, =?utf-8?q?Marek_Beh=C3=BAn?=
+ <kabel@kernel.org>, "Andrei Botila" <andrei.botila@oss.nxp.com>, "FUJITA
+ Tomonori" <fujita.tomonori@gmail.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>,
+ "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Danilo Krummrich" <dakr@kernel.org>,
+ "Sabrina Dubroca" <sd@queasysnail.net>, "Michael Klein"
+ <michael@fossekall.de>, "Daniel Golle" <daniel@makrotopia.org>,
+ <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+Subject: Re: [net-next PATCH v10 7/7] rust: net::phy sync with
+ match_phy_device C changes
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Christian Marangi" <ansuelsmth@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <20250515112721.19323-1-ansuelsmth@gmail.com>
+ <20250515112721.19323-8-ansuelsmth@gmail.com>
+ <D9WPMD7Q4XRN.32LF8UDPK1IBI@kernel.org>
+ <6825d53b.df0a0220.36755a.ca22@mx.google.com>
+In-Reply-To: <6825d53b.df0a0220.36755a.ca22@mx.google.com>
 
-The number of pre-allocated huge pages should be nr_huge_pages, not
-free_huge_pages, although they are same during booting stage
+On Thu May 15, 2025 at 1:51 PM CEST, Christian Marangi wrote:
+> On Thu, May 15, 2025 at 01:49:35PM +0200, Benno Lossin wrote:
+>> On Thu May 15, 2025 at 1:27 PM CEST, Christian Marangi wrote:
+>> > Sync match_phy_device callback wrapper in net:phy rust with the C
+>> > changes where match_phy_device also provide the passed PHY driver.
+>> >
+>> > As explained in the C commit, this is useful for match_phy_device to
+>> > access the PHY ID defined in the PHY driver permitting more generalize=
+d
+>> > functions.
+>> >
+>> > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+>> > ---
+>> >  rust/kernel/net/phy.rs | 26 +++++++++++++++++++++++---
+>> >  1 file changed, 23 insertions(+), 3 deletions(-)
+>>=20
+>> You probably should do this in the same commit as the C changes,
+>> otherwise the in-between commits will error.
+>>=20
+>
+> You are right, I will fix this in v11 but I would really want to know if
+> the Rust changes are correct. It's not my main language so it's all
+> discovering new stuff :D
 
-Signed-off-by: Wenjie Xu <xuwenjie04@baidu.com>
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
+No worries :) I have lost some context on the PHY Rust bindings, so
+Fujita will probably have to review it, but if I find the time, I'll
+take a look.
+
 ---
- mm/hugetlb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 6ea1be71aa42..2a4d4551749a 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -3740,7 +3740,7 @@ static void __init report_hugepages(void)
- 
- 		string_get_size(huge_page_size(h), 1, STRING_UNITS_2, buf, 32);
- 		pr_info("HugeTLB: registered %s page size, pre-allocated %ld pages\n",
--			buf, h->free_huge_pages);
-+			buf, h->nr_huge_pages);
- 		if (nrinvalid)
- 			pr_info("HugeTLB: %s page size: %lu invalid page%s discarded\n",
- 					buf, nrinvalid, nrinvalid > 1 ? "s" : "");
--- 
-2.41.0
-
+Cheers,
+Benno
