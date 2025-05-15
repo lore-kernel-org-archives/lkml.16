@@ -1,92 +1,163 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D2529ACEE;
-	Thu, 15 May 2025 12:51:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE1E298C21;
+	Thu, 15 May 2025 12:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747313467; cv=none; b=uPVpsmgPK4xaSoiDxExvzIrZgYAzhLtznQ9KoEe6a9WYCuU7djtw0dNt49wVCsLsm8eJ4T7iQrmxN9eItCo26vTpX3fAVeUkiv4a82+HB83SISZHaw9vwXQinY8E4jLG4wrGI6SJ9WwGfkNpAbTD2XTjr3Mx/zqU13Rn+7EWCdA=
+	t=1747313511; cv=none; b=qq/3JNJuglA/xui6ZL6ULaC1DBqOcMqmsVM/vf/3eGy380Sa7BLNVB39nmrVGmoq14l8q3fBoIlpD0nhbL+o5ZLWW/kowFGujjEUByRaMVQ/M31DuTsXjIObWKNc9Mo4skItEp6YP51+ta0O6NSQhsis8qpFltHMhzaXk7rsS+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747313467; c=relaxed/simple;
-	bh=3QC4ffM1Aa1pxu9uvJFwWx/DFJiMYK2jTahWSrSwVns=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eHZApsHIM8ylfhOKykrlHqe9tZSbymba9kWGDzZ/bAh6Mv6YxZ3aVHHeBEpa7OQuFU61bSpPgSCDhW87ECujWX+eIhno98C+FJngIe6pbuWJskaDV+JFmD4vkq1t9yqxOAdwW1qVhjLrdBp7OGDXn7obtvyB4/5jSi5DuvbgvU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=lQdljp3l; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1747313511; c=relaxed/simple;
+	bh=UfCtjCjLMy3EXaRycOntxcaM3apBDdPoyB7FMimlPQk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Inx6BhVwAWtAuqzuVCyL2qqKR/+ogJx+VC5c+/zJfYgKY6IHQWyjfdVbIN5N15wKsoVd/Ij4q2PD6lLU7vjKI21Fh05YHJIaQDB7lqW9FzOaiBMlTbNcjTEwmwj03vKfoxbY5R6TUguDEUqEYsFh0wuvs16BPAFRFJGXM/m49F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K8SOZwAc; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="lQdljp3l"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=2dhwvLZ3lMVhmKEnca5rP7c57gf2pJHeBmKdCsIIeL0=; b=lQdljp3lEee35nVJq5VsP15Ac0
-	G3TV1N3nN47hq4ycpzthNv2Y4tRkox9fkOdp6bOQY2CT728MLhVqQ8ALawdPWo3zPOhO0XO42KSUm
-	u0Riq4EB4PdDqO/6oTdXb2W3TjmhWZBJFRHSvhgqrCzn7wvC8bwBl2NWXDHAm7jzX9IZyqrvUpVJE
-	IUxjNlLkgeGgWQHyM6lalXF0QKD3i098rkQ2mbjAytZ1/eSwkuKC+aJzeMBzKQi0fwYxbSQYXozwM
-	C2EY9zh7h9BMdHlQcxj8rDlfIBCz/yntxH9AKv6tinjh1F+NsRfbKbZSCvoErHVZLA1e3rzo9LekK
-	TvpW1NZQ==;
-Received: from i53875a50.versanet.de ([83.135.90.80] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1uFY39-0004ph-BC; Thu, 15 May 2025 14:50:59 +0200
-From: Heiko Stuebner <heiko@sntech.de>
-To: Matthias Kaehlcke <mka@chromium.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Benjamin Bara <benjamin.bara@skidata.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Klaus Goger <klaus.goger@theobroma-systems.com>,
-	Lukasz Czechowski <lukasz.czechowski@thaumatec.com>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	stable@vger.kernel.org,
-	Quentin Schulz <quentin.schulz@cherry.de>
-Subject: Re: (subset) [PATCH v2 0/5] Fix onboard USB hub instability on RK3399 Puma SoM
-Date: Thu, 15 May 2025 14:50:45 +0200
-Message-ID: <174731343062.2524804.11565347943974455778.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250425-onboard_usb_dev-v2-0-4a76a474a010@thaumatec.com>
-References: <20250425-onboard_usb_dev-v2-0-4a76a474a010@thaumatec.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K8SOZwAc"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-b0db0b6a677so644934a12.2;
+        Thu, 15 May 2025 05:51:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747313509; x=1747918309; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NsUnEpTB9TgvbJe08iwx+kPzreYFJA/xHaoOoYwMSYw=;
+        b=K8SOZwAc2TTrrdOmXiFJtLzlE33mifPPJIWtbMAwkp3YJ1sMeUy6bXhE62J9x87/E7
+         5Ul3Dai8MWaZ8GqMjQCUtj7LHoYA5KfXvqNaP4BE1pxYgwLyIKO/NR9v3KLoGy/TayTP
+         l6anXLbL8hHm9F2z3TstalR1GF1ciB5QocKg6iFEOH+CWdEsDxkH8a8dZhiY8AwW16an
+         gH2hBJEgmlkNEs2Z7s7SRwwQKkJUCgZDmcOoMOMS+eOW90h43BQDwDJKlGSqem48rQwi
+         Q6GWNqzFIKeyYX0zL/+hqQ6cWtwO/DMd/35rJ4gqWmxmcYxDahiWK4hO3WyoE1UYSMFz
+         KT8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747313509; x=1747918309;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NsUnEpTB9TgvbJe08iwx+kPzreYFJA/xHaoOoYwMSYw=;
+        b=WBNxtFsBmzcN0arRmknX73lZjTo5USswpuQOBjxlCUqok4+dE15pCsLqyEKD968kS0
+         ludIgWFfjCVqVkY31y58RuDx35HlWjbCW3aGNRZApc24QwSv3QywhWtfIYDbXZiRKzB1
+         2sEp5Jn9fpJMD+iQOyxkvXP26KN+Fpnj7zyVSfp2el4+DvQ43Y8G1JKNpMCkkFdyOFBl
+         /f8VmtTfUamhsCI15B/KnyKLvtWnQLFwJ/mi1nG186wnKuMbJUGtZBNwics9HM5J/EHJ
+         /xUczf5PSYFu0boZxcCy9VnLBKyTOlv3cDJ1gFEDue8k6cF06gIuHB6CXCW83k4uj1H/
+         MOWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW6Ylg3QpwgGjCjdJ4IVrl9WlYcvDuQPFJ/wwY8CXtNZFO6+Ud/yRs2RpFHK56lecMoHpcy4NUapwMBEKs=@vger.kernel.org, AJvYcCX9DVQ1/VZIttfDKoBW51hjjcqHwF6614rYwOfmMKkQvppXCr3qHTTk7fNfa0m2NMwwoaUhtBr4a5tM1h43@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDJ0vXyGAN60jE2mr8LLrEnwoO7EsP1dBPlWOPa0Sl/AHVXk8O
+	G04ZdqkE2Z/kNU0ipNJGbj67UD5EbH/AJlAAU9f5fqIefYcNZ6/dbCdumXsaK8FXPVlT3RDNBpp
+	BQa3rVlxY0wogH8G7WDMPp2IOc7E=
+X-Gm-Gg: ASbGnct+ykpZb3PDCInPLWR4JxlY5p09twAEde27Ha6kEaoTpMUWj9N6UILOv2DIRmZ
+	j/9w3LhcO7s7BJMACXFulF5yUx4YukgYJYQ2k1vigFzwHm4FSNvH+pQDtWpWRZD22atzU5aZCcA
+	6JszAT9fZUIqP+mVa5YH/P3V9mIGKVpG5nahErUUbhoxQWplU3RF4=
+X-Google-Smtp-Source: AGHT+IHmtTntsE+sfyZwvw5nINLePGfaCPfUPxiD3EwklQw3lSH9rnreveUf94kj+UB+XCwKB297vGNrhQeqiaUwzxM=
+X-Received: by 2002:a17:90b:560f:b0:308:7270:d6ea with SMTP id
+ 98e67ed59e1d1-30e2e633452mr10796896a91.30.1747313508929; Thu, 15 May 2025
+ 05:51:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250506130712.156583-1-ltykernel@gmail.com> <SN6PR02MB4157DD818BB2269809AEBBC0D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <SN6PR02MB4157DD818BB2269809AEBBC0D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
+From: Tianyu Lan <ltykernel@gmail.com>
+Date: Thu, 15 May 2025 20:51:11 +0800
+X-Gm-Features: AX0GCFsIeyWW9s8zrkVlSWBSWiwDw-5SaUxpUcvOQ76LvVHr0Sci75eMLxZmNkw
+Message-ID: <CAMvTesCjTTO4S9wYRNw2BprHJ-+rCnQjZOJBXtBiK3810onT5Q@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/6] x86/Hyper-V: Add AMD Secure AVIC for Hyper-V platform
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>, 
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>, 
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"hpa@zytor.com" <hpa@zytor.com>, "Neeraj.Upadhyay@amd.com" <Neeraj.Upadhyay@amd.com>, 
+	"kvijayab@amd.com" <kvijayab@amd.com>, "yuehaibing@huawei.com" <yuehaibing@huawei.com>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "jpoimboe@kernel.org" <jpoimboe@kernel.org>, 
+	"jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>, "tiala@microsoft.com" <tiala@microsoft.com>, 
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, May 15, 2025 at 12:54=E2=80=AFAM Michael Kelley <mhklinux@outlook.c=
+om> wrote:
+>
+> From: Tianyu Lan <ltykernel@gmail.com> Sent: Tuesday, May 6, 2025 6:07 AM
+> >
+>
+> For consistency with other patches, use "x86/hyperv" as the Subject prefi=
+x.
+> I'd suggest being slightly more precise and saying "Hyper-V guests" inste=
+ad
+> of "Hyper-V platform". So,
+>
+> x86/hyperv: Add AMD Secure AVIC support for Hyper-V guests
+>
+Hi Michael:
+       Thanks for your review.  Good idea ! Will update in the next version=
+.
+
+> > Secure AVIC is a new hardware feature in the AMD64
+> > architecture to allow SEV-SNP guests to prevent the
+> > hypervisor from generating unexpected interrupts to
+> > a vCPU or otherwise violate architectural assumptions
+> > around APIC behavior.
+> >
+> > Each vCPU has a guest-allocated APIC backing page of
+> > size 4K, which maintains APIC state for that vCPU.
+> > APIC backing page's ALLOWED_IRR field indicates the
+>
+> s/APIC backing/The APIC backing/
+>
+> > interrupt vectors which the guest allows the hypervisor
+> > to send.
+> >
+> > This patchset is to enable the feature for Hyper-V
+> > platform. Patch "Expose x2apic_savic_update_vector()"
+>
+> s/platform/guests/
+>
+> > is to expose new fucntion and device driver and arch
+>
+> "is to expose the new function. Device driver and arch"
+>
+> > code may update AVIC backing page ALLOWED_IRR field to
+>
+> s/update AVIC/update the AVIC/
+>
+> > allow Hyper-V inject associated vector.
+>
+> s/Hyper-V inject associated/Hyper-V to inject the associated/
+>
+> >
+> > This patchset is based on the AMD patchset "AMD: Add
+> > Secure AVIC Guest Support"
+> > https://lkml.org/lkml/2025/4/17/585
+> >
+> > Tianyu Lan (6):
+> >   x86/Hyper-V: Not use hv apic driver when Secure AVIC is available
+> >   x86/x2apic-savic: Expose x2apic_savic_update_vector()
+> >   drivers/hv: Allow vmbus message synic interrupt injected from Hyper-V
+> >   x86/Hyper-V: Allow Hyper-V to inject Hyper-V vectors
+> >   x86/Hyper-V: Not use auto-eoi when Secure AVIC is available
+> >   x86/x2apic-savic: Not set APIC backing page if Secure AVIC is not
+> >     enabled.
+> >
+> >  arch/x86/hyperv/hv_apic.c           |  3 +++
+> >  arch/x86/hyperv/hv_init.c           | 12 ++++++++++++
+> >  arch/x86/include/asm/apic.h         |  9 +++++++++
+> >  arch/x86/kernel/apic/x2apic_savic.c | 13 ++++++++++++-
+> >  arch/x86/kernel/cpu/mshyperv.c      |  3 +++
+> >  drivers/hv/hv.c                     |  2 ++
+> >  6 files changed, 41 insertions(+), 1 deletion(-)
+> >
+> > --
+> > 2.25.1
+> >
+>
 
 
-On Fri, 25 Apr 2025 17:18:05 +0200, Lukasz Czechowski wrote:
-> The RK3399 Puma SoM contains the internal Cypress CYUSB3304 USB
-> hub, that shows instability due to improper reset pin configuration.
-> Currently reset pin is modeled as a vcc5v0_host regulator, that
-> might result in too short reset pulse duration.
-> Starting with the v6.6, the Onboard USB hub driver (later renamed
-> to Onboard USB dev) contains support for Cypress HX3 hub family.
-> It can be now used to correctly model the RK3399 Puma SoM hardware.
-> 
-> [...]
-
-Applied, thanks!
-
-[2/5] dt-bindings: usb: cypress,hx3: Add support for all variants
-      commit: 1ad4b5a7de16806afc1aeaf012337e62af04e001
-[3/5] arm64: dts: rockchip: fix internal USB hub instability on RK3399 Puma
-      commit: d7cc532df95f7f159e40595440e4e4b99481457b
-[4/5] arm64: dts: rockchip: disable unrouted USB controllers and PHY on RK3399 Puma
-      commit: 3373af1d76bacd054b37f3e10266dd335ce425f8
-[5/5] arm64: dts: rockchip: disable unrouted USB controllers and PHY on RK3399 Puma with Haikou
-      commit: febd8c6ab52c683b447fe22fc740918c86feae43
-
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+--=20
+Thanks
+Tianyu Lan
