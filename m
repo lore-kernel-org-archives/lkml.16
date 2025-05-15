@@ -1,78 +1,95 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from rusty.tulip.relay.mailchannels.net (rusty.tulip.relay.mailchannels.net [23.83.218.252])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EEC19FA93;
-	Thu, 15 May 2025 23:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747350816; cv=none; b=ZH4Tu33epPVYbseC3az5yomyh093bQWPE+2RZHNinygEEQjBVOVC1fzpiuDhkA5LcmpubV5dkq4tVFixk6Pp1uOY7JPJEORA3G99RvxqNOY3+Msqg187w4cXnxule3qGSI9RMmty7V7yRZtXfwB2huU2w/V/8sdF+vXH2UzWIz0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747350816; c=relaxed/simple;
-	bh=rMGTe2f0xjfvVRMXuNW1byFydKvdBVL6wOaiad7a4jA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=p3RpnOw6fMhUEEXjgEK8ELJ5Spq2A5d1hMrV0Hcn4ycFibIHnWNBwmqcfs7ztBWd36SVKaRYKBYTxEazqOFTB4IBQg5MIpMbBsoMR7uHBZ0jZFJdv8rKbbAS9n0dukdVfrRBvloLcf+OhI07oxEBVjlIjU/1O//I21zwBYAphZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h1/VX6hA; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9C619FA93;
+	Thu, 15 May 2025 23:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.252
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747350824; cv=pass; b=lbE2t972A9I5gGeLvmsZMXw+8/KXmJK4IxF1PBSWDhkT7DMr7SkzcVqUkOdny6geIdbB76wH3f9OH8PmgXfNqiqZdBBZw6hL2bzqwzieyPMFTypY9iiBY/q3oB0SGtgilBfwDhi1MsUmIMkvikX3ZDBblI+v/IrX9Fuz2tTewK8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747350824; c=relaxed/simple;
+	bh=ZCGkHhXwVQRnTOe+lNrHq7OfguE4bhlkiEfGU59hepA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=myMP+Vv8Bd9qjJBmGuD2n3ij1KHlwV2AgahSwIelAPTGYSSPtQ7wpveevwLQNmLF83lVOGwlALqACOZrpXlxNjYQOJ8doLSzdHUPaKx0MqJ3WvZ1f696dNeVbO3OgLXeOc+uvdIbNWdNSVfjmtTeSuCZ5NhIF9ym73fLutD96Gc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=BpSzRLie; arc=pass smtp.client-ip=23.83.218.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h1/VX6hA"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b26df8f44e6so1112449a12.2;
-        Thu, 15 May 2025 16:13:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747350813; x=1747955613; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HZLtSoPTWIDXtlzB5/eV7RAMuqxvAneOk4mPIHABE40=;
-        b=h1/VX6hAvltAHSf0TqQeMK3+pJ41W1he583GUGEMqS1ldBRaoI4+1gMVlBQkOwbzNY
-         LL2NUOPJYtGJgUPYktafQRwhTkJuv42tLrdBIzskBdZuxFJoL6TXlwZQyVYTArT/QbUE
-         TPtXi6xlh1n8//n4Ruby+8/Obs75F5QjkrnENu6Z9spr4Lubhy0L4lTxc2KGDY4WMK2H
-         H97i1XfoiWR8QgnQNHhMHTkD5Et9xmdapmG+u8ZnO0WXq3KYNSP1DkTSUszjBQ1+idVZ
-         2cEgTapIgVczRJyKgZKmzRL3ka4gJjlUIM4zq/5vbQCMB9HTvUiM8KegFqwDbxTkAMsk
-         qKcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747350813; x=1747955613;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HZLtSoPTWIDXtlzB5/eV7RAMuqxvAneOk4mPIHABE40=;
-        b=bj0HfCcMGtG7w+hwe19h3wBUcjvEcHqHUk+KrNEoc5GSvQ07vPnzj1aICfTYwDmFKt
-         yiVeTXMGS8ogSvN5FFQd6VcqrBK4wyasHCHEBdu4H8ZgT+O1FWUGsniHCITzaSxALn+M
-         WaXMi5kRMS10hKdkB0KLyhEylqjHxub3WZSh9zlWfnYZpjGO5qX4VwCYxfNiiAyL7pRd
-         sb53U461E+A3R/Gh1sgl7kqo4leFJbREct3bob//YVe/DJ2cyFV36/kejsGVEeHwTQ2T
-         oTxS3M1rL/DHwEICaZfNfySRkEGYSopfa6bUvbK82tJYNlfi4f28zRunC5eu6ib5FGfG
-         x+rg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXIWwSn4AtegDXy3s+dRlhu+CWII7mOL7pwwYa8Z36dfwU0oSBsofXBIj+0nc/Yi3LAZB4qz8zb/VlklU=@vger.kernel.org, AJvYcCW+Xf0fHNIpwRVVjNQNPhUWczufdFnYBwjQ1lUGR+m0o0mstK/RDJsbVp++7Bch/vRmvtjh4+jo5/ID1Chk8Iz8@vger.kernel.org
-X-Gm-Message-State: AOJu0YzED66OXzUlbHJfEe8wl3shNEjcWorBUvFj0LNsB8/M8t6lZg6C
-	eEziTITaXCnYx2ZwkGvCzgwh/jxW8WoRRgFedAO28N0AVw5ORZqQhEavUktM
-X-Gm-Gg: ASbGncsRG2VtRA+Fzp80d956UTVHuV2KsGRnbMu8X4YzW2Sq1Ck0IhhLBwIx7OXKGbO
-	JF5aC8CCgZ3PZz9nZA46t3sCgu32F4Qs/pNNKgeKA1gO33JmRiOK+MyD5P3REyVC2egPGskL7ZX
-	UvFPytNAYgV0Gz8+fpyfLy0ndvHKqj/WLqtmErD2kRKuLo5Ot3+cw/coNNigp1TAalQilovBZ8E
-	2FGyrDaDdCauqjas+2dsW49Lg2ZEsOs9cFZhqzC5OYPiGooqKCMeVYVmB0oNRBQt10dL+9caH2j
-	0YZKRmZSpC/73o182iVJLjuiTr1LofzIBPWNtukfh9Uy/ZkM8+XU3WSqhNsFTARQt6H6uGV3r+4
-	zQETGpS2TtqBH
-X-Google-Smtp-Source: AGHT+IEMWAyLw9og40QZUUd+RwjdVaZHBVBVptNM65YbRcHC1wud+bnH5LoJ2EJNeTB+z/GNtESxkA==
-X-Received: by 2002:a17:903:2449:b0:223:619e:71da with SMTP id d9443c01a7336-231d455d993mr14362505ad.49.1747350813449;
-        Thu, 15 May 2025 16:13:33 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-231d4e980c0sm2966485ad.126.2025.05.15.16.13.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 16:13:32 -0700 (PDT)
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	andrew+netdev@lunn.ch,
-	horms@kernel.org,
-	jiri@resnulli.us,
-	shuah@kernel.org,
-	stfomichev@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH net] selftests: net: validate team flags propagation
-Date: Thu, 15 May 2025 16:13:32 -0700
-Message-ID: <20250515231332.4120071-1-stfomichev@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="BpSzRLie"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 7BF1823A22;
+	Thu, 15 May 2025 17:40:23 +0000 (UTC)
+Received: from pdx1-sub0-mail-a272.dreamhost.com (100-112-106-193.trex-nlb.outbound.svc.cluster.local [100.112.106.193])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 1AF6A239CB;
+	Thu, 15 May 2025 17:40:23 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1747330823; a=rsa-sha256;
+	cv=none;
+	b=KGd2MQRzAc3Jw5QNi3ppX3rPip8yx1f4vyQZ4mR7SN1ugv3rN6yUB+8ugG7cIvMlJuyl3K
+	7mDXD5GjTABQP+V2wc8Mf8pp9RsdJ3vKQVrbS5Ly5v4LKVjrmj9OciKPAbS9J55oV07OVP
+	jKyvlZMNN5WaAvayv9Bz+EQlvX+i2s+w204ocx2JgSD22f28AfKs1NvSW/rVNKURh4b8/B
+	1ijfOWJlZxSF9tHOs+KEKzxnQXtx0c53YcMEF29q/rofuUXsT4jKxgJTViDgkkTu/lyVS8
+	tosLDsGSP5n96GZUDdvyJFmWQpvkVTGhvKhDoHxVnOBV8BB7J4iKH/8BBQoD2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1747330823;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=DiqDaihEdOkReJztOtQt4hmcT0IfYIVzd6AdHQkx+ic=;
+	b=4hUFnvOIvLNXA5/WSLRVRo21X5L8fspegmXcSgY5swKtG64c+2olcK+z1JTylUhBYIaPOl
+	tDvoMVcLusQI9CspzdT99szpeAfUG+MeClcF+hf8J7XFKxk5rk/mqR+wYBilKW1/X7AF1R
+	oGALbWD0Aa6AWeHTlZ50PRCEsYqleJxdnG2irIfc2r9lgmhhT28a1bXROEJ325AZKyynuo
+	44u296J+uk/1yta5lG4zqJ8CuKI4Iol3gjAlPbT+Oh3RITfU6qAYHBf76fS/k/3hxOKaLD
+	AvKlkisJqsoel0X1bZ8KGatSYsFvd2lMff7F2WE9Xd/uEIjd5KTiqBxsNtpESA==
+ARC-Authentication-Results: i=1;
+	rspamd-5dcf5fb4c6-72pgw;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Tank-Illustrious: 1c6d0da64ed65452_1747330823378_3902456520
+X-MC-Loop-Signature: 1747330823378:4084077714
+X-MC-Ingress-Time: 1747330823378
+Received: from pdx1-sub0-mail-a272.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.112.106.193 (trex/7.0.3);
+	Thu, 15 May 2025 17:40:23 +0000
+Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a272.dreamhost.com (Postfix) with ESMTPSA id 4ZyyCp2DbgzCS;
+	Thu, 15 May 2025 10:40:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1747330823;
+	bh=DiqDaihEdOkReJztOtQt4hmcT0IfYIVzd6AdHQkx+ic=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=BpSzRLieZbbTctjSokCrpdQ/huoCytneFWSaI9x3FPrQVAcMNEhS86y8FUwKnTrWb
+	 8fkhdFwKCDJr8J5PXh6hsnMlMrIFK/gb4NTavXUmOsh5x70hAi7h8wwwLVU34XAEcw
+	 bMtNfXohGs/wC/Efqv3mr3gs5Zn1ufpuF9icpFpdigBt2Ixi7YvttoSOBIENLh6zph
+	 /7h/61Suk4pUWNWal2LhB6sKT8uHLzsl4vqB/e2SvctvHccsMiU9xvDIEu9K0/9PlS
+	 V35DA/g500EtYHauGLlzqOMfrNL5rLGbIIjA+2qSXprPUExndouoavDSpfXIAQZoIp
+	 WT0qH76MQ7/Sw==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: brauner@kernel.org
+Cc: jack@suse.cz,
+	viro@zeniv.linux.org.uk,
+	mcgrof@kernel.org,
+	dave@stgolabs.net,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 3/4] fs/buffer: remove superfluous statements
+Date: Thu, 15 May 2025 10:39:24 -0700
+Message-Id: <20250515173925.147823-4-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250515173925.147823-1-dave@stgolabs.net>
+References: <20250515173925.147823-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,178 +98,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Cover three recent cases:
-1. missing ops locking for the lowers during netdev_sync_lower_features
-2. missing locking for dev_set_promiscuity (plus netdev_ops_assert_locked
-   with a comment on why/when it's needed)
-3. rcu lock during team_change_rx_flags
+Get rid of those unnecessary return statements.
 
-Verified that each one triggers when the respective fix is reverted.
-Not sure about the placement, but since it all relies on teaming,
-added to the teaming directory.
-
-One ugly bit is that I add NETIF_F_LRO to netdevsim; there is no way
-to trigger netdev_sync_lower_features without it.
-
-Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 ---
- drivers/net/netdevsim/netdev.c                |  2 +
- net/core/dev.c                                | 10 ++-
- .../selftests/drivers/net/team/Makefile       |  2 +-
- .../testing/selftests/drivers/net/team/config |  1 +
- .../selftests/drivers/net/team/propagation.sh | 79 +++++++++++++++++++
- 5 files changed, 92 insertions(+), 2 deletions(-)
- create mode 100755 tools/testing/selftests/drivers/net/team/propagation.sh
+ fs/buffer.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
-index 0e0321a7ddd7..3bd1f8cffee8 100644
---- a/drivers/net/netdevsim/netdev.c
-+++ b/drivers/net/netdevsim/netdev.c
-@@ -879,11 +879,13 @@ static void nsim_setup(struct net_device *dev)
- 			 NETIF_F_SG |
- 			 NETIF_F_FRAGLIST |
- 			 NETIF_F_HW_CSUM |
-+			 NETIF_F_LRO |
- 			 NETIF_F_TSO;
- 	dev->hw_features |= NETIF_F_HW_TC |
- 			    NETIF_F_SG |
- 			    NETIF_F_FRAGLIST |
- 			    NETIF_F_HW_CSUM |
-+			    NETIF_F_LRO |
- 			    NETIF_F_TSO;
- 	dev->max_mtu = ETH_MAX_MTU;
- 	dev->xdp_features = NETDEV_XDP_ACT_HW_OFFLOAD;
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 0d891634c692..4debd4b8e0f5 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -9188,8 +9188,16 @@ static int __dev_set_promiscuity(struct net_device *dev, int inc, bool notify)
+diff --git a/fs/buffer.c b/fs/buffer.c
+index b02cced96529..210b43574a10 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -297,7 +297,6 @@ static void end_buffer_async_read(struct buffer_head *bh, int uptodate)
  
- 		dev_change_rx_flags(dev, IFF_PROMISC);
- 	}
--	if (notify)
-+	if (notify) {
-+		/* The ops lock is only required to ensure consistent locking
-+		 * for `NETDEV_CHANGE` notifiers. This function is sometimes
-+		 * called without the lock, even for devices that are ops
-+		 * locked, such as in `dev_uc_sync_multiple` when using
-+		 * bonding or teaming.
-+		 */
-+		netdev_ops_assert_locked(dev);
- 		__dev_notify_flags(dev, old_flags, IFF_PROMISC, 0, NULL);
-+	}
- 	return 0;
+ still_busy:
+ 	spin_unlock_irqrestore(&first->b_uptodate_lock, flags);
+-	return;
  }
  
-diff --git a/tools/testing/selftests/drivers/net/team/Makefile b/tools/testing/selftests/drivers/net/team/Makefile
-index 2d5a76d99181..eaf6938f100e 100644
---- a/tools/testing/selftests/drivers/net/team/Makefile
-+++ b/tools/testing/selftests/drivers/net/team/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- # Makefile for net selftests
+ struct postprocess_bh_ctx {
+@@ -422,7 +421,6 @@ static void end_buffer_async_write(struct buffer_head *bh, int uptodate)
  
--TEST_PROGS := dev_addr_lists.sh
-+TEST_PROGS := dev_addr_lists.sh propagation.sh
+ still_busy:
+ 	spin_unlock_irqrestore(&first->b_uptodate_lock, flags);
+-	return;
+ }
  
- TEST_INCLUDES := \
- 	../bonding/lag_lib.sh \
-diff --git a/tools/testing/selftests/drivers/net/team/config b/tools/testing/selftests/drivers/net/team/config
-index b5e3a3aad4bf..636b3525b679 100644
---- a/tools/testing/selftests/drivers/net/team/config
-+++ b/tools/testing/selftests/drivers/net/team/config
-@@ -1,5 +1,6 @@
- CONFIG_DUMMY=y
- CONFIG_IPV6=y
- CONFIG_MACVLAN=y
-+CONFIG_NETDEVSIM=m
- CONFIG_NET_TEAM=y
- CONFIG_NET_TEAM_MODE_LOADBALANCE=y
-diff --git a/tools/testing/selftests/drivers/net/team/propagation.sh b/tools/testing/selftests/drivers/net/team/propagation.sh
-new file mode 100755
-index 000000000000..849a5f2cb3a7
---- /dev/null
-+++ b/tools/testing/selftests/drivers/net/team/propagation.sh
-@@ -0,0 +1,79 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+NSIM_LRO_ID=$((256 + RANDOM % 256))
-+NSIM_LRO_SYS=/sys/bus/netdevsim/devices/netdevsim$NSIM_LRO_ID
-+
-+NSIM_DEV_SYS_NEW=/sys/bus/netdevsim/new_device
-+NSIM_DEV_SYS_DEL=/sys/bus/netdevsim/del_device
-+
-+cleanup()
-+{
-+	ip link del dummyteam &>/dev/null
-+	ip link del team0 &>/dev/null
-+	echo $NSIM_LRO_ID > $NSIM_DEV_SYS_DEL
-+}
-+
-+# Trigger LRO propagation to the lower.
-+# https://lore.kernel.org/netdev/aBvOpkIoxcr9PfDg@mini-arch/
-+team_lro()
-+{
-+	# using netdevsim because it supports NETIF_F_LRO
-+	NSIM_LRO_NAME=$(find $NSIM_LRO_SYS/net -maxdepth 1 -type d ! \
-+		-path $NSIM_LRO_SYS/net -exec basename {} \;)
-+
-+	ip link add name team0 type team
-+	ip link set $NSIM_LRO_NAME down
-+	ip link set dev $NSIM_LRO_NAME master team0
-+	ip link set team0 up
-+	ethtool -K team0 large-receive-offload off
-+
-+	ip link del team0
-+}
-+
-+# Trigger promisc propagation to the lower during IFLA_MASTER.
-+# https://lore.kernel.org/netdev/20250506032328.3003050-1-sdf@fomichev.me/
-+team_promisc()
-+{
-+	ip link add name dummyteam type dummy
-+	ip link add name team0 type team
-+	ip link set dummyteam down
-+	ip link set team0 promisc on
-+	ip link set dev dummyteam master team0
-+	ip link set team0 up
-+
-+	ip link del team0
-+	ip link del dummyteam
-+}
-+
-+# Trigger promisc propagation to the lower via netif_change_flags (aka
-+# ndo_change_rx_flags).
-+# https://lore.kernel.org/netdev/20250514220319.3505158-1-stfomichev@gmail.com/
-+team_change_flags()
-+{
-+	ip link add name dummyteam type dummy
-+	ip link add name team0 type team
-+	ip link set dummyteam down
-+	ip link set dev dummyteam master team0
-+	ip link set team0 up
-+	ip link set team0 promisc on
-+
-+	# Make sure we can add more L2 addresses without any issues.
-+	ip link add link team0 address 00:00:00:00:00:01 team0.1 type macvlan
-+	ip link set team0.1 up
-+
-+	ip link del team0.1
-+	ip link del team0
-+	ip link del dummyteam
-+}
-+
-+trap cleanup EXIT
-+modprobe netdevsim || :
-+echo $NSIM_LRO_ID > $NSIM_DEV_SYS_NEW
-+udevadm settle
-+team_lro
-+team_promisc
-+team_change_flags
-+modprobe -r netdevsim || :
+ /*
+@@ -1684,7 +1682,6 @@ void block_invalidate_folio(struct folio *folio, size_t offset, size_t length)
+ 		filemap_release_folio(folio, 0);
+ out:
+ 	folio_clear_mappedtodisk(folio);
+-	return;
+ }
+ EXPORT_SYMBOL(block_invalidate_folio);
+ 
 -- 
-2.49.0
+2.39.5
 
