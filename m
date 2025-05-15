@@ -1,106 +1,252 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FBA29375F;
-	Thu, 15 May 2025 03:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AB9295517
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 03:04:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747278258; cv=none; b=osCnekwda3pSCBJpUihbGjzhYLc+qMjSjJrNmZRgeMj+4JzIGk4F+bKcGSD3qa6hXKTk10EQsb+Azxe3XTwt43Gd1Dx6D1MHOePXPawI84RPJApVfDWTE4iiebTsWY4bNkmpgNt2TKUwaxxEIdNjJZYoOS0b61n9/NQlpFAnSSI=
+	t=1747278260; cv=none; b=PyljMx7ZlSAmQbtu3kRWN1DeWGgBFcwq3CkBVhSkIGRJF+yXTLybMl57lmx88aGDjdB7gs10jPDV6bMWBZ4FWCzKKftFxWjOtt/3V0uXrN1erFVpRzaQ4QByMcXxz598EqCsR4D7nW61hOkPpplE60qjsKj7qMYUhryvfhlnQ5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747278258; c=relaxed/simple;
-	bh=KbCF5MKCWNn3YP5xLgTo6/b3b/wNnyl4Ieq6Iz4mRVg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=io+Kjl0QcRAmtmk1Q9mE++TC6iHhor2HCFZm7bUt3QkAO9XKqZNVEIqbZEUfvUXpoMvZnOgf6C2gNMyuchXGwhXlB4y5b9a3wg0CLkyWBgSPH+zsV6A96xk0BJN3vrntPsDYBKNtqJRivfmQ769KgZCdePrrEG5oqKv2d9f5m9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 40f45dde313911f0b29709d653e92f7d-20250515
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:5a9b7689-c6cc-429c-bf32-1c973e39c20c,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6493067,CLOUDID:8860f9c49583b8e2e2cb45ee7d7b6a34,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:nil,UR
-	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
-	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 40f45dde313911f0b29709d653e92f7d-20250515
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <zhangzihuan@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 606235159; Thu, 15 May 2025 11:04:02 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id C9E55E003507;
-	Thu, 15 May 2025 11:04:01 +0800 (CST)
-X-ns-mid: postfix-682559A1-648868357
-Received: from localhost.localdomain (unknown [172.25.120.24])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 4EB96E003506;
-	Thu, 15 May 2025 11:04:01 +0800 (CST)
-From: Zihuan Zhang <zhangzihuan@kylinos.cn>
-To: rafael@kernel.org,
-	pavel@kernel.org
-Cc: linux-pm@vger.kernel.org,
+	s=arc-20240116; t=1747278260; c=relaxed/simple;
+	bh=rZG0W9gShX8ZkarrXn4Q4mdgOrT70bhWKNb+0D824YI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=F2zzA8LPnUiOV00IZTRhclKzNgGe5XBcvL3sSdoqP2y7FnWUhhhx1Wi7fgI+ZrrRkUvWhWaVcwpkxRHG4xOlIhcm8DEdGLEHNzG0kgmnDeAxGP8L1F9GwxVDBxDFgRsd/M5qGxWnEggXAZGwJYwEb2Xi8t9uSUkdpCE4iTgwo8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rh4k2LY1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rh4k2LY1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747278258;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=syVueP3EsNMt8QnyrnfxvyQxJqj9XQQFWMPiuMj2fdA=;
+	b=Rh4k2LY1YqJxbhV7fGvU9XjY6wyTjXhrPru4pYyqbE2iqvnLEDTPB+xejLKt9JOdkpPIkG
+	7jH+aX5o/jy4mCIDT+e3LJpFCpm8P3rbR1tQ0d0jykT8J++PL04iooL/mhH8/hFezc13G9
+	QBONI8M59iT/ZAQGyN+VxVm4MWTqgZI=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-156-t30ZdOrGMEipARm_TpzeRQ-1; Wed,
+ 14 May 2025 23:04:12 -0400
+X-MC-Unique: t30ZdOrGMEipARm_TpzeRQ-1
+X-Mimecast-MFC-AGG-ID: t30ZdOrGMEipARm_TpzeRQ_1747278248
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3F5EB1956096;
+	Thu, 15 May 2025 03:04:07 +0000 (UTC)
+Received: from h1.redhat.com (unknown [10.22.88.116])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 576D51800DB9;
+	Thu, 15 May 2025 03:03:50 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Zihuan Zhang <zhangzihuan@kylinos.cn>
-Subject: [PATCH v1] freezer: Skip zombie processes early to reduce lock contention
-Date: Thu, 15 May 2025 11:01:51 +0800
-Message-Id: <20250515030151.224508-1-zhangzihuan@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	linux-trace-kernel@vger.kernel.org
+Cc: david@redhat.com,
+	ziy@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	corbet@lwn.net,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	akpm@linux-foundation.org,
+	baohua@kernel.org,
+	willy@infradead.org,
+	peterx@redhat.com,
+	wangkefeng.wang@huawei.com,
+	usamaarif642@gmail.com,
+	sunnanyong@huawei.com,
+	vishal.moola@gmail.com,
+	thomas.hellstrom@linux.intel.com,
+	yang@os.amperecomputing.com,
+	kirill.shutemov@linux.intel.com,
+	aarcange@redhat.com,
+	raquini@redhat.com,
+	anshuman.khandual@arm.com,
+	catalin.marinas@arm.com,
+	tiwai@suse.de,
+	will@kernel.org,
+	dave.hansen@linux.intel.com,
+	jack@suse.cz,
+	cl@gentwo.org,
+	jglisse@google.com,
+	surenb@google.com,
+	zokeefe@google.com,
+	hannes@cmpxchg.org,
+	rientjes@google.com,
+	mhocko@suse.com,
+	rdunlap@infradead.org
+Subject: [PATCH v6 02/12] introduce khugepaged_collapse_single_pmd to unify khugepaged and madvise_collapse
+Date: Wed, 14 May 2025 21:03:02 -0600
+Message-ID: <20250515030312.125567-3-npache@redhat.com>
+In-Reply-To: <20250515030312.125567-2-npache@redhat.com>
+References: <20250515030312.125567-1-npache@redhat.com>
+ <20250515030312.125567-2-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Currently, the freezer core processes all tasks, including zombie tasks
-(EXIT_ZOMBIE), when performing freeze operations.  However, zombie tasks
-cannot be frozen since they are already dead and won't execute further.
-Despite this, these tasks are still passed to freeze_task(), which may
-involve acquiring locks and accessing unnecessary internal state.
+The khugepaged daemon and madvise_collapse have two different
+implementations that do almost the same thing.
 
-This patch introduces an early check to skip zombie tasks when calling
-freeze_task(), significantly reducing the lock contention, especially on
-systems with many short-lived processes or a high volume of process
-exits.
+Create khugepaged_collapse_single_pmd to increase code
+reuse and create an entry point for future khugepaged changes.
 
-Benefits:
-- Reduces unnecessary lock contention by skipping zombie processes
-  earlier in the freeze process.
-- Improves overall freezing performance, particularly in high-load
-  systems where there are many zombie processes.
+Refactor madvise_collapse and khugepaged_scan_mm_slot to use
+the new khugepaged_collapse_single_pmd function.
 
-Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Signed-off-by: Nico Pache <npache@redhat.com>
 ---
- kernel/freezer.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ mm/khugepaged.c | 96 +++++++++++++++++++++++++------------------------
+ 1 file changed, 49 insertions(+), 47 deletions(-)
 
-diff --git a/kernel/freezer.c b/kernel/freezer.c
-index 8d530d0949ff..a6867195bb77 100644
---- a/kernel/freezer.c
-+++ b/kernel/freezer.c
-@@ -164,6 +164,9 @@ bool freeze_task(struct task_struct *p)
- {
- 	unsigned long flags;
-=20
-+	if (p->exit_state =3D=3D EXIT_ZOMBIE)
-+		return false;
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 806bcd8c5185..5457571d505a 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -2353,6 +2353,48 @@ static int khugepaged_scan_file(struct mm_struct *mm, unsigned long addr,
+ 	return result;
+ }
+ 
++/*
++ * Try to collapse a single PMD starting at a PMD aligned addr, and return
++ * the results.
++ */
++static int khugepaged_collapse_single_pmd(unsigned long addr,
++				   struct vm_area_struct *vma, bool *mmap_locked,
++				   struct collapse_control *cc)
++{
++	int result = SCAN_FAIL;
++	struct mm_struct *mm = vma->vm_mm;
 +
- 	spin_lock_irqsave(&freezer_lock, flags);
- 	if (!freezing(p) || frozen(p) || __freeze_task(p)) {
- 		spin_unlock_irqrestore(&freezer_lock, flags);
-@@ -203,6 +206,9 @@ void __thaw_task(struct task_struct *p)
- {
- 	unsigned long flags;
-=20
-+	if (p->exit_state =3D=3D EXIT_ZOMBIE)
-+		return;
++	if (IS_ENABLED(CONFIG_SHMEM) && !vma_is_anonymous(vma)) {
++		struct file *file = get_file(vma->vm_file);
++		pgoff_t pgoff = linear_page_index(vma, addr);
 +
- 	spin_lock_irqsave(&freezer_lock, flags);
- 	if (WARN_ON_ONCE(freezing(p)))
- 		goto unlock;
---=20
-2.25.1
++		mmap_read_unlock(mm);
++		*mmap_locked = false;
++		result = khugepaged_scan_file(mm, addr, file, pgoff, cc);
++		fput(file);
++		if (result == SCAN_PTE_MAPPED_HUGEPAGE) {
++			mmap_read_lock(mm);
++			*mmap_locked = true;
++			if (khugepaged_test_exit_or_disable(mm)) {
++				result = SCAN_ANY_PROCESS;
++				goto end;
++			}
++			result = collapse_pte_mapped_thp(mm, addr,
++							 !cc->is_khugepaged);
++			if (result == SCAN_PMD_MAPPED)
++				result = SCAN_SUCCEED;
++			mmap_read_unlock(mm);
++			*mmap_locked = false;
++		}
++	} else {
++		result = khugepaged_scan_pmd(mm, vma, addr, mmap_locked, cc);
++	}
++	if (cc->is_khugepaged && result == SCAN_SUCCEED)
++		++khugepaged_pages_collapsed;
++end:
++	return result;
++}
++
+ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
+ 					    struct collapse_control *cc)
+ 	__releases(&khugepaged_mm_lock)
+@@ -2427,34 +2469,12 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
+ 			VM_BUG_ON(khugepaged_scan.address < hstart ||
+ 				  khugepaged_scan.address + HPAGE_PMD_SIZE >
+ 				  hend);
+-			if (!vma_is_anonymous(vma)) {
+-				struct file *file = get_file(vma->vm_file);
+-				pgoff_t pgoff = linear_page_index(vma,
+-						khugepaged_scan.address);
+-
+-				mmap_read_unlock(mm);
+-				mmap_locked = false;
+-				*result = hpage_collapse_scan_file(mm,
+-					khugepaged_scan.address, file, pgoff, cc);
+-				fput(file);
+-				if (*result == SCAN_PTE_MAPPED_HUGEPAGE) {
+-					mmap_read_lock(mm);
+-					if (hpage_collapse_test_exit_or_disable(mm))
+-						goto breakouterloop;
+-					*result = collapse_pte_mapped_thp(mm,
+-						khugepaged_scan.address, false);
+-					if (*result == SCAN_PMD_MAPPED)
+-						*result = SCAN_SUCCEED;
+-					mmap_read_unlock(mm);
+-				}
+-			} else {
+-				*result = hpage_collapse_scan_pmd(mm, vma,
+-					khugepaged_scan.address, &mmap_locked, cc);
+-			}
+-
+-			if (*result == SCAN_SUCCEED)
+-				++khugepaged_pages_collapsed;
+ 
++			*result = khugepaged_collapse_single_pmd(khugepaged_scan.address,
++						vma, &mmap_locked, cc);
++			/* If we return SCAN_ANY_PROCESS we are holding the mmap_lock */
++			if (*result == SCAN_ANY_PROCESS)
++				goto breakouterloop;
+ 			/* move to next address */
+ 			khugepaged_scan.address += HPAGE_PMD_SIZE;
+ 			progress += HPAGE_PMD_NR;
+@@ -2773,36 +2793,18 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
+ 		mmap_assert_locked(mm);
+ 		memset(cc->node_load, 0, sizeof(cc->node_load));
+ 		nodes_clear(cc->alloc_nmask);
+-		if (!vma_is_anonymous(vma)) {
+-			struct file *file = get_file(vma->vm_file);
+-			pgoff_t pgoff = linear_page_index(vma, addr);
+ 
+-			mmap_read_unlock(mm);
+-			mmap_locked = false;
+-			result = hpage_collapse_scan_file(mm, addr, file, pgoff,
+-							  cc);
+-			fput(file);
+-		} else {
+-			result = hpage_collapse_scan_pmd(mm, vma, addr,
+-							 &mmap_locked, cc);
+-		}
++		result = khugepaged_collapse_single_pmd(addr, vma, &mmap_locked, cc);
++
+ 		if (!mmap_locked)
+ 			*prev = NULL;  /* Tell caller we dropped mmap_lock */
+ 
+-handle_result:
+ 		switch (result) {
+ 		case SCAN_SUCCEED:
+ 		case SCAN_PMD_MAPPED:
+ 			++thps;
+ 			break;
+ 		case SCAN_PTE_MAPPED_HUGEPAGE:
+-			BUG_ON(mmap_locked);
+-			BUG_ON(*prev);
+-			mmap_read_lock(mm);
+-			result = collapse_pte_mapped_thp(mm, addr, true);
+-			mmap_read_unlock(mm);
+-			goto handle_result;
+-		/* Whitelisted set of results where continuing OK */
+ 		case SCAN_PMD_NULL:
+ 		case SCAN_PTE_NON_PRESENT:
+ 		case SCAN_PTE_UFFD_WP:
+-- 
+2.49.0
 
