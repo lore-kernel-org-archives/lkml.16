@@ -1,138 +1,82 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC2D5FEE6
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D77E7262E;
+	Thu, 15 May 2025 15:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747322292; cv=none; b=Y+I+WRChOgaWKCZiVcm5LQEUFeUQWa2+Xz4gQg4btj3QeygkaRUe/mqDVrxgcrjzipAMiFEYGtYb07OPEOLBoLQefnjT5iPEMJCWOgP4qPolaJQLk40LUr0BVAXYcMVFAX8e5mGOp5UmFmPj6xc3uyiGxu/k/54kX7Pkzb4swfU=
+	t=1747322326; cv=none; b=djeO4ATpQVMaGB4x2uwCctCQCFUvXLPZ+ycvuJNJJOYwDIzFQNkV1soSgnxYrcqhZ4LMLLutARsrJHDETs4QhFLW4wg5vxCz5Qp3WCzw16SQ5MVRLfQoJ8O5BebMnDWfC/JotkKEruE9uynqsC9E3xmnlNBJAdPHxRIHmf8/1fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747322292; c=relaxed/simple;
-	bh=7VnizUWK/lVjOFaq7NAaMlRlSrGMpuLOKsqj4k/9nDg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WXaUEt6PIl52eVWGsNf86fVtoLo6xdGcoiLf/x5+xjYgXiC3ZNlovg9sg4Ir5Gi+3QUUCRPMJdqFGYGls+EaTE9ArcARtbHGIQUKD3obi8gDEznHxFhI8OHlCZvWJQc2mDK+50iOFH3AlOUUKALaTseiLAVh/0Xwssp5/kwECKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=kYklDV/H; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=kYklDV/H; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1747322326; c=relaxed/simple;
+	bh=X3XWbQq+H47jtI2k6k/3sb8AJxjpUzMbqBhGMs8AtsQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OE7+XrKv15x6YPAj4ZzFi5lR8sI8WmHuLVp7bL1qmvooyu9KH7rOVl3R7JVkqKm+V5rhW2+vqbiG0uw5E96aaAtd5v3TaeYn8rVIvo2ioZfFrxUWjoc+M0nImD7tvkLBhdw5bTVWVoLqS7RuyJdhf8j5edBUxhubAcJs7e6EV4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DqUrube6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="kYklDV/H";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="kYklDV/H"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0AF361F6E6;
-	Thu, 15 May 2025 15:18:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1747322289; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7VnizUWK/lVjOFaq7NAaMlRlSrGMpuLOKsqj4k/9nDg=;
-	b=kYklDV/HZ0nHYbEGVoNYC0wOmkhjaZ7wA2I1o20HaRD0aIzTmpT5ST6gY8VjkdVKQHN6y/
-	VlVdvyr2zUYx4G96usSje+LgHjUZsNiKdOtZEn2d30FydUAvPyQaxwiUZ4/I8NgdbSyn2V
-	kadu6x0uUnfLAXkrZ7P+1K+u20xBcF0=
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b="kYklDV/H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1747322289; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7VnizUWK/lVjOFaq7NAaMlRlSrGMpuLOKsqj4k/9nDg=;
-	b=kYklDV/HZ0nHYbEGVoNYC0wOmkhjaZ7wA2I1o20HaRD0aIzTmpT5ST6gY8VjkdVKQHN6y/
-	VlVdvyr2zUYx4G96usSje+LgHjUZsNiKdOtZEn2d30FydUAvPyQaxwiUZ4/I8NgdbSyn2V
-	kadu6x0uUnfLAXkrZ7P+1K+u20xBcF0=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ACB26139D0;
-	Thu, 15 May 2025 15:18:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id D4MvKLAFJmhwQgAAD6G6ig
-	(envelope-from <mwilck@suse.com>); Thu, 15 May 2025 15:18:08 +0000
-Message-ID: <86402acdc74de0ed42f41fea0f3ac55af56e0cdb.camel@suse.com>
-Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
- paths
-From: Martin Wilck <mwilck@suse.com>
-To: Paolo Bonzini <pbonzini@redhat.com>, Kevin Wolf <kwolf@redhat.com>
-Cc: Christoph Hellwig <hch@infradead.org>, Benjamin Marzinski
-	 <bmarzins@redhat.com>, dm-devel@lists.linux.dev, hreitz@redhat.com, 
-	mpatocka@redhat.com, snitzer@kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 15 May 2025 17:18:08 +0200
-In-Reply-To: <22f811d4-d327-41dc-9daa-7c4aa75a5cba@redhat.com>
-References: <20250429165018.112999-1-kwolf@redhat.com>
-	 <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
-	 <aCIRUwt5BueQmlMZ@redhat.com>
-	 <d51d6f85b5728648fe9c584f9cb3acee12c4873f.camel@suse.com>
-	 <cc2ec011cf286cb5d119f2378ecbd7b818e46769.camel@suse.com>
-	 <aCW95f8RGpLJZwSA@redhat.com>
-	 <22f811d4-d327-41dc-9daa-7c4aa75a5cba@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DqUrube6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03ECFC4CEEB;
+	Thu, 15 May 2025 15:18:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747322325;
+	bh=X3XWbQq+H47jtI2k6k/3sb8AJxjpUzMbqBhGMs8AtsQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DqUrube6sVoeKmbRyuuHJymJMsNre+DSW+ijeQwswLfsQB9Q8xavcKmpQu350VKZf
+	 Y8OpK0u4/3JZAWDahUXawNk56s9Z++MLAf+A3RYk754+ORRMNYFyxg0YGTaLA1rYge
+	 Gca3N8eL5KnykWsQhDScay5GJI3SgaN0FFFD2hPI7nGnxWS5Ns2qNp3IN1RmDBSOeX
+	 BJ2eRYs8rrhQ9QoMk4fE2QGv32riuRget7ihySTAj8CMLIzaeWmEt5px8Wyz6EP17N
+	 VzSC4Ztoug0MJovw9s+Hba6arwOOhIAsVsC4loG4Q8yu/3Er11hoWTATExCN0VSydI
+	 myAJFbBOmsCxw==
+Date: Thu, 15 May 2025 17:18:40 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org, x86@kernel.org,
+	Borislav Petkov <bp@alien8.de>,
+	Dionna Amalie Glaze <dionnaglaze@google.com>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [RFT PATCH v3 01/21] x86/sev: Separate MSR and GHCB based
+ snp_cpuid() via a callback
+Message-ID: <aCYF0J0mCJdz61Ep@gmail.com>
+References: <20250512190834.332684-23-ardb+git@google.com>
+ <20250512190834.332684-24-ardb+git@google.com>
+ <aCWWPmVloPP0_St0@gmail.com>
+ <CAMj1kXE0o+ody9V0APmDqRT=skiUyeDDYE3dMVi+sngQ8QxSFA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 0AF361F6E6
-X-Spam-Flag: NO
-X-Spam-Score: -4.51
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,suse.com:dkim]
-X-Rspamd-Action: no action
-
-On Thu, 2025-05-15 at 13:09 +0200, Paolo Bonzini wrote:
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXE0o+ody9V0APmDqRT=skiUyeDDYE3dMVi+sngQ8QxSFA@mail.gmail.com>
 
 
-> However, EBADE handling dates back to 2011 (commit 63583cca745f,
-> "[SCSI]=20
-> Add detailed SCSI I/O errors", 2011-02-12) and yet the Windows tests
-> for=20
-> PR were failing before QEMU switched to SG_IO for reads and writes.=C2=A0
-> I=20
-> guess I have to try reverting that and retest, though.
+* Ard Biesheuvel <ardb@kernel.org> wrote:
 
-Thanks! This makes me realize that we could summarize the goal for
-future efforts (independent of the current patch set) roughly like
-this:
+> On Thu, 15 May 2025 at 08:22, Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> >
+> > * Ard Biesheuvel <ardb+git@google.com> wrote:
+> >
+> > > +     if (cr4 & X86_CR4_OSXSAVE)
+> > > +             /* Safe to read xcr0 */
+> > > +             ghcb_set_xcr0(ghcb, xgetbv(XCR_XFEATURE_ENABLED_MASK));
+> > > +     else
+> > > +             /* xgetbv will cause #UD - use reset value for xcr0 */
+> > > +             ghcb_set_xcr0(ghcb, 1);
+> >
+> > Just a couple of style nits here - this new __sev_cpuid_hv_ghcb()
+> > function
+> 
+> __sev_cpuid_hv_ghcb() is just being moved from one source file to
+> another - I didn't change a single line, and so I don't think tweaking
+> the style is appropriate for this patch.
 
-"Emulate a SCSI disk on top of a (host) multipath device in a way that
-1) failover works properly (like it would work for regular IO from the
-host itself),=C2=A0
-2) Windows tests for PR (plus test case X, Y, ...) can be run
-successfully".
+Yeah, fair enough - in fact changing anything in a pure-movement patch 
+would be counterproductive.
 
-Does this make sense? It implies that PR commands don't just need to be
-forwarded appropriately, we also need to pass meaningful error codes
-back to the guest.
+Thanks,
 
-Martin
+	Ingo
