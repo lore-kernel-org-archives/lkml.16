@@ -1,171 +1,69 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F411FDE15
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 07:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E955D202C2A;
+	Thu, 15 May 2025 07:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747294433; cv=none; b=QRcgDKDXmUCeV/+s32MNmT96JuBNBudDp/1ZJ33uUtyjKy/H97CKKPBKazOHH9K6Fp9leMqQCbZyyK6oBNurlpuHqB7t/rBnOObvS76dxhCI/JUNhNkkd+kqVDWLB8GpLH6OEFkkrwbO3GpUbX+/CZ9Hat8lOVKfJan51uYhBYU=
+	t=1747294453; cv=none; b=DAukOLetumQA9z8OnCpX7A+ukH0uUAMYk+W3wPvfxRsKxQrHUYiAj800ZA9rWp4BjHX8AGBISnLZEBWLFO6PVH7hAOyuS+Ou2XcVqd6ekIKw41ed67ZsmhFPHo65tNuNaUzKYJWoEHVsQAr5DjZY+NIctB+JcM2DTbE8MkRpK3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747294433; c=relaxed/simple;
-	bh=JNzgfSL4CsTGy1bjrPz4RxndSl0WA53cyHjzmh8RFj4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fMe8yanc+Ez6wgHjD5petLAJnoapcv3ON45hCq8BT6FrfgYkr2uQ6ga5z8LHGOxDP+m5bQIA6i6ZhU4N8HqALvVyRFy5m6SjX/7ozlsRFpMlHlsq5mXthoyEGPDW8Fm5HdyxsKCtCLh7QoGBBaofGuh0Fgu2shm9sf8dhx+B2XY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=OeZftPa4; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1747294453; c=relaxed/simple;
+	bh=736rpEXKbH5qMeOMJenuW1uaJNGdJskUGnAfZzCYthY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MaR4x9RM5Dy0k3SSlK2WlNFYxRsPBw0TweWMtoqiFVNnKBG5zFiNLel1RReKgl0RkgzDE5v+gj53imKJ7CyBhISV49j+njrsyjvD5k9+DjhCGHEgKUdQPpF4P1kiLRHVzEWoCIADU+zSReUgsKatNmGPQSP4m7Qi9g2z2daKpFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=cc6+rhF7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="OeZftPa4"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54F7WfsF3336298
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 15 May 2025 00:32:41 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54F7WfsF3336298
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747294363;
-	bh=FTKlSsiJd9+jpos7AVLXF8LAqgwtfl1Qy7H7vRzCDXE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OeZftPa4P2RcLNrfq7mYvwL9TgxRMcLlkVGZC6h8vETFbJVCjpBbzmpzH5AR13wKx
-	 15mv9dkcpvv5ouP63h6d4FyAbbBv4ahXZZT/mJEs0YcVe4dSsuiidCYyb5eLIFmmab
-	 KZh7WExvvM7f5dcUXiiH4kI087BVfYMnwIxDBqPfWZBau2sgqY1q7vFYn0CwCYjxM9
-	 k2IdZTAsWYVBOheuyRj88cuKgPcjoyTQbvMyOTslRINSkfMVXRDIiVGVCAqieKjmOF
-	 vIstWyCK+xY4GqiDXwaoMJ8FcLhCdyf9Y7Wv9kaBeH/qOTfV0h+xsRne4kDWAibHx3
-	 4HrOazqt1wu0g==
-Message-ID: <652dfd63-e41c-4d7a-8fea-40509e8191ef@zytor.com>
-Date: Thu, 15 May 2025 00:32:40 -0700
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="cc6+rhF7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAB76C4CEE7;
+	Thu, 15 May 2025 07:34:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747294452;
+	bh=736rpEXKbH5qMeOMJenuW1uaJNGdJskUGnAfZzCYthY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cc6+rhF7e2/5gfQiSB+pp7zUGNdfzxAJnl17JGDBIAEnJLp+MLKzVIKPUjjcGxV8X
+	 IA2prCVi2+wmynkW5uv1bEHq3ldTjW6JNxDraaOUwwM2r7DTBmyA0UqubG3AB0MG0K
+	 LM3+3+6vQGNzSyCxnm1UZjv2cXyjM4QvhTe8eOEE=
+Date: Thu, 15 May 2025 09:32:24 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Roy Luo <royluo@google.com>
+Cc: Thinh.Nguyen@synopsys.com, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] usb: dwc3: Force full reset on xhci removal
+Message-ID: <2025051557-dismantle-exclude-c437@gregkh>
+References: <20250515040259.1254356-1-royluo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] x86/paravirt: Switch MSR access pv_ops functions to
- instruction interfaces
-To: "H. Peter Anvin" <hpa@zytor.com>,
-        =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?=
- <jgross@suse.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        virtualization@lists.linux.dev, Peter Zijlstra <peterz@infradead.org>
-Cc: Ajay Kaher <ajay.kaher@broadcom.com>,
-        Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-        Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
-        Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        xen-devel@lists.xenproject.org
-References: <20250506092015.1849-1-jgross@suse.com>
- <20250506092015.1849-6-jgross@suse.com>
- <722f5b30-20e9-4540-98e4-d211d7c44cbe@zytor.com>
- <9f4e33d5-9cb3-4079-b764-87a15265fd52@suse.com>
- <ff567466-a46a-4f66-935a-8fae1140c1a2@suse.com>
- <eb077393-ea95-4ac0-9479-980e227f7bff@zytor.com>
- <6cc20ef6-d8e5-4c74-89d9-6a949c84b397@suse.com>
- <DDA7C560-1BD9-40A6-8B93-28D5AC10EBB2@zytor.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- xsDNBGUPz1cBDACS/9yOJGojBFPxFt0OfTWuMl0uSgpwk37uRrFPTTLw4BaxhlFL0bjs6q+0
- 2OfG34R+a0ZCuj5c9vggUMoOLdDyA7yPVAJU0OX6lqpg6z/kyQg3t4jvajG6aCgwSDx5Kzg5
- Rj3AXl8k2wb0jdqRB4RvaOPFiHNGgXCs5Pkux/qr0laeFIpzMKMootGa4kfURgPhRzUaM1vy
- bsMsL8vpJtGUmitrSqe5dVNBH00whLtPFM7IbzKURPUOkRRiusFAsw0a1ztCgoFczq6VfAVu
- raTye0L/VXwZd+aGi401V2tLsAHxxckRi9p3mc0jExPc60joK+aZPy6amwSCy5kAJ/AboYtY
- VmKIGKx1yx8POy6m+1lZ8C0q9b8eJ8kWPAR78PgT37FQWKYS1uAroG2wLdK7FiIEpPhCD+zH
- wlslo2ETbdKjrLIPNehQCOWrT32k8vFNEMLP5G/mmjfNj5sEf3IOKgMTMVl9AFjsINLHcxEQ
- 6T8nGbX/n3msP6A36FDfdSEAEQEAAc0WWGluIExpIDx4aW5Aenl0b3IuY29tPsLBDQQTAQgA
- NxYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89XBQkFo5qAAhsDBAsJCAcFFQgJCgsFFgID
- AQAACgkQa70OVx2uN1HUpgv/cM2fsFCQodLArMTX5nt9yqAWgA5t1srri6EgS8W3F+3Kitge
- tYTBKu6j5BXuXaX3vyfCm+zajDJN77JHuYnpcKKr13VcZi1Swv6Jx1u0II8DOmoDYLb1Q2ZW
- v83W55fOWJ2g72x/UjVJBQ0sVjAngazU3ckc0TeNQlkcpSVGa/qBIHLfZraWtdrNAQT4A1fa
- sWGuJrChBFhtKbYXbUCu9AoYmmbQnsx2EWoJy3h7OjtfFapJbPZql+no5AJ3Mk9eE5oWyLH+
- QWqtOeJM7kKvn/dBudokFSNhDUw06e7EoVPSJyUIMbYtUO7g2+Atu44G/EPP0yV0J4lRO6EA
- wYRXff7+I1jIWEHpj5EFVYO6SmBg7zF2illHEW31JAPtdDLDHYcZDfS41caEKOQIPsdzQkaQ
- oW2hchcjcMPAfyhhRzUpVHLPxLCetP8vrVhTvnaZUo0xaVYb3+wjP+D5j/3+hwblu2agPsaE
- vgVbZ8Fx3TUxUPCAdr/p73DGg57oHjgezsDNBGUPz1gBDAD4Mg7hMFRQqlzotcNSxatlAQNL
- MadLfUTFz8wUUa21LPLrHBkUwm8RujehJrzcVbPYwPXIO0uyL/F///CogMNx7Iwo6by43KOy
- g89wVFhyy237EY76j1lVfLzcMYmjBoTH95fJC/lVb5Whxil6KjSN/R/y3jfG1dPXfwAuZ/4N
- cMoOslWkfZKJeEut5aZTRepKKF54T5r49H9F7OFLyxrC/uI9UDttWqMxcWyCkHh0v1Di8176
- jjYRNTrGEfYfGxSp+3jYL3PoNceIMkqM9haXjjGl0W1B4BidK1LVYBNov0rTEzyr0a1riUrp
- Qk+6z/LHxCM9lFFXnqH7KWeToTOPQebD2B/Ah5CZlft41i8L6LOF/LCuDBuYlu/fI2nuCc8d
- m4wwtkou1Y/kIwbEsE/6RQwRXUZhzO6llfoN96Fczr/RwvPIK5SVMixqWq4QGFAyK0m/1ap4
- bhIRrdCLVQcgU4glo17vqfEaRcTW5SgX+pGs4KIPPBE5J/ABD6pBnUUAEQEAAcLA/AQYAQgA
- JhYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89ZBQkFo5qAAhsMAAoJEGu9DlcdrjdR4C0L
- /RcjolEjoZW8VsyxWtXazQPnaRvzZ4vhmGOsCPr2BPtMlSwDzTlri8BBG1/3t/DNK4JLuwEj
- OAIE3fkkm+UG4Kjud6aNeraDI52DRVCSx6xff3bjmJsJJMb12mWglN6LjdF6K+PE+OTJUh2F
- dOhslN5C2kgl0dvUuevwMgQF3IljLmi/6APKYJHjkJpu1E6luZec/lRbetHuNFtbh3xgFIJx
- 2RpgVDP4xB3f8r0I+y6ua+p7fgOjDLyoFjubRGed0Be45JJQEn7A3CSb6Xu7NYobnxfkwAGZ
- Q81a2XtvNS7Aj6NWVoOQB5KbM4yosO5+Me1V1SkX2jlnn26JPEvbV3KRFcwV5RnDxm4OQTSk
- PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
- gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
- l75w1xInsg==
-In-Reply-To: <DDA7C560-1BD9-40A6-8B93-28D5AC10EBB2@zytor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515040259.1254356-1-royluo@google.com>
 
-On 5/13/2025 3:24 PM, H. Peter Anvin wrote:
-> On May 12, 2025 11:06:02 PM PDT, "Jürgen Groß" <jgross@suse.com> wrote:
->> On 13.05.25 07:55, Xin Li wrote:
->>> On 5/12/2025 4:24 AM, Juergen Gross wrote:
->>>> Now with the mentioned patch really attached. :-)
->>>>
->>>
->>> Does it allow patching with an instruction more than 6 bytes long?
->>>
->>> The immediate form MSR instructions are 9 bytes long.
->>
->> Yes, shouldn't be a problem.
->>
->>
->> Juergen
+On Thu, May 15, 2025 at 04:02:59AM +0000, Roy Luo wrote:
+> During an xhci host controller reset (via `USBCMD.HCRST`), reading DWC3
+> registers can return zero instead of their actual values. This applies
+> not only to registers within the xhci memory space but also those in
+> the broader DWC3 IP block.
 > 
-> However, it is more than that. The immediate instructions have a different interface, and it makes more sense to use the extra bytes to shuffle the bits around for the legacy forms:
+> By default, the xhci driver doesn't wait for the reset handshake to
+> complete during teardown. This can cause problems when the DWC3 controller
+> is operating as a dual role device and is switching from host to device
+> mode, the invalid register read caused by ongoing HCRST could lead to
+> gadget mode startup failures and unintended register overwrites.
 > 
-> Write:
+> To mitigate this, enable xhci-full-reset-on-remove-quirk to ensure that
+> xhci_reset() completes its full reset handshake during xhci removal.
 > 
->      mov %rax,%rdx
->      shr $32,%rdx
->      wrmsr(ns)
-> 
-> Read:
-> 
->      rdmsr
->      shl $32,%rdx
->      or %rdx,%rax
-> 
-> For the write case, this also means that two separate trap points are needed.
-> 
-> As far as Xen (the only user of pv msrs), note that it only paravirtualizes a very small number of MSRs, and some of those are fairly performance sensitive, so not going through the Xen framework for MSRs known to be either native or null on Xen would definitely be a win.
-> 
-> 
+> Signed-off-by: Roy Luo <royluo@google.com>
+> ---
+>  drivers/usb/dwc3/host.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 
-Hi Juergen,
+What commit id does this fix?  Should it also go to stable kernels?  If
+so, how far back?
 
-I have some update on this thread while working on it.
+thanks,
 
-If we continue down the path of maintaining pvops MSR APIs as this patch
-series does, it seems we’ll need to duplicate the ALTERNATIVE code in
-three different places.
-
-1) The MSR access primitives defined in <asm/msr.h>, which is used when
-    CONFIG_PARAVIRT=n.
-
-2) The pvops native MSR functions pv_native_{rd,wr}msr{,_safe}() defined
-    in arch/x86/kernel/paravirt.c, used when CONFIG_PARAVIRT=y on bare
-    metal.
-
-3) The pvops Xen MSR functions paravirt_{read,write}_msr{,_safe}()
-    defined in <asm/paravirt.h>, used when CONFIG_PARAVIRT_XXL=y.
-
-hpa had mentioned to me earlier that this would be a maintenance burden
-— something I only truly realized once I got hands-on with it.
-
-Maybe you have something in mind to address it?
-
-Also add PeterZ to the To list because he cares it.
-
-Thanks!
-     Xin
+greg k-h
