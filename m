@@ -1,152 +1,95 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7278F6B
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 06:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2538F6B;
+	Thu, 15 May 2025 06:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747291177; cv=none; b=cFoIwxgJJvxPeRlv5WoKeVo+kIiDChRlgzkGaedpDHV4sZyoVXDZFDOZz560QA/5kAnE12WTTkbz5wCwKKxz1+wE+NBgiJF0orT7jzaOOUUUoIkZurJ8laCDIPK3bgzsaVEEKLO0zB6QyMxcAsqta7KnDMCYOcOlG10RKIDgKlA=
+	t=1747291311; cv=none; b=n7/BkJZwbJAizdlZVCy2fK5dvBWPipryskl1uCWeW3VAYtESrGyp6KgX8qm6lGXL3V9heqgc8AWO+vAgU7cIKwwBKhlrU/K6hW0Fq+PvN5W03Q6B0C+2wKwzORdKY8+r9cbQV2MUKnby/FuBGZ6S4XoIR44gO1E2jbM8Pq/3hMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747291177; c=relaxed/simple;
-	bh=7m3HrFADU6K/ePFJiXseiJx+cfxOboEb2XiguWUsfzU=;
+	s=arc-20240116; t=1747291311; c=relaxed/simple;
+	bh=Pv6C9wmqOTvYR6XxVYsJacLeb11nK38fPSPZdYYRbmM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BhzoEAIl1ca+iJ7rn+L6bXiVZ8zWRop0wn6pJLt8rUZxe1W1mj5deGOIeIdDSxn+YYM7WqvkOUxq6dsxKM14+qz6eY7XJksXAnmXw6sNoy0pkyq7LHGtCVgjxKkjGIWPIY6+Ywg/SDR1oU98sZP0vRijdYPaU7IHxA37yzag3Lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=l1bg6OKv; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	 To:Cc:Content-Type; b=puQpCbMwrRPYK9pVdtbGTSNB6elO3SqHBJOBApIZnlipMrVJ7l9BOH8GdQm0yXKeIQ7fx8+8Numq1LNNTxPBOiTCNINSrewAjMyXdimdJo3YQVaMsFfO4/5BFGCheke98XkV13YPu+FMF1KywM0V8yfZIHHu32oMRr0bz3O6D4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=C4fNRBze; arc=none smtp.client-ip=54.207.22.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="l1bg6OKv"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-8613f456960so14976739f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:39:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1747291175; x=1747895975; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7x2m3RSAmWZBZEj+PaQZiQeaOOx6B+ozKMgLfoFz30Q=;
-        b=l1bg6OKvMk56i1LNscDQp/W8sxnc1QvRf5/mTb+gDLhSOWmPhXGy8Kr1/K6OKZPY1c
-         tfVNy4BV2VleabbX2fjDZkPihxDLX1tqM3NI1s+So06P0H/mfO3ZAv0+vDjrneOqupQK
-         4fI/piOhbizNvyxGtPkrEeM8wpdnhpptnugNhdHjDRebdqvBwgT3ys3PiufAD5Uy6XWC
-         aqRAkRi4X1eFFwPukqju66b2Galc+Zdmmv5VjVUzOwrSeNRwHTNNfrnv4wb8U1ldUT++
-         qg1jEM5lxFr0J1pE1OBWndphqIJL14mRMcQua1BAK5UfZ7+vhfQ1RhxEuKPcV83bbU/H
-         79cA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747291175; x=1747895975;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7x2m3RSAmWZBZEj+PaQZiQeaOOx6B+ozKMgLfoFz30Q=;
-        b=ZQ5yXhA4uFX4FmdhjK+r0JxSTSZqhGSKt8EnUmAyfO31ZMZrXBeRnEF1jhaWnGDnn5
-         905Q2puYudHdedZ67d5HYj0oJWm0j+XyS1h8AYFLr2yVZtiptNcQprTv5r4YGVwfCQOs
-         1JZnH5vS97yTGux9ZTtEebARDtJf6yqJUwVajjw7aZWYa029gmO5hiMQEhbGu7dz6bGz
-         b+7OTrr7YSUz7p7T4F7iMn15riRXsaEsIgNNBz1ZiLTb5O0FWubnkfW3791/rsL9VXQp
-         VEiurAgmua/NWOj8ylmkDJqvk7h8OMBf3cYXnu8c2Lkm5jmUn/xtXwh98/JG1x2fIKp8
-         4udg==
-X-Forwarded-Encrypted: i=1; AJvYcCWgh2JZi6QRXXXzbbwXCaonT7zm8ErgsUuUuuFWNFcjm+DVqHFmeHoMmRfq+yLAmvzpK2kLl1WcYdj7lns=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCEUIz2vTgxHiqW/rCzmqvGVVFW+sdMoxDOLLfYncTa/v979r1
-	XQ1zD5rB6FYkDhsOE+c+0GSii55g6xiEVfF0AKULy8eHu24Ck3NBBgcCr0q0ii6uzjVt9Blla1r
-	Ck9qSAoZ5DOeJ0yMBR+PvmHZiWuLOtMYIb0fW0faW/RkE17xp
-X-Gm-Gg: ASbGncvnKZ0QtwVHx6qc/OsKBARB+0jOka0mNukNVF/fmnGlN0kkoWcEWqxZsPtxH0F
-	iR3ov9ZfHRAHsd2KWLWGfAOEKE764ftr9kPlL4lsYW9U9YgDGRV4KaWyCDGaC4eZ09iMlJzv3zR
-	wHaiJR+fVjEZTPMpeyMI3Z5tUNillc0oW/D0B1/pj9zg==
-X-Google-Smtp-Source: AGHT+IEeu0D8pHDHQW5TccqTotTBLOJ+RWC9pPxTNl5GwhC0PZ74BmZbAawuwwiBLjonxVe4alewTE5daIMupBgB4BE=
-X-Received: by 2002:a05:6e02:168c:b0:3d3:fdb8:1792 with SMTP id
- e9e14a558f8ab-3db6f7f199bmr60062105ab.14.1747291174762; Wed, 14 May 2025
- 23:39:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="C4fNRBze"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1747291299;
+	bh=Pv6C9wmqOTvYR6XxVYsJacLeb11nK38fPSPZdYYRbmM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=C4fNRBzeBaG/QUhJFw7HdAPbwjy/ukOXR27BFdCV969F2UcAa4xRK98GUxhKBWCH2
+	 a6XnDTtwRumEfixRevACAir3e+ai/giM2MVyUZlF7CUNtJrBkEbKU6CwesiA6QoJhy
+	 VCUhb4f++e8wO2crHO4IGKpoGAO6wSXSHOxyryJA=
+X-QQ-mid: zesmtpsz3t1747291297t1d3c26d5
+X-QQ-Originating-IP: oN9SqwewSJgHzg/+UlmPwfIMMf7bRvfD0mv2EQOlL/k=
+Received: from mail-yw1-f172.google.com ( [209.85.128.172])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 15 May 2025 14:41:35 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 12567563911921161485
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70a2d8a8404so4977147b3.3;
+        Wed, 14 May 2025 23:41:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVzFOZ6xKrIxhHppSVTPhASxDcFfBrWwewCAYrLMDgPojoJlkjetSOE9RQca10Mvf2TKJZOlToXx9C82MOf@vger.kernel.org, AJvYcCXv5F0M5F3neXUYHhyc3vcGCjR7N+Td8iVNvLGZ+jfXNu1zk6RpBThg6Y+Zr3VzcLSSLjLGCE88LSHmdh2j@vger.kernel.org
+X-Gm-Message-State: AOJu0YyG2slY1MuhO6mTiJC4qiaTEZiZ3hReqsand1qB4cGlin5L2r7n
+	Khac5LIzQ54L4eMv4XrD33wYMMWi/oaUayfVMLd4XMt230onQVNrEyLUG0sQsS8WH0W9gdwL+rT
+	V05aUkfDwAqlfoBFYRdpnOsOypKo=
+X-Google-Smtp-Source: AGHT+IH1hrC3auLTUMVebNlwUh1G/xvE0Z6gAJGCTODIFZU2L6qsdqgviOVXEovfHZf1xm12AtckLvK+4rgQ9gtVc/Y=
+X-Received: by 2002:a05:690c:680e:b0:6fd:a226:fb2b with SMTP id
+ 00721157ae682-70c7f10bed6mr88556677b3.3.1747291294859; Wed, 14 May 2025
+ 23:41:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514171320.3494917-1-abrestic@rivosinc.com>
-In-Reply-To: <20250514171320.3494917-1-abrestic@rivosinc.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Thu, 15 May 2025 12:09:22 +0530
-X-Gm-Features: AX0GCFvnkuONjW0g2to7KR73aQzmZtKG3JnmQAUt22P4CHLpD5Tq4AlRij675Uk
-Message-ID: <CAAhSdy2nb0siV-oE8gDQLVdAnMzw2TQqYOSK6SXZqxzYBCqM0Q@mail.gmail.com>
-Subject: Re: [PATCH] irqchip/riscv-imsic: Start local sync timer on correct CPU
-To: Andrew Bresticker <abrestic@rivosinc.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org, 
+References: <20250511084859.1788484-3-chenlinxuan@uniontech.com>
+ <CAJfpegtJ423afKvQaai8EeFrP4soep6LrA3jZg4A1oth3Fi2gg@mail.gmail.com> <CAC1kPDNvU-F=09Dsm1DW43Xrm1e4T3BQ0K5j7R1PHrQ-Ju0i6g@mail.gmail.com>
+In-Reply-To: <CAC1kPDNvU-F=09Dsm1DW43Xrm1e4T3BQ0K5j7R1PHrQ-Ju0i6g@mail.gmail.com>
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+Date: Thu, 15 May 2025 14:41:23 +0800
+X-Gmail-Original-Message-ID: <C7BF8CEA36D77D0B+CAC1kPDMuAPV+3SwsqnNBLhQag73TLA5+HivQFcJ3m-QKHAGbXg@mail.gmail.com>
+X-Gm-Features: AX0GCFsFe0p4IyYETThGWdU0wO3jtNOIJaJeaMc46GW6MRKtwIQjPONZTrknaVc
+Message-ID: <CAC1kPDMuAPV+3SwsqnNBLhQag73TLA5+HivQFcJ3m-QKHAGbXg@mail.gmail.com>
+Subject: Re: [PATCH v4] fs: fuse: add more information to fdinfo
+To: Chen Linxuan <chenlinxuan@uniontech.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: NrxvMG+AXCyEr8nOWJPdkOBxfjOOLtlQWzrcIth2qRUNxrQ0Yv77eYsa
+	PhbnDQVw5sAseHC8n3n5FErVjPRryqhi4t05GE/roE7F0NatGFGkENu0ygf2f5IzrJqvpFD
+	JMXQb/YQr3kMdHc3durqgMh4W2TL42PYD3XKUf+2MSm9K3RWyig0jw4bugzhhEbKN2XBdgV
+	21HJ0EsJ/juB8dMhdCH8u2BZ/jVSGv0R+tQ+ZqO9Tua9A1Xc3gjg648AiQntHHZzYNd+3t6
+	Cl7b56w55t96oqX5HzeQoCoyHSaMt8Mny+NHziA+IOkfZsXA2Ihvro8Ic6Z+a5j2xgEYqvf
+	PQW3YSQo/fcegd4qqo3GSufV+YxfZ5vFX0MRr1AyY+juP2URghReqn5vhVSQrkB/25Cw5W/
+	xY8KmU0mcUbHY77UlpuOVWSqV50NXkGQkZ94IAz3uOtHpMvPGbo65hJSgDG8fSqyLwUyaQO
+	2SetEqQvYxQy5cyojYE7ysEZeyV/1YAdbtfDSan9HTTuJVXufO3U7aEdC/KuCP4jktRgKUw
+	8d6jqfAMqHqbqfe+3277e5J1Sc50nrb8K/rZ3Qs1Wb797qo4RMiR63BEEKlQ0+rFQ+CVpYB
+	plhfIqHkS0GYnY6t8P2P1eT8qrTKjKIVpQVafOUd6r3s1vhE4fKxcVGArYGt8il+BsjHFoB
+	VUMwdiSUyhqo5u7PCQhVDJ9SACaLRBT8S8d8wLjhlFyyZS194jvlWRPTI2TFRMZ7uH6uzdV
+	LtbnxwkdB4wZwySaiQhLFQ7tttlCRRpjctbmRzWAq87OAQrZCvkjnc0ysYzl0qBZNJF23c6
+	eMnjGInzqNKBfPzNXEB5gBjqqtFc757mMibxCOro8IdjFyCJr8bbGybuHMUcZjhyUl7BBIC
+	Wryz6uIoQxh1QMP/n1IO281rrFyk3Y7RHIPies6l1A/Gx+usXWz0MPX/v6piu/nabs1W52l
+	AWkSDFYBVNXd/TBXH2RkjGGmGj46Fjd7qt0ZTPWCUMzM22+oMR1AiUQLHlXslm4YXNwfil0
+	1NJ3PMdb7Gf856gDUdjZVAJqQ+jHIbs0AhAGNjZN3v01hEev1zf1bfe8lw4bI=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-QQ-RECHKSPAM: 0
 
-On Wed, May 14, 2025 at 10:43=E2=80=AFPM Andrew Bresticker
-<abrestic@rivosinc.com> wrote:
->
-> When starting the local sync timer to synchronize the state of a remote
-> CPU it should be added on the CPU to be synchronized, not the initiating
-> CPU. This results in interrupt delivery being delayed until the timer
-> eventually runs (due to another mask/unmask/migrate operation) on the
-> target CPU.
->
-> Fixes: 0f67911e821c ("irqchip/riscv-imsic: Separate next and previous poi=
-nters in IMSIC vector")
-> Signed-off-by: Andrew Bresticker <abrestic@rivosinc.com>
+On Thu, May 15, 2025 at 2:36=E2=80=AFPM Chen Linxuan <chenlinxuan@uniontech=
+.com> wrote:
 
-My bad. Thanks for catching the issue.
+> But it doesn't seem like exposing this information here would be a bad
+> idea either, does it?
+> For example, if a system administrator wants to write a script to
+> abort the FUSE connection
+> corresponding to a specific directory,
+> the script could use this information to locate the relevant connection.
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
-
-Regards,
-Anup
-
-> ---
->  drivers/irqchip/irq-riscv-imsic-state.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/irqchip/irq-riscv-imsic-state.c b/drivers/irqchip/ir=
-q-riscv-imsic-state.c
-> index bdf5cd2037f2..62f76950a113 100644
-> --- a/drivers/irqchip/irq-riscv-imsic-state.c
-> +++ b/drivers/irqchip/irq-riscv-imsic-state.c
-> @@ -208,17 +208,17 @@ static bool __imsic_local_sync(struct imsic_local_p=
-riv *lpriv)
->  }
->
->  #ifdef CONFIG_SMP
-> -static void __imsic_local_timer_start(struct imsic_local_priv *lpriv)
-> +static void __imsic_local_timer_start(struct imsic_local_priv *lpriv, un=
-signed int cpu)
->  {
->         lockdep_assert_held(&lpriv->lock);
->
->         if (!timer_pending(&lpriv->timer)) {
->                 lpriv->timer.expires =3D jiffies + 1;
-> -               add_timer_on(&lpriv->timer, smp_processor_id());
-> +               add_timer_on(&lpriv->timer, cpu);
->         }
->  }
->  #else
-> -static inline void __imsic_local_timer_start(struct imsic_local_priv *lp=
-riv)
-> +static inline void __imsic_local_timer_start(struct imsic_local_priv *lp=
-riv, unsigned int cpu)
->  {
->  }
->  #endif
-> @@ -233,7 +233,7 @@ void imsic_local_sync_all(bool force_all)
->         if (force_all)
->                 bitmap_fill(lpriv->dirty_bitmap, imsic->global.nr_ids + 1=
-);
->         if (!__imsic_local_sync(lpriv))
-> -               __imsic_local_timer_start(lpriv);
-> +               __imsic_local_timer_start(lpriv, smp_processor_id());
->
->         raw_spin_unlock_irqrestore(&lpriv->lock, flags);
->  }
-> @@ -278,7 +278,7 @@ static void __imsic_remote_sync(struct imsic_local_pr=
-iv *lpriv, unsigned int cpu
->                                 return;
->                 }
->
-> -               __imsic_local_timer_start(lpriv);
-> +               __imsic_local_timer_start(lpriv, cpu);
->         }
->  }
->  #else
-> --
-> 2.43.0
->
+Oh I see I can get connection id via .st_dev from stat(2)
