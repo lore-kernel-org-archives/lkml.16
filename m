@@ -1,93 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8857529614F;
-	Thu, 15 May 2025 09:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65443295DB8
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747300806; cv=none; b=iLx0RzVZswvEoWEs4KZZHxlmA8VOkIgtfWdoVhRZn1Q5w4rD6j5Y5SiBwJ6QulyIxiY4yfyErmoVWE28k9Fe44r01uHiOzBc15plzz3SGfD1B+mBpcHFN/tyXiMgbe23w5du0z2/eNH+fTrNvfYRVZ+nBUxRuxzrIkxm1gekBRQ=
+	t=1747300807; cv=none; b=Mvp2E51l0iBt7aK7PIPC29cOp8WACRUoqUzlx3m1RtboGv//pejuYjALg5g1lMyb7X/DxL72++lSh5OlIrhO877botXdt3DAekMkF1Kb3En8WSMWYZd/NnapwUKKQGmYaTTn9i2J9pyJdSpkAGhuCw/S+FGJ9WSCvGdsiUW+G20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747300806; c=relaxed/simple;
-	bh=rm618sxDeCiPbi8y8NEmx3FDI0gdJMROpy9V3fCDMDQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cCqZ2LU458bHuR53oJuL8ZX1yHjaJ4MQ9t3TVYTm22aconVhdp3j5RmrSPxOEhmJ0daG6OB1B09ukCK6g3MZIarl8FoJuHm7jjdPbTLt2IsdEuFC2Liy6A9S+GutEQWGGpeikSDuKqne/cE2NoP/ygt08/5x4WJxJxlvwBhVon4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZOSz8X4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747300807; c=relaxed/simple;
+	bh=AMvDqQYGnDnGb/sl2sVntr4FQ/Pvxle3go/Gh6vbtZo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=pbSZvypGcH3OjyrCwmJU0ypXGWsyZTEMEvdMExT5euD9C+lNMtY8CCm020jcLu/1KNvN5RNIRgWwXXKgadflmLjUe/tV8X/zWin9481OS9VBUt5+/MU77QR7wx5wLZb4D01I8x3bVnLbAIs6cgPPiIoJhsioXKRExGHd4DK/OBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FjYhesQM; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZOSz8X4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 226EAC4CEE7;
-	Thu, 15 May 2025 09:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747300806;
-	bh=rm618sxDeCiPbi8y8NEmx3FDI0gdJMROpy9V3fCDMDQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MZOSz8X4ZqAwZlE2i4UNV3piIuYOa7FOuUZiETU8K1rG+qkCBfajGh9vnIF6NhVMj
-	 pgJsy4tLUzSAkZMM2u34obTByikyyOHn/D4XfZx6DuOaHoeLzrktc8DB6uJebYtOLw
-	 71RYOtNxXT0hBXSkQl5PjSt2HZZoBnkAVNmvIj2Uh+qvX1GP6+bWG35Em0ysD0H8Eq
-	 UsVg6nz1/2H7HunM2n3XZia+LuZCqlhI4pFKPGprfyeQ8TYmEiEMT62FkRd1OKOjY+
-	 3/HgEyi2ngq4aQgnJSecO5Pk+h9VQzQc8vZv+5okj2CKDIbMKdjsTaXgpwChXrxzPT
-	 EL2k2gcGKk7Xg==
-Date: Thu, 15 May 2025 10:20:00 +0100
-From: Lee Jones <lee@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Artur Weber <aweber.kernel@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Stanislav Jakubek <stano.jakubek@gmail.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v8 4/9] mfd: bcm590xx: Add support for multiple device
- types + BCM59054 compatible
-Message-ID: <20250515092000.GF2936510@google.com>
-References: <20250430-bcm59054-v8-0-e4cf638169a4@gmail.com>
- <20250430-bcm59054-v8-4-e4cf638169a4@gmail.com>
- <20250509140957.GD2492385@google.com>
- <aCRZzwW0w8oVWLUp@finisterre.sirena.org.uk>
- <20250515071357.GD2936510@google.com>
- <aCWfre2-n_PSuhxR@finisterre.sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FjYhesQM"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a064a3e143so304096f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 02:20:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747300804; x=1747905604; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=x2lMP2sWq3+4XRD9R5jQk8nu8eG7GVwKsI/4ygBP9qA=;
+        b=FjYhesQMn/Z5Y7c8sL8r3NBxstvMIZyWfs8aP1qg631WOd7Ch/wulDb0roLXsNVzuB
+         olisVbJXVbHwCZ3551FuPUonlFAu4WosMAc71RFUWvynIDMiYiOqHgMQhYqIzd94f5vD
+         3OZbpA0h5louGMNsvOypikHWVzNeXcg0joLYw/5LBE6vsVGp586b8Uu+YDoj3n94743f
+         1zDVrIf21hwhz7BoYQ2lTF4a/hz5OIldrZ11Q07BZ2y3X1sU82atzTbmUvuM5e6i83TX
+         Y9dDY0R8V2006gTUQeyvZuxgcyVyGCuq8wia6OtizAPABYMnrU++brtIPxmg0FrtEvFw
+         HWgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747300804; x=1747905604;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=x2lMP2sWq3+4XRD9R5jQk8nu8eG7GVwKsI/4ygBP9qA=;
+        b=Bh0Ib/Kbl/8D7BMyqLFjd72zi5FewBPqHCx1PIUXbp0xzBEaljfEccC3GydRLZQLWZ
+         af/uaJXnX2fZOyN7MkfQBticHXtwmKftdqlTXRytoVBmQJTZM+o3AkUc3XJjSrc1Vt0T
+         v2eRpI5lJE1OrV3gcOF81I+B/P/R6+BY7osgiOplMRNpk0PvSIkK2FbjjbBDNU6JW+yB
+         volI9K8e05MjKI7PdKo3XiVnx0P8pE1YJSVdwLMhTPNb/LWFNzgzQrGtGeJUP5YbHHMC
+         meE9KUt8XosPv3Er95ZqQcokDJkqYSsbFTQCYPB7HGViID5+JcgSU9ycZsPYnh3BfL6u
+         AUrQ==
+X-Gm-Message-State: AOJu0YyVB/dQgKlxXkqaF25mgHWkWF/pNZ1OB8S4Xi+I33R7QscMDZUe
+	hEUwmcnbDxo4YQ9xvzcfah1T7optb2OvQmHtTOSV5vb79DGEN85/g6dHKpMWGGOCB1/GjeCKibF
+	0pSkM+Q==
+X-Gm-Gg: ASbGncsUZXUOeGpEDgCEomqvKBP5FzW1bDMfch0hzOcqo9n9aGYQESnoPANIFm9kkeb
+	E2VzRty8CCyh+QiEbFoJJkkL5ZfTgs24+ZlgYZgDh+bBuxbHvji1a82YqElgp/HcI3ayVabI6AC
+	ImMgfYfA7i8kKzSDOIWNFy12og+g8niOHpL5o7TvI54PO8MUhbzgrrt2KY9PesOJtz+9XQfJhtp
+	U8oTEMiMRSu1NLxh/YRSLFNArX3UXqFLsSzOM66+MeCrCA3X+JZTf1Ysz506s16OUT2NPen8o8v
+	zK9cG1eISGdsiTRVbd7O4fJkrIn04MQi0sYJfsqph0kGcYijPCV1QQduQGugC4R+NUT7L1bLyhG
+	1PR1nYSLWmCht
+X-Google-Smtp-Source: AGHT+IEROeBcQLXaeEtKAeBz3Fs2jZereQNJ6BQ+vtNCHT5Y13IsuxKCN1ufBhmMDuFZWcOb5S2qTA==
+X-Received: by 2002:a5d:584c:0:b0:391:3aab:a7d0 with SMTP id ffacd0b85a97d-3a3496a66cfmr5384359f8f.19.1747300803712;
+        Thu, 15 May 2025 02:20:03 -0700 (PDT)
+Received: from [192.168.2.1] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a1f57dde6bsm22420509f8f.13.2025.05.15.02.20.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 02:20:03 -0700 (PDT)
+Message-ID: <ba3ff719-ce60-4c0f-a215-fa332b614b82@linaro.org>
+Date: Thu, 15 May 2025 11:20:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: error trying to fetch the clockevents tree
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20250429082047.4af75695@canb.auug.org.au>
+ <db7fce1c-c051-41d9-9cf1-ef015b0f7fb4@linaro.org>
+Content-Language: en-US
+In-Reply-To: <db7fce1c-c051-41d9-9cf1-ef015b0f7fb4@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aCWfre2-n_PSuhxR@finisterre.sirena.org.uk>
 
-On Thu, 15 May 2025, Mark Brown wrote:
 
-> On Thu, May 15, 2025 at 08:13:57AM +0100, Lee Jones wrote:
-> > On Wed, 14 May 2025, Mark Brown wrote:
-> 
-> > > Could you be more explicit what you're looking for here, the diffstat is
-> > > entirely MFD?
-> 
-> > Okay, more explicitly, I can merge this and MFD will have no issue.
-> > However, the Regulator commits make use of 'pmu_id' introduced in this
-> > change and would therefore cause a compile break.  So we could:
-> 
-> >   1. Apply this now and merge the dependents next cycle
-> >   2. Apply this now and provide an IB
-> >   3. Wait for all Acks and apply as a unified set
-> 
-> > We usually choose 3, hence my assumptions above.
-> 
-> Well, you choose 3 - I do think it'd be a lot easier to go with option
-> 2, or with applying the rest to your tree as acks come in.  There seemed
-> to still be a reasonable amount of discussion on the MFD bits (eg,
-> there's some formatting comments still) so I was expecting this series
-> to churn some more and was waiting for a resend.
+Hi Stephen,
 
-Yes, I expected to apply v9 with your Ack.
 
-I can go with 2 in this case.  Applying in dribs-and-drabs as Acks come
-in would be sub-optimal and would likely end up in a mess.
+On 4/29/25 00:35, Daniel Lezcano wrote:
+> On 29/04/2025 00:20, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> Fetching the clockevents tree produces this error:
+>>
+>> fatal: unable to access 'https://git.linaro.org/people/daniel.lezcano/ 
+>> linux.git/': The requested URL returned error: 503
+> 
+> Seems like there is some issues with the servers recently.
+> 
+> Could you please disable the tree while I migrate it to kernel.org ?
+
+I had no time yet to migrate the git tree to kernel.org but the servers 
+seem to work correctly now.
+
+Is it possible to enable back the tree so its content gets some round in 
+linux-next before the PR ?
+
+Thanks
+
+   -- Daniel
 
 -- 
-Lee Jones [李琼斯]
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
