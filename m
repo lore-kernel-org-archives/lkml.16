@@ -1,122 +1,102 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6997329B791;
-	Thu, 15 May 2025 21:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADEF35970;
+	Thu, 15 May 2025 21:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747343485; cv=none; b=urlYVbOiPxl8vZ8L4BhwiHDaWGkYqD3WERa/xWphcR/6AP5ypx4wYwGHXWlEP0yE8CzjFrGjse7U7hY3ooXps62JVokQO604/LxAUiDNTJlL0sYFy3FlfElkp/HCyKL9x2TVF6vxz98HJwO6SCwHNG+4/V4dzA3dmbM4qDSiH5k=
+	t=1747343518; cv=none; b=f8HxWUwO0jHStCxTQjK+8v0Pja1+9snB71+NFjFXnF/KjRJ/RRf7g1+rvBgK97elzdS2RxIViM6a5dk9GED5k9FIg+KFUgwQLTc896LPEjKuVSRS76J989Kp7o+XojNorCb+a7e2pqFQuWTsh7ek1KfhFb6VaeK+b5y10WORfpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747343485; c=relaxed/simple;
-	bh=yxw7XY5YZWxuopjnhj9nRwMOfXcahZ26siXv4dTTPCs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o1z8OBrAEchNa5CGBrTHYTyEmA2HKgrkh77NsYy3pu2bF6ZcfCTWrQtWMMJ69lpDbBTuA5kijzEDOpwRuP4RRCSsheno4B8uQCyPZI5vzvuUsNUcxpopXEboK6wZRfYzdGeA4/U2y12stb4iMLaLtO2W3HKH+MUkDE231Z4vt4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cuDo8UOe; arc=none smtp.client-ip=209.85.210.47
+	s=arc-20240116; t=1747343518; c=relaxed/simple;
+	bh=at8wo4sideq12LISKVbT5TJ813to55EQj1hiXx40xJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e797WBTMOWvsVkXgwf/aX9fuEIeH9OfOgzbL68Z1Wq1TYCstO1MxokJB4V7zIEZu7PUQrHTRj7MiQnvAO02/rh2v0PbZoE5GqQYuE1sUwfP34J4IB0qgdRNbNJUaefoZiC95m6a4JRkSmw/u3/3GYKAGCRwL73q8K5XTRR/B7dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MWdRCgp8; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cuDo8UOe"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-7300069c447so1310622a34.2;
-        Thu, 15 May 2025 14:11:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWdRCgp8"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54e816aeca6so1894189e87.2;
+        Thu, 15 May 2025 14:11:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747343483; x=1747948283; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zsrbCQbXdTBMHnkFh4svvgR8i1h1hl4ZIoZzKn+642g=;
-        b=cuDo8UOeEKYIHsBySOYBnMt3cs6USNLb+fSwdCJvmNcvljyf6OzP4apwQYZLluO0TU
-         O9nxHNsui7hQxDN9RIm7yUgP6A9r/pADQG1soYRV5QdmNUpax8MBQCQC5hJB0B/1zYaE
-         eQzZ07SRA49hDBSZ9IUofxZS5VtSl5sEHs81APbL5VHHD+AFi5Gu36pKYDCAnmMP/MMr
-         qIulcMOAYSvi1YZQCSzpOiaz88nUkXlkh+rhRZ7/Vvj/MGdRz+9RSNW/NInea83mc5Dj
-         th0+LOKVngcK+KyvTI0XlPoHlV1gYTCMGhKs8dQyY2v8WzAbENx/3maE7OAvFjT0tVlI
-         Ex+Q==
+        d=gmail.com; s=20230601; t=1747343515; x=1747948315; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xDYhltCq2quiDqrEIIaILKsSX4NxL0nbga+EY2yVcTQ=;
+        b=MWdRCgp84DMupgUMO2/73yz/ckAQM8w8myxTl9aVSY7x8wyLOpknWS5qAnjMKMTNU9
+         p51W3NkC7p8J/x1sAX/9q63TKwtxjlkfGKiR/MT3Rz8vPj2OdhI/G3jq7rKaWtQSKCAZ
+         fzVwb4X8R1epOrTAv6v/gQ6ASD4KjYvEGsOenxc/o3FOLu7HCkaIxGMsrQ+uGV9F5PFj
+         H3uEMSBw2BItJGiyvO+zR/iWYWC3uONpg4daN/7dmcV/35Wr9uAWA8/O4J1uxlNl5stt
+         blxwf/2vPfFm+wEpM2Xrtjw7TpvsvUOFYHs19MNpW1in/2bXOT7wfiWo/locsm/7X/wu
+         Xl4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747343483; x=1747948283;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zsrbCQbXdTBMHnkFh4svvgR8i1h1hl4ZIoZzKn+642g=;
-        b=PBJY5IQtvdiGzNsqQZNMvbR4ib/dwAmUXq2+Xz9UUIzOUhHXE+8mmE/ZqxQuimsaeB
-         TQwUQbTdQY4jXlh58PUTLY14MOszk5P7tqueLQ1vgn5Qgbdj6e7rbOJBK6o/PnEzw0Dx
-         KJxiPpE27oeWfY9fX2ZyQVUNWUsPJT+baUthlz3IiXnM2ZX420KmZoKowoxgMCcG9BMy
-         Mye7FsB2/fLr2K4Zz98s4jtfLmAGBWI9/b/loA6CQnUxgMYBQj8Y8ESRtRDFktmOG0fC
-         Sy+5W2I1IyhX7jzPt9oWtiijeoGEJzZf3bszvbfAYK2EhlF5VvYrmB6y8L5lXc30OE9t
-         Rxrg==
-X-Forwarded-Encrypted: i=1; AJvYcCWOfKg5ies0TLUGNnLC9wa5Z35xLwxFxUCd6Wzpi39n23fx1BwAVL5DFHSHomd1xn5aJOu0cyhkP531u/4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhCEBPAWWhxqeMGEE5MLoYbgi0aHyByjmuhfWZlIkUIuXZpjy0
-	whLYp4dX/1RZ18Acj2OPJgkuf/VyX3rV/fs2DeZC5WOBjvhG75OsMkSSTl+Blw==
-X-Gm-Gg: ASbGncv2y8cEdYGmTnknKFcX/Mqa+EqRANHX3tM7xWcdRcsWzh5LQaW4gPD8jBheMhO
-	zcaEe3j44umXRnx1FqzPvaT03R83aiboVJcjfyE7nM7YVVTER1pGz/eqoUP0frSgjXfUanuz9U+
-	y08hw41L1Hnv3gO1MhQgKsVsmJp/J6beiYRDseebRPqkBK3htIEHLrnFd8oPsMKnmptlowtQyCz
-	J4itPzO9lnUNmSpJKwPb4Xp6xzRx/QXgOLtfTPVVyfVzTSNamkx0dZL+6YYXFZZkjw2x+Xo2fWp
-	4TUUvTwdc0q9trmrnzws5yYStZJfT3NqNnjbY3RM2sphyLsx9TBs08owqbms2c2Z8Gaa3IbNLyI
-	xka8utTpzYePlLP4UOLhDjL/7ew==
-X-Google-Smtp-Source: AGHT+IGXAwZ1lMKkYKPVqm106lsiF8QexIHxQXcdvdh4KcFq2Lq7wgLaksOTSGOb37VGrFzEV43asw==
-X-Received: by 2002:a17:90b:1c05:b0:301:6343:1626 with SMTP id 98e67ed59e1d1-30e7d4f91ccmr1021115a91.1.1747343472751;
-        Thu, 15 May 2025 14:11:12 -0700 (PDT)
-Received: from localhost ([2a00:79e0:3e00:2601:3afc:446b:f0df:eadc])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e7d4892a1sm261094a91.14.2025.05.15.14.11.11
+        d=1e100.net; s=20230601; t=1747343515; x=1747948315;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xDYhltCq2quiDqrEIIaILKsSX4NxL0nbga+EY2yVcTQ=;
+        b=MCKzF9BuJAkIsuUDLOcWAjGF81FLOkjOrqhoGIetSOJP2hZF5f8fkpYePLAnRvGc65
+         xksIj05Y579DwXa5AyMlxWt562OCyAK+s3j5s+FGOxt0LpNO5BdRpggrmT3ghG5d/ETM
+         jNU1xjpZEj7Cze44AvaksiC9SHKGl70gKD8qUDtfNNEbgW1XJLGqVUpUEYg6CaiyDRmH
+         X7L4kljHLOqFXih6wQhiRlddJi0uP0MGbk/HY/lQIL4Li6MF8uzDqZAXuTfXMBOentc5
+         nPbtx8CbEOThISzuUZ6CBHYqE2u42C/zX8HU4m6DWKmXUBFgTJg721LzyuIOKl4Z8IEu
+         Zp3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUoXHVrAT/JnAWd7c8a38AjfMG7rYpI85gt7iHuG7+xX0/ugHiVLrWwO11lNY5uu8a5pXUvMdW7PNFi8VQ=@vger.kernel.org, AJvYcCXzDMTKCV7OnAoBqRJk3uzH+1fVePoUEWs9686/nH3yF3uhnQi69acvnT9+iIzn8VkS6uD3/+FjFWbCmGkVQ/Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuBQi7g2WAD94Y/ZGQJaPbd6+NkP+6TCaPZ7AOJmY7dLVEfOh7
+	ppTdccMyLTGAGZP2kiBeV/NzePEjYDjzIv8Lj2uuHv3dkv4rqYyvrXRVnVdL/Q==
+X-Gm-Gg: ASbGncs20V+K/QjuoB6g8G0X1IFvxXoBT7XSZIdskHJvecc7DyTBBaHzOGEpDzj+FGq
+	5zKbOGTtgTg26mv91DNRpLAI0wIrkSvaWjlnWUsCFL7D2RQxpI8bSdzJONnp2W5m2x5OCZfZgxU
+	3JzgujQ5xITA8W/beIaAyamDG9NomCrD0F2uqUrQugbX5ZiBWOe3fQWixEfobTTnXITojsftx0R
+	tXoBcb1Qp6gqQWgwRHkWoXmGbdYIP7g4r5d+RsWeeL801mQQoL81exqJXBtu9WY5DEBB4yezB/G
+	+KU7fTYLFQZDQPTFqAKVBw3ilRURksw1iYJj3wfY6a7evzk=
+X-Google-Smtp-Source: AGHT+IHCb/STf0vwxoS6kNi3dBUgKys7p8EM3GBFKDOT9iH+gZSWuK48BQSeuyxdMt6uGRIzF0usBQ==
+X-Received: by 2002:a05:6512:2616:b0:549:8b24:9894 with SMTP id 2adb3069b0e04-550e71a72bamr248467e87.15.1747343514468;
+        Thu, 15 May 2025 14:11:54 -0700 (PDT)
+Received: from localhost ([83.149.199.15])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f16354sm103981e87.45.2025.05.15.14.11.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 14:11:12 -0700 (PDT)
-From: Rob Clark <robdclark@gmail.com>
-To: dri-devel@lists.freedesktop.org
-Cc: linux-arm-msm@vger.kernel.org,
-	Rob Clark <robdclark@chromium.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/panel-edp: Add BOE NV133WUM-N61 panel entry
-Date: Thu, 15 May 2025 14:11:10 -0700
-Message-ID: <20250515211110.8806-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        Thu, 15 May 2025 14:11:54 -0700 (PDT)
+Date: Fri, 16 May 2025 00:11:53 +0300
+From: Fedor Pchelkin <boddah8794@gmail.com>
+To: Bernie Huang <phhuang@realtek.com>
+Cc: Ping-Ke Shih <pkshih@realtek.com>, 
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [Bug report] rtw89: 8852b: IO_PAGE_FAULTs with beacon filter
+ feature enabled
+Message-ID: <gan5ysjiosyk5il42ifxrzodfgparbw6vod6qboez2mtubbw7s@l7lb3dm7zwi2>
+References: <uidltsdsuujrczrtzgerhh5cw2tztxktfen6yvztnc7gttzgvk@jccomj7f4gul>
+ <148ed65c53be4ef29246d372dd0fef8e@realtek.com>
+ <z54thedngt3wnhr5bfer3yg7id2c4uqgw2jjvyausv6p66ys4k@guqol77fpugz>
+ <dcf695a6621f43e38a20eb860194191a@realtek.com>
+ <7injzacfmvhrugcovyxkn4elnaxnzg27c26zmcqzrwhottyk7e@ap5ellaozcg4>
+ <419811cccd774d38b5a9c0bbcdf5dfbe@realtek.com>
+ <42783d9a032143bfb67ea969ee0b805d@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <42783d9a032143bfb67ea969ee0b805d@realtek.com>
 
-From: Rob Clark <robdclark@chromium.org>
+On Wed, 14. May 03:29, Bernie Huang wrote:
+> Hi Fedor,
+> 
+> Could you please check whether the attached firmware fixes this issue?
+> The firmware version should be 1.29.29.9.
+> You could check it via command:
+> `cat /var/log/kern.log | grep "Firmware version"`
 
-Add an eDP panel for BOE NV133WUM-N61, which appears to be a 3rd panel
-option on the lenevo x13s laptop.
+Thanks Bernie, Ping-Ke.
 
-edid:
-00 ff ff ff ff ff ff 00 09 e5 64 09 00 00 00 00
-16 1e 01 04 a5 1d 12 78 03 55 8e a7 51 4c 9c 26
-0f 52 53 00 00 00 01 01 01 01 01 01 01 01 01 01
-01 01 01 01 01 01 74 3c 80 a0 70 b0 28 40 30 20
-36 00 1e b3 10 00 00 1a 5d 30 80 a0 70 b0 28 40
-30 20 36 00 1e b3 10 00 00 1a 00 00 00 fe 00 42
-4f 45 20 48 46 0a 20 20 20 20 20 20 00 00 00 fe
-00 4e 56 31 33 33 57 55 4d 2d 4e 36 31 0a 00 7d
+I may confirm there are no IO page faults nor any other regressions seen
+on my side with the updated firmware in use.
 
-datasheet: https://datasheet4u.com/pdf-down/N/V/1/NV133WUM-N61-BOE.pdf
+If needed
 
-v2: Actually get the panel name correct in the table
+Tested-by: Fedor Pchelkin <boddah8794@gmail.com> 
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- drivers/gpu/drm/panel/panel-edp.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
-index 52028c8f8988..28c38672c898 100644
---- a/drivers/gpu/drm/panel/panel-edp.c
-+++ b/drivers/gpu/drm/panel/panel-edp.c
-@@ -1916,6 +1916,7 @@ static const struct edp_panel_entry edp_panels[] = {
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x094b, &delay_200_500_e50, "NT116WHM-N21"),
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0951, &delay_200_500_e80, "NV116WHM-N47"),
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x095f, &delay_200_500_e50, "NE135FBM-N41 v8.1"),
-+	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0964, &delay_200_500_e50, "NV133WUM-N61"),
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x096e, &delay_200_500_e50_po2e200, "NV116WHM-T07 V8.0"),
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0979, &delay_200_500_e50, "NV116WHM-N49 V8.0"),
- 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x098d, &boe_nv110wtm_n61.delay, "NV110WTM-N61"),
--- 
-2.49.0
-
+--
+Fedor
