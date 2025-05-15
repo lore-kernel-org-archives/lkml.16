@@ -1,94 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6F53C00
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 07:16:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0473C00;
+	Thu, 15 May 2025 07:17:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747293390; cv=none; b=rPLfTp228A5hu79pZX+JvNp+DJ0/tl4dlS6Vj/2PNfeg93oN7SfAA5JufczEkSZ5/HAjksmkyPcs2kWwEfVAvtzm97OWoX5fE3BW5gfA6pYHZiu20FYDvKLm4UiHhaw3kQYagXRbqTlQ0DK1m2+glcz0rcPJMVy9UG22evtJrwE=
+	t=1747293472; cv=none; b=BXrt1ejGzV/el37CbtShChJDETnDdFE/27FGQnZnCdsJhceKKs8xh4kzGpEKL27wbLQElW6y3JF9vrj7RKC0+h9LHwiE1Fvkyc/Kyqvm84CKC/x74Dk7z8xpD/7NYEJH3wipcLnRJ298T1vTKTH+WLVfcFeX3AfS+8ESGwKHYXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747293390; c=relaxed/simple;
-	bh=aQs1XIPe57K9n8PcMJI8I5+ObKj3gnKRAF2bfZObLpY=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LQ4MyYm8UAz3fCJuUp6DZd55rn9SGESeO4mc9ZaxIXfYgWKthYVSkkI0dmYdCG6GGL8JJuIC+drBnXFP6DBejSt95nwsHo4Zh9Dk40B4NxmwAhPtYj18puQmMcNvjaqWDEnhjOB5V0dst/uoJfTfeVihKjwmXQTcbSWu65vKe1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMa2HNp2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747293472; c=relaxed/simple;
+	bh=SsLAI4som5AdBLbBTAAoaHXnIvb3gOFyZy6oRKj3ZYs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uSTSSTlE3ZvwmgVKnSwavardJMHrSJhOvUorDOZIxvZJ20/FAMAXmflnO6hmK1aXeiSsKZsrX3vs6KV6UUqPK1bTMTJTXCuWRc2wPI+X0yrzC+e9DpqMZfPO4RXqxi7YcyoG5GsViW161+KdOPViyG9rKfBygNey7LejvdvByHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K2zw9mFU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMa2HNp2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D4BFC4CEE7;
-	Thu, 15 May 2025 07:16:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K2zw9mFU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2778EC4CEE7;
+	Thu, 15 May 2025 07:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747293389;
-	bh=aQs1XIPe57K9n8PcMJI8I5+ObKj3gnKRAF2bfZObLpY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GMa2HNp2Mgab22TOka+1Jupo3bWlm2IbBn+6CDBEcVxYY+K59YG7c9Ra3A9kAmFBn
-	 wYeTRilRpL5t5BDrdBjfjrDrg1qLkgppIVX+axllp21JBCij7OZ+Trjv5OhzRjOgL6
-	 FTStY8REPS6cUtFmQz5nHLBI67gCVPhahyes3VJz5/L70EglTJ4lSMdFvX0Gy88mMj
-	 N1vxY3sH+f6d2L6ntuMZpRP5HokwnzWwZ3btoMgI286p8AE8/sXecYZy4H+D1EH/wg
-	 nOWSYq1OFTgl9F8Dt5h9uit5SdhumrtRrPOggneXGwk4P8Pu02KK8HjmWSgLUAIAgB
-	 aG24WVsnKUH/w==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uFSpO-00F7vF-5l;
-	Thu, 15 May 2025 08:16:26 +0100
-Date: Thu, 15 May 2025 08:16:25 +0100
-Message-ID: <86ldqyfinq.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Nianyao Tang <tangnianyao@huawei.com>
-Cc: <tglx@linutronix.de>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>,
-	<guoyang2@huawei.com>,
-	<wangwudi@hisilicon.com>,
-	<wangzhou1@hisilicon.com>
-Subject: Re: [PATCH v3] irqchip/gic-v4.1: Use local 4_1 ITS to generate VSGI
-In-Reply-To: <20250515145359.2795959-1-tangnianyao@huawei.com>
-References: <20250515145359.2795959-1-tangnianyao@huawei.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1747293471;
+	bh=SsLAI4som5AdBLbBTAAoaHXnIvb3gOFyZy6oRKj3ZYs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K2zw9mFUc8wLSOKYRaKVw4nywKsvOF1K+FzaijttX3cWxjp5F1Zi+zPoKkxVszrwF
+	 X3gGIaAI2V1Wg1MM2VizM89CZ3c9rnO69klX5apgng5I89hnDHnxbgzazgg6y9cBBK
+	 te6EzYVEvZYea7DXnLEBaLJuZjpIUBqO2sdfGmD2fEhTAb3OJHcCNvqgU0ABLtAwJX
+	 NtBSd4taTsKwO1IMvLDoF2swsJq7iKh3WmigyX00XjP7KLmpA8h5HuGapXTxVbaDiv
+	 RkLA7JCfIErS3diyZKVgCaIAUDh+XUvIHFZV6k+ldrEmLG+rvYyrLduFgnM51GLtQ+
+	 SOPn7dbTasFKQ==
+Date: Thu, 15 May 2025 09:17:46 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>, Ard Biesheuvel <ardb+git@google.com>,
+	linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+	x86@kernel.org, Dionna Amalie Glaze <dionnaglaze@google.com>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFT PATCH v3 00/21] x86: strict separation of startup code
+Message-ID: <aCWVGtLo7XhW7aT0@gmail.com>
+References: <20250512190834.332684-23-ardb+git@google.com>
+ <20250512191705.GHaCJJMcpPTS4ioLpm@fat_crate.local>
+ <aCMYrgd9DDQl7G1W@gmail.com>
+ <20250513101250.GAaCMbIpk6kdVMizng@fat_crate.local>
+ <aCMraFZ2yJQNyHf3@gmail.com>
+ <20250513141633.GDaCNUQdRl6ci2zK5T@fat_crate.local>
+ <CAMj1kXEzKEuePEiHB+HxvfQbFz0sTiHdn4B++zVBJ2mhkPkQ4Q@mail.gmail.com>
+ <aCQ444zAwwkUwwm8@gmail.com>
+ <CAMj1kXE0UHyTXZ31R_ps=Nk0+AsFy1tLj04Zg6cR90wdN=7pBA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: tangnianyao@huawei.com, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, guoyang2@huawei.com, wangwudi@hisilicon.com, wangzhou1@hisilicon.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXE0UHyTXZ31R_ps=Nk0+AsFy1tLj04Zg6cR90wdN=7pBA@mail.gmail.com>
 
-On Thu, 15 May 2025 15:53:59 +0100,
-Nianyao Tang <tangnianyao@huawei.com> wrote:
-> 
-> On multi-node GICv4.1 system, VSGI senders always use one certain 4_1 ITS,
-> because find_4_1_its return the first its_node in list, regardless of
-> which node the VSGI sender is on. This brings guest vsgi performance drop
-> when VM is not running on the same node as this returned ITS.
-> 
-> On a 2-socket environment, each with one ITS and 32 cpu, GICv4.1 enabled,
-> 4U8G guest, 4 vcpu is running on same socket.
-> When VM on socket0, kvm-unit-tests ipi_hw result is 850ns.
-> When VM on socket1, it is 750ns. The reason is VSGI sender always
-> use the last reported ITS(that on socket1) to inject VSGI. The access
-> from cpu to other-socket ITS will cost 100ns more compared to cpu to
-> local ITS.
-> 
-> By using a local ITS, we can get 12% reduction in IPI latency.
-> 
-> Modify find_4_1_its to first return per-cpu local_4_1_its, which is
-> init when inherit the VPE table from the ITS or from another CPU.
-> If fail to find local 4_1 ITS, return any 4_1 ITS like before.
-> 
-> Signed-off-by: Nianyao Tang <tangnianyao@huawei.com>
-> Suggested-by: Marc Zyngier <maz@kernel.org>
 
-Link: https://lore.kernel.org/all/87tthgrt7s.wl-maz@kernel.org
-Reviewed-by: Marc Zyngier <maz@kernel.org>
+* Ard Biesheuvel <ardb@kernel.org> wrote:
 
-	M.
+> On Wed, 14 May 2025 at 07:32, Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> >
+> > * Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> ...
+> > > In any case, there is no urgency wrt these changes as far as I am
+> > > concerned, and given that I already found an issue myself with v3,
+> > > perhaps it is better if we disregard it for the time being, and we can
+> > > come back to it for the next cycle. In the mean time, I can compare
+> > > notes with Boris and Tom directly to ensure that this is in the right
+> > > shape, and perhaps we could at least fix the pgtable_l5_enabled() mess
+> > > as well (for which I sent out a RFC/v3 today).
+> >
+> ...
+> > We could perhaps do the mechanical code movement to
+> > arch/x86/boot/startup/ alone, without any of the followup functional
+> > changes. This would reduce the cross section of the riskiest part of
+> > your series substantially.
+> 
+> The first phase of this work, which is already queued up, was to move
+> all of the source files that were using RIP_REL_REF() into
+> arch/x86/boot/startup to be built with -fPIC so that RIP_REL_REF()
+> could be removed.
+> 
+> The current phase is to separate code that really needs to live under
+> startup/ from code that doesn't. This is the bit that was
+> straight-forward for mapping the kernel (including the SME encryption
+> pieces) because they were already in dedicated source files, but not
+> so straight-forward for SEV-SNP.
+> 
+> In reality, the mechanical code movement in this phase is mostly in
+> the opposite direction, where things are separated into startup and
+> non-startup code at a high level of detail, and the latter is moved
+> out again.
+> 
+> > If that sounds good to you, please send a
+> > series for review.
+> >
+> 
+> Not sure what happened to the tip/x86/boot branch in the meantime,
 
--- 
-Without deviation from the norm, progress is not possible.
+It got merged into tip:x86/core. I wrote you an email about it 
+yesterday, should be somewhere in your inbox. :)
+
+> [...] but assuming that what was already queued up is still scheduled 
+> for the next cycle, I don't think there are any parts of this series 
+> that could be meaningfully rearranged. IOW, the SEV-SNP refactoring 
+> needs to be completed first, which accounts for most of the code 
+> movement.
+
+Understood.
+
+Thanks,
+
+	Ingo
