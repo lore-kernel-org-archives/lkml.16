@@ -1,121 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835A6295D89;
-	Thu, 15 May 2025 06:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5F729713D
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 06:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747292079; cv=none; b=TFvH3PS69wT720Jhd2IPn2FaoWxZzHJ0q9tBVDlhGmo5PdcxyTs3FG+Z1xCrtXD862oQwKse9MY6iqa2GIIhyb7SUklPBFndA6MinuabL8jCJwIpaIanMN3QTfGcq0mC7dHNdnk/exlnPBvWDcCcg+Om2qGwEcCO4u6+UgCfsQM=
+	t=1747292093; cv=none; b=s8hnMxzj/GADqf3q8UHHPMb936wvy19QqS3d7J29jCJACNm3LUCsGMztu3mnDYP1BEc4RjNg3jBTSbSmiJjdsjWLkgvJQxBhLatsv9MA7SfdWNH0mcK1VXIQlSD0YXk+aAlcqHWTp+QPi2qRW0xieDGrMy+uw1xZ1wzW5/rf1Kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747292079; c=relaxed/simple;
-	bh=2W8v5Gdhm+xnSWlzDaIimqr2v2xWvhPz810ej4BlwHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JECi3w5062j6tfRTIcU/KdrPgZ8V/KD5svpfcnNJsTkQgdlIc32K+d3QoPSepH5jaSfJUO9KzYGhBZiZCLkJMJ5fY8MleM5ILJnRXSO/Vwytm4I1v17fMicWgHWvEGKbo5IL+YQLJ7LSbHt20qxj8Xahqtxy49T7Z88DT0vI6nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gq/pCxjf; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gq/pCxjf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 347FFC4CEE7;
-	Thu, 15 May 2025 06:54:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747292079;
-	bh=2W8v5Gdhm+xnSWlzDaIimqr2v2xWvhPz810ej4BlwHE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gq/pCxjfX6mGmuXzyMRIfxOX4elFRSCNmBy7cdeJgUJ33gGLHj1HwHR82HMFdDPaF
-	 Itmn53oheVwh+KYS3jmmOAQe4tsr6+h1uQLF4DBAHe1gDFuThYW0tyTJHvDakrheX8
-	 8EsZ5REZ4rDo8+xFxQ564SyoLpowEL2ap8g068TTp6Mf998kOiDttJYhXPwVlfj+LP
-	 W7OPLjs6C5TAveGNsNU0GDNFKdbrFv2WUpRuAf42hUEbnNQ5lUEwiL5N1DFqdEopR8
-	 5p2lQLExDhfwP+m1+o2nWxFCyC10Dr9GqeARwrvDI75rx5x2bG02m5r618oEI5osiz
-	 WYW52mzq9Oe+w==
-Date: Thu, 15 May 2025 08:54:31 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Shivank Garg <shivankg@amd.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	luto@kernel.org, peterz@infradead.org, rafael@kernel.org,
-	pavel@kernel.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	sohil.mehta@intel.com, rui.zhang@intel.com, yuntao.wang@linux.dev,
-	kai.huang@intel.com, xiaoyao.li@intel.com, peterx@redhat.com,
-	sandipan.das@amd.com, ak@linux.intel.com, rostedt@goodmis.org
-Subject: Re: [PATCH RESEND 1/4] x86/mm: pgtable: Fix W=1 build kernel-doc
- warnings
-Message-ID: <aCWPp4wYwauSuTed@gmail.com>
-References: <20250514062637.3287779-1-shivankg@amd.com>
- <aCRMT0TlpFvpRGYk@gmail.com>
- <6c4b227e-abdd-4e7f-8abd-d85cae0f0ec3@amd.com>
- <aCRgRxmO6rsR-0k3@gmail.com>
- <c5ad88e9-434a-4399-8e21-3c41e9295e93@amd.com>
+	s=arc-20240116; t=1747292093; c=relaxed/simple;
+	bh=QBWw7BibD8RrHJXfAtvVn9utmmSQ0jmMRsDe9k560I0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M5+mWQpcNLJhtFnTbguOI7dUOpjpZsYL+5WXT9tCFWI5r2BjmK8fHOW1RE7BbaAliIl7x1VgANHFvO+GzHnNMFlsaw+gT+ZQ1hO386QMPTCIHYiKDKBPPdTpuolINhN1bNjPXjNhTfxpC8d8200PpL006so1v2zvkMKyY2qsqfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZygsQ5DqKztR6Q;
+	Thu, 15 May 2025 14:53:30 +0800 (CST)
+Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 84A2B140276;
+	Thu, 15 May 2025 14:54:47 +0800 (CST)
+Received: from kwepemq500001.china.huawei.com (7.202.195.224) by
+ dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 15 May 2025 14:54:47 +0800
+Received: from 228-1616.huawei.com (10.67.246.68) by
+ kwepemq500001.china.huawei.com (7.202.195.224) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 15 May 2025 14:54:46 +0800
+From: Nianyao Tang <tangnianyao@huawei.com>
+To: <maz@kernel.org>, <tglx@linutronix.de>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: <guoyang2@huawei.com>, <wangwudi@hisilicon.com>, <tangnianyao@huawei.com>,
+	<wangzhou1@hisilicon.com>
+Subject: [PATCH v3] irqchip/gic-v4.1: Use local 4_1 ITS to generate VSGI
+Date: Thu, 15 May 2025 14:53:59 +0000
+Message-ID: <20250515145359.2795959-1-tangnianyao@huawei.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c5ad88e9-434a-4399-8e21-3c41e9295e93@amd.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemq500001.china.huawei.com (7.202.195.224)
 
+On multi-node GICv4.1 system, VSGI senders always use one certain 4_1 ITS,
+because find_4_1_its return the first its_node in list, regardless of
+which node the VSGI sender is on. This brings guest vsgi performance drop
+when VM is not running on the same node as this returned ITS.
 
-* Shivank Garg <shivankg@amd.com> wrote:
+On a 2-socket environment, each with one ITS and 32 cpu, GICv4.1 enabled,
+4U8G guest, 4 vcpu is running on same socket.
+When VM on socket0, kvm-unit-tests ipi_hw result is 850ns.
+When VM on socket1, it is 750ns. The reason is VSGI sender always
+use the last reported ITS(that on socket1) to inject VSGI. The access
+from cpu to other-socket ITS will cost 100ns more compared to cpu to
+local ITS.
 
-> 
-> 
-> On 5/14/2025 2:50 PM, Ingo Molnar wrote:
-> > 
-> > * Shivank Garg <shivankg@amd.com> wrote:
-> > 
-> >>>> @@ -665,6 +665,9 @@ void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
-> >>>>  #ifdef CONFIG_X86_5LEVEL
-> >>>>  /**
-> >>>>   * p4d_set_huge - setup kernel P4D mapping
-> >>>> + * @p4d: Pointer to a p4d entry.
-> >>>> + * @addr: Virtual Address associated with p4d.
-> >>>> + * @prot: Protection bits to use.
-> >>>
-> >>> How about using the same capitalization you already see in this 
-> >>> description?
-> > 
-> >> Please review the revised patch with suggested changes.
-> > 
-> > I think you misunderstood: why are you using 'p4d', while a line before 
-> > it's 'P4D'? It's an acronym, and only used lowercase when it's a local 
-> > variable. 'p4d is a pointer to a p4d entry' is doubly confusing in that 
-> > regard ...
-> > 
-> > Same for PMD/PUD etc.
-> > 
-> 
-> Thank you for the clarification. I understand it now.
-> I hope the attached patch looks good now.
+By using a local ITS, we can get 12% reduction in IPI latency.
 
-No. Please re-read your patches and see whether you caught everything, 
-not just the things I pointed out ...
+Modify find_4_1_its to first return per-cpu local_4_1_its, which is
+init when inherit the VPE table from the ITS or from another CPU.
+If fail to find local 4_1 ITS, return any 4_1 ITS like before.
 
->  /**
->   * reserve_top_address - reserves a hole in the top of kernel address space
-> - * @reserve - size of hole to reserve
-> + * @reserve: size of hole to reserve.
+Signed-off-by: Nianyao Tang <tangnianyao@huawei.com>
+Suggested-by: Marc Zyngier <maz@kernel.org>
+---
+ drivers/irqchip/irq-gic-v3-its.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-And here the original capitalization in your -v1 patch was better.
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 0115ad6c8259..1b1d32f746b4 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -125,6 +125,8 @@ struct its_node {
+ 	int			vlpi_redist_offset;
+ };
+ 
++static DEFINE_PER_CPU(struct its_node *, local_4_1_its);
++
+ #define is_v4(its)		(!!((its)->typer & GITS_TYPER_VLPIS))
+ #define is_v4_1(its)		(!!((its)->typer & GITS_TYPER_VMAPP))
+ #define device_ids(its)		(FIELD_GET(GITS_TYPER_DEVBITS, (its)->typer) + 1)
+@@ -2778,6 +2780,8 @@ static u64 inherit_vpe_l1_table_from_its(void)
+ 		}
+ 		val |= FIELD_PREP(GICR_VPROPBASER_4_1_SIZE, GITS_BASER_NR_PAGES(baser) - 1);
+ 
++		*this_cpu_ptr(&local_4_1_its) = its;
++
+ 		return val;
+ 	}
+ 
+@@ -2815,6 +2819,8 @@ static u64 inherit_vpe_l1_table_from_rd(cpumask_t **mask)
+ 		gic_data_rdist()->vpe_l1_base = gic_data_rdist_cpu(cpu)->vpe_l1_base;
+ 		*mask = gic_data_rdist_cpu(cpu)->vpe_table_mask;
+ 
++		*this_cpu_ptr(&local_4_1_its) = *per_cpu_ptr(&local_4_1_its, cpu);
++
+ 		return val;
+ 	}
+ 
+@@ -4180,8 +4186,9 @@ static struct irq_chip its_vpe_irq_chip = {
+ 
+ static struct its_node *find_4_1_its(void)
+ {
+-	static struct its_node *its = NULL;
++	struct its_node *its;
+ 
++	its = *this_cpu_ptr(&local_4_1_its);
+ 	if (!its) {
+ 		list_for_each_entry(its, &its_nodes, entry) {
+ 			if (is_v4_1(its))
+-- 
+2.30.0
 
->   * p4d_set_huge - setup kernel P4D mapping
-> + * @p4d: pointer to a P4D entry.
-> + * @addr: virtual Address associated with p4d.
-> + * @prot: protection bits to use.
-
-Why is 'address' capitalized here?
-
->  /**
->   * pud_set_huge - setup kernel PUD mapping
-> + * @pud: pointer to a PUD entry.
-> + * @addr: virtual Address associated with pud.
-> + * @prot: protection bits to use.
-
-s/pud
- /the PUD entry
-
-Also, similar errors are elsewhere as well.
-
-Thanks,
-
-	Ingo
