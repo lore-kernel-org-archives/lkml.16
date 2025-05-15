@@ -1,106 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE43E26AD0
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:44:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55C428DEE6;
+	Thu, 15 May 2025 11:44:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747309473; cv=none; b=R2WTj4zbDyjCuNTlNKOVrJ/5VqeFpZmPeiFZpaRe2AJZbXupB7N+R1335z+bB/T7otCVp1fQNpmH8DbB8SJqjYFCR46LJOXrIMisMUKPXReDFv5t6qCr+hHeIohxNgq5TJBB+beaf21G3sn5Vt5hay1HrMRPeMNmn87owo9AQZY=
+	t=1747309497; cv=none; b=Mqyeb4EmRVspcURZ6l/S14YYWYaQWZxjfaLZDz45SWStVZ4fGqf7Ualf20HKRtg/FFzxY32JpRL31r5Y5J+SglRNdUKKziqkJb9sNLlMN18YQ6G1okBvfXQLhjoB32RNXg0DhTwH/GjAGBw8uUlTLOgIoXiUzib59ruKbxsHOgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747309473; c=relaxed/simple;
-	bh=fYBAMnUAbSmbstaaQWJvyiR/vqIs6Lf+U5vlR9+NGFE=;
+	s=arc-20240116; t=1747309497; c=relaxed/simple;
+	bh=9L1IyfyzQObJzbaVGvEPZrNbRGkTUP7BBjXPMB7XoiU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Siulu4u7CR6LMV/dzc95VdTPPWwZFKqzZz6EbjU4RxnwqlwzPwF2+S4gsi4sVJO+Vut7KmOe4lCdFmofd5BRz/zNcpedZArePSH842JTqBJKjkSPL28A/XmX16/gys/lg+aqQ6L02oRAqAlCTtI/pabDYnQCAhROMGXy1PeHqV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BB6y+bRX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=eVH7apNf7AiL1QTEZpGD0mD1FIFThfztaAFERLvzSzgMc7SAJ1EOqVaMHGXQ8hfW6NLm2aG8aSB8GpUTl63Uvp9tBYxzBAWSuMm3BtwTK4KEUaWb9voiaGX8sEuFPgCbzsL5/0B2WKO2zzWxBHm0IIhOYggfNFuYeqE5dFIup6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0FpzRxTF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BB6y+bRX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79B8CC4CEE7;
-	Thu, 15 May 2025 11:44:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747309473;
-	bh=fYBAMnUAbSmbstaaQWJvyiR/vqIs6Lf+U5vlR9+NGFE=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0FpzRxTF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA271C4CEED;
+	Thu, 15 May 2025 11:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747309497;
+	bh=9L1IyfyzQObJzbaVGvEPZrNbRGkTUP7BBjXPMB7XoiU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BB6y+bRXqYUk3n4XicdBVqUfJ0TTWL1OqXU0AIxja1Utv7xZK4WJu2w5j6vUmc5an
-	 hN1opk44ZdVvLGjENQ3RWI33WjcYkVUAfM/alpiKIEBjGJ3lAFfKmNLf4QFefYtAwS
-	 pJlon8wdZP0UkCGgvW/yS1f8RJFTvjpyEYwOP/DB6u2XivuvZ5eoEMVUYzGugwwRub
-	 f8FEHbVNaAjTdU84rYU3oyA/t9lZLyqVKTy0SgUS4MYwkEnOzyQkzFDIAeZkRnQ7tR
-	 ArH8f1s31XalfJuquU2uRCOH5ayFk6OYupBMl6RKQ3HtqpgyZBAHbYHdXc8DVNGTLm
-	 tIKdhN7jju3Dw==
-Date: Thu, 15 May 2025 13:44:27 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-	Borislav Petkov <bp@alien8.de>, Juergen Gross <jgross@suse.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Kees Cook <keescook@chromium.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	David Woodhouse <dwmw@amazon.co.uk>
-Subject: Re: [PATCH 20/29] x86/boot/e820: Clean up
- e820__setup_pci_gap()/e820_search_gap() a bit
-Message-ID: <aCXTm-BH2QopFIGV@gmail.com>
-References: <20250421185210.3372306-1-mingo@kernel.org>
- <20250421185210.3372306-21-mingo@kernel.org>
- <aAfFvbgRONT0OLmj@smile.fi.intel.com>
+	b=0FpzRxTFUsa9HxV6CXrpFGp2bV4BtdySujaFJyCtIqWXoTIPVZM+s82/v1ggGc/ct
+	 JwpUZ889TWiSgw7hA59a5J+/ti3J2dOpXmme8ucvgXNUrJMgRUQ1TLawj9EMHwanZ4
+	 5/nzvO8qoLqnRhTrq7/3JgOQvtwzafeSaYbcFmG0=
+Date: Thu, 15 May 2025 13:43:09 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Matthew Maurer <mmaurer@google.com>, Danilo Krummrich <dakr@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
+Message-ID: <2025051524-festival-afterglow-8483@gregkh>
+References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
+ <20250505-debugfs-rust-v5-4-3e93ce7bb76e@google.com>
+ <D9VPA1M45WBK.1TB4KOUXD24BD@kernel.org>
+ <aCRdNJ2oq-REBotd@pollux>
+ <CAGSQo0204_Dz65G33pAN3_iY=ejPXJRdAiB4ioM-nvMkAh0YXQ@mail.gmail.com>
+ <D9WM0BP5446N.1NVNDCZ4Y2QN1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aAfFvbgRONT0OLmj@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D9WM0BP5446N.1NVNDCZ4Y2QN1@kernel.org>
 
-
-* Andy Shevchenko <andy@kernel.org> wrote:
-
-> On Mon, Apr 21, 2025 at 08:52:00PM +0200, Ingo Molnar wrote:
-> > Use a bit more readable variable names, we haven't run out of
-> > underscore characters in the kernel yet.
+On Thu, May 15, 2025 at 10:59:44AM +0200, Benno Lossin wrote:
+> On Wed May 14, 2025 at 11:55 PM CEST, Matthew Maurer wrote:
+> > On Wed, May 14, 2025 at 2:07 AM Danilo Krummrich <dakr@kernel.org> wrote:
+> >> However, I really think we should keep the code as it is in this version and
+> >> just don't provide an example that utilizes ManuallyDrop and forget().
+> >>
+> >> I don't see how the idea of "manually dropping" (sub-)directories and files
+> >> provides any real value compared to just storing their instance in a driver
+> >> structure as long as they should stay alive, which is much more intuitive
+> >> anyways.
+> >
+> > We can't easily do this, because dropping a root directory recursively
+> > drops everything underneath it. This means that if I have
+> >
+> > foo/
+> >   - bar/
+> >   - baz/
+> >
+> > Then my directory handle for `bar` have to be guaranteed to outlive my
+> > directory handle for `foo` so that I know it's didn't get deleted
+> > under me. This is why they have a borrow onto their parent directory.
+> > This borrow means that you can't (without `unsafe`, or something like
+> > `yoke`) keep handles to `foo` and `bar` in the same struct.
 > 
-> Size notes:
-> 
-> > +	gap_size = 0x400000;
-> 
-> SZ_4M ?
-> 
-> ...
-> 
-> > +		gap_start = (max_pfn << PAGE_SHIFT) + 1024*1024;
-> 
-> SZ_1M ?
+> Is there no refcount that we can use instead of borrowing? I guess not,
+> since one can call `debugfs_remove`. What about a refcount on the rust
+> side? or is debugfs not used for "debugging" and needs to have the
+> performance of no refcount?
 
-Good point - delta patch below folded back & propagated to the rest of 
-the series.
+debugfs should never have any performance issues (i.e. you don't use it
+for performant things.)
 
-Thanks,
+So refcount away!  That should never be an issue.
 
-	Ingo
+thanks,
 
-===============================>
- arch/x86/kernel/e820.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 3baf558107e7..d00ca2dd20b7 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -722,12 +722,12 @@ __init void e820__setup_pci_gap(void)
- 	unsigned long gap_start, gap_size;
- 	int found;
- 
--	gap_size = 0x400000;
-+	gap_size = SZ_4M;
- 	found  = e820_search_gap(&gap_start, &gap_size);
- 
- 	if (!found) {
- #ifdef CONFIG_X86_64
--		gap_start = (max_pfn << PAGE_SHIFT) + 1024*1024;
-+		gap_start = (max_pfn << PAGE_SHIFT) + SZ_1M;
- 		pr_err("Cannot find an available gap in the 32-bit address range\n");
- 		pr_err("PCI devices with unassigned 32-bit BARs may not work!\n");
- #else
+greg k-h
