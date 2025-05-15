@@ -1,124 +1,403 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE575293B69
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:58:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B81E298990;
+	Thu, 15 May 2025 08:58:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299481; cv=none; b=ckguBk7gRtenOmMVUTWTg9Npl5uYQDEWZw5qYCT66uzM/MDnsOU7y4cR5LJYq4S40ApNpPf/X0PCRXPNox1AXbb+IdXS82Kdu1k/9vaoaju2azk/aI3IFgC7a/bYGygTWP9o1FwfdPN8jj8rqm4USjZDoX5AwhMzMjQyzwh8xFI=
+	t=1747299483; cv=none; b=aFOINlGm9oK9fjsX0bU7RzJKKaStZsPrccbQ1BfFIru0HQzl3sskg7gu8aJvef9hmCxuCRYIeK/CO1pgOZEG0FwLSOtVlIzlTRasCML8onOnyLGAVjlwnif0qS5ZsTr9i5Q8qRm/g/CkRUD7LJYOMNBYZW+QruN0QD4LeJN5pEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299481; c=relaxed/simple;
-	bh=vT91OralCxDf7tZj4Ytf33Vg6J6q4NXGQ0jCa9/KjeM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eesmwMfLkw8bR7+G6XuScuE8QRW4R3EYEuqPomxKhuTw+hcbKGE42zM0xZMx4Y7FYOhju6u7ec5U/lunOeCr2qiDzCGF9MNDkI5EbCWm3lvNb7qZd/HySeJWI8HU2cwWKui0Uq1pe6XfGPfGXij/SzasbTwn+idYwboxvoCVzB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IlmvBLWk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747299483; c=relaxed/simple;
+	bh=NEV/vgjb1O/PPVkq9/gsk0ry6YJMMin78MpzVr9F6jE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=O7vNeR4NNcdyhrjMJIxdrgKTxD8OFnwHthKTQjIGQ96ONT5rXmTZw4YsDBh2UbRQPIamFZd28S081TQMJslibdRtrb6Wf9PbiVq0a1Uge6N+6DzjoVopR9Xg7aW6skinEEXeBRgXCZpFxvyGiRxxJ1mdfRQgM3PCdR6jz1/gMRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kw1RJr0R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IlmvBLWk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F3DFC4CEE7;
-	Thu, 15 May 2025 08:57:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kw1RJr0R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE405C4CEED;
+	Thu, 15 May 2025 08:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747299481;
-	bh=vT91OralCxDf7tZj4Ytf33Vg6J6q4NXGQ0jCa9/KjeM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IlmvBLWkjfSSubbX7HQmCZuqWfmAPCDiI5FEG35hDj6ugQddbIiIWGRzdhEnMlWCb
-	 EAJmnH368Ssu7BScuJqrLP1Y7qtdUm7hs+Di9fGdQhQ73RKSRde0+jwlyYWT5UaZTG
-	 1JK22i08IHw0CZlhW/K7Nxexnd9hb4naBfsTHmRwro/Riy/Pz0yuSxr1h7615OPU+r
-	 mCYTeSpIfBhq0G2YG9iITt4fiGI/eMunlkJUX2FnnjA+DCsrb3q5yJEBEjDwONo3Vi
-	 Jrk21mcALfDuVZ7mAiEUVgNa9N0qZqk+DcLp+941P4bgg8+/rUJy3HO5U0+gYM4hLH
-	 IwauUpC0r/x2Q==
-From: Ingo Molnar <mingo@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Ingo Molnar <mingo@kernel.org>,
-	"Ahmed S . Darwish" <darwi@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 13/15] x86/cpu: Make CONFIG_X86_CX8 unconditional
-Date: Thu, 15 May 2025 10:57:03 +0200
-Message-ID: <20250515085708.2510123-14-mingo@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250515085708.2510123-1-mingo@kernel.org>
-References: <20250515085708.2510123-1-mingo@kernel.org>
+	s=k20201202; t=1747299483;
+	bh=NEV/vgjb1O/PPVkq9/gsk0ry6YJMMin78MpzVr9F6jE=;
+	h=From:Date:Subject:To:Cc:From;
+	b=kw1RJr0RO/a8+KiqP4uGF/0iyDF019soPfxFudneNTz+AoHZ65xM1G9tTZc7BXLb7
+	 VZFU9OQlMAEbuwdIUeraQllqBZZiRKVFrZAnGkQAa9X0dDsZT91s/e2eVmti05AE3X
+	 8jwf2H94jECberw/VbcRgAYOlgtF7VsxRLV51dJw1feqk5VH5NY8N5AjF3UpknaoBY
+	 oy2gyr3HMpHN3SWd1TXifE78O/Rp3E4XbPFiTZ2pOW2x1mfCBjziC+hDeBse1+Gn5Q
+	 6nkI6IdBfiAIpzP9gLYXRowipH9v+NZMWqm3DxvZO3YTooKtp6pUtvqZC7pPbL6Fhs
+	 /pET26bYjrLkg==
+From: Mark Brown <broonie@kernel.org>
+Date: Thu, 15 May 2025 10:57:43 +0200
+Subject: [PATCH] selftests/mm: Fix test result reporting in gup_longterm
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250515-selftests-mm-gup-longterm-dups-v1-1-05f8f731cf63@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAIasJWgC/x3NQQrDIBBG4auEWXfAhKRIr1K6EPNrB6IRx5RCy
+ N0rXX6b905SVIHSYzip4iMqe+4YbwP5t8sRLGs3TWZazDLOrNhCgzbllDgehbc9x4aaeD2K8t0
+ 6N8ME762lHikVQb7/wfN1XT8s1rlDcAAAAA==
+X-Change-ID: 20250514-selftests-mm-gup-longterm-dups-68aa4e0fcc88
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10522; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=NEV/vgjb1O/PPVkq9/gsk0ry6YJMMin78MpzVr9F6jE=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoJayXuu5E064SKrebHXiJNB4DB5TQnQRm9TYHX
+ 8hCCTCb/F6JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaCWslwAKCRAk1otyXVSH
+ 0DBhB/0Qtlq8iuwdvSiCW2Zc1PK1cV1yKz0/abE4XfAcO0QCzDdUgaM6FTJO2GEVppn8XvTQPL1
+ JX2GNonWUt7Lm9l7o5UjiJTRY2baR1nwhEyyT2fuIBVLVZ7EiZPfC+cFttnG86nfsVjQyrjVAON
+ 2pFId0Tgsndp1ebHJMe5LY8pdwDlWBpbkhpx1xqYu0ZLjpHCLOyk/CTCeov4FO1AvlYW0ECGPws
+ z8BcbV8TBcBS9re54BeuTkV2mTQqRKl1gN6KcGxiFG+LHRYWb71VakjqKND/KDP/YrOmPlaWEIC
+ XF3BNQOsUeCWE7X3I8rgTZATA8jBZ5obVtY7f6PJqvDmohVv
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-I.e. it's a boot time requirement for the CPU to support it.
+The kselftest framework uses the string logged when a test result is
+reported as the unique identifier for a test, using it to track test
+results between runs. The gup_longterm test completely fails to follow
+this pattern, it runs a single test function repeatedly with various
+parameters but each result report is a string logging an error message
+which is fixed between runs.
 
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Cc: Ahmed S . Darwish <darwi@linutronix.de>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: H . Peter Anvin <hpa@zytor.com>
-Cc: John Ogness <john.ogness@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250425084216.3913608-14-mingo@kernel.org
+Since the code already logs each test uniquely before it starts refactor
+to also print this to a buffer, then use that name as the test result.
+This isn't especially pretty, really this test could use a more
+substantial cleanup.
+
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/x86/Kconfig             | 2 +-
- arch/x86/Kconfig.cpu         | 3 +--
- arch/x86/Kconfig.cpufeatures | 1 -
- 3 files changed, 2 insertions(+), 4 deletions(-)
+ tools/testing/selftests/mm/gup_longterm.c | 163 ++++++++++++++++++++----------
+ 1 file changed, 107 insertions(+), 56 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 3747efea6a31..a715f877e199 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -136,7 +136,7 @@ config X86
- 	select ARCH_SUPPORTS_AUTOFDO_CLANG
- 	select ARCH_SUPPORTS_PROPELLER_CLANG    if X86_64
- 	select ARCH_USE_BUILTIN_BSWAP
--	select ARCH_USE_CMPXCHG_LOCKREF		if X86_CX8
-+	select ARCH_USE_CMPXCHG_LOCKREF
- 	select ARCH_USE_MEMTEST
- 	select ARCH_USE_QUEUED_RWLOCKS
- 	select ARCH_USE_QUEUED_SPINLOCKS
-diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
-index 5f0e29d154a8..b3772d384fa0 100644
---- a/arch/x86/Kconfig.cpu
-+++ b/arch/x86/Kconfig.cpu
-@@ -245,7 +245,6 @@ config X86_HAVE_PAE
+diff --git a/tools/testing/selftests/mm/gup_longterm.c b/tools/testing/selftests/mm/gup_longterm.c
+index 21595b20bbc3..a849537f9372 100644
+--- a/tools/testing/selftests/mm/gup_longterm.c
++++ b/tools/testing/selftests/mm/gup_longterm.c
+@@ -35,6 +35,8 @@ static int nr_hugetlbsizes;
+ static size_t hugetlbsizes[10];
+ static int gup_fd;
  
- config X86_CX8
- 	def_bool y
--	depends on X86_HAVE_PAE || M586TSC || M586MMX || MK6 || MK7 || MGEODEGX1 || MGEODE_LX
++static char test_name[1024];
++
+ static __fsword_t get_fs_type(int fd)
+ {
+ 	struct statfs fs;
+@@ -93,33 +95,48 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
+ 	__fsword_t fs_type = get_fs_type(fd);
+ 	bool should_work;
+ 	char *mem;
++	int result = KSFT_PASS;
+ 	int ret;
  
- # this should be set for all -march=.. options where the compiler
- # generates cmov.
-@@ -257,7 +256,7 @@ config X86_MINIMUM_CPU_FAMILY
- 	int
- 	default "64" if X86_64
- 	default "6" if X86_32 && (MPENTIUM4 || MPENTIUMM || MPENTIUMIII || MPENTIUMII || M686 || MVIAC3_2 || MVIAC7 || MEFFICEON || MATOM || MK7)
--	default "5" if X86_32 && X86_CX8
-+	default "5" if X86_32
++	if (fd < 0) {
++		result = KSFT_FAIL;
++		goto report;
++	}
++
+ 	if (ftruncate(fd, size)) {
+ 		if (errno == ENOENT) {
+ 			skip_test_dodgy_fs("ftruncate()");
+ 		} else {
+-			ksft_test_result_fail("ftruncate() failed (%s)\n", strerror(errno));
++			ksft_print_msg("ftruncate() failed (%s)\n",
++				       strerror(errno));
++			result = KSFT_FAIL;
++			goto report;
+ 		}
+ 		return;
+ 	}
  
- config X86_DEBUGCTLMSR
- 	def_bool y
-diff --git a/arch/x86/Kconfig.cpufeatures b/arch/x86/Kconfig.cpufeatures
-index cd551818f451..f04ae53435bc 100644
---- a/arch/x86/Kconfig.cpufeatures
-+++ b/arch/x86/Kconfig.cpufeatures
-@@ -42,7 +42,6 @@ config X86_REQUIRED_FEATURE_NOPL
+ 	if (fallocate(fd, 0, 0, size)) {
+-		if (size == pagesize)
+-			ksft_test_result_fail("fallocate() failed (%s)\n", strerror(errno));
+-		else
+-			ksft_test_result_skip("need more free huge pages\n");
+-		return;
++		if (size == pagesize) {
++			ksft_print_msg("fallocate() failed (%s)\n", strerror(errno));
++			result = KSFT_FAIL;
++		} else {
++			ksft_print_msg("need more free huge pages\n");
++			result = KSFT_SKIP;
++		}
++		goto report;
+ 	}
  
- config X86_REQUIRED_FEATURE_CX8
- 	def_bool y
--	depends on X86_CX8
+ 	mem = mmap(NULL, size, PROT_READ | PROT_WRITE,
+ 		   shared ? MAP_SHARED : MAP_PRIVATE, fd, 0);
+ 	if (mem == MAP_FAILED) {
+-		if (size == pagesize || shared)
+-			ksft_test_result_fail("mmap() failed (%s)\n", strerror(errno));
+-		else
+-			ksft_test_result_skip("need more free huge pages\n");
+-		return;
++		if (size == pagesize || shared) {
++			ksft_print_msg("mmap() failed (%s)\n", strerror(errno));
++			result = KSFT_FAIL;
++		} else {
++			ksft_print_msg("need more free huge pages\n");
++			result = KSFT_SKIP;
++		}
++		goto report;
+ 	}
  
- # this should be set for all -march=.. options where the compiler
- # generates cmov.
+ 	/* Fault in the page such that GUP-fast can pin it directly. */
+@@ -134,7 +151,8 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
+ 		 */
+ 		ret = mprotect(mem, size, PROT_READ);
+ 		if (ret) {
+-			ksft_test_result_fail("mprotect() failed (%s)\n", strerror(errno));
++			ksft_print_msg("mprotect() failed (%s)\n", strerror(errno));
++			result = KSFT_FAIL;
+ 			goto munmap;
+ 		}
+ 		/* FALLTHROUGH */
+@@ -147,12 +165,14 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
+ 				type == TEST_TYPE_RW_FAST;
+ 
+ 		if (gup_fd < 0) {
+-			ksft_test_result_skip("gup_test not available\n");
++			ksft_print_msg("gup_test not available\n");
++			result = KSFT_SKIP;
+ 			break;
+ 		}
+ 
+ 		if (rw && shared && fs_is_unknown(fs_type)) {
+-			ksft_test_result_skip("Unknown filesystem\n");
++			ksft_print_msg("Unknown filesystem\n");
++			result = KSFT_SKIP;
+ 			return;
+ 		}
+ 		/*
+@@ -169,14 +189,19 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
+ 		args.flags |= rw ? PIN_LONGTERM_TEST_FLAG_USE_WRITE : 0;
+ 		ret = ioctl(gup_fd, PIN_LONGTERM_TEST_START, &args);
+ 		if (ret && errno == EINVAL) {
+-			ksft_test_result_skip("PIN_LONGTERM_TEST_START failed (EINVAL)n");
++			ksft_print_msg("PIN_LONGTERM_TEST_START failed (EINVAL)n");
++			result = KSFT_SKIP;
+ 			break;
+ 		} else if (ret && errno == EFAULT) {
+-			ksft_test_result(!should_work, "Should have failed\n");
++			if (should_work)
++				result = KSFT_FAIL;
++			else
++				result = KSFT_PASS;
+ 			break;
+ 		} else if (ret) {
+-			ksft_test_result_fail("PIN_LONGTERM_TEST_START failed (%s)\n",
+-					      strerror(errno));
++			ksft_print_msg("PIN_LONGTERM_TEST_START failed (%s)\n",
++				       strerror(errno));
++			result = KSFT_FAIL;
+ 			break;
+ 		}
+ 
+@@ -189,7 +214,10 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
+ 		 * some previously unsupported filesystems, we might want to
+ 		 * perform some additional tests for possible data corruptions.
+ 		 */
+-		ksft_test_result(should_work, "Should have worked\n");
++		if (should_work)
++			result = KSFT_PASS;
++		else
++			result = KSFT_FAIL;
+ 		break;
+ 	}
+ #ifdef LOCAL_CONFIG_HAVE_LIBURING
+@@ -199,8 +227,9 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
+ 
+ 		/* io_uring always pins pages writable. */
+ 		if (shared && fs_is_unknown(fs_type)) {
+-			ksft_test_result_skip("Unknown filesystem\n");
+-			return;
++			ksft_print_msg("Unknown filesystem\n");
++			result = KSFT_SKIP;
++			goto report;
+ 		}
+ 		should_work = !shared ||
+ 			      fs_supports_writable_longterm_pinning(fs_type);
+@@ -208,8 +237,9 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
+ 		/* Skip on errors, as we might just lack kernel support. */
+ 		ret = io_uring_queue_init(1, &ring, 0);
+ 		if (ret < 0) {
+-			ksft_test_result_skip("io_uring_queue_init() failed (%s)\n",
+-					      strerror(-ret));
++			ksft_print_msg("io_uring_queue_init() failed (%s)\n",
++				       strerror(-ret));
++			result = KSFT_SKIP;
+ 			break;
+ 		}
+ 		/*
+@@ -222,17 +252,28 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
+ 		/* Only new kernels return EFAULT. */
+ 		if (ret && (errno == ENOSPC || errno == EOPNOTSUPP ||
+ 			    errno == EFAULT)) {
+-			ksft_test_result(!should_work, "Should have failed (%s)\n",
+-					 strerror(errno));
++			if (should_work) {
++				ksft_print_msg("Should have failed (%s)\n",
++					       strerror(errno));
++				result = KSFT_FAIL;
++			} else {
++				result = KSFT_PASS;
++			}
+ 		} else if (ret) {
+ 			/*
+ 			 * We might just lack support or have insufficient
+ 			 * MEMLOCK limits.
+ 			 */
+-			ksft_test_result_skip("io_uring_register_buffers() failed (%s)\n",
+-					      strerror(-ret));
++			ksft_print_msg("io_uring_register_buffers() failed (%s)\n",
++				       strerror(-ret));
++			result = KSFT_SKIP;
+ 		} else {
+-			ksft_test_result(should_work, "Should have worked\n");
++			if (should_work) {
++				result = KSFT_PASS;
++			} else {
++				ksft_print_msg("Should have worked\n");
++				result = KSFT_FAIL;
++			}
+ 			io_uring_unregister_buffers(&ring);
+ 		}
+ 
+@@ -246,21 +287,32 @@ static void do_test(int fd, size_t size, enum test_type type, bool shared)
+ 
+ munmap:
+ 	munmap(mem, size);
++report:
++	ksft_test_result(result, "%s\n", test_name);
+ }
+ 
+ typedef void (*test_fn)(int fd, size_t size);
+ 
++static void log_test_start(const char *name, ...)
++{
++	va_list args;
++	va_start(args, name);
++
++	vsnprintf(test_name, sizeof(test_name), name, args);
++	ksft_print_msg("[RUN] %s\n", test_name);
++
++	va_end(args);
++}
++
+ static void run_with_memfd(test_fn fn, const char *desc)
+ {
+ 	int fd;
+ 
+-	ksft_print_msg("[RUN] %s ... with memfd\n", desc);
++	log_test_start("%s ... with memfd", desc);
+ 
+ 	fd = memfd_create("test", 0);
+-	if (fd < 0) {
+-		ksft_test_result_fail("memfd_create() failed (%s)\n", strerror(errno));
+-		return;
+-	}
++	if (fd < 0)
++		ksft_print_msg("memfd_create() failed (%s)\n", strerror(errno));
+ 
+ 	fn(fd, pagesize);
+ 	close(fd);
+@@ -271,23 +323,23 @@ static void run_with_tmpfile(test_fn fn, const char *desc)
+ 	FILE *file;
+ 	int fd;
+ 
+-	ksft_print_msg("[RUN] %s ... with tmpfile\n", desc);
++	log_test_start("%s ... with tmpfile", desc);
+ 
+ 	file = tmpfile();
+ 	if (!file) {
+-		ksft_test_result_fail("tmpfile() failed (%s)\n", strerror(errno));
+-		return;
+-	}
+-
+-	fd = fileno(file);
+-	if (fd < 0) {
+-		ksft_test_result_fail("fileno() failed (%s)\n", strerror(errno));
+-		goto close;
++		ksft_print_msg("tmpfile() failed (%s)\n", strerror(errno));
++		fd = -1;
++	} else {
++		fd = fileno(file);
++		if (fd < 0) {
++			ksft_print_msg("fileno() failed (%s)\n", strerror(errno));
++		}
+ 	}
+ 
+ 	fn(fd, pagesize);
+-close:
+-	fclose(file);
++
++	if (file)
++		fclose(file);
+ }
+ 
+ static void run_with_local_tmpfile(test_fn fn, const char *desc)
+@@ -295,22 +347,22 @@ static void run_with_local_tmpfile(test_fn fn, const char *desc)
+ 	char filename[] = __FILE__"_tmpfile_XXXXXX";
+ 	int fd;
+ 
+-	ksft_print_msg("[RUN] %s ... with local tmpfile\n", desc);
++	log_test_start("%s ... with local tmpfile", desc);
+ 
+ 	fd = mkstemp(filename);
+-	if (fd < 0) {
+-		ksft_test_result_fail("mkstemp() failed (%s)\n", strerror(errno));
+-		return;
+-	}
++	if (fd < 0)
++		ksft_print_msg("mkstemp() failed (%s)\n", strerror(errno));
+ 
+ 	if (unlink(filename)) {
+-		ksft_test_result_fail("unlink() failed (%s)\n", strerror(errno));
+-		goto close;
++		ksft_print_msg("unlink() failed (%s)\n", strerror(errno));
++		close(fd);
++		fd = -1;
+ 	}
+ 
+ 	fn(fd, pagesize);
+-close:
+-	close(fd);
++
++	if (fd >= 0)
++		close(fd);
+ }
+ 
+ static void run_with_memfd_hugetlb(test_fn fn, const char *desc,
+@@ -319,15 +371,14 @@ static void run_with_memfd_hugetlb(test_fn fn, const char *desc,
+ 	int flags = MFD_HUGETLB;
+ 	int fd;
+ 
+-	ksft_print_msg("[RUN] %s ... with memfd hugetlb (%zu kB)\n", desc,
++	log_test_start("%s ... with memfd hugetlb (%zu kB)", desc,
+ 		       hugetlbsize / 1024);
+ 
+ 	flags |= __builtin_ctzll(hugetlbsize) << MFD_HUGE_SHIFT;
+ 
+ 	fd = memfd_create("test", flags);
+ 	if (fd < 0) {
+-		ksft_test_result_skip("memfd_create() failed (%s)\n", strerror(errno));
+-		return;
++		ksft_print_msg("memfd_create() failed (%s)\n", strerror(errno));
+ 	}
+ 
+ 	fn(fd, hugetlbsize);
+
+---
+base-commit: 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
+change-id: 20250514-selftests-mm-gup-longterm-dups-68aa4e0fcc88
+
+Best regards,
 -- 
-2.45.2
+Mark Brown <broonie@kernel.org>
 
