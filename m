@@ -1,61 +1,63 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65AA31F4C97;
-	Thu, 15 May 2025 15:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCA71F4C97;
+	Thu, 15 May 2025 15:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747323104; cv=none; b=gAg5I/rXXKGc74zt7fBLiqefIlY7U9lYAPq3z1dx6EDmghoRE/UTtv7Fx2KdBDpRiw7GK6Zoi9nSeCXLnTpvsOiwWTj7VJulUuIQOXX580Pn5a0YN477q+JsY3OPNatGI7D9XMuglLgVO+Rh96IuGtKDNxMG87qnoae5p025xOk=
+	t=1747323109; cv=none; b=Fvux4efCa8BEyjG/6hqI++7b8U+39Z7MREwAxPRDK1inp+XrlNT0U/6FiK8uFkjYTCoM1D7nLl9ftpF5tt6VEZx0BaH0mSCi4yexW0CaCJf46NA3nR2Ux6zdatmskBAewCWjKJ8K7GNYuyDjT5r5ZwtwJEDEtxpmbcD+brZiRkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747323104; c=relaxed/simple;
-	bh=PnAo1oy36wkZC4iacSN5Dxd3k5hdUeTirgRuwO6gKb8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mWeVOhgQV05wqOgKwqY/7MFyAHyVgKVQNfOMXcM6ypIAmOE0lQECjNzJztDuTsSH7IRy1UD2huJdIINYRerR+IOHIGpBcZ2S2KimxDY883v4xUrsXezBcPfZGy9UKSGF+1vWp4x1cH6OYbeN0QdDpyfEHfNbMPV4hRWfz1/1Dfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=azOKJCbc; arc=none smtp.client-ip=209.85.221.48
+	s=arc-20240116; t=1747323109; c=relaxed/simple;
+	bh=gkYTuJlPPWBN0Mo/59Z5vPhiz9LzDHrqOhq+Ztyl3S4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Lx9wkldr1g7fzQS2zBRC7iUY9/yNJ6Rrm0YUUj58Sfh4iiXLlbB9xvJrjd23QXUrlVS6Cv3eKvs/pFU5AGbpA+lxREgdKj6DyqVWZs9Dopzx7x/hkx2GOlOc+YDutveyZDHiKT/hUlE+8y/KaSQhSsjkzAENnxGGKKnJKgRHTc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W9Q3OVNL; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azOKJCbc"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a1b8e8b2b2so708732f8f.2;
-        Thu, 15 May 2025 08:31:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9Q3OVNL"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a0bdcd7357so909022f8f.1;
+        Thu, 15 May 2025 08:31:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747323101; x=1747927901; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=E887hLoV0mvWBatjUOh0WoVNqn5SVBGvUoo7S03Cz3Y=;
-        b=azOKJCbc/KRxY/YFV3tJs/oTMGXcw0690wIWq5UbzjHTK/Whx4vcl/4gnNItIWSUXY
-         gSTh+5QtZmjA+Xuq6JhjLzlzA38mgjMiGpDcNZee2Gs0W/DG0oRW04hmactxzb5u/2al
-         a/Y3gQMr8ghAp5W4xM+/a4Uv9mR7ogUXCoY3ipXfScNikLP+igvxmUxPuW/+EIsekpg+
-         ul3CCzwu2NXAFkhd3sxU0pB7WafC6yoQezRhoWYBjDMZYVgkEJAIsPw2Q6s9MElCKu9E
-         3Hp7bteQxqbdzyMWlw2JANmT8JIJWWggbGGQYiQ8HQLjtLG633StOAkMnpxsv/SCWvm8
-         /Ylg==
+        d=gmail.com; s=20230601; t=1747323104; x=1747927904; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+UMNOScS/nLhEASnWiqg2pAIhCiCnLz2QSJ+NCAvmKU=;
+        b=W9Q3OVNL2qQabAaZ5izfjk5ghRv8Ppu6hXE/tMZRKC71Bk30N6Ahgnc3YPiQnqd9Qo
+         P4zZty3VNtwLt4nJfM6lm8O/+sV7qjuzYFjZazbNuyYCx+baZ/c3csXAjyX9qZ0qSAuR
+         U36+EUJOb+YNAOJTikoRFb14AafgVYE3alK9lVlgv0Uc2CFu0B8zaxzQgvtFjL082nh6
+         hzNT7YsrcMlpNmEND9JKKhEUYP8Wfa3dGUUwQ//SG+emx4b82Uw4L4HOQ/fdtDaYWKuz
+         t3V9iN7E5isC0K6XDK9IaEt6RA4MAlaq6qe00p+YG1d1hvzceiqMo7krBuU6yA7C5eg9
+         qcJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747323101; x=1747927901;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=E887hLoV0mvWBatjUOh0WoVNqn5SVBGvUoo7S03Cz3Y=;
-        b=jdUHebxlILzoWiOlo76lajXbgTNIHndTiNJbf6bVr+RqhyDkPHb3eOdBcAgqFG6/Y+
-         tC2RsVUK7vyghS/Jr/KrH3aiCMsVrOwchVF4wKCz4Ls/sP2esiqdgc0gDZli8cPZkTuW
-         UabDqYFC0WhW0gtopZLgjcFCFVBrPfZK5GJh0LSeJo1bB+MN9TUD5t8Go7RHYO5B42kw
-         tv/1dGhm0KPtTd34nPc5UHcZHMtCRKR4+BCPGBCR5eurkhh/X3ytaWXXdItZCGWaD1Lh
-         BL3V2+YAP/C/Y8kpEx1EdJ1BNkWWxxU9igfwCfX+LZHllShKogg7QUwcTugw0zbmx71a
-         0Hjw==
-X-Forwarded-Encrypted: i=1; AJvYcCWT71QD301rqdGlrBfIAEqHJHJ/sNm98yzC8EwiGlxewyzxIoIoo7F+ldrzVu5yr+5ObAFNOAwEZchAEw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFTndgMIU9qY7n75giaX5ql8ID3gWalt/6BOjjv5LXljuNspa/
-	BwpO4CgoVSdnjFQGVNuVm61mJCIdI8RKzpKHUDtsWp3y9P1Jx+E2txle
-X-Gm-Gg: ASbGncv8d6axo3qWFJhWSwmxbZvh8Sso+woK5jsgQFsFb1ZCGFLjtxVJ2VgUOsvWSJs
-	vwS2DZWoLZkofobnE6t8JKZyCTPNF3SgdCZ0r2isVNRjkWLitABD/2U/asEGq6qnFUTunxNOIS0
-	NXFCnu6EvBUYSAlUqPcc+BA6x4Z3nSMgyrJ0+r8attpR68XLTb6yA9PI8EXR+NTlHccr9Cc9OOz
-	/z/peAMmzou1nkNqziAYRMqmniZ67fhV7XJ3q8ANZpJv2INwEIWjl5KeTKr5x8rRuEwVzr7mUXZ
-	TIF/pprmAX79PqqY88gkzvOlvfvCqZnWmwPNBI5xnSwE5newuPtmMtof/fooj1OtdB0X6tW0Wlx
-	V11BP8CUoxZdT
-X-Google-Smtp-Source: AGHT+IFftXa/Cc5yP/0YXe4frc+ywNZqnlZwyub0ZKCe8wNwnS+yYU3Ly5obmt7ZlBbYWv1INGmY8A==
-X-Received: by 2002:a05:6000:438a:b0:3a0:ad15:4422 with SMTP id ffacd0b85a97d-3a35c8356bfmr228497f8f.21.1747323100390;
-        Thu, 15 May 2025 08:31:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747323104; x=1747927904;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+UMNOScS/nLhEASnWiqg2pAIhCiCnLz2QSJ+NCAvmKU=;
+        b=GetuN+wwJ3H13oJfRupPaNqxS78BLMsiJWmDdvoN+iwqfJTHjb4nsEodHMcBHJxLgn
+         Vczt1FLiJEb47UhgA+SllNXYMjgqBe2SbmPeYWNs3eYdjpTKKkNpIRfdnaJoiRkHAVbL
+         XyIQvepoGI4KUSLrZkg8loSOjwb3kQRF60VGSxg8xafsnJxx6BK6hrMFD2SXgiAJqAKx
+         pe8GkIDZyMimcaefdzCsNsCw033U0pMYRm+JIGdpG8UzpTM3H3ACdGKYbrB64WzmzqLx
+         3s5AUh7jpTgBF7vsauZO6KhMb9H6C/XLoXJYgbxRhnosIcNd/X0radHLpGBzaYfHzCf8
+         ldqg==
+X-Forwarded-Encrypted: i=1; AJvYcCUPRteV7hks2XdaLB/UHRML6jVy4CKvVWFjws0iePjIa/HAPpmMquH3J0HZPO7ZUKVikZNuG6SJRG7WIA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyugvcfsy36YBxdh6iHH0JHe171anf2AH6sb6j7ysd+AK1iaNIf
+	q1tsq6l+pZTfZLE/cuD1Yk79D4eOwpYXKdTArPi9q3Y8yhpUsjj/XaSa
+X-Gm-Gg: ASbGncvMmNRYFDkqMnPRkwGOjGBSi3zXycHjN74IUQi8ZLeasZnP+xeOfRngJiZMTyC
+	C+Pb/o4ibPmAMsjuOTI8omQCGOnVZCjDilI/odG+ArFBX/xF6f6pAS+XQY9BCuux9zL4EyTSjtn
+	Ou0QuEZBkuEdfvX0i/yRVtLmO6yPTI4Xv5TknwqAenY9BkqQg36X9QDVcL6m5BprpvFtCPf6pzS
+	CXD0/tfNvF+n/4ZhNG0OgaFWjo35AawDUXeBg8VWVbfixu1Q/ckEtWmyoaH0qxXVSODpAbWRCNu
+	zPJDeJXvhuvHa+2Y/il8TKcqDIeRcFKwyREsDwejZT96bxjNIz16is/reQtcu82Bwh2bOqyzZ3U
+	jkVL1X1urhDXG
+X-Google-Smtp-Source: AGHT+IFCWv7sS0o5RLMAYzy00EVXOEEzZ8epBiVhzCbLF/WOtKr85X0xxKEIvVfQ/4cmLc4GelQZfg==
+X-Received: by 2002:a05:6000:2012:b0:391:31c8:ba59 with SMTP id ffacd0b85a97d-3a35c808b6emr237791f8f.4.1747323104135;
+        Thu, 15 May 2025 08:31:44 -0700 (PDT)
 Received: from playground.localdomain ([82.79.237.69])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57ddfd6sm22617986f8f.4.2025.05.15.08.31.39
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57ddfd6sm22617986f8f.4.2025.05.15.08.31.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 08:31:39 -0700 (PDT)
+        Thu, 15 May 2025 08:31:43 -0700 (PDT)
 From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
 To: Mark Brown <broonie@kernel.org>,
 	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
@@ -64,10 +66,12 @@ To: Mark Brown <broonie@kernel.org>,
 	Liam Girdwood <lgirdwood@gmail.com>
 Cc: linux-kernel@vger.kernel.org,
 	linux-sound@vger.kernel.org
-Subject: [PATCH RFC 0/3] ASoC: audio-graph-card2: support explicitly disabled links
-Date: Thu, 15 May 2025 11:31:25 -0400
-Message-Id: <20250515153128.147457-1-laurentiumihalcea111@gmail.com>
+Subject: [PATCH RFC 1/3] ASoC: re-introduce disable_route_checks flag for OF routes
+Date: Thu, 15 May 2025 11:31:26 -0400
+Message-Id: <20250515153128.147457-2-laurentiumihalcea111@gmail.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250515153128.147457-1-laurentiumihalcea111@gmail.com>
+References: <20250515153128.147457-1-laurentiumihalcea111@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,123 +82,54 @@ Content-Transfer-Encoding: 8bit
 
 From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
 
-Some boards (referred to as "base" boards here) support attaching daughter
-boards (referred to as "plugin" boards here) to them to extend their audio
-capabilities (i.e. the daughter boards may contain additional codecs that
-can be attached to the DAIs exposed by the base boards). This can be seen
-in the following diagram:
+The "disable_route_checks" flag was previously removed via commit
+dd2395162c07 ("ASoC: remove disable_route_checks") as it wasn't being
+used anywhere.
 
-                  +========+               +========+
-                  |        | D0 <-----> C0 |        |
-                  |  BASE  |               | PLUGIN |
-                  |        | D1 <-----> C1 |        |
-                  +========+               +========+
+Re-introduce an OF-specific variant of the flag: "disable_of_route_checks"
+as this will be used by audio-graph-card2.
 
-where D0 and D1 are the DAIs of BASE board connected to PLUGIN's C0 and C1
-codecs.
+Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+---
+ include/sound/soc.h  |  1 +
+ sound/soc/soc-core.c | 12 ++++++++++--
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-Currently, if any of the devices that make up a DAI link have their
-DT nodes disabled using the 'status = "disabled"' property, the creation
-of the sound card using "audio-graph-card2" driver will fail.
-
-To allow for some extra flexibility with respect to the devicetrees,
-this series allows the existence of explicitly disabled links. An
-explicitly disabled link is a link whose CODEC/DAI DT node has been
-disabled using the 'status = "disabled"' property. The sound card creation
-will no longer fail if such a link is encountered.
-
-The main usage of this feature is to support links that can be removed.
-For instance, links D0-C0 and D1-C1 cannot be created unless PLUGIN is
-connected. As such, we can disable the DT nodes of C0 and C1 in the
-BASE's DTS and then enable them using PLUGIN's DT overlay.
-
-Additionally, since links might be disabled, the route creation may fail.
-So, if there's at least one link that was explicitly disabled then we need
-to allow the route creation to fail (by re-introducing an OF variant of
-the previously removed "disabled_of_route_checks"). This also allows
-making the DT overlays for the plugins more scalable as we remove the
-dependency of the "routing" property on the base board.
-
-In addition to the aforementioned feature, this series also includes a set
-of DTSIs that I've used for testing. I've included them in case anyone
-would like to try out this new feature. If they don't bring any value then
-we can just drop them.
-
-An example of how this feature can be used is shown below. We assume that
-C0 has widget C00. We also assume that BASE has an additional connection:
-D2-C2, where C2 is a codec present on the BASE board. C2 has widgets C20
-and C21.
-
-[snippet from base.dts]
-	card {
-		compatible = "audio-graph-card2";
-		links = <&l0>, <&l1>, <&l2>;
-		routing = "Headphones", "C20",
-			  "Headphones", "C21",
-			  "Line", "C01";
-	};
-
-	d0: cpu@0 {
-		l0: port { l0_ep: endpoint { remote-endpoint = <&c0_ep>; } };
-	};
-
-	d1: cpu@1 {
-		l1: port { l1_ep: endpoint { remote-endpoint = <&c1_ep>; } };
-	};
-
-	d2: cpu@2 {
-		l2: port { l2_ep: endpoint { remote-endpoint = <&c2_ep>; } };
-	};
-
-	c0: codec@0 {
-		status = "disabled";
-
-		port { c0_ep: endpoint { remote-endpoint = <&l0_ep>; } };
-	};
-
-	c1: codec@1 {
-		status = "disabled";
-
-		port { c1_ep: endpoint { remote-endpoint = <&l1_ep>; } };
-	};
-
-	c2: codec@2 {
-		port { c2_ep: endpoint { remote-endpoint = <&l2_ep>; } };
-	};
-
-[snippet from plugin.dtso]
-
-&c0 {
-	status = "okay";
-};
-
-&c1 {
-	status = "okay";
-};
-
-Since codecs c0 and c1 do not exist unless PLUGIN is connected, they are
-disabled in BASE's DTS. If PLUGIN's DTBO is not applied then only link l2
-will be created. Otherwise, all links will be created. PLUGIN's DTBO can
-be applied to the DTB of any BASE board it's compatible with under the
-condition that the DT node labels for said codecs are kept the same.
-
-Laurentiu Mihalcea (3):
-  ASoC: re-introduce disable_route_checks flag for OF routes
-  ASoC: audio-graph-card2: support explicitly disabled links
-  ASoC: generic: add more sample DTSIs for audio-graph-card2
-
- include/sound/simple_card_utils.h             |   3 +-
- include/sound/soc.h                           |   1 +
- .../generic/audio-graph-card2-sample1.dtsi    | 278 ++++++
- .../generic/audio-graph-card2-sample2.dtsi    | 878 ++++++++++++++++++
- .../generic/audio-graph-card2-sample3.dtsi    | 486 ++++++++++
- sound/soc/generic/audio-graph-card2.c         | 231 +++++
- sound/soc/soc-core.c                          |  12 +-
- 7 files changed, 1886 insertions(+), 3 deletions(-)
- create mode 100644 sound/soc/generic/audio-graph-card2-sample1.dtsi
- create mode 100644 sound/soc/generic/audio-graph-card2-sample2.dtsi
- create mode 100644 sound/soc/generic/audio-graph-card2-sample3.dtsi
-
+diff --git a/include/sound/soc.h b/include/sound/soc.h
+index 1fffef311c41..e76da038557d 100644
+--- a/include/sound/soc.h
++++ b/include/sound/soc.h
+@@ -1077,6 +1077,7 @@ struct snd_soc_card {
+ 	unsigned int instantiated:1;
+ 	unsigned int topology_shortname_created:1;
+ 	unsigned int fully_routed:1;
++	unsigned int disable_of_route_checks:1;
+ 	unsigned int probed:1;
+ 	unsigned int component_chaining:1;
+ 	struct device *devres_dev;
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 67bebc339148..b14a52d6f550 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -2245,8 +2245,16 @@ static int snd_soc_bind_card(struct snd_soc_card *card)
+ 
+ 	ret = snd_soc_dapm_add_routes(&card->dapm, card->of_dapm_routes,
+ 				      card->num_of_dapm_routes);
+-	if (ret < 0)
+-		goto probe_end;
++	if (ret < 0) {
++		if (card->disable_of_route_checks) {
++			ret = 0;
++			dev_info(card->dev,
++				 "%s: disable_of_route_checks set, ignoring errors on add_routes\n",
++				 __func__);
++		} else {
++			goto probe_end;
++		}
++	}
+ 
+ 	/* try to set some sane longname if DMI is available */
+ 	snd_soc_set_dmi_name(card);
 -- 
 2.34.1
 
