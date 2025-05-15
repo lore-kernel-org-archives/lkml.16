@@ -1,68 +1,66 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0A729B8F2;
-	Thu, 15 May 2025 21:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E0238DD8;
+	Thu, 15 May 2025 21:15:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747343697; cv=none; b=Mr3/ux2iTLpGBEeJhfrhxSXwNYg/oeh93rozAipRPX+GFud34PSCS9ie/1i5CttpVxTtF0dfckZRrNHr+AWvhhJPZzFXDJsrruI1YJY4/cg7KBzZ7hUpNLg+8aRx3+75xYvPIMhJC6bnbAL5ZAWioAlz65Q/aNSFfuD7TuyntKk=
+	t=1747343756; cv=none; b=subtDdO0zItkPjSzjIwHcYZfag2xdGW+GBToRVMPOxRGCx9ABIE7D0+t87/ZC5ubLvMGNRpOi3My//srtNgqM+zMBjC0+JY3aaz7HKyyojcYjF7lRECnRiOGAJnbsW9N7Zi4h6dS2isccfvxQqesXmhWOJYOtw2/+ZeidN37cNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747343697; c=relaxed/simple;
-	bh=RAyngCPq2peFM0V0FTaA8Fr/E0TLSEJxlAFs8iBQIjE=;
+	s=arc-20240116; t=1747343756; c=relaxed/simple;
+	bh=0xMKbu9JvEzTLH/t7pzwV8X6AAq3s2TjmRoUG/aZy/E=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k76U90+4+b1BQD0rrAeRntJipERLPKEUPcnWS/0Fz7ZpfZMuZOKVRvMxk9EWZ9HV2GFKxVNUly/aib3nhRyUL4TiSGPGK3HRApN3lWehemIYb45mnaR3ZpLVWeuPdDQa3dVmOz4zlMnpxGMGH3wz6v0YbCHCjN7YE/WB+rKcVBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=M+1elNIu; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	 MIME-Version:Content-Type; b=CDD+hXBvJLKHsGmHBromhxqkPeWERlg7NTt3oyNNVcMNrrhlc4nO+dikQiNF8oGCHwMaBjG2u006a/dO2NjDMkRcWtRXoufTFassRT4pd/h4s+oEyyw57AmDDEX0eNGZoXlMC3eHBtQqRGjCgQrvCECy05vLlgaAKnbk2Fk3fN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=CvUvtBX4; arc=none smtp.client-ip=99.78.197.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="M+1elNIu"
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54FK2uZ1016353;
-	Thu, 15 May 2025 17:14:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=w0lbf
-	dYGBStOV8QFtlF1ozKaiKDqJdzZMS+uaLk8ATg=; b=M+1elNIuZV+SCalyaegWE
-	AjGBwCSh+pKEwyXLguERf+Yr//ZfrY/leqQvt0M4K4GfxmBvdqL6JE0jnUmVrHSk
-	4IuL+2fN/NJCJzZA9IFcehma5qTBxoh4d+ijei50IH3thN9u/0wEjgR8C51t23ZQ
-	l09WYr0KvZTifNytDT9n/d5+M9G9r3ertPPo/kz0L22wRmc2S50yZ9Dx/IEcapmt
-	1g2c8qRN8G/L2DbFt2JR5ncl6uDIctfpmWBnxLyPhLR/yZ7ODFRxLzWEjbafRDNG
-	Y2dC7xas6jpI3jsQCsLl0dVFmllE0ebE0VwJ06q6Ie36XaBHPdefWKhIXGcuW2bF
-	Q==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 46mn65295x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 May 2025 17:14:49 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 54FLEmR0038370
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 15 May 2025 17:14:48 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Thu, 15 May
- 2025 17:14:48 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Thu, 15 May 2025 17:14:48 -0400
-Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 54FLEYOU018893;
-	Thu, 15 May 2025 17:14:36 -0400
-From: Jonathan Santos <Jonathan.Santos@analog.com>
-To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-CC: Jonathan Santos <Jonathan.Santos@analog.com>, <andy@kernel.org>,
-        <nuno.sa@analog.com>, <Michael.Hennerich@analog.com>,
-        <marcelo.schmitt@analog.com>, <jic23@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <marcelo.schmitt1@gmail.com>, <linus.walleij@linaro.org>,
-        <brgl@bgdev.pl>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <jonath4nns@gmail.com>, <dlechner@baylibre.com>
-Subject: [PATCH v8 11/11] iio: adc: ad7768-1: add low pass -3dB cutoff attribute
-Date: Thu, 15 May 2025 18:14:33 -0300
-Message-ID: <42dc4d7722996a8d64a1bbafd8848609c9e435d8.1747175187.git.Jonathan.Santos@analog.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1747175187.git.Jonathan.Santos@analog.com>
-References: <cover.1747175187.git.Jonathan.Santos@analog.com>
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="CvUvtBX4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1747343754; x=1778879754;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=INKi4gWzLSgpI54JdZ2cf2sadUWhpO0o8pnubcsQ0Qo=;
+  b=CvUvtBX4vfcg6Us+iwdSXuXsCOVZrIxXqu9vNrsRVv6233rLy1hRutoM
+   7e3fa//BNShnQPZv0RAB6TjqYixeYHxj/I5gGzlWOjpUxPcW01e5sRLjk
+   fwyGKfsr0sDS7rgSCi3rOWyxhxYAZx6ZvBNM7W6iP4cVZ0WVbcLJhMYif
+   S3nq+/2OAwPwwxFt8yLD7vnm9kJ6YSqqhKH0oVMZff3mfwcOZsdc92HHi
+   55nJp31JHUAeHj2tzBzXtk5hwjfazHxtEt9HYc8Qbmn5NDMVDbGsX3ohS
+   Dk3rdIW7GuOuJQfqJGQViEoMr+TvOGK/LeFz2h7E8V6uuL5RK6YuNDNji
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.15,292,1739836800"; 
+   d="scan'208";a="197320532"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 21:15:51 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:46432]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.0.141:2525] with esmtp (Farcaster)
+ id 79f35f10-c27e-46a5-9970-bd7c79ee1730; Thu, 15 May 2025 21:15:51 +0000 (UTC)
+X-Farcaster-Flow-ID: 79f35f10-c27e-46a5-9970-bd7c79ee1730
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 15 May 2025 21:15:51 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.170.35) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 15 May 2025 21:15:47 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <jannh@google.com>
+CC: <alexander@mihalicyn.com>, <bluca@debian.org>, <brauner@kernel.org>,
+	<daan.j.demeyer@gmail.com>, <daniel@iogearbox.net>, <davem@davemloft.net>,
+	<david@readahead.eu>, <edumazet@google.com>, <horms@kernel.org>,
+	<jack@suse.cz>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<lennart@poettering.net>, <linux-fsdevel@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-security-module@vger.kernel.org>,
+	<me@yhndnzj.com>, <netdev@vger.kernel.org>, <oleg@redhat.com>,
+	<pabeni@redhat.com>, <viro@zeniv.linux.org.uk>, <zbyszek@in.waw.pl>
+Subject: Re: [PATCH v7 4/9] coredump: add coredump socket
+Date: Thu, 15 May 2025 14:15:26 -0700
+Message-ID: <20250515211539.93223-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <CAG48ez2iXeu7d8eu7L694n54qNi=_-frmBst36iuUTpq9GCFvg@mail.gmail.com>
+References: <CAG48ez2iXeu7d8eu7L694n54qNi=_-frmBst36iuUTpq9GCFvg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,120 +69,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: Nf6WrU6mVAOs3TL9TXjXNciIWz9wkxb-
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDIwNyBTYWx0ZWRfX50d/hI6k38Zb
- MDqgFqD49L8jStu6rX4r+ketHa093hPZ/06yPgbU6xENwqASH3LOW6rkZp9Aj61sCd5705G+9uZ
- N5T1YibZzUdu5r9OLY+IF5WqHRIFvamkzVx14cBwnPV/G8mGvGwBKHIkGc//3uH1eK/DS35GM7p
- +jwE0YSDo1ixyCDC5QcMls5CofFUIcAOgxrqsqfSgYEN7t7aAjqU+jUAFV7RhrXeY4xXMVSImlA
- /+tGAqrNRPd9BdWiqClu5H8haBPh8xpoaMELGEYPtQWgW05wqNtjyi0l1pEQ6FLgp0z7yBtpguV
- 5EArlYfhS7fDOkL3fNuGoHX28S5jUttaISR+FMmCoFQV7UvUapvVFQkQ+nFmLaRcCJx9g6vPGky
- ylufgDlMKO1uCB/NNS+ppxdATCbMExkqoPj/GUoC8cxWDwn7oKc5/xy9YprrhibsBAGamAfA
-X-Authority-Analysis: v=2.4 cv=SZL3duRu c=1 sm=1 tr=0 ts=68265949 cx=c_pps
- a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
- a=dt9VzEwgFbYA:10 a=gAnH3GRIAAAA:8 a=IpJZQVW2AAAA:8 a=ZkoTrUv0hqWFqrPu6skA:9
- a=IawgGOuG5U0WyFbmm1f5:22
-X-Proofpoint-ORIG-GUID: Nf6WrU6mVAOs3TL9TXjXNciIWz9wkxb-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-15_09,2025-05-15_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 lowpriorityscore=0 mlxlogscore=999 adultscore=0
- priorityscore=1501 mlxscore=0 suspectscore=0 malwarescore=0 spamscore=0
- clxscore=1015 phishscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505150207
+X-ClientProxiedBy: EX19D040UWB003.ant.amazon.com (10.13.138.8) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-Ad7768-1 has a different -3db frequency multiplier depending on
-the filter type configured. The cutoff frequency also varies according
-to the current ODR.
+From: Jann Horn <jannh@google.com>
+Date: Thu, 15 May 2025 22:54:14 +0200
+> > +               /*
+> > +                * It is possible that the userspace process which is
+> > +                * supposed to handle the coredump and is listening on
+> > +                * the AF_UNIX socket coredumps. Userspace should just
+> > +                * mark itself non dumpable.
+> > +                */
+> > +
+> > +               retval = sock_create_kern(&init_net, AF_UNIX, SOCK_STREAM, 0, &socket);
+> > +               if (retval < 0)
+> > +                       goto close_fail;
+> > +
+> > +               file = sock_alloc_file(socket, 0, NULL);
+> > +               if (IS_ERR(file)) {
+> > +                       sock_release(socket);
+> 
+> I think you missed an API gotcha here. See the sock_alloc_file() documentation:
+> 
+>  * On failure @sock is released, and an ERR pointer is returned.
+> 
+> So I think basically sock_alloc_file() always consumes the socket
+> reference provided by the caller, and the sock_release() in this
+> branch is a double-free?
 
-Add a readonly low pass -3dB frequency cutoff attribute to clarify to
-the user which bandwidth is being allowed depending on the filter
-configurations.
+Good catch, yes, sock_release() is not needed here.
 
-Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-Reviewed-by: David Lechner <dlechner@baylibre.com>
-Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
----
-v8 Changes:
-* None
 
-v7 Changes:
-* None
+> 
+> > +                       goto close_fail;
+> > +               }
+> [...]
+> > diff --git a/include/linux/net.h b/include/linux/net.h
+> > index 0ff950eecc6b..139c85d0f2ea 100644
+> > --- a/include/linux/net.h
+> > +++ b/include/linux/net.h
+> > @@ -81,6 +81,7 @@ enum sock_type {
+> >  #ifndef SOCK_NONBLOCK
+> >  #define SOCK_NONBLOCK  O_NONBLOCK
+> >  #endif
+> > +#define SOCK_COREDUMP  O_NOCTTY
+> 
+> Hrrrm. I looked through all the paths from which the ->connect() call
+> can come, and I think this is currently safe; but I wonder if it would
+> make sense to either give this highly privileged bit a separate value
+> that can never come from userspace, or explicitly strip it away in
+> __sys_connect_file() just to be safe.
 
-v6 Changes:
-* None
-
-v5 Changes:
-* None
-
-v4 Changes:
-* None
-
-v3 Changes:
-* None
-
-v2 Changes:
-* New patch in v2.
----
- drivers/iio/adc/ad7768-1.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iio/adc/ad7768-1.c b/drivers/iio/adc/ad7768-1.c
-index caa76f526d4c..4cfea6f12f69 100644
---- a/drivers/iio/adc/ad7768-1.c
-+++ b/drivers/iio/adc/ad7768-1.c
-@@ -152,6 +152,17 @@ enum ad7768_scan_type {
- 	AD7768_SCAN_TYPE_HIGH_SPEED,
- };
- 
-+/*
-+ * -3dB cutoff frequency multipliers (relative to ODR) for
-+ * each filter type. Values are multiplied by 1000.
-+ */
-+static const int ad7768_filter_3db_odr_multiplier[] = {
-+	[AD7768_FILTER_SINC5] = 204,
-+	[AD7768_FILTER_SINC3] = 262,
-+	[AD7768_FILTER_SINC3_REJ60] = 262,
-+	[AD7768_FILTER_WIDEBAND] = 433,
-+};
-+
- static const int ad7768_mclk_div_rates[] = {
- 	16, 8, 4, 2,
- };
-@@ -748,7 +759,8 @@ static const struct iio_chan_spec ad7768_channels[] = {
- 		.type = IIO_VOLTAGE,
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
- 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |
--					    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-+					    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |
-+					    BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY),
- 		.info_mask_shared_by_type_available = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
- 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
- 		.info_mask_shared_by_all_available = BIT(IIO_CHAN_INFO_SAMP_FREQ),
-@@ -768,7 +780,7 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
- {
- 	struct ad7768_state *st = iio_priv(indio_dev);
- 	const struct iio_scan_type *scan_type;
--	int scale_uv, ret;
-+	int scale_uv, ret, temp;
- 
- 	scan_type = iio_get_current_scan_type(indio_dev, chan);
- 	if (IS_ERR(scan_type))
-@@ -806,6 +818,12 @@ static int ad7768_read_raw(struct iio_dev *indio_dev,
- 	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
- 		*val = st->oversampling_ratio;
- 
-+		return IIO_VAL_INT;
-+
-+	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-+		temp = st->samp_freq * ad7768_filter_3db_odr_multiplier[st->filter_type];
-+		*val = DIV_ROUND_CLOSEST(temp, 1000);
-+
- 		return IIO_VAL_INT;
- 	}
- 
--- 
-2.34.1
-
+I had the same thought, but I think it's fine to leave the code as
+is for now.  We can revisit it later once someone reports a strange
+regression, which will be most unlikely.
