@@ -1,216 +1,147 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F642581
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C068F6D17
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747270018; cv=none; b=Sr5ABAQaKOtwAshAgo/7IT08AueGC+c63aTWc3bAnRZClJEtqkPABLqdbOTGHwtf27O99xl83A44nnaxMW+FJ+7KKyd8iP2FflNCXKdcZfuM9cHWkLQQAG6bxpQ/PBzGDvrMWHqw6upVOnb9ccvOTvM2LgpzjhFJ227txYo/LKk=
+	t=1747270166; cv=none; b=n4V67dHkZnI6yfxuCtcUs3IeT68XYw6FWI2sZF01780lUH2twhBEwO0+OOHKGIuAV6IzgGi4ir+2EzGEbA5zOJ2R87bLBo6QvyYlAo0XGmItT+pcmwVQEVX6kXUfHVQCxpyktutgtqCNxaH5p24cfj9d/cfeal3Pkdhm/tOVwnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747270018; c=relaxed/simple;
-	bh=CFLN9/cxyNLTlzc+Ux5r4nx7pH3h6oCprO5dPG3iVAI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PhEtjSrNN4xuw/8+dXASrCdDtqQzy3JCv/0RzklQ+GByKozzY9mw6jbQ/9ZO5sVC4nluHqmQFNSdydIcXT1O3+GJMJCqMipt6h7NsXFzKE8BwD2cY28RfbOYx3qrbm+qddoe8xXKJHw7mT3HIm/dGQyEPd5+BAyzA33ysaC/Uho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T16o7uaq; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747270166; c=relaxed/simple;
+	bh=jPnzg6PNsN6lUzHoKMbxdMvPtIe0LNuhdxU8f6d8XHM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Vglqjl7WabD5RH84WU8zQOovSXMOlJI5qwtsGYMMaeKSegyAaneL0MEwPoYouQIMShbwgOc1pPHTHdeTW2ti6GrPSkBF3BcqJRpXJggpBy2JC6z3QM5dK5b01elAJNP4dR3zRAGxHHUzyEsGkbF7fYw17Nph9luiFpb4UMjw86Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=obcs8GVN; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T16o7uaq"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-441d1ed82faso2956045e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:46:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="obcs8GVN"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30df7c1287fso340290a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:49:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747270015; x=1747874815; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nPQI1WS6AB+A/U7AWpPuLM+DOikiei6WxX6ByvDP9Zk=;
-        b=T16o7uaqe1DHSw+Z0ye57l9yEYqjzIvtEFw8z0kw1Hp80dUf8A1MlhL93lUlS6mAAf
-         3WaP059luxQXsqkyusjhmSjP1IgAawp51Y3lFmVM+9lU0JAgaepoU52kdk2ojNYUq2oJ
-         Mhk5ZsmLnXnmwY/SgeK+MtOAvpPkbpcGOO3Fda98uJh6l+GaQeCFEiAvbqpQ5AbEtElg
-         7ed80TLEgyR9l/hlGSVjOBj8+tDE5hbu2C7nd1nbRHV235ssauKnMQRM6HOmFZ79/EWf
-         6qwcrBWCPIIAF6UR7zbxOn1cK1gaTVheXlhvJ8pLsvBekbSrmPJ51RHzJ+qcitWT2hQ6
-         xHEg==
+        d=google.com; s=20230601; t=1747270164; x=1747874964; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hMfietv3cfwdDUfJJ6Vu0q3GZ0OBruwHSCB3xq9gft0=;
+        b=obcs8GVNe6j8T8Ck0DEPBVHuNs5kfkVvmPdQjAX/POma6uMLdaKQDNhIPdTaBz4E5R
+         pHNut+1MSlI4muJ9zQFato4ySFqBU8/c7AbxiOGuSO5/nEhlh3eKXBGCO2IxtQnO2hec
+         J3/97txx7W1+gfWHWXOtj3CPIdra4mT9sFOoOv9lZvtYvvKz88Y7jfpbdB6eHebuLZrS
+         g1yIra/n6G1r7reDrpvFL2NLqaSKksHxP9W0vPtbKaRl0vIQtGLZOlAfcODktPCKCFaj
+         1m0euXS8SXN/wbpZA25gvjktpgwoKxjLM3UNhadZqqzOLbaZaxmH4pMcFDQWYX44cIUp
+         2SWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747270015; x=1747874815;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nPQI1WS6AB+A/U7AWpPuLM+DOikiei6WxX6ByvDP9Zk=;
-        b=oRMSMzrXD+AAWYQ9td+xFpjzV3wP7Mxp0HAa244gGrhawi0KViU99d352I44oHvaKB
-         urDbozB2qiLGY51rBhiYiSdaK+FRnqUzuOMioOT2uLEOurQE9CLi4SDs3Z5bTlYjEywg
-         kUxWvSfU4YkPAingUwadFy/+8tm+ULTmql0e/FAT1W0DvwsRgpLDSOS7j++OBjI2ftiG
-         i7knVkiGUAzjCqYVJv/tLR74j+PklGc6JUS61v5FVDX6QDxQbM12CvYKClyllwCdh3Lg
-         lIZioNpeJPc8W1uIBZ92IuaGueqFcQE+Iz/Ht4Li5o9fNE26AMVXltOUyd1pJCcNfngH
-         Tx8g==
-X-Gm-Message-State: AOJu0YwQjp8Si/IeO20tCv9FGUkLFBkfEScW7m3trJZA0wooiv/D3G/6
-	tELoE7GUOgrFj9wroBX5CQNwRvOW7EETDTuHJsHbasJ4/8Gy+vtkilLUqYgH73m0D4uHibuEpOg
-	17t3pfW9a/WpcZyruS8a023OD7LE=
-X-Gm-Gg: ASbGncvb+Leb3Qt5eXGEAL4DsSHTmdVI9Vezm3quyH6uv6JEMYcdnuUmnDkMl2y6fAF
-	8ll86lLpstOBDgeX00gbcadntyQOovtEP1Vmugn+Egqw+9o9jdoeYeanyP6qgTKu/nOJ8mLUN3j
-	AMCr66jxE3FTlxuCwaODozUTzzvS2jajnguJM6CPHcYnsgO3z+uLhcbi6CFXuxP6hN5Gk9shj4
-X-Google-Smtp-Source: AGHT+IFvguK5EGohjnZtpt0PIlv1IYbXz5WvOlqrdtAP/4VH871pPVsi6cP0RCNRby9CG3Qd89iv5iHFbtSkDcWDoKk=
-X-Received: by 2002:a05:6000:3112:b0:3a3:47cf:5b6 with SMTP id
- ffacd0b85a97d-3a3537a904dmr375228f8f.43.1747270014837; Wed, 14 May 2025
- 17:46:54 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747270164; x=1747874964;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hMfietv3cfwdDUfJJ6Vu0q3GZ0OBruwHSCB3xq9gft0=;
+        b=mSeisprbOPLQQUftmEWL+acYfLlS9Aclq0kJRxmbAr3bzqloE+ChhtRNOZ5iV/l7wF
+         Rpq+zxoYxf8taqdaXW0ggfojmA99WBKuKxJEh2drpJshsAU5sA2IwoAEtnBFbj94+baI
+         G+VSK4Uj4i6TmjEihhgb4kprLhB6C17PSHZ8o9SX9hJEmTLAs5UM8U3P6SPye2UYoKGr
+         kHVgO5DudVvUnNS6KiG1U5uobqpxqn3dErhNqDR7ip9e78UbBIKT29aEk0UPmJcFB9mj
+         GWW/lN8yNsRFT03xvurbKGNgRWOe6X/FkdIA8rNrDn2ARe8dQ2G1p+mtFZ/+FrwQMGoz
+         RK/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVYkLGOJm5Z50swGKyZvIgy6rhFtZxVsCcUVjHrJvyG4Z1gXuAyioEzE6W//COtzXwIz11dOXjFFMJx2LE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqckGO81PeUe4OV11JkXQMOhOitdMM8Fx8IeC/FqpYiAqn1qrN
+	giDZaI96/0TH5P0s6u7RtasYXL/gcVYgUf8XPD79h3yYngo9OGeyO7EXJqAhZVbX28h3ierZKbu
+	sAA==
+X-Google-Smtp-Source: AGHT+IEkFXVGxtOuqdcAPO0vpFEVYeUwvYJWz2kVDDpTt9pJsdBPXKA7ndT83tbNuCGk6UN2X+RRAvKJR+4=
+X-Received: from pjc14.prod.google.com ([2002:a17:90b:2f4e:b0:2fc:1356:bcc3])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:38c8:b0:2ff:5a9d:937f
+ with SMTP id 98e67ed59e1d1-30e2e65affamr8466341a91.24.1747270163943; Wed, 14
+ May 2025 17:49:23 -0700 (PDT)
+Date: Wed, 14 May 2025 17:49:22 -0700
+In-Reply-To: <20250324173121.1275209-1-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250514110750.852919-1-bigeasy@linutronix.de> <20250514110750.852919-2-bigeasy@linutronix.de>
-In-Reply-To: <20250514110750.852919-2-bigeasy@linutronix.de>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 14 May 2025 17:46:43 -0700
-X-Gm-Features: AX0GCFvl1zo_ilDqc1Rp5K1Hv8APOcGDlYJ2RgUVqR2HL2PRN2984xNmivjT_cU
-Message-ID: <CAADnVQLz=+FN8-B_QmmT-eg7PB7jGHiah=9B-s5WpfmQbAF3eg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] local_lock: Move this_cpu_ptr() notation from
- internal to main header.
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-rt-devel@lists.linux.dev, 
-	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
-	Boqun Feng <boqun.feng@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com>
+Message-ID: <aCU6EjbXzPct9v7B@google.com>
+Subject: Re: [PATCH v4 00/38] Mediated vPMU 4.0 for x86
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
+	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, May 14, 2025 at 4:07=E2=80=AFAM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> The local_lock.h is the main entry for the local_lock_t type and
-> provides wrappers around internal functions prefixed with __ in
-> local_lock_internal.h.
->
-> Move the this_cpu_ptr() dereference of the variable from the internal to
-> the main header. Since it is all macro implemented, this_cpu_ptr() will
-> still happen within the preempt/ IRQ disabled section.
-> This will free the internal implementation (__) to be used on
-> local_lock_t types which are local variables and must not be accessed
-> via this_cpu_ptr().
->
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->  include/linux/local_lock.h          | 20 +++++++++----------
->  include/linux/local_lock_internal.h | 30 ++++++++++++++---------------
->  2 files changed, 25 insertions(+), 25 deletions(-)
->
-> diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
-> index 16a2ee4f8310b..2ba8464195244 100644
-> --- a/include/linux/local_lock.h
-> +++ b/include/linux/local_lock.h
-> @@ -13,13 +13,13 @@
->   * local_lock - Acquire a per CPU local lock
->   * @lock:      The lock variable
->   */
-> -#define local_lock(lock)               __local_lock(lock)
-> +#define local_lock(lock)               __local_lock(this_cpu_ptr(lock))
->
->  /**
->   * local_lock_irq - Acquire a per CPU local lock and disable interrupts
->   * @lock:      The lock variable
->   */
-> -#define local_lock_irq(lock)           __local_lock_irq(lock)
-> +#define local_lock_irq(lock)           __local_lock_irq(this_cpu_ptr(loc=
-k))
->
->  /**
->   * local_lock_irqsave - Acquire a per CPU local lock, save and disable
-> @@ -28,19 +28,19 @@
->   * @flags:     Storage for interrupt flags
->   */
->  #define local_lock_irqsave(lock, flags)                                \
-> -       __local_lock_irqsave(lock, flags)
-> +       __local_lock_irqsave(this_cpu_ptr(lock), flags)
->
->  /**
->   * local_unlock - Release a per CPU local lock
->   * @lock:      The lock variable
->   */
-> -#define local_unlock(lock)             __local_unlock(lock)
-> +#define local_unlock(lock)             __local_unlock(this_cpu_ptr(lock)=
-)
->
->  /**
->   * local_unlock_irq - Release a per CPU local lock and enable interrupts
->   * @lock:      The lock variable
->   */
-> -#define local_unlock_irq(lock)         __local_unlock_irq(lock)
-> +#define local_unlock_irq(lock)         __local_unlock_irq(this_cpu_ptr(l=
-ock))
->
->  /**
->   * local_unlock_irqrestore - Release a per CPU local lock and restore
-> @@ -49,7 +49,7 @@
->   * @flags:      Interrupt flags to restore
->   */
->  #define local_unlock_irqrestore(lock, flags)                   \
-> -       __local_unlock_irqrestore(lock, flags)
-> +       __local_unlock_irqrestore(this_cpu_ptr(lock), flags)
->
->  /**
->   * local_lock_init - Runtime initialize a lock instance
-> @@ -64,7 +64,7 @@
->   * locking constrains it will _always_ fail to acquire the lock in NMI o=
-r
->   * HARDIRQ context on PREEMPT_RT.
->   */
-> -#define local_trylock(lock)            __local_trylock(lock)
-> +#define local_trylock(lock)            __local_trylock(this_cpu_ptr(lock=
-))
->
->  /**
->   * local_trylock_irqsave - Try to acquire a per CPU local lock, save and=
- disable
-> @@ -77,7 +77,7 @@
->   * HARDIRQ context on PREEMPT_RT.
->   */
->  #define local_trylock_irqsave(lock, flags)                     \
-> -       __local_trylock_irqsave(lock, flags)
-> +       __local_trylock_irqsave(this_cpu_ptr(lock), flags)
->
->  DEFINE_GUARD(local_lock, local_lock_t __percpu*,
->              local_lock(_T),
-> @@ -91,10 +91,10 @@ DEFINE_LOCK_GUARD_1(local_lock_irqsave, local_lock_t =
-__percpu,
->                     unsigned long flags)
->
->  #define local_lock_nested_bh(_lock)                            \
-> -       __local_lock_nested_bh(_lock)
-> +       __local_lock_nested_bh(this_cpu_ptr(_lock))
->
->  #define local_unlock_nested_bh(_lock)                          \
-> -       __local_unlock_nested_bh(_lock)
-> +       __local_unlock_nested_bh(this_cpu_ptr(_lock))
->
->  DEFINE_GUARD(local_lock_nested_bh, local_lock_t __percpu*,
->              local_lock_nested_bh(_T),
-> diff --git a/include/linux/local_lock_internal.h b/include/linux/local_lo=
-ck_internal.h
-> index 8d5ac16a9b179..b4d7b24882835 100644
-> --- a/include/linux/local_lock_internal.h
-> +++ b/include/linux/local_lock_internal.h
-> @@ -99,14 +99,14 @@ do {                                                 =
-               \
->                 local_trylock_t *tl;                                    \
->                 local_lock_t *l;                                        \
->                                                                         \
-> -               l =3D (local_lock_t *)this_cpu_ptr(lock);                =
- \
-> +               l =3D (local_lock_t *)(lock);                     \
->                 tl =3D (local_trylock_t *)l;                             =
- \
->                 _Generic((lock),                                        \
-> -                       __percpu local_trylock_t *: ({                  \
-> +                       local_trylock_t *: ({                   \
->                                 lockdep_assert(tl->acquired =3D=3D 0);   =
-   \
->                                 WRITE_ONCE(tl->acquired, 1);            \
->                         }),                                             \
-> -                       __percpu local_lock_t *: (void)0);              \
-> +                       local_lock_t *: (void)0);               \
+On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+> Dapeng Mi (18):
+>   KVM: x86/pmu: Introduce enable_mediated_pmu global parameter
+>   KVM: x86/pmu: Check PMU cpuid configuration from user space
+>   KVM: x86: Rename vmx_vmentry/vmexit_ctrl() helpers
+>   KVM: x86/pmu: Add perf_capabilities field in struct kvm_host_values{}
+>   KVM: x86/pmu: Move PMU_CAP_{FW_WRITES,LBR_FMT} into msr-index.h header
+>   KVM: VMX: Add macros to wrap around
+>     {secondary,tertiary}_exec_controls_changebit()
+>   KVM: x86/pmu: Check if mediated vPMU can intercept rdpmc
+>   KVM: x86/pmu/vmx: Save/load guest IA32_PERF_GLOBAL_CTRL with
+>     vm_exit/entry_ctrl
+>   KVM: x86/pmu: Optimize intel/amd_pmu_refresh() helpers
+>   KVM: x86/pmu: Setup PMU MSRs' interception mode
+>   KVM: x86/pmu: Handle PMU MSRs interception and event filtering
+>   KVM: x86/pmu: Switch host/guest PMU context at vm-exit/vm-entry
+>   KVM: x86/pmu: Handle emulated instruction for mediated vPMU
+>   KVM: nVMX: Add macros to simplify nested MSR interception setting
+>   KVM: selftests: Add mediated vPMU supported for pmu tests
+>   KVM: Selftests: Support mediated vPMU for vmx_pmu_caps_test
+>   KVM: Selftests: Fix pmu_counters_test error for mediated vPMU
+>   KVM: x86/pmu: Expose enable_mediated_pmu parameter to user space
+> 
+> Kan Liang (8):
+>   perf: Support get/put mediated PMU interfaces
+>   perf: Skip pmu_ctx based on event_type
+>   perf: Clean up perf ctx time
+>   perf: Add a EVENT_GUEST flag
+>   perf: Add generic exclude_guest support
+>   perf: Add switch_guest_ctx() interface
+>   perf/x86: Support switch_guest_ctx interface
+>   perf/x86/intel: Support PERF_PMU_CAP_MEDIATED_VPMU
+> 
+> Mingwei Zhang (5):
+>   perf/x86: Forbid PMI handler when guest own PMU
+>   perf/x86/core: Plumb mediated PMU capability from x86_pmu to
+>     x86_pmu_cap
+>   KVM: x86/pmu: Exclude PMU MSRs in vmx_get_passthrough_msr_slot()
+>   KVM: x86/pmu: introduce eventsel_hw to prepare for pmu event filtering
+>   KVM: nVMX: Add nested virtualization support for mediated PMU
+> 
+> Sandipan Das (4):
+>   perf/x86/core: Do not set bit width for unavailable counters
+>   KVM: x86/pmu: Add AMD PMU registers to direct access list
+>   KVM: x86/pmu/svm: Set GuestOnly bit and clear HostOnly bit when guest
+>     write to event selectors
+>   perf/x86/amd: Support PERF_PMU_CAP_MEDIATED_VPMU for AMD host
+> 
+> Xiong Zhang (3):
+>   x86/irq: Factor out common code for installing kvm irq handler
+>   perf: core/x86: Register a new vector for KVM GUEST PMI
+>   KVM: x86/pmu: Register KVM_GUEST_PMI_VECTOR handler
 
-Are you sure this is correct?
-Have you tested with gcc 14 or higher?
+I ran out of time today and didn't get emails send for all patches.  I'm planning
+on getting that done tomorrow.
 
-It looks to me that moving this_cpu_ptr() up one level should
-still preserve __seg_gs modifier.
+I already have most of the proposed changes implemented:
+
+  https://github.com/sean-jc/linux.git x86/mediated_pmu
+
+It compiles and doesn't explode, but it's not fully functional (PMU tests fail).
+I'll poke at it over the next few days, but if someone is itching to figure out
+what I broke, then by all means.
+
+Given that I've already made many modifications (I have a hard time reviewing a
+series this big without editing as I go), unless someone objects, I'll post v5
+(and v6+ as needed), though that'll like be days/weeks as I need to get it working,
+and want to do more passes over the code, shortlogs, and changelogs. 
