@@ -1,110 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28EBB72627;
-	Thu, 15 May 2025 13:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445454B1E52;
+	Thu, 15 May 2025 13:40:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747316346; cv=none; b=C6iBjajZKbZxgdxgLfN+ZFamRn8bByr3cah90TfuzTxkxUsM/gyJ4TMwyAAGLP1rRDl2BLBvyAyRPuYKDi/Waq4EL7rGMzm8dKHF9vDwvRp65DVhXWE/eKdR6rma9F1qve5zc7idtxvT4OSE8JHBdAY82WaAesTnLSFtWub1T/I=
+	t=1747316409; cv=none; b=YjivjaKnn45R1Ra8aJXTiwFbhGiwz7ZxpF0SnZO++ovQmu6raZGmqxW6JABs0TeGhfWvLIqY08PkbgQ+a+olc50HWee4Xbtt9FfnorYQiybCqD0pAx4Bl414yOAkf3wxEEicASjSamvKAyCs26jYEc2LI0l5kV0WArCfLIbIUkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747316346; c=relaxed/simple;
-	bh=EIOxUVksE3XuviiCBzP8CgS3FaS5wIMBO/GIYyKSBRM=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Yn6OpGkNZDO/nns/CNP2/5pnbAgGeL7W+8ODln5GHRQBusTY318ypUIjov9eQ7uu1vfP3ksHMFWXvw3825C2ibv/R7cSM6qjyCjbRhHMhvCw5nKAwR43uNcmJLQ4dh+ShaDxhKuMtb6BA174p5iYFQDYziwVpcSb/0xNF7l8B3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cCQWAQk+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cCQWAQk+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89132C4CEE7;
-	Thu, 15 May 2025 13:39:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747316344;
-	bh=EIOxUVksE3XuviiCBzP8CgS3FaS5wIMBO/GIYyKSBRM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cCQWAQk+En/dVTAmz1kHXi3efxDXiX0oYSk119kSLhSXMbi7EM2Yzfi+I68/MURXQ
-	 ogf7lbj82DSlyiU/3c7lDwd8w1ecpqs5UNmPUNbyRYDN61HCKcpIcgMmi4NgFxPR/k
-	 w1wUzWwjW7SpaQ2/81gElCZTq56OuK5znPQp1WT+wt4l4VV4pyO5D6B32Q/iIOHR5F
-	 aABqsVuKPMK5lVmR4KNbzeWobzPTAGNiS53YtEr/Md0zfR3n98kU6JoyWI3bLZHB/O
-	 9ieZQ8jLfqNI2o9p3Lrgv+m1YsrdDsIyPDL8fS6LHOotdvxoQKqcwlupbPssFOn973
-	 jqnP09prJgDdg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uFYne-00FFHo-Eg;
-	Thu, 15 May 2025 14:39:02 +0100
-Date: Thu, 15 May 2025 14:39:01 +0100
-Message-ID: <86ikm2f0y2.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Patrick Delaunay <patrick.delaunay@foss.st.com>
-Cc: Alexandre TORGUE <alexandre.torgue@foss.st.com>,
-	Rob Herring
-	<robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley
-	<conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	<devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>,
-	<linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH 1/2] arm64: dts: st: fix timer used for ticks
-In-Reply-To: <20250515151238.1.I85271ddb811a7cf73532fec90de7281cb24ce260@changeid>
-References: <20250515151238.1.I85271ddb811a7cf73532fec90de7281cb24ce260@changeid>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1747316409; c=relaxed/simple;
+	bh=bLsm45s9D0qARSqkBSIJVd3zYZoqeCxjGRV/ULXVIrA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ny6r4n7qe3PgZiqGRquCvRZqiidcLcZL0HGKG0M2Cuv5A/JGdlgG/G1xd7/z0lWMe5Z52v9JSC994GP3DPOmFQSbGi7ZSzlQlpS/SGfaa3ENReeAQb/m6SvQC8awzeJsztlj/oHSQlR0Ehg9985CVEK0g/FkwE2kSEr85U+5Mjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-03 (Coremail) with SMTP id rQCowAAXxUGm7iVorh3cFQ--.28807S2;
+	Thu, 15 May 2025 21:39:54 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: mustafa.ismail@intel.com,
+	tatyana.e.nikolova@intel.com,
+	jgg@ziepe.ca,
+	leon@kernel.org
+Cc: linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] RDMA/irdma: puda: Clear entries after allocation to ensure clean state
+Date: Thu, 15 May 2025 21:39:28 +0800
+Message-ID: <20250515133929.1222-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: patrick.delaunay@foss.st.com, alexandre.torgue@foss.st.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowAAXxUGm7iVorh3cFQ--.28807S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7uw45Zr18Gw4rur18uF1kuFg_yoW8Gry3pa
+	yDJr1q9rZ0qa1UWa1DG393CFW3Xa17Gr9FvrZFk3s3ZF45Jr10qF1kGryj9F4kGr1xuw4x
+	Xrnrtr15C3Wrur7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
+	6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUf8nOUUU
+	UU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCQ8DA2glvjRVYQAEsx
 
-On Thu, 15 May 2025 14:12:39 +0100,
-Patrick Delaunay <patrick.delaunay@foss.st.com> wrote:
-> 
-> Remove always-on on generic ARM timer as the clock source provided by
-> STGEN is deactivated in low power mode, STOP1 by example.
-> 
-> Fixes: 5d30d03aaf78 ("arm64: dts: st: introduce stm32mp25 SoCs family")
-> Signed-off-by: Patrick Delaunay <patrick.delaunay@foss.st.com>
-> ---
-> 
->  arch/arm64/boot/dts/st/stm32mp251.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-> index 8d87865850a7..74c5f85b800f 100644
-> --- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
-> +++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-> @@ -150,7 +150,7 @@ timer {
->  			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
->  			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
->  			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>;
-> -		always-on;
-> +		arm,no-tick-in-suspend;
+The irdma_puda_send() calls the irdma_puda_get_next_send_wqe() to get
+entries, but does not clear the entries after the function call. This
+could lead to wqe data inconsistency. A proper implementation can be
+found in irdma_uk_send().
 
-That's amusing, because these two properties literally describe
-opposite behaviours (from an optimisation to a HW bug).
+Add the irdma_clr_wqes() after irdma_puda_get_next_send_wqe(). Add the
+headfile of the irdma_clr_wqes().
 
-I'm also pretty sure 99% of the DTs in the tree that have the
-always-on property are wrong.
+Fixes: a3a06db504d3 ("RDMA/irdma: Add privileged UDA queue implementation")
+Cc: stable@vger.kernel.org # v5.14
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/infiniband/hw/irdma/puda.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
->  	};
->  
->  	soc@0 {
-
-I don't want to sound rude or anything, but the guy you Cc'd on an
-@arm.com will not reply (and hasn't been replying for almost 6 years).
-
-Thanks,
-
-	M.
-
+diff --git a/drivers/infiniband/hw/irdma/puda.c b/drivers/infiniband/hw/irdma/puda.c
+index 7e3f9bca2c23..1d113ad05500 100644
+--- a/drivers/infiniband/hw/irdma/puda.c
++++ b/drivers/infiniband/hw/irdma/puda.c
+@@ -7,6 +7,7 @@
+ #include "protos.h"
+ #include "puda.h"
+ #include "ws.h"
++#include "user.h"
+ 
+ static void irdma_ieq_receive(struct irdma_sc_vsi *vsi,
+ 			      struct irdma_puda_buf *buf);
+@@ -444,6 +445,8 @@ int irdma_puda_send(struct irdma_sc_qp *qp, struct irdma_puda_send_info *info)
+ 	if (!wqe)
+ 		return -ENOMEM;
+ 
++	irdma_clr_wqes(qp, wqe_idx);
++
+ 	qp->qp_uk.sq_wrtrk_array[wqe_idx].wrid = (uintptr_t)info->scratch;
+ 	/* Third line of WQE descriptor */
+ 	/* maclen is in words */
 -- 
-Without deviation from the norm, progress is not possible.
+2.42.0.windows.2
+
