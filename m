@@ -1,63 +1,63 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51397268FFF
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B4B26980F
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747333431; cv=none; b=Hh4nHmHgGazubyjxK+5i0Selcve8GnDOv89PtE5cEYLvgP1JX7Gn5pL2jCojguoy3solVKjQu//TVD8QhWQFr9nIllRMTpu1MqdVU42dzANvATAtoR1jIdfse/CWUy4Hl7wEVxsu0v6lNz6XwwghMlJ28SuOW8GICfXc8xZylt4=
+	t=1747333433; cv=none; b=KB6w8XlNb4jCxFfhU+TXEMj3VY3HkHjiWdsdnFiVLDysWhhQOpCdFmnX8jXnjH3uJHYqMyhwg0ds7BWbPyqO2gl+zTo3BE7DQAoRnKgIBplZtcsus4CCs5thDpPkPWbOBzN/LIU9cqQ1LoWRwQlj1Es3GZ7UafSpnxSmmgrO8fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747333431; c=relaxed/simple;
-	bh=VRCETR/ZNMscZ4PQziAJBi6EbuBypp6uz2gXjli2EYg=;
+	s=arc-20240116; t=1747333433; c=relaxed/simple;
+	bh=YaE0d21aL4ypcSNyRnSQBH6nYjgCRfkHddqKY3G90JA=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fqzTFuvnY/vdUKOMFAL54nle1ztYW+pT71ZSf9WKv4N7vdPaj19MKipdrq6tStYzxfIVs5CghqxEV1H7vsICllkU3lA22kMLcqoQHNbQt/fPZVvEY31e+4yfgTwM2nc/K5a2Nk1qBkPdGw6Vjg3JjftJaSnOc8lAAy+1ykxCiNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=piDK4RO+; arc=none smtp.client-ip=209.85.222.172
+	 MIME-Version; b=iSyOTPS/R4hIANq7JSz7wkFeWZJ+s5MDm8kGnwXYPviUT2WOyeRsfqu2MzaRBEju5xhDGz3BScR+9s4N8m1ricA8V0QRRMwAqWFu+hoE0cI8EkYN53v0St/ZVCsFhbypB3iA+QlryEClYaEEVsKRqPBrixlBL8696z99Sk4CqWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=FAoAOoLd; arc=none smtp.client-ip=209.85.222.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="piDK4RO+"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c96759d9dfso175719985a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:23:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="FAoAOoLd"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c54b651310so159307785a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:23:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1747333428; x=1747938228; darn=vger.kernel.org;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1747333429; x=1747938229; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=P6KJXTjc0r76p8v9NLIxG+1plF/W6x+7amHEacWowEk=;
-        b=piDK4RO+9tkwg4jUhMDgPVkkjIeDkrL4nwJsbE+YHnPeOJybDtb3y7k0a4xIPCj+L7
-         0LssXD3ewidk9RUsycKZWGycnqGbtF1aQFW3fzIrzhRGJhzcTauaTst3CtqPUKJhM+cn
-         B32VJc1PBbpJlzgrVOi8z6HQV5MC+SVlI/B9oC574jayWmDzcNMj1n+NBvygsQn5UKMq
-         87Y+vUFE/+UgixTcN8XsE+1UgdYtyyZmhvzk8H1lu/PmwuVvwzRU778POKUdcGLS+Xzj
-         fLZAtOGrh4zILl1SCRbdqy9xyTr7jdp3HHynCejX5VwT/M8e2yR1TxzGh6WissHUPoFP
-         konQ==
+        bh=/UkhatAda5pzqxG11ONXrnfa3++BT9kkRoGoO4mFl6c=;
+        b=FAoAOoLd6QYmSjM6SUEUmnwyBnT2AdRAN6cfGWxnEEpuhJYfAdi00tbPkfnLHJMYnw
+         NWz+dNniMpXPt4ee3XoPx1edtzkLlkQiV/ThsDEQees28704JfYMgV7M6xk3kYhGHr7Z
+         ja0lX+F2xuNJxx+8OopdGGeWkD7xpxUTHyhRDiLUsgYCSB1AsmGrRuJeLIT9JF3eQ2yd
+         FwsdNfQ399hycjca8F/hajfpNAElD3MoGZ6N5cwYBZIuvNPqQFbE+en/tPzuB+gbIrwe
+         zlMaP+EffIQUCn+tuLLVmPgDDEsOKaTJ7NWrQ/BsvJhQ5WqApOTnI42L7+JUhMimTgBz
+         w2xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747333428; x=1747938228;
+        d=1e100.net; s=20230601; t=1747333429; x=1747938229;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=P6KJXTjc0r76p8v9NLIxG+1plF/W6x+7amHEacWowEk=;
-        b=pj1ZviwKji5U6mrHA/sHjFWk1hXcuLVfEAEzmtQ4PRjJfTpZEMHuoXtDw8S29Bot/X
-         SnWyjW5dLH3yMxPqf0PyscAvrpkJnlkrtHIG42EZZmP1TtapvTDjmzreUZ0JHW/fz4D9
-         f9vb1Xacmq9Fobf7Ac3q08ctx1pyLo7YxpsiVbNN0bhB6Oc9t/HyANEw4m1YbH5Sn//W
-         w6QzhyqGkZCC0tX5T/kxx8hinUVmVnTUKstMPqIDAZrCh8xmnUa6W8gBShkMtyWObIl3
-         gvjgN5sekIhUwDXPAarxOc+xuzsZrrBHfuPQd+lE64TXps/DJxgfp2SgaLD1gU5F15Ei
-         U8aw==
-X-Forwarded-Encrypted: i=1; AJvYcCV+sD1B5ianTJMB48HjPU75Xvc75Q4YuKiQ/8WG74YwP7raKOH4a0bPsc3zZZCrpk+NKgoVGQwDJrUL0zU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkHBOnr01yIvTkgl40ShAYLhNthfsFOCwQsrX12ptzU70gdcS+
-	36BperVR7s5iGuL/CUqMVclgReZPrMtdAcDDSRDlhypkwPE3CcaRKAQBwN31PmkbTvU=
-X-Gm-Gg: ASbGncsakAGNIsyUn9WofQJ/iEB5CWQ+W4AD5D/T9Da6gZ+dRvegtjsZNbrymLmDJux
-	IihlVwFOa98/p41zZ3a9o5mJ3qIJookK5crKV8DnR1fqVPOBz7JNv+zh9AJ3k2YJaGImBV1cT5C
-	j8ytEzYXTK4RREF1oaTYtLy9WA3WyOc7pQiCvtiBqZJdzidLtR9jbR7REthPwQQEhiDPQZAOCQU
-	7x8lsBFmsePUY7TL9EtvAwo+BHm39PSptbKZI+KrD5jdJwg9IlHKJIAQVT+pEhI06KBh7LLcQL8
-	HYdPUUvomwQrwl3MTm6FZ4hHU4YnzL6jyXtVGHyQ1u17HuD6eXGLyeS73vZzmDJozDwHCYBiy38
-	QqUNWr1g2+BhS41t+keHdhMkFMsme1tK7h/mnftjX9Yic
-X-Google-Smtp-Source: AGHT+IEG7RwmXqR/Tm2fInhaZBiu3WtaiEVf8X1895Z0lbevuSTfErYi54kRZ9n6luWpwWWeTV+CYQ==
-X-Received: by 2002:a05:620a:d89:b0:7c5:4b24:468d with SMTP id af79cd13be357-7cd46707195mr63632785a.2.1747333428187;
-        Thu, 15 May 2025 11:23:48 -0700 (PDT)
+        bh=/UkhatAda5pzqxG11ONXrnfa3++BT9kkRoGoO4mFl6c=;
+        b=ZVhHbkkrY0RJ9ON7xItrAdED3qfHJpFXMXlYd6o7DAV08IKe7JHgBAW1QoM3DNG5sN
+         GcX4/7Lcz6B/JG+VSau6EOwRaHxWsebsUmHFb2UNMaPuDz68+Krfwz9HTEVcU3AIaE1c
+         Bi1IetPeAkDbkaOV53VXcbHwRN6dnj4Qreq+bdzX1N7UUezKiLJdhv+XdboBcwPBgSUP
+         57w76p/EqCiQvoja9qjicNyAsrKqs4snwEnolUVEyGI5tSwhxo0rAWG3iiXYvBxqNE8f
+         +Jq8KeHfUa5OBJLEWZ6F+4XOK6VqLejuo7uEjDP1bqHwAos4Oehq5rU5S1Jq8ve3zNR6
+         6/2A==
+X-Forwarded-Encrypted: i=1; AJvYcCWHisuIbdVC8KDn6NeuY3t7u8wDZxctCbPcKD+4F9Op4swevOoTUbxQEcKqDtK28R0fUxnvedeMQPSvI3k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2qXx1KYBAmvfP6+hVzRWOUD3O/Kb24eWdtfQwn42W/geNSxWD
+	owrAKORPcjgxQMJXPsuYHusvs6F3lx0a6XWppwb1DlqonUretNSo1wEB4f5/XzTnWGs=
+X-Gm-Gg: ASbGncuXpOpklbe5RCNz4sLv6GW++3Vm6LpAnQHevjI62/74A60PHYydgAF6tP3hHuC
+	szn/ZeSA1WBl1X9LaSnlcXuMJB6juw6QiyycnMWnvVuzpnZqLzbNRHzW/l7ih3s0DdrLj/k/DGu
+	yQghU07aaf5P/pt5neKVUZLwJRUoBkdVqd3viuOBEP9SGcslcaOunTZMPyzF783xEgwolhcBKKi
+	39udwQgXYR2aT+zBrAZF3pUPltcFdzAVMi1YGD/7fkNiRopJQu57SDTpGsKzCfZYElHJ9cLBH7X
+	6VMEYZWhyq6C3wxkMfncka+VtOKxIwSAlXzJUmzpuYe1ZddV5HfzaikUbanXzz5u13i55fXsyRJ
+	fUl/11CEhu2gx0fpSjo9aywCMBSivU9IiX59INFmxi1IlY2WqQ2rFYtE=
+X-Google-Smtp-Source: AGHT+IEMo9czCluXO4G1WUwXTZGTpWwBloBS5Kz3sFDyqt4FQLh+A2ENHLRTo8aoPbEVNVI7zemMmQ==
+X-Received: by 2002:a05:620a:4885:b0:7cc:fde8:81cd with SMTP id af79cd13be357-7cd46722312mr74875585a.24.1747333429367;
+        Thu, 15 May 2025 11:23:49 -0700 (PDT)
 Received: from soleen.c.googlers.com.com (138.200.150.34.bc.googleusercontent.com. [34.150.200.138])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd466fc2afsm18218685a.0.2025.05.15.11.23.47
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd466fc2afsm18218685a.0.2025.05.15.11.23.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 11:23:47 -0700 (PDT)
+        Thu, 15 May 2025 11:23:48 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: pratyush@kernel.org,
 	jasonmiu@google.com,
@@ -121,9 +121,9 @@ To: pratyush@kernel.org,
 	djeffery@redhat.com,
 	stuart.w.hayes@gmail.com,
 	ptyadav@amazon.de
-Subject: [RFC v2 15/16] docs: add luo documentation
-Date: Thu, 15 May 2025 18:23:19 +0000
-Message-ID: <20250515182322.117840-16-pasha.tatashin@soleen.com>
+Subject: [RFC v2 16/16] MAINTAINERS: add liveupdate entry
+Date: Thu, 15 May 2025 18:23:20 +0000
+Message-ID: <20250515182322.117840-17-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
 In-Reply-To: <20250515182322.117840-1-pasha.tatashin@soleen.com>
 References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
@@ -135,99 +135,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add the main documentation file for the Live Update Orchestrator
-subsystem at Documentation/admin-guide/liveupdate.rst.
-
-The new file is included in the main
-Documentation/admin-guide/index.rst table of contents.
+Add a MAINTAINERS file entry for the new Live Update Orchestrator
+introduced in previous patches.
 
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- Documentation/admin-guide/index.rst      |  1 +
- Documentation/admin-guide/liveupdate.rst | 62 ++++++++++++++++++++++++
- 2 files changed, 63 insertions(+)
- create mode 100644 Documentation/admin-guide/liveupdate.rst
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 259d79fbeb94..3f59ccf32760 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -95,6 +95,7 @@ likely to be of interest on almost any system.
-    cgroup-v2
-    cgroup-v1/index
-    cpu-load
-+   liveupdate
-    mm/index
-    module-signing
-    namespaces/index
-diff --git a/Documentation/admin-guide/liveupdate.rst b/Documentation/admin-guide/liveupdate.rst
-new file mode 100644
-index 000000000000..bff9475d2518
---- /dev/null
-+++ b/Documentation/admin-guide/liveupdate.rst
-@@ -0,0 +1,62 @@
-+.. SPDX-License-Identifier: GPL-2.0
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4fc28b6674bd..327b2084ab79 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13806,6 +13806,17 @@ F:	kernel/module/livepatch.c
+ F:	samples/livepatch/
+ F:	tools/testing/selftests/livepatch/
+ 
++LIVE UPDATE
++M:	Pasha Tatashin <pasha.tatashin@soleen.com>
++L:	linux-kernel@vger.kernel.org
++S:	Maintained
++F:	Documentation/ABI/testing/sysfs-kernel-liveupdate
++F:	Documentation/admin-guide/liveupdate.rst
++F:	drivers/misc/liveupdate/
++F:	include/linux/liveupdate.h
++F:	include/uapi/linux/liveupdate.h
++F:	tools/testing/selftests/liveupdate/
 +
-+==============================
-+Live Update Orchestrator (LUO)
-+==============================
-+:Author: Pasha Tatashin <pasha.tatashin@soleen.com>
-+
-+.. kernel-doc:: drivers/misc/liveupdate/luo_core.c
-+   :doc: Live Update Orchestrator (LUO)
-+
-+LUO Subsystems Participation
-+============================
-+.. kernel-doc:: drivers/misc/liveupdate/luo_subsystems.c
-+   :doc: LUO Subsystems support
-+
-+LUO Preserving File Descriptors
-+===============================
-+.. kernel-doc:: drivers/misc/liveupdate/luo_files.c
-+   :doc: LUO file descriptors
-+
-+LUO ioctl interface
-+===================
-+.. kernel-doc:: drivers/misc/liveupdate/luo_ioctl.c
-+   :doc: LUO ioctl Interface
-+
-+LUO sysfs interface
-+===================
-+.. kernel-doc:: drivers/misc/liveupdate/luo_sysfs.c
-+   :doc: LUO sysfs interface
-+
-+LUO selftests ioctl
-+===================
-+.. kernel-doc:: drivers/misc/liveupdate/luo_selftests.c
-+   :doc: LUO Selftests
-+
-+ioctl uAPI
-+===========
-+.. kernel-doc:: include/uapi/linux/liveupdate.h
-+
-+Public API
-+==========
-+.. kernel-doc:: include/linux/liveupdate.h
-+
-+.. kernel-doc:: drivers/misc/liveupdate/luo_core.c
-+   :export:
-+
-+.. kernel-doc:: drivers/misc/liveupdate/luo_subsystems.c
-+   :export:
-+
-+.. kernel-doc:: drivers/misc/liveupdate/luo_files.c
-+   :export:
-+
-+Internal API
-+============
-+.. kernel-doc:: drivers/misc/liveupdate/luo_core.c
-+   :internal:
-+
-+.. kernel-doc:: drivers/misc/liveupdate/luo_subsystems.c
-+   :internal:
-+
-+.. kernel-doc:: drivers/misc/liveupdate/luo_files.c
-+   :internal:
+ LLC (802.2)
+ L:	netdev@vger.kernel.org
+ S:	Odd fixes
 -- 
 2.49.0.1101.gccaa498523-goog
 
