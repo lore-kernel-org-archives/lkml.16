@@ -1,102 +1,179 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99A417BD9;
-	Thu, 15 May 2025 07:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858FD4B1E5A
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 07:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747295145; cv=none; b=baoxgDmICqPWRWfNhf4KT2IW7lPhtmv9UlF+gpJkPaw4a2caZB0+uNXi/ewIW2BOJk1vYqzw4DJhm0LarRuVmjPz0UqDxhG2nFdm9DDrGj5KrZnxSSzQycuUUsZ6r5ISiTmClC1UaY8B7LcwGZUfQZd9nLh9jROJikLm7RtEDuQ=
+	t=1747295157; cv=none; b=EZJ5fzHa33qVxBPnnyxlYRZgj0aF8H6bLVmrNYKNaI0jOdzjWylmD7ITfeaOEDbnWQNqZgxCLtrEyRNgGelHrBT3mfIPe4yz3OT4fjqOjjqvM7uriA65UKg3ZQBunouCbZH/gYdJRBWKSoYoqVIzqM0xpyPHluJHttK8NetM59c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747295145; c=relaxed/simple;
-	bh=FUTGQUAOkm5bi73IlMsoeSedRcN4KCV84hEa6dEH/8U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=soaTtzs3dWlcm1uu2x96j2lHKmuwoMaGQgV3QTvJN++TZhgottajAsJO0OX55hoDj6A7Yd7hH0IdByq+ITkooWWoZLMv1nk5z9QNBcN91E/CT0psC4e9IDPEvcuM3hgBhLZ0YA25RfDMd8vZRbJKvZWsQmuNmkHUQ7o8BorhAIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QBpWSsL8; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747295157; c=relaxed/simple;
+	bh=RU53/Z1F+B+WEi8f7Ubcx4/pZKWYgwxZ+EqnCJDGVaM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aXZ3TbSoof4O+xDa37uRDQQ+sRPK4Ph2ib9z/7oQjD5Rgi+Czj9AIrSB2uaZ/grGZFrjGsTaH3HUIkb+ttFR9LYZlNU4N3uDccf4HL6/lC89W84aFn5x0AtwpixBJlj9VbTYUZBih0VqkjjcdRWYjlIreMsLWnc7DcwXF91S++Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aof8px4M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBpWSsL8"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso6446165e9.0;
-        Thu, 15 May 2025 00:45:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747295142; x=1747899942; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ji/KKSHoP7yY7aJyBCvNgq977Um77Yq/cN+M0anXeoY=;
-        b=QBpWSsL8ZxthIO6ryC4ulXaTHIYL5cCR0/mwSNZTLrVcz3APUQhYebWpq9j4dBW2/R
-         hReVbx0zNqesO+63Azk7maVM3oqiOKMqKGMuis0x+CAV/g0ckWQWWSOeJKMmg7pPGkgD
-         pDopgSSZ4wjGLcFjeA6YdG3WRg/1SbWD2Sy9fLFQB8Y3w/hbMXLhnNdbMNl+OSNnuzlv
-         vzG76vHA0vtr2X9NlmtTovNXv4JGYrxOMAq7k0XSwLhfVE+BKOWanx77UWrOLr4Rc3A6
-         h6stuQ9C7kqpSGWAQtboXs0BjA/t6YNLL/ew6surf+rbaignP22MzdM0VGZ87zWtBbiM
-         B4tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747295142; x=1747899942;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ji/KKSHoP7yY7aJyBCvNgq977Um77Yq/cN+M0anXeoY=;
-        b=DDKkY0+yDwV7h0zY/6T/l2ipLCK06CO9xiU3HR6X+La1KERJiagwbwLhYGjOPz+5+N
-         0UyWf6W9TWhSoAB7cjIRmzjv6vxRTHuBZ1qZwJpOmFV0TiDUnynwwdutK9FlYYjeSY8u
-         Fc6MslXn291UepfYX//eEKcadHQcA+XfoG8i/qtrqpcMuqekiaIPLr6T9oFptZaDpLcN
-         JSOdGiZjgOsC1vyd6SfXVC24wdxizUMngJBCkeQSVbny8UbCYdMURgL5eSuNu5bQLEd4
-         daDB6B5GLwb7n+FP2uDiYsVxcjBRmEuhgYR7qklePYwvEo3/NoUK9KLSjtuOD/ak9rYz
-         1Vhw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1AVQuJcsbp8ZHUgUEO7NfMai5vPECQ3zwr4EF3cD6ZjJ8p5pVklqDQAI2nf+uzXhYuPjhXvd4tMce@vger.kernel.org, AJvYcCV1XKVY/2HNCKVvTzmGvLFYB5WXJIsS8GrMWF4fCDQApMPgeqUlRkzZf7PECyaJWvjHfTU6M0VBrZ8tNl8/@vger.kernel.org, AJvYcCVqVkXNVH/asAZfS/I8o8aHEdhlVfA3thnns+1KE2I+yt4cpjrIQIAsRZFO7+TwDoqzZBLqls3J@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7SaU9p506vHMdqvKuiwZ3v5C2WAOlCXRvp4uo2rFAJEyL0VlW
-	0YaixyyfObiEiEFjfoyFA3MGXcqVN8YbgtPRafPSTtic4KgLxpQF
-X-Gm-Gg: ASbGncvvks6ZN3vnqckAnJj4D6rS6ivgpLlkTstgw0A/rJghmdIuozNIcPs/+LAj+Gk
-	c9wee562PgTd/Mx2dxNtIeEnyUXiRWoyZt1RjD/LxCrOZjBg4QDfTkwoqc5fVqR+xYE0ghEZD7+
-	+Mkio7oGIfqIELfuapYc0EHROpiKCu+us52tEdxbkfGjYd2jC31jv3mcC/Vs514j6qAGpUZM5fF
-	cxw42QDvJqwK7Dm0ACkOVQBHiB7PkZg6fGY0vqbJixCLpflQCyaSBS8boHMGhmiiBeKNxjRoJVH
-	5Zd0z5kGn2SHP/UNb4ng+YyLFcJC48YFzHCTWO+3jjCZWkCgp7uI8wT9HEhB5VeDjDE3uSN1ifX
-	gZZzObarLChaPZaWw
-X-Google-Smtp-Source: AGHT+IEnXEKhyoqKyql7HmWJcCHO+Gr5r3eS6SUzYuWVl+B+RTKRMOQwn/WGYHQLnofQqru7Sv/AKw==
-X-Received: by 2002:a05:600c:3c85:b0:442:cab1:e092 with SMTP id 5b1f17b1804b1-442f20e5547mr55352885e9.11.1747295141986;
-        Thu, 15 May 2025 00:45:41 -0700 (PDT)
-Received: from [192.168.20.170] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f395060esm60261815e9.17.2025.05.15.00.45.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 00:45:41 -0700 (PDT)
-Message-ID: <d5083f6a-e39b-46cb-8551-ca7a5f6f6bed@gmail.com>
-Date: Thu, 15 May 2025 09:45:40 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aof8px4M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86AA3C4CEE7;
+	Thu, 15 May 2025 07:45:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747295156;
+	bh=RU53/Z1F+B+WEi8f7Ubcx4/pZKWYgwxZ+EqnCJDGVaM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Aof8px4MKaKWrEFkiHNS3Pbb2MSDHdKdy/J7KhEnb64VXkJeyBS4TPZ29rOArt5OJ
+	 3UoHpsmNRhnGC6WHrc72mjkqBFgbq0WgLuK2Ts4rWj0fM0zqlj7dQ6rQgg2a+uMIAh
+	 JPc/G8TvWh6ZOpIeJUmJrR7V5wFmI6rxC+sTMGDd5Dr4jJ94KRcLx8EnVUbeGxLADN
+	 L60DOrFRuJ89hObmTCzwFUeGC/z72XvgF7AowMCbhkLoWOlofxLzbGGiGo5b2jkOz8
+	 mH8dWJHxsJ1KcjAltzT9gWrJYtxtKxgZ+DEGmKGyto9wZyNgF/glnTB4FtR1EaR21x
+	 nVgy1dgl3QGYA==
+Date: Thu, 15 May 2025 09:45:52 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Brian Gerst <brgerst@gmail.com>
+Subject: Re: [PATCH v3 1/7] x86/cpu: Use a new feature flag for 5 level paging
+Message-ID: <aCWbsM1qaMsKNkMj@gmail.com>
+References: <20250514104242.1275040-9-ardb+git@google.com>
+ <20250514104242.1275040-10-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/7] pinctrl: armada-37xx: a couple of small fixes
-Content-Language: hu
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andrew Lunn <andrew@lunn.ch>,
- Gregory Clement <gregory.clement@bootlin.com>,
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Imre Kaloz <kaloz@openwrt.org>,
- linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250514-pinctrl-a37xx-fixes-v2-0-07e9ac1ab737@gmail.com>
- <CACRpkdb2Njam8GGuN5yeR+DYvi0xe11xbARaoDepoGk=gAK6GA@mail.gmail.com>
-From: Gabor Juhos <j4g8y7@gmail.com>
-In-Reply-To: <CACRpkdb2Njam8GGuN5yeR+DYvi0xe11xbARaoDepoGk=gAK6GA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250514104242.1275040-10-ardb+git@google.com>
 
-2025. 05. 15. 0:28 keltezéssel, Linus Walleij írta:
-> On Wed, May 14, 2025 at 9:18 PM Gabor Juhos <j4g8y7@gmail.com> wrote:
-> 
->> The series contains several small patches to fix various
->> issues in the pinctrl driver for Armada 3700.
->>
->> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
-> 
-> Patches applied by applying to a separate immutable branch
-> and merging into my "devel" branch: we were clashing a bit
-> with Bartosz rewrites so I had to help git a bit.
-> 
-> Pushed to the autobuilders, check the result!
 
-Checked, it is fine. Thanks!
+* Ard Biesheuvel <ardb+git@google.com> wrote:
 
--Gabor
+> From: Ard Biesheuvel <ardb@kernel.org>
+> 
+> Currently, the LA57 CPU feature flag is taken to mean two different
+> things at once:
+> - whether the CPU implements the LA57 extension, and is therefore
+>   capable of supporting 5 level paging;
+> - whether 5 level paging is currently in use.
+> 
+> This means the LA57 capability of the hardware is hidden when a LA57
+> capable CPU is forced to run with 4 levels of paging. It also means the
+> the ordinary CPU capability detection code will happily set the LA57
+> capability and it needs to be cleared explicitly afterwards to avoid
+> inconsistencies.
+> 
+> Separate the two so that the CPU hardware capability can be identified
+> unambigously in all cases.
+> 
+> To avoid breaking existing users that might assume that 5 level paging
+> is being used when the "la57" string is visible in /proc/cpuinfo,
+> repurpose that string to mean that 5-level paging is in use, and add a
+> new string la57_capable to indicate that the CPU feature is implemented
+> by the hardware.
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  arch/x86/include/asm/cpufeatures.h               |  3 ++-
+>  arch/x86/include/asm/page_64.h                   |  2 +-
+>  arch/x86/include/asm/pgtable_64_types.h          |  2 +-
+>  arch/x86/kernel/cpu/common.c                     | 16 ++--------------
+>  arch/x86/kvm/x86.h                               |  4 ++--
+>  drivers/iommu/amd/init.c                         |  4 ++--
+>  drivers/iommu/intel/svm.c                        |  4 ++--
+>  tools/testing/selftests/kvm/x86/set_sregs_test.c |  2 +-
+>  8 files changed, 13 insertions(+), 24 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index f67a93fc9391..d59bee5907e7 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -395,7 +395,7 @@
+>  #define X86_FEATURE_AVX512_BITALG	(16*32+12) /* "avx512_bitalg" Support for VPOPCNT[B,W] and VPSHUF-BITQMB instructions */
+>  #define X86_FEATURE_TME			(16*32+13) /* "tme" Intel Total Memory Encryption */
+>  #define X86_FEATURE_AVX512_VPOPCNTDQ	(16*32+14) /* "avx512_vpopcntdq" POPCNT for vectors of DW/QW */
+> -#define X86_FEATURE_LA57		(16*32+16) /* "la57" 5-level page tables */
+> +#define X86_FEATURE_LA57		(16*32+16) /* "la57_hw" 5-level page tables */
+>  #define X86_FEATURE_RDPID		(16*32+22) /* "rdpid" RDPID instruction */
+>  #define X86_FEATURE_BUS_LOCK_DETECT	(16*32+24) /* "bus_lock_detect" Bus Lock detect */
+>  #define X86_FEATURE_CLDEMOTE		(16*32+25) /* "cldemote" CLDEMOTE instruction */
+> @@ -483,6 +483,7 @@
+>  #define X86_FEATURE_PREFER_YMM		(21*32+ 8) /* Avoid ZMM registers due to downclocking */
+>  #define X86_FEATURE_APX			(21*32+ 9) /* Advanced Performance Extensions */
+>  #define X86_FEATURE_INDIRECT_THUNK_ITS	(21*32+10) /* Use thunk for indirect branches in lower half of cacheline */
+> +#define X86_FEATURE_5LEVEL_PAGING	(21*32+11) /* "la57" Whether 5 levels of page tables are in use */
+
+So there's a new complication here, KVM doesn't like the use of 
+synthethic CPU flags, for understandable reasons:
+
+  inlined from ‘intel_pmu_set_msr’ at arch/x86/kvm/vmx/pmu_intel.c:369:7:
+  ...
+  ./arch/x86/kvm/reverse_cpuid.h:102:9: note: in expansion of macro ‘BUILD_BUG_ON’
+    102 |         BUILD_BUG_ON(x86_leaf == CPUID_LNX_5);
+        |         ^~~~~~~~~~~~
+
+(See x86-64 allmodconfig)
+
+Even though previously X86_FEATURE_LA57 was effectively a synthethic 
+CPU flag (it got artificially turned off by the Linux kernel if 5-level 
+paging was disabled) ...
+
+So I think the most straightforward solution would be to do the change 
+below, and pass through LA57 flag if 5-level paging is enabled in the 
+host kernel. This is similar to as if the firmware turned off LA57, and 
+it doesn't bring in all the early-boot complications bare metal has. It 
+should also match the previous behavior I think.
+
+Thoughts?
+
+Thanks,
+
+	Ingo
+
+=================>
+
+ arch/x86/kvm/cpuid.c | 6 ++++++
+ arch/x86/kvm/x86.h   | 4 ++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 571c906ffcbf..d951d71aea3b 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -1221,6 +1221,12 @@ void kvm_set_cpu_caps(void)
+ 		kvm_cpu_cap_clear(X86_FEATURE_RDTSCP);
+ 		kvm_cpu_cap_clear(X86_FEATURE_RDPID);
+ 	}
++	/*
++	 * Clear the LA57 flag in the guest if the host kernel
++	 * does not have 5-level paging support:
++	 */
++	if (kvm_cpu_cap_has(X86_FEATURE_LA57) && !pgtable_l5_enabled())
++		kvm_cpu_cap_clear(X86_FEATURE_LA57);
+ }
+ EXPORT_SYMBOL_GPL(kvm_set_cpu_caps);
+ 
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index d2c093f17ae5..9dc32a409076 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -243,7 +243,7 @@ static inline u8 vcpu_virt_addr_bits(struct kvm_vcpu *vcpu)
+ 
+ static inline u8 max_host_virt_addr_bits(void)
+ {
+-	return kvm_cpu_cap_has(X86_FEATURE_5LEVEL_PAGING) ? 57 : 48;
++	return kvm_cpu_cap_has(X86_FEATURE_LA57) ? 57 : 48;
+ }
+ 
+ /*
+@@ -603,7 +603,7 @@ static inline bool __kvm_is_valid_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+ 		__reserved_bits |= X86_CR4_FSGSBASE;    \
+ 	if (!__cpu_has(__c, X86_FEATURE_PKU))           \
+ 		__reserved_bits |= X86_CR4_PKE;         \
+-	if (!__cpu_has(__c, X86_FEATURE_5LEVEL_PAGING))          \
++	if (!__cpu_has(__c, X86_FEATURE_LA57))          \
+ 		__reserved_bits |= X86_CR4_LA57;        \
+ 	if (!__cpu_has(__c, X86_FEATURE_UMIP))          \
+ 		__reserved_bits |= X86_CR4_UMIP;        \
