@@ -1,121 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2B6289E03;
-	Thu, 15 May 2025 09:23:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F2D221296;
+	Thu, 15 May 2025 09:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747301025; cv=none; b=emluqKjMyMImP051FOTA4p0ZAkmQL2cLeHri2R8vtTW30ABBBp+DfsaaAKvO/5RbwCHyL0dO7lFY57j77BSlbybL1jth6HahUKHs2zMCsrbLAvwp1MeGNuyt2pcx81qUULU2jlcizkkTT+AHrtgnitv0K6zCF/fbAcJ0Ivx/Oyk=
+	t=1747301097; cv=none; b=E3XVRriMAD8lsLgYCd30CCZzqiG1+knGIo9Fw6f9zRLF+Q86oWM0m5Ej8Qtj7xrtAXi8PCWpoaPt+yRZfugpRH0LYkwyZl5aTLrBwlQcG41Xh29SBIVbPMAwDE+jGC8zXjncAVlb62lWRpmpNf8mKlImGJbxTYOPClfhwMJRvtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747301025; c=relaxed/simple;
-	bh=pmh0bU9D30ShKkm22QJjwQKrEY0tzBBAail+x8L+Wfg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eh1rWGYHMjTB804HsQbOF639VQxl93wog57BS9XHHm0nAAIHW1Qw0DBw7cBuaUjGXek154O/9sJPtfCFTa0Df5v8KSaF8ZhUsICnrUbrPIj0qrNjlq+9mXxfwXtf7Nr+J9VvWvwir34As8JSEoZWp09E+IT094N4IGrATWaQfT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DlSg03m8; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747301097; c=relaxed/simple;
+	bh=JZp32cGnARt5v5SngWT8bwZW1Jh8iJC7PUvH3dlXTsI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R4liFbo1pr/73dqUtm8X9RXRpJjn3vWj8OSzJVS03J9TxvgHKN/9zyWl7uwxvqGfa3Wv21o5FGVnkedyHXfWsltCXnKhbEb+Hg1s5MxMHQ8syCfaqHs74xIkqgnGLOWGMzweo0nY+yn4FtxEQvo5kD5doTKPyhU+Ae4KjVS7vRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A7mU282L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DlSg03m8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747301024; x=1778837024;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=pmh0bU9D30ShKkm22QJjwQKrEY0tzBBAail+x8L+Wfg=;
-  b=DlSg03m8IylNEUUW6MTQCJbsnIW1G5ZqugPTa9crCmTTof/LzSwLVNwW
-   p6UUWLidHo1FWZhA7Hv46RNa5US39hUZLWtM6dOhCV5OyOhWjpPmiGO+W
-   Cs3rXQESMYyfwhw1ajKSf46uvlapHDeHn2NLjtdVwPsSgUZZoecF+7Z2g
-   bMevLfNCsfz6F6Td9j82XOEqObov4pislEOrrcba2I/7sTEDA7HhslZJo
-   JVsl5jzlzGABmr5uWYWtzndHtQ8NdLIitlyD+ZsSnB/7QwFVmzAV3wb3E
-   LfHScJLzNkXUSsXle79B0gwdH82PjRVvI8Z5rfvhroqimx82UlUJvigwg
-   Q==;
-X-CSE-ConnectionGUID: EXXIF+x5TYmRhL2w2cqnTQ==
-X-CSE-MsgGUID: /V05UTTsTuqqotMANPi2TA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="60628654"
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="60628654"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 02:23:42 -0700
-X-CSE-ConnectionGUID: Refl9nmdQnCSQuH4FV2QOA==
-X-CSE-MsgGUID: J3wJnCFwRly62bB+1zlDUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="138722753"
-Received: from sbockowx-mobl2.ger.corp.intel.com (HELO [10.94.8.84]) ([10.94.8.84])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 02:23:38 -0700
-Message-ID: <3470451d-6768-42d4-93db-2783ffd9cbab@linux.intel.com>
-Date: Thu, 15 May 2025 11:23:36 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A7mU282L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C28A3C4CEE7;
+	Thu, 15 May 2025 09:24:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747301096;
+	bh=JZp32cGnARt5v5SngWT8bwZW1Jh8iJC7PUvH3dlXTsI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A7mU282LSWsGdpwJ5DOiLTIAyqVyxqrlhiVc/v/e9xV8IF8oplET2K7F1vaW9ndS9
+	 Tlas2OXmX6IsN+pRPlTSwvSVtCP/Cw8hsCLXnTBqvAPakVN7aP6hBug3Z5jAfSXubn
+	 ZZrk7AA4uR2EeRexTRs3IkByDiF4sfYVO8tBjoHvFYBpCuapOsYHAbkzEnbptayKPG
+	 MaoK0JqisvSZA0NJiNex8WCJ8Q3RnsW2nI/+VLG9cLM4obd3XEaUHaDi8QTplnEc1M
+	 321EnbfQT9BLZhjy61zQ22mIKJpakf9bnmHCgr0tDdiOLD7gc8Vv4jdSy+oggRK3O8
+	 BkvdzdvjkhAOg==
+Date: Thu, 15 May 2025 11:24:53 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	wbg@kernel.org, jic23@kernel.org, catalin.marinas@arm.com, will@kernel.org, 
+	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, olivier.moysan@foss.st.com, lee@kernel.org, 
+	alexandre.torgue@foss.st.com
+Subject: Re: [PATCH v3 4/8] pwm: stm32: add support for stm32mp25
+Message-ID: <5ui74qlssllgn4h34by5jcpi5g6rknziclcsh4w27tjvznynsv@lcjtjxn6rovl>
+References: <20250110091922.980627-1-fabrice.gasnier@foss.st.com>
+ <20250110091922.980627-5-fabrice.gasnier@foss.st.com>
+ <4b641513-ff2e-43ab-8074-ba6b521875e2@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: Intel: avs: rt274: Add null pointer check for
- snd_soc_card_get_codec_dai()
-To: Wentao Liang <vulab@iscas.ac.cn>, cezary.rojewski@intel.com,
- liam.r.girdwood@linux.intel.com, peter.ujfalusi@linux.intel.com,
- yung-chuan.liao@linux.intel.com, ranjani.sridharan@linux.intel.com,
- kai.vehmanen@linux.intel.com, pierre-louis.bossart@linux.dev,
- broonie@kernel.org, perex@perex.cz, tiwai@suse.com
-Cc: kuninori.morimoto.gx@renesas.com, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250514141947.998-1-vulab@iscas.ac.cn>
-Content-Language: en-US
-From: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
- <amadeuszx.slawinski@linux.intel.com>
-In-Reply-To: <20250514141947.998-1-vulab@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="dxezo4t7v65ydh54"
+Content-Disposition: inline
+In-Reply-To: <4b641513-ff2e-43ab-8074-ba6b521875e2@foss.st.com>
 
 
+--dxezo4t7v65ydh54
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 4/8] pwm: stm32: add support for stm32mp25
+MIME-Version: 1.0
 
-On 2025-05-14 16:19, Wentao Liang wrote:
-> The avs_card_suspend_pre() and avs_card_resume_post() in rt274
-> calls the snd_soc_card_get_codec_dai(), but does not check its return
-> value which is a null pointer if the function fails. This can result
-> in a null pointer dereference. A proper implementation can be found
-> in acp5x_nau8821_hw_params() and card_suspend_pre().
-> 
-> Add a null pointer check for snd_soc_card_get_codec_dai() to avoid null
-> pointer dereference when the function fails.
-> 
-> Fixes: a08797afc1f9 ("ASoC: Intel: avs: rt274: Refactor jack handling")
-> Cc: stable@vger.kernel.org # v6.2
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
->   sound/soc/intel/avs/boards/rt274.c | 10 ++++++++++
->   1 file changed, 10 insertions(+)
-> 
-> diff --git a/sound/soc/intel/avs/boards/rt274.c b/sound/soc/intel/avs/boards/rt274.c
-> index 4b6c02a40204..7a8b6ee79f4c 100644
-> --- a/sound/soc/intel/avs/boards/rt274.c
-> +++ b/sound/soc/intel/avs/boards/rt274.c
-> @@ -194,6 +194,11 @@ static int avs_card_suspend_pre(struct snd_soc_card *card)
->   {
->   	struct snd_soc_dai *codec_dai = snd_soc_card_get_codec_dai(card, RT274_CODEC_DAI);
->   
-> +	if (!codec_dai) {
-> +		dev_err(card->dev, "Codec dai not found\n");
-> +		return -EINVAL;
-> +	}
-> +
->   	return snd_soc_component_set_jack(codec_dai->component, NULL, NULL);
->   }
->   
-> @@ -202,6 +207,11 @@ static int avs_card_resume_post(struct snd_soc_card *card)
->   	struct snd_soc_dai *codec_dai = snd_soc_card_get_codec_dai(card, RT274_CODEC_DAI);
->   	struct snd_soc_jack *jack = snd_soc_card_get_drvdata(card);
->   
-> +	if (!codec_dai) {
-> +		dev_err(card->dev, "Codec dai not found\n");
-> +		return -EINVAL;
-> +	}
-> +
->   	return snd_soc_component_set_jack(codec_dai->component, jack, NULL);
->   }
->   
+Hello Fabrice,
 
-Same as in other case, where Cezary commented - this is not needed, once 
-card is loaded codec should exist.
+On Wed, May 14, 2025 at 11:30:26AM +0200, Fabrice Gasnier wrote:
+> On 1/10/25 10:19, Fabrice Gasnier wrote:
+> > Add support for STM32MP25 SoC. Use newly introduced compatible to handle
+> > new features along with registers and bits diversity.
+> > The MFD part of the driver fills in ipidr, so it is used to check the
+> > hardware configuration register, when available to gather the number
+> > of PWM channels and complementary outputs.
+> >=20
+> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+> > ---
+> > Changes in v2:
+> > Address Uwe review comments:
+> > - Make MAX_PWM_OUTPUT definition less generic: STM32_PWM_MAX_OUTPUT
+> > - No need to initialize 'npwm'
+> > - refactor code, for *num_enabled to use same code path
+> > ---
+> >  drivers/pwm/pwm-stm32.c | 42 ++++++++++++++++++++++++++++++++++-------
+> >  1 file changed, 35 insertions(+), 7 deletions(-)
+>=20
+> Hi Uwe,
+>=20
+> I think this patch still miss some reviews.
+> The first patches of this series have been merged.
+>=20
+> Is it ok for you to merge, or shall I resend separately ?
+
+I have it still on my radar, no need to resend. I just have to find the
+time to look into it in more detail.
+
+Best regards
+Uwe
+
+--dxezo4t7v65ydh54
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmglstgACgkQj4D7WH0S
+/k7tvQgAr0tuQYW7a8kZHG4D+r8Ju5Etk+73ekoD+5NJcmpwe6C8Nye8E3mKfgS6
+bWCXuQS9aBsBvnmwFzIV9jkcwJrdeejQfv46EJ0IOZZFloj7b/vB3K/L/dzS3Ray
+XkPiy+M1R1rGt5B5X1U2gyUK6QRCE4KOMquhXMRCQxO7zqXlozUOk2rcmcAzgGMV
+tpQY/lDPoA9V6k4R6WL4yGAzwybvl+ASbzdrDmsjuIcW9On5Y5xDzkeVH9RSU5P0
+apvIu6hfS3bj3LvTF8QiT9emDOMQJAMU0J5t2YOeazfw/A7rFfqFQl7FA4Z2nDGZ
+wxTfL+UCcOGnVPHKb0fByZ5OKLMqrA==
+=ZB/v
+-----END PGP SIGNATURE-----
+
+--dxezo4t7v65ydh54--
