@@ -1,156 +1,70 @@
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFBA1D79A6;
-	Thu, 15 May 2025 16:53:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2066253B56;
+	Thu, 15 May 2025 16:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747327988; cv=none; b=P4UyNplcCa9TFlNTf7V/qAkkKfRVVHPc+BaIuyu16UlGAdDm73CBWN8whBw3tzA9mCCMWN0BGeN+vSySmwmMRmGWloMo7RYoiRPWeSABvBkOFPI9wHrZdIk4ryh275bbcaTUhlbtZZyN+Z6hSn8SSrEB5YmB0EHUGm6/g9v8Qxo=
+	t=1747328013; cv=none; b=bj4aiG3ajhUvCATfrn0XNan7nNF8arqqMBENO+mZ956qfso0zUwu63vl9zLSGHJh7jLAB/u6ntu4TM7pte3+UGc+pi6aQiIcusO5w8NuSZJq1hKUYu9rMJbdstmTA8Jp1gPti4cqB7Zs97/ZctDAFvnbXr8YvXJKyTM1ntPnbRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747327988; c=relaxed/simple;
-	bh=x2mw5yqY7SjedCStPq1pT8tA+9SiafJT2CicuDHHlus=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=aDP3B5F151Pc805a8lQDJL4f8rq52PX2CmroRaWmN9mwvgXJdgg6LuRI668FDqJ6RRm2boK/0S+Qs5CZyLn2JbkBYsvNpohApp1/fnbERyJxkdhE5T33f6KNYy3YAPjncBDTzXedFziwfUVi0GLzMSPXu+M9usJ/F7Md5bmRCb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTPS id 4Zyx8V3tdtzsST6;
-	Fri, 16 May 2025 00:52:26 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 8BDF61402E0;
-	Fri, 16 May 2025 00:53:00 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP1 (Coremail) with SMTP id LxC2BwCHC0rhGyZocybvBw--.48004S2;
-	Thu, 15 May 2025 17:52:59 +0100 (CET)
-Message-ID: <2a20e37ac05068a0fbcfb6faaf6cd73123da2844.camel@huaweicloud.com>
-Subject: Re: [syzbot] [lsm?] [integrity?] KMSAN: uninit-value in
- ima_add_template_entry (3)
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: syzbot <syzbot+3f0b3970f154dfc95e6e@syzkaller.appspotmail.com>, 
- dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, jmorris@namei.org, 
- linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-security-module@vger.kernel.org, paul@paul-moore.com, 
- roberto.sassu@huawei.com, serge@hallyn.com,
- syzkaller-bugs@googlegroups.com,  zohar@linux.ibm.com,
- linux-bcachefs@vger.kernel.org
-Date: Thu, 15 May 2025 18:52:45 +0200
-In-Reply-To: <er7lw7xo3qfu67sdjdghcurgar3q2iwcy6lr4jlunsmev5c4qq@b7mue2oh6ort>
-References: <6824aea8.a00a0220.104b28.0011.GAE@google.com>
-	 <38c28bd4dc40b2e992c13a6fdba820a667861d8c.camel@huaweicloud.com>
-	 <rbab6axciiuomrann3uwvpks2zogx3xfntk7w4p2betq3morlf@5xnl5guhnaxj>
-	 <576e10238d83f725fbe23c4af63be6e83de9ce48.camel@huaweicloud.com>
-	 <l7xs6ea7takb5yvyvobxoce3mudbgen5d7s47onksm4ujpdkib@tvstwbdpvm4o>
-	 <2993afd1b2b1553a75d1016ec2d06b6fb8e78e57.camel@huaweicloud.com>
-	 <er7lw7xo3qfu67sdjdghcurgar3q2iwcy6lr4jlunsmev5c4qq@b7mue2oh6ort>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1747328013; c=relaxed/simple;
+	bh=p8wlX+CxjJDQW9hZmMeNz7tUVN6QmK2wRYdGGqNklJI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GzIVh1aARd7iQ5ijKDUKKk8POTFmSocHCTRmTRuk3besInYpaButP5x9oar8Mp9c3mLJvfIY0uxg0mX4DwXoNh0y7of5Jafk376eP2zrabv/bwSkj47YtsAFQtJ973nzT1SE+gi+KjtM6JtkYR90CVLIsrNd6iQVLXdEA8PWrFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nOUMa/Of; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nOUMa/Of"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4052C4CEE7;
+	Thu, 15 May 2025 16:53:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747328013;
+	bh=p8wlX+CxjJDQW9hZmMeNz7tUVN6QmK2wRYdGGqNklJI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=nOUMa/OfEJy1OLR374OYHo3b/Cd//LUfdzEuBDhIo4dmF/EE/2rBId2rKEOU45LOO
+	 bvu2w0EpDPbZGon6URZrgr3HzWPgmc5qywzWo+9d3IfHNKR0xbSKje7ydaswdW+vOp
+	 b7YvVovtu2CPrfK4pRjKX7GBlwooDpLQMjQYlVMTfVKHyEQnMabRjgLuJTIBb1lkLr
+	 qqgigbgloxGW1nHu42AlQYzmmXhAA5ZqPXWZafBDPcpLgebAqlhWDbSjyy7ITyKYkr
+	 +MNj+Rj9DCXYasgpwzeUTur+j9MHhXgoBBK6Z7oUDKa4kmJhKEwFkHMT/P0oLTJUnv
+	 dD7xhFvzp31XQ==
+Date: Thu, 15 May 2025 17:53:26 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andrew Ijano <andrew.ijano@gmail.com>
+Cc: andrew.lopes@alumni.usp.br, gustavobastos@usp.br, David Lechner
+ <dlechner@baylibre.com>, nuno.sa@analog.com, andy@kernel.org,
+ jstephan@baylibre.com, linux-iio <linux-iio@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] iio: accel: sca3000: replace usages of internal read
+ data helpers by spi helpers
+Message-ID: <20250515175326.67615d3b@jic23-huawei>
+In-Reply-To: <CANZih_SmneYr+jK9Apuif66vfCcpni7K+CzMk32-hZt-LRrZWw@mail.gmail.com>
+References: <20250510190759.23921-1-andrew.lopes@alumni.usp.br>
+	<20250511123416.729eb50f@jic23-huawei>
+	<CANZih_QHNEuFTQ2NysUVOJ-PmrL-ASFeG5b8xBTbRSG=3ho-vw@mail.gmail.com>
+	<CANZih_SmneYr+jK9Apuif66vfCcpni7K+CzMk32-hZt-LRrZWw@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:LxC2BwCHC0rhGyZocybvBw--.48004S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxXw18uw17XF1DAF1kKF4DArb_yoW5ArWDpa
-	yaqF1UK34DXFy7ArW2k3WYqFyfKrW8t345X34rXr97CF90qr1Y9ryxtr1Y9r17Xr1rtw1U
-	Cr1Dt34avw1DJFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUOB
-	MKDUUUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAJBGglkmAH5AAAsT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2025-05-15 at 12:48 -0400, Kent Overstreet wrote:
-> On Thu, May 15, 2025 at 06:39:48PM +0200, Roberto Sassu wrote:
-> > On Thu, 2025-05-15 at 12:37 -0400, Kent Overstreet wrote:
-> > > On Thu, May 15, 2025 at 04:30:09PM +0200, Roberto Sassu wrote:
-> > > > On Thu, 2025-05-15 at 10:18 -0400, Kent Overstreet wrote:
-> > > > > On Thu, May 15, 2025 at 04:06:02PM +0200, Roberto Sassu wrote:
-> > > > > > On Wed, 2025-05-14 at 07:54 -0700, syzbot wrote:
-> > > > > > > Hello,
-> > > > > >=20
-> > > > > > + Kent, bcachefs mailing list
-> > > > > >=20
-> > > > > > I have the feeling that this was recently fixed in one of the l=
-atest
-> > > > > > pull requests in bcachefs. I don't see it occurring anymore, an=
-d there
-> > > > > > are more commits after the one reported by syzbot.
-> > > > >=20
-> > > > > I have no idea how any of the ima stuff works or even what it doe=
-s, I'm
-> > > > > not even sure where I'd start...
-> > > >=20
-> > > > Basically, I got a clue that bcachefs would be the cause from the
-> > > > bottom of the report:
-> > > >=20
-> > > >  page_cache_sync_ra+0x108a/0x13e0 mm/readahead.c:621
-> > > >  filemap_get_pages+0xfb3/0x3a70 mm/filemap.c:2591
-> > > >  filemap_read+0x5c6/0x2190 mm/filemap.c:2702
-> > > >  bch2_read_iter+0x559/0x21c0 fs/bcachefs/fs-io-direct.c:221
-> > > >  __kernel_read+0x750/0xda0 fs/read_write.c:528
-> > > >  integrity_kernel_read+0x77/0x90 security/integrity/iint.c:28
-> > > >=20
-> > > > This means that IMA is reading a file and calculating a digest over=
- it:
-> > > >=20
-> > > >  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:498 [in=
-line]
-> > > >  ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inlin=
-e]
-> > > >  ima_calc_file_hash+0x240a/0x3fd0 security/integrity/ima/ima_crypto=
-.c:568
-> > > >  ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api=
-.c:293
-> > > >  process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.=
-c:385
-> > > >  ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
-> > > >=20
-> > > > syzbot is complaining that the data the digest was calculated from =
-was
-> > > > not initialized (e.g. zeroed).
-> > > >=20
-> > > > There is a reproducer, we would be probably able to do a bisection =
-and
-> > > > find the commit that caused it (and maybe the one that fixed it).
-> > >=20
-> > > Ok, that would be fixed by the - multiple - KMSAN fixes, most of thos=
-e
-> > > were spurious but code was lacking annotations. Probably this one:
-> > >=20
-> > > 9c3a2c9b471a bcachefs: Disable asm memcpys when kmsan enabled
-> >=20
-> > Perfect, thanks a lot!
-> >=20
-> > Will check it and mark this report as fixed.
->=20
-> Btw, since you mentioned syzbot reproducers, I have a tool for running
-> those locally, with a single command. It's one of the "tests" in ktest:
->=20
-> https://evilpiepirate.org/git/ktest.git/
->=20
-> With that, you can do
->=20
-> build-test-kernel run -IP ~/ktest/tests/syzbot-repro.ktest <syz id>
->=20
-> in your kernel tree, and it'll build a kernel, launch a vm, and run the
-> reproducer, all in a single command :)
+> > >  }
+> > > @@ -432,13 +434,13 @@ static int sca3000_print_rev(struct iio_dev *indio_dev)
+> > >       struct sca3000_state *st = iio_priv(indio_dev);
+> > >
+> > >       mutex_lock(&st->lock);  
+> >
+> > Another patch to use guard(mutex)(&st->lock); etc would be help clean this
+> > up by allowing direct return in the error path.  
+> 
+> Great! In this case, would you suggest the following order?
+> 1. One patch for general style changes, like the removal of error_ret labels;
+> 2. Another patch for spi changes;
+> 3. And another one for using guard(mutex)(&st->lock).
 
-Great, will try that!
+That order is fine.
 
-Thanks
-
-Roberto
-
+J
