@@ -1,201 +1,128 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D724B1E44;
-	Thu, 15 May 2025 02:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFA401581F0
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 02:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747276341; cv=none; b=jq59akMDkJdgNPrGMYqBnwScCzRxO8XiZabhkAAy1AtiaYtmbMVG+XAn7gJsW9He9X+Uw5sDBg/XgmLua7E+KaInD5Fnds9uCM9ugMhR/+UJlTrUzWtvVesu1iIFgDAwWEGZjhTTW67URXjSLw1BtwugNllDk0D3o/sZR07MWBc=
+	t=1747276365; cv=none; b=alwmUz4A9zHC9UQzpBPtws/b6uqVWCFEUxFZUqMwU+0gU2V9G6Akzvf30xu7oYlTOAFCnOcJgD5bWqQ8Xan+KjYPvIBkUeBupE2zwzJNxEI3BTaepx3z6NiTHvaD2TgIn93VSfPGqfSU57ademdQQv5jbxubNYR1Dj5EmbJ8EFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747276341; c=relaxed/simple;
-	bh=7ceVayl/7ltGiynOCrfdi3wF28FmTW389XU3hoI4mG4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=thIRIxr0WqJcc7zheJZhSoW7tnfyXbstmVvXH8yzAqRNGpeC5SI8UIWEaipfeLhv4JOKbRev1GxCKPxcDqerYbaPZ08xuTsyrFiI1N1IBXReu7F2qTGV3AxSYAywdkH0SokqURqDhThmyYnNZ6OaABJAea3+QM06bN3eQE089XU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cHiIDxTG; arc=none smtp.client-ip=209.85.161.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cHiIDxTG"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-6060200710bso325924eaf.3;
-        Wed, 14 May 2025 19:32:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747276339; x=1747881139; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=a1WEc2CAkZrTUrnqUm71lSCgh9IfHNNmUGEOhV4UQH8=;
-        b=cHiIDxTGIPkHYDLg2CJru+aU6lAXNBKYbukEwsEyxwn1sx35Acxz/yrOqHTpU73Ora
-         GId6WNdqg5kZ1GHcKvt0wxWDHyRd4UlOp7XaCBt/dpJ9+BePhsehlcH/ptiD1kvgooO7
-         bJZ40U/TzeSW5E8MYKZAMKS6p97dJBf9o2hCefRm2CawtZemTqblIsQTLsqqrB72IZMq
-         lep0asI8ly8c+Jj3bwkRqw/bsZ9mn7lH+bkLoB5rOCEiVlvywT6fJByJK9LyWNkWfdAC
-         OzqBUVBehUK69dThY+/xq6uws6lWvuog4PxI1ZoUVCMO11kXa+C7dMfZyKjBiPRZ3Aep
-         oqCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747276339; x=1747881139;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a1WEc2CAkZrTUrnqUm71lSCgh9IfHNNmUGEOhV4UQH8=;
-        b=SsROhCaine85mfQ1Vg8hzAKX9GIdo7brz2seHSdaIrr4ygc9mQ6IhozYoomBFgZWXY
-         A1JWCFEuV9HjrXvzIbR0xrZqyLe/Wxf/XuZKEe5Y7YDNpv91UqGA3lb/GhhMCyjeb0Ws
-         mkHtKrmrDmzd6lXIEwdAkVoBcsd0280quhmMe/kmuXuE7o9Zmf9xcW4/mvS+2AmPMBXu
-         niUc7thK2pAqMnuYXU65N1dga9bRSeQs32eeZr5Pbh72r8RGSLg08GowN5dKh6ewbORX
-         Sfsgyu1QPTqqrcOitqVGgkxj2mk3bBRZdpv4RPTSvKiPTD6MxsM59E3mLGunsbyShJ1+
-         JJIA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8WY1PUgQa7KIy2ZGzQ/vlNe9R/ftS4Y10zpTyNccCiY49ne3rWlftkvkv91DkURWHomHFwNM+y4gFU6l+aQ==@vger.kernel.org, AJvYcCW6FIUO4afaal1y1NE8kX3d7N3KeP3UjIyPnipPJc/ENJ/WrxdYK40HAj74EJVd8uVk4XU1W//+N0FC@vger.kernel.org, AJvYcCWtQ+tw6p3PvyzB+oUsQfYLq7Uvs3yoLdKhRzz7vROv2+0q5JsydZeQ6qGMhMeZC+WqtEVFy42i@vger.kernel.org, AJvYcCWxrpgqRJjTE24CQKQRWuLUy7booz0wJJfFOUISc/x2IFnFOqGydN/wZk/+Ilw48m5jxAOtZ2xVC6ootpE9@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsnmNIW3uA/hQIDOxN/h/ijRBR26SJ0dQpr8MiGQu/TEIl1ZRr
-	0uRWRml6Vg4No2lIeTgQlA1LBLMCld7PGryujgBw2TXspJxbyWX4
-X-Gm-Gg: ASbGnctSyNYQOhu1S097mZHaoUdnMdAVHbmPs3HErG5lsMvqPx3WISLTUSkVbFhmeW3
-	5RWBZLHiEWpTpWld9SJZLNIAhEvNNksTGqn2M/msiU0UWaKRKS+lXjedsTw/BlareUOXV6w20B4
-	4NHOC0HdeGdqsVog7T/XpiLHtRWBU5V4Jq68O+cttV8EtLWJcHeNUZOd/5Z2kTh1vRXPU1TQ3wf
-	6pafatYItR3HmPf7Nz3lFyw62w8Qd0dVsGdttnyK0N6LO77sUPgNjy9C3TyPEgoOhJbocBevBMs
-	cU7EqGwS4knltGwsO6COp5I35EmJukbhuHtv951LZmU4Zoni/KH5ZB3JJ02Phq7OssSUnBT3Fz3
-	APpd5JsRMRCnkDw==
-X-Google-Smtp-Source: AGHT+IH6aNrU4NcrN1bSn3vTgH/AqwvT/wu0+1k4X8SprlPBIpx6ZMiFq+Phdp7vqz4SyU4Bac7ZwQ==
-X-Received: by 2002:a05:6870:a50a:b0:2bc:883f:3dc8 with SMTP id 586e51a60fabf-2e348872352mr3294113fac.34.1747276338570;
-        Wed, 14 May 2025 19:32:18 -0700 (PDT)
-Received: from [192.168.7.110] (c-98-57-15-22.hsd1.tx.comcast.net. [98.57.15.22])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2e01e474cdbsm780532fac.49.2025.05.14.19.32.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 19:32:17 -0700 (PDT)
-Message-ID: <62c98d4f-8f02-43cc-8af6-99edfa5f6c88@gmail.com>
-Date: Wed, 14 May 2025 21:32:12 -0500
+	s=arc-20240116; t=1747276365; c=relaxed/simple;
+	bh=f5iIoPfhro2GvnQllYlD5RXq+JMRu0k9+RzyAIoY1Tc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=muQJQY3dFC2PziD55K9cT3hwKIq+dvKyd8uPDC7AT0+chAZcihxFesFdq1i8F2yoecTaS0w1oGvyh4IyJmPbc+AvXMCJq8xAS4JxssxYboOW2zgho/h1ZHO+MXklGEAUGlsH3Diye/3pojE1XOFBsF0zTVa2I2QMwKE3z4mGK3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.186])
+	by gateway (Coremail) with SMTP id _____8Bx22pHUiVoT4noAA--.15507S3;
+	Thu, 15 May 2025 10:32:39 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.186])
+	by front1 (Coremail) with SMTP id qMiowMCxbsVDUiVo1PnTAA--.19913S2;
+	Thu, 15 May 2025 10:32:36 +0800 (CST)
+From: Binbin Zhou <zhoubinbin@loongson.cn>
+To: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Lee Jones <lee@kernel.org>,
+	Corey Minyard <minyard@acm.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	Binbin Zhou <zhoubinbin@loongson.cn>
+Subject: [PATCH v2 0/3] LoongArch: Add Loongson-2K0500 BMC support
+Date: Thu, 15 May 2025 10:32:23 +0800
+Message-ID: <cover.1747276047.git.zhoubinbin@loongson.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v5 0/5] Add PCS support for Qualcomm IPQ9574 SoC
-To: Lei Wei <quic_leiwei@quicinc.com>,
- "Russell King (Oracle)" <linux@armlinux.org.uk>,
- Jakub Kicinski <kuba@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, quic_kkumarcs@quicinc.com,
- quic_suruchia@quicinc.com, quic_pavir@quicinc.com, quic_linchen@quicinc.com,
- quic_luoj@quicinc.com, srinivas.kandagatla@linaro.org,
- bartosz.golaszewski@linaro.org, vsmuthu@qti.qualcomm.com, john@phrozen.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250207-ipq_pcs_6-14_rc1-v5-0-be2ebec32921@quicinc.com>
- <20250211195934.47943371@kernel.org> <Z6x1xD0krK0_eycB@shell.armlinux.org.uk>
- <71a69eb6-9e24-48ab-8301-93ec3ff43cc7@quicinc.com>
- <0c1a0dbd-fd24-40d7-bec9-c81583be1081@gmail.com>
- <c6a78dd6-763c-41a0-8a6e-2e81723412be@quicinc.com>
-Content-Language: en-US
-From: "Alex G." <mr.nuke.me@gmail.com>
-In-Reply-To: <c6a78dd6-763c-41a0-8a6e-2e81723412be@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCxbsVDUiVo1PnTAA--.19913S2
+X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7WryxJw4rGw17GrykZw1UArc_yoW8KrW7pa
+	15uFZ8ur4DJFW7CrZ3Xw4xuFW3Zas5Xa4rKr13Jw15WrWYkry0yry3tFy5WFy7AF15Jry2
+	q3s8Ar1xGFyUAagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4ApnDUUUU
 
-On 5/14/25 11:03, Lei Wei wrote:> On 5/13/2025 6:56 AM, 
-mr.nuke.me@gmail.com wrote:
->> On 2/19/25 4:46 AM, Lei Wei wrote:
->>
->> I tried this PCS driver, and I am seeing a circular dependency in the 
->> clock init. If the clock tree is:
->>      GCC -> NSSCC -> PCS(uniphy) -> NSSCC -> PCS(mii)
->>
->> The way I understand it, the UNIPHY probe depends on the MII probe. If 
->> MII .probe() returns -EPROBE_DEFER, then so will the UNIPHY .probe(). 
->> But the MII cannot probe until the UNIPHY is done, due to the clock 
->> dependency. How is it supposed to work?
->>
->> The way I found to resolve this is to move the probing of the MII 
->> clocks to ipq_pcs_get().
->>
->> This is the kernel log that I see:
->>
->> [   12.008754] platform 39b00000.clock-controller: deferred probe 
->> pending: platform: supplier 7a00000.ethernet-pcs not ready
->> [   12.008788] mdio_bus 90000.mdio-1:18: deferred probe pending: 
->> mdio_bus: supplier 7a20000.ethernet-pcs not ready
->> [   12.018704] mdio_bus 90000.mdio-1:00: deferred probe pending: 
->> mdio_bus: supplier 90000.mdio-1:18 not ready
->> [   12.028588] mdio_bus 90000.mdio-1:01: deferred probe pending: 
->> mdio_bus: supplier 90000.mdio-1:18 not ready
->> [   12.038310] mdio_bus 90000.mdio-1:02: deferred probe pending: 
->> mdio_bus: supplier 90000.mdio-1:18 not ready
->> [   12.047943] mdio_bus 90000.mdio-1:03: deferred probe pending: 
->> mdio_bus: supplier 90000.mdio-1:18 not ready
->> [   12.057579] platform 7a00000.ethernet-pcs: deferred probe pending: 
->> ipq9574_pcs: Failed to get MII 0 RX clock
->> [   12.067209] platform 7a20000.ethernet-pcs: deferred probe pending: 
->> ipq9574_pcs: Failed to get MII 0 RX clock
->> [   12.077200] platform 3a000000.qcom-ppe: deferred probe pending: 
->> platform: supplier 39b00000.clock-controller not ready
->>
->>
-> 
-> Hello, thanks for bringing this to our notice. Let me try to understand 
-> the reason for the probe failure:
-> 
-> The merged NSSCC DTS does not reference the PCS node directly in the 
-> "clocks" property. It uses a placeholder phandle '<0>' for the 
-> reference. Please see below patch which is merged.
-> https://lore.kernel.org/all/20250313110359.242491-6-quic_mmanikan@quicinc.com/
-> 
-> Ideally there should be no direct dependency from NSSCC to PCS driver if
-> we use this version of the NSSCC DTS.
-> 
-> Hence it seems that you may have a modified patch here, and DTS changes 
-> have been applied to enable all the Ethernet components including PCS 
-> and NSSCC, and NSSCC modified to have a direct reference to PCS? However 
-> even in this case, I think the driver probe should work if the drivers 
-> are built as modules. Can you please confirm if the NSSCC and PCS 
-> drivers are built-in to the kernel and not built as modules
+Hi all:
 
-The NSSCC and PCS built-in. I also added the uniphy PCS clocks to the 
-NSSCC in order to expose the issue.
+This patch set introduces the Loongson-2K0500 BMC.
 
-I have a heavily patched tree with PPE driver and EDMA support. That's 
-the final use case in order to support ethernet, right?
+It is a PCIe device present on servers similar to the Loongson-3C6000.
+And it is a multifunctional device (MFD), such as display as a sub-function
+of it.
 
+For IPMI, according to the existing design, we use software simulation to
+implement the KCS interface registers: Stauts/Command/Data_Out/Data_In.
 
-> For the case where the drivers are built-in to kernel, and the NSSCC DTS
-> node has a direct reference to PCS node, we can use the below solution:
-> [Note that the 'UNIPHY' PCS clocks are not needed for NSSCC clocks
-> initialization/registration.]
-> 
->      Enable 'post-init-providers' property in the NSSCC DTS node to mark
->     'UNIPHY' PCS as post-initialization providers to NSSCC. This will
->      ensure following probe order by the kernel:
-> 
->      1.) NSSCC driver
->      2.) PCS driver.
-> 
-> Please let me know if the above suggestion can help.
+Also since both host side and BMC side read and write kcs status, we use
+fifo pointer to ensure data consistency.
 
-I see. Adding the 'post-init-providers' property does fix the circular 
-dependency. Thank you!
+For the display, based on simpledrm, the resolution is read from a fixed
+position in the BMC since the hardware does not support auto-detection
+of the resolution. Of course, we will try to support multiple
+resolutions later, through a vbios-like approach.
 
-I have another question. Do you have a public repository with the 
-unmerged IPQ9574 patches, including, PCS, PPE, EDMA, QCA8084 ?
+Especially, for the BMC reset function, since the display will be
+disconnected when BMC reset, we made a special treatment of re-push.
+
+Based on this, I will present it in four patches:
+patch-1: BMC device PCI resource allocation.
+patch-2: IPMI implementation
+patch-3: display, based on simpledrm
+patch-4: BMC reboot support
+
+Thanks.
+
+-------
+V2:
+- Drop ls2kdrm, use simpledrm instead.
+Patch (1/3):
+ - Use DEFINE_RES_MEM_NAMED/MFD_CELL_RES simplified code;
+ - Add resolution fetching due to replacing the original display
+   solution with simpledrm; 
+ - Add aperture_remove_conflicting_devices() to avoid efifb
+   conflict with simpledrm.
+Patch (3/3):
+ - This part of the function, moved from the original ls2kdrm to mfd;
+ - Use set_console to implement the Re-push display function.
+
+Link to V1:
+https://lore.kernel.org/all/cover.1735550269.git.zhoubinbin@loongson.cn/
+
+Binbin Zhou (3):
+  mfd: ls2kbmc: Introduce Loongson-2K BMC MFD Core driver
+  ipmi: Add Loongson-2K BMC support
+  mfd: ls2kbmc: Add Loongson-2K BMC reset function support
+
+ drivers/char/ipmi/Makefile       |   1 +
+ drivers/char/ipmi/ipmi_si.h      |   7 +
+ drivers/char/ipmi/ipmi_si_intf.c |   3 +
+ drivers/char/ipmi/ipmi_si_ls2k.c | 250 +++++++++++++++++++
+ drivers/mfd/Kconfig              |  13 +
+ drivers/mfd/Makefile             |   2 +
+ drivers/mfd/ls2kbmc-mfd.c        | 398 +++++++++++++++++++++++++++++++
+ 7 files changed, 674 insertions(+)
+ create mode 100644 drivers/char/ipmi/ipmi_si_ls2k.c
+ create mode 100644 drivers/mfd/ls2kbmc-mfd.c
 
 
-> Later once the IPQ PCS driver is merged, we are planning to push the PCS 
-> DTS changes, along with an update of the NSSCC DTS to point to the PCS 
-> node and mark the "post-init-providers" property. This should work for 
-> all cases.
-> 
-> Also, in my view, it is not suitable to move PCS MII clocks get to
-> "ipq_pcs_get()" because the natural loading order for the drivers
-> is as below:
-> 
-> 1) NSSCC driver
-> 2) PCS driver
-> 3) Ethernet driver.
-> 
-> Additionally, the community is currently working on an infrastructure to
-> provide a common pcs get method. (Christian and Sean Anderson has been 
-> working on this). Therefore, I expect "ipq_pcs_get" to be dropped in the 
-> future and replaced with the common pcs get method once this common 
-> infra is merged.
+base-commit: 9f2b0c15b752bb940e2eb6737bee30fff96d96b6
+-- 
+2.47.1
 
-That makes sense. Thank you for clarifying.
