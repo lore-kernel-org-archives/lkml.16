@@ -1,155 +1,118 @@
-Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
+Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04AB04B1E75;
-	Thu, 15 May 2025 15:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E8C4B1E75;
+	Thu, 15 May 2025 15:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747323050; cv=none; b=Iwtvxs267jH6Dmk6RlwTOJH5AQZ8X6M26lBks8LLWwkmEQ9OrK/IE8JD0ctFm/m8ljliMBWY5pFUCNFjm0PtgTk6zsGw7j4evSQjbwxhgsossQ6zLTFVKRVOzasP1RTqPiwvTSh2kDju1cXt5uuawVawpa40dfP528wJvabImZ4=
+	t=1747323058; cv=none; b=tuGlyLmDAgbaI34jjJ8/SZOCny0shOOgwDRe0gDY8jwBAg7PbP9zjO/aNhlHqIpw5dSn+DON2aXPhPN5xp/9uiJ7Db24O5hcBDJCdjEnX5Lx8hsfIviaunyMayhdyUA7PedWCue0HHXkgL+GjxOnDITYguwSk8l5qMPRNvdPKR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747323050; c=relaxed/simple;
-	bh=gAq66lmlIXirgAZXOLRYYgtXpOMIICQ55VBAdFF5qA8=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Pe5kIMOq53pBvEcppT1tV+bi1XqIYEeSBhpyA2VM6biXFBAWJeUoJFuJ2pekZhFvYGpKsSI/8o/8PF3m7aimb0OBrHzPzQTQ6NlduAnGbw6iZdMidjGcmVzim4Cd8riNG+H1hNmDlntCLy5A86feeiZGp0eGe8mD7P9chp5miyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=gFCEUkQR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eYpSyON9; arc=none smtp.client-ip=202.12.124.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1747323058; c=relaxed/simple;
+	bh=+HQsfmCC8H1AyitA5HLSA3fDVa9CU0xpDdRYbxb5HRU=;
+	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=XYDGS/W29y5yir/RWvTQulnyysO/k0b4MMn1tYZYRe+QG1XWoGvgo27E+AP2AD5Q4B+PKSZHF2OcIa/wxZmdFNsdMVL8bwIPiTWyFzDoWFP65puFJM8aulKJ6tBLY6FsOzu9EDwJQz8bgLsWGlUczIWl93f9ceqqfSt9CWMSGUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=H7g27Tr7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pQQG2ch1; arc=none smtp.client-ip=202.12.124.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="gFCEUkQR";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eYpSyON9"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 90D2C2540130;
-	Thu, 15 May 2025 11:30:44 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-05.internal (MEProxy); Thu, 15 May 2025 11:30:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1747323044;
-	 x=1747409444; bh=TJEMi2DZszncr9ngWM9TKXoTkgSwUZkQzL00n+Zz2qw=; b=
-	gFCEUkQRlUW98VEKJW6ae5xVd+2EGQmmZgY9V2ErOJMpmFSLtVeYUn7vBh1mIR/c
-	pIMMsKnKmsb8oSTKmVNR4nQhn8NaOJ3E7NJgOt3AbPlENy2Oufwf78MY9MQNZuJc
-	zt5jawQqJ/dP1eAqy/ZkUpzVS2WsINx5Yn7cwbf/VWURsBfLkAXCPVDv3zQXnkZS
-	pnkBPCWw0SMka9wIDpBfUUWyOT9aSjbYHFksospR/sD/AnkJWV1Q0EkGgIbIs5Q+
-	X7BhiCmpe7ZVI0FI4tv9aWUlK1m9jIDMovUtmT11Q4lf7kTPhaRu5lLosTDJUsm5
-	T4csTDxbUqyfcdCebT4Ocw==
+	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="H7g27Tr7";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pQQG2ch1"
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfout.stl.internal (Postfix) with ESMTP id 8466D1140129;
+	Thu, 15 May 2025 11:30:54 -0400 (EDT)
+Received: from phl-frontend-02 ([10.202.2.161])
+  by phl-compute-03.internal (MEProxy); Thu, 15 May 2025 11:30:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm3;
+	 t=1747323054; x=1747409454; bh=KUxrtcJ3xIsgw7aplTT+IKljavQReIJC
+	NRW0zxjuI1A=; b=H7g27Tr7FvSVrffWAoBkUCnwFe09oKB0t9Zhkm+H1IuaDxz/
+	zuVJqm/ffkzzCIzHaPDQsJUgwdzgsMZQUIOTnew/Zyr3Ivh24Dryi5BgT+eYGij6
+	HbWbkuXXVlvKWbqi5AWH9ykj+CnGVO8F/PV8xZ9y1r7Qug5OVyyAr2nt80jBrQzv
+	PbJ+6fmZSYuB7xW4Wvd1k8/e/6puwNBQ1O4ff0W9WxKzpZVpqRfhgkxPL6hR5Tnt
+	fv1LOhrG7MWTNhKwU3/3DtgxFQwiwmLMFlZJYwAe5htiO7wZ3Ap0UtewepGxuWKI
+	H833o1QSTerkSDVgUycH6JhZCaBllwuDEnqIvA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747323044; x=
-	1747409444; bh=TJEMi2DZszncr9ngWM9TKXoTkgSwUZkQzL00n+Zz2qw=; b=e
-	YpSyON9eH8YqK1sQFhY1jM2zM4qA+qlYy9v8lCfn74O8NXgcs2h0LcsdF8vc8tL3
-	ExSVzbbo2PGseYQ5iS/ognfYwExLgdNGD8nvMrBKHtZq/XpVJC11Z4Tz3OSPG6m6
-	AmyWtoRn37iMjRbHiEO2E2+Xl0Jq2eZhsz3DPiph27MnxB1/gssf3YTlByf+UJzd
-	NOeRDuWQf8xps1JO8tYo+02Iyf7+7Y30+C220Fyf2bZGih9DtyWK/n3Nl74SDuRY
-	Os7M99b9ISREomM5wTXRhpK6FJ3cVpZzz3WdOQL4CL1NoPjIhRE+oPUmpHFGpK9A
-	CdsFu1Hcvp/zmuXvcwwKg==
-X-ME-Sender: <xms:owgmaGMh5Bb8X3GqK7Ok5r4gIdbtYZXS9VBplR-Db3prXUGMSNwv7A>
-    <xme:owgmaE9FW56lru7QtPDjKQiU9fBQmce8GvGSQ551VpMKkA9tDRYgummYk443eQIqc
-    xu9b5HhxgpAlA7qzls>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefuddtvdegucetufdoteggodetrf
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747323054; x=
+	1747409454; bh=KUxrtcJ3xIsgw7aplTT+IKljavQReIJCNRW0zxjuI1A=; b=p
+	QQG2ch1mComMFw2nePfpEYDhig4gzp3hahItLkV6585YC0zj3eqqyzpLtQ9wPlaw
+	4jsK2wcJH00ciAMcED/w9K4KEcU40QJe2ZyKa6gO5VdhhClQT9JnsrJ2bRBGrnj3
+	eT1tEsXf6AmYjGSiIaFHQtwtTrkfYLROwCc4oqaKY2yHE/7e1ZALfGFj7cZaai/O
+	ejG2rpyBd4y0LiNUWNbZ/0KGd2l0OixztvrcRgJVg607YRaIWFYRiXyUvWBTq2I/
+	WW7H8tYLW2e/TO/jgVV2KVuUTlF+PZd5OiLd0joty26/neEYyAw1M7W8HTsyYAkk
+	5P35KSYjV44LcXJL34tmg==
+X-ME-Sender: <xms:rQgmaKc60w_85dlvrsLT_rOnhTnOuWU-GLE7PfeQeQg6MmuQZ7O-iw>
+    <xme:rQgmaEMfjK-Im0hpXxwOcT_RMXmfLreVHaqaP18CEJ4GwWAE9QxrDXrH-_PDTFFXV
+    WPy5ZE6S2RWEc8-7Sw>
+X-ME-Received: <xmr:rQgmaLjZ44V_lJx4L2RiqbZiGxLcrMrCcbOTbyrkNp9Z1w8_mfXvduuNKbZ-l2A27T_tECfvSVNwVhTL7IkZO9u54lua3g-aLWh8ndKOKei6VVb1NA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefuddtvdefucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
     pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhepfefhheetffduvdfgieeghfejtedvkeetkeej
-    feekkeelffejteevvdeghffhiefhnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
-    rghrnhgusgdruggvpdhnsggprhgtphhtthhopedufedpmhhouggvpehsmhhtphhouhhtpd
-    hrtghpthhtohepphgvuggrsegrgigvnhhtihgrrdhsvgdprhgtphhtthhopegurghvvghm
-    segurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhogh
-    hlvgdrtghomhdprhgtphhtthhopehlkhhpsehinhhtvghlrdgtohhmpdhrtghpthhtohep
-    khhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiihihsiihtohhfrdhkoh
-    iilhhofihskhhisehlihhnrghrohdrohhrghdprhgtphhtthhopehgrhgvghhkhheslhhi
-    nhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopegrnhgurhgvfidonhgvth
-    guvghvsehluhhnnhdrtghhpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtgho
-    mh
-X-ME-Proxy: <xmx:owgmaNTUVctqHw-QjwD0nY9t83FdegmgXutQmh9Bz6ofcioYOn9OGQ>
-    <xmx:owgmaGuCFQGeJIU5ZA6L-BTxwVvzoVY466kSh82V3Ufj3v9M6Uqx_Q>
-    <xmx:owgmaOdtPArKqOLch2ZSkrn9I4enfRxvTKPMZwlnFhIQhKC1os924A>
-    <xmx:owgmaK3xUsqzlsLJm-8KuoHYjzmyHRW7TH52jdFoeiqs2smkdP7v0g>
-    <xmx:pAgmaPJvSgWKQufyoyLQUTE0ALLALHWgjv4ZEKgpaPgvHXyf5HKAmDAT>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id ABE3A106005F; Thu, 15 May 2025 11:30:43 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkgggtsehttdertddttddvnecu
+    hfhrohhmpefpihgtohhlrghsucfrihhtrhgvuceonhhitghosehflhhugihnihgtrdhnvg
+    htqeenucggtffrrghtthgvrhhnpeeigfeiteevgefgtdehhfegvedvvdfhtedugeettdek
+    veegteeifefgveeigeetvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhhitghosehflhhu
+    gihnihgtrdhnvghtpdhnsggprhgtphhtthhopeehpdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopehnphhithhrvgessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtohepjhhi
+    rhhishhlrggshieskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgkhhhsehlih
+    hnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhn
+    vghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshgvrh
+    hirghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:rQgmaH9vIkIVLWvE6jQPpj4h6b2xUITFrjycYOub37WHZOj8gegWng>
+    <xmx:rggmaGtXLUDJpf7F3bK0eucCKC4fP_SBBGC0kZPt4DkPwG9JJ-I3Tw>
+    <xmx:rggmaOH2YvF8J4lwoN7KfrWhrqnhQzCw5LEezTW6gV3RMxp7uzBxFA>
+    <xmx:rggmaFPV-tiyJur4Rjlp2Gj6xyPNNhWmu1M7Iz6AsTk5dJGI3vb9WQ>
+    <xmx:rggmaKs7Iw2utU5KXpDUaGaZ1ylXGrlpDiSsWEwLFkW11zAqufLUtUNI>
+Feedback-ID: i58514971:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 15 May 2025 11:30:53 -0400 (EDT)
+Received: from xanadu (xanadu.lan [192.168.1.120])
+	by yoda.fluxnic.net (Postfix) with ESMTPSA id 2186A11A42D0;
+	Thu, 15 May 2025 11:30:53 -0400 (EDT)
+Date: Thu, 15 May 2025 11:30:52 -0400 (EDT)
+From: Nicolas Pitre <nico@fluxnic.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Jiri Slaby <jirislaby@kernel.org>
+cc: npitre@baylibre.com, linux-serial@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: [PATCH] vt: remove VT_RESIZE and VT_RESIZEX from vt_compat_ioctl()
+Message-ID: <pr214s15-36r8-6732-2pop-159nq85o48r7@syhkavp.arg>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Ted1cd7a392a3d5bf
-Date: Thu, 15 May 2025 17:30:23 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
- "Peter Rosin" <peda@axentia.se>, "Andrew Lunn" <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, "Andrew Davis" <afd@ti.com>,
- linux-kernel@vger.kernel.org, Netdev <netdev@vger.kernel.org>
-Cc: "kernel test robot" <lkp@intel.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Samuel Holland" <samuel@sholland.org>
-Message-Id: <8819720e-dada-4489-a867-c4de0f95a003@app.fastmail.com>
-In-Reply-To: <20250515140555.325601-2-krzysztof.kozlowski@linaro.org>
-References: <20250515140555.325601-2-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH] mux: mmio: Fix missing CONFIG_REGMAP_MMIO
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, May 15, 2025, at 16:05, Krzysztof Kozlowski wrote:
-> MMIO mux uses now regmap_init_mmio(), so one way or another
-> CONFIG_REGMAP_MMIO should be enabled, because there are no stubs for
-> !REGMAP_MMIO case:
->
->   ERROR: modpost: "__regmap_init_mmio_clk" [drivers/mux/mux-mmio.ko] undefined!
->
-> REGMAP_MMIO should be, because it is a non-visible symbol, but this
-> causes a circular dependency:
->
->   error: recursive dependency detected!
->   symbol IRQ_DOMAIN is selected by REGMAP
->   symbol REGMAP default is visible depending on REGMAP_MMIO
->   symbol REGMAP_MMIO is selected by MUX_MMIO
->   symbol MUX_MMIO depends on MULTIPLEXER
->   symbol MULTIPLEXER is selected by MDIO_BUS_MUX_MULTIPLEXER
->   symbol MDIO_BUS_MUX_MULTIPLEXER depends on MDIO_DEVICE
->   symbol MDIO_DEVICE is selected by PHYLIB
->   symbol PHYLIB is selected by ARC_EMAC_CORE
->   symbol ARC_EMAC_CORE is selected by EMAC_ROCKCHIP
->   symbol EMAC_ROCKCHIP depends on OF_IRQ
->   symbol OF_IRQ depends on IRQ_DOMAIN
->
-> ... which we can break by changing dependency in EMAC_ROCKCHIP from
-> OF_IRQ to OF.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: 
-> https://lore.kernel.org/oe-kbuild-all/202505150312.dYbBqUhG-lkp@intel.com/
-> Fixes: 61de83fd8256 ("mux: mmio: Do not use syscon helper to build 
-> regmap")
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->
-> ---
->
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Samuel Holland <samuel@sholland.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> ---
+From: Nicolas Pitre <npitre@baylibre.com>
 
-I'm unable to test this on my randconfig setup, but the patch
-looks sensible to me.
+They are listed amon those cmd values that "treat 'arg' as an integer"
+which is wrong. They should instead fall into the default case. Probably
+nobody ever relied on that code since 2009 but still.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: e92166517e3c ("tty: handle VT specific compat ioctls in vt driver")
+Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+Reviewed-by: Jiri Slaby <jirislaby@kernel.org>
+---
 
-In the dependency loop above, I think the PHYLIB bit should also
-be changed, but that is an independent problem.
+Reposting as I screwed up my initial post.
+Jiri's analysis can be viewed here:
+http://lore.kernel.org/all/184449a6-f2db-4307-8351-66b617a3839b@kernel.org
 
-I see that OF_IRQ still depends on !SPARC, which may be another
-source for problems, so it's possible that anything that tries
-to use OF_IRQ causes a build failure on sparc as well.
-
-     Arnd
+diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
+index 83a3d49535e5..61342e06970a 100644
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -1119,8 +1119,6 @@ long vt_compat_ioctl(struct tty_struct *tty,
+ 	case VT_WAITACTIVE:
+ 	case VT_RELDISP:
+ 	case VT_DISALLOCATE:
+-	case VT_RESIZE:
+-	case VT_RESIZEX:
+ 		return vt_ioctl(tty, cmd, arg);
+ 
+ 	/*
