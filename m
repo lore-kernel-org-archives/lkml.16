@@ -1,201 +1,425 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2067.outbound.protection.outlook.com [40.107.237.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED73E25B682
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747332717; cv=fail; b=V2lTj/4GqIbs+7T4QMGj0RGUXAhxsgCoOmX4U9dmOquaDgPJDMzoyFKEpx4IMINX8Jof0pUuy7IGMxTKRlIJetXIo4hTg9s4Lf0Tut/SMxacT9/1PwyllsfuESWMDKoEht/7KMIPMKuWiU0GtgJO8S4+H2wmySKXu5RZKB+j9DQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747332717; c=relaxed/simple;
-	bh=pQjJ7ECCchBHN3uEmYdzakh9ZOfn75ZFvcwS2ZpA+ek=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=poQw9M90JBmsQ0+0+znlsdcY+jFCB/rc+hul3mUiUHOS10D6Ip1FAOZBCSNB6fd7WacDAraY534jM3ki+dCHVtROb1WLsQIKRIpzomVwL+cyCSqPLTfK2akBIDS0h8+Lt7K8/75FFkTiVFjFkcbb5UgLXHo5MLuP/1pOuR+B+6g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=FwU85Czk; arc=fail smtp.client-ip=40.107.237.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ACE325B67D
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:14:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747332864; cv=none; b=TO+U6b4zANlvdyFhQD9/mIgG7BFGGmgq9GZ8PODRDheiu1M+FT1dYbArlAoS57QEAk60Sz4gypWAT9oKogVpOtwjNvP2yoSchvAIbCy7Zh8XJn4I73CkzsC3s1yFaBWHkNHC/QagfGsJ+wduKn0gRfhr7I0PIusBIb4ez5X4WKM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747332864; c=relaxed/simple;
+	bh=wHuax43TFRd40xOXMv7BAU0/fM4kiPYCRdquA8wCbIs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=jHqyDZjL2wIMzONG2p0oyzeDZdcZM+r4GIRwLXZwXkHKl2WOrxF54Xji2MVJwzwAvsAyCjEsKMphnPXlNKVk9pXsFe1TxqVzQkVjy1/As5du5ksyqbeL2AAYstbLGYnU5o7j1iwwy1Hl3+dC1EcQ8+GPaL13OMdsCsFZvAa4bAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SNhWTYSd; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="FwU85Czk"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LentYmpAJQ96BfArQTGIztygoAH5t/kNZRrK2RMpLxk+Os74HisB2fUgxHmY4ArumLscYoT8QrrnXHFOTDk+ab9C0DDzfRVG/0R5DvX9xCeNAbQDL0tQGCrHiEZPfVJ90LSjI/dOhCCAWGnYlkOb3G11YgcqU+xt5P1G7XbV3Efa7MkXzoCiCg6uON83yxRQiCZWIKJWuvyghhYRfpT6DXfRrTbDgFmxhFIDoJtQYz3QlKCjsefTONejw0IH5HpZeBX4cbSIoi3YXjVsbj6KVulmnBAFNFQxc105wpzeTtgJuMIrs77enG+E2uXKhEztTlmZPXsS47WunLtSJpwjBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pQjJ7ECCchBHN3uEmYdzakh9ZOfn75ZFvcwS2ZpA+ek=;
- b=FJy11mMTDZuNQLVhP4IHXkpX5dHdhbDyCPAAPwBTcmZI7a6+Rlmiw6KaNFgMY+Z6Q0NwwWCdfMX4pht5aWotBtU6RG6khDZkj2EIM3Hkdbri4jeFGOqOp0MQ9LeQmwGrZo5EWfpvuWYy9Tr2ro4LH8tSQWaIW1Y+/eCRZ4TgvSxowPqAmhtvCrD867Mo9M7hn9tNAHiiyXZ4a32nd9F3kfq3e4IhvB9hbBPC6gLHXpNwOABecFs+80lAbsLYSKRbFacL7fzeOBf7waVxreUiGHP5K34tKbQILQVjeW0p3U4YyHxAx1ogdVUbzRU3NHrWr8s2qsiC0Zs7QuV+q/dJDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pQjJ7ECCchBHN3uEmYdzakh9ZOfn75ZFvcwS2ZpA+ek=;
- b=FwU85CzkQyOPRbPc5368KaC5gy+CiVMVWPVy2CZulztu5p3qF2Lb057OCjWHwuIcYg/2n24pL3LXw8dbYMN4moWBtjMMMwaU0MC2fvjsiJ4hyjT/5qdnWHnp1R0HcY2QxuCRjnPqlrXUYgGHfbq01vjK1QEIbrXrvAKUC5HryyU85lIu+pfw7XJQ0bQ9OBzYfrI//dnMPAiOCsAy1RKwjQi4laArQrdjvRLFg0r2o78XBfnoYyD7rPr/Scn3DimMiQccYLJMU2Tb8xXgD+QMqXKxhLsCSNBchTFiXwL3ERZtSYncV9U37fBbXcYrlEZlzm7wMAK69OqGc5Ex5xQCjA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB2667.namprd12.prod.outlook.com (2603:10b6:5:42::28) by
- PH7PR12MB6467.namprd12.prod.outlook.com (2603:10b6:510:1f5::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Thu, 15 May
- 2025 18:11:52 +0000
-Received: from DM6PR12MB2667.namprd12.prod.outlook.com
- ([fe80::bd88:b883:813d:54a2]) by DM6PR12MB2667.namprd12.prod.outlook.com
- ([fe80::bd88:b883:813d:54a2%4]) with mapi id 15.20.8722.027; Thu, 15 May 2025
- 18:11:52 +0000
-Message-ID: <8fe36fea-d2ba-4e18-bd60-39c57ca74319@nvidia.com>
-Date: Thu, 15 May 2025 11:11:49 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 00/25] x86/resctrl: Move the resctrl filesystem code
- to /fs/resctrl
-To: Borislav Petkov <bp@alien8.de>
-Cc: James Morse <james.morse@arm.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org, Reinette Chatre <reinette.chatre@intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
- shameerali.kolothum.thodi@huawei.com,
- D Scott Phillips OS <scott@os.amperecomputing.com>,
- carl@os.amperecomputing.com, lcherian@marvell.com,
- bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
- baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
- Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
- dfustini@baylibre.com, amitsinght@marvell.com,
- David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
- Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>
-References: <20250515165855.31452-1-james.morse@arm.com>
- <20250515175054.GKaCYpfoCe0b7QyIqL@fat_crate.local>
- <f42b0165-092a-4e58-abb4-a8d59bba5cab@nvidia.com>
- <20250515180623.GMaCYtH84bauHWs44X@fat_crate.local>
-Content-Language: en-US
-From: Fenghua Yu <fenghuay@nvidia.com>
-In-Reply-To: <20250515180623.GMaCYtH84bauHWs44X@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR06CA0056.namprd06.prod.outlook.com
- (2603:10b6:a03:14b::33) To DM6PR12MB2667.namprd12.prod.outlook.com
- (2603:10b6:5:42::28)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SNhWTYSd"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7394772635dso915668b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:14:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747332862; x=1747937662; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3U2NubgigREvZHf4qX/BwfWTuiTQss2pr7vSyKTz1no=;
+        b=SNhWTYSdjXxONs1RBggW3fvfZvsJR19hiKhCwg7YXtPf3xYqBglxw/5MYHXbed1dEx
+         2c0fS3x9oLbETZ+SBsPvwu609FLXK0krwnLRvOjnJVPU3X6MTCon6j4hRg4v4WWxzSup
+         6V+dT8h+StjedXyyetfLpUH3zFAaM/rUZuKMqD674o6ZGY4wEp1Wko5/fi4pyHnAHN4j
+         tYt4yQOurEhyl8KLripjWYz2Y8HpPG9SiPWkOmQQCScRZA74K2SpjpAW1sSjBwNXSe7l
+         QFlbROgpzLak//xNtMYFjwQ78YuVDRrfvJGJpdg2aDDAwrbqtVDBRmerJTOOkZPbOrM3
+         50MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747332862; x=1747937662;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3U2NubgigREvZHf4qX/BwfWTuiTQss2pr7vSyKTz1no=;
+        b=DzB5gPcdmh/q9Io+QcTXzOZgOpVzX7TcFP4Sn9XegPZMIBLpsDX6tDebmzmqNZeGyE
+         b0cB6/k0PYlgtBPhe7ctb9BXQcAg40ExB1aurkaeyCRnOqH1//6VYLFYGYcbU5eZ9wVo
+         Ne86InHjQm3j6YiYmhd9liKIHLzUzydzqGOb9uQQYupgCTf1gc/zhfb7h09bp4pJKvju
+         wbfbpO+Uq2huoVBvnplS5pdNDdwH0CdQGtwSLsiMRSf8IgRX6B2LpJsd1Pl1nls9kmcK
+         uM2z84BugLLW66XkQflsY/NHVNC2EnXzdtsMeUHqg6WAZOGDmbpwtOg5nsRQAOhQmb4v
+         r+Tw==
+X-Forwarded-Encrypted: i=1; AJvYcCWMSVw9MHrBaZVEqziZHw5+Lu83XDgUkr0RVbulMwUyJi+0QKjSImO0O6p7obry/5yyUc13qibKC9KlyJ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIth42NTJWPI6Nwmg0xQ05vYplAW6Gye8WKIAs3e+zADALikXz
+	oufehW+Rzg0JOhDl8Kqn6FAzeB3lu/PfZO4MTqS5Q8wp6IXb0WmBPr6rml+S9b0j620KNiB9ORh
+	fnuJUEGgbhg==
+X-Google-Smtp-Source: AGHT+IFE8nWAgXQin3KOuuLfmH5gtlpPhAMbTNhfjoYg6Ov7qkPdqR38tYWB1RLciZrWraPpigc5lLVo/but
+X-Received: from pfbhe19.prod.google.com ([2002:a05:6a00:6613:b0:736:46a8:452d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1797:b0:734:b136:9c39
+ with SMTP id d2e1a72fcca58-742a98ab4a5mr416911b3a.19.1747332861655; Thu, 15
+ May 2025 11:14:21 -0700 (PDT)
+Date: Thu, 15 May 2025 11:14:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2667:EE_|PH7PR12MB6467:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7cf6a2e3-1eea-47cb-7082-08dd93dbf7a0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RWl5dlRxbUJPTlBZditzdXpvdVRsMEQ5ZTNpNmlnTFA4alh4b3FidFdlbEE1?=
- =?utf-8?B?YnZKOW42eTY3cGFyZDMwenBxTmptcTVLR1dhazlxWGhNc0Rsa1dxT00ySkxF?=
- =?utf-8?B?YVdBdWtOMWh5bUJuR1E2N1p5K2JXV3ErdjRRQ3JSU0t6eHVCakxDS3paNm15?=
- =?utf-8?B?dEpWNHhka1hTR2pxVTBGKzVhSjZMWVRPSTQzYVFjNW1lZGtDeUhQcFRhZGgy?=
- =?utf-8?B?Wkk1Y0Vsc0grbS9pMGtaNmVBdWFQNDVZMEU3K092bDU2TUhHNGpzRWtTQ3Vu?=
- =?utf-8?B?aFkxWWl5V0lVUFRDdVN1U01sRzBGWmIvMFFpclA0MTJSRzFXeExTN21tcnEw?=
- =?utf-8?B?ZS8zekwxRkJCL0ZTaGdISm9LTUZzdC8xSER4S2FjR0VNUXpnRDNEeEVUTlp6?=
- =?utf-8?B?U08xc010RmF0TjF4RmZmOTNTSFg5LzZ1K0REK0thOW44U2xGYVJySlpRT0Zp?=
- =?utf-8?B?WjlkelMra3M2S0I5UW8zTFdOWFJ6Q01TbkxVQzJMZXhJT0xnTWsrblh5THMz?=
- =?utf-8?B?bDdrMUdWMmRlQ28vdWRJak9DTE1JdzI5SWpKemxzdlpyZFVteGZ1alBrQnhz?=
- =?utf-8?B?SnFIN1JLaDVXM09FRkx6N0k4c1RERjBldk9qZUhqd21PM1dDUXI2cVFmclAz?=
- =?utf-8?B?UnRWcXVRTDgrcFowZXFHZTRuMVY1MlVwSjMyZ2NtK0t3VW5xUS9OaHBmczJi?=
- =?utf-8?B?dGFxVkt4YkFjOUwvOTk2UUZ0bGMzR3lma3BsemJVYktKd0wvRCtQekgvdytU?=
- =?utf-8?B?bkFhREtuemFWQzNsdUVISSswR2NOVzYxNXcyOEdvcC9UZ0pNYWFqanJ4VWRM?=
- =?utf-8?B?TFJoQ0tHbWt0L3FhZjBNemJYNWdjWGRpRGNrWWNibnV2ZGhwOHlsNGZTcHkr?=
- =?utf-8?B?NlE3QmR2NlptQXE4bW42TUFmWTJZY3BxcWlqSURrTS95ZEhVbWptRnExbEEy?=
- =?utf-8?B?bCtHaTRwZ3BvdGEwUzk2OWh4Nyt4OWpuY0h3VDQ5b3NMOWJONUFweXJoZXZr?=
- =?utf-8?B?QjJ3dWRVMFZTaEVTbkFFUHhFbUg3VHorWDJZaW41bVFzK1NMZ3ZTK0QvMWtR?=
- =?utf-8?B?dmpvYkVJUTFFYllYMHZBeHl6N1UwNlJoNjhXeUw1SEd2R1pFN3BSMXVGZ0Nn?=
- =?utf-8?B?SHc2Z0tzMkZpbmxpcUdZVTMxTVdWZmVhNFNieTJ1RTV4OWhwMFBhbnhTb1VN?=
- =?utf-8?B?NHkzbDlFaVJQa3hybk42M2REeWFHaTBNK0w1R0doK25jR2o1blZWQkJsZ3VN?=
- =?utf-8?B?SVBYY0d4U3BsT2k5TlNwMzRacGlhMGw4dGxjTUZxS1hzOUhrQ2YxNStwb0Zh?=
- =?utf-8?B?a2IxZXVJNkp1blVrRTVTRlJDdGpFeFJFdWNGd3BJNnlSMjFNMXVxaUxxSDBD?=
- =?utf-8?B?OWVsSmNTMGl0TjFCaU42Q2YvYzJXMWIrdFl4N1cvUGk1bERNOFNtVS9wbjhL?=
- =?utf-8?B?QlFyb0gvQXRmKy9pY09ua3NzbEtmR083ZnVSSEJ6cDV0N3ZOeUNUSDhVdy96?=
- =?utf-8?B?TkV5dnYza3ZOZWxGY3R5b1ExZzNRN2Y4aHJmUzhOb1BXYXN3YnRXS2ZlRElE?=
- =?utf-8?B?SVhqelJISVFRb21nc1RRbXBSdEVpT1pRTUdEY2w3cElYZXF1bVVGM2ZmaExr?=
- =?utf-8?B?U2lXSGJZSmZNMWV0MHhWQ2xnQThXTmJKMWhQcnQ4aDZ5ZzVFVnlWRlNVK1N6?=
- =?utf-8?B?SlJOZVlTK2VmNlozQkhmaWhlNkNISWMzQlFjU3U3eVBsMElKcVJqeHRDb29M?=
- =?utf-8?B?L1UrcWhXU0tJZi82elRJU09uZHBwcVhQMlhaRzdZb2hJUUdoRUVDWDRBVEhB?=
- =?utf-8?B?eXQ1NGYzbFdDb2JPTmhNeU55cXd1TUM5Ny9zMlFyQUxXeVpoYmlVRjg5bzg4?=
- =?utf-8?B?N3BjanE2aVlpNzJMZUNCVGJlWHlLMU82WFVZOTl4T0xiZTcxMkRnWVZSUVpS?=
- =?utf-8?Q?29cX+304IZI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aHEzbXhieFdRVjBtRmpCUU41akVUMEN4S2N0RHBuQ0hOQXZjZTZtMXoyMVd6?=
- =?utf-8?B?WGZiZzNHQ0c2NDhxTng0NkgyZzd3bUlVTklvVm9qNkI3YU5WMEFiRlU5Z1Bt?=
- =?utf-8?B?TkZ3dDN1Mk5nbEJNTTdIK0NqaVBweEQ4dnNwVlpYWDNDQjZ2WldTckcvKzZy?=
- =?utf-8?B?SHdnQjJReTBvek8rYUpsVkt5WUpONVJLSzl6NWJubWlxZ0JjcWpCQVM4Y2s3?=
- =?utf-8?B?R3RocDRqVnFPZUJwVFFDSDZ2Ti9qcEVoNkpJNEl6K1l1bnRESDN6MXBJbDhS?=
- =?utf-8?B?K3NneWtydFNaeUovNVhkWGplbHNLK3hnQkY4UzJ2K3VjekFockZ6VytMcS85?=
- =?utf-8?B?TFR0eUE0OWtLTHBqZEFaNTZ3NXFnYTV4dnVvSVAxSUhROGN1ZkNHQndndEsw?=
- =?utf-8?B?SWd0cmYzSFFkN2MrMzRCbkFHME00WTB2RUd6MzlCQW5ETzk3amY4Y1hYaEZW?=
- =?utf-8?B?OEF4bXdUU3NYd25DZ1NmTHphNnliUWd5RjdvRDA5cEdUMFE1NlJ4d1V6clpj?=
- =?utf-8?B?TXFpdllzYmZmQ0E3NlJ2R3Nadk5VamFPK1pia0NaOWZJV1AxOVlCd0VpWWlp?=
- =?utf-8?B?Kzhrd1RYWEk2cmR5dGVJY2FYMkVaTEVHRTJIMFJHTVhVazkzMEV3MWVMdCtp?=
- =?utf-8?B?QlJudFo3dHZUYW83QnZhWUlnS2JzSDNDVUlyWlp4UkZYWFlWd2I0NXk3b0FM?=
- =?utf-8?B?R2NUVnZ3bFJETzJtYUJBQmZYczIyU3RyeWpqVi9JelJ1RUhKQTk5dUh5KzhE?=
- =?utf-8?B?ZE1DRHc3dG1EaGhoSFJIMnI3N1FBZVZxbk0yUUtXSGZiSzY0MFNDbWFQZU1O?=
- =?utf-8?B?bkZyeXFTU1A3bTF3UXNGSXhuZDgvbkc3UGdsSUlsWWhlSE1CTWFpQzZycFpz?=
- =?utf-8?B?eFhjUkhybXNhWU96YllLVVVPU2dVLy92NDg3TkoyMHBwY0ZtWDhGR1Fibkhr?=
- =?utf-8?B?dURlR2YxcXhmbU91cThkNzBWUTlrVG43WUFvNVRtaStMV3N2N2cwUjBXTUZn?=
- =?utf-8?B?Yy83L25wZ1IxL0Qyc3MvZDJ5dkswV0ppZTVEQmFydnlyLzQyRmNKYzRRdW1S?=
- =?utf-8?B?QWpLNkdnZ3J2ZFhybWk4a0RHYis5bnVMRTR2ZW1xVk1wT05Ra3JJN2Jod0o3?=
- =?utf-8?B?Zm8yaWc1eUVMaDYzVUlxR3Z3ZXZyUVJza2c3WmNEVU5rMlZDSWJ4bFQrMncw?=
- =?utf-8?B?cGpZNWszR2djTURuTnA0d3FpMWhlUVd6djlTNVRqNzUxbWlBWmFrWXZzVzlZ?=
- =?utf-8?B?ZkRrbTdXc2R4TFhEeXRxK0xQRzdWZU83NksvY3ZCb1dMajJaTlVZcWN5c21W?=
- =?utf-8?B?Szc0TnBWdkF6c1RTektEdjNGdlpqNDBJV2xnTGJtUmZKaUkyM1N3bTA2cGx6?=
- =?utf-8?B?a1BRRzhMK2orR25yM1h3Z0ZoZW9lbXlwYWxYT0dZeUdlVHRId25zSlNtRTNy?=
- =?utf-8?B?YnMxeEkzbXVzYWFBRURxR29UNkZ6WDl3ZldjeXNiQ2lDdXhzK0VSY2JpMHNJ?=
- =?utf-8?B?cEh5YmNPU3NEZHp0VXJWbk55ajJRbjUvb2ZZMG9YZ0x0WFRFd01YWUFLMS82?=
- =?utf-8?B?VHpzQVdZaEI0djVrLzRlekJqNEpUdVVqR0JmVTZEcjhvRzdxQzNnWUdmQUxM?=
- =?utf-8?B?S3NkMTE2OXVnVUdXVFBNc2RTNFYzbm15TDg4RHI1dy9nUytxNzJSZmwvUjY0?=
- =?utf-8?B?UnNpdnp1QTRRUDVvYS9uZVN1VlVVSnJ0N01OR2VIbGRIRWhCYjVLY3l3N1No?=
- =?utf-8?B?WStXdkpYU0FJeU1EbmNYMHVaeEg1WnFOL0doUTV1ZmhKRFhTSjlRdVdvQldW?=
- =?utf-8?B?OHZnTTdpeUF5cVhNQnE0UG95R0N6RGtoanBNcUVhc25CTGN3VUNLb3VRTThs?=
- =?utf-8?B?WkgyWlhiZXgrY3dGSitqSFhFZVhvOEQ4eFhTVDZrZitYUEgzbk5YUkEyMktw?=
- =?utf-8?B?bDBCS0xsWWpUMExQNGgzTjJkNnhUUkdSVGVVZUozNDFUZkNjL0VIWCtXL0Rj?=
- =?utf-8?B?TU1oaHFIaGx1ZDZma0R4bkdUNkJINEQwejFid0Y1TDBXS3dJQ2d5eEFXYzVp?=
- =?utf-8?B?L2RUWUdoalZ1TmRya01EclpHMi91NTFCdnNXTHNZV0VZSTBmZnhibFNibUgz?=
- =?utf-8?Q?Ttse6xdzMv0MO08ZWg1ynxwEO?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7cf6a2e3-1eea-47cb-7082-08dd93dbf7a0
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2667.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2025 18:11:52.0033
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: t30xMYG+ApuYAZTl5vHZhBKkpid11QiD5lu1UbVUMO0RSFA89BfitXgcVU0H3yMTEB/DHWTQpCpv9+VhOH//aQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6467
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
+Message-ID: <20250515181417.491401-1-irogers@google.com>
+Subject: [PATCH v3] perf pmu intel: Adjust cpumaks for sub-NUMA clusters on graniterapids
+From: Ian Rogers <irogers@google.com>
+To: Weilin Wang <weilin.wang@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, Boris,
+On graniterapids the cache home agent (CHA) and memory controller
+(IMC) PMUs all have their cpumask set to per-socket information. In
+order for per NUMA node aggregation to work correctly the PMUs cpumask
+needs to be set to CPUs for the relevant sub-NUMA grouping.
 
-On 5/15/25 11:06, Borislav Petkov wrote:
-> On Thu, May 15, 2025 at 11:00:04AM -0700, Fenghua Yu wrote:
->> On 5/15/25 10:50, Borislav Petkov wrote:
->>> On Thu, May 15, 2025 at 04:58:30PM +0000, James Morse wrote:
->>>> Hello!
->>>>
->>>> No code changes since v11 - this is the 'final' form of the series
->>>> with patches v11:24-29 squashed together. See [v11] for the breakdown.
->>> Thx, lemme see if I can queue them...
->>>
->> I build and test this series. Everything looks good to me.
-> Is that you giving a
->
-> Tested-by: you
->
-> tag?
+For example, on a 2 socket graniterapids machine with sub NUMA
+clustering of 3, for uncore_cha and uncore_imc PMUs the cpumask is
+"0,120" leading to aggregation only on NUMA nodes 0 and 3:
+```
+$ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a sleep 1
 
-Yes.
+ Performance counter stats for 'system wide':
 
-Tested-by: Fenghua Yu <fenghuay@nvidia.com>
+N0        1    277,835,681,344      UNC_CHA_CLOCKTICKS
+N0        1     19,242,894,228      UNC_M_CLOCKTICKS
+N3        1    277,803,448,124      UNC_CHA_CLOCKTICKS
+N3        1     19,240,741,498      UNC_M_CLOCKTICKS
 
-Thanks.
+       1.002113847 seconds time elapsed
+```
 
--Fenghua
+By updating the PMUs cpumasks to "0,120", "40,160" and "80,200" then
+the correctly 6 NUMA node aggregations are achieved:
+```
+$ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+N0        1     92,748,667,796      UNC_CHA_CLOCKTICKS
+N0        0      6,424,021,142      UNC_M_CLOCKTICKS
+N1        0     92,753,504,424      UNC_CHA_CLOCKTICKS
+N1        1      6,424,308,338      UNC_M_CLOCKTICKS
+N2        0     92,751,170,084      UNC_CHA_CLOCKTICKS
+N2        0      6,424,227,402      UNC_M_CLOCKTICKS
+N3        1     92,745,944,144      UNC_CHA_CLOCKTICKS
+N3        0      6,423,752,086      UNC_M_CLOCKTICKS
+N4        0     92,725,793,788      UNC_CHA_CLOCKTICKS
+N4        1      6,422,393,266      UNC_M_CLOCKTICKS
+N5        0     92,717,504,388      UNC_CHA_CLOCKTICKS
+N5        0      6,421,842,618      UNC_M_CLOCKTICKS
+
+       1.003406645 seconds time elapsed
+```
+
+In general, having the perf tool adjust cpumasks isn't desirable as
+ideally the PMU driver would be advertising the correct cpumask.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+v3: Return early for unexpected PMU cpumask (Kan) extra asserts/debug
+    prints for robustness.
+v2: Fix asan/ref count checker build. Fix bad patch migration where
+    '+' was lost in uncore_cha_imc_compute_cpu_adjust and add assert
+    to make this easier to debug in the future.
+---
+ tools/perf/arch/x86/util/pmu.c | 268 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 263 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
+index 8712cbbbc712..58113482654b 100644
+--- a/tools/perf/arch/x86/util/pmu.c
++++ b/tools/perf/arch/x86/util/pmu.c
+@@ -8,6 +8,8 @@
+ #include <linux/perf_event.h>
+ #include <linux/zalloc.h>
+ #include <api/fs/fs.h>
++#include <api/io_dir.h>
++#include <internal/cpumap.h>
+ #include <errno.h>
+ 
+ #include "../../../util/intel-pt.h"
+@@ -16,7 +18,256 @@
+ #include "../../../util/fncache.h"
+ #include "../../../util/pmus.h"
+ #include "mem-events.h"
++#include "util/debug.h"
+ #include "util/env.h"
++#include "util/header.h"
++
++static bool x86__is_intel_graniterapids(void)
++{
++	static bool checked_if_graniterapids;
++	static bool is_graniterapids;
++
++	if (!checked_if_graniterapids) {
++		const char *graniterapids_cpuid = "GenuineIntel-6-A[DE]";
++		char *cpuid = get_cpuid_str((struct perf_cpu){0});
++
++		is_graniterapids = cpuid && strcmp_cpuid_str(graniterapids_cpuid, cpuid) == 0;
++		free(cpuid);
++		checked_if_graniterapids = true;
++	}
++	return is_graniterapids;
++}
++
++static struct perf_cpu_map *read_sysfs_cpu_map(const char *sysfs_path)
++{
++	struct perf_cpu_map *cpus;
++	char *buf = NULL;
++	size_t buf_len;
++
++	if (sysfs__read_str(sysfs_path, &buf, &buf_len) < 0)
++		return NULL;
++
++	cpus = perf_cpu_map__new(buf);
++	free(buf);
++	return cpus;
++}
++
++static int snc_nodes_per_l3_cache(void)
++{
++	static bool checked_snc;
++	static int snc_nodes;
++
++	if (!checked_snc) {
++		struct perf_cpu_map *node_cpus =
++			read_sysfs_cpu_map("devices/system/node/node0/cpulist");
++		struct perf_cpu_map *cache_cpus =
++			read_sysfs_cpu_map("devices/system/cpu/cpu0/cache/index3/shared_cpu_list");
++
++		snc_nodes = perf_cpu_map__nr(cache_cpus) / perf_cpu_map__nr(node_cpus);
++		perf_cpu_map__put(cache_cpus);
++		perf_cpu_map__put(node_cpus);
++		checked_snc = true;
++	}
++	return snc_nodes;
++}
++
++static bool starts_with(const char *str, const char *prefix)
++{
++	return !strncmp(prefix, str, strlen(prefix));
++}
++
++static int num_chas(void)
++{
++	static bool checked_chas;
++	static int num_chas;
++
++	if (!checked_chas) {
++		int fd = perf_pmu__event_source_devices_fd();
++		struct io_dir dir;
++		struct io_dirent64 *dent;
++
++		if (fd < 0)
++			return -1;
++
++		io_dir__init(&dir, fd);
++
++		while ((dent = io_dir__readdir(&dir)) != NULL) {
++			/* Note, dent->d_type will be DT_LNK and so isn't a useful filter. */
++			if (starts_with(dent->d_name, "uncore_cha_"))
++				num_chas++;
++		}
++		close(fd);
++		checked_chas = true;
++	}
++	return num_chas;
++}
++
++#define MAX_SNCS 6
++
++static int uncore_cha_snc(struct perf_pmu *pmu)
++{
++	// CHA SNC numbers are ordered correspond to the CHAs number.
++	unsigned int cha_num;
++	int num_cha, chas_per_node, cha_snc;
++	int snc_nodes = snc_nodes_per_l3_cache();
++
++	if (snc_nodes <= 1)
++		return 0;
++
++	num_cha = num_chas();
++	if (num_cha <= 0) {
++		pr_warning("Unexpected: no CHAs found\n");
++		return 0;
++	}
++
++	/* Compute SNC for PMU. */
++	if (sscanf(pmu->name, "uncore_cha_%u", &cha_num) != 1) {
++		pr_warning("Unexpected: unable to compute CHA number '%s'\n", pmu->name);
++		return 0;
++	}
++	chas_per_node = num_cha / snc_nodes;
++	cha_snc = cha_num / chas_per_node;
++
++	/* Range check cha_snc. for unexpected out of bounds. */
++	return cha_snc >= MAX_SNCS ? 0 : cha_snc;
++}
++
++static int uncore_imc_snc(struct perf_pmu *pmu)
++{
++	// Compute the IMC SNC using lookup tables.
++	unsigned int imc_num;
++	int snc_nodes = snc_nodes_per_l3_cache();
++	const u8 snc2_map[] = {1, 1, 0, 0, 1, 1, 0, 0};
++	const u8 snc3_map[] = {1, 1, 0, 0, 2, 2, 1, 1, 0, 0, 2, 2};
++	const u8 *snc_map;
++	size_t snc_map_len;
++
++	switch (snc_nodes) {
++	case 2:
++		snc_map = snc2_map;
++		snc_map_len = ARRAY_SIZE(snc2_map);
++		break;
++	case 3:
++		snc_map = snc3_map;
++		snc_map_len = ARRAY_SIZE(snc3_map);
++		break;
++	default:
++		/* Error or no lookup support for SNC with >3 nodes. */
++		return 0;
++	}
++
++	/* Compute SNC for PMU. */
++	if (sscanf(pmu->name, "uncore_imc_%u", &imc_num) != 1) {
++		pr_warning("Unexpected: unable to compute IMC number '%s'\n", pmu->name);
++		return 0;
++	}
++	if (imc_num >= snc_map_len) {
++		pr_warning("Unexpected IMC %d for SNC%d mapping\n", imc_num, snc_nodes);
++		return 0;
++	}
++	return snc_map[imc_num];
++}
++
++static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
++{
++	static bool checked_cpu_adjust[MAX_SNCS];
++	static int cpu_adjust[MAX_SNCS];
++	struct perf_cpu_map *node_cpus;
++	char node_path[] = "devices/system/node/node0/cpulist";
++
++	/* Was adjust already computed? */
++	if (checked_cpu_adjust[pmu_snc])
++		return cpu_adjust[pmu_snc];
++
++	/* SNC0 doesn't need an adjust. */
++	if (pmu_snc == 0) {
++		cpu_adjust[0] = 0;
++		checked_cpu_adjust[0] = true;
++		return 0;
++	}
++
++	/*
++	 * Use NUMA topology to compute first CPU of the NUMA node, we want to
++	 * adjust CPU 0 to be this and similarly for other CPUs if there is >1
++	 * socket.
++	 */
++	assert(pmu_snc >= 0 && pmu_snc <= 9);
++	node_path[24] += pmu_snc; // Shift node0 to be node<pmu_snc>.
++	node_cpus = read_sysfs_cpu_map(node_path);
++	cpu_adjust[pmu_snc] = perf_cpu_map__cpu(node_cpus, 0).cpu;
++	if (cpu_adjust[pmu_snc] < 0) {
++		pr_debug("Failed to read valid CPU list from <sysfs>/%s\n", node_path);
++		cpu_adjust[pmu_snc] = 0;
++	} else {
++		checked_cpu_adjust[pmu_snc] = true;
++	}
++	perf_cpu_map__put(node_cpus);
++	return cpu_adjust[pmu_snc];
++}
++
++static void gnr_uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *pmu, bool cha)
++{
++	// With sub-NUMA clustering (SNC) there is a NUMA node per SNC in the
++	// topology. For example, a two socket graniterapids machine may be set
++	// up with 3-way SNC meaning there are 6 NUMA nodes that should be
++	// displayed with --per-node. The cpumask of the CHA and IMC PMUs
++	// reflects per-socket information meaning, for example, uncore_cha_60
++	// on a two socket graniterapids machine with 120 cores per socket will
++	// have a cpumask of "0,120". This cpumask needs adjusting to "40,160"
++	// to reflect that uncore_cha_60 is used for the 2nd SNC of each
++	// socket. Without the adjustment events on uncore_cha_60 will appear in
++	// node 0 and node 3 (in our example 2 socket 3-way set up), but with
++	// the adjustment they will appear in node 1 and node 4. The number of
++	// CHAs is typically larger than the number of cores. The CHA numbers
++	// are assumed to split evenly and inorder wrt core numbers. There are
++	// fewer memory IMC PMUs than cores and mapping is handled using lookup
++	// tables.
++	static struct perf_cpu_map *cha_adjusted[MAX_SNCS];
++	static struct perf_cpu_map *imc_adjusted[MAX_SNCS];
++	struct perf_cpu_map **adjusted = cha ? cha_adjusted : imc_adjusted;
++	int idx, pmu_snc, cpu_adjust;
++	struct perf_cpu cpu;
++	bool alloc;
++
++	// Cpus from the kernel holds first CPU of each socket. e.g. 0,120.
++	if (perf_cpu_map__cpu(pmu->cpus, 0).cpu != 0) {
++		pr_debug("Ignoring cpumask adjust for %s as unexpected first CPU\n", pmu->name);
++		return;
++	}
++
++	pmu_snc = cha ? uncore_cha_snc(pmu) : uncore_imc_snc(pmu);
++	if (pmu_snc == 0) {
++		// No adjustment necessary for the first SNC.
++		return;
++	}
++
++	alloc = adjusted[pmu_snc] == NULL;
++	if (alloc) {
++		// Hold onto the perf_cpu_map globally to avoid recomputation.
++		cpu_adjust = uncore_cha_imc_compute_cpu_adjust(pmu_snc);
++		adjusted[pmu_snc] = perf_cpu_map__empty_new(perf_cpu_map__nr(pmu->cpus));
++		if (!adjusted[pmu_snc])
++			return;
++	}
++
++	perf_cpu_map__for_each_cpu(cpu, idx, pmu->cpus) {
++		// Compute the new cpu map values or if not allocating, assert
++		// that they match expectations. asserts will be removed to
++		// avoid overhead in NDEBUG builds.
++		if (alloc) {
++			RC_CHK_ACCESS(adjusted[pmu_snc])->map[idx].cpu = cpu.cpu + cpu_adjust;
++		} else if (idx == 0) {
++			cpu_adjust = perf_cpu_map__cpu(adjusted[pmu_snc], idx).cpu - cpu.cpu;
++			assert(uncore_cha_imc_compute_cpu_adjust(pmu_snc) == cpu_adjust);
++		} else {
++			assert(perf_cpu_map__cpu(adjusted[pmu_snc], idx).cpu ==
++			       cpu.cpu + cpu_adjust);
++		}
++	}
++
++	perf_cpu_map__put(pmu->cpus);
++	pmu->cpus = perf_cpu_map__get(adjusted[pmu_snc]);
++}
+ 
+ void perf_pmu__arch_init(struct perf_pmu *pmu)
+ {
+@@ -49,10 +300,17 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
+ 
+ 		perf_mem_events__loads_ldlat = 0;
+ 		pmu->mem_events = perf_mem_events_amd_ldlat;
+-	} else if (pmu->is_core) {
+-		if (perf_pmu__have_event(pmu, "mem-loads-aux"))
+-			pmu->mem_events = perf_mem_events_intel_aux;
+-		else
+-			pmu->mem_events = perf_mem_events_intel;
++	} else {
++		if (pmu->is_core) {
++			if (perf_pmu__have_event(pmu, "mem-loads-aux"))
++				pmu->mem_events = perf_mem_events_intel_aux;
++			else
++				pmu->mem_events = perf_mem_events_intel;
++		} else if (x86__is_intel_graniterapids()) {
++			if (starts_with(pmu->name, "uncore_cha_"))
++				gnr_uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/true);
++			else if (starts_with(pmu->name, "uncore_imc_"))
++				gnr_uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/false);
++		}
+ 	}
+ }
+-- 
+2.49.0.1101.gccaa498523-goog
 
