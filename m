@@ -1,137 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CB52798EA;
-	Thu, 15 May 2025 01:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E1A746E;
+	Thu, 15 May 2025 01:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747273258; cv=none; b=OYWcGdCyoyxGoS77tUKV6Ew7zpEiUbpUr6e/yiXh+j6FsRp+Rkdg4wxC4mfQMMr+6QQukRFHstwh3gjSKhUs4ZB6b9JUS5bg9jLk3Dux08oyI+404JHspB8XqzYFPoSSWsZ+QeCTeojqy5BrKuRzIMS6ANZANMZ9SUfy6Jhc00A=
+	t=1747273312; cv=none; b=Cu02z1ptZvELgcPibhAhLgDzoOktbXW4cFrSqX2AR7ljlOSsg5ZAbGxh5mSSsglDAGgN79ENfLdfyZWQtgrsgcJrPzA8HPnvqQB+bf5sDLBlbsxDyt9yNTWqx6/Vii3/cozSI2NDfFyN5HUTGwRrDkpedHP5LK/S/p9LyGJaY3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747273258; c=relaxed/simple;
-	bh=1ihtGtHpTM6gYPrx8yeOkrO0mE1WK1KqAeqrzwHP8to=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WiGErs59VKMDoV3q4zIhPeMZ/9tjCGfNULw1xZ1NX/h4D7Ceeamg4mZMW6DnhqbR58s1v2r/DBE+lKPzECXzkctJcI2jR2Hj9EMxUz6cQaquKg5oJrKrMyTk3z7iKcwcgXRJoS5qJ3JIEG6t4ftD+wtzoNl1KZEn+7P3cme/PlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FIEWLPTj; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747273312; c=relaxed/simple;
+	bh=OTWJVAAiNGFgSoscBaj7v9EEyBMWHAN7S4h7HHzq0AU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gqziuo7hS/6NhFZzC/ToIQwXv+hl5BWSY8396uzZRtAR1XYx8/WXgOcWQoZbD6y+DszypJzA0MzQ7ddoXRmUnELesXobsJzTAC2lHeTeRUncv7Az47658QTtb4lyRyD4Mf0GlFhxoJxEtseAZ6NMbtkSg9Pcgyly5SZUKSkynUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QWzoy3ol; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FIEWLPTj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747273257; x=1778809257;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=1ihtGtHpTM6gYPrx8yeOkrO0mE1WK1KqAeqrzwHP8to=;
-  b=FIEWLPTjHy6WQhy+Y6JD0pZY5HbeUB2FteWjRhm0HKA5GVn7KxjmvZE6
-   iS/G4mMhZB2mxqDKg9lVpAh6nG3BhM6TLS5YLU6TjT3rx0iONTj6I19Hk
-   BGiyyoOUfUCECBpkOT7YfpXntkaRqkiHAd1HSrWdkmWnyAOqQnyt6UpRO
-   D1+MLXE7vDl0BWJ8cVlRYyZOrBjmN12xmsXWUCKOBFRXQqkt3efU8kCA3
-   rmJJMB80TqDXnkosz7OV6TpHwywcfhzJNhJium0k+Hk6HE/s2Pf6e8Cr5
-   AqkB98a52BQAG8HrifzuQKmVeHJH4kU2ndRC5k1jGHLs6xx8LR5RaCSFj
-   A==;
-X-CSE-ConnectionGUID: gnyYzFRvQMGFnkYmtyYSGQ==
-X-CSE-MsgGUID: pIU57DDCQoCXIj+BFa43cg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="36814739"
-X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
-   d="scan'208";a="36814739"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 18:40:56 -0700
-X-CSE-ConnectionGUID: kKkn4OnxR+6SQ+bZFGWRDw==
-X-CSE-MsgGUID: uO0QduhKREGse4orvz/lbA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
-   d="scan'208";a="143090670"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 18:40:50 -0700
-Message-ID: <e8e8ed55-7614-49be-9a1e-069738dbb2ef@linux.intel.com>
-Date: Thu, 15 May 2025 09:40:47 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QWzoy3ol"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 268E4C4CEE3;
+	Thu, 15 May 2025 01:41:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747273311;
+	bh=OTWJVAAiNGFgSoscBaj7v9EEyBMWHAN7S4h7HHzq0AU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QWzoy3olVsXjVDZGH/LI5rkCSTD8jlDKpNQlgCTfWjOu6qoTyVaRFKFhTtTpXmFDu
+	 6WYXgFKETXVu4s2KCI+LSWZyjfxc/PXKmaFa3TncKgboAsjHg/E+HY3ZHCnotL01Cd
+	 Ic2UCzWm8x4d5/pMEXzzj8typPY6wOBNMH6YJtzXwF2clgZdOmtG9SSnqEx1zaUHHO
+	 vWBChG+2ebl8tsZk7dDY0AnzaYC4Ip/06Kt4ZPwXwvGXVTlu8Uw24uYUK8JjsMKi0R
+	 dFrugkgvTImU3bimQSRRo26es2PSZoH8pHY5szFWtM9p81+VuOQ2om9peyjDK7mgyj
+	 03wdkYS9UiQwA==
+Date: Thu, 15 May 2025 04:41:47 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>,
+	Sasha Levin <sashal@kernel.org>
+Cc: Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Jonathan McDowell <noodles@earth.li>,
+	Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: Re: [PATCH v3] tpm: tis: Double the timeout B to 4s
+Message-ID: <aCVGW7T5Gy5zVkJ-@kernel.org>
+References: <4e4640bd-0313-4594-9667-82340ed9368a@molgen.mpg.de>
+ <20250404082325.13876-1-msuchanek@suse.de>
+ <Z--d7Obw2UEk8Pve@kernel.org>
+ <aCSIRS1fq_b9sByn@kitsune.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 07/38] perf: core/x86: Register a new vector for KVM
- GUEST PMI
-To: Sean Christopherson <seanjc@google.com>,
- Mingwei Zhang <mizhang@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
- Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Yongwei Ma <yongwei.ma@intel.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
- Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
- Shukla Manali <Manali.Shukla@amd.com>,
- Nikunj Dadhania <nikunj.dadhania@amd.com>
-References: <20250324173121.1275209-1-mizhang@google.com>
- <20250324173121.1275209-8-mizhang@google.com> <aCUmGC45Pg6qC6FR@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aCUmGC45Pg6qC6FR@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aCSIRS1fq_b9sByn@kitsune.suse.cz>
 
+On Wed, May 14, 2025 at 02:10:45PM +0200, Michal Suchánek wrote:
+> Hello,
+> 
+> On Fri, Apr 04, 2025 at 11:53:00AM +0300, Jarkko Sakkinen wrote:
+> > On Fri, Apr 04, 2025 at 10:23:14AM +0200, Michal Suchanek wrote:
+> > > With some Infineon chips the timeouts in tpm_tis_send_data (both B and
+> > > C) can reach up to about 2250 ms.
+> > > 
+> > > Timeout C is retried since
+> > > commit de9e33df7762 ("tpm, tpm_tis: Workaround failed command reception on Infineon devices")
+> > > 
+> > > Timeout B still needs to be extended.
+> > > 
+> > > The problem is most commonly encountered with context related operation
+> > > such as load context/save context. These are issued directly by the
+> > > kernel, and there is no retry logic for them.
+> > > 
+> > > When a filesystem is set up to use the TPM for unlocking the boot fails,
+> > > and restarting the userspace service is ineffective. This is likely
+> > > because ignoring a load context/save context result puts the real TPM
+> > > state and the TPM state expected by the kernel out of sync.
+> > > 
+> > > Chips known to be affected:
+> > > tpm_tis IFX1522:00: 2.0 TPM (device-id 0x1D, rev-id 54)
+> > > Description: SLB9672
+> > > Firmware Revision: 15.22
+> > > 
+> > > tpm_tis MSFT0101:00: 2.0 TPM (device-id 0x1B, rev-id 22)
+> > > Firmware Revision: 7.83
+> > > 
+> > > tpm_tis MSFT0101:00: 2.0 TPM (device-id 0x1A, rev-id 16)
+> > > Firmware Revision: 5.63
+> > > 
+> > > Link: https://lore.kernel.org/linux-integrity/Z5pI07m0Muapyu9w@kitsune.suse.cz/
+> > > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> > > ---
+> > > v2: Only extend timeout B
+> > > v3: Update commit message
+> > > ---
+> > >  drivers/char/tpm/tpm_tis_core.h | 2 +-
+> > >  include/linux/tpm.h             | 2 +-
+> > >  2 files changed, 2 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
+> > > index 970d02c337c7..6c3aa480396b 100644
+> > > --- a/drivers/char/tpm/tpm_tis_core.h
+> > > +++ b/drivers/char/tpm/tpm_tis_core.h
+> > > @@ -54,7 +54,7 @@ enum tis_int_flags {
+> > >  enum tis_defaults {
+> > >  	TIS_MEM_LEN = 0x5000,
+> > >  	TIS_SHORT_TIMEOUT = 750,	/* ms */
+> > > -	TIS_LONG_TIMEOUT = 2000,	/* 2 sec */
+> > > +	TIS_LONG_TIMEOUT = 4000,	/* 4 secs */
+> > >  	TIS_TIMEOUT_MIN_ATML = 14700,	/* usecs */
+> > >  	TIS_TIMEOUT_MAX_ATML = 15000,	/* usecs */
+> > >  };
+> > > diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+> > > index 6c3125300c00..3db0b6a87d45 100644
+> > > --- a/include/linux/tpm.h
+> > > +++ b/include/linux/tpm.h
+> > > @@ -224,7 +224,7 @@ enum tpm2_const {
+> > >  
+> > >  enum tpm2_timeouts {
+> > >  	TPM2_TIMEOUT_A          =    750,
+> > > -	TPM2_TIMEOUT_B          =   2000,
+> > > +	TPM2_TIMEOUT_B          =   4000,
+> > >  	TPM2_TIMEOUT_C          =    200,
+> > >  	TPM2_TIMEOUT_D          =     30,
+> > >  	TPM2_DURATION_SHORT     =     20,
+> > > -- 
+> > > 2.47.1
+> > > 
+> > > 
+> > 
+> > Cc: stable@vger.kernel.org # v6.1+
+> > 
+> > Probably best that I'll piggyback a patch set for stable with the two
+> > fixes, in order to cause least noise. I need to do this *after* an
+> > ack'd PR to -rc2.
+> 
+> While there is talk about stable this does not seem to be applied
+> anywhere I could find. Is that expected?
 
-On 5/15/2025 7:24 AM, Sean Christopherson wrote:
-> On Mon, Mar 24, 2025, Mingwei Zhang wrote:
->> diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
->> index ad5c68f0509d..b0cb3220e1bb 100644
->> --- a/arch/x86/include/asm/idtentry.h
->> +++ b/arch/x86/include/asm/idtentry.h
->> @@ -745,6 +745,7 @@ DECLARE_IDTENTRY_SYSVEC(IRQ_WORK_VECTOR,		sysvec_irq_work);
->>  DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_VECTOR,		sysvec_kvm_posted_intr_ipi);
->>  DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_WAKEUP_VECTOR,	sysvec_kvm_posted_intr_wakeup_ipi);
->>  DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_NESTED_VECTOR,	sysvec_kvm_posted_intr_nested_ipi);
->> +DECLARE_IDTENTRY_SYSVEC(KVM_GUEST_PMI_VECTOR,	        sysvec_kvm_guest_pmi_handler);
-> I would prefer to keep KVM out of the name, and as mentioned in the previous patch,
-> route this through perf.
+Definitely not. I got shifted away with other work early April and
+this was left to my TODO folder, apologies.
 
-Sure.
+Sasha, can you also auto-select this to v6.1+? It is in my next
+branch now (should be soon'ish mirrored to linux-next).
 
-
->
->>  #else
->>  # define fred_sysvec_kvm_posted_intr_ipi		NULL
->>  # define fred_sysvec_kvm_posted_intr_wakeup_ipi		NULL
-> Y'all forgot to wire up the FRED handling.  I.e. the mediated PMI IRQs would get
-> treated as spurious when running with FRED.
-
-Oh, yes. we missed that. we would look at it. Thanks for reminding.
-
-
->
->> diff --git a/arch/x86/include/asm/irq_vectors.h b/arch/x86/include/asm/irq_vectors.h
->> index 47051871b436..250cdab11306 100644
->> --- a/arch/x86/include/asm/irq_vectors.h
->> +++ b/arch/x86/include/asm/irq_vectors.h
->> @@ -77,7 +77,10 @@
->>   */
->>  #define IRQ_WORK_VECTOR			0xf6
->>  
->> -/* 0xf5 - unused, was UV_BAU_MESSAGE */
->> +#if IS_ENABLED(CONFIG_KVM)
->> +#define KVM_GUEST_PMI_VECTOR		0xf5
->> +#endif
-> Conditionally defining the vector sounds good on paper, but its problematic, e.g.
-> for connecting the handler to FRED's array, and doesn't really add much value.
->
->>  #define DEFERRED_ERROR_VECTOR		0xf4
->>  
->>  /* Vector on which hypervisor callbacks will be delivered */
->> diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
->> index f445bec516a0..0bec4c7e2308 100644
->> --- a/arch/x86/kernel/idt.c
->> +++ b/arch/x86/kernel/idt.c
->> @@ -157,6 +157,7 @@ static const __initconst struct idt_data apic_idts[] = {
->>  	INTG(POSTED_INTR_VECTOR,		asm_sysvec_kvm_posted_intr_ipi),
->>  	INTG(POSTED_INTR_WAKEUP_VECTOR,		asm_sysvec_kvm_posted_intr_wakeup_ipi),
->>  	INTG(POSTED_INTR_NESTED_VECTOR,		asm_sysvec_kvm_posted_intr_nested_ipi),
+BR, Jarkko
