@@ -1,222 +1,461 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2060.outbound.protection.outlook.com [40.107.243.60])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC31C14F104;
-	Thu, 15 May 2025 16:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747325189; cv=fail; b=Zd8xvRG7s/OivQQIEKGGOmNRMYCqMpFzC5sdaIF0YTPfb/8f0VJqmqr+Fn0lPggoDPE+cP9qA7qQhnkVM9tUb8163FBdH2fqou7nSObgEkCLDUXMp2tYyEFZQ/YeXelAVGPZrAAfuhhgbllT4hmnajfEAjzGtSVF5VsugQvqVqI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747325189; c=relaxed/simple;
-	bh=p8V6Snq0cKyGVrkHXCqYtK0V/fGstcPO0QZ6Te1UEQ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=hO+8qcmn9nGqCR+/Oy9YcYQRjgzgA5zcVRLvjYLty5zQ41uUtKWDdXf1KNe3E/iouSs2ymDMt/fHkWiI5q/wAOVAko6lJm4IxHPBawXRgIgyZXHKtxD1U12zHkmZtojAjPHZQT7VzZgprkUz4DmzIW1pLSw2Wx+bcTeX0pa9AtA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YX1CGs/O; arc=fail smtp.client-ip=40.107.243.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A005183098;
+	Thu, 15 May 2025 16:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747325217; cv=none; b=Md6xhroATdt83UePXeRQrXriKZmiWYZpsLhyGMb8jIT9HUqqQSsLAbtmlR2xgpWFa0lm51R1SX6I1XSVFEsmPuvjKANUT8yifuurXVVQAFrKMc+L1SFv6REspavdZ3X5taSbSxyx7O+gztHrG7198zAGfM+45RCSlLP6BpfgplI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747325217; c=relaxed/simple;
+	bh=mVOJxR9jh8qBUgfhL8DL2yKIBYy1OWgSMqw7m5awS+0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=mFb9waNF5JQSKup6HfdqGa8IjtbiRoXn6oqeoHBr285YCbyIlnMPWEVG/cjGnc17fCWuhCFOTlwa+EyHDzL3BbkyZb2m3DnfIMYxG/1WdL/lRIlZka9G5TMMB17h6eh3cF8mvI3ICexaHf6h8+3ybSAJCevdUfYo4xK1GesMs6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=REM9fjKF; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YX1CGs/O"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bw5qhOkriAdc/Vi6oOuvmuRRPfxDG/EZsFO/5nzYTUBWDqr4P47m6I/IL3M3zw6u1/W3plT9toJ1wNLY7DqHufKWRMD0KONTMxNkRj+hZTzhSuw8IsAL64bPOzIFdN+n6cYcEba4Ogy/piQtRwYawsfG6LXZrXdOVyb83zwrV6wXdngItlaHd8eGsNuqfHkIISaGZfhqShUnJKLyCGJNY6TZv2sggrLlF3ftLjfapcHadcjdylhmQjLTGGr9bcWS75QHtpIsYwhRRfcGCNzyG6FmACRPqqr4YZFKi7y545hz0C2BvKzWCLGHtJIj6v10aL6BI7DBYrMwaOpXP0a+Bg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dQ91qb0g54QhN1jy9gzcQgMJWUdCjbl5aurLZFsTiOQ=;
- b=Xp//i4/zYeTdKLOV+L/6nq2dI99Sf8+BP06XcDKLQsQf8udlDQYKDyte22POFHUbY3Ze0M4zf5NCXO+KjK/+xShzefOHeSzV3gI2dYxRQP/kT8yLYBFyrURO+nw8AtzniNMhtzmPRzO8TbI/OxY/dd/H3yLNzX41Jp6KyzxaG6q9Crkd6RVtESCQCp2gSFa+pnrLz0167hr4WzhRLXh8J0VheD8l9zQUB1mtcaMYOCf90Jh4xxt730ie2dQpXpq9372JEaGze9V40oIkCbA7XwM8M1kBQLWJKJ5HzO6WQ9XPQxyNvEio0eIHVRJbUmLmYNLyKtPEBlwN/1mCi/YdaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dQ91qb0g54QhN1jy9gzcQgMJWUdCjbl5aurLZFsTiOQ=;
- b=YX1CGs/OtwDhZi6uBic3/4zX6uJVR8o7hH9o7GMcI1xY8joigVGg3oxu54OpsGBxyG6xjzzCNTo/cga01JGPcRhZVka4NNHOnx0OjFJMBeU8YGBA0AnEA6bi9NJz18Kl+3XOJZOuUFIoxBHbqSCINcVzPNcewj7D55r0Y9NkLRwZjyZjHXZotJF+RnmgIU8z1oZNniGxKG39D8Ut3GkcPYVXapGdy04F3KE/B/0jgxAxFKGpPAVT3PZ1DmsAz8VDJWLVRtjbdcNcd9hPZR1IItbm1b8pNq+KQmSflaMPOM0+R5dlPE7cjpDx46RzyS3nEPSHV7nAFnJZEQKhawiXFw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by DS0PR12MB9445.namprd12.prod.outlook.com (2603:10b6:8:1a1::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Thu, 15 May
- 2025 16:06:22 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8722.031; Thu, 15 May 2025
- 16:06:21 +0000
-Date: Thu, 15 May 2025 13:06:20 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	praan@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
-Subject: Re: [PATCH v4 11/23] iommufd/viommu: Add IOMMUFD_CMD_HW_QUEUE_ALLOC
- ioctl
-Message-ID: <20250515160620.GJ382960@nvidia.com>
-References: <cover.1746757630.git.nicolinc@nvidia.com>
- <f52937c027e2fd25d76bc47f4965ba46f82c77c0.1746757630.git.nicolinc@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f52937c027e2fd25d76bc47f4965ba46f82c77c0.1746757630.git.nicolinc@nvidia.com>
-X-ClientProxiedBy: YQBPR0101CA0238.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:66::18) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="REM9fjKF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747325215; x=1778861215;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=mVOJxR9jh8qBUgfhL8DL2yKIBYy1OWgSMqw7m5awS+0=;
+  b=REM9fjKFkkkatxzIj423A1xnng2rm2uIvOFb8vxwy6QCojccKMuyuV4z
+   u3Uf+Zhl4yIiEK7kIFpRoTSTZ11AcuC02Tqs4Bq7rv8rb3kH0+mlnEq5t
+   FKRR4uWLsO6SSEJLuRrivFr9/PkGYrzlJKsnz8Y26Zw+puizzJRzLkUET
+   sjIRevC6HTmKdsFX1VjmHHQXbH9Xynj9KnVHTB1bqj7g+FVJxOnz5okj1
+   0IQK9PWkjh33kfzZ7Q+De3ECO1CEmUVCsBBBV0TPmfyLLu70ENl5i+cxr
+   O8OXkF4S9KO67eHwIClm3Pb7IOLFMWCKNtpEwhK9FUxIq7qdWZDmFaXxy
+   w==;
+X-CSE-ConnectionGUID: XgA5W68OSkKEbl3u8Pefmw==
+X-CSE-MsgGUID: Cut/D4g7T/aYxAoBzaHzMQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="36890217"
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="36890217"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 09:06:54 -0700
+X-CSE-ConnectionGUID: b7phbyMvTemxrxhCMaTthA==
+X-CSE-MsgGUID: j+40rhg9T/6p7FvTH5Y8WA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="143532136"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 09:06:54 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 1F42220B5736;
+	Thu, 15 May 2025 09:09:33 -0700 (PDT)
+Message-ID: <909e988c-6e7c-4de1-b5b3-d5de119e4f35@linux.intel.com>
+Date: Thu, 15 May 2025 12:06:52 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DS0PR12MB9445:EE_
-X-MS-Office365-Filtering-Correlation-Id: c7ee7947-1d73-4a0a-4126-08dd93ca6f4b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?OJn4WNIozgy1IIHP4cIblkkeQR6utUXpjnCyLREgE7/OYbNh3nzF5gUghh6w?=
- =?us-ascii?Q?5knXqWFYFtLRUBEmjXivYYIEoxShtzdbjPQjFY9jS+DmGCpXfT5wKQRLgqJa?=
- =?us-ascii?Q?IFtxR37HU8GAB810ljrM6FfrBpiFc40i3hvv2/SqRL4iS+TnCOkpqUnI9SOU?=
- =?us-ascii?Q?GZLAr7AmGckWVh2R57jUOxeVHz0IO16sbBSN7Mmd9wSUb1vSrPQ7c/W0aB0v?=
- =?us-ascii?Q?+ffHuttz5z7DdE3CisK5qnprxRerke/I7+SxPiutQoWcdc8KX3dLLn1xKctk?=
- =?us-ascii?Q?D3V85g9WWkjNzjl6xrbXbZ9gNc1dVwoRxWv8nkKlMM6KrzJWmhrletWhyG3x?=
- =?us-ascii?Q?QqBl1k3E43AmVA6OV+5Xb3qnZthGNZd1uv/xrCSN5JoKmty29mUKdjJC4Tvh?=
- =?us-ascii?Q?QEansGsdUVRfUFbBOVDtaCLfMVScJg4qe9Znjp8cAdH/NCtjbWqR90hcEv5o?=
- =?us-ascii?Q?ZA+de9ljXVmZYETHLS+dVV0jv8/8sLtgG/ug2GXtUDI7JdJNuT/ZNoQ/W5jD?=
- =?us-ascii?Q?QJDuey8RyJ2V/9qQkTCINry512Bhy/eu8XWM4UmuS3/y6p23W+ZKSublajIc?=
- =?us-ascii?Q?ceE6lB9ezzgTdqS5/vW71922PLJvQlFYCnYrIwUTfAeAQOH2CtgyclWmxWIT?=
- =?us-ascii?Q?UOhaojSXhVXvZfdlCAOc4aMPhAsIgL/baTzquFD8nVQJ7A9DRwkacFSYLxZP?=
- =?us-ascii?Q?YwfohCjKJ+3m5ODx/xziP/pQlK2zVvpGUxVSNJrjMComL+6OwmhuaVm0Qy1F?=
- =?us-ascii?Q?sXfgXPQaeSyAMhexplDoIZcaSvCqFoyopTuimnl0ME4L+bdFkXaW7O8xagMD?=
- =?us-ascii?Q?NmcvMJYV4oVaN+6lRQO27x0U0ZkYrTX9hU2ZgIF6/Z29S0ss9KEBdEC6RuqK?=
- =?us-ascii?Q?6pEBtAxYpUl237552Hy4jZ7kTy8BrmIAlKdoa9kwuRcEmPvXqvSzAcl+WN+I?=
- =?us-ascii?Q?SEVCf+rBXHPmKl14K5Zia+FHDvhr+D7U0B0XzCJqy2MudkiK/9hK89WY8tCT?=
- =?us-ascii?Q?ZpstVSsT9q5WCEVWHZrA4RfQzcZztIqC6rZvUDx+V3n6wOLgkQDTEEfbKBca?=
- =?us-ascii?Q?dCLCyBwcER4mxA21+yzlZYuH46s6NNexBOxu1Wmhbg2WADq61DqAVQFYlU2E?=
- =?us-ascii?Q?oj2uDwhRQJR0NpmKTzKwZEznOlNGH26kV7d2aXEgAS5h3TsVsnfos1WPkpYm?=
- =?us-ascii?Q?q9J8Uj/VwQ7zz1csNxij0MiUHKnnNQXleuiUVqJc+O2Ixyh7gTkWzo1ZFZkB?=
- =?us-ascii?Q?nCABi4JYtr9pEaSu5KzSbPV3kFCyA6LDpQSAVQ9wtUL1mBJ7KVcU0498spbR?=
- =?us-ascii?Q?R5Yc9GIIXUdAobCwx8NXKOjfkFBd+r6UahQqyHt9KaKZU40eB6f9ZqpUtZA2?=
- =?us-ascii?Q?dLeV6ekznP59Az0TwbkSt+WrtJb45ImnKzk5f7w0EC7GAbfKJOZC7UoFMjnp?=
- =?us-ascii?Q?AHFCFmjFhSc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?79YRmOnJZpuUrTN/jPKCsPHWAUhmjK/s6N0N8N/Z+q51tHRPAWgYmOw+uL4L?=
- =?us-ascii?Q?cbFfUNhC8zuI98hy/Zm5ZM3FK0cAigm2MvF15u9rUMUWj5TT9qDJSpobYOM/?=
- =?us-ascii?Q?Os5Irxj64ROKQbstYInL5RCF8Xu0E+UVT3W6iRWovR22NYjr+D4ktUmiF66P?=
- =?us-ascii?Q?lJ/oN5a8sYtB5Rt3e499FR/mL62zH0S2uA7fFh7wFEOPawwPQ3vt2BgWFIxL?=
- =?us-ascii?Q?S9t9/KJKRYeCZrrEOy8bkbM7x3OofTnoyP4cQswP57ElPvY6ejUgAqKUpweU?=
- =?us-ascii?Q?04y6lyR7UFSQLJz8qUnCNub2irS+/Q223RQN9Fie/VlQbrOYMuPZUJnyHvn7?=
- =?us-ascii?Q?7vjIySQL/Ez/RcdC6ZdEF4rn6jIk07uFk1LDAeNo2o3JCGTRbFvdxWhbWZi6?=
- =?us-ascii?Q?3SHbcEDO0XPExfBkwjr4+oGQjJGCq4mjlbbDbFUnAH+hcDqCW/dnBLKilMM8?=
- =?us-ascii?Q?fJYt9WYsE99QnOk+eDM4PBaEuE/GtDsrws2uMK7h5tP8NO/yBlzMoHVq23qA?=
- =?us-ascii?Q?kGu2CpuDPMwr44n7/zzqZiEXsF7ySExvyy/pasAd8bDft97V//v3PPqq5oG4?=
- =?us-ascii?Q?in3YYd1C0D+otKptILA8kszUs9TOP5T4V5tNWubH7US5bZlnGmc906DDQnQX?=
- =?us-ascii?Q?mR/ztKfO30CLGEhY0F35/vGw1L12Znr4bGPr0FhIYXPkA5eixojoDF+JiyJO?=
- =?us-ascii?Q?mi51mJQGQUPlOT2EWEbJ4zzzWjyk9D1A5bejjspj4L7Yb7k6jJbib9IbTmKo?=
- =?us-ascii?Q?YPG4loLPCCL9VHmI9M5JZSJkmLdemuz+Tjhut6iipPBaVszizKWC9TsaGy+V?=
- =?us-ascii?Q?f0TW7kkWjGIhSXLylNbU8KuYCKyDG5X0qFevwxJHivDQOEojdHQVkftASkME?=
- =?us-ascii?Q?bEpXn5yn0zgYAK6M6RTYbhZox33iMTM8hPz7eEFD6IeUQQPprIjZC6UhbSff?=
- =?us-ascii?Q?Cd+SvpfQhZKJV7RnD/ejHHvloccrwE9vbOF6/85gDdcON7DDI1ciw6ZLdeiM?=
- =?us-ascii?Q?El+ap/zuQVP2CrZH0Sp3IwU2ITbKJ5B4UGnI8FYTy9mbeHdBKnfDqAd9H6ul?=
- =?us-ascii?Q?LF8ESQ4ThQVn/00eqO+q4GK2m9oMHRNSUIY2NEVgzBiHBTzCpukLgR7L0tF2?=
- =?us-ascii?Q?SKa0Yh4EY2GbGPcjBA/sllmV0RabteRnpotPVPr+JPugxPnoBmqRqSQTE1PE?=
- =?us-ascii?Q?fygddJvRILSbiYkyZaZq6fVklmbOtJpocjDs4182r+sVo9aQrBSi56tGy7Ba?=
- =?us-ascii?Q?BIQhTkGb/3yYgBi1OfDN17zHQ8b4q7WFm96qwiSzCAIQW0T7EqYyCdaMDzpp?=
- =?us-ascii?Q?zlNss5/Mt+YO9ea28LcwzxVPfp801npic39oSq54vxeQ506CSnvcHr9zqeWm?=
- =?us-ascii?Q?VJKwRC84+LNErhzlQEjZ0j6sa7bY5WwsuJKKUfwhJVWvox3/s6DvIFmbqC7X?=
- =?us-ascii?Q?pCW/F+rcKBIdRabDIrGTnoCyfmy3J8r2nxkyHckGnPbElRjOD3nbU1kCCERR?=
- =?us-ascii?Q?bS2lzpD/znLgKCLPM0XLaCGqe5u0W6JUen8e5fwg7p/duwzVKCZkkW/MVAE5?=
- =?us-ascii?Q?yPUjxoBvOD0nHTepGic+IbQn4mbYHVD6lJ5Nvcyc?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7ee7947-1d73-4a0a-4126-08dd93ca6f4b
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2025 16:06:21.8035
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1sRFc/GFtn8r+CuS3ct7W0mzpkXPpciS0gCg2TlPu+Sae5AEM2rhyGTeWxuHoxKK
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9445
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] perf pmu intel: Adjust cpumaks for sub-NUMA clusters
+ on graniterapids
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250515043818.236807-1-irogers@google.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250515043818.236807-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 08, 2025 at 08:02:32PM -0700, Nicolin Chen wrote:
-> +/**
-> + * struct iommu_hw_queue_alloc - ioctl(IOMMU_HW_QUEUE_ALLOC)
-> + * @size: sizeof(struct iommu_hw_queue_alloc)
-> + * @flags: Must be 0
-> + * @viommu_id: Virtual IOMMU ID to associate the HW queue with
-> + * @type: One of enum iommu_hw_queue_type
-> + * @index: The logical index to the HW queue per virtual IOMMU for a multi-queue
-> + *         model
-> + * @out_hw_queue_id: The ID of the new HW queue
-> + * @base_addr: Base address of the queue memory in guest physical address space
-> + * @length: Length of the queue memory in the guest physical address space
-> + *
-> + * Allocate a HW queue object for a vIOMMU-specific HW-accelerated queue, which
-> + * allows HW to access a guest queue memory described by @base_addr and @length.
-> + * Upon success, the underlying physical pages of the guest queue memory will be
-> + * pinned to prevent VMM from unmapping them in the IOAS until the HW queue gets
-> + * destroyed.
 
-Do we have way to make the pinning optional?
 
-As I understand AMD's system the iommu HW itself translates the
-base_addr through the S2 page table automatically, so it doesn't need
-pinned memory and physical addresses but just the IOVA.
+On 2025-05-15 12:38 a.m., Ian Rogers wrote:
+> On graniterapids the cache home agent (CHA) and memory controller
+> (IMC) PMUs all have their cpumask set to per-socket information. In
+> order for per NUMA node aggregation to work correctly the PMUs cpumask
+> needs to be set to CPUs for the relevant sub-NUMA grouping.
+> 
+> For example, on a 2 socket graniterapids machine with sub NUMA
+> clustering of 3, for uncore_cha and uncore_imc PMUs the cpumask is
+> "0,120" leading to aggregation only on NUMA nodes 0 and 3:
+> ```
+> $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a sleep 1
+> 
+>  Performance counter stats for 'system wide':
+> 
+> N0        1    277,835,681,344      UNC_CHA_CLOCKTICKS
+> N0        1     19,242,894,228      UNC_M_CLOCKTICKS
+> N3        1    277,803,448,124      UNC_CHA_CLOCKTICKS
+> N3        1     19,240,741,498      UNC_M_CLOCKTICKS
+> 
+>        1.002113847 seconds time elapsed
+> ```
+> 
+> By updating the PMUs cpumasks to "0,120", "40,160" and "80,200" then
+> the correctly 6 NUMA node aggregations are achieved:
+> ```
+> $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a sleep 1
+> 
+>  Performance counter stats for 'system wide':
+> 
+> N0        1     92,748,667,796      UNC_CHA_CLOCKTICKS
+> N0        0      6,424,021,142      UNC_M_CLOCKTICKS
+> N1        0     92,753,504,424      UNC_CHA_CLOCKTICKS
+> N1        1      6,424,308,338      UNC_M_CLOCKTICKS
+> N2        0     92,751,170,084      UNC_CHA_CLOCKTICKS
+> N2        0      6,424,227,402      UNC_M_CLOCKTICKS
+> N3        1     92,745,944,144      UNC_CHA_CLOCKTICKS
+> N3        0      6,423,752,086      UNC_M_CLOCKTICKS
+> N4        0     92,725,793,788      UNC_CHA_CLOCKTICKS
+> N4        1      6,422,393,266      UNC_M_CLOCKTICKS
+> N5        0     92,717,504,388      UNC_CHA_CLOCKTICKS
+> N5        0      6,421,842,618      UNC_M_CLOCKTICKS
+> 
+>        1.003406645 seconds time elapsed
+> ```
+> 
+> In general, having the perf tool adjust cpumasks isn't desirable as
+> ideally the PMU driver would be advertising the correct cpumask.
+>
 
-Perhaps for this reason the pinning should be done with a function
-call from the driver?
+Strictly speaking, the information used here is the CHA and IMC topology
+information, not a cpumask.
 
-> +struct iommu_hw_queue_alloc {
-> +	__u32 size;
-> +	__u32 flags;
-> +	__u32 viommu_id;
-> +	__u32 type;
-> +	__u32 index;
-> +	__u32 out_hw_queue_id;
-> +	__aligned_u64 base_addr;
+The cpumask in the uncore driver implies the scope of the PMU. Usually,
+it's the first CPU of each socket/die.
 
-base addr should probably be called nesting_parent_iova  to match how
-we described the viommu hwpt:
+The topology information discloses how the uncore units connect to the
+HW components, e.g., die, node...
+There should be another interface for it. An example is the UPI topology
+information.
+https://lore.kernel.org/lkml/20221117122833.3103580-7-alexander.antonov@linux.intel.com/
 
- * @hwpt_id: ID of a nesting parent HWPT to associate to
+But I think utilizing the cpumask to imply the topology as this patch
+does should be a good idea.
 
+But I still incline not to add it to the kernel at least for now. Because,
+- The current method is based on some assumptions, e.g., the hardware id
+and logical id of Notes and CHAs follow the ascending order. It should
+work for the vast majority of cases. But it's not reliable compared to
+retrieving from a register.
+- Perf tool is more flexible. It can be easily deployed on an old
+environment without the need to update the kernel.
+- The cpumask codes are shared among uncore PMUs in the uncore driver.
+It requires a big refactor to support per uncore PMU specific cpumask.
+It may not be worth doing it only for GNR.
+
+Let's support it in the perf tool x86 code for now. We may move it to
+the uncore driver later once the above items have changed.
+
+
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/arch/x86/util/pmu.c | 259 ++++++++++++++++++++++++++++++++-
+>  1 file changed, 254 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
+> index 8712cbbbc712..38c800c6e9c8 100644
+> --- a/tools/perf/arch/x86/util/pmu.c
+> +++ b/tools/perf/arch/x86/util/pmu.c
+> @@ -8,6 +8,8 @@
+>  #include <linux/perf_event.h>
+>  #include <linux/zalloc.h>
+>  #include <api/fs/fs.h>
+> +#include <api/io_dir.h>
+> +#include <internal/cpumap.h>
+>  #include <errno.h>
+>  
+>  #include "../../../util/intel-pt.h"
+> @@ -16,7 +18,247 @@
+>  #include "../../../util/fncache.h"
+>  #include "../../../util/pmus.h"
+>  #include "mem-events.h"
+> +#include "util/debug.h"
+>  #include "util/env.h"
+> +#include "util/header.h"
+> +
+> +static bool x86__is_intel_graniterapids(void)
+> +{
+> +	static bool checked_if_graniterapids;
+> +	static bool is_graniterapids;
+> +
+> +	if (!checked_if_graniterapids) {
+> +		const char *graniterapids_cpuid = "GenuineIntel-6-A[DE]";
+> +		char *cpuid = get_cpuid_str((struct perf_cpu){0});
+> +
+> +		is_graniterapids = cpuid && strcmp_cpuid_str(graniterapids_cpuid, cpuid) == 0;
+> +		free(cpuid);
+> +		checked_if_graniterapids = true;
+> +	}
+> +	return is_graniterapids;
+> +}
+> +
+> +static struct perf_cpu_map *read_sysfs_cpu_map(const char *sysfs_path)
+> +{
+> +	struct perf_cpu_map *cpus;
+> +	char *buf = NULL;
+> +	size_t buf_len;
+> +
+> +	if (sysfs__read_str(sysfs_path, &buf, &buf_len) < 0)
+> +		return NULL;
+> +
+> +	cpus = perf_cpu_map__new(buf);
+> +	free(buf);
+> +	return cpus;
+> +}
+> +
+> +static int snc_nodes_per_l3_cache(void)
+> +{
+> +	static bool checked_snc;
+> +	static int snc_nodes;
+> +
+> +	if (!checked_snc) {
+> +		struct perf_cpu_map *node_cpus =
+> +			read_sysfs_cpu_map("devices/system/node/node0/cpulist");
+> +		struct perf_cpu_map *cache_cpus =
+> +			read_sysfs_cpu_map("devices/system/cpu/cpu0/cache/index3/shared_cpu_list");
+> +
+> +		snc_nodes = perf_cpu_map__nr(cache_cpus) / perf_cpu_map__nr(node_cpus);
+> +		perf_cpu_map__put(cache_cpus);
+> +		perf_cpu_map__put(node_cpus);
+> +		checked_snc = true;
+> +	}
+> +	return snc_nodes;
+> +}
+> +
+> +static bool starts_with(const char *str, const char *prefix)
+> +{
+> +	return !strncmp(prefix, str, strlen(prefix));
+> +}
+> +
+> +static int num_chas(void)
+> +{
+> +	static bool checked_chas;
+> +	static int num_chas;
+> +
+> +	if (!checked_chas) {
+> +		int fd = perf_pmu__event_source_devices_fd();
+> +		struct io_dir dir;
+> +		struct io_dirent64 *dent;
+> +
+> +		if (fd < 0)
+> +			return -1;
+> +
+> +		io_dir__init(&dir, fd);
+> +
+> +		while ((dent = io_dir__readdir(&dir)) != NULL) {
+> +			/* Note, dent->d_type will be DT_LNK and so isn't a useful filter. */
+> +			if (starts_with(dent->d_name, "uncore_cha_"))
+> +				num_chas++;
+> +		}
+> +		close(fd);
+> +		checked_chas = true;
+> +	}
+> +	return num_chas;
+> +}
+> +
+> +#define MAX_SNCS 6
+> +
+> +static int uncore_cha_snc(struct perf_pmu *pmu)
+> +{
+> +	// CHA SNC numbers are ordered correspond to the CHAs number.
+> +	unsigned int cha_num;
+> +	int num_cha, chas_per_node, cha_snc;
+> +	int snc_nodes = snc_nodes_per_l3_cache();
+> +
+> +	if (snc_nodes <= 1)
+> +		return 0;
+> +
+> +	num_cha = num_chas();
+> +	if (num_cha <= 0) {
+> +		pr_warning("Unexpected: no CHAs found\n");
+> +		return 0;
+> +	}
+> +
+> +	/* Compute SNC for PMU. */
+> +	if (sscanf(pmu->name, "uncore_cha_%u", &cha_num) != 1) {
+> +		pr_warning("Unexpected: unable to compute CHA number '%s'\n", pmu->name);
+> +		return 0;
+> +	}
+> +	chas_per_node = num_cha / snc_nodes;
+> +	cha_snc = cha_num / chas_per_node;
+> +
+> +	/* Range check cha_snc. for unexpected out of bounds. */
+> +	return cha_snc >= MAX_SNCS ? 0 : cha_snc;
+> +}
+> +
+> +static int uncore_imc_snc(struct perf_pmu *pmu)
+> +{
+> +	// Compute the IMC SNC using lookup tables.
+> +	unsigned int imc_num;
+> +	int snc_nodes = snc_nodes_per_l3_cache();
+> +	const u8 snc2_map[] = {1, 1, 0, 0, 1, 1, 0, 0};
+> +	const u8 snc3_map[] = {1, 1, 0, 0, 2, 2, 1, 1, 0, 0, 2, 2};
+> +	const u8 *snc_map;
+> +	size_t snc_map_len;
+> +
+> +	switch (snc_nodes) {
+> +	case 2:
+> +		snc_map = snc2_map;
+> +		snc_map_len = ARRAY_SIZE(snc2_map);
+> +		break;
+> +	case 3:
+> +		snc_map = snc3_map;
+> +		snc_map_len = ARRAY_SIZE(snc3_map);
+> +		break;
+> +	default:
+> +		/* Error or no lookup support for SNC with >3 nodes. */
+> +		return 0;
+> +	}
+> +
+> +	/* Compute SNC for PMU. */
+> +	if (sscanf(pmu->name, "uncore_imc_%u", &imc_num) != 1) {
+> +		pr_warning("Unexpected: unable to compute IMC number '%s'\n", pmu->name);
+> +		return 0;
+> +	}
+> +	if (imc_num >= snc_map_len) {
+> +		pr_warning("Unexpected IMC %d for SNC%d mapping\n", imc_num, snc_nodes);
+> +		return 0;
+> +	}
+> +	return snc_map[imc_num];
+> +}
+> +
+> +static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
+> +{
+> +	static bool checked_cpu_adjust[MAX_SNCS];
+> +	static int cpu_adjust[MAX_SNCS];
+> +	struct perf_cpu_map *node_cpus;
+> +	char node_path[] = "devices/system/node/node0/cpulist";
+> +
+> +	/* Was adjust already computed? */
+> +	if (checked_cpu_adjust[pmu_snc])
+> +		return cpu_adjust[pmu_snc];
+> +
+> +	/* SNC0 doesn't need an adjust. */
+> +	if (pmu_snc == 0) {
+> +		cpu_adjust[0] = 0;
+> +		checked_cpu_adjust[0] = true;
+> +		return 0;
+> +	}
+> +
 > +	/*
-> +	 * The underlying physical pages must be pinned to prevent them from
-> +	 * being unmapped (via IOMMUFD_CMD_IOAS_UNMAP) during the life cycle
-> +	 * of the HW QUEUE object.
+> +	 * Use NUMA topology to compute first CPU of the NUMA node, we want to
+> +	 * adjust CPU 0 to be this and similarly for other CPUs if there is >1
+> +	 * socket.
 > +	 */
-> +	rc = iopt_pin_pages(&hwpt->ioas->iopt, cmd->base_addr, cmd->length,
-> +			    pages, 0);
+> +	node_path[24] = pmu_snc; // Shift node0 to be node<pmu_snc>.
 
-I don't think this actually works like this without an unmap
-callback. unmap will break:
+I think scnprintf should be a prefer way to update the idx. E.g.,
 
-			iommufd_access_notify_unmap(iopt, area_first, length);
-			/* Something is not responding to unmap requests. */
-			tries++;
-			if (WARN_ON(tries > 100))
-				return -EDEADLOCK;
+#define NODE_PATH	"devices/system/node/node%d/cpulist"
 
-If it can't shoot down the pinning.
+scnprintf(node_path, MAX_PATH, NODE_PATH, pmu_snc);
 
-Why did this need to change away from just a normal access? That ops
-and unmap callback are not optional things.
 
-What vcmdq would do in the unmap callback is question I'm not sure
-of..
+> +	node_cpus = read_sysfs_cpu_map(node_path);
+> +	cpu_adjust[pmu_snc] = perf_cpu_map__cpu(node_cpus, 0).cpu;
+> +	checked_cpu_adjust[pmu_snc] = true;
+> +	perf_cpu_map__put(node_cpus);
+> +	return cpu_adjust[pmu_snc];
+> +}
+> +
+> +static void gnr_uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *pmu, bool cha)
+> +{
+> +	// With sub-NUMA clustering (SNC) there is a NUMA node per SNC in the
+> +	// topology. For example, a two socket graniterapids machine may be set
+> +	// up with 3-way SNC meaning there are 6 NUMA nodes that should be
+> +	// displayed with --per-node. The cpumask of the CHA and IMC PMUs
+> +	// reflects per-socket information meaning, for example, uncore_cha_60
+> +	// on a two socket graniterapids machine with 120 cores per socket will
+> +	// have a cpumask of "0,120". This cpumask needs adjusting to "40,160"
+> +	// to reflect that uncore_cha_60 is used for the 2nd SNC of each
+> +	// socket. Without the adjustment events on uncore_cha_60 will appear in
+> +	// node 0 and node 3 (in our example 2 socket 3-way set up), but with
+> +	// the adjustment they will appear in node 1 and node 4. The number of
+> +	// CHAs is typically larger than the number of cores. The CHA numbers
+> +	// are assumed to split evenly and inorder wrt core numbers. There are
+> +	// fewer memory IMC PMUs than cores and mapping is handled using lookup
+> +	// tables.
+> +	static struct perf_cpu_map *cha_adjusted[MAX_SNCS];
+> +	static struct perf_cpu_map *imc_adjusted[MAX_SNCS];
+> +	struct perf_cpu_map **adjusted = cha ? cha_adjusted : imc_adjusted;
+> +	int idx, pmu_snc, cpu_adjust;
+> +	struct perf_cpu cpu;
+> +	bool alloc;
+> +
+> +	// Cpus from the kernel holds first CPU of each socket. e.g. 0,120
+> +	assert(perf_cpu_map__cpu(pmu->cpus, 0).cpu == 0);
 
-This is more reason to put the pin/access in the driver so it can
-provide an unmap callback that can fix it up. I think this should have
-been done just by using the normal access mechanism, maybe with a
-simplifying wrapper for in-driver use. ie no need for patch #9
+Can it just simply return if a non-0 is detected?
+In case, the uncore driver is updated later. This can be treated as a
+fallback solution.
 
-Jason
+Thanks,
+Kan> +
+> +	pmu_snc = cha ? uncore_cha_snc(pmu) : uncore_imc_snc(pmu);
+> +	if (pmu_snc == 0) {
+> +		// No adjustment necessary for the first SNC.
+> +		return;
+> +	}
+> +
+> +	alloc = adjusted[pmu_snc] == NULL;
+> +	if (alloc) {
+> +		// Hold onto the perf_cpu_map globally to avoid recomputation.
+> +		cpu_adjust = uncore_cha_imc_compute_cpu_adjust(pmu_snc);
+> +		adjusted[pmu_snc] = perf_cpu_map__empty_new(perf_cpu_map__nr(pmu->cpus));
+> +		if (!adjusted[pmu_snc])
+> +			return;
+> +	}
+> +
+> +	perf_cpu_map__for_each_cpu(cpu, idx, pmu->cpus) {
+> +		// Compute the new cpu map values or if not allocating, assert
+> +		// that they match expectations. asserts will be removed to
+> +		// avoid overhead in NDEBUG builds.
+> +		if (alloc) {
+> +			adjusted[pmu_snc]->map[idx].cpu = cpu.cpu + cpu_adjust;
+> +		} else if (idx == 0) {
+> +			cpu_adjust = perf_cpu_map__cpu(adjusted[pmu_snc], idx).cpu - cpu.cpu;
+> +			assert(uncore_cha_imc_compute_cpu_adjust(pmu_snc) == cpu_adjust);
+> +		} else {
+> +			assert(perf_cpu_map__cpu(adjusted[pmu_snc], idx).cpu ==
+> +			       cpu.cpu + cpu_adjust);
+> +		}
+> +	}
+> +
+> +	perf_cpu_map__put(pmu->cpus);
+> +	pmu->cpus = perf_cpu_map__get(adjusted[pmu_snc]);
+> +}
+>  
+>  void perf_pmu__arch_init(struct perf_pmu *pmu)
+>  {
+> @@ -49,10 +291,17 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
+>  
+>  		perf_mem_events__loads_ldlat = 0;
+>  		pmu->mem_events = perf_mem_events_amd_ldlat;
+> -	} else if (pmu->is_core) {
+> -		if (perf_pmu__have_event(pmu, "mem-loads-aux"))
+> -			pmu->mem_events = perf_mem_events_intel_aux;
+> -		else
+> -			pmu->mem_events = perf_mem_events_intel;
+> +	} else {
+> +		if (pmu->is_core) {
+> +			if (perf_pmu__have_event(pmu, "mem-loads-aux"))
+> +				pmu->mem_events = perf_mem_events_intel_aux;
+> +			else
+> +				pmu->mem_events = perf_mem_events_intel;
+> +		} else if (x86__is_intel_graniterapids()) {
+> +			if (starts_with(pmu->name, "uncore_cha_"))
+> +				gnr_uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/true);
+> +			else if (starts_with(pmu->name, "uncore_imc_"))
+> +				gnr_uncore_cha_imc_adjust_cpumask_for_snc(pmu, /*cha=*/false);
+> +		}
+>  	}
+>  }
+
