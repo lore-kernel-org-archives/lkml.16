@@ -1,138 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47AF31E480;
-	Thu, 15 May 2025 19:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176E31F3FE3;
+	Thu, 15 May 2025 19:56:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747338654; cv=none; b=dyHZ6rxPIzV3CkF4azKztPEU4/GBROZnidIDPgLwHH6Wd88IXdUXjIf2osYxUYQhcT4B/lNWQd9FAU+rMhx4u6vrKT+YbOl2onZFfb5l4zPAyX5y+1JFI9LxBCNc1CyDv6AxLXdIewgfteIQNvpW4JfkepPg9k3cIoN/ED6DDJg=
+	t=1747339013; cv=none; b=PoZm89HOGArWKrCGJmCpVsYVPfk9OFReX9BXtskduTOYIRnEL4xV9jODxApiEJ7JNnxBkni6UIIa9fPdmTntv69ba28sadCgEuAg7rbAh7iV1kbtBtAAPZzYENSp/uJSjGLxc6Lokt7YHNlmI8qK7WfldxN2kT27S59mwDCIsPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747338654; c=relaxed/simple;
-	bh=kgfQ2FYbZjCZ/XYEQ8hsCXz1xRoSlsf5qPC9Zb25Quc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VB6DPDEaRmxv1gHNBVmNgKiKbgJvow/ADPzsQKoEHfe3OsfmTTzLQf+9BSq440MVd+T3KCD18pqnAeh1gXNcDn1e47ssenUxMlT1dYgGp/fINW/1SfPqrUoRNvuzamDW+8UnuZiQx82Vrhp2Iq0q0vB/fl5eqffJKSnCesIAGuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJCeGa03; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747339013; c=relaxed/simple;
+	bh=BSk6HMXbHqy4bmF2p4V47cUoMUq5f+6F3jsfiwPTCqw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oQtCSXa1uAFumKsuqYLnv7vO/ISDXERDKOot+Oek5YkplVmQsvvgKUKn5AI52bVTwei+uFv/ff+ioPJ/jF/vFeXk8RqiRPty5JIkCpfGotSJZvNZvYV5SrQLCp9DjPBv/9FhgXsNub1cqyFga0OJonJBC8trQnJ6nM2wR3Ty3uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eSFzTJkx; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJCeGa03"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 066A2C4CEE7;
-	Thu, 15 May 2025 19:50:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747338653;
-	bh=kgfQ2FYbZjCZ/XYEQ8hsCXz1xRoSlsf5qPC9Zb25Quc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YJCeGa03u+MXVXzYiYmzNrtGorUIgN+I8l+9BnFinR/vITYyXYIubK5Kngc0mb38l
-	 7GNSrffkIG/TzhCgqLFYv5nlsDsXaQc4b6yI1esbaZRMFOnIqCxAqc3DsIlWvVdU4C
-	 nUcD/bbgcll5ZALu3MLXl7eyzrBoiR5qUjU1zViVAiKDw9BAE0Qoigj0EE3YDuiLH5
-	 rrhJnpvHfZcIBqZfWx0Eu1MTWmrC/UreYIh2/fwLkbrjsXurvvPL97ePeT6cs91MvV
-	 X0N/2CNlUnuuZcAYnss/gPnJULUCnANZuEIGJq2ysIQj0uct/g8D4OGqFFcbxzCYpY
-	 aeiWvnpn9MUoA==
-Date: Thu, 15 May 2025 12:50:51 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	netdev@vger.kernel.org, linux-nvme@lists.infradead.org,
-	linux-sctp@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Sagi Grimberg <sagi@grimberg.me>
-Subject: Re: [PATCH net-next 00/10] net: faster and simpler CRC32C computation
-Message-ID: <20250515195051.GK1411@quark>
-References: <20250511004110.145171-1-ebiggers@kernel.org>
- <b9b0f188-d873-43ff-b1e1-259e2afdda6c@lunn.ch>
- <20250511172929.GA1239@sol>
- <fe9fdf65-8eb1-4e33-88ce-4856a10364b2@lunn.ch>
- <CAMj1kXFSm9-5+uBoF3mBbZKRU6wK9jmmyh=L538FoGvZ1XVShQ@mail.gmail.com>
- <20250511230750.GA87326@sol>
- <20250515202136.32b4f456@pumpkin>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eSFzTJkx"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-85e73562577so119341939f.0;
+        Thu, 15 May 2025 12:56:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747339011; x=1747943811; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fMAdLoMT5L/a1MOnGEYuM9x+axh2zb+MjQ/Qq0Mzs2g=;
+        b=eSFzTJkx/Bp4aZsHqo/NxJ5F9iCGJoac/adBSHKWVt+Am1ssUm/WJFdzqFZDr0iSyE
+         P8t+TawyFOy/5uUdMHwbAurmc1qoZt6TOUTDdx20DeYR9a4tlnWRLjrxUXn3T8HzmuCZ
+         xQiZoVHBu1bmGoCtdDlP7LMELVPyrBqYxm8pc150Z3j2Tx6WXSY5/KTXeNSoKJqr9vTX
+         pVItT7IVi0wLzfVLhZuAdZrj0LqODAqa5fYs0qHuKTlbwf4m8K9tjorF8voDGcG9eOpV
+         2AHOvdRxvjGFXrZ+PbJANnbKbi1tEcNnBt1+w+xD9CbiwiKcZEtlO6OsfTHcBh0jb1Wf
+         U1wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747339011; x=1747943811;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fMAdLoMT5L/a1MOnGEYuM9x+axh2zb+MjQ/Qq0Mzs2g=;
+        b=ml03JUZ5CU4N31U3/Jltngf4guQaeAPRJIl2F52w1de6S9RAXfLJ9sGTS/XNRH55iA
+         5Py8TGYsGTrXHxwidrm+nlmZLnCu4x5jk/oCv7wv7k/Kzx9Smw0k0B1KDnnuHx0zLtp/
+         VBZyzt4VRvObDbfbOCmfqOZTWnoxJD1GhkCtsSp7TwFBp4ba2m4kQ5JO9Zb2GpxqhFHr
+         eDGb6v+jpwwSHX1ImxeT+tpylGoxP1dlPTJTBN72RhqCewQRZM+eCa55/e+raVlkdcZN
+         XXTUTCKwvu9dB2myAem8oawUsdjd1MIg7kUo+4j/vnjMe0ShGNvkKMkJvfCmmOQax1rX
+         Rcjw==
+X-Forwarded-Encrypted: i=1; AJvYcCUX8L9qdntGY/wTAKhA6JfTPI36waOL8QkPGv/sHDKZAR+cNlSf9nV8rYx1RO60Ko2U4iCbj5Onpsl7gqse@vger.kernel.org, AJvYcCXM7O6qS0ub30ugJro3VL+0PrAKiumY88Xhn1tTD1fm/aORfjeUeS1v+x9FB/k9uAvualVYcWWDHyIbBN2b@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3TzkT3/laZVLcDLyCx3kkLUHQOHL7TSAjDlOBNnwiSltioVJ0
+	VHGZqKSL66Ka+aZfv0kgogsSJ29gswTpl9XpiUgq17T7d2rUWp/ytU600kSTwV5GlKOkXkHspFv
+	o1cwmHwakghhMTqAbRUU64Xs/FsRWl+8=
+X-Gm-Gg: ASbGnct9nJx2fPMzNXOHnIv/QDj2Zc+Q4osSrfy4RoyorBf+FL6v5zAMlOyBuKhav99
+	01tXxDr+etBMuF6BzNQlx5rMPX7A9zSe2NWgyoVDa/C0DzujjCfdy41uvms1QmEZWWLSPpMKox3
+	s0yRe/H2NfZ5AabCrbgpykjd+lKL9NtXE7VJE5G5NUMFvu7TYjqqukk16ES5fap/BfuFg=
+X-Google-Smtp-Source: AGHT+IFPCvF4LukcF3e+PrLa/e7+Ptn8ausMxE8i1Ao10DvbOVg+94kocFag8Mx84gWnNCqcKrfEOwhvTgh/Bgnpj6k=
+X-Received: by 2002:a05:6602:2744:b0:867:325d:6247 with SMTP id
+ ca18e2360f4ac-86a231c39d6mr191572739f.7.1747339010947; Thu, 15 May 2025
+ 12:56:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515202136.32b4f456@pumpkin>
+References: <20250514170118.40555-1-robdclark@gmail.com> <20250514170118.40555-5-robdclark@gmail.com>
+ <51f87f358fa1b7ef8db8b67ee6cde38ae071fbe8.camel@mailbox.org>
+ <CAJs_Fx771FFVDVFMn8YJkR9f9Ad-UQspJ9KKQw4u6Cu4TA7YPA@mail.gmail.com>
+ <CACu1E7EL+E-M0N-EAN9Bx7u9O6_pECQQdPE2ph575idhVb2Szg@mail.gmail.com>
+ <aCYkk4Y7feltfp79@pollux> <CAF6AEGsoG_W3A3+BHV4n5EKZQazFubrCyfrtxVUH7+H4-j7i5A@mail.gmail.com>
+ <aCY42rgJC4sQ4tp4@pollux>
+In-Reply-To: <aCY42rgJC4sQ4tp4@pollux>
+From: Rob Clark <robdclark@gmail.com>
+Date: Thu, 15 May 2025 12:56:38 -0700
+X-Gm-Features: AX0GCFvRdC4lKpvLHD4k1lEo4Kh-CGTqFLXWxbdj5_u0cbuv5zT5opAiGIP9Ch8
+Message-ID: <CAF6AEGubHkdhfJz=bAZvctO1aTKDLwRsRyPzkoVrQ7tA6dRbKw@mail.gmail.com>
+Subject: Re: [PATCH v4 04/40] drm/sched: Add enqueue credit limit
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Connor Abbott <cwabbott0@gmail.com>, Rob Clark <robdclark@chromium.org>, phasta@kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-arm-msm@vger.kernel.org, Matthew Brost <matthew.brost@intel.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	Boris Brezillon <boris.brezillon@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2025 at 08:21:36PM +0100, David Laight wrote:
-> On Sun, 11 May 2025 16:07:50 -0700
-> Eric Biggers <ebiggers@kernel.org> wrote:
-> 
-> > On Sun, May 11, 2025 at 11:45:14PM +0200, Ard Biesheuvel wrote:
-> > > On Sun, 11 May 2025 at 23:22, Andrew Lunn <andrew@lunn.ch> wrote:  
-> > > >
-> > > > On Sun, May 11, 2025 at 10:29:29AM -0700, Eric Biggers wrote:  
-> > > > > On Sun, May 11, 2025 at 06:30:25PM +0200, Andrew Lunn wrote:  
-> > > > > > On Sat, May 10, 2025 at 05:41:00PM -0700, Eric Biggers wrote:  
-> > > > > > > Update networking code that computes the CRC32C of packets to just call
-> > > > > > > crc32c() without unnecessary abstraction layers.  The result is faster
-> > > > > > > and simpler code.  
-> > > > > >
-> > > > > > Hi Eric
-> > > > > >
-> > > > > > Do you have some benchmarks for these changes?
-> > > > > >
-> > > > > >     Andrew  
-> > > > >
-> > > > > Do you want benchmarks that show that removing the indirect calls makes things
-> > > > > faster?  I think that should be fairly self-evident by now after dealing with
-> > > > > retpoline for years, but I can provide more details if you need them.  
-> > > >
-> > > > I was think more like iperf before/after? Show the CPU load has gone
-> > > > down without the bandwidth also going down.
-> > > >
-> > > > Eric Dumazet has a T-Shirt with a commit message on the back which
-> > > > increased network performance by X%. At the moment, there is nothing
-> > > > T-Shirt quotable here.
-> > > >  
-> > > 
-> > > I think that removing layers of redundant code to ultimately call the
-> > > same core CRC-32 implementation is a rather obvious win, especially
-> > > when indirect calls are involved. The diffstat speaks for itself, so
-> > > maybe you can print that on a T-shirt.  
-> > 
-> > Agreed with Ard.  I did try doing some SCTP benchmarks with iperf3 earlier, but
-> > they were very noisy and the CRC32C checksumming seemed to be lost in the noise.
-> > There probably are some tricks to running reliable networking benchmarks; I'm
-> > not a networking developer.  Regardless, this series is a clear win for the
-> > CRC32C code, both from a simplicity and performance perspective.  It also fixes
-> > the kconfig dependency issues.  That should be good enough, IMO.
-> > 
-> > In case it's helpful, here are some microbenchmarks of __skb_checksum (old) vs
-> > skb_crc32c (new):
-> > 
-> >     Linear sk_buffs
-> > 
-> >         Length in bytes    __skb_checksum cycles    skb_crc32c cycles
-> >         ===============    =====================    =================
-> >                      64                       43                   18
-> >                    1420                      204                  161
-> >                   16384                     1735                 1642
-> > 
-> >     Nonlinear sk_buffs (even split between head and one fragment)
-> > 
-> >         Length in bytes    __skb_checksum cycles    skb_crc32c cycles
-> >         ===============    =====================    =================
-> >                      64                      579                   22
-> >                    1420                     1506                  194
-> >                   16384                     4365                 1682
-> > 
-> > So 1420-byte linear buffers (roughly the most common case) is 21% faster,
-> 
-> 1420 bytes is unlikely to be the most common case - at least for some users.
-> SCTP is message oriented so the checksum is over a 'user message'.
-> A non-uncommon use is carrying mobile network messages (eg SMS) over the IP
-> network (instead of TDM links).
-> In that case the maximum data chunk size (what is being checksummed) is limited
-> to not much over 256 bytes - and a lot of data chunks will be smaller.
-> The actual difficulty is getting multiple data chunks into a single ethernet
-> packet without adding significant delays.
-> 
-> But the changes definitely improve things.
+On Thu, May 15, 2025 at 11:56=E2=80=AFAM Danilo Krummrich <dakr@kernel.org>=
+ wrote:
+>
+> On Thu, May 15, 2025 at 10:40:15AM -0700, Rob Clark wrote:
+> > On Thu, May 15, 2025 at 10:30=E2=80=AFAM Danilo Krummrich <dakr@kernel.=
+org> wrote:
+> > >
+> > > (Cc: Boris)
+> > >
+> > > On Thu, May 15, 2025 at 12:22:18PM -0400, Connor Abbott wrote:
+> > > > For some context, other drivers have the concept of a "synchronous"
+> > > > VM_BIND ioctl which completes immediately, and drivers implement it=
+ by
+> > > > waiting for the whole thing to finish before returning.
+> > >
+> > > Nouveau implements sync by issuing a normal async VM_BIND and subsequ=
+ently
+> > > waits for the out-fence synchronously.
+> >
+> > As Connor mentioned, we'd prefer it to be async rather than blocking,
+> > in normal cases, otherwise with drm native context for using native
+> > UMD in guest VM, you'd be blocking the single host/VMM virglrender
+> > thread.
+> >
+> > The key is we want to keep it async in the normal cases, and not have
+> > weird edge case CTS tests blow up from being _too_ async ;-)
+>
+> I really wonder why they don't blow up in Nouveau, which also support ful=
+l
+> asynchronous VM_BIND. Mind sharing which tests blow up? :)
 
-Interesting.  Of course, the data I gave shows that the proportional performance
-increase is even greater on short packets than long ones.  I'll include those
-tables when I resend the patchset and add a row for 256 bytes too.
+Maybe it was dEQP-VK.sparse_resources.buffer.ssbo.sparse_residency.buffer_s=
+ize_2_24,
+but I might be mixing that up, I'd have to back out this patch and see
+where things blow up, which would take many hours.
 
-- Eric
+There definitely was one where I was seeing >5k VM_BIND jobs pile up,
+so absolutely throttling like this is needed.
+
+Part of the VM_BIND for msm series adds some tracepoints for amount of
+memory preallocated vs used for each job.  That plus scheduler
+tracepoints should let you see how much memory is tied up in
+prealloc'd pgtables.  You might not be noticing only because you are
+running on a big desktop with lots of RAM ;-)
+
+> > > > But this
+> > > > doesn't work for native context, where everything has to be
+> > > > asynchronous, so we're trying a new approach where we instead submi=
+t
+> > > > an asynchronous bind for "normal" (non-sparse/driver internal)
+> > > > allocations and only attach its out-fence to the in-fence of
+> > > > subsequent submits to other queues.
+> > >
+> > > This is what nouveau does and I think other drivers like Xe and panth=
+or do this
+> > > as well.
+> >
+> > No one has added native context support for these drivers yet
+>
+> Huh? What exactly do you mean with "native context" then?
+
+It is a way to use native usermode driver in a guest VM, by remoting
+at the UAPI level, as opposed to the vk or gl API level.  You can
+generally get equal to native performance, but the guest/host boundary
+strongly encourages asynchronous to hide the guest->host latency.
+
+https://gitlab.freedesktop.org/virgl/virglrenderer/-/merge_requests/693
+https://indico.freedesktop.org/event/2/contributions/53/attachments/76/121/=
+XDC2022_%20virtgpu%20drm%20native%20context.pdf
+
+So far there is (merged) support for msm + freedreno/turnip, amdgpu +
+radeonsi/radv, with MRs in-flight for i915 and asahi.
+
+BR,
+-R
+
+> > > > Once you do this then you need a
+> > > > limit like this to prevent memory usage from pending page table
+> > > > updates from getting out of control. Other drivers haven't needed t=
+his
+> > > > yet, but they will when they get native context support.
+> > >
+> > > What are the cases where you did run into this, i.e. which applicatio=
+n in
+> > > userspace hit this? Was it the CTS, some game, something else?
+> >
+> > CTS tests that do weird things with massive # of small bind/unbind.  I
+> > wouldn't expect to hit the blocking case in the real world.
+>
+> As mentioned above, can you please share them? I'd like to play around a =
+bit. :)
+>
+> - Danilo
