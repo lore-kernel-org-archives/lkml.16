@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093C1299944;
-	Thu, 15 May 2025 12:08:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC76A299944;
+	Thu, 15 May 2025 12:08:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747310913; cv=none; b=j1XczbkEW9osus7vFWXcxWMpj8fzXTUPSnqjmdeJCVwc4LA2fjqqDOJLeIgyJvIIa7/B0dMD3vNF2iMtf4Ccb9U4wI0NbosYRg7ZWFf9xdpZZkTQn9X/PrkdTeOxNaLzOUUMn05iXz7mEku3cCD8GQRfE4+biMnO2DUf6p1hpvk=
+	t=1747310917; cv=none; b=C68mi6yw+WHmFP/kGubkxZf9HB6g5ORh5iGMBATiAP6CS4KYAT0vC+wI9v5mgK/nF+mTDXyOwI1wXMiXrOrDhx3kjC3Lt0/Sbla6L/nMFezRsvY5pnIAdg4u3A4ipk3aAmxsoxr9Cj2Iz2QxHPkgKA3XmAL1cPzAfuzg3mzws70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747310913; c=relaxed/simple;
-	bh=PVXmFS9xocJhFw8tMe/ApKjvpnBjGHQjSvNu5PMoN/U=;
+	s=arc-20240116; t=1747310917; c=relaxed/simple;
+	bh=PIYHx6tgc2AqldiAsYmqybFCMZ0RxWnj6Ah6FftuVmI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=AzkSLze4OG9IPZPdkAl12Rmra4YbKCxNAusO50pYnfIwMI8E2xegvIWIBqigU+zUxA/46ppxbVXyZBPVfmBcm5ZFPQbY6ehMN7AMrBoroSq5CYJtvQ5c6sAJ9Gd3QQsvl7zBp6qxsFEVHwno92oP2CE5jsIpATc4JISnqv0sl7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTaucKZk; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=igF/xZtv+CqqA1DKDRMsVuXyYWLEipcg1puMxkQYtRQDEVjZuUKL0hmTOjDYPTWYCQSBHpP700lRZ7q9zWWa3TXNNQJhTredgQHw9Q075X4YtBx6DqZAwLV6eJaVdt9AOc4h8Wh8ae/1NYuMjEwEeZoNa2zi++RGXTlGB+hluIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PZPeyM7U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTaucKZk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4949BC4CEED;
-	Thu, 15 May 2025 12:08:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PZPeyM7U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21243C4CEE7;
+	Thu, 15 May 2025 12:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747310912;
-	bh=PVXmFS9xocJhFw8tMe/ApKjvpnBjGHQjSvNu5PMoN/U=;
+	s=k20201202; t=1747310917;
+	bh=PIYHx6tgc2AqldiAsYmqybFCMZ0RxWnj6Ah6FftuVmI=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=XTaucKZkVkcQ+1EKe1DuB96s4Nb5n8FwTK09wRyNBwH+kLcftkmY0pN09ts7MUU4Z
-	 NpxS/0h2BhclAvTDTikztPPKQ73j0Aio4RmP1VQ0kJQhy526cUrU9gplRULzqSg8l9
-	 +iNIkYdvTOacijWmUGVqrX2rw9bvGzE8dmOeo2VT9M4OGCUpezfHfByuY33j3vjJoX
-	 IznFqFwXz74P2tDvRWoTM4CMv3oCyHLCAxAluGHULQOrNb6gONBHHB7FbtV9ZKAk1n
-	 OVBHg0fPhQJfs6wv1pbB0TFoC697VJj94g9btctIFgw/FnQhRs3O0OtQxRHNNTB2Tq
-	 czB4MBzD6loHw==
+	b=PZPeyM7U4SZXGSMIBKxExSFu7cErfHfl8jcvxfK26ThswAkhQv+54W7NhGsL1yMpA
+	 c25PFbIv4HSDWedWqD0Eqos1GdtOaXcTYPZI2rih9BUE3oVNUmxFu9K0D4G6bJ26xU
+	 197+zqxdjqLQEh7d1vSuqC7J43nml1mCT1xaXF10eIsLWAe/YU8gtDIFbROQKa1kcT
+	 0CS7xM29G28VbH7oj/0yXIO1aimkPiso8619+xdHS5xPZgCnFZ7i44FNUrjhd2h3SC
+	 tMsR5EPMcYa+sb+h58LHBERkS85etX42WcR6ZJG6xn5LYxKI6QWWBBNNvlGFV0XI2P
+	 7/hTphyQgxH6w==
 From: Mark Brown <broonie@kernel.org>
 To: robh@kernel.org, tiwai@suse.com, devicetree@vger.kernel.org, 
  conor+dt@kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, 
  linux-sound@vger.kernel.org, perex@perex.cz, krzk+dt@kernel.org, 
  Zhang Yi <zhangyi@everest-semi.com>
 Cc: amadeuszx.slawinski@linux.intel.com, krzk@kernel.org
-In-Reply-To: <20250328080319.53734-1-zhangyi@everest-semi.com>
-References: <20250328080319.53734-1-zhangyi@everest-semi.com>
-Subject: Re: [PATCH v7 0/2] ASoC: codecs: add support for ES8389
-Message-Id: <174731090771.350483.11721841609200880780.b4-ty@kernel.org>
-Date: Thu, 15 May 2025 14:08:27 +0200
+In-Reply-To: <20250514033327.32641-1-zhangyi@everest-semi.com>
+References: <20250514033327.32641-1-zhangyi@everest-semi.com>
+Subject: Re: [RESEND v7 0/2] ASoC: codecs: add support for ES8389
+Message-Id: <174731091258.350483.11584969721868310645.b4-ty@kernel.org>
+Date: Thu, 15 May 2025 14:08:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,7 +47,7 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Fri, 28 Mar 2025 16:03:17 +0800, Zhang Yi wrote:
+On Wed, 14 May 2025 11:33:25 +0800, Zhang Yi wrote:
 > The driver is for codec ES8389 of everest-semi.
 > 
 > v7 -> v6:
