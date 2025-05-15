@@ -1,130 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E98E29DB69;
-	Thu, 15 May 2025 21:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F37422A1E5
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 21:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747344024; cv=none; b=EfheTduqp+q5JYnMnWn5wFhJIET5b969pNjCk6zVkMAyVAfApdBCihaxGFFZKBizGkOHLdVvVTIWnpLkhEjISjjUsF/kTrypU48vmtGU5IccFxAQx7j7tRjwOVkJ7CPzHOUIvFKrfA0OVwfFogmregxwjVxQefOm9ktmmTyC2zA=
+	t=1747344050; cv=none; b=kzD0/VQzEtRo2CFIb30tTPtTWB5edfk0sDI1OEheQ3emFjjFS9CVBhVtK3b0n+qnIbwHI353ZaQdWqIehZUuqQyzBbEXx23iRE8w5xEv11kgY8t7cz8PkX82J6cEXUxhw68/NajXLZApOPGWMn36WNmZNnD29njpwphFILDSQns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747344024; c=relaxed/simple;
-	bh=ccxi92/CdYcFz5SRXc75fcFWq7DUZRAtA96LadU0vMs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=my4P3RsIETlE7AO9sxP80OQOkhLWv/5gxSVO3VyWDjKgESVddb8LSbFGLAR+t+3dUXwbaYYCzOmQpVeiDEPUGuch2i++NrBlZWws2ZU//kceGyfqdZyG6r3oSOvlDIftz01sFMcQt9OBYGE1ZXVy8nJcg4AL957O+EZEPCaZwzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GOZTCYE1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747344050; c=relaxed/simple;
+	bh=QOm3m/r0dyEo2Mfa7umeu+ruloxr/DK67GsqoXNotWc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QRK+jq8p390SoAqXMo57WC9QAI5Uuyr8kP8AUSdezlJOjd5BbILM7DqKslKv79d80zJnHzDOsBSuLGfheTfFEqNB7o62kF9cx/ILBEkK5OTcRGqesss6iRmfFIl1pEMRAelI3xretzWuge7iEkF/HhCzzmeoHpmkSM0rKBz/2mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=MxLafy8E; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GOZTCYE1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C90BEC4CEE7;
-	Thu, 15 May 2025 21:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747344024;
-	bh=ccxi92/CdYcFz5SRXc75fcFWq7DUZRAtA96LadU0vMs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GOZTCYE1AfYxSnTPuiMx3EDc6y/a2uA5klS8tlrZUT+kTUswdV2mpHwHq2PtgCZ2D
-	 beD2/4FeQp06ZQGtEqdbeuWVZ+ZMTrBW5jJiaMuEgixFX5CPKyBQt1anoB+RaBO7yN
-	 0B39LvVbQ25TALtekJjBCIGICa8Q0xb9G801WX9SEWofhEgbPlPN2jMMfPrGl3U+Fz
-	 Xu3Y3HBREIsStb/Eu4Z1ZmQQdoneTyPpd3glVAQzHIYAP6Xe7hIWsqpUoe/Fb0Prfu
-	 JiJDWPTpLQvmVxenU7fFJqIE/z6JwYfdWzEkxLzURnyRL9Y75xkm2OCFrVUxCBVqlc
-	 RLRGWTk2EeeLg==
-From: Mario Limonciello <superm1@kernel.org>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Perry Yuan <perry.yuan@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Huang Rui <ray.huang@amd.com>,
-	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	platform-driver-x86@vger.kernel.org (open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER),
-	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
-	linux-pm@vger.kernel.org (open list:AMD PSTATE DRIVER)
-Subject: [PATCH v10 13/13] x86/itmt: Add debugfs file to show core priorities
-Date: Thu, 15 May 2025 16:19:50 -0500
-Message-ID: <20250515211950.3102922-14-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250515211950.3102922-1-superm1@kernel.org>
-References: <20250515211950.3102922-1-superm1@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="MxLafy8E"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad216a5a59cso205393266b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:20:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1747344046; x=1747948846; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=BBR1eDOR9aCst/oayM8CR1mluYptr7n0p9+2J85ynlw=;
+        b=MxLafy8E8iqQ5lgWlpYcoGzbiZPRAexp0uA9BJZ/N3ylYtyyZsMxITSSXWApTBv0dP
+         GOPzzLyH4/Dm0OiyRJLjOrvLeci3X2UJZsQNI5FQG8mbJywQBTighY19678rCPPDOTWh
+         cCjmK9/JUbOoPb74X5vfD/YNRVksUgzZH55xI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747344046; x=1747948846;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BBR1eDOR9aCst/oayM8CR1mluYptr7n0p9+2J85ynlw=;
+        b=QRQVaeu04dN9wPwJW1EVtr515wUI+SPVI2SsM1OdMhGVKyb9riHuYhvIoPrb8Rsh7m
+         B32sVnIINCX90JH93tvpJjxHd+aorjOc/tK56DUhsZLt+kme5St3EEkNRtbkKFSlH7iB
+         OpKqCdtWqKrEnR7EbWn9XysGgVJzKpsGWtK2LM2ffAT3QP4lIWmFWYDeSlmHEHIA2RQY
+         JVT5dVEXOb0jadl6nOcvQJKTeE1FQkpx6SfYrUAA4mVqBEhQKLZyqgw2go0yhG3lUHgn
+         rEgHNA1yCRB/nOn0vulDIyh+ZFU5MIcW6GUWRaG3zdO8KatpaiuOM4gYW0H2Hr6onQ+E
+         7iIA==
+X-Forwarded-Encrypted: i=1; AJvYcCUU7kyxZIHsGVwzrTm6CZmgde/prl4m69qPlJlKzAi+pNkjgvupmc9MTQXslvqaku2jwl6w4frDp4GNsUg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOJdCuRnkcU+0lUORZDbQAF2z0TnMuCjYIzoBl0enz+Fkexy3u
+	l6zIzlbxAIBpctDTKkut4yxF4yxcpQcLEtcJD4ANs67ulYIuA+/TaTOHnq+jlg4wuCfDgV/v0gr
+	cxL9vcZA=
+X-Gm-Gg: ASbGnctUCQTzgv/d42unhtO1hfFshNbkr45h2INID6acMvzejE34pdRp/aJxra8bOxC
+	bl0+H9KWh4CPYf0ku+TGuxBunKSoDyn1xEXMzy+kNwMP+YMo1GbgQttSDzl5BMYKBwI3XAJW6Mc
+	oEw80hVAWHUd6+Qhtnjh++2+OfuHRDE3hZJNSBRU15Tgl2T0FGlFrBEz+rBP14/F1pas4n9GD6d
+	JmMgxOqB0kJ+c2qFQlA5JeVUn/9Nb3crV/hew6XaMlgJ5vgwy3Ys05vfAd1BKHnQQLoTtaZOK3a
+	WtLscC51tCHCxaKhpFUJfSCsDqZWWYgpkETT805d+k069Xi4VReoHSAdkAA5BW4z2262wB1Mrrx
+	4j+CBBZnqlWfFWMkgMap48LJq4Q==
+X-Google-Smtp-Source: AGHT+IHV08S/ZvAE9jB6dIYfouFy60KD4EdTHvVNQjB5N8GIJnypZtwY+2cwz6ervBhyFeQhbgfmoQ==
+X-Received: by 2002:a17:906:c115:b0:ad2:2abd:4613 with SMTP id a640c23a62f3a-ad52d5d85b1mr130610166b.41.1747344046571;
+        Thu, 15 May 2025 14:20:46 -0700 (PDT)
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d49889asm40091066b.141.2025.05.15.14.20.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 14:20:45 -0700 (PDT)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5fbfa0a7d2cso2345197a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:20:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXxI8dunmvenv4r6plDqC5xR5KWv9zthBiCItZI4CxMqgkK+uya8I++czLs1Jr0BDaNTA2kL+xNmbfWhN0=@vger.kernel.org
+X-Received: by 2002:a05:6402:34d3:b0:5fb:e868:4d47 with SMTP id
+ 4fb4d7f45d1cf-600900a54a2mr778653a12.7.1747344044885; Thu, 15 May 2025
+ 14:20:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <feb98a0f-8d17-495c-b556-b4fe19446d5d@zytor.com>
+In-Reply-To: <feb98a0f-8d17-495c-b556-b4fe19446d5d@zytor.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 15 May 2025 14:20:28 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi7sLm+zHUkyFO8V6QNghLQn0yiWsHfm8WU=V15K7K07Q@mail.gmail.com>
+X-Gm-Features: AX0GCFvQzChipAAsH_IbAZosPG5_B84g3tcv-qhuY1vOrrfycyiz9i-JpJtmDoM
+Message-ID: <CAHk-=wi7sLm+zHUkyFO8V6QNghLQn0yiWsHfm8WU=V15K7K07Q@mail.gmail.com>
+Subject: Re: Metalanguage for the Linux UAPI
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>, 
+	libc-alpha@sourceware.org, linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On Thu, 15 May 2025 at 13:05, H. Peter Anvin <hpa@zytor.com> wrote:
+>
+> We have finally succeeded in divorcing the Linux UAPI from the general
+> kernel headers, but even so, there are a lot of things in the UAPI that
+> means it is not possible for an arbitrary libc to use it directly; for
+> example "struct termios" is not the glibc "struct termios", but
+> redefining it breaks the ioctl numbering unless the ioctl headers are
+> changed as well, and so on. However, other libcs want to use the struct
+> termios as defined in the kernel, or, more likely, struct termios2.
 
-Multiple drivers can report priorities to ITMT. To aid in debugging
-any issues with the values reported by drivers introduce a debugfs
-file to read out the values.
+Honestly, I *really* don't want to go down that rat-hole.
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- arch/x86/kernel/itmt.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+It's going to be full of random project-specific issues, and the
+bigger projects - like glibc - wouldn't use the kernel headers anyway,
+even with some generic language, because they have their own history,
+they deal with lots of other non-Linux platforms, and it's just all
+downside for them.
 
-diff --git a/arch/x86/kernel/itmt.c b/arch/x86/kernel/itmt.c
-index 9cea1fc36c18f..243a769fdd97b 100644
---- a/arch/x86/kernel/itmt.c
-+++ b/arch/x86/kernel/itmt.c
-@@ -59,6 +59,18 @@ static ssize_t sched_itmt_enabled_write(struct file *filp,
- 	return result;
- }
- 
-+static int sched_core_priority_show(struct seq_file *s, void *unused)
-+{
-+	int cpu;
-+
-+	seq_puts(s, "CPU #\tPriority\n");
-+	for_each_possible_cpu(cpu)
-+		seq_printf(s, "%d\t%d\n", cpu, arch_asym_cpu_priority(cpu));
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(sched_core_priority);
-+
- static const struct file_operations dfs_sched_itmt_fops = {
- 	.read =         debugfs_read_file_bool,
- 	.write =        sched_itmt_enabled_write,
-@@ -67,6 +79,7 @@ static const struct file_operations dfs_sched_itmt_fops = {
- };
- 
- static struct dentry *dfs_sched_itmt;
-+static struct dentry *dfs_sched_core_prio;
- 
- /**
-  * sched_set_itmt_support() - Indicate platform supports ITMT
-@@ -102,6 +115,14 @@ int sched_set_itmt_support(void)
- 		return -ENOMEM;
- 	}
- 
-+	dfs_sched_core_prio = debugfs_create_file("sched_core_priority", 0644,
-+						  arch_debugfs_dir, NULL,
-+						  &sched_core_priority_fops);
-+	if (IS_ERR_OR_NULL(dfs_sched_core_prio)) {
-+		dfs_sched_core_prio = NULL;
-+		return -ENOMEM;
-+	}
-+
- 	sched_itmt_capable = true;
- 
- 	sysctl_sched_itmt_enabled = 1;
-@@ -133,6 +154,8 @@ void sched_clear_itmt_support(void)
- 
- 	debugfs_remove(dfs_sched_itmt);
- 	dfs_sched_itmt = NULL;
-+	debugfs_remove(dfs_sched_core_prio);
-+	dfs_sched_core_prio = NULL;
- 
- 	if (sysctl_sched_itmt_enabled) {
- 		/* disable sched_itmt if we are no longer ITMT capable */
--- 
-2.43.0
+In fact, it's all downside for the kernel too. I do *not* want kernel
+headers to be used by other projects, because I simply don't want to
+hear about "we do Xyz, so the innocuous uapi header change breaks
+Abc". It's all pain, for no gain.
 
+So as far as I'm concerned, the uapi header split has been very
+successful - but not because other projects can then use our uapi
+headers. No, purely because it helped *kernel* people be more careful
+about a certain class of changes, and was a big read flag in that it
+made people go "Oh, I can't just change that structure, because it's
+exported as an API to user space".
+
+If you _really_ want to do a Metalanguage for these things, and want
+to support lots of different namespace issues, several different
+languages etc, I have a very practical suggestion: make that
+metalanguage have a very strict and traditional syntax. Make it look
+like C with the C pre-processor.
+
+There are lots of libraries and tools to parse C, and turn it into
+other forms. Making up a new language when we already *have* a good
+language is all kinds of silly. Just use the language it already is
+in, and take advantage of the fact that there's lots of infrastructure
+for that language.
+
+                    Linus
