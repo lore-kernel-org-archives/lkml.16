@@ -1,63 +1,55 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D0561FCE;
-	Thu, 15 May 2025 13:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6DA161FCE;
+	Thu, 15 May 2025 13:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747317106; cv=none; b=HuDOysybKkHRTPmndNVGKMM90xXNCc5sTOuUSbuKpd+itAQwdxlpW4hw6+uv7VUKjh60XlsJe1S9ptTuGar0TQp1DqCqZQMd338fk5NIecISQejIrAZGtXkW3wCpZNQqCefW/I+8nlwdEaOEyjxsduGQkOhzFbB6P0584CwoUOc=
+	t=1747317155; cv=none; b=M6oWxadd0amF22cxI09AR6w+waqD0QTGUraboMR1+F2Bm6hS+fzdyoszAe4I7HDeljT5cB+uRWdQiAVqUcFe/YyGQtdki1fGvDjgbny0EU+rBMIbSUdWZZk9S7tL7iXrfJ9GifGKNEY+3TuBWB3pCNkvjdd2KiycfIzEhlfsCzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747317106; c=relaxed/simple;
-	bh=DrqOcpYY6iSo+bqo7rbRmtWp3pEawZuMUwYrphaP4OQ=;
+	s=arc-20240116; t=1747317155; c=relaxed/simple;
+	bh=1goV/IH2W0v4lJhJQXfNOetGBRDKZao2V7PBJPLKVmk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q8r6spm64n5qWZFdCkVZj6VNXF5egvdPZF8L0qc9jqa3AkyB+7f1jBheecfVvAMnCZjUzgRlF06u2xKP8X//rft98fx/NS9CXyQ1kZoTZA2V8OlhWhU1Ng2D45NFzYm64ciTiYJqzg2rsgeoWkua8RqFYvlV8Ru13PuL9C4+oWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BgtnVlkF; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fAMFn/cfSuXCDAd064qWG6M/RLdLQEJt4MZ4TOmAJUKijTv80tcW2fcePw7NvFDaWS4H5O1+4Nutbbqik6S/AMltANcq4gV9xHq/HYARWQBLeFJ3XTv0o1IhkWXJqR+6OAQOJdy722LRxMkAnmHwvf/gyoFz8F0/pV/SaFNtynw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eQrFOqpE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BgtnVlkF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747317105; x=1778853105;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DrqOcpYY6iSo+bqo7rbRmtWp3pEawZuMUwYrphaP4OQ=;
-  b=BgtnVlkF+w9YZPzFcs3PtSv40pvQAz+jZeb44ZEzcvrH9Q4GIK3WFwXR
-   6pm8fbdRwE3aqgpowDsNjvb8fmd6rDAKSe3s3zezgbyvWjD/xX/DrnUla
-   7UTU8LJDXp9piNBT1daI8dLP1esOdhWPQ1+K2Qi8ITdmNu0je+KYhFtuI
-   B+Wu6wHPIStALYpQdud8CnFi/7uUDaKOtvd01/dhtDL1HUlD8euMOGk4D
-   GPsKrL4E07dwXPOqHGRIPJkEv7spL0sEqExtdtt2schvL/sBxkWcTt7cp
-   31XU1hsvh3M/JA2LFVpwQQ5RGpUVO8c+vkxCDPRyAuihDSda7S+1N397H
-   g==;
-X-CSE-ConnectionGUID: KALY+lD8Q/CppssPxoMAAA==
-X-CSE-MsgGUID: TIlKxcEgSIesL0sDE79+Dw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="59907351"
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="59907351"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 06:51:44 -0700
-X-CSE-ConnectionGUID: +hI/IbhwRSO5IY0GtRV8Ew==
-X-CSE-MsgGUID: ff/CqJhVSHauVZUCBDtDxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="143262650"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO mdjait-mobl) ([10.245.245.5])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 06:51:40 -0700
-Date: Thu, 15 May 2025 15:51:33 +0200
-From: Mehdi Djait <mehdi.djait@linux.intel.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, sakari.ailus@linux.intel.com, 
-	tomi.valkeinen@ideasonboard.com, jacopo.mondi@ideasonboard.com, hverkuil@xs4all.nl, 
-	kieran.bingham@ideasonboard.com, naush@raspberrypi.com, mchehab@kernel.org, 
-	dave.stevenson@raspberrypi.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v4] media: v4l2-common: Add a helper for obtaining
- the clock producer
-Message-ID: <2egx7hakxleahk5o3ngydrcgtlnpgpdj4kgcijfij2bmss7u4d@2yho4udpzjtm>
-References: <20250321130329.342236-1-mehdi.djait@linux.intel.com>
- <f467e4a8-fcb2-4345-b8f7-7557c1a7552b@redhat.com>
- <20250515084403.GQ23592@pendragon.ideasonboard.com>
- <id2ikiio23ahslghpx56niwxrvaqdgmrgk3k647i3u27cptqgz@hwqrkdvljd3b>
- <20250515124050.GA12492@pendragon.ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eQrFOqpE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8189C4CEEB;
+	Thu, 15 May 2025 13:52:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747317155;
+	bh=1goV/IH2W0v4lJhJQXfNOetGBRDKZao2V7PBJPLKVmk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eQrFOqpE4RICxz+SJSpwX/Zhfm4M8rhDAaYMYR5OlTf+yluWHNlVedJJHgj9DHGqN
+	 g07i7GJ9zzFrPaUFZpYjtnWu9HPWJY1YLm93EzUpJHuYTTxE4dDsA0AcQ66tFTxyl9
+	 mKzko4InbP2tuy5YRklogDJnX4DpTwl9m6d+7Emo7QCzluWnV/NXWI4Tp0PXw/eUIf
+	 JmYdmtQuwgtkZMURBAz0wsUrUVrr2nc4+ma9kx8mbaRhlgYE7X+DBzrz1GrwikYj8n
+	 abVNlv87C+im4CgkXm/oqjXZVQ03k4MAzJDSFYJA5Dl4JFl2XJKzyvkDw2uku4IHyZ
+	 hNkfRoFCjWt3g==
+Date: Thu, 15 May 2025 15:52:29 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] rust: irq: add support for request_irq()
+Message-ID: <aCXxnUdO8--5y8Zo@pollux>
+References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com>
+ <20250514-topics-tyr-request_irq-v3-1-d6fcc2591a88@collabora.com>
+ <aCUQ0VWgoxdmIUaS@pollux>
+ <A7E3A124-AF77-4A4A-B4E2-AE7DDB1CE007@collabora.com>
+ <aCXYaCGvO_tI1OOh@pollux>
+ <39C56E3E-07C6-44BB-B5F6-38090F037032@collabora.com>
+ <aCXh1g5FWNiz7exb@pollux>
+ <BEDD659F-B222-4150-9018-3B59126140E6@collabora.com>
+ <aCXv86nAARGgoqEq@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,97 +58,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250515124050.GA12492@pendragon.ideasonboard.com>
+In-Reply-To: <aCXv86nAARGgoqEq@pollux>
 
-Hi Laurent,
-
-On Thu, May 15, 2025 at 02:40:50PM +0200, Laurent Pinchart wrote:
-> On Thu, May 15, 2025 at 11:17:37AM +0200, Mehdi Djait wrote:
-> > On Thu, May 15, 2025 at 10:44:03AM +0200, Laurent Pinchart wrote:
-> > > On Sat, May 10, 2025 at 04:21:09PM +0200, Hans de Goede wrote:
-> > > > On 21-Mar-25 2:03 PM, Mehdi Djait wrote:
-> > > > > Introduce a helper for v4l2 sensor drivers on both DT- and ACPI-based
-> > > > > platforms to retrieve a reference to the clock producer from firmware.
-> > > > > 
-> > > > > This helper behaves the same as clk_get_optional() except where there is
-> > > > > no clock producer like in ACPI-based platforms.
-> > > > > 
-> > > > > For ACPI-based platforms the function will read the "clock-frequency"
-> > > > > ACPI _DSD property and register a fixed frequency clock with the frequency
-> > > > > indicated in the property.
-> > > > > 
-> > > > > Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
-> > > > 
-> > > > This certainly looks quite useful, thank you for working
-> > > > on this.
-> > > > 
-> > > > Note on some IPU3 platforms where the clk is provided by
-> > > > a clk-generator which is part of a special sensor-PMIC
-> > > > the situation is a bit more complicated.
-> > > > 
-> > > > Basically if there is both a clk provider and a clock-frequency
-> > > > property then the clock-frequency value should be set as freq
-> > > > to the clk-provider, see:
-> > > > 
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/media/i2c/ov8865.c#n3020
-> > > > 
-> > > > for an example of a driver which handles this case.
+On Thu, May 15, 2025 at 03:45:28PM +0200, Danilo Krummrich wrote:
+> On Thu, May 15, 2025 at 10:16:33AM -0300, Daniel Almeida wrote:
+> > 
+> > >> 
+> > >> Well, not really, because this impl PinInit can be assigned to something larger
+> > >> that is already pinned, like drm::Device::Data for example, which is (or was)
+> > >> already behind an Arc, or any other private data in other subsystems.
+> > >> 
+> > >> IIUC what you proposed has yet another indirection. If we reuse the example
+> > >> from above, that would be an Arc for the drm Data, and another Arc for the
+> > >> handler itself?
 > > > 
-> > > On a side note, the DT bindings for the OV8865 doesn't specify the
-> > > clock-frequency property...
+> > > Can't you implement Handler for drm::Device::Data and e.g. make Registration
+> > > take an Arc<T: Handler>?
 > > 
-> > Is this wrong ?
+> > No, because drivers may need more than one handler. Panthor needs 3, for
+> > example, for 3 different lines.
 > > 
-> > The OV8865 driver was introduced for DT-based systems, where you will
-> > get a reference to the "struct clk corresponding to the clock producer"
-> > and then get the clock-rate/frequency with a call to:
+> > > 
+> > > The irq::Registration itself doesn't need to be allocated dynamically, so it'd
+> > > still be a single allocation, no?
+> > > 
 > > 
-> > 	rate = clk_get_rate(sensor->extclk);
-> > 
-> > The patch "73dcffeb2ff9 media: i2c: Support 19.2MHz input clock in ov8865"
-> > adding support for clock-frequency came later to support ACPI-based
-> > systems (IPU3 here)
+> > Right, the registrations don't, but the handlers do.
 > 
-> I'd expect all device properties to be documented in DT bindings. Is
-> that an incorrect assumption ?
+> Why does the handler need to be allocated dynamically?
 > 
+> What about something like the following?
+> 
+> 	pub struct Registration<T, H: Handler<T>> { ... };
+> 
+> 	pub trait Handler<T> {
+> 	   fn handle_irq(&T) -> IrqReturn;
+> 	}
+> 
+> 	// Could be `drm::Device::Data`.
+> 	struct MyData { ... };
+> 
+> 	// Implements `Handler<MyData>`.
+> 	struct IRQHandler1;
+> 	struct IRQHandler2;
+> 
+> 	// `data` is `Arc<MyData>`
+> 	irq::Registration::<IRQHandler1>::new(data, ...);
+> 	irq::Registration::<IRQHandler2>::new(data, ...);
+> 
+> With that you can have as many IRQs as you want without any additional
+> allocation.
 
-I am actually genuinely asking, is the clock-frequency a device property
-of the ov8865 camera sensor or the clock source, which is a separate device ?
+Alternatively we could also do the following, which is probably simpler.
 
-Example the imx258 with a fixed-clock, which has its own compatible
-and DT bindings under bindings/clock/fixed-clock.yaml
+	pub struct Registration<H: Handler> { ... };
 
-So when adding support for ACPI-based systems, the DT bindings should
-not be changed because getting the clock-frequency from the ACPI _DSD
-property is a workaround only needed on ACPI-based systems.
+	pub trait Handler {
+	   fn handle_irq(&self) -> IrqReturn;
+	}
 
-    i2c {
-        #address-cells = <1>;
-        #size-cells = <0>;
+	// Could be `drm::Device::Data`.
+	struct MyData { ... };
 
-        sensor@6c {
-            compatible = "sony,imx258";
-            reg = <0x6c>;
-            clocks = <&imx258_clk>;
+	// Implements `Handler`.
+	struct IRQHandler1(Arc<MyData>);
+	struct IRQHandler2(Arc<MyData>);
 
-            port {
-                endpoint {
-                    remote-endpoint = <&csi1_ep>;
-                    data-lanes = <1 2 3 4>;
-                    link-frequencies = /bits/ 64 <320000000>;
-                };
-            };
-        };
-    };
+	// `data` is `Arc<MyData>`
+	let handler1 = IRQHandler1::new(data);
+	let handler2 = IRQHandler2::new(data);
 
-    /* Oscillator on the camera board */
-    imx258_clk: clk {
-        compatible = "fixed-clock";
-        #clock-cells = <0>;
-        clock-frequency = <19200000>;
-    };
-
---
-Kind Regards
-Mehdi Djait
+	irq::Registration::new(handler1, ...);
+	irq::Registration::new(handler2, ...);
