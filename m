@@ -1,197 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from clean306.mxserver.ro (clean306.mxserver.ro [46.102.249.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7982882D7
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A38A28C849;
+	Thu, 15 May 2025 08:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.102.249.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747298983; cv=none; b=Uy2cM91rq9vTJzK1AJQ3527cUHM5ysZO5m+1nkK4/KxcXWnMjBE6Qwt4MGbp1gxWO7Zi2np0LXbQ6v8ajGSLEhT7F3jahPK9wDKrlyUAyfdy5FllHFQ0ixr4Dt/EF6+uIswXirrWnhRwb0ADDjKtVFekxEinkBv5v0GFYAzJ+2g=
+	t=1747299020; cv=none; b=oSqSn3E6cK2SEOeZPWS3wJiVXy2SWct1WwAGS+Jd+oSt3ADbKwUV8sQm/uIb6y4qtUkLcTSxcxacYrUU9yALpnibqo8oLk8OWeuVv0jRjtki1UXx4wqKdc4e/eRv/mftyRrgedJ/8q2+Uci4LQOzNyHlC7rrFHL07u4KLDpQVgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747298983; c=relaxed/simple;
-	bh=kVKTp1u2T3K/2CbuM8jvK/+7c7/tfdpkS5Lf9BOkaqs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c81cL/nFb4ZIrfYsXXsAEWNJNLtBCxB0iN6CFvfNVYBceMIyZv/bInhJViUkK0Axwo6FalrXhNkqtlYx2dD0zsFnvnaDx2i2B0EjmTHObUPdjLKLOMhhaCUSy/Fh+sPS8ua6lidn1lsVi7ATK0s3irNPi9vVeGlFofgl6D56MnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bI5Sm1Sq; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747299020; c=relaxed/simple;
+	bh=UrsXN5BvsiqE04f7YeDfQT3UuNVswVmTBvR9lCi358Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QbBeVIo/Ry0jGz8gmfKbFWpZXTgD2Se5tsdv9yl6W7cf8Y/Dd9I8QE/qt2STtKXZfbGNIBoo9azCH+mdbaKGiCWlkcTxtcWnqDzxeU+kpOjHPfK4k9GwhEWZ1UIBtKhU4oQDQzcDW+73WU+ifiyK3YJn3xdZ974W6CH/1LcZN8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro; spf=pass smtp.mailfrom=taladin.ro; dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b=IOFKTbyL; arc=none smtp.client-ip=46.102.249.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=taladin.ro
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bI5Sm1Sq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747298981;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=numVHUGG76UJqn6luDC1PvM4Gdk34C40sFiPEgPwpO8=;
-	b=bI5Sm1SqYSBqofzJdb29qn9AbWLCmyoVkTTjEpNaeoI7eh5pE4obUZaI/AeLkIr3rx40bM
-	vC3jhXv0Q8slsFGuWvk+lYVcUbxK9sL852Lqe65aNMFt14pTkdkTKLXMV7cMhcixhzDXJK
-	kr7MsKI5dzVhWE91ZFLcJuAJ6L5Qx4M=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-220-xJ7bqZI1MamLNu4gcnqLaA-1; Thu, 15 May 2025 04:49:39 -0400
-X-MC-Unique: xJ7bqZI1MamLNu4gcnqLaA-1
-X-Mimecast-MFC-AGG-ID: xJ7bqZI1MamLNu4gcnqLaA_1747298978
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-442f4a3851fso5980775e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:49:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747298978; x=1747903778;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=numVHUGG76UJqn6luDC1PvM4Gdk34C40sFiPEgPwpO8=;
-        b=O9ibif1OBK92aL04WqPscdJO6BVJp5VqN5yiYmmCcNlBjRvDapzFOY1XKCxMABpIqD
-         casOt2ir6hBwOpBfGg2qK9KzAHOae4CK/WWMpN16rMgRoor8Ug7H8kKZBQhVOeRwS05w
-         bi9RR/WoHuWg+FGKnAF/+4K9I4z6Gc8A0028wKsRHbics/Gh4pujLrKfsEWXjohAJlFx
-         dWVTBsClmDKXSAykO4QshsjhTX6/On7c1JXzVtci7dVBFwCST8mWPzPgBu3gJ2w9m732
-         CpM4AT7VChZOo0ntCDgghG0QHhlXB9FNrv1pEaTJbN2WjeQ1ab+J8PQjhNSFu3Auhwq5
-         4dHg==
-X-Forwarded-Encrypted: i=1; AJvYcCU2hkIu9FQedMNzkiK7bfmYAxgVYedh0Lt/6a6Bait9UL2JGOZDwdKENmb1UfUTOdM0TVaS+Ot5trwX12U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhBEn6v3eQRxh8/xhiLJQKexS9ifqMoNDAXtaPzRx7QFA3QsjD
-	OwkyN3Bh+ry73Thv3w56fzTO8gZ/aBuFLLdsFE/1YXRw4j5TpXvyx/yo5fDZhUG9BWnG5DBxE/e
-	DDoeX8vtvLyy/jRvHRzIIDJTMEBuAJI8z7rd4tY+AX7Raaa4e5MvPLSlLrTC4EQ==
-X-Gm-Gg: ASbGnctuMLh5BfzMi8of8g4j+yjwFdrMNigQ0WP+Nte9EFcJx+uyo4TYAERtBYEAmGq
-	mMCai60gmP50mJ53W14tza0OO0Axx1eoZ1yaan75Gjyqlbz/1PgSSrC2GZGJyejvtef1C8CB9dP
-	8qI2VXBbVt5rGRdGK+cWX3g/J+CYtApsbG6GFRhw7RTr0h28EmQ8k44Qt8uwzk6vBONsAj8jAmi
-	U4Qq7v+JCuNwK3bWWZCipY0lDszNBbbjCNoboNKW31GZI/Due+g9Z+p+zG1eEY378F2tUtZyHHS
-	qqo2pdG9phelxm9OVU+XOKoSzyy8Wc/NokxUaQroYDYvVralSQhZh8ive0FEPY/Y5bhJ0xHU22L
-	4s9ZeVp8b2Nvsb2Lggk0qsVrrmZ1BnQloS62AsuU=
-X-Received: by 2002:a05:600c:818d:b0:442:f8e7:25ef with SMTP id 5b1f17b1804b1-442f96e9395mr13742985e9.11.1747298978518;
-        Thu, 15 May 2025 01:49:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEF9Ljyx9InpG9QwACcNHvFcbbyugKq1zXFwEj77RI8E97AvX6NCU5d7dYmk90/DADgbbtlOg==
-X-Received: by 2002:a05:600c:818d:b0:442:f8e7:25ef with SMTP id 5b1f17b1804b1-442f96e9395mr13742725e9.11.1747298978121;
-        Thu, 15 May 2025 01:49:38 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f4a:8900:884a:b3af:e3c9:ec88? (p200300d82f4a8900884ab3afe3c9ec88.dip0.t-ipconnect.de. [2003:d8:2f4a:8900:884a:b3af:e3c9:ec88])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f396c093sm60263885e9.27.2025.05.15.01.49.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 01:49:37 -0700 (PDT)
-Message-ID: <61da67fe-ba7a-4b9c-acb2-f1488f00a804@redhat.com>
-Date: Thu, 15 May 2025 10:49:36 +0200
+	dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b="IOFKTbyL"
+Received: from cloud347.c-f.ro ([185.236.86.218])
+	by cleanserver3.mxserver.ro with esmtps (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <asoponar@taladin.ro>)
+	id 1uFTm5-00CMeD-05; Thu, 15 May 2025 04:17:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=taladin.ro;
+	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=Dd/1uGlxOGQIWLy+UQQMfzF+0rkvA0dOH5y9zGsb3zc=; b=IOFKTbyLNpmAaSCGKgbdGUACMy
+	QLyJvOxILHppGYla0i7JPpcYcC/MTnxS1UiLI/6yAabY5k0zQjcHmiFY1Dp8vF5Qgna/mmjZSNZtS
+	2E3QPHXZxioGcaBINNmCkUigXU/2IJCeSmwh9lyDKbh3ljERZgo/3fKlD11u6m0ZPZeGq4nW9o7SI
+	VhBGldBnTT7eCEt6czKy3/Fl3G6bF3gm9Hdb6hEKWIm71tgwwp6ufmDEq428nHRN1V+r3ql/peWvz
+	KZ5EgMTh2q1C8OUGDV2t1v41cx49lhtAoyvGrOaUVNSwdo76hO8BpfEPiTRzw7riNXzkD0jiLW7je
+	eA/K0j9g==;
+Received: from [109.166.137.172] (port=39036 helo=localhost)
+	by cloud347.c-f.ro with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.98.1)
+	(envelope-from <asoponar@taladin.ro>)
+	id 1uFTlu-00000006qHm-0oO8;
+	Thu, 15 May 2025 11:17:03 +0300
+From: Alexandru Soponar <asoponar@taladin.ro>
+To: linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	linux-watchdog@vger.kernel.org
+Cc: jdelvare@suse.com,
+	linux@roeck-us.net,
+	jic23@kernel.org,
+	pavel@ucw.cz,
+	lee@kernel.org,
+	baocheng.su@siemens.com,
+	wim@linux-watchdog.org,
+	tobias.schaffner@siemens.com,
+	angelogioacchino.delregno@collabora.com,
+	benedikt.niedermayr@siemens.com,
+	matthias.bgg@gmail.com,
+	aardelean@baylibre.com,
+	contact@sopy.one,
+	Alexandru Soponar <asoponar@taladin.ro>
+Subject: [PATCH 11/16] iio: mcp3564: Fix type incompatibility with non-macro find_closest
+Date: Thu, 15 May 2025 11:13:27 +0300
+Message-ID: <20250515081332.151250-12-asoponar@taladin.ro>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250515081332.151250-1-asoponar@taladin.ro>
+References: <20250515081332.151250-1-asoponar@taladin.ro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: Check pxd_leaf() instead of !pxd_table() while
- tearing down page tables
-To: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com, will@kernel.org
-Cc: ryan.roberts@arm.com, anshuman.khandual@arm.com, mark.rutland@arm.com,
- yang@os.amperecomputing.com, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
-References: <20250515063450.86629-1-dev.jain@arm.com>
- <332ecda7-14c4-4dc3-aeff-26801b74ca04@redhat.com>
- <4904d02f-6595-4230-a321-23327596e085@arm.com>
- <6fe7848c-485e-4639-b65c-200ed6abe119@redhat.com>
- <73a67d06-b497-40a2-8cb2-3b80c6ba59d1@arm.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <73a67d06-b497-40a2-8cb2-3b80c6ba59d1@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-SpamExperts-Domain: cloud347.c-f.ro
+X-SpamExperts-Username: 185.236.86.218
+Authentication-Results: mxserver.ro; auth=pass smtp.auth=185.236.86.218@cloud347.c-f.ro
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: SB/global_tokens (0.00594371703284)
+X-Recommended-Action: accept
+X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT+SpUDVgxhRP0tE3SZ/aeXbPUtbdvnXkggZ
+ 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5w1OL79HMxE022P+rQy8YAdcSeERs4TOTnIH1kc1IWc5TSx
+ S75yz9IFZiY7BarU/NrpK8SEOwGmfn6ucAKqn/OHRh3BqzFaEnAEj4UixLJBjVNiLZt/QXQnOBRD
+ +jq1HsIBmHTFdhqXZEtguZY7iGKpkcJnJKaJfT+dw1udmv00tbIRNtoyOobb3xnDyRRylAVTYi2b
+ f0F0JzgUQ/o6tR7C8pLPCtTiVLo0r89ClJHDKhDGKgJ+T00JeCnHBmMdB1eMZAyYlfUtEN4pUyes
+ jVRntA/J5DcfwvG53FyVviDO9UET3GKmqv1jT0lY+AQz8YX4CVph7ctC7tRH2SPTQJ/0klTuXKq/
+ B9rqRWsYzNfBLt79i78aPHyWnIqxGMxPZotYvH/es1vXuByXo2bkrYMqq0x5CzaUoJIoBUQayHle
+ UvbvCQmh9x4kn6NeQcRkc6G+OgAcq5x+BzhRyg9rYO6I0H7Q2OEpckvWJAOmdJd77Z9vwc+QHB+X
+ +u7aTqYHtT2CBuxNPBc9JM2jck1NnIBf0tvflhq7Xjhll72AYgnW/6M0ftSpvLIx+X1vKami8KF6
+ jWQ71uVNIY/EFPWeDmcZuFRQy1vmjjPiYw8fUCp0/qY6cmSW9oUDdvKuTRfTGZ6f8nTXoYFaQ71l
+ mMti8uxA0gKVmIzBXtbLDVvAQ/KVNVsSl4ozgMW8/m/uGVZycIKSAN5VcIfsMVILjVAz6RZsCHxD
+ lgOJwEwCFaF+62b2lf1UUDu9jECN1V/lwmsioRK+Y6c+J2XawkXUwNqmNMJsXAQw85DCXa0iAPEd
+ fYyrF5wMRSLGyY+i0m2IxQLxQUz5rOsCgWfUk8oCCEJC9L2lSDBPqdRoFsq0hfzdx0oxkgNI/jhY
+ WFhu7VV+HdWjdZLlmQ5z83qEVVG/6RJ+BW7FmGcwL889DSW2cZWGkIYVQAbHnYkWUz1gRIjAiMvi
+ vM7um7t0SVa5NVZ2g1u6DnOpqk1nwAzTSgytNKIH5lfAuQc8I07FTFcjpdfX/Jcr87en7cKbI0NU
+ afdkQMG+6qjtXoANVR89VM6f75a5kmRIbungV7ywXD8VtmM8wef5C6IkqMFhROX1HYRo9Sm1kZOW
+ saz62DSUUd/fn3Ix/aSqJVglEtnFggTvi4y/qO0sxBxzHDeqqFz43py4SDhdaHkWkQILQXDyW9dm
+ jNKonZjYWHRTR+H6+2RiNcUwzTu30W3aAMyZU+AFpdcwj1rCWKtoaItdoEjZybQVqqiDgYguI1bG
+ 7m9C/1crfxEQ+RMIu45TjrXtoQVWRmJMAe+fcJPd0z6bhalFEM/pjPCQA+BAlnDfxF+P4qUdmrCV
+ Jcb6keE4kn354Ur/DPbOVK8U1h7+CQ9zHshHNhAtXYb18nfCRRlJFBHB+of+uXRa0S3mFIoiSRWm
+ 1WkKsmdoBm6E4S2NuN/NBTe2/ULqDAwOt9zqr+uO5TcDeKjrEmYPn2IVWRtXQGd2K9wEqsPdlH9+
+ YnMU5dPhUFL9snxfLwyUh0hPsPhVGdemay+RORAW9d0tvzdLMkCVXN63lz38Up+2UgeFcpE+PmUA
+ j1PxNMRErSYM7n8DxBG3VLDRB+maCRTs466AUT31X+L1qXgiXZeLdQiA
+X-Report-Abuse-To: spam@cleanserver1.mxserver.ro
+X-Complaints-To: abuse@cleanserver1.mxserver.ro
 
-On 15.05.25 10:40, Dev Jain wrote:
-> 
-> 
-> On 15/05/25 2:06 pm, David Hildenbrand wrote:
->> On 15.05.25 10:22, Dev Jain wrote:
->>>
->>>
->>> On 15/05/25 1:43 pm, David Hildenbrand wrote:
->>>> On 15.05.25 08:34, Dev Jain wrote:
->>>>> Commit 9c006972c3fe removes the pxd_present() checks because the caller
->>>>> checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller
->>>>> only
->>>>> checks pud_present(); pud_free_pmd_page() recurses on each pmd through
->>>>> pmd_free_pte_page(), wherein the pmd may be none.
->>>> The commit states: "The core code already has a check for pXd_none()",
->>>> so I assume that assumption was not true in all cases?
->>>>
->>>> Should that one problematic caller then check for pmd_none() instead?
->>>
->>>    From what I could gather of Will's commit message, my interpretation is
->>> that the concerned callers are vmap_try_huge_pud and vmap_try_huge_pmd.
->>> These individually check for pxd_present():
->>>
->>> if (pmd_present(*pmd) && !pmd_free_pte_page(pmd, addr))
->>>      return 0;
->>>
->>> The problem is that vmap_try_huge_pud will also iterate on pte entries.
->>> So if the pud is present, then pud_free_pmd_page -> pmd_free_pte_page
->>> may encounter a none pmd and trigger a WARN.
->>
->> Yeah, pud_free_pmd_page()->pmd_free_pte_page() looks shaky.
->>
->> I assume we should either have an explicit pmd_none() check in
->> pud_free_pmd_page() before calling pmd_free_pte_page(), or one in
->> pmd_free_pte_page().
->>
->> With your patch, we'd be calling pte_free_kernel() on a NULL pointer,
->> which sounds wrong -- unless I am missing something important.
->>
->>>
->>>>
->>>> If you were able to trigger this WARN, it's always a good idea to
->>>> include the splat in the commit.
->>>
->>> I wasn't able to, it is just an observation from code inspection.
->>
->> That better be included in the patch description :)
-> 
-> I did, actually. My bad for not putting in spaces, I notice now that the
-> description looks horrible to the eye :)
+The mcp3564_oversampling_avail array was previously declared as unsigned
+int but used with find_closest(). With find_closest() now implemented as
+a function taking signed int parameters instead of a macro,  passing
+unsigned arrays causes type incompatibility errors. This patch changes the
+arrays type from unsigned int to int to ensure compatibility with the
+function signature and prevent compilation errors.
 
-Ahh, there it is. Sorry :) Yeah, some empty lines won't hurt!
+Signed-off-by: Alexandru Soponar <asoponar@taladin.ro>
+---
+ drivers/iio/adc/mcp3564.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/iio/adc/mcp3564.c b/drivers/iio/adc/mcp3564.c
+index a68f1cd6883e..01efc77f710a 100644
+--- a/drivers/iio/adc/mcp3564.c
++++ b/drivers/iio/adc/mcp3564.c
+@@ -253,7 +253,7 @@ enum mcp3564_oversampling {
+ 	MCP3564_OVERSAMPLING_RATIO_98304
+ };
+ 
+-static const unsigned int mcp3564_oversampling_avail[] = {
++static const int mcp3564_oversampling_avail[] = {
+ 	[MCP3564_OVERSAMPLING_RATIO_32] = 32,
+ 	[MCP3564_OVERSAMPLING_RATIO_64] = 64,
+ 	[MCP3564_OVERSAMPLING_RATIO_128] = 128,
 -- 
-Cheers,
-
-David / dhildenb
+2.49.0
 
