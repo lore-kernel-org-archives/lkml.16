@@ -1,82 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D77E7262E;
-	Thu, 15 May 2025 15:18:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0146818FC91;
+	Thu, 15 May 2025 15:20:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747322326; cv=none; b=djeO4ATpQVMaGB4x2uwCctCQCFUvXLPZ+ycvuJNJJOYwDIzFQNkV1soSgnxYrcqhZ4LMLLutARsrJHDETs4QhFLW4wg5vxCz5Qp3WCzw16SQ5MVRLfQoJ8O5BebMnDWfC/JotkKEruE9uynqsC9E3xmnlNBJAdPHxRIHmf8/1fg=
+	t=1747322403; cv=none; b=nl5G/Dl2LE40cEDG9q4Ch07HGl3GHDq0tqHbK2nxHvsZUAGd14lm48TKsMiyDRuinHghU3gI3bjlfd35krjP7chNFwRZZKVmqjUy0VoKQW1uXVK3h/PwhrqUzxn5MHn7XvaOX6HUn4JEveH8SqH+dnUaVkaPDK4SEzRRk0Da5ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747322326; c=relaxed/simple;
-	bh=X3XWbQq+H47jtI2k6k/3sb8AJxjpUzMbqBhGMs8AtsQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OE7+XrKv15x6YPAj4ZzFi5lR8sI8WmHuLVp7bL1qmvooyu9KH7rOVl3R7JVkqKm+V5rhW2+vqbiG0uw5E96aaAtd5v3TaeYn8rVIvo2ioZfFrxUWjoc+M0nImD7tvkLBhdw5bTVWVoLqS7RuyJdhf8j5edBUxhubAcJs7e6EV4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DqUrube6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747322403; c=relaxed/simple;
+	bh=SBgb0vTlu2RtuW96PAdlVVB6BgteIAVWl6pfUjNz1v8=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Tz7lg1AR1CNY8HkY5Yvp1aKAPeU8ph4nh4UXa9+kNCD1s7h04zHS//jQlNqpnZ8EZntUULymmyfmV99T8gyClNzh4ZTp+Vfgm/69vCZJb4KRFWunerfbJqa3uh3DCaKlKTafGYZ7ugHleJ9KHvGPo1ZAEpA3Fz5G9lX/aahg1Mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lg/u3Pty; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DqUrube6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03ECFC4CEEB;
-	Thu, 15 May 2025 15:18:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lg/u3Pty"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 696A0C4CEE7;
+	Thu, 15 May 2025 15:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747322325;
-	bh=X3XWbQq+H47jtI2k6k/3sb8AJxjpUzMbqBhGMs8AtsQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DqUrube6sVoeKmbRyuuHJymJMsNre+DSW+ijeQwswLfsQB9Q8xavcKmpQu350VKZf
-	 Y8OpK0u4/3JZAWDahUXawNk56s9Z++MLAf+A3RYk754+ORRMNYFyxg0YGTaLA1rYge
-	 Gca3N8eL5KnykWsQhDScay5GJI3SgaN0FFFD2hPI7nGnxWS5Ns2qNp3IN1RmDBSOeX
-	 BJ2eRYs8rrhQ9QoMk4fE2QGv32riuRget7ihySTAj8CMLIzaeWmEt5px8Wyz6EP17N
-	 VzSC4Ztoug0MJovw9s+Hba6arwOOhIAsVsC4loG4Q8yu/3Er11hoWTATExCN0VSydI
-	 myAJFbBOmsCxw==
-Date: Thu, 15 May 2025 17:18:40 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org, x86@kernel.org,
-	Borislav Petkov <bp@alien8.de>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [RFT PATCH v3 01/21] x86/sev: Separate MSR and GHCB based
- snp_cpuid() via a callback
-Message-ID: <aCYF0J0mCJdz61Ep@gmail.com>
-References: <20250512190834.332684-23-ardb+git@google.com>
- <20250512190834.332684-24-ardb+git@google.com>
- <aCWWPmVloPP0_St0@gmail.com>
- <CAMj1kXE0o+ody9V0APmDqRT=skiUyeDDYE3dMVi+sngQ8QxSFA@mail.gmail.com>
+	s=k20201202; t=1747322402;
+	bh=SBgb0vTlu2RtuW96PAdlVVB6BgteIAVWl6pfUjNz1v8=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Lg/u3PtybrRTpI6u2kIoLESoUYc/WP1G8UP5ih6JsdCP1tWeZbTPGEoOKwCmeEAU+
+	 IzvzUygvw5Ir5kTXOBE56761f+GGyy8KHqNtixosm3ZNcDv+LlcWO3W2UcCxJJ+/hW
+	 B5hubuV0m+1qNWTqnuj4bTnxyAJfGH7qRci2GiyHvI3JAdU+/YEFy7/M5gLuj0F/Xd
+	 d/23+xELdYcNW8uQ+eqFG/zN8eb6gaq1wxmdVCJ9zco1cqG+wpmyEvLWwU1lHjDfqj
+	 +3pW6XuufRDjWtjB3onUdcAoPsCm7naK76PsfpO1iW6BdDxqyVsgcoUEBiQ4OGDhFx
+	 lQosL80O9vPjA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADFC73806659;
+	Thu, 15 May 2025 15:20:40 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXE0o+ody9V0APmDqRT=skiUyeDDYE3dMVi+sngQ8QxSFA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v2] net/mlx5: Use to_delayed_work()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174732243949.3145583.8227565924121305936.git-patchwork-notify@kernel.org>
+Date: Thu, 15 May 2025 15:20:39 +0000
+References: <20250514072419.2707578-1-nichen@iscas.ac.cn>
+In-Reply-To: <20250514072419.2707578-1-nichen@iscas.ac.cn>
+To: Chen Ni <nichen@iscas.ac.cn>
+Cc: saeedm@nvidia.com, leon@kernel.org, tariqt@nvidia.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
 
+Hello:
 
-* Ard Biesheuvel <ardb@kernel.org> wrote:
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-> On Thu, 15 May 2025 at 08:22, Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> >
-> > * Ard Biesheuvel <ardb+git@google.com> wrote:
-> >
-> > > +     if (cr4 & X86_CR4_OSXSAVE)
-> > > +             /* Safe to read xcr0 */
-> > > +             ghcb_set_xcr0(ghcb, xgetbv(XCR_XFEATURE_ENABLED_MASK));
-> > > +     else
-> > > +             /* xgetbv will cause #UD - use reset value for xcr0 */
-> > > +             ghcb_set_xcr0(ghcb, 1);
-> >
-> > Just a couple of style nits here - this new __sev_cpuid_hv_ghcb()
-> > function
+On Wed, 14 May 2025 15:24:19 +0800 you wrote:
+> Use to_delayed_work() instead of open-coding it.
 > 
-> __sev_cpuid_hv_ghcb() is just being moved from one source file to
-> another - I didn't change a single line, and so I don't think tweaking
-> the style is appropriate for this patch.
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+> ---
+> Changelog:
+> 
+> v1 -> v2:
+> 
+> [...]
 
-Yeah, fair enough - in fact changing anything in a pure-movement patch 
-would be counterproductive.
+Here is the summary with links:
+  - [net-next,v2] net/mlx5: Use to_delayed_work()
+    https://git.kernel.org/netdev/net-next/c/ee39bae6c141
 
-Thanks,
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-	Ingo
+
