@@ -1,191 +1,94 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DEC34CF9
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 07:15:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6F53C00
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 07:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747293334; cv=none; b=eLlkOB0KXh064RlaGt5qIcIjS7PLdzxBTNDs5ptr0kRPIL3rduBy3wCxkdyU0l9zPvRiypWbX7B/5vpxOnX2V6uwJTZi8OcvLgbF3otTqXDXuHs1Y3kDozWduugHAVCVEwyuQl9HWNWIAJFrhG9wcM1KOkajkmagC2Mi7U4cuR0=
+	t=1747293390; cv=none; b=rPLfTp228A5hu79pZX+JvNp+DJ0/tl4dlS6Vj/2PNfeg93oN7SfAA5JufczEkSZ5/HAjksmkyPcs2kWwEfVAvtzm97OWoX5fE3BW5gfA6pYHZiu20FYDvKLm4UiHhaw3kQYagXRbqTlQ0DK1m2+glcz0rcPJMVy9UG22evtJrwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747293334; c=relaxed/simple;
-	bh=qlh+kB3YovK9w5uTPzIUuljTu10BHoW6zgni0KrhuZY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Izu7oWBCZBBauWSvxjbT0mQzvrOS9qeVdlRfSJjaw2KAbhKJn/EChGJtV4P4nHpG3jOtOCLoekK6XI3cKNgYDe2Un7Z5tlYJW8qH4uJIIoqWBEsW8mRB//Fpy7HvkkJDlYQiQ7DhnPtiFJJ3qJWU5ylQN8Mu/+u+ifyJollTOCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xKuDpf0m; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747293390; c=relaxed/simple;
+	bh=aQs1XIPe57K9n8PcMJI8I5+ObKj3gnKRAF2bfZObLpY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LQ4MyYm8UAz3fCJuUp6DZd55rn9SGESeO4mc9ZaxIXfYgWKthYVSkkI0dmYdCG6GGL8JJuIC+drBnXFP6DBejSt95nwsHo4Zh9Dk40B4NxmwAhPtYj18puQmMcNvjaqWDEnhjOB5V0dst/uoJfTfeVihKjwmXQTcbSWu65vKe1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMa2HNp2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xKuDpf0m"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-30ac268a8e0so1429419a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:15:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747293332; x=1747898132; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fNz4MAM7giVqZ1kIj91pZlfFRdZA2woN5u2lniAi+R0=;
-        b=xKuDpf0mzG7diSHWerbhdw21qCiCky/s7+6nTpQzi6swB+UA0LiwDcVph0BqN6LQfZ
-         Ir/ugie3DTYRqKDqQ0YAQ7BOKM2BdER/+oAwwnf0flYE7kR8bVCJF7jQ7iC0Ghl/QLQu
-         DJ64gzL619aeIpWkBowQeN0pB7qIfdUz6yqD4atEooxp7wGxBO5ByapOFKCH9rqoGwSW
-         lDRU9GY30uKMi5ekS6peGQlDheMEPg0vZOUcZyNs6bJalCqORjwrgHEUpz6ucNxtkn0x
-         faRxIYve/+CLDhwXZQccRFQlgBdJ2A6jeXmkLgR526g99yAM+qb0zG38OIu96WnugqPT
-         aChw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747293332; x=1747898132;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fNz4MAM7giVqZ1kIj91pZlfFRdZA2woN5u2lniAi+R0=;
-        b=IxMVhCOQk7NE27ENdtRdRgx6eAGK7mXVkLK2ROAb5LrCQfcVQlt2IJONk/dkMznT0y
-         FrYgdjWDGNxuFh4obkxZxGz0VramGFZqodegGsTBIlfZB48WMAjv8vnAlo995IrsN3pv
-         VsCMCT4UScFghTnoR/BtZLYhOAPZxIBVS0Kwj+/IFJNXox6OTOasoogNV53cSJSqEyCR
-         L0obAQBonhYrtA6azc2CgSSRVf5VqjIgVG3I3Nja7OUIXN7nmihLLJIbX3rFo2MerFQt
-         VCmhUT3W3IKCm9BCcOodye7mbia4YnLgNSrtw8S24PM8+/C4v94WC8muoqN1aL5uoIkI
-         Jifg==
-X-Forwarded-Encrypted: i=1; AJvYcCWFQc4hzFlg2mtgAeZLEbe/D5QWczAEa+OrjTqerCBwcpQBTRktmzC5sr+429jh6asArVFIjJy3s54QNjY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6c43zxPZvL7HvpI2xHwwJJTYLw/PkHPByJlb2ORMSDCfuQWY/
-	atT+rJglBOGJOeEawqZ0qWqOw8R90cROGXukTAB1YwXt3wpeJzLrRWx5EI8H5w==
-X-Gm-Gg: ASbGnct+aM4xUz98wDvyWtZiwAcizqfNsYEHwKqcllIGoJCaxm72nNIaR+ge1J+xHNf
-	LYpB8UTBy03+VV/nsHmarPlK9nc+/OO258IH6zPmVg4ImmoX30oBH12kbVj6YGEYRbb+xINwxJw
-	cjFS3Qv0ofIBtD8nG0O0y1UMtMzTFYyOK808FVq65mRGfTL8/bTLGFZYb3yc2iX+4WFFcLVV31C
-	VEpMzeLoHUCPgUmOBzcKBUhqxWUWvRqZJMRPIs8urdHeHpjXmMW/XwQl70zxLxCmJD7lvfJZ5cr
-	wVHJV+S3LcAt1nYHX6i4Qyqkt1+y/KQoHtdSPXp4oTEEyF05MKyuUho+GcuPG1I79oMunCVDUUf
-	+P6Cy3Y7jAIyu3KDbfqMDIUE=
-X-Google-Smtp-Source: AGHT+IEp9eTd3hls9DgkDTgFMCjs1olsgJPSelhs5NIcds9k0dqlTrGcDISLk+XnoExwF4yOwHRgIQ==
-X-Received: by 2002:a17:90b:5350:b0:302:fc48:4f0a with SMTP id 98e67ed59e1d1-30e4d99d77amr4167602a91.0.1747293331617;
-        Thu, 15 May 2025 00:15:31 -0700 (PDT)
-Received: from ?IPV6:2600:1700:4570:89a0:f74c:a163:fe37:3c0f? ([2600:1700:4570:89a0:f74c:a163:fe37:3c0f])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e3345f4ecsm2803723a91.27.2025.05.15.00.15.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 00:15:31 -0700 (PDT)
-Message-ID: <4245c9da-cb81-4494-93c6-224883057410@google.com>
-Date: Thu, 15 May 2025 00:15:29 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMa2HNp2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D4BFC4CEE7;
+	Thu, 15 May 2025 07:16:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747293389;
+	bh=aQs1XIPe57K9n8PcMJI8I5+ObKj3gnKRAF2bfZObLpY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GMa2HNp2Mgab22TOka+1Jupo3bWlm2IbBn+6CDBEcVxYY+K59YG7c9Ra3A9kAmFBn
+	 wYeTRilRpL5t5BDrdBjfjrDrg1qLkgppIVX+axllp21JBCij7OZ+Trjv5OhzRjOgL6
+	 FTStY8REPS6cUtFmQz5nHLBI67gCVPhahyes3VJz5/L70EglTJ4lSMdFvX0Gy88mMj
+	 N1vxY3sH+f6d2L6ntuMZpRP5HokwnzWwZ3btoMgI286p8AE8/sXecYZy4H+D1EH/wg
+	 nOWSYq1OFTgl9F8Dt5h9uit5SdhumrtRrPOggneXGwk4P8Pu02KK8HjmWSgLUAIAgB
+	 aG24WVsnKUH/w==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uFSpO-00F7vF-5l;
+	Thu, 15 May 2025 08:16:26 +0100
+Date: Thu, 15 May 2025 08:16:25 +0100
+Message-ID: <86ldqyfinq.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Nianyao Tang <tangnianyao@huawei.com>
+Cc: <tglx@linutronix.de>,
+	<linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>,
+	<guoyang2@huawei.com>,
+	<wangwudi@hisilicon.com>,
+	<wangzhou1@hisilicon.com>
+Subject: Re: [PATCH v3] irqchip/gic-v4.1: Use local 4_1 ITS to generate VSGI
+In-Reply-To: <20250515145359.2795959-1-tangnianyao@huawei.com>
+References: <20250515145359.2795959-1-tangnianyao@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] usb: typec: tcpm: Use configured PD revision for
- negotiation
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Cosmo Chou <chou.cosmo@gmail.com>
-Cc: badhri@google.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org, cosmo.chou@quantatw.com
-References: <20250513130834.1612602-1-chou.cosmo@gmail.com>
- <aCNLeX1k34BSgPOV@kuha.fi.intel.com> <aCNOOXcAuA_1B-0Z@kuha.fi.intel.com>
- <CAOeEDyuFmFqacy1N8TtpuJRdv-3K2f1DzXNwR1MpyNn4Nrug7A@mail.gmail.com>
- <aCRQbRCHFdFOCNw2@kuha.fi.intel.com>
-From: Amit Sunil Dhamne <amitsd@google.com>
-Content-Language: en-US
-In-Reply-To: <aCRQbRCHFdFOCNw2@kuha.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tangnianyao@huawei.com, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, guoyang2@huawei.com, wangwudi@hisilicon.com, wangzhou1@hisilicon.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hi Heikki,
+On Thu, 15 May 2025 15:53:59 +0100,
+Nianyao Tang <tangnianyao@huawei.com> wrote:
+> 
+> On multi-node GICv4.1 system, VSGI senders always use one certain 4_1 ITS,
+> because find_4_1_its return the first its_node in list, regardless of
+> which node the VSGI sender is on. This brings guest vsgi performance drop
+> when VM is not running on the same node as this returned ITS.
+> 
+> On a 2-socket environment, each with one ITS and 32 cpu, GICv4.1 enabled,
+> 4U8G guest, 4 vcpu is running on same socket.
+> When VM on socket0, kvm-unit-tests ipi_hw result is 850ns.
+> When VM on socket1, it is 750ns. The reason is VSGI sender always
+> use the last reported ITS(that on socket1) to inject VSGI. The access
+> from cpu to other-socket ITS will cost 100ns more compared to cpu to
+> local ITS.
+> 
+> By using a local ITS, we can get 12% reduction in IPI latency.
+> 
+> Modify find_4_1_its to first return per-cpu local_4_1_its, which is
+> init when inherit the VPE table from the ITS or from another CPU.
+> If fail to find local 4_1 ITS, return any 4_1 ITS like before.
+> 
+> Signed-off-by: Nianyao Tang <tangnianyao@huawei.com>
+> Suggested-by: Marc Zyngier <maz@kernel.org>
 
-On 5/14/25 1:12 AM, Heikki Krogerus wrote:
-> On Tue, May 13, 2025 at 10:14:32PM +0800, Cosmo Chou wrote:
->> On Tue, May 13, 2025 at 04:50:49PM +0300, Heikki Krogerus wrote:
->>> On Tue, May 13, 2025 at 04:39:09PM +0300, Heikki Krogerus wrote:
->>>> On Tue, May 13, 2025 at 09:08:34PM +0800, Cosmo Chou wrote:
->>>>> Initialize negotiated_rev and negotiated_rev_prime based on the port's
->>>>> configured PD revision (rev_major) rather than always defaulting to
->>>>> PD_MAX_REV. This ensures ports start PD communication using their
->>>>> appropriate revision level.
->>>>>
->>>>> This allows proper communication with devices that require specific
->>>>> PD revision levels, especially for the hardware designed for PD 1.0
->>>>> or 2.0 specifications.
->>>>>
->>>>> Signed-off-by: Cosmo Chou <chou.cosmo@gmail.com>
->>>>> ---
->>>>> Change log:
->>>>>
->>>>> v2:
->>>>>   - Add PD_CAP_REVXX macros and use switch-case for better readability.
->>>>>
->>>>> ---
->>>>>  drivers/usb/typec/tcpm/tcpm.c | 29 +++++++++++++++++++++++++----
->>>>>  1 file changed, 25 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
->>>>> index 8adf6f954633..48e9cfc2b49a 100644
->>>>> --- a/drivers/usb/typec/tcpm/tcpm.c
->>>>> +++ b/drivers/usb/typec/tcpm/tcpm.c
->>>>> @@ -313,6 +313,10 @@ struct pd_data {
->>>>>     unsigned int operating_snk_mw;
->>>>>  };
->>>>>
->>>>> +#define PD_CAP_REV10       0x1
->>>>> +#define PD_CAP_REV20       0x2
->>>>> +#define PD_CAP_REV30       0x3
->>>>> +
->>>>>  struct pd_revision_info {
->>>>>     u8 rev_major;
->>>>>     u8 rev_minor;
->>>>> @@ -4665,6 +4669,25 @@ static void tcpm_set_initial_svdm_version(struct tcpm_port *port)
->>>>>     }
->>>>>  }
->>>>>
->>>>> +static void tcpm_set_initial_negotiated_rev(struct tcpm_port *port)
->>>>> +{
->>>>> +   switch (port->pd_rev.rev_major) {
->>>>> +   case PD_CAP_REV10:
->>>>> +           port->negotiated_rev = PD_REV10;
->>>>> +           break;
->>>>> +   case PD_CAP_REV20:
->>>>> +           port->negotiated_rev = PD_REV20;
->>>>> +           break;
->>>>> +   case PD_CAP_REV30:
->>>>> +           port->negotiated_rev = PD_REV30;
->>>>> +           break;
->>>>> +   default:
->>>>> +           port->negotiated_rev = PD_MAX_REV;
->>>>> +           break;
->>>>> +   }
->>>>> +   port->negotiated_rev_prime = port->negotiated_rev;
->>>>> +}
->>>> Do we need this? Couldn't you just add one to rev_major?
->>>>
->>>>         port->negotiated_rev = port->pd_rev.rev_major + 1;
->>>>         port->negotiated_rev_prime = port->pd_rev.rev_major + 1;
->>>>
->>>> Or am I missing something?
->>> Sorry, I mean minus one :-)
->>>
->>>         port->negotiated_rev = port->pd_rev.rev_major - 1;
->>>         port->negotiated_rev_prime = port->pd_rev.rev_major - 1;
+Link: https://lore.kernel.org/all/87tthgrt7s.wl-maz@kernel.org
+Reviewed-by: Marc Zyngier <maz@kernel.org>
 
-The only reason I asked for macros is that in the case of Spec Revision
-for header, the value for PD 3.0 is 0x2, PD 2.0 is 0x1 & so on. While
-for PD max revisions, it's the exact values. Having a clear distinction
-may be easier to follow. If you want to go with the +/- approach you can
-add a comment stating the above. 
+	M.
 
-I don't have a hard opinion on either approach :).
-
-Thanks,
-
-Amit
-
->>>
->>> --
->>> heikki
->> It seems to be the PATCH v1:
->> https://lore.kernel.org/all/20250508174756.1300942-1-chou.cosmo@gmail.com/
->>
->> if (port->pd_rev.rev_major > 0 && port->pd_rev.rev_major <= PD_MAX_REV + 1) {
->>         port->negotiated_rev = port->pd_rev.rev_major - 1;
->>         port->negotiated_rev_prime = port->pd_rev.rev_major - 1;
->> } else {
->>         port->negotiated_rev = PD_MAX_REV;
->>         port->negotiated_rev_prime = PD_MAX_REV;
->> }
-> Okay, sorry I missed that. I still don't like the extra definitions,
-> but I don't have any better idea (I guess macro is not an option?).
-> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->
-> thanks,
->
+-- 
+Without deviation from the norm, progress is not possible.
