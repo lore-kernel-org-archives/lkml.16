@@ -1,102 +1,125 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 871B7801
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7769C801
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:10:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747271402; cv=none; b=m+2spRI33rb8y7Oq31pJFt4TvcCQTNYGiO1HeAfDRYJCIDPb8TDAGm3YzaBszwcLmN+Ig1mVSgnI4+WQKkUQ97AGT9a8epAqQ+IW9gGYNt+tqc7UXiO7aohgh93LrgVfDpKn63okHX4HhQCeY+Gqz7pex6UUu2CLBKgBA4vhXaw=
+	t=1747271435; cv=none; b=Dojnv9FHVyrMlV2RadCfO6/tAIu4Kv44V3GywTsVfj2uqzyT3IgRbjYSt/407+kiNWzusAm5KOriKgDtPaSIiPMHszIcwGaZekeFLLqLiMrhjAUfhQFxS4bDxpB2dAoBBjDhRu7Ls0vuIGyDFsbqh3Pg9/UZkGKMK122taOYzQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747271402; c=relaxed/simple;
-	bh=aDjA6Rzbza+c88Sx3+XCpBplINzeHkIDfLCQJ3ubBZU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=hDc9/MJgVAu0maA03/PRfdrhWty2aAPAJIncsE3PNjVafflF923yYu09oAGtGU4JWC23mFLFv+x2p3uNxTY90p/FvuJURtl+/5QMMj5QEDlUw94j1SPfrH3XzU0XRF0SgLwuDykMxvGaie50DRCfEpCcViu6B1b+jWRedrYs7qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4ZyXF20ytSzKHLy2
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:09:58 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id BE6851A018D
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:09:56 +0800 (CST)
-Received: from [10.174.178.129] (unknown [10.174.178.129])
-	by APP4 (Coremail) with SMTP id gCh0CgDHKF3kPiVoN_TCMQ--.32358S2;
-	Thu, 15 May 2025 09:09:56 +0800 (CST)
-Subject: Re: [PATCH 4/5] mm: shmem: keep inode in swaplist when failed to
- allocate swap entry in shmem_writepage()
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, hughd@google.com,
- akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250514165047.946884-1-shikemeng@huaweicloud.com>
- <20250514165047.946884-5-shikemeng@huaweicloud.com>
- <fe00c756-8c1c-4219-af16-8bb9f6300bbc@linux.alibaba.com>
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-Message-ID: <17224d95-edd8-d426-1110-1332e329f746@huaweicloud.com>
-Date: Thu, 15 May 2025 09:09:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1747271435; c=relaxed/simple;
+	bh=Vpi9yO3lle9qXbfYWi9NIZVtgdUtOs1fM2z5YMQE7aI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qd66g7akDdke6kahYhEPlkTTe2mmQZYnUv7MjcadBK/nVo7oCG4bNkeElxH2008Qs/lLoRlw2dLKuwGm3b5kavXscMIRXiBAp0arwy7JaUut629MUrjI/9xRwFTeWnUcb5KWKyu3mm+SBwz7QQw7xcnPk0h4soX7zq5caNJAhyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com; spf=pass smtp.mailfrom=dubeyko.com; dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b=C8qJuhi9; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dubeyko.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b="C8qJuhi9"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54fbd1ba65dso378458e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:10:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dubeyko-com.20230601.gappssmtp.com; s=20230601; t=1747271431; x=1747876231; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=e5n+9oNBJa8I1ajVPNmF7REMZSoiE89WgACRz/GpvLA=;
+        b=C8qJuhi9+pK8klWhqgaZ9wDkhg09VYXr+49AOnG1yGI05kpjVkeS+Lj2+uZyFP8u5q
+         TyxERTSHlg7dhgPU/rJhLxSLvBYOG9xK8iDvPl42W0J9ez5yW0JennVhamyFnL+sKN5N
+         1Mlgi3IGGooG3MgV/hZE0S+gEyX80RykhaYzmLAiV1LcitlERShCF1dNaSi7UymHiuNN
+         cV7DH0U8lg3V7nm4VAWXHUHeY/ux0Cvg8KOewm/CSAdtGO16dIA9+JI6gw8AYqxhhOCN
+         57CEjXjPG6P5fOVCyfejLscaxZZLkqOm7COQru6JU166Taw4a9m96qDevLxXWjY65iVM
+         10UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747271431; x=1747876231;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e5n+9oNBJa8I1ajVPNmF7REMZSoiE89WgACRz/GpvLA=;
+        b=GVAYSweF7KhnPcms9OUHfEYufOKWaNN3ftpmnT6jF7DUbA/pIxZb3V+zOGXBSKZc9b
+         iYWZH+cc9SJpUPkAaBN2zU5A+oN7urUuUhmAAijFh5tFY+EodFvdZEmUfcCaaS3FN5M+
+         wvY/pcuu4+/Zvz2YDG4Rk4Vlc9UiVuyO4zA0EZALHlsLdIarBFfRoiSsjHbwKtda7ztB
+         HA/TZw2ZQz5DtDUsHFz1JKD/6Ec3d3+1dC9X9Fnoc1BkyayH/1e/qTxLfCm0kAmwnBMm
+         c7ZVfHi/k51kLaOR0Qs/+BXY1OPYMsPLsiejCp8Gi1briO5rEMtM82z9Ie2KWbfglySf
+         uDLg==
+X-Forwarded-Encrypted: i=1; AJvYcCXL/0ltjzKaSz8ySwcvUUXXhdyjLTV4lWT+eUGBJhzgUabWlVss0LlZpozE4TiN0cviEXh1bHKUv/i5ToA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzginCQzq5kEdbPur90o5nSMPzzqLwr/WEIKnkGPrIcGp5wj+9d
+	rl0RSHh2e6fXI0UQ5xGIi6pAsBugpMstDLxbt6SRQKj8wWDsH7xmOwzfOnRBMFY=
+X-Gm-Gg: ASbGnctkZLsXZcvtwj9vEvMMtmcZqnii/yLIEpeqlVZyzqg4kjnMI/MMpf1TFHyTaRK
+	EacWpOyHBWD8ddVL6P8LbLeq7/SZVSEgNEvepOHsoBzKrJ0i9XjjLXzG/b6rh4FZUokkaWyqoG3
+	Y3+CmyiPTmc59wipdcnxFI1ItuCnADCloxHM3JlM3bfX5KWoEsPp+vmYkgLqKPhWuUNlilMQNTR
+	wBlRfIAzvxP7QJn3OJk/wwMXFwlTxN5biwxAAdsyTdpxM3xNOkYSI+vwVILVgpJyvTn19vv9VhY
+	y/EvV41T7hnHydbdaIJeAScBeKGAjJyKUmNofX3UA7VxAKXh7Mp6mA==
+X-Google-Smtp-Source: AGHT+IGQdtgUjYwqZiSEo4a5YI+wlqPvR0EFz1KQrGzfKFyM/SVmJN7/CJAxhwlH89l4W+9gi2visg==
+X-Received: by 2002:a05:6512:3e0c:b0:54f:c3bf:988e with SMTP id 2adb3069b0e04-550dd0135d3mr189215e87.33.1747271431225;
+        Wed, 14 May 2025 18:10:31 -0700 (PDT)
+Received: from [10.24.138.144] ([91.230.138.172])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64cd208sm2438411e87.253.2025.05.14.18.10.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 18:10:30 -0700 (PDT)
+Message-ID: <44bdd2c97a8c91acb4b7e101f85f9a261b6c5cbc.camel@dubeyko.com>
+Subject: Re: =?UTF-8?Q?=E5=9B=9E=E5=A4=8D=3A?=
+ =?UTF-8?Q?_=E5=9B=9E=E5=A4=8D=3A?=  [PATCH 2/2] hfs: fix to update ctime
+ after rename
+From: Viacheslav Dubeyko <slava@dubeyko.com>
+To: =?UTF-8?Q?=E6=9D=8E=E6=89=AC=E9=9F=AC?= <frank.li@vivo.com>,  Viacheslav
+ Dubeyko <Slava.Dubeyko@ibm.com>, "glaubitz@physik.fu-berlin.de"
+ <glaubitz@physik.fu-berlin.de>
+Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
+ "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>
+Date: Wed, 14 May 2025 18:10:26 -0700
+In-Reply-To: <SEZPR06MB5269F2CCD9AD085D2712842FE895A@SEZPR06MB5269.apcprd06.prod.outlook.com>
+References: <20250429201517.101323-1-frank.li@vivo.com>
+			 <20250429201517.101323-2-frank.li@vivo.com>
+		 <24ef85453961b830e6ab49ea3f8f81ff7c472875.camel@ibm.com>
+		 <SEZPR06MB5269E572825AE202D1E146A6E888A@SEZPR06MB5269.apcprd06.prod.outlook.com>
+	 <c19db3b68063cd361c475aaebdd95a232aef710c.camel@dubeyko.com>
+	 <SEZPR06MB5269F2CCD9AD085D2712842FE895A@SEZPR06MB5269.apcprd06.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <fe00c756-8c1c-4219-af16-8bb9f6300bbc@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHKF3kPiVoN_TCMQ--.32358S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cr15uw1UJryDtFW8Kw4fAFb_yoW8GrWkpr
-	WkJ3s8GFWrZry8Crs7Xw4v9ryFgw48tw4UGF4SkF18ZFnIqwnY9FyjqFy0gr93ZrZ7Xr1j
-	qF1qgFnrZF4UtaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
-	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UtR6
-	wUUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
+On Sat, 2025-05-10 at 05:31 +0000, =E6=9D=8E=E6=89=AC=E9=9F=AC wrote:
+> Hi Slava,
+>=20
+> > If I understood correctly "ERROR: access time has changed for file1
+> > after remount" means atime has been changed.
+>=20
+> In fact, it seems that it is not the atime that has been changed, but
+> the disk atime that has been not changed.=20
+> The inode in memory has a newer atime, but the atime is not updated
+> to the disk when write_inode is executed(hfs has no atime in disk
+> format).
+>=20
+> For ERROR: access time has changed for file1 after remount
+>=20
+> Before:
+> 	Access:=C2=A0 2025-05-09 14:05:40
+> 	Modify:=C2=A0 2025-05-09 14:05:38
+> 	Change:=C2=A0 2025-05-09 14:05:38
+>=20
+> After umount&mount:
+> 	Access:=C2=A0 2025-05-09 14:05:38		<-- back to mtime
+> 	Modify:=C2=A0 2025-05-09 14:05:38
+> 	Change:=C2=A0 2025-05-09 14:05:38
+>=20
+> So we get inconsistent results for atime.
+>=20
+> Am I missing something?
+>=20
 
+This is was my point. We need to make the access time (atime) always
+the same as the modification time (mtime) because we cannot save the
+atime on disk. This is what I meant by atime =3D=3D mtime. And this atime
+change is happening in HFS driver logic that needs to be corrected.
 
-on 5/14/2025 5:31 PM, Baolin Wang wrote:
-> 
-> 
-> On 2025/5/15 00:50, Kemeng Shi wrote:
->> Even if we fail to allocate a swap entry, the inode might have previously
->> allocated entry and we might take inode containing swap entry off swaplist.
->> As a result, try_to_unuse() may enter a potential dead loop to repeatedly
->> look for inode and clean it's swap entry.
->> Address this by keeping inode in swaplist even if we fail to allocate
->> swap entry as it does not pose significant problem to keep inode without
->> swap entry in swaplist.
->>
->> Fixes: b487a2da3575b ("mm, swap: simplify folio swap allocation")
->> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
->> ---
->>   mm/shmem.c | 2 --
->>   1 file changed, 2 deletions(-)
->>
->> diff --git a/mm/shmem.c b/mm/shmem.c
->> index 0fed94c2bc09..dfd2f730833c 100644
->> --- a/mm/shmem.c
->> +++ b/mm/shmem.c
->> @@ -1651,8 +1651,6 @@ static int shmem_writepage(struct page *page, struct writeback_control *wbc)
->>           BUG_ON(folio_mapped(folio));
->>           return swap_writepage(&folio->page, wbc);
->>       }
->> -
->> -    list_del_init(&info->swaplist);
-> 
-> If 'info->swapped' is 0, we can still remove it?
-> 
-Sure, both approaches are acceptable to me: either keep it in list unconditionlly as it was done in old
-behavior, or remove it if it's info->swapped is 0.
+Thanks,
+Slava.
 
