@@ -1,102 +1,100 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3FF627FB16;
-	Thu, 15 May 2025 08:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CE42882A8;
+	Thu, 15 May 2025 08:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747297943; cv=none; b=aGi8cEy6O9L8392l4WkFiyzCT38zY035YovoplMxxM1OrV6eVcQz1OpjcE/JzpIdf3D6b8rVN92LZfbs7uMteFWCWoNRPT0nJn8sZAMOL2jNlg6o1A93ba6hoTX8cstg7C2QO8DDZLpYF4+y+mcHevh3ttYY5mT/uiYWvrt2dpI=
+	t=1747297982; cv=none; b=T+/Srkxn5SJVK/TdL+RGb4eO6F3b9+hGpd/7T4jde8wbadO4RAgCdqRSdXDauXQd1220Vhv7mKt+2KZUMYyT66Wd6Vf+VhluxBP9el3azGKnwrycvWc4LNguL+b4SiaTI/514vwfRxhJ4QJKAAWZ8RiW6Y2Hni5rJ6dJPYzgWAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747297943; c=relaxed/simple;
-	bh=ft0dKBqcbX3Ig1fHTnCsSOWKg6T6rN12vq7j5B2OZUM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=icPL5hpWtEhhlWbmm527xrrFX+3HqC6lrM3taMeSBCRt/ocs6qlfkK4E8nbuQXgOeGpodtPuRb4HKKrFILNnAj5M+oB+kzrIxwvaAWNw1vpHRSC4P6OLqIl/unlw9mIkz0Cx3oS3XgLY4fP1SYwJmMFEPxnSYrN4GIqK0Du/AUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-05 (Coremail) with SMTP id zQCowAAHRg58piVoyo_ZFQ--.49488S2;
-	Thu, 15 May 2025 16:31:56 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: jic23@kernel.org,
-	dlechner@baylibre.com,
-	nuno.sa@analog.com,
-	andy@kernel.org,
-	mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com,
-	u.kleine-koenig@baylibre.com,
-	tglx@linutronix.de,
-	robh@kernel.org,
-	jirislaby@kernel.org,
-	fabrice.gasnier@foss.st.com
-Cc: linux-iio@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH v2] iio: adc: stm32-adc: Fix race in installing chained IRQ handler
-Date: Thu, 15 May 2025 16:31:01 +0800
-Message-Id: <20250515083101.3811350-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1747297982; c=relaxed/simple;
+	bh=6NRsKlPEJLGQR0EIbLTd7Yy+oRiBQo/LcI5cvx1skd0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=buy3jA/lIuelDsrFftfaVwUihR8yLvJ0119Hs4iw8VVsR/Qu+dN++PanLiWnxg+RbpwtH9UF4JeA/YMUjvPP+lK9hl2mr7pVj0UcR9BF0bjF9CoIhmzNtCi0i2t8EKXu2i9tjJ3SAEYm5g1M11nKgVSu01tKZczPX80hqRhL6jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EHSfYGtH; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EHSfYGtH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747297981; x=1778833981;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=6NRsKlPEJLGQR0EIbLTd7Yy+oRiBQo/LcI5cvx1skd0=;
+  b=EHSfYGtHBXPifjq19vwQYO/TUY3CqwZvYSTOOT7SB9papwQsYpUp2ebO
+   zpud6ueyrkBaGeEKg3mhqdxM017BFkNOJQs7dXNyK/x9N35rljq6shTL/
+   jQ2t1PggUqHTu+RhaSwSozzRREcj1MjT3rNtedRnN7zqCr8j5gC9GzTNz
+   VYdFfePoWwKQsnWTi9vO3aE0wfMHpvDhaLhSspo19cWuZCR+0UPAJwpNZ
+   kMYlr+YMiYa5hUh53q2H5c3NkCw0Jr4XGaSJxtH9FnZ7Ju/tP+uBWDH+s
+   PrxLVBrNI2oLDGLA3+EbtoPIQCjGWIybvUh70m3qN+w9BRfP/cC3hNZ/U
+   A==;
+X-CSE-ConnectionGUID: SrMLDp4sRTK3HEpxJmaeWw==
+X-CSE-MsgGUID: 8XR+jLiSRl6ZPAhQFnNuQg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49157528"
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="49157528"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 01:33:00 -0700
+X-CSE-ConnectionGUID: 1Oyy/5PVTe+K7w51lFPXcA==
+X-CSE-MsgGUID: DjREWa3HTga7QfxE+EMplA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="139298073"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.157])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 01:32:56 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 15 May 2025 11:32:53 +0300 (EEST)
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Ingo Molnar <mingo@kernel.org>, 
+    PDx86 ML <platform-driver-x86@vger.kernel.org>, 
+    Suma Hegde <suma.hegde@amd.com>
+cc: Hans de Goede <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>, 
+    Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+    Linux Next Mailing List <linux-next@vger.kernel.org>, x86@kernel.org, 
+    Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+    Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: linux-next: build failure after merge of the drivers-x86 tree
+In-Reply-To: <20250515164620.071d70e3@canb.auug.org.au>
+Message-ID: <bce51c8f-56c2-3a44-b590-149627398b7a@linux.intel.com>
+References: <20250515164620.071d70e3@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAAHRg58piVoyo_ZFQ--.49488S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrtrWUJF45KF13ZFyxGw4UArb_yoWkGrgEg3
-	97ZwnxGw4Iyr9Iyw17XFnxZa4SqrW8KwsrCr1vvFZ3Gr9rZry5ZrsIvFsxur18WFykCas7
-	ZFyxC3yfC3y5GjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbfkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
-	628vn2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCY02Avz4vE14v_GFyl42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRuksqDUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: text/plain; charset=US-ASCII
 
-Fix a race where a pending interrupt could be received and the handler
-called before the handler's data has been setup, by converting to
-irq_set_chained_handler_and_data().
+On Thu, 15 May 2025, Stephen Rothwell wrote:
 
-Fixes: d58c67d1d851 ("iio: adc: stm32-adc: add support for STM32MP1")
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
-Changelog:
+> Hi all,
+> 
+> After merging the drivers-x86 tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+> 
+> drivers/platform/x86/amd/hsmp/hwmon.c: In function 'hsmp_hwmon_write':
+> drivers/platform/x86/amd/hsmp/hwmon.c:38:16: error: implicit declaration of function 'hsmp_send_message' [-Wimplicit-function-declaration]
+>    38 |         return hsmp_send_message(&msg);
+>       |                ^~~~~~~~~~~~~~~~~
+> 
+> Caused by commit
+> 
+>   92c025db52bb ("platform/x86/amd/hsmp: Report power via hwmon sensors")
+> 
+> I have used the drivers-x86 tree from next-20250514 for today.
 
-v1 -> v2:
+Hi Stephen,
 
-1. Add Fixes tag.
----
- drivers/iio/adc/stm32-adc-core.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+This is a direct result of moving a pdx86 related header behind my back:
 
-diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
-index bd3458965bff..21c04a98b3b6 100644
---- a/drivers/iio/adc/stm32-adc-core.c
-+++ b/drivers/iio/adc/stm32-adc-core.c
-@@ -430,10 +430,9 @@ static int stm32_adc_irq_probe(struct platform_device *pdev,
- 		return -ENOMEM;
- 	}
- 
--	for (i = 0; i < priv->cfg->num_irqs; i++) {
--		irq_set_chained_handler(priv->irq[i], stm32_adc_irq_handler);
--		irq_set_handler_data(priv->irq[i], priv);
--	}
-+	for (i = 0; i < priv->cfg->num_irqs; i++)
-+		irq_set_chained_handler_and_data(priv->irq[i],
-+						 stm32_adc_irq_handler, priv);
- 
- 	return 0;
- }
+https://lore.kernel.org/all/20250413084144.3746608-5-mingo@kernel.org/
+
+That change wasn't sent to the relevant MAINTAINERS entries (and obviously 
+then does not contain my ack either).
+
+Ingo, any suggestion how to deal with this breakage? Do you have e.g. an 
+IB which I could pull into pdx86 tree which has only these header moves?
+
 -- 
-2.25.1
+ i.
 
