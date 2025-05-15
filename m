@@ -1,199 +1,108 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83E61A5BB1;
-	Thu, 15 May 2025 16:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB99183098;
+	Thu, 15 May 2025 16:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747325035; cv=none; b=FLBNV+gSC7zhhakM9628dUVbYezHpdb/HB/MTByQE9Ot57JN21CxpoDCgPVlcq8W8+iE+RFOGR/XKDoPEHZxLnJw90WwbyLkveSbt8umHftjCiWVIgoxA7TbCGgYdMKMc5DvwuS6kYAQKyU6RqAopTEmV0uwRyCC5CcL6J1UHmA=
+	t=1747325102; cv=none; b=u1ZtFnO0CUBhltQOPePlIFF4TcHPZeaJVJvCk33+Zq/Ns0Q23uWWSWNBbsVRdiryliHCUylLfEWNB/VIKzitIDOt61/c/eMb8aY021P6riPk2WMphk9zRqnMeNo726mAyRmi2Q0NKHogckPqs+9Wg5YCm4KN1btEWPtKX+GZxtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747325035; c=relaxed/simple;
-	bh=nvjc/Lk5BrAlP27T30+ARUsGXUd0a7PMDJD9kxSZ4Ow=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aIK0nd5dcoI6g4GF+6nZ+P/2uK7TpDhai7SQlYujPEe0iTi/azvh6Md4KOSYgc5zECuGAGnAxoh/cWiyylZeO6N4eVQ5IcTjBmsZC/nrRFQyyEa3MSFHWWtnTAyr79C0e78LI9z3IcsBUWkVPq1Kou8daRYXfv379DKPb1md4us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FgYdCd+/; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747325102; c=relaxed/simple;
+	bh=nmXD9VX4Vqx1k0kpjG3eWSDmEb4T7U9TcKdZgRykNdc=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=rT0dhH/Cblmf7JseUyw+S/XyW5sCqpjSQL2bzN9UXSmcRTKGrgljNALvORZJU5bU4Zmy0QPXBmI3ACiq8g6nURvLUkrpAK8Mk2lHYUbMv/50vTAmishNP1vrPpRDFyeHKWBnHw18OpIfeu5TBtt0Lqz/I1d97u8ShR0xM1Ow23E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IHICkvLC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3mZw8uA3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FgYdCd+/"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb2so1098377a91.3;
-        Thu, 15 May 2025 09:03:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747325033; x=1747929833; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SQIzojvdBrCvjCTQup3lWYpKZ6WvBhI3Efadpz4Nhvg=;
-        b=FgYdCd+/1r6RzoXrmTglW07CFuFV8BvjuYQiteYB5IvxD1/S9P5yg/C/kRB5DKsOwF
-         r0bjxv57ZVWPfmW7hbf/NeFHJiCro3MTtaKyZ9qSh7iDcTWdacLcJY4N0J+KEP7uXmSq
-         vWPhPvSQinF0seXAntUrbwiey4+wl/pJ/aO13dIuJaAyQJ2Xz8Zut03iuCXjWH0cd0eL
-         A/1WPf2T6e4y56mms4TcJ441U0Wop8d1faT7p2fetySOJf4fX4qademRV1YioxEzjVbD
-         dcAIOmZctdNgiElv+C3glVCdxhv/7NoSKPzwIyvGVzzod0jwwSM4x0bVPHoleEu5Vezt
-         Tp/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747325033; x=1747929833;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SQIzojvdBrCvjCTQup3lWYpKZ6WvBhI3Efadpz4Nhvg=;
-        b=sYJXhOEyHttzU/3da+OGAXChmVWlRBiniEbNx9AjDcJw6agtYoa3CTzMhBcqgzIvWm
-         Xm/hAFJkTHoZtHbSY2AQ0gEypGLWfHOLRn+rE6apIL3s0LoqCz8rAYedxJ6kASVNccKd
-         6aj/P2BpDPfrGQJre92LaOVpcT6SeTjAVmoXcCjZW0C0xUbtXz0oDQLm8u7pLOKNXt88
-         WVzVCvZU67Dz6KXU0Sap+m4L+pXmCJOewxB4LkunFbALUkxHmLIh3MgpkCkr0lIFsDFy
-         +CuXXXqUXbrjJPqiYZTtC/QZDJmjqnd+qVJBtmeG15MH4C+pX50TcBOsXoB6xhJagWTS
-         Ty/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVjYrI8p7CbiSr4lg/EL5T1NtQIKcS/NYi6nVyQhCjdY9OKSkaO63s6w3D27Y3gwBQyQmhtsaH5hjIqruM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2MW++fvT+6L7C/bHAqQVoPOz4a9pS4lcRUYjS8DbIs/XVTP6o
-	v5RyMQs7oj171Q7mhbmIPidyR24IVKdrqmU1wBFvlGGAYfcTRkwVmTg/4LSYB7KBLG54C5+3n1E
-	soAOQ/n8xpI/RhaZT44Kpa1vio0U=
-X-Gm-Gg: ASbGncsmDWmZ/uKEY67ESwabwuTBI5eZGL79PgbryTBrCjJb/Dj7aVYpCa+E58bwf41
-	jwC9Y79bLeS7chBrhqNIb2RwZX9fq1cnTcrGxjnuvwNhlWuMmEN5LMifLpvCmeylDIyFkVNGqYC
-	1rjUtR7GkOWeXsJOimh+9O2Xl/6i+oY77rTTUF/evBr7Zexlhx
-X-Google-Smtp-Source: AGHT+IGLnmAyTn+jbsZIBQgkJ5Sm1BS3PdUGW0qm7m2ynVGjjj2unFwpaUwcZfyE3ODVEoU9zApvt4zXrBJffr61fDg=
-X-Received: by 2002:a17:90b:3d8d:b0:2ef:114d:7bf8 with SMTP id
- 98e67ed59e1d1-30e2e59bd13mr11340591a91.6.1747325032753; Thu, 15 May 2025
- 09:03:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IHICkvLC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3mZw8uA3"
+Date: Thu, 15 May 2025 16:04:57 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747325098;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bChncj96Y5n1ySf6ezCFB6jma8uYNwDQ41JCxjM4Zhg=;
+	b=IHICkvLCKoISJCiVrpV4RncFHgxCJV2dk1ef+wGrjN90dLpSUhFHVdP/98WvJZmKPMwM0e
+	lZZWwr2DQEHX5un6Cj1oXwS/WZS0cnsdqqKRWwqeoxXfw1dKCGWbpKcnL9NGDD91X0Vl+l
+	rtT9arsX92mzjnjQ2GtLkBueExJPrOGp/e7ho46OYZqswIR7kaVMFCfZA2smWDxnQIFi/x
+	zOunWQYsps3usTjweA2Zn4QW6IGoWF7gBMIZsIqjflfKs0MPHvudCBM0813BZj2JwnClx0
+	SqM35TbgL4hGNN8YacetRlS8iQbK/1uidLRM4qWHa4HKRyMLlcx8GfaRu/Dkxw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747325098;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bChncj96Y5n1ySf6ezCFB6jma8uYNwDQ41JCxjM4Zhg=;
+	b=3mZw8uA3Snv5SpJsUVVdBvjgvChm1LiVJtomiZ9UWm5Pwl/JfTsH4/MfOClfV7R1db+twg
+	UyilllNzUqn0PeDQ==
+From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/core] x86/msr: Add rdmsrl_on_cpu() compatibility wrapper
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Ingo Molnar <mingo@kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>,
+ Dave Hansen <dave.hansen@intel.com>, Xin Li <xin@zytor.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250512145517.6e0666e3@canb.auug.org.au>
+References: <20250512145517.6e0666e3@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515065018.240188-1-jiayuan.chen@linux.dev>
-In-Reply-To: <20250515065018.240188-1-jiayuan.chen@linux.dev>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 15 May 2025 09:03:39 -0700
-X-Gm-Features: AX0GCFv-OIxKCK9_Iw8tQ87ssy1Vb7qkSx0Tpb5CAtDvK01K1f2E5fqT1JWIn44
-Message-ID: <CAEf4BzYf7+D_Jck6LH_tFTdsfNg+tWQvz-T2WccYYEefRHm3Vg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2] bpftool: Add support for custom BTF path in
- prog load/loadall
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf@vger.kernel.org, Quentin Monnet <qmo@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Daniel Xu <dxu@dxuuu.xyz>, Mykyta Yatsenko <yatsenko@meta.com>, 
-	Tao Chen <chen.dylane@gmail.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174732509785.406.5208741014442312924.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 14, 2025 at 11:52=E2=80=AFPM Jiayuan Chen <jiayuan.chen@linux.d=
-ev> wrote:
->
-> This patch exposes the btf_custom_path feature to bpftool, allowing users
-> to specify a custom BTF file when loading BPF programs using prog load or
-> prog loadall commands.
->
-> The argument 'btf_custom_path' in libbpf is used for those kernes that
-> don't have CONFIG_DEBUG_INFO_BTF enabled but still want to perform CO-RE
-> relocations.
->
-> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-> ---
->  tools/bpf/bpftool/Documentation/bpftool-prog.rst |  7 ++++++-
->  tools/bpf/bpftool/bash-completion/bpftool        |  2 +-
->  tools/bpf/bpftool/prog.c                         | 12 +++++++++++-
->  3 files changed, 18 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/bpf/bpftool/Documentation/bpftool-prog.rst b/tools/bpf=
-/bpftool/Documentation/bpftool-prog.rst
-> index d6304e01afe0..e60a829ab8d0 100644
-> --- a/tools/bpf/bpftool/Documentation/bpftool-prog.rst
-> +++ b/tools/bpf/bpftool/Documentation/bpftool-prog.rst
-> @@ -127,7 +127,7 @@ bpftool prog pin *PROG* *FILE*
->      Note: *FILE* must be located in *bpffs* mount. It must not contain a=
- dot
->      character ('.'), which is reserved for future extensions of *bpffs*.
->
-> -bpftool prog { load | loadall } *OBJ* *PATH* [type *TYPE*] [map { idx *I=
-DX* | name *NAME* } *MAP*] [{ offload_dev | xdpmeta_dev } *NAME*] [pinmaps =
-*MAP_DIR*] [autoattach]
-> +bpftool prog { load | loadall } *OBJ* *PATH* [type *TYPE*] [map { idx *I=
-DX* | name *NAME* } *MAP*] [{ offload_dev | xdpmeta_dev } *NAME*] [pinmaps =
-*MAP_DIR*] [autoattach] [kernel_btf *BTF_DIR*]
->      Load bpf program(s) from binary *OBJ* and pin as *PATH*. **bpftool p=
-rog
->      load** pins only the first program from the *OBJ* as *PATH*. **bpfto=
-ol prog
->      loadall** pins all programs from the *OBJ* under *PATH* directory. *=
-*type**
-> @@ -153,6 +153,11 @@ bpftool prog { load | loadall } *OBJ* *PATH* [type *=
-TYPE*] [map { idx *IDX* | na
->      program does not support autoattach, bpftool falls back to regular p=
-inning
->      for that program instead.
->
-> +    The **kernel_btf** option allows specifying an external BTF file to =
-replace
-> +    the system's own vmlinux BTF file for CO-RE relocations. NOTE that a=
-ny
-> +    other feature (e.g., fentry/fexit programs, struct_ops, etc) will re=
-quire
-> +    actual kernel BTF like /sys/kernel/btf/vmlinux.
-> +
->      Note: *PATH* must be located in *bpffs* mount. It must not contain a=
- dot
->      character ('.'), which is reserved for future extensions of *bpffs*.
->
-> diff --git a/tools/bpf/bpftool/bash-completion/bpftool b/tools/bpf/bpftoo=
-l/bash-completion/bpftool
-> index 1ce409a6cbd9..609938c287b7 100644
-> --- a/tools/bpf/bpftool/bash-completion/bpftool
-> +++ b/tools/bpf/bpftool/bash-completion/bpftool
-> @@ -511,7 +511,7 @@ _bpftool()
->                              ;;
->                          *)
->                              COMPREPLY=3D( $( compgen -W "map" -- "$cur" =
-) )
-> -                            _bpftool_once_attr 'type pinmaps autoattach'
-> +                            _bpftool_once_attr 'type pinmaps autoattach =
-kernel_btf'
->                              _bpftool_one_of_list 'offload_dev xdpmeta_de=
-v'
->                              return 0
->                              ;;
-> diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
-> index f010295350be..3b6a361dd0f8 100644
-> --- a/tools/bpf/bpftool/prog.c
-> +++ b/tools/bpf/bpftool/prog.c
-> @@ -1681,8 +1681,17 @@ static int load_with_options(int argc, char **argv=
-, bool first_prog_only)
->                 } else if (is_prefix(*argv, "autoattach")) {
->                         auto_attach =3D true;
->                         NEXT_ARG();
-> +               } else if (is_prefix(*argv, "kernel_btf")) {
-> +                       NEXT_ARG();
-> +
-> +                       if (!REQ_ARGS(1))
-> +                               goto err_free_reuse_maps;
-> +
-> +                       open_opts.btf_custom_path =3D GET_ARG();
->                 } else {
-> -                       p_err("expected no more arguments, 'type', 'map' =
-or 'dev', got: '%s'?",
-> +                       p_err("expected no more arguments, "
-> +                             "'type', 'map', 'dev', 'offload_dev', 'xdpm=
-eta_dev', 'pinmaps', "
-> +                             "'autoattach', or 'kernel_btf', got: '%s'?"=
-,
->                               *argv);
->                         goto err_free_reuse_maps;
->                 }
-> @@ -2474,6 +2483,7 @@ static int do_help(int argc, char **argv)
->                 "                         [map { idx IDX | name NAME } MA=
-P]\\\n"
->                 "                         [pinmaps MAP_DIR]\n"
->                 "                         [autoattach]\n"
-> +               "                         [kernel_btf BTF_DIR]\n"
+The following commit has been merged into the x86/core branch of tip:
 
-Is it a DIR or a FILE/PATH?
+Commit-ID:     baad9190e6465fdbe458f59cf04c2b2032ec4797
+Gitweb:        https://git.kernel.org/tip/baad9190e6465fdbe458f59cf04c2b2032ec4797
+Author:        Ingo Molnar <mingo@kernel.org>
+AuthorDate:    Thu, 15 May 2025 17:49:16 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 15 May 2025 17:58:55 +02:00
 
->                 "       %1$s %2$s attach PROG ATTACH_TYPE [MAP]\n"
->                 "       %1$s %2$s detach PROG ATTACH_TYPE [MAP]\n"
->                 "       %1$s %2$s run PROG \\\n"
-> --
-> 2.47.1
->
->
+x86/msr: Add rdmsrl_on_cpu() compatibility wrapper
+
+Add a simple rdmsrl_on_cpu() compatibility wrapper for
+rdmsrq_on_cpu(), to make life in -next easier, where
+the PM tree recently grew more uses of the old API.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Mario Limonciello <mario.limonciello@amd.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Xin Li <xin@zytor.com>
+Link: https://lore.kernel.org/r/20250512145517.6e0666e3@canb.auug.org.au
+---
+ arch/x86/include/asm/msr.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
+index a9ce56f..4096b8a 100644
+--- a/arch/x86/include/asm/msr.h
++++ b/arch/x86/include/asm/msr.h
+@@ -329,6 +329,7 @@ static inline int wrmsr_safe_regs_on_cpu(unsigned int cpu, u32 regs[8])
+ /* Compatibility wrappers: */
+ #define rdmsrl(msr, val) rdmsrq(msr, val)
+ #define wrmsrl(msr, val) wrmsrq(msr, val)
++#define rdmsrl_on_cpu(cpu, msr, q) rdmsrq_on_cpu(cpu, msr, q)
+ 
+ #endif /* __ASSEMBLER__ */
+ #endif /* _ASM_X86_MSR_H */
