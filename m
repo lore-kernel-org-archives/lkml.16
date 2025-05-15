@@ -1,44 +1,43 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E661F0E20;
-	Thu, 15 May 2025 12:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632342253B5;
+	Thu, 15 May 2025 12:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747312017; cv=none; b=ry7DsHtw6V/oSpNgajpi9hKskLT4MmAWgRQTF7rfAV9LKXNRxLWhlk9pm4XzjWnFeDsrCxFLMbffTfm1t4drREH4ZQPaHVysXyfoknHXQ2rjRWSZGfxNecSLvEh0EKkoe1wU/mlInrU2GOby8+GlWY1KqxWInNwZC5TNuKBWvfU=
+	t=1747312059; cv=none; b=Sz+bI3vWinQcKabprmuWA2SZ0YBhIovlxCIhR6d7WFbgT3mE8ldjISbUM9L82jkcY9m7ktnLNw3esNw+25cZHr4HSQYvGykZz/Qh4n9AS+rFqsIwHx5jfkpKzYThMXTxhLxFXZLAeJeD2Zk6qfhdAPHMttMKKvPq/WiIPi+V7bE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747312017; c=relaxed/simple;
-	bh=6pAnn+UekFJZ8a8ublbvD3EYf+TORa8O6LbEZm5kWbw=;
+	s=arc-20240116; t=1747312059; c=relaxed/simple;
+	bh=4DWIXHRcAJp2J4m/FFHNZtU2ownSnh3NG4wp6QerkFA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nqNr7VMKntR8pxsTCX/fGKHI0tdWt5UkS5DqTMT2VKTYoooELWRyTP9+jkm+JeR+W29VMPBkHSsSvyi3MjZiP6Mi/2DWO8w7WEi13hsL6sJX2RQNJsHzctjYQDHmMHnGNEGAJE33vBo4UdVvb+k64UyZ1Dl/bLJRUuRT1iJW6iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 265132C00584;
-	Thu, 15 May 2025 14:26:19 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 11D3844E5A; Thu, 15 May 2025 14:26:53 +0200 (CEST)
-Date: Thu, 15 May 2025 14:26:53 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: Denis Benato <benato.denis96@gmail.com>,
-	Mario Limonciello <superm1@kernel.org>, rafael@kernel.org,
-	mahesh@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com, aravind.iddamsetty@linux.intel.com
-Subject: Re: [PATCH v3] PCI: Prevent power state transition of erroneous
- device
-Message-ID: <aCXdjWaKpHST79ZO@wunner.de>
-References: <20250504090444.3347952-1-raag.jadav@intel.com>
- <7dbb64ee-3683-4b47-b17d-288447da746e@gmail.com>
- <384a2c60-2f25-4a1d-b8a6-3ea4ea34e2c2@kernel.org>
- <350f35dd-757e-459f-81f7-666a4457e736@gmail.com>
- <aCXW4c-Ocly4t6yF@black.fi.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=siycYwnHnjx4YYcvI8Dmys7GR65cnkV3JYQ6DZovjoRHLlxT/b1KRa8qeApghdAXLi0grjXY599iGF5WFhR15gC3niXE3jZvtJz3yRyuGdB0V8En1bHUduk77b0Ba0RS7jgQxTRsdNAbDUpjLJIiIvR6H607ekOFkmaULwiP7Ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=R4BePNe/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="R4BePNe/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47E5FC4CEE7;
+	Thu, 15 May 2025 12:27:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747312058;
+	bh=4DWIXHRcAJp2J4m/FFHNZtU2ownSnh3NG4wp6QerkFA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R4BePNe/db93bpviLL9aQ2j7q2CT+C/BhQ63X6RCFMDtJBHjGzC08pbi312LkI/vb
+	 w80RXl4Y9XM8Ble4csViBrYkiX1Vji93KRsscujGDR5zTEMST3IOlQqCQVPMvi1G82
+	 UCPKC8yQ579grvk2RNLUebYxDQRUVlo7HlS+/ygQ=
+Date: Thu, 15 May 2025 14:25:50 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Shung-Hsi Yu <shung-hsi.yu@suse.com>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+	kees@kernel.org
+Subject: Re: [PATCH 6.14 000/197] 6.14.7-rc2 review
+Message-ID: <2025051529-mulled-cubicle-b1cd@gregkh>
+References: <20250514125625.496402993@linuxfoundation.org>
+ <vrvefaimjqkseuoyuhgg6omt2ypgp5v6xwwuxihj2t5jidizyr@ir5w67k4kl36>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,41 +46,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aCXW4c-Ocly4t6yF@black.fi.intel.com>
+In-Reply-To: <vrvefaimjqkseuoyuhgg6omt2ypgp5v6xwwuxihj2t5jidizyr@ir5w67k4kl36>
 
-On Thu, May 15, 2025 at 02:58:25PM +0300, Raag Jadav wrote:
-> On Wed, May 14, 2025 at 11:25:36PM +0200, Denis Benato wrote:
-> > I tested this patch on top of 6.14.6 and this patch comes with a nasty regression: s2idle resume breaks all my three GPUs, while for example the sound of a YT video resumes fine.
-> >
-> > You can see the dmesg here: https://pastebin.com/Um7bmdWi
+On Thu, May 15, 2025 at 08:15:32PM +0800, Shung-Hsi Yu wrote:
+> On Wed, May 14, 2025 at 03:04:16PM +0200, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 6.14.7 release.
+> > There are 197 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> ...
+> > Kees Cook <kees@kernel.org>
+> >     mm: vmalloc: support more granular vrealloc() sizing
 > 
-> Thanks for the report. From logs it looks like a hotplug event is triggered
-> for presence detect which is disabling the slot and in turn loosing the
-> device on resume. The cause of it is unclear though (assuming it is not
-> a manual intervention).
+> The above is causing a slow down in BPF verifier[1]. Assuming BPF
+> selftests are somewhat representing of real world BPF programs, the slow
+> down would be around 2x on average, but for an unrealistic worth-case it
+> could go as high as 40x[2].
+> 
+> 1: https://lore.kernel.org/stable/20250515041659.smhllyarxdwp7cav@desk/
+> 2: https://lore.kernel.org/stable/g4fpslyse2s6hnprgkbp23ykxn67q5wabbkpivuc3rro5bivo4@sj2o3nd5vwwm/
 
-When an Endpoint transitions to D3cold, the link to the Endpoint goes
-down.  If the Downstream Port above the Endpoint is hotplug-capable,
-it will see a Data Link Layer State Changed event as a side effect.
-If it doesn't support out-of-band presence detect, it will also see
-a Presence Detect Changed event as a side effect.
+Is this slowdown also in 6.15-rc right now?  If so, let's work on fixing
+it there first.
 
-As a workaround, graphics drivers invoke pci_ignore_hotplug() and that
-will cause pciehp and acpiphp to permanently ignore any hotplug events.
+thanks,
 
-In v6.16 there will be a new pci_hp_ignore_link_change() and
-pci_hp_unignore_link_change() API to tell PCI hotplug drivers that
-DLLSC and PDC events shall be ignored temporarily:
-
-https://git.kernel.org/pci/pci/c/2af781a9edc4
-
-I intend to replace pci_ignore_hotplug() with this new approach,
-as explained here:
-
-https://lore.kernel.org/r/Z_nfuGrVh_CO7vbe@wunner.de
-
-I'm not sure though if that will help with the issue at hand.
-
-Thanks,
-
-Lukas
+greg k-h
