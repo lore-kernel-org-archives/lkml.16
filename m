@@ -1,104 +1,98 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4DA82882CB;
-	Thu, 15 May 2025 08:25:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535892882CB
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:26:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747297549; cv=none; b=fM6XOfCl4GiJOe/lJRSklpGitUljPVPQ9mTzMnw8NQH8ZsLjMYHj9wICKvFTyia9x3hs7toPKQeUisEQ8Xc/BC5j8CLGzBpKpjffJNPl2NBFqzI3wuq7d1t5CQQeaulk8V1KUkP+2JFjiLSF/MkcMT1K7w2U00EjPH78VezCcWQ=
+	t=1747297585; cv=none; b=CBHZ4iq29IIIyNodl0w/A0SLc5giz+yBMl+FiNnsqKsZuZgGvUPZ+1B7QHj8P6STyscZHxJlnoldEygGEqrf9pKqu5rR1O4Lry1ho2uFH/ZObbaNZs6e+jdOzqhCs7nS4UAwhyTRhBwZDVZiuNdbCk5lwCVRTKMBVbl706JAH3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747297549; c=relaxed/simple;
-	bh=JxIs9ti23+lhasBtOh4fpkazhknzy+eYTXszTYWShXI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gUFtDJPf/lA5vd277WBLMT17lp1yM+nP0kyzK3XQznbJdjc8EHiu3uvwMt/0TA6sBZMU6B6qqdaHImq02s2SHRrlY4ePB4iuf73MdtLKNByoXLk5QCjYdRI1cLSBhzzJRM4FMzC+mqll8J/Xrz5VS+EUdrEmC6Jq5BvVIVEXj2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c5e2fe5f17so64912385a.3;
-        Thu, 15 May 2025 01:25:47 -0700 (PDT)
+	s=arc-20240116; t=1747297585; c=relaxed/simple;
+	bh=ENrOJDgWFvKCQkM8U1+sfaS07Ost8oWCJy/AbU25QJQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qlB4CugFgfTMjIoQ8+kgwLrytKhHF9cMcDDFNwhofWK8L6ji5tqyyIUu3+fjLYixnG4VZoxN/C1hkN1KwhPIC3rp5E+Zz2zhilL7mmBMRPfoVy+fo2PgTDaDJ0iGyrbAftJePyjU88sBNxiDMMdIjBCdElBuhTQRKwwEP8+tQEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QjHSl30S; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QjHSl30S"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a0bd7f4cd5so522152f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:26:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747297581; x=1747902381; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=RZBT0B9JbAjbmvz5JEz72qClxMGhTZUJxqqtB//hBoY=;
+        b=QjHSl30SYhCVFpoIxhyhJPZyyu0pOpqpO5E8fbLKd+dqDZoGNhRYYWkBxas2KiqJNk
+         CcAQPxHusSLK9ehjxvxaIc7Dep8dBtKS5tYzvmEaswgZEtWFQFVp0hxVnD2AfC3iVWWq
+         Oqg0fdp2zJu0BwnVHhUdHtwAM7fYNW2HpWcnjaIVRo57NmotAzUfGfozTdoAUugQbzLo
+         0k++IioYPsa/VaMldshrKyM5SJPpROq0rHozLU05A4ut86G+Faa0vFwXWgu02JJAaDR+
+         IKs5WkOBIjbnmhT4Whx5hVyg12uB+Utsh9tH6ss7Bm3Ut9mfZbGu/3Q8RDg4A3Ckv5+p
+         H3LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747297546; x=1747902346;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6mkHlRM8iLp0NsM5Jk7d5tEtIOoI6iyctbL8lUwGW6Y=;
-        b=I+8bn3trgknTUrx8HNhee2GtTVhCz2pOHoRxeuiLTrzAy4sGvgsIS/dqqolEQR5+K5
-         6gAq6axK1zBzFn8C0+vE5CdX1hmIY2NjYtP4RZppBgu6ST9HynhxzqKW/eNSk2lQNntH
-         cGLc3p1xl0m1qmFFTQRkbPu2ab+QQzhzGw6kwifvK5gi3jpy/auwVYY4XZfc0cLMh6Xh
-         Thx/vJRz5tqacH0Lx/1PRfBmZ82o4BQrCJrN/YZL5sTlJUTGtEsPDpfFc/xObKGoxkJe
-         SUDkbNL6VPfxHu1sTRcQ0gWttu+xHRx2Of/MC5lsp5uqVx2KCwquwTqbSXviSiPb6WOe
-         a+2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUrU+bmIa1qWxGXAqvy2rivisAMnUBk+l9JuSpf6z/ztcOWcsg9GsElce0KBsiyeezDR+H2Tae8r82uh9E=@vger.kernel.org, AJvYcCWVG+pH9K3gaaJL3dLyaRaqOL9haM94aVqikdkE+eGZ7WHcVzFtkNPHSAQLkFAxf+U2Nzoq3Cnkg+FQXwOEst42@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHuL85ZGtWEF1rJYMrTDDVUC+lFCByJzeXyaQrnr5+0gawKjSs
-	qOqGw/JRxsxCHbygTKQy6wvNoDtV737DjH2Hw05yJmc04t6BbibTCIUCupSzuBI=
-X-Gm-Gg: ASbGnctM1LQ34qqr4UHTz/rHlrBhRI1cekn/nGrZj/RuCd5Llu44D6Tgfxfvu9EZM+W
-	4AIElpOxytgt6K6yB7YWz6devbox9mYxVrFintnfFyYMMggXfOnsnRBhWy120dDfX2C6VrXsaIY
-	RtAoukiZWIPBLz0K8fTdppkvKrxosE1LjsS2mriauh8UYMH0OI7zDYnSM6fpNbNJvWNgG/8O3GM
-	uWKg391v3CuFV8h6EIuJbqpLGXoxVBnhgAvuAEuUHrOcQud1JD7na4nGmxkdqs1aMeibLnWDQte
-	ba5kKzJsDhGLuQd6iIC8qp8OrZNUQntIdoByhnxbvhAKjECAMHXGFLIaM2j6Jxa++BYFIRc+9iD
-	NUE2Ge6E77Js=
-X-Google-Smtp-Source: AGHT+IHiPQ8uW95AatqAwso13h1WKaP0+B7bIj7pRJzr+/EQRvdcdBIlwrYkcv0hfB89DdKMD1DJ6A==
-X-Received: by 2002:a05:620a:2404:b0:7ca:f349:4265 with SMTP id af79cd13be357-7cd287df076mr823220185a.4.1747297546343;
-        Thu, 15 May 2025 01:25:46 -0700 (PDT)
-Received: from localhost.localdomain (ip171.ip-51-81-44.us. [51.81.44.171])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd00f4d52dsm955472185a.17.2025.05.15.01.25.43
+        d=1e100.net; s=20230601; t=1747297581; x=1747902381;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RZBT0B9JbAjbmvz5JEz72qClxMGhTZUJxqqtB//hBoY=;
+        b=aoGmZ0A9274sU5F+g9TNjiCQfl91ugXosvt4T4cKmT/8GzzzOtudNzpGxjHT2HQWVo
+         7uMCzpK9ycT+afWSpIfMvjOzhsbUd2UpQYz9yjtYUzk88hj62rzssNU3JbDM/FtkVRX1
+         J2zZAYXq6NM74vOOHKl8iO5CeO/NYCMXqj9AMyDz+j739JNSPAizJC2McdLVAgwJ4u1Z
+         O2DHItsOOLoiGkesdxQbHvjOYGcEXqfITWfXAMm+VH26iHOJRHGYpXypD7JgDeeYmGJQ
+         fLolvFT/ZeRwPn2WOG7POqbvifUo7Cp0P+XxMhwWme4hwO3wiTmAsUae1vhzNHe9DkQE
+         At3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUuvniXMMQSpqOsmRjt2qMJisBYYJc65TCkYkG7raS11wC4TSvi47F/yPZbDWViqJfe2lMY1evGXcHHmtY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6X+3tt8C4H6Fxj7FGUTf3vdYvhrF6X6Rw1hsrdkuxffMEkJXQ
+	sWqtdAiCR3tSrNh8dB/PZknpblNXqq+tNe9IyRLMOJc6BMImy3fer2+d3LGiOHU=
+X-Gm-Gg: ASbGncviRXJdxwyNPF0bnkMjXUgFIXihj7sLzu79nSxONBOLZmS6fkR2ZnHanwoxqh1
+	t5TWcHn0v+yrJQekO+MHVu5nXAmz7wNzr7uef5EsYa+0hI6ASxkQQHpqNEkzWjA1YJBING0+EJZ
+	Z4lvRhH9C8evkK+DmvejmkL5M4xUSuEqPzhA83P/fAThPB/7iiqIrZYIt5N0ODxfP0uzvIC88F2
+	YO327O/7ey17xKnet8awHy01gbgsZQYmpZM6Kuyt7iQOxijQ4DD5qluykRC9FttW1lFWytmt8uN
+	RngBw++OzairLu8UHQN1k6VZZ/mNsyTdhBQh9KVvDEdn3C7JKTnk7AL8yn1JXbY98BrurFSFIwQ
+	o/E+Xnb855fFnr9vrtE0jtPhB
+X-Google-Smtp-Source: AGHT+IFutkGNvNOJLwoaYHsnazJI/e2XvuA6DWj8m8uba5Jv172Bohbp+P6ihvUbNwvbTK8YGNfiyw==
+X-Received: by 2002:a5d:5983:0:b0:3a1:f6fd:63fc with SMTP id ffacd0b85a97d-3a34994b188mr5793077f8f.47.1747297581580;
+        Thu, 15 May 2025 01:26:21 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3368d1csm62594915e9.8.2025.05.15.01.26.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 01:25:45 -0700 (PDT)
-From: Chen Linxuan <chenlinxuan@uniontech.com>
-To: Shuah Khan <shuah@kernel.org>,
-	Chen Linxuan <chenlinxuan@uniontech.com>
-Cc: zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	wentao@uniontech.com,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests/memfd: clean Makefile
-Date: Thu, 15 May 2025 16:25:21 +0800
-Message-ID: <20250515082525.358433-1-chenlinxuan@uniontech.com>
-X-Mailer: git-send-email 2.43.0
+        Thu, 15 May 2025 01:26:21 -0700 (PDT)
+Date: Thu, 15 May 2025 10:26:19 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vineet Gupta <vgupta@synopsys.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: timer: Convert snps,archs-gfrc to DT schema
+Message-ID: <aCWlK8H7PtSwhY77@mai.linaro.org>
+References: <20250506022309.2588605-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250506022309.2588605-1-robh@kernel.org>
 
-When writing a test for fusectl, I referred to this Makefile as a
-reference for creating a FUSE daemon in the selftests.
-While doing so, I noticed that there is a minor issue in the Makefile.
+On Mon, May 05, 2025 at 09:23:08PM -0500, Rob Herring wrote:
+> Convert the Synopsys ARC HS 64-bit Timer binding to DT schema format.
+> It's a straight-forward conversion.
+> 
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
 
-The fuse_mnt.c file is not actually compiled into fuse_mnt.o,
-and the code setting CFLAGS for it never takes effect.
-The reason fuse_mnt compiles successfully is because CFLAGS is set
-at the very beginning of the file.
+Applied, thanks
 
-Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
----
- tools/testing/selftests/memfd/Makefile | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/tools/testing/selftests/memfd/Makefile b/tools/testing/selftests/memfd/Makefile
-index 163b6f68631c4..e9b886c65153d 100644
---- a/tools/testing/selftests/memfd/Makefile
-+++ b/tools/testing/selftests/memfd/Makefile
-@@ -1,5 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--CFLAGS += -D_FILE_OFFSET_BITS=64
- CFLAGS += $(KHDR_INCLUDES)
- 
- TEST_GEN_PROGS := memfd_test
-@@ -16,10 +15,9 @@ ifeq ($(VAR_LDLIBS),)
- VAR_LDLIBS := -lfuse -pthread
- endif
- 
--fuse_mnt.o: CFLAGS += $(VAR_CFLAGS)
--
- include ../lib.mk
- 
-+$(OUTPUT)/fuse_mnt: CFLAGS += $(VAR_CFLAGS)
- $(OUTPUT)/fuse_mnt: LDLIBS += $(VAR_LDLIBS)
- 
- $(OUTPUT)/memfd_test: memfd_test.c common.c
 -- 
-2.43.0
 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
