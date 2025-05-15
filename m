@@ -1,110 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48BDD1B0F31;
-	Thu, 15 May 2025 10:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C9035970;
+	Thu, 15 May 2025 10:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747305214; cv=none; b=PNRmhrwScpLibqjG1u133slJ6njGVAgxV8tZtUD1MRt98yZ1/R6aqJdIp3YUsx4ZlikQTJpVvQsYeJ5X9VPzaALk0xHmoKsLOSgvUc3HMYfIG971lR5+QYUtledM/z6b9HWqfAZqdW2/O6xFIgDT9RRHm08PQCCICkquA4xzr1E=
+	t=1747305222; cv=none; b=HLWHHwhGXHGNoNU59wGBzH2xtDpikIklGiIyilxYzjNi2qCc5otMS5GLXClLqK97fNsHkrRT9/BFEUF2bINYmuyMII/acMY1l0iME+8yRVkEUXIT1SxMgMe8mnGNwlnjAQ9fG6usriGPZGCvgDZV4ab9HRDaMXdLnCs8v6UbQKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747305214; c=relaxed/simple;
-	bh=xCYQ6WOiz9cUOPIBQEVZI/wwHsBuLl5q9YtMNp2XXEw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ukfvpl9UwfmfZVZY36pZCgTJCySpq0OoY16sTTRveZ4sazcAeX2947uVADWzpx0sJAZRIm1Nv2OmeD86inkAe57mko2Y6wXjNAzPAk5Hq0BqZ6xdx3ISMKFeRhzvqJvGw2YJ3Q5dKruVIowfOlkXFP5cQacMVA9EHb8HvDiHxls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YcHwxIi9; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747305222; c=relaxed/simple;
+	bh=jOy+gdB5snTg+AWaYBwU4zrEGtaSgqQCzCFFbsWkaZ4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HDWrW7X7dOCs2SXd2SNsR/yXz0AKkaF0MbDnIVV8TeiRA+2RQYAJqzKvlMSmzWUYBh2fEMGDcOuvorJiuUlBvJbLgPFnu/3gN60xzAHDzwMGYpRBQZbUMPpX93/+AVAdt+JZ7rPjsaVtaXBHCTSXGqtGT69NAkY9gkDv+qoX8Qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=SK+GnLaa; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YcHwxIi9"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="SK+GnLaa"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747305211; x=1778841211;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xCYQ6WOiz9cUOPIBQEVZI/wwHsBuLl5q9YtMNp2XXEw=;
-  b=YcHwxIi9/dJww3sYc3YUHGi7WV/Ii4Nu4Qthvj2PR8X4+rez1zJmlbYR
-   6FcwnC8GXrux0AM9fcCsQTcKrStuzMiSWAoU4Nwez4nLrJvOdmRkx416m
-   p9MRouPOARzsi+mIe9NHQvDdgwBZm5rAhpB+m2OhvtSM9TTMTWWJ5QoDC
-   rvaZ6WKIjBWTP0Yni71BXGaxQ5be3RWVFGnwt8LxDFb7v6fAXo/OpB4Is
-   8XZk57mP2I1hyc5KhAO7jU3nwiyHgYaDF2yXsnJiUD5AqqN7dQulPonUD
-   zoKaMWi8LInQGLBz1D+0cWpZ5CSnIfvdZjZIXMYOHZyPppohAx1YlPo73
-   g==;
-X-CSE-ConnectionGUID: s/MjEDP9R8u+8sGmhB1fjg==
-X-CSE-MsgGUID: 0iemWrSCTXmSW/rq0/+GuA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="48351617"
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="48351617"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 03:33:30 -0700
-X-CSE-ConnectionGUID: isaNyDEPQLy1etpJfSyzrw==
-X-CSE-MsgGUID: qKdApXCJTRCaDS+AROvpwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="138733577"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 15 May 2025 03:33:27 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uFVu1-000IHP-13;
-	Thu, 15 May 2025 10:33:25 +0000
-Date: Thu, 15 May 2025 18:32:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: Konrad Dybcio <konradybcio@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Rob Clark <robdclark@gmail.com>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Akhil P Oommen <quic_akhilpo@quicinc.com>,
-	Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: Re: [PATCH RFT v2 03/15] drm/msm: Use the central UBWC config
- database
-Message-ID: <202505151822.QNn0FQXs-lkp@intel.com>
-References: <20250514-topic-ubwc_central-v2-3-09ecbc0a05ce@oss.qualcomm.com>
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1747305220; x=1778841220;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jOy+gdB5snTg+AWaYBwU4zrEGtaSgqQCzCFFbsWkaZ4=;
+  b=SK+GnLaaH07XxhL8iGW5yt/cXtd+Lr8IboOxqctj0X/ujAW5j3gogUrV
+   /W5LpNLRVa63MrSfBuNyJhhRwHldp3vnklRqAFNV063ruyhfKJSdc9vbz
+   7/lJH8TV2WujghT3bEbpeGQYbCMBOWyLAbHwf8JFN9PCFArP/SqFkRqts
+   t/A/tjtCsLNKXekQ3L7gX/2uEMJEgyLCKPlxfw73kWGZO2+NdeiUwmdld
+   o6dF4E0y7SMo+mZjQ7FK+1Fl7eG4YhDNU3zfekU8JIdFAmQu9YpZ5PZhF
+   FCQ0N/YPezAgVZ5MHB+lVPvDIF4nq3TTxjaTEkfS8xNeSncaDk+jvBKfR
+   A==;
+X-CSE-ConnectionGUID: YDYKtXNcQOipD744zTQ15A==
+X-CSE-MsgGUID: ZMEcAudjRRmAFgfZqoRjuQ==
+X-IronPort-AV: E=Sophos;i="6.15,290,1739862000"; 
+   d="scan'208";a="209126771"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 May 2025 03:33:39 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Thu, 15 May 2025 03:33:08 -0700
+Received: from che-lt-i67131.microchip.com (10.10.85.11) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Thu, 15 May 2025 03:33:04 -0700
+From: Manikandan Muralidharan <manikandan.m@microchip.com>
+To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<claudiu.beznea@tuxon.dev>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: Manikandan Muralidharan <manikandan.m@microchip.com>
+Subject: [PATCH] ARM: dts: microchip: rename spi-cs-setup-ns property to spi-cs-setup-delay-ns
+Date: Thu, 15 May 2025 16:02:51 +0530
+Message-ID: <20250515103251.210468-1-manikandan.m@microchip.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514-topic-ubwc_central-v2-3-09ecbc0a05ce@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Hi Konrad,
+The naming scheme for delay properties includes "delay" in the name,
+so renaming spi-cs-setup-ns property to spi-cs-setup-delay-ns to keep
+that consistent.
 
-kernel test robot noticed the following build errors:
+Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
+---
+ arch/arm/boot/dts/microchip/at91-sam9x60ek.dts        | 2 +-
+ arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi   | 2 +-
+ arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi | 2 +-
+ arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts      | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-[auto build test ERROR on edef457004774e598fc4c1b7d1d4f0bcd9d0bb30]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Konrad-Dybcio/soc-qcom-Add-UBWC-config-provider/20250514-231354
-base:   edef457004774e598fc4c1b7d1d4f0bcd9d0bb30
-patch link:    https://lore.kernel.org/r/20250514-topic-ubwc_central-v2-3-09ecbc0a05ce%40oss.qualcomm.com
-patch subject: [PATCH RFT v2 03/15] drm/msm: Use the central UBWC config database
-config: arm64-randconfig-002-20250515 (https://download.01.org/0day-ci/archive/20250515/202505151822.QNn0FQXs-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250515/202505151822.QNn0FQXs-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505151822.QNn0FQXs-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>, old ones prefixed by <<):
-
->> drivers/soc/qcom/ubwc_config.c:41:40: warning: unused variable 'sar2130p_data' [-Wunused-const-variable]
-41 | static const struct qcom_ubwc_cfg_data sar2130p_data = {
-|                                        ^~~~~~~~~~~~~
-1 warning generated.
---
-ERROR: modpost: missing MODULE_LICENSE() in drivers/soc/qcom/ubwc_config.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/soc/qcom/ubwc_config.o
->> ERROR: modpost: "qcom_ubwc_config_get_data" [drivers/gpu/drm/msm/msm.ko] undefined!
-
+diff --git a/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts b/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts
+index cdc56b53299d..c1ff3248bd8f 100644
+--- a/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts
++++ b/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts
+@@ -609,7 +609,7 @@ flash@0 {
+ 		compatible = "jedec,spi-nor";
+ 		reg = <0>;
+ 		spi-max-frequency = <104000000>;
+-		spi-cs-setup-ns = <7>;
++		spi-cs-setup-delay-ns = <7>;
+ 		spi-tx-bus-width = <4>;
+ 		spi-rx-bus-width = <4>;
+ 		m25p,fast-read;
+diff --git a/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi b/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi
+index 8ac85dac5a96..13c28e92b17e 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi
++++ b/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi
+@@ -44,7 +44,7 @@ flash@0 {
+ 					compatible = "jedec,spi-nor";
+ 					reg = <0>;
+ 					spi-max-frequency = <104000000>;
+-					spi-cs-setup-ns = <7>;
++					spi-cs-setup-delay-ns = <7>;
+ 					spi-tx-bus-width = <4>;
+ 					spi-rx-bus-width = <4>;
+ 					m25p,fast-read;
+diff --git a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
+index ef11606a82b3..9543214adc9f 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
++++ b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
+@@ -234,7 +234,7 @@ qspi1_flash: flash@0 {
+ 		compatible = "jedec,spi-nor";
+ 		reg = <0>;
+ 		spi-max-frequency = <104000000>;
+-		spi-cs-setup-ns = <7>;
++		spi-cs-setup-delay-ns = <7>;
+ 		spi-rx-bus-width = <4>;
+ 		spi-tx-bus-width = <4>;
+ 		m25p,fast-read;
+diff --git a/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts b/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts
+index 9fa6f1395aa6..fbae6a9af6c3 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts
++++ b/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts
+@@ -714,7 +714,7 @@ flash@0 {
+ 		compatible = "jedec,spi-nor";
+ 		reg = <0>;
+ 		spi-max-frequency = <104000000>;
+-		spi-cs-setup-ns = <7>;
++		spi-cs-setup-delay-ns = <7>;
+ 		spi-tx-bus-width = <4>;
+ 		spi-rx-bus-width = <4>;
+ 		m25p,fast-read;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
