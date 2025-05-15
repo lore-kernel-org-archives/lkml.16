@@ -1,183 +1,227 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B07B617BA3
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 03:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F082833062
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 03:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747279212; cv=none; b=f7DyQkGIKuoDkff7noIz5gPi8rEUmmm3XVDj0TtRrhXq7qdihSGzNTEW9ziff+/KQmrPtPOW/m0Eaa1yGA2S/HFsIrdXJFjlLMDVgSwBWil7W7BsdsrTQ0uVdvmcr19zyHVqD+7A/zoEXJXqy7C14k3/oEtm1dA89lwPXyGUjVc=
+	t=1747279307; cv=none; b=HsNkylGpqERQ3NyVaxFWja823bsWEM2h5+nZiqIB9gzALNfXB7DrjuIHAORQEWoSYx2iqzbzcQPeV61Omjtcad1sGDREzCyXtwZK5/bUvZONT4/1IltMaNg4uRUYml85z9AFT98GavakHCNW+yZ21dIfLvz+dajfrAyDvq/eFu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747279212; c=relaxed/simple;
-	bh=wmyDntFHg9J1aeNDqXH9NMNtAddxfUhTvQ+e7PrYACI=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=fn6lg4LFfkbn8+dz+N3OFzTaa4/5QsAt2Xsq5sSG4ZPFhgQIuizmgd6JGlt43VhgBVQqeisGFI22m60Tgrv2BVMXS1NVL4lP4YNPnmgK3k3ZZnsjvrXOSe1AIwsHTt+MBJ5P9iutUtbDQADVSLEIfgKF2bgJ2stpXKqOHN4+26Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8AxHHJmXSVoIaPoAA--.50643S3;
-	Thu, 15 May 2025 11:20:06 +0800 (CST)
-Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by front1 (Coremail) with SMTP id qMiowMBxb8deXSVorxzUAA--.14896S3;
-	Thu, 15 May 2025 11:20:01 +0800 (CST)
-Subject: Re: [PATCH] mm/page_alloc.c: Avoid infinite retries caused by cpuset
- race
-To: Vlastimil Babka <vbabka@suse.cz>,
- Andrew Morton <akpm@linux-foundation.org>,
- Suren Baghdasaryan <surenb@google.com>
-Cc: Harry Yoo <harry.yoo@oracle.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Zi Yan <ziy@nvidia.com>
-References: <20250416082405.20988-1-zhangtianyang@loongson.cn>
- <aAYXP4f417_bx6Is@harry> <025e3f51-2ab5-bc58-5475-b57103169a82@loongson.cn>
- <20250422171116.f3928045a13205dc1b9a46ea@linux-foundation.org>
- <CAJuCfpHbXmjAr2Rt0Mo_i32hpGOyXnVtXUd4qFjXriH9eYFDkQ@mail.gmail.com>
- <20250510200740.b7de2408e40be7ad5392fed9@linux-foundation.org>
- <CAJuCfpFdC6hgFSPy3M2sagkFobWeCuxLdcWiyV5pnzB55dgjZg@mail.gmail.com>
- <20250513121609.a9741e49a0e865f25f966de1@linux-foundation.org>
- <e783c311-2f3c-42ba-b0ba-734a206cf04c@suse.cz>
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <75a7258b-224c-c4f2-47a9-fda3775d268c@loongson.cn>
-Date: Thu, 15 May 2025 11:19:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1747279307; c=relaxed/simple;
+	bh=nZ7fPcFM09Quvx4U8CoxDdb4H334WsV9KVwTmqQi9nk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b4wloX2d1q1HOVLgr4EFsMTgHEpRbA9IiYVuVoX/9r/Hi+SQdkjoVsvNPkuJuU2eUZGSiwTHnDwMxfQ9g6ivsZIBxalKj1JY7/Gfg+hRuEKd9HJ9Yj28uK9adtEw9HxTCmYJBSD1syPYlC16GE6jZ+drOcSfkayFiP1ZA8HVfs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iOYDE4w4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iOYDE4w4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747279304;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fTeV/WO8sCZkiFkU9JmxKppZ1kmH8Wa3R30xrqm9r44=;
+	b=iOYDE4w4tJyaERj52SDMXFdJrMJsVtoDw+DTsVYJmkRcdKeeQYuNvlA2GddT4LWhMerZag
+	GFdBn4HYU8Td0erTY7pqU98bgvh5duiUBT0KgtofechgVUrgvG2B6Sb4i1Fs3g1NF2o8Sj
+	o2aB01NfN1pEr7whETPmPQinOp1xReE=
+Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
+ [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-435-qVGOB5ikOuCYJt_uDA6VUA-1; Wed, 14 May 2025 23:21:42 -0400
+X-MC-Unique: qVGOB5ikOuCYJt_uDA6VUA-1
+X-Mimecast-MFC-AGG-ID: qVGOB5ikOuCYJt_uDA6VUA_1747279301
+Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-70b3e8ba60aso8850177b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 20:21:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747279301; x=1747884101;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fTeV/WO8sCZkiFkU9JmxKppZ1kmH8Wa3R30xrqm9r44=;
+        b=nHzX7vhFkbt2xdNNrOMIGsfF6KxOHg9PaJOmstBqVJUCFuECYm5Xu7ylKBasMM036a
+         palyQ1ZS61wXxShTNTCFPRLpQAFj1fwPtF6g9mv6RwHsYyHnIWFLnmsDejruvdO5c0R5
+         cx5mDkG6hwruS638fsmTo5mwD8KTlCnQJhqzXximPEKPSRgUgclzNrpaC/M+nFg1xAQ+
+         V9evy/FSjD4htY4gdw3HZXdN7iKKZuueg1RB8dV/Ob2JhcHNc5k/YU/v2M/wwLy3eWdJ
+         XQXR1Ve7XmVkbFUN2oeGKWKYaofMX9lAkEVttgHZqY4tY5J4TllgWMdrdtGMoFcfAspo
+         H6vg==
+X-Forwarded-Encrypted: i=1; AJvYcCXQWJn6YMQmE3k0HLwf6qcppPAD77YtUuaO7IZKKup2P4kkhD0Oj+6222ZbAc/Kgsm0VWTYs4DuxDGdOi4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfGinRhTMaR5Tpj/2H3BYyPsIiS5ZhXuMKHg6d5fsBhmWyo3yJ
+	EoVEyT6qR3NThYPsu4Pou2BISC84rhcO0CONtiCIpQ3CmG7o/huPTFjHEvph7f8X1xiEe418AR2
+	RkqyjfhEiK+vBrtFKU1JfAvGYezXGcIMoc8EGpzyFQGRDMYWu5JzSxaREB+XqvQUza7ZGPz0nAU
+	A8c3us6pAzV5jL/fLXuLQw946TyGJOGfxn3s+r
+X-Gm-Gg: ASbGncs3QOH5SneUrzFYTn7kBUry6T7nmJD79pot8j38XH6EuobK2yx0zSmhycWDF91
+	wM6eeoFSkE8j/qX8qHPwpkYzg2aZsHqR1vTApUbfu08akXRaTv4ebUeVLv5/DvF04BwBTGiI=
+X-Received: by 2002:a05:690c:6e0e:b0:708:3a47:3d2c with SMTP id 00721157ae682-70c7f12c8famr94768687b3.13.1747279301395;
+        Wed, 14 May 2025 20:21:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFM4mZxig5/05EWPU+CFmocywD5iXORxl4Y6pxrnOlBmTEaXyhJqWFviIYIj7G5V/QV7i7XgKaqOB+7kYcteo0=
+X-Received: by 2002:a05:690c:6e0e:b0:708:3a47:3d2c with SMTP id
+ 00721157ae682-70c7f12c8famr94768327b3.13.1747279300939; Wed, 14 May 2025
+ 20:21:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <e783c311-2f3c-42ba-b0ba-734a206cf04c@suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMBxb8deXSVorxzUAA--.14896S3
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWw17Jw4fZr18Jw15ArWUAwc_yoWrAw15pF
-	95uF1j9a1rJFWIk392yFykury0v39rJrW3JFWUJ34xZwnxCr4Iyry7urs8uFyUZrsIkF1j
-	qr4YyryxXF1YvagCm3ZEXasCq-sJn29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCF
-	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
-	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8TCJPUUUUU==
+References: <20250515030312.125567-1-npache@redhat.com>
+In-Reply-To: <20250515030312.125567-1-npache@redhat.com>
+From: Nico Pache <npache@redhat.com>
+Date: Wed, 14 May 2025 21:21:14 -0600
+X-Gm-Features: AX0GCFuDBI2AES8eO7twjKdGMIMeHHi4i6ePTC9RxmHbpsPIlqmkhrIU3ijT4fQ
+Message-ID: <CAA1CXcAKk5z+gTrQDe-eLsxkrsNrf8G9HD5KBPTJv_EECei_Mg@mail.gmail.com>
+Subject: Re: [PATCH v6 00/12] khugepaged: mTHP support
+To: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc: david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com, 
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, ryan.roberts@arm.com, 
+	dev.jain@arm.com, corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, baohua@kernel.org, 
+	willy@infradead.org, peterx@redhat.com, wangkefeng.wang@huawei.com, 
+	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
+	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
+	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
+	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, 
+	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, 
+	jglisse@google.com, surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
+	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Ugh... So sorry, I forgot to turn off the chain-reply-to.
 
-在 2025/5/14 下午3:34, Vlastimil Babka 写道:
-> On 5/13/25 21:16, Andrew Morton wrote:
->> On Tue, 13 May 2025 09:26:53 -0700 Suren Baghdasaryan <surenb@google.com> wrote:
->>
->>>>>> This has been in mm-hotfixes-unstable for six days.  Hopefully we'll
->>>>>> see some review activity soon (please).
->>>>> I reviewed and provided my feedback but saw neither a reply nor a
->>>>> respin with proposed changes.
->>>> OK, thanks.  Do you have time to put together a modified version of this?
->>> I think the code is fine as is. Would be good to add Fixes: tag but it
->>> will require some investigation to find the appropriate patch to
->>> reference here.
->> Below is what is in mm-hotfixes.  It doesn't actually have any
->> acked-by's or reviewed-by's.
->>
->> So... final call for review, please.
->>
->>
->> From: Tianyang Zhang <zhangtianyang@loongson.cn>
->> Subject: mm/page_alloc.c: avoid infinite retries caused by cpuset race
->> Date: Wed, 16 Apr 2025 16:24:05 +0800
->>
->> __alloc_pages_slowpath has no change detection for ac->nodemask in the
->> part of retry path, while cpuset can modify it in parallel.  For some
->> processes that set mempolicy as MPOL_BIND, this results ac->nodemask
->> changes, and then the should_reclaim_retry will judge based on the latest
->> nodemask and jump to retry, while the get_page_from_freelist only
->> traverses the zonelist from ac->preferred_zoneref, which selected by a
->> expired nodemask and may cause infinite retries in some cases
->>
->> cpu 64:
->> __alloc_pages_slowpath {
->>          /* ..... */
->> retry:
->>          /* ac->nodemask = 0x1, ac->preferred->zone->nid = 1 */
->>          if (alloc_flags & ALLOC_KSWAPD)
->>                  wake_all_kswapds(order, gfp_mask, ac);
->>          /* cpu 1:
->>          cpuset_write_resmask
->>              update_nodemask
->>                  update_nodemasks_hier
->>                      update_tasks_nodemask
->>                          mpol_rebind_task
->>                           mpol_rebind_policy
->>                            mpol_rebind_nodemask
->> 		// mempolicy->nodes has been modified,
->> 		// which ac->nodemask point to
->>
->>          */
->>          /* ac->nodemask = 0x3, ac->preferred->zone->nid = 1 */
->>          if (should_reclaim_retry(gfp_mask, order, ac, alloc_flags,
->>                                   did_some_progress > 0, &no_progress_loops))
->>                  goto retry;
->> }
->>
->> Simultaneously starting multiple cpuset01 from LTP can quickly reproduce
->> this issue on a multi node server when the maximum memory pressure is
->> reached and the swap is enabled
->>
->> Link: https://lkml.kernel.org/r/20250416082405.20988-1-zhangtianyang@loongson.cn
->> Fixes: 902b62810a57 ("mm, page_alloc: fix more premature OOM due to race with cpuset update").
-> After the discussion in this thread, Suren retracted this Fixes: suggestion.
-> I think it actually goes back to this one which introduced the
-> preferred_zoneref caching.
+resending V7 *facepalm*
+
+On Wed, May 14, 2025 at 9:03=E2=80=AFPM Nico Pache <npache@redhat.com> wrot=
+e:
 >
-> Fixes: c33d6c06f60f ("mm, page_alloc: avoid looking up the first zone in a
-> zonelist twice")
-Yes, the problem should be introduced by this patch, thank you
+> The following series provides khugepaged and madvise collapse with the
+> capability to collapse anonymous memory regions to mTHPs.
 >
->> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
->> Cc: Vlastimil Babka <vbabka@suse.cz>
->> Cc: Suren Baghdasaryan <surenb@google.com>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Brendan Jackman <jackmanb@google.com>
->> Cc: Johannes Weiner <hannes@cmpxchg.org>
->> Cc: Zi Yan <ziy@nvidia.com>
->> Cc: <stable@vger.kernel.org>
->> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> I would have placed the check bit further down, just above the
-> should_reclaim_retry() call, but it's not that important to hold up a fix
-> and can be done later.
+> To achieve this we generalize the khugepaged functions to no longer depen=
+d
+> on PMD_ORDER. Then during the PMD scan, we keep track of chunks of pages
+> (defined by KHUGEPAGED_MTHP_MIN_ORDER) that are utilized. This info is
+> tracked using a bitmap. After the PMD scan is done, we do binary recursio=
+n
+> on the bitmap to find the optimal mTHP sizes for the PMD range. The
+> restriction on max_ptes_none is removed during the scan, to make sure we
+> account for the whole PMD range. When no mTHP size is enabled, the legacy
+> behavior of khugepaged is maintained. max_ptes_none will be scaled by the
+> attempted collapse order to determine how full a THP must be to be
+> eligible. If a mTHP collapse is attempted, but contains swapped out, or
+> shared pages, we dont perform the collapse.
 >
-> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+> With the default max_ptes_none=3D511, the code should keep its most of it=
+s
+> original behavior. To exercise mTHP collapse we need to set
+> max_ptes_none<=3D255. With max_ptes_none > HPAGE_PMD_NR/2 you will
+> experience collapse "creep" and constantly promote mTHPs to the next
+> available size. This is due the fact that it will introduce at least 2x
+> the number of pages, and on a future scan will satisfy that condition onc=
+e
+> again.
 >
->> ---
->>
->>   mm/page_alloc.c |    8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> --- a/mm/page_alloc.c~mm-page_allocc-avoid-infinite-retries-caused-by-cpuset-race
->> +++ a/mm/page_alloc.c
->> @@ -4562,6 +4562,14 @@ restart:
->>   	}
->>   
->>   retry:
->> +	/*
->> +	 * Deal with possible cpuset update races or zonelist updates to avoid
->> +	 * infinite retries.
->> +	 */
->> +	if (check_retry_cpuset(cpuset_mems_cookie, ac) ||
->> +	    check_retry_zonelist(zonelist_iter_cookie))
->> +		goto restart;
->> +
->>   	/* Ensure kswapd doesn't accidentally go to sleep as long as we loop */
->>   	if (alloc_flags & ALLOC_KSWAPD)
->>   		wake_all_kswapds(order, gfp_mask, ac);
->> _
->>
+> Patch 1:     Refactor/rename hpage_collapse
+> Patch 2:     Some refactoring to combine madvise_collapse and khugepaged
+> Patch 3-5:   Generalize khugepaged functions for arbitrary orders
+> Patch 6-9:   The mTHP patches
+> Patch 10-11: Tracing/stats
+> Patch 12:    Documentation
+>
+> ---------
+>  Testing
+> ---------
+> - Built for x86_64, aarch64, ppc64le, and s390x
+> - selftests mm
+> - I created a test script that I used to push khugepaged to its limits
+>    while monitoring a number of stats and tracepoints. The code is
+>    available here[1] (Run in legacy mode for these changes and set mthp
+>    sizes to inherit)
+>    The summary from my testings was that there was no significant
+>    regression noticed through this test. In some cases my changes had
+>    better collapse latencies, and was able to scan more pages in the same
+>    amount of time/work, but for the most part the results were consistent=
+.
+> - redis testing. I tested these changes along with my defer changes
+>   (see followup post for more details).
+> - some basic testing on 64k page size.
+> - lots of general use.
+>
+> V6 Changes:
+> - Dont release the anon_vma_lock early (like in the PMD case), as not all
+>   pages are isolated.
+> - Define the PTE as null to avoid a uninitilized condition
+> - minor nits and newline cleanup
+> - make sure to unmap and unlock the pte for the swapin case
+> - change the revalidation to always check the PMD order (as this will mak=
+e
+>   sure that no other VMA spans it)
+>
+> V5 Changes [2]:
+> - switched the order of patches 1 and 2
+> - fixed some edge cases on the unified madvise_collapse and khugepaged
+> - Explained the "creep" some more in the docs
+> - fix EXCEED_SHARED vs EXCEED_SWAP accounting issue
+> - fix potential highmem issue caused by a early unmap of the PTE
+>
+> V4 Changes:
+> - Rebased onto mm-unstable
+> - small changes to Documentation
+>
+> V3 Changes:
+> - corrected legacy behavior for khugepaged and madvise_collapse
+> - added proper mTHP stat tracking
+> - Minor changes to prevent a nested lock on non-split-lock arches
+> - Took Devs version of alloc_charge_folio as it has the proper stats
+> - Skip cases were trying to collapse to a lower order would still fail
+> - Fixed cases were the bitmap was not being updated properly
+> - Moved Documentation update to this series instead of the defer set
+> - Minor bugs discovered during testing and review
+> - Minor "nit" cleanup
+>
+> V2 Changes:
+> - Minor bug fixes discovered during review and testing
+> - removed dynamic allocations for bitmaps, and made them stack based
+> - Adjusted bitmap offset from u8 to u16 to support 64k pagesize.
+> - Updated trace events to include collapsing order info.
+> - Scaled max_ptes_none by order rather than scaling to a 0-100 scale.
+> - No longer require a chunk to be fully utilized before setting the bit.
+>    Use the same max_ptes_none scaling principle to achieve this.
+> - Skip mTHP collapse that requires swapin or shared handling. This helps
+>    prevent some of the "creep" that was discovered in v1.
+>
+> [1] - https://gitlab.com/npache/khugepaged_mthp_test
+> [2] - https://lore.kernel.org/all/20250428181218.85925-1-npache@redhat.co=
+m/
+>
+> Dev Jain (1):
+>   khugepaged: generalize alloc_charge_folio()
+>
+> Nico Pache (11):
+>   khugepaged: rename hpage_collapse_* to khugepaged_*
+>   introduce khugepaged_collapse_single_pmd to unify khugepaged and
+>     madvise_collapse
+>   khugepaged: generalize hugepage_vma_revalidate for mTHP support
+>   khugepaged: generalize __collapse_huge_page_* for mTHP support
+>   khugepaged: introduce khugepaged_scan_bitmap for mTHP support
+>   khugepaged: add mTHP support
+>   khugepaged: skip collapsing mTHP to smaller orders
+>   khugepaged: avoid unnecessary mTHP collapse attempts
+>   khugepaged: improve tracepoints for mTHP orders
+>   khugepaged: add per-order mTHP khugepaged stats
+>   Documentation: mm: update the admin guide for mTHP collapse
+>
+>  Documentation/admin-guide/mm/transhuge.rst |  14 +-
+>  include/linux/huge_mm.h                    |   5 +
+>  include/linux/khugepaged.h                 |   4 +
+>  include/trace/events/huge_memory.h         |  34 +-
+>  mm/huge_memory.c                           |  11 +
+>  mm/khugepaged.c                            | 472 ++++++++++++++-------
+>  6 files changed, 382 insertions(+), 158 deletions(-)
+>
+> --
+> 2.49.0
+>
 
