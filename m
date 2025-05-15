@@ -1,91 +1,219 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B75C20297C;
-	Thu, 15 May 2025 11:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC72B202C5D;
+	Thu, 15 May 2025 11:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747307696; cv=none; b=TTKzJkB21q3/HcfgySdss9nM7BLRFOsv3bVSjuhe53n7+1JUa/xcYHbEHmfTehC2oMQ048a3P0ucOyZV5NbqkJj6hey4IcyNqMlZq0fZKC98pjyoqbGyY4jk84LCXKPGGv/Otgi5llSdaI/pLCkoK1PwceUuHsENyhb6bJF/4rg=
+	t=1747307761; cv=none; b=DbrJhtcgRsKgn2MySjn7u8WHXNdqDhXP4MwFt5f4QUZ1Uvpg91Viot6fF6y45l7+Gnzc60dXgEjb9lStYo59trePWpyFZqh4ovXZUfz2IcjCZAh7ek2e8ANC1fRH9CInanW+OqnPZ4SdRdI8UtL6I0vNP7xsIE/dupnV4ojtCWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747307696; c=relaxed/simple;
-	bh=KAOGf5l3a1QUryljVuiJwl1E3W/RvEWQRQxTmy+qBjU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DqryfyU7rNmQ4qt/tD66KLuNlfNxQI32A87hYLB6RipIZhBHT9ucyp+27hJ/ZQPZ7V2dJ0qp4woV9W0DF/6ub7OCn1wJIwRAVJmzRjGtY2r5o11xDhnigbq9nAWNuBkCOp7Is6pug5FEuTyRgMQZKL/7UAvWUjhboSvRX8e20mY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=qJC4ZpqD; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747307761; c=relaxed/simple;
+	bh=15KP2pl6dWb1y5/Go7dvJ7kbiOO+tNWUThlBC2YivmE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SX4vDmQDlzbr/NLFWHK7PabekUeMOgHbc0tZaNigiM9eaeJPZw2dvQt/u4IeI784m2lII7vbZHS8Be8cc9ulNKZ98YqbPOqYASylpeBvqMKWQXD4TE1nTeFyvGXATdNbb7vb7F60D7rh+W8FzMgLzjQNPB5+kuKEk82bPE9BjiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZyBnSX10; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="qJC4ZpqD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=z/
-	DVrSVzhckFzlr5cf1y4a94mQlkYtE0DByz9JiadCU=; b=qJC4ZpqDS0Pyt0eGa4
-	ahQcJ2RC5HjLtImKssw6hzcu0RrvMcOIhGF0wn7f8lQ4v020vxsI3MNtbQ8MNTf4
-	KaYrOnDjdR7KpShQIwQNN9rFuUlLEwNKBlSKCPo7/R9Y+KNu5BlUmne+Jagr4Hrv
-	hUjEUCqo90d3PAhaEBG9j4bh4=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wC3lfSQzCVo+qkzBg--.11996S2;
-	Thu, 15 May 2025 19:14:24 +0800 (CST)
-From: chenchangcheng <ccc194101@163.com>
-To: laurent.pinchart@ideasonboard.com,
-	ribalda@chromium.org
-Cc: hdegoede@redhat.com,
-	mchehab@kernel.org,
-	linux-media@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZyBnSX10"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99F96C4CEE7;
+	Thu, 15 May 2025 11:15:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747307760;
+	bh=15KP2pl6dWb1y5/Go7dvJ7kbiOO+tNWUThlBC2YivmE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZyBnSX10tyblkRxhmOiwlDFQulDd2bDibTSzQPGXi6i3yyH1BYCxHSfHK56elpRJq
+	 GcYJ8YF5ORkfHwgyBccI6P0EJXcg7ADzjGILpz6MTn5k04D6pmAabAMIYfmykukkOB
+	 jZd+tnvB0M6mjcGZ5LKYGAyznOakpmbpE/oIHCWmxK+j0270J619f7aO3hmIogCfIu
+	 QR7Fm29pVfvHGmSn+XTh4jsEoyF2cFfJ2H+F/l+q0DN6a6xCKqa6XRZ5dJu2nDoDGq
+	 mkTDSxQJlIOUzkbBm2jrspv7G0wS1BpCRljPlV5c/KGTfRboNuxR4gSWcDFMxqWYF1
+	 bHovMBag8j1Kw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
-	chenchangcheng <chenchangcheng@kylinos.cn>
-Subject: [PATCH v11] media: uvcvideo: Fix bandwidth issue for Alcor camera.
-Date: Thu, 15 May 2025 19:14:06 +0800
-Message-Id: <20250515111406.1470687-1-ccc194101@163.com>
-X-Mailer: git-send-email 2.25.1
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v2] tracing: ring_buffer: Rewind persistent ring buffer when reboot
+Date: Thu, 15 May 2025 20:15:56 +0900
+Message-ID:  <174730775661.3893490.10420015749079085314.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wC3lfSQzCVo+qkzBg--.11996S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ZFWDKry5WFWfKF1xAr4UCFg_yoW8Wr1Upa
-	1ruayFyryUJrWFganrJa1rKa1rAanYyw4fKFW3W34kZr45JryxXFy3G340q3sFya1fAw1a
-	qr1qqrnru39YvrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jreOJUUUUU=
-X-CM-SenderInfo: 5fffimiurqiqqrwthudrp/1tbiTQZO3mglx4yKJAAAsz
 
-From: chenchangcheng <chenchangcheng@kylinos.cn>
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Some broken device return wrong dwMaxPayloadTransferSize fields
-as follows:
-    [  218.632537] [pid:20427,cpu6,guvcview,8]uvcvideo: Device requested 2752512 B/frame bandwidth.
-    [  218.632598] [pid:20427,cpu6,guvcview,9]uvcvideo: No fast enough alt setting for requested bandwidth.
+Rewind persistent ring buffer pages which have been read in the
+previous boot. Those pages are highly possible to be lost before
+writing it to the disk if the previous kernel crashed. In this
+case, the trace data is kept on the persistent ring buffer, but
+it can not be read because its commit size has been reset after
+read.
+This skips clearing the commit size of each sub-buffer and
+recover it after reboot.
 
-When dwMaxPayloadTransferSize is greater than maxpsize,
-it will prevent the camera from starting.
-So use the bandwidth of maxpsize.
+Note: If you read the previous boot data via trace_pipe, that
+is not accessible in that time. But reboot without clearing (or
+reusing) the read data, the read data is recovered again in the
+next boot.
+Thus, when you read the previous boot data, clear it by
+`echo > trace`.
 
-Signed-off-by: chenchangcheng <chenchangcheng@kylinos.cn>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- drivers/media/usb/uvc/uvc_video.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ Changes in v2:
+  - Stop rewind if timestamp is not older.
+  - Rewind reader page and reset all indexes.
+  - Make ring_buffer_read_page() not clear the commit size.
+---
+ kernel/trace/ring_buffer.c |   99 ++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 95 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
-index e3567aeb0007..11769a1832d2 100644
---- a/drivers/media/usb/uvc/uvc_video.c
-+++ b/drivers/media/usb/uvc/uvc_video.c
-@@ -262,6 +262,15 @@ static void uvc_fixup_video_ctrl(struct uvc_streaming *stream,
- 
- 		ctrl->dwMaxPayloadTransferSize = bandwidth;
- 	}
-+
-+	if (stream->intf->num_altsetting > 1 &&
-+	    ctrl->dwMaxPayloadTransferSize > stream->maxpsize) {
-+		dev_warn_ratelimited(&stream->intf->dev,
-+				     "UVC non compliance: the max payload transmission size (%u) exceeds the size of the ep max packet (%u). Using the max size.\n",
-+				     ctrl->dwMaxPayloadTransferSize,
-+				     stream->maxpsize);
-+		ctrl->dwMaxPayloadTransferSize = stream->maxpsize;
-+	}
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 6859008ca34d..48f5f248eb4c 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1358,6 +1358,13 @@ static inline void rb_inc_page(struct buffer_page **bpage)
+ 	*bpage = list_entry(p, struct buffer_page, list);
  }
  
- static size_t uvc_video_ctrl_size(struct uvc_streaming *stream)
-
-base-commit: 9f35e33144ae5377d6a8de86dd3bd4d995c6ac65
--- 
-2.25.1
++static inline void rb_dec_page(struct buffer_page **bpage)
++{
++	struct list_head *p = rb_list_head((*bpage)->list.prev);
++
++	*bpage = list_entry(p, struct buffer_page, list);
++}
++
+ static struct buffer_page *
+ rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+@@ -1866,10 +1873,11 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
+ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+ 	struct ring_buffer_cpu_meta *meta = cpu_buffer->ring_meta;
+-	struct buffer_page *head_page;
++	struct buffer_page *head_page, *orig_head;
+ 	unsigned long entry_bytes = 0;
+ 	unsigned long entries = 0;
+ 	int ret;
++	u64 ts;
+ 	int i;
+ 
+ 	if (!meta || !meta->head_buffer)
+@@ -1885,8 +1893,93 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
+ 	local_set(&cpu_buffer->reader_page->entries, ret);
+ 
+-	head_page = cpu_buffer->head_page;
++	orig_head = head_page = cpu_buffer->head_page;
++	ts = head_page->page->time_stamp;
++
++	/*
++	 * Try to rewind the head so that we can read the pages which already
++	 * read in the previous boot.
++	 */
++	if (head_page == cpu_buffer->tail_page)
++		goto rewound;
++
++	rb_dec_page(&head_page);
++	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_dec_page(&head_page)) {
++
++		/* Rewind until tail (writer) page. */
++		if (head_page == cpu_buffer->tail_page)
++			break;
++
++		/* Ensure the page has older data than head. */
++		if (ts < head_page->page->time_stamp)
++			break;
++
++		ts = head_page->page->time_stamp;
++		/* Ensure the page has correct timestamp and some data. */
++		if (!ts || rb_page_commit(head_page) == 0)
++			break;
++
++		/* Stop rewind if the page is invalid. */
++		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
++		if (ret < 0)
++			break;
++
++		/* Recover the number of entries and update stats. */
++		local_set(&head_page->entries, ret);
++		if (ret)
++			local_inc(&cpu_buffer->pages_touched);
++		entries += ret;
++		entry_bytes += rb_page_commit(head_page);
++	}
++	pr_info("Rewound %d pages on cpu%d\n", i, cpu_buffer->cpu);
++
++	/* The last rewound page must be skipped. */
++	if (head_page != orig_head)
++		rb_inc_page(&head_page);
+ 
++	/* If there are rewound pages, rewind the reader page too. */
++	if (head_page != orig_head) {
++		struct buffer_page *bpage = orig_head;
++
++		rb_dec_page(&bpage);
++		/*
++		 * Insert the reader_page before the original head page.
++		 * Since the list encode RB_PAGE flags, general list
++		 * operations should be avoided.
++		 */
++		cpu_buffer->reader_page->list.next = &orig_head->list;
++		cpu_buffer->reader_page->list.prev = orig_head->list.prev;
++		orig_head->list.prev = &cpu_buffer->reader_page->list;
++		bpage->list.next = &cpu_buffer->reader_page->list;
++
++		/* Make the head_page tthe new read page */
++		cpu_buffer->reader_page = head_page;
++		bpage = head_page;
++		rb_inc_page(&head_page);
++		head_page->list.prev = bpage->list.prev;
++		rb_dec_page(&bpage);
++		bpage->list.next = &head_page->list;
++		rb_set_list_to_head(&bpage->list);
++
++		cpu_buffer->head_page = head_page;
++		meta->head_buffer = (unsigned long)head_page->page;
++
++		/* Reset all the indexes */
++		bpage = cpu_buffer->reader_page;
++		meta->buffers[0] = rb_meta_subbuf_idx(meta, bpage->page);
++		bpage->id = 0;
++
++		for (i = 0, bpage = head_page; i < meta->nr_subbufs;
++		     i++, rb_inc_page(&bpage)) {
++			meta->buffers[i + 1] = rb_meta_subbuf_idx(meta, bpage->page);
++			bpage->id = i + 1;
++		}
++
++		/* We'll restart verifying from orig_head */
++		head_page = orig_head;
++	}
++
++ rewound:
+ 	/* If the commit_buffer is the reader page, update the commit page */
+ 	if (meta->commit_buffer == (unsigned long)cpu_buffer->reader_page->page) {
+ 		cpu_buffer->commit_page = cpu_buffer->reader_page;
+@@ -5348,7 +5441,6 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 	 */
+ 	local_set(&cpu_buffer->reader_page->write, 0);
+ 	local_set(&cpu_buffer->reader_page->entries, 0);
+-	local_set(&cpu_buffer->reader_page->page->commit, 0);
+ 	cpu_buffer->reader_page->real_end = 0;
+ 
+  spin:
+@@ -6642,7 +6734,6 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+ 		cpu_buffer->read_bytes += rb_page_size(reader);
+ 
+ 		/* swap the pages */
+-		rb_init_page(bpage);
+ 		bpage = reader->page;
+ 		reader->page = data_page->data;
+ 		local_set(&reader->write, 0);
 
