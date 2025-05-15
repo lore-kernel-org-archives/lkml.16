@@ -1,132 +1,257 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD6A222586;
-	Thu, 15 May 2025 10:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2291C18DB37;
+	Thu, 15 May 2025 10:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747303362; cv=none; b=RWaQjSX2cqNlmmF5jvf89r1bmWFbyH8PaL40kIdq2he9fvk6+U+a4onXZbPplSSV0Nt+8KwAk1fumbA4K28ZMfktB/4ukCc3fe44de7Z5xm7DOc+hORqq4cApzLe1MmLkJlHweCauDrg5exBNZ5wL0WPeObZFBqDEln95CZ50uY=
+	t=1747303450; cv=none; b=OuAmxfC//9CbH/qtTQ0FeOViBSnvxwoR17D/lveKYdg6q2M9weQieoK9/OtlXmwgEO4rSvnuG+i56l66CX+AN7BwpZAFpwITucIdlGZWXnJS/zcobIW70bOLFMlDBa6rtRfPBJ5Sizo/32gR8FOe0Ppjicy00H9TKNgoJbCJZV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747303362; c=relaxed/simple;
-	bh=7V+0sXGhrjXDWjjEqhgFc7TixWZcO1mFzorR7Ny6tVE=;
+	s=arc-20240116; t=1747303450; c=relaxed/simple;
+	bh=sD1eHD0aNCDTJQ1r/x2BlkpBGb6+H+dwk6qBtn6A6eo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TmJxXfDHxG2UVr2h4Equ8tHwKgLJAkoxX3pCKXGuPVPVK3REQmYw1YANoI6dTcNT3pkLVyaGsIa6TiU9A0dpcJ4Hq6CyT0B7R8BoEyTXNDWkjHqWz7ZfmNvsA5Ej9+dTKDeKuHIiPxR73JMYvVoJ97kyR7LLxZnT4dyeNehG8ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GlVE8kYI; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=aQiGtNIPnms912SWKmXBcvTnQ5B2vo5AiIynhCGpU000ZY2RsoV2/A+mYnrOfpqMXPLZOmV6HsKFtl4FVfrqdGaZseEcir6oDpmZCyPL4MS7PoYzHZs2c2oS5f1LvnSc7CUOKDGWSdXOMLnDQkquI3RUvU1rgKnE+hz9PMr9OnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SdlfQCTm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GlVE8kYI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747303360; x=1778839360;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7V+0sXGhrjXDWjjEqhgFc7TixWZcO1mFzorR7Ny6tVE=;
-  b=GlVE8kYI+kfX1kQIQGrPGu+YguDNq6gNs623FczsGWD3xaNgLSEVWXrh
-   MsmDxaKPkoH6lwB5hWkEliPTQHMbAuUB5JAsTAwuFnsZWRHBcsq3x1NSw
-   bIiysTq/85m0U22u8k+cge/fHxH7cgmbm/dS0QHqoP0gxxPqRCwvZcNtx
-   7cBNJ4B4i0JrPnTRzZnXOU6mRAEaU9qQq/Kq1pquzPbidPtpq/Uzogk+U
-   VC8z7yCaF8XSAno9FI/XVcThrYJO7ICvhjXa/FHWKRzv2MjUlvUNAXuO2
-   qnSj181lXUv8PFMm8NuUz0Rat3d45QfyoENscrYSubLd/TbeDRmLE5Glx
-   g==;
-X-CSE-ConnectionGUID: 4P9xtCK3S3y3jErxczeANg==
-X-CSE-MsgGUID: NJppuzI7Rg+A5uABdQBKOw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="51868459"
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="51868459"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 03:02:39 -0700
-X-CSE-ConnectionGUID: 7q/X3VPPQzCJMbjpDDGX7Q==
-X-CSE-MsgGUID: BFAj0XCCTa+EZV33FnPIQQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="138205390"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 03:02:38 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uFVQA-00000001oKi-1zxc;
-	Thu, 15 May 2025 13:02:34 +0300
-Date: Thu, 15 May 2025 13:02:34 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Mika Westerberg <westeri@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v1 0/4] gpiolib: acpi: Split quirks to its own file
-Message-ID: <aCW7unjYEgPWYV_i@smile.fi.intel.com>
-References: <20250513100514.2492545-1-andriy.shevchenko@linux.intel.com>
- <20250514155955.GS88033@black.fi.intel.com>
- <aCWgBp4ZD5aesvRw@smile.fi.intel.com>
- <20250515083451.GT88033@black.fi.intel.com>
- <aCWo19FjcvZzP1H7@smile.fi.intel.com>
- <20250515084727.GU88033@black.fi.intel.com>
- <aCWsuRc5ggJJFc5u@smile.fi.intel.com>
- <20250515093124.GV88033@black.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SdlfQCTm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AB21C4CEE7;
+	Thu, 15 May 2025 10:04:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747303449;
+	bh=sD1eHD0aNCDTJQ1r/x2BlkpBGb6+H+dwk6qBtn6A6eo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SdlfQCTmqiyc9cLRn+bVZ+J/xKgEspqF0Xu5p+/MWV6lwgvd5Lj8GKu0SHK6ExgDM
+	 wdl5smrvYBEAv233vaVzX+xdxBbq8VNg+eXXl1G5vFNI2TVEsSNxMyt1dLNB7OtHmE
+	 i09U3/VA+pM89W75yUOWmZ3HBaqvB2rIFp8kxGmrc0hxCOLryKo/Zn0O/zVzpixJtW
+	 roRpUVx+OI1n7fhD3n1pZbEFimyLqzII6s/qKrupFLv+4KDguIzE0hAHVJiLpuIpTG
+	 wzsrcEMv6piv+Yv2BAzI19UUcFgwLeSGYEj4HyES8HYjMYE17NVnQ6nYEfIv5hGuCb
+	 bUqghGUUvFwbQ==
+Date: Thu, 15 May 2025 12:04:04 +0200
+From: Joel Granados <joel.granados@kernel.org>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, 
+	Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, Kees Cook <kees@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Frederic Weisbecker <frederic@kernel.org>, 
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>, 
+	Josh Triplett <josh@joshtriplett.org>, Uladzislau Rezki <urezki@gmail.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	Helge Deller <deller@gmx.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, rcu@vger.kernel.org, linux-mm@kvack.org, 
+	linux-parisc@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH 01/12] module: Move modprobe_path and modules_disabled
+ ctl_tables into the module subsys
+Message-ID: <g3e3ygz4jb73b3zhxexpwacwui3imlwauujzeq2nlopp2i2fjp@lzj33hcwztc2>
+References: <20250509-jag-mv_ctltables_iter2-v1-0-d0ad83f5f4c3@kernel.org>
+ <20250509-jag-mv_ctltables_iter2-v1-1-d0ad83f5f4c3@kernel.org>
+ <e2ebf88d-46a2-4f38-a0c8-940c3d3bee49@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ru77vocekp26ujzg"
+Content-Disposition: inline
+In-Reply-To: <e2ebf88d-46a2-4f38-a0c8-940c3d3bee49@suse.com>
+
+
+--ru77vocekp26ujzg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250515093124.GV88033@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2025 at 12:31:24PM +0300, Mika Westerberg wrote:
-> On Thu, May 15, 2025 at 11:58:33AM +0300, Andy Shevchenko wrote:
-> > On Thu, May 15, 2025 at 11:47:27AM +0300, Mika Westerberg wrote:
-> > > On Thu, May 15, 2025 at 11:41:59AM +0300, Andy Shevchenko wrote:
-> > > > On Thu, May 15, 2025 at 11:34:51AM +0300, Mika Westerberg wrote:
-> > > > > On Thu, May 15, 2025 at 11:04:22AM +0300, Andy Shevchenko wrote:
-> > > > > > On Wed, May 14, 2025 at 06:59:55PM +0300, Mika Westerberg wrote:
-> > 
-> > ...
-> > 
-> > > > > > That's might be the next step to have for all of them, but these are ACPI
-> > > > > > specific. In any case they can't be put to gpiolib-quirks.c due to module
-> > > > > > parameters. If we do that we will need a dirty hack to support old module
-> > > > > > parameters (see 8250 how it's done there, and even author of that didn't like
-> > > > > > the approach).
-> > > > > 
-> > > > > Hmm, how does it affect module paremeters? I thought they are
-> > > > > gpiolib.something as all these object files are linked to it?
-> > > > 
-> > > > gpiolib_acpi.FOO because the object file is gpiolib-acpi.o.
-> > > 
-> > > Ah okay.
-> > > 
-> > > > > At least can we drop the gpiolib-acpi-core.c rename?
-> > > > 
-> > > > Unfortunately no due to the above.
-> > > 
-> > > This does not work?
-> > > 
-> > > gpiolib-acpi-y                 := gpiolib-acpi.o gpiolib-acpi-quirks.o
-> > 
-> > No. You can't use the same name on left and right parts.
-> 
-> I see :( Okay then I guess there are no other options than name it like
-> this.
-> 
-> [ Ideally we would drop the while gpiolib- prefix from all these so you have
-> acpi.c, sysfs.c and so on without the redundancy but that's outside of
-> scope of this work anyways ;-) ]
+On Thu, May 15, 2025 at 10:04:53AM +0200, Petr Pavlu wrote:
+> On 5/9/25 14:54, Joel Granados wrote:
+> > Move module sysctl (modprobe_path and modules_disabled) out of sysctl.c
+> > and into the modules subsystem. Make the modprobe_path variable static
+> > as it no longer needs to be exported. Remove module.h from the includes
+> > in sysctl as it no longer uses any module exported variables.
+> >=20
+> > This is part of a greater effort to move ctl tables into their
+> > respective subsystems which will reduce the merge conflicts in
+> > kernel/sysctl.c.
+> >=20
+> > Signed-off-by: Joel Granados <joel.granados@kernel.org>
+> > [...]
+> > --- a/kernel/module/kmod.c
+> > +++ b/kernel/module/kmod.c
+> > @@ -60,7 +60,7 @@ static DEFINE_SEMAPHORE(kmod_concurrent_max, MAX_KMOD=
+_CONCURRENT);
+> >  /*
+> >  	modprobe_path is set via /proc/sys.
+> >  */
+> > -char modprobe_path[KMOD_PATH_LEN] =3D CONFIG_MODPROBE_PATH;
+> > +static char modprobe_path[KMOD_PATH_LEN] =3D CONFIG_MODPROBE_PATH;
+> > =20
+> >  static void free_modprobe_argv(struct subprocess_info *info)
+> >  {
+> > @@ -177,3 +177,33 @@ int __request_module(bool wait, const char *fmt, .=
+=2E.)
+> >  	return ret;
+> >  }
+> >  EXPORT_SYMBOL(__request_module);
+> > +
+> > +#ifdef CONFIG_MODULES
+> > +static const struct ctl_table kmod_sysctl_table[] =3D {
+> > +	{
+> > +		.procname	=3D "modprobe",
+> > +		.data		=3D &modprobe_path,
+> > +		.maxlen		=3D KMOD_PATH_LEN,
+> > +		.mode		=3D 0644,
+> > +		.proc_handler	=3D proc_dostring,
+> > +	},
+> > +	{
+> > +		.procname	=3D "modules_disabled",
+> > +		.data		=3D &modules_disabled,
+> > +		.maxlen		=3D sizeof(int),
+> > +		.mode		=3D 0644,
+> > +		/* only handle a transition from default "0" to "1" */
+> > +		.proc_handler	=3D proc_dointvec_minmax,
+> > +		.extra1		=3D SYSCTL_ONE,
+> > +		.extra2		=3D SYSCTL_ONE,
+> > +	},
+>=20
+> This is minor.. but the file kernel/module/kmod.c contains the logic to
+> request direct modprobe invocation by the kernel. Registering the
+> modprobe_path sysctl here is appropriate. However, the modules_disabled
+> setting affects the entire module loader so I don't think it's best to
+> register it here.
+>=20
+> I suggest keeping a single table for the module sysctl values but moving
+> it to kernel/module/main.c. This means the variable modprobe_path must
+> retain external linkage, on the other hand, modules_disabled can be made
+> static.
 
-I also would like to have prefix to be dropped for the files, but the modules
-(and it's can be achieved, but it's indeed out of scope here).
+Like this?:
 
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ include/linux/module.h |  1 -
+ kernel/module/main.c   | 30 +++++++++++++++++++++++++++++-
+ kernel/sysctl.c        | 20 --------------------
+ 3 files changed, 29 insertions(+), 22 deletions(-)
 
-Thank you!
-I am going to push to my review and testing queue soon.
+diff --git a/include/linux/module.h b/include/linux/module.h
+index d94b196d5a34..25476168e012 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -302,7 +302,6 @@ struct notifier_block;
+=20
+ #ifdef CONFIG_MODULES
+=20
+-extern int modules_disabled; /* for sysctl */
+ /* Get/put a kernel symbol (calls must be symmetric) */
+ void *__symbol_get(const char *symbol);
+ void *__symbol_get_gpl(const char *symbol);
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index a2859dc3eea6..13055ef65f15 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -126,9 +126,37 @@ static void mod_update_bounds(struct module *mod)
+ }
+=20
+ /* Block module loading/unloading? */
+-int modules_disabled;
++static int modules_disabled;
+ core_param(nomodule, modules_disabled, bint, 0);
+=20
++static const struct ctl_table kmod_sysctl_table[] =3D {
++	{
++		.procname	=3D "modprobe",
++		.data		=3D &modprobe_path,
++		.maxlen		=3D KMOD_PATH_LEN,
++		.mode		=3D 0644,
++		.proc_handler	=3D proc_dostring,
++	},
++	{
++		.procname	=3D "modules_disabled",
++		.data		=3D &modules_disabled,
++		.maxlen		=3D sizeof(int),
++		.mode		=3D 0644,
++		/* only handle a transition from default "0" to "1" */
++		.proc_handler	=3D proc_dointvec_minmax,
++		.extra1		=3D SYSCTL_ONE,
++		.extra2		=3D SYSCTL_ONE,
++	},
++};
++
++static int __init init_kmod_sysctl(void)
++{
++	register_sysctl_init("kernel", kmod_sysctl_table);
++	return 0;
++}
++
++subsys_initcall(init_kmod_sysctl);
++
+ /* Waiting for a module to finish initializing? */
+ static DECLARE_WAIT_QUEUE_HEAD(module_wq);
+=20
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 9b4f0cff76ea..473133d9651e 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -19,7 +19,6 @@
+  *  Removed it and replaced it with older style, 03/23/00, Bill Wendling
+  */
+=20
+-#include <linux/module.h>
+ #include <linux/sysctl.h>
+ #include <linux/bitmap.h>
+ #include <linux/printk.h>
+@@ -1616,25 +1615,6 @@ static const struct ctl_table kern_table[] =3D {
+ 		.proc_handler	=3D proc_dointvec,
+ 	},
+ #endif
+-#ifdef CONFIG_MODULES
+-	{
+-		.procname	=3D "modprobe",
+-		.data		=3D &modprobe_path,
+-		.maxlen		=3D KMOD_PATH_LEN,
+-		.mode		=3D 0644,
+-		.proc_handler	=3D proc_dostring,
+-	},
+-	{
+-		.procname	=3D "modules_disabled",
+-		.data		=3D &modules_disabled,
+-		.maxlen		=3D sizeof(int),
+-		.mode		=3D 0644,
+-		/* only handle a transition from default "0" to "1" */
+-		.proc_handler	=3D proc_dointvec_minmax,
+-		.extra1		=3D SYSCTL_ONE,
+-		.extra2		=3D SYSCTL_ONE,
+-	},
+-#endif
+ #ifdef CONFIG_UEVENT_HELPER
+ 	{
+ 		.procname	=3D "hotplug",
+--=20
+2.47.2
 
--- 
-With Best Regards,
-Andy Shevchenko
+--=20
 
+Joel Granados
 
+--ru77vocekp26ujzg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmglvAoACgkQupfNUreW
+QU8L/Av/YmkHrysPaGwJRKxmis9nMWc0PYzFjViNFVlZuFXAXKu5kWSHvaxsq8fl
++yJvXtS9QV8pXzyKlEgEdknV+d8qh95hPO7WArzybZ3bivL7LsjCnBU6mflIQnOb
+xfvTTJncJ5PUk15VXsPA9mNiYy+xA2y7HCsxD7N3Vz2uDzl2HnJucfga9SRuua52
+lTItMHiKvN0oxOwsVH5jQtPijcknG9sV7Cz84O31WuvY7DPhNFUBhhb6UGB5RA25
+pM4Zb7bWDBv+xnWKGBjHFdhCqCDFr/Honyjvl4xiSbGd0kzucDlJiSkHiJfE/zFl
+2Fvm/edUeW7PUI7pqyYunJeEeTDiNU1/aalCIErLT8idbEf5EwbqPVjMCU9ktVXS
+73LiItIXrewicguZtSGB+nJMz4ETZKzBxFQo2ZTEsZ9saxr0SebmpSg1jar5rkXy
+S+3KjAQKE7JsI7s765cc1m/SCPceaN02cw9zMELFXt/0tQU5xIH2rWTLinYpFVyt
+HrP1upxU
+=vQLm
+-----END PGP SIGNATURE-----
+
+--ru77vocekp26ujzg--
