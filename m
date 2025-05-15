@@ -1,277 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C22E29995C;
-	Thu, 15 May 2025 12:55:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE722298C1C;
+	Thu, 15 May 2025 12:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747313759; cv=none; b=Nf3OcWm5t3WbVfdY2Q9jhSuTV8U6IjDx/LtQFymhVMrY4h4F9bYbIWx7B/mGqgs5WTZqDTAX0Nb+7CFZ2mUOxAkLAQuXXH9cwOxi1+O6vixNGelmSEMIQnOs7ARVukACp5i3vIxj/S4WHsgWyptzlZVML+0DDqfUx/eGPU/KyyA=
+	t=1747313772; cv=none; b=a18eCi0cUpuMokREWy1QDNDQBQMgb5CS4ExtVgUEpnlObvQXVXgdEmkZfRX3SinEDSSssG72g8QhhMg+lc0Bg+Yr7iPLSR0lsqo84AbNrslAV0vgZcNNFDwb6N6cu0F71/G51kJ55tERZFXfxw/csIcTnT7kHn44OBLYd9ekeO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747313759; c=relaxed/simple;
-	bh=/UPaLoHrddNLbUn4Gl4Qnrk7JCOj1PaZElu2uhtUnBM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aEOfwm8lEuiaAKEHSJYyqAXjpedqp0k/98lF7ig/kMzgqZ+Pu+84JECsGiI1l2IxosnDZ65Wbc7fin1rYkHbjx0q0G+IGVQ0mgSSd+6O0zSVQ96aZ/ee9n42nKuwPb4/Nh+rrFoLyzTedd9mOMmgCkD4Z2lGONY6NLYhQOgrPuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=givRzcZf; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747313772; c=relaxed/simple;
+	bh=XjaA4euigQSgEh5o8KfHZkKho3kN1DiJAA1xWUvIMWo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WCkOd14vg8x0DzI+tHSlq0lh2KIZqGpO4u97OLrGhTXGYUwjKRnfDNSS/j3Z/FzhCsIqsPB+M5J36Iwq7JXuV37nadUKUZR6ObEY9s5+zUFCVAeMxIzc4Nn9Eht6uNefccqBvFAGpTGR+xXjNnVDWu6U1SYzq30o4hm3LU8OeDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EM12WOIa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="givRzcZf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747313758; x=1778849758;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/UPaLoHrddNLbUn4Gl4Qnrk7JCOj1PaZElu2uhtUnBM=;
-  b=givRzcZflhELqhy+hl5Z7OezqrfbYVTlpqYW3u6TnSx7xbs5p8HSnYSn
-   dP+hg3hHmWzLeAAy8BbGlQJx8zOkVIF7tVdlGdbd3Yn0HE9d7LZLpKhgy
-   ZvPQHm76XtgYJ2V5EypR3fVs2ekb5D75txWYJsAvepkaZjCaJ1DzRdEax
-   n489xWN/jN8jkr4lWF5o79XncErxmFg8hurhg8JJXSKVLWu7yLlPid00o
-   lRspS53Bbigp8QNjpsYjo2jFe1YjY2ZX8gu15fXDiRtIhA+Jg+DfB+mju
-   SSnLdt8VJDZaUjNsjYa8NOlbCVbNoFePCuafMdlZAXb+LszEXup6aIeuN
-   A==;
-X-CSE-ConnectionGUID: 3VGrFW+5Tjet9bEPpap8Ug==
-X-CSE-MsgGUID: +VaPTpjFSPycXqj9cwqU1g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49383691"
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="49383691"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 05:55:57 -0700
-X-CSE-ConnectionGUID: m5Tos1AaRqm1HtzVEP/+qw==
-X-CSE-MsgGUID: SiOtB6pBT2mpVjmCiYL4PQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="138862525"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 05:55:57 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 413C720B5736;
-	Thu, 15 May 2025 05:55:06 -0700 (PDT)
-Message-ID: <4a44b8cb-7c73-4926-8b9f-1f63929ea48f@linux.intel.com>
-Date: Thu, 15 May 2025 08:55:05 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EM12WOIa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47426C4CEEB;
+	Thu, 15 May 2025 12:56:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747313772;
+	bh=XjaA4euigQSgEh5o8KfHZkKho3kN1DiJAA1xWUvIMWo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EM12WOIao1+ZILoI/QChBsE2hjpGrOwBOP9fd0v/f9IsoWMv+o9xrViP/7wSm/ch8
+	 QkdBxpSwxwAFduwPN42UnsAWCQ9Ip7zqEAr9QtkIifmAwju7VsOBW7K5/cyC83O/i2
+	 nedqpvu0TdLW/7S3ke7oVUnDCdaiSZ8+I+XkAqDFmrEN0QAbNSf4cFKsUuorF0wgQ+
+	 dnPd1jw7r5vIS+1dTk2kZyrQSxl5QngYSwA8UEg0nFu6F8FiJFAMDQp0+o7AbaP9MH
+	 HmHULpthiu+owl4gZdu6JfpFUHFGrmlrSDi8VSG/hkcwuz+vM3UBZCW5k4W+xzH7yL
+	 ydOEAJutUySaQ==
+Date: Thu, 15 May 2025 13:56:07 +0100
+From: Will Deacon <will@kernel.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com,
+	ryan.roberts@arm.com, anshuman.khandual@arm.com,
+	mark.rutland@arm.com, yang@os.amperecomputing.com,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] arm64: Check pxd_leaf() instead of !pxd_table() while
+ tearing down page tables
+Message-ID: <20250515125606.GA11878@willie-the-truck>
+References: <20250515063450.86629-1-dev.jain@arm.com>
+ <332ecda7-14c4-4dc3-aeff-26801b74ca04@redhat.com>
+ <4904d02f-6595-4230-a321-23327596e085@arm.com>
+ <6fe7848c-485e-4639-b65c-200ed6abe119@redhat.com>
+ <35ef7691-7eac-4efa-838d-c504c88c042b@arm.com>
+ <c06930f0-f98c-4089-aa33-6789b95fd08f@redhat.com>
+ <91fc96c3-4931-4f07-a0a9-507ac7b5ae6d@arm.com>
+ <a005b0c3-861f-4e73-a747-91e0a15c85de@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 01/15] perf: Fix the throttle logic for a group
-To: Leo Yan <leo.yan@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
- irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com,
- tmricht@linux.ibm.com
-References: <20250514151401.2547932-1-kan.liang@linux.intel.com>
- <20250514151401.2547932-2-kan.liang@linux.intel.com>
- <20250515094300.GC412060@e132581.arm.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250515094300.GC412060@e132581.arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a005b0c3-861f-4e73-a747-91e0a15c85de@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-
-
-On 2025-05-15 5:43 a.m., Leo Yan wrote:
-> On Wed, May 14, 2025 at 08:13:47AM -0700, kan.liang@linux.intel.com wrote:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> The current throttle logic doesn't work well with a group, e.g., the
->> following sampling-read case.
->>
->> $ perf record -e "{cycles,cycles}:S" ...
->>
->> $ perf report -D | grep THROTTLE | tail -2
->>             THROTTLE events:        426  ( 9.0%)
->>           UNTHROTTLE events:        425  ( 9.0%)
->>
->> $ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
->> 0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
->> ... sample_read:
->> .... group nr 2
->> ..... id 0000000000000327, value 000000000cbb993a, lost 0
->> ..... id 0000000000000328, value 00000002211c26df, lost 0
->>
->> The second cycles event has a much larger value than the first cycles
->> event in the same group.
->>
->> The current throttle logic in the generic code only logs the THROTTLE
->> event. It relies on the specific driver implementation to disable
->> events. For all ARCHs, the implementation is similar. Only the event is
->> disabled, rather than the group.
->>
->> The logic to disable the group should be generic for all ARCHs. Add the
->> logic in the generic code. The following patch will remove the buggy
->> driver-specific implementation.
->>
->> The throttle only happens when an event is overflowed. Stop the entire
->> group when any event in the group triggers the throttle.
->> The MAX_INTERRUPTS is set to all throttle events.
->>
->> The unthrottled could happen in 3 places.
->> - event/group sched. All events in the group are scheduled one by one.
->>   All of them will be unthrottled eventually. Nothing needs to be
->>   changed.
->> - The perf_adjust_freq_unthr_events for each tick. Needs to restart the
->>   group altogether.
->> - The __perf_event_period(). The whole group needs to be restarted
->>   altogether as well.
->>
->> With the fix,
->> $ sudo perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
->> 0 3573470770332 0x12f5f8 [0x70]: PERF_RECORD_SAMPLE(IP, 0x2):
->> ... sample_read:
->> .... group nr 2
->> ..... id 0000000000000a28, value 00000004fd3dfd8f, lost 0
->> ..... id 0000000000000a29, value 00000004fd3dfd8f, lost 0
->>
->> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
->>
->> Changes since V1:
->> - Apply the suggested throttle/unthrottle functions from Peter.
->>   The MAX_INTERRUPTS and throttle logs are applied to all events.
->> - Update the description and comments accordingly
->>
->>  kernel/events/core.c | 58 +++++++++++++++++++++++++++++++++-----------
->>  1 file changed, 44 insertions(+), 14 deletions(-)
->>
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index a84abc2b7f20..a270fcda766d 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -2734,6 +2734,39 @@ void perf_event_disable_inatomic(struct perf_event *event)
->>  static void perf_log_throttle(struct perf_event *event, int enable);
->>  static void perf_log_itrace_start(struct perf_event *event);
->>  
->> +static void perf_event_unthrottle(struct perf_event *event, bool start)
->> +{
->> +	event->hw.interrupts = 0;
->> +	if (start)
->> +		event->pmu->start(event, 0);
->> +	perf_log_throttle(event, 1);
->> +}
->> +
->> +static void perf_event_throttle(struct perf_event *event)
->> +{
->> +	event->pmu->stop(event, 0);
->> +	event->hw.interrupts = MAX_INTERRUPTS;
->> +	perf_log_throttle(event, 0);
->> +}
->> +
->> +static void perf_event_unthrottle_group(struct perf_event *event, bool start)
->> +{
->> +	struct perf_event *sibling, *leader = event->group_leader;
->> +
->> +	perf_event_unthrottle(leader, leader != event || start);
->> +	for_each_sibling_event(sibling, leader)
->> +		perf_event_unthrottle(sibling, sibling != event || start);
+On Thu, May 15, 2025 at 11:32:22AM +0200, David Hildenbrand wrote:
+> On 15.05.25 11:27, Dev Jain wrote:
+> > 
+> > 
+> > On 15/05/25 2:23 pm, David Hildenbrand wrote:
+> > > On 15.05.25 10:47, Dev Jain wrote:
+> > > > 
+> > > > 
+> > > > On 15/05/25 2:06 pm, David Hildenbrand wrote:
+> > > > > On 15.05.25 10:22, Dev Jain wrote:
+> > > > > > 
+> > > > > > 
+> > > > > > On 15/05/25 1:43 pm, David Hildenbrand wrote:
+> > > > > > > On 15.05.25 08:34, Dev Jain wrote:
+> > > > > > > > Commit 9c006972c3fe removes the pxd_present() checks because the
+> > > > > > > > caller
+> > > > > > > > checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller
+> > > > > > > > only
+> > > > > > > > checks pud_present(); pud_free_pmd_page() recurses on each pmd
+> > > > > > > > through
+> > > > > > > > pmd_free_pte_page(), wherein the pmd may be none.
+> > > > > > > The commit states: "The core code already has a check for pXd_none()",
+> > > > > > > so I assume that assumption was not true in all cases?
+> > > > > > > 
+> > > > > > > Should that one problematic caller then check for pmd_none() instead?
+> > > > > > 
+> > > > > >     From what I could gather of Will's commit message, my
+> > > > > > interpretation is
+> > > > > > that the concerned callers are vmap_try_huge_pud and vmap_try_huge_pmd.
+> > > > > > These individually check for pxd_present():
+> > > > > > 
+> > > > > > if (pmd_present(*pmd) && !pmd_free_pte_page(pmd, addr))
+> > > > > >       return 0;
+> > > > > > 
+> > > > > > The problem is that vmap_try_huge_pud will also iterate on pte entries.
+> > > > > > So if the pud is present, then pud_free_pmd_page -> pmd_free_pte_page
+> > > > > > may encounter a none pmd and trigger a WARN.
+> > > > > 
+> > > > > Yeah, pud_free_pmd_page()->pmd_free_pte_page() looks shaky.
+> > > > > 
+> > > > > I assume we should either have an explicit pmd_none() check in
+> > > > > pud_free_pmd_page() before calling pmd_free_pte_page(), or one in
+> > > > > pmd_free_pte_page().
+> > > > > 
+> > > > > With your patch, we'd be calling pte_free_kernel() on a NULL pointer,
+> > > > > which sounds wrong -- unless I am missing something important.
+> > > > 
+> > > > Ah thanks, you seem to be right. We will be extracting table from a none
+> > > > pmd. Perhaps we should still bail out for !pxd_present() but without the
+> > > > warning, which the fix commit used to do.
+> > > 
+> > > Right. We just make sure that all callers of pmd_free_pte_page() already
+> > > check for it.
+> > > 
+> > > I'd just do something like:
+> > > 
+> > > diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> > > index 8fcf59ba39db7..e98dd7af147d5 100644
+> > > --- a/arch/arm64/mm/mmu.c
+> > > +++ b/arch/arm64/mm/mmu.c
+> > > @@ -1274,10 +1274,8 @@ int pmd_free_pte_page(pmd_t *pmdp, unsigned long
+> > > addr)
+> > > 
+> > >           pmd = READ_ONCE(*pmdp);
+> > > 
+> > > -       if (!pmd_table(pmd)) {
+> > > -               VM_WARN_ON(1);
+> > > -               return 1;
+> > > -       }
+> > > +       VM_WARN_ON(!pmd_present(pmd));
+> > > +       VM_WARN_ON(!pmd_table(pmd));
+> > 
+> > And also return 1?
 > 
-> Seems to me that the condition "leader != event || start" is bit tricky
-> (similarly for the check "sibling != event || start").
+> I'll leave that to Catalin + Will.
 > 
-> If a session sets the frequency (with option -F in perf tool), the
-> following flow is triggered:
-> 
->   perf_adjust_freq_unthr_events()
->     `> perf_event_unthrottle_group(event, false);
-> 
-> The argument "start" is false, so all sibling events will be enabled,
-> but the event pointed by the "event" argument remains disabled.  
+> I'm not a friend for adding runtime-overhead for soemthing that should not
+> happen and be caught early during testing -> VM_WARN_ON_ONCE().
 
-Right. Because the following code will adjust the period of the event
-and start it.
-The PMU is disabled at the moment. There is no difference in starting
-the leader first or the member first.
+I definitely think we should return early if the pmd isn't a table.
+Otherwise, we could end up descending into God-knows-what!
 
-> Though
-> the __perf_event_period() function will enables all events with adjusted
-> period, but it is still risky for counting discrepancy caused by the
-> flow described above.
-
-The __perf_event_period() is similar. The event in both cases has to
-adjust the period before re-start the event, which has to be done
-outside of the perf_event_unthrottle_group().
-
-Thanks,
-Kan>
-> Thanks,
-> Leo
-> 
->> +}
->> +
->> +static void perf_event_throttle_group(struct perf_event *event)
->> +{
->> +	struct perf_event *sibling, *leader = event->group_leader;
->> +
->> +	perf_event_throttle(leader);
->> +	for_each_sibling_event(sibling, leader)
->> +		perf_event_throttle(sibling);
->> +}
->> +
->>  static int
->>  event_sched_in(struct perf_event *event, struct perf_event_context *ctx)
->>  {
->> @@ -4389,10 +4422,8 @@ static void perf_adjust_freq_unthr_events(struct list_head *event_list)
->>  		hwc = &event->hw;
->>  
->>  		if (hwc->interrupts == MAX_INTERRUPTS) {
->> -			hwc->interrupts = 0;
->> -			perf_log_throttle(event, 1);
->> -			if (!event->attr.freq || !event->attr.sample_freq)
->> -				event->pmu->start(event, 0);
->> +			perf_event_unthrottle_group(event,
->> +				!event->attr.freq || !event->attr.sample_freq);
->>  		}
->>  
->>  		if (!event->attr.freq || !event->attr.sample_freq)
->> @@ -6421,14 +6452,6 @@ static void __perf_event_period(struct perf_event *event,
->>  	active = (event->state == PERF_EVENT_STATE_ACTIVE);
->>  	if (active) {
->>  		perf_pmu_disable(event->pmu);
->> -		/*
->> -		 * We could be throttled; unthrottle now to avoid the tick
->> -		 * trying to unthrottle while we already re-started the event.
->> -		 */
->> -		if (event->hw.interrupts == MAX_INTERRUPTS) {
->> -			event->hw.interrupts = 0;
->> -			perf_log_throttle(event, 1);
->> -		}
->>  		event->pmu->stop(event, PERF_EF_UPDATE);
->>  	}
->>  
->> @@ -6436,6 +6459,14 @@ static void __perf_event_period(struct perf_event *event,
->>  
->>  	if (active) {
->>  		event->pmu->start(event, PERF_EF_RELOAD);
->> +		/*
->> +		 * Once the period is force-reset, the event starts immediately.
->> +		 * But the event/group could be throttled. Unthrottle the
->> +		 * event/group now to avoid the next tick trying to unthrottle
->> +		 * while we already re-started the event/group.
->> +		 */
->> +		if (event->hw.interrupts == MAX_INTERRUPTS)
->> +			perf_event_unthrottle_group(event, false);
->>  		perf_pmu_enable(event->pmu);
->>  	}
->>  }
->> @@ -10326,8 +10357,7 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
->>  	if (unlikely(throttle && hwc->interrupts >= max_samples_per_tick)) {
->>  		__this_cpu_inc(perf_throttled_count);
->>  		tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
->> -		hwc->interrupts = MAX_INTERRUPTS;
->> -		perf_log_throttle(event, 0);
->> +		perf_event_throttle_group(event);
->>  		ret = 1;
->>  	}
->>  
->> -- 
->> 2.38.1
->>
->>
-> 
-
+Will
