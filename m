@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B877629A311
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:07:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B05929C35B
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:07:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747310850; cv=none; b=U0m5+6kbqv0inKMBJn1L77tGdEzOWDcEE7NsDMeBLBOF1hdu/2/6NDa1+6VORaGRbR8f7l2ew5SYOYLEQvLeLSEbAJ6Yw9YutqGG4BjSb5v12RAcrZWhmiDEhrqaVbWveO4HhIXT9cc9Ukvq8sTIT+TpZTfptca3OwF2i5M+Mik=
+	t=1747310854; cv=none; b=PhIkaMJElULPVRM5Oi3s5McdRdbNGKMtCjY9blOocIe8XobScwf6thBOnMI0wfZiNMUPaLDsHfFAwYgTpuqbgpIbFPricOgyB0aDV6i2mUDtdSfOx/H24Zofn8RdFPY8F85xragv+S0719GaA8mabfIG/63Fj08M8+YDK0nN7mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747310850; c=relaxed/simple;
-	bh=WGx/wVMyN1mwQ5Wl4n4+val1Ddn9GH3N8wmYMPoD6kg=;
+	s=arc-20240116; t=1747310854; c=relaxed/simple;
+	bh=VgVnHh1c7rhPJCchELKiTUN2OXkQW1yRKPkHQDPQf7w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FAnfAjxrlAlTlgb0serjzJvmlxe7cG5NC+lm3oJI3iBZyPhLd6BycQRrKwir27i+DPx7al2Ng4sUyMWxJ50U/ZWlSCycUxfvBs4SsVawEh5o+ABDaLydl7Z+c73eIPP0yeHGvWMOHv1jrjwxKJ9nJV5oVlFp8yahOtn7a0qiyLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r8KHsPJg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=c/+Zt2lwO1NM/AwJgsvPCjEa+XDUZC5RzfrzOY9Av7MhBv9RUrDzhkDTCYaKc+nWd9qqEROYSIH/LRKsqZfQJW4bmJDbHjkEOrUXR7XD+nP2CF/K5rMDZqzVUuHmpHLhOIw1I5Lj89MaA4wUp94/rZDnAiPYHFGnU7/nGIyyTAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R5F33Esq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r8KHsPJg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34964C4CEEF;
-	Thu, 15 May 2025 12:07:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R5F33Esq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE331C4CEE7;
+	Thu, 15 May 2025 12:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747310850;
-	bh=WGx/wVMyN1mwQ5Wl4n4+val1Ddn9GH3N8wmYMPoD6kg=;
+	s=k20201202; t=1747310853;
+	bh=VgVnHh1c7rhPJCchELKiTUN2OXkQW1yRKPkHQDPQf7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r8KHsPJge9yWMHPROuqaizU6K1Y4zwQ6juA2Tgx931OLZyDi59ly1vn1OMRWmEYW8
-	 MYEj6IWHRB6w5gYXAlRK+vvvjd7IA9xIOdauurGitnE6oHcN+fPDuRQ4bn17YMMJAu
-	 kKfXw9NgQS0k83JFxi2M/Kfq+2avoiO/tpG7tQn3Mq3Y+8n97rbbqrRHKp5iicj+gE
-	 pdA9NIdKIMZO+Ti4XYY6WaBCXphggGLqxJDKDY0c1V//io6vhtYdbYI/xHh1+NqKFV
-	 26LlEVCkMAZm4idzPStao2YIIlfo3/6ufWJOBWrDfDfWHTzcfEtn7mpQKRvcL6nmXA
-	 2wCjgVxfmICTw==
+	b=R5F33EsqdUTJ9oWJtElxMkSAN+Ev8+STh1paLnnMLOB80n/X36ukMfuEiLj9Oo3OR
+	 m425Ktoic8wCzRNnN9C8Ag9Bedd4sjA1PMD6x7MKPAMNT4jf6NIhAFAPDquuGU1/LA
+	 pVirEuhctiO8HBfs6PkXlulTHv2iZkHysik726D9b8Y5zPDIM7KdLO6+yqDUc+V443
+	 X5DzJwKhT8RkXGHZNPUkRz8TvgK7vHa+GYtdBWKzsLj4WNmzls6VA72oL57NSoV/UV
+	 K85+/vI1QrxgxwwO+U4hdadvMBMseR/tDg7xCJfo1yBfy64u84ntDgaBtBqIaePahw
+	 hrVWOXPutbQww==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -41,9 +41,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	David Woodhouse <dwmw@amazon.co.uk>
-Subject: [PATCH 27/32] x86/boot/e820: Simplify the e820__range_remove() API
-Date: Thu, 15 May 2025 14:05:43 +0200
-Message-ID: <20250515120549.2820541-28-mingo@kernel.org>
+Subject: [PATCH 28/32] x86/boot/e820: Make sure e820_search_gap() finds all gaps
+Date: Thu, 15 May 2025 14:05:44 +0200
+Message-ID: <20250515120549.2820541-29-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250515120549.2820541-1-mingo@kernel.org>
 References: <20250515120549.2820541-1-mingo@kernel.org>
@@ -55,49 +55,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Right now e820__range_remove() has two parameters to control the
-E820 type of the range removed:
+The current implementation of e820_search_gap() searches gaps
+in a reverse search from MAX_GAP_END back to 0, contrary to
+what its main comment claims:
 
-	extern void e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool check_type);
+    * Search for a gap in the E820 memory space from 0 to MAX_GAP_END (4GB).
 
-Since E820 types start at 1, zero has a natural meaning of 'no type.
+But gaps can not only be beyond E820 RAM ranges, they can be below
+them as well. For example this function will not find the proper
+PCI gap for simplified memory map layouts that have a single RAM
+range that crosses the 4GB boundary.
 
-Consolidate the (old_type,check_type) parameters into a single (filter_type)
-parameter:
+Rework the function to have a proper forward search of
+E820 table entries.
 
-	extern void e820__range_remove(u64 start, u64 size, enum e820_type filter_type);
+This makes the code somewhat bigger:
 
-Note that both e820__mapped_raw_any() and e820__mapped_any()
-already have such semantics for their 'type' parameter, although
-it's currently not used with '0' by in-kernel code.
+   text       data        bss        dec        hex    filename
+   7613      44072          0      51685       c9e5    e820.o.before
+   7645      44072          0      51717       ca05    e820.o.after
 
-Also, the __e820__mapped_all() internal helper already has such
-semantics implemented as well, and the e820__get_entry_type() API
-uses the '0' type to such effect.
+but it now both implements what it claims to do, and is more
+straightforward to read.
 
-This simplifies not just e820__range_remove(), and synchronizes its
-use of type filters with other E820 API functions, but simplifies
-usage sites as well, such as parse_memmap_one(), beyond the reduction
-of the number of parameters:
-
-  -               else if (from)
-  -                       e820__range_remove(start_at, mem_size, from, 1);
-                  else
-  -                       e820__range_remove(start_at, mem_size, 0, 0);
-  +                       e820__range_remove(start_at, mem_size, from);
-
-The generated code gets smaller as well:
-
-	add/remove: 0/0 grow/shrink: 0/5 up/down: 0/-66 (-66)
-
-	Function                                     old     new   delta
-	parse_memopt                                 112     107      -5
-	efi_init                                    1048    1039      -9
-	setup_arch                                  2719    2709     -10
-	e820__range_remove                           283     273     -10
-	parse_memmap_opt                             559     527     -32
-
-	Total: Before=22,675,600, After=22,675,534, chg -0.00%
+( This also allows 'idx' to be the regular u32 again, not an 'int'
+  underflowing to -1. )
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Andy Shevchenko <andy@kernel.org>
@@ -108,118 +90,100 @@ Cc: Kees Cook <keescook@chromium.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- arch/x86/include/asm/e820/api.h |  2 +-
- arch/x86/kernel/e820.c          | 16 +++++++---------
- arch/x86/kernel/setup.c         |  4 ++--
- arch/x86/platform/efi/efi.c     |  3 +--
- 4 files changed, 11 insertions(+), 14 deletions(-)
+ arch/x86/kernel/e820.c | 59 +++++++++++++++++++++++++++++++++++---------------
+ 1 file changed, 41 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/include/asm/e820/api.h b/arch/x86/include/asm/e820/api.h
-index 9cf416f7a84f..bbe0c8de976c 100644
---- a/arch/x86/include/asm/e820/api.h
-+++ b/arch/x86/include/asm/e820/api.h
-@@ -16,7 +16,7 @@ extern bool e820__mapped_all(u64 start, u64 end, enum e820_type type);
- 
- extern void e820__range_add   (u64 start, u64 size, enum e820_type type);
- extern u64  e820__range_update(u64 start, u64 size, enum e820_type old_type, enum e820_type new_type);
--extern void e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool check_type);
-+extern void e820__range_remove(u64 start, u64 size, enum e820_type filter_type);
- extern u64  e820__range_update_table(struct e820_table *t, u64 start, u64 size, enum e820_type old_type, enum e820_type new_type);
- 
- extern int  e820__update_table(struct e820_table *table);
 diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 0fc77ab72c5f..0d7e9794cd52 100644
+index 0d7e9794cd52..5260ce6ad466 100644
 --- a/arch/x86/kernel/e820.c
 +++ b/arch/x86/kernel/e820.c
-@@ -590,7 +590,7 @@ __init u64 e820__range_update_table(struct e820_table *t, u64 start, u64 size,
- }
- 
- /* Remove a range of memory from the E820 table: */
--__init void e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool check_type)
-+__init void e820__range_remove(u64 start, u64 size, enum e820_type filter_type)
+@@ -666,30 +666,52 @@ __init static void e820__update_table_kexec(void)
+  */
+ __init static int e820_search_gap(unsigned long *max_gap_start, unsigned long *max_gap_size)
  {
- 	u32 idx;
- 	u64 end;
-@@ -600,8 +600,8 @@ __init void e820__range_remove(u64 start, u64 size, enum e820_type old_type, boo
+-	u64 last = MAX_GAP_END;
+-	int idx = e820_table->nr_entries;
++	struct e820_entry *entry;
++	u64 range_end_prev = 0;
+ 	int found = 0;
++	u32 idx;
  
- 	end = start + size;
- 	printk(KERN_DEBUG "e820: remove [mem %#010Lx-%#010Lx]", start, end - 1);
--	if (check_type)
--		e820_print_type(old_type);
-+	if (filter_type)
-+		e820_print_type(filter_type);
- 	pr_cont("\n");
+-	while (--idx >= 0) {
+-		u64 start = e820_table->entries[idx].addr;
+-		u64 end = start + e820_table->entries[idx].size;
++	for (idx = 0; idx < e820_table->nr_entries; idx++) {
++		u64 range_start, range_end;
  
- 	for (idx = 0; idx < e820_table->nr_entries; idx++) {
-@@ -609,7 +609,7 @@ __init void e820__range_remove(u64 start, u64 size, enum e820_type old_type, boo
- 		u64 final_start, final_end;
- 		u64 entry_end;
+-		/*
+-		 * Since "last" is at most 4GB, we know we'll
+-		 * fit in 32 bits if this condition is true:
+-		 */
+-		if (last > end) {
+-			unsigned long gap = last - end;
++		entry = e820_table->entries + idx;
++		range_start = entry->addr;
++		range_end   = entry->addr + entry->size;
  
--		if (check_type && entry->type != old_type)
-+		if (filter_type && entry->type != filter_type)
- 			continue;
- 
- 		entry_end = entry->addr + entry->size;
-@@ -945,7 +945,7 @@ __init static int parse_memopt(char *p)
- 	if (mem_size == 0)
- 		return -EINVAL;
- 
--	e820__range_remove(mem_size, ULLONG_MAX - mem_size, E820_TYPE_RAM, 1);
-+	e820__range_remove(mem_size, ULLONG_MAX - mem_size, E820_TYPE_RAM);
- 
- #ifdef CONFIG_MEMORY_HOTPLUG
- 	max_mem_size = mem_size;
-@@ -1001,12 +1001,10 @@ __init static int parse_memmap_one(char *p)
- 			e820__range_update(start_at, mem_size, from, to);
- 		else if (to)
- 			e820__range_add(start_at, mem_size, to);
--		else if (from)
--			e820__range_remove(start_at, mem_size, from, 1);
- 		else
--			e820__range_remove(start_at, mem_size, 0, 0);
-+			e820__range_remove(start_at, mem_size, from);
- 	} else {
--		e820__range_remove(mem_size, ULLONG_MAX - mem_size, E820_TYPE_RAM, 1);
-+		e820__range_remove(mem_size, ULLONG_MAX - mem_size, E820_TYPE_RAM);
+-			if (gap > *max_gap_size) {
+-				*max_gap_size = gap;
+-				*max_gap_start = end;
+-				found = 1;
++		/* Process any gap before this entry: */
++		if (range_start > range_end_prev) {
++			u64 gap_start = range_end_prev;
++			u64 gap_end = range_start;
++			u64 gap_size;
++
++			if (gap_start < MAX_GAP_END) {
++				/* Make sure the entirety of the gap is below MAX_GAP_END: */
++				gap_end = min(gap_end, MAX_GAP_END);
++				gap_size = gap_end-gap_start;
++
++				if (gap_size >= *max_gap_size) {
++					*max_gap_start = gap_start;
++					*max_gap_size = gap_size;
++					found = 1;
++				}
+ 			}
+ 		}
+-		if (start < last)
+-			last = start;
++
++		range_end_prev = range_end;
++	}
++
++	/* Is there a usable gap beyond the last entry: */
++	if (entry->addr + entry->size < MAX_GAP_END) {
++		u64 gap_start = entry->addr + entry->size;
++		u64 gap_size = MAX_GAP_END-gap_start;
++
++		if (gap_size >= *max_gap_size) {
++			*max_gap_start = gap_start;
++			*max_gap_size = gap_size;
++			found = 1;
++		}
  	}
- 
- 	return *p == '\0' ? 0 : -EINVAL;
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index f40dffc3e014..72ac61c58ec8 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -732,7 +732,7 @@ static void __init trim_bios_range(void)
- 	 * area (640Kb -> 1Mb) as RAM even though it is not.
- 	 * take them out.
- 	 */
--	e820__range_remove(BIOS_BEGIN, BIOS_END - BIOS_BEGIN, E820_TYPE_RAM, 1);
-+	e820__range_remove(BIOS_BEGIN, BIOS_END - BIOS_BEGIN, E820_TYPE_RAM);
- 
- 	e820__update_table(e820_table);
- }
-@@ -754,7 +754,7 @@ static void __init e820_add_kernel_range(void)
- 		return;
- 
- 	pr_warn(".text .data .bss are not marked as E820_TYPE_RAM!\n");
--	e820__range_remove(start, size, E820_TYPE_RAM, 0);
-+	e820__range_remove(start, size, 0);
- 	e820__range_add(start, size, E820_TYPE_RAM);
++
+ 	return found;
  }
  
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index 463b784499a8..d00c6de7f3b7 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -333,8 +333,7 @@ static void __init efi_remove_e820_mmio(void)
- 			if (size >= 256*1024) {
- 				pr_info("Remove mem%02u: MMIO range=[0x%08llx-0x%08llx] (%lluMB) from e820 map\n",
- 					i, start, end, size >> 20);
--				e820__range_remove(start, size,
--						   E820_TYPE_RESERVED, 1);
-+				e820__range_remove(start, size, E820_TYPE_RESERVED);
- 			} else {
- 				pr_info("Not removing mem%02u: MMIO range=[0x%08llx-0x%08llx] (%lluKB) from e820 map\n",
- 					i, start, end, size >> 10);
+@@ -706,6 +728,7 @@ __init void e820__setup_pci_gap(void)
+ 	unsigned long max_gap_start, max_gap_size;
+ 	int found;
+ 
++	/* The minimum eligible gap size is 4MB: */
+ 	max_gap_size = SZ_4M;
+ 	found  = e820_search_gap(&max_gap_start, &max_gap_size);
+ 
+@@ -725,7 +748,7 @@ __init void e820__setup_pci_gap(void)
+ 	pci_mem_start = max_gap_start;
+ 
+ 	pr_info("[gap %#010lx-%#010lx] available for PCI devices\n",
+-		max_gap_start, max_gap_start + max_gap_size - 1);
++		max_gap_start, max_gap_start + max_gap_size-1);
+ }
+ 
+ /*
 -- 
 2.45.2
 
