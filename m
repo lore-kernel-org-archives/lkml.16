@@ -1,73 +1,46 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDCD25A338;
-	Thu, 15 May 2025 18:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60BAA1F4C96;
+	Thu, 15 May 2025 18:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747332503; cv=none; b=cR/rNk0D2izHM2hdhlwG63RnOEDjq+QNheEylGHP6egLAYWTgJ+ep++s0u+kyT7rvBRHe2T9akbLWO6qNYSKKGKBpRogh/kqmdKbSNWwMKN2cjiqJL0rSHJzGWVmLRT5r+Ya3FXvjYrsu8KdioJ6fK+AWRE+6dIcvVg0lvLvsgA=
+	t=1747332544; cv=none; b=PTqkWbFZhDw0Vlg5AAhdOt27LtB9REmk28sA3JaKKeELXolmWLjumct29JbZAq0YvVOvzxr04JYiB0ez1J7MlT+BIaFzDtG/tVqth7YfwqpXvOvOhJ8WYeLe0yKVqbTIRFfdFPcP/HSADirnv/ejw0qSYtZdJck4AvZFNNfetyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747332503; c=relaxed/simple;
-	bh=AgsXEgybKJC5NgUaI+KPLkWpvyHX1LAfCpawBKt7gHA=;
+	s=arc-20240116; t=1747332544; c=relaxed/simple;
+	bh=EMbkV613PdDRHIH0TklJGK8IdRcNls/AaRkWvfzUGpQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s+Mr9x4F/8oht/jC8aZSShtfbwyr9Xru1BrQ4NrNn/dOUqyq+3CxCPiwyI71gGhQyY0TQRu/blERTreJsRI8IWIzaFty6veNmFMm3ARFH+T73Al0F6pvA/PBn/IGXKht7AVoJqgiretV3pHn5oZBMiq25qpngv/s1MhLjcEAWWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=it4p5Hh5; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fLphbU13iFSvd2LMNBIDKl7G7gl3F1ws1qm3ymYOm8TO7zTgNKMWICYfkC+PsvjQWjUvGpkNRG5lkWiL084KhMfmrAI4RtWj+BcpJ0Pv7uKJD7dHigq8GVHRHEcFc66dcgUwVIwlfaGCTerbK1TOWXR+9TUB1XehLDmc0T2ubS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mgTeyS0n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="it4p5Hh5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747332502; x=1778868502;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AgsXEgybKJC5NgUaI+KPLkWpvyHX1LAfCpawBKt7gHA=;
-  b=it4p5Hh5YJ+rjjs3gWvB4akbNIbamtbXwUeMdii/Q9fhYMwzqS0MBYE9
-   9avIM5VCN33yoT3pZ8otDW53lCqtzpExRbci7NuUV6RFPxWCMmsfgkmp2
-   HMme5ohEFtaNA7xHUNe9gYxpRlcN39iMtBwB3xU0pHZ1MZ37hUar27QCM
-   EIuZ4OAbHIXV2w2/w4qMaSCFKdo/XuF3r65ha1kfC/LTjXBw55yNuFbUT
-   kgoAqA5CUfaJelW24VCiXPHPuVJDjDaoIzFA0i8c3rr0xEajSJ6H086D2
-   TzxZon9Q5OEw9MDdy0unz0HOk4HsOYZR97oCK28yp53HTr2OYz0ABt4ZH
-   Q==;
-X-CSE-ConnectionGUID: 3ak+ML4iTEClwd93i3bcjw==
-X-CSE-MsgGUID: x5M5CW/FRw6AFimu8iNi1g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="60304166"
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="60304166"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 11:08:21 -0700
-X-CSE-ConnectionGUID: 0qlDoZHvQuWXHzOv/4v1hg==
-X-CSE-MsgGUID: wC3Reo/iRc6O5IOzpxZAKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="138841415"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa008.fm.intel.com with ESMTP; 15 May 2025 11:08:09 -0700
-Date: Fri, 16 May 2025 02:02:29 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Zhi Wang <zhiw@nvidia.com>
-Cc: Jason Gunthorpe <jgg@nvidia.com>, Alexey Kardashevskiy <aik@amd.com>,
-	kvm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	sumit.semwal@linaro.org, christian.koenig@amd.com,
-	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
-	vivek.kasireddy@intel.com, dan.j.williams@intel.com,
-	yilun.xu@intel.com, linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
-	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
-	zhenzhong.duan@intel.com, tao1.su@intel.com
-Subject: Re: [RFC PATCH 00/12] Private MMIO support for private assigned dev
-Message-ID: <aCYsNSFQJZzHVOFI@yilunxu-OptiPlex-7050>
-References: <c10bf9c2-e073-479d-ad1c-6796c592d333@amd.com>
- <aB3jLmlUKKziwdeG@yilunxu-OptiPlex-7050>
- <aB4tQHmHzHooDeTE@yilunxu-OptiPlex-7050>
- <20250509184318.GD5657@nvidia.com>
- <aB7Ma84WXATiu5O1@yilunxu-OptiPlex-7050>
- <2c4713b0-3d6c-4705-841b-1cb58cd9a0f5@amd.com>
- <20250512140617.GA285583@nvidia.com>
- <20250513130315.0158a626.zhiw@nvidia.com>
- <aCRmoDupzK9zTqFL@yilunxu-OptiPlex-7050>
- <20250514230502.6b64da7f.zhiw@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mgTeyS0n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BBDBC4CEE7;
+	Thu, 15 May 2025 18:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747332543;
+	bh=EMbkV613PdDRHIH0TklJGK8IdRcNls/AaRkWvfzUGpQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mgTeyS0nRo/8GGQox7waepWvBt89X11Tjc4IIkuPLN0GqeY5JaU0dP3ym2OYbstyL
+	 hPFl1HqPwySKYVlNGI38eFb3BPYb3C2/AcLkuR50wXRdHE08PjpxH9cqqp+Mas8EYK
+	 myf9BJtwv/4ZVcfwyLFJvrIrIAML+DPXg8il6uwFuWTw6hOY1VNhSmZOBCVAOktZe5
+	 jIGzEPHRseWZPp8ondAPHuPX3YYAZUytRpBBj/4SyF2rV8x/Ga8V0gNi+mZuNkdA/z
+	 rU46XFYpoJRDo7+XpyKuN9P7N0Qyw6cTd0saAbr5xlcFyL2S1yity0q4TbtzPQ+f7d
+	 z44zZxxq4c07w==
+Date: Thu, 15 May 2025 11:09:01 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, linux-nvme@lists.infradead.org,
+	linux-sctp@vger.kernel.org, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Sagi Grimberg <sagi@grimberg.me>, Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH net-next 08/10] net: add
+ skb_copy_and_crc32c_datagram_iter()
+Message-ID: <20250515180901.GA1411@quark>
+References: <20250511004110.145171-1-ebiggers@kernel.org>
+ <20250511004110.145171-9-ebiggers@kernel.org>
+ <20250513144154.49f8faaa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,90 +49,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250514230502.6b64da7f.zhiw@nvidia.com>
+In-Reply-To: <20250513144154.49f8faaa@kernel.org>
 
-> IMHO, I think it might be helpful that you can picture out what are the
-> minimum requirements (function/life cycle) to the current IOMMUFD TSM
-> bind architecture:
+On Tue, May 13, 2025 at 02:41:54PM -0700, Jakub Kicinski wrote:
+> On Sat, 10 May 2025 17:41:08 -0700 Eric Biggers wrote:
+> > +/**
+> > + *	skb_copy_and_crc32c_datagram_iter - Copy datagram to an iovec iterator
+> > + *		and update a CRC32C value.
+> > + *	@skb: buffer to copy
+> > + *	@offset: offset in the buffer to start copying from
+> > + *	@to: iovec iterator to copy to
+> > + *	@len: amount of data to copy from buffer to iovec
+> > + *	@crcp: pointer to CRC32C value to update
+> > + */
 > 
-> 1.host tsm_bind (preparation) is in IOMMUFD, triggered by QEMU handling
-> the TVM-HOST call.
-> 2. TDI acceptance is handled in guest_request() to accept the TDI after
-> the validation in the TVM)
+> When you repost please toss a Return: statement here.
+> kernel-doc -Wall is complaining
 
-I'll try my best to brainstorm and make a flow in ASCII. 
+I'll plan to fold in the following:
 
-(*) means new feature
-
-
-      Guest          Guest TSM       QEMU           VFIO            IOMMUFD       host TSM          KVM 
-      -----          ---------       ----           ----            -------       --------          ---
-1.                                                                               *Connect(IDE)
-2.                                 Init vdev            
-3.                                *create dmabuf   
-4.                                               *export dmabuf                              
-5.                                create memslot
-6.                                                                                              *import dmabuf
-7.                                setup shared DMA
-8.                                                                 create hwpt
-9.                                               attach hwpt
-10.                                  kvm run
-11.enum shared dev
-12.*Connect(Bind)
-13.                  *GHCI Bind
-14.                                  *Bind
-15                                                                 CC viommu alloc
-16.                                                                vdevice allloc
-16.                                              *attach vdev
-17.                                                               *setup CC viommu
-18                                                                 *tsm_bind
-19.                                                                                  *bind
-20.*Attest
-21.               *GHCI get CC info
-22.                                 *get CC info
-23.                                                                *vdev guest req
-24.                                                                                 *guest req
-25.*Accept
-26.             *GHCI accept MMIO/DMA
-27.                                *accept MMIO/DMA
-28.                                                               *vdev guest req
-29.                                                                                 *guest req
-30.                                                                                              *map private MMIO
-31.             *GHCI start tdi
-32.                                *start tdi
-33.                                                               *vdev guest req
-34.                                                                                 *guest req
-35.Workload...
-36.*disconnect(Unbind)
-37.              *GHCI unbind
-38.                                *Unbind
-39.                                            *detach vdev
-40.                                                               *tsm_unbind
-41.                                                                                 *TDX stop tdi
-42.                                                                                 *TDX disable mmio cb
-43.                                            *cb dmabuf revoke
-44.                                                                                               *unmap private MMIO
-45.                                                                                 *TDX disable dma cb
-46.                                                              *cb disable CC viommu
-47.                                                                                 *TDX tdi free
-48.                                                                                 *enable mmio
-49.                                            *cb dmabuf recover
-50.workable shared dev
-
-TSM unbind is a little verbos & specific to TDX Connect, but SEV TSM could
-ignore these callback. Just implement an "unbind" tsm ops.
-
-Thanks,
-Yilun
-
-> 
-> and which part/where need to be modified in the current architecture to
-> reach there. Try to fold vendor-specific knowledge as much as possible,
-> but still keep them modular in the TSM driver and let's see how it looks
-> like. Maybe some example TSM driver code to demonstrate together with
-> VFIO dma-buf patch.
-> 
-> If some where is extremely hacky in the TSM driver, let's see how they
-> can be lift to the upper level or the upper call passes more parameters
-> to them.
-> 
+diff --git a/net/core/datagram.c b/net/core/datagram.c
+index 3599eda959917..fa87abb666324 100644
+--- a/net/core/datagram.c
++++ b/net/core/datagram.c
+@@ -538,10 +538,12 @@ static size_t crc32c_and_copy_to_iter(const void *addr, size_t bytes,
+  *	@skb: buffer to copy
+  *	@offset: offset in the buffer to start copying from
+  *	@to: iovec iterator to copy to
+  *	@len: amount of data to copy from buffer to iovec
+  *	@crcp: pointer to CRC32C value to update
++ *
++ *	Return: 0 on success, -EFAULT if there was a fault during copy.
+  */
+ int skb_copy_and_crc32c_datagram_iter(const struct sk_buff *skb, int offset,
+ 				      struct iov_iter *to, int len, u32 *crcp)
+ {
+ 	return __skb_datagram_iter(skb, offset, to, len, true,
