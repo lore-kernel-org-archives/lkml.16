@@ -1,156 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66328C1F;
-	Thu, 15 May 2025 01:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B1D8C1F
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747272102; cv=none; b=I5km5CjdVssUMq8W+c/T3hSUQgQ18vynw72BVixzUE66LDSEWNo94lWM1UoLq9ETyQ0ZB9RTVa3JIwkDpksJPfdvlCWnjIeBFOkfFmv05TiUDTXmqyB0XxJWCUwsxw3P3L7u4h/2sEUNhiTMXVcIdGFIrtf8UQczVgfiGOK0Las=
+	t=1747272185; cv=none; b=nCt2TEqlzLBKkbbjMJjjuaSvUITCVJDLWLzvim4LDUGmE4sNWJoLM2IxrDNub5MWpIS+K9q+uQoVvtQi3RsXoB4vapletqzdQOZqTRD2XQiOq13RYPkqHudLsAiFbP2M/r0HhcRJV8y9YFt6DdbJZRPbSfcZdD8aXTSPWTC1Yzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747272102; c=relaxed/simple;
-	bh=jgjSrlr/T0ZiWg2l9ELXgMwJAxZDAl6Zhb98CMnMTL8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HH0lsUY0jTlAa1grxxgWOpsEekQbu5XSpi50JhAsCUaswNE7DcSKgkEuAyTpIHKY2wpq71BTETDzE06nis6XSBK3TdIFxMJQEkY3jLy6NbtQaUKmmlqbuymGhLAvHnDR/qS7s1sbbqiCgYgkWoCP3RiNRGWNrhydsLRHNEedrw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R5/UdE2S; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747272185; c=relaxed/simple;
+	bh=pGj0cEG5wc65zR8K0SxXkU2TKD17QpcnRbobuZ2pGe0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ihkFApTanAVNsUI9xnncO8Sgq7TG2AVbM12O3r28F+XvYqRsC3nlxsxnWwcQd+EinpBpBcJBXws0Xw+3eHKghF3WO48JagJl6PwqVlGonarOhH6smsuI7yyqr0rbl6exlORVK74fj+mi/0S2Ehd3t49oJ9xOpkAH4M8PRGvAB6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com; spf=pass smtp.mailfrom=dubeyko.com; dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b=s03GqgLW; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dubeyko.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R5/UdE2S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747272101; x=1778808101;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jgjSrlr/T0ZiWg2l9ELXgMwJAxZDAl6Zhb98CMnMTL8=;
-  b=R5/UdE2SIYX47ZIg9vWceYBmUw14BAc3y3zvgtz8NH2S7x8ljQjS6Ud6
-   1ETHGStTh3VM3mP8CIAu9x58wk32TMotJ84DfwiHJ6A88q8K7+KNYHlCV
-   4Dq7CDv/Y9rjGwSLpYJzhty9Pux8lZ0umNRccz/P/+1wpoHOd5VSAm/Xz
-   KkoBWfhXGHSNt/eYyJJqgoVYj8ZmFkggBy4q/8JOC/w0b25xp8dTXEwbR
-   jSbkn8AG3Pz47QXW1ih36Sjs6RxjjoQpVrbpLSvcRxIPDmYnI69GQk9eM
-   raJECY2YzRHR+M43Xg83qeHRJbwkJPxAsdznspcDhlaLW8it8738w2OdA
-   g==;
-X-CSE-ConnectionGUID: ebNYtUzWS0mkbVuNrwsFjA==
-X-CSE-MsgGUID: paNCFFFoRiK7wxbcdQnH/Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="52997096"
-X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
-   d="scan'208";a="52997096"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 18:21:40 -0700
-X-CSE-ConnectionGUID: ZHDeO+p7Q5iDzwAbdYR0CA==
-X-CSE-MsgGUID: QbWLwMJ8SnOi5SPFb4oH8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
-   d="scan'208";a="138716109"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 14 May 2025 18:21:36 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uFNHy-000Hkz-1M;
-	Thu, 15 May 2025 01:21:34 +0000
-Date: Thu, 15 May 2025 09:20:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Aleksa Paunovic via B4 Relay <devnull+aleksa.paunovic.htecgroup.com@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-	Djordje Todorovic <djordje.todorovic@htecgroup.com>,
-	Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
-Subject: Re: [PATCH v4 2/2] Allow for riscv-clock to pick up mmio address.
-Message-ID: <202505150913.Iq1XRKqC-lkp@intel.com>
-References: <20250514-riscv-time-mmio-v4-2-cb0cf2922d66@htecgroup.com>
+	dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b="s03GqgLW"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54e9021d2b5so1767610e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 18:23:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dubeyko-com.20230601.gappssmtp.com; s=20230601; t=1747272181; x=1747876981; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pGj0cEG5wc65zR8K0SxXkU2TKD17QpcnRbobuZ2pGe0=;
+        b=s03GqgLWydhoHBGZy+LbMJbHU4JizUc+29DVve7mKQdSHcJIdk5qXtmPAAzhC4E8NH
+         XiQ3AvuHiQaKVVHyDxBmjZzOtK6b4vG9nYRWqhMJhnfs1j9i7DWNA47igGjDgIuYKaQy
+         csbyOPQaQWDYND0d2ta0wamOp+6OGSypLt8JIvIdDiWk1zvRS2A7lB1Y/MHifvHfKba4
+         QnZhqvzvu7t7ot4Js1Sei6tT+Gdn0uGlWmTKZV7/J90EjIqC0utLgCZ73gw42vSSq7sO
+         RtKLGN/B6K/r1tlJzdL96nsnfRmAKiVAFtovh7/kiw5s6J+VOp4hkR3d89xUnnB5Gg/u
+         8JKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747272181; x=1747876981;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pGj0cEG5wc65zR8K0SxXkU2TKD17QpcnRbobuZ2pGe0=;
+        b=IiuEfbYSfXxdUm4uzBbPzTIsthxXgJP4n7+1S4JUhWEPfjqTCi7XBJ0wY8E78wwlla
+         KCvhCKM7iEwoJSnGsP0BhtD8Ke4KEkdrtwDFu5oF6/pC0tIX5Abs5Uqe0IJvyb/Fy2Vi
+         NaQLlGB1A7qqITvS2rJCUHpqj9swyK+jizWltjTUmB+/Im5Rq7eineLHfpV3vCVbCw3y
+         4Riys5WeuGszfvcHLP1VMkdlDbhnLERPTmcABbQWz14Y6RahqLgdnqINHYEaOjlcmocY
+         oAhrvtXhe7ZR0mZLBHQVhlYzXi/J3qfCpbrwDi8Uo6VBYiOsqLXB60lWsIRqgQ2dxoYh
+         aZIA==
+X-Forwarded-Encrypted: i=1; AJvYcCVK+hCITQeQWAiq0nf1be8sRR+MJjagoFaAlZ0NO3bem0T5DBejpjundK9/xpUNZLXU23PwpACVR772ODI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznS+iQNn1w4zAr6FcTTvRK+sV+j6gCeMv2K9GqqooKYantb9Vj
+	61SdBjapVjrQNgk2x/hLZkRT58OfyQ9d1CjeEml65NW7RXNfQPuwIvLmm+p8/ZWSGG5rJM+fVBx
+	uj8s=
+X-Gm-Gg: ASbGncvQ7FW48FBj1C2nTTwjPFkdSM90trvhR4J14KM+REoCyvxKM22QTwdXYt2ZdFr
+	KsU5Og9hrmnclgYCwhda7Ci5pe/MUAA+0KLhfUdvFjU6VStDU2wRpZih5/QsK15kMIEOYvNa0y4
+	VewWN9pujdNm68+lIDvWft9LcaEu8jnRni6qOF2kIjLTAZUvc2OpUxASliobpllz5n0CfV7HLNp
+	xivmV75kFDC5UeaW6ZHQRNmmD6betUergn28gWhpivpnzXj0hGruHjKKx1GMnU/cv/zJ+6Q8Cb3
+	VCDV8lmgzPRvxEBSN1C7qQzQFHhrMShsl9ermGCLx6V//x8n5+afUA==
+X-Google-Smtp-Source: AGHT+IEinenTYCOal04RXE8A9a0KVTDkVV4cPi1jtVXojhXDm6vALnC5HQDQ/gSdC3zTEm4/4BHAeg==
+X-Received: by 2002:a05:6512:6096:b0:54a:cc10:1050 with SMTP id 2adb3069b0e04-550db931e0bmr514727e87.15.1747272180380;
+        Wed, 14 May 2025 18:23:00 -0700 (PDT)
+Received: from [10.24.138.144] ([91.230.138.172])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64bfb55sm2453549e87.180.2025.05.14.18.22.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 18:22:59 -0700 (PDT)
+Message-ID: <6a8e52d5019df1af7fd99dcf42467ece28b5c858.camel@dubeyko.com>
+Subject: Re: =?UTF-8?Q?=E5=9B=9E=E5=A4=8D=3A?= [PATCH] hfs: export dbg_flags
+ in debugfs
+From: Viacheslav Dubeyko <slava@dubeyko.com>
+To: =?UTF-8?Q?=E6=9D=8E=E6=89=AC=E9=9F=AC?= <frank.li@vivo.com>, 
+ "glaubitz@physik.fu-berlin.de"
+	 <glaubitz@physik.fu-berlin.de>
+Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
+ "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>
+Date: Wed, 14 May 2025 18:22:57 -0700
+In-Reply-To: <SEZPR06MB52690DEB5593079DA5236655E894A@SEZPR06MB5269.apcprd06.prod.outlook.com>
+References: <20250507145550.425303-1-frank.li@vivo.com>
+	 <e87e0fce1391a34ccd3f62581f8dc62d03b5c022.camel@dubeyko.com>
+	 <SEZPR06MB52690DEB5593079DA5236655E894A@SEZPR06MB5269.apcprd06.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514-riscv-time-mmio-v4-2-cb0cf2922d66@htecgroup.com>
 
-Hi Aleksa,
+On Sun, 2025-05-11 at 10:45 +0000, =E6=9D=8E=E6=89=AC=E9=9F=AC wrote:
+> Hi Slava,
+>=20
+> > Frankly speaking, if we would like to rework the debugging
+> > framework in HFS/HFS+, then I prefer to switch on pr_debug() and to
+> > use dynamic debug framework of Linux kernel [1]. It will provide
+> > the more flexible solution.
+>=20
+> I'll try it.
 
-kernel test robot noticed the following build errors:
+Sounds good! As far as I can see, it should be pretty simple fix. And I
+think we we need to unify the code for HFS and HFS+. I am considering
+to introduce HFS folder in include/linux where we can gather small
+duplicated code patterns of HFS/HFS+. However, for more complex
+duplicated code patterns, maybe, we need to consider of introduction an
+fs/hfs_common module or shared HFS subsystem.
 
-[auto build test ERROR on 9c32cda43eb78f78c73aee4aa344b777714e259b]
+>=20
+> By the way, I plan to export disk, mem and some statistics related
+> information to debugfs, just like f2fs does. Any suggestions?
+>=20
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Aleksa-Paunovic-via-B4-Relay/dt-bindings-timer-mti-gcru/20250514-165347
-base:   9c32cda43eb78f78c73aee4aa344b777714e259b
-patch link:    https://lore.kernel.org/r/20250514-riscv-time-mmio-v4-2-cb0cf2922d66%40htecgroup.com
-patch subject: [PATCH v4 2/2] Allow for riscv-clock to pick up mmio address.
-config: riscv-randconfig-001-20250515 (https://download.01.org/0day-ci/archive/20250515/202505150913.Iq1XRKqC-lkp@intel.com/config)
-compiler: riscv32-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250515/202505150913.Iq1XRKqC-lkp@intel.com/reproduce)
+I think there is no troubles with it. But could you please share which
+particular stats would you like to keep in debugfs? Which in-core and
+on-disk objects fields will be stored into debugfs?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505150913.Iq1XRKqC-lkp@intel.com/
+Thanks,
+Slava.
 
-All errors (new ones prefixed by >>):
-
-   In file included from include/linux/timex.h:67,
-                    from include/linux/time32.h:13,
-                    from include/linux/time.h:60,
-                    from include/linux/jiffies.h:10,
-                    from include/linux/ktime.h:25,
-                    from include/linux/timer.h:6,
-                    from include/linux/uprobes.h:18,
-                    from include/linux/mm_types.h:16,
-                    from include/linux/mmzone.h:22,
-                    from include/linux/gfp.h:7,
-                    from include/linux/mm.h:7,
-                    from arch/riscv/kernel/asm-offsets.c:8:
-   arch/riscv/include/asm/timex.h: In function 'random_get_entropy':
->> arch/riscv/include/asm/timex.h:39:9: error: implicit declaration of function 'get_cycles'; did you mean 'get_cycles_ptr'? [-Werror=implicit-function-declaration]
-     return get_cycles();
-            ^~~~~~~~~~
-            get_cycles_ptr
-   arch/riscv/include/asm/timex.h: In function 'get_cycles64':
->> arch/riscv/include/asm/timex.h:45:23: error: implicit declaration of function 'get_cycles_ptr_hi'; did you mean 'get_cycles_ptr'? [-Werror=implicit-function-declaration]
-    #define get_cycles_hi get_cycles_ptr_hi
-                          ^~~~~~~~~~~~~~~~~
-   arch/riscv/include/asm/timex.h:58:8: note: in expansion of macro 'get_cycles_hi'
-      hi = get_cycles_hi();
-           ^~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-   make[3]: *** [scripts/Makefile.build:98: arch/riscv/kernel/asm-offsets.s] Error 1 shuffle=2386734513
-   make[3]: Target 'prepare' not remade because of errors.
-   make[2]: *** [Makefile:1282: prepare0] Error 2 shuffle=2386734513
-   make[2]: Target 'prepare' not remade because of errors.
-   make[1]: *** [Makefile:248: __sub-make] Error 2 shuffle=2386734513
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:248: __sub-make] Error 2 shuffle=2386734513
-   make: Target 'prepare' not remade because of errors.
-
-
-vim +39 arch/riscv/include/asm/timex.h
-
-d5be89a8d118a8 Palmer Dabbelt     2020-09-14  29  
-aa9887608e77b8 Anup Patel         2020-09-27  30  /*
-aa9887608e77b8 Anup Patel         2020-09-27  31   * Much like MIPS, we may not have a viable counter to use at an early point
-aa9887608e77b8 Anup Patel         2020-09-27  32   * in the boot process. Unfortunately we don't have a fallback, so instead
-aa9887608e77b8 Anup Patel         2020-09-27  33   * we just return 0.
-aa9887608e77b8 Anup Patel         2020-09-27  34   */
-aa9887608e77b8 Anup Patel         2020-09-27  35  static inline unsigned long random_get_entropy(void)
-aa9887608e77b8 Anup Patel         2020-09-27  36  {
-aa9887608e77b8 Anup Patel         2020-09-27  37  	if (unlikely(clint_time_val == NULL))
-6d01238623faa9 Jason A. Donenfeld 2022-04-08  38  		return random_get_entropy_fallback();
-aa9887608e77b8 Anup Patel         2020-09-27 @39  	return get_cycles();
-aa9887608e77b8 Anup Patel         2020-09-27  40  }
-aa9887608e77b8 Anup Patel         2020-09-27  41  #define random_get_entropy()	random_get_entropy()
-7eeda0113dff84 Aleksa Paunovic    2025-05-14  42  #endif
-aa9887608e77b8 Anup Patel         2020-09-27  43  
-7eeda0113dff84 Aleksa Paunovic    2025-05-14  44  #define get_cycles get_cycles_ptr
-7eeda0113dff84 Aleksa Paunovic    2025-05-14 @45  #define get_cycles_hi get_cycles_ptr_hi
-ccbbfd1cbf365b Palmer Dabbelt     2020-11-25  46  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
