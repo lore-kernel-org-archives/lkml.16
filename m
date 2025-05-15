@@ -1,110 +1,138 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701411B0F0A;
-	Thu, 15 May 2025 15:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792B621771C;
+	Thu, 15 May 2025 15:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747322879; cv=none; b=aKAVMNhJrBexp55w0yYaZQVlE63/CXEQFBvk6oh968CehKqt5lp2h1qV2rsEGm3PzKItN5Cw27Z69+SQ3GH7WJYCBvtM9x8sc2Js3xP6l4boVjqAjpIt1Vb5MQosMmeko2KUa4ohxQzYdS4fvAzvQuPKNG9Wbj0vOlHfwoeuVkg=
+	t=1747322880; cv=none; b=at2AMnWo3/8MrScsNMr5mvHwj7jijxteZxMmqm8bUKdd78LBCd+8h3paa0h2wPCm9cUK66uEtx6qHd+LfRabaCuqFpNFfVg+xBg74LOTv9Bqs8mznU6eNHknn0v1IA6pZ6cXwh1DVXIN944a5iLz/lLkp7j9xddaadvLKgLn0Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747322879; c=relaxed/simple;
-	bh=Lmpw7DwQZw+6+nhCvA/dBvpMC1GiljVTmlLUIpVuZpo=;
-	h=Content-Type:MIME-Version:Content-Disposition:In-Reply-To:
-	 References:Subject:From:Cc:To:Date:Message-ID; b=gT3TgznMAw4nd6HNkMdGauidiJXYebOm9y8Ka3ElUaxmH2FoHYTXvohbWzdieSzz5PoiQJ85rrzvq3CQ0x5ze/4I1T0+7w99o3IaxR42igMK0bxfKXltojaXv8zRkV5AwXdGnL9F5255lZQ3i8x4QPeGMnh3uSNj179n0iWkWDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=dGtn3/ZN; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1747322880; c=relaxed/simple;
+	bh=wTZNHAPIBGaDgxLqd/WHpqVk0k+ekpNN4VOQRq3Ly30=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=QOfeOURy+oI518Fj+MMzgHd+sYatctEXA2veSY+nt0G2qhY02j0uqLn6WIVtQTwAw83OY69lGvW2jnWU7fcAkHt72e+NFitW9yf3iSbj5MjNJRkObutNoysJU5QLUe31apT/z7ZJFdN/LGVeojM/31XnPz3zEN0+rIAA1E53bcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eVmo/bjt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nL600Lir; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dGtn3/ZN"
-Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:7a1b:96fc:ca34:4316:6e64:be11])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 64055886;
-	Thu, 15 May 2025 17:27:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1747322858;
-	bh=Lmpw7DwQZw+6+nhCvA/dBvpMC1GiljVTmlLUIpVuZpo=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=dGtn3/ZNm2DHe7cgDMbCI7MxHBvKADtla6AEc9EOB9cfY1riDWzZfOOJAvGFahSa9
-	 +58REyzjQh6duX5wOHPEtG9v8PMRr5SbrcYVT7MwkgxNlCxhO0xMaGjwrFx4ZqbIEx
-	 KZ5E7dA2qwos3nzB5xlcce9yMnNGVapLiIHtinuU=
-Content-Type: multipart/signed; micalg="pgp-sha512"; protocol="application/pgp-signature"; boundary="===============8737441480565818882=="
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eVmo/bjt";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nL600Lir"
+Date: Thu, 15 May 2025 15:27:55 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747322876;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4nqZUEpO6bQTGQYHmROULchkhjFS87xe8SLIPpBMN60=;
+	b=eVmo/bjtFji4UdrUc7rq7JMlMM0f98O9ePYHSDnjPMgVVOusi+ifat5TeCvxYZVLjAzJSh
+	LU4fWVDI6cl/sK7i2rpfWGCqY4UHWFmVWGph0YrUc0CvNgiFTsMgMtp/AH+FLlXawiMQka
+	W+qH1Mu0c9apAm9KuTOnp8GoI60aWifrSZAbgnFJt5QUUPBH1hYuML1t/+7ulAhyB9AO/P
+	NDvPQtEGzN6z9ypT1lHDvKTvFxud72yoxSVslLc1p0BJBHd7CkUdvvYvO+6nTy+eaXjmBh
+	/wr/rYbmNjRKBVFza21lL+qRHNiUpCy1NFOLeSM1F3MP9t5oqiUenKTJyo/4iQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747322876;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4nqZUEpO6bQTGQYHmROULchkhjFS87xe8SLIPpBMN60=;
+	b=nL600LirlU4ekKpIosGm0ExBmBpoCtJX3bR/z6WQjLQVEf4MpSMyB7EY0HYMS2mAi44wNc
+	rG/MVTpoDqZ9ijAg==
+From: "tip-bot2 for Andrew Bresticker" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: irq/urgent] irqchip/riscv-imsic: Start local sync timer on correct CPU
+Cc: Andrew Bresticker <abrestic@rivosinc.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Anup Patel <anup@brainfault.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20250514171320.3494917-1-abrestic@rivosinc.com>
+References: <20250514171320.3494917-1-abrestic@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <2247039.irdbgypaU6@steina-w>
-References: <20250515142945.1348722-1-alexander.stein@ew.tq-group.com> <174732159526.2108882.8905658469049267620@selene> <2247039.irdbgypaU6@steina-w>
-Subject: Re: [PATCH 1/1] media: dt-bindings: sony, imx219: Allow props from video-interface-devices
-From: Jai Luthra <jai.luthra@ideasonboard.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-To: Alexander Stein <alexander.stein@ew.tq-group.com>, Conor Dooley <conor+dt@kernel.org>, Dave Stevenson <dave.stevenson@raspberrypi.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>
-Date: Thu, 15 May 2025 17:27:46 +0200
-Message-ID: <174732286637.2108882.17517842559862668158@selene>
-User-Agent: alot/0.12.dev11+g1dd20f1f
-
---===============8737441480565818882==
+Message-ID: <174732287558.406.10520781374596620014.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-
-Quoting Alexander Stein (2025-05-15 17:09:24)
-> Hi,
->=20
-> Am Donnerstag, 15. Mai 2025, 17:06:35 CEST schrieb Jai Luthra:
-> > Quoting Alexander Stein (2025-05-15 16:29:42)
-> > > Allow properties from video-interface-devices. The change is identica=
-l to
-> > > commit b6339ecfd0865 ("media: dt-bindings: sony,imx290: Allow props f=
-rom
-> > > video-interface-devices")
-> > >=20
-> > > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> >=20
-> > Reviewed-by: Jai Luthra <jai.luthra@ideasonboard.com>
-> >=20
-> > Are there any driver changes coming for the new properties?
->=20
-> No. This is a standard property and is already handled in v4l2_fwnode_dev=
-ice_parse(),
-> same as orientation.
->=20
-
-Ah understood, thank you.
-
-> Best regards,
-> Alexander
->=20
-> > > ---
-> > >  Documentation/devicetree/bindings/media/i2c/sony,imx219.yaml | 5 +++=
-+-
-> > >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > >=20
-
---
-Jai
---===============8737441480565818882==
-MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Description: signature
-Content-Type: application/pgp-signature; name="signature.asc"; charset="us-ascii"
 
------BEGIN PGP SIGNATURE-----
+The following commit has been merged into the irq/urgent branch of tip:
 
-iQIzBAABCgAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAmgmB/IACgkQQ96R+SSa
-cUWirg//c4MsUOhXzsuJ3F00FtrW6D5YeTJU+iyr44Mk+XxdDpjZ7MxBPGOaFOaP
-+KyN0VluR58q9NFrDjx1/JROkKMGQswx4+EM8a1OR3SAfaQtpX0EFlwwIYS5vZ8C
-evvb4QHJx1ushCdNmZanX7622kZBrpI/DvzQlk/F6/ixNedNqQLN2S/zSQ1IFygs
-TBnbgjFewpub0GnoP3clY5gD9qOsVb+Zb0zygGAfJAMxjWE2NhPuSMEMiHcGaHoo
-FqdGeFNz6Y/sDnl4DjyGmmLsUBll1gS8Sc7q7/ru5aT2mvZnrckzUaZd3dzAseBd
-9hi4eAOmOjvyH15gp47KJKye5yss/WdkZsUuAsSTmmgQ/9UXvyQ91O99NloSjJwN
-AluGF/9OEna4hTTcknvm7jXSwqPeDcdrDeCQIDiQNoodeoAFauig4/nCcXqrFR1z
-o3El3K5SKuNpli19FDy5aPA4iuiUWRIU54nXos/qHomHe1YBkKu0Df5l+5BxcJiM
-Qa6f/f9XPZ6NKnLYPNwPbCmEBHBsLI/zCVw88f8zsATkiFZA59YGPDos8KP7fBv0
-1wvdzcnERZXDbaqFn2D0b4drpND5CBKbnireJHIFsxAjzGVr3cdYfIkHf0gNBu4S
-loqYJEl53O9JQi2sc9C+i06kAQS5VcCdl5UqhvYnjtolojxQwCA=
-=soJM
------END PGP SIGNATURE-----
+Commit-ID:     08fb624802d8786253994d8ebdbbcdaa186f04f5
+Gitweb:        https://git.kernel.org/tip/08fb624802d8786253994d8ebdbbcdaa186f04f5
+Author:        Andrew Bresticker <abrestic@rivosinc.com>
+AuthorDate:    Wed, 14 May 2025 10:13:20 -07:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 15 May 2025 16:01:50 +02:00
 
---===============8737441480565818882==--
+irqchip/riscv-imsic: Start local sync timer on correct CPU
+
+When starting the local sync timer to synchronize the state of a remote
+CPU it should be added on the CPU to be synchronized, not the initiating
+CPU. This results in interrupt delivery being delayed until the timer
+eventually runs (due to another mask/unmask/migrate operation) on the
+target CPU.
+
+Fixes: 0f67911e821c ("irqchip/riscv-imsic: Separate next and previous pointers in IMSIC vector")
+Signed-off-by: Andrew Bresticker <abrestic@rivosinc.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Anup Patel <anup@brainfault.org>
+Link: https://lore.kernel.org/all/20250514171320.3494917-1-abrestic@rivosinc.com
+
+---
+ drivers/irqchip/irq-riscv-imsic-state.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/irqchip/irq-riscv-imsic-state.c b/drivers/irqchip/irq-riscv-imsic-state.c
+index bdf5cd2..62f7695 100644
+--- a/drivers/irqchip/irq-riscv-imsic-state.c
++++ b/drivers/irqchip/irq-riscv-imsic-state.c
+@@ -208,17 +208,17 @@ skip:
+ }
+ 
+ #ifdef CONFIG_SMP
+-static void __imsic_local_timer_start(struct imsic_local_priv *lpriv)
++static void __imsic_local_timer_start(struct imsic_local_priv *lpriv, unsigned int cpu)
+ {
+ 	lockdep_assert_held(&lpriv->lock);
+ 
+ 	if (!timer_pending(&lpriv->timer)) {
+ 		lpriv->timer.expires = jiffies + 1;
+-		add_timer_on(&lpriv->timer, smp_processor_id());
++		add_timer_on(&lpriv->timer, cpu);
+ 	}
+ }
+ #else
+-static inline void __imsic_local_timer_start(struct imsic_local_priv *lpriv)
++static inline void __imsic_local_timer_start(struct imsic_local_priv *lpriv, unsigned int cpu)
+ {
+ }
+ #endif
+@@ -233,7 +233,7 @@ void imsic_local_sync_all(bool force_all)
+ 	if (force_all)
+ 		bitmap_fill(lpriv->dirty_bitmap, imsic->global.nr_ids + 1);
+ 	if (!__imsic_local_sync(lpriv))
+-		__imsic_local_timer_start(lpriv);
++		__imsic_local_timer_start(lpriv, smp_processor_id());
+ 
+ 	raw_spin_unlock_irqrestore(&lpriv->lock, flags);
+ }
+@@ -278,7 +278,7 @@ static void __imsic_remote_sync(struct imsic_local_priv *lpriv, unsigned int cpu
+ 				return;
+ 		}
+ 
+-		__imsic_local_timer_start(lpriv);
++		__imsic_local_timer_start(lpriv, cpu);
+ 	}
+ }
+ #else
