@@ -1,133 +1,139 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903B01F5827
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 20:25:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04921F5827;
+	Thu, 15 May 2025 20:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747340729; cv=none; b=RUjKTg+60p4bJRgTQPixE/ztWJFtsmP/caN3/GPliXMqVgQPa3pYze/NVQ9lXez4BHkbBzhNEeZPcAv7yMpc+iJYxsqZaZt111eqG0HRm7/c9CmFscOLPstZLJIP1a1KExS6kjhIxGbku8bb0OvSANeRi0y+ZpR0xphkDrx+xuE=
+	t=1747340774; cv=none; b=a7XLOIdfFLAei99TpkXyDJvDNBZCxxFpoi5fYWmlJ7aD8ZAizjYbs8I8RrDOr6oxg5XkCGCONlSJI5ztkh/J7ZumRP1WXGsFaVOI62XHS0Cy1aFe3Eg72a1JZVthzRmiNIQDY1Vdv/w917bhG9by3IPJSAaRbd6u/A5YwCOF7LM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747340729; c=relaxed/simple;
-	bh=UByHk4M1G+jCLtezPz26iijhvUskQ3D9UHUSD+CWFP8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RPAVgNkP9RJYoJOlq+xgmof/VAtB1OQxHnVcoXViLjmOG3oNrzfNjp50NPQsHwD5ntR3Iqta+iPLhimtIDPVpxfcfGGYZwR6NmB0GWDWSmpQFKYVqDcqyqThxpJNo/3hfs92lL01xEEy3LLLa0AeOW6n+5qNDuuy71MQ5QzHSqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=gJKDU4Mf; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1747340774; c=relaxed/simple;
+	bh=TxY7a/noT4+XphSwUtR0Qw3R/xm0x/v1iIZu5905ch8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uYmH1T3l6j9Cdx84hzIbtU9+uMbWcJRWNBWu9rZ59W8RZWp932OkBjx/UcNi+Am1GFrXH26QhqjXpArCYxpIz/R9mOyPlWiPq9deRO5ygCqqAu0WFJxHMVhczIElsmKfJr7WXOH6IIDdQBa6LPcz/qzP6OQdTYyB2NalKkQxPJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wdc3ReDq; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gJKDU4Mf"
-Received: from [172.27.3.244] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54FKOiar3684076
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 15 May 2025 13:24:45 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54FKOiar3684076
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747340686;
-	bh=wKRRKSoScdWzuK4LlPzka9ZNoM1J1rtc/6+sJ4Fs1a4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gJKDU4MfBzkQmOtQ+brwkqwBjCxpL4Aoh5vuHM2zX07AMP1wouqPEkZ8t8Zginx95
-	 wrmSUhstmpIg3W+8NMVN1RGPGaCkTLgFMExrIr20QNTYQRF46w1HKoY9N6cJgNIhyK
-	 YfMXFT27hXu6tuIYlmOvWObaWramdivO/S6ueWlBtJVzLXf7gEn2jGGveuRTSOLWRj
-	 ITIda0Xuqsd0g1cIxraDOX6VAsxa53a1lW4KgwnGcozRFvWOR9nw+SD9cjfC3VTvtl
-	 a476jFIreR9+e7oW2CgniF1eXFe20zxaA95VXTbYl8aUxx0lJ3rvMXY0vwewtm9KAu
-	 aiJHfA6ipWCUA==
-Message-ID: <8d61e7a2-5eba-43c8-a38d-ca6ae59172b5@zytor.com>
-Date: Thu, 15 May 2025 13:24:44 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wdc3ReDq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747340772; x=1778876772;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TxY7a/noT4+XphSwUtR0Qw3R/xm0x/v1iIZu5905ch8=;
+  b=Wdc3ReDq+4VORUT8hc5BF66A7E9XrMEaOYgSM+eai2Tk5fF+VNUAPX+7
+   tVeTQxPlCcGfDuMRMq/WMbcP39L6wHSzj1/1femB2fwDX/qShDvlQ46E/
+   1ylVGcWvO/riWpmWOrlB+5RTVAZlSpdDaOfY1wN2weSMV5T5gUDTYsiIz
+   XGbGj0rJPY+ga5NGrn5frV/4LJj0oz59oLXI3hBY5H2cY7S0EEDg9ql/b
+   66V8whVExSXprsb7yLtmID7cvNCQqtuC4Wqmnau4zdXZeOnjsBpvw0foS
+   kqsu/Ub5rLdy5qF/cMf64erqJ8/CWB/OQxlt5ccA3q7w5gJYmn8uZcLuO
+   g==;
+X-CSE-ConnectionGUID: t1TP3vtuSXyKYvxqFe4gPA==
+X-CSE-MsgGUID: oJjOmh72QiCcWxUCfmQKqA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="59938533"
+X-IronPort-AV: E=Sophos;i="6.15,292,1739865600"; 
+   d="scan'208";a="59938533"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 13:26:11 -0700
+X-CSE-ConnectionGUID: vUztFMGqQJi1FIgG+GTGMA==
+X-CSE-MsgGUID: iraNBp1BRJCATn9l8/pqmg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,292,1739865600"; 
+   d="scan'208";a="138977709"
+Received: from gkhatri-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.13])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 13:26:11 -0700
+Date: Thu, 15 May 2025 13:26:03 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Shung-Hsi Yu <shung-hsi.yu@suse.com>, bpf@vger.kernel.org,
+	linux-mm@kvack.org, Andrii Nakryiko <andrii@kernel.org>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Uladzislau Rezki <urezki@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, regressions@lists.linux.dev,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Eduard Zingerman <eddyz87@gmail.com>
+Subject: Re: [REGRESSION] bpf verifier slowdown due to vrealloc() change
+ since 6.15-rc6
+Message-ID: <20250515202552.znxvzcnhpdjqmlbm@desk>
+References: <20250515-bpf-verifier-slowdown-vwo2meju4cgp2su5ckj@6gi6ssxbnfqg>
+ <C66C764E-C898-457D-93F0-A680983707F0@kernel.org>
+ <202505150911.1254C695D@keescook>
+ <20250515171821.6je7a4uvmttcdiia@desk>
+ <202505151039.DAA202A@keescook>
+ <20250515175205.th7pjvord6fum35a@desk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] x86/paravirt: Switch MSR access pv_ops functions to
- instruction interfaces
-To: Xin Li <xin@zytor.com>,
-        =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?=
- <jgross@suse.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        virtualization@lists.linux.dev, Peter Zijlstra <peterz@infradead.org>
-Cc: Ajay Kaher <ajay.kaher@broadcom.com>,
-        Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-        Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>,
-        Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        xen-devel@lists.xenproject.org
-References: <20250506092015.1849-1-jgross@suse.com>
- <20250506092015.1849-6-jgross@suse.com>
- <722f5b30-20e9-4540-98e4-d211d7c44cbe@zytor.com>
- <9f4e33d5-9cb3-4079-b764-87a15265fd52@suse.com>
- <ff567466-a46a-4f66-935a-8fae1140c1a2@suse.com>
- <eb077393-ea95-4ac0-9479-980e227f7bff@zytor.com>
- <6cc20ef6-d8e5-4c74-89d9-6a949c84b397@suse.com>
- <DDA7C560-1BD9-40A6-8B93-28D5AC10EBB2@zytor.com>
- <652dfd63-e41c-4d7a-8fea-40509e8191ef@zytor.com>
-Content-Language: en-US
-From: "H. Peter Anvin" <hpa@zytor.com>
-In-Reply-To: <652dfd63-e41c-4d7a-8fea-40509e8191ef@zytor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515175205.th7pjvord6fum35a@desk>
 
-On 5/15/25 00:32, Xin Li wrote:
+On Thu, May 15, 2025 at 10:52:13AM -0700, Pawan Gupta wrote:
+> On Thu, May 15, 2025 at 10:41:41AM -0700, Kees Cook wrote:
+> > On Thu, May 15, 2025 at 10:18:21AM -0700, Pawan Gupta wrote:
+> > > On Thu, May 15, 2025 at 09:51:15AM -0700, Kees Cook wrote:
+> > > > On Thu, May 15, 2025 at 07:51:26AM -0700, Kees Cook wrote:
+> > > > > On May 15, 2025 6:12:25 AM PDT, Shung-Hsi Yu <shung-hsi.yu@suse.com> wrote:
+> > > > > >There is an observable slowdown when running BPF selftests on 6.15-rc6
+> > > > > >kernel[1] built with tools/testing/selftests/bpf/{config,config.x86_64}.
+> > > > > [...]
+> > > > > Where can I find the .config for the slow runs?
+> > > > 
+> > > > Oops, I can read. :) Doing a build now...
+> > > > 
+> > > > > And how do I run the test myself directly?
+> > > > 
+> > > > I found:
+> > > > https://docs.kernel.org/bpf/bpf_devel_QA.html
+> > > > 
+> > > > But it doesn't seem to cover a bunch of stuff (no way to prebuild the
+> > > > tests, no info on building the test modules).
+> > > > 
+> > > > This seems to be needed:
+> > > > 
+> > > > make O=regression-bug -C tools/testing/selftests/bpf/test_kmods
+> > > > 
+> > > > But then the booted kernel doesn't load it (missing signatures?)
+> > > > 
+> > > > Anyway, I'll keep digging...
+> > > 
+> > > After struggling with this for a while, I figured vmtest.sh is the easiest
+> > > way to test bpf:
+> > > 
+> > > ./tools/testing/selftests/bpf/vmtest.sh -i ./test_progs
+> > 
+> > I can't even build the test_progs. :(
+> > 
+> > $ make test_progs
+> > ...
+> >   CLNG-BPF [test_progs] bpf_iter_tasks.bpf.o
+> > progs/bpf_iter_tasks.c:98:8: error: call to undeclared function 'bpf_copy_from_user_task_str'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+> >    98 |         ret = bpf_copy_from_user_task_str((char *)task_str1, sizeof(task_str1), ptr, task, 0
+> > );
+> >       |               ^
+> > 1 error generated.
 > 
-> Hi Juergen,
+> I just tried on the latest upstream, and I am getting the same error. My
+> earlier bisection was on a stable-rc for 6.14.y:
 > 
-> I have some update on this thread while working on it.
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-6.14.y
 > 
-> If we continue down the path of maintaining pvops MSR APIs as this patch
-> series does, it seems we’ll need to duplicate the ALTERNATIVE code in
-> three different places.
+> ... where it was first reported:
 > 
-> 1) The MSR access primitives defined in <asm/msr.h>, which is used when
->     CONFIG_PARAVIRT=n.
-> 
-> 2) The pvops native MSR functions pv_native_{rd,wr}msr{,_safe}() defined
->     in arch/x86/kernel/paravirt.c, used when CONFIG_PARAVIRT=y on bare
->     metal.
-> 
-> 3) The pvops Xen MSR functions paravirt_{read,write}_msr{,_safe}()
->     defined in <asm/paravirt.h>, used when CONFIG_PARAVIRT_XXL=y.
-> 
-> hpa had mentioned to me earlier that this would be a maintenance burden
-> — something I only truly realized once I got hands-on with it.
-> 
-> Maybe you have something in mind to address it?
-> 
-> Also add PeterZ to the To list because he cares it.
-> 
+> https://lore.kernel.org/stable/20250515041659.smhllyarxdwp7cav@desk/
 
-Having the code being duplicated is definitely not a good thing; 
-although I'm not one of the x86 maintainers anymore, I would consider it 
-a strong reason to NAK such a patchset.
+I can confirm on v6.14.7-rc2 the test verif_scale_loop3_fail is now
+passing(in <10 secs) after applying your first patch (mm: vmalloc: Actually
+use the in-place vrealloc region). The the test passes after applying your
+second patch also.
 
-At one point I was considering augmenting the alternatives framework to 
-be able to call an ad hoc subroutine to generate the code. It would be 
-useful in cases like this, where if PV is enabled it can make a callout 
-to the currently-active PV code to query the desired code to be output.
-
-There are 16 unused bits in the alternatives table (not counting the 14 
-unused flag bits), which could be used for an enumeration of such 
-subroutines, optionally split into 8 bits of function enumeration and 8 
-bits of private data. In this case, the "replacement" pointer becomes 
-available as a private pointer; possibly to a metadata structure used by 
-the subroutine.
-
-This could also be used to significantly enhance the static-immediate 
-framework, by being able to have explicit code which handles the 
-transformations instead of needing to rely on assembly hacks. That way 
-we might even be able to do that kind of transformations for any 
-ro_after_init value.
-
-I think the biggest concern is how this would affect objtool, since 
-objtool would now not have any kind of direct visibility into the 
-possibly generated code. How to best feed the information objtool needs 
-to it would be my biggest question (in part because I don't know what 
-objtool would actually need.)
-
-	-hpa
-
+For some reason I am unable to build the bpf selftests on latest upstream.
+I may be missing something that is required on latest upstream :-(
