@@ -1,98 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B60028F95B;
-	Thu, 15 May 2025 08:55:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16A028C2C7
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:55:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299302; cv=none; b=L3HxVEgQY6hrpmSEVhpD6c7Nz0VDexLNzCgSrI9mUkv3Z2m/f2VdB8NwHM8xPZh3TUBp1dRHgUac5yJO2d2NCB8iFqt38Q7Wd2qVxhxi12jm7kQXo+FkX2n0bAJVuyvGed3eU0DTUThqY0fcZKTRBeVCB/IitDfqh09TOiuPSyY=
+	t=1747299326; cv=none; b=GEXoktphW1Nao7Af2o0PldeXyXoAhqtwidVcEJbqiTADrjvSvDGYzulsS395XxXUDcB6lLJnNdc7Jzfi3g73Y7DJ96LYEbizLiyT8J6lZF4A6sEZE7ZRe1xAi932D+y8TW93OyXHCzsFnRnFPqRiVued5iC7v8xRPEISuJC1/no=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299302; c=relaxed/simple;
-	bh=LBRCYx6yEYw3JtcZjfSpiVcbjCjzsGhvOmR/nBYptGc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GXby/bQ/Q5HVWpm4qH9oO7lBiFjdr0qw3+1vAVzk1v0uT7aQSi3z5vqrEXCs0IeMORgsgSaboBUqs3eQbPBuLJ252MIsWZNNUOOmsGDMFHiAEoS3jJx0ssqnXVjVJT8jpJw8MXKwX6f19FwJUJFMoypl0V5vl+YUUOCBuSTgG24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gkmu0CWP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747299326; c=relaxed/simple;
+	bh=DGNuWaape+/tQRhHkH8Z3oeB8XdeWACmaRgfc9MlPYI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aGl0sxDoROZsXOEqfQbC2awkYtPshu+Nh5JFfpM8PLUgrEefeBS5arnJa025EolJAbVYvYh7ytcsQGHIUwaadbOqk/0ZhBWwGzuILxanhraEpctLwBLlY5Xx0sgJmSOKyb7I8W/sGGVvbPrE4QL/NmUQYIvtxNpBGUdxeTqEOH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TKADJbUe; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gkmu0CWP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8211DC4CEE7;
-	Thu, 15 May 2025 08:55:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747299301;
-	bh=LBRCYx6yEYw3JtcZjfSpiVcbjCjzsGhvOmR/nBYptGc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gkmu0CWPpNp86K/Euz/Dm/e9t+19BBJ4AZWRaMDphQEk3US7k8Zey8c0olpWuVXM8
-	 ZnipbUJLdpq/d4XbppKnYptDpShQmqzMqaVK5fY3RwEryRp3G5m9N4FilTcq2v6NdY
-	 lHL3ByJ8wjGe5fczpts9EydsGOjjRTsoaCPg3MbVoJuxHxi8bHCU6UmUi9xFGatMpk
-	 xpqNDhskY4sklfMIIaL8ZTog9/30KFvuwS5UnvetQqGl5imNwCKyP/8XEr6hsugkgp
-	 76AIm57wcqumpg2zAvGvdj5vSm+PdbKgoAEtmK1/qWx43HX9XpxVHmu4Q5k4F/ULmu
-	 XxNmuiDI4VUVQ==
-Date: Thu, 15 May 2025 10:54:56 +0200
-From: Mark Brown <broonie@kernel.org>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	"Darren.Ye" <darren.ye@mediatek.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 03/10] ASoC: mediatek: mt8196: support audio clock
- control
-Message-ID: <aCWr4HDpEOr_jn3C@finisterre.sirena.org.uk>
-References: <20250514081125.24475-1-darren.ye@mediatek.com>
- <20250514081125.24475-4-darren.ye@mediatek.com>
- <be75ac83-5421-4bb0-a28a-57be639f427c@collabora.com>
- <CAGXv+5Hj358gOBomY=KdwYojgpwxFP-tiM38Z18b63ie=922mg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TKADJbUe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747299325; x=1778835325;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=DGNuWaape+/tQRhHkH8Z3oeB8XdeWACmaRgfc9MlPYI=;
+  b=TKADJbUeLjqgH7LoYiT2uqTJoUu3hVI9ESHLOoZHOQ0/Qv4+vrWSJClH
+   0T63mBNJMSxlefJgQtyArpBiKkJ1TfXQWd6Apr+NWX0Zntctix1Kwfjwr
+   QzblzFG/SmT0ODhStGRnr9Sv56299Ura9wVKAmuHeaRrkCm1fDzYtTK0y
+   1a3Oi5dmpOtbgXBB73Em6qG2cyrIseFfEe5yYlLUuR9edtHtwDw+05EgH
+   InVgiCzXZoKzxb6UlJ38yQsWnVgLporlEctqtns/3q6F1OTHJc4E6BBvY
+   m9orK8oAKu9hQcrAWCBBO0tSMg5Yrsyz8MAjxlkD3gbmdRcszTSWI/uJj
+   Q==;
+X-CSE-ConnectionGUID: 2x9D0rJ4Qlqh5xilEA7siA==
+X-CSE-MsgGUID: lO2ea1U7RAKtnnJ+yiOaUw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49338544"
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="49338544"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 01:55:24 -0700
+X-CSE-ConnectionGUID: 2qNOOQOdTEOluViTCmZ5hg==
+X-CSE-MsgGUID: Mt38Xo1eSLqEx2JkL0XYlw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="138719717"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa008.fm.intel.com with ESMTP; 15 May 2025 01:55:22 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 648B523F; Thu, 15 May 2025 11:55:21 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	linux-kernel@vger.kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH v1 1/1] genirq: Bump the size of the local variable for sprintf()
+Date: Thu, 15 May 2025 11:55:16 +0300
+Message-ID: <20250515085516.2913290-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pqANQ8hKcxHdPm61"
-Content-Disposition: inline
-In-Reply-To: <CAGXv+5Hj358gOBomY=KdwYojgpwxFP-tiM38Z18b63ie=922mg@mail.gmail.com>
-X-Cookie: Well begun is half done.
+Content-Transfer-Encoding: 8bit
 
+GCC is not happy about sprintf() call on a buffer that might be too small for
+the given formatting string.
 
---pqANQ8hKcxHdPm61
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+kernel/irq/debugfs.c:233:26: warning: 'sprintf' may write a terminating nul past the end of the destination [-Wformat-overflow=]
 
-On Thu, May 15, 2025 at 04:50:33PM +0800, Chen-Yu Tsai wrote:
-> On Thu, May 15, 2025 at 4:40=E2=80=AFPM AngeloGioacchino Del Regno
-> <angelogioacchino.delregno@collabora.com> wrote:
-> >
-> > Il 14/05/25 10:11, Darren.Ye ha scritto:
-> > > From: Darren Ye <darren.ye@mediatek.com>
-> > >
-> > > Add audio clock wrapper and audio tuner control.
+Fix this by bumping the size of the local variable for sprintf().
 
-Please delete unneeded context from mails when replying.  Doing this
-makes it much easier to find your reply in the message, helping ensure
-it won't be missed by people scrolling through the irrelevant quoted
-material.
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202505151057.xbyXAbEn-lkp@intel.com/
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ kernel/irq/debugfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---pqANQ8hKcxHdPm61
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/kernel/irq/debugfs.c b/kernel/irq/debugfs.c
+index 3d6a5b3cfaf3..3527defd2890 100644
+--- a/kernel/irq/debugfs.c
++++ b/kernel/irq/debugfs.c
+@@ -225,7 +225,7 @@ void irq_debugfs_copy_devname(int irq, struct device *dev)
+ 
+ void irq_add_debugfs_entry(unsigned int irq, struct irq_desc *desc)
+ {
+-	char name [10];
++	char name [12];
+ 
+ 	if (!irq_dir || !desc || desc->debugfs_file)
+ 		return;
+-- 
+2.47.2
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmglq98ACgkQJNaLcl1U
-h9B/xQf/WCgax1XZIrHI7sRyhwZ6FlzcWWzC/96GoahlhlHRo6AwJ7ves1riScIY
-iWfySDDylRMd2YfjjtoaKosS1N3/jAK8cHbUwFhap4h1WSGltSq+V55v17AzaO+k
-tn1SDdLEjA2pMy5+fatN3uVR2PheWLbi5mjxhXzxYTJW/lxfZ22kPl67IGqCFkpu
-uh9U74kyhK2m7NnZvjAdwW8is3GrihqtIS7zoqcT3R4DLc3hYEQbJdFTjXzUFyZm
-gG/cWOUHko4BbpK5jXfBEgFSDiOT6bzhnHZ1uE4S8ckah7tmctIdVZZ19mwZ5UWI
-QAnFFOIaD+7/KimjanojcgHqkusz3g==
-=hJfD
------END PGP SIGNATURE-----
-
---pqANQ8hKcxHdPm61--
