@@ -1,254 +1,261 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC71A28BABC
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 22:04:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C3321D3CD;
+	Thu, 15 May 2025 22:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747346661; cv=none; b=MlThcT3xUTYMoExtF3Z/2T9R0wRDFBZUPA52VGsVabksODNokV5gM+wWGt0hFDF9K7BluxHKnhXcWv4RBSNVTd1Ykea4WGZUhvkgwHo90IZifVdxtXgcucjyZPixQWgma7gt+teDlrWN0gNzydFcr29GJcsapZEAGypPc5lA9qY=
+	t=1747346728; cv=none; b=ABevHs9AcpFWyOPEHu7ZsbVPmffW5pX2U5sIuVR2FY/lIlhghzAHjUtVXtTml8KHoH4noK8evyMuylusopxvOldDRy/JmWjS9aTPoou2KDZdjpO5XkIwCh79VRtPBVKpbFkjVatSMLuXP2+rs9ztR3NGcLpIwX/2OS6rlAGFEXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747346661; c=relaxed/simple;
-	bh=6eVULcLPVdzazGE/wg9Pf+TgKc9aOyrX0eUUEgwYzJU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=S5meRohIKGujtfvslMkztNLiyv9n4xnl02xqcWfOCpbLG6xanD8FPrOfgn3l8gC+l2DhNrntn7xiQRn1Wfw3JIw9xeYSiYnuQpjguweQLyUvMyhEe2meZPrK56WPvdgDNusuQbg//NJvOaRKDCthVs5Xju/AmZ8sI9QnGSkATKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dionnaglaze.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IfTiBaJP; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dionnaglaze.bounces.google.com
+	s=arc-20240116; t=1747346728; c=relaxed/simple;
+	bh=utV4UbqIcfj3fLRtnbUakItH9tRWD8UFDUwlxeD08EE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LtlOO4iT+JcO2GAUG6kn7oY0k54nXWsGVi1eUgM2bodo40yb33zYeRosKM0Q1YUxX1STExngt7Nkj3AzzkWOasQsJtuam/eLmZWtQg3JbvWxIdx1QDv4vf3PN/+UoTXBAVN/5QFv//IPKaRWVvZJMDemo+CJdLxOdorY/cSqvEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=OqPnX/pw; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IfTiBaJP"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22fafbbe51fso20014025ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:04:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747346657; x=1747951457; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/61l/GG8ceY1HQ/1Mbz9W8+Z6NMWlwdTU/z1QWzDW24=;
-        b=IfTiBaJP3o9wJ19dNr8ddF9fWihDsU31Lr1QB/1+vtwdoH0PPCoJ6r2I7//b1xQqJN
-         Y/4JQRxnSM+UWvzEgxDF3te2DMIKMWSUT7TFJA2WRCWqpXvShDwzMXyqyGXkI6tcK02l
-         6smFp/5AxXwILffQXqzl223sz4ryqk9hFmH8aoH4T3CHXyCIRuVl/DV+rCZX0SUv1HMj
-         quyNefiPPzqg8TkS7xUpYunH2BuoOATtZFbnOqRwFIn6QWaeKD6tDOdcaVC0DWr0RkL+
-         rtKVKPcu0os/JMpweGw0u74us2Fh35e2CPcOh8c7t3e8gC1ac+vs91O2Gp3ZHc507AnT
-         n5Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747346657; x=1747951457;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/61l/GG8ceY1HQ/1Mbz9W8+Z6NMWlwdTU/z1QWzDW24=;
-        b=WCeMEJEcUQkG9X13f3k4yoZ6gi73gkYfh1/tClSIC3ga2dU5s2bbuDdYT/C0sxl1Bt
-         jXE8M1mJ80KfakNjyZXm1F2zcWPHkCRmZoUK0Wrousnup63OnBQ6OmSb3fpP45q0eo+9
-         6zgLchBO/Ol11Y/mvhFgjoo2N9vijr+nzC/dEt3uF4cMn066ry39oOc4+fa7ecbgNefs
-         VsE3e1B5IkwI/1s6Ef+V2ZrTTBMVvhCjxXDpeE1NjtcXp3e2u3XeUBkKs1pa6cJ/uXiq
-         0imhsynh1Ij66QPEKr3QBPCTrrruCdnPXvejquYesLoBoP0yVWgD2UcqVt+y2GC/0Ut2
-         T2GA==
-X-Gm-Message-State: AOJu0YzR5G9egY2v94nvBBeJjr4rNnJjzajiud/S6ylHx60/eKXyUxji
-	O5CHjVpWQM7DDIhG4u3iHeTbU1KBB8O5z3tWGYl8V6JQiWf2hO/ulSW0JPzvVnkNxbcFX4+5f7r
-	sM/ZWqeBDv6SlRSeV2X6G7xcJvg==
-X-Google-Smtp-Source: AGHT+IEIogqWVI3jhvBuBHzH/RVC4nU9qls/xo8WHotmwx8ma/XGj5KxgExpQP3h4WgyLHLR1u3cujYZAXUA4Janbg==
-X-Received: from plge2.prod.google.com ([2002:a17:902:cf42:b0:226:453a:f2db])
- (user=dionnaglaze job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:19c4:b0:220:e655:d77 with SMTP id d9443c01a7336-231d452d0e3mr12729205ad.36.1747346657095;
- Thu, 15 May 2025 15:04:17 -0700 (PDT)
-Date: Thu, 15 May 2025 22:03:59 +0000
-In-Reply-To: <20250515220400.1096945-1-dionnaglaze@google.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="OqPnX/pw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1747346713; x=1747951513; i=w_armin@gmx.de;
+	bh=y+AvyreBxvEMr3n6KAhGPSvdF8El4XZ6FzvHqM20aQQ=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=OqPnX/pwX68NhZ+Gqk95ENl1LVC02ncysilLYWz9kNJbRUjWyNGgGvz7uFmyXZkf
+	 vV6A5NUqonVFAJkGEKTXr17ZItDQvbLAiABuCgS1ml3rpT8sChOidisWH9pMk2Dia
+	 OV8H8kEPSuaLTGY5VRLsLrhjkW6M96lAPyOF+XQ+Pdoe+UZeP3gsYcMXy1RBNELY+
+	 Gi8vXnoF1ZYtVbg7bwtbNN6oZ3OU8VBHjDGuho+vSpFcWFxQG9IQ1oIs88sCgHVKW
+	 ksvkoqXBvz7IdAMEw1p3XzXsILkcC9GytdA0Tq9wETrjZaiQFnGEwh4wmIFik/im1
+	 n49QretHvwTygg0cww==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mi2O1-1utiLR3afh-00bb6q; Fri, 16
+ May 2025 00:05:12 +0200
+Message-ID: <b77edae0-50bd-4039-9487-15bb69389c6c@gmx.de>
+Date: Fri, 16 May 2025 00:05:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250515220400.1096945-1-dionnaglaze@google.com>
-X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250515220400.1096945-2-dionnaglaze@google.com>
-Subject: [PATCH v5 1/2] kvm: sev: Add SEV-SNP guest request throttling
-From: Dionna Glaze <dionnaglaze@google.com>
-To: kvm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, 
-	Dionna Glaze <dionnaglaze@google.com>, Thomas Lendacky <Thomas.Lendacky@amd.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <jroedel@suse.de>, Peter Gonda <pgonda@google.com>, 
-	Borislav Petkov <bp@alien8.de>, Sean Christopherson <seanjc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] HID: lenovo: Unbreak USB/BT keyboards on non-ACPI
+ platforms
+To: j@jannau.net, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>, Vishnu Sankar <vishnuocv@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ linux-acpi@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250512-hid_lenovo_unbreak_non_acpi-v1-1-e9e37ecbfbfe@jannau.net>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <20250512-hid_lenovo_unbreak_non_acpi-v1-1-e9e37ecbfbfe@jannau.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:tbB8hxfqNOHBiN6rDK63ZoKR4og/dN6oOjcpMwItUrsVujvSEU4
+ ZRMRQ80A1B7QvdYKk4/quD2+WMdhVvDmmSojZuohMjwG9e2lzAaVpKsnJTD1AMLlkvN3W1T
+ ih+/h5bmtrHAjC0V8+F8knR6HEz1B4jXYNtziKusE1mYlnl0N/m5pqAOfs/TTmQ0bE3dwl1
+ STZuxiOapxO2BNyPhudQA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:SJZGd2TbucQ=;UDfm+YNDV2H0XZG852a1/7CMsM9
+ 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
+ E2ZwNTxy1GSI52HC
 
-The AMD-SP is a precious resource that doesn't have a scheduler other
-than a mutex lock queue. To avoid customers from causing a DoS, a
-mem_enc_ioctl command for rate limiting guest requests is added.
+Am 12.05.25 um 23:55 schrieb Janne Grunau via B4 Relay:
 
-Recommended values are {.interval_ms = 1000, .burst = 1} or
-{.interval_ms = 2000, .burst = 2} to average 1 request every second.
-You may need to allow 2 requests back to back to allow for the guest
-to query the certificate length in an extended guest request without
-a pause. The 1 second average is our target for quality of service
-since empirical tests show that 64 VMs can concurrently request an
-attestation report with a maximum latency of 1 second. We don't
-anticipate more concurrency than that for a seldom used request for
-a majority well-behaved set of VMs. The majority point is decided as
->64 VMs given the assumed 128 VM count for "extreme load".
+> From: Janne Grunau <j@jannau.net>
+>
+> Commit 84c9d2a968c8 ("HID: lenovo: Support for ThinkPad-X12-TAB-1/2 Kbd
+> Fn keys") added a dependency on ACPI_PLATFORM_PROFILE to cycle through
+> power profiles. This breaks USB and Bluetooth keyboards on non-ACPI
+> platforms since platform_profile_init() fails. See the warning below for
+> the visible symptom but cause is the dependency on the platform_profile
+> module.
+>
+> [  266.225052] kernel: usb 1-1.3.2: new full-speed USB device number 9 u=
+sing xhci_hcd
+> [  266.316032] kernel: usb 1-1.3.2: New USB device found, idVendor=3D17e=
+f, idProduct=3D6047, bcdDevice=3D 3.30
+> [  266.327129] kernel: usb 1-1.3.2: New USB device strings: Mfr=3D1, Pro=
+duct=3D2, SerialNumber=3D0
+> [  266.327623] kernel: usb 1-1.3.2: Product: ThinkPad Compact USB Keyboa=
+rd with TrackPoint
+> [  266.328096] kernel: usb 1-1.3.2: Manufacturer: Lenovo
+> [  266.337488] kernel: ------------[ cut here ]------------
+> [  266.337551] kernel: WARNING: CPU: 4 PID: 2619 at fs/sysfs/group.c:131=
+ internal_create_group+0xc0/0x358
+> [  266.337584] kernel: Modules linked in: platform_profile(+) nft_fib_in=
+et nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_rej=
+ect_ipv6 nft_reject nft_ct nft>
+> [  266.337685] kernel:  apple_sio spi_apple apple_dart soundcore spmi_ap=
+ple_controller pinctrl_apple_gpio i2c_pasemi_platform apple_admac i2c_pase=
+mi_core clk_apple_nco xhci_pla>
+> [  266.337717] kernel: CPU: 4 UID: 0 PID: 2619 Comm: (udev-worker) Taint=
+ed: G S      W          6.14.4-400.asahi.fc41.aarch64+16k #1
+> [  266.337750] kernel: Tainted: [S]=3DCPU_OUT_OF_SPEC, [W]=3DWARN
+> [  266.337776] kernel: Hardware name: Apple Mac mini (M1, 2020) (DT)
+> [  266.337808] kernel: pstate: 61400009 (nZCv daif +PAN -UAO -TCO +DIT -=
+SSBS BTYPE=3D--)
+> [  266.337834] kernel: pc : internal_create_group+0xc0/0x358
+> [  266.337860] kernel: lr : sysfs_create_group+0x20/0x40
+> [  266.337886] kernel: sp : ffff800086f877a0
+> [  266.337914] kernel: x29: ffff800086f877b0 x28: 0000000000000000 x27: =
+ffffb66d0b338348
+> [  266.337939] kernel: x26: ffffb66d0b338358 x25: ffffb66d528c7c50 x24: =
+ffffb66d507e37b0
+> [  266.337965] kernel: x23: 0000fffebf6708d8 x22: 0000000000000000 x21: =
+ffffb66d0b370340
+> [  266.337991] kernel: x20: ffffb66d0b370308 x19: 0000000000000000 x18: =
+0000000000000000
+> [  266.338029] kernel: x17: 554e514553007373 x16: ffffb66d4f8c2268 x15: =
+595342555300656c
+> [  266.338051] kernel: x14: 69666f72702d6d72 x13: 00353236353d4d55 x12: =
+4e51455300737361
+> [  266.338075] kernel: x11: ffff6adf91b80100 x10: 0000000000000139 x9 : =
+ffffb66d4f8c2288
+> [  266.338097] kernel: x8 : ffff800086f87620 x7 : 0000000000000000 x6 : =
+0000000000000000
+> [  266.338116] kernel: x5 : ffff6adfc896e100 x4 : 0000000000000000 x3 : =
+ffff6adfc896e100
+> [  266.338139] kernel: x2 : ffffb66d0b3703a0 x1 : 0000000000000000 x0 : =
+0000000000000000
+> [  266.338155] kernel: Call trace:
+> [  266.338173] kernel:  internal_create_group+0xc0/0x358 (P)
+> [  266.338193] kernel:  sysfs_create_group+0x20/0x40
+> [  266.338206] kernel:  platform_profile_init+0x48/0x3ff8 [platform_prof=
+ile]
+> [  266.338224] kernel:  do_one_initcall+0x60/0x358
+> [  266.338239] kernel:  do_init_module+0x94/0x260
+> [  266.338257] kernel:  load_module+0x5e0/0x708
+> [  266.338271] kernel:  init_module_from_file+0x94/0x100
+> [  266.338290] kernel:  __arm64_sys_finit_module+0x268/0x360
+> [  266.338309] kernel:  invoke_syscall+0x6c/0x100
+> [  266.338327] kernel:  el0_svc_common.constprop.0+0xc8/0xf0
+> [  266.338346] kernel:  do_el0_svc+0x24/0x38
+> [  266.338365] kernel:  el0_svc+0x3c/0x170
+> [  266.338385] kernel:  el0t_64_sync_handler+0x10c/0x138
+> [  266.338404] kernel:  el0t_64_sync+0x1b0/0x1b8
+> [  266.338419] kernel: ---[ end trace 0000000000000000 ]---
+>
+> Fixes: 84c9d2a968c8 ("HID: lenovo: Support for ThinkPad-X12-TAB-1/2 Kbd =
+Fn keys")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Janne Grunau <j@jannau.net>
+>
+> ------>8---------
+> I don't see an easy solution to keep the functionality in generic HID
+> code which is used on non-ACPI platforms. Solution for this are not
+> trivial so remove the functionality for now.
+> Cc-ing the ACPI maintainers in the case they can think of a solution for
+> this issue.
 
-Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Peter Gonda <pgonda@google.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Sean Christopherson <seanjc@google.com>
+Hi,
 
-Signed-off-by: Dionna Glaze <dionnaglaze@google.com>
----
- .../virt/kvm/x86/amd-memory-encryption.rst    | 23 +++++++++++++
- arch/x86/include/uapi/asm/kvm.h               |  7 ++++
- arch/x86/kvm/svm/sev.c                        | 33 +++++++++++++++++++
- arch/x86/kvm/svm/svm.h                        |  3 ++
- 4 files changed, 66 insertions(+)
+i think we can fix that. We just have to skip the compat stuff if acpi_kob=
+j is NULL (means that ACPI is not used).
+The modern platform profile interface is generic enough to also work on no=
+n-ACPI systems.
 
-diff --git a/Documentation/virt/kvm/x86/amd-memory-encryption.rst b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
-index 1ddb6a86ce7f..1b5b4fc35aac 100644
---- a/Documentation/virt/kvm/x86/amd-memory-encryption.rst
-+++ b/Documentation/virt/kvm/x86/amd-memory-encryption.rst
-@@ -572,6 +572,29 @@ Returns: 0 on success, -negative on error
- See SNP_LAUNCH_FINISH in the SEV-SNP specification [snp-fw-abi]_ for further
- details on the input parameters in ``struct kvm_sev_snp_launch_finish``.
- 
-+21. KVM_SEV_SNP_SET_REQUEST_THROTTLE_RATE
-+-----------------------------------------
-+
-+The KVM_SEV_SNP_SET_REQUEST_THROTTLE_RATE command is used to set a per-VM rate
-+limit on responding to requests for AMD-SP to process a guest request.
-+The AMD-SP is a global resource with limited capacity, so to avoid noisy
-+neighbor effects, the host may set a request rate for guests.
-+
-+Parameters (in): struct kvm_sev_snp_set_request_throttle_rate
-+
-+Returns: 0 on success, -negative on error
-+
-+::
-+
-+	struct kvm_sev_snp_set_request_throttle_rate {
-+		__u32 interval_ms;
-+		__u32 burst;
-+	};
-+
-+The interval will be translated into jiffies, so if it after transformation
-+the interval is 0, the command will return ``-EINVAL``. The ``burst`` value
-+must be greater than 0.
-+
- Device attribute API
- ====================
- 
-diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index 460306b35a4b..d92242d9b9af 100644
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -708,6 +708,8 @@ enum sev_cmd_id {
- 	KVM_SEV_SNP_LAUNCH_UPDATE,
- 	KVM_SEV_SNP_LAUNCH_FINISH,
- 
-+	KVM_SEV_SNP_SET_REQUEST_THROTTLE_RATE,
-+
- 	KVM_SEV_NR_MAX,
- };
- 
-@@ -877,6 +879,11 @@ struct kvm_sev_snp_launch_finish {
- 	__u64 pad1[4];
- };
- 
-+struct kvm_sev_snp_set_request_throttle_rate {
-+	__u32 interval_ms;
-+	__u32 burst;
-+};
-+
- #define KVM_X2APIC_API_USE_32BIT_IDS            (1ULL << 0)
- #define KVM_X2APIC_API_DISABLE_BROADCAST_QUIRK  (1ULL << 1)
- 
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index a7a7dc507336..35b04a10ed73 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -12,12 +12,14 @@
- #include <linux/kvm_host.h>
- #include <linux/kernel.h>
- #include <linux/highmem.h>
-+#include <linux/limits.h>
- #include <linux/psp.h>
- #include <linux/psp-sev.h>
- #include <linux/pagemap.h>
- #include <linux/swap.h>
- #include <linux/misc_cgroup.h>
- #include <linux/processor.h>
-+#include <linux/ratelimit.h>
- #include <linux/trace_events.h>
- #include <uapi/linux/sev-guest.h>
- 
-@@ -2535,6 +2537,28 @@ static int snp_launch_finish(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 	return ret;
- }
- 
-+static int snp_set_request_throttle_ms(struct kvm *kvm, struct kvm_sev_cmd *argp)
-+{
-+	struct kvm_sev_info *sev = to_kvm_sev_info(kvm);
-+	struct kvm_sev_snp_set_request_throttle_rate params;
-+	u64 jiffies;
-+
-+	if (!sev_snp_guest(kvm))
-+		return -ENOTTY;
-+
-+	if (copy_from_user(&params, u64_to_user_ptr(argp->data), sizeof(params)))
-+		return -EFAULT;
-+
-+	jiffies = ((u64)params.interval_ms * HZ) / 1000;
-+
-+	if (!jiffies || !params.burst || params.burst > S32_MAX || jiffies > S32_MAX)
-+		return -EINVAL;
-+
-+	ratelimit_state_init(&sev->snp_guest_msg_rs, jiffies, params.burst);
-+
-+	return 0;
-+}
-+
- int sev_mem_enc_ioctl(struct kvm *kvm, void __user *argp)
- {
- 	struct kvm_sev_cmd sev_cmd;
-@@ -2640,6 +2664,9 @@ int sev_mem_enc_ioctl(struct kvm *kvm, void __user *argp)
- 	case KVM_SEV_SNP_LAUNCH_FINISH:
- 		r = snp_launch_finish(kvm, &sev_cmd);
- 		break;
-+	case KVM_SEV_SNP_SET_REQUEST_THROTTLE_RATE_MS:
-+		r = snp_set_request_throttle_ms(kvm, &sev_cmd);
-+		break;
- 	default:
- 		r = -EINVAL;
- 		goto out;
-@@ -4015,6 +4042,12 @@ static int snp_handle_guest_req(struct vcpu_svm *svm, gpa_t req_gpa, gpa_t resp_
- 
- 	mutex_lock(&sev->guest_req_mutex);
- 
-+	if (!__ratelimit(&sev->snp_guest_msg_rs)) {
-+		svm_vmgexit_no_action(svm, SNP_GUEST_ERR(SNP_GUEST_VMM_ERR_BUSY, 0));
-+		ret = 1;
-+		goto out_unlock;
-+	}
-+
- 	if (kvm_read_guest(kvm, req_gpa, sev->guest_req_buf, PAGE_SIZE)) {
- 		ret = -EIO;
- 		goto out_unlock;
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index f16b068c4228..2643c940d054 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -18,6 +18,7 @@
- #include <linux/kvm_types.h>
- #include <linux/kvm_host.h>
- #include <linux/bits.h>
-+#include <linux/ratelimit.h>
- 
- #include <asm/svm.h>
- #include <asm/sev-common.h>
-@@ -112,6 +113,8 @@ struct kvm_sev_info {
- 	void *guest_req_buf;    /* Bounce buffer for SNP Guest Request input */
- 	void *guest_resp_buf;   /* Bounce buffer for SNP Guest Request output */
- 	struct mutex guest_req_mutex; /* Must acquire before using bounce buffers */
-+
-+	struct ratelimit_state snp_guest_msg_rs; /* Limit guest requests */
- };
- 
- struct kvm_svm {
--- 
-2.49.0.1101.gccaa498523-goog
+Can you test a patch?
 
+Thanks,
+Armin Wolf
+
+>
+> ---
+>   drivers/hid/Kconfig      | 1 -
+>   drivers/hid/hid-lenovo.c | 5 +----
+>   2 files changed, 1 insertion(+), 5 deletions(-)
+>
+> diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+> index a503252702b7b43c332a12b14bc8b23b83e9f028..6b4445f54b2f2818d451ff28=
+b3f7bcc2b1c7e99f 100644
+> --- a/drivers/hid/Kconfig
+> +++ b/drivers/hid/Kconfig
+> @@ -596,7 +596,6 @@ config HID_LED
+>   config HID_LENOVO
+>   	tristate "Lenovo / Thinkpad devices"
+>   	depends on ACPI
+> -	select ACPI_PLATFORM_PROFILE
+>   	select NEW_LEDS
+>   	select LEDS_CLASS
+>   	help
+> diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
+> index af29ba840522f99bc2f426d4753f70d442cef3af..cff4b5ddd9aa9bad0516f8c9=
+beb58927c24477fc 100644
+> --- a/drivers/hid/hid-lenovo.c
+> +++ b/drivers/hid/hid-lenovo.c
+> @@ -32,8 +32,6 @@
+>   #include <linux/leds.h>
+>   #include <linux/workqueue.h>
+>  =20
+> -#include <linux/platform_profile.h>
+> -
+>   #include "hid-ids.h"
+>  =20
+>   /* Userspace expects F20 for mic-mute KEY_MICMUTE does not work */
+> @@ -729,8 +727,7 @@ static int lenovo_raw_event_TP_X12_tab(struct hid_de=
+vice *hdev, u32 raw_data)
+>   				report_key_event(input, KEY_RFKILL);
+>   				return 1;
+>   			}
+> -			platform_profile_cycle();
+> -			return 1;
+> +			return 0;
+>   		case TP_X12_RAW_HOTKEY_FN_F10:
+>   			/* TAB1 has PICKUP Phone and TAB2 use Snipping tool*/
+>   			(hdev->product =3D=3D USB_DEVICE_ID_LENOVO_X12_TAB) ?
+>
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250512-hid_lenovo_unbreak_non_acpi-c041f3cc13b6
+>
+> Best regards,
