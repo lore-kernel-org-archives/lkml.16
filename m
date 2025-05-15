@@ -1,130 +1,95 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A888253F1E
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2B4253F17;
+	Thu, 15 May 2025 17:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747328980; cv=none; b=PA4qMxHM9j7PoupWvjEnHXH4poqNAtUsuFi2jvd3B8RgcrDzCQt23gVW1zNI0Itfx7GLIORiDYG9rMOW1IVy4zEv8UlnEA7vFAlXpVNQucvM8VZdX3ENi8VLVIytRJyOeqOzQ96cLmZX/7Miluywu3lAzvePKWhhN3DeM7KWHYA=
+	t=1747328994; cv=none; b=Z2ejEP4FVYWg38+rg679CsD6stpJwCS6f1sJ1IBLrSY2arox2X7JOggB+Rjj4otAN15NfvKyrQ47WnNBXpXwePfXROWqgEXDxsBb04ZWu6a2VIVjvnqPGi+xdhe/+Bf18WsUuCAzEHUvV4EI5mGaqu1NWCcQG2SqC154Pu6gPE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747328980; c=relaxed/simple;
-	bh=TJ6zr0f5oCOxxHarsKCrGAUL8GqdgcCiFPdWFb4Wpw4=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lFF3BvKM+f/FurQntB7qjGQ/XrFRwLVSvsSExS4zETYVkd7Hh/JNGRgXws7EDEkYKHzSqP+AyXrfTPakmORPH+qDcvOhq+P8zgdCM24y/nwICfjZPwIuMcI4QNJ9Zd9PxquSiz4YkIZesLQy3SpjE7C0uR84IHYmE2lLAUfihUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=PrSxcuOV; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1747328994; c=relaxed/simple;
+	bh=vigcnckwJAxU7xBLD9wpWuNrdCa6qlHweBDjwqaDrGw=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=LdFHQMOZVA4QmoUJ7gKr3/x2wBsIH4rF1w4UJV3nXM5NfgCAhnDBCHDSA+LdpXJEjzRBQyWnE+WKHO8gdgyZDeFmRxtJch8JHBh2aijPeWM/xYLw/JS40E/u3ODWusPhgZNHb00CIAjUOcmhoVB21zenjdk/KDuMaegVJg0sGVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tj7snRIl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="PrSxcuOV"
-Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com [209.85.161.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 4E489497A1
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:09:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1747328976;
-	bh=UaIbzEI3BxG1QqMP2g2eV2vg414lhcb+S7oh2OMWjZQ=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=PrSxcuOVKB2xfAwg5FSRejVJbyQpm2AdAo1DU3Kpt82ki+ZHz9aX7d5BGZPIib/rb
-	 pP9Csyc0YdzViQp4sYM/DTLWPKR0hcYXlOuIyT3GTyb9YkAQlw3iYj3QHAFnc816jL
-	 f3gWgFHsRlADBE26o7yzWJcv8j7C/XfrBgoWTDUsLCutNPX4bxggWXbT9op0Mbqlzq
-	 E0iGtn0d8KBXjwBMX/LwAWz66Dd+7XLUafAjSjw4kXWhvEP4C6HSMPTHiV5KjrYuMf
-	 rfiVZH84ffMCjhWBBrqtm2VDsYFz5he2V4pJOO2ENcDG9tn4x4FrQV/V7WQpOAm/KG
-	 nyYjZqM9gt3OQ==
-Received: by mail-oo1-f70.google.com with SMTP id 006d021491bc7-60214b7cdbcso1375652eaf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:09:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747328975; x=1747933775;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UaIbzEI3BxG1QqMP2g2eV2vg414lhcb+S7oh2OMWjZQ=;
-        b=M8bNR/7i73JVDvy9UN+yBJ3heHrj05GYHEk6+69zh0kiXO0Fx2YXws0x+icL+FgAEb
-         4XNIgkyA7FOIrYrSrc0oTekPAw0VD2x1PvKWeA8zLNDHqOAPcsekD9q5Mye8LkqxKeXn
-         +2PR+a8XN0nWw1JthSGSwGNViYOpfwuD0xhPnaX3+J+Ube6z5fT6buzBaks8xh86a18D
-         C8MYCPY4+/H4PpKFj8YK9tBMVBFchbUoEb50jO1vHvphFyRIpcgwFK+zzo1rGHGRQH4g
-         L29qufo7sgscOp3RsAekritthqWXEOtB+hqSRv5pHHvzrFTsuEznShbukvdxbVr39m7l
-         Zf2g==
-X-Gm-Message-State: AOJu0YzSjykLT2zGaLEkbCeF0svQDaDmbGRpG7mrcV+YNFPP10gq7Hr7
-	ZJJDoSqLwnv//GRF8Hzu6TmACPK0TybCePlJlWKBYjUPIttfHebOQgbHLCxA/20T9v5/7zxoOjq
-	VLJtiKs6RhObYmjK9mn8V5QgEkRScXP30EJQx/esXvJno/vEWJ0JRUCIvXvNWzc8U9frvSppuW8
-	WxYEy/FczxfOlzBjACtDkln2Xz0D0Jix4IF//O5KOcjYpBltO4UpJcLw+p
-X-Gm-Gg: ASbGnctEVEbBVg8gj+vdscs0ey7JiUoY6AJ//DiB0CuUkLYVLu0XIpEXJWV+4m/lchk
-	XOz65U/ATSbEAFnc65SLDKq9EjMcIZTx2eIqKLLyHBp7DseD565AxQj5ZfjdSJf/Ahgykdw==
-X-Received: by 2002:a05:6820:988:b0:600:5673:69ef with SMTP id 006d021491bc7-609f37cd90cmr76672eaf.1.1747328975217;
-        Thu, 15 May 2025 10:09:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGLutELQZn16DHflkUI5wwt/XutX3gwxVSCFyJcK6PHHXgJubotxdGaczJ6DOqIwaSUHGtaxo4SC0sf9J0GSBY=
-X-Received: by 2002:a05:6820:988:b0:600:5673:69ef with SMTP id
- 006d021491bc7-609f37cd90cmr76650eaf.1.1747328974888; Thu, 15 May 2025
- 10:09:34 -0700 (PDT)
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 15 May 2025 10:09:34 -0700
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 15 May 2025 10:09:34 -0700
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <20250502103101.957016-3-e@freeshell.de>
-References: <20250502103101.957016-1-e@freeshell.de> <20250502103101.957016-3-e@freeshell.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tj7snRIl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65350C4CEE7;
+	Thu, 15 May 2025 17:09:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747328993;
+	bh=vigcnckwJAxU7xBLD9wpWuNrdCa6qlHweBDjwqaDrGw=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Tj7snRIlyhVCMcAGIKYQ7aqTRqTDmICMm9sGE9FuaJILy9n2qJsp1yGyQFmu5qGb/
+	 xXYeajq/Oned+JZEKb3sgnmWn1aXxNJF6f8oZ86ki9URAIrToswiD8/xfh4iVhAcV6
+	 rMbap9zOVdLY9FMsKmPhMVPYhVj9uPURBvXdgCFQISNaHltyeTcD7nkmL2uOsNSykl
+	 sRWWTugLUuUEg5LniZdazq6C42KwxXCPjukWxnJvBCNoOJPKF9XFyNO2QVxTg/N1CL
+	 f+DzONjGHv6eaRUBmeXjV2dkK868Kz1U4216abFCrhHUhM25Su3SJ6YHlcCAaEXnyS
+	 tOrwyGcMoxUIA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADDC13806659;
+	Thu, 15 May 2025 17:10:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Thu, 15 May 2025 10:09:34 -0700
-X-Gm-Features: AX0GCFtbB_vNvAHLPwksxwineqOYhEEn3iOraJm-aHuirOkyFfVbsN4SakWjbrc
-Message-ID: <CAJM55Z-TMEn2oukQ_5XvyoQ4U-BVjt5dekVv2T3=vsQWL4CCuA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] riscv: dts: starfive: jh7110-common: qspi flash
- setting read-delay 2 cycles max 100MHz
-To: E Shattow <e@freeshell.de>, Conor Dooley <conor@kernel.org>, 
-	Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, Hal Feng <hal.feng@starfivetech.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] Bluetooth: btusb: Add new VID/PID 13d3/3584 for MT7922
+From: patchwork-bot+bluetooth@kernel.org
+Message-Id: 
+ <174732903051.3181810.414853071879946435.git-patchwork-notify@kernel.org>
+Date: Thu, 15 May 2025 17:10:30 +0000
+References: <SY7P300MB0829AE8C53A9A35F9038F97ABF832@SY7P300MB0829.AUSP300.PROD.OUTLOOK.COM>
+In-Reply-To: <SY7P300MB0829AE8C53A9A35F9038F97ABF832@SY7P300MB0829.AUSP300.PROD.OUTLOOK.COM>
+To: =?utf-8?b?6Z2S5Y+2IOilv+WfjiA8c3VubGl3ZWkyMDE1c0BvdXRsb29rLmNvbT4=?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org
+Cc: marcel@holtmann.org, luiz.dentz@gmail.com,
+ linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
 
-E Shattow wrote:
-> Use qspi flash read-delay and spi-max-frequency settings compatible with
-> U-Boot bootloader.
->
-> Observations from testing on Pine64 Star64 hardware within U-Boot bootloader
-> and read-delay=2 are spi-max-frequency less than 49.8MHz fails to write,
-> corrupt data writes at 25MHz to 49.799999MHz, and valid data writes at
-> 49.8MHz to 100MHz (not tested above 100MHz). No valid spi-max-frequency
-> was found for 1<read-delay<=3 and corrupt data with read-delay=3.
->
-> Looking around the Linux codebase it is common to see read-delay 2 cycles
-> with spi-max-frequency 100MHz and testing confirms this to work in both
-> U-Boot and Linux.
->
-> Signed-off-by: E Shattow <e@freeshell.de>
-> Reviewed-by: Hal Feng <hal.feng@starfivetech.com>
+Hello:
 
-Thanks!
+This patch was applied to bluetooth/bluetooth-next.git (master)
+by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
 
-Acked-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+On Wed, 30 Apr 2025 23:50:50 +0000 you wrote:
+> From dcb763edda3fd9f3fdb6525b07072fdd136d713a Mon Sep 17 00:00:00 2001
+> From: Liwei Sun <sunliwei2015s@outlook.com>
+> Date: Thu, 1 May 2025 06:18:50 +0800
+> Subject: [PATCH] Bluetooth: btusb: Add new VID/PID 13d3/3584 for MT7922
+> 
+> A new variant of MT7922 wireless device has been identified.
+> The device introduces itself as MEDIATEK MT7922,
+> so treat it as MediaTek device.
+> With this patch, btusb driver works as expected:
+> [    3.151162] Bluetooth: Core ver 2.22
+> [    3.151185] Bluetooth: HCI device and connection manager initialized
+> [    3.151189] Bluetooth: HCI socket layer initialized
+> [    3.151191] Bluetooth: L2CAP socket layer initialized
+> [    3.151194] Bluetooth: SCO socket layer initialized
+> [    3.295718] Bluetooth: hci0: HW/SW Version: 0x008a008a, Build Time: 20241106163512
+> [    4.676634] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+> [    4.676637] Bluetooth: BNEP filters: protocol multicast
+> [    4.676640] Bluetooth: BNEP socket layer initialized
+> [    5.560453] Bluetooth: hci0: Device setup in 2320660 usecs
+> [    5.560457] Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is advertised, but not supported.
+> [    5.619197] Bluetooth: hci0: AOSP extensions version v1.00
+> [    5.619204] Bluetooth: hci0: AOSP quality report is supported
+> [    5.619301] Bluetooth: MGMT ver 1.23
+> [    6.741247] Bluetooth: RFCOMM TTY layer initialized
+> [    6.741258] Bluetooth: RFCOMM socket layer initialized
+> [    6.741261] Bluetooth: RFCOMM ver 1.11
+> 
+> [...]
 
-> ---
->  arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-> index f1489e9bb83e..5c525686c043 100644
-> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-> @@ -317,8 +317,8 @@ &qspi {
->  	nor_flash: flash@0 {
->  		compatible = "jedec,spi-nor";
->  		reg = <0>;
-> -		cdns,read-delay = <5>;
-> -		spi-max-frequency = <12000000>;
-> +		cdns,read-delay = <2>;
-> +		spi-max-frequency = <100000000>;
->  		cdns,tshsl-ns = <1>;
->  		cdns,tsd2d-ns = <1>;
->  		cdns,tchsh-ns = <1>;
-> --
-> 2.49.0
->
+Here is the summary with links:
+  - Bluetooth: btusb: Add new VID/PID 13d3/3584 for MT7922
+    https://git.kernel.org/bluetooth/bluetooth-next/c/72d82f47a019
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
