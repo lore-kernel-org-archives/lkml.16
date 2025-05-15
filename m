@@ -1,105 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB101E990B;
-	Thu, 15 May 2025 09:33:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C69E294A0E;
+	Thu, 15 May 2025 09:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747301624; cv=none; b=sS1aJ5gzDXShTw2WvyGAsTanB66uqZpWdLdEBZgGJIYpXtumgJ12HbHZJUf7N6A0yYE746rSKYI00a3fWHEI14UC08rfehMqrjWW7iz0dnEZ1rBV1ivr35PkPathw8HuucE7eB2T68VlClHn8BfB6K+NVfG7shMvGLYgVF62eH0=
+	t=1747301707; cv=none; b=YdLhPatdxJnL+PQC4jIiWh+RPDu/1Ed08z20CQUyyuIu9rGwoD7sTkIym1HMy8ocW9tRB8hIdtKqz96gdLUdwGbby8fZ920jl6hnLcV4CyFc34sC+AB5laGCePH9odhAZg/4I+GWTSFUVVd25y/x9STUNUh4pggdt+ez1m5/rQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747301624; c=relaxed/simple;
-	bh=U+tPnOpL3m607kNEaHvTgUEJzEiFqUT9VJpj4Anya/k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xrq0Kb1EwKMjeHukNhq2U811Wbxs8FkIupC+CYYgEykHvUDio4PDbkeAmlsVBJsfBXgdEfltpNpiJ+tEQyKTYIkikICQXIo1ZvCprxu00QuJbqERpnr7lW8lOyUxPSwysMqnDaexzYq0gSRDb53vU1XRjp01PbxIsCFks7CXZ+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UXNjgnWA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747301707; c=relaxed/simple;
+	bh=9vS5YsxwHGxyIoo3lcntrfUvFtNCQjp0fjJPooqZw3c=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fMRrv8BzXSCIz4aU9gzbEKwf4fjH96nsuO4OYoA88H9k7W8qhRdx63KgAXL//AkNWjG7P7pKTSgvssdyhmFvoMjwh5t+ZCHq80Ht0HLJ4n5EDtYsltxnjNuQuY3OsC7Q6em8efKFgRO1zuVY71m3MlxOSYG5+5rrInwVfcSGlSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=EAIIGjC6; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UXNjgnWA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0F04C4CEE7;
-	Thu, 15 May 2025 09:33:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747301623;
-	bh=U+tPnOpL3m607kNEaHvTgUEJzEiFqUT9VJpj4Anya/k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UXNjgnWA+H9nCoRF2qGohiFrM+9FMPSMyzLbuKMGzSIut6SneQ5AYUcvMaR4mY8zs
-	 5rZ2AQ0wyVGpNGFJXsr1fU4zR+9Uzk66i7NnFVaQlkhcQaXpo67AMgy/qYLD628N0f
-	 faFIQ9MSqNnmIyNl2evCqzqXt9Cx69CBb+nnunbzBgUGY2wu4gDEYlKPFCElm+ZzUF
-	 oI0ZEebDwChS2GbD3vAcnmmT5D/eugikStnnPtMeePAKnCR5P+RTAK6fWefc5ukQ28
-	 r/ilLS4EEcMC6h9BU9inlZuFI2WrvRWCrPtFi1hDuFnefN8qxXICkIoQUMdd4YRTaZ
-	 pExzq0Nm0S3/g==
-Date: Thu, 15 May 2025 11:33:39 +0200
-From: Mark Brown <broonie@kernel.org>
-To: Lee Jones <lee@kernel.org>
-Cc: Artur Weber <aweber.kernel@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Stanislav Jakubek <stano.jakubek@gmail.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v8 4/9] mfd: bcm590xx: Add support for multiple device
- types + BCM59054 compatible
-Message-ID: <aCW0822BVpfKV2NL@finisterre.sirena.org.uk>
-References: <20250430-bcm59054-v8-0-e4cf638169a4@gmail.com>
- <20250430-bcm59054-v8-4-e4cf638169a4@gmail.com>
- <20250509140957.GD2492385@google.com>
- <aCRZzwW0w8oVWLUp@finisterre.sirena.org.uk>
- <20250515071357.GD2936510@google.com>
- <aCWfre2-n_PSuhxR@finisterre.sirena.org.uk>
- <20250515092000.GF2936510@google.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="EAIIGjC6"
+X-UUID: de48f80c316f11f0813e4fe1310efc19-20250515
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Q/xfop9wnEO136N/qMMmRk8QFSCF4Oc8e/XZ49ElI3U=;
+	b=EAIIGjC6gA1YXFIcX1d+WndSjIUnQPPCHRxaBpDP4Oz8F+hitC5SnWxX+u0fcXPv3GqtlyVAgcF21t+atV3YAavq9pAFByx6yUr6y1Gvpl1Ltx9Gq886jsHia1mve5WdtwgwRH7CjblCDuiPyP0ROGX4CY5zS3RDEP1cnKEhpHw=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:27d3d653-119f-4591-80b8-39c8fe90053d,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:ca96c297-7410-4084-8094-24619d975b02,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
+	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
+	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: de48f80c316f11f0813e4fe1310efc19-20250515
+Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw01.mediatek.com
+	(envelope-from <paul-pl.chen@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 446291499; Thu, 15 May 2025 17:34:58 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Thu, 15 May 2025 17:34:57 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Thu, 15 May 2025 17:34:57 +0800
+From: paul-pl.chen <paul-pl.chen@mediatek.com>
+To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+	<chunkuang.hu@kernel.org>, <angelogioacchino.delregno@collabora.com>
+CC: <matthias.bgg@gmail.com>, <p.zabel@pengutronix.de>,
+	<jason-jh.lin@mediatek.com>, <nancy.lin@mediatek.com>,
+	<singo.chang@mediatek.com>, <xiandong.wang@mediatek.com>,
+	<sirius.wang@mediatek.com>, <paul-pl.chen@mediatek.com>,
+	<sunny.shen@mediatek.com>, <fshao@chromium.org>, <treapking@chromium.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
+	<linux-arm-kernel@lists.infradead.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v3 01/17] dt-bindings: soc: mediatek: add mutex yaml for MT8196
+Date: Thu, 15 May 2025 17:34:13 +0800
+Message-ID: <20250515093454.1729720-2-paul-pl.chen@mediatek.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250515093454.1729720-1-paul-pl.chen@mediatek.com>
+References: <20250515093454.1729720-1-paul-pl.chen@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ejBQO6RFNOdfKSiv"
-Content-Disposition: inline
-In-Reply-To: <20250515092000.GF2936510@google.com>
-X-Cookie: Well begun is half done.
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+From: Nancy Lin <nancy.lin@mediatek.com>
 
---ejBQO6RFNOdfKSiv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Add compatible string to support mutex for MT8196.
 
-On Thu, May 15, 2025 at 10:20:00AM +0100, Lee Jones wrote:
-> On Thu, 15 May 2025, Mark Brown wrote:
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Nancy Lin <nancy.lin@mediatek.com>
+Signed-off-by: Paul-pl Chen <paul-pl.chen@mediatek.com>
+---
+ .../devicetree/bindings/soc/mediatek/mediatek,mutex.yaml        | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> > Well, you choose 3 - I do think it'd be a lot easier to go with option
-> > 2, or with applying the rest to your tree as acks come in.  There seemed
-> > to still be a reasonable amount of discussion on the MFD bits (eg,
-> > there's some formatting comments still) so I was expecting this series
-> > to churn some more and was waiting for a resend.
+diff --git a/Documentation/devicetree/bindings/soc/mediatek/mediatek,mutex.yaml b/Documentation/devicetree/bindings/soc/mediatek/mediatek,mutex.yaml
+index a10326a9683d..1be4e139a8b5 100644
+--- a/Documentation/devicetree/bindings/soc/mediatek/mediatek,mutex.yaml
++++ b/Documentation/devicetree/bindings/soc/mediatek/mediatek,mutex.yaml
+@@ -36,6 +36,7 @@ properties:
+       - mediatek,mt8188-vpp-mutex
+       - mediatek,mt8192-disp-mutex
+       - mediatek,mt8195-disp-mutex
++      - mediatek,mt8196-disp-mutex
+       - mediatek,mt8195-vpp-mutex
+       - mediatek,mt8365-disp-mutex
+ 
+@@ -87,6 +88,7 @@ allOf:
+               - mediatek,mt8186-mdp3-mutex
+               - mediatek,mt8192-disp-mutex
+               - mediatek,mt8195-disp-mutex
++              - mediatek,mt8196-disp-mutex
+     then:
+       required:
+         - clocks
+-- 
+2.45.2
 
-> Yes, I expected to apply v9 with your Ack.
-
-OK, that's about where I was expecting - at least one more respin before
-the MFD bits are stable.
-
-> I can go with 2 in this case.  Applying in dribs-and-drabs as Acks come
-> in would be sub-optimal and would likely end up in a mess.
-
-Well, then just going a head and applying them on a branch with a tag
-seems easier than delaying then.
-
---ejBQO6RFNOdfKSiv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgltPIACgkQJNaLcl1U
-h9DkqQf/REpQxgWVfq8b7aQzalvyecOuF4kgL/JR9uyKEG8EDkwpLRnT/+yxJmCX
-Dkw4A53gNv/cD2E1UWI2AYs6i4/rUScPzGsjtiUV5AUoDJ91LB2uxgHiSk/xFpck
-x6A37s+FfJYLx9Gmq8cfwVrl103CH7er2kqiadxUL0db4mPXvq/g1EPk2XmuP/Lz
-/dkbZtw92fLqWkofr/kiGGoKV9TKa0vlcVmunnaF1Pm14oN+cpTU3aAT58Ogi6Vn
-1AuIHpgbH1fae6uL52xialrE8H3PVQF0KkkxyMPrSj+mSL17DDN3jDCXoz6Ypw2Y
-eJFtfBiL5D0nmaE7Z2CtBkgLq3LMow==
-=U5xD
------END PGP SIGNATURE-----
-
---ejBQO6RFNOdfKSiv--
