@@ -1,178 +1,108 @@
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176E31F3FE3;
-	Thu, 15 May 2025 19:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4DAF1F3FE3;
+	Thu, 15 May 2025 19:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747339013; cv=none; b=PoZm89HOGArWKrCGJmCpVsYVPfk9OFReX9BXtskduTOYIRnEL4xV9jODxApiEJ7JNnxBkni6UIIa9fPdmTntv69ba28sadCgEuAg7rbAh7iV1kbtBtAAPZzYENSp/uJSjGLxc6Lokt7YHNlmI8qK7WfldxN2kT27S59mwDCIsPY=
+	t=1747339057; cv=none; b=cI57ZwFlTpk+kV2INL8F+AtBMwsp+/YuBomRP6m7a/Y9cX+tnv/VpuSA+Iuc8x49qmh5QcyPxqJ2h2yr6at2/F/IP8snjPjBWXPp6M4/gX75igfoy6yMb5mwVhQI0RlMktHra9szed4GtsLGgdC+BRaHQJDbEc+2KpNOArwSFwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747339013; c=relaxed/simple;
-	bh=BSk6HMXbHqy4bmF2p4V47cUoMUq5f+6F3jsfiwPTCqw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oQtCSXa1uAFumKsuqYLnv7vO/ISDXERDKOot+Oek5YkplVmQsvvgKUKn5AI52bVTwei+uFv/ff+ioPJ/jF/vFeXk8RqiRPty5JIkCpfGotSJZvNZvYV5SrQLCp9DjPBv/9FhgXsNub1cqyFga0OJonJBC8trQnJ6nM2wR3Ty3uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eSFzTJkx; arc=none smtp.client-ip=209.85.166.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747339057; c=relaxed/simple;
+	bh=Xxp3Hf8tEb7NVyAn0wC6H1zxrTjRWn4dy59yYUgAG7g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j99074zmVcmn/ih1mdymUnNsiGyUgbPMzlSUMEqfC+m9fGOt6B9fymbbParMiVUSGBlL+ZO+1HR9jTbIvs4b0yCIaWyZ88kZUyJBIta5c1z3mOZjdmG6XuU/+rMTsfSzThpF9D8tZtB250S4wARqcPhe7B2ghs65duyDmFnAIvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=By8bjPon; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eSFzTJkx"
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-85e73562577so119341939f.0;
-        Thu, 15 May 2025 12:56:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="By8bjPon"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-441ab63a415so14206025e9.3;
+        Thu, 15 May 2025 12:57:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747339011; x=1747943811; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fMAdLoMT5L/a1MOnGEYuM9x+axh2zb+MjQ/Qq0Mzs2g=;
-        b=eSFzTJkx/Bp4aZsHqo/NxJ5F9iCGJoac/adBSHKWVt+Am1ssUm/WJFdzqFZDr0iSyE
-         P8t+TawyFOy/5uUdMHwbAurmc1qoZt6TOUTDdx20DeYR9a4tlnWRLjrxUXn3T8HzmuCZ
-         xQiZoVHBu1bmGoCtdDlP7LMELVPyrBqYxm8pc150Z3j2Tx6WXSY5/KTXeNSoKJqr9vTX
-         pVItT7IVi0wLzfVLhZuAdZrj0LqODAqa5fYs0qHuKTlbwf4m8K9tjorF8voDGcG9eOpV
-         2AHOvdRxvjGFXrZ+PbJANnbKbi1tEcNnBt1+w+xD9CbiwiKcZEtlO6OsfTHcBh0jb1Wf
-         U1wg==
+        d=googlemail.com; s=20230601; t=1747339054; x=1747943854; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=g+uhLvzK7rNj9LDHaREMcCcONyDPb7wemhKZZ/4dZJU=;
+        b=By8bjPon2WTN6Q0bealVH7D7nMewVb25AGLYgW8/ZGSDQKVpu9vB9eaWzCQtFAhYZV
+         uiUV0WOHH4fnfmtHXQDzoqtkhurZaR/mYXB4bT2GTcLgv5/EG3FFfS4DvUDr1JgadZOF
+         Ha5hcy2Umca1BY+x1TS7Etf5HTx6mu/2JjRE7l+TRfN2blcB6kQVUKrygsPiLbBuo8mo
+         GCIfvmudP3Beat4KycZql9rJpJWLrugMxfRuLxRi+NlkeCXVg/Jtb0ah6MoeLIfPhf7M
+         P1f3RUt+BoHWB8IrwrfNRT0bCFx8DzX9JkrETnQbm/FRZaAffyMFnHC+9Dv2HwFHBbke
+         HXqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747339011; x=1747943811;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fMAdLoMT5L/a1MOnGEYuM9x+axh2zb+MjQ/Qq0Mzs2g=;
-        b=ml03JUZ5CU4N31U3/Jltngf4guQaeAPRJIl2F52w1de6S9RAXfLJ9sGTS/XNRH55iA
-         5Py8TGYsGTrXHxwidrm+nlmZLnCu4x5jk/oCv7wv7k/Kzx9Smw0k0B1KDnnuHx0zLtp/
-         VBZyzt4VRvObDbfbOCmfqOZTWnoxJD1GhkCtsSp7TwFBp4ba2m4kQ5JO9Zb2GpxqhFHr
-         eDGb6v+jpwwSHX1ImxeT+tpylGoxP1dlPTJTBN72RhqCewQRZM+eCa55/e+raVlkdcZN
-         XXTUTCKwvu9dB2myAem8oawUsdjd1MIg7kUo+4j/vnjMe0ShGNvkKMkJvfCmmOQax1rX
-         Rcjw==
-X-Forwarded-Encrypted: i=1; AJvYcCUX8L9qdntGY/wTAKhA6JfTPI36waOL8QkPGv/sHDKZAR+cNlSf9nV8rYx1RO60Ko2U4iCbj5Onpsl7gqse@vger.kernel.org, AJvYcCXM7O6qS0ub30ugJro3VL+0PrAKiumY88Xhn1tTD1fm/aORfjeUeS1v+x9FB/k9uAvualVYcWWDHyIbBN2b@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3TzkT3/laZVLcDLyCx3kkLUHQOHL7TSAjDlOBNnwiSltioVJ0
-	VHGZqKSL66Ka+aZfv0kgogsSJ29gswTpl9XpiUgq17T7d2rUWp/ytU600kSTwV5GlKOkXkHspFv
-	o1cwmHwakghhMTqAbRUU64Xs/FsRWl+8=
-X-Gm-Gg: ASbGnct9nJx2fPMzNXOHnIv/QDj2Zc+Q4osSrfy4RoyorBf+FL6v5zAMlOyBuKhav99
-	01tXxDr+etBMuF6BzNQlx5rMPX7A9zSe2NWgyoVDa/C0DzujjCfdy41uvms1QmEZWWLSPpMKox3
-	s0yRe/H2NfZ5AabCrbgpykjd+lKL9NtXE7VJE5G5NUMFvu7TYjqqukk16ES5fap/BfuFg=
-X-Google-Smtp-Source: AGHT+IFPCvF4LukcF3e+PrLa/e7+Ptn8ausMxE8i1Ao10DvbOVg+94kocFag8Mx84gWnNCqcKrfEOwhvTgh/Bgnpj6k=
-X-Received: by 2002:a05:6602:2744:b0:867:325d:6247 with SMTP id
- ca18e2360f4ac-86a231c39d6mr191572739f.7.1747339010947; Thu, 15 May 2025
- 12:56:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747339054; x=1747943854;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g+uhLvzK7rNj9LDHaREMcCcONyDPb7wemhKZZ/4dZJU=;
+        b=EwxyZvxALRU3O2wgP6BUE9P7wtYTMRt2RLTS8qewAod7CLhfou2sWz181ms9l4SCb3
+         y9eJYyt/Rok4gToyJCm4aixje5lOfUlNmD0xNASgdGPF1Mn7EI8Es8WxQDM5+nhBbXxx
+         HKSuCRgLK+XPs/c/kC/1aXyES+xDuooFshC7fdyulv2zBUPKuBycFjqneI2ecBK3/Mry
+         tuvFW/oVPYTP5BaN8qEzY8/CyrxUIjgMwEEtysydBRqN/RhGz4a41sSgJZqBy7xN2kzX
+         GyPV6moNXEURkK/lOvPg3P1eqDwE5MvHA2CwSSsMj+d5ePK5GcWHWePSgJV3MOipSYYB
+         ACnw==
+X-Forwarded-Encrypted: i=1; AJvYcCUHoPTtGumKrRA0atcMhO481ceLuqS12s78BiMa02z9INVJiJie7cOKnrfQ16gxJ83i3LAJdsNH@vger.kernel.org, AJvYcCUYXuy1YXFFGOntT94biEnP9pJyPR4td4Ds+ha0r72WmtfV3J9z2hp4HZeTPJig7j6TqGWM8q+m8wFBQvA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOuvpFvblCbhArYTq1WNneyDO/tObMNBpIT0O5V2g800bOONW5
+	/06OEzyGQeU+SlrQBYWYYBNeXPvVFqWsZJkg5SCQL9p7ESZSYmkm8bo=
+X-Gm-Gg: ASbGnctZf5Aj+TgmlJSdhOmK6q6yhP/CaXiB3uasTypn+3nGyO7wOGBFE0c1dWsn4qa
+	9A6rHx1hTTv20Ins3kLwCNntebPrvdGkEqkpQR2wloP/CSkpNm68VUyb+GO9nYkNGygDNzsCQvB
+	eJTnT3PVibtbJG+hCd7nui19xOE8e1B/r2YPOdr3Wg+BEIwW4DYCuCm8qcbCwl23AVUdrXSbPJb
+	0S3Vt0a234ExtWGzU+Ahu37Hs7ztmLaunFFZnbVWytC3UwFK6tOXb3+iy/uaovugo+aY7lvQuCk
+	0t1vsewiR7agY2HJaZKvsG+g8pvqw9m/lm73Xz3C4l/5or+i3OWo/FHLJguoeAQC5tC2Z5uedCQ
+	8vs/+qViV8dVo6/CO0DXGQA5klA==
+X-Google-Smtp-Source: AGHT+IGAhkiHGFhNZo3b4MoNjBTYMdTrTDmz079jIw/UdBFcGOXieOxisqroo9I/bLfyHmmKI7zhxA==
+X-Received: by 2002:a05:600c:384b:b0:43c:f8fc:f6a6 with SMTP id 5b1f17b1804b1-442fd6100famr8233125e9.9.1747339053808;
+        Thu, 15 May 2025 12:57:33 -0700 (PDT)
+Received: from [192.168.1.3] (p5b057603.dip0.t-ipconnect.de. [91.5.118.3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f39e851bsm82758785e9.28.2025.05.15.12.57.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 12:57:33 -0700 (PDT)
+Message-ID: <0d48b34e-ad69-44b1-8b61-141afca3cc33@googlemail.com>
+Date: Thu, 15 May 2025 21:57:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514170118.40555-1-robdclark@gmail.com> <20250514170118.40555-5-robdclark@gmail.com>
- <51f87f358fa1b7ef8db8b67ee6cde38ae071fbe8.camel@mailbox.org>
- <CAJs_Fx771FFVDVFMn8YJkR9f9Ad-UQspJ9KKQw4u6Cu4TA7YPA@mail.gmail.com>
- <CACu1E7EL+E-M0N-EAN9Bx7u9O6_pECQQdPE2ph575idhVb2Szg@mail.gmail.com>
- <aCYkk4Y7feltfp79@pollux> <CAF6AEGsoG_W3A3+BHV4n5EKZQazFubrCyfrtxVUH7+H4-j7i5A@mail.gmail.com>
- <aCY42rgJC4sQ4tp4@pollux>
-In-Reply-To: <aCY42rgJC4sQ4tp4@pollux>
-From: Rob Clark <robdclark@gmail.com>
-Date: Thu, 15 May 2025 12:56:38 -0700
-X-Gm-Features: AX0GCFvRdC4lKpvLHD4k1lEo4Kh-CGTqFLXWxbdj5_u0cbuv5zT5opAiGIP9Ch8
-Message-ID: <CAF6AEGubHkdhfJz=bAZvctO1aTKDLwRsRyPzkoVrQ7tA6dRbKw@mail.gmail.com>
-Subject: Re: [PATCH v4 04/40] drm/sched: Add enqueue credit limit
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Connor Abbott <cwabbott0@gmail.com>, Rob Clark <robdclark@chromium.org>, phasta@kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-arm-msm@vger.kernel.org, Matthew Brost <matthew.brost@intel.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	Boris Brezillon <boris.brezillon@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.1 00/96] 6.1.139-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250514125614.705014741@linuxfoundation.org>
+Content-Language: de-DE
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250514125614.705014741@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 15, 2025 at 11:56=E2=80=AFAM Danilo Krummrich <dakr@kernel.org>=
- wrote:
->
-> On Thu, May 15, 2025 at 10:40:15AM -0700, Rob Clark wrote:
-> > On Thu, May 15, 2025 at 10:30=E2=80=AFAM Danilo Krummrich <dakr@kernel.=
-org> wrote:
-> > >
-> > > (Cc: Boris)
-> > >
-> > > On Thu, May 15, 2025 at 12:22:18PM -0400, Connor Abbott wrote:
-> > > > For some context, other drivers have the concept of a "synchronous"
-> > > > VM_BIND ioctl which completes immediately, and drivers implement it=
- by
-> > > > waiting for the whole thing to finish before returning.
-> > >
-> > > Nouveau implements sync by issuing a normal async VM_BIND and subsequ=
-ently
-> > > waits for the out-fence synchronously.
-> >
-> > As Connor mentioned, we'd prefer it to be async rather than blocking,
-> > in normal cases, otherwise with drm native context for using native
-> > UMD in guest VM, you'd be blocking the single host/VMM virglrender
-> > thread.
-> >
-> > The key is we want to keep it async in the normal cases, and not have
-> > weird edge case CTS tests blow up from being _too_ async ;-)
->
-> I really wonder why they don't blow up in Nouveau, which also support ful=
-l
-> asynchronous VM_BIND. Mind sharing which tests blow up? :)
+Am 14.05.2025 um 15:03 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.1.139 release.
+> There are 96 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Maybe it was dEQP-VK.sparse_resources.buffer.ssbo.sparse_residency.buffer_s=
-ize_2_24,
-but I might be mixing that up, I'd have to back out this patch and see
-where things blow up, which would take many hours.
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-There definitely was one where I was seeing >5k VM_BIND jobs pile up,
-so absolutely throttling like this is needed.
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-Part of the VM_BIND for msm series adds some tracepoints for amount of
-memory preallocated vs used for each job.  That plus scheduler
-tracepoints should let you see how much memory is tied up in
-prealloc'd pgtables.  You might not be noticing only because you are
-running on a big desktop with lots of RAM ;-)
 
-> > > > But this
-> > > > doesn't work for native context, where everything has to be
-> > > > asynchronous, so we're trying a new approach where we instead submi=
-t
-> > > > an asynchronous bind for "normal" (non-sparse/driver internal)
-> > > > allocations and only attach its out-fence to the in-fence of
-> > > > subsequent submits to other queues.
-> > >
-> > > This is what nouveau does and I think other drivers like Xe and panth=
-or do this
-> > > as well.
-> >
-> > No one has added native context support for these drivers yet
->
-> Huh? What exactly do you mean with "native context" then?
+Beste Grüße,
+Peter Schneider
 
-It is a way to use native usermode driver in a guest VM, by remoting
-at the UAPI level, as opposed to the vk or gl API level.  You can
-generally get equal to native performance, but the guest/host boundary
-strongly encourages asynchronous to hide the guest->host latency.
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
 
-https://gitlab.freedesktop.org/virgl/virglrenderer/-/merge_requests/693
-https://indico.freedesktop.org/event/2/contributions/53/attachments/76/121/=
-XDC2022_%20virtgpu%20drm%20native%20context.pdf
-
-So far there is (merged) support for msm + freedreno/turnip, amdgpu +
-radeonsi/radv, with MRs in-flight for i915 and asahi.
-
-BR,
--R
-
-> > > > Once you do this then you need a
-> > > > limit like this to prevent memory usage from pending page table
-> > > > updates from getting out of control. Other drivers haven't needed t=
-his
-> > > > yet, but they will when they get native context support.
-> > >
-> > > What are the cases where you did run into this, i.e. which applicatio=
-n in
-> > > userspace hit this? Was it the CTS, some game, something else?
-> >
-> > CTS tests that do weird things with massive # of small bind/unbind.  I
-> > wouldn't expect to hit the blocking case in the real world.
->
-> As mentioned above, can you please share them? I'd like to play around a =
-bit. :)
->
-> - Danilo
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
