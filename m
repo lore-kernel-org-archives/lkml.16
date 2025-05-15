@@ -1,116 +1,147 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BD9F4ED
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 04:54:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD90374C4;
+	Thu, 15 May 2025 04:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747284901; cv=none; b=RR6HmxHxbvE/5LHKQVwmYkr7d477AixeVmAxHX87JTsMt6HwDPNXhox9oOL3zsRjTLdH1HpiYZ10Uy81EF0cIRAsLuXgLW8AdlIU1UVVRu7s0ie7GZe1N1iC/5l2oP4UdKWV3a7ZYNSYgh5LKS55hWyj2AJ4X1L7b8kZYC+sA1Y=
+	t=1747285163; cv=none; b=Ebi4Y6smpHzmPdB6U/EHldzbSIqrwIIItqMZI4x1GXZK04Tv2atbhDR71Wmefr+NktQevOp/ZJD1voKqR2yXaQZFQTh4lqZRsqVEGEmgXrnhGW8XX77fiF2FWbPyNZUwB+fUMyDGPZdeE4G8Pxn1rtaWc0BtawHsR2DzH5fTwU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747284901; c=relaxed/simple;
-	bh=CQV/WjAU9kL/UFhY/mEwBBv6K9aVgMG9E+kE0axrO5U=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Hj3nAgYBmrFKnOj7a8OUb7Hditm8ukZ/FAZVSTD4xUop/ERt+q6Ksb5KCo57Lp9/mAuz0Ppuvzjqf6FsN3aNTY9muvDeosKghk/gP6RJ8jItaPWUJ03+wdptu0beo3scocUKDq0G+IDouUNnQdl+iwkASsCCCBwVCEbZtCT2Ba4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=P9ten73v; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1747285163; c=relaxed/simple;
+	bh=4VztJ67csbNOom2wQRi838Nreo1zmt+wKbfXF4TmClk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=C5zx0FxhJGi1HWun+SSTmTuzkRkMoRaK5nIgEvkMV+1We5GXjIMMgr1Q0klpzS7pflPgHfEgbdwgS9XcVy2nHNALGkgl2mkWALscrChw/seMCinb+RVcoUxhu38HL/Pox5NN+C0Hva77fi+oKcVZaNIZhDhMrkFFpSNgODUPUaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=0EDPiRSh; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="P9ten73v"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54F4sPLY3283743
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 14 May 2025 21:54:26 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54F4sPLY3283743
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747284866;
-	bh=Dt0QE3AMxSwDM7mvQ1bZ2S7nUnc99GV2fqu0I3w/bQU=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=P9ten73vQo7fH+yLfG8paPxDS8vlUwwPsn9qiE2OveBwzvItCzEYhtMMKmItGPvrg
-	 Bjr8OcFpf90M68/UX2euJY0OczVwd+sWODlmi46LTGFaQ9p5HC4k5ko4WMisN+lZuX
-	 O0xvE8M4tnEkcqMYuhMmpm6SqVAADZRzscw2hx8y97lI827LcwFoFiejxrc+AjBHbJ
-	 y8iZ7Ylpxa6kpNjAHzU0iWOsERsPxOPV/+AJ/W8IESu7X81KuRc7pCb6weS9tl/lvk
-	 wbeB2KsKrwKVN8gO/3S2A1SC9Hg4ld8yRpLXrm7d2kDveb34m5xTu0TN39u7uFrVYq
-	 M3UVbKX6x3SxA==
-Date: Wed, 14 May 2025 21:54:23 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Ruben Wauters <rubenru09@aol.com>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
-CC: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/cpu/intel: replace deprecated strcpy with strscpy
-User-Agent: K-9 Mail for Android
-In-Reply-To: <098b949b8ddc5b706adb927d04460943c245bef8.camel@aol.com>
-References: <20250507185459.8769-1-rubenru09.ref@aol.com> <20250507185459.8769-1-rubenru09@aol.com> <3AFD7702-7D6F-479C-950A-CA439E01838C@zytor.com> <758195078eee66ce97c05091004bca9d5c3b6cd9.camel@aol.com> <098b949b8ddc5b706adb927d04460943c245bef8.camel@aol.com>
-Message-ID: <218DE733-6165-45D8-9338-8DB6A96AB66A@zytor.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="0EDPiRSh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1747285161; x=1778821161;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=4VztJ67csbNOom2wQRi838Nreo1zmt+wKbfXF4TmClk=;
+  b=0EDPiRShms0Fr536lnQK1M5Bpz/srQVfNqNECuDsaZZTOEvnP19kb0ps
+   ei+ElxMPugfhlReTDpQxMAE4DlnNCcA1b9cIA5OPPFy7PKXqLL0HL7Qjg
+   67x7iSUhRto+aJABpkjsvPPngfLdOlcLKSXEzvJxRWK0nUsHlusmAF/lv
+   DquWUy/u8KAEL3Kc2BELJhWDGMdniBu40ZWwBfhuHDspehXhNyO5aXorK
+   Vz+6uGkA0ao0LCNx/sPM688h8TY1qIgoa2EIb790L3VGg+bKxxV2j1EoM
+   Z9GUX8wyB423tu1RrYq1Qg/J7ZHeRXUDFKEDuyUb5Lyp9bh1XuvCvUJxc
+   w==;
+X-CSE-ConnectionGUID: 7SwAsoW3S9q8TSOD2TSkbQ==
+X-CSE-MsgGUID: /cROPzdaS3GrzU0lo4VFRA==
+X-IronPort-AV: E=Sophos;i="6.15,290,1739862000"; 
+   d="scan'208";a="42133405"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 May 2025 21:59:15 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Wed, 14 May 2025 21:58:35 -0700
+Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Wed, 14 May 2025 21:58:33 -0700
+From: Dharma Balasubiramani <dharma.b@microchip.com>
+Date: Thu, 15 May 2025 10:28:25 +0530
+Subject: [PATCH] counter: microchip-tcb-capture: Add watch validation
+ support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250515-counter-tcb-v1-1-e547061ed80f@microchip.com>
+X-B4-Tracking: v=1; b=H4sIAHB0JWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDU0NT3eT80ryS1CLdkuQk3SSzxFRDSxNTI0ODJCWgjoKi1LTMCrBp0bG
+ 1tQCOvc6/XQAAAA==
+To: Kamel Bouhara <kamel.bouhara@bootlin.com>, William Breathitt Gray
+	<wbg@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-iio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Dharma Balasubiramani
+	<dharma.b@microchip.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747285110; l=2402;
+ i=dharma.b@microchip.com; s=20240209; h=from:subject:message-id;
+ bh=4VztJ67csbNOom2wQRi838Nreo1zmt+wKbfXF4TmClk=;
+ b=q187hDCueE1QScVAwflXU6hvqLkWRU76EQZbtHTo2ZyqL/Jz2tvk9VZo07bPwp1m6foSk0EPM
+ GrIMjrDG8boByfWV3iwXTyloEioJwZqmBA2HCtGB3WZBboYKjAGn1gx
+X-Developer-Key: i=dharma.b@microchip.com; a=ed25519;
+ pk=kCq31LcpLAe9HDfIz9ZJ1U7T+osjOi7OZSbe0gqtyQ4=
 
-On May 14, 2025 12:16:20 PM PDT, Ruben Wauters <rubenru09@aol=2Ecom> wrote:
->On Wed, 2025-05-07 at 21:30 +0100, Ruben Wauters wrote:
->> On Wed, 2025-05-07 at 13:14 -0700, H=2E Peter Anvin wrote:
->> > On May 7, 2025 11:51:36 AM PDT, Ruben Wauters <rubenru09@aol=2Ecom>
->> > wrote:
->> > > strcpy is deprecated due to lack of bounds checking=2E
->> > > This patch replaces strcpy with strscpy, the recommended
->> > > alternative for
->> > > null terminated strings, to follow best practices=2E
->> > >=20
->> > > Signed-off-by: Ruben Wauters <rubenru09@aol=2Ecom>
->> > > ---
->> > > arch/x86/kernel/cpu/intel=2Ec | 2 +-
->> > > 1 file changed, 1 insertion(+), 1 deletion(-)
->> > >=20
->> > > diff --git a/arch/x86/kernel/cpu/intel=2Ec
->> > > b/arch/x86/kernel/cpu/intel=2Ec
->> > > index 584dd55bf739=2E=2Eb49bba30434d 100644
->> > > --- a/arch/x86/kernel/cpu/intel=2Ec
->> > > +++ b/arch/x86/kernel/cpu/intel=2Ec
->> > > @@ -607,7 +607,7 @@ static void init_intel(struct cpuinfo_x86 *c)
->> > > 		}
->> > >=20
->> > > 		if (p)
->> > > -			strcpy(c->x86_model_id, p);
->> > > +			strscpy(c->x86_model_id, p);
->> > > 	}
->> > > #endif
->> > >=20
->> >=20
->> > strscpy() needs a buffer length; this patch wouldn't even compile!
->>=20
->> Hi, this is incorrect, strscpy is defined in string=2Eh as
->> #define strscpy(dst, src, =2E=2E=2E)	\
->> 	CONCATENATE(__strscpy, COUNT_ARGS(__VA_ARGS__))(dst, src,
->> __VA_ARGS__)
->>=20
->> the third parameter is optional, and it works perfectly fine with two
->> parameters=2E I have compiled it, and there are no errors=2E
->>=20
->> > Not to mention that the string in question is generated in such a
->> > way
->> > that cannot be unterminated=2E
->>=20
->> I'm not entirely sure what you mean here? The assignments above are
->> null terminated strings, which the two parameter version works fine
->> with=2E
->
->Hello
->
->Just wanted to check that everything was ok with this patch, and that
->any concerns were addressed or explained=2E Please do let me know if
->there is anything I need to do or change to get this patch applied=2E
->
->Ruben Wauters
->
+Introduce a watch validation callback to restrict supported event and
+channel combinations. This allows userspace to receive notifications only
+for valid event types and sources. Specifically, enable the following
+supported events on channels RA, RB, and RC:
 
-Yes, I stand corrected=2E=20
+  - COUNTER_EVENT_CAPTURE
+  - COUNTER_EVENT_CHANGE_OF_STATE
+  - COUNTER_EVENT_OVERFLOW
+  - COUNTER_EVENT_THRESHOLD
 
-I still think it is superfluous (or arguably a memcpy would be better, sin=
-ce this is a fixed length) but it doesn't hurt enything=2E
+Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+---
+ drivers/counter/microchip-tcb-capture.c | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/microchip-tcb-capture.c
+index 1de3c50b9804..179ff5595143 100644
+--- a/drivers/counter/microchip-tcb-capture.c
++++ b/drivers/counter/microchip-tcb-capture.c
+@@ -337,6 +337,27 @@ static struct counter_comp mchp_tc_count_ext[] = {
+ 	COUNTER_COMP_COMPARE(mchp_tc_count_compare_read, mchp_tc_count_compare_write),
+ };
+ 
++static int mchp_tc_watch_validate(struct counter_device *counter,
++				  const struct counter_watch *watch)
++{
++	switch (watch->channel) {
++	case COUNTER_MCHP_EVCHN_RA:
++	case COUNTER_MCHP_EVCHN_RB:
++	case COUNTER_MCHP_EVCHN_RC:
++		switch (watch->event) {
++		case COUNTER_EVENT_CAPTURE:
++		case COUNTER_EVENT_CHANGE_OF_STATE:
++		case COUNTER_EVENT_OVERFLOW:
++		case COUNTER_EVENT_THRESHOLD:
++			return 0;
++		default:
++			return -EINVAL;
++		}
++	default:
++		return -EINVAL;
++	}
++}
++
+ static struct counter_count mchp_tc_counts[] = {
+ 	{
+ 		.id = 0,
+@@ -351,12 +372,13 @@ static struct counter_count mchp_tc_counts[] = {
+ };
+ 
+ static const struct counter_ops mchp_tc_ops = {
+-	.signal_read    = mchp_tc_count_signal_read,
++	.action_read    = mchp_tc_count_action_read,
++	.action_write   = mchp_tc_count_action_write,
+ 	.count_read     = mchp_tc_count_read,
+ 	.function_read  = mchp_tc_count_function_read,
+ 	.function_write = mchp_tc_count_function_write,
+-	.action_read    = mchp_tc_count_action_read,
+-	.action_write   = mchp_tc_count_action_write
++	.signal_read    = mchp_tc_count_signal_read,
++	.watch_validate = mchp_tc_watch_validate,
+ };
+ 
+ static const struct atmel_tcb_config tcb_rm9200_config = {
+
+---
+base-commit: 9f35e33144ae5377d6a8de86dd3bd4d995c6ac65
+change-id: 20250515-counter-tcb-b6ae1945210b
+
+Best regards,
+-- 
+Dharma Balasubiramani <dharma.b@microchip.com>
+
