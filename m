@@ -1,110 +1,139 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1A91DDD1;
-	Thu, 15 May 2025 17:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E96C2550D3
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747329683; cv=none; b=abI2YAQbGwTgJfzqV2aBUIBdf7+7d0Xiy+FdS7oIZrrG42zGWYVIFksMrgd4lYQ7DlrVeAor0CyvuY79g8JVOnHq7eO48hVTW+R8maKUPq2bgH2XMFvejO6H6xCj8S3vovDxyZlN8zYS2q3cpPEWNlkrQjTbnovet4Z3nzL8eu4=
+	t=1747329724; cv=none; b=NoaJkWXJmdW4tpHLxHK3zROXuJHL8LqUFw9pyXIiaS3gtMkZ5bUilRxV7d7pXUMr5x/5fRSa1iFK+Yfn90C/nmbvrE9EW45Z8oY9ttZ96fnkKkYX0ebdLkGK3ZdY+73qg2ruunpT+uB7SwBbRlae4ZaXKK99UJVYu4kG3brhs5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747329683; c=relaxed/simple;
-	bh=Lku0Fqz3R1KYacwiYbjnrPq3OzBpTMZbc8lQ8NqOqVc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=hhwABlok4BB0HDsvOI/g9D9hSyu5xUjoGYW27wyvStIC+Y9a1EHPsihHzhlWcXEWXN5wE9S/x47pbDMWESyG7lvy3i4zDiYQANUBvyKZ9nRbT7I1p9D0F/HHHKmAoAFkxk4+oTXte4b8xIqAkSC2PCKt1P50IFv0Oc0IWiZDkiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KffGn10y; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1747329724; c=relaxed/simple;
+	bh=mfCeoOfwRJ2IubXApVWQduxn7NdySIMTBa5CH/dXP+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GuMkLxTH2HV/4vcSkAWh6tSFxZGs8DQqlvz7N7n9NQTkAjvPinrLiePvCCIYuoAsjqutS02Emh/QL+AhpkBpwbdfybe6YnBVtJCuoGKGGfX+0pWsmChna4kzwz5uZjT2tB6IXVmK2V6IyO/JEKoqZoO4m6i5xzMGtlZ6d6hhkFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=I6BjP5Tq; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KffGn10y"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 54FHLFmu069490
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 15 May 2025 12:21:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1747329675;
-	bh=IPnPj2DVeO3A+GP4PePrMM6nt9jC2SgWX+MIfNasZLY=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=KffGn10yUo5IK24e9eUFEH9RP9SuBvZTVp9e0/Qm5WkLMiMf8iSnqyP67cIJTjilq
-	 67eAB3iFUhqZIuwmvGfZXEE4m+hgsMXyMwlqxLMDXMJi7cGtfh5SLa7Nd9hSA67Oyx
-	 LN1ixPZCVrvngHQEM4XL20RPCcdLw79MJgPPniUA=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 54FHLFqU056707
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 15 May 2025 12:21:15 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 15
- May 2025 12:21:14 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 15 May 2025 12:21:14 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54FHLE38014411;
-	Thu, 15 May 2025 12:21:14 -0500
-Message-ID: <e178418b-4ca3-4b43-82ce-32622ff19477@ti.com>
-Date: Thu, 15 May 2025 12:21:14 -0500
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I6BjP5Tq"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7410c18bb00so1822634b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:22:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1747329722; x=1747934522; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AZkQs5Y9+0MeoeQo27zBlTtClsZ5pt01lNLAK9VkB3I=;
+        b=I6BjP5TqPJjHzJ3hNkLz89Bs9/WjHbbrHUa0o+uJKjiQ99vBT7bCn09LReAsd7Zk3u
+         f3ksnuR3Z1icM2L9C+nO/Y5cN8ghWIEvcJsyHOQPDeUO1ThToF9UZnvHLZsFtWl4vEgD
+         8rkDEX02CCOxgTd9oCRoOOE7yo9xKgNXPoScE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747329722; x=1747934522;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AZkQs5Y9+0MeoeQo27zBlTtClsZ5pt01lNLAK9VkB3I=;
+        b=XAmW++lXqgV3fNsT8USQNisN38igbXmxFSPQFDLlKOROS05yZOg3y/8LVsqs+VVDO5
+         B/nNEIvU/7LZY6JjKGSXb1jCVMX11zbEi+Ypk04jbFjlQ06iY79WrwTJm9+ULljB88U5
+         yMt8TyuYhg6oFuwFZqXMwdcS9qziNQLB+SGvXyFYNflMSR4J969bn/xMCinBCsF1qusu
+         jYUkvDWdxs0B+akV459gKhjWVeO2E3FdBFWwaivBIjGgECjmtB53jLfH8Czii57z201I
+         FhU8hRNXPXpniB8hvXsRtyEJ6i6oBgbgQr9nAD67LeNrBqBzY5hp0gxjWPvFp0OtSi9f
+         YXKw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/Um1T/A5ZD8KdqpG4hIcoL7xbH4/bwHchWE/q8OltyD6nxR6d9mdYpppR1Mv6UzoTkhGepqoPXDwBwNo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiozpH5doKAqHXBimEsbjcw8aF0YD33xr71GAHtFbzsgWDpwJe
+	UUXw/SLUnhPXKnm0K7wklAHugZwfOBWPysWGYCR1GpoEZeMZ+kJzJ1co1yVDCJntzQ==
+X-Gm-Gg: ASbGncsL8akg+e4FL+rm74bmaBrU3SBrFPFL5/kuA7e3OjNN1Z7OlHs/GESCQ++mzyk
+	nenIwIku9w7iWmQhyULlH5nXTbsTxr3OycbrpaxOuLMEgKH497qA+UA7kekn6QgImRSpCfH+BcQ
+	C5dhPwA0q0T33hkX9TMFksUfoYc0QBNfmASi9cecscKLfjzUY9SSeXlEXAgAFWqT/lBb7b466rA
+	jRUVvZoR6S5mYYLJd3h83RFp12y23So419GU9u7T9wt6n1t41AaDIMSCoaV81ICBvuBpRpmLqLt
+	UJ+aPRcWKBScWa84Xp2riGqwndfKdbvTBTjiWfz+4+uHAo5d9loxnay2MKlErsUvBgOYPCRJAvK
+	mFyEyC2pH3YxISw==
+X-Google-Smtp-Source: AGHT+IGoidqfL8uEq7VTSHRz9j2OBbBO6mNxzWcPuV572jAmJW70jDu4s7p58cVo+XRQEqjyzJkCSw==
+X-Received: by 2002:a05:6a00:1822:b0:740:a879:4f7b with SMTP id d2e1a72fcca58-742a98a0cc1mr245972b3a.18.1747329722449;
+        Thu, 15 May 2025 10:22:02 -0700 (PDT)
+Received: from localhost ([2a00:79e0:2e14:7:cd06:335b:936a:7dc1])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-742a973a261sm69730b3a.84.2025.05.15.10.22.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 10:22:01 -0700 (PDT)
+Date: Thu, 15 May 2025 10:21:59 -0700
+From: Brian Norris <briannorris@chromium.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev,
+	Tsai Sung-Fu <danielsftsai@google.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v2 2/2] genirq: Add kunit tests for depth counts
+Message-ID: <aCYit48N85WpjmiN@google.com>
+References: <20250514201353.3481400-3-briannorris@chromium.org>
+ <202505152136.y04AHovS-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Revert "remoteproc: core: Clear table_sz when
- rproc_shutdown"
-To: Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier
-	<mathieu.poirier@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250513-revert-rproc-table-sz-v1-1-a8c6b5d6f8a7@kernel.org>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20250513-revert-rproc-table-sz-v1-1-a8c6b5d6f8a7@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202505152136.y04AHovS-lkp@intel.com>
 
-On 5/13/25 10:52 AM, Bjorn Andersson wrote:
-> Clearing the table_sz on cleanup seemed reasonable, but further
-> discussions concluded that this merely working around the issue
-> and that the fix is incomplete.
-> 
-> As such, revert commit efdde3d73ab2 ("remoteproc: core: Clear table_sz
-> when rproc_shutdown") to avoid carrying a partial fix.
-> 
+Hi Thomas,
 
-Setting table_sz to 0 still seems like a good idea from a defensive
-programming perspective. Both table_ptr and table_sz should be set
-and cleared together in all spots.
+On Thu, May 15, 2025 at 10:01:18PM +0800, kernel test robot wrote:
+> patch link:    https://lore.kernel.org/r/20250514201353.3481400-3-briannorris%40chromium.org
+> patch subject: [PATCH v2 2/2] genirq: Add kunit tests for depth counts
 
-In addition to this, another fix would be to also update
-both table_ptr and table_sz to 0 when loading firmware without
-a resource table. Both should be done, no need to revert this.
+First of all, thanks for the help, and for applying patch 1. I see that:
+1) this bot noticed a trivial problem with patch 2; and
+2) I received notification that patch 2 was applied to tip/irq/core, but
+3) I can't find it there any more.
 
-Andrew
+I'm not sure if #3 is because you dropped it (e.g., due to #1's report)
+or some other reason, so I'm not sure what to do next. Possibilities:
 
-> Signed-off-by: Bjorn Andersson <andersson@kernel.org>
-> ---
->   drivers/remoteproc/remoteproc_core.c | 1 -
->   1 file changed, 1 deletion(-)
+(a) send the trivial fix separately, as a fixup (against what tree?)
+(b) resend an improved patch 2 on its own, against tip/irq/core
+(c) just drop it, because you have deeper reasons to not want these
+    tests.
+
+I'm fine with anything you'd like, although I do think there's value in
+providing unit tests for corner cases like this.
+
+See below for the trivial fix, for the record. I can send it separately
+if you'd like.
+
+> config: i386-buildonly-randconfig-004-20250515 (https://download.01.org/0day-ci/archive/20250515/202505152136.y04AHovS-lkp@intel.com/config)
+> compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250515/202505152136.y04AHovS-lkp@intel.com/reproduce)
 > 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 48d146e1fa560397c11eeb8f824ae0fb844a022b..81b2ccf988e852ac79cee375c7e3f118c2a4b41a 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -2025,7 +2025,6 @@ int rproc_shutdown(struct rproc *rproc)
->   	kfree(rproc->cached_table);
->   	rproc->cached_table = NULL;
->   	rproc->table_ptr = NULL;
-> -	rproc->table_sz = 0;
->   out:
->   	mutex_unlock(&rproc->lock);
->   	return ret;
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202505152136.y04AHovS-lkp@intel.com/
 > 
-> ---
-> base-commit: aa94665adc28f3fdc3de2979ac1e98bae961d6ca
-> change-id: 20250513-revert-rproc-table-sz-53ecf24726ae
+> All errors (new ones prefixed by >>, old ones prefixed by <<):
 > 
-> Best regards,
+> WARNING: modpost: missing MODULE_DESCRIPTION() in lib/ucs2_string.o
+> ERROR: modpost: "irq_domain_alloc_descs" [kernel/irq/irq_test.ko] undefined!
+> ERROR: modpost: "irq_to_desc" [kernel/irq/irq_test.ko] undefined!
+> ERROR: modpost: "irq_shutdown_and_deactivate" [kernel/irq/irq_test.ko] undefined!
+> >> ERROR: modpost: "irq_activate" [kernel/irq/irq_test.ko] undefined!
+> >> ERROR: modpost: "irq_startup_managed" [kernel/irq/irq_test.ko] undefined!
+
+The test Kconfig symbol should be bool, not tristate. Some of the
+functions required for the test are non-modular.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202505152136.y04AHovS-lkp@intel.com/
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+
+--- a/kernel/irq/Kconfig
++++ b/kernel/irq/Kconfig
+@@ -145,7 +145,7 @@ config GENERIC_IRQ_KEXEC_CLEAR_VM_FORWARD
+ 	bool
+ 
+ config IRQ_KUNIT_TEST
+-	tristate "KUnit tests for IRQ management APIs" if !KUNIT_ALL_TESTS
++	bool "KUnit tests for IRQ management APIs" if !KUNIT_ALL_TESTS
+ 	depends on KUNIT
+ 	default KUNIT_ALL_TESTS
+ 	imply SMP
