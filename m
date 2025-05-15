@@ -1,254 +1,546 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2073.outbound.protection.outlook.com [40.107.22.73])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCFC202C2A;
-	Thu, 15 May 2025 07:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747294578; cv=fail; b=qnAqG2/vA9UaLAzXYqPzUq4GGOMz00lafPp6BdK22OuC7tNH0itYyfoWLZfhAbM4s26up7jo/ZlWCaUSRnKzZSq33jfOcXjxJT1SGy3VlBu+c3/PFZv/sKSX5AlP/WQfg3uTqf9XGYQTTXNjkXFAAUoXBr44INSauhD56F/lVRY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747294578; c=relaxed/simple;
-	bh=TDn7Fik/6LGb5lNoCQQ2ChlCU5US4jh09XBxUB8hmws=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=jC4ImrM5hZ3dwdmkIxgVJ5xI5SlznaMgVrJKb6lnXgfj+XSLbbgZ/Y5xXeCYEHcaILfA36sQ3mf6nY2hk3TKnY6s9rsxceApPEuUlZJkamClflMaZhnuUwfgUcdnnT8m3TDDdDWEjsc68qAKun1jBd46HSJmDcYuE0KgqmXuqJY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=f9qeHLJW; arc=fail smtp.client-ip=40.107.22.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6241FFC46;
+	Thu, 15 May 2025 07:36:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747294606; cv=none; b=QyW71Y6REBNdKEfh6YRp+01B1I2pViGSHhIvYksFQgCrNUiB86ryNnDzh5UW6S54QBQHcEKn3+/aQjcY9GO1Hm6QVnE2og4gkDCmOvJ6xFhqJV5QOWI2FVMKVrwNln9CNU21u8oDdpjdqnbYGHJJ3MO3wiuVtr+tVxv+ZKQa0YI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747294606; c=relaxed/simple;
+	bh=gXBjwiQfN2NmlauHQfc5qJjXDFmBxA25P9oFmctnxxI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NOaYcBLpjuzSCKIkck8TJtg1A11UKAAdUSF1A/leYhl2KuiJb+fCaccW/fwPUzGvDRVJ2uAj7I6nC7ROu2B+kN6+5Q9+J8V6nSMOJUv0Bh22LPP1RnXDIP12Yk44OeoyHdL3sa+qyfhl9oCQRhbuvxhoLjdHqIrF3dCxXs87grI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UrU8vWk7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="f9qeHLJW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TmiZbTjY5QRUqTSP6sW+R07El3rulExrlQFZC50IH75x1f7B76XLVBYcc4X7KBlSnimrFpLJO44xwkwf1kvl/+e/eH7g6e5DVEbB9qaW891i3WlVIzORwKSVSIX6No8/c4l1WXY3ydDsx3VdISE69lXiI4ZOF0PxNyO/trGYDeKYMfoTPGCKXATQnW94I3qYFShSGmlfCoPJIpjDEtlDwCI2h0WIZm9RLV09RmIEvv91uUJ5/L0tzXP/OrRSMMqmGMaE4jEvpTyjqIDr3PVm+NSbNvLBOqlGHNSHqDJNcKhuHLc/Q8Im3h2zCh94zrQO/hAcC70K3XW0BUlEYxFJHg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Nxw5jtT126AcP0WjWfaBOJkpSA3cOIhamuEig8HTBzg=;
- b=vCvGECHfChw7pFEBlFo32oDy3b0+QxMJht7XF/vg2ovOL5WgDhhQGz6hXaQiBao6pA2IeNrYsB/MJnEJ9gAFTVpe8YDn8aoQkl84maC7DoIgrsISuFGIsCGXV/jZ6CXDpV9icznI/x6pc3CCmiW9urbxbw353ggyqT3Vz4KAm9OdNsMlI7fvMwa4Qw8itJ7qE7Tuovny57a1E+UbrabFCJ4+0t4ChZ/ctgSQpBWKWhwFqRlcvGdzbbk1jSiN3pi0/8pDWs09mgiaX42LsIJfKRlCti0nQcsv5c1/d7gxd3Diz0ZtQWZRWW3/Uh0b7zPjgxej5RmqUXC1W72Zey40Qw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axis.com; dmarc=pass action=none header.from=axis.com;
- dkim=pass header.d=axis.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Nxw5jtT126AcP0WjWfaBOJkpSA3cOIhamuEig8HTBzg=;
- b=f9qeHLJWiDeH+h+XRAB8WcA/3ZZaHZP5PX8X0ch2aTJ47qga/jynk4cuOxn7nQqbEJcwLcawXr/VP5RqcDvhITjxFqqOk3QAmxFKN+yBq5lXpiHoFGNSFAAZw+oSIlDooP9RVgN6JPjILAv/X9iO4tlFmaWNycxc2LAkKuvC8OY=
-Received: from PAWPR02MB9281.eurprd02.prod.outlook.com (2603:10a6:102:330::10)
- by DU2PR02MB10109.eurprd02.prod.outlook.com (2603:10a6:10:497::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Thu, 15 May
- 2025 07:36:08 +0000
-Received: from PAWPR02MB9281.eurprd02.prod.outlook.com
- ([fe80::87f6:1bcb:22bd:b050]) by PAWPR02MB9281.eurprd02.prod.outlook.com
- ([fe80::87f6:1bcb:22bd:b050%5]) with mapi id 15.20.8722.027; Thu, 15 May 2025
- 07:36:08 +0000
-From: Johan Adolfsson <Johan.Adolfsson@axis.com>
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Lee Jones <lee@kernel.org>,
-	Pavel Machek <pavel@kernel.org>
-CC: "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kernel
-	<Kernel@axis.com>, Johan Adolfsson <Johan.Adolfsson@axis.com>
-Subject: Re: [PATCH RFC] leds: leds-lp50xx: Handle reg to get correct
- multi_index
-Thread-Topic: [PATCH RFC] leds: leds-lp50xx: Handle reg to get correct
- multi_index
-Thread-Index: AQHbvnMzuEeJRwGRtkiTeZxACDeeErPRBBWAgAE4NHmAAFsqgIAAu44f
-Date: Thu, 15 May 2025 07:36:08 +0000
-Message-ID:
- <PAWPR02MB928130924556174EA494C97D9B90A@PAWPR02MB9281.eurprd02.prod.outlook.com>
-References: <20250506-led-fix-v1-1-56a39b55a7fc@axis.com>
- <5d34aec7-5027-4575-b860-afdf7b2c0757@gmail.com>
- <PAWPR02MB92815DC59F65E90956269EEC9B91A@PAWPR02MB9281.eurprd02.prod.outlook.com>
- <449cf572-f637-42c9-b804-aaf74178e96b@gmail.com>
-In-Reply-To: <449cf572-f637-42c9-b804-aaf74178e96b@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axis.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PAWPR02MB9281:EE_|DU2PR02MB10109:EE_
-x-ms-office365-filtering-correlation-id: 7e90342d-68ce-49d4-a888-08dd93832893
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?+Dfh4B1ANO0ljrtyCgB8QRNemDHxdK72gQ4eFHbFJrvGLXWKpx8kdHDuDF?=
- =?iso-8859-1?Q?THCZ0a1mjFT6XQoV3ci3ugSevBOiTMv1TjVNutEK5OymikO6gjm+SIcDnX?=
- =?iso-8859-1?Q?YcmUgKJ0T3i5Tubmpua5KC02XqZR4oJ8ydoGGeKZ6sE7j6mUHdekJMl0h+?=
- =?iso-8859-1?Q?gRlM1dex6x+p1l4ENIgztp0NnmrnHoyZcD8OlD2jkORZhkmrfve6qadWmu?=
- =?iso-8859-1?Q?PcP9AtWQBG6AJTisSdPcXIsFr2o865+UIVAZYOv6DIbH5Yzj5wbg9r+hfQ?=
- =?iso-8859-1?Q?dbvEAJ1Cbu59OrAQjOwwtqZMBAXRD5zQnQKfWOJrZeUqHyHvy8rltOjSA8?=
- =?iso-8859-1?Q?EXTgtJMaTEW7PXjRmRyvG7JY0jdFOQrPC0+V3RQbwwHGj6Pr1aFzHjy1LR?=
- =?iso-8859-1?Q?0tbB7Zb8GzZ9ePe59DSmq/Vw0qg40o8ceRWyL86CBn7MRU3Zy9oYFSpkIk?=
- =?iso-8859-1?Q?bdiv+3VtrD80gB9Wdy/obTCXzfqOyMz5ePtQaFfqXyQbfgMQnRi2yoJ/FA?=
- =?iso-8859-1?Q?/m3Aef7dxFuuGw4FC3159MrS2znuQA0GRPz4Imir4N6Vu36zpfrikQI5UY?=
- =?iso-8859-1?Q?ZhpNUUYEYpBUMhTLqyPTRMUehyt7gISzEQl9Iv5RLWFeazWLtNwIeK88Gd?=
- =?iso-8859-1?Q?c5fWWxjZ83RHbJBypocwEk2dHnC5FnAVo/+N9ZUAV6XQHmwH0j/0dPx1ny?=
- =?iso-8859-1?Q?5BL1d5Iy+Y8elWyL7XTnWOXcmwcUItpr0jtQSM+cc6NAixcBsQg8JHweKW?=
- =?iso-8859-1?Q?phYslyEiF23Knn0Y+BH0QPsnRW/7CItQJbJU0ZkNHQldt1wSmVTcqs2TTh?=
- =?iso-8859-1?Q?xRfSkMISnCITlshp5WWQQNFD1WfxhV4Lo0hJ7R9gTwck5AkR+vMPFr6Q0q?=
- =?iso-8859-1?Q?pBOixDvG3D1Vk1pNrREbydqTwk8yda2uehoeDIF4T6r8sR1IuI8YIULn+K?=
- =?iso-8859-1?Q?GWpuYeVkTgw4id/hJH4L7pxRCEpo9opzRhc2qzs2HqpiOcnQgArP3PmKtI?=
- =?iso-8859-1?Q?aG1ySOYTWfjv0BDtGgsbRUyfBvodBKNH4hNUN6fhmAwcSYwk1h/lLpP6oc?=
- =?iso-8859-1?Q?bpAk341NGkO2aUHrloMtRQk3WCzrm9IPcb4skEAVkeytQhHqsSHdeHZAUK?=
- =?iso-8859-1?Q?toKHs0O4Qyza94fyBcGKON7bp6bAA7up8VBkja7gqcWJJH7bk963XQsWyr?=
- =?iso-8859-1?Q?ropmQEYTthU0NrV5FAJDNqyj13EqGYFZgasS3Q6R3rbu4nb38nSDGgybrB?=
- =?iso-8859-1?Q?KHU0iROofd4Uesr9zEEL1/MQT++7um4bLRkBqB2CvKQcr9Eoyxz9Too5dZ?=
- =?iso-8859-1?Q?jvSxoQ8Yt/kuh0ESHixogfkL83ptejO7lUuNSgMolmAB+xnAlevywhzSP6?=
- =?iso-8859-1?Q?kuh1duTwjQd9/mdx8bSmof2OhomLdI8r419IXzLQctqrJkSaHNHGLEXw3p?=
- =?iso-8859-1?Q?LWShnLpN4hjE5g7mRNX+SAOXb9S64UjkZJt7D2P93xkW8DQpIEAhlUw9Ix?=
- =?iso-8859-1?Q?8wpnYR1ys9ycAUJegUMsfQE5CtSH+hYWV5fDrw9CjpXA=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAWPR02MB9281.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?oMs4X6EIfMI/TAaryUtQFHpXkRSH2e5xtn2r7ffENTkCIob294SXztRHrh?=
- =?iso-8859-1?Q?/9tF2pJknQi7XMC7/kVxVn0dRD+G8ZYNBPPbPLz0z7LFyS9qVqfEonpbIJ?=
- =?iso-8859-1?Q?d3LbJKtBO9udyCGID5wyqU5XorwERTuEvxcywx74VfvzZRPOeZxt5QRYeQ?=
- =?iso-8859-1?Q?cGzz3v+aGsDNG8tEySnceI3Zphc7zTD6EdtHMq2J2cIla/3EV+UKVK5FHr?=
- =?iso-8859-1?Q?nZrOm8bp1g3FVm+tQGDlwBHdNK6wuBvWNUC9ZDNOAF9EY1xRAqeA7HQ29o?=
- =?iso-8859-1?Q?uIykayJmoOhPxcZ5ZnFl3nNCI6ppO+B8WHHx6Sh5edQFdSfGlbQyNRdJXs?=
- =?iso-8859-1?Q?JVTusTqRm0GPELna5otYmuODcxBtNBbX3VO8We3luayaCtdLLpUesTPWMf?=
- =?iso-8859-1?Q?u0jPbaARR72lpsRcVtOXxu360da4EkI1X7DrWldcolYTGnLqZmDCXXp8gI?=
- =?iso-8859-1?Q?aXTRpBkYkLtAm7+MAynI5IOWS+4sXLqw9Shi6VrBYSm1JP6jqJ6VQXOOYZ?=
- =?iso-8859-1?Q?sYG+zpTXdgpIpd6ohM/93+OrE1p6hxtq5QyshKdpGHTJtFwvEnNfaYNR7B?=
- =?iso-8859-1?Q?BVSRrPewxen3Uf3qeHT8/P5K1I0lCL+NOzZPmND2sAzpi6/jqE3I7aqvpr?=
- =?iso-8859-1?Q?Cksxpc8YG1PhwdLURL3DRQ9VZXfEIcEPsKQee8WKDyaVvUauDByWzhQ4oy?=
- =?iso-8859-1?Q?8p+Bo29oq91UMZDMoI5gn34Ab29hb1l9E7uwuYqHfN9USryeNIgfZYFMtR?=
- =?iso-8859-1?Q?Tis/18GgAggo/p3NYUdybvU3l/99dVj9zg+4m7TFlrJrpWwJjE4pXLjOd3?=
- =?iso-8859-1?Q?vIgSKF6iSfznkvzpnE5IO9jNO5JBaxTZPFSXa0oWCqsYNMIiSPXZUZF6hy?=
- =?iso-8859-1?Q?xLJzH6hY1kxlF3KAXe4cJvVzJ07fep8RMsYweHXi+6RXckpSSvBx7yUhtR?=
- =?iso-8859-1?Q?sXLiziF3ezX3IpSHWJ7FwvivLe3prmG3DvWrCzn+yuYENFsX6zjbp6aNGp?=
- =?iso-8859-1?Q?CPdOo07qiQQDN34xwp+TonIhsR6Gn+aAFnvoxOChPsiWOs6T+4wgz96Uoi?=
- =?iso-8859-1?Q?SC2f9lL30IPU4P+Gyv7ZAQMWOquce1wKrFaGVg2WwobQnqlYrMSBlft+eN?=
- =?iso-8859-1?Q?KhVf2GbWh3UhoIkA03iAHpX9d3IAY/HfiFI0vYCenoikoL4kEjlC+PeROY?=
- =?iso-8859-1?Q?7JLHmuCQ0Em0fdc5q+xlq+4GEuJ02RLtpkent+ZiVfpulVZEI03M8pxT5l?=
- =?iso-8859-1?Q?t/OY4c/1EXO0aD6VyYeivk4W2fFC45hUY60RK+iyUIPOMJyKS7j4i6/4Cs?=
- =?iso-8859-1?Q?ymnA4DrIvpEaA+dhiwseEBgAeha30EIE5n5KnWTyo/Lz/g4C3NT/j6zcJC?=
- =?iso-8859-1?Q?V3c1vTjZvLjLX2erRvW6IiW1uczJYvgvi0mrfb65I/VTxhTVjCxGqsXjhv?=
- =?iso-8859-1?Q?9QL5FeyBAKXwTEWMBjW0020+1DzCeAKtJeBP7ilns6Ty+oOqI2XdCAPCnU?=
- =?iso-8859-1?Q?qze8I9hV1Rmq0tsQtrkhxbhg0AnT/ol+3OlxS5fEQZ2R8Ogvw5kM72TrR9?=
- =?iso-8859-1?Q?xamoA3ilwp+r85iZzIDNiMG/rTQmpsVKDNKSj5GB4JVWt25m8KgDbU2BQS?=
- =?iso-8859-1?Q?zLh/fPgv3kzh0=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UrU8vWk7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6247FC4CEE9;
+	Thu, 15 May 2025 07:36:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747294605;
+	bh=gXBjwiQfN2NmlauHQfc5qJjXDFmBxA25P9oFmctnxxI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UrU8vWk7yQhzeEtyZwjkWdA1DUkXBnDHSA1AC54AhgTeZpRAJbBCXQJMQg1zGO1q4
+	 qhTmAbu1pA3EnG49I6An2dOpOjfExWeGKQQHw7FgpWYntjpgM1KcPPhXZhEdA+fusV
+	 mInWemdBJi7fs5YjMwjJIaXv875z6saZgM1JLcsYxBEG3+GkvXyDRECSoSKfu5O/jF
+	 9pMankp/+o56X4ESNNjTreXeDQqcqhJWt/dSlJYrN5A67HuayX/xSo28KmbABLLe71
+	 kLZ3FavUFHi830MWYXp80ihcMF00TwOeUM7HfJoAOd1/JYCrlflmcQzQdRQkguBQK2
+	 uiVs+dVI93++w==
+Date: Thu, 15 May 2025 08:36:38 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ eraretuya@gmail.com
+Subject: Re: [PATCH v7 10/11] iio: accel: adxl345: add coupling detection
+ for activity/inactivity
+Message-ID: <20250515083638.14ee1292@jic23-huawei>
+In-Reply-To: <CAFXKEHaupT2RZqNaQnLjiKpCodHSHsswhRXCKAmGh_Tnr3iXJQ@mail.gmail.com>
+References: <20250421220641.105567-1-l.rubusch@gmail.com>
+	<20250421220641.105567-11-l.rubusch@gmail.com>
+	<20250427140032.3112f51b@jic23-huawei>
+	<CAFXKEHZ60bREfFmi33XSyrUNigyuQv+by4vh+uoUErni_UEcnw@mail.gmail.com>
+	<20250504113907.5030b02d@jic23-huawei>
+	<CAFXKEHaupT2RZqNaQnLjiKpCodHSHsswhRXCKAmGh_Tnr3iXJQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAWPR02MB9281.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e90342d-68ce-49d4-a888-08dd93832893
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2025 07:36:08.7202
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0Tb+E6Z0HaPk46/rvkClaMm4cXIrO4ya1YRO0Hm6uSyepqCwqy7cJK2fr9qCBo4N
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR02MB10109
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jacek,=0A=
-=0A=
->From: Jacek Anaszewski <jacek.anaszewski@gmail.com>=0A=
->Sent: Wednesday, May 14, 2025 21:55=0A=
->To: Johan Adolfsson; Lee Jones; Pavel Machek=0A=
->Cc: linux-leds@vger.kernel.org; linux-kernel@vger.kernel.org; Kernel=0A=
->Subject: Re: [PATCH RFC] leds: leds-lp50xx: Handle reg to get correct mult=
-i_index=0A=
->=0A=
->Hi Johan,=0A=
->=0A=
->On 5/14/25 16:34, Johan Adolfsson wrote:=0A=
-> From: Jacek Anaszewski <jacek.anaszewski@gmail.com>=0A=
-> Sent: Tuesday, May 13, 2025 21:52=0A=
-> To: Johan Adolfsson; Lee Jones; Pavel Machek=0A=
-> Cc: linux-leds@vger.kernel.org; linux-kernel@vger.kernel.org; Kernel=0A=
-> Subject: Re: [PATCH RFC] leds: leds-lp50xx: Handle reg to get correct mul=
-ti_index=0A=
-> ..=0A=
->>>                        }=0A=
->>> +                     ret =3D fwnode_property_read_u32(led_node, "reg",=
- &multi_index);=0A=
->>> +                     if (ret) {=0A=
->>> +                             multi_index =3D num_colors;=0A=
->>=0A=
->> Why not to fail if 'reg' parsing fails?=0A=
->> It is marked required in DT bindings [0].=0A=
->=0A=
->> I didn't want to start failing if reg is missing since it has never been=
- handled until now, despite what the doc says since 2022...=0A=
->=0A=
->There is one in-tree user [0], and we will need to patch it as well,=0A=
->because it uses reg 0,1,2 for each RGB LED module, instead of iout=0A=
->numbers as it will be after your change.=0A=
-=0A=
-Not sure i follow you here. What works for me is starting with reg =3D <0> =
-for the childs of each bank (multi-led).=0A=
-The register (maps to iout I guess) is calculated based on led_number * 3 +=
- i where i is the offset as well as the color_index in subled_info (reg).=
-=0A=
-So I don't think additional changes to that dts is needed.=0A=
-=0A=
->=0A=
->We will need to also state clearly in the bindings that 'reg' property=0A=
->maps to iouts for the non-banked RGB LED modules.=0A=
-=0A=
-Not sure it actually does, haven't really tested that, or at least not gott=
-en it to work as I expected. =0A=
-For the non-rgb led in the product I requested those to be on the first pin=
- on each bank (wasting 2 pins per bank),=0A=
-since I couldn't figure out how to configure it in another way when prototy=
-ping.=0A=
-=0A=
-Since the 3 outputs per bank share a single brightness setting, it could co=
-mplicate things as well.=0A=
-(And we didn't need all the pins anyway)=0A=
-=0A=
->For banked RGB LED modules it is more tricky, because there is one=0A=
->LED multicolor class device created for them. Probably to be correct=0A=
->we would need make the 'reg' properties in the subnodes also arrays=0A=
->reflecting iouts that will be governed by BANK_A_Color, BANK_B_Color,=0A=
->and BANK_C_Color registers respectively. And DT parser in the driver=0A=
->would need to enforce proper iout definition for the banked modules=0A=
-=0A=
->E.g. the multi-led@3 node from the example should look like below:=0A=
->=0A=
->             multi-led@3 {=0A=
->                 #address-cells =3D <1>;=0A=
->                 #size-cells =3D <0>;=0A=
->                 reg =3D <0x3>, <0x4>, <0x5>;=0A=
->                 color =3D <LED_COLOR_ID_RGB>;=0A=
->                 function =3D LED_FUNCTION_STANDBY;=0A=
->=0A=
->                 led@9 {=0A=
->                     reg =3D <0x9>, <0xc>, <0xf>;=0A=
->                     color =3D <LED_COLOR_ID_RED>;=0A=
->                 };=0A=
->=0A=
->                 led@a {=0A=
->                     reg =3D <0xa>, <0xd>, <0x10>;=0A=
->                     color =3D <LED_COLOR_ID_GREEN>;=0A=
->                 };=0A=
->=0A=
->                 led@b {=0A=
->                     reg =3D <0xb>, <0xe>, <0x11>;=0A=
->                     color =3D <LED_COLOR_ID_BLUE>;=0A=
->                 };=0A=
->=0A=
->=0A=
->[0] arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-fuji.dts=0A=
-=0A=
-Not sure about that, I dont' think we handle an array of reg values within =
-the led node.=0A=
-=0A=
->--=0A=
->Best regards,=0A=
->Jacek Anaszewski=0A=
-=0A=
-Best regards=0A=
-/Johan=0A=
-=0A=
-=0A=
+On Wed, 7 May 2025 22:04:29 +0200
+Lothar Rubusch <l.rubusch@gmail.com> wrote:
+
+> Hi Jonathan,
+>=20
+> On Sun, May 4, 2025 at 12:39=E2=80=AFPM Jonathan Cameron <jic23@kernel.or=
+g> wrote:
+> >
+> > On Thu, 1 May 2025 09:35:29 +0200
+> > Lothar Rubusch <l.rubusch@gmail.com> wrote:
+> > =20
+> > > On Sun, Apr 27, 2025 at 3:00=E2=80=AFPM Jonathan Cameron <jic23@kerne=
+l.org> wrote: =20
+> > > >
+> > > > On Mon, 21 Apr 2025 22:06:40 +0000
+> > > > Lothar Rubusch <l.rubusch@gmail.com> wrote:
+> > > > =20
+> > > > > Add coupling activity/inactivity detection by the AC/DC bit. This=
+ is an
+> > > > > addititional enhancement for the detection of activity states and
+> > > > > completes the activity / inactivity feature of the ADXL345.
+> > > > >
+> > > > > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com> =20
+> > > >
+> > > > I've dragged the table from the earlier patch into this one that ac=
+tually uses it.
+> > > > However I'm a little unsure on exactly how we present this feature.
+> > > >
+> > > > So until those questions are resolved I've dropped the patch (you'l=
+l need
+> > > > to rebase on my testing branch and fix up missing table for v8).
+> > > >
+> > > > The bit that made me not apply this series (with some tweaks) was t=
+hat
+> > > > I'd expect enabling AC events to be visible as disabling of DC ones.
+> > > > =20
+> > >
+> > > There are no AC events, nor DC ones.
+> > >
+> > > Think of AC- or DC-coupled detection as modes of operating the
+> > > ACTIVITY/INACTIVITY
+> > > detection. The events are ACTIVITY or INACTIVITY. =20
+> >
+> > That's where we differ. For generalizing an ABI we absolutely should
+> > not think of them as modes - that's an implementation detail only
+> > =20
+> > > It has effect on how
+> > > the sensor detects
+> > > if it needs to trigger an (IN)/ACTIVITY event. DC is just going by the
+> > > configured thresholds,
+> > > where AC is supposed to apply some more elaborate way of declaring AC=
+TIVITY or
+> > > INACTIVITY.
+> > >
+> > > The fact that you imply on this means to me, at least I explained it
+> > > wrong, or need to clarify
+> > > better. =20
+> >
+> > Not at all (I think).  This is a question of datasheet representation vs
+> > what we are doing in the ABI.  Lets have a thought experiment.
+> >
+> > If the device had separate enables, thresholds and periods for
+> > DC activity, DC inactivity, AC activity and AC inactivity would you be
+> > thinking of them as modes of one event?  They would be separate event t=
+ypes
+> > that could be all enabled at the same time.
+> >
+> > Now step 2.  We have many sensors that have limited numbers of highly p=
+rogrammable
+> > event detection engines (the adis IMUs for instance have only a few suc=
+h engines
+> > but many types of events). For those we treat them as a fifo.  If you r=
+equest
+> > 3 events and the device has 2 detectors you get the last two that were =
+asked
+> > for.  We do this because we don't want a detector with 10s of modes with
+> > the parameter meaning changing for each one.  The ABI should look the s=
+ame
+> > as independent detectors.  Some models are more complex and have more s=
+uch
+> > engines, but the interface remains the same.
+> >
+> > So here we have a pair of less flexible engines that can support either
+> > AC or DC for inactivity/activity.  We should represent that the same
+> > way we represent the separate engines case.  Hence when you enable
+> > activity AC, our short (1 element) fifo means we disable activity DC.
+> >
+> > Which is why treating them as separate engines (with rules on which can
+> > be enabled at any time) is the right way to go.  IIRC correctly long
+> > ago we had various experiments with interfaces around this (including
+> > mode based ones) and ended up with this approach that looks like a
+> > whole bunch of event detectors with a mux that means we can only use
+> > a subset at a time.
+> >
+> > Jonathan
+> > =20
+>=20
+> Thank  you so much for this explanation. It makes it much clearer to
+> me now to understand what
+> you were writing about before.
+>=20
+> Anyway, I just wanted to confirm what is missing here. I'll need to
+> distinguish the following events:
+> - activity_ac
+> - inactivity_ac
+> - activity_dc
+> - inactivity_dc
+>=20
+> For the implementation, each shall be a separate event, i.e. each will
+> have separate handles in sysfs:
+> - event config: enable
+> - event value: threshold
+> - event value: time
+>=20
+yes, so 4 different events for inactivty/activity - only one type
+of inactivity enabled at a time and only one type of activity event enabled
+
+> Internally I will use the regmap cached flag for AC/DC to distinguish
+> if the ACTIVITY or INACTIVITY event belongs to activity_ac or
+> inactivity_dc. Threshold and time values will be specific to ACTIVITY
+> and INACTIVITY, respectively. Since, the events will be still activity
+> / inactivity, as their registers will be so, too.=20
+
+> The distinction thus
+> will be rather a question of the presented handles in sysfs.
+> All events will be type MAG, and dir RISING (activity) or FALLING
+> (inactivity). As said above, dc /  ac coupling I will read from the
+> cache.
+
+Not quite.  The caching bit is all fine but the sysfs events
+have to represent AC/DC and they do that with different event types.
+>=20
+> Is this approach sufficient to solve the required adjustments, or do
+> the events themselves need further information about coupling (I guess
+> so, how can I represent this in the events?)?
+
+
+activity_dc is a simple magnitude threshold type event.
+activity_ac is one of two options depending on how we think about it.
+MAG_REFERENCED if we ignore the reset of the reference when activity_ac and
+inactivity_ac are coupled.
+MAG_ADAPTIVE if we take it that the base point for the threshold is changing
+over time (which is slightly more accurate if inactivity and activity are
+coupled). =20
+
+I think I slightly prefer MAG_ADAPTIVE but it's a corner case because
+until the other state occurs we don't adapt and it looks more like
+a referenced event.
+
+So we'd have 4 event types for these.  2 for activity and 2 for inactivity.
+
+Jonathan
+
+>=20
+> Best,
+> L
+>=20
+> > =20
+> > > =20
+> > > > Also, I just noticed you aren't pushing the new event types.
+> > > >
+> > > > These controls need to look like a separate event detector hardware=
+ block
+> > > > with it's own controls + its own event codes.  The fact only this or
+> > > > the DC version can be enabled at any time should only be exposed in=
+ the
+> > > > reported state, not apparent via what files we expose etc.  On some
+> > > > other device they may be independent hardware blocks.
+> > > >
+> > > > Note I'd also expect to see value controls for these new events. Yo=
+u may
+> > > > need to cache the values and update on event change if the meaning =
+is
+> > > > very different.   That's because the expectation would be an event
+> > > > setup sequence from userspace is:
+> > > >
+> > > > 1) Set value of threshold
+> > > > 2) Enable event
+> > > >
+> > > > On a change of event (due to shared hardware) The value set may scr=
+amble
+> > > > the event already enabled.
+> > > >
+> > > > So write the values into a cache and update to the right one when c=
+hanging
+> > > > event.
+> > > > =20
+> > >
+> > > Might be that I got you wrong here, but I assume the above does
+> > > actually not apply.
+> > >
+> > > Best,
+> > > L
+> > > =20
+> > > > > ---
+> > > > >  drivers/iio/accel/adxl345_core.c | 162 +++++++++++++++++++++++++=
++++++-
+> > > > >  1 file changed, 159 insertions(+), 3 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel=
+/adxl345_core.c
+> > > > > index b25efcad069b..c07ad5774c8a 100644
+> > > > > --- a/drivers/iio/accel/adxl345_core.c
+> > > > > +++ b/drivers/iio/accel/adxl345_core.c
+> > > > > @@ -37,7 +37,9 @@
+> > > > >  #define ADXL345_REG_TAP_SUPPRESS_MSK BIT(3)
+> > > > >  #define ADXL345_REG_TAP_SUPPRESS     BIT(3)
+> > > > >  #define ADXL345_REG_ACT_AXIS_MSK     GENMASK(6, 4)
+> > > > > +#define ADXL345_REG_ACT_ACDC_MSK     BIT(7)
+> > > > >  #define ADXL345_REG_INACT_AXIS_MSK   GENMASK(2, 0)
+> > > > > +#define ADXL345_REG_INACT_ACDC_MSK   BIT(3)
+> > > > >  #define ADXL345_POWER_CTL_INACT_MSK  (ADXL345_POWER_CTL_AUTO_SLE=
+EP | ADXL345_POWER_CTL_LINK)
+> > > > >
+> > > > >  #define ADXL345_TAP_Z_EN             BIT(0)
+> > > > > @@ -91,6 +93,11 @@ static const unsigned int adxl345_act_thresh_r=
+eg[] =3D {
+> > > > >       [ADXL345_INACTIVITY] =3D ADXL345_REG_THRESH_INACT,
+> > > > >  };
+> > > > >
+> > > > > +static const unsigned int adxl345_act_acdc_msk[] =3D {
+> > > > > +     [ADXL345_ACTIVITY] =3D ADXL345_REG_ACT_ACDC_MSK,
+> > > > > +     [ADXL345_INACTIVITY] =3D ADXL345_REG_INACT_ACDC_MSK,
+> > > > > +};
+> > > > > +
+> > > > >  enum adxl345_odr {
+> > > > >       ADXL345_ODR_0P10HZ =3D 0,
+> > > > >       ADXL345_ODR_0P20HZ,
+> > > > > @@ -204,6 +211,18 @@ static struct iio_event_spec adxl345_events[=
+] =3D {
+> > > > >                       BIT(IIO_EV_INFO_RESET_TIMEOUT) |
+> > > > >                       BIT(IIO_EV_INFO_TAP2_MIN_DELAY),
+> > > > >       },
+> > > > > +     {
+> > > > > +             /* activity, activity - ac bit */ =20
+> > > > Comment says activity and inactivity but channel type wise this
+> > > > is just activity (as rising)
+> > > > =20
+> > > > > +             .type =3D IIO_EV_TYPE_MAG_REFERENCED,
+> > > > > +             .dir =3D IIO_EV_DIR_RISING,
+> > > > > +             .mask_shared_by_type =3D BIT(IIO_EV_INFO_ENABLE),
+> > > > > +     },
+> > > > > +     {
+> > > > > +             /* activity, inactivity - ac bit */ =20
+> > > >
+> > > > Likewise this seems to be inactivity.  Should this be in the x&y&z
+> > > > channel, not this one?
+> > > > =20
+> > > > > +             .type =3D IIO_EV_TYPE_MAG_REFERENCED,
+> > > > > +             .dir =3D IIO_EV_DIR_FALLING,
+> > > > > +             .mask_shared_by_type =3D BIT(IIO_EV_INFO_ENABLE),
+> > > > > +     },
+> > > > >  };
+> > > > >
+> > > > >  #define ADXL345_CHANNEL(index, reg, axis) {                     =
+             \
+> > > > > @@ -320,6 +339,69 @@ static int adxl345_set_measure_en(struct adx=
+l345_state *st, bool en)
+> > > > >
+> > > > >  /* act/inact */
+> > > > >
+> > > > > +static int adxl345_is_act_inact_ac(struct adxl345_state *st,
+> > > > > +                                enum adxl345_activity_type type,=
+ bool *ac)
+> > > > > +{
+> > > > > +     unsigned int regval;
+> > > > > +     int ret;
+> > > > > +
+> > > > > +     ret =3D regmap_read(st->regmap, ADXL345_REG_ACT_INACT_CTRL,=
+ &regval);
+> > > > > +     if (ret)
+> > > > > +             return ret;
+> > > > > +
+> > > > > +     if (type =3D=3D ADXL345_ACTIVITY)
+> > > > > +             *ac =3D FIELD_GET(ADXL345_REG_ACT_ACDC_MSK, regval);
+> > > > > +     else
+> > > > > +             *ac =3D FIELD_GET(ADXL345_REG_INACT_ACDC_MSK, regva=
+l);
+> > > > > +
+> > > > > +     return 0;
+> > > > > +}
+> > > > > +
+> > > > > +static int adxl345_set_act_inact_ac(struct adxl345_state *st,
+> > > > > +                                 enum adxl345_activity_type type=
+, bool ac)
+> > > > > +{
+> > > > > +     unsigned int act_inact_ac =3D ac ? 0xff : 0x00;
+> > > > > +
+> > > > > +     /*
+> > > > > +      * A setting of false selects dc-coupled operation, and a s=
+etting of
+> > > > > +      * true enables ac-coupled operation. In dc-coupled operati=
+on, the
+> > > > > +      * current acceleration magnitude is compared directly with
+> > > > > +      * ADXL345_REG_THRESH_ACT and ADXL345_REG_THRESH_INACT to d=
+etermine
+> > > > > +      * whether activity or inactivity is detected.
+> > > > > +      *
+> > > > > +      * In ac-coupled operation for activity detection, the acce=
+leration
+> > > > > +      * value at the start of activity detection is taken as a r=
+eference
+> > > > > +      * value. New samples of acceleration are then compared to =
+this
+> > > > > +      * reference value, and if the magnitude of the difference =
+exceeds the
+> > > > > +      * ADXL345_REG_THRESH_ACT value, the device triggers an act=
+ivity
+> > > > > +      * interrupt.
+> > > > > +      *
+> > > > > +      * Similarly, in ac-coupled operation for inactivity detect=
+ion, a
+> > > > > +      * reference value is used for comparison and is updated wh=
+enever the
+> > > > > +      * device exceeds the inactivity threshold. After the refer=
+ence value
+> > > > > +      * is selected, the device compares the magnitude of the di=
+fference
+> > > > > +      * between the reference value and the current acceleration=
+ with
+> > > > > +      * ADXL345_REG_THRESH_INACT. If the difference is less than=
+ the value in
+> > > > > +      * ADXL345_REG_THRESH_INACT for the time in ADXL345_REG_TIM=
+E_INACT, the
+> > > > > +      * device is considered inactive and the inactivity interru=
+pt is
+> > > > > +      * triggered. [quoted from p. 24, ADXL345 datasheet Rev. G]
+> > > > > +      *
+> > > > > +      * In a conclusion, the first acceleration snapshot sample =
+which hit the
+> > > > > +      * threshold in a particular direction is always taken as a=
+cceleration
+> > > > > +      * reference value to that direction. Since for the hardwar=
+e activity
+> > > > > +      * and inactivity depend on the x/y/z axis, so do ac and dc=
+ coupling.
+> > > > > +      * Note, this sw driver always enables or disables all thre=
+e x/y/z axis
+> > > > > +      * for detection via act_axis_ctrl and inact_axis_ctrl, res=
+pectively.
+> > > > > +      * Where in dc-coupling samples are compared against the th=
+resholds, in
+> > > > > +      * ac-coupling measurement difference to the first accelera=
+tion
+> > > > > +      * reference value are compared against the threshold. So, =
+ac-coupling
+> > > > > +      * allows for a bit more dynamic compensation depending on =
+the initial
+> > > > > +      * sample.
+> > > > > +      */
+> > > > > +     return regmap_update_bits(st->regmap, ADXL345_REG_ACT_INACT=
+_CTRL,
+> > > > > +                              adxl345_act_acdc_msk[type], act_in=
+act_ac);
+> > > > > +} =20
+> > > > =20
+> > > > >  static int adxl345_find_range(struct adxl345_state *st, int val,=
+ int val2,
+> > > > > @@ -797,9 +886,51 @@ static int adxl345_find_range(struct adxl345=
+_state *st, int val, int val2,
+> > > > >
+> > > > >  static int adxl345_set_range(struct adxl345_state *st, enum adxl=
+345_range range)
+> > > > >  {
+> > > > > -     return regmap_update_bits(st->regmap, ADXL345_REG_DATA_FORM=
+AT,
+> > > > > +     unsigned int act_threshold, inact_threshold;
+> > > > > +     unsigned int range_old;
+> > > > > +     unsigned int regval;
+> > > > > +     int ret;
+> > > > > +
+> > > > > +     ret =3D regmap_read(st->regmap, ADXL345_REG_DATA_FORMAT, &r=
+egval);
+> > > > > +     if (ret)
+> > > > > +             return ret;
+> > > > > +     range_old =3D FIELD_GET(ADXL345_DATA_FORMAT_RANGE, regval);
+> > > > > +
+> > > > > +     ret =3D regmap_read(st->regmap,
+> > > > > +                       adxl345_act_thresh_reg[ADXL345_ACTIVITY],
+> > > > > +                       &act_threshold);
+> > > > > +     if (ret)
+> > > > > +             return ret;
+> > > > > +
+> > > > > +     ret =3D regmap_read(st->regmap,
+> > > > > +                       adxl345_act_thresh_reg[ADXL345_INACTIVITY=
+],
+> > > > > +                       &inact_threshold);
+> > > > > +     if (ret)
+> > > > > +             return ret;
+> > > > > +
+> > > > > +     ret =3D regmap_update_bits(st->regmap, ADXL345_REG_DATA_FOR=
+MAT,
+> > > > >                                ADXL345_DATA_FORMAT_RANGE,
+> > > > >                                FIELD_PREP(ADXL345_DATA_FORMAT_RAN=
+GE, range));
+> > > > > +     if (ret)
+> > > > > +             return ret;
+> > > > > +
+> > > > > +     act_threshold =3D act_threshold
+> > > > > +             * adxl345_range_factor_tbl[range_old]
+> > > > > +             / adxl345_range_factor_tbl[range];
+> > > > > +     act_threshold =3D min(255, max(1, inact_threshold));
+> > > > > + =20
+> > > > This is first use of the range table. So introduce that in this pat=
+ch.
+> > > > =20
+> > > > > +     inact_threshold =3D inact_threshold
+> > > > > +             * adxl345_range_factor_tbl[range_old]
+> > > > > +             / adxl345_range_factor_tbl[range];
+> > > > > +     inact_threshold =3D min(255, max(1, inact_threshold));
+> > > > > +
+> > > > > +     ret =3D regmap_write(st->regmap, adxl345_act_thresh_reg[ADX=
+L345_ACTIVITY],
+> > > > > +                        act_threshold);
+> > > > > +     if (ret)
+> > > > > +             return ret;
+> > > > > +
+> > > > > +     return regmap_write(st->regmap, adxl345_act_thresh_reg[ADXL=
+345_INACTIVITY],
+> > > > > +                        inact_threshold);
+> > > > >  }
+> > > > >
+> > > > >  static int adxl345_read_avail(struct iio_dev *indio_dev,
+> > > > > @@ -938,7 +1069,7 @@ static int adxl345_read_event_config(struct =
+iio_dev *indio_dev,
+> > > > >                                    enum iio_event_direction dir)
+> > > > >  {
+> > > > >       struct adxl345_state *st =3D iio_priv(indio_dev);
+> > > > > -     bool int_en;
+> > > > > +     bool int_en, act_ac, inact_ac;
+> > > > >       int ret;
+> > > > >
+> > > > >       switch (type) {
+> > > > > @@ -983,6 +1114,21 @@ static int adxl345_read_event_config(struct=
+ iio_dev *indio_dev,
+> > > > >               if (ret)
+> > > > >                       return ret;
+> > > > >               return int_en;
+> > > > > +     case IIO_EV_TYPE_MAG_REFERENCED:
+> > > > > +             switch (dir) {
+> > > > > +             case IIO_EV_DIR_RISING:
+> > > > > +                     ret =3D adxl345_is_act_inact_ac(st, ADXL345=
+_ACTIVITY, &act_ac); =20
+> > > >
+> > > > Do we not need a check in the enabling of the DC events as well?  I=
+f we have enabled
+> > > > AC the DC one should report disabled (and if we enable that again t=
+hen we should
+> > > > update this.
+> > > > =20
+> > > > > +                     if (ret)
+> > > > > +                             return ret;
+> > > > > +                     return act_ac;
+> > > > > +             case IIO_EV_DIR_FALLING:
+> > > > > +                     ret =3D adxl345_is_act_inact_ac(st, ADXL345=
+_INACTIVITY, &inact_ac);
+> > > > > +                     if (ret)
+> > > > > +                             return ret;
+> > > > > +                     return inact_ac;
+> > > > > +             default:
+> > > > > +                     return -EINVAL;
+> > > > > +             }
+> > > > >       default:
+> > > > >               return -EINVAL;
+> > > > >       }
+> > > > > @@ -1019,6 +1165,16 @@ static int adxl345_write_event_config(stru=
+ct iio_dev *indio_dev,
+> > > > >               }
+> > > > >       case IIO_EV_TYPE_MAG:
+> > > > >               return adxl345_set_ff_en(st, state);
+> > > > > +     case IIO_EV_TYPE_MAG_REFERENCED:
+> > > > > +             switch (dir) {
+> > > > > +             case IIO_EV_DIR_RISING:
+> > > > > +                     return adxl345_set_act_inact_ac(st, ADXL345=
+_ACTIVITY, state); =20
+> > > >
+> > > > Similar to read path.  The DC events should be affected by this as =
+well as the AC ones.
+> > > > =20
+> > > > > +             case IIO_EV_DIR_FALLING:
+> > > > > +                     return adxl345_set_act_inact_ac(st, ADXL345=
+_INACTIVITY, state);
+> > > > > +             default:
+> > > > > +                     return -EINVAL;
+> > > > > +             }
+> > > > > +
+> > > > >       default:
+> > > > >               return -EINVAL;
+> > > > >       } =20
+> > > > =20
+> > =20
+
