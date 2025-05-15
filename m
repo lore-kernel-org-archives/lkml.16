@@ -1,55 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6DA161FCE;
-	Thu, 15 May 2025 13:52:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C25564A98;
+	Thu, 15 May 2025 13:54:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747317155; cv=none; b=M6oWxadd0amF22cxI09AR6w+waqD0QTGUraboMR1+F2Bm6hS+fzdyoszAe4I7HDeljT5cB+uRWdQiAVqUcFe/YyGQtdki1fGvDjgbny0EU+rBMIbSUdWZZk9S7tL7iXrfJ9GifGKNEY+3TuBWB3pCNkvjdd2KiycfIzEhlfsCzM=
+	t=1747317250; cv=none; b=W9opQVdH4RNiDBysb3zHaWSvLPeh3TAj3Flm8NlObLHEfGJNSEm0E/OaebT71aUUVdQK5J2fZbn+WSK935iXKGdQrYW70qwhBisKrpro+04gH+khuMAQRvtKwB9nCZ/WV77KTAuy8nI2dWSo3FgLy80cyrOYb+NKiRzNNHHKYLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747317155; c=relaxed/simple;
-	bh=1goV/IH2W0v4lJhJQXfNOetGBRDKZao2V7PBJPLKVmk=;
+	s=arc-20240116; t=1747317250; c=relaxed/simple;
+	bh=qis/7P2GU5yvhrel43Yv7JcaotjjyWb/SyxisrkM/BY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fAMFn/cfSuXCDAd064qWG6M/RLdLQEJt4MZ4TOmAJUKijTv80tcW2fcePw7NvFDaWS4H5O1+4Nutbbqik6S/AMltANcq4gV9xHq/HYARWQBLeFJ3XTv0o1IhkWXJqR+6OAQOJdy722LRxMkAnmHwvf/gyoFz8F0/pV/SaFNtynw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eQrFOqpE; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=efLLPYEg0apVM1rresIp2mLArv9Sk7hGV85E7YKefaodILeUHBcEGmp8Fm8eltW3eoSN1PFlXOvHpPh4mOi+O3WDyyjT8xPkkCd6QnAhNWEON5gwezaef+q0oYwOOgTBftPp60sdhp7jg9umDY00qGKEhQr04/LbD5rNUMzwaDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kYDk4/IS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eQrFOqpE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8189C4CEEB;
-	Thu, 15 May 2025 13:52:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kYDk4/IS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ADD0C4CEE7;
+	Thu, 15 May 2025 13:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747317155;
-	bh=1goV/IH2W0v4lJhJQXfNOetGBRDKZao2V7PBJPLKVmk=;
+	s=k20201202; t=1747317250;
+	bh=qis/7P2GU5yvhrel43Yv7JcaotjjyWb/SyxisrkM/BY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eQrFOqpE4RICxz+SJSpwX/Zhfm4M8rhDAaYMYR5OlTf+yluWHNlVedJJHgj9DHGqN
-	 g07i7GJ9zzFrPaUFZpYjtnWu9HPWJY1YLm93EzUpJHuYTTxE4dDsA0AcQ66tFTxyl9
-	 mKzko4InbP2tuy5YRklogDJnX4DpTwl9m6d+7Emo7QCzluWnV/NXWI4Tp0PXw/eUIf
-	 JmYdmtQuwgtkZMURBAz0wsUrUVrr2nc4+ma9kx8mbaRhlgYE7X+DBzrz1GrwikYj8n
-	 abVNlv87C+im4CgkXm/oqjXZVQ03k4MAzJDSFYJA5Dl4JFl2XJKzyvkDw2uku4IHyZ
-	 hNkfRoFCjWt3g==
-Date: Thu, 15 May 2025 15:52:29 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] rust: irq: add support for request_irq()
-Message-ID: <aCXxnUdO8--5y8Zo@pollux>
-References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com>
- <20250514-topics-tyr-request_irq-v3-1-d6fcc2591a88@collabora.com>
- <aCUQ0VWgoxdmIUaS@pollux>
- <A7E3A124-AF77-4A4A-B4E2-AE7DDB1CE007@collabora.com>
- <aCXYaCGvO_tI1OOh@pollux>
- <39C56E3E-07C6-44BB-B5F6-38090F037032@collabora.com>
- <aCXh1g5FWNiz7exb@pollux>
- <BEDD659F-B222-4150-9018-3B59126140E6@collabora.com>
- <aCXv86nAARGgoqEq@pollux>
+	b=kYDk4/ISOyzUQs4q4kxCkluBG7Y7HhFWahc+YaoCBC7y/ra5DUMkfXglO5rIGvQNa
+	 or06eeabJbC+Vcm2UXnk2F4gQc6nDRyedK+eKlRLdpcxeerQfVszDqbAUhdiQK38hp
+	 oevVH6feMF0FxWXo75pZWe2U/LrQv3dZgx5o6RbZW5a4MRnepyo0BXPLqQBee1BFsp
+	 a3kFztRYzmmxFEzcCpD9VXIJKih96OiTYj/LJiK6UnPnaEhbuH19r+V23WKiClLzUn
+	 Z9Pj17Lr/f0b3wCVOYnKiY0h8GIEB0UM0QYUvMhJxox0SYDLEI5OprHlt+aBa3MQE0
+	 XHDSzgC4n1I0Q==
+Date: Thu, 15 May 2025 22:54:08 +0900
+From: Krzysztof Wilczy??ski <kwilczynski@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>, linux-pci@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] PCI/bwctrl: Remove also pcie_bwctrl_lbms_rwsem
+Message-ID: <20250515135408.GB3596832@rocinante>
+References: <20250508090036.1528-1-ilpo.jarvinen@linux.intel.com>
+ <174724335628.23991.985637450230528945.b4-ty@kernel.org>
+ <aCTyFtJJcgorjzDv@wunner.de>
+ <20250515084346.GA51912@rocinante>
+ <aCXZdfOA8bme-qra@wunner.de>
+ <98fa31e7-db86-35f0-a71c-a1ebf27f93f0@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,75 +48,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aCXv86nAARGgoqEq@pollux>
+In-Reply-To: <98fa31e7-db86-35f0-a71c-a1ebf27f93f0@linux.intel.com>
 
-On Thu, May 15, 2025 at 03:45:28PM +0200, Danilo Krummrich wrote:
-> On Thu, May 15, 2025 at 10:16:33AM -0300, Daniel Almeida wrote:
+Hello,
+
+[...]
+> > > Done.  Squashed with the first commit from Ilpo, see:
+> 
+> Thanks Krzysztof for handling this, I should have put the note about 
+> squashing it to the resubmission but I forgot (this time I didn't do 
+> the diff against the previous version before sending it which I normally 
+> do).
+
+No problem!  I am sorry for missing the ask in the first place.
+
+[...]
+> > > Let me know if there is anything else needed.
 > > 
-> > >> 
-> > >> Well, not really, because this impl PinInit can be assigned to something larger
-> > >> that is already pinned, like drm::Device::Data for example, which is (or was)
-> > >> already behind an Arc, or any other private data in other subsystems.
-> > >> 
-> > >> IIUC what you proposed has yet another indirection. If we reuse the example
-> > >> from above, that would be an Arc for the drm Data, and another Arc for the
-> > >> handler itself?
-> > > 
-> > > Can't you implement Handler for drm::Device::Data and e.g. make Registration
-> > > take an Arc<T: Handler>?
+> > Actually, two small things:
 > > 
-> > No, because drivers may need more than one handler. Panthor needs 3, for
-> > example, for 3 different lines.
+> > - That patch on the pci/bwctrl topic branch is still marked "New"
+> >   in patchwork, even though it's been applied:
+> >   https://patchwork.kernel.org/project/linux-pci/patch/20250422115548.1483-1-ilpo.jarvinen@linux.intel.com/
 > > 
-> > > 
-> > > The irq::Registration itself doesn't need to be allocated dynamically, so it'd
-> > > still be a single allocation, no?
-> > > 
+> > - Version 1 of the same patch is likewise marked "New", even though
+> >   it's been superseded:
+> >   https://patchwork.kernel.org/project/linux-pci/patch/20250417124633.11470-1-ilpo.jarvinen@linux.intel.com/
 > > 
-> > Right, the registrations don't, but the handlers do.
+> > Unfortunately I can't update it myself because I'm not the submitter.
+> > (Ilpo could do it if he has a patchwork.kernel.org account.)
 > 
-> Why does the handler need to be allocated dynamically?
+> I'm a pdx86 maintainer so I do have an account, yes. I actually had the 
+> patchwork page listing my PCI patches already open, but I just hadn't hit 
+> "update" button yet.
 > 
-> What about something like the following?
-> 
-> 	pub struct Registration<T, H: Handler<T>> { ... };
-> 
-> 	pub trait Handler<T> {
-> 	   fn handle_irq(&T) -> IrqReturn;
-> 	}
-> 
-> 	// Could be `drm::Device::Data`.
-> 	struct MyData { ... };
-> 
-> 	// Implements `Handler<MyData>`.
-> 	struct IRQHandler1;
-> 	struct IRQHandler2;
-> 
-> 	// `data` is `Arc<MyData>`
-> 	irq::Registration::<IRQHandler1>::new(data, ...);
-> 	irq::Registration::<IRQHandler2>::new(data, ...);
-> 
-> With that you can have as many IRQs as you want without any additional
-> allocation.
+> I've done those two changes now.
 
-Alternatively we could also do the following, which is probably simpler.
+Thank you!
 
-	pub struct Registration<H: Handler> { ... };
-
-	pub trait Handler {
-	   fn handle_irq(&self) -> IrqReturn;
-	}
-
-	// Could be `drm::Device::Data`.
-	struct MyData { ... };
-
-	// Implements `Handler`.
-	struct IRQHandler1(Arc<MyData>);
-	struct IRQHandler2(Arc<MyData>);
-
-	// `data` is `Arc<MyData>`
-	let handler1 = IRQHandler1::new(data);
-	let handler2 = IRQHandler2::new(data);
-
-	irq::Registration::new(handler1, ...);
-	irq::Registration::new(handler2, ...);
+	Krzysztof
