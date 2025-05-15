@@ -1,83 +1,187 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03371A275
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 07:46:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB8510FD;
+	Thu, 15 May 2025 07:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747295199; cv=none; b=JNb1H/TbXqUb2XLk5fMkwQed3/upm8MsaOVbSyh5Fs2G54qGqH/64gRvV1N+vPSLFDzvlQa0qti9qQbKT5YuPho40c2RmnXsAVf8Tw/wQVWlfWVX2bs2htmKlK44vz+V6zVLLpAqgDhax8BTHFs756U0BEnyhUjHd75/LbM023Q=
+	t=1747295385; cv=none; b=I1f9oWptH/kFAy1PT0l2XY7eiO64rUAM1eFLhYbRHVlkJ3uv/8OFyGp51S41AWzKv+ysUinr5A8qnrgS6nbvn7h/9AeIf1bAo762o/OjQiBL+7nG4l9D2gLjwkVx4SD3HiQonPKMU3l40tEazGGCa+lm+6HHFRk9Cq0UXPwIcbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747295199; c=relaxed/simple;
-	bh=3dGv8gYTC13hUZq24+Pm38bZNTwUMvkg0Wuz6L+YRyA=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=VRAGTNoAKVbR3CBz2hS7AF69TkZsZ2KEKxSp9r63udvbkGaTW+2taFVHB1eaqxBYU91QKRMfuGc1jP1lUyH1AAQX4yJ6uVpYdeCFE7LtdaZy2Db9UNZrrjhNh63YeoQvOo4wzRWP0xUF9wqVrWPktiXhT9vB+TthSNSRZp9rb0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85b3b781313so115146939f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:46:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747295197; x=1747899997;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9kt1NDTppGe89OAg0t76R11zo1Nd69AtJT250Tah5Zk=;
-        b=FcPF5AVSE8DHBMUK6kWR4VaEAsvd/svzBXHDAWmPDKiZIBW6xljfD8uY18MHtiT6Kx
-         /nRPeTDENM3vWUjHdrd5VEXYMmnoomitexjh5PgJ8Qem5AptIXbRa21u+YNK++mAzZg6
-         Z8UVwcGN0fLNx+X4AqkmcBPDiyIhsLYLmLVlKzmKDWKBXVty1rSffQEkk80GwL+QHDod
-         3H8epzooddkXOTJzij317VRMCP5cSYV0jXNxaidA5m929du03OOI9eO+gIbW2i+QjKHW
-         YyteHtOEPl2ymqC1s6I2ywcG+MBg94iUvGDi5S0CIfNRd10oWw3sr9qdXtOpqfN5aBYj
-         fzjg==
-X-Forwarded-Encrypted: i=1; AJvYcCUYdOBfRiCtgApKKIQYWGMZhW05k8Ug3wqM3t+RccUYbJ7Pjl6h69MBvm+sq1pbk3I3a17v8kawENmX7pM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYYPOcYeHcZqiuKdALvFuE73hLxklLg/5v4MewI1Ag1Rr4cJjB
-	5UrgVLvQvpbpvu8hsWJoTt29E8C245BNyhnw83XTByJK8gxGMBvwgCUiS/v6meDWEKIK4wyaGJ0
-	o40YDVkl9dPFfOYGGqL4kmFsKlSMyRiJVltYKe6u3Vw7PZP7eBZg0D7U=
-X-Google-Smtp-Source: AGHT+IHmrp5WtW7OQYEkkGxNt8FveewheaKCyS0ubzmg2KufxpEWcR8ntchdMkUWoHlQGTFZbBMAYHFWXHvcH5k3dMC1yvVj8moe
+	s=arc-20240116; t=1747295385; c=relaxed/simple;
+	bh=3jzzyKoPVNBte10yueh+3cKhOlijEv98gMIVxapULC4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GmQS/+hVZSpmWGwzIxy39luWZYaQc0wwZbjqMueMNNH//sX8lYp1PfkrbhJJyv8tC6OjLyaQwZegI8539KyFx/Nw9a9IggQVEESNaDYSp4Q9T8dlyv8+WNbGYA+n2fwmkJYDP7wZCprWCr4NSdmtBuhdq5nyKGUvuVHFcjjyY1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u9UJxZya; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u9UJxZya"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 745E7C4CEE7;
+	Thu, 15 May 2025 07:49:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747295384;
+	bh=3jzzyKoPVNBte10yueh+3cKhOlijEv98gMIVxapULC4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=u9UJxZya60202wNrLNq2xs/u/QwHHwiTkHlp3gKc65I8fZ8BLs0qZnQFGjnE2XL0q
+	 VjO9rk3erH8FhkyjehvKzB5xsZPiuu79VBd4aN1Fd8TagXuQ2G5q5Q19A1p9IFdvGF
+	 bgQD1G/3ZaIMvbd3aK6+Sk6Cs7mN6evcrn6ZkqkGlvzmUPLShlpr1BDmLaE1A4seL2
+	 pUf8X5Ur+4h0gNbhD9MLnGIO/lWq6ZOqiidr1P4pb4X9LqMh3oGIS99X9bcK/Y/ka5
+	 5tRayH7eHZFamv4QblXVj73hJs0RE8t/15UUbwR6L/7bTVI+hYU6CQmvULirHc4tKm
+	 J55KSWWq45kpw==
+Date: Thu, 15 May 2025 08:49:37 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Gyeyoung Baek <gye976@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: trigger: Add validation to reject devices
+ requiring top half
+Message-ID: <20250515084937.432fd168@jic23-huawei>
+In-Reply-To: <CAKbEznuG6-+cKOOVSvyw30Qra_6yVruA0cvpcK5Gqp2_kcPHcw@mail.gmail.com>
+References: <20250503190044.32511-1-gye976@gmail.com>
+	<20250504152441.13772899@jic23-huawei>
+	<CAKbEznvZ3BHJK8TjGg7MR2dDMtWk+gZ5SewF_u_J0=Nw6c082Q@mail.gmail.com>
+	<20250507204026.11a260ef@jic23-huawei>
+	<CAKbEznuG6-+cKOOVSvyw30Qra_6yVruA0cvpcK5Gqp2_kcPHcw@mail.gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:4a07:b0:85c:96a5:dc2c with SMTP id
- ca18e2360f4ac-86a1a10192dmr179809339f.14.1747295197045; Thu, 15 May 2025
- 00:46:37 -0700 (PDT)
-Date: Thu, 15 May 2025 00:46:37 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68259bdd.a00a0220.a2f23.0199.GAE@google.com>
-Subject: [syzbot] Monthly v9fs report (May 2025)
-From: syzbot <syzbot+list9b8c66749a443c063719@syzkaller.appspotmail.com>
-To: asmadeus@codewreck.org, ericvh@kernel.org, linux-kernel@vger.kernel.org, 
-	lucho@ionkov.net, syzkaller-bugs@googlegroups.com, v9fs@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hello v9fs maintainers/developers,
+On Mon, 12 May 2025 00:47:39 +0900
+Gyeyoung Baek <gye976@gmail.com> wrote:
 
-This is a 31-day syzbot report for the v9fs subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/v9fs
+> Hello Jonathan,
+> I=E2=80=99ve referred to your previous comments and implemented the ideas.
+> Thank you for your earlier feedback.
+> I now have a few follow-up questions and would appreciate your
+> thoughts on the below points.
+>=20
+> On Thu, May 8, 2025 at 4:40=E2=80=AFAM Jonathan Cameron <jic23@kernel.org=
+> wrote:
+> >
+> > On Wed, 7 May 2025 00:55:27 +0900
+> > Gyeyoung Baek <gye976@gmail.com> wrote: =20
+>=20
+> > I'd take a different approach (slightly) though it's more effort.
+> >
+> > Step 1. Tidy up current situation.
+> >
+> > Patch to convert all existing calls to devm_iio_triggered_buffer_setup()
+> > and iio_triggered_buffer_setup() to not take a top half function but re=
+place
+> > that variable with a bool early_timestamp or something along those line=
+s.
+> > Replace the h in struct iio_poll_func with a similarly named bool.
+> > Bunch of plumbing to make that all get filled in correctly.
+> >
+> > Then in iio_trigger_attach_pollfunc() check that bool and if appropriate
+> > pass iio_pollfunc_store_time() it to request_threaded_irq() =20
+>=20
+> Now we have both the existing `devm_iio_triggered_buffer_setup()`,
+> and a new version with the additional arguments of that.
+> Should these two coexist for compatibility, or should the before one
+> be replaced by the new one?
 
-During the period, 0 new issues were detected and 0 were fixed.
-In total, 6 issues are still open and 37 have already been fixed.
+So the aim will be to replace the existing function.=20
+How to get there is indeed an excellent question.
 
-Some of the still happening issues:
+I'd want to do it in one go, but as it affects a lot of drivers a=20
+single patch is probably not appropriate.
 
-Ref Crashes Repro Title
-<1> 58      Yes   WARNING: refcount bug in p9_req_put (3)
-                  https://syzkaller.appspot.com/bug?extid=d99d2414db66171fccbb
-<2> 37      Yes   INFO: task hung in v9fs_evict_inode
-                  https://syzkaller.appspot.com/bug?extid=56bd5818697f0f93fdd9
-<3> 14      No    BUG: corrupted list in p9_fd_cancelled (3)
-                  https://syzkaller.appspot.com/bug?extid=15a08eabe3d3838fb641
+So we'd introduce something like
+devm_iio_triggered_buffer_setup2() with new parameters
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Move everything over to that then a single patch to remove
+the old function and rename it all back to the original.
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+Alternatively we could find a reasonable alternative name to avoid
+that 'rename all at the end' patch.
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
+devm_iio_triggered_buf_setup() perhaps? =20
 
-You may send multiple commands in a single email message.
+>=20
+> > Step 2. Make what you want work cleanly now we only have that one handl=
+er.
+> >
+> > In iio_trigger_poll_nested() we can't know if that flag is set and I'm =
+not
+> > really keen on trying to get to this from elsewhere. We have previously=
+ considered
+> > solving this case via whether the timestamp is set or not in the thread=
+ed
+> > handler. I've never like that much as in theory timestamp 0 is valid (w=
+as
+> > a while ago). The rpr0521 light sensor has handling for this. =20
+>=20
+> What I'm trying to do is a mechanism where device drivers can
+> automatically get timestamps without manually handling them =E2=80=94 sim=
+ply
+> by setting a argument to indicate whether to capture the timestamp in
+> the tophalf or bottomhalf.
+>=20
+> But there are cases like the rpr0521 where the driver sets the
+> timestamp manually within its own trigger.
+> Would it make sense to extend this to automatically set the timestamp
+> in cases where the driver uses its own trigger as well?
+> To that, I believe we would need a unified interface that can cover
+> all trigger types (e.g., interrupt, software trigger) that invoke
+> poll() or poll_nested().
+> Would it be the right direction?
+> Or would it be more appropriate to consider only the top/bottom of a
+> consumer device?
+
+I'd like to avoid grabbing the timestamp for particular drivers
+that never need it (as they want to grab it in the thread for
+reasons of how they work - typically the capture only starts
+when then write to the device).  Other than that I'm not against
+having it grabbed in drivers that 'sometimes' need it whether
+or not it turns out they do.
+
+The dance is that we can't see the right information in poll / poll_nested
+so the best we can do is see if someone already filled in the
+timestamp in the handler we are currently running.  For that we need
+a flag alongside the pollfunc timestamp.  Care will be needed to ensure
+there are no races though as we might clear that flag just after another
+top half interrupt has been taken on a different cpu core.
+
+I'm not sure yet exactly how this will work.  Needs some experimenting
+and thought.
+
+J
+>=20
+> > I wonder if the following would work.
+> >
+> > In iio_trigger_attach_poll_func() we have access to the trigger and
+> > the pollfunc.  So if the pollfunc flag for wanting an early timestamp i=
+s set and
+> > we know the trigger is going to use iio_poll_trigger_nested() then we c=
+ould
+> > wrap the registered handler in a local one that calls the iio_pollfunc_=
+store_time()
+> >
+> > The additional magic needed here is that today we don't know that about=
+ the trigger.
+> > So we'd need to add a bool to the struct iio_trig to indicate it and se=
+t that
+> > for all drivers that use iio_trigger_poll_nested()   bool nested; will =
+do.
+> >
+> > It's not perfect as there are driver that do iio_trigger_poll() and iio=
+_trigger_poll_nested()
+> > depending on path. To handle those we'd need a flag to say don't overwr=
+ite my timestamp.
+> > at91-sama5d2-adc.c is the first one I found. =20
+>=20
+> > There are ways to make even that work but lets skip that for now as the=
+y'd
+> > slightly complicate things. That driver won't call the timestamp captur=
+e in
+> > some paths but it doesn't today so we are no worse off. =20
+>=20
+> --
+> Regards,
+> Gyeyoung
