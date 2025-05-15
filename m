@@ -1,126 +1,134 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D441928DF3F
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 19:22:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D65E194A44
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 19:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747336958; cv=none; b=GgrsHuCRD4RMdzsDlVgtLKi6E54UJVHi9s6PEahE7eUMX3My2yWWjqTwY4fCBCT3TRIsaZMUgs0q9mTXuJ/60nxn85JSYc+MCyMhrWEcy1qkcdKw6OWWFexoSmkU/INxa84bvaxilI15enurIT6l6bF9m9k0QvgnAlVyNzIJfeQ=
+	t=1747336980; cv=none; b=kZxNmx5FaJmNuDAsuy1xXb3D8tkV5IUGcmMYi0a3RKXEdhkNsQqqayiKgavZ2e1ASkOHxWTHadyRj19jQs2juKpiW5xc7fwdUUTd6YeBvq0pAbjML8+3QisvThSjVTWo61HttWYz6Zy120WIv7tSRah/rTuzfF6tkqUcjLPIEso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747336958; c=relaxed/simple;
-	bh=n/zFpZcSE3pHysd3m2Fzk6M3YtGyO7I2EMnhWkGrCfs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tqHa8ya74My2KhAujDE7/fUmAxR4H96eXq4ntf3AnNLUOedH55YKSabCodYa2HVdNuSvGtHKichY3cNKy81YFrGl3n5vH3u/k2zBahELRZJFkNr3wRdJNLQPEVs1F8MrKVhlwVvWqmUvTB8GloDCUiEW7tpnLBc3CvlsEEZs0lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eZZUbgmi; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747336980; c=relaxed/simple;
+	bh=96N46iqOIStqCIhFVpc7U2TEDGtEL6hnmfMs56TVuk0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pdshqkWvXJAeout7gjLZyE8ryKYzlAvaBHgvRVmkDyET01g27Bkj9NgZxEH6+X6b6hTEGbmrKjZ/Udl9ssz4hePF38GO9riIafGqcqelzyj27QbTj7IbrDwGxTmMV/SqTzdCNs2xuYPT2BVBOyeo7PetLPrOhXt1qg4jYDhg3LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=eQelwtN6; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eZZUbgmi"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30e0e8ba948so1428935a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:22:36 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="eQelwtN6"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7423fb98cb1so1626000b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:22:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747336956; x=1747941756; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RsH88TGnmmzXVwjGCgEyBwwNTaWeRBTEOp0jZumImFs=;
-        b=eZZUbgmiYW0vylFODHBMRmmPc6OUmE4FhZ/I38EbZoILEJ1AM5XO7Y35+xEvMWQu3S
-         w/5pZ2PpLviL864sfGGpgXgYmRXMZZXNhjWHs/YvP/Uwd/7QIsDI0tSDGJKO4Cn05+5B
-         BEUGERymdqUzqpoQhCRm/m2AQ693tU9diX+DPoxnjjHYTLPI0faLSxiQaPmaj1vy3/Aq
-         C5D16hM8TBW44tH7lqRTbBXgam4hcU4iH8zsuGxxsS67AbYTpnGqvZ+IvGL1QNfRBTPt
-         Omg1/pIiNM3syUSKmWHqrYr7rfLNTX67VolLt6TJi65fFHwVo6FWcuzAKvj80A+0A+/T
-         djrg==
+        d=broadcom.com; s=google; t=1747336976; x=1747941776; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fyWm0rF9eCaDvUShSNc7s++hP2H/Glv+MtPcJ7Ax5f0=;
+        b=eQelwtN6xcwH2rQghkkeaj12hIAqXyv8M9NeiQZeO4eL947l4e5ddGG7KzLFavkZw/
+         oj/uEVfSCYXaDRymncHTSShDyQRDZJNBuMap4r7IMp+57Rzj0ZjtiOTqDvu2XO8RWQg0
+         hxJG2TX0vZXZRB1vV7z29+2Ao3ud3jfezDEpU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747336956; x=1747941756;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RsH88TGnmmzXVwjGCgEyBwwNTaWeRBTEOp0jZumImFs=;
-        b=juK9USTvVfzvhiQeJiy8QmsHqzvIELdgQ2nANR6XSlf/fHd0JcTiRZjZ8a5sogzA2V
-         fCPtJ3kXt1WyTFJor9snVGp/I79HvG651yXjkZJVybl5GZgxdxs9pElIk14Se8hLpzFp
-         UA9+SC20lvOlZda2McrQX4HjPGDVzIGFGcSyW2Tv0XiX4H4QRHxWepKRLQcQ2YZJxegY
-         zTv9wCR0LvOawal7LyfctYzP155WlntD06rVTVFAh/9Sn6XvVJG0Fqj7z10PGYTJhgpA
-         vD5iQAS37gJQy3xhb/l6ALynEDcl8SC6i9zbhJynvOZbMHvokvkSHbzvqurgeafj50cu
-         F7mA==
-X-Forwarded-Encrypted: i=1; AJvYcCVgj+gdkFtBE6uBuIXmd3/wzLr+TO2audDkm10JM54Y2Q3PDZ8BsfNOxq7eyUNJzYuCSb6np5DsMGd/lWo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvCpnnYo5b6oxG6x7AvA3t1P4/MV4coSFDzqI+y5SO6cxPAsBA
-	MlI7VOKgvyhR+v7pAP1awavsEyUqSIe7l9zvoICsqc0PnVmJyiMCDFhNVje6MQi1ywlko24XZNZ
-	L3TU2GQ==
-X-Google-Smtp-Source: AGHT+IEkfeMKuOwaJhTC9ck1pxVfS9tzvvlzT27Kir8dDv5v2Oq1JjDHX75C4sK4dLAARhXjrxD8V6GQF+g=
-X-Received: from pjbdj3.prod.google.com ([2002:a17:90a:d2c3:b0:30e:7783:edb6])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2e42:b0:2f5:88bb:118
- with SMTP id 98e67ed59e1d1-30e7d5aca5cmr609980a91.22.1747336955985; Thu, 15
- May 2025 12:22:35 -0700 (PDT)
-Date: Thu, 15 May 2025 12:22:32 -0700
-In-Reply-To: <41821a66-8db1-42f1-85d6-fde67a8c072e@linux.intel.com>
+        d=1e100.net; s=20230601; t=1747336976; x=1747941776;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fyWm0rF9eCaDvUShSNc7s++hP2H/Glv+MtPcJ7Ax5f0=;
+        b=XlGHCrN+L7vATJuc66WVfEcweGJHI2CFQYTvO5REzWf6qcK8llbscbhPHyavo0SzQP
+         4WhYX14IPr+NJddNjFE8TusbwNUhKLSlbHKb/NbIrGiSRunnr7db50/yBePaGEnyd0of
+         CXNmBuMo40PAyq5PsoC8POUhEY0ShXpNx5GkipmBwkZBRgOM3px7QeYS8Yk+eLtfOolt
+         3uF3B3X4uojqbvmJ57iMoA/0/QSN65DVk2Jn7Gt9EYryedOAOqqrPDrwY4KACayeje5I
+         fKtHyORPI0Al8h+k3Z/fbXci9xbTbMBdJ/lNTrEZroRhjU74cxzGmpXoXxAXF46owTiA
+         ey9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXq15GloLbvrnyzQuz+OknUy8grHq3KG5xo12Yvp5BJJyUsBhtM2hVDwirsy+A7anx6mqZXrNx/fC1+JmA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHP53Hkj7yF6FlbZipFn6bghHAufdxjbPHtgn2C/hWZ3sy6Cyv
+	udq9BzhvFrvv2dmiuGjtXuT72VcbzygfNk6VKGOOQ1soJo38bvGHN8AguvuUESLonQ==
+X-Gm-Gg: ASbGnctmuhjfPDmEIbAT/6tw3e2OhDrs1tQLC5il2JpxQlgs0htkBgFz7f9H9Qsn+Lf
+	qwusa/Q6ksT53BRVOWiWeA7tiwDznyngoXn/3X78cyQb7WVPBu1KwCcT/X06SfSX+aOKnjszn71
+	iiNEwNzm2UgyVC/ZvInSgYTrPlpTy/A68nr9ecDqgCjHpgkDgehnduOIXqqFOZKyf4l7vnpijn1
+	VwaMBLNgeX1nMU8RDYT+wI/8vkRDTnIvIUPEN/0+iJNM/JJfw7SQccZWqnxjk8TtCYTXsAwRiIi
+	Gt8qJZ4c/TVbh4uicbCqM8RMOsQYSdiWmQ9NodMzr5EbrUaGdlAfpRlcebxx4hZ9lHzwMnL3TlX
+	U
+X-Google-Smtp-Source: AGHT+IGjWfUdXhgZL/hXJdI9mgEh2fOX9YaRz+9pHCBuN/jVr88KABTo2oYP+8cK+POae/uJK9WdVQ==
+X-Received: by 2002:a05:6a21:3289:b0:215:df3d:d56 with SMTP id adf61e73a8af0-21621902575mr851830637.21.1747336976503;
+        Thu, 15 May 2025 12:22:56 -0700 (PDT)
+Received: from ubuntu.. ([192.19.161.250])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb0a0b19sm255222a12.74.2025.05.15.12.22.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 12:22:55 -0700 (PDT)
+From: Ronak Doshi <ronak.doshi@broadcom.com>
+To: netdev@vger.kernel.org
+Cc: Ronak Doshi <ronak.doshi@broadcom.com>,
+	stable@vger.kernel.org,
+	Guolin Yang <guolin.yang@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Ronghua Zhang <ronghua@vmware.com>,
+	Shreyas Bhatewara <sbhatewara@vmware.com>,
+	Bhavesh Davda <bhavesh@vmware.com>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net v2] vmxnet3: update MTU after device quiesce
+Date: Thu, 15 May 2025 19:04:56 +0000
+Message-ID: <20250515190457.8597-1-ronak.doshi@broadcom.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-23-mizhang@google.com>
- <aCU3Ri0iz0aDBDup@google.com> <41821a66-8db1-42f1-85d6-fde67a8c072e@linux.intel.com>
-Message-ID: <aCY--A8SY7GQuq4F@google.com>
-Subject: Re: [PATCH v4 22/38] KVM: x86/pmu: Optimize intel/amd_pmu_refresh() helpers
-From: Sean Christopherson <seanjc@google.com>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
-	Shukla Manali <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 15, 2025, Dapeng Mi wrote:
-> On 5/15/2025 8:37 AM, Sean Christopherson wrote:
-> >> diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
-> >> index 153972e944eb..eba086ef5eca 100644
-> >> --- a/arch/x86/kvm/svm/pmu.c
-> >> +++ b/arch/x86/kvm/svm/pmu.c
-> >> @@ -198,12 +198,20 @@ static void __amd_pmu_refresh(struct kvm_vcpu *vcpu)
-> >>  	pmu->nr_arch_gp_counters = min_t(unsigned int, pmu->nr_arch_gp_counters,
-> >>  					 kvm_pmu_cap.num_counters_gp);
-> >>  
-> >> -	if (pmu->version > 1) {
-> >> -		pmu->global_ctrl_rsvd = ~((1ull << pmu->nr_arch_gp_counters) - 1);
-> >> +	if (kvm_pmu_cap.version > 1) {
+Currently, when device mtu is updated, vmxnet3 updates netdev mtu, quiesces
+the device and then reactivates it for the ESXi to know about the new mtu.
+So, technically the OS stack can start using the new mtu before ESXi knows
+about the new mtu.
 
-ARGH!!!!!  I saw the pmu->version => kvm_pmu_cap.version change when going through
-this patch, but assumed it was simply a refactoring bug and ignored it.
+This can lead to issues for TSO packets which use mss as per the new mtu
+configured. This patch fixes this issue by moving the mtu write after
+device quiesce.
 
-Nope, 100% intentional, as I discovered after spending the better part of an hour
-debugging.  Stuffing pmu->global_ctrl when it doesn't exist is necessary when the
-mediated PMU is enabled, because pmu->global_ctrl will always be loaded in hardware.
-And so loading '0' means the PMU is effectively disabled, because KVM disallows the
-guest from writing the MSR.
+Cc: stable@vger.kernel.org
+Fixes: d1a890fa37f2 ("net: VMware virtual Ethernet NIC driver: vmxnet3")
+Signed-off-by: Ronak Doshi <ronak.doshi@broadcom.com>
+Acked-by: Guolin Yang <guolin.yang@broadcom.com>
+Changes v1-> v2:
+  Moved MTU write after destroy of rx rings
+---
+ drivers/net/vmxnet3/vmxnet3_drv.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-_That_ is the type of thing that absolutely needs a comment and a lengthy explanation
-in the changelog.
+diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
+index 3df6aabc7e33..c676979c7ab9 100644
+--- a/drivers/net/vmxnet3/vmxnet3_drv.c
++++ b/drivers/net/vmxnet3/vmxnet3_drv.c
+@@ -3607,8 +3607,6 @@ vmxnet3_change_mtu(struct net_device *netdev, int new_mtu)
+ 	struct vmxnet3_adapter *adapter = netdev_priv(netdev);
+ 	int err = 0;
+ 
+-	WRITE_ONCE(netdev->mtu, new_mtu);
+-
+ 	/*
+ 	 * Reset_work may be in the middle of resetting the device, wait for its
+ 	 * completion.
+@@ -3622,6 +3620,7 @@ vmxnet3_change_mtu(struct net_device *netdev, int new_mtu)
+ 
+ 		/* we need to re-create the rx queue based on the new mtu */
+ 		vmxnet3_rq_destroy_all(adapter);
++		WRITE_ONCE(netdev->mtu, new_mtu);
+ 		vmxnet3_adjust_rx_ring_size(adapter);
+ 		err = vmxnet3_rq_create_all(adapter);
+ 		if (err) {
+@@ -3638,6 +3637,8 @@ vmxnet3_change_mtu(struct net_device *netdev, int new_mtu)
+ 				   "Closing it\n", err);
+ 			goto out;
+ 		}
++	} else {
++		WRITE_ONCE(netdev->mtu, new_mtu);
+ 	}
+ 
+ out:
+-- 
+2.45.2
 
-Intel also needs the same treatment for PMU v1.  And since there's no hackery that
-I can see, that suggests PMU v1 guests haven't been tested with the mediated PMU
-on Intel.
-
-I guess congratulations are in order, because this patch just became my new goto
-example of why I'm so strict about on the "one thing per patch" rule.
-
-> > It's not just global_ctrl.  PEBS and the fixed counters also depend on v2+ (the
-> > SDM contradicts itself; KVM's ABI is that they're v2+).
-> >
-> >> +		/*
-> >> +		 * At RESET, AMD CPUs set all enable bits for general purpose counters in
-> >> +		 * IA32_PERF_GLOBAL_CTRL (so that software that was written for v1 PMUs
-> >> +		 * don't unknowingly leave GP counters disabled in the global controls).
-> >> +		 * Emulate that behavior when refreshing the PMU so that userspace doesn't
-> >> +		 * need to manually set PERF_GLOBAL_CTRL.
-> >> +		 */
-> >> +		pmu->global_ctrl = BIT_ULL(pmu->nr_arch_gp_counters) - 1;
-> >> +		pmu->global_ctrl_rsvd = ~pmu->global_ctrl;
-> >>  		pmu->global_status_rsvd = pmu->global_ctrl_rsvd;
-> >>  	}
