@@ -1,117 +1,117 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0391A198823;
-	Thu, 15 May 2025 22:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942B3E55B;
+	Thu, 15 May 2025 22:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747348089; cv=none; b=ocrWEab6A2uJcgMGkxAXiTfH0ZQm/NOZRjJI1KrFTyGWnBBr8dEDg6Do755VbN8jc/s1xYo50lPRiLCdFFTCN2LFQUKNbtYZ//ANYjyZs9bKtgmap4YRJZza9YLdk6fyYzBFgPuaG7u9I4Iv6LXd3XUD3NazmOkWYKyVZU9U3JI=
+	t=1747348140; cv=none; b=Zmll42Mej/Ftj2wDLCUPmgPttVKK8A0QH0tXz/VbyESHOkq3HnjWjBN9QZxLIkVPlcqb8vv3tt4rCEwhuuGIY4B+NEPxQLE5A80UEXOpq8Ex17WPzPA36bbIoOzJ4biSsVW0gXC3tL2fP1/pqj/e8qMkPIdWTJPpW6aPNjENZ/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747348089; c=relaxed/simple;
-	bh=IFoUYNU9sUukdcnwqzdpKJq7hcxDfBJw2SxRQCl7Uhg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cNr8fCiGnHfhmxtZQmFwd7fU8/sdMDSR98ZWB8hCHAaplqk5qPCA/+60mTqZe1RLjqSFuQBKXqWKfpxD2/5iOqq12mR7VR2hB0bDCI/umdoHv20n3IVw+IM2JdpgQyXUfRDxHNLTwa3+O3If7/3UCGgWXTQHDBc8RnRgdeHPhCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T9FF1ZEp; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747348140; c=relaxed/simple;
+	bh=3j49X7ylBCwmdaUflrhLyH28SbNIQMG8C6USoXMDC6I=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=JleVmonsPc0w5cqWVWeSdoPo5UcPRPQdVc+FBA8FHAelZ/sqihGJWwRgRVo1RSQ3+FZhqUc1mOF3O3W2vas3nepniQTVBzI43qvGgk9Mk4ngHdrtSc1ge8dn7JC2sDH+00ykJTGIO72uisHkI2zJm1fyY4miWGPQHCfEERjRU8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=Fk44wA45; arc=none smtp.client-ip=52.119.213.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T9FF1ZEp"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5fbe7a65609so2617060a12.0;
-        Thu, 15 May 2025 15:28:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="Fk44wA45"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747348086; x=1747952886; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LC8o1vMF1qj7OExNV+zZktMJov/vAO+8ERvrF0MQQJc=;
-        b=T9FF1ZEp6WAC3hqLhJTASkD+h01mIdYqFyUxNcVnqfymcmD/W+ebCieh1L/jfQBvFu
-         D7VoE4TiGXSXAA75wIA0LlXBvq4xY3J0reJiUShxH2q9Zoby7g6quWKykgOT36i+6yA3
-         Dvg5CEAnDcYdR0ibfZeLkTTfIi6gR4OZb00Zubd2XkJiOAZT2mGwvhJjbDDTsuCSV7Bc
-         /nwDHscHfDqjerwjJKpvBDTexQghJv3/Btj56rrQHfSRdO6B1D4JAmvY1zNNeYa1cJDk
-         TKi97e1t6tyshH3sAZ6M74SPRwYKJXx4H2W/jKHIXDp/JHiE41sDRAfVEzb0g+GwJg9D
-         4Sig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747348086; x=1747952886;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LC8o1vMF1qj7OExNV+zZktMJov/vAO+8ERvrF0MQQJc=;
-        b=Yf3LY1L4kDnGwMHWVfFA0pheNn6LEs4Ne9Ku/gx9fR9ubzt13E/P59yDH+3UK+KIcs
-         5tVqlN1EhnZehTvkJ2FS4T6ao3HZr8kLpTxVYQKdWcwIqdqrsXXxc3wKpWE2guQIEasN
-         O8OJpqe0WOcLTAvBZ+hM4kgnKhW/af1Pe/asp0prbhCh0UQywpZpZc/4ZNWgNpDzNgBP
-         9XoJz3vxipAiPxbLTFFXMyImvUryQrLHRXB+ZksbXBzxbuUU0ms10V9sdzamU9Y2uSNZ
-         Vm/Aaj/cdOeoNTTXYaDkeFSL9Nc1OJVE9hCmlCrlsAM1FwueZks+jPN6OHEmTaXQBu2i
-         ZYyw==
-X-Forwarded-Encrypted: i=1; AJvYcCVY9Ld6gU6J/JxxFXGHvjDIJvDnzJp0CCgSSAdfT5iW8bvdDOCkWcXKvfMxZgFTN/D3OQxzslP0U9jgCaU=@vger.kernel.org, AJvYcCWRvz9XnLovdRTY6oFIZZBBsxKp9pNVWwvziNf0VIODXQmjcN2u9KJbtKJ7skwkem2563SrqI3fCJx+st4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4T1W+opOXqePeqEBzgOp8pJyZOyoYaaPkMRqJfJgWte1n+cg8
-	bT48Vi4a0h1+7PUsCJmh7xZQRWk28GFWXM1lKcYDS7fqgmoYl4Fkt2srvCsEhXwicTA=
-X-Gm-Gg: ASbGnctFxWAy/1aJfGp0YzXGX/2eciNJGOM5HPv/oUbNCqjv1gybBm4iK7Xbse1ca/M
-	zryz4GaFhhv/1lqxUQd1BD0a8NnI0u0bsnBzEqFbgyAYqTdiaKMw4AzvX0R5K13/hsXDGw7LctK
-	P5c9NCz6RayCmHJazqM57xczRTQW0fcVz/9cRHYWVmD5eEqPlwo6TE44zdii6C2xQTW7jT7Aikp
-	vO8tJ+aoXne0GamIWLGlUK4gex8Y3tGqaOd4WKTu8kVBLVrPIlgSwgYuEYDOD7a057loTVux7cv
-	q6aVsBrVtflfICgbbdpIPjNFvzDxWBjCRwxMZy+3a/ifs9psxaRCeW7s6PTl96l6J14pQatC
-X-Google-Smtp-Source: AGHT+IED0W2WAmxJKKCD0fGpSIzHghEPp79a651dw2vgPdYx1ZoTTNQeBWzG/U3NhZ2qokfnIgxGfA==
-X-Received: by 2002:a05:6402:40d2:b0:5f7:eafe:76d5 with SMTP id 4fb4d7f45d1cf-6008a590e63mr848271a12.8.1747348086001;
-        Thu, 15 May 2025 15:28:06 -0700 (PDT)
-Received: from localhost.localdomain ([178.153.43.188])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6005ae3b824sm376073a12.79.2025.05.15.15.28.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 15:28:05 -0700 (PDT)
-From: Talhah Peerbhai <talhah.peerbhai@gmail.com>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	mario.limonciello@amd.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Talhah Peerbhai <talhah.peerbhai@gmail.com>
-Subject: [PATCH] ASoC: amd: yc: Add quirk for Lenovo Yoga Pro 7 14ASP9
-Date: Fri, 16 May 2025 01:27:41 +0300
-Message-ID: <20250515222741.144616-1-talhah.peerbhai@gmail.com>
-X-Mailer: git-send-email 2.49.0
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1747348139; x=1778884139;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=3j49X7ylBCwmdaUflrhLyH28SbNIQMG8C6USoXMDC6I=;
+  b=Fk44wA451HTk2C4qLbP2fyEmLD/KmhcjDm3x+hEdgDZCqAf5qd0F9LtH
+   XUXKahe9Vch9OWW06RcuFDrVyGn4R7vwAQ6Hw71nRmcNPFpYyLwr6sr0M
+   z7xrjnvXkTMWWQB2SRvdecmNNf7TXTTchjTf9ikkPnAHRrISOX2lW1x0w
+   HeCJ443wFHNG0f5Lx5XMBHWXKT6Wy1mUNqwWPNrnjSfN5Sfggf/0RqadT
+   Eib5Q7pzxjWki6XkleHfMqqZFZhg2kcFPfWoPudif9WOBlr7p8HPsQlgM
+   ThK3AL323kMrSHeEEZ6/h/hTsvVXMllsKHKp2T3b2cfDHcIylRiP/XWm3
+   w==;
+X-IronPort-AV: E=Sophos;i="6.15,292,1739836800"; 
+   d="scan'208";a="723235557"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 22:28:57 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.7.35:33171]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.11.48:2525] with esmtp (Farcaster)
+ id ed2bae08-5f3a-462d-a842-8236c48a5326; Thu, 15 May 2025 22:28:56 +0000 (UTC)
+X-Farcaster-Flow-ID: ed2bae08-5f3a-462d-a842-8236c48a5326
+Received: from EX19D015UWC002.ant.amazon.com (10.13.138.161) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 15 May 2025 22:28:56 +0000
+Received: from EX19D015UWC003.ant.amazon.com (10.13.138.179) by
+ EX19D015UWC002.ant.amazon.com (10.13.138.161) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 15 May 2025 22:28:56 +0000
+Received: from EX19D015UWC003.ant.amazon.com ([fe80::d084:6d60:a01b:9e2c]) by
+ EX19D015UWC003.ant.amazon.com ([fe80::d084:6d60:a01b:9e2c%5]) with mapi id
+ 15.02.1544.014; Thu, 15 May 2025 22:28:55 +0000
+From: "Jitindar Singh, Suraj" <surajjs@amazon.com>
+To: "pawan.kumar.gupta@linux.intel.com" <pawan.kumar.gupta@linux.intel.com>,
+	"bp@alien8.de" <bp@alien8.de>
+CC: "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "peterz@infradead.org"
+	<peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>, "jpoimboe@kernel.org" <jpoimboe@kernel.org>
+Subject: Re: [PATCH] x86/bugs: Don't warn when overwriting
+ retbleed_return_thunk with srso_return_thunk
+Thread-Topic: [PATCH] x86/bugs: Don't warn when overwriting
+ retbleed_return_thunk with srso_return_thunk
+Thread-Index: AQHbxei+2+hDRI+2X0aMj4Gszp0Lnw==
+Date: Thu, 15 May 2025 22:28:55 +0000
+Message-ID: <11e9589a1489d9a7d9cca99a2c0673ae99e8166e.camel@amazon.com>
+References: <20250514220835.370700-1-surajjs@amazon.com>
+	 <20250514222507.GKaCUYQ9TVadHl7zMv@fat_crate.local>
+	 <20250514233022.t72lijzi4ipgmmpj@desk>
+	 <20250515093652.GBaCW1tARiE2jkVs_d@fat_crate.local>
+	 <20250515170633.sn27zil2wie54yhn@desk>
+	 <20250515172355.GIaCYjK_fz-n71Aruz@fat_crate.local>
+	 <20250515173830.uulahmrm37vyjopx@desk>
+In-Reply-To: <20250515173830.uulahmrm37vyjopx@desk>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5F4A4BB367E8464DBA827D448AC17970@amazon.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 
-Similar to many other Lenovo models with AMD chips, the Lenovo
-Yoga Pro 7 14ASP9 (product name 83HN) requires a specific quirk
-to ensure internal mic detection. This patch adds a quirk fixing this.
-
-Signed-off-by: Talhah Peerbhai <talhah.peerbhai@gmail.com>
----
- sound/soc/amd/yc/acp6x-mach.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/sound/soc/amd/yc/acp6x-mach.c b/sound/soc/amd/yc/acp6x-mach.c
-index e632f16c9102..3d9da93d22ee 100644
---- a/sound/soc/amd/yc/acp6x-mach.c
-+++ b/sound/soc/amd/yc/acp6x-mach.c
-@@ -311,6 +311,13 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "83AS"),
- 		}
- 	},
-+	{
-+		.driver_data = &acp6x_card,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "83HN"),
-+		}
-+	},
- 	{
- 		.driver_data = &acp6x_card,
- 		.matches = {
-@@ -360,7 +367,7 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "M5402RA"),
- 		}
- 	},
--        {
-+	{
- 		.driver_data = &acp6x_card,
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK COMPUTER INC."),
---
-2.49.0
-
+T24gVGh1LCAyMDI1LTA1LTE1IGF0IDEwOjM4IC0wNzAwLCBQYXdhbiBHdXB0YSB3cm90ZToNCj4g
+Q0FVVElPTjogVGhpcyBlbWFpbCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiB0aGUgb3JnYW5p
+emF0aW9uLiBEbw0KPiBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3Mg
+eW91IGNhbiBjb25maXJtIHRoZSBzZW5kZXINCj4gYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2Fm
+ZS4NCj4gDQo+IA0KPiANCj4gT24gVGh1LCBNYXkgMTUsIDIwMjUgYXQgMDc6MjM6NTVQTSArMDIw
+MCwgQm9yaXNsYXYgUGV0a292IHdyb3RlOg0KPiA+IE9uIFRodSwgTWF5IDE1LCAyMDI1IGF0IDEw
+OjA2OjMzQU0gLTA3MDAsIFBhd2FuIEd1cHRhIHdyb3RlOg0KPiA+ID4gQXMgSSBzYWlkIGFib3Zl
+LCBhIG1pdGlnYXRpb24gdW5pbnRlbnRpb25hbGx5IG1ha2UgYW5vdGhlcg0KPiA+ID4gbWl0aWdh
+dGlvbg0KPiA+ID4gaW5lZmZlY3RpdmUuDQo+ID4gDQo+ID4gSSBhY3R1YWxseSBkaWRuJ3QgbmVl
+ZCBhbiBhbmFseXNpcyAtIG15IHBvaW50IGlzOiBpZiB5b3UncmUgZ29pbmcNCj4gPiB0byB3YXJu
+DQo+ID4gYWJvdXQgaXQsIHRoZW4gbWFrZSBpdCBiaWcgc28gdGhhdCBpdCBnZXRzIGNhdWdodC4N
+Cj4gPiANCj4gPiA+IFllcywgbWF5YmUgYSBXQVJOX09OKCkgY29uZGl0aW9uYWwgdG8gc2FuaXR5
+IGNoZWNrcyBmb3INCj4gPiA+IHJldGJsZWVkL1NSU08uDQo+ID4gDQo+ID4gWWVzLCB0aGF0Lg0K
+PiA+IA0KPiA+IEF0IGxlYXN0Lg0KPiA+IA0KPiA+IFRoZSBuZXh0IHN0ZXAgd291bGQgYmUgaWYg
+dGhpcyB3aG9sZSAibGV0J3Mgc2V0IGEgdGh1bmsgd2l0aG91dA0KPiA+IG92ZXJ3cml0aW5nDQo+
+ID4gYSBwcmV2aW91c2x5IHNldCBvbmUiIGNhbiBiZSBmaXhlZCBkaWZmZXJlbnRseS4NCj4gPiAN
+Cj4gPiBGb3Igbm93LCB0aG91Z2gsIHRoZSAqbGVhc3QqIHdoYXQgc2hvdWxkIGJlIGRvbmUgaGVy
+ZSBpcyBjYXRjaCB0aGUNCj4gPiBjcml0aWNhbA0KPiA+IGNhc2VzIHdoZXJlIGEgbWl0aWdhdGlv
+biBpcyByZW5kZXJlZCBpbmVmZmVjdGl2ZS4gQW5kIHdhcm5pbmcgSm9lDQo+ID4gTm9ybWFsIFVz
+ZXINCj4gPiBhYm91dCBpdCBkb2Vzbid0IGJyaW5nIGFueXRoaW5nLiBXZSBkbyBkZWNpZGUgZm9y
+IHRoZSB1c2VyIHdoYXQgaXMNCj4gPiBzYWZlIG9yDQo+ID4gbm90LCBwcmFjdGljYWxseS4gQXQg
+bGVhc3QgdGhpcyBoYXMgYmVlbiB0aGUgc3RyYXRlZ3kgdW50aWwgbm93Lg0KPiA+IA0KPiA+IFNv
+IHRoZSBnb2FsIGhlcmUgc2hvdWxkIGJlIHRvIG1ha2UgSm9lIGNhdGNoIHRoaXMgYW5kIHRlbGwg
+dXMgdG8NCj4gPiBmaXggaXQuDQo+ID4gDQo+ID4gTWFrZXMgc2Vuc2U/DQo+IA0KPiBBYnNvbHV0
+ZWx5IG1ha2VzIHNlbnNlLg0KPiANCj4gU3VyYWosIGRvIHdhbnQgdG8gcmV2aXNlIHRoaXMgcGF0
+Y2g/IE9yIGVsc2UgSSBjYW4gZG8gaXQgdG9vLg0KDQpIYXBweSB0byByZXZpc2UgaXQuDQoNClRv
+IGJlIGNsZWFyLCBiYXNlZCBvbiBteSB1bmRlcnN0YW5kaW5nIHRoZSByZXF1ZXN0IGlzIHRvIG1h
+a2UgdGhlDQp3YXJuaW5nIG1vcmUgb2J2aW91cyB3aXRoIGEgV0FSTigpPw0K
