@@ -1,85 +1,200 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0109326ACC
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 03:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FF526ACC
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 03:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747280313; cv=none; b=G6ZQOzjGhBSP56l3KNAiy2IXs/E+mTuvltNw6mTPpsB8zmvDN9lj7ZhU49UStkVqM1lHdSpbqUZ5plqDZKtQqd+c7+l8VWYXw77CagoQxmpuIWDzkb/vzmgR/qNbDRurdR45cUVOQdKJlgnxxXaVKdPbkOE7PzXmvWJrrxRqBbM=
+	t=1747280373; cv=none; b=mFp2wrKPpSi+Ttl5ffOzVCC8xtbHyo49SSBGsx0qBNsBGPKwe+CmjHVQa4uJJS20lgY1vs2/A15vl6omGA78dLmWYRR8M8TTaq16Uh1uWpIqH64vvnE3zCKjPba0s9zynoBtki56cJ07cYMhz2nsb75eigSWAqpNcL0rYJGaij4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747280313; c=relaxed/simple;
-	bh=DOGAkysXSwlLDYwvelSMGth8yExrN3Q1t3k4OCAaHyo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pfT13CvQXsm61x7BwxEX4JsweRYR+8Ab1GnaCw3b0q+n8SZYofaqQdq4s31ZhxFDJ4b+Pmr5LbZiEVqG7mu2H6f1NwtvSbK82HeIVY3PeUuqVBCxmbDMH/kKvX8wLoRUthl8Qg9Czo5MjLl9sC9pjZ68Oczd0Vm/s1X4E3BB5Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=r5K6nCCe; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1747280373; c=relaxed/simple;
+	bh=/hLxrPyLj0L7WyFSf7/68ZsQ9VoDSyyMZyFXnAugEv4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KpT0Nx4tZVU9SqMQBbt+q+hHNKmf7QiU0Ie1htD2myG0D1OGIUWh6mm8048DiAhYqF0GH6pr9Uz5wP08GL8S8LEky43E9ZPvJjHiZO4tyorTT4OkJl6dsejYkVpSDyJbKoViWuAOPyAl59SfYtiP3hPTWvp1askzXBlfJMJ2Ues=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gvlhC9t8; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="r5K6nCCe"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=lcKSi+6b7yk8tzjb4aEVxT5mS7sILzFJ1AgsL9YQ3KI=; b=r5K6nCCe3e24Vx0CsAp4RIKpBI
-	kRth2DlMH7ykQkqEAKTvC4jRJf8fy3aKqf0epb1RhHOM0WArIeRl0Cy2WYNt5Sy+iTA6uBraztBAh
-	nTtfoeXXBtWLsevv89kllmSXS6xKt1m0eaMaOKkc2eGXIYqbH4grFIMAm3gLc4yRyVF8dcoNAdfPr
-	tMIS6NSezbqh+EnCK+EC0q6Rf7sFyuON2tfcQ5ymGpkXd8l9F6G8v454WGr0CQGJELn9LmeKi2v+2
-	1217VF4DO/wX5lyubXit9buVxjKtIWII6DrcNChxQmAl1sZQinhiCmDb52drNh9GFWGqWgvTsrEA8
-	brIA/5yA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uFPQN-006DQd-0P;
-	Thu, 15 May 2025 11:38:24 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 15 May 2025 11:38:23 +0800
-Date: Thu, 15 May 2025 11:38:23 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Zaslonko Mikhail <zaslonko@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, Heiko Carstens <hca@linux.ibm.com>,
-	Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: Re: [PATCH 2/2] zram: support deflate-specific params
-Message-ID: <aCVhr6fKFnZklcM1@gondor.apana.org.au>
-References: <20250514024825.1745489-1-senozhatsky@chromium.org>
- <20250514024825.1745489-3-senozhatsky@chromium.org>
- <bec7391c-e40d-4633-a2d0-881eb6d18f19@linux.ibm.com>
- <ystv6cvrdllh64eqkislh47a3bnx5d2lk42ox4eiuuubioin6u@gmt5pwbkwiz3>
- <aCVcsB-M9cKdq8d4@gondor.apana.org.au>
- <2bnnkkwhqor73ls7dvsxlt57tp2u3xf2o27opkveuqwgh3xf2j@5kzgq4eej3cw>
- <aCVeeWCawIETqkfG@gondor.apana.org.au>
- <qddzdpkjsi6plu7jih5vau3xq5kjucnocoeoz7ewqbrzoiwgt6@zio43bbj5r2z>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gvlhC9t8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747280371;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=b3N47OnInst/UbZLqqieOD9Ze+opRltby/uUlyZCiJo=;
+	b=gvlhC9t8K9/o3dWxUQURmMiaveDWHxr8frhtVCWHPuCyS8xONqS9Zzm/OsAQTWnYJ5ESNA
+	ub3L9TOqswW/1z5O9AWElDUvBtwOjHrsQnTcuhsaTB7w6P5wfDESDDY1fFQY26AHfVSKlL
+	yYz+cFe6DRp2lz5XaqPTQWa+K1lePIo=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-605-oNCaLXnNMS2Oe823YFcD_A-1; Wed,
+ 14 May 2025 23:39:27 -0400
+X-MC-Unique: oNCaLXnNMS2Oe823YFcD_A-1
+X-Mimecast-MFC-AGG-ID: oNCaLXnNMS2Oe823YFcD_A_1747280363
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 44B2F1956086;
+	Thu, 15 May 2025 03:39:22 +0000 (UTC)
+Received: from h1.redhat.com (unknown [10.22.88.116])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 294C01955F24;
+	Thu, 15 May 2025 03:39:04 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: rientjes@google.com,
+	hannes@cmpxchg.org,
+	lorenzo.stoakes@oracle.com,
+	rdunlap@infradead.org,
+	mhocko@suse.com,
+	Liam.Howlett@oracle.com,
+	zokeefe@google.com,
+	surenb@google.com,
+	jglisse@google.com,
+	cl@gentwo.org,
+	jack@suse.cz,
+	dave.hansen@linux.intel.com,
+	will@kernel.org,
+	tiwai@suse.de,
+	catalin.marinas@arm.com,
+	anshuman.khandual@arm.com,
+	dev.jain@arm.com,
+	raquini@redhat.com,
+	aarcange@redhat.com,
+	kirill.shutemov@linux.intel.com,
+	yang@os.amperecomputing.com,
+	thomas.hellstrom@linux.intel.com,
+	vishal.moola@gmail.com,
+	sunnanyong@huawei.com,
+	usamaarif642@gmail.com,
+	wangkefeng.wang@huawei.com,
+	ziy@nvidia.com,
+	shuah@kernel.org,
+	peterx@redhat.com,
+	willy@infradead.org,
+	ryan.roberts@arm.com,
+	baolin.wang@linux.alibaba.com,
+	baohua@kernel.org,
+	david@redhat.com,
+	mathieu.desnoyers@efficios.com,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	corbet@lwn.net,
+	akpm@linux-foundation.org,
+	npache@redhat.com
+Subject: [PATCH v6 0/4] mm: introduce THP deferred setting
+Date: Wed, 14 May 2025 21:38:53 -0600
+Message-ID: <20250515033857.132535-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <qddzdpkjsi6plu7jih5vau3xq5kjucnocoeoz7ewqbrzoiwgt6@zio43bbj5r2z>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Thu, May 15, 2025 at 12:32:39PM +0900, Sergey Senozhatsky wrote:
->
-> This is not exported yet.
-> 
-> I lean toward not filtering/limiting anything and just permit
-> what include/linux/zlib.h promises [1].  Would that be OK for
-> Crypto API?
+This series is a follow-up to [1], which adds mTHP support to khugepaged.
+mTHP khugepaged support is a "loose" dependency for the sysfs/sysctl
+configs to make sense. Without it global="defer" and  mTHP="inherit" case
+is "undefined" behavior.
 
-I don't have a problem with that.
+We've seen cases were customers switching from RHEL7 to RHEL8 see a
+significant increase in the memory footprint for the same workloads.
 
-It just makes the hardware implementor's job a little bit harder,
-because the Crypto API requires every implementation of a given
-algorithm to be equivalent.  So if the software zlib supports
-a full level specification, then so must the s390 version of zlib.
-If it cannot support a parameter, then it must provide a software
-fallback.
+Through our investigations we found that a large contributing factor to
+the increase in RSS was an increase in THP usage.
 
-Cheers,
+For workloads like MySQL, or when using allocators like jemalloc, it is
+often recommended to set /transparent_hugepages/enabled=never. This is
+in part due to performance degradations and increased memory waste.
+
+This series introduces enabled=defer, this setting acts as a middle
+ground between always and madvise. If the mapping is MADV_HUGEPAGE, the
+page fault handler will act normally, making a hugepage if possible. If
+the allocation is not MADV_HUGEPAGE, then the page fault handler will
+default to the base size allocation. The caveat is that khugepaged can
+still operate on pages that are not MADV_HUGEPAGE.
+
+This allows for three things... one, applications specifically designed to
+use hugepages will get them, and two, applications that don't use
+hugepages can still benefit from them without aggressively inserting
+THPs at every possible chance. This curbs the memory waste, and defers
+the use of hugepages to khugepaged. Khugepaged can then scan the memory
+for eligible collapsing. Lastly there is the added benefit for those who
+want THPs but experience higher latency PFs. Now you can get base page
+performance at the PF handler and Hugepage performance for those mappings
+after they collapse.
+
+Admins may want to lower max_ptes_none, if not, khugepaged may
+aggressively collapse single allocations into hugepages.
+
+TESTING:
+- Built for x86_64, aarch64, ppc64le, and s390x
+- selftests mm
+- In [1] I provided a script [2] that has multiple access patterns
+- lots of general use.
+- redis testing. This test was my original case for the defer mode. What I
+   was able to prove was that THP=always leads to increased max_latency
+   cases; hence why it is recommended to disable THPs for redis servers.
+   However with 'defer' we dont have the max_latency spikes and can still
+   get the system to utilize THPs. I further tested this with the mTHP
+   defer setting and found that redis (and probably other jmalloc users)
+   can utilize THPs via defer (+mTHP defer) without a large latency
+   penalty and some potential gains. I uploaded some mmtest results
+   here[3] which compares:
+       stock+thp=never
+       stock+(m)thp=always
+       khugepaged-mthp + defer (max_ptes_none=64)
+
+  The results show that (m)THPs can cause some throughput regression in
+  some cases, but also has gains in other cases. The mTHP+defer results
+  have more gains and less losses over the (m)THP=always case.
+
+V6 Changes:
+- nits
+- rebased dependent series and added review tags
+
+V5 Changes:
+- rebased dependent series
+- added reviewed-by tag on 2/4
+
+V4 Changes:
+- Minor Documentation fixes
+- rebased the dependent series [1] onto mm-unstable
+    commit 0e68b850b1d3 ("vmalloc: use atomic_long_add_return_relaxed()")
+
+V3 Changes:
+- Combined the documentation commits into one, and moved a section to the
+  khugepaged mthp patchset
+
+V2 Changes:
+- base changes on mTHP khugepaged support
+- Fix selftests parsing issue
+- add mTHP defer option
+- add mTHP defer Documentation
+
+[1] - https://lore.kernel.org/all/20250515032226.128900-1-npache@redhat.com/
+[2] - https://gitlab.com/npache/khugepaged_mthp_test
+[3] - https://people.redhat.com/npache/mthp_khugepaged_defer/testoutput2/output.html
+
+Nico Pache (4):
+  mm: defer THP insertion to khugepaged
+  mm: document (m)THP defer usage
+  khugepaged: add defer option to mTHP options
+  selftests: mm: add defer to thp setting parser
+
+ Documentation/admin-guide/mm/transhuge.rst | 31 +++++++---
+ include/linux/huge_mm.h                    | 18 +++++-
+ mm/huge_memory.c                           | 69 +++++++++++++++++++---
+ mm/khugepaged.c                            |  8 +--
+ tools/testing/selftests/mm/thp_settings.c  |  1 +
+ tools/testing/selftests/mm/thp_settings.h  |  1 +
+ 6 files changed, 106 insertions(+), 22 deletions(-)
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.49.0
+
