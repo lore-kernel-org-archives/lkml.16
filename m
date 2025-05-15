@@ -1,40 +1,44 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF3A828540B;
-	Thu, 15 May 2025 10:04:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C87028540B;
+	Thu, 15 May 2025 10:04:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747303466; cv=none; b=ZkpWiipqut+N36rtEBZqP3GvgfqdK5JdUK6IauxIRbYe7fwGrxbMkzocFXZyJnwP05xURb9TFB4pz/G1ipnKx6dPTv4JJqsbfYOLO2/7eWrukvE7Mp9Tr0S5UiRR3nF+rtMt1J1d/P6E9UBFMG8dtVPdIjNM02ArxJ71+kLma2o=
+	t=1747303474; cv=none; b=QOe0/mabRIixQIb6J2DYpGoUgGHu/z2aPr7QACkfAqNhwHl39y7d5tZEKYwYhClqcWSvBpSv8U2ORWMLylnvsSPfAIEgnX8BOVryiSYbc93nO/CU6+StPe/JosTk06nnqw9/ibTJAnHjt+LPh/u8V0UGAd+ccWwTs7tCO8wZW3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747303466; c=relaxed/simple;
-	bh=9y501ufUEZ0yQlM0egGSuDc18JW9Heg3tMa9gB6YWUM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=gsZ9XaP9Vo8pY2ZAPns7BS6lweYZ5lsvBVgdZkutO7t9BIRilCoCh/GZ1N4XNy8f4nHtGHT7qZPdyn4rpVC+fwD5WAfpwyoIw8zYcYIjJGx3skPKzfPvp1QL6+vusCm09xeaH7X3zKqmkz3i6hzeOClmtfMiRpgpYSeCkXuS+I4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=NDC2IyK/; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1747303474; c=relaxed/simple;
+	bh=4fv5s1gQ9Teikm9yrf0w4UpJvAG//n1htCUJx+4nq4A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OCVNQiJ/XY9RLOXTYeVLmp02pbX/Uotzxs5Rorv7H17hyIdtuPpS6SJ0Bg7YrA+MBhni8K70P48OagXpEkUywcfKm7UWP7XcGHqrJ0b0CwLpBFSTqJthZOKqxqsGH25IlTqwwdWhwoQVM1A+gZiRi7HHD8k0UFMIA0fzwkG0dm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uin2Rz/q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="NDC2IyK/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1747303455;
-	bh=9y501ufUEZ0yQlM0egGSuDc18JW9Heg3tMa9gB6YWUM=;
-	h=From:Date:Subject:To:Cc:From;
-	b=NDC2IyK/TQNv0WwhDvWj4oxYM3AL9dmvJBhmjUPn381v4BfG61N2xSirwAZqjnnSI
-	 wszjaCKVB2opyqF6BDHSbVESDLDxZJ9MnuplSfzhQPx//Ofx9dwQBsC2+uzpIH3pf9
-	 k/pny/o17CdjkwZVSwEnjLphMYZROlwp0nni/NNbyTZvIfDGARxLBC8ftZzdjbofm2
-	 JR6f4O3ZtE2s3r2K6LLjtpf/oAyE/8QzHhyL6R04kfnzvsJyk3WG1ajCFV0cpsfJYM
-	 33hOf4gg0Y3cOm36K2IKOmKDkJT4tSteEEJwb0i9Teu8sC4HfyJwoesnbbFhcSCpWH
-	 ECJbUkpx9BVsw==
-Received: from yukiji.home (amontpellier-657-1-116-247.w83-113.abo.wanadoo.fr [83.113.51.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laeyraud)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 2275317E01FD;
-	Thu, 15 May 2025 12:04:15 +0200 (CEST)
-From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-Date: Thu, 15 May 2025 12:04:11 +0200
-Subject: [PATCH] arm64: dts: mt8365-evk: Add goodix touchscreen support
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uin2Rz/q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24DF5C4CEE7;
+	Thu, 15 May 2025 10:04:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747303473;
+	bh=4fv5s1gQ9Teikm9yrf0w4UpJvAG//n1htCUJx+4nq4A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=uin2Rz/qjU+at2D7epdPaUL2iL/qvJqvVs0nND1g6/bF/hfb+bI5E7sokurf10GZ3
+	 zSPC6A2BstdjDnGsWx8xu1z313IwWKwhNfuptYz73qVOJ2ankAdOimymnEh8NGwIBW
+	 x5+E2oOTfk8uXUBzhjCep7R9Ic59pZztKV5hdg5cEZy55MWFCPCkoLQAuSJ8IKSGhq
+	 irm5XJIC1C9AnQQLP0nbEJhBjq027B3RcU0/o/lrCrpWExlJKDPmeXNjmh4tF4yQ02
+	 gxtfQwCnW27axXw5yzJ47/RhQxOQjItN8MpXP7ErhlUH2iQSLZ2/0T4Q9V/F0aapCt
+	 hZlItVXccSOAA==
+From: Christian Brauner <brauner@kernel.org>
+To: Max Kellermann <max.kellermann@ionos.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	viro@zeniv.linux.org.uk,
+	jack@suse.cz,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] include/linux/fs.h: add inode_lock_killable()
+Date: Thu, 15 May 2025 12:04:20 +0200
+Message-ID: <20250515-wettrennen-zweisamkeit-5493081baee2@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250513150327.1373061-1-max.kellermann@ionos.com>
+References: <20250513150327.1373061-1-max.kellermann@ionos.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,115 +46,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250515-mt8365-evk-enable-touchscreen-v1-1-7ba3c87b2a71@collabora.com>
-X-B4-Tracking: v=1; b=H4sIABq8JWgC/y2NQQqDMBQFrxL+uh80GhGvUlzE+FJDa2yTKIJ49
- 4ba5cxi5qCI4BCpEwcFbC66xWcob4LMpP0D7MbMJAupClVWPKe2ahRjezK8Hl7gtKxmiiYAnrV
- slDR2tK0C5cY7wLr917/3Fwd81rxJl6RBR7BZ5tmlTnjsif+rmvrz/AKeNjh/oAAAAA==
-X-Change-ID: 20250513-mt8365-evk-enable-touchscreen-a2652cfdf85e
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747303455; l=2499;
- i=louisalexis.eyraud@collabora.com; s=20250113; h=from:subject:message-id;
- bh=9y501ufUEZ0yQlM0egGSuDc18JW9Heg3tMa9gB6YWUM=;
- b=ABT1kxQ2/Bxc9QowYRZKtUgQi3TrLS9pcrXkEjcgctmKc588DxeIVkj7SrSvJRZ9KnxTQciDq
- yWpVrSDDURKBNzLJnGYaIsEHq/AqDlEpXsGvm72+ULnp90y6Qmcpc0b
-X-Developer-Key: i=louisalexis.eyraud@collabora.com; a=ed25519;
- pk=CHFBDB2Kqh4EHc6JIqFn69GhxJJAzc0Zr4e8QxtumuM=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1246; i=brauner@kernel.org; h=from:subject:message-id; bh=4fv5s1gQ9Teikm9yrf0w4UpJvAG//n1htCUJx+4nq4A=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSo7tGZc/PIkzX5Zn9mMm67V58RnWq3yUCJq1LN8ztH2 +n/oazhHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABOp5WRkeMH7KE3Xt9j59ySH o3IrHZtvTTNUL2o/zb+CT2K3/bmjZYwMW3adP2L5NmXvo8sFi9Pu+lS+sXN6018f8OF79/xnzL1 zWQA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-The Mediatek Genio 350-EVK board has on the DSI0 connector a StarTek
-KD070FHFID015 display panel that uses a Goodix GT9271 I2C capacitive
-touch controller.
+On Tue, 13 May 2025 17:03:24 +0200, Max Kellermann wrote:
+> Prepare for making inode operations killable while they're waiting for
+> the lock.
+> 
+> 
 
-The mt8365-evk devicetree already have the display panel support but
-lacks the touchscreen support, so add it.
+Applied to the vfs-6.16.misc branch of the vfs/vfs.git tree.
+Patches in the vfs-6.16.misc branch should appear in linux-next soon.
 
-Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
----
-Tested on a Mediatek Genio 350-EVK board with a kernel
-based on linux-next (tag: next-20250514).
----
- arch/arm64/boot/dts/mediatek/mt8365-evk.dts | 40 +++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
-index 1f8584bd66c33744c3a2f29ae9bb19c934588ce0..ea75f87acf746d61a982dadf0d96cff9076c06a6 100644
---- a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
-@@ -69,6 +69,21 @@ memory@40000000 {
- 		reg = <0 0x40000000 0 0xc0000000>;
- 	};
- 
-+	reg_vsys: regulator-vsys {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vsys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	touch0_fixed_3v3: regulator-5 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vio33_tp";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&reg_vsys>;
-+	};
-+
- 	usb_otg_vbus: regulator-0 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "otg_vbus";
-@@ -324,6 +339,18 @@ hdmi_connector_out: endpoint@0 {
- 			};
- 		};
- 	};
-+
-+	touchscreen@5d {
-+		compatible = "goodix,gt9271";
-+		reg = <0x5d>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&touch_pins>;
-+		interrupts-extended = <&pio 78 IRQ_TYPE_EDGE_FALLING>;
-+		irq-gpios = <&pio 78 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&pio 79 GPIO_ACTIVE_LOW>;
-+		AVDD28-supply = <&touch0_fixed_3v3>;
-+		VDDIO-supply = <&mt6357_vrf12_reg>;
-+	};
- };
- 
- &mmc0 {
-@@ -650,6 +677,19 @@ cmd-dat-pins {
- 		};
- 	};
- 
-+	touch_pins: touch-pins {
-+		ctp-int1-pins {
-+			pinmux = <MT8365_PIN_78_CMHSYNC__FUNC_GPIO78>;
-+			input-enable;
-+			bias-disable;
-+		};
-+
-+		rst-pins {
-+			pinmux = <MT8365_PIN_79_CMVSYNC__FUNC_GPIO79>;
-+			output-low;
-+		};
-+	};
-+
- 	uart0_pins: uart0-pins {
- 		pins {
- 			pinmux = <MT8365_PIN_35_URXD0__FUNC_URXD0>,
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
----
-base-commit: ccb396cc1664a9a367831fb43de67776547354f4
-change-id: 20250513-mt8365-evk-enable-touchscreen-a2652cfdf85e
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-Best regards,
--- 
-Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.16.misc
 
+[1/4] include/linux/fs.h: add inode_lock_killable()
+      https://git.kernel.org/vfs/vfs/c/d8c5507cd140
+[2/4] fs/open: make chmod_common() and chown_common() killable
+      https://git.kernel.org/vfs/vfs/c/28a3f6ab2fe0
+[3/4] fs/open: make do_truncate() killable
+      https://git.kernel.org/vfs/vfs/c/d68687564280
+[4/4] fs/read_write: make default_llseek() killable
+      https://git.kernel.org/vfs/vfs/c/2e1a8fbff51b
