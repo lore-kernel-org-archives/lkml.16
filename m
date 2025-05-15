@@ -1,90 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008D325B682;
-	Thu, 15 May 2025 18:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E063425C820
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747333294; cv=none; b=EITWMxO2g2A3FMur9f59l0BF4cbjkkZRyy6Tnm3nMZsSlifoHCoMiRULWH3PUwLvDooUE/kE9HdqLtJEdUNET9hb2gvfb1BdrUMW2F6mC1dyQNKjbdevTDNgRO6oAnrDnYvyfQz5pJcmdPNflO3s1thR7+gVi+AwUiTz0KrFh9g=
+	t=1747333298; cv=none; b=ao/9jOswGIlhUrmoa6JHWllSgM2h1RMH1lzHQ24hXp2xwJo6R6R9sr44jkIO4msld43g0vS8mq268gDAd5ZI8GPnGDAg70iYD8wqQNUtgBFciHSaGnAV2SnlMYOXLLqvurtg6NKYuIKedrdM8WdskSmibbuJO7aeguhYnxvUOEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747333294; c=relaxed/simple;
-	bh=FxFfDzDgOp986k0H7VfACOZfr9TqwD1Xt+WZdTe4qYg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hHDToM1UCI/Z49nBtu/gIb1CoZxmGnKA2UhL+bd0apWCqPdapuWTJZWAnx/UpsBhulogc7bbgQ6RCHP+QFxIfTeUYxWc6juJ/BUCHU1IhFgiLl3TPC1ff0Xk1LM7wvQiElIJCB9HcwC6mytHB4tmh+FUgTERaOH4eowRsyFb7j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zcib9lV2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747333298; c=relaxed/simple;
+	bh=MGqBHlfRDrVxcmk2EPImRTpJPJYE+2rYOX+WqRjNrPM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K0SqvT4y0GgLmR2574cbAUE1oBQZMawPsqxFbtttSDLifTr0BU5C9W7nbFCutkQ/zS5eA1/Rm/2snrXVaBKtM0/vbpVZdSLo6fI+9mJ5ufRymvmbfeB0r2EnP5yF8lvW+hLk5EvhZKcAQz+iyL4XVr6OZfbyGfbMvoRvWmVrCFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=1ZxBFOKX; arc=none smtp.client-ip=209.85.166.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zcib9lV2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD50DC4CEE7;
-	Thu, 15 May 2025 18:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747333293;
-	bh=FxFfDzDgOp986k0H7VfACOZfr9TqwD1Xt+WZdTe4qYg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Zcib9lV2xe8z2dUxIYZ3PyJ1POiKAPw5mjTzXsGPkgYQHy34aBinzuLp+gFDhX6BU
-	 jAW0xLKEIfoaMpPCz1Og7HDRVQDfvjsM2BTnmJAr6/b1N8BSw/wBX4HgCc4aWCPY/S
-	 b3FKX2Rlq73wPCqRWjJhcnM2WDZQLZ6VyHzgkdD5JpUDBUID+RQczdfQdHlMKQx/gu
-	 wYiHdZYBsxfZBFN/C3U8bFjvNxrOde+8orkgmfDB1+5Mtib6yA5RTQmJf0BMHviAeU
-	 lNIz/Y+d94d/0NrDXywYkAh4RHkcwN5LvDSnw+pyDZ+l4ZyJTYc8u+alQuAwfuFGbg
-	 elNOWNRYI3F5Q==
-Date: Thu, 15 May 2025 11:21:31 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-	Corentin Labbe <clabbe.montjoie@gmail.com>,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
-Message-ID: <20250515182131.GC1411@quark>
-References: <aB8W4iuvjvAZSJoc@gondor.apana.org.au>
- <41680c5d41ed568e8c65451843e3ff212fd340c4.camel@gmail.com>
- <aB8t1ZTVBexqGlcm@gondor.apana.org.au>
- <dcb0b04e479d6f3cfed87795d100ea09e4fbcf53.camel@gmail.com>
- <aCAX8rj2ie4QMnTo@gondor.apana.org.au>
- <28184fb96e2de8a0af32816f5ff1b3d776b57217.camel@gmail.com>
- <aCMOyWVte4tw85_F@gondor.apana.org.au>
- <8e9b45bdafe6ac3f12bcbb5fce5bc9949566344f.camel@gmail.com>
- <aCQm0aHYnI6ciyPz@gondor.apana.org.au>
- <20dde00750d803a9a364ded99dab1e3e22daec77.camel@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="1ZxBFOKX"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-867355d9c4eso31929939f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:21:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1747333296; x=1747938096; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=X/C1KpHBgALZXKW/azerT8WsdA1SRCuWfyvYCdkhgTU=;
+        b=1ZxBFOKX4hcx/gLOJaeDXHAS1+i/jqrm6TstatELC7s8FtQu+1mNb96nv99HRvBKVR
+         2APHyWM/US4Cpo4FGgcu4unFaP9SKZ4blORzwrNeGZ/9yHkVHBrMlH7AgHXlRSJiRoRn
+         kYlH4nbud76AFE9Fb4MBgY4KxkUCjyiKoKoX5/Q5bKlnFTM9uvOH4UQZFc0/P2fk+NIn
+         vJx78UPUZKkhjgTxcDvZuNzCq2HEBsNp/YNZfDF8j6TZmglvFtrYCOWB5IFLRxqICNRu
+         FLairlM4qQUc35V4jWbMgBC95haNdT694vNWSCVaLZkbe2g9gDfcY+bl9y7jhKa27Xll
+         l8qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747333296; x=1747938096;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=X/C1KpHBgALZXKW/azerT8WsdA1SRCuWfyvYCdkhgTU=;
+        b=KIafHde7lfyueSQX+W1+GTa1BUOliGTOuJG7cUENZFWeziipxXSsHv3LqNGVC6jxd5
+         /1micTmxztJOIsEqG0J7Jq1+zLqj+HVbzys9/Wx5OvHN6ZxPg8TXq3tZcLC+Yuk4CQ63
+         T+rps4EDNbWZd+QZODBSz/8J4sgDTOXUpAlAPnKUmeoad9RNzaivewuFzyYkH3PiHl+o
+         o3qj6SmcTEY/VYxWx1oZzM7sxy/iCLexo3EL5NVjQS25MtfJtYcj3X3s2d76wL76s/9M
+         3Ofy6K5Fd3iSwKb2FY3SwoW5kbIhPPdXD4LrSJwot25X2N+atiOsY5Isufu4DNjPtbdW
+         /w6Q==
+X-Gm-Message-State: AOJu0Yyl38J62q8ZlwYPRJSdYD57S4XBmsLh6OrjzeJI1rQFEkNuNXa/
+	2bMTZ4A1aMYnsXmh6tRWF7BVpY8toiCep0gpKCRhVQQ6VdA7RPpzlBHp4Frxb/+O+Jo=
+X-Gm-Gg: ASbGncubeQ9fp5PQgRbQbiEzqOqyrM2TRELhouXikipiqiF+wJk0JrnKQQ2gS9yGa1e
+	JXos7gprUk2vg8WFA259QT6tusMlNLLv3JyNxjpzrvGncURh42RUwQ9B47HWv1n4HE/ZmLlvn75
+	pOLo5zXCX3JySn3gXPI8wDKkVdMYcwlYoiPp61X3JYB9ZZauAZiyV48CF1uEiFleT8rKCeySWHt
+	dSRDeGbILKj9bioRoL+PAUbdrhF3fI9RN+aUPU5V7U1qAG4BuN23whEfHXH+Eg5AOjnjY30NpN9
+	aC/0f+fVJkRoQXG5HfZ27G+0+ylGFCXroS9whbGZggNDwuM=
+X-Google-Smtp-Source: AGHT+IFpzCE8hu6atEYHjd6yneH4PqaIpUSAler+yg/h5WtSeiuEURnFGnyHBShaB+rR65b4K+RX6w==
+X-Received: by 2002:a05:6602:4816:b0:86a:93b:32bd with SMTP id ca18e2360f4ac-86a23172932mr113585439f.2.1747333295734;
+        Thu, 15 May 2025 11:21:35 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc4af62dsm30041173.109.2025.05.15.11.21.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 11:21:35 -0700 (PDT)
+Message-ID: <543ef493-a478-4e92-b384-f6ff299b11fb@kernel.dk>
+Date: Thu, 15 May 2025 12:21:34 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20dde00750d803a9a364ded99dab1e3e22daec77.camel@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] blktrace: use rbuf->stats.full as a drop indicator
+ in relayfs
+To: Jason Xing <kerneljasonxing@gmail.com>, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>,
+ Yushan Zhou <katrinzhou@tencent.com>
+References: <20250515061643.31472-1-kerneljasonxing@gmail.com>
+ <20250515061643.31472-4-kerneljasonxing@gmail.com>
+From: Jens Axboe <axboe@kernel.dk>
+Content-Language: en-US
+In-Reply-To: <20250515061643.31472-4-kerneljasonxing@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 15, 2025 at 07:53:03PM +0200, Klaus Kudielka wrote:
-> On Wed, 2025-05-14 at 13:14 +0800, Herbert Xu wrote:
-> > 
-> > Sorry, should've mentioned that this goes on top of the current
-> > cryptodev tree:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git/log/
-> > 
+On 5/15/25 12:16 AM, Jason Xing wrote:
+> From: Jason Xing <kernelxing@tencent.com>
 > 
-> Okay, so now I have two printk patches on top of the current cryptodev tree.
+> Replace internal subbuf_start in blktrace with the default policy
+> in relayfs.
 > 
-> I have enabled CRYPTO_SELFTESTS
-> 
-> - Three successful reboot / modprobe marvell-cesa. All self-tests passed.
-> - But the whole self-tests sequence now take approx. 2 minutes, instead of 15 seconds with plain v6.15-rc5
-> - And the journal gets huge. 24k lines. I am attaching a gzipped version, hope this works.
-> 
-> Best regards, Klaus
+> Remove dropped field from struct blktrace. Correspondingly, call the
+> common helper in relay. Through incrementing full_count to keep track
+> of how many times we encountered a full buffer issue, it aids the user
+> space app in telling how many lost events appear.
 
-CRYPTO_SELFTESTS now enables the full set of crypto self-tests, which for the
-past 6 years have been needed to be run anyway to properly validate the drivers;
-just developers often forgot to enable them because they were under a separate
-kconfig option that had a confusing name.  So the longer test time is expected.
-It's unfortunate that it takes 2 minutes on the platform you're testing (on most
-platforms it's much faster), but presumably that is still okay since it's just a
-development option?  People shouldn't be expecting to run these tests in
-production kernels.  (But even if they are for some reason, the test time also
-remains configurable via kernel command-line options.)
+Forgot, I'd rewrite this, "telling how many lost events appear" doesn't
+make any sense at all, as these events obviously don't appears in the
+first place.
 
-- Eric
+By incrementing full_count to keep track of how many times we
+encountered a full buffer issue, user space will know how many events
+were lost.
+
+-- 
+Jens Axboe
