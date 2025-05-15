@@ -1,68 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03B1158DA3;
-	Thu, 15 May 2025 21:25:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABC21922C4;
+	Thu, 15 May 2025 21:36:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747344353; cv=none; b=gpH3DAHNNxmxW1RR7p2wO4c4lQXK3hR2XxGEnTlpO3pMhiGJ6wW0TsCU34lynJVxaIwz8aUoTum7sf2oOFGOK1AHiPxjQ+Cd2JriqZumTrQ+qm35Nn1jg6uoCJiB7EgHxmlVc9MhlEqxQfkvFJ+/ftUJ2Z/GEWh8uMhZZKRKW94=
+	t=1747344983; cv=none; b=RnMQgi7ItnGEP24TwfeKMB3Qk+yeb5Wm7VOEz+gNb4Z52lmKVZn9bJ/XGHbfWsWBPt0GpSmpms1iGY+yMfnVSmpUf78pwl94wJ5k14BkoAeJSZGs8PEyzZJQGLZReckhkDQejby5K6AhVhTLckKw/1yVogpdU4Fjw0G2RjrAfZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747344353; c=relaxed/simple;
-	bh=z6S5X9MnnkOQohJSFOywHQYKdlN/N3s6Cmbdad8m31I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tPa27WSi5wir3DzjAyA/AEdzH9R4MZFsoCiplKK1OruVr5Jx5Rn0Wipk1UziO/1FA0Bgf0uinwGN8rN0O9q0nNXaJM4yFv7594LYC4GxCB69cYGCI3bHTZhXwrVbtE65QhPaulj3iESLxhRpQ6L+3WPaWc2ybN3Ae708+bPZZ4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qZAfrdmX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747344983; c=relaxed/simple;
+	bh=SeYwRuis/az6deX8AL3u4+LQM8L5xEuFWIqWaKOTXMo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NR3weyH+vSXjpZwb8SzZcF3wC8kZBwq6kCZHNthLUgiuZ32aesbAhKISYxBlquzv81VxSyHjXsPsriRiT/T49rY/QGTHfBGtPQ3dmSYRZZnALrfds/HDRgQ7VXhdrn0NTjxCD4/wEmg731A7cmuBSC8kuLqhp1oCZ3tmjO8S2a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B9y3q0MK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qZAfrdmX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8F84C4CEE7;
-	Thu, 15 May 2025 21:25:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B9y3q0MK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60BCCC4CEE7;
+	Thu, 15 May 2025 21:36:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747344352;
-	bh=z6S5X9MnnkOQohJSFOywHQYKdlN/N3s6Cmbdad8m31I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qZAfrdmX4b4LE4QTIhSyyg0vdCxc/bGV3nAADzgnBfgWlr4ZyAnpAkvDZBq0zio1h
-	 EccF2nnQ5TMagEleE5W7XeKT+Tu+39GjmFMWoql+4zBe6FXL+m9kgIZcsM1yKKU50Q
-	 3D6kQ46MSk5yIKKcdxUxBTFwKWtk8aIZu32U1AcVFFO5T0nOlU5upE9YB1Fm+IDCBD
-	 aCmQKKufjHaDmSDIQBG5Mu0PG+Ll4mrbEQ3mD+clg/4n59hOC7xIcCp8FvQIokZPFk
-	 5jUSFL8eKJL2sHuoJZM3fm+orFjiwKSg+WAMFS2V9ogjsHmHIhfhUIW4lQ/WNCowQ6
-	 VZDtA1yDT/m9A==
-Date: Thu, 15 May 2025 14:25:51 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Ronak Doshi <ronak.doshi@broadcom.com>
-Cc: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, Guolin Yang
- <guolin.yang@broadcom.com>, Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net] vmxnet3: correctly report gso type for UDP tunnels
-Message-ID: <20250515142551.1fee0440@kernel.org>
-In-Reply-To: <CAP1Q3XQcPnjOYRb+G7hSDE6=GH=Yzat_oLM3PMREp-DWgfmT6w@mail.gmail.com>
-References: <20250513210504.1866-1-ronak.doshi@broadcom.com>
-	<20250515070250.7c277988@kernel.org>
-	<CAP1Q3XQcPnjOYRb+G7hSDE6=GH=Yzat_oLM3PMREp-DWgfmT6w@mail.gmail.com>
+	s=k20201202; t=1747344982;
+	bh=SeYwRuis/az6deX8AL3u4+LQM8L5xEuFWIqWaKOTXMo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B9y3q0MK/zbiEU/HAxlbPGU73uzBL5vYTiUT+rCbyxgIL9AuxVykDRbstUpE6XU7x
+	 RXlB02xpxW3eJJI6gj0q9SIZYYH6RwHimPp/9mJEPL7A+co9VxQkSSBHQCNFfMrU/D
+	 shHcTlTkawpaTvtS5i6WngH3uaFb5Qz8qFAX7JAe8x+d9wlOc11hg5xeEARkIhBMM/
+	 pF0mbwrjXD2QExW3Vq5qISkPQ/jNbE+AiaXpVR4ZJlqpT5B6sWf/6Enn7nvhF4gvQm
+	 1IUJbVpRx6O71EaqR7GVFI6MychgN6K8wbin3rOOEV1hMFmujOdhwMj802ggKl3luU
+	 ps01aja+qBRig==
+Date: Thu, 15 May 2025 14:36:19 -0700
+From: Kees Cook <kees@kernel.org>
+To: Eduard Zingerman <eddyz87@gmail.com>
+Cc: Shung-Hsi Yu <shung-hsi.yu@suse.com>, bpf@vger.kernel.org,
+	linux-mm@kvack.org, Andrii Nakryiko <andrii@kernel.org>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Uladzislau Rezki <urezki@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, regressions@lists.linux.dev,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Subject: Re: [REGRESSION] bpf verifier slowdown due to vrealloc() change
+ since 6.15-rc6
+Message-ID: <202505151435.ECC98E09@keescook>
+References: <20250515-bpf-verifier-slowdown-vwo2meju4cgp2su5ckj@6gi6ssxbnfqg>
+ <202505150845.0F9E154@keescook>
+ <c36245a48149a12180ec710c65d317a12cdfa020.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c36245a48149a12180ec710c65d317a12cdfa020.camel@gmail.com>
 
-On Thu, 15 May 2025 13:38:49 -0700 Ronak Doshi wrote:
-> > IIRC ->encapsulation means that ->inner.. fields are valid, no?
-> > And I don't see you setting any of these.
-> >
-> > Paolo, please keep me honest, IIUC you have very recent and very
-> > relevant experience with virtio.  
+On Thu, May 15, 2025 at 11:31:09AM -0700, Eduard Zingerman wrote:
+> On Thu, 2025-05-15 at 08:47 -0700, Kees Cook wrote:
+> > On Thu, May 15, 2025 at 09:12:25PM +0800, Shung-Hsi Yu wrote:
+> > > Bisect was done by Pawan and got to commit a0309faf1cb0 "mm: vmalloc:
+> > > support more granular vrealloc() sizing"[2]. To further zoom in the
+> > 
+> > Can you try this patch? It's a clear bug fix, but if it doesn't improve
+> > things, I have another idea to rearrange the memset.
 > 
-> I did not hit any issues during Vxlan and Geneve tunnel testing. I did not find
-> the code which validates inner fields being set. Maybe I missed something. If
-> you and Paolo think inner fields are indeed required, then I will remove these
-> lines.
+> I tried this patch on top of the commit 82f2b0b97b36 ("Linux 6.15-rc6").
+> W/o the patch I observe the slowdown, test times out after 120 seconds,
+> with the patch test finishes in 3 seconds.
 
-Not sure if the stack itself cares, but drivers look at those 
-fields for TSO. I see a call to skb_inner_transport_offset() 
-in vmxnet3_parse_hdr(). One thing to try would be to configure
-the machine for forwarding so that the packet comes via LRO
-and leaves via TSO.
+Well that's pretty definitive! Thank you! I'll send out a properly
+formatted patch. May I add your Tested-by?
+
+-- 
+Kees Cook
