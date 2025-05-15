@@ -1,110 +1,100 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2954A289353;
-	Thu, 15 May 2025 10:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D632F1FBC94
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747305709; cv=none; b=do+O8ciC6dVdniFW2hpXCaLHkzs+kQo1IFSE1EF7DmbavDIZAzlbKru0aFbQoAo755lHRTsM2sj4yJAO2tMzNYg3jFQlSMqBrvF+OSjD+zouk4QxRc4+j5EEFbmbfMcSWfn3sSg9A2AJ0kp7pgb80hS7r7BQJXHEcSjJIrgwRUo=
+	t=1747305737; cv=none; b=miH2pteS/7r05UKALwGE3RNvpRuOjsHqqO55yZDtHjuffWB4/MW8WVGlcXXYfmqFm7V5rD8+u5NgtjjBJg1//a/8OYVDQfeqFYy7KisUsvkt1ke82LhvpR6PnLi7sYJ9cEWuK9yzvTvHywigEgc6YCPbFre1HqOqhlNMMlLyKRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747305709; c=relaxed/simple;
-	bh=as7f2bEW46UojcmgSSs9aSH2vABUJaYN2zNdona5Hbs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QCppkRiIGSNriujuVFQY4bj3/Jgv+9QbspmPWpsBbU73h1GMJGune3aAHPHSlCR0SBIxZEkHmVDOI0ll9TQqddGYOHU0BAVZ9nGt8pEcaI9A8tJMF6LniVO3w4c8vkIvUzo95kbCQuukqpnsQI73jBqc3ltz5jqqSwUKlFrCHC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XkQiBuHP; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747305737; c=relaxed/simple;
+	bh=lSwTOOyvQBSKjA+yy+GDikxljG7whUJ7zYFHdXMTj94=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UT/3Qv7olg7IcRP/45SAXggKXreceMKTMZtC6WsY7voGhA3PnVR4u97yNUsF9z+je9iFijUt9ohh55g88EwJ43ZCxsWdlzFIk3OJiAPrJ7G00V4XgWtOhNkcsA2OXeCiRbQfXNI0Ua2wPRoFBZCzOcDS6+h6qp0ku1ga6Zl0N5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=d0/kGHkQ; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XkQiBuHP"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54F9F3gL017659;
-	Thu, 15 May 2025 10:41:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=/u6sVXUmIl0OU5rt4LugTm5/9stFbB
-	2bUferjR+mw2o=; b=XkQiBuHPhhAtMRAntWSEmOzxg3OF+K2lPQyR/xajWQmU8g
-	8To+vs2el39XEiHidryFS+LYw8sZbwduyeFS1yZ3Gr05DRtKX2pp+Gmjs1O29Sd1
-	ywiA8XSVGOOvYsi4QxyXT6/0lgSspnDHPf9JKtQ8PPMe5TGxdOn/KNuR+pIoQNlO
-	4iWC76mc1U1GkNbdUooGpLqCE2e6gOmhcWljSPvFTmAssgK8BKJ9j2PzBFC+/NPz
-	EysCI9xjJgsocmk+rjMiKMLJJAeYRKmxV99JDtRkDuJYBBWeWioIRHOgB2TkMHiu
-	9wID74IIIDOb68bEEiGE0uiOXJ6eohUya62a2zqg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ndfjrcg6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 May 2025 10:41:39 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54FAfddN013212;
-	Thu, 15 May 2025 10:41:39 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ndfjrcg0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 May 2025 10:41:39 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54F7F2G3021396;
-	Thu, 15 May 2025 10:41:38 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46mbfrsp0g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 May 2025 10:41:38 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54FAfaHG58786254
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 15 May 2025 10:41:36 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B053820071;
-	Thu, 15 May 2025 10:41:36 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9BE092004D;
-	Thu, 15 May 2025 10:41:27 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 15 May 2025 10:41:27 +0000 (GMT)
-Date: Thu, 15 May 2025 12:41:26 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Daniel Axtens <dja@axtens.net>,
-        Harry Yoo <harry.yoo@oracle.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, kasan-dev@googlegroups.com,
-        linux-s390@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v8 0/1] kasan: Avoid sleepable page allocation from
- atomic context
-Message-ID: <aCXE1p4+AiYhGAuV@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <cover.1747149155.git.agordeev@linux.ibm.com>
- <53a86990-0aa5-4816-a252-43287f3451b8@gmail.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="d0/kGHkQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1747305733;
+	bh=lSwTOOyvQBSKjA+yy+GDikxljG7whUJ7zYFHdXMTj94=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=d0/kGHkQ3H9hBwt/Io4OL30DTR2JNnAmn+IYkQq0E5s3Wybtba4c4lExLKsXzAr0f
+	 nkiXE3frc+Teu4bhqCeeEsSC8UXUm2oNz7Ad9WqJMZZ/GYPAWWjgCyXEWDtJz6tRRc
+	 YDFlqz9Z/N/akS5hPwDmTfj+V1C1BBYqpbsfH2Zq/KLUeLWXMKkfrbIMQtlpFdJyDc
+	 DXPvQ0t0jsTyqoxWWPA/nQGhKXeSmHTlj4YWggdpUEloB+CiSTsqQnD91xr4RvDHDj
+	 ic7Wccl8bLRlJ4PQUGWuFzVm3DUtfnIR15TlYs5AzT00eLraZ/PNSeZyKR1I7Cla+b
+	 FuxCt1ikoyIFQ==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6C25117E0404;
+	Thu, 15 May 2025 12:42:13 +0200 (CEST)
+Date: Thu, 15 May 2025 12:42:09 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Ashley Smith <ashley.smith@collabora.com>
+Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, kernel@collabora.com,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/panthor: Reset queue slots if termination fails
+Message-ID: <20250515124209.37253a92@collabora.com>
+In-Reply-To: <20250515103314.1682471-1-ashley.smith@collabora.com>
+References: <20250515103314.1682471-1-ashley.smith@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <53a86990-0aa5-4816-a252-43287f3451b8@gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: dzjBTB1YXB_GH0AY4aIS8luY9AuQsR1r
-X-Authority-Analysis: v=2.4 cv=ecg9f6EH c=1 sm=1 tr=0 ts=6825c4e3 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=c33pmkp9q3dSwcthHBMA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-ORIG-GUID: eLYookaplGgxG-G1m8c7YaaHlMPNOwHB
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDEwNCBTYWx0ZWRfXxJAAEzW9p62n eD0G3GXOh/v1Rdf6Tztkey5ALI1/qRAnIJOP/FnPMyDC2GVfQ7ZSXzO/adPnbR/GjqzUsyjJL5f bexw/87v0sS0Rjounzdo4P5zO906eIqq4pa46Dgr9RTyDm6iDVljI7a++lEclNZHoLX8HJr6Q41
- fCuHfMftHJPXRszy0B1DuwAPG+8VpkE2zVQQHM0VA0gEqb0sngRK3UjKoz3i7YgM5mr24PYF8aZ JfdbgXx69HalthV3AunVbN74Amv+aXo6ZI/krhACzd2f2YQr2OEIwrW/scs40CABp9Hv1g6CjTC dX/Z0bDYtSSMf/fb3zb2Z/rTtoLZVEhJgXOquXpk0ww7tgTWlCTeLAKd55GKBjlr67n/VcceMMM
- k5HC4K1hpEK2UNQMEiop5JficUKNKypkQSEETGISYmW4Sod/lzXv/XjNoaabrXGBXy0CAIh/
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-15_04,2025-05-14_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=376
- impostorscore=0 spamscore=0 clxscore=1015 malwarescore=0 mlxscore=0
- lowpriorityscore=0 priorityscore=1501 adultscore=0 bulkscore=0
- suspectscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505150104
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 13, 2025 at 06:43:56PM +0200, Andrey Ryabinin wrote:
-> Have you looked at boot failure report from kernel test robot ?
-> https://lkml.kernel.org/r/202505121313.806a632c-lkp@intel.com
+On Thu, 15 May 2025 11:33:05 +0100
+Ashley Smith <ashley.smith@collabora.com> wrote:
+
+> This fixes a bug where if we timeout after a suspend and the termination
+> fails, due to waiting on a fence that will never be signalled for
+> example, we do not resume the group correctly. The fix forces a reset
+> for groups that are not terminated correctly.
 > 
-> I think the report is for v6 version, but I don't see evidence that it was
-> addressed, so the v8 is probably affected as well?
+> Signed-off-by: Ashley Smith <ashley.smith@collabora.com>
 
-Yes. The problem is page_owner=on prevents bulk allcations.
-I will send an updated version.
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 
-Thanks!
+> ---
+>  drivers/gpu/drm/panthor/panthor_sched.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
+> index 43ee57728de5..1f4a5a103975 100644
+> --- a/drivers/gpu/drm/panthor/panthor_sched.c
+> +++ b/drivers/gpu/drm/panthor/panthor_sched.c
+> @@ -2727,8 +2727,17 @@ void panthor_sched_suspend(struct panthor_device *ptdev)
+>  			 * automatically terminate all active groups, so let's
+>  			 * force the state to halted here.
+>  			 */
+> -			if (csg_slot->group->state != PANTHOR_CS_GROUP_TERMINATED)
+> +			if (csg_slot->group->state != PANTHOR_CS_GROUP_TERMINATED) {
+>  				csg_slot->group->state = PANTHOR_CS_GROUP_TERMINATED;
+> +
+> +				/* Reset the queue slots manually if the termination
+> +				 * request failed.
+> +				 */
+> +				for (i = 0; i queue_count; i++) {
+> +					if (group->queues[i])
+> +						cs_slot_reset_locked(ptdev, csg_id, i);
+> +				}
+> +			}
+>  			slot_mask &= ~BIT(csg_id);
+>  		}
+>  	}
+> 
+> base-commit: 9934ab18051118385c7ea44d8e14175edbe6dc9c
+
