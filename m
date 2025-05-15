@@ -1,111 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4880B2820CD;
-	Thu, 15 May 2025 08:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A3E1C862D;
+	Thu, 15 May 2025 08:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747296270; cv=none; b=TTaZAKvFFSPoVPNgYAmSp5y+gqnEI1Bw4DPJ+1CsdKyOhZsOypuHUuU9reo8EA01NIzrSXBq7Ny5zpnAL3ZrMwSMEgPPr/NXixE9+ymEFeAl7zyv5fy/sXozOY4yPoM47lDAqFF2FFzUqQbJZy/uq0L0Iaaizfe5SlbXdSQv518=
+	t=1747296292; cv=none; b=nSJ72TY+eaDMuB1ZrSzjghmjKlECwn9ukJzNSMVJtQq7NweYzStYIbKm6k9mZSrBlkoYnPFZ8hTDm+KNCdDsU8XVKmJ0o4BSDSiR4qpuL83Pio9rb/nM4ZbgsAzBfVfEV/zHI+1B0CDn8ii12TLsTIkh6D9lXbLepsfAHkR1VFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747296270; c=relaxed/simple;
-	bh=1M9gFt8zcx9pxQgfErGrv96mAUW3gZ4D8dDvbtfNJCk=;
+	s=arc-20240116; t=1747296292; c=relaxed/simple;
+	bh=ty0IDKnnmR8p8z94Fij8gOadvYL2Zq0dAMs8I1xCWOU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bizvqgcy/ZjTugV3DYlqQmofgROpUSaGL53iNxD9psW2U8iFVg+rcKIuOYUDeSSG5ANt9E3+Na1+DUpQHYC+Mx/uIGZYXaUUSZXNPqLgNKl3ZVi5V7MppYLEvVi2Hy7PDi7nH0aYo/O4dhlippzCtcmxAKKJKJdeMi4uk1Hhwdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ga1Q2mYI; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=KkmkW7nycUUyLdtebzPRnL6t6LgpX8ac5kKKiOqUp+D/InxapccL0nGdlkNAi7HYuR0DX5HWs2pE4XhjwRc+GLLbfks1IgZXJnG7KYJ6MqWHP05Hn7YcXgs8gEJY8IjPxFKKSa7xbbfMPSZGxzCVtDvtNIWVl42Swy8zqg89Sos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uCpBL1tt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ga1Q2mYI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747296269; x=1778832269;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1M9gFt8zcx9pxQgfErGrv96mAUW3gZ4D8dDvbtfNJCk=;
-  b=ga1Q2mYIgvtV4Dw4YYM65s/Eh7uSlnrSLHPR2pNp8qZcZDG+2pbwWyDi
-   SDzQYE9+FSA9rQUokTWEZa/DqkmUesLYo19NR83Ljje4P4pET1zHJx6eQ
-   bjoHS/CV5Z4DaxfgTM3BaHFnfpuGezfjvjDjSeyW08Mwfwgpk5EtgCG5b
-   lEXsu5bavPxn8cJmVlZxKH5J5N9DbVspnwahr/iRH8c0Bx/JM7tFQ4vem
-   KqnRHYqCYroOS7drirYIkKiUD/69BnAtmb2untskHq3A0lTuHWCvtIX5a
-   accbOTaAQ11oO9HiQ8QfPzoCul8joP7ijCI/1/StxYlivzm2CX4O3WOh+
-   w==;
-X-CSE-ConnectionGUID: KRdKZPKnQPWDRwqLDXBOuA==
-X-CSE-MsgGUID: i/ETMfAZQLucowgCcqWNpQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49380465"
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="49380465"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 01:04:28 -0700
-X-CSE-ConnectionGUID: 8rn1t7pnS1+Vp/MKnVHVkg==
-X-CSE-MsgGUID: bIueTCnlQoWnbt5TSlsEaA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="138340907"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 01:04:25 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uFTZm-00000001mmx-3BXQ;
-	Thu, 15 May 2025 11:04:22 +0300
-Date: Thu, 15 May 2025 11:04:22 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Mika Westerberg <westeri@kernel.org>,
-	Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v1 0/4] gpiolib: acpi: Split quirks to its own file
-Message-ID: <aCWgBp4ZD5aesvRw@smile.fi.intel.com>
-References: <20250513100514.2492545-1-andriy.shevchenko@linux.intel.com>
- <20250514155955.GS88033@black.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uCpBL1tt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47FF8C4CEE9;
+	Thu, 15 May 2025 08:04:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747296292;
+	bh=ty0IDKnnmR8p8z94Fij8gOadvYL2Zq0dAMs8I1xCWOU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uCpBL1tthvB7RQhyphDgK7R5PRZbPQ4JnJnp1G4ZBARD3XYdQi8QdAKD5g62ixqVh
+	 KRyzWYwOBg+NuLw9AUjgRAE4Dihh4GIEmtTwlJCeGzqs2MJI7qOqIYIi5aLDMr3TrE
+	 LYMwlfnwGEntV2xJj2P+EaG3tjjGHn4Tj2K5H8gi7BYblyOMGgrFABfMD2D8Mw6XZ6
+	 J5L6wD3lei/2YyCNDrfPu4p2ctIGYvfeXIqZb3QkufP1Ex8h/5TAnsCdCVv8+oEh1p
+	 kuJWgAzqF9rFzJtwshH375DLztzJdttIbKJ85cEdv2ZSGmpUXxH2Jvf21NM7HP5SKb
+	 CVKS/ZVc8xogw==
+Date: Thu, 15 May 2025 10:04:47 +0200
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.1 00/96] 6.1.139-rc2 review
+Message-ID: <aCWgH6bec0nxse9I@finisterre.sirena.org.uk>
+References: <20250514125614.705014741@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="TGrf15Nb218DgonB"
+Content-Disposition: inline
+In-Reply-To: <20250514125614.705014741@linuxfoundation.org>
+X-Cookie: Well begun is half done.
+
+
+--TGrf15Nb218DgonB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250514155955.GS88033@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, May 14, 2025 at 06:59:55PM +0300, Mika Westerberg wrote:
-> On Tue, May 13, 2025 at 01:00:30PM +0300, Andy Shevchenko wrote:
-> > The GPIO ACPI helpers use a few quirks which consumes approximately 20%
-> > of the file. Besides that the necessary bits are sparse and being directly
-> > referred. Split them to a separate file. There is no functional change.
-> > 
-> > For the new file I used the Hans' authorship of Hans as he the author of
-> > all those bits (expect very tiny changes made by this series).
-> > 
-> > Hans, please check if it's okay and confirm, or suggest better alternative.
-> > 
-> > Andy Shevchenko (4):
-> >   gpiolib: acpi: Switch to use enum in acpi_gpio_in_ignore_list()
-> >   gpiolib: acpi: Handle deferred list via new API
-> >   gpiolib: acpi: Add acpi_gpio_need_run_edge_events_on_boot() getter
-> >   gpiolib: acpi: Move quirks to a separate file
-> > 
-> >  drivers/gpio/Makefile                         |   1 +
-> >  .../{gpiolib-acpi.c => gpiolib-acpi-core.c}   | 344 +----------------
-> >  drivers/gpio/gpiolib-acpi-quirks.c            | 363 ++++++++++++++++++
-> >  drivers/gpio/gpiolib-acpi.h                   |  15 +
-> 
-> All this -foo-core things look redundant to me. Why not just split it out
-> and call it gpiolib-quirks.c and put there all the quirks not just ACPI? I
-> Don't think we want to have gpiolib-of-quirks.c and gpiolog-swnode-quirks.c
-> and so on.
+On Wed, May 14, 2025 at 03:03:45PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.139 release.
+> There are 96 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-That's might be the next step to have for all of them, but these are ACPI
-specific. In any case they can't be put to gpiolib-quirks.c due to module
-parameters. If we do that we will need a dirty hack to support old module
-parameters (see 8250 how it's done there, and even author of that didn't like
-the approach).
+Tested-by: Mark Brown <broonie@kernel.org>
 
--- 
-With Best Regards,
-Andy Shevchenko
+--TGrf15Nb218DgonB
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgloB4ACgkQJNaLcl1U
+h9BFvQf/TZ/2gGHjYWTXvkypDcyopzNZrahO+NJRSe9vkdvX2EfbZSlOpD9m65nR
+jUo2ii/R3z41QlhOsXErM/6DfWKPcQDI+tR6IhmGTterEFCc1iGudbe/v3GLRI/5
+Dofua7UUpG+A7DvHjO7IH+wj+DqyHF4aED+Dov7K/g/X3DU7HjdlLhtbN/0PsT+F
+/GqUO9M6fDcTTAyYoAFUOrd1rT735JhBQVX+SGFXE0I6nMY6+cWECTkrd9QOsTuw
+ZasCDHGAahK1WyZ11H90ywarjuUNK5Ew85iIbv/sfkojkBEWIh79l2z/FCai2EBb
+aZnYajYKrBbdCuJyAPHzyV4JcBh2Wg==
+=QhUV
+-----END PGP SIGNATURE-----
+
+--TGrf15Nb218DgonB--
