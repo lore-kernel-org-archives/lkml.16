@@ -1,99 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B43B1AAE13
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5328E1AAE13;
+	Thu, 15 May 2025 10:23:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747304407; cv=none; b=NSTAUAagvK3FyYHFujItEVZbacVmHgjdwRil6ggR9EBaO0OjCyMMbD3MI1B43RcC6vSHElD2JKtkSd8jBRGnWa8oV3SuSzaOOUddbat/S1ah4UBX1DJqacB1JsOcfVrrJi/nTeaYk0jylkkwcVFBLViPsq5diARZkSCPXEH2S+A=
+	t=1747304622; cv=none; b=EjQ+zKUbG7+W5iShTz1sOGB/c4xwt6A1JwhUloiU9kxAjNMOu5nikZOqL/BQiOfE9VL0cXNePaPqRl8NzLE8am9UlGuTfPvbLsk/4N+9189XEVo2LLvhjZ/0euKB9BlqhaTsWpOdPUpSbaEzlMh6D0SrxLE+M1tvRVYVmcrRGmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747304407; c=relaxed/simple;
-	bh=9DzazpLoGL/Nkn9c5iEDlVYv1IDLgL/gC21JRfg2o1g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WKqKQ6DbCpYjx9bzWazNc2jIsUizzgseuc/4RJrIhgoVyC7IMT09itBXv1t2G02WUINtoQnulsAtCgJHw7yV2I5zJXfY0o+PfuGe/ir2VwFRZfmD4zAcCCDpvDkbrRRsF3ggQ/3zEAiYnEJ+ugMqujsPr07eahRtnUHvH1z2eAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gfkfy/YI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747304622; c=relaxed/simple;
+	bh=LPn993xnWWkvwlm5rudsJA0BQo0qu2yihgm1xOxvsW0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VSHLRqjl+JDSd5fBYQP1EHM5Jt4dBJdIl+KMhD85N4M1cydNT4ansepgMGGjlr4N7O0PE5wewkbiyI2+u5zNGOAxHN/R+RmgFxWHiLH2Z/aoYv9dl3PpFRtFpFv5QFkjsOHgjqoATsVRnJk6gJFMe3ac1r/25Wl1Y8fI/XdsJ/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MjU6e95W; arc=none smtp.client-ip=209.85.166.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gfkfy/YI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7F35C4CEE7;
-	Thu, 15 May 2025 10:20:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747304406;
-	bh=9DzazpLoGL/Nkn9c5iEDlVYv1IDLgL/gC21JRfg2o1g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gfkfy/YIW4/NzC5Rt62EY5HwE43k84oTbKql43knvBFkg2vACULXysJCjlEncq/la
-	 YECQ0fxHD8Vd/9A1QeDgXF5WlFTycJqr4TFn8gGrUHZGh1/IiHC5ABLhtynSTKJqd0
-	 ksm8o8uKBdHnK2r6SsUdOESp+BtcJtIqfF7byzaOjdqFBcx7CLoHvtjidbDiQEnjRB
-	 YspukPxuhlYqsv0hlPdmyRdkGAUi7OIuYoxK3jBzrEFlN5gvVuEKmatJbYVQBeh7aN
-	 Xwn+8XVlorhB1e87wxSCbwCT7ZXMHi5lK1X4cI42mdQrJZcvWE+pnt7YRfVrVSaB6Z
-	 VMerQu6I7Gr7g==
-Date: Thu, 15 May 2025 12:20:01 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-	Arnd Bergmann <arnd@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Juergen Gross <jgross@suse.com>, "H . Peter Anvin" <hpa@zytor.com>,
-	Kees Cook <keescook@chromium.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	David Woodhouse <dwmw@amazon.co.uk>
-Subject: Re: [PATCH 03/29] x86/boot/e820: Simplify the PPro Erratum #50
- workaround
-Message-ID: <aCW_0VyzQU10kwPx@gmail.com>
-References: <20250421185210.3372306-1-mingo@kernel.org>
- <20250421185210.3372306-4-mingo@kernel.org>
- <aAc3LGfa7HTBJqWx@surfacebook.localdomain>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MjU6e95W"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-86135ad7b4cso34344639f.1;
+        Thu, 15 May 2025 03:23:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747304620; x=1747909420; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zJZrSFBkNbM1G4hOj8s/L4+l2f6c8+4aH2wqD19Gqc0=;
+        b=MjU6e95Wr2BTHeJzY+bQZIjb5rdR1nJ0Vex1U64iYdI+2uXKtMourAMFn+Vh2HsFUM
+         vc63ofqdHVTH6jUeKbxi2gBEAhoaGtl0lSS03qqEQDEZpVpNw4nxXvHOJjYSPgjZH+ku
+         2s/xqUn29w5Lm1EOkcGEb/TWwf15CbhScRfkXS3DN5l6e4yOs5gbBIGT4g4KyCXz9Aoo
+         TVsxcve4AHBQS8qsbiplkJJLX9K4ut3gU8Vb+i0v0igFk8HlLUD03Xe4d/ciB8QT2NZX
+         TT9D8nvxW8OKP9tr5R8jHDuIw+zCghZILwaQOefcR7UXdgR4kM0v9X9RxxU5efOYR1M5
+         P08g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747304620; x=1747909420;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zJZrSFBkNbM1G4hOj8s/L4+l2f6c8+4aH2wqD19Gqc0=;
+        b=AlfBmRZu7IpkKkG8II9PUEawqpCZOn+NPLHoZcM/xzgHryXCxa0ZZYOFtefP4aW6Su
+         G4cwOLUNeaCMeiiGfWfnS2/5bGXvyu8dAWS1pZqCxy+1k7ZA2/ngIbwlFuZcqeVlg4Qf
+         Kslxc+f8LgknFbQ/Jgy+hv4i/iuPqaANQGLhhV0CSVUDYQIfXKJe6dJH2ws7fzaf6Bxl
+         6coXvCa3Ym7Vh+8jTKKZp9gwJOvdmGF7jetrQOyaNX232uLv+6Nzffvu6++yHCVqwkeW
+         6UUPRPRSlaiM4Jtf35WF5F/sxtGOQaRmXH38PX0yO3eGVolxhyuTpa/fy/LHnSnL8umb
+         Hz2w==
+X-Forwarded-Encrypted: i=1; AJvYcCUO/oI0Rjd7zH4s3OvNzfKQTivCuGbefHjCklj1jy3PyH41OGTtRmWcu78gSdeC2tLJezBtedezneTJ@vger.kernel.org, AJvYcCUlqT9q1S36H6r3uiVEg2KD4s78M7Q0WU+G2yQc4rPpnRswIqr3x+UxVykqS+gq2B95hK4OkmAt4Y4JR2W8@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhaYkvPLAIrP0aZmPw409g8RTCchSKxBqtGmxgn/YHJpnsmjyy
+	3acDXQ3LDg6nm3IMz0gj78iNIpkuNx6xvTgcz+sTIjZlE3i4I4AjHn5ZNOe5Ht/NqVfsn1gp/1R
+	7qdNkIflIhLg/HR1G5oWY51xfXM4=
+X-Gm-Gg: ASbGncvq4lU/Avk0nFXxdWbQliMb+85gYzdfbPFaLx7AQttoWJUba7PLIQLVX9b3XPh
+	EWYG5DA74oew/StKRJe6KCWmPd5jPPhffw8swgZfelQ+bQPVOi2BzXNCHilTQa7JdsDQ1uA7+zV
+	CU2dRJ59yfKa2sRcD9wdIn2nhxWjwcv3qE
+X-Google-Smtp-Source: AGHT+IHO5NjvG7NPaTx/Wk84Xf6YXEN9rB+dPDyiQnC6Nqm2qSNMD7m/f1k9O8ljI/qF9B+KJKVTOxllmfRsmBxkeqU=
+X-Received: by 2002:a05:6e02:2186:b0:3db:75e6:80d5 with SMTP id
+ e9e14a558f8ab-3db75e68272mr38100995ab.14.1747304620350; Thu, 15 May 2025
+ 03:23:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAc3LGfa7HTBJqWx@surfacebook.localdomain>
+References: <20250515051900.2353627-1-shengjiu.wang@nxp.com>
+ <20250515051900.2353627-2-shengjiu.wang@nxp.com> <CAEnQRZBJgJpyE-K6fn3_s61-Q7j=mXk5FGMggpaBhnH62w+ACQ@mail.gmail.com>
+In-Reply-To: <CAEnQRZBJgJpyE-K6fn3_s61-Q7j=mXk5FGMggpaBhnH62w+ACQ@mail.gmail.com>
+From: Shengjiu Wang <shengjiu.wang@gmail.com>
+Date: Thu, 15 May 2025 18:23:26 +0800
+X-Gm-Features: AX0GCFs1HwaoDdoFbQAbv3WJV20f_7O_khUEi6c3pJChsc5rxc9dD7nQQ1yVecY
+Message-ID: <CAA+D8APSQK8FqGYYmAygF-dhM7N_54Zw-jSz4xWrr5ToGfUKmw@mail.gmail.com>
+Subject: Re: [PATCH 1/6] arm64: dts: imx94: Add micfil and mqs device nodes
+To: Daniel Baluta <daniel.baluta@gmail.com>
+Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, 
+	kernel@pengutronix.de, festevam@gmail.com, devicetree@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, carlos.song@nxp.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, May 15, 2025 at 6:19=E2=80=AFPM Daniel Baluta <daniel.baluta@gmail.=
+com> wrote:
+>
+> On Thu, May 15, 2025 at 8:21=E2=80=AFAM Shengjiu Wang <shengjiu.wang@nxp.=
+com> wrote:
+> >
+> > Add micfil and mqs device nodes
+> >
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > ---
+> >  arch/arm64/boot/dts/freescale/imx94.dtsi | 30 ++++++++++++++++++++++++
+> >  1 file changed, 30 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/imx94.dtsi b/arch/arm64/boot=
+/dts/freescale/imx94.dtsi
+> > index 3661ea48d7d2..77297dde5c95 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx94.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx94.dtsi
+> > @@ -108,6 +108,16 @@ scmi_misc: protocol@84 {
+> >                 };
+> >         };
+> >
+> > +       mqs1: mqs1 {
+> > +               compatible =3D "fsl,imx943-aonmix-mqs";
+> > +               status =3D "disabled";
+> > +       };
+> > +
+> > +       mqs2: mqs2 {
+> > +               compatible =3D "fsl,imx943-wakeupmix-mqs";
+> > +               status =3D "disabled";
+> > +       };
+>
+> Node names should be somehow generic.
+>
+> So here, we need to have something like:
+>
+> mqs1: mqs@<ip_addr>
+>
+> similar for mqs2.
 
-* Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+There is no ip address for mqs module.  The only control register is
+in BLK_CTRL.
 
-> Mon, Apr 21, 2025 at 08:51:43PM +0200, Ingo Molnar kirjoitti:
-> > No need to print out the table - users won't really be able
-> > to tell much from it anyway and the messages around this
-> > erratum are unnecessarily obtuse.
-> > 
-> > Instead clearly inform the user that a 256 kB hole is being
-> > punched in their memory map at the 1.75 GB physical address.
-> > 
-> > Not that there are many PPro users left. :-)
-> 
-> ...
-> 
-> > +		e820__range_update(0x70000000ULL, 0x40000ULL, E820_TYPE_RAM, E820_TYPE_RESERVED);
-> 
-> Perhaps, 0x40000ULL --> SZ_256K ?
-
-Indeed! I folded in the change below.
-
-Thanks,
-
-	Ingo
-
-==============================>
- arch/x86/kernel/setup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index a1e2d64bb28d..f40dffc3e014 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -985,7 +985,7 @@ void __init setup_arch(char **cmdline_p)
- #ifdef CONFIG_X86_32
- 	if (ppro_with_ram_bug()) {
- 		pr_info("Applying PPro RAM bug workaround: punching 256 kB hole at 1.75 GB physical.\n");
--		e820__range_update(0x70000000ULL, 0x40000ULL, E820_TYPE_RAM, E820_TYPE_RESERVED);
-+		e820__range_update(0x70000000ULL, SZ_256K, E820_TYPE_RAM, E820_TYPE_RESERVED);
- 		e820__update_table(e820_table);
- 	}
- #else
+best regards
+Shengjiu Wang
