@@ -1,159 +1,236 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E100221348;
-	Thu, 15 May 2025 13:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBF321348
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 13:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747315267; cv=none; b=D0UwC92HgP64VEQeN4kpLR7zxLTyoG5TlQISgZOgXcEscexWYC8yVzZA9YFrmec9HdH+b322ydgX71hWNwsATYb9o3N5oK/XN0hm948fxksH43Gd2Y32NtbZb50/h3ve+7f+Bh/UhDtenAshva7fTyt31Vx76mUDWXZheV7KcFc=
+	t=1747315313; cv=none; b=u7Gf0zwRm2+AIJ6BYzA2fq6dsKLnWQtNP/GjGFaYJo4EUgcnoyb5bVZsDEd65SPjfT0pr+VOnZ6pqhZfVlD+N3aqIehYupVGUAXJYNILrq2rBwbucukN7NZtnaUn6+Q6CmTX5ETmVsjEe2iSX6RfHujfyg7GQDpX5SlXVoQL/48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747315267; c=relaxed/simple;
-	bh=JPkYbeCC/0+2C7oAcLkVgxvwJCw1QU+wPgbrczN6A7U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NXbELUT4/K71cMjdb+ZSj333H0bxoYO1lquNBuhQdSzTyCsgHxlt0i41FhitytDYJYnp7hAWWBbxUPD/K0ghDynOhQh8YmO8d+Bb/RxN99wDtTxJev634q1bemwSxAXcrf/+coQkQZYvLLu9VyyN+cfs+zo1yQdj495qtciSFi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ULXEX8Kv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747315313; c=relaxed/simple;
+	bh=0qwJq3bQ4wZzZYyMLfyzoU+4N0UDYrslGD8tXICI3XI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tZ5FYilR+KYjqiqvXX5oUXGxy1oymqds4xvuanExwGbxLV2SlzIeT/wJCMRC7bYjrd35s6PjpYeJWGMv+QgoWhsSxeWWYUoxxBH7en7U+Qsx6I0nOrs93nb9qPuD5hhXjWn9Apu7Xy6oB4AGUtuWW0XQUjqniEx5UHHD9DalPYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mihalicyn.com; spf=pass smtp.mailfrom=mihalicyn.com; dkim=pass (1024-bit key) header.d=mihalicyn.com header.i=@mihalicyn.com header.b=SkNwMkB+; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mihalicyn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mihalicyn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ULXEX8Kv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9334CC4CEEF;
-	Thu, 15 May 2025 13:21:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747315266;
-	bh=JPkYbeCC/0+2C7oAcLkVgxvwJCw1QU+wPgbrczN6A7U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ULXEX8KvfmKzhiJTB9Hd7eAwANfC1BZlgWUM6t1hJ0bRn630MAm6VurvIy9r8jpMv
-	 P8420bwYR5nxut2GfVXVQDFMKw37eb5L9zAC+Lvc2MjADIccHILfOZidJCg4zVrg9d
-	 ztlRyJp81Y8h9GJBQ8F7MtMW/l5FFlq2R6LHEytAK8hJO4D52qmjNYozDkFgO5xZTU
-	 7XpeOkZCSYTjUvUkUIch2iogvEw/HV/kp2nPW8sWvO38mtWsKti/L661hX7Bdi/18x
-	 p0vUB79T0gzxVtl8orIGPgtsS0rbb95U71ta/kVU9w0UWbwMMSBU2H25ROQ1jxHDHR
-	 GX1Ig7sE95TZw==
-Date: Thu, 15 May 2025 14:21:01 +0100
-From: Will Deacon <will@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com,
-	ryan.roberts@arm.com, anshuman.khandual@arm.com,
-	mark.rutland@arm.com, yang@os.amperecomputing.com,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] arm64: Check pxd_leaf() instead of !pxd_table() while
- tearing down page tables
-Message-ID: <20250515132059.GA12038@willie-the-truck>
-References: <20250515063450.86629-1-dev.jain@arm.com>
- <332ecda7-14c4-4dc3-aeff-26801b74ca04@redhat.com>
- <4904d02f-6595-4230-a321-23327596e085@arm.com>
- <6fe7848c-485e-4639-b65c-200ed6abe119@redhat.com>
- <35ef7691-7eac-4efa-838d-c504c88c042b@arm.com>
- <c06930f0-f98c-4089-aa33-6789b95fd08f@redhat.com>
- <91fc96c3-4931-4f07-a0a9-507ac7b5ae6d@arm.com>
- <a005b0c3-861f-4e73-a747-91e0a15c85de@redhat.com>
- <20250515125606.GA11878@willie-the-truck>
- <23042cdf-e0fc-4b3a-92f6-688689728cc7@redhat.com>
+	dkim=pass (1024-bit key) header.d=mihalicyn.com header.i=@mihalicyn.com header.b="SkNwMkB+"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54fcb7e3474so889557e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 06:21:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mihalicyn.com; s=mihalicyn; t=1747315310; x=1747920110; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9/0rLioWunSkOUNMsdKO2DuQooK8T/s9++j3a8KFy8Q=;
+        b=SkNwMkB+Ld8aOJ1zwEvD7G20w+oLfIBQZjVrSF0U0npzWMVl5Lb5L4zNS//3wHIQIS
+         bQehNUOAed52zmdlWCt3ZElD6ZbIK3rBLyUFMzvAYiBRSEitwe/79UFo84je7XSeYhBK
+         UxS1cve7qTB6g9tYKaKpDXxII6DAXvlQkEQ5Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747315310; x=1747920110;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9/0rLioWunSkOUNMsdKO2DuQooK8T/s9++j3a8KFy8Q=;
+        b=voBf4TtTxBL4RN6rWLf6qtlDXHKiLNCwtt/fSF25wiaLLcSt4g/AGXv5+ANgtRW2Go
+         MKqqP2YVDE5KxeiL83qDIeQe6PF00KYQhiug6F62zjO9zK+CMtwOPweJ+wAIwg4bgW0v
+         1z8eOktoWe+weSGXz+jpLMbxVwxm2u49xPwRET8/Ysq9e18hGhIxTvCtSoDUITBHLSW+
+         kXaYgWIjxFdjoIH7V3CpxZJi7RvQF5qSr6Z6OKNejYMGxFA74D5MN0GneenYqpUuosbc
+         4/VJJybYjzjAqs8JNxJf8OV3KSZJ6X4JroUiaFBY3hOLgEU+fhygmY9cH1li39K5YZas
+         +SHw==
+X-Forwarded-Encrypted: i=1; AJvYcCWbcedawDs6YDKWhyk9azPO4NTF2rAtCQC8J4Q9HXrcOm7TNpqlmyx2F+obguYv1pj7bItdApW22nFtNDA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpwqSHXz3qqoalAOLg6ZDxW15eveECEo+sanyE3LR0O1CNbBoh
+	QyWuv06WCs/xELDAgQ8O/PHox1gshC5mNLD1FSJM5LRs2B5qJd6ck2b9arc+NWx20US1GE+rAd7
+	QCdRBb1CbmT49W0h1iFfMz6WhMoonxs3K5eNluEfkTyD4uIXTczoTfade
+X-Gm-Gg: ASbGncuAMzMBcAZPF9tyTvTfhsJ87ogR84ZvARvj8G+EUvJ69ETGl3u4QO9opIpcUwL
+	2k9Px233ifGa6ArTedD2E1pUHss6N8jTZUoGVRq3ZBxCAbnmQDSR3EOmKi4plhhNC0t9VbN31AR
+	5KZWaE1flgkoKKCiMkr/kQLO3tA8ShZ18eeKelDzyh3RII
+X-Google-Smtp-Source: AGHT+IFsP3ydWrJ83abQUqhyxXRR8VIad8vuhq9qo8X9+orqDhs7UiCFmfG5cRgOacMsA7cZGJHNLHHILRRTmcZZ8a4=
+X-Received: by 2002:a05:6512:6c4:b0:54f:c57d:d25 with SMTP id
+ 2adb3069b0e04-550d61ddbe6mr2771666e87.48.1747315298977; Thu, 15 May 2025
+ 06:21:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <23042cdf-e0fc-4b3a-92f6-688689728cc7@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20250515-work-coredump-socket-v7-0-0a1329496c31@kernel.org> <20250515-work-coredump-socket-v7-2-0a1329496c31@kernel.org>
+In-Reply-To: <20250515-work-coredump-socket-v7-2-0a1329496c31@kernel.org>
+From: Alexander Mikhalitsyn <alexander@mihalicyn.com>
+Date: Thu, 15 May 2025 15:21:27 +0200
+X-Gm-Features: AX0GCFtZbZz82-8yLUwL6JXmvjJbvTtiMA_mPveEttmh8tJJN9Z9Kzc8Qdt9YDU
+Message-ID: <CAJqdLrqrVWV_iHG+f51fRZ=JKLeu9jSd_7i5BQ=zCu9FFPjiog@mail.gmail.com>
+Subject: Re: [PATCH v7 2/9] coredump: massage do_coredump()
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, Jann Horn <jannh@google.com>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
+	Eric Dumazet <edumazet@google.com>, Oleg Nesterov <oleg@redhat.com>, 
+	"David S. Miller" <davem@davemloft.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, David Rheinsberg <david@readahead.eu>, 
+	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, May 15, 2025 at 03:04:50PM +0200, David Hildenbrand wrote:
-> On 15.05.25 14:56, Will Deacon wrote:
-> > On Thu, May 15, 2025 at 11:32:22AM +0200, David Hildenbrand wrote:
-> > > On 15.05.25 11:27, Dev Jain wrote:
-> > > > 
-> > > > 
-> > > > On 15/05/25 2:23 pm, David Hildenbrand wrote:
-> > > > > On 15.05.25 10:47, Dev Jain wrote:
-> > > > > > 
-> > > > > > 
-> > > > > > On 15/05/25 2:06 pm, David Hildenbrand wrote:
-> > > > > > > On 15.05.25 10:22, Dev Jain wrote:
-> > > > > > > > 
-> > > > > > > > 
-> > > > > > > > On 15/05/25 1:43 pm, David Hildenbrand wrote:
-> > > > > > > > > On 15.05.25 08:34, Dev Jain wrote:
-> > > > > > > > > > Commit 9c006972c3fe removes the pxd_present() checks because the
-> > > > > > > > > > caller
-> > > > > > > > > > checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller
-> > > > > > > > > > only
-> > > > > > > > > > checks pud_present(); pud_free_pmd_page() recurses on each pmd
-> > > > > > > > > > through
-> > > > > > > > > > pmd_free_pte_page(), wherein the pmd may be none.
-> > > > > > > > > The commit states: "The core code already has a check for pXd_none()",
-> > > > > > > > > so I assume that assumption was not true in all cases?
-> > > > > > > > > 
-> > > > > > > > > Should that one problematic caller then check for pmd_none() instead?
-> > > > > > > > 
-> > > > > > > >      From what I could gather of Will's commit message, my
-> > > > > > > > interpretation is
-> > > > > > > > that the concerned callers are vmap_try_huge_pud and vmap_try_huge_pmd.
-> > > > > > > > These individually check for pxd_present():
-> > > > > > > > 
-> > > > > > > > if (pmd_present(*pmd) && !pmd_free_pte_page(pmd, addr))
-> > > > > > > >        return 0;
-> > > > > > > > 
-> > > > > > > > The problem is that vmap_try_huge_pud will also iterate on pte entries.
-> > > > > > > > So if the pud is present, then pud_free_pmd_page -> pmd_free_pte_page
-> > > > > > > > may encounter a none pmd and trigger a WARN.
-> > > > > > > 
-> > > > > > > Yeah, pud_free_pmd_page()->pmd_free_pte_page() looks shaky.
-> > > > > > > 
-> > > > > > > I assume we should either have an explicit pmd_none() check in
-> > > > > > > pud_free_pmd_page() before calling pmd_free_pte_page(), or one in
-> > > > > > > pmd_free_pte_page().
-> > > > > > > 
-> > > > > > > With your patch, we'd be calling pte_free_kernel() on a NULL pointer,
-> > > > > > > which sounds wrong -- unless I am missing something important.
-> > > > > > 
-> > > > > > Ah thanks, you seem to be right. We will be extracting table from a none
-> > > > > > pmd. Perhaps we should still bail out for !pxd_present() but without the
-> > > > > > warning, which the fix commit used to do.
-> > > > > 
-> > > > > Right. We just make sure that all callers of pmd_free_pte_page() already
-> > > > > check for it.
-> > > > > 
-> > > > > I'd just do something like:
-> > > > > 
-> > > > > diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> > > > > index 8fcf59ba39db7..e98dd7af147d5 100644
-> > > > > --- a/arch/arm64/mm/mmu.c
-> > > > > +++ b/arch/arm64/mm/mmu.c
-> > > > > @@ -1274,10 +1274,8 @@ int pmd_free_pte_page(pmd_t *pmdp, unsigned long
-> > > > > addr)
-> > > > > 
-> > > > >            pmd = READ_ONCE(*pmdp);
-> > > > > 
-> > > > > -       if (!pmd_table(pmd)) {
-> > > > > -               VM_WARN_ON(1);
-> > > > > -               return 1;
-> > > > > -       }
-> > > > > +       VM_WARN_ON(!pmd_present(pmd));
-> > > > > +       VM_WARN_ON(!pmd_table(pmd));
-> > > > 
-> > > > And also return 1?
-> > > 
-> > > I'll leave that to Catalin + Will.
-> > > 
-> > > I'm not a friend for adding runtime-overhead for soemthing that should not
-> > > happen and be caught early during testing -> VM_WARN_ON_ONCE().
-> > 
-> > I definitely think we should return early if the pmd isn't a table.
-> > Otherwise, we could end up descending into God-knows-what!
-> 
-> The question is: how did something that is not a table end up here, and why
-> is it valid to check exactly that at runtime. Not strong opinion, it just
-> feels a bit arbitrary to test for exactly that at runtime if it is
-> completely unexpected.
+Am Do., 15. Mai 2025 um 00:04 Uhr schrieb Christian Brauner
+<brauner@kernel.org>:
+>
+> We're going to extend the coredump code in follow-up patches.
+> Clean it up so we can do this more easily.
+>
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
 
-I see it a little bit like type-checking: we could see an invalid entry,
-a leaf entry or a table entry and we should only ever dereference the
-latter. If the VM_WARN_ON() is justified, then I find it jarring to go
-ahead with the dereference regardless of the type.
+Reviewed-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
 
-That said, maybe the VM_WARN_ON() should either be deleted or moved out
-to the callers in mm/vmalloc.c?
-
-Will
+> ---
+>  fs/coredump.c | 122 +++++++++++++++++++++++++++++++---------------------------
+>  1 file changed, 65 insertions(+), 57 deletions(-)
+>
+> diff --git a/fs/coredump.c b/fs/coredump.c
+> index 368751d98781..0e97c21b35e3 100644
+> --- a/fs/coredump.c
+> +++ b/fs/coredump.c
+> @@ -646,63 +646,8 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+>                 goto fail_unlock;
+>         }
+>
+> -       if (cn.core_type == COREDUMP_PIPE) {
+> -               int argi;
+> -               int dump_count;
+> -               char **helper_argv;
+> -               struct subprocess_info *sub_info;
+> -
+> -               if (cprm.limit == 1) {
+> -                       /* See umh_coredump_setup() which sets RLIMIT_CORE = 1.
+> -                        *
+> -                        * Normally core limits are irrelevant to pipes, since
+> -                        * we're not writing to the file system, but we use
+> -                        * cprm.limit of 1 here as a special value, this is a
+> -                        * consistent way to catch recursive crashes.
+> -                        * We can still crash if the core_pattern binary sets
+> -                        * RLIM_CORE = !1, but it runs as root, and can do
+> -                        * lots of stupid things.
+> -                        *
+> -                        * Note that we use task_tgid_vnr here to grab the pid
+> -                        * of the process group leader.  That way we get the
+> -                        * right pid if a thread in a multi-threaded
+> -                        * core_pattern process dies.
+> -                        */
+> -                       coredump_report_failure("RLIMIT_CORE is set to 1, aborting core");
+> -                       goto fail_unlock;
+> -               }
+> -               cprm.limit = RLIM_INFINITY;
+> -
+> -               dump_count = atomic_inc_return(&core_dump_count);
+> -               if (core_pipe_limit && (core_pipe_limit < dump_count)) {
+> -                       coredump_report_failure("over core_pipe_limit, skipping core dump");
+> -                       goto fail_dropcount;
+> -               }
+> -
+> -               helper_argv = kmalloc_array(argc + 1, sizeof(*helper_argv),
+> -                                           GFP_KERNEL);
+> -               if (!helper_argv) {
+> -                       coredump_report_failure("%s failed to allocate memory", __func__);
+> -                       goto fail_dropcount;
+> -               }
+> -               for (argi = 0; argi < argc; argi++)
+> -                       helper_argv[argi] = cn.corename + argv[argi];
+> -               helper_argv[argi] = NULL;
+> -
+> -               retval = -ENOMEM;
+> -               sub_info = call_usermodehelper_setup(helper_argv[0],
+> -                                               helper_argv, NULL, GFP_KERNEL,
+> -                                               umh_coredump_setup, NULL, &cprm);
+> -               if (sub_info)
+> -                       retval = call_usermodehelper_exec(sub_info,
+> -                                                         UMH_WAIT_EXEC);
+> -
+> -               kfree(helper_argv);
+> -               if (retval) {
+> -                       coredump_report_failure("|%s pipe failed", cn.corename);
+> -                       goto close_fail;
+> -               }
+> -       } else if (cn.core_type == COREDUMP_FILE) {
+> +       switch (cn.core_type) {
+> +       case COREDUMP_FILE: {
+>                 struct mnt_idmap *idmap;
+>                 struct inode *inode;
+>                 int open_flags = O_CREAT | O_WRONLY | O_NOFOLLOW |
+> @@ -796,6 +741,69 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+>                 if (do_truncate(idmap, cprm.file->f_path.dentry,
+>                                 0, 0, cprm.file))
+>                         goto close_fail;
+> +               break;
+> +       }
+> +       case COREDUMP_PIPE: {
+> +               int argi;
+> +               int dump_count;
+> +               char **helper_argv;
+> +               struct subprocess_info *sub_info;
+> +
+> +               if (cprm.limit == 1) {
+> +                       /* See umh_coredump_setup() which sets RLIMIT_CORE = 1.
+> +                        *
+> +                        * Normally core limits are irrelevant to pipes, since
+> +                        * we're not writing to the file system, but we use
+> +                        * cprm.limit of 1 here as a special value, this is a
+> +                        * consistent way to catch recursive crashes.
+> +                        * We can still crash if the core_pattern binary sets
+> +                        * RLIM_CORE = !1, but it runs as root, and can do
+> +                        * lots of stupid things.
+> +                        *
+> +                        * Note that we use task_tgid_vnr here to grab the pid
+> +                        * of the process group leader.  That way we get the
+> +                        * right pid if a thread in a multi-threaded
+> +                        * core_pattern process dies.
+> +                        */
+> +                       coredump_report_failure("RLIMIT_CORE is set to 1, aborting core");
+> +                       goto fail_unlock;
+> +               }
+> +               cprm.limit = RLIM_INFINITY;
+> +
+> +               dump_count = atomic_inc_return(&core_dump_count);
+> +               if (core_pipe_limit && (core_pipe_limit < dump_count)) {
+> +                       coredump_report_failure("over core_pipe_limit, skipping core dump");
+> +                       goto fail_dropcount;
+> +               }
+> +
+> +               helper_argv = kmalloc_array(argc + 1, sizeof(*helper_argv),
+> +                                           GFP_KERNEL);
+> +               if (!helper_argv) {
+> +                       coredump_report_failure("%s failed to allocate memory", __func__);
+> +                       goto fail_dropcount;
+> +               }
+> +               for (argi = 0; argi < argc; argi++)
+> +                       helper_argv[argi] = cn.corename + argv[argi];
+> +               helper_argv[argi] = NULL;
+> +
+> +               retval = -ENOMEM;
+> +               sub_info = call_usermodehelper_setup(helper_argv[0],
+> +                                               helper_argv, NULL, GFP_KERNEL,
+> +                                               umh_coredump_setup, NULL, &cprm);
+> +               if (sub_info)
+> +                       retval = call_usermodehelper_exec(sub_info,
+> +                                                         UMH_WAIT_EXEC);
+> +
+> +               kfree(helper_argv);
+> +               if (retval) {
+> +                       coredump_report_failure("|%s pipe failed", cn.corename);
+> +                       goto close_fail;
+> +               }
+> +               break;
+> +       }
+> +       default:
+> +               WARN_ON_ONCE(true);
+> +               goto close_fail;
+>         }
+>
+>         /* get us an unshared descriptor table; almost always a no-op */
+>
+> --
+> 2.47.2
+>
