@@ -1,136 +1,173 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478B62951D8;
-	Thu, 15 May 2025 05:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA675295506;
+	Thu, 15 May 2025 05:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747288423; cv=none; b=pbBLdlbeOKPzwkpi5jpuXf4CTBXERhn9tPdEdpuhuC4elYIREbP8VuKE5FRytK6P5Pl7i8+EFPsAwTmxZazq9gDMVMdIKajrZqqcy3A2eMxyHMZ6ffaJeq0Khm+Rjw5d3sFLGlEXQnhebBigeJ09j0oUM9GBb3KeV9ipRob+GZQ=
+	t=1747288456; cv=none; b=fCr+FPyXCIW9FQFR+SgB1q7InAVF7OkgDg1Cy1Wqps0l4sIfz++KApOi42p1ne1EITzsSSHCJWkSc8EvXkactivd5x8xEnenGvmBZnd1cWxyLRly16rsIVylGdkfh5vBd8wlxEDiFKMN9wOyMsrtAetiDAyvPcy47OZTqKfByEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747288423; c=relaxed/simple;
-	bh=QRe32xatwTRsoz+wj88ZVHN17zQOUDN3VJmsCT3pC6w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UY8ZBM1w+CachY6zPsfDh17KdQ/wPU8JpYWboyX3seKEYchCtJcuAM3RmFQ4Onjj0JuK0MSikLxKYMubKrxDjbnM6TuADVISeJrmiv8fuew0ldnVKahq6dZ44ES9FjWuDxQ8cshYsnvpYa0bUHpk1LW7HipehEL/hthVeKUF2go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1747288456; c=relaxed/simple;
+	bh=rx1/9A8dVOwOhrTh11u2UqTyFdFfZws9vN4IjLqI+yE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M3MOnRXmZWdPfEONLOW/heEToGwChCU8bpr9zkJI06nWJNG/Fv9ZEju1VzHYVMPpPU6f5fFR+W2zRg//koU1Smzeaw+keLTfFQ+IV+Rg7uEXNrtAyBei/wO9Y0tdmlv2YaZBbrQCC86iTxtVJd/uYAsmSZJjoecOtzpHS07doNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lGD/h8Nb; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-52c4e568d07so160845e0c.0;
-        Wed, 14 May 2025 22:53:41 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lGD/h8Nb"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-74068f95d9fso509366b3a.0;
+        Wed, 14 May 2025 22:54:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747288454; x=1747893254; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BgKT5U3SZeCc2sPkQ0JOFIZTSMBOA7CuCOjmkLX15rU=;
+        b=lGD/h8NbpIKnsATp5j640tqEA8PAjMS1qGHQ2ryd4vwIqK6TF+zHaGsIsiTcn3qiWV
+         cxSYGUcOSOJmzXUXhjYf1RerosYecJf6VDzRlT+mAE/oM3ahC9bsnuNsuHbsrblWfDaW
+         LkU/FVYuvr646PCwKEuRIxcJY5uqMGD1vnK0qDVbZOf/o7Fac/SuI5CKzPegEWZ/2g2I
+         VwilBu6IkrI/Uu8p/gs/wa7rB9/9LT/MJotSTZ7hIqMt+Y7R3SnNsvMD9ePFOAkNuXQ4
+         LSuBForYcPfo5RNualtN6rAjMTyFwkKfOKzNd/DMMaKNLYl9+7FNltnXkzcmAichww9z
+         7AyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747288418; x=1747893218;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rPyG0mlit4Fqvc3ieiHFbClT0DklwqbFDL/14cm9a+o=;
-        b=amlKL0Uk/VIT/dtdClsoekBi3OJVT42/7xr69zKlvBWoCtwt+5WItgHhAY5meWYRBB
-         Y0pSwfouy9O8sllyiuFdvlu+N2BAuz8AFmK0jyoVJyv/8v66ZDUU/LAtZEmPUXdIWPae
-         Z/F88+uummUw+kg1pDNvN6F6ybpPsHZ4auHCfUyQHbH02FAgR5MWjo3Q76bbKhIx1YWH
-         5w3YXaKvvnOkbi86p8b36RkBD51TAiDhehTGmXSplxckff+qKV8vwi4Hmls8NoTL/VxB
-         FENT625ZlXZlMRiSZJ2ZPgS7u+PFvrPsxElaiBTFwt3WjcxX3MsNerk7zc689WPF1HTg
-         8l+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVokdYoLJ1SlA0Kaw8TmlMhlT1GrxF6itGdcFQaqnYzYWiWkvySBtb94pqBvCaNgStNuNa/Rlpe69K6oTfH@vger.kernel.org, AJvYcCVronU9kRrQug4gmnDzijoDS+P8HKFWjTJTyu4wmFHRXvXPFHfkS8w7lf8+W5iE7BtozNhdE6kuU4WoLAZQLQkYbQc=@vger.kernel.org, AJvYcCWdsZXtCwh9jC0SRUsjlOluqmvHKBYWJKMrr9dtJ44FcK2ki8ddxf0i+vr3+AJlEz6L7Ptzhq0Taelm@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZL5TH+9RBxbNmNen+BvkW38rAgJovjh/3r63TFkAa71DNTzB4
-	scE4pMy1vSJpooUetOQCJd8Ayx+oMD4HaztWxQK0NmxlKU9RaaUnDpiKU2f2
-X-Gm-Gg: ASbGncsd1Y/iV5YmrN4ruK8laWbb07/5vznLvZioI0n49jXAR2V/Z94xnnp8OYt0pSZ
-	G07lNDdHVuMRHDkom4VbPQJ18FJHpVHnJ1C51EA35C1GQSjJZDbE3FC2Byu+rAPLfbCC3R1FVwn
-	bZIcWejMH4MaLERAnJdZN2KNSot4EjCdkNbvzwC3+9EPK2m63MUAFqLRVUHZPjCqrJIpdiRH4sa
-	DLBFhLT/b/i5v9ivj36lXHQCkVv80YpfqrJ4lNd61JMca/Yce0D688jBlZb8s3tpCOKmX+wtEEO
-	KXpSUJ+Db4T8ApijQr1H1gz1oZcFbtF8BHq80GKvUmI06WMLS2taQXXaKYSzT8Ej0k7Em2dVj/S
-	QWsBqul0HUuOh0A==
-X-Google-Smtp-Source: AGHT+IETenXI+9SbdsyOZmsQyg6s+CzGbt8Dfb6vrDK9/pp4703P/ZUG3ct9ypSGPjBDrwA4c/GukA==
-X-Received: by 2002:a05:6122:3283:b0:50d:a31c:678c with SMTP id 71dfb90a1353d-52d9c5698b1mr5746589e0c.2.1747288418648;
-        Wed, 14 May 2025 22:53:38 -0700 (PDT)
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52c8bd074c6sm4258220e0c.8.2025.05.14.22.53.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 22:53:37 -0700 (PDT)
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-8783bce9f84so130191241.2;
-        Wed, 14 May 2025 22:53:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVAtrIHAPva0qjbCHUtyPQI0zXPozlOS9/VVMfIp/uspfWE50Io8SsmdCD7EqfY8zg7cW4VXHTNx0I9m1V0XyEh+b8=@vger.kernel.org, AJvYcCWTgNQDZ//ywwoLu6ob19sQ4R8+lombPU+Yl4k40hQF2hrMy/MpoiUCmLglfn2nOLwBrgDtV9ChqXHT@vger.kernel.org, AJvYcCXuQ9aMHOJM+G3WFabQHLS2zwK5mx6143Alaq3QfQ64UXFWBtU8Cc2xJ/3PayXVYijcbKbp8kwnjpA8jnCE@vger.kernel.org
-X-Received: by 2002:a05:6102:3e0b:b0:4b6:d108:cac1 with SMTP id
- ada2fe7eead31-4df7dcb5c78mr6484774137.9.1747288417074; Wed, 14 May 2025
- 22:53:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747288454; x=1747893254;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BgKT5U3SZeCc2sPkQ0JOFIZTSMBOA7CuCOjmkLX15rU=;
+        b=A0OPZLx7ga+ZRrv27Kcr/5zHzWVGX8Q+ILLSML9se8agcJX8MXoEnT6L4gfT2wgBK+
+         FYVBuRoACP1wkAW/UtqhPoKoXg/SERmQ+RlrI/QMo4YPeA0seeAxyVtY1WgeVvkkkBAO
+         jhInuznd1DYjxhakUf56qxSftXMKNSG5+QhgwMYt15xAaE6amuTtuduDjl8aX+YYK90Y
+         l41HOAG+Wwtytd/jwElfQ1+Pmn3qbOU3zRHKcoLl6e8P/C5I9wfCMuw/WbFXVTUi+rKR
+         sSyN7RG0+AacruX4lfvbZsUEu9n1So62kj6uV6lDGAu6KWyl9+5scSAtz339kwgEFO8C
+         vHzA==
+X-Forwarded-Encrypted: i=1; AJvYcCU4hUyu4iTtfmRr0UcGSmiFbBP6vFprnlwOjKTKYnH6FzAOx0gYm1wvj8ZCyzNVRdg/k3Sj7Xfw4LnLnoQ=@vger.kernel.org, AJvYcCUOQUmgN2DRKe+RwpFIJ2cPCRU+dvDRvoNRT4QCmtkAQydaSEI3OZsPadCSI2m/H+yUf7Wnngqo@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoEjPQ87O9W6nFEUJoVDLNwx1hnFEwGpJ2PVwRdbK3fo7dVzxE
+	Ojyoc15qmzizocIU9/HpjI0nuSS04WcX71mjx8zmjiz1S3MVU8kx
+X-Gm-Gg: ASbGnctk+o6Kk5756uJHeuEvDdXjM5/NJYsS6HorF84lrD/dIJWHpyi4CEcpb5jybu+
+	uQOqJTHj+KCulkqu8/OBivCNfhuH35HwK4k0STlrMD+tbhLX23cfPIdzNWAto4+hqd2X1g5y7/i
+	OYNPfqnYeCh8zwkHyWuqvXXLV7bXFP26ERf+ZEHQTMTmoojtV59xH9pED7JoDTLSygMCz0+yJqI
+	GMi2pggmlxstL4A8bHBdo9/FOhlSKEyOI57kOpHCFEU4evbRWmf96XSflFwu1F1SiDfvE5jx6gQ
+	UIQlX4jdaAX18VBdqVQbbG9rxH2NZLI5MrlOks1DqUnSj6xBEaJN
+X-Google-Smtp-Source: AGHT+IGnvvwj2o8mGeCjnMVoMZ7GPGO0Yp7szaIvLMxyQiQuihgCVjzFljKZa2ipYOWvWf3o/H60/A==
+X-Received: by 2002:a05:6a21:7a8b:b0:215:d9fc:382e with SMTP id adf61e73a8af0-216115270femr1696464637.13.1747288453904;
+        Wed, 14 May 2025 22:54:13 -0700 (PDT)
+Received: from gmail.com ([98.97.45.238])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b234a0b5815sm9726893a12.21.2025.05.14.22.54.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 22:54:13 -0700 (PDT)
+Date: Wed, 14 May 2025 22:53:56 -0700
+From: John Fastabend <john.fastabend@gmail.com>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: bpf@vger.kernel.org, Michal Luczaj <mhal@rbox.co>,
+	Jakub Sitnicki <jakub@cloudflare.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Cong Wang <cong.wang@bytedance.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v5] bpf, sockmap: avoid using sk_socket after
+ free when sending
+Message-ID: <20250515055356.bgevcqwkyv3q7acr@gmail.com>
+References: <20250508061825.51896-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506103152.109525-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <202505151255.rCHp8Bvu-lkp@intel.com>
-In-Reply-To: <202505151255.rCHp8Bvu-lkp@intel.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 15 May 2025 07:53:23 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUh3oXniR3b_g+SuqXXeB=3YRFSVOONOth7XRNpHC=a8A@mail.gmail.com>
-X-Gm-Features: AX0GCFvo3GnsTZII4bhG8cXLylyB93OgSRrkVG13kj0dt4dQMBXBbYjIu4GDk6M
-Message-ID: <CAMuHMdUh3oXniR3b_g+SuqXXeB=3YRFSVOONOth7XRNpHC=a8A@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] clocksource/drivers/renesas-ostm: Unconditionally
- enable reprobe support
-To: kernel test robot <lkp@intel.com>
-Cc: Prabhakar <prabhakar.csengg@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Chris Brandt <chris.brandt@renesas.com>, llvm@lists.linux.dev, 
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250508061825.51896-1-jiayuan.chen@linux.dev>
 
-On Thu, 15 May 2025 at 07:04, kernel test robot <lkp@intel.com> wrote:
-> kernel test robot noticed the following build warnings:
->
-> [auto build test WARNING on tip/timers/core]
-> [also build test WARNING on robh/for-next linus/master v6.15-rc6 next-20250514]
-> [cannot apply to daniel-lezcano/clockevents/next]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/Prabhakar/dt-bindings-timer-renesas-ostm-Document-RZ-V2N-R9A09G056-support/20250506-223636
-> base:   tip/timers/core
-> patch link:    https://lore.kernel.org/r/20250506103152.109525-3-prabhakar.mahadev-lad.rj%40bp.renesas.com
-> patch subject: [PATCH v3 2/2] clocksource/drivers/renesas-ostm: Unconditionally enable reprobe support
-> config: hexagon-randconfig-001-20250513 (https://download.01.org/0day-ci/archive/20250515/202505151255.rCHp8Bvu-lkp@intel.com/config)
-> compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250515/202505151255.rCHp8Bvu-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202505151255.rCHp8Bvu-lkp@intel.com/
->
-> All warnings (new ones prefixed by >>):
->
-> >> drivers/clocksource/renesas-ostm.c:235:34: warning: unused variable 'ostm_of_table' [-Wunused-const-variable]
->      235 | static const struct of_device_id ostm_of_table[] = {
->          |                                  ^~~~~~~~~~~~~
->    1 warning generated.
->
->
-> vim +/ostm_of_table +235 drivers/clocksource/renesas-ostm.c
->
-> 3a3e9f23c2cae9 Biju Das 2021-11-12  234
-> 3a3e9f23c2cae9 Biju Das 2021-11-12 @235  static const struct of_device_id ostm_of_table[] = {
-> 3a3e9f23c2cae9 Biju Das 2021-11-12  236         { .compatible = "renesas,ostm", },
-> 3a3e9f23c2cae9 Biju Das 2021-11-12  237         { /* sentinel */ }
-> 3a3e9f23c2cae9 Biju Das 2021-11-12  238  };
-> 3a3e9f23c2cae9 Biju Das 2021-11-12  239
+On 2025-05-08 14:18:25, Jiayuan Chen wrote:
+> The sk->sk_socket is not locked or referenced in backlog thread, and
+> during the call to skb_send_sock(), there is a race condition with
+> the release of sk_socket. All types of sockets(tcp/udp/unix/vsock)
+> will be affected.
+> 
+> Race conditions:
+> '''
+> CPU0                               CPU1
+> 
+> backlog::skb_send_sock
+>   sendmsg_unlocked
+>     sock_sendmsg
+>       sock_sendmsg_nosec
+>                                    close(fd):
+>                                      ...
+>                                      ops->release() -> sock_map_close()
+>                                      sk_socket->ops = NULL
+>                                      free(socket)
+>       sock->ops->sendmsg
+>             ^
+>             panic here
+> '''
+> 
+> The ref of psock become 0 after sock_map_close() executed.
+> '''
+> void sock_map_close()
+> {
+>     ...
+>     if (likely(psock)) {
+>     ...
+>     // !! here we remove psock and the ref of psock become 0
+>     sock_map_remove_links(sk, psock)
+>     psock = sk_psock_get(sk);
+>     if (unlikely(!psock))
+>         goto no_psock; <=== Control jumps here via goto
+>         ...
+>         cancel_delayed_work_sync(&psock->work); <=== not executed
+>         sk_psock_put(sk, psock);
+>         ...
+> }
+> '''
+> 
+> Based on the fact that we already wait for the workqueue to finish in
+> sock_map_close() if psock is held, we simply increase the psock
+> reference count to avoid race conditions.
+> 
+> With this patch, if the backlog thread is running, sock_map_close() will
+> wait for the backlog thread to complete and cancel all pending work.
+> 
+> If no backlog running, any pending work that hasn't started by then will
+> fail when invoked by sk_psock_get(), as the psock reference count have
+> been zeroed, and sk_psock_drop() will cancel all jobs via
+> cancel_delayed_work_sync().
+> 
+> In summary, we require synchronization to coordinate the backlog thread
+> and close() thread.
+> 
+> The panic I catched:
+> '''
+> Workqueue: events sk_psock_backlog
+> RIP: 0010:sock_sendmsg+0x21d/0x440
+> RAX: 0000000000000000 RBX: ffffc9000521fad8 RCX: 0000000000000001
+> ...
+> Call Trace:
+>  <TASK>
+>  ? die_addr+0x40/0xa0
+>  ? exc_general_protection+0x14c/0x230
+>  ? asm_exc_general_protection+0x26/0x30
+>  ? sock_sendmsg+0x21d/0x440
+>  ? sock_sendmsg+0x3e0/0x440
+>  ? __pfx_sock_sendmsg+0x10/0x10
+>  __skb_send_sock+0x543/0xb70
+>  sk_psock_backlog+0x247/0xb80
+> ...
+> '''
+> 
+> Reported-by: Michal Luczaj <mhal@rbox.co>
+> Fixes: 799aa7f98d53 ("skmsg: Avoid lock_sock() in sk_psock_backlog()")
+> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
 
-The table is unused if CONFIG_OF=n due to
+Is the fixes tag actually,
 
-                .of_match_table = of_match_ptr(ostm_of_table),
+ 4b4647add7d3c sock_map: avoid race between sock_map_close and sk_psock_put
 
-Gr{oetje,eeting}s,
+Before that we should call the cancel correctly?
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+John
