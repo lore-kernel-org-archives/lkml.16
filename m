@@ -1,125 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC06A72618
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 13:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C684B1E52;
+	Thu, 15 May 2025 13:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747316094; cv=none; b=tOc3lReFuWks7q5F8mh2L/rmMPXyLsfLD0nai48jC7n5+x7MLTvtCzwZstVh4i/hejIwVzhQ61q+0OyX2O9RcvJ7KyzVQIPfTUXhcL00DluAznh9xMr0XpUKJ7644xROvxSTEENMMkTjwJOTTLjW7vTUIAthE/fkWnLziNt5Nwg=
+	t=1747316125; cv=none; b=oVev8sw4Q8E01Dex44PXj2estDEdS/UKtluFuc5C5LZUrDQfF/GXUBEd2O++Jzcte/3FSUFUjd65cLWOEW82kQBqTZ6qaHQqK45dBr/HCsQsVooJAIXEmIPRgnJnSm8j2ftiG0FUENdQ/tLVWMYpeclZ6/6oUqUA+chKazJ4G0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747316094; c=relaxed/simple;
-	bh=9ZvaIIF2Varpw6WjkbkLwuByFu4iwc8VswtbQLG4UPk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u1fSAam1WAVaDoRtgSABD7CEwYdGa7ffdVCSpU9XgcKbUyWYTqdQ3S7hpC3RGY6uQ/pamrI87JVVA7u3sXlH5jlJHKq2TwDgwTTOMCHnrgf2if/ZF0fqkhvhELRx5EVCpooKezBOPzfS9SGw79wA2Li+QsC2GRNKjUhi/Cz5oYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2YicVKQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747316125; c=relaxed/simple;
+	bh=N6hUe1JahVV3NodwigUCoPGFJb+vT+7cGyun41pvr78=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L8iDmuMqAcPmf3QokJcyygvLZ6sRQJL/CrdoiiWwfcHW4H0lWaAqeL6OMurt63GW3o9txfruVCiPqRquN3H9ch06LFcr53YQbV1BtnrvCdVnvbQ4m4gdn1OvwznpPQEATsYmFjPecdpER6gvf7131nwcvdPhD0973YnVc9K0Pfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nj9Xjb7D; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2YicVKQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8D64C4CEEF;
-	Thu, 15 May 2025 13:34:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747316094;
-	bh=9ZvaIIF2Varpw6WjkbkLwuByFu4iwc8VswtbQLG4UPk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=r2YicVKQsYOFakRpQ4BrMDdGNn/TuyyV3ybV7D3e5jhGZaeqYO+23XcA4EWcJyZv1
-	 qv1WG+sSU+GRb48BteB+FAJUMlIqJuIZzWTOdV6uxMgysL6d55sN8BHAyvQC9ZGRWe
-	 ryETL5UzRj+1AdmcOlGw4EaS8lMX0l+1N3DWV+9lKbpsVyf6v4MSeKytkL4OQMTKwT
-	 59K1LJoXWNVFciYqRDsADTtkLIN5S0/3OPkalwbT8d2Ud+E0r24JvyOvRsqbNd0UFK
-	 0ce1QDT5INtkQ59zjEYL9gAhvOrbPenTSV/aRbrwfv4/E+3wfydgsQEE+C5nIKrtC5
-	 wQUiAtsbJLUEA==
-Message-ID: <f6f2fa8f-3502-4739-a977-14dd0a63a25a@kernel.org>
-Date: Thu, 15 May 2025 15:34:51 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nj9Xjb7D"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7cadc92771dso89082885a.1;
+        Thu, 15 May 2025 06:35:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747316122; x=1747920922; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HVK7+XeCrE0vaAK5daWU0mfxJLR/TlZDvlGnpbE/bhg=;
+        b=nj9Xjb7DRAbYmaxeodZntyXM8QaHUBWndS3zkEIK9Y5vKmfG8RWIYN7dAM3r7vQ5w4
+         K8fLywKuc+NLYDyG33UHJBnrI73oCrysH90bN6P58AcVWBXIw9GiPJpXIdCQb2ZumIu5
+         A3c5c47u0eHIJDIbtUyCBmZ9LcCEeQfymUEGbPL+TLVP5WrMGk5GekUGnS6uRauSW+mt
+         t/5vHF9PBq/bUCjGwk1NsXEd/9tA1vs5tY+Bbk+mUdGAA0trZTcZL1Y/dqry/Ao1mJp5
+         sVYMdx6SCB5BLmDyhHeJHCq/e3d3GpKyPi/UCZM24GEzJgddK2TbOSH5fqWONKG9hG1x
+         xcbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747316122; x=1747920922;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HVK7+XeCrE0vaAK5daWU0mfxJLR/TlZDvlGnpbE/bhg=;
+        b=QIYUcUa5QiUK5w/35q26tDSY/WXWflsVabTkrbZPUXQy/rp/AGlZH6gF8DNVDEuFr5
+         foczmSq6zuo8o61aQsYWcRW2Xt06m76/QofW+KaIAZQ36aP2nZiT1WxJG9xBAVQEQeJl
+         xgWBdCksymrjVAEzw3OEJmUJme0h6BdpN8nFRPdPdDi+CE5ZOA+NKrMdUXSg6HRsmtqk
+         YEhXebITjdPl0+iftWWSs0H9H9mgMtU7PV2/EjTo9EF8kUbLOZX+6P+1zMgubxTRtoEw
+         TrJcXJeUEPoDRewQ2mXSZlJrm3DhFg0LQSt/CyPTN0Fc99ztFoWMKzrfbNiOxhUtqaXq
+         sdjg==
+X-Forwarded-Encrypted: i=1; AJvYcCW0/aS/vmOKRJuK68HchFAjBaqZQ1sIVioLS/BTm83fFCt6LEIgJRFHf272EJkx/GjK08+2jMCGBovfk2g0@vger.kernel.org, AJvYcCWVE/eW/QozxKJybaF0wdwVDpHmqws275bmBXLoWeDenvQvHBKBGq4YXU9meZ/BdqXueaFor76JLW4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzd8SKCvRg5frlsxgjXfDV6McWniK4MgN6AD7RNUVoSp+oa6Rgz
+	ckZdx1UeM/Cs861fijX3wnqJPDSJJPE+TKMe+2to3YMRqhBwPzj3
+X-Gm-Gg: ASbGnctbT+cxu5x4fdY5fCBOUd5Zwp2ockWaf+t7hvDa0sWNkH0VTnPMxy/ewJ0XRyF
+	xQmxw4jDF7qYrQrwdcYfUk7+hCBtlYmbeLyEA3q88swI2ICPPrV9fQInLQofY3o2hO/DeVt4EgI
+	bzYNvuAEy7fAa5iqpe0W9imfXk1Jm80jEJsEsuZhIn404JnDQt+ljC25negss49MylANzMqFp7o
+	0DsXNaILPse/MsJEomF1O0FU0EqcuINrV4qzN4ythVrMY1j19Ato3sS1SpHRcEWO44kl8hFioFh
+	PuljkpQHCh8Ng9Q5m/csw1yeULd75fl3HY20EFx3WR03jTWN
+X-Google-Smtp-Source: AGHT+IE3uLRPVmAMx8aqjehSeTosSaDm95ed9rhjS7Cdm74U2OOvVDir0FUQPoeM6h3tWC5rx1PFLw==
+X-Received: by 2002:a05:620a:414f:b0:7cc:fd84:cf8a with SMTP id af79cd13be357-7cd287133a3mr951646585a.0.1747316122447;
+        Thu, 15 May 2025 06:35:22 -0700 (PDT)
+Received: from localhost ([2a03:2880:20ff:6::])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd00f64230sm985676585a.28.2025.05.15.06.35.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 06:35:22 -0700 (PDT)
+From: Usama Arif <usamaarif642@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	david@redhat.com,
+	linux-mm@kvack.org
+Cc: hannes@cmpxchg.org,
+	shakeel.butt@linux.dev,
+	riel@surriel.com,
+	ziy@nvidia.com,
+	laoar.shao@gmail.com,
+	baolin.wang@linux.alibaba.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	npache@redhat.com,
+	ryan.roberts@arm.com,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	kernel-team@meta.com,
+	Usama Arif <usamaarif642@gmail.com>
+Subject: [PATCH 0/6] prctl: introduce PR_SET/GET_THP_POLICY
+Date: Thu, 15 May 2025 14:33:29 +0100
+Message-ID: <20250515133519.2779639-1-usamaarif642@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] mux drivers improvements for v6.16
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>
-References: <20250513105058.27028-2-krzysztof.kozlowski@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250513105058.27028-2-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 13/05/2025 12:50, Krzysztof Kozlowski wrote:
-> Hi Greg,
-> 
+This allows to change the THP policy of a process, according to the value
+set in arg2, all of which will be inherited during fork+exec:
+- PR_THP_POLICY_DEFAULT_HUGE: This will set the MMF2_THP_VMA_DEFAULT_HUGE
+  process flag which changes the default of new VMAs to be VM_HUGEPAGE. The
+  call also modifies all existing VMAs that are not VM_NOHUGEPAGE
+  to be VM_HUGEPAGE.
+  This allows systems where the global policy is set to "madvise"
+  to effectively have THPs always for the process. In an environment
+  where different types of workloads are stacked on the same machine
+  whose global policy is set to "madvise", this will allow workloads
+  that benefit from always having hugepages to do so, without regressing
+  those that don't.
+- PR_THP_POLICY_DEFAULT_NOHUGE: This will set the MMF2_THP_VMA_DEFAULT_NOHUGE
+  process flag which changes the default of new VMAs to be VM_NOHUGEPAGE.
+  The call also modifies all existing VMAs that are not VM_HUGEPAGE
+  to be VM_NOHUGEPAGE.
+  This allows systems where the global policy is set to "always"
+  to effectively have THPs on madvise only for the process. In an
+  environment where different types of workloads are stacked on the
+  same machine whose global policy is set to "always", this will allow
+  workloads that benefit from having hugepages on an madvise basis only
+  to do so, without regressing those that benefit from having hugepages
+  always.
+- PR_THP_POLICY_DEFAULT_SYSTEM: This will clear the MMF2_THP_VMA_DEFAULT_HUGE
+  and MMF2_THP_VMA_DEFAULT_NOHUGE process flags.
 
+These patches are required in rolling out hugepages in hyperscaler
+configurations for workloads that benefit from them, where workloads are
+stacked anda single THP global policy is likely to be used across the entire
+fleet, and prctl will help override it.
 
-...
+v1->v2:
+- change from modifying the THP decision making for the process, to modifying
+  VMA flags only. This prevents further complicating the logic used to
+  determine THP order (Thanks David!)
+- change from using a prctl per policy change to just using PR_SET_THP_POLICY
+  and arg2 to set the policy. (Zi Yan)
+- Introduce PR_THP_POLICY_DEFAULT_NOHUGE and PR_THP_POLICY_DEFAULT_SYSTEM
+- Add selftests and documentation.
 
->   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/mux-drv-6.16
-> 
-> for you to fetch changes up to 9761037d28327e0d4ee9586a8210ef6462c2c757:
-> 
->   mux: adgs1408: fix Wvoid-pointer-to-enum-cast warning (2025-05-08 17:12:08 +0200)
-> 
-> ----------------------------------------------------------------
-> Mux drivers for v6.16
-> 
-> Few cleanups and fixes for the mux drivers:
-> 1. Simplify with spi_get_device_match_data().
-> 2. Fix -Wunused-const-variable and -Wvoid-pointer-to-enum-cast warnings.
-> 3. GPIO mux: add optional regulator for Lenovo T14s laptop headset.
-> 4. MMIO mux: avoid using syscon's device_node_to_regmap(), due to
->    changes in the syscon code.
-> 
-> ----------------------------------------------------------------
-> Andrew Davis (1):
->       mux: mmio: Do not use syscon helper to build regmap
-I received LKP build error report for some specific configuration:
-https://lore.kernel.org/oe-kbuild-all/202505150312.dYbBqUhG-lkp@intel.com/
+Usama Arif (6):
+  prctl: introduce PR_THP_POLICY_DEFAULT_HUGE for the process
+  prctl: introduce PR_THP_POLICY_DEFAULT_NOHUGE for the process
+  prctl: introduce PR_THP_POLICY_SYSTEM for the process
+  selftests: prctl: introduce tests for PR_THP_POLICY_DEFAULT_NOHUGE
+  selftests: prctl: introduce tests for PR_THP_POLICY_DEFAULT_HUGE
+  docs: transhuge: document process level THP controls
 
-I will send a follow up fix for that and then later updated pull
-request, if you do not pull it till that time.
+ Documentation/admin-guide/mm/transhuge.rst    |  40 +++
+ include/linux/huge_mm.h                       |   4 +
+ include/linux/mm_types.h                      |  14 +
+ include/uapi/linux/prctl.h                    |   6 +
+ kernel/fork.c                                 |   1 +
+ kernel/sys.c                                  |  35 +++
+ mm/huge_memory.c                              |  56 ++++
+ mm/vma.c                                      |   2 +
+ tools/include/uapi/linux/prctl.h              |   6 +
+ .../trace/beauty/include/uapi/linux/prctl.h   |   6 +
+ tools/testing/selftests/prctl/Makefile        |   2 +-
+ tools/testing/selftests/prctl/thp_policy.c    | 286 ++++++++++++++++++
+ 12 files changed, 457 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/prctl/thp_policy.c
 
-Best regards,
-Krzysztof
+-- 
+2.47.1
+
