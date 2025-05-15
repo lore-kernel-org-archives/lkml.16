@@ -1,168 +1,116 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DF214B1E49;
-	Thu, 15 May 2025 04:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BD9F4ED
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 04:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747284681; cv=none; b=KQmKV/3YgVSk2HEdUqK+wS8uuYkVYz0Hv0IYUQZvnmRCA3NNSc+x3BEk+VX4kQc/2pVbdTUIyzqVzc2JCHIMj0YlIeEZF042GpuxQIZ4VsugEf9B+JruRC3hkaimyrYdq1MVzG6DcpH0wDWtHU5M/LrO0Jmgzfl5HAkNkFdd5f4=
+	t=1747284901; cv=none; b=RR6HmxHxbvE/5LHKQVwmYkr7d477AixeVmAxHX87JTsMt6HwDPNXhox9oOL3zsRjTLdH1HpiYZ10Uy81EF0cIRAsLuXgLW8AdlIU1UVVRu7s0ie7GZe1N1iC/5l2oP4UdKWV3a7ZYNSYgh5LKS55hWyj2AJ4X1L7b8kZYC+sA1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747284681; c=relaxed/simple;
-	bh=OwDT9D2s/x+E+dTKnaaPGtdy53NW6+Y5seO74clNOkc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WWGJ6ABORUqpquK1P8HlJCKcIkJrnDLC9/3jC/jDrkQkLOs5XuDyCwyUB/yII0FRunfYZXUWItTxAT+ea/EA1W3Clou3eaeiQHTGZqJ4X3GT12HVEjHP/+urrjz7p2FBS6N4CUL3a/0ho/YR0SokFMj3/y33VQnm8phezGogSFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=D0XhA469; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1747284901; c=relaxed/simple;
+	bh=CQV/WjAU9kL/UFhY/mEwBBv6K9aVgMG9E+kE0axrO5U=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=Hj3nAgYBmrFKnOj7a8OUb7Hditm8ukZ/FAZVSTD4xUop/ERt+q6Ksb5KCo57Lp9/mAuz0Ppuvzjqf6FsN3aNTY9muvDeosKghk/gP6RJ8jItaPWUJ03+wdptu0beo3scocUKDq0G+IDouUNnQdl+iwkASsCCCBwVCEbZtCT2Ba4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=P9ten73v; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="D0XhA469"
-Received: by linux.microsoft.com (Postfix, from userid 1134)
-	id C35B7201DB25; Wed, 14 May 2025 21:51:19 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C35B7201DB25
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1747284679;
-	bh=NwCVHk1zwv6ufK+E+alq6OT7sWvQmDej52f9l0dgCjQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D0XhA469lUmJwmqPdxcpuvAnjK3vhkfnEVz6S1aajXx2cQ25KVoC3ry56wlVADPF8
-	 /u8pdBTKTR2iN3TmenQWvMdPsfqvqTk3JT/1GJAeIJrhXWf2+bZ75WbxcJnIP6Rspo
-	 irgnJAQdBOW73EG1ygy63FLHztFxIXhczS8VGR0E=
-Date: Wed, 14 May 2025 21:51:19 -0700
-From: Shradha Gupta <shradhagupta@linux.microsoft.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Michael Kelley <mhklinux@outlook.com>, Dexuan Cui <decui@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
-	Maxim Levitsky <mlevitsk@redhat.com>,
-	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Nipun Gupta <nipun.gupta@amd.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Krzysztof Wilczy???~Dski <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	Paul Rosswurm <paulros@microsoft.com>,
-	Shradha Gupta <shradhagupta@microsoft.com>
-Subject: Re: [PATCH v3 3/4] net: mana: Allow irq_setup() to skip cpus for
- affinity
-Message-ID: <20250515045119.GB5681@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1746785566-4337-1-git-send-email-shradhagupta@linux.microsoft.com>
- <1746785625-4753-1-git-send-email-shradhagupta@linux.microsoft.com>
- <SN6PR02MB41577E2FAA79E2803C3384B0D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <aCTK5PjV1n1EYOpi@yury>
- <SN6PR02MB4157AA971E41FE92B1878F9DD491A@SN6PR02MB4157.namprd02.prod.outlook.com>
- <aCTZ0J8F7JkWMlYW@yury>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="P9ten73v"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54F4sPLY3283743
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 14 May 2025 21:54:26 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54F4sPLY3283743
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1747284866;
+	bh=Dt0QE3AMxSwDM7mvQ1bZ2S7nUnc99GV2fqu0I3w/bQU=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=P9ten73vQo7fH+yLfG8paPxDS8vlUwwPsn9qiE2OveBwzvItCzEYhtMMKmItGPvrg
+	 Bjr8OcFpf90M68/UX2euJY0OczVwd+sWODlmi46LTGFaQ9p5HC4k5ko4WMisN+lZuX
+	 O0xvE8M4tnEkcqMYuhMmpm6SqVAADZRzscw2hx8y97lI827LcwFoFiejxrc+AjBHbJ
+	 y8iZ7Ylpxa6kpNjAHzU0iWOsERsPxOPV/+AJ/W8IESu7X81KuRc7pCb6weS9tl/lvk
+	 wbeB2KsKrwKVN8gO/3S2A1SC9Hg4ld8yRpLXrm7d2kDveb34m5xTu0TN39u7uFrVYq
+	 M3UVbKX6x3SxA==
+Date: Wed, 14 May 2025 21:54:23 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Ruben Wauters <rubenru09@aol.com>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+CC: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/cpu/intel: replace deprecated strcpy with strscpy
+User-Agent: K-9 Mail for Android
+In-Reply-To: <098b949b8ddc5b706adb927d04460943c245bef8.camel@aol.com>
+References: <20250507185459.8769-1-rubenru09.ref@aol.com> <20250507185459.8769-1-rubenru09@aol.com> <3AFD7702-7D6F-479C-950A-CA439E01838C@zytor.com> <758195078eee66ce97c05091004bca9d5c3b6cd9.camel@aol.com> <098b949b8ddc5b706adb927d04460943c245bef8.camel@aol.com>
+Message-ID: <218DE733-6165-45D8-9338-8DB6A96AB66A@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCTZ0J8F7JkWMlYW@yury>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 14, 2025 at 01:58:40PM -0400, Yury Norov wrote:
-> On Wed, May 14, 2025 at 05:26:45PM +0000, Michael Kelley wrote:
-> > > Hope that helps.
-> > 
-> > Yes, that helps! So the key to understanding "weight" is that
-> > NUMA locality is preferred over sibling dislocality.
-> > 
-> > This is a great summary!  All or most of it should go as a
-> > comment describing the function and what it is trying to do.
-> 
-> OK, please consider applying:
-> 
-> >From abdf5cc6dabd7f433b1d1e66db86333a33a2cd15 Mon Sep 17 00:00:00 2001
-> From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-> Date: Wed, 14 May 2025 13:45:26 -0400
-> Subject: [PATCH] net: mana: explain irq_setup() algorithm
-> 
-> Commit 91bfe210e196 ("net: mana: add a function to spread IRQs per CPUs")
-> added the irq_setup() function that distributes IRQs on CPUs according
-> to a tricky heuristic. The corresponding commit message explains the
-> heuristic.
-> 
-> Duplicate it in the source code to make available for readers without
-> digging git in history. Also, add more detailed explanation about how
-> the heuristics is implemented.
-> 
-> Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-> ---
->  .../net/ethernet/microsoft/mana/gdma_main.c   | 41 +++++++++++++++++++
->  1 file changed, 41 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> index 4ffaf7588885..f9e8d4d1ba3a 100644
-> --- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> +++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-> @@ -1288,6 +1288,47 @@ void mana_gd_free_res_map(struct gdma_resource *r)
->  	r->size = 0;
->  }
->  
-> +/*
-> + * Spread on CPUs with the following heuristics:
-> + *
-> + * 1. No more than one IRQ per CPU, if possible;
-> + * 2. NUMA locality is the second priority;
-> + * 3. Sibling dislocality is the last priority.
-> + *
-> + * Let's consider this topology:
-> + *
-> + * Node            0               1
-> + * Core        0       1       2       3
-> + * CPU       0   1   2   3   4   5   6   7
-> + *
-> + * The most performant IRQ distribution based on the above topology
-> + * and heuristics may look like this:
-> + *
-> + * IRQ     Nodes   Cores   CPUs
-> + * 0       1       0       0-1
-> + * 1       1       1       2-3
-> + * 2       1       0       0-1
-> + * 3       1       1       2-3
-> + * 4       2       2       4-5
-> + * 5       2       3       6-7
-> + * 6       2       2       4-5
-> + * 7       2       3       6-7
-> + *
-> + * The heuristics is implemented as follows.
-> + *
-> + * The outer for_each() loop resets the 'weight' to the actual number
-> + * of CPUs in the hop. Then inner for_each() loop decrements it by the
-> + * number of sibling groups (cores) while assigning first set of IRQs
-> + * to each group. IRQs 0 and 1 above are distributed this way.
-> + *
-> + * Now, because NUMA locality is more important, we should walk the
-> + * same set of siblings and assign 2nd set of IRQs (2 and 3), and it's
-> + * implemented by the medium while() loop. We do like this unless the
-> + * number of IRQs assigned on this hop will not become equal to number
-> + * of CPUs in the hop (weight == 0). Then we switch to the next hop and
-> + * do the same thing.
-> + */
-> +
->  static int irq_setup(unsigned int *irqs, unsigned int len, int node)
->  {
->  	const struct cpumask *next, *prev = cpu_none_mask;
+On May 14, 2025 12:16:20 PM PDT, Ruben Wauters <rubenru09@aol=2Ecom> wrote:
+>On Wed, 2025-05-07 at 21:30 +0100, Ruben Wauters wrote:
+>> On Wed, 2025-05-07 at 13:14 -0700, H=2E Peter Anvin wrote:
+>> > On May 7, 2025 11:51:36 AM PDT, Ruben Wauters <rubenru09@aol=2Ecom>
+>> > wrote:
+>> > > strcpy is deprecated due to lack of bounds checking=2E
+>> > > This patch replaces strcpy with strscpy, the recommended
+>> > > alternative for
+>> > > null terminated strings, to follow best practices=2E
+>> > >=20
+>> > > Signed-off-by: Ruben Wauters <rubenru09@aol=2Ecom>
+>> > > ---
+>> > > arch/x86/kernel/cpu/intel=2Ec | 2 +-
+>> > > 1 file changed, 1 insertion(+), 1 deletion(-)
+>> > >=20
+>> > > diff --git a/arch/x86/kernel/cpu/intel=2Ec
+>> > > b/arch/x86/kernel/cpu/intel=2Ec
+>> > > index 584dd55bf739=2E=2Eb49bba30434d 100644
+>> > > --- a/arch/x86/kernel/cpu/intel=2Ec
+>> > > +++ b/arch/x86/kernel/cpu/intel=2Ec
+>> > > @@ -607,7 +607,7 @@ static void init_intel(struct cpuinfo_x86 *c)
+>> > > 		}
+>> > >=20
+>> > > 		if (p)
+>> > > -			strcpy(c->x86_model_id, p);
+>> > > +			strscpy(c->x86_model_id, p);
+>> > > 	}
+>> > > #endif
+>> > >=20
+>> >=20
+>> > strscpy() needs a buffer length; this patch wouldn't even compile!
+>>=20
+>> Hi, this is incorrect, strscpy is defined in string=2Eh as
+>> #define strscpy(dst, src, =2E=2E=2E)	\
+>> 	CONCATENATE(__strscpy, COUNT_ARGS(__VA_ARGS__))(dst, src,
+>> __VA_ARGS__)
+>>=20
+>> the third parameter is optional, and it works perfectly fine with two
+>> parameters=2E I have compiled it, and there are no errors=2E
+>>=20
+>> > Not to mention that the string in question is generated in such a
+>> > way
+>> > that cannot be unterminated=2E
+>>=20
+>> I'm not entirely sure what you mean here? The assignments above are
+>> null terminated strings, which the two parameter version works fine
+>> with=2E
+>
+>Hello
+>
+>Just wanted to check that everything was ok with this patch, and that
+>any concerns were addressed or explained=2E Please do let me know if
+>there is anything I need to do or change to get this patch applied=2E
+>
+>Ruben Wauters
+>
 
-Thank you Yury,
+Yes, I stand corrected=2E=20
 
-I will include this patch in the patchset with the next version.
-
-> -- 
-> 2.43.0
+I still think it is superfluous (or arguably a memcpy would be better, sin=
+ce this is a fixed length) but it doesn't hurt enything=2E
