@@ -1,99 +1,470 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11D921B910;
-	Thu, 15 May 2025 16:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D4E26ACB
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 16:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747324955; cv=none; b=DVkoW3jhA5loFqSrn1AFRfB71OCQ5miwlMSojbwCAbd2GfWICYuwLUgzo1bVSeWWLA/aSbxuQikCw4r66Qx33ve0cr+OjfBnxOTm3j59rMz2hhAJ2mteR2TF2C/E2uP0LAtI5JQC07GDfrcgtN0b2AyOi5k2+7lz6LP2dAsPXyQ=
+	t=1747324969; cv=none; b=pvk9FsJXjZ92caGhS5xWyXPYZoXuFqEjID6GZYG0Dv3NCrQ9tq7H2t39aXiiT6PaG8tPsLjthJXZwxKpQjupfrvZ2s25izAFTFEZmsULA0KFj9AfWrSKbPpCmkX4L4XRsJA/K5K2LKE+dyfcKerLrfTmgDdvh0cnuh/CwL8rtSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747324955; c=relaxed/simple;
-	bh=NeQa9Q9Kb72fLgS+DYOFNrIRrqBf+Ez+boe81RNR0rc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eqV7SWdbMsI0HwsBxLvy8qAHABB1WIAvW6vKipC7m8EtVQqgACVKSX/g74SEJebnx4Rr50v662gvVvj4eIQheJWcgfl/HlTm6w2J/taHtunYm1r11P6jU56D4mCNO4CoeD0XgJnCJg+UBuTeZU7LnXexMi+3b7kHBx+cR0s+srg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gjCkJAuI; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747324969; c=relaxed/simple;
+	bh=Rc4Pu6VyAswNcuUEpx3gO4Q6RzhT7vATPJgDkGOFsoE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=h6lGpnFEXSVawHzEIRZDaE91OsIWJVAmaP3MSf1IQ9O4jNrxqVJvVS/9B7Z77169ltC6a00SqiD+QvQm88J8Unld7PpNzbWk/o2//FMaC0TG/dvOAsS72jtamY+ePXgNOXfU78t7rDJ8Wa3LSmQ3Bu6zHxhDUfZv3G4z+RIMuIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WmuLAo3b; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gjCkJAuI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747324953; x=1778860953;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NeQa9Q9Kb72fLgS+DYOFNrIRrqBf+Ez+boe81RNR0rc=;
-  b=gjCkJAuIB+JmvpXD0MjsKhWz9z+yqwatxicb3NSCbcvWBe+gx48oNEKP
-   bjaS9+Jn0olyTRslYk1eKo6oGCVlbV/OQwpHPONgIlk/o05iqbYLmZuWt
-   SMPilipIUr7T5m3TZRPWC1VCTlGG2/hy4SLhjbasXM4NzpUEG45VfIa/M
-   QNECL4ptVkRpqtb2mEQvdq9Ku2ECqA3875k3SgjuNBDp8C4TxS/v0rwHt
-   sAa9ALZYUdgm+69GE3eYaQE2WpCm+xwgWvcqcoYNv4ZUgdZnhX7wGPqUR
-   BeblG/94qC/aqKs4pWAa4Oh774yt/JTgE3enPnBKLP+B5H0/qGhinsy5e
-   g==;
-X-CSE-ConnectionGUID: fsTQjMk+TfKfANrAWpfPKQ==
-X-CSE-MsgGUID: ZDbLF9ImQMyo2Y9+BKrKDA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="53072359"
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="53072359"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 09:02:32 -0700
-X-CSE-ConnectionGUID: GciQCzw6TrmO1GCnPjcRlA==
-X-CSE-MsgGUID: 4mEPT2KeTGyV6y82RJ5X4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="161709439"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa002.fm.intel.com with ESMTP; 15 May 2025 09:02:29 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id BD22623F; Thu, 15 May 2025 19:02:27 +0300 (EEST)
-Date: Thu, 15 May 2025 19:02:27 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Sean Christopherson <seanjc@google.com>, pbonzini@redhat.com, 
-	rick.p.edgecombe@intel.com, isaku.yamahata@intel.com, kai.huang@intel.com, 
-	yan.y.zhao@intel.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, kvm@vger.kernel.org, x86@kernel.org, linux-coco@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC, PATCH 00/12] TDX: Enable Dynamic PAMT
-Message-ID: <hwxaujzu4jz5v4gztv2afbfzrqhldh3aq42jbpi2owussor46y@v2vfzrybtdnx>
-References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
- <aCSddrn7D4J-9iUU@google.com>
- <pla54zy4z27df57uxmzuog26mddiezbwsyrurnjxivdkg5dibx@574tcxdgjru2>
- <e1e2eddf-7706-4e5f-8e4a-ef2dc331e873@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WmuLAo3b"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3db82534852so66835ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:02:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747324966; x=1747929766; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zNEiTtEIDHNlmVia2GFQ0qpG7Qornhf6jQbb4JLwMZc=;
+        b=WmuLAo3bw79dSh279pRM1IzSHuxQ7o4ZUYfBH4ILAXr26wLHXIDqqR4TN35VwXkNNe
+         ht/4q5KLrCvxniG/SvNq4YqRBjTHJ1u+QiJIa7M2enD69ngbbaasxFIvIPvA2fA5pfkI
+         sKYMXUUy7lAC3yetbtalplwQLmUGgGzV5TnC/hD1ylJjCD/yeGUGRoUtklxiNxfLV/JE
+         i1tVVLQItbOCARySddWVdzOdjnLRTwI8OBNeiBwgBV6ci5cB5PqaoHExe0UQc7bkFOhg
+         AGX5RjgxghlzzVyiEATRh7769/UBz+P9hAG+Lw4X39W48ggciSru/VVva2OSm+enmy1O
+         XY1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747324966; x=1747929766;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zNEiTtEIDHNlmVia2GFQ0qpG7Qornhf6jQbb4JLwMZc=;
+        b=xKkSW9uoH4fopw/ACRnPN/NM4+Xw0Mcf1xjyckZpMC3s2YPpkNwoJYbxcZ0SFL/cw6
+         npq5nPIs+zqZsPzoxOSeLN3eawJuylMwCKBadIGoMkwp2gtHPXKNJcMpm+tMuyJMs1Dg
+         jUoldxOBaxPh+dsmC0fMhYzCHukWIJ+BLUJnC71nh0RaancR6KPb47dqBXanmUKTW0Rk
+         P9LkmH1hHHtUzqHivqMEzP4iH/9MIJshQVvbD+qZtRL/aeMvqTNPwTP4jVUWS1R93wlL
+         RKfuGl18F/RjIzi1uTx0eyoMswId50w846GiBmb1OlYwVmtkUWQwnwazQLLwvsG7UTDq
+         2fUw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5jZ3XlplelKEX2SzhFYtph9DSrvVS7UCIXnTmlNv/MqxEdSy4ta5GWh4OqweDCMdwkbbtT1sh234ZHY0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXJaB4624SxtPWBleWwr20W20evdbOgDoOI1+ec11muesMjkEp
+	7Tv0Ppvqb0bdshydeNT+7ZnqNWm7RJi4lBc35afymV10N/EUb1jDXgQP5wFjyqpTYvrg5ItfY6E
+	utsWNm5rMYE+Chv2wrvIfK0TGew0ythGpLwB5VLDk
+X-Gm-Gg: ASbGncvWHuFR59qqHlHyYhN7q4yejwoPp8rH6BR/Q6zNo1ooDV+CHvpWEaPMQjtknNP
+	Jtqx5BUK3zFHD96a5Gt+gVTWp/rsXSQP3BQ0Mq6NpxZQwnQCX5LVUaTfv4CUsPiMXMqh8Z7PSr5
+	m5jiBJAGlpMxIiJKZbnEhNo+l0g4AyXnAMWMwj1jn/ey2jNS12ifj+9xug3jQJRQ==
+X-Google-Smtp-Source: AGHT+IFpemWKANP9mtqDnN7Vt/CLxQCe62NgTtJigvz88wyC9hkL3RWXBmQvnO2zaNlIff5knuED7OA82oyhfIe76GU=
+X-Received: by 2002:a05:6e02:216e:b0:3d5:e202:6f05 with SMTP id
+ e9e14a558f8ab-3db780673b7mr4845115ab.18.1747324965695; Thu, 15 May 2025
+ 09:02:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e1e2eddf-7706-4e5f-8e4a-ef2dc331e873@intel.com>
+References: <20250515043818.236807-1-irogers@google.com>
+In-Reply-To: <20250515043818.236807-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 15 May 2025 09:02:34 -0700
+X-Gm-Features: AX0GCFs7Uwtz4onl_u0xC4oHn__ywbBwH1lBS0hW5-D4un_TiodmjMrTGQICijM
+Message-ID: <CAP-5=fV0jEcphF9CW0jNbr6XkebgqADzcvuFgjeuUO6pAtGSzQ@mail.gmail.com>
+Subject: Re: [PATCH v1] perf pmu intel: Adjust cpumaks for sub-NUMA clusters
+ on graniterapids
+To: Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2025 at 08:03:28AM -0700, Dave Hansen wrote:
-> On 5/15/25 07:22, Kirill A. Shutemov wrote:
-> > VMM is responsible for allocating and freeing PAMT_4K. There's a pair of
-> > new SEAMCALLs for it: TDH.PHYMEM.PAMT.ADD and TDH.PHYMEM.PAMT.REMOVE. They
-> > add/remove PAMT memory in form of page pair. There's no requirement for
-> > these pages to be contiguous.
-> 
-> BTW, that second sentence is a little goofy. Is it talking about
-> ADD/REMOVE being a matched pair? Or that there needs to be 8k of
-> metadata storage provided to each ADD/REMOVE call?
+On Wed, May 14, 2025 at 9:38=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On graniterapids the cache home agent (CHA) and memory controller
+> (IMC) PMUs all have their cpumask set to per-socket information. In
+> order for per NUMA node aggregation to work correctly the PMUs cpumask
+> needs to be set to CPUs for the relevant sub-NUMA grouping.
+>
+> For example, on a 2 socket graniterapids machine with sub NUMA
+> clustering of 3, for uncore_cha and uncore_imc PMUs the cpumask is
+> "0,120" leading to aggregation only on NUMA nodes 0 and 3:
+> ```
+> $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a sleep =
+1
+>
+>  Performance counter stats for 'system wide':
+>
+> N0        1    277,835,681,344      UNC_CHA_CLOCKTICKS
+> N0        1     19,242,894,228      UNC_M_CLOCKTICKS
+> N3        1    277,803,448,124      UNC_CHA_CLOCKTICKS
+> N3        1     19,240,741,498      UNC_M_CLOCKTICKS
+>
+>        1.002113847 seconds time elapsed
+> ```
+>
+> By updating the PMUs cpumasks to "0,120", "40,160" and "80,200" then
+> the correctly 6 NUMA node aggregations are achieved:
+> ```
+> $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a sleep =
+1
+>
+>  Performance counter stats for 'system wide':
+>
+> N0        1     92,748,667,796      UNC_CHA_CLOCKTICKS
+> N0        0      6,424,021,142      UNC_M_CLOCKTICKS
+> N1        0     92,753,504,424      UNC_CHA_CLOCKTICKS
+> N1        1      6,424,308,338      UNC_M_CLOCKTICKS
+> N2        0     92,751,170,084      UNC_CHA_CLOCKTICKS
+> N2        0      6,424,227,402      UNC_M_CLOCKTICKS
+> N3        1     92,745,944,144      UNC_CHA_CLOCKTICKS
+> N3        0      6,423,752,086      UNC_M_CLOCKTICKS
+> N4        0     92,725,793,788      UNC_CHA_CLOCKTICKS
+> N4        1      6,422,393,266      UNC_M_CLOCKTICKS
+> N5        0     92,717,504,388      UNC_CHA_CLOCKTICKS
+> N5        0      6,421,842,618      UNC_M_CLOCKTICKS
+>
+>        1.003406645 seconds time elapsed
+> ```
+>
+> In general, having the perf tool adjust cpumasks isn't desirable as
+> ideally the PMU driver would be advertising the correct cpumask.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/arch/x86/util/pmu.c | 259 ++++++++++++++++++++++++++++++++-
+>  1 file changed, 254 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pm=
+u.c
+> index 8712cbbbc712..38c800c6e9c8 100644
+> --- a/tools/perf/arch/x86/util/pmu.c
+> +++ b/tools/perf/arch/x86/util/pmu.c
+> @@ -8,6 +8,8 @@
+>  #include <linux/perf_event.h>
+>  #include <linux/zalloc.h>
+>  #include <api/fs/fs.h>
+> +#include <api/io_dir.h>
+> +#include <internal/cpumap.h>
+>  #include <errno.h>
+>
+>  #include "../../../util/intel-pt.h"
+> @@ -16,7 +18,247 @@
+>  #include "../../../util/fncache.h"
+>  #include "../../../util/pmus.h"
+>  #include "mem-events.h"
+> +#include "util/debug.h"
+>  #include "util/env.h"
+> +#include "util/header.h"
+> +
+> +static bool x86__is_intel_graniterapids(void)
+> +{
+> +       static bool checked_if_graniterapids;
+> +       static bool is_graniterapids;
+> +
+> +       if (!checked_if_graniterapids) {
+> +               const char *graniterapids_cpuid =3D "GenuineIntel-6-A[DE]=
+";
+> +               char *cpuid =3D get_cpuid_str((struct perf_cpu){0});
+> +
+> +               is_graniterapids =3D cpuid && strcmp_cpuid_str(graniterap=
+ids_cpuid, cpuid) =3D=3D 0;
+> +               free(cpuid);
+> +               checked_if_graniterapids =3D true;
+> +       }
+> +       return is_graniterapids;
+> +}
+> +
+> +static struct perf_cpu_map *read_sysfs_cpu_map(const char *sysfs_path)
+> +{
+> +       struct perf_cpu_map *cpus;
+> +       char *buf =3D NULL;
+> +       size_t buf_len;
+> +
+> +       if (sysfs__read_str(sysfs_path, &buf, &buf_len) < 0)
+> +               return NULL;
+> +
+> +       cpus =3D perf_cpu_map__new(buf);
+> +       free(buf);
+> +       return cpus;
+> +}
+> +
+> +static int snc_nodes_per_l3_cache(void)
+> +{
+> +       static bool checked_snc;
+> +       static int snc_nodes;
+> +
+> +       if (!checked_snc) {
+> +               struct perf_cpu_map *node_cpus =3D
+> +                       read_sysfs_cpu_map("devices/system/node/node0/cpu=
+list");
+> +               struct perf_cpu_map *cache_cpus =3D
+> +                       read_sysfs_cpu_map("devices/system/cpu/cpu0/cache=
+/index3/shared_cpu_list");
+> +
+> +               snc_nodes =3D perf_cpu_map__nr(cache_cpus) / perf_cpu_map=
+__nr(node_cpus);
+> +               perf_cpu_map__put(cache_cpus);
+> +               perf_cpu_map__put(node_cpus);
+> +               checked_snc =3D true;
+> +       }
+> +       return snc_nodes;
+> +}
+> +
+> +static bool starts_with(const char *str, const char *prefix)
+> +{
+> +       return !strncmp(prefix, str, strlen(prefix));
+> +}
+> +
+> +static int num_chas(void)
+> +{
+> +       static bool checked_chas;
+> +       static int num_chas;
+> +
+> +       if (!checked_chas) {
+> +               int fd =3D perf_pmu__event_source_devices_fd();
+> +               struct io_dir dir;
+> +               struct io_dirent64 *dent;
+> +
+> +               if (fd < 0)
+> +                       return -1;
+> +
+> +               io_dir__init(&dir, fd);
+> +
+> +               while ((dent =3D io_dir__readdir(&dir)) !=3D NULL) {
+> +                       /* Note, dent->d_type will be DT_LNK and so isn't=
+ a useful filter. */
+> +                       if (starts_with(dent->d_name, "uncore_cha_"))
+> +                               num_chas++;
+> +               }
+> +               close(fd);
+> +               checked_chas =3D true;
+> +       }
+> +       return num_chas;
+> +}
+> +
+> +#define MAX_SNCS 6
+> +
+> +static int uncore_cha_snc(struct perf_pmu *pmu)
+> +{
+> +       // CHA SNC numbers are ordered correspond to the CHAs number.
+> +       unsigned int cha_num;
+> +       int num_cha, chas_per_node, cha_snc;
+> +       int snc_nodes =3D snc_nodes_per_l3_cache();
+> +
+> +       if (snc_nodes <=3D 1)
+> +               return 0;
+> +
+> +       num_cha =3D num_chas();
+> +       if (num_cha <=3D 0) {
+> +               pr_warning("Unexpected: no CHAs found\n");
+> +               return 0;
+> +       }
+> +
+> +       /* Compute SNC for PMU. */
+> +       if (sscanf(pmu->name, "uncore_cha_%u", &cha_num) !=3D 1) {
+> +               pr_warning("Unexpected: unable to compute CHA number '%s'=
+\n", pmu->name);
+> +               return 0;
+> +       }
+> +       chas_per_node =3D num_cha / snc_nodes;
+> +       cha_snc =3D cha_num / chas_per_node;
+> +
+> +       /* Range check cha_snc. for unexpected out of bounds. */
+> +       return cha_snc >=3D MAX_SNCS ? 0 : cha_snc;
+> +}
+> +
+> +static int uncore_imc_snc(struct perf_pmu *pmu)
+> +{
+> +       // Compute the IMC SNC using lookup tables.
+> +       unsigned int imc_num;
+> +       int snc_nodes =3D snc_nodes_per_l3_cache();
+> +       const u8 snc2_map[] =3D {1, 1, 0, 0, 1, 1, 0, 0};
+> +       const u8 snc3_map[] =3D {1, 1, 0, 0, 2, 2, 1, 1, 0, 0, 2, 2};
+> +       const u8 *snc_map;
+> +       size_t snc_map_len;
+> +
+> +       switch (snc_nodes) {
+> +       case 2:
+> +               snc_map =3D snc2_map;
+> +               snc_map_len =3D ARRAY_SIZE(snc2_map);
+> +               break;
+> +       case 3:
+> +               snc_map =3D snc3_map;
+> +               snc_map_len =3D ARRAY_SIZE(snc3_map);
+> +               break;
+> +       default:
+> +               /* Error or no lookup support for SNC with >3 nodes. */
+> +               return 0;
+> +       }
+> +
+> +       /* Compute SNC for PMU. */
+> +       if (sscanf(pmu->name, "uncore_imc_%u", &imc_num) !=3D 1) {
+> +               pr_warning("Unexpected: unable to compute IMC number '%s'=
+\n", pmu->name);
+> +               return 0;
+> +       }
+> +       if (imc_num >=3D snc_map_len) {
+> +               pr_warning("Unexpected IMC %d for SNC%d mapping\n", imc_n=
+um, snc_nodes);
+> +               return 0;
+> +       }
+> +       return snc_map[imc_num];
+> +}
+> +
+> +static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
+> +{
+> +       static bool checked_cpu_adjust[MAX_SNCS];
+> +       static int cpu_adjust[MAX_SNCS];
+> +       struct perf_cpu_map *node_cpus;
+> +       char node_path[] =3D "devices/system/node/node0/cpulist";
+> +
+> +       /* Was adjust already computed? */
+> +       if (checked_cpu_adjust[pmu_snc])
+> +               return cpu_adjust[pmu_snc];
+> +
+> +       /* SNC0 doesn't need an adjust. */
+> +       if (pmu_snc =3D=3D 0) {
+> +               cpu_adjust[0] =3D 0;
+> +               checked_cpu_adjust[0] =3D true;
+> +               return 0;
+> +       }
+> +
+> +       /*
+> +        * Use NUMA topology to compute first CPU of the NUMA node, we wa=
+nt to
+> +        * adjust CPU 0 to be this and similarly for other CPUs if there =
+is >1
+> +        * socket.
+> +        */
+> +       node_path[24] =3D pmu_snc; // Shift node0 to be node<pmu_snc>.
 
-Both :P
+Sorry I migrated a patch badly and this should be "+=3D", will fix in v2
+along with the reference count checker.
 
-Pair of SEAMCALLs operate on pairs of pages.
+Thanks,
+Ian
 
-> One thing I've noticed in writing changelogs and so forth is that
-> repetition can hurt understanding if the concepts aren't the same. Like
-> saying there is a "pair" of calls and a "pair" of pages when the fact
-> that both are pairs is a coincidence rather than an intentional and
-> important part of the design.
-
-Yeah, I see it.
-
-I will try to avoid to "pair" for SEAMCALLs in Dynamic PAMT context.
-Maybe it will clear up the confusion.
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+> +       node_cpus =3D read_sysfs_cpu_map(node_path);
+> +       cpu_adjust[pmu_snc] =3D perf_cpu_map__cpu(node_cpus, 0).cpu;
+> +       checked_cpu_adjust[pmu_snc] =3D true;
+> +       perf_cpu_map__put(node_cpus);
+> +       return cpu_adjust[pmu_snc];
+> +}
+> +
+> +static void gnr_uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *p=
+mu, bool cha)
+> +{
+> +       // With sub-NUMA clustering (SNC) there is a NUMA node per SNC in=
+ the
+> +       // topology. For example, a two socket graniterapids machine may =
+be set
+> +       // up with 3-way SNC meaning there are 6 NUMA nodes that should b=
+e
+> +       // displayed with --per-node. The cpumask of the CHA and IMC PMUs
+> +       // reflects per-socket information meaning, for example, uncore_c=
+ha_60
+> +       // on a two socket graniterapids machine with 120 cores per socke=
+t will
+> +       // have a cpumask of "0,120". This cpumask needs adjusting to "40=
+,160"
+> +       // to reflect that uncore_cha_60 is used for the 2nd SNC of each
+> +       // socket. Without the adjustment events on uncore_cha_60 will ap=
+pear in
+> +       // node 0 and node 3 (in our example 2 socket 3-way set up), but =
+with
+> +       // the adjustment they will appear in node 1 and node 4. The numb=
+er of
+> +       // CHAs is typically larger than the number of cores. The CHA num=
+bers
+> +       // are assumed to split evenly and inorder wrt core numbers. Ther=
+e are
+> +       // fewer memory IMC PMUs than cores and mapping is handled using =
+lookup
+> +       // tables.
+> +       static struct perf_cpu_map *cha_adjusted[MAX_SNCS];
+> +       static struct perf_cpu_map *imc_adjusted[MAX_SNCS];
+> +       struct perf_cpu_map **adjusted =3D cha ? cha_adjusted : imc_adjus=
+ted;
+> +       int idx, pmu_snc, cpu_adjust;
+> +       struct perf_cpu cpu;
+> +       bool alloc;
+> +
+> +       // Cpus from the kernel holds first CPU of each socket. e.g. 0,12=
+0
+> +       assert(perf_cpu_map__cpu(pmu->cpus, 0).cpu =3D=3D 0);
+> +
+> +       pmu_snc =3D cha ? uncore_cha_snc(pmu) : uncore_imc_snc(pmu);
+> +       if (pmu_snc =3D=3D 0) {
+> +               // No adjustment necessary for the first SNC.
+> +               return;
+> +       }
+> +
+> +       alloc =3D adjusted[pmu_snc] =3D=3D NULL;
+> +       if (alloc) {
+> +               // Hold onto the perf_cpu_map globally to avoid recomputa=
+tion.
+> +               cpu_adjust =3D uncore_cha_imc_compute_cpu_adjust(pmu_snc)=
+;
+> +               adjusted[pmu_snc] =3D perf_cpu_map__empty_new(perf_cpu_ma=
+p__nr(pmu->cpus));
+> +               if (!adjusted[pmu_snc])
+> +                       return;
+> +       }
+> +
+> +       perf_cpu_map__for_each_cpu(cpu, idx, pmu->cpus) {
+> +               // Compute the new cpu map values or if not allocating, a=
+ssert
+> +               // that they match expectations. asserts will be removed =
+to
+> +               // avoid overhead in NDEBUG builds.
+> +               if (alloc) {
+> +                       adjusted[pmu_snc]->map[idx].cpu =3D cpu.cpu + cpu=
+_adjust;
+> +               } else if (idx =3D=3D 0) {
+> +                       cpu_adjust =3D perf_cpu_map__cpu(adjusted[pmu_snc=
+], idx).cpu - cpu.cpu;
+> +                       assert(uncore_cha_imc_compute_cpu_adjust(pmu_snc)=
+ =3D=3D cpu_adjust);
+> +               } else {
+> +                       assert(perf_cpu_map__cpu(adjusted[pmu_snc], idx).=
+cpu =3D=3D
+> +                              cpu.cpu + cpu_adjust);
+> +               }
+> +       }
+> +
+> +       perf_cpu_map__put(pmu->cpus);
+> +       pmu->cpus =3D perf_cpu_map__get(adjusted[pmu_snc]);
+> +}
+>
+>  void perf_pmu__arch_init(struct perf_pmu *pmu)
+>  {
+> @@ -49,10 +291,17 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
+>
+>                 perf_mem_events__loads_ldlat =3D 0;
+>                 pmu->mem_events =3D perf_mem_events_amd_ldlat;
+> -       } else if (pmu->is_core) {
+> -               if (perf_pmu__have_event(pmu, "mem-loads-aux"))
+> -                       pmu->mem_events =3D perf_mem_events_intel_aux;
+> -               else
+> -                       pmu->mem_events =3D perf_mem_events_intel;
+> +       } else {
+> +               if (pmu->is_core) {
+> +                       if (perf_pmu__have_event(pmu, "mem-loads-aux"))
+> +                               pmu->mem_events =3D perf_mem_events_intel=
+_aux;
+> +                       else
+> +                               pmu->mem_events =3D perf_mem_events_intel=
+;
+> +               } else if (x86__is_intel_graniterapids()) {
+> +                       if (starts_with(pmu->name, "uncore_cha_"))
+> +                               gnr_uncore_cha_imc_adjust_cpumask_for_snc=
+(pmu, /*cha=3D*/true);
+> +                       else if (starts_with(pmu->name, "uncore_imc_"))
+> +                               gnr_uncore_cha_imc_adjust_cpumask_for_snc=
+(pmu, /*cha=3D*/false);
+> +               }
+>         }
+>  }
+> --
+> 2.49.0.1045.g170613ef41-goog
+>
