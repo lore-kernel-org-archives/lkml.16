@@ -1,100 +1,78 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A3D1E3DF2
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1FA14900B
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747298123; cv=none; b=qeQLwelBSTI2znndFL9le9D5+VQ7he/FiFKv6aJ2RQaqL4ZwFpKXYpCGqer1F3J0n7ru79XGfh98oyPxU3t44I72QuTGxaPZRFwvpy3FXsIDZCj/cvzxAt3VeflMFZERpb7C1TUWl0vJ41wEory5/VyU0HhsM3U6WTage3+reGg=
+	t=1747298137; cv=none; b=D3JtGAebbAdtiXvp1zV6w94aKXwYpgIqztTiYVOa5gcYEn2FRdckWyaptOCRAm4kKcmtwKDwC1pppyCMYuTG0o+T7XQVQxYQpCRqFU+3vEskRKVxL4CAamxyYLtz3sYXHvKCUh/Cm/r5dukYk+8qyuCihMziYc2YwMrh3JRC9Os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747298123; c=relaxed/simple;
-	bh=9pbatmL7aL/vj8ZUFAV6MU/4LtyoSBW0BcKNN8jXnCM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CxNIBMl1JQnPa7OlfzlnNLSlYMcOa7JsQcUUpON353E2Nq9eeneKzn7vJzxsO4RoPBljw5Kqnd4NQfaLfk/p7iIjuUr3MmhJrspu0RmfskvGKd9ZwRzDROHfWJ3+oOa2zVIUCkW1da6SeyRc9vdKppLZ1afIJ4XM1RlVODF8fFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pyMAA+tf; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pyMAA+tf"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso6984695e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:35:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747298120; x=1747902920; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=06fYRQosONYXgKhGU9k/rO3oNTjga5PPDQkysxE6Iro=;
-        b=pyMAA+tf4Jfw/LMBzsN2hYO2y0UsNgxojDpw3cX2zyLNmBfDxe2HgHsRwE7iQDpo7c
-         D66gx9GD3wIJgUhwR0so5EaQtNqVPo31cWLBRFzesrpKDQHqcEyDVttBATAkpuDPtEF1
-         gO6cct/M44rOGONA9JKESjBEWzZyFRHNaKls7eKHaLjcPElGvsReCGQy+4OAj/V4K+Hb
-         zd74JE6GhVc3Pz0xBjFQG9Y4x221kwo2dxkEZIE28v7GgteWvIdSf3wZrlLhHHnCqHU6
-         CzRbrjQmpnWDlP7RQhSxJS45NqbwV9KQVn9jqNq6BBKtmj9JPkPXXq/gzQ1Kg01ORVKs
-         awTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747298120; x=1747902920;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=06fYRQosONYXgKhGU9k/rO3oNTjga5PPDQkysxE6Iro=;
-        b=BD8sQGlASYyt4gUEpEeuozDZ/mcj8lT3yn6nY7msbqxg7kYQFew+US/+xlO2qpxbud
-         4fmqHF3KM7NDCxex0rW/qaLcpZOoeY+cb4f31DvQPsc8wz3MnqPnsNPU+6z5KB26H6ZB
-         ph5j5YJ9vkQcmAeSrB5zPi5P+/71SP8cod6CgjSQ6k6gGFCX55MiaTKf3NkvzUUNc5Rl
-         WwFXb0I+4qDbX4VHoG2Dp1dHjDW+UZ9ZBcijfMNkK68S5GTLLhE+YEqXK5ZwWfV4qux1
-         Pz708htEjV0Mzu8bYHXrMwQBCd8VWCirj7PRYrLqmjgGy02fq/n/tvM1cPwzNi372WqL
-         JoAA==
-X-Forwarded-Encrypted: i=1; AJvYcCU2lW+5yiKzczRK+vTo8CUKRMiCg3J0CcO6Yvv/2ecA6oW6+5eOgnZYnJVJAe+/NThYFTuelubR2xfq/qo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8dv6Bae/1kADEYdX+KLaDu2EXxuRL1T1XCsqBSxgILBdEIrBZ
-	1u84Pa/KBBBo56IW0T2DRKEqE3V+bD6Pux4D56UZMpcQ9/V0ggc5qdOiTVXCppo=
-X-Gm-Gg: ASbGncvZD8xsEl9VNRvZxliFW6+V/3YRtc1bjG8Sy8mQA7yfGIm6xPYD8uvTUhNSD1q
-	SvQHYcNz4/JF0vcBSo4yrL0+fAsm/7cCIgtAu6Tu3q3jHVjvC9E601Pg1i3TB3D/MYVLLB5AQhY
-	9TxL7fjWB3GElpOZn/62sZWRLSr64C6zwG4jrMahQndb69Duow8lzuIaGVV9JpYA/ItOMGi26g1
-	Na3Lqdsg5yKhXl/1SguKL7SyDGgzfr55DUL1HYJkMoBJ7qndcuOAA1bAYV+k2DiRisdocaq+p6h
-	XjtONtruAnGvyUD9M8aEkm3WR3elAFHGDtBDsajNT4vHK390jOQiQq9cQWFxdEP/JW95y0y1UCM
-	DU1K2IvTLFKJQeg==
-X-Google-Smtp-Source: AGHT+IHu2s9sa92qmesl5veI+oAS03nFjtQ47vH11ArCbrSF0HDjcyh6IGTJen7CR8wkKp03sRpn5g==
-X-Received: by 2002:a05:600c:c0f:b0:43c:fbbf:7bf1 with SMTP id 5b1f17b1804b1-442f2179271mr73566765e9.30.1747298120445;
-        Thu, 15 May 2025 01:35:20 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2cf0esm22131999f8f.79.2025.05.15.01.35.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 01:35:20 -0700 (PDT)
-Date: Thu, 15 May 2025 10:35:18 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: timer: Convert marvell,armada-370-timer to
- DT schema
-Message-ID: <aCWnRtoXHfDKqOSP@mai.linaro.org>
-References: <20250506022301.2588282-1-robh@kernel.org>
+	s=arc-20240116; t=1747298137; c=relaxed/simple;
+	bh=y0bMo/unmXbfKx2jqD1auRYxYI4xYTh2PoiDEKBXwrk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pG+rRk3ER1VKv9Q9R4mmcIonLjpeV0i9TSqIxVNAQepsGbxi5fagMCuBe+Y9uMQEPm6rIVXwcaeEN8ujQpfKbufT6avLkphz0qjfuNuO2Fz9Np4hChASQGC91goZeEiqkGrnikym3szqbWybSfUHz8/BkZNX0aJIJ1Y5EbnPxzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-05 (Coremail) with SMTP id zQCowAAnYQlSpyVoRv7ZFQ--.50029S2;
+	Thu, 15 May 2025 16:35:30 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] irqchip/irq-pruss-intc: Consolidate chained IRQ handler install/remove
+Date: Thu, 15 May 2025 16:34:50 +0800
+Message-Id: <20250515083450.3811411-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250506022301.2588282-1-robh@kernel.org>
+X-CM-TRANSID:zQCowAAnYQlSpyVoRv7ZFQ--.50029S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7GF1fZFWUWr1fAr17KF4Durg_yoWfArb_uw
+	4fWrs3Jr40yrs0yF1xJFnxAFy2yw4kWr1Du3ySqF9xtry5J343CF1qvFnIkr4UWF1rAas7
+	Cr98urWfAry7GjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbcAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r
+	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_
+	GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1Y6r17MIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUndgAUUUUU
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-On Mon, May 05, 2025 at 09:23:00PM -0500, Rob Herring wrote:
-> Convert the Marvell Armada 37x/380/XP Timer binding to DT schema format.
-> Update the compatible entries to match what is in use.
-> "marvell,armada-380-timer" in particular was missing.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
+Chained irq handlers usually set up handler data as well.
+irq_set_chained_handler_and_data() can set both under irq_desc->lock.
+Replace the two calls with one.
 
-Applied, thanks
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/irqchip/irq-pruss-intc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/irqchip/irq-pruss-intc.c b/drivers/irqchip/irq-pruss-intc.c
+index 8f7c9dc45953..1feba8e26e27 100644
+--- a/drivers/irqchip/irq-pruss-intc.c
++++ b/drivers/irqchip/irq-pruss-intc.c
+@@ -581,8 +581,8 @@ static int pruss_intc_probe(struct platform_device *pdev)
+ 		host_data->intc = intc;
+ 		host_data->host_irq = i;
+ 
+-		irq_set_handler_data(irq, host_data);
+-		irq_set_chained_handler(irq, pruss_intc_irq_handler);
++		irq_set_chained_handler_and_data(irq, pruss_intc_irq_handler,
++						 host_data);
+ 	}
+ 
+ 	return 0;
 -- 
+2.25.1
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
