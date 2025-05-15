@@ -1,79 +1,108 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F34C120;
-	Thu, 15 May 2025 01:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4842622DA03;
+	Thu, 15 May 2025 01:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747272916; cv=none; b=kMLyL/6KvjsIyEEx9ags0ZFbXLz0Y1Zg61ZL8c/sn3a9AWaRNQPa+3fP7CGEMXtpAyhu/ImX4QdEXppwqBjAj9gir5UUgFtzqn3h/SHgkJRdT4/4u6MKyCZAF0dezTNdZ8rO4gNSaKH9sRy6hMWnDbO/+XlGmG4qjvigvLww1fU=
+	t=1747272940; cv=none; b=jfeGUUuPdWjZozjQ6HtHjFme+TFsBiA9rAHZ4G513PHJqG4SS8gwZk8B+YpU/G/q9GeYQ7iCpiQvpNrak8cfGSVKCc1iYsBv741Ei9fEuK1LZEqfs2vouJPHPUHEuhawJ0iIgu1V9Si/J+nG4K2yZ08AekE2SJJ4325SUvmrUdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747272916; c=relaxed/simple;
-	bh=LlpPGyBl+GCm/7I8MrIrcNdTHLEJpltCkDT8u6enguo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=u78rIiRvP0ay9lzMo9dJvLShYl7D3EfDVE5xr+8AbrYkxAo1hsvD0eZrjNUo9n5VayUmw9pAbZjDuiIO4tqrR7evJnZcK1Q8+y9ZdtK4Dzek7+fZIR6oe0WNieAgmX9uULV5nVvfDAF5sZKnOac9qLWdVlcAX7R9zTJmXV1IDUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4ZyXmL0K6hz1DKfX;
-	Thu, 15 May 2025 09:33:38 +0800 (CST)
-Received: from dggpemf100013.china.huawei.com (unknown [7.185.36.179])
-	by mail.maildlp.com (Postfix) with ESMTPS id EE33B140109;
-	Thu, 15 May 2025 09:35:04 +0800 (CST)
-Received: from localhost.localdomain (10.50.165.33) by
- dggpemf100013.china.huawei.com (7.185.36.179) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 15 May 2025 09:35:04 +0800
-From: Yihang Li <liyihang9@huawei.com>
-To: <martin.petersen@oracle.com>, <James.Bottomley@HansenPartnership.com>
-CC: <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <liyihang9@huawei.com>, <liuyonglong@huawei.com>,
-	<prime.zeng@hisilicon.com>
-Subject: [PATCH] scsi: hisi_sas: Fix warning detected by sparse
-Date: Thu, 15 May 2025 09:35:04 +0800
-Message-ID: <20250515013504.3234016-1-liyihang9@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1747272940; c=relaxed/simple;
+	bh=xCpDmmAYRWAbawXwCWvho2dS6smLcURJoOuFzWX+JY8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PjPvZPoEesoJ3g32dR95ek8fsNFco78AaQapZ1dPmkKw1yAuRtKh2soaxyl0cW8xjbAIFLxmzvpleXoHGSj4uyELnS2PVlW96K7Ri7OV59La449Apia1Tx0EpKwIwBprbLMQBXbFv7Sn1/artaGc8bh91nX2IfryfUv0yZp40VA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KDRlsqWZ; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KDRlsqWZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747272940; x=1778808940;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=xCpDmmAYRWAbawXwCWvho2dS6smLcURJoOuFzWX+JY8=;
+  b=KDRlsqWZy5DDNjJ4RnYvYzwmqWQzRIijcFmGmiRg4wMh2eAELwsL3444
+   3hlkl3XtDzKtr2O0eTWeFBljWkUyN+A9Z1PNuHtRxgrnkYwShpiQki8/q
+   4Pii3GTZHwkWA7vnXEiYvSwE00AO8y0pHcKHjtJKzY/3ig4XEwHm5cZ0M
+   OYwoFh862FzFAL9finihktWwtVU8Z1JqA2SQnDXuaqkwCXPOZWZjfvHYN
+   awyShmMxA7bhWf7NHUXlCLtDrZAiExGX0E6doQQ20g+xX13A25jPPBCYR
+   f3dg8XCDg9w6We5K0/S6maj/vNQSY/xxpCQM1vW67xXxUt3pIxl1AtBOT
+   w==;
+X-CSE-ConnectionGUID: lWnSAbCISoOmSBw3Fs1Q0g==
+X-CSE-MsgGUID: WyExNyGqTJ2jWpVQ96CgMQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49176993"
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="49176993"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 18:35:39 -0700
+X-CSE-ConnectionGUID: GQMum0KHRMCqZLlsjNmR2w==
+X-CSE-MsgGUID: qbe95BuSSYOtE0ShZLidCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="169295432"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 18:35:32 -0700
+Message-ID: <def6a396-b6c0-4b7a-8ccd-6d4a0a8f6aaa@linux.intel.com>
+Date: Thu, 15 May 2025 09:35:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemf100013.china.huawei.com (7.185.36.179)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 04/38] perf: Add a EVENT_GUEST flag
+To: Sean Christopherson <seanjc@google.com>,
+ Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+ Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Yongwei Ma <yongwei.ma@intel.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
+ Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
+ Shukla Manali <Manali.Shukla@amd.com>,
+ Nikunj Dadhania <nikunj.dadhania@amd.com>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <20250324173121.1275209-5-mizhang@google.com> <aCUeh6KxgjLxd-MK@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aCUeh6KxgjLxd-MK@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-LKP reports below warning when building for RISC-V with randconfig
-configuration.
 
-drivers/scsi/hisi_sas/hisi_sas_v3_hw.c:4554:25: sparse:
-sparse: incorrect type in argument 4 (different base types)
-@@     expected restricted __le32 [usertype] *[assigned] ptr
-@@     got unsigned int * @@
+On 5/15/2025 6:51 AM, Sean Christopherson wrote:
+> On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+>> +{
+>> +	if (event->attr.exclude_guest && __this_cpu_read(perf_in_guest)) {
+> My vote is for s/perf_in_guest/guest_ctx_loaded, because "perf in guest" doesn't
+> accurately describe just the mediated PMU case.  E.g. perf itself is running in
+> KVM guests when using an emulated vPMU, or no vPMU at all.
 
-Type cast to fix this warning.
+Agree.
 
-Fixes: 4ca7fe99fc84 ("scsi: hisi_sas: Use macro instead of magic number")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202505150705.k9ZzMxf1-lkp@intel.com/
-Signed-off-by: Yihang Li <liyihang9@huawei.com>
----
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index d7f45a2eb200..bc5d5356dd00 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -4558,7 +4558,7 @@ static int debugfs_fifo_data_v3_hw_show(struct seq_file *s, void *p)
- 
- 	debugfs_show_row_32_v3_hw(s, 0,
- 			HISI_SAS_FIFO_DATA_DW_SIZE * HISI_SAS_REG_MEM_SIZE,
--			phy->fifo.rd_data);
-+			(__le32 *)phy->fifo.rd_data);
- 
- 	return 0;
- }
--- 
-2.33.0
-
+>
+> And with a Kconfig to guard the mediated PMU, this check (and others) can be
+> elided at compile time for architectures that don't support a mediated PMU (or
+> if KVM is disabled).
+>
+>> +		/*
+>> +		 * (now + times[total].offset) - (now + times[guest].offset) :=
+>> +		 * times[total].offset - times[guest].offset
+>> +		 */
+>> +		return READ_ONCE(times[T_TOTAL].offset) - READ_ONCE(times[T_GUEST].offset);
+>> +	}
+>> +
+>> +	return now + READ_ONCE(times[T_TOTAL].offset);
+>> +}
+>> +
