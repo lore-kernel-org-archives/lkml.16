@@ -1,96 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B768202F67;
-	Thu, 15 May 2025 08:20:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE10828643D
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747297253; cv=none; b=acuQGw6Z3ETkNqlYIK94L5KyFM3qRb5m5FK8c+bDDDClmbJGsPugVSXEuNXfp3k1vV+n1K9KNe6N5+Jp8Mfu2ibI8mfirkbP8WGB3vUGWOIFRrkWFsYw5xmG9edPbkHGA4lPAUjUQdc6XnwBkfFNx8mbk5tn9Mql/oESHjgds9M=
+	t=1747297267; cv=none; b=iojbZFelLJ51Hnf3XqaAd7p4ls+727LDApDigrtr1EAZr3h7qj9eU90uWgP+JKf9FQA5k9iUjZoi50uMi3pToM0Q7LzJJCKsVWquqoNNDjYzjH6vL+VjrSfn7sBeTZTm99kYmx90ej5LtUGk4p42xvnkE5vmZvZD4N4jv577sUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747297253; c=relaxed/simple;
-	bh=PwH7evc+Zg9zQbRLNnZYre+nyvUninerAdI6sm9HyQQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qVMcEESdwgZPaDhO8giEzv74yPGJ83BBNp5ntl1V6x4W/E96pXgOgY1SoZ1O57R3GPVRRuo4aaT/1zQjep233Gj16xuSlDd8OzGSDeU/Hp9Zq9nZGcoXGjwUTacBykVo0qZAt2IJ+ZDkxCUOXDNpoSzYryiMTmJmymcTFdrjIwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R8e7QL4f; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R8e7QL4f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EEA5C4CEE7;
-	Thu, 15 May 2025 08:20:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747297253;
-	bh=PwH7evc+Zg9zQbRLNnZYre+nyvUninerAdI6sm9HyQQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R8e7QL4f51Ns4Svc0BXooM7bT20NZqGbI//uIINvG1stzHDxRcXJHYef3s//B1WpU
-	 7GNI0lWPGEe9/Cj3Cczav4tFDlVpjDBDJ3F35V9E6+r1hAu21RctQtzhUkuXi0jnUI
-	 cQCLFRf3tk1S/gioQhLMXqESwWaU6bJNXFZH5m20dh0KJykQ6OS882ysxZPl7UhM8/
-	 rivdHdJUeuWxsuPi35S75xgmhmAon9rYsZBF0FicGfQHcIleW6jj/wLftN2vJg9g+2
-	 DX2vYLGbiu4BguZ6ZgXbfCX3eVryGzzbkiEiWed0lsYOCjaTy8ItdHkkkh+/wbBRZq
-	 pd9djPFaUyykQ==
-Date: Thu, 15 May 2025 09:20:49 +0100
-From: Vinod Koul <vkoul@kernel.org>
-To: Igor Belwon <igor.belwon@mentallysanemainliners.org>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v2 0/2] USB PHY support for Exynos990 SoCs
-Message-ID: <aCWj4cn4y+RyfGiZ@vaman>
-References: <20250420-usb-resends-april-v2-0-25dc7d2e6dd4@mentallysanemainliners.org>
- <aCRXgpD0Ld2W4lHE@vaman>
- <D9VYC98LJTR0.LJXYC1H0BAKA@mentallysanemainliners.org>
+	s=arc-20240116; t=1747297267; c=relaxed/simple;
+	bh=trPgxOzC3uBhx/jjBBkfCAGr8L3X3EGZFCMDd258s1M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jvAJBvLSjG8VKY2z4mA635t0VuAdPt18lFg6alK+jETYRoBikNwFha89FjvszOtFxG6CAZMKEwMMk0PZ27vYYaSTSgLjFeARUgkrOgwm20YetlNcEuGJb8IRcBIzG0ssNDbsewTpfSTw7GERxjpTBlSm15qH6qAZkhByFk6/XsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uFTpl-0006ax-AB; Thu, 15 May 2025 10:20:53 +0200
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uFTpj-002qNa-2l;
+	Thu, 15 May 2025 10:20:52 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uFTpk-00B5zQ-0k;
+	Thu, 15 May 2025 10:20:52 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH net-next v1 1/1] net: phy: microchip: document where the LAN88xx PHYs are used
+Date: Thu, 15 May 2025 10:20:51 +0200
+Message-Id: <20250515082051.2644450-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D9VYC98LJTR0.LJXYC1H0BAKA@mentallysanemainliners.org>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 14-05-25, 16:26, Igor Belwon wrote:
-> On Wed May 14, 2025 at 10:42 AM CEST, Vinod Koul wrote:
-> > On 20-04-25, 21:28, Igor Belwon wrote:
-> >> Hi all!
-> >> 
-> >> This patchset adds support for the USB 2.0 PHY of the Exynos990 SoC.
-> >> This SoC has a combo PHY that supports highspeed, superspeed USB and
-> >> DisplayPort, however due to my inability to test the superspeed part of
-> >> the combo phy (device always enumerated as high-speed, even on the
-> >> vendor kernels/bootloaders) only the highspeed part is brought up.
-> >> 
-> >> These changes have been tested and confirmed working (with the USB_ETH
-> >> gadget and telnet/ssh in a ramdisk) on a device from the hubble family
-> >> (x1s) and also a device from the canvas family (c1s).
-> >
-> > I am missing the dt patch, can you pls report the whole series if you
-> > would like me to review and apply this
-> 
-> Hi Vinod,
-> 
-> I've sent the DT series a while back (before resending). Usually I
-> propose DT changes through Krzysztof's tree. The patches are 
-> unchanged (they will be resent unchanged when all usb and wdt 
-> changes are merged).
+The driver uses the name LAN88xx for PHYs with phy_id = 0x0007c132. But
+with this placeholder name no documentation can be found on the net.
 
-It makes sense to post bindings and driver togther and mostly these go
-thru subsystem trees!
+Document the fact that these PHYs are build into the LAN7800 and LAN7850
+USB/Ethernet controllers.
 
-> 
-> Here is the patchset:
-> - on patchwork: https://patchwork.kernel.org/project/linux-samsung-soc/patch/20250217-exynos990-dt-changes-febuary-v1-2-99935218cbf4@mentallysanemainliners.org/
-> - on the mailing list archives: https://lore.kernel.org/all/20250217-exynos990-dt-changes-febuary-v1-2-99935218cbf4@mentallysanemainliners.org/
-> 
-> Best regards
-> - Igor
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/net/phy/microchip.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/drivers/net/phy/microchip.c b/drivers/net/phy/microchip.c
+index 93de88c1c8fd..13570f628aa5 100644
+--- a/drivers/net/phy/microchip.c
++++ b/drivers/net/phy/microchip.c
+@@ -474,6 +474,8 @@ static struct phy_driver microchip_phy_driver[] = {
+ 	/* This mask (0xfffffff2) is to differentiate from
+ 	 * LAN8742 (phy_id 0x0007c130 and 0x0007c131)
+ 	 * and allows future phy_id revisions.
++	 * These PHYs are integrated in LAN7800 and LAN7850 USB/Ethernet
++	 * controllers.
+ 	 */
+ 	.phy_id_mask	= 0xfffffff2,
+ 	.name		= "Microchip LAN88xx",
 -- 
-~Vinod
+2.39.5
+
