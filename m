@@ -1,470 +1,199 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D4E26ACB
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 16:02:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83E61A5BB1;
+	Thu, 15 May 2025 16:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747324969; cv=none; b=pvk9FsJXjZ92caGhS5xWyXPYZoXuFqEjID6GZYG0Dv3NCrQ9tq7H2t39aXiiT6PaG8tPsLjthJXZwxKpQjupfrvZ2s25izAFTFEZmsULA0KFj9AfWrSKbPpCmkX4L4XRsJA/K5K2LKE+dyfcKerLrfTmgDdvh0cnuh/CwL8rtSE=
+	t=1747325035; cv=none; b=FLBNV+gSC7zhhakM9628dUVbYezHpdb/HB/MTByQE9Ot57JN21CxpoDCgPVlcq8W8+iE+RFOGR/XKDoPEHZxLnJw90WwbyLkveSbt8umHftjCiWVIgoxA7TbCGgYdMKMc5DvwuS6kYAQKyU6RqAopTEmV0uwRyCC5CcL6J1UHmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747324969; c=relaxed/simple;
-	bh=Rc4Pu6VyAswNcuUEpx3gO4Q6RzhT7vATPJgDkGOFsoE=;
+	s=arc-20240116; t=1747325035; c=relaxed/simple;
+	bh=nvjc/Lk5BrAlP27T30+ARUsGXUd0a7PMDJD9kxSZ4Ow=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=h6lGpnFEXSVawHzEIRZDaE91OsIWJVAmaP3MSf1IQ9O4jNrxqVJvVS/9B7Z77169ltC6a00SqiD+QvQm88J8Unld7PpNzbWk/o2//FMaC0TG/dvOAsS72jtamY+ePXgNOXfU78t7rDJ8Wa3LSmQ3Bu6zHxhDUfZv3G4z+RIMuIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WmuLAo3b; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=aIK0nd5dcoI6g4GF+6nZ+P/2uK7TpDhai7SQlYujPEe0iTi/azvh6Md4KOSYgc5zECuGAGnAxoh/cWiyylZeO6N4eVQ5IcTjBmsZC/nrRFQyyEa3MSFHWWtnTAyr79C0e78LI9z3IcsBUWkVPq1Kou8daRYXfv379DKPb1md4us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FgYdCd+/; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WmuLAo3b"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3db82534852so66835ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:02:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FgYdCd+/"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb2so1098377a91.3;
+        Thu, 15 May 2025 09:03:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747324966; x=1747929766; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=gmail.com; s=20230601; t=1747325033; x=1747929833; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zNEiTtEIDHNlmVia2GFQ0qpG7Qornhf6jQbb4JLwMZc=;
-        b=WmuLAo3bw79dSh279pRM1IzSHuxQ7o4ZUYfBH4ILAXr26wLHXIDqqR4TN35VwXkNNe
-         ht/4q5KLrCvxniG/SvNq4YqRBjTHJ1u+QiJIa7M2enD69ngbbaasxFIvIPvA2fA5pfkI
-         sKYMXUUy7lAC3yetbtalplwQLmUGgGzV5TnC/hD1ylJjCD/yeGUGRoUtklxiNxfLV/JE
-         i1tVVLQItbOCARySddWVdzOdjnLRTwI8OBNeiBwgBV6ci5cB5PqaoHExe0UQc7bkFOhg
-         AGX5RjgxghlzzVyiEATRh7769/UBz+P9hAG+Lw4X39W48ggciSru/VVva2OSm+enmy1O
-         XY1w==
+        bh=SQIzojvdBrCvjCTQup3lWYpKZ6WvBhI3Efadpz4Nhvg=;
+        b=FgYdCd+/1r6RzoXrmTglW07CFuFV8BvjuYQiteYB5IvxD1/S9P5yg/C/kRB5DKsOwF
+         r0bjxv57ZVWPfmW7hbf/NeFHJiCro3MTtaKyZ9qSh7iDcTWdacLcJY4N0J+KEP7uXmSq
+         vWPhPvSQinF0seXAntUrbwiey4+wl/pJ/aO13dIuJaAyQJ2Xz8Zut03iuCXjWH0cd0eL
+         A/1WPf2T6e4y56mms4TcJ441U0Wop8d1faT7p2fetySOJf4fX4qademRV1YioxEzjVbD
+         dcAIOmZctdNgiElv+C3glVCdxhv/7NoSKPzwIyvGVzzod0jwwSM4x0bVPHoleEu5Vezt
+         Tp/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747324966; x=1747929766;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1747325033; x=1747929833;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zNEiTtEIDHNlmVia2GFQ0qpG7Qornhf6jQbb4JLwMZc=;
-        b=xKkSW9uoH4fopw/ACRnPN/NM4+Xw0Mcf1xjyckZpMC3s2YPpkNwoJYbxcZ0SFL/cw6
-         npq5nPIs+zqZsPzoxOSeLN3eawJuylMwCKBadIGoMkwp2gtHPXKNJcMpm+tMuyJMs1Dg
-         jUoldxOBaxPh+dsmC0fMhYzCHukWIJ+BLUJnC71nh0RaancR6KPb47dqBXanmUKTW0Rk
-         P9LkmH1hHHtUzqHivqMEzP4iH/9MIJshQVvbD+qZtRL/aeMvqTNPwTP4jVUWS1R93wlL
-         RKfuGl18F/RjIzi1uTx0eyoMswId50w846GiBmb1OlYwVmtkUWQwnwazQLLwvsG7UTDq
-         2fUw==
-X-Forwarded-Encrypted: i=1; AJvYcCV5jZ3XlplelKEX2SzhFYtph9DSrvVS7UCIXnTmlNv/MqxEdSy4ta5GWh4OqweDCMdwkbbtT1sh234ZHY0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXJaB4624SxtPWBleWwr20W20evdbOgDoOI1+ec11muesMjkEp
-	7Tv0Ppvqb0bdshydeNT+7ZnqNWm7RJi4lBc35afymV10N/EUb1jDXgQP5wFjyqpTYvrg5ItfY6E
-	utsWNm5rMYE+Chv2wrvIfK0TGew0ythGpLwB5VLDk
-X-Gm-Gg: ASbGncvWHuFR59qqHlHyYhN7q4yejwoPp8rH6BR/Q6zNo1ooDV+CHvpWEaPMQjtknNP
-	Jtqx5BUK3zFHD96a5Gt+gVTWp/rsXSQP3BQ0Mq6NpxZQwnQCX5LVUaTfv4CUsPiMXMqh8Z7PSr5
-	m5jiBJAGlpMxIiJKZbnEhNo+l0g4AyXnAMWMwj1jn/ey2jNS12ifj+9xug3jQJRQ==
-X-Google-Smtp-Source: AGHT+IFpemWKANP9mtqDnN7Vt/CLxQCe62NgTtJigvz88wyC9hkL3RWXBmQvnO2zaNlIff5knuED7OA82oyhfIe76GU=
-X-Received: by 2002:a05:6e02:216e:b0:3d5:e202:6f05 with SMTP id
- e9e14a558f8ab-3db780673b7mr4845115ab.18.1747324965695; Thu, 15 May 2025
- 09:02:45 -0700 (PDT)
+        bh=SQIzojvdBrCvjCTQup3lWYpKZ6WvBhI3Efadpz4Nhvg=;
+        b=sYJXhOEyHttzU/3da+OGAXChmVWlRBiniEbNx9AjDcJw6agtYoa3CTzMhBcqgzIvWm
+         Xm/hAFJkTHoZtHbSY2AQ0gEypGLWfHOLRn+rE6apIL3s0LoqCz8rAYedxJ6kASVNccKd
+         6aj/P2BpDPfrGQJre92LaOVpcT6SeTjAVmoXcCjZW0C0xUbtXz0oDQLm8u7pLOKNXt88
+         WVzVCvZU67Dz6KXU0Sap+m4L+pXmCJOewxB4LkunFbALUkxHmLIh3MgpkCkr0lIFsDFy
+         +CuXXXqUXbrjJPqiYZTtC/QZDJmjqnd+qVJBtmeG15MH4C+pX50TcBOsXoB6xhJagWTS
+         Ty/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVjYrI8p7CbiSr4lg/EL5T1NtQIKcS/NYi6nVyQhCjdY9OKSkaO63s6w3D27Y3gwBQyQmhtsaH5hjIqruM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2MW++fvT+6L7C/bHAqQVoPOz4a9pS4lcRUYjS8DbIs/XVTP6o
+	v5RyMQs7oj171Q7mhbmIPidyR24IVKdrqmU1wBFvlGGAYfcTRkwVmTg/4LSYB7KBLG54C5+3n1E
+	soAOQ/n8xpI/RhaZT44Kpa1vio0U=
+X-Gm-Gg: ASbGncsmDWmZ/uKEY67ESwabwuTBI5eZGL79PgbryTBrCjJb/Dj7aVYpCa+E58bwf41
+	jwC9Y79bLeS7chBrhqNIb2RwZX9fq1cnTcrGxjnuvwNhlWuMmEN5LMifLpvCmeylDIyFkVNGqYC
+	1rjUtR7GkOWeXsJOimh+9O2Xl/6i+oY77rTTUF/evBr7Zexlhx
+X-Google-Smtp-Source: AGHT+IGLnmAyTn+jbsZIBQgkJ5Sm1BS3PdUGW0qm7m2ynVGjjj2unFwpaUwcZfyE3ODVEoU9zApvt4zXrBJffr61fDg=
+X-Received: by 2002:a17:90b:3d8d:b0:2ef:114d:7bf8 with SMTP id
+ 98e67ed59e1d1-30e2e59bd13mr11340591a91.6.1747325032753; Thu, 15 May 2025
+ 09:03:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515043818.236807-1-irogers@google.com>
-In-Reply-To: <20250515043818.236807-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 15 May 2025 09:02:34 -0700
-X-Gm-Features: AX0GCFs7Uwtz4onl_u0xC4oHn__ywbBwH1lBS0hW5-D4un_TiodmjMrTGQICijM
-Message-ID: <CAP-5=fV0jEcphF9CW0jNbr6XkebgqADzcvuFgjeuUO6pAtGSzQ@mail.gmail.com>
-Subject: Re: [PATCH v1] perf pmu intel: Adjust cpumaks for sub-NUMA clusters
- on graniterapids
-To: Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20250515065018.240188-1-jiayuan.chen@linux.dev>
+In-Reply-To: <20250515065018.240188-1-jiayuan.chen@linux.dev>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 15 May 2025 09:03:39 -0700
+X-Gm-Features: AX0GCFv-OIxKCK9_Iw8tQ87ssy1Vb7qkSx0Tpb5CAtDvK01K1f2E5fqT1JWIn44
+Message-ID: <CAEf4BzYf7+D_Jck6LH_tFTdsfNg+tWQvz-T2WccYYEefRHm3Vg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2] bpftool: Add support for custom BTF path in
+ prog load/loadall
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: bpf@vger.kernel.org, Quentin Monnet <qmo@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Daniel Xu <dxu@dxuuu.xyz>, Mykyta Yatsenko <yatsenko@meta.com>, 
+	Tao Chen <chen.dylane@gmail.com>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 14, 2025 at 9:38=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Wed, May 14, 2025 at 11:52=E2=80=AFPM Jiayuan Chen <jiayuan.chen@linux.d=
+ev> wrote:
 >
-> On graniterapids the cache home agent (CHA) and memory controller
-> (IMC) PMUs all have their cpumask set to per-socket information. In
-> order for per NUMA node aggregation to work correctly the PMUs cpumask
-> needs to be set to CPUs for the relevant sub-NUMA grouping.
+> This patch exposes the btf_custom_path feature to bpftool, allowing users
+> to specify a custom BTF file when loading BPF programs using prog load or
+> prog loadall commands.
 >
-> For example, on a 2 socket graniterapids machine with sub NUMA
-> clustering of 3, for uncore_cha and uncore_imc PMUs the cpumask is
-> "0,120" leading to aggregation only on NUMA nodes 0 and 3:
-> ```
-> $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a sleep =
-1
+> The argument 'btf_custom_path' in libbpf is used for those kernes that
+> don't have CONFIG_DEBUG_INFO_BTF enabled but still want to perform CO-RE
+> relocations.
 >
->  Performance counter stats for 'system wide':
->
-> N0        1    277,835,681,344      UNC_CHA_CLOCKTICKS
-> N0        1     19,242,894,228      UNC_M_CLOCKTICKS
-> N3        1    277,803,448,124      UNC_CHA_CLOCKTICKS
-> N3        1     19,240,741,498      UNC_M_CLOCKTICKS
->
->        1.002113847 seconds time elapsed
-> ```
->
-> By updating the PMUs cpumasks to "0,120", "40,160" and "80,200" then
-> the correctly 6 NUMA node aggregations are achieved:
-> ```
-> $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a sleep =
-1
->
->  Performance counter stats for 'system wide':
->
-> N0        1     92,748,667,796      UNC_CHA_CLOCKTICKS
-> N0        0      6,424,021,142      UNC_M_CLOCKTICKS
-> N1        0     92,753,504,424      UNC_CHA_CLOCKTICKS
-> N1        1      6,424,308,338      UNC_M_CLOCKTICKS
-> N2        0     92,751,170,084      UNC_CHA_CLOCKTICKS
-> N2        0      6,424,227,402      UNC_M_CLOCKTICKS
-> N3        1     92,745,944,144      UNC_CHA_CLOCKTICKS
-> N3        0      6,423,752,086      UNC_M_CLOCKTICKS
-> N4        0     92,725,793,788      UNC_CHA_CLOCKTICKS
-> N4        1      6,422,393,266      UNC_M_CLOCKTICKS
-> N5        0     92,717,504,388      UNC_CHA_CLOCKTICKS
-> N5        0      6,421,842,618      UNC_M_CLOCKTICKS
->
->        1.003406645 seconds time elapsed
-> ```
->
-> In general, having the perf tool adjust cpumasks isn't desirable as
-> ideally the PMU driver would be advertising the correct cpumask.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
 > ---
->  tools/perf/arch/x86/util/pmu.c | 259 ++++++++++++++++++++++++++++++++-
->  1 file changed, 254 insertions(+), 5 deletions(-)
+>  tools/bpf/bpftool/Documentation/bpftool-prog.rst |  7 ++++++-
+>  tools/bpf/bpftool/bash-completion/bpftool        |  2 +-
+>  tools/bpf/bpftool/prog.c                         | 12 +++++++++++-
+>  3 files changed, 18 insertions(+), 3 deletions(-)
 >
-> diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pm=
-u.c
-> index 8712cbbbc712..38c800c6e9c8 100644
-> --- a/tools/perf/arch/x86/util/pmu.c
-> +++ b/tools/perf/arch/x86/util/pmu.c
-> @@ -8,6 +8,8 @@
->  #include <linux/perf_event.h>
->  #include <linux/zalloc.h>
->  #include <api/fs/fs.h>
-> +#include <api/io_dir.h>
-> +#include <internal/cpumap.h>
->  #include <errno.h>
+> diff --git a/tools/bpf/bpftool/Documentation/bpftool-prog.rst b/tools/bpf=
+/bpftool/Documentation/bpftool-prog.rst
+> index d6304e01afe0..e60a829ab8d0 100644
+> --- a/tools/bpf/bpftool/Documentation/bpftool-prog.rst
+> +++ b/tools/bpf/bpftool/Documentation/bpftool-prog.rst
+> @@ -127,7 +127,7 @@ bpftool prog pin *PROG* *FILE*
+>      Note: *FILE* must be located in *bpffs* mount. It must not contain a=
+ dot
+>      character ('.'), which is reserved for future extensions of *bpffs*.
 >
->  #include "../../../util/intel-pt.h"
-> @@ -16,7 +18,247 @@
->  #include "../../../util/fncache.h"
->  #include "../../../util/pmus.h"
->  #include "mem-events.h"
-> +#include "util/debug.h"
->  #include "util/env.h"
-> +#include "util/header.h"
+> -bpftool prog { load | loadall } *OBJ* *PATH* [type *TYPE*] [map { idx *I=
+DX* | name *NAME* } *MAP*] [{ offload_dev | xdpmeta_dev } *NAME*] [pinmaps =
+*MAP_DIR*] [autoattach]
+> +bpftool prog { load | loadall } *OBJ* *PATH* [type *TYPE*] [map { idx *I=
+DX* | name *NAME* } *MAP*] [{ offload_dev | xdpmeta_dev } *NAME*] [pinmaps =
+*MAP_DIR*] [autoattach] [kernel_btf *BTF_DIR*]
+>      Load bpf program(s) from binary *OBJ* and pin as *PATH*. **bpftool p=
+rog
+>      load** pins only the first program from the *OBJ* as *PATH*. **bpfto=
+ol prog
+>      loadall** pins all programs from the *OBJ* under *PATH* directory. *=
+*type**
+> @@ -153,6 +153,11 @@ bpftool prog { load | loadall } *OBJ* *PATH* [type *=
+TYPE*] [map { idx *IDX* | na
+>      program does not support autoattach, bpftool falls back to regular p=
+inning
+>      for that program instead.
+>
+> +    The **kernel_btf** option allows specifying an external BTF file to =
+replace
+> +    the system's own vmlinux BTF file for CO-RE relocations. NOTE that a=
+ny
+> +    other feature (e.g., fentry/fexit programs, struct_ops, etc) will re=
+quire
+> +    actual kernel BTF like /sys/kernel/btf/vmlinux.
 > +
-> +static bool x86__is_intel_graniterapids(void)
-> +{
-> +       static bool checked_if_graniterapids;
-> +       static bool is_graniterapids;
+>      Note: *PATH* must be located in *bpffs* mount. It must not contain a=
+ dot
+>      character ('.'), which is reserved for future extensions of *bpffs*.
+>
+> diff --git a/tools/bpf/bpftool/bash-completion/bpftool b/tools/bpf/bpftoo=
+l/bash-completion/bpftool
+> index 1ce409a6cbd9..609938c287b7 100644
+> --- a/tools/bpf/bpftool/bash-completion/bpftool
+> +++ b/tools/bpf/bpftool/bash-completion/bpftool
+> @@ -511,7 +511,7 @@ _bpftool()
+>                              ;;
+>                          *)
+>                              COMPREPLY=3D( $( compgen -W "map" -- "$cur" =
+) )
+> -                            _bpftool_once_attr 'type pinmaps autoattach'
+> +                            _bpftool_once_attr 'type pinmaps autoattach =
+kernel_btf'
+>                              _bpftool_one_of_list 'offload_dev xdpmeta_de=
+v'
+>                              return 0
+>                              ;;
+> diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+> index f010295350be..3b6a361dd0f8 100644
+> --- a/tools/bpf/bpftool/prog.c
+> +++ b/tools/bpf/bpftool/prog.c
+> @@ -1681,8 +1681,17 @@ static int load_with_options(int argc, char **argv=
+, bool first_prog_only)
+>                 } else if (is_prefix(*argv, "autoattach")) {
+>                         auto_attach =3D true;
+>                         NEXT_ARG();
+> +               } else if (is_prefix(*argv, "kernel_btf")) {
+> +                       NEXT_ARG();
 > +
-> +       if (!checked_if_graniterapids) {
-> +               const char *graniterapids_cpuid =3D "GenuineIntel-6-A[DE]=
-";
-> +               char *cpuid =3D get_cpuid_str((struct perf_cpu){0});
+> +                       if (!REQ_ARGS(1))
+> +                               goto err_free_reuse_maps;
 > +
-> +               is_graniterapids =3D cpuid && strcmp_cpuid_str(graniterap=
-ids_cpuid, cpuid) =3D=3D 0;
-> +               free(cpuid);
-> +               checked_if_graniterapids =3D true;
-> +       }
-> +       return is_graniterapids;
-> +}
-> +
-> +static struct perf_cpu_map *read_sysfs_cpu_map(const char *sysfs_path)
-> +{
-> +       struct perf_cpu_map *cpus;
-> +       char *buf =3D NULL;
-> +       size_t buf_len;
-> +
-> +       if (sysfs__read_str(sysfs_path, &buf, &buf_len) < 0)
-> +               return NULL;
-> +
-> +       cpus =3D perf_cpu_map__new(buf);
-> +       free(buf);
-> +       return cpus;
-> +}
-> +
-> +static int snc_nodes_per_l3_cache(void)
-> +{
-> +       static bool checked_snc;
-> +       static int snc_nodes;
-> +
-> +       if (!checked_snc) {
-> +               struct perf_cpu_map *node_cpus =3D
-> +                       read_sysfs_cpu_map("devices/system/node/node0/cpu=
-list");
-> +               struct perf_cpu_map *cache_cpus =3D
-> +                       read_sysfs_cpu_map("devices/system/cpu/cpu0/cache=
-/index3/shared_cpu_list");
-> +
-> +               snc_nodes =3D perf_cpu_map__nr(cache_cpus) / perf_cpu_map=
-__nr(node_cpus);
-> +               perf_cpu_map__put(cache_cpus);
-> +               perf_cpu_map__put(node_cpus);
-> +               checked_snc =3D true;
-> +       }
-> +       return snc_nodes;
-> +}
-> +
-> +static bool starts_with(const char *str, const char *prefix)
-> +{
-> +       return !strncmp(prefix, str, strlen(prefix));
-> +}
-> +
-> +static int num_chas(void)
-> +{
-> +       static bool checked_chas;
-> +       static int num_chas;
-> +
-> +       if (!checked_chas) {
-> +               int fd =3D perf_pmu__event_source_devices_fd();
-> +               struct io_dir dir;
-> +               struct io_dirent64 *dent;
-> +
-> +               if (fd < 0)
-> +                       return -1;
-> +
-> +               io_dir__init(&dir, fd);
-> +
-> +               while ((dent =3D io_dir__readdir(&dir)) !=3D NULL) {
-> +                       /* Note, dent->d_type will be DT_LNK and so isn't=
- a useful filter. */
-> +                       if (starts_with(dent->d_name, "uncore_cha_"))
-> +                               num_chas++;
-> +               }
-> +               close(fd);
-> +               checked_chas =3D true;
-> +       }
-> +       return num_chas;
-> +}
-> +
-> +#define MAX_SNCS 6
-> +
-> +static int uncore_cha_snc(struct perf_pmu *pmu)
-> +{
-> +       // CHA SNC numbers are ordered correspond to the CHAs number.
-> +       unsigned int cha_num;
-> +       int num_cha, chas_per_node, cha_snc;
-> +       int snc_nodes =3D snc_nodes_per_l3_cache();
-> +
-> +       if (snc_nodes <=3D 1)
-> +               return 0;
-> +
-> +       num_cha =3D num_chas();
-> +       if (num_cha <=3D 0) {
-> +               pr_warning("Unexpected: no CHAs found\n");
-> +               return 0;
-> +       }
-> +
-> +       /* Compute SNC for PMU. */
-> +       if (sscanf(pmu->name, "uncore_cha_%u", &cha_num) !=3D 1) {
-> +               pr_warning("Unexpected: unable to compute CHA number '%s'=
-\n", pmu->name);
-> +               return 0;
-> +       }
-> +       chas_per_node =3D num_cha / snc_nodes;
-> +       cha_snc =3D cha_num / chas_per_node;
-> +
-> +       /* Range check cha_snc. for unexpected out of bounds. */
-> +       return cha_snc >=3D MAX_SNCS ? 0 : cha_snc;
-> +}
-> +
-> +static int uncore_imc_snc(struct perf_pmu *pmu)
-> +{
-> +       // Compute the IMC SNC using lookup tables.
-> +       unsigned int imc_num;
-> +       int snc_nodes =3D snc_nodes_per_l3_cache();
-> +       const u8 snc2_map[] =3D {1, 1, 0, 0, 1, 1, 0, 0};
-> +       const u8 snc3_map[] =3D {1, 1, 0, 0, 2, 2, 1, 1, 0, 0, 2, 2};
-> +       const u8 *snc_map;
-> +       size_t snc_map_len;
-> +
-> +       switch (snc_nodes) {
-> +       case 2:
-> +               snc_map =3D snc2_map;
-> +               snc_map_len =3D ARRAY_SIZE(snc2_map);
-> +               break;
-> +       case 3:
-> +               snc_map =3D snc3_map;
-> +               snc_map_len =3D ARRAY_SIZE(snc3_map);
-> +               break;
-> +       default:
-> +               /* Error or no lookup support for SNC with >3 nodes. */
-> +               return 0;
-> +       }
-> +
-> +       /* Compute SNC for PMU. */
-> +       if (sscanf(pmu->name, "uncore_imc_%u", &imc_num) !=3D 1) {
-> +               pr_warning("Unexpected: unable to compute IMC number '%s'=
-\n", pmu->name);
-> +               return 0;
-> +       }
-> +       if (imc_num >=3D snc_map_len) {
-> +               pr_warning("Unexpected IMC %d for SNC%d mapping\n", imc_n=
-um, snc_nodes);
-> +               return 0;
-> +       }
-> +       return snc_map[imc_num];
-> +}
-> +
-> +static int uncore_cha_imc_compute_cpu_adjust(int pmu_snc)
-> +{
-> +       static bool checked_cpu_adjust[MAX_SNCS];
-> +       static int cpu_adjust[MAX_SNCS];
-> +       struct perf_cpu_map *node_cpus;
-> +       char node_path[] =3D "devices/system/node/node0/cpulist";
-> +
-> +       /* Was adjust already computed? */
-> +       if (checked_cpu_adjust[pmu_snc])
-> +               return cpu_adjust[pmu_snc];
-> +
-> +       /* SNC0 doesn't need an adjust. */
-> +       if (pmu_snc =3D=3D 0) {
-> +               cpu_adjust[0] =3D 0;
-> +               checked_cpu_adjust[0] =3D true;
-> +               return 0;
-> +       }
-> +
-> +       /*
-> +        * Use NUMA topology to compute first CPU of the NUMA node, we wa=
-nt to
-> +        * adjust CPU 0 to be this and similarly for other CPUs if there =
-is >1
-> +        * socket.
-> +        */
-> +       node_path[24] =3D pmu_snc; // Shift node0 to be node<pmu_snc>.
+> +                       open_opts.btf_custom_path =3D GET_ARG();
+>                 } else {
+> -                       p_err("expected no more arguments, 'type', 'map' =
+or 'dev', got: '%s'?",
+> +                       p_err("expected no more arguments, "
+> +                             "'type', 'map', 'dev', 'offload_dev', 'xdpm=
+eta_dev', 'pinmaps', "
+> +                             "'autoattach', or 'kernel_btf', got: '%s'?"=
+,
+>                               *argv);
+>                         goto err_free_reuse_maps;
+>                 }
+> @@ -2474,6 +2483,7 @@ static int do_help(int argc, char **argv)
+>                 "                         [map { idx IDX | name NAME } MA=
+P]\\\n"
+>                 "                         [pinmaps MAP_DIR]\n"
+>                 "                         [autoattach]\n"
+> +               "                         [kernel_btf BTF_DIR]\n"
 
-Sorry I migrated a patch badly and this should be "+=3D", will fix in v2
-along with the reference count checker.
+Is it a DIR or a FILE/PATH?
 
-Thanks,
-Ian
-
-> +       node_cpus =3D read_sysfs_cpu_map(node_path);
-> +       cpu_adjust[pmu_snc] =3D perf_cpu_map__cpu(node_cpus, 0).cpu;
-> +       checked_cpu_adjust[pmu_snc] =3D true;
-> +       perf_cpu_map__put(node_cpus);
-> +       return cpu_adjust[pmu_snc];
-> +}
-> +
-> +static void gnr_uncore_cha_imc_adjust_cpumask_for_snc(struct perf_pmu *p=
-mu, bool cha)
-> +{
-> +       // With sub-NUMA clustering (SNC) there is a NUMA node per SNC in=
- the
-> +       // topology. For example, a two socket graniterapids machine may =
-be set
-> +       // up with 3-way SNC meaning there are 6 NUMA nodes that should b=
-e
-> +       // displayed with --per-node. The cpumask of the CHA and IMC PMUs
-> +       // reflects per-socket information meaning, for example, uncore_c=
-ha_60
-> +       // on a two socket graniterapids machine with 120 cores per socke=
-t will
-> +       // have a cpumask of "0,120". This cpumask needs adjusting to "40=
-,160"
-> +       // to reflect that uncore_cha_60 is used for the 2nd SNC of each
-> +       // socket. Without the adjustment events on uncore_cha_60 will ap=
-pear in
-> +       // node 0 and node 3 (in our example 2 socket 3-way set up), but =
-with
-> +       // the adjustment they will appear in node 1 and node 4. The numb=
-er of
-> +       // CHAs is typically larger than the number of cores. The CHA num=
-bers
-> +       // are assumed to split evenly and inorder wrt core numbers. Ther=
-e are
-> +       // fewer memory IMC PMUs than cores and mapping is handled using =
-lookup
-> +       // tables.
-> +       static struct perf_cpu_map *cha_adjusted[MAX_SNCS];
-> +       static struct perf_cpu_map *imc_adjusted[MAX_SNCS];
-> +       struct perf_cpu_map **adjusted =3D cha ? cha_adjusted : imc_adjus=
-ted;
-> +       int idx, pmu_snc, cpu_adjust;
-> +       struct perf_cpu cpu;
-> +       bool alloc;
-> +
-> +       // Cpus from the kernel holds first CPU of each socket. e.g. 0,12=
-0
-> +       assert(perf_cpu_map__cpu(pmu->cpus, 0).cpu =3D=3D 0);
-> +
-> +       pmu_snc =3D cha ? uncore_cha_snc(pmu) : uncore_imc_snc(pmu);
-> +       if (pmu_snc =3D=3D 0) {
-> +               // No adjustment necessary for the first SNC.
-> +               return;
-> +       }
-> +
-> +       alloc =3D adjusted[pmu_snc] =3D=3D NULL;
-> +       if (alloc) {
-> +               // Hold onto the perf_cpu_map globally to avoid recomputa=
-tion.
-> +               cpu_adjust =3D uncore_cha_imc_compute_cpu_adjust(pmu_snc)=
-;
-> +               adjusted[pmu_snc] =3D perf_cpu_map__empty_new(perf_cpu_ma=
-p__nr(pmu->cpus));
-> +               if (!adjusted[pmu_snc])
-> +                       return;
-> +       }
-> +
-> +       perf_cpu_map__for_each_cpu(cpu, idx, pmu->cpus) {
-> +               // Compute the new cpu map values or if not allocating, a=
-ssert
-> +               // that they match expectations. asserts will be removed =
-to
-> +               // avoid overhead in NDEBUG builds.
-> +               if (alloc) {
-> +                       adjusted[pmu_snc]->map[idx].cpu =3D cpu.cpu + cpu=
-_adjust;
-> +               } else if (idx =3D=3D 0) {
-> +                       cpu_adjust =3D perf_cpu_map__cpu(adjusted[pmu_snc=
-], idx).cpu - cpu.cpu;
-> +                       assert(uncore_cha_imc_compute_cpu_adjust(pmu_snc)=
- =3D=3D cpu_adjust);
-> +               } else {
-> +                       assert(perf_cpu_map__cpu(adjusted[pmu_snc], idx).=
-cpu =3D=3D
-> +                              cpu.cpu + cpu_adjust);
-> +               }
-> +       }
-> +
-> +       perf_cpu_map__put(pmu->cpus);
-> +       pmu->cpus =3D perf_cpu_map__get(adjusted[pmu_snc]);
-> +}
->
->  void perf_pmu__arch_init(struct perf_pmu *pmu)
->  {
-> @@ -49,10 +291,17 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
->
->                 perf_mem_events__loads_ldlat =3D 0;
->                 pmu->mem_events =3D perf_mem_events_amd_ldlat;
-> -       } else if (pmu->is_core) {
-> -               if (perf_pmu__have_event(pmu, "mem-loads-aux"))
-> -                       pmu->mem_events =3D perf_mem_events_intel_aux;
-> -               else
-> -                       pmu->mem_events =3D perf_mem_events_intel;
-> +       } else {
-> +               if (pmu->is_core) {
-> +                       if (perf_pmu__have_event(pmu, "mem-loads-aux"))
-> +                               pmu->mem_events =3D perf_mem_events_intel=
-_aux;
-> +                       else
-> +                               pmu->mem_events =3D perf_mem_events_intel=
-;
-> +               } else if (x86__is_intel_graniterapids()) {
-> +                       if (starts_with(pmu->name, "uncore_cha_"))
-> +                               gnr_uncore_cha_imc_adjust_cpumask_for_snc=
-(pmu, /*cha=3D*/true);
-> +                       else if (starts_with(pmu->name, "uncore_imc_"))
-> +                               gnr_uncore_cha_imc_adjust_cpumask_for_snc=
-(pmu, /*cha=3D*/false);
-> +               }
->         }
->  }
+>                 "       %1$s %2$s attach PROG ATTACH_TYPE [MAP]\n"
+>                 "       %1$s %2$s detach PROG ATTACH_TYPE [MAP]\n"
+>                 "       %1$s %2$s run PROG \\\n"
 > --
-> 2.49.0.1045.g170613ef41-goog
+> 2.47.1
+>
 >
