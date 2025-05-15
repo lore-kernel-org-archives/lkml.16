@@ -1,153 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E663372638;
-	Thu, 15 May 2025 16:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFBA1D79A6;
+	Thu, 15 May 2025 16:53:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747327886; cv=none; b=AeN+FoPSKupo7pWPimqd6OS5P4txzdkGqEunZEsJo0LcIzkBg8rni7LPl/GbSiwMA2r6DBPriyGoRbldPepW4vugCab8H5YvbwHnUyU2KWCAk3alLJsM1I0e+erjquNaOxteDTir5fvNmEsz5dssWmcdMZLPy8hEV1LD5GpGQXQ=
+	t=1747327988; cv=none; b=P4UyNplcCa9TFlNTf7V/qAkkKfRVVHPc+BaIuyu16UlGAdDm73CBWN8whBw3tzA9mCCMWN0BGeN+vSySmwmMRmGWloMo7RYoiRPWeSABvBkOFPI9wHrZdIk4ryh275bbcaTUhlbtZZyN+Z6hSn8SSrEB5YmB0EHUGm6/g9v8Qxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747327886; c=relaxed/simple;
-	bh=3DPNjyp/917C9IaWYsELtdTjRMZT/8tWz2u/wuB04SI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EhZsPal2Ct3t5er0kmweoIYdKHlwwiXCF0OHNtZV7uavdAs5hdX8/OSIWckeyLdRicPmcMWjMGmr9oldUiKpcxElILkS7jXl8e2RrKIs1ynTH2eMCcjQYZtcflHReALzevQo06re4K9Lm1j0NToZycKUdsiJrSw/RT3eGGUFz8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tDlNlmua; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tDlNlmua"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46EB0C4CEEF;
-	Thu, 15 May 2025 16:51:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747327885;
-	bh=3DPNjyp/917C9IaWYsELtdTjRMZT/8tWz2u/wuB04SI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tDlNlmua3Rv4A6wfHEhTsyY1fhtP9Ry6mwq6MfDez0T5Lb8JyCpcYnpN++S4PI572
-	 fZRzIm9/Ov4x3q2DcEHfP/HEJWqXnPx2wFAxumsmOrrg+HtxlFYUckbC2sBA3dA2QY
-	 TehhdkKoB4kEvz6WNEzFdkOrIkyXt1LNJg7VuSNaT+7J9JmoL4G+VEJUAbJlUxjxzr
-	 AeTwfadkMrmqinXF3iMuuNq74naWBSEP+2hlZdWCftyIMBNEpp0jyBFAplMdd3zlMj
-	 KZuUcdJLDTB4rrCSXG6EALUzrQlXy/sVifi/S1eOaEVH2CIaTGaFYSsDns3nS9SmCQ
-	 k6GXdy9gIYliQ==
-Date: Thu, 15 May 2025 18:51:20 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: "Ahmed S. Darwish" <darwi@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
-	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 0/9] x86/cpuid: Headers cleanup
-Message-ID: <aCYbiLjkWM67Ogj_@gmail.com>
-References: <20250508150240.172915-1-darwi@linutronix.de>
+	s=arc-20240116; t=1747327988; c=relaxed/simple;
+	bh=x2mw5yqY7SjedCStPq1pT8tA+9SiafJT2CicuDHHlus=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aDP3B5F151Pc805a8lQDJL4f8rq52PX2CmroRaWmN9mwvgXJdgg6LuRI668FDqJ6RRm2boK/0S+Qs5CZyLn2JbkBYsvNpohApp1/fnbERyJxkdhE5T33f6KNYy3YAPjncBDTzXedFziwfUVi0GLzMSPXu+M9usJ/F7Md5bmRCb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout12.his.huawei.com (SkyGuard) with ESMTPS id 4Zyx8V3tdtzsST6;
+	Fri, 16 May 2025 00:52:26 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id 8BDF61402E0;
+	Fri, 16 May 2025 00:53:00 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP1 (Coremail) with SMTP id LxC2BwCHC0rhGyZocybvBw--.48004S2;
+	Thu, 15 May 2025 17:52:59 +0100 (CET)
+Message-ID: <2a20e37ac05068a0fbcfb6faaf6cd73123da2844.camel@huaweicloud.com>
+Subject: Re: [syzbot] [lsm?] [integrity?] KMSAN: uninit-value in
+ ima_add_template_entry (3)
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: syzbot <syzbot+3f0b3970f154dfc95e6e@syzkaller.appspotmail.com>, 
+ dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, jmorris@namei.org, 
+ linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-security-module@vger.kernel.org, paul@paul-moore.com, 
+ roberto.sassu@huawei.com, serge@hallyn.com,
+ syzkaller-bugs@googlegroups.com,  zohar@linux.ibm.com,
+ linux-bcachefs@vger.kernel.org
+Date: Thu, 15 May 2025 18:52:45 +0200
+In-Reply-To: <er7lw7xo3qfu67sdjdghcurgar3q2iwcy6lr4jlunsmev5c4qq@b7mue2oh6ort>
+References: <6824aea8.a00a0220.104b28.0011.GAE@google.com>
+	 <38c28bd4dc40b2e992c13a6fdba820a667861d8c.camel@huaweicloud.com>
+	 <rbab6axciiuomrann3uwvpks2zogx3xfntk7w4p2betq3morlf@5xnl5guhnaxj>
+	 <576e10238d83f725fbe23c4af63be6e83de9ce48.camel@huaweicloud.com>
+	 <l7xs6ea7takb5yvyvobxoce3mudbgen5d7s47onksm4ujpdkib@tvstwbdpvm4o>
+	 <2993afd1b2b1553a75d1016ec2d06b6fb8e78e57.camel@huaweicloud.com>
+	 <er7lw7xo3qfu67sdjdghcurgar3q2iwcy6lr4jlunsmev5c4qq@b7mue2oh6ort>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250508150240.172915-1-darwi@linutronix.de>
+X-CM-TRANSID:LxC2BwCHC0rhGyZocybvBw--.48004S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxXw18uw17XF1DAF1kKF4DArb_yoW5ArWDpa
+	yaqF1UK34DXFy7ArW2k3WYqFyfKrW8t345X34rXr97CF90qr1Y9ryxtr1Y9r17Xr1rtw1U
+	Cr1Dt34avw1DJFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
+	wI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUOB
+	MKDUUUU
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAJBGglkmAH5AAAsT
 
+On Thu, 2025-05-15 at 12:48 -0400, Kent Overstreet wrote:
+> On Thu, May 15, 2025 at 06:39:48PM +0200, Roberto Sassu wrote:
+> > On Thu, 2025-05-15 at 12:37 -0400, Kent Overstreet wrote:
+> > > On Thu, May 15, 2025 at 04:30:09PM +0200, Roberto Sassu wrote:
+> > > > On Thu, 2025-05-15 at 10:18 -0400, Kent Overstreet wrote:
+> > > > > On Thu, May 15, 2025 at 04:06:02PM +0200, Roberto Sassu wrote:
+> > > > > > On Wed, 2025-05-14 at 07:54 -0700, syzbot wrote:
+> > > > > > > Hello,
+> > > > > >=20
+> > > > > > + Kent, bcachefs mailing list
+> > > > > >=20
+> > > > > > I have the feeling that this was recently fixed in one of the l=
+atest
+> > > > > > pull requests in bcachefs. I don't see it occurring anymore, an=
+d there
+> > > > > > are more commits after the one reported by syzbot.
+> > > > >=20
+> > > > > I have no idea how any of the ima stuff works or even what it doe=
+s, I'm
+> > > > > not even sure where I'd start...
+> > > >=20
+> > > > Basically, I got a clue that bcachefs would be the cause from the
+> > > > bottom of the report:
+> > > >=20
+> > > >  page_cache_sync_ra+0x108a/0x13e0 mm/readahead.c:621
+> > > >  filemap_get_pages+0xfb3/0x3a70 mm/filemap.c:2591
+> > > >  filemap_read+0x5c6/0x2190 mm/filemap.c:2702
+> > > >  bch2_read_iter+0x559/0x21c0 fs/bcachefs/fs-io-direct.c:221
+> > > >  __kernel_read+0x750/0xda0 fs/read_write.c:528
+> > > >  integrity_kernel_read+0x77/0x90 security/integrity/iint.c:28
+> > > >=20
+> > > > This means that IMA is reading a file and calculating a digest over=
+ it:
+> > > >=20
+> > > >  ima_calc_file_hash_tfm security/integrity/ima/ima_crypto.c:498 [in=
+line]
+> > > >  ima_calc_file_shash security/integrity/ima/ima_crypto.c:511 [inlin=
+e]
+> > > >  ima_calc_file_hash+0x240a/0x3fd0 security/integrity/ima/ima_crypto=
+.c:568
+> > > >  ima_collect_measurement+0x45d/0xe60 security/integrity/ima/ima_api=
+.c:293
+> > > >  process_measurement+0x2d1a/0x40e0 security/integrity/ima/ima_main.=
+c:385
+> > > >  ima_file_check+0x8e/0xd0 security/integrity/ima/ima_main.c:613
+> > > >=20
+> > > > syzbot is complaining that the data the digest was calculated from =
+was
+> > > > not initialized (e.g. zeroed).
+> > > >=20
+> > > > There is a reproducer, we would be probably able to do a bisection =
+and
+> > > > find the commit that caused it (and maybe the one that fixed it).
+> > >=20
+> > > Ok, that would be fixed by the - multiple - KMSAN fixes, most of thos=
+e
+> > > were spurious but code was lacking annotations. Probably this one:
+> > >=20
+> > > 9c3a2c9b471a bcachefs: Disable asm memcpys when kmsan enabled
+> >=20
+> > Perfect, thanks a lot!
+> >=20
+> > Will check it and mark this report as fixed.
+>=20
+> Btw, since you mentioned syzbot reproducers, I have a tool for running
+> those locally, with a single command. It's one of the "tests" in ktest:
+>=20
+> https://evilpiepirate.org/git/ktest.git/
+>=20
+> With that, you can do
+>=20
+> build-test-kernel run -IP ~/ktest/tests/syzbot-repro.ktest <syz id>
+>=20
+> in your kernel tree, and it'll build a kernel, launch a vm, and run the
+> reproducer, all in a single command :)
 
-* Ahmed S. Darwish <darwi@linutronix.de> wrote:
+Great, will try that!
 
-> Hi,
-> 
-> This is a CPUID headers cleanup series, on top of tip:x86/cpu.  It is a
-> precursor for the upcoming v2 of the CPUID parser:
-> 
->     [PATCH v1 00/26] x86: Introduce centralized CPUID model
->     https://lore.kernel.org/lkml/20250506050437.10264-1-darwi@linutronix.de
-> 
-> as suggested by Ingo here:
-> 
->     https://lore.kernel.org/lkml/aBnSgu_JyEi8fvog@gmail.com
-> 
-> * Summary:
-> 
-> The current CPUID header structure is:
-> 
->     include/asm/
->     ├── cpuid
->     │   ├── api.h
->     │   ├── leaf_0x2_api.h
->     │   └── types.h
->     └── cpuid.h
-> 
-> Simplify it into:
-> 
->     include/asm/
->     ├── api.h
->     └── types.h
-> 
-> Standardize the CPUID header namespace by enforcing a "cpuid_" prefix for
-> all exported symbols.  That is:
-> 
->     have_cpuid_p()		➤	cpuid_feature()
->     hypervisor_cpuid_base()	➤	cpuid_hypervisor_base()
->     native_cpuid()		➤	cpuid_native()
->     native_cpuid_REG()		➤	cpuid_native_REG()
-> 
-> Also rename:
-> 
->     cpuid_get_leaf_0x2_regs()	➤	cpuid_leaf_0x2()
-> 
-> for consistency with the other <asm/cpuid/api.h> accessors that return
-> full CPUID register output; i.e., cpuid_leaf() and cpuid_subleaf().
-> 
-> Finally, rename:
-> 
->     for_each_leaf_0x2_entry()   ➤	for_each_cpuid_0x2_desc()
-> 
-> to include "cpuid" in the iterator name, and since what is being iterated
-> upon is CPUID(0x2) cache and TLB "descriptos", not "entries".
-> 
-> * Testing:
-> 
-> - Basic one-by-one allyesconfig compilation
-> 
-> - Comparison of a before/after of below files:
-> 
->   - /proc/cpuinfo
->   - /sys/devices/system/cpu/
->   - /sys/kernel/debug/x86/topo/
->   - dmesg --notime | grep 'Last level [id]TLB entries'
-> 
-> Thanks!
-> 
-> 8<--
-> 
-> Ahmed S. Darwish (9):
->   x86/cpuid: Move CPUID(0x2) APIs into <cpuid/api.h>
->   x86/cpuid: Set <asm/cpuid/api.h> as the main CPUID header
->   x86/cpuid: Rename have_cpuid_p() to cpuid_feature()
->   x86/cpuid: Rename hypervisor_cpuid_base() to cpuid_hypervisor_base()
->   x86/cpuid: Rename cpuid_get_leaf_0x2_regs() to cpuid_leaf_0x2()
->   x86/cacheinfo: Rename CPUID(0x2) descriptors iterator parameter
->   x86/cpu: Rename CPUID(0x2) descriptors iterator parameter
->   x86/cpuid: Rename native_cpuid() to cpuid_native()
->   x86/cpuid: Rename native_cpuid_REG() to cpuid_native_REG()
+Thanks
 
-Thank you for doing this. I've reviewed the series and applied these:
+Roberto
 
-    x86/cpuid: Move CPUID(0x2) APIs into <cpuid/api.h>
-    x86/cpuid: Set <asm/cpuid/api.h> as the main CPUID header
-    x86/cpuid: Rename have_cpuid_p() to cpuid_feature()
-    x86/cpuid: Rename cpuid_get_leaf_0x2_regs() to cpuid_leaf_0x2()
-    x86/cacheinfo: Rename CPUID(0x2) descriptors iterator parameter
-    x86/cpu/intel: Rename CPUID(0x2) descriptors iterator parameter
-
-I had some questions about:
-
-    x86/cpuid: Rename hypervisor_cpuid_base() to cpuid_hypervisor_base()
-    x86/cpuid: Rename native_cpuid() to cpuid_native()
-
-and you had better ideas about:
-
-    x86/cpuid: Rename native_cpuid_REG() to cpuid_native_REG()
-
-Thanks,
-
-	Ingo
