@@ -1,168 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73EBB295D89
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 06:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20D718C02E;
+	Thu, 15 May 2025 06:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747289679; cv=none; b=tonEE2ZbnkDQOGKeowk561wI4cgTDBMJ723h0ZG7VX1VawS+s8nZ3ub9lScH1H8hSE6UmpOpq4/pEAT2Xb+gpRubSln8IVgqOEb0k48jN4HmCyKiBpeb4ThI/giEaRaudmcVlt/UuAERD05CvoMuMXigL/Bbs6pGmq/4GW3yOYA=
+	t=1747289865; cv=none; b=MrhvGepRlvai7vGuagdWmR4TBCBZO8zdTYTXZVpN1sxMD50H4sp+gOZJFZRd1rgvlyNB9aKGJLCm9c50AQ6HS8telqVUP8KG8j72dT6MfCsSKMqVeYFk2dIfAp8WBlPTYF3pTD0Po4nd2rxR65i0SV3d7aVPBY7ryepsng4l9Gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747289679; c=relaxed/simple;
-	bh=GHX8SKnuRhPHg4JVM24oLTd/BzpBHMkfXNZOoDsAupc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q4W+km5NAraLQ6zznDtBB2bC/PWDUYGUG5EqIb7hQxwM9k/BeJLEp7nMaeVy1XJ8o/dycGRjEn43xlU8Hm1JCZ5o7oE9ZETW6dDViBcwL+ijXZtzrh+PucYEIrL+6jJUdfVUTUO2lWj8AebmpOHudYI0oFA9MxbwYyg9WNeqIz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JjiT3WgD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747289865; c=relaxed/simple;
+	bh=oru/zjh4HWQQQVjgjm5hZII0Yl/eTwNGeswMe2zOaG0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QCfJtQlA9ihXi6ceuhActQesdviAJPXB4JQQEBsobBENFG7hfibaqu2ey/XWWe/p0QR9a9uQhLunKHZKjgGLeSDk0VjKbfK5/pX/mP2Dfh+ElatQsttWs0frix/20Pt+Z+kkKvPu2l6zrM7gO9F/TjRKWg2WLUaTWKUaVy8t8D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bx6YLr8G; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JjiT3WgD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747289676;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=O0+9WuDoVK7seiIekMPOn5cFsp2sTkD5ZfvmbgrYAn0=;
-	b=JjiT3WgDVFVylFVRhxTCCWIFpZTWFnNZfOiVQH5cF9SF12jYaCAhgoUO1dE0o6RopSZr1B
-	ZzuJTJz5lQrsvYMmfmeI+Canam9WLNPZMeyo7cVH1ArD/wzMstywH/BLIhSVzbnvn0m93M
-	IlOjnWZGLp9x1zVDhP0NMezoMRNKCb4=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-348-MF-wgKswPtO8f7zm10Iutg-1; Thu, 15 May 2025 02:14:34 -0400
-X-MC-Unique: MF-wgKswPtO8f7zm10Iutg-1
-X-Mimecast-MFC-AGG-ID: MF-wgKswPtO8f7zm10Iutg_1747289673
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-442cdf07ad9so3001135e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 23:14:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bx6YLr8G"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b13e0471a2dso285682a12.2;
+        Wed, 14 May 2025 23:17:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747289863; x=1747894663; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hubB3bq5hrgLVSF8PoDBX4VrowZwZMhu6qQo8MKJuAA=;
+        b=bx6YLr8GbrKYX8N+26a/RctPWo5g6LFsVEEVgjhenNHK9kf5kwFlZWxKimXV5Aku9X
+         JcwW+tyYW5rwrbr2eyKf1+Xtp/6OL9stj0fO1R7cmIMgUMkXSjgPnh9jdn6m5PClXVZi
+         +igRxbr7cJDLKYuz19nKKqzT3SLKIPHf2QzqZ+IOgkXfb4z1X6iKul1KugnuRyZcv+zz
+         e7zTvp6DuOJd7ngDVSq2/hgNe+NBB7kCi995Pig1KvOa2v5eV4X8cbH1MxTK3Fuul0b+
+         xdiSKfbL3c9WkBMfSNZQhK7Kuo/8yfcV5WhHp1EAKA2FX3DX9xCksMK//cdLzofkRUPr
+         0p2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747289673; x=1747894473;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O0+9WuDoVK7seiIekMPOn5cFsp2sTkD5ZfvmbgrYAn0=;
-        b=QITBhprHEfx2jTVqMynwXc8wa10lRQC3lRVLTPC9dqaX3GdPuzX90Ct/R2JW8DYWnd
-         x5YdrY80ad4SPPT4jTJmCfcWaw2SR2MIx0Udk/pIwghubFa4ufly91y+2VYrcsh5ltRT
-         Ep2eQKkFahvWIsbePIDW9axtZIew9zVKY8qpnZIonOfnei0agkmrc9Gcq/sIpVWZu8L+
-         HkbRFAaxDu7DrRurBZ+pxvsIit5Lztb2CzW8U3xQvqElu7FxCtr2kEDSBY0W//ZxlUlV
-         SkPEz+BsMQhID9YtLRCr7uXWsh0PWzHlY2eX1OYqVnreDYRm9JVqagfu1oU0KiWOLU1X
-         f+Og==
-X-Forwarded-Encrypted: i=1; AJvYcCWE+xCd9DBQGHMrgYIa4ge5S3p3fPJf01yoB4cvTdNPYPciMHutx1Bu2NuOoE4ixpFW4fhoDqHDdH5cy30=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4tBxaOjOdgttiFfUVwE6hIsHuLAX/ppkzpSeffDKeATHSmQ1j
-	iz8lQvIhaUVoTEs1uSw4KYDmrJ+R1aWplUP/zgAiP+qz5Rxz26yDXLnkcj3gxzBsdq5mwssprVf
-	nWtg68EPRXGzxp7396zDE+XsDgS53EwZ2M53oxHq/6IzFaYMtiObXnMP2ZyojeQ==
-X-Gm-Gg: ASbGnctPLje5ObsixULwg7W0k6VDp5OyWR9+KAz+8qw4LBYU3wjuVF45F+lhJ3MHmOf
-	S6gkleS06Md8S2JWUHYrN70xGk08AVSvLnNtYn6JPnUUsW1pzzHmp/lC2xxPFZF7CntT388rL7M
-	JJEO/d4kQYittI61WnWxyFI4DzDFwsXCOUYrA3d4X7HcArwzqjr9k0+GHr1xx45gMM2gyFC8lcs
-	sUdw05Q48rSMlS1nbxENzfYyYROJhFIBrn7pNYuTFTHgvMz+yvqE2maR9jRz5loqnwEL4kJ8n7G
-	nVAmwQ==
-X-Received: by 2002:a05:600c:8289:b0:43d:ea:51d2 with SMTP id 5b1f17b1804b1-442f96ebbdcmr9335005e9.14.1747289673391;
-        Wed, 14 May 2025 23:14:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG3PEe9C8rgBo0TvQnY3+NCOLyFxB24dQVnG16aVk1y3CI+MSZSiHnCWnpwcLn7wNlLIVXpyg==
-X-Received: by 2002:a05:600c:8289:b0:43d:ea:51d2 with SMTP id 5b1f17b1804b1-442f96ebbdcmr9334755e9.14.1747289673051;
-        Wed, 14 May 2025 23:14:33 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f39e8578sm57255445e9.29.2025.05.14.23.14.31
+        d=1e100.net; s=20230601; t=1747289863; x=1747894663;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hubB3bq5hrgLVSF8PoDBX4VrowZwZMhu6qQo8MKJuAA=;
+        b=Korh+bvt8lJQRAw/o7GD3OpGtpMLdpz+3dfIttXMdV/2UC/KuxUi9b6XHddrwVZjeY
+         ChuFVhxns3a7kPmZ2iQz8dT5TDP69nHkpY6ekTb/j+Gsyl0mskpW0osyH46s9hFSdMrJ
+         nhs28XFtAOiT+q44hl6Nc1CYdNpZ4tx8RKk0Knlhr83xsEweAJhUJQHcwSNq1LeSqkLR
+         sHw9JZoQjCeBHTfMwZBR1U8rHSnmICg+BCicsA73PC9qdqgx0BZaOfFnsTffY+nzGCa7
+         4ocfBSNOScPqTBamcLIeQrofJ+G8VEzjvKvd60vYGeHOnmQg62YMT2Vfu1YfpkrOuqSK
+         wYuw==
+X-Forwarded-Encrypted: i=1; AJvYcCX0G06Yn9SUp3QPIGIQiHkC0OnldPMb8kiZbxVkKV/R1fWE+aGP/DYsZJK+UbPdr1GMn5Hc4HB0nX+LcQ==@vger.kernel.org, AJvYcCXo7qMmeoIiFYpVYT8C+KpRsmPqhnnQ/c7rTQGSOkoTsOqQts2+yL/262YpXo8prULglR5fNCB8GD0UCOoDghD52xRi@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjwiOiKeprAkgr2Up5n+iaZfpAlzhEI8htsk+d/AAjCoMpmrAW
+	zHJBUrhwnTRWCDdLJZrffK4EQzYlbDkgd8TJOiULp4BWG9AbCT7e
+X-Gm-Gg: ASbGnctmqet+STCXihzV6J1xxDeomm/dBdnTk2nmlgDbgA7coiH1w6wWlKRL3nEN7/b
+	kAz3PEzPuEpsrtp8Kpxr6ZXBcKwmbNDRGVCLtaaXDAgUsfdIKZDDELK1zqoikKytIWn6CT/yAwr
+	inchVkLLS9pIKPXGbx4IVIGva1TtkvylS8cl5Znt0u1Se+YILVlYyLxDJeGqyNsm2ihGaHnVcHT
+	umr11Wj198c8ZiKrPRCTSvfd5yxK9tp4mNcBPgChLVgONoKuQn/OPUdfF9JgvhIGNXy29AvmLwa
+	G7Dj+bVrDV5IArx+92TEp9XNIsbH3QNP+0JwIyr0+0V4uwAZ8SukCqbTF5mczD1qZhEl61Gjtwg
+	tkqhmoUhSME10UOBtfueMcAWEBG6MiKdKNQ==
+X-Google-Smtp-Source: AGHT+IGlYnQb7Enm3HGEax4wj7K5Yq5K1lhUoJJzjXGCVjDzOtMUonq2TACY0cPT/bA97WY+fMSi6A==
+X-Received: by 2002:a17:903:228f:b0:21f:85d0:828 with SMTP id d9443c01a7336-231b5eba1e0mr21553355ad.41.1747289862974;
+        Wed, 14 May 2025 23:17:42 -0700 (PDT)
+Received: from KERNELXING-MB0.tencent.com ([43.132.141.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8273d93sm109242375ad.150.2025.05.14.23.17.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 23:14:32 -0700 (PDT)
-Date: Thu, 15 May 2025 02:14:29 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Jason Wang <jasowang@redhat.com>
-Cc: Cindy Lu <lulu@redhat.com>, michael.christie@oracle.com,
-	sgarzare@redhat.com, linux-kernel@vger.kernel.org,
-	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v9 4/4] vhost: Add a KConfig knob to enable IOCTL
- VHOST_FORK_FROM_OWNER
-Message-ID: <20250515021319-mutt-send-email-mst@kernel.org>
-References: <20250421024457.112163-5-lulu@redhat.com>
- <CACGkMEt-ewTqeHDMq847WDEGiW+x-TEPG6GTDDUbayVmuiVvzg@mail.gmail.com>
- <CACGkMEte6Lobr+tFM9ZmrDWYOpMtN6Xy=rzvTy=YxSPkHaVdPA@mail.gmail.com>
- <CACGkMEstbCKdHahYE6cXXu1kvFxiVGoBw3sr4aGs4=MiDE4azg@mail.gmail.com>
- <20250429065044-mutt-send-email-mst@kernel.org>
- <CACGkMEteBReoezvqp0za98z7W3k_gHOeSpALBxRMhjvj_oXcOw@mail.gmail.com>
- <20250430052424-mutt-send-email-mst@kernel.org>
- <CACGkMEub28qBCe4Mw13Q5r-VX4771tBZ1zG=YVuty0VBi2UeWg@mail.gmail.com>
- <20250513030744-mutt-send-email-mst@kernel.org>
- <CACGkMEtm75uu0SyEdhRjUGfbhGF4o=X1VT7t7_SK+uge=CzkFQ@mail.gmail.com>
+        Wed, 14 May 2025 23:17:42 -0700 (PDT)
+From: Jason Xing <kerneljasonxing@gmail.com>
+To: axboe@kernel.dk,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Jason Xing <kernelxing@tencent.com>
+Subject: [PATCH v2 0/4] relayfs: misc changes
+Date: Thu, 15 May 2025 14:16:39 +0800
+Message-Id: <20250515061643.31472-1-kerneljasonxing@gmail.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACGkMEtm75uu0SyEdhRjUGfbhGF4o=X1VT7t7_SK+uge=CzkFQ@mail.gmail.com>
 
-On Wed, May 14, 2025 at 10:52:58AM +0800, Jason Wang wrote:
-> On Tue, May 13, 2025 at 3:09 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> >
-> > On Tue, May 13, 2025 at 12:08:51PM +0800, Jason Wang wrote:
-> > > On Wed, Apr 30, 2025 at 5:27 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > >
-> > > > On Wed, Apr 30, 2025 at 11:34:49AM +0800, Jason Wang wrote:
-> > > > > On Tue, Apr 29, 2025 at 6:56 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > > > >
-> > > > > > On Tue, Apr 29, 2025 at 11:39:37AM +0800, Jason Wang wrote:
-> > > > > > > On Mon, Apr 21, 2025 at 11:46 AM Jason Wang <jasowang@redhat.com> wrote:
-> > > > > > > >
-> > > > > > > > On Mon, Apr 21, 2025 at 11:45 AM Jason Wang <jasowang@redhat.com> wrote:
-> > > > > > > > >
-> > > > > > > > > On Mon, Apr 21, 2025 at 10:45 AM Cindy Lu <lulu@redhat.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > Introduce a new config knob `CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL`,
-> > > > > > > > > > to control the availability of the `VHOST_FORK_FROM_OWNER` ioctl.
-> > > > > > > > > > When CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL is set to n, the ioctl
-> > > > > > > > > > is disabled, and any attempt to use it will result in failure.
-> > > > > > > > >
-> > > > > > > > > I think we need to describe why the default value was chosen to be false.
-> > > > > > > > >
-> > > > > > > > > What's more, should we document the implications here?
-> > > > > > > > >
-> > > > > > > > > inherit_owner was set to false: this means "legacy" userspace may
-> > > > > > > >
-> > > > > > > > I meant "true" actually.
-> > > > > > >
-> > > > > > > MIchael, I'd expect inherit_owner to be false. Otherwise legacy
-> > > > > > > applications need to be modified in order to get the behaviour
-> > > > > > > recovered which is an impossible taks.
-> > > > > > >
-> > > > > > > Any idea on this?
-> > > > > > >
-> > > > > > > Thanks
-> > > >
-> > > > So, let's say we had a modparam? Enough for this customer?
-> > > > WDYT?
-> > >
-> > > Just to make sure I understand the proposal.
-> > >
-> > > Did you mean a module parameter like "inherit_owner_by_default"? I
-> > > think it would be fine if we make it false by default.
-> > >
-> > > Thanks
-> >
-> > I think we should keep it true by default, changing the default
-> > risks regressing what we already fixes.
-> 
-> I think it's not a regression since it comes since the day vhost is
-> introduced. To my understanding the real regression is the user space
-> noticeable behaviour changes introduced by vhost thread.
-> 
-> > The specific customer can
-> > flip the modparam and be happy.
-> 
-> If you stick to the false as default, I'm fine.
-> 
-> Thanks
+From: Jason Xing <kernelxing@tencent.com>
 
-That would be yet another behaviour change.
-I think one was enough, don't you think?
+The series mostly focuss on the error counters which helps every user
+debug their own kernel module. More patches making the relayfs more
+robust and functional are around the corner :)
 
+---
+Note: this series is made on top of this cleanup[1] and unmerged commit[1]
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/log/?h=mm-nonmm-unstable
+[2]: https://lore.kernel.org/all/20250507134225.63248-1-kerneljasonxing@gmail.com/
 
-> >
-> > > >
-> > > > --
-> > > > MST
-> > > >
-> >
+*** BLURB HERE ***
+
+Jason Xing (4):
+  relayfs: support a counter tracking if per-cpu buffers is full
+  relayfs: introduce dump of relayfs statistics function
+  blktrace: use rbuf->stats.full as a drop indicator in relayfs
+  relayfs: support a counter tracking if data is too big to write
+
+ include/linux/relay.h   | 19 ++++++++++++++-
+ kernel/relay.c          | 51 +++++++++++++++++++++++++++++++++++------
+ kernel/trace/blktrace.c | 22 ++----------------
+ 3 files changed, 64 insertions(+), 28 deletions(-)
+
+-- 
+2.43.5
 
