@@ -1,112 +1,225 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E0111B043A
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6438F1B043A;
+	Thu, 15 May 2025 09:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747302182; cv=none; b=eDhX5AXgZ3wYSjfUNAnXwrrYJxdH3A4/S5XMGTlDs+apeMqvixy51aNkwZXvEKpWR1X/269cXUU0UnnCVOzmWiXKvq2kR1O8B2uIbdYAdnTApw9XkjtJwyh5083q66guWqgt37OjAw+Wr4CLtkDu0jDX+E2G9lYyH6Ik4yPLyDI=
+	t=1747302188; cv=none; b=WaAcsIkrLcJp2LbN22N/cO6l7X8Kj3CkCn0uEl7D4f1YXA2dGnIjZTbzqDCfLS6JzNSWaepp7utoBtaX0k0eyjhnpeYCyQzPq2yUoY+Nv4yE1ZTtr/5QvhQHpPpVLSUEjkFBksYAGV+g8LGu7LeIhZkQ4QriOuYzOqD6VO0/dos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747302182; c=relaxed/simple;
-	bh=xOgl5f6hWKj/HHODvNZYShFSiloL6d2fazX4+7M3G7I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dc7Z1XTpRL+yydC1LS1HRvQ2O8CxUajgsMu0eCSq84KLTcoNc+iBMgILdNkS2pGn/5wvHN7J6YcVmZx+ucDZ5qajHMSR/PQ0WdVRFhcpPMNzH+tXdZql4eNtPXKXtCwH3kP+RQLDuCn0ss/TxXSQEyldKq1Ib50n5df7pZzsD/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S6afS2X5; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S6afS2X5"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-326c1f3655eso6568211fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 02:43:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747302179; x=1747906979; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QSoJsMMID/Gsu+/PBfKDktnH99/TWY47+ywS73Ttvts=;
-        b=S6afS2X59DrLm2cPHWKY6NUJhBD+PI9cNqvCuKBEEyxzuhB1IPOEUpj1jfvk/dlirc
-         /dg89QY+Ztro+ZJ9/8VGlypJ8i7WWII2sJKEBS0CQTNml6AGlbxEWs18N8USYdPKw5P+
-         cLuzuhOghNtRbz99OQlgAhWPBPS2m1XTM2fj82PBsZA7XJQx1ZuY5dx5ELJDFpf9SnM5
-         z6hOCGi3GOkUZlIr9rIGCIFjayraDTVTHn+d5sLRAyGVAIHykA6UxnQKn5VHg52rgdE7
-         vN/wHlOIggvFEf9bumeWF0pg0JixWatlZi3ZRXxvoDgOi3mqEBS1xz/iLy2vuyID+Fx8
-         hmIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747302179; x=1747906979;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QSoJsMMID/Gsu+/PBfKDktnH99/TWY47+ywS73Ttvts=;
-        b=jRHHw1fhFq4l5WVraqFb0CoSgc23Y1O+GYRTMXD4GmvOlDonEfTuj9I/BcXkQomsAG
-         GtG3AhjdhPWa/pfIuO6Pbyrzr9ErVHdWT0eVTVqZ1O7UNPn0sUdSGNY9PTA1k/OylsRm
-         5k5GLtdF8w9Uh872prpLht8sZIawxKRgZwezinM6v/qJdmXzQvQdbU+yUOqahyIdZZJh
-         M7Bbjm/RGg7IYY3bfTjn0BpRwnnguhePDI+lHHnaqGMrrWJeRTgqxhcZZ031aoKpFOIz
-         bAlJtNhco6WTiPWF27V8R7Qc14l5UgSmo+8DSuMOeXcfXpI5DSbikurmhJEvKN0EF33r
-         mdmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVqxcq6E46dO/v66vnJf0zcZ/sZpZubAgHwzuMm0PicTGRSM1tqR6SAryFM7LJ/bmuo3c3fLZSlgCvNgYM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2nhkwQxt+OSHTlosTe+K2ABjROyJw3oGgKwwGKz6CES3jKlTG
-	Ec20kNCnVj3VWdPRGnA0dZfHcciWMPQpKB1kI+B4+Ry1Ss75iFKKmkXXvfPngFQT+5k2NFCT+ew
-	PwMFFIv6GkCTItrhNet2PlMMjRRg=
-X-Gm-Gg: ASbGncsGi/bE9eahOeS7qyqXFNmgT33uQe1krXkJpm7RNMw9MoVFZYE8FzwcZlpIb1U
-	Fmq9frNsBF8ycewvaheDqzECPS1JSDAUXPHxn9++3DMgAJ9bxOm52AIT8wRQsOdsicQWnGw+/L4
-	gDqzLtHJEvdGC9No66m8F0u31MqFCSi2hv566onwr31e8=
-X-Google-Smtp-Source: AGHT+IFK6XC+Qi7dUXMS8rDolWdRj0H43CP7C7piezecVYmK8iet2iB7VFXlmNpgTHx/sSukM84LJzaWKtyq0HYQpWw=
-X-Received: by 2002:a2e:bcc8:0:b0:30b:fe19:b07a with SMTP id
- 38308e7fff4ca-327fac54739mr8347941fa.25.1747302178967; Thu, 15 May 2025
- 02:42:58 -0700 (PDT)
+	s=arc-20240116; t=1747302188; c=relaxed/simple;
+	bh=H4ELDb9y0+EqXm3nF7/j/Z0jw82RCViU9zBrxdD81cM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gVgVuK9OXFl4y6X4zddd/eZHM+NWQkS2Ns7ymZJgVq3beyOEv/OXBwKIjWeNk3peVRdZ5MEqAkxQutww9jdD1UxQZCz0TANvrWfO4z83mredcH9tVKcTbfBCB/bKw37rYL/h7IdJXIJRq+9KR4nFUMqW5qabH9fuuLztAFFf/wI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08AC714BF;
+	Thu, 15 May 2025 02:42:54 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B0383F5A1;
+	Thu, 15 May 2025 02:43:05 -0700 (PDT)
+Date: Thu, 15 May 2025 10:43:00 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: kan.liang@linux.intel.com
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+	irogers@google.com, mark.rutland@arm.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	eranian@google.com, ctshao@google.com, tmricht@linux.ibm.com
+Subject: Re: [PATCH V2 01/15] perf: Fix the throttle logic for a group
+Message-ID: <20250515094300.GC412060@e132581.arm.com>
+References: <20250514151401.2547932-1-kan.liang@linux.intel.com>
+ <20250514151401.2547932-2-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515154758.956521-1-shikemeng@huaweicloud.com> <20250515154758.956521-2-shikemeng@huaweicloud.com>
-In-Reply-To: <20250515154758.956521-2-shikemeng@huaweicloud.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Thu, 15 May 2025 17:42:41 +0800
-X-Gm-Features: AX0GCFupifVW6_5jV2E2V3n__1ogNC4pGxj3zt4_KgzPvFwv1ii2wBMkZy_qoV0
-Message-ID: <CAMgjq7As2A9jEvY11Bp0+MApHmS16ocdoFwBNuubJwBD34Hjsg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] mm: shmem: avoid unpaired folio_unlock() in shmem_swapin_folio()
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: hughd@google.com, baolin.wang@linux.alibaba.com, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514151401.2547932-2-kan.liang@linux.intel.com>
 
-On Thu, May 15, 2025 at 2:54=E2=80=AFPM Kemeng Shi <shikemeng@huaweicloud.c=
-om> wrote:
->
-> If we get a folio from swap_cache_get_folio() successfully but encounter
-> a failure before the folio is locked, we will unlock the folio which was
-> not previously locked.
-> Put the folio and set it to NULL when a failure occurs before the folio
-> is locked to fix the issue.
->
-> Fixes: 058313515d5aa ("mm: shmem: fix potential data corruption during sh=
-mem swapin")
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+On Wed, May 14, 2025 at 08:13:47AM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> The current throttle logic doesn't work well with a group, e.g., the
+> following sampling-read case.
+> 
+> $ perf record -e "{cycles,cycles}:S" ...
+> 
+> $ perf report -D | grep THROTTLE | tail -2
+>             THROTTLE events:        426  ( 9.0%)
+>           UNTHROTTLE events:        425  ( 9.0%)
+> 
+> $ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> 0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
+> ... sample_read:
+> .... group nr 2
+> ..... id 0000000000000327, value 000000000cbb993a, lost 0
+> ..... id 0000000000000328, value 00000002211c26df, lost 0
+> 
+> The second cycles event has a much larger value than the first cycles
+> event in the same group.
+> 
+> The current throttle logic in the generic code only logs the THROTTLE
+> event. It relies on the specific driver implementation to disable
+> events. For all ARCHs, the implementation is similar. Only the event is
+> disabled, rather than the group.
+> 
+> The logic to disable the group should be generic for all ARCHs. Add the
+> logic in the generic code. The following patch will remove the buggy
+> driver-specific implementation.
+> 
+> The throttle only happens when an event is overflowed. Stop the entire
+> group when any event in the group triggers the throttle.
+> The MAX_INTERRUPTS is set to all throttle events.
+> 
+> The unthrottled could happen in 3 places.
+> - event/group sched. All events in the group are scheduled one by one.
+>   All of them will be unthrottled eventually. Nothing needs to be
+>   changed.
+> - The perf_adjust_freq_unthr_events for each tick. Needs to restart the
+>   group altogether.
+> - The __perf_event_period(). The whole group needs to be restarted
+>   altogether as well.
+> 
+> With the fix,
+> $ sudo perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+> 0 3573470770332 0x12f5f8 [0x70]: PERF_RECORD_SAMPLE(IP, 0x2):
+> ... sample_read:
+> .... group nr 2
+> ..... id 0000000000000a28, value 00000004fd3dfd8f, lost 0
+> ..... id 0000000000000a29, value 00000004fd3dfd8f, lost 0
+> 
+> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 > ---
->  mm/shmem.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 99327c30507c..980fa15f393e 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -2335,6 +2335,8 @@ static int shmem_swapin_folio(struct inode *inode, =
-pgoff_t index,
->                  */
->                 split_order =3D shmem_split_large_entry(inode, index, swa=
-p, gfp);
->                 if (split_order < 0) {
-> +                       folio_put(folio);
-> +                       folio =3D NULL;
->                         error =3D split_order;
->                         goto failed;
->                 }
+> 
+> Changes since V1:
+> - Apply the suggested throttle/unthrottle functions from Peter.
+>   The MAX_INTERRUPTS and throttle logs are applied to all events.
+> - Update the description and comments accordingly
+> 
+>  kernel/events/core.c | 58 +++++++++++++++++++++++++++++++++-----------
+>  1 file changed, 44 insertions(+), 14 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index a84abc2b7f20..a270fcda766d 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2734,6 +2734,39 @@ void perf_event_disable_inatomic(struct perf_event *event)
+>  static void perf_log_throttle(struct perf_event *event, int enable);
+>  static void perf_log_itrace_start(struct perf_event *event);
+>  
+> +static void perf_event_unthrottle(struct perf_event *event, bool start)
+> +{
+> +	event->hw.interrupts = 0;
+> +	if (start)
+> +		event->pmu->start(event, 0);
+> +	perf_log_throttle(event, 1);
+> +}
+> +
+> +static void perf_event_throttle(struct perf_event *event)
+> +{
+> +	event->pmu->stop(event, 0);
+> +	event->hw.interrupts = MAX_INTERRUPTS;
+> +	perf_log_throttle(event, 0);
+> +}
+> +
+> +static void perf_event_unthrottle_group(struct perf_event *event, bool start)
+> +{
+> +	struct perf_event *sibling, *leader = event->group_leader;
+> +
+> +	perf_event_unthrottle(leader, leader != event || start);
+> +	for_each_sibling_event(sibling, leader)
+> +		perf_event_unthrottle(sibling, sibling != event || start);
 
-Nice fix, I also noticed this and included the same fix in the swap
-table series and forgot to split that out. We should merge this clean
-fix first:
+Seems to me that the condition "leader != event || start" is bit tricky
+(similarly for the check "sibling != event || start").
 
-Reviewed-by: Kairui Song <kasong@tencent.com>
+If a session sets the frequency (with option -F in perf tool), the
+following flow is triggered:
+
+  perf_adjust_freq_unthr_events()
+    `> perf_event_unthrottle_group(event, false);
+
+The argument "start" is false, so all sibling events will be enabled,
+but the event pointed by the "event" argument remains disabled.  Though
+the __perf_event_period() function will enables all events with adjusted
+period, but it is still risky for counting discrepancy caused by the
+flow described above.
+
+Thanks,
+Leo
+
+> +}
+> +
+> +static void perf_event_throttle_group(struct perf_event *event)
+> +{
+> +	struct perf_event *sibling, *leader = event->group_leader;
+> +
+> +	perf_event_throttle(leader);
+> +	for_each_sibling_event(sibling, leader)
+> +		perf_event_throttle(sibling);
+> +}
+> +
+>  static int
+>  event_sched_in(struct perf_event *event, struct perf_event_context *ctx)
+>  {
+> @@ -4389,10 +4422,8 @@ static void perf_adjust_freq_unthr_events(struct list_head *event_list)
+>  		hwc = &event->hw;
+>  
+>  		if (hwc->interrupts == MAX_INTERRUPTS) {
+> -			hwc->interrupts = 0;
+> -			perf_log_throttle(event, 1);
+> -			if (!event->attr.freq || !event->attr.sample_freq)
+> -				event->pmu->start(event, 0);
+> +			perf_event_unthrottle_group(event,
+> +				!event->attr.freq || !event->attr.sample_freq);
+>  		}
+>  
+>  		if (!event->attr.freq || !event->attr.sample_freq)
+> @@ -6421,14 +6452,6 @@ static void __perf_event_period(struct perf_event *event,
+>  	active = (event->state == PERF_EVENT_STATE_ACTIVE);
+>  	if (active) {
+>  		perf_pmu_disable(event->pmu);
+> -		/*
+> -		 * We could be throttled; unthrottle now to avoid the tick
+> -		 * trying to unthrottle while we already re-started the event.
+> -		 */
+> -		if (event->hw.interrupts == MAX_INTERRUPTS) {
+> -			event->hw.interrupts = 0;
+> -			perf_log_throttle(event, 1);
+> -		}
+>  		event->pmu->stop(event, PERF_EF_UPDATE);
+>  	}
+>  
+> @@ -6436,6 +6459,14 @@ static void __perf_event_period(struct perf_event *event,
+>  
+>  	if (active) {
+>  		event->pmu->start(event, PERF_EF_RELOAD);
+> +		/*
+> +		 * Once the period is force-reset, the event starts immediately.
+> +		 * But the event/group could be throttled. Unthrottle the
+> +		 * event/group now to avoid the next tick trying to unthrottle
+> +		 * while we already re-started the event/group.
+> +		 */
+> +		if (event->hw.interrupts == MAX_INTERRUPTS)
+> +			perf_event_unthrottle_group(event, false);
+>  		perf_pmu_enable(event->pmu);
+>  	}
+>  }
+> @@ -10326,8 +10357,7 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
+>  	if (unlikely(throttle && hwc->interrupts >= max_samples_per_tick)) {
+>  		__this_cpu_inc(perf_throttled_count);
+>  		tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
+> -		hwc->interrupts = MAX_INTERRUPTS;
+> -		perf_log_throttle(event, 0);
+> +		perf_event_throttle_group(event);
+>  		ret = 1;
+>  	}
+>  
+> -- 
+> 2.38.1
+> 
+> 
