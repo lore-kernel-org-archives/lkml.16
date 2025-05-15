@@ -1,72 +1,50 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C21B1F8753
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AEC420B80B;
+	Thu, 15 May 2025 15:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747323458; cv=none; b=tBOAXars8SUYAmls0XowlbhYGLrvOKvtD/zd/FI2wGEMgvFFbWdCgg4ZXn67l3fXZpX2Qk2ny46otXi+wni7Rl+Y6dqWSCA3TfgfONl7P1e4WMplrRZCVetzUi5Wx9ohqO7+uwPk+/dBy2rZea4q8AWSCmhnJVjD9/iHTSyumMs=
+	t=1747323479; cv=none; b=oyQmq4s95koK5pQGCcYpaXASlZgEBlABeYIFYDN3QX+S/0negza+jAejazIf+BcwLBjitLc/p5FWhfuq8/CMTy+YXgZZNM949j43qoz8vE/d8HVCfq9om7yadsdFpdSXhNbF0ssW2OlL9kGcHE0uJWABvZ7DkR5BO2o2DK0b2Eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747323458; c=relaxed/simple;
-	bh=atIQpaQtopMpwJYgji9E+C/yVnZRqcR9Uu8nkCMzx9o=;
+	s=arc-20240116; t=1747323479; c=relaxed/simple;
+	bh=dSkCpg/z3AQ4gx2+ruT4iP+42ZujybsMW+0OdzI72JU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QXKy/hkhmgzIF+90Rdj9Q4mKOOkbiU5ayf8jcuA/zyVYi6J4TuXdo3Ojb1s6z0wRVM3L62U8T/vA2+/d6FxzG9ER+IoeLqGb9Vl+nOTI7nd3sV1xFoh6xmI54G5eDvpXjSW8TGM4kcuKywAVChjNwgeIc7aT6ku6Sno9UEooodY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NmCZHdeX; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=Grv/RqXPl5GAtlzVJuObnMUrQ4e8+uTd6kic5bBfbdhHgsA68Rw1fq8w6+5/NC/JV92EgRtq5/rx11BKwLzMxtfBV+g+9ybkNS+1tWyGsSw9cfyg7xkSVStxWENBXIToE5Ctrx4nKEclENOz0VDHnyqhYYagFlGERNWn8YohsyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dfywr1O4; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NmCZHdeX"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54FEFAQN016650
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:37:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rLPxO64FqhcmIW9NSqbt9hKhOmOMomaefB8JAbvRe84=; b=NmCZHdeX7ZLIWbNm
-	LlW+7vHn6PNHkGcoVrtku47I7KnVvh8D26U142nVo0jqfPEs6azNam5k/4J0TXcA
-	wTTSqrBN+0garmh9IPRQ3/aw0QrggRo78yj16Ucx7PW1IwkPXjfoerbrDIcZ07cn
-	P9XgZCzYpMIYrUq0oTVhlxbyXerDvqJHn08RQXJ+ko7z3TjxJiUCzBnbQUN33DIV
-	WTJIsi7YVUx0e2VHAUHlVcjOT95Mebm+F1nSijQw0jBpU2LQJ2XUyvFhKWsSkCvs
-	ZrHnxZMU3+KT6lGlpNTfMsKXe9o9nSltRr/KN7g5iXu/zLRM7T9XeEM691zWp64M
-	+xRFiA==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcmpstj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:37:35 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f8ac35546eso351866d6.2
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:37:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747323454; x=1747928254;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rLPxO64FqhcmIW9NSqbt9hKhOmOMomaefB8JAbvRe84=;
-        b=mxf2O1hPF8wlvb7pmiW0TkXYKbqKguueaHZfjELglHTl8PNMzjVTtfedr2w/nh0m1I
-         RF052kgEeJ7k3tm0KsoKDiA6l2W2dA2kfci9yMmZvxGjmmHfPxtOY78n9jayLpFNTqSy
-         gefAidmBsMjgLZvPZsfwFI/TbAvykEaSpxhyHpdkEfJhCsP2JRhZYpr05ZkImVBUgIu5
-         nFkKbD1OBQaLIgtMi7oHh4Ez+c2kUEM2ltGrZwXHGcdjdB48O8EX5tYZgyHz8PKxHCY1
-         YkIiCng7zpg3OxWYJCvlpMiQZkxuhNAKqAZe/P0XDahCUDeIPXC75y07RBIExVkzHgIy
-         Qx4w==
-X-Forwarded-Encrypted: i=1; AJvYcCVvqgyydpCYUrqwbZoSjAj9PbDaBn0H6PAN4oNZePySFcLw1stNz8tf9gh7TiztpuljPGIvawycuFO2d+s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywFgFeibiA/9EJ6Rop38A06fS205PLqtVXoJxOaiawhzeSUPqu
-	mqFTXJwz6SaMVnXehQYxJMe15kJ1wk1vMXJXH+ysejOKSQ/FlX2tWG12DN74AH2BsB4eyx1kHjz
-	a4IyS4hsBmaZ0ikL6AONA3xJ1sgWUCmUDWk6Jn6viZuUcSK19SkV2UMvnOXxCQ7EQY3g=
-X-Gm-Gg: ASbGncstVrvakGs3xEmujXk64DcxUOHE61T+wOdBCD6f0M+C4TAVfiyeoXJLoq8ZeIk
-	fEZamxiiHxislCaHIcMjqXF88p6hFiNIrUV/cqh4Xi5hQjK5AnNt/zSULg2hO8kqseSldZdmfti
-	WAmRDSoG0DndVVi7mWHKiCr36Kv5wBNSsrVKr2/Ht8I8ZfXMb0RFqv7enhgHt163kMTyR4f/jzO
-	5MTSgTVQ0yq07GPH4LQSZ1AONY2O59UgcWUxr0+qb0tZEmpV/mDr4pXrphpVMEDLNQA47wMtrqo
-	bevr7boEE2AD/MEZg7QjOAWOp1x5D+ykkWCT1C8H+BdCgOkYqGyy5rOvbHl/7eWeEg==
-X-Received: by 2002:a05:6214:2309:b0:6e8:f645:2639 with SMTP id 6a1803df08f44-6f8b08400ccmr964216d6.5.1747323453886;
-        Thu, 15 May 2025 08:37:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE5SKIS8bxAwsl16PrLjGcS3ujMsxqEj4y1zULjib1Z01idF3D6tCNQakAyR+kLSeki/BaSnw==
-X-Received: by 2002:a05:6214:2309:b0:6e8:f645:2639 with SMTP id 6a1803df08f44-6f8b08400ccmr963926d6.5.1747323453394;
-        Thu, 15 May 2025 08:37:33 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d047be1sm6506966b.26.2025.05.15.08.37.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 08:37:32 -0700 (PDT)
-Message-ID: <ea2f5477-e75f-4e07-ba0f-7926ec490639@oss.qualcomm.com>
-Date: Thu, 15 May 2025 17:37:29 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dfywr1O4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747323478; x=1778859478;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dSkCpg/z3AQ4gx2+ruT4iP+42ZujybsMW+0OdzI72JU=;
+  b=dfywr1O499dJ9ofLOEgiZxexhYi4rH30sc6QtthvE8euaxbXbXGpFf0K
+   N+8wx2AcFmMsYJ+fFsacjFZRaiMqVx5ZPCAe1hobG3JK2YrDBT6G2y4m8
+   /PtRpL/9M+dJyn7zJ1D6k0M/hHyDj7vYJrIVFrQWtbUPFH33mBRk9hTof
+   WaSaIKNo0HbWhfvOU12memaaXSlvyKhWUD9O75XR6GnalTOjPoZra74NT
+   UzdD+niWJ/rnwymxV1c8LDeKxtIufSUnyaOcE0cbiXFW3IJq1Qs8jKpBe
+   +PbqSIaBUsylppTgqOwbxxOLflrP396KFaQYpv1G+8L3LUrxZkBvX8U5t
+   A==;
+X-CSE-ConnectionGUID: 6fUz27HYSaKKWLGjvBDofg==
+X-CSE-MsgGUID: i7Ex4NIiRZmMrW1qtVRF6g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49253742"
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="49253742"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 08:37:57 -0700
+X-CSE-ConnectionGUID: FpAD40fMT12afszuGd6diQ==
+X-CSE-MsgGUID: zJTpBJ9aRGG8bfMvutHl1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="161697886"
+Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.109.45]) ([10.125.109.45])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 08:37:56 -0700
+Message-ID: <e2b65d4d-0d82-470d-9d9d-09ebc77621f7@intel.com>
+Date: Thu, 15 May 2025 08:37:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,70 +52,103 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 07/18] clk: qcom: videocc-sm8450: Move PLL & clk
- configuration to really probe
-To: Jagadeesh Kona <quic_jkona@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-        Dmitry Baryshkov <lumag@kernel.org>
-Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-References: <20250515-videocc-pll-multi-pd-voting-v4-0-571c63297d01@quicinc.com>
- <20250515-videocc-pll-multi-pd-voting-v4-7-571c63297d01@quicinc.com>
+Subject: Re: [PATCH v4 1/1] x86/sgx: Enable automatic SVN updates for SGX
+ enclaves
+To: "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc: "jarkko@kernel.org" <jarkko@kernel.org>,
+ "seanjc@google.com" <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>,
+ "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>, "Mallick, Asit K"
+ <asit.k.mallick@intel.com>,
+ "Scarlata, Vincent R" <vincent.r.scarlata@intel.com>,
+ "Cai, Chong" <chongc@google.com>, "Aktas, Erdem" <erdemaktas@google.com>,
+ "Annapurve, Vishal" <vannapurve@google.com>,
+ "dionnaglaze@google.com" <dionnaglaze@google.com>,
+ "bondarn@google.com" <bondarn@google.com>,
+ "Raynor, Scott" <scott.raynor@intel.com>
+References: <20250507111542.709858-1-elena.reshetova@intel.com>
+ <20250507111542.709858-2-elena.reshetova@intel.com>
+ <023ab74f-82b7-41fc-ab20-0c0089f1f348@intel.com>
+ <DM8PR11MB5750FBF44109B8CAD5574922E78BA@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <21752778-b6c8-42aa-8be6-db93a30a570c@intel.com>
+ <DM8PR11MB5750FA8798AF68845D81717FE797A@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <DM8PR11MB5750202F36E2AA2443FB5762E791A@DM8PR11MB5750.namprd11.prod.outlook.com>
+From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250515-videocc-pll-multi-pd-voting-v4-7-571c63297d01@quicinc.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <DM8PR11MB5750202F36E2AA2443FB5762E791A@DM8PR11MB5750.namprd11.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDE1NSBTYWx0ZWRfXz0vMr3AEGE4V
- XXdlduX2u/lkB3lWCzye9Mon+bi0yTw06KersvXXemZE6lmJmUSkjzCcGljIGvFdyS9irswVRWX
- 2cGPsLHsuAmJHyqAjmgVq+WbAlsX9SK5hiqxK4aPkfK9Ahibq0ItWfXneAvP/+WsFh2MsDU/OIY
- iAlNpkX5oOixIOs8WLCXClYREtA6Hu6EJHCp0yFEgUeq+0ImqhrkFVvZbDMGpzsJ/RmVIbkUHuF
- vt3ZIq76t0rx1g3uRsuWQbyjL6VJsV7jSs0B/lSgCHn6HJH0Q6f+SUD2EOJJh02P0NnM7USsEN+
- IRSsl9w64bFQApaTEWT/tjxvbelOuPjZ2hLQnb2Y4fc88mTGSjIBu8orwnjtWogWHrp7ofTZlv7
- peQ4Y4VUAN170OKVoqx1M8UeIn6qLzTEGNQLBeYSAQlJR1BGzaHzRvx30YBGiUpO9ZrK+Ui/
-X-Authority-Analysis: v=2.4 cv=G5scE8k5 c=1 sm=1 tr=0 ts=68260a3f cx=c_pps
- a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8
- a=CXQnK64LRHhqnx0rWp8A:9 a=QEXdDO2ut3YA:10 a=iYH6xdkBrDN1Jqds4HTS:22
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: LAezNocsiEnJgNjyZbrwA57JaJtYYYED
-X-Proofpoint-ORIG-GUID: LAezNocsiEnJgNjyZbrwA57JaJtYYYED
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-15_06,2025-05-15_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 mlxlogscore=999 clxscore=1015 phishscore=0 bulkscore=0
- suspectscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0
- malwarescore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505150155
 
-On 5/14/25 9:08 PM, Jagadeesh Kona wrote:
-> Video PLLs on SM8450/SM8475 require both MMCX and MXC rails to be kept ON
-> to configure the PLLs properly. Hence move runtime power management, PLL
-> configuration and enable critical clocks to qcom_cc_really_probe() which
-> ensures all required power domains are in enabled state before configuring
-> the PLLs or enabling the clocks.
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
-> ---
+On 5/14/25 00:32, Reshetova, Elena wrote:
+>> This was the recent discussion I am aware we had on this matter:
+>> https://lkml.org/lkml/2024/2/5/1595
+>> The measurements were done for older platform (skylake), but I am not
+>> aware of any architectural changes since that time to improve this.
+> And to make it more concrete, I made some simple tests based
+> on program for stress testing rdrand/rdseed that was discussed in that
+> threat earlier: https://lkml.org/lkml/2024/2/6/746 
+> Using this stress testing and enough threads, I can make EUPDATESVN fail
+> reliably and quite easily even with 10 time retry loop by kernel. So,
+> given this, what should be the correct behaviour be here? WARN_ON
+> is not justified imo. But should we return an error to userspace and
+> block open()? 
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+No, we can't block open. Just silently fail the EUPDATESVN for now.
 
-Konrad
+We can have a separate bikeshedding session about how to warn about the
+failure (or not).
+
+I can also hear Sean screaming from across the room that silent failure
+is going to be really nasty to debug. Once we settle on this set, we can
+have another discussion on an explicit update ABI so that folks who
+truly control their environment can stop all the guests and explicitly
+run EUPDATESVN at a nice convenient time. *THAT* interface can punt
+retries out to userspace and warn for sure.
+
+But, one thing at a time, please. This set will cover *normal* users:
+those who don't know exactly where each SGX user is and what their
+lifetimes are. Oh, and normal users also aren't under RDSEED attacks.
