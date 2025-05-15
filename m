@@ -1,92 +1,96 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614F82989B8;
-	Thu, 15 May 2025 12:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3228298C36;
+	Thu, 15 May 2025 12:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747310972; cv=none; b=LsWrJ4VNjn+8IKCkAO5Dm49cNGn1fApL9nzmqo1RJT8//l1xhBufdvwzXSlZsCakzimSlOooTCsFFTZejSBX7sdGFbHOBqhKV7+unHt8+OBeB9DTB9TiaSzUStqhYy9pJX/S2JNQL9X+MnzpIUOA8jsOdLsm5zAo6A85x/X05jk=
+	t=1747311051; cv=none; b=hHhPDTHz2CtfWzOwqzHSYRMxVFqlAal3L1qg/oc3wTl3KEOFCTSLEFuPuDpwWzXifHl4PdBRJEX/1Dp/LL50DZ/GCI7urODrLYHppIQfQliFn7/5iECOFKpboai23TOT4VHd8vAKVEff2gyWevQs3h1kybZpG1vh8hVyX4kCQgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747310972; c=relaxed/simple;
-	bh=5YSTM2cg0G+we0OL+Krxk1NE3KwiMAQeiNzwu890rPU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qFYhvy+AKWtC7idy8wGGj3YMo/EAR8AGzf/PLgls/Vs6AWtrgr6P2nCpPCZIsLe+wxDWKnrQ3BtQA7V4C5dojrZWjT7r6AxMTZRQ0KXHdnjy9bp2C+nll3mQRSKi4kvKCkFWlalCg7NuCXoBJOQrGcOok2EzrBSFSpH41NHx4zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	s=arc-20240116; t=1747311051; c=relaxed/simple;
+	bh=N6rMoCx2aOj/7ScMu7wI/CvU9gkdt/FPtQ4XvrgHyNQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U0TqPXL3BqJ4gBsdrCqFz93WzszzaqsOb5K+U/qcxSnoyubJYSKlc/paUxeV/Ms7yOHlz732QJTxccm1miNIbArGsW6kvDOYxdPVvcBZ6q3akqc+FiIOX1xadpgljFcaoaB4bTgOcRc1/JVyAcn8Ah288SIfDJBqJqZysr+0d2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=cNxfbw7T; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cNxfbw7T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747311043;
+	bh=N6rMoCx2aOj/7ScMu7wI/CvU9gkdt/FPtQ4XvrgHyNQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cNxfbw7TKopOr76pqBt1IlHgj3jY6tDdQWO2HqbGadj/8zLsjU3p1kN0C5XMmqrpQ
+	 cBO/TMMAVMLnYHSgW7ZONwrpDg+4B7HkYAT4GLzoTokYBBgYNcS05IPGU00zRmk2uq
+	 FHhrGHSOd7iV/mQvPGlPiLEURUBIg/tchLc6edM+xg8/8I7PmeH1os2ltkZCCJc9JE
+	 +MrWvd8d3NvmLUxKgD+TIMsqf7dnpInOyNIfx4gblDDEqLcn8kznJ5AkpnmhXJhXjr
+	 IZNI0KVj6uM9X+B6MIVlDm/SCKcPYm1aRAvW+R6orUEVvYWmSkN0t9Sq088IEPRPiE
+	 U/onZH8FHZeuQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 84AC32C06846;
-	Thu, 15 May 2025 14:08:51 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 7673B26E80; Thu, 15 May 2025 14:09:25 +0200 (CEST)
-Date: Thu, 15 May 2025 14:09:25 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Krzysztof Wilczy??ski <kwilczynski@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] PCI/bwctrl: Remove also pcie_bwctrl_lbms_rwsem
-Message-ID: <aCXZdfOA8bme-qra@wunner.de>
-References: <20250508090036.1528-1-ilpo.jarvinen@linux.intel.com>
- <174724335628.23991.985637450230528945.b4-ty@kernel.org>
- <aCTyFtJJcgorjzDv@wunner.de>
- <20250515084346.GA51912@rocinante>
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZypvR1dTxz4wvg;
+	Thu, 15 May 2025 22:10:43 +1000 (AEST)
+Date: Thu, 15 May 2025 22:10:42 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: error trying to fetch the clockevents tree
+Message-ID: <20250515221042.7471ffc9@canb.auug.org.au>
+In-Reply-To: <ba3ff719-ce60-4c0f-a215-fa332b614b82@linaro.org>
+References: <20250429082047.4af75695@canb.auug.org.au>
+	<db7fce1c-c051-41d9-9cf1-ef015b0f7fb4@linaro.org>
+	<ba3ff719-ce60-4c0f-a215-fa332b614b82@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250515084346.GA51912@rocinante>
+Content-Type: multipart/signed; boundary="Sig_/ub16.dQMbCW7_llv1o7P1SF";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Thu, May 15, 2025 at 05:43:46PM +0900, Krzysztof Wilczy??ski wrote:
-> Done.  Squashed with the first commit from Ilpo, see:
-> 
->   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=bwctrl&id=2389d8dc38fee18176c49e9c4804f5ecc55807fa
+--Sig_/ub16.dQMbCW7_llv1o7P1SF
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Awesome, thank you!
+Hi Daniel,
 
-> Let me know if there is anything else needed.
+On Thu, 15 May 2025 11:20:01 +0200 Daniel Lezcano <daniel.lezcano@linaro.or=
+g> wrote:
+>
+> I had no time yet to migrate the git tree to kernel.org but the
+> servers seem to work correctly now.
+>=20
+> Is it possible to enable back the tree so its content gets some round
+> in linux-next before the PR ?
 
-Actually, two small things:
+Restored from tomorrow.
 
-- That patch on the pci/bwctrl topic branch is still marked "New"
-  in patchwork, even though it's been applied:
-  https://patchwork.kernel.org/project/linux-pci/patch/20250422115548.1483-1-ilpo.jarvinen@linux.intel.com/
+Just to make sure - this is still
 
-- Version 1 of the same patch is likewise marked "New", even though
-  it's been superseded:
-  https://patchwork.kernel.org/project/linux-pci/patch/20250417124633.11470-1-ilpo.jarvinen@linux.intel.com/
+https://git.linaro.org/people/daniel.lezcano/linux.git#timers/drivers/next
 
-Unfortunately I can't update it myself because I'm not the submitter.
-(Ilpo could do it if he has a patchwork.kernel.org account.)
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/ub16.dQMbCW7_llv1o7P1SF
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Something unrelated (only if you feel like doing it):
+-----BEGIN PGP SIGNATURE-----
 
-On the pci/enumeration branch, Bjorn queued up a revert which was
-waiting to be ack'ed by AMD IOMMU maintainers:
-https://lore.kernel.org/r/20250425163259.GA546441@bhelgaas/
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgl2cIACgkQAVBC80lX
+0Gxscgf/azHtkJZK1c89SBx4lYCiPZV6uj6t5kgzKjXJV5qMg1bpvPbH7o3bfXA2
+B2d13bBIyCZ8vyvJdfsfUg22QrAD1c1bUWcvhiHxpNkI2Kle0kyH4rZ9kMIxLxDw
+Yu6aAxTzqh7XKjpHXOyopDoDVHlsU0ZzVsPW1Syevr+QZzCgplex/PMs/CIrbtph
+4hEWz4JbWuV6tx36zfJTDq+mwLYrr7EpPnGTxvINfP0wB5HoiFvtFA1MlN8KjOwx
+5kjEgZpbbTpYNkHGc55Tk4fNb4eMN9VNdo8ojiM38LM9hryPHKdbIQfAnP+fn9+U
+cP/A3L7sIj0ekE88PeDAPqHvryVuSQ==
+=3CMP
+-----END PGP SIGNATURE-----
 
-In the meantime the ack has arrived:
-https://lore.kernel.org/r/aCLv7cN_s1Z4abEl@8bytes.org/
-
-So the remaining housekeeping items are:
-
-- Add Jörg's Acked-by to commit e86c7278eba8 on pci/enumeration
-- Remove the "XXX" marker from the subject line
-- Remove "Needs AMD IOMMU ack" from the commit message
-
-Again, only if you feel like doing it.  No urgency.
-
-Thanks,
-
-Lukas
+--Sig_/ub16.dQMbCW7_llv1o7P1SF--
