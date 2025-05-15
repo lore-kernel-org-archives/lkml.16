@@ -1,113 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E41221562;
-	Thu, 15 May 2025 16:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C58C220F36;
+	Thu, 15 May 2025 16:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747327217; cv=none; b=U5VX47OSPQ+ANT/2Nw1CwZsERAl+Croczcc6FNMCBi77eee9X80b4rO4Hz2VU0b5hISQ3v0ZxhYPKBTa4AQDhSeSm5ergVSRWH2jCnMm2ImLEN0wc2+rj3a9edWyEIGhfM3iPIiSH9r7RBdN1yEIx4Z/rDz8+cHMLoANfmLXehQ=
+	t=1747327444; cv=none; b=paiAy+qthwnEaZKifI3GRSdrM/zBk+OeoTaDEGlcz4sCxE/gcSUjLEoEqRWnEcSsSG3Ay932e4UQGPoHQ9qZykmScNmzlBo3TJiT/t0JxUwFcAfoF65HXRMWpYw1klz4/02ENMl/Mwu5fudHYKEMf2sVSSgsWeyblO2gVTa3KY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747327217; c=relaxed/simple;
-	bh=XXJbH6ABghuJ/ft7lMNxkt09sjneicuIuW/QQ6uiTN0=;
+	s=arc-20240116; t=1747327444; c=relaxed/simple;
+	bh=hUuvLAlxl36gzoPyWEpN4pSZaYUNo3hhA/Y82uDCWvI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gZtXGAKpzUsJGKidNJQoTVqTmaFuflD5JppmxE4NI3uzp/AJOxCRYDbxSOg0zuGdxEe/XXhWIzAoGk4C0Y5MBXC/72EHl2Hd4BOWTbwUMWVjjah2VCKo+W5djlNXfftLjtG2PGUzymfGGOmlS3Su0h99DZ7KlgIshDhehZwPFH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q2V7gbJk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q8X+GEOLFn9RGe4oApkdS+cghvVxAjk2CJAoKRc0Zc47cekbZdsO+tiCoTzQlnbbXC8yT56p+SkrOvJsMqiZpXW+GgIHJfqpZkKdsHpNLWP9qqlA3cWST02MS4UsgrQNn1BwAHsVEf4lbmWq9KGzwhdTuG2RBuwjFEXNe0TS9rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=NEYY0NGj; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q2V7gbJk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B51DC4CEE7;
-	Thu, 15 May 2025 16:40:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747327217;
-	bh=XXJbH6ABghuJ/ft7lMNxkt09sjneicuIuW/QQ6uiTN0=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="NEYY0NGj"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A598140E01ED;
+	Thu, 15 May 2025 16:43:58 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id DKdTbWNw82uG; Thu, 15 May 2025 16:43:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747327434; bh=heO/KKccK7/qsTVyu/x6gPewEvLAKaNyPahysf1Wvno=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q2V7gbJk4XjqdDYv8B4Z5wpfW7a1Nj9x7qN72qq7LFLFcQwfpw0BJWfpo0ZD005I6
-	 YiYQReuXuVd+oij4YkiczK850YkFm8VNkt2QkfI0b8lbOePTXkglmNpghyUSnPdYSH
-	 c0UDA5XX+35ACJ/Bci3wsTymdPwSSpWrkZ7pgSy5NI3dMlDlne6nuJw9JuZEfsZEp5
-	 NA+MQuDCW5yw/bcCo/fu2FK0zwU+lBwaCgENKztsReUZFNqAm4TX5pYdhcJYiPUNoU
-	 rAo4Mm3CYvb80ybntwbotJIQ5Cx1R8dxaz6m2jgo8YviAQa/je3TslEU9Rpc1WeiTk
-	 wilAcMB5YBv9g==
-Date: Thu, 15 May 2025 18:40:12 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: "Ahmed S. Darwish" <darwi@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
-	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 4/9] x86/cpuid: Rename hypervisor_cpuid_base() to
- cpuid_hypervisor_base()
-Message-ID: <aCYY7CE57Al9ydWa@gmail.com>
-References: <20250508150240.172915-1-darwi@linutronix.de>
- <20250508150240.172915-5-darwi@linutronix.de>
+	b=NEYY0NGjCf2etHNpYOdE6F1X2bmjkcx2E/BEQGyuhS/iDfgI0XCsRAK2DRndXxGN8
+	 xGZt2g4glR0jfkJMBgIeseEqknKTFDcjFcZNZ0nS3Omhi8io3eM+pxgFjW+dwU7afZ
+	 r0Rjz/hsL9nmuhmQEIkcRJDnQPCffTJFMchzCftd2FwWjCYMsu3Oqk4uVUyKVxtmWU
+	 ctc5rQrvH3NwrJteaDoY2zHvddKPzB9rD7Y2ll9kf24gYjqcp8Cy3aJOA2VNL5RBjp
+	 A1UKtiPhw9pl/ZGUvpnmwDWqhxgcctQF3G0IpnV9NpJ1vyjga6ciG7ZlXhofFVWBLm
+	 NHwh0gdMIds8PKDEa7jlyRGiWTfAg+tqePHUt+s9BxB/TJ5TyG6u/smsoKdZmozub+
+	 LPaxP8yu1lGagWJd0nkj4qckhR/UsXu3x0j7zEDFYPP0Dbu9RcKGDMRqKSv0Nrhds7
+	 CNeGoZXtRwz+28zE3yylq6TpGfv2GkJiNeVD/62snH8LciZ1aFjN4eHuQF8kXYgkFt
+	 5cg9eLkJ6GIoEf+orKpCN1bk0Zyp6364QJUK++YgXnvydU2+gyRpQVFeBkqn8t1IKX
+	 OzMl1I1DQlNiUNb6onK+punbviq5T0yx0XunBn7BRJfWoADXZDaiRV/Q+BXUnEwy4i
+	 O8H1Ph/0ANc35433TMHc02g8=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2036440E0196;
+	Thu, 15 May 2025 16:43:45 +0000 (UTC)
+Date: Thu, 15 May 2025 18:43:37 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Dionna Amalie Glaze <dionnaglaze@google.com>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [RFT PATCH v3 02/21] x86/sev: Use MSR protocol for remapping
+ SVSM calling area
+Message-ID: <20250515164337.GDaCYZuXXjJkfRlK8k@fat_crate.local>
+References: <20250512190834.332684-23-ardb+git@google.com>
+ <20250512190834.332684-25-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250508150240.172915-5-darwi@linutronix.de>
+In-Reply-To: <20250512190834.332684-25-ardb+git@google.com>
 
-
-* Ahmed S. Darwish <darwi@linutronix.de> wrote:
-
-> In order to let all the APIs under <cpuid/api.h> have a shared "cpuid_"
-> namespace, rename hypervisor_cpuid_base() to cpuid_hypervisor_base().
+On Mon, May 12, 2025 at 09:08:37PM +0200, Ard Biesheuvel wrote:
+> From: Ard Biesheuvel <ardb@kernel.org>
 > 
-> To align with the new style, also rename:
+> As the preceding code comment already indicates, remapping the SVSM
+> calling area occurs long before the GHCB page is configured, and so
+> calling svsm_perform_call_protocol() is guaranteed to result in a call
+> to svsm_perform_msr_protocol().
 > 
->     for_each_possible_hypervisor_cpuid_base(function)
+> So just call the latter directly. This allows most of the GHCB based API
+> infrastructure to be moved out of the startup code in a subsequent
+> patch.
 > 
-> to:
-> 
->     for_each_possible_cpuid_hypervisor_base(function)
-> 
-> Adjust all call-sites accordingly.
-> 
-> Suggested-by: Ingo Molnar <mingo@kernel.org>
-> Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 > ---
->  arch/x86/include/asm/acrn.h           | 2 +-
->  arch/x86/include/asm/cpuid/api.h      | 6 +++---
->  arch/x86/include/asm/xen/hypervisor.h | 2 +-
->  arch/x86/kernel/jailhouse.c           | 2 +-
->  arch/x86/kernel/kvm.c                 | 2 +-
->  arch/x86/kvm/cpuid.c                  | 2 +-
->  6 files changed, 8 insertions(+), 8 deletions(-)
+>  arch/x86/boot/startup/sev-startup.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/boot/startup/sev-startup.c b/arch/x86/boot/startup/sev-startup.c
+> index 435853a55768..a1d5a5632d58 100644
+> --- a/arch/x86/boot/startup/sev-startup.c
+> +++ b/arch/x86/boot/startup/sev-startup.c
+> @@ -325,7 +325,9 @@ static __head void svsm_setup(struct cc_blob_sev_info *cc_info)
+>  	call.caa = svsm_get_caa();
+>  	call.rax = SVSM_CORE_CALL(SVSM_CORE_REMAP_CA);
+>  	call.rcx = pa;
+> -	ret = svsm_perform_call_protocol(&call);
+> +	do {
+> +		ret = svsm_perform_msr_protocol(&call);
+> +	} while (ret == -EAGAIN);
 
-> -#define for_each_possible_hypervisor_cpuid_base(function) \
-> +#define for_each_possible_cpuid_hypervisor_base(function) \
->  	for (function = 0x40000000; function < 0x40010000; function += 0x100)
+Right, a future cleanup for another patch would be to wrap that loop into
+a function. But not now.
 
-
-> --- a/arch/x86/include/asm/xen/hypervisor.h
-> +++ b/arch/x86/include/asm/xen/hypervisor.h
-> @@ -43,7 +43,7 @@ extern struct start_info *xen_start_info;
+>  	if (ret)
+>  		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_SVSM_CA_REMAP_FAIL);
 >  
->  static inline uint32_t xen_cpuid_base(void)
->  {
-> -	return hypervisor_cpuid_base(XEN_SIGNATURE, 2);
-> +	return cpuid_hypervisor_base(XEN_SIGNATURE, 2);
->  }
+> -- 
 
-So the interaction here looks a bit weird IMO (what is a 'hypervisor 
-base'?), and I think the 'CPUID base' phrase should be immutable.
+Reviewed-by: Borislav Petkov (AMD) <bp@alien8.de>
 
-Ie. I think it would be more natural to call this method 
-cpuid_base_hypervisor(), which would mix reasonably well with:
+-- 
+Regards/Gruss,
+    Boris.
 
-	kvm_cpuid_base()
-	xen_cpuid_base()
-	jailhouse_cpuid_base()
-
-These lower level methods are prefixed with kvm_/xen_/jailhouse_, as 
-most of their internal methods are.
-
-Likewise, for_each_possible_cpuid_base_hypervisor()?
-
-Thanks,
-
-	Ingo
+https://people.kernel.org/tglx/notes-about-netiquette
