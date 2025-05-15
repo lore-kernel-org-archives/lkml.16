@@ -1,146 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E4B28CF73
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 03:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25CE26ACC
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 03:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747279564; cv=none; b=Y7m2JruNlduasTDtt57HX1FnT35GwJcGFeSz4MlXDXrH1IjsRejjDQnz1cRepGUctG8jZXPCW+Mu37DT7hfKH/y6mXD89paobCOOoj/GAsiisJh/V0K6iG74Ha5gc4Fjo9r+Ip/PwYkBQcwwmCck1WNjHnt0sTDMwJHzlcM5w/8=
+	t=1747279967; cv=none; b=oDHZCL/JovJcgsrbv0gUvDr33K2FZjff1/bAOR4WiKCbI28bIS51D8Orx5qHy7jkPey3UBAorCDbDIFIV2aMmiQvOQLsuk3eXxDjZTnDr60gnOEHtsGFV6RfjzLS0AQJP5rIBiL1dQ9Jru/GBpj59Q9CBhVUD01zGiIB/UEnxBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747279564; c=relaxed/simple;
-	bh=WOupC6E4HpO8mX5nlK6W7ryVaOhAjAR0LIPnaWVxKwc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W+bq1TzMNeJ/Kc5ypcSKvj71fMBiDLzAu+bRYAecKxV9/llyyZrjW60ykrd+dPQr4HiamyT99fmblR6Ihzm1BfyFtNKwhUBlR3bqgWqxOUck/ajBOEdHZDhlKDOSJd3d5HArpFtdZJJCUKxRyfnB9HftKTsKU6Xfoj9bO67HsYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i9pyHTd8; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747279967; c=relaxed/simple;
+	bh=xlE1BjnH8LiVbYaaPBOKpa01JoxrxoQuUPgfJgxIwxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FzjcPlcR2ighLP28X6eQ6Xlkdg0L/nswBBh8VkOMAtf7Vg7DP8K7HqLUQShuW3/xMdicMgctoFkCsC5TZJnqep7JQ0l4BD4grw+MR6iMVH8gMctDskGg9iWyHN6j99+2eVFhjywhs6xVp9Sf5RKJ835IkqGhGyhzzr3oWcTiHVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fMul68mP; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i9pyHTd8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747279562;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ahT4btz576S69wvUnfwsCRHjbpr8W2QT0Gxup0BuO2U=;
-	b=i9pyHTd8C5ddgR0CSyXvPVpADfMxEswmpOHsB29GEAYbXSjyHQT+6YgGv8XQBB+6sVSMDI
-	ghfLEtVOC7LwiN0UOFZqcRrAPwjkBULQjlJbh/FaKHQShN4XCINj/DTBla4bxkhnRp3/Wz
-	Sbpcck6QdsqYLNQzq8ss0AHju+vcdJY=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-669-KOhIuteWMa2BBXwiIcLjhg-1; Wed,
- 14 May 2025 23:25:59 -0400
-X-MC-Unique: KOhIuteWMa2BBXwiIcLjhg-1
-X-Mimecast-MFC-AGG-ID: KOhIuteWMa2BBXwiIcLjhg_1747279555
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EB38619560B0;
-	Thu, 15 May 2025 03:25:54 +0000 (UTC)
-Received: from h1.redhat.com (unknown [10.22.88.116])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1C2ED18008F4;
-	Thu, 15 May 2025 03:25:39 +0000 (UTC)
-From: Nico Pache <npache@redhat.com>
-To: linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: david@redhat.com,
-	ziy@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	corbet@lwn.net,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	akpm@linux-foundation.org,
-	baohua@kernel.org,
-	willy@infradead.org,
-	peterx@redhat.com,
-	wangkefeng.wang@huawei.com,
-	usamaarif642@gmail.com,
-	sunnanyong@huawei.com,
-	vishal.moola@gmail.com,
-	thomas.hellstrom@linux.intel.com,
-	yang@os.amperecomputing.com,
-	kirill.shutemov@linux.intel.com,
-	aarcange@redhat.com,
-	raquini@redhat.com,
-	anshuman.khandual@arm.com,
-	catalin.marinas@arm.com,
-	tiwai@suse.de,
-	will@kernel.org,
-	dave.hansen@linux.intel.com,
-	jack@suse.cz,
-	cl@gentwo.org,
-	jglisse@google.com,
-	surenb@google.com,
-	zokeefe@google.com,
-	hannes@cmpxchg.org,
-	rientjes@google.com,
-	mhocko@suse.com,
-	rdunlap@infradead.org,
-	Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: [PATCH v7 12/12] Documentation: mm: update the admin guide for mTHP collapse
-Date: Wed, 14 May 2025 21:22:26 -0600
-Message-ID: <20250515032226.128900-13-npache@redhat.com>
-In-Reply-To: <20250515032226.128900-1-npache@redhat.com>
-References: <20250515032226.128900-1-npache@redhat.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fMul68mP"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-741b3e37a1eso502566b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 20:32:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1747279965; x=1747884765; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1g/suZwDMtwCwOejPygUimT1SDv6FRw8jhecB+9KAkU=;
+        b=fMul68mPsYuM1nrmEDkBnmekXs/3LQHfzxHDUZ9CgLyF5pvDMKNtbulQwNHGWCQuvy
+         tagua7/93yE3r6BWISrFw9UzkpONh8a2nUWsY8DuyhaGbvlKw0anYgfptAHMvYqY21Bd
+         EM2AD+WP3s6pjrCwhYXRsHq6W3p09mOPa2KuY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747279965; x=1747884765;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1g/suZwDMtwCwOejPygUimT1SDv6FRw8jhecB+9KAkU=;
+        b=gYVWXI9ubqHyG9/pDn8pCyGPP2sGTQ1alHvvVEvHwAHj509iER/9cqS7HS/AN6o52Y
+         DPIvsRB8qvhzQqyDuwucwgALQoaU2cvSoDlfCbileJze1bMJ79dkHG644LODnT5XqOVp
+         uRE/xkOKH/2A4wcsctBrPu1SMIfEtHvoq1WMBbtsEa9dqC0cRBMmvuLcN8BC3CF0AtLC
+         +H9xSKYZCLb9bWtMsU3qRWLz1BFuNAkLZ9UFY7V6JDcEN92KxLJSt1VRk2IqpVdj8oUl
+         KdOT8dGUBZTUOL1ULRMIrZMSXKIraysr8gxmVj85XrfFTyF9xYDzkpRObamHSbyx6Trl
+         XO5w==
+X-Forwarded-Encrypted: i=1; AJvYcCW5uOjC/e+34ICT19hl7uUTkcDlLBwMK26cRnscjLFJsPX3uX0AL+ddhBupNB9RonhUCJidHZ8TOaequeY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuS0ZeqCJ77B2BXHIXO9GIQrGVAs9ogaVDPYTMW2+h0MpcdBYs
+	kLdjc5y6vr246eHB4Jw2yNSEmKeQqilFVuFJFoshldHn6LftNyeLODrKcFy6+Q==
+X-Gm-Gg: ASbGnctSm5IkEwxeVlLVqBemKuFB0pI6DHASJGumOGg/Wyc4FXfkbU/3w/g7A2hXZab
+	2axfm3RqcPymnyEeW+bdOFa2uymRiTj+H6lSk745E8fNJgvSJg0DZBzZQVztibG0pVy/zhkC+dp
+	5D+7PEM5kKtg6Lkz2i26IEYR8VGNevGARb+ER8+nlwKY+7miUKSIY01Ear2QnyuwzLU0csasF1T
+	hycCcZqBTUR9XCc+85FF8kDa0JJuIIT+zQOl73UpKqncusbDoP9Wl7aGcO6ZTOZjLN6v83AHbCy
+	Gk9CmCVmQ6lPMyrFU0Gq6rgDQPZlW+SxgWddjkb/InQlPjTJBtzabY0=
+X-Google-Smtp-Source: AGHT+IFMDL27J4Xfo5AX374nk2UIjh5s2nm/2nbFAWtcSmHlepcaluh1TqSJym39cx/9MwWz+2EWuQ==
+X-Received: by 2002:a05:6a20:6a0c:b0:1f5:7b6f:f8e8 with SMTP id adf61e73a8af0-215ff08594dmr9177059637.6.1747279964958;
+        Wed, 14 May 2025 20:32:44 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:291c:c511:a135:fe23])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b234af2c287sm8231325a12.41.2025.05.14.20.32.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 20:32:44 -0700 (PDT)
+Date: Thu, 15 May 2025 12:32:39 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Zaslonko Mikhail <zaslonko@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	Heiko Carstens <hca@linux.ibm.com>, Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: Re: [PATCH 2/2] zram: support deflate-specific params
+Message-ID: <qddzdpkjsi6plu7jih5vau3xq5kjucnocoeoz7ewqbrzoiwgt6@zio43bbj5r2z>
+References: <20250514024825.1745489-1-senozhatsky@chromium.org>
+ <20250514024825.1745489-3-senozhatsky@chromium.org>
+ <bec7391c-e40d-4633-a2d0-881eb6d18f19@linux.ibm.com>
+ <ystv6cvrdllh64eqkislh47a3bnx5d2lk42ox4eiuuubioin6u@gmt5pwbkwiz3>
+ <aCVcsB-M9cKdq8d4@gondor.apana.org.au>
+ <2bnnkkwhqor73ls7dvsxlt57tp2u3xf2o27opkveuqwgh3xf2j@5kzgq4eej3cw>
+ <aCVeeWCawIETqkfG@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCVeeWCawIETqkfG@gondor.apana.org.au>
 
-Now that we can collapse to mTHPs lets update the admin guide to
-reflect these changes and provide proper guidence on how to utilize it.
+On (25/05/15 11:24), Herbert Xu wrote:
+> On Thu, May 15, 2025 at 12:19:25PM +0900, Sergey Senozhatsky wrote:
+> >
+> > OK, so do we want to limit user-space and permit only "raw deflate"
+> > winbits values. that is only negative ones (either explicitly or
+> > implicitly (by negating the value before zlib API calls))?
+> 
+> I would suggest that we stick with the zlib values, but filter
+> out the ones that we don't support/use currently.  If you've already
+> exported this to user-space then obviously you'll need to decide
+> on how to maintain compatibility but that should be specific to
+> zram.
 
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-Signed-off-by: Nico Pache <npache@redhat.com>
----
- Documentation/admin-guide/mm/transhuge.rst | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+This is not exported yet.
 
-diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
-index dff8d5985f0f..5c63fe51b3ad 100644
---- a/Documentation/admin-guide/mm/transhuge.rst
-+++ b/Documentation/admin-guide/mm/transhuge.rst
-@@ -63,7 +63,7 @@ often.
- THP can be enabled system wide or restricted to certain tasks or even
- memory ranges inside task's address space. Unless THP is completely
- disabled, there is ``khugepaged`` daemon that scans memory and
--collapses sequences of basic pages into PMD-sized huge pages.
-+collapses sequences of basic pages into huge pages.
- 
- The THP behaviour is controlled via :ref:`sysfs <thp_sysfs>`
- interface and using madvise(2) and prctl(2) system calls.
-@@ -144,6 +144,18 @@ hugepage sizes have enabled="never". If enabling multiple hugepage
- sizes, the kernel will select the most appropriate enabled size for a
- given allocation.
- 
-+khugepaged uses max_ptes_none scaled to the order of the enabled mTHP size
-+to determine collapses. When using mTHPs it's recommended to set
-+max_ptes_none low-- ideally less than HPAGE_PMD_NR / 2 (255 on 4k page
-+size). This will prevent undesired "creep" behavior that leads to
-+continuously collapsing to a larger mTHP size; When we collapse, we are
-+bringing in new non-zero pages that will, on a subsequent scan, cause the
-+max_ptes_none check of the +1 order to always be satisfied. By limiting
-+this to less than half the current order, we make sure we don't cause this
-+feedback loop. max_ptes_shared and max_ptes_swap have no effect when
-+collapsing to a mTHP, and mTHP collapse will fail on shared or swapped out
-+pages.
-+
- It's also possible to limit defrag efforts in the VM to generate
- anonymous hugepages in case they're not immediately free to madvise
- regions or to never try to defrag memory and simply fallback to regular
--- 
-2.49.0
+I lean toward not filtering/limiting anything and just permit
+what include/linux/zlib.h promises [1].  Would that be OK for
+Crypto API?
 
+[1]
+----
+
+     The windowBits parameter is the base two logarithm of the maximum window
+   size (the size of the history buffer).  It should be in the range 8..15 for
+   this version of the library. The default value is 15 if inflateInit is used
+   instead. windowBits must be greater than or equal to the windowBits value
+   provided to deflateInit2() while compressing, or it must be equal to 15 if
+   deflateInit2() was not used. If a compressed stream with a larger window
+   size is given as input, inflate() will return with the error code
+   Z_DATA_ERROR instead of trying to allocate a larger window.
+
+     windowBits can also be -8..-15 for raw inflate. In this case, -windowBits
+   determines the window size. inflate() will then process raw deflate data,
+   not looking for a zlib or gzip header, not generating a check value, and not
+   looking for any check values for comparison at the end of the stream. This
+   is for use with other formats that use the deflate compressed data format
+   such as zip.  Those formats provide their own check values. If a custom
+   format is developed using the raw deflate format for compressed data, it is
+   recommended that a check value such as an adler32 or a crc32 be applied to
+   the uncompressed data as is done in the zlib, gzip, and zip formats.  For
+   most applications, the zlib format should be used as is. Note that comments
+   above on the use in deflateInit2() applies to the magnitude of windowBits.
+
+     windowBits can also be greater than 15 for optional gzip decoding. Add
+   32 to windowBits to enable zlib and gzip decoding with automatic header
+   detection, or add 16 to decode only the gzip format (the zlib format will
+   return a Z_DATA_ERROR).  If a gzip stream is being decoded, strm->adler is
+   a crc32 instead of an adler32.
