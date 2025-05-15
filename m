@@ -1,98 +1,89 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 480161A23A0;
-	Thu, 15 May 2025 08:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE821F461A
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747298417; cv=none; b=rvFYKqjzGFmjRF4ZVhjNkyrr3jn3Od8O4h/6vtOn6TFF0LeBhi+iPSTQueLbWBmVG9sjEq6V9NVoU9Pj6HSz1ucur9x3QAW+w3kV4/9XBDhwwMgTcauzpvvKQviWfdXxjT8GfNrcQhD2fZPHH7TYUFnqaeM10/u3RbbPVVBbnYE=
+	t=1747298483; cv=none; b=EwWnj8NzwudqlHiNY2ddPStb081cmck8xeJudECtMugTlOtWeHijiC3AhRzQ83UcP1WJl4PNJB0D8w0Za84r52F9/8yiPzsZwc5F71wJyyVcZG4389Cu25S60YbNUpd77+lc7F8NTNGjc1zDxcr5cntFEa2LIYFbGYo9s5Pds2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747298417; c=relaxed/simple;
-	bh=iGPLC7alKVMRN6/e5ZztVooLrAljgiLXr6wjYMcHwTg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jhFB1/L0+MIrRZT88s/n6/fXPh+L1HAT2seQynBNVeJtG6vbgXAZOPLDKIXcGL3o3YrQE99YwI397PajzAIbyfjcfStpOk0SMa5BGvloK+LscJES+bF7AScmpr4LOwbWmMXhF9Tma9akDziSiv8OqmM3zpPM2O54Wkm1+qWguB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C79D014BF;
-	Thu, 15 May 2025 01:40:01 -0700 (PDT)
-Received: from [10.162.40.26] (K4MQJ0H1H2.blr.arm.com [10.162.40.26])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E50B3F673;
-	Thu, 15 May 2025 01:40:09 -0700 (PDT)
-Message-ID: <73a67d06-b497-40a2-8cb2-3b80c6ba59d1@arm.com>
-Date: Thu, 15 May 2025 14:10:07 +0530
+	s=arc-20240116; t=1747298483; c=relaxed/simple;
+	bh=3fbwG17g0zGe0WHDorq39S/ESe25tR5ldW0/jUF0+Lk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ae7rCR8K1NXyjS5WwwekzUcglP/WJ0oOBszbdzJS/Zd9xUF22pvCI4VaF0Ippb9jUWp27RIF63P2A7EXxPjVW/563hOWRpA+NFgniRRhduHgXyqIsMz71DqEE7nSGNsIuvjEpCTDE/8Ublf/eMJkccmJsQfS9BPctc17nFE0FZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-05 (Coremail) with SMTP id zQCowAA3dw+iqCVotbHaFQ--.49892S2;
+	Thu, 15 May 2025 16:41:06 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: qiang.zhao@nxp.com,
+	christophe.leroy@csgroup.eu
+Cc: linuxppc-dev@lists.ozlabs.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] soc: fsl: qe: Consolidate chained IRQ handler install/remove
+Date: Thu, 15 May 2025 16:39:19 +0800
+Message-Id: <20250515083919.3811473-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: Check pxd_leaf() instead of !pxd_table() while
- tearing down page tables
-To: David Hildenbrand <david@redhat.com>, catalin.marinas@arm.com,
- will@kernel.org
-Cc: ryan.roberts@arm.com, anshuman.khandual@arm.com, mark.rutland@arm.com,
- yang@os.amperecomputing.com, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
-References: <20250515063450.86629-1-dev.jain@arm.com>
- <332ecda7-14c4-4dc3-aeff-26801b74ca04@redhat.com>
- <4904d02f-6595-4230-a321-23327596e085@arm.com>
- <6fe7848c-485e-4639-b65c-200ed6abe119@redhat.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <6fe7848c-485e-4639-b65c-200ed6abe119@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAA3dw+iqCVotbHaFQ--.49892S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7GF1fZFWUWr1fAr17tr4UXFb_yoWkZFc_Ww
+	45X347Xr18ZasayF12ywsxAF4rZF4vqrnrCanYqFZay34fJ397AF1UtFnxur1kWF15ZF1k
+	Ary5ZrWfGrWUGjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbVxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r
+	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AK
+	xVWUAVWUtwCY02Avz4vE14v_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
+	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
+	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
+	73UjIFyTuYvjfU00eHDUUUU
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
+Chained irq handlers usually set up handler data as well.
+irq_set_chained_handler_and_data() can set both under irq_desc->lock.
+Replace the two calls with one.
 
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/soc/fsl/qe/qe_ic.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-On 15/05/25 2:06 pm, David Hildenbrand wrote:
-> On 15.05.25 10:22, Dev Jain wrote:
->>
->>
->> On 15/05/25 1:43 pm, David Hildenbrand wrote:
->>> On 15.05.25 08:34, Dev Jain wrote:
->>>> Commit 9c006972c3fe removes the pxd_present() checks because the caller
->>>> checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller
->>>> only
->>>> checks pud_present(); pud_free_pmd_page() recurses on each pmd through
->>>> pmd_free_pte_page(), wherein the pmd may be none.
->>> The commit states: "The core code already has a check for pXd_none()",
->>> so I assume that assumption was not true in all cases?
->>>
->>> Should that one problematic caller then check for pmd_none() instead?
->>
->>   From what I could gather of Will's commit message, my interpretation is
->> that the concerned callers are vmap_try_huge_pud and vmap_try_huge_pmd.
->> These individually check for pxd_present():
->>
->> if (pmd_present(*pmd) && !pmd_free_pte_page(pmd, addr))
->>     return 0;
->>
->> The problem is that vmap_try_huge_pud will also iterate on pte entries.
->> So if the pud is present, then pud_free_pmd_page -> pmd_free_pte_page
->> may encounter a none pmd and trigger a WARN.
-> 
-> Yeah, pud_free_pmd_page()->pmd_free_pte_page() looks shaky.
-> 
-> I assume we should either have an explicit pmd_none() check in 
-> pud_free_pmd_page() before calling pmd_free_pte_page(), or one in 
-> pmd_free_pte_page().
-> 
-> With your patch, we'd be calling pte_free_kernel() on a NULL pointer, 
-> which sounds wrong -- unless I am missing something important.
-> 
->>
->>>
->>> If you were able to trigger this WARN, it's always a good idea to
->>> include the splat in the commit.
->>
->> I wasn't able to, it is just an observation from code inspection.
-> 
-> That better be included in the patch description :)
-
-I did, actually. My bad for not putting in spaces, I notice now that the 
-description looks horrible to the eye :)
-
-> 
+diff --git a/drivers/soc/fsl/qe/qe_ic.c b/drivers/soc/fsl/qe/qe_ic.c
+index 17e6d2377c7c..4068b501a3a3 100644
+--- a/drivers/soc/fsl/qe/qe_ic.c
++++ b/drivers/soc/fsl/qe/qe_ic.c
+@@ -450,13 +450,11 @@ static int qe_ic_init(struct platform_device *pdev)
+ 
+ 	qe_ic_write(qe_ic->regs, QEIC_CICR, 0);
+ 
+-	irq_set_handler_data(qe_ic->virq_low, qe_ic);
+-	irq_set_chained_handler(qe_ic->virq_low, low_handler);
++	irq_set_chained_handler_and_data(qe_ic->virq_low, low_handler, qe_ic);
+ 
+-	if (high_handler) {
+-		irq_set_handler_data(qe_ic->virq_high, qe_ic);
+-		irq_set_chained_handler(qe_ic->virq_high, high_handler);
+-	}
++	if (high_handler)
++		irq_set_chained_handler_and_data(qe_ic->virq_high,
++						 high_handler, qe_ic);
+ 	return 0;
+ }
+ static const struct of_device_id qe_ic_ids[] = {
+-- 
+2.25.1
 
