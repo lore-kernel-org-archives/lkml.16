@@ -1,171 +1,178 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34624B1E44
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 02:01:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4E64B1E44;
+	Thu, 15 May 2025 02:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747274499; cv=none; b=EZsFY5YDK/16peiUhWGzAKTXJgrvL9g8HlpIYL3V+w9Y328hLjAleKJ36529x8SAAPRHmXWkLgYah/BRdZEYvzbGmt9PB3OxJa9ntQ2Xk/m1mI/VxpIzusdoGYE0v4S3mSKF4BIbjENSa2rIay8oFX2xBSPinGLvpoNpU9YYwYw=
+	t=1747274786; cv=none; b=LmbXApBD0lc60L15jfGdhSru6+Olk7kojD2qHNHqzXME4NhUzjVGga4rSC2rNuTKovYm1D7adetctWgm4JbnICR/wDTxQ2XaghDuYtOksVwUkKrW90vRBdohPgOf9tea+7Eyc1NzkqeXH1tvIVjYK5MYl6L6tArCpXYJKaVczuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747274499; c=relaxed/simple;
-	bh=Ys33O/zgHEEBRUX0TZ7+hETBTcCcg+4QlDnFZ+FeywU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sKWJu2SW1mrUZEhWQO2haJ0g+4New7MDB77mT4CdGsLTywecqII7O4/k9/5lpIS7mUs82py3SGqfDR3l6oApYbvO1qtLEsRPjTAjwsIoenhAYdU4GPlPtdEOr3ARKJBIpTz/mlpF/1d4eNWjwBEvDMMeUcBqcEb2FqVKRDQRauc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com; spf=pass smtp.mailfrom=dubeyko.com; dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b=i3nM6aZS; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dubeyko.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dubeyko.com
+	s=arc-20240116; t=1747274786; c=relaxed/simple;
+	bh=0s4aP+GUXSooXukpZbwoYjCRRnKU1I3gEARrmJir8Kg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=obrOdxbltJIKMybUVwax4Bfy/KyIg18++zMpXGMPiChW1AJE1oowE6O8jNudqt5KVSNRB7X16KsvjiwGrW3duHVOTSKuOEDLtx0puEyHu7ifwtwPPZ9zJSomY9w8AGB2sHNTrIVQNmHhyWapZwowVELo/H5hC+tDVOL9EWhRDVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uxm1PjfW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dubeyko-com.20230601.gappssmtp.com header.i=@dubeyko-com.20230601.gappssmtp.com header.b="i3nM6aZS"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-550d4b7a076so400421e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 19:01:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dubeyko-com.20230601.gappssmtp.com; s=20230601; t=1747274494; x=1747879294; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3igWJBklYuK9G/0qmdyO39ElstyriCzMZS8fl9pAzNM=;
-        b=i3nM6aZSvfXtFBi7OBC9WHCtAmwswWTQtadoFx3tu3mO3jJ+AvBHdIZp0DVxfVYFdg
-         cghxdPQWzaFwBmPdVZl5A1x66XaL7xi2FRNVFL+jObPWt/ur9gclYeRafPEu8bd55szb
-         DDuofG8jwVi+Wb03fsUrj27tIr+l8AL9Sk+rR4xCllDQlQhzUr0CZBpTQuxiEwKpqCWo
-         AbwC4lBHwnqDlTfBf/kJswpeGnSnVuid0WEMmvJnSFDx1mKc/Ggdua7OMbg2mT/aFL8l
-         Uew+X9EW2JwJVyCC5sJButH8WBrvMsnM2wqG3ZnqcNUJ/Bnpj4TeTDgTmiYOntU13Zr/
-         NwIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747274494; x=1747879294;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3igWJBklYuK9G/0qmdyO39ElstyriCzMZS8fl9pAzNM=;
-        b=i+YohUwgBYoXmoI6IO5HXcYHyRqmksPL1yPBZeM8ExP84jVHWHvo9f+wn1l7I1/syk
-         kvwU2jsPb9+LLioji/tLiao4GuDbg6pmnhqZCGnGnkrL+6LnrHn12papZDQOGxVZ12Cz
-         sTvBWzQbUOlwxvyxWGh0J8RAXJnlFhxvURH3j+u/3DxzO5qGM93yp+jgSwbpIXfBv2F6
-         Q3kJqZRykZPqT6pxvxlBsEpx1RZE6OgDac8PJE9UMmL4ezsGD7zYAxAuRPD1eL5vNJi3
-         WvOyF0s+BibafosDfUHp+hgapxIGIzEw9ky0sRHnFJyYTYAM4BfsvedhVtGwlsRLP4cp
-         yDfw==
-X-Forwarded-Encrypted: i=1; AJvYcCX2EU4USdUSh5y+oWuL/OrKAh4izhr8hhJ7oUCCTpJiKJQM2jT4upuuw0acRPgeBzL2k8Ds2DXfvNnTh4E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+V/3yW+xODRHaFblxzRwdxQevxQVoixbg/ZvcBiHxM1P4yBfH
-	DJMBxh1Md+4mG+aDIs9UxkdjV0cBHkgOsOTpQqq3fa1bHlOj8FfF6mgtYymalME=
-X-Gm-Gg: ASbGncvrOPdY/OY7rFCISt+/6R7CpT0co/Zh7PPquBQD/TkRlhs+NDiqbJyJuFF6gtL
-	MSlEbW8btwz8eMG/m1vnPrOPdd4MYO2NY5OKw2eSpDHgBljH/Zb0mOYBmdYTTDQ5XS0ZfPRAgKi
-	AGW9+W0BHbmC9/2cjcjgEHZBlEXCNTE3v0gqdUPYNMXCKasIhRoGwB9+1EVNp9r6BKVCb09q0NB
-	ZSJyoeDbeDsElkhwxmXjWQp92OywMSPyq9IQYVjRPnSIUcb7AwtZtcOF4QAQE33agCrxouyU+t2
-	a0teypuZJt3LpriS3YInyZm+G3MxC3Q7AqvA/+N5sSVFKqME47HUPQ==
-X-Google-Smtp-Source: AGHT+IEeIBvJX6OKvUbZqPpng9PWrTVmUIp6FebTgR/KxxOKTDCWY581tYEO2BmhEHo+OorC8cDfjQ==
-X-Received: by 2002:a05:6512:3e21:b0:545:381:71e with SMTP id 2adb3069b0e04-550dd127e21mr220128e87.40.1747274493797;
-        Wed, 14 May 2025 19:01:33 -0700 (PDT)
-Received: from [10.24.138.144] ([91.230.138.172])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc64bf6ddsm2451584e87.193.2025.05.14.19.01.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 19:01:32 -0700 (PDT)
-Message-ID: <58e07322349210ea1c7bf0a23278087724e95dfd.camel@dubeyko.com>
-Subject: Re: [PATCH] hfsplus: remove mutex_lock check in hfsplus_free_extents
-From: Viacheslav Dubeyko <slava@dubeyko.com>
-To: Yangtao Li <frank.li@vivo.com>, glaubitz@physik.fu-berlin.de, Andrew
- Morton	 <akpm@linux-foundation.org>, "Ernesto A."
- =?ISO-8859-1?Q?Fern=E1ndez?=	 <ernesto.mnd.fernandez@gmail.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzbot+8c0bc9f818702ff75b76@syzkaller.appspotmail.com
-Date: Wed, 14 May 2025 19:01:31 -0700
-In-Reply-To: <20250511110856.543944-1-frank.li@vivo.com>
-References: <20250511110856.543944-1-frank.li@vivo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (by Flathub.org) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uxm1PjfW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85924C4CEE3;
+	Thu, 15 May 2025 02:06:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747274785;
+	bh=0s4aP+GUXSooXukpZbwoYjCRRnKU1I3gEARrmJir8Kg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uxm1PjfWlSxmPpIXMVfETaA8OuYRSur6Ps9dBWi2N9q2pRj6enIo2XEBzRmoohzhn
+	 cVA1Ud8dka8UNRuu5gc27gUmAEooIrqmlSHsvpDchkhy42rX/M12Ekb4nrlSmQlkqt
+	 YFXjwBKS/5BFGB41NEIwpQCzl6NoMh5JFST9Gzra80W7wC+Yhw6KzLC54vEn+2Os09
+	 KbvBUP325JH5Iyg6se3TA5IYgvmjD4k/IM79iSA3+EHKPV53v6DEMSWb3XC2BXfS3M
+	 R3AUE/BYHwqSR04VjJaRl+WIDwDbW4ictpm8FuMJbpzVVjFIPfGfbb8x209cJ+qFA8
+	 7bumzqpOSKidw==
+Date: Wed, 14 May 2025 19:06:24 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: John Groves <John@groves.net>, Dan Williams <dan.j.williams@intel.com>,
+	Bernd Schubert <bschubert@ddn.com>,
+	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Luis Henriques <luis@igalia.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Stefan Hajnoczi <shajnocz@redhat.com>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC PATCH 13/19] famfs_fuse: Create files with famfs fmaps
+Message-ID: <20250515020624.GP1035866@frogsfrogsfrogs>
+References: <20250421013346.32530-1-john@groves.net>
+ <20250421013346.32530-14-john@groves.net>
+ <nedxmpb7fnovsgbp2nu6y3cpvduop775jw6leywmmervdrenbn@kp6xy2sm4gxr>
+ <20250424143848.GN25700@frogsfrogsfrogs>
+ <5rwwzsya6f7dkf4de2uje2b3f6fxewrcl4nv5ba6jh6chk36f3@ushxiwxojisf>
+ <20250428190010.GB1035866@frogsfrogsfrogs>
+ <CAJfpegtR28rH1VA-442kS_ZCjbHf-WDD+w_FgrAkWDBxvzmN_g@mail.gmail.com>
+ <20250508155644.GM1035866@frogsfrogsfrogs>
+ <CAJfpegt4drCVNomOLqcU8JHM+qLrO1JwaQbp69xnGdjLn5O6wA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegt4drCVNomOLqcU8JHM+qLrO1JwaQbp69xnGdjLn5O6wA@mail.gmail.com>
 
-On Sun, 2025-05-11 at 05:08 -0600, Yangtao Li wrote:
-> Syzbot reported an issue in hfsplus subsystem:
->=20
+On Tue, May 13, 2025 at 11:14:55AM +0200, Miklos Szeredi wrote:
+> On Thu, 8 May 2025 at 17:56, Darrick J. Wong <djwong@kernel.org> wrote:
+> 
+> > Well right now my barely functional prototype exposes this interface
+> > for communicating mappings to the kernel.  I've only gotten as far as
+> > exposing the ->iomap_{begin,end} and ->iomap_ioend calls to the fuse
+> > server with no caching, because the only functions I've implemented so
+> > far are FIEMAP, SEEK_{DATA,HOLE}, and directio.
+> >
+> > So basically the kernel sends a FUSE_IOMAP_BEGIN command with the
+> > desired (pos, count) file range to the fuse server, which responds with
+> > a struct fuse_iomap_begin_out object that is translated into a struct
+> > iomap.
+> >
+> > The fuse server then responds with a read mapping and a write mapping,
+> > which tell the kernel from where to read data, and where to write data.
+> 
+> So far so good.
+> 
+> The iomap layer is non-caching, right?   This means that e.g. a
+> direct_io request spanning two extents will result in two separate
+> requests, since one FUSE_IOMAP_BEGIN can only return one extent.
 
-Could you please add the issue into the issues list [1] (if it is not
-there yet) and to assign it on yourself?
+Originally it wasn't supposed to be cached at all.  Then history taught
+us a lesson. :P
 
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 4400 at fs/hfsplus/extents.c:346
-> 	hfsplus_free_extents+0x700/0xad0
-> Call Trace:
-> <TASK>
-> hfsplus_file_truncate+0x768/0xbb0 fs/hfsplus/extents.c:606
-> hfsplus_write_begin+0xc2/0xd0 fs/hfsplus/inode.c:56
-> cont_expand_zero fs/buffer.c:2383 [inline]
-> cont_write_begin+0x2cf/0x860 fs/buffer.c:2446
-> hfsplus_write_begin+0x86/0xd0 fs/hfsplus/inode.c:52
-> generic_cont_expand_simple+0x151/0x250 fs/buffer.c:2347
-> hfsplus_setattr+0x168/0x280 fs/hfsplus/inode.c:263
-> notify_change+0xe38/0x10f0 fs/attr.c:420
-> do_truncate+0x1fb/0x2e0 fs/open.c:65
-> do_sys_ftruncate+0x2eb/0x380 fs/open.c:193
-> do_syscall_x64 arch/x86/entry/common.c:50 [inline]
-> do_syscall_64+0x3d/0xb0 arch/x86/entry/common.c:80
-> entry_SYSCALL_64_after_hwframe+0x63/0xcd
->=20
-> To avoid deadlock, Commit 31651c607151 ("hfsplus: avoid deadlock
-> on file truncation") unlock extree before hfsplus_free_extents(),
-> and add check wheather extree is locked in hfsplus_free_extents().
->=20
-> However, when operations such as hfsplus_file_release,
-> hfsplus_setattr, hfsplus_unlink, and hfsplus_unlink are executed
-> concurrently in different files, it is very likely to trigger the
-> WARN_ON, which will lead syzbot and xfstest to consider it as an
-> abnormality.
->=20
+In hindsight, there needs to be coordination of the space mapping
+manipulations that go on between pagecache writes and reclaim writeback.
+Pagecache write can get an unwritten iomap, then go to sleep while it
+tries to get a folio.  In the meantime, writeback can find the folio for
+that range, write it back to the disk (which converts unwritten to
+written) and reclaim the folio.  Now the first process wakes up and
+grabs a new folio.  Because its unwritten mapping is now stale, it must
+not start zeroing that folio; it needs to go get a new mapping.
 
-Which particular xfstests' test-case(s) triggers the issue? Do we have
-the easy reproducing path of it? How can I check the fix, finally?
+So iomap still doesn't need caching per se, but it needs writer threads
+to revalidate the mapping after locking a folio.  The reason for caching
+iomaps under the fuse_inode somewhere is that I don't want the
+revalidations to have to jump all the way out to userspace with a folio
+lock held.
 
-> Since we already have alloc_mutex to protect alloc file modify,
-> let's remove mutex_lock check.
->=20
+That said, on a VM on this 12 year old workstation, I can get about
+2.0GB/s direct writes in fuse2fs and 2.2GB/s in kernel ext4, and that's
+with initiating iomap_begin/end/ioends with no caching of the mappings.
+Pagecache writes run at about 1.9GB/s through fuse2fs and 1.5GB/s
+through the kernel, but only if I tweak fuse to use large folios and a
+relatively unconstrained bdi.  2GB/s might be enough IO for anyone. ;)
 
-I don't think that I follow the point. The two mutexes are namely the
-basis for potential deadlocks. Currently, I am not sure that we are
-fixing the issue. Probably, we are trying to hide the symptoms of the
-real issue without the clear understanding what is going wrong. I would
-like to hear the explanation how the issue is happening and why the
-warning removal can help here.
+> And the next direct_io request may need to repeat the query for the
+> same extent as the previous one if the I/O boundary wasn't on the
+> extent boundary (which is likely).
+> 
+> So some sort of caching would make sense, but seeing the multitude of
+> FUSE_IOMAP_OP_ types I'm not clearly seeing how that would look.
 
-> Fixes: 31651c607151f ("hfsplus: avoid deadlock on file truncation")
-> Reported-by: syzbot+8c0bc9f818702ff75b76@syzkaller.appspotmail.com
-> Closes:
-> https://lore.kernel.org/all/00000000000057fa4605ef101c4c@google.com/
-> Signed-off-by: Yangtao Li <frank.li@vivo.com>
-> ---
-> =C2=A0fs/hfsplus/extents.c | 3 ---
-> =C2=A01 file changed, 3 deletions(-)
->=20
-> diff --git a/fs/hfsplus/extents.c b/fs/hfsplus/extents.c
-> index a6d61685ae79..b1699b3c246a 100644
-> --- a/fs/hfsplus/extents.c
-> +++ b/fs/hfsplus/extents.c
-> @@ -342,9 +342,6 @@ static int hfsplus_free_extents(struct
-> super_block *sb,
-> =C2=A0	int i;
-> =C2=A0	int err =3D 0;
-> =C2=A0
-> -	/* Mapping the allocation file may lock the extent tree */
-> -	WARN_ON(mutex_is_locked(&HFSPLUS_SB(sb)->ext_tree-
-> >tree_lock));
-> -
+Yeah, it's confusing.  The design doc tries to clarify this, but this is
+roughly what we need for fuse:
 
-I am not sure that it's the good idea to remove any warning because,
-probably, we could not understand the real reason of the issue and we
-simply trying to hind the symptoms of something more serious.
+FUSE_IOMAP_OP_WRITE being set means we're writing to the file.
+FUSE_IOMAP_OP_ZERO being set means we're zeroing the file.
+Neither of those being set means we're reading the file.
 
-Current explanation doesn't sound reasonably well to me. I am not
-convinced yet that it is proper fix and we see the reason of the issue.
-I would like to hear more clear justification that we have to remove
-this check.
+(3 different operations)
 
-Thanks,
-Slava.=20
+FUSE_IOMAP_OP_DIRECT being set means directio, and it not being set
+means pagecache.
 
-> =C2=A0	hfsplus_dump_extent(extent);
-> =C2=A0	for (i =3D 0; i < 8; extent++, i++) {
-> =C2=A0		count =3D be32_to_cpu(extent->block_count);
+(and one flag, for 6 different types of IO)
 
-[1] https://github.com/hfs-linux-kernel/hfs-linux-kernel/issues
+FUSE_IOMAP_OP_REPORT is set all by itself for things like FIEMAP and
+SEEK_DATA/HOLE.
+
+> > I'm a little confused, are you talking about FUSE_NOTIFY_INVAL_INODE?
+> > If so, then I think that's the wrong layer -- INVAL_INODE invalidates
+> > the page cache, whereas I'm talking about caching the file space
+> > mappings that iomap uses to construct bios for disk IO, and possibly
+> > wanting to invalidate parts of that cache to force the kernel to upcall
+> > the fuse server for a new mapping.
+> 
+> Maybe I'm confused, as the layering is not very clear in my head yet.
+> 
+> But in your example you did say that invalidation of data as well as
+> mapping needs to be invalidated, so I thought that the simplest thing
+> to do is to just invalidate the cached mapping from
+> FUSE_NOTIFY_INVAL_INODE as well.
+
+For now I want to keep the two invalidation types separate while I build
+out more of the prototype so that I can be more sure that I haven't
+broken any existing code. :)
+
+The mapping invalidation might be more useful for things like FICLONE on
+weird filesystems where the file allocation unit size is larger than the
+block size and we actually need to invalidate more mappings than the vfs
+knows about.
+
+But I'm only 80% sure of that, as I'm still figuring out how to create a
+notification and send it from fuse2fs and haven't gotten to the caching
+layer yet.
+
+--D
+
+> Thanks,
+> Miklos
+> 
