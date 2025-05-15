@@ -1,83 +1,107 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D50AD211276;
-	Thu, 15 May 2025 23:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EC41F6679;
+	Thu, 15 May 2025 23:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747351563; cv=none; b=qlVe3T6Lp9R5YgKKkTnrlehtwfMPjMeyI3eOkzkVwx89WWPqE429XO9mYZyH6O9BEIAsFTNCxPaYcKO7153bOUvO7eLPFrkal/r2dgpqtFDLy0CcH06HBZRT2Seytp8MYytz1jTyCZ3ZMYmy8VpK49NtPuz/eCShvsRugeF/eGo=
+	t=1747351638; cv=none; b=rIO53PkDiDzgs9+HNGX0zD0MXM1IMBQp9f4rcUmvGCLq8GH+OV8ox/m9cNNc6ClQKNxMg7DstUVo/xOV3Mc58+ETGCiUQL6lm6r/FXBO5wjxIRY2IWAv79Czi7dYJP9NhpIiXXNxLagA04MQDKiOGxVb94V8NdtLcsb8VWvDFnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747351563; c=relaxed/simple;
-	bh=mw9/BAhXb2qHkrwYtyOMmpW0tLYOxZYPqTvqtKkGiVk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XiBU4dtuagwgoKgVG8hnPMypyS8vuU90Ei3p2mzQ3T5h2isnnhqabgoRfOSAvUjTFhLFQGtTwcSDrLVj95cpsO8jUpoRywPacXJcQBo+D7P01gwyJAnfnRvCsbRK4XdXBIY81LZcZ9PB3T6ml0tZXhH0rG5PaKjQPJFO2NVwrEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=ml1+uyx3; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1747351638; c=relaxed/simple;
+	bh=Pgu2Y6SESaYpP1jqivqgblNQ4Ifsz5v7aJ3n6jeq+Bw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tkSrQSzmgr0mV+c91CF9bTJvNCJd8X3c2kdsIchNa468DOhC0NLCljLirJmxDnLFsGH9VD9idDYjL7i/+l6UK9vJTQMO7XKho4m+1NuDrOLglJApHiE/KwxNl8BfwZ/AcJoORYzwctDdPhhM7Kc+lHQFt52FZjJB3MpC6+kHrnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ICkzPb5N; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="ml1+uyx3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=hizxHZhxdPn8Y3F03YsB7R1Oe8f9AaxUsu11/H4PZZo=; b=ml1+uyx3eZ4QLvqtYky5FgMhKd
-	NPBnNxmsz3/P6GYBqAFrgbb7EDfQgKNFZz4v8FB6zuF8mmzfAf7yiPrTQzrXa0mEyHqEeBDwLTvZ3
-	LxYXcYaR5gMGvuLHdg5wqnC3D+YvoP+zjV4giDGo8Jow8H5QsYoTNDOlnf6+9wkFZiLDZNFKDcaW7
-	79ainoySstVQRJcSPn7dxFWBTO9GyAhOO/ua8rS5l37DiUJ3rtzNU0IummbC14jYeHakBwkutnatg
-	SiTCJD2Z/abzE+JsIQdn9T/XAcprkXOCjdO/n05algtqa5Ci9bVqE3CSqhstQ3IiSjF9s4dRDqDLx
-	OloEVQZQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uFhxV-006SfU-0x;
-	Fri, 16 May 2025 07:25:50 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 16 May 2025 07:25:49 +0800
-Date: Fri, 16 May 2025 07:25:49 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: Eric Biggers <ebiggers@kernel.org>,
-	Corentin Labbe <clabbe.montjoie@gmail.com>,
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>
-Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
-Message-ID: <aCZ3_ZMAFu6gzlyt@gondor.apana.org.au>
-References: <aB8t1ZTVBexqGlcm@gondor.apana.org.au>
- <dcb0b04e479d6f3cfed87795d100ea09e4fbcf53.camel@gmail.com>
- <aCAX8rj2ie4QMnTo@gondor.apana.org.au>
- <28184fb96e2de8a0af32816f5ff1b3d776b57217.camel@gmail.com>
- <aCMOyWVte4tw85_F@gondor.apana.org.au>
- <8e9b45bdafe6ac3f12bcbb5fce5bc9949566344f.camel@gmail.com>
- <aCQm0aHYnI6ciyPz@gondor.apana.org.au>
- <20dde00750d803a9a364ded99dab1e3e22daec77.camel@gmail.com>
- <20250515182131.GC1411@quark>
- <f0dc235e3d7bfa1f60cc01fd527da52024af54e0.camel@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICkzPb5N"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3da785e3f90so7218945ab.2;
+        Thu, 15 May 2025 16:27:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747351636; x=1747956436; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Pgu2Y6SESaYpP1jqivqgblNQ4Ifsz5v7aJ3n6jeq+Bw=;
+        b=ICkzPb5NDvFpyhIq/PxhMY0osvHGOb85tbLlUg6ZZgkBkYSNZ4mhBZ7fT8Vl90UUkW
+         VVIaDqFrhxTP2y38Me7CJ9CokDKdD/PebJ2VzUNG/xBYiIUas0fUSH0RvKIaTDMBixQj
+         0uEy8trUrq/Ezk9FzGQjUJ/32jjgueP1RdIFVJ00Lel3YsdR+Cbd+lULo+A0ZX92jNei
+         c1IgHu6A3Hw7lZOatfJVfdu+i7gatMyZkuo8Oe5xg9cDBtuVYLTSqjC6ZOTK5XNXdeRH
+         OLzChsjUXSGdnBPmDXGUje2t1I7jnV+6qrjgv66U/Bj8SVv7m4X5G3Wt6rLoKUuldPWy
+         opLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747351636; x=1747956436;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Pgu2Y6SESaYpP1jqivqgblNQ4Ifsz5v7aJ3n6jeq+Bw=;
+        b=u5b7VqxJzZQKS+jlVxXaUYKmxYmoi7fMxGqWR0QYjhiWc0CNNKYtNNfnJz48ocXVL/
+         fKVDhKGK3UEy1fbyobnMR5ylIRyQJZjpU/mOhk0Rfmimm53acUNuLTVrCYfb2IPvcVk6
+         4vKm7NQAWDNHoSsgU+gnSvfp4LSFkT/QyNuo05b6Tv2526AZ6NjNeHeCR7JwOtimrylY
+         PJJVNdICoLEAXeCjHZ78u3ib+pEeU1E0piLW+pIaWmNaBSKhAFGvA2kRMg9FcU+AtBml
+         IN3zgda5DVyROsvOj3y6pWBObaWi4xO87XN4DDGe/M1Ut9xOlJZKM4dDc7S6jlUvxe9Z
+         yRIw==
+X-Forwarded-Encrypted: i=1; AJvYcCV7WSmig292LZJwSowruE7Jdk3pjBu+sFkRPtFzvNti6JbZA+wNO/xkEJjsMKRNP/AIGWOr3bGN3R/gBQ==@vger.kernel.org, AJvYcCVNlmC6OQE4nFY5SSCWRHs5t0LsHSrV3s49nToriIhEXimwDp3ZSgHBlapOlfF4Sp/4s8d036/jcfMAytQV@vger.kernel.org, AJvYcCVzx6TIO2u0jeRpAbo8gBC85P2xlzCrP7P6ECmNduXuA1gMvgS+09SLOZfhWC4ZwkfVMYYD5vC6QdC56SPh6GlHzKIv@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhGx54UNU3Cjn2K/Rf/e+0whV5ft2JiQrfUEpqbEF/Fq584TZJ
+	ssqyFbHEgj1pZNr7XITucV+kERnKNPGMKzWziv6z3IZpxf8Oaa6SUUAuToGaK7bCAisFR9laNLr
+	WXUN38iJKT64V1fDEuciYqHlcd72sbTQ=
+X-Gm-Gg: ASbGnctL1HW/ptybqtIxPyHag4hNuN7Q65z1+yFRRhnVEn0RI8ExaNrXxpSwHW2Eac1
+	Q0s2QyUcLB7VYf2cVbqLGzI8gczaW/DTD38MMw53Z1kaJ3phPsJVsFqquettzPoj7WqyAJMAxbf
+	hiRTrRjiF/mnydc/lPKYIY8Hf3wFlwtu4=
+X-Google-Smtp-Source: AGHT+IGMfInsdd4M86V2Nizwia98eN9Cphdu9Ifp0c4g8ILD/M5kt5/nqFyr5+vgxMpx7sYVOFj4slUTcZjlKV1jb40=
+X-Received: by 2002:a05:6e02:1a02:b0:3d4:2306:a875 with SMTP id
+ e9e14a558f8ab-3db8573b7f2mr6272255ab.8.1747351636199; Thu, 15 May 2025
+ 16:27:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f0dc235e3d7bfa1f60cc01fd527da52024af54e0.camel@gmail.com>
+References: <20250515061643.31472-1-kerneljasonxing@gmail.com>
+ <20250515061643.31472-4-kerneljasonxing@gmail.com> <543ef493-a478-4e92-b384-f6ff299b11fb@kernel.dk>
+In-Reply-To: <543ef493-a478-4e92-b384-f6ff299b11fb@kernel.dk>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Fri, 16 May 2025 07:26:40 +0800
+X-Gm-Features: AX0GCFsN5GIaAdgN6g5NVxIIwO__es_7OFWs3t7NcNFhfUkgfO8Q1iiiqvjpgUg
+Message-ID: <CAL+tcoCLu5PNvfs=_HDfy8NdNj5N1_h5dt4GjVCvB9qSt0EYyg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] blktrace: use rbuf->stats.full as a drop indicator
+ in relayfs
+To: Jens Axboe <axboe@kernel.dk>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Jason Xing <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2025 at 08:45:39PM +0200, Klaus Kudielka wrote:
+On Fri, May 16, 2025 at 2:21=E2=80=AFAM Jens Axboe <axboe@kernel.dk> wrote:
 >
-> ...and the failing marvell-cesa self-tests seem to have magically disappeared.
-> I now had five successful reboot / modprobe marvell-cesa in a row.
+> On 5/15/25 12:16 AM, Jason Xing wrote:
+> > From: Jason Xing <kernelxing@tencent.com>
+> >
+> > Replace internal subbuf_start in blktrace with the default policy
+> > in relayfs.
+> >
+> > Remove dropped field from struct blktrace. Correspondingly, call the
+> > common helper in relay. Through incrementing full_count to keep track
+> > of how many times we encountered a full buffer issue, it aids the user
+> > space app in telling how many lost events appear.
+>
+> Forgot, I'd rewrite this, "telling how many lost events appear" doesn't
+> make any sense at all, as these events obviously don't appears in the
+> first place.
+>
+> By incrementing full_count to keep track of how many times we
+> encountered a full buffer issue, user space will know how many events
+> were lost.
 
-It's always unfortunate when a printk patch makes the problem
-go away :)
-
-Correntin, can you still reproduce the failures with the latest
-cryptodev tree?
+Oh right, I will adjust it!
 
 Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Jason
+
+>
+> --
+> Jens Axboe
