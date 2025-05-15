@@ -1,120 +1,210 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B8E4B1E70;
-	Thu, 15 May 2025 12:05:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A703417BB21
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:05:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747310702; cv=none; b=XM8D7HyINUBxW6euUwBFcwASPQpQXZHL2qI8qdJi/zCu/CYldkt6/Lia4g8WgO/xnB2Yp7FWV2A0VA8QzhlwaX727IMiZ0aUmEb6zQAcGDYfMAKTGRTe3Y1HVwR63EGqtwB3c8PGE+s53nQjJqzY8DBZiIhkJ/5GDbi4xrRlTbQ=
+	t=1747310756; cv=none; b=L1up5GOaPG9qkPUPN+DqaOQigBr1QlvQZJdJH9MKE2jZF40jD7jYCYy/iRz+SVDUKG3PZRxcMQE/FkjVToKVDROfWJ+5vbpbCzK3UScDdJ4Sk4NAJ2hoPIR5RtuqImSD5UrtY6zszgdUZ2mAek4pCcVqYGVfnUsttDosEVGmERY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747310702; c=relaxed/simple;
-	bh=62OwTFjCUryg+sOCfQpoiPdxoz3pueMjuZ3KrIe1EF0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U6FYPQzzs2Wc3q25ESSeuwzvZVfCu1DhoauAqpNk9XcNUZ8NqtVoQ0LwR2OHBQHLrefOxNIm92bHL0SQwtqQrOiqFXS5eTAxpCUnpCQlq/v38gWZ9NI8lumfZF/o72q1wMW9AXyjhd62JKTcsROuReZtQn1zSTaI7RrU8GX42kY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JquxQaQP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747310756; c=relaxed/simple;
+	bh=Ek3q35eEpSN5jOqeQGcZqs+oZjUTxVloFkdKMcgcyec=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YxxRCH9nO9ml4Yb4GWddsC6O6/DZWCxwIoSbtiv7Zc6XxEARV5Kyh/Sn4/dGw9XG3yEOJJwSmitcBdZWXJ30nELlBoRKp1B5vDFHimYxKGMmGfW90eeNZocz8uBPpMJOotvumEnFe+ysbJJDsnivdXuCUfdFIIA7+AiByaHk98w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lfnupBQI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JquxQaQP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBD1DC4CEE7;
-	Thu, 15 May 2025 12:04:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lfnupBQI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4782DC4CEE7;
+	Thu, 15 May 2025 12:05:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747310701;
-	bh=62OwTFjCUryg+sOCfQpoiPdxoz3pueMjuZ3KrIe1EF0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JquxQaQPRxUQxbg4cmaB62CrxYLU+x41RaL5QMNLbi2ZRp652hH/Vyk7orXgDc6RE
-	 deVlhyY3CARISbOapaCWPZPt8UPzA+bOcdlBMAeWym4vfDQpfCeZJOBSgs/CjAzrek
-	 qyKnpjNxY/B1V7l/zeCUAzCAUOY0yBNSrCfzQgGM12nUIcvbuvbljYpHCdFOmEAJ9V
-	 rn0nAGRhx3P5E6zTaIXAQ39vFu7ukcnhfeQVZCHdG1VaYDKxj/TR/nQhzyV36L2hs4
-	 /WwSxRCOw5ieJhM1AarY3iR2VJR+G1gZwnhoL5z7TIQfFYyGi+RWFND77fn9NuhruT
-	 smoI/MPpScqXw==
-Date: Thu, 15 May 2025 14:04:56 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] rust: irq: add support for request_irq()
-Message-ID: <aCXYaCGvO_tI1OOh@pollux>
-References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com>
- <20250514-topics-tyr-request_irq-v3-1-d6fcc2591a88@collabora.com>
- <aCUQ0VWgoxdmIUaS@pollux>
- <A7E3A124-AF77-4A4A-B4E2-AE7DDB1CE007@collabora.com>
+	s=k20201202; t=1747310756;
+	bh=Ek3q35eEpSN5jOqeQGcZqs+oZjUTxVloFkdKMcgcyec=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lfnupBQIDJ43SndLDhPJIQSMLeLxhsZYtCpPgFvjSg/vIhmo0Vrnh0Kh3+0kQ44lu
+	 tv8tcqu/6MYhRxxE0zCEXGuJvkCHTa2msT0khtii5kpIE5szM8cM55RObrqm3IXjq0
+	 N2LYezsSPG/x9zs3gzwKgvT03ohIJ8AlBAAij67KBPqTgBpOMYAMxhFmTAKxrvHt5c
+	 kPRuaoAc9PY931mRGr/0khumhAMMQfVf30or4PdrlkKvlRgaQ9RFtMBZlmpQ4auxsz
+	 mfg7H4kpADpSaXnMCWwOIbmDdGXdVSUPa8haQUx83kZMxzOsk7qqe/bEoGBiwXWoAa
+	 MOn8MS7qmDuAA==
+From: Ingo Molnar <mingo@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Arnd Bergmann <arnd@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Juergen Gross <jgross@suse.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Kees Cook <keescook@chromium.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH -v2 00/32] x86/boot/e820: Assorted E820 table handling features and cleanups
+Date: Thu, 15 May 2025 14:05:16 +0200
+Message-ID: <20250515120549.2820541-1-mingo@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <A7E3A124-AF77-4A4A-B4E2-AE7DDB1CE007@collabora.com>
 
-On Thu, May 15, 2025 at 08:54:35AM -0300, Daniel Almeida wrote:
-> Hi Danilo,
-> 
-> > On 14 May 2025, at 18:53, Danilo Krummrich <dakr@kernel.org> wrote:
-> > 
-> > On Wed, May 14, 2025 at 04:20:51PM -0300, Daniel Almeida wrote:
-> >> +/// // This is running in process context.
-> >> +/// fn register_irq(irq: u32, handler: Handler) -> Result<Arc<Registration<Handler>>> {
-> >> +///     let registration = Registration::register(irq, flags::SHARED, c_str!("my-device"), handler);
-> >> +///
-> >> +///     // You can have as many references to the registration as you want, so
-> >> +///     // multiple parts of the driver can access it.
-> >> +///     let registration = Arc::pin_init(registration, GFP_KERNEL)?;
-> > 
-> > This makes it possible to arbitrarily extend the lifetime of an IRQ
-> > registration. However, we must guarantee that the IRQ is unregistered when the
-> > corresponding device is unbound. We can't allow drivers to hold on to device
-> > resources after the corresponding device has been unbound.
-> > 
-> > Why does the data need to be part of the IRQ registration itself? Why can't we
-> > pass in an Arc<T> instance already when we register the IRQ?
-> > 
-> > This way we'd never have a reason to ever access the Registration instance
-> > itself ever again and we can easily wrap it as Devres<irq::Registration> -
-> > analogously to devm_request_irq() on the C side - without any penalties.
-> > 
-> >> +///     // The handler may be called immediately after the function above
-> >> +///     // returns, possibly in a different CPU.
-> >> +///
-> >> +///     {
-> >> +///         // The data can be accessed from the process context too.
-> >> +///         let mut data = registration.handler().0.lock();
-> >> +///         *data = 42;
-> >> +///     }
-> >> +///
-> >> +///     Ok(registration)
-> >> +/// }
-> > 
-> 
-> Up until this point, there was no need for the data to not be inline with the
-> registration. This new design would force an Arc, which, apart from the
-> heap-allocation, is restrictive for users.
+Changes in -v2:
 
-Does the current design not also imply a heap allocation heap allocation? With
-my proposal irq::Registration::new() can just return an irq::Registration
-instance, not an impl PinInit that you need to stuff into a Box or Arc instead.
-Hence, there shouldn't be a difference.
+ - Further refine type-13 handling as suggested by hpa, and
+   don't change behavior for other undefined E820 types.
 
-> Can’t we use Devres with the current implementation?
-> 
-> IIUC from a very cursory glance, all that would mean is that you'd have to call
-> try_access() on your handler, which should be fine?
+ - Incorporate review feedback from Mike Rapoport and Andy Shevchenko:
 
-Well, that would work indeed.
+    - Clean up the ppro_with_ram_bug() quirk some more
+    - Use FW_BUG to print out firmware bugs
+    - Simplify the new size-printing code
+    - Standardize on the 'System RAM' string for E820_TYPE_RAM
+    - Change e820_type_to_string() to take a 'type' parameter
+    - Unify e820_print_type() and e820_type_to_string()
+    - Move index increments outside accessors in e820__update_table()
+    - Reorder the series a bit for easier review
+    - Utilize more SZ_ constants
 
-But people will - with good reason - be upset that every access to the handler's
-data needs to be guarded with the RCU read side critical section implied by
-Revocable and hence Devres.
+ - Rebase on top of v6.15-rc6 + tip:x86/core
 
-We can easily avoid that in this case, hence we should do it.
+The latest version of this series can be found at:
 
+   git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/e820
+
+Thanks,
+
+	Ingo
+
+===========
+Original -v1 announcement:
+
+So I was looking into a E820 table related bug report by
+Paul Menzel, and I wanted to implement the behavior
+suggested by the ACPI specification, which bug/problem
+results in unbootable Linux systems with certain bootloaders:
+
+  https://lore.kernel.org/r/074c2637-1b65-428e-b3e2-24384780e936@molgen.mpg.de
+
+One thing led to another, and now I'm here 29 patches later,
+trying to explain what they all do. :-/
+
+In order of importance:
+
+ - The bugfix / change of Linux kernel E820 table parsing behavior:
+
+      x86/boot/e820: Treat non-type-2 'reserved' E820 region types as E820_TYPE_RESERVED
+
+ - A change to e820_search_gap() to fix an implementational oddity
+   that would prefer lower-address same-size PCI gaps over larger-address
+   PCI gaps. Now the implementation searches for the largest gap:
+
+      x86/boot/e820: Change e820_search_gap() to search for the highest-address PCI gap
+
+ - A rewrite of e820_search_gap() to search the E820 table in ascending
+   order to make sure even weird PCI holes get found, as claimed by the
+   comments around the code (but not properly implemented):
+
+      x86/boot/e820: Make sure e820_search_gap() finds all gaps
+
+ - Remove the exclusion of single-entry E820 tables passed in by
+   firmware:
+
+      x86/boot/e820: Simplify append_e820_table() and remove restriction on single-entry tables
+
+ - A debuggability improvement, to print the sizes of the e820 entries
+   and the holes as well, because parsing raw hexadecimal ranges is hard
+   for humans:
+
+      x86/boot/e820: Print gaps in the E820 table
+      x86/boot/e820: Print out sizes of E820 memory ranges
+
+   Before:
+		BIOS-provided physical RAM map:
+		BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+		BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+		BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+		BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff] usable
+		BIOS-e820: [mem 0x000000007ffdc000-0x000000007fffffff] reserved
+		BIOS-e820: [mem 0x00000000b0000000-0x00000000bfffffff] reserved
+		BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed1ffff] reserved
+		BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+		BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+		BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff] reserved
+   After:
+		BIOS-provided physical RAM map:
+		BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff]  639   KB kernel usable RAM
+		BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff]    1   KB device reserved
+		BIOS-e820: [gap 0x00000000000a0000-0x00000000000effff]  320   KB ...
+		BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff]   64   KB device reserved
+		BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff]    1.9 GB kernel usable RAM
+		BIOS-e820: [mem 0x000000007ffdc000-0x000000007fffffff]  144   KB device reserved
+		BIOS-e820: [gap 0x0000000080000000-0x00000000afffffff]  768   MB ...
+		BIOS-e820: [mem 0x00000000b0000000-0x00000000bfffffff]  256   MB device reserved
+		BIOS-e820: [gap 0x00000000c0000000-0x00000000fed1bfff] 1005.1 MB ...
+		BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed1ffff]   16   KB device reserved
+		BIOS-e820: [gap 0x00000000fed20000-0x00000000feffbfff]    2.8 MB ...
+		BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff]   16   KB device reserved
+		BIOS-e820: [gap 0x00000000ff000000-0x00000000fffbffff]   15.7 MB ...
+		BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff]  256   KB device reserved
+		BIOS-e820: [gap 0x0000000100000000-0x000000fcffffffff] 1008   GB ...
+		BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff]   12   GB device reserved
+
+   Note how weirdly broken up ranges are printed with fractional size
+   values, while 'round' ranges are printed as natural numbers.
+
+ - Assorted cleanups: type cleanups, simplifications, standardization
+   of coding patterns, etc.
+
+Thanks,
+
+	Ingo
+
+===============>
+
+Ingo Molnar (32):
+  x86/boot/e820: Remove inverted boolean logic from the e820_nomerge() function name, rename it to e820_type_mergeable()
+  x86/boot/e820: Simplify e820__print_table() a bit
+  x86/boot/e820: Simplify the PPro Erratum #50 workaround
+  x86/boot/e820: Mark e820__print_table() static
+  x86/boot/e820: Print gaps in the E820 table
+  x86/boot/e820: Make the field separator space character part of e820_print_type()
+  x86/boot/e820: Print out sizes of E820 memory ranges
+  x86/boot/e820: Print E820_TYPE_RAM entries as ... RAM entries
+  x86/boot/e820: Call the PCI gap a 'gap' in the boot log printout
+  x86/boot/e820: Use 'u64' consistently instead of 'unsigned long long'
+  x86/boot/e820: Remove pointless early_panic() indirection
+  x86/boot/e820: Clean up confusing and self-contradictory verbiage around E820 related resource allocations
+  x86/boot/e820: Improve e820_print_type() messages
+  x86/boot/e820: Clean up __e820__range_add() a bit
+  x86/boot/e820: Clean up __refdata use a bit
+  x86/boot/e820: Remove unnecessary header inclusions
+  x86/boot/e820: Standardize e820 table index variable names under 'idx'
+  x86/boot/e820: Standardize e820 table index variable types under 'u32'
+  x86/boot/e820: Change struct e820_table::nr_entries type from __u32 to u32
+  x86/boot/e820: Clean up e820__setup_pci_gap()/e820_search_gap() a bit
+  x86/boot/e820: Change e820_search_gap() to search for the highest-address PCI gap
+  x86/boot/e820: Rename gap_start/gap_size to max_gap_start/max_gap_start in e820_search_gap() et al
+  x86/boot/e820: Simplify & clarify __e820__range_add() a bit
+  x86/boot/e820: Standardize __init/__initdata tag placement
+  x86/boot/e820: Simplify append_e820_table() and remove restriction on single-entry tables
+  x86/boot/e820: Remove e820__range_remove()'s unused return parameter
+  x86/boot/e820: Simplify the e820__range_remove() API
+  x86/boot/e820: Make sure e820_search_gap() finds all gaps
+  x86/boot/e820: Introduce E820_TYPE_13 and treat it as a device region
+  x86/boot/e820: Change e820_type_to_string() to take a 'type' parameter
+  x86/boot/e820: Unify e820_print_type() and e820_type_to_string()
+  x86/boot/e820: Move index increments outside accessors in e820__update_table()
+
+ arch/x86/include/asm/e820/api.h   |   3 +-
+ arch/x86/include/asm/e820/types.h |   6 +-
+ arch/x86/kernel/e820.c            | 555 ++++++++++++++++++++++----------------
+ arch/x86/kernel/setup.c           |  10 +-
+ arch/x86/platform/efi/efi.c       |   3 +-
+ 5 files changed, 328 insertions(+), 249 deletions(-)
+
+-- 
+2.45.2
 
