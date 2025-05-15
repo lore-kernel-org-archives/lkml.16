@@ -1,222 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC8024A04D
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D7FF9D6;
+	Thu, 15 May 2025 00:59:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747270454; cv=none; b=d/rtW73TjJEkwdwW/P7d0PVahUxxkVg6CpFREzhI4Yh3APeR/oI/LwcBi9LZSPhmvOzxQdaBb1528c/Pvt5nHacAVnWcpncLgYSkWxVbGNfGwKf0Timh39pCzuH6JPcfiRCM3Rf0pqBbQIATNf2zQhqBUlZ+I7biuwfBHuvU5hM=
+	t=1747270774; cv=none; b=e1DF4Lraalp/o2977wc8a4fWIWETqcj963+pEi7jgbqo6pTwdHcsbXsKKLkb+3xs9a/erFym+ZzYRZJ5ts4488gHpRpxsvvFmx6XDI6H4B2XljvM8SF6pOZuxAx6U59ntTFc2D1TFbDOWfuh6/gfY0Hqe18faPXh9fkM4wRWaZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747270454; c=relaxed/simple;
-	bh=XIT9X6z9tNCqLtz+c0aFqZhfgEcHpUn7EzAR/X64sxQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S/ig4OYRE0Ufb2Ve/dB0Q8T5NHzHQN9mR1l/F68cQLEk2AxqO4QpBqg+5eLGno1DMtXyh6GAf3WlbS7ueyun92cl09gzBT5YzL3SF1GtU/U6NANMnTn+N0L3ToBO+ye5/zEK6tu7ujoeS9TOvsIrq8Do4D4tHKkF/ZRTvxH2R2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TWa9GOYq; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747270774; c=relaxed/simple;
+	bh=AO0oxrbM4bgozBnTjAXPkoJNmwA9aXQbJ8MUrwELvvQ=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=YhD5bBqyrwH6XlBqj8Fd6e4w4Y63mY/hBItFoNOWJ113OCYiwsd6kPDAQyfs6eFxI00fsSmUO3tMOXkO67ZvByLBObQZdDnfZ/dHDziJ+vUDw9G1un3fLAsnmhTGoORPre+uG9wqPnxF9tu5v7qZcEtNrqBTfukcTVC0yyR2Mzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JwbipXFu; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TWa9GOYq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747270452;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wG2REckrWlDMRtU3eTh+Y7dHbzwqS83QmmyH4v1KO2Q=;
-	b=TWa9GOYq8M7buc3Tl37Ahle/y2ng2wYyrv/zv8INJ1EVjnVd2IadNnsfCjAtUDoju+WJwz
-	4pmM9OicvAmSyzass/GKL/BlW2J69budBCu5PKlQt8J0jVxtibIoKWrk+WVNFQmfrVtuGt
-	XfNAzLkVoPvMid7Oqk/xJ/MgAf0cCY8=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-362-M7jkT3hdM-qewT4N9U52Qw-1; Wed,
- 14 May 2025 20:54:09 -0400
-X-MC-Unique: M7jkT3hdM-qewT4N9U52Qw-1
-X-Mimecast-MFC-AGG-ID: M7jkT3hdM-qewT4N9U52Qw_1747270448
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3C86718004A7;
-	Thu, 15 May 2025 00:54:08 +0000 (UTC)
-Received: from intellaptop.lan (unknown [10.22.80.5])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D86ED19560A7;
-	Thu, 15 May 2025 00:54:05 +0000 (UTC)
-From: Maxim Levitsky <mlevitsk@redhat.com>
-To: kvm@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Sean Christopherson <seanjc@google.com>,
-	Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Maxim Levitsky <mlevitsk@redhat.com>
-Subject: [PATCH v4 4/4] x86: KVM: VMX: preserve DEBUGCTLMSR_FREEZE_IN_SMM
-Date: Wed, 14 May 2025 20:53:53 -0400
-Message-ID: <20250515005353.952707-5-mlevitsk@redhat.com>
-In-Reply-To: <20250515005353.952707-1-mlevitsk@redhat.com>
-References: <20250515005353.952707-1-mlevitsk@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JwbipXFu"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-708b31650ffso3920827b3.0;
+        Wed, 14 May 2025 17:59:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747270772; x=1747875572; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Y6cw3Gn+tXrQiLkB1C5Xzf+D8lEAhFlZJAmK7VQ6xuQ=;
+        b=JwbipXFus7Sefh+RNU1oM16dds8kUrYkUDef4j+WQyMuQxgdQ4R+EbVDnNmi/3BMQz
+         E6Gg88yyFhfxJjJBmpEwMBEwDGRHCTXNPTdN3KPZd3gAQLx3hCath7Li5359wMLETyrI
+         Mp8HXo2XksnT5TUvSJZZBA9tqN31HKK0/alsF5HLbbJxegUWLrDqyuO+69IeJxQkUobF
+         q17sBKeSxPju2KLFIGmMamcDB0/9d22D4VFv/R8IAK6MBIhI3jiQb3qY0K3UX58Xs7N2
+         8VBtQzMuZKmulXGQ3bVozf53Vgj15PSM4we/b/GACAmByMnI9tvFX+yL9dMcATAiyAj2
+         9KjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747270772; x=1747875572;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Y6cw3Gn+tXrQiLkB1C5Xzf+D8lEAhFlZJAmK7VQ6xuQ=;
+        b=o1g5Nh6BspmaIfQqMb/JBZH0RXZKYrfjh4n1Uu+6aG3VyzxDLiCRefC73rG+SijkN8
+         qoMmrrtOPYpdSYUmjduYHS6oFry1iQ5P7oVDslx5mwKtlWxarGT5YfSoMwrHMldNEMdQ
+         4AD4YUGpp5YsAsiPhJ5wE6I3mYt+Lj2QQBlIVQpTIrWMnkCuM0f/NwImL7vWbbBYanP4
+         oOQSnqsSQrwQi3YtKTEe6BE7fQ0cF6iZilzmfPgf813lVFg/5b/uFDN7NwyEdW/KDYmC
+         x0uRKBOwEwouVhMokrJQpTlXmOHWV8gdnGSLLVkQ5uitCwLynhLxWkCy6wihd5MnCTN4
+         7gyw==
+X-Forwarded-Encrypted: i=1; AJvYcCV/pnEhPnY6wS/B1cmw+6c2EBLL7Kqrzi230HVWMNUi4u8l1MDWhCmRzjkTody+toZQj4LpGPdV3lnj+0Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhJY03eAviSpqVz/23YW+1cCPSKMaDy0VGshHo1FH9RyPdkBuq
+	CdvAoZIkD8ABKuXO2dBSZa8wEdv4yDIGxqAtrFVqNtj2g8rZ0LA/NsLOVudGdzqxkBFMHwa2dma
+	Sc6UK8vxt8HqSz4QWWzFz2fAmv9I=
+X-Gm-Gg: ASbGnctMMOHajIWSKrrT3IYQUOLMAgLSUG3qCW6BikiD6HT7eqOqLIZJTEb7iS+qCIq
+	QkV6O7L/5ZlGM+CPRRYGvTIORBTAZMtqpajEa6nGuslFOR0ssbJkPKaGLwxtwX2v2xHGWFZiQng
+	PGN7tFR2nxKKIxi3pZ5CwQP4EbTMtuK1FEOXufKHl3QHg1pxkZaJpfwXGVDfvHziGe
+X-Google-Smtp-Source: AGHT+IESrIUmtrXiSIb6LoWeMOt37+kobGDcGMEPF1yJfKKkIctkK+TvU+kZFywubGf0o7thMjZG+nZ+xq+qjtyQRGg=
+X-Received: by 2002:a05:690c:45c7:b0:709:176d:2b5 with SMTP id
+ 00721157ae682-70c7f10c045mr84889977b3.2.1747270771901; Wed, 14 May 2025
+ 17:59:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+From: rujra <braker.noob.kernel@gmail.com>
+Date: Thu, 15 May 2025 06:29:19 +0530
+X-Gm-Features: AX0GCFsoQguQ0Xmr1HwEN-lvs50OmGxFhXFLmfsaBEiyghpm-bWyMa93naAlTXE
+Message-ID: <CAG+54DZ4YqBfqkvCWBWSZWE0LGmcs0GdE2_HiSB8JUsau3OvOw@mail.gmail.com>
+Subject: [PATCH] Documentation : kernel-hacking : hacking.rst : fixed spelling mistake
+To: skhan@linuxfoundation.org, Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Pass through the host's DEBUGCTL.DEBUGCTLMSR_FREEZE_IN_SMM to the guest
-GUEST_IA32_DEBUGCTL without the guest seeing this value.
+fixed spelling mistake
+LOG :
+----------------------------------------
+Documentation/kernel-hacking/hacking.rst
+----------------------------------------
+WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
++.. _kernel_hacking_hack:
 
-Since the value of the host DEBUGCTL can in theory change between VM runs,
-check if has changed, and if yes, then reload the GUEST_IA32_DEBUGCTL with
-the new value.
+CHECK: 'compatability' may be misspelled - perhaps 'compatibility'?
++     * Sun people can't spell worth damn. "compatability" indeed.
+                                            ^^^^^^^^^^^^^
 
-Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+total: 0 errors, 1 warnings, 1 checks, 830 lines checked
+-----------------------------------------------------------------
+as first patch for documentation.
+
+Signed-off-by: Rujra Bhatt <braker.noob.kernel@gmail.com>
 ---
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/vmx/nested.c       |  4 ++--
- arch/x86/kvm/vmx/vmx.c          | 22 +++++++++++++++++++---
- arch/x86/kvm/vmx/vmx.h          |  2 ++
- arch/x86/kvm/x86.c              |  7 +++++--
- 5 files changed, 29 insertions(+), 7 deletions(-)
+ Documentation/kernel-hacking/hacking.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index d2ad31a1628e..2e7e4a8b392e 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1673,6 +1673,7 @@ static inline u16 kvm_lapic_irq_dest_mode(bool dest_mode_logical)
- enum kvm_x86_run_flags {
- 	KVM_RUN_FORCE_IMMEDIATE_EXIT	= BIT(0),
- 	KVM_RUN_LOAD_GUEST_DR6		= BIT(1),
-+	KVM_RUN_LOAD_DEBUGCTL		= BIT(2),
- };
- 
- struct kvm_x86_ops {
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 0bda6400e30a..0a572356119f 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -2653,7 +2653,7 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
- 	if (vmx->nested.nested_run_pending &&
- 	    (vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS)) {
- 		kvm_set_dr(vcpu, 7, vmcs12->guest_dr7);
--		vmcs_write64(GUEST_IA32_DEBUGCTL, vmcs12->guest_ia32_debugctl);
-+		vmx_guest_debugctl_write(vcpu, vmcs12->guest_ia32_debugctl);
- 	} else {
- 		kvm_set_dr(vcpu, 7, vcpu->arch.dr7);
- 		vmcs_write64(GUEST_IA32_DEBUGCTL, vmx->nested.pre_vmenter_debugctl);
-@@ -4792,7 +4792,7 @@ static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
- 	__vmx_set_segment(vcpu, &seg, VCPU_SREG_LDTR);
- 
- 	kvm_set_dr(vcpu, 7, 0x400);
--	vmcs_write64(GUEST_IA32_DEBUGCTL, 0);
-+	vmx_guest_debugctl_write(vcpu, 0);
- 
- 	if (nested_vmx_load_msr(vcpu, vmcs12->vm_exit_msr_load_addr,
- 				vmcs12->vm_exit_msr_load_count))
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 9046ee2e9a04..c70fe7cbede6 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2154,7 +2154,7 @@ int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 			msr_info->data = vmx->pt_desc.guest.addr_a[index / 2];
- 		break;
- 	case MSR_IA32_DEBUGCTLMSR:
--		msr_info->data = vmcs_read64(GUEST_IA32_DEBUGCTL);
-+		msr_info->data = vmx_guest_debugctl_read();
- 		break;
- 	default:
- 	find_uret_msr:
-@@ -2194,6 +2194,17 @@ u64 vmx_get_supported_debugctl(struct kvm_vcpu *vcpu, bool host_initiated)
- 	return debugctl;
- }
- 
-+void vmx_guest_debugctl_write(struct kvm_vcpu *vcpu, u64 val)
-+{
-+	val |= vcpu->arch.host_debugctl & DEBUGCTLMSR_FREEZE_IN_SMM;
-+	vmcs_write64(GUEST_IA32_DEBUGCTL, val);
-+}
-+
-+u64 vmx_guest_debugctl_read(void)
-+{
-+	return vmcs_read64(GUEST_IA32_DEBUGCTL) & ~DEBUGCTLMSR_FREEZE_IN_SMM;
-+}
-+
- /*
-  * Writes msr value into the appropriate "register".
-  * Returns 0 on success, non-0 otherwise.
-@@ -2279,7 +2290,8 @@ int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 						VM_EXIT_SAVE_DEBUG_CONTROLS)
- 			get_vmcs12(vcpu)->guest_ia32_debugctl = data;
- 
--		vmcs_write64(GUEST_IA32_DEBUGCTL, data);
-+		vmx_guest_debugctl_write(vcpu, data);
-+
- 		if (intel_pmu_lbr_is_enabled(vcpu) && !to_vmx(vcpu)->lbr_desc.event &&
- 		    (data & DEBUGCTLMSR_LBR))
- 			intel_pmu_create_guest_lbr_event(vcpu);
-@@ -4795,7 +4807,8 @@ static void init_vmcs(struct vcpu_vmx *vmx)
- 	vmcs_write32(GUEST_SYSENTER_CS, 0);
- 	vmcs_writel(GUEST_SYSENTER_ESP, 0);
- 	vmcs_writel(GUEST_SYSENTER_EIP, 0);
--	vmcs_write64(GUEST_IA32_DEBUGCTL, 0);
-+
-+	vmx_guest_debugctl_write(&vmx->vcpu, 0);
- 
- 	if (cpu_has_vmx_tpr_shadow()) {
- 		vmcs_write64(VIRTUAL_APIC_PAGE_ADDR, 0);
-@@ -7368,6 +7381,9 @@ fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, u64 run_flags)
- 	if (run_flags & KVM_RUN_LOAD_GUEST_DR6)
- 		set_debugreg(vcpu->arch.dr6, 6);
- 
-+	if (run_flags & KVM_RUN_LOAD_DEBUGCTL)
-+		vmx_guest_debugctl_write(vcpu, vmx_guest_debugctl_read());
-+
- 	/*
- 	 * Refresh vmcs.HOST_CR3 if necessary.  This must be done immediately
- 	 * prior to VM-Enter, as the kernel may load a new ASID (PCID) any time
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 1b80479505d3..5ddedf73392b 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -416,6 +416,8 @@ static inline void vmx_set_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr,
- 
- void vmx_update_cpu_dirty_logging(struct kvm_vcpu *vcpu);
- u64 vmx_get_supported_debugctl(struct kvm_vcpu *vcpu, bool host_initiated);
-+void vmx_guest_debugctl_write(struct kvm_vcpu *vcpu, u64 val);
-+u64 vmx_guest_debugctl_read(void);
- 
- /*
-  * Note, early Intel manuals have the write-low and read-high bitmap offsets
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 684b8047e0f2..a85078dfa36d 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -10752,7 +10752,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 		dm_request_for_irq_injection(vcpu) &&
- 		kvm_cpu_accept_dm_intr(vcpu);
- 	fastpath_t exit_fastpath;
--	u64 run_flags;
-+	u64 run_flags, host_debug_ctl;
- 
- 	bool req_immediate_exit = false;
- 
-@@ -11024,7 +11024,10 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 		set_debugreg(0, 7);
- 	}
- 
--	vcpu->arch.host_debugctl = get_debugctlmsr();
-+	host_debug_ctl = get_debugctlmsr();
-+	if (host_debug_ctl != vcpu->arch.host_debugctl)
-+		run_flags |= KVM_RUN_LOAD_DEBUGCTL;
-+	vcpu->arch.host_debugctl = host_debug_ctl;
- 
- 	guest_timing_enter_irqoff();
- 
--- 
-2.46.0
+diff --git a/Documentation/kernel-hacking/hacking.rst
+b/Documentation/kernel-hacking/hacking.rst
+index 0042776a9e17..22b880add846 100644
+--- a/Documentation/kernel-hacking/hacking.rst
++++ b/Documentation/kernel-hacking/hacking.rst
+@@ -794,7 +794,7 @@ Some favorites from browsing the source. Feel free
+to add to this list.
+ ``arch/sparc/kernel/head.S:``::
 
+     /*
+-     * Sun people can't spell worth damn. "compatability" indeed.
++     * Sun people can't spell worth damn. "compatibility" indeed.
+      * At least we *know* we can't spell, and use a spell-checker.
+      */
+
+--
+2.43.0
