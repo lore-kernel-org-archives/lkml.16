@@ -1,218 +1,99 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-18.smtpout.orange.fr [80.12.242.18])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ECBB29B770;
-	Thu, 15 May 2025 19:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35931DE3A5;
+	Thu, 15 May 2025 20:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747339108; cv=none; b=dtAsz7daNvk641KdVUk/eJSbepusRbUEjk83h3Scbcy4qiu7emzKeC36TVVtZZGm3Ef/5xoJR8kMXbabs0Sdorx1uM3cZwK9nKJjnphtdIxpujkYtW5seCxCkD5iFtyTgIKoSeWEzhwQhJ/32f8wO5QHOyZpjiPEp5C2uq3bbv4=
+	t=1747339272; cv=none; b=H+eEPuuEe08r8VGXW9RwoQOdMSuzQXLEjqYPuTNOnjingCouwwYKxWibXuX/ekvqFfcAm1jcERu/Fy2qlc9TEw0AcmUQvgr8J89yeKA30ODvECz+mNU7BQQ8bY6Afb5hkpzp/QbrcL8I9ZOYuacoDfVzyWUALg7tEL+UR7RxJIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747339108; c=relaxed/simple;
-	bh=Hx9XqnN1Ky1xnifC3f1mE3KSfmKRJqKgcc7ImwIV7lQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oBNsXsNwXX9DJjEhN4cupYo4CoGLaiSqHpIUbzpM4BnkOu75jVsuPKyWXCvT0ixlAcuvklyRbDp+uUC5iF7oNia0OQTi8m4KNThjs/OJjgoFwgDb5QEa6x0CTdKfw+9LE5IpHDJ4N8CNpaLf6F45Sieo/p0Ke56ybZxigBbmzwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=XUjZbDsz; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1747339272; c=relaxed/simple;
+	bh=V8A6kL7k0T7FGuERctoH99KMK0UQUn9FlYtLbvWoCcE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nTnNvvKOn/t7rEIavqNfZbiLWLzW1EVieKmDh/Nhk1HoZDdhaljNmW/BqhKmJ7LnsZxEB0l/xN0d6qT0X/l/RkFPlel9leoL4gmlnekS7Fx40SkMVuBXHBH6fscQoe2g+OVaNjrVfiZfi5wiXjMnlFQ6ohRRwAwVAoz1hQGv4hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=ffImzayx; arc=none smtp.client-ip=80.12.242.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="XUjZbDsz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1747339094;
-	bh=Hx9XqnN1Ky1xnifC3f1mE3KSfmKRJqKgcc7ImwIV7lQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=XUjZbDszCyK+gupu3DAzStjhd8f+wFojL4CdOCEUWMODoQ9YaGWksT19PPOaRUvQ+
-	 QcGgP9NGkm4lyPcyo3cgNUlXWvnsxIRKUI1QM/pUEXc2Qo6Hd+tHwypXQq6r/3uMZd
-	 EybG514TlZU52ueKWwdIuOgShdFngCccoDiNDwfE=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Thu, 15 May 2025 21:57:51 +0200
-Subject: [PATCH 5/9] tools/nolibc: move getrlimit() and friends to
- sys/resource.h
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="ffImzayx"
+Received: from localhost.localdomain ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id FekBuCN6oIqMPFekNugnlY; Thu, 15 May 2025 22:00:03 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1747339203;
+	bh=syHX3ePlCOfAt9od3HD1QU5fZnKKQgenE6TOoaHBCO4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=ffImzayxzCuQqUxZrUmLMtOQvWTsL5s8UxxZdZ55u6P628315zXwChazaAuvs5Qrp
+	 LeAgU58fGl67+u6f34HzTj0NDa/Cwc79lSbvH9gMNenK6ng0Uq0Ag71rHG+3X3REX3
+	 a9YInNI6m9KBwCHfNFKCVY4bJyBNmlZDziqv4JedkhDlQTIvpmNVUPG7UieArsMfaV
+	 BJMzlxW6e21GtYPtM0lsTM456+aZHlWDHMdWdReK0rIaqq7d/nsvhL+0+nyaIAYcPe
+	 P+ZJJPSDk+Pn32di25T4oJeer8jgwxQp48UkETzlzIOo8YBU0OEqUCwmmAjLKCBrqX
+	 7NjKXKlU2pAjw==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 15 May 2025 22:00:03 +0200
+X-ME-IP: 90.11.132.44
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	netdev@vger.kernel.org
+Subject: [PATCH v3 2/4] net: airoha: Fix an error handling path in airoha_probe()
+Date: Thu, 15 May 2025 21:59:36 +0200
+Message-ID: <47910951a3fa3c3bd2a942210e821d9301362128.1746715755.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <5c94b9b345017f29ed653e2f05d25620d128c3f0.1746715755.git.christophe.jaillet@wanadoo.fr>
+References: <5c94b9b345017f29ed653e2f05d25620d128c3f0.1746715755.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250515-nolibc-sys-v1-5-74f82eea3b59@weissschuh.net>
-References: <20250515-nolibc-sys-v1-0-74f82eea3b59@weissschuh.net>
-In-Reply-To: <20250515-nolibc-sys-v1-0-74f82eea3b59@weissschuh.net>
-To: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747339091; l=4891;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=Hx9XqnN1Ky1xnifC3f1mE3KSfmKRJqKgcc7ImwIV7lQ=;
- b=Q/rEXNf3m5peBPfud3+Idc+spcsnW4d0d2TDGQCL5DQGnaYKPoT5qUjF3T64ZgFUhgZoLKq9Z
- 16m6uxEJ/ouC/qIbS+p3wbjdcemc1Ki3OP3VsTCd6vDTrGL5iLxO6As
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-This is the location regular userspace expects these definitions.
+If an error occurs after a successful airoha_hw_init() call,
+airoha_ppe_deinit() needs to be called as already done in the remove
+function.
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Fixes: 00a7678310fe ("net: airoha: Introduce flowtable offload support")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- tools/include/nolibc/Makefile       |  1 +
- tools/include/nolibc/nolibc.h       |  1 +
- tools/include/nolibc/sys.h          | 38 --------------------------
- tools/include/nolibc/sys/resource.h | 53 +++++++++++++++++++++++++++++++++++++
- tools/include/nolibc/types.h        |  1 -
- 5 files changed, 55 insertions(+), 39 deletions(-)
+Changes in v3:
+  - call airoha_ppe_deinit() and not airoha_ppe_init()   [Lorenzo Bianconi]
 
-diff --git a/tools/include/nolibc/Makefile b/tools/include/nolibc/Makefile
-index 4850501b8d53be6b603ecbb04d6f952cd5370cf0..cc82399e940e53940061b60588566db51f2e191a 100644
---- a/tools/include/nolibc/Makefile
-+++ b/tools/include/nolibc/Makefile
-@@ -55,6 +55,7 @@ all_files := \
- 		sys/prctl.h \
- 		sys/random.h \
- 		sys/reboot.h \
-+		sys/resource.h \
- 		sys/stat.h \
- 		sys/syscall.h \
- 		sys/time.h \
-diff --git a/tools/include/nolibc/nolibc.h b/tools/include/nolibc/nolibc.h
-index 36ea7a02c7434cc006a7b12d413add04a2f85565..7d151776e47a30080dc3d961bcdeacd6ab558629 100644
---- a/tools/include/nolibc/nolibc.h
-+++ b/tools/include/nolibc/nolibc.h
-@@ -103,6 +103,7 @@
- #include "sys/prctl.h"
- #include "sys/random.h"
- #include "sys/reboot.h"
-+#include "sys/resource.h"
- #include "sys/stat.h"
- #include "sys/syscall.h"
- #include "sys/time.h"
-diff --git a/tools/include/nolibc/sys.h b/tools/include/nolibc/sys.h
-index 6c89dd0316dd0ebf03ebde6fa5c14273df6a0c62..282909b1992d17d5292917fbabb0bd2a2dbfce88 100644
---- a/tools/include/nolibc/sys.h
-+++ b/tools/include/nolibc/sys.h
-@@ -23,7 +23,6 @@
- #include <linux/auxvec.h>
- #include <linux/fcntl.h> /* for O_* and AT_* */
- #include <linux/stat.h>  /* for statx() */
--#include <linux/resource.h>
- #include <linux/utsname.h>
- 
- #include "errno.h"
-@@ -730,43 +729,6 @@ ssize_t read(int fd, void *buf, size_t count)
- }
- 
- 
--/*
-- * int getrlimit(int resource, struct rlimit *rlim);
-- * int setrlimit(int resource, const struct rlimit *rlim);
-- */
--
--static __attribute__((unused))
--int sys_prlimit64(pid_t pid, int resource,
--		  const struct rlimit64 *new_limit, struct rlimit64 *old_limit)
--{
--	return my_syscall4(__NR_prlimit64, pid, resource, new_limit, old_limit);
--}
--
--static __attribute__((unused))
--int getrlimit(int resource, struct rlimit *rlim)
--{
--	struct rlimit64 rlim64;
--	int ret;
--
--	ret = __sysret(sys_prlimit64(0, resource, NULL, &rlim64));
--	rlim->rlim_cur = rlim64.rlim_cur;
--	rlim->rlim_max = rlim64.rlim_max;
--
--	return ret;
--}
--
--static __attribute__((unused))
--int setrlimit(int resource, const struct rlimit *rlim)
--{
--	struct rlimit64 rlim64 = {
--		.rlim_cur = rlim->rlim_cur,
--		.rlim_max = rlim->rlim_max,
--	};
--
--	return __sysret(sys_prlimit64(0, resource, &rlim64, NULL));
--}
--
--
- /*
-  * int sched_yield(void);
-  */
-diff --git a/tools/include/nolibc/sys/resource.h b/tools/include/nolibc/sys/resource.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..ac2705a67e8b3abacffa57f097095b98afa1469c
---- /dev/null
-+++ b/tools/include/nolibc/sys/resource.h
-@@ -0,0 +1,53 @@
-+/* SPDX-License-Identifier: LGPL-2.1 OR MIT */
-+/*
-+ * Resource definitions for NOLIBC
-+ * Copyright (C) 2017-2021 Willy Tarreau <w@1wt.eu>
-+ */
-+
-+/* make sure to include all global symbols */
-+#include "nolibc.h"
-+
-+#ifndef _NOLIBC_SYS_RESOURCE_H
-+#define _NOLIBC_SYS_RESOURCE_H
-+
-+#include "../sys.h"
-+
-+#include <linux/resource.h>
-+
-+/*
-+ * int getrlimit(int resource, struct rlimit *rlim);
-+ * int setrlimit(int resource, const struct rlimit *rlim);
-+ */
-+
-+static __attribute__((unused))
-+int sys_prlimit64(pid_t pid, int resource,
-+		  const struct rlimit64 *new_limit, struct rlimit64 *old_limit)
-+{
-+	return my_syscall4(__NR_prlimit64, pid, resource, new_limit, old_limit);
-+}
-+
-+static __attribute__((unused))
-+int getrlimit(int resource, struct rlimit *rlim)
-+{
-+	struct rlimit64 rlim64;
-+	int ret;
-+
-+	ret = __sysret(sys_prlimit64(0, resource, NULL, &rlim64));
-+	rlim->rlim_cur = rlim64.rlim_cur;
-+	rlim->rlim_max = rlim64.rlim_max;
-+
-+	return ret;
-+}
-+
-+static __attribute__((unused))
-+int setrlimit(int resource, const struct rlimit *rlim)
-+{
-+	struct rlimit64 rlim64 = {
-+		.rlim_cur = rlim->rlim_cur,
-+		.rlim_max = rlim->rlim_max,
-+	};
-+
-+	return __sysret(sys_prlimit64(0, resource, &rlim64, NULL));
-+}
-+
-+#endif /* _NOLIBC_SYS_RESOURCE_H */
-diff --git a/tools/include/nolibc/types.h b/tools/include/nolibc/types.h
-index 74c7694b2d5e54f7a86854697ac32a2ea2b62e86..2225c9388a46480a18e9ce603b08d846e5276bab 100644
---- a/tools/include/nolibc/types.h
-+++ b/tools/include/nolibc/types.h
-@@ -15,7 +15,6 @@
- #include <linux/stat.h>
- #include <linux/time.h>
- #include <linux/wait.h>
--#include <linux/resource.h>
- 
- 
- /* Only the generic macros and types may be defined here. The arch-specific
+Changes in v2:
+  - Call airoha_ppe_init() at the right place in the error handling path
+    of the probe   [Lorenzo Bianconi]
+v2: https://lore.kernel.org/all/3791c95da3fa3c3bd2a942210e821d9301362128.1746715755.git.christophe.jaillet@wanadoo.fr/
 
+v1: https://lore.kernel.org/all/f4a420f3a8b4a6fe72798f9774ec9aff2291522d.1744977434.git.christophe.jaillet@wanadoo.fr/
+
+Compile tested only.
+---
+ drivers/net/ethernet/airoha/airoha_eth.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/ethernet/airoha/airoha_eth.c b/drivers/net/ethernet/airoha/airoha_eth.c
+index af8c4015938c..d435179875df 100644
+--- a/drivers/net/ethernet/airoha/airoha_eth.c
++++ b/drivers/net/ethernet/airoha/airoha_eth.c
+@@ -2967,6 +2967,7 @@ static int airoha_probe(struct platform_device *pdev)
+ error_napi_stop:
+ 	for (i = 0; i < ARRAY_SIZE(eth->qdma); i++)
+ 		airoha_qdma_stop_napi(&eth->qdma[i]);
++	airoha_ppe_deinit(eth);
+ error_hw_cleanup:
+ 	for (i = 0; i < ARRAY_SIZE(eth->qdma); i++)
+ 		airoha_hw_cleanup(&eth->qdma[i]);
 -- 
 2.49.0
 
