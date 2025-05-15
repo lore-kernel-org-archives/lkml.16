@@ -1,77 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD05E298253;
-	Thu, 15 May 2025 12:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010E627A935;
+	Thu, 15 May 2025 12:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747313832; cv=none; b=i/e6sIUficU7RS55YauPJf2GFFSyIQRTQIoTWVsm/WIC8zIUfOBl870VZ8DZVmclrjUiEAW/agIG+M+6sffa8jGyM06VBmq9vpsaI57JUQT69evAoLdQJTe37jWH2kgfX4RSdYiom8KiUuUcYAMeHYYH3ajS5adEPRQwlBLdZ9o=
+	t=1747313857; cv=none; b=sOCy7xCy/QD70SvCd8xvubKm3ohsorxDZRJ7m3LNdDoNG5Jro/MsnnVfsdwYKSWi9ZMzVWk3XYAI4nk4S+Tw1T0nnjHk42A1IiVI2v8+/vx4ORFNuFjDOgbPeVPjOal3fk5HisQrsfb7rzXLq9CtyBm5PMLYyTdTvqsaiFR9iyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747313832; c=relaxed/simple;
-	bh=fVLeIiShoZEc+SqiPjggCktfijxjcJLo864O5Nu5zfA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fukn17E7utMOCZ8WkIADPI4tfso9OmY5JuE2OqAIdKNeovoN51RUhtnuLdX/5MvPnZTgTikNKNQppShUXqcrqD1wP4Ya5r36Ly6932/I0roZGSWR2LPwBMKeiH9iyOyv+QYbUGs3fQJAvEHDyHk7jN31bNbxIIduYNJQLQLyvWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bk8AiuVL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747313857; c=relaxed/simple;
+	bh=XaKFKX1wryyv9mD5ofnIQ8ARck2qdPeXVeiAwmGRNzc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZXAYADAdbzdbysXQuShVF1zRZy1C0RZkp2H0lQleoLmHyFOa6js/DCfH9zXkHKJ41kBQcEmtyFLN5a1hoGtSlwPqMz7M0p24xt2VctVoTuOWoh6Vk8wLEodsgzoVjsSubWg3D1c1akDAHqupXWoEkNhMIMX3kgD7423FWwOnhIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mxPVOsPZ; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bk8AiuVL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93EB1C4CEE7;
-	Thu, 15 May 2025 12:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747313831;
-	bh=fVLeIiShoZEc+SqiPjggCktfijxjcJLo864O5Nu5zfA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bk8AiuVLhEvg+nPmjMTIabWgdtDwvh7KdDxmgj6r7wEHzI6S9QvodH0QwoQSLHRno
-	 reMmeVD9wni2TPkkApOyvuOENFR6k/o9wGnGvF+6y2jTsR1MukhZFd4q+MUE1zVc0/
-	 eoNZCkT3KaZqVV7VuYj6eSc7+o982ecTnePCa/17jdOjGs8rkUYrvx5T29j83IM9e0
-	 zaSGlqQWyQjDIE49Vwny/LfqiiIFYoYocl0al4/Wsfn+GMJhfEu2xCKxaRs/j2Qmbm
-	 mZSUNprN/Zbjjp/be8vYjmG60ifyZ1K+hDI0X5kHBbexOvNJuXu2BOypNMvZcUpgVF
-	 6Y48HnhqcWdRg==
-Date: Thu, 15 May 2025 14:57:05 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	PDx86 ML <platform-driver-x86@vger.kernel.org>,
-	Suma Hegde <suma.hegde@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mark Gross <markgross@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: linux-next: build failure after merge of the drivers-x86 tree
-Message-ID: <aCXkofMlUGxEmzMN@gmail.com>
-References: <20250515164620.071d70e3@canb.auug.org.au>
- <bce51c8f-56c2-3a44-b590-149627398b7a@linux.intel.com>
- <aCWyatvDQEG5l6NV@gmail.com>
- <20250515221929.3d646dab@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mxPVOsPZ"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-73c17c770a7so1078884b3a.2;
+        Thu, 15 May 2025 05:57:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747313855; x=1747918655; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T1VJIKQzn3Eg+DR16k2/eGqGBeABAciO/xNJ6ACvdIA=;
+        b=mxPVOsPZ3nNHgTVYTDfvirZe0MyzMER+cjv0xm0y78aQPpdBNfp6GIwTKx9NbwYfSK
+         QlEhonLNP++/CW31GZ54BBToEsofb2YVOczB2cOntDwjxDSoUjEdbwvY97dhKgvonG09
+         OVC2O8aEbrL6/QY0KHCTGrpHKGvDtBLd66ATFMxe8gAsS9KShzInUt82yhSr4eKUYceq
+         f6ulD3B+U0YYZ641+W2NiBx9wFutAZ2wL3a5UMhvRWwwdPDEYfSGrEwQVGWFlpMjtOEx
+         JFaVXaqQsmELSjeE0ujEp0McBtgovx3VHRNY5FrJ58rL+hFmPTByfO8gcRerHye18Z/j
+         h1uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747313855; x=1747918655;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=T1VJIKQzn3Eg+DR16k2/eGqGBeABAciO/xNJ6ACvdIA=;
+        b=Z31SOd1B4/S/6byKH1CQzp2qfgykWb+2l4svutbWqXaLfBen5RmTPSf2Vqc7C2a2Db
+         o79Xgaxp3Nz6eOCFu20zdXCivMeQmvKnNzfk79bP0XaQcFe3QfGjaNuFKULmRyAFvLrD
+         pD7alBQv1+ApKPcmNCzwmv9DhkCsRAeOrl8uxsK3zc29u8lOBTLBefl+JTy9XmVEGIU8
+         SDS82G/tkfep6aAvqd/jBjV4gaNQa7HcgrV0RHbgiNx8XMui+2oXxrvqMHAeVgQD5yRY
+         gM3lE+tK03Rh8ZgQSLJM7dsVQMf50s0JxNZRAZz9Y0gHCM6O24jI69QkgKsSujt4ZWri
+         8g9g==
+X-Forwarded-Encrypted: i=1; AJvYcCVpVE1oj7DQ6L45sTBTDSXuoeA3+VBpT5MQrKBkFNdj9q0X/gNpp1YXBJz4Ipqfj4TV4GZngke/0E6FQbI=@vger.kernel.org, AJvYcCXgWmExG5F7bG16/3MtSTTpcZ+PsYzpvay8ph+ZHfM0uTHYGF6lMjtZc1qU8ze/C2Iqhlmf+u1v5FIAz7TX@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1HqsYVjoKiRZ3J3vrkB5P4ausD5oS+zb8YM2HxLJPryZWpcHY
+	uIu18iGFNLLDOV2j92PdYfJ9qKHHYBzbnSHdm/CZJj+wHDZuctDU8Hg7LWpkde9gcqnD4IxOSxQ
+	f5pFEBSm2RHxf03o+ZarsYyvKqII=
+X-Gm-Gg: ASbGncuU+8Iu6Mx4Mt5SdhdjhbyQN6KympJldMYsry7DisTxb9f9BnchrrsmxJoCz/O
+	avqYtGT5zlIzJIjmdHjFpnhPPaRV3sZzM98Ue7WinCafln4zRb/4tTVj1wRlsvcyNMVWFz7NABH
+	kxOHai8Nc9ryuRs4hWPlGcDWsQIxMUCO2L67pcWsv8FtaXjDow9oA=
+X-Google-Smtp-Source: AGHT+IFF0P1onBZ/hyhfFLv6g0B78R2i66luVTvTXL1v7kzBsCt3CfDJxhT1b6SXjzCdc+9iL4Nlc1feiRZw+OLLGpg=
+X-Received: by 2002:a17:902:d50d:b0:224:13a4:d61e with SMTP id
+ d9443c01a7336-231983cefacmr95730245ad.51.1747313855162; Thu, 15 May 2025
+ 05:57:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515221929.3d646dab@canb.auug.org.au>
+References: <20250506130712.156583-1-ltykernel@gmail.com> <20250506130712.156583-2-ltykernel@gmail.com>
+ <SN6PR02MB4157A5928B486CF5D43C50F8D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <SN6PR02MB4157A5928B486CF5D43C50F8D491A@SN6PR02MB4157.namprd02.prod.outlook.com>
+From: Tianyu Lan <ltykernel@gmail.com>
+Date: Thu, 15 May 2025 20:56:58 +0800
+X-Gm-Features: AX0GCFugkEn3wtw4pmWDuOVpd7HhwrjuqmM_GwKvfoPaTH4qC8ia1Y50QUr2014
+Message-ID: <CAMvTesBnO2crBYRbZQS=2RWta-M1azvsv7Q9RR1-he+iR-4jOA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/6] x86/Hyper-V: Not use hv apic driver when Secure
+ AVIC is available
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com" <haiyangz@microsoft.com>, 
+	"wei.liu@kernel.org" <wei.liu@kernel.org>, "decui@microsoft.com" <decui@microsoft.com>, 
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"hpa@zytor.com" <hpa@zytor.com>, "Neeraj.Upadhyay@amd.com" <Neeraj.Upadhyay@amd.com>, 
+	"yuehaibing@huawei.com" <yuehaibing@huawei.com>, "kvijayab@amd.com" <kvijayab@amd.com>, 
+	"jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>, "jpoimboe@kernel.org" <jpoimboe@kernel.org>, 
+	"tiala@microsoft.com" <tiala@microsoft.com>, 
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-* Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-
-> Hi Ingo,
-> 
-> On Thu, 15 May 2025 11:22:50 +0200 Ingo Molnar <mingo@kernel.org> wrote:
+On Thu, May 15, 2025 at 12:54=E2=80=AFAM Michael Kelley <mhklinux@outlook.c=
+om> wrote:
+>
+> From: Tianyu Lan <ltykernel@gmail.com> Sent: Tuesday, May 6, 2025 6:07 AM
 > >
-> > I'm not sure that's needed, the above build failure is not really a 
-> > build failure caused by the platform-drivers-x86.git tree, it is a 
-> > semantic merge conflict that should be resolved at the linux-next level 
-> > I think. (And which conflict should be mentioned to Linus by whoever 
-> > sends their tree second.)
-> > 
-> > Stephen, could you apply the patch below perhaps?
-> 
-> Thanks for the fix.  Applied from tomorrow.
+> >  void __init hv_apic_init(void)
+> >  {
+> > +     if (cc_platform_has(CC_ATTR_SNP_SECURE_AVIC))
+> > +             return;
+> > +
+> >       if (ms_hyperv.hints & HV_X64_CLUSTER_IPI_RECOMMENDED) {
+> >               pr_info("Hyper-V: Using IPI hypercalls\n");
+> >               /*
+>
+> It seems like this patch will cause a bisect problem if a bisect includes
+> this patch but none of the subsequent patches in this series. The
+> Hyper-V guest VM could see Secure AVIC is enabled, but the VM
+> wouldn't boot because the code to allow Hyper-V to inject an interrupt
+> haven't been added yet.
+>
+> This patch probably should come later in the patch series after Secure
+> AVIC can be functional in a Hyper-V guest.
+>
 
-Thank you Stephen!!
+Good idea! Will rework patch order.
 
-	Ingo
+--=20
+Thanks
+Tianyu Lan
