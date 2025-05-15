@@ -1,101 +1,159 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8BE2550A6;
-	Thu, 15 May 2025 21:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBAE1F153C
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 21:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747344206; cv=none; b=n4hkWc8OvzdPpV5XVUw5P9nLy6196L/+ISc1JAzOsENVhqNZzHfPE53il2dKCs/QEx7QaZw6aKxMk1MyVKgddXqh7exF9BJPAS650+4g7tMd5JLn1S6LEkulgu0VWyY/Rnqvq/0KISaNwimK7afUToTi9OcLAEdaHpqbV9+1iYY=
+	t=1747344219; cv=none; b=NJHJaE/XjUUizCXUhx/3Z2lDYzpN1mtSj4VNET6eXYWV4GWYwUPgjcSDEQXZuFzP6ych54twaCj3Lp3L4Abs/JnMuQc5juFAApGfuQ5MG8lnJqAf/6LZx+0o9fMQgfvSk46WAOhWQRP1bou5qE5yuFNyWFz/QcToMJxC5GfnHN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747344206; c=relaxed/simple;
-	bh=oVYbB4mvS5cfWCiHQJsTQZyBYXY5ZEDYJpI67V0lKb0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cunh2oHtRfuh/pYlXOcY332yIHaxP4s4scZZy5SXg4QMm99pYOuhQu3wr3ZKq3Qw0hPfNjLp+OtO+OrIHZCasEGU8MW9vlwfCoJKfPYioaFPudcBbFY9L91FGiuyDFgYuY6UJsOrO4SdQkNNN3YcT34eLcxj+gRbGBYPzoc6UQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Era89RFd; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1747344219; c=relaxed/simple;
+	bh=xc0H7+YitLw06WQkPCov15qGZg4eTZD18ABgVNdRwck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vGVzdhNxjSZVFfNc02fvl3CYM3hPMYb3icfhbVm4EPYeE0uOON407KQjo8qKMSVIxaFSTlme1XdnC+YkDq6/h1PnZVdgoi6uhWBbiRpqLgJweoKyDHyiTUGh+Y7p7CKiyAoYUIeQnv3pLXcOLfzYv8zR3h0r2raF8uuNoDTVUtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LrWdKsPZ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Era89RFd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=ZuFYpEebz7eNMFM2Au2qK78qxUP2XIO3+2uAIGKCqFo=; b=Era89RFdEYToePNFSYPchDIGdE
-	GIgWTfTw826wSiHIo4qlKg2jvVe6sy2ThdpsC+0BnPvoDbDmMUwwbDfFeWgfGqLM4asa8Hb5PERy0
-	1i8mUE5545Z6nD6s079M3JvU9NVw8KetFgApzRAGLPQUNN/y34bP6ecnxnj2SV+XZc3EY89Hkm1iJ
-	VLO6YTdtBMdgpFfwWp8yzvFpCM4JW9qA16i73P3ZScH3jfPEpR/Tp6UgiWvL2KV+wr/7wIGi9eaEX
-	mCKa3vryZZ3EY36Y2jNgNL7rmc28JtK5nXW7QWgSiHLu95k2wPDFW3wDPlAfpdZEJ/M8xOx9rXc9P
-	4jebtc3g==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uFg2f-0000000Ha4B-3VvL;
-	Thu, 15 May 2025 21:23:06 +0000
-Message-ID: <e0e6a6cb-3b73-471f-97f8-415fd6ac5333@infradead.org>
-Date: Thu, 15 May 2025 14:22:56 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LrWdKsPZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747344216;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xhoYdRHOw/DAgF56UmU2UQGCpyQP8HIsL6pMqFK4YkA=;
+	b=LrWdKsPZrQBtHPu5tQp4VcKBtwmWhMXj+u96pzaQrZC69ZibMUVkxoweL28AAHO2NfMh6V
+	Q/EwnPZ96GBG9sRvf6tmxab02hheOtxL/ZUL5KgoeNW5gX15a1YhsaXIBx1TYMsH+nDiJO
+	4/Qeq0L63ytI/MxC3pxZOpvLRzEerY4=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-508-TDGsZ2QQN8GALLrlzvB3ng-1; Thu, 15 May 2025 17:23:35 -0400
+X-MC-Unique: TDGsZ2QQN8GALLrlzvB3ng-1
+X-Mimecast-MFC-AGG-ID: TDGsZ2QQN8GALLrlzvB3ng_1747344214
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-22e76805fecso26682145ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:23:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747344214; x=1747949014;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xhoYdRHOw/DAgF56UmU2UQGCpyQP8HIsL6pMqFK4YkA=;
+        b=KjVIEqqaKX/97KvKSCq+jgyuh7oKXp3GliK0VNLhIBQu8KhOt6sCyk6vOWlIl1EaAI
+         hYPgnjDFQNGtGdrgu4itFvqntjmpc+3YwCKaAIRw63QXFJxi3f5wrkhXxGqvHlYjegZP
+         dkVM35HSnETOnA8OGpUKEPkQP67jKqx7bLaRt9+DzIyL3UvOkU0lez9NUmvSQ+cLbsvV
+         sZNQK/fvNdTVRWT6P2U+ZoHwJ/sVJuCmrLhWXdpqON5yMHu1x+j/tSrUGCSsADmjKdtM
+         bERm43qJDbqK/ouIm+oXd/0I6kuPIUvGd4em9h/wrQImmnVw9uzIVgwyy+PpU1aN5tSE
+         HmBg==
+X-Forwarded-Encrypted: i=1; AJvYcCVtTixoU5ztK4QRdhW4ykK6xsMl4BeKoccp+YhCav/AwDxnB7zOqSt8TlKFst5Zm39cJ9ukwI14WyG5zjU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4s319ASjg9pN9ek25fQd3gQAtonf4duH+G/h6433dWSPA5oqO
+	fbG0IT3lVHLzLCi4du2GmQAm9wwIBcjp9lCqWWjq8OtgaCvvJV2SMRU8/SgI0nmJcq7aHLthAhl
+	gSzzZ2tA5MJMQenhRu1Nd6S/RsWy675A2aLkSmjPfw3FwlFb/lSNzAS6fRI7FNXzMjQ==
+X-Gm-Gg: ASbGnctqS6JOKUaelbUX4rKN3mkPG2JLRxRJpjHmP76h6QyaMXDcEHrpPjETySuznU3
+	04K/wshhxD0Np0fYhaBmqL2JKkRX8Pyp47CfUsm7Ai8ph6xqarE5fYNHfwS5mju+GXACdAqnLq3
+	0da6TYy+ODJMn4JlBKYGQvzYd6o3LeMY9fiIiCbgOUx+yX2cmribR8AICSxNOvtHsC8xXsUOQBD
+	r28+RwhP307ZXRAzbtuJaycB8BWu1e2MQvxhwVQx9ue5TfaY3rUhts/WFlst1WODqD84p79A876
+	sm5FLlow8345zD04bSj4oC4Iyqxbo/6JE6Xm7WWkvak=
+X-Received: by 2002:a17:902:ea12:b0:231:c6d0:f784 with SMTP id d9443c01a7336-231de37623amr802175ad.28.1747344214279;
+        Thu, 15 May 2025 14:23:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHr9w7zQDNlfZfipRAcMlpxln2q3MngshwyeAQ3v5ovu/ApwTkb9eF8fiZ55jCN+s8sZveYcg==
+X-Received: by 2002:a17:902:ea12:b0:231:c6d0:f784 with SMTP id d9443c01a7336-231de37623amr802065ad.28.1747344213955;
+        Thu, 15 May 2025 14:23:33 -0700 (PDT)
+Received: from jkangas-thinkpadp1gen3.rmtuswa.csb ([2601:1c2:4301:5e20:98fe:4ecb:4f14:576b])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ed1946sm2178145ad.217.2025.05.15.14.23.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 14:23:33 -0700 (PDT)
+Date: Thu, 15 May 2025 14:23:31 -0700
+From: Jared Kangas <jkangas@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: willy@infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] radix tree: fix kmemleak false positive in
+ radix_tree_shrink()
+Message-ID: <aCZbU41LoIqm4FBU@jkangas-thinkpadp1gen3.rmtuswa.csb>
+References: <20250514180137.363929-1-jkangas@redhat.com>
+ <20250514151605.9a07943954737f52e2895b05@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 04/13] platform/x86: hfi: Introduce AMD Hardware
- Feedback Interface Driver
-To: Mario Limonciello <superm1@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
- Perry Yuan <perry.yuan@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
- "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
- Huang Rui <ray.huang@amd.com>, "Gautham R . Shenoy"
- <gautham.shenoy@amd.com>, "Rafael J . Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- "open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER"
- <platform-driver-x86@vger.kernel.org>,
- "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
- <linux-kernel@vger.kernel.org>,
- "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- "open list:AMD PSTATE DRIVER" <linux-pm@vger.kernel.org>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-References: <20250515211950.3102922-1-superm1@kernel.org>
- <20250515211950.3102922-5-superm1@kernel.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250515211950.3102922-5-superm1@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514151605.9a07943954737f52e2895b05@linux-foundation.org>
 
-just a coding style nit:
+Hi Andrew,
 
-On 5/15/25 2:19 PM, Mario Limonciello wrote:
-> diff --git a/drivers/platform/x86/amd/hfi/Kconfig b/drivers/platform/x86/amd/hfi/Kconfig
-> new file mode 100644
-> index 0000000000000..476e4a9ed67a9
-> --- /dev/null
-> +++ b/drivers/platform/x86/amd/hfi/Kconfig
-> @@ -0,0 +1,17 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# AMD Hardware Feedback Interface Driver
-> +#
-> +
-> +config AMD_HFI
-> +	bool "AMD Hetero Core Hardware Feedback Driver"
-> +	depends on ACPI
-> +	depends on CPU_SUP_AMD
-> +	help
-> +	 Select this option to enable the AMD Heterogeneous Core Hardware
-> +	 Feedback Interface. If selected, hardware provides runtime thread
-> +	 classification guidance to the operating system on the performance and
-> +	 energy efficiency capabilities of each heterogeneous CPU core. These
-> +	 capabilities may vary due to the inherent differences in the core types
-> +	 and can also change as a result of variations in the operating
-> +	 conditions of the system such as power and thermal limits.
+On Wed, May 14, 2025 at 03:16:05PM -0700, Andrew Morton wrote:
+> On Wed, 14 May 2025 11:01:37 -0700 Jared Kangas <jkangas@redhat.com> wrote:
+> 
+> > Kmemleak periodically produces a false positive report that resembles
+> > the following:
+> > 
+> > unreferenced object 0xffff00000db613b8 (size 576):
+> >   comm "systemd", pid 1, jiffies 4294987015
+> >   hex dump (first 32 bytes):
+> >     00 22 01 00 00 00 00 00 28 1c d5 c5 00 00 ff ff  ."......(.......
+> >     10 e4 6c c0 00 00 ff ff d0 13 b6 0d 00 00 ff ff  ..l.............
+> >   backtrace (crc 520d6e1c):
+> >     kmemleak_alloc+0xb4/0xc4
+> >     kmem_cache_alloc+0x288/0x2b0
+> >     radix_tree_node_alloc.constprop.0+0x214/0x364
+> >     idr_get_free+0x3d0/0x690
+> >     idr_alloc_u32+0x120/0x280
+> >     idr_alloc_cyclic+0xe8/0x1b4
+> >     __kernfs_new_node+0x118/0x5a0
+> >     kernfs_create_dir_ns+0x8c/0x1fc
+> >     cgroup_create+0x1cc/0x8a0
+> >     cgroup_mkdir+0x13c/0x90c
+> >     kernfs_iop_mkdir+0x108/0x184
+> >     vfs_mkdir+0x3c8/0x5f0
+> >     do_mkdirat+0x218/0x290
+> >     __arm64_sys_mkdirat+0xe0/0x140
+> >     invoke_syscall.constprop.0+0x74/0x1e4
+> >     do_el0_svc+0xd0/0x1dc
+> > 
+> > This is a transient leak that can be traced to radix_tree_shrink(): when
+> > root->xa_head is set, kmemleak may have already started traversing the
+> > radix tree. If this has happened, but kmemleak fails to scan the new
+> > xa_head before it moves, kmemleak will see it as a leak until the radix
+> > tree is scanned again.
+> > 
+> > Mark the new xa_head as a transient leak to prevent this false positive
+> > report.
+> > 
+> > ...
+> >
+> > --- a/lib/radix-tree.c
+> > +++ b/lib/radix-tree.c
+> > @@ -509,6 +509,14 @@ static inline bool radix_tree_shrink(struct radix_tree_root *root)
+> >  		if (is_idr(root) && !tag_get(node, IDR_FREE, 0))
+> >  			root_tag_clear(root, IDR_FREE);
+> >  
+> > +		/*
+> > +		 * Kmemleak might report a false positive if it traverses the
+> > +		 * tree while we're shrinking it, since the reference moves
+> > +		 * from node->slots[0] to root->xa_head.
+> > +		 */
+> > +		if (radix_tree_is_internal_node(child))
+> > +			kmemleak_transient_leak(entry_to_node(child));
+> > +
+> 
+> There is only one other caller of kmemleak_transient_leak().  Makes me
+> think that perhaps a more fundamental fix is needed.
+> 
+> So I'll queue it for testing for now, but I won't proceed further until
+> some further examination has occured.  Thanks.
+> 
 
-Help text should be indented with one tab + 2 spaces.
+This patch actually breaks xarray and vma userland test compilation in
+the same way Lorenzo pointed out in [1], and probably should be dropped
+as well. If it sounds reasonable for v2, I can group this in with the
+patch from [1] and the test compilation fix to keep the discussion in
+one place. (In hindsight I should have sent them in the same series to
+begin with.)
 
--- 
-~Randy
+Sorry for the inconvenience caused by my oversight here.
+
+[1]: https://lore.kernel.org/all/053ad5f9-3eee-486e-ac29-3104517b674a@lucifer.local/
 
