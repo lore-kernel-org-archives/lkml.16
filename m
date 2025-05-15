@@ -1,70 +1,82 @@
-Received: from clean305.mxserver.ro (clean305.mxserver.ro [89.46.7.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8FA28DF03;
-	Thu, 15 May 2025 08:53:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.46.7.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA05B286D5C
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299182; cv=none; b=P03KyL6xEiIWk62jQESapQaSddUDETkTaUW3p5JVK11BGbH1Rv6z5t7Q1JBOqiYLoNLnbNpzwNIulWJo6/IUt2TTf/RfwNOfhzye5p56Cp4xpBzl7hOfClXYv4mou3a9QFruVu5iEIjXsxMEruzGzp0BBjW+F6d7sf4eqjI92S0=
+	t=1747299204; cv=none; b=KmgJakdWBivpJoYMN7vuvnMqz+h75Tou4XQ9+7bP5f7MH4DvBJ/jBk0AKHk0Y0YXc0EsJEmBXFDY50SIo4E9oXIPAa/ZQO9gBzTztdrBqaMLv5dqNDQxS2l7UTeyqhq1+MYBRQftOJyuM2Y78d0EkD5zeTWJWOOcr4T3L9UOjJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299182; c=relaxed/simple;
-	bh=cUhXfE0teahU2ww6EIn0nqXfWhkzFFEyzjETfkiZ7W4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MgvZFMfybdOp/DqebM5ZtP7a87YofEajm43iR4rmOUh2gUVUymdOvz6e948nwXOILzLEhwyis0P41UlbxXrnrCvriYXKTALOGqBVVtTEcBOTcbv22Vyw9of56QuLV9vvfeMex72QGceZa2hamejawXc5KhmPkdpU59mdZFFBUK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro; spf=pass smtp.mailfrom=taladin.ro; dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b=uvuNDQts; arc=none smtp.client-ip=89.46.7.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=taladin.ro
+	s=arc-20240116; t=1747299204; c=relaxed/simple;
+	bh=lIfNCPP66O5sWacTogM/feH6CoiW9xHNdDEGcTAOa1g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=f+r4HJta0kq8K0ayF1jBzE0yq4zm0FF9BUdQ+yQgUMn1wHaCd4f+DopX0u5fBHOypPiqKLaxLuAB7zFmW8OzgZCh4DSoG48bQIl6LVZXdOEmbflMnQHsXZfQhvVnCfpF9Im+ZM9eVLUTjljyb6kn3NVgC/yARkFGV5oftj7lpYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com; spf=pass smtp.mailfrom=inventec.com; dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b=JIbYk9p2; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inventec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b="uvuNDQts"
-Received: from cloud347.c-f.ro ([185.236.86.218])
-	by cleanserver3.mxserver.ro with esmtps (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <asoponar@taladin.ro>)
-	id 1uFTm3-00CMcl-2s; Thu, 15 May 2025 04:17:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=taladin.ro;
-	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=TfYvbooBJpGFwd30gpTbaChn3Y/B5jOh5zocpZWBp90=; b=uvuNDQtsUu0l5/gDrSrjcmTwy8
-	7cuiYtU+wtm1CUfY/wL1sz0/cXFuAd8o7RSi9ZzPGJDZ3WKW4pm1G+LM2Mnj/Gyz5JwNswjTzLVqC
-	9tr/xIACDoU+s0wgWrjg/z14eOjAQDfv2msapiqQdd7qEM8rco4VJ19HOAhFHGDLsccNzIVBK6YlM
-	cVbprVgE5kbI5IAx1L1TnnLZ+Fmpv30Uad64iXa7qG48ZHBwENWkE3XlNUXSlnvfOV4vJr8xFPGjH
-	auqrBBEQAeuTEUK8qKPIevLbDmUVfGvxKk3ycJ0yAmCYhtdfa792vEiah0AItUwrWmyHdBKBS5+PM
-	ae5PZWSw==;
-Received: from [109.166.137.172] (port=39012 helo=localhost)
-	by cloud347.c-f.ro with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <asoponar@taladin.ro>)
-	id 1uFTls-00000006qBK-0uWI;
-	Thu, 15 May 2025 11:17:01 +0300
-From: Alexandru Soponar <asoponar@taladin.ro>
-To: linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b="JIbYk9p2"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b24f986674fso642518a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:53:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=inventec.com; s=google; t=1747299201; x=1747904001; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nOVoQnwWT25lQttWoZH7JoBjuOJGRtQg1frpngi8VzY=;
+        b=JIbYk9p23k25N0ts46ZfByaxfR0wUe8eftbnQ8WcAraUkc5xwLHLFqGjjEukAywz6N
+         xSR1QlxoxfR27yuHr2SMsufGmo4iLnqENPkJKf0yWc6eUI7Ip51A+C8pXOwOTTsMWTcA
+         2m21uEEzRYwdxC0NsLOM2H6iSYtdMdDzNxlQI2FLcuBTS9IyA/b2O+4ZzbywUS0ZM+Go
+         M1ln70M26ZUX26+5VM+EUUV4+kf13mIc9ImYLFzoIxZSZuYL8fXnC0Fnomg92SCdwsy3
+         wIfQATH+vKhLNKmwIZ4b5TPob6Rp6xCh/kSfn2VeVPMTyC70Eyl7YnXo+D0KjFRIaBor
+         /I0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747299201; x=1747904001;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nOVoQnwWT25lQttWoZH7JoBjuOJGRtQg1frpngi8VzY=;
+        b=CVjlZ0B2QNgb1EZNl/XnJpj+8t8ta+wxhiA0LKATOCqpWkuNVYXkBbQLm7O3I928l6
+         Vh/B6MyX8/dR0XUdFqjHgr9Aavz6a0UjdbJRe3l2Krur7+H9lPVnzddQcjpJNhDCgGkf
+         Qsr04fWctyjwIBy81yuZ79kq1yTwDimpiYWXgG3n4GU7H1Bk0RS/uI6nL2Hr3Cmblg5u
+         b8bghCSZqDSzgjyHH9BUez7rYDpwmfzw1RbRyvWArGfaiAM9DwPksfS/A6nNdOYFvv5T
+         6PJDeEMtCCbZ47UEc2m2WmR79LcKZskJS+thDy1ahNK8ppPrWY6lVyaTclXwAnBI9ooP
+         jMyg==
+X-Forwarded-Encrypted: i=1; AJvYcCXcoVmHaXkryE7CHx8z8uWbtSULm6Iotwej9y+Beobyh0Yx52CjZzdxwE+U5rFl5I2ReSMMN7d3EJInguc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIFTvtG/AURyWyKOhha3UQOlacL2RAcAUO+/3xMwUaKs6g890f
+	/rCL+2ZEUfHXuv7OoouF0giuhWs7ZBc8dF58qDS+gi8mIpSL0quAB5MaFQljxI0=
+X-Gm-Gg: ASbGncvO/yx/6iX4PFYwDjk1mj9o4BAEiR1nJYNVjMgoqkX2lOO35AK5gWJb8nCcxag
+	Y7MMWvJNgkJ3WoBUnetjqNm85brEPP+ItQ99DyUYaYGSYGpKonLgI9yW2P+SYHrNYfLW64POB5I
+	DbTJTBoxJbyOg5rRbuHJPV4gcDKiic4272/4oGIZdg/nNABgRmDKnHx7Y8obcy2ffgTVk3O8eXl
+	CHCUzzu78tQxZYTNQKe8caxDxEaLfNONdpUhESr3pHhPwbeophM4J2++FhwKQK3dUuBebH1LZ8+
+	tVQ1S9GIMqwI1fEtdxlHeL8w04ad1pJlxg4z1KM/5LwW1Co+6uN+evsbWDnUfYEy96DUrF1bupJ
+	jWZdeLwUrfv5q9hntGs7tWpJpcTKAXuZs
+X-Google-Smtp-Source: AGHT+IENsPZ/AMQVPFzwdzV24c1hYE73gMI1F84hexuGBFYoNLNqWR0VXSlco8GETzsjYyrN3LMd4Q==
+X-Received: by 2002:a17:903:1252:b0:21f:2e:4e4e with SMTP id d9443c01a7336-231b3970b19mr36155395ad.5.1747299200653;
+        Thu, 15 May 2025 01:53:20 -0700 (PDT)
+Received: from localhost.localdomain (60-250-242-163.hinet-ip.hinet.net. [60.250.242.163])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc7742f3csm111237665ad.99.2025.05.15.01.53.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 01:53:20 -0700 (PDT)
+From: Chiang Brian <chiang.brian@inventec.com>
+To: chiang.brian@inventec.com
+Cc: alex@ghiti.fr,
+	aou@eecs.berkeley.edu,
+	corbet@lwn.net,
+	jdelvare@suse.com,
+	linux-doc@vger.kernel.org,
 	linux-hwmon@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	linux-watchdog@vger.kernel.org
-Cc: jdelvare@suse.com,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
 	linux@roeck-us.net,
-	jic23@kernel.org,
-	pavel@ucw.cz,
-	lee@kernel.org,
-	baocheng.su@siemens.com,
-	wim@linux-watchdog.org,
-	tobias.schaffner@siemens.com,
-	angelogioacchino.delregno@collabora.com,
-	benedikt.niedermayr@siemens.com,
-	matthias.bgg@gmail.com,
-	aardelean@baylibre.com,
-	contact@sopy.one,
-	Alexandru Soponar <asoponar@taladin.ro>
-Subject: [PATCH 09/16] hwmon: max20740: Fix type incompatibility with non-macro find_closest
-Date: Thu, 15 May 2025 11:13:25 +0300
-Message-ID: <20250515081332.151250-10-asoponar@taladin.ro>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250515081332.151250-1-asoponar@taladin.ro>
-References: <20250515081332.151250-1-asoponar@taladin.ro>
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com
+Subject: Re: [PATCH v7 2/2] hwmon: (pmbus/tps53679) Add support for TPS53685
+Date: Thu, 15 May 2025 16:45:40 +0800
+Message-Id: <20250515084540.1558914-1-chiang.brian@inventec.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250515083706.1554823-1-chiang.brian@inventec.com>
+References: <20250515083706.1554823-1-chiang.brian@inventec.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,72 +84,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SpamExperts-Domain: cloud347.c-f.ro
-X-SpamExperts-Username: 185.236.86.218
-Authentication-Results: mxserver.ro; auth=pass smtp.auth=185.236.86.218@cloud347.c-f.ro
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: SB/global_tokens (0.00126298370281)
-X-Recommended-Action: accept
-X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT9HrjyttcYZsZ1qAKfxRRdrPUtbdvnXkggZ
- 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5w1OL79HMxE022P+rQy8YAdcSeERs4TOTnIH1kc1IWc5TSx
- S75yz9IFZiY7BarU/NrpK8SEOwGmfn6ucAKqn/OHRh3BqzFaEnAEj4UixLJBjVNiLZt/QXQnOBRD
- +jq1HsIBmHTFdhqXZEtguZY7iGKpkcJnJKaJfT+dw1udmv00tbIRNtoyOobb3xnDyRRylAVTYi2b
- f0F0JzgUQ/o6tR7C8pLPCtTiVLo0r89ClJHDKhDGKgJ+T00JeCnHBmMdB1eMZAyYlfUtEN4pUyes
- jVRntA/J5DcfwvG53FyVviDO9UET3GKmqv1jT0lY+AQz8YX4CVph7ctC7tRH2SPTQJ/0klTuXKq/
- B9rqRWsYzNfBLt79i78aPHyWnIqxGMxPZotYvH/es1vXuByXo2bkrYMqq0x5CzaUoJIoBUQayHle
- UvbvCQmh9x4kn6NeQcRkc6G+OgAcq5x+BzhRyg9rYO6I0H7Q2OEpckvWJAOmdJd77Z9vwc+QHB+X
- +u7aTqYHtT2CBuxNPBc9JM2jck1NnIBf0tvflhq7Xjhll72AYgnW/6M0ftSpvLIx+X1vKami8KF6
- jWQ71uVNIY/EFPWeDmcZuFRQy1vmjjPiYw8fUCp0/qY6cmSW9oUDdvKuTRfTGZ6f8nTXoYFaQ71l
- mMti8uxA0gKVmIzBXtbLDVvAQ/KVNZ5qHeAijuf8P+TKZ2Hcpe+SAN5VcIfsMVILjVAz6RZsCHxD
- lgOJwEwCFaF+62b2lf1UUDu9jECN1V/lwmsioRK+Y6c+J2XawkXUwNqmNMJsXAQw85DCXa0iAPEd
- fYyrF5wMRSLGyY+i0m2IxQLxQUz5rOsCgWfUk8oCCEJC9L2lSDBPqdRoFsq0hfzdx0oxkgNI/jhY
- WFhu7VV+HdWjdZLlmQ5z83qEVVG/6RJ+BW7FmGcwL889DSW2cZWGkIYVQAbHnYkWUz1gRIjAiMvi
- vM7um7t0SVa5NVZ2g1u6DnOpqk1nwAzTSgytNKIH5lfAuQc8I07FTFcjpdfX/Jcr87en7cKbI0NU
- afdkQMG+6qjtXoANVR89VM6f75a5kmRIbungV7ywXD8VtmM8wef5C6IkqMFhROX1HYRo9Sm1kZOW
- saz62DSUUd/fn3Ix/aSqJVglEtnFggTvi4y/qO0sxBxzHDeqqFz43py4SDhdaHkWkQILQXDyW9dm
- jNKonZjYWHRTR+H6+2RiNcUwzTu30W1KFmaCL65ELqp8rJqsdffFaItdoEjZybQVqqiDgYguI1bG
- 7m9C/1crfxEQ+RMIu45TjrXtoQVWRmJMAe+fcJPd0z6bhalFEM/pjPCQA+BAlnDfxF+P4qUdmrCV
- Jcb6keE4kn354Ur/DPbOVK8U1h7+QJdMBlWCuejtbh4f46dJ9KHgVozBLsX5yKA3Fz74hlciSRWm
- 1WkKsmdoBm6E4S2NuN/NBTe2/ULqDAwOt9zqr+uO5TcDeKjrEmYPn2IVWRtXQGd2K9wEqsPdlH9+
- YnMU5dPhUFL9snxfLwyUh0hPsPhVGdemay+RORAW9d0tvzdLMkCVXN63lz38Up+2UgeFcpE+PmUA
- j1PxNMRErSYM7n8DxBG3VLDRB+maCRTs466AUT31X+L1qXgiXZeLdQiA
-X-Report-Abuse-To: spam@cleanserver1.mxserver.ro
-X-Complaints-To: abuse@cleanserver1.mxserver.ro
 
-The max_current array was previously declared as u32 but used with
-find_closest(). With find_closest() now implemented as a function taking
-signed int parameters instead of a macro, passing unsigned arrays causes
-type incompatibility errors. This patch changes the array type from u32
-to int to ensure compatibility with the function signature and prevent
-compilation errors.
+On 15/05/2025 08:37 GMT, Chiang Brian wrote:
+> 
+> On 14/03/2025 07:11, Chiang Brian wrote:
+> > 
+> > On 14/03/2025 04:28, Chiang Brian wrote:
+> > > Add undocumented tps53685 into compatible in dt-bindings
+> > > 
+> > > Signed-off-by: Chiang Brian <chiang.brian@inventec.com>
+> > >  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+> > > index fadbd3c041c8..c98d69facb48 100644
+> > > --- a/Documentation/devicetree/bindings/trivial-devices.yaml
+> > > +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+> > > @@ -380,6 +380,8 @@ properties:
+> > >            - ti,tps53676
+> > >              # TI Dual channel DCAP+ multiphase controller TPS53679
+> > >            - ti,tps53679
+> > > +            # TI Dual channel DCAP+ multiphase controller TPS53685 with AMD-SVI3
+> > > +          - ti,tps53685
+> >
+> > There is no user of such compatible, so how can it be undocumented?
+> 
+> The following link is the patch which I would like to add support tps53685,
+> and I think it is the user of the compatible:
+> https://lore.kernel.org/lkml/20250314033040.3190642-1-chiang.brian@inventec.com/
 
-Signed-off-by: Alexandru Soponar <asoponar@taladin.ro>
----
- drivers/hwmon/pmbus/max20730.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Sorry for the wrong post, and please ignore it.
+Thank you.
 
-diff --git a/drivers/hwmon/pmbus/max20730.c b/drivers/hwmon/pmbus/max20730.c
-index 95869d198ecf..0e8d292e9ff4 100644
---- a/drivers/hwmon/pmbus/max20730.c
-+++ b/drivers/hwmon/pmbus/max20730.c
-@@ -436,7 +436,7 @@ static long direct_to_val(u16 w, enum pmbus_sensor_classes class,
- 	return d;
- }
- 
--static u32 max_current[][5] = {
-+static int max_current[][5] = {
- 	[max20710] = { 6200, 8000, 9700, 11600 },
- 	[max20730] = { 13000, 16600, 20100, 23600 },
- 	[max20734] = { 21000, 27000, 32000, 38000 },
-@@ -449,7 +449,7 @@ static int max20730_read_word_data(struct i2c_client *client, int page,
- 	const struct pmbus_driver_info *info = pmbus_get_driver_info(client);
- 	const struct max20730_data *data = to_max20730_data(info);
- 	int ret = 0;
--	u32 max_c;
-+	int max_c;
- 
- 	switch (reg) {
- 	case PMBUS_OT_FAULT_LIMIT:
--- 
-2.49.0
-
+Best Regards,
+Brian Chiang
