@@ -1,188 +1,161 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF99828313E
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 07:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35B3F283FD9;
+	Thu, 15 May 2025 07:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747295455; cv=none; b=g6LDcK8dU9FxH5cpKEDg7hSpr5Ql6hONwo2LZd/o4sjq3XKaKrnj+tPeD83cKhjbaOirtwy8baZJu6WttUcXe5sm6kcL6tFblR/rzu7Ao7Et9HPl6RJzIbDfPv0P2RTj/+m0Z4u/ONtB1wGUK2HMpNluJXEJYtLdTkS1Klplh8M=
+	t=1747295457; cv=none; b=DXmOYo71gDEwlQiga+wKrKzG5RAUh4CeTknD0vCwKotC4cBr7BHtXwVpoBdIt2C42SdEda/FI2V7NzLcSdqDo+wxntGh8KURxjOKP/67SE2RvHjkRSPk3OsDX9FaADSiTfSEvrBZrR/a9H7J+j4VW7P+kadycFiGVYEHxM2kM3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747295455; c=relaxed/simple;
-	bh=SI+pTvA0hGOAcmdfuFDmY5RUnGs6yiJiGIIQYLSqKL0=;
+	s=arc-20240116; t=1747295457; c=relaxed/simple;
+	bh=tpCTD5xGme/qPS7vcmDRv0oeU5Y1eIoub1iwPCyoqhU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hihBnTyb1M0VC+7NnKRM5aznCDY5fi3Z+yVzwOsjIwhrsQLI2hN/K48x4omNsb2DOk1mdWiHgr3V1SVM8Ovy5r0JNXtfRxsq31s2bPUaGnHuY6EzgM/Dp/p7Mc86hTOqiZWkTeqCLRGklZI3LvTSDK4LnUSQJZiEDSShkBs33iI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VI1W6tm5; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=GXcSODXCBv/33c2oHpUTXZ37hxijuwFPmy3Kl75O8CUtwjQQxbbtmoMqYw4x3/3SkCKslYk5V+eBl3cOHdGYll8W5WHlqeJwMEGvPvt16js+mnYDwkR2zFmWkTPql4s/P+HAr/aK5EbPTZ/djmBofzgKes4e9nL6eM+H/zMmzFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=MRRE2jpO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VI1W6tm5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747295450;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dIYznBp1zKy3fmdyZZzgeQrbk2pRjSVKo51V0MhaZng=;
-	b=VI1W6tm5uVAu8XbZNsMxPrs82UkHjuB1RuuRMlrzpOpWtDemyOsUIegBcTEXwfFETJxPQ0
-	BirYD500P9dF/DzSUxzdBsc60a/SIHzTnnGaj57W1nFZujcvUYxwSTp2HqZ7T9mgCxVy3Y
-	/+ACe7KvUzL6OonYjNuBBvRC9UdCtrQ=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-216-waSZrC1RPmKdqltcK8rrmA-1; Thu, 15 May 2025 03:50:49 -0400
-X-MC-Unique: waSZrC1RPmKdqltcK8rrmA-1
-X-Mimecast-MFC-AGG-ID: waSZrC1RPmKdqltcK8rrmA_1747295448
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ad4d7d9e7b4so54547266b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:50:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747295448; x=1747900248;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dIYznBp1zKy3fmdyZZzgeQrbk2pRjSVKo51V0MhaZng=;
-        b=MIO4Hzhrlq/29oKBunBmdjCU09syT3utdaBqk/va17K3ZXmHRfynJ0e/JW17LCXkf5
-         JYMuGPAMAwDrxov6fesrNl9Vzry+v2zADexAyB3NiBeCN+fIlb68/FpQbhiAOk04XAJg
-         exPchtXnAGmC6gQwDslYVmaQ6Exqby786zdG++Jl7t+TAmbCD7B/LGbqYUiDPGEJZWqb
-         Hren4SrXLA6C4m4rK6x2iI9RBeM/L38bvZXylaJRCFUbCONKpBZb7+95tPyzVi5/nr/1
-         +x+1Pv4tVTbSdt9DV/iR1jUNzxPdBBXAcrV0sQSGcDDSiwapy5/qXgGJ/uE/pNP+DdyS
-         DmZg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXJiH4UMDPOzi3z7A7m5CMFw359Xb1zdSucCIzaFcxAtDxV121wgVdhFehzjasn+50DXkqE+ahEsbZnOQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRA7glV8g1Uesnfv1RVwqbGCMlM5YiDbUhkEwF7fviMjJYjnV/
-	xt0mgqMtaYicdp/dLeC6JT3u1TJLt7iNQNmC8TyxQyQZpRpDARnMAzTMPeNHKd1WDWD0fRSnElo
-	wsGAJAOVahnfKPSbdpYMonZBvokxGTzTAyB8stxAPvMZNLN9c7NXdrS8kDa+B
-X-Gm-Gg: ASbGncs2cldELVvWGD6PaPkGWq2VnFKkvaIak+mXM/Fix5r2Dz0Zo1k5+hVPP+WdIQw
-	bef2f7jlCAthUXLzZAxVtQh5i6Wwq7J4U4mRD2CiVK5WUzYgNjFuOnUSW5mKhncdlsAhe/OfN4p
-	aAeh03L+I3DZO8hgm3oJVsRwVuMGZrexMyBiQgxNQ7zAaLP0C08lsdyWdsgydWFBJaafVlypRBn
-	odkjGsUDxhJpGqbZMMuyUNraMfRuDA9GBzelXirzUFOYA9RRwH7lCAsFv98i8zgwzfgrhvMkNpJ
-	43XQ6XXDxy5LEW6Ht1An9mtMVtUzMi0LcbZqyRU6
-X-Received: by 2002:a17:907:6e8f:b0:ad4:f6d2:431b with SMTP id a640c23a62f3a-ad51601e1edmr114982766b.44.1747295448277;
-        Thu, 15 May 2025 00:50:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHWr4fWklZ0eQ07tSCt/uJX+ZC5LZkXrxcbvUbmkmojzea9n6Ige7V0auLmvx+BHm+IbBk77A==
-X-Received: by 2002:a17:907:6e8f:b0:ad4:f6d2:431b with SMTP id a640c23a62f3a-ad51601e1edmr114976966b.44.1747295447688;
-        Thu, 15 May 2025 00:50:47 -0700 (PDT)
-Received: from thinky (109-92-26-237.static.isp.telekom.rs. [109.92.26.237])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad224531152sm984378866b.38.2025.05.15.00.50.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 00:50:47 -0700 (PDT)
-Date: Thu, 15 May 2025 09:50:44 +0200
-From: Andrey Albershteyn <aalbersh@redhat.com>
-To: Casey Schaufler <casey@schaufler-ca.com>
-Cc: Richard Henderson <richard.henderson@linaro.org>, 
-	Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	Ondrej Mosnacek <omosnace@redhat.com>, Tyler Hicks <code@tyhicks.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, linux-alpha@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, linux-arch@vger.kernel.org, 
-	selinux@vger.kernel.org, ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
-Subject: Re: [PATCH v5 2/7] lsm: introduce new hooks for setting/getting
- inode fsxattr
-Message-ID: <5jtjzgfgyjkw5oiofp2npp5zwib4rdp24u6lwmfctvmxo742vz@5wi6latt74lb>
-References: <20250512-xattrat-syscall-v5-0-4cd6821e8ff7@kernel.org>
- <20250512-xattrat-syscall-v5-2-4cd6821e8ff7@kernel.org>
- <f700845d-f332-4336-a441-08f98cd7f075@schaufler-ca.com>
- <kgl5h2iruqnhmad65sonlvneu6mdj6jl3sd4aoc3us3lvrgviy@imce27t4nk2e>
- <cb737e58-51ab-4918-b5ba-2c18bf1ad601@schaufler-ca.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="MRRE2jpO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E490DC4CEED;
+	Thu, 15 May 2025 07:50:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747295456;
+	bh=tpCTD5xGme/qPS7vcmDRv0oeU5Y1eIoub1iwPCyoqhU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MRRE2jpO51015SkZlpUH3dWOOmZ4ntJR8HlDtRS/JqOFD8nOw3UUPf2yukSld8ns4
+	 2ZCBTFaZ58lndbcxSgd+4XeTtMolz41FMjGHFB/OFyorz3NbHkWHYLNPV0bAO8gc4C
+	 VszQq7SNr0gaR0zgZmCoMWXesIZW/ZRWdPYkO2Js=
+Date: Thu, 15 May 2025 09:49:01 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Damien =?iso-8859-1?Q?Ri=E9gel?= <damien.riegel@silabs.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Silicon Labs Kernel Team <linux-devel@silabs.com>,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+	Alex Elder <elder@kernel.org>, greybus-dev@lists.linaro.org
+Subject: Re: [RFC net-next 00/15] Add support for Silicon Labs CPC
+Message-ID: <2025051551-rinsing-accurate-1852@gregkh>
+References: <20250512012748.79749-1-damien.riegel@silabs.com>
+ <6fea7d17-8e08-42c7-a297-d4f5a3377661@lunn.ch>
+ <D9VCEGBQWBW8.3MJCYYXOZHZNX@silabs.com>
+ <f1a4ab5a-f2ce-4c94-91eb-ab81aea5b413@lunn.ch>
+ <D9W93CSVNNM0.F14YDBPZP64O@silabs.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <cb737e58-51ab-4918-b5ba-2c18bf1ad601@schaufler-ca.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D9W93CSVNNM0.F14YDBPZP64O@silabs.com>
 
-On 2025-05-14 11:21:46, Casey Schaufler wrote:
-> On 5/14/2025 4:02 AM, Andrey Albershteyn wrote:
-> > On 2025-05-12 08:43:32, Casey Schaufler wrote:
-> >> On 5/12/2025 6:25 AM, Andrey Albershteyn wrote:
-> >>> Introduce new hooks for setting and getting filesystem extended
-> >>> attributes on inode (FS_IOC_FSGETXATTR).
-> >>>
-> >>> Cc: selinux@vger.kernel.org
-> >>> Cc: Paul Moore <paul@paul-moore.com>
-> >>>
-> >>> Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
-> >>> ---
-> >>>  fs/file_attr.c                | 19 ++++++++++++++++---
-> >>>  include/linux/lsm_hook_defs.h |  2 ++
-> >>>  include/linux/security.h      | 16 ++++++++++++++++
-> >>>  security/security.c           | 30 ++++++++++++++++++++++++++++++
-> >>>  4 files changed, 64 insertions(+), 3 deletions(-)
-> >>>
-> >>> diff --git a/fs/file_attr.c b/fs/file_attr.c
-> >>> index 2910b7047721..be62d97cc444 100644
-> >>> --- a/fs/file_attr.c
-> >>> +++ b/fs/file_attr.c
-> >>> @@ -76,10 +76,15 @@ EXPORT_SYMBOL(fileattr_fill_flags);
-> >>>  int vfs_fileattr_get(struct dentry *dentry, struct fileattr *fa)
-> >>>  {
-> >>>  	struct inode *inode = d_inode(dentry);
-> >>> +	int error;
-> >>>  
-> >>>  	if (!inode->i_op->fileattr_get)
-> >>>  		return -ENOIOCTLCMD;
-> >>>  
-> >>> +	error = security_inode_file_getattr(dentry, fa);
-> >>> +	if (error)
-> >>> +		return error;
-> >>> +
-> >> If you're changing VFS behavior to depend on LSMs supporting the new
-> >> hooks I'm concerned about the impact it will have on the LSMs that you
-> >> haven't supplied hooks for. Have you tested these changes with anything
-> >> besides SELinux?
-> > Sorry, this thread is incomplete, I've resent full patchset again.
-> > If you have any further comments please comment in that thread [1]
+On Wed, May 14, 2025 at 06:52:27PM -0400, Damien Riégel wrote:
+> On Tue May 13, 2025 at 5:53 PM EDT, Andrew Lunn wrote:
+> > On Tue, May 13, 2025 at 05:15:20PM -0400, Damien Riégel wrote:
+> >> On Mon May 12, 2025 at 1:07 PM EDT, Andrew Lunn wrote:
+> >> > On Sun, May 11, 2025 at 09:27:33PM -0400, Damien Riégel wrote:
+> >> >> Hi,
+> >> >>
+> >> >>
+> >> >> This patchset brings initial support for Silicon Labs CPC protocol,
+> >> >> standing for Co-Processor Communication. This protocol is used by the
+> >> >> EFR32 Series [1]. These devices offer a variety for radio protocols,
+> >> >> such as Bluetooth, Z-Wave, Zigbee [2].
+> >> >
+> >> > Before we get too deep into the details of the patches, please could
+> >> > you do a compare/contrast to Greybus.
+> >>
+> >> Thank you for the prompt feedback on the RFC. We took a look at Greybus
+> >> in the past and it didn't seem to fit our needs. One of the main use
+> >> case that drove the development of CPC was to support WiFi (in
+> >> coexistence with other radio stacks) over SDIO, and get the maximum
+> >> throughput possible. We concluded that to achieve this we would need
+> >> packet aggregation, as sending one frame at a time over SDIO is
+> >> wasteful, and managing Radio Co-Processor available buffers, as sending
+> >> frames that the RCP is not able to process would degrade performance.
+> >>
+> >> Greybus don't seem to offer these capabilities. It seems to be more
+> >> geared towards implementing RPC, where the host would send a command,
+> >> and then wait for the device to execute it and to respond. For Greybus'
+> >> protocols that implement some "streaming" features like audio or video
+> >> capture, the data streams go to an I2S or CSI interface, but it doesn't
+> >> seem to go through a CPort. So it seems to act as a backbone to connect
+> >> CPorts together, but high-throughput transfers happen on other types of
+> >> links. CPC is more about moving data over a physical link, guaranteeing
+> >> ordered delivery and avoiding unnecessary transmissions if remote
+> >> doesn't have the resources, it's much lower level than Greybus.
 > >
-> > I haven't tested with anything except SELinux, but I suppose if
-> > module won't register any hooks, then security_inode_file_*() will
-> > return 0. Reverting SELinux implementation of the hooks doesn't
-> > cause any errors.
+> > As is said, i don't know Greybus too well. I hope its Maintainers can
+> > comment on this.
 > >
-> > I'm not that familiar with LSMs/selinux and its codebase, if you can
-> > recommend what need to be tested while adding new hooks, I will try
-> > to do that for next revision.
+> >> > Also, this patch adds Bluetooth, you talk about Z-Wave and Zigbee. But
+> >> > the EFR32 is a general purpose SoC, with I2C, SPI, PWM, UART. Greybus
+> >> > has support for these, although the code is current in staging. But
+> >> > for staging code, it is actually pretty good.
+> >>
+> >> I agree with you that the EFR32 is a general purpose SoC and exposing
+> >> all available peripherals would be great, but most customers buy it as
+> >> an RCP module with one or more radio stacks enabled, and that's the
+> >> situation we're trying to address. Maybe I introduced a framework with
+> >> custom bus, drivers and endpoints where it was unnecessary, the goal is
+> >> not to be super generic but only to support coexistence of our radio
+> >> stacks.
+> >
+> > This leads to my next problem.
+> >
+> > https://www.nordicsemi.com/-/media/Software-and-other-downloads/Product-Briefs/nRF5340-SoC-PB.pdf
+> > Nordic Semiconductor has what appears to be a similar device.
+> >
+> > https://www.microchip.com/en-us/products/wireless-connectivity/bluetooth-low-energy/microcontrollers
+> > Microchip has a similar device as well.
+> >
+> > https://www.ti.com/product/CC2674R10
+> > TI has a similar device.
+> >
+> > And maybe there are others?
+> >
+> > Are we going to get a Silabs CPC, a Nordic CPC, a Microchip CPC, a TI
+> > CPC, and an ACME CPC?
+> >
+> > How do we end up with one implementation?
+> >
+> > Maybe Greybus does not currently support your streaming use case too
+> > well, but it is at least vendor neutral. Can it be extended for
+> > streaming?
 > 
-> At a minimum the Smack testsuite:
-> 	https://github.com/smack-team/smack-testsuite.git
-> And the audit suite:
-> 	https://github.com/linux-audit/audit-testsuite.git
+> I get the sentiment that we don't want every single vendor to push their
+> own protocols that are ever so slightly different. To be honest, I don't
+> know if Greybus can be extended for that use case, or if it's something
+> they are interested in supporting. I've subscribed to greybus-dev so
+> hopefully my email will get through this time (previous one is pending
+> approval).
 > 
-> AppArmor has a suite as well, but I'm not sure where is resides.
+> Unfortunately, we're deep down the CPC road, especially on the firmware
+> side. Blame on me for not sending the RFC sooner and getting feedback
+> earlier, but if we have to massively change our course of action we need
+> some degree of confidence that this is a viable alternative for
+> achieving high-throughput for WiFi over SDIO. I would really value any
+> input from the Greybus folks on this.
 
-Well, I thought about something more specific, I know about these
-testsuites
+So what you are looking for is a standard way to "tunnel" SDIO over some
+other physical transport, right?  If so, then yes, please use Greybus as
+that is exactly what it was designed for.
 
-> 
-> My primary concern is that you're making changes that remove existing
-> hook calls and add new hook calls without verifying that the protections
-> provided by the old calls are always also provided by the new ones.
+If there is a throughput issue with the sdio implementation on Greybus,
+we can address it by fixing up the code to go faster, I don't recall
+there ever being any real benchmarking happening for that protocol in
+the past as the physical layer that we were using for Greybus at the
+time (MIPI) was very fast, the bottleneck was usually either the host
+controller we were using for Greybus, OR on the firmware side in the
+device itself (i.e. turning Greybus packets into SDIO commands, as SDIO
+was pretty slow.)
 
-I'm only adding new hooks, ioctls weren't calling any hooks.
+thanks,
 
--- 
-- Andrey
-
+greg k-h
