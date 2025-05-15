@@ -1,289 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5094A78F26
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 13:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC7A7261A
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 13:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747315697; cv=none; b=mGmG+h2zaM6THSH4x75mxxjMgTeVZzcRLVnhGNwWmaXZXMesOiQ9SBbUVw8/SSgQr4yodVVp3mNK9ZYC1/4B29mmHZhJbaeNfTomurgU6t+KN3qBnqvwrlHXOIaAR3bxpsNJLL0TI6ulqukyisUW3boobrH1YmO6QQfpMboMK3A=
+	t=1747315744; cv=none; b=ZUcZnm6YVXgOMmiXUA54Z7LoBtd5eOw8TahxpcQDjSP4THUQnlnkxy7SC/tbJ/J26ctw7yh8mTJcwWkT3csi+uE7BCc64POGUlfS3BHGDErRzigpvLl8Zieegy6pbzYFhetBx4Bat6MxV3hVh44ioyi8wLEXn557qXkvc+IqzVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747315697; c=relaxed/simple;
-	bh=OeY/lH7dgUbvBRV0viwsPydoXZTZmNaFkPm9Bw+Lrb4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s/aVwytxE4xapX+h3fCfmS2HbQce9dCteWhfXVUEWMKGBw4Hk3qn8JWgRPJ6idUmdl04v/Jyn8264Zq+Z+RMlE2NlWobEpKXa0JbKGj3VUUszWMIQqwnsa8FNzcu29FLjCF4UUK5xPgu6/V1LmjGV+i13HUSJbGu8WPg2abkmGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fJQT2Mgs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747315744; c=relaxed/simple;
+	bh=0OxqwkoXyk4pMEZB+3Be/QzVD7EbaVm3mM/XisR5KNc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cUs+b9bWeh9e/MLVDWkqNWaOY4zDrNYGcEKQCiM2eY8TZp1OobY0jtSuj9GCpymElQrSDcaYCO7fwBllbWvlgaLODLnlSqzC5zAMslqu3H6uJglcXebQO1oI/U9xB0vH7b98wjcDo43ZVUhSe+02CqroGkewzgc/UEcl3rUKOWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Nd2vWg9u; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fJQT2Mgs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B67D1C4CEEB;
-	Thu, 15 May 2025 13:28:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747315693;
-	bh=OeY/lH7dgUbvBRV0viwsPydoXZTZmNaFkPm9Bw+Lrb4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fJQT2MgsRdg1Icw13T2DxTDrIYOnBAf+1hzzBXa96MNtf6m7bcFEiWQ3/+VzbZz5m
-	 25I+j43z+QcSDnLutUPzzyZwgutVCLcf6A/h4hE2zi2k31hWE+h4A3RKfZv32AoNta
-	 0tZ/HOerpCuB0OPUXXF7xbu+ImwgVpsKMQOSZdVPa0HwLbXDmRV88DQD2Ky5mLTtDh
-	 l4ke7VoG7eKQ0LyP1tvTDdINO79gbnDoSQJA32ZcLb+acnJ7lc6NMf0XFT+mD9Pz0r
-	 IGZBpguglE1pi2P8Ad05GACH3xm9HXy7/ETYTx9UFmmB9s5+oGO8Ita9vHRGP58Zsb
-	 CAT5V0e7C2KkA==
-From: Ingo Molnar <mingo@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Ingo Molnar <mingo@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	=?UTF-8?q?J=C3=BCrgen=20Gro=C3=9F?= <jgross@suse.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Masahiro Yamada <yamada.masahiro@socionext.com>,
-	Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH 13/13] x86/kconfig/32: Synchronize the x86-32 defconfig to the x86-64 defconfig
-Date: Thu, 15 May 2025 15:27:19 +0200
-Message-ID: <20250515132719.31868-14-mingo@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250515132719.31868-1-mingo@kernel.org>
-References: <20250515132719.31868-1-mingo@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nd2vWg9u"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-442ec3ce724so7563445e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 06:29:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747315741; x=1747920541; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gXeqa887aZIuoR48uoN7BEsLTRu+NlEEvV/bSAfKqmQ=;
+        b=Nd2vWg9uzonXvn3Ku+ahyeMH71CjBYLgnEdSYTMmCKCRYemS31Q7u3k8+JXO23jx0G
+         tZIRiuw5f1jTL09JElIeNLFxAzH8hZu/W/bD0HVUabJZy/um+XTzVEprG65dstApHKp0
+         Uzk26kgx1KunmPcYVcE5TifN0yiKLQNSs2iTNjEZE+ZfSvWdE+5bFdQEX3Fm0rxH1nZe
+         IUaPXtYONcU3PvuXZszy/et9nCs2+3ncRwEPwK0MqBIoKE7wfxccoPgwM2oHLC2cosNE
+         cUsUd/uRf4vbEVU7hEy59y67kCzzHOk6eU1ajOOOZ9mfKNTCt4EUmHJLZUpHNQXZdJNX
+         /M0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747315741; x=1747920541;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gXeqa887aZIuoR48uoN7BEsLTRu+NlEEvV/bSAfKqmQ=;
+        b=w22kLAXy61a0+uBeHCO0y7IYkX3iSLjglmjBvj0Ne4V+RpU9x3IfrxxLfEDnzE/L0M
+         2JksShKPrawBVxuHi1/N1kuAhuKuoLSxEUniMXFpSRZ8RG3abOelBPu1naL9FJfT9vL2
+         8vWuy5nPyn6IJ1cypzmAOWpZMVIXeIbYCVlqLlzv3XATs9Vnz/qnfqWrYUN3DfvXFEnk
+         09YbRE/5eqmH/xc61ik29GNpzdrF2Nq3XmCdeODr5ROZ5NFz4G8K8JdNdmMpvDkC3P53
+         wHThP6QhfVHEWcdkEfZp/UPjhh9WOGS3/uvj3ljb8ATACfR7DL92GQagOijYbL/VjyIW
+         VmcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWigj2s/wbsb47zHRDk/tAeMDlaUEnntF4E2dRicU4+RUQXnvEf6hODEykDVkD6LajSnK1sRjvL71W6v2g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqdeV1ooMbaK3ELLB6qKZr7Nemf6ZOtrk6cZXqf9yyn+KrOtr6
+	PLCO3ysnttgwMhcRkFyfGrm4KWzkMCWhOIZteISxpZQEwfn6aoutjy8k6lH8CCw=
+X-Gm-Gg: ASbGncuzsjq96FDvxzGdFCiMT3H8nDH9sBz9cDkf+Y0TmEFbtm5pfyvM648yG10coVf
+	gjC/n2cIdUnLjMq8Id7vD5lGtHGAjyfbZZ7v1y8jYhB6SjWcrmgArarYyGA3psy5sPPwCZUs5vr
+	64Una/BQeZK4h+4oS6SgbmOlNUg/J5k3F2wC/KyOQPramLWIjvdW/KRBt7lmU45aM5XTwWirPQ7
+	IV4esyhwlG+KgGN/WRGa2lkpO0UvSzVEW11ShEI+g+9kXSDVO9LFDPA5BVKMXJ+SZC1Hp6iXvVd
+	x8XzCtVLJm6uGU9e5Uwb3v6Ks7hF4FmzTtvV9KlTDCXX1XuZP5S6lG7RX6WVdsLc3kaHk5d7inU
+	vFUNKlm7RVBMniKb9Z4v01kQ=
+X-Google-Smtp-Source: AGHT+IEjQRVUhGojBwI+97YBtdmsQnt5mRPLvJ6XJl4UcLoxhfGfGLJJ2ddgeOKQqlG0CKXA5mxG9g==
+X-Received: by 2002:a05:600c:348a:b0:43c:fa0e:4713 with SMTP id 5b1f17b1804b1-442f20bb25dmr78852185e9.2.1747315741090;
+        Thu, 15 May 2025 06:29:01 -0700 (PDT)
+Received: from [192.168.2.1] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-442f3368d1csm73524575e9.8.2025.05.15.06.28.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 06:28:59 -0700 (PDT)
+Message-ID: <92c2949e-2fc1-40e9-9dea-e3d9f7aa571d@linaro.org>
+Date: Thu, 15 May 2025 15:28:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/4] Exynos Thermal code improvement
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ "open list:SAMSUNG THERMAL DRIVER" <linux-pm@vger.kernel.org>,
+ "open list:SAMSUNG THERMAL DRIVER" <linux-samsung-soc@vger.kernel.org>,
+ "moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:CLANG/LLVM BUILD SUPPORT:Keyword:b(?i:clang|llvm)b"
+ <llvm@lists.linux.dev>
+References: <20250430123306.15072-1-linux.amoon@gmail.com>
+ <aCR9RzGMWEuI0pxS@mai.linaro.org>
+ <CANAwSgSA-JHMRD7-19wijOY=TSWD-sv6yyrT=mH+wkUJuvxFAw@mail.gmail.com>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <CANAwSgSA-JHMRD7-19wijOY=TSWD-sv6yyrT=mH+wkUJuvxFAw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Just a mechanic synchronization of kernel options enabled: nobody
-really develops kernel features on x86-32 anymore, so make sure the
-defconfig is roughly equivalent to the 64-bit one, so that testing
-doesn't cover some combination that nobody cares about.
+On 5/15/25 13:10, Anand Moon wrote:
+> Hi Daniel,
+> 
+> On Wed, 14 May 2025 at 16:53, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+>>
+>> On Wed, Apr 30, 2025 at 06:02:56PM +0530, Anand Moon wrote:
+>>> Hi All,
+>>
+>> Hi Anand,
+>>
+>> if the goal of the changes is to do cleanups, I recommend to rework
+>> how the code is organized. Instead of having the data->soc check all
+>> around the functions, write per platform functions and store them in
+>> struct of_device_id data field instead of the soc version.
+>>
+>> Basically get rid of exynos_map_dt_data by settings the different ops
+>> in a per platform structure.
+>>
+>> Then the initialization routine would be simpler to clean.
+>>
+> 
+> Thanks, I had previously attempted this approach.
+> The goal is to split the exynos_tmu_data structure to accommodate
+> SoC-specific callbacks for initialization and configuration.
+> 
+> In my earlier attempt, I tried to refactor the code to achieve this.
+> However, the main challenge I encountered was that the
+> exynos_sensor_ops weren’t being correctly mapped for each SoC.
+> 
+> Some SoC have multiple sensor
+> exynos4x12
+>                      tmu: tmu@100c0000
+> exynos5420
+>                  tmu_cpu0: tmu@10060000
+>                  tmu_cpu1: tmu@10064000
+>                  tmu_cpu2: tmu@10068000
+>                  tmu_cpu3: tmu@1006c000
+>                  tmu_gpu: tmu@100a0000
+>   exynos5433
+>                  tmu_atlas0: tmu@10060000
+>                  tmu_atlas1: tmu@10068000
+>                  tmu_g3d: tmu@10070000
+> exynos7
+>                  tmu@10060000
+> 
+> It could be a design issue of the structure.or some DTS issue.
+> So what I found in debugging it is not working correctly.
+> 
+> static const struct thermal_zone_device_ops exynos_sensor_ops = {
+>          .get_temp = exynos_get_temp,
+>          .set_emul_temp = exynos_tmu_set_emulation,
+>          .set_trips = exynos_set_trips,
+> };
+> 
+> The sensor callback will not return a valid pointer and soc id for the get_temp.
+> 
+> Here is my earlier version of local changes.
+> [1] https://pastebin.com/bbEP04Zh exynos_tmu.c
+> [2] https://pastebin.com/PzNz5yve Odroid U3 dmesg.log
+> [3] https://pastebin.com/4Yjt2d2u    Odroid Xu4 dmesg.log
+> 
+> I want to re-model the structure to improve the code.
+> Once Its working condition I will send this for review.
+> 
+> If you have some suggestions please let me know.
 
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michal Marek <michal.lkml@markovi.net>
----
- arch/x86/configs/i386_defconfig | 116 +++++++++++++++++++++++++++++++++++++---
- 1 file changed, 110 insertions(+), 6 deletions(-)
+I suggest to do the conversion step by step beginning by 
+exynos4210_tmu_clear_irqs, then by exynos_map_dt_data as the first 
+cleanup iteration
 
-diff --git a/arch/x86/configs/i386_defconfig b/arch/x86/configs/i386_defconfig
-index e983f1db22dd..26a0fc03d642 100644
---- a/arch/x86/configs/i386_defconfig
-+++ b/arch/x86/configs/i386_defconfig
-@@ -1,37 +1,63 @@
- CONFIG_WERROR=y
-+CONFIG_UAPI_HEADER_TEST=y
- CONFIG_SYSVIPC=y
- CONFIG_POSIX_MQUEUE=y
-+CONFIG_WATCH_QUEUE=y
- CONFIG_USELIB=y
- CONFIG_AUDIT=y
- CONFIG_NO_HZ=y
- CONFIG_HIGH_RES_TIMERS=y
-+CONFIG_BPF_SYSCALL=y
-+CONFIG_BPF_JIT=y
-+CONFIG_BPF_JIT_ALWAYS_ON=y
-+CONFIG_BPF_PRELOAD=y
-+CONFIG_BPF_PRELOAD_UMD=y
-+CONFIG_BPF_LSM=y
- CONFIG_PREEMPT_VOLUNTARY=y
-+CONFIG_SCHED_CORE=y
-+CONFIG_IRQ_TIME_ACCOUNTING=y
- CONFIG_BSD_PROCESS_ACCT=y
-+CONFIG_BSD_PROCESS_ACCT_V3=y
- CONFIG_TASKSTATS=y
- CONFIG_TASK_DELAY_ACCT=y
- CONFIG_TASK_XACCT=y
- CONFIG_TASK_IO_ACCOUNTING=y
-+CONFIG_PSI=y
-+CONFIG_PSI_DEFAULT_DISABLED=y
- CONFIG_LOG_BUF_SHIFT=18
--CONFIG_CGROUPS=y
-+CONFIG_PRINTK_INDEX=y
-+CONFIG_UCLAMP_TASK=y
-+CONFIG_MEMCG=y
-+CONFIG_MEMCG_V1=y
- CONFIG_BLK_CGROUP=y
--CONFIG_CGROUP_SCHED=y
-+CONFIG_CFS_BANDWIDTH=y
-+CONFIG_UCLAMP_TASK_GROUP=y
- CONFIG_CGROUP_PIDS=y
- CONFIG_CGROUP_RDMA=y
-+CONFIG_CGROUP_DMEM=y
- CONFIG_CGROUP_FREEZER=y
- CONFIG_CGROUP_HUGETLB=y
- CONFIG_CPUSETS=y
-+CONFIG_CPUSETS_V1=y
- CONFIG_CGROUP_DEVICE=y
- CONFIG_CGROUP_CPUACCT=y
- CONFIG_CGROUP_PERF=y
-+CONFIG_CGROUP_BPF=y
- CONFIG_CGROUP_MISC=y
- CONFIG_CGROUP_DEBUG=y
--CONFIG_BLK_DEV_INITRD=y
-+CONFIG_NAMESPACES=y
-+CONFIG_USER_NS=y
-+CONFIG_CHECKPOINT_RESTORE=y
-+CONFIG_SCHED_AUTOGROUP=y
-+CONFIG_SYSFS_SYSCALL=y
-+CONFIG_EXPERT=y
- CONFIG_KALLSYMS_ALL=y
- CONFIG_PROFILING=y
- CONFIG_KEXEC=y
- CONFIG_SMP=y
- CONFIG_HYPERVISOR_GUEST=y
- CONFIG_PARAVIRT=y
-+CONFIG_PARAVIRT_SPINLOCKS=y
- CONFIG_NR_CPUS=8
- CONFIG_X86_REROUTE_FOR_BROKEN_BOOT_IRQS=y
- CONFIG_X86_MSR=y
-@@ -50,7 +76,11 @@ CONFIG_ACPI_BGRT=y
- CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE=y
- CONFIG_CPU_FREQ_GOV_ONDEMAND=y
- CONFIG_X86_ACPI_CPUFREQ=y
--CONFIG_KPROBES=y
-+CONFIG_KVM=y
-+CONFIG_KVM_INTEL=y
-+CONFIG_KVM_AMD=y
-+CONFIG_KVM_XEN=y
-+CONFIG_KVM_MAX_NR_VCPUS=4096
- CONFIG_JUMP_LABEL=y
- CONFIG_COMPAT_32BIT_TIME=y
- CONFIG_MODULES=y
-@@ -60,7 +90,23 @@ CONFIG_BLK_CGROUP_IOLATENCY=y
- CONFIG_BLK_CGROUP_IOCOST=y
- CONFIG_BLK_CGROUP_IOPRIO=y
- CONFIG_BINFMT_MISC=y
-+CONFIG_ZSWAP=y
-+CONFIG_SLAB_FREELIST_RANDOM=y
-+CONFIG_SLAB_FREELIST_HARDENED=y
-+# CONFIG_SLAB_BUCKETS is not set
- # CONFIG_COMPAT_BRK is not set
-+CONFIG_PAGE_REPORTING=y
-+CONFIG_KSM=y
-+CONFIG_DEFAULT_MMAP_MIN_ADDR=65536
-+CONFIG_MEMORY_FAILURE=y
-+CONFIG_HWPOISON_INJECT=y
-+CONFIG_TRANSPARENT_HUGEPAGE=y
-+CONFIG_TRANSPARENT_HUGEPAGE_MADVISE=y
-+CONFIG_IDLE_PAGE_TRACKING=y
-+CONFIG_ANON_VMA_NAME=y
-+CONFIG_USERFAULTFD=y
-+CONFIG_LRU_GEN=y
-+CONFIG_LRU_GEN_ENABLED=y
- CONFIG_NET=y
- CONFIG_PACKET=y
- CONFIG_XFRM_USER=y
-@@ -120,6 +166,7 @@ CONFIG_CFG80211=y
- CONFIG_MAC80211=y
- CONFIG_MAC80211_LEDS=y
- CONFIG_RFKILL=y
-+CONFIG_RFKILL_INPUT=y
- CONFIG_NET_9P=y
- CONFIG_NET_9P_VIRTIO=y
- CONFIG_PCI=y
-@@ -189,6 +236,8 @@ CONFIG_SERIAL_8250_RSA=y
- CONFIG_SERIAL_NONSTANDARD=y
- CONFIG_VIRTIO_CONSOLE=y
- CONFIG_HW_RANDOM=y
-+# CONFIG_HW_RANDOM_INTEL is not set
-+# CONFIG_HW_RANDOM_AMD is not set
- CONFIG_NVRAM=y
- CONFIG_HPET=y
- # CONFIG_HPET_MMAP is not set
-@@ -208,7 +257,19 @@ CONFIG_SND_SEQ_DUMMY=y
- CONFIG_SND_HDA_INTEL=y
- CONFIG_SND_HDA_HWDEP=y
- CONFIG_HIDRAW=y
-+CONFIG_HID_A4TECH=y
-+CONFIG_HID_APPLE=y
-+CONFIG_HID_BELKIN=y
-+CONFIG_HID_CHERRY=y
-+CONFIG_HID_CHICONY=y
-+CONFIG_HID_CYPRESS=y
-+CONFIG_HID_EZKEY=y
- CONFIG_HID_GYRATION=y
-+CONFIG_HID_ITE=y
-+CONFIG_HID_KENSINGTON=y
-+CONFIG_HID_REDRAGON=y
-+CONFIG_HID_MICROSOFT=y
-+CONFIG_HID_MONTEREY=y
- CONFIG_HID_NTRIG=y
- CONFIG_HID_PANTHERLORD=y
- CONFIG_PANTHERLORD_FF=y
-@@ -234,6 +295,8 @@ CONFIG_DMADEVICES=y
- CONFIG_VIRTIO_PCI=y
- CONFIG_VIRTIO_INPUT=y
- CONFIG_EEEPC_LAPTOP=y
-+CONFIG_INTEL_IOMMU=y
-+# CONFIG_INTEL_IOMMU_DEFAULT_ON is not set
- CONFIG_EXT4_FS=y
- CONFIG_EXT4_FS_POSIX_ACL=y
- CONFIG_EXT4_FS_SECURITY=y
-@@ -264,14 +327,55 @@ CONFIG_SECURITY_NETWORK=y
- CONFIG_SECURITY_SELINUX=y
- CONFIG_SECURITY_SELINUX_BOOTPARAM=y
- CONFIG_PRINTK_TIME=y
--CONFIG_DEBUG_KERNEL=y
-+CONFIG_BOOT_PRINTK_DELAY=y
-+CONFIG_DYNAMIC_DEBUG=y
- CONFIG_FRAME_WARN=1024
--CONFIG_MAGIC_SYSRQ=y
-+CONFIG_STRIP_ASM_SYMS=y
-+CONFIG_HEADERS_INSTALL=y
-+CONFIG_DEBUG_SECTION_MISMATCH=y
-+CONFIG_KGDB=y
-+CONFIG_KGDB_TESTS=y
-+CONFIG_KGDB_LOW_LEVEL_TRAP=y
-+CONFIG_KGDB_KDB=y
-+CONFIG_KDB_KEYBOARD=y
-+CONFIG_UBSAN=y
-+CONFIG_UBSAN_SHIFT=y
-+CONFIG_PAGE_OWNER=y
-+CONFIG_PAGE_POISONING=y
- CONFIG_DEBUG_STACK_USAGE=y
-+CONFIG_SCHED_STACK_END_CHECK=y
-+CONFIG_DEBUG_MEMORY_INIT=y
-+CONFIG_KFENCE=y
-+CONFIG_DEBUG_SHIRQ=y
-+CONFIG_PANIC_ON_OOPS=y
-+CONFIG_HARDLOCKUP_DETECTOR=y
-+CONFIG_BOOTPARAM_HARDLOCKUP_PANIC=y
-+# CONFIG_DETECT_HUNG_TASK is not set
-+CONFIG_WQ_CPU_INTENSIVE_REPORT=y
- CONFIG_SCHEDSTATS=y
-+CONFIG_NMI_CHECK_CPU=y
-+CONFIG_DEBUG_LIST=y
-+CONFIG_RCU_CPU_STALL_CPUTIME=y
-+CONFIG_BOOTTIME_TRACING=y
-+CONFIG_FUNCTION_GRAPH_RETVAL=y
-+CONFIG_FUNCTION_PROFILER=y
-+CONFIG_STACK_TRACER=y
-+CONFIG_SCHED_TRACER=y
-+CONFIG_HWLAT_TRACER=y
-+CONFIG_TIMERLAT_TRACER=y
-+CONFIG_MMIOTRACE=y
-+CONFIG_FTRACE_SYSCALLS=y
- CONFIG_BLK_DEV_IO_TRACE=y
-+CONFIG_USER_EVENTS=y
-+CONFIG_HIST_TRIGGERS=y
-+CONFIG_TRACE_EVENT_INJECT=y
-+CONFIG_RV=y
-+CONFIG_RV_MON_WWNR=y
- CONFIG_PROVIDE_OHCI1394_DMA_INIT=y
- CONFIG_EARLY_PRINTK_DBGP=y
-+CONFIG_EARLY_PRINTK_USB_XDBC=y
- CONFIG_DEBUG_BOOT_PARAMS=y
- CONFIG_DEBUG_ENTRY=y
- CONFIG_UNWINDER_FRAME_POINTER=y
-+CONFIG_FUNCTION_ERROR_INJECTION=y
-+CONFIG_MEMTEST=y
+
 -- 
-2.45.2
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
