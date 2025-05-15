@@ -1,113 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6353634CF9;
-	Thu, 15 May 2025 14:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E8E34CF9;
+	Thu, 15 May 2025 14:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747319599; cv=none; b=nDNtosqNSAcbd6+lSCnX59pb2zwHpn7x4IZoQixhYjZ+CFJG7gip72r6J3K+EkLuuKH4fYR7z5AwDkl3WyfKP782YCJFEFKnhbi79DO3zcI/9hkIYFuKtjH1XusqYQdNEob7foy9Gk9g93XhhZBYH30vmSF4Ov66SCS1g3jMe6k=
+	t=1747319645; cv=none; b=pJjpHuihf7JEtehp0k0dRPjuwOxRIKCMoMGDNXM+KHD1rp3G3kvQTnqP1EQhOc/AuZT6VFb058fxrpVutpl+d4AG43zb022fLMGgYW9eDdDeOzNFYC5Zf84aTYfik4t8/2i5weNjZwxSnQN0iOrHLbmffzDjH3DejwRwRnLlaY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747319599; c=relaxed/simple;
-	bh=aK3rHV9MtBbtgEpm1YycksMWHc3n6cne+RJGaA7nDSk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DzM3W9rod9HP0GAI8ZM0PFu1R1owEpqreFy7NQCPD4MsFsiRBhGFSGXhvhh9PSXfoWalIZdMzu5P1UZ02aMRDBxp8sX1KzpmE9hK2qNZiqp8+oxG7Uo8eekE62Xm2tDQt9X29E9Cfzq3debUmPiWq5qyHT8/VDM0gCongtFV0g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PpDzTORU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747319645; c=relaxed/simple;
+	bh=hp6heb/+3LzooOsmeQDNwwZhhzYyMV9j3qJgJJ2V3Zw=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=smG81fWR5/RvTXHjGTqt1Q4TSKJ4txJViqAV8dCCojw1lTz5UMA14eSBhIy2DOjDcNgz1Jc+8891FQQSgFbOiCuAiUzUXWlX1c3xU4CSspilxUzrDproVcUoZ/BFrp+T1ORocTvpPcwDaMGag2KptIaUYvzIqOFP30TFRY+rHuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EAstEY3n; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QEormMYw; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PpDzTORU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39541C4CEE7;
-	Thu, 15 May 2025 14:33:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747319596;
-	bh=aK3rHV9MtBbtgEpm1YycksMWHc3n6cne+RJGaA7nDSk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PpDzTORUkYWu9YTyP3G2LZ7vGtA3BEZ2rlgSomrVu/Qdp7QEu06jbSvRoTUVw7ETl
-	 2132dOSL1pBhWlbL4iIVF7X2tepv3AXp/CLBJmHOKzzQpfBRQudCNEwIuHpMKPbesq
-	 Q6aNfPEJFou2azINgLxWxRfz7Eq4XGO4fITkgUtc5YNkl/3J1kCjQx37SlRLdiSINS
-	 hPZo085VL/QYlszeM5vkLjzK9+5UxoN/rjy9R5I9BzcjaSolNnum29uHVz+Sk+Lb+Z
-	 209P6QhUvdxfysoe/EQKlYmfnXt2SQwSkCtXyCazKNh3Bah6NQYrUXcH6nr3PyoCRH
-	 AkDCR0a5YUUeA==
-Date: Thu, 15 May 2025 15:33:10 +0100
-From: Will Deacon <will@kernel.org>
-To: Rob Clark <robdclark@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>,
-	Rob Clark <robdclark@chromium.org>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Nicolin Chen <nicolinc@nvidia.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Joao Martins <joao.m.martins@oracle.com>,
-	"moderated list:ARM SMMU DRIVERS" <linux-arm-kernel@lists.infradead.org>,
-	"open list:IOMMU SUBSYSTEM" <iommu@lists.linux.dev>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 05/40] iommu/io-pgtable-arm: Add quirk to quiet
- WARN_ON()
-Message-ID: <20250515143309.GA12165@willie-the-truck>
-References: <20250514175527.42488-1-robdclark@gmail.com>
- <20250514175527.42488-6-robdclark@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EAstEY3n";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QEormMYw"
+Date: Thu, 15 May 2025 14:33:54 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747319635;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qms05hQIOpL1+FqXJPXoWtSJACNQob/yriFKf5Ddr80=;
+	b=EAstEY3n109u7mo2d8+LDZQNfvB5XigacfSzP8mAYppPhILvAJDRppex9TxBXVyyhMgIia
+	+3PJ4Trj9CqgdeM0UIq40xmRRXpSodLAaayCQu8eZKd+Gxfzab2ZEhl9RZS3PJ3js12Z8B
+	b7NNGMv6PvXRL/MvU9fersVTRCXmGeoWs71KNr5DhsWqg4SIMdw10zS6FnBibAyXo4CA5F
+	bBxQDNLy4cO2xs1Vp/6yW0YA9A8TvwYUWBYUPIjH2p2KOY5L5Og8YhbbZ54PLEojKO8wae
+	bsdzx4Zi+2foGhktt9y7nzSky5U3i9XAnfiRjh+9SuPNlEmD9u48BgAzkODd7Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747319635;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qms05hQIOpL1+FqXJPXoWtSJACNQob/yriFKf5Ddr80=;
+	b=QEormMYw4BE8wK8+DrMK72977HUxgTJJFizt0OlkHptkWjk6GT42+BSBwItqHW4b9guN7X
+	+hz0FMjvb/Mzn2BQ==
+From: "tip-bot2 for Andy Shevchenko" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: irq/core] genirq: Bump the size of the local variable for sprintf()
+Cc: kernel test robot <lkp@intel.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20250515085516.2913290-1-andriy.shevchenko@linux.intel.com>
+References: <20250515085516.2913290-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514175527.42488-6-robdclark@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <174731963480.406.8669837030668986806.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 14, 2025 at 10:53:19AM -0700, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
-> 
-> In situations where mapping/unmapping sequence can be controlled by
-> userspace, attempting to map over a region that has not yet been
-> unmapped is an error.  But not something that should spam dmesg.
-> 
-> Now that there is a quirk, we can also drop the selftest_running
-> flag, and use the quirk instead for selftests.
-> 
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> Acked-by: Robin Murphy <robin.murphy@arm.com>
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
->  drivers/iommu/io-pgtable-arm.c | 27 ++++++++++++++-------------
->  include/linux/io-pgtable.h     |  8 ++++++++
->  2 files changed, 22 insertions(+), 13 deletions(-)
+The following commit has been merged into the irq/core branch of tip:
 
-[...]
+Commit-ID:     a4a39c81e1043b153bde3ef5cb3cf94222ffd918
+Gitweb:        https://git.kernel.org/tip/a4a39c81e1043b153bde3ef5cb3cf94222ffd918
+Author:        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+AuthorDate:    Thu, 15 May 2025 11:55:16 +03:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 15 May 2025 16:28:09 +02:00
 
-> diff --git a/include/linux/io-pgtable.h b/include/linux/io-pgtable.h
-> index bba2a51c87d2..639b8f4fb87d 100644
-> --- a/include/linux/io-pgtable.h
-> +++ b/include/linux/io-pgtable.h
-> @@ -88,6 +88,13 @@ struct io_pgtable_cfg {
->  	 *
->  	 * IO_PGTABLE_QUIRK_ARM_HD: Enables dirty tracking in stage 1 pagetable.
->  	 * IO_PGTABLE_QUIRK_ARM_S2FWB: Use the FWB format for the MemAttrs bits
-> +	 *
-> +	 * IO_PGTABLE_QUIRK_NO_WARN_ON: Do not WARN_ON() on conflicting
-> +	 *	mappings, but silently return -EEXISTS.  Normally an attempt
-> +	 *	to map over an existing mapping would indicate some sort of
-> +	 *	kernel bug, which would justify the WARN_ON().  But for GPU
-> +	 *	drivers, this could be under control of userspace.  Which
-> +	 *	deserves an error return, but not to spam dmesg.
->  	 */
->  	#define IO_PGTABLE_QUIRK_ARM_NS			BIT(0)
->  	#define IO_PGTABLE_QUIRK_NO_PERMS		BIT(1)
-> @@ -97,6 +104,7 @@ struct io_pgtable_cfg {
->  	#define IO_PGTABLE_QUIRK_ARM_OUTER_WBWA		BIT(6)
->  	#define IO_PGTABLE_QUIRK_ARM_HD			BIT(7)
->  	#define IO_PGTABLE_QUIRK_ARM_S2FWB		BIT(8)
-> +	#define IO_PGTABLE_QUIRK_NO_WARN_ON		BIT(9)
+genirq: Bump the size of the local variable for sprintf()
 
-This feels a bit fragile to me:
-  * IOMMU-API users of io-pgtable shouldn't be passing this quirk
-    but might end up doing so to paper over driver bugs.
+GCC is not happy about a sprintf() call on a buffer that might be too small
+for the given formatting string.
 
-  * Low-level users of io-pgtable who expose page-table operations to
-    userspace need to pass the quirk, but might well not bother because
-    well-behaved userspace doesn't trigger the warning.
+kernel/irq/debugfs.c:233:26: warning: 'sprintf' may write a terminating nul past the end of the destination [-Wformat-overflow=]
 
-So overall, it's all a bit unsatisfactory. Is there a way we could have
-the warnings only when invoked via the IOMMU API?
+Fix this by bumping the size of the local variable for sprintf().
 
-Will
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250515085516.2913290-1-andriy.shevchenko@linux.intel.com
+Closes: https://lore.kernel.org/oe-kbuild-all/202505151057.xbyXAbEn-lkp@intel.com/
+---
+ kernel/irq/debugfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/irq/debugfs.c b/kernel/irq/debugfs.c
+index 3d6a5b3..3527def 100644
+--- a/kernel/irq/debugfs.c
++++ b/kernel/irq/debugfs.c
+@@ -225,7 +225,7 @@ void irq_debugfs_copy_devname(int irq, struct device *dev)
+ 
+ void irq_add_debugfs_entry(unsigned int irq, struct irq_desc *desc)
+ {
+-	char name [10];
++	char name [12];
+ 
+ 	if (!irq_dir || !desc || desc->debugfs_file)
+ 		return;
