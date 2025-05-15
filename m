@@ -1,250 +1,312 @@
-Received: from zg8tmja2lje4os43os4xodqa.icoremail.net (zg8tmja2lje4os43os4xodqa.icoremail.net [206.189.79.184])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B52A51D79A0;
-	Thu, 15 May 2025 05:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.79.184
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465B4296169
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 05:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747288020; cv=none; b=hv8U3p8sas57YdBDkz4TCQzXvECIVZsZVjaJw8QHkeynTJHiMMrVXXvVnp0rN3VZVU8UdfdPR7nZY9OL66DGQK4M60rjx94OPJJQ5vpWUzHVz45W+YBja7Asg+ldoVc/6Y7SMU2+ekSgM53ecNbLwbZ6VpiNkJCVav/kW/U8aq0=
+	t=1747288025; cv=none; b=tLLlwi1PIhC3J7LYdPLvbv4ISMEi3JJ6rQE+hkjKHN4j75ZFbMO6IRn+DCahC3Bz1w5BtnmY40NZNaHj2PbqlGt9h+kWD7taQEZGfSFJzTlA2HCSIFmBaYeyFdGJwI8d2+yFsAYmhnDLd8hltjX0LW/NFFds+flZiro5psBhwB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747288020; c=relaxed/simple;
-	bh=E++j0VEKWl4vXpOMr+jNQnxTUhTcRw3k4Jgt5LDWoPA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QcSkSe/ljv5HvDrFAqBW807D5Mu/omJX/aaynOqjTvUXFSEPNWirbWuyCwDkONYJZgrsBHwDKyhM0nRuxRZb8xzp+vCHPodQaRWntKYWMw6cJz2ygZZ8qPcyjzxCFvQuEp5lIrVJu6EVLNUc2wPGU5BDEobQXpBthyavsYZHYrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.79.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0006800LT.eswin.cn (unknown [10.12.96.77])
-	by app1 (Coremail) with SMTP id TAJkCgAXOxHDfyVo7wB8AA--.55102S2;
-	Thu, 15 May 2025 13:46:44 +0800 (CST)
-From: Yulin Lu <luyulin@eswincomputing.com>
-To: linus.walleij@linaro.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kees@kernel.org,
-	gustavoars@kernel.org,
-	brgl@bgdev.pl,
-	linux-hardening@vger.kernel.org
-Cc: ningyu@eswincomputing.com,
-	zhengyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	huangyifeng@eswincomputing.com,
-	fenglin@eswincomputing.com,
-	lianghujun@eswincomputing.com,
-	Yulin Lu <luyulin@eswincomputing.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v4 1/2] dt-bindings: pinctrl: eswin: Document for EIC7700 SoC
-Date: Thu, 15 May 2025 13:46:41 +0800
-Message-Id: <20250515054641.695-1-luyulin@eswincomputing.com>
-X-Mailer: git-send-email 2.31.1.windows.1
-In-Reply-To: <20250515054524.390-1-luyulin@eswincomputing.com>
-References: <20250515054524.390-1-luyulin@eswincomputing.com>
+	s=arc-20240116; t=1747288025; c=relaxed/simple;
+	bh=8afQTwmSiOUgPl8LoKvHouIF+vTEyegW+hleiSg5GUE=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Ue/cgcakEZxhj51+ceoAUjOPzikpK1F/E9V0nqg9I5ZYj0pHzRGTlUfA3IzwPzEK3fTwQZb83SD62qiXHDjJum71yxCm5rXSVitWJHtSSlltn3JhmVenS9MDtINuJAulDhaOARn8PO0+uLhgmoKkcdwuhl7dOstkUckARuFNaik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IOnNbi4z; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IOnNbi4z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747288024; x=1778824024;
+  h=date:from:to:cc:subject:message-id;
+  bh=8afQTwmSiOUgPl8LoKvHouIF+vTEyegW+hleiSg5GUE=;
+  b=IOnNbi4z6EkQZc8MEOezJjHky2GZb8wK+DaEMLezrS6DXQDr0ipMtZQx
+   PhKd9LovTBTTdgxq2U1v4S5T+wg06DiCjQjciS+ZifTrliwWnXwi2GF5m
+   x7kURRqw+0nUQuec1UtswkzkRVzU9fw4Yyzz+lryeUogPxnZz+nmIplYh
+   Jumqr64OzBgE4M0O0Rz5C0A25wuOIGb5hOcIteKBzVOxuzyoxj3HsUZ3P
+   kaG9ja4autFbSwh6g6IuQr5KmjVr2u9AGFtRhG6jp94xF6xdnT1RS/n+d
+   pK1Piy3fESl+iT/rMZHNtfiZoUNBuHxkx2HbNW+B9MAtPn7QVmPqaR3c+
+   Q==;
+X-CSE-ConnectionGUID: 0i5kksZeTiGL2Hm7gMm0/Q==
+X-CSE-MsgGUID: P+0NqxYAQOe5r/5EOBMbGg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="71718986"
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="71718986"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 22:47:03 -0700
+X-CSE-ConnectionGUID: sc+GiMafT220r6T1avxP/Q==
+X-CSE-MsgGUID: S4YH+vazTSqCOefipDYT/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="169195023"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 14 May 2025 22:47:01 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uFRQo-000HyF-37;
+	Thu, 15 May 2025 05:46:58 +0000
+Date: Thu, 15 May 2025 13:45:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:sched/core] BUILD SUCCESS
+ 676e8cf70cb0533e1118e29898c9a9c33ae3a10f
+Message-ID: <202505151349.4pFtV86F-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TAJkCgAXOxHDfyVo7wB8AA--.55102S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3XFW8KrWDGw45GryUZry7ZFb_yoW7Kr1xpF
-	43W34fJF1qqr1xGa9Ivw109F1fJan7AF9xAFyjyry3Xw1Yq3WSyr4ayr45WFWUWr4kJ343
-	Xayjqa4jqF4UCrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9G14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
-	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
-	wI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
-	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v2
-	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
-	W8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRRKZX5UUUUU==
-X-CM-SenderInfo: pox13z1lq6v25zlqu0xpsx3x1qjou0bp/
 
-Add EIC7700 pinctrl device for all configurable pins.
-For the EIC7700 pinctrl registers, each register (32 bits)
-controls the characteristics of a single pin.
-It supports setting function multiplexing, Schmitt trigger,
-drive strength, pull-up/pull-down, and input enable.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
+branch HEAD: 676e8cf70cb0533e1118e29898c9a9c33ae3a10f  sched,livepatch: Untangle cond_resched() and live-patching
 
-Co-developed-by: Samuel Holland <samuel.holland@sifive.com>
-Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-Signed-off-by: Yulin Lu <luyulin@eswincomputing.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../pinctrl/eswin,eic7700-pinctrl.yaml        | 156 ++++++++++++++++++
- 1 file changed, 156 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
+elapsed time: 1046m
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
-new file mode 100644
-index 000000000000..d46e7ee6372d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/eswin,eic7700-pinctrl.yaml
-@@ -0,0 +1,156 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/eswin,eic7700-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Eswin Eic7700 Pinctrl
-+
-+maintainers:
-+  - Yulin Lu <luyulin@eswincomputing.com>
-+
-+allOf:
-+  - $ref: pinctrl.yaml#
-+
-+description: |
-+  eic7700 pin configuration nodes act as a container for an arbitrary number of
-+  subnodes. Each of these subnodes represents some desired configuration for one or
-+  more pins. This configuration can include the mux function to select on those pin(s),
-+  and various pin configuration parameters, such as input-enable, pull-up, etc.
-+
-+properties:
-+  compatible:
-+    const: eswin,eic7700-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+  vrgmii-supply:
-+    description:
-+      Regulator supply for the RGMII interface IO power domain.
-+      This property should reference a regulator that provides either 1.8V or 3.3V,
-+      depending on the board-level voltage configuration required by the RGMII interface.
-+
-+patternProperties:
-+  '-grp$':
-+    type: object
-+    additionalProperties: false
-+
-+    patternProperties:
-+      '-pins$':
-+        type: object
-+
-+        properties:
-+          pins:
-+            description:
-+              For eic7700, specifies the name(s) of one or more pins to be configured by
-+              this node.
-+            items:
-+              enum: [ chip_mode, mode_set0, mode_set1, mode_set2, mode_set3, xin,
-+                      rst_out_n, key_reset_n, gpio0, por_sel, jtag0_tck, jtag0_tms,
-+                      jtag0_tdi, jtag0_tdo, gpio5, spi2_cs0_n, jtag1_tck, jtag1_tms,
-+                      jtag1_tdi, jtag1_tdo, gpio11, spi2_cs1_n, pcie_clkreq_n,
-+                      pcie_wake_n, pcie_perst_n, hdmi_scl, hdmi_sda, hdmi_cec,
-+                      jtag2_trst, rgmii0_clk_125, rgmii0_txen, rgmii0_txclk,
-+                      rgmii0_txd0, rgmii0_txd1, rgmii0_txd2, rgmii0_txd3, i2s0_bclk,
-+                      i2s0_wclk, i2s0_sdi, i2s0_sdo, i2s_mclk, rgmii0_rxclk,
-+                      rgmii0_rxdv, rgmii0_rxd0, rgmii0_rxd1, rgmii0_rxd2, rgmii0_rxd3,
-+                      i2s2_bclk, i2s2_wclk, i2s2_sdi, i2s2_sdo, gpio27, gpio28, gpio29,
-+                      rgmii0_mdc, rgmii0_mdio, rgmii0_intb, rgmii1_clk_125, rgmii1_txen,
-+                      rgmii1_txclk, rgmii1_txd0, rgmii1_txd1, rgmii1_txd2, rgmii1_txd3,
-+                      i2s1_bclk, i2s1_wclk, i2s1_sdi, i2s1_sdo, gpio34, rgmii1_rxclk,
-+                      rgmii1_rxdv, rgmii1_rxd0, rgmii1_rxd1, rgmii1_rxd2, rgmii1_rxd3,
-+                      spi1_cs0_n, spi1_clk, spi1_d0, spi1_d1, spi1_d2, spi1_d3, spi1_cs1_n,
-+                      rgmii1_mdc, rgmii1_mdio, rgmii1_intb, usb0_pwren, usb1_pwren,
-+                      i2c0_scl, i2c0_sda, i2c1_scl, i2c1_sda, i2c2_scl, i2c2_sda,
-+                      i2c3_scl, i2c3_sda, i2c4_scl, i2c4_sda, i2c5_scl, i2c5_sda,
-+                      uart0_tx, uart0_rx, uart1_tx, uart1_rx, uart1_cts, uart1_rts,
-+                      uart2_tx, uart2_rx, jtag2_tck, jtag2_tms, jtag2_tdi, jtag2_tdo,
-+                      fan_pwm, fan_tach, mipi_csi0_xvs, mipi_csi0_xhs, mipi_csi0_mclk,
-+                      mipi_csi1_xvs, mipi_csi1_xhs, mipi_csi1_mclk, mipi_csi2_xvs,
-+                      mipi_csi2_xhs, mipi_csi2_mclk, mipi_csi3_xvs, mipi_csi3_xhs,
-+                      mipi_csi3_mclk, mipi_csi4_xvs, mipi_csi4_xhs, mipi_csi4_mclk,
-+                      mipi_csi5_xvs, mipi_csi5_xhs, mipi_csi5_mclk, spi3_cs_n, spi3_clk,
-+                      spi3_di, spi3_do, gpio92, gpio93, s_mode, gpio95, spi0_cs_n,
-+                      spi0_clk, spi0_d0, spi0_d1, spi0_d2, spi0_d3, i2c10_scl,
-+                      i2c10_sda, i2c11_scl, i2c11_sda, gpio106, boot_sel0, boot_sel1,
-+                      boot_sel2, boot_sel3, gpio111, lpddr_ref_clk ]
-+
-+          function:
-+            description:
-+              Specify the alternative function to be configured for the
-+              given pins.
-+            enum: [ disabled, boot_sel, chip_mode, emmc, fan_tach,
-+                    gpio, hdmi, i2c, i2s, jtag, ddr_ref_clk_sel,
-+                    lpddr_ref_clk, mipi_csi, osc, pcie, pwm,
-+                    rgmii, reset, sata, sdio, spi, s_mode, uart, usb ]
-+
-+          input-schmitt-enable: true
-+
-+          input-schmitt-disable: true
-+
-+          bias-disable: true
-+
-+          bias-pull-down: true
-+
-+          bias-pull-up: true
-+
-+          input-enable: true
-+
-+          input-disable: true
-+
-+          drive-strength-microamp: true
-+
-+        required:
-+          - pins
-+
-+        additionalProperties: false
-+
-+        allOf:
-+          - $ref: pincfg-node.yaml#
-+          - $ref: pinmux-node.yaml#
-+
-+          - if:
-+              properties:
-+                pins:
-+                  anyOf:
-+                    - pattern: '^rgmii'
-+                    - const: lpddr_ref_clk
-+            then:
-+              properties:
-+                drive-strength-microamp:
-+                  enum: [3000, 6000, 9000, 12000, 15000, 18000, 21000, 24000]
-+            else:
-+              properties:
-+                drive-strength-microamp:
-+                  enum: [6000, 9000, 12000, 15000, 18000, 21000, 24000, 27000]
-+
-+required:
-+  - compatible
-+  - reg
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    pinctrl@51600080 {
-+      compatible = "eswin,eic7700-pinctrl";
-+      reg = <0x51600080 0x1fff80>;
-+      vrgmii-supply = <&vcc_1v8>;
-+
-+      dev-active-grp {
-+        /* group node defining 1 standard pin */
-+        gpio10-pins {
-+          pins = "jtag1_tdo";
-+          function = "gpio";
-+          input-enable;
-+          bias-pull-up;
-+        };
-+
-+        /* group node defining 2 I2C pins */
-+        i2c6-pins {
-+          pins = "uart1_cts", "uart1_rts";
-+          function = "i2c";
-+        };
-+      };
-+    };
--- 
-2.25.1
+configs tested: 235
+configs skipped: 5
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    clang-19
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              alldefconfig    gcc-14.2.0
+arc                              allmodconfig    clang-19
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    clang-19
+arc                              allyesconfig    gcc-14.2.0
+arc                                 defconfig    gcc-14.2.0
+arc                   randconfig-001-20250514    gcc-13.3.0
+arc                   randconfig-001-20250515    gcc-6.5.0
+arc                   randconfig-002-20250514    gcc-14.2.0
+arc                   randconfig-002-20250515    gcc-6.5.0
+arm                              allmodconfig    clang-19
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    gcc-14.2.0
+arm                              allyesconfig    clang-19
+arm                              allyesconfig    gcc-14.2.0
+arm                                 defconfig    gcc-14.2.0
+arm                   randconfig-001-20250514    clang-21
+arm                   randconfig-001-20250515    gcc-6.5.0
+arm                   randconfig-002-20250514    clang-21
+arm                   randconfig-002-20250515    gcc-6.5.0
+arm                   randconfig-003-20250514    gcc-7.5.0
+arm                   randconfig-003-20250515    gcc-6.5.0
+arm                   randconfig-004-20250514    gcc-7.5.0
+arm                   randconfig-004-20250515    gcc-6.5.0
+arm                         vf610m4_defconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                               defconfig    gcc-14.2.0
+arm64                 randconfig-001-20250514    clang-17
+arm64                 randconfig-001-20250515    gcc-6.5.0
+arm64                 randconfig-002-20250514    gcc-5.5.0
+arm64                 randconfig-002-20250515    gcc-6.5.0
+arm64                 randconfig-003-20250514    gcc-5.5.0
+arm64                 randconfig-003-20250515    gcc-6.5.0
+arm64                 randconfig-004-20250514    clang-21
+arm64                 randconfig-004-20250515    gcc-6.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                                defconfig    gcc-14.2.0
+csky                  randconfig-001-20250514    gcc-13.3.0
+csky                  randconfig-001-20250515    clang-21
+csky                  randconfig-002-20250514    gcc-14.2.0
+csky                  randconfig-002-20250515    clang-21
+hexagon                          allmodconfig    clang-17
+hexagon                          allmodconfig    clang-19
+hexagon                           allnoconfig    gcc-14.2.0
+hexagon                          allyesconfig    clang-19
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    gcc-14.2.0
+hexagon               randconfig-001-20250514    clang-21
+hexagon               randconfig-001-20250515    clang-21
+hexagon               randconfig-002-20250514    clang-21
+hexagon               randconfig-002-20250515    clang-21
+i386                             allmodconfig    clang-20
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    clang-20
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    clang-20
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250514    clang-20
+i386        buildonly-randconfig-001-20250515    gcc-11
+i386        buildonly-randconfig-002-20250514    gcc-12
+i386        buildonly-randconfig-002-20250515    gcc-11
+i386        buildonly-randconfig-003-20250514    clang-20
+i386        buildonly-randconfig-003-20250515    gcc-11
+i386        buildonly-randconfig-004-20250514    clang-20
+i386        buildonly-randconfig-004-20250515    gcc-11
+i386        buildonly-randconfig-005-20250514    gcc-12
+i386        buildonly-randconfig-005-20250515    gcc-11
+i386        buildonly-randconfig-006-20250514    gcc-12
+i386        buildonly-randconfig-006-20250515    gcc-11
+i386                                defconfig    clang-20
+i386                  randconfig-001-20250515    clang-20
+i386                  randconfig-002-20250515    clang-20
+i386                  randconfig-003-20250515    clang-20
+i386                  randconfig-004-20250515    clang-20
+i386                  randconfig-005-20250515    clang-20
+i386                  randconfig-006-20250515    clang-20
+i386                  randconfig-007-20250515    clang-20
+i386                  randconfig-011-20250515    gcc-12
+i386                  randconfig-012-20250515    gcc-12
+i386                  randconfig-013-20250515    gcc-12
+i386                  randconfig-014-20250515    gcc-12
+i386                  randconfig-015-20250515    gcc-12
+i386                  randconfig-016-20250515    gcc-12
+i386                  randconfig-017-20250515    gcc-12
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch                           defconfig    gcc-14.2.0
+loongarch             randconfig-001-20250514    gcc-14.2.0
+loongarch             randconfig-001-20250515    clang-21
+loongarch             randconfig-002-20250514    gcc-14.2.0
+loongarch             randconfig-002-20250515    clang-21
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                         amcore_defconfig    gcc-14.2.0
+m68k                                defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+microblaze                          defconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                   sb1250_swarm_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                               defconfig    gcc-14.2.0
+nios2                 randconfig-001-20250514    gcc-7.5.0
+nios2                 randconfig-001-20250515    clang-21
+nios2                 randconfig-002-20250514    gcc-11.5.0
+nios2                 randconfig-002-20250515    clang-21
+openrisc                          allnoconfig    clang-21
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-12
+openrisc                 simple_smp_defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    clang-21
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-12
+parisc                randconfig-001-20250514    gcc-12.4.0
+parisc                randconfig-001-20250515    clang-21
+parisc                randconfig-002-20250514    gcc-10.5.0
+parisc                randconfig-002-20250515    clang-21
+parisc64                            defconfig    gcc-14.2.0
+powerpc                    adder875_defconfig    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    clang-21
+powerpc                          allyesconfig    gcc-14.2.0
+powerpc                      katmai_defconfig    gcc-14.2.0
+powerpc                 mpc8313_rdb_defconfig    gcc-14.2.0
+powerpc                      pcm030_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250514    clang-17
+powerpc               randconfig-001-20250515    clang-21
+powerpc               randconfig-002-20250514    gcc-5.5.0
+powerpc               randconfig-002-20250515    clang-21
+powerpc               randconfig-003-20250514    gcc-7.5.0
+powerpc               randconfig-003-20250515    clang-21
+powerpc64             randconfig-001-20250514    gcc-10.5.0
+powerpc64             randconfig-001-20250515    clang-21
+powerpc64             randconfig-002-20250514    clang-19
+powerpc64             randconfig-002-20250515    clang-21
+powerpc64             randconfig-003-20250514    gcc-5.5.0
+powerpc64             randconfig-003-20250515    clang-21
+riscv                            allmodconfig    gcc-14.2.0
+riscv                             allnoconfig    clang-21
+riscv                            allyesconfig    gcc-14.2.0
+riscv                               defconfig    gcc-12
+riscv                    nommu_k210_defconfig    gcc-14.2.0
+riscv                 randconfig-001-20250515    gcc-8.5.0
+riscv                 randconfig-001-20250515    gcc-9.3.0
+riscv                 randconfig-002-20250515    gcc-14.2.0
+riscv                 randconfig-002-20250515    gcc-9.3.0
+s390                             allmodconfig    clang-18
+s390                             allmodconfig    gcc-14.2.0
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    gcc-12
+s390                  randconfig-001-20250515    clang-21
+s390                  randconfig-001-20250515    gcc-9.3.0
+s390                  randconfig-002-20250515    gcc-9.3.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                        apsh4ad0a_defconfig    gcc-14.2.0
+sh                                  defconfig    gcc-12
+sh                    randconfig-001-20250515    gcc-14.2.0
+sh                    randconfig-001-20250515    gcc-9.3.0
+sh                    randconfig-002-20250515    gcc-10.5.0
+sh                    randconfig-002-20250515    gcc-9.3.0
+sh                              ul2_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250515    gcc-6.5.0
+sparc                 randconfig-001-20250515    gcc-9.3.0
+sparc                 randconfig-002-20250515    gcc-10.3.0
+sparc                 randconfig-002-20250515    gcc-9.3.0
+sparc64                             defconfig    gcc-12
+sparc64               randconfig-001-20250515    gcc-9.3.0
+sparc64               randconfig-002-20250515    gcc-9.3.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    clang-19
+um                               allyesconfig    gcc-12
+um                                  defconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250515    gcc-12
+um                    randconfig-001-20250515    gcc-9.3.0
+um                    randconfig-002-20250515    clang-21
+um                    randconfig-002-20250515    gcc-9.3.0
+um                           x86_64_defconfig    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250514    clang-20
+x86_64      buildonly-randconfig-001-20250515    gcc-12
+x86_64      buildonly-randconfig-002-20250514    gcc-12
+x86_64      buildonly-randconfig-002-20250515    gcc-12
+x86_64      buildonly-randconfig-003-20250514    gcc-12
+x86_64      buildonly-randconfig-003-20250515    gcc-12
+x86_64      buildonly-randconfig-004-20250514    gcc-12
+x86_64      buildonly-randconfig-004-20250515    gcc-12
+x86_64      buildonly-randconfig-005-20250514    clang-20
+x86_64      buildonly-randconfig-005-20250515    gcc-12
+x86_64      buildonly-randconfig-006-20250514    gcc-12
+x86_64      buildonly-randconfig-006-20250515    gcc-12
+x86_64                              defconfig    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20250515    gcc-12
+x86_64                randconfig-002-20250515    gcc-12
+x86_64                randconfig-003-20250515    gcc-12
+x86_64                randconfig-004-20250515    gcc-12
+x86_64                randconfig-005-20250515    gcc-12
+x86_64                randconfig-006-20250515    gcc-12
+x86_64                randconfig-007-20250515    gcc-12
+x86_64                randconfig-008-20250515    gcc-12
+x86_64                randconfig-071-20250515    clang-20
+x86_64                randconfig-072-20250515    clang-20
+x86_64                randconfig-073-20250515    clang-20
+x86_64                randconfig-074-20250515    clang-20
+x86_64                randconfig-075-20250515    clang-20
+x86_64                randconfig-076-20250515    clang-20
+x86_64                randconfig-077-20250515    clang-20
+x86_64                randconfig-078-20250515    clang-20
+x86_64                               rhel-9.4    clang-20
+x86_64                          rhel-9.4-rust    clang-18
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250515    gcc-14.2.0
+xtensa                randconfig-001-20250515    gcc-9.3.0
+xtensa                randconfig-002-20250515    gcc-13.3.0
+xtensa                randconfig-002-20250515    gcc-9.3.0
+xtensa                    xip_kc705_defconfig    gcc-14.2.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
