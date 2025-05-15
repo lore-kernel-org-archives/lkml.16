@@ -1,92 +1,183 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E681A28D
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 03:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B07B617BA3
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 03:20:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747279172; cv=none; b=Erh/kBzZj1IX4H/p9cyI6924AqOzN9BfgfO7FhNLX4wpKXZ5YioCsWhQQREl3STg7W4nmSVsLOKHR5rPdM1aAxF5h9kQW/QPFDzjm6XjdwFWnAy3fGUddeDuA/eqwaNdFMgpuPqderGPiBSl6M7ZU09ohLAZubasNmDGsvhyQDA=
+	t=1747279212; cv=none; b=f7DyQkGIKuoDkff7noIz5gPi8rEUmmm3XVDj0TtRrhXq7qdihSGzNTEW9ziff+/KQmrPtPOW/m0Eaa1yGA2S/HFsIrdXJFjlLMDVgSwBWil7W7BsdsrTQ0uVdvmcr19zyHVqD+7A/zoEXJXqy7C14k3/oEtm1dA89lwPXyGUjVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747279172; c=relaxed/simple;
-	bh=5falsyy2NSbhgTzsI7iw9JhcbxL9GA26schuAZMhDeg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tjuSOcZ/ii7j8Km7HiziJnQt0f5as9PQGpYM5LjmbYuKGhBDPP0sDzju0jcIb1zNWXuZqlP1QsU51xWYnx+5GPHxmeMppgB7sZ7PpkVC4SNVdYIcHhO502ESVwu0fCzcshcPy4zj6AlwYJsYJtxwVDO0zvWTP4SiScH5u7lIm04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=fpVo0Iea; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fpVo0Iea"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22c336fcdaaso4239945ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 20:19:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1747279170; x=1747883970; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NfMiph1RSohe0S02imOGJtgpN9S3gS74RbgzBkoa5vI=;
-        b=fpVo0IeaKGPSAXVAJiQy0kRrVcYUoPdYmzb5KkSMIueLxsCdOfe+szPpQwplFQRodo
-         JZU21zM/GjkUgYwcIJwNcbgbat0oPuRtAnuFRXXSWHiuJ9i/v5oTiC54UmY1Qm2G1ait
-         AAo2peRBPyXO6j101PUfuO5+AmGfzPm8yK28w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747279170; x=1747883970;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NfMiph1RSohe0S02imOGJtgpN9S3gS74RbgzBkoa5vI=;
-        b=GgD60+hxdbAhDr0WQfHtfbL+tG3jHHVN4cOtUKEA9iaD8lb47jltPkyU0TFjSi9Bl3
-         y2n8VBTx2H7iOh1P7yqv570pnhsuQWYZLrKIg2xZVtoJ/Z7HhhvQzryx7/5hBTaMy++i
-         Qhg3nZ0YWLftKaY0OiXnhnjuwgFaES0JT4JtSqtZi1+GnnvSVR07r03mn9qXS/XNVDux
-         dMXXcWA1Xo/Sp6kYeRd0/1nsNimYpQnAE70aNQj+NIH/RbT0BH59zNbAZk0LTDjFvcYr
-         ZNZ8IyUNHQ1k1a9z+0jDhtE9zfOgjdp+lohsCDvDXxJ7woQjq2cck2U3b7iRLvJ2r7sq
-         by7A==
-X-Forwarded-Encrypted: i=1; AJvYcCXbET2wdz6KRXLU41JsYgcWv/OMFAxh6eWuCxX+vfePDvgh+byA87OprJJkIVbVvsSYULqyWsuRJ1IN1tM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXP+99So+p7PonRzrzz5z5RrZeY9GyG/obEbjftS49to1afLmU
-	lWdUCDAf7jQ3QVIaDSw8QaVw6/dyfAEQLbgDFoYxt0IHMmyWfkHu0FjFxQFTL2TpYxUwsQy+cn0
-	=
-X-Gm-Gg: ASbGncs5O/Dk36YjqOqlirHV7WtYjYYIoyJbg1cwvYICZyAe/osU3inmck2cxc3pkZ2
-	7vn03yjuuMyQuFHWSzTctlzIgqafU/Og4E9baZ2BEwtJHf2mR3nYDN1IdDcrULAHpRuKIgK+kcL
-	nmgjGxARiFFXWhPiqjuvoKIJQnMF7gzU55x9RHribcbUnYvgWNvmi0cba1cSf4bevT+i/r1PtK8
-	PlXMpW8ex++8KjvK+smsdA7QuqypRFzEgU9Ev+CzMAxYjoszFBviHAmDYCxDVGOAGP4B/AC0cb5
-	NDsIhisdWlEdnxsd56NAdjIGckkbfxpFZyKlZiVn+Ctk2xax77sqe+o=
-X-Google-Smtp-Source: AGHT+IGvBDkjV4xRFAQFnM2nOHWCd9M5YhCblzNXzaPx80ufn2YWCWTUk/8FrScqDLEdru3/StH3lg==
-X-Received: by 2002:a17:903:1c8:b0:215:b75f:a1cb with SMTP id d9443c01a7336-231980cb1admr80598445ad.9.1747279169920;
-        Wed, 14 May 2025 20:19:29 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:291c:c511:a135:fe23])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8271c01sm106523515ad.140.2025.05.14.20.19.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 20:19:29 -0700 (PDT)
-Date: Thu, 15 May 2025 12:19:25 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Zaslonko Mikhail <zaslonko@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	Heiko Carstens <hca@linux.ibm.com>, Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: Re: [PATCH 2/2] zram: support deflate-specific params
-Message-ID: <2bnnkkwhqor73ls7dvsxlt57tp2u3xf2o27opkveuqwgh3xf2j@5kzgq4eej3cw>
-References: <20250514024825.1745489-1-senozhatsky@chromium.org>
- <20250514024825.1745489-3-senozhatsky@chromium.org>
- <bec7391c-e40d-4633-a2d0-881eb6d18f19@linux.ibm.com>
- <ystv6cvrdllh64eqkislh47a3bnx5d2lk42ox4eiuuubioin6u@gmt5pwbkwiz3>
- <aCVcsB-M9cKdq8d4@gondor.apana.org.au>
+	s=arc-20240116; t=1747279212; c=relaxed/simple;
+	bh=wmyDntFHg9J1aeNDqXH9NMNtAddxfUhTvQ+e7PrYACI=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=fn6lg4LFfkbn8+dz+N3OFzTaa4/5QsAt2Xsq5sSG4ZPFhgQIuizmgd6JGlt43VhgBVQqeisGFI22m60Tgrv2BVMXS1NVL4lP4YNPnmgK3k3ZZnsjvrXOSe1AIwsHTt+MBJ5P9iutUtbDQADVSLEIfgKF2bgJ2stpXKqOHN4+26Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8AxHHJmXSVoIaPoAA--.50643S3;
+	Thu, 15 May 2025 11:20:06 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by front1 (Coremail) with SMTP id qMiowMBxb8deXSVorxzUAA--.14896S3;
+	Thu, 15 May 2025 11:20:01 +0800 (CST)
+Subject: Re: [PATCH] mm/page_alloc.c: Avoid infinite retries caused by cpuset
+ race
+To: Vlastimil Babka <vbabka@suse.cz>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Suren Baghdasaryan <surenb@google.com>
+Cc: Harry Yoo <harry.yoo@oracle.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+ Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Zi Yan <ziy@nvidia.com>
+References: <20250416082405.20988-1-zhangtianyang@loongson.cn>
+ <aAYXP4f417_bx6Is@harry> <025e3f51-2ab5-bc58-5475-b57103169a82@loongson.cn>
+ <20250422171116.f3928045a13205dc1b9a46ea@linux-foundation.org>
+ <CAJuCfpHbXmjAr2Rt0Mo_i32hpGOyXnVtXUd4qFjXriH9eYFDkQ@mail.gmail.com>
+ <20250510200740.b7de2408e40be7ad5392fed9@linux-foundation.org>
+ <CAJuCfpFdC6hgFSPy3M2sagkFobWeCuxLdcWiyV5pnzB55dgjZg@mail.gmail.com>
+ <20250513121609.a9741e49a0e865f25f966de1@linux-foundation.org>
+ <e783c311-2f3c-42ba-b0ba-734a206cf04c@suse.cz>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <75a7258b-224c-c4f2-47a9-fda3775d268c@loongson.cn>
+Date: Thu, 15 May 2025 11:19:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCVcsB-M9cKdq8d4@gondor.apana.org.au>
+In-Reply-To: <e783c311-2f3c-42ba-b0ba-734a206cf04c@suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMBxb8deXSVorxzUAA--.14896S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWw17Jw4fZr18Jw15ArWUAwc_yoWrAw15pF
+	95uF1j9a1rJFWIk392yFykury0v39rJrW3JFWUJ34xZwnxCr4Iyry7urs8uFyUZrsIkF1j
+	qr4YyryxXF1YvagCm3ZEXasCq-sJn29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr
+	0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8TCJPUUUUU==
 
-On (25/05/15 11:17), Herbert Xu wrote:
-> On Thu, May 15, 2025 at 12:14:38PM +0900, Sergey Senozhatsky wrote:
-> >
-> > Yeah, so in zram we can use only raw deflate (we decompress only what we
-> > have compressed earlier and the data never leaves the device.)  But in case
-> > of Crypto API I actually don't know, added Herbert to the Cc.
-> 
-> The Crypto API has only ever used the raw deflate format.
+Hi,
 
-OK, so do we want to limit user-space and permit only "raw deflate"
-winbits values. that is only negative ones (either explicitly or
-implicitly (by negating the value before zlib API calls))?
+在 2025/5/14 下午3:34, Vlastimil Babka 写道:
+> On 5/13/25 21:16, Andrew Morton wrote:
+>> On Tue, 13 May 2025 09:26:53 -0700 Suren Baghdasaryan <surenb@google.com> wrote:
+>>
+>>>>>> This has been in mm-hotfixes-unstable for six days.  Hopefully we'll
+>>>>>> see some review activity soon (please).
+>>>>> I reviewed and provided my feedback but saw neither a reply nor a
+>>>>> respin with proposed changes.
+>>>> OK, thanks.  Do you have time to put together a modified version of this?
+>>> I think the code is fine as is. Would be good to add Fixes: tag but it
+>>> will require some investigation to find the appropriate patch to
+>>> reference here.
+>> Below is what is in mm-hotfixes.  It doesn't actually have any
+>> acked-by's or reviewed-by's.
+>>
+>> So... final call for review, please.
+>>
+>>
+>> From: Tianyang Zhang <zhangtianyang@loongson.cn>
+>> Subject: mm/page_alloc.c: avoid infinite retries caused by cpuset race
+>> Date: Wed, 16 Apr 2025 16:24:05 +0800
+>>
+>> __alloc_pages_slowpath has no change detection for ac->nodemask in the
+>> part of retry path, while cpuset can modify it in parallel.  For some
+>> processes that set mempolicy as MPOL_BIND, this results ac->nodemask
+>> changes, and then the should_reclaim_retry will judge based on the latest
+>> nodemask and jump to retry, while the get_page_from_freelist only
+>> traverses the zonelist from ac->preferred_zoneref, which selected by a
+>> expired nodemask and may cause infinite retries in some cases
+>>
+>> cpu 64:
+>> __alloc_pages_slowpath {
+>>          /* ..... */
+>> retry:
+>>          /* ac->nodemask = 0x1, ac->preferred->zone->nid = 1 */
+>>          if (alloc_flags & ALLOC_KSWAPD)
+>>                  wake_all_kswapds(order, gfp_mask, ac);
+>>          /* cpu 1:
+>>          cpuset_write_resmask
+>>              update_nodemask
+>>                  update_nodemasks_hier
+>>                      update_tasks_nodemask
+>>                          mpol_rebind_task
+>>                           mpol_rebind_policy
+>>                            mpol_rebind_nodemask
+>> 		// mempolicy->nodes has been modified,
+>> 		// which ac->nodemask point to
+>>
+>>          */
+>>          /* ac->nodemask = 0x3, ac->preferred->zone->nid = 1 */
+>>          if (should_reclaim_retry(gfp_mask, order, ac, alloc_flags,
+>>                                   did_some_progress > 0, &no_progress_loops))
+>>                  goto retry;
+>> }
+>>
+>> Simultaneously starting multiple cpuset01 from LTP can quickly reproduce
+>> this issue on a multi node server when the maximum memory pressure is
+>> reached and the swap is enabled
+>>
+>> Link: https://lkml.kernel.org/r/20250416082405.20988-1-zhangtianyang@loongson.cn
+>> Fixes: 902b62810a57 ("mm, page_alloc: fix more premature OOM due to race with cpuset update").
+> After the discussion in this thread, Suren retracted this Fixes: suggestion.
+> I think it actually goes back to this one which introduced the
+> preferred_zoneref caching.
+>
+> Fixes: c33d6c06f60f ("mm, page_alloc: avoid looking up the first zone in a
+> zonelist twice")
+Yes, the problem should be introduced by this patch, thank you
+>
+>> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: Suren Baghdasaryan <surenb@google.com>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Brendan Jackman <jackmanb@google.com>
+>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>> Cc: Zi Yan <ziy@nvidia.com>
+>> Cc: <stable@vger.kernel.org>
+>> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> I would have placed the check bit further down, just above the
+> should_reclaim_retry() call, but it's not that important to hold up a fix
+> and can be done later.
+>
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+>
+>> ---
+>>
+>>   mm/page_alloc.c |    8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> --- a/mm/page_alloc.c~mm-page_allocc-avoid-infinite-retries-caused-by-cpuset-race
+>> +++ a/mm/page_alloc.c
+>> @@ -4562,6 +4562,14 @@ restart:
+>>   	}
+>>   
+>>   retry:
+>> +	/*
+>> +	 * Deal with possible cpuset update races or zonelist updates to avoid
+>> +	 * infinite retries.
+>> +	 */
+>> +	if (check_retry_cpuset(cpuset_mems_cookie, ac) ||
+>> +	    check_retry_zonelist(zonelist_iter_cookie))
+>> +		goto restart;
+>> +
+>>   	/* Ensure kswapd doesn't accidentally go to sleep as long as we loop */
+>>   	if (alloc_flags & ALLOC_KSWAPD)
+>>   		wake_all_kswapds(order, gfp_mask, ac);
+>> _
+>>
+
