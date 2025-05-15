@@ -1,107 +1,109 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EC41F6679;
-	Thu, 15 May 2025 23:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FAD1DFDE;
+	Thu, 15 May 2025 23:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747351638; cv=none; b=rIO53PkDiDzgs9+HNGX0zD0MXM1IMBQp9f4rcUmvGCLq8GH+OV8ox/m9cNNc6ClQKNxMg7DstUVo/xOV3Mc58+ETGCiUQL6lm6r/FXBO5wjxIRY2IWAv79Czi7dYJP9NhpIiXXNxLagA04MQDKiOGxVb94V8NdtLcsb8VWvDFnk=
+	t=1747352096; cv=none; b=hJ0EpgkRfk8Hzg/EdYn6QaZ06aSUrwKEHAZw4XaJ6SCibx2k7ZJi1SF/OGfDk9Q3I/blpIjjeSA/XkQnQXqURaeOpGycrTEsDUsSa/JXK0NG/bDUnnTYP0IBW5GN65pueIylN4i5g8SkXEYW3yEJ216AnVM0l8B5ZwJKyS+pZm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747351638; c=relaxed/simple;
-	bh=Pgu2Y6SESaYpP1jqivqgblNQ4Ifsz5v7aJ3n6jeq+Bw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tkSrQSzmgr0mV+c91CF9bTJvNCJd8X3c2kdsIchNa468DOhC0NLCljLirJmxDnLFsGH9VD9idDYjL7i/+l6UK9vJTQMO7XKho4m+1NuDrOLglJApHiE/KwxNl8BfwZ/AcJoORYzwctDdPhhM7Kc+lHQFt52FZjJB3MpC6+kHrnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ICkzPb5N; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747352096; c=relaxed/simple;
+	bh=qAiMXidI6WPFEDkri4iRFbQ/gwt7bWy7ygBdaUzaEY4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tXufh2CEJDQQF3SOw3UdzUQe9NiLADfGPus00B+Vy0zbKf1mYXfJzwAWG/JBn4Tn+D0dPM0cKXhIQ+/SHn01oe1XCpQVMQHSxUsuitytIY+QW/1SVUmL+KmBlWnb3IzMEubVCX8rJ/NdWKU82AsTlyOGTiP8G4JvUHobWHHT5q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=pR2Mqmrs; arc=none smtp.client-ip=207.171.188.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICkzPb5N"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3da785e3f90so7218945ab.2;
-        Thu, 15 May 2025 16:27:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="pR2Mqmrs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747351636; x=1747956436; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pgu2Y6SESaYpP1jqivqgblNQ4Ifsz5v7aJ3n6jeq+Bw=;
-        b=ICkzPb5NDvFpyhIq/PxhMY0osvHGOb85tbLlUg6ZZgkBkYSNZ4mhBZ7fT8Vl90UUkW
-         VVIaDqFrhxTP2y38Me7CJ9CokDKdD/PebJ2VzUNG/xBYiIUas0fUSH0RvKIaTDMBixQj
-         0uEy8trUrq/Ezk9FzGQjUJ/32jjgueP1RdIFVJ00Lel3YsdR+Cbd+lULo+A0ZX92jNei
-         c1IgHu6A3Hw7lZOatfJVfdu+i7gatMyZkuo8Oe5xg9cDBtuVYLTSqjC6ZOTK5XNXdeRH
-         OLzChsjUXSGdnBPmDXGUje2t1I7jnV+6qrjgv66U/Bj8SVv7m4X5G3Wt6rLoKUuldPWy
-         opLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747351636; x=1747956436;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Pgu2Y6SESaYpP1jqivqgblNQ4Ifsz5v7aJ3n6jeq+Bw=;
-        b=u5b7VqxJzZQKS+jlVxXaUYKmxYmoi7fMxGqWR0QYjhiWc0CNNKYtNNfnJz48ocXVL/
-         fKVDhKGK3UEy1fbyobnMR5ylIRyQJZjpU/mOhk0Rfmimm53acUNuLTVrCYfb2IPvcVk6
-         4vKm7NQAWDNHoSsgU+gnSvfp4LSFkT/QyNuo05b6Tv2526AZ6NjNeHeCR7JwOtimrylY
-         PJJVNdICoLEAXeCjHZ78u3ib+pEeU1E0piLW+pIaWmNaBSKhAFGvA2kRMg9FcU+AtBml
-         IN3zgda5DVyROsvOj3y6pWBObaWi4xO87XN4DDGe/M1Ut9xOlJZKM4dDc7S6jlUvxe9Z
-         yRIw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7WSmig292LZJwSowruE7Jdk3pjBu+sFkRPtFzvNti6JbZA+wNO/xkEJjsMKRNP/AIGWOr3bGN3R/gBQ==@vger.kernel.org, AJvYcCVNlmC6OQE4nFY5SSCWRHs5t0LsHSrV3s49nToriIhEXimwDp3ZSgHBlapOlfF4Sp/4s8d036/jcfMAytQV@vger.kernel.org, AJvYcCVzx6TIO2u0jeRpAbo8gBC85P2xlzCrP7P6ECmNduXuA1gMvgS+09SLOZfhWC4ZwkfVMYYD5vC6QdC56SPh6GlHzKIv@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhGx54UNU3Cjn2K/Rf/e+0whV5ft2JiQrfUEpqbEF/Fq584TZJ
-	ssqyFbHEgj1pZNr7XITucV+kERnKNPGMKzWziv6z3IZpxf8Oaa6SUUAuToGaK7bCAisFR9laNLr
-	WXUN38iJKT64V1fDEuciYqHlcd72sbTQ=
-X-Gm-Gg: ASbGnctL1HW/ptybqtIxPyHag4hNuN7Q65z1+yFRRhnVEn0RI8ExaNrXxpSwHW2Eac1
-	Q0s2QyUcLB7VYf2cVbqLGzI8gczaW/DTD38MMw53Z1kaJ3phPsJVsFqquettzPoj7WqyAJMAxbf
-	hiRTrRjiF/mnydc/lPKYIY8Hf3wFlwtu4=
-X-Google-Smtp-Source: AGHT+IGMfInsdd4M86V2Nizwia98eN9Cphdu9Ifp0c4g8ILD/M5kt5/nqFyr5+vgxMpx7sYVOFj4slUTcZjlKV1jb40=
-X-Received: by 2002:a05:6e02:1a02:b0:3d4:2306:a875 with SMTP id
- e9e14a558f8ab-3db8573b7f2mr6272255ab.8.1747351636199; Thu, 15 May 2025
- 16:27:16 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1747352095; x=1778888095;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=3SHHqO+V1Yak6BtbjBKjRCDuYvk+8JklC6/Wvsvs7ug=;
+  b=pR2Mqmrsgy+GdXZtqDt/gn8DJ96fLYih6aTdYEm5Rjo9547MhN7akoyZ
+   vdqKMNPzgG2myLIoOEOSbF5LhLw4hYyak0JEv/WMfF+S++afPZ8+SnpoV
+   5pj593EFkhNpo32t2rVMfXD277PCI9xthfKp7cWoc64lZbHH3K+v4NXnC
+   Ndy3wbkk+3uctU3s1LqV3KrnCV1itNRTSHsqzHPGrKxpe4NR1XoXKr/kF
+   ALDCJhcBw9uZjMN0EGaCUZfy8ZrbJv3vt3bY/Ufg/f0KmT+lHRkNA1F9/
+   Z4FkS7GEMpKYO8sUfcOBrI9nU32nxd3YNFvD33UWc11fKFg/N1nDkL4yp
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.15,292,1739836800"; 
+   d="scan'208";a="20254192"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 23:34:55 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.38.20:4832]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.59.47:2525] with esmtp (Farcaster)
+ id 84fb90dd-8cc2-4ae1-a59b-986dd30662d6; Thu, 15 May 2025 23:34:53 +0000 (UTC)
+X-Farcaster-Flow-ID: 84fb90dd-8cc2-4ae1-a59b-986dd30662d6
+Received: from EX19D015UWC003.ant.amazon.com (10.13.138.179) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 15 May 2025 23:34:53 +0000
+Received: from u1e958862c3245e.ant.amazon.com (10.135.218.11) by
+ EX19D015UWC003.ant.amazon.com (10.13.138.179) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 15 May 2025 23:34:53 +0000
+From: Suraj Jitindar Singh <surajjs@amazon.com>
+To: <linux-kernel@vger.kernel.org>, <x86@kernel.org>
+CC: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+	Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Ingo Molnar
+	<mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, "Suraj
+ Jitindar Singh" <surajjs@amazon.com>, <stable@vger.kernel.org>
+Subject: [PATCH 1/2] x86/bugs: WARN() when overwriting x86_return_thunk
+Date: Thu, 15 May 2025 16:34:32 -0700
+Message-ID: <20250515233433.105054-1-surajjs@amazon.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250515173830.uulahmrm37vyjopx@desk>
+References: <20250515173830.uulahmrm37vyjopx@desk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515061643.31472-1-kerneljasonxing@gmail.com>
- <20250515061643.31472-4-kerneljasonxing@gmail.com> <543ef493-a478-4e92-b384-f6ff299b11fb@kernel.dk>
-In-Reply-To: <543ef493-a478-4e92-b384-f6ff299b11fb@kernel.dk>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Fri, 16 May 2025 07:26:40 +0800
-X-Gm-Features: AX0GCFsN5GIaAdgN6g5NVxIIwO__es_7OFWs3t7NcNFhfUkgfO8Q1iiiqvjpgUg
-Message-ID: <CAL+tcoCLu5PNvfs=_HDfy8NdNj5N1_h5dt4GjVCvB9qSt0EYyg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] blktrace: use rbuf->stats.full as a drop indicator
- in relayfs
-To: Jens Axboe <axboe@kernel.dk>
-Cc: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Jason Xing <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D038UWB003.ant.amazon.com (10.13.139.157) To
+ EX19D015UWC003.ant.amazon.com (10.13.138.179)
 
-On Fri, May 16, 2025 at 2:21=E2=80=AFAM Jens Axboe <axboe@kernel.dk> wrote:
->
-> On 5/15/25 12:16 AM, Jason Xing wrote:
-> > From: Jason Xing <kernelxing@tencent.com>
-> >
-> > Replace internal subbuf_start in blktrace with the default policy
-> > in relayfs.
-> >
-> > Remove dropped field from struct blktrace. Correspondingly, call the
-> > common helper in relay. Through incrementing full_count to keep track
-> > of how many times we encountered a full buffer issue, it aids the user
-> > space app in telling how many lost events appear.
->
-> Forgot, I'd rewrite this, "telling how many lost events appear" doesn't
-> make any sense at all, as these events obviously don't appears in the
-> first place.
->
-> By incrementing full_count to keep track of how many times we
-> encountered a full buffer issue, user space will know how many events
-> were lost.
+A warning message is emitted in set_return_thunk() when the return thunk is
+overwritten since this is likely a bug and will result in a mitigation not
+functioning and the mitigation information displayed in sysfs being
+incorrect.
 
-Oh right, I will adjust it!
+Make this louder by using a WARN().
 
-Thanks,
-Jason
+Cc: stable@vger.kernel.org # 5.15.x-
+Signed-off-by: Suraj Jitindar Singh <surajjs@amazon.com>
+---
+ arch/x86/kernel/cpu/bugs.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
->
-> --
-> Jens Axboe
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 8596ce85026c..9679fa30563c 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -69,8 +69,15 @@ void (*x86_return_thunk)(void) __ro_after_init = __x86_return_thunk;
+ 
+ static void __init set_return_thunk(void *thunk)
+ {
+-	if (x86_return_thunk != __x86_return_thunk)
+-		pr_warn("x86/bugs: return thunk changed\n");
++	/*
++	 * There can only be one return thunk enabled at a time, so issue a
++	 * warning when overwriting it as this is likely a bug which will
++	 * result in a mitigation getting disabled and a vulnerability being
++	 * incorrectly reported in sysfs.
++	 */
++	WARN(x86_return_thunk != __x86_return_thunk,
++	     "x86/bugs: return thunk changed from %ps to %ps\n",
++	     x86_return_thunk, thunk);
+ 
+ 	x86_return_thunk = thunk;
+ }
+-- 
+2.34.1
+
