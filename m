@@ -1,107 +1,86 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9019F2BCF60
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F702BD01D;
+	Thu, 15 May 2025 12:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747313239; cv=none; b=qOdR/Oi9z0WEV4qcf5Aw1XDrx1p5Wi+a2QmuttTflssaoO9JHdRTX9LnayT/ArvAoTLDfk5EJEct4CRBYpMxHda0HagnIjXBfq6Gu/ZPeto77WrceFEpLtv2QjCNXeU/OBRnEh1cQNuH+kPO9vUZaWe1itbfTtOL+H3rIUrWhfM=
+	t=1747313240; cv=none; b=JEhVMcv6adUZ0KdW7xJPGRmjVXILMOXS9p322i7WdtFsOFTRQoCAEkSiVIHA2SQk65DHonkjYZjufxUDDHP0sXkcBg/ZXEFzH7NuaCGEhjAK74PmXsjCSitIrq1GTcBwsw7KiknLb7rpxATiMnQPHfg00FcM6O8Cu1H6NC6g0gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747313239; c=relaxed/simple;
-	bh=cdRMK6LJuIuR53a5d5m6jO15/NvO43ubYVwBhvHh5nw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MNhy9+L6Vy5TRAgY951nvzOcsLRKJRlyLUMpW5JLfHkjeq9sxBjlEvLm2rfS2Qqu9yGUOdGyEPmqLlr2dz6TLsD52YadtYC0N19ip9xHQsSNbQ30E7lOJFh8zDP4Bk9eXpkq48zvhcnotLQPAt+nEzciCnX+/1/IJ07Y1Esi9UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dFWEWNel; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747313240; c=relaxed/simple;
+	bh=gns3qHyFehNLw8d4OgScz4caW7RxNFoQ8sFgnpdZIDI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cUumaLvwO1YCvrdlfhFy/8z4vvEMDKRqaJaP3LksN6K8+rL8xsVwEkHBG4mlyoPV654nwpgqUWROrhJ4/Z1a6U+7e/F3KbbCm8pPySorpdXPa/yNmFJyNUhhf0UHqRwYVCFAbLCGVjBDP6An3MfHj8R+mpkBEe4IkjBm2LV7KUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CrubKjyL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dFWEWNel"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a1f5d2d91eso535523f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 05:47:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747313234; x=1747918034; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=c3h/2xGx5o+cXR4Tj3+quHhSs36iBw7d2tJFhbvplbE=;
-        b=dFWEWNelejdOMA0C/11IMQiIVqfMwzx8ImvnyN186GeNsgIxQ4g5rmdOOS3sNzBn0n
-         aVLG+RY+tlm2fGzbMO6tzuO1P8MA6joNU+F96dT4VLAYQl4ion4qo9qsu7HectR2KU8b
-         JYKzsNrgGI+xDFDVXx6sGOw3Nidm4trBRwtdN5LT2stAuqqsaDW17zxAzyZtxE3rkz1I
-         bmOlk3UoH3eGPYS0kVjqZbU89og1Dlvs3lXvSszHxUApGd+wR91urPdj/3FZphANlo79
-         veCBiK8tCQgic2+7saAX/qh++vlVhV5ICbElbu3iD3GLC5XNDZQddfCoBUSoH1GbHAbM
-         isEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747313234; x=1747918034;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c3h/2xGx5o+cXR4Tj3+quHhSs36iBw7d2tJFhbvplbE=;
-        b=BC/37lWPx+02qWR3yPXVNiOTxYSr47ruzhjmawYKZwc+Lp/cjS5YD+OQY9xcBW+Okj
-         SGc0QTbnoZ0lz52pulgp4dJj4KB0eyCDHeIT3LIHs/8g0Sd6bY2h2atYMrhe5vlb8Hd/
-         Wd2eJ+b/gcmbzIA92p9EFHvdQIubkiQZsW4PyYNDmmWzUXG4s/R+8ndlSF0e585Eps5Y
-         OmJaNFQf8e1CmMp4SXgVxw2noeEWVJDye3sJupv+nj0IPevS7EGHJvPXhjM9Bf+/Ab1I
-         8ut8M/mD6GvAnfIa4Rs/GuZhnRbeDPSqIUosuCMcptUZyr6qCmdUnYIn0t4e4kz6CUyQ
-         IS9A==
-X-Forwarded-Encrypted: i=1; AJvYcCWKqrve3pTq6NdbMSa/OB5OTDqWJTiSY0svFjimWy871IA3Ly2mOgwFXOU9R6isYsI+4yKwnku3d8zT3XA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzifqiroVZZ1L+AGgYQCxqV1r+tiHLddP159fpqAqdC9CFDH3iQ
-	lrFwaxUZtL7fZykz3OxtakHtd1TpW0ucGLizESk1taxcyU9rk5045YWL5V82eJGYr4cDBlxWpDO
-	Ry4Klmg==
-X-Gm-Gg: ASbGnctgexXv+Jkh/eop3KnAHMTaX6/eOsmhBA39NoasIcqyju1HIjmp1d6T+1iOfK/
-	BDrbNrwTc+GSQakxyHcaVfTaBVmHbbhoBgiZFPrvU7xD0aT31KGpzOqfFNofwhhUv2n3xkbqSEq
-	VJUT7VqYukip30PJGpJe4U7YKiw4nWkQk5hd2bXBkAu6WjriPwyTd61V0w4L4fmQKSsGZTGypZT
-	ICt3abdEG0Og2Dh4wXlrZ8ejP4M5m7SRIkjxf0BpaNusW1c22Pht+Gb75r3cJ9upGnv7Rvg+kiz
-	Nn4M22D5XY7HU6EKt/iOB41ociCl70BLDohfNU6exhj75artC6YMSobmaKfX4iBYgCKBOzWUk27
-	aRLE3ggs2hd1L
-X-Google-Smtp-Source: AGHT+IEPJwFSjhLimrJ1U1Wl5OiPN1oaEgyc2W4Wag4f3o9ljBIBLfptIZjZl0NRHAgrEMrevxQNMQ==
-X-Received: by 2002:a05:6000:200d:b0:3a2:45f:7c3 with SMTP id ffacd0b85a97d-3a3499502bamr6070044f8f.57.1747313233806;
-        Thu, 15 May 2025 05:47:13 -0700 (PDT)
-Received: from [10.61.1.70] (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57dde0esm22983992f8f.18.2025.05.15.05.47.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 05:47:13 -0700 (PDT)
-Message-ID: <bd704149-694f-4d89-90d9-a22307488743@linaro.org>
-Date: Thu, 15 May 2025 13:47:12 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CrubKjyL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E574C4CEE7;
+	Thu, 15 May 2025 12:47:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747313240;
+	bh=gns3qHyFehNLw8d4OgScz4caW7RxNFoQ8sFgnpdZIDI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=CrubKjyL0gOO+AZYdBbsxXybrsOaI2be4LQ3fw1FEDimSavGetTGBB8iqft0t8w3b
+	 6i35D+ZVYc2EpG3l2zGYaMuvr21hkCwlScnRWKzvdD2TF2o0WF/Ew/WH9oupXH5s4K
+	 tB2NfAuQcXoAC4AIQHmBI9RS54p1v6O77+4z/xUzT5eG1P3xmR5rOlIaMbSoDvGdsz
+	 yNC/hX/hU0dSl0HgZ4apkixLiGS7FrQMJN7wHv6K4D95LUI57BvMI8UOh6uf0vT75r
+	 Jp5WgXY8wdbIbJNquLE9kkMwBqSofibL0LofoWyVeuI6wAkfgIoHVuOozf57pt5nac
+	 r08ybrgeWqIfQ==
+From: Ingo Molnar <mingo@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-arch@vger.kernel.org,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	linux-parisc@vger.kernel.org
+Subject: [PATCH 13/15] bugs/parisc: Concatenate 'cond_str' with '__FILE__' in __WARN_FLAGS(), to extend WARN_ON/BUG_ON output
+Date: Thu, 15 May 2025 14:46:42 +0200
+Message-ID: <20250515124644.2958810-14-mingo@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250515124644.2958810-1-mingo@kernel.org>
+References: <20250515124644.2958810-1-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] media: venus: fix TOCTOU vulnerability when
- reading packets from shared memory
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Stanimir Varbanov <stanimir.varbanov@linaro.org>,
- Hans Verkuil <hans.verkuil@cisco.com>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, Vedang Nagar <quic_vnagar@quicinc.com>
-References: <20250514-venus-fixes-v3-0-32298566011f@quicinc.com>
- <20250514-venus-fixes-v3-1-32298566011f@quicinc.com>
- <ad92cf06-636a-417a-b03b-0d90c9243446@linaro.org>
- <0c50c24a-35fa-acfb-a807-b4ed5394506b@quicinc.com>
- <b0c48989-4ce7-4338-b4bb-565ea8b6cd82@linaro.org>
- <b663539d-5ad6-399b-1e7b-0b8b9daca10d@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <b663539d-5ad6-399b-1e7b-0b8b9daca10d@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 15/05/2025 13:11, Vikash Garodia wrote:
->> But what if the "malicious" firmware only updated the data in the packet, not
->> the length - or another field we are not checking ?
-> That does not cause any vulnerability. You can check and suggest if you see a
-> vulnerability when the data outside length is an issue w.r.t vulnerability.
+Extend WARN_ON and BUG_ON style output from:
 
-I don't believe you have identified a vulnerability here.
+  WARNING: CPU: 0 PID: 0 at kernel/sched/core.c:8511 sched_init+0x20/0x410
 
-You read a length field, you check that length field against a MAX size.
+to:
 
-Re-reading to see if the firmware wrote new bad data to the transmitted 
-packet in-memory is not a fix before or after the memcpy() because the 
-time you do that re-read is not fixed - locked wrt the freerunning firmware.
+  WARNING: CPU: 0 PID: 0 at [idx < 0 && ptr] kernel/sched/core.c:8511 sched_init+0x20/0x410
 
+Note that the output will be further reorganized later in this series.
+
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Helge Deller <deller@gmx.de>
+Cc: linux-parisc@vger.kernel.org
+Cc: <linux-arch@vger.kernel.org>
 ---
-bod
+ arch/parisc/include/asm/bug.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/parisc/include/asm/bug.h b/arch/parisc/include/asm/bug.h
+index 1a87cf80ec3c..5aa1623e4f2f 100644
+--- a/arch/parisc/include/asm/bug.h
++++ b/arch/parisc/include/asm/bug.h
+@@ -61,7 +61,7 @@
+ 			     "\t.short %1, %2\n"			\
+ 			     "\t.blockz %3-2*4-2*2\n"			\
+ 			     "\t.popsection"				\
+-			     : : "i" (__FILE__), "i" (__LINE__),	\
++			     : : "i" (WARN_CONDITION_STR(cond_str) __FILE__), "i" (__LINE__), \
+ 			     "i" (BUGFLAG_WARNING|(flags)),		\
+ 			     "i" (sizeof(struct bug_entry)) );		\
+ 	} while(0)
+-- 
+2.45.2
+
