@@ -1,176 +1,73 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B729280304;
-	Thu, 15 May 2025 07:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ABF528030E;
+	Thu, 15 May 2025 07:54:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747295632; cv=none; b=K66kjV0KqzmIs3E7FMvcEBh5KjlikxUZnsiInNYkPfVcL4R0vsQmpHSWAnNxCKdTWjx2SrQH+QFAjQGlvJ4Rf8cmYz1k065sTt/fm/OHFUOREntBPMHCNGAZS0TzSUvQS9QVL3W5lHVFEyPgHqav1yF6qdO6FLdE97NjIIjBrDA=
+	t=1747295659; cv=none; b=gT2pZ2erYi38MUY/oX3qlXBQO39ij8Q/oK4snGA86myU1a+AwoyAhLDdRD/D3OK5CNFCBSbvXoLP+X3ywkg0h+6UbrxtEMiOD/3M81HLvPcMiBM5ZxEzKl9eueywT2F+Y+sZ4me5mpfBqByR/h/KygLdHOKZhtlwdM0vKrYbNKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747295632; c=relaxed/simple;
-	bh=wUEqgSTV2QgtgOIjx6bsDxFv4ShMZp2fM80qbS8rSiw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X+phS23JiyXYHmilmlME1YnLVFEcOfSldRI0S5calzzIGbLf8eY1ZJpZ0oHVqbncK5YkXRyBB5aMvFI3RjLjOcd8skm4MrkK2UgAI4tZL6RXVugPO4nRFpeaJzmVuSo5DNB9pMW+sjimAa1cw6D3qHfm/D8v64gR2MXgLoIOzaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ffUnYvzQ; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747295659; c=relaxed/simple;
+	bh=sxdO7aNfLSfO5lmZl2v3RLakD6ynfpy2GeysNMPD2ns=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mQ+mgKGDXxXG5zG869Drwyn9B/L+zOu3KSlOry1+KOTiyu/Cf1oMYvxquzT/4q4Ea/9goLfpNXClqWxBr4xo1KvcoTV/s1bjlX1fBo/12vq56jP/jMlFUGnl2+nLwUBoaknIlb/idzSj9WNFEeK+B0Hcid3i0G2FO0SoR7ov71Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CmEh/BHM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffUnYvzQ"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7423fb98cb1so680306b3a.3;
-        Thu, 15 May 2025 00:53:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747295630; x=1747900430; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=d6+1l6psSc4ieMT2IvTyMfmvtZ8uQROzlTdXH4Fr4sA=;
-        b=ffUnYvzQ7XbzhYHIZhYhgBh6xzgkhlErhKH+0SHUy/cdhk0ggapLBYzO8t7rtiumo2
-         1PMuugL+cvSq1Oc1TVzk7Zy3Lw0UpuTdXe1+2nDd3c0+8Iqe3JB553WV4CUQx7MQpbQN
-         1+tk2zDnzfJGlqOBREoVhUJ7myX21SCYjg2+QVYWSlvXZDruP9NP9Cd1Pya7OtGyqphO
-         ohhqjXPOpMOoUV9sf7TJ5t2HfHsb/w4bf5MDifKEEqEJqrkLBrs3xmdYbI+oCX+CNhZI
-         zvk4uSATdF3kp/U2tbbMH9q/q0ZUh3na47esX00GvJG0+dXMT2FjslDmdQC2BlfcoWfK
-         HhfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747295630; x=1747900430;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=d6+1l6psSc4ieMT2IvTyMfmvtZ8uQROzlTdXH4Fr4sA=;
-        b=g08R7NHOTHobFExgrmznHl00taj/R0IgIMTlgq+RoMZKDlK3WferWyi9b+gZF0EwuL
-         8k3n9rciJmC64KdYogsuyx7I76zS24aLerpgUPlu1SEkFJ3iEixLEKP8uhLXDI7N+Ckd
-         e10mzR6qL/krhUNp3HH8rr8fzVywK+M+LvHRzQbkWOufeC1FwnP1adDoXQEBHpQUFqVK
-         FspemQ2AQOOfMfLz13TgK7i9j7+BJO2lEK3l3r/zKXRHtbVwciMUx3G5cT+Rn+n1FpBa
-         oLA4IlTg+jHU8gaLw2BZOD4QWzGqAFVF71gunC3x4gew0Ze/2UfOzO/tnMHCsrrsnk8w
-         YlVg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1CaZSk25A5mrLeOkEkFF6d4dB9auQp1kz/0TLghtG7JpyJ7iopJSlvWws0Exji3kmkGtj+OTO@vger.kernel.org, AJvYcCXHHWfOPL7Q99SF8naafDRrRNPocsh/5VVrO5xXePYe9z6XqoI8ZgBqYePjw6fx9PPLpqG0OogU5eMBIoY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrVirB+wqsHXMsHdsolt8m0cB5p6WefMA3H6e6i1X5ZwnKGrTH
-	RpDbRMIXzpFP8uDFXp3nYeOsft/FB3uxPvgX2u5JQT+od4H9dghV
-X-Gm-Gg: ASbGncukODwTfmMrlijJK3/lBEUIi/bGXtWR0Yoa1o6z+1ta7DVgM18+ssBNlgo9Z9Q
-	dTdYV/tU2IwRy5RgI/ZnQ849c9h7rCDZJVF3sJxW9HE5NpVk1qq9P0G6e59az2+Vw4CIr8AB84e
-	+VGVQR9Oen5opW4w1KhR15AXDcGAmPtuWEQC83zHoG+zhnJm4P6A7eFdl2BOskQenK05oe9W9ql
-	3INMEB2Cx4hiIbX2l5Nw4LgVWQpJu/DWf4VRal2nPUoXA/IAE35OHdmJ9WhEuiEmounrweCenIM
-	sAncR29jSmtbrOK8/eC7gNBS3JDkfHDpiRAviiL3AN5bRQ50r+cm
-X-Google-Smtp-Source: AGHT+IHKeW/lRf4A736uiyEk8pb1EFNbX4MNRx95s1GbRRKiftyq5dFJydREqeAw1RiiX8blRyYUDg==
-X-Received: by 2002:a05:6a00:2987:b0:736:a8db:93bb with SMTP id d2e1a72fcca58-742892680f5mr7842964b3a.5.1747295630226;
-        Thu, 15 May 2025 00:53:50 -0700 (PDT)
-Received: from mythos-cloud.. ([125.138.201.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74237704dc0sm10666148b3a.7.2025.05.15.00.53.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 00:53:49 -0700 (PDT)
-From: Moon Yeounsu <yyyynoom@gmail.com>
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Moon Yeounsu <yyyynoom@gmail.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v3] net: dlink: add synchronization for stats update
-Date: Thu, 15 May 2025 16:53:31 +0900
-Message-ID: <20250515075333.48290-1-yyyynoom@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CmEh/BHM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 870C6C4CEE9;
+	Thu, 15 May 2025 07:54:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747295658;
+	bh=sxdO7aNfLSfO5lmZl2v3RLakD6ynfpy2GeysNMPD2ns=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CmEh/BHMAicg6wnOnpRVmP+34GYGs6UYV01rIJggKEaIsQ63IWGRh03e6I5MZA+7d
+	 b6Hhcq4t87IyL4vnn1Iunszh98uV+gv7hzPZdO3rJYsYSD0nmhTK+rGh6/BAUewd4a
+	 hPUu6y97GohjyRZKhtXidic04erQglwvHK+yjfgw=
+Date: Thu, 15 May 2025 09:52:29 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Linux-Kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
+	shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	goda <yusuke.goda.sx@renesas.com>,
+	Kurokawa <harunobu.kurokawa.dn@renesas.com>,
+	Kihara <takeshi.kihara.df@renesas.com>,
+	kazuya.mizuguchi.ks@renesas.com, takamitsu.honda.pv@renesas.com
+Subject: Re: Question about UIO vs DT
+Message-ID: <2025051549-flannels-lively-a46d@gregkh>
+References: <87o6vutrbw.wl-kuninori.morimoto.gx@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o6vutrbw.wl-kuninori.morimoto.gx@renesas.com>
 
-This patch synchronizes code that accesses from both user-space
-and IRQ contexts. The `get_stats()` function can be called from both
-context.
+On Thu, May 15, 2025 at 04:45:23AM +0000, Kuninori Morimoto wrote:
+> 
+> Hi Greg / UIO / DT
+> 
+> I would like to ask about UIO vs DT.
+> 
+> If my understanding was correct, current UIO can use 1 IRQ / 1 reg per 1 UIO,
+> but some device needs multi-IRQ/reg. In such case, we need to use
+> multi-UIO. But it is not good much to DT rule. For example in case of
+> the device which needs "2 regs 3 irqs". it will be
+> 
+> (A)	[1 reg, 1 IRQ] UIO
+> (B)	[1 reg, 1 IRQ] UIO
+> (C)	[0 reg, 1 IRQ] UIO
+> 
+> and (C) will be DT error. Is this known issue ? Do we have better solution ?
 
-`dev->stats.tx_errors` and `dev->stats.collisions` are also updated
-in the `tx_errors()` function. Therefore, these fields must also be
-protected by synchronized.
+Yes, write a real driver for the device as obviously it is a complex one
+and UIO shouldn't be used for it :)
 
-There is no code that accessses `dev->stats.tx_errors` between the
-previous and updated lines, so the updating point can be moved.
+What type of device is this that requires this type of hardware control
+and why do you feel that UIO is the proper solution?
 
-Signed-off-by: Moon Yeounsu <yyyynoom@gmail.com>
----
-Changelog:
-v1: https://lore.kernel.org/netdev/20250421191645.43526-2-yyyynoom@gmail.com/
-v2: https://lore.kernel.org/netdev/20250425231352.102535-2-yyyynoom@gmail.com/
-- fix incorrect method of updating `dev->stats.tx_errors` and
-  `dev->stats.collisions`
-v3:
-- fix incorrect locking method
----
- drivers/net/ethernet/dlink/dl2k.c | 14 +++++++++++++-
- drivers/net/ethernet/dlink/dl2k.h |  2 ++
- 2 files changed, 15 insertions(+), 1 deletion(-)
+thanks,
 
-diff --git a/drivers/net/ethernet/dlink/dl2k.c b/drivers/net/ethernet/dlink/dl2k.c
-index 232e839a9d07..038a0400c1f9 100644
---- a/drivers/net/ethernet/dlink/dl2k.c
-+++ b/drivers/net/ethernet/dlink/dl2k.c
-@@ -146,6 +146,8 @@ rio_probe1 (struct pci_dev *pdev, const struct pci_device_id *ent)
- 	np->ioaddr = ioaddr;
- 	np->chip_id = chip_idx;
- 	np->pdev = pdev;
-+
-+	spin_lock_init(&np->stats_lock);
- 	spin_lock_init (&np->tx_lock);
- 	spin_lock_init (&np->rx_lock);
- 
-@@ -865,7 +867,6 @@ tx_error (struct net_device *dev, int tx_status)
- 	frame_id = (tx_status & 0xffff0000);
- 	printk (KERN_ERR "%s: Transmit error, TxStatus %4.4x, FrameId %d.\n",
- 		dev->name, tx_status, frame_id);
--	dev->stats.tx_errors++;
- 	/* Ttransmit Underrun */
- 	if (tx_status & 0x10) {
- 		dev->stats.tx_fifo_errors++;
-@@ -902,9 +903,15 @@ tx_error (struct net_device *dev, int tx_status)
- 		rio_set_led_mode(dev);
- 		/* Let TxStartThresh stay default value */
- 	}
-+
-+	spin_lock(&np->stats_lock);
- 	/* Maximum Collisions */
- 	if (tx_status & 0x08)
- 		dev->stats.collisions++;
-+
-+	dev->stats.tx_errors++;
-+	spin_unlock(&np->stats_lock);
-+
- 	/* Restart the Tx */
- 	dw32(MACCtrl, dr16(MACCtrl) | TxEnable);
- }
-@@ -1073,7 +1080,9 @@ get_stats (struct net_device *dev)
- 	int i;
- #endif
- 	unsigned int stat_reg;
-+	unsigned long flags;
- 
-+	spin_lock_irqsave(&np->stats_lock, flags);
- 	/* All statistics registers need to be acknowledged,
- 	   else statistic overflow could cause problems */
- 
-@@ -1123,6 +1132,9 @@ get_stats (struct net_device *dev)
- 	dr16(TCPCheckSumErrors);
- 	dr16(UDPCheckSumErrors);
- 	dr16(IPCheckSumErrors);
-+
-+	spin_unlock_irqrestore(&np->stats_lock, flags);
-+
- 	return &dev->stats;
- }
- 
-diff --git a/drivers/net/ethernet/dlink/dl2k.h b/drivers/net/ethernet/dlink/dl2k.h
-index 0e33e2eaae96..56aff2f0bdbf 100644
---- a/drivers/net/ethernet/dlink/dl2k.h
-+++ b/drivers/net/ethernet/dlink/dl2k.h
-@@ -372,6 +372,8 @@ struct netdev_private {
- 	struct pci_dev *pdev;
- 	void __iomem *ioaddr;
- 	void __iomem *eeprom_addr;
-+	// To ensure synchronization when stats are updated.
-+	spinlock_t stats_lock;
- 	spinlock_t tx_lock;
- 	spinlock_t rx_lock;
- 	unsigned int rx_buf_sz;		/* Based on MTU+slack. */
--- 
-2.49.0
-
+greg k-h
