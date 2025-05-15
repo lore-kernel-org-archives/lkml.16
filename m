@@ -1,248 +1,223 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2088.outbound.protection.outlook.com [40.107.243.88])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963041C4A20;
-	Thu, 15 May 2025 09:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747300190; cv=fail; b=NN8Z/wrvrqQd+YiZXRIUmkSKChjTbAViqaPIjx2s/xALO8UZMhnvQ7/Vkak7NVPyMCxGmTtPJj/Apk2iKv1kiI6ZXc5iKtwm2Yl3LkOMXZ8TgMgQVKa9JMaMdwWz5zxTsVEeApHu3qAWN/CLJ2EFKB6KScvsp1p6dI8HCJxGGoU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747300190; c=relaxed/simple;
-	bh=uI8GU1k7OBha+19D1zSaDQzs94V01DrKG3QwAyG3lXQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=cc389NrOiiUUmIBSLUzJpJWFj1cxfEyvSUEYKvqgpEhIAE9Q+smvgGOmTlg7cCM2dPqnYwTyV4wddI9AV/NeMUMEfsms8SErWPHaqH1oOkbsE6rAkRoqFt0OkrDubaIzQgoe9Fh3Z9EfUJJDPzxC9A54Q1QiVB0QQfMVsrylfWs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gsHK2zjJ; arc=fail smtp.client-ip=40.107.243.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2315F1FAA;
+	Thu, 15 May 2025 09:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747300251; cv=none; b=cCtkZajdEsBXtl/sWJnwmPihnPoeliPM8xjtJa8tjOZ2atmsK/vIQA6q+1wUN1P6NTpPvFaNJq5sW8/+6P2S1jy47E8sYKPagemVhKcgIuF0a8ufo5LdkBauoV20USh5mvf8rryfHrmnMfQCngHFmMINYgzOgoa9CYUgAdISS00=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747300251; c=relaxed/simple;
+	bh=JfQ7DY+3VoCkdZhZVxclfjCRSyYZYSyFpAb6mQ79suA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=RCHzgwKNXsGp/DiOMdItUxup5l7GMT0v8vvrPyazuilIS1yK5hoXzOMIHwOpU7nVHlnPLSn0qXh6JdCGuULiL4bt3ushYkXewTWLonmvFaMvgk6mqxfP9UDApvWgMpA6IKw0lCVRvGN3whk1gVt5ZjjGsvePIJyKPR82kwsVA9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=mJukR+qH; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gsHK2zjJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oeZIiXHK6YnzFJa3Lqeftdvo0kLv0EHelBqWlYifj/kTI5DH5ahQ+QiodaNedeIPRNu+uekOBVbD1ERZt/1BeyUliFmsOydwz1Bh4wlubsQDWDlcbzkwRpHETYpKsiuT/igezbnpmqJA/e0EMqgx5MkbcuQbu0mcfvZs+JU0u2tj5y4k68iZdV/TB/7QgRj00RZFeHsjhrr6AxnwboKLMjXi2EyT0GEpnLZijhwZ49IPgbcCNZqKhBT5uiw1iwGbIF/XwpPZzbVMTvXwmNGLDd4UkN55yrg7+pbcnAjZr18d+Q5ew5rCI0LufNE5DOQauZ1pghFP2BgkrAVCjFn0nA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RDkwx0kYIMNkSBORkwCuF5mXK+BYhqBBz1YId60Q2pA=;
- b=nc2LFZOtrMv/sYlA4eRY2g6OM6JRavz5FSp5I3owvAoO3M29seGaxyswmWipTxfHiWCcQWnoXsQTdwrT8kbsUBZ0LzENhbmglGGWUjDaT+6iahe+R6oBeKjGGNljDSpwzVCu7X0/erPN2M6PHGaXZX6dCRrHOntTpzx76gpV20zyj17sSr/O+0ZVfgv63MpRVfnIbRR/TyKA3ApPsye8CATEJg5QOQVgzaxZcAeGh+ITwVWK25D4Dct3S+Kj04VrOrsHvVFaPgm1ZfBjkbvNFVc79oN+7Z4AZ9wmeOeKnusWRC9JhdnaKXxnNwH/VleHPrSJRx1kBPylvD34sB1iGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RDkwx0kYIMNkSBORkwCuF5mXK+BYhqBBz1YId60Q2pA=;
- b=gsHK2zjJ53MFOdCzjkuQL21yuPeR83r2UFumJaPSvqzTCvDXnaIO7Ue/iOdE9TYbkswyv1eqsEvsduO1EJ+0HRTZxDgOSC+MnUHPZ016sITqvJzuhvZvj0PvJ9alPKdiG5cAeXKhGEQPEL5CPyXj2Kh8jDAvbjKAZsEVQW3vre4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6395.namprd12.prod.outlook.com (2603:10b6:510:1fd::14)
- by CY8PR12MB7244.namprd12.prod.outlook.com (2603:10b6:930:57::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Thu, 15 May
- 2025 09:09:45 +0000
-Received: from PH7PR12MB6395.namprd12.prod.outlook.com
- ([fe80::5a9e:cee7:496:6421]) by PH7PR12MB6395.namprd12.prod.outlook.com
- ([fe80::5a9e:cee7:496:6421%4]) with mapi id 15.20.8722.024; Thu, 15 May 2025
- 09:09:45 +0000
-Message-ID: <df28aa12-176c-4761-a901-a2dd63a61b71@amd.com>
-Date: Thu, 15 May 2025 14:39:38 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] spi: spi_amd: Add HIDDMA basic write support
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: kernel test robot <lkp@intel.com>, broonie@kernel.org,
- oe-kbuild-all@lists.linux.dev, linux-spi@vger.kernel.org,
- linux-kernel@vger.kernel.org, Krishnamoorthi M <krishnamoorthi.m@amd.com>,
- Akshata MukundShetty <akshata.mukundshetty@amd.com>
-References: <20250509181737.997167-1-Raju.Rangoju@amd.com>
- <202505110641.zLT16Dv7-lkp@intel.com>
- <e84f5483-a203-4095-82cd-23fa94c87700@amd.com>
- <CAMuHMdUAE2umYggDdBjYZJY2-mYwim=P_=4Q00k9b8gB1tNY+Q@mail.gmail.com>
- <8c89410b-80f2-47ad-97fd-6ac10752c040@amd.com>
- <CAMuHMdX_ugjS475udqa1oOOfbOJ+0s_JAKcCyCcdQfPhhaWOTQ@mail.gmail.com>
-Content-Language: en-US
-From: "Rangoju, Raju" <raju.rangoju@amd.com>
-In-Reply-To: <CAMuHMdX_ugjS475udqa1oOOfbOJ+0s_JAKcCyCcdQfPhhaWOTQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0181.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:e8::7) To PH7PR12MB6395.namprd12.prod.outlook.com
- (2603:10b6:510:1fd::14)
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="mJukR+qH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1747300232; x=1747905032; i=spasswolf@web.de;
+	bh=FA8nwZLd6fsDB/lVfJxo9+FEU+s6+zXEeLeiqLWa8YQ=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=mJukR+qH8y10DckWt++QstOWuS2ejsZmdMSBH1s9j7hRCmMrkLknYyyryIaWu0pI
+	 Tu6qkM+60NltTl5P4tA31pIW0Bs+RVsItTbU6XlLkNw/LupoZBoloqiu0tto2ZKCy
+	 FkxUVAUXSjGGkczTuzkKixsBP8U/26qj1Zdtc4GEiRO9ZFloNWaxwGLejE3AxEVmj
+	 RJ4cMO1GYsVvh1xXuND9phpIp+BL+R/7IqiFbSX8TyaBRe+1TfzpQJ1fVN0QXrPfP
+	 kx0XW7CMolphgwbZNCMLKIK7n6G5XEzfQK648oV90W11s3Q6wmCEtLArarzxE4vIV
+	 7/dMKJLVHn+cEfxPwQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1M8TBM-1uJuSe0q9I-00FME9; Thu, 15
+ May 2025 11:10:32 +0200
+Message-ID: <ba97a2559cda1b14e0c9754523ff1152bdad90ef.camel@web.de>
+Subject: Re: lockup and kernel panic in linux-next-202505{09,12} when
+ compiled with clang
+From: Bert Karwatzki <spasswolf@web.de>
+To: Johannes Berg <johannes@sipsolutions.net>,
+ "linux-kernel@vger.kernel.org"	 <linux-kernel@vger.kernel.org>
+Cc: "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, 
+ "llvm@lists.linux.dev"
+	 <llvm@lists.linux.dev>, Thomas Gleixner <tglx@linutronix.de>, 
+	linux-wireless@vger.kernel.org, spasswolf@web.de
+Date: Thu, 15 May 2025 11:10:31 +0200
+In-Reply-To: <8684a2b4bf367e2e2a97e2b52356ffe5436a8270.camel@sipsolutions.net>
+References: <20250513164807.51780-1-spasswolf@web.de> <87h61ojg3g.ffs@tglx>
+									 <7471a185adcc34a79c2ab8ce1e87ab922ae2232b.camel@web.de>
+								 <b644ff1714731cfb652d809d4864f0d178b24a97.camel@web.de>
+							 <2d8c1929bf5ab5260dacf9aa390456b3b49ce465.camel@sipsolutions.net>
+						 <2cad838b39f00d93319509d2a6a77a4c42c7fa92.camel@web.de>
+					 <a12c82c394e9676e32ede6b8312f821a16fef94b.camel@sipsolutions.net>
+		 <f8552d41fb7eae286803b78302390614179b33b0.camel@web.de>
+	 <8684a2b4bf367e2e2a97e2b52356ffe5436a8270.camel@sipsolutions.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6395:EE_|CY8PR12MB7244:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6f1d3a92-05a6-47e1-a50b-08dd93903c50
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?L1N3UFQzQi9idlN6cHZSL3VaNUVabVd1REFwWjJVVUdWU3FFVjRQRm9aK1dT?=
- =?utf-8?B?aGZQSDRaRUtRdjJQam8vaHRtcFRaY1UxZHZnUXNSbDJEWDByNHlJWjBEbUNq?=
- =?utf-8?B?eTRMaWs5dktmRnNzbXJERkV6T0tubXBGOFdZdnFwRmhOZDJ0bkNuTUwzTTZZ?=
- =?utf-8?B?N2Z6NXBXZHQyTEdFY2lKZG9GUFFLMy9JYlk1MW9ldWVaUUQwOS9qbzJ4MzZk?=
- =?utf-8?B?c1pqdG9NNGU3c2wyMUtzKytrc1dpMXNxSkhPVjRIbjgzZnNXYlo3YjZaaElC?=
- =?utf-8?B?TmJTeUFCS2k4ZXk3UmNaNlNxVmZVeE9LNHNtTnZmR1hXeThWQ0lMT3dGcG5p?=
- =?utf-8?B?MmtpTHBtdGlSTDVGNEk0ZVU3N3l1bWg3eGVYSHFUNWNmSlpjamQvQ0ZPVTJr?=
- =?utf-8?B?T05xMURBbVhBd2MrbzdwbG9sajE2OTROZHhCb01DM29ISlBNdzZCWTUrTkVz?=
- =?utf-8?B?RDNYWmo2OENuMW5iOUpVbUw1dThFc2RsYkVyazNhUW05OEg2WW91ZXhqcmlG?=
- =?utf-8?B?dmthWXJuR09VTjN2c1ZISzhVc29QL0JrSmdrQnQxZmVaNXo5NzR3VVRVTzRh?=
- =?utf-8?B?WWM0K2huRDlHUlRGNVEzanJGN00vdTlNL0dKWUxPNlhGSFg1K2lHOVk0M1Qw?=
- =?utf-8?B?S1ZTR2h0Z1UvNmhmYzN1Snd4akhYV0VpRmRtQXZ2UW1USjhkQVFUM1lFV00r?=
- =?utf-8?B?TFhHK203QVRMMExMaVJqb24ybWpOV3Jtbitacm5za3BheFhBSkc5T21jdVE5?=
- =?utf-8?B?MEtNZE5jRjVlcVE0Z08rb2xvWHJRdEFZQ2NXbFR5a1g3ZUExdjlseFlaNmZp?=
- =?utf-8?B?anc5U1NONldva1huMGpya1B1VlpOZWxCYkk5OFVlUGhmQmJFQnZIREd6MHBP?=
- =?utf-8?B?Y0tybURscTFFa2R4QmxUYWNsQzAzMGJVaEFSRHhaZmJJa2lITFV4LzBhYzlp?=
- =?utf-8?B?WHNrSUFXc0YyNmxjUVVUam5pTEo4UWdkOVNhbDBUZ00wRk1pYzhzQ3FqOTkr?=
- =?utf-8?B?QVhGczczb25rcHo1TmtxNEVmRkExZ1dSa3RSOVE4OTdaa2pxYk1CQzJtNGJ0?=
- =?utf-8?B?Z0xWQ1R3c2JhRXJlZlArV3FVRjZ0ekNURlNBMzh5ak9Pb0xtMXFUakh1eWtT?=
- =?utf-8?B?cFBTdmhRREM2SGRvNkRjMHl0SHBRakRrblZjRk1OV3Z3a1ZxMjM2ZXcreHhz?=
- =?utf-8?B?WHMwV0E5STFWT1hoNHVLWEgyMkk1cUpJeTdWOWp1S3YvQmgyTUh3UjZLRHRX?=
- =?utf-8?B?YnkxOVREdSsyZ2lIQzN6UmxLSlFJeHQ0MFNJZzNSa2M3bC9TQlhhSlJJaThz?=
- =?utf-8?B?aE1wNldZK2hTS2FOdWk0aU1yRVpmczBHSnpFSjNUNWh1ejFreFVXY3cvWHNJ?=
- =?utf-8?B?RWhOMnFpSUpnelZVcGV2RTNyVXFmYUR0bWFzMWtvaDZzdmJmUGlNdW14MkxZ?=
- =?utf-8?B?QUl5blQwZFRCMVRPMWhvajJDK0NEWUtQUTZ1M0pWLzVvMFozbGtRSkVVWWFR?=
- =?utf-8?B?aDJnZFNvdm1Ga29ndXg2VzNCU2owbkIwZjlYOEpYRE1JMTNlZ1EvWjZZQm5P?=
- =?utf-8?B?dXh5TUN5U2t4TlVSTXRKbXZPTFNTUmNzL3J1OTQxZVZPaVdxRHRIRVhSeDVP?=
- =?utf-8?B?YmREaWhrcjBDSTVubVRhSmF6eE5OT2NmZHo4M1hmSE40dWUrK2Q2K1pLNzR1?=
- =?utf-8?B?YVBRcGhzVTdhVm1GUU8zQ1dhOWNOVVBBcGV1ekRhVXV3WThNOVk2bDBCb0pP?=
- =?utf-8?B?emc1aldRS0RjMDJ5ZVV2bnpnOW96YVJSZXVWcFFBcU94eXVIZkRqQTNxL1gx?=
- =?utf-8?B?ZUM0T2xwYXYzS1RVZzIrRFdXMER2cnM5V0Q0OFJBdmUwVVFUaTlJY0ltekx1?=
- =?utf-8?Q?lYDT3gW1SPHMN?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6395.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?V0Q2VlA2UnJjQjRYQlBCZGV2SEZvRENVSHpJNHlNU25ZcUllbC9WQTN0YUlu?=
- =?utf-8?B?MTBIQXJlTlI2SS9FaTNWcnRaR1FvZVkwTTlVT0NEbWcyMk1lR0pmV2xraTh4?=
- =?utf-8?B?Q2xQVUx0K28rOVgvL01oWHNmNlZEMEMvemhjRzFrSjNWZXVkakxDS2xBRk54?=
- =?utf-8?B?MFNLOGlBWjQzc0NPOGI4STNOZk8vcVNRRVFnMEd6NWlBOS9Qa2pqekRITmdj?=
- =?utf-8?B?ZWxnVlZEaGE1RzllZDFxSGE0aC9mOW9JdnIvekE5QkZRUmpiRHcvOGxJbDF2?=
- =?utf-8?B?RTVhYXRTT25TKzVHMk1Zdi9jQU4yb3ZPWVJseWdSZnZYbDZDUEdWUG5WWVBJ?=
- =?utf-8?B?aFJ3bkw2emNrK2EyZWEzOHJKQjJvRGZTOFpZMXdRanZKd21ERlhId0VGMkxO?=
- =?utf-8?B?WnlGdVdPaXRYVDhSdmFQaTZqZysrSmVuTE4rRzNTcitSdEtFVm1EazBLYnJh?=
- =?utf-8?B?NEN1Qmd1ejFEV0dVTG1XRzVmZkhUMDZOZysxVGhnSDBqTzg3Z2dnWFBxZzF2?=
- =?utf-8?B?WjhWWHBuQ2p3RjVDYU5KMzVMait3SjY3ZFFBTC8yZFM1WmIwRVhydlZ5VUtU?=
- =?utf-8?B?OERNb2E2NjE2TTR0UjdweVVuVXdZRzVubkZ3ei9qYWpTY3NYai9UdloyOGI4?=
- =?utf-8?B?S2dRSlhrbGtIMkdmWmgzYWZSRnNoYTlpSDFKeGFVRVdncTR1bjZFTWx1U2tm?=
- =?utf-8?B?cDczM3E2OE5xL3Uwa2ppNmxSMEZNVWtpU01lcHdUeDR4YmV0MDI4ckd6U3VI?=
- =?utf-8?B?NU9MNmIwWjlqQlVuQmU2VDQ3MVhnb2pIMWdwSTFnMmdoUVJ3VE9DRnJZQy85?=
- =?utf-8?B?TkVSZ3ptbXIrYmJPSVRKSUtVaXFWdEltZ1QyVy9aTWcwTXBaazcwa3dDNXNM?=
- =?utf-8?B?cmMrMnQrUGZRakpra1BnSkczY1YzTm5SS1QyUEw3VkhOKy9nWXFmK1g3QmU4?=
- =?utf-8?B?M2N0VnhEU3Z0SHI1MXFEa0ZSdlNiVytTdU9TTS9xUWFUT3JRZmtocklOVnF5?=
- =?utf-8?B?a3FsWEMySDB6Tmd5UENRdWtpUmY0ZE9mU2I0d2MrQXdYU2dyZ0NkTlY1Uk1Q?=
- =?utf-8?B?WGZocEYwZGUxUXlOdUtiWGpoaUQrc1Iwa3hpYmdnVkFnL2dqTHM5YVZmVVVs?=
- =?utf-8?B?dFZiZUVQZVBKN0Iwck0wL0VMb0NpNExqNlVTOG1UU1h1TDlqS2N2V08zMWRp?=
- =?utf-8?B?UStGRkYwSHFrcUpoU1JpUlZPWGxQRFA4RXNlSDhNN3c0cnk4b1ZLcTZrK0p2?=
- =?utf-8?B?VVN4UWV1UHFqa1FNQ0ordEYzaHFDZlJtbk1jMWlVbm5EUjZRNzY0c0ZlTHBL?=
- =?utf-8?B?UTFvYjNZbkRWOUZEOHdBVGkxd0s5ZDhXUTFPQlIxUmdvMW1YanBFU3ZqS3BY?=
- =?utf-8?B?djNONjhCcEEveU9IKzJnQnBlVUQyV2cwdlQyWXNVQUFRQmpTQXI5bVVqMzEx?=
- =?utf-8?B?Mi81TS8xYURTa2pXTzlwNHFqMng4NVZEbWRvdWsxeHhDU1VtLzBzMDlIRGdz?=
- =?utf-8?B?ZXBXdG9qbVZRajVkU1lNVmhyTWhGQTQzUzk1K1haa3Q1NzIwOWw2YVRaUVVE?=
- =?utf-8?B?YUFaWHVpTFJPTkxxMW1uTmhxNUwrMm5jZU91SDIzQ1l3MWRyNFROUXFtT1Y5?=
- =?utf-8?B?eTgrT3VmZU1hU0dYT0tzTnVCN050M0ZPSlRtdHp0WVM2QWhVTGkvTVR5eGEr?=
- =?utf-8?B?dytvclg4c0FuZzdIakJvcnh6RFhGVUpFd0xEbFVZQlIrdzRybzMvVnZXaGxx?=
- =?utf-8?B?VXhacFJrR1hyL092NFVrWjNJdSs3cUltckJhMC9lVWhGREVJR1o5MXVabDBy?=
- =?utf-8?B?S3BBNVBJN2dNWUZjWFNpcjVpQTRrbmlSNTRzaHpzaUtFL1hFVEZqdm5SSjhq?=
- =?utf-8?B?ZHY4RGI0UlZhYlY3YUI4bk1UZU5UMjRhQ1hNL3lHNE1CNkh6OEkxem1HKzJZ?=
- =?utf-8?B?RXRONXZwNmpRR3B4cVkycXJVQ1lBem4yWU5uck5UTkNGS0JKTXJrTVc4bk5U?=
- =?utf-8?B?dmdNOW1PSVdtd3daUW9kVTZZcFZZQzB4d2QySE1ITFp4MWsyemVFd0pFRmJZ?=
- =?utf-8?B?RjlXeUI2aGFMclRQZFhnOFZFS3NkTE50R0xmUTlVSlROY1BrZjVJUEJ3M2ph?=
- =?utf-8?Q?eTPnIPLnOZu1ZGPKm3bQiKuA7?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f1d3a92-05a6-47e1-a50b-08dd93903c50
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6395.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2025 09:09:45.6896
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: f9QGb1QQQodAH7pQOAF/SyA/AKlKE3EKzi00Pa+FSA5YRh2blfGetH7RA8lGOeD8hoR4HFvh3BuOqfJ+RhMxbA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7244
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:AgZlPCa34X3pe/n06Id/9sUdWs6gUEY/yQGj6urQnK51V1IM2Nk
+ 6s+15Bkil6i161Poh0dBFPEgae44dyD7Bqb/rQh+zGKIRPj/8GDd0IfvvRQmmcjvA/icpxQ
+ bW0qmmJqBqJgppYibxSlrijTkilLDysTj2yeC1Nl5spXgwFm8JdXqnCbFNCszrQE5x6r9I2
+ CItDDtBz6Q51r92Or63ow==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:m8D0S43rqss=;yAf6bsg7DVHMDDJzmC8a+Rq5aDw
+ 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
+ 23eKQTEPKQstY=
 
+Am Donnerstag, dem 15.05.2025 um 08:30 +0200 schrieb Johannes Berg:
+> On Thu, 2025-05-15 at 00:27 +0200, Bert Karwatzki wrote:
+> > Am Mittwoch, dem 14.05.2025 um 20:56 +0200 schrieb Johannes Berg:
+> > > >=20
+> > > > I've split off the problematic piece of code into an noinline func=
+tion to simplify the disassembly:
+> > > >=20
+> > >=20
+> > > Oh and also, does it even still crash with that? :)
+> >=20
+> > Yes, it still crashes when compiled with clang.
+>=20
+> OK, just checking. :)
 
+To be more precise I need clang AND PREEMPT_RT=3Dy to get a crash.
 
-On 5/13/2025 12:04 AM, Geert Uytterhoeven wrote:
-> Hi Raju,
-> 
-> On Mon, 12 May 2025 at 19:55, Rangoju, Raju <raju.rangoju@amd.com> wrote:
->> On 5/12/2025 7:47 PM, Geert Uytterhoeven wrote:
->>> On Mon, 12 May 2025 at 09:29, Rangoju, Raju <raju.rangoju@amd.com> wrote:
->>>> On 5/11/2025 3:51 AM, kernel test robot wrote:
->>>>> kernel test robot noticed the following build warnings:
->>>>>
->>>>> [auto build test WARNING on v6.15-rc5]
->>>>> [also build test WARNING on linus/master]
->>>>> [cannot apply to broonie-spi/for-next next-20250509]
->>>>> [If your patch is applied to the wrong git tree, kindly drop us a note.
->>>>> And when submitting patch, we suggest to use '--base' as documented in
->>>>> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->>>>>
->>>>> url:    https://github.com/intel-lab-lkp/linux/commits/Raju-Rangoju/spi-spi_amd-Add-HIDDMA-basic-write-support/20250510-021954
->>>>> base:   v6.15-rc5
->>>>> patch link:    https://lore.kernel.org/r/20250509181737.997167-1-Raju.Rangoju%40amd.com
->>>>> patch subject: [PATCH] spi: spi_amd: Add HIDDMA basic write support
->>>>> config: m68k-randconfig-r111-20250511 (https://download.01.org/0day-ci/archive/20250511/202505110641.zLT16Dv7-lkp@intel.com/config)
->>>>> compiler: m68k-linux-gcc (GCC) 14.2.0
->>>>
->>>> Thanks for reporting this. We do not support m68k.
->>>
->>> All write[bwlq]() functions take a volatile void __iomem pointer
->>> (https://elixir.bootlin.com/linux/v6.14.6/source/include/asm-generic/io.h#L174)
->>> while you are passing a void *, so sparse should complain about this
->>> on all architectures.
->>
->> My bad, with the following flags included, sparse now complains this on
->> all architectures.
->>
->> -fmax-errors=unlimited -fmax-warnings=unlimited
->>
->> And sparse is right, this driver is using MMIO
->>> accessors on allocated DMA memory, which is just plain wrong:
->>>
->>>       amd_spi->dma_virt_addr = dma_alloc_coherent(dev, AMD_SPI_HID2_DMA_SIZE,
->>>               &amd_spi->phy_dma_buf, GFP_KERNEL);
->>>
->>>        for (i = 0; left_data >= 8; i++, left_data -= 8)
->>>               *buf_64++ = readq((u8 __iomem *)amd_spi->dma_virt_addr + (i * 8));
->>>
->>>> Will re-spin v2 with necessary changes in Kconfig.
->>>
->>> Please fix the real issue instead ;-)
->>
->> We are using read*/write* calls instead of memcpy to copy data to/from
->> DMA memory due to performance concerns, as we observed better throughput
->> during continuous read/write compared to the memcpy functions.
+>=20
+> FWIW, I'm not convinced at all that the code you were looking at is
+> really the problem. The crash (see below) is happening on the status
+> side. Of course it cannot crash on the status side if on the TX side we
+> never enter anything into the IDR data structure, and never tag the SKB
+> to look up in the IDR and therefore never try to create the status
+> report on the status side.
+
+After looking at the backtrace I'm also no longer conviced that piece of c=
+ode is
+the problem.
+
+>=20
+> Basically what happens is this:
+>=20
+> - on TX, if we have a socket requesting status, create a copy of the
+>   SKB, put it into the IDR, and put the IDR index into the original
+>   skb->cb
+> - then transmit the original skb, of course
+> - on TX status report from the driver, see if the skb->cb is tagged with
+>   the IDR value, if so, report the copy of the SKB back to the socket
+>   with the status information
+>=20
+> (The reason we need to make a copy is that the SKB could be encrypted or
+> otherwise modified in flight, and we don't want to undo that, rather
+> keeping a copy for the report.)
+>=20
+> >  [  267.339591][  T575] BUG: unable to handle page fault for address: =
+ffffffff51e080b0
+> >  [  267.339598][  T575] #PF: supervisor write access in kernel mode
+> >  [  267.339602][  T575] #PF: error_code(0x0002) - not-present page
+> >  [  267.339606][  T575] PGD f1cc3c067 P4D f1cc3c067 PUD 0=20
+> >  [  267.339613][  T575] Oops: Oops: 0002 [#1] SMP NOPTI
+> >  [  267.339622][  T575] CPU: 0 UID: 0 PID: 575 Comm: napi/phy0-0 Not t=
+ainted
+> > 6.15.0-rc6-next-20250513-llvm-00009-gec34cd07a425 #968 PREEMPT_{RT,(fu=
+ll)}=20
+> >  [  267.339629][  T575] Hardware name: Micro-Star International Co., L=
+td. Alpha
+> > 15 B5EEK/MS-158L, BIOS E158LAMS.10F 11/11/2024
+> >  [  267.339632][  T575] RIP: 0010:queued_spin_lock_slowpath+0x120/0x1c=
+0
+> ...
+> > [  267.339692][  T575] Call Trace:
+> >  [  267.339701][  T575]  <TASK>
+> >  [  267.339705][  T575]  _raw_spin_lock_irqsave+0x57/0x60
+> >  [  267.339714][  T575]  rt_spin_lock+0x73/0xa0
+> >  [  267.339720][  T575]  sock_queue_err_skb+0xdc/0x140
+> >  [  267.339727][  T575]  skb_complete_wifi_ack+0xa9/0x120
+> >  [  267.339737][  T575]  ieee80211_report_used_skb+0x541/0x6e0 [mac802=
+11]
+> >  [  267.339799][  T575]  ? srso_alias_return_thunk+0x5/0xfbef5
+> >  [  267.339804][  T575]  ? start_dl_timer+0xcf/0x110
+> >  [  267.339814][  T575]  ieee80211_tx_status_ext+0x3b3/0x870 [mac80211=
+]
+> >  [  267.339851][  T575]  ? raw_spin_rq_lock_nested+0x15/0x80
+> >  [  267.339862][  T575]  ? srso_alias_return_thunk+0x5/0xfbef5
+> >  [  267.339866][  T575]  ? rt_spin_lock+0x3d/0xa0
+> >  [  267.339873][  T575]  ? mt76_tx_status_unlock+0x38/0x230 [mt76]
+> >  [  267.339886][  T575]  mt76_tx_status_unlock+0x1e0/0x230 [mt76]
+>=20
+> Yeah so that's the crash on the status report as explained above, it
+> kind of looks almost like the skb->sk was freed and somehow invalid now?
+> But I don't see a general issue here (will keep digging), and how come
+> it only shows up with clang?
+>=20
+> Since it reproduces pretty reliably, maybe you could do with KASAN?
+>=20
+
+I'm currently doing a testrun with KASAN enabled, test is running ~1h so f=
+ar
+(without KASAN the max time to a crash was about 10min), so KASAN is proba=
+bly
+killing the bug (there are no messages from KASAN in dmesg).
+
+> Also could be interesting - what userspace are you running with wifi?
+> What tool is even setting up the wifi status? If you don't really know
+> maybe just put WARN_ON(1) into net/core/sock.s where SO_WIFI_STATUS is
+> written (sk_setsockopt).
 >
-Hi Geert,
+> johannes
 
-> Perhaps your memcpy() copies backwards?
+For the recording these backtraces I disabled wifi just after booting (it
+usually takes ~5s to connect here) with network manager (nmcli)(from debia=
+n sid
+(last updated on 20250511, before I encountered this bug))
+$ nmcli radio wifi off
+then I set up the netconsole and reenabled wifi and waited for the crash
+$ nmcli radio wifi on
 
-Nope. The Source and destinations are in different address range, so we 
-do not do backward copying.
-
-> https://lwn.net/Articles/1016300/
-> 
-> There is no guarantee that read*/write* calls work on normal RAM on
-> all architectures. It may just crash, as some architectures return
-> cookies instead of real pointers when mapping MMIO.
-
-Okay. We will copy the data to/from the DMA buffer by iterating 
-(ensuring that memory access is safe) by avoiding MMIO accessor usage 
-(`read*`/`write*`).
-
-For example:
-
-u64 *dma_buff = (u64 *)amd_spi->dma_virt_addr;
-...
-for (i = 0; i < nbytes / 8; i++)
-     *dma_buff++ = *buf_64++;
-
-We will re-spin V2 with these changes.
-
-> Gr{oetje,eeting}s,
-> 
->                          Geert
-> 
+Bert Karwatzki
 
