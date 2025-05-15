@@ -1,148 +1,324 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143AC223DE2
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67141DE4EC;
+	Thu, 15 May 2025 11:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747307374; cv=none; b=BfOXcvDitfY0RSF3LLLPTwM6OxtA//QM1hnoJKM8wuKkNAkAAQUSYiXlfGoabtDldPQn/+SYNfwnDvIgqjOLYsVnDRbgmiEWTuQ2z+jmhuzyzGdZhQQamK0Bzq6XuFd/7TqDaeT3AOhaUsFJ66+SxAbkM4yZ3OYjWTKWHAT4nwQ=
+	t=1747307424; cv=none; b=k+ZzFGNPiTZr1pHWpTskY9DalvhoLT10L9nYl+JELKQJLQIezpanxo54HqiTeuwoEcu+hfIfgM3AVYzNjMg4Zr71Zw0/yXX3mBEPThglUNvVbTJg/jUD6c+dG6edhh7N1UddWDrpE1Fy81pXoyncptwyHG9V9m1p8wvZk5KmxfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747307374; c=relaxed/simple;
-	bh=2j84STCDm0vREYtgZ6xSL2ryhUkBXmMAz8HL1cnzyQY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=trSTK8ak1aVmqbsTZ4xL4TjNHnTW9DFMiORjS9ToYC8bVnWAA/dNPq/f8QwbdxqgTugK72MIFDdvEIm0p32bREy1VkVLQ8P2geA9JVUcUQLRdKeuzXoqFtgKx+1rSH6S+L+FZ9IeJ3Jqecpmy90x7ZdVY0QbPq0cbvqlzpVGvoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LWU8HLSZ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747307424; c=relaxed/simple;
+	bh=dOSpEwILtvqK7dsEfINsAvMIVPK19AOSi7QavgluMlo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jwd9lrz4CBnNpJ498U8V2M8vjO/3vMIS2698R0/TcxujecPc9PJOstkYPTtdsXo7Jww7dsG6aM9oWzcj/xnziqQDcEMv00wiNDzZwOG95yT5iNDrBgSkZZO1CaLu/o2xAb5q5On+ZfYS9FB9fkXDDAXEANK8adFP25EF715aTvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=PG5DiDVw; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LWU8HLSZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747307371;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=JRR/RELLFaGmt5TsP7eVtXUVpGFQlMlBD6NeI0Bmw3Y=;
-	b=LWU8HLSZFVSulCNVF+NNfX/HRkVtYtOCJsUV7DeKmtNAY6zU33JKcdcrWqZJ6yPhsOMW+T
-	W1FHlBklkfiBQCqr/Q3VQR2aqBeID+thIU7MGgWomhFp3XFRQZ4v4Btq5x57yVzQ5Mo2qA
-	Yyfy57aMohCHeDgr4ja/ZAQl58X+Y4A=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-528-v8su1HgIMDacP1eP6JAwsw-1; Thu, 15 May 2025 07:09:30 -0400
-X-MC-Unique: v8su1HgIMDacP1eP6JAwsw-1
-X-Mimecast-MFC-AGG-ID: v8su1HgIMDacP1eP6JAwsw_1747307370
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-47689968650so8937641cf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 04:09:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747307370; x=1747912170;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JRR/RELLFaGmt5TsP7eVtXUVpGFQlMlBD6NeI0Bmw3Y=;
-        b=ZFlLvNgvu+OvLbv3dNxYwp2H3RMCtyXw/0CH+wq9YsQINsmjdEpiIB5rGtyxnKvB/w
-         U0Z2D/U8V1rSS76UVkvKWLbVlXWez1T6qbiQTTSAF96/j7VK8zJ7SHWO4WxBUJMgYpSu
-         g2j7LxZCf3iYgFVvQJasWHyHbtcxdoX5wn+SHH2PWMyQl+wsrZhMTO3rmENINHmWpYFi
-         n+i+sFcDaS1RVRRJiRvcpvWFnHaTd6VXkVybNKsIeiD/zbzpXSgQDjAphp7xF1F+hcHu
-         21x1g+U7c5j2cqKy4iGLtY7ngvL7CgxiWE9abcBKleKpwiKpuDKkCaBcJq0BdjUH5x7j
-         HThg==
-X-Forwarded-Encrypted: i=1; AJvYcCWdexYXjSDWMwoLFXD6iPkTqsB1W4ItuVIJvshYuXCGdKY67kiVhD+P4T/uOpfm3X61nyca3PlSTxKNa84=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yygp5cuGST4b9WSeVw9cVcjDEyhzd2bxWnm2wYyRmtb3QxcyP4U
-	OrKdaCKxe5OC33kNSIt0fOEfyvQGAaf5eYBAG3Cai5d6PTlbQ/TbfLPcTuamcfzWVazzPlN4HNB
-	zGlD9GpETz6LOXBlx6Bgg950jk1a8FkobMv+O/Myo2kBKMkJerOiNNE90xnM5aQ==
-X-Gm-Gg: ASbGncuMI47xTZybELoJ8Iu3w8XdMWEHZzvY2GFLBLV9QrqVwQrpQLgJntbZSiOeLkv
-	l53vwo8gKAmsAe7PzSZecYUwijadKotbZCoCJy2FXjRl/C1+i4P/PFY77rhVLLC+UOVJWcpLIMk
-	y6IG8S8VigZBLutGxnWi1jyLNM4ztBL/n5Y9g98dGx5RTk+UZ4FPwhBHK6HXyftB/ZsHilKSuCO
-	FC9oxrgpWlm1Y3wrTi5KgUTCmKoeqCA4dkrw9V8U5mJdVE+SzVZCXZPescpzPvV4plzMico9tmV
-	U7jh1biNmDvVw/SyYg==
-X-Received: by 2002:a05:622a:1e11:b0:476:c650:9839 with SMTP id d75a77b69052e-49495d020ecmr104492801cf.51.1747307370124;
-        Thu, 15 May 2025 04:09:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFms0SmEnYQMTyDvj/1zyQ6HJJbttnxjklBEGCUrbonquaTHXDdozao+AhCWetPjvq3/uAuhQ==
-X-Received: by 2002:a05:622a:1e11:b0:476:c650:9839 with SMTP id d75a77b69052e-49495d020ecmr104492411cf.51.1747307369613;
-        Thu, 15 May 2025 04:09:29 -0700 (PDT)
-Received: from [192.168.21.214] ([69.164.134.123])
-        by smtp.googlemail.com with ESMTPSA id d75a77b69052e-494a4facf77sm6054871cf.59.2025.05.15.04.09.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 04:09:29 -0700 (PDT)
-Message-ID: <22f811d4-d327-41dc-9daa-7c4aa75a5cba@redhat.com>
-Date: Thu, 15 May 2025 13:09:27 +0200
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="PG5DiDVw"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D91FB40E0222;
+	Thu, 15 May 2025 11:10:18 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id CdIDGR7wdB9i; Thu, 15 May 2025 11:10:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747307415; bh=mcjbdkqU6NFpAJs04IaNgq1bhla1EfQq1yGFnWFMhmA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PG5DiDVwgkmfO2WU4EtR/dwynzVX4zy0bNVb/XZelLlHYNQct7YfQEsxfCoxoyAzZ
+	 G7M9FYyd/sGpIdjPrCF+COuDQ1dWP6p+5QoEkA4tRQhIDmT1sZ9BQl8/Ki02oRDIKX
+	 mD1rZ+Z8+FuwcOEk31K7/SJASBZZat5ZR2ON1NGq5ZiLR5+FD2nHv5QzCPS2N8dC1R
+	 yW8wXI1c+EtavjJaoezQc6/Dm3fjk/1CZID4Vd4P9U4B2ypLvAeUC0xBe1obT0/9b5
+	 5Y90tsklSe/2AkgnLtokwsjyiFVe2VJQaNGmmyV4Sx4lwSlwX2Jf0q5DtYgkHNozhl
+	 n+1n3lGOQBCfXcbjsOrq9xHcNvk/W7dkTGJ/YaoL9MvNNx0vkt0dwpdh6WE+PH7/9U
+	 prUfQQeST5P+/kF4hO1QD3aEnRPSK1La07LzcXP5tKcHhHC2McHrD3eTShCNB/+aWe
+	 ZGiX0qHEoGRuLBWkJ4zoya69eT91RVE+yvP00Ci83MgKcmZCD+MH26c5FXLW3t4llr
+	 rveci8Ju7GXnhonX/dW+d3mEARjkFCS37RL3tlWXb9YJd2M9d4l6SxDsiBc4LpD00G
+	 S7fh+NQKeQQhQb/gxdHMXfGQltSj82COF6ElQLdCEh9sbo98VUMBKb+xkGxqmrCWYs
+	 OkfWCwgfhyImQL2pcuWc/mUU=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 23A3240E01ED;
+	Thu, 15 May 2025 11:10:06 +0000 (UTC)
+Date: Thu, 15 May 2025 13:10:00 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Dionna Amalie Glaze <dionnaglaze@google.com>,
+	Kevin Loughlin <kevinloughlin@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [RFT PATCH v3 01/21] x86/sev: Separate MSR and GHCB based
+ snp_cpuid() via a callback
+Message-ID: <20250515111000.GBaCXLiEi0_bG1qVzx@fat_crate.local>
+References: <20250512190834.332684-23-ardb+git@google.com>
+ <20250512190834.332684-24-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
- paths
-To: Kevin Wolf <kwolf@redhat.com>, Martin Wilck <mwilck@suse.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
- Benjamin Marzinski <bmarzins@redhat.com>, dm-devel@lists.linux.dev,
- hreitz@redhat.com, mpatocka@redhat.com, snitzer@kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250429165018.112999-1-kwolf@redhat.com>
- <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
- <aCIRUwt5BueQmlMZ@redhat.com>
- <d51d6f85b5728648fe9c584f9cb3acee12c4873f.camel@suse.com>
- <cc2ec011cf286cb5d119f2378ecbd7b818e46769.camel@suse.com>
- <aCW95f8RGpLJZwSA@redhat.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=pbonzini@redhat.com; keydata=
- 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
-In-Reply-To: <aCW95f8RGpLJZwSA@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250512190834.332684-24-ardb+git@google.com>
 
-On 5/15/25 12:11, Kevin Wolf wrote:
-> The thing that we need to make sure, though, is that the emulated status
-> we can expose to the guest is actually good enough. That Paolo said that
-> the problem with reservation conflicts was mostly because -EBADE wasn't
-> a thing yet gives me some hope that at least this wouldn't be a problem
-> any more today.
+On Mon, May 12, 2025 at 09:08:36PM +0200, Ard Biesheuvel wrote:
+> From: Ard Biesheuvel <ardb@kernel.org>
+> 
+> There are two distinct callers of snp_cpuid(): one where the MSR
+> protocol is always used, and one where the GHCB page based interface is
+> always used.
 
-Hmm I'm not sure about that anymore...  I was confused because some of 
-the refactoring of block errors was done in 2017, which is around the 
-same time I was working on persistent reservations in QEMU.
+Yeah, let's stick to the nomenclature, pls: you have a GHCB protocol and a MSR
+protocol. We call both protocols. :)
 
-However, EBADE handling dates back to 2011 (commit 63583cca745f, "[SCSI] 
-Add detailed SCSI I/O errors", 2011-02-12) and yet the Windows tests for 
-PR were failing before QEMU switched to SG_IO for reads and writes.  I 
-guess I have to try reverting that and retest, though.
+> The snp_cpuid() logic does not care about the distinction, which only
+> matters at a lower level. But the fact that it supports both interfaces
+> means that the GHCB page based logic is pulled into the early startup
+> code where PA to VA conversions are problematic, given that it runs from
+> the 1:1 mapping of memory.
+> 
+> So keep snp_cpuid() itself in the startup code, but factor out the
+> hypervisor calls via a callback, so that the GHCB page handling can be
+> moved out.
+> 
+> Code refactoring only - no functional change intended.
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  arch/x86/boot/startup/sev-shared.c | 58 ++++----------------
+>  arch/x86/coco/sev/vc-shared.c      | 49 ++++++++++++++++-
+>  arch/x86/include/asm/sev.h         |  3 +-
+>  3 files changed, 61 insertions(+), 49 deletions(-)
 
-Paolo
+...
 
+> @@ -484,21 +447,21 @@ snp_cpuid_get_validated_func(struct cpuid_leaf *leaf)
+>  	return false;
+>  }
+>  
+> -static void snp_cpuid_hv(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
+> +static void snp_cpuid_hv_no_ghcb(void *ctx, struct cpuid_leaf *leaf)
+
+Uff, those suffixes make my head hurt. So this is the MSR prot CPUID. Let's
+call it this way:
+
+	snp_cpuid_msr_prot()
+
+and the other one 
+
+	snp_cpuid_ghcb_prot()
+
+All clear this way.
+
+>  {
+> -	if (sev_cpuid_hv(ghcb, ctxt, leaf))
+> +	if (__sev_cpuid_hv_msr(leaf))
+
+__sev_cpuid_msr_prot
+
+>  		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_CPUID_HV);
+>  }
+>  
+>  static int __heada
+
+Let's zap that ugly linebreak.
+
+> -snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
+> -		      struct cpuid_leaf *leaf)
+> +snp_cpuid_postprocess(void (*cpuid_hv)(void *ctx, struct cpuid_leaf *),
+
+Let's call that just "cpuid" now that it can be different things and it is
+a pointer.
+
+> +		      void *ctx, struct cpuid_leaf *leaf)
+>  {
+>  	struct cpuid_leaf leaf_hv = *leaf;
+>  
+>  	switch (leaf->fn) {
+>  	case 0x1:
+> -		snp_cpuid_hv(ghcb, ctxt, &leaf_hv);
+> +		cpuid_hv(ctx, &leaf_hv);
+>  
+>  		/* initial APIC ID */
+>  		leaf->ebx = (leaf_hv.ebx & GENMASK(31, 24)) | (leaf->ebx & GENMASK(23, 0));
+> @@ -517,7 +480,7 @@ snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
+>  		break;
+>  	case 0xB:
+>  		leaf_hv.subfn = 0;
+> -		snp_cpuid_hv(ghcb, ctxt, &leaf_hv);
+> +		cpuid_hv(ctx, &leaf_hv);
+>  
+>  		/* extended APIC ID */
+>  		leaf->edx = leaf_hv.edx;
+> @@ -565,7 +528,7 @@ snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
+>  		}
+>  		break;
+>  	case 0x8000001E:
+> -		snp_cpuid_hv(ghcb, ctxt, &leaf_hv);
+> +		cpuid_hv(ctx, &leaf_hv);
+>  
+>  		/* extended APIC ID */
+>  		leaf->eax = leaf_hv.eax;
+> @@ -587,7 +550,8 @@ snp_cpuid_postprocess(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
+>   * should be treated as fatal by caller.
+>   */
+>  int __head
+
+And that ugly linebreak too pls.
+
+...
+
+Here's a diff ontop with my changes. I think it looks a lot saner now and one
+can really differentiate which is which.
+
+Could more cleanup be done? Ofc. But that for later patches.
+
+Thx.
+
+---
+
+diff --git a/arch/x86/boot/startup/sev-shared.c b/arch/x86/boot/startup/sev-shared.c
+index 408e064a80d9..992abfa50508 100644
+--- a/arch/x86/boot/startup/sev-shared.c
++++ b/arch/x86/boot/startup/sev-shared.c
+@@ -319,7 +319,7 @@ static int __sev_cpuid_hv(u32 fn, int reg_idx, u32 *reg)
+ 	return 0;
+ }
+ 
+-static int __sev_cpuid_hv_msr(struct cpuid_leaf *leaf)
++static int __sev_cpuid_msr_prot(struct cpuid_leaf *leaf)
+ {
+ 	int ret;
+ 
+@@ -447,21 +447,20 @@ snp_cpuid_get_validated_func(struct cpuid_leaf *leaf)
+ 	return false;
+ }
+ 
+-static void snp_cpuid_hv_no_ghcb(void *ctx, struct cpuid_leaf *leaf)
++static void snp_cpuid_msr_prot(void *ctx, struct cpuid_leaf *leaf)
+ {
+-	if (__sev_cpuid_hv_msr(leaf))
++	if (__sev_cpuid_msr_prot(leaf))
+ 		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_CPUID_HV);
+ }
+ 
+-static int __head
+-snp_cpuid_postprocess(void (*cpuid_hv)(void *ctx, struct cpuid_leaf *),
+-		      void *ctx, struct cpuid_leaf *leaf)
++static int __head snp_cpuid_postprocess(void (*cpuid)(void *ctx, struct cpuid_leaf *),
++					void *ctx, struct cpuid_leaf *leaf)
+ {
+ 	struct cpuid_leaf leaf_hv = *leaf;
+ 
+ 	switch (leaf->fn) {
+ 	case 0x1:
+-		cpuid_hv(ctx, &leaf_hv);
++		cpuid(ctx, &leaf_hv);
+ 
+ 		/* initial APIC ID */
+ 		leaf->ebx = (leaf_hv.ebx & GENMASK(31, 24)) | (leaf->ebx & GENMASK(23, 0));
+@@ -480,7 +479,7 @@ snp_cpuid_postprocess(void (*cpuid_hv)(void *ctx, struct cpuid_leaf *),
+ 		break;
+ 	case 0xB:
+ 		leaf_hv.subfn = 0;
+-		cpuid_hv(ctx, &leaf_hv);
++		cpuid(ctx, &leaf_hv);
+ 
+ 		/* extended APIC ID */
+ 		leaf->edx = leaf_hv.edx;
+@@ -528,7 +527,7 @@ snp_cpuid_postprocess(void (*cpuid_hv)(void *ctx, struct cpuid_leaf *),
+ 		}
+ 		break;
+ 	case 0x8000001E:
+-		cpuid_hv(ctx, &leaf_hv);
++		cpuid(ctx, &leaf_hv);
+ 
+ 		/* extended APIC ID */
+ 		leaf->eax = leaf_hv.eax;
+@@ -549,9 +548,8 @@ snp_cpuid_postprocess(void (*cpuid_hv)(void *ctx, struct cpuid_leaf *),
+  * Returns -EOPNOTSUPP if feature not enabled. Any other non-zero return value
+  * should be treated as fatal by caller.
+  */
+-int __head
+-snp_cpuid(void (*cpuid_hv)(void *ctx, struct cpuid_leaf *),
+-	  void *ctx, struct cpuid_leaf *leaf)
++int __head snp_cpuid(void (*cpuid)(void *ctx, struct cpuid_leaf *), void *ctx,
++		     struct cpuid_leaf *leaf)
+ {
+ 	const struct snp_cpuid_table *cpuid_table = snp_cpuid_get_table();
+ 
+@@ -585,7 +583,7 @@ snp_cpuid(void (*cpuid_hv)(void *ctx, struct cpuid_leaf *),
+ 			return 0;
+ 	}
+ 
+-	return snp_cpuid_postprocess(cpuid_hv, ctx, leaf);
++	return snp_cpuid_postprocess(cpuid, ctx, leaf);
+ }
+ 
+ /*
+@@ -612,14 +610,14 @@ void __head do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code)
+ 	leaf.fn = fn;
+ 	leaf.subfn = subfn;
+ 
+-	ret = snp_cpuid(snp_cpuid_hv_no_ghcb, NULL, &leaf);
++	ret = snp_cpuid(snp_cpuid_msr_prot, NULL, &leaf);
+ 	if (!ret)
+ 		goto cpuid_done;
+ 
+ 	if (ret != -EOPNOTSUPP)
+ 		goto fail;
+ 
+-	if (__sev_cpuid_hv_msr(&leaf))
++	if (__sev_cpuid_msr_prot(&leaf))
+ 		goto fail;
+ 
+ cpuid_done:
+diff --git a/arch/x86/coco/sev/vc-shared.c b/arch/x86/coco/sev/vc-shared.c
+index b4688f69102e..776cb90be530 100644
+--- a/arch/x86/coco/sev/vc-shared.c
++++ b/arch/x86/coco/sev/vc-shared.c
+@@ -409,7 +409,7 @@ static enum es_result vc_handle_ioio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
+ 	return ret;
+ }
+ 
+-static int __sev_cpuid_hv_ghcb(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
++static int __sev_cpuid_ghcb_prot(struct ghcb *ghcb, struct es_em_ctxt *ctxt, struct cpuid_leaf *leaf)
+ {
+ 	u32 cr4 = native_read_cr4();
+ 	int ret;
+@@ -447,11 +447,11 @@ struct cpuid_ctx {
+ 	struct es_em_ctxt *ctxt;
+ };
+ 
+-static void snp_cpuid_hv_ghcb(void *p, struct cpuid_leaf *leaf)
++static void snp_cpuid_ghcb_prot(void *p, struct cpuid_leaf *leaf)
+ {
+ 	struct cpuid_ctx *ctx = p;
+ 
+-	if (__sev_cpuid_hv_ghcb(ctx->ghcb, ctx->ctxt, leaf))
++	if (__sev_cpuid_ghcb_prot(ctx->ghcb, ctx->ctxt, leaf))
+ 		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_CPUID_HV);
+ }
+ 
+@@ -464,7 +464,7 @@ static int vc_handle_cpuid_snp(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
+ 
+ 	leaf.fn = regs->ax;
+ 	leaf.subfn = regs->cx;
+-	ret = snp_cpuid(snp_cpuid_hv_ghcb, &ctx, &leaf);
++	ret = snp_cpuid(snp_cpuid_ghcb_prot, &ctx, &leaf);
+ 	if (!ret) {
+ 		regs->ax = leaf.eax;
+ 		regs->bx = leaf.ebx;
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
