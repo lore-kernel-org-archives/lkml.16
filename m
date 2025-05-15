@@ -1,124 +1,102 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5EA8295DB5;
-	Thu, 15 May 2025 09:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67715289E03;
+	Thu, 15 May 2025 09:22:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747300834; cv=none; b=KMQtmw4x6WHhuz8Zlmg19SZfy4TP/bIARGtUdN8s0l4hOnOYc/yN77R07/WRgZ/NHLgdlbmA+Rnqj7efSgTVaI7qLdjR12/2SYJzeWSL+vbGCiSE/0HDIqnRHCtBYOa3OjYPC0qXifft+OF5O6qiDBczYysq3J8k5zxGxX0LZn4=
+	t=1747300964; cv=none; b=uSHd9rwrzi444fbT7zHOrSCxz03NlihhdkpfpYccY7EY2Y2hoSknkqOfLsx8DudCTvf9CwATJUlcBG27X/dlchGCawcL1wcJsbupjno5zKAFMUU3GaKJK19eFpeRQWpdERlxUiKaxvcIU26nwatE/+HLeKBiySiuty4iC7L+Hso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747300834; c=relaxed/simple;
-	bh=T0xIs53YyMGsPIFPEWuTJKQwtqyUkFoPGQIbHPbvpOc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e0cJIIgt9SnaPiknhbNppDyTYMCVwIaUse+P5URRnlmt4bupP7Z6f8QCGCKLs2tiGYg8mqEn7eziGzorBExRa3hlAEp/S6FYTzHUt9cW8u5P1XCZNmokFoykMRLTbCLXakw2wydQfPodCplMzA0uuyuQcxebN6xFuyF0Pmbm1XA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d1ipIkpy; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747300964; c=relaxed/simple;
+	bh=09psgg/FDIgxF3WszEeFUp1upo+WVfhoS0WFJ5ThPzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G1dCaj962hkg+cKF8xmnTVcWk5stRk6wMCiz6GkIhVoZGjlqF6pmpORFM9xoaxVcykeFUf7+PqPhBVbg+eYRBLDkSAjIVf4NQv27/Edp6IuwGB/E/nQWsuR/1hBQqNZumBj5nt0BHFOE8wUGI3lpp+ta+zsM2y57+XbcITA1J2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BTauZgz0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d1ipIkpy"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54d3ee30af1so744623e87.0;
-        Thu, 15 May 2025 02:20:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747300831; x=1747905631; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Gr8YDjeShMs5Dbf0Xg1ibXjoeWLBh6KvIWOpPkgrAjM=;
-        b=d1ipIkpyvfr3cPvSkw8MWolysLm9zavbxJfieEfSDgT4sFOik+sJ1WHFOwp2C55N3c
-         jgOjtedqdy1MiLzITNgifK89Hjr+c2agepVLSRtO1JCOL4XxGGYdNpNoL32Ge0E+J3KX
-         0tHuFE3A+0gkl1qPH0xLQDHZImp4rs21Kd4Iw/2OyNcaOt4fYmDoAISrPq1lKi2YM+EN
-         xRGVRW0gjwrFJVlxCY99oq9sYuevEh1DFwXCPUfGIyM1GPEk1o6jOU5FN2XS4p53i0AQ
-         qZ2mIfAlv04zxO4I06J+99JwwNPHnLqrygpvQ0RX/HB9KXfos0o6D4wMI/2URiOFCKLE
-         c5LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747300831; x=1747905631;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gr8YDjeShMs5Dbf0Xg1ibXjoeWLBh6KvIWOpPkgrAjM=;
-        b=E2F1L0QsYF933U+4fbqtGZX0yOvx3SseWRO4GESlfgLi/Jf0qGCnVZK8jK7bwHAxzB
-         Wxk18rWcQIcL8WB/kdJTn0BVhiQFn94fdJ82KK0juVnxrXJcN0N5KXp7h0DfKtkKof8l
-         eZMmjwW/epN2x8tXM3AeUBXOrcDZI/SC4zVseoDrDpC9wF0k/SEznvCFPapnVibyHazo
-         fCvP5G3d599+w7X0dTT3ATdej6Wr57Mla2ngVBfTVMNCKeWQokXB4O08q36JFldPlFOZ
-         MZurvBXBRwKBjod9Kp5qHA4SNA/s5ljn/BfybwgKTAoNzzLxqEhhgRcncE3U9xnXUbT5
-         z1Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCWN/ICEFVbDbD4r+4XHqBubSM0hE4hdI5/d4Wi84I1HW9kbZlFxzHdjF3j1cF/HE6Gy36H66N4/fyst9bTG@vger.kernel.org, AJvYcCX80N0H6lIREN62/9KO45Lct4wmVwOSQ90S3/sh+W0LCcwJw/A9UNCgC8HQPGRwGugLwEecEhfi0D8Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgzTYRbPgxvCm3WzVjgLQbddrw9EenJl5ESePBtDCMqnlUiqqh
-	/dNpmzLopAq6HKAQRcxtfQqu5BDXATfsQ4rOV+zqlQ+BWUG0W1hk
-X-Gm-Gg: ASbGnctjCeiKJ0Sq+cCVPMigcEU1xc0QsD9Kf1+/JTaXiliHpbMjgmk7QZU5DLsghYu
-	Y3WlTUyBFRJSHPSIkFaW0qVQ+ebEDFyjVs0Xb1moKU3tlg7tnxT0cuzkiTm1BrvfPzP2rjYFez6
-	jLXfSgVRII4hAq1WVD9SjqYoxd/N5A64dJBeDror5X4OBjRnNJRBnPt8HDd5E8EUgva5YmjWliq
-	KuLGnZsZJWnQUcixgL3L6ATPNvPjx98Z3qVub6e+ePciVX6Pj2axsAUJD7vqoWvBpWxQif8AlsQ
-	lFx3p7p4UyZpQtkgth7XxvYNI+MJ6nO4es+FgZDPuWljKYujFMhRYeSYVD6+mkzqfdFQQS2Ixe7
-	BHnPbMifY4Gnx4CFLUpQbcPDVnhIMEufzC3nJIXvQHkU=
-X-Google-Smtp-Source: AGHT+IF1K2xmstWUKqRXQKvNfbx1fHA8kSSO7L0hXYxzd9u70VeGhf6RRP23AYcOT1vimL6BWWt6aw==
-X-Received: by 2002:a05:6512:2392:b0:545:944:aae1 with SMTP id 2adb3069b0e04-550dcffc298mr627839e87.12.1747300830765;
-        Thu, 15 May 2025 02:20:30 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc645d082sm2579696e87.76.2025.05.15.02.20.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 02:20:30 -0700 (PDT)
-Message-ID: <a44cad65-1f23-43cd-83b7-bc128e9f858f@gmail.com>
-Date: Thu, 15 May 2025 12:20:29 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BTauZgz0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF4DEC4CEE7;
+	Thu, 15 May 2025 09:22:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747300963;
+	bh=09psgg/FDIgxF3WszEeFUp1upo+WVfhoS0WFJ5ThPzM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BTauZgz0HZn5DsUlIaSxS6Xagzd8AziP1XStFm3Jt2dV4YjGOu9KP03KWV4m6zbJ+
+	 gqotrf1hy/DvzOr0lZM+qJqdGHXc7Ba6/mpIYabCJ6C2+7Wq20OLC4PgviEMxPTgDP
+	 jW4nVGr0cnat8geUD0HXFabpdw/rlcUWoWPzg3nS98yclZsWwJe7NA78HZjk1po9wD
+	 9MEcTnDm/CAXzP70gJ8W91+zk6bKs9bomcr2TYd3IhN/8gfMzPTu9/teIkz1Jtt8SG
+	 ydnVS1OhJZHd4YSgFgLI5Zi/fONKW2vnuOoJ6XxyXptZLg71PyXThuRKnHD51rN1Sp
+	 E2OG/W1aflNVg==
+Date: Thu, 15 May 2025 11:22:38 +0200
+From: Mark Brown <broonie@kernel.org>
+To: =?iso-8859-1?B?Q3Pza+Fz?= Bence <csokas.bence@prolan.hu>
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Vinod Koul <vkoul@kernel.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>
+Subject: Re: [PATCH v6 0/2] Add `devm_dma_request_chan()` to simplify probe
+ path in atmel-quadspi.c
+Message-ID: <aCWyXsJ2iRXRUmOi@finisterre.sirena.org.uk>
+References: <20250515083132.255410-1-csokas.bence@prolan.hu>
+ <aCWpjplhAXUvr9fj@finisterre.sirena.org.uk>
+ <e4e6c7a9-9b7a-4012-8bda-75804229ec95@prolan.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/9] arm64: dts: imx8mn-bsh-smm-s2-common: Set minimum
- value for VDD_3V3
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>,
- linux-kernel@vger.kernel.org
-Cc: Simon Holesch <simon.holesch@bshg.com>,
- Karthikdatt Anantharamrao <karthikdatt.anantharamrao@in.bosch.com>,
- michael@amarulasolutions.com, linux-amarula@amarulasolutions.com,
- Wolfgang Birkner <wolfgang.birkner@bshg.com>,
- Conor Dooley <conor+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-References: <20250514082507.1983849-1-dario.binacchi@amarulasolutions.com>
- <20250514082507.1983849-8-dario.binacchi@amarulasolutions.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250514082507.1983849-8-dario.binacchi@amarulasolutions.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="lsS54prYZ+c1tDdi"
+Content-Disposition: inline
+In-Reply-To: <e4e6c7a9-9b7a-4012-8bda-75804229ec95@prolan.hu>
+X-Cookie: Well begun is half done.
 
-On 14/05/2025 11:25, Dario Binacchi wrote:
-> From: Wolfgang Birkner <wolfgang.birkner@bshg.com>
-> 
-> Buck4 is called Buck6 in the BD71847 datasheet. This buck supports
-> 2.6...3.3V. Set the minimum allowed value.
 
-Same comment as for 6/9. Please provide better rationale than the PMIC's 
-limits.
+--lsS54prYZ+c1tDdi
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Signed-off-by: Wolfgang Birkner <wolfgang.birkner@bshg.com>
-> Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-> ---
-> 
->   arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi b/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi
-> index 81fa0a8767e2..04112a83b1d3 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mn-bsh-smm-s2-common.dtsi
-> @@ -144,7 +144,7 @@ buck3_reg: BUCK3 {
->   			buck4_reg: BUCK4 {
->   				/* PMIC_BUCK6 - VDD_3V3 */
->   				regulator-name = "buck4";
-> -				regulator-min-microvolt = <3000000>;
-> +				regulator-min-microvolt = <2600000>;
->   				regulator-max-microvolt = <3300000>;
->   				regulator-boot-on;
->   				regulator-always-on;
+On Thu, May 15, 2025 at 11:14:22AM +0200, Cs=F3k=E1s Bence wrote:
+> On 2025. 05. 15. 10:45, Mark Brown wrote:
 
-Yours,
-	-- Matti
+> > I can't tell what the plan is here, or what the status is for the first
+> > patch (since I'm not CCed).  The second patch depends on a new API
+> > introduced in the first patch so it can't be merged independently.
+
+> Yes, the situation is a bit convoluted. Obviously 2/2 will be applied aft=
+er
+> 1/2, in a similar vein than the former PM series.
+
+> So what I was trying to say: Vinod should be able to apply 1/2 to his bra=
+nch
+> (dma/next) right now, which can then be merged to spi/for-next. This merg=
+ed
+> branch should be able to then cleanly apply 2/2.
+
+I wouldn't expect to pull the whole DMA tree in, that'll have a huge
+amount of extra stuff in it - if I was going to pull something I'd
+expect a topic branch.  Wouldn't it be simpler for me to just apply both
+patches at this point if there's no conflicts with the DMA tree?  We're
+at -rc6 now...
+
+--lsS54prYZ+c1tDdi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmglsl0ACgkQJNaLcl1U
+h9CkSQf/aHhDgShaJOuGnP6gxQePQyEyifKpyjggCAaRO0Sesc+kJpLP+WmA0tu5
+zR8dncLAeFAWIhOnoiv/TvWp37UG0ZMzmoMeVYSzQNijpT1i3K3Hj59K/7Xj7pOY
+DfM+te9RzU6zFCqQCBsG/HzrtmN135ZWSITtrqSZIMerQPzwj1gRxn739aVsdeEu
+uMpbZiLJ5kCiQrzKGo8Ixui87RlSho7whEs38ryCVpHsHdKIqHhu6KdqbAIdtbse
+o9sgfNAOjjua7YHhcNiEqCmUoj9cbzMjXA8YAYuWXfJwj4w8bys8xRCi3nGF7zXc
+nVbkjKLI5vJuum8GbeDZrTefcfktBw==
+=bjGy
+-----END PGP SIGNATURE-----
+
+--lsS54prYZ+c1tDdi--
