@@ -1,168 +1,306 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94699221733;
-	Thu, 15 May 2025 16:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747326556; cv=fail; b=bbLeK7zEFUfBSWdKOit1PVfkLB9kmU3KuChCoIRAURlStdSd+BgPlUCNCjipmNh/8zylVMQVQteQ+KXQn7/WzfuXF9wVpayk0vuCdBBrEAbHijWaMSfprgDluS9Q5wFxTx1zCw+ZfQNPpRAOTNw4w5sEZEDTYzOC7yUXYT/4HZs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747326556; c=relaxed/simple;
-	bh=W1HnvW9A1MOI5Ghb/wQgFZ/mWHSK3TPu/Yi+RQLr5+4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gk9JhuVrIhNtjGfNkEZ2h7z/mBE8MVUYrnzWeBE19XL598p9cs5suayyBPUQ4yH5LkaTxEOkw9vrAVt9MxFTyeq01zeSoEHriGBEGRc6RGDS5S3ZLTqM1Fs3eb+liEgYxMTCXvOp+WIXBXNLcbny8YxmEcUdYlbd2m3zqW5PSVI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=UpsvI7DC; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=icdm7aa2; arc=fail smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E326224225
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 16:29:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747326561; cv=none; b=TecNILeiK++4RgOgsfTvCaA9L9gBtA6TLwoa5v57QGyK8VhbOIhy3V+jMTOqTUGt7ekrQ01AJWsz2M7dgc3AICyxFxSoxTfvOcThcoQ+K673njifnneQJ5TkM2Q5Q45ScLSsfX7Y6IeAhq1U0JvdIEt14pfEvaTvo3h6GNRwaR4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747326561; c=relaxed/simple;
+	bh=Dpe5GUytD/ZBfI9RSwk6yyNyU3qFGXl1KlZv7Wh3PnY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=AVo820zAlMcAiqKv/iBFWg8weWUS9gdNM7Hth+M9tvvf0lsf7Yr5eDq0E4vP5lPpm6ztegCAbRIShUqerV5dFTgSVYFHZfHeWbZeS6BQ+a6b9usEDwWbUhWGm2bJRItZLbkyRWBAvJvQLSXjoB9P8Mz/cprSb9V1XQlDDboVhnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ISFL80QA; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="UpsvI7DC";
-	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="icdm7aa2"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54FErK5I029269;
-	Thu, 15 May 2025 11:29:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=PODMain02222019; bh=nEGLOaw71Hn+jxzy
-	Y5xJ0iVKRTYK5Dl0+YHAakhS31k=; b=UpsvI7DCtxN/ueGMalBMcsQHYMoiFfXF
-	+9cJgw0ktolcffPpb9ed4SK0cJCns14eUPUwc6iU8YA6vjII6drY24nX0oYZNIMI
-	MpzSnTexpwWsbvbP76p1xT9q/KYz3dRX23fMDgYO5pOwY4CsAlPDQwv6xGW/2msX
-	QVj1opjDXJR9nRB+mcXrm4oAubAyvnoQDPZOaX/8NaNp50D0D9xS8cmwsuO4bUY8
-	Xi9u8Vbuch/o/J+/W6em2p2tI9/8AG2gDgNKUslWr8AZ2Wn+2+VFzxs51BV+yBga
-	t9Yzb2sOowSz0MK4cgZPX4wYFzQqyVoTonMwIlnoEeud9KMkGuV3WQ==
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2046.outbound.protection.outlook.com [104.47.66.46])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 46mbe5bbj2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 May 2025 11:29:00 -0500 (CDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uIcqyLD3iRQEFAAlYIST1603o8A48QNcLN/WIW/viIt7jLe/fRaJvdyOTa8B2otPd8ea0v+MSDyN3TAQaI+ozdGPJm7tAIWwv+pQ+okFNpRXBrqkk3fF49WEdKAYCt9BCfbIFEOQ8EZj/JEh+3/Q5Ks+HouA5GD5sHLV8wUmQ1szKt7WsIaLwG5xeLFmOBdjvpFEEzTV7r1cuvoxxbmKGV/ETkZgfqe3+ozqwatdjysSDYPaHqmXGgbgqu0b15Hs9uQ9AUeNJMpe9+OowRMr7WOigw2kk/dOHAIufFBBBpvuTWs84uapV6TmeI89+P2exboj92GmCt8zo/h2Nk/ULQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nEGLOaw71Hn+jxzyY5xJ0iVKRTYK5Dl0+YHAakhS31k=;
- b=CKhiKf/1xKQWtV1JRiR24OKe3GmlBBqhJ9Kp5ijT6plyB8julv8EbhzGzOF0XJhELkCf1QBNYDYVhbgCewmmr0hR60UcDIcCbc2uuSxSIGCAx9RXJ7E6Ogqoaiz+PnzlPpzCqrlozlcq9SK7H4fIKr+u63gLH9A4yZptVSfAhPJAvdpfhLfFUw9Urbf7bxSvRt5+wTJUPccu3njgUklCT9Kh+KBBZzgHZKjweipkNAtfnFvHlOaZ4sadyJpveVD2NYtYhvKhquAKeyL49I0pTZCsojPced4Hi3kfTbAz+l11VsS9oHB0dZF2CZgrIVYa1axhEmhYcPMoiHiRYQyMZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 84.19.233.75) smtp.rcpttodomain=cirrus.com
- smtp.mailfrom=opensource.cirrus.com; dmarc=fail (p=reject sp=reject pct=100)
- action=oreject header.from=opensource.cirrus.com; dkim=none (message not
- signed); arc=none (0)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ISFL80QA"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-740774348f6so1098559b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 09:29:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nEGLOaw71Hn+jxzyY5xJ0iVKRTYK5Dl0+YHAakhS31k=;
- b=icdm7aa2b1xw+xS7rWgwcGdIl7yEoHnDN/cB3eI3wCycH/GTX4WpAFAib2sC9Cl8b7KmfHwRga39oZixeYaDCCHbsGKbaaXhH97OJMSEf5pFzjoFlWpF/MMFtGRw5C7Q6dZYrNDsRXGI6CR2P4psh5hZEfmsb8KwkIsPlLWQ0h4=
-Received: from DS7PR03CA0205.namprd03.prod.outlook.com (2603:10b6:5:3b6::30)
- by SJ2PR19MB7577.namprd19.prod.outlook.com (2603:10b6:a03:4d2::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Thu, 15 May
- 2025 16:28:54 +0000
-Received: from DS3PEPF000099D8.namprd04.prod.outlook.com
- (2603:10b6:5:3b6:cafe::b9) by DS7PR03CA0205.outlook.office365.com
- (2603:10b6:5:3b6::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.28 via Frontend Transport; Thu,
- 15 May 2025 16:28:54 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
- smtp.mailfrom=opensource.cirrus.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
-Received-SPF: Fail (protection.outlook.com: domain of opensource.cirrus.com
- does not designate 84.19.233.75 as permitted sender)
- receiver=protection.outlook.com; client-ip=84.19.233.75;
- helo=edirelay1.ad.cirrus.com;
-Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
- DS3PEPF000099D8.mail.protection.outlook.com (10.167.17.9) with Microsoft SMTP
- Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.18 via
- Frontend Transport; Thu, 15 May 2025 16:28:53 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 26219406545;
-	Thu, 15 May 2025 16:28:52 +0000 (UTC)
-Received: from lonswws02.ad.cirrus.com (lonswws02.ad.cirrus.com [198.90.188.42])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id D6F7782026C;
-	Thu, 15 May 2025 16:28:51 +0000 (UTC)
-From: Stefan Binding <sbinding@opensource.cirrus.com>
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patches@opensource.cirrus.com,
-        Stefan Binding <sbinding@opensource.cirrus.com>
-Subject: [PATCH v1 0/2] Add Support for three Acer laptops using CS35L41
-Date: Thu, 15 May 2025 17:28:31 +0100
-Message-ID: <20250515162848.405055-1-sbinding@opensource.cirrus.com>
-X-Mailer: git-send-email 2.43.0
+        d=google.com; s=20230601; t=1747326558; x=1747931358; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=33G1FuWPJhrQeT4tEtrokH8++dgRv3pDhHxeoQfcB18=;
+        b=ISFL80QALiu45+yxd4seLdnOVcdG52kTWsSbi7lUqMrIY0ugzLiyaVbJX/6no29Maq
+         ibvep4ZHgdwdC7CTxp35vfOYjjcaJHh2fh7/EJK59C7SCEE4W4aZYzl9A9248L06dt4o
+         ilY3K6elbaReICBIg44ucg6hF4rdWxawCk1eyhI/JMEbnBm5LUSjKu2kPidBzvQgjCCk
+         Mq9Y3M9RgfPQJ553e8ulBztj/X1hh/T+6TcFu143PfZAOS6jTCvN3wpug5SflRjtBJrO
+         v9BQ1jmaLV2+v+PpokQnKCp56wroMyrzkCJb6h9TxgdglvtiF4PIn8RjbUK1d36oGhu7
+         U7Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747326558; x=1747931358;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=33G1FuWPJhrQeT4tEtrokH8++dgRv3pDhHxeoQfcB18=;
+        b=Y4Oqz1NFSbUA1tvlFNyxfSwOfSJy1iZ1b4zLRDTlSxmRyJT5c3HiqxTfuE3v7QH3Q8
+         /OoLhXc8b/7qxxtOv+uo0hjPcJ2WK7a3Itb1OrPke6xcrUhfDLJhPgFFvo13iSdR6Iw5
+         vRwr+yaTvVA6GQALZtPs9wvgkutlHUt919l9AEWY97PDaiYRG58ZlVTumyI6KUlQS1uS
+         pgk8iyQXqZ079QjQ2kAuo9uY/CeNNzgyd/FpwD7mG9VnEEQDCsHY2uf8t0s7+XI1IZ83
+         idQXtYTtNVw88s/bXSbZ2iTlLCH6e5/9Kt8yh+ZrC5iL9kAskQaPxjV2NVbsu0hI/U27
+         2KRA==
+X-Forwarded-Encrypted: i=1; AJvYcCWfG6A3vuJbC5vsRHMaeyk55VQgxPhbj4+CGorfBjEUU8J25uzsMDEm6KgYWvl/7EcBwm/lyTBLkBW/MYI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXaSp1HkDxYkXKLQwZWpJFHFaiDjs39pN6bw68UoRNU1qS8Lkq
+	uFJfD9fzYqIeN0sgVtESYztrL1E46alPrf2qd4ZxKOyq6gh4uNWh49H5OEPpZez+RpGXVJHTM7t
+	7n6dt6g==
+X-Google-Smtp-Source: AGHT+IG6i4Ql7QxdqDS+namDmxhrAYEcLOTNClrETOX5R5KqFJpjaHYTWyhnRXJ27aSZiPLgy5D8PFJ682M=
+X-Received: from pgar27.prod.google.com ([2002:a05:6a02:2e9b:b0:b1f:866e:b28a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3d88:b0:215:db66:2a32
+ with SMTP id adf61e73a8af0-216219ba60emr236442637.33.1747326558483; Thu, 15
+ May 2025 09:29:18 -0700 (PDT)
+Date: Thu, 15 May 2025 09:29:17 -0700
+In-Reply-To: <20250324173121.1275209-30-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D8:EE_|SJ2PR19MB7577:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: fab2d1ea-af3c-4c3b-f2dd-08dd93cd952b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|61400799027|82310400026|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cqiivhWr+y+sYH5ul3aXbotEHZFVGCxt8XePn3ym18QA9zu2gV3wtdtKTcjV?=
- =?us-ascii?Q?ElDAteBVMCyGGM2XL9dotds2wfVWtI2X30C2okiakX3cKivXzraTTBIYgtUp?=
- =?us-ascii?Q?e0DshZEx6uuCIn3VjVsJgLbqck+6yDjUwk1rAV+lhyfDwy4Sw69dJT6e0DJ4?=
- =?us-ascii?Q?SWms9e2H6VgzJAiC5OgZ4aSN56F8AzSvYVoIGo3E5jD6G3TVNA7eN1SLnLXn?=
- =?us-ascii?Q?CR2JoznOasmHJIGNCvaUHJTcB+l8T3rEUgx6n2jpT7nKrPZyx3sZk/5uag76?=
- =?us-ascii?Q?yMCxM21GKDaqpJPzDgZHLLmfeiLEV6nZq2n3XBVPkloxmBf6M0m81Vvqnby3?=
- =?us-ascii?Q?ApPDoz9DQ7CFJ6h4gToTh/xHBPaIOSFchnpSRPW5b4OMQnrv6MeJDFflkFQB?=
- =?us-ascii?Q?dTcUBuxnZr0h/Hu1rITHkfp6x87fO0wPB7orYjxXITQJt7nRutqN7k+/Gf4v?=
- =?us-ascii?Q?fI5EUVzFp49rdRdZA3d0Q8UxMYZ/xwQpjdH72YWKgbZalE6AmdHWv4+WlTXs?=
- =?us-ascii?Q?RWvvG6UA4pIjlpsno2LeVPd9Cu26ZFc0UPa63Gbe39JKs/bVddLUwCwnYIEw?=
- =?us-ascii?Q?kJcT1HcMJ3UC6MVHg+zjrqvwe5eM+wbWzimy4XmphivgO0qJv1t0fhbK3idm?=
- =?us-ascii?Q?KoSTWrtRcijFvAZwArlbe1fDWHgkP7fuWD1qZNvWdmgFvurzMPHB7fIRaSXN?=
- =?us-ascii?Q?ytj+s/M0en5PTRUXNS1VeXQ7bsn+m5BdbboR6BQyQK+X7zs75FM/Yz3uXQB5?=
- =?us-ascii?Q?DxJ3Wn9rU1F3uzBNSszT4Wok9P5oGRsmLuI3LoQYvRITVjExPm40nh5Zaq+7?=
- =?us-ascii?Q?Ir6bq4wLDD81qmIBL6il3YCkMoh/5hAYSiShRrf2ijwVDbdbTSl2uHlXB4fD?=
- =?us-ascii?Q?qb0fDB9QluW0kcFPcruvn9s4PJxi5tcDbmQsrQ3ine8FisP0ZJFryieKlv0y?=
- =?us-ascii?Q?XeD/dpGvx8PDrb4IFNkfPyyLFss0azPW9IMSj/pSr5h2dTsVA5G9Zms7l2Uc?=
- =?us-ascii?Q?OrODyksSBBQRdbt1Ae3vbpY/lNteeGJXEGtYeB7RQob99v2VIWb3wiOMDn6n?=
- =?us-ascii?Q?N11Lp1grLdEFJRiUJOlVDnuboA4Cm+Dy+KUhyraQUkkmV+lX5NCUyzNC2Zgp?=
- =?us-ascii?Q?erTNHNxfN5NeKqP2vCiuG0P5ZyhhZe7J5Q+SfNwckySiUHFzlucN9o/Knrf6?=
- =?us-ascii?Q?VzJshDqoKZrLl1zDqjJOnE+WkHNuD+avUmLQ9zCn+Gz5lhkMoROzCKPZx5SE?=
- =?us-ascii?Q?GenliAFR7bRyPdkt7SZuvacyxgn/536AgNMvT86uk66x4ol/4z5AK6rn8k5/?=
- =?us-ascii?Q?k6RICI6xNYAkDiDIG91jnKRgmwUXDOdzexKd7lL60rg7X8rsR4D1OXVXA932?=
- =?us-ascii?Q?qnL3T0NrckcOCrYa5HYx+tJMahXfVEthijym49L6IICv+FW1iXRW7Rvdv+XJ?=
- =?us-ascii?Q?D82tiiJGZOfQoiLrjKzP90BcV2K8frT1HljdMaRkyp9XkyjUCdN/W/YlD4n2?=
- =?us-ascii?Q?0xv9/IeHvzkUvvkt6HqeqXv86oXZlfNC3Ldo?=
-X-Forefront-Antispam-Report:
-	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(61400799027)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1102;
-X-OriginatorOrg: opensource.cirrus.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2025 16:28:53.3951
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fab2d1ea-af3c-4c3b-f2dd-08dd93cd952b
-X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099D8.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR19MB7577
-X-Proofpoint-ORIG-GUID: LeY9brle1dkFUdnv7E5n2zUd0C0ZIxIp
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDE2MyBTYWx0ZWRfX9knbs8XRjlF0 7pRQedQHrHTmBROiuL8zev36PJasFVgEhIBx6/RmikU7mRJ51eVCO9v5Z0WhF+hfZuWS+cGV5zF S8ZanxtHsUucMwO0lpL+qz1R24J7S5YLPqnOuxIe93JfBTNKP2Ef2Y0Sby1RY4drrdGWHl7bDxX
- 2YfAZ1KoYntr6zUYyPWY1rC3XJbgE/y8g2bLlhkNy9YLUK/uuPS7Icf3J7dQAbLHnQaX7CHlcNX PtriuCiZSDATdc/serbq2nxjM7GGChQrlrUVaeJsPlIanWmTmSV9/qPLhDwzB3uchyzToXI+1QY zcK094sJNkh8X0OVBvs7XyaWAG7Fwq4JOh77fD/UCMzVhOu1rgT+F70y/vGLHgcw5/98s8hGr9Q
- qCulQ2RuUkPKemKHH5xkfggLE+27pmxBSeYZjtdpgovf6w8xoEn1Wzaaeo1Z35PSYz6ABu0r
-X-Authority-Analysis: v=2.4 cv=eqLfzppX c=1 sm=1 tr=0 ts=6826164c cx=c_pps a=gaH0ZU3udx4N2M5FeSqnRg==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=dt9VzEwgFbYA:10 a=RWc_ulEos4gA:10
- a=Zjo8pFjcaZ4ocmjuABIA:9
-X-Proofpoint-GUID: LeY9brle1dkFUdnv7E5n2zUd0C0ZIxIp
-X-Proofpoint-Spam-Reason: safe
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-30-mizhang@google.com>
+Message-ID: <aCYWXXpFcx33uVPi@google.com>
+Subject: Re: [PATCH v4 29/38] KVM: x86/pmu: Switch host/guest PMU context at vm-exit/vm-entry
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
+	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Add support for three Acer laptops using CS35L41 HDA.
-These laptops use External boost with I2C.
+On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+> diff --git a/arch/x86/include/asm/kvm-x86-pmu-ops.h b/arch/x86/include/asm/kvm-x86-pmu-ops.h
+> index 9159bf1a4730..35f27366c277 100644
+> --- a/arch/x86/include/asm/kvm-x86-pmu-ops.h
+> +++ b/arch/x86/include/asm/kvm-x86-pmu-ops.h
+> @@ -22,6 +22,8 @@ KVM_X86_PMU_OP(init)
+>  KVM_X86_PMU_OP_OPTIONAL(reset)
+>  KVM_X86_PMU_OP_OPTIONAL(deliver_pmi)
+>  KVM_X86_PMU_OP_OPTIONAL(cleanup)
+> +KVM_X86_PMU_OP(put_guest_context)
+> +KVM_X86_PMU_OP(load_guest_context)
 
-Stefan Binding (2):
-  ALSA: hda/realtek: Add support for Acer Helios Laptops using CS35L41
-    HDA
-  ALSA: hda: cs35l41: Fix swapped l/r audio channels for Acer Helios
-    laptops
+For KVM, the "guest_context" part is largely superfluous, as KVM always operates
+on guest state, e.g. kvm_fpu_{load,put}().
 
- sound/pci/hda/cs35l41_hda_property.c |  6 ++++++
- sound/pci/hda/patch_realtek.c        | 10 ++++++++++
- 2 files changed, 16 insertions(+)
+I do think we should squeeze in "mediated" somewhere, otherwise the it's hard to
+see that these are specific to the mediated PMU.
 
--- 
-2.43.0
+So probably mediated_{load,put}()?
 
+>  #undef KVM_X86_PMU_OP
+>  #undef KVM_X86_PMU_OP_OPTIONAL
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 7ee74bbbb0aa..4117a382739a 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -568,6 +568,10 @@ struct kvm_pmu {
+>  	u64 raw_event_mask;
+>  	struct kvm_pmc gp_counters[KVM_MAX_NR_GP_COUNTERS];
+>  	struct kvm_pmc fixed_counters[KVM_MAX_NR_FIXED_COUNTERS];
+> +	u32 gp_eventsel_base;
+> +	u32 gp_counter_base;
+> +	u32 fixed_base;
+> +	u32 cntr_shift;
+
+Gah, my bad, "shift" was a terrible suggestion.  It should be "stride".
+
+> @@ -306,6 +313,10 @@ void kvm_pmu_destroy(struct kvm_vcpu *vcpu);
+>  int kvm_vm_ioctl_set_pmu_event_filter(struct kvm *kvm, void __user *argp);
+>  void kvm_pmu_trigger_event(struct kvm_vcpu *vcpu, u64 eventsel);
+>  bool vcpu_pmu_can_enable(struct kvm_vcpu *vcpu);
+> +void kvm_pmu_put_guest_pmcs(struct kvm_vcpu *vcpu);
+> +void kvm_pmu_load_guest_pmcs(struct kvm_vcpu *vcpu);
+> +void kvm_pmu_put_guest_context(struct kvm_vcpu *vcpu);
+> +void kvm_pmu_load_guest_context(struct kvm_vcpu *vcpu);
+>  
+>  bool is_vmware_backdoor_pmc(u32 pmc_idx);
+>  bool kvm_rdpmc_in_guest(struct kvm_vcpu *vcpu);
+> diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
+> index 1a7e3a897fdf..7e0d84d50b74 100644
+> --- a/arch/x86/kvm/svm/pmu.c
+> +++ b/arch/x86/kvm/svm/pmu.c
+> @@ -175,6 +175,22 @@ static int amd_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  	return 1;
+>  }
+>  
+> +static inline void amd_update_msr_base(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> +
+> +	if (kvm_pmu_has_perf_global_ctrl(pmu) ||
+> +	    guest_cpu_cap_has(vcpu, X86_FEATURE_PERFCTR_CORE)) {
+> +		pmu->gp_eventsel_base = MSR_F15H_PERF_CTL0;
+> +		pmu->gp_counter_base = MSR_F15H_PERF_CTR0;
+> +		pmu->cntr_shift = 2;
+> +	} else {
+> +		pmu->gp_eventsel_base = MSR_K7_EVNTSEL0;
+> +		pmu->gp_counter_base = MSR_K7_PERFCTR0;
+> +		pmu->cntr_shift = 1;
+> +	}
+> +}
+
+Moving quoted text around to organize responses...
+
+> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+> index 796b7bc4affe..ed17ab198dfb 100644
+> --- a/arch/x86/kvm/vmx/pmu_intel.c
+> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+> @@ -460,6 +460,17 @@ static void intel_pmu_enable_fixed_counter_bits(struct kvm_pmu *pmu, u64 bits)
+>  		pmu->fixed_ctr_ctrl_rsvd &= ~intel_fixed_bits_by_idx(i, bits);
+>  }
+>  
+> +static inline void intel_update_msr_base(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> +
+> +	pmu->gp_eventsel_base = MSR_P6_EVNTSEL0;
+> +	pmu->gp_counter_base = fw_writes_is_enabled(vcpu) ?
+> +			       MSR_IA32_PMC0 : MSR_IA32_PERFCTR0;
+
+This is wrong.  And I unintentionally proved that it's wrong, by goofing when I
+fixed up this code and using MSR_IA32_PERFCTR0 instead of MSR_IA32_PMC0.
+
+Whether or not the guest supports full-width writes is irrelevant, because support
+for FW writes doesn't change the width of the counters.  Just because the *guest* 
+can't directly write all e.g. 48 bits doesn't mean clobbering bits 47:32 is ok.
+
+Similarly, on the AMD side, using the legacy interface in KVM is unnecessary.
+The guest may be limited to those MSRs, but KVM has a hard dependency on PMU v2,
+so just unconditionally use MSR_F15H_PERF_CTR0 (and for the record, because I
+had to look it up, the newfangled MSRs on AMD are aliased to the legacy MSRs for
+0..3).
+
+Very happily, that means the MSRs don't need to be per-PMU, and they don't even
+need to be configured at runtime for a given vendor.  Simply require FW writes
+on Intel to enable the mediated PMU, and then hardcode the GP base to MSR_IA32_PMC0.
+
+> +static void amd_put_guest_context(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> +
+> +	rdmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, pmu->global_ctrl);
+> +	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, 0);
+> +	rdmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS, pmu->global_status);
+> +
+> +	/* Clear global status bits if non-zero */
+> +	if (pmu->global_status)
+> +		wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR, pmu->global_status);
+> +
+> +	kvm_pmu_put_guest_pmcs(vcpu);
+> +}
+> +
+> +static void amd_load_guest_context(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> +	u64 global_status;
+> +
+> +	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, 0);
+
+Back when I suggested we give up on trying to handle PMCs and eventsels in common
+x86, this WRMSR didn't exist.  Now that it does, I don't see anything that prevents
+invoking kvm_pmu_{load,put}_guest_pmcs() from common x86, KVM just needs to clear
+GLOBAL_CTRL before setting eventsels and PMCs.
+
+For the load path:
+
+	/*
+	 * Disable all counters before loading event selectors and PMCs so that
+	 * KVM doesn't enable or load guest counters while host events are
+	 * active.  VMX will enable/disabled counters at VM-Enter/VM-Exit by
+	 * atomically loading PERF_GLOBAL_CONTROL.  SVM effectively performs
+	 * the switch by configuring all events to be GUEST_ONLY.
+	 */
+	wrmsrl(kvm_pmu_ops.PERF_GLOBAL_CTRL, 0);
+
+	kvm_pmu_load_guest_pmcs(vcpu);
+
+	kvm_pmu_call(mediated_load)(vcpu);
+
+And for the put path, just reverse the ordering:
+
+	/*
+	 * Defer handling of PERF_GLOBAL_CTRL to vendor code.  On Intel, it's
+	 * atomically cleared on VM-Exit, i.e. doesn't need to be clear here.
+	 */
+	kvm_pmu_call(mediated_put)(vcpu);
+
+	kvm_pmu_put_guest_pmcs(vcpu);
+
+	perf_put_guest_context();
+
+On Intel, PERF_GLOBAL_CTRL is cleared on VM-Exit, and on AMD, the vendor hook
+will clear it.  The fact that vendor code sets other MSRs is irrelevant, what
+matters is that all counters are quieseced.
+
+I think it's still worth having helpers, but they can be static locals.
+
+> +
+> +	kvm_pmu_load_guest_pmcs(vcpu);
+> +
+> +	rdmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS, global_status);
+> +	/* Clear host global_status MSR if non-zero. */
+> +	if (global_status)
+> +		wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR, global_status);
+> +
+> +	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_SET, pmu->global_status);
+> +	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, pmu->global_ctrl);
+> +}
+> +
+>  static void intel_pmu_update_msr_intercepts(struct kvm_vcpu *vcpu)
+> @@ -809,6 +822,50 @@ void intel_pmu_cross_mapped_check(struct kvm_pmu *pmu)
+>  	}
+>  }
+>  
+> +static void intel_put_guest_context(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> +
+> +	/* Global ctrl register is already saved at VM-exit. */
+> +	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, pmu->global_status);
+> +
+> +	/* Clear hardware MSR_CORE_PERF_GLOBAL_STATUS MSR, if non-zero. */
+> +	if (pmu->global_status)
+> +		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, pmu->global_status);
+> +
+> +	rdmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl_hw);
+> +
+> +	/*
+> +	 * Clear hardware FIXED_CTR_CTRL MSR to avoid information leakage and
+> +	 * also avoid these guest fixed counters get accidentially enabled
+> +	 * during host running when host enable global ctrl.
+> +	 */
+> +	if (pmu->fixed_ctr_ctrl_hw)
+> +		wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, 0);
+> +
+> +	kvm_pmu_put_guest_pmcs(vcpu);
+> +}
+> +
+> +static void intel_load_guest_context(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> +	u64 global_status, toggle;
+> +
+> +	/* Clear host global_ctrl MSR if non-zero. */
+> +	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, 0);
+> +
+> +	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, global_status);
+> +	toggle = pmu->global_status ^ global_status;
+> +	if (global_status & toggle)
+> +		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, global_status & toggle);
+> +	if (pmu->global_status & toggle)
+> +		wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status & toggle);
+> +
+> +	wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl_hw);
+> +
+> +	kvm_pmu_load_guest_pmcs(vcpu);
+> +}
