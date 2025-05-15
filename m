@@ -1,99 +1,117 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F18284677;
-	Thu, 15 May 2025 08:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34619CA6B;
+	Thu, 15 May 2025 08:13:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747296754; cv=none; b=S+d8OPapvjkpSkp1KWfSf/SyTwrWVdtDswMvUCSi3tCCOOvndp2MHnGfKLsWW3itd8/iaD8XG7Lf+jU/26U97fGGE9kCnUlTujSQaTvwa++4t6cf+23zIR8XFGKQRLxwiMVvVra79V4CfNSwrxdByX+0aMjyjDOYjE16EOSyyxg=
+	t=1747296798; cv=none; b=BpR682kyiNjOCZs8MOBZbzu5XzBHavHuD0qkBwbjv0qt44AHziyFVTr5PJflLE46dtjsvztYShPo7N/8ciJUrgBBx9xHBNrKrumn2L6dl5Xk3l2CgMdy+oH31Yx3BXtveb2IjcgwcMBpQxBKE5KAxLgUL062fdrvyUjzWIjRwL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747296754; c=relaxed/simple;
-	bh=kWo+ToFF1scYUVeSyc8TwNFBY9nZbRC6g7JdJ9AQB2I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pRATyPTmoNO3S4mfsVvGqQ/a+eDWtBTE5LwvbNE5doWWNn97DPiXz35uaBAYPLu2Dxz9ESvEshJD3z42AdOZRSGTTy6vcCEjFonLT9EFibXsVIFNiZWM8MP56H9KYJRsE47LecaUvc33yUYdmh/gTdZLhplGg7FA2zNwjDF5qlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=0lIbzheC; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1747296798; c=relaxed/simple;
+	bh=DxyT6W9hw+QLqH++O0m3qf0OogpXov8SOzPA1UQb8bE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VjHTken4kTdAkin4wxI9fQDlwcs1lJGzLgGsrSEtMNCLtOfPlYBqVEoHxJIfyYWURqqWxAPe4MYBPsFZc9Su1ddDyXNkCqthcNX4MTXhoOdQcxnwAASmqRXTFF4zXp7TwZL1zmr5NrzcrCsSMBpGfKJbT70kOqkKKcBiVPcQ13A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DEl7eCgo; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="0lIbzheC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=oRapiM1CWDlIcv8b3zVCV3xtuGGZyLXnUZE3mLx5drU=; b=0lIbzheCLzKzWUqTPcmSq+sLNX
-	q3TX8RKtKpuprFTYp5nM3YZxfyvF3ijHjXNMMqcbeA1vf3W/nnHp2ehOZTTMj+7eL0/oGNWVrfPci
-	PPB30wekvGfohLjb2dC6K/M+81wG9p5H6/a40kSZO6+QTq2NxW67yJSOlD/xrtFzw7xOUPCx8AmHi
-	VIbcx5pW9mAl9ej6NIzeThkxcLeLqAvrJlNUoILwlblF5rM27n7Qu3SpF7kS7Bqu8Bv5kAvdnON2G
-	8AhxdBLXsB1qLuGIO4BMhNdVjIfemoL8W1WOcvad07lgXP1NKncTnC6oD/UiVpgwzfsLUDrq9q4BL
-	ily8ZL2g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34880)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uFThY-0000FD-3D;
-	Thu, 15 May 2025 09:12:25 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uFThU-00057u-0T;
-	Thu, 15 May 2025 09:12:20 +0100
-Date: Thu, 15 May 2025 09:12:19 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Sean Anderson <sean.anderson@linux.dev>, netdev@vger.kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	upstream@airoha.com, Kory Maincent <kory.maincent@bootlin.com>,
-	Simon Horman <horms@kernel.org>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [net-next PATCH v4 06/11] net: phy: Export some functions
-Message-ID: <aCWh48ckDDCttbe-@shell.armlinux.org.uk>
-References: <20250512161013.731955-1-sean.anderson@linux.dev>
- <20250512161013.731955-7-sean.anderson@linux.dev>
- <20250514195716.5ec9d927@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DEl7eCgo"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-736c277331eso1580496b3a.1;
+        Thu, 15 May 2025 01:13:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747296796; x=1747901596; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pva8j2GZFLttdtKxinE0hP/DJHkfs2IvbbPFLofHyZ8=;
+        b=DEl7eCgoTu0Wy07J3lCuUaD3Gkcgzmg1iX9Hdr6u7eOPrEVrATB7ZV1v48M8OAgr2d
+         hL4tJoKnco+4+98yt9I9QgJxvZYpLxMFaLa5jKu7KOFUo0KWNZmnKapq+jv8iUKIsRSX
+         ciULcSVoNBlABOQ08PGGwues2o+Vda0m3t7JFiyrYgfWpVKh0PX9PYF00w38KPNxslDK
+         ScOQHxMhwwdGtRd2h48kBtEEYfV8WAn2UddFz3s0HAQiwqOZ/gQnf9bzaaWsxaYFc6tK
+         p0hF5moY62hl91yvR6npcoCCW3r45aTuoB+6SBgRbSEgwUqmr1nbkZg+sE1L3jTGiBbh
+         VbyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747296796; x=1747901596;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Pva8j2GZFLttdtKxinE0hP/DJHkfs2IvbbPFLofHyZ8=;
+        b=PUygdATxy+lPv6cGPdNfEold/Tvkf/f0bJhf+PSki5wSELaDVG6e06jog0jz4P3DyD
+         4kWPftqzrNpeNqUAFYAcoY3lYCvr/+syKvkor466sJUAEGPtzF42lc3wjjTK7s8SybKJ
+         SZ4zH5zsh5EGuQBIgUneXKQn9nW4rPX6fMnDt6xgPJKtgUnTTXkWxGCa5eYPNL64UiF6
+         qGYcKMXABOaaLaAI4Pddl7pZHbncQiWXYvSj2Kyy4d5u0RcDaj2UDgAzlDdtTPYkqvkw
+         vIz/Lm1JVvUi+wnk9hLb/EDPG4r+IzTOJZ9ScAPh/u3dy+37FTb6JaivqGLTmDjE+uk+
+         GUQA==
+X-Forwarded-Encrypted: i=1; AJvYcCUUwl5GxWgZdKAJBkSNRxBp6Wb6+FelxBOvGgN+5tXNMU7NAsjOTn0o3Y+TfEgqmSzc/aZ6Koceh7wH8d8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4BEXF9UGX4pyFKaiS5hMUB3uDeC8k+riSGb6ty5vLi2SjynYX
+	aVIAbxW4MRnVtiMthYqphSE5DqJonMKR90vgfn5PVqZCGlFqAwMc
+X-Gm-Gg: ASbGncsx9L0AlMiP04mFMZLVEwkTvz6pdXIP0K+DRHAvJoimOceZchEDktE5QGbYl7N
+	Fr3mYNxXjiv1pTJGdXWT+TK1gooRoH6afwj1kwxA0sMLO6A2qxmrBgGT3zWyN+mybjVLvbQnc0G
+	WbrJBU8uBQOlOTKFdkzn9yjyRy67BbPrgtT/RunyNxmvLU9u+V99B/7eyrlxeTK3g87KDtjUM66
+	aIUYyk79eOOMIHFuZmuSjRRUVz2e28ECdBP66a9R3k2jkWTJp1NaZdaDDUjdwJfLX5fnTvT+3ZT
+	Flv0ZZ0a8SJ2Eabq2yGe3b9RYaRkMTqNUtb0GhP+0+23p1mxMkMnoF/NNm6UGZuFA4Mbxo7vKKP
+	ah9RAhA==
+X-Google-Smtp-Source: AGHT+IHpxEDG8gwBDARRHS3Vz56j9VlacquoxXwyhH0WsZwqbL30t5Q3hYEztXrcC3PUqwMY4AwpIA==
+X-Received: by 2002:a17:902:f542:b0:22e:23c1:d711 with SMTP id d9443c01a7336-231b399df70mr43125495ad.16.1747296796237;
+        Thu, 15 May 2025 01:13:16 -0700 (PDT)
+Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc82a0fffsm111215775ad.224.2025.05.15.01.13.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 01:13:15 -0700 (PDT)
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: gregkh@linuxfoundation.org,
+	jirislaby@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	jserv@ccns.ncku.edu.tw,
+	Kuan-Wei Chiu <visitorckw@gmail.com>,
+	Yu-Chun Lin <eleanor15x@gmail.com>
+Subject: [PATCH v5] serial: max3100: Replace open-coded parity calculation with parity8()
+Date: Thu, 15 May 2025 16:13:11 +0800
+Message-Id: <20250515081311.775559-1-visitorckw@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514195716.5ec9d927@kernel.org>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 14, 2025 at 07:57:16PM -0700, Jakub Kicinski wrote:
-> On Mon, 12 May 2025 12:10:08 -0400 Sean Anderson wrote:
-> > Export a few functions so they can be used outside the phy subsystem:
-> > 
-> > get_phy_c22_id is useful when probing MDIO devices which present a
-> > phy-like interface despite not using the Linux ethernet phy subsystem.
-> > 
-> > mdio_device_bus_match is useful when creating MDIO devices manually
-> > (e.g. on non-devicetree platforms).
-> > 
-> > At the moment the only (future) user of these functions selects PHYLIB,
-> > so we do not need fallbacks for when CONFIG_PHYLIB=n.
-> 
-> This one does not apply cleanly.
+Refactor parity calculations to use the standard parity8() helper.
+This change eliminates redundant implementations.
 
-In any case, we *still* have two competing implementations for PCS
-support, and the authors have been asked to work together, but there's
-been no sign of that with both authors posting their patch sets within
-the last week.
+Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
+Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
+Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+---
+Changes in v5:
+- Dropped changes to bitops.h
+- Switched to using existing parity8()
+- Split parity8() conversion patch out of the series
 
-Plus, I had asked for the patches to be posted as RFC because I'm not
-going to have time to review them for a while (you may have noticed a
-lack of patches from myself - because I don't have time to post them
-as I'm working on stuff directed by my employer.)
+ drivers/tty/serial/max3100.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Sadly, being employed means there will be times that I don't have the
-bandwidth to look at mainline stuff.
-
+diff --git a/drivers/tty/serial/max3100.c b/drivers/tty/serial/max3100.c
+index f2dd83692b2c..d28a2ebfa29f 100644
+--- a/drivers/tty/serial/max3100.c
++++ b/drivers/tty/serial/max3100.c
+@@ -16,6 +16,7 @@
+ /* 4 MAX3100s should be enough for everyone */
+ #define MAX_MAX3100 4
+ 
++#include <linux/bitops.h>
+ #include <linux/container_of.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
+@@ -133,7 +134,7 @@ static int max3100_do_parity(struct max3100_port *s, u16 c)
+ 	else
+ 		c &= 0xff;
+ 
+-	parity = parity ^ (hweight8(c) & 1);
++	parity = parity ^ parity8(c);
+ 	return parity;
+ }
+ 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.34.1
+
