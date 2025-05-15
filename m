@@ -1,98 +1,96 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF8C15278E
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:20:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B768202F67;
+	Thu, 15 May 2025 08:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747297226; cv=none; b=NdvSZnrWOfxOkAWnxPBvidpNOkmGr0Zkw8fS2BzK7vkSPK2jiDgml0qgaFF2UvpB0O+lYfornd6qoVxfnOImR2vkg5f5D4BcWAJ7nezGfxCnLmYD81KrnLpplgKmAXfIs8UyREQYGYifWJzUJbpuvKXpJ8/DvJRKI18ltiQv57U=
+	t=1747297253; cv=none; b=acuQGw6Z3ETkNqlYIK94L5KyFM3qRb5m5FK8c+bDDDClmbJGsPugVSXEuNXfp3k1vV+n1K9KNe6N5+Jp8Mfu2ibI8mfirkbP8WGB3vUGWOIFRrkWFsYw5xmG9edPbkHGA4lPAUjUQdc6XnwBkfFNx8mbk5tn9Mql/oESHjgds9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747297226; c=relaxed/simple;
-	bh=FIaTKX7b4nzW2qlX9kj69WF5Z2/Wk9ZzHbCQJtLHzog=;
+	s=arc-20240116; t=1747297253; c=relaxed/simple;
+	bh=PwH7evc+Zg9zQbRLNnZYre+nyvUninerAdI6sm9HyQQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oWYPWa71QIDBLmf5+TL7XFeygqhXhhZMfRPS4fVFZ2r6Lv5HnZTZLub7q/fpk9KanqUMgVJlokalB9xs4evlUbpnVEQlScilqv3+OXqhGBmqsTSZkTBUlb4ee2rss7YaAHTkMNSNjCZ3rL/8FBED/CdLKXH2GWMXaWqkq8aCCjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QKQPbD8C; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=qVMcEESdwgZPaDhO8giEzv74yPGJ83BBNp5ntl1V6x4W/E96pXgOgY1SoZ1O57R3GPVRRuo4aaT/1zQjep233Gj16xuSlDd8OzGSDeU/Hp9Zq9nZGcoXGjwUTacBykVo0qZAt2IJ+ZDkxCUOXDNpoSzYryiMTmJmymcTFdrjIwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R8e7QL4f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QKQPbD8C"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a1c85e77d7so366484f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:20:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747297222; x=1747902022; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=g3sxhMO5RpeGc8vdDtyGXyj7URCP6ZAr4eRmvlXBLrc=;
-        b=QKQPbD8C5euGPIjYCE0UhSQjLerneuvpGLcMzKRL9uQOlnk5nSC0kpOaO/AdgXjz8D
-         QhuxCGGpKGZd7ArgdGVeKsfFQEDKZrFLb/eN3qTg9EDj9ylxbr4d6W64nOOyPT+4IS/m
-         ZwD8G2Z7O2uCFOSMfky06l5zURp/PVbyORZFvIQBpMpbZksTEwbZSu8+kfiIf7dlllz/
-         KzXgND/YOBCdT76JlctgwriMxLXAb4vtVmoT6a76R+7K/fvAkZroLX7Y1S0UCoBrDfbh
-         Zx9+72gzK0qtwPkPXZrhyKWN5lg15q949Gr5FzOyL+scujBDSXtKMoqsWSxpwgPDapyN
-         pvdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747297222; x=1747902022;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g3sxhMO5RpeGc8vdDtyGXyj7URCP6ZAr4eRmvlXBLrc=;
-        b=C1cjpxyDTdAsf10TeZydocGbAt5mymIe6/zzJC3WO8ggA67U+D8E1ivfRnP4dkxJM/
-         Zi2DK258YaLFN1xjISCpkg40I8JVgwy/mLHploufm9zGKwdWK8cMrFt1EkkIZIWXw85z
-         vP8pOsp/034b5I7jo4g/MH5zO9HKf8n0N+ln99rgCucuD7Y3cAU9m6QqsNS75iTAdUOx
-         08z3hmTzHKks4Gil0Pq2wHKceIKUwvo04GvezfSthGrvBrmvlAFgXnSm44lZzytIPHsh
-         nmZ3eg9rkJfI8CmCPqtpIaD+W3TPRt1U2LbAoIqPRikzH5BZ7lyjLQA/lEcglsfV7C32
-         i5WA==
-X-Forwarded-Encrypted: i=1; AJvYcCVdOJbvVgL1uyznc2pC2UaQAYPEzIy62zFpEhhSief/WkV2U87LyHgquAYOs5tlyi/ZlQvcJ7hs0QXBRjw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxN3KQFAGRFJxpb95RnjezW1IAyBHhrIouezyOuwbGsHJAOayYl
-	KESYXLBt9PXo7il2YD7Vt4dOJha1wP+smdZx2KOKF6dbRlAUPfO6x5dmeDGv3as=
-X-Gm-Gg: ASbGncuhkyi398Xm6GZxSfw9Bx/xDOCdATHMocWCRBzI+/SOiWvIBi2ueCCw57/X7oO
-	fjUgCGydulIj1NFxrUfYnnwQJoxhuF2FPUYnuJPqguca7WZ0p7o3WydOBt8dn1VIbgMXepS6W/O
-	0ziziiKoApdbJKxvOzqmgPDKrWelprXa9Tj9+/ConeceU54eUntMRvZ5qQEDb7x4wW0IA2KDlXB
-	QurL0Ya2o10StkQsjSSxOismVlElfi+HO8D9PTpBi9ZaZujOfwodTP+m/tQKEQRY1OvNzncaebd
-	Vh/zBH9DqcV9pZrUPZ04XLmQ1la9lMEhVIPhveogttFwlv2akkYGO3uq+2OH3Jr30uDXqWV4fVH
-	YYiAR7CdT7i+hGA==
-X-Google-Smtp-Source: AGHT+IEa1+58d1+6BJSAIo2TzY5wWJOuVJ0+Z2TtfkoH5bi1jAgj51GkhbBm4Ay68skIHC+1J/fe1w==
-X-Received: by 2002:a05:6000:2484:b0:3a1:fffe:6b6c with SMTP id ffacd0b85a97d-3a353749125mr1354915f8f.34.1747297222207;
-        Thu, 15 May 2025 01:20:22 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f39517f7sm58550155e9.20.2025.05.15.01.20.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 01:20:21 -0700 (PDT)
-Date: Thu, 15 May 2025 10:20:19 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R8e7QL4f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EEA5C4CEE7;
+	Thu, 15 May 2025 08:20:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747297253;
+	bh=PwH7evc+Zg9zQbRLNnZYre+nyvUninerAdI6sm9HyQQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R8e7QL4f51Ns4Svc0BXooM7bT20NZqGbI//uIINvG1stzHDxRcXJHYef3s//B1WpU
+	 7GNI0lWPGEe9/Cj3Cczav4tFDlVpjDBDJ3F35V9E6+r1hAu21RctQtzhUkuXi0jnUI
+	 cQCLFRf3tk1S/gioQhLMXqESwWaU6bJNXFZH5m20dh0KJykQ6OS882ysxZPl7UhM8/
+	 rivdHdJUeuWxsuPi35S75xgmhmAon9rYsZBF0FicGfQHcIleW6jj/wLftN2vJg9g+2
+	 DX2vYLGbiu4BguZ6ZgXbfCX3eVryGzzbkiEiWed0lsYOCjaTy8ItdHkkkh+/wbBRZq
+	 pd9djPFaUyykQ==
+Date: Thu, 15 May 2025 09:20:49 +0100
+From: Vinod Koul <vkoul@kernel.org>
+To: Igor Belwon <igor.belwon@mentallysanemainliners.org>
+Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: timer: Convert altr,timer-1.0 to DT schema
-Message-ID: <aCWjwwE1mDzAubNi@mai.linaro.org>
-References: <20250506022202.2586157-1-robh@kernel.org>
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v2 0/2] USB PHY support for Exynos990 SoCs
+Message-ID: <aCWj4cn4y+RyfGiZ@vaman>
+References: <20250420-usb-resends-april-v2-0-25dc7d2e6dd4@mentallysanemainliners.org>
+ <aCRXgpD0Ld2W4lHE@vaman>
+ <D9VYC98LJTR0.LJXYC1H0BAKA@mentallysanemainliners.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250506022202.2586157-1-robh@kernel.org>
+In-Reply-To: <D9VYC98LJTR0.LJXYC1H0BAKA@mentallysanemainliners.org>
 
-On Mon, May 05, 2025 at 09:22:01PM -0500, Rob Herring wrote:
-> Convert the Altera Timer binding to DT schema format. It's a
-> straight-forward conversion.
+On 14-05-25, 16:26, Igor Belwon wrote:
+> On Wed May 14, 2025 at 10:42 AM CEST, Vinod Koul wrote:
+> > On 20-04-25, 21:28, Igor Belwon wrote:
+> >> Hi all!
+> >> 
+> >> This patchset adds support for the USB 2.0 PHY of the Exynos990 SoC.
+> >> This SoC has a combo PHY that supports highspeed, superspeed USB and
+> >> DisplayPort, however due to my inability to test the superspeed part of
+> >> the combo phy (device always enumerated as high-speed, even on the
+> >> vendor kernels/bootloaders) only the highspeed part is brought up.
+> >> 
+> >> These changes have been tested and confirmed working (with the USB_ETH
+> >> gadget and telnet/ssh in a ramdisk) on a device from the hubble family
+> >> (x1s) and also a device from the canvas family (c1s).
+> >
+> > I am missing the dt patch, can you pls report the whole series if you
+> > would like me to review and apply this
 > 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
+> Hi Vinod,
+> 
+> I've sent the DT series a while back (before resending). Usually I
+> propose DT changes through Krzysztof's tree. The patches are 
+> unchanged (they will be resent unchanged when all usb and wdt 
+> changes are merged).
 
-Applied, thanks
+It makes sense to post bindings and driver togther and mostly these go
+thru subsystem trees!
+
+> 
+> Here is the patchset:
+> - on patchwork: https://patchwork.kernel.org/project/linux-samsung-soc/patch/20250217-exynos990-dt-changes-febuary-v1-2-99935218cbf4@mentallysanemainliners.org/
+> - on the mailing list archives: https://lore.kernel.org/all/20250217-exynos990-dt-changes-febuary-v1-2-99935218cbf4@mentallysanemainliners.org/
+> 
+> Best regards
+> - Igor
 
 -- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+~Vinod
