@@ -1,126 +1,179 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www637.your-server.de (www637.your-server.de [168.119.26.117])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F37422A1E5
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 21:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBB7171C9;
+	Thu, 15 May 2025 21:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.26.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747344050; cv=none; b=kzD0/VQzEtRo2CFIb30tTPtTWB5edfk0sDI1OEheQ3emFjjFS9CVBhVtK3b0n+qnIbwHI353ZaQdWqIehZUuqQyzBbEXx23iRE8w5xEv11kgY8t7cz8PkX82J6cEXUxhw68/NajXLZApOPGWMn36WNmZNnD29njpwphFILDSQns=
+	t=1747344118; cv=none; b=LVb0o+Bo6gl/PWjMZhGciQVXzC1pmbPukYczTKppkjo5KpTjMz+/mm2ohwvUGhHQNoIXyKYYwCMUQj0mQZ2EgbfKnzZ/0iT74M5ksTdqhaysilZ4dBcJvJnINCg/iLm1GKs173EIiLJFvD/1Yql9uxefE7lalXqWQ48zWyTM6+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747344050; c=relaxed/simple;
-	bh=QOm3m/r0dyEo2Mfa7umeu+ruloxr/DK67GsqoXNotWc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QRK+jq8p390SoAqXMo57WC9QAI5Uuyr8kP8AUSdezlJOjd5BbILM7DqKslKv79d80zJnHzDOsBSuLGfheTfFEqNB7o62kF9cx/ILBEkK5OTcRGqesss6iRmfFIl1pEMRAelI3xretzWuge7iEkF/HhCzzmeoHpmkSM0rKBz/2mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=MxLafy8E; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1747344118; c=relaxed/simple;
+	bh=xt3t2zCy2rbwmCE3z2RJVblyMEfL0A/VWx0xyaHd7aU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GDc2mL/477DGx6nYUV+kIjTiL3LeHLN5VZx2nqSsuX7zjHLIarLwipzCeVpGBdC2M33iB+pPGAiYEJ6NU3WguzfQR72uhKwvtnBjY7eCVV/eGJl6pnh729PbA6GRQ+NndOewQgSRel8WalrJdZ3Vvh000/CyE2lxplnm9/IqUjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu; spf=pass smtp.mailfrom=apitzsch.eu; dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b=AMa8qTqF; arc=none smtp.client-ip=168.119.26.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apitzsch.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apitzsch.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="MxLafy8E"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad216a5a59cso205393266b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:20:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1747344046; x=1747948846; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BBR1eDOR9aCst/oayM8CR1mluYptr7n0p9+2J85ynlw=;
-        b=MxLafy8E8iqQ5lgWlpYcoGzbiZPRAexp0uA9BJZ/N3ylYtyyZsMxITSSXWApTBv0dP
-         GOPzzLyH4/Dm0OiyRJLjOrvLeci3X2UJZsQNI5FQG8mbJywQBTighY19678rCPPDOTWh
-         cCjmK9/JUbOoPb74X5vfD/YNRVksUgzZH55xI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747344046; x=1747948846;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BBR1eDOR9aCst/oayM8CR1mluYptr7n0p9+2J85ynlw=;
-        b=QRQVaeu04dN9wPwJW1EVtr515wUI+SPVI2SsM1OdMhGVKyb9riHuYhvIoPrb8Rsh7m
-         B32sVnIINCX90JH93tvpJjxHd+aorjOc/tK56DUhsZLt+kme5St3EEkNRtbkKFSlH7iB
-         OpKqCdtWqKrEnR7EbWn9XysGgVJzKpsGWtK2LM2ffAT3QP4lIWmFWYDeSlmHEHIA2RQY
-         JVT5dVEXOb0jadl6nOcvQJKTeE1FQkpx6SfYrUAA4mVqBEhQKLZyqgw2go0yhG3lUHgn
-         rEgHNA1yCRB/nOn0vulDIyh+ZFU5MIcW6GUWRaG3zdO8KatpaiuOM4gYW0H2Hr6onQ+E
-         7iIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUU7kyxZIHsGVwzrTm6CZmgde/prl4m69qPlJlKzAi+pNkjgvupmc9MTQXslvqaku2jwl6w4frDp4GNsUg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOJdCuRnkcU+0lUORZDbQAF2z0TnMuCjYIzoBl0enz+Fkexy3u
-	l6zIzlbxAIBpctDTKkut4yxF4yxcpQcLEtcJD4ANs67ulYIuA+/TaTOHnq+jlg4wuCfDgV/v0gr
-	cxL9vcZA=
-X-Gm-Gg: ASbGnctUCQTzgv/d42unhtO1hfFshNbkr45h2INID6acMvzejE34pdRp/aJxra8bOxC
-	bl0+H9KWh4CPYf0ku+TGuxBunKSoDyn1xEXMzy+kNwMP+YMo1GbgQttSDzl5BMYKBwI3XAJW6Mc
-	oEw80hVAWHUd6+Qhtnjh++2+OfuHRDE3hZJNSBRU15Tgl2T0FGlFrBEz+rBP14/F1pas4n9GD6d
-	JmMgxOqB0kJ+c2qFQlA5JeVUn/9Nb3crV/hew6XaMlgJ5vgwy3Ys05vfAd1BKHnQQLoTtaZOK3a
-	WtLscC51tCHCxaKhpFUJfSCsDqZWWYgpkETT805d+k069Xi4VReoHSAdkAA5BW4z2262wB1Mrrx
-	4j+CBBZnqlWfFWMkgMap48LJq4Q==
-X-Google-Smtp-Source: AGHT+IHV08S/ZvAE9jB6dIYfouFy60KD4EdTHvVNQjB5N8GIJnypZtwY+2cwz6ervBhyFeQhbgfmoQ==
-X-Received: by 2002:a17:906:c115:b0:ad2:2abd:4613 with SMTP id a640c23a62f3a-ad52d5d85b1mr130610166b.41.1747344046571;
-        Thu, 15 May 2025 14:20:46 -0700 (PDT)
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d49889asm40091066b.141.2025.05.15.14.20.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 14:20:45 -0700 (PDT)
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5fbfa0a7d2cso2345197a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:20:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXxI8dunmvenv4r6plDqC5xR5KWv9zthBiCItZI4CxMqgkK+uya8I++czLs1Jr0BDaNTA2kL+xNmbfWhN0=@vger.kernel.org
-X-Received: by 2002:a05:6402:34d3:b0:5fb:e868:4d47 with SMTP id
- 4fb4d7f45d1cf-600900a54a2mr778653a12.7.1747344044885; Thu, 15 May 2025
- 14:20:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=apitzsch.eu header.i=@apitzsch.eu header.b="AMa8qTqF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=apitzsch.eu
+	; s=default2410; h=MIME-Version:Content-Transfer-Encoding:Content-Type:
+	References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=DtyhCMdgGFayCf64QkOsFNDpi9zrn2dltmKT58BWfNE=; b=AMa8qTqFCQDf2tkSKrh/yhpr4Z
+	bd0xc/jKnEYbF+skfZoWd/cegUyHus3VGyXluieMOBaKkA3Kx5gp1nuP7Gngn1TVj/K6bhKlhgff+
+	CNOD0x2DcmBtv1LgS11Vy+A9Kc/770lOi7EBmOLG+t7gOepHGm3ABibms9Z54Gf9oPTMPlymPQCEf
+	ntgnQSVbvo44WIeHzIbDzr0OMxNPJythVPF/lo6s6cZWdwu0N1QzqmouA2cbgPi8TwZkcB0H569eT
+	9t7k3hifkgn4MktDC2z9iBtSS3qQOnRuNQ0oqPCvDDZSgV9g2jvLRrcm/fYR4blA4tp6ghLqB37AB
+	N2JPtv5w==;
+Received: from sslproxy07.your-server.de ([78.47.199.104])
+	by www637.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <git@apitzsch.eu>)
+	id 1uFg1Q-000Crw-1g;
+	Thu, 15 May 2025 23:21:44 +0200
+Received: from localhost ([127.0.0.1])
+	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <git@apitzsch.eu>)
+	id 1uFg1Q-0006IK-0f;
+	Thu, 15 May 2025 23:21:44 +0200
+Message-ID: <7d2d4c3bc5e8d49fbcd4763487f82db634b06205.camel@apitzsch.eu>
+Subject: Re: [PATCH v2 4/4] media: i2c: imx214: Remove hard-coded external
+ clock frequency
+From: =?ISO-8859-1?Q?Andr=E9?= Apitzsch <git@apitzsch.eu>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, Laurent Pinchart
+	 <laurent.pinchart@ideasonboard.com>
+Cc: Ricardo Ribalda <ribalda@kernel.org>, Mauro Carvalho Chehab
+	 <mchehab@kernel.org>, ~postmarketos/upstreaming@lists.sr.ht, 
+	phone-devel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Thu, 15 May 2025 23:21:42 +0200
+In-Reply-To: <aCZWV6xj4vap5PFZ@svinhufvud>
+References: <20250505-imx214_ccs_pll-v2-0-f50452061ff1@apitzsch.eu>
+	 <20250505-imx214_ccs_pll-v2-4-f50452061ff1@apitzsch.eu>
+	 <aBnHI1APgjfcj2xG@kekkonen.localdomain>
+	 <20250515085846.GR23592@pendragon.ideasonboard.com>
+	 <aCXWDnZhffjlt+8i@svinhufvud>
+	 <20250515130340.GC12492@pendragon.ideasonboard.com>
+	 <aCZWV6xj4vap5PFZ@svinhufvud>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <feb98a0f-8d17-495c-b556-b4fe19446d5d@zytor.com>
-In-Reply-To: <feb98a0f-8d17-495c-b556-b4fe19446d5d@zytor.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 15 May 2025 14:20:28 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi7sLm+zHUkyFO8V6QNghLQn0yiWsHfm8WU=V15K7K07Q@mail.gmail.com>
-X-Gm-Features: AX0GCFvQzChipAAsH_IbAZosPG5_B84g3tcv-qhuY1vOrrfycyiz9i-JpJtmDoM
-Message-ID: <CAHk-=wi7sLm+zHUkyFO8V6QNghLQn0yiWsHfm8WU=V15K7K07Q@mail.gmail.com>
-Subject: Re: Metalanguage for the Linux UAPI
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>, 
-	libc-alpha@sourceware.org, linux-arch@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Authenticated-Sender: andre@apitzsch.eu
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27638/Thu May 15 10:41:10 2025)
 
-On Thu, 15 May 2025 at 13:05, H. Peter Anvin <hpa@zytor.com> wrote:
->
-> We have finally succeeded in divorcing the Linux UAPI from the general
-> kernel headers, but even so, there are a lot of things in the UAPI that
-> means it is not possible for an arbitrary libc to use it directly; for
-> example "struct termios" is not the glibc "struct termios", but
-> redefining it breaks the ioctl numbering unless the ioctl headers are
-> changed as well, and so on. However, other libcs want to use the struct
-> termios as defined in the kernel, or, more likely, struct termios2.
+Hi Sakari, Hi Laurent,
 
-Honestly, I *really* don't want to go down that rat-hole.
+Am Freitag, dem 16.05.2025 um 00:02 +0300 schrieb Sakari Ailus:
+> Hi Laurent,
+>=20
+> On Thu, May 15, 2025 at 03:03:40PM +0200, Laurent Pinchart wrote:
+> > On Thu, May 15, 2025 at 02:54:54PM +0300, Sakari Ailus wrote:
+> > > On Thu, May 15, 2025 at 10:58:46AM +0200, Laurent Pinchart wrote:
+> > > > On Tue, May 06, 2025 at 08:24:03AM +0000, Sakari Ailus wrote:
+> > > > > On Mon, May 05, 2025 at 11:05:56PM +0200, Andr=C3=A9 Apitzsch via
+> > > > > B4 Relay wrote:
+> > > > > > From: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
+> > > > > >=20
+> > > > > > Instead rely on the rate set on the clock (using assigned-
+> > > > > > clock-rates
+> > > > > > etc.)
+> > > > > >=20
+> > > > > > Signed-off-by: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
+> > > > > > ---
+> > > > > > =C2=A0drivers/media/i2c/imx214.c | 6 ------
+> > > > > > =C2=A01 file changed, 6 deletions(-)
+> > > > > >=20
+> > > > > > diff --git a/drivers/media/i2c/imx214.c
+> > > > > > b/drivers/media/i2c/imx214.c
+> > > > > > index
+> > > > > > 9e9be47394ec768a5b34d44b06b5bbb0988da5a1..c12996e294dccebb1
+> > > > > > 8c608254f1e0d14dc064423 100644
+> > > > > > --- a/drivers/media/i2c/imx214.c
+> > > > > > +++ b/drivers/media/i2c/imx214.c
+> > > > > > @@ -32,7 +32,6 @@
+> > > > > > =C2=A0
+> > > > > > =C2=A0#define IMX214_REG_FAST_STANDBY_CTRL	CCI_REG8(0x0106)
+> > > > > > =C2=A0
+> > > > > > -#define IMX214_DEFAULT_CLK_FREQ	24000000
+> > > > > > =C2=A0#define IMX214_DEFAULT_LINK_FREQ	600000000
+> > > > > > =C2=A0/* Keep wrong link frequency for backward compatibility *=
+/
+> > > > > > =C2=A0#define IMX214_DEFAULT_LINK_FREQ_LEGACY	480000000
+> > > > > > @@ -1405,11 +1404,6 @@ static int imx214_probe(struct
+> > > > > > i2c_client *client)
+> > > > > > =C2=A0		return dev_err_probe(dev, PTR_ERR(imx214-
+> > > > > > >xclk),
+> > > > > > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get
+> > > > > > xclk\n");
+> > > > > > =C2=A0
+> > > > > > -	ret =3D clk_set_rate(imx214->xclk,
+> > > > > > IMX214_DEFAULT_CLK_FREQ);
+> > > > > > -	if (ret)
+> > > > > > -		return dev_err_probe(dev, ret,
+> > > > > > -				=C2=A0=C2=A0=C2=A0=C2=A0 "failed to set xclk
+> > > > > > frequency\n");
+> > > > > > -
+> > > > >=20
+> > > > > Oops. I missed this is what the driver was doing already.
+> > > > > Indeed, this is one of the historic sensor drivers that do
+> > > > > set the frequency in DT systems.
+> > > > >=20
+> > > > > The driver never used the clock-frequency property and
+> > > > > instead used a fixed frequency. Changing the behaviour now
+> > > > > could be problematic.
+> > > > >=20
+> > > > > There are options here that I think we could do:
+> > > > >=20
+> > > > > 1) use your v1 patch (4) which uses "clock-frequency" if it
+> > > > > exists and otherwise uses the default, fixed frequency or
+> > > > >=20
+> > > > > 2) set the frequency only if the "clock-frequency" property
+> > > > > exists. The DT currently requires clock-frequency and the
+> > > > > YAML conversion was done in 2020 whereas the driver is from
+> > > > > 2018. If we do this, the clock-frequency should
+> > > > > be deprecated (or even removed from bingings).
+> > > > >=20
+> > > > > I wonder what others think. Cc'd Laurent in any case.
+> > > >=20
+> > > > Maybe I'm missing something, but I don't really see the issue
+> > > > here. The clock-frequency DT property is currently ignored, and
+> > > > this patch doesn't change that situation, does it ?
+> > > >=20
+> > > > The change of behaviour here is related to the assigned-clock-
+> > > > rates property. If that property is specified today, it will
+> > > > set the clock rate, and the driver will override it to 24MHz
+> > > > right after.
+> > > > With this patch, the clock rate won't be overridden. I think
+> > > > the risk of regression is very low here, as I don't expect
+> > > > systems to set assigned-clock-rates in DT to a value different
+> > > > than 24MHz and expect the driver to override it.
+> > >=20
+> > > If the DTS had assigned-clock-rates set correctly, then yes. How
+> > > much can we trust the older DTS did have that?
+> >=20
+> > I am relatively confident that DT-based systems wouldn't have an
+> > assigned-clock-rates property with a frequency that doesn't match
+> > IMX214_DEFAULT_CLK_FREQ. The real question is whether or not I'm
+> > over-confident :-)
+>=20
+> The assigned-clock stuff wasn't always there. But nowadays I guess a
+> lot of things in practice depends on it.
+>=20
+> So I guess doing this should be fine then.
 
-It's going to be full of random project-specific issues, and the
-bigger projects - like glibc - wouldn't use the kernel headers anyway,
-even with some generic language, because they have their own history,
-they deal with lots of other non-Linux platforms, and it's just all
-downside for them.
+Just to be clear, this patch is fine and no changes are needed?
 
-In fact, it's all downside for the kernel too. I do *not* want kernel
-headers to be used by other projects, because I simply don't want to
-hear about "we do Xyz, so the innocuous uapi header change breaks
-Abc". It's all pain, for no gain.
+Should the bindings be updated in this series or can that be done
+later?
 
-So as far as I'm concerned, the uapi header split has been very
-successful - but not because other projects can then use our uapi
-headers. No, purely because it helped *kernel* people be more careful
-about a certain class of changes, and was a big read flag in that it
-made people go "Oh, I can't just change that structure, because it's
-exported as an API to user space".
-
-If you _really_ want to do a Metalanguage for these things, and want
-to support lots of different namespace issues, several different
-languages etc, I have a very practical suggestion: make that
-metalanguage have a very strict and traditional syntax. Make it look
-like C with the C pre-processor.
-
-There are lots of libraries and tools to parse C, and turn it into
-other forms. Making up a new language when we already *have* a good
-language is all kinds of silly. Just use the language it already is
-in, and take advantage of the fact that there's lots of infrastructure
-for that language.
-
-                    Linus
+Best regards,
+Andr=C3=A9
