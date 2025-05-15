@@ -1,96 +1,55 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F04E17993
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B33E17993;
+	Thu, 15 May 2025 10:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747306095; cv=none; b=cUm5QkP5jNOn/S9T28D4R0q60RzQtQtJty24/IrO29eNZCOFMSDGt+6h2MxyWCqvyLBcvAgUm5UcSXgvz5fFU7+F752cb5fX3XmyjivEQ06UyKWebci3vEdqe2Y8tMFyu+qGjTl5rYGpb2L5fbaoOaK8SNzvPOhUDbW+yRCBnfE=
+	t=1747306100; cv=none; b=OJKaVQpiLA9eNqa19gF8/yskURsdycbPfA5wBC73wl3Fh+qG1agD13j9Fk1eiCrdUiYpejXPHCEVDIrMhPFPNo2PSuoyX2AsJ9vr3xJpsNFr+FSL04VPIz/uTeXJDQ8kPpbWWgz3bi01YGVERbUb3uPoQeTdktb/CAvIsjKg15Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747306095; c=relaxed/simple;
-	bh=HSHAc1esZ7JGsghsuy8H2Bqb4SKoBoPV4DVt5e5AQzY=;
+	s=arc-20240116; t=1747306100; c=relaxed/simple;
+	bh=ZM2IaWkndpSY9YYKLqBne0P30sJu/8RnGzA74WDbB7I=;
 	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tsxihwP/1C9m1HN2oRg7EexrclmUbrPqds+r8+LunGDtWK31PyLXXZ8tzJtv8z7E6ccgzoGp4nq5r3eaR5HBDD7tUmcBQCvueceNDpg0OzfWYC5vLsmd6miMcBJKg++58W2Zs0uFQHeiJxYHjbEFCerxLyMKqb9BURK2/ffZclY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=W19INCcK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=r1ZTN2ys; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zLyRDf5b; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lkp2QJLL; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 MIME-Version:Content-Type; b=XTt1Z65QEkIM0v2CEvH1qodUDt44CUWy1FLcV6/u4yQob5/7RECrH+Uyqvim5WCRicT/3FapfyypkIUEMHNN0Hs/RRlO9g0RHA1x92QIlBAPht34WNhkFV/rRPfAmV5++T+3QW7H7uPNGOp/BWmCWGvw5G4+9nv9se1DT02mMVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NZlkmiqV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="W19INCcK";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="r1ZTN2ys";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zLyRDf5b";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lkp2QJLL"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 8E659211EB;
-	Thu, 15 May 2025 10:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747306091; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HxihgeIkFF/rHdS4s6GW49xNqzW9yrSrX50YJnkKkME=;
-	b=W19INCcKMU0cm1jbKIcq3MNJwuidUTyN6mqfMl4C4sHfkDXbIDop1030mBRAVj+kWEQREt
-	UlP2HALnjEmIObe3G1opjfrKaUM3rdy5srgBXoOVaR/GVwPPGeDUjV20fsPTNwyujEwtIm
-	GJMGb0VgpxO9eB93YxQa6u18WwN+OGg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747306091;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HxihgeIkFF/rHdS4s6GW49xNqzW9yrSrX50YJnkKkME=;
-	b=r1ZTN2ysZtn+sQTHBpO2VA81MsO4mL2VZ5KYluF+/HzOb8P8mEL8QR7MwaR3o8RYgtlT6c
-	qqITH2vUydsrdbBg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=zLyRDf5b;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=lkp2QJLL
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747306090; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HxihgeIkFF/rHdS4s6GW49xNqzW9yrSrX50YJnkKkME=;
-	b=zLyRDf5barxYam1WigUEvSI4oBX5+kb04uTjPyO3LkFBt6gcc36dNuxDym7d4aP0QqXchs
-	30X+tixwai45imR5yoKXdwoW2GMmuwcNY2zJ6ag208/vqkXUTS49ODVeuZ6AsLKXLFFxjG
-	MBkY1kJWSdAqJ1V42QEpVr4xhytJ9c8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747306090;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HxihgeIkFF/rHdS4s6GW49xNqzW9yrSrX50YJnkKkME=;
-	b=lkp2QJLLaQ7SBT8+8MqXoC9dcranJYUti3dAGzkSUYYuyZNd6CgPbDdD+IdElLE/MRXPWe
-	J5ksK9zkW+nkavBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2A3B8137E8;
-	Thu, 15 May 2025 10:48:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id +igNCWrGJWjRZwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Thu, 15 May 2025 10:48:10 +0000
-Date: Thu, 15 May 2025 12:48:09 +0200
-Message-ID: <87msbervyu.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: "Sheetal ." <sheetal@nvidia.com>
-Cc: <lgirdwood@gmail.com>,
-	<broonie@kernel.org>,
-	<robh@kernel.org>,
-	<krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>,
-	<linux-sound@vger.kernel.org>,
-	<devicetree@vger.kernel.org>,
-	<linux-tegra@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	<thierry.reding@gmail.com>,
-	<jonathanh@nvidia.com>,
-	<perex@perex.cz>,
-	<tiwai@suse.com>
-Subject: Re: [PATCH 0/2] HDA: Add Tegra264 support
-In-Reply-To: <20250512064258.1028331-1-sheetal@nvidia.com>
-References: <20250512064258.1028331-1-sheetal@nvidia.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NZlkmiqV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0689C4CEE7;
+	Thu, 15 May 2025 10:48:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747306100;
+	bh=ZM2IaWkndpSY9YYKLqBne0P30sJu/8RnGzA74WDbB7I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NZlkmiqVCoiGlAyCHq/uRm6Ti6BPAEvuRWb9pm21vgLFNQzAlSzZxDI7Ag4rBBrhg
+	 hG/KA7ZuiWGPY3IikuYGESrDrBa3lxnUEpchzP6KSICzZTYuZgqDO0jRSSLMIHuPEw
+	 p5Z+Usz57kaMWBTwMewezNKMGdlQIBC+mUgilZpe9R9NvLIxVspHscebg0FWOgfSPq
+	 nWIUhSTGkDDXKhVjxGHA8cctjwiUxWDhK7QAdUmmxdBd9QkdoDWbQ1vEwXkyOg+BLv
+	 YUJYB8kHe86veN8Vrf6+SJ+4IvlY0mif+RT2ak6rFlA04hnJKauCa+p8WN1p9KhgCD
+	 WXaeyiq2cEGfw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uFW8P-00FCGc-Kj;
+	Thu, 15 May 2025 11:48:17 +0100
+Date: Thu, 15 May 2025 11:48:17 +0100
+Message-ID: <86jz6if8um.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Ben Horgan <ben.horgan@arm.com>
+Cc: Raghavendra Rao Ananta <rananta@google.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Mingwei Zhang <mizhang@google.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH 0/3] KVM: arm64: Allow vGICv4 configuration per VM
+In-Reply-To: <5d204cf7-c6a0-455c-8706-753e1fce3777@arm.com>
+References: <20250514192159.1751538-1-rananta@google.com>
+	<5d204cf7-c6a0-455c-8706-753e1fce3777@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -98,61 +57,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 8E659211EB
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-2.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,vger.kernel.org,nvidia.com,perex.cz,suse.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[dt];
-	DKIM_TRACE(0.00)[suse.de:+];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,nvidia.com:email]
-X-Spam-Score: -2.01
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: ben.horgan@arm.com, rananta@google.com, oliver.upton@linux.dev, mizhang@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Mon, 12 May 2025 08:42:55 +0200,
-Sheetal . wrote:
+On Thu, 15 May 2025 11:30:33 +0100,
+Ben Horgan <ben.horgan@arm.com> wrote:
 > 
-> From: Sheetal <sheetal@nvidia.com>
+> Hi,
 > 
-> The patch series is to add support for Tegra264 in HDA driver.
-> 
-> Mohan Kumar D (1):
->   ALSA: hda/tegra: Add Tegra264 support
-> 
-> Sheetal (2):
->   dt-bindings: hda: Update Tegra compatible requirements
->   dt-bindings: Document Tegra264 HDA Support
+> On 5/14/25 20:21, Raghavendra Rao Ananta wrote:
+> > Hello,
+> > 
+> > When kvm-arm.vgic_v4_enable=1, KVM adds support for direct interrupt
+> > injection by default to all the VMs in the system, aka GICv4. A
+> > shortcoming of the GIC architecture is that there's an absolute limit on
+> > the number of vPEs that can be tracked by the ITS. It is possible that
+> > an operator is running a mix of VMs on a system, only wanting to provide
+> > a specific class of VMs with hardware interrupt injection support.
+> > 
+> > To support this, introduce a GIC attribute, KVM_DEV_ARM_VGIC_CONFIG_GICV4,
+> > for the userspace to enable or disable vGICv4 for a given VM.
+> > 
+> > The attribute allows the configuration only when vGICv4 is enabled in KVM,
+> > else it acts a read-only attribute returning
+> > KVM_DEV_ARM_VGIC_CONFIG_GICV4_UNAVAILABLE as the value.
+> What's the reason for the cmdline enable continuing to be absolute in
+> the disable case? I wonder if this is unnecessarily restrictive.
 
-Applied all patches now to for-next branch.
+Because there are a number of GICv4 implementations that are
+absolutely terrible out there, and that will happily lock-up under
+some undisclosed circumstances.
 
+So unless you find a good way to retire that HW, GICv4 will continue
+to be a buy-in.
 
-thanks,
+	M.
 
-Takashi
+-- 
+Without deviation from the norm, progress is not possible.
