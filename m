@@ -1,91 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E161A5B95;
-	Thu, 15 May 2025 06:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE24A280A57;
+	Thu, 15 May 2025 06:13:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747289459; cv=none; b=HDQ6Y+hBF08stwvSVL1eQmjPgQ/t7sAx6DOSuBCHCFX+Kp8E37113xsvru4jVELY3FiBuFp8TjHfkxlRSUYmxud9zmZxW4bvE49dweERuHDhUlQt9mf+WmsAcdwnuX0/oTG4tS3V8IJkhGfp4TCKv07BZGkFd+EU3LjGyvYHuS8=
+	t=1747289637; cv=none; b=eOIr42fCHgfouqdkKSvkt7Qv8OGiNG6AE/Ym3xxEDOforXGkh1AanYzd/I/82ktAYpwBwIQz6BEKSgNPEKI7Cra7Fq9Rb4fhflBwqZjCGKMw9UPgQAmdY9w65SBJsukrl/v/OYTuNhI37an363syaLtNgggZpc7gW2XdD3ym6o8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747289459; c=relaxed/simple;
-	bh=uwAvIOKiGNt0V7PmuDj4HchROm9VjBjY9WBKCBQ84Vo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LxoedsGJZO+3atYl2G5Z0s15VURroHEdwXkGeXSmFDcewmoWuDQO7Pd+95Ww5SzesO0XUiAfRZsANV8PMY2aNzme8EAuO67lC+g8mzpbLZ/Ru2jfDgyQoSe5OIVqV/OtqLTctl4eqz+oTz6eUmFXnQ3IBY/gAIwUBkRnwMB9Q6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FnR2lEy3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747289637; c=relaxed/simple;
+	bh=vtoknimTlct0P2pBjlgVFtfVvUE2Qtioz9EcT/r3oIw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LRPE67BJ+dfzpmUSM/1f4gJ3tW/qhlx+R4x5g/WYot/nwC/loFDvjWOZH/AC95obv59mI/al7M+NOJf/CDhofAJNgw2ums6xk7gsfWCxUOVTldeH5+KuC5pXH9tVxSAVvmgZ/itzkKwQhB/Z8jy3AV7u8fYhzKUEe8grErWy1rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=LNw4mOFK; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FnR2lEy3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DFB8C4CEE7;
-	Thu, 15 May 2025 06:10:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747289458;
-	bh=uwAvIOKiGNt0V7PmuDj4HchROm9VjBjY9WBKCBQ84Vo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FnR2lEy3OYI8L29u3+QfR6kLHNYG5uKVEXFva5ImXpzBPvUaO6my2Aw3g3HOBWdlk
-	 Uf3VH8l98Ytodmjo29W9o3aHMa7N4L4CHr3H1aLyt2aeedcu8pYXLEHde9ihwiugD3
-	 F87YccKQCix44dQYaFuguQYij4bpo2xQ1czzJDceerUYkpZG1Tna25e5M8OYarjLDS
-	 FxcR3pTAC5l+fp6mesqZz9wJKoqwoBjqBb9LKjmudVy15r3PXs4Y8xg+Opyc6dS0/P
-	 LeeknhiFPRP+nli03LtsMR04uyawJKPPGjCH0Ldj3HvxNdyEdU3JLnmYaeKWjJEGJw
-	 OyOUetgHd11Dw==
-Date: Thu, 15 May 2025 11:40:45 +0530
-From: Sumit Garg <sumit.garg@kernel.org>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Apurupa Pattapu <quic_apurupa@quicinc.com>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 05/11] firmware: qcom: scm: add support for object
- invocation
-Message-ID: <aCWFZchX9nbZOC89@sumit-X1>
-References: <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-0-6a143640a6cb@oss.qualcomm.com>
- <20250428-qcom-tee-using-tee-ss-without-mem-obj-v4-5-6a143640a6cb@oss.qualcomm.com>
- <aCRkRTMFi65zBODh@sumit-X1>
- <CACMJSev2qqnxLN6OiSEKhUqxeewY09to0Jd2oPNoE39YFS6i3A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="LNw4mOFK"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54F48PEe026960;
+	Wed, 14 May 2025 23:13:42 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=anHo+MtlLOaSLRQrmIlyGcx
+	guu34jS62bNXAmb/2UMY=; b=LNw4mOFKrz30ja9BEm/gV86yZBjycQXhTcPg5rn
+	G5zX959Rr9qZcuwqqS8qK10FT/l9ghiBp1spb6cI3HuURFuUixN9xJpOzh6P79td
+	fKGs+XKP7U8F3QhTs4IGT6lNyFPlmVOMicBcWNFqZeub2aIsf3PTyGFDxQ4f9bhJ
+	H1WbcDqGcR7QL8anz5Ke9vZ6C61EHnrQ3xjU2ge8gdaJ4IXfL5zOvxq2SL1nwZsg
+	bgZCb8a1puyCmhP6E7iou7aqtyySJsQ/8AkAxSfjbo8hriznTZeD5dwI+gBnxGdW
+	SdOES5PXqEyyW5tJfZpEpA4+VlKeT1l5pQG32qV180E6lGA==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 46n4vngm63-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 May 2025 23:13:42 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Wed, 14 May 2025 23:13:41 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Wed, 14 May 2025 23:13:41 -0700
+Received: from bharat-OptiPlex-Tower-Plus-7020.. (unknown [10.28.34.254])
+	by maili.marvell.com (Postfix) with ESMTP id B2EE43F707D;
+	Wed, 14 May 2025 23:13:38 -0700 (PDT)
+From: Bharat Bhushan <bbhushan2@marvell.com>
+To: <bbrezillon@kernel.org>, <schalla@marvell.com>,
+        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <giovanni.cabiddu@intel.com>, <linux@treblig.org>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Bharat Bhushan <bbhushan2@marvell.com>
+Subject: [PATCH 0/2] crypto: octeontx2: Changes related to LMTST memory
+Date: Thu, 15 May 2025 11:43:34 +0530
+Message-ID: <20250515061336.3348493-1-bbhushan2@marvell.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACMJSev2qqnxLN6OiSEKhUqxeewY09to0Jd2oPNoE39YFS6i3A@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: djwqasaALAIqBFIlDoqzKcpxMVL0ftAh
+X-Proofpoint-GUID: djwqasaALAIqBFIlDoqzKcpxMVL0ftAh
+X-Authority-Analysis: v=2.4 cv=aIDwqa9m c=1 sm=1 tr=0 ts=68258616 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=dt9VzEwgFbYA:10 a=5-JLTSaU0EQnWg3z5X0A:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDA1OCBTYWx0ZWRfX26n/tu3pqqhL nrN2PLgcmcfkVjXr771VVFIPosuC5yAt7wBld7F9Jec/BkgygSmGIr7MbkkKN+4DCu7N8qhyzgd BTzLr32dDZW3AcmT4EwdomOJlv1Co3rWBEjKkhcdX9gXYYZ568ej9zLMuotBUPWklkWdQxoWW1h
+ QtLTkAAJ5A69AhaoR0JXfp2IYjFxu0FhWGpVAA5xi1gvvyH3j0g8F1TB3+Pc9C8lD+ptsvvvgGE R1sw9cg6glOTVxZLmyLQuLI39viGscwlJrxEj31rvJgOC9ASyxmb3Z6cm85LDEgGcDCt1bKyQRY vGqX10Kz075YgoytUsGSmSTxWdsg5Wyuw02VG69pkAcTBb3EMJR3mpAZ8dsNHZhOfqj/IXIE9eK
+ i6+87KroP6S9CnC04gzDCKn1EkLGyVhhzP2gzhjTPN2Fvs9hRbNuna8wpLrGYWWYKpfm6HIb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-15_02,2025-05-14_03,2025-02-21_01
 
-On Wed, May 14, 2025 at 05:27:44PM +0200, Bartosz Golaszewski wrote:
-> On Wed, 14 May 2025 at 11:37, Sumit Garg <sumit.garg@kernel.org> wrote:
-> >
-> > Hi Amir,
-> >
-> > I am still unable to get the QCOMTEE driver to work on db845c. As I can
-> > see machine: "qcom,sdm845" is not supported for tzmem based on SHM
-> > brigde here: drivers/firmware/qcom/qcom_tzmem.c +81. I am still seeing
-> > following logs from userspace:
-> >
-> > # /mnt/unittest -d
-> > [test_print_diagnostics_info][31] test_get_client_env_object.
-> > [test_supplicant_release][65] test_supplicant_worker killed.
-> >
-> > I think you should first check here for SHM bridge support. If available
-> > then only add a QTEE platform device.
-> >
-> 
-> On platforms not supporting SHM Bridge, the module should fall back to
-> non-SHM mode. Isn't it the case?
+The first patch moves the initialization of cptlfs device info to the early
+probe stage, also eliminate redundant initialization.
 
-Okay, I see. Amir clarified offline how the non-SHM mode works.
-IIUC, the memory registration with QTEE is not required and instead QTEE
-can directly work with memory references being passed as part of object
-invocation.
+The second patch updates the driver to use a dynamically allocated
+memory region for LMTST instead of the statically allocated memory
+from firmware. It also adds myself as a maintainer.
 
-So it looks like the user space app not working on db845c is another
-issue with QTEE which needs to be fixed. 
+Bharat Bhushan (2):
+  crypto: octeontx2: Initialize cptlfs device info once
+  crypto: octeontx2: Use dynamic allocated memory region for lmtst
 
--Sumit
+ MAINTAINERS                                   |  1 +
+ drivers/crypto/marvell/octeontx2/cn10k_cpt.c  | 89 ++++++++++++++-----
+ drivers/crypto/marvell/octeontx2/cn10k_cpt.h  |  1 +
+ .../marvell/octeontx2/otx2_cpt_common.h       |  1 +
+ .../marvell/octeontx2/otx2_cpt_mbox_common.c  | 25 ++++++
+ drivers/crypto/marvell/octeontx2/otx2_cptlf.c |  5 +-
+ drivers/crypto/marvell/octeontx2/otx2_cptlf.h | 12 ++-
+ .../marvell/octeontx2/otx2_cptpf_main.c       | 18 +++-
+ .../marvell/octeontx2/otx2_cptpf_mbox.c       |  6 +-
+ .../marvell/octeontx2/otx2_cptpf_ucode.c      |  2 -
+ .../marvell/octeontx2/otx2_cptvf_main.c       | 19 ++--
+ .../marvell/octeontx2/otx2_cptvf_mbox.c       |  1 +
+ drivers/pci/controller/pci-host-common.c      |  4 +
+ 13 files changed, 137 insertions(+), 47 deletions(-)
+
+-- 
+2.34.1
+
