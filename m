@@ -1,98 +1,140 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE3B298CDD
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD3227978D
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:52:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747313544; cv=none; b=eUZmze4YykgT3tLkv3t2y4tZg8yiY3kj/u6NqsClT/1pauBzE+7A+cssPkSyE6OxoF0UtFxPajFTDdpVOQ+51RGUnml5ok6NHUfLnuDMPEyFkzfaghJTBlQIXRyab2GKHJdq6dIHWmKObaoSbz1lywWybDVKrmgXqREKysxBo8o=
+	t=1747313567; cv=none; b=fuXksucWIYgxjpeESSg7HiH6eQg9V2rSe5HwrjANWbf8VN8U1WSIE8yDvpYKKD9gnmcOcryIiZ2pOXi7XzBdq2w3YXxeUKTdLbZnkLpiPyHK94BVtDP3vqftKX5Xb9pDKr4I5nVBJseV8h2XjfnPRbI1O2rPryjAoQxCh4x9DOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747313544; c=relaxed/simple;
-	bh=CPkuAWMDXEB5UuZ6HlFfiQZ87mvHOAlAeOGYVCqenus=;
+	s=arc-20240116; t=1747313567; c=relaxed/simple;
+	bh=r5wjZzZJdlRUNc8+awzmIOy8f4SQE+WWNZHaU5l2A44=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cbWSsIAjNoBlBAaKKYZo4kVzI34Wmub2F3N4H83z4LYEqjDO2g4UmK89cRr4UZz7Kx+UdD6oGKgMpvFRCbv8wd540WIIow2cQV6Vv8d0Z2PixYmbYBnH4NF4Plh4Wko1viS2goGM+tVz9jqSMsVnrsAXeXRlEhVQGzt4DNw9lV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RR8++vlc; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=eYKbY7udc+ge7cZ+CrJQXMnFq75VVFp26NXCPOKeH10sBjVcU1/lrOCCFmkLIURdB36vpMR/oix3euuoqfIc4X4o63e4TjVCo2HV4bpCBbxzhNBmVgsPfHZyu2B4tXdpNxFPenaKqIjyw5eYoyXqe411HT8OhKkh2kDlKmg3GLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VY28uras; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RR8++vlc"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-442ec3ce724so7217685e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 05:52:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747313540; x=1747918340; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fK3aTKI5/68JTESvc/oXGZyIBHmOFX8dt6G+gKVeWWw=;
-        b=RR8++vlclrR7mSnYYWcClj7379hRTHpvCAatuSGIK+PKgt1QaQeYIsRM9A9IVH+8NR
-         gzJbRVdAwYEptf40X5KvRYyS4KNTzVWHnFtI4+2/bkszInITcI5M1xlUsJnX5r15UX95
-         mzvu/WtaR5mjaJD5KmI0NvQo+b3EJy2O6NcdwUXExaT0nvbLcEj3ppkOrce+asojVmHE
-         28M4jxXWP7RgbQPTZtOc7raTyVlo9gk5jBMO+CgjoREyNLxrdafWi3CljnHf+Ky3QAB3
-         EZmjaHLOvEHRp6LGWyi8LJqzU9ivfnjPo2tG7NrXaoXHKNOzVGAI73ISEo3o92qVjq67
-         s38g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747313540; x=1747918340;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fK3aTKI5/68JTESvc/oXGZyIBHmOFX8dt6G+gKVeWWw=;
-        b=WnwHtu/NDQk1catcnjoPm0JhXSGB8ZS2852vbnb6Zj7uhBdEQRsoekap82Lf4s3OgS
-         9zXjb9g6Cd95g1oycOQ60EB1Q1Q/BEH7Vax4z7alLBmpHZo+cmO0a1sb40JRUuKIcy19
-         4/pHztkPV8cPtMsgoBadAFk8k/q8UHvES1n/IIy0jrkbtUnMAd1lU4L2CVOmm19rIc8k
-         ac7hMshYzTPFr5lTj566uGe1qRKo2oNJERqlh0rGrRkKj98EVe3GkQoxdFPkG1/isFqm
-         oIq/dLQrON+XiD+n+/sx90n2XUkepx7NHK5uwJAMTTEDsfeFnXfdyELNjLOtP8Oz8lvJ
-         KZnw==
-X-Forwarded-Encrypted: i=1; AJvYcCXpNWgwBKHycz0XvgwSMGfRdGaBwn46Bk225RHgs+lAQlB4qIMcC+ksHjgfdRys3QOul+qED15bBF5+uAc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKGae6W2N7OrGijL3OMv64ptcmwnxpgt1bkt/q8VnoI8nWc89J
-	zULvHqQERp5/92aCelMCUS067SU3dlDxhcIZmwdbdGUvq872bYeZFjFD/EDH96w=
-X-Gm-Gg: ASbGnct7bE6LAv6yRd+UvK4SYx+v1WLMW2JQmNlaNWYwyAR1WRWeMU/G0RCQThQ3ya/
-	3t5o1Zz8wx6nAZf4r6lV1W1Um3RyXvHgmv653yTsMIkOkMCf5FxywcbWJ+XU3Pdc2IvPnYc2DhL
-	lcFtFtE9cqfTuo2yrPXs0f4Asd/OoFKzkfjqj2yFUsAFhR5zCoVVRfn1oK5QI09EVsYClZc1jiI
-	gpDhs3YlJXwQtdH4XTBwS7KHhFuuHzHS2EegNjXHIUXpx/d0BOBvJy1Izzi2raw5AXU+430JhdK
-	Ykg13EQRuU7onxJgm4bXpInBLmmDLXIvowlLh2eM9T+dIjR1eniWse/NaUEDox/VcPaNBNq89LH
-	LeFlauMbgmLZYfA==
-X-Google-Smtp-Source: AGHT+IHS2/j9+N7xSaRjAkIWps6mxeAYqws1hdNZCTv0XgJraew6abe5Y67oztqEy7hekjalJ6mCwg==
-X-Received: by 2002:a05:6000:2501:b0:3a3:55e6:eac6 with SMTP id ffacd0b85a97d-3a355e6f03fmr1782764f8f.17.1747313540359;
-        Thu, 15 May 2025 05:52:20 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57ddd2dsm22638932f8f.9.2025.05.15.05.52.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 05:52:19 -0700 (PDT)
-Date: Thu, 15 May 2025 14:52:18 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ALOK TIWARI <alok.a.tiwari@oracle.com>
-Subject: Re: [PATCH] thermal: airoha: Fix spelling mistake
-Message-ID: <aCXjgj-3kmcCqLpT@mai.linaro.org>
-References: <20250514213919.2321490-1-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VY28uras"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747313565; x=1778849565;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=r5wjZzZJdlRUNc8+awzmIOy8f4SQE+WWNZHaU5l2A44=;
+  b=VY28urasbf/HTY6vLW4Wuk5mau/m1Y/krgu9EjuoojIIcDTxm5C4Ur89
+   sK64RGMIPC6fdRR3NwYC16q5dOSoTlKqAAGYjWz5O+WbYESWesNIYt5/v
+   nN/Or5RLd+l/hdEjyFx9MRsF/JC0kTRKpN3qe83M11j8/ii5gcoEKENXC
+   vUJzAa1j9/50XLJLycgREAyDW60rKnaKMzWqi6k4cUbIlpTZyF+7lUecz
+   PyIQ+CiSog120i2qMQHMu9Myd4RCbrZei7BPWz/7BSvi0GYeICCFCrjOk
+   f3OIp3uYs76lTddNulisUNtmk65tcAJU6oyNtD48ympgDdc4Qk7vGd07o
+   Q==;
+X-CSE-ConnectionGUID: lzVBvqRoTWO7QbdJXs5HKw==
+X-CSE-MsgGUID: AUFjldMRTV6XYcmqutG9pQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="60584354"
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="60584354"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 05:52:44 -0700
+X-CSE-ConnectionGUID: PYgcxN/8R4SdFxS/EDLrYA==
+X-CSE-MsgGUID: k374LrxXSLiWziX7G9pQ8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="138225381"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 05:52:43 -0700
+Date: Thu, 15 May 2025 15:52:38 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: gregkh@linuxfoundation.org, david.m.ertman@intel.com,
+	ira.weiny@intel.com, lee@kernel.org,
+	mika.westerberg@linux.intel.com, heikki.krogerus@linux.intel.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] driver core: auxiliary bus: Introduce auxiliary
+ device resource management
+Message-ID: <aCXjltG40x9mJ25U@black.fi.intel.com>
+References: <20250514122432.4019606-1-raag.jadav@intel.com>
+ <20250514122432.4019606-2-raag.jadav@intel.com>
+ <aCSOYRJXaiJpch6u@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250514213919.2321490-1-ansuelsmth@gmail.com>
+In-Reply-To: <aCSOYRJXaiJpch6u@smile.fi.intel.com>
 
-On Wed, May 14, 2025 at 11:39:12PM +0200, Christian Marangi wrote:
-> Fix various spelling mistake in airoha_thermal_setup_monitor() and
-> define.
+On Wed, May 14, 2025 at 03:36:49PM +0300, Andy Shevchenko wrote:
+> On Wed, May 14, 2025 at 05:54:31PM +0530, Raag Jadav wrote:
+> > With more and more drivers adopting to auxiliary bus infrastructure comes
+> > the need for managing resources at auxiliary device level. This is useful
+> > for cases where parent device shares variable number and type of resources
+> > with auxiliary child device but doesn't require any active involvement in
+> > managing them.
+> > 
+> > This reduces potential duplication of resource APIs that may be required by
+> > parent device driver. With this in place parent driver will be responsible
+> > for filling up respective resources and its count in auxiliary device
+> > structure before registering it, so that the leaf drivers can utilize in
+> > their probe function. Lifecycle of these resources will be as long as the
+> > auxiliary device exists.
 > 
-> Reported-by: ALOK TIWARI <alok.a.tiwari@oracle.com>
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> ---
+> ...
+> 
+> > +/**
+> > + * auxiliary_get_irq_optional - get an optional IRQ for auxiliary device
+> > + * @auxdev: auxiliary device
+> > + * @num: IRQ number index
+> > + *
+> > + * Gets an IRQ for a auxiliary device. Device drivers should check the return value
+> > + * for errors so as to not pass a negative integer value to the request_irq()
+> > + * APIs. This is the same as auxiliary_get_irq(), except that it does not print an
+> > + * error message if an IRQ can not be obtained.
+> > + *
+> > + * For example::
+> > + *
+> > + *		int irq = auxiliary_get_irq_optional(auxdev, 0);
+> > + *		if (irq < 0)
+> > + *			return irq;
+> > + *
+> > + * Return: non-zero IRQ number on success, negative error number on failure.
+> > + */
+> > +int auxiliary_get_irq_optional(struct auxiliary_device *auxdev, unsigned int num)
+> > +{
+> > +	struct resource *r;
+> > +	int ret = -ENXIO;
+> > +
+> > +	r = auxiliary_get_resource(auxdev, IORESOURCE_IRQ, num);
+> > +	if (!r)
+> > +		goto out;
+> > +
+> > +	/*
+> > +	 * The resources may pass trigger flags to the irqs that need to be
+> > +	 * set up. It so happens that the trigger flags for IORESOURCE_BITS
+> > +	 * correspond 1-to-1 to the IRQF_TRIGGER* settings.
+> > +	 */
+> > +	if (r->flags & IORESOURCE_BITS) {
+> > +		struct irq_data *irqd;
+> > +
+> > +		irqd = irq_get_irq_data(r->start);
+> > +		if (!irqd)
+> > +			goto out;
+> > +		irqd_set_trigger_type(irqd, r->flags & IORESOURCE_BITS);
+> > +	}
+> > +
+> > +	ret = r->start;
+> > +	if (WARN(!ret, "0 is an invalid IRQ number\n"))
+> > +		ret = -EINVAL;
+> > +out:
+> > +	return ret;
+> > +}
+> 
+> Please, do not inherit the issues that the respective platform device API has.
+> And after all, why do you need this? What's wrong with plain fwnode_irq_get()?
 
-Applied, thanks
+Can you please elaborate? Are we expecting fwnode to be supported by auxiliary
+device?
 
--- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Raag
