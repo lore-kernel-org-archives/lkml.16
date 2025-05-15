@@ -1,158 +1,159 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F781B960
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:19:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005A079C4
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:21:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747268398; cv=none; b=Q6niPHqoB597VPkgm9Ex4yrU6+0PR2wkyJivlJggU72ZvPUDGVtcMlq0BudnYV/k+2YifCTkIMZzz0cQJKIK1VCJ+BhjRBKKiQERrlAY0R0R/v+lCzvth2zauIrGbPHn2q9lLRumsDYFCm9jlw8p1wNt8UWk7V3JI4NeoKQzcms=
+	t=1747268488; cv=none; b=sRAsDCYtLIwCMrnP1VAlchOZtFvpoTA8RWMrrnT+l3y+VzZNTwlSVgeVrRU2lh5kmx2JVoyI5ctTSjI+gsyQw7wBfwFAQ3EOtrWFGWRJRjjCanbhuJpN0BKG1tXgiz/7C0xe5vRf2323tsU1pcKaw5SuJ6o2fwQjsS0P8ipsZKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747268398; c=relaxed/simple;
-	bh=LjpMuPJLWL/kSD36VWNs6Nv8CF2pnWpxWtkNafcX8qI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Hf/86/GxT3CssirNcJgzD+8GAF4PQcOsARUxbhL2W6ZVtCil07OxwXJ5Geu/9sGCkhQWMq/pXLorKiRHezXofttKK3AGAeKf15TNY/TTBF1TzjBvwMsshBq5l0LYkQ4z/OMcJXvW7sAYAKUXyrcz2zrL4c5NphlN71aW44HouBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cGpN0wsC; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747268488; c=relaxed/simple;
+	bh=MHGclyAX35xo0Oi1MTvmAyO8ClYxGP9jyCf99e7/ITw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZueB8bIEyhzd3K3wzgy0xG00Err2ML5ExoVeAoqraIbpKr/0Efi3B0M2DruwM/n58fomM6jfOpUY08LIUXVggH1VIxly35Qs6w9Yrotnw4ZFeaCV7A1oH6O1ywlny93WvhzB7fY5082imc4dUGl5L25/xwEtkY4vEa6xv5F2A6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kLulVig3; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cGpN0wsC"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30ad109bc89so400486a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:19:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747268396; x=1747873196; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NillZDQHMGkN8gsEINGl9IIKhPwgteKU+AMr08jxx80=;
-        b=cGpN0wsCVFBG33lcBz1uHs+nfwzzkqv1AUTvfuyePYLl6tcU2yuHeZrzftncdn8jT4
-         BZ+3ZwPjobA6iOUU1hg4ImgJyS5gruDKuu1hc7OwR48XAH4OYB/4W9xz0frZXmVQBuDH
-         sgeqxSTGRh/7p+pzLbPa+D7Vb3cgia/uBpq3qfCccR7oYlvktKdtad/qdtB64E7g1X49
-         J1Q3K/oIFcoax6ehIu0OzrVyPEOJ2SkkLEoqvfxrgtkYqGQ/wfzDnZWqGqNUhjzRE8J7
-         B6Zd0cE40p7TJYsV+WYsCaW2dMdsX+4bU3N+QK44raVLYHT8g0fmuYvjuXZcqjgOpFh8
-         HOkw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kLulVig3"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EK2mGe002581
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:21:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=u3T4zfjmzH1nVAi6lbmvTDJy
+	/YQD5ld+KCby8V6tPYA=; b=kLulVig3aJALtC/8rTwm3evvJXj75+9Wr3w/d3d8
+	yvl4wCstpHvGIEko0hndxmmeIsduyCUaOSFzl6FSZhyYPcco2xp3tGr34VUggFU2
+	FFjTJOERazcfZ6pWqe5ZaC2BkKuBQePD49aE89xbVK6F3hRIarvGlReZ9dF0pf1l
+	5+joO9xHjgqZ5cyi51kNzvA96cs0YNrABgqzj7Dz3ffxIGl3nCKFFG/G5TSmNNvJ
+	oZiZ8JwOlZOPWdOTzDthUxhzLx+rPiaEXk5G6xYGA1f3R7+D9/SJHP3refOz6GUv
+	RnQQfMHRoQwYcGyFUGlcuqFe/mt7GKSC8+j8WTyghmayRQ==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbex4e1y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:21:25 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7caef20a527so106667285a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:21:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747268396; x=1747873196;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NillZDQHMGkN8gsEINGl9IIKhPwgteKU+AMr08jxx80=;
-        b=bCIrscfNwx+wYnK3NjJzuTYUnQTYus62cY5uhns0TTMIKiolFOCU7Kw02NdPr+Ciau
-         4HzberrnAVvbHcYzZW1F1oT86Te/LezaKqOfttNMzC6UGOSBb3B0FhKT7IZ/s4vxDx58
-         A0QFbrcCXv3PaXNl6174qNeHs6AQ4pOXpg4Xd198QEIgiAG1KNVlpAoUXGTj6lRBz7zK
-         4MI+76cK22/p0X6b/HkZFov3cp8uzVfyoKicyTQWkKKC2yd7GB74It2irbi+WHDPypAN
-         X9L+epdmAYWU2mHwoVb2TvKEvHW6nTaka8HwOAEYzycOYJkIMaWM+G31kgXYK/+YKEfl
-         uYNw==
-X-Forwarded-Encrypted: i=1; AJvYcCXhK1AfzRe7I+qeyUezVRNAo+wyG2kKbrYbvS+Fx1lwx9ZgpTnRM+P+eeNFGEi78xoqeqMdGDetiJJjesM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLsp+/NIPA08Xkp6KWF6bxvV06i2cVGW3E5XYBpMuMxJ2t9g/i
-	hVt3qHVJ+1O5O/S6xV75AWfJrnr/pa2ObKNv5CR4uE+xEB/1foNCzI8wFt5ixP1k+ufdmn4/OJW
-	aGg==
-X-Google-Smtp-Source: AGHT+IFQjq1PCKOnQWifSwkYyIBpWTwDXTf5nA7iDlW/f85riVF6j0D/YJzRcqSnGliIoEN7myQuTor4ttY=
-X-Received: from pjn12.prod.google.com ([2002:a17:90b:570c:b0:2ef:8055:93d9])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:35c4:b0:30a:4700:ca91
- with SMTP id 98e67ed59e1d1-30e5156e9e0mr777959a91.1.1747268395729; Wed, 14
- May 2025 17:19:55 -0700 (PDT)
-Date: Wed, 14 May 2025 17:19:54 -0700
-In-Reply-To: <20250324173121.1275209-21-mizhang@google.com>
+        d=1e100.net; s=20230601; t=1747268484; x=1747873284;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u3T4zfjmzH1nVAi6lbmvTDJy/YQD5ld+KCby8V6tPYA=;
+        b=tOyX4QXY9XRY5/KWLwWlFFuMsZT8dZgBM/zJVYfFhZIsfFVBoTfirh8MsYuOqQrA2H
+         PkFm2TTUMHJZElnC42bfWpEBOwIuYGq9NUWgBRuB/n4irrm5V0A0cPo8Clq0U9sCGLD7
+         9SfiIqoh1Ev3OGwkS/XH9YS+dfbC5tthbovVHpFlC2ObxR3MwO0vAj7mSkw7miUVxKo+
+         8QO8I/WD+73rLLcewCd3ibEybaK2XxuK1hQ2HoZEGC6Qop+62JXaBFxoTymOA/ZkN/zf
+         3cxKvxf1T6hpeRGPL7CRq8F3qhfh01vzMtpNEpiWdLjup0zA8t22g6XO5LIisL9MfqAF
+         fUbA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzgohMGm1rr51SArnGX5R0vk2V8prOkqU2+eSgwP2m6g1m5UHQXncTD5Nc1R41SwJENazPoUyECrimAwU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyn+PwMSRKpMspmVvUWlTuhIc6MAi0N9c+9/x7kgcrNIIjd2uXd
+	ntqJtYbzV/5Fxt0N7xZLi6owc9dOqyX+wTuTxxFwNofp41OhzmfpcvVWxmvBSAao94XUHCB2k7Y
+	ZKtatBS5tiq7mXio4sWV9sm0rUjYJ1wfowZ/s6Ycm/jwIFOq6duZInLvrG6nM2pg=
+X-Gm-Gg: ASbGncuEiHwwu4Hj7twTlqJFf8HzChUGV2d0CvzuGKysvFRDPEbVQiFuC4yntLsQnMX
+	BNOmjbE5Uc1f7V3hLXBsDEfDk4KusF9tuUAuyHVDy++TOLYR+OonsYNXi4eDNf94hUzO5ucFV0i
+	35wHMZeYNGVUPVfuQMp5CXuZIP9YvV7pcOopdoMV4YLkwk/XJVlMRiMvRltvlU/7EJVx3eJUms/
+	ABKZ3iJqnjkzGIETq0+H1A/mTmHDFrscNuhBtFIb+LYW+EANaEG7JaURuF8A0kvgKyOYGqvOzoh
+	iXQGSuF2Oisap6MaCHn8dAx01KYFHdoJ4LJtEqv4U/PkyLfERyJnvQmS5ZU/+HpVdPZClcZFowk
+	=
+X-Received: by 2002:a05:620a:29d2:b0:7c5:d7c4:576e with SMTP id af79cd13be357-7cd3c6997d6mr59894185a.31.1747268484544;
+        Wed, 14 May 2025 17:21:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGxthZgaaCEtgMWvPOufQHVkJCtJIfpyoMQ85ENiwc8/TTy112uu3WYn6gbXoDll+GJBh5MXA==
+X-Received: by 2002:a05:620a:29d2:b0:7c5:d7c4:576e with SMTP id af79cd13be357-7cd3c6997d6mr59891585a.31.1747268484206;
+        Wed, 14 May 2025 17:21:24 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54fc644fcbfsm2419532e87.50.2025.05.14.17.21.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 17:21:23 -0700 (PDT)
+Date: Thu, 15 May 2025 03:21:21 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Jessica Zhang <jessica.zhang@oss.qualcomm.com>
+Cc: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Abhinav Kumar <abhinav.kumar@oss.qualcomm.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] drm/msm/dpu: Add max pingpong and dsc width to HW
+ catalog
+Message-ID: <txn2anohfbrymaseeo55slmzimstietsrmhx3mhigw4fcx3ow4@b42b3n53et6l>
+References: <20250514-max-mixer-width-v1-0-c8ba0d9bb858@oss.qualcomm.com>
+ <20250514-max-mixer-width-v1-2-c8ba0d9bb858@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-21-mizhang@google.com>
-Message-ID: <aCUzKp1uhMsn-g_u@google.com>
-Subject: Re: [PATCH v4 20/38] KVM: x86/pmu: Check if mediated vPMU can
- intercept rdpmc
-From: Sean Christopherson <seanjc@google.com>
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
-	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
-	Nikunj Dadhania <nikunj.dadhania@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514-max-mixer-width-v1-2-c8ba0d9bb858@oss.qualcomm.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDAwMSBTYWx0ZWRfX9It1kuB/8fX/
+ 3vII2dBU5xAQ7Kj/b+6pRBOuGR2H0lMxn1g3h9GLf/zfa/6H45zKIYMedmaIuilUEgeFk1l2VV9
+ 5GaNk/JXxragxae4/sONnww+R+yFs45CXy/d97xHDuuJBw9ilfx9qT5Stkwel+3ucAH1hkkqxaF
+ AzL5aZ5xCyEe3kmt6JSoVy3r9VhhW7ztCuckmYfH/hNRuCKytHm64aFRLCf/meRqe4qhpeLekC4
+ at1AySQyCu8BeFGrGFzw/t70CjWV+XBVrNnEZmECmH2juWU1QFFZhUeOj00EmVvbsyT7q0WTGo2
+ UCrNWJPf3RHKeMqfGeqadBUmcZ+C09rVO+aiImtUSmwKCzofnispw0m23yvgHA+cHjAhIKZYJBc
+ YY6Pal2oTfnaV+rBfLdO7O3SOqJuu9nYM3oZwVRN+QXQWpUV61RzjvfIPzER/iLMrI70iWig
+X-Proofpoint-ORIG-GUID: yOo3L1to6HBn6TV_rXjPHdld4S95CtnK
+X-Proofpoint-GUID: yOo3L1to6HBn6TV_rXjPHdld4S95CtnK
+X-Authority-Analysis: v=2.4 cv=IcuHWXqa c=1 sm=1 tr=0 ts=68253385 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=XNzoCkbmTKmYsmvQHroA:9 a=CjuIK1q_8ugA:10
+ a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-14_05,2025-05-14_03,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 mlxscore=0 adultscore=0 mlxlogscore=962 bulkscore=0
+ clxscore=1015 spamscore=0 impostorscore=0 phishscore=0 lowpriorityscore=0
+ priorityscore=1501 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505150001
 
-The shortlog is wildly inaccurate.  KVM is not simply checking, KVM is actively
-disabling RDPMC interception.  *That* needs to be the focus of the shortlog and
-changelog.
+On Wed, May 14, 2025 at 04:52:30PM -0700, Jessica Zhang wrote:
+> Add max_dsc_encoder_width to dpu_caps struct and max_linewidth to
+> dpu_pingpong_cfg for all chipsets within the HW catalog.
+> 
+> Note: The max supported PINGPONG width was 4096 but increased to 5120
+> after DPU 6.x. In addition, DPU 8.x+ increases the max supported width
+> of PINGPONG_0 specifically to 8960.
+> 
+> Signed-off-by: Jessica Zhang <jessica.zhang@oss.qualcomm.com>
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_10_0_sm8650.h  | 11 +++++++++++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h |  2 ++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h |  1 +
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h |  2 ++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h  |  4 ++++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_0_msm8998.h  |  4 ++++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h   |  4 ++++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h   |  2 ++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h   |  4 ++++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h   |  6 ++++++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h  |  6 ++++++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h   |  4 ++++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h   |  3 +++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h   |  2 ++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_0_sm8250.h   |  6 ++++++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_2_sc7180.h   |  2 ++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_3_sm6115.h   |  1 +
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_4_sm6350.h   |  2 ++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h  |  1 +
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_9_sm6375.h   |  1 +
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_7_0_sm8350.h   |  7 +++++++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_7_2_sc7280.h   |  5 +++++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h |  7 +++++++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_1_sm8450.h   |  9 +++++++++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_4_sa8775p.h  |  9 +++++++++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h   |  9 +++++++++
+>  drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h |  9 +++++++++
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h           | 10 ++++++++++
 
-> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> index 92c742ead663..6ad71752be4b 100644
-> --- a/arch/x86/kvm/pmu.c
-> +++ b/arch/x86/kvm/pmu.c
-> @@ -604,6 +604,40 @@ int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
->  	return 0;
->  }
->  
-> +inline bool kvm_rdpmc_in_guest(struct kvm_vcpu *vcpu)
+This needs to be rebased on top of linux-next, otherwise you've missed
+dpu_9_1_sar2130p.h .
 
-Strongly prefer kvm_need_rdpmc_intercept(), e.g. to follow vmx_need_pf_intercept(),
-and because it makes the users more obviously correct.  The "in_guest" terminology
-from kvm_{hlt,mwait,pause,cstate}_in_guest() isn't great, but at least in those
-flows it's not awful because they are very direct reflections of knobs that control
-interception, whereas this helper is making a variety of runtime checks.
-
-> +{
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +
-> +	if (!kvm_mediated_pmu_enabled(vcpu))
-> +		return false;
-> +
-> +	/*
-> +	 * VMware allows access to these Pseduo-PMCs even when read via RDPMC
-> +	 * in Ring3 when CR4.PCE=0.
-> +	 */
-> +	if (enable_vmware_backdoor)
-> +		return false;
-> +
-> +	/*
-> +	 * FIXME: In theory, perf metrics is always combined with fixed
-> +	 *	  counter 3. it's fair enough to compare the guest and host
-> +	 *	  fixed counter number and don't need to check perf metrics
-> +	 *	  explicitly. However kvm_pmu_cap.num_counters_fixed is limited
-> +	 *	  KVM_MAX_NR_FIXED_COUNTERS (3) as fixed counter 3 is not
-> +	 *	  supported now. perf metrics is still needed to be checked
-> +	 *	  explicitly here. Once fixed counter 3 is supported, the perf
-> +	 *	  metrics checking can be removed.
-> +	 */
-
-And then what happens when hardware supported fixed counter #4?  KVM has the same
-problem, and we can't check for features that KVM doesn't know about.
-
-The entire problem is that this code is checking for *KVM* support, but what the
-guest can see and access needs to be checked against *hardware* support.  Handling
-that is simple, just take a snapshot of the host PMU capabilities before KVM
-generates kvm_pmu_cap, and use the unadulterated snapshot here (and everywhere
-else with similar checks).
-
-> +	return pmu->nr_arch_gp_counters == kvm_pmu_cap.num_counters_gp &&
-> +	       pmu->nr_arch_fixed_counters == kvm_pmu_cap.num_counters_fixed &&
-> +	       vcpu_has_perf_metrics(vcpu) == kvm_host_has_perf_metrics() &&
-> +	       pmu->counter_bitmask[KVM_PMC_GP] ==
-> +				(BIT_ULL(kvm_pmu_cap.bit_width_gp) - 1) &&
-> +	       pmu->counter_bitmask[KVM_PMC_FIXED] ==
-> +				(BIT_ULL(kvm_pmu_cap.bit_width_fixed) - 1);
-> +}
-> @@ -212,6 +212,18 @@ static void amd_pmu_refresh(struct kvm_vcpu *vcpu)
->  	bitmap_set(pmu->all_valid_pmc_idx, 0, pmu->nr_arch_gp_counters);
->  }
->  
-> +static void amd_pmu_refresh(struct kvm_vcpu *vcpu)
-> +{
-> +	struct vcpu_svm *svm = to_svm(vcpu);
-> +
-> +	__amd_pmu_refresh(vcpu);
-
-To better communicate the roles of the two paths to refresh():
-
-	amd_pmu_refresh_capabilities(vcpu);
-
-	amd_pmu_refresh_controls(vcpu);
-
-Ditto for Intel.
+-- 
+With best wishes
+Dmitry
