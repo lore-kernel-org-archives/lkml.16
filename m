@@ -1,63 +1,63 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F1525D902;
-	Thu, 15 May 2025 18:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCFB25DB09;
+	Thu, 15 May 2025 18:22:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747333372; cv=none; b=TQo+ztlDNJYLhRMoeoYLXPGOyrUBgqA05NLh8DHPcEt7qrAdm2MHG3pIaRpQR6HEN8SrK1cnjUPeUyMAF4MuLHEHI3INqvO0ZeE0dGiCfwRIwk2yFnFye7UUGTdF0GMrHmXkrdM2/nTU6Bfe3hlHPCCpWbT6JxJQ3r4KEK/f+5g=
+	t=1747333374; cv=none; b=aXOxiTJM2FieXD/yoRasyrnUhInUyN8Hgy+5q7SDg3PNLGewYgvjfFEYkwu6RVQPzvOYV5S13Ncwub4tuUxaVQ1YG1hQTUWpLBjsn7veRIKdWdb6x4lIjlEKOF8cYfGvf8+inzXWmaC2t6S08+61qx9iAipmHu9OqakLU5gZN3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747333372; c=relaxed/simple;
-	bh=w64cUplTGlSMfoowHr4EI6FF4JJVsBgz+pefDd5tNJs=;
+	s=arc-20240116; t=1747333374; c=relaxed/simple;
+	bh=uGBaakA/g/wlUiTbyl+bCX0/CWilkLcThKCa9kCPlf8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uo9Y0i/eqNUH6hF48gd/CjtghC99ArHlTW3H2vDHbRp5UZFbAZkvkQW2oZJfXCbdyg9FUcw9oad1nkdv7ioHgbTwg6bCa0nh7xGolhirikD822mxE0QbIbDIVNuud30kzQLf9+pr7MpzkNAm9jt9ZmCDHyvo7YQM5sEayQf9fWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H1VC1NMS; arc=none smtp.client-ip=209.85.214.179
+	 MIME-Version; b=Fhv1u4XG60/5Ollo9s+zaOLDptYdWzSOtffc32cJ7lPfIK60KAMIjq2RCFaTqU1pbalP3dyMf2l2vxIY2+fEutFmRH0VvOpU8rRkeMGEPzOxWQVydJmqAiDTv9i6NQdGLB266CqpZGaCSiFBzuPPJZHr/5khYShiOKiw+jwX5qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bjBR6o56; arc=none smtp.client-ip=209.85.215.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H1VC1NMS"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22e331215dbso18066065ad.1;
-        Thu, 15 May 2025 11:22:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjBR6o56"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b24f986674fso1318840a12.0;
+        Thu, 15 May 2025 11:22:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747333369; x=1747938169; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747333371; x=1747938171; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bVSbppLtIp5lac6LYr/+h21HSHcShV89QDbXsrjAMpE=;
-        b=H1VC1NMSWtLXLOrJ+ANxX1vE0Wpy9XEBjep0xRJKCW7CqwmQFu4fo3EdbxhU8D+AdM
-         2FSALgoMx9rWOB0pe9kyoP4+Wsq1J/J0GM67ZXhJprDvKuMhCAsKAb2L3xdbmHeca2PS
-         SgssaxKSY0BzP66k3sjI0zIVzg/zxG9Meh559yUz/V+BWGPwGVkBy9QQ1731ZXtaHIro
-         lp+HlcS9aFV8dxnLnuPD/SrSo4yZJ9YrC2U/THpNQh7aFJXiI0Gm6miAHrUyBehss1lF
-         ymge+vhL1sWqgfj9Z1FUMEFhRnowIo+Lf8OIavvKm9TVTAQqXEC5Iiaa/Ucq/6bSHQzX
-         8tEA==
+        bh=9mTm2aVh6+/9bOSGDwrcGr28MDt7w0Dqb84tffOp8us=;
+        b=bjBR6o564OCbpANkOWTTELtNYVQ/aIQB2mm7xF53rVmGrNbkyEWyDO7+oRh+92gYru
+         07hgd3VsfoZ/RwQXqf2/mYNa6zQ6n7TL8ckladVUW4prkm6xpr/rBbHtSYbDjzNaJWSy
+         +8B/PWNm5I07pMPilG+GRWTyC9/9om7Ri0bCuTWB8fF0fzkEgO5uEqgmpR+5gZeNYkwS
+         1IxNJsT843HVrgWOOcY/8NHP02D5ObCJYwzvSKvCMixevJWTE8bgAPQ7Y7Si/6vHs5RZ
+         Zn0wW37sU9NiTOrNWJk7lMnqyykqTrjBzbItQJItMoAs2nThOPhi9tjI6Xy8joTVfnYz
+         mbug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747333369; x=1747938169;
+        d=1e100.net; s=20230601; t=1747333371; x=1747938171;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bVSbppLtIp5lac6LYr/+h21HSHcShV89QDbXsrjAMpE=;
-        b=YuGB5VCzkaOWULuHGSscWW/0W/VctSxUFiCjRfREUv0jKwUK3qOMCqBB8yMoOEA8V7
-         8YxLnLbZCg892J8uuih9JCkkIsRXWt9Sib2EXDoWBrQ9sxQMY1H+ctisQBVONMiqbQQN
-         Q+pR2ENQnIbwyhgmG/9gxbZHo09W7PXRuvtJMiQ8RWG4hlN/mdylooBpIGkOl8jnAB8E
-         MEwTZlUQjbV9OHF9yOZL2NBX+q4SwYDwNeJx4UfvsGJ2sXiZXq87/epaxgOxqpm+bDUe
-         imyJBbLGHcd/eZX8EFOAe+xdVnuMZq4pRgHlkUCzxaEgigFqYSCkvClSCVHbiIbA/Jij
-         7Ocg==
-X-Forwarded-Encrypted: i=1; AJvYcCVnZVMxWaTykhohZ95mDsszIaUQ1kw1p8wlWuypEHXZJGaekJkhj8A0Y6aZh6gHYOPN8qlj2lrP6j0=@vger.kernel.org, AJvYcCWMZfihUNdDUr50klOz/yf5EqxMsl02vIIMQVwNkmOoFfZqVFPgMIz/f9N8IEkXg3lyQlpHNr4s8zyPbxNpq60wqU9eiA==@vger.kernel.org, AJvYcCWpr/Oyf+n4oDp79piqo3o5lAT2g+zkwl5wL4elLM38dGXxdHRlAbiZvH0hovsjztrhF9X72TQ0Z3dGOQ1S@vger.kernel.org
-X-Gm-Message-State: AOJu0YybFhLkCuOE+tct128xNdmxpCO2dsEcJ84p/bbmEZyp0mBLT3sd
-	yiBVA73+kxDMojY9Hdm8MN6iGb6bphWqPErJ3DYLnSFO6S8EKF76W42O
-X-Gm-Gg: ASbGncufu+qotEsf/Nrvqb46b4MvffWAaSwv1wY4moAmtILkjBxhMJHww35YXWJCcV5
-	g7MIwzVmZv9aXythzHNxUBfLYIlr7Jqxkqa9SHXHiBfSvX2npWw42pccc0S/lP6PbZsDw3hMuq+
-	wQ8OQDiZ9NgtOjrcM89js+jLvGwbRULuv1DaZnrcbhso0P67cMae5DU3ps18nsCTVSM6MccWap0
-	BNVCWSuJS6DiySn6L4517dOw6I+AStfd4m2eQBzFOlhANjo7oXHgkLNviHKSe59xGeGiuRTe2FK
-	z+Jj0vZNf/JnxXX6GYWxViW4tE2INdXaR3eGlpisc3rf//RRFin0UBHT7sszB1iSNka5o81f2Cv
-	sYXCCGM5bTLTrBsxBVRSLBjT35dKBg4a8g9COzTMrFfv8gXgs1A==
-X-Google-Smtp-Source: AGHT+IEPgYpk4dy7hTU1WsNZ0bplpebWCv7NNjkqnojtA261tVybgnPIGxOP/4dePdTPwYT1u72nuQ==
-X-Received: by 2002:a17:903:3d10:b0:22e:23c1:d711 with SMTP id d9443c01a7336-231d4e5087cmr4214405ad.16.1747333369482;
-        Thu, 15 May 2025 11:22:49 -0700 (PDT)
+        bh=9mTm2aVh6+/9bOSGDwrcGr28MDt7w0Dqb84tffOp8us=;
+        b=N0FOWKCjlQFtlRHF3/t0bH1U4MdKvMT4iiCvBKxW/Id8ooXq1jjFGJQgJG+DWriy+o
+         SVlxbkN0doNiaHGGCH9lRt9nxtumyEfIEd3g9WCINzl2wbLeJWIdWyzLIwJuHcyyysmi
+         1s8/x4vaTDvkmeJmVnSaTsd1QTGpVIkc3srqn7hmGGM7HxPzO+cxWhOlLVOA7GkLfoYE
+         FGpFcViWTmTkaOHVwJuFaMwLksCTwUYFLGJp3NZBbPRr1Qctky56yxpRW6zTgP3V9VlW
+         s6H1EGc7JqNuzGA/a6SOphIOEVpjEo3yT3fjGHNcH4xuUMKyp3MgdB6PQ5ycMLI0DbkI
+         Zk4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUYaBIJaVCcx+kvbbkZVHx2jZUsXfptyEtxZe3u5ALyxs8sW/k5V7df6AhXci8Vm6MJ841CU0erftmifzP+uJB/+tstOQ==@vger.kernel.org, AJvYcCWDhW02hciQkWIyetjJWhvzPw+wcII2s0j//0i8FFQubOuZ95ZDUzcJX1PBAXZnnwODqCzEKWKnWdM=@vger.kernel.org, AJvYcCWUKlgiAPgNwgD8GFRiCV9agsQPIOFd/L3HJfpL2Xmz1FKsgeWuss+xeLbd9nQDUMj+FMvYHjlHK26F2lnl@vger.kernel.org
+X-Gm-Message-State: AOJu0YypZHWemCHSr1Ie7q/6Fnd67jQgVRPSRsUqqod8pNvlo6dLzW6u
+	qR0n7jfZ80RA5T8+kTlXpEl2PiRGHqrSTKxjh27nHdNOCJ2/8wDDWn4f
+X-Gm-Gg: ASbGnctv8lagMZzccK2usO6p3MjUXAv6BXI20eT0izStDk3oHRlTI9Ikj/92i4fJE2T
+	L+12KX+EK9nc0xjJdBm3DZb1X58Q/31mRarL0AvTaB4ahld4jhIKI2PA+QCmb4RJLgAVkWdFLRk
+	nOocXoNezhxLGlzC6v7TZvSmpKZWLRtJJrI8Gegzjv87nYKaxfBO5di0yag1pZ39llyX+M27diz
+	8q1Pcw0+iSl/TY/5irInbDxIKEMNWEXXATRR0GrlXCE72UOf74wMBllEIpkPonKIUB1EstkcwzM
+	vp2OY6owXuoAbXoIaml4T44n4ngTnTS0JTKlHccJYAeoY16W0R48lEwGVb0Px6u8YhKlKHroYRk
+	N+sSbsk9b83vJ+S/68gxVPp5CGRfSxxBbs9xkMTjurMgzHGqrIw==
+X-Google-Smtp-Source: AGHT+IHAniR7YpOjNGhbQLHULNM6GWE4VHG/zBWf4voa3GzD7/P97EsGcKGaHAm6sp27GiteYVrIqQ==
+X-Received: by 2002:a17:903:17c7:b0:215:58be:3349 with SMTP id d9443c01a7336-231d4d24ec5mr4169935ad.14.1747333370985;
+        Thu, 15 May 2025 11:22:50 -0700 (PDT)
 Received: from localhost.localdomain (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e978adsm826955ad.119.2025.05.15.11.22.48
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e978adsm826955ad.119.2025.05.15.11.22.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 11:22:49 -0700 (PDT)
+        Thu, 15 May 2025 11:22:50 -0700 (PDT)
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
 To: Hans de Goede <hdegoede@redhat.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
@@ -77,11 +77,10 @@ Cc: Armin Wolf <W_Armin@gmx.de>,
 	platform-driver-x86@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Alok Tiwari <alok.a.tiwari@oracle.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v10 3/6] platform/x86: Add Lenovo WMI Events Driver
-Date: Thu, 15 May 2025 11:22:21 -0700
-Message-ID: <20250515182224.8277-4-derekjohn.clark@gmail.com>
+	Alok Tiwari <alok.a.tiwari@oracle.com>
+Subject: [PATCH v10 4/6] platform/x86: Add Lenovo Capability Data 01 WMI Driver
+Date: Thu, 15 May 2025 11:22:22 -0700
+Message-ID: <20250515182224.8277-5-derekjohn.clark@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250515182224.8277-1-derekjohn.clark@gmail.com>
 References: <20250515182224.8277-1-derekjohn.clark@gmail.com>
@@ -93,310 +92,453 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Adds lenovo-wmi-events driver. The events driver is designed as a
-general entrypoint for all Lenovo WMI Events. It acts as a notification
-chain head that will process event data and pass it on to registered
-drivers so they can react to the events.
+Adds lenovo-wmi-capdata01 driver which provides the
+LENOVO_CAPABILITY_DATA_01 WMI data block that comes on "Other Mode"
+enabled hardware. Provides an interface for querying if a given
+attribute is supported by the hardware, as well as its default_value,
+max_value, min_value, and step increment.
 
-Currently only the Gamezone interface Thermal Mode Event GUID is
-implemented in this driver. It is documented in the Gamezone
-documentation.
-
-Suggested-by: Armin Wolf <W_Armin@gmx.de>
 Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
 Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 Signed-off-by: Derek J. Clark <derekjohn.clark@gmail.com>
 ---
 v10: No change
-v9: No change
-v8: No change
+v9:
+ - Check result of devm_mutex_init.
+v8:
+ - Use devm_mutex_init() instead of mutex_init().
+ - Check return of devm_add_action_or_reset during probe.
+ - Don't check if cd01 list exists in bind as the driver will bail if
+   there is a malloc/populating issue prior to bind.
+ - Fix typos.
 v7:
- - Fix typos
+ - Do memcpy instead of returning pointer in lwmi_cd01_get_data.
+ - Put list mutex inside lwmi_cd01_priv struct.
+ - Unregister from acpi events on dev remove.
+ - Fix typos.
 v6:
- - Fix typos and rewordings to ensure consistancy in function description
-   text.
+ - Recache capabiltiy data on ACPI AC events to ensure accutare
+   max_value.
+ - Fix typos and rewordings from v5 review.
 v5:
+ - Return to cache at device initialization. On component bind, pass a
+   pointer to lenovo-wmi-other.
  - Fixes from v4 review.
 v4:
-  - Remove the Thermal Mode Event GUID from Gamezone and add this driver.
+ - Make driver data a private struct, remove references from Other Mode
+   driver.
+ - Don't cache data at device initialization. Instead, on component bind,
+   cache the data on a member variable of the Other Mode driver data
+   passed as a void pointer.
+ - Add header file for capdata01 structs.
+ - Add new struct to pass capdata01 array data and array length to Other
+   Mode.
+v3:
+- Add as component to lenovo-wmi-other driver.
+v2:
+- Use devm_kmalloc to ensure driver can be instanced, remove global
+  reference.
+- Ensure reverse Christmas tree for all variable declarations.
+- Remove extra whitespace.
+- Use guard(mutex) in all mutex instances, global mutex.
+- Use pr_fmt instead of adding the driver name to each pr_err.
+- Remove noisy pr_info usage.
+- Rename capdata_wmi to lenovo_wmi_cd01_priv and cd01_wmi to priv.
+- Use list to get the lenovo_wmi_cd01_priv instance in
+  lenovo_wmi_capdata01_get as none of the data provided by the macros
+  that will use it can pass a member of the struct for use in
+  container_of.
+
+capdata
 ---
- MAINTAINERS                              |   1 +
- drivers/platform/x86/Kconfig             |   4 +
- drivers/platform/x86/Makefile            |   1 +
- drivers/platform/x86/lenovo-wmi-events.c | 196 +++++++++++++++++++++++
- drivers/platform/x86/lenovo-wmi-events.h |  20 +++
- 5 files changed, 222 insertions(+)
- create mode 100644 drivers/platform/x86/lenovo-wmi-events.c
- create mode 100644 drivers/platform/x86/lenovo-wmi-events.h
+ MAINTAINERS                                 |   1 +
+ drivers/platform/x86/Kconfig                |   4 +
+ drivers/platform/x86/Makefile               |   1 +
+ drivers/platform/x86/lenovo-wmi-capdata01.c | 303 ++++++++++++++++++++
+ drivers/platform/x86/lenovo-wmi-capdata01.h |  25 ++
+ 5 files changed, 334 insertions(+)
+ create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.c
+ create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01.h
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index aab59a777693..2b4b06e81192 100644
+index 2b4b06e81192..1b22e41cc730 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -13164,6 +13164,7 @@ L:	platform-driver-x86@vger.kernel.org
  S:	Maintained
  F:	Documentation/wmi/devices/lenovo-wmi-gamezone.rst
  F:	Documentation/wmi/devices/lenovo-wmi-other.rst
-+F:	drivers/platform/x86/lenovo-wmi-events.*
++F:	drivers/platform/x86/lenovo-wmi-capdata01.*
+ F:	drivers/platform/x86/lenovo-wmi-events.*
  F:	drivers/platform/x86/lenovo-wmi-helpers.*
  
- LENOVO WMI HOTKEY UTILITIES DRIVER
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index bece1ba61417..13b8f4ac5dc5 100644
+index 13b8f4ac5dc5..64663667f0cb 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -459,6 +459,10 @@ config IBM_RTL
- 	 state = 0 (BIOS SMIs on)
- 	 state = 1 (BIOS SMIs off)
+@@ -467,6 +467,10 @@ config LENOVO_WMI_HELPERS
+ 	tristate
+ 	depends on ACPI_WMI
  
-+config LENOVO_WMI_EVENTS
++config LENOVO_WMI_DATA01
 +	tristate
 +	depends on ACPI_WMI
 +
- config LENOVO_WMI_HELPERS
- 	tristate
- 	depends on ACPI_WMI
+ config IDEAPAD_LAPTOP
+ 	tristate "Lenovo IdeaPad Laptop Extras"
+ 	depends on ACPI
 diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 5a9f4e94f78b..fc039839286a 100644
+index fc039839286a..7a35c77221b7 100644
 --- a/drivers/platform/x86/Makefile
 +++ b/drivers/platform/x86/Makefile
 @@ -69,6 +69,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
  obj-$(CONFIG_YOGABOOK)		+= lenovo-yogabook.o
  obj-$(CONFIG_YT2_1380)		+= lenovo-yoga-tab2-pro-1380-fastcharger.o
  obj-$(CONFIG_LENOVO_WMI_CAMERA)	+= lenovo-wmi-camera.o
-+obj-$(CONFIG_LENOVO_WMI_EVENTS)	+= lenovo-wmi-events.o
++obj-$(CONFIG_LENOVO_WMI_DATA01)	+= lenovo-wmi-capdata01.o
+ obj-$(CONFIG_LENOVO_WMI_EVENTS)	+= lenovo-wmi-events.o
  obj-$(CONFIG_LENOVO_WMI_HELPERS)	+= lenovo-wmi-helpers.o
  
- # Intel
-diff --git a/drivers/platform/x86/lenovo-wmi-events.c b/drivers/platform/x86/lenovo-wmi-events.c
+diff --git a/drivers/platform/x86/lenovo-wmi-capdata01.c b/drivers/platform/x86/lenovo-wmi-capdata01.c
 new file mode 100644
-index 000000000000..51ebdebac340
+index 000000000000..9f13d511b390
 --- /dev/null
-+++ b/drivers/platform/x86/lenovo-wmi-events.c
-@@ -0,0 +1,196 @@
++++ b/drivers/platform/x86/lenovo-wmi-capdata01.c
+@@ -0,0 +1,303 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * Lenovo WMI Events driver. Lenovo WMI interfaces provide various
-+ * hardware triggered events that many drivers need to have propagated.
-+ * This driver provides a uniform entrypoint for these events so that
-+ * any driver that needs to respond to these events can subscribe to a
-+ * notifier chain.
++ * Lenovo Capability Data 01 WMI Data Block driver.
++ *
++ * Lenovo Capability Data 01 provides information on tunable attributes used by
++ * the "Other Mode" WMI interface. The data includes if the attribute is
++ * supported by the hardware, the default_value, max_value, min_value, and step
++ * increment. Each attribute has multiple pages, one for each of the thermal
++ * modes managed by the Gamezone interface.
 + *
 + * Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com>
 + */
 +
++#include "linux/printk.h"
 +#include <linux/acpi.h>
++#include <linux/cleanup.h>
++#include <linux/component.h>
++#include <linux/container_of.h>
++#include <linux/device.h>
 +#include <linux/export.h>
++#include <linux/gfp_types.h>
 +#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/mutex_types.h>
 +#include <linux/notifier.h>
++#include <linux/overflow.h>
 +#include <linux/types.h>
 +#include <linux/wmi.h>
 +
-+#include "lenovo-wmi-events.h"
-+#include "lenovo-wmi-gamezone.h"
++#include "lenovo-wmi-capdata01.h"
 +
-+#define THERMAL_MODE_EVENT_GUID "D320289E-8FEA-41E0-86F9-911D83151B5F"
++#define LENOVO_CAPABILITY_DATA_01_GUID "7A8F5407-CB67-4D6E-B547-39B3BE018154"
 +
-+#define LWMI_EVENT_DEVICE(guid, type)                        \
-+	.guid_string = (guid), .context = &(enum lwmi_events_type) \
-+	{                                                          \
-+		type                                               \
-+	}
++#define ACPI_AC_CLASS "ac_adapter"
++#define ACPI_AC_NOTIFY_STATUS 0x80
 +
-+static BLOCKING_NOTIFIER_HEAD(events_chain_head);
-+
-+struct lwmi_events_priv {
++struct lwmi_cd01_priv {
++	struct notifier_block acpi_nb; /* ACPI events */
 +	struct wmi_device *wdev;
-+	enum lwmi_events_type type;
++	struct cd01_list *list;
++};
++
++struct cd01_list {
++	struct mutex list_mutex; /* list R/W mutex */
++	u8 count;
++	struct capdata01 data[];
 +};
 +
 +/**
-+ * lwmi_events_register_notifier() - Add a notifier to the notifier chain.
-+ * @nb: The notifier_block struct to register
++ * lwmi_cd01_component_bind() - Bind component to master device.
++ * @cd01_dev: Pointer to the lenovo-wmi-capdata01 driver parent device.
++ * @om_dev: Pointer to the lenovo-wmi-other driver parent device.
++ * @data: capdata01_list object pointer used to return the capability data.
 + *
-+ * Call blocking_notifier_chain_register to register the notifier block to the
-+ * lenovo-wmi-events driver blocking notifier chain.
++ * On lenovo-wmi-other's master bind, provide a pointer to the local capdata01
++ * list. This is used to call lwmi_cd01_get_data to look up attribute data
++ * from the lenovo-wmi-other driver.
 + *
-+ * Return: 0 on success, %-EEXIST on error.
++ * Return: 0
 + */
-+int lwmi_events_register_notifier(struct notifier_block *nb)
++static int lwmi_cd01_component_bind(struct device *cd01_dev,
++				    struct device *om_dev, void *data)
 +{
-+	return blocking_notifier_chain_register(&events_chain_head, nb);
-+}
-+EXPORT_SYMBOL_NS_GPL(lwmi_events_register_notifier, "LENOVO_WMI_EVENTS");
++	struct lwmi_cd01_priv *priv = dev_get_drvdata(cd01_dev);
++	struct cd01_list **cd01_list = data;
 +
-+/**
-+ * lwmi_events_unregister_notifier() - Remove a notifier from the notifier
-+ * chain.
-+ * @nb: The notifier_block struct to unregister
-+ *
-+ * Call blocking_notifier_chain_unregister to unregister the notifier block
-+ * from the lenovo-wmi-events driver blocking notifier chain.
-+ *
-+ * Return: 0 on success, %-ENOENT on error.
-+ */
-+int lwmi_events_unregister_notifier(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_unregister(&events_chain_head, nb);
-+}
-+EXPORT_SYMBOL_NS_GPL(lwmi_events_unregister_notifier, "LENOVO_WMI_EVENTS");
++	*cd01_list = priv->list;
 +
-+/**
-+ * devm_lwmi_events_unregister_notifier() - Remove a notifier from the notifier
-+ * chain.
-+ * @data: Void pointer to the notifier_block struct to unregister.
-+ *
-+ * Call lwmi_events_unregister_notifier to unregister the notifier block from
-+ * the lenovo-wmi-events driver blocking notifier chain.
-+ *
-+ * Return: 0 on success, %-ENOENT on error.
-+ */
-+static void devm_lwmi_events_unregister_notifier(void *data)
-+{
-+	struct notifier_block *nb = data;
-+
-+	lwmi_events_unregister_notifier(nb);
++	return 0;
 +}
 +
-+/**
-+ * devm_lwmi_events_register_notifier() - Add a notifier to the notifier chain.
-+ * @dev: The parent device of the notifier_block struct.
-+ * @nb: The notifier_block struct to register
-+ *
-+ * Call lwmi_events_register_notifier to register the notifier block to the
-+ * lenovo-wmi-events driver blocking notifier chain. Then add, as a device
-+ * managed action, unregister_notifier to automatically unregister the
-+ * notifier block upon its parent device removal.
-+ *
-+ * Return: 0 on success, or an error code.
-+ */
-+int devm_lwmi_events_register_notifier(struct device *dev,
-+				       struct notifier_block *nb)
-+{
-+	int ret;
++static const struct component_ops lwmi_cd01_component_ops = {
++	.bind = lwmi_cd01_component_bind,
++};
 +
-+	ret = lwmi_events_register_notifier(nb);
-+	if (ret < 0)
++/**
++ * lwmi_cd01_get_data - Get the data of the specified attribute
++ * @dev: The lenovo-wmi-capdata01 parent device.
++ * @tunable_attr: The attribute to be found.
++ * @output: Pointer to a capdata01 struct to return the data.
++ *
++ * Retrieves the capability data 01 struct pointer for the given
++ * attribute for its specified thermal mode.
++ *
++ * Return: 0 on success, or -EINVAL.
++ */
++int lwmi_cd01_get_data(struct cd01_list *list, u32 attribute_id, struct capdata01 *output)
++{
++	u8 idx;
++
++	guard(mutex)(&list->list_mutex);
++	for (idx = 0; idx < list->count; idx++) {
++		if (list->data[idx].id != attribute_id)
++			continue;
++		memcpy(output, &list->data[idx], sizeof(list->data[idx]));
++		return 0;
++	};
++
++	return -EINVAL;
++}
++EXPORT_SYMBOL_NS_GPL(lwmi_cd01_get_data, "LENOVO_WMI_CD01");
++
++/**
++ * lwmi_cd01_setup() - Cache all WMI data block information
++ * @priv: lenovo-wmi-capdata01 driver data.
++ *
++ * Loop through each WMI data block and cache the data.
++ *
++ * Return: 0 on success, or an error.
++ */
++static int lwmi_cd01_cache(struct lwmi_cd01_priv *priv)
++{
++	int idx;
++
++	guard(mutex)(&priv->list->list_mutex);
++	for (idx = 0; idx < priv->list->count; idx++) {
++		union acpi_object *ret_obj __free(kfree) = NULL;
++
++		ret_obj = wmidev_block_query(priv->wdev, idx);
++		if (!ret_obj)
++			return -ENODEV;
++
++		if (ret_obj->type != ACPI_TYPE_BUFFER ||
++		    ret_obj->buffer.length < sizeof(priv->list->data[idx]))
++			continue;
++
++		memcpy(&priv->list->data[idx], ret_obj->buffer.pointer,
++		       ret_obj->buffer.length);
++	}
++
++	return 0;
++}
++
++/**
++ * lwmi_cd01_alloc() - Allocate a cd01_list struct in drvdata
++ * @priv: lenovo-wmi-capdata01 driver data.
++ *
++ * Allocate a cd01_list struct large enough to contain data from all WMI data
++ * blocks provided by the interface.
++ *
++ * Return: 0 on success, or an error.
++ */
++static int lwmi_cd01_alloc(struct lwmi_cd01_priv *priv)
++{
++	struct cd01_list *list;
++	size_t list_size;
++	int count, ret;
++
++	count = wmidev_instance_count(priv->wdev);
++	list_size = struct_size(list, data, count);
++
++	list = devm_kzalloc(&priv->wdev->dev, list_size, GFP_KERNEL);
++	if (!list)
++		return -ENOMEM;
++
++	ret = devm_mutex_init(&priv->wdev->dev, &list->list_mutex);
++	if (ret)
 +		return ret;
 +
-+	return devm_add_action_or_reset(dev, devm_lwmi_events_unregister_notifier, nb);
++	list->count = count;
++	priv->list = list;
++
++	return 0;
 +}
-+EXPORT_SYMBOL_NS_GPL(devm_lwmi_events_register_notifier, "LENOVO_WMI_EVENTS");
 +
 +/**
-+ * lwmi_events_notify() - Call functions for the notifier call chain.
-+ * @wdev: The parent WMI device of the driver.
-+ * @obj: ACPI object passed by the registered WMI Event.
++ * lwmi_cd01_setup() - Cache all WMI data block information
++ * @priv: lenovo-wmi-capdata01 driver data.
 + *
-+ * Validate WMI event data and notify all registered drivers of the event and
-+ * its output.
++ * Allocate a cd01_list struct large enough to contain data from all WMI data
++ * blocks provided by the interface. Then loop through each data block and
++ * cache the data.
 + *
 + * Return: 0 on success, or an error code.
 + */
-+static void lwmi_events_notify(struct wmi_device *wdev, union acpi_object *obj)
++static int lwmi_cd01_setup(struct lwmi_cd01_priv *priv)
 +{
-+	struct lwmi_events_priv *priv = dev_get_drvdata(&wdev->dev);
-+	int sel_prof;
 +	int ret;
 +
-+	switch (priv->type) {
-+	case LWMI_EVENT_THERMAL_MODE:
-+		if (obj->type != ACPI_TYPE_INTEGER)
-+			return;
++	ret = lwmi_cd01_alloc(priv);
++	if (ret)
++		return ret;
 +
-+		sel_prof = obj->integer.value;
++	return lwmi_cd01_cache(priv);
++}
 +
-+		switch (sel_prof) {
-+		case LWMI_GZ_THERMAL_MODE_QUIET:
-+		case LWMI_GZ_THERMAL_MODE_BALANCED:
-+		case LWMI_GZ_THERMAL_MODE_PERFORMANCE:
-+		case LWMI_GZ_THERMAL_MODE_EXTREME:
-+		case LWMI_GZ_THERMAL_MODE_CUSTOM:
-+			ret = blocking_notifier_call_chain(&events_chain_head,
-+							   LWMI_EVENT_THERMAL_MODE,
-+							   &sel_prof);
-+			if (ret == NOTIFY_BAD)
-+				dev_err(&wdev->dev,
-+					"Failed to send notification to call chain for WMI Events\n");
-+			return;
-+		default:
-+			dev_err(&wdev->dev, "Got invalid thermal mode: %x",
-+				sel_prof);
-+			return;
-+		}
-+		break;
++/**
++ * lwmi_cd01_notifier_call() - Call method for lenovo-wmi-capdata01 driver notifier.
++ * block call chain.
++ * @nb: The notifier_block registered to lenovo-wmi-events driver.
++ * @action: Unused.
++ * @data: The ACPI event.
++ *
++ * For LWMI_EVENT_THERMAL_MODE, set current_mode and notify platform_profile
++ * of a change.
++ *
++ * Return: notifier_block status.
++ */
++static int lwmi_cd01_notifier_call(struct notifier_block *nb, unsigned long action,
++				   void *data)
++{
++	struct acpi_bus_event *event = data;
++	struct lwmi_cd01_priv *priv;
++	int ret;
++
++	if (strcmp(event->device_class, ACPI_AC_CLASS) != 0)
++		return NOTIFY_DONE;
++
++	priv = container_of(nb, struct lwmi_cd01_priv, acpi_nb);
++
++	switch (event->type) {
++	case ACPI_AC_NOTIFY_STATUS:
++		ret = lwmi_cd01_cache(priv);
++		if (ret)
++			return NOTIFY_BAD;
++
++		return NOTIFY_OK;
 +	default:
-+		return;
++		return NOTIFY_DONE;
 +	}
 +}
 +
-+static int lwmi_events_probe(struct wmi_device *wdev, const void *context)
++/**
++ * lwmi_cd01_unregister() - Unregister the cd01 ACPI notifier_block.
++ * @data: The ACPI event notifier_block to unregister.
++ */
++static void lwmi_cd01_unregister(void *data)
 +{
-+	struct lwmi_events_priv *priv;
++	struct notifier_block *acpi_nb = data;
 +
-+	if (!context)
-+		return -EINVAL;
++	unregister_acpi_notifier(acpi_nb);
++}
++
++static int lwmi_cd01_probe(struct wmi_device *wdev, const void *context)
++
++{
++	struct lwmi_cd01_priv *priv;
++	int ret;
 +
 +	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
 +	if (!priv)
 +		return -ENOMEM;
 +
 +	priv->wdev = wdev;
-+	priv->type = *(enum lwmi_events_type *)context;
-+
 +	dev_set_drvdata(&wdev->dev, priv);
-+	return 0;
++
++	ret = lwmi_cd01_setup(priv);
++	if (ret)
++		return ret;
++
++	priv->acpi_nb.notifier_call = lwmi_cd01_notifier_call;
++
++	ret = register_acpi_notifier(&priv->acpi_nb);
++	if (ret)
++		return ret;
++
++	ret = devm_add_action_or_reset(&wdev->dev, lwmi_cd01_unregister, &priv->acpi_nb);
++	if (ret)
++		return ret;
++
++	return component_add(&wdev->dev, &lwmi_cd01_component_ops);
 +}
 +
-+static const struct wmi_device_id lwmi_events_id_table[] = {
-+	{ LWMI_EVENT_DEVICE(THERMAL_MODE_EVENT_GUID, LWMI_EVENT_THERMAL_MODE) },
++static void lwmi_cd01_remove(struct wmi_device *wdev)
++{
++	component_del(&wdev->dev, &lwmi_cd01_component_ops);
++}
++
++static const struct wmi_device_id lwmi_cd01_id_table[] = {
++	{ LENOVO_CAPABILITY_DATA_01_GUID, NULL },
 +	{}
 +};
 +
-+static struct wmi_driver lwmi_events_driver = {
++static struct wmi_driver lwmi_cd01_driver = {
 +	.driver = {
-+		.name = "lenovo_wmi_events",
++		.name = "lenovo_wmi_cd01",
 +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
 +	},
-+	.id_table = lwmi_events_id_table,
-+	.probe = lwmi_events_probe,
-+	.notify = lwmi_events_notify,
++	.id_table = lwmi_cd01_id_table,
++	.probe = lwmi_cd01_probe,
++	.remove = lwmi_cd01_remove,
 +	.no_singleton = true,
 +};
 +
-+module_wmi_driver(lwmi_events_driver);
++/**
++ * lwmi_cd01_match() - Match rule for the master driver.
++ * @dev: Pointer to the capability data 01 parent device.
++ * @data: Unused void pointer for passing match criteria.
++ *
++ * Return: int.
++ */
++int lwmi_cd01_match(struct device *dev, void *data)
++{
++	return dev->driver == &lwmi_cd01_driver.driver;
++}
++EXPORT_SYMBOL_NS_GPL(lwmi_cd01_match, "LENOVO_WMI_CD01");
 +
-+MODULE_DEVICE_TABLE(wmi, lwmi_events_id_table);
++module_wmi_driver(lwmi_cd01_driver);
++
++MODULE_DEVICE_TABLE(wmi, lwmi_cd01_id_table);
 +MODULE_AUTHOR("Derek J. Clark <derekjohn.clark@gmail.com>");
-+MODULE_DESCRIPTION("Lenovo WMI Events Driver");
++MODULE_DESCRIPTION("Lenovo Capability Data 01 WMI Driver");
 +MODULE_LICENSE("GPL");
-diff --git a/drivers/platform/x86/lenovo-wmi-events.h b/drivers/platform/x86/lenovo-wmi-events.h
+diff --git a/drivers/platform/x86/lenovo-wmi-capdata01.h b/drivers/platform/x86/lenovo-wmi-capdata01.h
 new file mode 100644
-index 000000000000..cd34e886912c
+index 000000000000..bd06c5751f68
 --- /dev/null
-+++ b/drivers/platform/x86/lenovo-wmi-events.h
-@@ -0,0 +1,20 @@
++++ b/drivers/platform/x86/lenovo-wmi-capdata01.h
+@@ -0,0 +1,25 @@
 +/* SPDX-License-Identifier: GPL-2.0-or-later */
 +
 +/* Copyright (C) 2025 Derek J. Clark <derekjohn.clark@gmail.com> */
 +
-+#ifndef _LENOVO_WMI_EVENTS_H_
-+#define _LENOVO_WMI_EVENTS_H_
++#ifndef _LENOVO_WMI_CAPDATA01_H_
++#define _LENOVO_WMI_CAPDATA01_H_
++
++#include <linux/types.h>
 +
 +struct device;
-+struct notifier_block;
++struct cd01_list;
 +
-+enum lwmi_events_type {
-+	LWMI_EVENT_THERMAL_MODE = 1,
++struct capdata01 {
++	u32 id;
++	u32 supported;
++	u32 default_value;
++	u32 step;
++	u32 min_value;
++	u32 max_value;
 +};
 +
-+int lwmi_events_register_notifier(struct notifier_block *nb);
-+int lwmi_events_unregister_notifier(struct notifier_block *nb);
-+int devm_lwmi_events_register_notifier(struct device *dev,
-+				       struct notifier_block *nb);
++int lwmi_cd01_get_data(struct cd01_list *list, u32 attribute_id, struct capdata01 *output);
++int lwmi_cd01_match(struct device *dev, void *data);
 +
-+#endif /* !_LENOVO_WMI_EVENTS_H_ */
++#endif /* !_LENOVO_WMI_CAPDATA01_H_ */
 -- 
 2.49.0
 
