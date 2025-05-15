@@ -1,157 +1,170 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7CB4254874
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E571B4242
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:13:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747329074; cv=none; b=ieFbVXwWApLiYXOm7CBGNsbfnHnnRulTx+LX/OdPisg7LQ2TkJtkBn3RiYlGiXgrnOsTnC6RGDeHCo77iMaE0bXTYBErHbFS24AqEO68NOLTUKu2JfdIMAOlLKh0bzMZmDBhkTd0wQDh7nZ+EeIsJ5AhZqvSE6UispMtCi3YKMk=
+	t=1747329204; cv=none; b=XfzIXPszT7za4Lb8O8TcPODR/5lypQXtl8cPp3jUtoG/mrtHR+nJzNr18Pmq5uJMCe+j+vv76BDPXzBQr0/eiocNnILVXU4lRWtm4lHujnsMXu89l/yanKOIX8InsxZeil6Hzga+w3WplsC7duBi/iK8wcjuVkx3kSZRY+Vo1OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747329074; c=relaxed/simple;
-	bh=S66ui8RplR1hUsEfL2yiUULr7ReEi7voeyYmjYi8kQM=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tepu4i6f7wzBT55o87Do9vkbtOd46PGu69aKzQt0BI3E44neyEGh9u1PtUxPXsUWBil8iuX4BlCfIq/pCUaoKO8o4PSYS1hmmoxGisbr21w62/6yT5WtS3coPbfdjoVxQTtXBF+NLA70Q74wuPW1CmgaBc6V5T96eOVvzjvAAls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=ROl/X5K2; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1747329204; c=relaxed/simple;
+	bh=O63cXBs+Xx3OU/kGfCocj7yS4CxizcWT/oxTtnSxx3A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fxn6v1RlAIrIJ975e+5nd3slxeWxyJnuPF6gnhOZaP0H6uMHgPT+1MltMJYvqwDe69D9u3XEana5XRyFKbHK+QkS3X0N+b1g+vE5EWt+IFLlVtbc23Xh1MybsLk8/g7GnDj62PVJ5RQc+FEuiUxvinqyUtTTY1xfQJlsZR/Hev4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Y5GcOq9j; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="ROl/X5K2"
-Received: from mail-vk1-f200.google.com (mail-vk1-f200.google.com [209.85.221.200])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 655163F830
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:11:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1747329069;
-	bh=JtByJyVo62jw0XHnA95uqk/ce1yHYsp6TEnfnoc5j1w=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=ROl/X5K2DjNGRQGG39gm7pLDB+ZrOl6W+kl2UTHPPjAw5LcYeGOjLInbmAARgjMUh
-	 Gu4LIIF5zwLAkVsxmC5WcrOKRkRwfk0KeUxBA4Hw2T8bq/fxpXfVGembzWJc6bWO0u
-	 dCSCK1VEjZfenCn48ZhLSFtVWVDOyVaS1CCmlAhyP7TIRf4a569pDsy7S9qOLtzoft
-	 qo0TDxHxs4FSyr1cyqNjISjHPWa1QHfRZlEiIK4RX7Xb7V4SVJn4ZRchdCHVXjlmQ3
-	 p9u0o/Zk4CF47ZzYiYstfsdFltfD9BBvTVfztlrZ8NWXtqzkt6Xl1+id8X+c+Lv4Kd
-	 8aHwcJDoX2Urg==
-Received: by mail-vk1-f200.google.com with SMTP id 71dfb90a1353d-52a7458ad5aso317713e0c.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:11:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Y5GcOq9j"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54FEFPeg031652
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:13:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	yYY5LgPRLIrcdKBo4sFGaqpoE0nGNKtVE2RVccwfFlg=; b=Y5GcOq9jFeWOZVDD
+	Wp0cXL7yUw4LnTspT78KA03rujBHrF7cXUO/6KD3mzlgkEHiicB0Ytq2lQtoQad8
+	4N1SAwIhxX3Aa/Gc1l6xPR1ZVa6Vp8idrnEOYmgSDkv3HAWUZYbnuNF5z4voWMAP
+	hd1ei+t35uiJmG9EHY5U8Mqds8UbUKC6b7oGUpGjU8Kld0SbCP/qna4vc4jsApIP
+	vc85l6eaNVSYhHGxJcl3qDn5/lkIpNwKx8Op+w696lD4gX5ihJd+t4LKP4CjnwXm
+	oK20wWCxR7rVJgqVnKKMzTPBNC5eJ0hv3LGC205kIEfZTh1TjBjuQjiCePRfru+/
+	nAn7Lg==
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcr6v93-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:13:21 +0000 (GMT)
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-30e57a372dcso1104430a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:13:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747329067; x=1747933867;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JtByJyVo62jw0XHnA95uqk/ce1yHYsp6TEnfnoc5j1w=;
-        b=O6dyaevCZhxqNnL28pML3cdsqed4t+jTxyvyQebC0E71d+I0SMDq7nEec2RMU4Z2wD
-         MlTgcs/TDAC7deTaqrTykce3j3DGm44EgBp9DxrAO3sJIeEKX/4w6VeKqfxj/vbUZLqB
-         YqQeo8S5yLI2N4ze2JDtFcpiWc2uoFH491DSxP+CR86aVG0Rvi26mFcAVUlaNOiGG+iK
-         2SK9DoBon4UAFPtLtVt311+e9xeiEd4jvIvxU416R0brdOg5z4cvgGCJXtyZaEBw0iU5
-         350OjnbD0Pi1afRSiIBwHfhX0UOjsHIHH5TED2pecPqFJgaHfZJKbN5t5EN7L+PKTQal
-         y4iw==
-X-Gm-Message-State: AOJu0YypwaV2GZtKpzxMIy84Sf1teUfei3Iz4pLyyGuPODOhuAkTVwGg
-	NhUZeSN9HyAdKZTaX5fxu8XhV2aiV2z2Fo//wbUvAGfjtbcRg4t7dmo3aVC1Jn4K03iZXk/o0+Q
-	zAFZvpujSGDC+M3CbypXnWejzjybM6si0C9EvqQQ2sTRjVXN5nM35S0ZKlJJ9VBtOmT6TOFfUBd
-	2PUX8Z5BZ94PwlzY8HUiLmQMqmOPHNCHaZACaMEpK2g7RJr1ekpO8jLUoe2TY9rKRsizp/yvj8
-X-Gm-Gg: ASbGnculQu3E+OBtiItHzLcVFLIKya5Y9tn48B8R+OCqh1UB694foIAjNxC+9LoGYRt
-	3vyr0nX0LhZfdAqlkcBpPQVLJfinD3wufVxwifdsMlIIq6dLRNb1DMKR37H+MLOgYlpBF9Q==
-X-Received: by 2002:a05:6122:8c0f:b0:525:aecb:6306 with SMTP id 71dfb90a1353d-52dba970130mr818023e0c.11.1747329067033;
-        Thu, 15 May 2025 10:11:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHcaUH2N5muwkVDiIxEHWItA30nxiMYoNCDf2Wv2idVAmWCRr+uin/5sa1AilKtPRZiwiaH2QNVjHO7L9k7ddY=
-X-Received: by 2002:a05:6820:1841:b0:608:3ee9:13a4 with SMTP id
- 006d021491bc7-609f37a4c25mr127767eaf.5.1747329055811; Thu, 15 May 2025
- 10:10:55 -0700 (PDT)
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 15 May 2025 10:10:55 -0700
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 15 May 2025 10:10:55 -0700
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <20250502103101.957016-1-e@freeshell.de>
-References: <20250502103101.957016-1-e@freeshell.de>
+        d=1e100.net; s=20230601; t=1747329200; x=1747934000;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yYY5LgPRLIrcdKBo4sFGaqpoE0nGNKtVE2RVccwfFlg=;
+        b=Nm3P/QXawE0P+ZASaJAD8gv2Ip5tlLlntKNtsQ4HUQNrXBB1paRghQV87ygAi8mv3f
+         2Q9obionS9QoMF1EGf/lqXgMkOk6YKXVH7LHY4lHP8nv/96vN3iiI5jyEjRY+NWe3Zdy
+         FJbR1/nbMcTyfQg9LNqFaLw2ooAGdnpPsr47j25U96Atq8pFCrczAcGIbenY16FukexQ
+         G4aeOuPFxBTHJAGT9GLgQRQokm6XyMKa5a69dE9vrlHxBIytY2LZIcbr5+afrWNafc9h
+         JQrkt2T9sKDIot/iKD3wb8wPMyrxB1k74GEyadBVg629rWD5cwRw3hPeLEOht1tSyEsb
+         fcaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVtvJGyYJqUk3TBkK4kfoM2yzt+gZh7QzlV03AQ4puZmjG5qH53v1ccFwSqT+kMil4IPl2a8LMfspirN4o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZ/4z65K/tBugBVmdOsEMo+vLNRznSTlZTdnAgtBdBEOu/QZJd
+	m6m9XAuDDASINk6iv5Ykj2PiXJw1RQsbEUzxtGsSHy2LRiws8SSRL0s6YFue2xehNNqUqhTjeCG
+	iWWqR1pZrN1v6biyhQbF+bgsFSqBWjQkniWzBFDv03ALGn18Az+aGbM7f+qLb68VWQK8=
+X-Gm-Gg: ASbGncvTXkZoMV92B6r0usX183aQsIv1OXQkceG4+vBihgy92uMDSSNhuVU1kpCD/RR
+	j/3+9//divUuGR0lUakQF74Das2cXmOclLWPG+DPQQM2cOOjG56aOzlQmSOWZKubZ0GPjqqWYJy
+	ngxNy01F+MNvp0Y5NKcAcFfCkbb4OzpmmEsXnNosrkPtVsidK0/xJ8dBKv5wRTkFnHdFVKnZ+rW
+	aopCly6B2C4LzYqjRN07jkwyDJ+SNyDHdsGcZwRG7RsPaCBAO7tCepldyiKZLNbnyRObVospkyM
+	/EMpVfeW4DAfPlQu/Nqc7A5pVhREG+IBgwLn6579ocZUjACQoCqAj7BYXvB5L9iurbkB3Q==
+X-Received: by 2002:a17:90b:33c2:b0:2ff:6608:78cd with SMTP id 98e67ed59e1d1-30e7d544fd4mr288087a91.9.1747329199743;
+        Thu, 15 May 2025 10:13:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFNDu7NvHwl9BxUYwJis4ASPQgBchI/AV8+LYPCkrCV2kofbKQRnSnmom5F9mPfzufGWwElaA==
+X-Received: by 2002:a17:90b:33c2:b0:2ff:6608:78cd with SMTP id 98e67ed59e1d1-30e7d544fd4mr288065a91.9.1747329199310;
+        Thu, 15 May 2025 10:13:19 -0700 (PDT)
+Received: from [10.134.71.99] (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e7d5918aesm64070a91.49.2025.05.15.10.13.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 10:13:19 -0700 (PDT)
+Message-ID: <abc767ff-acb9-47c3-8b6e-6c6150f7b19e@oss.qualcomm.com>
+Date: Thu, 15 May 2025 10:13:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Thu, 15 May 2025 10:10:55 -0700
-X-Gm-Features: AX0GCFsMRCnrUVPh4GyhcmqGXz7TGDQn2DvhmQZjDAp9e_FqEd74NBSnaFQLito
-Message-ID: <CAJM55Z_ebHvpf=G9fMGctkPbAtVd6yco6joRNVbzcAtiEzD=ag@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] riscv: dts: starfive: jh7110-common: Sync
- downstream U-Boot changes
-To: E Shattow <e@freeshell.de>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] drm/msm/dpu: Add max pingpong and dsc width to HW
+ catalog
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Abhinav Kumar <abhinav.kumar@oss.qualcomm.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250514-max-mixer-width-v1-0-c8ba0d9bb858@oss.qualcomm.com>
+ <20250514-max-mixer-width-v1-2-c8ba0d9bb858@oss.qualcomm.com>
+ <txn2anohfbrymaseeo55slmzimstietsrmhx3mhigw4fcx3ow4@b42b3n53et6l>
+Content-Language: en-US
+From: Jessica Zhang <jessica.zhang@oss.qualcomm.com>
+In-Reply-To: <txn2anohfbrymaseeo55slmzimstietsrmhx3mhigw4fcx3ow4@b42b3n53et6l>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: coCgeV2aBgZgJIzWTKzeqMl0wb6LnSY0
+X-Authority-Analysis: v=2.4 cv=Auju3P9P c=1 sm=1 tr=0 ts=682620b1 cx=c_pps
+ a=RP+M6JBNLl+fLTcSJhASfg==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=_YleJFLcT2wxSgV-J2oA:9
+ a=QEXdDO2ut3YA:10 a=iS9zxrgQBfv6-_F4QbHw:22
+X-Proofpoint-GUID: coCgeV2aBgZgJIzWTKzeqMl0wb6LnSY0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDE3MCBTYWx0ZWRfXzTitVOTFRn/4
+ mV1JpcqOBMvUdsnjFU8LmOJxbcYMHCKMY050dW1PYHpsBmhq/tx2FNz44VKHehBqzkb8LvDPNGB
+ EB0CXiSQjzol9RLCMCo9z2whnlYcHFO18Fnc/6OudbGLriVs41qXOA7n3nx7+mol8aXoOhfGaEO
+ d0Qw2Rgre4Mc2Q4UeXjC+hRjtlXkpWQXni9U77dTHvBytG8D+cpJw+RNib7rKWJi0EFLUK9KBG0
+ LcV1/RrYrm++EC89d3Zio6stUBehH90J0W5tNPzFILbW18EVaMm046el3gHYXPTPXFf4JT2nA9T
+ tG69t/Re71hFxkFmIsafWm8g0elSuxpQH9f4KUninwsssdOMHXN9jiHB4sBZ/+CS2NjuM6M58+9
+ 1Y1ELmiGTMnS5bWqpWbRuGC683UfVxPBkgbme+HlWB7jjbjPt4sjqDEmkmRn1zkTPuS8p6Xc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-15_07,2025-05-15_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 clxscore=1015 spamscore=0 impostorscore=0 lowpriorityscore=0
+ malwarescore=0 mlxscore=0 adultscore=0 priorityscore=1501 mlxlogscore=999
+ phishscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505150170
 
-E Shattow wrote:
-> U-Boot boot loader has adopted using the Linux dt-rebasing tree for dts
-> with StarFive VisionFive2 board target (and related JH7110 common boards).
-> Sync the minimum changes from jh7110-common.dtsi needed for boot so these
-> can be dropped from U-Boot.
->
-> Changes since v2:
->
-> - 1/5 -> 1/4: Do not replace assigned CPU core or PLL0 clock when adding new
->   assignments. Adjust patch name and commit message accordingly.
-> - 2/5 -> 2/4: Detail reason for qspi setting changes in commit message
-> - 3/5 -> Drop uart0 clock-frequency patch
-> - 4/5 -> 3/4: Add reviewed by tag (no change)
-> - 5/5 -> 4/4: Follow dts coding style sort order. Add bootph-pre-ram hint
->   for mmc interfaces
->
-> Note: mmc boot source modes of JH7110 loader on mask ROM are deprecated as
-> of StarFive JH7110 User Guide 1.2 revision. The loader expects data within
-> range of LBA 0 and LBA 1 in conflict with GUID Partition Table.
->
-> SD Card and eMMC boot media are prepared as follows:
->
-> # GPT partition SD Card or eMMC as
-> # 1: Secondary Program Loader @ 0x200000
-> # 2: Main payload area for use by SPL
-> # 3: EFI System Partition
-> sgdisk --clear \
->   --new=1:2M:+2M --typecode=1:2E54B353-1271-4842-806F-E436D6AF6985 \
->   --new=2:4M:+4M --typecode=2:5B193300-FC78-40CD-8002-E86C45580B47 \
->   --new=3:8M:+100M --typecode=3:EF00 /dev/sdX
->
-> # Write offset value in bytes of loader 'backup section' SPL as part1 @ 2M
-> python3 <<-EOF
-> with open("/dev/sdX", "r+b") as f:
->   f.seek(0x0004)
->   f.write((0x200000).to_bytes(4, "little"))
-> EOF
->
-> # Write invalid CRC to trigger 'Main section boot fail,use backup section'
-> python3 <<-EOF
-> with open("/dev/sdX", "r+b") as f:
->   f.seek(0x0290)
->   f.write((0x5A5A5A5A).to_bytes(4, "little"))
-> EOF
 
-This series looks good to me now. Thank you.
 
-/Emil
+On 5/14/2025 5:21 PM, Dmitry Baryshkov wrote:
+> On Wed, May 14, 2025 at 04:52:30PM -0700, Jessica Zhang wrote:
+>> Add max_dsc_encoder_width to dpu_caps struct and max_linewidth to
+>> dpu_pingpong_cfg for all chipsets within the HW catalog.
+>>
+>> Note: The max supported PINGPONG width was 4096 but increased to 5120
+>> after DPU 6.x. In addition, DPU 8.x+ increases the max supported width
+>> of PINGPONG_0 specifically to 8960.
+>>
+>> Signed-off-by: Jessica Zhang <jessica.zhang@oss.qualcomm.com>
+>> ---
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_10_0_sm8650.h  | 11 +++++++++++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h |  2 ++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h |  1 +
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h |  2 ++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h  |  4 ++++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_0_msm8998.h  |  4 ++++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h   |  4 ++++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h   |  2 ++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h   |  4 ++++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h   |  6 ++++++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h  |  6 ++++++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h   |  4 ++++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h   |  3 +++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h   |  2 ++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_0_sm8250.h   |  6 ++++++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_2_sc7180.h   |  2 ++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_3_sm6115.h   |  1 +
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_4_sm6350.h   |  2 ++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h  |  1 +
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_9_sm6375.h   |  1 +
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_7_0_sm8350.h   |  7 +++++++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_7_2_sc7280.h   |  5 +++++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h |  7 +++++++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_1_sm8450.h   |  9 +++++++++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_8_4_sa8775p.h  |  9 +++++++++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h   |  9 +++++++++
+>>   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h |  9 +++++++++
+>>   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h           | 10 ++++++++++
+> 
+> This needs to be rebased on top of linux-next, otherwise you've missed
+> dpu_9_1_sar2130p.h .
 
->
-> E Shattow (4):
->   riscv: dts: starfive: jh7110-common: add CPU BUS PERH QSPI clocks to
->     syscrg
->   riscv: dts: starfive: jh7110-common: qspi flash setting read-delay 2
->     cycles max 100MHz
->   riscv: dts: starfive: jh7110-common: add eeprom node to i2c5
->   riscv: dts: starfive: jh7110-common: bootph-pre-ram hinting needed by
->     boot loader
->
->  .../boot/dts/starfive/jh7110-common.dtsi      | 31 ++++++++++++++++---
->  1 file changed, 27 insertions(+), 4 deletions(-)
->
->
-> base-commit: ebd297a2affadb6f6f4d2e5d975c1eda18ac762d
-> --
-> 2.49.0
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+Ah yes, forgot to update my local working branch.
+
+Thanks,
+
+Jessica Zhang
+
+> 
+
