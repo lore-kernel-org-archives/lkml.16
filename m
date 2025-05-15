@@ -1,99 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95E72980A3;
-	Thu, 15 May 2025 10:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01A92101AE;
+	Thu, 15 May 2025 10:49:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747306112; cv=none; b=FKZ46Kz1RfGjmZifeKTptO/Q8jPyDjAtJ1E38PYbsACt9KJ+rgrD49x4UT0+EZQE/eayGj9Q+HBYUrPCWkVSjEOjp0VJrRibiujumuSUZV7iH76hWb5omjEm7s0n4z7LFqKiTiy0fVhGfLZjrizSNdtd+Ho9NlGI40BFjW/N+Ec=
+	t=1747306174; cv=none; b=j1r2BfA2m0sf/plJR6nkHQ4JW2ZJAEJ+MuANn2Z4auwdLXTN928VeRfO+KTgpBTiNHoDU+sRkDLz7cDDtWFepyr/dFazS6SaE/WcAUbEnW1zC9FDQVxN3peFIPNp839xyVcR7i+AlUx/UYv/KirelTUf7XlNMH2MeDGvmg9Brfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747306112; c=relaxed/simple;
-	bh=adxalg7H3lV44b62vZBcg+BCmQflj5misd5wybzAhrk=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=tb2gZ1PSFoIxQU+c0fD98fHVx3E8rhkdlUBVjrru/9pxJ1zyiSU5vkC5AK+VLgIGTLMth8IeETHfGo5FUlj8KG64pwSqBltXrrkbzxK2Zb/PIvx0LcyPgmAnbtfW1OuM/UfV8qK+pxvQj3UBkwPYctwNvxe+OwqqtBoLB+h4zzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u7DeagEU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747306174; c=relaxed/simple;
+	bh=tFsaYwqq/XOzOdN/T6tvc0f3OJ5+Koygucog5fYi5MM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DJjWHmkbcVSJlu9dQ6eR8v7sPNECFe5L10jsgIFP6aqn0Sd3gPST1ljbe12LVkUqBC2nUbaGcR3TY0n6V7EYFj1uEapmHRi2dkChTQmes88YE8MSw1SUIkW0hIkEuIO++4oStQ0MB21tW+VEDOGaiseyLAvIZOGyKqoyR5xJuyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=rSbTnGeO; arc=none smtp.client-ip=185.226.149.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u7DeagEU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2176DC4CEE7;
-	Thu, 15 May 2025 10:48:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747306112;
-	bh=adxalg7H3lV44b62vZBcg+BCmQflj5misd5wybzAhrk=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=u7DeagEUEiexQGncuTRbIUiVohH0r9Yv/kmqm+EZaKWZsCoK4Cfh43a3y4gqdXWtx
-	 lG6aDJSr5GlY/zwP4+xtCu2IF3yYaRcpqqFQ7pEP2YbEMl9tafTCc3Wbg1T3ZetDx+
-	 S7Dr07ViBTwbdcoPp3xMI+BYPcipOz9cYhdVQzdlCZycbA4WVjGWgZVPctUru/smxt
-	 rsHP4HksXSkcOoNoA5LazlUNOsY+b/bD3A1t5cctBTq/wTVSXxaS4xITr1QLGQBs+v
-	 cD7aJmx+dm7h97l6Jlh/aeIifn55CJmfS8E2QMtqOB7wrnd21eRq0VP1ZOklrxxBgr
-	 4Vy7hhIETPFYw==
-Date: Thu, 15 May 2025 05:48:30 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="rSbTnGeO"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uFW9R-003Sxf-5e; Thu, 15 May 2025 12:49:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
+	bh=V6U6TgHHp/PrCB7JP5WcdZvqqmCnTPEWOC9eHJ6fj7g=; b=rSbTnGeOXgUUZBXM8rnA+9aHVC
+	CSmRTGuKx/AjREk3ptDoi8ce4/ca0+IsQCpOJBsMLp4XwtIz49eYXWP1ZTy+yFPJTxApv0LpjNfGT
+	RpgZaSo/yCMcbnQbI1ecLwlwOYEvtvLvn2J8Z3bfWf1KicGz/EoE2Ll4Z9eRAGO+z+OrA6MiOvQ1e
+	EjoeCGvslArs21ree5Nhd4eUqWnACocdgg/vBlQvp11l8fVDosoJPhpfGa6+XDWzYBTX2xQISP+0N
+	/T9snvZJm07zovXMVlB+jP+fua4ntxwJT3h8G/YmZ+X8y3dHS/rRMzAxJ053DdamXJO9G8lOCd6QE
+	bUlqYSIg==;
+Received: from [10.9.9.72] (helo=submission01.runbox)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uFW9Q-0004ip-56; Thu, 15 May 2025 12:49:20 +0200
+Received: by submission01.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uFW9F-008WYe-MC; Thu, 15 May 2025 12:49:09 +0200
+Message-ID: <069def19-1a77-4677-9bc9-70a44215cd05@rbox.co>
+Date: Thu, 15 May 2025 12:49:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: fshao@chromium.org, devicetree@vger.kernel.org, 
- Project_Global_Chrome_Upstream_Group@mediatek.com, 
- xiandong.wang@mediatek.com, krzk+dt@kernel.org, 
- dri-devel@lists.freedesktop.org, nancy.lin@mediatek.com, 
- linux-mediatek@lists.infradead.org, sirius.wang@mediatek.com, 
- singo.chang@mediatek.com, linux-arm-kernel@lists.infradead.org, 
- p.zabel@pengutronix.de, treapking@chromium.org, jason-jh.lin@mediatek.com, 
- linux-kernel@vger.kernel.org, matthias.bgg@gmail.com, conor+dt@kernel.org, 
- chunkuang.hu@kernel.org, angelogioacchino.delregno@collabora.com, 
- sunny.shen@mediatek.com
-To: "paul-pl.chen" <paul-pl.chen@mediatek.com>
-In-Reply-To: <20250515093454.1729720-3-paul-pl.chen@mediatek.com>
-References: <20250515093454.1729720-1-paul-pl.chen@mediatek.com>
- <20250515093454.1729720-3-paul-pl.chen@mediatek.com>
-Message-Id: <174730611044.164934.18396756831118218280.robh@kernel.org>
-Subject: Re: [PATCH v3 02/17] dt-bindings: display: mediatek: add EXDMA
- yaml for MT8196
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v3 4/8] selftests/bpf: Introduce verdict programs
+ for sockmap_redir
+To: John Fastabend <john.fastabend@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman
+ <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
+ Jiayuan Chen <mrpre@163.com>
+References: <20250515-selftests-sockmap-redir-v3-0-a1ea723f7e7e@rbox.co>
+ <20250515-selftests-sockmap-redir-v3-4-a1ea723f7e7e@rbox.co>
+ <20250515042900.5dox2mozx455tekm@gmail.com>
+Content-Language: pl-PL, en-GB
+From: Michal Luczaj <mhal@rbox.co>
+In-Reply-To: <20250515042900.5dox2mozx455tekm@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-On Thu, 15 May 2025 17:34:14 +0800, paul-pl.chen wrote:
-> From: Paul-pl Chen <paul-pl.chen@mediatek.com>
+On 5/15/25 06:29, John Fastabend wrote:
+> On 2025-05-15 00:15:27, Michal Luczaj wrote:
+>> Instead of piggybacking on test_sockmap_listen, introduce
+>> test_sockmap_redir especially for sockmap redirection tests.
+>>
+>> Suggested-by: Jiayuan Chen <mrpre@163.com>
+>> Acked-by: John Fastabend <john.fastabend@gmail.com>
+>> Signed-off-by: Michal Luczaj <mhal@rbox.co>
+>> ---
 > 
-> Add mediatek,exdma.yaml to support EXDMA for MT8196.
-> The MediaTek display overlap extended DMA engine, namely
-> OVL_EXDMA or EXDMA, primarily functions as a DMA engine
-> for reading data from DRAM with various DRAM footprints
-> and data formats.
+> LGTM, this is a net new patch in v3 though correct? In the future
+> only carry the Acks into patches that are from the previous version
+> and not substantially changed.
+
+Will do, sorry.
+
+Note that I wasn't being sneaky, I asked about it in the cover letter :)
+
+Thanks,
+Michal
+
+> All the same thanks for doing this. For this patch.
 > 
-> Signed-off-by: Nancy Lin <nancy.lin@mediatek.com>
-> Signed-off-by: Paul-pl Chen <paul-pl.chen@mediatek.com>
-> ---
->  .../bindings/dma/mediatek,exdma.yaml          | 68 +++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/mediatek,exdma.yaml
-> 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dma/mediatek,exdma.example.dtb: dma-controller@32850000 (mediatek,mt8196-exdma): 'mediatek,larb' is a required property
-	from schema $id: http://devicetree.org/schemas/dma/mediatek,exdma.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250515093454.1729720-3-paul-pl.chen@mediatek.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+> Acked-by: John Fastabend <john.fastabend@gmail.com>
 
