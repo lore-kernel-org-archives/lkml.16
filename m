@@ -1,99 +1,117 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160C428DF27
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212AC28C2D7
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747297436; cv=none; b=YgSTuVilsbQX1f0if0qU6HycPtqGG4ORbwBISoE5ulSxw5dkD2Awjqtjmy0V4BiyV83G9ETdiXdn8OmdHwV0kePIEHoXE0hX0P8izDNwx62BWgINJG9mlYcyPEJA3cfK/dMDegP+HxZmT4fs41Dhdp8KIaTPskKSYMoJMyv6TFs=
+	t=1747297437; cv=none; b=h4dPTgxSQRiNlYzbKpmgY1PVgiwLrtD65Dk+VEspSHEUJ+5fXptKCHFU/c6TH9KhoDj1VJkdvR+wxfpP3QKbE6LseizsSPKKajHoIQyv3wUh6xwTXPueVQELqHyiKHFlMmNdQQDp/QjEjAjEYJNOIbYhA5nrwuy1twQOAJSIjJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747297436; c=relaxed/simple;
-	bh=ZoN7WUrWTT1EvP6wGsSudZOTn/CrPVijo1zustyTmkI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uLkPg2BMIAU+14I+wm6SJx3of0PMnQjD13yQhTElx5/EWt8ZJIpPTJT44QaQ+F6zRe7/sTrtoSTmesdtUc35u4AhM5YpmHoswD0vx6Y4OQtTMNevBmi7xUb0A+UmG4wD+PuRqFAjITfeU9at94luL5Xd1ziIu4pRsaKs/+Gem+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CsfZpOqB; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747297437; c=relaxed/simple;
+	bh=uz1riMVMX6ESvcly3DK7ZVeRESfNcHcQ1KO1rEuMiRg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ugDTlS7xmAnOzGrvZQzO9gg4kCU90xhG6sy0tzGv2GASbSs9hQV8q2jhyGzlwJRVD1J1jI0KSMTyLaIux/IHjBIJSmFxexT9UZfuKujiiRERoa1hIkDzzJwxzKeDoZrzjK2+w6qYl9xyX2r9YmZ/5gFg2INIVgJ2EMuACoFsj4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Yk6WHYJT; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CsfZpOqB"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-441ab63a415so6635705e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:23:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Yk6WHYJT"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso6010725e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:23:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747297431; x=1747902231; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+HLbkl6AZb7BGR9qo8J2ScZzZaqgPdxm8C/99kZcqbk=;
-        b=CsfZpOqBP5DrcC0qcKlKIZYun/D5ZhMBjFn7SjzOFfkkKyzN39EkABYYXfg0B8+HlK
-         kZhCH9KScdzYWeL98N0QrUAPiosBhKx3W22lEI6sdQP5bunX+GGljPmGz6qN6CLzmX3U
-         jbxEHk7HxIw/KdnAccOLQXblLASJKef9l76QU8CM7Y7LsecZU6lZQif/h+L1ipKFql5Y
-         0Oxgo2jMFjm8vOxgxWLtRRgw8V0FACqNw6S+X8GpZMlUkTNGZkiuaMJta+NlwW1f1eky
-         SkpRUmpLyy4Do3p/l9rhgYhyNu0PrXz8fWlsyMmh2tUrkhMf0mf3blkU6a/lj3L/i5dX
-         2rXw==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747297433; x=1747902233; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rW3Gt5ot6i3Z0vibD5tiRCC8lZra7MrDIFxKpe4L2VI=;
+        b=Yk6WHYJT4QdCmQSEWOroBrq/gu2itGDi2XdFnjsBzYiaAd5vxtI74pNgsjV5RyvOWm
+         MNg8j2rZCgcmPtaXNrFX58zkli73L0D6C2s7mbqnAm2Nj7KS2W2TJ1/ioIDGb/5fgOCX
+         FTqtkc7KPN1umDaN5WsKhUzKGuxlsO1j8Bk9B6231AVbtEP12bSazPKKAXcy4A1yiVKc
+         OEtRaZ7eNskiMMWJqT22sLlXYJNOeGvPHWjuG1Vjpvh/rrdKpvJ/Ehut4uvCdXmzNThh
+         5KI3DhYsYJWGcxyrAPAb/7WWLg8BGVe5J5CDxKJG1BcBdFjcvNxiQ4tGsL+2LQ5nTJ4z
+         nNkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747297431; x=1747902231;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+HLbkl6AZb7BGR9qo8J2ScZzZaqgPdxm8C/99kZcqbk=;
-        b=LThkzuwmnXMY6OUbDbtRIsC30pEHbaebr1Xi4abw498hPrSC0YXAp6zAbn8PK5cpzW
-         oUDIhbgFI/uWv6OTxy+a5I8IyzEjoRTd8dbRaKqXFgbs99xtkLe+GSiv8jPVG16pU3vf
-         PhvQ1S6c2AFYXMct0gNx9k6EtUosNrpFV6B8NTk/jDj4UE0EBpIF82BYPsOcQLW76vTy
-         bzmj/qbIVg4+feBPkibxrJvJr4Y/qGka5T2Sn1WX68GS7x4cUA9AzaNx/wARWtkDKI5t
-         dDL0+0DNFeS/2aGxwI2/Y8UyrMgqWFzv5egLu19Vf7LYFxu7PlTXO1VwSnGET/VfUdA8
-         1HIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxd6hqeO8LwP/lovyYSvA814Xk3BraEdaoCyBgeLY527pxVTDwY8Uq7WpuAXC7xrUacTc8QJc8YPLbyK0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfZo585GYQciq9h7C4UZjbzAc96FqLaBJ2V0m8ohfummWIfQrX
-	AMYQ/cUmbH10colApXvaNtg8K6NjB8KAk4IK1q7U3gDBULBMNzm9yO+f9dN2MAM=
-X-Gm-Gg: ASbGnct1c+qHqT63vcpAm7I5hdxNw9/3Wz0cTh8oSzE9U2gKMNNWoxp0UqOHT35Ld+w
-	l2OAzYDfYxtMbFnTva2nAXxxsVM5VNrCMdyp9TKe9z1PUSZ5HHK0OgiEL8N0+8/aNZL1y57Emaz
-	vSPGAX3a3lPAWJ/PGzoXxhNiIwyxSx8Wd6j0urlvWLahibeDXBOj7b7j61mLcxV1i2oEYPgzM/o
-	NyUBICWVbT0qe36gVFMlwvKgOEBIu9tQTuKBplLvqI+nJGbLI1HhrK/f7OWhKwwpRl+z6hM8msc
-	LLAuZ3uCX2bnw6xsBLIii6qwcIdkTaPxWWxNRkfqpN+aOn+YCfec8NSExOfwN4G5DY40ecvd8nb
-	hlM0t0r3h1nDOdA==
-X-Google-Smtp-Source: AGHT+IGGpcJqyo2chd/Qt7FhZAddVefASCm/rGvTnzANcNrhxPatD3FKWX67AQKztgRQcEReU47KIA==
-X-Received: by 2002:a05:600c:4447:b0:43c:f470:7605 with SMTP id 5b1f17b1804b1-442f20e80cbmr60116595e9.12.1747297431280;
-        Thu, 15 May 2025 01:23:51 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3979355sm60876865e9.37.2025.05.15.01.23.50
+        d=1e100.net; s=20230601; t=1747297433; x=1747902233;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rW3Gt5ot6i3Z0vibD5tiRCC8lZra7MrDIFxKpe4L2VI=;
+        b=RBEmXSGrQzkCz6Axo89Be6tZpYsxkU3QLjNoeZKHkhE/EXSEjJBp7Qfjn3wNxyWgJg
+         kaWgjuGLdxhSG5Sf94N2rKMt9jNjE6BtFK7A7J+TA/JDzaZtNIwXU4oKPsnGSp4wgAT8
+         yPfncPSuEXo9W3kLX8ZbZpaBO6FN2JuUwFpGMiFruy6yxRENBvUjVU/rOrqa15xheKAi
+         Lb0KOpxUrOB8E79LavC5zIZD1179DaqGdabW8MWbiAznfnPFAAHD8it1sYuP/xS8bvJM
+         tE3Gx71irBoWPpRaNXwG5Cgwtr/Y+2Dvlud75PrFaTDgsbwVcupiudwzLML2FWwaSGil
+         dEZA==
+X-Forwarded-Encrypted: i=1; AJvYcCV+LaWCMN5JzZ+tMjKamjQPSY6UW4J9GtD05uVZo2QOw0Uz6RkrceZvKSCVHs0kG7cYc6KvSzeyHgBRHwk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytsT7uFTlLQDwbiODS9Q7UL/Fg7h6i4CjREeUpc2SY57El+SV+
+	nIk3hy5Y8kMS8TgWKcwYhWMgkRyUTAIJofgCsbBFpoYwyF+9v5Y+HLBY7M8lYSc=
+X-Gm-Gg: ASbGncvtls1Qt6WQEo0KIhZWqTrWtwyacMGe54q3sAj1l5ssWlDdd69vhcN0/X7GNoV
+	QQCR0iZhy7YxYIsBCrSdLanwmoCsA9EJIgmrPSXdaGrVj5Q3lCCEZZx12Wy3d69kSK6UY4KfEw+
+	XZRpll9xgYtiiDvQYBOiYOMxUUWUQmsn0cp3WVAcCRKmsxqRfyMXi/x9W5QR2IGZ9koE1mUk7d6
+	/HV3lQDD1Qgbnb5OGbNhVEbXjs0oyvwg8vtCYTgz6gWfFDCUSBGO9+DyU1u7j2Vu483i7AeEiFD
+	oB/7XsnFr2I+A6Qo6nhZIBFIky4W44w1ZTIWQbIps9QWjP4VGFg=
+X-Google-Smtp-Source: AGHT+IEkMTLzUmbcaQoV7fBGhKB8oDf174vYHHp/il10qE0/kSBDkuCpwfLuKVtfldQPVM2OqN3Neg==
+X-Received: by 2002:a05:600c:a07:b0:43c:e481:3353 with SMTP id 5b1f17b1804b1-442f96eca92mr14271065e9.17.1747297433494;
+        Thu, 15 May 2025 01:23:53 -0700 (PDT)
+Received: from carbon-x1.. ([91.197.138.148])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f395166fsm59310785e9.18.2025.05.15.01.23.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 01:23:50 -0700 (PDT)
-Date: Thu, 15 May 2025 10:23:49 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ezequiel Garcia <ezequiel.garcia@imgtec.com>,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: timer: Convert img,pistachio-gptimer to DT
- schema
-Message-ID: <aCWklbIgCbQOOkj_@mai.linaro.org>
-References: <20250506022249.2587839-1-robh@kernel.org>
+        Thu, 15 May 2025 01:23:52 -0700 (PDT)
+From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-kselftest@vger.kernel.org
+Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Deepak Gupta <debug@rivosinc.com>
+Subject: [PATCH v7 08/14] riscv: misaligned: use correct CONFIG_ ifdef for misaligned_access_speed
+Date: Thu, 15 May 2025 10:22:09 +0200
+Message-ID: <20250515082217.433227-9-cleger@rivosinc.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250515082217.433227-1-cleger@rivosinc.com>
+References: <20250515082217.433227-1-cleger@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250506022249.2587839-1-robh@kernel.org>
 
-On Mon, May 05, 2025 at 09:22:48PM -0500, Rob Herring wrote:
-> Convert the ImgTec Pistachio Timer binding to DT schema format. It's a
-> straight-forward conversion.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
+misaligned_access_speed is defined under CONFIG_RISCV_SCALAR_MISALIGNED
+but was used under CONFIG_RISCV_PROBE_UNALIGNED_ACCESS. Fix that by
+using the correct config option.
 
-Applied, thanks
+Signed-off-by: Clément Léger <cleger@rivosinc.com>
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+---
+ arch/riscv/kernel/traps_misaligned.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
+index 34b4a4e9dfca..e551ba17f557 100644
+--- a/arch/riscv/kernel/traps_misaligned.c
++++ b/arch/riscv/kernel/traps_misaligned.c
+@@ -369,7 +369,7 @@ static int handle_scalar_misaligned_load(struct pt_regs *regs)
+ 
+ 	perf_sw_event(PERF_COUNT_SW_ALIGNMENT_FAULTS, 1, regs, addr);
+ 
+-#ifdef CONFIG_RISCV_PROBE_UNALIGNED_ACCESS
++#ifdef CONFIG_RISCV_SCALAR_MISALIGNED
+ 	*this_cpu_ptr(&misaligned_access_speed) = RISCV_HWPROBE_MISALIGNED_SCALAR_EMULATED;
+ #endif
+ 
 -- 
+2.49.0
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
