@@ -1,96 +1,241 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11023078.outbound.protection.outlook.com [40.107.159.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55C428DEE6;
-	Thu, 15 May 2025 11:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747309497; cv=none; b=Mqyeb4EmRVspcURZ6l/S14YYWYaQWZxjfaLZDz45SWStVZ4fGqf7Ualf20HKRtg/FFzxY32JpRL31r5Y5J+SglRNdUKKziqkJb9sNLlMN18YQ6G1okBvfXQLhjoB32RNXg0DhTwH/GjAGBw8uUlTLOgIoXiUzib59ruKbxsHOgk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747309497; c=relaxed/simple;
-	bh=9L1IyfyzQObJzbaVGvEPZrNbRGkTUP7BBjXPMB7XoiU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eVH7apNf7AiL1QTEZpGD0mD1FIFThfztaAFERLvzSzgMc7SAJ1EOqVaMHGXQ8hfW6NLm2aG8aSB8GpUTl63Uvp9tBYxzBAWSuMm3BtwTK4KEUaWb9voiaGX8sEuFPgCbzsL5/0B2WKO2zzWxBHm0IIhOYggfNFuYeqE5dFIup6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0FpzRxTF; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7BC72628D;
+	Thu, 15 May 2025 11:45:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747309545; cv=fail; b=lLFxDxHlMPzcce4e2ILy7qHb8P6HEo7DN5Te1EPoxzdtHhZh4X3HvLaGyNE46tswmPHXpbSQlf/qoXFNuTsz18XiEW3aZfFD1GrKfl1t5uZRH1cKyXkB3f2MFLQ88pxAFoJbMg4ScO9doabh7dz+NdArU9WbpqZ68ddQ3/rQ144=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747309545; c=relaxed/simple;
+	bh=NM8wPszAUQkI5PUQfJtxGwYyNwX+DPBqPe1rmHG6KZk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=E9dodLgyLGUXHGCj9ckg9BUnkZcKsY5X6UeDCsVdLs+GvBysnF7IRGa92xtcG6CVjEG6aPcMFBsdc8lAm8lEi/QtmawnEvQ2XMqhWbULlS9R7y5WdEKRwiwRXBPDr8gZqajvdjCuBEvs0Nbafve3AZ215jUoYv0YImQb22OcKeQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net; spf=pass smtp.mailfrom=wolfvision.net; dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b=JYWzu5Bh; arc=fail smtp.client-ip=40.107.159.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wolfvision.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0FpzRxTF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA271C4CEED;
-	Thu, 15 May 2025 11:44:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747309497;
-	bh=9L1IyfyzQObJzbaVGvEPZrNbRGkTUP7BBjXPMB7XoiU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=0FpzRxTFUsa9HxV6CXrpFGp2bV4BtdySujaFJyCtIqWXoTIPVZM+s82/v1ggGc/ct
-	 JwpUZ889TWiSgw7hA59a5J+/ti3J2dOpXmme8ucvgXNUrJMgRUQ1TLawj9EMHwanZ4
-	 5/nzvO8qoLqnRhTrq7/3JgOQvtwzafeSaYbcFmG0=
-Date: Thu, 15 May 2025 13:43:09 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: Matthew Maurer <mmaurer@google.com>, Danilo Krummrich <dakr@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
-Message-ID: <2025051524-festival-afterglow-8483@gregkh>
-References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
- <20250505-debugfs-rust-v5-4-3e93ce7bb76e@google.com>
- <D9VPA1M45WBK.1TB4KOUXD24BD@kernel.org>
- <aCRdNJ2oq-REBotd@pollux>
- <CAGSQo0204_Dz65G33pAN3_iY=ejPXJRdAiB4ioM-nvMkAh0YXQ@mail.gmail.com>
- <D9WM0BP5446N.1NVNDCZ4Y2QN1@kernel.org>
+	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="JYWzu5Bh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZW772XBVOH0N/nTGb0f3KjwHmvfAGnNVKsD6bYOaNCR/NtM9qk27c6wLfv0h8BbC14nmgZ8JzOSrThSlACqoJucRt35ASpJErqntZXBhjPDP03TuPdpECCEbPFW+DKK2WqBcBYotnKrqhzzc0xqlWmwR68NL1H9jj6TMPcxRk7vJCQYNluxB6RGo1yJtdjA7aN33N3wxYhtsyILdrewDkFJIHtqlq2YxPDdGc+5Oz0yzPUEMRjU3KshN6hYWPlQIZY1r2gK+lR2PjA2Eh48nC6TMkYDgVPZoGe38Rfpl/DQfgzxllop9T75bKNEa/4gFz7HjzjKRP4nliQJm7Sc/aA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lzQUaeDSdxwKzm5wHMJXr4c5yP5/S/eSnNdTZl6uY7g=;
+ b=vYIQx+tecf/FDtHi5JiRs+Zp+jtbS3zidx0HkbTCBlMzkdNe8kiQKqCoA0fMDlxba8dSrnNARdMXjp+VcwithMJQ+fcO3UTPS9hoeSoHfp1q9QurbMlm6AfFTi/9T3O7lzWltYA3BrKhaHFOSfI5lidxby4zs85fO+LFkNMKfTmheAkkdkondFp6QKIdkoJvsM0EdS3rw4cO/H9yePRJTyE33aE/+VTon51QilKzh4JBZvuWY/TIeMdR6B0INOfQsyi/laS0NLtAsXsqKcwY8Y6hpbzfrkFx8Gzdq/P221L0eOkW8qn6dd+Sbez4iswNhwA12tt9Sp1HQ33Kqasntw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wolfvision.net; dmarc=pass action=none
+ header.from=wolfvision.net; dkim=pass header.d=wolfvision.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wolfvision.net;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lzQUaeDSdxwKzm5wHMJXr4c5yP5/S/eSnNdTZl6uY7g=;
+ b=JYWzu5Bh3EUD0V3ymUlqhl65WsFH6Zbsk+lZQ0EOBxyWwQQgLkD3xcvg3asBdmBORwNOpMJc3mJ0Gb2vrr0Ylahwx4eyyIYjXt52GSecjCoenDf+p35lyh9y9JZBH2IU8xbMU9qdPqnTpssC9UVBxq4gXX/wVtGgo1I2qZUmj3g=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wolfvision.net;
+Received: from DB9PR08MB7724.eurprd08.prod.outlook.com (2603:10a6:10:393::12)
+ by PA6PR08MB10739.eurprd08.prod.outlook.com (2603:10a6:102:3d8::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Thu, 15 May
+ 2025 11:45:39 +0000
+Received: from DB9PR08MB7724.eurprd08.prod.outlook.com
+ ([fe80::ef67:bfef:6aca:11e5]) by DB9PR08MB7724.eurprd08.prod.outlook.com
+ ([fe80::ef67:bfef:6aca:11e5%3]) with mapi id 15.20.8722.031; Thu, 15 May 2025
+ 11:45:38 +0000
+Message-ID: <9b7b54c6-568a-4534-960e-33269adbaee1@wolfvision.net>
+Date: Thu, 15 May 2025 13:45:35 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 14/14] arm64: dts: rockchip: enable vicap dvp on
+ wolfvision pf5 io expander
+To: michael.riesch@collabora.com, Mehdi Djait <mehdi.djait@linux.intel.com>,
+ Maxime Chevallier <maxime.chevallier@bootlin.com>,
+ =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Markus Elfring <Markus.Elfring@web.de>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Kever Yang <kever.yang@rock-chips.com>,
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Collabora Kernel Team <kernel@collabora.com>,
+ Paul Kocialkowski <paulk@sys-base.io>,
+ Alexander Shiyan <eagle.alexander923@gmail.com>,
+ Val Packett <val@packett.cool>, Rob Herring <robh@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org,
+ Michael Riesch <michael.riesch@wolfvision.net>
+References: <20240220-rk3568-vicap-v7-0-7581fd96a33a@collabora.com>
+ <20240220-rk3568-vicap-v7-14-7581fd96a33a@collabora.com>
+From: Gerald Loacker <gerald.loacker@wolfvision.net>
+Organization: WolfVision GmbH
+In-Reply-To: <20240220-rk3568-vicap-v7-14-7581fd96a33a@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: WA2P291CA0016.POLP291.PROD.OUTLOOK.COM
+ (2603:10a6:1d0:1e::12) To DB9PR08MB7724.eurprd08.prod.outlook.com
+ (2603:10a6:10:393::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <D9WM0BP5446N.1NVNDCZ4Y2QN1@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR08MB7724:EE_|PA6PR08MB10739:EE_
+X-MS-Office365-Filtering-Correlation-Id: a8c53864-c1d2-4a33-7566-08dd93a6032a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ekVacWUvdCtLcGRCcmQrZ2dBNUhCUHFrclVNZEo3cXErRm1HV05EY3NkQ0Jj?=
+ =?utf-8?B?VU9RNFBXVkdCSS9xWFhPV2xZNUZJK3IzaXZOWWRITmlJcFFoMS9EWW9aK2RH?=
+ =?utf-8?B?eW11STl4bFgxYnBPWllSZ1J2WmpOUis3MzA3NE5zUTRDSktYaTBQU3BTcy9X?=
+ =?utf-8?B?a2xjZzdsOThIV1JWK1lzY0sxZ1hRd2s5Zk5acmZPQzFQZEVhNTFhMG9QQ2lq?=
+ =?utf-8?B?NEwzcTFHOUxJd1BKNXlFL3hBdjg1V2pCZldBcnJYZGRUM3hZN3FDZmtZN2hQ?=
+ =?utf-8?B?ajI4M2VUZEdKTWRFRW9sZnc4bFp4QWtqZmtHRU1sSGFtaGEzUG1JWlZ6MWs0?=
+ =?utf-8?B?aVMxY0wrZzNGU0JMSytJaXJ0SFBmQk04SnYvcHAwanNvTXFoSXBJN3ZCUU83?=
+ =?utf-8?B?QlVkTFdONkhYaW15bWhwTjBNUGVUdzdBdUh1MHlzeHUrWWxmNkFsWWtFS1Jw?=
+ =?utf-8?B?QWFpaEdWbzQ2dm5RM3NSN3g0NCtDYUE3VmVhdVpvWVg5RStZN3ZobUszY1g0?=
+ =?utf-8?B?YkZ5aU5XbittRmpiczFaczhjUjFpOTZyU1NlT05aWHRuZVJSTmtPcW44M3VT?=
+ =?utf-8?B?OHBYbDhzSGEyZUptaUhBRkZEcTBKU0gxVjU2MVhGeWFIM3B2M05RMG5OdzZN?=
+ =?utf-8?B?bURsYndKaDY4WC9tdWF1bXNvN0dmNVJLcitJczQ5dmpWRDU0N21kYnhhalN5?=
+ =?utf-8?B?dm5EYTdVSmdoSzh3L1dXc3k1YjA0eko5ZzMvVWJZTGFmNktIMHdpYmNNVmQ2?=
+ =?utf-8?B?bDRjb2kwS1VvSjJyNGwzRFhwVG16SW1vM2R2S0NIZXl4Y0V5VmJrdkxMblQ1?=
+ =?utf-8?B?VVlKL2RpNWhJUVR5clZtNTBpZnZTZlBLQVl0OFBjNzZoeGVOZlJvQlZOdXZq?=
+ =?utf-8?B?d2hjZDd2ZEkwT0d5UkFzNXhlQ2psSGdiK1J2ekc4a0dzRktKOUw1K2g1bktC?=
+ =?utf-8?B?bE13UUNQVlZSZXRZRFBaYmFLRmIzSmRTaDkzdlRlMCtzOEdXVHBJQjNIZi9O?=
+ =?utf-8?B?NGYvcTljVUpINWlmK1pwN2NQNVEweGswQ3pEMThreXV3eS9TeWZROXNVVkFv?=
+ =?utf-8?B?Rno2UDIwMmNmc1d5UXBUY1RkRDhkeDJKcWxwaEgyS1ZxM0JvWXdoN3IvQVNV?=
+ =?utf-8?B?STFFeWxUbEhQM0xnczFrQitla3BiMzNVL0tldnpPWFJFaGxLV2twSGY1d1RX?=
+ =?utf-8?B?czJLb1p0THI4UEIyeEQ5THlSRG03dWx1U0FrV3hwQnFMUGxLNERsNmxFS0F4?=
+ =?utf-8?B?cXFaQzVISEhheUZEWkFFTFpYNHozekE1Tzlsa21QY3BkSEtxSmNKTTN0WjZI?=
+ =?utf-8?B?ZDYrMmZleFdDTkEvNDVLQlJ1LzZxcUpDd3JkdlpPeWh2NiswVzNQenNVWFBT?=
+ =?utf-8?B?d1dnQVZEOUlxZVdidU0zdTloclNyVHRQc1RGenUxZW1oN1ZUVXBpTFlFL3M2?=
+ =?utf-8?B?MXNXRjdlcTZyV2NkK3BnNVdsVWhReGFnTTBTSExVRUUyU0dRNlNMNTBYeVF2?=
+ =?utf-8?B?TWRoLzhPZmhYVUxCSzN5eWlMNkhmVGlWQ0o5RDRtREx5M2hWbnZjanRiWk84?=
+ =?utf-8?B?cjJKbUNHelljcVhRSmhxcVJqaUhBcDVZalpVbXoyOE9jSnBkQ3JraUFnajgw?=
+ =?utf-8?B?OUlGQ01qc0dKMHlRNzhvTWJsWjA2ZTJJOXhBMGxqL3NRdXY1SS8yK0Jjcitr?=
+ =?utf-8?B?ckoyVGNXZUl1TzJMWnp0bVNZQzlBTE5LVWk1Q0JaY2pNL0ZOaWszOHk5d1Bv?=
+ =?utf-8?B?YzdoVDhXNC96UTRxSWpFWVJrKzBURE1OTE4rdFl6WXJnamNHM3FUZFhidldI?=
+ =?utf-8?B?WjQ1VUxkZ2xwenhKbHVIWk5STnFuMEx2eng4cmFCUXE0N1laMlovVXRrREJu?=
+ =?utf-8?B?Y05qQXFXeWNMb2dvRTRnS0p6Ukx5b3ZOOXpXYnFSdllvaVdzZEFwSUwxa0tZ?=
+ =?utf-8?B?aGJIUUNkZUE2ek96L2VaM2grVkozbXpBdGt4ckpTWGRiODZuTTlRTGVSUEdp?=
+ =?utf-8?B?dFZJL1NneTh3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR08MB7724.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007)(921020);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dHJENGRwTDJRNkFDWldqa1hVbE41UThva2s2R2NTa0svbEw5cnJpc2lxNitT?=
+ =?utf-8?B?ZXdsM3dCWEtlZ2owdkMxeE01ZVBMYVY2VlZ3VnVPSjRkanVOaEJIZmdlMW5s?=
+ =?utf-8?B?UVdUYnVMRnl4UEc5VkxQV01qVE5RdnVUdEZ2UnV2UFBsRC91dmtzbWxkd1c1?=
+ =?utf-8?B?NURWOEQ4bHczU2gwSUV2ZVhtWW1RN29CMEVNOEQwSHNVYk5ia3ZyWFh5a3lL?=
+ =?utf-8?B?WkcwQis5MVlIYlorVmdhOTdQKzVOZkp0c2tqcjFmdGl2VnhvMkFUbVRvc1ln?=
+ =?utf-8?B?bkw3bEE5aXp1RzB2TGY1UVdJUjJCalRiV1Q2ZDhkZ1RsNytYemJHeGNxeVBX?=
+ =?utf-8?B?cDN5UlZnUHgvakVvT0FYbVlCMnN5K0gvaS9iWFBiTEE0OGdRTzRmQlQrMEt0?=
+ =?utf-8?B?dnRaYjZEblZOYkF4SG1SaktXV2dwMUdZb2VhYVYrNmtQTmZjVjVMd0RxemY3?=
+ =?utf-8?B?R1ZGMWFRTmRkYVprcm9PKzkvT1d6RjhnREk5ZlF6dHBCRFRtRGh4aFFGclVp?=
+ =?utf-8?B?S3llQVFCT2VCdjFjOVNZUjB0TDdIVzNWeCt1L1pzUFh0OUI4VjIzcXlpTTla?=
+ =?utf-8?B?Z2x0MTVRVGpOTmlmeFdndnhDSFY4NHloUU9hcVRhdWhRNVBLUzB6aTNzNi96?=
+ =?utf-8?B?NHEzakxqRVRET280Q2J0NFBzYncwVUhLWGdZa1NWeHdnMG94aldQSHJJSWJz?=
+ =?utf-8?B?aHZnUUpzTmJnNDJ5VmtJWWtWMmFDYW9tUjdUd1FEVFk0MEtDNHViTGFDNUQw?=
+ =?utf-8?B?NlR6YW1oMFFoak9EMTZocGx6NWdON3cwWlMrTFRUS2EwKzQ0UHowdGpzN3Bl?=
+ =?utf-8?B?QTVwMHdzRElFai9uaE5BQ2JYb2ovR0wwUFN3ZnRTS3JNMmphdUFRaEJqN25k?=
+ =?utf-8?B?UUp0aDN2eUtDNEl5eWF4Q21BbVZGZktyZlpWTlVHSjN4VENYUFlhL3VKWldw?=
+ =?utf-8?B?dHBXcWxOVmhzQzhGdkhLTFkxcE1jRk4zd0RjeUY4THBEbU0zd1JLWjVUbFVh?=
+ =?utf-8?B?emc0Lys0Qi9OTkh1RXM5MFdCcGpvd3BCaW5BWlFUT0NjNjdYenM1SFpaZ3g2?=
+ =?utf-8?B?L0c3T25mU2l6a3hWelhrK2VraVlseTRiT2t2eXkwZW4ycjV3MkEvQmVJMFlo?=
+ =?utf-8?B?NThoUjlVKzlNell6QzFEM01IYktpZkZmM1pDRDVEWWdHTExVZWsxZytLdTJ6?=
+ =?utf-8?B?S2FrYlVyRHQ5enFpSDg3TVh3TlBQZ3g3ZE9XT1dkL0JnZTJVcCtHb2JDUXpy?=
+ =?utf-8?B?ZStrSTlUdjllaEgwU3RyRHc0aEFweXF1QWVUZW5KZWFtQzhUbVFjcEgrbTRX?=
+ =?utf-8?B?WG5ZSU43M01MUFBESjZTVzJ6WlZxeVN3VFNUQmxjek95MFNWYTN3cDAxMFdE?=
+ =?utf-8?B?blJJdFJVdDBzVUFSNWlaNDM3ZVVhK0pXWE1oRFpiZEdZZXI2QVlacHhCSEdK?=
+ =?utf-8?B?WVUzWW5YVjdLYW9Dd2ZEczFsUUFwdUlCRlZ0N3lRM0tCdm9xWmxJNEJ5QjYr?=
+ =?utf-8?B?TGpnbGFtd2VsSG9oQkFzQ3k2a2IwVG1FU3NPSTlHL0VValRhdHJaNFU3WXg4?=
+ =?utf-8?B?T2xFMzYxQ3hrZnc3SThKNmEwcDNkdTltTHduK1RYYjRBWkpZMzdScm5lMndX?=
+ =?utf-8?B?aFFjODNaRWVBczVZN0owQWhhajM4YTRoRXpaNUdkVVhOWVFtY0hVSmRyY0pn?=
+ =?utf-8?B?RE52Z3Y5S2xuM24vTUsveHNLWlVLSGhPak5sRTR4M2tqUjg2TTFkMVgwTkdB?=
+ =?utf-8?B?NG9UbkUrRjBsM2JqclJkVXJQWktDK1pBWGxzYUJOeGRNeXZnYzA4TDA2TE1h?=
+ =?utf-8?B?d1E4VU5vaGxyc2l2ZmswWjhXa0FDY3EvYjVLMWhBR25HWmNpa25OVHltSUJq?=
+ =?utf-8?B?c1U2YnFyMkNIK3VtTjhwLzFSNGZxWjdEQllGWUV3WmVVeEZDRXdOOE1tNFJM?=
+ =?utf-8?B?WkZNMFNmNy9vaVM4QmhpOVpGZE01cG5wUVZrbkp3QThsSWxqOTNZWlVDalJl?=
+ =?utf-8?B?NnBIcjFtd1BCS0sxWkViTVNLTHhHMzNYRUZnK09yZENkYi9jcnRBaE9QbmZJ?=
+ =?utf-8?B?ZUhjQTVMblQrc2Y1M09YRmVSZHRMeXpGYUVoaVJtL0tVaTRpNVZUVlNNNGxm?=
+ =?utf-8?B?MnlrQmNYd0VKQjBmRTZ4L28yd0FacWppbGZwdSt1TFRBdDFFVkdzMzlCa2Vr?=
+ =?utf-8?B?N3c9PQ==?=
+X-OriginatorOrg: wolfvision.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: a8c53864-c1d2-4a33-7566-08dd93a6032a
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR08MB7724.eurprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2025 11:45:38.6113
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e94ec9da-9183-471e-83b3-51baa8eb804f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 69ObVovUQniVX6OMTkzE87ecKIRilFt24JaibFj3qB7NrfF8H96aaleaOAb53O6qkMsKodFVcXB5H87h/YLqhN+lKD/Utb45TKT1Pl/Dua0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA6PR08MB10739
 
-On Thu, May 15, 2025 at 10:59:44AM +0200, Benno Lossin wrote:
-> On Wed May 14, 2025 at 11:55 PM CEST, Matthew Maurer wrote:
-> > On Wed, May 14, 2025 at 2:07 AM Danilo Krummrich <dakr@kernel.org> wrote:
-> >> However, I really think we should keep the code as it is in this version and
-> >> just don't provide an example that utilizes ManuallyDrop and forget().
-> >>
-> >> I don't see how the idea of "manually dropping" (sub-)directories and files
-> >> provides any real value compared to just storing their instance in a driver
-> >> structure as long as they should stay alive, which is much more intuitive
-> >> anyways.
-> >
-> > We can't easily do this, because dropping a root directory recursively
-> > drops everything underneath it. This means that if I have
-> >
-> > foo/
-> >   - bar/
-> >   - baz/
-> >
-> > Then my directory handle for `bar` have to be guaranteed to outlive my
-> > directory handle for `foo` so that I know it's didn't get deleted
-> > under me. This is why they have a borrow onto their parent directory.
-> > This borrow means that you can't (without `unsafe`, or something like
-> > `yoke`) keep handles to `foo` and `bar` in the same struct.
+Hi Michael,
+
+Am 14.05.2025 um 17:41 schrieb Michael Riesch via B4 Relay:
+> From: Michael Riesch <michael.riesch@wolfvision.net>
 > 
-> Is there no refcount that we can use instead of borrowing? I guess not,
-> since one can call `debugfs_remove`. What about a refcount on the rust
-> side? or is debugfs not used for "debugging" and needs to have the
-> performance of no refcount?
+> The Digital Video Port (DVP, the 16-bit variant) of the RK3568 VICAP
+> is broken out to the PF5 mainboard expansion header.
+> Enable it in the device tree overlay for the WolfVision PF5 IO
+> Expander board.
+> 
+> Signed-off-by: Michael Riesch <michael.riesch@wolfvision.net>
+> Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
+> ---
+>  .../rockchip/rk3568-wolfvision-pf5-io-expander.dtso  | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3568-wolfvision-pf5-io-expander.dtso b/arch/arm64/boot/dts/rockchip/rk3568-wolfvision-pf5-io-expander.dtso
+> index 048933de2943..8cfce71dd318 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3568-wolfvision-pf5-io-expander.dtso
+> +++ b/arch/arm64/boot/dts/rockchip/rk3568-wolfvision-pf5-io-expander.dtso
+> @@ -11,6 +11,7 @@
+>  #include <dt-bindings/clock/rk3568-cru.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/media/video-interfaces.h>
+>  #include <dt-bindings/pinctrl/rockchip.h>
+>  
+>  &{/} {
+> @@ -134,3 +135,22 @@ &usb2phy0_host {
+>  	phy-supply = <&usb_host_vbus>;
+>  	status = "okay";
+>  };
+> +
+> +&vicap {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&cif_clk &cif_dvp_clk &cif_dvp_bus16>;
+> +	status = "okay";
+> +};
+> +
+> +&vicap_dvp {
+> +	vicap_dvp_input: endpoint {
+> +		bus-type = <MEDIA_BUS_TYPE_BT656>;
+> +		bus-width = <16>;
+> +		pclk-sample = <MEDIA_PCLK_SAMPLE_DUAL_EDGE>;
+> +		rockchip,dvp-clk-delay = <10>;
+> +	};
+> +};
+> +
+> +&vicap_mmu {
+> +	status = "okay";
+> +};
+> 
 
-debugfs should never have any performance issues (i.e. you don't use it
-for performant things.)
+Reviewed-by: Gerald Loacker <gerald.loacker@wolfvision.net>
+Tested-by: Gerald Loacker <gerald.loacker@wolfvision.net>
 
-So refcount away!  That should never be an issue.
-
-thanks,
-
-greg k-h
+Regards,
+Gerald
