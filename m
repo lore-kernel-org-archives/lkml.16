@@ -1,122 +1,127 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A7623BE
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECC7F9D6;
+	Thu, 15 May 2025 01:31:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747272645; cv=none; b=ksahnrTdww88jvTK1rGsX6Xo1VH0Zmj1ySaOSEWt7I95mUqzeAu/cqFXNFot9qM7CTcQJxvCrEylvDdDHVhDruKfAZuQuWsTnCRwEATHfoMYKYNqhlbkvr7iOPegqe1a7QzFPp4/mOqZSm6kUKRH0n+KIR3lcjFsmLiZzMPk5L0=
+	t=1747272673; cv=none; b=OtshoInVJ/wPy29vApTLEaQBcZkcVsOQD8ekNgjlXIZsw8K9X6mEAU1J4JNEFq+7T1cO0IFAMtNjQDwp9AwdZiXVVFZvKOpdxbH3hR0gcFmALqZcYmmzgo9XK/HLNZoV7NrxZMaiv8XEX4/OjRkutOqrBwBNSaVibcpNxQ7M3i0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747272645; c=relaxed/simple;
-	bh=7d11dxMUWSlUIvsx1ISMixfrtiUXfAzjI3gLaGSALKU=;
+	s=arc-20240116; t=1747272673; c=relaxed/simple;
+	bh=NCeIslnruzRitSm7BSgkBHpLCL5CTK0c5HqsqD1ej3U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M6SS00BNM9kIoyIqDCx2EVBZDAhqdNVxOOdSAa/FgKJEEt+TW188g6I4maSYDyZ667fRcLQ3fNfmV8U0BkIejkbQirGLzAKDALlPsSgYYRDz5v8cJVLaxb4JmjfTGpRgcDp159SnXhuUCAbq84mp8fUUz5m/U/f7bFqix/u3BAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aBaWm5U+; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=XpkyBv144dsZprxxes6/tyb5i5q+8DzHPv2XBaj6KHdpKPFhpt2iB/5zyQ953edQBFs+DmGV4qavz8Vc8hppsVFV9ZNyei/0ru9nireMQEZ7/YBH4TKKju+btl7xMdkSkdqg2W2mr5kNKs/89T4BVzah810lFD91tOqhiLcFs8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bUUEGTIr; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aBaWm5U+"
-Message-ID: <7135de9f-4372-4e12-994d-ecdc234bff28@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747272641;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ciAFAPUHoqP7kxDTaOJWSofaP2GTW0t32HqF5a7B428=;
-	b=aBaWm5U+V54ipnws5yhyd78b0OCayavJMYV1WP4Do40m7+AZKeVhiwXPNb1Vh6DBT/FQbj
-	vJA1nJOn4XmwrE4UwRcPtYvDzpfZFAsDpASr85yAyd7JE8fAe7Uyhq4qOCzyLLGsswApKE
-	nnouiomU3pAY4gGj1KnCcoUmOIBCc08=
-Date: Thu, 15 May 2025 09:30:36 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bUUEGTIr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747272672; x=1778808672;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=NCeIslnruzRitSm7BSgkBHpLCL5CTK0c5HqsqD1ej3U=;
+  b=bUUEGTIrhKMl5CrE0XxFnp1jzrlpoP6CrlNFZIuxBqGYcCf/+eN2r3jQ
+   D+Nzo6z6UGMSD6OOJEATmv5pQmM5dY6nynbm04284ScMysOuQcXDpbJHS
+   TrXdV4NJK0fQas1x6HXqGzDt6n/bUZMOrcb/Hn4EcVFPZS0pAI0naT2so
+   YmziCVQCut2/ughJpjYa6fGU6ie1cUM7swSKJCAj9rIzQf+nJVQkxN6QT
+   XrQLlFFCk22s62b3127b1CXQHiHWUJI6RhM2GNnrSPEn81DzyfZWGJJ13
+   OmjzU22EmNNKgFsu7GW6NYfTJdRCgcrYExlQ+xEjangr3MVl8owmdl2mL
+   A==;
+X-CSE-ConnectionGUID: BEXEKepuQYypwcRr3Bv8EA==
+X-CSE-MsgGUID: Au76MdiIQl69/YFEwM0/Kw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="60203284"
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="60203284"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 18:31:10 -0700
+X-CSE-ConnectionGUID: mAW4HLuBTZCVGylJMSMRRg==
+X-CSE-MsgGUID: HWTGOs0DQrekd2cBL6qCoA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
+   d="scan'208";a="142973694"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 18:31:04 -0700
+Message-ID: <60ca046d-b706-47ff-bbdb-9e6646af5250@linux.intel.com>
+Date: Thu, 15 May 2025 09:31:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] LoongArch: Save and restore CSR.CNTC for hibernation
-To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>,
- Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Xianglai Li <lixianglai@loongson.cn>
-References: <20250514144643.1620870-1-chenhuacai@loongson.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/38] perf: Support get/put mediated PMU interfaces
+To: Sean Christopherson <seanjc@google.com>,
+ Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+ Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Yongwei Ma <yongwei.ma@intel.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
+ Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
+ Shukla Manali <Manali.Shukla@amd.com>,
+ Nikunj Dadhania <nikunj.dadhania@amd.com>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <20250324173121.1275209-2-mizhang@google.com> <aCUdvaM4xkLzRF8J@google.com>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <20250514144643.1620870-1-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aCUdvaM4xkLzRF8J@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-在 5/14/25 10:46 PM, Huacai Chen 写道:
-> Save and restore CSR.CNTC for hibernation which is similar to suspend.
-> 
-> For host this is unnecessary because sched clock is ensured continuous,
-> but for kvm guest sched clock isn't enough because rdtime.d should also
-> be continuous.
-> 
-> Host::rdtime.d = Host::CSR.CNTC + counter
-> Guest::rdtime.d = Host::CSR.CNTC + Host::CSR.GCNTC + Guest::CSR.CNTC + counter
-> 
-> so,
-> 
-> Guest::rdtime.d = Host::rdtime.d + Host::CSR.GCNTC + Guest::CSR.CNTC
-> 
-> To ensure Guest::rdtime.d continuous, Host::rdtime.d should be at first
-> continuous, while Host::CSR.GCNTC / Guest::CSR.CNTC is maintained by KVM.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
 
-Thanks,
-Yanteng
-> ---
->   arch/loongarch/kernel/time.c     | 2 +-
->   arch/loongarch/power/hibernate.c | 3 +++
->   2 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
-> index e2d3bfeb6366..bc75a3a69fc8 100644
-> --- a/arch/loongarch/kernel/time.c
-> +++ b/arch/loongarch/kernel/time.c
-> @@ -111,7 +111,7 @@ static unsigned long __init get_loops_per_jiffy(void)
->   	return lpj;
->   }
->   
-> -static long init_offset __nosavedata;
-> +static long init_offset;
->   
->   void save_counter(void)
->   {
-> diff --git a/arch/loongarch/power/hibernate.c b/arch/loongarch/power/hibernate.c
-> index 1e0590542f98..e7b7346592cb 100644
-> --- a/arch/loongarch/power/hibernate.c
-> +++ b/arch/loongarch/power/hibernate.c
-> @@ -2,6 +2,7 @@
->   #include <asm/fpu.h>
->   #include <asm/loongson.h>
->   #include <asm/sections.h>
-> +#include <asm/time.h>
->   #include <asm/tlbflush.h>
->   #include <linux/suspend.h>
->   
-> @@ -14,6 +15,7 @@ struct pt_regs saved_regs;
->   
->   void save_processor_state(void)
->   {
-> +	save_counter();
->   	saved_crmd = csr_read32(LOONGARCH_CSR_CRMD);
->   	saved_prmd = csr_read32(LOONGARCH_CSR_PRMD);
->   	saved_euen = csr_read32(LOONGARCH_CSR_EUEN);
-> @@ -26,6 +28,7 @@ void save_processor_state(void)
->   
->   void restore_processor_state(void)
->   {
-> +	sync_counter();
->   	csr_write32(saved_crmd, LOONGARCH_CSR_CRMD);
->   	csr_write32(saved_prmd, LOONGARCH_CSR_PRMD);
->   	csr_write32(saved_euen, LOONGARCH_CSR_EUEN);
+On 5/15/2025 6:48 AM, Sean Christopherson wrote:
+> On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+>> +/*
+>> + * Currently invoked at VM creation to
+>> + * - Check whether there are existing !exclude_guest events of PMU with
+>> + *   PERF_PMU_CAP_MEDIATED_VPMU
+>> + * - Set nr_mediated_pmu_vms to prevent !exclude_guest event creation on
+>> + *   PMUs with PERF_PMU_CAP_MEDIATED_VPMU
+>> + *
+>> + * No impact for the PMU without PERF_PMU_CAP_MEDIATED_VPMU. The perf
+>> + * still owns all the PMU resources.
+>> + */
+>> +int perf_get_mediated_pmu(void)
+>> +{
+>> +	guard(mutex)(&perf_mediated_pmu_mutex);
+>> +	if (atomic_inc_not_zero(&nr_mediated_pmu_vms))
+>> +		return 0;
+>> +
+>> +	if (atomic_read(&nr_include_guest_events))
+>> +		return -EBUSY;
+>> +
+>> +	atomic_inc(&nr_mediated_pmu_vms);
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(perf_get_mediated_pmu);
+> IMO, all of the mediated PMU logic should be guarded with a Kconfig.  I strongly
+> suspect KVM x86 will be the only user for the foreseeable, e.g. arm64 is trending
+> toward a partioned PMU approach, and subjecting other architectures to the (minor)
+> overhead associated with e.g. nr_mediated_pmu_vms seems pointless.  The other
+> nicety is that it helps encapsulate the mediated PMU code, which for those of us
+> that haven't been living and breathing this for the last few months, is immensely
+> helpful.
+
+I'm fine with this.
+
+
+>
+>> +void perf_put_mediated_pmu(void)
+> To avoid confusion with perf_put_guest_context() in future patches, I think it
+> makes sense to go with something like perf_{create,release}_mediated_pmu().  I
+> actually like the get/put terminology in isolation, but they look weird side-by-side.
+
+Agree.
+
 
