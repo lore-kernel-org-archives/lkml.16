@@ -1,134 +1,117 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5243D35971;
-	Thu, 15 May 2025 17:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F5435971;
+	Thu, 15 May 2025 17:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747331723; cv=none; b=adyNrDdSjORVHoHWdOpw/e3Qk1Gh0rNmGixW7VIY5J4NfU19BEwF6zxy5lttjbpIugHvyjn4RND83NUxIc4gumm2rFCDN+RMK++tTP5FfRfWzxzSoTb0FMcVq2+mSrXy7e//HdgWEbei8V505K9h2of7XDi0EZi+7k8noedkhE4=
+	t=1747331732; cv=none; b=JMlYSRSh1mg303Rweg79t3zZ+9UrtcWAwuQTsGcLwNojKpiVIV+AaN/939SacHUa1+7yBBSCY7wvW2Prf9sQeqPc+eOzQT46fYc5w+e6V6KQ0nlgazxWNQkaU7e6moVmzsxSD31u2Z2bR27jwjWPuH/+CVfurp5F6mEZx4bYi2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747331723; c=relaxed/simple;
-	bh=9rEB8MGAMouvWT1mRTZ0aDO/9zJ1K3nvDRmId1JOb2g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ERNlPro45ldD+8VJ65e6LC6QOQIBfAGDgcjGY8ngN9E2ueLkuYS+66IeTGgHmACdlkMIvxTPzpEppro8awDjjEIV/mqMeqYstrbjFCt4ukpaebN3BksUdwactBJE26dZEgPyHbJIBVcdwTSP15ipKMi5j/ja3+rmfvcWOR9rJ+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AQCsg9Le; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747331732; c=relaxed/simple;
+	bh=FE108NgcBtS22vyKRaCgUWA1SHvN7NTzmtBpjsEDbVM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CbGbR/+kGkbK/pIF2MRK+UFQl4WM0ek89cY+aYzH65lJGDyoeMXti37HuKMsI2HS4pA2DIviNkqLhDZ4togfaXSuXojxpj13VWqo1IS+1fkmiTSSEM6Jng2fHuThDqt60Xi/9517jzbqWCqm0JNSxOmclN5RZjOcnxRRUy3HCaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Pci5Cm4A; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AQCsg9Le"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-326ca53a7f1so12436121fa.2;
-        Thu, 15 May 2025 10:55:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747331719; x=1747936519; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=C6BvMq2D5p+ldyLhswJqBQibnI6QVGEbvUpylGppPw8=;
-        b=AQCsg9LeR8Ys7+OHy8VyA6pRT72kCIAJJSAHEWYhC4VTCcLfHGtt0pdz7Bnu2P12aR
-         GY379mIhLi1bzuzoXVzCZY24IN1zOKj6kx8j0f9X8wsMSHSQ/Cy5ocGjNS+hhliL3uiY
-         BmSpflAv8+es6h4xcn7x5Wo+/QicIVR+/f9+EFe+6m56/9Y/RxhT+apsxNq9I6NQWwvi
-         c+5Aw2qipvZF7IJSVsM6T7RMH0c7Vo0FZMQoI3KdgokCzIq3Fgzr54ZLdQRkOKKXeO6w
-         QsVRJqXQFiST7/XFwn5h57KqejYA7fatq/ewGJV04so4EhuoGl4vVZKr0OQmiQtHwlc8
-         NK3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747331719; x=1747936519;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=C6BvMq2D5p+ldyLhswJqBQibnI6QVGEbvUpylGppPw8=;
-        b=nzQY4mfLHk3TFK+/e1rCealeM+0zXnextI2QDd/0imLclJ0sJc+VvfeplQbJ1B1/KI
-         kt7wLyTauUDI4uqqhVjMfhX9zHd4Aq9raCxan7rbO+uBoKqt748MEjQDvcpbOhGbiMW3
-         R5G7hw6qHWTf6+5XzpOelBZJcYwbZ2AujPQDSl/iHY1EP+n5VS9Ok/fnJjvVOhOpqn99
-         6mz7gcwI23bBSeIm55ZsopewWb2y1YOFuSKeVrVT2iqX8n9H3D5WUEx9yYXwtSbVKEdz
-         fSZyXOVXgD9cONBIvkTvyIC/3KqJjRNJyPJNMXPgwGXdbm9raqYQrlYl061G2JpeHxG3
-         +TgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVx1d3hdy6ClAmWZrlmlPpL01lL1TAkcJd4XVmwSRKhfsacQKb918M5q6pISO6Ih8z67dZkjtRp@vger.kernel.org, AJvYcCXPGQ4yZoU2/KOGmoXGaRZhzn0bBJfQcIQsuXRWLYfBWjFf4S803VR+R2SttZglE+gHdIgnJQ+hpoNwgZk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxn49w6JW2Ck8jq/U2aoB31m3gPrlKdQRHDNlLMXZt/fOUhsGEd
-	zbkOtjtC3h/JvS92uOymuErB6krXKSCJWQjkYUsdchwMekJA8Y9Ij1tg
-X-Gm-Gg: ASbGncunyeSm/8mq5iFJcos0r2KjKHZj0ih0jXLhc4RC48jBeMWis7QmeGbZdC4Q/4s
-	PlSOa8YHntEwUmBOAuk4NsG89QNgaoUmdZA5jnC8EuUhTX1wua0w1C/krpvNX4S1/AuImHIwRFi
-	8NH0QtnmNF/TnMCXgUv/rEMZPlmiq8jnw3BfjaH4tslteXRKMG066dqLqQXvrV6igkc1ZEJNgpW
-	DRiqyx4xSbiJTxamyiibdDunJWHvjzTimiIL7SU4lImZjuXYRJ1RigmHjNodevvgguQ3dxZz+MB
-	1oMGNzgtLET4wgRU946qMUwU0PFjnm9rQ1LaUoDHxyXFJ6N/h5D/6ErvS6zRGxKm8RV3K2njos1
-	D
-X-Google-Smtp-Source: AGHT+IEAYT7A8V86V38Ir8ujqQaxYXXPI/SygzlFMMcOI46zlz+ZfaOlGXG2fLbME3wues+vX6CuKA==
-X-Received: by 2002:a05:651c:4215:b0:326:c07e:b0a4 with SMTP id 38308e7fff4ca-3280771da40mr2056621fa.11.1747331719010;
-        Thu, 15 May 2025 10:55:19 -0700 (PDT)
-Received: from localhost.localdomain ([91.197.2.199])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-328084dd21esm137531fa.63.2025.05.15.10.55.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 10:55:18 -0700 (PDT)
-From: Andrey Kriulin <kitotavrik.s@gmail.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Andrey Kriulin <kitotavrik.s@gmail.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Josef Bacik <josef@toxicpanda.com>,
-	NeilBrown <neilb@suse.de>,
-	Jan Kara <jack@suse.cz>,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	stable@vger.kernel.org
-Subject: [PATCH v3] fs: minix: Fix handling of corrupted directories
-Date: Thu, 15 May 2025 20:54:57 +0300
-Message-ID: <20250515175500.12128-1-kitotavrik.s@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Pci5Cm4A"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54FHsVpw3601639
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 15 May 2025 10:54:31 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54FHsVpw3601639
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1747331672;
+	bh=G7ieaLLHFbx+QEHyWYMyrA/SFOLf3DqlbM1dcfxnafw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Pci5Cm4AkZKrjtNgbD9kIEvofugHGu9rQStIB8I6HlP0P5GmfcK8dxy26SYPqu53l
+	 iUM4QoaUoo5QxDSCvgasxn5a9QUGr0D1Ql8K0jbLDLd6g03vlF4gw+h31ZHoeUtVay
+	 nLaR3PRAokolM4ZGUQbkNlu38pWzS8eCeMWnDvWNDSy7m9+87WxIlRTiVMXpmSFy5T
+	 7VtfMfoWjJQ/T85JinrErAMrTP4HXKdE71rn54Q+Ov9SzSwCPPZ64mi3rjtV8dMYPF
+	 5UOeboDxuVCnoqosEg4VSZBW7Cg1EJT2ZfxCtgvATt/5g83VQycjJC3x7Yge2GFBwO
+	 NtO5Ryz7YKzsA==
+Message-ID: <68dba45c-a677-4f6d-b7ec-e896aef3d27b@zytor.com>
+Date: Thu, 15 May 2025 10:54:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 3/3] x86/msr: Convert a native_wrmsr() use to
+ native_wrmsrq()
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        peterz@infradead.org, jgross@suse.com, boris.ostrovsky@oracle.com,
+        rafael@kernel.org, lenb@kernel.org
+References: <20250512084552.1586883-1-xin@zytor.com>
+ <20250512084552.1586883-4-xin@zytor.com> <aCYH0UQzO_Ek27js@gmail.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <aCYH0UQzO_Ek27js@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-If the directory is corrupted and the number of nlinks is less than 2
-(valid nlinks have at least 2), then when the directory is deleted, the
-minix_rmdir will try to reduce the nlinks(unsigned int) to a negative
-value.
+On 5/15/2025 8:27 AM, Ingo Molnar wrote:
+> 
+> * Xin Li (Intel) <xin@zytor.com> wrote:
+> 
+>> Convert a native_wrmsr() use to native_wrmsrq() to zap meaningless type
+>> conversions when a u64 MSR value is splitted into two u32.
+>>
+> 
+> BTW., at this point we should probably just replace
+> sev_es_wr_ghcb_msr() calls with direct calls to:
+> 
+> 	native_wrmsrq(MSR_AMD64_SEV_ES_GHCB, ...);
+> 
+> as sev_es_wr_ghcb_msr() is now basically an open-coded native_wrmsrq().
+> 
 
-Make nlinks validity check for directories.
+I thought about it, however it looks to me that current code prefers not
+to spread MSR_AMD64_SEV_ES_GHCB in 17 callsites.  And anyway it's a 
+__always_inline function.
 
-Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+But as you have asked, I will make the change unless someone objects.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable@vger.kernel.org
-Signed-off-by: Andrey Kriulin <kitotavrik.s@gmail.com>
----
-v3: Move nlinks validaty check to minix_rmdir and minix_rename per Jan
-Kara <jack@suse.cz> request.
-v2: Move nlinks validaty check to V[12]_minix_iget() per Jan Kara
-<jack@suse.cz> request. Change return error code to EUCLEAN. Don't block
-directory in r/o mode per Al Viro <viro@zeniv.linux.org.uk> request.
-
- fs/minix/namei.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/fs/minix/namei.c b/fs/minix/namei.c
-index 8938536d8d3c..5a1e5f8ef443 100644
---- a/fs/minix/namei.c
-+++ b/fs/minix/namei.c
-@@ -161,8 +161,12 @@ static int minix_unlink(struct inode * dir, struct dentry *dentry)
- static int minix_rmdir(struct inode * dir, struct dentry *dentry)
- {
- 	struct inode * inode = d_inode(dentry);
--	int err = -ENOTEMPTY;
-+	int err = -EUCLEAN;
- 
-+	if (inode->i_nlink < 2)
-+		return err;
-+
-+	err = -ENOTEMPTY;
- 	if (minix_empty_dir(inode)) {
- 		err = minix_unlink(dir, dentry);
- 		if (!err) {
-@@ -235,6 +239,10 @@ static int minix_rename(struct mnt_idmap *idmap,
- 	mark_inode_dirty(old_inode);
- 
- 	if (dir_de) {
-+		if (old_dir->i_nlink <= 2) {
-+			err = -EUCLEAN;
-+			goto out_dir;
-+		}
- 		err = minix_set_link(dir_de, dir_folio, new_dir);
- 		if (!err)
- 			inode_dec_link_count(old_dir);
--- 
-2.47.2
-
+Thanks!
+     Xin
