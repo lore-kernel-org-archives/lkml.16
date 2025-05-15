@@ -1,182 +1,111 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC68A27A935;
-	Thu, 15 May 2025 07:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA0110FD;
+	Thu, 15 May 2025 07:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747294176; cv=none; b=hk0VC0iqHvE6KkBCIVl31EKGmThKsJFWMvphW1Kf9lO1dX6JBp2Ud09htjUboBDmfQZk0bsP9sHHAAeKp7EdqMuXztIPOs8z4dylj+5jsc0Pfn3v8dk8wdiktSyrpcjXbFzUpV3b+9+spxs40VppeIqqz4NFCUZiE1It3WFGMXM=
+	t=1747294290; cv=none; b=gwmCuRjRpZXGmEpAVaebkaGX/fdl2METN9LScq8N6sPIk6dTpjHlPUDCdgPRAf2PuRdv/4l5FL5BqAfsAiylQ8pMPy0rWkZ/cLmDp0ebiGqGIThZfP6fdrtK9DjCk/TYillhtQ0zVA/3kpLlPuCw9jDzJ2dKik4AX3Kn1gq5Q7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747294176; c=relaxed/simple;
-	bh=xT73YG7vjavilCxVefcwNrXMNUFIuptsDRvlJC6qVKY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I0rJeGrfBRnJFypOpXrfZMUV6QtxeSAcSJlxdPsSCIM49o2aXsqSda8vh581R29rpoHm3NDNbzNidSCXJB8imhflGcy22u9R8EbQXdcIsRs/Z3Sdo9gTixEU4aTpesANfv/2McvZmmpS5fNcP0BtlFwA6FDZQ0Vmkbq/pLwb/6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KXAxaqQN; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747294290; c=relaxed/simple;
+	bh=AAYNcNZn4MmRjtFJuqCMF+YEecA54JF4VSCDovXMDuk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hOOp4z9/rXM5ZjZ9SdknbQJBZHl3qtWirPoB21UiC0WoPzn9ourqPeiw1MS9oDuNlvtAXYurrH45D/G42ZTJrpI3U6q8pbtqNF0I6bLvqsCcqBuYyNE3AfHD2M+Zh0xaakvGTNXPm1fjTvKg9z0am6O0ulmbP8vHHtaMFrMFOQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gp5hEekP; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXAxaqQN"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5fbc736f0c7so934817a12.2;
-        Thu, 15 May 2025 00:29:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747294173; x=1747898973; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IcSede8Su1QJmSqSFnb7duRkTxUsdythasqSlmba4ww=;
-        b=KXAxaqQNEaggWxwTeW4Iovce3tTc0RvwZjFBO+GwKCpiM340QnQ4IG+SKZMVVKNYhB
-         1gWuXKsPxT0M+Wuta21EDv2KxDixERJehFkYPBJEtKhHGETIzwP5oScRcnOfPztVFAKo
-         v+EqizBr6J2iKJAi5AlMHFtob8HxtyFfivs/HnTwlnfL0RFF8TWkX+FulG0QTevAceYp
-         ZasxpBoUjslZh+c4lrDfouaaSM0fYVAhn0vFB03idLLPRo7PS1pOqZjPHSmvEh83tQGI
-         bosvBZu3+ivzsLdJmFHAXb2QBHLMaWDkkGHy0X/3Vi6JyIiZhqrKqMkqjttxrQLHvBWP
-         Yqrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747294173; x=1747898973;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IcSede8Su1QJmSqSFnb7duRkTxUsdythasqSlmba4ww=;
-        b=mne2JKnLZ/HY7rwt9Z0oA1W/VKyQh/IlPVysanGXcvmjQ65OTHYioDjBpKqBptooV1
-         XgLsiJWhI6XgKTCr848Er64lCMoAQ/hNy/VZbohXcRYThx1wbvD+KA9Wlu+UhV1sxFK3
-         b9TL4VwEhbaS6zjpdVYMOWE0avy58dRCooNHBknBaxU8kAABF0IhM+oYXagqRrQtk8HS
-         oTV7C/8wIt29QJbFLpnCkbd2MQJsLGsQvLNzmahkYuNT3Nhts1XStLZkxBwr0zlo7ryW
-         fJDM/dv19wORirZvw3iDteT74pVEBkGMrNF4qao7lOClNUV6UGGSafG9N7D0HHWG+9/S
-         61DA==
-X-Forwarded-Encrypted: i=1; AJvYcCUanfj3h6T9y/QPSgQQHmAXk0QWcx8pjPRw/NTv8Npr0303CkgeAMkEoFFFPtnMwjBSIcrl0H8S@vger.kernel.org, AJvYcCUmejukToARwfuBXC6+peFS9ryMQdcj6ZbHHJlUNq7mMk33VLP0IFOE2AvAiMP3K3x/1/L2DgIN@vger.kernel.org, AJvYcCXBoR1OcrcbPI8rOWN5F1meP7TDsF0Ghs4Ocgn4KpnFYN4CPD8kMo32KkgQnC96ZceFY7nxkm5dhMNFT10=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzc/gAlVHmbOnuyawZVxlU07v7qzEpd6ndXOQzamS2hq4KDFEeL
-	gKeZWZgPB4/VCYKpMU7gloWlM56CPQyGUAIJs5ckdxGy2JA4avV4
-X-Gm-Gg: ASbGnctfSyvs1S+zbaLGB0avfdQfmCvWGHnfuEXLCA+y14NSFX9vvIh5VfnKcT1y8EK
-	DXFXEYFMxrLL5PaWSrf8H72IVGY4WFR7PqaiBk7VrlLcMUu9JKXNUDa0Dtl6US24GGNP5PP6fyn
-	9QU+4mVY4PoNQAYactoGmFTfZHczzsNaZdj8DqdFUoP6bEvTw6lz9+BZCKVIBy1/HJgxE39g2vY
-	TXh2xiFg+oaI2w1yUUeDgHGspGgRNActDndSbIPG4Gepc3g07kUJrY/LiYfb2O7/dbOAf+hOrn9
-	Y4p6hYq2tmejbdCSA0oN1xyQ3HasDZQCIzOtu8bSnNPxxXBy8K8zgxYWkx9vFwZdt6mGTGVTT1r
-	CMokMM57O2gjiwiDGsyPv5doNi/w72A==
-X-Google-Smtp-Source: AGHT+IFSVVDRt3x2PXh3uMgcCoYQ2vtPrrvFgkELSqshxtEzujh1920Xxoj08IE6nOwdDjFPPstsVQ==
-X-Received: by 2002:a05:6402:84c:b0:5f8:36b2:dc1a with SMTP id 4fb4d7f45d1cf-5ff988ae1d0mr5580189a12.16.1747294172762;
-        Thu, 15 May 2025 00:29:32 -0700 (PDT)
-Received: from localhost.localdomain (ip092042140082.rev.nessus.at. [92.42.140.82])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fc9cc5144csm10064410a12.41.2025.05.15.00.29.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 00:29:32 -0700 (PDT)
-From: Jakob Unterwurzacher <jakobunt@gmail.com>
-X-Google-Original-From: Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>
-To: Woojung Huh <woojung.huh@microchip.com>,
-	UNGLinuxDriver@microchip.com,
-	Andrew Lunn <andrew@lunn.ch>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Tristram Ha <Tristram.Ha@microchip.com>,
-	Marek Vasut <marex@denx.de>,
-	Florian Fainelli <f.fainelli@gmail.com>
-Cc: quentin.schulz@cherry.de,
-	Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>,
-	stable@vger.kernel.org,
-	Woojung Huh <Woojung.Huh@microchip.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net v3] net: dsa: microchip: linearize skb for tail-tagging switches
-Date: Thu, 15 May 2025 09:29:19 +0200
-Message-Id: <20250515072920.2313014-1-jakob.unterwurzacher@cherry.de>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gp5hEekP"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F016C43B56;
+	Thu, 15 May 2025 07:31:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747294286;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A6ZVrKXZ7nh1gJn9x7O1w63niuypshH7rDC/mZ2ilkQ=;
+	b=gp5hEekPPgb0aWTMfZXrT35W3K8YfdS3rZ9QlucKjykkQiKwNYpbENvWffczSlOWJWkdYj
+	BTI9QvFlcyJccZm38DpCXXg7WQbXD9GvR7DDOWAiyxhfzq6C9DzAbOWjk7aqlKHxI6A6Re
+	D2D1EwL3JBmMmDKkCNwtbg0aV6l7lDiS2ImmBqL+AE7aePw+GfTa7tUSC029qdQUQn+DsQ
+	oPeCulbI5yVoFrxQtpFB9YlyPC0QaFzAlv03Cb8zXPDodmXYJ+BYKelN06od2hYzkV5YWE
+	q9OA3L9c6g6kTQFTJXH3/PM9qDL76v2bwRwQi0JPahFeRUtjiK7Kbn4jnk5jRA==
+Date: Thu, 15 May 2025 09:31:24 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: <Tristram.Ha@microchip.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Woojung Huh <woojung.huh@microchip.com>,
+ Russell King <linux@armlinux.org.uk>, Vladimir Oltean <olteanv@gmail.com>,
+ Heiner Kallweit <hkallweit1@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
+ <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v3] net: dsa: microchip: Add SGMII port support
+ to KSZ9477 switch
+Message-ID: <20250515093124.7b7c365a@fedora.home>
+In-Reply-To: <20250513222224.4123-1-Tristram.Ha@microchip.com>
+References: <20250513222224.4123-1-Tristram.Ha@microchip.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeftdelvdekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtohepvfhrihhsthhrrghmrdfjrgesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopeifohhojhhunhhgrdhhuhhhsehmihgtrhhotghhi
+ hhprdgtohhmpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopeholhhtvggrnhhvsehgmhgrihhlrdgtohhmpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhm
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-The pointer arithmentic for accessing the tail tag only works
-for linear skbs.
+Hi Tristram,
 
-For nonlinear skbs, it reads uninitialized memory inside the
-skb headroom, essentially randomizing the tag. I have observed
-it gets set to 6 most of the time.
+On Tue, 13 May 2025 15:22:24 -0700
+<Tristram.Ha@microchip.com> wrote:
 
-Example where ksz9477_rcv thinks that the packet from port 1 comes from port 6
-(which does not exist for the ksz9896 that's in use), dropping the packet.
-Debug prints added by me (not included in this patch):
+> From: Tristram Ha <tristram.ha@microchip.com>
+> 
+> The KSZ9477 switch driver uses the XPCS driver to operate its SGMII
+> port.  However there are some hardware bugs in the KSZ9477 SGMII
+> module so workarounds are needed.  There was a proposal to update the
+> XPCS driver to accommodate KSZ9477, but the new code is not generic
+> enough to be used by other vendors.  It is better to do all these
+> workarounds inside the KSZ9477 driver instead of modifying the XPCS
+> driver.
+> 
+> There are 3 hardware issues.  The first is the MII_ADVERTISE register
+> needs to be write once after reset for the correct code word to be
+> sent.  The XPCS driver disables auto-negotiation first before
+> configuring the SGMII/1000BASE-X mode and then enables it back.  The
+> KSZ9477 driver then writes the MII_ADVERTISE register before enabling
+> auto-negotiation.  In 1000BASE-X mode the MII_ADVERTISE register will
+> be set, so KSZ9477 driver does not need to write it.
+> 
+> The second issue is the MII_BMCR register needs to set the exact speed
+> and duplex mode when running in SGMII mode.  During link polling the
+> KSZ9477 will check the speed and duplex mode are different from
+> previous ones and update the MII_BMCR register accordingly.
+> 
+> The last issue is 1000BASE-X mode does not work with auto-negotiation
+> on.  The cause is the local port hardware does not know the link is up
+> and so network traffic is not forwarded.  The workaround is to write 2
+> additional bits when 1000BASE-X mode is configured.
+> 
+> Note the SGMII interrupt in the port cannot be masked.  As that
+> interrupt is not handled in the KSZ9477 driver the SGMII interrupt bit
+> will not be set even when the XPCS driver sets it.
+> 
+> Signed-off-by: Tristram Ha <tristram.ha@microchip.com>
 
-	[  256.645337] ksz9477_rcv:323 tag0=6
-	[  256.645349] skb len=47 headroom=78 headlen=0 tailroom=0
-	               mac=(64,14) mac_len=14 net=(78,0) trans=78
-	               shinfo(txflags=0 nr_frags=1 gso(size=0 type=0 segs=0))
-	               csum(0x0 start=0 offset=0 ip_summed=0 complete_sw=0 valid=0 level=0)
-	               hash(0x0 sw=0 l4=0) proto=0x00f8 pkttype=1 iif=3
-	               priority=0x0 mark=0x0 alloc_cpu=0 vlan_all=0x0
-	               encapsulation=0 inner(proto=0x0000, mac=0, net=0, trans=0)
-	[  256.645377] dev name=end1 feat=0x0002e10200114bb3
-	[  256.645386] skb headroom: 00000000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-	[  256.645395] skb headroom: 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-	[  256.645403] skb headroom: 00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-	[  256.645411] skb headroom: 00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-	[  256.645420] skb headroom: 00000040: ff ff ff ff ff ff 00 1c 19 f2 e2 db 08 06
-	[  256.645428] skb frag:     00000000: 00 01 08 00 06 04 00 01 00 1c 19 f2 e2 db 0a 02
-	[  256.645436] skb frag:     00000010: 00 83 00 00 00 00 00 00 0a 02 a0 2f 00 00 00 00
-	[  256.645444] skb frag:     00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01
-	[  256.645452] ksz_common_rcv:92 dsa_conduit_find_user returned NULL
+I was able to test this patch this morning, with both SGMII (copper
+SFP) and 1000BaseX (Fibre SFP), hot-swapping and all, it works well :)
 
-Call skb_linearize before trying to access the tag.
+Thanks for that !
 
-This patch fixes ksz9477_rcv which is used by the ksz9896 I have at
-hand, and also applies the same fix to ksz8795_rcv which seems to have
-the same problem.
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Tested-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-Signed-off-by: Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>
-CC: stable@vger.kernel.org
-Fixes: 016e43a26bab ("net: dsa: ksz: Add KSZ8795 tag code")
-Fixes: 8b8010fb7876 ("dsa: add support for Microchip KSZ tail tagging")
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
----
-v1: Initial submission
-    https://lore.kernel.org/netdev/20250509071820.4100022-1-jakob.unterwurzacher@cherry.de/
-v2: Add Fixes tags, Cc stable, "[PATCH net]" prefix
-    https://lore.kernel.org/netdev/20250512144416.3697054-1-jakob.unterwurzacher@cherry.de/
-v3: Move declarations before skb_linearize call, pick up Reviewed-By
-
- net/dsa/tag_ksz.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
-
-diff --git a/net/dsa/tag_ksz.c b/net/dsa/tag_ksz.c
-index c33d4bf17929..0b7564b53790 100644
---- a/net/dsa/tag_ksz.c
-+++ b/net/dsa/tag_ksz.c
-@@ -140,7 +140,12 @@ static struct sk_buff *ksz8795_xmit(struct sk_buff *skb, struct net_device *dev)
- 
- static struct sk_buff *ksz8795_rcv(struct sk_buff *skb, struct net_device *dev)
- {
--	u8 *tag = skb_tail_pointer(skb) - KSZ_EGRESS_TAG_LEN;
-+	u8 *tag;
-+
-+	if (skb_linearize(skb))
-+		return NULL;
-+
-+	tag = skb_tail_pointer(skb) - KSZ_EGRESS_TAG_LEN;
- 
- 	return ksz_common_rcv(skb, dev, tag[0] & KSZ8795_TAIL_TAG_EG_PORT_M,
- 			      KSZ_EGRESS_TAG_LEN);
-@@ -311,10 +316,16 @@ static struct sk_buff *ksz9477_xmit(struct sk_buff *skb,
- 
- static struct sk_buff *ksz9477_rcv(struct sk_buff *skb, struct net_device *dev)
- {
--	/* Tag decoding */
--	u8 *tag = skb_tail_pointer(skb) - KSZ_EGRESS_TAG_LEN;
--	unsigned int port = tag[0] & KSZ9477_TAIL_TAG_EG_PORT_M;
- 	unsigned int len = KSZ_EGRESS_TAG_LEN;
-+	unsigned int port;
-+	u8 *tag;
-+
-+	if (skb_linearize(skb))
-+		return NULL;
-+
-+	/* Tag decoding */
-+	tag = skb_tail_pointer(skb) - KSZ_EGRESS_TAG_LEN;
-+	port = tag[0] & KSZ9477_TAIL_TAG_EG_PORT_M;
- 
- 	/* Extra 4-bytes PTP timestamp */
- 	if (tag[0] & KSZ9477_PTP_TAG_INDICATION) {
--- 
-2.39.5
-
+Maxime
