@@ -1,439 +1,104 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36991D6DBB;
-	Thu, 15 May 2025 14:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053DD34CF9;
+	Thu, 15 May 2025 14:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747320709; cv=none; b=cALovZP9ZZjmXMAg6PZV4WEUThN6f+zomlXXVcDXxhPCpQkMZRE+2b2FID9juQTANM5Y8h+4Zmm/5yE5TfRKa5c3agqS+CBhUqtzr7If6PxGpugKlQjDeZReMiSTOcKNC3GHah6hQPsViubv1vq54bQ0mVCrAfqXqH/RsL2SA2w=
+	t=1747320727; cv=none; b=g3rov/KgORdpXRMPQ5nVkhaU19uHIXgNXp/9xLaUjjd9f96lteG+0iSbQJZ1732t3Y/M+ptaYPcjaF3zdEE9R6tQA/5zxDEXj86/TyEjQIdlAG6SSsF1jtNhZDgCSrbh0U6eeFYo9je5myn28Se3Exij5gfr4nlxEi3XnFSCeVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747320709; c=relaxed/simple;
-	bh=fLXEyJ04rV/YA6f/3XO9nxbLMNb0+FTMXrQxP0vrhxE=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=N+hXEvn8I6wDmTGn7+GbepZBeHajj0LNGzNM+CuIkPUckGtj+rCyrJ//Xu+6QlrlUsbionJYuThPBA9VGQxAFns1a5BKskTpQhhxwq8tjD02xksJpQUs2y0lXkVbA3JBzbXPwLSdTZJ+Np/GP0NLBYdZ7/fD8qgF6m4+MTgwcUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s0dekOQz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NUo+Gf60; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747320727; c=relaxed/simple;
+	bh=NmoY497PnjzJmvhyLUTzuh03sgxv+SnIeoHnCzkIZYI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NSavZLxNlXh2Jjy/NmgW75dnqPIZ94kgeycVp8eAsapKYXrbJzsk+wcgCYJ5ElJEktSDm+wdDRxEPkuefKxFXiBIC4BrLd+2sKon8YLvVNxdlgeJtoehXKNd/Tl54ij3bHRpo9vXzGYuvABLtpOuZoxKWqyw8fjcL4S5EQwwKBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ChR98yrx; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s0dekOQz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NUo+Gf60"
-Date: Thu, 15 May 2025 14:51:41 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747320702;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pHibEe6F3cCTb9te0CFdRUlIGAMn7RJG4y2GTxfmP4k=;
-	b=s0dekOQzrG1vPDSl75rEd1rjCpLU8Bh5SWfPU6TIm2eGIoNPtJ1tcwUrCoemm59+5RBKd8
-	eUHaXnpU7T6R820y8yCvpRK847sfSBU5U6uXHaSXyX6mP3F85+1Q2TLPQxzc5zyoEiG/Pa
-	ulbEJROqiOVFz3DmofOfxkiAYaNj78iYpmewurpMwTmoUTTdl1cvS3/ogxfyyMRNL/Bm0+
-	wzhyLhYGdWH/BXKTvXz5BcsbJ6hFC1qTtwwtZ7mT551i0fam+RSD/+Vs6BXsmWEyH2AfvE
-	Xgrjpmo7/g3kTFLKxZ96Yvgl58ajT+udHQraCTsZQEngV+spodp1IbAI8TqJQg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747320702;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pHibEe6F3cCTb9te0CFdRUlIGAMn7RJG4y2GTxfmP4k=;
-	b=NUo+Gf60yAdJwduv0d43felFy3ZTeAueMh/dIVKM10QWZGWzjfdKorZGaXsPuvPrS0/Uxm
-	7FpSdn5bgB3lH2BA==
-From: "tip-bot2 for Brian Norris" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] genirq: Add kunit tests for disable depth counts
-Cc: Brian Norris <briannorris@chromium.org>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20250514201353.3481400-3-briannorris@chromium.org>
-References: <20250514201353.3481400-3-briannorris@chromium.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ChR98yrx"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5fcf1dc8737so1993881a12.1;
+        Thu, 15 May 2025 07:52:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747320723; x=1747925523; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=R3rYtHGI7f2bS5Wz8y1R8kta8HvN8vcDb4XhTNw0Ufw=;
+        b=ChR98yrxzbkJ3jwU42GsmADFb7j9V0MWNqHm33H1DtyRipHOgfTZHJzOKmvD3GSV8+
+         y/ATCiZIcMqREEhnfa29lhx9PdL1y/0woCwis8jXjjyxEHyclalCIbaeYNdUPh1k/EBa
+         e5zSzrfkGKt/pGYGfVINSeWBFjvhPKuOrswtM584Wtut58VQkCxnyXce0WoT7eI2o3Va
+         w98dw6KA69lrxMksn12GO35y8EjpFH7a+ATROA4z52VydVlZfaPaLn2JspmGnEnuTOXY
+         ZSQH6+ijG2rGfaRl8WlpXO9kopaLohccGouQwbCxZYE6/c8+Ymw1p9rDo14XFy10bfM8
+         VFWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747320723; x=1747925523;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=R3rYtHGI7f2bS5Wz8y1R8kta8HvN8vcDb4XhTNw0Ufw=;
+        b=UqUl5bv/F2eVf1SjdpeZAlBna0+aUV6B8rhIAsdfvEQ1XwFp54IrspgtfxRTahqoMn
+         vXf6lUpecIeD0dAMa+H8HO7BcRo+dJBhQ6VLdPr5dX2oFJZYZSXaMYMqsxV1zIS+axRL
+         hxyWqLSkQG9+v3PtUo+m9tlZWJEAsRHt6UJSTwS2IMcrMJcXdG7OE31agDfwcS/ruftn
+         M6a4478iTU+ZdY9Js24qv0E7ra9K7bWswLuHpBTh0uiBmCN1oo4N8+MEgDdqGmM5VQFk
+         cAYXCdYsfHk+cd57VFCBhEFx43xKrmDFnYoA61eXZPPgFDZhwxapjuBEGEFwMEshlcC5
+         5raQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVhXeTctkQczYLwBgtMEYXtZASKkbrQD6euXATGiHWrujNHsT055XhZnhA4ycA6kryH13SWjcqm9Hh3mio=@vger.kernel.org, AJvYcCVo3qX1iqk71fcG13heLgDLe71gGfGsKzC6rhQ/adOEJWfidg9/CAyVwf6hGda4Yf0WIW6H3KH4@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSGJ5nKJRrddrQ6yV/5ONmoFQaGR1HU0a5hFJ8+mMWz1Hbz8Oh
+	pd1cscjBBAf6Gl2GOV5e+VXcABj9ZPoa984pRkceXoWaggsTBwmp
+X-Gm-Gg: ASbGncvJCQmePnjG2ct0PZV7zvXvICuW8F6S4ynE52Zneml0nKStABRKvYjbk8TuiGf
+	E2AErcCJndcAwBUbCIMH9O8NJmvbH51vXBTOdXwIrWomf4l3pmUUxh1WHin9tjK3qLPxYtDx+Nf
+	KHxIYn7XqkZ+4KTFohTpJ8pc4cboYrcGJF18TB9z2n69AvmQS7XDTzNEJuLGAVtxbE58YKs/Ql3
+	+2JwKmi2B9GA9DrGojGRd9arE2giIRSBYx2Mbv/Y2nzVbN5Wfb0his17xrXLn5yyIHhNJcL2fWw
+	7iRJK6WglcoWYvILG1vU2FyAU5kk+PFaq1bGUxFwz6GqBTbIcikicDmRhaI6QQ==
+X-Google-Smtp-Source: AGHT+IFnbQsmJ28PMwm6ZpW/qqXkzMbIj8mfZUAcTRDZys7wkjr4Qrwaxu7LwCnZ1+NttJvuk113ng==
+X-Received: by 2002:a17:907:9448:b0:ad2:2c89:7a8 with SMTP id a640c23a62f3a-ad51612af30mr268227366b.51.1747320722901;
+        Thu, 15 May 2025 07:52:02 -0700 (PDT)
+Received: from debian-vm.localnet ([2a01:4b00:d20c:cddd:20c:29ff:fe56:c86])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d275d9fsm871366b.74.2025.05.15.07.52.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 07:52:02 -0700 (PDT)
+From: Zak Kemble <zakkemble@gmail.com>
+To: Doug Berger <opendmb@gmail.com>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Zak Kemble <zakkemble@gmail.com>
+Subject: [PATCH v2 0/3] net: bcmgenet: 64bit stats and expose more stats in ethtool
+Date: Thu, 15 May 2025 15:51:39 +0100
+Message-Id: <20250515145142.1415-1-zakkemble@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174732070186.406.2327362552572565637.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the irq/core branch of tip:
+Hi, this patchset updates the bcmgenet driver with new 64bit statistics via
+ndo_get_stats64 and rtnl_link_stats64, now reports hardware discarded
+packets in the rx_missed_errors stat and exposes more stats in ethtool.
 
-Commit-ID:     334c36eeb5df010ea1d954a96b6eba42a15a1d4a
-Gitweb:        https://git.kernel.org/tip/334c36eeb5df010ea1d954a96b6eba42a15a1d4a
-Author:        Brian Norris <briannorris@chromium.org>
-AuthorDate:    Wed, 14 May 2025 13:13:17 -07:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 15 May 2025 16:44:25 +02:00
+v1:
+https://lore.kernel.org/all/20250513144107.1989-1-zakkemble@gmail.com
 
-genirq: Add kunit tests for disable depth counts
+v2:
+- Hopefully better readability
+- Fold singular stat updates
 
-There have been a few bugs and/or misunderstandings about the reference
-counting, and startup/shutdown behaviors in the interrupt core and the
-related CPU hotplug code. These 4 test cases try to capture a few
-interesting cases.
+Zak Kemble (3):
+  net: bcmgenet: switch to use 64bit statistics
+  net: bcmgenet: count hw discarded packets in missed stat
+  net: bcmgenet: expose more stats in ethtool
 
-* irq_disable_depth_test: basic request/disable/enable sequence
+ .../net/ethernet/broadcom/genet/bcmgenet.c    | 279 +++++++++++++-----
+ .../net/ethernet/broadcom/genet/bcmgenet.h    |  32 +-
+ 2 files changed, 223 insertions(+), 88 deletions(-)
 
-* irq_free_disabled_test: request/disable/free/re-request sequence - this
-  catches errors on previous revisions of the fix for the hotplug case.
+-- 
+2.39.5
 
-* irq_cpuhotplug_test: exercises managed-affinity IRQ + CPU hotplug.
-
-  This captures a problematic test case for a bug in that code path, which
-  failed to retain the disable depth across the managed interrupt
-  hotunplug/hotplug path.
-
-  This test requires CONFIG_SMP and a hotpluggable CPU#1.
-
-* irq_shutdown_depth_test: exercises similar behavior as
-
-  irq_cpuhotplug_test, but directly uses the irq_*() APIs instead of going
-  through CPU hotplug. This still requires CONFIG_SMP, because
-  managed-affinity is stubbed out (and not all APIs are even present)
-  without it.
-
-Note the use of 'imply SMP': ARCH=um doesn't support SMP, and kunit is
-often exercised there. Thus, 'imply' will force SMP on where possible
-(such as ARCH=x86_64), but leave it off where it's not.
-
-Behavior on various SMP and ARCH configurations:
-
-  $ tools/testing/kunit/kunit.py run 'irq_test_cases*' --arch x86_64 --qemu_args '-smp 2'
-  [...]
-  [11:12:24] Testing complete. Ran 4 tests: passed: 4
-
-  $ tools/testing/kunit/kunit.py run 'irq_test_cases*' --arch x86_64
-  [...]
-  [11:13:27] [SKIPPED] irq_cpuhotplug_test
-  [11:13:27] ================= [PASSED] irq_test_cases ==================
-  [11:13:27] ============================================================
-  [11:13:27] Testing complete. Ran 4 tests: passed: 3, skipped: 1
-
-  # default: ARCH=um
-  $ tools/testing/kunit/kunit.py run 'irq_test_cases*'
-  [11:14:26] [SKIPPED] irq_shutdown_depth_test
-  [11:14:26] [SKIPPED] irq_cpuhotplug_test
-  [11:14:26] ================= [PASSED] irq_test_cases ==================
-  [11:14:26] ============================================================
-  [11:14:26] Testing complete. Ran 4 tests: passed: 2, skipped: 2
-
-Without the prior fix ("genirq: Retain disable depth for managed interrupts
-across CPU hotplug"), this fails as follows:
-
-  [11:18:55] =============== irq_test_cases (4 subtests) ================
-  [11:18:55] [PASSED] irq_disable_depth_test
-  [11:18:55] [PASSED] irq_free_disabled_test
-  [11:18:55]     # irq_shutdown_depth_test: EXPECTATION FAILED at kernel/irq/irq_test.c:147
-  [11:18:55]     Expected desc->depth == 1, but
-  [11:18:55]         desc->depth == 0 (0x0)
-  [11:18:55] ------------[ cut here ]------------
-  [11:18:55] Unbalanced enable for IRQ 26
-  [11:18:55] WARNING: CPU: 1 PID: 36 at kernel/irq/manage.c:792 __enable_irq+0x36/0x60
-  ...
-  [11:18:55] [FAILED] irq_shutdown_depth_test
-  [11:18:55]  #1
-  [11:18:55]     # irq_cpuhotplug_test: EXPECTATION FAILED at kernel/irq/irq_test.c:202
-  [11:18:55]     Expected irqd_is_activated(data) to be false, but is true
-  [11:18:55]     # irq_cpuhotplug_test: EXPECTATION FAILED at kernel/irq/irq_test.c:203
-  [11:18:55]     Expected irqd_is_started(data) to be false, but is true
-  [11:18:55]     # irq_cpuhotplug_test: EXPECTATION FAILED at kernel/irq/irq_test.c:204
-  [11:18:55]     Expected desc->depth == 1, but
-  [11:18:55]         desc->depth == 0 (0x0)
-  [11:18:55] ------------[ cut here ]------------
-  [11:18:55] Unbalanced enable for IRQ 27
-  [11:18:55] WARNING: CPU: 0 PID: 38 at kernel/irq/manage.c:792 __enable_irq+0x36/0x60
-  ...
-  [11:18:55] [FAILED] irq_cpuhotplug_test
-  [11:18:55]     # module: irq_test
-  [11:18:55] # irq_test_cases: pass:2 fail:2 skip:0 total:4
-  [11:18:55] # Totals: pass:2 fail:2 skip:0 total:4
-  [11:18:55] ================= [FAILED] irq_test_cases ==================
-  [11:18:55] ============================================================
-  [11:18:55] Testing complete. Ran 4 tests: passed: 2, failed: 2
-
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250514201353.3481400-3-briannorris@chromium.org
-
----
- kernel/irq/Kconfig    |  11 ++-
- kernel/irq/Makefile   |   1 +-
- kernel/irq/irq_test.c | 229 +++++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 241 insertions(+)
- create mode 100644 kernel/irq/irq_test.c
-
-diff --git a/kernel/irq/Kconfig b/kernel/irq/Kconfig
-index 3f02a0e..7429abe 100644
---- a/kernel/irq/Kconfig
-+++ b/kernel/irq/Kconfig
-@@ -144,6 +144,17 @@ config GENERIC_IRQ_DEBUGFS
- config GENERIC_IRQ_KEXEC_CLEAR_VM_FORWARD
- 	bool
- 
-+config IRQ_KUNIT_TEST
-+	tristate "KUnit tests for IRQ management APIs" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	imply SMP
-+	help
-+	  This option enables KUnit tests for the IRQ subsystem API. These are
-+	  only for development and testing, not for regular kernel use cases.
-+
-+	  If unsure, say N.
-+
- endmenu
- 
- config GENERIC_IRQ_MULTI_HANDLER
-diff --git a/kernel/irq/Makefile b/kernel/irq/Makefile
-index c0f44c0..6ab3a40 100644
---- a/kernel/irq/Makefile
-+++ b/kernel/irq/Makefile
-@@ -19,3 +19,4 @@ obj-$(CONFIG_GENERIC_IRQ_IPI_MUX) += ipi-mux.o
- obj-$(CONFIG_SMP) += affinity.o
- obj-$(CONFIG_GENERIC_IRQ_DEBUGFS) += debugfs.o
- obj-$(CONFIG_GENERIC_IRQ_MATRIX_ALLOCATOR) += matrix.o
-+obj-$(CONFIG_IRQ_KUNIT_TEST) += irq_test.o
-diff --git a/kernel/irq/irq_test.c b/kernel/irq/irq_test.c
-new file mode 100644
-index 0000000..5161b56
---- /dev/null
-+++ b/kernel/irq/irq_test.c
-@@ -0,0 +1,229 @@
-+// SPDX-License-Identifier: LGPL-2.1+
-+
-+#include <linux/cpu.h>
-+#include <linux/cpumask.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/irqdesc.h>
-+#include <linux/irqdomain.h>
-+#include <linux/nodemask.h>
-+#include <kunit/test.h>
-+
-+#include "internals.h"
-+
-+static irqreturn_t noop_handler(int irq, void *data)
-+{
-+	return IRQ_HANDLED;
-+}
-+
-+static void noop(struct irq_data *data) { }
-+static unsigned int noop_ret(struct irq_data *data) { return 0; }
-+
-+static int noop_affinity(struct irq_data *data, const struct cpumask *dest,
-+			 bool force)
-+{
-+	irq_data_update_effective_affinity(data, dest);
-+
-+	return 0;
-+}
-+
-+static struct irq_chip fake_irq_chip = {
-+	.name           = "fake",
-+	.irq_startup    = noop_ret,
-+	.irq_shutdown   = noop,
-+	.irq_enable     = noop,
-+	.irq_disable    = noop,
-+	.irq_ack        = noop,
-+	.irq_mask       = noop,
-+	.irq_unmask     = noop,
-+	.irq_set_affinity = noop_affinity,
-+	.flags          = IRQCHIP_SKIP_SET_WAKE,
-+};
-+
-+static void irq_disable_depth_test(struct kunit *test)
-+{
-+	struct irq_desc *desc;
-+	int virq, ret;
-+
-+	virq = irq_domain_alloc_descs(-1, 1, 0, NUMA_NO_NODE, NULL);
-+	KUNIT_ASSERT_GE(test, virq, 0);
-+
-+	irq_set_chip_and_handler(virq, &dummy_irq_chip, handle_simple_irq);
-+
-+	desc = irq_to_desc(virq);
-+	KUNIT_ASSERT_PTR_NE(test, desc, NULL);
-+
-+	ret = request_irq(virq, noop_handler, 0, "test_irq", NULL);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+
-+	KUNIT_EXPECT_EQ(test, desc->depth, 0);
-+
-+	disable_irq(virq);
-+	KUNIT_EXPECT_EQ(test, desc->depth, 1);
-+
-+	enable_irq(virq);
-+	KUNIT_EXPECT_EQ(test, desc->depth, 0);
-+
-+	free_irq(virq, NULL);
-+}
-+
-+static void irq_free_disabled_test(struct kunit *test)
-+{
-+	struct irq_desc *desc;
-+	int virq, ret;
-+
-+	virq = irq_domain_alloc_descs(-1, 1, 0, NUMA_NO_NODE, NULL);
-+	KUNIT_ASSERT_GE(test, virq, 0);
-+
-+	irq_set_chip_and_handler(virq, &dummy_irq_chip, handle_simple_irq);
-+
-+	desc = irq_to_desc(virq);
-+	KUNIT_ASSERT_PTR_NE(test, desc, NULL);
-+
-+	ret = request_irq(virq, noop_handler, 0, "test_irq", NULL);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+
-+	KUNIT_EXPECT_EQ(test, desc->depth, 0);
-+
-+	disable_irq(virq);
-+	KUNIT_EXPECT_EQ(test, desc->depth, 1);
-+
-+	free_irq(virq, NULL);
-+	KUNIT_EXPECT_GE(test, desc->depth, 1);
-+
-+	ret = request_irq(virq, noop_handler, 0, "test_irq", NULL);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+	KUNIT_EXPECT_EQ(test, desc->depth, 0);
-+
-+	free_irq(virq, NULL);
-+}
-+
-+static void irq_shutdown_depth_test(struct kunit *test)
-+{
-+	struct irq_desc *desc;
-+	struct irq_data *data;
-+	int virq, ret;
-+	struct irq_affinity_desc affinity = {
-+		.is_managed = 1,
-+		.mask = CPU_MASK_ALL,
-+	};
-+
-+	if (!IS_ENABLED(CONFIG_SMP))
-+		kunit_skip(test, "requires CONFIG_SMP for managed shutdown");
-+
-+	virq = irq_domain_alloc_descs(-1, 1, 0, NUMA_NO_NODE, &affinity);
-+	KUNIT_ASSERT_GE(test, virq, 0);
-+
-+	irq_set_chip_and_handler(virq, &dummy_irq_chip, handle_simple_irq);
-+
-+	desc = irq_to_desc(virq);
-+	KUNIT_ASSERT_PTR_NE(test, desc, NULL);
-+
-+	data = irq_desc_get_irq_data(desc);
-+	KUNIT_ASSERT_PTR_NE(test, data, NULL);
-+
-+	ret = request_irq(virq, noop_handler, 0, "test_irq", NULL);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+
-+	KUNIT_EXPECT_TRUE(test, irqd_is_activated(data));
-+	KUNIT_EXPECT_TRUE(test, irqd_is_started(data));
-+	KUNIT_EXPECT_TRUE(test, irqd_affinity_is_managed(data));
-+
-+	KUNIT_EXPECT_EQ(test, desc->depth, 0);
-+
-+	disable_irq(virq);
-+	KUNIT_EXPECT_EQ(test, desc->depth, 1);
-+
-+	irq_shutdown_and_deactivate(desc);
-+
-+	KUNIT_EXPECT_FALSE(test, irqd_is_activated(data));
-+	KUNIT_EXPECT_FALSE(test, irqd_is_started(data));
-+
-+	KUNIT_EXPECT_EQ(test, irq_activate(desc), 0);
-+#ifdef CONFIG_SMP
-+	irq_startup_managed(desc);
-+#endif
-+
-+	KUNIT_EXPECT_EQ(test, desc->depth, 1);
-+
-+	enable_irq(virq);
-+	KUNIT_EXPECT_EQ(test, desc->depth, 0);
-+
-+	free_irq(virq, NULL);
-+}
-+
-+static void irq_cpuhotplug_test(struct kunit *test)
-+{
-+	struct irq_desc *desc;
-+	struct irq_data *data;
-+	int virq, ret;
-+	struct irq_affinity_desc affinity = {
-+		.is_managed = 1,
-+	};
-+
-+	if (!IS_ENABLED(CONFIG_SMP))
-+		kunit_skip(test, "requires CONFIG_SMP for CPU hotplug");
-+	if (!get_cpu_device(1))
-+		kunit_skip(test, "requires more than 1 CPU for CPU hotplug");
-+	if (!cpu_is_hotpluggable(1))
-+		kunit_skip(test, "CPU 1 must be hotpluggable");
-+
-+	cpumask_copy(&affinity.mask, cpumask_of(1));
-+
-+	virq = irq_domain_alloc_descs(-1, 1, 0, NUMA_NO_NODE, &affinity);
-+	KUNIT_ASSERT_GE(test, virq, 0);
-+
-+	irq_set_chip_and_handler(virq, &fake_irq_chip, handle_simple_irq);
-+
-+	desc = irq_to_desc(virq);
-+	KUNIT_ASSERT_PTR_NE(test, desc, NULL);
-+
-+	data = irq_desc_get_irq_data(desc);
-+	KUNIT_ASSERT_PTR_NE(test, data, NULL);
-+
-+	ret = request_irq(virq, noop_handler, 0, "test_irq", NULL);
-+	KUNIT_EXPECT_EQ(test, ret, 0);
-+
-+	KUNIT_EXPECT_TRUE(test, irqd_is_activated(data));
-+	KUNIT_EXPECT_TRUE(test, irqd_is_started(data));
-+	KUNIT_EXPECT_TRUE(test, irqd_affinity_is_managed(data));
-+
-+	KUNIT_EXPECT_EQ(test, desc->depth, 0);
-+
-+	disable_irq(virq);
-+	KUNIT_EXPECT_EQ(test, desc->depth, 1);
-+
-+	KUNIT_EXPECT_EQ(test, remove_cpu(1), 0);
-+	KUNIT_EXPECT_FALSE(test, irqd_is_activated(data));
-+	KUNIT_EXPECT_FALSE(test, irqd_is_started(data));
-+	KUNIT_EXPECT_GE(test, desc->depth, 1);
-+	KUNIT_EXPECT_EQ(test, add_cpu(1), 0);
-+
-+	KUNIT_EXPECT_FALSE(test, irqd_is_activated(data));
-+	KUNIT_EXPECT_FALSE(test, irqd_is_started(data));
-+	KUNIT_EXPECT_EQ(test, desc->depth, 1);
-+
-+	enable_irq(virq);
-+	KUNIT_EXPECT_TRUE(test, irqd_is_activated(data));
-+	KUNIT_EXPECT_TRUE(test, irqd_is_started(data));
-+	KUNIT_EXPECT_EQ(test, desc->depth, 0);
-+
-+	free_irq(virq, NULL);
-+}
-+
-+static struct kunit_case irq_test_cases[] = {
-+	KUNIT_CASE(irq_disable_depth_test),
-+	KUNIT_CASE(irq_free_disabled_test),
-+	KUNIT_CASE(irq_shutdown_depth_test),
-+	KUNIT_CASE(irq_cpuhotplug_test),
-+	{}
-+};
-+
-+static struct kunit_suite irq_test_suite = {
-+	.name = "irq_test_cases",
-+	.test_cases = irq_test_cases,
-+};
-+
-+kunit_test_suite(irq_test_suite);
-+MODULE_DESCRIPTION("IRQ unit test suite");
-+MODULE_LICENSE("GPL");
