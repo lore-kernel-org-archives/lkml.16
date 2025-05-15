@@ -1,155 +1,109 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6656D41C63;
-	Thu, 15 May 2025 17:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D1F25A323;
+	Thu, 15 May 2025 17:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747329491; cv=none; b=CGfM6JI6rrpd5DaexyEs0j95AYw66UM4XF+bARDZ5+mokMVQ0Xd0D0tvL9GuXxmzXxuOjShEgK1/vfkWmX5orX664/ksItWRCdH7iyIg9m6U5II4TVBfqbqHPfpwSzPgfQ6ZC7ol5Jo2AzXJoXiWkR/s0dfRvYq4vcb2ieYeCEo=
+	t=1747329509; cv=none; b=T2dQvYsOJzF3zW/ouCFC+38kYSITcU0TsHFZ2cRh+GanlwPZaQdSpfpHThhJZct0Rdgec6rYQiBUD1loikJhpIPYrdsl1M7/jPeyPriKgnp59IRIQ1i0UCw6/yprcZ1eafPnPwTQ6ap0rHX+EY4cH261Cd6Vbp6RbtlQ/WhQ0pg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747329491; c=relaxed/simple;
-	bh=a4Qne7EUq3njwu3tN8seiT1B8K9bvCdm/3W2UzwVpPA=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=tn9FGO28n14YPuyunBpXJsWzHO/azLxPEPTuRzOhoAZohEcCdeAW8EGOrccbhXqwsDizyu75+cZnBSLKe/W46PmPlVoinpuKnIvF5mP7zDuD62ysALeOwX/SyO6+4X5nhV/KvQMSpzED0cR3NfAVfhZMQpxZ06E2LdDEgbCp1cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tXqUVW5E; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZTufoNb5; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747329509; c=relaxed/simple;
+	bh=jLsjmy6XbR3/FzmrHbEaCohAPEq2r3hRO6K/9SXIuJ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MdB3uOahmYWHh6I/H5Es3e4MKcw2Z1asdfwPnhdAeeAv7EzoRu4fmMNlm8ailkFD/7v+rkMYkEMpdGxkNaaDf5Nj1b6KeqbztdNRyNmMDmI3Fn0YkzQ2Om9SG9+RbFsnGW9i3U3TNdo9TowGskJ0YCLN9fGznBQRk7AnOu3ahJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NeJrTNXr; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tXqUVW5E";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZTufoNb5"
-Date: Thu, 15 May 2025 17:18:06 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747329487;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Pw173M98a5WT126GMnv8GVkdic7b6WV49PZGTOyDE9I=;
-	b=tXqUVW5EqPsyP9zq59pdPZJdHXcyR1dIYgKIc9YgQ7YmxDTDiBBfetdGVL840QB/Z/vwMn
-	ljIMzXSvz5Y1TLPKZj3dDFMvJNBxbEQMIse4f28u5eJfwW7oSNcWC87z6h1CI8gFgff/jG
-	layj/5+CZ8AeONwmgLCqCwUIpOrTtHa7VqWAios/guDjGY8Ge4rEMHuwjhMOcq17q1r9QU
-	H7GuWeAHpbSAPM/cW0o6bNWA7DtD0xfTBpA6C8QiOLKzow7qkZ9vT0YkcDYUKETIui2uUn
-	c50U9ruou2w0BZXudGnSOPvH3zChwfHTCkfZTsV3UZ3dGaPYySSMW/xkSJJ+jg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747329487;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Pw173M98a5WT126GMnv8GVkdic7b6WV49PZGTOyDE9I=;
-	b=ZTufoNb5S1BPHjt3pzlJPu99yOnVj9GiubnFr1iJIHX3pdbzsDhHG8pKAVQlMKNhHYq+ae
-	FRJ8pZ4ymQDXolDg==
-From: "tip-bot2 for Andrew Zaborowski" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/sgx] x86/sgx: Prevent attempts to reclaim poisoned pages
-Cc: Andrew Zaborowski <andrew.zaborowski@intel.com>,
- Ingo Molnar <mingo@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Tony Luck <tony.luck@intel.com>, balrogg@gmail.com, linux-sgx@vger.kernel.org,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250508230429.456271-1-andrew.zaborowski@intel.com>
-References: <20250508230429.456271-1-andrew.zaborowski@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NeJrTNXr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747329507; x=1778865507;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jLsjmy6XbR3/FzmrHbEaCohAPEq2r3hRO6K/9SXIuJ0=;
+  b=NeJrTNXrJR9upcqFQX1eU70PQL0QSlMXZYLsFkA89Qzo2PGt9P2nsIPY
+   +THPW66ys+qrLwf9GfQMMiyW9HKyZVIyVxbSMmQrmK/2WuVHmlUTYDO++
+   WdOt2kMwIGVcJCOyIOIJ3tB+tnsBqvAVLRHX+p6BMJMLCjD5PMigRWs7P
+   Tw4HN/+ZWSq2Je4oj9NVcVT2t+4BCXzZN0fyjNcaOwifB0irBRqE1k+sd
+   3494SJlSO1xj/HcLwdMkzyw1ywkkpCHhPBoDBjKbFDjDYfhiIjcj9MtFp
+   o1FY/Y3kJ2kVENVIA2sg7s010cDVh40YInTqw/VspZKeZuLmQRhTXn2sF
+   Q==;
+X-CSE-ConnectionGUID: 4sxXWMGTTf+0BQQyHJr3ow==
+X-CSE-MsgGUID: bOuaWFw2RMa+9pP2zK3mqA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="71793893"
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="71793893"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 10:18:27 -0700
+X-CSE-ConnectionGUID: N3nhctrSSnavYWRNPqzbJg==
+X-CSE-MsgGUID: MUo9qKZJTXiui09gg8s7Ow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="175559623"
+Received: from gkhatri-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.13])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 10:18:27 -0700
+Date: Thu, 15 May 2025 10:18:21 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Shung-Hsi Yu <shung-hsi.yu@suse.com>, bpf@vger.kernel.org,
+	linux-mm@kvack.org, Andrii Nakryiko <andrii@kernel.org>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Uladzislau Rezki <urezki@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, regressions@lists.linux.dev,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Eduard Zingerman <eddyz87@gmail.com>
+Subject: Re: [REGRESSION] bpf verifier slowdown due to vrealloc() change
+ since 6.15-rc6
+Message-ID: <20250515171821.6je7a4uvmttcdiia@desk>
+References: <20250515-bpf-verifier-slowdown-vwo2meju4cgp2su5ckj@6gi6ssxbnfqg>
+ <C66C764E-C898-457D-93F0-A680983707F0@kernel.org>
+ <202505150911.1254C695D@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174732948660.406.520307759495972754.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202505150911.1254C695D@keescook>
 
-The following commit has been merged into the x86/sgx branch of tip:
+On Thu, May 15, 2025 at 09:51:15AM -0700, Kees Cook wrote:
+> On Thu, May 15, 2025 at 07:51:26AM -0700, Kees Cook wrote:
+> > On May 15, 2025 6:12:25 AM PDT, Shung-Hsi Yu <shung-hsi.yu@suse.com> wrote:
+> > >There is an observable slowdown when running BPF selftests on 6.15-rc6
+> > >kernel[1] built with tools/testing/selftests/bpf/{config,config.x86_64}.
+> > [...]
+> > Where can I find the .config for the slow runs?
+> 
+> Oops, I can read. :) Doing a build now...
+> 
+> > And how do I run the test myself directly?
+> 
+> I found:
+> https://docs.kernel.org/bpf/bpf_devel_QA.html
+> 
+> But it doesn't seem to cover a bunch of stuff (no way to prebuild the
+> tests, no info on building the test modules).
+> 
+> This seems to be needed:
+> 
+> make O=regression-bug -C tools/testing/selftests/bpf/test_kmods
+> 
+> But then the booted kernel doesn't load it (missing signatures?)
+> 
+> Anyway, I'll keep digging...
 
-Commit-ID:     ed16618c380c32c68c06186d0ccbb0d5e0586e59
-Gitweb:        https://git.kernel.org/tip/ed16618c380c32c68c06186d0ccbb0d5e0586e59
-Author:        Andrew Zaborowski <andrew.zaborowski@intel.com>
-AuthorDate:    Fri, 09 May 2025 01:04:29 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 15 May 2025 19:01:45 +02:00
+After struggling with this for a while, I figured vmtest.sh is the easiest
+way to test bpf:
 
-x86/sgx: Prevent attempts to reclaim poisoned pages
+./tools/testing/selftests/bpf/vmtest.sh -i ./test_progs
 
-TL;DR: SGX page reclaim touches the page to copy its contents to
-secondary storage. SGX instructions do not gracefully handle machine
-checks. Despite this, the existing SGX code will try to reclaim pages
-that it _knows_ are poisoned. Avoid even trying to reclaim poisoned pages.
+To test just the failing case, you can run:
 
-The longer story:
-
-Pages used by an enclave only get epc_page->poison set in
-arch_memory_failure() but they currently stay on sgx_active_page_list until
-sgx_encl_release(), with the SGX_EPC_PAGE_RECLAIMER_TRACKED flag untouched.
-
-epc_page->poison is not checked in the reclaimer logic meaning that, if other
-conditions are met, an attempt will be made to reclaim an EPC page that was
-poisoned.  This is bad because 1. we don't want that page to end up added
-to another enclave and 2. it is likely to cause one core to shut down
-and the kernel to panic.
-
-Specifically, reclaiming uses microcode operations including "EWB" which
-accesses the EPC page contents to encrypt and write them out to non-SGX
-memory.  Those operations cannot handle MCEs in their accesses other than
-by putting the executing core into a special shutdown state (affecting
-both threads with HT.)  The kernel will subsequently panic on the
-remaining cores seeing the core didn't enter MCE handler(s) in time.
-
-Call sgx_unmark_page_reclaimable() to remove the affected EPC page from
-sgx_active_page_list on memory error to stop it being considered for
-reclaiming.
-
-Testing epc_page->poison in sgx_reclaim_pages() would also work but I assume
-it's better to add code in the less likely paths.
-
-The affected EPC page is not added to &node->sgx_poison_page_list until
-later in sgx_encl_release()->sgx_free_epc_page() when it is EREMOVEd.
-Membership on other lists doesn't change to avoid changing any of the
-lists' semantics except for sgx_active_page_list.  There's a "TBD" comment
-in arch_memory_failure() about pre-emptive actions, the goal here is not
-to address everything that it may imply.
-
-This also doesn't completely close the time window when a memory error
-notification will be fatal (for a not previously poisoned EPC page) --
-the MCE can happen after sgx_reclaim_pages() has selected its candidates
-or even *inside* a microcode operation (actually easy to trigger due to
-the amount of time spent in them.)
-
-The spinlock in sgx_unmark_page_reclaimable() is safe because
-memory_failure() runs in process context and no spinlocks are held,
-explicitly noted in a mm/memory-failure.c comment.
-
-Signed-off-by: Andrew Zaborowski <andrew.zaborowski@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: balrogg@gmail.com
-Cc: linux-sgx@vger.kernel.org
-Link: https://lore.kernel.org/r/20250508230429.456271-1-andrew.zaborowski@intel.com
----
- arch/x86/kernel/cpu/sgx/main.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
-index 8ce352f..7c19977 100644
---- a/arch/x86/kernel/cpu/sgx/main.c
-+++ b/arch/x86/kernel/cpu/sgx/main.c
-@@ -719,6 +719,8 @@ int arch_memory_failure(unsigned long pfn, int flags)
- 		goto out;
- 	}
- 
-+	sgx_unmark_page_reclaimable(page);
-+
- 	/*
- 	 * TBD: Add additional plumbing to enable pre-emptive
- 	 * action for asynchronous poison notification. Until
+./tools/testing/selftests/bpf/vmtest.sh -i -- timeout 20 ./test_progs -t verif_scale_loop3_fail
