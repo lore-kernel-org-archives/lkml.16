@@ -1,126 +1,146 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84BD1548C;
-	Thu, 15 May 2025 13:23:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D77481C4
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 13:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747315414; cv=none; b=PMAX8FUcejnaPrZE8QbhQM5eBI0xhQnqd8YiYXwwWbSBetjZTTgBPzMvHq4JPJVdyEvh9k+qLxmh5tCzd1sMvHbfbtd7BGnGXb2KaYhUSagKxit11VDrerKid9bZrJKjte0SyK4BUEW1MwwjHk7RWA6Nm97JtR/PjqhXnFgJ/dk=
+	t=1747315645; cv=none; b=aXaKbULBJQj2L+GK4Ba+W37riqnGo1jIRbfkn5aFchDpvkqnILfQae3UqiHx6u4+O4lS6j4kq9wQB2t9qbesiUpI5s8nnXbR73X019GVeR9cSqXRgqaEdV0/0HGJWKv9VTxNvi4DdiDhRNbk3CtsaJe95AFvL2PLPU4udvBdhTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747315414; c=relaxed/simple;
-	bh=g0ufLssCm8Alj3cTVt8QALFwQMtIzbKfeEj47LWOWZA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=OdBZkUmHSrkRj9xo9EzNqxMQ5VPudPMsw9BrT4M5ID/swnbnw4+w3n989FC5mpn1r+igveZSZsPpSsemsXR+FKubgbOoDtfm5nMOYgcraPwcWUeGakUzu3vKaG79XKwBSoq1fsvRXh2hZNMz58ojwBNhhs147aK+b63+PBaMpeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fWarpOz2; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747315645; c=relaxed/simple;
+	bh=wGT0OJ+uU2Wms/xfD/ecjY4SjYeFOjKB+DUjQZ0QeCY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R9rKpImolyBy0Njqc5LsChD7FeucySYcQ2KzAQAlPc4dShK3PdZjOAqBBUgGu4Y1w0p1QOk2P48tphQ95SkdxPWKimwf3/NCdYE7o06vbrrYAyGQHHGdwh0JGOVpMorNRhD0vKWkSnYx2oTzC0W3UT9Z81qshDLeyzKAxFIWa9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WVo6bm+P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fWarpOz2"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54FDEJBY029112;
-	Thu, 15 May 2025 13:23:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	x9u0p2en3cKLL5HJYv09X7cVjcWQ4JEERQsO7QLXiTg=; b=fWarpOz2XfPntNEX
-	5ikT7SHztSI44unUSOnLWPd5gKZTjTzR+N6NnUlajq2x/gJUWL1/avkFr+faaWEK
-	S6RTx5ptT7bn0zdhc1pHf0wBiZJMF5EnTKVBHkYA3AgaVTSX5SBUvzSd2SetQ20n
-	ShBWz5Cr0RV9ILf3Vindm1sD0jWc/lOTL5HbuWtum0PrhXz4oU7xhyejtD4JRUI4
-	XPCQWbmKQVITb8p2c9t/sAD9mhY6RZWduvnv7bUt5XpV5+ct7h3LB/5Kir0248VS
-	IPpSJIj7AJHTTNiLivtHI56ewgpVpTEGmbvvJUiwtOloUH3VDpA60gm59sd7Bemg
-	hiAOuA==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcmpce2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 May 2025 13:23:21 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54FDNKa7007958
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 May 2025 13:23:20 GMT
-Received: from [10.50.16.181] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 15 May
- 2025 06:23:17 -0700
-Message-ID: <f7df808c-0724-3f4d-b910-6e44637c7aaf@quicinc.com>
-Date: Thu, 15 May 2025 18:53:15 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVo6bm+P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 855DAC4CEE7;
+	Thu, 15 May 2025 13:27:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747315644;
+	bh=wGT0OJ+uU2Wms/xfD/ecjY4SjYeFOjKB+DUjQZ0QeCY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WVo6bm+PWLvpr+9XXIQIh0CXf17I7ql275Sf84Xn5fgPYtbIzcOTBp0dK1ismK+0A
+	 C9fXI2Ea5pNmmllukJVzS5YfU56PTSzMv6bBjIKXazfFMAmzZBZUG7HuQ9bdp/dBL0
+	 UaxbomFoV1h3B1v34qbxGXKajOjTBCyYZ//Sjt/1lwLIuliQ0AdJcfvkDf4R7zxrN1
+	 RmnVj6r6TljrpR97d8FXCHj7kxRdLs7icXe9QdwMQkQGr3lQtocohRUDnoJSvjq8KY
+	 Wo7eb1aJsEewP4VkDEjaj5TM5bR8eLLWMYroVYdRKQC5W7NAbjRgfDn4pWoge42aJu
+	 iKFIWAOrIZF9A==
+From: Ingo Molnar <mingo@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	=?UTF-8?q?J=C3=BCrgen=20Gro=C3=9F?= <jgross@suse.com>
+Subject: [PATCH -v3 00/13] x86/kconfig: Synchronize the x86 defconfigs with distribution configs
+Date: Thu, 15 May 2025 15:27:06 +0200
+Message-ID: <20250515132719.31868-1-mingo@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 1/2] media: venus: fix TOCTOU vulnerability when
- reading packets from shared memory
-Content-Language: en-US
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Dikshita Agarwal
-	<quic_dikshita@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Hans Verkuil
-	<hans.verkuil@cisco.com>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Vedang Nagar <quic_vnagar@quicinc.com>
-References: <20250514-venus-fixes-v3-0-32298566011f@quicinc.com>
- <20250514-venus-fixes-v3-1-32298566011f@quicinc.com>
- <ad92cf06-636a-417a-b03b-0d90c9243446@linaro.org>
- <0c50c24a-35fa-acfb-a807-b4ed5394506b@quicinc.com>
- <b0c48989-4ce7-4338-b4bb-565ea8b6cd82@linaro.org>
- <b663539d-5ad6-399b-1e7b-0b8b9daca10d@quicinc.com>
- <bd704149-694f-4d89-90d9-a22307488743@linaro.org>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <bd704149-694f-4d89-90d9-a22307488743@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDEzMSBTYWx0ZWRfXx3aCyG3lnoeB
- JbCAD4C0Bd7wKHH5p4Oefu+5YyxvhOl5jB35c9KRjMG0pk/+rPW/NoT5qvtbSf/KliCVOIffimH
- PU0zV6lRmtKMFJfxXPoZLKAcvOF2Xn0vx+YrrcR5ZgyrJ9ubx9myrqpGWkMYEIw9RLYyQoqR4Bm
- UGoAZk7ebduGxNQuj471bgST0gGfXEJnXy7js+Vo7vlyQ8PnHz/71V+fIJYQ1Yk/+SufJrpTUom
- z8jWmWUgL5zL5VtVB+gSmHzzDtSHfZBYKxpuBaMMz2g9pOV/ZSoVgTWADPgf2OVgVhi49XhHZm2
- OYyzPyHHe1wGMyJ85OPf3ByJk7yeuOYP2TqkhVFaHVdGzmAPVRhJ4GMYrM9aJunpYB0ZeBiNHPd
- AaOATWwookkzd++skvBAq5H6TXqMPaqtYCbh7dVFVbD2aWYSRZxegKUx2TcNQjOBgywNiHQ2
-X-Authority-Analysis: v=2.4 cv=G5scE8k5 c=1 sm=1 tr=0 ts=6825eac9 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=n5NGAYUfpJiGUcY_KLoA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: CbIXEGm2PcjNSKLV4OTSEDq8uabBQIMj
-X-Proofpoint-ORIG-GUID: CbIXEGm2PcjNSKLV4OTSEDq8uabBQIMj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-15_05,2025-05-14_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 mlxlogscore=999 clxscore=1015 phishscore=0 bulkscore=0
- suspectscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0
- malwarescore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505150131
+Content-Transfer-Encoding: 8bit
 
+Changes in -v3:
 
+ - Drop patches that renamed the defconfig files, and the
+   introduction of the x86_32 subarchitecture string
 
-On 5/15/2025 6:17 PM, Bryan O'Donoghue wrote:
-> On 15/05/2025 13:11, Vikash Garodia wrote:
->>> But what if the "malicious" firmware only updated the data in the packet, not
->>> the length - or another field we are not checking ?
->> That does not cause any vulnerability. You can check and suggest if you see a
->> vulnerability when the data outside length is an issue w.r.t vulnerability.
-> 
-> I don't believe you have identified a vulnerability here.
-> 
-> You read a length field, you check that length field against a MAX size.
-> 
-> Re-reading to see if the firmware wrote new bad data to the transmitted packet
-> in-memory is not a fix before or after the memcpy() because the time you do that
-> re-read is not fixed - locked wrt the freerunning firmware.
-It would be more meaningful if you can suggest the vulnerability you see with
-the changes suggested i.e adding the check in local packet against the size read
-from shared queue. Based on that we can see how to fix it, otherwise this
-discussion in not leading to any conclusion.
+ - Rebase to v6.15-rc6
 
-Regards,
-Vikash
+This series can also be accessed through my Git tree:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/kconfig
+
+Thanks,
+
+	Ingo
+
+===============>
+Changes in -v2:
+
+ - Switch from CONFIG_DEBUG_LIST=y to the lower-overhead
+   CONFIG_LIST_HARDENING=y option
+
+ - Add Hyper-V
+
+ - Propagate the above changes to x86_32
+
+ - Add review tags
+
+Changes in -v1 (initial announcement):
+
+Historically the x86 defconfigs aimed to be distro kernel
+work-alikes with fewer drivers and a substantially shorter
+build time. We regularly ask our contributors to test their
+changes on x86 defconfigs, and we frequently analyze code
+generation on such kernels as well.
+
+In practice, over the past couple of years this goal has
+diverged from what actual modern Linux distributions do
+these days, and this series aims to correct that divergence.
+
+Perform a thorough modernization of the x86 defconfigs, and
+apply some cleanups to the x86 build system as well:
+
+ - Enable various kernel features that the most popular
+   Linux distributions have enabled in their generic
+   kernels these days: KVM host, BPF support, UBSAN, various MM
+   options, debugging options, various scheduler and cgroups
+   options, support for a number of guest OS platforms,
+   and other options.
+
+ - More specifically, these changes enable a rough superset
+   of the kernel features enabled by Ubuntu, Fedora/RHEL
+   kernels.
+
+ - Clean up the organization of the defconfig files as well. [Note: REMOVED in -v3]
+
+ - Add the ARCH=x86_32 build target [Note: REMOVED in -v3]
+
+ - Synchronize the x86_32 defconfig to the x86_64 defconfig:
+   this file is really just a random set of options configured
+   many years ago with no relevance to anything people are
+   using today anymore. Just follow the 64-bit options to the
+   extent possible, to have at least one modern frame of
+   reference.
+
+ - Clean up a number of kbuild details
+
+Thanks,
+
+	Ingo
+
+================>
+
+Ingo Molnar (13):
+  x86/kconfig/64: Refresh defconfig
+  x86/kconfig/32: Refresh defconfig
+  x86/kbuild: Remove ancient 'arch/i386/' and 'arch/x86_64/' directory removal 'archclean' target
+  x86/tools: insn_decoder_test.c: Emit standard build success messages
+  x86/tools: insn_sanity.c: Emit standard build success messages
+  x86/kconfig/64: Enable the KVM host in the defconfig
+  x86/kconfig/64: Enable more virtualization guest options in the defconfig: enable Xen, Xen_PVH, Jailhouse, ACRN, Intel TDX and Hyper-V
+  x86/kconfig/64: Enable BPF support in the defconfig
+  x86/kconfig/64: Enable popular MM options in the defconfig
+  x86/kconfig/64: Enable popular kernel debugging options in the defconfig
+  x86/kconfig/64: Enable popular scheduler, cgroups and namespaces options in the defconfig
+  x86/kconfig/64: Enable popular generic kernel options in the defconfig
+  x86/kconfig/32: Synchronize the x86-32 defconfig to the x86-64 defconfig
+
+ arch/x86/Makefile                  |   4 --
+ arch/x86/configs/i386_defconfig    | 130 ++++++++++++++++++++++++++++++++-----
+ arch/x86/configs/x86_64_defconfig  | 128 +++++++++++++++++++++++++++++++-----
+ arch/x86/tools/insn_decoder_test.c |   2 +-
+ arch/x86/tools/insn_sanity.c       |   4 +-
+ 5 files changed, 229 insertions(+), 39 deletions(-)
+
+-- 
+2.45.2
+
