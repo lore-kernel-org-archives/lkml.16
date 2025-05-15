@@ -1,246 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68B010E5;
-	Thu, 15 May 2025 04:39:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747283970; cv=fail; b=LcPqumyASMsQU7P0X3xcBE9OKTPR8/ZLTA0aD8yazxbSE2hI1bhsGRh1GKcau9qyeT4ltWzzgevB1WGONwAXyQTHyz7zx12grskLQvkvFdN+ML+TxfJmyN5nT7vcHHfYpWF3jyKS9Ps74dWKDPSR1GJMSU8t/kw0vTKZtehJwiw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747283970; c=relaxed/simple;
-	bh=RbHssT6mnKqjMtPIcCOKhUuXBK3mKV0DfcNdVlaSKUk=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=q/dLRtWbp31XDtbjcnu9Z08nHnh8TqpA7PLEDGDr0W0UBX0F6gmWaR6MECTiv0j+4NyXoKjmeRDcsiXEKXQmS04FBZfWXeE7NK0kL2UpJaHjkCH5GVGPANsld5wBgmETD6cLDtLDPV+yfEO23J1prAp3ez4Dbgn1T5cLzJP5kbA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F0S4L3El; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1CDB3596B;
+	Thu, 15 May 2025 04:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747284089; cv=none; b=pCR7YNmprThfmHme6pnJIi91jKzLZCYJEjrlzfpfM23rEEXEHOlmXXUi8JKXWSMZogp1QYlFUXNQRA85mWC91cm7X8dzDNqqY4TshhXQQAx7xesRt4+E1QPbzHeOzuij/NMDjbpFTCN9KhWrTsA8NEJh9IflyqQSfeS4VXSut/o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747284089; c=relaxed/simple;
+	bh=caTac13LQVC/U723M9009M6uh2ZgMJ6u9O1QnsGUjsU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lPWJQPOGjVPdFbKOlslyvSjihHIftdjtWL24rApa3T54cm40StO9gkOlPEeGCVwGnYXLH+FSvMVDtJCZFW53Ehq4KtqCXD/8lYfMyeVwfyWy2ovVNlsYgoCfbRW5Ysxx9KIy+V+bf7SJ6z+i/p1gqJ6w7yO/id+XvkXSqw//xJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=c2XrBq4F; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F0S4L3El"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747283969; x=1778819969;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=RbHssT6mnKqjMtPIcCOKhUuXBK3mKV0DfcNdVlaSKUk=;
-  b=F0S4L3ElStF39wz0i9e4tudJYZY9GjJKWF/HOWHvmmgpnNETPtg6ONat
-   +3LceqcfkfFmQ82dpTmxYQA5wt0PsjsW+a4AXsYwsJx4l0uw8BQFKSieh
-   9GXd6chFHgbZVWuB7SzHDBR6YAwAcE8uqFLhgFu7HvYvIol5Q1f3HgJnS
-   FHBb68WL2W6zoofZoGvv/pTBHmY8Hmu/KMB+hv3SF5ob1S9TyCEQaIg4k
-   Lv7mG/grgMxKd3uOlzj7rzJYkpXdKFFDhcNSu2sAnr69mAxVmi+1jfl0H
-   Hkje55x+9ereoc8/Yh5B0x4UWvtY2BJxWFjgSn2Rf7k7j2vH2sy+Kr6F5
-   A==;
-X-CSE-ConnectionGUID: hH7RmqBsQ8mmuIHBRWiSWA==
-X-CSE-MsgGUID: Xc5joeZSTHu4fL8VMOVHUw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="51844747"
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="51844747"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 21:39:28 -0700
-X-CSE-ConnectionGUID: WC1oxWNjTF+AuaznMSFTkA==
-X-CSE-MsgGUID: klqBjN0pQ2CsPUbvkbyJ7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="142263962"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 21:39:28 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 14 May 2025 21:39:27 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 14 May 2025 21:39:27 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.173)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 14 May 2025 21:39:27 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mohCWXw4nimCVcxbRMnGRuP37UjwiGCT4HQRuCry9aQzjWq+Ov+BBa0bTTtsp5rTLeGN7GmEfq53Ar+9bK+AiJIezNzBdhtYAow9U63xAp797ItPNp9YCsfui7LCOxbakdgpfFmrE758DNoBs+x68Nb/Rk+ihiJj5LAbJTZ6RbaULP2L6bL4DQyGEbNGY///KwmfsCNPYS1cbLLO+/HOraCVaOuHu0Y2UP3x3I/CYuvkyelfPxzr8ahCjw1dgx5EAD9Fcdh3BjzXK/xw+zNfFvvUpnQP2lNq1B5y/OhRYlSitliuKxX1K30S9pPv2oHcp7jAbgxKOIHMzwyKWojfXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ED4emRdUg+cXU6dWhKZQurgOO7qZg9TPm6K7Fc86SrA=;
- b=gGJHRRqOVOobB76RwzYtuiXJck8/he5Io42KkNNty+IfwzXdFUGXmP1fZYCmvk+lUP/e8O1uUWEQEW5KnCy5FTxFz6T4AzLysOgPSMYicNyqBJ6f1wzd6CUkHJJXjhIcE7SW7ZEQoMCgxBfU6fqSHsiSBDQAhqiRCjKPFa4UvTHeNpcl//M8R8BIuvB6Ph6BVjIUl67G21jVoz5SYizXnSQGcNJ5pmNWhL8w+JzOo7nwJYLYtPDxjZhV1OGSq9ArNE3aO/K1WLkqZYZDuTkwznvzC6FxbtV7WNpCu22wMGj7MROXjITtHVJ/zJZiYHZeCbwqLr3wcZjRl3cHZlchTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH0PR11MB5949.namprd11.prod.outlook.com (2603:10b6:510:144::6)
- by DM3PPFE50071912.namprd11.prod.outlook.com (2603:10b6:f:fc00::f57) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Thu, 15 May
- 2025 04:39:25 +0000
-Received: from PH0PR11MB5949.namprd11.prod.outlook.com
- ([fe80::1c5d:e556:f779:e861]) by PH0PR11MB5949.namprd11.prod.outlook.com
- ([fe80::1c5d:e556:f779:e861%6]) with mapi id 15.20.8722.027; Thu, 15 May 2025
- 04:39:25 +0000
-Message-ID: <03216908-6675-4487-a7e1-4a42d169c401@intel.com>
-Date: Thu, 15 May 2025 07:39:18 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH] e1000e: disregard NVM checksum on tgp
- when valid checksum mask is not set
-To: Vlad URSU <vlad@ursu.me>, Jacek Kowalski <jacek@jacekk.info>, Tony Nguyen
-	<anthony.l.nguyen@intel.com>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, "Paolo
- Abeni" <pabeni@redhat.com>
-CC: <intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <5555d3bd-44f6-45c1-9413-c29fe28e79eb@jacekk.info>
- <23bb365c-9d96-487f-84cc-2ca1235a97bb@ursu.me>
-Content-Language: en-US
-From: "Lifshits, Vitaly" <vitaly.lifshits@intel.com>
-In-Reply-To: <23bb365c-9d96-487f-84cc-2ca1235a97bb@ursu.me>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: TL2P290CA0015.ISRP290.PROD.OUTLOOK.COM
- (2603:1096:950:2::18) To PH0PR11MB5949.namprd11.prod.outlook.com
- (2603:10b6:510:144::6)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c2XrBq4F"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=bx2b5u0UIRHpVoa/cRaHEgW1QwNFD2w2QJQlPwvTLYw=; b=c2XrBq4FdmOhmUe9/Fim0tB23C
+	Anh7n3crTKCIzBdlLLvXe85YGRb28OEArR6oV1dYk+lC5LgRE0+tFuu6YDHAP9W1OD7Ar5BQwTztx
+	5GHIKgEqFyp9OZ3GyXtL+K83o7UyKtW+15UiQ1mG8tE8STi1rd2BdQ/XBLn7ZnsAAqBH1M+hYU5YQ
+	TRJQiVQqpxoTDzYY4eBgO4PLjv51kwv0I12tMOJC9E3p2egwQzmIeZq2rIO8TXXYmwfzmJPA184nv
+	LdufpwDRvQBes8/EEU9q5MvVmYEZi4ThPsmoRB+6vFVKoLsg/S/a4p9/hAmetxPfSO1crQ4noP8mh
+	dFqfjQWg==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uFQP4-0000000HL60-02cW;
+	Thu, 15 May 2025 04:41:07 +0000
+Message-ID: <86845229-d8b3-4dae-89d3-888dc4d73ea2@infradead.org>
+Date: Wed, 14 May 2025 21:40:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR11MB5949:EE_|DM3PPFE50071912:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1dd59dc6-2d1d-4ad4-1778-08dd936a7810
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?UXZGbWlFSG9ZaFlEVnlLNldQVW15MmIyL3BlQWphNlZNY0JrMmlFdzN1WXNj?=
- =?utf-8?B?aVhCckxKSGd6M2FRelJHODhKZnMxUCtvWGVDVS8vUGFjRFRpVUV6RDR1QjV5?=
- =?utf-8?B?QWduU2U4UmtZaVI3MTNxZ0E5RVNEVkEvNWhQSno2R2pmTHluY0V6RXFzTk83?=
- =?utf-8?B?VnQ0T3hCNzBjLzZwYW0xN0k0Vk1GdUNZSmcrbWhpZTFxZUVJaTZOc0VDRnJ1?=
- =?utf-8?B?Uml1MlhGNlRhcU9jTkVFTG9oL0tyN3dSVjNYZFhCYUlwejFmcW5rRk42T0Z6?=
- =?utf-8?B?SXFkVXErR0xrYTRQUWVIU2RFSjFSbmxUWGxUTmx3eXlGZmQ2eG1GdVF6MDNI?=
- =?utf-8?B?TWlMUWRLUG56dEdVNEJJQ0RUdS9DcEYzNXZ3RmVUa1plK0s3dHJWbG1sdUZt?=
- =?utf-8?B?M0pNclBTK2xPb3BwZjZOZHdxalZjTE0yRG5KQlZTeWt6d3lXUU5ibzQzcXJ0?=
- =?utf-8?B?amNkYkxENkxvd2JiemN3ZDRCNjR0U2FlUWFJWUtjenphT2craTdtZ2dNMTZI?=
- =?utf-8?B?c0JsSnVUYkRQTDlOV1dRYmNyRURzRzlEcGJva2Vwd0s5Y1p5VXBNNUpXeUdY?=
- =?utf-8?B?UkdyWjFMbTAvdzY0VEVNekhBZTNzSWNQZzNHRVJBUjBlOHlYWDRkN1BFTVVI?=
- =?utf-8?B?V3hLQUFsWHFGYWlwb0l2SVd6QmhPK1NwUDF2TnV1MHVrcDgrYzhWYUtER3p4?=
- =?utf-8?B?b1VyUnRWcTgzVlhIS3ppZCsyQktmM3Rib3QyaEk2a2xBN0c2bDVBUnpVdFNY?=
- =?utf-8?B?UUFDeXgyODFpNUtwT24vMGZUMThWYWFmbzdoTXhxb2Zic21PeWtidk9nZ09h?=
- =?utf-8?B?emVseS91OGtlWG5XdzI0cTdWQ0xRQzR3ekxWaGpTR3V2TlViaEZOaEV5UW0y?=
- =?utf-8?B?d0Q0dnp5a0VpcGVnNUR1YjBDSUE3NFd3ZzZSWkkrQ25tMDhMKzhyQnpqbXhh?=
- =?utf-8?B?LzhaR1dyS0VQMkZPLzNHWS9MK0FCTmhCb2c5c2VleFZGcmpXTkhSMmRLaDMr?=
- =?utf-8?B?UDVmL21DeE5XSW1ucnpLUmw5ZFV4bFNSU2FleWFtREs1VkRBVTFpOHlPbzBR?=
- =?utf-8?B?T2JmZ1RyS3ErYlB0aXg4Q2F2UitXRCswRWxPaFNsbCsyWEpDbTFDaHU0RkFn?=
- =?utf-8?B?RUJJYzZ1RDBPWEVobVpMYnJaeEcrTHk2b0tFTHVpZVNYMWUzTlNXUFZCRjgr?=
- =?utf-8?B?ZDFtNGdOMExPcXdZM3N6OE5SRnpGQW1MZVczN1p4VllOVTRERVVRelpvcllr?=
- =?utf-8?B?V3U3YS80MkN3S0pPQlFrYTJkbFEwYWZGRFdhMko0Zk52R3VRUXlUT0x4VnNW?=
- =?utf-8?B?SDlxS1ZZZ3hwWkI3VjFzSC9GSnZXM3dsWmQ0L3ZPcGtpNlZmalhkRVdCNFV4?=
- =?utf-8?B?T1pCN1lnWjFocXQxMHY0YjJMSVE5SFFORWhIUDFzTENxRjlMZnZ3Zk1HV1FZ?=
- =?utf-8?B?VktZVHEzWEphdDVpN3VLcE1sV0NWL2JGQ2JJZlZuejdvYnJFWGpOWWFnWWp3?=
- =?utf-8?B?eGlKS0kyV0taeHpkaUZaY082OTZrTTVyMWpXWjVZQUtldXh6RDF3WHhVV2U3?=
- =?utf-8?B?YnJPSHpRNk5jZ0o4VU5VYkRHdXp0OWZyR3BnVEJ1VlJxQ1UxMzdHaGZzU0xG?=
- =?utf-8?B?S0t5bWZRczUwaHZjM3RKR2FDYURZSDNTelJydlpvckc1UEhFcE9VRzJOeUhG?=
- =?utf-8?B?OW0rZHRqS0FjalFPVFFoSThscHFYMnpSZ0JodFpwOWh0STR5WkREcFRaTjVU?=
- =?utf-8?B?Rk5lT2ZKWDZublF3Sjg1RXlsM0l6eTFoOXYvL3RUQ3VyQ2szWm9SOERRbHVB?=
- =?utf-8?Q?u8WmF59JUVyNG/MQ2Nw78vLQ5dLC6E2mLJjWU=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5949.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cjNjKzhJT3NMN2ozZEMxUU0xeVVkUWVPZVU1WWNJdFRoK2pTQUJHVmozaWpI?=
- =?utf-8?B?Zkttb25KRTNGeVdZT3l0ZTVTVDl3blpZS1dndlBjK1JnOElBdTBUbU0yNzRI?=
- =?utf-8?B?OStwSUgrNXU3Y1hPaDE1UU02Rm1Sd1NUNitvZlpJODduM1BRY0doY3F4S1lB?=
- =?utf-8?B?WXRzcEZCTG9XWFdDNnlodE1Gc29QTFdBT0FJdFBOdjVsWWpnNjkyZFNhMzFo?=
- =?utf-8?B?eVJLaHNydVpCNmdOWG9WbDFmNW52S2FHSTEzVHNzZCsyRFA3TkM5T2d1TjRZ?=
- =?utf-8?B?bWI2c0F6b0FrVzdSeVpjRlcyMythOTVpQ2Y3VWtxRWVLK3ZjdXpDNmxqUTVJ?=
- =?utf-8?B?bnozQ0lSeE5ySm1yNjZqY3NVK29nVDY0dzkwYmNPZXE2cU9jWlY4bnE5cVJV?=
- =?utf-8?B?OWN0RHNCcStZL2tTVGd4am5Ba09Hb1JMSVBLcTJIWW1XZUIwTUEvNUZ5TFVm?=
- =?utf-8?B?TEJyTjFoZnkxQ2NqYThyZVVnNmxWMXpnWUJNakQ0NHpjTGJ4c3pBaWpoY3pk?=
- =?utf-8?B?WU4xTTY1RHJEc2ZKdytMbWhtRDBTdmZqQktMcy92UjdGTkNEbWRrRklHU1lZ?=
- =?utf-8?B?eS9vYUgzSFIzVlRXK0VTeEczUTBFdFNmTTRQZ3ZJM1BUendDY1h5NHIxT01X?=
- =?utf-8?B?dlFwQmpnVDhZRnFSVERWMisycjdndXlISnJGd1NPVFpkVWZEa200NVIxL0Jv?=
- =?utf-8?B?L1YzSTIvdW1FOFpBS3Fmc0JWMUZYdUQrcm5VRk1WSVNTUUdnOUhTTzlUaUU4?=
- =?utf-8?B?RVpZSGV3NDdOMlA1NmwyTWpydmRZc0t5bjE4TURaUytsbWhhREdPWnNyTFp4?=
- =?utf-8?B?eDhzU0FGRUFYYXdwSGZKU2FwalY5WlZuOGxXa05zcjEyam1tYXBDbGVZQjJi?=
- =?utf-8?B?elV0SndrVkdNYmg0bTVKOWlhVUNOQUFTNS9XWnFtOG5WL3JvMHBSaVNudzZS?=
- =?utf-8?B?d0oyUWZLSEtCT2FSdFlIbnhXdE42WXRmek43MTZ6cnE1dGk2bjRhaDI4bVRu?=
- =?utf-8?B?eHBVMkRpK3NOZThVK256TXE2Y1o5R2lFUDkvMXlrWWJKZE5aWTloaXVXRjZw?=
- =?utf-8?B?eUJpZFYyajdJZzluM0pzS3hET2JkVDczMmtKZGlCUFBZNXY5SXhhTUhmUnNj?=
- =?utf-8?B?bktWMVFRTU5vdmNHK2NmVTV0ZHBpVlBPTDdCbFhIdUhsWXJsSnNIVUcwZnhR?=
- =?utf-8?B?blRQdW95VVFqZTh6YVB1ZHZvaXBhbDFscXBmWmRlelZlYzIvMzdwV09xTk1V?=
- =?utf-8?B?aHNtS2x0TUVyM1JUY0dKdk4vRy9ZaUlqUUZpWmVCU053YUY5bEpIUkluenVa?=
- =?utf-8?B?dWVMWllBenFrMGNldlAvRmYwTnUyTVRYU1hVdEIwRlNiYnZ5Z0xKVUY3RHg0?=
- =?utf-8?B?ODg4blRZK29LK013NDVSejdLcTl1WS9adnFMcE44NDVsVkRLdkF3SnRza3RW?=
- =?utf-8?B?Y1k2eEtIanlvTVh0NUlLbXA0R0lWTEJqRFFoNkRwNzBhS3pWSFlpTWFrRTJH?=
- =?utf-8?B?ck5zQkZiTno4QTF4V0QyeHlZOElIemxUYktwdkErdTJWNUtOSVlZaFZEeS96?=
- =?utf-8?B?OE5nOEJKQ3lLQ1ZwRi9sM29CZmZTU0tOUmpHQW1xL0dpcDJNZzdIRk1PL1R5?=
- =?utf-8?B?RXNvMFY4b3NjbldWOE5GUEpNTkZIS0Q1b2tIeTg0U0tOZXJRdTR6cDQvUERV?=
- =?utf-8?B?WmZtTGp1RVZWVmNrM0ZrUmJpNUxiUWNUYWRsQkhsRERxYnBQeTdxT2JvYjZw?=
- =?utf-8?B?Rk5OUCtvdDlvSFF4RkJEUXphS2hYaVRNbVdZN1Q4TW1Lb1orRTdjOXBwd1Ez?=
- =?utf-8?B?eklBZE9laGFlS3diT1ZheEJia0daRWlPZ0I5TXZyV0xUeXNqalN2c2hGS29M?=
- =?utf-8?B?Mm95ZUNvQnhrSlNxZ1psd2pUZUlYdjIxTVA5bnBDS2k5a1EwNWhENXpqZno3?=
- =?utf-8?B?djJPVzJEWmpPSklYYkdlcVlqRnlTM3B5OGpDZmp4bzByRGw0OGNlbTNlb04v?=
- =?utf-8?B?dnVtS3BVSkdaMFVaeGpoNk9YQ0xIZU41aXF6TURZUFVNL1gvZisyWVFCbFMr?=
- =?utf-8?B?Q2Z2a25tZDV2R20wZldUaW5DTE1ldUs1Wmxja1Z5cDFEL29wTFMvcDlqd3hG?=
- =?utf-8?B?dHdMZmo5OUZJd0YvckdMTEplR2pRaTBxWkltVFQ1b1FyYUdIRXcybkFpbUZT?=
- =?utf-8?B?Nmc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1dd59dc6-2d1d-4ad4-1778-08dd936a7810
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5949.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2025 04:39:24.9604
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BGz9PivqBJiu0z5+F7p9pxlcKhCf3UiTfVqkxT90p7qMMX+/jg+Pu6koo3+RmTe77U2QZ/yqS9a3mlHQupnFT9r33/BA719nqzvMeCcNya4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPFE50071912
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 12/12] Documentation: mm: update the admin guide for
+ mTHP collapse
+To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, ryan.roberts@arm.com,
+ dev.jain@arm.com, corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
+ baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
+ wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
+ vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
+ yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
+ aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
+ catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
+ dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
+ jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ Bagas Sanjaya <bagasdotme@gmail.com>
+References: <20250515032226.128900-1-npache@redhat.com>
+ <20250515032226.128900-13-npache@redhat.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250515032226.128900-13-npache@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
 
-On 5/12/2025 8:25 PM, Vlad URSU wrote:
-> On 22.04.2025 10:43, Jacek Kowalski wrote:
->> Some Dell Tiger Lake systems have incorrect NVM checksum. These also
->> have a bitmask that indicates correct checksum set to "invalid".
->>
->> Because it is impossible to determine whether the NVM write would finish
->> correctly or hang (see https://bugzilla.kernel.org/show_bug.cgi? 
->> id=213667)
->> it makes sense to skip the validation completely under these conditions.
->>
->> Signed-off-by: Jacek Kowalski <Jacek@jacekk.info>
->> Fixes: 4051f68318ca9 ("e1000e: Do not take care about recovery NVM 
->> checksum")
->> Cc: stable@vger.kernel.org
->> ---
->>   drivers/net/ethernet/intel/e1000e/ich8lan.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/ 
->> net/ethernet/intel/e1000e/ich8lan.c
->> index 364378133526..df4e7d781cb1 100644
->> --- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
->> +++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
->> @@ -4274,6 +4274,8 @@ static s32 
->> e1000_validate_nvm_checksum_ich8lan(struct e1000_hw *hw)
->>               ret_val = e1000e_update_nvm_checksum(hw);
->>               if (ret_val)
->>                   return ret_val;
->> +        } else if (hw->mac.type == e1000_pch_tgp) {
->> +            return 0;
->>           }
->>       }
->>
+On 5/14/25 8:22 PM, Nico Pache wrote:
+> Now that we can collapse to mTHPs lets update the admin guide to
+> reflect these changes and provide proper guidence on how to utilize it.
 > 
-> This patch doesn't work for me on an Optiplex 5090 Micro (i5-10500T). I 
-> did some debugging and the platform is recognized as Tiger Lake, by the 
-> driver, but the checksum valid bit is set even though the checksum is 
-> not valid.
+> Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+>  Documentation/admin-guide/mm/transhuge.rst | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
 > 
-> The network controller works fine if I patch out the validation in 
-> netdev.c. The checksum word at address 0x7e read using ethtool is 0xffff.
-> 
-> I'm also a bit confused about why the driver reports the mac type as 
-> e1000_pch_tgp even though i5-10500T should be Comet Lake?
+> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+> index dff8d5985f0f..5c63fe51b3ad 100644
+> --- a/Documentation/admin-guide/mm/transhuge.rst
+> +++ b/Documentation/admin-guide/mm/transhuge.rst
+> @@ -63,7 +63,7 @@ often.
+>  THP can be enabled system wide or restricted to certain tasks or even
+>  memory ranges inside task's address space. Unless THP is completely
+>  disabled, there is ``khugepaged`` daemon that scans memory and
+> -collapses sequences of basic pages into PMD-sized huge pages.
+> +collapses sequences of basic pages into huge pages.
+>  
+>  The THP behaviour is controlled via :ref:`sysfs <thp_sysfs>`
+>  interface and using madvise(2) and prctl(2) system calls.
+> @@ -144,6 +144,18 @@ hugepage sizes have enabled="never". If enabling multiple hugepage
+>  sizes, the kernel will select the most appropriate enabled size for a
+>  given allocation.
+>  
+> +khugepaged uses max_ptes_none scaled to the order of the enabled mTHP size
+> +to determine collapses. When using mTHPs it's recommended to set
+> +max_ptes_none low-- ideally less than HPAGE_PMD_NR / 2 (255 on 4k page
+> +size). This will prevent undesired "creep" behavior that leads to
+> +continuously collapsing to a larger mTHP size; When we collapse, we are
 
-The device is being recognized by the device ID. Probably the device you 
-have on your system is TGP.
+either                                      size. When
+or                                          size; when
 
-Since the checksum word is 0xFFFF which is peculiar, can you dump the 
-whole NVM and share with us?
+> +bringing in new non-zero pages that will, on a subsequent scan, cause the
+> +max_ptes_none check of the +1 order to always be satisfied. By limiting
+> +this to less than half the current order, we make sure we don't cause this
+> +feedback loop. max_ptes_shared and max_ptes_swap have no effect when
+> +collapsing to a mTHP, and mTHP collapse will fail on shared or swapped out
+> +pages.
+> +
+>  It's also possible to limit defrag efforts in the VM to generate
+>  anonymous hugepages in case they're not immediately free to madvise
+>  regions or to never try to defrag memory and simply fallback to regular
+
+-- 
+~Randy
+
