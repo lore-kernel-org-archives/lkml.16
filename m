@@ -1,443 +1,185 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2061.outbound.protection.outlook.com [40.107.244.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C49F258CF4;
-	Thu, 15 May 2025 17:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747329444; cv=none; b=lum5tg8Y22zT62msOqQWJU09GS2a+y5CMXjPnGfPNKpmxiKkdHsZcVgft5vjLDXBjAO+MORjOpxZiZKYa9i/g/KDCu8FxcMBAT4CRJHT7U2lhMpN5SoFEcVANuRjeekVh5lwyHeO56XuhywoOJxn3ONJ2XQjfFUDA0NwezU4wZQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747329444; c=relaxed/simple;
-	bh=DWLi+pfq8wqzoy9fxCts7QtNQgnQ2rSQjG8nmDTG4fg=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=BhnX42FJ6AKlKRJ066W3R6lEdVFmJLkhu2errDcXGwpnlBbjZSIYmIWIOq2XcboGvDHyG1dXbzGPgvFcKkZF6cWc3qwZWaY1XwL7sGfdh/3xJBe767KScMWch/kgl0G2jyBjdfqL4jDy7/JhHrjB1PcDvnu6H61GTb5Z3obNLkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gb2h1jsa; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UkHh7Do7; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B31B259CBE;
+	Thu, 15 May 2025 17:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747329449; cv=fail; b=GPSL1PNStK3Chq6R82HFY0Ap3rIAYQSnItsOMTLrfv2gAMhPIWCKuhj0RB8eXg3+gjHkRIdGLhj+MvSpSkHe3l8SxOpgurtCY0RSJGBIvXY33vfXW2IcdQC4XaCbcxjSeWSP8SzBClgZhOxDAbPTYRXJgWHnh5sjtuTrtQ3FB5Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747329449; c=relaxed/simple;
+	bh=eV9EsYTev1Zum796dh5gsCuB0gowAojCCLaSJU8xcVQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cg9Dl8NieCOgXVs53RzziquQxeOqfvTS/uTEn1JGVRLsu/MVyda4k2vgI1+Yzq7Vfce77XuuwY2ppJ9fPhmaPsbgoZN73m5LnFzlSlsgwzR5/97phMRlgbfHaeyPnIvVyT8Lme6I/l/bb54ZNzAKklas+AR75Zq+9SN5tcli0IE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Rg321tiW; arc=fail smtp.client-ip=40.107.244.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gb2h1jsa";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UkHh7Do7"
-Date: Thu, 15 May 2025 17:17:17 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747329438;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f9tTeSggDHomyX793xESkkRISzN7l8LzMhIpDueBFBU=;
-	b=gb2h1jsaZ6AUTNMme0vLxtQvHVIBgA3oo7bLOfMRiLhxSAoTzY5CLv2bI+uCSGY5jwvJJT
-	fZVJJW8Tiz8PylDJ4zOb0ICu7BPFkEV6ZOfc6Qn/CVQbPWMx7sYdtx6igx8NMBRmUEdZsq
-	OQDb6yXJ1lD0XH9mSt0uwcklmEkgY8VPszHytxF2wBU5RfNOhOSoCOi6My6o1RQRmm6VWE
-	Pivt9pmK/2icXBMxlyy9RpgkI7V/Xb/COX6rcI6tWiLy8IICwkuqffbcI7GcSRzQq3/U/0
-	OJet5/TMucu0nZvLVt666h/9JU0x6vXsxeQv/E+CY+/VVOoWnlZ6yOfqsZdvZQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747329438;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f9tTeSggDHomyX793xESkkRISzN7l8LzMhIpDueBFBU=;
-	b=UkHh7Do7ewNKvzSou7/b4i7mz389YdJ+VWS5Dqy9ZpDq7xv+3V24QjAUJJyrR8Q8mDRAW1
-	6uwU8eS7tAMVq8Bg==
-From: "tip-bot2 for Ahmed S. Darwish" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/core] x86/cpuid: Set <asm/cpuid/api.h> as the main CPUID header
-Cc: Ingo Molnar <mingo@kernel.org>, "Ahmed S. Darwish" <darwi@linutronix.de>,
- Andrew Cooper <andrew.cooper3@citrix.com>, "H. Peter Anvin" <hpa@zytor.com>,
- John Ogness <john.ogness@linutronix.de>, x86-cpuid@lists.linux.dev,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250508150240.172915-3-darwi@linutronix.de>
-References: <20250508150240.172915-3-darwi@linutronix.de>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Rg321tiW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=x47t6z+N88iY2pW/khYRSoTTfnU4hKNXlAKEiru9J8SAJuCCVmM+lImk4MHCU5Z5npQzF1NYIblgr2mj6TxM9RDRh8OiMRNB9eSMnBzZFKxIrjY0H2Xx/oacMLxcVXvXps6T2EbwLG/oUjxCkngIW2z7fZ9efcvC/mGL7rzAy8VF0dwXj1DXVEIIZ7dfD4G8Y8PDdOSFDSHBTD3rx/TNZtmW1DSv6U+2G2nBFW43s+upv8UViommoadtcb6rg5eHHTGKMZ8BOjkHfhConD+y6DUX05I7R9C8+qqeA/s+17n2AHPUZohySHRHAeF5SdorS7Djdl4LzQh1r2m6cL6m9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ld21duK/bsBrO04yS1GVyrYEhLYWTDvjWnjE2xsk2C0=;
+ b=hh9GSIAa2sxp5xK8IO9atMLq7nMT0m82GSc6nMrj+O9rrkRQRNRNCMu3RJQMI/v05+wT5XWmOuc4OVY2lt2kQwK9g0m9TjAq0mxT/SsXx/g2hnYX4DBavsMIpqjDn2pgvUapsNA9oNcukbEKSzvTrIAu2wvmifGHEmI+vJyUQOgXb/tNg3dilw6vpfGgtacfJIr0NHFom1SOWgcZ4ZkOHg9hYG9Bd4H8bmOlC5/kF334/KNqJZrkpcXHXgG1BKlWmNZRAXTbcIUVl+GBq3Im1tZauflkUnku3tKya7qgzGEy35Mk6anpnEOx96zmSnRraEK2ZXqzHnIXZDZ9kVqljQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ld21duK/bsBrO04yS1GVyrYEhLYWTDvjWnjE2xsk2C0=;
+ b=Rg321tiW/jLAnbRaC/+DKYAYx/AvB59vHkzZxSk+fXIy06XyyYKyYTbmYzR/6vGIOesun/xFV1Dg6TNap/NJq+JNO3zsGGCE7C8RgbYoeRBb8mNaWF6UsHZsuqokpWP/0ezysl3xZh9nF6vGu/ydnTNN0k/Lgr8b9v2VRU+PzphyH1Lmcz8t66YsgGhKgDYH/DAeOvd6wHRHqQzVOy3quBrFb7A59SnvbyM7jbah+4A1cTMTub4wxpj758FKHXyJIDA5HLP4mmaWIXxVtdsnILDOKu59Sx7Zimw2BYLVsOJEPTehaoLIQgsn12BsLMUyHZbOa90zf4V0VlYsNLUlsw==
+Received: from CH0PR03CA0035.namprd03.prod.outlook.com (2603:10b6:610:b3::10)
+ by PH7PR12MB9151.namprd12.prod.outlook.com (2603:10b6:510:2e9::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Thu, 15 May
+ 2025 17:17:25 +0000
+Received: from CH1PEPF0000A349.namprd04.prod.outlook.com
+ (2603:10b6:610:b3:cafe::8b) by CH0PR03CA0035.outlook.office365.com
+ (2603:10b6:610:b3::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.20 via Frontend Transport; Thu,
+ 15 May 2025 17:17:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ CH1PEPF0000A349.mail.protection.outlook.com (10.167.244.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.18 via Frontend Transport; Thu, 15 May 2025 17:17:25 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 15 May
+ 2025 10:17:09 -0700
+Received: from drhqmail202.nvidia.com (10.126.190.181) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 15 May 2025 10:17:08 -0700
+Received: from Asurada-Nvidia (10.127.8.11) by mail.nvidia.com
+ (10.126.190.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Thu, 15 May 2025 10:17:07 -0700
+Date: Thu, 15 May 2025 10:17:06 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: <kevin.tian@intel.com>, <corbet@lwn.net>, <will@kernel.org>,
+	<bagasdotme@gmail.com>, <robin.murphy@arm.com>, <joro@8bytes.org>,
+	<thierry.reding@gmail.com>, <vdumpa@nvidia.com>, <jonathanh@nvidia.com>,
+	<shuah@kernel.org>, <jsnitsel@redhat.com>, <nathan@kernel.org>,
+	<peterz@infradead.org>, <yi.l.liu@intel.com>, <mshavit@google.com>,
+	<praan@google.com>, <zhangzekun11@huawei.com>, <iommu@lists.linux.dev>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <patches@lists.linux.dev>,
+	<mochs@nvidia.com>, <alok.a.tiwari@oracle.com>, <vasant.hegde@amd.com>
+Subject: Re: [PATCH v4 10/23] iommufd/viommu: Introduce IOMMUFD_OBJ_HW_QUEUE
+ and its related struct
+Message-ID: <aCYhksN8Zlp1QMP8@Asurada-Nvidia>
+References: <cover.1746757630.git.nicolinc@nvidia.com>
+ <bedd9de4e24bb89f18f4b13b52c5fdb6db6bd889.1746757630.git.nicolinc@nvidia.com>
+ <20250515153903.GI382960@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174732943783.406.7046718117296673782.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250515153903.GI382960@nvidia.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000A349:EE_|PH7PR12MB9151:EE_
+X-MS-Office365-Filtering-Correlation-Id: 20fef7d5-e850-4eb5-87a6-08dd93d45c9d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|1800799024|36860700013|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?JobERncr8Ke0ylaGhIgNAzhag6WFAutnTlM25yBoKan1g6yKy3pN65opUvtx?=
+ =?us-ascii?Q?4oQjo/wmeWQE7HUhpAfBE8wbuS+3ZN28YipRUhvvRshv3wIEl941ZiJrUaz7?=
+ =?us-ascii?Q?SDm5hVlgsXbH2g6IUQjHLJEg6Nex0DIR54Md1L3zuzXEY/sxg9c6Xjtyj7FY?=
+ =?us-ascii?Q?9K/QbKdw3MOGZK535vbuvdWnuHm3YkgAQc/zrRpC9cF72+DgkF0QqBvx2rM9?=
+ =?us-ascii?Q?Vit3J4+1ToP8G+I+qky1chKpsrAUrgZfXr7kywZ6Ehkxq+CevekZwVY2SDiK?=
+ =?us-ascii?Q?NR0QoonfPxoP+ZkD653JZbAvCkyU8NMzj4z/tZHTSqfRfZaxulFkiHXFssTq?=
+ =?us-ascii?Q?LxIvr7HJ8l9ZpJ6xDPz6neNOxWyzmU1DrbcygaheRSgkLN5mOTigJtwsZ+/S?=
+ =?us-ascii?Q?UzB2IiwB1gwFfdWdLvSEuBrTqV4ivpvccxtwBar3Ih1zz5WQaeZERALCeN+O?=
+ =?us-ascii?Q?utYcSqD/SBN+9j8lOPQjIdQ9BhZkAWkH9x0fuNECk8km5JLIjfkjAtNnLHWQ?=
+ =?us-ascii?Q?xvWncDrckOJ5Zd+iz3WBh95somm2HTpBy30MN+NTUbyiyeCEagMJd+bpKD4p?=
+ =?us-ascii?Q?bWe1pDvwE+HxPMj/eY5Lc36iKnZpGoCYnJD5vdnOcw9+ffqlOqhWRrqCM/xy?=
+ =?us-ascii?Q?DM5OqurdvbNvevJOK9Jxb3J4qtiJIbExLTFk1Vo3Bpxo5axwivFZL7KQKMGF?=
+ =?us-ascii?Q?NwOTlfmdp47/LtSZKIAgYAeikVt5CW4A6iMEk2P2CvzXlZzdqqUAoB4mDnVI?=
+ =?us-ascii?Q?6EhkaFSenVndCI7jKVrh2Cih9K8rblta3Xl9RFZHo+W5WxUi6fTQd6ofNRZr?=
+ =?us-ascii?Q?UVnjDHfJGXLM9QkriamAZr1QhQjBth1ids3LYzxBCr7E+uUB8HktLyqwZL4V?=
+ =?us-ascii?Q?/fQEDYhypLKbwH1srE1Nrp7102ILtHPLQGzv8RZ6wNlzo0pAzfCMPLitzApS?=
+ =?us-ascii?Q?S7tIiqhUg9woH6aJSla4xWROL1y/3Cssz4zg5jvC6+a3/ijJlDpKrBd+QjoO?=
+ =?us-ascii?Q?QeK6QsgQbSZiOGBwrBJnB/EtKZb37keyOc4cfJ5NjKpfLIeqTjvdhs13E2cv?=
+ =?us-ascii?Q?OgJZJbyFjEIYHjQlWrzHbqrU78lKTHfARAmmyefROo+2ZI51v2W+tbvN92q6?=
+ =?us-ascii?Q?x/Q+x94dRHXnTE/aL9NgGM9mJlUOUUl56sGnm+4zefhRV7o3Grdj7O599/g5?=
+ =?us-ascii?Q?u2uWUFUGX/XKqofFLtEFENSQFVZsKVXum6ngqsfVdZLq90Jnl6HxBYGIYcZt?=
+ =?us-ascii?Q?tBeJSwrzhg38yovhmXwPDy5fyIjY1IiJEefPuIk/IsmCx7lMb/0l89YRo3Ox?=
+ =?us-ascii?Q?nZBysVsPTX5OJ5OCKIn3JZwdrn42tCpzUuwEr280S/EPNdksxe3jWSEY9D/b?=
+ =?us-ascii?Q?9XogQEqDvTNXY6mxvRsTLhYwro69CvGGrMzsAYKTujGrLXOotl4HTzVtQr/S?=
+ =?us-ascii?Q?3ERtXFUBFmuivOIdaltk+RaiLSznzYAr0rn9t+sZgBDyto3oeSWAdhYgTAKH?=
+ =?us-ascii?Q?t1McvIVSZL528OPOLgReG9Ja6cbP82nyIXWn?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2025 17:17:25.1157
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 20fef7d5-e850-4eb5-87a6-08dd93d45c9d
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000A349.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9151
 
-The following commit has been merged into the x86/core branch of tip:
+On Thu, May 15, 2025 at 12:39:03PM -0300, Jason Gunthorpe wrote:
+> On Thu, May 08, 2025 at 08:02:31PM -0700, Nicolin Chen wrote:
+> > +#define iommufd_hw_queue_alloc(viommu, drv_struct, member)                     \
+> > +	({                                                                     \
+> > +		drv_struct *ret;                                               \
+> > +									       \
+> > +		static_assert(__same_type(struct iommufd_viommu, *viommu));    \
+> > +		static_assert(__same_type(struct iommufd_hw_queue,             \
+> > +					  ((drv_struct *)NULL)->member));      \
+> > +		static_assert(offsetof(drv_struct, member.obj) == 0);          \
+> > +		ret = (drv_struct *)_iommufd_object_alloc(                     \
+> > +			viommu->ictx, sizeof(drv_struct),                      \
+> > +			IOMMUFD_OBJ_HW_QUEUE);                                 \
+> > +		if (!IS_ERR(ret)) {                                            \
+> > +			ret->member.viommu = viommu;                           \
+> > +			ret->member.ictx = viommu->ictx;                       \
+> > +		}                                                              \
+> > +		ret;                                                           \
+> > +	})
+> 
+> This should just call 
+> 
+> __iommufd_object_alloc(viommu->ictx, ret, IOMMUFD_OBJ_HW_QUEUE member.obj)
+> 
+> And all the casting and asserts should be in that macro, move it to
+> this header
 
-Commit-ID:     968e3000680713f712bcf02c51c4d7bb7d4d7685
-Gitweb:        https://git.kernel.org/tip/968e3000680713f712bcf02c51c4d7bb7d4d7685
-Author:        Ahmed S. Darwish <darwi@linutronix.de>
-AuthorDate:    Thu, 08 May 2025 17:02:31 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 15 May 2025 18:23:55 +02:00
+Ack.
 
-x86/cpuid: Set <asm/cpuid/api.h> as the main CPUID header
+> >  /* Helper for IOMMU driver to destroy structures created by allocators above */
+> >  #define iommufd_struct_destroy(drv_struct, member)                             \
+> >  	({                                                                     \
+> 
+> This is abort not destroy, the names should be consistent. But looking
+> more at the series I think it will be better to do the little rework I
+> suggested and not give this function to the driver in the first place.
 
-The main CPUID header <asm/cpuid.h> was originally a storefront for the
-headers:
+Yea, it will be replaced in v5.
 
-    <asm/cpuid/api.h>
-    <asm/cpuid/leaf_0x2_api.h>
-
-Now that the latter CPUID(0x2) header has been merged into the former,
-there is no practical difference between <asm/cpuid.h> and
-<asm/cpuid/api.h>.
-
-Migrate all users to the <asm/cpuid/api.h> header, in preparation of
-the removal of <asm/cpuid.h>.
-
-Don't remove <asm/cpuid.h> just yet, in case some new code in -next
-started using it.
-
-Suggested-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: John Ogness <john.ogness@linutronix.de>
-Cc: x86-cpuid@lists.linux.dev
-Link: https://lore.kernel.org/r/20250508150240.172915-3-darwi@linutronix.de
----
- arch/x86/boot/compressed/sev.c        | 2 +-
- arch/x86/boot/startup/sev-startup.c   | 2 +-
- arch/x86/coco/sev/core.c              | 2 +-
- arch/x86/coco/sev/vc-handle.c         | 2 +-
- arch/x86/events/intel/pt.c            | 2 +-
- arch/x86/include/asm/processor.h      | 2 +-
- arch/x86/kernel/acpi/cstate.c         | 2 +-
- arch/x86/kernel/amd_nb.c              | 2 +-
- arch/x86/kernel/cpu/cacheinfo.c       | 2 +-
- arch/x86/kernel/cpu/common.c          | 2 +-
- arch/x86/kernel/cpu/intel.c           | 2 +-
- arch/x86/kernel/fpu/xstate.c          | 2 +-
- arch/x86/kernel/hpet.c                | 2 +-
- arch/x86/kernel/process.c             | 2 +-
- arch/x86/kernel/smpboot.c             | 2 +-
- arch/x86/kernel/tsc.c                 | 2 +-
- arch/x86/kvm/cpuid.c                  | 2 +-
- arch/x86/virt/svm/sev.c               | 2 +-
- arch/x86/xen/enlighten_pv.c           | 2 +-
- drivers/acpi/acpi_pad.c               | 2 +-
- drivers/dma/ioat/dca.c                | 2 +-
- drivers/idle/intel_idle.c             | 2 +-
- drivers/platform/x86/intel/pmc/core.c | 2 +-
- sound/soc/intel/avs/tgl.c             | 2 +-
- 24 files changed, 24 insertions(+), 24 deletions(-)
-
-diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-index 612b443..fd1b67d 100644
---- a/arch/x86/boot/compressed/sev.c
-+++ b/arch/x86/boot/compressed/sev.c
-@@ -21,7 +21,7 @@
- #include <asm/fpu/xcr.h>
- #include <asm/ptrace.h>
- #include <asm/svm.h>
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- 
- #include "error.h"
- #include "sev.h"
-diff --git a/arch/x86/boot/startup/sev-startup.c b/arch/x86/boot/startup/sev-startup.c
-index 435853a..0b7e3b9 100644
---- a/arch/x86/boot/startup/sev-startup.c
-+++ b/arch/x86/boot/startup/sev-startup.c
-@@ -38,7 +38,7 @@
- #include <asm/smp.h>
- #include <asm/cpu.h>
- #include <asm/apic.h>
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include <asm/cmdline.h>
- 
- /* For early boot hypervisor communication in SEV-ES enabled guests */
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index b40c159..5678c3f 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -42,7 +42,7 @@
- #include <asm/smp.h>
- #include <asm/cpu.h>
- #include <asm/apic.h>
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include <asm/cmdline.h>
- #include <asm/msr.h>
- 
-diff --git a/arch/x86/coco/sev/vc-handle.c b/arch/x86/coco/sev/vc-handle.c
-index b4895c6..0989d98 100644
---- a/arch/x86/coco/sev/vc-handle.c
-+++ b/arch/x86/coco/sev/vc-handle.c
-@@ -32,7 +32,7 @@
- #include <asm/smp.h>
- #include <asm/cpu.h>
- #include <asm/apic.h>
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- 
- static enum es_result vc_slow_virt_to_phys(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
- 					   unsigned long vaddr, phys_addr_t *paddr)
-diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-index f37cce2..9dbc688 100644
---- a/arch/x86/events/intel/pt.c
-+++ b/arch/x86/events/intel/pt.c
-@@ -18,7 +18,7 @@
- #include <linux/slab.h>
- #include <linux/device.h>
- 
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include <asm/perf_event.h>
- #include <asm/insn.h>
- #include <asm/io.h>
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 50d3469..bde58f6 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -16,7 +16,7 @@ struct vm86;
- #include <uapi/asm/sigcontext.h>
- #include <asm/current.h>
- #include <asm/cpufeatures.h>
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include <asm/page.h>
- #include <asm/pgtable_types.h>
- #include <asm/percpu.h>
-diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
-index d5ac341..8698d66 100644
---- a/arch/x86/kernel/acpi/cstate.c
-+++ b/arch/x86/kernel/acpi/cstate.c
-@@ -14,7 +14,7 @@
- 
- #include <acpi/processor.h>
- #include <asm/cpu_device_id.h>
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include <asm/mwait.h>
- #include <asm/special_insns.h>
- #include <asm/smp.h>
-diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
-index 7c79c9f..c1acead 100644
---- a/arch/x86/kernel/amd_nb.c
-+++ b/arch/x86/kernel/amd_nb.c
-@@ -15,7 +15,7 @@
- #include <linux/pci_ids.h>
- 
- #include <asm/amd/nb.h>
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- 
- static u32 *flush_words;
- 
-diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
-index f866d94..6d61f7d 100644
---- a/arch/x86/kernel/cpu/cacheinfo.c
-+++ b/arch/x86/kernel/cpu/cacheinfo.c
-@@ -16,7 +16,7 @@
- #include <asm/amd/nb.h>
- #include <asm/cacheinfo.h>
- #include <asm/cpufeature.h>
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include <asm/mtrr.h>
- #include <asm/smp.h>
- #include <asm/tlbflush.h>
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 114aaaf..c14db8d 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -29,7 +29,7 @@
- 
- #include <asm/alternative.h>
- #include <asm/cmdline.h>
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include <asm/perf_event.h>
- #include <asm/mmu_context.h>
- #include <asm/doublefault.h>
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 584dd55..7f8ca29 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -16,7 +16,7 @@
- #include <asm/cpu_device_id.h>
- #include <asm/cpufeature.h>
- #include <asm/cpu.h>
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include <asm/hwcap2.h>
- #include <asm/intel-family.h>
- #include <asm/microcode.h>
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index 3e477a5..9aa9ac8 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -21,7 +21,7 @@
- #include <asm/fpu/signal.h>
- #include <asm/fpu/xcr.h>
- 
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include <asm/msr.h>
- #include <asm/tlbflush.h>
- #include <asm/prctl.h>
-diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
-index c9982a7..d6387dd 100644
---- a/arch/x86/kernel/hpet.c
-+++ b/arch/x86/kernel/hpet.c
-@@ -7,7 +7,7 @@
- #include <linux/cpu.h>
- #include <linux/irq.h>
- 
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include <asm/irq_remapping.h>
- #include <asm/hpet.h>
- #include <asm/time.h>
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 4b668bc..c1d2dac 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -30,7 +30,7 @@
- #include <linux/hw_breakpoint.h>
- #include <linux/entry-common.h>
- #include <asm/cpu.h>
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include <asm/apic.h>
- #include <linux/uaccess.h>
- #include <asm/mwait.h>
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index d6cf1e2..d7d61b3 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -64,7 +64,7 @@
- 
- #include <asm/acpi.h>
- #include <asm/cacheinfo.h>
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include <asm/desc.h>
- #include <asm/nmi.h>
- #include <asm/irq.h>
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index 5d3a764..87e7491 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -16,7 +16,7 @@
- #include <linux/static_key.h>
- #include <linux/static_call.h>
- 
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include <asm/hpet.h>
- #include <asm/timer.h>
- #include <asm/vgtod.h>
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 571c906..7f43d8d 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -21,7 +21,7 @@
- #include <asm/user.h>
- #include <asm/fpu/xstate.h>
- #include <asm/sgx.h>
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include "cpuid.h"
- #include "lapic.h"
- #include "mmu.h"
-diff --git a/arch/x86/virt/svm/sev.c b/arch/x86/virt/svm/sev.c
-index 76926f7..942372e 100644
---- a/arch/x86/virt/svm/sev.c
-+++ b/arch/x86/virt/svm/sev.c
-@@ -27,7 +27,7 @@
- #include <asm/smp.h>
- #include <asm/cpu.h>
- #include <asm/apic.h>
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include <asm/cmdline.h>
- #include <asm/iommu.h>
- #include <asm/msr.h>
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index 3be3835..7f9ded1 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -49,7 +49,7 @@
- #include <xen/hvc-console.h>
- #include <xen/acpi.h>
- 
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include <asm/paravirt.h>
- #include <asm/apic.h>
- #include <asm/page.h>
-diff --git a/drivers/acpi/acpi_pad.c b/drivers/acpi/acpi_pad.c
-index 3fde449..6f8bbe1 100644
---- a/drivers/acpi/acpi_pad.c
-+++ b/drivers/acpi/acpi_pad.c
-@@ -19,7 +19,7 @@
- #include <linux/acpi.h>
- #include <linux/perf_event.h>
- #include <linux/platform_device.h>
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include <asm/mwait.h>
- #include <xen/xen.h>
- 
-diff --git a/drivers/dma/ioat/dca.c b/drivers/dma/ioat/dca.c
-index c9aba23..5d3c0ae 100644
---- a/drivers/dma/ioat/dca.c
-+++ b/drivers/dma/ioat/dca.c
-@@ -10,7 +10,7 @@
- #include <linux/interrupt.h>
- #include <linux/dca.h>
- 
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- 
- /* either a kernel change is needed, or we need something like this in kernel */
- #ifndef CONFIG_SMP
-diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-index 6a1712b..433d858 100644
---- a/drivers/idle/intel_idle.c
-+++ b/drivers/idle/intel_idle.c
-@@ -51,7 +51,7 @@
- #include <linux/notifier.h>
- #include <linux/cpu.h>
- #include <linux/moduleparam.h>
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
- #include <asm/mwait.h>
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index ff7f64d..9f678c7 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -22,7 +22,7 @@
- #include <linux/suspend.h>
- #include <linux/units.h>
- 
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
- #include <asm/msr.h>
-diff --git a/sound/soc/intel/avs/tgl.c b/sound/soc/intel/avs/tgl.c
-index 56905f2..9dbb3ad 100644
---- a/sound/soc/intel/avs/tgl.c
-+++ b/sound/soc/intel/avs/tgl.c
-@@ -47,7 +47,7 @@ static int avs_tgl_config_basefw(struct avs_dev *adev)
- #ifdef CONFIG_X86
- 	unsigned int ecx;
- 
--#include <asm/cpuid.h>
-+#include <asm/cpuid/api.h>
- 	ecx = cpuid_ecx(CPUID_TSC_LEAF);
- 	if (ecx) {
- 		ret = avs_ipc_set_fw_config(adev, 1, AVS_FW_CFG_XTAL_FREQ_HZ, sizeof(ecx), &ecx);
+Thanks
+Nicolin
