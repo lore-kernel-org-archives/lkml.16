@@ -1,89 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C25564A98;
-	Thu, 15 May 2025 13:54:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04C461FCE;
+	Thu, 15 May 2025 13:54:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747317250; cv=none; b=W9opQVdH4RNiDBysb3zHaWSvLPeh3TAj3Flm8NlObLHEfGJNSEm0E/OaebT71aUUVdQK5J2fZbn+WSK935iXKGdQrYW70qwhBisKrpro+04gH+khuMAQRvtKwB9nCZ/WV77KTAuy8nI2dWSo3FgLy80cyrOYb+NKiRzNNHHKYLU=
+	t=1747317288; cv=none; b=IdSHSa7nVB46mZWugUtwq10IdpfA0YpTkeL05dymh7IrOlptPkcacuL/09LOD10As/koG4mGJPBAbJV/ifhAWXNeBiV5YyDOobwttO0ZlJeONhpvtXW3CTTrjxfaPzzzR+DXvRnUqpYrRIshuz1R5gcFzcY+WRl3IoW6k8O+97s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747317250; c=relaxed/simple;
-	bh=qis/7P2GU5yvhrel43Yv7JcaotjjyWb/SyxisrkM/BY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=efLLPYEg0apVM1rresIp2mLArv9Sk7hGV85E7YKefaodILeUHBcEGmp8Fm8eltW3eoSN1PFlXOvHpPh4mOi+O3WDyyjT8xPkkCd6QnAhNWEON5gwezaef+q0oYwOOgTBftPp60sdhp7jg9umDY00qGKEhQr04/LbD5rNUMzwaDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kYDk4/IS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747317288; c=relaxed/simple;
+	bh=DwYIY8Z+5lq41YhvHpTSD/sEClinlMmnggDNbzx1XNM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uvXPoVgkDYkZV27YyMO6E7BgtrCmlu/qptoBU7lo6bTPuUH9MMSGPrUsRWKV32jZaoMgAFNohFcAX0pHdVyUt2qcDesgl0ygHKGgH4c9+szFo5j8c/+MjRgq/+5IEyQntgd62Sj9KvpfyAVBxtBPu06lMJwDhlbs3ApGn+i4xKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=blNXYurc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kYDk4/IS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ADD0C4CEE7;
-	Thu, 15 May 2025 13:54:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="blNXYurc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D329FC4CEE7;
+	Thu, 15 May 2025 13:54:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747317250;
-	bh=qis/7P2GU5yvhrel43Yv7JcaotjjyWb/SyxisrkM/BY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kYDk4/ISOyzUQs4q4kxCkluBG7Y7HhFWahc+YaoCBC7y/ra5DUMkfXglO5rIGvQNa
-	 or06eeabJbC+Vcm2UXnk2F4gQc6nDRyedK+eKlRLdpcxeerQfVszDqbAUhdiQK38hp
-	 oevVH6feMF0FxWXo75pZWe2U/LrQv3dZgx5o6RbZW5a4MRnepyo0BXPLqQBee1BFsp
-	 a3kFztRYzmmxFEzcCpD9VXIJKih96OiTYj/LJiK6UnPnaEhbuH19r+V23WKiClLzUn
-	 Z9Pj17Lr/f0b3wCVOYnKiY0h8GIEB0UM0QYUvMhJxox0SYDLEI5OprHlt+aBa3MQE0
-	 XHDSzgC4n1I0Q==
-Date: Thu, 15 May 2025 22:54:08 +0900
-From: Krzysztof Wilczy??ski <kwilczynski@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>, linux-pci@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] PCI/bwctrl: Remove also pcie_bwctrl_lbms_rwsem
-Message-ID: <20250515135408.GB3596832@rocinante>
-References: <20250508090036.1528-1-ilpo.jarvinen@linux.intel.com>
- <174724335628.23991.985637450230528945.b4-ty@kernel.org>
- <aCTyFtJJcgorjzDv@wunner.de>
- <20250515084346.GA51912@rocinante>
- <aCXZdfOA8bme-qra@wunner.de>
- <98fa31e7-db86-35f0-a71c-a1ebf27f93f0@linux.intel.com>
+	s=k20201202; t=1747317286;
+	bh=DwYIY8Z+5lq41YhvHpTSD/sEClinlMmnggDNbzx1XNM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=blNXYurckmoVa7fjtLKqzP4GpQD3MnKv0TLSmG9kBhBdQqoC53jG4Q0O+3Q2osPDX
+	 Tu4laPQ7r+qqdNxuWL7x6aGzcu4y1kYhnP2U6/xnx6THfxHuHt9n0LBTbo5/jk6mVS
+	 w0/rE5i9QwH9kqesD52Yj+a7Wt/uvGsk+Vk+KC4subwNbe61+bvAaNV7Ab2oQzP5ud
+	 4jCDeMisWKSC/ysuZxvk1vGDPQgoaarwK368FryFDMyIrL0PaZS8vXOKfP/5BLinCf
+	 fCem7KE6BKs498nZlrVBHD7aXZxHWG+g+qrE9bUU508/+icqY7VIheV4nFh+nHJHYM
+	 JZiu2mwtPFh2A==
+Date: Thu, 15 May 2025 06:54:44 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Ronak Doshi <ronak.doshi@broadcom.com>
+Cc: netdev@vger.kernel.org, Guolin Yang <guolin.yang@broadcom.com>, Broadcom
+ internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew
+ Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Ronghua
+ Zhang <ronghua@vmware.com>, Bhavesh Davda <bhavesh@vmware.com>, Shreyas
+ Bhatewara <sbhatewara@vmware.com>, linux-kernel@vger.kernel.org (open list)
+Subject: Re: [PATCH net] vmxnet3: update MTU after device quiesce
+Message-ID: <20250515065444.60df21c0@kernel.org>
+In-Reply-To: <20250513210243.1828-1-ronak.doshi@broadcom.com>
+References: <20250513210243.1828-1-ronak.doshi@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <98fa31e7-db86-35f0-a71c-a1ebf27f93f0@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Tue, 13 May 2025 21:02:40 +0000 Ronak Doshi wrote:
+> @@ -3619,6 +3617,7 @@ vmxnet3_change_mtu(struct net_device *netdev, int new_mtu)
+>  	if (netif_running(netdev)) {
+>  		vmxnet3_quiesce_dev(adapter);
+>  		vmxnet3_reset_dev(adapter);
+> +		WRITE_ONCE(netdev->mtu, new_mtu);
+>  
+>  		/* we need to re-create the rx queue based on the new mtu */
+>  		vmxnet3_rq_destroy_all(adapter);
 
-[...]
-> > > Done.  Squashed with the first commit from Ilpo, see:
-> 
-> Thanks Krzysztof for handling this, I should have put the note about 
-> squashing it to the resubmission but I forgot (this time I didn't do 
-> the diff against the previous version before sending it which I normally 
-> do).
-
-No problem!  I am sorry for missing the ask in the first place.
-
-[...]
-> > > Let me know if there is anything else needed.
-> > 
-> > Actually, two small things:
-> > 
-> > - That patch on the pci/bwctrl topic branch is still marked "New"
-> >   in patchwork, even though it's been applied:
-> >   https://patchwork.kernel.org/project/linux-pci/patch/20250422115548.1483-1-ilpo.jarvinen@linux.intel.com/
-> > 
-> > - Version 1 of the same patch is likewise marked "New", even though
-> >   it's been superseded:
-> >   https://patchwork.kernel.org/project/linux-pci/patch/20250417124633.11470-1-ilpo.jarvinen@linux.intel.com/
-> > 
-> > Unfortunately I can't update it myself because I'm not the submitter.
-> > (Ilpo could do it if he has a patchwork.kernel.org account.)
-> 
-> I'm a pdx86 maintainer so I do have an account, yes. I actually had the 
-> patchwork page listing my PCI patches already open, but I just hadn't hit 
-> "update" button yet.
-> 
-> I've done those two changes now.
-
-Thank you!
-
-	Krzysztof
+Maybe a nit pick but wouldn't it make the most sense to place the write
+after all teardown related code? So after vmxnet3_rq_destroy_all() ?
