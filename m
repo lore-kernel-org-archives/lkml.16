@@ -1,111 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D86A298255;
-	Thu, 15 May 2025 10:48:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95E72980A3;
+	Thu, 15 May 2025 10:48:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747306102; cv=none; b=BpYN3HhRfCGoQVRJhCNYEsAqzvgsyVyQVxXtg7LSUHmqCBq2GjIkh8qjU4Xc4s61RSJ3oiNWUhIRR3Ae1V2pjN9xBnY4myzuQ/2ke8WlwjfMCg0KfgcBZM4F0KKu4NkgNhsvEe2s87glgY7Z063hpXZZdJpa4Mv1bb9ucD3063o=
+	t=1747306112; cv=none; b=FKZ46Kz1RfGjmZifeKTptO/Q8jPyDjAtJ1E38PYbsACt9KJ+rgrD49x4UT0+EZQE/eayGj9Q+HBYUrPCWkVSjEOjp0VJrRibiujumuSUZV7iH76hWb5omjEm7s0n4z7LFqKiTiy0fVhGfLZjrizSNdtd+Ho9NlGI40BFjW/N+Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747306102; c=relaxed/simple;
-	bh=eBPgvvsvHseuwOOxm/fxnYlTjdO4X6W/Sa724t+OOxQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NLhYvcvlyyN/7B/6SPtjChDJ9o+6EGT8Z8Qa2r9z0N/jbk+wvIqFGWq9aRjcOtbBdW7dO/r87aXR48K2BV1AwoOzOYQMMTdP9xf4m81Hdp/Nb4nJheneWh12SIjW1jI6T1gmVPDrMNInF5DjV/Yo4ubaq49QzF+V6FftzGJ8LKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FfTLTM9L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747306112; c=relaxed/simple;
+	bh=adxalg7H3lV44b62vZBcg+BCmQflj5misd5wybzAhrk=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=tb2gZ1PSFoIxQU+c0fD98fHVx3E8rhkdlUBVjrru/9pxJ1zyiSU5vkC5AK+VLgIGTLMth8IeETHfGo5FUlj8KG64pwSqBltXrrkbzxK2Zb/PIvx0LcyPgmAnbtfW1OuM/UfV8qK+pxvQj3UBkwPYctwNvxe+OwqqtBoLB+h4zzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u7DeagEU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FfTLTM9L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92D8BC4AF09;
-	Thu, 15 May 2025 10:48:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u7DeagEU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2176DC4CEE7;
+	Thu, 15 May 2025 10:48:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747306102;
-	bh=eBPgvvsvHseuwOOxm/fxnYlTjdO4X6W/Sa724t+OOxQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FfTLTM9LTMC6SzJrgtYs00OrUofyFCHezGXXKViJVYeakcCCqqgEHbDdKFA4YWZ5/
-	 D4e8z6eujMyUzh9UDkfyRG6xci9BE2e5NELK0o2qkHEqyRgF4guWxYrDgMQ7mp6Jax
-	 dX9Al8qFAmCCDRt/IFsVADWDEmsPo47xycvazkQtEIHxKjD5uMkki8opEHo7rFtfeE
-	 tayB9CBSMBI+GXA/6/Uw9IYGDAFWUnxU5Q6Anl3Ol9yiWQuUWMR7pz/Mh9BUUFaghI
-	 /g6gdCG4HBB7chLiUq58JT+ctMJmwkR22aDRIqoZxUFbOev/PIQv54P1LibHnaVC4m
-	 LnaGTHKPOScFA==
-Date: Thu, 15 May 2025 11:48:19 +0100
-From: Vinod Koul <vkoul@kernel.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
-	dma <dmaengine@vger.kernel.org>
-Cc: Qiu-ji Chen <chenqiuji666@gmail.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the dmaengine-fixes tree
-Message-ID: <aCXGc21rVab7ZuDG@vaman>
-References: <20250515093325.4e29e8a6@canb.auug.org.au>
+	s=k20201202; t=1747306112;
+	bh=adxalg7H3lV44b62vZBcg+BCmQflj5misd5wybzAhrk=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=u7DeagEUEiexQGncuTRbIUiVohH0r9Yv/kmqm+EZaKWZsCoK4Cfh43a3y4gqdXWtx
+	 lG6aDJSr5GlY/zwP4+xtCu2IF3yYaRcpqqFQ7pEP2YbEMl9tafTCc3Wbg1T3ZetDx+
+	 S7Dr07ViBTwbdcoPp3xMI+BYPcipOz9cYhdVQzdlCZycbA4WVjGWgZVPctUru/smxt
+	 rsHP4HksXSkcOoNoA5LazlUNOsY+b/bD3A1t5cctBTq/wTVSXxaS4xITr1QLGQBs+v
+	 cD7aJmx+dm7h97l6Jlh/aeIifn55CJmfS8E2QMtqOB7wrnd21eRq0VP1ZOklrxxBgr
+	 4Vy7hhIETPFYw==
+Date: Thu, 15 May 2025 05:48:30 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515093325.4e29e8a6@canb.auug.org.au>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: fshao@chromium.org, devicetree@vger.kernel.org, 
+ Project_Global_Chrome_Upstream_Group@mediatek.com, 
+ xiandong.wang@mediatek.com, krzk+dt@kernel.org, 
+ dri-devel@lists.freedesktop.org, nancy.lin@mediatek.com, 
+ linux-mediatek@lists.infradead.org, sirius.wang@mediatek.com, 
+ singo.chang@mediatek.com, linux-arm-kernel@lists.infradead.org, 
+ p.zabel@pengutronix.de, treapking@chromium.org, jason-jh.lin@mediatek.com, 
+ linux-kernel@vger.kernel.org, matthias.bgg@gmail.com, conor+dt@kernel.org, 
+ chunkuang.hu@kernel.org, angelogioacchino.delregno@collabora.com, 
+ sunny.shen@mediatek.com
+To: "paul-pl.chen" <paul-pl.chen@mediatek.com>
+In-Reply-To: <20250515093454.1729720-3-paul-pl.chen@mediatek.com>
+References: <20250515093454.1729720-1-paul-pl.chen@mediatek.com>
+ <20250515093454.1729720-3-paul-pl.chen@mediatek.com>
+Message-Id: <174730611044.164934.18396756831118218280.robh@kernel.org>
+Subject: Re: [PATCH v3 02/17] dt-bindings: display: mediatek: add EXDMA
+ yaml for MT8196
 
-On 15-05-25, 09:33, Stephen Rothwell wrote:
-> Hi all,
+
+On Thu, 15 May 2025 17:34:14 +0800, paul-pl.chen wrote:
+> From: Paul-pl Chen <paul-pl.chen@mediatek.com>
 > 
-> After merging the dmaengine-fixes tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
+> Add mediatek,exdma.yaml to support EXDMA for MT8196.
+> The MediaTek display overlap extended DMA engine, namely
+> OVL_EXDMA or EXDMA, primarily functions as a DMA engine
+> for reading data from DRAM with various DRAM footprints
+> and data formats.
 > 
-> drivers/dma/mediatek/mtk-cqdma.c: In function 'mtk_cqdma_find_active_desc':
-> drivers/dma/mediatek/mtk-cqdma.c:423:23: error: unused variable 'flags' [-Werror=unused-variable]
->   423 |         unsigned long flags;
->       |                       ^~~~~
+> Signed-off-by: Nancy Lin <nancy.lin@mediatek.com>
+> Signed-off-by: Paul-pl Chen <paul-pl.chen@mediatek.com>
+> ---
+>  .../bindings/dma/mediatek,exdma.yaml          | 68 +++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/mediatek,exdma.yaml
 > 
-> Caused by commit
-> 
->   157ae5ffd76a ("dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()")
-> 
-> I have used the dmaengine-fixes tree from next-20250514 for today.
 
-Thanks, I have fixed it up and applied below:
+My bot found errors running 'make dt_binding_check' on your patch:
 
--- >8 --
+yamllint warnings/errors:
 
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/dma/mediatek,exdma.example.dtb: dma-controller@32850000 (mediatek,mt8196-exdma): 'mediatek,larb' is a required property
+	from schema $id: http://devicetree.org/schemas/dma/mediatek,exdma.yaml#
 
-From 811d6a923b40fc130f91abf49151f57cf9ac2a6f Mon Sep 17 00:00:00 2001
-From: Vinod Koul <vkoul@kernel.org>
-Date: Thu, 15 May 2025 11:42:13 +0100
-Subject: [PATCH] dmaengine: mediatek: drop unused variable
+doc reference errors (make refcheckdocs):
 
-Commit 157ae5ffd76a dmaengine: mediatek: Fix a possible deadlock error
-in mtk_cqdma_tx_status() fixed locks but kept unused varibale leading to
-warning and build failure (due to warning treated as errors)
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250515093454.1729720-3-paul-pl.chen@mediatek.com
 
-drivers/dma/mediatek/mtk-cqdma.c: In function 'mtk_cqdma_find_active_desc':
-drivers/dma/mediatek/mtk-cqdma.c:423:23: error: unused variable 'flags' [-Werror=unused-variable]
-  423 |         unsigned long flags;
-      |                       ^~~~~
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-Fix by dropping this unused flag
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: 157ae5ffd76a ("dmaengine: mediatek: Fix a possible deadlock error in mtk_cqdma_tx_status()")
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/dma/mediatek/mtk-cqdma.c | 1 -
- 1 file changed, 1 deletion(-)
+pip3 install dtschema --upgrade
 
-diff --git a/drivers/dma/mediatek/mtk-cqdma.c b/drivers/dma/mediatek/mtk-cqdma.c
-index e35271ac1eed..47c8adfdc155 100644
---- a/drivers/dma/mediatek/mtk-cqdma.c
-+++ b/drivers/dma/mediatek/mtk-cqdma.c
-@@ -420,7 +420,6 @@ static struct virt_dma_desc *mtk_cqdma_find_active_desc(struct dma_chan *c,
- {
- 	struct mtk_cqdma_vchan *cvc = to_cqdma_vchan(c);
- 	struct virt_dma_desc *vd;
--	unsigned long flags;
- 
- 	list_for_each_entry(vd, &cvc->pc->queue, node)
- 		if (vd->tx.cookie == cookie) {
--- 
-2.34.1
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
-
--- 
-~Vinod
