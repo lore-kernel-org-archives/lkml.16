@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20052980B5
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:57:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48347297A4A
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:57:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299468; cv=none; b=SysAFbT08zjtYaXesObJDHdJjrcjQ7/WLhe36lT0fTP2cDou0NjPRiSJU5QEe+oEneTSS5GohEE1sy/Ne/yEI7Eyat+ZA26O6cTrrZ+c4yUliprFq9n/uVrsRVoW2BSgE6Br3rJhJjSRZKjZAbDg55zrPu9esCx6LQFwXv3LjgM=
+	t=1747299474; cv=none; b=C4jJLrKyOWz2dYky0on6GMe9igCrrz9vkfjrecoYOAsHVmF/WC0L7/rJgkG1u625z2iwKV9xMaqRa4Y4dcQX8SPRA6Nf0e8qaSb792gGyacHClfyTNc4iMPfS3HR3bKqn5ICUjUf9J2ycuOR5HOu37I/LwBEBNiG6mAY3AG3914=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299468; c=relaxed/simple;
-	bh=5iShoFeNRgDVmEFMgRIhhGEkEjFE5sRIS9jH53sfYnY=;
+	s=arc-20240116; t=1747299474; c=relaxed/simple;
+	bh=m1/f6cUwFgLy8rwGkqxjggADDxrq1GzWLphLxgSp2Ow=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kbNN24BGYLv+cxTuR+MH3q3Tx/xEbh8PxpQ6groYMNHU5/NmUPpKsWSWqWqPAZ6q//K7JmEoekmFXcrM23XG8w/xbWQmyDUS8PaT5xxC6bNGA5U7OMCsbfBNFp9MiSe5F2/ma04m0N8Ti1sePfsqYsRqIQTQWUhLTuHI1aqWIrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihJ/n4e6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JcB3AxJ3eOmuNE0cJcoKt29C9TGp0owC3Z0MFEia6hWzj26sX2jpPqnVlulgDqPAwQPcior47oHW6TfxjW7FQrmqKaIrOfMbAeqYmbBwYIEk+GsvvJTzHZ9oS+vYYsXei7zHkiepLL+0wkEbREnnJFUTgu7YN42DnbW+K9iBeJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lwJXmkoN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihJ/n4e6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63A25C4CEE7;
-	Thu, 15 May 2025 08:57:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lwJXmkoN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C1F6C4CEE7;
+	Thu, 15 May 2025 08:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747299466;
-	bh=5iShoFeNRgDVmEFMgRIhhGEkEjFE5sRIS9jH53sfYnY=;
+	s=k20201202; t=1747299474;
+	bh=m1/f6cUwFgLy8rwGkqxjggADDxrq1GzWLphLxgSp2Ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ihJ/n4e6U/YFj/zGxO6jEG+XLoAaq8lhzKRlLv837tKiN8FBdESttHvsAOvSRXr2S
-	 Jg5qpY1rFgjWaKI+TL+3OtEAlLY0GgN7JiNJD+76Aum5XFtQK+chkG23wYn5BaUS6d
-	 N3ERjfhKczZchP7WweFkp4IfCfhxK0A971WK4eOMjuhwtfQAxboolwlLqaYUyQC8JF
-	 9fsRfrXXjP99Ys5egoBQ27+FCIzCQes1nh6FuyUbyKNRDyZcHQ/GqkWO7sV3pIUDSl
-	 PD1AfhVV4F5d5NPyu+2Xwq/LVj6+ae0coiJF/+dWnsm3pCYo+fyahrGIE94rez45A0
-	 jjth56mF4Yosg==
+	b=lwJXmkoNi8zObIQC2Qlysthx8Nnkqfcy0ax5uBGhyF2D+Mbpq2CY5nHcwtinrBOJ0
+	 nCew/Hfh54PxdQ1iY7ywSHuryC1X4Vp7lBKsTt610if0Oq2Zk9h7yyMfkcxT0+lHqP
+	 WBAmj11hxkGqR0SK3BrYkFqv/2zR6G5J+ofb/f+mEtkytaCg/CvX3O1dvztqniUz34
+	 HCzLkFMUnxmdtZB8Tafv9dLaZR7Qgwpkl3PEgHK9Akx8aVAPEokUo9/q6bF5si05H+
+	 UbOIjWA3ogSQRttbF1kHABH7e4hYzKpvvCku+TNBogIKiti38YbneLe2zhl6kjrjKb
+	 dVbOSispgxiOg==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -41,9 +41,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 09/15] x86/fpu: Remove the 'no387' boot option
-Date: Thu, 15 May 2025 10:56:59 +0200
-Message-ID: <20250515085708.2510123-10-mingo@kernel.org>
+Subject: [PATCH 11/15] x86/cpu: Make CONFIG_X86_TSC unconditional
+Date: Thu, 15 May 2025 10:57:01 +0200
+Message-ID: <20250515085708.2510123-12-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250515085708.2510123-1-mingo@kernel.org>
 References: <20250515085708.2510123-1-mingo@kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Without math emulation there's no point to this option.
+I.e. it's a boot time requirement for the CPU to support it.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Reviewed-by: Arnd Bergmann <arnd@arndb.de>
@@ -66,78 +66,50 @@ Cc: H . Peter Anvin <hpa@zytor.com>
 Cc: John Ogness <john.ogness@linutronix.de>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250425084216.3913608-10-mingo@kernel.org
+Link: https://lore.kernel.org/r/20250425084216.3913608-12-mingo@kernel.org
 ---
- Documentation/admin-guide/kernel-parameters.txt |  4 ----
- arch/x86/Kconfig                                | 20 +++++++++-----------
- arch/x86/kernel/cpu/common.c                    |  7 -------
- 3 files changed, 9 insertions(+), 22 deletions(-)
+ arch/x86/Kconfig     | 1 -
+ arch/x86/Kconfig.cpu | 1 -
+ arch/x86/xen/Kconfig | 2 +-
+ 3 files changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 8f75ec177399..e380fff281a9 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4067,10 +4067,6 @@
- 			These settings can be accessed at runtime via
- 			the nmi_watchdog and hardlockup_panic sysctls.
- 
--	no387		[BUGS=X86-32] Tells the kernel to use the 387 maths
--			emulation library even if a 387 maths coprocessor
--			is present.
--
- 	no4lvl		[RISCV,EARLY] Disable 4-level and 5-level paging modes.
- 			Forces kernel to use 3-level paging instead.
- 
 diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index e983705a4fe3..be5f9be532a9 100644
+index be5f9be532a9..3747efea6a31 100644
 --- a/arch/x86/Kconfig
 +++ b/arch/x86/Kconfig
-@@ -2739,18 +2739,16 @@ menuconfig APM
- 	  1) make sure that you have enough swap space and that it is
- 	  enabled.
- 	  2) pass the "idle=poll" option to the kernel
--	  3) switch on floating point emulation in the kernel and pass
--	  the "no387" option to the kernel
--	  4) pass the "floppy=nodma" option to the kernel
--	  5) pass the "mem=4M" option to the kernel (thereby disabling
-+	  3) pass the "floppy=nodma" option to the kernel
-+	  4) pass the "mem=4M" option to the kernel (thereby disabling
- 	  all but the first 4 MB of RAM)
--	  6) make sure that the CPU is not over clocked.
--	  7) read the sig11 FAQ at <http://www.bitwizard.nl/sig11/>
--	  8) disable the cache from your BIOS settings
--	  9) install a fan for the video card or exchange video RAM
--	  10) install a better fan for the CPU
--	  11) exchange RAM chips
--	  12) exchange the motherboard.
-+	  5) make sure that the CPU is not over clocked.
-+	  6) read the sig11 FAQ at <http://www.bitwizard.nl/sig11/>
-+	  7) disable the cache from your BIOS settings
-+	  8) install a fan for the video card or exchange video RAM
-+	  9) install a better fan for the CPU
-+	  10) exchange RAM chips
-+	  11) exchange the motherboard.
+@@ -662,7 +662,6 @@ config X86_INTEL_QUARK
+ 	depends on X86_32
+ 	depends on X86_EXTENDED_PLATFORM
+ 	depends on X86_PLATFORM_DEVICES
+-	depends on X86_TSC
+ 	depends on PCI
+ 	depends on PCI_GOANY
+ 	depends on X86_IO_APIC
+diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
+index 246a221c32e2..5f0e29d154a8 100644
+--- a/arch/x86/Kconfig.cpu
++++ b/arch/x86/Kconfig.cpu
+@@ -238,7 +238,6 @@ config X86_USE_PPRO_CHECKSUM
  
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called apm.
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 114aaaf6ae8a..a996915f763f 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1655,13 +1655,6 @@ static void __init cpu_parse_early_param(void)
- 	int arglen;
+ config X86_TSC
+ 	def_bool y
+-	depends on (MWINCHIP3D || MCRUSOE || MEFFICEON || MCYRIXIII || MK7 || MK6 || MPENTIUM4 || MPENTIUMM || MPENTIUMIII || MPENTIUMII || M686 || M586MMX || M586TSC || MVIAC3_2 || MVIAC7 || MGEODEGX1 || MGEODE_LX || MATOM) || X86_64
  
- #ifdef CONFIG_X86_32
--	if (cmdline_find_option_bool(boot_command_line, "no387"))
--#ifdef CONFIG_MATH_EMULATION
--		setup_clear_cpu_cap(X86_FEATURE_FPU);
--#else
--		pr_err("Option 'no387' required CONFIG_MATH_EMULATION enabled.\n");
--#endif
--
- 	if (cmdline_find_option_bool(boot_command_line, "nofxsr"))
- 		setup_clear_cpu_cap(X86_FEATURE_FXSR);
- #endif
+ config X86_HAVE_PAE
+ 	def_bool y
+diff --git a/arch/x86/xen/Kconfig b/arch/x86/xen/Kconfig
+index 98d8a50d2aed..222b6fdad313 100644
+--- a/arch/x86/xen/Kconfig
++++ b/arch/x86/xen/Kconfig
+@@ -10,7 +10,7 @@ config XEN
+ 	select X86_HV_CALLBACK_VECTOR
+ 	depends on X86_64 || (X86_32 && X86_PAE)
+ 	depends on X86_64 || (X86_GENERIC || MPENTIUM4 || MATOM)
+-	depends on X86_LOCAL_APIC && X86_TSC
++	depends on X86_LOCAL_APIC
+ 	help
+ 	  This is the Linux Xen port.  Enabling this will allow the
+ 	  kernel to boot in a paravirtualized environment under the
 -- 
 2.45.2
 
