@@ -1,319 +1,369 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2085.outbound.protection.outlook.com [40.107.220.85])
+Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FED929B22C;
-	Thu, 15 May 2025 19:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747335982; cv=fail; b=afLVNsGkigwzgLXolp+B5adqJZcd+rHA2C9Br6L3bVUUb2ih6dt2CLAMMkF6tjptpJj19TJllynlKuDf3323mzHc89ZEf8/BvvO/BWjgxZnw2EbZHTDMjIXxNSJ94e8rr50eIo87eswu+e57nPmJOrqXx7nVFdcBRcmbPMhdDdM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747335982; c=relaxed/simple;
-	bh=ORQn8cJwJs1TPsHzMCrpve/SWIYE3wvdwwEB2Eh7EO0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=MjLA3Hog4pt9UOsVo++rY3FCgizffveELNUx9DzDRWDBFkSEDZjFY9C7PQ3WpECQRPotk/SEGFOlD0jWR4fApSWf5a8kGuRqHUL+6mEqCt8ccuu7AOE86eXOmawAA4cnzCrvKVVzcnL6cN7jkq+7bSHvH73rtNX0VTRzXqmFsRc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OSwGei7N; arc=fail smtp.client-ip=40.107.220.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A7A1F4163;
+	Thu, 15 May 2025 19:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747336076; cv=none; b=P6tUlf0KBeYtBPS0cVIF3c6O+AoFJmVvf32E30N1tbGgmKHtpKOSs6FRoxnKthP9wNxCELwILQl4weD0EzPfclqH9iyzef6YCOvqk341esPqnTC1DVdCgDS8ntlJDUyaJmbeJvWgMVmg8LsPUGHS2vLGaqxCUFmMbtGr1WYxhWM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747336076; c=relaxed/simple;
+	bh=UV9x6XQ+cR/D6diC3muJ3RNnIUUZ6Z2XQ97a3vfKSp0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gV2FP26S0BoRuOYwd3xN8MxyyLSGIkMLiIC97UuMx6+wtMW8QrMF9BLRmYr+fegYXl47whp/cYgQs2NmrBA9S25EzvrGm1HxfxrLekN7rSSATAv8FAdfVZvyOqD5EZ+tMPiu0fYUh7YgHnO9ihx0cBzGXfeZG7sCozbaq7X2ibU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursu.me; spf=pass smtp.mailfrom=ursu.me; dkim=pass (2048-bit key) header.d=ursu.me header.i=@ursu.me header.b=LNec+Eb0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cQ3Z/hII; arc=none smtp.client-ip=202.12.124.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursu.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ursu.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OSwGei7N"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u/7bDkY3F0UmdajHiMgZt/kabdwObJv7Oip3z2ovmZHVe0iynqs9icSi1nJpOgKpHkn39h66nRDbKkVLnaqH8Qpd4op9NQC6hIcIco2iM3rf7TIAnD2ZGfrXomHJx9Z6Y9B97KvdAl4YGOb7kMhuqQgRlAZxQz8bsfD/tnMunrBy3r+Tp5Ssr595Nuo97aJUsGc4kPlMpDgTV5P0Dt+FBhfGecPPpvQSn5GauIZLEWlJNZhZJEqH078gFZdNOrHVNgJpqJ2ANmaHoa9ZsevNRHhnMBCg69ZkSBCnnD+/q5tUuUyPK7a9rH8jY13F3O6zdTPw6AusLF+Z0MvXoSpCUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ORQn8cJwJs1TPsHzMCrpve/SWIYE3wvdwwEB2Eh7EO0=;
- b=L9/yFTlG01oXZfbRlshlksNMS3e8/2TeKqwwS0oGSv1Wa7k4L9f58DT6kmW7RElWXjbCngSAmeX1+BO96mhx3D65FXwJ9RgvtcNl/T4f9iXCe+jM6eSdQMiV5TlAhcnFz73qR0qNur/x4gqo13SzsZ6QjeG3kHpJRwcJaCGIoHUnyTEH94DwG0oiPe1IxZ82iA8PGRi069eruYsypfxaTFpoNX7uLcMJgtvsJwN6UXtiO82T4dW1ZFbgEIBF8h2hQZwyxwbVA/5rIBqX1Wz1lia5Bmsn0tObSo3zkpS7l4QyZhsgz642fghyiLFiHkBrGCGLwRrqf6Umy3AZRmZ5yw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ORQn8cJwJs1TPsHzMCrpve/SWIYE3wvdwwEB2Eh7EO0=;
- b=OSwGei7NvTJwris05DESoXuxdyi7I8oQbDHcsEkQf++cgyqfp1NnXplZuB2VIgulo9oDnHiIFm2elv23ZgGwYgBwfWIJZM3UqMEjUhZOm7KdFOwqkWdYl+jFKancAQAlUY2w6oDQ2HAdJuhr1qHv3bCdkEVlS6bVP5f60DHKIMwUMlUGIr4XlqZPaLVxhpxVBZQ4OKiFT3QS+3ED+L5fsktZgaJ1YqFmZfdUyAgdVZbpATyOmgjsmqFpRrfY2/EDmzWYri/P2DcXhauYncn/mf7wbluyWBnsqtUsmzrjo9H+YuflV++5P7xxR/lBZK/x747Bcydxg3vbhkVOsdkh5w==
-Received: from CY5PR12MB6526.namprd12.prod.outlook.com (2603:10b6:930:31::20)
- by CH3PR12MB8509.namprd12.prod.outlook.com (2603:10b6:610:157::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Thu, 15 May
- 2025 19:06:11 +0000
-Received: from CY5PR12MB6526.namprd12.prod.outlook.com
- ([fe80::e420:4e37:166:9c56]) by CY5PR12MB6526.namprd12.prod.outlook.com
- ([fe80::e420:4e37:166:9c56%5]) with mapi id 15.20.8722.031; Thu, 15 May 2025
- 19:06:10 +0000
-From: Timur Tabi <ttabi@nvidia.com>
-To: "jpoimboe@kernel.org" <jpoimboe@kernel.org>
-CC: "dakr@kernel.org" <dakr@kernel.org>, "a.hindborg@kernel.org"
-	<a.hindborg@kernel.org>, "ojeda@kernel.org" <ojeda@kernel.org>,
-	"boqun.feng@gmail.com" <boqun.feng@gmail.com>, "patches@lists.linux.dev"
-	<patches@lists.linux.dev>, "stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"tmgross@umich.edu" <tmgross@umich.edu>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "alex.gaynor@gmail.com"
-	<alex.gaynor@gmail.com>, "benno.lossin@proton.me" <benno.lossin@proton.me>,
-	John Hubbard <jhubbard@nvidia.com>, "rust-for-linux@vger.kernel.org"
-	<rust-for-linux@vger.kernel.org>, "bjorn3_gh@protonmail.com"
-	<bjorn3_gh@protonmail.com>, "peterz@infradead.org" <peterz@infradead.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>, "aliceryhl@google.com"
-	<aliceryhl@google.com>, "gary@garyguo.net" <gary@garyguo.net>, Alexandre
- Courbot <acourbot@nvidia.com>, Alistair Popple <apopple@nvidia.com>
-Subject: Re: [PATCH 1/5] objtool/rust: add one more `noreturn` Rust function
- for Rust 1.87.0
-Thread-Topic: [PATCH 1/5] objtool/rust: add one more `noreturn` Rust function
- for Rust 1.87.0
-Thread-Index:
- AQHbxDH3Ep6RzftN7kiIvL2+4bJBKrPRG/KAgAAoPoCAAAXLgIAA7TOAgABJQICAAAkJAIABWCcAgAAu04A=
-Date: Thu, 15 May 2025 19:06:10 +0000
-Message-ID: <097a4926cebc9030469d42cc7a3392b39dfd703d.camel@nvidia.com>
-References: <20250502140237.1659624-1-ojeda@kernel.org>
-	 <20250502140237.1659624-2-ojeda@kernel.org>
-	 <20250513180757.GA1295002@joelnvbox> <20250513215833.GA1353208@joelnvbox>
-	 <38a7d3f8-3e75-4a1f-bc93-9b301330d898@nvidia.com>
-	 <f4c946b2988d63a26aff2d03fe73fbfe1f52f31b.camel@nvidia.com>
-	 <723f7ae8-bb36-4a4c-a1d8-733d131ca222@nvidia.com>
-	 <grdfkevm4nnovdefhn7thydixjtdt2w2aybuvnrtot2jolyte3@pmvcv3vbmmll>
-	 <554965650ac2aaa210028d495b06e1ede6aab74d.camel@nvidia.com>
-	 <devk5empq6e3fy4vp5mhxaznzrxfso6d4bqqzpzachlwy5w567@32tvtoddkn6p>
-In-Reply-To: <devk5empq6e3fy4vp5mhxaznzrxfso6d4bqqzpzachlwy5w567@32tvtoddkn6p>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.52.3-0ubuntu1 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CY5PR12MB6526:EE_|CH3PR12MB8509:EE_
-x-ms-office365-filtering-correlation-id: bb08ff12-b613-4d9f-a45f-08dd93e38df1
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|376014|7416014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?ZUVTVlBYdERqaGk0QTNmNHMvYjFsdVloWjE5NDB4RWVRdERENGhPaFQ2Q1VI?=
- =?utf-8?B?aHVLVmh4V1gyS05PQ1FtdW42YTNpTW9xakgzc0p2anFuKzg3aVIzUlBiVVJZ?=
- =?utf-8?B?ZWtNUGNHVi94SWFnZ0p2dC9kRDYwaTJJOVdXakdFcFNFYTk2UUhSazY1Kzg1?=
- =?utf-8?B?bjNZUW1ZYVB1dWU0eHRlZ0xibEhjVitQRDZMNEE1aktBQk5WbFVCY2s4SXZr?=
- =?utf-8?B?SnJMbDVyanQ4bStDT3ZCdTdVTUJGbnpWaXJ0bDJPTUZUTkZER2x5OVhMQjBS?=
- =?utf-8?B?MjFHS1Ura3JRTUtLRVdaZU1UOFQ0TDExQ3grVEVhc1RORkVudkJQd3Ird3lN?=
- =?utf-8?B?TGY0OGlNWmtRSlJXUk45VElXeExHd3dzcXRlcTFTVnFUUCtCRTdHUHhJQ0Nj?=
- =?utf-8?B?d0VrN2pscEdaVWtEUjlaVGgvaTBSS0NCQy9pVGl1dXdNWVNLL1NLRG5aMHJ1?=
- =?utf-8?B?TmtKKytPQWVlcW5aMHVCajlvVktzMnl1cmVUdDBKSVVuMG9ZMzg4cnpXQkxV?=
- =?utf-8?B?eGs4OGc2eURITlFMM21CZmwzQlNqVTBhdlJYYXIwVmZadEVYb1RNNW9HMm01?=
- =?utf-8?B?bVhXOERDSDcxMHdvYVZEWGZZRmk1SklUMlg4UGFhOTQ5RFdKK2JjSFRLWHBh?=
- =?utf-8?B?SlpEdWdyZ2tJMzgrOHVjU0ZEQ1U4OURvOFZ6aU5VSy9waVp1N3dFbllKNTcy?=
- =?utf-8?B?TWdHMm9icTAvbFg5NW9hTU5WNXJrYnd0K2ZGSTkxOGJXcEd1M0FKNnFHcDU4?=
- =?utf-8?B?aVliMTRHczFzMXRvcjZnQk9xWldzeFBJSlVDYy81VzFtbWNhcjhLYzFjdERD?=
- =?utf-8?B?TGdDLzlyU21aQzFLYTlRaUhFVDBDNWx2akpEVnZDVUw2SXFXVWFNdlR4OENM?=
- =?utf-8?B?SUVIY3JxMEUzUU10TFczbkJTVDgxbjVqYkYxV2dqMlhjY3h6OFcrMXVZbUNE?=
- =?utf-8?B?M3puWVNXaUhKSzBRQTc2aFdsMkRtS0ZLaVRBa29QdURRM2p5cCtlNnFNbWpk?=
- =?utf-8?B?VXpHcDZsaHk4bnNGdHRPMEJoVHNBMmQvL0daRzcxNDVyWnkwS0tqbDl5Rk1D?=
- =?utf-8?B?VFNrWFdYSW9QUWJFQ1JJWWl5TWdMQlEyNGZsZTlESkIwUHdRL3dVNHpVVHE1?=
- =?utf-8?B?djlRTDhYTnRjbEozeSs5NElSN2F1OHh5Mm9yTVA1K0F0TUNsUVE4TGtzZzZB?=
- =?utf-8?B?QlNBWTNBYXdzdC9XbGRtWVlFZUtrcUtZY1czQ1FuZ0twNzg1SEpWUDM0U0dZ?=
- =?utf-8?B?TlZta2NtZ084M2dkeitTam51VVhmcHFHRzA2OWtUcEt0UFNwd1I2eldOcCtW?=
- =?utf-8?B?TW5tU0NCY3JzWFJ2MlUzd2JBZXF0ekNWQS83SUtPcXpiOHVZVlVOYXJJQWl4?=
- =?utf-8?B?RVM2R0dPK3Mva3k5M3ZtUjhmZTZsZisybFdlUCtObWJGNDllcVNaOGNLWExm?=
- =?utf-8?B?THVsWEtTUkdJWVRycWsxNHlMb0VMLzY0NDhSeDhOSUVmNEtIV1k0Yjk0RzBq?=
- =?utf-8?B?TUFSNnB0ZnRHZEY0TTVTZGo4dDc0QngyYzJoQ2U0ZjVYR3ZnZm1BNEE1bHlC?=
- =?utf-8?B?cWQyQWEvSFVOaFZSZENlckU2eFErWGVqMU4vR3dZVUd4RlhiVlEraTFLdVlB?=
- =?utf-8?B?Szk5MVZBR3JNN2V6a2lQSFQvejZBeDJDZjh2c2dsYkFRUXg5NjBWWWpQTUh2?=
- =?utf-8?B?U3h5NDFkS3NheWpRMlZBckJqYVpnQlRoZ2tpZElLRjVoakZSRUdBR2JXajdF?=
- =?utf-8?B?NmV3ekNMQkUrZVY5L2tCdFJkUFkwRjN5bHFtbU5RaVYzei9zdktMNVRsZVFa?=
- =?utf-8?B?YUppOWE1RDRNellkUWhyVlQ2Z1dhWC9Nb2RsdGtnSjcweHVCcURSbGF1VFgw?=
- =?utf-8?B?ZlRndWtLOFJDYlhSdFZPK1ZmNVM3N3JDelVkMzhNa0tQNjdrVUFUU3oxRGlD?=
- =?utf-8?B?TG5RMTlBVlB4aktyU1ZLek9sYzdZTU4yZGxhbUxQWFFVSXFUOVVGeVhjRzI5?=
- =?utf-8?Q?pA7dIX7pFY0NTOI0Z8bglUMZZIjOSQ=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6526.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?SzhYdUhwUUVTQnZKWllrLytUYm9SR2hGbDVxODhubmlWVXJKQ1lWL052Rk9x?=
- =?utf-8?B?blZkVUtKVXNPVjFzK2tFbVdsb0hyVTZOeDhSMEg1V1p0UkdqR0U5NVJzWGJ3?=
- =?utf-8?B?NWxpQlR6MjJQcGFFSGszUmdBSkJuak9Db2k5RGErbHZoSStqVElWQXJSVHBT?=
- =?utf-8?B?NnVzNlpoRmFOaTc1cGQ0b3REK0N2eVhiZHptUUVoYmFnaEc4UzRLaVJoRmZt?=
- =?utf-8?B?ZE8yNzdjWlhXMGprMGV2QTZhMVJPc1U1YU1aSXRkaUdOcFB6QW8zdUcyNzg1?=
- =?utf-8?B?S2lpbUtXcG1TdllRelVkbEhQZ0oyNzVab2ttaWRRUkN4N0RxZUYzdzA2NzhX?=
- =?utf-8?B?Sm1VOXl1bmxIc2lqV0U3Y0ppMERSTks0QzZJOXhOZUhtcDlDZDJ4bHZLZ2Fw?=
- =?utf-8?B?WU1tV2NLQ2VEMFU2bGhHZEtFeHhJOUdpbkdRZHNSWjFWYlNOSjVRKzZ2czU4?=
- =?utf-8?B?UTFqTDVHczltZUc5cCszWjFoVnFzcVFmaXhnM05ENUJtMVJPeWxlNjhUK1I1?=
- =?utf-8?B?Z1RvREJpam93UTN0STZEaFhqcXlidG9FNCtIT0pialdORjNQTHppNnBieDVn?=
- =?utf-8?B?REZhaEdiOEJrL3BSWll5akJSbXJvV3BKempFUFNZTWM4YWZWQ3NWeWJrUXBI?=
- =?utf-8?B?Zk9aTkFGR3I5c0laVlk4UHNTeU1SOXZ0NGpqMFVjM2pEVmNuMEZHMGFmV2kz?=
- =?utf-8?B?MUc5dEQ4bEw1Z21zQmNSTFl2VlI2WG45SXRkVVFPWnhxTDY3WmlQR2ZKSDZa?=
- =?utf-8?B?OHd1TjZwNWFPdjlZUitWbXpTMjJYM1dzOHNLY1BaQmFBZVlyZkJITytkT2Uw?=
- =?utf-8?B?SlJvMmhnb3FML1lWN1I3MmU0YjRITXRILzVmMFdKNVZOaVZKK0czTytvNmkr?=
- =?utf-8?B?V1IxOGZIWWlRZVFidDlrazBSdyttUTVONytpZXlUS2FXN1Z1QTdHV3ZrVWQ4?=
- =?utf-8?B?ZWFqc3NLdWJVSFFEV1JJR2QxM215aE4vd25adWFVZmQ3aHhLaWRxVVJPVUd4?=
- =?utf-8?B?eWZtcTV6R3VINTRkbThhdnBLdTVrelVOWUtXaTZINVZ0MFBLVWtPejY1T0I0?=
- =?utf-8?B?UjlrQm5rZ2ZDMFFER1lta0kxUXpILzljN0FxWXpmdm5RdjFTNXptK1oxS2w4?=
- =?utf-8?B?SXZOTkFoc1RHcFNyY09PbG9UZEZnNmtyYUxkY3hXQmVCaWxOc2xMTVViNnFt?=
- =?utf-8?B?c0dIRXg2Z1Y5M2JXdTNPU05VYW9GdkM5UEJqWURSdWVjcnRkdkZLZFFBR09y?=
- =?utf-8?B?MktwTGF5QlNOTUVZMkY4YXVhRTlwZlp5YytnL3dEMnBweXVlRXV5N3BIUURs?=
- =?utf-8?B?L0VFNk9tMTI5K0swNUZLMG02VjhZQ2RvSGpJUlM5Z0hNQnc1dEVhMzV0S0dE?=
- =?utf-8?B?TU9nRFhVN2hxcnUzSUdlVGZzVXRnNFgzTEZEQ0dib28wNXNtMGRkUGpZVlBV?=
- =?utf-8?B?Ky9EdHBZWnpVeSswbjZpVFNnejFEMzFTMGlGQWN1dnlpV093SFFmc0I2ai9O?=
- =?utf-8?B?U3V4WTJOTGJxL3JyWkx3a25sM2dtMHZDQ0ZjY0E5V2lQVmxLS0hRZEVyZTVZ?=
- =?utf-8?B?TEk1bmIzVDQ2V1NKSTJ6NjBZTFdVRWNjVGVYRE1vWjkwU08wcnRDSDNpWjZU?=
- =?utf-8?B?MTJLZE9kd1dwWkFvWWNndVNKS1dZdjQ1bjJhdXJGbC9ITkc2bVpjUm1uakJh?=
- =?utf-8?B?TEpMZWNHMXFYdzdpU0lLQyt6MktrM1NNcmhOQXFUYUdSRmg5dTk0N2JEblFE?=
- =?utf-8?B?dHdBdUV1UXk4blNFTzZNOFJzS3IxamRnT2JwQ0ptanJlUmF5a2hTbXptNHhX?=
- =?utf-8?B?WmJPaGhqQ2xwTTZxRlRRazU3bEU0cjd4U0FUQXJWUkZIRzB5NUhYQUU0eWZZ?=
- =?utf-8?B?ZDNpdzI5UlFqNkU1VWFwYVc2b3BYMFlHS3ZsRjM3RUl5SGxLRXNQMEkybzRG?=
- =?utf-8?B?allOYTNkSTRSRG56OVRYRCswelFyc2VZMzVxQ3o2YVl3czNteEI0R0QvY3c4?=
- =?utf-8?B?d3N1aDlhVUhVMTAwWDdIWVNuVnZ2RXV6bkdCV3piMWU5T1ByTmdIZFBHem10?=
- =?utf-8?B?YmEzS2syVkVwMU54ek85dDB4djg4SXoxU2ZHazZ6c3hCMFlpVldVT0dLUWlt?=
- =?utf-8?Q?IXm+TOkj3Yy/eH1WAtVe3GH+v?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DC4559137BCDFA4691211995E63602C2@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=ursu.me header.i=@ursu.me header.b="LNec+Eb0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cQ3Z/hII"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id C04EB254010A;
+	Thu, 15 May 2025 15:07:50 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Thu, 15 May 2025 15:07:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ursu.me; h=cc:cc
+	:content-transfer-encoding:content-type:content-type:date:date
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1747336070;
+	 x=1747422470; bh=9EmCe1q2Eg5oHsao11iqVbhKxJnm4mj5FEOLmpM563c=; b=
+	LNec+Eb0Fc/7H3Guw0hyZjnAT8R30U9/Jg7wQ/GHiiNN1qoRKHv7LYfJA72cMumU
+	s1+iCDeTaAVrTrso38AgeD9+3zVq6/7JMYDDzgIL/VQ19uNGzz3+OCuaL6oVh2Fp
+	J7b1BdY9/lrJ5BjjfNbqHUbAmwoOgeW5mA0TIB7LltFIv2doi5+syGuRj+Q9lEqR
+	XFkbvAV2sHKYr/NVROxsLpaG3OeVXQY6Dd0k7zJrkZOz9B0iyMKIIegOCqmlsIHE
+	ylxmPZTnuHfz+LK2uBHPhdycRajCkmPhP6XMywR+QpHqtlPQASpnwCqXcW4wL7Q6
+	HL3tHDHpZvsqjHTKGBTESA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747336070; x=
+	1747422470; bh=9EmCe1q2Eg5oHsao11iqVbhKxJnm4mj5FEOLmpM563c=; b=c
+	Q3Z/hII0dV0Xp6WtMwspctWYjQv/IzGdBvZfxpkOiQeqKo6HHJUcnW98sHdNS2zh
+	gf9LAOIHhXitr3/B6h9PCreSXda+2p4ZLcNwX573jvqxm5oY1HjOLGiH2jR3pMSc
+	gwTeJzOX2adDfas7t36zRAJ/WUlQAj3RBPfXUy5vIILDnW+bJqSsu2/Cy+lN3s8q
+	axGmgCurXw023TQTDWfbpsJHRNZ2bIKpyCZ5zzH22vw09CK2rTqlsukeh+KA25ji
+	ZEJQzCyCQHoRYdmhnqh8z44IZH0eLkOb8U18SD96dNwVtbw/4Zrhjl/KmXSD6IrH
+	5UqPCaFp6uFKTLNtOkq8g==
+X-ME-Sender: <xms:hTsmaN0g_aYlY8Ko1aoTJ3bOLUnGwIUYGTmd0eLDwIHu-jgr6O5WCQ>
+    <xme:hTsmaEGo_76ci5qz2_cUn1kemURGZBqcRULr3Rx1hkDPwYx31wfrAHMiXOtJWaqrt
+    GVik_VU5oBvHt1zx0w>
+X-ME-Received: <xmr:hTsmaN5hUXUIqi0q_ZMBFIUzhjn7W3oRY4fyZ6YaQP0rNfS6ZhLl5SQmHqXnRP2TWQgV>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefuddtieejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddt
+    vdejnecuhfhrohhmpegglhgrugcufgftufgfuceovhhlrggusehurhhsuhdrmhgvqeenuc
+    ggtffrrghtthgvrhhnpeekfeegveejvdefhfffieegffefgfeuudegieeludefudfguedu
+    fedtfeeigfffgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehvlhgrugesuhhrshhurdhmvgdpnhgspghrtghpthhtohepuddvpdhmohguvgep
+    shhmthhpohhuthdprhgtphhtthhopehvihhtrghlhidrlhhifhhshhhithhssehinhhtvg
+    hlrdgtohhmpdhrtghpthhtohepjhgrtggvkhesjhgrtggvkhhkrdhinhhfohdprhgtphht
+    thhopegrnhhthhhonhihrdhlrdhnghhuhigvnhesihhnthgvlhdrtghomhdprhgtphhtth
+    hopehprhiivghmhihslhgrfidrkhhithhsiigvlhesihhnthgvlhdrtghomhdprhgtphht
+    thhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohepuggrvh
+    gvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghho
+    ohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtph
+    htthhopehprggsvghnihesrhgvughhrghtrdgtohhm
+X-ME-Proxy: <xmx:hTsmaK2LHxMuV9OvaQ91t02qHfqDa66y-ylQyAStJLwr4HCjEKAggg>
+    <xmx:hTsmaAGrq4G1xO-n7EBh0YfQ9vvJtW1rI5NtcBW6hq55O7BSCtnO8w>
+    <xmx:hTsmaL9RjXX_wMYo8OWLr1lFHYnIZCDXEeDb5PjWxlG6Q3nn-kpkMg>
+    <xmx:hTsmaNn5TnXJzx1doaASv2Qe0ULMp9Fxk6um8DZY2-AJHUji1UL-1Q>
+    <xmx:hjsmaK6H808UxnCxvrM--v7a_lyXtpT1VHKSt3bvvS_8mT5CiJ6JvgSx>
+Feedback-ID: i9ff147ff:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 15 May 2025 15:07:46 -0400 (EDT)
+Message-ID: <47b2fe98-da85-4cef-9668-51c36ac66ce5@ursu.me>
+Date: Thu, 15 May 2025 22:07:44 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6526.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb08ff12-b613-4d9f-a45f-08dd93e38df1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2025 19:06:10.4701
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nP2xCs/CtictDe7DXQzi89KBKAzeW5mhRmR1/+9G+tHJC1/1YXkWOiX7CNdiwH79tl1O3l3OZvRl0nIZhG0VLQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8509
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Intel-wired-lan] [PATCH] e1000e: disregard NVM checksum on tgp
+ when valid checksum mask is not set
+To: "Lifshits, Vitaly" <vitaly.lifshits@intel.com>,
+ Jacek Kowalski <jacek@jacekk.info>, Tony Nguyen
+ <anthony.l.nguyen@intel.com>, Przemek Kitszel
+ <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <5555d3bd-44f6-45c1-9413-c29fe28e79eb@jacekk.info>
+ <23bb365c-9d96-487f-84cc-2ca1235a97bb@ursu.me>
+ <03216908-6675-4487-a7e1-4a42d169c401@intel.com>
+Content-Language: en-US
+From: Vlad URSU <vlad@ursu.me>
+In-Reply-To: <03216908-6675-4487-a7e1-4a42d169c401@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-T24gVGh1LCAyMDI1LTA1LTE1IGF0IDA5OjE4IC0wNzAwLCBKb3NoIFBvaW1ib2V1ZiB3cm90ZToN
-Cj4gPiBTaW5jZSBJIGJ1aWxkIHdpdGggTExWTT0xLCBJJ20gYXNzdW1pbmcgdGhlIGFuc3dlciBp
-cyAxOC4xLjMNCj4gDQo+IEknbSBub3QgYWJsZSB0byByZWNyZWF0ZSwgY2FuIHlvdSBydW4gd2l0
-aCBPQkpUT09MX1ZFUkJPU0U9MSBhbmQgcGFzdGUNCj4gdGhlIG91dHB1dD8NCg0KWW91IHByb2Jh
-Ymx5IGNhbid0IHJlcHJvIGJlY2F1c2UgaXQgaW5jbHVkZXMgY29kZSB0aGF0IGhhc24ndCBiZWVu
-IG1lcmdlZCB1cHN0cmVhbSB5ZXQuICBUcnkgdGhpczoNCg0KaHR0cHM6Ly9naXRodWIuY29tL3R0
-YWJpL2xpbnV4L2NvbW1pdHMvYWxleA0KDQogIENISyAgICAga2VybmVsL2toZWFkZXJzX2RhdGEu
-dGFyLnh6DQpkcml2ZXJzL2dwdS9ub3ZhLWNvcmUvbm92YV9jb3JlLm86IHdhcm5pbmc6IG9ianRv
-b2w6DQpfUk52WHNhX050Q3M4UzM5MTdXaWx5b185bm92YV9jb3JlNXZiaW9zTnRCNV8xNFBjaUF0
-Qmlvc0ltYWdlSU50TnRDc2dLODhEUGFpMWxDXzRjb3JlN2NvbnZlcnQ3VHJ5RnJvDQptTnRCNV8x
-M0Jpb3NJbWFnZUJhc2VFOHRyeV9mcm9tKCkgZmFsbHMgdGhyb3VnaCB0byBuZXh0IGZ1bmN0aW9u
-DQpfUk52TXNkX050Q3M4UzM5MTdXaWx5b185bm92YV9jb3JlNXZiaW9zTnRCNV8xNEZ3U2VjQmlv
-c0ltYWdlMTJmd3NlY19oZWFkZXIoKQ0KZHJpdmVycy9ncHUvbm92YS1jb3JlL25vdmFfY29yZS5v
-OiB3YXJuaW5nOiBvYmp0b29sOiAgDQpfUk52WHNhX050Q3M4UzM5MTdXaWx5b185bm92YV9jb3Jl
-NXZiaW9zTnRCNV8xNFBjaUF0Qmlvc0ltYWdlSU50TnRDc2dLODhEUGFpMWxDXzRjb3JlN2NvbnZl
-cnQ3VHJ5RnJvDQptTnRCNV8xM0Jpb3NJbWFnZUJhc2VFOHRyeV9mcm9tKzB4NWM6IChicmFuY2gp
-DQpkcml2ZXJzL2dwdS9ub3ZhLWNvcmUvbm92YV9jb3JlLm86IHdhcm5pbmc6IG9ianRvb2w6ICAN
-Cl9STnZYc2FfTnRDczhTMzkxN1dpbHlvXzlub3ZhX2NvcmU1dmJpb3NOdEI1XzE0UGNpQXRCaW9z
-SW1hZ2VJTnROdENzZ0s4OERQYWkxbENfNGNvcmU3Y29udmVydDdUcnlGcm8NCm1OdEI1XzEzQmlv
-c0ltYWdlQmFzZUU4dHJ5X2Zyb20rMHg0YTogKGJyYW5jaCkNCmRyaXZlcnMvZ3B1L25vdmEtY29y
-ZS9ub3ZhX2NvcmUubzogd2FybmluZzogb2JqdG9vbDogIA0KX1JOdlhzYV9OdENzOFMzOTE3V2ls
-eW9fOW5vdmFfY29yZTV2Ymlvc050QjVfMTRQY2lBdEJpb3NJbWFnZUlOdE50Q3NnSzg4RFBhaTFs
-Q180Y29yZTdjb252ZXJ0N1RyeUZybw0KbU50QjVfMTNCaW9zSW1hZ2VCYXNlRTh0cnlfZnJvbSsw
-eDA6IDw9PT0gKHN5bSkNCi4vdG9vbHMvb2JqdG9vbC9vYmp0b29sIC0taGFja3M9anVtcF9sYWJl
-bCAtLWhhY2tzPW5vaW5zdHIgLS1oYWNrcz1za3lsYWtlIC0tbWNvdW50IC0tbW5vcCAtLQ0KcmV0
-cG9saW5lIC0tcmV0aHVuayAtLXNscyAtLXN0YWNrdmFsIC0tc3RhdGljLWNhbGwgLS11YWNjZXNz
-IC0tcHJlZml4PTE2IC0tbW9kdWxlIGRyaXZlcnMvZ3B1L25vdmEtDQpjb3JlL25vdmFfY29yZS5v
-Lm9yaWcgLW8gZHJpdmVycy9ncHUvbm92YS1jb3JlL25vdmFfY29yZS5vDQowMDAwIDAwMDAwMDAw
-MDAwMDYyMzANCjxfUk52WHNhX050Q3M4UzM5MTdXaWx5b185bm92YV9jb3JlNXZiaW9zTnRCNV8x
-NFBjaUF0Qmlvc0ltYWdlSU50TnRDc2dLODhEUGFpMWxDXzRjb3JlN2NvbnZlcnQ3VHJ5RnINCm9t
-TnRCNV8xM0Jpb3NJbWFnZUJhc2VFOHRyeV9mcm9tPjoNCjAwMDAgICAgIDYyMzA6CTU1ICAgICAg
-ICAgICAgICAgICAgIAlwdXNoICAgJXJicA0KMDAwMSAgICAgNjIzMToJNDggODkgZTUgICAgICAg
-ICAgICAgCW1vdiAgICAlcnNwLCVyYnANCjAwMDQgICAgIDYyMzQ6CTUzICAgICAgICAgICAgICAg
-ICAgIAlwdXNoICAgJXJieA0KMDAwNSAgICAgNjIzNToJNDggODMgZWMgMTggICAgICAgICAgCXN1
-YiAgICAkMHgxOCwlcnNwDQowMDA5ICAgICA2MjM5Ogk0OCA4OSBmYiAgICAgICAgICAgICAJbW92
-ICAgICVyZGksJXJieA0KMDAwYyAgICAgNjIzYzoJNDggOGIgM2UgICAgICAgICAgICAgCW1vdiAg
-ICAoJXJzaSksJXJkaQ0KMDAwZiAgICAgNjIzZjoJNDggOGIgNGUgMTAgICAgICAgICAgCW1vdiAg
-ICAweDEwKCVyc2kpLCVyY3gNCjAwMTMgICAgIDYyNDM6CWM3IDQ1IGYyIGZmIGI4IDQyIDQ5IAlt
-b3ZsICAgJDB4NDk0MmI4ZmYsLTB4ZSglcmJwKQ0KMDAxYSAgICAgNjI0YToJNjYgYzcgNDUgZjYg
-NTQgMDAgICAgCW1vdncgICAkMHg1NCwtMHhhKCVyYnApDQowMDIwICAgICA2MjUwOgk0OCA4MyBm
-OSAwNiAgICAgICAgICAJY21wICAgICQweDYsJXJjeA0KMDAyNCAgICAgNjI1NDoJNzIgNDIgICAg
-ICAgICAgICAgICAgCWpiICAgICA2Mjk4DQo8X1JOdlhzYV9OdENzOFMzOTE3V2lseW9fOW5vdmFf
-Y29yZTV2Ymlvc050QjVfMTRQY2lBdEJpb3NJbWFnZUlOdE50Q3NnSzg4RFBhaTFsQ180Y29yZTdj
-b252ZXJ0N1RyeUZyDQpvbU50QjVfMTNCaW9zSW1hZ2VCYXNlRTh0cnlfZnJvbSsweDY4Pg0KMDAy
-NiAgICAgNjI1NjoJNDggOGQgNTEgZmIgICAgICAgICAgCWxlYSAgICAtMHg1KCVyY3gpLCVyZHgN
-CjAwMmEgICAgIDYyNWE6CTMxIGMwICAgICAgICAgICAgICAgIAl4b3IgICAgJWVheCwlZWF4DQow
-MDJjICAgICA2MjVjOgkwZiAxZiA0MCAwMCAgICAgICAgICAJbm9wbCAgIDB4MCglcmF4KQ0KMDAz
-MCAgICAgNjI2MDoJNDQgOGIgMDQgMDcgICAgICAgICAgCW1vdiAgICAoJXJkaSwlcmF4LDEpLCVy
-OGQNCjAwMzQgICAgIDYyNjQ6CTQ0IDMzIDQ1IGYyICAgICAgICAgIAl4b3IgICAgLTB4ZSglcmJw
-KSwlcjhkDQowMDM4ICAgICA2MjY4Ogk0NCAwZiBiNyA0YyAwNyAwNCAgICAJbW92endsIDB4NCgl
-cmRpLCVyYXgsMSksJXI5ZA0KMDAzZSAgICAgNjI2ZToJNjYgNDQgMzMgNGQgZjYgICAgICAgCXhv
-ciAgICAtMHhhKCVyYnApLCVyOXcNCjAwNDMgICAgIDYyNzM6CTQ1IDBmIGI3IGM5ICAgICAgICAg
-IAltb3Z6d2wgJXI5dywlcjlkDQowMDQ3ICAgICA2Mjc3Ogk0NSAwOSBjMSAgICAgICAgICAgICAJ
-b3IgICAgICVyOGQsJXI5ZA0KMDA0YSAgICAgNjI3YToJNzQgMGEgICAgICAgICAgICAgICAgCWpl
-ICAgICA2Mjg2DQo8X1JOdlhzYV9OdENzOFMzOTE3V2lseW9fOW5vdmFfY29yZTV2Ymlvc050QjVf
-MTRQY2lBdEJpb3NJbWFnZUlOdE50Q3NnSzg4RFBhaTFsQ180Y29yZTdjb252ZXJ0N1RyeUZyDQpv
-bU50QjVfMTNCaW9zSW1hZ2VCYXNlRTh0cnlfZnJvbSsweDU2Pg0KMDA0YyAgICAgNjI3YzoJNDgg
-ZmYgYzAgICAgICAgICAgICAgCWluYyAgICAlcmF4DQowMDRmICAgICA2MjdmOgk0OCAzOSBjMiAg
-ICAgICAgICAgICAJY21wICAgICVyYXgsJXJkeA0KMDA1MiAgICAgNjI4MjoJNzUgZGMgICAgICAg
-ICAgICAgICAgCWpuZSAgICA2MjYwDQo8X1JOdlhzYV9OdENzOFMzOTE3V2lseW9fOW5vdmFfY29y
-ZTV2Ymlvc050QjVfMTRQY2lBdEJpb3NJbWFnZUlOdE50Q3NnSzg4RFBhaTFsQ180Y29yZTdjb252
-ZXJ0N1RyeUZyDQpvbU50QjVfMTNCaW9zSW1hZ2VCYXNlRTh0cnlfZnJvbSsweDMwPg0KMDA1NCAg
-ICAgNjI4NDoJZWIgMTIgICAgICAgICAgICAgICAgCWptcCAgICA2Mjk4DQo8X1JOdlhzYV9OdENz
-OFMzOTE3V2lseW9fOW5vdmFfY29yZTV2Ymlvc050QjVfMTRQY2lBdEJpb3NJbWFnZUlOdE50Q3Nn
-Szg4RFBhaTFsQ180Y29yZTdjb252ZXJ0N1RyeUZyDQpvbU50QjVfMTNCaW9zSW1hZ2VCYXNlRTh0
-cnlfZnJvbSsweDY4Pg0KMDA1NiAgICAgNjI4NjoJNDggODkgY2EgICAgICAgICAgICAgCW1vdiAg
-ICAlcmN4LCVyZHgNCjAwNTkgICAgIDYyODk6CTQ4IDI5IGMyICAgICAgICAgICAgIAlzdWIgICAg
-JXJheCwlcmR4DQowMDVjICAgICA2MjhjOgkwZiA4MiBhYyAwMCAwMCAwMCAgICAJamIgICAgIDYz
-M2UNCjxfUk52WHNhX050Q3M4UzM5MTdXaWx5b185bm92YV9jb3JlNXZiaW9zTnRCNV8xNFBjaUF0
-Qmlvc0ltYWdlSU50TnRDc2dLODhEUGFpMWxDXzRjb3JlN2NvbnZlcnQ3VHJ5RnINCm9tTnRCNV8x
-M0Jpb3NJbWFnZUJhc2VFOHRyeV9mcm9tKzB4MTBlPg0KMDA2MiAgICAgNjI5MjoJNDggODMgZmEg
-MGMgICAgICAgICAgCWNtcCAgICAkMHhjLCVyZHgNCjAwNjYgICAgIDYyOTY6CTczIDMwICAgICAg
-ICAgICAgICAgIAlqYWUgICAgNjJjOA0KPF9STnZYc2FfTnRDczhTMzkxN1dpbHlvXzlub3ZhX2Nv
-cmU1dmJpb3NOdEI1XzE0UGNpQXRCaW9zSW1hZ2VJTnROdENzZ0s4OERQYWkxbENfNGNvcmU3Y29u
-dmVydDdUcnlGcg0Kb21OdEI1XzEzQmlvc0ltYWdlQmFzZUU4dHJ5X2Zyb20rMHg5OD4NCjAwNjgg
-ICAgIDYyOTg6CWM3IDQzIDA4IGVhIGZmIGZmIGZmIAltb3ZsICAgJDB4ZmZmZmZmZWEsMHg4KCVy
-YngpDQowMDZmICAgICA2MjlmOgk0OCBjNyAwMyAwMiAwMCAwMCAwMCAJbW92cSAgICQweDIsKCVy
-YngpDQowMDc2ICAgICA2MmE2Ogk0OCA4YiA0NiAwOCAgICAgICAgICAJbW92ICAgIDB4OCglcnNp
-KSwlcmF4DQowMDdhICAgICA2MmFhOgk0OCA4NSBjMCAgICAgICAgICAgICAJdGVzdCAgICVyYXgs
-JXJheA0KMDA3ZCAgICAgNjJhZDoJNDggMGYgNDQgZjggICAgICAgICAgCWNtb3ZlICAlcmF4LCVy
-ZGkNCjAwODEgICAgIDYyYjE6CTMxIGY2ICAgICAgICAgICAgICAgIAl4b3IgICAgJWVzaSwlZXNp
-DQowMDgzICAgICA2MmIzOgkzMSBkMiAgICAgICAgICAgICAgICAJeG9yICAgICVlZHgsJWVkeA0K
-MDA4NSAgICAgNjJiNToJZTggMDAgMDAgMDAgMDAgICAgICAgCWNhbGwgICA2MmJhDQo8X1JOdlhz
-YV9OdENzOFMzOTE3V2lseW9fOW5vdmFfY29yZTV2Ymlvc050QjVfMTRQY2lBdEJpb3NJbWFnZUlO
-dE50Q3NnSzg4RFBhaTFsQ180Y29yZTdjb252ZXJ0N1RyeUZyDQpvbU50QjVfMTNCaW9zSW1hZ2VC
-YXNlRTh0cnlfZnJvbSsweDhhPgk2MmI2OiBSX1g4Nl82NF9QTFQzMglydXN0X2hlbHBlcl9rcmVh
-bGxvYy0weDQNCjAwOGEgICAgIDYyYmE6CTQ4IDg5IGQ4ICAgICAgICAgICAgIAltb3YgICAgJXJi
-eCwlcmF4DQowMDhkICAgICA2MmJkOgk0OCA4MyBjNCAxOCAgICAgICAgICAJYWRkICAgICQweDE4
-LCVyc3ANCjAwOTEgICAgIDYyYzE6CTViICAgICAgICAgICAgICAgICAgIAlwb3AgICAgJXJieA0K
-MDA5MiAgICAgNjJjMjoJNWQgICAgICAgICAgICAgICAgICAgCXBvcCAgICAlcmJwDQowMDkzICAg
-ICA2MmMzOgllOSAwMCAwMCAwMCAwMCAgICAgICAJam1wICAgIDYyYzgNCjxfUk52WHNhX050Q3M4
-UzM5MTdXaWx5b185bm92YV9jb3JlNXZiaW9zTnRCNV8xNFBjaUF0Qmlvc0ltYWdlSU50TnRDc2dL
-ODhEUGFpMWxDXzRjb3JlN2NvbnZlcnQ3VHJ5RnINCm9tTnRCNV8xM0Jpb3NJbWFnZUJhc2VFOHRy
-eV9mcm9tKzB4OTg+CTYyYzQ6IFJfWDg2XzY0X1BMVDMyCV9feDg2X3JldHVybl90aHVuay0weDQN
-CjAwOTggICAgIDYyYzg6CTY2IDgxIDNjIDA3IGZmIGI4ICAgIAljbXB3ICAgJDB4YjhmZiwoJXJk
-aSwlcmF4LDEpDQowMDllICAgICA2MmNlOgk3NSBjOCAgICAgICAgICAgICAgICAJam5lICAgIDYy
-OTgNCjxfUk52WHNhX050Q3M4UzM5MTdXaWx5b185bm92YV9jb3JlNXZiaW9zTnRCNV8xNFBjaUF0
-Qmlvc0ltYWdlSU50TnRDc2dLODhEUGFpMWxDXzRjb3JlN2NvbnZlcnQ3VHJ5RnINCm9tTnRCNV8x
-M0Jpb3NJbWFnZUJhc2VFOHRyeV9mcm9tKzB4Njg+DQowMGEwICAgICA2MmQwOgk4MSA3YyAwNyAw
-MiA0MiA0OSA1NCAwMCAJY21wbCAgICQweDU0NDk0MiwweDIoJXJkaSwlcmF4LDEpDQowMGE4ICAg
-ICA2MmQ4Ogk3NSBiZSAgICAgICAgICAgICAgICAJam5lICAgIDYyOTgNCjxfUk52WHNhX050Q3M4
-UzM5MTdXaWx5b185bm92YV9jb3JlNXZiaW9zTnRCNV8xNFBjaUF0Qmlvc0ltYWdlSU50TnRDc2dL
-ODhEUGFpMWxDXzRjb3JlN2NvbnZlcnQ3VHJ5RnINCm9tTnRCNV8xM0Jpb3NJbWFnZUJhc2VFOHRy
-eV9mcm9tKzB4Njg+DQowMGFhICAgICA2MmRhOgkwZiBiNiA0YyAwNyAwYSAgICAgICAJbW92emJs
-IDB4YSglcmRpLCVyYXgsMSksJWVjeA0KMDBhZiAgICAgNjJkZjoJOGIgNTQgMDcgMDYgICAgICAg
-ICAgCW1vdiAgICAweDYoJXJkaSwlcmF4LDEpLCVlZHgNCjAwYjMgICAgIDYyZTM6CTQ0IDBmIGI2
-IDQ0IDA3IDBiICAgIAltb3Z6YmwgMHhiKCVyZGksJXJheCwxKSwlcjhkDQowMGI5ICAgICA2MmU5
-OgljNyA0NSBlYyA0MiA0OSA1NCAwMCAJbW92bCAgICQweDU0NDk0MiwtMHgxNCglcmJwKQ0KMDBj
-MCAgICAgNjJmMDoJNjYgYzcgNDUgZjAgZmYgYjggICAgCW1vdncgICAkMHhiOGZmLC0weDEwKCVy
-YnApDQowMGM2ICAgICA2MmY2Ogk0OCBjMSBlMSAyMCAgICAgICAgICAJc2hsICAgICQweDIwLCVy
-Y3gNCjAwY2EgICAgIDYyZmE6CTQ5IGMxIGUwIDI4ICAgICAgICAgIAlzaGwgICAgJDB4MjgsJXI4
-DQowMGNlICAgICA2MmZlOgk0OSAwOSBjOCAgICAgICAgICAgICAJb3IgICAgICVyY3gsJXI4DQow
-MGQxICAgICA2MzAxOgk0NCA4YiA0ZCBlZSAgICAgICAgICAJbW92ICAgIC0weDEyKCVyYnApLCVy
-OWQNCjAwZDUgICAgIDYzMDU6CTQ4IGM3IDAzIDAxIDAwIDAwIDAwIAltb3ZxICAgJDB4MSwoJXJi
-eCkNCjAwZGMgICAgIDYzMGM6CTQ4IDg5IDQzIDA4ICAgICAgICAgIAltb3YgICAgJXJheCwweDgo
-JXJieCkNCjAwZTAgICAgIDYzMTA6CTQ4IDhkIDdiIDEwICAgICAgICAgIAlsZWEgICAgMHgxMCgl
-cmJ4KSwlcmRpDQowMGU0ICAgICA2MzE0OgliOSAwZCAwMCAwMCAwMCAgICAgICAJbW92ICAgICQw
-eGQsJWVjeA0KMDBlOSAgICAgNjMxOToJZjMgNDggYTUgICAgICAgICAgICAgCXJlcCBtb3ZzcSAl
-ZHM6KCVyc2kpLCVlczooJXJkaSkNCjAwZWMgICAgIDYzMWM6CWM3IDQzIDc4IDAxIDAwIDQyIDQ5
-IAltb3ZsICAgJDB4NDk0MjAwMDEsMHg3OCglcmJ4KQ0KMDBmMyAgICAgNjMyMzoJNDQgODkgNGIg
-N2MgICAgICAgICAgCW1vdiAgICAlcjlkLDB4N2MoJXJieCkNCjAwZjcgICAgIDYzMjc6CTQ5IGMx
-IGU4IDIwICAgICAgICAgIAlzaHIgICAgJDB4MjAsJXI4DQowMGZiICAgICA2MzJiOgk2NiA0NCA4
-OSA4MyA4NCAwMCAwMCAwMCAJbW92ICAgICVyOHcsMHg4NCglcmJ4KQ0KMDEwMyAgICAgNjMzMzoJ
-ODkgOTMgODAgMDAgMDAgMDAgICAgCW1vdiAgICAlZWR4LDB4ODAoJXJieCkNCjAxMDkgICAgIDYz
-Mzk6CWU5IDdjIGZmIGZmIGZmICAgICAgIAlqbXAgICAgNjJiYQ0KPF9STnZYc2FfTnRDczhTMzkx
-N1dpbHlvXzlub3ZhX2NvcmU1dmJpb3NOdEI1XzE0UGNpQXRCaW9zSW1hZ2VJTnROdENzZ0s4OERQ
-YWkxbENfNGNvcmU3Y29udmVydDdUcnlGcg0Kb21OdEI1XzEzQmlvc0ltYWdlQmFzZUU4dHJ5X2Zy
-b20rMHg4YT4NCjAxMGUgICAgIDYzM2U6CTQ4IDg5IGM3ICAgICAgICAgICAgIAltb3YgICAgJXJh
-eCwlcmRpDQowMTExICAgICA2MzQxOgk0OCA4OSBjZSAgICAgICAgICAgICAJbW92ICAgICVyY3gs
-JXJzaQ0KMDExNCAgICAgNjM0NDoJNDggYzcgYzIgMDAgMDAgMDAgMDAgCW1vdiAgICAkMHgwLCVy
-ZHgJNjM0NzoNClJfWDg2XzY0XzMyUwkucm9kYXRhKzB4MTA1OA0KMDExYiAgICAgNjM0YjoJZTgg
-MDAgMDAgMDAgMDAgICAgICAgCWNhbGwgICA2MzUwIDwuTHRtcDM4Pgk2MzRjOg0KUl9YODZfNjRf
-UExUMzIJX1JOdk50TnRDc2dLODhEUGFpMWxDXzRjb3JlNXNsaWNlNWluZGV4MjZzbGljZV9zdGFy
-dF9pbmRleF9sZW5fZmFpbC0weDQNCg0K
+On 15.05.2025 07:39, Lifshits, Vitaly wrote:
+> Since the checksum word is 0xFFFF which is peculiar, can you dump the 
+> whole NVM and share with us?
+
+Sure, here's a dump of my NVM
+
+Offset		Values
+------		------
+0x0000:		d0 8e 79 07 78 c8 01 08 ff ff 44 00 01 00 6c 00
+0x0010:		ff ff ff ff c9 10 54 0a 28 10 f9 15 00 00 00 00
+0x0020:		00 00 00 00 00 80 05 a7 30 30 00 16 00 00 00 0c
+0x0030:		f3 08 00 0a 43 08 13 01 f9 15 ad ba f9 15 fa 15
+0x0040:		ad ba f9 15 ad ba f9 15 00 00 80 80 00 4e 86 08
+0x0050:		00 00 00 00 07 00 00 20 20 00 00 00 00 0e 00 00
+0x0060:		00 00 00 40 28 12 07 40 ff ff ff ff ff ff ff ff
+0x0070:		ff ff ff ff ff ff ff ff ff ff 00 02 ff ff ff ff
+0x0080:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0090:		00 00 00 00 00 00 ff ff ff ff ff ff ff ff ff ff
+0x00a0:		94 b0 00 08 0a 00 04 90 b0 47 40 24 c2 e1 21 c3
+0x00b0:		3f 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x00c0:		80 60 1f 00 00 48 10 00 40 60 1f 00 04 d3 11 00
+0x00d0:		03 0a 12 00 00 00 1f 00 04 b4 30 00 1c 00 31 00
+0x00e0:		06 b4 30 00 09 00 31 00 07 b4 30 00 10 00 31 00
+0x00f0:		0a b4 30 00 18 00 31 00 0c b4 30 00 18 00 31 00
+0x0100:		0d b4 30 00 18 00 31 00 01 fd 30 00 2c 9c 31 00
+0x0110:		4c b6 30 00 05 00 31 00 ff ff ff ff ff ff ff ff
+0x0120:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0130:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0140:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0150:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0160:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0170:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0180:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0190:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x01a0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x01b0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x01c0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x01d0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x01e0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x01f0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0200:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0210:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0220:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0230:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0240:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0250:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0260:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0270:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0280:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0290:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x02a0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x02b0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x02c0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x02d0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x02e0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x02f0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0300:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0310:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0320:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0330:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0340:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0350:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0360:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0370:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0380:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0390:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x03a0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x03b0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x03c0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x03d0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x03e0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x03f0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0400:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0410:		69 53 84 03 01 00 00 00 00 00 00 00 00 00 00 00
+0x0420:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0430:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0440:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0450:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0460:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0470:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0480:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0490:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x04a0:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x04b0:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x04c0:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x04d0:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x04e0:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x04f0:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0500:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0510:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0520:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0530:		00 00 00 00 00 00 00 00 03 3d 00 00 00 00 00 00
+0x0540:		00 00 00 00 00 00 00 00 00 00 00 00 bc 0c 00 00
+0x0550:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0560:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0570:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0580:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0590:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x05a0:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x05b0:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x05c0:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x05d0:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x05e0:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x05f0:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0600:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0610:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0620:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0630:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0640:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0650:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0660:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0670:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0680:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0690:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x06a0:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x06b0:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x06c0:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x06d0:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x06e0:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x06f0:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0700:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0710:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0720:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0730:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0740:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0750:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0760:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0770:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0780:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x0790:		00 00 00 00 ff ff ff ff ff ff ff ff ff ff ff ff
+0x07a0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x07b0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x07c0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x07d0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x07e0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x07f0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0800:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0810:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0820:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0830:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0840:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0850:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0860:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0870:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0880:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0890:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x08a0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x08b0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x08c0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x08d0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x08e0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x08f0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0900:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0910:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0920:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0930:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0940:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0950:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0960:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0970:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0980:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0990:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x09a0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x09b0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x09c0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x09d0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x09e0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x09f0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0a00:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0a10:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0a20:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0a30:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0a40:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0a50:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0a60:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0a70:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0a80:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0a90:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0aa0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0ab0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0ac0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0ad0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0ae0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0af0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0b00:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0b10:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0b20:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0b30:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0b40:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0b50:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0b60:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0b70:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0b80:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0b90:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0ba0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0bb0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0bc0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0bd0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0be0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0bf0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0c00:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0c10:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0c20:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0c30:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0c40:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0c50:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0c60:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0c70:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0c80:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0c90:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0ca0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0cb0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0cc0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0cd0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0ce0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0cf0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0d00:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0d10:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0d20:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0d30:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0d40:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0d50:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0d60:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0d70:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0d80:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0d90:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0da0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0db0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0dc0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0dd0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0de0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0df0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0e00:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0e10:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0e20:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0e30:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0e40:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0e50:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0e60:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0e70:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0e80:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0e90:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0ea0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0eb0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0ec0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0ed0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0ee0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0ef0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0f00:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0f10:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0f20:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0f30:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0f40:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0f50:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0f60:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0f70:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0f80:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0f90:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0fa0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0fb0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0fc0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0fd0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0fe0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x0ff0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+
