@@ -1,102 +1,254 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3F0296157;
-	Thu, 15 May 2025 09:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30B928F946;
+	Thu, 15 May 2025 09:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747300630; cv=none; b=D4WOD9FjXArHG/F8F3CaiIvbSv8F4uekaofkBxOfHvImxbloaiQIaxo62ILjSEYbAY12j+oxFKPLqdU4Dpp0QApJMjhyZFjoGRiXYByrX5EUcnOpX735rRtDYxA3zeE5cPyT6Ja/tvaCc4EJORhOfDmZfkB90xss9UPCmPXxnf0=
+	t=1747300670; cv=none; b=tntH8WQecrl121pDZrWjgOuKNU9yjgs8T3ffW4q0RKyFagumQDZHlv+AUR8+Y7Qnvths+IR+xKw5ckHaB9U94Vvpzm/bWcy169D6OS5HGCTIvrIRHI0veEQ7hk+DCiTbdgTW/dxdPHaYKhkPxCzrTj50Xk6SN4J3/RBajb8R4G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747300630; c=relaxed/simple;
-	bh=aKQNALUFKpA2c4teux9nQkxq26FnVN2RV1olH/ka2YY=;
+	s=arc-20240116; t=1747300670; c=relaxed/simple;
+	bh=VoBuvvaTggt88pD7cLcxjXVZ1+vn0MjJRMAsFFfswOs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IVugZFwPfpnMVHyE3PaOHoFjN/gNdXFonOcVKhQy2sYqGq/aOjQTux1YBtLfJWv+V8zjMWjvXaJ3Xrk/7s5rChGSeqcqFtYu5YdMMwKPNcqhKxow+7ORlJEQOFd8O2ViUUJDJb00PwTzQ7A4rks9T91IJRMEwAYxOc/kdeO3+YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PvW+7QrB; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=PndH7MBFLUZGaKBomJaAp8NQCnBLZQMYiNlCzsihxvdXPP4eKF+o63qcU47qhxBQ4XN6iuWrJLzUIS2fhGxnLKA/z+2HIEP1d075LNqY0w011zVGJdUbXTxVr33WDAqr2ETOWW4uwF7yoFkerd+MaCZj0J7q0+MGWtvXQMgiH7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kUZiF7wh; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PvW+7QrB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B5D8C4CEE7;
-	Thu, 15 May 2025 09:17:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747300630;
-	bh=aKQNALUFKpA2c4teux9nQkxq26FnVN2RV1olH/ka2YY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PvW+7QrBpbaH1XvqgG1/WZJhwkEwQcUSE+3Zgyyg24vHg+ddHxR5NL3P8qimfaJpq
-	 OvZM0nToS7P80zCPFEYV8LZPFIxuhWzieT2pM220FEntTCgU7VmR5y4rnN5eit+4TR
-	 2uZ3/VU/5F1I8Bu0HJopTyPCvJEXLh0QZCH1+5oCmA2LpoBxKT92DvvNTiHlIHqIQQ
-	 iul6qyI7i8/M0QSQek6LYND3yMotZrM06qvd1X3sd/L4K4TJiA380due5ZjEdRM/hi
-	 5e8dg6WhP3ZngSb3umZpEfVKjWtXJVMBEH6oFMmpy3e8D2NCb8fHlp3YTAoBBuOkk+
-	 FMzqKmMmALJOg==
-Date: Thu, 15 May 2025 11:17:03 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: linux-fsdevel@vger.kernel.org, Jann Horn <jannh@google.com>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: Eric Dumazet <edumazet@google.com>, Oleg Nesterov <oleg@redhat.com>, 
-	"David S. Miller" <davem@davemloft.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Daan De Meyer <daan.j.demeyer@gmail.com>, David Rheinsberg <david@readahead.eu>, 
-	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, Alexander Mikhalitsyn <alexander@mihalicyn.com>
-Subject: Re: [PATCH v7 0/9] coredump: add coredump socket
-Message-ID: <20250515-ameisen-abmarsch-37b698f99847@brauner>
-References: <20250515-work-coredump-socket-v7-0-0a1329496c31@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kUZiF7wh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747300669; x=1778836669;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VoBuvvaTggt88pD7cLcxjXVZ1+vn0MjJRMAsFFfswOs=;
+  b=kUZiF7wheL2RqPSjS/sAxw2Iss9+tf/a5Ygs5wJekd+JsmgyR0+/5Ti9
+   IGKAhyn54B1WIPLHzlq8746f9IbQToqrpjBRZI+VcnKIlBGAw9KM5NNL5
+   +n5x/Mpy+X4ugEq1GbKywJdY4v2QqAI4HJ6M0F8B4ggcabT0W3+5w7ALX
+   +a2UdgBfyHIw0NRb8qBch1UnlYYo8Lp6QEOXdkDmP3lacrWTpfV3reduv
+   PqnzqS8S3Y3sl/OfYFt67fx3YbK6u6synf3c9tcwBSuzKXfQAhja3ehjh
+   dyURpC+UfKcUFoFk2c/XMZ2yOM1giXy17XH+wmRlOQHa9uaRWIPuGAVNt
+   g==;
+X-CSE-ConnectionGUID: 78hNJraSSP6cR28byC+v5Q==
+X-CSE-MsgGUID: vMUnyG//RZW30tL5zSw2+w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="48477377"
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="48477377"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 02:17:48 -0700
+X-CSE-ConnectionGUID: q9JTUy0kTPqTg+cAcpx97g==
+X-CSE-MsgGUID: BqZ2l4BkRA+EEqzfRq836A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="138193263"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO mdjait-mobl) ([10.245.244.201])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 02:17:44 -0700
+Date: Thu, 15 May 2025 11:17:37 +0200
+From: Mehdi Djait <mehdi.djait@linux.intel.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, sakari.ailus@linux.intel.com, 
+	tomi.valkeinen@ideasonboard.com, jacopo.mondi@ideasonboard.com, hverkuil@xs4all.nl, 
+	kieran.bingham@ideasonboard.com, naush@raspberrypi.com, mchehab@kernel.org, 
+	dave.stevenson@raspberrypi.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v4] media: v4l2-common: Add a helper for obtaining
+ the clock producer
+Message-ID: <id2ikiio23ahslghpx56niwxrvaqdgmrgk3k647i3u27cptqgz@hwqrkdvljd3b>
+References: <20250321130329.342236-1-mehdi.djait@linux.intel.com>
+ <f467e4a8-fcb2-4345-b8f7-7557c1a7552b@redhat.com>
+ <20250515084403.GQ23592@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250515-work-coredump-socket-v7-0-0a1329496c31@kernel.org>
+In-Reply-To: <20250515084403.GQ23592@pendragon.ideasonboard.com>
 
-On Thu, May 15, 2025 at 12:03:33AM +0200, Christian Brauner wrote:
-> Coredumping currently supports two modes:
-> 
-> (1) Dumping directly into a file somewhere on the filesystem.
-> (2) Dumping into a pipe connected to a usermode helper process
->     spawned as a child of the system_unbound_wq or kthreadd.
-> 
-> For simplicity I'm mostly ignoring (1). There's probably still some
-> users of (1) out there but processing coredumps in this way can be
-> considered adventurous especially in the face of set*id binaries.
-> 
-> The most common option should be (2) by now. It works by allowing
-> userspace to put a string into /proc/sys/kernel/core_pattern like:
-> 
->         |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h
-> 
-> The "|" at the beginning indicates to the kernel that a pipe must be
-> used. The path following the pipe indicator is a path to a binary that
-> will be spawned as a usermode helper process. Any additional parameters
-> pass information about the task that is generating the coredump to the
-> binary that processes the coredump.
-> 
-> In the example core_pattern shown above systemd-coredump is spawned as a
-> usermode helper. There's various conceptual consequences of this
-> (non-exhaustive list):
-> 
-> - systemd-coredump is spawned with file descriptor number 0 (stdin)
->   connected to the read-end of the pipe. All other file descriptors are
->   closed. That specifically includes 1 (stdout) and 2 (stderr). This has
->   already caused bugs because userspace assumed that this cannot happen
->   (Whether or not this is a sane assumption is irrelevant.).
-> 
-> - systemd-coredump will be spawned as a child of system_unbound_wq. So
->   it is not a child of any userspace process and specifically not a
->   child of PID 1. It cannot be waited upon and is in a weird hybrid
->   upcall which are difficult for userspace to control correctly.
-> 
-> - systemd-coredump is spawned with full kernel privileges. This
->   necessitates all kinds of weird privilege dropping excercises in
->   userspace to make this safe.
-> 
-> - A new usermode helper has to be spawned for each crashing process.
-> 
-> This series adds a new mode:
-> 
-> (3) Dumping into an abstract AF_UNIX socket.
+Hi Laurent,
 
-s/abstract//
-Forgot to remove that. Fixed in-tree.
+On Thu, May 15, 2025 at 10:44:03AM +0200, Laurent Pinchart wrote:
+> Hi Hans,
+> 
+> On Sat, May 10, 2025 at 04:21:09PM +0200, Hans de Goede wrote:
+> > On 21-Mar-25 2:03 PM, Mehdi Djait wrote:
+> > > Introduce a helper for v4l2 sensor drivers on both DT- and ACPI-based
+> > > platforms to retrieve a reference to the clock producer from firmware.
+> > > 
+> > > This helper behaves the same as clk_get_optional() except where there is
+> > > no clock producer like in ACPI-based platforms.
+> > > 
+> > > For ACPI-based platforms the function will read the "clock-frequency"
+> > > ACPI _DSD property and register a fixed frequency clock with the frequency
+> > > indicated in the property.
+> > > 
+> > > Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
+> > 
+> > This certainly looks quite useful, thank you for working
+> > on this.
+> > 
+> > Note on some IPU3 platforms where the clk is provided by
+> > a clk-generator which is part of a special sensor-PMIC
+> > the situation is a bit more complicated.
+> > 
+> > Basically if there is both a clk provider and a clock-frequency
+> > property then the clock-frequency value should be set as freq
+> > to the clk-provider, see:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/media/i2c/ov8865.c#n3020
+> > 
+> > for an example of a driver which handles this case.
+> 
+> On a side note, the DT bindings for the OV8865 doesn't specify the
+> clock-frequency property...
+> 
+
+Is this wrong ?
+
+The OV8865 driver was introduced for DT-based systems, where you will
+get a reference to the "struct clk corresponding to the clock producer"
+and then get the clock-rate/frequency with a call to:
+
+	rate = clk_get_rate(sensor->extclk);
+
+The patch "73dcffeb2ff9 media: i2c: Support 19.2MHz input clock in ov8865"
+adding support for clock-frequency came later to support ACPI-based
+systems (IPU3 here)
+
+> > IMHO it would be good if the generic helper would handle
+> > this case too and if there is both a clk-provider and
+> > a clock-frequency property then try to set the clock-frequency
+> > value with clk_set_rate(), arguably you could just warn on
+> > a failure to set the rate though, instead of the error
+> > the ov8865 driver currently throws.
+> > 
+> > Sakari, Laurent any opinions on adding handling this case
+> > to the generic helper ?
+> 
+> We really need to standardize the clock-frequency property, and document
+> it accordingly. Some drivers use it to set the external clock rate,
+> while others use it to inform themselves about the clock rate, without
+> changing it, for platforms that have no CCF clock providers. Some
+> drivers also set the clock rate to a fixed value, or to a value that
+> depends on the link frequency selected by userspace. I don't like this
+> situation much.
+> 
+> > > ---
+> > > v1 -> v2:
+> > > Suggested by Sakari:
+> > >     - removed clk_name
+> > >     - removed the IS_ERR() check
+> > >     - improved the kernel-doc comment and commit msg
+> > > Link v1: https://lore.kernel.org/linux-media/20250227092643.113939-1-mehdi.djait@linux.intel.com
+> > > 
+> > > v2 -> v3:
+> > > - Added #ifdef CONFIG_COMMON_CLK for the ACPI case
+> > > Link v2: https://lore.kernel.org/linux-media/20250310122305.209534-1-mehdi.djait@linux.intel.com/
+> > > 
+> > > v3 -> v4:
+> > > Suggested by Laurent:
+> > > 	- removed the #ifdef to use IS_REACHABLE(CONFIG_COMMON_CLK)
+> > > 	- changed to kasprintf() to allocate the clk name when id is NULL and
+> > > 	  used the __free(kfree) scope-based cleanup helper when
+> > > 	  defining the variable to hold the allocated name
+> > > Link v3: https://lore.kernel.org/linux-media/20250321093814.18159-1-mehdi.djait@linux.intel.com/
+> > > 
+> > > 
+> > >  drivers/media/v4l2-core/v4l2-common.c | 40 +++++++++++++++++++++++++++
+> > >  include/media/v4l2-common.h           | 18 ++++++++++++
+> > >  2 files changed, 58 insertions(+)
+> > > 
+> > > diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
+> > > index 0a2f4f0d0a07..b33152e2c3af 100644
+> > > --- a/drivers/media/v4l2-core/v4l2-common.c
+> > > +++ b/drivers/media/v4l2-core/v4l2-common.c
+> > > @@ -34,6 +34,9 @@
+> > >   * Added Gerd Knorrs v4l1 enhancements (Justin Schoeman)
+> > >   */
+> > >  
+> > > +#include <linux/clk.h>
+> > > +#include <linux/clkdev.h>
+> > > +#include <linux/clk-provider.h>
+> > >  #include <linux/module.h>
+> > >  #include <linux/types.h>
+> > >  #include <linux/kernel.h>
+> > > @@ -636,3 +639,40 @@ int v4l2_link_freq_to_bitmap(struct device *dev, const u64 *fw_link_freqs,
+> > >  	return 0;
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(v4l2_link_freq_to_bitmap);
+> > > +
+> > > +struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
+> > > +{
+> > > +	const char *clk_id __free(kfree) = NULL;
+> > > +	struct clk_hw *clk_hw;
+> > > +	struct clk *clk;
+> > > +	u32 rate;
+> > > +	int ret;
+> > > +
+> > > +	clk = devm_clk_get_optional(dev, id);
+> > > +	if (clk)
+> > > +		return clk;
+> > > +
+> > > +	if (!IS_REACHABLE(CONFIG_COMMON_CLK))
+> > > +		return ERR_PTR(-ENOENT);
+> > > +
+> > > +	if (!is_acpi_node(dev_fwnode(dev)))
+> > > +		return ERR_PTR(-ENOENT);
+> > > +
+> > > +	ret = device_property_read_u32(dev, "clock-frequency", &rate);
+> > > +	if (ret)
+> > > +		return ERR_PTR(ret);
+> > > +
+> > > +	if (!id) {
+> > > +		clk_id = kasprintf(GFP_KERNEL, "clk-%s", dev_name(dev));
+> > > +		if (!clk_id)
+> > > +			return ERR_PTR(-ENOMEM);
+> > > +		id = clk_id;
+> > > +	}
+> > > +
+> > > +	clk_hw = devm_clk_hw_register_fixed_rate(dev, id, NULL, 0, rate);
+> > > +	if (IS_ERR(clk_hw))
+> > > +		return ERR_CAST(clk_hw);
+> > > +
+> > > +	return clk_hw->clk;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(devm_v4l2_sensor_clk_get);
+> > > diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
+> > > index 63ad36f04f72..35b9ac698e8a 100644
+> > > --- a/include/media/v4l2-common.h
+> > > +++ b/include/media/v4l2-common.h
+> > > @@ -573,6 +573,24 @@ int v4l2_link_freq_to_bitmap(struct device *dev, const u64 *fw_link_freqs,
+> > >  			     unsigned int num_of_driver_link_freqs,
+> > >  			     unsigned long *bitmap);
+> > >  
+> > > +/**
+> > > + * devm_v4l2_sensor_clk_get - lookup and obtain a reference to an optional clock
+> > > + *			      producer for a camera sensor.
+> > > + *
+> > > + * @dev: device for v4l2 sensor clock "consumer"
+> > > + * @id: clock consumer ID
+> > > + *
+> > > + * This function behaves the same way as clk_get_optional() except where there
+> > > + * is no clock producer like in ACPI-based platforms.
+> > > + * For ACPI-based platforms, the function will read the "clock-frequency"
+> > > + * ACPI _DSD property and register a fixed-clock with the frequency indicated
+> > > + * in the property.
+> > > + *
+> > > + * Return:
+> > > + * * pointer to a struct clk on success or an error code on failure.
+> > > + */
+> > > +struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id);
+> > > +
+> > >  static inline u64 v4l2_buffer_get_timestamp(const struct v4l2_buffer *buf)
+> > >  {
+> > >  	/*
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+
+--
+Kind Regards
+Mehdi Djait
