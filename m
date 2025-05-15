@@ -1,127 +1,95 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184FA297A6D;
-	Thu, 15 May 2025 08:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53E628A735;
+	Thu, 15 May 2025 09:00:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299567; cv=none; b=EeJaVIrwUjS8wA4e6t4owVBvawBPtl+JhAC0CQgUHcz4231RTPkW3lOSD/R0hC/xo5M3mE11UAJj7tXhXJpVYY0DwmNQ3b+AbpQ2vjMYF5/faP0UtOb0trBRNHS6s51IsAXBMSeSg+3xy2aG41ZyKT4C50cuZlVKI3u7k8yWHTI=
+	t=1747299600; cv=none; b=PqdbHhDgirf3TrizqUdipF+L3h7lbFRAVHI9LCuv6O5xl5+9BZcZWa3xEy01BWfnVXY8oX457z9EwJrYs75NHCnEJoZGyFRhI2s5ggvKRv6Lb3XZf5HNnVVUpks72evITGXQ08xTv2o30RLqlD9oF/CqaVZP+cLTcp32c5Ryh60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299567; c=relaxed/simple;
-	bh=U8Gms1unVLaYGMPmJgh5mvgST4RNp4pyfwxfbuqpqZ0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NIWf8Vp/lPJAQtV2OTHPC3IjrPlk22rT5d6Ie3fFU0nO7JiY0VvpWSeio0E6nn9METq8zLLwFalIVVgs2I3owxjgqNKNb6OBF/um63TofmnWuwPOgHIdI77QpbPd7ORDVqsTCcNuNXrI1DgSn5m8c/jdMCd2T25fpDsGcjoTWRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fejes.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fejes.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-441ab63a415so7022885e9.3;
-        Thu, 15 May 2025 01:59:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747299563; x=1747904363;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+wY3EMb5JxEbCY3HNeRXG9ydmvJmQVNydYXnk83cuGg=;
-        b=qBN4E3ORgyDjGyN5X7r2BqybCfqi0NH9FpRqzqXKYzoIWd+cM7kNJDU7eMDiiPYPWY
-         9f3m1JIunUfDwENp8rT9d3RZV/eQM2IGXn1HlMQswpdA8dAMa5IXSQZF2wDNCSFSjilK
-         pY5Tau8gDo0VMs5jz6H9TBjfm/4BkqoPNbr47W42p9130XbMa9xBIKtSAkwFeJ0mbzfs
-         oBRSEyjrgez88eOP/hFTaDYs/Xr9Gt8Tlg9XXxozOo7FoObQ0aRXbgizcAhO1CRVko+k
-         rQ7+S6IvePN1f42/Q0RsNzvNPv7I/Vzwa7v+csSJv5ynROFROUZLf/u+HDXOwaILOYXR
-         rqoA==
-X-Forwarded-Encrypted: i=1; AJvYcCUw9k2YqkGItpVhYsMm/LihhEOUrCr6nyLGktP/VsGU11I7y2T+66RVDVtGcjGzBXHkqgmFf/3mi37nk3s2@vger.kernel.org, AJvYcCWWBBOA+zQA9DMkWALf4ah+BnPxlwJDUNlNrS2T4O1CppH85V6M3HF8n76iCOJTblj7ckI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywl3/LChk947W48u2FHn3+Tf949S9kvDY1nTpedCjTRYLHBEaBI
-	LTEi1I+/hh/TWU69LVUOS3HYAFnyNS0IDHtfMyVPvxzLXNNZqOgo
-X-Gm-Gg: ASbGncuVvhhobDr+wc3RHXyMPQcPPmRU/CBydTS7Yr3q6G82yraHmCiSIBQAxQHt56M
-	YVDsH102Y0O+wf/oq5W4PB3KTX5bzTWFHul/ZR5WdTua/yCdysggwTt/lJDC2UvPCwJGAzIYNfa
-	IFJNnIIOAgDysymockqC61eOekXAqKW9WsW0PxlJutGx1QPvm9pXrBAF5AzHmB4sQbViHRwErZE
-	rMGbPnbx5MY7HmdM0TOSa7qq97QeB6cIFD4yi5dGMyCMKyzLbN4j5Yd3Wq8+/dOg/VOLaQfyUFC
-	gsnYbCicYTthCDxbo9y8HOFJunTu03dWzbPfV9F8G973BwE0PZrNh9BrOtnreGU6JRv0gGQj1un
-	H06U64RD//9AwkgI4I4VB6/8A1g==
-X-Google-Smtp-Source: AGHT+IHSMBOis1LN9zZB8Ns1QMfbY61wSCNeknS/nXCa2UvoEyCLR8YwmUUu5xG/+nbb3Bg0E/FFdQ==
-X-Received: by 2002:a05:600d:1b:b0:43d:4686:5cfb with SMTP id 5b1f17b1804b1-442f4735a8bmr43794115e9.27.1747299563102;
-        Thu, 15 May 2025 01:59:23 -0700 (PDT)
-Received: from [10.148.85.1] (business-89-135-192-225.business.broadband.hu. [89.135.192.225])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f337db8asm62665355e9.9.2025.05.15.01.59.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 01:59:22 -0700 (PDT)
-Message-ID: <eefad549e3d0568b523305252b6ec3a468502d2d.camel@fejes.dev>
-Subject: Re: [PATCHv2] bpf: add bpf_msleep_interruptible() kfunc
-From: Ferenc Fejes <ferenc@fejes.dev>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>, Alexei Starovoitov
-	 <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
-	 <john.fastabend@gmail.com>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
-	 <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Matt Bobrowski
-	 <mattbobrowski@google.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 15 May 2025 10:59:21 +0200
-In-Reply-To: <20250515064800.2201498-1-senozhatsky@chromium.org>
-References: <20250515064800.2201498-1-senozhatsky@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1 
+	s=arc-20240116; t=1747299600; c=relaxed/simple;
+	bh=rHy4emrIBLZbJ3QtrnS37i1Uyh6E0LFIHII0qhsVPRU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=bSlhmPZ8O00aTDK57smNBOFDbKOp/rVwPW7Bb1Cs5q8NCT0dfrohTpkeAMUXaDRVDzJvkBIPiSxMHv9WA4LMFr2kaV3Xwh+QI3q43TShxIYWCY5P4hX3zABPTCCYVqvhZvPAZ2D13rcj1PnhQKZDk2PbUVgqK6J43J6weImHD98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cPZHrRFZ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cPZHrRFZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5022EC4CEE9;
+	Thu, 15 May 2025 08:59:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747299600;
+	bh=rHy4emrIBLZbJ3QtrnS37i1Uyh6E0LFIHII0qhsVPRU=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=cPZHrRFZwUiZpLDBAHEXVEO87FttS6GNGCHxlZY3SXhnK8MUFjvRF4PKjohYjT0d8
+	 XDHH6zo85WbnxuwsDp1F+ohK0FO8+74FyV5ug/lwUuMeuAg+QQJ/5mkbCfujrv5j8o
+	 8mtD7LBqP4PGnAtXKzO6r/q9cdo5H8+AQitMrhgVKW9onRURFFRNsvsOg70Ox5SH1A
+	 ySHXzg5zX+SL3larrBRlkJZ79Y4aWuGXRj6G2d49alkgzUGybcBxwAWhR+Ty2fBZC2
+	 dxRJ9tc1f5aQGzCplH9R5MwQ9DFhmJh0uG5H/i6Vy1I98lA9HtTQ7L5o/4DQOX0Nh/
+	 0q+BcRyFvl3sQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 15 May 2025 10:59:44 +0200
+Message-Id: <D9WM0BP5446N.1NVNDCZ4Y2QN1@kernel.org>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Sami Tolvanen" <samitolvanen@google.com>, "Timur
+ Tabi" <ttabi@nvidia.com>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH v5 4/4] rust: samples: Add debugfs sample
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Matthew Maurer" <mmaurer@google.com>, "Danilo Krummrich"
+ <dakr@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250505-debugfs-rust-v5-0-3e93ce7bb76e@google.com>
+ <20250505-debugfs-rust-v5-4-3e93ce7bb76e@google.com>
+ <D9VPA1M45WBK.1TB4KOUXD24BD@kernel.org> <aCRdNJ2oq-REBotd@pollux>
+ <CAGSQo0204_Dz65G33pAN3_iY=ejPXJRdAiB4ioM-nvMkAh0YXQ@mail.gmail.com>
+In-Reply-To: <CAGSQo0204_Dz65G33pAN3_iY=ejPXJRdAiB4ioM-nvMkAh0YXQ@mail.gmail.com>
 
-Hi,
+On Wed May 14, 2025 at 11:55 PM CEST, Matthew Maurer wrote:
+> On Wed, May 14, 2025 at 2:07=E2=80=AFAM Danilo Krummrich <dakr@kernel.org=
+> wrote:
+>> However, I really think we should keep the code as it is in this version=
+ and
+>> just don't provide an example that utilizes ManuallyDrop and forget().
+>>
+>> I don't see how the idea of "manually dropping" (sub-)directories and fi=
+les
+>> provides any real value compared to just storing their instance in a dri=
+ver
+>> structure as long as they should stay alive, which is much more intuitiv=
+e
+>> anyways.
+>
+> We can't easily do this, because dropping a root directory recursively
+> drops everything underneath it. This means that if I have
+>
+> foo/
+>   - bar/
+>   - baz/
+>
+> Then my directory handle for `bar` have to be guaranteed to outlive my
+> directory handle for `foo` so that I know it's didn't get deleted
+> under me. This is why they have a borrow onto their parent directory.
+> This borrow means that you can't (without `unsafe`, or something like
+> `yoke`) keep handles to `foo` and `bar` in the same struct.
 
-On Thu, 2025-05-15 at 15:47 +0900, Sergey Senozhatsky wrote:
-> bpf_msleep_interruptible() puts a calling context into an
-> interruptible sleep.=C2=A0 This function is expected to be used
-> for testing only (perhaps in conjunction with fault-injection)
-> to simulate various execution delays or timeouts.
->=20
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> ---
->=20
-> v2:
-> -- switched to kfunc (Matt)
->=20
-> =C2=A0kernel/bpf/helpers.c | 7 +++++++
-> =C2=A01 file changed, 7 insertions(+)
->=20
-> diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-> index fed53da75025..a7404ab3b0b8 100644
-> --- a/kernel/bpf/helpers.c
-> +++ b/kernel/bpf/helpers.c
-> @@ -24,6 +24,7 @@
-> =C2=A0#include <linux/bpf_mem_alloc.h>
-> =C2=A0#include <linux/kasan.h>
-> =C2=A0#include <linux/bpf_verifier.h>
-> +#include <linux/delay.h>
-> =C2=A0
-> =C2=A0#include "../../lib/kstrtox.h"
-> =C2=A0
-> @@ -3283,6 +3284,11 @@ __bpf_kfunc void bpf_local_irq_restore(unsigned lo=
-ng
-> *flags__irq_flag)
-> =C2=A0	local_irq_restore(*flags__irq_flag);
-> =C2=A0}
-> =C2=A0
-> +__bpf_kfunc unsigned long bpf_msleep_interruptible(unsigned int msecs)
-> +{
-> +	return msleep_interruptible(msecs);
+Is there no refcount that we can use instead of borrowing? I guess not,
+since one can call `debugfs_remove`. What about a refcount on the rust
+side? or is debugfs not used for "debugging" and needs to have the
+performance of no refcount?
 
-Perhaps exposing fsleep instead of msleep? fsleep might fallback to msleep =
-if no
-better mechanism exists or if the sleep duration is >1000us.
-
-> +}
-> +
-> =C2=A0__bpf_kfunc_end_defs();
-> =C2=A0
-> =C2=A0BTF_KFUNCS_START(generic_btf_ids)
-> @@ -3388,6 +3394,7 @@ BTF_ID_FLAGS(func, bpf_iter_kmem_cache_next,
-> KF_ITER_NEXT | KF_RET_NULL | KF_SLE
-> =C2=A0BTF_ID_FLAGS(func, bpf_iter_kmem_cache_destroy, KF_ITER_DESTROY |
-> KF_SLEEPABLE)
-> =C2=A0BTF_ID_FLAGS(func, bpf_local_irq_save)
-> =C2=A0BTF_ID_FLAGS(func, bpf_local_irq_restore)
-> +BTF_ID_FLAGS(func, bpf_msleep_interruptible, KF_SLEEPABLE)
-> =C2=A0BTF_KFUNCS_END(common_btf_ids)
-> =C2=A0
-> =C2=A0static const struct btf_kfunc_id_set common_kfunc_set =3D {
+---
+Cheers,
+Benno
