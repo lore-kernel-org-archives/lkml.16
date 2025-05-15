@@ -1,209 +1,218 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022121.outbound.protection.outlook.com [52.101.126.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C30A2820A0
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 03:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747278290; cv=none; b=QHUQk9hnqmdVHQT02TfHF+meOJ04BZq+da6uMyrDXFKMwriObEa0leHiSdwJXQzbgbdmRH7hqxTva40kSKGDbqBAQ4xd4UA2h2BuqpwIbyoMkerso8dox9w0gUUzQdkbY9X+AYHuxoNXIuS9O9BwVFNAl6N7i862/lKGOpzzE58=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747278290; c=relaxed/simple;
-	bh=3n/d0rzxlg5Syj9a0Hh5vrE2jLnlULLzyKudvUdodmU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mHIT1ybFp5dHSbkodXD6QmvrQikFM10VXSXZKeb+zurOZFASHiOSsWWjQZiw/axHYWjnLJ3U8shPBLCQx0vPVLwoEm1+Qi/kXBEg6n5/DFI1yLQLFuRPKNsGpMTgyaY8kvzIZA0Rp8w6YAqbXAgPTfTW1Q97hGK0DQfA1LhCSoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=chWqak54; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2341D29551F;
+	Thu, 15 May 2025 03:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.121
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747278293; cv=fail; b=uzbinXpEOdCKZUbEP9J06yOLBdFAS6AHNTV8SsHJe/DjJM43YC0iXqdArX/5tuxGpuZfbJjbCD2JcSdIE/IzXEY8mrGnzStprhnrEUSiVjFlZXcnIBULmTz0Vlu0Bl1MpFFXZOwuUwvPb8MJgkZJUy1wDphfK6pXf6Q7jP+ztGc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747278293; c=relaxed/simple;
+	bh=58WZjlOuscMCz+IO/8ILnxmU7yA420IUBi0kIhAs40M=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=bro+4mPhh80CxxWVeRpdnwRmcwzJFl/CFenyFJ4PHo/NDrduDwB4pONwgoEjcy9MuiS95yHFTEqtwQlAH24sDcYrrdCqJNjKP+0w7Vm7ShCykIRYrmMpVkLmokY1k7nKfQDOwAFs70H2lTr+2jJKxEmOisDeQ/030DtdqYQ0oTM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=B62zWYMh; arc=fail smtp.client-ip=52.101.126.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="chWqak54"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747278288;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PsANGthd/agErItVRASunv78tkLnfNiPJwd/K41Ki1A=;
-	b=chWqak54KM4MSSvN+Y1g7LvRkXv3oHY42whBhEgoEZR8038Ovh1dHQV/IK0HMr22o8z/Qe
-	aU/eHcd+rpby+3vFcHsGiohFCj5PDh6MhQawmw2z6RD1UuwiEJ3dJi/QQ6769vhSqVD2cQ
-	59wQoCwa0MF1NGv9ikxSOXqTdNXzrlA=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-428-OAsNAc0BO8ah-AAGCjh2MA-1; Wed,
- 14 May 2025 23:04:44 -0400
-X-MC-Unique: OAsNAc0BO8ah-AAGCjh2MA-1
-X-Mimecast-MFC-AGG-ID: OAsNAc0BO8ah-AAGCjh2MA_1747278280
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6E5C4195608A;
-	Thu, 15 May 2025 03:04:39 +0000 (UTC)
-Received: from h1.redhat.com (unknown [10.22.88.116])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C6E8D1800268;
-	Thu, 15 May 2025 03:04:23 +0000 (UTC)
-From: Nico Pache <npache@redhat.com>
-To: linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: david@redhat.com,
-	ziy@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	corbet@lwn.net,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	akpm@linux-foundation.org,
-	baohua@kernel.org,
-	willy@infradead.org,
-	peterx@redhat.com,
-	wangkefeng.wang@huawei.com,
-	usamaarif642@gmail.com,
-	sunnanyong@huawei.com,
-	vishal.moola@gmail.com,
-	thomas.hellstrom@linux.intel.com,
-	yang@os.amperecomputing.com,
-	kirill.shutemov@linux.intel.com,
-	aarcange@redhat.com,
-	raquini@redhat.com,
-	anshuman.khandual@arm.com,
-	catalin.marinas@arm.com,
-	tiwai@suse.de,
-	will@kernel.org,
-	dave.hansen@linux.intel.com,
-	jack@suse.cz,
-	cl@gentwo.org,
-	jglisse@google.com,
-	surenb@google.com,
-	zokeefe@google.com,
-	hannes@cmpxchg.org,
-	rientjes@google.com,
-	mhocko@suse.com,
-	rdunlap@infradead.org
-Subject: [PATCH v6 04/12] khugepaged: generalize alloc_charge_folio()
-Date: Wed, 14 May 2025 21:03:04 -0600
-Message-ID: <20250515030312.125567-5-npache@redhat.com>
-In-Reply-To: <20250515030312.125567-4-npache@redhat.com>
-References: <20250515030312.125567-1-npache@redhat.com>
- <20250515030312.125567-2-npache@redhat.com>
- <20250515030312.125567-3-npache@redhat.com>
- <20250515030312.125567-4-npache@redhat.com>
+	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="B62zWYMh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kQ5BL3aVJYoT6xasnO+LwFh+diz9t7hlrZ5GFeKTfWcuDt4qX8C28kveMyiO3piyVFRZVuVFRuQxc9H9qY1Yc+hnl4Jl+UguCD/LYAYM/pIld3yK3iWUoJ+xweeKSXFVjJ4ETgI7qZFXD5hVhIPkhueRWz62D6UJdBEwvM2VhImdd7BRUaM/O2ZSYOuNPv73Hb4yRvH3MteYJnUfnWeH0S7YeRhkudP0QYP7MSbDEIySvd7X/X31tPMvpEOsZnCe7c8yj5LVaZcC0NKBawdRje6BXmbn6+ijoPdJg1/d+s0u+ysDSLklF18IONgGg3dZnYjnJihZ6Zj3A1kpxHV1Jg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qJRbNLHuset5EmFyBR2PGEnrx1PE0gUkTiMVLdrtVos=;
+ b=ylfBLKSBSztuIji2D0oLa3ze+K6iYZVombUF7lBcOF0X5CoKOUMpPJmn7jJYnRrMYVFvC68PUGT5C4uKsUfQC8HIxjcq08cXoAZGu8FSFJ1tRXPe/d7E/4DJnCXywEpTUn4OwqUjgjv5XR/1yN1KwKaeg7ItpKzhd1KNXjAdfLlCs2M6kkhZUlTphCdSY9XN7pwA/TANqSCHV1+EpMca17jWK9Fn0Ph6fOXnPj9hbDFQcPTgI4OBQ9q5posF6vu2piaORXX/Ka9t4OK3t5kftDOFS+kgJt+rXwH8IH0yqCfPlav1q8YcBdkzsxYaixzFjwKZkWCrsoKLq6IZO4gUow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qJRbNLHuset5EmFyBR2PGEnrx1PE0gUkTiMVLdrtVos=;
+ b=B62zWYMhdxI88U1xu/JRXCJ2snZyiCLs0q2KdYucyNnBkm7MUteR7g8LUBtbkPJb6xJwf+RcGXLAqhwYYXzoqg6Y/Hua59REuXUB849v5mwLLn6CwO28PeuoLJaaA33SXOSy00zX+NAbCUZhoWP7cHc0/6QINOXBTom573rP6PGOuqund1r9CXev7E2mLD9aqs70cyQL/Td79nfmz53LuGesvZypu1Qr8SnR/7wQIc2hTDDcf+0J5h8E6wmn507JvEcFdqdFpkDgsLLztsfC9m4f9ccw8F8UH1p5IRqR4A3Fn1sYYCyvITtyGR4U1iG9mMt8eplv5YSlgande2+oUw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
+ by PUZPR03MB7016.apcprd03.prod.outlook.com (2603:1096:301:f0::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Thu, 15 May
+ 2025 03:04:48 +0000
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123]) by TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123%7]) with mapi id 15.20.8722.027; Thu, 15 May 2025
+ 03:04:47 +0000
+Message-ID: <b58ce27b-6e32-4fa6-ba31-7e1b25e1bdd6@amlogic.com>
+Date: Thu, 15 May 2025 11:04:42 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/8] dts: arm64: amlogic: add S7 pinctrl node
+Content-Language: en-US
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250514-s6-s7-pinctrl-v1-0-39d368cad250@amlogic.com>
+ <20250514-s6-s7-pinctrl-v1-6-39d368cad250@amlogic.com>
+ <20250514131022.GA1833633-robh@kernel.org>
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+In-Reply-To: <20250514131022.GA1833633-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TY4P301CA0034.JPNP301.PROD.OUTLOOK.COM
+ (2603:1096:405:2be::11) To TYZPR03MB6896.apcprd03.prod.outlook.com
+ (2603:1096:400:289::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|PUZPR03MB7016:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4097c65d-641d-492c-8f86-08dd935d4048
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZThNNS9hKzNzVk1tRGRHYW9vdktpNW1YODQ2M3VYYkJQUjViZUVHUFh1akNt?=
+ =?utf-8?B?WTdmNXhEazFQS2FRNmowWEU1YUc2SGNqVlF5MU04bi9rNkZ6d3NpYllxY2xN?=
+ =?utf-8?B?Vzg3cm9GM2thZ1E2ekR5M1dJdjcwdlFqeE5Ua2YvVm5VNnNzeEFVeDF1R1Na?=
+ =?utf-8?B?RTVtQWxpV0xiaE9LaUJRanpKZzZHcXNkWVlLRDJBYW0vSGJobTRVS2VuZG44?=
+ =?utf-8?B?S09wT0hUSTlzaUhSZWx5WEJpNlBGNDNINmdNUUUrS1Z0ZStXY2pTWUYyc3dj?=
+ =?utf-8?B?cTFaS3RXOWF1OTVJSzdSN2JDbzdyZlpCVXFNOG1KZVNPbXJMR2xreWUyc3RG?=
+ =?utf-8?B?M0U0R3VEbyt1bVAxSzU1UnVyVDN2a2oxcUhsREcxL2FNTVZJdkMrV1RrZ1U0?=
+ =?utf-8?B?WkNRS1FObWZ1cFdDK2VIOUQyWWdVMHpMYnFha1Vqd3hzeGYweDF1VDhYODRU?=
+ =?utf-8?B?TXhVMGc3UnBpNnlRd2JBL01yMjN0U2hEZFZ4MTN6S0VXaVhZWFM1Y3Q4dUwy?=
+ =?utf-8?B?V2ZibXJQbHVsZzg4alI0WThmWEVIOUNXL1paSlh5a1F1WnMwbkE3QmQzS3M4?=
+ =?utf-8?B?eHliQkg3Uk1hb0hJMHNCMlRhMFEwRXJCa3krandBempVMkZKWkZyUWpBaVpu?=
+ =?utf-8?B?NG9jczQyYnZOSkIvZVB2Q1V4ZjVHYTA4OWNVb20yTEJvZ0hZYmdFalJBQXRi?=
+ =?utf-8?B?U3UxSGhvZjJtck5YdTNKWGlLcFlkbmNHYm04eHhRT1BkZWY0endPTlBWb2xO?=
+ =?utf-8?B?a0dBcVc2bi9vcWFrcnpYWkE1NW9Sa2k2SG1LZHV2aGJOeEhpeHdjRStBekpF?=
+ =?utf-8?B?T294SGRnMW13T01uUmNUR2x0MFR1Z3ZvRXNrYkgvQVhONmZEQ0g3YUdySU83?=
+ =?utf-8?B?d0lwU3c4b2lQdEtLR21La29BUm1seGxLSVB2WnhMdVZ3cmYyZm1Ockt2MTg4?=
+ =?utf-8?B?UlhjNFZLcDcrMzVPS2RHVzdiT1pKcTJDQ2k3RUdGbzVkTVNtM2xNaTV1T3R4?=
+ =?utf-8?B?RUhyUGZ4NWVjNTJtZ2FRSExCUjNXcyswQlpHelJEcmYzTU5Sa0ptV1Z0THhy?=
+ =?utf-8?B?YkNhWHVoOEFHeEJtMjdnWmxjUDJOL205ZVZZaDN0SzI3RFgrL2RsS21IYmR3?=
+ =?utf-8?B?bUkwU0pQVUVNcnN2dDBxTklmaWlpb3dUNnVCWjBENU1PTUVRVldmLzUzeVF4?=
+ =?utf-8?B?MUZ6eTEwRlFITGNOb3J2d1dtOWtEa3MvTTN4OVB5Nm15eUNpOENPZXZWL0Fs?=
+ =?utf-8?B?SGFQNzlTd29vS1dVelNyRnNzc1k2QzNRU216d0MzQmdMK3pmQVczSkFUL1Zu?=
+ =?utf-8?B?c0ZuaWtoTmFhcmpPdUdIckJRMEpBbkIwTkNPWE1qMG8yVDVmWG10SHdLWUNC?=
+ =?utf-8?B?UE9sbG43TW9GckFtNWxZcnF3S2JMamIrQXpSMzhHS1FJMElCaVRadlRVR216?=
+ =?utf-8?B?aXdJNFd0MC81M1B4YkJ2TFVMOTA0c1VlbzFjZ3creHN2eFpuNk55SkRyMUdD?=
+ =?utf-8?B?VVZLaW9ud2pBT0ltSlU4dnptMDRNbkgwb0p0eDV0aElndWpuSjZVSHNTVjJh?=
+ =?utf-8?B?aktpRmFybHFsWndZQzM0eTVvT1VaYTJMYkIvZ3JEelFBOUg2eERacC9wdHJM?=
+ =?utf-8?B?bHlac3NuazNVVzZBSG43aGlUK2EzQ2dRUGFzbStXVGZjU3ZxYnZQSnEwM0Y5?=
+ =?utf-8?B?aEpGUkpJM0pYeDFSbGVmRE8yUFlmakxCNVhmaWFPWkpzQThBSW5kVUJXNUZS?=
+ =?utf-8?B?YW5zQ011dEo3R09WWUxURlBUditTVjlwKzNGRVZCVnZrK1lpZWFvQWhvQW9V?=
+ =?utf-8?B?cmZpVUFWWFkzVXRES3hrY3NoK2RzNEhGV0tMYmJtUFE1aU1TckxMTTlHU1l5?=
+ =?utf-8?Q?PUY03YMSsAAnV?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UG1GQzNMTlZpdXJGQ3pscnZ2T2oxNVhQTXFRS2c2K002d3Y3dDhKU3BqNzlU?=
+ =?utf-8?B?MHhkRzdNRk56WXJZVzAxL2VaL2FHbFk1d1lyd1ArRVBmTThSVmVoMEg5VlNz?=
+ =?utf-8?B?VWtjekw1TlZ3RE54M29oYllPN1k1T2VKcG5oQWZHRTFoOHpGd1BPbk9XUXI5?=
+ =?utf-8?B?R0xPMnE0Mm1JZW5aNUdzeVhyS0U5Qm5udXFFdjI5ZjdsVW9zWDhrd3Rsd3pv?=
+ =?utf-8?B?NGRYNU05Z3NKTWh4VGNEalR0cnVjZUVJNmZ6WXFPS0owLyttU0FuNjVMbEVQ?=
+ =?utf-8?B?RUd4QkZnclV1QmM4d3NrYnpaL0dPWktvSHNaNUV5aHpBOUQ3dms1UXc2YnYx?=
+ =?utf-8?B?WmhGY0NFMzhCL09pOUI0d3NmVDVMck1ZdkZCUG5ZKzZTSlpkVmZaTmV6N3p5?=
+ =?utf-8?B?cnZ4U1EyQWpHL0djZmNLRHlaWUh3WUJaM3QvR1dEVkxsMGpKaVkwTjRPdlh3?=
+ =?utf-8?B?UEIvdUt1cFJGbHIweEl6ZlBsMFJ2V2wwQ1BRZ0ZrZ2hGWnRub2pYUXl4TlQr?=
+ =?utf-8?B?cVlYbVJNc00zWDBzVnVFaWJLRGRFMmcwZHViWTB0b0MzVzlqcGh5Q2ZHMFFO?=
+ =?utf-8?B?N3VZZzJjTU5kSHVERXZuRGpUZmtEa2NxbWVpck9oMEl3aVppVDg4Wjdzazgr?=
+ =?utf-8?B?NDFNNzlWK3RNckRrYllNODhCaHhFam1qNEsrdGh1SzRnSVZBMnY0d3V1TGdC?=
+ =?utf-8?B?STZGWE9KZlpiQ3l2ZllTbEFGSytwWWJWYUpoTGIvUlpiOGJkS1hYR2lVSk5i?=
+ =?utf-8?B?NXJSMjV2TW9yV3h2MU5VWUlSNTB3UmZFYWpwMlZLY0JINTFCNFIrRGswVzVp?=
+ =?utf-8?B?TG5zeHo3aFk3N0l2TmFzOFhLU0xvUUV1NlFRSmhYelZqTUoxTVZGYkhZWDVJ?=
+ =?utf-8?B?QlBlMHpCbHo2a3BMakVoTWFCVjJDbjR5ZVRRZTZHQmFxejU4OGFIQjgxQzgy?=
+ =?utf-8?B?UXdxclVrU3NSQUUzRk1zTzFGUHNINTlWWExrZFIrUXZxbFUxSUhrMjZyV2Nw?=
+ =?utf-8?B?b0xoZW5KdEVmSW1RSnZtdHJBS1k2NVZ5aEpadlY1NzgxRU5Qdmt4ODNwTGt2?=
+ =?utf-8?B?Q3BQMDV4YjlhNjFtUmw0M2JIWEZXU09LS2FDUjRIdVFHRlMwdGRyUjcvNjJM?=
+ =?utf-8?B?b2Q0WUJOUHRON1pnbzkwSldONTZSS2dJNXZheGFTcGZ4VVJiUUJHUGVFY0oz?=
+ =?utf-8?B?ekYrVjhjQlpTTDJjcnlxSnNqdnptZDNudHd3c0hQdEdMd3FjeWR1anFYRTJO?=
+ =?utf-8?B?NTZyd21FRzhEem40VWFOdE4zMGJZTDY2V2Z6Zi9mbmltblZEZXhGM2UrKzh0?=
+ =?utf-8?B?VTJCcUl0RE1Tb3FzTnZ2UkNVZmtyT3RpbjljRDdMUW93QVBROERkYnBkSEhL?=
+ =?utf-8?B?VEswYlVrc1ZVZWorUlVOd3Y4THB1VUdVMG4yTDUvZjJJTkJrOEJWMlZZZkkx?=
+ =?utf-8?B?c0lWYmdFWDNCWWx4MTdaQWtiT2d4ZzhDR1BIejc1M2dTMWZlejg0aGZuR094?=
+ =?utf-8?B?aFBzVUlKVnNxeVlUSUZFb2x0disva29wVTNOZTZPejZwdmNHQkhiYmROQS9n?=
+ =?utf-8?B?NUZ5em5kTG9EVk5WdEw5MzcxVEpmRFhXZXhQQ3VROFlTeXc3Rm9iZ0RMcGpC?=
+ =?utf-8?B?a2JSa2o5QTFTMkUzN0U5VjBLbENaQzNkekpSMGtKMkd6MDZqdS9oM3Faa29T?=
+ =?utf-8?B?TkJadVlGcUxoVDFEaXVhNHNCeVpNMFNNVnROZnhrY0Y3dGJXQ3NWTkJ4MW9E?=
+ =?utf-8?B?clcraThGU2pPNExKVi9kakJCTXBLaGtMOXU0dnhLenJidUNuZTU5cW9tTXZD?=
+ =?utf-8?B?aEYxWTJKaVYvN0hla0FuZlh3NFVaRDFwZ3E0MU8yQ3BHK3hvbnlaVWY0VThq?=
+ =?utf-8?B?R1hyYjRQZ2RCdTJ4MHNiSEZlYUxUcXg5OWpSb1N2UjJDRFRoRkMwelFnd0Jn?=
+ =?utf-8?B?cWdaWDRGY0VrUTB4eEMvKzZSL3FJbGpHRVBOK1k4VFIzVWhRRGFmK1ZzcWpV?=
+ =?utf-8?B?NlZwOGk0TUd4MDJLWU9yTkJjM1pYdVJxbHE0SkhqZUg0aWVnbi9aM3FvRG1M?=
+ =?utf-8?B?RTYra3VkVDhQM0pQWDNnelRUeDJxK0ZRNllwU1dKYkt4ZTJmU0NNWGFGc2Nm?=
+ =?utf-8?B?WmVoNDRpcXdFemZ5bmNhWVRidzBUS2JBMzE2c2h5WE1ncWV5VU1xUDVjdXlW?=
+ =?utf-8?B?Q0E9PQ==?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4097c65d-641d-492c-8f86-08dd935d4048
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2025 03:04:47.7923
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: e3puW92dOlOCwZEll1R2bE9cqx5x9NQqm/oe82GV8P2G5QJCLDesoKyeoo/gnTCMqybN9L0YmqDC/rcQXUP5pCzpFblh0tt/b8od5jr2Buc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR03MB7016
 
-From: Dev Jain <dev.jain@arm.com>
+Hi Rob,
+    Thanks for your reply.
 
-Pass order to alloc_charge_folio() and update mTHP statistics.
+On 2025/5/14 21:10, Rob Herring wrote:
+> [ EXTERNAL EMAIL ]
+> 
+> On Wed, May 14, 2025 at 03:01:33PM +0800, Xianwei Zhao wrote:
+>> Add pinctrl device to support Amlogic S7.
+>>
+>> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>> ---
+>>   arch/arm64/boot/dts/amlogic/amlogic-s7.dtsi | 81 +++++++++++++++++++++++++++++
+>>   1 file changed, 81 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/amlogic-s7.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-s7.dtsi
+>> index f0c172681bd1..924f10aff269 100644
+>> --- a/arch/arm64/boot/dts/amlogic/amlogic-s7.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/amlogic-s7.dtsi
+>> @@ -6,6 +6,7 @@
+>>   #include <dt-bindings/interrupt-controller/irq.h>
+>>   #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>   #include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/pinctrl/amlogic,pinctrl.h>
+>>
+>>   / {
+>>        cpus {
+>> @@ -94,6 +95,86 @@ uart_b: serial@7a000 {
+>>                                clock-names = "xtal", "pclk", "baud";
+>>                                status = "disabled";
+>>                        };
+>> +
+>> +                     periphs_pinctrl: pinctrl {
+> 
+> If you have non-boolean ranges, then this should have a unit address
+> (@4000).
+> 
 
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-Co-developed-by: Nico Pache <npache@redhat.com>
-Signed-off-by: Nico Pache <npache@redhat.com>
-Signed-off-by: Dev Jain <dev.jain@arm.com>
----
- include/linux/huge_mm.h |  2 ++
- mm/huge_memory.c        |  4 ++++
- mm/khugepaged.c         | 17 +++++++++++------
- 3 files changed, 17 insertions(+), 6 deletions(-)
+Will add a unit address for node.
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 2f190c90192d..0bb65bd4e6dd 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -123,6 +123,8 @@ enum mthp_stat_item {
- 	MTHP_STAT_ANON_FAULT_ALLOC,
- 	MTHP_STAT_ANON_FAULT_FALLBACK,
- 	MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE,
-+	MTHP_STAT_COLLAPSE_ALLOC,
-+	MTHP_STAT_COLLAPSE_ALLOC_FAILED,
- 	MTHP_STAT_ZSWPOUT,
- 	MTHP_STAT_SWPIN,
- 	MTHP_STAT_SWPIN_FALLBACK,
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index d3e66136e41a..177f0a78666a 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -615,6 +615,8 @@ static struct kobj_attribute _name##_attr = __ATTR_RO(_name)
- DEFINE_MTHP_STAT_ATTR(anon_fault_alloc, MTHP_STAT_ANON_FAULT_ALLOC);
- DEFINE_MTHP_STAT_ATTR(anon_fault_fallback, MTHP_STAT_ANON_FAULT_FALLBACK);
- DEFINE_MTHP_STAT_ATTR(anon_fault_fallback_charge, MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE);
-+DEFINE_MTHP_STAT_ATTR(collapse_alloc, MTHP_STAT_COLLAPSE_ALLOC);
-+DEFINE_MTHP_STAT_ATTR(collapse_alloc_failed, MTHP_STAT_COLLAPSE_ALLOC_FAILED);
- DEFINE_MTHP_STAT_ATTR(zswpout, MTHP_STAT_ZSWPOUT);
- DEFINE_MTHP_STAT_ATTR(swpin, MTHP_STAT_SWPIN);
- DEFINE_MTHP_STAT_ATTR(swpin_fallback, MTHP_STAT_SWPIN_FALLBACK);
-@@ -680,6 +682,8 @@ static struct attribute *any_stats_attrs[] = {
- #endif
- 	&split_attr.attr,
- 	&split_failed_attr.attr,
-+	&collapse_alloc_attr.attr,
-+	&collapse_alloc_failed_attr.attr,
- 	NULL,
- };
- 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 0c4d6a02d59c..cf94ccdfe751 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1074,21 +1074,26 @@ static int __collapse_huge_page_swapin(struct mm_struct *mm,
- }
- 
- static int alloc_charge_folio(struct folio **foliop, struct mm_struct *mm,
--			      struct collapse_control *cc)
-+			      struct collapse_control *cc, u8 order)
- {
- 	gfp_t gfp = (cc->is_khugepaged ? alloc_hugepage_khugepaged_gfpmask() :
- 		     GFP_TRANSHUGE);
- 	int node = khugepaged_find_target_node(cc);
- 	struct folio *folio;
- 
--	folio = __folio_alloc(gfp, HPAGE_PMD_ORDER, node, &cc->alloc_nmask);
-+	folio = __folio_alloc(gfp, order, node, &cc->alloc_nmask);
- 	if (!folio) {
- 		*foliop = NULL;
--		count_vm_event(THP_COLLAPSE_ALLOC_FAILED);
-+		if (order == HPAGE_PMD_ORDER)
-+			count_vm_event(THP_COLLAPSE_ALLOC_FAILED);
-+		count_mthp_stat(order, MTHP_STAT_COLLAPSE_ALLOC_FAILED);
- 		return SCAN_ALLOC_HUGE_PAGE_FAIL;
- 	}
- 
--	count_vm_event(THP_COLLAPSE_ALLOC);
-+	if (order == HPAGE_PMD_ORDER)
-+		count_vm_event(THP_COLLAPSE_ALLOC);
-+	count_mthp_stat(order, MTHP_STAT_COLLAPSE_ALLOC);
-+
- 	if (unlikely(mem_cgroup_charge(folio, mm, gfp))) {
- 		folio_put(folio);
- 		*foliop = NULL;
-@@ -1125,7 +1130,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
- 	 */
- 	mmap_read_unlock(mm);
- 
--	result = alloc_charge_folio(&folio, mm, cc);
-+	result = alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
- 	if (result != SCAN_SUCCEED)
- 		goto out_nolock;
- 
-@@ -1847,7 +1852,7 @@ static int collapse_file(struct mm_struct *mm, unsigned long addr,
- 	VM_BUG_ON(!IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS) && !is_shmem);
- 	VM_BUG_ON(start & (HPAGE_PMD_NR - 1));
- 
--	result = alloc_charge_folio(&new_folio, mm, cc);
-+	result = alloc_charge_folio(&new_folio, mm, cc, HPAGE_PMD_ORDER);
- 	if (result != SCAN_SUCCEED)
- 		goto out;
- 
--- 
-2.49.0
+>> +                             compatible = "amlogic,pinctrl-s7";
+>> +                             #address-cells = <2>;
+>> +                             #size-cells = <2>;
+> 
+> Doesn't look like you need 64-bits of address and size. 1 cell is
+> enough.
+> 
 
+Krzysztof raised this question in the definition of binding stage.
+https://lore.kernel.org/all/012cfaca-e8f5-4614-9393-a4a46a797adb@amlogic.com/
+
+>> +                             ranges = <0x0 0x0 0x0 0x4000 0x0 0x340>;
+> 
