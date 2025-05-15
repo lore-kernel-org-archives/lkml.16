@@ -1,132 +1,190 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F561DE2D6
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:20:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180AA18FC91;
+	Thu, 15 May 2025 14:22:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747318820; cv=none; b=Y5UfbPoD+L18shq1czqZHEcQ99BOEhwiO06nafBicT6H0TDfn2DzElILcQ09yjZG6mA2EtZ4cWd9TOtp8+umYZaOw5dtbiKbkIOLs7COakjKtQIRJjZoxzHw/2Ka11S/ykBzTmHVlzQcp2V79Gn2v4tw6RusmD4ryfJABpSrbj0=
+	t=1747318928; cv=none; b=nrBeaB+vbio3sWj+hPkByxOcc362qK5yrDPXK6FYLBBxfpUyzdOhElTTRgyZxjvTEGsbZb077tXCQ4UK3jUJ2oRYV5+DkKqZLAT8YqCUWU7ykRmI6Tp4HD9cUoiRWlTABDOQoNHcyHYw0JTJutW6YaKRhK560vVM/4I3fB4s+/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747318820; c=relaxed/simple;
-	bh=Q3/zm5qHVC0rx9DwPaIcXzul/NpwRQTr9XjpXj7YIs8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OSvKnoamUT4MxD4E+tOcxFn9JRUirwFnUzwFhf0wTWI4jqWgE7lvvESIDv412/LnzQqOkJBl6mFOq/EWDOlZZqGg6NwiB1hwBDdi4nHJ+DNmgJFkInvEkw+SKB3i0T74V7p1UKhatQ7IB9qptvJwqwd6rgVwWSpXzIUC20Y+hQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VKRnqDfY; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747318928; c=relaxed/simple;
+	bh=dHqEeggz/sGBQSp6+BlyRI5Po6EHhiF7PVmQa+VQnfI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L++8PbFvODQhz50SR/t1BRIoHtsTTUX2FMnlbUzlRKRSF0ACvHMjLpKQZMUFf4t9bjSZgq8YjXfpJGEO8GPgkSW2rnZ/KoZJCeah9FDX1Sm1R93dKZKghvBh/Dj1d552+XHlAmDz//Pyn/cChiEQMXDEXaFoG+N4RmX74H+0ULk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H0+PtxAP; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VKRnqDfY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H0+PtxAP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747318819; x=1778854819;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Q3/zm5qHVC0rx9DwPaIcXzul/NpwRQTr9XjpXj7YIs8=;
-  b=VKRnqDfYjKNMIUgpBd5mkM6mUswX/ruGzTzBM6O2fcp+TbaWxyYt1R9G
-   g+dzcOnYjzUNSRH61xzpdFhMz+nY+EHNOPhNO0NlBG6QsNHoA294ax8qL
-   V110FHA5YLXZyOFlNRIOKfA0rlmNBssuu2V0kWZgpXZhraJ0xoI5LRhV6
-   7umCW7vmIHuxngkNCFLAzziAysp1t3V0aOHeOEqYhmwuPJS8e7RErs9sc
-   ueI4m3G5xWT+iX7v0KdY8eKTG8fwwIHWnzLyXd2Ej0NDfUZDR9svmca/k
-   Ldga7RmAq5/oeSgTQUm+AJejXeVx++FmhKB2Su8wsweY8bctXCW4D2zJn
-   w==;
-X-CSE-ConnectionGUID: 4prpd1Y9TtWtNWblxPnLWg==
-X-CSE-MsgGUID: FS44BE5XSXq7LmmIVrZICQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="60597391"
+  t=1747318927; x=1778854927;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dHqEeggz/sGBQSp6+BlyRI5Po6EHhiF7PVmQa+VQnfI=;
+  b=H0+PtxAPNrRDZOpaYnR9hhLdZ3nqci8DuqeIfMSQSl3i5Ya+qEysN/gV
+   Fuou/inS1qi1pzfYOF3oyadCUw/u0dAGAeFtHH1hjBU8nFgKdW7QVyy6x
+   86HEaYGLfY09XvCL/QOpFJAiVBUl9rsrLKurpt8MecctqiOW1LPNLCWAy
+   dTC+vXBh5StECyo+BgNVaLs08IUqC6dzAWE0dTDiR9X3bWJV6qWBxRMwM
+   24UMGeEvT9CgSxqgJq2kt0X/bxK9E7ZKEMpHECVgweTeItrnbW4iITrQs
+   +NL9JWgXAaBjoB1jURZdLxTMRjkFoZPbFJsvpnoi4mBZIoEvKZghHLHy3
+   g==;
+X-CSE-ConnectionGUID: 8HjmMDMRQ/y/jfMUabLS8A==
+X-CSE-MsgGUID: EM5WIFYqT0KVPhAJ9HUiAw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="60597584"
 X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="60597391"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 07:20:17 -0700
-X-CSE-ConnectionGUID: tShc6y3KTbKYSPWyQvqMNw==
-X-CSE-MsgGUID: sf1xcLtgQau/vi3DgRo5Nw==
+   d="scan'208";a="60597584"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 07:22:06 -0700
+X-CSE-ConnectionGUID: 3Ica6LFpTe2/lrzVobNRMg==
+X-CSE-MsgGUID: scHxO3ftQwOEFQSNhwV6Vg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="143603198"
-Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.109.45]) ([10.125.109.45])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 07:20:16 -0700
-Message-ID: <ae2478d9-640f-4c42-86ec-31cbe5955a59@intel.com>
-Date: Thu, 15 May 2025 07:20:12 -0700
+   d="scan'208";a="138264488"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP; 15 May 2025 07:22:02 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 0900238D; Thu, 15 May 2025 17:22:00 +0300 (EEST)
+Date: Thu, 15 May 2025 17:22:00 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: pbonzini@redhat.com, rick.p.edgecombe@intel.com, 
+	isaku.yamahata@intel.com, kai.huang@intel.com, yan.y.zhao@intel.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, kvm@vger.kernel.org, 
+	x86@kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [RFC, PATCH 00/12] TDX: Enable Dynamic PAMT
+Message-ID: <pla54zy4z27df57uxmzuog26mddiezbwsyrurnjxivdkg5dibx@574tcxdgjru2>
+References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
+ <aCSddrn7D4J-9iUU@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -v2 0/15] x86: Remove support for TSC-less and CX8-less
- CPUs
-To: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Cc: "Ahmed S . Darwish" <darwi@linutronix.de>,
- Andrew Cooper <andrew.cooper3@citrix.com>, Ard Biesheuvel <ardb@kernel.org>,
- Arnd Bergmann <arnd@kernel.org>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
- <hpa@zytor.com>, John Ogness <john.ogness@linutronix.de>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
-References: <20250515085708.2510123-1-mingo@kernel.org>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250515085708.2510123-1-mingo@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCSddrn7D4J-9iUU@google.com>
 
-On 5/15/25 01:56, Ingo Molnar wrote:
->  80 files changed, 47 insertions(+), 14117 deletions(-)
+On Wed, May 14, 2025 at 06:41:10AM -0700, Sean Christopherson wrote:
+> On Fri, May 02, 2025, Kirill A. Shutemov wrote:
+> > This RFC patchset enables Dynamic PAMT in TDX. It is not intended to be
+> > applied, but rather to receive early feedback on the feature design and
+> > enabling.
+> 
+> In that case, please describe the design, and specifically *why* you chose this
+> particular design, along with the constraints and rules of dynamic PAMTs that
+> led to that decision.  It would also be very helpful to know what options you
+> considered and discarded, so that others don't waste time coming up with solutions
+> that you already rejected.
 
-Thanks for doing this, Ingo. A lot of this code was sitting off on the
-side and not causing _too_ many problems. But that was (I think) mostly
-because it was being so lightly used.
+Dynamic PAMT support in TDX module
+==================================
 
-I've been using Linux since the late 90's. The oldest systems I ever ran
-it on were i586's and they were old at the time.
+Dynamic PAMT is a TDX feature that allows VMM to allocate PAMT_4K as
+needed. PAMT_1G and PAMT_2M are still allocated statically at the time of
+TDX module initialization. At init stage allocation of PAMT_4K is replaced
+with PAMT_PAGE_BITMAP which currently requires one bit of memory per 4k.
 
-I suspect this is going to throw a couple more compile issues at us to
-fix, that's par for the course on something like this. Ideally, we'd
-wait for v6.16-rc1 for applying something of this magnitude. What were
-your plans on when to apply it?
+VMM is responsible for allocating and freeing PAMT_4K. There's a pair of
+new SEAMCALLs for it: TDH.PHYMEM.PAMT.ADD and TDH.PHYMEM.PAMT.REMOVE. They
+add/remove PAMT memory in form of page pair. There's no requirement for
+these pages to be contiguous.
 
-In any case:
+Page pair supplied via TDH.PHYMEM.PAMT.ADD will cover specified 2M region.
+It allows any 4K from the region to be usable by TDX module.
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+With Dynamic PAMT, a number of SEAMCALLs can now fail due to missing PAMT
+memory (TDX_MISSING_PAMT_PAGE_PAIR):
+
+ - TDH.MNG.CREATE
+ - TDH.MNG.ADDCX 
+ - TDH.VP.ADDCX
+ - TDH.VP.CREATE
+ - TDH.MEM.PAGE.ADD
+ - TDH.MEM.PAGE.AUG 
+ - TDH.MEM.PAGE.DEMOTE
+ - TDH.MEM.PAGE.RELOCATE
+
+Basically, if you supply memory to a TD, this memory has to backed by PAMT
+memory.
+
+Once no TD uses the 2M range, the PAMT page pair can be reclaimed with
+TDH.PHYMEM.PAMT.REMOVE.
+
+TDX module track PAMT memory usage and can give VMM a hint that PAMT
+memory can be removed. Such hint is provided from all SEAMCALLs that
+removes memory from TD:
+
+ - TDH.MEM.SEPT.REMOVE
+ - TDH.MEM.PAGE.REMOVE
+ - TDH.MEM.PAGE.PROMOTE
+ - TDH.MEM.PAGE.RELOCATE
+ - TDH.PHYMEM.PAGE.RECLAIM
+
+With Dynamic PAMT, TDH.MEM.PAGE.DEMOTE takes PAMT page pair as additional
+input to populate PAMT_4K on split. TDH.MEM.PAGE.PROMOTE returns no longer
+needed PAMT page pair.
+
+PAMT memory is global resource and not tied to a specific TD. TDX modules
+maintains PAMT memory in a radix tree addressed by physical address. Each
+entry in the tree can be locked with shared or exclusive lock. Any
+modification of the tree requires exclusive lock.
+
+Any SEAMCALL that takes explicit HPA as an argument will walk the tree
+taking shared lock on entries. It required to make sure that the page
+pointed by HPA is of compatible type for the usage.
+
+TDCALLs don't take PAMT locks as none of the take HPA as an argument.
+
+Dynamic PAMT enabling in kernel
+===============================
+
+Kernel maintains refcounts for every 2M regions with two helpers
+tdx_pamt_get() and tdx_pamt_put().
+
+The refcount represents number of users for the PAMT memory in the region.
+Kernel calls TDH.PHYMEM.PAMT.ADD on 0->1 transition and
+TDH.PHYMEM.PAMT.REMOVE on transition 1->0.
+
+PAMT memory gets allocated as part of TD init, VCPU init, on populating
+SEPT tree and adding guest memory (both during TD build and via AUG on
+accept).
+
+PAMT memory removed on reclaim of control pages and guest memory.
+
+Populating PAMT memory on fault is tricky as we cannot allocate memory
+from the context where it is needed. I introduced a pair of kvm_x86_ops to
+allocate PAMT memory from a per-VCPU pool from context where VCPU is still
+around and free it on failuire. This flow will likely be reworked in next
+versions.
+
+Previous attempt on Dynamic PAMT enabling
+=========================================
+
+My initial kernel enabling attempt was quite different. I wanted to make
+PAMT allocation lazy: only try to add PAMT page pair if a SEAMCALL fails
+due to missing PAMT and reclaim it back based on hint provided by the TDX
+module.
+
+The motivation was to avoid duplication of PAMT memory refcounting that
+TDX module does on kernel side.
+
+This approach is inherently more racy as we don't serialize PAMT memory
+add/remove against SEAMCALLs that uses add/remove memory for a TD. Such
+serialization would require global locking which is no-go.
+
+I made this approach work, but at some point I realized that it cannot be
+robust as long as we want to avoid TDX_OPERAND_BUSY loops.
+TDX_OPERAND_BUSY will pop up as result of the races I mentioned above.
+
+I gave up on this approach and went with the current one which uses
+explicit refcounting.
+
+
+Brain dumped.
+
+Let me know if anything is unclear.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
