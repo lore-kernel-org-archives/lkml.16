@@ -1,196 +1,133 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6EBB298CC6
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 20:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903B01F5827
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 20:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747340718; cv=none; b=D1NvMM7uRN+Xt+pikEcEu9Y3U2If7cEUyG/xRs1AiQRJCOQAUQUll953KcuQkY9aIzsyo+nGdSa/LatyOlgMLYeL+qO883tBBtrpHHwz1J5v4HAluD9ASEa9RBwclqcBapVDCS4ObhF7jpKZM298iyU7BdrXIQfGRoJIqMHmzHw=
+	t=1747340729; cv=none; b=RUjKTg+60p4bJRgTQPixE/ztWJFtsmP/caN3/GPliXMqVgQPa3pYze/NVQ9lXez4BHkbBzhNEeZPcAv7yMpc+iJYxsqZaZt111eqG0HRm7/c9CmFscOLPstZLJIP1a1KExS6kjhIxGbku8bb0OvSANeRi0y+ZpR0xphkDrx+xuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747340718; c=relaxed/simple;
-	bh=cEMlm+36YbPPJ9hANH6fcWzYz4CWIwOAXvDkXtiIIpA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MBh5eLGh4/WjbcDRZsaSc6J7UWj/RLQabWTaE96+LiCciTp1v0TTb8CK1CqOfGxLq5PL8bpVwIjttxK058ZjYtkca6GF742be9bEdkCTlPb245SXzgtGJieh+yKXA6U0XUdbRjtZOnk5hlXwXc3BRySwrBJRqNtEaqFMQViAgF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oyfdx/tg; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747340729; c=relaxed/simple;
+	bh=UByHk4M1G+jCLtezPz26iijhvUskQ3D9UHUSD+CWFP8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RPAVgNkP9RJYoJOlq+xgmof/VAtB1OQxHnVcoXViLjmOG3oNrzfNjp50NPQsHwD5ntR3Iqta+iPLhimtIDPVpxfcfGGYZwR6NmB0GWDWSmpQFKYVqDcqyqThxpJNo/3hfs92lL01xEEy3LLLa0AeOW6n+5qNDuuy71MQ5QzHSqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=gJKDU4Mf; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oyfdx/tg"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22e45088d6eso17039495ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 13:25:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747340716; x=1747945516; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zUTfWForHlbZrJBv1cAxwqbk62WlolptWTpwwDZry+A=;
-        b=oyfdx/tgvwOZSqHmy5qDSJcJBFsEiCgGTLd8hbPsSUHX28Q5m1c5+HdYVrU9NVU3hz
-         YJdCPaZYTAMoPCaMwumWKfbJaeOYbphJ3hrYk/kZo3t5zWT+rc7DHtELfm3Cc+GKHn7l
-         YPfHurVH/m5DvN8CYpib/ujWUlW+1ipNQvJTQlleg4qroWn78zOsYCtno89y/oDPH1K9
-         U11/hUdFnZozOJ2roq5vOdZCipRPR46SuWaru51XIn7V4yJPPDx/ibQOe6bSVa4/gkvu
-         j8lOuOUWv2nHZva3bpe5qcS4CxsKYuvCzvVbUWIEzT+WMqSeyhXKRyLND9IcL60sghdn
-         Rizw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747340716; x=1747945516;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zUTfWForHlbZrJBv1cAxwqbk62WlolptWTpwwDZry+A=;
-        b=YU9FavXxLoWVm2S4AwQss5BIPXVh3pMd0AV4hYpq5ysKIpqojrUcmERyDsrEav+Gjt
-         9GW+yoT3lqEuuZsz+6MO9czXj9efyEIK4UQcaO8MLKk8bwSNIvSzXhkY4yKkCzVYXZr6
-         2YYPugu7Q4Zk0U8fTO2/Lu3qgV1/KwHaHFGh2cwlgEF1vmV/pmdrj1+/L6gSUWDhRBXt
-         CZTB7kDRgszbTvkxItixY8G+gv0NiAaFlOJ6oTXrfEdbZKTs1zqH+lelM2k03PyKhtmK
-         6VDy4XPHd4QQDa+R/zKwfSdSEPaRmrhXwwJ5/biGjr2Gp2IqDB2CUJHVNXGRQYTwMdU8
-         sPSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8QAhQ7nrTWeAHCbATuJhtLjzt6GLbYRdf2FASwU7uR/9Gz+CLRiJqcTOfwOj9tDFyb5+ehAbfRnAjXN4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxdmWRLNXu30pn7JqM0MFT3g6jHFmnKnCLBYJsKfZt4TKjGocc
-	Ys/Jkk58Se411uocYlRpHCm3bI/AaccBPin6l/BlW5f76uqiX8IcrE5zMfDmzrcsSEZv8r4xZ59
-	WZApi
-X-Gm-Gg: ASbGnct6UiTL+j706RhqsdYvUfPAFR+lthFR3ufm1C2mb1sL7WQrm39RdqZEr5WaeYo
-	ldUm5yQMX+fhTo1v08ASb0ut4DMfaHQOGzuBPLil6vhmsXWPI7ZBWM/3236MIvyuO3g3s/Uuljp
-	K7+zDdotxojxV2mwv0crkBNEWRTEjxKn192fBusUUaGEsK381awOHKWsl3hFVq9U70W/4y112mx
-	r/YE0ALwHOu7AAol6Ouag40hIsc3oOABqmGUmbgEqloK52IihA0GJH/5C5ipiE0WClR0E8NG/6Q
-	o6pqjKTyQHFehlp+SV0BaC/VR90swnpDwIVPjBRiP7QH1VGcSxKTYV8=
-X-Google-Smtp-Source: AGHT+IH7u31BXIHf5hNai5YAN/j8hWa4qZF2kgL+u1GNmBbTs/yeUNpckzK4SUgqojO2Yx9Bj5NmpQ==
-X-Received: by 2002:a17:903:b8f:b0:224:c76:5e57 with SMTP id d9443c01a7336-231d459bee3mr8271575ad.39.1747340715957;
-        Thu, 15 May 2025 13:25:15 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:1d7a:b4f2:fe56:fa4e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4b017b0sm1879275ad.95.2025.05.15.13.25.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 13:25:15 -0700 (PDT)
-Date: Thu, 15 May 2025 14:25:13 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Dawei Li <dawei.li@linux.dev>
-Cc: andersson@kernel.org, linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, set_pte_at@outlook.com
-Subject: Re: [PATCH v2 2/3] rpmsg: char: Implement eptdev based on anon inode
-Message-ID: <aCZNqVbGKa_EaCBT@p14s>
-References: <20250509155927.109258-1-dawei.li@linux.dev>
- <20250509155927.109258-3-dawei.li@linux.dev>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gJKDU4Mf"
+Received: from [172.27.3.244] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54FKOiar3684076
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 15 May 2025 13:24:45 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54FKOiar3684076
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1747340686;
+	bh=wKRRKSoScdWzuK4LlPzka9ZNoM1J1rtc/6+sJ4Fs1a4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gJKDU4MfBzkQmOtQ+brwkqwBjCxpL4Aoh5vuHM2zX07AMP1wouqPEkZ8t8Zginx95
+	 wrmSUhstmpIg3W+8NMVN1RGPGaCkTLgFMExrIr20QNTYQRF46w1HKoY9N6cJgNIhyK
+	 YfMXFT27hXu6tuIYlmOvWObaWramdivO/S6ueWlBtJVzLXf7gEn2jGGveuRTSOLWRj
+	 ITIda0Xuqsd0g1cIxraDOX6VAsxa53a1lW4KgwnGcozRFvWOR9nw+SD9cjfC3VTvtl
+	 a476jFIreR9+e7oW2CgniF1eXFe20zxaA95VXTbYl8aUxx0lJ3rvMXY0vwewtm9KAu
+	 aiJHfA6ipWCUA==
+Message-ID: <8d61e7a2-5eba-43c8-a38d-ca6ae59172b5@zytor.com>
+Date: Thu, 15 May 2025 13:24:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250509155927.109258-3-dawei.li@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/6] x86/paravirt: Switch MSR access pv_ops functions to
+ instruction interfaces
+To: Xin Li <xin@zytor.com>,
+        =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?=
+ <jgross@suse.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        virtualization@lists.linux.dev, Peter Zijlstra <peterz@infradead.org>
+Cc: Ajay Kaher <ajay.kaher@broadcom.com>,
+        Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+        Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+        Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        xen-devel@lists.xenproject.org
+References: <20250506092015.1849-1-jgross@suse.com>
+ <20250506092015.1849-6-jgross@suse.com>
+ <722f5b30-20e9-4540-98e4-d211d7c44cbe@zytor.com>
+ <9f4e33d5-9cb3-4079-b764-87a15265fd52@suse.com>
+ <ff567466-a46a-4f66-935a-8fae1140c1a2@suse.com>
+ <eb077393-ea95-4ac0-9479-980e227f7bff@zytor.com>
+ <6cc20ef6-d8e5-4c74-89d9-6a949c84b397@suse.com>
+ <DDA7C560-1BD9-40A6-8B93-28D5AC10EBB2@zytor.com>
+ <652dfd63-e41c-4d7a-8fea-40509e8191ef@zytor.com>
+Content-Language: en-US
+From: "H. Peter Anvin" <hpa@zytor.com>
+In-Reply-To: <652dfd63-e41c-4d7a-8fea-40509e8191ef@zytor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 09, 2025 at 11:59:26PM +0800, Dawei Li wrote:
-> Introduce new eptdev abstraction based on anon inode. The new API is
-> exactly same with legacy one except:
+On 5/15/25 00:32, Xin Li wrote:
 > 
-> - It's anonymous and devnode/path free.
-> - Its fops->open() is empty.
+> Hi Juergen,
 > 
-> Signed-off-by: Dawei Li <dawei.li@linux.dev>
-> ---
->  drivers/rpmsg/rpmsg_char.c | 44 ++++++++++++++++++++++++++++++++++++++
->  drivers/rpmsg/rpmsg_char.h | 19 ++++++++++++++++
->  2 files changed, 63 insertions(+)
+> I have some update on this thread while working on it.
 > 
-> diff --git a/drivers/rpmsg/rpmsg_char.c b/drivers/rpmsg/rpmsg_char.c
-> index 5b2a883d6236..b0ec05f88013 100644
-> --- a/drivers/rpmsg/rpmsg_char.c
-> +++ b/drivers/rpmsg/rpmsg_char.c
-> @@ -13,6 +13,7 @@
->  
->  #define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
->  
-> +#include <linux/anon_inodes.h>
->  #include <linux/cdev.h>
->  #include <linux/device.h>
->  #include <linux/fs.h>
-> @@ -517,6 +518,49 @@ int rpmsg_chrdev_eptdev_create(struct rpmsg_device *rpdev, struct device *parent
->  }
->  EXPORT_SYMBOL(rpmsg_chrdev_eptdev_create);
->  
-> +static const struct file_operations rpmsg_eptdev_anon_fops = {
-> +	.owner = THIS_MODULE,
-> +	.release = rpmsg_eptdev_release,
-> +	.read_iter = rpmsg_eptdev_read_iter,
-> +	.write_iter = rpmsg_eptdev_write_iter,
-> +	.poll = rpmsg_eptdev_poll,
-> +	.unlocked_ioctl = rpmsg_eptdev_ioctl,
-> +	.compat_ioctl = compat_ptr_ioctl,
-> +};
-> +
-> +int rpmsg_eptdev_create(struct rpmsg_device *rpdev, struct device *parent,
-> +			struct rpmsg_channel_info chinfo, int *pfd)
+> If we continue down the path of maintaining pvops MSR APIs as this patch
+> series does, it seems we’ll need to duplicate the ALTERNATIVE code in
+> three different places.
+> 
+> 1) The MSR access primitives defined in <asm/msr.h>, which is used when
+>     CONFIG_PARAVIRT=n.
+> 
+> 2) The pvops native MSR functions pv_native_{rd,wr}msr{,_safe}() defined
+>     in arch/x86/kernel/paravirt.c, used when CONFIG_PARAVIRT=y on bare
+>     metal.
+> 
+> 3) The pvops Xen MSR functions paravirt_{read,write}_msr{,_safe}()
+>     defined in <asm/paravirt.h>, used when CONFIG_PARAVIRT_XXL=y.
+> 
+> hpa had mentioned to me earlier that this would be a maintenance burden
+> — something I only truly realized once I got hands-on with it.
+> 
+> Maybe you have something in mind to address it?
+> 
+> Also add PeterZ to the To list because he cares it.
+> 
 
-rpmsg_anonymous_eptdev_create()
+Having the code being duplicated is definitely not a good thing; 
+although I'm not one of the x86 maintainers anymore, I would consider it 
+a strong reason to NAK such a patchset.
 
-> +{
-> +	struct rpmsg_eptdev *eptdev;
-> +	int ret, fd;
-> +
-> +	eptdev = __rpmsg_chrdev_eptdev_alloc(rpdev, parent, false);
-> +	if (IS_ERR(eptdev))
-> +		return PTR_ERR(eptdev);
-> +
-> +	ret =  __rpmsg_chrdev_eptdev_add(eptdev, chinfo, false);
-> +	if (ret) {
-> +		dev_err(&eptdev->dev, "failed to add %s\n", eptdev->chinfo.name);
-> +		return ret;
-> +	}
-> +
-> +	fd = anon_inode_getfd("rpmsg-eptdev", &rpmsg_eptdev_anon_fops, eptdev, O_RDWR | O_CLOEXEC);
-> +	if (fd < 0) {
-> +		put_device(&eptdev->dev);
-> +		return fd;
-> +	}
-> +
-> +	mutex_lock(&eptdev->ept_lock);
-> +	ret = __rpmsg_eptdev_open(eptdev);
-> +	mutex_unlock(&eptdev->ept_lock);
-> +
-> +	if (!ret)
-> +		*pfd = fd;
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(rpmsg_eptdev_create);
-> +
->  static int rpmsg_chrdev_probe(struct rpmsg_device *rpdev)
->  {
->  	struct rpmsg_channel_info chinfo;
-> diff --git a/drivers/rpmsg/rpmsg_char.h b/drivers/rpmsg/rpmsg_char.h
-> index 117d9cbc52f0..8cc2c14537da 100644
-> --- a/drivers/rpmsg/rpmsg_char.h
-> +++ b/drivers/rpmsg/rpmsg_char.h
-> @@ -19,6 +19,19 @@
->  int rpmsg_chrdev_eptdev_create(struct rpmsg_device *rpdev, struct device *parent,
->  			       struct rpmsg_channel_info chinfo);
->  
-> +/**
-> + * rpmsg_eptdev_create() - register ep device and its associated fd based on an endpoint
-> + * @rpdev:  prepared rpdev to be used for creating endpoints
-> + * @parent: parent device
-> + * @chinfo: associated endpoint channel information.
-> + * @pfd: fd in represent of endpoint device
-> + *
-> + * This function create a new rpmsg endpoint device and its associated fd to instantiate a new
-> + * endpoint based on chinfo information.
-> + */
-> +int rpmsg_eptdev_create(struct rpmsg_device *rpdev, struct device *parent,
-> +			struct rpmsg_channel_info chinfo, int *pfd);
-> +
->  /**
->   * rpmsg_chrdev_eptdev_destroy() - destroy created char device endpoint.
->   * @data: private data associated to the endpoint device
-> @@ -36,6 +49,12 @@ static inline int rpmsg_chrdev_eptdev_create(struct rpmsg_device *rpdev, struct
->  	return -ENXIO;
->  }
->  
-> +static inline int rpmsg_eptdev_create(struct rpmsg_device *rpdev, struct device *parent,
-> +				      struct rpmsg_channel_info chinfo, int *pfd)
-> +{
-> +	return -ENXIO;
-> +}
-> +
->  static inline int rpmsg_chrdev_eptdev_destroy(struct device *dev, void *data)
->  {
->  	return -ENXIO;
-> -- 
-> 2.25.1
-> 
+At one point I was considering augmenting the alternatives framework to 
+be able to call an ad hoc subroutine to generate the code. It would be 
+useful in cases like this, where if PV is enabled it can make a callout 
+to the currently-active PV code to query the desired code to be output.
+
+There are 16 unused bits in the alternatives table (not counting the 14 
+unused flag bits), which could be used for an enumeration of such 
+subroutines, optionally split into 8 bits of function enumeration and 8 
+bits of private data. In this case, the "replacement" pointer becomes 
+available as a private pointer; possibly to a metadata structure used by 
+the subroutine.
+
+This could also be used to significantly enhance the static-immediate 
+framework, by being able to have explicit code which handles the 
+transformations instead of needing to rely on assembly hacks. That way 
+we might even be able to do that kind of transformations for any 
+ro_after_init value.
+
+I think the biggest concern is how this would affect objtool, since 
+objtool would now not have any kind of direct visibility into the 
+possibly generated code. How to best feed the information objtool needs 
+to it would be my biggest question (in part because I don't know what 
+objtool would actually need.)
+
+	-hpa
+
