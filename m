@@ -1,111 +1,112 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1C21DE4C2;
-	Thu, 15 May 2025 14:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1365D1DDE9;
+	Thu, 15 May 2025 14:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747319407; cv=none; b=NTYGMfSSto5HrsKlogk3WK/844ZyKIrQTb5ebA2btRGNA4AZxm2mZxy6g8WTF1q8KZ7ZYpfoefQs9EtX053c02ASCgy3uHuy8DQQwGK5xT732UDVMCFxeiJfmv/oXaCJ4Y6GIv6A1Rh+jTd1+jI1d6YQnVjbp7qZvHU89+0deO4=
+	t=1747319467; cv=none; b=p1fD/R0FC1s067SpXC0RRt2R+ps4cL+/5XbnhwJKIW9tTywI66u91mH1U4mmOiFkY1xa64fbV+UYfnwaQjmEHZdyzCEkpLLN9DkSdslcbmhk2ud38sADb3F4GQ108PD4Kw3X268MdTJZtheodfTdkL033voLwlP/jnx3/V9zHVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747319407; c=relaxed/simple;
-	bh=yx80i3ss/njcwOPYKpAMbsSUwMCd96dYzPK4X7KLZMM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mb7G6pRjCJanOkKp6K4CLxHae2281983OCNaFVJ75EeLAwtRrRLjQ4dSD8yzbd016CGAU5XxyonrooLd3W03ZL72xKOkTqHM1uHqhlbro4uk86EZPoYY6klWpAt8gVzYx9mBy60/aouPNzV1Svl3vof9VpQeHveol+NI2b+vgJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=C3eS4PNw; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=fTAV4Lfs reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1747319467; c=relaxed/simple;
+	bh=gBVcgI+bVIW8089OzOAqCSzjfYMoWZXlfDLqx2jCPmA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aCcDsC/SfT2szINBRRx8zVHOooFAA3l468ThujAE04TSGQt3mB7gSYupJYSCw+lNudJOPLWle7hulHemVq4oIaT3rohFgTUnM3zXgbINCNoJdRQA8vBQXYdjaiPc+3hKwQTE6sKYZeB/M0WFe30ot4kbdA0uFyVTjhhDEHoSOs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HWBx0eCU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="C3eS4PNw";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="fTAV4Lfs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1747319403; x=1778855403;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=b0tlbhLxSAEmnsveQS8FGSEE3bwObFXqb/3UCcwAnPI=;
-  b=C3eS4PNwG9J/kdRo66Bx+VLJiWr4BQeIojmHH0Z7OYI9DKSZZlq4S+yv
-   n7dJ4PfBNDOOB+2u9QZa3vfjQdGzUROpCrMDx8VFwGISJsdFIaQ1ZAiUU
-   85NRnlw/I5bvDSog6CXOPqjnW4mrOuhTIOLUtRLFmgqsxc6XfRQpObuNi
-   KylH++ftkJlIA8KHGwQjb4UH7o7xV3N9nkT9XoiNctjOSaVRqUnuvsdTm
-   rZ9ZEjfl5JIq1F0IJzWLlpo/7FPjcRetjhZFVkUY6Mqr7wePQYMOBVccE
-   cKkFQsQBdP63rm4bdYQmvvTAmoGKnCAzhdBvotSEicjPmo03wKwGof1y9
-   g==;
-X-CSE-ConnectionGUID: ifQO2kpWT6iGHzb89wHLHw==
-X-CSE-MsgGUID: fskjUjC/TveuJCG2KldNMA==
-X-IronPort-AV: E=Sophos;i="6.15,291,1739833200"; 
-   d="scan'208";a="44102182"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 15 May 2025 16:29:59 +0200
-X-CheckPoint: {6825FA67-20-C7E25413-F4312D34}
-X-MAIL-CPID: 282EDE4D20DD297041C25D142FD40109_4
-X-Control-Analysis: str=0001.0A006368.6825FA7B.0013,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 468C816A011;
-	Thu, 15 May 2025 16:29:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1747319395;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=b0tlbhLxSAEmnsveQS8FGSEE3bwObFXqb/3UCcwAnPI=;
-	b=fTAV4LfsxM8jq31QLG9bsTHnjTM2R1Ydftfm+t52ujoCupSJqa8L12p9ijgRKipWnMr7tq
-	aZECbz7plNdc5DV7cVIC64ITpMpW51S+QoPqK1HO9DWNDJO3aQOYt//ykfYjLSJw4zK+Hf
-	qSBFL9JEZaW3O4fDFqoMmaIXVBknHnlq4W8V0Dgu4TK9AA3xfkVpYrpLbj44lBsjIB1vql
-	uZbr1rwqb90Xl9uuj+ELAp6mPBQe0dYf/jELUDXpQ3HZFdyDCHmIkfoItcym/YCj2Wxx7L
-	ipXva2eJuTBvNLxD0b2Rr4wsMYTKVaIbojLC4ahOeany/mwTib82TVw20yE0+A==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] media: dt-bindings: sony,imx219: Allow props from video-interface-devices
-Date: Thu, 15 May 2025 16:29:42 +0200
-Message-ID: <20250515142945.1348722-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HWBx0eCU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8112CC4CEEB;
+	Thu, 15 May 2025 14:31:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747319466;
+	bh=gBVcgI+bVIW8089OzOAqCSzjfYMoWZXlfDLqx2jCPmA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=HWBx0eCUbJnz4Ejz3fckFs6s+gnEZIIp5C5jdVn9DnNWM9TqiKGmZmrhvw0qaFxW9
+	 jXTT+wDk175eR/8/kIGhU3Zoa7cDhHB37ljjTt+fuHk0VoBT8B9+s8wvQ9Vg5VbPfa
+	 U+N9tFo6QZpxfldW2YwX0IGUWjEVLESNHfpT9z/7ffAKc5tm6W/whkaKxVXLCNybTM
+	 Bba4SAAj1B9n1bjEQkTOxtwP+90oD+dLYnJjyWbZ9qSgSLrR7vOsG+IF6NeYnHGGA/
+	 GB9JkYz7pgoK9htWDseTdpuJ4cUyzAyCfRU4cChmtK0GJpVbDhrU8HPQPGC2TvAFcH
+	 qrVD8Z9Te+A4g==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad1f6aa2f84so210873266b.0;
+        Thu, 15 May 2025 07:31:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVuodCV3+7lRBUJoNuLScLCDX7LCjDA9wtsjdiguFx/ivm+4QnlMgC019tjpGu/+tiCGi04EB2c3mSUr6teiD0=@vger.kernel.org, AJvYcCX63CD9t0Lp+iJj44sSCW3UHqGbLMPNETYOFcJdbtyF7x87KMWCr4f2TNKaKFJ0YrImb5XNZVtoEtAeltc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMIhZPNmTI+4HreHoVdCrZpvwr+96xxYGLJEQsiRaKmyQYUo8+
+	BW7SPTwHI9dSe5EpnKKM0Ib56nWsNZqocq8XqZDsB5l2OAvzkikDMdQDmMhwvI0aKQ4DrZzvLf6
+	dKsEr/LNPOZdokuYb7seAy28GjGc=
+X-Google-Smtp-Source: AGHT+IGN876loDT8s+NGMAWAM46LQrqWUl7KnLWNCjkwPsoQU/5Vy+NFYEVa/HhDZO7UdP+c5HGPEGWy3u340bSCL8k=
+X-Received: by 2002:a17:907:d28:b0:ace:dc05:b186 with SMTP id
+ a640c23a62f3a-ad50f639d09mr341806666b.21.1747319465054; Thu, 15 May 2025
+ 07:31:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+References: <20250515-elf-v1-1-4b53745453c0@nvidia.com> <2025051543-override-rockiness-3ead@gregkh>
+ <D9WLFTPRB9FJ.OL6I760HKALZ@nvidia.com> <D9WP3YU31199.Q8IEDBJZ87LU@nvidia.com> <2025051532-gentleman-reset-58f2@gregkh>
+In-Reply-To: <2025051532-gentleman-reset-58f2@gregkh>
+From: Timur Tabi <timur@kernel.org>
+Date: Thu, 15 May 2025 09:30:28 -0500
+X-Gmail-Original-Message-ID: <CAOZdJXWKLu0y+kwC+Bm8nBCLizQVpsDdDUoS--hVgz2vnuZJQg@mail.gmail.com>
+X-Gm-Features: AX0GCFufjMIcd7AJh9ZUGCRgOX9zzN0oFtSrFsrGtHN8krwCpqrMyqtRdj_rCqQ
+Message-ID: <CAOZdJXWKLu0y+kwC+Bm8nBCLizQVpsDdDUoS--hVgz2vnuZJQg@mail.gmail.com>
+Subject: Re: [PATCH] rust: add basic ELF sections parser
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Alexandre Courbot <acourbot@nvidia.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Allow properties from video-interface-devices. The change is identical to
-commit b6339ecfd0865 ("media: dt-bindings: sony,imx290: Allow props from
-video-interface-devices")
+On Thu, May 15, 2025 at 6:43=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+> > Or if ELF is the problem, I don't mind introducing a WAD loader. ;)
+>
+> The "problem" I'm not understanding is why does the kernel have to do
+> any of this parsing at all?
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
- Documentation/devicetree/bindings/media/i2c/sony,imx219.yaml | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Nova will need to parse ELF headers in order to properly load and boot
+Nvidia firmware images.  Nouveau does this already:
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx219.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx219.yaml
-index 8b23e5fc6a24f..38c3759bcd9f5 100644
---- a/Documentation/devicetree/bindings/media/i2c/sony,imx219.yaml
-+++ b/Documentation/devicetree/bindings/media/i2c/sony,imx219.yaml
-@@ -16,6 +16,9 @@ description: |-
-   Image data is sent through MIPI CSI-2, which is configured as either 2 or
-   4 data lanes.
- 
-+allOf:
-+  - $ref: /schemas/media/video-interface-devices.yaml#
-+
- properties:
-   compatible:
-     const: sony,imx219
-@@ -79,7 +82,7 @@ required:
-   - VDDL-supply
-   - port
- 
--additionalProperties: false
-+unevaluatedProperties: false
- 
- examples:
-   - |
--- 
-2.43.0
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dri=
+vers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c#n2931
 
+In addition, we are adding new ELF image support to Nouveau to support
+newer Hopper and Blackwell GPUs:
+
+https://lore.kernel.org/nouveau/20250511210722.80350-55-bskeggs@nvidia.com/=
+T/
+(grep for "elf_header[]")
+
+For this new code, I used ELF for new firmware images. I did this for
+a few reasons:
+
+1. In addition to the large GSP-RM binary, there are 3 "meta data"
+blobs that are very small (<100 bytes) and I wanted a way to combine
+all blobs into one file to keep things neat.
+2. I didn't want to invent a new encapsulation format from scratch.
+3. ELF allows you to use existing user-space tools to parse the file
+if you are so inclined.
+4. ELF contained all of the header bits I was looking for.
+5. I was even able to include a CRC in the ELF header, for extra validation=
+.
+6. Structs for the headers already exist in the kernel and are used by
+other drivers.
+
+
+
+ What does it do with these segments that
+> userspace can't do instead?  Why does patching have to be done within
+> the kernel at all?  What prevents all of this from being done elsewhere?
+>
+> And ELF parsing is "tricky" in places, and you aren't using the existing
+> elf parser, as proof of needing a new parser in rust :)
+>
+> thanks,
+>
+> greg k-h
+>
