@@ -1,102 +1,102 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F5328540F;
-	Thu, 15 May 2025 18:58:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B18425A2B2;
+	Thu, 15 May 2025 18:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747335483; cv=none; b=dGYKbq4b9Uet5Qj1ljkk+3zpocHwSHFEQjcXOC0aYkZs9n0bC0Uf1HNZCsu/ah10zqlcHk/XuG79AzH7tUv0Zcj5EC75Fxaw/VOTU2UWA97g3sIXRVAnTlieyLxINVhti2uNbdBd4PILB06GyymSZqUJFd72IijqdnJoyvGiLsg=
+	t=1747335509; cv=none; b=Lc35Ta7LYiR+paX6P10i8v8RXnj+1eg5H/npbbEsF+mGaxf/junaetp6H/NalZd5uyvyNV5EM/XIYPbYf5DtEvuIMQDJ+aj57VOOB8FV13UrFZElzXldjvNg9iZzorjqaSTZFI1MYPhYuggwf9OXGRmW4i9x+mBaqZfOcHmmi6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747335483; c=relaxed/simple;
-	bh=558xP4g9pXqmLej/gQCalGaNa6pvPIbpvQ9uxVsh7lg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bWFWYIceBAxaZRYiVjg1esf2ScqVN0cYpfsnwdcJvvLQs9uUeJ4mjSPmmiskHvhgDKgEVU64l0JhzwwJDq+lki5Wj/yDu7dlCdFMJeNVRIQO4ah7V6szvUV/UVTQm2+JD5owX8N3dJf8E8iHjnxAvUaFAM75Gmd7+ewnY+Yqto0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O8dRLSFb; arc=none smtp.client-ip=209.85.210.169
+	s=arc-20240116; t=1747335509; c=relaxed/simple;
+	bh=xGJB46PlTVyL/38anLkanWSeKgJ2eooulVbxHzP2RHM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CizaltNtyFL3bzqxpf2FYgxD1pB/HXBjgtAACIrzlwHLfPiZqxBq0Yuii8MENUWGKKMgnyr9JtMHYqjR5+ay6FWhgvEfHoRRJnviShxLKWitTVErBt90aQ9j+RPjrXAq3q1R2TgpPJjN2wXTrBqz5yzEjfhMUTUG0U4vVSnLl+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hYqIgeIl; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O8dRLSFb"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-74267c68c11so1376407b3a.0;
-        Thu, 15 May 2025 11:58:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hYqIgeIl"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a20257c815so1164664f8f.3;
+        Thu, 15 May 2025 11:58:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747335482; x=1747940282; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xDN2wlRjPyxYrHXZaZwhbasSn4JXBsTkANhY1lWf6EQ=;
-        b=O8dRLSFbOP9HGJqKdXGayWPFGzXE1qNRfeYGN3jzQB0bm+6gc+QjTlsLL6ahm+Rfyd
-         cbtEima+YXUeyWEAidAYFbm9jem1f3npgYkCpqTmVUQiQkbh197gQBNxiuhoY45maX/E
-         rLvXYB2ENVBZvXx/2XtthX0yl65o8tjN2fDwHHJInSx3rAjvtAExBcKp8CaEtRtncRwT
-         Qx2K/0UAICupwYaqVfDutzzIE5+yYV1/pHPUuvQ0lLuBrjvahZM+yVrasdfLyO3I/ipu
-         dxhIN8OFzvHymGF23CBXP3vljisTI+bstlNj68f0vQHfYHJaTJwYzDxexSFsj3OFY5nS
-         abVQ==
+        d=gmail.com; s=20230601; t=1747335506; x=1747940306; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rAQgWK/HcHL5JZDomkBxGumchi4d3oKcZ0VquzyFHF0=;
+        b=hYqIgeIlQk57/JlPdQpFlQz1U5LVm4qqmm2WqzD6fCecMaxfwz0E6/0eG7FAs7DCx3
+         Odd0MO/2rMxCxUnt5c8vjCWWshwuUjFYs87LipXF8StjIs32P0NT7BaRbrSb4NxT0sTk
+         OnHuoA5cbhyAUHBixlmoJjB+fr9pHLe93fp1AroNiwukd5AAcf/wdwM222pR9PULyTgD
+         oI/OQlRkla04nJ/MUnG3ytozwlbMLmKsAIftHIpIgw0fpgHsW9jwFnjh09+14Tn6bD9S
+         GziA9qo55wXkHxFNbPcthYrPRqmFqEHXCfzy4qXgnOArr/Lxh8GnF/sDg/ota8WtMsGa
+         Mi+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747335482; x=1747940282;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xDN2wlRjPyxYrHXZaZwhbasSn4JXBsTkANhY1lWf6EQ=;
-        b=Ib23y33VxG2YMCFR9l56Grh2/OBSHsckg45Xysf7A/TZZ4wA5XLg0/XAg4hNFjsVaE
-         eFKqhuOfP3OLQKD/UxISznq9zujRimQ1Tc/dEwSeN5YgP23hxopht0HQUdcYdczBHStC
-         KTAdJZvdb/VLNG2WHXxByKySF3aDjTZRATwuSAvlk/3uzIxV4Zsb29ISDblusyN9ao44
-         qSgG8uRAZNYwr6mjXJztNzEk3V5KavEBBSuQQ2fYpez7QqQ/DhidBDtP1P648cXjUjLH
-         xVFNYXP3lhZtl1iltXuUWux79KXajXY3y9v6bCXE2hAyck1wlx0dmlry8m5MiBxE8xDV
-         zszQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvzlGqiyVuEEbAHhrTQyc3rm/c20BPWJnk1yhGoy0vIjenCgQI9Xza+J59tixxXJeiKYNo8P/BWJn1Lw==@vger.kernel.org, AJvYcCW54ViEZTv6+xtO4ORXeLJ9fEHqWbUeVjpnGexvj/LSwVoOexrbqAPkdn32P2ICfuPslwK4h8j8qK4ypLcp@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc9lDf0f9O7frLiEXzPr+nXsRbXjbLLUqCFJYZocgaFe+Kpdm2
-	u5GSqiJeDFvcFR4uszOLhANdQHqHKQAfiM4lqWfgPqf+NIXkp8hR4e7r
-X-Gm-Gg: ASbGncsQQv241uoKscpd7mTZ+jU910xnGWeOp2diy2rgJpA9qMOImstJalTybOddx7P
-	zzUluZLC2OElBdEUujLqAHxjITc87XdVT8gZjoYpmyiELzGrZIoSXAQ0lXcSy4sCNwQDQy1vT30
-	zAyb9Bp4P22tfKBJcbdOImorFA10QfG6zkQ6c3QnihCZqLCVWxpr2ezmJlDSnj/IlxOSxUss3uu
-	HMsaMbb5hToC0nw0F8vcPFJLYNKCThzSNSdcXlfJ1pWoQ44yhKsc8f/xSk7ZuklS5/V0lwShxZt
-	4P+wZLfyDS5f3nnOiBskYBGv73mIIPhcrlBPwd1FBt60ZkJL2F8=
-X-Google-Smtp-Source: AGHT+IEdonouJ3HWWVNx2T+7l3WuFC+ev1xScAzwBT9M6+mWX4A9pt1Lo8ASxTDzzrXNmrt6ARFFtw==
-X-Received: by 2002:aa7:9ddd:0:b0:73e:2dc8:94f3 with SMTP id d2e1a72fcca58-742a978714fmr510846b3a.1.1747335481583;
-        Thu, 15 May 2025 11:58:01 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:4a64:9a04:f793:540])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9739a12sm149552b3a.77.2025.05.15.11.58.00
+        d=1e100.net; s=20230601; t=1747335506; x=1747940306;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rAQgWK/HcHL5JZDomkBxGumchi4d3oKcZ0VquzyFHF0=;
+        b=P4zF2XmpTZX6b3vitbYqrIcMeyJkWrraypiPD4m1O0PQFHIjXWqizbKYWyHPqTVze8
+         nuX3qkxXMn3xnn2/Tiikn+6l6jkXhHR8514WXZ23DbaY70itwOiJp2lxmintxAZxldFs
+         9bHmFsfULwa8LKEh2cmHm9iQ+OARfMDwP6k+IddTvAHKeEvRDno3Js6jL4wny57FfG8z
+         Rlp/NuYA4+ktjl5HWSoEei6tobX36GKJV16PpOjLjYUAaTvSBPtUkPtoZh2W43SLafQI
+         DFiGyTd6H2aIf0ATpTLavfeBRqApVWAl/cpSskeY1ZaCnL329T3ajhIzNrKY73pN5FZz
+         Ri/A==
+X-Forwarded-Encrypted: i=1; AJvYcCUHNmyL+rehbYLlAwOfXLNU2DTV2xRZ9UkjJi9BojwTWeHWDrSdZQvqOgGaFxsfsc6SaMS4gAdHrdT5vE/g@vger.kernel.org, AJvYcCUM4QJ3yRhlwSRSTj8kvuAzko/JHeN5hRS+agoOwz8JtSzr1J5u+LXdBQb8RFFzysaqvoZbPAoU7cXf@vger.kernel.org, AJvYcCWfuh0mo7h2dgLfunwYh4dno4KNfh6e2/U37jOhl5Wee9CY02I8vS3QZ+zaDMnVIO2eSxlLDlyLvIVCn+Qp@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeMXXI5Rv2ioPzmJPGtpnnoxoLdDGXT/fgr+xSjV8TEhjE0cnf
+	D9AOL/3zlHD9Vo2MPZzj3p3sMeX5sRj6OiinPF5DP7mZQjsHBI0ccS2eJ1SMKA==
+X-Gm-Gg: ASbGncvSfz4s/2fMZrCccLohYxE0AoausuzElJT/PTBZXPeagDGeV6IieGS/sKwGRuF
+	RmMzU1w7u7YyyY8hxVJP/kE6t5y54bCaMltfQFj3spYkF3Vm/QSZYoWSZnA9kF4HlLZqHXSabFr
+	kAI/zoZVgUMoSMi6O/UlpkYR4cVN83Wu4AvfxeYc58XcUkBP+oxkakaIDjV0gZtjKC3/JH8a+fY
+	GVhWQiN8uu1Vc6xkX2jCFKMF+2npZIF0yQeehqtu2ytXfMdbn3JYKLJJb8Z9ovZXIxLni883dol
+	cDgqd++ECFmb4wfN2DnnzNAwZrgiqLZghcRc/P/m9xMu+ZjhrN/XRGZnQrCU4+g3BxAqQ3fH9Vp
+	suF5hO7KoikQbWJI=
+X-Google-Smtp-Source: AGHT+IGv5WT6iqGCzdtWMRw7/md5mqJ64SN/PDjAZ3l6FzfhMofC1/5lndV/1swytPL6rGhF8MzLKw==
+X-Received: by 2002:a05:6000:2012:b0:3a1:4c72:9067 with SMTP id ffacd0b85a97d-3a35c8271b3mr867307f8f.13.1747335506177;
+        Thu, 15 May 2025 11:58:26 -0700 (PDT)
+Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a35ca5a857sm335778f8f.32.2025.05.15.11.58.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 11:58:01 -0700 (PDT)
-Date: Thu, 15 May 2025 11:57:58 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: lihua - <lihua@huaqin.corp-partner.google.com>, hdegoede@redhat.com, 
-	javier.carrasco.cruz@gmail.com, zack.rusin@broadcom.com, namcao@linutronix.de, 
-	tglx@linutronix.de, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: gpio-keys - Detect long press events in sleep mode
-Message-ID: <44fclxle3b7hfo44ec3vlwlth3uamceaqght3ecu3lmz4eltfz@e57uk7jw3hky>
-References: <20250506055847.15389-1-lihua@huaqin.corp-partner.google.com>
- <CAAkVrDM1TyM9VQ6rctF75EcLCRbimgJqbA2oH_RvJxC8ex6_vQ@mail.gmail.com>
- <aCG2Rx_99mP6JFi-@smile.fi.intel.com>
+        Thu, 15 May 2025 11:58:25 -0700 (PDT)
+From: Gabor Juhos <j4g8y7@gmail.com>
+Subject: [PATCH 0/2] spi: spi-qpic-snand: extend bitmasks usage
+Date: Thu, 15 May 2025 20:58:04 +0200
+Message-Id: <20250515-qpic-snand-use-bitmasks-v1-0-11729aeae73b@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCG2Rx_99mP6JFi-@smile.fi.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADw5JmgC/x3MQQ5AMBBA0avIrE3SVrrgKmLR1mAiig4iEXfXW
+ L7F/w8IJSaBpngg0cXCa8zQZQFhcnEk5D4bjDJWWW1x3zigRBd7PIXQ87E4mQWNqlTQtffka8j
+ 1lmjg+z+33ft+MGVDz2kAAAA=
+X-Change-ID: 20250515-qpic-snand-use-bitmasks-2030c19bbeb9
+To: Mark Brown <broonie@kernel.org>
+Cc: Varadarajan Narayanan <quic_varada@quicinc.com>, 
+ Md Sadre Alam <quic_mdalam@quicinc.com>, 
+ Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
+ linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Gabor Juhos <j4g8y7@gmail.com>
+X-Mailer: b4 0.14.2
 
-On Mon, May 12, 2025 at 11:50:15AM +0300, Andy Shevchenko wrote:
-> On Mon, May 12, 2025 at 03:57:17PM +0800, lihua - wrote:
-> 
-> First of all, do not top-post!
-> 
-> > Hello, All linux team members:
-> >       Could you please review this modification as soon as possible?
-> 
-> You even haven't waited for a full week...
-> 
-> If it's an (important) fix, made it look so (Fixes: tag, Cc: stable@, etc).
+The two patches in the series are extending the usage of FIELD_PREP()
+macro and predefined bitmasks usage in the driver.
 
-I can see that missing input_sync() might hurt, but the patch
-description makes no sense. The driver does not really differentiate
-between long and sort press.
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+---
+Gabor Juhos (2):
+      spi: spi-qpic-snand: use CW_PER_PAGE_MASK bitmask
+      spi: spi-qpic-snand: extend FIELD_PREP() macro usage
 
-Please provide a better explanation how missing sync interferes with
-your use case.
+ drivers/spi/spi-qpic-snand.c | 45 ++++++++++++++++++++++----------------------
+ 1 file changed, 23 insertions(+), 22 deletions(-)
+---
+base-commit: 4614fd6342ab69feebb067d5db84a9bfb9aada9f
+change-id: 20250515-qpic-snand-use-bitmasks-2030c19bbeb9
 
-Thanks.
-
+Best regards,
 -- 
-Dmitry
+Gabor Juhos <j4g8y7@gmail.com>
+
