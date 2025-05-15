@@ -1,147 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E06820A5D8;
-	Thu, 15 May 2025 15:07:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642251A0B08;
+	Thu, 15 May 2025 15:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747321650; cv=none; b=VsHHRJwCgzjS0xwAqAFK5wTMob1iYs2jdtAGQrZhmLM4J5QXMeOIdJsIP+BtMiT9/gWtMv6DuzW4H3ai4Ud1zMDpy1E2JAguz2+FznThm13U2/Ay0S8JcABtsmFLbzVpRh6e4lemt2oLfoV7ijsXJ3gUIDCiEU11Yz/SH5SzSFo=
+	t=1747321777; cv=none; b=aOAk+vTsYFq1Muit3WiTaDnDktFFf4ZGMvl2F2Yf9KDlpztCyMoMA/T00aLpo13CJju4Ws4qIE6+WZszNLiQf5Run0KRzyQY3zIbk05b0U9fiMWJK286zi3SWIzcaPczr17MZi3CN5rL2Kf8P8EIrf9ZgUqGxO7K3x41wGeJgIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747321650; c=relaxed/simple;
-	bh=NVnU3EXlKhcA1buxaPfe5O18xcLQiBuKx4mM07IagEE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HPXc8nn+2vEDPpSjr58jo6nRuiAdAPQhLnwWHl6w28p+eX1jxm6WVqsvqqjKlbbZTwmpbnin7+fPPAzhYK+3KAV5EiCa+2GNwYlw0bHs7ISxm5wd7/PQ/GKSykDH4BVkPMSug1rgv/oJKGXuP+IseLa/Hh4jkhP3JnGh2A/Nfi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hxiXMnls; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747321777; c=relaxed/simple;
+	bh=w44A4dLjrd4Yidtbmwllfd+kSKFs/nM/K7Ucl6ZDugA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=S4AiFx7DgfFcg3mn/vQE1R68jH6WjyUjClLaow5EHnwh8FmavngPcbGJzol2lMgkR54G1m+wzQF+CiNgE5ikjGk0zTbNd4ZxV/TAp7B5c/t1zw1/Ye8JLqBiOAlj8feTt+QFSWcQxy+6fviqLh7Slwdh4rc51TPukMkY1Pl7hvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=bkAFMqMH; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=gsNWknRE reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hxiXMnls"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC609C4CEE7;
-	Thu, 15 May 2025 15:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747321649;
-	bh=NVnU3EXlKhcA1buxaPfe5O18xcLQiBuKx4mM07IagEE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hxiXMnlsIBdlJpTna4XVl4yd+LIHBATurggzh1gAwCvCiEltU8DzI/Npq3OdlKRKZ
-	 GKZiKlUI18UwxeyRKxIAdkxLSPr8krEUTkXzgMEItGQKXCRWjw6qFGqImPKtWJhA9a
-	 iNQ/USp2IYiv9tYezwSsca83juoSQqrZZeuEWYJOQ1YFUULVHZEButC68OLzVG0sxv
-	 hJOmtcI0HPAh3G9VLQm4Wkprc3hlcPByga66I/CQ33bgULosMJ9XbDtZsaY6ekkSH4
-	 IFrtvwA4hik9gsdQtkpLtTJ7cKOxppxpc7kbsQOPDqWKYBJFLHQ+0ooqT4Wceqfh9v
-	 qMiPRpi/rqpKw==
-Date: Thu, 15 May 2025 16:07:25 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Manikandan Muralidharan <manikandan.m@microchip.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: microchip: rename spi-cs-setup-ns property to
- spi-cs-setup-delay-ns
-Message-ID: <20250515-laptop-unfixable-85dca20d1b57@spud>
-References: <20250515103251.210468-1-manikandan.m@microchip.com>
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="bkAFMqMH";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="gsNWknRE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1747321774; x=1778857774;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=OKO1o7AXgboNWVrjuNu0zS6tMTQ0M3cqjX6LCKpPtBs=;
+  b=bkAFMqMHT1cttXb40o5NdJsLUXvOCO8vHvoSkcWaAVc2Wn9aFPIOkCy0
+   NfN1kiMtuj9o77lYULu+Ithw0Jd/o32pUILVrvHzWXBds9Ymh9Jm7v1CH
+   No9+tfOzs6AEcwEISAKf5ZENIlihacO5yfzR/WUn0BQC2aUCBpDQo9/Bd
+   dUW4/kq4G/rHb2NfmWWq/gGTZfoiZotyfKtEm9jDUextO10H/LCQxWqtd
+   ioa8anWwew8qUzKBmRQqxeM+P+/B0+4sH04hwXm2yBMDQ1B6J1H5wIY8C
+   t9jYfJifDshn5onAZFh9i+ssmok0E8WZb4h9HJzlZCQjIRNNc2FC6v9iI
+   g==;
+X-CSE-ConnectionGUID: 6W4+I+s4QBeJAKSgWpMqVA==
+X-CSE-MsgGUID: OborI3dyS9yfad95ooZ86Q==
+X-IronPort-AV: E=Sophos;i="6.15,291,1739833200"; 
+   d="scan'208";a="44103160"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 15 May 2025 17:09:30 +0200
+X-CheckPoint: {682603A9-32-BF62DDF1-CB8BF55F}
+X-MAIL-CPID: F957553CC4C182DE8056D3848055452E_1
+X-Control-Analysis: str=0001.0A006377.682603AC.003A,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5E0F2169B79;
+	Thu, 15 May 2025 17:09:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1747321765;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OKO1o7AXgboNWVrjuNu0zS6tMTQ0M3cqjX6LCKpPtBs=;
+	b=gsNWknREq/+YpiCH7AfQW36IRqv/5SjPHth37HoJcFvYvI10tDQMO8NIuLhx80nZHG+XoC
+	VTVwcCbauyVxlQ6uGKXVmFTPpvR0yI56JBzxb2wRoa4PaSYX4yNn9ffvUrR9j1mARRa4Rt
+	rNkswIyAHY9syxarsQ3n7LfYSEoWApbcM/NRLaBp1eUXe62ouj5T89P5b2hHaqTErpne3k
+	GaPdC20+aSeGbs2VS1emFa/FoupHBNwkafpnPoYlYUN0KpG9M5HTz2EboVFMU8wk2tFgMk
+	rw5KlLwTYyoSutqTCGDq9E4HVlqtdGqGR4cl6NXfnt+MVD3g0aBqXUshJ2vcvg==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Conor Dooley <conor+dt@kernel.org>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Jai Luthra <jai.luthra@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] media: dt-bindings: sony,
+ imx219: Allow props from video-interface-devices
+Date: Thu, 15 May 2025 17:09:24 +0200
+Message-ID: <2247039.irdbgypaU6@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <174732159526.2108882.8905658469049267620@selene>
+References:
+ <20250515142945.1348722-1-alexander.stein@ew.tq-group.com>
+ <174732159526.2108882.8905658469049267620@selene>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="YNVVBp6SZFwNB2lg"
-Content-Disposition: inline
-In-Reply-To: <20250515103251.210468-1-manikandan.m@microchip.com>
-
-
---YNVVBp6SZFwNB2lg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Thu, May 15, 2025 at 04:02:51PM +0530, Manikandan Muralidharan wrote:
-> The naming scheme for delay properties includes "delay" in the name,
-> so renaming spi-cs-setup-ns property to spi-cs-setup-delay-ns to keep
-> that consistent.
+Hi,
 
-"to keep that consistent" sounds like some nice cleanup, but these
-properties appear nowhere in kernel code and therefore just do not work?
-I think the wording should reflect that and there should be a Fixes tag
-to the broken commit.
-
+Am Donnerstag, 15. Mai 2025, 17:06:35 CEST schrieb Jai Luthra:
+> Quoting Alexander Stein (2025-05-15 16:29:42)
+> > Allow properties from video-interface-devices. The change is identical =
+to
+> > commit b6339ecfd0865 ("media: dt-bindings: sony,imx290: Allow props from
+> > video-interface-devices")
+> >=20
+> > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 >=20
-> Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
-> ---
->  arch/arm/boot/dts/microchip/at91-sam9x60ek.dts        | 2 +-
->  arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi   | 2 +-
->  arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi | 2 +-
->  arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts      | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
+> Reviewed-by: Jai Luthra <jai.luthra@ideasonboard.com>
 >=20
-> diff --git a/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts b/arch/arm/bo=
-ot/dts/microchip/at91-sam9x60ek.dts
-> index cdc56b53299d..c1ff3248bd8f 100644
-> --- a/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts
-> +++ b/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts
-> @@ -609,7 +609,7 @@ flash@0 {
->  		compatible =3D "jedec,spi-nor";
->  		reg =3D <0>;
->  		spi-max-frequency =3D <104000000>;
-> -		spi-cs-setup-ns =3D <7>;
-> +		spi-cs-setup-delay-ns =3D <7>;
->  		spi-tx-bus-width =3D <4>;
->  		spi-rx-bus-width =3D <4>;
->  		m25p,fast-read;
-> diff --git a/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi b/arch/a=
-rm/boot/dts/microchip/at91-sama5d27_som1.dtsi
-> index 8ac85dac5a96..13c28e92b17e 100644
-> --- a/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi
-> +++ b/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi
-> @@ -44,7 +44,7 @@ flash@0 {
->  					compatible =3D "jedec,spi-nor";
->  					reg =3D <0>;
->  					spi-max-frequency =3D <104000000>;
-> -					spi-cs-setup-ns =3D <7>;
-> +					spi-cs-setup-delay-ns =3D <7>;
->  					spi-tx-bus-width =3D <4>;
->  					spi-rx-bus-width =3D <4>;
->  					m25p,fast-read;
-> diff --git a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi b/arch=
-/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
-> index ef11606a82b3..9543214adc9f 100644
-> --- a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
-> +++ b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
-> @@ -234,7 +234,7 @@ qspi1_flash: flash@0 {
->  		compatible =3D "jedec,spi-nor";
->  		reg =3D <0>;
->  		spi-max-frequency =3D <104000000>;
-> -		spi-cs-setup-ns =3D <7>;
-> +		spi-cs-setup-delay-ns =3D <7>;
->  		spi-rx-bus-width =3D <4>;
->  		spi-tx-bus-width =3D <4>;
->  		m25p,fast-read;
-> diff --git a/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts b/arch/arm/=
-boot/dts/microchip/at91-sama5d2_icp.dts
-> index 9fa6f1395aa6..fbae6a9af6c3 100644
-> --- a/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts
-> +++ b/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts
-> @@ -714,7 +714,7 @@ flash@0 {
->  		compatible =3D "jedec,spi-nor";
->  		reg =3D <0>;
->  		spi-max-frequency =3D <104000000>;
-> -		spi-cs-setup-ns =3D <7>;
-> +		spi-cs-setup-delay-ns =3D <7>;
->  		spi-tx-bus-width =3D <4>;
->  		spi-rx-bus-width =3D <4>;
->  		m25p,fast-read;
-> --=20
-> 2.25.1
+> Are there any driver changes coming for the new properties?
+
+No. This is a standard property and is already handled in v4l2_fwnode_devic=
+e_parse(),
+same as orientation.
+
+Best regards,
+Alexander
+
+> > ---
+> >  Documentation/devicetree/bindings/media/i2c/sony,imx219.yaml | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx219.ya=
+ml b/Documentation/devicetree/bindings/media/i2c/sony,imx219.yaml
+> > index 8b23e5fc6a24f..38c3759bcd9f5 100644
+> > --- a/Documentation/devicetree/bindings/media/i2c/sony,imx219.yaml
+> > +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx219.yaml
+> > @@ -16,6 +16,9 @@ description: |-
+> >    Image data is sent through MIPI CSI-2, which is configured as either=
+ 2 or
+> >    4 data lanes.
+> > =20
+> > +allOf:
+> > +  - $ref: /schemas/media/video-interface-devices.yaml#
+> > +
+> >  properties:
+> >    compatible:
+> >      const: sony,imx219
+> > @@ -79,7 +82,7 @@ required:
+> >    - VDDL-supply
+> >    - port
+> > =20
+> > -additionalProperties: false
+> > +unevaluatedProperties: false
+> > =20
+> >  examples:
+> >    - |
+> >
 >=20
 
---YNVVBp6SZFwNB2lg
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCYDLQAKCRB4tDGHoIJi
-0uu/AQCsh2Rrf0aLS5+M+Dn41EcWua9fjg/EU6tZYdeV5+YuvwD/cSVJLXH4dMCp
-Yo8NyZ3cszL9S8dlEsdTv2vQ6t1V3AU=
-=AvJj
------END PGP SIGNATURE-----
 
---YNVVBp6SZFwNB2lg--
