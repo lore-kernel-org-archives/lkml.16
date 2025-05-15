@@ -1,223 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9908F66;
-	Thu, 15 May 2025 00:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD808F66;
+	Thu, 15 May 2025 00:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747269754; cv=none; b=csRAkAZ+iCX6h57LM468nnGQfn1Ao2EKlwa6ukb8COldktrGmmMTbtIWtMQfe6rNIT0IqoWH6M2gYYWwvoEc2ToN23BXRVvuwuMui/55rq2rU5/b+p1nwwL1gLztVKCdbY92oQllcjh7Qf1NDUdKu+rNs45F85DI5Kprz/BrhYk=
+	t=1747269789; cv=none; b=SJmUURFhBO1WKbOlmXhMztPaFdBvLrk/Wts0Bcsa5wpx7b76QJmIFHJe4sa3gwG0EoCj29Y7+Q+xSg+p/2EW7661edD2evHCaU/irrR9KwZqg0H1nPZO9WllXu5taiPEKGSyNhS0K6zBl/Q3SBwTH1N5uyTLqw263i7o5dXUiCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747269754; c=relaxed/simple;
-	bh=Jj9rZa3izoGXcM992ohp3v3M45235wdqTvdJRYPXBm8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=YjTrlPwK940WueCBuOznWOvE8fQQEdjtCCAAJ31ZoMcDvVTsp30xG0zlasQ7BaTEBmoIF68eIAxZx4D44I1ENcZHF6BnKSva71dxN8PhPcy0rgtW7dwy2sryFY8Ajl7wq1Qdx5EOFq5FNMHRTcZrezbbspsf4J4cYsDHlIeQzu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Srbfwyos; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747269789; c=relaxed/simple;
+	bh=CaZ4C3YksYVpPo32yraBL2f0bTtgs+Duayou0LWapfY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZW2iUNkXG7uZjUqRlLyRxrCRPuhDCVtK09Zulorb9eWKLM33kPLe2MdWxdrU+DpQI+SmVds/jdZHgWSihjVwX0pBsZHqJ1Q9PCEc9wFUMWwomCnVlpXw4ddO1XqV4aDsNM3XoTt+shOsW0yGBrmy6NGXdmJ0vXsgliFxrsuVmMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lvYn/i4W; arc=none smtp.client-ip=209.85.222.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Srbfwyos"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 628DAC4CEE3;
-	Thu, 15 May 2025 00:42:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747269754;
-	bh=Jj9rZa3izoGXcM992ohp3v3M45235wdqTvdJRYPXBm8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Srbfwyos5e2kIDRWuI3DZ/j4W49UbwYtkFzssehg+9B8+Mu3CYSiXwPhGmddd65HU
-	 zLXCaXCkP/hpy0ItDRgYyP81COjgeYSaUo6IeeQzTNnccIZsQFl5PD9xRnP/5roHVs
-	 3ebgLaWqpRtg3uFsqm3Xe5VFchXmMLMwb13VSmHZ1bKc6Mz11RZOxOTCmvBs83Xm1L
-	 0zAmlsVFudy1FiKo+V3rU5ew57rTkLvc8nIL1ZmDDkxmsje2CiYrhK5Bv+a9OHVWiS
-	 O047PGlVUcWXZkZ+UA5WpT6oBIj0ypnFV8Fkzun3uQM7qqPxK4n78HWXPf2aCr7I7E
-	 GX7UQHgs4O5EA==
-Date: Thu, 15 May 2025 09:42:30 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] tracing: ring_buffer: Rewind persistent ring buffer
- when reboot
-Message-Id: <20250515094230.5c84ca613bd3ebdc9063e13e@kernel.org>
-In-Reply-To: <20250514090050.52db97ed@batman.local.home>
-References: <174709742769.1964496.18203163435305117893.stgit@mhiramat.tok.corp.google.com>
-	<20250513203237.0e7ff662@gandalf.local.home>
-	<20250514150059.6edf09bd72862ca175b64c98@kernel.org>
-	<20250514090050.52db97ed@batman.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lvYn/i4W"
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-879c44a1dc4so86297241.3;
+        Wed, 14 May 2025 17:43:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747269786; x=1747874586; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cueXC2hlZsQuDhrii/uQD0jplPg4hNH073llC7Ktm+A=;
+        b=lvYn/i4WzfCA3U8fecyOhYOTzQXW2Otj5/d/nA7JP1s5v2dkHUwvpDCA7wKWJntx94
+         dI6VmnIWvWJyAAolJdga/rKXRy45kHv8sdLBpEzfzf/CuyrvOLbcBllvuYNmsMDKviPH
+         v6uuiqexM4iykGfICRMEXJfW9YO++ESmmqBQouJB+MFgILZSgw4TDZICOqAFURkdQrdr
+         +iUAae0xMpQiSF+fdr6XN8gvWB508p+9jsCZ9jC/7u+mlyO1nVfEZrruzzJqTrhNtd9X
+         VutqTco8HIx1+UlvqMlNk7XIOXasUrpkDHR5Eo2zEvyGFMRmGA0ajzzoRMnT+KFQQJ+S
+         Fouw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747269786; x=1747874586;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cueXC2hlZsQuDhrii/uQD0jplPg4hNH073llC7Ktm+A=;
+        b=fsDcRVCsZKpoOrZI7og8PLk1EJ3QWYMuVQ+dZP6j3xgTY1/p24jBiuD/1P40XGEjKr
+         X1XTaOoV9XwUoG1Ek518Uds50k0JVIDg44bbJLHxndzlFdYbC3LelF18Q1WnlqqwbeQd
+         7eQjbBBnVhuqWRhC36Dk20iaml8fi9fqIwW99hhUUU6RSI3tY0so42iiaKh5A+Bnpugl
+         KI83y/l24IQzyzkADVfocNsnLIt1Qh9dGuqQIJmO2/2lJ7a5B9OB8r5qcDvwm5awnp4K
+         OSvRKOHhJYWcOI2SL+cedVNMUvPDvGoFD2ZDeuuawifKAj33++jCo/E6d0joPuzkzXA+
+         a0Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCUD7badEAns5F0lyPfNtORT7++D1NuLsILIEEVA7TrKkujGOXsiePGt+bAzZGwZmdySvcmKyOJkzxEI+4w=@vger.kernel.org, AJvYcCWfFo828+TY4Efj4vcvTK5zJ76/HE+hGZKTEC0pAiuisF9ZHEXRiLiVKs+gzGidguDiBN4GKsG9ldCPFau7IEY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9M2xCma1TJV6wVoXDbELn5E7up5rvo2sxSuGR09PkkAn0j9FO
+	iAX6kSGgt93HxvX+D4aGlw/hLLMxTOrreQTB1N1yvfxvYGFbU7Yd
+X-Gm-Gg: ASbGncsk0Mlp2dIGBl3s2V7LGf/98v6HfU6YIi00qjQttvb/ETb/Huiuybb7upX7Ipm
+	haxSVKQ+yqX1uCN6crXWUPioHykoa/Vnna6+Nrg364SKsFcy9aJpKna31q14sPEbNUXBEYgOWWO
+	hOoLZkQG789uAwQ6myGPFR4enzLb8hEnkcSMC5eSjOIRAIL4G3EzDVs6N+UfxzNKaEYQdiY6aZx
+	fU3JGRYZ+R+jZ1j6tyn9mt75VhSTvKr+ifVjI8aVXdsWgVWftCRSfQcSGb6/DdPL+ah5hdJH/R8
+	GsgxUcBySWlrqRaXx4GWUH4nLZoiM2Ptq19mVBkibfTtkBoY8Y8xvfWAqrAqgnJE/CHOjCYuWdU
+	=
+X-Google-Smtp-Source: AGHT+IGMCVTHaTAAEE9TyxMrC1UkOXyDv9xgn/r9jfFGP1Q8+03YjUg0MM1rRdEdZGDUJNxnohsoQA==
+X-Received: by 2002:a05:6102:4b82:b0:4c5:505a:c1f5 with SMTP id ada2fe7eead31-4df7de00c28mr6031983137.24.1747269786465;
+        Wed, 14 May 2025 17:43:06 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14d:4c64:81ec:7409:107a:a63b:a3da])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-879f603551dsm9775065241.0.2025.05.14.17.43.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 17:43:06 -0700 (PDT)
+From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+To: jjohnson@kernel.org
+Cc: ~lkcamp/patches@lists.sr.ht,
+	linux-wireless@vger.kernel.org,
+	ath11k@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] wifi: ath11k: clean-up during wrong ath11k_crypto_mode
+Date: Wed, 14 May 2025 21:40:54 -0300
+Message-ID: <20250515004258.87234-1-rodrigo.gobbi.7@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 14 May 2025 09:00:50 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+if ath11k_crypto_mode is invalid (not ATH11K_CRYPT_MODE_SW/ATH11K_CRYPT_MODE_HW),
+ath11k_core_qmi_firmware_ready() will not undo some actions that was previously
+started/configured. It's reasonable to undo things during this condition, despite
+the value used at ath11k_crypto_mode not being valid in this case.
 
-> On Wed, 14 May 2025 15:00:59 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> > > 
-> > > Is that a problem? I'm thinking that the data in the buffer should not be
-> > > used.  
-> > 
-> > Yes, even if we read (dump) the previous boot data, the data is
-> > in the buffer. Thus the kernel rebooted before reusing the buffer
-> > the dumped pages are recovered again. Unless comparing with the
-> > previous dump data, we can not know this data is older boot or not.
-> > Anyway, user can avoid this issue by clearing the trace buffer
-> > explicitly.
-> 
-> What we could do, and I don't think this would be too hard, is once the
-> buffer is empty and it's still LAST_BOOT buffer, we simply clear it in
-> the kernel.
+Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+---
+Smatch got the following error:
 
-Ah, that sounds good :-D
+drivers/net/wireless/ath/ath11k/core.c:2166 ath11k_core_qmi_firmware_ready() warn: missing unwind goto?
 
-> 
-> That way after a reboot, a read of trace_pipe that reads the entire
-> buffer will end up resetting the buffer, and I think that will solve
-> this problem.
-> 
-> 
-> 
-> > > +
-> > > +		/* Stop rewind if the page is invalid. */
-> > > +		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
-> > > +		if (ret < 0)
-> > > +			break;
-> > > +
-> > > +		/* Recover the number of entries. */
-> > > +		local_set(&head_page->entries, ret);
-> > > +		if (ret)
-> > > +			local_inc(&cpu_buffer->pages_touched);
-> > > +		entries += ret;
-> > > +		entry_bytes += rb_page_commit(head_page);  
-> > 
-> > If we validate the pages again later (because fixing head_page),
-> > we can skip this part.
-> 
-> The validator takes a bit of time. I would rather not do another loop
-> if we don't have to. If this is duplicate code, lets just make a static
-> inline helper function that does it and use that in both places.
+When the ath11k_crypto_mode, which is a module param, is not
+ATH11K_CRYPT_MODE_SW/HW, clean-up actions are not triggered. 
+Considering the whole ath11k_core_qmi_firmware_ready() function,
+during potential errors, those actions are properly triggered. 
+I'm suggesting a little change over the default case to clean things up.
+Tks and regards.
+---
+ drivers/net/wireless/ath/ath11k/core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-OK, I think we can just restart validating unread part from
-orig_head.
-
-> 
-> > 
-> > > +	}
-> > > +
-> > > +	/* The last rewind page must be skipped. */
-> > > +	if (head_page != orig_head)
-> > > +		rb_inc_page(&head_page);
-> > > +
-> > > +	if (head_page != orig_head) {  
-> > 
-> > Ah, I forgot this part (setup new reader_page)
-> > 
-> > > +		struct buffer_page *bpage = orig_head;
-> > > +
-> > > +		rb_dec_page(&bpage);
-> > > +		/*
-> > > +		 * Move the reader page between the orig_head and the page
-> > > +		 * before it.
-> > > +		 */  
-> > -----
-> > > +		cpu_buffer->reader_page->list.next = &orig_head->list;
-> > > +		cpu_buffer->reader_page->list.prev = orig_head->list.prev;
-> > > +		orig_head->list.prev = &cpu_buffer->reader_page->list;
-> > > +
-> > > +		bpage->list.next = &cpu_buffer->reader_page->list;  
-> > -----
-> > These seems the same as (because head_page->list.prev->next encodes
-> > flags, but we don't read that pointer.);
-> > 
-> > 		list_insert(&orig_head->list, &cpu_buffer->reader_page->list);
-> 
-> I thought about this, but because the pointers are used to encode
-> flags, I try to avoid using the list_*() functions all together on
-> these. Just to remind everyone that these are "special" lists.
-> 
-> I prefer it open coded because that way I can see exactly what it is
-> doing. Note, this is not just assigning pointers, it is also clearing
-> flags in the process.
-
-OK. And I found list_insert() is not in the kernel.
-(tools/firmware/list.h has that)
-
-> 
-> We could add a comment that states something like:
-> 
-> 	/*
-> 	 * This is the same as:
-> 	 *   list_insert(&orig_head->list, &cpu_buffer->read_page->list);
-> 	 * but as it is also clearing flags, its open coded so that
-> 	 * there's no chance that list_insert() gets optimized where
-> 	 * it doesn't do the extra work that this is doing.
-> 	 */
-> 
-> ?
-
-Yeah, anyway I will leave a comment.
-
-Thank you,
-
-> 
-> -- Steve
-> 
-> 
-> > 
-> > > +
-> > > +		/* Make the head_page the new reader page */
-> > > +		cpu_buffer->reader_page = head_page;
-> > > +		bpage = head_page;
-> > > +		rb_inc_page(&head_page);
-> > > +		head_page->list.prev = bpage->list.prev;
-> > > +		rb_dec_page(&bpage);
-> > > +		bpage->list.next = &head_page->list;
-> > > +		rb_set_list_to_head(&bpage->list);
-> > > +
-> > > +		cpu_buffer->head_page = head_page;
-> > > +		meta->head_buffer = (unsigned long)head_page->page;
-> > > +
-> > > +		/* Reset all the indexes */
-> > > +		bpage = cpu_buffer->reader_page;
-> > > +		meta->buffers[0] = rb_meta_subbuf_idx(meta, bpage->page);
-> > > +		bpage->id = 0;
-> > > +
-> > > +		for (i = 0, bpage = head_page; i < meta->nr_subbufs;
-> > > +		     i++, rb_inc_page(&bpage)) {
-> > > +			meta->buffers[i + 1] = rb_meta_subbuf_idx(meta, bpage->page);
-> > > +			bpage->id = i + 1;
-> > > +		}
-> > > +		head_page = orig_head;
-> > > +	}
-> > > +
-> > >  	/* Iterate until finding the commit page */
-> > >  	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_inc_page(&head_page)) {
-> > >  
-> > > @@ -5348,7 +5439,6 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
-> > >  	 */
-> > >  	local_set(&cpu_buffer->reader_page->write, 0);
-> > >  	local_set(&cpu_buffer->reader_page->entries, 0);
-> > > -	local_set(&cpu_buffer->reader_page->page->commit, 0);
-> > >  	cpu_buffer->reader_page->real_end = 0;
-> > >  
-> > >   spin:
-> > > @@ -6642,7 +6732,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
-> > >  		cpu_buffer->read_bytes += rb_page_size(reader);
-> > >  
-> > >  		/* swap the pages */
-> > > -		rb_init_page(bpage);
-> > > +//		rb_init_page(bpage);
-> > >  		bpage = reader->page;
-> > >  		reader->page = data_page->data;
-> > >  		local_set(&reader->write, 0);  
-> > 
-> > Thank you,
-> > 
-> > 
-> > 
-> 
-
-
+diff --git a/drivers/net/wireless/ath/ath11k/core.c b/drivers/net/wireless/ath/ath11k/core.c
+index 2e9f8a5e61e4..fd3017c444a4 100644
+--- a/drivers/net/wireless/ath/ath11k/core.c
++++ b/drivers/net/wireless/ath/ath11k/core.c
+@@ -2163,7 +2163,9 @@ int ath11k_core_qmi_firmware_ready(struct ath11k_base *ab)
+ 		break;
+ 	default:
+ 		ath11k_info(ab, "invalid crypto_mode: %d\n", ath11k_crypto_mode);
+-		return -EINVAL;
++		ret = -EINVAL;
++		ath11k_dp_free(ab);
++		goto err_firmware_stop;
+ 	}
+ 
+ 	if (ath11k_frame_mode == ATH11K_HW_TXRX_RAW)
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.49.0
+
