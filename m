@@ -1,117 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0473C00;
-	Thu, 15 May 2025 07:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E140D1B960;
+	Thu, 15 May 2025 07:19:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747293472; cv=none; b=BXrt1ejGzV/el37CbtShChJDETnDdFE/27FGQnZnCdsJhceKKs8xh4kzGpEKL27wbLQElW6y3JF9vrj7RKC0+h9LHwiE1Fvkyc/Kyqvm84CKC/x74Dk7z8xpD/7NYEJH3wipcLnRJ298T1vTKTH+WLVfcFeX3AfS+8ESGwKHYXs=
+	t=1747293563; cv=none; b=OR25G3v1KteGo7XzseIZRN4dI/eUyZFuIMBZ4ED3efQOciyccQuTHV+IlIy+ufTIdv/Zd6K15TXGcYTAmvGCoUWh6YXeMBT2iywSbZHcqo+oBFWCnnU3Ob19Mi8JWb+CflSSVOnWz7ZLdLHHxr5zvHj4PN2p8I+ehtmXmL6yW5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747293472; c=relaxed/simple;
-	bh=SsLAI4som5AdBLbBTAAoaHXnIvb3gOFyZy6oRKj3ZYs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uSTSSTlE3ZvwmgVKnSwavardJMHrSJhOvUorDOZIxvZJ20/FAMAXmflnO6hmK1aXeiSsKZsrX3vs6KV6UUqPK1bTMTJTXCuWRc2wPI+X0yrzC+e9DpqMZfPO4RXqxi7YcyoG5GsViW161+KdOPViyG9rKfBygNey7LejvdvByHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K2zw9mFU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747293563; c=relaxed/simple;
+	bh=un43Rmr7pThpelAYiq373H0+K8u+aZOSIfYm0dwc0YM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=P3IkrTcxflGSbHIK7gchGq/GfyvQ4v9/q1Z2PeuN8kiKVpTZ5kaRU7B1uHP5xT8MPH0DOYSlYTwk5RHrarzW/XwUV8vld5Cf82EWEJzNzNidlswHEQhfZi5r4ClXOlJhHLa1wAlAGYztcOmpqvig8q8BUQQV9Rr0ToTCPszXSUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dzr0cIvr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WPQc3xvl; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K2zw9mFU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2778EC4CEE7;
-	Thu, 15 May 2025 07:17:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747293471;
-	bh=SsLAI4som5AdBLbBTAAoaHXnIvb3gOFyZy6oRKj3ZYs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K2zw9mFUc8wLSOKYRaKVw4nywKsvOF1K+FzaijttX3cWxjp5F1Zi+zPoKkxVszrwF
-	 X3gGIaAI2V1Wg1MM2VizM89CZ3c9rnO69klX5apgng5I89hnDHnxbgzazgg6y9cBBK
-	 te6EzYVEvZYea7DXnLEBaLJuZjpIUBqO2sdfGmD2fEhTAb3OJHcCNvqgU0ABLtAwJX
-	 NtBSd4taTsKwO1IMvLDoF2swsJq7iKh3WmigyX00XjP7KLmpA8h5HuGapXTxVbaDiv
-	 RkLA7JCfIErS3diyZKVgCaIAUDh+XUvIHFZV6k+ldrEmLG+rvYyrLduFgnM51GLtQ+
-	 SOPn7dbTasFKQ==
-Date: Thu, 15 May 2025 09:17:46 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>, Ard Biesheuvel <ardb+git@google.com>,
-	linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-	x86@kernel.org, Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFT PATCH v3 00/21] x86: strict separation of startup code
-Message-ID: <aCWVGtLo7XhW7aT0@gmail.com>
-References: <20250512190834.332684-23-ardb+git@google.com>
- <20250512191705.GHaCJJMcpPTS4ioLpm@fat_crate.local>
- <aCMYrgd9DDQl7G1W@gmail.com>
- <20250513101250.GAaCMbIpk6kdVMizng@fat_crate.local>
- <aCMraFZ2yJQNyHf3@gmail.com>
- <20250513141633.GDaCNUQdRl6ci2zK5T@fat_crate.local>
- <CAMj1kXEzKEuePEiHB+HxvfQbFz0sTiHdn4B++zVBJ2mhkPkQ4Q@mail.gmail.com>
- <aCQ444zAwwkUwwm8@gmail.com>
- <CAMj1kXE0UHyTXZ31R_ps=Nk0+AsFy1tLj04Zg6cR90wdN=7pBA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dzr0cIvr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WPQc3xvl"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747293558;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6D07CqThBr8ECVgNpKkQgHMewXWhEO/lS7W8K+zKG1M=;
+	b=dzr0cIvrDO9a5IxS6gXJH+20QhY54+m1fbYW4/1nVO27UB0OaiMAhT1f4ge/y3nGCXCorr
+	EH8/EJLjeG6GjQekYPY+BavJV84oN9u2xOSlEOr6nBjk2nb3Meue8Ut2qzoISw/Zhgn4jF
+	bPLMZpiFgayPt0gl/GurlF+lgHD2y0abYOTALvyDdryQqYkoLQXweoe/cBC6sFvUtuM7Ys
+	5Oe3odFCHy3U/fWanUTp3sO4tN2lJkLzygmXCJKyc57KSxYsV78BmBQz5sfxV0keCYJ5lF
+	2a+DQHmWIm0x4NhVLYVogiubDkqELsM7saFOWCHZ49xYRbkeKVUMcUns2Q4DHA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747293558;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6D07CqThBr8ECVgNpKkQgHMewXWhEO/lS7W8K+zKG1M=;
+	b=WPQc3xvl8nzGkuu5aDYjIdp2pLWc0Ds1i6m5/PgOyC8LhlGLtTYap4TCtxwExaYZnsQsW0
+	pjcAmIIjvm8vmaDQ==
+To: Shivank Garg <shivankg@amd.com>, Ingo Molnar <mingo@kernel.org>
+Cc: mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+ x86@kernel.org, hpa@zytor.com, luto@kernel.org, peterz@infradead.org,
+ rafael@kernel.org, pavel@kernel.org, akpm@linux-foundation.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ sohil.mehta@intel.com, rui.zhang@intel.com, yuntao.wang@linux.dev,
+ kai.huang@intel.com, xiaoyao.li@intel.com, peterx@redhat.com,
+ sandipan.das@amd.com, ak@linux.intel.com, rostedt@goodmis.org
+Subject: Re: [PATCH RESEND 4/4] x86/apic: Fix W=1 build kernel-doc warning
+In-Reply-To: <51fbdbcd-a895-43b0-bb59-aa3361d77cad@amd.com>
+References: <20250514062637.3287779-1-shivankg@amd.com>
+ <20250514062637.3287779-4-shivankg@amd.com> <aCRMpba5mp5YvmY3@gmail.com>
+ <51fbdbcd-a895-43b0-bb59-aa3361d77cad@amd.com>
+Date: Thu, 15 May 2025 09:19:17 +0200
+Message-ID: <87o6vuibnu.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXE0UHyTXZ31R_ps=Nk0+AsFy1tLj04Zg6cR90wdN=7pBA@mail.gmail.com>
+Content-Type: text/plain
 
+On Thu, May 15 2025 at 12:03, Shivank Garg wrote:
+> On 5/14/2025 1:26 PM, Ingo Molnar wrote:
+>> This is incorrect and is based on a misunderstanding of what the code 
+>> does:
+>> 
+>> DEFINE_IDTENTRY_IRQ(spurious_interrupt)
+>> {
+>>         handle_spurious_interrupt(vector);
+>> }
+>
+> The kernel-doc tool doesn't handle macros properly.
+> Can I change it to a normal comment instead?
+> or if a kernel-doc comment is required how should I make it correct?
 
-* Ard Biesheuvel <ardb@kernel.org> wrote:
-
-> On Wed, 14 May 2025 at 07:32, Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> >
-> > * Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> ...
-> > > In any case, there is no urgency wrt these changes as far as I am
-> > > concerned, and given that I already found an issue myself with v3,
-> > > perhaps it is better if we disregard it for the time being, and we can
-> > > come back to it for the next cycle. In the mean time, I can compare
-> > > notes with Boris and Tom directly to ensure that this is in the right
-> > > shape, and perhaps we could at least fix the pgtable_l5_enabled() mess
-> > > as well (for which I sent out a RFC/v3 today).
-> >
-> ...
-> > We could perhaps do the mechanical code movement to
-> > arch/x86/boot/startup/ alone, without any of the followup functional
-> > changes. This would reduce the cross section of the riskiest part of
-> > your series substantially.
-> 
-> The first phase of this work, which is already queued up, was to move
-> all of the source files that were using RIP_REL_REF() into
-> arch/x86/boot/startup to be built with -fPIC so that RIP_REL_REF()
-> could be removed.
-> 
-> The current phase is to separate code that really needs to live under
-> startup/ from code that doesn't. This is the bit that was
-> straight-forward for mapping the kernel (including the SME encryption
-> pieces) because they were already in dedicated source files, but not
-> so straight-forward for SEV-SNP.
-> 
-> In reality, the mechanical code movement in this phase is mostly in
-> the opposite direction, where things are separated into startup and
-> non-startup code at a high level of detail, and the latter is moved
-> out again.
-> 
-> > If that sounds good to you, please send a
-> > series for review.
-> >
-> 
-> Not sure what happened to the tip/x86/boot branch in the meantime,
-
-It got merged into tip:x86/core. I wrote you an email about it 
-yesterday, should be somewhere in your inbox. :)
-
-> [...] but assuming that what was already queued up is still scheduled 
-> for the next cycle, I don't think there are any parts of this series 
-> that could be meaningfully rearranged. IOW, the SEV-SNP refactoring 
-> needs to be completed first, which accounts for most of the code 
-> movement.
-
-Understood.
-
-Thanks,
-
-	Ingo
+Fix the stupid tool and leave the comment alone.
