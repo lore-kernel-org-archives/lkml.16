@@ -1,91 +1,53 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9AC25B1CE
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 03:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC484B1E53;
+	Thu, 15 May 2025 03:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747278227; cv=none; b=L5X+D9oF7pLoXn8DAtMeoO3axdpsXvjHNDwGvuFcFNEjpAONwf6j+8z6XagxSnKzGb5lA+BrFfGVou/0yszGMhvQ8+341CNIc7hni6qX19tCHGA6PvSQ6KS7tZLr4oGZAmDEn4DoVt2ifCDgLWU/s5xyRDgUQp8M8rloDFNSGf0=
+	t=1747278228; cv=none; b=Nq6knXzU9ZbZiVEWzEDS/oAP4zvybCV8nTRGraRd4CubqKY4PrZZf55nRvZzB7i3PLuzHHxt1PEQucqVTZlahIV8rU/28BtYY0kSFVdWayRAwHaP1ab0VMcEydG4kOog4za6JP+JKHKVs/qHXOzyLub74uCAoRYRMxIZwCuvdTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747278227; c=relaxed/simple;
-	bh=CcvM8TPahvrvDY29hyXvR11tNSUKj/pJlZmeV5QgToM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QdlwgnepQASJ3QfWiUYkDw7J9kqWC0WAz7OZ3ShnR5oc75di5ay7Bj2U9Y668jUyE9tCJ6vsJj9usjNuQk6jwPSrojlNgItE01xbe9hgX43bTKwW0aPS5bGEa0QYFwQ+FpYneOo3wvEL0sJNTXSQ0tYadD9AKZjJOp+Jny372g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MAG/3cfD; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747278228; c=relaxed/simple;
+	bh=xD6ZTC4b5LOoXbKrPs9EkgBnWxjDPusifq5jhRVLmoU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=S8yDI9kBaqG0/Vr4XQqz/q/GaoaLvZ78D1eqq/UrDkVMJGiHzYn40Ar6iMw7SZUe8EXEllgQ200qEojpyXtg0TWA2ZrqHkRh0NI6Ly609wjrQrkMNWskinrucccmUvn0vUj2fGBwbmE1owBmxB9bnCzhHNfZe48tmjubjbJHJvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=BZmMN3zO; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MAG/3cfD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747278224;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=JpaebEPPZJMesPD/jagQR+EUUomMl0IAlT5nBhfQTL8=;
-	b=MAG/3cfDXY1NDXsWDaoh0NGStJXlhNIHdfqr2s1KxkeCEnIyaDZGDwZZKVUcl8WvsUlLIl
-	wv0G213u+qCwZKaiLckHXM1+vCoKySY5bI5W3Wf7bjSU7YI5ZI/sYWhGl1WPHwAcCcRm7A
-	C2sOk9syWEAlxQ/iyZG6TCkegQ+gZoY=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-19-_CBLfwOLPLyWmVJ2YxO-8A-1; Wed,
- 14 May 2025 23:03:41 -0400
-X-MC-Unique: _CBLfwOLPLyWmVJ2YxO-8A-1
-X-Mimecast-MFC-AGG-ID: _CBLfwOLPLyWmVJ2YxO-8A_1747278216
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3D04D195608F;
-	Thu, 15 May 2025 03:03:34 +0000 (UTC)
-Received: from h1.redhat.com (unknown [10.22.88.116])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E1BF118008F4;
-	Thu, 15 May 2025 03:03:16 +0000 (UTC)
-From: Nico Pache <npache@redhat.com>
-To: linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: david@redhat.com,
-	ziy@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	ryan.roberts@arm.com,
-	dev.jain@arm.com,
-	corbet@lwn.net,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	akpm@linux-foundation.org,
-	baohua@kernel.org,
-	willy@infradead.org,
-	peterx@redhat.com,
-	wangkefeng.wang@huawei.com,
-	usamaarif642@gmail.com,
-	sunnanyong@huawei.com,
-	vishal.moola@gmail.com,
-	thomas.hellstrom@linux.intel.com,
-	yang@os.amperecomputing.com,
-	kirill.shutemov@linux.intel.com,
-	aarcange@redhat.com,
-	raquini@redhat.com,
-	anshuman.khandual@arm.com,
-	catalin.marinas@arm.com,
-	tiwai@suse.de,
-	will@kernel.org,
-	dave.hansen@linux.intel.com,
-	jack@suse.cz,
-	cl@gentwo.org,
-	jglisse@google.com,
-	surenb@google.com,
-	zokeefe@google.com,
-	hannes@cmpxchg.org,
-	rientjes@google.com,
-	mhocko@suse.com,
-	rdunlap@infradead.org
-Subject: [PATCH v6 00/12] khugepaged: mTHP support
-Date: Wed, 14 May 2025 21:03:00 -0600
-Message-ID: <20250515030312.125567-1-npache@redhat.com>
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="BZmMN3zO"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 54F33PFN02845539, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1747278206; bh=xD6ZTC4b5LOoXbKrPs9EkgBnWxjDPusifq5jhRVLmoU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type;
+	b=BZmMN3zOugDGuxk8McsZOM8okcTzgUus3YeUW8DxZGJslBeFekzTUDSCM0prk8b3B
+	 5ro5R+8Fh1EAj/HzJOKcCfsglgyLSqEWaRivUyinzT4LjoJ8wWcJ/EDr90dPVRJZ3D
+	 ASY7tihGJfsWv6iQuL5iZwta2ltpTRyvpPUJzaJ6p9b2cDKcrarZawvlTxj7gUMdRv
+	 wL3+TiluWk4VMnMXBTvrBfMeA5MlSgGr1Vn10L4e+Haw06Eqscj7iitATsCs9tVIwP
+	 27Yf9rUsUKUWg2wbH6YqCfgQnxvoc9o9A/shegtQVi8DgY0BdVVLExX0SzrgHKdLIE
+	 yQNZyEkmfbwcw==
+Received: from RS-EX-MBS2.realsil.com.cn ([172.29.17.102])
+	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 54F33PFN02845539
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 15 May 2025 11:03:26 +0800
+Received: from RS-EX-MBS1.realsil.com.cn (172.29.17.101) by
+ RS-EX-MBS2.realsil.com.cn (172.29.17.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 15 May 2025 11:03:26 +0800
+Received: from 172.29.32.27 (172.29.32.27) by RS-EX-MBS1.realsil.com.cn
+ (172.29.17.101) with Microsoft SMTP Server id 15.2.1544.11 via Frontend
+ Transport; Thu, 15 May 2025 11:03:26 +0800
+From: ChunHao Lin <hau@realtek.com>
+To: <hkallweit1@gmail.com>, <nic_swsd@realtek.com>, <andrew+netdev@lunn.ch>,
+        <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        ChunHao Lin
+	<hau@realtek.com>
+Subject: [PATCH net-next] r8169: add support for RTL8127A
+Date: Thu, 15 May 2025 11:03:23 +0800
+Message-ID: <20250515030323.4602-1-hau@realtek.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -93,126 +55,321 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain
 
-The following series provides khugepaged and madvise collapse with the
-capability to collapse anonymous memory regions to mTHPs.
+This adds support for 10Gbs chip RTL8127A.
 
-To achieve this we generalize the khugepaged functions to no longer depend
-on PMD_ORDER. Then during the PMD scan, we keep track of chunks of pages
-(defined by KHUGEPAGED_MTHP_MIN_ORDER) that are utilized. This info is
-tracked using a bitmap. After the PMD scan is done, we do binary recursion
-on the bitmap to find the optimal mTHP sizes for the PMD range. The
-restriction on max_ptes_none is removed during the scan, to make sure we
-account for the whole PMD range. When no mTHP size is enabled, the legacy
-behavior of khugepaged is maintained. max_ptes_none will be scaled by the
-attempted collapse order to determine how full a THP must be to be
-eligible. If a mTHP collapse is attempted, but contains swapped out, or
-shared pages, we dont perform the collapse.
+Signed-off-by: ChunHao Lin <hau@realtek.com>
+---
+ drivers/net/ethernet/realtek/r8169.h          |   1 +
+ drivers/net/ethernet/realtek/r8169_main.c     |  29 +++-
+ .../net/ethernet/realtek/r8169_phy_config.c   | 158 ++++++++++++++++++
+ 3 files changed, 185 insertions(+), 3 deletions(-)
 
-With the default max_ptes_none=511, the code should keep its most of its
-original behavior. To exercise mTHP collapse we need to set
-max_ptes_none<=255. With max_ptes_none > HPAGE_PMD_NR/2 you will
-experience collapse "creep" and constantly promote mTHPs to the next
-available size. This is due the fact that it will introduce at least 2x
-the number of pages, and on a future scan will satisfy that condition once
-again.
-
-Patch 1:     Refactor/rename hpage_collapse
-Patch 2:     Some refactoring to combine madvise_collapse and khugepaged
-Patch 3-5:   Generalize khugepaged functions for arbitrary orders
-Patch 6-9:   The mTHP patches
-Patch 10-11: Tracing/stats
-Patch 12:    Documentation
-
----------
- Testing
----------
-- Built for x86_64, aarch64, ppc64le, and s390x
-- selftests mm
-- I created a test script that I used to push khugepaged to its limits
-   while monitoring a number of stats and tracepoints. The code is
-   available here[1] (Run in legacy mode for these changes and set mthp
-   sizes to inherit)
-   The summary from my testings was that there was no significant
-   regression noticed through this test. In some cases my changes had
-   better collapse latencies, and was able to scan more pages in the same
-   amount of time/work, but for the most part the results were consistent.
-- redis testing. I tested these changes along with my defer changes
-  (see followup post for more details).
-- some basic testing on 64k page size.
-- lots of general use.
-
-V6 Changes:
-- Dont release the anon_vma_lock early (like in the PMD case), as not all
-  pages are isolated.
-- Define the PTE as null to avoid a uninitilized condition
-- minor nits and newline cleanup
-- make sure to unmap and unlock the pte for the swapin case
-- change the revalidation to always check the PMD order (as this will make
-  sure that no other VMA spans it)
-
-V5 Changes [2]:
-- switched the order of patches 1 and 2
-- fixed some edge cases on the unified madvise_collapse and khugepaged
-- Explained the "creep" some more in the docs
-- fix EXCEED_SHARED vs EXCEED_SWAP accounting issue
-- fix potential highmem issue caused by a early unmap of the PTE
-
-V4 Changes:
-- Rebased onto mm-unstable
-- small changes to Documentation
-
-V3 Changes:
-- corrected legacy behavior for khugepaged and madvise_collapse
-- added proper mTHP stat tracking
-- Minor changes to prevent a nested lock on non-split-lock arches
-- Took Devs version of alloc_charge_folio as it has the proper stats
-- Skip cases were trying to collapse to a lower order would still fail
-- Fixed cases were the bitmap was not being updated properly
-- Moved Documentation update to this series instead of the defer set
-- Minor bugs discovered during testing and review
-- Minor "nit" cleanup
-
-V2 Changes:
-- Minor bug fixes discovered during review and testing
-- removed dynamic allocations for bitmaps, and made them stack based
-- Adjusted bitmap offset from u8 to u16 to support 64k pagesize.
-- Updated trace events to include collapsing order info.
-- Scaled max_ptes_none by order rather than scaling to a 0-100 scale.
-- No longer require a chunk to be fully utilized before setting the bit.
-   Use the same max_ptes_none scaling principle to achieve this.
-- Skip mTHP collapse that requires swapin or shared handling. This helps
-   prevent some of the "creep" that was discovered in v1.
-
-[1] - https://gitlab.com/npache/khugepaged_mthp_test
-[2] - https://lore.kernel.org/all/20250428181218.85925-1-npache@redhat.com/
-
-Dev Jain (1):
-  khugepaged: generalize alloc_charge_folio()
-
-Nico Pache (11):
-  khugepaged: rename hpage_collapse_* to khugepaged_*
-  introduce khugepaged_collapse_single_pmd to unify khugepaged and
-    madvise_collapse
-  khugepaged: generalize hugepage_vma_revalidate for mTHP support
-  khugepaged: generalize __collapse_huge_page_* for mTHP support
-  khugepaged: introduce khugepaged_scan_bitmap for mTHP support
-  khugepaged: add mTHP support
-  khugepaged: skip collapsing mTHP to smaller orders
-  khugepaged: avoid unnecessary mTHP collapse attempts
-  khugepaged: improve tracepoints for mTHP orders
-  khugepaged: add per-order mTHP khugepaged stats
-  Documentation: mm: update the admin guide for mTHP collapse
-
- Documentation/admin-guide/mm/transhuge.rst |  14 +-
- include/linux/huge_mm.h                    |   5 +
- include/linux/khugepaged.h                 |   4 +
- include/trace/events/huge_memory.h         |  34 +-
- mm/huge_memory.c                           |  11 +
- mm/khugepaged.c                            | 472 ++++++++++++++-------
- 6 files changed, 382 insertions(+), 158 deletions(-)
-
+diff --git a/drivers/net/ethernet/realtek/r8169.h b/drivers/net/ethernet/realtek/r8169.h
+index f05231030925..2c1a0c21af8d 100644
+--- a/drivers/net/ethernet/realtek/r8169.h
++++ b/drivers/net/ethernet/realtek/r8169.h
+@@ -70,6 +70,7 @@ enum mac_version {
+ 	RTL_GIGA_MAC_VER_64,
+ 	RTL_GIGA_MAC_VER_66,
+ 	RTL_GIGA_MAC_VER_70,
++	RTL_GIGA_MAC_VER_80,
+ 	RTL_GIGA_MAC_NONE,
+ 	RTL_GIGA_MAC_VER_LAST = RTL_GIGA_MAC_NONE - 1
+ };
+diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+index 7bf71a675362..43170500d566 100644
+--- a/drivers/net/ethernet/realtek/r8169_main.c
++++ b/drivers/net/ethernet/realtek/r8169_main.c
+@@ -60,6 +60,7 @@
+ #define FIRMWARE_8125BP_2	"rtl_nic/rtl8125bp-2.fw"
+ #define FIRMWARE_8126A_2	"rtl_nic/rtl8126a-2.fw"
+ #define FIRMWARE_8126A_3	"rtl_nic/rtl8126a-3.fw"
++#define FIRMWARE_8127A_1	"rtl_nic/rtl8127a-1.fw"
+ 
+ #define TX_DMA_BURST	7	/* Maximum PCI burst, '7' is unlimited */
+ #define InterFrameGap	0x03	/* 3 means InterFrameGap = the shortest one */
+@@ -98,6 +99,9 @@ static const struct rtl_chip_info {
+ 	const char *name;
+ 	const char *fw_name;
+ } rtl_chip_infos[] = {
++	/* 8127A family. */
++	{ 0x7cf, 0x6c9,	RTL_GIGA_MAC_VER_80, "RTL8127A", FIRMWARE_8127A_1 },
++
+ 	/* 8126A family. */
+ 	{ 0x7cf, 0x64a,	RTL_GIGA_MAC_VER_70, "RTL8126A", FIRMWARE_8126A_3 },
+ 	{ 0x7cf, 0x649,	RTL_GIGA_MAC_VER_70, "RTL8126A", FIRMWARE_8126A_2 },
+@@ -222,8 +226,10 @@ static const struct pci_device_id rtl8169_pci_tbl[] = {
+ 	{ 0x0001, 0x8168, PCI_ANY_ID, 0x2410 },
+ 	{ PCI_VDEVICE(REALTEK,	0x8125) },
+ 	{ PCI_VDEVICE(REALTEK,	0x8126) },
++	{ PCI_VDEVICE(REALTEK,	0x8127) },
+ 	{ PCI_VDEVICE(REALTEK,	0x3000) },
+ 	{ PCI_VDEVICE(REALTEK,	0x5000) },
++	{ PCI_VDEVICE(REALTEK,	0x0e10) },
+ 	{}
+ };
+ 
+@@ -769,6 +775,7 @@ MODULE_FIRMWARE(FIRMWARE_8125D_2);
+ MODULE_FIRMWARE(FIRMWARE_8125BP_2);
+ MODULE_FIRMWARE(FIRMWARE_8126A_2);
+ MODULE_FIRMWARE(FIRMWARE_8126A_3);
++MODULE_FIRMWARE(FIRMWARE_8127A_1);
+ 
+ static inline struct device *tp_to_dev(struct rtl8169_private *tp)
+ {
+@@ -2937,6 +2944,7 @@ static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
+ 		rtl_mod_config5(tp, 0, ASPM_en);
+ 		switch (tp->mac_version) {
+ 		case RTL_GIGA_MAC_VER_70:
++		case RTL_GIGA_MAC_VER_80:
+ 			val8 = RTL_R8(tp, INT_CFG0_8125) | INT_CFG0_CLKREQEN;
+ 			RTL_W8(tp, INT_CFG0_8125, val8);
+ 			break;
+@@ -2968,6 +2976,7 @@ static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
+ 
+ 		switch (tp->mac_version) {
+ 		case RTL_GIGA_MAC_VER_70:
++		case RTL_GIGA_MAC_VER_80:
+ 			val8 = RTL_R8(tp, INT_CFG0_8125) & ~INT_CFG0_CLKREQEN;
+ 			RTL_W8(tp, INT_CFG0_8125, val8);
+ 			break;
+@@ -3687,10 +3696,13 @@ static void rtl_hw_start_8125_common(struct rtl8169_private *tp)
+ 	/* disable new tx descriptor format */
+ 	r8168_mac_ocp_modify(tp, 0xeb58, 0x0001, 0x0000);
+ 
+-	if (tp->mac_version == RTL_GIGA_MAC_VER_70)
++	if (tp->mac_version == RTL_GIGA_MAC_VER_70 ||
++	    tp->mac_version == RTL_GIGA_MAC_VER_80)
+ 		RTL_W8(tp, 0xD8, RTL_R8(tp, 0xD8) & ~0x02);
+ 
+-	if (tp->mac_version == RTL_GIGA_MAC_VER_70)
++	if (tp->mac_version == RTL_GIGA_MAC_VER_80)
++		r8168_mac_ocp_modify(tp, 0xe614, 0x0f00, 0x0f00);
++	else if (tp->mac_version == RTL_GIGA_MAC_VER_70)
+ 		r8168_mac_ocp_modify(tp, 0xe614, 0x0700, 0x0400);
+ 	else if (tp->mac_version == RTL_GIGA_MAC_VER_63)
+ 		r8168_mac_ocp_modify(tp, 0xe614, 0x0700, 0x0200);
+@@ -3708,7 +3720,8 @@ static void rtl_hw_start_8125_common(struct rtl8169_private *tp)
+ 	r8168_mac_ocp_modify(tp, 0xe056, 0x00f0, 0x0030);
+ 	r8168_mac_ocp_modify(tp, 0xe040, 0x1000, 0x0000);
+ 	r8168_mac_ocp_modify(tp, 0xea1c, 0x0003, 0x0001);
+-	if (tp->mac_version == RTL_GIGA_MAC_VER_70)
++	if (tp->mac_version == RTL_GIGA_MAC_VER_70 ||
++	    tp->mac_version == RTL_GIGA_MAC_VER_80)
+ 		r8168_mac_ocp_modify(tp, 0xea1c, 0x0300, 0x0000);
+ 	else
+ 		r8168_mac_ocp_modify(tp, 0xea1c, 0x0004, 0x0000);
+@@ -3786,6 +3799,12 @@ static void rtl_hw_start_8126a(struct rtl8169_private *tp)
+ 	rtl_hw_start_8125_common(tp);
+ }
+ 
++static void rtl_hw_start_8127a(struct rtl8169_private *tp)
++{
++	rtl_set_def_aspm_entry_latency(tp);
++	rtl_hw_start_8125_common(tp);
++}
++
+ static void rtl_hw_config(struct rtl8169_private *tp)
+ {
+ 	static const rtl_generic_fct hw_configs[] = {
+@@ -3829,6 +3848,7 @@ static void rtl_hw_config(struct rtl8169_private *tp)
+ 		[RTL_GIGA_MAC_VER_64] = rtl_hw_start_8125d,
+ 		[RTL_GIGA_MAC_VER_66] = rtl_hw_start_8125d,
+ 		[RTL_GIGA_MAC_VER_70] = rtl_hw_start_8126a,
++		[RTL_GIGA_MAC_VER_80] = rtl_hw_start_8127a,
+ 	};
+ 
+ 	if (hw_configs[tp->mac_version])
+@@ -3846,8 +3866,11 @@ static void rtl_hw_start_8125(struct rtl8169_private *tp)
+ 	case RTL_GIGA_MAC_VER_61:
+ 	case RTL_GIGA_MAC_VER_64:
+ 	case RTL_GIGA_MAC_VER_66:
++	case RTL_GIGA_MAC_VER_80:
+ 		for (i = 0xa00; i < 0xb00; i += 4)
+ 			RTL_W32(tp, i, 0);
++		if (tp->mac_version == RTL_GIGA_MAC_VER_80)
++			RTL_W16(tp, INT_CFG1_8125, 0x0000);
+ 		break;
+ 	case RTL_GIGA_MAC_VER_63:
+ 	case RTL_GIGA_MAC_VER_70:
+diff --git a/drivers/net/ethernet/realtek/r8169_phy_config.c b/drivers/net/ethernet/realtek/r8169_phy_config.c
+index 5403f8202c79..9815a143c762 100644
+--- a/drivers/net/ethernet/realtek/r8169_phy_config.c
++++ b/drivers/net/ethernet/realtek/r8169_phy_config.c
+@@ -1130,6 +1130,163 @@ static void rtl8126a_hw_phy_config(struct rtl8169_private *tp,
+ 	rtl8125_common_config_eee_phy(phydev);
+ }
+ 
++static void rtl8127a_1_hw_phy_config(struct rtl8169_private *tp,
++				     struct phy_device *phydev)
++{
++	r8169_apply_firmware(tp);
++	rtl8168g_enable_gphy_10m(phydev);
++
++	r8168g_phy_param(phydev, 0x8415, 0xff00, 0x9300);
++	r8168g_phy_param(phydev, 0x81a3, 0xff00, 0x0f00);
++	r8168g_phy_param(phydev, 0x81ae, 0xff00, 0x0f00);
++	r8168g_phy_param(phydev, 0x81b9, 0xff00, 0xb900);
++	rtl8125_phy_param(phydev, 0x83b0, 0x0e00, 0x0000);
++	rtl8125_phy_param(phydev, 0x83C5, 0x0e00, 0x0000);
++	rtl8125_phy_param(phydev, 0x83da, 0x0e00, 0x0000);
++	rtl8125_phy_param(phydev, 0x83ef, 0x0e00, 0x0000);
++	phy_modify_paged(phydev, 0xbf3, 0x14, 0x01f0, 0x0160);
++	phy_modify_paged(phydev, 0xbf3, 0x15, 0x001f, 0x0014);
++	phy_modify_paged(phydev, 0xbf2, 0x14, 0x6000, 0x0000);
++	phy_modify_paged(phydev, 0xbf2, 0x16, 0xc000, 0x0000);
++	phy_modify_paged(phydev, 0xbf2, 0x14, 0x1fff, 0x0187);
++	phy_modify_paged(phydev, 0xbf2, 0x15, 0x003f, 0x0003);
++
++	r8168g_phy_param(phydev, 0x8173, 0xffff, 0x8620);
++	r8168g_phy_param(phydev, 0x8175, 0xffff, 0x8671);
++	r8168g_phy_param(phydev, 0x817c, 0x0000, 0x2000);
++	r8168g_phy_param(phydev, 0x8187, 0x0000, 0x2000);
++	r8168g_phy_param(phydev, 0x8192, 0x0000, 0x2000);
++	r8168g_phy_param(phydev, 0x819d, 0x0000, 0x2000);
++	r8168g_phy_param(phydev, 0x81a8, 0x2000, 0x0000);
++	r8168g_phy_param(phydev, 0x81b3, 0x2000, 0x0000);
++	r8168g_phy_param(phydev, 0x81be, 0x0000, 0x2000);
++	r8168g_phy_param(phydev, 0x817d, 0xff00, 0xa600);
++	r8168g_phy_param(phydev, 0x8188, 0xff00, 0xa600);
++	r8168g_phy_param(phydev, 0x8193, 0xff00, 0xa600);
++	r8168g_phy_param(phydev, 0x819e, 0xff00, 0xa600);
++	r8168g_phy_param(phydev, 0x81a9, 0xff00, 0x1400);
++	r8168g_phy_param(phydev, 0x81b4, 0xff00, 0x1400);
++	r8168g_phy_param(phydev, 0x81bf, 0xff00, 0xa600);
++
++	phy_modify_paged(phydev, 0xaea, 0x15, 0x0028, 0x0000);
++
++	rtl8125_phy_param(phydev, 0x84f0, 0xffff, 0x201c);
++	rtl8125_phy_param(phydev, 0x84f2, 0xffff, 0x3117);
++
++	phy_modify_paged(phydev, 0xaec, 0x13, 0xffff, 0x0000);
++	phy_modify_paged(phydev, 0xae2, 0x10, 0xffff, 0xffff);
++	phy_modify_paged(phydev, 0xaec, 0x17, 0xffff, 0xffff);
++	phy_modify_paged(phydev, 0xaed, 0x11, 0xffff, 0xffff);
++	phy_modify_paged(phydev, 0xaec, 0x14, 0xffff, 0x0000);
++	phy_modify_paged(phydev, 0xaed, 0x10, 0x0001, 0x0000);
++	phy_modify_paged(phydev, 0xadb, 0x14, 0xffff, 0x0150);
++	rtl8125_phy_param(phydev, 0x8197, 0xff00, 0x5000);
++	rtl8125_phy_param(phydev, 0x8231, 0xff00, 0x5000);
++	rtl8125_phy_param(phydev, 0x82cb, 0xff00, 0x5000);
++	rtl8125_phy_param(phydev, 0x82cd, 0xff00, 0x5700);
++	rtl8125_phy_param(phydev, 0x8233, 0xff00, 0x5700);
++	rtl8125_phy_param(phydev, 0x8199, 0xff00, 0x5700);
++
++	rtl8125_phy_param(phydev, 0x815a, 0xffff, 0x0150);
++	rtl8125_phy_param(phydev, 0x81f4, 0xffff, 0x0150);
++	rtl8125_phy_param(phydev, 0x828e, 0xffff, 0x0150);
++	rtl8125_phy_param(phydev, 0x81b1, 0xffff, 0x0000);
++	rtl8125_phy_param(phydev, 0x824b, 0xffff, 0x0000);
++	rtl8125_phy_param(phydev, 0x82e5, 0xffff, 0x0000);
++
++	rtl8125_phy_param(phydev, 0x84f7, 0xff00, 0x2800);
++	phy_modify_paged(phydev, 0xaec, 0x11, 0x0000, 0x1000);
++	rtl8125_phy_param(phydev, 0x81b3, 0xff00, 0xad00);
++	rtl8125_phy_param(phydev, 0x824d, 0xff00, 0xad00);
++	rtl8125_phy_param(phydev, 0x82e7, 0xff00, 0xad00);
++	phy_modify_paged(phydev, 0xae4, 0x17, 0x000f, 0x0001);
++	rtl8125_phy_param(phydev, 0x82ce, 0xf000, 0x4000);
++
++	rtl8125_phy_param(phydev, 0x84ac, 0xffff, 0x0000);
++	rtl8125_phy_param(phydev, 0x84ae, 0xffff, 0x0000);
++	rtl8125_phy_param(phydev, 0x84b0, 0xffff, 0xf818);
++	rtl8125_phy_param(phydev, 0x84b2, 0xff00, 0x6000);
++
++	rtl8125_phy_param(phydev, 0x8ffc, 0xffff, 0x6008);
++	rtl8125_phy_param(phydev, 0x8ffe, 0xffff, 0xf450);
++
++	rtl8125_phy_param(phydev, 0x8015, 0x0000, 0x0200);
++	rtl8125_phy_param(phydev, 0x8016, 0x0800, 0x0000);
++	rtl8125_phy_param(phydev, 0x8fe6, 0xff00, 0x0800);
++	rtl8125_phy_param(phydev, 0x8fe4, 0xffff, 0x2114);
++
++	rtl8125_phy_param(phydev, 0x8647, 0xffff, 0xa7b1);
++	rtl8125_phy_param(phydev, 0x8649, 0xffff, 0xbbca);
++	rtl8125_phy_param(phydev, 0x864b, 0xff00, 0xdc00);
++
++	rtl8125_phy_param(phydev, 0x8154, 0xc000, 0x4000);
++	rtl8125_phy_param(phydev, 0x8158, 0xc000, 0x0000);
++
++	rtl8125_phy_param(phydev, 0x826c, 0xffff, 0xffff);
++	rtl8125_phy_param(phydev, 0x826e, 0xffff, 0xffff);
++
++	rtl8125_phy_param(phydev, 0x8872, 0xff00, 0x0e00);
++	r8168g_phy_param(phydev, 0x8012, 0x0000, 0x0800);
++	r8168g_phy_param(phydev, 0x8012, 0x0000, 0x4000);
++	phy_modify_paged(phydev, 0xb57, 0x13, 0x0000, 0x0001);
++	r8168g_phy_param(phydev, 0x834a, 0xff00, 0x0700);
++	rtl8125_phy_param(phydev, 0x8217, 0x3f00, 0x2a00);
++	r8168g_phy_param(phydev, 0x81b1, 0xff00, 0x0b00);
++	rtl8125_phy_param(phydev, 0x8fed, 0xff00, 0x4e00);
++
++	r8168g_phy_param(phydev, 0x8370, 0xffff, 0x8671);
++	r8168g_phy_param(phydev, 0x8372, 0xffff, 0x86c8);
++	r8168g_phy_param(phydev, 0x8401, 0xffff, 0x86c8);
++	r8168g_phy_param(phydev, 0x8403, 0xffff, 0x86da);
++	r8168g_phy_param(phydev, 0x8406, 0x1800, 0x1000);
++	r8168g_phy_param(phydev, 0x8408, 0x1800, 0x1000);
++	r8168g_phy_param(phydev, 0x840a, 0x1800, 0x1000);
++	r8168g_phy_param(phydev, 0x840c, 0x1800, 0x1000);
++	r8168g_phy_param(phydev, 0x840e, 0x1800, 0x1000);
++	r8168g_phy_param(phydev, 0x8410, 0x1800, 0x1000);
++	r8168g_phy_param(phydev, 0x8412, 0x1800, 0x1000);
++	r8168g_phy_param(phydev, 0x8414, 0x1800, 0x1000);
++	r8168g_phy_param(phydev, 0x8416, 0x1800, 0x1000);
++
++	r8168g_phy_param(phydev, 0x82bd, 0xffff, 0x1f40);
++
++	phy_modify_paged(phydev, 0xbfb, 0x12, 0x07ff, 0x0328);
++	phy_modify_paged(phydev, 0xbfb, 0x13, 0xffff, 0x3e14);
++
++	r8168g_phy_param(phydev, 0x81c4, 0xffff, 0x003b);
++	r8168g_phy_param(phydev, 0x81c6, 0xffff, 0x0086);
++	r8168g_phy_param(phydev, 0x81c8, 0xffff, 0x00b7);
++	r8168g_phy_param(phydev, 0x81ca, 0xffff, 0x00db);
++	r8168g_phy_param(phydev, 0x81cc, 0xffff, 0x00fe);
++	r8168g_phy_param(phydev, 0x81ce, 0xffff, 0x00fe);
++	r8168g_phy_param(phydev, 0x81d0, 0xffff, 0x00fe);
++	r8168g_phy_param(phydev, 0x81d2, 0xffff, 0x00fe);
++	r8168g_phy_param(phydev, 0x81d4, 0xffff, 0x00c3);
++	r8168g_phy_param(phydev, 0x81d6, 0xffff, 0x0078);
++	r8168g_phy_param(phydev, 0x81d8, 0xffff, 0x0047);
++	r8168g_phy_param(phydev, 0x81da, 0xffff, 0x0023);
++
++	rtl8125_phy_param(phydev, 0x88d7, 0xffff, 0x01a0);
++	rtl8125_phy_param(phydev, 0x88d9, 0xffff, 0x01a0);
++	rtl8125_phy_param(phydev, 0x8ffa, 0xffff, 0x002a);
++	rtl8125_phy_param(phydev, 0x8fee, 0xffff, 0xffdf);
++	rtl8125_phy_param(phydev, 0x8ff0, 0xffff, 0xffff);
++	rtl8125_phy_param(phydev, 0x8ff2, 0xffff, 0x0a4a);
++	rtl8125_phy_param(phydev, 0x8ff4, 0xffff, 0xaa5a);
++	rtl8125_phy_param(phydev, 0x8ff6, 0xffff, 0x0a4a);
++	rtl8125_phy_param(phydev, 0x8ff8, 0xffff, 0xaa5a);
++	rtl8125_phy_param(phydev, 0x88d5, 0xff00, 0x0200);
++
++	r8168g_phy_param(phydev, 0x84bb, 0xff00, 0x0a00);
++	r8168g_phy_param(phydev, 0x84c0, 0xff00, 0x1600);
++
++	phy_modify_paged(phydev, 0xa43, 0x10, 0x0000, 0x0003);
++
++	rtl8125_legacy_force_mode(phydev);
++	rtl8168g_disable_aldps(phydev);
++	rtl8125_common_config_eee_phy(phydev);
++}
++
+ void r8169_hw_phy_config(struct rtl8169_private *tp, struct phy_device *phydev,
+ 			 enum mac_version ver)
+ {
+@@ -1181,6 +1338,7 @@ void r8169_hw_phy_config(struct rtl8169_private *tp, struct phy_device *phydev,
+ 		[RTL_GIGA_MAC_VER_64] = rtl8125d_hw_phy_config,
+ 		[RTL_GIGA_MAC_VER_66] = rtl8125bp_hw_phy_config,
+ 		[RTL_GIGA_MAC_VER_70] = rtl8126a_hw_phy_config,
++		[RTL_GIGA_MAC_VER_80] = rtl8127a_1_hw_phy_config,
+ 	};
+ 
+ 	if (phy_configs[ver])
 -- 
-2.49.0
+2.43.0
 
