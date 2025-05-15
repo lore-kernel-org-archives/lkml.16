@@ -1,136 +1,119 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244232192EB
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 22:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6847228AB12
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 22:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747346746; cv=none; b=Y1jkpSRTxjW4+ykSu2jLrHR8v/3xMjHf38RhqKp7bcogXUuCRob0RGXDGw/oFH1OJYMpA7wah43bV5554SbNr/bfW7/1zuMyANE09iCckve3BMlRZr+X9pUKuxYmdyGKsx8lHM2jSqE5tstMflF8laJlDPevtAM7OQVENehkwHI=
+	t=1747346773; cv=none; b=ZkCEzA6eTImETNo5iF/S2cOAHCUf1sskdhwj7M0oJLKtv+shPTtSEsO/H8z6LYNVE0Szl+ROMdu0vRuUT5Nthv88ZzJ4qPIJbFeBnopoJmzck21JNW8A1uG895O93yMzJ6emiAhBJGOgCk+B9fZLVWsjtlOn76aP7zOyK5S5DC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747346746; c=relaxed/simple;
-	bh=R04t5OP7VoRR7an/K/mH1NZqJb80IHwLckbbrUiaTWY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VZmmG+0DRc0eATjsUdRCq6cDMljLdJsc+5W0X+uzGoMWMZYJ2vMG3tIjTuKqLgsCxYVo7oMyCQaPDPtklnSEo0fzKaYYegQZXsCazVA+ocvKpq0pBTqEiIPwtikPjeTyH6NI+1hiu+OBXGxVKaIbAEV2sdMvEPssfpPt+WLvDpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Xru8s1gV; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747346773; c=relaxed/simple;
+	bh=u/EaVaHKx9F1SHv14qeTnwcVtfcQnc0b+jYaydTMHlE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=evQCQgwHcXXliB4C6+kj+n1z7zzVY0AMGpgBQTo1Fu+qe7J3MPIjxnBuGCPfPpX5BpI8DSYZO7lVFNRFi8BQSVDEKrAF8sX7vLWXItNDX6GSHrkJPXA5ksNTGHQuh+6acKGMxzOwyGprFW7H9DFdHcVtwKreGOsmr9GueXZFew0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=zfeFT7WZ; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xru8s1gV"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ab5d34fdbso1573723a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:05:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="zfeFT7WZ"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2301ac32320so16440025ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:06:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747346743; x=1747951543; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Oi7sS9/hL2apZcsFxNVWjiM0xG6d7sH4nOsxyAerdW0=;
-        b=Xru8s1gV9rTttrOCEX454kSAt6Z/XcJLtgwZZVSRIho1K0AdR3xDFulZlIfeL9NAUO
-         nsCEaHUXj3pBGi/UBNg9JD1tMvpXrxK5THx+A8iniTuqQfFAaE8lPWGPwmoBeQQsmlcg
-         RFYo+X7oThXS0X3zjX4Zha6JPli4exBIAQMoZbRR6zArhr2KjTF7ROpFu5UBocz6GmMv
-         TpU1uOuE/bFmdpteQphfquHLDQ4JFL2UK0Q/ujWx/7odLtbHffW7d2+o+ZBtuPTZLMXF
-         h7h8G1TFobXE+gsxiVVkIfrEH23lgAPRIj7LviOvMFzxVjWuV0u/rWiRcl1Iu2V5XH3N
-         y5fQ==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747346769; x=1747951569; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pKEzAEjPYjOvvo8wW1NKB/AseRp560F6iFtwwKSA2eo=;
+        b=zfeFT7WZ5WjSHFEw9NPu91v9Yj8cRuhhsCo5Ld1JRZnIIhJ9u1rzjwXqep7bKH2dlt
+         DFGBNOZQM5PkuRyteA8fMo5zpctStytekeEV/JvPrDf78vKDIflzLUtjcqPf4/Z37wcC
+         YIltQPpLPqLFBrdHbQo2QIXZF/2/sotC3CBd+MAIXux9wOqwE4GLjs+i95UDn0kH6iWj
+         WP1fsR1/0nP+vLThP/fPLWMDpVwprG/KfJFeJ/5CIcGMDi/HDQHgzm5xSMP428ilODmV
+         CbikMHj5R8r4DkZGXONLYTjQ4GaYlcEB0Pypf61tAsAH7GDjyhpkuTD/Og7w7DGNqLZq
+         G+0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747346743; x=1747951543;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Oi7sS9/hL2apZcsFxNVWjiM0xG6d7sH4nOsxyAerdW0=;
-        b=cwGrPsO71LLOOhNYaawqTcvW0cVoq7E7ZG2rhEG6dnUEN9x5b+CYttLh3Yg0mXxd+l
-         alEY8GoTYMfvRlQnoM2yQj0XAp/cAvCMMokBoA6LP08FznErKTdt2HTliskIYYyjDul0
-         b4asrtHTHi4orlMRHGTXS3u/Eo7nYllyNYaAxZfkQ3WfuOHPpYOaOZE9Kn9buMLHnVmk
-         vkkUxFJrNfoFEx1MbB0ZKMmwyxSH9P4EqQS6JWSrOYyJ407/1qKHPjXU0wYx5gJN5qBj
-         oxSch3tt6mV27i5NTp+UeADEc6KhKGUTEMgUGJY1e+7M8Pk5P73dbW5lnWLIBFhlO3H6
-         tn+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXLsr5JM4A/I+6KPUXPNmiDsaAHkcieKqT/2cWrsHP739nEZo0klzugyoABna9E0UWIaM/cQ9K5IaJDRo8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxw0aoIMAjkIYv2jUWEz4EiSELJbpWUrvv468B2FqlurYsta2uG
-	YgHLf+OKlLWX5RQhRnVjLqElpPaMqpgiSID0v8h4t9J02UdbUdRQ3cnCcF208ErXlAaRHAzQevZ
-	ogIMHaw==
-X-Google-Smtp-Source: AGHT+IFsAyQHkBD9JIcdxXmgn3lyYCeVd2u7vwK18dv1Rs4/Dq4Q7I3Qiz7gFrycKUxrAq6vHuxsB5iwTcg=
-X-Received: from pjbqc9.prod.google.com ([2002:a17:90b:2889:b0:2f9:e05f:187f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1dd1:b0:2ff:784b:ffe
- with SMTP id 98e67ed59e1d1-30e7d522171mr1418806a91.11.1747346743464; Thu, 15
- May 2025 15:05:43 -0700 (PDT)
-Date: Thu, 15 May 2025 15:05:41 -0700
-In-Reply-To: <20250515120804.32131-1-sarunkod@amd.com>
+        d=1e100.net; s=20230601; t=1747346769; x=1747951569;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pKEzAEjPYjOvvo8wW1NKB/AseRp560F6iFtwwKSA2eo=;
+        b=qmTuE7dR6IIgEq6YDeCdoJLpJDqhR+wjFh6X1dNf5vQ7tAc4/sqBkH6hdJf6LUDYFz
+         KK+T+urNb3UnqYBuTriiNlRp8dnRBJYcA0/AkpRm2aevpi0hVV/BLi5VO9q36jfWvey+
+         QSBVRp7PAP7e2lxQbIEASJxU43of/tkXYOHZ/aw1sQcee+8OOFSrtWnRK6oO4LyMaNJu
+         TTzw5CgRPKUvXP/r8KDgSxjjaawpaqbt9YP81YCugPhoGPLAupfKrNqT3oaBAW+z+N5t
+         5bQDDuNurIXdRFR0sMlOaLOwcfDozw1sabmoUXtQPpT8As86mVF3E27IDsEC6k5ykT+x
+         u0DA==
+X-Forwarded-Encrypted: i=1; AJvYcCUZrnmuyZIxkC10GfMf+GgzOLvMkXPQxne81COUPRKqUIDt4AA3PNptKQccgL3kc5yIgmmre78GljWRfxk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcVK/acJ+QGAhJfEHPrZFcsDBM0m6NUTZJSEPdNM8Dcns/Vfjv
+	Lf9Ctksv8yVr1OZzPzS2Ac8rYme3OSFF+Z4PnKpqtrsGjmfcCl6iMdLQKe9EqtEGu7huBRBD/94
+	0mXJ6
+X-Gm-Gg: ASbGncvn4gRdNRdpfiFKhvxROkiJx2rOeWDzjxxg5QLjYz+NPXLv1Qo7PlWlD+F8Q8c
+	0Ub2RHoxHZxaZ0saW7GaPUeSqeTuIe6+qQROe1bxDskHj9Y9E5+q9WU5l9Q6iFZAdK7/0Her+Zy
+	7I1fkHLepf3GUeLhxJ/MDqsrMyDZT0XA+wS77/DZhbHueCQ5twEwg8HKzscMOXXsIU977NkKFMZ
+	THYUgvEtMPljGgCqH1bl7BUTm9U65i+hlc4iZbOYFhO3TKwASbag2UUR0in0KzqtlYfjXgyKLYs
+	vFo9zaFB4hYHPxeFlll7C1sjnxd9D14ISDvJsPUOulP4RCUPVvk2eEa4BawXnTJe
+X-Google-Smtp-Source: AGHT+IFiKNNYtzCEg6C6XYe7DP0nZARy3KIK4XDqNnkJzROZ4X9NmluwSJ7FFKC6yeImxQGIHZ2cIQ==
+X-Received: by 2002:a17:902:e805:b0:22c:33e4:fa5a with SMTP id d9443c01a7336-231d43d9c05mr11341725ad.9.1747346769141;
+        Thu, 15 May 2025 15:06:09 -0700 (PDT)
+Received: from atishp.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ed25a9sm2470515ad.223.2025.05.15.15.06.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 15:06:08 -0700 (PDT)
+From: Atish Patra <atishp@rivosinc.com>
+Date: Thu, 15 May 2025 15:06:05 -0700
+Subject: [PATCH v2] RISC-V: KVM: Remove scounteren initialization
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250404193923.1413163-1-seanjc@google.com> <20250515120804.32131-1-sarunkod@amd.com>
-Message-ID: <aCZlNYlhSKXRFvnc@google.com>
-Subject: Re: [PATCH 00/67] KVM: iommu: Overhaul device posted IRQs support
-From: Sean Christopherson <seanjc@google.com>
-To: Sairaj Kodilkar <sarunkod@amd.com>
-Cc: baolu.lu@linux.intel.com, dmatlack@google.com, dwmw2@infradead.org, 
-	iommu@lists.linux.dev, joao.m.martins@oracle.com, joro@8bytes.org, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, mlevitsk@redhat.com, 
-	pbonzini@redhat.com, vasant.hegde@amd.com, suravee.suthikulpanit@amd.com, 
-	naveen.rao@amd.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250515-fix_scounteren_vs-v2-1-1fd8dc0693e8@rivosinc.com>
+X-B4-Tracking: v=1; b=H4sIAExlJmgC/32NQQ6CMBBFr0JmbQ0tqYgr72EIwWEqs7AlHWw0p
+ He3cgCX7+f/9zcQikwCl2qDSImFgy9gDhXgPPoHKZ4Kg6mNra1ulOP3IBhefqVIfkii3DSdT8Z
+ abO8tlN0SqZR2560vPLOsIX72i6R/6T9b0kor1M6a0XUNtt01cgrCHo8YntDnnL+d7uw+tQAAA
+ A==
+X-Change-ID: 20250513-fix_scounteren_vs-fdd86255c7b7
+To: Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>
+Cc: kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Atish Patra <atishp@rivosinc.com>
+X-Mailer: b4 0.15-dev-42535
 
-On Thu, May 15, 2025, Sairaj Kodilkar wrote:
-> Hi Sean,
-> 
-> We ran few tests with following setup
+Scounteren CSR controls the direct access the hpmcounters and cycle/
+instret/time from the userspace. It's the supervisor's responsibility
+to set it up correctly for it's user space. They hypervisor doesn't
+need to decide the policy on behalf of the supervisor.
 
-A few!!?!?  This is awesome!  Thank you, I greatly appreciate the testing!
+Signed-off-by: Atish Patra <atishp@rivosinc.com>
+---
+Changes in v2:
+- Remove the scounteren initialization instead of just setting the TM bit. 
+- Link to v1: https://lore.kernel.org/r/20250513-fix_scounteren_vs-v1-1-c1f52af93c79@rivosinc.com
+---
+ arch/riscv/kvm/vcpu.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-> * Turin system with 2P, 192 cores each (SMT enabled, Total 768)
-> * 4 NVMEs of size 1.7 attached to a single IOMMU
-> * Total RAM 247 GiB
-> * Qemu version : 9.1.93
-> * Guest kernel : 6.14-rc7
-> * FIO random reads with 4K blocksize and libai
-> 
-> With above setup we measured the Guest nvme interrupts, IOPS, GALOG interrupts
-> and GALOG entries for 60 seconds with and without your changes.
-> 
-> Here are the results,
-> 
->                           VCPUS = 32, Jobs per NVME = 8
-> ==============================================================================================
->                              w/o Sean's patches           w/ Sean's patches     Percent change
-> ----------------------------------------------------------------------------------------------
-> Guest Nvme interrupts               123,922,860                 124,559,110              0.51%
-> IOPS (in kilo)                            4,795                       4,796              0.04%
-> GALOG Interrupts                         40,245                         164            -99.59%
-> GALOG entries                            42,040                         169            -99.60%
-> ----------------------------------------------------------------------------------------------
-> 
-> 
->                 VCPUS = 64, Jobs per NVME = 16
-> ==============================================================================================
->                              w/o Sean's patches           w/ Sean's patches     Percent change
-> ----------------------------------------------------------------------------------------------
-> Guest Nvme interrupts               99,483,339                   99,800,056             0.32% 
-> IOPS (in kilo)                           4,791                        4,798             0.15% 
-> GALOG Interrupts                        47,599                       11,634           -75.56% 
-> GALOG entries                           48,899                       11,923           -75.62%
-> ----------------------------------------------------------------------------------------------
-> 
-> 
->                 VCPUS = 192, Jobs per NVME = 48
-> ==============================================================================================
->                              w/o Sean's patches          w/ Sean's patches      Percent change
-> ----------------------------------------------------------------------------------------------
-> Guest Nvme interrupts               76,750,310                  78,066,512               1.71%
-> IOPS (in kilo)                           4,751                       4,749              -0.04%
-> GALOG Interrupts                        56,621                      54,732              -3.34%
-> GALOG entries                           59,579                      56,215              -5.65%
-> ----------------------------------------------------------------------------------------------
->  
-> 
-> The results show that patches have significant impact on the number of posted
-> interrupts at lower vCPU count (32 and 64) while providing similar IOPS and
-> Guest NVME interrupt rate (i.e. patches do not regress).
-> 
-> Along with the performance evaluation, we did sanity tests such with AVIC,
-> x2AVIC and kernel selftest.  All tests look good.
-> 
-> For AVIC related patches:
-> Tested-by: Sairaj Kodilkar <sarunkod@amd.com>
-> 
-> Regards
-> Sairaj Kodilkar
-> 
+diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+index 60d684c76c58..fa3713b5a41b 100644
+--- a/arch/riscv/kvm/vcpu.c
++++ b/arch/riscv/kvm/vcpu.c
+@@ -146,9 +146,6 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+ 	if (kvm_riscv_vcpu_alloc_vector_context(vcpu, cntx))
+ 		return -ENOMEM;
+ 
+-	/* By default, make CY, TM, and IR counters accessible in VU mode */
+-	reset_csr->scounteren = 0x7;
+-
+ 	/* Setup VCPU timer */
+ 	kvm_riscv_vcpu_timer_init(vcpu);
+ 
+
+---
+base-commit: 01f95500a162fca88cefab9ed64ceded5afabc12
+change-id: 20250513-fix_scounteren_vs-fdd86255c7b7
+--
+Regards,
+Atish patra
+
