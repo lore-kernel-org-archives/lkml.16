@@ -1,42 +1,33 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D52152F88;
-	Thu, 15 May 2025 09:14:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8098C1F09AD;
+	Thu, 15 May 2025 09:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747300476; cv=none; b=KtSTIyOmV2m8+MsdGKt8+RKPQmPV8ol15zLI4yyYngiuUwYA3HQcW1etx9yxij/2RD4qMWqmjXa8NfLsqDK5XOc6u9PaH4JoO24c5KZzqGMpG8kuK5A2wqRK78JeXA8r26wcuV0VuLrfSHngY2R3AkP4IQBSo+mKeCg/jVH9M9c=
+	t=1747300629; cv=none; b=MnzbQKc7HQ6S4HCUeSbHzkFp1JpIOa+9hLW9Um9Gqx9tM2zfeoYExXU9ZuBSbY3y2yjxsgVKg2SwDZsQ0sKifZFa9ytC5A0GILnn4cl9STzDoF3wULqQ0Hh2kbxdYFnMCvziqIXLj1b6ZNAm5eepo88epzINPtMlzZI66v2+9fE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747300476; c=relaxed/simple;
-	bh=Y/KpJyEAbhpNsINCs7cRVAYqOgkCdkE6/S/Pzp5AwCo=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=ouwFCRhlH/bXLsJiT+qJ5op6BkFPIRoT32jjtOM8pBMLehQKLaRCAz5pbw6d2JamTrqz5h7tMCe+pLgnU6JG182dBTQWddLbcjVOXdq9HO+mpKrkF459DgJntvM4oukXQgoqVCWyG4rYu5VthR3rL+ip1zf644XjAKlm1oi8jeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=DXhlJFfs; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1747300629; c=relaxed/simple;
+	bh=QVKOlT5ufDwX7I65S3zH6n+hABL8lXqI6aFRrHvjK7k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jZd2STN6IzOO0DuV2z5yc1hw5PKSWAdVC8s4cxuQcu1fdytOzzteZaxSjXrjV5YvICoE8RLhd+DzSK9Zk7K9OhrqBPsX47bszi7paYONv8eTBuEizdaVnGlkeb8V/yDMa+lXbKSFgT/lQgCnqOf1+6TNQxSsFWjpQcOn62bA6sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KdzhbpG3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="DXhlJFfs"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 1F6D2A0149;
-	Thu, 15 May 2025 11:14:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=mail; bh=BqELylo+1x+Ji/2E4BhW
-	BaCKgU1m0gtE541IdTwDmWQ=; b=DXhlJFfsBzh3PItI+RaXb17IizvM2dqy7JUe
-	FjbOv6zgjMSrtE9vEdkagaGnPqqSlIa7B2S8BcH39SRHH0jErj6hlN49qvadjC+r
-	ebahbAtnNnBFIngf3HZOL6jq2Yjgh8hTfoPNynGV1Nq+A6HoIQAy0T6OoG/kAAvJ
-	fHFABQIprJL4mpidvPrjfUug8QEHNrmIxfxh0RzNOnem8Cj0yARlt1iXp3ekda5G
-	6tTKmC7JI/VrrfZobjMQjBmSbplSN8q5l3ySM7zrI5LWzGAmrfD5kr/LQzx2FtuZ
-	rQQfSdJnImPpaILVFaVlLjkDywcIibj38cYtDKkAaFqvFaUkhQB97kJMf5sdfUJ7
-	SNzMZowJEq4XyylXEQlRqimOU/xyMOA80Qx5BYJl0AFvZYWPbVLg8qkEkXH5qqWY
-	CK1kY5m+ACdcPwSgYbLD826D1AJjv4gePz+4LNeGeEY/o7z/StxRz9EKGOJOun7D
-	3eTgKlF1wq71Pe/rYvTvlmkvf/tjHrvQaRFDMMtZ1yQNeDXY0ja/1f4Ca2Aw0mZY
-	4a303i3GrPao0hwqKn9hy9kgu4zjeTzdFSCytHFCPZFAD1tOG+D9LpMY8Dr+PxDa
-	CdVXbhpa2ovLWb0RfleqZtSDAB3ipA3Nd9G8ET838hr4KS28+usFZueNYYtsBVKk
-	aXu+Mp8=
-Message-ID: <e4e6c7a9-9b7a-4012-8bda-75804229ec95@prolan.hu>
-Date: Thu, 15 May 2025 11:14:22 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KdzhbpG3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFC5BC4CEE9;
+	Thu, 15 May 2025 09:17:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747300629;
+	bh=QVKOlT5ufDwX7I65S3zH6n+hABL8lXqI6aFRrHvjK7k=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KdzhbpG3zkVRx5Lyuw4wjB54O3iU36v1AdIu5FCTbZ6GO90HOSOUaEOkbY0ENXYLK
+	 u0YzV4pdXreYzzHNek1rZbTmse/RAJv9pRglfVY1+UPacLDTiW11ot5QH7he3810QV
+	 HsSjiwGzJ9/h7lgTxsPOve0zeWqaOsBujQzeHEhhdazyh33zHJAcQX1J/I9Xp4dW3F
+	 HMG3e96Y2uyZgUtlHhgUSH3FY5TaS91vq44gLDL4jSrTgHKnaIuLN9HsdfqlUA6xzG
+	 /tt3ZLiUsjzycxVZ8UgU0Cb5FGY3vNqA2k75m/1v/uLoRV+QYrFtgVAizbP8DebhVO
+	 mcuG4UKigfNSA==
+Message-ID: <d4e30634-b64e-47c7-9089-a37d20e29d2f@kernel.org>
+Date: Thu, 15 May 2025 10:17:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,53 +35,161 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: =?UTF-8?B?Q3PDs2vDoXMgQmVuY2U=?= <csokas.bence@prolan.hu>
-Subject: Re: [PATCH v6 0/2] Add `devm_dma_request_chan()` to simplify probe
- path in atmel-quadspi.c
-To: Mark Brown <broonie@kernel.org>
-CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>, "Vinod
- Koul" <vkoul@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea
-	<claudiu.beznea@tuxon.dev>, "Rafael J. Wysocki" <rafael@kernel.org>, "Tudor
- Ambarus" <tudor.ambarus@linaro.org>
-References: <20250515083132.255410-1-csokas.bence@prolan.hu>
- <aCWpjplhAXUvr9fj@finisterre.sirena.org.uk>
-Content-Language: en-US
-In-Reply-To: <aCWpjplhAXUvr9fj@finisterre.sirena.org.uk>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Subject: Re: [PATCH bpf-next v2] bpftool: Add support for custom BTF path in
+ prog load/loadall
+To: Jiayuan Chen <jiayuan.chen@linux.dev>, bpf@vger.kernel.org
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Daniel Xu <dxu@dxuuu.xyz>,
+ Mykyta Yatsenko <yatsenko@meta.com>, Tao Chen <chen.dylane@gmail.com>,
+ linux-kernel@vger.kernel.org
+References: <20250515065018.240188-1-jiayuan.chen@linux.dev>
+From: Quentin Monnet <qmo@kernel.org>
+Content-Language: en-GB
+In-Reply-To: <20250515065018.240188-1-jiayuan.chen@linux.dev>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: sinope.intranet.prolan.hu (10.254.0.237) To
- ATLAS.intranet.prolan.hu (10.254.0.229)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A296767155D617062
 
-Hi,
-
-On 2025. 05. 15. 10:45, Mark Brown wrote:
-> On Thu, May 15, 2025 at 10:31:28AM +0200, Bence Csókás wrote:
+2025-05-15 14:50 UTC+0800 ~ Jiayuan Chen <jiayuan.chen@linux.dev>
+> This patch exposes the btf_custom_path feature to bpftool, allowing users
+> to specify a custom BTF file when loading BPF programs using prog load or
+> prog loadall commands.
 > 
->> Change in v4:
->> * split PM imbalance fix (now merged) and DMA cleanup (this series)
->> Change in v6:
->> * rebase to spi/for-next, see note below:
->>
->> There is currently no difference in drivers/dma/dmaengine.c between it and
->> dma/next [1], therefore PATCH 1/2 should be safe for Vinod to apply. But
->> this way PATCH 2/2 is trivial to apply. I didn't want to pull the whole
->> linux-next tree, but if any ofyou run into problems, let me know, and I'll
->> rebase the series on it instead.
+> The argument 'btf_custom_path' in libbpf is used for those kernes that
+
+
+Typo: "kernes"
+
+
+> don't have CONFIG_DEBUG_INFO_BTF enabled but still want to perform CO-RE
+> relocations.
 > 
-> I can't tell what the plan is here, or what the status is for the first
-> patch (since I'm not CCed).  The second patch depends on a new API
-> introduced in the first patch so it can't be merged independently.
+> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+> ---
+>  tools/bpf/bpftool/Documentation/bpftool-prog.rst |  7 ++++++-
+>  tools/bpf/bpftool/bash-completion/bpftool        |  2 +-
+>  tools/bpf/bpftool/prog.c                         | 12 +++++++++++-
+>  3 files changed, 18 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/bpf/bpftool/Documentation/bpftool-prog.rst b/tools/bpf/bpftool/Documentation/bpftool-prog.rst
+> index d6304e01afe0..e60a829ab8d0 100644
+> --- a/tools/bpf/bpftool/Documentation/bpftool-prog.rst
+> +++ b/tools/bpf/bpftool/Documentation/bpftool-prog.rst
+> @@ -127,7 +127,7 @@ bpftool prog pin *PROG* *FILE*
+>      Note: *FILE* must be located in *bpffs* mount. It must not contain a dot
+>      character ('.'), which is reserved for future extensions of *bpffs*.
+>  
+> -bpftool prog { load | loadall } *OBJ* *PATH* [type *TYPE*] [map { idx *IDX* | name *NAME* } *MAP*] [{ offload_dev | xdpmeta_dev } *NAME*] [pinmaps *MAP_DIR*] [autoattach]
+> +bpftool prog { load | loadall } *OBJ* *PATH* [type *TYPE*] [map { idx *IDX* | name *NAME* } *MAP*] [{ offload_dev | xdpmeta_dev } *NAME*] [pinmaps *MAP_DIR*] [autoattach] [kernel_btf *BTF_DIR*]
+>      Load bpf program(s) from binary *OBJ* and pin as *PATH*. **bpftool prog
+>      load** pins only the first program from the *OBJ* as *PATH*. **bpftool prog
+>      loadall** pins all programs from the *OBJ* under *PATH* directory. **type**
+> @@ -153,6 +153,11 @@ bpftool prog { load | loadall } *OBJ* *PATH* [type *TYPE*] [map { idx *IDX* | na
+>      program does not support autoattach, bpftool falls back to regular pinning
+>      for that program instead.
+>  
+> +    The **kernel_btf** option allows specifying an external BTF file to replace
+> +    the system's own vmlinux BTF file for CO-RE relocations. NOTE that any
+> +    other feature (e.g., fentry/fexit programs, struct_ops, etc) will require
 
-Yes, the situation is a bit convoluted. Obviously 2/2 will be applied 
-after 1/2, in a similar vein than the former PM series.
 
-So what I was trying to say: Vinod should be able to apply 1/2 to his 
-branch (dma/next) right now, which can then be merged to spi/for-next. 
-This merged branch should be able to then cleanly apply 2/2.
+Nit: No need for both "e.g." and "etc", they're redundant.
 
-Bence
 
+> +    actual kernel BTF like /sys/kernel/btf/vmlinux.
+> +
+
+
+Can we rephrase the second part of the paragraph a little bit please?
+“Any other feature” could be clearer, how about:
+
+	Note that any other feature relying on BTF (such as fentry/fexit
+	programs, struct_ops) requires the BTF file for the actual
+	kernel running on the host, often exposed at
+	/sys/kernel/btf/vmlinux.
+
+
+>      Note: *PATH* must be located in *bpffs* mount. It must not contain a dot
+>      character ('.'), which is reserved for future extensions of *bpffs*.
+>  
+> diff --git a/tools/bpf/bpftool/bash-completion/bpftool b/tools/bpf/bpftool/bash-completion/bpftool
+> index 1ce409a6cbd9..609938c287b7 100644
+> --- a/tools/bpf/bpftool/bash-completion/bpftool
+> +++ b/tools/bpf/bpftool/bash-completion/bpftool
+> @@ -511,7 +511,7 @@ _bpftool()
+>                              ;;
+>                          *)
+>                              COMPREPLY=( $( compgen -W "map" -- "$cur" ) )
+> -                            _bpftool_once_attr 'type pinmaps autoattach'
+> +                            _bpftool_once_attr 'type pinmaps autoattach kernel_btf'
+>                              _bpftool_one_of_list 'offload_dev xdpmeta_dev'
+>                              return 0
+>                              ;;
+
+
+Correct, but right before this could you also add the following, please:
+
+	@@ -505,13 +505,13 @@ _bpftool()
+	                             _bpftool_get_map_names
+	                             return 0
+	                             ;;
+	-                        pinned|pinmaps)
+	+                        pinned|pinmaps|kernel_btf)
+	                             _filedir
+	                             return 0
+	                             ;;
+	                         *)
+
+This will make the completion offer file names after the user has typed
+"kernel_btf".
+
+
+> diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+> index f010295350be..3b6a361dd0f8 100644
+> --- a/tools/bpf/bpftool/prog.c
+> +++ b/tools/bpf/bpftool/prog.c
+> @@ -1681,8 +1681,17 @@ static int load_with_options(int argc, char **argv, bool first_prog_only)
+>  		} else if (is_prefix(*argv, "autoattach")) {
+>  			auto_attach = true;
+>  			NEXT_ARG();
+> +		} else if (is_prefix(*argv, "kernel_btf")) {
+> +			NEXT_ARG();
+> +
+> +			if (!REQ_ARGS(1))
+> +				goto err_free_reuse_maps;
+> +
+> +			open_opts.btf_custom_path = GET_ARG();
+>  		} else {
+> -			p_err("expected no more arguments, 'type', 'map' or 'dev', got: '%s'?",
+> +			p_err("expected no more arguments, "
+> +			      "'type', 'map', 'dev', 'offload_dev', 'xdpmeta_dev', 'pinmaps', "
+> +			      "'autoattach', or 'kernel_btf', got: '%s'?",
+
+
+Some of them were missing, thanks for this! Can you remove "dev" from
+the list, please? It's been deprecated in favour of "offload_dev", to
+avoid confusion with "xdpmeta_dev".
+
+pw-bot: cr
+
+
+>  			      *argv);
+>  			goto err_free_reuse_maps;
+>  		}
+> @@ -2474,6 +2483,7 @@ static int do_help(int argc, char **argv)
+>  		"                         [map { idx IDX | name NAME } MAP]\\\n"
+>  		"                         [pinmaps MAP_DIR]\n"
+>  		"                         [autoattach]\n"
+> +		"                         [kernel_btf BTF_DIR]\n"
+>  		"       %1$s %2$s attach PROG ATTACH_TYPE [MAP]\n"
+>  		"       %1$s %2$s detach PROG ATTACH_TYPE [MAP]\n"
+>  		"       %1$s %2$s run PROG \\\n"
+
+
+Thanks,
+Quentin
