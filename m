@@ -1,101 +1,113 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1AA928469D;
-	Thu, 15 May 2025 18:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A4528540F;
+	Thu, 15 May 2025 18:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747333875; cv=none; b=UIeOi6wx4CtpnRb0CnNCcuRbP/2MKWpB+v5Ym6Gk3PewFElnBFHTyYPDYgYiFj1BBgycG9Rb6E+JXD4deJue32xLPT5FAW188Hjpz/xjtJ8ksJi+FvUFhIp8c+B0WcLhp3J3TOPVzKSnBQD8i/U/Ue/o3zJQGlHAzR3Cg9Ix5ew=
+	t=1747333878; cv=none; b=Um8ZKmsRLuL2woFEABx595/OCppBT3axrUs4d5BWKg9suxYm+uioktDO9Ors7HCvTo5QGetbDmSKWLOQmvosj6KJvSzv1+ucpd7T4Yd47eWE8jnB3wPhQk81gOGFtJO5jYLjV/z19Y9z+n77ri2j/7GxVdCe1GLwR+dbzJ1T9FQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747333875; c=relaxed/simple;
-	bh=V6rVl2MUL74b08/nShEq7cCkERzRMRshlzLbhmNnQ+M=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Xl/Plvux5QTSviR14IPcrEzUkhvIygTntfS0TV/anrWs6E02/5LlJzMFB414d0QC3q/y0tjuW0cd+miuGvZJsj/oL3WJXmECw335pnSoqlj9jQHllc9AR8SNPMh8+zdGsee0rHSpT+fmHquBArytdfz1mtQ22Wa3cCPl3WJJ5YA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mc2c4Pth; arc=none smtp.client-ip=209.85.215.172
+	s=arc-20240116; t=1747333878; c=relaxed/simple;
+	bh=ijWd6Ng//qFQrFa7+MJ53Ncb5AIvYp4NmWE0i/aMyNY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c8eGelYXYz8rNkdur0Puu32csb/Jnaad0ZeDNi6TncgoPgV2NDXZiVZdmGfX0/CwDVRDo0TUE+MD4e8KQJtYNQHnBq73doc3MwPd/cQRRpunxzTJu9jLa5c/NUrjGKnYImgD1hcaAFc54t1p0pLiGbtU/OvfPi5EWMQ2WwSE6fU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bmLDVnRQ; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mc2c4Pth"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so1015344a12.2;
-        Thu, 15 May 2025 11:31:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bmLDVnRQ"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a1b8e8b2b2so844963f8f.2;
+        Thu, 15 May 2025 11:31:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747333873; x=1747938673; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=V6rVl2MUL74b08/nShEq7cCkERzRMRshlzLbhmNnQ+M=;
-        b=Mc2c4PthL7zLQimOWfiOzdY/66hta7ybX42W94Ogk+5scBNUV4VyTie6MuIKNSz6BQ
-         GxfNRBcYAzJRPP2lBlhAekadEeA4ytD4dP5v3xTozVd5P3qaS5c7+LCIjewAZUPVSBH4
-         +0NzQ3cUhgi2B1AE/09Dnfo938pcVHpF8mndFMmCwC4BE5vzJ/gPl6ycPM9FdL+1jflm
-         krN8NcvnLVBwkBc8MLd5vYIn0Wkyfs34NLiY7RzESIpHUR/iEw+/qqQvYPZHzNu9EQWN
-         ulW1Isa6OVdAME8u1nmgvYFaGXb6Bwgo+L5hM3IUACiB/U5yJI2D4jr9KO4142MTsikZ
-         wrKw==
+        d=gmail.com; s=20230601; t=1747333875; x=1747938675; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LR3LA4JPBUM6L45iQPdXfFH78cmZ1w4E7V1FUn5v1mo=;
+        b=bmLDVnRQ3mmrsKHdteIg6NHuqiYMs6WXlhy71isVit6j2Mzuiky0mLoLjr2P3wkV0a
+         EbOlHDwmnGySa5sprKb68KAVY6pJSEfOWMw8n+EySK1W9tUD0P/QvOVAf9HogRdW2INE
+         gn0lqLWzreOOKA8wAo5jNgdVfJ5VXLC2mBMTXQbcBpA2I68YrPEbtlxA9SnteAXEdvfm
+         SLyuGj6VrO6jioCGWshAAwLiZv4QPxPmQ3wWeXUxMWmIGOTyYy9k6OAs1D7y9wWZfCCG
+         j3sDolmhnhEBok6AWujK2MLL+oJfUCzgT9TkiSic5v7opPWYlkgOqqpTMmgLMVDgNRs2
+         askw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747333873; x=1747938673;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V6rVl2MUL74b08/nShEq7cCkERzRMRshlzLbhmNnQ+M=;
-        b=noo3aWR7Asoy28VkTX7IdhU5HisFmTBrRDreMaHhnAQzoZdQxkemeniAL0sHwwIh6o
-         PN09OWdJ4Cq/3CHsS7bD5uvKSvtUMh53yZmSxWZ9N4RKdz8vmjcw3MrHfiXdJyz/h4UR
-         6XSUiZXwui7mGLQkKLn6LLWfNXVzTCUZLaE5AktNl59JzZGG1sKyw2aur4RJ/9LktO5R
-         7/u5aV8ICf25hIEpfqWjXZtrrjUQue8c7Cfksp3bcUtY1lC/9KXDQQmjclDRCMTYAVre
-         AsAssVWhEMLAP6DmA4ceqoAIbVw8acxZAGe7UYnHZZd2ockfH94ENQdrHxzeJn5dZ2lo
-         4L2A==
-X-Forwarded-Encrypted: i=1; AJvYcCU1dZt4PQJdhV1zsS/mzlX+oUYf8y7NiSnl1QuNsG59OSS0XF4A4EcFbPSs7LF1IRZSyRbyK5syklyGPtsl@vger.kernel.org, AJvYcCV+lEmAt3ZO1mpxUMCUsnaP1sPk89Ae01+JrKD4WplvQJLCAonaubBbU1Ri0pzIC6ynDFUD9srdmrYd/l2tRfU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRAT27R8/AVT4xspNQf+srCMcgnspUaZeapjVjULJqTDCEMW3v
-	rW03qZ6pxb6HjdhGBEp9Vk8WanL7XLYnPpU5Od1t2c5wmg7ZZpQ17/JU
-X-Gm-Gg: ASbGnctPnPEeORZSoNvHfoEi7XSY/xuYjW0XbZ/Wto1mMNGdD5KRv39xemZJS4uZwHo
-	jgzYVnLcuxQa9/fIPSgc5XYO6bcof//IozEDYEOpi6BFS4syVVAIn/aX2n7Nng5sPwhoKwx+vWt
-	nhqL08hV4AfLYU80cMctrlIfBIteaxA7CBcEBuLrlK5OCcjKfnZQhkIjuWqSrGp9sCNyd7+Dt4I
-	IK5eVgfIdxHdCA9gFM9Ab10zGcDr5k/BK8aHLz97YmHwep5e+gFaSvVtrykeCu96dsmlHPL/qpJ
-	Qt6YIhnwsfNPfs2kUiTGcVITAU+gneGewmAh4CwyZkoqXvM7OW5cfTTKdg==
-X-Google-Smtp-Source: AGHT+IH6OY+7lX78qJzXX8XUmWkJnOnPaGJh9q4L+Bcz6Vd9CB0IOhsuPWAb1U3MJhxd+KmPtBkNvg==
-X-Received: by 2002:a17:902:ce87:b0:223:653e:eb09 with SMTP id d9443c01a7336-231d438a294mr6291995ad.7.1747333872812;
-        Thu, 15 May 2025 11:31:12 -0700 (PDT)
-Received: from [192.168.0.56] ([38.34.87.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e98018sm917875ad.155.2025.05.15.11.31.12
+        d=1e100.net; s=20230601; t=1747333875; x=1747938675;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LR3LA4JPBUM6L45iQPdXfFH78cmZ1w4E7V1FUn5v1mo=;
+        b=fgDAwccQ5TEXdU4qOooepbrbSBGd56tVlR+dhe0kx93Jw0PvaFOEdmdn46584eqmhK
+         J1crDMS31BfGxqEuH34z0oK83XgLhUrDYKiirAm0jXNO23UcE+bbQbZLAgqbXLI1jkxg
+         WAXwIHrZoBwiJRkARGN6J0x7sVLgdtDHnyG7ZbovUAg9keiv5IzC+G2NOy/lv5BLp9tU
+         gDMQBoaJkIsO190Tn/I1GZ717Lf2SIhJU1/bPGPb1Flg4cfxH3IpCfRkzHC9C6QN6jdt
+         VU0qc0vWk3RdKKVksaI/3T3nksT3cfRx8OO3N8LqaZG0ZX38MF636g+Ia2wiqM+eaW89
+         ZVDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUyU505haW89ra3No2w4vBHuhcz6UoHSPe/ivelhs5L13wcgbLrfhZfHfYAkanXuHrNYBvKP5x64H7t@vger.kernel.org, AJvYcCVPDD7FauhCmjK5EYkC6be48deeF2Z8xBd63tv0QKBGUlOa2yGJucMfuONpDARrcaSW7PgAFZIThXO2dZ2Q@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOgbeevboFSnpIEpWVRKCaxLYTP/JAZdnKAAwKYgs0d1TTkXgo
+	nC8p4mmTRR8EjXZfiOJt4qgpIzpWqvoszLWTHlTrY21yFBvz2lZXl7o5
+X-Gm-Gg: ASbGncsUGs65T3vfWEqUXGQ4B7ZOrOsM4RL0Bjy9ztAx0puBEpIjRJ42Q+ICZsrn3uM
+	1wsatD+Z6nuZWQfyeLe3Tw3bjWbMZOM/pwfoReBhbB1yCk2MIrHmo3fdemJEE0M5L1cjXraPQed
+	M0d2bCF2gCqKpoHfKh1YuenmUIJ6LTw2KkbX6vtw6pdNbNyhDTA1PNJC58070A3Bva4H9CJ7oWe
+	L4UESr6ZkthqMAqLZ33waAV8OkcMSHsLYesLMX5UUUus2wOvBSlCjBpvxdfyIgqv0n5y1L0sHVH
+	1hyuB7wawH4P9Y7KvBXo5PVElp6snaMqWMbuA38NnDfeS0koKBIC0uLopq/ru9tBqJbsHV6Te4L
+	VzWIPaIr3
+X-Google-Smtp-Source: AGHT+IGvr63wbsoft19zXxsz+QChVFtVl4GoWkLaCeEiqo2Npzl231TJ6UXnb3FzGQ1hk+IBi6iysg==
+X-Received: by 2002:a5d:5886:0:b0:3a0:b4fa:e594 with SMTP id ffacd0b85a97d-3a35c842a99mr751565f8f.33.1747333874604;
+        Thu, 15 May 2025 11:31:14 -0700 (PDT)
+Received: from iku.example.org ([2a06:5906:61b:2d00:7b5:b9aa:961b:d080])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca8d012sm262816f8f.94.2025.05.15.11.31.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 11:31:12 -0700 (PDT)
-Message-ID: <c36245a48149a12180ec710c65d317a12cdfa020.camel@gmail.com>
-Subject: Re: [REGRESSION] bpf verifier slowdown due to vrealloc() change
- since 6.15-rc6
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Kees Cook <kees@kernel.org>, Shung-Hsi Yu <shung-hsi.yu@suse.com>
-Cc: bpf@vger.kernel.org, linux-mm@kvack.org, Andrii Nakryiko
- <andrii@kernel.org>,  Ihor Solodrai <ihor.solodrai@linux.dev>, Andrew
- Morton <akpm@linux-foundation.org>, Michal Hocko	 <mhocko@suse.com>,
- Vlastimil Babka <vbabka@suse.cz>, Uladzislau Rezki	 <urezki@gmail.com>,
- linux-kernel@vger.kernel.org, 	linux-hardening@vger.kernel.org,
- regressions@lists.linux.dev, Greg Kroah-Hartman	
- <gregkh@linuxfoundation.org>, Alexei Starovoitov <ast@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Pawan Gupta
- <pawan.kumar.gupta@linux.intel.com>
-Date: Thu, 15 May 2025 11:31:09 -0700
-In-Reply-To: <202505150845.0F9E154@keescook>
-References: 
-	<20250515-bpf-verifier-slowdown-vwo2meju4cgp2su5ckj@6gi6ssxbnfqg>
-	 <202505150845.0F9E154@keescook>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+        Thu, 15 May 2025 11:31:14 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 0/2] Add USB2.0 support for R9A09G057 SoC and RZ/V2H EVK
+Date: Thu, 15 May 2025 19:31:02 +0100
+Message-ID: <20250515183104.330964-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-05-15 at 08:47 -0700, Kees Cook wrote:
-> On Thu, May 15, 2025 at 09:12:25PM +0800, Shung-Hsi Yu wrote:
-> > Bisect was done by Pawan and got to commit a0309faf1cb0 "mm: vmalloc:
-> > support more granular vrealloc() sizing"[2]. To further zoom in the
->=20
-> Can you try this patch? It's a clear bug fix, but if it doesn't improve
-> things, I have another idea to rearrange the memset.
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-I tried this patch on top of the commit 82f2b0b97b36 ("Linux 6.15-rc6").
-W/o the patch I observe the slowdown, test times out after 120 seconds,
-with the patch test finishes in 3 seconds.
+Hi All,
 
-[...]
+This patch series adds USB2.0 support for the Renesas R9A09G057 SoC and
+enables it on the RZ/V2H EVK board.
+The first patch adds the USB2.0 support in the R9A09G057 SoC device tree
+file, while the second patch enables the USB2.0 support in the RZ/V2H
+EVK board device tree file.
+
+Note, this patch series applies on top of the patch series [1] which adds
+GBETH support for the R9A09G057 SoC and RZ/V2H EVK board.
+
+[1] https://lore.kernel.org/all/20250513131412.253091-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (2):
+  arm64: dts: renesas: r9a09g057: Add USB2.0 support
+  arm64: dts: renesas: r9a09g057h44-rzv2h-evk: Enable USB2.0 support
+
+ arch/arm64/boot/dts/renesas/r9a09g057.dtsi    | 113 ++++++++++++++++++
+ .../dts/renesas/r9a09g057h44-rzv2h-evk.dts    |  67 +++++++++++
+ 2 files changed, 180 insertions(+)
+
+-- 
+2.49.0
+
