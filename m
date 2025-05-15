@@ -1,86 +1,50 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB3C298251
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B4B18DB37
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:48:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747309668; cv=none; b=WC7PQSZqRPNSVcIJhDz1IbMY2K7DKa6k1sVNQUmOcfwQ79kksGNJCCwHJvefko7rTLUSIsrhF+nuFXXIz3I4ql7T0xN6RfRkMbjq22aikFRQb9pNVcaXnqmPUcjnG718Ce2lPATqi1N8kh5T9mpt3sX9wi3OdDWAEypesmMXI6M=
+	t=1747309704; cv=none; b=P4caen7R9f8Jt+2RXj2w4l73ZZ3Ai9yEen7c6grwkOzPITb+FJwp6pgoNbp5wtEKf+rtMP9M740EhH9hBPryB5YR+2/FBqn57RHY/oOvN4Vjbc24z0PUxrDZLQ2V7W17zcSnxlzqBpXZPgnfQxzT2DTFrZzewzgYXzMACvQ9Rjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747309668; c=relaxed/simple;
-	bh=zUVyxbhWjFuorrF/a4kP4qtrfJjqJHcXI9Ez9tuV8q8=;
+	s=arc-20240116; t=1747309704; c=relaxed/simple;
+	bh=Kq9+Buz5fcVW6ofMM3wKqdJLpRwgrA5JhjkA1NJu7QA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tzLAa/wjZE9c0/s/HJknfV2HBx9o/RS8LWg5WYCiY4LRnvZ01wZ0qyDk9rRnzvWPGtWVy2Gg3D0WWLDy/waT5teKTZ/qy9O/mGfb9EAEf+GAdGuxwjjYCzIHQ+jsMGgVLg4cwxkMzpnwbs5Lr1h/tejX/GFCfyqa9cLhb7V/JSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=debK0Nr7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=UF8E//dH; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=debK0Nr7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=UF8E//dH; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="debK0Nr7";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="UF8E//dH";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="debK0Nr7";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="UF8E//dH"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 921601F391;
-	Thu, 15 May 2025 11:47:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747309664; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+P3F3Szd7PRBmf+6JunC5ebnIxmdnh36JcmraQsCgto=;
-	b=debK0Nr7g6huppII/+jI4pmoz6yUOdrJVpl0utsru9y7a/zjDWWrLkMeeju0iwLBrFoNx0
-	NDs1Biz/6vQqv9CTDC4KoQ/qhH+KHHhjwjg17Sx9BigCcsU6Xa4yt8+j+SPYnbbo2AwF0D
-	JpmtBoGzMMWcTLTgsXM6+MD+A/VQQRw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747309664;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+P3F3Szd7PRBmf+6JunC5ebnIxmdnh36JcmraQsCgto=;
-	b=UF8E//dHlEkW6ngPnec+fEMT+5uvVaRhXWJdBMSL2xswd/rhqJeRmqJzVKT1JgVNTwI1ei
-	TZA/DX3UJcv0mSBg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=debK0Nr7;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="UF8E//dH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747309664; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+P3F3Szd7PRBmf+6JunC5ebnIxmdnh36JcmraQsCgto=;
-	b=debK0Nr7g6huppII/+jI4pmoz6yUOdrJVpl0utsru9y7a/zjDWWrLkMeeju0iwLBrFoNx0
-	NDs1Biz/6vQqv9CTDC4KoQ/qhH+KHHhjwjg17Sx9BigCcsU6Xa4yt8+j+SPYnbbo2AwF0D
-	JpmtBoGzMMWcTLTgsXM6+MD+A/VQQRw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747309664;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+P3F3Szd7PRBmf+6JunC5ebnIxmdnh36JcmraQsCgto=;
-	b=UF8E//dHlEkW6ngPnec+fEMT+5uvVaRhXWJdBMSL2xswd/rhqJeRmqJzVKT1JgVNTwI1ei
-	TZA/DX3UJcv0mSBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 85022139D0;
-	Thu, 15 May 2025 11:47:44 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id EwV3IGDUJWizeQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 15 May 2025 11:47:44 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 36313A08CF; Thu, 15 May 2025 13:47:40 +0200 (CEST)
-Date: Thu, 15 May 2025 13:47:40 +0200
-From: Jan Kara <jack@suse.cz>
-To: Max Kellermann <max.kellermann@ionos.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] fs/read_write: make default_llseek() killable
-Message-ID: <psvtoce37eljiye6nuzffpyaz65c33ipvfos7lyyitw5ixthkz@aclnplhcmlme>
-References: <20250513150327.1373061-1-max.kellermann@ionos.com>
- <20250513150327.1373061-4-max.kellermann@ionos.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZqE7dMUkwDgwTaV6cwde1Q+QeSDHViIaEM98FWroKp/EFE936jrwt26ciEQF6ligz5mokDZe46AjPx6KG51ALws4qIrZXcB82K9JeaJxB4s2TiuenEukcjwbNYMF/4LWUnnsNCd/YKXpRfMBJ4WEz9Vmf0sZKVU+haUyA8GpfHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; arc=none smtp.client-ip=212.27.42.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
+Received: from localhost (unknown [82.64.135.138])
+	by smtp2-g21.free.fr (Postfix) with ESMTP id 037D52003D6;
+	Thu, 15 May 2025 13:48:08 +0200 (CEST)
+Received: by localhost (Postfix, from userid 1502)
+	id 90FFDC4D5; Thu, 15 May 2025 11:48:08 +0000 (GMT)
+Date: Thu, 15 May 2025 11:48:08 +0000
+From: Etienne Buira <etienne.buira@free.fr>
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	bcm-kernel-feedback-list@broadcom.com,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Etienne Buira <etienne.buira@free.fr>,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] firmware/raspberrypi: raise timeout to 3s
+Message-ID: <aCXUeOmy28tqg6Oy@Z926fQmE5jqhFMgp6>
+Mail-Followup-To: Stefan Wahren <wahrenst@gmx.net>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	bcm-kernel-feedback-list@broadcom.com,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Etienne Buira <etienne.buira@free.fr>,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <aCIiEp3CXD2o9dTw@Z926fQmE5jqhFMgp6>
+ <048fd6c5-9f09-4c06-9a23-e5821dc291d5@gmx.net>
+ <aCWMrJcldfrsNTQq@Z926fQmE5jqhFMgp6>
+ <ffeb860f-5522-4130-ae47-45a6068b17ea@gmx.net>
+ <aCW3d7tc27Awj62K@Z926fQmE5jqhFMgp6>
+ <cecda824-4f47-4e4c-bee9-1a59cd5d801c@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,84 +53,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250513150327.1373061-4-max.kellermann@ionos.com>
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 921601F391
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,ionos.com:email,suse.com:email];
-	RCVD_COUNT_THREE(0.00)[3];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_TLS_LAST(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Spam-Score: -4.01
+In-Reply-To: <cecda824-4f47-4e4c-bee9-1a59cd5d801c@gmx.net>
 
-On Tue 13-05-25 17:03:27, Max Kellermann wrote:
-> Allows killing processes that are waiting for the inode lock.
+On Thu, May 15, 2025 at 12:31:38PM +0200, Stefan Wahren wrote:
+> Am 15.05.25 um 11:44 schrieb Etienne Buira:
+> > Hi Stefan, and thank you for your interest.
+> >
+> > On Thu, May 15, 2025 at 09:42:43AM +0200, Stefan Wahren wrote:
+> >> Hi Etienne,
+> >>
+> >> Am 15.05.25 um 08:41 schrieb Etienne Buira:
+> >>> On Wed, May 14, 2025 at 06:20:32PM +0200, Stefan Wahren wrote:
+> >>>> Hi Etienne,
+> >>>>
+> >>>> Am 12.05.25 um 18:30 schrieb Etienne Buira:
+> >>> ../..
+> >>>> Out of curiosity and because i never saw this issue, could you please
+> >>>> provide more details?
+> >>>> There is nothing connected to HDMI 0 & 1 ?
+> >>>> Which firmware version are you running?
+> >> Please provide the dmesg output, so we can extract the firmware version.
+> > Firmware version is 2025-02-17T20:03:07, i also attach the full gzipped
+> > dmesg, as long as a patch of extra traces used.
+> > I did not specifically test other firmware versions for the timeout
+> > issue (but i did for video output).
+> Thanks, i'll try to reproduce.
 > 
-> Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+> Sorry, i forgot but is this reproducible with a recent stable 6.12.x kernel?
 
-Looks good. Feel free to add:
+Just reproduced with pristine 6.12.28.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-> v2: split into separate patches
-> 
-> TODO: review whether all callers can handle EINTR; see
-
-I did a quick audit and everything seems OK AFAICT.
-
-								Honza
-
->  https://lore.kernel.org/linux-fsdevel/20250512-unrat-kapital-2122d3777c5d@brauner/
-> and
->  https://lore.kernel.org/linux-fsdevel/hzrj5b7x3rvtxt4qgjxdihhi5vjoc5gw3i35pbyopa7ccucizo@q5c42kjlkly3/
-> 
-> Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
-> ---
->  fs/read_write.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/read_write.c b/fs/read_write.c
-> index bb0ed26a0b3a..0ef70e128c4a 100644
-> --- a/fs/read_write.c
-> +++ b/fs/read_write.c
-> @@ -332,7 +332,9 @@ loff_t default_llseek(struct file *file, loff_t offset, int whence)
->  	struct inode *inode = file_inode(file);
->  	loff_t retval;
->  
-> -	inode_lock(inode);
-> +	retval = inode_lock_killable(inode);
-> +	if (retval)
-> +		return retval;
->  	switch (whence) {
->  		case SEEK_END:
->  			offset += i_size_read(inode);
-> -- 
-> 2.47.2
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
