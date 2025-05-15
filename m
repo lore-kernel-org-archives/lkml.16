@@ -1,129 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp-42a8.mail.infomaniak.ch (smtp-42a8.mail.infomaniak.ch [84.16.66.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3528B244679;
-	Thu, 15 May 2025 17:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0762525A338
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:52:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747331536; cv=none; b=MDOpgTdf549sgRqatMQWantd1LKjN8qBp5Cx/MdCOfSqre8s9L4XaeflIVlVz8TaPm5/KojqfL5enApxco++zo7fA6ZI8tXO+oWxmIHVsDfQP+5wLuPTZ1uR31BqPWa7HpA3wS1kAenF8RETsS6bPgT6qW2uSs5tcJ26r1qffyw=
+	t=1747331543; cv=none; b=fP12W4hV7RSrqwGQ79hyQxjnp8LOsGTzAdTfkJYV38ZMIZuYVH/tJMj8vyVNux+0tMUOiJMFofyVJJis/qg2FhUhC7xnowAAc4gK6GumzoxBtItxMq2iUfjK9XOUbBdOr9HT3pwUGIJvTm0KJvJ93NeSLlJjvGFD98fDrHj9/wk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747331536; c=relaxed/simple;
-	bh=m/TOlmyn+s2/Ige0FOwKesnagDQC/gXqCDf28q5+pLo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dYq3HBFLuyqHg4Dh7z/j87lNhnayit6mjHw8vk8chx2Cd+lsW7Sx6rkrYO5EiPPfelf9bxYKUvWov/toFHmTdgk7TcC7Tw6PEE9PTcrhSJe6sgpWtpWXrCsf3zACKeq0Y9OSjIiEiuE96n8iqTvoKxBNsYrAQjjDHrk1I+DcvO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PETGkpv9; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747331543; c=relaxed/simple;
+	bh=tFNPapdRFFjooc9r+SlXsVOmgwTmmL5/lfcJfv+Y1p4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=C5Qir+elJreRi+ghSJkeXXsnofH6bgLEDm1arDu5rJwWJSTL4dvxj3t1UGbORz9UKnScfCHdtCkHHZ1YvF7tUt/1LgBMDK0Mu+sTws6qhis4zYXZC4bajX+wTVWzeAMbVTf1VtYiyBHYHc5DtiRS3eSVgm1gkOlBj8tXKuzPrTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=t5IZi5eI; arc=none smtp.client-ip=84.16.66.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PETGkpv9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747331534; x=1778867534;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=m/TOlmyn+s2/Ige0FOwKesnagDQC/gXqCDf28q5+pLo=;
-  b=PETGkpv9LC15U9x/ql6+8owgs+uDyCut9+QEk+eGfklI9/Po7SD14Z7j
-   SUuOQjLMOQCTEk7yLH3eHrMPCixGvmBW5wAm9mxyQqgD63aRKgxT+oPSI
-   hGLPQudNnM1TQgxwrHlwbEzioKA7kW6r1eUzSQ9h8l9B9TI+Nxaf9cvdG
-   Osob3zAzP0b/w1wLiHIaxicp8mBsdAmyhZXGs2YrbZ+w3YEZPp60e/Kog
-   kgxGSJ7erlXI+3s0FLp3Gm98C048rqI5oqFtSkSZEd2LYP5UXV2p6yPeY
-   98jaMwsleQ5naL+fXl5nQLI5yCFKHj8YFlj63qHVMUWB/ppGHnG+QFlai
-   Q==;
-X-CSE-ConnectionGUID: 9P+FkLkyQBC6CIFeVnI74Q==
-X-CSE-MsgGUID: T7yggr5PRNmQqiF8oFwduA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="59941499"
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="59941499"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 10:52:13 -0700
-X-CSE-ConnectionGUID: Qruo5h3UT56HNd7t0fDJRw==
-X-CSE-MsgGUID: frud17EwTh2NliK0R4UTNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
-   d="scan'208";a="143333504"
-Received: from gkhatri-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.13])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 10:52:13 -0700
-Date: Thu, 15 May 2025 10:52:05 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Shung-Hsi Yu <shung-hsi.yu@suse.com>, bpf@vger.kernel.org,
-	linux-mm@kvack.org, Andrii Nakryiko <andrii@kernel.org>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
-	Uladzislau Rezki <urezki@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, regressions@lists.linux.dev,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Eduard Zingerman <eddyz87@gmail.com>
-Subject: Re: [REGRESSION] bpf verifier slowdown due to vrealloc() change
- since 6.15-rc6
-Message-ID: <20250515175205.th7pjvord6fum35a@desk>
-References: <20250515-bpf-verifier-slowdown-vwo2meju4cgp2su5ckj@6gi6ssxbnfqg>
- <C66C764E-C898-457D-93F0-A680983707F0@kernel.org>
- <202505150911.1254C695D@keescook>
- <20250515171821.6je7a4uvmttcdiia@desk>
- <202505151039.DAA202A@keescook>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="t5IZi5eI"
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZyyTN5X8kzdJJ;
+	Thu, 15 May 2025 19:52:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1747331528;
+	bh=0b6gT6hVmnbZkcwayzSS4iB48pHH34w9zFzT0fBtOvg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=t5IZi5eIILhTAamUm4UumViSRMN0H2KXgpRVMFjV0nJbU1mfCLT4xpM1cdTHb7K4y
+	 Ruv8QcF61+N2L/cgEUuzJIQNWblKVxkx0t9JMPJYsF5SQsmHyKDnl1dvtmN+F1bjQI
+	 Lo394FqIbFzbBKY9nvMcIAJaCqUEIEZH+vlT1Ej8=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZyyTN1lz0zgsP;
+	Thu, 15 May 2025 19:52:08 +0200 (CEST)
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	Tingmao Wang <m@maowtm.org>,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: [GIT PULL] Landlock fix for v6.15-rc7
+Date: Thu, 15 May 2025 19:52:03 +0200
+Message-ID: <20250515175203.2434864-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202505151039.DAA202A@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-On Thu, May 15, 2025 at 10:41:41AM -0700, Kees Cook wrote:
-> On Thu, May 15, 2025 at 10:18:21AM -0700, Pawan Gupta wrote:
-> > On Thu, May 15, 2025 at 09:51:15AM -0700, Kees Cook wrote:
-> > > On Thu, May 15, 2025 at 07:51:26AM -0700, Kees Cook wrote:
-> > > > On May 15, 2025 6:12:25 AM PDT, Shung-Hsi Yu <shung-hsi.yu@suse.com> wrote:
-> > > > >There is an observable slowdown when running BPF selftests on 6.15-rc6
-> > > > >kernel[1] built with tools/testing/selftests/bpf/{config,config.x86_64}.
-> > > > [...]
-> > > > Where can I find the .config for the slow runs?
-> > > 
-> > > Oops, I can read. :) Doing a build now...
-> > > 
-> > > > And how do I run the test myself directly?
-> > > 
-> > > I found:
-> > > https://docs.kernel.org/bpf/bpf_devel_QA.html
-> > > 
-> > > But it doesn't seem to cover a bunch of stuff (no way to prebuild the
-> > > tests, no info on building the test modules).
-> > > 
-> > > This seems to be needed:
-> > > 
-> > > make O=regression-bug -C tools/testing/selftests/bpf/test_kmods
-> > > 
-> > > But then the booted kernel doesn't load it (missing signatures?)
-> > > 
-> > > Anyway, I'll keep digging...
-> > 
-> > After struggling with this for a while, I figured vmtest.sh is the easiest
-> > way to test bpf:
-> > 
-> > ./tools/testing/selftests/bpf/vmtest.sh -i ./test_progs
-> 
-> I can't even build the test_progs. :(
-> 
-> $ make test_progs
-> ...
->   CLNG-BPF [test_progs] bpf_iter_tasks.bpf.o
-> progs/bpf_iter_tasks.c:98:8: error: call to undeclared function 'bpf_copy_from_user_task_str'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
->    98 |         ret = bpf_copy_from_user_task_str((char *)task_str1, sizeof(task_str1), ptr, task, 0
-> );
->       |               ^
-> 1 error generated.
+Linus,
 
-I just tried on the latest upstream, and I am getting the same error. My
-earlier bisection was on a stable-rc for 6.14.y:
+This PR fixes a KUnit issue, simplifies code, and adds new tests.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-6.14.y
+Please pull these changes for v6.15-rc7 .  These commits merge cleanly
+with your master branch.  They have been been tested in the latest
+linux-next releases.
 
-... where it was first reported:
+Test coverage for security/landlock is unchanged (with Kselftest).
 
-https://lore.kernel.org/stable/20250515041659.smhllyarxdwp7cav@desk/
+Regards,
+ Mickaël
+
+--
+The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add530e:
+
+  Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/mic/linux.git tags/landlock-6.15-rc7
+
+for you to fetch changes up to 3039ed432745f8fdf5cbb43fdc60b2e1aad624c1:
+
+  landlock: Improve bit operations in audit code (2025-05-12 11:38:53 +0200)
+
+----------------------------------------------------------------
+Landlock fix for v6.15-rc7
+
+----------------------------------------------------------------
+Mickaël Salaün (2):
+      landlock: Remove KUnit test that triggers a warning
+      landlock: Improve bit operations in audit code
+
+ security/landlock/audit.c    |  4 ++--
+ security/landlock/id.c       | 33 +++++++++++++++++++++++++++++++--
+ security/landlock/syscalls.c |  3 ++-
+ 3 files changed, 35 insertions(+), 5 deletions(-)
