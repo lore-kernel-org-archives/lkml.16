@@ -1,33 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DCE297B8F;
-	Thu, 15 May 2025 11:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314FA1D2F42
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747307520; cv=none; b=CcQay3Of1uw5BayOQWBmZswRL6znbrmUXWm8C6l7PamYGkvhLBcWTgUMOUNsfAdbNhFfKODi0kM+kMQMABMF/koPn7UAyBNAC+HceTYQJBRWqIaiMFPyBwCCqOJDmadotolkSJzaRB9i2B+aaTBgNhF26qltCv7RU6yeQAmSgwU=
+	t=1747307661; cv=none; b=luauqgEt+H//HyiFMdD1egNJje0U8BZsDtAQsSaf3WVfuGTQrRsJcKLYd9wpjB8rKflFP4lgUgFb8wSUYlBluSFl6oldkDWgSZ4iyJp84/JP1DMJyNgsSVTSZ/ZRDq9Z9d6wIo0eLR1PS6dMuBtUmG7ix+TpCPCBSYRsgG6X5UQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747307520; c=relaxed/simple;
-	bh=XPgp+L0xynTMhQdAzvCt1qZX2mlUrGAkjD9kQfYs8lQ=;
+	s=arc-20240116; t=1747307661; c=relaxed/simple;
+	bh=FN3aODM/Vs2gKGwui2su2aD9kUgy03QHDadlp9UJ5DM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fq22bH9vzJCz8lUfc7BugI7aUKwMU4aUY8NZCMyZ5vDXOOJ6703CUtJ6Jfgdx5EHHrUd2hcOOPW3sAtw9tHQbKghHuGyTjEBPIRzgCxfsC5bxNiipIspyBNF3rG4Qgvn+FuRBuifOoCMAt3DEUyxRxaEkA5IsPRYo81NqspJGRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jrE7mMQi; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=f/VEfO8p9xhLrDFyuSEVRi/VGez3o50sS+JHmq+KjgbwHmc9bjegN+L2rwDU48Bl02VUP9AcWzIyAtHb9d4zyWRkuwq4Wpzya4C2YQx3LpUCRd5O9FkkQQOrzaIZbUf2pnjvN6bFjR2epXsPkrbOLsCnCHWovt/2yveEIgHjHXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Dq4LbKbY; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jrE7mMQi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A40CEC4CEE7;
-	Thu, 15 May 2025 11:11:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747307520;
-	bh=XPgp+L0xynTMhQdAzvCt1qZX2mlUrGAkjD9kQfYs8lQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jrE7mMQifMc13Y+3ygYR6Ksx18KYg211bivTIiBnDb4Dq745anxWHzyhyG5eK8lYV
-	 4ZbaoTVzZQ8CYY9jqpashkR9z2Jmm67I0wF+PN/3ntuUbbD2OgUra3UD+vxQCCHdJ/
-	 Fr4BxbpIGmwUCf9Hxy+gc6ScMs+3zO0wNAnisOPsWnsPxJgZ/SPV//+j/lMTl8u7EX
-	 7/4g1PVfrifnQqPZ1XhDLpmL2VKoogXaEtZ7iOpFa91UrvjqxQFaztivEW9LY3o01b
-	 O9Dp0Kd8jACC3UOLApN8mIZ/RsJhAFTjuQ4DLZYL+p+l5pGTIKc+YPdc36bFEb+vLH
-	 c4eKN6dj0XcUg==
-Message-ID: <daf58379-ea55-468d-9174-8a04677550e2@kernel.org>
-Date: Thu, 15 May 2025 13:11:54 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dq4LbKbY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747307658;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=fq//g9rX4/O4lr2yu6IflbnOwjCV+MJ48Zq5nGAklT0=;
+	b=Dq4LbKbYgVWPynb0LBRxqB0NS4OhdiSvprLdb7BBg0gIV/wBj0mgANevaHcW7CG2b9Znhq
+	dzSKGldmEYMjlDOaRnT2S8h30XtrTd52VeGrVkgEVeBBCbHGaZg3PDhpqQxOzU8dgyyA1J
+	IpCgj285xvveFXdPenxEKTnOyVnxa7k=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-343-I5HRswBbOFu-wlGwbMhJSg-1; Thu, 15 May 2025 07:14:16 -0400
+X-MC-Unique: I5HRswBbOFu-wlGwbMhJSg-1
+X-Mimecast-MFC-AGG-ID: I5HRswBbOFu-wlGwbMhJSg_1747307656
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-476870bad3bso13663181cf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 04:14:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747307656; x=1747912456;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fq//g9rX4/O4lr2yu6IflbnOwjCV+MJ48Zq5nGAklT0=;
+        b=dVNdcWYh01QY06lueHrzAeT+NI2A9vWsCCMSZ7zmvqxyy4/iiNfvDxEPktgUzsebHN
+         1o4aUtDpF8TRX68Wnls1O0qQQrseFDYY7Qov6vnNKhty8NYlavZIvSperDxco6iC2E/u
+         Fq0az1HfQSjjaAXIcKJ0l5Dq0V/9EBxfeTHdWuV6zq/xWSBThHQ59qB8LY1O2p1vuCcQ
+         Fdytid8rt4E/yfSbtzZBTrlk5BF+NvaAVu3t02C+O+GMRuw1QBbcnk6CjEkkMSh8n+8u
+         T1BUdcD4YDO+5/ZV9J1AC/TVgk4rodfOaS93oCiOcpw8C9MCmJCDblxmKyYSrazpN5i7
+         s+TQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXbxZkGepEs3AnloBxQ2didHxbTuIx0mu8MtYufaRZva8n18gQnLikrY2r76WjHL/iFA1PCTWyzMydn+GU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOJjYj6oSTRpIGFnU47QLux9HI4xNaIAXkzsyCH8K60IKgdV7L
+	wgTF0LhvnbRQ4A6VpDd6n3JLC61HfKd+FdEdNlpSLOwRtbcDe8kKxJdKo9ZOpsypEGahq0VosOJ
+	E/pICHZoLS+GQHN50bicehqQ0iu7wJHfSaUoOClI8DxoHdwOWEFOvR/0oQH1lrQ==
+X-Gm-Gg: ASbGncvaFb7l9qpESM8tKoQYtQs5NzfCyIrXvdcpreiHMTD+I+qhaadAPtwbIZTUuh2
+	666DX0Ubw6ghTXxarZnRMhv1IITizYRh9i/8IDLS7xAvZjFk5AoVhKR/ItQJGNX83mvt/wIFRAz
+	KxuFO/qJoo1taB+E9sZKyNRT1Cepk3qnXpUiBGUOFwEowU2e/FsR3rc/nS/sXMu4U1f+bMxjINw
+	kFCmKlW+zUDqKBazzK3wOf35OHqUphaP4IgCOpoKKUrjPWrYh6j16pfWZmwOpKbA0fFnFX2FHHO
+	jQyFT8rvUuV9+o75pA==
+X-Received: by 2002:a05:622a:5c85:b0:494:a36c:ebd7 with SMTP id d75a77b69052e-494a36cecf8mr42288451cf.34.1747307656405;
+        Thu, 15 May 2025 04:14:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFEfTCS9krxzm9V1zvy13K07KTUSWtp+SYYN9LDtq+WtCDlRCR1m6JLPfOFtf6DuMKdBCa9ZQ==
+X-Received: by 2002:a05:622a:5c85:b0:494:a36c:ebd7 with SMTP id d75a77b69052e-494a36cecf8mr42288061cf.34.1747307656127;
+        Thu, 15 May 2025 04:14:16 -0700 (PDT)
+Received: from [192.168.21.214] ([69.164.134.123])
+        by smtp.googlemail.com with ESMTPSA id d75a77b69052e-4945258789asm93276011cf.49.2025.05.15.04.14.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 04:14:14 -0700 (PDT)
+Message-ID: <bbe13eae-63c4-4f1d-b510-517d5e8d6a28@redhat.com>
+Date: Thu, 15 May 2025 13:14:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,88 +74,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] ESWIN EIC7700 pinctrl driver
-To: Yulin Lu <luyulin@eswincomputing.com>, linus.walleij@linaro.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, kees@kernel.org, gustavoars@kernel.org,
- brgl@bgdev.pl, linux-hardening@vger.kernel.org
-Cc: ningyu@eswincomputing.com, zhengyu@eswincomputing.com,
- linmin@eswincomputing.com, huangyifeng@eswincomputing.com,
- fenglin@eswincomputing.com, lianghujun@eswincomputing.com
-References: <20250515054524.390-1-luyulin@eswincomputing.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
+ paths
+To: Christoph Hellwig <hch@infradead.org>, Martin Wilck <mwilck@suse.com>
+Cc: Hannes Reinecke <hare@suse.de>, Kevin Wolf <kwolf@redhat.com>,
+ dm-devel@lists.linux.dev, hreitz@redhat.com, mpatocka@redhat.com,
+ snitzer@kernel.org, bmarzins@redhat.com, linux-kernel@vger.kernel.org
+References: <20250429165018.112999-1-kwolf@redhat.com>
+ <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
+ <aCIRUwt5BueQmlMZ@redhat.com> <aCLe5UT2kfzI96TQ@infradead.org>
+ <0340c51e-6f89-4799-b2f1-19c785a19ff2@suse.de>
+ <aCLjPLCztuXhgpnA@infradead.org>
+ <d2a7fa68-1890-4367-a2ac-59ec220779bd@suse.de>
+ <aCLrbz3bRLwUbA8p@infradead.org>
+ <265961162cf0747a82c66c6cae38aecb85acfec9.camel@suse.com>
+ <aCQh4NeXtLLCQeVN@infradead.org>
+From: Paolo Bonzini <pbonzini@redhat.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250515054524.390-1-luyulin@eswincomputing.com>
-Content-Type: text/plain; charset=UTF-8
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ xsEhBFRCcBIBDqDGsz4K0zZun3jh+U6Z9wNGLKQ0kSFyjN38gMqU1SfP+TUNQepFHb/Gc0E2
+ CxXPkIBTvYY+ZPkoTh5xF9oS1jqI8iRLzouzF8yXs3QjQIZ2SfuCxSVwlV65jotcjD2FTN04
+ hVopm9llFijNZpVIOGUTqzM4U55sdsCcZUluWM6x4HSOdw5F5Utxfp1wOjD/v92Lrax0hjiX
+ DResHSt48q+8FrZzY+AUbkUS+Jm34qjswdrgsC5uxeVcLkBgWLmov2kMaMROT0YmFY6A3m1S
+ P/kXmHDXxhe23gKb3dgwxUTpENDBGcfEzrzilWueOeUWiOcWuFOed/C3SyijBx3Av/lbCsHU
+ Vx6pMycNTdzU1BuAroB+Y3mNEuW56Yd44jlInzG2UOwt9XjjdKkJZ1g0P9dwptwLEgTEd3Fo
+ UdhAQyRXGYO8oROiuh+RZ1lXp6AQ4ZjoyH8WLfTLf5g1EKCTc4C1sy1vQSdzIRu3rBIjAvnC
+ tGZADei1IExLqB3uzXKzZ1BZ+Z8hnt2og9hb7H0y8diYfEk2w3R7wEr+Ehk5NQsT2MPI2QBd
+ wEv1/Aj1DgUHZAHzG1QN9S8wNWQ6K9DqHZTBnI1hUlkp22zCSHK/6FwUCuYp1zcAEQEAAc0j
+ UGFvbG8gQm9uemluaSA8cGJvbnppbmlAcmVkaGF0LmNvbT7CwU0EEwECACMFAlRCcBICGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRB+FRAMzTZpsbceDp9IIN6BIA0Ol7MoB15E
+ 11kRz/ewzryFY54tQlMnd4xxfH8MTQ/mm9I482YoSwPMdcWFAKnUX6Yo30tbLiNB8hzaHeRj
+ jx12K+ptqYbg+cevgOtbLAlL9kNgLLcsGqC2829jBCUTVeMSZDrzS97ole/YEez2qFpPnTV0
+ VrRWClWVfYh+JfzpXmgyhbkuwUxNFk421s4Ajp3d8nPPFUGgBG5HOxzkAm7xb1cjAuJ+oi/K
+ CHfkuN+fLZl/u3E/fw7vvOESApLU5o0icVXeakfSz0LsygEnekDbxPnE5af/9FEkXJD5EoYG
+ SEahaEtgNrR4qsyxyAGYgZlS70vkSSYJ+iT2rrwEiDlo31MzRo6Ba2FfHBSJ7lcYdPT7bbk9
+ AO3hlNMhNdUhoQv7M5HsnqZ6unvSHOKmReNaS9egAGdRN0/GPDWr9wroyJ65ZNQsHl9nXBqE
+ AukZNr5oJO5vxrYiAuuTSd6UI/xFkjtkzltG3mw5ao2bBpk/V/YuePrJsnPFHG7NhizrxttB
+ nTuOSCMo45pfHQ+XYd5K1+Cv/NzZFNWscm5htJ0HznY+oOsZvHTyGz3v91pn51dkRYN0otqr
+ bQ4tlFFuVjArBZcapSIe6NV8C4cEiSTOwE0EVEJx7gEIAMeHcVzuv2bp9HlWDp6+RkZe+vtl
+ KwAHplb/WH59j2wyG8V6i33+6MlSSJMOFnYUCCL77bucx9uImI5nX24PIlqT+zasVEEVGSRF
+ m8dgkcJDB7Tps0IkNrUi4yof3B3shR+vMY3i3Ip0e41zKx0CvlAhMOo6otaHmcxr35sWq1Jk
+ tLkbn3wG+fPQCVudJJECvVQ//UAthSSEklA50QtD2sBkmQ14ZryEyTHQ+E42K3j2IUmOLriF
+ dNr9NvE1QGmGyIcbw2NIVEBOK/GWxkS5+dmxM2iD4Jdaf2nSn3jlHjEXoPwpMs0KZsgdU0pP
+ JQzMUMwmB1wM8JxovFlPYrhNT9MAEQEAAcLBMwQYAQIACQUCVEJx7gIbDAAKCRB+FRAMzTZp
+ sadRDqCctLmYICZu4GSnie4lKXl+HqlLanpVMOoFNnWs9oRP47MbE2wv8OaYh5pNR9VVgyhD
+ OG0AU7oidG36OeUlrFDTfnPYYSF/mPCxHttosyt8O5kabxnIPv2URuAxDByz+iVbL+RjKaGM
+ GDph56ZTswlx75nZVtIukqzLAQ5fa8OALSGum0cFi4ptZUOhDNz1onz61klD6z3MODi0sBZN
+ Aj6guB2L/+2ZwElZEeRBERRd/uommlYuToAXfNRdUwrwl9gRMiA0WSyTb190zneRRDfpSK5d
+ usXnM/O+kr3Dm+Ui+UioPf6wgbn3T0o6I5BhVhs4h4hWmIW7iNhPjX1iybXfmb1gAFfjtHfL
+ xRUr64svXpyfJMScIQtBAm0ihWPltXkyITA92ngCmPdHa6M1hMh4RDX+Jf1fiWubzp1voAg0
+ JBrdmNZSQDz0iKmSrx8xkoXYfA3bgtFN8WJH2xgFL28XnqY4M6dLhJwV3z08tPSRqYFm4NMP
+ dRsn0/7oymhneL8RthIvjDDQ5ktUjMe8LtHr70OZE/TT88qvEdhiIVUogHdo4qBrk41+gGQh
+ b906Dudw5YhTJFU3nC6bbF2nrLlB4C/XSiH76ZvqzV0Z/cAMBo5NF/w=
+In-Reply-To: <aCQh4NeXtLLCQeVN@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 15/05/2025 07:45, Yulin Lu wrote:
->   Implements support for the Eswin eic7700 SoC pinctrl controller.
->   Provides API to manage pinctrl for the eic7700 SoC.
->   Integration with the Linux pinctrl subsystem for consistency and
->   scalability.
+On 5/14/25 06:53, Christoph Hellwig wrote:
+>> And no, passing the SCSI devices to the VM and doing multipath in the
+>> the guest doesn't work. The transport layer isn't properly emulated
+>> (bluntly speaking, we have no FC emulation).
 > 
->   Supported chips:
->     Eswin eic7700 SoC.
-> 
->   Test:
->     Tested this patch on the Sifive HiFive Premier P550 (which uses
->     the EIC7700 SoC), including system boot, networking, EMMC, display,
->     and other peripherals. The drivers for these modules all use the
->     pinctrl module, so this verifies that this pinctrl driver
->     patch is working properly.
-> 
-> ---
-> Changes since V3:
-> - Added "Reviewed-by" tag of "Krzysztof Kozlowski"
-> - Corrected some incorrect spaces and blank lines in the YAML file.
-> - Link: https://lore.kernel.org/all/20250514080928.385-1-luyulin@eswincomputing.com/
+> Then fix that.  Because without it you will be in never ending pain
+> due to impedance mismatch.
 
-Start using b4 so you will not introduce such errors like here.
+FC HBAs don't even expose enough of the protocol to actually do it 
+sensibly, so that can't really be done.  Hannes tried.
 
-Best regards,
-Krzysztof
+Paolo
+
