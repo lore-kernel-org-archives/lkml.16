@@ -1,74 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B764204E;
-	Thu, 15 May 2025 17:05:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B5519D07E;
+	Thu, 15 May 2025 17:06:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747328721; cv=none; b=WQioUw5tL5QgQ5guDR75ysV3wI02EHxLlX7xwvnx4M3ItXq+dOaNp+2FrEUBIXh2ZtHGuYEbnpv7PafC3tJOdBv67OhTfuex7cM2jumysnnsEOaJUzqgI8oNVyotXkx9jXgQQcoqWUNSzh05i0m2L6N4WYFiKWvbTYVVowK5j6A=
+	t=1747328784; cv=none; b=eclR+hxjaoPOq1v2X/Tj+BUkbVHFgkOMU7P6Fj7uGtzSjSlfCNLcj/wIRMUJwdNOq373WZUCu/4Ek/Xh2oBiZa8GnBxOZS22rLxIWwDcyuQdbcu4jwXWaEoAR8soFuEDZVMur7D2VQCspjObQ4G9Pj/w0qQUrhBTRTF+eK6ELX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747328721; c=relaxed/simple;
-	bh=2tva5z8F4BkHvDMW0L8lVvxBVLAA8/4Ekn1G6iy/Oww=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IRaq7ioOKHg/gvOrkCg+PUMWhIuItuf5MHzK4Yp9xEb/14gnfhFXu24Kazm5/g1FGn5mPYPH5gVmCSQcgjnl+qzaWNTLb4iIVusiIfZPfwj+yTnpCkqtDb0KiVpUfahCH2cWUsi5yJoqVmdLB/J0kNq8SBw3Ag2XHQ4bJb+6gnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fyW6RZxA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747328784; c=relaxed/simple;
+	bh=HjI5Tmn7uWq4Z2O/TbcEhEVsZ2+CrZPS4Rlv2p45C0o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LwGTs9K6j2X/TJRyVodZ4H8KqN8fzdeFbOk9Z9vdKsD/MQ8Vbn+ixnFhHVSFscgquQpbFvgLhkngtORCTGMlnWYD/jPtpzkIqQGcGtvWpXuXBI53GtS96KN+TOD+IhkNJxuLOtcheIuj/ffDV5VHVIc2NnxZpmcnAGRUtbhSFx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AseQbg7w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fyW6RZxA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1D67C4CEE7;
-	Thu, 15 May 2025 17:05:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AseQbg7w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1187C4CEE7;
+	Thu, 15 May 2025 17:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747328720;
-	bh=2tva5z8F4BkHvDMW0L8lVvxBVLAA8/4Ekn1G6iy/Oww=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fyW6RZxA6F33r8u63gWJN+rqZQigTYDjvtqV98T+Hd1yS47faeqWyZ5zShhYF8l5W
-	 NpVQsttj9j40PnpBsDpbNRNr1kFXKhDg3NbZCfAx+kUV8K7Ws62abVW61xxwQEr/iY
-	 P9dScSCIKRg7UTwpHRvNxiis5vism+tu9LKykzE98u8TUujr9lv6ENIDYXacqPwst2
-	 6fwIt7JVIhw8B1Q1LpV/2dKnToaod0ziHCGZWFbgS+tobi/6cAB+YglSoRm7K6I9yM
-	 ti30tU/dtj8mYkFWIp3T98MyxqqbINoEo/aQ+yy5tkUvS+O8Y74k7+03d6fzOAIw41
-	 FSkJS4VHjfPZw==
-Date: Thu, 15 May 2025 19:05:15 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Andrew Zaborowski <andrew.zaborowski@intel.com>, x86@kernel.org,
-	linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-	"H . Peter Anvin" <hpa@zytor.com>, balrogg@gmail.com
-Subject: Re: [PATCH v2] x86/sgx: Prevent attempts to reclaim poisoned pages
-Message-ID: <aCYey1W6i7i3yPLL@gmail.com>
-References: <20250508230429.456271-1-andrew.zaborowski@intel.com>
- <448598e9-972f-4807-ba54-fc1f7e141b4f@intel.com>
+	s=k20201202; t=1747328783;
+	bh=HjI5Tmn7uWq4Z2O/TbcEhEVsZ2+CrZPS4Rlv2p45C0o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=AseQbg7wRARQBQ+CyKQkQHPlWuKwhALHHIkn+7oJ2y5aBiSgDjKhroXBy3N+Xu+AJ
+	 3dU1Okr0va3lJJC8YgY0SNGOmH5XXVQKbaKWgrtaLdkJMo1vyiyLjHNGm5hFFNrtTT
+	 y2liCnw8+tmF7glFmZfPYvrn8wRM08nBXlk+7x0k9FS3avNHH10VslbvWtJx3/zjcd
+	 XngCIGFFdUfnnuPZ+RYr3+sB3ELUBqnYJpGsOvglarffY5wEtR9hMGtItoscXK6JsI
+	 CtrzTi9CYobYdRpETDEOrGicvlbVXwq9q3N4KDtoZPMMFxpqzSadGYyxhH92EpmGeG
+	 dKUoRNQftpW6Q==
+Date: Thu, 15 May 2025 18:06:16 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown
+ <broonie@kernel.org>, linux-spi@vger.kernel.org
+Subject: Re: [PATCH 2/2] iio: adc: ad7476: Support ROHM BU79100G
+Message-ID: <20250515180616.23ca96fd@jic23-huawei>
+In-Reply-To: <5ed56b89-8a9b-464f-9b87-f6553395a941@gmail.com>
+References: <cover.1747123883.git.mazziesaccount@gmail.com>
+	<a6d84a4c9cdd961fbda38182501983f26cceadc9.1747123883.git.mazziesaccount@gmail.com>
+	<5f36c304-ed09-4a13-b22d-ceb5924c3739@gmail.com>
+	<5ed56b89-8a9b-464f-9b87-f6553395a941@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <448598e9-972f-4807-ba54-fc1f7e141b4f@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, 14 May 2025 12:21:30 +0300
+Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+
+> On 14/05/2025 10:38, Matti Vaittinen wrote:
+> > On 13/05/2025 11:26, Matti Vaittinen wrote: =20
+> >> ROHM BU79100G is a 12-bit, single channel ADC. Support reading ADC
+> >> measurements using the ad7476.c
+> >>
+> >> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> >> ---
+> >> =C2=A0 drivers/iio/adc/ad7476.c | 8 ++++++++
+> >> =C2=A0 1 file changed, 8 insertions(+) =20
+> >=20
+> > For anyone who might hit this mail thread later:
+> >=20
+> > Conor made me realize that, for now, the BU79100G looks identical to th=
+e=20
+> > ads7866. Thus, these code-changes aren't needed at the moment, and this=
+=20
+> > patch can be dropped. For those who wish to use BU79100G, please=20
+> > introduce it as
+> >=20
+> > compatible =3D "rohm,bu79100g", "ti,ads7866";
+> >  =20
+>=20
+> I was too hasty.
+>=20
+> It seems to me that the fallback won't work with the current driver=20
+> because the driver is not populating the of_match_table, but is relying=20
+> solely on the spi_device_id table.
+>=20
+> Judging a quick code reading, the spi_driver_id table entries are=20
+> matched to the modalias:
+> https://elixir.bootlin.com/linux/v6.15-rc6/source/drivers/spi/spi.c#L393
+>=20
+> Which is (as far as I understand), generated from the first compatible:
+> https://elixir.bootlin.com/linux/v6.15-rc6/source/drivers/of/base.c#L1170
+>=20
+> and not from the fallback one.
+>=20
+> I suppose this means that we would need to add the of_match_table entry=20
+> for the ti,ads7866 to make the fallback entry to match the driver.
+>=20
+> But...
+>=20
+> The __spi_register_driver() has following comment:
+> 	/*
+> 	 * For Really Good Reasons we use spi: modaliases not of:
+> 	 * modaliases for DT so module autoloading won't work if we
+> 	 * don't have a spi_device_id as well as a compatible string.
+> 	 */
+> https://elixir.bootlin.com/linux/v6.15-rc6/source/drivers/spi/spi.c#L487
+>=20
+> So, having the of_match_table for would not be sufficient for the=20
+> autoloading, which would still require the bu79100g to be in the=20
+> spi_device_id table.
+>=20
+> Am I missing something? I don't see how the Linux SPI drivers benefit=20
+> from the fallback entries in the dt? (Not saying fallbacks wouldn't be=20
+> The Right Thing To Do. Ideally DTs aren't for Linux only, maybe some=20
+> other systems can utilize them). To me it seems I still need to add the=20
+> spi_device_id entry for the BU79100G, and of_match_table has no=20
+> additional benefit? If this is right, then this patch is still relevant,=
+=20
+> even though the binding should be done as in v2.
++CC Mark Brown and linux-spi.
 
 
-* Dave Hansen <dave.hansen@intel.com> wrote:
+>=20
+> Yours,
+> 	-- Matti
+>=20
+>=20
+>=20
 
-> Thanks for sending this, Andrew!
-> 
-> I think I'll probably add a slightly shorter summary:
-> 
-> tl;dr: SGX page reclaim touches the page to copy its contents to
-> secondary storage. SGX instructions do not gracefully handle machine
-> checks. Despite this, the existing SGX code will try to reclaim pages
-> that it _knows_ are poisoned. Avoid even trying to reclaim poisoned pages.
-> 
-> But otherwise it looks great:
-> 
-> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-
-Thanks, I've applied this fix to tip:x86/sgx, with the TL;DR paragraph 
-added in.
-
-Thanks,
-
-	Ingo
