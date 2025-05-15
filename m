@@ -1,31 +1,50 @@
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80A826ACC
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 03:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0471361;
+	Thu, 15 May 2025 03:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747280475; cv=none; b=iWf0KE2s8GFO+heN06oqr/4YD84YTUX+pXB22PAMQ3iiy2MPC6ZLHt0s7DlKTVzIhCHnTEJHsaKhUlORpmTpm8Maa2ajSnFfU+HzCGnT8fM79/wa+qItHtmFZ32Ptd6pYDazETWcOeSOf2ppckuywOo3F9NYeqd1/i4t8OXp46g=
+	t=1747280745; cv=none; b=BrCSrkvzIJkeHjolFJN726lIUQuO+Y+oHtwdXhxI7GbnPa7x2DKXnXgElV6Qo5IeuWTTry4kLX3oVsOb938EB7bALw/KeNq6yF29gSQu6yRTx7W+tZJZtIehs4NsYC3NMsSC5/evGPvJwagvazqHJan//bEEDcKuEvwOFOERxy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747280475; c=relaxed/simple;
-	bh=wILSGy5886tWI0HRy51lUpPDqbSaBc1fbaonwNrEmXY=;
+	s=arc-20240116; t=1747280745; c=relaxed/simple;
+	bh=tGr307HCw1T+7zsfEplVXFrFlJlzWpsW+UUf+2EEZuE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S/WsUqMaE0e9Oy6bAT2iQ0Cxr2jrS7CAcGEatk61wsv4RSWOcfi8I4G6PUUaXUFpZX+5dGvzjWIGfGDb1dd7T6pRoDr3gRLEnnLsA+x00lXCOWeAhvvF8EvR5+WC/vloK99H8eXFwqnPX6MZXuyNp5JVzxG0V9IBh5EPuriAB8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=YT/EyHu5; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=dawcT0PoGxxI3RYZR7vRzYqj/OVG1AjZ5CLG1omg6MJEV90XrfAKhd8RtG3I2mks9RqIPdsHyj3Y//nqx3UD/iQXyie1QB1+sHusXkThnSAhwWtpqHbPA1qHdlChDSiRTiJR42JrAgcoPyhsodJJX20hEZAkxDJ+oldKDVclaMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j7/YF4ns; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="YT/EyHu5"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747280462; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=utrn866EA563qPPDBDN5+mo/2vugsVwpDaeN4GcFtM8=;
-	b=YT/EyHu5arajpa6AVdzJygwESVj1gaJpDIHIPFIFuFk9wEN0twxUVWrnXg1OkJ+YvIwk2ENgIY+33H+fspTdvAHtuhEJFD2aQkUsEGZ2mwEnUGHKycD6FQ20Dr4UKKbJH2UcZbKraafP13K0sw6f0OxG0HNoKssf3lui4/ZKElI=
-Received: from 30.74.144.114(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wap3lOb_1747280460 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 15 May 2025 11:41:00 +0800
-Message-ID: <1a985416-c8c5-429f-a83a-3c66be939439@linux.alibaba.com>
-Date: Thu, 15 May 2025 11:40:59 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j7/YF4ns"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747280744; x=1778816744;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=tGr307HCw1T+7zsfEplVXFrFlJlzWpsW+UUf+2EEZuE=;
+  b=j7/YF4nsYgkDrKzdOECNfIRraJDpOx1AcPjm5meVpT/KLWTqxwshqiq8
+   mrfEmLK/PafBSBPpiSfep6yx4wxNcGWqhBL7a9LDPKnlIwtUJaBasj39l
+   fAUlPUDhOORlako81SEnXTSBLHTNYhEP2k+mo8PtKYgX3E8tjncDtr+9F
+   t3xkoJrEuOMhSDSefyjUkwww3MU+Mz9We02JBQ2G1r2GMOho0MFbqyokv
+   wk3zV7iC5CAc+X5X6U9vT6+LKkZAtOShxEl/v/bH5vsYuwQqEU5cwAbAf
+   yF2M+b7Bax00MqaNdUwEQNJmNG3teSJftPT/D2ESu8K8UiEwByJW3BuKY
+   w==;
+X-CSE-ConnectionGUID: QwzhmUINTraTcypjHi5KKQ==
+X-CSE-MsgGUID: IYTjXIzwQNiXNkoDff/cNQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="66606431"
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="66606431"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 20:45:42 -0700
+X-CSE-ConnectionGUID: xMo36eKQQ32U3Z83uPI5/Q==
+X-CSE-MsgGUID: JyCMxJ5xRFqaIG/rFzkziw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="143339351"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 20:45:35 -0700
+Message-ID: <d585c449-19f0-4a07-9223-82d892f7d3e0@linux.intel.com>
+Date: Thu, 15 May 2025 11:45:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,167 +52,233 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] mm: make try_to_unmap_one support batched unmap for
- anon large folios
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
- David Hildenbrand <david@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry.yoo@oracle.com>,
- Kairui Song <kasong@tencent.com>, Chris Li <chrisl@kernel.org>,
- Baoquan He <bhe@redhat.com>, Dan Schatzberg <schatzberg.dan@gmail.com>,
- Kaixiong Yu <yukaixiong@huawei.com>, Fan Ni <fan.ni@samsung.com>,
- Tangquan Zheng <zhengtangquan@oppo.com>
-References: <20250513084620.58231-1-21cnbao@gmail.com>
- <dfdf06eb-faf5-487a-b0e6-57c1ceb58fcc@linux.alibaba.com>
- <CAGsJ_4yF-evyWCvF=aO_Y2UzpPMAb4zdOe3i5AtR_RBVDbuUZA@mail.gmail.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <CAGsJ_4yF-evyWCvF=aO_Y2UzpPMAb4zdOe3i5AtR_RBVDbuUZA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v4 21/38] KVM: x86/pmu/vmx: Save/load guest
+ IA32_PERF_GLOBAL_CTRL with vm_exit/entry_ctrl
+To: Sean Christopherson <seanjc@google.com>,
+ Mingwei Zhang <mizhang@google.com>
+Cc: Zide Chen <zide.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+ Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Yongwei Ma <yongwei.ma@intel.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
+ Eranian Stephane <eranian@google.com>, Shukla Manali
+ <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <20250324173121.1275209-22-mizhang@google.com>
+ <4d55c919-92ab-4bfe-a8c2-c0a756546f7c@intel.com>
+ <CAL715WLfr5k=Rz0cQ08xS=eHEyRn83PBTiqQ5H7iX4qH=jiS8A@mail.gmail.com>
+ <aCU2YEpU0dOk7RTk@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aCU2YEpU0dOk7RTk@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
+On 5/15/2025 8:33 AM, Sean Christopherson wrote:
+> On Wed, Mar 26, 2025, Mingwei Zhang wrote:
+>> On Wed, Mar 26, 2025 at 9:51 AM Chen, Zide <zide.chen@intel.com> wrote:
+>>>> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+>>>> index 6ad71752be4b..4e8cefcce7ab 100644
+>>>> --- a/arch/x86/kvm/pmu.c
+>>>> +++ b/arch/x86/kvm/pmu.c
+>>>> @@ -646,6 +646,30 @@ void kvm_pmu_deliver_pmi(struct kvm_vcpu *vcpu)
+>>>>       }
+>>>>  }
+>>>>
+>>>> +static void kvm_pmu_sync_global_ctrl_from_vmcs(struct kvm_vcpu *vcpu)
+>>>> +{
+>>>> +     struct msr_data msr_info = { .index = MSR_CORE_PERF_GLOBAL_CTRL };
+>>>> +
+>>>> +     if (!kvm_mediated_pmu_enabled(vcpu))
+>>>> +             return;
+>>>> +
+>>>> +     /* Sync pmu->global_ctrl from GUEST_IA32_PERF_GLOBAL_CTRL. */
+>>>> +     kvm_pmu_call(get_msr)(vcpu, &msr_info);
+>>>> +}
+>>>> +
+>>>> +static void kvm_pmu_sync_global_ctrl_to_vmcs(struct kvm_vcpu *vcpu, u64 global_ctrl)
+>>>> +{
+>>>> +     struct msr_data msr_info = {
+>>>> +             .index = MSR_CORE_PERF_GLOBAL_CTRL,
+>>>> +             .data = global_ctrl };
+>>>> +
+>>>> +     if (!kvm_mediated_pmu_enabled(vcpu))
+>>>> +             return;
+>>>> +
+>>>> +     /* Sync pmu->global_ctrl to GUEST_IA32_PERF_GLOBAL_CTRL. */
+>>>> +     kvm_pmu_call(set_msr)(vcpu, &msr_info);
+> Eh, just add a dedicated kvm_pmu_ops hook.  Feeding this through set_msr() avoids
+> adding another hook, but makes the code hard to follow and requires the above
+> ugly boilerplate.
 
-On 2025/5/15 09:35, Barry Song wrote:
-> On Wed, May 14, 2025 at 8:11 PM Baolin Wang
-> <baolin.wang@linux.alibaba.com> wrote:
->>
->>
->>
->> On 2025/5/13 16:46, Barry Song wrote:
->>> From: Barry Song <v-songbaohua@oppo.com>
->>>
->>> My commit 354dffd29575c ("mm: support batched unmap for lazyfree large
->>> folios during reclamation") introduced support for unmapping entire
->>> lazyfree anonymous large folios at once, instead of one page at a time.
->>> This patch extends that support to generic (non-lazyfree) anonymous
->>> large folios.
->>>
->>> Handling __folio_try_share_anon_rmap() and swap_duplicate() becomes
->>> extremely complex—if not outright impractical—for non-exclusive
->>> anonymous folios. As a result, this patch limits support to exclusive
->>> large folios. Fortunately, most anonymous folios are exclusive in
->>> practice, so this restriction should be acceptable in the majority of
->>> cases.
->>>
->>> SPARC is currently the only architecture that implements
->>> arch_unmap_one(), which also needs to be batched for consistency.
->>> However, this is not yet supported, so the platform is excluded for
->>> now.
->>>
->>> Using the following micro-benchmark to measure the time taken to perform
->>> PAGEOUT on 256MB of 64KiB anonymous large folios.
->>>
->>>    #define _GNU_SOURCE
->>>    #include <stdio.h>
->>>    #include <stdlib.h>
->>>    #include <sys/mman.h>
->>>    #include <string.h>
->>>    #include <time.h>
->>>    #include <unistd.h>
->>>    #include <errno.h>
->>>
->>>    #define SIZE_MB 256
->>>    #define SIZE_BYTES (SIZE_MB * 1024 * 1024)
->>>
->>>    int main() {
->>>        void *addr = mmap(NULL, SIZE_BYTES, PROT_READ | PROT_WRITE,
->>>                          MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
->>>        if (addr == MAP_FAILED) {
->>>            perror("mmap failed");
->>>            return 1;
->>>        }
->>>
->>>        memset(addr, 0, SIZE_BYTES);
->>>
->>>        struct timespec start, end;
->>>        clock_gettime(CLOCK_MONOTONIC, &start);
->>>
->>>        if (madvise(addr, SIZE_BYTES, MADV_PAGEOUT) != 0) {
->>>            perror("madvise(MADV_PAGEOUT) failed");
->>>            munmap(addr, SIZE_BYTES);
->>>            return 1;
->>>        }
->>>
->>>        clock_gettime(CLOCK_MONOTONIC, &end);
->>>
->>>        long duration_ns = (end.tv_sec - start.tv_sec) * 1e9 +
->>>                           (end.tv_nsec - start.tv_nsec);
->>>        printf("madvise(MADV_PAGEOUT) took %ld ns (%.3f ms)\n",
->>>               duration_ns, duration_ns / 1e6);
->>>
->>>        munmap(addr, SIZE_BYTES);
->>>        return 0;
->>>    }
->>>
->>> w/o patch:
->>> ~ # ./a.out
->>> madvise(MADV_PAGEOUT) took 1337334000 ns (1337.334 ms)
->>> ~ # ./a.out
->>> madvise(MADV_PAGEOUT) took 1340471008 ns (1340.471 ms)
->>> ~ # ./a.out
->>> madvise(MADV_PAGEOUT) took 1385718992 ns (1385.719 ms)
->>> ~ # ./a.out
->>> madvise(MADV_PAGEOUT) took 1366070000 ns (1366.070 ms)
->>> ~ # ./a.out
->>> madvise(MADV_PAGEOUT) took 1347834992 ns (1347.835 ms)
->>>
->>> w/patch:
->>> ~ # ./a.out
->>> madvise(MADV_PAGEOUT) took 698178000 ns (698.178 ms)
->>> ~ # ./a.out
->>> madvise(MADV_PAGEOUT) took 708570000 ns (708.570 ms)
->>> ~ # ./a.out
->>> madvise(MADV_PAGEOUT) took 693884000 ns (693.884 ms)
->>> ~ # ./a.out
->>> madvise(MADV_PAGEOUT) took 693366000 ns (693.366 ms)
->>> ~ # ./a.out
->>> madvise(MADV_PAGEOUT) took 690790000 ns (690.790 ms)
->>>
->>> We found that the time to reclaim this memory was reduced by half.
->>
->> Do you have some performance numbers for the base page?
-> 
-> We verified that folio_test_large(folio) needs to run in a batched context;
-> otherwise, nr_pages remains 1 for each folio.
-> 
->                          if (folio_test_large(folio) && !(flags &
-> TTU_HWPOISON) &&
->                              can_batch_unmap_folio_ptes(address, folio, pvmw.pte,
->                              anon_exclusive))
->                                  nr_pages = folio_nr_pages(folio);
-> 
-> I didn't expect any noticeable performance change for base pages, but testing
-> shows the patch appears to make them slightly faster—likely due to test noise or
-> jitter.
-> 
-> W/o patch:
-> 
-> ~ # ./a.out
-> madvise(MADV_PAGEOUT) took 5686488000 ns (5686.488 ms)
-> ~ # ./a.out
-> madvise(MADV_PAGEOUT) took 5628330992 ns (5628.331 ms)
-> ~ # ./a.out
-> madvise(MADV_PAGEOUT) took 5771742992 ns (5771.743 ms)
-> ~ # ./a.out
-> madvise(MADV_PAGEOUT) took 5672108000 ns (5672.108 ms)
-> 
-> 
-> W/ patch:
-> 
-> ~ # ./a.out
-> madvise(MADV_PAGEOUT) took 5481578000 ns (5481.578 ms)
-> ~ # ./a.out
-> madvise(MADV_PAGEOUT) took 5425394992 ns (5425.395 ms)
-> ~ # ./a.out
-> madvise(MADV_PAGEOUT) took 5522109008 ns (5522.109 ms)
-> ~ # ./a.out
-> madvise(MADV_PAGEOUT) took 5506832000 ns (5506.832 ms)
+Sure. I originally thought if it's worthy to add a new kvm_pmu_ops hook
+since only Intel platforms need it.
 
-Thanks. My expectation is also that the batch processing of large folios 
-should not have a performance impact on the base pages, but it would be 
-best to clearly state this in the commit message.
+
+>
+>>>> +}
+>>>> +
+>>>>  bool kvm_pmu_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
+>>>>  {
+>>>>       switch (msr) {
+>>>> @@ -680,7 +704,6 @@ int kvm_pmu_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>>>>               msr_info->data = pmu->global_status;
+>>>>               break;
+>>>>       case MSR_AMD64_PERF_CNTR_GLOBAL_CTL:
+>>>> -     case MSR_CORE_PERF_GLOBAL_CTRL:
+>>>>               msr_info->data = pmu->global_ctrl;
+>>>>               break;
+>>>>       case MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR:
+>>>> @@ -731,6 +754,9 @@ int kvm_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>>>
+>>> pmu->global_ctrl doesn't always have the up-to-date guest value, need to
+>>> sync from vmcs/vmbc before comparing it against 'data'.
+>>>
+>>> +               kvm_pmu_sync_global_ctrl_from_vmcs(vcpu);
+>>>                 if (pmu->global_ctrl != data) {
+>> Good catch. Thanks!
+>>
+>> This is why I really prefer just unconditionally syncing the global
+>> ctrl from VMCS to pmu->global_ctrl and vice versa.
+>>
+>> We might get into similar problems as well in the future.
+> The problem isn't conditional synchronization, it's that y'all reinvented the
+> wheel, poorly.  This is a solved problem via EXREG and wrappers.
+>
+> That said, I went through the exercise of adding a PERF_GLOBAL_CTRL EXREG and
+> associated wrappers, and didn't love the result.  Host writes should be rare, so
+> the dirty tracking is overkill.  For reads, the cost of VMREAD is lower than
+> VMWRITE (doesn't trigger consistency check re-evaluation on VM-Enter), and is
+> dwarfed by the cost of switching all other PMU state.
+>
+> So I think for the initial implementation, it makes sense to propagated writes
+> to the VMCS on demand, but do VMREAD after VM-Exit (if VM-Enter was successful).
+> We can always revisit the optimization if/when we optimize the PMU world switches,
+> e.g. to defer them if there are no active host events.
+
+Sure.
+
+
+>
+>>>> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+>>>> index 8a7af02d466e..ecf72394684d 100644
+>>>> --- a/arch/x86/kvm/vmx/nested.c
+>>>> +++ b/arch/x86/kvm/vmx/nested.c
+>>>> @@ -7004,7 +7004,8 @@ static void nested_vmx_setup_exit_ctls(struct vmcs_config *vmcs_conf,
+>>>>               VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR |
+>>>>               VM_EXIT_LOAD_IA32_EFER | VM_EXIT_SAVE_IA32_EFER |
+>>>>               VM_EXIT_SAVE_VMX_PREEMPTION_TIMER | VM_EXIT_ACK_INTR_ON_EXIT |
+>>>> -             VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL;
+>>>> +             VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
+>>>> +             VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL;
+> This is completely wrong.  Stuffing VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL here
+> advertises support for KVM emulation of the control, and that support is non-existent
+> in this patch (and series).
+>
+> Just drop this, emulation of VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL can be done
+> separately.
+
+Sure.
+
+
+>
+>>>> +     mediated = kvm_mediated_pmu_enabled(vcpu);
+>>>> +     if (cpu_has_load_perf_global_ctrl()) {
+>>>> +             vm_entry_controls_changebit(vmx,
+>>>> +                     VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL, mediated);
+>>>> +             /*
+>>>> +              * Initialize guest PERF_GLOBAL_CTRL to reset value as SDM rules.
+>>>> +              *
+>>>> +              * Note: GUEST_IA32_PERF_GLOBAL_CTRL must be initialized to
+>>>> +              * "BIT_ULL(pmu->nr_arch_gp_counters) - 1" instead of pmu->global_ctrl
+>>>> +              * since pmu->global_ctrl is only be initialized when guest
+>>>> +              * pmu->version > 1. Otherwise if pmu->version is 1, pmu->global_ctrl
+>>>> +              * is 0 and guest counters are never really enabled.
+>>>> +              */
+>>>> +             if (mediated)
+>>>> +                     vmcs_write64(GUEST_IA32_PERF_GLOBAL_CTRL,
+>>>> +                                  BIT_ULL(pmu->nr_arch_gp_counters) - 1);
+> This belongs in common code, as a call to the aforementioned hook to propagate
+> PERF_GLOBAL_CTRL to hardware.
+
+Sure.
+
+
+>
+>>>> +     }
+>>>> +
+>>>> +     if (cpu_has_save_perf_global_ctrl())
+>>>> +             vm_exit_controls_changebit(vmx,
+>>>> +                     VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
+>>>> +                     VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL, mediated);
+>>>>  }
+>>>>
+>>>>  static void intel_pmu_init(struct kvm_vcpu *vcpu)
+>>>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>>>> index ff66f17d6358..38ecf3c116bd 100644
+>>>> --- a/arch/x86/kvm/vmx/vmx.c
+>>>> +++ b/arch/x86/kvm/vmx/vmx.c
+>>>> @@ -4390,6 +4390,13 @@ void vmx_set_constant_host_state(struct vcpu_vmx *vmx)
+>>>>
+>>>>       if (cpu_has_load_ia32_efer())
+>>>>               vmcs_write64(HOST_IA32_EFER, kvm_host.efer);
+>>>> +
+>>>> +     /*
+>>>> +      * Initialize host PERF_GLOBAL_CTRL to 0 to disable all counters
+>>>> +      * immediately once VM exits. Mediated vPMU then call perf_guest_exit()
+>>>> +      * to re-enable host perf events.
+>>>> +      */
+>>>> +     vmcs_write64(HOST_IA32_PERF_GLOBAL_CTRL, 0);
+> This needs to be conditioned on the mediated PMU being enabled, because this field
+> is not constant when using the emulated PMU (or no vPMU).
+
+Yes.
+
+
+>
+>>>> @@ -8451,6 +8462,15 @@ __init int vmx_hardware_setup(void)
+>>>>               enable_sgx = false;
+>>>>  #endif
+>>>>
+>>>> +     /*
+>>>> +      * All CPUs that support a mediated PMU are expected to support loading
+>>>> +      * and saving PERF_GLOBAL_CTRL via dedicated VMCS fields.
+>>>> +      */
+>>>> +     if (enable_mediated_pmu &&
+>>>> +         (WARN_ON_ONCE(!cpu_has_load_perf_global_ctrl() ||
+>>>> +                       !cpu_has_save_perf_global_ctrl())))
+> This needs to be conditioned on !HYPERVISOR, or it *will* fire.
+
+Ok.
+
+
+>
+> And placing this check here, without *any* mention of *why* you did so, is evil
+> and made me very grumpy.  I had to discover the hard way that you checked the
+> VMCS fields here, instead of in kvm_init_pmu_capability() where it logically
+> belongs, because the VMCS configuration isn't yet initialized.
+>
+> Grumpiness aside, I don't like this late clear of enable_mediated_pmu, as it risks
+> a variation of the problem you're trying to avoid, i.e. risks consuming the variable
+> between kvm_init_pmu_capability() and here.
+
+Yes.
+
+
+>
+> I don't see any reason why setup_vmcs_config() can't be called before
+> kvm_x86_vendor_init(), so unless I'm missing/forgetting something, let's just do
+> that, and move these checks where they belong.
+
+I'm not quite sure about this. Let me double check.
+
+
