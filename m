@@ -1,109 +1,122 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFEB58C1F;
-	Thu, 15 May 2025 01:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A7623BE
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:30:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747272230; cv=none; b=sEFsBHwsN2zgId4VyDjwdQEM1/GuQKngVhpiIrWJwn18W4X0BP/2Pj2bQ5KkOu3qTw6CZGtY4b7eNryFCOrCySzvBWNLIwX+6fqf5Xo+nLX1xmFHtb8CvTkRLw9VRlgd8L+zmC5h7/PdIqNVcuzdib9K6IKm0i+d3xHiER9LfAg=
+	t=1747272645; cv=none; b=ksahnrTdww88jvTK1rGsX6Xo1VH0Zmj1ySaOSEWt7I95mUqzeAu/cqFXNFot9qM7CTcQJxvCrEylvDdDHVhDruKfAZuQuWsTnCRwEATHfoMYKYNqhlbkvr7iOPegqe1a7QzFPp4/mOqZSm6kUKRH0n+KIR3lcjFsmLiZzMPk5L0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747272230; c=relaxed/simple;
-	bh=bSX8ZwcZSPjmpOO3el/q+Vf6RN/k/v0gYzWUjl+oSPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YMPP8qSAYgbMjI7ONoYTXvQ2sskACAsXKh6la4msM/WjYnIo1CTmbc4Lt23WRR+CkiVA4i5drzcvHTzDxqCrw6vHes9kx+i6nFot/8LqL2cV/EtPU4u6ulG7vm8jM774oVVjLuI3QqgvQBPcClEgfCpNLIbTeXVb7eHKWQ2+lzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=TqrC6tHx; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1747272645; c=relaxed/simple;
+	bh=7d11dxMUWSlUIvsx1ISMixfrtiUXfAzjI3gLaGSALKU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M6SS00BNM9kIoyIqDCx2EVBZDAhqdNVxOOdSAa/FgKJEEt+TW188g6I4maSYDyZ667fRcLQ3fNfmV8U0BkIejkbQirGLzAKDALlPsSgYYRDz5v8cJVLaxb4JmjfTGpRgcDp159SnXhuUCAbq84mp8fUUz5m/U/f7bFqix/u3BAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aBaWm5U+; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TqrC6tHx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=ZNEVePrYcEKpGjmy4ptaEK0bCgRenH9d4U+STgUBLp8=; b=TqrC6tHx2nDhX1MPJu5HfQDFFF
-	7iqxY6YE+cP/esAGf7veHNXV1UqPnK7nme2FRbF2NuoIM2IJw58Wj7bkVswUBcQrkVJntiDzFCHdt
-	tu1FC0gCzbV4WHr4o5HNEWiaqNxr5IwE+rAp/swFVcVA9BuGHRag39g70xUNxAlv4Grs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uFNJz-00CcSc-Nn; Thu, 15 May 2025 03:23:39 +0200
-Date: Thu, 15 May 2025 03:23:39 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Marek Pazdan <mpazdan@arista.com>
-Cc: aleksander.lobakin@intel.com, almasrymina@google.com,
-	andrew+netdev@lunn.ch, anthony.l.nguyen@intel.com,
-	daniel.zahka@gmail.com, davem@davemloft.net, ecree.xilinx@gmail.com,
-	edumazet@google.com, gal@nvidia.com, horms@kernel.org,
-	intel-wired-lan@lists.osuosl.org, jianbol@nvidia.com,
-	kory.maincent@bootlin.com, kuba@kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	pabeni@redhat.com, przemyslaw.kitszel@intel.com, willemb@google.com
-Subject: Re: [Intel-wired-lan] [PATCH net-next v2 2/2] ice: add qsfp
- transceiver reset, interrupt and presence pin control
-Message-ID: <200f7d11-50c2-4ee2-a80b-15341fbbd5f4@lunn.ch>
-References: <6f127b5b-77c6-4bd4-8124-8eea6a12ca61@lunn.ch>
- <20250513224017.202236-1-mpazdan@arista.com>
- <20250513224017.202236-2-mpazdan@arista.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aBaWm5U+"
+Message-ID: <7135de9f-4372-4e12-994d-ecdc234bff28@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747272641;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ciAFAPUHoqP7kxDTaOJWSofaP2GTW0t32HqF5a7B428=;
+	b=aBaWm5U+V54ipnws5yhyd78b0OCayavJMYV1WP4Do40m7+AZKeVhiwXPNb1Vh6DBT/FQbj
+	vJA1nJOn4XmwrE4UwRcPtYvDzpfZFAsDpASr85yAyd7JE8fAe7Uyhq4qOCzyLLGsswApKE
+	nnouiomU3pAY4gGj1KnCcoUmOIBCc08=
+Date: Thu, 15 May 2025 09:30:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250513224017.202236-2-mpazdan@arista.com>
+Subject: Re: [PATCH] LoongArch: Save and restore CSR.CNTC for hibernation
+To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, Xuefeng Li <lixuefeng@loongson.cn>,
+ Guo Ren <guoren@kernel.org>, Xuerui Wang <kernel@xen0n.name>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Xianglai Li <lixianglai@loongson.cn>
+References: <20250514144643.1620870-1-chenhuacai@loongson.cn>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <20250514144643.1620870-1-chenhuacai@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-> + * ice_get_module_mgmt_signal - get module management signal status
-> + * @dev: network interface device structure
-> + * @params: ethtool module management signal params
-> + * @extack: extended ACK from the Netlink message
-> + *
-> + * Returns -EIO if AQ command for GPIO get failed, otherwise
-> + * returns 0 and current status of requested signal in params.
-> + */
-> +static int
-> +ice_get_module_mgmt_signal(struct net_device *dev,
-> +			   struct ethtool_module_mgmt_params *params,
-> +			   struct netlink_ext_ack *extack)
-> +{
-> +	struct ice_netdev_priv *np = netdev_priv(dev);
-> +	struct ice_pf *pf = np->vsi->back;
-> +	struct ice_hw *hw = &pf->hw;
-> +	u16 gpio_handle = 0; /* SOC/on-chip GPIO */
-> +	bool value;
-> +	int ret = 0;
-> +
-> +	if (hw->has_module_mgmt_gpio) {
-> +		switch (params->type) {
-> +		case ETHTOOL_MODULE_MGMT_RESET:
-> +			ret = ice_aq_get_gpio(hw, gpio_handle,
-> +					      ICE_MGMT_PIN_RESET, &value, NULL);
-> +			break;
+在 5/14/25 10:46 PM, Huacai Chen 写道:
+> Save and restore CSR.CNTC for hibernation which is similar to suspend.
+> 
+> For host this is unnecessary because sched clock is ensured continuous,
+> but for kvm guest sched clock isn't enough because rdtime.d should also
+> be continuous.
+> 
+> Host::rdtime.d = Host::CSR.CNTC + counter
+> Guest::rdtime.d = Host::CSR.CNTC + Host::CSR.GCNTC + Guest::CSR.CNTC + counter
+> 
+> so,
+> 
+> Guest::rdtime.d = Host::rdtime.d + Host::CSR.GCNTC + Guest::CSR.CNTC
+> 
+> To ensure Guest::rdtime.d continuous, Host::rdtime.d should be at first
+> continuous, while Host::CSR.GCNTC / Guest::CSR.CNTC is maintained by KVM.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Xianglai Li <lixianglai@loongson.cn>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
 
-Reset, i can kind of understand being used this way.
+Thanks,
+Yanteng
+> ---
+>   arch/loongarch/kernel/time.c     | 2 +-
+>   arch/loongarch/power/hibernate.c | 3 +++
+>   2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
+> index e2d3bfeb6366..bc75a3a69fc8 100644
+> --- a/arch/loongarch/kernel/time.c
+> +++ b/arch/loongarch/kernel/time.c
+> @@ -111,7 +111,7 @@ static unsigned long __init get_loops_per_jiffy(void)
+>   	return lpj;
+>   }
+>   
+> -static long init_offset __nosavedata;
+> +static long init_offset;
+>   
+>   void save_counter(void)
+>   {
+> diff --git a/arch/loongarch/power/hibernate.c b/arch/loongarch/power/hibernate.c
+> index 1e0590542f98..e7b7346592cb 100644
+> --- a/arch/loongarch/power/hibernate.c
+> +++ b/arch/loongarch/power/hibernate.c
+> @@ -2,6 +2,7 @@
+>   #include <asm/fpu.h>
+>   #include <asm/loongson.h>
+>   #include <asm/sections.h>
+> +#include <asm/time.h>
+>   #include <asm/tlbflush.h>
+>   #include <linux/suspend.h>
+>   
+> @@ -14,6 +15,7 @@ struct pt_regs saved_regs;
+>   
+>   void save_processor_state(void)
+>   {
+> +	save_counter();
+>   	saved_crmd = csr_read32(LOONGARCH_CSR_CRMD);
+>   	saved_prmd = csr_read32(LOONGARCH_CSR_PRMD);
+>   	saved_euen = csr_read32(LOONGARCH_CSR_EUEN);
+> @@ -26,6 +28,7 @@ void save_processor_state(void)
+>   
+>   void restore_processor_state(void)
+>   {
+> +	sync_counter();
+>   	csr_write32(saved_crmd, LOONGARCH_CSR_CRMD);
+>   	csr_write32(saved_prmd, LOONGARCH_CSR_PRMD);
+>   	csr_write32(saved_euen, LOONGARCH_CSR_EUEN);
 
-> +		case ETHTOOL_MODULE_MGMT_INT:
-> +			ret = ice_aq_get_gpio(hw, gpio_handle,
-> +					      ICE_MGMT_PIN_INT, &value, NULL);
-> +			break;
-> +		case ETHTOOL_MODULE_MGMT_PRESENT:
-> +			ret = ice_aq_get_gpio(hw, gpio_handle,
-> +					      ICE_MGMT_PIN_PRESENT, &value, NULL);
-> +			break;
-
-but not these two. These represent events. I've not looked at the
-datasheet... Does the GPIO controller support interrupts? For PRESENT
-you are interested in the edges, maybe with some debounce logic. For
-INT, i _guess_ it is active low? But i've no idea what user space is
-going to actually do on an interrupt, and how is it going to clear the
-interrupt? This smells like a user space driver, which is not
-something we want. Even if there is a legitimate use case, which there
-might be for PRESENT, polling does not make much sense when the kernel
-can broadcast a netlink message to user space if the GPIO controller
-has interrupt support.
-
-    Andrew
-
----
-pw-bot: cr
