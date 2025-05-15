@@ -1,232 +1,210 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2070.outbound.protection.outlook.com [40.107.100.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3698F6E;
-	Thu, 15 May 2025 17:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747330302; cv=none; b=QjV1I0GY0Sw+JpJ1i/j0LEUTxIg2BcVcrDsCS6AtqCmQ19QMZ/CBXURs0aTf6d4KP7DjFR2Ix7lyoTpgzB7DyyxNqM82l0NjZGgArWfeyX8DQdxPBc7SW/Ne8OZrcpMHtl/P2H2hTQAXFejNEhOt1Z/PunYdIYYEMJQfAu1R8Vg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747330302; c=relaxed/simple;
-	bh=578yBCCF9YgD1A2zHQsbxBb6nOWkxV7xhBGHlUk1Zc4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NXCHBqexB/9snrpoA13Y7hRI2lkhGBAQ83p9G/cmHjG0/bgg/WQOxY3+cZZQG8LTEFWR+TkCLFkLorOEfQ+ub8lIbQ6GaPRTq/1t4g7c3+zCS5yoisJJ5pGa85JuBjh1XS6jDHIbr0GvcwodFvIH746z4ArTltco+Pyf1MtECWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kDJFcJM1; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5853C198A08;
+	Thu, 15 May 2025 17:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747330383; cv=fail; b=qwHn2/2rA0tq5Sb/PA43+BLOWclFc5ofcflt7U+aBF5c7Puvx4L4brreyCFrMCrJO2ghDip8ah/RnwEqIcVhGyXkOsVyOl473MN0cXVbwPt31xY46s2vti2ljYh77vb+7D5nKLBETgraWmixpiZFRDcx1ulOG/W29ttYyBUThgY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747330383; c=relaxed/simple;
+	bh=BCVhNRSOFcsgv2RywLOopxKLDS6OI9xSck8R+ThDvIE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F6AFv7a6Snj54+elo7ZUjr0idKMuRAgw1VWzsrdIH1zkREbsqbtDajq0mu/3GadiMby9bj47rHkW9hQlNV4/db7bX1o+EH/UqyBJ2WKqZ1kG44vuq4F40RkCNxqXM96eThEuNgeb2A0zpU7eHB4HAg9fMoSEUcbNW57lJQmv6Z4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Puap+MfH; arc=fail smtp.client-ip=40.107.100.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kDJFcJM1"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-30c47918d84so1220437a91.3;
-        Thu, 15 May 2025 10:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747330300; x=1747935100; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=prxVvoM1ErB3/Q5EAy9SY19xCRr1qk2RFrDCUh/b+3k=;
-        b=kDJFcJM1AyG5SSO8+bT2+5MYNbpdO7Mbx09E/xP6iyRk4kChuGV3flWltaR0KJF6Ih
-         tcoPMb2IEeo+ASqwhMUzHgy9YuZwHsnIavKpJ146LxRW8wjZ9LIUIEUutDhvkOGut30I
-         eYfpfQoauFnNh+UXCJhy/caF0uEfVQWWq7bmSQPFr+neRoXtIyhDm12AJ+W1/1Uk/xqy
-         JBBSS8IJGsE9i1DY8nbHXTZtMMv8OeKcBativto/OFOgX1j+W6i2W3omvQT+TuLgEoo+
-         JFObxU+Uic+2LTKiYPUlIFhiECAa8osa71zTn0JBON+2k05FD5MBWV+tr28i5EO1CGqI
-         bf0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747330300; x=1747935100;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=prxVvoM1ErB3/Q5EAy9SY19xCRr1qk2RFrDCUh/b+3k=;
-        b=pnwFqjuR8kojT+bzjAeLr3r5og4mBiE2MDAxTSST/wMoXKAf6ZVLzDy70jSoGJUh7g
-         8ndaJenAl5whXNGKojY7txQaiY4+mTHtW7su4LudNwBZwA5gqQ6Ls3b4ouILsaJGhYl1
-         isOHq29tkuxwZZXOYDcyzn7T1U4wnUX+ShnEGWBicpj7s+vgKf4C9Sa0OMksr3CqoKFD
-         7zqzgc7JpqFOQ9qCOKvS2k/LBbi0AVU6Bgt1LrINfooe1uC3r9x2IQtx7t9I6xljbhdv
-         Pr/uowf/wO5FKrrKMZsnF/WxAYMJXb9bR6+gQU6eaGmmvpdr9Gd5SQV8CSipkP392dJu
-         poXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUIqSY9PdmRbX7M/qJ4/PJ3MR8R4RUf5HyxoIJCIE28FoP+8p2bDijLXRC0PNrzkt+ocds=@vger.kernel.org, AJvYcCVHMRPr4WRiKz2No4g4ILckcGx1rm6ODkojVSCOD7gMWUFQ1r512tg7+GoJgQXhuS/K+2opwTfqLNWKP7GQumoz8x9j@vger.kernel.org, AJvYcCXoLoFDhMA2NZGEjYqYL7/FK7pLiMFCDVIUyEUW1dsX6qTurUaAnoctxR4pxx63nAxwdamNOub5DO0ClK/l@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNzNgf4ghSkZvp78BjYlrth25623o5G9HvdUsIBNTb27FtvOeW
-	MLmtkkUUGtFunKpukKxh4cwfSnQIArMz1cmZYWiStPFanY4l81dPyTHv79aCHShXLRqbwMXl6/s
-	02AM9NhkoZc6mVV7jLoUqpRT/hYSpkSI=
-X-Gm-Gg: ASbGnctnvoimSEUECWDwglJ4SMbTcc4yLW0tZBtld2X84rHp+KC1oGBdNxOAcKYVCRn
-	oLfi4EGvq0bD2VFbmT0pg0M48F8VCwNBl/bJVQDO4cDX+fXeyVmxx/EFSHQHAJC1bKXKOr0XJBh
-	UMlBuP4G4Lt0KjFPI407cGOnGkwW016UfqpliY6UY+eVogdFuD
-X-Google-Smtp-Source: AGHT+IEWJEP4JHBPYv3pIhsvQT0yFk8+vd0BQ6h8BcUdT6+/B+8a0NIRqXbe5Kc4av7UTEAWeTX24BqqBVmsR9UY+K0=
-X-Received: by 2002:a17:90b:48ce:b0:30a:a50e:349c with SMTP id
- 98e67ed59e1d1-30e7d5b77f2mr300399a91.30.1747330300315; Thu, 15 May 2025
- 10:31:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Puap+MfH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FyFNfkOzVBpqr8CVbIVhVYIvQOnRYrbWji9e9TSHZgVB2xiIh6FDBAmmn0LICKrWWruc2fiWk19y0wWbLUk4HYuLL7PRKsVvzjSu1VZGAbPBAKL+SArI98GJzsSwap/5OZyVemf3f9FsaWM1otlOnwJRGU0psvhLGbwzCw4z5e5Ecfv9k7m3LJ/jTOqug/NbytTCFBl1EtI1UEuzkY2rRkjP+Jph7YMTiZMtuSA1vCzuw7vzMoXrohM5K6+T+aRHME90BeGIwkX+ZrvH+eCm3RkAMoRZliKa2GI+rvL/rpV4nz8Ple5IleJRitoY/wXkD67THuz0HVKPcT0l1YWHRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OcCJT2n+NdwluftUBOxmhv2A5eFeAUiAZd/40z5yTxA=;
+ b=AphaknoYN0lbE2NDjuIMrxzuJ5YvbdqfzxTJMLisOScEo01d07kj429aOoRm6Ik8ZeVzU9EH83b1etbTJZ+qQEEaXewegnZ5P643E4eZwTnraUjPcCCw2icpifcI9Iq29e3kNDo+OZ5C3d0/bUijAS+eiUvvxT/x0xziaapLxuYchZV2J0SEV0IydkmSkfk/dMwYMV+751y/2h1nT2sVvoqR90l/BWraU3IL1+hwGk/EIhUgpQDupkCa7bwxFPE+8lczEGCTSonzlrfRLJxC57BW0jCk2O70cZT1NWQaEGk0JDKEFG+r51k9fsaqmfD8bKHIqf2lA0Wt+b1wq0jAJQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OcCJT2n+NdwluftUBOxmhv2A5eFeAUiAZd/40z5yTxA=;
+ b=Puap+MfHJcvzHX5pT6SLUmPv/JBzk7nxbmKBtny0tF/VOJuQUOsXwclqo7vPsfrt3vHhgmZI1eL6esBNEbP+cOvxxr4tj3ixER4nfGzo+prtxcOKlA+n4DSc5Vd3zWAFrOOqrmMvI7Xo/ZVedDgDdXevLD+ZX3bVm/E/B5uFR/c8Dup3pCC+JJC1gkgcYnIFtraYvQf1TOsX/Lk2g8VSyg4ytOEZcEvCDzarQb47Mm+4KR4Ms/3XR+PWFsaHA3lhQ8cIqTU5NS0Ls/VmrZAPIRR+E/XM5aPqu47QJ4QtpHC8owQITiYqzsd7/uj/UIhdgzIJs9a/VUzeGhFy0YkYEw==
+Received: from BL1PR13CA0395.namprd13.prod.outlook.com (2603:10b6:208:2c2::10)
+ by CY5PR12MB6381.namprd12.prod.outlook.com (2603:10b6:930:3f::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Thu, 15 May
+ 2025 17:32:58 +0000
+Received: from BL6PEPF0001AB55.namprd02.prod.outlook.com
+ (2603:10b6:208:2c2:cafe::7b) by BL1PR13CA0395.outlook.office365.com
+ (2603:10b6:208:2c2::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.16 via Frontend Transport; Thu,
+ 15 May 2025 17:32:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ BL6PEPF0001AB55.mail.protection.outlook.com (10.167.241.7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.18 via Frontend Transport; Thu, 15 May 2025 17:32:58 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 15 May
+ 2025 10:32:40 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 15 May 2025 10:32:40 -0700
+Received: from Asurada-Nvidia (10.127.8.11) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Thu, 15 May 2025 10:32:38 -0700
+Date: Thu, 15 May 2025 10:32:37 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: <kevin.tian@intel.com>, <corbet@lwn.net>, <will@kernel.org>,
+	<bagasdotme@gmail.com>, <robin.murphy@arm.com>, <joro@8bytes.org>,
+	<thierry.reding@gmail.com>, <vdumpa@nvidia.com>, <jonathanh@nvidia.com>,
+	<shuah@kernel.org>, <jsnitsel@redhat.com>, <nathan@kernel.org>,
+	<peterz@infradead.org>, <yi.l.liu@intel.com>, <mshavit@google.com>,
+	<praan@google.com>, <zhangzekun11@huawei.com>, <iommu@lists.linux.dev>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <patches@lists.linux.dev>,
+	<mochs@nvidia.com>, <alok.a.tiwari@oracle.com>, <vasant.hegde@amd.com>
+Subject: Re: [PATCH v4 17/23] iommu/arm-smmu-v3-iommufd: Add vsmmu_alloc impl
+ op
+Message-ID: <aCYlNROYiTFv0XCk@Asurada-Nvidia>
+References: <cover.1746757630.git.nicolinc@nvidia.com>
+ <80465bf197e1920a4c763244fab7577614c34700.1746757630.git.nicolinc@nvidia.com>
+ <20250515171902.GO382960@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515121121.2332905-1-jolsa@kernel.org> <20250515121121.2332905-16-jolsa@kernel.org>
-In-Reply-To: <20250515121121.2332905-16-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 15 May 2025 10:31:28 -0700
-X-Gm-Features: AX0GCFsYXtZK-ThNHMZx5N7UZfuuIZHTCObzi1QJtMdvlRR1bBbVItHq81V6p8c
-Message-ID: <CAEf4Bza3cd5cMRvouUiVNrt5MRU4Nhpo7i0KEy1Gm5DTgOFszw@mail.gmail.com>
-Subject: Re: [PATCHv2 perf/core 15/22] selftests/bpf: Add hit/attach/detach
- race optimized uprobe test
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250515171902.GO382960@nvidia.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB55:EE_|CY5PR12MB6381:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3f197e89-f440-489a-b16f-08dd93d688c4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|7416014|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?NEyHQZMq8gnssFhVGGp44Hv8sLVPum2X1mDSPa6jCa4VRTFFwiB+kvKQi4vx?=
+ =?us-ascii?Q?1IwOEIAzgC5jH7z3dl0T8R9b1al0BbFjUmO4goaAmPuWt09desgfV6vPfART?=
+ =?us-ascii?Q?S7htricjxjJLf7wQkKShn7zoaFkpLF09ggcbjacGVS82UHh9fSi3/2v8uMdJ?=
+ =?us-ascii?Q?XsfjLWz44NbFI1pEKvA4EqoaZaaOScx+5kqKsxG+KC0qzd0zINwYLfb+uw0K?=
+ =?us-ascii?Q?s1HqJ4pWTLXoLpgxNxdjfs4CJ/twJz/c1xSY2BBFk80wY99atB/6QOwOY/9k?=
+ =?us-ascii?Q?kXfmveDzgJzZS7KlTCv54l9NYw3j4uk10vx8Y6wusEQRg/K4ZmP4agO9i3vG?=
+ =?us-ascii?Q?lfVpSXMx+gEGyHRxtgdkryonhiSElLLGVF2mhth7sJvve+BInUCZ66N/F9s7?=
+ =?us-ascii?Q?gq91w5fV1m46pCl+hoEcDFmQtSD8JtE9Tg6sUwC+0/MaM+ZhfkKZQQQzjIg+?=
+ =?us-ascii?Q?4ntVHa3fv2K2jZ5MX2tDOH+4xjEDqdtJSEzBMvtrKsBQtyzEXN/SOcfINleH?=
+ =?us-ascii?Q?6JpV+bgIAMIP1AsSfm5CM18cnOb1shS0LdxlsgnWMDpZ09BGl7J8mJaaq5jJ?=
+ =?us-ascii?Q?X0KJQZTJ+DKnRU6BCpaYVXi3oWMPpsoMFWUlBgUNdYGNuAio4AYrflsDd47U?=
+ =?us-ascii?Q?mEPAxcC8clQRDEt2jj633THhAWm52YnN3oEuVbsMKnrx/aayjgr20ojnYxwm?=
+ =?us-ascii?Q?fBmw0uqDgsa3iqPW6Fvy7I9pyfKlwbR/mfvyOpoSabEaUTc9dit+FEdDcfoI?=
+ =?us-ascii?Q?+M0f/dFXD4CKu4afPEflAed5Clz50h7M/0DpEiGxGsZTG933RwQqRBSGKB65?=
+ =?us-ascii?Q?C2gaf2mnK2XMXf41GmMM3aXpMxxuNp/H6mzjQaLFt99K/SOg6Mk3TxqOXtDA?=
+ =?us-ascii?Q?sQ4fHetSv4dBujb4hCTD+Dx2JsgMhl74NtYUBRezZLRg4wRq6p/3NkguX/jk?=
+ =?us-ascii?Q?jlFEagnKzmUke1vf0+N4spuf48d+LpXkNuuE4ie7dtsAq9v5fznV+7lwM8NM?=
+ =?us-ascii?Q?+sbxiNqwLGiNS5fUTL1EGOR3GmFgFucbzHiZ2tJkRCizZePhHtEkoIYGHrTW?=
+ =?us-ascii?Q?TosCoMm1R4eDW1bCkzARH8e4rC5hlbEoBIdmx0TfMYC8omyx12xkrkFLlE6u?=
+ =?us-ascii?Q?Hp2VLqpjSmP2h8/71jMhkM6tvb2FtWp3YuJBC3c1zkp30Pds5kv7JN7NOXuW?=
+ =?us-ascii?Q?J/l6+aRg75JQiUE++xG3EDJIQ8BpMhDuLa2ARVUh9sfaNcPtJfvYRhkG6ffz?=
+ =?us-ascii?Q?vDLsOq4LOgdTBv5qVhRdUU+poAwBGHyGQd5uUjfLD5MSXcC/FbEi/HrbTdOF?=
+ =?us-ascii?Q?gtIjR66ZbQElGvy1ikNUL9e9uxp9nRKsX4xLWpvvoVTQrXY++krwveSnAvjg?=
+ =?us-ascii?Q?q6kmW0uhhr9TJ9iR6RJVRWGJgHqyJvzjcssDdNbwBaWGRpAV5r/YSEQ9hlg1?=
+ =?us-ascii?Q?BaeqC81+AC1CDG2nX1NwR+jYMtbLLVzi0fCsiJi2k1fYPUFIP8wq2hWJRdD/?=
+ =?us-ascii?Q?MJZw8PfwQpQEsfHU0Nxmw4GxY4RmZAxPOgjB?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(7416014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2025 17:32:58.1267
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f197e89-f440-489a-b16f-08dd93d688c4
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB55.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6381
 
-On Thu, May 15, 2025 at 5:15=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Adding test that makes sure parallel execution of the uprobe and
-> attach/detach of optimized uprobe on it works properly.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  .../selftests/bpf/prog_tests/uprobe_syscall.c | 94 +++++++++++++++++++
->  1 file changed, 94 insertions(+)
->
-> diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/to=
-ols/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> index b9152ca8cdf5..a83abbe91b01 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> @@ -15,6 +15,7 @@
->  #include <asm/prctl.h>
->  #include "uprobe_syscall.skel.h"
->  #include "uprobe_syscall_executed.skel.h"
-> +#include "bpf/libbpf_internal.h"
->
->  #define USDT_NOP .byte 0x0f, 0x1f, 0x44, 0x00, 0x00
->  #include "usdt.h"
-> @@ -634,6 +635,97 @@ static void test_uretprobe_shadow_stack(void)
->         ARCH_PRCTL(ARCH_SHSTK_DISABLE, ARCH_SHSTK_SHSTK);
->  }
->
-> +static volatile bool race_stop;
-> +
-> +static USDT_DEFINE_SEMA(race);
-> +
-> +static void *worker_trigger(void *arg)
-> +{
-> +       unsigned long rounds =3D 0;
-> +
-> +       while (!race_stop) {
-> +               uprobe_test();
-> +               rounds++;
-> +       }
-> +
-> +       printf("tid %d trigger rounds: %lu\n", gettid(), rounds);
-> +       return NULL;
-> +}
-> +
-> +static void *worker_attach(void *arg)
-> +{
-> +       LIBBPF_OPTS(bpf_uprobe_opts, opts);
-> +       struct uprobe_syscall_executed *skel;
-> +       unsigned long rounds =3D 0, offset;
-> +       const char *sema[2] =3D {
-> +               __stringify(USDT_SEMA(race)),
-> +               NULL,
-> +       };
-> +       unsigned long *ref;
-> +       int err;
-> +
-> +       offset =3D get_uprobe_offset(&uprobe_test);
-> +       if (!ASSERT_GE(offset, 0, "get_uprobe_offset"))
-> +               return NULL;
-> +
-> +       err =3D elf_resolve_syms_offsets("/proc/self/exe", 1, (const char=
- **) &sema, &ref, STT_OBJECT);
-> +       if (!ASSERT_OK(err, "elf_resolve_syms_offsets_sema"))
-> +               return NULL;
-> +
-> +       opts.ref_ctr_offset =3D *ref;
-> +
-> +       skel =3D uprobe_syscall_executed__open_and_load();
-> +       if (!ASSERT_OK_PTR(skel, "uprobe_syscall_executed__open_and_load"=
-))
-> +               return NULL;
-> +
-> +       while (!race_stop) {
-> +               skel->links.test_uprobe =3D bpf_program__attach_uprobe_op=
-ts(skel->progs.test_uprobe,
-> +                                       0, "/proc/self/exe", offset, &opt=
-s);
-> +               if (!ASSERT_OK_PTR(skel->links.test_uprobe, "bpf_program_=
-_attach_uprobe_opts"))
-> +                       break;
-> +
-> +               bpf_link__destroy(skel->links.test_uprobe);
-> +               skel->links.test_uprobe =3D NULL;
-> +               rounds++;
-> +       }
-> +
-> +       printf("tid %d attach rounds: %lu hits: %d\n", gettid(), rounds, =
-skel->bss->executed);
-> +       uprobe_syscall_executed__destroy(skel);
-> +       free(ref);
-> +       return NULL;
-> +}
-> +
-> +static void test_uprobe_race(void)
-> +{
-> +       int err, i, nr_threads;
-> +       pthread_t *threads;
-> +
-> +       nr_threads =3D libbpf_num_possible_cpus();
-> +       if (!ASSERT_GT(nr_threads, 0, "libbpf_num_possible_cpus"))
-> +               return;
-> +       nr_threads =3D max(2, nr_threads);
-> +
-> +       threads =3D malloc(sizeof(*threads) * nr_threads);
+On Thu, May 15, 2025 at 02:19:02PM -0300, Jason Gunthorpe wrote:
+> On Thu, May 08, 2025 at 08:02:38PM -0700, Nicolin Chen wrote:
+> > An impl driver might want to allocate its own type of vIOMMU object or the
+> > standard IOMMU_VIOMMU_TYPE_ARM_SMMUV3 by setting up its own SW/HW bits, as
+> > the tegra241-cmdqv driver will add IOMMU_VIOMMU_TYPE_TEGRA241_CMDQV.
+> > 
+> > Add a vsmmu_alloc op and prioritize it in arm_vsmmu_alloc().
+> > 
+> > Reviewed-by: Pranjal Shrivastava <praan@google.com>
+> > Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> > ---
+> >  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h     |  6 ++++++
+> >  .../iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c | 17 +++++++++++------
+> >  2 files changed, 17 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> > index 6b8f0d20dac3..a5835af72417 100644
+> > --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> > +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> > @@ -16,6 +16,7 @@
+> >  #include <linux/sizes.h>
+> >  
+> >  struct arm_smmu_device;
+> > +struct arm_smmu_domain;
+> >  
+> >  /* MMIO registers */
+> >  #define ARM_SMMU_IDR0			0x0
+> > @@ -720,6 +721,11 @@ struct arm_smmu_impl_ops {
+> >  	int (*init_structures)(struct arm_smmu_device *smmu);
+> >  	struct arm_smmu_cmdq *(*get_secondary_cmdq)(
+> >  		struct arm_smmu_device *smmu, struct arm_smmu_cmdq_ent *ent);
+> > +	struct arm_vsmmu *(*vsmmu_alloc)(
+> > +		struct arm_smmu_device *smmu,
+> > +		struct arm_smmu_domain *smmu_domain, struct iommufd_ctx *ictx,
+> > +		unsigned int viommu_type,
+> > +		const struct iommu_user_data *user_data);
+> >  };
+> 
+> I think you should put the supported viommu type here in the ops
+> struct and match it here:
 
-leaking this? maybe just use `pthread_t thread[nr_threads];`? or alloca()?
+OK. A single type per impl might be enough for now, so it can
+be a static one.
 
-> +       if (!ASSERT_OK_PTR(threads, "malloc"))
-> +               return;
-> +
-> +       for (i =3D 0; i < nr_threads; i++) {
-> +               err =3D pthread_create(&threads[i], NULL, i % 2 ? worker_=
-trigger : worker_attach,
-> +                                    NULL);
-> +               if (!ASSERT_OK(err, "pthread_create"))
-> +                       goto cleanup;
-> +       }
-> +
-> +       sleep(4);
+> > +	/* Prioritize the impl that may support IOMMU_VIOMMU_TYPE_ARM_SMMUV3 */
+> > +	if (master->smmu->impl_ops && master->smmu->impl_ops->vsmmu_alloc)
+> > +		vsmmu = master->smmu->impl_ops->vsmmu_alloc(
+> > +			master->smmu, s2_parent, ictx, viommu_type, user_data);
+> 
+> instead of the EOPNOTSUPP dance. Either the impl_ops supports the
+> requested viommu as an extension or we are running in the normal mode?
 
-4 seconds... can we make it much shorter and allow to define the
-actual runtime with envvar? So for thorough testing you'll define
-something multi-second, but once things land and settle we can run it
-for 100ms at most and not slow down CI significantly? All these slow
-tests do add up :(
+I think we can only do normal mode if requested viommu is the
+normal SMMUV3 type, i.e. still need to reject a type other than
+!CMDQV nor !SMMUV3, right?
 
-> +
-> +cleanup:
-> +       race_stop =3D true;
-> +       for (nr_threads =3D i, i =3D 0; i < nr_threads; i++)
-> +               pthread_join(threads[i], NULL);
-> +
-> +       ASSERT_FALSE(USDT_SEMA_IS_ACTIVE(race), "race_semaphore");
-> +}
-> +
->  static void __test_uprobe_syscall(void)
->  {
->         if (test__start_subtest("uretprobe_regs_equal"))
-> @@ -652,6 +744,8 @@ static void __test_uprobe_syscall(void)
->                 test_uprobe_session();
->         if (test__start_subtest("uprobe_usdt"))
->                 test_uprobe_usdt();
-> +       if (test__start_subtest("uprobe_race"))
-> +               test_uprobe_race();
->  }
->  #else
->  static void __test_uprobe_syscall(void)
-> --
-> 2.49.0
->
+> Is there a reason to allocate a different viommu if the userspace does
+> not enable the implementation specific features?
+
+Hmm, what is this different viommu?
+
+If VMM doesn't want VCMDQ, it should go with the normal SMMUV3
+type.
+
+Thanks
+Nicolin
