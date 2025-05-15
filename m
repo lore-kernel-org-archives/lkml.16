@@ -1,52 +1,40 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701052980A8
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from zg8tmja2lje4os43os4xodqa.icoremail.net (zg8tmja2lje4os43os4xodqa.icoremail.net [206.189.79.184])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C735F297B80;
+	Thu, 15 May 2025 08:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.79.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299465; cv=none; b=N2ROfpmK7Tzbklru+qqhFAy0U7jx40MT7ib/PqHIgMvfSw/RGdP2Bg09aUCwNcJl3c5X4rl9OYQ48nuMjjH4PrIBs9bpzEZDAT/Snn9HsIJ/qszFRl7KZkep8sXgkImwCLYLsyv0PTUsdgji4JwTgehSJYSGnPht9EdH08kfj+0=
+	t=1747299468; cv=none; b=SwE7ePcjrfrXhUfbcdMQuS/yIrDe53ODiwMg5z0iGOyUmgheXMKqY6GGezEM8MLhWu6M75xsr3cgDof9ILdXPGm0kciFK9zhGtOyUpL+2vx2AIyRvVa9wM4xoqYVO3soHnya0fWrrhvdtVY8DK3oiMS2Lo3cTI7Qdb4RZOLm7pM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747299465; c=relaxed/simple;
-	bh=lFDDfd1Kvdh8/uWhFlBJABxYTqvqtwIqY1sADEFEtQU=;
+	s=arc-20240116; t=1747299468; c=relaxed/simple;
+	bh=Uacy/T85NjrYqwsVAcBXza0n7x8SpTrfY2clvu2Ph4c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qWLBFemuM2Nkr0pNryDHb3IJTdtnUNLCa/zMzYz5C00pLPq0OLz14Ed9KX1LD0MZvdFLhO/bCKq3WACXQPWy0rVNc/vXteF6lk+M1Q9g3jo0ghQZlKbn0MhqSr44fByBKiTldMPJw5HKudkWgV1LOA2X75tWszPUOC8ExahbjIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D+RGnsfn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D+RGnsfn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3EA0C4CEF0;
-	Thu, 15 May 2025 08:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747299462;
-	bh=lFDDfd1Kvdh8/uWhFlBJABxYTqvqtwIqY1sADEFEtQU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D+RGnsfn2RS+Th3gZ4wJ86a5gY4AeO2mtfde7xPK3mKtqZBv+TgmHWeaXaGzfio3V
-	 t3NVCz0TkkE1yTf1HRIluKg5dEpTDO3IKO2NSANZP3zSno60/NUsPhxMq74hdSz0D2
-	 nET5O/uENFVgCaSTWVpghtbpw3CTNUeRb87QG8rCEW8v8l6kqxfpaPM7jD2INpdgTJ
-	 M5xgaTZAso20+GYPqx7t7vwO5dusM9ueIbjcHo0Ll15oDnfeT2DVl5PwvVIuTZs6Zf
-	 SS2ajlWqnjiVJHw2e5/tka/2wtvsJgWNBdagkMSJiBNG0fgWy1Y/QTJb9VaEHrp1Sz
-	 57z2NviTyyhjA==
-From: Ingo Molnar <mingo@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Ingo Molnar <mingo@kernel.org>,
-	"Ahmed S . Darwish" <darwi@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Arnd Bergmann <arnd@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 08/15] x86/fpu: Remove MATH_EMULATION and related glue code
-Date: Thu, 15 May 2025 10:56:58 +0200
-Message-ID: <20250515085708.2510123-9-mingo@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250515085708.2510123-1-mingo@kernel.org>
-References: <20250515085708.2510123-1-mingo@kernel.org>
+	 MIME-Version; b=YQIFdpIJJRPOPeLse3h7RU3XQGYWx0LRbQQXMgQH+ygJiyHZS/RXd0pPT7biBAh+gi12Bt6bDoCV98Iy8MEke64hiDpQcm96B1ccfwMBn/+aMUEoUnJ8t6gq/Xwvai94RB/3rJ9aGgo8YWjsNqDPHlGZWjsOAsgZnzo3sHi0cL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.79.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0005154LT.eswin.cn (unknown [10.12.96.103])
+	by app1 (Coremail) with SMTP id TAJkCgAXOxF3rCVoMDV8AA--.55791S2;
+	Thu, 15 May 2025 16:57:29 +0800 (CST)
+From: hehuan1@eswincomputing.com
+To: dlemoal@kernel.org,
+	cassel@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-ide@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	p.zabel@pengutronix.de
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	luyulin@eswincomputing.com,
+	Huan He <hehuan1@eswincomputing.com>
+Subject: [PATCH v1 1/2] dt-bindings: sata: eswin: Document for EIC7700 SoC
+Date: Thu, 15 May 2025 16:57:23 +0800
+Message-ID: <20250515085723.1706-1-hehuan1@eswincomputing.com>
+X-Mailer: git-send-email 2.49.0.windows.1
+In-Reply-To: <20250515085114.1692-1-hehuan1@eswincomputing.com>
+References: <20250515085114.1692-1-hehuan1@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,179 +42,126 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TAJkCgAXOxF3rCVoMDV8AA--.55791S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxGw4UuF1DWF1UCw4fXF4rGrg_yoW5Xw13pF
+	4kGryDJF4fXr17Wa17XF10kF13Xan7uF1Ykrn2qF15twn0ga4Yqw4akF15Ca4UCr1xXa43
+	WF4Fg343Aw47AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-wCF04
+	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
+	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
+	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
+	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUXJ5wUUUUU=
+X-CM-SenderInfo: 5khk3tzqr6v25zlqu0xpsx3x1qjou0bp/
 
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Cc: Ahmed S . Darwish <darwi@linutronix.de>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: H . Peter Anvin <hpa@zytor.com>
-Cc: John Ogness <john.ogness@linutronix.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250425084216.3913608-9-mingo@kernel.org
+From: Huan He <hehuan1@eswincomputing.com>
+
+Add eic7700 AHCI SATA controller device with single port support.
+For the eic7700 SATA registers, it supports AHCI standard interface,
+interrupt modes (INTx/MSI/PME), APB reset control,
+and HSP_SP_CSR register configuration.
+
+Co-developed-by: Yulin Lu <luyulin@eswincomputing.com>
+Signed-off-by: Yulin Lu <luyulin@eswincomputing.com>
+Signed-off-by: Huan He <hehuan1@eswincomputing.com>
 ---
- arch/x86/Kconfig               | 27 ---------------------------
- arch/x86/Kconfig.cpufeatures   |  1 -
- arch/x86/Makefile              |  1 -
- arch/x86/include/asm/fpu/api.h |  6 ------
- arch/x86/kernel/fpu/core.c     |  5 -----
- arch/x86/kernel/fpu/init.c     |  9 +--------
- arch/x86/kernel/traps.c        | 14 --------------
- 7 files changed, 1 insertion(+), 62 deletions(-)
+ .../bindings/ata/eswin,eic7700-sata.yaml      | 80 +++++++++++++++++++
+ 1 file changed, 80 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ata/eswin,eic7700-sata.yaml
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 1f29dc81018f..e983705a4fe3 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1637,33 +1637,6 @@ config X86_BOOTPARAM_MEMORY_CORRUPTION_CHECK
- 	  Set whether the default state of memory_corruption_check is
- 	  on or off.
- 
--config MATH_EMULATION
--	bool
--	depends on MODIFY_LDT_SYSCALL
--	prompt "Math emulation" if X86_32 && (M486SX || MELAN)
--	help
--	  Linux can emulate a math coprocessor (used for floating point
--	  operations) if you don't have one. 486DX and Pentium processors have
--	  a math coprocessor built in, 486SX and 386 do not, unless you added
--	  a 487DX or 387, respectively. (The messages during boot time can
--	  give you some hints here ["man dmesg"].) Everyone needs either a
--	  coprocessor or this emulation.
--
--	  If you don't have a math coprocessor, you need to say Y here; if you
--	  say Y here even though you have a coprocessor, the coprocessor will
--	  be used nevertheless. (This behavior can be changed with the kernel
--	  command line option "no387", which comes handy if your coprocessor
--	  is broken. Try "man bootparam" or see the documentation of your boot
--	  loader (lilo or loadlin) about how to pass options to the kernel at
--	  boot time.) This means that it is a good idea to say Y here if you
--	  intend to use this kernel on different machines.
--
--	  More information about the internals of the Linux math coprocessor
--	  emulation can be found in <file:arch/x86/math-emu/README>.
--
--	  If you are not sure, say Y; apart from resulting in a 66 KB bigger
--	  kernel, it won't hurt.
--
- config MTRR
- 	def_bool y
- 	prompt "MTRR (Memory Type Range Register) support" if EXPERT
-diff --git a/arch/x86/Kconfig.cpufeatures b/arch/x86/Kconfig.cpufeatures
-index e12d5b7e39a2..cd551818f451 100644
---- a/arch/x86/Kconfig.cpufeatures
-+++ b/arch/x86/Kconfig.cpufeatures
-@@ -66,7 +66,6 @@ config X86_REQUIRED_FEATURE_UP
- 
- config X86_REQUIRED_FEATURE_FPU
- 	def_bool y
--	depends on !MATH_EMULATION
- 
- config X86_REQUIRED_FEATURE_PAE
- 	def_bool y
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 53daf4654f6c..84901c3acc94 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -285,7 +285,6 @@ core-y  += arch/x86/boot/startup/
- libs-y  += arch/x86/lib/
- 
- # drivers-y are linked after core-y
--drivers-$(CONFIG_MATH_EMULATION) += arch/x86/math-emu/
- drivers-$(CONFIG_PCI)            += arch/x86/pci/
- 
- # suspend and hibernation support
-diff --git a/arch/x86/include/asm/fpu/api.h b/arch/x86/include/asm/fpu/api.h
-index 8e6848f55dcd..87b794921070 100644
---- a/arch/x86/include/asm/fpu/api.h
-+++ b/arch/x86/include/asm/fpu/api.h
-@@ -119,12 +119,6 @@ extern void fpu__init_system(void);
- extern void fpu__init_check_bugs(void);
- extern void fpu__resume_cpu(void);
- 
--#ifdef CONFIG_MATH_EMULATION
--extern void fpstate_init_soft(struct swregs_state *soft);
--#else
--static inline void fpstate_init_soft(struct swregs_state *soft) {}
--#endif
--
- /* State tracking */
- DECLARE_PER_CPU(struct fpu *, fpu_fpregs_owner_ctx);
- 
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index 948b4f5fad99..a39c0798c975 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -520,11 +520,6 @@ static inline void fpstate_init_fstate(struct fpstate *fpstate)
-  */
- void fpstate_init_user(struct fpstate *fpstate)
- {
--	if (!cpu_feature_enabled(X86_FEATURE_FPU)) {
--		fpstate_init_soft(&fpstate->regs.soft);
--		return;
--	}
--
- 	xstate_init_xcomp_bv(&fpstate->regs.xsave, fpstate->xfeatures);
- 
- 	if (cpu_feature_enabled(X86_FEATURE_FXSR))
-diff --git a/arch/x86/kernel/fpu/init.c b/arch/x86/kernel/fpu/init.c
-index 6bb3e35c40e2..20017fbfc16c 100644
---- a/arch/x86/kernel/fpu/init.c
-+++ b/arch/x86/kernel/fpu/init.c
-@@ -36,12 +36,7 @@ static void fpu__init_cpu_generic(void)
- 	write_cr0(cr0);
- 
- 	/* Flush out any pending x87 state: */
--#ifdef CONFIG_MATH_EMULATION
--	if (!boot_cpu_has(X86_FEATURE_FPU))
--		;
--	else
--#endif
--		asm volatile ("fninit");
-+	asm volatile ("fninit");
- }
- 
- /*
-@@ -83,13 +78,11 @@ static void __init fpu__init_system_early_generic(void)
- 			setup_clear_cpu_cap(X86_FEATURE_FPU);
- 	}
- 
--#ifndef CONFIG_MATH_EMULATION
- 	if (!test_cpu_cap(&boot_cpu_data, X86_FEATURE_FPU)) {
- 		pr_emerg("x86/fpu: Giving up, no FPU found and no math emulation present\n");
- 		for (;;)
- 			asm volatile("hlt");
- 	}
--#endif
- }
- 
- /*
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 8d08c58b3fe2..6b2ffb86c46d 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -1414,20 +1414,6 @@ DEFINE_IDTENTRY(exc_device_not_available)
- 	if (handle_xfd_event(regs))
- 		return;
- 
--#ifdef CONFIG_MATH_EMULATION
--	if (!boot_cpu_has(X86_FEATURE_FPU) && (cr0 & X86_CR0_EM)) {
--		struct math_emu_info info = { };
--
--		cond_local_irq_enable(regs);
--
--		info.regs = regs;
--		math_emulate(&info);
--
--		cond_local_irq_disable(regs);
--		return;
--	}
--#endif
--
- 	/* This should not happen. */
- 	if (WARN(cr0 & X86_CR0_TS, "CR0.TS was set")) {
- 		/* Try to fix it up and carry on. */
+diff --git a/Documentation/devicetree/bindings/ata/eswin,eic7700-sata.yaml b/Documentation/devicetree/bindings/ata/eswin,eic7700-sata.yaml
+new file mode 100644
+index 000000000000..71e1b865ed2a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ata/eswin,eic7700-sata.yaml
+@@ -0,0 +1,80 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/ata/eswin,eic7700-sata.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Eswin EIC7700 SoC SATA Controller
++
++maintainers:
++  - Yulin Lu <luyulin@eswincomputing.com>
++  - Huan He <hehuan1@eswincomputing.com>
++
++description: |
++  This binding describes the SATA controller integrated in the Eswin EIC7700 SoC.
++  The controller is compatible with the AHCI (Advanced Host Controller Interface)
++  specification and supports up to 1 port.
++
++properties:
++  compatible:
++    const: eswin,eic7700-ahci
++
++  reg:
++    maxItems: 1
++    description: Address range of the SATA registers
++
++  interrupt-names:
++    items:
++      - const: intrq
++      - const: msi
++      - const: pme
++
++  interrupts:
++    maxItems: 3
++    description: The SATA interrupt numbers
++
++  ports-implemented:
++    maximum: 0x1
++
++  resets:
++    maxItems: 1
++    description: resets to be used by the controller.
++
++  reset-names:
++    const: apb
++
++  '#address-cells':
++    const: 2
++
++  '#size-cells':
++    const: 2
++
++  eswin,hsp_sp_csr:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: hsp_sp_csr regs to be used by the controller.
++
++required:
++  - compatible
++  - reg
++  - interrupt-names
++  - interrupts
++  - resets
++  - reset-names
++  - eswin,hsp_sp_csr
++
++additionalProperties: false
++
++examples:
++  - |
++    sata: sata@50420000 {
++      compatible = "eswin,eic7700-ahci";
++      reg = <0x50420000 0x10000>;
++      interrupt-parent = <&plic>;
++      interrupt-names = "intrq", "msi", "pme";
++      interrupts = <58>, <59>, <60>;
++      ports-implemented = <0x1>;
++      resets = <&reset 7 (1 << 27)>;
++      reset-names = "apb";
++      #size-cells = <2>;
++      eswin,hsp_sp_csr = <&hsp_sp_csr 0x1050>;
++    };
 -- 
-2.45.2
+2.25.1
 
