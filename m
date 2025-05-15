@@ -1,117 +1,113 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640DD34CF9
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6353634CF9;
+	Thu, 15 May 2025 14:33:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747319501; cv=none; b=PzxAdKGuHjZS6ONjEAo0+16TxomuMqI/rzzBaHweYjmjPqcg97DX0CCrOvNW16kFCBiF86rkY2qkrF+uEit4zTAMPUSjqspZmZZ9fz0dy94SfwKatG8oYOlWjFbpuSlSYFsFPZ4XDrKEoFDmv3Gre2yY762qEoNeNStO+EP5iC4=
+	t=1747319599; cv=none; b=nDNtosqNSAcbd6+lSCnX59pb2zwHpn7x4IZoQixhYjZ+CFJG7gip72r6J3K+EkLuuKH4fYR7z5AwDkl3WyfKP782YCJFEFKnhbi79DO3zcI/9hkIYFuKtjH1XusqYQdNEob7foy9Gk9g93XhhZBYH30vmSF4Ov66SCS1g3jMe6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747319501; c=relaxed/simple;
-	bh=heBnoNQS7qSXi4BvdVbMHG/Q0/5UYojtsxzKt5l9f5w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J0v/cKjPzTrbFOyP3v8cfmykbj0C/Zy87ld5JDdy6aY/O3wDhYGjaNewg1o1YHlbgz4/LsQO588NF1wpFhLZqnRH4M4iyHxMb8ZxOHlqSUmIoAjzzvjXOfk7afODduLk4VywcSnVyLWSvwMwEUapYEZkl9AFeQisTxU+jwdNZdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SKbcaR1g; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747319599; c=relaxed/simple;
+	bh=aK3rHV9MtBbtgEpm1YycksMWHc3n6cne+RJGaA7nDSk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DzM3W9rod9HP0GAI8ZM0PFu1R1owEpqreFy7NQCPD4MsFsiRBhGFSGXhvhh9PSXfoWalIZdMzu5P1UZ02aMRDBxp8sX1KzpmE9hK2qNZiqp8+oxG7Uo8eekE62Xm2tDQt9X29E9Cfzq3debUmPiWq5qyHT8/VDM0gCongtFV0g8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PpDzTORU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SKbcaR1g"
-X-Forwarded-Encrypted: i=1; AJvYcCVQxn3FnteDKKo3BFx5ofCkncUoL4fkvhfkIimfmGkz3QOW0+Gfpld+ilvsBtUadZSLeraLfxwhemM7PgsR@vger.kernel.org, AJvYcCXC2Z1P6i/GdLS/DO35SWvGe9WN+2kHKlQe1l7FaMYUluJLCa6Y3UqoNh1vjTgUdRqOxe7FQfOpBA==@vger.kernel.org, AJvYcCXQm9s9MUkVhvZkf8Z3x+VVCAJ08NSG96v8Wn3NNsHNPn+4aAarhp5Zs8yXiTssL9e840A=@vger.kernel.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747319487;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qFetwXF/VwiHsM2Y9xmcYYhX84ZJvWa2dyXEgkPZk18=;
-	b=SKbcaR1gFAxvOyZWx2twk8ConWLTfGusMxqcDFFu1nMsTCMRicKXaXAcbBGUm1QpBkVeJK
-	blK51c5zEWUJwBoErZOmoTsLN8WQ5//nC4KujbiwfazSqYXSI2SONjttNiCIUxj4MCta//
-	ondJlSVZrjlVl3WitIVpT7HBdVJL33w=
-X-Gm-Message-State: AOJu0Yy8CL43WB1+v2bmKiPcns3u6lsmZkgAdyAGwC3GGN8vOqPqh1Dk
-	108XfCh3xuo3lLWCBfHBIeposzl0u1yuNAwUxF5j0+hMRIW4E+eE2AtI5GdeLnIHI37/R3+LLh+
-	xVXyHUuz90TtpjanVO1zOIb13lQ4=
-X-Google-Smtp-Source: AGHT+IGQIU2q5KzVhNqIoGtPyXwZcXsLMJcH4k4PnyFhVeQq9UMndtkORnyWj6lRGN+WELtJVJXaSFxNE3JUAPOlHYA=
-X-Received: by 2002:a54:4393:0:b0:403:5277:9424 with SMTP id
- 5614622812f47-404c21373f2mr3743430b6e.32.1747319480654; Thu, 15 May 2025
- 07:31:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PpDzTORU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39541C4CEE7;
+	Thu, 15 May 2025 14:33:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747319596;
+	bh=aK3rHV9MtBbtgEpm1YycksMWHc3n6cne+RJGaA7nDSk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PpDzTORUkYWu9YTyP3G2LZ7vGtA3BEZ2rlgSomrVu/Qdp7QEu06jbSvRoTUVw7ETl
+	 2132dOSL1pBhWlbL4iIVF7X2tepv3AXp/CLBJmHOKzzQpfBRQudCNEwIuHpMKPbesq
+	 Q6aNfPEJFou2azINgLxWxRfz7Eq4XGO4fITkgUtc5YNkl/3J1kCjQx37SlRLdiSINS
+	 hPZo085VL/QYlszeM5vkLjzK9+5UxoN/rjy9R5I9BzcjaSolNnum29uHVz+Sk+Lb+Z
+	 209P6QhUvdxfysoe/EQKlYmfnXt2SQwSkCtXyCazKNh3Bah6NQYrUXcH6nr3PyoCRH
+	 AkDCR0a5YUUeA==
+Date: Thu, 15 May 2025 15:33:10 +0100
+From: Will Deacon <will@kernel.org>
+To: Rob Clark <robdclark@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>,
+	Rob Clark <robdclark@chromium.org>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Nicolin Chen <nicolinc@nvidia.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Joao Martins <joao.m.martins@oracle.com>,
+	"moderated list:ARM SMMU DRIVERS" <linux-arm-kernel@lists.infradead.org>,
+	"open list:IOMMU SUBSYSTEM" <iommu@lists.linux.dev>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 05/40] iommu/io-pgtable-arm: Add quirk to quiet
+ WARN_ON()
+Message-ID: <20250515143309.GA12165@willie-the-truck>
+References: <20250514175527.42488-1-robdclark@gmail.com>
+ <20250514175527.42488-6-robdclark@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514184158.3471331-1-shakeel.butt@linux.dev>
- <20250514184158.3471331-2-shakeel.butt@linux.dev> <22f69e6e-7908-4e92-96ca-5c70d535c439@lucifer.local>
-In-Reply-To: <22f69e6e-7908-4e92-96ca-5c70d535c439@lucifer.local>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-Date: Thu, 15 May 2025 07:31:09 -0700
-X-Gmail-Original-Message-ID: <CAGj-7pUJQZD59Sx7E69Uvi1++dB59R8wWkDYvSTGYhU-18AHXg@mail.gmail.com>
-X-Gm-Features: AX0GCFuAJwtLNKJwKPDMOLiftKy-4ToNrqm6RD1vIrynPcQ5WImKcXb6Sk0ZoHk
-Message-ID: <CAGj-7pUJQZD59Sx7E69Uvi1++dB59R8wWkDYvSTGYhU-18AHXg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/7] memcg: memcg_rstat_updated re-entrant safe against irqs
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, Vlastimil Babka <vbabka@suse.cz>, 
-	Alexei Starovoitov <ast@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Harry Yoo <harry.yoo@oracle.com>, 
-	Yosry Ahmed <yosry.ahmed@linux.dev>, bpf@vger.kernel.org, linux-mm@kvack.org, 
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Meta kernel team <kernel-team@meta.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514175527.42488-6-robdclark@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Thu, May 15, 2025 at 5:47=E2=80=AFAM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> Shakeel - This breaks the build in mm-new for me:
->
->   CC      mm/pt_reclaim.o
-> In file included from ./arch/x86/include/asm/rmwcc.h:5,
->                  from ./arch/x86/include/asm/bitops.h:18,
->                  from ./include/linux/bitops.h:68,
->                  from ./include/linux/radix-tree.h:11,
->                  from ./include/linux/idr.h:15,
->                  from ./include/linux/cgroup-defs.h:13,
->                  from mm/memcontrol.c:28:
-> mm/memcontrol.c: In function =E2=80=98mem_cgroup_alloc=E2=80=99:
-> ./arch/x86/include/asm/percpu.h:39:45: error: expected identifier or =E2=
-=80=98(=E2=80=99 before =E2=80=98__seg_gs=E2=80=99
->    39 | #define __percpu_seg_override   CONCATENATE(__seg_, __percpu_seg)
->       |                                             ^~~~~~
-> ./include/linux/args.h:25:24: note: in definition of macro =E2=80=98__CON=
-CAT=E2=80=99
->    25 | #define __CONCAT(a, b) a ## b
->       |                        ^
-> ./arch/x86/include/asm/percpu.h:39:33: note: in expansion of macro =E2=80=
-=98CONCATENATE=E2=80=99
->    39 | #define __percpu_seg_override   CONCATENATE(__seg_, __percpu_seg)
->       |                                 ^~~~~~~~~~~
-> ./arch/x86/include/asm/percpu.h:93:33: note: in expansion of macro =E2=80=
-=98__percpu_seg_override=E2=80=99
->    93 | # define __percpu_qual          __percpu_seg_override
->       |                                 ^~~~~~~~~~~~~~~~~~~~~
-> ././include/linux/compiler_types.h:60:25: note: in expansion of macro =E2=
-=80=98__percpu_qual=E2=80=99
->    60 | # define __percpu       __percpu_qual BTF_TYPE_TAG(percpu)
->       |                         ^~~~~~~~~~~~~
-> mm/memcontrol.c:3700:45: note: in expansion of macro =E2=80=98__percpu=E2=
-=80=99
->  3700 |         struct memcg_vmstats_percpu *statc, __percpu *pstatc_pcpu=
-;
->       |                                             ^~~~~~~~
-> mm/memcontrol.c:3731:25: error: =E2=80=98pstatc_pcpu=E2=80=99 undeclared =
-(first use in this function); did you mean =E2=80=98kstat_cpu=E2=80=99?
->  3731 |                         pstatc_pcpu =3D parent->vmstats_percpu;
->       |                         ^~~~~~~~~~~
->       |                         kstat_cpu
-> mm/memcontrol.c:3731:25: note: each undeclared identifier is reported onl=
-y once for each function it appears in
->
-> The __percpu macro seems to be a bit screwy with comma-delimited decls, a=
-s it
-> seems that putting this on its own line fixes this problem:
->
+On Wed, May 14, 2025 at 10:53:19AM -0700, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> In situations where mapping/unmapping sequence can be controlled by
+> userspace, attempting to map over a region that has not yet been
+> unmapped is an error.  But not something that should spam dmesg.
+> 
+> Now that there is a quirk, we can also drop the selftest_running
+> flag, and use the quirk instead for selftests.
+> 
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> Acked-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  drivers/iommu/io-pgtable-arm.c | 27 ++++++++++++++-------------
+>  include/linux/io-pgtable.h     |  8 ++++++++
+>  2 files changed, 22 insertions(+), 13 deletions(-)
 
-Which compiler (and version) is this? Thanks for the fix.
+[...]
+
+> diff --git a/include/linux/io-pgtable.h b/include/linux/io-pgtable.h
+> index bba2a51c87d2..639b8f4fb87d 100644
+> --- a/include/linux/io-pgtable.h
+> +++ b/include/linux/io-pgtable.h
+> @@ -88,6 +88,13 @@ struct io_pgtable_cfg {
+>  	 *
+>  	 * IO_PGTABLE_QUIRK_ARM_HD: Enables dirty tracking in stage 1 pagetable.
+>  	 * IO_PGTABLE_QUIRK_ARM_S2FWB: Use the FWB format for the MemAttrs bits
+> +	 *
+> +	 * IO_PGTABLE_QUIRK_NO_WARN_ON: Do not WARN_ON() on conflicting
+> +	 *	mappings, but silently return -EEXISTS.  Normally an attempt
+> +	 *	to map over an existing mapping would indicate some sort of
+> +	 *	kernel bug, which would justify the WARN_ON().  But for GPU
+> +	 *	drivers, this could be under control of userspace.  Which
+> +	 *	deserves an error return, but not to spam dmesg.
+>  	 */
+>  	#define IO_PGTABLE_QUIRK_ARM_NS			BIT(0)
+>  	#define IO_PGTABLE_QUIRK_NO_PERMS		BIT(1)
+> @@ -97,6 +104,7 @@ struct io_pgtable_cfg {
+>  	#define IO_PGTABLE_QUIRK_ARM_OUTER_WBWA		BIT(6)
+>  	#define IO_PGTABLE_QUIRK_ARM_HD			BIT(7)
+>  	#define IO_PGTABLE_QUIRK_ARM_S2FWB		BIT(8)
+> +	#define IO_PGTABLE_QUIRK_NO_WARN_ON		BIT(9)
+
+This feels a bit fragile to me:
+  * IOMMU-API users of io-pgtable shouldn't be passing this quirk
+    but might end up doing so to paper over driver bugs.
+
+  * Low-level users of io-pgtable who expose page-table operations to
+    userspace need to pass the quirk, but might well not bother because
+    well-behaved userspace doesn't trigger the warning.
+
+So overall, it's all a bit unsatisfactory. Is there a way we could have
+the warnings only when invoked via the IOMMU API?
+
+Will
