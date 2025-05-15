@@ -1,240 +1,104 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2402594AA;
-	Thu, 15 May 2025 17:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FAFE25742F;
+	Thu, 15 May 2025 17:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747329846; cv=none; b=SlpAOQLuQRNgtN1ocTAsm6ipmoe0R0dDdl/YWIb0kvx2+S9BO3mQN5CewAu97Xx6y0MIgwopvWtAbXQB/oTSbUBTEgpIo1WNDcOdMJxDaDEty7zy/N6UN1kDYViLc0lbMnDTLS0M+yLawTKP52XSkMkl/3pgatH25nP0+ZWt0xE=
+	t=1747329865; cv=none; b=d3vYBux8/+hiJGc/bGi23vb32usmiwGhqq0hGl5XagoJNdMj8JcppPlLPMWAZjIuDvxzWNkM8qpa2F3nKiz8kf3UyZ27JtabK1zMVfQB1dkJEMecGFgB5hs0xLHxyadiWJqSge6Ecx0T9VBbDYVj7X9T3DsaC0qK1ueOeu/07wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747329846; c=relaxed/simple;
-	bh=jVTMc+G+MsnGu7yvTEf/heR8X6WrFkO6OQ92iSvyc/k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TOqh5cCwvvAbNXm5uYQT7Z2eg8u9z4xIKPIK8x2Sv409/+nFw3C7tRAWYXuQWaD7vP73pS8BbaCPbCgB7/O4pSvcvTMKSm7xPpZvJGXh9e12gQdMQxC4ByBYN3H6O5l3RyqDveP7kv47rbbhFxjQEMNJ0qT4fv0E1wUEOrNKkUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D25F9q7Z; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747329865; c=relaxed/simple;
+	bh=eNwAQA4z9tt/UhWr0PAxDKxPJ9Qa5LlS+FkuRrwfOW4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A8KhB1SPKa07TKRHnN2XmjItMrLHoLr7/F+zRx+qpLnL54HR/CB12zcjV9tVmjg5wOhlQBJJQ+SZc3lmihEsBsznI2NVsvNe1owCVv5MqQRcL9Z7M/sO4gP3Q59UbtcdQaT0Fxh+khV/VgdEHUV+xfA1lFTQ+gYi06FOO1JM8sA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=YclF0ypL; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D25F9q7Z"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-7099bc957d9so12265157b3.0;
-        Thu, 15 May 2025 10:24:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747329844; x=1747934644; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=us+1sw+TjwAzbWDuUs5/7h91LAqit4Y+rsQEVdNjnnc=;
-        b=D25F9q7Zd39RwPEkDqeCU4oQYUJIxQiP78lL+DZMHBiHcmXKQRKilR/qQ5s1tGHzgw
-         ErxhXw5OYzkMLUOl6wsRBgcCp0e2C/nbfhjfkDfU+akuC+JcTXCZneUKw3NwbQUQAkzl
-         ZlasiyRTB7yuSRlViKPgTi7w6kb1YDRc+Tj71Iz/DRzvXdTULNuhTevEQPYx8XRtXH0L
-         K57e1dF5IvxtqOwMQkmgPdQUnYoxELKsHGIND0UmrZNalimkXZw5TQP6fQraruZFskcO
-         M+QW0oUvmX/2faYwkyZ5FAV4SyUQ7mMfnSNmG+DM2Vs576Swq6IrgYnrOWf0C7VhU2G0
-         QQrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747329844; x=1747934644;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=us+1sw+TjwAzbWDuUs5/7h91LAqit4Y+rsQEVdNjnnc=;
-        b=YJbLOh5FTshR27+JNhvZ43xPJgDUug2AuU2rQEwch52KxL2t/FBZqBq6DIq+VlyfbK
-         0ia4UM69/vymmtd3hE1+Bv4apoMYWPE8I52B0tqUI8PUaS5rjDweNAWEvumeTPf92dd5
-         Z4BOk2F1fMjf7JoBqNO1DNjn88UGyzHvjNht1GYjbJ5rAlfmf98SEiIVOmgvplf49+Uq
-         TPMhd8HGgXxxdDv123Yxzp1sZ62u1Hhp/j7uEdzCXXVAAwRagSH5K1ZTKHdoCdcioCSS
-         dNuK7vYNVQuJFjlcRkS0IhlyPBoKa/6e03BFow6kTH6opY2m+JeVNV6MkxB2bvDbwWCQ
-         tecA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQC49/rGFXdGaiN8zOrxqgdHtyf/3x47u/xP9QgQ5zdQ2Bangtil9EpflaKLf8gS1oYPLrQ+IkCFJO07c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzzgzgojp07r2UBH8rmTZ45HTZdNRCpMvKIt2HZNy41zRt40Sbh
-	ZNLEQuYL19UPVDYGk+VhT+Y4/hlFDJcIBnsGv0JvmzXKL4lrOkMSLYQ6XP96XIhUJQ+W8OEDS24
-	SMWLNkFEK5JfYwADo4qbqlLFGXT8TM/o=
-X-Gm-Gg: ASbGnctN22jbWhc7ZgswFZ0sW1s44poxnaZYcZSUb6PCZ8nXowXfqEqIzuMibHHDm6A
-	kZGEU0ahSr/gpw+1NFctf5beog6CZLKRA+vlJAXf1alWxIEikJfHsELzOx8VH/L9hcouyv3EpAu
-	rb3DhNwGr3akBTJIQAJNhpqy2YkVtsw9yU
-X-Google-Smtp-Source: AGHT+IEjTEoJRq2T3LULkfk9Zh9aHi/xSNGmuKKzDYSZ6rjqdu8cGJaPZyPzb5syYIGHMSt4dS7tNSz/nGd90u+Sjyk=
-X-Received: by 2002:a05:690c:4c13:b0:703:c3ed:1f61 with SMTP id
- 00721157ae682-70ca7a14077mr7892047b3.20.1747329843704; Thu, 15 May 2025
- 10:24:03 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="YclF0ypL"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0ACF640E015E;
+	Thu, 15 May 2025 17:24:15 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id aRmW3RpzN8oK; Thu, 15 May 2025 17:24:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747329851; bh=vnOR8fxIQYmv1Re732NV39dffNo3/vy3eS6oQ+6mzBY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YclF0ypLbGaa0NrSoiQz+Ln9euPla0VvbB9rtBzfeVEUOUGMYNpabshzKNV2P/ba+
+	 xRViJdLSi9Q8EVgXsc0u5Mb48btKY3ITfn+03LCyX0gp6sZL8DMPmtfJb976QxmpbR
+	 VktnF5iYqDQ97w1ysLVoxKu7dEx9VQZ8OYX0e3VJAmvopv4UA0630pP4s3v2BY+Iab
+	 3pgJyQM+neW/Zn6KTcQRpEREqILh1/ZBiUqHoQJFC/9LFrbrpjBQWFn41jpyzkrpZS
+	 GBZ4h9TNxa4Wt2VjzUe0d+6dPRzn4QD/EoqLg/RvZeUwF9ONN864/r+UKraFZ37/0n
+	 efaTMLzXUeVe15IuB9hsPQ5mm8//Jbcyv7jDZR4bsm5i8u86MXOR6NbDdfpIk9nfo/
+	 +KeI0xbj0KQabg7uha9b1ihbG7rPvFyA04YIx6wCnKtenZ1Y6F7S/1ZQYnkruXO9yx
+	 WXa/JUnAkZfVTafchxEqObzoYAEGyDIfyIqOFBsbMLKWFF7027pxWtar062t+X3oR9
+	 ljOLO9snb6Y0sXkyDVmNyyYycCGFIgoKIL9EFU5kbomsghRhNf+rPmPIM9H0ywr0E1
+	 ovGa5GqoQPEUDf8y9E/MpPAym/00t1XGJ6K9kIuINX4zPuxWv4ctz7RHsPorXFfIgr
+	 yM3CZ2KB8g2n8p4YoBCKRmig=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4DE6D40E0239;
+	Thu, 15 May 2025 17:24:01 +0000 (UTC)
+Date: Thu, 15 May 2025 19:23:55 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Suraj Jitindar Singh <surajjs@amazon.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] x86/bugs: Don't warn when overwriting
+ retbleed_return_thunk with srso_return_thunk
+Message-ID: <20250515172355.GIaCYjK_fz-n71Aruz@fat_crate.local>
+References: <20250514220835.370700-1-surajjs@amazon.com>
+ <20250514222507.GKaCUYQ9TVadHl7zMv@fat_crate.local>
+ <20250514233022.t72lijzi4ipgmmpj@desk>
+ <20250515093652.GBaCW1tARiE2jkVs_d@fat_crate.local>
+ <20250515170633.sn27zil2wie54yhn@desk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515152432.77835-1-stefano.radaelli21@gmail.com> <2b2ef0bd-6491-41a0-b2e1-81e2b83167ef@lunn.ch>
-In-Reply-To: <2b2ef0bd-6491-41a0-b2e1-81e2b83167ef@lunn.ch>
-From: Stefano Radaelli <stefano.radaelli21@gmail.com>
-Date: Thu, 15 May 2025 19:23:53 +0200
-X-Gm-Features: AX0GCFtrXZdRTTe1Z1VhonDgvkBWT9Gpepioxgzk2FCQBn1UeCMIbi53mBPc35U
-Message-ID: <CAK+owogXdnvoiVNBn_6uBZgqoHrkiQmVU58ip1Wqd6v8VX5f6A@mail.gmail.com>
-Subject: Re: [PATCH] net: phy: add driver for MaxLinear MxL86110 PHY
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Xu Liang <lxu@maxlinear.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250515170633.sn27zil2wie54yhn@desk>
 
-Hi Andrew,
+On Thu, May 15, 2025 at 10:06:33AM -0700, Pawan Gupta wrote:
+> As I said above, a mitigation unintentionally make another mitigation
+> ineffective.
 
-> If there is only one page, does these make any sense?
+I actually didn't need an analysis - my point is: if you're going to warn
+about it, then make it big so that it gets caught.
 
-You're totally right: the MxL86110 does not have a traditional page
-mechanism like other PHYs. The so-called "page" access via register 30
-is simply the standard MaxLinear mechanism to access extended
-registers: reg 30 is used to select the register address, and reg 31 is used
-for the data. So in this case, I can drop both 'phy_select_page()' and the
-'read_page'/'write_page' functions entirely, and just keep the
-'mxl86110_{read,write}_extended_reg()' helpers.
+> Yes, maybe a WARN_ON() conditional to sanity checks for retbleed/SRSO.
 
-> This is confusing. It looks identical to mxl86110_write_page(). So
-> regnum is actually page?
+Yes, that.
 
-Exactly; as mentioned above, regnum isn't a page, it's the actual address
-of the extended register I'm trying to access. The name `regnum` is
-still accurate
-because it corresponds to the extended register map defined by MaxLinear
-and written to reg 30 before accessing reg 31.
+At least.
 
-> So does the value 1 here mean 8ns? 0 would be 2ns?
+The next step would be if this whole "let's set a thunk without overwriting
+a previously set one" can be fixed differently.
 
-Setting RXDLY_ENABLE = 1 enables the internal fixed RX_CLK delay
-provided by the PHY, but the actual delay value depends on the
-RX clock frequency: approximately 2 ns at 125 MHz, and ~8 ns at 25 or 2.5 MHz.
-I'm not explicitly selecting 2 or 8 ns, it's applied automatically by the PHY
-based on clock rate.
+For now, though, the *least* what should be done here is catch the critical
+cases where a mitigation is rendered ineffective. And warning Joe Normal User
+about it doesn't bring anything. We do decide for the user what is safe or
+not, practically. At least this has been the strategy until now.
 
-Since this delay is additive with the configurable digital RX delay
-set in `CFG1_REG`, I only configure 150 ps in the digital field to
-avoid over-delaying.
-That said, if you prefer, I can disable `RXDLY_ENABLE` and set to 1950 ps
-directly in the digital delay field. Just let me know what you'd prefer here.
+So the goal here should be to make Joe catch this and tell us to fix it.
 
-Thanks again,
-Stefano
+Makes sense?
 
-Il giorno gio 15 mag 2025 alle ore 18:33 Andrew Lunn <andrew@lunn.ch>
-ha scritto:
->
-> > +/* only 1 page for MXL86110 */
-> > +#define MXL86110_DEFAULT_PAGE        0
->
-> > +/**
-> > + * mxl86110_read_page - Read current page number
-> > + * @phydev: Pointer to the PHY device
-> > + *
-> > + * Return: The currently selected page number, or negative errno on failure.
-> > + */
-> > +static int mxl86110_read_page(struct phy_device *phydev)
-> > +{
-> > +     return __phy_read(phydev, MXL86110_EXTD_REG_ADDR_OFFSET);
-> > +};
->
-> If there is only one page, does these make any sense?
->
-> > +static int mxl86110_write_page(struct phy_device *phydev, int page)
-> > +{
-> > +     return __phy_write(phydev, MXL86110_EXTD_REG_ADDR_OFFSET, page);
-> > +};
-> > +
-> > +/**
-> > + * mxl86110_write_extended_reg() - write to a PHY's extended register
-> > + * @phydev: pointer to a &struct phy_device
-> > + * @regnum: register number to write
-> > + * @val: value to write to @regnum
-> > + *
-> > + * NOTE: This function assumes the caller already holds the MDIO bus lock
-> > + * or otherwise has exclusive access to the PHY. If exclusive access
-> > + * cannot be guaranteed, please use mxl86110_locked_write_extended_reg()
-> > + * which handles locking internally.
-> > + *
-> > + * returns 0 or negative error code
-> > + */
-> > +static int mxl86110_write_extended_reg(struct phy_device *phydev, u16 regnum, u16 val)
-> > +{
-> > +     int ret;
-> > +
-> > +     ret = __phy_write(phydev, MXL86110_EXTD_REG_ADDR_OFFSET, regnum);
->
-> This is confusing. It looks identical to mxl86110_write_page(). So
-> regnum is actually page?
->
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> > +     return __phy_write(phydev, MXL86110_EXTD_REG_ADDR_DATA, val);
->
-> And within that page, there is a single register at address
-> MXL86110_EXTD_REG_ADDR_DATA?
->
-> If you keep the write_page() and read_page(), it looks like you can
-> replace this with
->
->         return phy_write_paged(phydev, regnum,
->                                MXL86110_EXTD_REG_ADDR_DATA,
->                                val);
->
-> > +static int mxl86110_set_wol(struct phy_device *phydev, struct ethtool_wolinfo *wol)
-> > +{
-> > +     struct net_device *netdev;
-> > +     int page_to_restore;
-> > +     const u8 *mac;
-> > +     int ret = 0;
-> > +
-> > +     if (wol->wolopts & WAKE_MAGIC) {
-> > +             netdev = phydev->attached_dev;
-> > +             if (!netdev)
-> > +                     return -ENODEV;
-> > +
-> > +             page_to_restore = phy_select_page(phydev, MXL86110_DEFAULT_PAGE);
-> > +             if (page_to_restore < 0)
-> > +                     goto error;
->
-> If there is only one page, i think this can be removed. And everywhere
-> else in the driver.
->
-> > +     /*
-> > +      * RX_CLK delay (RXDLY) enabled via CHIP_CFG register causes a fixed
-> > +      * delay of approximately 2 ns at 125 MHz or 8 ns at 25/2.5 MHz.
-> > +      * Digital delays in RGMII_CFG1 register are additive
-> > +      */
-> > +     switch (phydev->interface) {
-> > +     case PHY_INTERFACE_MODE_RGMII:
-> > +             val = 0;
-> > +             break;
-> > +     case PHY_INTERFACE_MODE_RGMII_RXID:
-> > +             val = MXL86110_EXT_RGMII_CFG1_RX_DELAY_150PS;
->
-> This should be 2000ps, or the nearest you can get to it.
->
-> > +             break;
-> > +     case PHY_INTERFACE_MODE_RGMII_TXID:
-> > +             val = MXL86110_EXT_RGMII_CFG1_TX_1G_DELAY_2250PS |
-> > +                     MXL86110_EXT_RGMII_CFG1_TX_10MB_100MB_DELAY_2250PS;
-> > +             break;
-> > +     case PHY_INTERFACE_MODE_RGMII_ID:
-> > +             val = MXL86110_EXT_RGMII_CFG1_TX_1G_DELAY_2250PS |
-> > +                     MXL86110_EXT_RGMII_CFG1_TX_10MB_100MB_DELAY_2250PS;
-> > +             val |= MXL86110_EXT_RGMII_CFG1_RX_DELAY_150PS;
->
-> Same here.
->
-> > +             break;
-> > +     default:
-> > +             ret = -EINVAL;
-> > +             goto err_restore_page;
-> > +     }
-> > +     ret = mxl86110_modify_extended_reg(phydev, MXL86110_EXT_RGMII_CFG1_REG,
-> > +                                        MXL86110_EXT_RGMII_CFG1_FULL_MASK, val);
-> > +     if (ret < 0)
-> > +             goto err_restore_page;
-> > +
-> > +     /* Configure RXDLY (RGMII Rx Clock Delay) to keep the default
-> > +      * delay value on RX_CLK (2 ns for 125 MHz, 8 ns for 25 MHz/2.5 MHz)
-> > +      */
-> > +     ret = mxl86110_modify_extended_reg(phydev, MXL86110_EXT_CHIP_CFG_REG,
-> > +                                        MXL86110_EXT_CHIP_CFG_RXDLY_ENABLE, 1);
->
-> So does the value 1 here mean 8ns? 0 would be 2ns?
->
->     Andrew
->
-> ---
-> pw-bot: cr
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
