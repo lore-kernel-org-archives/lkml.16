@@ -1,82 +1,201 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482BD481C4
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 15:53:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B3FA1D5CDD;
+	Thu, 15 May 2025 15:53:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747324428; cv=none; b=cAm74scaiJrJvnpJBhdnh+hYkEPK84vwnUJDmwzobuPnGzYjkxu80wwoJb5JOqm3aMtkh+CALCO0qNSQIYE3w6hRZcYo0Mnpn+/4jPpgjj4TcsbkBgqboLc9JAQO3xXxjJVoT1lNPabBqrtP4i+vn9P60A0zw3l4W2aF5J7lbBs=
+	t=1747324438; cv=none; b=laVg5q3KSAyoPtjW2gg6yYJvYdARTZdqhnJZiPyc+1QO8YW6YvUQrVWwPlT/5xb40/oz3pblzdymNrAfdZgqoe8Yiq7yeCImCha7xyE8pzyMXSRBqTclrI91vG1z2nGtR1FjiI9WSZ+8tdxB58NPX1MjBMzIr3H8b6Le4iIQrYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747324428; c=relaxed/simple;
-	bh=bus/gjtJ6jnDZJAvN6OTrLA9OvRDzX/sPYLlfJQuzV0=;
+	s=arc-20240116; t=1747324438; c=relaxed/simple;
+	bh=oQtR/k1mAclk4uJV1KOw+qqxCmz293wRmRjMSGxcXd8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C0FRuJ+IF9VIeVHZlMuR7ZKHLeucU6ZtnH55oTPUXDnS8vTSONIMHr3q03qXa3JSUGrqkGdLBKwZylpKiY0bnMDruEf1w1+NKev0kP4TbMFnAAxmaqokJRAltKqKDVCXa34ivZceiv/1PJm3EK8UHu3uSZRB/XfYdPJwPptdmPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uvNW0okx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LW2gLKbmcAXobA4sI9tjQwHDgFbVkmFk3TL+4sGHD7TiiT4LU2l3b28Fz3KkNyA1MS9fDOfjJ8S94hsS0zGkTCHnSpcgwTph7Wt4RH7rfPyEsf7Y0nImm1gWqVNeRn1LuAQt4BAdx9fdsWa8ua4OzRafmCVtRU4PZxFl58MOZz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O6Za27OL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uvNW0okx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88B10C4CEE7;
-	Thu, 15 May 2025 15:53:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O6Za27OL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 847A9C4CEE7;
+	Thu, 15 May 2025 15:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747324426;
-	bh=bus/gjtJ6jnDZJAvN6OTrLA9OvRDzX/sPYLlfJQuzV0=;
+	s=k20201202; t=1747324437;
+	bh=oQtR/k1mAclk4uJV1KOw+qqxCmz293wRmRjMSGxcXd8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uvNW0okxmz6bciskk0TiNGZLdEV/Idfy6+7CzsDNuv6DjMvtv1J7/tyJAydxUyTmK
-	 eGZ7BkcHq7GSgD115GwMxFfMumtDSNWXBpQC4+fS7ZdN4yxBExG9oOBqPCCnByHh6o
-	 mZIrm+BdE2ZMsSRek9GiHHSVknow4RLoP/7zl/ozs4dK0iE0bujJY2ja7KXp9u98dB
-	 Seqpk+gbILwZdxScBAw+kxjP3fo7cG5cu4W38rAvHMUC/VC2TUirCnmdNNze9hXfH9
-	 Sqa+wjyOabXfrM1gsyfvUN8A8ff6j5LyCj4TXzhMLNaZOk1+N4d1G+IZ3bk6WoYKaE
-	 VwjqUuqzFim9g==
-Date: Thu, 15 May 2025 11:53:45 -0400
-From: Tejun Heo <tj@kernel.org>
-To: Muchun Song <songmuchun@bytedance.com>
-Cc: jiangshanlai@gmail.com, linux-kernel@vger.kernel.org,
-	muchun.song@linux.dev
-Subject: Re: [PATCH] workqueue: show the latest function name in
- /proc/PID/{comm,stat,status}
-Message-ID: <aCYOCYsXisQH6mi_@mtj.duckdns.org>
-References: <20250515040523.430181-1-songmuchun@bytedance.com>
+	b=O6Za27OLflHibhD4ws8FWtzHc9u4v9TX6qfFNWqc6vetO9AAvwvQHqBRUZ1MbcGUT
+	 LBk879KeMQeO7xsy0vxFeJu7tHG0PnNgHmZRXREEP66Zq7w5BovG7rTwT7ivJnkr2w
+	 jLKsRZnUv/S4NNiJaZf+vTo5gRgoYJytfbJWyJvs0fsyVVWOE35Mup963P5254DPka
+	 LjlMjxjrfK83OLXgDoyDqyqT9njQBHqo4Y6QcMZ+1ZVdOHcUJ131ZbrxV2lXaZpyfP
+	 c/H+4n1RCiIGLFOdrHGtWOouv7rdHLvDsaCVpNHj1D7reLW3QJfFioltvrvFV1Avkh
+	 124gyKnz1c3xw==
+Date: Thu, 15 May 2025 12:53:55 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	namhyung@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com,
+	sumanthk@linux.ibm.com, hca@linux.ibm.com, irogers@google.com
+Subject: Re: [PATCH V4] perf test: Allow tolerance for leader sampling test
+Message-ID: <aCYOEwgBLWyK7g3q@x1>
+References: <20250430140611.599078-1-tmricht@linux.ibm.com>
+ <aBT0a5lGzUSLpWpX@x1>
+ <CAJpZYjWW07J8J40ygx6-5q_rfKEoz2g0VYCC=Go3PM2pBKvDRw@mail.gmail.com>
+ <aBUY-zaI6BxRvWWS@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250515040523.430181-1-songmuchun@bytedance.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aBUY-zaI6BxRvWWS@x1>
 
-Hello, Muchun.
-
-On Thu, May 15, 2025 at 12:05:23PM +0800, Muchun Song wrote:
-> Workqueues, such as system_unbound_wq, are shared across the system,
-> making it difficult to determine which tasks are being executed by
-> each worker. This patch improves clarity by displaying the latest
-> function name associated with each workqueue worker in the
-> /proc/PID/{comm,stat,status}. For example:
+On Fri, May 02, 2025 at 04:11:55PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Fri, May 02, 2025 at 11:21:07AM -0700, Chun-Tse Shao wrote:
+> > Hi Arnaldo,
+> > 
+> > I submitted the patch v1 and Thomas helped me to modify and submit v2
+> > and v3 while I was OOO. In this case I am not sure which one should be
+> > the author, maybe just keep it as Thomas.
 > 
-> Before:
->   # ps 64 67 68
->   PID TTY STAT TIME COMMAND
->   64  ?   I    0:00 [kworker/u34:0-events_unbound]
->   67  ?   I    0:00 [kworker/u33:1-events_unbound]
->   68  ?   I    0:00 [kworker/u33:2-events_unbound]
+> >From the tags provided, I think it would be best to list you as the
+> author and Thomas a a Co-developer, like mentioned in:
 > 
-> After:
->   # ps 64 67 68
->   PID TTY STAT TIME COMMAND
->   64  ?   I    0:00 [kworker/u34:0-events_unbound:flush_memcg_stats_dwork]
->   67  ?   I    0:00 [kworker/u33:1-events_unbound:flush_to_ldisc]
->   68  ?   I    0:00 [kworker/u33:2-events_unbound:idle_cull_fn]
+> Documentation/process/submitting-patches.rst
 > 
-> This change provides a clearer view of the tasks being performed by
-> each worker, enhancing system monitoring and debugging.
+> Co-developed-by: states that the patch was co-created by multiple developers;
+> it is used to give attribution to co-authors (in addition to the author
+> attributed by the From: tag) when several people work on a single patch.  Since
+> Co-developed-by: denotes authorship, every Co-developed-by: must be immediately
+> followed by a Signed-off-by: of the associated co-author.  Standard sign-off
+> procedure applies, i.e. the ordering of Signed-off-by: tags should reflect the
+> chronological history of the patch insofar as possible, regardless of whether
+> the author is attributed via From: or Co-developed-by:.  Notably, the last
+> Signed-off-by: must always be that of the developer submitting the patch.
+> 
+> Note, the From: tag is optional when the From: author is also the person (and
+> email) listed in the From: line of the email header.
+> 
+> Example of a patch submitted by the From: author::
+> 
+>         <changelog>
+> 
+>         Co-developed-by: First Co-Author <first@coauthor.example.org>
+>         Signed-off-by: First Co-Author <first@coauthor.example.org>
+>         Co-developed-by: Second Co-Author <second@coauthor.example.org>
+>         Signed-off-by: Second Co-Author <second@coauthor.example.org>
+>         Signed-off-by: From Author <from@author.example.org>
+> 
+> Example of a patch submitted by a Co-developed-by: author::
+> 
+>         From: From Author <from@author.example.org>
+> 
+>         <changelog>
+> 
+>         Co-developed-by: Random Co-Author <random@coauthor.example.org>
+>         Signed-off-by: Random Co-Author <random@coauthor.example.org>
+>         Signed-off-by: From Author <from@author.example.org>
+>         Co-developed-by: Submitting Co-Author <sub@coauthor.example.org>
+>         Signed-off-by: Submitting Co-Author <sub@coauthor.example.org>
 
-One worry I have about this is that these will likely be stale most of the
-time as kworkers are just sitting and waiting, and there's no connection
-between what a kworker ran before and what it's going to run next, so I'm
-unsure how useful the extra information is.
+I was expecting some reaction from you or Thomas, but since I got a ping
+from Thomas for this not being processed, I'll process it according to
+my assessment of this thread.
 
-Thanks.
+Thanks,
 
--- 
-tejun
+- Arnaldo
+
+
+>  
+> > Thanks,
+> > CT
+> > 
+> > On Fri, May 2, 2025 at 9:35 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > >
+> > > On Wed, Apr 30, 2025 at 04:06:11PM +0200, Thomas Richter wrote:
+> > > > V4: Update to be applied onto linux-next
+> > > > V3: Added check for missing samples as suggested by Chun-Tse.
+> > > > V2: Changed bc invocation to return 0 on success and 1 on error.
+> > > >
+> > > > There is a known issue that the leader sampling is inconsistent, since
+> > > > throttle only affect leader, not the slave. The detail is in [1]. To
+> > > > maintain test coverage, this patch sets a tolerance rate of 80% to
+> > > > accommodate the throttled samples and prevent test failures due to
+> > > > throttling.
+> > > >
+> > > > [1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
+> > > >
+> > > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> > > > Suggested-by: Ian Rogers <irogers@google.com>
+> > > > Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
+> > >
+> > > But who is the author? As-is this patch states Thomas Richter as the
+> > > author, but since there is also a Suggested-by and Tested-by Thomas
+> > > Richter, it makes me believe the author is Chun-Tse Shao, is that the
+> > > case?
+> > >
+> > > - Arnaldo
+> > >
+> > > > Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+> > > > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> > > > ---
+> > > >  tools/perf/tests/shell/record.sh | 33 ++++++++++++++++++++++++++------
+> > > >  1 file changed, 27 insertions(+), 6 deletions(-)
+> > > >
+> > > > diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+> > > > index 05d91a663fda..587f62e34414 100755
+> > > > --- a/tools/perf/tests/shell/record.sh
+> > > > +++ b/tools/perf/tests/shell/record.sh
+> > > > @@ -240,22 +240,43 @@ test_leader_sampling() {
+> > > >      err=1
+> > > >      return
+> > > >    fi
+> > > > +  perf script -i "${perfdata}" | grep brstack > $script_output
+> > > > +  # Check if the two instruction counts are equal in each record.
+> > > > +  # However, the throttling code doesn't consider event grouping. During throttling, only the
+> > > > +  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
+> > > > +  # let's set the tolerance rate to 80%.
+> > > > +  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
+> > > >    index=0
+> > > > -  perf script -i "${perfdata}" > "${script_output}"
+> > > > +  valid_counts=0
+> > > > +  invalid_counts=0
+> > > > +  tolerance_rate=0.8
+> > > >    while IFS= read -r line
+> > > >    do
+> > > > -    # Check if the two instruction counts are equal in each record
+> > > >      cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
+> > > >      if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
+> > > >      then
+> > > > -      echo "Leader sampling [Failed inconsistent cycles count]"
+> > > > -      err=1
+> > > > -      return
+> > > > +      invalid_counts=$(($invalid_counts+1))
+> > > > +    else
+> > > > +      valid_counts=$(($valid_counts+1))
+> > > >      fi
+> > > >      index=$(($index+1))
+> > > >      prev_cycles=$cycles
+> > > >    done < "${script_output}"
+> > > > -  echo "Basic leader sampling test [Success]"
+> > > > +  total_counts=$(bc <<< "$invalid_counts+$valid_counts")
+> > > > +  if (( $(bc <<< "$total_counts <= 0") ))
+> > > > +  then
+> > > > +    echo "Leader sampling [No sample generated]"
+> > > > +    err=1
+> > > > +    return
+> > > > +  fi
+> > > > +  isok=$(bc <<< "scale=2; if (($invalid_counts/$total_counts) < (1-$tolerance_rate)) { 0 } else { 1 };")
+> > > > +  if [ $isok -eq 1 ]
+> > > > +  then
+> > > > +     echo "Leader sampling [Failed inconsistent cycles count]"
+> > > > +     err=1
+> > > > +  else
+> > > > +    echo "Basic leader sampling test [Success]"
+> > > > +  fi
+> > > >  }
+> > > >
+> > > >  test_topdown_leader_sampling() {
+> > > > --
+> > > > 2.45.2
