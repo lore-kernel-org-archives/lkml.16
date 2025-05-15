@@ -1,136 +1,131 @@
-Received: from silver.cherry.relay.mailchannels.net (silver.cherry.relay.mailchannels.net [23.83.223.166])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEAE9146593;
-	Thu, 15 May 2025 17:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.166
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747330830; cv=pass; b=PmxQU8jBL4PjqUZh3xqDljNwZf1DN2YJoHDKGv1acNZ/DOXbD1xvNvOZBnjODupbha8lChkEjmf0WU76sx1oceGonuNq8oHtMhkKJQMrPxWUJEW3oV9Wk1xdilzrkQW5Jmx/V1NAcPgfbe4H6gib9yVwc+ZafW2fnDRqAuiBRt4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9979218858;
+	Thu, 15 May 2025 17:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747330830; cv=none; b=BDRnfA6Isu4Z1xroQBTXGuqlOZY6N/tcTLfZCkcD09vRdDj+XN98y4mCGYELkOZFoHRW9JXSAbRm9nlZialAdoflZRyyjaYSj6rS5Zm0FFKSrYyjd5UdBl6FaaVCOs1fVScPta32OeX2C+/lSlMPobfoVc8Xx3/Z/D3VgNi5uak=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747330830; c=relaxed/simple;
-	bh=3QdRH/Xwp5B9xckttKM+J35tFyTQOQ7YD4Oixg52R/M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PESKbXZWuBcQrKrg+8IuykvDfVXM+w2bNWoTmLBOsL9dNtrtuaW4tvjbOdVje2p708Qopjj9ais8NLgYU0On4aONRyJExI67WWN/BNqGMptslTqEVrkpBJjALw0oJbkpD4FZLvhINB6apfua5ubojnkkbhyCL7ewRfJ2N/LenRA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=d6MUmXIi; arc=pass smtp.client-ip=23.83.223.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	bh=0IzJdOxR81ygQCmsqANdLatnRP0Wcuz+EfKUEkhkJEA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l1otjG/l9HSYM/dahDBKbBgxrAXMsgakUioZixh4itaVsfuVdGe3vrB8LwYTR74P9XKc1x5+dVMjVzFqa+IpOdRlZhmDYfW2dv1cLQ+lyNE3QU8XGwniY41v83UMpJ/rur73NBN+nqr4Um4Vay/dMgVteFjOVIGB724m9GzD1ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IEJ2ndro; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="d6MUmXIi"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id C2E592C279B;
-	Thu, 15 May 2025 17:40:21 +0000 (UTC)
-Received: from pdx1-sub0-mail-a272.dreamhost.com (100-112-107-83.trex-nlb.outbound.svc.cluster.local [100.112.107.83])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 334832C33E9;
-	Thu, 15 May 2025 17:40:21 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1747330821; a=rsa-sha256;
-	cv=none;
-	b=mk384z56yzkRha7K2Kl/R++SkFtPvQfwvrOjJIBZk3k8r+AA/HQr4RVT/OYu/ac04Ro0Ph
-	3QirFBLiKtUU5GzJpTqGlQzrKL4goIamFCrt0YnbEfHHAbSsyuGRXMFZgwEaRkm0rkN4yt
-	CcqFHWIrYisGKwJ19O4VtlCPkVCkDBsUdZniBpqaXtCTdJrCt8defkB5HVulrZEOilfYng
-	mb9vbwSwgNPavJpkJ8/XgfiLUDB+cxZ3HfSOHY9roUz8KsJ47PYGToHWvlS2JiXkbu/ALB
-	FqOXkZi61Zqs7s3NxNos0j0cay8YueV0IS4dGbgZm4ZSEY8fn8gdT8LUBpQ1GA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1747330821;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=z2K3h8DtdtYAr0P/C5Y1cu0vq9ldHY8qjqE9Mw3c1yM=;
-	b=l5sttM/mQI8Wl2CKxTxGzqGkayxeuh3qB8qaMVXaXhduQsOai7agQzZd3PbPuWMh3VhTRJ
-	8xTgqxs70eBXddf01mi5yAYGr6tUNjewVmgqwOwYKFQw2jqS/5Dqlt+qudxgS1Jt/+MwcH
-	ZScBWjJsy1HOVZLATB4nzt/101If/IIe58aXF6Wc4uzJ66pjTwwhmiI2swZVLlcALt8psy
-	UEDUlvxxSc6vnWk0mXCSV/IgtqYm+Z/+wcIwOTEQTdopSGEgOYQwnSvZJ9H/vemJUplSmh
-	10f186bCKMUp+eRg77vEayvsPMJknkQVdhJ2w+DbFZGoYPdjkCO19bYWLpl5sQ==
-ARC-Authentication-Results: i=1;
-	rspamd-5dcf5fb4c6-pd69g;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Plucky-Coil: 2cb33266341beb2f_1747330821593_1556686013
-X-MC-Loop-Signature: 1747330821593:4255569526
-X-MC-Ingress-Time: 1747330821593
-Received: from pdx1-sub0-mail-a272.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.112.107.83 (trex/7.0.3);
-	Thu, 15 May 2025 17:40:21 +0000
-Received: from localhost.localdomain (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a272.dreamhost.com (Postfix) with ESMTPSA id 4ZyyCm3jRvz6x;
-	Thu, 15 May 2025 10:40:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1747330821;
-	bh=z2K3h8DtdtYAr0P/C5Y1cu0vq9ldHY8qjqE9Mw3c1yM=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=d6MUmXIixeqCYdXU2OeVbwE8vqTd4bXERn1FFN+vYngW8q+yNQzaAIloX8a3lbsRh
-	 IHAgUFHlb3xJFmw++S2PQlD3xQW99hQfS1L65fDh0BDeb7Ke6CnKiFaIYAXae5Jclu
-	 z/fcCqOl1xQMgggt7jiLBsZliYldQk0yC27ZVabgy5M0+4CYI6iOaHBTDzlVSj4MYe
-	 OSY4jc4CkzJmgxCPu2nElKrxTBrmoZdjVridzqCRS9mVvsX0XD7PFjVjvLJuq+Wqlt
-	 uNkRjQwL8WOTcswOeThhPP4rK6uikU63++w30EKfI3ulPZnlYCZ6uMus13iDEhp/Rl
-	 s+dw6n72f30TQ==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: brauner@kernel.org
-Cc: jack@suse.cz,
-	viro@zeniv.linux.org.uk,
-	mcgrof@kernel.org,
-	dave@stgolabs.net,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] fs/buffer: use sleeping lookup in __getblk_slowpath()
-Date: Thu, 15 May 2025 10:39:22 -0700
-Message-Id: <20250515173925.147823-2-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250515173925.147823-1-dave@stgolabs.net>
-References: <20250515173925.147823-1-dave@stgolabs.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IEJ2ndro"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3da73e9cf17so8945435ab.2;
+        Thu, 15 May 2025 10:40:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747330828; x=1747935628; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9Gv+jyqF5iQ9QDCMmj+4HNiLTyap9tDvvCFpoRNaACI=;
+        b=IEJ2ndros5wAvfxAQmVcITjhyjVxyHMT9y6bVlUIqax36s/hwgJE6tZ6Bnuy2MKzIf
+         oxIpmjpcIJG8qGQv8OFNAFnbCiy1olDcFfCM+5cCQ0jd3m1Q8dBfn23jgbtHLjgKqLXP
+         IrmJqSwPmkAYvNiosEKFrWDltcQj4IjQf8v37pHk5V/7DN+RUwXsQZPjPV+axV+hHeXn
+         wp2SiGyn1nG5rYBroH0x84q65Owordgt88vzAHRACZhjTRYKoOJdR6WzyC+MiCBr5m0R
+         yZbTqnDVwDL+sIXh5r1O0M5U4qOrT077/C9cQ5P26mAiB49jSoUZdgbrCZ81IcQtFRlc
+         7AWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747330828; x=1747935628;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9Gv+jyqF5iQ9QDCMmj+4HNiLTyap9tDvvCFpoRNaACI=;
+        b=EIfF4eF08sw6T1rtdvQmOlT/oLTx5E60UpEqsAbNqacoPjnSGgltuV2QgdtPm1mF9y
+         fVdd6QkK29LfNsYVMBIvQniHGCstCpw9oGg5EGfu9wsZhGwZWNrJnuaB01LjlYrzVNxL
+         dFxODCbW6nvg3cgVoKf5HmbggQADNfXTe10mwFDJ63Rn0/IbqDmoi5rk6lpYFl3ZMzbS
+         8qC8iXfgSis/WMl7xWqQFNz7ua4KXjBnk/CrQ9mri/6rszV64DwIgocmrO9d/j7e++yO
+         b0MHckXrxcwccTs15Pct7Mjox4H/8iZnfq6Fud+kkdYBkrkUNxmyKhHKU9LUMN4DVpze
+         XFxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUyd2jmLa6yHmOjTwUbQdWkuP5S6yO2ZL+blPOr3ZgMiq3lkXL1oLgy5IA2r+8qcw93rRRl/VUHwABd8cPE@vger.kernel.org, AJvYcCVisMzaFlOQq72J3aQIzkin4YqErpIVxZaAF2qdEWXA9MEqKXIZL6/Eb08gcb0XNNhZ2w4MR79HtD/U7VKi@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9k32Fulhldq81WbzQxX56vVjkKl5MpBMOGVdIclZ0EVvcTM5o
+	glADaAHQnMVgNrp21L/ALCmh09BIsLRlFDnqWeqdYozHixqAGYvG9tyVXGYt2PU+Q/2fYCDrh/D
+	3Ze7JWNKE/YKda36WeAaOJUOQIzppgVk=
+X-Gm-Gg: ASbGncu55MHQNSXY04MlmScBAoIS4YIFFC05y1RXNwojSkmcMw2F1H2PLOfZnSjsrbv
+	APwy61U4rpUaxKIcC+H4pwtAMs5ubxT8cxaEiPbzKSE7gKBAXOzcnB7+xM0RdD0pCTdoLyvZT7o
+	D5LrZ67bPspvhvDg95FXl3fGZPZ2S7Pg6kW0hu/3LurDd8kNd4vxCX7cwvGcEyrb0=
+X-Google-Smtp-Source: AGHT+IEJipXdl2VdU/Oec1bGlBvZGZ7tO6kaKvHUZEoNz8drXkpWOZVfZlKq5HOiApXq2RnjQWE/s2cZ189LZWiNKr4=
+X-Received: by 2002:a05:6e02:1a6c:b0:3d9:398f:b836 with SMTP id
+ e9e14a558f8ab-3db84321988mr8926665ab.17.1747330827801; Thu, 15 May 2025
+ 10:40:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250514170118.40555-1-robdclark@gmail.com> <20250514170118.40555-5-robdclark@gmail.com>
+ <51f87f358fa1b7ef8db8b67ee6cde38ae071fbe8.camel@mailbox.org>
+ <CAJs_Fx771FFVDVFMn8YJkR9f9Ad-UQspJ9KKQw4u6Cu4TA7YPA@mail.gmail.com>
+ <CACu1E7EL+E-M0N-EAN9Bx7u9O6_pECQQdPE2ph575idhVb2Szg@mail.gmail.com> <aCYkk4Y7feltfp79@pollux>
+In-Reply-To: <aCYkk4Y7feltfp79@pollux>
+From: Rob Clark <robdclark@gmail.com>
+Date: Thu, 15 May 2025 10:40:15 -0700
+X-Gm-Features: AX0GCFtd_SrDNpGNgyp8XAQPhmBBmDgvcdrcdNZ8xnRlH3UestZq2hfK_c4xVuQ
+Message-ID: <CAF6AEGsoG_W3A3+BHV4n5EKZQazFubrCyfrtxVUH7+H4-j7i5A@mail.gmail.com>
+Subject: Re: [PATCH v4 04/40] drm/sched: Add enqueue credit limit
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Connor Abbott <cwabbott0@gmail.com>, Rob Clark <robdclark@chromium.org>, phasta@kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-arm-msm@vger.kernel.org, Matthew Brost <matthew.brost@intel.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	Boris Brezillon <boris.brezillon@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Just as with the fast path, call the lookup variant depending
-on the gfp flags.
+On Thu, May 15, 2025 at 10:30=E2=80=AFAM Danilo Krummrich <dakr@kernel.org>=
+ wrote:
+>
+> (Cc: Boris)
+>
+> On Thu, May 15, 2025 at 12:22:18PM -0400, Connor Abbott wrote:
+> > For some context, other drivers have the concept of a "synchronous"
+> > VM_BIND ioctl which completes immediately, and drivers implement it by
+> > waiting for the whole thing to finish before returning.
+>
+> Nouveau implements sync by issuing a normal async VM_BIND and subsequentl=
+y
+> waits for the out-fence synchronously.
 
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
- fs/buffer.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+As Connor mentioned, we'd prefer it to be async rather than blocking,
+in normal cases, otherwise with drm native context for using native
+UMD in guest VM, you'd be blocking the single host/VMM virglrender
+thread.
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index b8e1e6e325cd..5a4342881f3b 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -1122,6 +1122,8 @@ static struct buffer_head *
- __getblk_slow(struct block_device *bdev, sector_t block,
- 	     unsigned size, gfp_t gfp)
- {
-+	bool blocking = gfpflags_allow_blocking(gfp);
-+
- 	/* Size must be multiple of hard sectorsize */
- 	if (unlikely(size & (bdev_logical_block_size(bdev)-1) ||
- 			(size < 512 || size > PAGE_SIZE))) {
-@@ -1137,7 +1139,10 @@ __getblk_slow(struct block_device *bdev, sector_t block,
- 	for (;;) {
- 		struct buffer_head *bh;
- 
--		bh = __find_get_block(bdev, block, size);
-+		if (blocking)
-+			bh = __find_get_block_nonatomic(bdev, block, size);
-+		else
-+			bh = __find_get_block(bdev, block, size);
- 		if (bh)
- 			return bh;
- 
--- 
-2.39.5
+The key is we want to keep it async in the normal cases, and not have
+weird edge case CTS tests blow up from being _too_ async ;-)
 
+> > But this
+> > doesn't work for native context, where everything has to be
+> > asynchronous, so we're trying a new approach where we instead submit
+> > an asynchronous bind for "normal" (non-sparse/driver internal)
+> > allocations and only attach its out-fence to the in-fence of
+> > subsequent submits to other queues.
+>
+> This is what nouveau does and I think other drivers like Xe and panthor d=
+o this
+> as well.
+
+No one has added native context support for these drivers yet
+
+> > Once you do this then you need a
+> > limit like this to prevent memory usage from pending page table
+> > updates from getting out of control. Other drivers haven't needed this
+> > yet, but they will when they get native context support.
+>
+> What are the cases where you did run into this, i.e. which application in
+> userspace hit this? Was it the CTS, some game, something else?
+
+CTS tests that do weird things with massive # of small bind/unbind.  I
+wouldn't expect to hit the blocking case in the real world.
+
+BR,
+-R
