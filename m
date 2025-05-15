@@ -1,177 +1,287 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5051F4285
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF931F153C;
+	Thu, 15 May 2025 14:50:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747320643; cv=none; b=sB1D/KGkcWzZuI2GODlTb4Lmhj9vTK8fvnBvWCMfWW3BCCcUIW7KS0mVghpwFe5Y2zcW0AMFvd3QlJKxSLYdymlPT/IW4PmfxXRLdRdACxR+PgrKbykSzKBCgZ4iirlueFs3Uwh+Bnv366hbUeIj2FLlpjstLC8Wyw9imTmVi+c=
+	t=1747320652; cv=none; b=nyafX9e2Ql8FoWmcJe4HXHth0lGlqlFLsEgnz97m7ru4nNpWb0FJFNeXujGooBuVxMreVab1au+z/2FQ+06SaSDa8OI0RzYQ2LXQaxK4/5I/bmgjESmxJAomDzPjoIC+2SXl5naeXevBJ93Jc5H2e2RONWQe8kgpRGGOcDRquWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747320643; c=relaxed/simple;
-	bh=iNPPWSSjkux2vHUUvYMs1kFOANwWm0iuVqNOjO5Mcf8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OJp2kgFnPH3mRyO6dllk7uvA9qdYJg1mHBX5QTQxoG3OAT4fPwvxq4mNK2thldkYnjltZc35xDP5vgxBAUHYYNSkYVYLb8SOEpmf6VtkSF/SpLdUIGez9y+HzIEcYveiJCYj8pDPXc4dqnieXMFo+Q/ulJ3mgxxSLpy/La7Fk2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=ZM8Zvx54; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=ZM8Zvx54; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1747320652; c=relaxed/simple;
+	bh=zTVUkT9H/eI878W4CE2bnmENuoMXQB32THJXF04sy1s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Hz5uXsNKpfZSoduTHlaqksHn5L/Kk9gas9nxpLKL1xMwUp4ahVhsRgiIQ7/9QGhtUXqJ8AM3xOnYK9DpVxavUAz8uiuKm0PWvNeN05SDEQnolyyZ/Ui8Hayr3lNorvfyHw5cmlboQ8YURceiXdEbkgmyCVIUZ1kBLDa4geQlSZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QZwVit9I; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="ZM8Zvx54";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="ZM8Zvx54"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 492341F387;
-	Thu, 15 May 2025 14:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1747320639; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iNPPWSSjkux2vHUUvYMs1kFOANwWm0iuVqNOjO5Mcf8=;
-	b=ZM8Zvx54WX9irnyij+Lz+cLbYu3X+YT8LgN8Gvm1RPXcgqyWs+EdxRbJqKlPinTBTT1krk
-	5EzlzE8AFEwjpFvy+PJZxbWGgfkfvpMZab0ok0N3DPidSmfEGAQYEnWJ1MBEVYwLHcLEA+
-	ohRv9n649lWpoWXfN+f09tEL2R/5FLA=
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=ZM8Zvx54
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1747320639; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iNPPWSSjkux2vHUUvYMs1kFOANwWm0iuVqNOjO5Mcf8=;
-	b=ZM8Zvx54WX9irnyij+Lz+cLbYu3X+YT8LgN8Gvm1RPXcgqyWs+EdxRbJqKlPinTBTT1krk
-	5EzlzE8AFEwjpFvy+PJZxbWGgfkfvpMZab0ok0N3DPidSmfEGAQYEnWJ1MBEVYwLHcLEA+
-	ohRv9n649lWpoWXfN+f09tEL2R/5FLA=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DE918137E8;
-	Thu, 15 May 2025 14:50:38 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id xOrEND7/JWjFOQAAD6G6ig
-	(envelope-from <mwilck@suse.com>); Thu, 15 May 2025 14:50:38 +0000
-Message-ID: <71b42e5b613628642abeba5bd1e61089ca59c643.camel@suse.com>
-Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
- paths
-From: Martin Wilck <mwilck@suse.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Benjamin Marzinski <bmarzins@redhat.com>, Christoph Hellwig	
- <hch@infradead.org>, Kevin Wolf <kwolf@redhat.com>,
- dm-devel@lists.linux.dev,  Hanna Czenczek <hreitz@redhat.com>, Mikulas
- Patocka <mpatocka@redhat.com>, snitzer@kernel.org, "Kernel Mailing List,
- Linux" <linux-kernel@vger.kernel.org>, Hannes Reinecke <hare@suse.com>
-Date: Thu, 15 May 2025 16:50:38 +0200
-In-Reply-To: <CABgObfZVbKcAua_=+C_0eC5Ec2ZDY4Bsz_b1memF1KifVGhoQw@mail.gmail.com>
-References: <20250429165018.112999-1-kwolf@redhat.com>
-	 <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
-	 <aCIRUwt5BueQmlMZ@redhat.com> <aCLe5UT2kfzI96TQ@infradead.org>
-	 <aCMQ5S-gI6vZJxmq@redhat.com> <aCQiz88HksKg791Z@infradead.org>
-	 <aCTDiHMuMncwdp_X@redhat.com>
-	 <50beb356b4dc000446fd186ab754c87f386eaeae.camel@suse.com>
-	 <CABgObfaEiMN=YANk02EWini+jAXU1MxSvo8_jYWaMiu3ds7hgQ@mail.gmail.com>
-	 <2f0fc8ef7d04c590893bd6d54a6c0c842c4b21d7.camel@suse.com>
-	 <CABgObfZVbKcAua_=+C_0eC5Ec2ZDY4Bsz_b1memF1KifVGhoQw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QZwVit9I"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso11096245e9.0;
+        Thu, 15 May 2025 07:50:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747320648; x=1747925448; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/GuVrR218OTIKMuet6zzIKhyiz67c2WUQNm8GReKqZo=;
+        b=QZwVit9ILscyw/M9JMRpp+u1pWE7/tp0jpet10PSSU5XGyGV/9iXB4ggTH44gmEbNk
+         uO+AexTWqtA4ipZjqGrDMSjpgqltD0rluDKM7WnYIqkvAfnNov4HrWXX5dwKV4N5fJHS
+         XOwHnlgSvW8f9r8fxPp5LFd6v6iOonA3yZbss5yYKqeaiEBKstFDgJqjgzBmkgFvXFE1
+         /JKTWMSbwaj9mjVZKHEN3WWGYSX3ZHSk4N6oNJV84epziV62OI72or3qyBp/drH17nWs
+         jzq0YYaZ1WGNqgck4oQ613qEtj5P+63+18TvlMr/ysSWUkj1cuSUss7cdsDS3I5Mhyrz
+         v7Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747320648; x=1747925448;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/GuVrR218OTIKMuet6zzIKhyiz67c2WUQNm8GReKqZo=;
+        b=C7jgYZhENYjkUIPnhJtPxYAVmuTCbZ6RulcOcsLAgQhXXJSTshKthndYcb1oGk4SNp
+         j+DnK/RT8Xuk7KyFHnHQ1Z/HrJx14FWsWtJr4Eva/KnpUMPD/dCyHf2BPLxB2O2/dwyo
+         bUGFjrPWcRE16yZAKYtD4TB2vHajHM8lG/T+7H4ZGka+xPx37PLtJ1o9+nF1COj9v95t
+         cXUwcsTZyEWZmkQ22jFxdyFW0r+f+e0WlNEpkpHCooD8Bk7fOM3ynguzvIAdPLPah8h1
+         xbt1vbUGwV1Epnc9uVOdKIUPegdQo9BwKKLiKGaw1lvScLKUvTfy4bjkt+2Z2CxP8sLm
+         mOXg==
+X-Forwarded-Encrypted: i=1; AJvYcCWbjRm2DJzfCL9lxX1Obm1dLE9MG7lWbY9E6sS+wpQBWJJ9DQhQ0hpTnI7zo8IW0XH65sYZ8e5Yhc8=@vger.kernel.org, AJvYcCWrWhyGPNT87yTbiPS43RAGWNjWBfoMu28XT/9nbKhyRgWeoeavUU0lmVBLf3Ql9cXuDwBcwGJxc1ya1iqx@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywgwk4NEtXoRLNmgY95COGXX+n2cnUOPP72/Q8223Wi17ZuXVmc
+	BhRtjgRa2FnT9dNsi5h+LzMdxxsEuObuQwAR/8UsjjAFhoB1bG2q
+X-Gm-Gg: ASbGncuscM9F6ZQfK/kKBNUZHkjxhmVbpro/MwdpGQ+qqYz7GWQa/X58r6rutsB87+A
+	9S7SRUQqqzXU8IqZ2o6mRS3836GcF0pbjzIKmdn0WiKaet4khIbP/s+GnBNQMZcw+Na6kPkgG/I
+	cX7fDtl9tabo/z10johMUPAgzhqizTcjmuwjpVh0TmFm4hS5BYXjGRzSzMUgvqTvX1mEbdQsVJM
+	bpJa8IDHuxoEbAbHN2Md8GqXPNUqb/pzY/7olaH9GPIr2qMAu2nQ6BIFsTS+spjFgGgESjCrhY9
+	nskpT49iS+v0by1FAmFquX7rD2R56sj0im98rEgsEsmVhxgVCiRnr2rpjwrf/OziMdGCxoPpiOu
+	enmMzYc5z3MC+9bunwsK98fLibvVIoQyGIxUTkQuYOdcNCfI=
+X-Google-Smtp-Source: AGHT+IGLlYxUOv3wMLNiKWUkaDJQTkJgIA/yeIbbcT3MiDxc+AeU9uYZmu24kvdmZnnE9FDI9YerxA==
+X-Received: by 2002:a05:600c:1986:b0:43d:7588:6688 with SMTP id 5b1f17b1804b1-442f4735b63mr71905045e9.12.1747320648103;
+        Thu, 15 May 2025 07:50:48 -0700 (PDT)
+Received: from ?IPV6:2a01:4b00:b211:ad00:1096:2c00:b223:9747? ([2a01:4b00:b211:ad00:1096:2c00:b223:9747])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3380615sm71009705e9.16.2025.05.15.07.50.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 07:50:47 -0700 (PDT)
+Message-ID: <5e4c107f-9db8-4212-99b6-a490406fec77@gmail.com>
+Date: Thu, 15 May 2025 15:50:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 492341F387
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:email,suse.com:mid,suse.com:dkim];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	DKIM_TRACE(0.00)[suse.com:+]
-X-Spam-Score: -4.51
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/6] prctl: introduce PR_SET/GET_THP_POLICY
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
+ linux-mm@kvack.org, hannes@cmpxchg.org, shakeel.butt@linux.dev,
+ riel@surriel.com, ziy@nvidia.com, laoar.shao@gmail.com,
+ baolin.wang@linux.alibaba.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, kernel-team@meta.com
+References: <20250515133519.2779639-1-usamaarif642@gmail.com>
+ <6502bbb7-e8b3-4520-9547-823207119061@lucifer.local>
+Content-Language: en-US
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <6502bbb7-e8b3-4520-9547-823207119061@lucifer.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2025-05-15 at 12:51 +0200, Paolo Bonzini wrote:
-> On Thu, May 15, 2025 at 12:34=E2=80=AFPM Martin Wilck <mwilck@suse.com>=
-=20
-> >=20
-> > Thanks for mentioning this. However, I suppose that depends on the
-> > permissions with which the qemu process is started, no? Wouldn't
-> > qemu need CAP_SYS_RAWIO for PCI passthrough as well?
->=20
-> Generally you want to assume that the VM is hostile and run QEMU with
-> as few privileges as possible (not just capabilities, but also in
-> separate namespaces and with restrictions from device cgroups,
-> SELinux, etc.). PCI passthrough is not an issue, it only needs access
-> to the VFIO inodes and you can do it by setting the appropriate file
-> permissions without extra capabilities. The actual privileged part is
-> binding the device to VFIO, which is done outside QEMU anyway.
 
-Thanks for the clarification.
 
-> > I admit that I'm confused by the many indirections in qemu's scsi-
-> > block
-> > code flow. AFAICS qemu forwards everything except PRIN/PROUT to the
-> > kernel block device in "scsi-block" mode. Correct me if I'm wrong.
->=20
-> Yes, that's correct. The code for PRIN/PROUT calls out to a separate
-> privileged process (in scsi/qemu-pr-helper.c if you're curious) which
-> is aware of multipath and can be extended if needed.
+On 15/05/2025 14:55, Lorenzo Stoakes wrote:
+> On Thu, May 15, 2025 at 02:33:29PM +0100, Usama Arif wrote:
+>> This allows to change the THP policy of a process, according to the value
+>> set in arg2, all of which will be inherited during fork+exec:
+> 
+> This is pretty confusing.
+> 
+> It should be something like 'add a new prctl() option that allows...' etc.
+> 
+>> - PR_THP_POLICY_DEFAULT_HUGE: This will set the MMF2_THP_VMA_DEFAULT_HUGE
+>>   process flag which changes the default of new VMAs to be VM_HUGEPAGE. The
+>>   call also modifies all existing VMAs that are not VM_NOHUGEPAGE
+>>   to be VM_HUGEPAGE.
+> 
+> This is referring to implementation detail that doesn't matter for an overview,
+> just add a summary here e.g.
+> 
+> PR_THP_POLICY_DEFAULT_HUGE - set VM_HUGEPAGE flag in all VMAs by default,
+> including after fork/exec, ignoring global policy.
+> 
+> PR_THP_POLICY_DEFAULT_NOHUGE - clear VM_HUGEPAGE flag in all VMAs by default,
+> including after fork/exec, ignoring global policy.
+> 
+> PR_THP_POLICY_DEFAULT_SYSTEM - Eliminate any policy set above.
 
-Sure, I was aware of the helper. I just wasn't 100% clear about how it
-gets called. Found the code in the meantime [1].
+Hi Lorenzo,
 
-[1] https://github.com/qemu/qemu/blob/864813878951b44e964eb4c012d832fd21f8c=
-c0c/block/file-posix.c#L4286
+Thanks for the review. I will make the cover letter clearer in the next revision.
 
-> > > .Of the ones that aren't simple I/O, mode parameters and TUR are
-> > > the
-> > > important cases. A TUR failure would be handled by the ioctl that
-> > > Kevin proposed here by forcing a path switch. Mode parameters
-> > > might
-> > > not be shared(*) and would need to be sent down all the paths in
-> > > that
-> > > case; that can be fixed in userspace if necessary.
-> >=20
-> > Passing TUR from a multipath device to a random member doesn't make
-> > much sense to me. qemu would need to implement some logic to
-> > determine
-> > whether the map has any usable paths.
->=20
-> As long as one path replies to a TUR and the host is able to
-> (eventually, somehow) steer I/O transparently to that path, that
-> should be good enough. If the one path that the kernel tries is down,
-> QEMU can probe which paths are up and retry. That seems consistent
-> with what you want from TUR but maybe I'm missing something.
+> 
+>>   This allows systems where the global policy is set to "madvise"
+>>   to effectively have THPs always for the process. In an environment
+>>   where different types of workloads are stacked on the same machine
+>>   whose global policy is set to "madvise", this will allow workloads
+>>   that benefit from always having hugepages to do so, without regressing
+>>   those that don't.
+> 
+> So does this just ignore and override the global policy? I'm not sure I'm
+> comfortable with that.
 
-It's ok-ish, in particular in combination with Kevin't patch. But using
-an equivalent of "multipath -C" would be closer to the real thing for
-TUR.
+No. The decision making of when and what order THPs are allowed is not
+changed, i.e. there are no changes in __thp_vma_allowable_orders and
+thp_vma_allowable_orders. David has the same concern as you and this
+current series is implementing what David suggested in
+https://lore.kernel.org/all/3f7ba97d-04d5-4ea4-9f08-6ec3584e0d4c@redhat.com/
 
-Regards
-Martin
+It will change the existing VMA (NO)HUGE flags according to
+the prctl. For e.g. doing PR_THP_POLICY_DEFAULT_HUGE will not give
+a THP when global policy is never. 
+
+> 
+> What about if the the policy is 'never'? Does this override that? That seems
+> completely wrong.
+
+No, it won't override it. hugepage_global_always and hugepage_global_enabled
+will still evaluate to false and you wont get a hugepage no matter what prctl
+is set.
+
+> 
+>> - PR_THP_POLICY_DEFAULT_NOHUGE: This will set the MMF2_THP_VMA_DEFAULT_NOHUGE
+>>   process flag which changes the default of new VMAs to be VM_NOHUGEPAGE.
+>>   The call also modifies all existing VMAs that are not VM_HUGEPAGE
+>>   to be VM_NOHUGEPAGE.
+>>   This allows systems where the global policy is set to "always"
+>>   to effectively have THPs on madvise only for the process. In an
+>>   environment where different types of workloads are stacked on the
+>>   same machine whose global policy is set to "always", this will allow
+>>   workloads that benefit from having hugepages on an madvise basis only
+>>   to do so, without regressing those that benefit from having hugepages
+>>   always.
+> 
+> Wait, so 'no huge' means 'madvise'? What? This is confusing.
+
+
+I probably made the cover letter confusing :) or maybe need to rename the flags.
+
+This flag work as follows: 
+
+a) Changes the default flag of new VMAs to be VM_NOHUGEPAGE
+
+b) Modifies all existing VMAs that are not VM_HUGEPAGE to be VM_NOHUGEPAGE
+
+c) Is inherited during fork+exec
+
+I think maybe I should add VMA to the flag names and rename the flags to
+PR_THP_POLICY_DEFAULT_VMA_(NO)HUGE ??
+
+> 
+>> - PR_THP_POLICY_DEFAULT_SYSTEM: This will clear the MMF2_THP_VMA_DEFAULT_HUGE
+>>   and MMF2_THP_VMA_DEFAULT_NOHUGE process flags.
+>>
+>> These patches are required in rolling out hugepages in hyperscaler
+>> configurations for workloads that benefit from them, where workloads are
+>> stacked anda single THP global policy is likely to be used across the entire
+>> fleet, and prctl will help override it.
+> 
+> I don't understand this justification whatsoever. What does 'stacked' mean? And
+> you're not justifying why you'd override the policy?
+
+By stacked I just meant different types of workloads running on the same machine.
+Lets say we have a single server whose global policy is set to madvise.
+You can have a container on that server running some database workload that best
+works with madvise.
+You can have another container on that same server running some AI workload that would
+benefit from having VM_HUGEPAGE set on all new VMAs. We can use prctl
+PR_THP_POLICY_DEFAULT_HUGE to get VM_HUGEPAGE set by default on all new VMAs for that
+container.
+
+> 
+> This series has no actual justificaiton here at all? You really need to provide one.
+> 
+
+There was a discussion on the usecases in
+https://lore.kernel.org/all/13b68fa0-8755-43d8-8504-d181c2d46134@gmail.com/
+
+I tried (and I guess failed :)) to summarize the justification from that thread.
+
+I will try and rephrase it here.
+
+In hyperscalers, we have a single THP policy for the entire fleet.
+We have different types of workloads (e.g. AI/compute/databases/etc)
+running on a single server (this is what I meant by 'stacked').
+Some of these workloads will benefit from always getting THP at fault (or collapsed
+by khugepaged), some of them will benefit by only getting them at madvise.
+
+This series is useful for 2 usecases:
+
+1) global system policy = madvise, while we want some workloads to get THPs
+at fault and by khugepaged :- some processes (e.g. AI workloads) benefits from getting
+THPs at fault (and collapsed by khugepaged). Other workloads like databases will incur
+regression (either a performance regression or they are completely memory bound and
+even a very slight increase in memory will cause them to OOM). So what these patches
+will do is allow setting prctl(PR_THP_POLICY_DEFAULT_HUGE) on the AI workloads,
+(This is how workloads are deployed in our (Meta's/Facebook) fleet at this moment).
+
+2) global system policy = always, while we want some workloads to get THPs
+only on madvise basis :- Same reason as 1). What these patches
+will do is allow setting prctl(PR_THP_POLICY_DEFAULT_NOHUGE) on the database
+workloads.
+(We hope this is us (Meta) in the near future, if a majority of workloads show that they
+benefit from always, we flip the default host setting to "always" across the fleet and
+workloads that regress can opt-out and be "madvise".
+New services developed will then be tested with always by default. "always" is also the
+default defconfig option upstream, so I would imagine this is faced by others as well.)
+
+Hope this makes the justification for the patches clearer :)
+
+>>
+>> v1->v2:
+> 
+> Where was the v1? Is it [0]?
+> 
+> This seems like a massive change compared to that series?
+> 
+> You've renamed it and not referenced the old series, please make sure you link
+> it or somehow let somebody see what this is against, because it makes review
+> difficult.
+> 
+
+Yes its the patch you linked below. Sorry should have linked it in this series.
+Its a big change, but it was basically incorporating all feedback from David,
+while trying to achieve a similar goal. Will link it in future series.
+
+> [0]: https://lore.kernel.org/linux-mm/20250507141132.2773275-1-usamaarif642@gmail.com/
+> 
+>> - change from modifying the THP decision making for the process, to modifying
+>>   VMA flags only. This prevents further complicating the logic used to
+>>   determine THP order (Thanks David!)
+>> - change from using a prctl per policy change to just using PR_SET_THP_POLICY
+>>   and arg2 to set the policy. (Zi Yan)
+>> - Introduce PR_THP_POLICY_DEFAULT_NOHUGE and PR_THP_POLICY_DEFAULT_SYSTEM
+>> - Add selftests and documentation.
+>>
+>> Usama Arif (6):
+>>   prctl: introduce PR_THP_POLICY_DEFAULT_HUGE for the process
+>>   prctl: introduce PR_THP_POLICY_DEFAULT_NOHUGE for the process
+>>   prctl: introduce PR_THP_POLICY_SYSTEM for the process
+>>   selftests: prctl: introduce tests for PR_THP_POLICY_DEFAULT_NOHUGE
+>>   selftests: prctl: introduce tests for PR_THP_POLICY_DEFAULT_HUGE
+>>   docs: transhuge: document process level THP controls
+>>
+>>  Documentation/admin-guide/mm/transhuge.rst    |  40 +++
+>>  include/linux/huge_mm.h                       |   4 +
+>>  include/linux/mm_types.h                      |  14 +
+>>  include/uapi/linux/prctl.h                    |   6 +
+>>  kernel/fork.c                                 |   1 +
+>>  kernel/sys.c                                  |  35 +++
+>>  mm/huge_memory.c                              |  56 ++++
+>>  mm/vma.c                                      |   2 +
+>>  tools/include/uapi/linux/prctl.h              |   6 +
+>>  .../trace/beauty/include/uapi/linux/prctl.h   |   6 +
+>>  tools/testing/selftests/prctl/Makefile        |   2 +-
+>>  tools/testing/selftests/prctl/thp_policy.c    | 286 ++++++++++++++++++
+>>  12 files changed, 457 insertions(+), 1 deletion(-)
+>>  create mode 100644 tools/testing/selftests/prctl/thp_policy.c
+>>
+>> --
+>> 2.47.1
+>>
+
