@@ -1,107 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2F08F6B;
-	Thu, 15 May 2025 06:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1B38F6B;
+	Thu, 15 May 2025 06:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747290908; cv=none; b=hZ7iwb7EwCfE2j28OAdBcV8SDMt3D5XOuq983ne1JVUhxLfViRa6OUNRBxHRxk5PkK01slUGbAJDqJsWJ2pMqH4nlP2hme32wk8H1mAAJ7O1NYIPCSJAkDuusUtlKAVF2WzLSiRILV5HoEPSjRVGiyaGrJVlmjEmsaRmy/UfHXs=
+	t=1747291005; cv=none; b=rORMFN0zerQH8w/f7j6VqzfUzPx+jRayApuCmO238+GphSMo4eQsagwvGTeDo7OHkxpjF6uYT0T+ejW8oQ3rUT8ohpTWuQKMuyr7F7XLJuZ+tEtLgSzGTpvVX39YEeddn0Ao7EpLj7YdOPaoF4mFRW6r6eFZ2CSGBJPfrnOfqFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747290908; c=relaxed/simple;
-	bh=MSr4YD5vSH4lNI7mt0HBLXYbePuFkhW1qFm0gecuRME=;
+	s=arc-20240116; t=1747291005; c=relaxed/simple;
+	bh=mAWACcbgCQjfBG0zUlUGFmA6qWKqO3wNro0jZrQNGFA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lQbPiC15eoOu/zjsqh7YtJqR+8ds6xmEeWEH92olUurXkUzEsj3Cg2IX3+Fcy1dP9PMNK6XK0hTeN0+UDOtaM3McQhy94gFD4ie9AcAwL/0fZ4CNblKfHrTf8S4bxlpr18NOjtlmIIjMOBk+i00sKu7Zwy4OMNDm9OLJREoP57M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QiX7F27m; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=RWkhH/xRM1P+tlm3FlYwDssCd6js4X4Ku1/DJGnrA3lmRUJivJPWUJBH79BHxwTWWqkWuDg6QNUE9uOyyGGsWsj9pV3wVr15HOhSJqgIxnNjirGmsy0vna4Ua0B+oVmx9/+Z3K8oyG4MoZmg9DUCRlDFzu/2PG3fPVdoNbtk9tA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=Pg2oSOkg; arc=none smtp.client-ip=52.59.177.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QiX7F27m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F683C4AF09;
-	Thu, 15 May 2025 06:35:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747290907;
-	bh=MSr4YD5vSH4lNI7mt0HBLXYbePuFkhW1qFm0gecuRME=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QiX7F27mVMR9T79j8DQ7z8gQkgcSQEv0mf/vft1q9VdKuieQaHGE0DzgKhumDV8rB
-	 QQrsOUqSaxLbVGQCdPdGymB5MqmDFu0oKJxO4WlqyfLoS/3rqptcS8yPZT9FXVsvzZ
-	 jTv03wGzqNbZLJEKGyd5tC2MgX1Q2qxVNT4yC3cld+fQQIprTu0rHmYGY5c6W2LAT/
-	 W5Bl6inEAEsJI4guQOQcFN10dHZVFY7bEkByvOVZVwXVPX4QUpc7LyxXkuuCbkUpYb
-	 gUHoJ0tJ8Af1XiqvPOsqNZKtHSotvxy9sBxBV7BfmxSyFavJHeqHBINmfbYn136VQk
-	 Aj7CF1fL3DFHw==
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a0b7fbdde7so450282f8f.2;
-        Wed, 14 May 2025 23:35:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU+9dRE6yx6RVn3S8d3oVMZQbzCAbqObXCQ+7UA0GG+MrRQaAiLIDxabkOT1A3sJS+r8ll1kGCv2oyR@vger.kernel.org, AJvYcCV8Z7MMwXYnFl44OTjfOazVPmctGuNb/udkAYjUeKJwmubnL7LdgfNnReYEi/O1ecf7UyH0S+6iptx6t6CJ@vger.kernel.org, AJvYcCX5IxzLec5Gp0vlMTQJf5SNs3cM4aocglJzY2c3CPOIjv8F2Xr5/8Eo3ayq8iV3I01Fh6mcPX83xVmHmNzZjVrKyA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5bfN6DK/JoXN570b/drXVVaGt3nrfuPdwOpYZoBJO/0aIKW8h
-	zf0Ynj4z22KXycaFYjZ/cjt6DP8HiE2dnVJxZ4VT6AbUPxITjD+YjQ+K1zyujjPaY7LCmsYn2Iu
-	BeA01NI1zwhsf9a1+QNvmzRTmk5Q=
-X-Google-Smtp-Source: AGHT+IFGLHb7ySos/FnFUiLC+79eVlvbF+XUlDMy0ikXTR7voaegX8lHIiEjUdPYRkwNprzSQchX3TU4Sk49muf6LHU=
-X-Received: by 2002:a5d:5f46:0:b0:3a3:582f:efaf with SMTP id
- ffacd0b85a97d-3a3582ff088mr403353f8f.26.1747290905872; Wed, 14 May 2025
- 23:35:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="Pg2oSOkg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1747290986;
+	bh=mAWACcbgCQjfBG0zUlUGFmA6qWKqO3wNro0jZrQNGFA=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To;
+	b=Pg2oSOkgfuaqGthsU75V7s/w/0TPhAT4wD1SF7fK3kQqHuxHpXZUImt+btAsAEXqB
+	 y9AkqMS9OmWXEr7DM8Ej//oVt/kuVVHKZJEsN8zibEL9ElnU50Qi98P2cRra46n+nV
+	 bmD+qRGa0EE0Dpw0qdWx3mKx7RvXk69s7e7a91+A=
+X-QQ-mid: esmtpsz20t1747290983t8ac72b44
+X-QQ-Originating-IP: 2JMmng1bOHlWlBsbdCu9ql2FwCNRLbUun0qhecmRrrk=
+Received: from mail-yw1-f169.google.com ( [209.85.128.169])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 15 May 2025 14:36:22 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 13543139004244045060
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-703cd93820fso5280297b3.2;
+        Wed, 14 May 2025 23:36:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVj78Bfi59q99JdxPMv67yZPWoM1CN9ngPvEm63dasOXJgYxpd7gd2lEFLn6nWsb5f1J0X2VP94EteZBRsM@vger.kernel.org, AJvYcCXZeJqmjWTdGw7JYySiYZxwC71Od4m7PPJNkzWVY8g1OV+NzHU2dKqOu++51uomV6WnevnfDTiaVkodw16s@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIIZ/Ah4s+4wBnTuMvCvYCjfI3Fje1UETtge2AXxvt7tJKLBSU
+	obbNTpZrgP5MO/ZACpVJYbPggbHSRyHMGGNZV9PvDAfefmLMkmvOjhaD8ZXi8yaWJH/bW0fMnkX
+	0bbz7bBRZs1OyB8aai5X8R7/miRA=
+X-Google-Smtp-Source: AGHT+IFoEpdCFhKbCLBX8zmOYMArHOET33DR4T79OJLTP/LXAE5lnsp3yv3tUOzLmbqqgWBGhoppNmu0wLRrQBgzrGU=
+X-Received: by 2002:a05:690c:6a03:b0:707:48a7:ea74 with SMTP id
+ 00721157ae682-70c945a0d6cmr16925007b3.22.1747290981225; Wed, 14 May 2025
+ 23:36:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514151401.2547932-1-kan.liang@linux.intel.com> <20250514151401.2547932-12-kan.liang@linux.intel.com>
-In-Reply-To: <20250514151401.2547932-12-kan.liang@linux.intel.com>
-From: Guo Ren <guoren@kernel.org>
-Date: Thu, 15 May 2025 08:34:53 +0200
-X-Gmail-Original-Message-ID: <CAJF2gTSKyhzVMeWA9DN7wjaOfKW+K8XiO56c10kim6eesJYDDg@mail.gmail.com>
-X-Gm-Features: AX0GCFtDQK1cgru_NYx59vfBOI0EV2TaEiyZ3thPCPW0dP3lU5WeJSfw_X1WhWs
-Message-ID: <CAJF2gTSKyhzVMeWA9DN7wjaOfKW+K8XiO56c10kim6eesJYDDg@mail.gmail.com>
-Subject: Re: [PATCH V2 11/15] csky/perf: Remove driver-specific throttle support
-To: kan.liang@linux.intel.com
-Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org, 
-	irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com, 
-	tmricht@linux.ibm.com, Mao Han <han_mao@c-sky.com>, Guo Ren <ren_guo@c-sky.com>, 
-	linux-csky@vger.kernel.org
+References: <20250511084859.1788484-3-chenlinxuan@uniontech.com> <CAJfpegtJ423afKvQaai8EeFrP4soep6LrA3jZg4A1oth3Fi2gg@mail.gmail.com>
+In-Reply-To: <CAJfpegtJ423afKvQaai8EeFrP4soep6LrA3jZg4A1oth3Fi2gg@mail.gmail.com>
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+Date: Thu, 15 May 2025 14:36:09 +0800
+X-Gmail-Original-Message-ID: <A0DCB600E7D575B0+CAC1kPDNvU-F=09Dsm1DW43Xrm1e4T3BQ0K5j7R1PHrQ-Ju0i6g@mail.gmail.com>
+X-Gm-Features: AX0GCFsiP56tFX9xzTLsc-CJDt0yjYb09zQeXIqbaazIALgozwSe1-4VjEohzyg
+Message-ID: <CAC1kPDNvU-F=09Dsm1DW43Xrm1e4T3BQ0K5j7R1PHrQ-Ju0i6g@mail.gmail.com>
+Subject: Re: [PATCH v4] fs: fuse: add more information to fdinfo
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Chen Linxuan <chenlinxuan@uniontech.com>, Amir Goldstein <amir73il@gmail.com>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: Nc/J2CUvEttVObEk7AbQv23lDniBxsy/fQPA20/MxUDhia5i+H8RZdyE
+	OvIaWNU5EKFV4TtoJnDA9QPVKcQgrVHozLF4t7kiNwa8SiN7mJJWnjKhhdr55WoujBYmtCH
+	waXlQ68WsiUv9+29j+yAv6WjongZw+QwrHTXOFEWpAq3drcCbC6Hl7ATStuFgbDer/1XLNY
+	JKiLiP6XGmZMvcEjz1/Yc8G+ik727fguD/ChzjK2Cm7xrJ74bkRjHYxdOf74bN5BLnTdkDx
+	COlsSKEqwLIK6d6taASsqBpMsfD44qEmQnGdyEGFvXT4mui117KhECTZ86ycOZFy1h/iTQ4
+	DfCOQF2KZz2UlAmeylj1qemQX/vnKIRE5CudtEQUrkuMuD5PSaNL2Yh2g5eEmOtUqpWv4dU
+	2Wwt8MSeR5PhVLkuMITyMp+5JxexRQLBfMHIg6RKJLdkfNRSSrFz8OETO99UhBUYYsLT2xd
+	WS6czwFZZTk6fSNNYFimDTHrL9iWgde5efdGGzcq9PPEKe9jFcKCyiXLG//SrYN2cHUtPdD
+	VbyKFtI7lrf+I/LhlYHVGA/H0gr4Q2S4PsjNpEL3dSfPw3g5W0CLl39um/vMj1G2TAcaX/K
+	rPRKaop+4Obx2j4wR6PdCagr6QfWYm1KkkrkeOrVTlgHWuRIEyaG7mGIHKltA0xxpSWYWq1
+	EVyIStTheLbi8wSh/DW50IJXHA8hZc9Hyn98OwtsK1n1Wu1D5PFJpk4xVFccBn71YyvO2WP
+	Qkqibcy52wjpMzdvbETTLX42gTUqnZTwAl6NRXfULa7qC09DGR4SoavVY2xvjlLUBQGSS1C
+	O6HqXLChu1YamHK470NLj67rg1/fQnYamNCCd51HUvvPKh9rRzQa9vTRyKTGcPMjA3PXjDK
+	WmT7+d7VnB1t3cbVIB3ar4TcOpnk9Ie+9+/Ewd5BZA+0yEnuxr9gIWqhZyzbFg6Soh30+kM
+	qGGItiqjekrG2TsSzCCaKEdi5ljQrcgg7vuJAOJKXHWONqqJSesdcyn76N07LXX4KV9ZnTf
+	0hcsqZCRlHqGFpVl1AsxTPU0k0SosS7KMy/i/z4h9rJ3PB0ciQDOcFaRGOkiA/V+Xj4xoLZ
+	A==
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
-On Wed, May 14, 2025 at 6:49=E2=80=AFPM <kan.liang@linux.intel.com> wrote:
->
-> From: Kan Liang <kan.liang@linux.intel.com>
->
-> The throttle support has been added in the generic code. Remove
-> the driver-specific throttle support.
-Acked-by: Guo Ren <guoren@kernel.org>
+On Mon, May 12, 2025 at 2:55=E2=80=AFPM Miklos Szeredi <miklos@szeredi.hu> =
+wrote:
 
->
-> Besides the throttle, perf_event_overflow may return true because of
-> event_limit. It already does an inatomic event disable. The pmu->stop
-> is not required either.
->
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Mao Han <han_mao@c-sky.com>
-> Cc: Guo Ren <ren_guo@c-sky.com>
-> Cc: linux-csky@vger.kernel.org
-> ---
->  arch/csky/kernel/perf_event.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/arch/csky/kernel/perf_event.c b/arch/csky/kernel/perf_event.=
-c
-> index e5f18420ce64..e0a36acd265b 100644
-> --- a/arch/csky/kernel/perf_event.c
-> +++ b/arch/csky/kernel/perf_event.c
-> @@ -1139,8 +1139,7 @@ static irqreturn_t csky_pmu_handle_irq(int irq_num,=
- void *dev)
->                 perf_sample_data_init(&data, 0, hwc->last_period);
->                 csky_pmu_event_set_period(event);
->
-> -               if (perf_event_overflow(event, &data, regs))
-> -                       csky_pmu_stop_event(event);
-> +               perf_event_overflow(event, &data, regs);
->         }
->
->         csky_pmu_enable(&csky_pmu.pmu);
-> --
-> 2.38.1
->
->
+> What I meant is adding this to fuse_dev_operations.
 
+But it doesn't seem like exposing this information here would be a bad
+idea either, does it?
+For example, if a system administrator wants to write a script to
+abort the FUSE connection
+corresponding to a specific directory,
+the script could use this information to locate the relevant connection.
 
---=20
-Best Regards
- Guo Ren
+Thanks,
+Chen Linxuan
