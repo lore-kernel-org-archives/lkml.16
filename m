@@ -1,130 +1,261 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD13229B79F;
-	Thu, 15 May 2025 21:12:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD0E29B773;
+	Thu, 15 May 2025 21:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747343572; cv=none; b=GhMUR//l2zYw3998G5z4uDWsakAgrkBbKaFHbMLrUFcQ3rIyGp3QPoFM3XbWGyfFlL1QUyru2eNw9df01QGkbptRunUoF0bkMcmxQyU7bqOWAM/mZqzVpGFf7Pc8uj/DjdFvhI8vSLhxL0sPJOWaI5bF9KE2gfrl1+kL2vLIa14=
+	t=1747343585; cv=none; b=Q6uABV1R7vj9hBDQ6y52n4AuCWoj1Ocg2j+F4OCQdYrqxmYeavMsr5jpQ5giboFXxTlYQesmH3g9tQcBAYM9GqMv8478Q1G0EfCff7hH+9IpKb/ztGFoNfyoQPOI2BnWm4sTiBC5nPmPtZT67v8VEbxkVztTH+SsSDilCZ307G8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747343572; c=relaxed/simple;
-	bh=q3PDrZM6G8zDDRhj4QwvJtG8rSqiKqS/I3flXIXrZeU=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=riXmeNEbzADRhWQ8fE1Nju9DWtcMUczRsE/Hn59g526yPPRjlbDOCMarotghDWf8SKezLVrvC0pZnukGRvzvMF10XrD4tVUyol4PIRJTxCt9WcK1k6FRrNqdEGZ+xLU3yhY/3zEJAHNLg1egcdA6Ha59OB5aLZsgee5HJq7jaMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F+6nMkEf; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747343585; c=relaxed/simple;
+	bh=cbDp5zT2ur/BORfj8Z1svUA8gT3TtOBDws6wHyZtoEM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cYEkG2w/Y8Tfrc23QeYoUBCeB+4TD8VdOTHwG/IKeCdOwGhvdKqhWpmz/9OBpfRocxAnNmTklmuG6BKT/okf4yztGGiKrrLLWWNMXmH2Xk+qrCOW1cdLqlGDPMn2vr3bCeMA42AuCtvrbSVQDqwxfsLdBcy5xwz+KXOQIXLbwB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=MX9/k90z; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F+6nMkEf"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a0b933f214so915869f8f.0;
-        Thu, 15 May 2025 14:12:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747343569; x=1747948369; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=opuvm8FKWBIYNRf90PxXi7sMcW0qx9YAX9FlKAsACPA=;
-        b=F+6nMkEfOeVKIEfWFWzsSAyNOLPH2amXneoP/icZ/EbVRUCme1GMOwZ9KvNLr4Bhj5
-         8/NF4m+wWTYk/7cDuO8EUEpWsMDqUv3j2/hPTGP4yEvyRYIMY14Fv7vmHxfgnBuS9qn7
-         HaXOk1Bm8b2DlFs/xLJ6/Vv9Q5443jmOL+JI+0f1PxTAadvTakvPVOLVvPOUiP5Wy6eV
-         bgjikKyM5tB/qIg99AKkXGQTVKrAx684BNFaF2xeffa6Erh1QoCdjhi9Ze/RxvXgmnDZ
-         vFYA77xU/ijNPy3pT3IQUg1JvT4w3iHTUnMWD2i5AXN4TDJ4GzkzyULkjFQ47mccOX3D
-         eh9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747343569; x=1747948369;
-        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=opuvm8FKWBIYNRf90PxXi7sMcW0qx9YAX9FlKAsACPA=;
-        b=JtFUVsh1QRlCW32Qu9ENZ9KA8U8qNL8siq+cJ4hfkYHq3DMI2u/sEUt/TY2029azl0
-         OiYM9kTptoyM2mNTLY0VTEn4mC9P9wxDruKigZ0IZT7aJ2paZi8FIWR3a5NIDzF28lt5
-         5Qs/W7fRs1gSRsYZTHl5vyizO4Jo+sHkPUl0TicDJLQrfSYVbJPtHMugwS0Gyc3EQGK6
-         IZnuVQl1+do2ESITYUN9M4hyeyTQonoSqDSAjgTKxIc62C4gAa3FzDFLaU9Y3Zo8IvCV
-         6yrLP0uipKICuj8RS3L6mB4J5rNCvw1j1TDx54Qhq1m1wjDiw+DDkf8hQuIJKwYMpOls
-         yYDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0xPimJXvZsFqKaBIc/AwnyiFTUyFOw4s+YaJUh2w/152ZQZNNFur6WX8QL+vUDjgYebXJPi7YgCNgU04=@vger.kernel.org, AJvYcCUXu6DL0q/H//BaV3BnLxvfeXuZDRThSruCAxmH1pi67/GEd6GD+fsse+KpRl5wwWnVXAz+bcgN@vger.kernel.org, AJvYcCWYzzXJt0JdldMtoShEQG9XNGAPCLWF90KJ2l9a5550pEAYuOfdB/kXG5QX7Q4zrWImAA/WXFFc7tyDOeI8gz0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpgFik2ET216dOpRMKunfAG3BftN7GdMkMbIe/zQKa1GLUVx/O
-	DACxnqA1023iuQ1NjUNJL5DDakhuM0CEfskQmqeZDVD5NNUqXMwvoXx1emUUBuWPOlWPQ1lf1nj
-	ZcIRZgXKsaZvLxTDf1epk99GwLTlmstU=
-X-Gm-Gg: ASbGnctQxtDJel2k53CGujOnUM3y7W+yHr0X2iP7jYFkMKUhvinCfPpXpcy4xxONnOh
-	yrN7ZfYO6++GExptyzIrMPLlfXOjpMgUV9atCeQdEkKb8Jx3BOuOuzv7keygU5Gzy54qEroNVPa
-	2jozMjtrlQzf/9KX2p7Cb7wcEl21hQbNyC9g==
-X-Google-Smtp-Source: AGHT+IEYoK6f7wP0SPm/gfKqdWjWZ4HX90FKs87O0UBgxajWhbvIOpj9PHkIZ8r7babBAps9G/Ln4njRTceq0nIyQp0=
-X-Received: by 2002:a5d:5c84:0:b0:3a2:12a:e637 with SMTP id
- ffacd0b85a97d-3a35c8542a6mr1195017f8f.56.1747343568560; Thu, 15 May 2025
- 14:12:48 -0700 (PDT)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 15 May 2025 14:12:48 -0700
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 15 May 2025 14:12:48 -0700
-From: Kane York <kanepyork@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <097a4926cebc9030469d42cc7a3392b39dfd703d.camel@nvidia.com>
-References: <097a4926cebc9030469d42cc7a3392b39dfd703d.camel@nvidia.com>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="MX9/k90z"
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54FIWOcm013668;
+	Thu, 15 May 2025 17:12:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=XFoS/
+	zD9092IyFYyPSIityXPosiDoRd7+dZm3ZAHNSQ=; b=MX9/k90ztFyN9f9QOr45P
+	6xTcZvplEO4vLAt6MCNcyk5yIJx+nSdDvffl4LzZ5jQyzdKBUmJ4rV6meE7UWorN
+	RaBCP+n6f66RT3Fu8Ac02TtiRPMpbV7crz2NfEPD3g4G1+WoBWaBaXv6TlLzcPck
+	dll+CYDrKnp2Ej2vH55V80c6KUlMjC/yM+SBTpVJgSsvKTCWkCekUko55tnoIIBs
+	d68q6sZHXhOYXHyC8/pYA8cGSxUq72IEr3Iw5oi33g58eywYWp8B5TIlgUCKzjag
+	ko1/pwd8VicyuN73or4KsLO4LdWXGTM19rNnS1KCXgqw3jph16c3ED18xacxf1gw
+	w==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 46nnmr8pwj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 May 2025 17:12:57 -0400 (EDT)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 54FLCtso024977
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 15 May 2025 17:12:55 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Thu, 15 May 2025 17:12:55 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.14; Thu, 15 May 2025 17:12:55 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Thu, 15 May 2025 17:12:55 -0400
+Received: from JSANTO12-L01.ad.analog.com ([10.65.60.206])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 54FLCWVc018838;
+	Thu, 15 May 2025 17:12:35 -0400
+From: Jonathan Santos <Jonathan.Santos@analog.com>
+To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+CC: Jonathan Santos <Jonathan.Santos@analog.com>, <andy@kernel.org>,
+        <nuno.sa@analog.com>, <Michael.Hennerich@analog.com>,
+        <marcelo.schmitt@analog.com>, <jic23@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <marcelo.schmitt1@gmail.com>, <linus.walleij@linaro.org>,
+        <brgl@bgdev.pl>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <jonath4nns@gmail.com>, <dlechner@baylibre.com>,
+        "Conor
+ Dooley" <conor.dooley@microchip.com>,
+        David Lechner <dlechner@baylirbe.com>
+Subject: [PATCH v8 02/11] dt-bindings: iio: adc: ad7768-1: add trigger-sources property
+Date: Thu, 15 May 2025 18:12:32 -0300
+Message-ID: <1136385776d4b9890848ad7cd281d3e3473a39c7.1747175187.git.Jonathan.Santos@analog.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1747175187.git.Jonathan.Santos@analog.com>
+References: <cover.1747175187.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 15 May 2025 14:12:48 -0700
-X-Gm-Features: AX0GCFslEILHetAnpjY2QFEJ9SocrJkFvcA9OUfU-AXwwAPQyRsjmsYuQT8ABk4
-Message-ID: <CABeNrKVfCHww2k_W-0s4GQE=2bA+wjje=FEH=gL8FhNbFB1tOw@mail.gmail.com>
-Subject: Re: [PATCH 1/5] objtool/rust: add one more `noreturn` Rust function
- for Rust 1.87.0
-To: ttabi@nvidia.com
-Cc: a.hindborg@kernel.org, acourbot@nvidia.com, alex.gaynor@gmail.com, 
-	aliceryhl@google.com, apopple@nvidia.com, benno.lossin@proton.me, 
-	bjorn3_gh@protonmail.com, boqun.feng@gmail.com, dakr@kernel.org, 
-	gary@garyguo.net, jhubbard@nvidia.com, joelagnelf@nvidia.com, 
-	jpoimboe@kernel.org, linux-kernel@vger.kernel.org, ojeda@kernel.org, 
-	patches@lists.linux.dev, peterz@infradead.org, rust-for-linux@vger.kernel.org, 
-	stable@vger.kernel.org, tmgross@umich.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Authority-Analysis: v=2.4 cv=AYexH2XG c=1 sm=1 tr=0 ts=682658d9 cx=c_pps
+ a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
+ a=dt9VzEwgFbYA:10 a=gAnH3GRIAAAA:8 a=XYAwZIGsAAAA:8 a=3yuoaRSoAAAA:8
+ a=Lq6TyEz25fwpf9jyvVMA:9 a=E8ToXWR_bxluHZ7gmE-Z:22 a=2SAQt7U6PxkJVs8Pt8Bp:22
+X-Proofpoint-ORIG-GUID: wz3wj0A8rcws5QZw8Pj-mBYETl0_0Kt0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDIwNyBTYWx0ZWRfX4UDjul6VhsTE
+ 0eCV1axU0pK/nIqrXuFbu7hLfBSuWOcHs5oRr9DJ4Y8CUvXrwYxSP2JaEEhul4BGVO5jkWVOPJx
+ LNioagWAzy1SRAz4+t40yylZFPl5FTfKHdeWfoO2HQwwpT6vSiqr65zBtptDpAqUj40WjhShAr2
+ ymPDU3ksLldFXYNu+mlNgkLVe32PLf9ayfZW2AabXgqlBK9/Udwnc7yWLZmCXoYId1MF6+AGqhn
+ 3HoJB9qk5pk84lo0+hGHdXVDnSVo7Gn0bdDCh+V0R94YCGbJNICIp3JIkNt7OWhBNVkbkUolbAv
+ xKQ/1/ac/97i/EAJHudgnDmIekbZs31Dmqfr5HFByz9ebSEXyfrqwP4HR/1vZMTF6AS9oaURBjZ
+ UNGE4dHS59UYaNPRo7oWhgPMx7BonBNqgDkwxYSujHsQl9ezO9BKdhqo9OTsaxkx6sMtzj1O
+X-Proofpoint-GUID: wz3wj0A8rcws5QZw8Pj-mBYETl0_0Kt0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-15_09,2025-05-15_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 lowpriorityscore=0 mlxlogscore=999 impostorscore=0 mlxscore=0
+ malwarescore=0 clxscore=1015 priorityscore=1501 bulkscore=0 suspectscore=0
+ adultscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505150207
 
-On Thu, 15 May 2025 19:06:10 +0000, Timur Tabi <ttabi@nvidia.com> wrote:
-> On Thu, 2025-05-15 at 09:18 -0700, Josh Poimboeuf wrote:
-> > > Since I build with LLVM=1, I'm assuming the answer is 18.1.3
-> >
-> > I'm not able to recreate, can you run with OBJTOOL_VERBOSE=1 and paste
-> > the output?
->
-> You probably can't repro because it includes code that hasn't been merged upstream yet.  Try this:
->
-> https://github.com/ttabi/linux/commits/alex
->
->   CHK     kernel/kheaders_data.tar.xz
-> drivers/gpu/nova-core/nova_core.o: warning: objtool:
-> _RNvXsa_NtCs8S3917Wilyo_9nova_core5vbiosNtB5_14PciAtBiosImageINtNtCsgK88DPai1lC_4core7convert7TryFro
-> mNtB5_13BiosImageBaseE8try_from() falls through to next function
+In addition to GPIO synchronization, The AD7768-1 also supports
+synchronization over SPI, which use is recommended when the GPIO
+cannot provide a pulse synchronous with the base MCLK signal. It
+consists of looping back the SYNC_OUT to the SYNC_IN pin and send
+a command via SPI to trigger the synchronization.
 
-...
+Introduce the 'trigger-sources' property to enable SPI-based
+synchronization via SYNC_OUT pin, along with additional optional
+entries for GPIO3 and DRDY pins.
 
-> 011b     634b:	e8 00 00 00 00       	call   6350 <.Ltmp38>	634c:
-> R_X86_64_PLT32
-> _RNvNtNtCsgK88DPai1lC_4core5slice5index26slice_start_index_len_fail-0x4
+Also create #trigger-source-cells property to differentiate the trigger
+sources provided by the ADC. To improve readability, create a
+adi,ad7768-1.h header with the macros for the cell values.
 
-Yup, that's an unrecognized noreturn function.
+While at it, add description to the interrupts property.
 
-src/core/slice/index.rs:
-> #[cfg_attr(not(feature = "panic_immediate_abort"), inline(never), cold)]
-> #[cfg_attr(feature = "panic_immediate_abort", inline)]
-> #[track_caller]
-> #[rustc_const_unstable(feature = "const_slice_index", issue = "none")]
-> const fn slice_start_index_len_fail(index: usize, len: usize) -> ! {
->     // SAFETY: we are just panicking here
->     unsafe {
->         const_eval_select(
->             (index, len),
->             slice_start_index_len_fail_ct,
->             slice_start_index_len_fail_rt,
->         )
->     }
-> }
->
-> // FIXME const-hack
-> #[inline]
-> #[track_caller]
-> fn slice_start_index_len_fail_rt(index: usize, len: usize) -> ! {
->     panic!("range start index {index} out of range for slice of length {len}");
-> }
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: David Lechner <dlechner@baylirbe.com>
+Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+---
+v8 Changes:
+* No changes. I have decided to keep the 'dependencies' section header
+  since Rob said it is ok for this case.
 
-The return is at offset 0093 (x62c3) with a jump to __x86_return_thunk.
+v7 Changes:
+* added new file to the MAINTAINERS entry.
+* Made interrupts description more concise.
+* Added dependencies to constrain the use of trigger-sources and
+  adi,sync-in-gpios properties at the same time.
+
+v6 Changes:
+* Removed references to offload.
+* Changed trigger-sources-cells description. Each cell value indicates
+  a gpio line from the ADC.
+* Added adi,ad7768-1.h header with macros for the trigger source cells.
+* Removed offload trigger entry from trigger-sources.
+
+v5 Changes:
+* Include START pin and DRDY in the trigger-sources description.
+* Fixed "#trigger-source-cells" value and description.
+* sync-in-gpios is represented in the trigger-sources property.
+
+v4 Changes:
+* none
+
+v3 Changes:
+* Fixed dt-bindings errors.
+* Trigger-source is set as an alternative to sync-in-gpios, so we
+  don't break the previous ABI.
+* increased maxItems from trigger-sources to 2.
+
+v2 Changes:
+* Patch added as replacement for adi,sync-in-spi patch.
+* addressed the request for a description to interrupts property.
+---
+ .../bindings/iio/adc/adi,ad7768-1.yaml        | 39 ++++++++++++++++++-
+ MAINTAINERS                                   |  1 +
+ include/dt-bindings/iio/adc/adi,ad7768-1.h    | 10 +++++
+ 3 files changed, 49 insertions(+), 1 deletion(-)
+ create mode 100644 include/dt-bindings/iio/adc/adi,ad7768-1.h
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+index 3ce59d4d065f..9a6df931edc3 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+@@ -26,7 +26,26 @@ properties:
+   clock-names:
+     const: mclk
+ 
++  trigger-sources:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    minItems: 1
++    maxItems: 2
++    description: |
++      A list of phandles referencing trigger source providers. Each entry
++      represents a trigger source for the ADC:
++
++        - First entry specifies the device responsible for driving the
++          synchronization (SYNC_IN) pin, as an alternative to adi,sync-in-gpios.
++          This can be a `gpio-trigger` or another `ad7768-1` device. If the
++          device's own SYNC_OUT pin is internally connected to its SYNC_IN pin,
++          reference the device itself or omit this property.
++        - Second entry optionally defines a GPIO3 pin used as a START signal trigger.
++
++      Use the accompanying trigger source cell to identify the type of each entry.
++
+   interrupts:
++    description:
++      DRDY (Data Ready) pin, which signals conversion results are available.
+     maxItems: 1
+ 
+   '#address-cells':
+@@ -57,6 +76,15 @@ properties:
+   "#io-channel-cells":
+     const: 1
+ 
++  "#trigger-source-cells":
++    description: |
++      Cell indicates the trigger output signal: 0 = SYNC_OUT, 1 = GPIO3,
++      2 = DRDY.
++
++      For better readability, macros for these values are available in
++      dt-bindings/iio/adc/adi,ad7768-1.h.
++    const: 1
++
+ required:
+   - compatible
+   - reg
+@@ -65,7 +93,16 @@ required:
+   - vref-supply
+   - spi-cpol
+   - spi-cpha
+-  - adi,sync-in-gpios
++
++dependencies:
++  adi,sync-in-gpios:
++    not:
++      required:
++        - trigger-sources
++  trigger-sources:
++    not:
++      required:
++        - adi,sync-in-gpios
+ 
+ patternProperties:
+   "^channel@([0-9]|1[0-5])$":
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9b2e9a9dd8bc..be07926f6666 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1426,6 +1426,7 @@ S:	Supported
+ W:	https://ez.analog.com/linux-software-drivers
+ F:	Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+ F:	drivers/iio/adc/ad7768-1.c
++F:	include/dt-bindings/iio/adc/adi,ad7768-1.h
+ 
+ ANALOG DEVICES INC AD7780 DRIVER
+ M:	Michael Hennerich <Michael.Hennerich@analog.com>
+diff --git a/include/dt-bindings/iio/adc/adi,ad7768-1.h b/include/dt-bindings/iio/adc/adi,ad7768-1.h
+new file mode 100644
+index 000000000000..34d92856a50b
+--- /dev/null
++++ b/include/dt-bindings/iio/adc/adi,ad7768-1.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++
++#ifndef _DT_BINDINGS_ADI_AD7768_1_H
++#define _DT_BINDINGS_ADI_AD7768_1_H
++
++#define AD7768_TRIGGER_SOURCE_SYNC_OUT  0
++#define AD7768_TRIGGER_SOURCE_GPIO3     1
++#define AD7768_TRIGGER_SOURCE_DRDY      2
++
++#endif /* _DT_BINDINGS_ADI_AD7768_1_H */
+-- 
+2.34.1
+
