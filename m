@@ -1,174 +1,237 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04EBB1547C9
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22D013B7A3;
+	Thu, 15 May 2025 14:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747321034; cv=none; b=JAVqbGsRy9O0MJBIrIMNTWMlNT9QNREDO1OnWzsYdMjCFWvfq1gAdIYT8gerkfAtmybdbrKVAJ80PBJGU/sO2TDWPPZ6+Ohybg1jWFOICY3lLSlje5Dyq3hNTD1TnJhKAIHeNYyMg5Mni6Qp790pk93z53/dsKvwM2whboJ7utk=
+	t=1747321128; cv=none; b=mpWOW1KrTgpdgKVCQE/uTtHbRViKkPFbXOIsgpdlx0fHQB35GCxb0KxPoQ7Dym3zZb6rZ90cjVMYELuwOFhA5vla2k86oePduWl6RQjMyVtfpso8AroU19iqiJkHwnHMTDDWDqMQcPdZLXNu2N9PcdpGW0U6k/7hRLGkEvJRyhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747321034; c=relaxed/simple;
-	bh=8fQq0PWQLuVp0FRzU6NvxKJHedMYCE+xtQUO7iyL6Z4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LVJ+po5vri2P/3XuK9hpC3cdj4Z7eqmoLYytQoBvkD71KDZofbURkjfDAC0UKQ7ojVOwmz+D+T0sGx/nnOBS6hNd//Yr1UXkNZKWpRIVK18KDZlgt3v00tOIxgErJraACPmjZgFXFftlSWqet1gKyHoqcXqysOg0Hzfpmrh79d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=CvVx4kFR; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rxlkYI3r; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=CvVx4kFR; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rxlkYI3r; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1747321128; c=relaxed/simple;
+	bh=m1jfScZCo8k+5goQ6NMvir+lyNDlszbRbw3Ck1Hx5zU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YUzkW4GQQReagHm6moJVB2C8YBrDCZB+XHmlizY9kEEw5tEjkb1RJwb+os8v+poFQpRVJsfrvStC7E5Op48bvAZ0uIBz74Jpq+aBju5A0LOZ5wTke8lEeZkEL9N9AmTht/IeRVCbZK5omhEt5sLnLG71Qy2AEaNWfe9m6AXn5wY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gbQ6Mm/y; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="CvVx4kFR";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rxlkYI3r";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="CvVx4kFR";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rxlkYI3r"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 36B35211D5;
-	Thu, 15 May 2025 14:57:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747321031; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=275R20YMq0CMl3mWxLHSxXzp2q9navMzLEtYmOMEG1k=;
-	b=CvVx4kFRIVHJBnwzffrXPD2IfV0JTCgFMMcYSzyBXMXx9qT+yYnWs2nc5z0szrXgturl0P
-	Um1/tmg4APcIW+7f1QeKUN8Fx/aJNui8oUdaQp9LDJX0Wzvh7+TU3zmf7LG8/fRncAXGLK
-	SH8FyWGIA6B1T8l8xhCTatyh/eBJSh0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747321031;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=275R20YMq0CMl3mWxLHSxXzp2q9navMzLEtYmOMEG1k=;
-	b=rxlkYI3rlhrl4Bj6OZGwHlXSH7Fr5OXZtpvdr2NbixnFSFyu0a3WLgtaEV2LgQdp7k1mfQ
-	KeQB7K8Rdzr4/xAw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747321031; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=275R20YMq0CMl3mWxLHSxXzp2q9navMzLEtYmOMEG1k=;
-	b=CvVx4kFRIVHJBnwzffrXPD2IfV0JTCgFMMcYSzyBXMXx9qT+yYnWs2nc5z0szrXgturl0P
-	Um1/tmg4APcIW+7f1QeKUN8Fx/aJNui8oUdaQp9LDJX0Wzvh7+TU3zmf7LG8/fRncAXGLK
-	SH8FyWGIA6B1T8l8xhCTatyh/eBJSh0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747321031;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=275R20YMq0CMl3mWxLHSxXzp2q9navMzLEtYmOMEG1k=;
-	b=rxlkYI3rlhrl4Bj6OZGwHlXSH7Fr5OXZtpvdr2NbixnFSFyu0a3WLgtaEV2LgQdp7k1mfQ
-	KeQB7K8Rdzr4/xAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0F748139D0;
-	Thu, 15 May 2025 14:57:11 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id yWrcAscAJmgHPAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Thu, 15 May 2025 14:57:11 +0000
-Message-ID: <2d517f89-3bb4-4de2-8c14-8bb1e4235c7a@suse.cz>
-Date: Thu, 15 May 2025 16:57:10 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbQ6Mm/y"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a1fb17a9beso597468f8f.3;
+        Thu, 15 May 2025 07:58:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747321125; x=1747925925; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=yRwIHNdNZHSHt6Sv0Ytj1R1VTPxHlVjg3ZwEgvmiCDs=;
+        b=gbQ6Mm/y8D5d9Gio3cAad0yyjLjnBNY6YvbQF3Pcr712hke/IzxCxjC6AYG1kxT2SW
+         dqzoedgkkmobiq4sE89RCZx7vOelB8caiCLBuxhTNPGly9VkhPQAlRve7z4+nQ6k3o/h
+         54J+KpmwkSlq/xVIg/QTEj4+ZlAXP7AKqbHHl7o9QKbp9nFtAY0XT2dqIb3gQQPFBwMC
+         HhSTs5R+8rQHqsMd5EOG/+hh/KogqjFnbEUaOLeg0h/bbCdhJIsll3BuEjmYnqkTzzu6
+         RvPjPZYZ4W5t2qkqtyd0RAmmTxk4cLuO/2vCAWuSQNuQoT/ejus/FJve++yA//C7jwef
+         7g8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747321125; x=1747925925;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yRwIHNdNZHSHt6Sv0Ytj1R1VTPxHlVjg3ZwEgvmiCDs=;
+        b=D5y+y3R/QwG10/PC8BSfAK8ST3yAmMC5Kth8hO/BXRvtxFZEwMUrd/dnTIMLTwceVh
+         MviB7OoQWj9ioWtQ6IaqfWjcuwj/vd6fr6s66YYPzpW+OP+DYHORSRIVgQzayJ43o1eC
+         5PYjXktMF+f7bJ7Z34wk4lZdZufFg6dViqGUYb/UtOQtRthwFGfJcxCPwA5y/7C3/W4R
+         i0ppt+WvTSYhGyQnN5k6iQkJhdGNFqAPWskLT74po2DvV+Fhn0r+LxoYZRVz2nuC6sGo
+         av4tz946MrgWRv47hT9p7wnCrP+Oif5U6k2l4Qp87jTkyatqSH/fwTp69klsW4gEEcPo
+         IEJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdivydE6MOdJdcjkrvAZGQu9zfzvlRd+zDwfl/PXoxb7Qvwl1g5IYhpkoxh0lwNrUyZ2p5+i7j@vger.kernel.org, AJvYcCX5CF+P1hIw2GaVYTE1SyAzpdin1KkRuVMN1EbaUJ82zzybUOTsgwHwThi8uJMnMeJRl6hmR9ZZBWm7m6M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyviqX20XiG2Nok8NjeQaJetYUlM1QD87AaMUaM+drqBDeasJ5j
+	32C9MxhTh9jcOSONH+KI4ySJN9d6PiTXNzqrZYpGMXvpsrldG2KhdC8+UzyIHPBCUrctf1ne/na
+	iwFskD8sKqCaGZNbJEVy1Of0gmSSXMQM=
+X-Gm-Gg: ASbGncsy4WUd/OhkW1t48BipF/4zQ+v3EjBUsKW0tVWuQ/k7HdW2dFWtrUNwdQe6FgP
+	jLThJEcI2GtNvcaVgUBC6+8Tszvl5x06to6yfzWUs/kAcVaoA9YwdNpxq0BMGqBHTtm27nAEQSm
+	N/EJQ1r+KerRNcu6x9KEuQPjvgtdH3IGV/PwxTNHUWTZlVOgzinS6LYtfvGzGjbRM=
+X-Google-Smtp-Source: AGHT+IHs4E6pGZWrxMY84w1MnyLhh+j/JZlBjLB86phT8Zh9bL6wKxJXEzDNMG/VfavPc0nFxVKoTn3ltyM+qQJlp+I=
+X-Received: by 2002:a05:6000:2288:b0:3a0:b9a9:2fd9 with SMTP id
+ ffacd0b85a97d-3a35c84fc91mr41988f8f.51.1747321125166; Thu, 15 May 2025
+ 07:58:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/7] memcg: memcg_rstat_updated re-entrant safe against
- irqs
-Content-Language: en-US
-To: Shakeel Butt <shakeel.butt@linux.dev>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Muchun Song <muchun.song@linux.dev>, Alexei Starovoitov <ast@kernel.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Harry Yoo <harry.yoo@oracle.com>, Yosry Ahmed <yosry.ahmed@linux.dev>,
- bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org,
- linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-References: <20250514184158.3471331-1-shakeel.butt@linux.dev>
- <20250514184158.3471331-2-shakeel.butt@linux.dev>
- <22f69e6e-7908-4e92-96ca-5c70d535c439@lucifer.local>
- <CAGj-7pUJQZD59Sx7E69Uvi1++dB59R8wWkDYvSTGYhU-18AHXg@mail.gmail.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <CAGj-7pUJQZD59Sx7E69Uvi1++dB59R8wWkDYvSTGYhU-18AHXg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,suse.cz:mid]
-X-Spam-Score: -4.30
+References: <20250513144107.1989-1-zakkemble@gmail.com> <20250513144107.1989-2-zakkemble@gmail.com>
+ <b37ea0be-0f37-4a78-b6ce-fc49610c00cc@broadcom.com>
+In-Reply-To: <b37ea0be-0f37-4a78-b6ce-fc49610c00cc@broadcom.com>
+From: Zak Kemble <zakkemble@gmail.com>
+Date: Thu, 15 May 2025 15:58:32 +0100
+X-Gm-Features: AX0GCFtGV6Cxv68ATXT1sFH1jvc1ekiTxfyS7hzPq4u4DHxQXYYVxdEenQ9Cidw
+Message-ID: <CAA+QEuRRanG=grXRM09U7YFYhxek=J3GY6otKXMvD0E_FFVmhg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] net: bcmgenet: switch to use 64bit statistics
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Doug Berger <opendmb@gmail.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/15/25 16:31, Shakeel Butt wrote:
-> On Thu, May 15, 2025 at 5:47 AM Lorenzo Stoakes
-> <lorenzo.stoakes@oracle.com> wrote:
->>
->> Shakeel - This breaks the build in mm-new for me:
->>
->>   CC      mm/pt_reclaim.o
->> In file included from ./arch/x86/include/asm/rmwcc.h:5,
->>                  from ./arch/x86/include/asm/bitops.h:18,
->>                  from ./include/linux/bitops.h:68,
->>                  from ./include/linux/radix-tree.h:11,
->>                  from ./include/linux/idr.h:15,
->>                  from ./include/linux/cgroup-defs.h:13,
->>                  from mm/memcontrol.c:28:
->> mm/memcontrol.c: In function ‘mem_cgroup_alloc’:
->> ./arch/x86/include/asm/percpu.h:39:45: error: expected identifier or ‘(’ before ‘__seg_gs’
->>    39 | #define __percpu_seg_override   CONCATENATE(__seg_, __percpu_seg)
->>       |                                             ^~~~~~
->> ./include/linux/args.h:25:24: note: in definition of macro ‘__CONCAT’
->>    25 | #define __CONCAT(a, b) a ## b
->>       |                        ^
->> ./arch/x86/include/asm/percpu.h:39:33: note: in expansion of macro ‘CONCATENATE’
->>    39 | #define __percpu_seg_override   CONCATENATE(__seg_, __percpu_seg)
->>       |                                 ^~~~~~~~~~~
->> ./arch/x86/include/asm/percpu.h:93:33: note: in expansion of macro ‘__percpu_seg_override’
->>    93 | # define __percpu_qual          __percpu_seg_override
->>       |                                 ^~~~~~~~~~~~~~~~~~~~~
->> ././include/linux/compiler_types.h:60:25: note: in expansion of macro ‘__percpu_qual’
->>    60 | # define __percpu       __percpu_qual BTF_TYPE_TAG(percpu)
->>       |                         ^~~~~~~~~~~~~
->> mm/memcontrol.c:3700:45: note: in expansion of macro ‘__percpu’
->>  3700 |         struct memcg_vmstats_percpu *statc, __percpu *pstatc_pcpu;
->>       |                                             ^~~~~~~~
->> mm/memcontrol.c:3731:25: error: ‘pstatc_pcpu’ undeclared (first use in this function); did you mean ‘kstat_cpu’?
->>  3731 |                         pstatc_pcpu = parent->vmstats_percpu;
->>       |                         ^~~~~~~~~~~
->>       |                         kstat_cpu
->> mm/memcontrol.c:3731:25: note: each undeclared identifier is reported only once for each function it appears in
->>
->> The __percpu macro seems to be a bit screwy with comma-delimited decls, as it
->> seems that putting this on its own line fixes this problem:
->>
-> 
-> Which compiler (and version) is this? Thanks for the fix.
+v2 is here https://lore.kernel.org/all/20250515145142.1415-1-zakkemble@gmail.com/
 
-Hm right I see the same errors with gcc 7, 13, 14, 15 but not with clang.
+Thanks!
+
+
+On Wed, 14 May 2025 at 09:45, Florian Fainelli
+<florian.fainelli@broadcom.com> wrote:
+>
+>
+>
+> On 5/13/2025 4:41 PM, Zak Kemble wrote:
+> > Update the driver to use ndo_get_stats64, rtnl_link_stats64 and
+> > u64_stats_t counters for statistics.
+> >
+> > Signed-off-by: Zak Kemble <zakkemble@gmail.com>
+> > ---
+>
+> [snip]
+>
+> >
+> > +
+> > +
+>
+> This is unrelated to your changes.
+>
+> >   static void bcmgenet_get_ethtool_stats(struct net_device *dev,
+> >                                      struct ethtool_stats *stats,
+> >                                      u64 *data)
+> >   {
+> >       struct bcmgenet_priv *priv = netdev_priv(dev);
+> > +     struct u64_stats_sync *syncp;
+> > +     struct rtnl_link_stats64 stats64;
+> > +     unsigned int start;
+> >       int i;
+> >
+> >       if (netif_running(dev))
+> >               bcmgenet_update_mib_counters(priv);
+> >
+> > -     dev->netdev_ops->ndo_get_stats(dev);
+> > +     dev_get_stats(dev, &stats64);
+> >
+> >       for (i = 0; i < BCMGENET_STATS_LEN; i++) {
+> >               const struct bcmgenet_stats *s;
+> >               char *p;
+> >
+> >               s = &bcmgenet_gstrings_stats[i];
+> > -             if (s->type == BCMGENET_STAT_NETDEV)
+> > -                     p = (char *)&dev->stats;
+> > +             if (s->type == BCMGENET_STAT_RTNL)
+> > +                     p = (char *)&stats64;
+> >               else
+> >                       p = (char *)priv;
+> >               p += s->stat_offset;
+> > -             if (sizeof(unsigned long) != sizeof(u32) &&
+> > +             if (s->type == BCMGENET_STAT_SOFT64) {
+> > +                     syncp = (struct u64_stats_sync *)(p - s->stat_offset +
+> > +                                                                                       s->syncp_offset);
+>
+> This is a bit difficult to read, but I understand why you would want to
+> do something like this to avoid discerning the rx from the tx stats...
+>
+> > +                     do {
+> > +                             start = u64_stats_fetch_begin(syncp);
+> > +                             data[i] = u64_stats_read((u64_stats_t *)p);
+> > +                     } while (u64_stats_fetch_retry(syncp, start));
+> > +             } else if (sizeof(unsigned long) != sizeof(u32) &&
+> >                   s->stat_sizeof == sizeof(unsigned long))
+> >                       data[i] = *(unsigned long *)p;
+>
+> >               else
+> > @@ -1857,6 +1881,7 @@ static unsigned int __bcmgenet_tx_reclaim(struct net_device *dev,
+> >                                         struct bcmgenet_tx_ring *ring)
+> >   {
+> >       struct bcmgenet_priv *priv = netdev_priv(dev);
+> > +     struct bcmgenet_tx_stats64 *stats = &ring->stats64;
+> >       unsigned int txbds_processed = 0;
+> >       unsigned int bytes_compl = 0;
+> >       unsigned int pkts_compl = 0;
+> > @@ -1896,8 +1921,10 @@ static unsigned int __bcmgenet_tx_reclaim(struct net_device *dev,
+> >       ring->free_bds += txbds_processed;
+> >       ring->c_index = c_index;
+> >
+> > -     ring->packets += pkts_compl;
+> > -     ring->bytes += bytes_compl;
+> > +     u64_stats_update_begin(&stats->syncp);
+> > +     u64_stats_add(&stats->packets, pkts_compl);
+> > +     u64_stats_add(&stats->bytes, bytes_compl);
+> > +     u64_stats_update_end(&stats->syncp);
+> >
+> >       netdev_tx_completed_queue(netdev_get_tx_queue(dev, ring->index),
+> >                                 pkts_compl, bytes_compl);
+> > @@ -1983,9 +2010,11 @@ static void bcmgenet_tx_reclaim_all(struct net_device *dev)
+> >    * the transmit checksum offsets in the descriptors
+> >    */
+> >   static struct sk_buff *bcmgenet_add_tsb(struct net_device *dev,
+> > -                                     struct sk_buff *skb)
+> > +                                     struct sk_buff *skb,
+> > +                                     struct bcmgenet_tx_ring *ring)
+> >   {
+> >       struct bcmgenet_priv *priv = netdev_priv(dev);
+> > +     struct bcmgenet_tx_stats64 *stats = &ring->stats64;
+> >       struct status_64 *status = NULL;
+> >       struct sk_buff *new_skb;
+> >       u16 offset;
+> > @@ -2001,7 +2030,9 @@ static struct sk_buff *bcmgenet_add_tsb(struct net_device *dev,
+> >               if (!new_skb) {
+> >                       dev_kfree_skb_any(skb);
+> >                       priv->mib.tx_realloc_tsb_failed++;
+> > -                     dev->stats.tx_dropped++;
+> > +                     u64_stats_update_begin(&stats->syncp);
+> > +                     u64_stats_inc(&stats->dropped);
+> > +                     u64_stats_update_end(&stats->syncp);
+> >                       return NULL;
+> >               }
+> >               dev_consume_skb_any(skb);
+> > @@ -2089,7 +2120,7 @@ static netdev_tx_t bcmgenet_xmit(struct sk_buff *skb, struct net_device *dev)
+> >       GENET_CB(skb)->bytes_sent = skb->len;
+> >
+> >       /* add the Transmit Status Block */
+> > -     skb = bcmgenet_add_tsb(dev, skb);
+> > +     skb = bcmgenet_add_tsb(dev, skb, ring);
+> >       if (!skb) {
+> >               ret = NETDEV_TX_OK;
+> >               goto out;
+> > @@ -2233,6 +2264,7 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
+> >   {
+> >       struct bcmgenet_priv *priv = ring->priv;
+> >       struct net_device *dev = priv->dev;
+> > +     struct bcmgenet_rx_stats64 *stats = &ring->stats64;
+> >       struct enet_cb *cb;
+> >       struct sk_buff *skb;
+> >       u32 dma_length_status;
+> > @@ -2253,7 +2285,9 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
+> >                  DMA_P_INDEX_DISCARD_CNT_MASK;
+> >       if (discards > ring->old_discards) {
+> >               discards = discards - ring->old_discards;
+> > -             ring->errors += discards;
+> > +             u64_stats_update_begin(&stats->syncp);
+> > +             u64_stats_add(&stats->errors, discards);
+> > +             u64_stats_update_end(&stats->syncp);
+> >               ring->old_discards += discards;
+>
+> Cannot you fold the update into a single block?
+>
+> >
+> >               /* Clear HW register when we reach 75% of maximum 0xFFFF */
+> > @@ -2279,7 +2313,9 @@ static unsigned int bcmgenet_desc_rx(struct bcmgenet_rx_ring *ring,
+> >               skb = bcmgenet_rx_refill(priv, cb);
+> >
+> >               if (unlikely(!skb)) {
+> > -                     ring->dropped++;
+> > +                     u64_stats_update_begin(&stats->syncp);
+> > +                     u64_stats_inc(&stats->dropped);
+> > +                     u64_stats_update_end(&stats->syncp);
+> >                       goto next;
+>
+> Similar comment as above, this would be better moved to a single
+> location, and this goes on below.
+> --
+> Florian
+>
