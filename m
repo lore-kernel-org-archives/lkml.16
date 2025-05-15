@@ -1,147 +1,149 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f202.google.com (mail-vk1-f202.google.com [209.85.221.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE371B4140
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 03:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FEDBE55B
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 04:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747281568; cv=none; b=mI61qU1Gju1G6pOP6moYngzONdqcEyymdAfiz8LJdopYn9nQ5If1DNny8fgag10oBokzotrYXJP8SJMX2fmMgCAF2Vz4lzv/hhoiUpcAfJ45ea/8h5Ttq2WfVhCjr2NzD5mZZxf8G3fTZn0BJkNsQmd9q0jp7Gurzw+cYdiOILA=
+	t=1747281757; cv=none; b=Ya547rj4C6cWEmJCC9g6g06iS7TL6FctMpIMcm7e27HplkBBwG+EGsksqaW0f7i5CAjUh2LNCSQQDxhNDFsGEPgKLFje+d1sd7Nz70s48TzY/vxwtMPZE5FFcAb2TlaXalgXGs0RQnetC3+UlH+pyShiNkFAIp7LXH81WntuhhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747281568; c=relaxed/simple;
-	bh=whQizIeyGW42Zl99GNuqjMQ5PXU6M7matiCigSNfyM8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k363oOeEB9jkXsQr3MOgpleJ09XkpT4ZRXT8biq/9YDAW4APxXiFwlVA9gtMpfhRd+zJO4GBplYa5TEYSppjdd3G01j0PwA8MaAbkOIGxz0Xv8Pc1c00Xecf1wZjHKCui3seDvCosB6q3uzbikZHV2fdUnYT4YcnN1L09SSYZ04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QOG3g1we; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1747281757; c=relaxed/simple;
+	bh=35RyqXQeA7KWC5QOPkRVaxmTyklwSHLfq0BRuvBY2jw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=IhhUyY4Nye+99jWRFHlkUSjdZfEBQPtANJW3GIIIQ5IrEe1mxUw//Np31uBHh8/Y+TIvcyeBtc9GM+VcHQUnS2b5a9dQ7Z+QenwZaQHnr73WcNoei6cfSBG4qDOoTZcenKLOAoEmuCekprhEAw+eYVmn29b881N5RfyOIjmDTq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--royluo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MnXvjXMU; arc=none smtp.client-ip=209.85.221.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--royluo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QOG3g1we"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747281555; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=TFdZ6vQjYgvoP+lEGuUuMLwUa7mcXBQhvQk2iDXRQ5U=;
-	b=QOG3g1weY7bke/tLe/B0mRJzxes4mNcV2bReeK1JzSdFTDM6GoSe6J56FreedYw4oqnYA/sblvMxyMevOCsuxKvubsnrkrstKkmHufSOTQ4nN5eJPfaiIBjBgBzTOXWHI+q+RiQH25AVSfpm1viWVzEij1LpfxkdKz5ciO7VqwY=
-Received: from 30.74.144.114(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wap9KyY_1747281555 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 15 May 2025 11:59:15 +0800
-Message-ID: <453015aa-e18f-4e37-86b1-001ec4e994d1@linux.alibaba.com>
-Date: Thu, 15 May 2025 11:59:13 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MnXvjXMU"
+Received: by mail-vk1-f202.google.com with SMTP id 71dfb90a1353d-5240516c312so91535e0c.3
+        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 21:02:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747281754; x=1747886554; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7F3UVGrTtkYG0SSNHXNPOJ3LM1MwuA6O7PbUx1oz7HM=;
+        b=MnXvjXMUdytokzcZjEItCLOeEjEQHGmMsVaknGsP8FzeBia2weOgSq7h+5I9dvhrGJ
+         6D+F4g0kYbRegWst0Xl6s9By2xyMguqvDwflldwSJJXh/fGad0Y/9dR3uk1izsu+3ojY
+         qs1YR0ogTdpjlYkBPK7Sa7LX6pma8UvCs3s9Eiypo6ZFLnbm9WXabAGowr83dfVX87+x
+         XzZFU/sNavpzkb+LM4VfyfIhtsn9bVceCeW6sfQd+485F7jn+XDl3gOnP5X0WT4SWA4G
+         o8oMM09QU8QbQYh1DPlZV+PP0Hd87cYvqU5o4N8Yx+PKpazP+Nd0iFkKmKquhRjm/q2f
+         AsIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747281754; x=1747886554;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7F3UVGrTtkYG0SSNHXNPOJ3LM1MwuA6O7PbUx1oz7HM=;
+        b=edDMqW3LeGj5nwDjxGDljvxeGI0nOCtwYXgX/DBntyTCZWJuTN9perAMKgNFlOERwM
+         X7jGOV9PF9BIMLPMlyGAL4MkobP1ULycen8NeV/BXxWAK1whslfkUb47lxqOnM0gy4kJ
+         i73CLpCW6e1hNpNQtRAavYTvbYWwOWJzEYuIsTpyMseFrZcSzxKiz0VLtA4HVsLeONZU
+         pP5kHt9bzw0A7rZVNsErWWyJLuelf3FHY6QbCpHYHYxlgGlV5hf3npCSTPcmx3Le0Ue1
+         lu3CEH+YogtMTYjUGfqkBAlYh7VrAI3X4uXQk2QN156MsY7nC8SuBstYzG3PePljtFHy
+         Ro6A==
+X-Forwarded-Encrypted: i=1; AJvYcCUVcHO1LA/IkXMeVGcd106Lo6eAJWv2A+JoZB8o740XQ3MfI26qs053fLbB2FZvkfALpJ14ggP2k6QomIE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhaLaPz624MSEPEfrZqyZyhJYPtIypqikbFOOJGQLlcFOryluo
+	5Y/yECb0L74QajbyljVx8uqXM8u/vldf2TYR1BFMOzMAbPMmrWmKXGPuFjgHd86/CLK0LDXmia5
+	b/Q==
+X-Google-Smtp-Source: AGHT+IHWJWslfUxDlLQ2wuw9w6C28/+/uJc7nRCodhYkI60OOtBYXIpcguot0fbMLL3afGQbQIYk0XaowbI=
+X-Received: from uabdb6.prod.google.com ([2002:a05:6130:2386:b0:871:d364:9800])
+ (user=royluo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6102:2c0c:b0:4de:81a:7d42
+ with SMTP id ada2fe7eead31-4df7dc8d136mr5289287137.1.1747281754453; Wed, 14
+ May 2025 21:02:34 -0700 (PDT)
+Date: Thu, 15 May 2025 04:02:07 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] mm/shmem: Fix potential dead loop in shmem_unuse()
-To: Kemeng Shi <shikemeng@huaweicloud.com>, hughd@google.com,
- akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250514165047.946884-1-shikemeng@huaweicloud.com>
- <20250514165047.946884-4-shikemeng@huaweicloud.com>
- <b7b6d5d0-2c3f-43ba-b2a9-3c9669f3f96d@linux.alibaba.com>
- <634a73ce-a24e-01d4-1d00-86272bc78860@huaweicloud.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <634a73ce-a24e-01d4-1d00-86272bc78860@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
+Message-ID: <20250515040207.1253690-1-royluo@google.com>
+Subject: [PATCH v1 1/2] xhci: Add a quirk for full reset on removal
+From: Roy Luo <royluo@google.com>
+To: royluo@google.com, mathias.nyman@intel.com, quic_ugoswami@quicinc.com, 
+	gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Commit 6ccb83d6c497 ("usb: xhci: Implement xhci_handshake_check_state()
+helper") introduced an optimization to xhci_reset() during xhci removal,
+allowing it to bail out early without waiting for the reset to complete.
 
+This behavior can cause issues on SNPS DWC3 USB controller with dual-role
+capability. When the DWC3 controller exits host mode and removes xhci
+while a reset is still in progress, and then tries to configure its
+hardware for device mode, the ongoing reset leads to register access
+issues; specifically, all register reads returns 0. These issues extend
+beyond the xhci register space (which is expected during a reset) and
+affect the entire DWC3 IP block, causing the DWC3 device mode to
+malfunction.
 
-On 2025/5/15 09:05, Kemeng Shi wrote:
-> 
-> 
-> on 5/14/2025 5:24 PM, Baolin Wang wrote:
->>
->>
->> On 2025/5/15 00:50, Kemeng Shi wrote:
->>> If multi shmem_unuse() for different swap type is called concurrently,
->>> a dead loop could occur as following:
->>> shmem_unuse(typeA)               shmem_unuse(typeB)
->>>    mutex_lock(&shmem_swaplist_mutex)
->>>    list_for_each_entry_safe(info, next, ...)
->>>     ...
->>>     mutex_unlock(&shmem_swaplist_mutex)
->>>     /* info->swapped may drop to 0 */
->>>     shmem_unuse_inode(&info->vfs_inode, type)
->>>
->>>                                     mutex_lock(&shmem_swaplist_mutex)
->>>                                     list_for_each_entry(info, next, ...)
->>>                                      if (!info->swapped)
->>>                                       list_del_init(&info->swaplist)
->>>
->>>                                     ...
->>>                                     mutex_unlock(&shmem_swaplist_mutex)
->>>
->>>     mutex_lock(&shmem_swaplist_mutex)
->>>     /* iterate with offlist entry and encounter a dead loop */
->>>     next = list_next_entry(info, swaplist);
->>>     ...
->>>
->>> Restart the iteration if the inode is already off shmem_swaplist list
->>> to fix the issue.
->>>
->>> Fixes: b56a2d8af9147 ("mm: rid swapoff of quadratic complexity")
->>> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
->>> ---
->>>    mm/shmem.c | 3 +++
->>>    1 file changed, 3 insertions(+)
->>>
->>> diff --git a/mm/shmem.c b/mm/shmem.c
->>> index 495e661eb8bb..0fed94c2bc09 100644
->>> --- a/mm/shmem.c
->>> +++ b/mm/shmem.c
->>> @@ -1505,6 +1505,7 @@ int shmem_unuse(unsigned int type)
->>>            return 0;
->>>          mutex_lock(&shmem_swaplist_mutex);
->>> +start_over:
->>>        list_for_each_entry_safe(info, next, &shmem_swaplist, swaplist) {
->>>            if (!info->swapped) {
->>>                list_del_init(&info->swaplist);
->>> @@ -1530,6 +1531,8 @@ int shmem_unuse(unsigned int type)
->>
->>          next = list_next_entry(info, swaplist);
->>          if (!info->swapped)
->>              list_del_init(&info->swaplist);
->>          if (atomic_dec_and_test(&info->stop_eviction))
->>              wake_up_var(&info->stop_eviction);
->>
->> We may still hit the list warning when calling list_del_init() for the off-list info->swaplist? So I hope we can add a check for the possible off-list:
-> Hello,
-> When entry is taken off list, it will be initialized to a valid empty entry
-> with INIT_LIST_HEAD(). So it should be fine to call list_del_init() for
-> off-list entry.
-> Please correct me if I miss anything. Thanks!
+To address this, introduce the `XHCI_FULL_RESET_ON_REMOVE` quirk. When this
+quirk is set, xhci_reset() always completes its reset handshake, ensuring
+the controller is in a fully reset state before proceeding.
 
-Ah, yes. I got confused with list_del(), but I still think we should not 
-continue to operate on an off-list entry.
+Fixes: 6ccb83d6c497 ("usb: xhci: Implement xhci_handshake_check_state() helper")
+Signed-off-by: Roy Luo <royluo@google.com>
+---
+ drivers/usb/host/xhci-plat.c | 3 +++
+ drivers/usb/host/xhci.c      | 8 +++++++-
+ drivers/usb/host/xhci.h      | 1 +
+ 3 files changed, 11 insertions(+), 1 deletion(-)
 
->> diff --git a/mm/shmem.c b/mm/shmem.c
->> index 99327c30507c..f5ae5e2d6fb4 100644
->> --- a/mm/shmem.c
->> +++ b/mm/shmem.c
->> @@ -1523,9 +1523,11 @@ int shmem_unuse(unsigned int type)
->>                  cond_resched();
->>
->>                  mutex_lock(&shmem_swaplist_mutex);
->> -               next = list_next_entry(info, swaplist);
->> -               if (!info->swapped)
->> -                       list_del_init(&info->swaplist);
->> +               if (!list_empty(&info->swaplist)) {
->> +                       next = list_next_entry(info, swaplist);
->> +                       if (!info->swapped)
->> +                               list_del_init(&info->swaplist);
->> +               }
->>                  if (atomic_dec_and_test(&info->stop_eviction))
->>                          wake_up_var(&info->stop_eviction);
->>                  if (error)
->>
->>>                wake_up_var(&info->stop_eviction);
->>>            if (error)
->>>                break;
->>> +        if (list_empty(&info->swaplist))
->>> +            goto start_over;
->>>        }
->>>        mutex_unlock(&shmem_swaplist_mutex);
->>>    
->>
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index 3155e3a842da..19c5c26a8e63 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -265,6 +265,9 @@ int xhci_plat_probe(struct platform_device *pdev, struct device *sysdev, const s
+ 		if (device_property_read_bool(tmpdev, "xhci-skip-phy-init-quirk"))
+ 			xhci->quirks |= XHCI_SKIP_PHY_INIT;
+ 
++		if (device_property_read_bool(tmpdev, "xhci-full-reset-on-remove-quirk"))
++			xhci->quirks |= XHCI_FULL_RESET_ON_REMOVE;
++
+ 		device_property_read_u32(tmpdev, "imod-interval-ns",
+ 					 &xhci->imod_interval);
+ 	}
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 90eb491267b5..4f091d618c01 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -198,6 +198,7 @@ int xhci_reset(struct xhci_hcd *xhci, u64 timeout_us)
+ 	u32 command;
+ 	u32 state;
+ 	int ret;
++	unsigned int exit_state;
+ 
+ 	state = readl(&xhci->op_regs->status);
+ 
+@@ -226,8 +227,13 @@ int xhci_reset(struct xhci_hcd *xhci, u64 timeout_us)
+ 	if (xhci->quirks & XHCI_INTEL_HOST)
+ 		udelay(1000);
+ 
++	if (xhci->quirks & XHCI_FULL_RESET_ON_REMOVE)
++		exit_state = 0;
++	else
++		exit_state = XHCI_STATE_REMOVING;
++
+ 	ret = xhci_handshake_check_state(xhci, &xhci->op_regs->command,
+-				CMD_RESET, 0, timeout_us, XHCI_STATE_REMOVING);
++				CMD_RESET, 0, timeout_us, exit_state);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index 242ab9fbc8ae..ac65af788298 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1637,6 +1637,7 @@ struct xhci_hcd {
+ #define XHCI_WRITE_64_HI_LO	BIT_ULL(47)
+ #define XHCI_CDNS_SCTX_QUIRK	BIT_ULL(48)
+ #define XHCI_ETRON_HOST	BIT_ULL(49)
++#define XHCI_FULL_RESET_ON_REMOVE	BIT_ULL(50)
+ 
+ 	unsigned int		num_active_eps;
+ 	unsigned int		limit_active_eps;
+
+base-commit: c94d59a126cb9a8d1f71e3e044363d654dcd7af8
+-- 
+2.49.0.1045.g170613ef41-goog
+
