@@ -1,128 +1,105 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6839F4B1E44;
-	Thu, 15 May 2025 20:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFF04B1E42;
+	Thu, 15 May 2025 20:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747339505; cv=none; b=mtWTSE7R7MAfv3JqMUOIPqzYQzt+olZ2a7fjNhfeNDmaK6QIrM8/alhaEZql9bvYFmuShf9NojSPkiLBCHXRsSQgJivMjqVl9NFea+WPTimdR4bdGL8GTGUss7pUGSuImDQXek+3lCWdWf/Mdkfr6Wo2Ww3w5kfVyNONtOmJUsk=
+	t=1747339745; cv=none; b=lJQKwzZQZMizI5f2H48d/cg16p3kqDq98ud5JTuHQOvP0vjH2+7OtCBoisuhvCy+9pG7aexNtWKq3P7Egqciq9DGL2KWhjsVkxPBeD4s76Tq9DRzs9iSVEwvPcOfuB4OQSFp8nNacutSp3Rqyj1OsMHjk9n6eBYcn/w54t00Pgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747339505; c=relaxed/simple;
-	bh=SKBHDrkAv6HI41+T61x4+kTjy7+6vSJRsrsYVNkeUOE=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=CfmaL1gSFITzRUFIXsny/R1Nnl2E4smkThNRDrQHAyIEXJ733ZwrKV6SlWcxL3inuMl1g3py1AKMajmhyNymF7HxQhUBrTM6KSZT+p8kcCqYNs5VhDMQUuZ2P6B7kAoqxJg/0QrVkYKdibdDkRWCgDQKBqAoRc2vg2A9jjUdHoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=h6IgwPNA; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1747339745; c=relaxed/simple;
+	bh=uf+Uec8jqK+aCOyw7H+7MiHxFd2PaALAT6F2kPyWT/o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lr29pLnvoR1qEzLFseO5fsZiLWpDnsDLwzgqIl24dB25I/gDbRkU0mEfxcgtrwmSnS/cyDTTxAy5+498JUZDg/rP3/YiW4jvLP0iALDlvVfuK1O9hdJdDYtVz8ggOtXW06aVGXwy+67bfmA7VauwxLpWbpU6fqK3QYEGmnwPwaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=E7BM5X20; arc=none smtp.client-ip=80.12.242.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="h6IgwPNA"
-Received: from [172.27.3.244] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54FK4qMB3672567
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 15 May 2025 13:04:54 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54FK4qMB3672567
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747339494;
-	bh=UgNmHzWW4X0bZb4Guomhh4etUesHhtEoB4gbOyjUxrE=;
-	h=Date:To:From:Subject:From;
-	b=h6IgwPNAydNf9R+sRGasHln/kezpG1tcgT9MlPDQKwe3jz7XrHKGYb//rDy3J6VvV
-	 /A2BA2prwttd5ize9QzxXvP+DfufUXReekF2l1rRoNui1/uKI3zRSPlp0ufx+VexOt
-	 l22ZySyKgIYQ6QH1BGDSMUm+8aLvwBX9gUTcSlYUH4Stn1OOJKYfHOde/cjtA6nzP7
-	 2CmsXtpdux9F/7tZ3uIXeEbeKGG3RzQ/ybzLlePFidOW45HL/sR3XhF6k1aGo41hUW
-	 4uWyNZKmAoucoQnqSodP3xsCASs8+pL9L/4OsUwxteY/dKrM1yNabPZi6wqS3SAQ79
-	 VF+erJh/2VsOw==
-Message-ID: <feb98a0f-8d17-495c-b556-b4fe19446d5d@zytor.com>
-Date: Thu, 15 May 2025 13:04:52 -0700
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="E7BM5X20"
+Received: from localhost.localdomain ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id FekBuCN6oIqMPFekCugnJy; Thu, 15 May 2025 21:59:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1747339196;
+	bh=MYe7aSMySa0ucT08nhb3OZlqYbxJUD++vh68yJRzj6M=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=E7BM5X20UrwkEoUQAe0akEYh/tAT6ODI+2Oc/9Zi6/yaf7wCBUufOmzwAsAZhcbZR
+	 9EgyqFCZ22tONOH0iqWDXw9v1xOKD2p27aOT2oJRtZyqOnQF/TZNzH1upW5SLFaoO1
+	 nASJ0dTx9oSlX1a/qPD2FvxfClJHSu5nQrv4N8Y+DCe4WJ04jvjw9dq0Bp2htyYABD
+	 SMqiEpVPcKXnGIdWS7RiOdM/6YjXCd/nhWE2sHCifxJkoF5sbjjKWXCre8JtDyCs88
+	 K35SYFUK6ZSLXgkFs4pvltoWu6X9uv4WsQNzgOzUArPzmHb8wUNjN+HWdPdwallz5B
+	 nJ6Cn7upIXDGw==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 15 May 2025 21:59:56 +0200
+X-ME-IP: 90.11.132.44
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	netdev@vger.kernel.org
+Subject: [PATCH v3 1/4] net: airoha: Fix an error handling path in airoha_alloc_gdm_port()
+Date: Thu, 15 May 2025 21:59:35 +0200
+Message-ID: <5c94b9b345017f29ed653e2f05d25620d128c3f0.1746715755.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        libc-alpha@sourceware.org, linux-arch@vger.kernel.org
-From: "H. Peter Anvin" <hpa@zytor.com>
-Subject: Metalanguage for the Linux UAPI
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-OK, so this is something I have been thinking about for quite a while. 
-It would be a quite large project, so I would like to hear people's 
-opinions on it before even starting.
+If register_netdev() fails, the error handling path of the probe will not
+free the memory allocated by the previous airoha_metadata_dst_alloc() call
+because port->dev->reg_state will not be NETREG_REGISTERED.
 
-We have finally succeeded in divorcing the Linux UAPI from the general 
-kernel headers, but even so, there are a lot of things in the UAPI that 
-means it is not possible for an arbitrary libc to use it directly; for 
-example "struct termios" is not the glibc "struct termios", but 
-redefining it breaks the ioctl numbering unless the ioctl headers are 
-changed as well, and so on. However, other libcs want to use the struct 
-termios as defined in the kernel, or, more likely, struct termios2.
+So, an explicit airoha_metadata_dst_free() call is needed in this case to
+avoid a memory leak.
 
-Furthermore, I was looking further into how C++ templates could be used 
-to make user pointers inherently safe and probably more efficient, but 
-ran into the problem that you really want to be able to convert a 
-user-tagged structure to a structure with "safe-user-tagged" members 
-(after access_ok), which turned out not to be trivially supportable even 
-after the latest C++ modernizations (without which I don't consider C++ 
-viable at all; I would not consider versions of C++ before C++17 worthy 
-of even looking at; C++20 preferred.)
+Fixes: af3cf757d5c9 ("net: airoha: Move DSA tag in DMA descriptor")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Changes in v3:
+  - None
 
-And it is not just generation of in-kernel versus out-of-kernel headers 
-that is an issue (which we have managed to deal with pretty well.) There 
-generally isn't enough information in C headers alone to do well at 
-creating bindings for other languages, *especially* given how many 
-constants are defined in terms of macros.
+Changes in v2:
+  - New patch
+v2: https://lore.kernel.org/all/5c94b9b3850f7f29ed653e2205325620df28c3ff.1746715755.git.christophe.jaillet@wanadoo.fr/
 
-The use of C also makes it hard to mangle the headers for user space. 
-For example, glibc has to add __extension__ before anonymous struct or 
-union members in order to be able to compile in strict C90 mode.
+Compile tested only.
+---
+ drivers/net/ethernet/airoha/airoha_eth.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-I have been considering if it would make sense to create more of a 
-metalanguage for the Linux UAPI. This would be run through a more 
-advanced preprocessor than cpp written in C and yacc/bison. (It could 
-also be done via a gcc plugin or a DWARF parser, but I do not like tying 
-this to compiler internals, and DWARF parsing is probably more complex 
-and less versatile.)
-
-It could thus provide things like "true" constants (constexpr for C++11 
-or C23, or enums), bitfield macro explosions and so on, depending on 
-what the backend user would like: namespacing, distributed enumerations, 
-and assembly offset constants, and even possibly syscall stubs.
-
-There is of course no reason such a generator couldn't be used for 
-kernel-only headers at some point, but I am concentrating on the
-
-Another major motivation is to be able to include one named struct 
-anonymously inside another, without having to repeat the definition. 
-(This is not supported in standard C or GNU C; MS C supports it as an 
-extension, and I have requested that it be added into GNU C which would 
-also allow it to be used with __extension__, and perhaps get folded into 
-a future C standard since it would now fit the criterion of more than 
-one implementation; however, the runway for being able to use that in 
-UAPI headers is quite long.)
-
-I obviously want to keep a C-like syntax for this, which is a major 
-reason for using a parser like yacc/bison.
-
-I have done such a project in the past, with some good success. That 
-being said, the requirements for the Linux UAPI language are obviously 
-much more complex. A few things I have considered are wanting to be able 
-to namespace constants or, more or less equivalently, create 
-enumerations in bits and pieces (consider ioctl constants, for example) 
-and have them coalesce into a single definition if appropriate for the 
-target language.
-
-Speaking of ioctl constants: one of the current problems is that a fair 
-number of ioctl constants do not have the size/type annotations, and 
-perhaps worse, it is impossible to tell from just the numeric value 
-(since _IOC_NONE expands to 0, an _IO() ioctl ends up having no type 
-information at all.) This is something that *definitely* ought to be 
-added, even if a certain backend cannot preserve that information
-
-Thoughts?
-
-	-hpa
+diff --git a/drivers/net/ethernet/airoha/airoha_eth.c b/drivers/net/ethernet/airoha/airoha_eth.c
+index 16c7896f931f..af8c4015938c 100644
+--- a/drivers/net/ethernet/airoha/airoha_eth.c
++++ b/drivers/net/ethernet/airoha/airoha_eth.c
+@@ -2873,7 +2873,15 @@ static int airoha_alloc_gdm_port(struct airoha_eth *eth,
+ 	if (err)
+ 		return err;
+ 
+-	return register_netdev(dev);
++	err = register_netdev(dev);
++	if (err)
++		goto free_metadata_dst;
++
++	return 0;
++
++free_metadata_dst:
++	airoha_metadata_dst_free(port);
++	return err;
+ }
+ 
+ static int airoha_probe(struct platform_device *pdev)
+-- 
+2.49.0
 
