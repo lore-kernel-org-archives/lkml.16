@@ -1,127 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4192298275
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B82620FA81;
+	Thu, 15 May 2025 11:52:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747309909; cv=none; b=qTX95HEBtPmxirXGG1FGUe61rkQRl8wYokmmweS29ZUIX+EXyb48MW6AU2Ho2sDpRCgXfncTbwIB/OtMbp/kp82hwhB5xNBnGUctrpC05emLYsB137dKXBCsMhp3EKi5UjmoGfQIC9U7J9HwT/vDx6X9tPPuRiAZLV36uId/Xxs=
+	t=1747309958; cv=none; b=XdnVoi8yAVTDTdFjxqcuOStNBzdpMj+xRqpD3EWBDH2DlVa4KsBAuXAaWqEmM6dxk/xyC9y3j+vmPTfmWAX8OT3uQAaB6rhD6wG3P2Rbt/QEge9qEiY34MCyvVWP9LsQTEEWiQSYjvc/UR0cwuoTBwzI5Z3PR3Eprshpkjg43Ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747309909; c=relaxed/simple;
-	bh=dAGgG8yyiAOY8HZUMAE4/N5xgfwh4+9Wjt3QcwMtdTE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U5ttqrB7XkOKIuPBuy7h4YBhB0IasaweDKVWwhfcQQiJAGR2voAhQuQBIYcSS7PBCVYf5/UFjKqkOLyZhtyR8hYt10eDHqQesHeoJe00G/HKytUu1a30PJZBaAz+WwUB4f+T59LFxRDBX1m6d/GyqMXRJSAaL3cys+e0b38s5vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CDFkX5D9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747309958; c=relaxed/simple;
+	bh=5n4gJIRJlJ40Aio9mAK8B0h/tvNUDSce7R7LVly6O/E=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=FWsU1hTpD9Qvahs95zFB6IYHe7EXEu7mXv3EoEwYrzUj1HCwR9NOMy7sOGM5BQ4EHWyDNKAg6dSKIlpNtb0aar3d5WYM2Fq79Xfq/qJY5qYcxt5+1DAjaZuBoU+oEfS/69OEI7q+uIsst0s02OLAOACO9Hyu85tZq8VPgyZIgY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bg9ADbY5; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CDFkX5D9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747309906;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8mvKOz//up2sPARV6VPRBQteHxfVgFtg2q1br9Ju/3o=;
-	b=CDFkX5D9Umi0pLFBE9/I6PVaePmmbVmsBdvgb0z4v/ra5WaQCG2FSYdix57yzLstVGWfFy
-	xs+8lYetChHh4l5a1k2enqo48WqVAeW0vM5xiU2nybO1r5We+jhp+JB/ChHTEQ6MFBTWdM
-	xVYH1jrmuWgH87hKzPZ4nA3RVUDFqOY=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-385-JJitsx7nOYGzAuriG4tS6g-1; Thu, 15 May 2025 07:51:44 -0400
-X-MC-Unique: JJitsx7nOYGzAuriG4tS6g-1
-X-Mimecast-MFC-AGG-ID: JJitsx7nOYGzAuriG4tS6g_1747309903
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a0b2e56da1so375751f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 04:51:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747309903; x=1747914703;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8mvKOz//up2sPARV6VPRBQteHxfVgFtg2q1br9Ju/3o=;
-        b=QQbPdaeZgKjyfPbjBu+VeswD40KhbPTdgLCAnLSDEVu4Nv9HspL5MVF4x5FIkd8JtH
-         6crZJ7/ymiUTzeISDD3AHZBw5bpnZG4g8yZJyApuKUa0zp2EBLVYp9l29919OPmBzMJ8
-         0gxPPmj2NUyzzMksvJHSi8nipb7BgQNFi/PGmVIvfGAcj/LvJwSyXRSizYJfGJtjARyh
-         ZTYzy3r+AO3wyPIz9j/Y+gFNMsXr1yeyit28Ols9z+wRRu2xVvyVOAH7bjFYhED+PCGJ
-         Sqi6k/tEc9xibGiyZxilEhnfdnmGHQGWApyhUGs5y3N/OlWGuGL5qqZq1+eZFPhfWT2W
-         0uow==
-X-Forwarded-Encrypted: i=1; AJvYcCUOOuL722OYm9ZOongQzMbE2dKH7cHrHIV52KiHfSsPiUa2orN/nt8s333DAoTzVkXTIWYRDscmLo5EP4s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMoTyQExYV5OhVPeL8f1pRd6GY56n5XLr7/MhH/M1abou+JMxE
-	bTGE5BnVegg3ptYPTrazjUvBENjj63xsitmC2Q6uH+rPNdMuCvR2coG72cg340GCbDIuTkqQOdn
-	X3R4t+MAmEk9gzlUz84gKU5ncWf12rhS3MxeBkjD1KekSKVTC+jVSYvAR1cRp/w==
-X-Gm-Gg: ASbGncvuphotz6vTNOrivpahTNB3bT8geTCwIGJUtP3Dkv4zmrR8c5MEYDnpSrhUAGd
-	yUW10XSZhwFZ+qMRSvq0lw1fhnV09crEHlBBDKVUY206EG5r3oZX4FOf2R24NqM8pzloGCzIk4C
-	bsnj9KphEUTvrlzixlHf5BHoRZxOmnKRdFso6BXO3XWAUtvGxm1fa5BPUSVWFPX9ObRhZh3I2f7
-	Sh5YU0JwcM/N4yXKi1M1Tnv6u54xJNKRJdK74kzWGYaZk6MZFshqflyIryU8Fk2DU905u67uzl/
-	vmF5qrUiFcA8azCNBrS8RX0DBQoAYqejUALLcG3d8gZVZfdz7fqPERzqbTA=
-X-Received: by 2002:a5d:64c8:0:b0:3a0:b733:f255 with SMTP id ffacd0b85a97d-3a3537480demr2229883f8f.25.1747309903392;
-        Thu, 15 May 2025 04:51:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEeJPO3okWHQzPk/Kq//Y4tisgvsrwh048orz2HvG3kmOZOLmvph3DCI1mcOIyLN7SeobjP7g==
-X-Received: by 2002:a5d:64c8:0:b0:3a0:b733:f255 with SMTP id ffacd0b85a97d-3a3537480demr2229854f8f.25.1747309903019;
-        Thu, 15 May 2025 04:51:43 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:2440:8010:8dec:ae04:7daa:497f? ([2a0d:3344:2440:8010:8dec:ae04:7daa:497f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f57ddd2dsm22484374f8f.9.2025.05.15.04.51.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 04:51:42 -0700 (PDT)
-Message-ID: <c6eed9e0-8f44-4ffb-b316-d65e0b5a192a@redhat.com>
-Date: Thu, 15 May 2025 13:51:40 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bg9ADbY5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747309957; x=1778845957;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=5n4gJIRJlJ40Aio9mAK8B0h/tvNUDSce7R7LVly6O/E=;
+  b=bg9ADbY5dooGrTiRuimfbBRU1I7PhId1IS3quDd/caeVozhHHwWGd3Kt
+   XYu+xhyEbTOzIfTgSPYTBTyOz2tBoiBSgZegAYOeW2jKW6UjW0Im5tiJ+
+   a5Hyq+YtQmZ7uz1KrHHx7RMyC238+5SKIZEc1Uc1AtxVY0TLmBya1jhVI
+   zHQsm/ebN6h/jO5YZR4jKEeEqvDY7GE6y6/qTGBlejdguy/phH+w9LzF2
+   ZlaMbTPEz1jEj2eLa65yhc6M06Roi02itjBJPXfU3ykwZfGm8fumAg7rp
+   AR5eUfnB1dwJidOrDNDszmiZfaCzsNeRn39JTCkMe/w8qOPgviXvnbuAs
+   Q==;
+X-CSE-ConnectionGUID: wh8J+/n4TPu5hZxjZFJHUw==
+X-CSE-MsgGUID: ++5YLfesRA2G2VpRBKPrYQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="53042146"
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="53042146"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 04:52:35 -0700
+X-CSE-ConnectionGUID: qUyIqUZBTMa39d5PrzXJ3g==
+X-CSE-MsgGUID: EK7AgqdqQ0GfhOfahzTjdA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="138847244"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.157])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 04:52:31 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Prasanth Ksr <prasanth.ksr@dell.com>, 
+ Vladimir Moskovkin <Vladimir.Moskovkin@kaspersky.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, 
+ Mario Limonciello <mario.limonciello@dell.com>, 
+ Divya Bharathi <divya.bharathi@dell.com>, Dell.Client.Kernel@dell.com, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, lvc-project@linuxtesting.org
+In-Reply-To: <39973642a4f24295b4a8fad9109c5b08@kaspersky.com>
+References: <39973642a4f24295b4a8fad9109c5b08@kaspersky.com>
+Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: Avoid buffer overflow
+ in current_password_store()
+Message-Id: <174730994725.2473.3936667480812297322.b4-ty@linux.intel.com>
+Date: Thu, 15 May 2025 14:52:27 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3] net: Add support for providing the PTP
- hardware source in tsinfo
-To: Kory Maincent <kory.maincent@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
- Jakub Kicinski <kuba@kernel.org>, Donald Hunter <donald.hunter@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Simon Horman <horms@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Jason Xing <kernelxing@tencent.com>,
- Richard Cochran <richardcochran@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Maxime Chevallier <maxime.chevallier@bootlin.com>,
- "Russell King (Oracle)" <linux@armlinux.org.uk>
-References: <20250513-feature_ptp_source-v3-1-84888cc50b32@bootlin.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250513-feature_ptp_source-v3-1-84888cc50b32@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On 5/13/25 1:40 PM, Kory Maincent wrote:
-> diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
-> index c650cd3dcb80bc93c5039dc8ba2c5c18793ff987..881e483f32e18f77c009f278bd2d2029c30af352 100644
-> --- a/Documentation/netlink/specs/ethtool.yaml
-> +++ b/Documentation/netlink/specs/ethtool.yaml
-> @@ -98,6 +98,23 @@ definitions:
->      name: tcp-data-split
->      type: enum
->      entries: [ unknown, disabled, enabled ]
-> +  -
-> +    name: hwtstamp-source
-> +    enum-name: hwtstamp-source
-> +    name-prefix: hwtstamp-source-
-> +    type: enum
-> +    entries:
+On Wed, 14 May 2025 12:12:55 +0000, Vladimir Moskovkin wrote:
 
-This causes a kdoc warning in the generated hdr, lacking the short
-description for the enum:
+> If the 'buf' array received from the user contains an empty string, the
+> 'length' variable will be zero. Accessing the 'buf' array element with
+> index 'length - 1' will result in a buffer overflow.
+> 
+> Add a check for an empty string.
+> 
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> 
+> [...]
 
-include/uapi/linux/ethtool_netlink_generated.h:42: warning: missing
-initial short description on line:
- * enum hwtstamp_source
 
-Please add a:
-    doc: <>
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
 
-section.
+The list of commits applied:
+[1/1] platform/x86: dell-wmi-sysman: Avoid buffer overflow in current_password_store()
+      commit: 4e89a4077490f52cde652d17e32519b666abf3a6
 
-Thanks,
-
-Paolo
+--
+ i.
 
