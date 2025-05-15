@@ -1,158 +1,133 @@
-Received: from clean210.mxserver.ro (clean210.mxserver.ro [176.223.125.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21CF2797A1;
-	Thu, 15 May 2025 08:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.223.125.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7447728C85B
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747298950; cv=none; b=Uok8MLWrLsw9wNwDEPg6v7iy/wY0QUA5BeMvzZNZBix0rZXx7tNSGurZ7KuA7Yoe8v+hOu7JmxwUwV56hIBwiJhf8rGukOnSYRVneDorTcSfCsSjwHips/bUjcG12qDUbmqfx80jGDUYRqu8Z0Yh052ev/cIY8sx+63XVrA0aQs=
+	t=1747298973; cv=none; b=gn0NNUC7xTOZVjvfYR0QfaMfKcA1vWEJF8BD4ZRhij9z5T+jLiy7zFazWr3e4eogncn/nu3efgPT863x6GBY8ipD0FcYfhkinkiUpOZVNpjqC7SDbARG7ZkoMq0bj/bADUUsiHhu/H//11V/dOQapnpvwCZ2QpzN5PXBEGcP/QI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747298950; c=relaxed/simple;
-	bh=afSHaI5eP32dQE5fXMwmOmDmg8JFKckh+LAOUTVscFA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Pd1rCwZjMbgjpL2TTnZR+nHlaIEVbxLshTZmkP6e08JxO/P+MPh/37RqIm/PIbwT2SOdzVALz2piQ+H30WgOSFa9kXgzgZISL8DHMzsvKteUTK6aet62KUeBKPY5fstiRS2TmF8UHJuvrhMXYcmiWipWRYm/neryjJGia159NjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro; spf=pass smtp.mailfrom=taladin.ro; dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b=Qv8AGPej; arc=none smtp.client-ip=176.223.125.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=taladin.ro
+	s=arc-20240116; t=1747298973; c=relaxed/simple;
+	bh=GXQLlBGkESa73JDeg9lAcZht900M2pOJKw4fLsLGiyg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=edFh6fCMWiVa7Cp6IkceAYodr2NtWOuzRlGg7DaO36sN2C/MNgV3vHXcKwO4wgKEgzeH6KG2CKFsCPx4lGpnWhxRK4kySImAb0N8ltikWBtPWsiitKmbyLxnhLNfxNpWW/6VtzJJZBWJNH4be7Jn/gWCftk1q7cuqEXqJjuNsWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BaUH9PJL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b="Qv8AGPej"
-Received: from cloud347.c-f.ro ([185.236.86.218])
-	by cleanserver2.mxserver.ro with esmtps (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <asoponar@taladin.ro>)
-	id 1uFTm4-001W25-Vt; Thu, 15 May 2025 04:17:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=taladin.ro;
-	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=IcwQOeAopjJk4D833aLWPS/i3EpXTNhJ5OpQyTYtqcU=; b=Qv8AGPejwyTt2HEAh8UKzOQGTy
-	gPmmaCA6DYGC/iC13lIUwKL1zddUJLqr6qnYqcMa5WfG5C6/b5OpxTtI5c8Bg5G28qqqnG/UGqpZq
-	vZLFJuAnLQaSk9Xc5ch9k9vWGl65OTWWC4nA+z1V8At6CP3LzjtL+EB6CfaDvEFNr4gqH9058lkgX
-	yMoGouH1h0fVjeH8fCnx+1FJzPFaHFBqSmMx33ieECLYMW+ZEoTJxQ+8v2ywGHWpTRvf4CCSni/yT
-	5f/uXagpUd8Q5h+mjQlYae8yG7bC6um6cJPuPgse3acq9LZoEMEqDYSGhvF4NEgk3SZxEVRQ6N96n
-	AXOLwhqw==;
-Received: from [109.166.137.172] (port=39024 helo=localhost)
-	by cloud347.c-f.ro with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <asoponar@taladin.ro>)
-	id 1uFTlt-00000006qFv-0sEf;
-	Thu, 15 May 2025 11:17:02 +0300
-From: Alexandru Soponar <asoponar@taladin.ro>
-To: linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	linux-watchdog@vger.kernel.org
-Cc: jdelvare@suse.com,
-	linux@roeck-us.net,
-	jic23@kernel.org,
-	pavel@ucw.cz,
-	lee@kernel.org,
-	baocheng.su@siemens.com,
-	wim@linux-watchdog.org,
-	tobias.schaffner@siemens.com,
-	angelogioacchino.delregno@collabora.com,
-	benedikt.niedermayr@siemens.com,
-	matthias.bgg@gmail.com,
-	aardelean@baylibre.com,
-	contact@sopy.one,
-	Alexandru Soponar <asoponar@taladin.ro>
-Subject: [PATCH 10/16] iio: ad7606: Fix type incompatibility with non-macro find_closest
-Date: Thu, 15 May 2025 11:13:26 +0300
-Message-ID: <20250515081332.151250-11-asoponar@taladin.ro>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250515081332.151250-1-asoponar@taladin.ro>
-References: <20250515081332.151250-1-asoponar@taladin.ro>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BaUH9PJL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F34E4C4CEE7;
+	Thu, 15 May 2025 08:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747298972;
+	bh=GXQLlBGkESa73JDeg9lAcZht900M2pOJKw4fLsLGiyg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BaUH9PJL4Ca7+96F2efoB+Wsds28d5NkT8gRlydt3GASFTkDnoSRYWhvWJeVK8rqS
+	 A1+yRTbqKeH7z57brgV4NAXN+z2FC0wgr/fjVArylf0K4jk5OOE+0jgyzsm//xI9y0
+	 BEEIkkGK6ayN/yIp+Gkv8qowZJksiImHZqxXR250ROGPifIn8brUy5wkariPxbvR4n
+	 g03OKpxBtvEFZAl++C+LmvyFTqsdQUi8CmhRk3zUlbQqh/4ODGPSlCWVz3jrdvK2yl
+	 JFS9CkvihpFY5xMAY0KjSqVVDa/gyMHPxbkqiQ+C/cmMvKA5H+Ow0UW9xr1TiwnkdJ
+	 tnmGezUzTLr2g==
+Date: Thu, 15 May 2025 10:49:27 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: linux-kernel@vger.kernel.org, "Ahmed S . Darwish" <darwi@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 15/15] x86/atomics: Remove !CONFIG_X86_CX8 methods
+Message-ID: <aCWql__AlUA2fnLe@gmail.com>
+References: <20250425084216.3913608-1-mingo@kernel.org>
+ <20250425084216.3913608-16-mingo@kernel.org>
+ <5c175b6a-e9c8-2546-a4fe-98572c3f4935@gmail.com>
+ <aA3qGMf759kePUFI@gmail.com>
+ <CAFULd4Za6kV0BuaDwi5j4Sz3LSX0VGef2Jfx9=Y0LYR-LKKaRQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SpamExperts-Domain: cloud347.c-f.ro
-X-SpamExperts-Username: 185.236.86.218
-Authentication-Results: mxserver.ro; auth=pass smtp.auth=185.236.86.218@cloud347.c-f.ro
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: SB/global_tokens (0.00322122345698)
-X-Recommended-Action: accept
-X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT+K+F6pHTdOPZZqI+fEkVaAPUtbdvnXkggZ
- 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5w1OL79HMxE022P+rQy8YAdcSeERs4TOTnIH1kc1IWc5TSx
- S75yz9IFZiY7BarU/NrpK8SEOwGmfn6ucAKqn/OHRh3BqzFaEnAEj4UixLJBjVNiLZt/QXQnOBRD
- +jq1HsIBmHTFdhqXZEtguZY7iGKpkcJnJKaJfT+dw1udmv00tbIRNtoyOobb3xnDyRRylAVTYi2b
- f0F0JzgUQ/o6tR7C8pLPCtTiVLo0r89ClJHDKhDGKgJ+T00JeCnHBmMdB1eMZAyYlfUtEN4pUyes
- jVRntA/J5DcfwvG53FyVviDO9UET3GKmqv1jT0lY+AQz8YX4CVph7ctC7tRH2SPTQJ/0klTuXKq/
- B9rqRWsYzNfBLt79i78aPHyWnIqxGMxPZotYvH/es1vXuByXo2bkrYMqq0x5CzaUoJIoBUQayHle
- UvbvCQmh9x4kn6NeQcRkc6G+OgAcq5x+BzhRyg9rYO6I0H7Q2OEpckvWJAOmdJd77Z9vwc+QHB+X
- +u7aTqYHtT2CBuxNPBc9JM2jck1NnIBf0tvflhq7Xjhll72AYgnW/6M0ftSpvLIx+X1vKami8KF6
- jWQ71uVNIY/EFPWeDmcZuFRQy1vmjjPiYw8fUCp0/qY6cmSW9oUDdvKuTRfTGZ6f8nTXoYFaQ71l
- mMti8uxA0gKVmIzBXtbLDVvAQ/KVNa6nAbYGixTbx4sXUH4WPL6SAN5VcIfsMVILjVAz6RZsCHxD
- lgOJwEwCFaF+62b2lf1UUDu9jECN1V/lwmsioRLmNJoHOZOE/9e5UD715p61XAQw85DCXa0iAPEd
- fYyrF5wMRSLGyY+i0m2IxQLxQUzTb3Mji+CrO1+NTWs5OBXbSDBPqdRoFsq0hfzdx0oxkgNI/jhY
- WFhu7VV+HdWjdZLlmQ5z83qEVVG/6RJ+BW7FmGcwL889DSW2cZWGkIYVQAbHnYkWUz1gRIjAiMvi
- vM7um7t0SVa5NVZ2g1u6DnOpqk1nwAzTSgytNKIH5lfAuQc8I07FTFcjpdfX/Jcr87en7cKbI0NU
- afdkQMG+6qjtXoANVR89VM6f75a5kmRIbungV7ywXD8VtmM8wef5C6IkqMFhROX1HYRo9Sm1kZOW
- saz62DSUUd/fn3Ix/aSqJVglEtnFggTvi4y/qO0sxBxzHDeqqFz43py4SDhdaHkWOGxZQgSAzbb+
- OB/nFYi5VbOv2oY4HXLSfAUu3sMpupagJz67c6+2AaKYGhiMiXWGMvYnkNWjwSQDaUU9MqYUCeef
- 0nlkmUPzlfoLUG4g/XHuva4NQ7gH1kLtR+dZ31Wj92PNDpgLsd6Ddd/s7VM53twrVC8K+lj1c6e/
- tTmd6eMo8njYQeCXryE9YzCFXixhT7FVIMQwRWLn0yVyqUMOeb6+5/5oQUTrIe1XMSXJ58tr/yiP
- gGFyxS1LuwmPRAQzaEJVYkfhZXq/u54kZVCWtfUf9oDBqtClgM5jH/om1Q6gjkapWNvVA5HRyb3X
- trWYR6vnFpUUmgU46LTsHtrjRqVe/ojyw7bapws3danDDsxD6gvvWu5/Lf1bKbM1VroDfVYPkwIu
- /8x7KhILIr1IfwgT9kxT5f4reZBSMLp/jH4zvQRYQJnl3XNqRK2lK/zP
-X-Report-Abuse-To: spam@cleanserver1.mxserver.ro
-X-Complaints-To: abuse@cleanserver1.mxserver.ro
+In-Reply-To: <CAFULd4Za6kV0BuaDwi5j4Sz3LSX0VGef2Jfx9=Y0LYR-LKKaRQ@mail.gmail.com>
 
-The ad7606_oversampling_avail and ad7616_oversampling_avail arrays were
-previously declared as unsigned int but used with find_closest(). With
-find_closest() now implemented as a function taking signed int parameters
-instead of a macro, passing unsigned arrays causes type incompatibility
-errors. This patch changes the arrays type from unsigned int to int to
-ensure compatibility with the function signature and prevent compilation
-errors.
 
-Signed-off-by: Alexandru Soponar <asoponar@taladin.ro>
+* Uros Bizjak <ubizjak@gmail.com> wrote:
+
+> On Sun, Apr 27, 2025 at 10:26 AM Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> >
+> > * Uros Bizjak <ubizjak@gmail.com> wrote:
+> >
+> > >
+> > >
+> > > On 25. 04. 25 10:42, Ingo Molnar wrote:
+> > >
+> > > > -#endif
+> > > > +#define arch_cmpxchg64                     __cmpxchg64
+> > > > +#define arch_cmpxchg64_local               __cmpxchg64_local
+> > > > +#define arch_try_cmpxchg64         __try_cmpxchg64
+> > > > +#define arch_try_cmpxchg64_local   __try_cmpxchg64_local
+> > > >   #define system_has_cmpxchg64()            boot_cpu_has(X86_FEATURE_CX8)
+> > >
+> > > #define system_has_cmpxchg64()                1
+> >
+> > Thanks, I've updated the patch with the change below.
+> 
+> I think you also want to change:
+> 
+> > diff --git a/lib/atomic64_test.c b/lib/atomic64_test.c
+> > index d726068358c7de..352e811c99ce9e 100644
+> > --- a/lib/atomic64_test.c
+> > +++ b/lib/atomic64_test.c
+> > @@ -254,10 +254,8 @@ static __init int test_atomics_init(void)
+> > pr_info("passed for %s platform %s CX8 and %s SSE\n",
+> > #ifdef CONFIG_X86_64
+> > "x86-64",
+> > -#elif defined(CONFIG_X86_CX8)
+> > - "i586+",
+> > #else
+> > - "i386+",
+> > + "i586+",
+> > #endif
+> > boot_cpu_has(X86_FEATURE_CX8) ? "with" : "without",
+> 
+> X86_FEATURE_CX8 is now always defined, so the "without" part is now a
+> dead code. Perhaps the info message should be updated to always say
+> "... platform with CX8 and ..." or even to remove this part.
+
+Yeah, agreed. I've folded in the delta change below.
+
+Thanks,
+
+	Ingo
+
 ---
- drivers/iio/adc/ad7606.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ lib/atomic64_test.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-index d8e3c7a43678..41b477ea386d 100644
---- a/drivers/iio/adc/ad7606.c
-+++ b/drivers/iio/adc/ad7606.c
-@@ -81,11 +81,11 @@ static const unsigned int ad7609_hw_scale_avail[2][2] = {
- 	{ 0, 152588 }, { 0, 305176 }
- };
+diff --git a/lib/atomic64_test.c b/lib/atomic64_test.c
+index 352e811c99ce..d7697c09041f 100644
+--- a/lib/atomic64_test.c
++++ b/lib/atomic64_test.c
+@@ -251,13 +251,12 @@ static __init int test_atomics_init(void)
+ 	test_atomic64();
  
--static const unsigned int ad7606_oversampling_avail[7] = {
-+static const int ad7606_oversampling_avail[7] = {
- 	1, 2, 4, 8, 16, 32, 64,
- };
- 
--static const unsigned int ad7616_oversampling_avail[8] = {
-+static const int ad7616_oversampling_avail[8] = {
- 	1, 2, 4, 8, 16, 32, 64, 128,
- };
- 
-@@ -835,7 +835,7 @@ static int ad7606_write_raw(struct iio_dev *indio_dev,
- 			    long mask)
- {
- 	struct ad7606_state *st = iio_priv(indio_dev);
--	unsigned int scale_avail_uv[AD760X_MAX_SCALES];
-+	int scale_avail_uv[AD760X_MAX_SCALES];
- 	struct ad7606_chan_scale *cs;
- 	int i, ret, ch = 0;
- 
-@@ -884,7 +884,7 @@ static ssize_t ad7606_oversampling_ratio_avail(struct device *dev,
- {
- 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
- 	struct ad7606_state *st = iio_priv(indio_dev);
--	const unsigned int *vals = st->oversampling_avail;
-+	const int *vals = st->oversampling_avail;
- 	unsigned int i;
- 	size_t len = 0;
- 
--- 
-2.49.0
-
+ #ifdef CONFIG_X86
+-	pr_info("passed for %s platform %s CX8 and %s SSE\n",
++	pr_info("passed for %s platform with CX8 and %s SSE\n",
+ #ifdef CONFIG_X86_64
+ 		"x86-64",
+ #else
+ 		"i586+",
+ #endif
+-	       boot_cpu_has(X86_FEATURE_CX8) ? "with" : "without",
+ 	       boot_cpu_has(X86_FEATURE_XMM) ? "with" : "without");
+ #else
+ 	pr_info("passed\n");
