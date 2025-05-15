@@ -1,137 +1,150 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8911361;
-	Thu, 15 May 2025 03:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC9A81361;
+	Thu, 15 May 2025 03:48:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747280858; cv=none; b=BH3aB1/CZLkK2bi8j07Qy30XLdCOtmRMJLk1HSzvE91pBcPy0tjTKq09SRX6Y2NLGOHyRI6+Qvj13ZBLQJ+0SozaWLozbQABHgzctYv9UFqlVU+JlLklIllp+dk1+DNnADr4YYZZG9+Y+JwP+oT3XSOzN7YIp2zTBHluDVMFHGk=
+	t=1747280914; cv=none; b=KX3rRJMYFTCQXX0FgSJVYhzGrXzkV0KIiaZRcMj+OLK0KqpyFa7o75wKtJ5jLJrDmmdO405qZ39riUBQ5OIWo1s6fHdaW0N5fzZqGbdeZlSZBoFmwJJmi5u6LlhebvP+UTv5HySLjilml26CsZnkTRfbF/u8oF2oC3g4fHK3w14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747280858; c=relaxed/simple;
-	bh=jusEkXQPdT+EmYOtbUapz0vfxgv/rJOyiAD+Rz2I7p4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rk4bH+bvJ/dPlT4tjTI2AhOad8J15WVEtaNQSHocKlITBoXiML2SMmQRqC1KY6FJ51nQJygF2i5MeGj6FhuvM8t4YChrXFw84a8nB6j/MqRzZwkL5IvPN0zOnQLerV3+Jg5fHiyPJIwNa8fNo2B8VHpxmpaOiBZNrTBxLdYVrBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZW0JM7Wn; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747280914; c=relaxed/simple;
+	bh=VfW3scZAPCqRyh80P4VN1dFpLkyTS0bTtFRLyXSNsas=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iNKaJc2yOICZz9ViLKqX83vuE9h1O6cWZJfOtizIt/HQOAOj9dVbuQ0QBBJ0klng7Lu3TKzzBk1snWqxeuK+EWiXqhhiOw9ugTujiOCnw/9f/dD8U4YhqQpbuSFJRp9SI6MeB1hjGOGb/JOEiiI9+ZQk9osOOBsyGbZtKMGaRuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lkXeM763; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZW0JM7Wn"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54EKPAuj013086;
-	Thu, 15 May 2025 03:47:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=zGTC0pl80cZTRh+KrVwQmdum
-	JQlUqqo0pnHsL1UmezI=; b=ZW0JM7Wnr+AfhIkQ6S1RyA3LKAoI6FRjwkPhf3wH
-	HBFyvz8gxywzhYX208+3o6xZUhgm7VIxcJXR8eTxiecJs0ZyEGqC/48mHel+4VWI
-	Szi3Si0pG9M4M12nPX1nSEW81epCwCNOZG8oxjHUSPvBit5bne6kZqHN1+Q4M4qS
-	JsgjrIHVpoK25BydioheTjM3Q+KJxO90LBfhNsEFAIsX0IDsHqNyzZbG4cHio7oP
-	1gbqEe5+NvGhMbUOeADWjFt6ttUDwCk2ylQ9uYYWCjfmi+A4EAOruKdwdoQ8R/Ng
-	35PbWXc7ylmkW32czePTuBbIWcgdTWNccy9LPdHr4Eu7gQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcmmv4r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 May 2025 03:47:19 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54F3lIIg000483
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 May 2025 03:47:18 GMT
-Received: from hu-mdtipton-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 14 May 2025 20:47:18 -0700
-Date: Wed, 14 May 2025 20:47:16 -0700
-From: Mike Tipton <quic_mdtipton@quicinc.com>
-To: Sudeep Holla <sudeep.holla@arm.com>
-CC: Cristian Marussi <cristian.marussi@arm.com>,
-        "Rafael J . Wysocki"
-	<rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>, <arm-scmi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Peng Fan
-	<peng.fan@oss.nxp.com>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v3] cpufreq: scmi: Skip SCMI devices that aren't used by
- the CPUs
-Message-ID: <aCVjxJB6dUzIAyPJ@hu-mdtipton-lv.qualcomm.com>
-References: <20250428144728.871404-1-quic_mdtipton@quicinc.com>
- <aBtLMYqcnwacGJuy@pluto>
- <20250507-analytic-practical-carp-5cddaf@sudeepholla>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lkXeM763"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747280913; x=1778816913;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VfW3scZAPCqRyh80P4VN1dFpLkyTS0bTtFRLyXSNsas=;
+  b=lkXeM763AN4F9fji6G5+ZAtkAFbc0O8dPB8BsT346sA0nOgkrlSYhXRP
+   Sk5Rj5FKzrejPW0jMEyO3rwpceXdjxt1YIilmJynvEKerWgLUb6a2xG5i
+   dgP3pdko7FG1EKvSImOp6khpJgUgbfXi60re85JVYaBV8zE274nNeFTI2
+   G8WOs0fDroqumIhGZBIXRHyVqy1jgDmDIl5aot9z7KwGcs8fHHg3GQ1ZS
+   fVrfnwtJssih+9fiQaqE6OyUtHsz9J2R2Lo2zdeZrB6ANnUFSlq95TDH7
+   Jp8IojhRAmKkHHnj+SvM0fAFMAbPXM8Xl/lzj+zi2vq8U3fgLN8JVJX6Q
+   g==;
+X-CSE-ConnectionGUID: XmuYQTK7TpWQgGG2YRsJwQ==
+X-CSE-MsgGUID: U2dJAY/0R2iHnDqvDhxvzg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="49341189"
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="49341189"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 20:48:32 -0700
+X-CSE-ConnectionGUID: Wm4JfG3aQGqgXz4C5GJRJQ==
+X-CSE-MsgGUID: e93CM5oCSzG07R6DcYt8IA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="139235585"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 20:48:31 -0700
+Date: Wed, 14 May 2025 20:53:38 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, x86@kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>, devicetree@vger.kernel.org,
+	Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Chris Oo <cho@microsoft.com>, linux-hyperv@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+	Ricardo Neri <ricardo.neri@intel.com>
+Subject: Re: [PATCH v3 06/13] dt-bindings: reserved-memory: Wakeup Mailbox
+ for Intel processors
+Message-ID: <20250515035338.GA4955@ranerica-svr.sc.intel.com>
+References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
+ <20250503191515.24041-7-ricardo.neri-calderon@linux.intel.com>
+ <20250504-original-leopard-of-vigor-5702ef@kuoka>
+ <20250506051610.GC25533@ranerica-svr.sc.intel.com>
+ <20250506-pompous-meaty-crane-97efce@kuoka>
+ <20250507032339.GA27243@ranerica-svr.sc.intel.com>
+ <20250512153224.GA3377771-robh@kernel.org>
+ <20250513221456.GA2794@ranerica-svr.sc.intel.com>
+ <20250514154248.GA2375202-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250507-analytic-practical-carp-5cddaf@sudeepholla>
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDAzNCBTYWx0ZWRfXzGvfqREIeNlu
- mK6PGnMZr0Z3NEH+vaH9JvW+HwiRH1nF5lnM4DuOSxGqcVLb07N1qD0AaDACMjg18rUGUa/VEeY
- S7ldd1wxFSZ2rmHAYKaRn9jwD7W2ERYr5xTH/iL5VFWrP/e12oxkXSa4zZj1kX5NStmlVpS3h7U
- 4cn+1c0z0C8XkQeNHOfTAPANWIOcP/MmE0ORIMdNB452CtjyOk5kADIsrlp0wHemX6gGPSODK+b
- eO1LordZDsYUl0HQJlhFmXavKtP1I3bXescCjbuLf+jARaLqdCYIy7E5QXMSVw/KW8tmWr62Jb5
- RmDYsB7Fw+a6VFnQu0aL1XTNgvsWbulChQjTdpyMKaZyzuLK10wLYdOtuLW2RONpT0rO9O7AHhi
- /jyn97wi1tSxi/XE/kOW9w73p0Gm6OzaenUSomuMtxtoDC/xKf0EEaJq6ETAbBCMT/e6n2xZ
-X-Authority-Analysis: v=2.4 cv=G5scE8k5 c=1 sm=1 tr=0 ts=682563c7 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=3H110R4YSZwA:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=7CQSdrXTAAAA:8
- a=Ml6eQ6jI9tVgauyEpOUA:9 a=CjuIK1q_8ugA:10 a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-GUID: 5PJ48GxnBVuJhvW7hiJVMppIztQxFO7i
-X-Proofpoint-ORIG-GUID: 5PJ48GxnBVuJhvW7hiJVMppIztQxFO7i
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-15_01,2025-05-14_03,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 mlxlogscore=717 clxscore=1015 phishscore=0 bulkscore=0
- suspectscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0
- malwarescore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505150034
+In-Reply-To: <20250514154248.GA2375202-robh@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-On Wed, May 07, 2025 at 02:12:36PM +0100, Sudeep Holla wrote:
-> On Wed, May 07, 2025 at 12:59:45PM +0100, Cristian Marussi wrote:
-> > On Mon, Apr 28, 2025 at 07:47:28AM -0700, Mike Tipton wrote:
-> > > +static bool scmi_dev_used_by_cpus(struct device *scmi_dev)
-> > > +{
-> > > +	struct device_node *scmi_np = dev_of_node(scmi_dev);
-> > > +	struct device_node *np;
-> > > +	struct device *cpu_dev;
-> > > +	int cpu, idx;
-> > > +
-> > > +	if (!scmi_np)
-> > > +		return false;
-> > > +
-> > > +	for_each_possible_cpu(cpu) {
-> > > +		cpu_dev = get_cpu_device(cpu);
-> > > +		if (!cpu_dev)
-> > > +			continue;
-> > > +
-> > > +		np = dev_of_node(cpu_dev);
-> > > +
-> > > +		if (of_parse_phandle(np, "clocks", 0) == scmi_np)
+On Wed, May 14, 2025 at 10:42:48AM -0500, Rob Herring wrote:
+> On Tue, May 13, 2025 at 03:14:56PM -0700, Ricardo Neri wrote:
+> > On Mon, May 12, 2025 at 10:32:24AM -0500, Rob Herring wrote:
+> > > On Tue, May 06, 2025 at 08:23:39PM -0700, Ricardo Neri wrote:
+> > > > On Tue, May 06, 2025 at 09:10:22AM +0200, Krzysztof Kozlowski wrote:
+> > > > > On Mon, May 05, 2025 at 10:16:10PM GMT, Ricardo Neri wrote:
+> > > > > > > If this is a device, then compatibles specific to devices. You do not
+> > > > > > > get different rules than all other bindings... or this does not have to
+> > > > > > > be binding at all. Why standard reserved-memory does not work for here?
+> > > > > > > 
+> > > > > > > Why do you need compatible in the first place?
+> > > > > > 
+> > > > > > Are you suggesting something like this?
+> > > > > > 
+> > > > > > reserved-memory {
+> > > > > > 	# address-cells = <2>;
+> > > > > > 	# size-cells = <1>;
+> > > > > > 
+> > > > > > 	wakeup_mailbox: wakeupmb@fff000 {
+> > > > > > 		reg = < 0x0 0xfff000 0x1000>
+> > > > > > 	}
+> > > > > > 
+> > > > > > and then reference to the reserved memory using the wakeup_mailbox
+> > > > > > phandle?
+> > > > > 
+> > > > > Yes just like every other, typical reserved memory block.
+> > > > 
+> > > > Thanks! I will take this approach and drop this patch.
+> > > 
+> > > If there is nothing else to this other than the reserved region, then 
+> > > don't do this. Keep it like you had. There's no need for 2 nodes.
 > > 
-> > Shouldn't this, on Success, be released by an of_node_put() (or, BETTER,
-> > by some OF-related cleanup.h magic...)
+> > Thank you for your feedback!
 > > 
+> > I was planning to use one reserved-memory node and inside of it a child
+> > node to with a `reg` property to specify the location and size of the
+> > mailbox. I would reference to that subnode from the kernel code.
+> > 
+> > IIUC, the reserved-memory node is only the container and the actual memory
+> > regions are expressed as child nodes.
+> > 
+> > I had it like that before, but with a `compatible` property that I did not
+> > need.
+> > 
+> > Am I missing anything?
 > 
-> Good catch, I missed this.
-> 
-> With the above issue fixed, you can add and post new version:
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> Without a compatible, how do you identify which reserved region is the 
+> wakeup mailbox?
 
-Thanks Cristian / Sudeep.
+I thought using a phandle to the wakeup_mailbox. Then I realized that the
+device nodes using the mailbox would be CPUs. They would need a `memory-
+region` property. This does not look right to me.
 
-The cleanup.h __free() logic gets a bit cumbersome here, especially with
-two struct *device_node to free in the same scope. And since there isn't
-any complicated cleanup logic to unwind, then I'll just go with the
-direct calls to of_node_put().
+> Before you say node name, those are supposed to be 
+> generic though we failed to enforce anything for /reserved-memory child 
+> nodes.
 
-Also note we aren't calling of_node_put() in scmi_cpu_domain_id(),
-either. I can fix that in a follow up patch.
+I see. Thanks for preventing me from doing this.
 
-I'll send v4 of this patch shortly.
+Then the `compatible` property seems the way to go after all.
+
+This what motivated this patch in the first place. On further analysis,
+IIUC, defining bindings and schema is not needed, IMO, since the mailbox
+is already defined in the ACPI spec. No need to redefine.
+
+Ricardo
