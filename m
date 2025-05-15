@@ -1,360 +1,195 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A15A8C1F
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 05:08:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910A88C1F;
+	Thu, 15 May 2025 05:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747285715; cv=none; b=rTmP+tTp4NgDmFlmMn7URbbz6brS9coRE5cJFu1PWIS3eF8t7p2DkChS0GIPs39kA6GL/NtfcBloq4USjOiDw2AEn53GtodPSuO2Wziy20V2I6VMp6zBIdHpklo6/vuvyaVuN8Mo847J/g4HtnJO13JPDfrEhORu7L4YlhsLTsg=
+	t=1747285779; cv=none; b=ffHXLMo9iZKi+ss4NEBcWMyR+WonGSDTU3ANhRnjjXigVnnEs1AI2Tkq8PZw5p7JvhkxiewX/nlQQ0kBE/sY3IOIKfFwK2g+RJU45QjIqFClVKfbWFXMbFxszHIqCts0/m0BAGngS/Jir3HNqiamgx+XTHjipcXvayrJXgAlaME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747285715; c=relaxed/simple;
-	bh=R2e6IY2aGM86GXVHnA535KPlLrO+bcT9FdZraQcUSZM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=krZnfP+xn/k0xSgcZ5V5weV8Ft5ZkIYcz6GEyT/sDMWN0JCDv5mvb7159lzE4wrzLPxWrSFzv3V08BTZSWtmHwodjKQciAjrTeoOuqZerUffhHgjqd4kMuY+ubERmptA3FTVhKrFSLMRJ565Dl4N8FMZsvRnaM3Orpr2rWbmTQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EikxpLdM; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747285779; c=relaxed/simple;
+	bh=uxbsQpMeKa8E2VkKT5+LTBbhyG22diHloapfLODy/p4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mY9oeZurnay4eMMDbFUDYl4sTZAra0pUZK+9FvdUZYm3493+5T5JfIeE8ZtN1GPnSRNvOt3cpkrX4xIH2uOoK1ajkK/35dENz8v6KBdDbbtGJnZPLO+GVC5VK0QWy8ZuroEzXVM6uAVJI68j+uUGxlouItHo1XyIDSRAaGzXa6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=edYumvmE; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EikxpLdM"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so3799405e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 22:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747285711; x=1747890511; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9NxJDudth95COytxeMte8dNYzQjInMdH/rxx6p7aGR4=;
-        b=EikxpLdMPZ3bxrln4vktu+bQH8UVlAx1GDWJf7+Z3t+3fxbUjYvfz9buH/BmnvVaJV
-         P4founSVizNJoZsbNiNkvOzfhXNgh/waNUa/wOuaeMQZ0hVJ5WXDRtsee32odkyvQpch
-         4/WUAHw3BHTl5vLsPN4nZIZVGJR9S0ioPQdv3mcfS//t/+oF4T1xNUZcwUVoba6dp+rg
-         9jjfT/BaGxdAbCGZ7+tGf6KA5oWmxPE2tCaVY5Euuek7SVY7ijuVn6uMqqzseYG298cT
-         VS5hBshTiuHp4Wyd6JUWdBgqxf1uVW/2JaqE3p2Q5VbdnGyi84DN2BvVMJksUoj7SC7d
-         z7DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747285711; x=1747890511;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9NxJDudth95COytxeMte8dNYzQjInMdH/rxx6p7aGR4=;
-        b=fVqrBHzLJMkwR0FUhX/aq1jnR561ujOOl7yfEVnUjNik4qJ/Dbkjw2gvTrJd4eBWBe
-         TLz+GKxf3l/taIZDVtjWy7nZOkC+cHUJY1Mj0rfy/slk3LYvzaqc0R1k6CsmMYeBZzys
-         jvMhE5fC9FZN01aHZJ5mQtNnAuep1ZUVrqu6sw4XvFIYerYlal+5bVwvTYp+9HkpD3j3
-         2HWFsqk45XUYJcBnhzOM6cgtA6CnUyyYYHdk83DABCI0GRK3ckX9LtnvyCIDHLBDGb18
-         qp8aiPvvSy5Hg2gIrEa+RMLXvQ7MhFO6FmJiNDDOKi7N+e2V1KOXXUeoI2waLHnlWQIM
-         1Sqg==
-X-Forwarded-Encrypted: i=1; AJvYcCUWaQAv9dpUE5hh3ggafJyfzICrA88UIGWZcXiBu+rb/qjVPZ3PPr35YZcxeg2DNcw6hoq3FmNnhVOZfR8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcrFEjxoNZR7uDtSnAG9i0GnwofrvhPy09Vt/ikMBkjQ24JBYK
-	O/fYo/t3zePMCKDbWbLrC1P6DC6ViHK2Hd8WyEaQqI0gm9Eq8kq3
-X-Gm-Gg: ASbGncuYtxT5MUeL9Bn3CwcnLuc99151JdMJ433Re5QK2kyhZxWDyOoFULQbKELPCwT
-	qaaz+Dd8OLs8sRK2U1QqG7e2246jDA2/v7T5W0tGkjaFv5h9FD5XH1oloxB30Qf+G0sOY1Ylgt+
-	9cyXtVr8aHReIK0Tl86N2uYhT0VWj6JV+zDNn4Bz8TRUhNNBOtFOJxy/2SUZM6W1mRoasGzDv3i
-	OIUw7src5d/zoIbQOQK5k4rZJj1he0xlaKCBCmVm/sCGdbZpju9CNB2php5L+M6PH2rI5L8+QE5
-	/sKhCen71wbS/3K9v2IUeAjPGWtIGHilS31/1iiiz01S7Phwg4e5Za2dTfCBRaioEkfevoPgt4D
-	q6dloTKNav9LIP2XCUpkRABkb8pvds37A5EaQqvWHU8wdmcp1uH4=
-X-Google-Smtp-Source: AGHT+IEYlbK6SpqgDIWRBPQvBVxXcupBMpet4tDsziRqWw+aFmthzTyUxlGDAxOkdMuyOxJ84/Slxg==
-X-Received: by 2002:a05:6000:1869:b0:3a1:a96c:9b76 with SMTP id ffacd0b85a97d-3a3537ab240mr737321f8f.38.1747285711158;
-        Wed, 14 May 2025 22:08:31 -0700 (PDT)
-Received: from skynet.lan (2a02-9142-4580-0400-0000-0000-0000-0008.red-2a02-914.customerbaf.ipv6.rima-tde.net. [2a02:9142:4580:400::8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f39ef8bbsm54689245e9.37.2025.05.14.22.08.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 May 2025 22:08:30 -0700 (PDT)
-From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
-To: linux-mtd@lists.infradead.org,
-	dregan@broadcom.com,
-	miquel.raynal@bootlin.com,
-	bcm-kernel-feedback-list@broadcom.com,
-	florian.fainelli@broadcom.com,
-	rafal@milecki.pl,
-	computersforpeace@gmail.com,
-	kamal.dasu@broadcom.com,
-	dan.beygelman@broadcom.com,
-	william.zhang@broadcom.com,
-	frieder.schrempf@kontron.de,
-	linux-kernel@vger.kernel.org,
-	vigneshr@ti.com,
-	richard@nod.at,
-	bbrezillon@kernel.org,
-	kdasu.kdev@gmail.com,
-	jaimeliao.tw@gmail.com,
-	kilobyte@angband.pl,
-	jonas.gorski@gmail.com,
-	dgcbueu@gmail.com
-Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
-Subject: [PATCH v4] mtd: rawnand: brcmnand: legacy exec_op implementation
-Date: Thu, 15 May 2025 07:07:59 +0200
-Message-Id: <20250515050759.1016697-1-noltari@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="edYumvmE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747285778; x=1778821778;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=uxbsQpMeKa8E2VkKT5+LTBbhyG22diHloapfLODy/p4=;
+  b=edYumvmExLPHrbViDxuds7uI71ViY19Gc5BAWNN1mgQKRn+V8gTmqKL7
+   bXY+VuydXWnFswUlDA0vqlJPrigrfZtZiE1eTnxoQLCubM+Cb9GByhGiW
+   hDR9IOEePj8ItgHmY9aFl0beLMCyu0EPeJevjhVSgYDu4NwwzrvaTOO5t
+   iDiGDuX/8laDLWss5uKm0sbByVJMFiqIww4kBhQG/HQvXWPHZ7jIVBSEG
+   fc/OxxeyXwLQhYO9P4WwG0qoONe6IOsR4Z/EolKMMULdZrP6Q386ZHe8J
+   dIvM1+SldqFVZZlWcwdfCanJxCulMAL3Pkm6XgWyNNfypA6a55ke8IAG4
+   w==;
+X-CSE-ConnectionGUID: ft3ou1QtRamY6w70GkSGPg==
+X-CSE-MsgGUID: 2JgsQi4CTo2RefNwlifIcw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="52878238"
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="52878238"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 22:09:37 -0700
+X-CSE-ConnectionGUID: ZmKsqzIERGOt+Pz6urd1sA==
+X-CSE-MsgGUID: AYK35yG+SxGBvZMuE7eoCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="137983579"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 22:09:31 -0700
+Message-ID: <41821a66-8db1-42f1-85d6-fde67a8c072e@linux.intel.com>
+Date: Thu, 15 May 2025 13:09:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 22/38] KVM: x86/pmu: Optimize intel/amd_pmu_refresh()
+ helpers
+To: Sean Christopherson <seanjc@google.com>,
+ Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+ Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Yongwei Ma <yongwei.ma@intel.com>,
+ Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+ Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
+ Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
+ Shukla Manali <Manali.Shukla@amd.com>,
+ Nikunj Dadhania <nikunj.dadhania@amd.com>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <20250324173121.1275209-23-mizhang@google.com> <aCU3Ri0iz0aDBDup@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <aCU3Ri0iz0aDBDup@google.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Commit 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
-removed legacy interface functions, breaking < v5.0 controllers support.
-In order to fix older controllers we need to add an alternative exec_op
-implementation which doesn't rely on low level registers.
 
-Fixes: 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
----
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 181 ++++++++++++++++++++++-
- 1 file changed, 175 insertions(+), 6 deletions(-)
+On 5/15/2025 8:37 AM, Sean Christopherson wrote:
+> This is not an optimization in any sane interpretation of that word.
 
- v4: add changes requested by Jonas Gorski:
-  - Add missing breaks in brcmnand_exec_instructions_legacy.
-  - Restore missing ret assignment in brcmnand_exec_op.
+Yes, maybe clean up or bug fix is more accurate.
 
- v3: add changes requested by Florian and other improvements:
-  - Add associative array for native command conversion.
-  - Add function pointer to brcmnand_controller for exec_instr
-    functionality.
-  - Fix CMD_BLOCK_ERASE address.
-  - Drop NAND_CMD_READOOB support.
 
- v2: multiple improvements:
-  - Use proper native commands for checks.
-  - Fix NAND_CMD_PARAM/NAND_CMD_RNDOUT addr calculation.
-  - Remove host->last_addr usage.
-  - Remove sector_size_1k since it only applies to v5.0+ controllers.
-  - Remove brcmnand_wp since it doesn't exist for < v5.0 controllers.
-  - Use j instead of i for flash_cache loop.
+>
+> On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+>> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>
+>> Currently pmu->global_ctrl is initialized in the common kvm_pmu_refresh()
+>> helper since both Intel and AMD CPUs set enable bits for all GP counters
+>> for PERF_GLOBAL_CTRL MSR. But it may be not the best place to initialize
+>> pmu->global_ctrl. Strictly speaking, pmu->global_ctrl is vendor specific
+> And?  There's mounds of KVM code that show it's very, very easy to manage
+> global_ctrl in common code.
 
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index 17f6d9723df9..e6ec394d30f1 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -65,6 +65,7 @@ module_param(wp_on, int, 0444);
- #define CMD_PARAMETER_READ		0x0e
- #define CMD_PARAMETER_CHANGE_COL	0x0f
- #define CMD_LOW_LEVEL_OP		0x10
-+#define CMD_NOT_SUPPORTED		0xff
- 
- struct brcm_nand_dma_desc {
- 	u32 next_desc;
-@@ -199,6 +200,30 @@ static const u16 flash_dma_regs_v4[] = {
- 	[FLASH_DMA_CURRENT_DESC_EXT]	= 0x34,
- };
- 
-+/* Native command conversion */
-+static const u8 native_cmd_conv[] = {
-+	[NAND_CMD_READ0]	= CMD_NOT_SUPPORTED,
-+	[NAND_CMD_READ1]	= CMD_NOT_SUPPORTED,
-+	[NAND_CMD_RNDOUT]	= CMD_PARAMETER_CHANGE_COL,
-+	[NAND_CMD_PAGEPROG]	= CMD_NOT_SUPPORTED,
-+	[NAND_CMD_READOOB]	= CMD_NOT_SUPPORTED,
-+	[NAND_CMD_ERASE1]	= CMD_BLOCK_ERASE,
-+	[NAND_CMD_STATUS]	= CMD_NOT_SUPPORTED,
-+	[NAND_CMD_SEQIN]	= CMD_NOT_SUPPORTED,
-+	[NAND_CMD_RNDIN]	= CMD_NOT_SUPPORTED,
-+	[NAND_CMD_READID]	= CMD_DEVICE_ID_READ,
-+	[NAND_CMD_ERASE2]	= CMD_NULL,
-+	[NAND_CMD_PARAM]	= CMD_PARAMETER_READ,
-+	[NAND_CMD_GET_FEATURES]	= CMD_NOT_SUPPORTED,
-+	[NAND_CMD_SET_FEATURES]	= CMD_NOT_SUPPORTED,
-+	[NAND_CMD_RESET]	= CMD_NOT_SUPPORTED,
-+	[NAND_CMD_READSTART]	= CMD_NOT_SUPPORTED,
-+	[NAND_CMD_READCACHESEQ]	= CMD_NOT_SUPPORTED,
-+	[NAND_CMD_READCACHEEND]	= CMD_NOT_SUPPORTED,
-+	[NAND_CMD_RNDOUTSTART]	= CMD_NULL,
-+	[NAND_CMD_CACHEDPROG]	= CMD_NOT_SUPPORTED,
-+};
-+
- /* Controller feature flags */
- enum {
- 	BRCMNAND_HAS_1K_SECTORS			= BIT(0),
-@@ -237,6 +262,10 @@ struct brcmnand_controller {
- 	/* List of NAND hosts (one for each chip-select) */
- 	struct list_head host_list;
- 
-+	/* Function to be called from exec_op */
-+	int (*exec_instr)(struct nand_chip *chip,
-+			  const struct nand_operation *op);
-+
- 	/* EDU info, per-transaction */
- 	const u16               *edu_offsets;
- 	void __iomem            *edu_base;
-@@ -2490,14 +2519,152 @@ static int brcmnand_op_is_reset(const struct nand_operation *op)
- 	return 0;
- }
- 
-+static int brcmnand_exec_instructions(struct nand_chip *chip,
-+				      const struct nand_operation *op)
-+{
-+	struct brcmnand_host *host = nand_get_controller_data(chip);
-+	unsigned int i;
-+	int ret = 0;
-+
-+	for (i = 0; i < op->ninstrs; i++) {
-+		ret = brcmnand_exec_instr(host, i, op);
-+		if (ret)
-+			break;
-+	}
-+
-+	return ret;
-+}
-+
-+static int brcmnand_exec_instructions_legacy(struct nand_chip *chip,
-+					     const struct nand_operation *op)
-+{
-+	struct mtd_info *mtd = nand_to_mtd(chip);
-+	struct brcmnand_host *host = nand_get_controller_data(chip);
-+	struct brcmnand_controller *ctrl = host->ctrl;
-+	const struct nand_op_instr *instr;
-+	unsigned int i, j;
-+	u8 cmd = CMD_NULL, last_cmd = CMD_NULL;
-+	int ret = 0;
-+	u64 last_addr;
-+
-+	for (i = 0; i < op->ninstrs; i++) {
-+		instr = &op->instrs[i];
-+
-+		if (instr->type == NAND_OP_CMD_INSTR) {
-+			cmd = native_cmd_conv[instr->ctx.cmd.opcode];
-+			if (cmd == CMD_NOT_SUPPORTED) {
-+				dev_err(ctrl->dev, "unsupported cmd=%d\n",
-+					instr->ctx.cmd.opcode);
-+				ret = -EOPNOTSUPP;
-+				break;
-+			}
-+		} else if (instr->type == NAND_OP_ADDR_INSTR) {
-+			u64 addr = 0;
-+
-+			if (cmd == CMD_NULL)
-+				continue;
-+
-+			if (instr->ctx.addr.naddrs > 8) {
-+				dev_err(ctrl->dev, "unsupported naddrs=%u\n",
-+					instr->ctx.addr.naddrs);
-+				ret = -EOPNOTSUPP;
-+				break;
-+			}
-+
-+			for (j = 0; j < instr->ctx.addr.naddrs; j++)
-+				addr |= (instr->ctx.addr.addrs[j]) << (j << 3);
-+
-+			if (cmd == CMD_BLOCK_ERASE)
-+				addr <<= chip->page_shift;
-+			else if (cmd == CMD_PARAMETER_CHANGE_COL)
-+				addr &= ~((u64)(FC_BYTES - 1));
-+
-+			brcmnand_set_cmd_addr(mtd, addr);
-+			brcmnand_send_cmd(host, cmd);
-+			last_addr = addr;
-+			last_cmd = cmd;
-+			cmd = CMD_NULL;
-+			brcmnand_waitfunc(chip);
-+
-+			if (last_cmd == CMD_PARAMETER_READ ||
-+			    last_cmd == CMD_PARAMETER_CHANGE_COL) {
-+				/* Copy flash cache word-wise */
-+				u32 *flash_cache = (u32 *)ctrl->flash_cache;
-+
-+				brcmnand_soc_data_bus_prepare(ctrl->soc, true);
-+
-+				/*
-+				 * Must cache the FLASH_CACHE now, since changes in
-+				 * SECTOR_SIZE_1K may invalidate it
-+				 */
-+				for (j = 0; j < FC_WORDS; j++)
-+					/*
-+					 * Flash cache is big endian for parameter pages, at
-+					 * least on STB SoCs
-+					 */
-+					flash_cache[j] = be32_to_cpu(brcmnand_read_fc(ctrl, j));
-+
-+				brcmnand_soc_data_bus_unprepare(ctrl->soc, true);
-+			}
-+		} else if (instr->type == NAND_OP_DATA_IN_INSTR) {
-+			u8 *in = instr->ctx.data.buf.in;
-+
-+			if (last_cmd == CMD_DEVICE_ID_READ) {
-+				u32 val;
-+
-+				if (instr->ctx.data.len > 8) {
-+					dev_err(ctrl->dev, "unsupported len=%u\n",
-+						instr->ctx.data.len);
-+					ret = -EOPNOTSUPP;
-+					break;
-+				}
-+
-+				for (j = 0; j < instr->ctx.data.len; j++) {
-+					if (j == 0)
-+						val = brcmnand_read_reg(ctrl, BRCMNAND_ID);
-+					else if (j == 4)
-+						val = brcmnand_read_reg(ctrl, BRCMNAND_ID_EXT);
-+
-+					in[j] = (val >> (24 - ((j % 4) << 3))) & 0xff;
-+				}
-+			} else if (last_cmd == CMD_PARAMETER_READ ||
-+				   last_cmd == CMD_PARAMETER_CHANGE_COL) {
-+				u64 addr;
-+				u32 offs;
-+
-+				for (j = 0; j < instr->ctx.data.len; j++) {
-+					addr = last_addr + j;
-+					offs = addr & (FC_BYTES - 1);
-+
-+					if (j > 0 && offs == 0)
-+						nand_change_read_column_op(chip, addr, NULL, 0,
-+									   false);
-+
-+					in[j] = ctrl->flash_cache[offs];
-+				}
-+			}
-+		} else if (instr->type == NAND_OP_WAITRDY_INSTR) {
-+			ret = bcmnand_ctrl_poll_status(host, NAND_CTRL_RDY, NAND_CTRL_RDY, 0);
-+			if (ret)
-+				break;
-+		} else {
-+			dev_err(ctrl->dev, "unsupported instruction type: %d\n", instr->type);
-+			ret = -EINVAL;
-+			break;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
- static int brcmnand_exec_op(struct nand_chip *chip,
- 			    const struct nand_operation *op,
- 			    bool check_only)
- {
- 	struct brcmnand_host *host = nand_get_controller_data(chip);
-+	struct brcmnand_controller *ctrl = host->ctrl;
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 	u8 *status;
--	unsigned int i;
- 	int ret = 0;
- 
- 	if (check_only)
-@@ -2525,11 +2692,7 @@ static int brcmnand_exec_op(struct nand_chip *chip,
- 	if (op->deassert_wp)
- 		brcmnand_wp(mtd, 0);
- 
--	for (i = 0; i < op->ninstrs; i++) {
--		ret = brcmnand_exec_instr(host, i, op);
--		if (ret)
--			break;
--	}
-+	ret = ctrl->exec_instr(chip, op);
- 
- 	if (op->deassert_wp)
- 		brcmnand_wp(mtd, 1);
-@@ -3142,6 +3305,12 @@ int brcmnand_probe(struct platform_device *pdev, struct brcmnand_soc *soc)
- 	if (ret)
- 		goto err;
- 
-+	/* Only v5.0+ controllers have low level ops support */
-+	if (ctrl->nand_version >= 0x0500)
-+		ctrl->exec_instr = brcmnand_exec_instructions;
-+	else
-+		ctrl->exec_instr = brcmnand_exec_instructions_legacy;
-+
- 	/*
- 	 * Most chips have this cache at a fixed offset within 'nand' block.
- 	 * Some must specify this region separately.
--- 
-2.39.5
+The original intention is to put all initialization code into a same place,
+which looks more easily to maintain. But if you don't like it. would drop
+the change.
 
+
+>
+>> and there are lots of global_ctrl related processing in
+>> intel/amd_pmu_refresh() helpers, so better handle them in same place.
+>> Thus move pmu->global_ctrl initialization into intel/amd_pmu_refresh()
+>> helpers.
+>>
+>> Besides, intel_pmu_refresh() doesn't handle global_ctrl_rsvd and
+>> global_status_rsvd properly and fix it.
+> Really?  You mention a bug fix in passing, and squash it into an opinionated
+> refactoring that is advertised as "optimizations" without even stating what the
+> bug is?  C'mon.
+
+Sorry not clearly to describe the issue. global_ctrl_rsvd and
+global_status_rsvd should be updated only when pmu->verion >=2, but the
+original code doesn't.
+
+
+>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+>> ---
+>>  arch/x86/kvm/pmu.c           | 10 -------
+>>  arch/x86/kvm/svm/pmu.c       | 14 +++++++--
+>>  arch/x86/kvm/vmx/pmu_intel.c | 55 ++++++++++++++++++------------------
+>>  3 files changed, 39 insertions(+), 40 deletions(-)
+>>
+>> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+>> index 4e8cefcce7ab..2ac4c039de8b 100644
+>> --- a/arch/x86/kvm/pmu.c
+>> +++ b/arch/x86/kvm/pmu.c
+>> @@ -843,16 +843,6 @@ void kvm_pmu_refresh(struct kvm_vcpu *vcpu)
+>>  		return;
+>>  
+>>  	kvm_pmu_call(refresh)(vcpu);
+>> -
+>> -	/*
+>> -	 * At RESET, both Intel and AMD CPUs set all enable bits for general
+>> -	 * purpose counters in IA32_PERF_GLOBAL_CTRL (so that software that
+>> -	 * was written for v1 PMUs don't unknowingly leave GP counters disabled
+>> -	 * in the global controls).  Emulate that behavior when refreshing the
+>> -	 * PMU so that userspace doesn't need to manually set PERF_GLOBAL_CTRL.
+>> -	 */
+>> -	if (kvm_pmu_has_perf_global_ctrl(pmu) && pmu->nr_arch_gp_counters)
+>> -		pmu->global_ctrl = GENMASK_ULL(pmu->nr_arch_gp_counters - 1, 0);
+> Absolutely not, this code stays where it is.
+
+Sure.
+
+
+>
+>>  }
+>>  
+>>  void kvm_pmu_init(struct kvm_vcpu *vcpu)
+>> diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
+>> index 153972e944eb..eba086ef5eca 100644
+>> --- a/arch/x86/kvm/svm/pmu.c
+>> +++ b/arch/x86/kvm/svm/pmu.c
+>> @@ -198,12 +198,20 @@ static void __amd_pmu_refresh(struct kvm_vcpu *vcpu)
+>>  	pmu->nr_arch_gp_counters = min_t(unsigned int, pmu->nr_arch_gp_counters,
+>>  					 kvm_pmu_cap.num_counters_gp);
+>>  
+>> -	if (pmu->version > 1) {
+>> -		pmu->global_ctrl_rsvd = ~((1ull << pmu->nr_arch_gp_counters) - 1);
+>> +	if (kvm_pmu_cap.version > 1) {
+> It's not just global_ctrl.  PEBS and the fixed counters also depend on v2+ (the
+> SDM contradicts itself; KVM's ABI is that they're v2+).
+>
+>> +		/*
+>> +		 * At RESET, AMD CPUs set all enable bits for general purpose counters in
+>> +		 * IA32_PERF_GLOBAL_CTRL (so that software that was written for v1 PMUs
+>> +		 * don't unknowingly leave GP counters disabled in the global controls).
+>> +		 * Emulate that behavior when refreshing the PMU so that userspace doesn't
+>> +		 * need to manually set PERF_GLOBAL_CTRL.
+>> +		 */
+>> +		pmu->global_ctrl = BIT_ULL(pmu->nr_arch_gp_counters) - 1;
+>> +		pmu->global_ctrl_rsvd = ~pmu->global_ctrl;
+>>  		pmu->global_status_rsvd = pmu->global_ctrl_rsvd;
+>>  	}
+>>  
+>> -	pmu->counter_bitmask[KVM_PMC_GP] = ((u64)1 << 48) - 1;
+>> +	pmu->counter_bitmask[KVM_PMC_GP] = BIT_ULL(48) - 1;
+> I like these cleanups, but they too belong in a separate patch.
+
+Sure.
+
+
+>
+>>  	pmu->reserved_bits = 0xfffffff000280000ull;
+>>  	pmu->raw_event_mask = AMD64_RAW_EVENT_MASK;
+>>  	/* not applicable to AMD; but clean them to prevent any fall out */
