@@ -1,420 +1,272 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707C612E7F
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 23:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412AB17993
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 23:52:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747353145; cv=none; b=ej+ODYKaL28zywbwkPUl9VhULgb12Oef80ORfS0CbQrwQKfL9z+bi22AmjiQGw7p2yuYnYz/SFjHlQTGAxK0fk/QVJiYm9yG5Ikay+fDb0gKtgOLRtqkI22n8JTHabi7JFnd/3e9HcPxY0zsmFqKNoE7rrOB98qGGDDWAbwVkrc=
+	t=1747353146; cv=none; b=VKxVVrdu18kWEsNbf2P6kkRKl+Lbx+8utbTiEiVsqPHY4LKpXQeIRGu5mziWqrdA/Pv3dcqw7m9UwMtpKjeXmhuuS3yZ1a9fIQWbQWMiX+/LH9bWIPWP/0VSHmUjU7KnbAmS5UmuqmGJfBOv1A5VVX2dXupU1JVCdURratG4o+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747353145; c=relaxed/simple;
-	bh=cRaHnwVH6BV/qTmDBk8hCL/ClhSuywD+VhWrWF2b3jM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G6h4jX4ULeTwX4lpeaOpGQ1llNUWJYmI0R046Bb8KxGsbgLFVz09iBXCRkgW87vvp+tZaPRIuqQ7NzDNFGXOHXkkyDSLuPyutzBuntMElO0jUiXgQEnYMtpqc4x1nHZm2wJ5OEwfOyMH2BpVmcBjw9i8L3vPZpKvuZfm0PNoVOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=byjzXrNv; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747353146; c=relaxed/simple;
+	bh=zIMM09LgwI+ahHDhun6Q+EKtJoN8+FU1uUTccg092Wk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mo7fPp2vEtIgU2rYMkjBjoqAYmlzT84otnZ9+eWgHL3KWNpnL34+JLJAZrqjawcrvR9Gl15SWBgKsRQCrwDI5lwZ5JlF+FH9wMBKw4IRuwQ+oesP2TYgWzVBJ+8QvVYgww00sTBM6c0qTBF1s8OOQmneeWywP2gd2RI4AEyDRHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OoShdByZ; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="byjzXrNv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747353144; x=1778889144;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=cRaHnwVH6BV/qTmDBk8hCL/ClhSuywD+VhWrWF2b3jM=;
-  b=byjzXrNvkFmtPPJgR5lnTNeYNjokmIJ+Kqdm8QlUpTlFicSPfMfAoORf
-   64rIwmCgv1PgbUuUnFMUgh/h/sUFLlOV17FgvxX5zNWU6Gdrp3Cqdd5xo
-   p/u7zLcrwa9hFrbPn3fVcUlVn7X2UO2NjOn3LMI1bxZA2nWwLFIAeq2mz
-   9pEotCAfUTVtaauwsoiS5uGwlqR3xreUpRoFbewn2cxs5N8l90owGaZxe
-   XSyo2HpwqQ0TFlrZMdBvKuwJoFC7Us0A4n+4Ev4o1SpUPzHDZ26FMGWY7
-   ajVLiIJxDvvd6NRopgpavXbWuS+5ye+BA1VfhB9/URK/jYYCFS3r+M9BN
-   g==;
-X-CSE-ConnectionGUID: uJanHGuUSKCNS2vxl5ancQ==
-X-CSE-MsgGUID: X9xXN+4FTrKoGivOMoQWoQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="53128783"
-X-IronPort-AV: E=Sophos;i="6.15,292,1739865600"; 
-   d="scan'208";a="53128783"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 16:52:23 -0700
-X-CSE-ConnectionGUID: jQWtpCQNSWiTx+FK0dr4sw==
-X-CSE-MsgGUID: i7n391PqR0uL+NEGJMFt+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,292,1739865600"; 
-   d="scan'208";a="175648686"
-Received: from gkhatri-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.13])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 16:52:18 -0700
-Date: Thu, 15 May 2025 16:52:10 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: David Kaplan <david.kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/bugs: Restructure ITS mitigation
-Message-ID: <20250515235210.ooq7ogymcdvbtakd@desk>
-References: <20250515134756.93274-1-david.kaplan@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OoShdByZ"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-401be80368fso721118b6e.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 16:52:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747353144; x=1747957944; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dvu88ev1VdWU5DxXw0FZJRoIRYMo1iE9Ijw3Gfebd28=;
+        b=OoShdByZYZuRzwICGHVkjhWAAOe+redy/vOYp3/mPQCtsJDfeZoAHyCgSUKzc9k8Me
+         WcxrM5MXzmbENmT+i9qQyZKXUncEAU9y8gTg9zeoXpiicYAWECATqWNs8kFgOfSmhKAV
+         /mvH0zO+dQiFW39hiwjwyblt1lvms3gPUBV3CPv54liMyTG/cOUUXElApQEjfSGQVB2S
+         z2Vs/pSlYxglbV7yn7ac3YxwaVDucTeQfi7p89MBalqsSXJi+VSn6rj1Z/o3nr1N6eW3
+         FveMBTV0S35eESy1R76WLE0e985pkljh5BqdRDjua+BwQj2/c3R1l+EBJLOSOnZpKyo3
+         g1ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747353144; x=1747957944;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dvu88ev1VdWU5DxXw0FZJRoIRYMo1iE9Ijw3Gfebd28=;
+        b=ECpjIaACd6DKdtWtRG3g7masTreLX5wICR8wbx9/UAH053CZdXIooOCO6sgEWSiSVO
+         SiQ+0sy+mJMCG8DIQ8k3Ld37ad9dS2IO/Xxh7XWYH3q85Ilm+HjMgA5OspzJV121RBYu
+         4HgiYYYgzMs8yGCTeItsENXqT/eyZ0tQ3899SydQ1CoX0uDa5gs/9XxZ8g9AcMaQ0LuR
+         JteLtZwe8AJZ6NKpbjjZOO013kbLc1R6JaU7cytGUBQpsWMtgAYuP+oGxUnkUHHkoqjZ
+         JW1jHVixwBlzyUmM1tOavWJqal4VbLEyiMus8sG4jsyobdn6bi+ITe38J+gnElJd9qlx
+         Nb7g==
+X-Forwarded-Encrypted: i=1; AJvYcCUI4dlaid6lJYtoOTGlb2k6hA4P88JyLA9fcIhMLkPVsWzejwG0fu2Wy2njTtVDCn+iBZXtECi48qR/6yE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzbit+hhicQwOYai5XR+zqS710FlQgQhl9Lf66JAYiRSpnvj7g+
+	zWqEKN9JS6A6GSaWuDZbMe/8D4lW6HJvn/Dca45sF8QLCq/Xr4DgUVXMdA5W90srRxnR9gkuNVV
+	o7PBRd2UxM9LQv76B/L2HU6qOY8+8Yo8=
+X-Gm-Gg: ASbGncvgjyVrs3cPtiXU/gF/Et/nOwSZ3rnYUPe9gxl5lY58UON2lm2/PCeXxKvyHIr
+	pzv+92XbfoOgbJaHyAqmgX3ME6rJrYJSL2xTGoUyWxkVsAbyp3n645jxs6OUhzn092PphbrsfDb
+	YV/rcoeDOMeEUPFluU1zb0T6PXOG16S34=
+X-Google-Smtp-Source: AGHT+IF7l+OfeWDxmtMQ/n0NGjONLriHzg84x+VxoXL/MEoU+nBi+ArpmI1jmKMqH8iuRgHL5o1427WBgaE5H/loxm8=
+X-Received: by 2002:a05:6808:2f18:b0:403:6fd2:d97c with SMTP id
+ 5614622812f47-404d869dcc3mr1361963b6e.14.1747353144041; Thu, 15 May 2025
+ 16:52:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515134756.93274-1-david.kaplan@amd.com>
+References: <cover.1737644530.git.jani.nikula@intel.com> <dfe6e774883e6ef93cfaa2b6fe92b804061ab9d9.1737644530.git.jani.nikula@intel.com>
+ <98201050-82eb-453d-a669-036eeefa354e@gmail.com>
+In-Reply-To: <98201050-82eb-453d-a669-036eeefa354e@gmail.com>
+From: Bill Wendling <isanbard@gmail.com>
+Date: Thu, 15 May 2025 16:52:12 -0700
+X-Gm-Features: AX0GCFsG1lMUbV8e9u6zQamu0DG4uq2UWcnglLtzwznz1X3UhF0PTDEVH-90KBk
+Message-ID: <CAEzuVAdfY-KiLF7AArQ2Wkw=qP1hnyuG1UmSsv_ZtgrUpfm-3A@mail.gmail.com>
+Subject: Re: [PATCH 5/5] drm/print: require struct drm_device for drm_err()
+ and friends
+To: Jani Nikula <jani.nikula@intel.com>, dri-devel@lists.freedesktop.org
+Cc: intel-gfx@lists.freedesktop.org, gustavo.sousa@intel.com, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	airlied@gmail.com, simona@ffwll.ch, linux-kernel@vger.kernel.org, 
+	kees@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2025 at 08:47:56AM -0500, David Kaplan wrote:
-> Restructure the ITS mitigation to use select/update/apply functions like
-> the other mitigations.
-> 
-> There is a particularly complex interaction between ITS and Retbleed as CDT
-> (Call Depth Tracking) is a mitigation for both, and either its=stuff or
-> retbleed=stuff will attempt to enable CDT.
-> 
-> retbleed_update_mitigation() runs first and will check the necessary
-> pre-conditions for CDT if either ITS or Retbleed stuffing is selected.  If
-> checks pass and ITS stuffing is selected, it will select stuffing for
-> Retbleed as well.
-> 
-> its_update_mitigation() runs after and will either select stuffing if
-> retbleed stuffing was enabled, or fall back to the default (aligned thunks)
-> if stuffing could not be enabled.
-> 
-> Enablement of CDT is done exclusively in retbleed_apply_mitigation().
-> its_apply_mitigation() is only used to enable aligned thunks.
-> 
-> Signed-off-by: David Kaplan <david.kaplan@amd.com>
-> ---
->  arch/x86/kernel/cpu/bugs.c | 167 ++++++++++++++++++++-----------------
->  1 file changed, 90 insertions(+), 77 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-> index dd8b50b4ceaa..db26fb5a0a13 100644
-> --- a/arch/x86/kernel/cpu/bugs.c
-> +++ b/arch/x86/kernel/cpu/bugs.c
-> @@ -92,6 +92,8 @@ static void __init bhi_select_mitigation(void);
->  static void __init bhi_update_mitigation(void);
->  static void __init bhi_apply_mitigation(void);
->  static void __init its_select_mitigation(void);
-> +static void __init its_update_mitigation(void);
-> +static void __init its_apply_mitigation(void);
->  
->  /* The base value of the SPEC_CTRL MSR without task-specific bits set */
->  u64 x86_spec_ctrl_base;
-> @@ -235,6 +237,11 @@ void __init cpu_select_mitigations(void)
->  	 * spectre_v2=ibrs.
->  	 */
->  	retbleed_update_mitigation();
-> +	/*
-> +	 * its_update_mitigation() depends on spectre_v2_update_mitigation()
-> +	 * and retbleed_update_mitigation().
-> +	 */
-> +	its_update_mitigation();
->  
->  	/*
->  	 * spectre_v2_user_update_mitigation() depends on
-> @@ -263,6 +270,7 @@ void __init cpu_select_mitigations(void)
->  	srbds_apply_mitigation();
->  	srso_apply_mitigation();
->  	gds_apply_mitigation();
-> +	its_apply_mitigation();
->  	bhi_apply_mitigation();
->  }
->  
-> @@ -1125,6 +1133,14 @@ enum retbleed_mitigation {
->  	RETBLEED_MITIGATION_STUFF,
->  };
->  
-> +enum its_mitigation {
-> +	ITS_MITIGATION_OFF,
-> +	ITS_MITIGATION_AUTO,
-> +	ITS_MITIGATION_VMEXIT_ONLY,
-> +	ITS_MITIGATION_ALIGNED_THUNKS,
-> +	ITS_MITIGATION_RETPOLINE_STUFF,
-> +};
+On Thu, May 15, 2025 at 1:18=E2=80=AFPM Bill Wendling <isanbard@gmail.com> =
+wrote:
+> On 1/23/25 7:09 AM, Jani Nikula wrote:
+> > The expectation is that the struct drm_device based logging helpers get
+> > passed an actual struct drm_device pointer rather than some random
+> > struct pointer where you can dereference the ->dev member.
+> >
+> > Add a static inline helper to convert struct drm_device to struct
+> > device, with the main benefit being the type checking of the macro
+> > argument.
+> >
+> > As a side effect, this also reduces macro argument double references.
+> >
+> > Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+> > ---
+> >   include/drm/drm_print.h | 41 +++++++++++++++++++++++-----------------=
+-
+> >   1 file changed, 23 insertions(+), 18 deletions(-)
+> >
+> > diff --git a/include/drm/drm_print.h b/include/drm/drm_print.h
+> > index 9732f514566d..f31eba1c7cab 100644
+> > --- a/include/drm/drm_print.h
+> > +++ b/include/drm/drm_print.h
+> > @@ -584,9 +584,15 @@ void __drm_dev_dbg(struct _ddebug *desc, const str=
+uct device *dev,
+> >    * Prefer drm_device based logging over device or prink based logging=
+.
+> >    */
+> >
+> > +/* Helper to enforce struct drm_device type */
+> > +static inline struct device *__drm_to_dev(const struct drm_device *drm=
+)
+> > +{
+> > +     return drm ? drm->dev : NULL;
+> > +}
+> > +
+> >   /* Helper for struct drm_device based logging. */
+> >   #define __drm_printk(drm, level, type, fmt, ...)                    \
+> > -     dev_##level##type((drm) ? (drm)->dev : NULL, "[drm] " fmt, ##__VA=
+_ARGS__)
+> > +     dev_##level##type(__drm_to_dev(drm), "[drm] " fmt, ##__VA_ARGS__)
+> >
+> >
+> >   #define drm_info(drm, fmt, ...)                                     \
+> > @@ -620,25 +626,25 @@ void __drm_dev_dbg(struct _ddebug *desc, const st=
+ruct device *dev,
+> >
+> >
+> >   #define drm_dbg_core(drm, fmt, ...)                                 \
+> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_CORE, fmt, ##__VA_A=
+RGS__)
+> > -#define drm_dbg_driver(drm, fmt, ...)                                 =
+               \
+> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_DRIVER, fmt, ##__VA=
+_ARGS__)
+> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_CORE, fmt, ##__VA_ARGS__)
+> > +#define drm_dbg_driver(drm, fmt, ...)                                 =
+       \
+> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_DRIVER, fmt, ##__VA_ARGS__)
+> >   #define drm_dbg_kms(drm, fmt, ...)                                  \
+> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_KMS, fmt, ##__VA_AR=
+GS__)
+> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_KMS, fmt, ##__VA_ARGS__)
+> >   #define drm_dbg_prime(drm, fmt, ...)                                 =
+       \
+> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_PRIME, fmt, ##__VA_=
+ARGS__)
+> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_PRIME, fmt, ##__VA_ARGS__)
+> >   #define drm_dbg_atomic(drm, fmt, ...)                                =
+       \
+> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_ATOMIC, fmt, ##__VA=
+_ARGS__)
+> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_ATOMIC, fmt, ##__VA_ARGS__)
+> >   #define drm_dbg_vbl(drm, fmt, ...)                                  \
+> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_VBL, fmt, ##__VA_AR=
+GS__)
+> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_VBL, fmt, ##__VA_ARGS__)
+> >   #define drm_dbg_state(drm, fmt, ...)                                 =
+       \
+> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_STATE, fmt, ##__VA_=
+ARGS__)
+> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_STATE, fmt, ##__VA_ARGS__)
+> >   #define drm_dbg_lease(drm, fmt, ...)                                 =
+       \
+> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_LEASE, fmt, ##__VA_=
+ARGS__)
+> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_LEASE, fmt, ##__VA_ARGS__)
+> >   #define drm_dbg_dp(drm, fmt, ...)                                   \
+> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_DP, fmt, ##__VA_ARG=
+S__)
+> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_DP, fmt, ##__VA_ARGS__)
+> >   #define drm_dbg_drmres(drm, fmt, ...)                                =
+       \
+> > -     drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_DRMRES, fmt, ##__VA=
+_ARGS__)
+> > +     drm_dev_dbg(__drm_to_dev(drm), DRM_UT_DRMRES, fmt, ##__VA_ARGS__)
+> >
+> >   #define drm_dbg(drm, fmt, ...)      drm_dbg_driver(drm, fmt, ##__VA_A=
+RGS__)
+> >
+> > @@ -727,10 +733,9 @@ void __drm_err(const char *format, ...);
+> >   #define __DRM_DEFINE_DBG_RATELIMITED(category, drm, fmt, ...)        =
+                               \
+> >   ({                                                                   =
+                       \
+> >       static DEFINE_RATELIMIT_STATE(rs_, DEFAULT_RATELIMIT_INTERVAL, DE=
+FAULT_RATELIMIT_BURST);\
+> > -     const struct drm_device *drm_ =3D (drm);                         =
+                         \
+> >                                                                        =
+                       \
+> >       if (drm_debug_enabled(DRM_UT_ ## category) && __ratelimit(&rs_)) =
+                       \
+> > -             drm_dev_printk(drm_ ? drm_->dev : NULL, KERN_DEBUG, fmt, =
+## __VA_ARGS__);       \
+> > +             drm_dev_printk(__drm_to_dev(drm), KERN_DEBUG, fmt, ## __V=
+A_ARGS__);             \
+> >   })
+> >
+> >   #define drm_dbg_ratelimited(drm, fmt, ...) \
+> > @@ -752,13 +757,13 @@ void __drm_err(const char *format, ...);
+> >   /* Helper for struct drm_device based WARNs */
+> >   #define drm_WARN(drm, condition, format, arg...)                    \
+> >       WARN(condition, "%s %s: [drm] " format,                         \
+> > -                     dev_driver_string((drm)->dev),                  \
+> > -                     dev_name((drm)->dev), ## arg)
+> > +                     dev_driver_string(__drm_to_dev(drm)),           \
+> > +                     dev_name(__drm_to_dev(drm)), ## arg)
+> >
+> >   #define drm_WARN_ONCE(drm, condition, format, arg...)                =
+       \
+> >       WARN_ONCE(condition, "%s %s: [drm] " format,                    \
+> > -                     dev_driver_string((drm)->dev),                  \
+> > -                     dev_name((drm)->dev), ## arg)
+> > +                     dev_driver_string(__drm_to_dev(drm)),           \
+> > +                     dev_name(__drm_to_dev(drm)), ## arg)
+> >
+> Hi Jani,
+>
+> These two changes introduce undefined behavior into these macros. The fin=
+al
+> code generation becomes this (from 'bxt_port_to_phy_channel'):
+>
+>         __warn_printk("%s %s: [drm] " "PHY not found for PORT %c",
+>                       dev_driver_string(__drm_to_dev(display->drm)),
+>                       dev_name(__drm_to_dev(display->drm)),
+>                       (port + 'A'));
+>
+> The issue lies in 'dev_name(__drm_to_dev(display->drm))'. After inlining,=
+ it
+> becomes this (pseudo code):
+>
+>         struct device *device =3D display->drm ? display->drm->dev : NULL=
+;
+>         const char *name =3D device->init_name ? device->init_name
+>                                              : kobject_name(&device->kobj=
+);
+>
+>         __warn_printk("%s %s: [drm] " "PHY not found for PORT %c",
+>                       dev_driver_string(device), name, (port + 'A'));
+>
+> The issue, of course, is that the 'device' may be NULL when attempting
+> to get
+> 'device->init_name'. The compiler sees this as undefined behavior, which =
+may
+> lead to unexpected outcomes, especially with Clang where paths
+> determined to be
+> undefined are removed entirely under certain conditions.
+>
+> (Note, I'm working on making this behavior less draconian by adopting a G=
+CC
+> pass, but this will take time to filter out to Linux devs.)
+>
+I potential fix for this would be something like this (untested). I'm
+not familiar with how 'dev_name' is used to know whether or not this
+could cause issues:
 
-This is in between retbleed declarations, I would suggest to move this
-before retbleed mitigation starts.
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 79e49fe494b7..ea20d439fe8e 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -778,6 +778,9 @@ static inline bool device_iommu_mapped(struct device *d=
+ev)
+  */
+ static inline const char *dev_name(const struct device *dev)
+ {
++       if (!dev)
++               return "default";
++
+        /* Use the init name until the kobject becomes available */
+        if (dev->init_name)
+                return dev->init_name;
 
-enum its_mitigation {
-        ITS_MITIGATION_OFF,
-        ITS_MITIGATION_AUTO,
-        ITS_MITIGATION_VMEXIT_ONLY,
-        ITS_MITIGATION_ALIGNED_THUNKS,
-        ITS_MITIGATION_RETPOLINE_STUFF,
-};
-
-static enum its_mitigation its_mitigation __ro_after_init =
-        IS_ENABLED(CONFIG_MITIGATION_ITS) ? ITS_MITIGATION_AUTO : ITS_MITIGATION_OFF;
-
-#undef pr_fmt
-#define pr_fmt(fmt)     "RETBleed: " fmt
-
-enum retbleed_mitigation {
-
->  static const char * const retbleed_strings[] = {
->  	[RETBLEED_MITIGATION_NONE]	= "Vulnerable",
->  	[RETBLEED_MITIGATION_UNRET]	= "Mitigation: untrained return thunk",
-> @@ -1137,6 +1153,9 @@ static const char * const retbleed_strings[] = {
->  static enum retbleed_mitigation retbleed_mitigation __ro_after_init =
->  	IS_ENABLED(CONFIG_MITIGATION_RETBLEED) ? RETBLEED_MITIGATION_AUTO : RETBLEED_MITIGATION_NONE;
->  
-> +static enum its_mitigation its_mitigation __ro_after_init =
-> +	IS_ENABLED(CONFIG_MITIGATION_ITS) ? ITS_MITIGATION_AUTO : ITS_MITIGATION_OFF;
-
-Ditto.
-
->  static int __ro_after_init retbleed_nosmt = false;
->  
->  static int __init retbleed_parse_cmdline(char *str)
-> @@ -1242,11 +1261,19 @@ static void __init retbleed_update_mitigation(void)
->  	/*
->  	 * retbleed=stuff is only allowed on Intel.  If stuffing can't be used
->  	 * then a different mitigation will be selected below.
-> +	 *
-> +	 * its=stuff will also attempt to enable stuffing.
->  	 */
-> -	if (retbleed_mitigation == RETBLEED_MITIGATION_STUFF) {
-> +	if (retbleed_mitigation == RETBLEED_MITIGATION_STUFF ||
-> +	    its_mitigation == ITS_MITIGATION_RETPOLINE_STUFF) {
->  		if (spectre_v2_enabled != SPECTRE_V2_RETPOLINE) {
-
-SPECTRE_V2_EIBRS_RETPOLINE also enables retpoline.
-
->  			pr_err("WARNING: retbleed=stuff depends on spectre_v2=retpoline\n");
-
-This can be updated to:
-
-  			pr_err("WARNING: retbleed=stuff depends on retpoline\n");
-
->  			retbleed_mitigation = RETBLEED_MITIGATION_AUTO;
-> +		} else {
-> +			if (retbleed_mitigation != RETBLEED_MITIGATION_STUFF)
-> +				pr_info("Retbleed mitigation updated to stuffing\n");
-> +
-> +			retbleed_mitigation = RETBLEED_MITIGATION_STUFF;
->  		}
->  	}
->  	/*
-> @@ -1338,20 +1365,6 @@ static void __init retbleed_apply_mitigation(void)
->  #undef pr_fmt
->  #define pr_fmt(fmt)     "ITS: " fmt
->  
-> -enum its_mitigation_cmd {
-> -	ITS_CMD_OFF,
-> -	ITS_CMD_ON,
-> -	ITS_CMD_VMEXIT,
-> -	ITS_CMD_RSB_STUFF,
-> -};
-> -
-> -enum its_mitigation {
-> -	ITS_MITIGATION_OFF,
-> -	ITS_MITIGATION_VMEXIT_ONLY,
-> -	ITS_MITIGATION_ALIGNED_THUNKS,
-> -	ITS_MITIGATION_RETPOLINE_STUFF,
-> -};
-> -
->  static const char * const its_strings[] = {
->  	[ITS_MITIGATION_OFF]			= "Vulnerable",
->  	[ITS_MITIGATION_VMEXIT_ONLY]		= "Mitigation: Vulnerable, KVM: Not affected",
-> @@ -1359,11 +1372,6 @@ static const char * const its_strings[] = {
->  	[ITS_MITIGATION_RETPOLINE_STUFF]	= "Mitigation: Retpolines, Stuffing RSB",
->  };
->  
-> -static enum its_mitigation its_mitigation __ro_after_init = ITS_MITIGATION_ALIGNED_THUNKS;
-> -
-> -static enum its_mitigation_cmd its_cmd __ro_after_init =
-> -	IS_ENABLED(CONFIG_MITIGATION_ITS) ? ITS_CMD_ON : ITS_CMD_OFF;
-> -
->  static int __init its_parse_cmdline(char *str)
->  {
->  	if (!str)
-> @@ -1375,16 +1383,16 @@ static int __init its_parse_cmdline(char *str)
->  	}
->  
->  	if (!strcmp(str, "off")) {
-> -		its_cmd = ITS_CMD_OFF;
-> +		its_mitigation = ITS_MITIGATION_OFF;
->  	} else if (!strcmp(str, "on")) {
-> -		its_cmd = ITS_CMD_ON;
-> +		its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
->  	} else if (!strcmp(str, "force")) {
-> -		its_cmd = ITS_CMD_ON;
-> +		its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
->  		setup_force_cpu_bug(X86_BUG_ITS);
->  	} else if (!strcmp(str, "vmexit")) {
-> -		its_cmd = ITS_CMD_VMEXIT;
-> +		its_mitigation = ITS_MITIGATION_VMEXIT_ONLY;
->  	} else if (!strcmp(str, "stuff")) {
-> -		its_cmd = ITS_CMD_RSB_STUFF;
-> +		its_mitigation = ITS_MITIGATION_RETPOLINE_STUFF;
->  	} else {
->  		pr_err("Ignoring unknown indirect_target_selection option (%s).", str);
->  	}
-> @@ -1395,85 +1403,90 @@ early_param("indirect_target_selection", its_parse_cmdline);
->  
->  static void __init its_select_mitigation(void)
->  {
-> -	enum its_mitigation_cmd cmd = its_cmd;
-> -
->  	if (!boot_cpu_has_bug(X86_BUG_ITS) || cpu_mitigations_off()) {
->  		its_mitigation = ITS_MITIGATION_OFF;
->  		return;
->  	}
->  
-> -	/* Retpoline+CDT mitigates ITS, bail out */
-> -	if (boot_cpu_has(X86_FEATURE_RETPOLINE) &&
-> -	    boot_cpu_has(X86_FEATURE_CALL_DEPTH)) {
-> -		its_mitigation = ITS_MITIGATION_RETPOLINE_STUFF;
-> -		goto out;
-> -	}
-> +	if (its_mitigation == ITS_MITIGATION_AUTO)
-> +		its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
-> +
-> +	if (its_mitigation == ITS_MITIGATION_OFF)
-> +		return;
->  
-> -	/* Exit early to avoid irrelevant warnings */
-> -	if (cmd == ITS_CMD_OFF) {
-> -		its_mitigation = ITS_MITIGATION_OFF;
-> -		goto out;
-> -	}
-> -	if (spectre_v2_enabled == SPECTRE_V2_NONE) {
-> -		pr_err("WARNING: Spectre-v2 mitigation is off, disabling ITS\n");
-> -		its_mitigation = ITS_MITIGATION_OFF;
-> -		goto out;
-> -	}
->  	if (!IS_ENABLED(CONFIG_MITIGATION_RETPOLINE) ||
->  	    !IS_ENABLED(CONFIG_MITIGATION_RETHUNK)) {
->  		pr_err("WARNING: ITS mitigation depends on retpoline and rethunk support\n");
->  		its_mitigation = ITS_MITIGATION_OFF;
-> -		goto out;
-> +		return;
->  	}
-> +
->  	if (IS_ENABLED(CONFIG_DEBUG_FORCE_FUNCTION_ALIGN_64B)) {
->  		pr_err("WARNING: ITS mitigation is not compatible with CONFIG_DEBUG_FORCE_FUNCTION_ALIGN_64B\n");
->  		its_mitigation = ITS_MITIGATION_OFF;
-> -		goto out;
-> -	}
-> -	if (boot_cpu_has(X86_FEATURE_RETPOLINE_LFENCE)) {
-> -		pr_err("WARNING: ITS mitigation is not compatible with lfence mitigation\n");
-> -		its_mitigation = ITS_MITIGATION_OFF;
-> -		goto out;
-> +		return;
->  	}
->  
-> -	if (cmd == ITS_CMD_RSB_STUFF &&
-> -	    (!boot_cpu_has(X86_FEATURE_RETPOLINE) || !IS_ENABLED(CONFIG_MITIGATION_CALL_DEPTH_TRACKING))) {
-> +	if (its_mitigation == ITS_MITIGATION_RETPOLINE_STUFF &&
-> +	    !IS_ENABLED(CONFIG_MITIGATION_CALL_DEPTH_TRACKING)) {
->  		pr_err("RSB stuff mitigation not supported, using default\n");
-> -		cmd = ITS_CMD_ON;
-> +		its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
-
-This and ...
-
->  	}
->  
-> -	switch (cmd) {
-> -	case ITS_CMD_OFF:
-> +	if (its_mitigation == ITS_MITIGATION_VMEXIT_ONLY &&
-> +	    !boot_cpu_has_bug(X86_BUG_ITS_NATIVE_ONLY))
-> +		its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
-
-... this are essentially resetting the mitigation to default. This will be
-more clear if you could change the mitigation to ITS_MITIGATION_AUTO here,
-and at the end have:
-
-	if (its_mitigation == ITS_MITIGATION_AUTO)
-		its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
-> +
-> +}
-> +
-> +static void __init its_update_mitigation(void)
-> +{
-> +	if (!boot_cpu_has_bug(X86_BUG_ITS) || cpu_mitigations_off())
-> +		return;
-> +
-> +	switch (spectre_v2_enabled) {
-> +	case SPECTRE_V2_NONE:
-> +		pr_err("WARNING: Spectre-v2 mitigation is off, disabling ITS\n");
->  		its_mitigation = ITS_MITIGATION_OFF;
->  		break;
-> -	case ITS_CMD_VMEXIT:
-> -		if (boot_cpu_has_bug(X86_BUG_ITS_NATIVE_ONLY)) {
-> -			its_mitigation = ITS_MITIGATION_VMEXIT_ONLY;
-> -			goto out;
-> -		}
-> -		fallthrough;
-> -	case ITS_CMD_ON:
-> -		its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
-> -		if (!boot_cpu_has(X86_FEATURE_RETPOLINE))
-> -			setup_force_cpu_cap(X86_FEATURE_INDIRECT_THUNK_ITS);
-> -		setup_force_cpu_cap(X86_FEATURE_RETHUNK);
-> -		set_return_thunk(its_return_thunk);
-> +	case SPECTRE_V2_RETPOLINE:
-
-Also SPECTRE_V2_EIBRS_RETPOLINE.
-
-> +		/* Retpoline+CDT mitigates ITS */
-> +		if (retbleed_mitigation == RETBLEED_MITIGATION_STUFF)
-
-
-
-> +			its_mitigation = ITS_MITIGATION_RETPOLINE_STUFF;
->  		break;
-> -	case ITS_CMD_RSB_STUFF:
-> -		its_mitigation = ITS_MITIGATION_RETPOLINE_STUFF;
-> -		setup_force_cpu_cap(X86_FEATURE_RETHUNK);
-> -		setup_force_cpu_cap(X86_FEATURE_CALL_DEPTH);
-> -		set_return_thunk(call_depth_return_thunk);
-> -		if (retbleed_mitigation == RETBLEED_MITIGATION_NONE) {
-> -			retbleed_mitigation = RETBLEED_MITIGATION_STUFF;
-> -			pr_info("Retbleed mitigation updated to stuffing\n");
-> -		}
-> +	case SPECTRE_V2_LFENCE:
-> +	case SPECTRE_V2_EIBRS_LFENCE:
-> +		pr_err("WARNING: ITS mitigation is not compatible with lfence mitigation\n");
-> +		its_mitigation = ITS_MITIGATION_OFF;
-> +		break;
-> +	default:
->  		break;
->  	}
-> -out:
-> +
-> +	/*
-> +	 * retbleed_update_mitigation() will try to do stuffing if its=stuff.
-> +	 * If it can't, such as if spectre_v2!=retpoline, then fall back to
-> +	 * aligned thunks.
-> +	 */
-> +	if (its_mitigation == ITS_MITIGATION_RETPOLINE_STUFF &&
-> +	    retbleed_mitigation != RETBLEED_MITIGATION_STUFF)
-> +		its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
-
-The =stuff mitigation depends on retpoline, not really on retbleed.
-Shouldn't this be handled in the switch (spectre_v2_enabled) above?
-
->  	pr_info("%s\n", its_strings[its_mitigation]);
->  }
->  
-> +static void __init its_apply_mitigation(void)
-> +{
-> +	/* its=stuff forces retbleed stuffing and is enabled there. */
-
-Oh, this is why you are depending on retbleed_mitigation above, this part is
-a bit confusing.
-
-Will think about it more later, trying to have a couple of days off.
-
-> +	if (its_mitigation != ITS_MITIGATION_ALIGNED_THUNKS)
-> +		return;
-> +
-> +	if (!boot_cpu_has(X86_FEATURE_RETPOLINE))
-> +		setup_force_cpu_cap(X86_FEATURE_INDIRECT_THUNK_ITS);
-> +
-> +	setup_force_cpu_cap(X86_FEATURE_RETHUNK);
-> +	set_return_thunk(its_return_thunk);
-> +}
+-bw
