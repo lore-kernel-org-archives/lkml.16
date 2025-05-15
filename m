@@ -1,119 +1,97 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f195.google.com (mail-yb1-f195.google.com [209.85.219.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5F729713D
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 06:54:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33404297A75;
+	Thu, 15 May 2025 06:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747292093; cv=none; b=s8hnMxzj/GADqf3q8UHHPMb936wvy19QqS3d7J29jCJACNm3LUCsGMztu3mnDYP1BEc4RjNg3jBTSbSmiJjdsjWLkgvJQxBhLatsv9MA7SfdWNH0mcK1VXIQlSD0YXk+aAlcqHWTp+QPi2qRW0xieDGrMy+uw1xZ1wzW5/rf1Kc=
+	t=1747292095; cv=none; b=MoAfyCPmkY/RXCtF7swr9bJHVW0ISYJe18BKvKLuBJTieZxk4SHNcoIlhkJaHBbcWmSimSFlGiwO7DtVjnRghiIQdFA6CvrDQeBymVaShRa4tnhjlH2jgI2lwKv+aS7DTkI4eId8TeVi0A/9Q7Sq56e/JHegqc+vUiqk5jVp2o4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747292093; c=relaxed/simple;
-	bh=QBWw7BibD8RrHJXfAtvVn9utmmSQ0jmMRsDe9k560I0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M5+mWQpcNLJhtFnTbguOI7dUOpjpZsYL+5WXT9tCFWI5r2BjmK8fHOW1RE7BbaAliIl7x1VgANHFvO+GzHnNMFlsaw+gT+ZQ1hO386QMPTCIHYiKDKBPPdTpuolINhN1bNjPXjNhTfxpC8d8200PpL006so1v2zvkMKyY2qsqfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZygsQ5DqKztR6Q;
-	Thu, 15 May 2025 14:53:30 +0800 (CST)
-Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 84A2B140276;
-	Thu, 15 May 2025 14:54:47 +0800 (CST)
-Received: from kwepemq500001.china.huawei.com (7.202.195.224) by
- dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 15 May 2025 14:54:47 +0800
-Received: from 228-1616.huawei.com (10.67.246.68) by
- kwepemq500001.china.huawei.com (7.202.195.224) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 15 May 2025 14:54:46 +0800
-From: Nianyao Tang <tangnianyao@huawei.com>
-To: <maz@kernel.org>, <tglx@linutronix.de>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC: <guoyang2@huawei.com>, <wangwudi@hisilicon.com>, <tangnianyao@huawei.com>,
-	<wangzhou1@hisilicon.com>
-Subject: [PATCH v3] irqchip/gic-v4.1: Use local 4_1 ITS to generate VSGI
-Date: Thu, 15 May 2025 14:53:59 +0000
-Message-ID: <20250515145359.2795959-1-tangnianyao@huawei.com>
-X-Mailer: git-send-email 2.30.0
+	s=arc-20240116; t=1747292095; c=relaxed/simple;
+	bh=t1cmxPP2lIC19qYJZZVCtSyQ5R5NNKHU/xitTTP2MSI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=cNGM1661KZMz6OYRp6QRHD39ZCacYVd9XnlbrW2F70b0Fo7IhOFecJpHrF4kX7gX4gtDE3YTXOhTdnFwdAVv6y9ho9vQ3o0U+KqI+NmffRLM77sECT4wd6KAUlN2zaOcRdR/yYH1byHu/QQuVesEfInJY4OPph6H+Djgy/r3pz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YykKjdvd; arc=none smtp.client-ip=209.85.219.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YykKjdvd"
+Received: by mail-yb1-f195.google.com with SMTP id 3f1490d57ef6-e72a786b1b8so578411276.1;
+        Wed, 14 May 2025 23:54:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747292093; x=1747896893; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=t1cmxPP2lIC19qYJZZVCtSyQ5R5NNKHU/xitTTP2MSI=;
+        b=YykKjdvdVIdsPwaaAia73dhZ0e4ZidC2MnbeFnfnFvyOoJw9phM/XBVOAgQ6kBDTrG
+         nkFy8nkM/wCh6zn7C3BhevTDPh9YSU9d3TC6hjD9BVhJ1EIehVx3oPPa6uL06M8x2+WY
+         MVL/Jc+CkiaQ9I+WsMCjO1SLiOdkX3VmYU8GjWABO4id0eD7Mrtf8Qe4aQppKOqD3n9E
+         0JVqKH+94uAn0fNcuWWyq6N9sZlxJMDPu0IiITu5mfQjpqQt7B/Rf9XHZO1NpwK5QIOU
+         VZIp1c9kErmtiT0Jr5cxu8JCSsQJJuC6nqeg5nD0hUq01U+rg7ZA3WkghvJDvDAiD+4l
+         MxBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747292093; x=1747896893;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=t1cmxPP2lIC19qYJZZVCtSyQ5R5NNKHU/xitTTP2MSI=;
+        b=VUOMC3NwjfxpsdPUlFjzI1bZoESU6B9+oljOI7i7HFA3oIIdoxvKrs/2yCy5blwShX
+         8RwqrCZfqBBUjDYq7i2uDLRzUPcEr6OutRvjOwaQeKIoeBefbCYzeBf9HVkFh///xKei
+         M+hHMwFPB3vD/YDXIso3zGJ10nEBh0bxGSM0DMRsz6cJBlCBh9sOD6d8C2POVYTmpVUo
+         n6HtcEVqX32TZ2+lIYjhxNO282+b5+P1Dst8P9w/GQ1RthbM1jjUngQZ9So1WvOTlJIQ
+         ox6TpuLzUw8LqWcrSP4zlXYWPAVcwz4PQ+U4ZTNdmYqlhz+m1xWxoqXgFRr0/aUGocAK
+         aHTA==
+X-Forwarded-Encrypted: i=1; AJvYcCW/vbM5WeT3FQ1sMYRyO4h8VUkcDpBY+6xyaG0gT3x7v3X98mDISJirgeOyk/fxC9HGbeFHRdAO4qgs@vger.kernel.org, AJvYcCXaJCpmlA+6YqQKzy38LVcxZq0gmqApPJj49/lgI8Dfk48dKOs2X1Uu9UvlyKCpJ1S91Tgguaejl7Q26C2u@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0UF1RatGGF8bFxevfS8jowRO1/0wCsoruDmXsst/zzmXFtpPX
+	kmGEXXGoXXVFnFUu38EW05h3CnWDKEAv88bA1kGgdpjqZarO797YoBWexmDrdhMODCNd5YW1tKp
+	91qptvZqaR6v/V4JhvPCoeAb9X16lO1GD+/ssV/Z3nGGi
+X-Gm-Gg: ASbGncuJzecJ/wckCn85NoNQhICRF54SzIOdFGVKqB9ghperOz4XGTB9Ax7SZ98aTC9
+	Q786lEWmlkbI9GbcNZ4ExYZtdTtSGTJSnsef15tJPjcMupIb7HNUpuSyH4P3e0FquvgxLG1Dqn2
+	TuE2EZQ1qhr7PuegO3+BRntJJ+rOyQsmq5
+X-Google-Smtp-Source: AGHT+IFzNiJ+zUyWkZFPg4RNuORDWffWYwQyIa09PVZx9ngM+x8SyPMp78/380FkRNmPOgMgyItWbe+VIAUEsW4BcAc=
+X-Received: by 2002:a05:6902:c02:b0:e7a:3d4f:6355 with SMTP id
+ 3f1490d57ef6-e7b4f87732emr3222858276.19.1747292093056; Wed, 14 May 2025
+ 23:54:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemq500001.china.huawei.com (7.202.195.224)
+From: Guoyu Yin <y04609127@gmail.com>
+Date: Thu, 15 May 2025 14:54:43 +0800
+X-Gm-Features: AX0GCFvmW-oCLyE_tglm61LLo5PTqhIE_ahHf0u84RbTzumcEHtp48MSObXmNfI
+Message-ID: <CAJNGr6uGfUpvHkPdE-OrWL4_cqd+_AG9Z4ZS9DB1KfYm3CzQAA@mail.gmail.com>
+Subject: [BUG] INFO: rcu_tasks_trace detected stalls on tasks:
+To: tytso@mit.edu, adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On multi-node GICv4.1 system, VSGI senders always use one certain 4_1 ITS,
-because find_4_1_its return the first its_node in list, regardless of
-which node the VSGI sender is on. This brings guest vsgi performance drop
-when VM is not running on the same node as this returned ITS.
+Hi,
 
-On a 2-socket environment, each with one ITS and 32 cpu, GICv4.1 enabled,
-4U8G guest, 4 vcpu is running on same socket.
-When VM on socket0, kvm-unit-tests ipi_hw result is 850ns.
-When VM on socket1, it is 750ns. The reason is VSGI sender always
-use the last reported ITS(that on socket1) to inject VSGI. The access
-from cpu to other-socket ITS will cost 100ns more compared to cpu to
-local ITS.
+This crash can be triggered by repeatedly executing a syzkaller test
+case that stresses the signal handling path and EXT4 filesystem
+operations. The reproducer causes the kernel to process signals (e.g.,
+via do_group_exit) while performing delayed block allocation on a
+corrupted EXT4 filesystem.
 
-By using a local ITS, we can get 12% reduction in IPI latency.
+The call trace shows the task is stuck in get_signal
+(kernel/signal.c:3036) and exit_to_user_mode_prepare
+(include/linux/entry-common.h:329) while handling signals.I think the
+key failure occurs in ext4_validate_block_bitmap due to inconsistent
+block bitmap padding, combined with an ENOSPC error during delayed
+allocation. This leads to RCU stalls when the task (syz-executor.4)
+fails to exit the RCU read-side critical section during resource
+cleanup.
 
-Modify find_4_1_its to first return per-cpu local_4_1_its, which is
-init when inherit the VPE table from the ITS or from another CPU.
-If fail to find local 4_1 ITS, return any 4_1 ITS like before.
+Maybe we can add sanity checks for block bitmap padding in
+ext4_validate_block_bitmap?
 
-Signed-off-by: Nianyao Tang <tangnianyao@huawei.com>
-Suggested-by: Marc Zyngier <maz@kernel.org>
----
- drivers/irqchip/irq-gic-v3-its.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+This can be reproduced on:
+HEAD commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 0115ad6c8259..1b1d32f746b4 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -125,6 +125,8 @@ struct its_node {
- 	int			vlpi_redist_offset;
- };
- 
-+static DEFINE_PER_CPU(struct its_node *, local_4_1_its);
-+
- #define is_v4(its)		(!!((its)->typer & GITS_TYPER_VLPIS))
- #define is_v4_1(its)		(!!((its)->typer & GITS_TYPER_VMAPP))
- #define device_ids(its)		(FIELD_GET(GITS_TYPER_DEVBITS, (its)->typer) + 1)
-@@ -2778,6 +2780,8 @@ static u64 inherit_vpe_l1_table_from_its(void)
- 		}
- 		val |= FIELD_PREP(GICR_VPROPBASER_4_1_SIZE, GITS_BASER_NR_PAGES(baser) - 1);
- 
-+		*this_cpu_ptr(&local_4_1_its) = its;
-+
- 		return val;
- 	}
- 
-@@ -2815,6 +2819,8 @@ static u64 inherit_vpe_l1_table_from_rd(cpumask_t **mask)
- 		gic_data_rdist()->vpe_l1_base = gic_data_rdist_cpu(cpu)->vpe_l1_base;
- 		*mask = gic_data_rdist_cpu(cpu)->vpe_table_mask;
- 
-+		*this_cpu_ptr(&local_4_1_its) = *per_cpu_ptr(&local_4_1_its, cpu);
-+
- 		return val;
- 	}
- 
-@@ -4180,8 +4186,9 @@ static struct irq_chip its_vpe_irq_chip = {
- 
- static struct its_node *find_4_1_its(void)
- {
--	static struct its_node *its = NULL;
-+	struct its_node *its;
- 
-+	its = *this_cpu_ptr(&local_4_1_its);
- 	if (!its) {
- 		list_for_each_entry(its, &its_nodes, entry) {
- 			if (is_v4_1(its))
--- 
-2.30.0
+report: https://pastebin.com/raw/A7yVpRQJ
 
+console output : https://pastebin.com/raw/Me02WbSY
+
+kernel config : https://pastebin.com/raw/u0Efyj5P
+
+C reproducer : https://pastebin.com/raw/TLx7rz0Q
