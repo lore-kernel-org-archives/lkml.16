@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F71529B8FC
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:07:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4321529A311
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 12:07:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747310843; cv=none; b=gPVFkFAlDQsSZmI7NPNo9qvMlrliwHJBipTIgJjtNe4lqdjRaCdnpKbOG8mczvj99CecWtiDC0gXtFLxwdKBSLULzLG5g9ObfEx7+5B6CLrayxq9lDhUWAKApn7rpjoLJWB4aKQjXxktinvfPrMrMVVjVpP0S2T0d+7aq6jjXQ8=
+	t=1747310847; cv=none; b=RuYcc8kCSre6lDEIj8Ud0ngSO5RqQz6+REk/I70LMryTxUKuWEOuSiqVAD4/9ULGUkQ435QYRP68N7hIGUCuZIlsPh8Bly9oEH2uqyhWP/f0AIx86a6ODX3+G5Ou90X8NPBxroADbwof5TFNBiLPHG8GA2g65ZEoFG+t+iDqwIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747310843; c=relaxed/simple;
-	bh=DxdXzcctVDPHawDRTusyFP68wroNBy7P8vzDdxb6Rss=;
+	s=arc-20240116; t=1747310847; c=relaxed/simple;
+	bh=RpiPBoEFrgVjyePw9jzNJG3wRbbb0PIjPyOlwIFuRd0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ElchncxG/s/YygmTHaMrUWXcxhpI1oqyYUZoPLxNNmSJ0mG1lVAIj2TZiE3VWpQ4D/Ie5hHk1Cg7Be6+2Smv/PnzWlX5aUANtfM57ptyTE9UCtH7DlbGjD4il0iDr+acsYUjScQRXmievOrl2Yfg9LzYOnogKOaIllsFTYLct1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=air0cQzs; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=UCawVLzmH6ulzl4ZelvvwbGhTN7sOYTlrlGdymw8ccdXyhnEnvIzDCgcBPl/fE2PQRbBlKO/Q7DTR8XcZNSyU5N19yF91UaHAd1/S0UoNBfIlSOZT7I5NiCS9mV/R0oi2eXW9LcnngubpDAPaTFSpImw3/toUyANh4F7EukdyM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BIR8RAPs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="air0cQzs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39F08C4CEE7;
-	Thu, 15 May 2025 12:07:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BIR8RAPs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B34F3C4CEE7;
+	Thu, 15 May 2025 12:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747310843;
-	bh=DxdXzcctVDPHawDRTusyFP68wroNBy7P8vzDdxb6Rss=;
+	s=k20201202; t=1747310846;
+	bh=RpiPBoEFrgVjyePw9jzNJG3wRbbb0PIjPyOlwIFuRd0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=air0cQzsw2ix/Xr0SDm6fxPDzNB5cu/NBea58XceGh6zwajwJ37a4WXuN40KLFX1T
-	 9o4JsYp8N4681T3OZtLU6Y0ykXy11e61QY7IXpmp/oxOALEcLkGdmhSfARSgcOO3mK
-	 TlkWSjul6IAtsrRcS7IsXf7CkyDsIpwGYuxv75FBPZhz9aBQdrwVw0Aa/g7O3OCLUp
-	 yR64i3Ey36L6GtFHhiXPo+Ow6iWDycq5wSRd6zwyGmwkrTyfyuqgNczEtbXHF/Uu7p
-	 TNY/V4PNuU1Uyc2XVkabegv7LAajbyDKnAMbXaEFjKQNyBzSlfsIJBzw1N9Mi+JOMa
-	 rhjkhTEPTHLwQ==
+	b=BIR8RAPsRAuwPe+4Hp0cQ5p+4RIA1YWkH+D/94WIb9noEaOYYVx235Y+EF087c4M+
+	 35tEkG0ZbRBkKWkp544N0GQKEeguJnFRDFfAynjrWKbPwTYy2Yk3YA4FTTA7BNXj0K
+	 5nYHayJlKWpAdFqxQiTzItlDMs4aoN09PqTkI9GPnzqFMyWHwEu/DKk6VT4+hlALwj
+	 4AlFM1UPynj1C2S21CKzwAEuMbU/PVV2kM29Ebk/McIyBm67seJ3B5oUOLo5/SxSuR
+	 iuqIjyCaHZxYQpWVDzzCwJSEVwHthqoaIW1jG+lWQYzG/89ddlPobGH2lkx9hKlFNF
+	 Z8+fPgMc8bg6w==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -41,9 +41,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	David Woodhouse <dwmw@amazon.co.uk>
-Subject: [PATCH 25/32] x86/boot/e820: Simplify append_e820_table() and remove restriction on single-entry tables
-Date: Thu, 15 May 2025 14:05:41 +0200
-Message-ID: <20250515120549.2820541-26-mingo@kernel.org>
+Subject: [PATCH 26/32] x86/boot/e820: Remove e820__range_remove()'s unused return parameter
+Date: Thu, 15 May 2025 14:05:42 +0200
+Message-ID: <20250515120549.2820541-27-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250515120549.2820541-1-mingo@kernel.org>
 References: <20250515120549.2820541-1-mingo@kernel.org>
@@ -55,32 +55,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-So append_e820_table() begins with this weird condition that checks 'nr_entries':
+None of the usage sites make use of the 'real_removed_size'
+return parameter of e820__range_remove(), and it's hard
+to contemplate much constructive use: E820 maps can have
+holes, and removing a fixed range may result in removal
+of any number of bytes from 0 to the requested size.
 
-    static int __init append_e820_table(struct boot_e820_entry *entries, u32 nr_entries)
-    {
-            /* Only one memory region (or negative)? Ignore it */
-            if (nr_entries < 2)
-                    return -1;
-
-Firstly, 'nr_entries' has been an u32 since 2017 and cannot be negative.
-
-Secondly, there's nothing inherently wrong with single-entry E820 maps,
-especially in virtualized environments.
-
-So remove this restriction and remove the __append_e820_table()
-indirection.
-
-Also:
-
- - fix/update comments
- - remove obsolete comments
-
-This shrinks the generated code a bit as well:
+So remove this pointless calculation. This simplifies
+the function a bit:
 
    text       data        bss        dec        hex    filename
-   7549      44072          0      51621       c9a5    e820.o.before
-   7533      44072          0      51605       c995    e820.o.after
+   7645      44072          0      51717       ca05    e820.o.before
+   7597      44072          0      51669       c9d5    e820.o.after
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Andy Shevchenko <andy@kernel.org>
@@ -91,75 +77,73 @@ Cc: Kees Cook <keescook@chromium.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- arch/x86/kernel/e820.c | 35 +++++++++++------------------------
- 1 file changed, 11 insertions(+), 24 deletions(-)
+ arch/x86/include/asm/e820/api.h | 2 +-
+ arch/x86/kernel/e820.c          | 8 +-------
+ 2 files changed, 2 insertions(+), 8 deletions(-)
 
+diff --git a/arch/x86/include/asm/e820/api.h b/arch/x86/include/asm/e820/api.h
+index 54427b77bc19..9cf416f7a84f 100644
+--- a/arch/x86/include/asm/e820/api.h
++++ b/arch/x86/include/asm/e820/api.h
+@@ -16,7 +16,7 @@ extern bool e820__mapped_all(u64 start, u64 end, enum e820_type type);
+ 
+ extern void e820__range_add   (u64 start, u64 size, enum e820_type type);
+ extern u64  e820__range_update(u64 start, u64 size, enum e820_type old_type, enum e820_type new_type);
+-extern u64  e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool check_type);
++extern void e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool check_type);
+ extern u64  e820__range_update_table(struct e820_table *t, u64 start, u64 size, enum e820_type old_type, enum e820_type new_type);
+ 
+ extern int  e820__update_table(struct e820_table *table);
 diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 447f8bbb77b8..22bfcad7b723 100644
+index 22bfcad7b723..0fc77ab72c5f 100644
 --- a/arch/x86/kernel/e820.c
 +++ b/arch/x86/kernel/e820.c
-@@ -483,17 +483,22 @@ __init int e820__update_table(struct e820_table *table)
- 	return 0;
+@@ -590,11 +590,10 @@ __init u64 e820__range_update_table(struct e820_table *t, u64 start, u64 size,
  }
  
--__init static int __append_e820_table(struct boot_e820_entry *entries, u32 nr_entries)
-+/*
-+ * Copy the BIOS E820 map into the kernel's e820_table.
-+ *
-+ * Sanity-check it while we're at it..
-+ */
-+__init static int append_e820_table(struct boot_e820_entry *entries, u32 nr_entries)
+ /* Remove a range of memory from the E820 table: */
+-__init u64 e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool check_type)
++__init void e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool check_type)
  {
- 	struct boot_e820_entry *entry = entries;
+ 	u32 idx;
+ 	u64 end;
+-	u64 real_removed_size = 0;
  
- 	while (nr_entries) {
- 		u64 start = entry->addr;
--		u64 size = entry->size;
--		u64 end = start + size - 1;
--		u32 type = entry->type;
-+		u64 size  = entry->size;
-+		u64 end   = start + size-1;
-+		u32 type  = entry->type;
+ 	if (size > (ULLONG_MAX - start))
+ 		size = ULLONG_MAX - start;
+@@ -617,7 +616,6 @@ __init u64 e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool
  
--		/* Ignore the entry on 64-bit overflow: */
-+		/* Ignore the remaining entries on 64-bit overflow: */
- 		if (start > end && likely(size))
- 			return -1;
+ 		/* Completely covered? */
+ 		if (entry->addr >= start && entry_end <= end) {
+-			real_removed_size += entry->size;
+ 			memset(entry, 0, sizeof(*entry));
+ 			continue;
+ 		}
+@@ -626,7 +624,6 @@ __init u64 e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool
+ 		if (entry->addr < start && entry_end > end) {
+ 			e820__range_add(end, entry_end - end, entry->type);
+ 			entry->size = start - entry->addr;
+-			real_removed_size += size;
+ 			continue;
+ 		}
  
-@@ -505,24 +510,6 @@ __init static int __append_e820_table(struct boot_e820_entry *entries, u32 nr_en
- 	return 0;
+@@ -636,8 +633,6 @@ __init u64 e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool
+ 		if (final_start >= final_end)
+ 			continue;
+ 
+-		real_removed_size += final_end - final_start;
+-
+ 		/*
+ 		 * Left range could be head or tail, so need to update
+ 		 * the size first:
+@@ -648,7 +643,6 @@ __init u64 e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool
+ 
+ 		entry->addr = final_end;
+ 	}
+-	return real_removed_size;
  }
  
--/*
-- * Copy the BIOS E820 map into a safe place.
-- *
-- * Sanity-check it while we're at it..
-- *
-- * If we're lucky and live on a modern system, the setup code
-- * will have given us a memory map that we can use to properly
-- * set up memory.  If we aren't, we'll fake a memory map.
-- */
--__init static int append_e820_table(struct boot_e820_entry *entries, u32 nr_entries)
--{
--	/* Only one memory region (or negative)? Ignore it */
--	if (nr_entries < 2)
--		return -1;
--
--	return __append_e820_table(entries, nr_entries);
--}
--
- __init static u64
- __e820__range_update(struct e820_table *table, u64 start, u64 size, enum e820_type old_type, enum e820_type new_type)
- {
-@@ -796,7 +783,7 @@ __init void e820__memory_setup_extended(u64 phys_addr, u32 data_len)
- 	entries = sdata->len / sizeof(*extmap);
- 	extmap = (struct boot_e820_entry *)(sdata->data);
- 
--	__append_e820_table(extmap, entries);
-+	append_e820_table(extmap, entries);
- 	e820__update_table(e820_table);
- 
- 	memcpy(e820_table_kexec, e820_table, sizeof(*e820_table_kexec));
+ __init void e820__update_table_print(void)
 -- 
 2.45.2
 
