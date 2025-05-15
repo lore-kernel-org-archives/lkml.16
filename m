@@ -1,178 +1,208 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0033B2989A5
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:28:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E6729B227
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747308502; cv=none; b=DsfDeCFuvpNfCGJqpdovcarDQc8XVXdnsNewV4sJPRrs3uKJa8JLr4gBEJchrN7RJ4ClJbsrkthCwpsm05Vg5ABD3C3w3Bekvnpyd6krTpoaGAO9BXcKnWvT5aco+Y3+94tJhintH/3juoa3BngIKtE79hXO830ueMx5RnXZ9ug=
+	t=1747308506; cv=none; b=ccufyn/YCMlxFNJbaVlq5lqJ9bUjubMJDsA5FLLbk2quKlfup5sPe/Za7y193jV4tNG1zzK+xGSvd8/A0GaExg/n8xfHhxdNzJvTHp3QraN6sjzjVBAf/0PgKzYicD9NS5JwcwCbc1XCyLGFY7UcGyl2Y9xcwdAdqSWDAnz/TmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747308502; c=relaxed/simple;
-	bh=gQvPujqngghj0Dq05iVIVhZF6wDE0w5nwGYupzIkA64=;
+	s=arc-20240116; t=1747308506; c=relaxed/simple;
+	bh=pejymE+5J/JOUZp5QCro2lHDDLB60GHjyo2G/ySAD84=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YVow70QsYIfup42xLVO7QOzV8Qf9ItAd5bbxzI4aFPTnEkWYCRWDq5XlGYiDgQxCSzQ3bMzcHTJANywnr7iL4bSHceTnYsMFV/iyw29A5njOoaDU6Erjm1XOgLQvVGzj3W7yF17c/gOzhWWAJfBcJvoSsQ0a1qZ0+pX7FcAJEcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Aiw731cV; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ykBfxu2I; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Aiw731cV; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ykBfxu2I; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=VLIwoGPm9OTOdn5vc/4PzOMUwPs+szR8dDmc2Mbm5fF4Mpk9citrCJ9a8wMz3mGpdJWRCMRStLY83pBBRgPT4v+Wr/Dsnj1DTHI/n6CaPm4VVIfT7bACRlx5yVe0lVpeOK9nWHVvKe6F3fkaIE+LC2TBusAc11/iRCGSruH5tYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gQOoAfcT; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Aiw731cV";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ykBfxu2I";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Aiw731cV";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ykBfxu2I"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 29B53211A5;
-	Thu, 15 May 2025 11:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747308499; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gQOoAfcT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747308503;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Up2hJiI9AuEDVzLuKqKUlIrqcsteVNokAO6UxOmyZYs=;
-	b=Aiw731cV/YzwTnFIRYjcUSTGMSidJSBw4OZ+7RjjLakkw2lWyNvZrPLXtQOGn40+jHWHB3
-	69/0qfTLFvc9p1w9MML6ONFGEj5t+qXHW0ZbT3B+2frgIMPzcDuj0Ns0aG8p0ZYXZr87RK
-	3i7jUTsKwPGxzqt3nMySTQ0fU18DEWY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747308499;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Up2hJiI9AuEDVzLuKqKUlIrqcsteVNokAO6UxOmyZYs=;
-	b=ykBfxu2IEiy4ptpcz0ZdIdVIm6qk8b/ON/gWYzNSfF+5QdBE9HGKCh+fa+c4Vj0R80kHgF
-	BSBv7AC5OEf/wpDQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747308499; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Up2hJiI9AuEDVzLuKqKUlIrqcsteVNokAO6UxOmyZYs=;
-	b=Aiw731cV/YzwTnFIRYjcUSTGMSidJSBw4OZ+7RjjLakkw2lWyNvZrPLXtQOGn40+jHWHB3
-	69/0qfTLFvc9p1w9MML6ONFGEj5t+qXHW0ZbT3B+2frgIMPzcDuj0Ns0aG8p0ZYXZr87RK
-	3i7jUTsKwPGxzqt3nMySTQ0fU18DEWY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747308499;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Up2hJiI9AuEDVzLuKqKUlIrqcsteVNokAO6UxOmyZYs=;
-	b=ykBfxu2IEiy4ptpcz0ZdIdVIm6qk8b/ON/gWYzNSfF+5QdBE9HGKCh+fa+c4Vj0R80kHgF
-	BSBv7AC5OEf/wpDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EA34B139D0;
-	Thu, 15 May 2025 11:28:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id W2AqOdLPJWjPcwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 15 May 2025 11:28:18 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id B8829A08CF; Thu, 15 May 2025 13:28:13 +0200 (CEST)
-Date: Thu, 15 May 2025 13:28:13 +0200
-From: Jan Kara <jack@suse.cz>
-To: Max Kellermann <max.kellermann@ionos.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] fs/open: make chmod_common() and chown_common()
- killable
-Message-ID: <2jll2ujfh2r2x54imkto3suaoe7h76ypokeaybrqdvwo2sromb@a7ep7dnpmfi3>
-References: <20250513150327.1373061-1-max.kellermann@ionos.com>
- <20250513150327.1373061-2-max.kellermann@ionos.com>
+	bh=xbhS3Ju7G0RU72yLnv7dx3n2u6YB6c2WXxN8h+PvWbc=;
+	b=gQOoAfcT+LJwOySXiV8dleERc83+ec0ZU9tv34fbM4YqRzglYBLzWJ9usf1ySaqOhXyskf
+	6weid57k3Xn4onNr0YsDHZmMRMwqC29rlKmYswXpT9+Crb9k5tq/6dWZZRQ00xI4xr70IP
+	dcMnlCpewbnXqd7aOEQDvxxiLUsKh4Q=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-338-5_zfOiLkOLiFXVgO5hckMA-1; Thu, 15 May 2025 07:28:22 -0400
+X-MC-Unique: 5_zfOiLkOLiFXVgO5hckMA-1
+X-Mimecast-MFC-AGG-ID: 5_zfOiLkOLiFXVgO5hckMA_1747308501
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a2046b5e75so382853f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 04:28:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747308501; x=1747913301;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xbhS3Ju7G0RU72yLnv7dx3n2u6YB6c2WXxN8h+PvWbc=;
+        b=o2EAHZsYKmlXrJwkrjloRMrw13eZsyQxk6wIi9VURwCkx5VzOsPeD8caOlQ+cAtSPF
+         zUJJxz0JebdWUDQ1uhmg+Kt9L/oByovK01RLSUqqZVSr5aKPKeomPsEvXaztm9RXwwTM
+         zB0IzxFsTaY2qP1DRMcLG6wOF0M47zba1wQLH3xu5T4qlut35d6gonmRP27W8jVfoCIu
+         2z0NxtP5GbZE5cZFfo/9gL+1IF6kwIjURAzeZmUdUNA1PLmbcqCNDDRkdgMf0hnvPEMy
+         dYMGxBNT/rrvd3mf39lDNi5fISUX8Id3M0VcVefTdjGPExSwxte1j67n6xT2pSxoq5q5
+         Q/Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCVSsutK6s+mM6mKUvtvWcQszGM4rf2ZlcZ45t3TAfczklAC9dU2LQD2QDWLqbx2jx4p/ifH8w3IDfW4xZo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxO5fJ9f5tIOCJhEePU+ieYxSJ/CN9KuVjc5UNNqsjStFIGIkI2
+	bAkssb+DxB4G4DOuQJC7jkSMQguSqDPkbV7m4/WFDrKvX4Gg6ttPyKtLB3hLCoNv9Zd/01M9G11
+	aru66J6uaxmb7J0F+zdXJdsbckQqd3EcpKWWlxJVIbViux3dUSYPE68NesfuNQQ==
+X-Gm-Gg: ASbGncvg7ave3ANVpcILOubrnAZ4R3m0cKfIwqZ023j3ta3mKQCZRRPL13oIifG8AM8
+	rv2XnWHbpxj1sK/XlnVfaM1GtT1GvwufNtfCnfYKH7gxgSAj2F84YvnEKZ2meWdHtjnbPXdvK14
+	i8Dz+mVat3Vu4yGbqH+1V8Dfm4J+OQBscMOn9HmsQ5upWDPR4zHiDJDVtK3cFOdlxu6apozWRx7
+	jusp3JQdRJykVvDlEhi/pi7UMRCc59AKPJrmAMSwYNXrCiK4hmQzug3aqJgvJWPeouul3BCo+XK
+	9C2Yjw==
+X-Received: by 2002:a5d:584c:0:b0:3a3:2aa5:11bc with SMTP id ffacd0b85a97d-3a3537b4adcmr1827398f8f.54.1747308500773;
+        Thu, 15 May 2025 04:28:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEyuhNAhTeV4lZLHtOAJbLtrrq5ZwPIS8k0LNXoYdTkHuAU/c8m5k5qzWyEnDIz37vXRY5wsg==
+X-Received: by 2002:a5d:584c:0:b0:3a3:2aa5:11bc with SMTP id ffacd0b85a97d-3a3537b4adcmr1827376f8f.54.1747308500344;
+        Thu, 15 May 2025 04:28:20 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a4c7a5sm22723419f8f.98.2025.05.15.04.28.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 04:28:19 -0700 (PDT)
+Date: Thu, 15 May 2025 07:28:16 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: phasta@kernel.org
+Cc: schalla@marvell.com, vattunuru@marvell.com,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Shijith Thotton <sthotton@marvell.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Satha Rao <skoteshwar@marvell.com>, virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] vdpa/octeon_ep: Control PCI dev enabling manually
+Message-ID: <20250515072724-mutt-send-email-mst@kernel.org>
+References: <20250508085134.24084-2-phasta@kernel.org>
+ <f6e5e4c0f32f8ecb3be71181042082d2d8a9533b.camel@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250513150327.1373061-2-max.kellermann@ionos.com>
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.com:email]
-X-Spam-Score: -3.80
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f6e5e4c0f32f8ecb3be71181042082d2d8a9533b.camel@mailbox.org>
 
-On Tue 13-05-25 17:03:25, Max Kellermann wrote:
-> Allows killing processes that are waiting for the inode lock.
+On Thu, May 15, 2025 at 09:14:22AM +0200, Philipp Stanner wrote:
+> On Thu, 2025-05-08 at 10:51 +0200, Philipp Stanner wrote:
+> > PCI region request functions such as pci_request_region() currently
+> > have
+> > the problem of becoming sometimes managed functions, if
+> > pcim_enable_device() instead of pci_enable_device() was called. The
+> > PCI
+> > subsystem wants to remove this deprecated behavior from its
+> > interfaces.
+> > 
+> > octeopn_ep enables its device with pcim_enable_device() (for VF. PF
+> > uses
+> > manual management), but does so only to get automatic disablement.
+> > The
+> > driver wants to manage its PCI resources for VF manually, without
+> > devres.
+> > 
+> > The easiest way not to use automatic resource management at all is by
+> > also handling device enable- and disablement manually.
+> > 
+> > Replace pcim_enable_device() with pci_enable_device(). Add the
+> > necessary
+> > calls to pci_disable_device().
+> > 
+> > Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> > Acked-by: Vamsi Attunuru <vattunuru@marvell.com>
 > 
-> Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+> Hi again,
+> 
+> this is the last of 12 drivers blocking me from removing a few hundred
+> lines of broken code from PCI. Would be great if it could be sent to
+> Linus next merge window.
+> 
+> Can someone take this patch in?
+> 
+> Thx
+> P.
 
-Looks good. Feel free to add:
+I intend to, working on packing things up for -next as we speak.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+> > ---
+> > Changes in v4:
+> >   - s/AF/PF
+> >   - Add Vamsi's AB
+> > 
+> > Changes in v3:
+> >   - Only call pci_disable_device() for the PF version. For AF it
+> > would
+> >     cause a WARN_ON because pcim_enable_device()'s callback will also
+> >     try to disable.
+> > ---
+> >  drivers/vdpa/octeon_ep/octep_vdpa_main.c | 17 ++++++++++++-----
+> >  1 file changed, 12 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+> > b/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+> > index f3d4dda4e04c..9b49efd24391 100644
+> > --- a/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+> > +++ b/drivers/vdpa/octeon_ep/octep_vdpa_main.c
+> > @@ -454,6 +454,9 @@ static void octep_vdpa_remove_pf(struct pci_dev
+> > *pdev)
+> >  		octep_iounmap_region(pdev, octpf->base,
+> > OCTEP_HW_MBOX_BAR);
+> >  
+> >  	octep_vdpa_pf_bar_expand(octpf);
+> > +
+> > +	/* The pf version does not use managed PCI. */
+> > +	pci_disable_device(pdev);
+> >  }
+> >  
+> >  static void octep_vdpa_vf_bar_shrink(struct pci_dev *pdev)
+> > @@ -825,7 +828,7 @@ static int octep_vdpa_probe_pf(struct pci_dev
+> > *pdev)
+> >  	struct octep_pf *octpf;
+> >  	int ret;
+> >  
+> > -	ret = pcim_enable_device(pdev);
+> > +	ret = pci_enable_device(pdev);
+> >  	if (ret) {
+> >  		dev_err(dev, "Failed to enable device\n");
+> >  		return ret;
+> > @@ -834,15 +837,17 @@ static int octep_vdpa_probe_pf(struct pci_dev
+> > *pdev)
+> >  	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
+> >  	if (ret) {
+> >  		dev_err(dev, "No usable DMA configuration\n");
+> > -		return ret;
+> > +		goto disable_pci;
+> >  	}
+> >  	octpf = devm_kzalloc(dev, sizeof(*octpf), GFP_KERNEL);
+> > -	if (!octpf)
+> > -		return -ENOMEM;
+> > +	if (!octpf) {
+> > +		ret = -ENOMEM;
+> > +		goto disable_pci;
+> > +	}
+> >  
+> >  	ret = octep_iomap_region(pdev, octpf->base,
+> > OCTEP_HW_MBOX_BAR);
+> >  	if (ret)
+> > -		return ret;
+> > +		goto disable_pci;
+> >  
+> >  	pci_set_master(pdev);
+> >  	pci_set_drvdata(pdev, octpf);
+> > @@ -856,6 +861,8 @@ static int octep_vdpa_probe_pf(struct pci_dev
+> > *pdev)
+> >  
+> >  unmap_region:
+> >  	octep_iounmap_region(pdev, octpf->base, OCTEP_HW_MBOX_BAR);
+> > +disable_pci:
+> > +	pci_disable_device(pdev);
+> >  	return ret;
+> >  }
+> >  
 
-								Honza
-
-> ---
-> v2: split into separate patches
-> 
-> This part was reviewed by Christian Brauner here:
->  https://lore.kernel.org/linux-fsdevel/20250512-unrat-kapital-2122d3777c5d@brauner/
-> 
-> Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
-> ---
->  fs/open.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/open.c b/fs/open.c
-> index a9063cca9911..d2f2df52c458 100644
-> --- a/fs/open.c
-> +++ b/fs/open.c
-> @@ -635,7 +635,9 @@ int chmod_common(const struct path *path, umode_t mode)
->  	if (error)
->  		return error;
->  retry_deleg:
-> -	inode_lock(inode);
-> +	error = inode_lock_killable(inode);
-> +	if (error)
-> +		goto out_mnt_unlock;
->  	error = security_path_chmod(path, mode);
->  	if (error)
->  		goto out_unlock;
-> @@ -650,6 +652,7 @@ int chmod_common(const struct path *path, umode_t mode)
->  		if (!error)
->  			goto retry_deleg;
->  	}
-> +out_mnt_unlock:
->  	mnt_drop_write(path->mnt);
->  	return error;
->  }
-> @@ -769,7 +772,9 @@ int chown_common(const struct path *path, uid_t user, gid_t group)
->  		return -EINVAL;
->  	if ((group != (gid_t)-1) && !setattr_vfsgid(&newattrs, gid))
->  		return -EINVAL;
-> -	inode_lock(inode);
-> +	error = inode_lock_killable(inode);
-> +	if (error)
-> +		return error;
->  	if (!S_ISDIR(inode->i_mode))
->  		newattrs.ia_valid |= ATTR_KILL_SUID | ATTR_KILL_PRIV |
->  				     setattr_should_drop_sgid(idmap, inode);
-> -- 
-> 2.47.2
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
