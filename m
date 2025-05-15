@@ -1,99 +1,154 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 689B728CF61;
-	Thu, 15 May 2025 08:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDA5288C80
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:48:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747298858; cv=none; b=Sih5NXnnfb6l6iNz8bssMBDeYsv4yp4RfKIJsIF/MKl2WUaoHU/Xm59aY6oOqjIuT68E17c+8QVv4bDaDl375eKSKU+x19CBE+Dsj8puDvA6ff4/q6/hJ+l+xBJ53hRKT/HDonBoWVFPTvCod923BI7rRwfIHwlmoiMOSGV+UXU=
+	t=1747298920; cv=none; b=XG4twYTr/3cGtMTo1bYjvaDxLaRCOVqEsbOjVEdVqOuJ7UMK87ii2R/PhAXVnkujL7Yjshsz9J1dW0jk6MlfCjfAHMmAqlXiINYEVLcYTZ8sxh42m14R3WjB3SsjWcBDm+9GqUqKjoqHAcEUIyLlLp0X+EDDmE6XTt8PpQC6IMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747298858; c=relaxed/simple;
-	bh=Bw4wosFmdzVjrqAaQ4HVzmHqwpE1UTT+LbWM5M1KXAM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=paBpqdFNdANzETSXN7w11TplIN3tiW5M6+4XTmSGb4MB3EXfGQYR+t+GRYs3eBZ//umwxMQDBhoQZ3PBHUtpEPiW8JAmKk5Kn71Fzd0mkK4dxeOkZ7a42XIBbw6ofALrTW12RcABeNvFuWDsO//AY+gIgkrBHQb1s3+58gH8VBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC1AC14BF;
-	Thu, 15 May 2025 01:47:21 -0700 (PDT)
-Received: from [10.162.40.26] (K4MQJ0H1H2.blr.arm.com [10.162.40.26])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 45DCD3F673;
-	Thu, 15 May 2025 01:47:30 -0700 (PDT)
-Message-ID: <35ef7691-7eac-4efa-838d-c504c88c042b@arm.com>
-Date: Thu, 15 May 2025 14:17:27 +0530
+	s=arc-20240116; t=1747298920; c=relaxed/simple;
+	bh=uafTKsLt5Y6vI+2YJVWbCoVLU1+w6d1TN41/6GcJe8w=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=PuqnDwql+kJs77QHgkm/I+tsLUSclujk9gGX+Q3Y5i4Xdt5c51TX0KISpjslwQb42VQVLOTLGXBiAZrnVhV58W2iuywhyfUCY05nJNsxwZXIaRtFfVahm/zkaB1aswUbsemRIG/OQ3iSFngDmzJD2j0cVW9ihZywo3dIj4vRIPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=I+o+mqOr; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="I+o+mqOr"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a0b4907a28so89429f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 01:48:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1747298916; x=1747903716; darn=vger.kernel.org;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bdVLI+IKJQCwIaBP/4ipGt86DAIuj3sOKMK9lc4aqFc=;
+        b=I+o+mqOrLwb6wAy3fZ6S3zjKPSqaM3CwDCRIeUdIay3/UdKVnn2nqClHp2i280eIJo
+         tZyO0jy8xMq7nzDk/AqEDzGLQA6Av8h5IUIrV+E9571R5E2Zid8XpZXo6RayFQu3J9Et
+         F/GBqCB1+3SvxUlFk0JZ8KNMo3Pt8iiTg8MJGPAZ2Y7gQJZL9F5OGqKptUTpV1kwK24L
+         EOlzSCCEVIi2oevOVj9yLa8GrSIWcCDBU4NLrVldY0U3XkdWSWI2ytaUJ8Sq3ZQqb4cs
+         u1f0G8OtL1VTWuMsykX7Bwk74nyGnyworNNU6w3awX+4DK4SlJeRIYuANTsjnT//Pq4q
+         lnrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747298916; x=1747903716;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=bdVLI+IKJQCwIaBP/4ipGt86DAIuj3sOKMK9lc4aqFc=;
+        b=o03GV143v8n/QlzXyHZAZvxTJapS7KA7a70v6s7YcWZlN2xe8srYKoQAjaS0FdVdPX
+         US1+XSw120lHCg6hNgAC8R+8WAjcleH9nUeGhDVmYgI5B+fxxAnu7PIUuIAYY9THa7J7
+         oWT8yeNr5rueb+03BSymvE3ppnxOKVkPyc8sUw85wG3tYEMt7LzAgdevzxI6KrKW9AGm
+         zXROls0Vddn3RZbMPQqZgiHUUOsnoLO0+6QjSRhUjen69LHnm7wYKwsd7FLIWiU9s5xt
+         etijEFDRm8Fy6HbQYYXYCO8yo2NzD/Y3Ti0C4BPLk73nbBaOKMM3H0CfXcbxKbl3IMHQ
+         F2+w==
+X-Gm-Message-State: AOJu0YyKckhUiujnvM6eWWYR0yh3XwNrcCiF4q78AELymgEFv/efsuow
+	7USP6MQHJyM2uD+V34iYFLkX3RKlp1hCOqSr7Ht/NYQwTALxiQqDmGLMoPjsMFU=
+X-Gm-Gg: ASbGncuzTj1fesDp5gINPKoeCcKAFlwm892SQf33fiux4VkUBcCs2DxpnlYAzHYujXZ
+	QxRCAFrVpqat5AHDdbxjesDYpwNP1jtbuKWUS91au2ETg5kS/ZyreofH1GtGiGhvVXXUCn2udeR
+	BDyLjGWhFaUPxeb5DXbm9IVwbKPi6k+cZWij2P/G2EJZiCov81w+4krADPruyv5cSxJAowqrUT8
+	LRxEHd8Vyt3f4guRMM0qfRifj0bG5RbsnvK2Ca+NM5GsXS+EUg0MIlGDycfQhsgBLT6ODipCqWY
+	iExI47OR32rZ9ZP1q1AEZ+2zlMjJSmbGHwMHJoTSdfGqAga3woo/U6OrUqmtnB8KITruHN3V/Yu
+	elKaOUW6uI0U=
+X-Google-Smtp-Source: AGHT+IFl5ofT8H2ymocVMBID7uffI6yQBoHWwntFgE3AOdsNMnKtMdzBwHwHlEbKzThnIcYnf09dKg==
+X-Received: by 2002:a5d:4311:0:b0:3a3:55b4:1abb with SMTP id ffacd0b85a97d-3a355b41b8emr294033f8f.12.1747298916300;
+        Thu, 15 May 2025 01:48:36 -0700 (PDT)
+Received: from localhost (ip-89-103-73-235.bb.vodafone.cz. [89.103.73.235])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2cf2bsm21822557f8f.80.2025.05.15.01.48.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 01:48:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: Check pxd_leaf() instead of !pxd_table() while
- tearing down page tables
-To: David Hildenbrand <david@redhat.com>, catalin.marinas@arm.com,
- will@kernel.org
-Cc: ryan.roberts@arm.com, anshuman.khandual@arm.com, mark.rutland@arm.com,
- yang@os.amperecomputing.com, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
-References: <20250515063450.86629-1-dev.jain@arm.com>
- <332ecda7-14c4-4dc3-aeff-26801b74ca04@redhat.com>
- <4904d02f-6595-4230-a321-23327596e085@arm.com>
- <6fe7848c-485e-4639-b65c-200ed6abe119@redhat.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <6fe7848c-485e-4639-b65c-200ed6abe119@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 15 May 2025 10:48:35 +0200
+Message-Id: <D9WLRSAB63M5.3DZD4ND3WVZ6F@ventanamicro.com>
+Subject: Re: [PATCH v15 05/27] riscv: usercfi state for task and
+ save/restore of CSR_SSP on trap entry/exit
+Cc: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+ <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
+ <devicetree@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+ <alistair.francis@wdc.com>, <richard.henderson@linaro.org>,
+ <jim.shu@sifive.com>, <andybnac@gmail.com>, <kito.cheng@sifive.com>,
+ <charlie@rivosinc.com>, <atishp@rivosinc.com>, <evan@rivosinc.com>,
+ <cleger@rivosinc.com>, <alexghiti@rivosinc.com>, <samitolvanen@google.com>,
+ <broonie@kernel.org>, <rick.p.edgecombe@intel.com>,
+ <rust-for-linux@vger.kernel.org>, "Zong Li" <zong.li@sifive.com>,
+ "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+To: "Alexandre Ghiti" <alex@ghiti.fr>, "Deepak Gupta" <debug@rivosinc.com>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>, "Dave Hansen"
+ <dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
+ <hpa@zytor.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Liam R.
+ Howlett" <Liam.Howlett@oracle.com>, "Vlastimil Babka" <vbabka@suse.cz>,
+ "Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>, "Paul Walmsley"
+ <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert
+ Ou" <aou@eecs.berkeley.edu>, "Conor Dooley" <conor@kernel.org>, "Rob
+ Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Arnd Bergmann" <arnd@arndb.de>, "Christian Brauner" <brauner@kernel.org>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Oleg Nesterov" <oleg@redhat.com>,
+ "Eric Biederman" <ebiederm@xmission.com>, "Kees Cook" <kees@kernel.org>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Shuah Khan" <shuah@kernel.org>, "Jann
+ Horn" <jannh@google.com>, "Conor Dooley" <conor+dt@kernel.org>, "Miguel
+ Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun
+ Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>
+From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+References: <20250502-v5_user_cfi_series-v15-0-914966471885@rivosinc.com>
+ <20250502-v5_user_cfi_series-v15-5-914966471885@rivosinc.com>
+ <D9OZVNOGLU4T.2XOUPX27HN0W8@ventanamicro.com>
+ <122fc6cd-2e21-4fca-979d-bcf558107b81@ghiti.fr>
+In-Reply-To: <122fc6cd-2e21-4fca-979d-bcf558107b81@ghiti.fr>
 
+2025-05-15T09:28:25+02:00, Alexandre Ghiti <alex@ghiti.fr>:
+> On 06/05/2025 12:10, Radim Kr=C4=8Dm=C3=A1=C5=99 wrote:
+>> 2025-05-02T16:30:36-07:00, Deepak Gupta <debug@rivosinc.com>:
+>>> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+>>> @@ -91,6 +91,32 @@
+>>> +.macro restore_userssp tmp
+>>> +	ALTERNATIVE("nops(2)",
+>>> +		__stringify(				\
+>>> +		REG_L \tmp, TASK_TI_USER_SSP(tp);	\
+>>> +		csrw CSR_SSP, \tmp),
+>>> +		0,
+>>> +		RISCV_ISA_EXT_ZICFISS,
+>>> +		CONFIG_RISCV_USER_CFI)
+>>> +.endm
+>> Do we need to emit the nops when CONFIG_RISCV_USER_CFI isn't selected?
+>>
+>> (Why not put #ifdef CONFIG_RISCV_USER_CFI around the ALTERNATIVES?)
+>
+> The alternatives are used to create a generic kernel that contains the=20
+> code for a large number of extensions and only enable it at runtime=20
+> depending on the platform capabilities. This way distros can ship a=20
+> single kernel that works on all platforms.
 
+Yup, and if a kernel is compiled without CONFIG_RISCV_USER_CFI, the nops
+will only enlarge the binary and potentially slow down execution.
+In other words, why we don't do something like this
 
-On 15/05/25 2:06 pm, David Hildenbrand wrote:
-> On 15.05.25 10:22, Dev Jain wrote:
->>
->>
->> On 15/05/25 1:43 pm, David Hildenbrand wrote:
->>> On 15.05.25 08:34, Dev Jain wrote:
->>>> Commit 9c006972c3fe removes the pxd_present() checks because the caller
->>>> checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller
->>>> only
->>>> checks pud_present(); pud_free_pmd_page() recurses on each pmd through
->>>> pmd_free_pte_page(), wherein the pmd may be none.
->>> The commit states: "The core code already has a check for pXd_none()",
->>> so I assume that assumption was not true in all cases?
->>>
->>> Should that one problematic caller then check for pmd_none() instead?
->>
->>   From what I could gather of Will's commit message, my interpretation is
->> that the concerned callers are vmap_try_huge_pud and vmap_try_huge_pmd.
->> These individually check for pxd_present():
->>
->> if (pmd_present(*pmd) && !pmd_free_pte_page(pmd, addr))
->>     return 0;
->>
->> The problem is that vmap_try_huge_pud will also iterate on pte entries.
->> So if the pud is present, then pud_free_pmd_page -> pmd_free_pte_page
->> may encounter a none pmd and trigger a WARN.
-> 
-> Yeah, pud_free_pmd_page()->pmd_free_pte_page() looks shaky.
-> 
-> I assume we should either have an explicit pmd_none() check in 
-> pud_free_pmd_page() before calling pmd_free_pte_page(), or one in 
-> pmd_free_pte_page().
-> 
-> With your patch, we'd be calling pte_free_kernel() on a NULL pointer, 
-> which sounds wrong -- unless I am missing something important.
+ (!CONFIG_RISCV_USER_CFI ? "" :
+   (RISCV_ISA_EXT_ZICFISS ? __stringify(...) : "nops(x)"))
 
-Ah thanks, you seem to be right. We will be extracting table from a none 
-pmd. Perhaps we should still bail out for !pxd_present() but without the 
-warning, which the fix commit used to do.
+instead of the current
 
-> 
->>
->>>
->>> If you were able to trigger this WARN, it's always a good idea to
->>> include the splat in the commit.
->>
->> I wasn't able to, it is just an observation from code inspection.
-> 
-> That better be included in the patch description :)
-> 
+ (CONFIG_RISCV_USER_CFI &&
+    RISCV_ISA_EXT_ZICFISS ? __stringify(...) : "nops(x)")
 
+It could be a new preprocessor macro in case we wanted to make it nice,
+but it's probably not a common case, so an ifdef could work as well.
+
+Do we just generally not care about such minor optimizations?
+
+(If we wanted to go an extra mile, we could also keep the nops when both
+ CONFIG_RISCV_USER_CFI and RISCV_ISA_EXT_ZICFISS are present, but
+ command line riscv_nousercfi disabled backward cfi.)
+
+Thanks.
