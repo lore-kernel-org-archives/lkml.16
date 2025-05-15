@@ -1,86 +1,223 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3CD72602
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9908F66;
+	Thu, 15 May 2025 00:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747269748; cv=none; b=XaQ0P8X5IGKoBZMtzLI99aDOifS6XtGn+xouxffAj3jhUyrrgs8xlLIjEt4ynjqRKFY89VGStzO3RwiKxF4ZbiEqcxqbNcZ6VP8I43F2+7DuL4NHRrNjxe9Cu9QpUukUIDoyOvsRf6TaYXJXepmylb1kZOr+qwFT3is/6RONd24=
+	t=1747269754; cv=none; b=csRAkAZ+iCX6h57LM468nnGQfn1Ao2EKlwa6ukb8COldktrGmmMTbtIWtMQfe6rNIT0IqoWH6M2gYYWwvoEc2ToN23BXRVvuwuMui/55rq2rU5/b+p1nwwL1gLztVKCdbY92oQllcjh7Qf1NDUdKu+rNs45F85DI5Kprz/BrhYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747269748; c=relaxed/simple;
-	bh=obx/PLZ6UIcwrs7uFv57ytnLd/749bN6ofjc/xYVY9g=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=C5m74ydgnOvXN6kf8vmntlKglrF3c1PtsaxY+BY99kNKzLsiGEUc7HncDKMfHjP9lOenOKaoYbkKeWRIBzfNZ49QA99VezE3/E5iJF/BV39toCdFmwluX9ZoVSqvAw5RuhhiwA1olSt5H4YwD2gicvYkWC1nJeO0U1JRdcN14Xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qp/SqBWx; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747269754; c=relaxed/simple;
+	bh=Jj9rZa3izoGXcM992ohp3v3M45235wdqTvdJRYPXBm8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=YjTrlPwK940WueCBuOznWOvE8fQQEdjtCCAAJ31ZoMcDvVTsp30xG0zlasQ7BaTEBmoIF68eIAxZx4D44I1ENcZHF6BnKSva71dxN8PhPcy0rgtW7dwy2sryFY8Ajl7wq1Qdx5EOFq5FNMHRTcZrezbbspsf4J4cYsDHlIeQzu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Srbfwyos; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qp/SqBWx"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-741a845cab2so540765b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 14 May 2025 17:42:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747269746; x=1747874546; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7lXQTySoZYBcx+77niflWXedrq2Xx/F460KNE+k8S/c=;
-        b=qp/SqBWxOXq/Ic61hIJ+Z2ASMpBiyG38ziHJr//11C9+8FIFMYXXoO7jmvjPMvXRtR
-         hxRsMVWXUg2IR9VOz1y0uykkNqKZ1VWP4jx+aEQasvNty/XBTlAIwynyQDhPCk7oN1RX
-         gOc/SCbznUMRZdnWs44UZCpka4oV93npH4tFk6EDep6pqR2KHA5JBhAdajHGySRNlh12
-         3Y62DjsngLvFKV02aRdLdGQTU0jMxKm4Pu210x0AT761Ev6Ad9RhOujCFNA/GvijiZkf
-         hTJCCuCfiK4FMWX1X3b+T8ue9/Ka5n3PCxDahl6t3rr6zmJszNWvzm+GuWF53lYcONj/
-         vICQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747269746; x=1747874546;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7lXQTySoZYBcx+77niflWXedrq2Xx/F460KNE+k8S/c=;
-        b=PZJ6Kq5qC2k1Ta4C+Var/gZgUFJSCc5N1/2cy3mCUe0hpHMcc4ygvkuGd1dfKGs9is
-         gAHEnH3Kl3m4fRxtHDTOwrui/QJ+xBSHm9NRDZ1IVBIgNnEOh4/18eYs9dqB+hO6nqPp
-         Ru3rtjEJrFcyJ5emwQaiL1TZNo4Dv8bsDrN/Xs5np2+5ftOhiT4NyrBhAkfDezy70YDt
-         RIOx8sIq/yG0tHBtSUVBgNWqNaAipbKGwyjYwOoB3Px5keEA7GiVYOkTT2lwEZ5SyQ26
-         1EK8UV0+wwhgHMEm3y5JzQt28CJLkh5eJSA7UygYdTQTD/bVDQotpwMPuPGdNGAhjQ17
-         GLHw==
-X-Forwarded-Encrypted: i=1; AJvYcCW/WVOfdcuFJ6W0SdmMBthTD3BRyKkHbsoeqnVes7yuUrv9CJtF6nl1dJPbdwomtOR9lE0VWtFUUop1X7o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8IOF4O2hWJYUlKkn0UnSCaNOXn6dDYVvHDQQAUzxIj8scsEGj
-	8UmkPX/RE/VbkYvc0hAVWNWKHmmWCBHvKHxNT26U9GRnn4zcLHqr2VGAByI5nKx6qoXk/cqMQB9
-	ueg==
-X-Google-Smtp-Source: AGHT+IGqxLXceYPydbCzXDD6iL7DFmjD1CvfNfOZAnmDRwybRZ8Dhg2v8MOu1RtV/6HVzmq7qJop18AXyQc=
-X-Received: from pfwz36.prod.google.com ([2002:a05:6a00:1da4:b0:736:5ca8:c79a])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1897:b0:736:53f2:87bc
- with SMTP id d2e1a72fcca58-742984f64d9mr965977b3a.13.1747269746181; Wed, 14
- May 2025 17:42:26 -0700 (PDT)
-Date: Wed, 14 May 2025 17:42:24 -0700
-In-Reply-To: <20250324173121.1275209-27-mizhang@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Srbfwyos"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 628DAC4CEE3;
+	Thu, 15 May 2025 00:42:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747269754;
+	bh=Jj9rZa3izoGXcM992ohp3v3M45235wdqTvdJRYPXBm8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Srbfwyos5e2kIDRWuI3DZ/j4W49UbwYtkFzssehg+9B8+Mu3CYSiXwPhGmddd65HU
+	 zLXCaXCkP/hpy0ItDRgYyP81COjgeYSaUo6IeeQzTNnccIZsQFl5PD9xRnP/5roHVs
+	 3ebgLaWqpRtg3uFsqm3Xe5VFchXmMLMwb13VSmHZ1bKc6Mz11RZOxOTCmvBs83Xm1L
+	 0zAmlsVFudy1FiKo+V3rU5ew57rTkLvc8nIL1ZmDDkxmsje2CiYrhK5Bv+a9OHVWiS
+	 O047PGlVUcWXZkZ+UA5WpT6oBIj0ypnFV8Fkzun3uQM7qqPxK4n78HWXPf2aCr7I7E
+	 GX7UQHgs4O5EA==
+Date: Thu, 15 May 2025 09:42:30 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] tracing: ring_buffer: Rewind persistent ring buffer
+ when reboot
+Message-Id: <20250515094230.5c84ca613bd3ebdc9063e13e@kernel.org>
+In-Reply-To: <20250514090050.52db97ed@batman.local.home>
+References: <174709742769.1964496.18203163435305117893.stgit@mhiramat.tok.corp.google.com>
+	<20250513203237.0e7ff662@gandalf.local.home>
+	<20250514150059.6edf09bd72862ca175b64c98@kernel.org>
+	<20250514090050.52db97ed@batman.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-27-mizhang@google.com>
-Message-ID: <aCU4cHtvjwDordxW@google.com>
-Subject: Re: [PATCH v4 26/38] KVM: x86/pmu: Introduce eventsel_hw to prepare
- for pmu event filtering
-From: Sean Christopherson <seanjc@google.com>
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
-	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
-	Nikunj Dadhania <nikunj.dadhania@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 24, 2025, Mingwei Zhang wrote:
-> -	pmu->fixed_ctr_ctrl = pmu->global_ctrl = pmu->global_status = 0;
-> +	pmu->fixed_ctr_ctrl = pmu->fixed_ctr_ctrl_hw = 0;
-> +	pmu->global_ctrl = pmu->global_status = 0;
+On Wed, 14 May 2025 09:00:50 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-VMCS needs to be updated.
+> On Wed, 14 May 2025 15:00:59 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> > > 
+> > > Is that a problem? I'm thinking that the data in the buffer should not be
+> > > used.  
+> > 
+> > Yes, even if we read (dump) the previous boot data, the data is
+> > in the buffer. Thus the kernel rebooted before reusing the buffer
+> > the dumped pages are recovered again. Unless comparing with the
+> > previous dump data, we can not know this data is older boot or not.
+> > Anyway, user can avoid this issue by clearing the trace buffer
+> > explicitly.
+> 
+> What we could do, and I don't think this would be too hard, is once the
+> buffer is empty and it's still LAST_BOOT buffer, we simply clear it in
+> the kernel.
+
+Ah, that sounds good :-D
+
+> 
+> That way after a reboot, a read of trace_pipe that reads the entire
+> buffer will end up resetting the buffer, and I think that will solve
+> this problem.
+> 
+> 
+> 
+> > > +
+> > > +		/* Stop rewind if the page is invalid. */
+> > > +		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
+> > > +		if (ret < 0)
+> > > +			break;
+> > > +
+> > > +		/* Recover the number of entries. */
+> > > +		local_set(&head_page->entries, ret);
+> > > +		if (ret)
+> > > +			local_inc(&cpu_buffer->pages_touched);
+> > > +		entries += ret;
+> > > +		entry_bytes += rb_page_commit(head_page);  
+> > 
+> > If we validate the pages again later (because fixing head_page),
+> > we can skip this part.
+> 
+> The validator takes a bit of time. I would rather not do another loop
+> if we don't have to. If this is duplicate code, lets just make a static
+> inline helper function that does it and use that in both places.
+
+OK, I think we can just restart validating unread part from
+orig_head.
+
+> 
+> > 
+> > > +	}
+> > > +
+> > > +	/* The last rewind page must be skipped. */
+> > > +	if (head_page != orig_head)
+> > > +		rb_inc_page(&head_page);
+> > > +
+> > > +	if (head_page != orig_head) {  
+> > 
+> > Ah, I forgot this part (setup new reader_page)
+> > 
+> > > +		struct buffer_page *bpage = orig_head;
+> > > +
+> > > +		rb_dec_page(&bpage);
+> > > +		/*
+> > > +		 * Move the reader page between the orig_head and the page
+> > > +		 * before it.
+> > > +		 */  
+> > -----
+> > > +		cpu_buffer->reader_page->list.next = &orig_head->list;
+> > > +		cpu_buffer->reader_page->list.prev = orig_head->list.prev;
+> > > +		orig_head->list.prev = &cpu_buffer->reader_page->list;
+> > > +
+> > > +		bpage->list.next = &cpu_buffer->reader_page->list;  
+> > -----
+> > These seems the same as (because head_page->list.prev->next encodes
+> > flags, but we don't read that pointer.);
+> > 
+> > 		list_insert(&orig_head->list, &cpu_buffer->reader_page->list);
+> 
+> I thought about this, but because the pointers are used to encode
+> flags, I try to avoid using the list_*() functions all together on
+> these. Just to remind everyone that these are "special" lists.
+> 
+> I prefer it open coded because that way I can see exactly what it is
+> doing. Note, this is not just assigning pointers, it is also clearing
+> flags in the process.
+
+OK. And I found list_insert() is not in the kernel.
+(tools/firmware/list.h has that)
+
+> 
+> We could add a comment that states something like:
+> 
+> 	/*
+> 	 * This is the same as:
+> 	 *   list_insert(&orig_head->list, &cpu_buffer->read_page->list);
+> 	 * but as it is also clearing flags, its open coded so that
+> 	 * there's no chance that list_insert() gets optimized where
+> 	 * it doesn't do the extra work that this is doing.
+> 	 */
+> 
+> ?
+
+Yeah, anyway I will leave a comment.
+
+Thank you,
+
+> 
+> -- Steve
+> 
+> 
+> > 
+> > > +
+> > > +		/* Make the head_page the new reader page */
+> > > +		cpu_buffer->reader_page = head_page;
+> > > +		bpage = head_page;
+> > > +		rb_inc_page(&head_page);
+> > > +		head_page->list.prev = bpage->list.prev;
+> > > +		rb_dec_page(&bpage);
+> > > +		bpage->list.next = &head_page->list;
+> > > +		rb_set_list_to_head(&bpage->list);
+> > > +
+> > > +		cpu_buffer->head_page = head_page;
+> > > +		meta->head_buffer = (unsigned long)head_page->page;
+> > > +
+> > > +		/* Reset all the indexes */
+> > > +		bpage = cpu_buffer->reader_page;
+> > > +		meta->buffers[0] = rb_meta_subbuf_idx(meta, bpage->page);
+> > > +		bpage->id = 0;
+> > > +
+> > > +		for (i = 0, bpage = head_page; i < meta->nr_subbufs;
+> > > +		     i++, rb_inc_page(&bpage)) {
+> > > +			meta->buffers[i + 1] = rb_meta_subbuf_idx(meta, bpage->page);
+> > > +			bpage->id = i + 1;
+> > > +		}
+> > > +		head_page = orig_head;
+> > > +	}
+> > > +
+> > >  	/* Iterate until finding the commit page */
+> > >  	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_inc_page(&head_page)) {
+> > >  
+> > > @@ -5348,7 +5439,6 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+> > >  	 */
+> > >  	local_set(&cpu_buffer->reader_page->write, 0);
+> > >  	local_set(&cpu_buffer->reader_page->entries, 0);
+> > > -	local_set(&cpu_buffer->reader_page->page->commit, 0);
+> > >  	cpu_buffer->reader_page->real_end = 0;
+> > >  
+> > >   spin:
+> > > @@ -6642,7 +6732,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+> > >  		cpu_buffer->read_bytes += rb_page_size(reader);
+> > >  
+> > >  		/* swap the pages */
+> > > -		rb_init_page(bpage);
+> > > +//		rb_init_page(bpage);
+> > >  		bpage = reader->page;
+> > >  		reader->page = data_page->data;
+> > >  		local_set(&reader->write, 0);  
+> > 
+> > Thank you,
+> > 
+> > 
+> > 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
