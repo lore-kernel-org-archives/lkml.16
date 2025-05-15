@@ -1,39 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A978295DAB
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:50:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89BC1296716;
+	Thu, 15 May 2025 08:50:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747299058; cv=none; b=cBicuWIEtS33o+SvYkKaDEAvB+bCV/f2mVKYauVFWucPeOE8cPMwCmxRX5nCclH07Z3zOdL2OkWhxkazd/pSDQUG/2OeOtum8zecMcvLuF/psdCg1hzPqEBk6wiY2oWpTBZT3VOXC8DVA/m4Lh8P8LfztjbetIAqK1FRG5jXzQU=
+	t=1747299058; cv=none; b=aj7PYzy0mn2CK9GmEPK0/wM7kl0AAEBI0BmGJZ+FAFuzsiPw1iAiI/lhQOqOunmVWo+/RfT4EqDCgPjYgi81AAVyk2uXO3GdUGcHvdKcVHbu9L0k5fkc90MXPtOfoHlzEsK5Ae09qJYEtyxL3KSwu/Fkcfva21YjdenGcUPfe7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747299058; c=relaxed/simple;
-	bh=1aSJRvz1NzAfuE9IZusbcx0KMhRBzDxJwAXKpQYPOvo=;
+	bh=EuYMndLHx2afU5zial+ZwPFgTZFXQV/bl3OOW5QG8AY=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=iSLN5cozDNjF0Uyw16Ffe1dSC5jf5HBR13vyISDbOUyYYYDNZSZAak/lEk7tZmi4unsMDjssqg9yz9EOvJeQvae8bNYYnf31o2gh20c7R3ImipjnFvzAP4DLG32EndMyDnujeeFBqFNY2RNasmqIqu1pt5tlg51v0VaLZTyAsdQ=
+	 Content-Type; b=KzIkeckDMMPJnJEyuUfoJAWTYQdVEwyXToSVRQ6hU5swwJd+PcmDJ0ndq7V1NYiteQABI4d+ltai8TYXzh5PV3FpfBbh+FH3+TeXOqh753cbXC+6vq4br0AVx7c9FlayFLcyU/OaCC49WB0xOT+b6oa7G8gnWy6z8qqANYP4W+o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4314AC4AF0B;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A07AC4CEF0;
 	Thu, 15 May 2025 08:50:58 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uFUJL-00000005XbC-26kZ;
+	id 1uFUJL-00000005Xag-1N8F;
 	Thu, 15 May 2025 04:51:27 -0400
-Message-ID: <20250515085127.349708434@goodmis.org>
+Message-ID: <20250515085127.180937900@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 15 May 2025 04:51:12 -0400
+Date: Thu, 15 May 2025 04:51:11 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Bhupesh <bhupesh@igalia.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
+ netdev <netdev@vger.kernel.org>,
+ Jiri Olsa <olsajiri@gmail.com>,
  Peter Zijlstra <peterz@infradead.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Thomas Gleixner <tglx@linutronix.de>,
- Juri Lelli <juri.lelli@redhat.com>
-Subject: [for-next][PATCH 3/4] tracing/sched: Use __string() instead of fixed lengths for task->comm
+ David Ahern <dsahern@kernel.org>,
+ Juri Lelli <juri.lelli@gmail.com>,
+ Breno Leitao <leitao@debian.org>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+ Gabriele Monaco <gmonaco@redhat.com>,
+ Andrii Nakryiko <andrii@kernel.org>
+Subject: [for-next][PATCH 2/4] tracepoint: Have tracepoints created with DECLARE_TRACE() have _tp
+ suffix
 References: <20250515085109.352233527@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -45,275 +50,463 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The sched_switch and sched_waking events hardcoded the length of the comm
-it recorded because these events were created before the dynamic strings
-were implemented. Unfortunately, several other events copied this method.
+Most tracepoints in the kernel are created with TRACE_EVENT(). The
+TRACE_EVENT() macro (and DECLARE_EVENT_CLASS() and DEFINE_EVENT() where in
+reality, TRACE_EVENT() is just a helper macro that calls those other two
+macros), will create not only a tracepoint (the function trace_<event>()
+used in the kernel), it also exposes the tracepoint to user space along
+with defining what fields will be saved by that tracepoint.
 
-As the size of the comm may change in the future, make the string dynamic.
-The dynamic string requires a 4 byte meta data to hold the size and offset
-of the string. The amount stored in the ring buffer will then be the
-strlen(comm) + 5 (for the \n), and aligned to 4 bytes if there's no other
-strings. This means that a task comm can have up to 10 characters before it
-requires another 4 bytes in the ring buffer. Most tasks are usually less
-than that, so this should not be a problem, and it also allows the name to
-be extended over the TASK_COMM_LEN [1]
+There are a few places that tracepoints are created in the kernel that are
+not exposed to userspace via tracefs. They can only be accessed from code
+within the kernel. These tracepoints are created with DEFINE_TRACE()
 
-Note, sched_switch and the sched_waking trace events still hardcode the
-length, as there is tooling that still requires that. An effort to update
-the tooling will be made to allow this to change in the future.
+Most of these tracepoints end with "_tp". This is useful as when the
+developer sees that, they know that the tracepoint is for in-kernel only
+(meaning it can only be accessed inside the kernel, either directly by the
+kernel or indirectly via modules and BPF programs) and is not exposed to
+user space.
 
-[1] https://lore.kernel.org/all/20250507110444.963779-1-bhupesh@igalia.com/
+Instead of making this only a process to add "_tp", enforce it by making
+the DECLARE_TRACE() append the "_tp" suffix to the tracepoint. This
+requires adding DECLARE_TRACE_EVENT() macros for the TRACE_EVENT() macro
+to use that keeps the original name.
 
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Bhupesh <bhupesh@igalia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/all/20250418083351.20a60e64@gandalf.local.home/
+
+Cc: netdev <netdev@vger.kernel.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Link: https://lore.kernel.org/20250507133458.51bafd95@gandalf.local.home
+Cc: David Ahern <dsahern@kernel.org>
+Cc: Juri Lelli <juri.lelli@gmail.com>
+Cc: Breno Leitao <leitao@debian.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Link: https://lore.kernel.org/20250510163730.092fad5b@gandalf.local.home
+Acked-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/trace/events/sched.h | 94 ++++++++++++++++++------------------
- 1 file changed, 47 insertions(+), 47 deletions(-)
+ Documentation/trace/tracepoints.rst           | 17 ++++++---
+ include/linux/tracepoint.h                    | 38 +++++++++++++------
+ include/trace/bpf_probe.h                     |  8 ++--
+ include/trace/define_trace.h                  | 17 ++++++++-
+ include/trace/events/sched.h                  | 30 +++++++--------
+ include/trace/events/tcp.h                    |  2 +-
+ .../testing/selftests/bpf/progs/raw_tp_null.c |  2 +-
+ .../selftests/bpf/progs/raw_tp_null_fail.c    |  2 +-
+ .../selftests/bpf/progs/test_module_attach.c  |  4 +-
+ .../bpf/progs/test_tp_btf_nullable.c          |  4 +-
+ .../selftests/bpf/test_kmods/bpf_testmod.c    |  8 ++--
+ 11 files changed, 83 insertions(+), 49 deletions(-)
 
+diff --git a/Documentation/trace/tracepoints.rst b/Documentation/trace/tracepoints.rst
+index decabcc77b56..b35c40e3abbe 100644
+--- a/Documentation/trace/tracepoints.rst
++++ b/Documentation/trace/tracepoints.rst
+@@ -71,7 +71,7 @@ In subsys/file.c (where the tracing statement must be added)::
+ 	void somefct(void)
+ 	{
+ 		...
+-		trace_subsys_eventname(arg, task);
++		trace_subsys_eventname_tp(arg, task);
+ 		...
+ 	}
+ 
+@@ -129,12 +129,12 @@ within an if statement with the following::
+ 		for (i = 0; i < count; i++)
+ 			tot += calculate_nuggets();
+ 
+-		trace_foo_bar(tot);
++		trace_foo_bar_tp(tot);
+ 	}
+ 
+-All trace_<tracepoint>() calls have a matching trace_<tracepoint>_enabled()
++All trace_<tracepoint>_tp() calls have a matching trace_<tracepoint>_enabled()
+ function defined that returns true if the tracepoint is enabled and
+-false otherwise. The trace_<tracepoint>() should always be within the
++false otherwise. The trace_<tracepoint>_tp() should always be within the
+ block of the if (trace_<tracepoint>_enabled()) to prevent races between
+ the tracepoint being enabled and the check being seen.
+ 
+@@ -143,7 +143,10 @@ the static_key of the tracepoint to allow the if statement to be implemented
+ with jump labels and avoid conditional branches.
+ 
+ .. note:: The convenience macro TRACE_EVENT provides an alternative way to
+-      define tracepoints. Check http://lwn.net/Articles/379903,
++      define tracepoints. Note, DECLARE_TRACE(foo) creates a function
++      "trace_foo_tp()" whereas TRACE_EVENT(foo) creates a function
++      "trace_foo()", and also exposes the tracepoint as a trace event in
++      /sys/kernel/tracing/events directory.  Check http://lwn.net/Articles/379903,
+       http://lwn.net/Articles/381064 and http://lwn.net/Articles/383362
+       for a series of articles with more details.
+ 
+@@ -159,7 +162,9 @@ In a C file::
+ 
+ 	void do_trace_foo_bar_wrapper(args)
+ 	{
+-		trace_foo_bar(args);
++		trace_foo_bar_tp(args); // for tracepoints created via DECLARE_TRACE
++					//   or
++		trace_foo_bar(args);    // for tracepoints created via TRACE_EVENT
+ 	}
+ 
+ In the header file::
+diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+index a351763e6965..826ce3f8e1f8 100644
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -464,16 +464,30 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ #endif
+ 
+ #define DECLARE_TRACE(name, proto, args)				\
+-	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
++	__DECLARE_TRACE(name##_tp, PARAMS(proto), PARAMS(args),		\
+ 			cpu_online(raw_smp_processor_id()),		\
+ 			PARAMS(void *__data, proto))
+ 
+ #define DECLARE_TRACE_CONDITION(name, proto, args, cond)		\
+-	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
++	__DECLARE_TRACE(name##_tp, PARAMS(proto), PARAMS(args),		\
+ 			cpu_online(raw_smp_processor_id()) && (PARAMS(cond)), \
+ 			PARAMS(void *__data, proto))
+ 
+ #define DECLARE_TRACE_SYSCALL(name, proto, args)			\
++	__DECLARE_TRACE_SYSCALL(name##_tp, PARAMS(proto), PARAMS(args),	\
++				PARAMS(void *__data, proto))
++
++#define DECLARE_TRACE_EVENT(name, proto, args)				\
++	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
++			cpu_online(raw_smp_processor_id()),		\
++			PARAMS(void *__data, proto))
++
++#define DECLARE_TRACE_EVENT_CONDITION(name, proto, args, cond)		\
++	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
++			cpu_online(raw_smp_processor_id()) && (PARAMS(cond)), \
++			PARAMS(void *__data, proto))
++
++#define DECLARE_TRACE_EVENT_SYSCALL(name, proto, args)			\
+ 	__DECLARE_TRACE_SYSCALL(name, PARAMS(proto), PARAMS(args),	\
+ 				PARAMS(void *__data, proto))
+ 
+@@ -591,32 +605,32 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ 
+ #define DECLARE_EVENT_CLASS(name, proto, args, tstruct, assign, print)
+ #define DEFINE_EVENT(template, name, proto, args)		\
+-	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
++	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
+ #define DEFINE_EVENT_FN(template, name, proto, args, reg, unreg)\
+-	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
++	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
+ #define DEFINE_EVENT_PRINT(template, name, proto, args, print)	\
+-	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
++	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
+ #define DEFINE_EVENT_CONDITION(template, name, proto,		\
+ 			       args, cond)			\
+-	DECLARE_TRACE_CONDITION(name, PARAMS(proto),		\
++	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
+ 				PARAMS(args), PARAMS(cond))
+ 
+ #define TRACE_EVENT(name, proto, args, struct, assign, print)	\
+-	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
++	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
+ #define TRACE_EVENT_FN(name, proto, args, struct,		\
+ 		assign, print, reg, unreg)			\
+-	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+-#define TRACE_EVENT_FN_COND(name, proto, args, cond, struct,		\
++	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
++#define TRACE_EVENT_FN_COND(name, proto, args, cond, struct,	\
+ 		assign, print, reg, unreg)			\
+-	DECLARE_TRACE_CONDITION(name, PARAMS(proto),	\
++	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
+ 			PARAMS(args), PARAMS(cond))
+ #define TRACE_EVENT_CONDITION(name, proto, args, cond,		\
+ 			      struct, assign, print)		\
+-	DECLARE_TRACE_CONDITION(name, PARAMS(proto),		\
++	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
+ 				PARAMS(args), PARAMS(cond))
+ #define TRACE_EVENT_SYSCALL(name, proto, args, struct, assign,	\
+ 			    print, reg, unreg)			\
+-	DECLARE_TRACE_SYSCALL(name, PARAMS(proto), PARAMS(args))
++	DECLARE_TRACE_EVENT_SYSCALL(name, PARAMS(proto), PARAMS(args))
+ 
+ #define TRACE_EVENT_FLAGS(event, flag)
+ 
+diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
+index 183fa2aa2935..9391d54d3f12 100644
+--- a/include/trace/bpf_probe.h
++++ b/include/trace/bpf_probe.h
+@@ -119,14 +119,14 @@ static inline void bpf_test_buffer_##call(void)				\
+ 
+ #undef DECLARE_TRACE
+ #define DECLARE_TRACE(call, proto, args)				\
+-	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args))		\
+-	__DEFINE_EVENT(call, call, PARAMS(proto), PARAMS(args), 0)
++	__BPF_DECLARE_TRACE(call##_tp, PARAMS(proto), PARAMS(args))		\
++	__DEFINE_EVENT(call##_tp, call##_tp, PARAMS(proto), PARAMS(args), 0)
+ 
+ #undef DECLARE_TRACE_WRITABLE
+ #define DECLARE_TRACE_WRITABLE(call, proto, args, size) \
+ 	__CHECK_WRITABLE_BUF_SIZE(call, PARAMS(proto), PARAMS(args), size) \
+-	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args)) \
+-	__DEFINE_EVENT(call, call, PARAMS(proto), PARAMS(args), size)
++	__BPF_DECLARE_TRACE(call##_tp, PARAMS(proto), PARAMS(args)) \
++	__DEFINE_EVENT(call##_tp, call##_tp, PARAMS(proto), PARAMS(args), size)
+ 
+ #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
+ 
+diff --git a/include/trace/define_trace.h b/include/trace/define_trace.h
+index ed52d0506c69..b2ba5a80583f 100644
+--- a/include/trace/define_trace.h
++++ b/include/trace/define_trace.h
+@@ -74,10 +74,18 @@
+ 
+ #undef DECLARE_TRACE
+ #define DECLARE_TRACE(name, proto, args)	\
+-	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
++	DEFINE_TRACE(name##_tp, PARAMS(proto), PARAMS(args))
+ 
+ #undef DECLARE_TRACE_CONDITION
+ #define DECLARE_TRACE_CONDITION(name, proto, args, cond)	\
++	DEFINE_TRACE(name##_tp, PARAMS(proto), PARAMS(args))
++
++#undef DECLARE_TRACE_EVENT
++#define DECLARE_TRACE_EVENT(name, proto, args)	\
++	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
++
++#undef DECLARE_TRACE_EVENT_CONDITION
++#define DECLARE_TRACE_EVENT_CONDITION(name, proto, args, cond)	\
+ 	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
+ 
+ /* If requested, create helpers for calling these tracepoints from Rust. */
+@@ -115,6 +123,11 @@
+ #undef DECLARE_TRACE_CONDITION
+ #define DECLARE_TRACE_CONDITION(name, proto, args, cond)
+ 
++#undef DECLARE_TRACE_EVENT
++#define DECLARE_TRACE_EVENT(name, proto, args)
++#undef DECLARE_TRACE_EVENT_CONDITION
++#define DECLARE_TRACE_EVENT_CONDITION(name, proto, args, cond)
++
+ #ifdef TRACEPOINTS_ENABLED
+ #include <trace/trace_events.h>
+ #include <trace/perf.h>
+@@ -136,6 +149,8 @@
+ #undef TRACE_HEADER_MULTI_READ
+ #undef DECLARE_TRACE
+ #undef DECLARE_TRACE_CONDITION
++#undef DECLARE_TRACE_EVENT
++#undef DECLARE_TRACE_EVENT_CONDITION
+ 
+ /* Only undef what we defined in this file */
+ #ifdef UNDEF_TRACE_INCLUDE_FILE
 diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 152fc8b37aa5..fadc7592372b 100644
+index 8994e97d86c1..152fc8b37aa5 100644
 --- a/include/trace/events/sched.h
 +++ b/include/trace/events/sched.h
-@@ -20,16 +20,16 @@ TRACE_EVENT(sched_kthread_stop,
- 	TP_ARGS(t),
+@@ -773,64 +773,64 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
+  *
+  * Postfixed with _tp to make them easily identifiable in the code.
+  */
+-DECLARE_TRACE(pelt_cfs_tp,
++DECLARE_TRACE(pelt_cfs,
+ 	TP_PROTO(struct cfs_rq *cfs_rq),
+ 	TP_ARGS(cfs_rq));
  
- 	TP_STRUCT__entry(
--		__array(	char,	comm,	TASK_COMM_LEN	)
--		__field(	pid_t,	pid			)
-+		__string(	comm,	t->comm		)
-+		__field(	pid_t,	pid		)
- 	),
+-DECLARE_TRACE(pelt_rt_tp,
++DECLARE_TRACE(pelt_rt,
+ 	TP_PROTO(struct rq *rq),
+ 	TP_ARGS(rq));
  
- 	TP_fast_assign(
--		memcpy(__entry->comm, t->comm, TASK_COMM_LEN);
-+		__assign_str(comm);
- 		__entry->pid	= t->pid;
- 	),
+-DECLARE_TRACE(pelt_dl_tp,
++DECLARE_TRACE(pelt_dl,
+ 	TP_PROTO(struct rq *rq),
+ 	TP_ARGS(rq));
  
--	TP_printk("comm=%s pid=%d", __entry->comm, __entry->pid)
-+	TP_printk("comm=%s pid=%d", __get_str(comm), __entry->pid)
+-DECLARE_TRACE(pelt_hw_tp,
++DECLARE_TRACE(pelt_hw,
+ 	TP_PROTO(struct rq *rq),
+ 	TP_ARGS(rq));
+ 
+-DECLARE_TRACE(pelt_irq_tp,
++DECLARE_TRACE(pelt_irq,
+ 	TP_PROTO(struct rq *rq),
+ 	TP_ARGS(rq));
+ 
+-DECLARE_TRACE(pelt_se_tp,
++DECLARE_TRACE(pelt_se,
+ 	TP_PROTO(struct sched_entity *se),
+ 	TP_ARGS(se));
+ 
+-DECLARE_TRACE(sched_cpu_capacity_tp,
++DECLARE_TRACE(sched_cpu_capacity,
+ 	TP_PROTO(struct rq *rq),
+ 	TP_ARGS(rq));
+ 
+-DECLARE_TRACE(sched_overutilized_tp,
++DECLARE_TRACE(sched_overutilized,
+ 	TP_PROTO(struct root_domain *rd, bool overutilized),
+ 	TP_ARGS(rd, overutilized));
+ 
+-DECLARE_TRACE(sched_util_est_cfs_tp,
++DECLARE_TRACE(sched_util_est_cfs,
+ 	TP_PROTO(struct cfs_rq *cfs_rq),
+ 	TP_ARGS(cfs_rq));
+ 
+-DECLARE_TRACE(sched_util_est_se_tp,
++DECLARE_TRACE(sched_util_est_se,
+ 	TP_PROTO(struct sched_entity *se),
+ 	TP_ARGS(se));
+ 
+-DECLARE_TRACE(sched_update_nr_running_tp,
++DECLARE_TRACE(sched_update_nr_running,
+ 	TP_PROTO(struct rq *rq, int change),
+ 	TP_ARGS(rq, change));
+ 
+-DECLARE_TRACE(sched_compute_energy_tp,
++DECLARE_TRACE(sched_compute_energy,
+ 	TP_PROTO(struct task_struct *p, int dst_cpu, unsigned long energy,
+ 		 unsigned long max_util, unsigned long busy_time),
+ 	TP_ARGS(p, dst_cpu, energy, max_util, busy_time));
+ 
+-DECLARE_TRACE(sched_entry_tp,
++DECLARE_TRACE(sched_entry,
+ 	TP_PROTO(bool preempt, unsigned long ip),
+ 	TP_ARGS(preempt, ip));
+ 
+-DECLARE_TRACE(sched_exit_tp,
++DECLARE_TRACE(sched_exit,
+ 	TP_PROTO(bool is_switch, unsigned long ip),
+ 	TP_ARGS(is_switch, ip));
+ 
+-DECLARE_TRACE_CONDITION(sched_set_state_tp,
++DECLARE_TRACE_CONDITION(sched_set_state,
+ 	TP_PROTO(struct task_struct *tsk, int state),
+ 	TP_ARGS(tsk, state),
+ 	TP_CONDITION(!!(tsk->__state) != !!state));
+diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+index 1a40c41ff8c3..4f9fa1b5b89b 100644
+--- a/include/trace/events/tcp.h
++++ b/include/trace/events/tcp.h
+@@ -259,7 +259,7 @@ TRACE_EVENT(tcp_retransmit_synack,
+ 		  __entry->saddr_v6, __entry->daddr_v6)
  );
  
- /*
-@@ -276,15 +276,15 @@ TRACE_EVENT(sched_migrate_task,
- 	TP_ARGS(p, dest_cpu),
+-DECLARE_TRACE(tcp_cwnd_reduction_tp,
++DECLARE_TRACE(tcp_cwnd_reduction,
+ 	TP_PROTO(const struct sock *sk, int newly_acked_sacked,
+ 		 int newly_lost, int flag),
+ 	TP_ARGS(sk, newly_acked_sacked, newly_lost, flag)
+diff --git a/tools/testing/selftests/bpf/progs/raw_tp_null.c b/tools/testing/selftests/bpf/progs/raw_tp_null.c
+index 5927054b6dd9..efa416f53968 100644
+--- a/tools/testing/selftests/bpf/progs/raw_tp_null.c
++++ b/tools/testing/selftests/bpf/progs/raw_tp_null.c
+@@ -10,7 +10,7 @@ char _license[] SEC("license") = "GPL";
+ int tid;
+ int i;
  
- 	TP_STRUCT__entry(
--		__array(	char,	comm,	TASK_COMM_LEN	)
--		__field(	pid_t,	pid			)
--		__field(	int,	prio			)
--		__field(	int,	orig_cpu		)
--		__field(	int,	dest_cpu		)
-+		__string(	comm,	p->comm		)
-+		__field(	pid_t,	pid		)
-+		__field(	int,	prio		)
-+		__field(	int,	orig_cpu	)
-+		__field(	int,	dest_cpu	)
- 	),
+-SEC("tp_btf/bpf_testmod_test_raw_tp_null")
++SEC("tp_btf/bpf_testmod_test_raw_tp_null_tp")
+ int BPF_PROG(test_raw_tp_null, struct sk_buff *skb)
+ {
+ 	struct task_struct *task = bpf_get_current_task_btf();
+diff --git a/tools/testing/selftests/bpf/progs/raw_tp_null_fail.c b/tools/testing/selftests/bpf/progs/raw_tp_null_fail.c
+index 38d669957bf1..0d58114a4955 100644
+--- a/tools/testing/selftests/bpf/progs/raw_tp_null_fail.c
++++ b/tools/testing/selftests/bpf/progs/raw_tp_null_fail.c
+@@ -8,7 +8,7 @@
+ char _license[] SEC("license") = "GPL";
  
- 	TP_fast_assign(
--		memcpy(__entry->comm, p->comm, TASK_COMM_LEN);
-+		__assign_str(comm);
- 		__entry->pid		= p->pid;
- 		__entry->prio		= p->prio; /* XXX SCHED_DEADLINE */
- 		__entry->orig_cpu	= task_cpu(p);
-@@ -292,7 +292,7 @@ TRACE_EVENT(sched_migrate_task,
- 	),
+ /* Ensure module parameter has PTR_MAYBE_NULL */
+-SEC("tp_btf/bpf_testmod_test_raw_tp_null")
++SEC("tp_btf/bpf_testmod_test_raw_tp_null_tp")
+ __failure __msg("R1 invalid mem access 'trusted_ptr_or_null_'")
+ int test_raw_tp_null_bpf_testmod_test_raw_tp_null_arg_1(void *ctx) {
+     asm volatile("r1 = *(u64 *)(r1 +0); r1 = *(u64 *)(r1 +0);" ::: __clobber_all);
+diff --git a/tools/testing/selftests/bpf/progs/test_module_attach.c b/tools/testing/selftests/bpf/progs/test_module_attach.c
+index 7f3c233943b3..03d7f89787a1 100644
+--- a/tools/testing/selftests/bpf/progs/test_module_attach.c
++++ b/tools/testing/selftests/bpf/progs/test_module_attach.c
+@@ -19,7 +19,7 @@ int BPF_PROG(handle_raw_tp,
  
- 	TP_printk("comm=%s pid=%d prio=%d orig_cpu=%d dest_cpu=%d",
--		  __entry->comm, __entry->pid, __entry->prio,
-+		  __get_str(comm), __entry->pid, __entry->prio,
- 		  __entry->orig_cpu, __entry->dest_cpu)
- );
+ __u32 raw_tp_bare_write_sz = 0;
  
-@@ -303,19 +303,19 @@ DECLARE_EVENT_CLASS(sched_process_template,
- 	TP_ARGS(p),
+-SEC("raw_tp/bpf_testmod_test_write_bare")
++SEC("raw_tp/bpf_testmod_test_write_bare_tp")
+ int BPF_PROG(handle_raw_tp_bare,
+ 	     struct task_struct *task, struct bpf_testmod_test_write_ctx *write_ctx)
+ {
+@@ -31,7 +31,7 @@ int raw_tp_writable_bare_in_val = 0;
+ int raw_tp_writable_bare_early_ret = 0;
+ int raw_tp_writable_bare_out_val = 0;
  
- 	TP_STRUCT__entry(
--		__array(	char,	comm,	TASK_COMM_LEN	)
--		__field(	pid_t,	pid			)
--		__field(	int,	prio			)
-+		__string(	comm,	p->comm		)
-+		__field(	pid_t,	pid		)
-+		__field(	int,	prio		)
- 	),
+-SEC("raw_tp.w/bpf_testmod_test_writable_bare")
++SEC("raw_tp.w/bpf_testmod_test_writable_bare_tp")
+ int BPF_PROG(handle_raw_tp_writable_bare,
+ 	     struct bpf_testmod_test_writable_ctx *writable)
+ {
+diff --git a/tools/testing/selftests/bpf/progs/test_tp_btf_nullable.c b/tools/testing/selftests/bpf/progs/test_tp_btf_nullable.c
+index 39ff06f2c834..cf0547a613ff 100644
+--- a/tools/testing/selftests/bpf/progs/test_tp_btf_nullable.c
++++ b/tools/testing/selftests/bpf/progs/test_tp_btf_nullable.c
+@@ -6,14 +6,14 @@
+ #include "../test_kmods/bpf_testmod.h"
+ #include "bpf_misc.h"
  
- 	TP_fast_assign(
--		memcpy(__entry->comm, p->comm, TASK_COMM_LEN);
-+		__assign_str(comm);
- 		__entry->pid		= p->pid;
- 		__entry->prio		= p->prio; /* XXX SCHED_DEADLINE */
- 	),
+-SEC("tp_btf/bpf_testmod_test_nullable_bare")
++SEC("tp_btf/bpf_testmod_test_nullable_bare_tp")
+ __failure __msg("R1 invalid mem access 'trusted_ptr_or_null_'")
+ int BPF_PROG(handle_tp_btf_nullable_bare1, struct bpf_testmod_test_read_ctx *nullable_ctx)
+ {
+ 	return nullable_ctx->len;
+ }
  
- 	TP_printk("comm=%s pid=%d prio=%d",
--		  __entry->comm, __entry->pid, __entry->prio)
-+		  __get_str(comm), __entry->pid, __entry->prio)
- );
+-SEC("tp_btf/bpf_testmod_test_nullable_bare")
++SEC("tp_btf/bpf_testmod_test_nullable_bare_tp")
+ int BPF_PROG(handle_tp_btf_nullable_bare2, struct bpf_testmod_test_read_ctx *nullable_ctx)
+ {
+ 	if (nullable_ctx)
+diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+index 3220f1d28697..18eded4d1d15 100644
+--- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
++++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
+@@ -413,7 +413,7 @@ bpf_testmod_test_read(struct file *file, struct kobject *kobj,
  
- /*
-@@ -349,19 +349,19 @@ TRACE_EVENT(sched_process_wait,
- 	TP_ARGS(pid),
+ 	(void)bpf_testmod_test_arg_ptr_to_struct(&struct_arg1_2);
  
- 	TP_STRUCT__entry(
--		__array(	char,	comm,	TASK_COMM_LEN	)
-+		__string(	comm,	current->comm		)
- 		__field(	pid_t,	pid			)
- 		__field(	int,	prio			)
- 	),
+-	(void)trace_bpf_testmod_test_raw_tp_null(NULL);
++	(void)trace_bpf_testmod_test_raw_tp_null_tp(NULL);
  
- 	TP_fast_assign(
--		memcpy(__entry->comm, current->comm, TASK_COMM_LEN);
-+		__assign_str(comm);
- 		__entry->pid		= pid_nr(pid);
- 		__entry->prio		= current->prio; /* XXX SCHED_DEADLINE */
- 	),
+ 	bpf_testmod_test_struct_ops3();
  
- 	TP_printk("comm=%s pid=%d prio=%d",
--		  __entry->comm, __entry->pid, __entry->prio)
-+		  __get_str(comm), __entry->pid, __entry->prio)
- );
+@@ -431,14 +431,14 @@ bpf_testmod_test_read(struct file *file, struct kobject *kobj,
+ 	if (bpf_testmod_loop_test(101) > 100)
+ 		trace_bpf_testmod_test_read(current, &ctx);
  
- /*
-@@ -374,22 +374,22 @@ TRACE_EVENT(sched_process_fork,
- 	TP_ARGS(parent, child),
+-	trace_bpf_testmod_test_nullable_bare(NULL);
++	trace_bpf_testmod_test_nullable_bare_tp(NULL);
  
- 	TP_STRUCT__entry(
--		__array(	char,	parent_comm,	TASK_COMM_LEN	)
--		__field(	pid_t,	parent_pid			)
--		__array(	char,	child_comm,	TASK_COMM_LEN	)
--		__field(	pid_t,	child_pid			)
-+		__string(	parent_comm,	parent->comm	)
-+		__field(	pid_t,		parent_pid	)
-+		__string(	child_comm,	child->comm	)
-+		__field(	pid_t,		child_pid	)
- 	),
+ 	/* Magic number to enable writable tp */
+ 	if (len == 64) {
+ 		struct bpf_testmod_test_writable_ctx writable = {
+ 			.val = 1024,
+ 		};
+-		trace_bpf_testmod_test_writable_bare(&writable);
++		trace_bpf_testmod_test_writable_bare_tp(&writable);
+ 		if (writable.early_ret)
+ 			return snprintf(buf, len, "%d\n", writable.val);
+ 	}
+@@ -470,7 +470,7 @@ bpf_testmod_test_write(struct file *file, struct kobject *kobj,
+ 		.len = len,
+ 	};
  
- 	TP_fast_assign(
--		memcpy(__entry->parent_comm, parent->comm, TASK_COMM_LEN);
-+		__assign_str(parent_comm);
- 		__entry->parent_pid	= parent->pid;
--		memcpy(__entry->child_comm, child->comm, TASK_COMM_LEN);
-+		__assign_str(child_comm);
- 		__entry->child_pid	= child->pid;
- 	),
+-	trace_bpf_testmod_test_write_bare(current, &ctx);
++	trace_bpf_testmod_test_write_bare_tp(current, &ctx);
  
- 	TP_printk("comm=%s pid=%d child_comm=%s child_pid=%d",
--		__entry->parent_comm, __entry->parent_pid,
--		__entry->child_comm, __entry->child_pid)
-+		__get_str(parent_comm), __entry->parent_pid,
-+		__get_str(child_comm), __entry->child_pid)
- );
- 
- /*
-@@ -473,19 +473,19 @@ DECLARE_EVENT_CLASS_SCHEDSTAT(sched_stat_template,
- 	TP_ARGS(__perf_task(tsk), __perf_count(delay)),
- 
- 	TP_STRUCT__entry(
--		__array( char,	comm,	TASK_COMM_LEN	)
--		__field( pid_t,	pid			)
--		__field( u64,	delay			)
-+		__string( comm,	tsk->comm	)
-+		__field(  pid_t,	pid	)
-+		__field(  u64,		delay	)
- 	),
- 
- 	TP_fast_assign(
--		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
-+		__assign_str(comm);
- 		__entry->pid	= tsk->pid;
- 		__entry->delay	= delay;
- 	),
- 
- 	TP_printk("comm=%s pid=%d delay=%Lu [ns]",
--			__entry->comm, __entry->pid,
-+			__get_str(comm), __entry->pid,
- 			(unsigned long long)__entry->delay)
- );
- 
-@@ -531,19 +531,19 @@ DECLARE_EVENT_CLASS(sched_stat_runtime,
- 	TP_ARGS(tsk, __perf_count(runtime)),
- 
- 	TP_STRUCT__entry(
--		__array( char,	comm,	TASK_COMM_LEN	)
--		__field( pid_t,	pid			)
--		__field( u64,	runtime			)
-+		__string( comm,		tsk->comm	)
-+		__field(  pid_t,	pid		)
-+		__field(  u64,		runtime		)
- 	),
- 
- 	TP_fast_assign(
--		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
-+		__assign_str(comm);
- 		__entry->pid		= tsk->pid;
- 		__entry->runtime	= runtime;
- 	),
- 
- 	TP_printk("comm=%s pid=%d runtime=%Lu [ns]",
--			__entry->comm, __entry->pid,
-+			__get_str(comm), __entry->pid,
- 			(unsigned long long)__entry->runtime)
- );
- 
-@@ -562,14 +562,14 @@ TRACE_EVENT(sched_pi_setprio,
- 	TP_ARGS(tsk, pi_task),
- 
- 	TP_STRUCT__entry(
--		__array( char,	comm,	TASK_COMM_LEN	)
--		__field( pid_t,	pid			)
--		__field( int,	oldprio			)
--		__field( int,	newprio			)
-+		__string( comm,		tsk->comm	)
-+		__field(  pid_t,	pid		)
-+		__field(  int,		oldprio		)
-+		__field(  int,		newprio		)
- 	),
- 
- 	TP_fast_assign(
--		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
-+		__assign_str(comm);
- 		__entry->pid		= tsk->pid;
- 		__entry->oldprio	= tsk->prio;
- 		__entry->newprio	= pi_task ?
-@@ -579,7 +579,7 @@ TRACE_EVENT(sched_pi_setprio,
- 	),
- 
- 	TP_printk("comm=%s pid=%d oldprio=%d newprio=%d",
--			__entry->comm, __entry->pid,
-+			__get_str(comm), __entry->pid,
- 			__entry->oldprio, __entry->newprio)
- );
- 
-@@ -589,16 +589,16 @@ TRACE_EVENT(sched_process_hang,
- 	TP_ARGS(tsk),
- 
- 	TP_STRUCT__entry(
--		__array( char,	comm,	TASK_COMM_LEN	)
--		__field( pid_t,	pid			)
-+		__string( comm,		tsk->comm	)
-+		__field(  pid_t,	pid		)
- 	),
- 
- 	TP_fast_assign(
--		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
-+		__assign_str(comm);
- 		__entry->pid = tsk->pid;
- 	),
- 
--	TP_printk("comm=%s pid=%d", __entry->comm, __entry->pid)
-+	TP_printk("comm=%s pid=%d", __get_str(comm), __entry->pid)
- );
- #endif /* CONFIG_DETECT_HUNG_TASK */
- 
+ 	return -EIO; /* always fail */
+ }
 -- 
 2.47.2
 
