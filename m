@@ -1,123 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFBC289E2B;
-	Thu, 15 May 2025 09:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D62028AB11;
+	Thu, 15 May 2025 09:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747300977; cv=none; b=b70T36wHO6at0159ZG820/Xz1+uPPXH1i4fL+cfYy/uDNVJn4r23d4wssYjSTsD6+LMjhdnKW6vRcWtrUq1hnGJQMoy2EntG7snX9HgI4iovaWaTtKinlS9pJ/6qWvObHG89BiAVplGQW6kpQsfPm1x//HpczzJCov00T4pSm8I=
+	t=1747301004; cv=none; b=rW/U6gvQogRgnY6peb9erSCXau9A2lne2++wq7kQHEliIWsL5lBeBGc/b0y5DUTKbUdDt6JlRFxbsVznmUxLCn6bOrULjaXx2bYRs3jUfnZ0VFqNvbrkSKBlKJ7ErihRfzPMdf3/kJeIh0egfqAI6mcKnDJwcw+SiSFZ9JGEbnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747300977; c=relaxed/simple;
-	bh=/XyyqdAFLfTvtOdOvYOEoJsJo0ZYtebZv7lzp117MMc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cwPGCPkbvWBm/Y5I8i+XRKMX//OTsZcg6itFfopvSV5QHIqvELLTIMrSAPe6lWLEUX0vVgyOmKNZ1qdwGDHpvw8KITbUlEwVK4TogeKqrnq31W5s5Oeck5/n4S9YRpHDq+tkfdXWJM8LflwmGHqmSFqpuU/OFp8BHSbGirxh6+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vCUpFO0e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747301004; c=relaxed/simple;
+	bh=btmW+zkcYyC6oGW8tMaCdxp7dary/VfHMiho7JQVNZQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jvrEnR8cWgSMHpVj+Psgu66rkc9EgonYobu3x0YnVNp0hl5oVX8I52NmMG3cOMZDFYbeBkyoXcGefTceiENkGJXHoiBMLhuQ8+t+jQra+gAzAmYsdE704dnNQZAzhPzdrtOWaqa9BMbDQiSo+hqa1ofB0zH2ENwLYZ/7tJKM0hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dQ3KVbEF; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vCUpFO0e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D210FC4CEE7;
-	Thu, 15 May 2025 09:22:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747300975;
-	bh=/XyyqdAFLfTvtOdOvYOEoJsJo0ZYtebZv7lzp117MMc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vCUpFO0eiIjGdw2hwNIPSSFvC/uEEfkQJOSf59VgMbLwO1KrXvu4mxn8XCEFAZ7Ar
-	 +czvu6eBWzzP75vIKtFwdPXoGDI6llAjQI7SQ7D/Dj33j9++KihkhMVdsdSVJMXfn4
-	 zIDyQNdB1O+P/kuJiUMndXDEidK5gNOyYRrgtqGqD5Yz/ZLeizaARnCrdq6SzLHP4J
-	 2fGdl7w70LA34d6h4Zp2NyHz9w7quPzdGHpWfjsDjtaCvdqFKVszOwPnL1YrK+uhFL
-	 P66NQilQG4sq3vBfbsciXZCTA+AmEiIn4XOyyWKkW6ISF7uiArNLMGVkAw9vXDILNv
-	 3qIGrIf3nY+IQ==
-Date: Thu, 15 May 2025 11:22:50 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	PDx86 ML <platform-driver-x86@vger.kernel.org>,
-	Suma Hegde <suma.hegde@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mark Gross <markgross@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: linux-next: build failure after merge of the drivers-x86 tree
-Message-ID: <aCWyatvDQEG5l6NV@gmail.com>
-References: <20250515164620.071d70e3@canb.auug.org.au>
- <bce51c8f-56c2-3a44-b590-149627398b7a@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dQ3KVbEF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747301003; x=1778837003;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=btmW+zkcYyC6oGW8tMaCdxp7dary/VfHMiho7JQVNZQ=;
+  b=dQ3KVbEFtyr9AkdVhl6YxpKlARWlB30yA2/K7V0IjpyXSyc94rfcypQE
+   mebadqIUEYFMkNurwXpB3u5PXTziEbifYdrmm9H/iR+Xv9Pcujw8vq1Rc
+   y6B85AtXA4YTUzx5luqlY/8dtYRggRlX1B4QsdmuzC9FkNwQSrkMrtHJy
+   Is5QwUzKg04xWzPP8It6SqrQ6GqEvk11Je3BQNM28Tz4dW5vCQOE2BVRy
+   k4s6SatOzNgGxKM7JrDGE55E0qQi9Tn7ywaDD2JkU5RHvCf5XmVcOftSO
+   Dfgt2uWxuQnpsuzY5HS1sZV5NXG2LSOzc/2MuvpQDSUDpVip4eIlzmHn+
+   A==;
+X-CSE-ConnectionGUID: AwlH46NgTZSF1FqR/5HhYw==
+X-CSE-MsgGUID: umWKg5akRI29/Ji+yQ0V2Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="60628645"
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="60628645"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 02:23:22 -0700
+X-CSE-ConnectionGUID: cvEmsxZtTkKupDat3bkVdg==
+X-CSE-MsgGUID: YD2vX8q/TtarDO2hxI4MHA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
+   d="scan'208";a="138722709"
+Received: from sbockowx-mobl2.ger.corp.intel.com (HELO [10.94.8.84]) ([10.94.8.84])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 02:23:19 -0700
+Message-ID: <86cdafd1-f77c-4c15-9777-0197e91cf0a5@linux.intel.com>
+Date: Thu, 15 May 2025 11:23:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bce51c8f-56c2-3a44-b590-149627398b7a@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ASoC: Intel: avs: nau8825: Add null pointer check for
+ snd_soc_card_get_codec_dai()
+To: Wentao Liang <vulab@iscas.ac.cn>, cezary.rojewski@intel.com,
+ liam.r.girdwood@linux.intel.com, peter.ujfalusi@linux.intel.com,
+ yung-chuan.liao@linux.intel.com, ranjani.sridharan@linux.intel.com,
+ kai.vehmanen@linux.intel.com, pierre-louis.bossart@linux.dev,
+ broonie@kernel.org, perex@perex.cz, tiwai@suse.com
+Cc: kuninori.morimoto.gx@renesas.com, linux-sound@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250514140433.862-1-vulab@iscas.ac.cn>
+Content-Language: en-US
+From: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
+ <amadeuszx.slawinski@linux.intel.com>
+In-Reply-To: <20250514140433.862-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-* Ilpo Järvinen <ilpo.jarvinen@linux.intel.com> wrote:
 
-> On Thu, 15 May 2025, Stephen Rothwell wrote:
+On 2025-05-14 16:04, Wentao Liang wrote:
+> The function avs_card_suspend_pre() in nau8825 calls the function
+> snd_soc_card_get_codec_dai(), but does not check its return
+> value which is a null pointer if the function fails. This can result
+> in a null pointer dereference. A proper implementation can be found
+> in acp5x_nau8821_hw_params() and card_suspend_pre().
 > 
-> > Hi all,
-> > 
-> > After merging the drivers-x86 tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:
-> > 
-> > drivers/platform/x86/amd/hsmp/hwmon.c: In function 'hsmp_hwmon_write':
-> > drivers/platform/x86/amd/hsmp/hwmon.c:38:16: error: implicit declaration of function 'hsmp_send_message' [-Wimplicit-function-declaration]
-> >    38 |         return hsmp_send_message(&msg);
-> >       |                ^~~~~~~~~~~~~~~~~
-> > 
-> > Caused by commit
-> > 
-> >   92c025db52bb ("platform/x86/amd/hsmp: Report power via hwmon sensors")
-> > 
-> > I have used the drivers-x86 tree from next-20250514 for today.
+> Add a null pointer check for snd_soc_card_get_codec_dai() to avoid null
+> pointer dereference when the function fails.
 > 
-> Hi Stephen,
+> Fixes: 9febcd7a0180 ("ASoC: Intel: avs: nau8825: Refactor jack handling")
+> Cc: stable@vger.kernel.org # v6.2
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+>   sound/soc/intel/avs/boards/nau8825.c | 5 +++++
+>   1 file changed, 5 insertions(+)
 > 
-> This is a direct result of moving a pdx86 related header behind my back:
-> 
-> https://lore.kernel.org/all/20250413084144.3746608-5-mingo@kernel.org/
-> 
-> That change wasn't sent to the relevant MAINTAINERS entries (and obviously 
-> then does not contain my ack either).
+> diff --git a/sound/soc/intel/avs/boards/nau8825.c b/sound/soc/intel/avs/boards/nau8825.c
+> index bf902540744c..5baeb95cd5a6 100644
+> --- a/sound/soc/intel/avs/boards/nau8825.c
+> +++ b/sound/soc/intel/avs/boards/nau8825.c
+> @@ -220,6 +220,11 @@ static int avs_card_suspend_pre(struct snd_soc_card *card)
+>   {
+>   	struct snd_soc_dai *codec_dai = snd_soc_card_get_codec_dai(card, SKL_NUVOTON_CODEC_DAI);
+>   
+> +	if (!codec_dai) {
+> +		dev_err(card->dev, "Codec dai not found\n");
+> +		return -EINVAL;
+> +	}
+> +
+>   	return snd_soc_component_set_jack(codec_dai->component, NULL, NULL);
+>   }
+>   
 
-Sorry about that! I always try to over- Cc:, but missed you this time.
+Same as in other case, where Cezary commented - this is not needed, once 
+card is loaded codec should exist.
 
-> Ingo, any suggestion how to deal with this breakage? Do you have e.g. 
-> an IB which I could pull into pdx86 tree which has only these header 
-> moves?
-
-I'm not sure that's needed, the above build failure is not really a 
-build failure caused by the platform-drivers-x86.git tree, it is a 
-semantic merge conflict that should be resolved at the linux-next level 
-I think. (And which conflict should be mentioned to Linus by whoever 
-sends their tree second.)
-
-Stephen, could you apply the patch below perhaps?
-
-If not then I'll add back an <asm/amd_hsmp.h> wrapper to the x86 tree.
-
-Thanks,
-
-	Ingo
-
-================>
- drivers/platform/x86/amd/hsmp/hwmon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/amd/hsmp/hwmon.c b/drivers/platform/x86/amd/hsmp/hwmon.c
-index 7ffb61e0ef62..0cc9a742497f 100644
---- a/drivers/platform/x86/amd/hsmp/hwmon.c
-+++ b/drivers/platform/x86/amd/hsmp/hwmon.c
-@@ -7,7 +7,7 @@
-  * This file provides hwmon implementation for HSMP interface.
-  */
- 
--#include <asm/amd_hsmp.h>
-+#include <asm/amd/hsmp.h>
- 
- #include <linux/device.h>
- #include <linux/err.h>
