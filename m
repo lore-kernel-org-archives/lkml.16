@@ -1,150 +1,129 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37922586C7
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3528B244679;
+	Thu, 15 May 2025 17:52:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747331499; cv=none; b=ZqjmCLR/wBUONRY6WLW/PIhVUGqE+8rS/X8nIR1MD9WogPnFfCj/aYWh6ahMp6Rdqs8l3q4ImNV7g5Qx4EZYls8Di0xthI0f24aY2ORi1nerxGGYHlEXXF8G+SxoVAkryaWsxT7D3x9tfdsHrZ9jPRnr7cifgY+34u9FcpnmeIY=
+	t=1747331536; cv=none; b=MDOpgTdf549sgRqatMQWantd1LKjN8qBp5Cx/MdCOfSqre8s9L4XaeflIVlVz8TaPm5/KojqfL5enApxco++zo7fA6ZI8tXO+oWxmIHVsDfQP+5wLuPTZ1uR31BqPWa7HpA3wS1kAenF8RETsS6bPgT6qW2uSs5tcJ26r1qffyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747331499; c=relaxed/simple;
-	bh=3dzTsmHfTdzI26tCQQiLWGKJXhohdOyMVUIj8nA8fWI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vCXvT6TUtyxhrokOg+6pHl8NtGGwLL4oEe50aDTK8OxCLnhggMn+mQdt2gNBjC+noJIZS2fzUSF/9K1aYtLQd6G2hsKlIqirWomttWgiZs+KIJb8rwdNsPghWidUcJjnQPU7sualkBMzLMsHqLkov1ZnbviddkR1FEh2nJhksao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XlQ2rUfV; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747331536; c=relaxed/simple;
+	bh=m/TOlmyn+s2/Ige0FOwKesnagDQC/gXqCDf28q5+pLo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dYq3HBFLuyqHg4Dh7z/j87lNhnayit6mjHw8vk8chx2Cd+lsW7Sx6rkrYO5EiPPfelf9bxYKUvWov/toFHmTdgk7TcC7Tw6PEE9PTcrhSJe6sgpWtpWXrCsf3zACKeq0Y9OSjIiEiuE96n8iqTvoKxBNsYrAQjjDHrk1I+DcvO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PETGkpv9; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XlQ2rUfV"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a0b646eff7so1036684f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 10:51:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747331496; x=1747936296; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FtLELk5UwOispvrTOOSkPzk7frJcAfVvOdFwBbXiG4M=;
-        b=XlQ2rUfV3GD+/MwzbPNJiQHvkb6RArqZamMDFetTki5ejto+8EIf9o2GWBFKWnPJ+F
-         ec0eizr905FH9dvLWLbvMD9ooM810K7ysJCyONvVFsR6dgHCOsXJZX+x7Be6JaMQaNTJ
-         KmlouCWnclKwe0qqB5Zy9WKMYX2ElMDbWB/ZTJPQ5le3nj5R8EuHj8omxNjV6zb7maj3
-         IMUQeZsPFxDnMx9L6khyZHuPr6Bw5qig1Mo3t9EIx8vaKBnL4DkPOLOUBhk1DnBfs6cO
-         ElxRcmhgJO2qIDSdlM1RtyNI94b69ak3qWxv8FAwPAC94SbFaSbaknipTUPtDj3EWqss
-         Dvjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747331496; x=1747936296;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FtLELk5UwOispvrTOOSkPzk7frJcAfVvOdFwBbXiG4M=;
-        b=FlBtXUSEXILsqWLqafGoABiVFUoVboC996WRFI6H6oKXPFrxseYUru/PjEzWUvkxjB
-         vnRU2EAsNPRnS6yIq/jVNgY3UfW8tooQLMMf2xQWu+kq/McPKQKCoxgiyYM66hj92Bqm
-         QWBZVwEtuXOSmRVKUOIziTtsKEtHvEeCplPnAK1Mys0N16zHqoQjM7ErkSrrQ09LTCJb
-         7dPOcxvVqLrUsxIRxwYHJnAiArHiSPutxgnK3xTql909EavWRwaU+U4FaMzwFrVNdbP9
-         btGgVezmT2/TKFq3oA40rUpf+706BW89EI/d8GBxt6OjUfjg/CB1adWzIxsORcFBKaal
-         BHUg==
-X-Forwarded-Encrypted: i=1; AJvYcCVkeenC0SflwoSuYnDDUepaMcjxiv9imCcmBn8hfv3wW/6ETTi2idaK0lpQwft7QXeAzl8q9TvzRUNI0iw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZjGWOPtquqwd08DBwNFjgxsD8MRqT7OFIJjgLpZQHYh+4vE4O
-	cWcIVAqj39kVj8nVpbLzoyaPJNWn50GeyfkFie6MYvP+zqZtcY1tPfFOTBdH30hkzv0=
-X-Gm-Gg: ASbGncuNgl1RLtSGQDeXxXJXhbAruaWxqtZbBoY/o+RkXZa4t3H1d8TlVJJuZ8sakHb
-	4DzrbO1YyTPjHpZ1MN9cByvCexR+IiXVY6F3POY5YBR33rwjaCApFX5kiS6oojhiXGTczSbZuWR
-	LITasi/3O+CtAMycJWKyqPpRArbDswx6nX536YMA1ryFUCytkKi5UxUM7qlenDIRHsCe7GvaJKi
-	2TfK6bjt9pwXuPmM76FX7xKILlO3k0P6CdnQEOoiewWXnewqZ7pmWHMzAU9c8XxmBL86HKy1uLl
-	IilKZ7Maki4cFbkerGSUKSX5KXs5KyosT1sUqeE8fI30u3ZtpHJEFxqWbgnZE2qno1C2hWnqkKp
-	k9TxzywwADQ3x
-X-Google-Smtp-Source: AGHT+IEAaO3Y6axB/+CwqerL4ksM660QpoVKeffLGtMp+IYWpiArFTV//tatHJxiGIAzY9TSUK+oNg==
-X-Received: by 2002:a5d:64eb:0:b0:39a:c9b3:e1d7 with SMTP id ffacd0b85a97d-3a35c83c068mr832771f8f.29.1747331495997;
-        Thu, 15 May 2025 10:51:35 -0700 (PDT)
-Received: from [10.61.1.70] (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca63753sm192263f8f.59.2025.05.15.10.51.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 10:51:35 -0700 (PDT)
-Message-ID: <767909a0-70ea-47d3-b6bf-b57e5d7e7c5c@linaro.org>
-Date: Thu, 15 May 2025 18:51:34 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PETGkpv9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747331534; x=1778867534;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=m/TOlmyn+s2/Ige0FOwKesnagDQC/gXqCDf28q5+pLo=;
+  b=PETGkpv9LC15U9x/ql6+8owgs+uDyCut9+QEk+eGfklI9/Po7SD14Z7j
+   SUuOQjLMOQCTEk7yLH3eHrMPCixGvmBW5wAm9mxyQqgD63aRKgxT+oPSI
+   hGLPQudNnM1TQgxwrHlwbEzioKA7kW6r1eUzSQ9h8l9B9TI+Nxaf9cvdG
+   Osob3zAzP0b/w1wLiHIaxicp8mBsdAmyhZXGs2YrbZ+w3YEZPp60e/Kog
+   kgxGSJ7erlXI+3s0FLp3Gm98C048rqI5oqFtSkSZEd2LYP5UXV2p6yPeY
+   98jaMwsleQ5naL+fXl5nQLI5yCFKHj8YFlj63qHVMUWB/ppGHnG+QFlai
+   Q==;
+X-CSE-ConnectionGUID: 9P+FkLkyQBC6CIFeVnI74Q==
+X-CSE-MsgGUID: T7yggr5PRNmQqiF8oFwduA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="59941499"
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="59941499"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 10:52:13 -0700
+X-CSE-ConnectionGUID: Qruo5h3UT56HNd7t0fDJRw==
+X-CSE-MsgGUID: frud17EwTh2NliK0R4UTNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,291,1739865600"; 
+   d="scan'208";a="143333504"
+Received: from gkhatri-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.13])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 10:52:13 -0700
+Date: Thu, 15 May 2025 10:52:05 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Shung-Hsi Yu <shung-hsi.yu@suse.com>, bpf@vger.kernel.org,
+	linux-mm@kvack.org, Andrii Nakryiko <andrii@kernel.org>,
+	Ihor Solodrai <ihor.solodrai@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Uladzislau Rezki <urezki@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, regressions@lists.linux.dev,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Eduard Zingerman <eddyz87@gmail.com>
+Subject: Re: [REGRESSION] bpf verifier slowdown due to vrealloc() change
+ since 6.15-rc6
+Message-ID: <20250515175205.th7pjvord6fum35a@desk>
+References: <20250515-bpf-verifier-slowdown-vwo2meju4cgp2su5ckj@6gi6ssxbnfqg>
+ <C66C764E-C898-457D-93F0-A680983707F0@kernel.org>
+ <202505150911.1254C695D@keescook>
+ <20250515171821.6je7a4uvmttcdiia@desk>
+ <202505151039.DAA202A@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] media: venus: fix TOCTOU vulnerability when
- reading packets from shared memory
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Stanimir Varbanov <stanimir.varbanov@linaro.org>,
- Hans Verkuil <hans.verkuil@cisco.com>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, Vedang Nagar <quic_vnagar@quicinc.com>
-References: <20250514-venus-fixes-v3-0-32298566011f@quicinc.com>
- <20250514-venus-fixes-v3-1-32298566011f@quicinc.com>
- <ad92cf06-636a-417a-b03b-0d90c9243446@linaro.org>
- <0c50c24a-35fa-acfb-a807-b4ed5394506b@quicinc.com>
- <b0c48989-4ce7-4338-b4bb-565ea8b6cd82@linaro.org>
- <b663539d-5ad6-399b-1e7b-0b8b9daca10d@quicinc.com>
- <bd704149-694f-4d89-90d9-a22307488743@linaro.org>
- <f7df808c-0724-3f4d-b910-6e44637c7aaf@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <f7df808c-0724-3f4d-b910-6e44637c7aaf@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202505151039.DAA202A@keescook>
 
-On 15/05/2025 14:23, Vikash Garodia wrote:
->> Re-reading to see if the firmware wrote new bad data to the transmitted packet
->> in-memory is not a fix before or after the memcpy() because the time you do that
->> re-read is not fixed - locked wrt the freerunning firmware.
-> It would be more meaningful if you can suggest the vulnerability you see with
-> the changes suggested i.e adding the check in local packet against the size read
-> from shared queue. Based on that we can see how to fix it, otherwise this
-> discussion in not leading to any conclusion.
+On Thu, May 15, 2025 at 10:41:41AM -0700, Kees Cook wrote:
+> On Thu, May 15, 2025 at 10:18:21AM -0700, Pawan Gupta wrote:
+> > On Thu, May 15, 2025 at 09:51:15AM -0700, Kees Cook wrote:
+> > > On Thu, May 15, 2025 at 07:51:26AM -0700, Kees Cook wrote:
+> > > > On May 15, 2025 6:12:25 AM PDT, Shung-Hsi Yu <shung-hsi.yu@suse.com> wrote:
+> > > > >There is an observable slowdown when running BPF selftests on 6.15-rc6
+> > > > >kernel[1] built with tools/testing/selftests/bpf/{config,config.x86_64}.
+> > > > [...]
+> > > > Where can I find the .config for the slow runs?
+> > > 
+> > > Oops, I can read. :) Doing a build now...
+> > > 
+> > > > And how do I run the test myself directly?
+> > > 
+> > > I found:
+> > > https://docs.kernel.org/bpf/bpf_devel_QA.html
+> > > 
+> > > But it doesn't seem to cover a bunch of stuff (no way to prebuild the
+> > > tests, no info on building the test modules).
+> > > 
+> > > This seems to be needed:
+> > > 
+> > > make O=regression-bug -C tools/testing/selftests/bpf/test_kmods
+> > > 
+> > > But then the booted kernel doesn't load it (missing signatures?)
+> > > 
+> > > Anyway, I'll keep digging...
+> > 
+> > After struggling with this for a while, I figured vmtest.sh is the easiest
+> > way to test bpf:
+> > 
+> > ./tools/testing/selftests/bpf/vmtest.sh -i ./test_progs
+> 
+> I can't even build the test_progs. :(
+> 
+> $ make test_progs
+> ...
+>   CLNG-BPF [test_progs] bpf_iter_tasks.bpf.o
+> progs/bpf_iter_tasks.c:98:8: error: call to undeclared function 'bpf_copy_from_user_task_str'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+>    98 |         ret = bpf_copy_from_user_task_str((char *)task_str1, sizeof(task_str1), ptr, task, 0
+> );
+>       |               ^
+> 1 error generated.
 
-So to re-iterate.
+I just tried on the latest upstream, and I am getting the same error. My
+earlier bisection was on a stable-rc for 6.14.y:
 
-TOCTOU is this
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-6.14.y
 
-if (*ptr_val >> 2 >= MAX)
-     return -EBAD;
+... where it was first reported:
 
-memcpy(dst, src, *ptr_val >> 2);
-
-Here a malicious actor can change *ptr_val between our check and our use.
-
-not
-
-data_value = *ptr_val >> 2;
-
-if (data_value >= MAX)
-     return -EBAD;
-
-memcpy(dst, src, data_value);
-
-Here the taking a copy of the value and subsequently relying on that 
-value mitigates TOCTOU, because the value *ptr_val is latched - read 
-into a local variable which cannot be manipulated from an outside agent 
-i.e. venus firmware.
-
-The example in the commit log is not a TOCTOU for that reason.
-
-Adding an additional check _after_ the memcpy() seems silly to me because
-
-data_value = *ptr_val >> 2;
-
-if (data_value >= MAX)
-     return -EBAD;
-
-memcpy(dst, src, data_value);
-
-// This statement could be false
-if (data_value != *ptr_value >> 2)
-     return -EBAD;
-
-// while this subsequent statement is true
-if (data_value != *ptr_value >> 2)
-     return -EBAD;
-
-And in any case this is a post-use sanity check not a mitigation for 
-TOCTOU which we don't have.
-
----
-bod
+https://lore.kernel.org/stable/20250515041659.smhllyarxdwp7cav@desk/
