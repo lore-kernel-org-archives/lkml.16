@@ -1,166 +1,355 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A1C2192FD;
-	Thu, 15 May 2025 16:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E3F21ADA4;
+	Thu, 15 May 2025 16:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747325449; cv=none; b=LeTxEe7NuQ47X6nA6d6Sg2Jv5bIghk5d3RyHrQUDoH2t623NAL8/+LPfdBPqbs34JkxLvnqSKeS0d3e7CZ4GGdVBKsWBZaJJZf8PmOucaxFn9O39wVv9Wd6rPTYjUSVCvhmiYk1/JdZfNN4CjZA4Ki++uNokANoi+yxLNnULYns=
+	t=1747325460; cv=none; b=fbUUHow/VvQYryVSxU6pmO2pFvN6gMkGQxoiaAD7Oxg6oLeyZ+wuVRW0iPj6LhbB5fXaE8V3QpVNyB8F5SImDXFxJnLGUkXHxr/0MOFo7wj3Dje0VqcQrHZLWgUDVvQ7Ef96XC98uIUoAcM1y+gvAwkPaaL9XMx2oe13BfWmBBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747325449; c=relaxed/simple;
-	bh=af9vxyEjUFLXkXblE0fNKzVVCZxvU4UnA/BPCTRi0Ag=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mPgQB7shBwHo0WmOC7pfs5DaqQLxBF0waBxj+d7/vrDH02An3u3AorLYQImLfMDfK1Jba2+FwkEp96T7Za0xQdx7x23oCAFdn34ij0ckTknzL8Lpas+0yOwd9S4IbNZ+Cqt5eANU/maOD486mfLTor5DHTGNAM9LsdpKIk/IdnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UYUZEKxl; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747325460; c=relaxed/simple;
+	bh=Zs+kT9HDfhVkzbH18VsQ2/h6ip1U/R/ygxgJShA10d4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZDpMgy9tR1gTuHKYdooL+O+K1veOxvSLU+HBmBTB09chuhTXOi44q+6qNaFD19pimh+qH+TxHwq0nksudgTMFImtXIfDWA68BfmE3OeGbDtIg+8bBUMq5u5hptrkO5XuXiggVnZgDv2efU3thFhwH6IVsSwtbLhodTEkuwrFKSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sOtk7DTM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UYUZEKxl"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-442ed8a275fso12831935e9.2;
-        Thu, 15 May 2025 09:10:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747325446; x=1747930246; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K2RUuqM7j77YiC7O2/E2sWiPYfT3vLPzw6aLspbrJ9A=;
-        b=UYUZEKxlSm7LXl+NH3YnZXh3xsPxeboKDDPXMBuwny5F2LMEwcERDhEhOY5ahnjn/a
-         J0LPWMJjGmfZ7G6JptCIu/Rpar4Meqdktyt3boOUJooqRtRfCW2upAJxl88vdy2sV44p
-         5IHHbmH9Nso+ykZfX6x6tyGafX4QGEBmSjs1pGpPPU5NFB5vnudkgUj1guo+GT44u/oS
-         xEgT16HzaEiiS4NyJU9QX000nMO4qHDRHgxxK89dSUZdXyR9ZclK6683aE6dEZnuCbwL
-         /5hz1L1Icn30qC79aaApfZD6tfSDGGLr+3HP3IPpXsx8H0ADu99v6A8QtpywaGNbREUe
-         /Jxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747325446; x=1747930246;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K2RUuqM7j77YiC7O2/E2sWiPYfT3vLPzw6aLspbrJ9A=;
-        b=wXc7g98dnVPQpRrLM0h+Hd4zemrTEN9l4mIp32w/HR+CAO1hQuFOJ0mHZ9tcUvx/Ni
-         n9zT749Xo6kBFnFaEb0caiAplxBlNX5+x69MAdD8XyC5YNCPujlMCgupZU6f5BbabkSl
-         0xIyxQUeuTD/gC+kSvmMmOI+hALKheJYHu369wDcjkF9eUTJHcgHD2Yn6bkZ9aNOfRCJ
-         T4YMAg5WERpO2+YNIyiJ7UktIvPxwmMgaspCqj7UBTG7aGU4GqYHLAdeyGaB8pGmOsW4
-         IgVc6fxf/PaIbpbkXrKJFwa+cUFUsKkUsnKBsEEUv5YXIw57Mzz4QH+Drn8R5hURviDw
-         e40Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVXPo6RuCWJ1lpgRmbcH6F1JC6MnzQo3NfI/s/TzEJE0GOBD6Sn5qK5IXInKPuG4N81ZtLB30ebAGhjrzj48e/TC0o=@vger.kernel.org, AJvYcCXDVn9TjXBIwGkLHP1AocUnc8btfbXH9saOzTJ2X7N/Dnxd3hZKF9QPXOyU5pZ/emP8uAu6AJkvbSxB@vger.kernel.org, AJvYcCXW4/H65ZSlVWriCFNRBCjbY34cuwnKijHeTk/qpSfPrbGGTfqVJPrvitTwTiE5pYkVZTq49gpxFMYukgDr@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywej/gs+2gj40OssxDG2fxLiH6brrry3okQLSjOIoy/taPZlfFC
-	dRj74o+r9fr+P+r9fpnL3/152AfNVWVqYUd8wNjgDSIAG890Vb6UjxpqEJ4fvIxqaXAzgsKehW5
-	Uyr2j6mxqShP88rGMWCneRSeUBh3HF/w=
-X-Gm-Gg: ASbGncuvA43aTWSPWY2PfD/xZ/K4A0z73XUhlOzs3MKqeNmidaX7VFB8QT8fCRMJrSG
-	9fjJ35T6/Z0BcdqBpKAXGdMnnWz8DfgPLDvwukuFvFrxb39OqBtqX07VLjL6RgmcbXaYG/r7aLJ
-	qtRn0OHV4D+1WBC703PkzhwC2jSISiVdo=
-X-Google-Smtp-Source: AGHT+IFZbUVdPwHyT0Clm2bKqbykU6Hoz0divy6kyYfkhV2fc4IbIeu9yY9VFI6isbO+t3Jgv72E5GlEP9c/n5Vmv4I=
-X-Received: by 2002:a05:6000:2dc8:b0:3a0:8325:8090 with SMTP id
- ffacd0b85a97d-3a35c825b99mr373886f8f.18.1747325445358; Thu, 15 May 2025
- 09:10:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sOtk7DTM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55AA3C4CEE7;
+	Thu, 15 May 2025 16:10:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747325459;
+	bh=Zs+kT9HDfhVkzbH18VsQ2/h6ip1U/R/ygxgJShA10d4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sOtk7DTMkK2nZtL92Utb0ccQSvWIX05QfUbJFPaXZIqAwaPNdxfUsKijAWFvDMRbz
+	 a4Z8sNY8QO/0pEa77u2UY7RS+eXomKrS3FuG7IZDI6W7Ab5Is54RxFpL0HhqMgi+1p
+	 MqW3YehlRUV4FKK3xiJdILFQpZVuLkofbtAV6ZUkjRpN1cO11P6DN5oC/9nUzpaRLJ
+	 6+fx9c/pangyH8bWwwRHZGLr007WLJlhbTzhmB3d4pf9LuSUL5U1LkhI0jrI7xHJHj
+	 UwpgnnGmghE9vJk1l8OuZqW/MIpjf1XTD7G/zCeKqYzHTIHldl6CxvTZxXxWjysHur
+	 m5ZR+PEizyMWw==
+Date: Thu, 15 May 2025 13:10:56 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Thomas Richter <tmricht@linux.ibm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ian Rogers <irogers@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, namhyung@kernel.org,
+	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+	hca@linux.ibm.com, Alexander Egorenkov <egorenar@linux.ibm.com>
+Subject: Re: [PATCH] perf ftrace: Restore to original trace settings on exit
+Message-ID: <aCYSEMrXIwptT0d6@x1>
+References: <20250515063407.3025338-1-tmricht@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506103152.109525-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <202505151255.rCHp8Bvu-lkp@intel.com> <CAMuHMdUh3oXniR3b_g+SuqXXeB=3YRFSVOONOth7XRNpHC=a8A@mail.gmail.com>
-In-Reply-To: <CAMuHMdUh3oXniR3b_g+SuqXXeB=3YRFSVOONOth7XRNpHC=a8A@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Thu, 15 May 2025 17:10:19 +0100
-X-Gm-Features: AX0GCFutHTsXdF6X-UzPCdROzCLoI3M2MdWC6VhMZtfwaAYxbEp32opOSVRegW4
-Message-ID: <CA+V-a8vrLyWDprGMcnbPQ5Skt=+zcRA6nJ6APOQ2V0d17pfMog@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] clocksource/drivers/renesas-ostm: Unconditionally
- enable reprobe support
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: kernel test robot <lkp@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Chris Brandt <chris.brandt@renesas.com>, llvm@lists.linux.dev, 
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515063407.3025338-1-tmricht@linux.ibm.com>
 
-Hi Geert,
+On Thu, May 15, 2025 at 08:34:07AM +0200, Thomas Richter wrote:
+> Executing perf ftrace commands ftrace, profile and latency
+> leave tracing disabled as can seen in this output:
+> 
+>  # echo 1 > /sys/kernel/debug/tracing/tracing_on
+>  # cat /sys/kernel/debug/tracing/tracing_on
+>  1
+>  # perf ftrace trace --graph-opts depth=5 sleep 0.1 > /dev/null
+>  # cat /sys/kernel/debug/tracing/tracing_on
+>  0
+>  #
+ 
+> The tracing_on file is not restored to its value before the command.
+> Fix this behavior and restore the trace setting to what
+> is was before the invocation of the command.
+> On Fedora 41 and 42 tracing is turned on by default.
 
-On Thu, May 15, 2025 at 6:59=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> On Thu, 15 May 2025 at 07:04, kernel test robot <lkp@intel.com> wrote:
-> > kernel test robot noticed the following build warnings:
-> >
-> > [auto build test WARNING on tip/timers/core]
-> > [also build test WARNING on robh/for-next linus/master v6.15-rc6 next-2=
-0250514]
-> > [cannot apply to daniel-lezcano/clockevents/next]
-> > [If your patch is applied to the wrong git tree, kindly drop us a note.
-> > And when submitting patch, we suggest to use '--base' as documented in
-> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> >
-> > url:    https://github.com/intel-lab-lkp/linux/commits/Prabhakar/dt-bin=
-dings-timer-renesas-ostm-Document-RZ-V2N-R9A09G056-support/20250506-223636
-> > base:   tip/timers/core
-> > patch link:    https://lore.kernel.org/r/20250506103152.109525-3-prabha=
-kar.mahadev-lad.rj%40bp.renesas.com
-> > patch subject: [PATCH v3 2/2] clocksource/drivers/renesas-ostm: Uncondi=
-tionally enable reprobe support
-> > config: hexagon-randconfig-001-20250513 (https://download.01.org/0day-c=
-i/archive/20250515/202505151255.rCHp8Bvu-lkp@intel.com/config)
-> > compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project=
- f819f46284f2a79790038e1f6649172789734ae8)
-> > reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/arc=
-hive/20250515/202505151255.rCHp8Bvu-lkp@intel.com/reproduce)
-> >
-> > If you fix the issue in a separate patch/commit (i.e. not just a new ve=
-rsion of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202505151255.rCHp8Bvu-l=
-kp@intel.com/
-> >
-> > All warnings (new ones prefixed by >>):
-> >
-> > >> drivers/clocksource/renesas-ostm.c:235:34: warning: unused variable =
-'ostm_of_table' [-Wunused-const-variable]
-> >      235 | static const struct of_device_id ostm_of_table[] =3D {
-> >          |                                  ^~~~~~~~~~~~~
-> >    1 warning generated.
-> >
-> >
-> > vim +/ostm_of_table +235 drivers/clocksource/renesas-ostm.c
-> >
-> > 3a3e9f23c2cae9 Biju Das 2021-11-12  234
-> > 3a3e9f23c2cae9 Biju Das 2021-11-12 @235  static const struct of_device_=
-id ostm_of_table[] =3D {
-> > 3a3e9f23c2cae9 Biju Das 2021-11-12  236         { .compatible =3D "rene=
-sas,ostm", },
-> > 3a3e9f23c2cae9 Biju Das 2021-11-12  237         { /* sentinel */ }
-> > 3a3e9f23c2cae9 Biju Das 2021-11-12  238  };
-> > 3a3e9f23c2cae9 Biju Das 2021-11-12  239
->
-> The table is unused if CONFIG_OF=3Dn due to
->
->                 .of_match_table =3D of_match_ptr(ostm_of_table),
->
-Thanks for the pointer, I'll add a __maybe_unused compiler attribute
-and send a new version.
+This looks fragile as it takes a snapshot in time of what are the files
+in some particular directory to save them and then restore it at the
+end.
 
-Cheers,
-Prabhakar
+The tool may at some point in the future go and touch other (added in
+the future) files in that directory, etc.
 
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
+I _think_ that instead we should move to use some "session mode" ftrace,
+which I _think_ is already available for quite some time, i.e. instead
+of touching the global ftrace files (which probably are there for
+historical reasons), we should use, lemme find the reference...
+
+I think the keyword to lookup is /sys/kernel/debug/tracing/instances/
+
+Ian did a lot of work on having 'perf test' run shell tests in parallel,
+so we need to think about ways of allowing for that by not touching
+global state.
+
+tldr; great idea, avoid global state.
+
+- Arnaldo
+ 
+> The root cause is function reset_tracing_files() which
+> writes zero (0) into file tracing_on.
+> 
+> Read tracing files on start of the program and
+> restore these values just before exit.
+> 
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Suggested-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+> Reviewed-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+> Reported-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+> ---
+>  tools/perf/builtin-ftrace.c | 226 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 226 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index 7caa18d5ffc3..11ead75fe0f7 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -299,6 +299,228 @@ static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
+>  	return 0;
+>  }
+>  
+> +static int read_tracing_file(const char *name, char *buf, size_t size)
+> +{
+> +	int ret = -1;
+> +	char *file;
+> +	int fd;
+> +
+> +	file = get_tracing_file(name);
+> +	if (!file) {
+> +		pr_debug("cannot get tracing file: %s\n", name);
+> +		return -1;
+> +	}
+> +
+> +	fd = open(file, O_RDONLY);
+> +	if (fd < 0) {
+> +		pr_debug("cannot open tracing file: %s: %s\n",
+> +			 name, str_error_r(errno, buf, size));
+> +		goto out;
+> +	}
+> +
+> +	/* read contents to stdout */
+> +	while (true) {
+> +		int n = read(fd, buf, size);
+> +
+> +		if (n == 0)
+> +			break;
+> +		else if (n < 0)
+> +			goto out_close;
+> +		buf += n;
+> +		size -= n;
+> +	}
+> +	ret = 0;
+> +
+> +out_close:
+> +	close(fd);
+> +out:
+> +	put_tracing_file(file);
+> +	return ret;
+> +}
+> +
+> +static int read_tracing_option_file(const char *name, char *val, size_t size)
+> +{
+> +	char *file;
+> +	int ret;
+> +
+> +	if (asprintf(&file, "options/%s", name) < 0)
+> +		return -1;
+> +
+> +	ret = read_tracing_file(file, val, size);
+> +	free(file);
+> +	return ret;
+> +}
+> +
+> +/*
+> + * Save the initial trace file setting to restore them after the tests.
+> + * This ensures the setting are the same as before the invocation
+> + * of the program.
+> + */
+> +static struct trace_file_list {		/* List of tracing files */
+> +	const char *filename;		/* File name */
+> +	char *contents;			/* Contents to restore */
+> +	int (*read_fct)(const char *fn, char *buf, size_t buf_sz);		/* Read function */
+> +	int (*write_fct)(const char *fn, const char *buf);		/* Write function */
+> +} trace_file_list[] = {
+> +	[0] = {
+> +		.filename = "tracing_on",
+> +		.read_fct = read_tracing_file,
+> +		.write_fct = write_tracing_file,
+> +	},
+> +	[1] = {
+> +		.filename = "current_tracer",
+> +		.read_fct = read_tracing_file,
+> +		.write_fct = write_tracing_file,
+> +	},
+> +	[2] = {
+> +		.filename = "set_ftrace_pid",
+> +		.read_fct = read_tracing_file,
+> +		.write_fct = write_tracing_file,
+> +	},
+> +	[3] = {
+> +		.write_fct = write_tracing_file,
+> +		.read_fct = read_tracing_file,
+> +		.filename = "max_graph_depth",
+> +	},
+> +	[4] = {
+> +		.filename = "tracing_thresh",
+> +		.read_fct = read_tracing_file,
+> +		.write_fct = write_tracing_file,
+> +	},
+> +	[5] = {
+> +		.filename = "tracing_cpumask",
+> +		.read_fct = read_tracing_file,
+> +		.write_fct = write_tracing_file,
+> +	},
+> +	[6] = {
+> +		.filename = "set_ftrace_filter",
+> +		.read_fct = read_tracing_file,
+> +		.write_fct = write_tracing_file,
+> +	},
+> +	[7] = {
+> +		.filename = "set_ftrace_notrace",
+> +		.read_fct = read_tracing_file,
+> +		.write_fct = write_tracing_file,
+> +	},
+> +	[8] = {
+> +		.filename = "set_graph_function",
+> +		.read_fct = read_tracing_file,
+> +		.write_fct = write_tracing_file,
+> +	},
+> +	[9] = {
+> +		.filename = "set_graph_notrace",
+> +		.read_fct = read_tracing_file,
+> +		.write_fct = write_tracing_file,
+> +	},
+> +			/* Files in .../options/ directory */
+> +	[10] = {
+> +		.filename = "function-fork",
+> +		.read_fct = read_tracing_option_file,
+> +		.write_fct = write_tracing_option_file,
+> +	},
+> +	[11] = {
+> +		.filename = "func_stack_trace",
+> +		.read_fct = read_tracing_option_file,
+> +		.write_fct = write_tracing_option_file,
+> +	},
+> +	[12] = {
+> +		.filename = "sleep-time",
+> +		.read_fct = read_tracing_option_file,
+> +		.write_fct = write_tracing_option_file,
+> +	},
+> +	[13] = {
+> +		.filename = "funcgraph-irqs",
+> +		.read_fct = read_tracing_option_file,
+> +		.write_fct = write_tracing_option_file,
+> +	},
+> +	[14] = {
+> +		.filename = "funcgraph-proc",
+> +		.read_fct = read_tracing_option_file,
+> +		.write_fct = write_tracing_option_file,
+> +	},
+> +	[15] = {
+> +		.filename = "funcgraph-abstime",
+> +		.read_fct = read_tracing_option_file,
+> +		.write_fct = write_tracing_option_file,
+> +	},
+> +	[16] = {
+> +		.filename = "funcgraph-tail",
+> +		.read_fct = read_tracing_option_file,
+> +		.write_fct = write_tracing_option_file,
+> +	},
+> +	[17] = {
+> +		.filename = "latency-format",
+> +		.read_fct = read_tracing_option_file,
+> +		.write_fct = write_tracing_option_file,
+> +	},
+> +	[18] = {
+> +		.filename = "irq-info",
+> +		.read_fct = read_tracing_option_file,
+> +		.write_fct = write_tracing_option_file,
+> +	},
+> +};
+> +
+> +static void free_tracing_content(void)
+> +{
+> +	size_t i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(trace_file_list); ++i)
+> +		zfree(&trace_file_list[i].contents);
+> +}
+> +
+> +/*
+> + * Return a copy of the input string.
+> + * Remove a trailing newline. It will be appended in the write
+> + * function when values are restored before program termination.
+> + * Change "no pid" or comment sign '#' at the beginning and replace it
+> + * by an empty string. This resets to the default behavior indicated
+> + * by the output. Those strings are not accepted as file input.
+> + */
+> +static char *copy_tracing_file(char *buf)
+> +{
+> +	char *c = strrchr(buf, '\n');
+> +
+> +	if (c)
+> +		*c = '\0';
+> +	if (*buf == '#' || !strncmp(buf, "no pid", 6))
+> +		*buf = '\0';
+> +	return strdup(buf);
+> +}
+> +
+> +static int save_tracing_files(void)
+> +{
+> +	char buf[4096];
+> +	size_t i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(trace_file_list); ++i) {
+> +		struct trace_file_list *tp = &trace_file_list[i];
+> +
+> +		memset(buf, 0, sizeof(buf));
+> +		if ((*tp->read_fct)(tp->filename, buf, sizeof(buf)) < 0)
+> +			goto out;
+> +		tp->contents = copy_tracing_file(buf);
+> +		if (!tp->contents)
+> +			goto out;
+> +	}
+> +	return 0;
+> +
+> +out:
+> +	free_tracing_content();
+> +	return -1;
+> +}
+> +
+> +static void restore_tracing_files(void)
+> +{
+> +	size_t i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(trace_file_list); ++i) {
+> +		struct trace_file_list *tp = &trace_file_list[i];
+> +
+> +		(*tp->write_fct)(tp->filename, tp->contents);
+> +	}
+> +	free_tracing_content();
+> +}
+> +
+>  static int set_tracing_pid(struct perf_ftrace *ftrace)
+>  {
+>  	int i;
+> @@ -1687,6 +1909,9 @@ int cmd_ftrace(int argc, const char **argv)
+>  	};
+>  	enum perf_ftrace_subcommand subcmd = PERF_FTRACE_NONE;
+>  
+> +	if (save_tracing_files())
+> +		return -1;
+> +
+>  	INIT_LIST_HEAD(&ftrace.filters);
+>  	INIT_LIST_HEAD(&ftrace.notrace);
+>  	INIT_LIST_HEAD(&ftrace.graph_funcs);
+> @@ -1839,5 +2064,6 @@ int cmd_ftrace(int argc, const char **argv)
+>  	delete_filter_func(&ftrace.graph_funcs);
+>  	delete_filter_func(&ftrace.nograph_funcs);
+>  
+> +	restore_tracing_files();
+>  	return ret;
+>  }
+> -- 
+> 2.49.0
