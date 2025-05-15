@@ -1,85 +1,120 @@
-Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA7D4174A;
-	Thu, 15 May 2025 21:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5474F4174A;
+	Thu, 15 May 2025 21:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747343122; cv=none; b=My0/Wd2J3q4h52eVF1uf3HJ5lj7GzY6e9zzGYxUssItCoVwD3laovSw9peSxRD9KochMtnitLn+Pnu36m/exKaFePuRPCoPm1pp1qxdflts4Z6yJQxwWmEaEkFArcp+p3ztjP/fFipiLSBN8iZqT6QA1gE8hIKqpGdN4Bq/qB6M=
+	t=1747343186; cv=none; b=XUAKQGXa7J1y45dPv8XxlMx8qMzE/LX5fZyxuHHM1RJup6HLpwRxZ8t2gIn2wUA/LLpD4tkVsO6+cnzL+bu/4a3hoRq4Q+ZaAUh6GnLHyhidhA88yWExO6+dnwgRG1SL3Ujde1rNH18KJ93TfIEMrOHHE91odkRa7nF2SpOxSY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747343122; c=relaxed/simple;
-	bh=hjdY6wXLhuusRwtLdNI+7Lc2DWrEQ6E1YASsEzK2Aks=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SJE0QmicJAsywpJkVgxghuNXVAKWN5ptK1sXXyT3bJInBmqLVRm6vOl67F6uePQTED135rpQ8bRzTRvSxPCThaYpzYlm6Ee4ulbYieimJG6IxYwsquD5hU5P/YLvyPqcETeSQu/GW9Cldhj8t4HwLqWdqUbBMl/Ye8FdUQRaL+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=UGxd2zhy; arc=none smtp.client-ip=99.78.197.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1747343186; c=relaxed/simple;
+	bh=rqmL8wSHIPVWED95fhvQCkgWovv7Z03OviE3lvpKypI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JAe6aUgCXRCPsS/BoUPxm/pI6KyqwnUHpASw+uDLyu9rH4bgHwXBx2tdCq3H5PA7tryOucP1jGGcQyKicgH1STgJzUwwnnlMIbMNl0HvJPR2VZ63e1rFFZNuyg8g5dAVu8YyL36he3D2T7RKOc4SNwTKoEcywohW2JnccHDvyeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NLZHyvcF; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="UGxd2zhy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLZHyvcF"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2317d94c9cdso14095685ad.2;
+        Thu, 15 May 2025 14:06:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1747343122; x=1778879122;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=tU5GPI6luOeZZUz1jc3iKVDreM5mUB0uafA/q4t13GU=;
-  b=UGxd2zhya9q1VxIlJoDvVSmSdXaZk+CB9idGs9TZogy1c2z9T+7UxTKu
-   pdoYMJmntnJzX6UX5iqVLwUiN+zrcQFDrKbUnyULO/9q5LXuhRfI5VucV
-   BTsp432j9qMHacBrzmWqSRUFxIKXilOxsDeJBERVSzj2js0DoD0xlBjdm
-   mpSxy5iXKC2Qss5Du8dNGiJ3Gnu/TkEbsuYhR7VIwuUYfGYoy4rS4iozU
-   e85BmQB2i3umzaXR3BasjSRWnmVk0Vjep1sCxprqt0JJyoTwEdd2XlhvV
-   C1xiC5Eh21zCA0gwmk9uOfwLSy2TBt85yTF57so66mwBlGIR/qYwdYTCk
-   Q==;
-X-IronPort-AV: E=Sophos;i="6.15,292,1739836800"; 
-   d="scan'208";a="405700419"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 21:05:16 +0000
-Received: from EX19MTAUWC001.ant.amazon.com [10.0.21.151:60934]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.29.53:2525] with esmtp (Farcaster)
- id d61893e1-700d-487e-8d5c-88e3e57e8dda; Thu, 15 May 2025 21:05:10 +0000 (UTC)
-X-Farcaster-Flow-ID: d61893e1-700d-487e-8d5c-88e3e57e8dda
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 15 May 2025 21:05:10 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.170.35) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 15 May 2025 21:05:05 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <jannh@google.com>
-CC: <alexander@mihalicyn.com>, <bluca@debian.org>, <brauner@kernel.org>,
-	<daan.j.demeyer@gmail.com>, <daniel@iogearbox.net>, <davem@davemloft.net>,
-	<david@readahead.eu>, <edumazet@google.com>, <horms@kernel.org>,
-	<jack@suse.cz>, <kuba@kernel.org>, <kuniyu@amazon.com>,
-	<lennart@poettering.net>, <linux-fsdevel@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-security-module@vger.kernel.org>,
-	<me@yhndnzj.com>, <netdev@vger.kernel.org>, <oleg@redhat.com>,
-	<pabeni@redhat.com>, <viro@zeniv.linux.org.uk>, <zbyszek@in.waw.pl>
-Subject: Re: [PATCH v7 4/9] coredump: add coredump socket
-Date: Thu, 15 May 2025 14:04:37 -0700
-Message-ID: <20250515210458.91912-1-kuniyu@amazon.com>
+        d=gmail.com; s=20230601; t=1747343184; x=1747947984; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=glVvTUmZ1lEPqkPsZ0IswYkeh0jiUIOqzVPrPGI5vCQ=;
+        b=NLZHyvcFgZn3p1zRfW4FphwHYi4ktebYvsIdNOdIjPnJV0Zyo0E6CP2IPa7NK46OOP
+         fCtwy/qXKTm7DQ/yLZbiqkI7jqoxQm+alMcELcd3WoyKjP5c5mbedoykA/hDOruSiv0P
+         dDFWte1RVI4lHtKgwTuIjdNLnMMblphWu+6wXzAKpiENCNEVteDmQLNJmQGeVlXF058g
+         Kf+Xwf4aqGfczHQO+7uyfBAlsfYTQPuKJDjx7GLXChH67rPsLj8cQeHzeQ0PwF1GcJ2c
+         HMCkiknhJTYZlOBZpATrkt/ZpPoOj9+jKW2ClzjncXiJJHlEgquyJMYzM1tfIuA4sph5
+         HN3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747343184; x=1747947984;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=glVvTUmZ1lEPqkPsZ0IswYkeh0jiUIOqzVPrPGI5vCQ=;
+        b=l+muWRVxCG3Ss8+Eld+bl/kKBwpP59DRgZ4CXSRJWGV7v+qVt+Oda197uo537uxJSx
+         pyylETzn9T8U/U1JOLq1dvhrcE55ZsRyj8MHc6ssE4nIEE0aC3uHVzmcV9tCp4xUgUCn
+         ya1JZEJRSHwc2JzvSltupVBXCp+P61hqqPMfPdBW1chl1Qg5h20rWMt/HcXgVQIa55Lh
+         D3Va8Bw9k5A+z8axljNSSlD4y+EfbxsVhXcCvrljODldQDOrBThNCztAZgUGV9cygC6p
+         LXvtYYSYRnfBoywlBSvvMBTEfFRlvxFqHgOZGAznSEFBlez1F9R/+b5OykoIjG48ytry
+         Kxug==
+X-Forwarded-Encrypted: i=1; AJvYcCUJBiVv2lnvwE0wMfoHMnnycYwolSkdjRy1hfYdRL4sGsibeq2LWNrfOV01+7SDNhd2kz2TzTQ2RYwmTJE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywor6XNULUT/Kamrnn9ACjNpRwNHMbBjcGeMKl4KRoEu4ookOgo
+	IOrsmg97AiuHAJe6ZVA09XeS3btKknT5KWNOjTLu8SUCHLO32GiN0pu+
+X-Gm-Gg: ASbGncsB3msVMVcovFg1cArP64zO4S7ytFMZbwn+4HbcS4Z67Kut6rantSo6ZehJDtW
+	N0201MEDOnx3+GrM0wB1jki7+ct/isLUgehQvMwMb1eHLuBsATT2CVK8KUb0kGJAlnDMal3m5kK
+	B0WXjZS/+MXueBt7kKXx/gfq04OoLONNe7eKdzgzSE3GnoCcxbSvJo2eMvWvtf+CCgKU4PoLy53
+	gljc/qDvjKP4BFBhWXtbhng9MiUalG0UNyFRF+LVSWBQkFISXSJQNkfOhI42EnGp6Xiq11cVY6o
+	RRpd47DYCGNG1vzfUIcwa1hj5yuv2WlbH118qT+++ZdsYNDT/YxEdNIEOH6pJ3VcLlgCo2g/zvf
+	lp9INlw1jI3ibC65kAiPt15PbTA==
+X-Google-Smtp-Source: AGHT+IGtCDa8JGGZEv5Fo4WJTmdj8+IdkuqNCkKpY6C/TQ/oUVVGOm13unafuIogtRfF2mhwQf2RYw==
+X-Received: by 2002:a17:902:f543:b0:210:fce4:11ec with SMTP id d9443c01a7336-231d43d7f23mr11109175ad.1.1747343184344;
+        Thu, 15 May 2025 14:06:24 -0700 (PDT)
+Received: from localhost ([2a00:79e0:3e00:2601:3afc:446b:f0df:eadc])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4adb733sm2146485ad.63.2025.05.15.14.06.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 14:06:23 -0700 (PDT)
+From: Rob Clark <robdclark@gmail.com>
+To: dri-devel@lists.freedesktop.org
+Cc: linux-arm-msm@vger.kernel.org,
+	Rob Clark <robdclark@chromium.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/panel-edp: Add BOE NV133WUM-N61 panel entry
+Date: Thu, 15 May 2025 14:06:20 -0700
+Message-ID: <20250515210621.7753-1-robdclark@gmail.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <CAG48ez3fC902JU244d=0zzr39f+iXxQH0GZgJp0rs8pbu8ka4w@mail.gmail.com>
-References: <CAG48ez3fC902JU244d=0zzr39f+iXxQH0GZgJp0rs8pbu8ka4w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EX19D041UWB003.ant.amazon.com (10.13.139.176) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-From: Jann Horn <jannh@google.com>
-Date: Thu, 15 May 2025 22:52:22 +0200
-> On Thu, May 15, 2025 at 7:01 PM Kuniyuki Iwashima <kuniyu@amazon.com> wrote:
-> > nit: please keep these in the reverse xmas tree order.
-> > https://docs.kernel.org/process/maintainer-netdev.html#local-variable-ordering-reverse-xmas-tree-rcs
-> 
-> Isn't that rule specific to things that go through the net tree?
+From: Rob Clark <robdclark@chromium.org>
 
-Which tree to go through doesn't matter, rather it's applied
-to code maintained by netdev maintainers, especially net/ and
-drivers/net/.
+Add an eDP panel for BOE NV133WUM-N61, which appears to be a 3rd panel
+option on the lenevo x13s laptop.
+
+edid:
+00 ff ff ff ff ff ff 00 09 e5 64 09 00 00 00 00
+16 1e 01 04 a5 1d 12 78 03 55 8e a7 51 4c 9c 26
+0f 52 53 00 00 00 01 01 01 01 01 01 01 01 01 01
+01 01 01 01 01 01 74 3c 80 a0 70 b0 28 40 30 20
+36 00 1e b3 10 00 00 1a 5d 30 80 a0 70 b0 28 40
+30 20 36 00 1e b3 10 00 00 1a 00 00 00 fe 00 42
+4f 45 20 48 46 0a 20 20 20 20 20 20 00 00 00 fe
+00 4e 56 31 33 33 57 55 4d 2d 4e 36 31 0a 00 7d
+
+datasheet: https://datasheet4u.com/pdf-down/N/V/1/NV133WUM-N61-BOE.pdf
+
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/panel/panel-edp.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
+index 52028c8f8988..aa7b58204523 100644
+--- a/drivers/gpu/drm/panel/panel-edp.c
++++ b/drivers/gpu/drm/panel/panel-edp.c
+@@ -1916,6 +1916,7 @@ static const struct edp_panel_entry edp_panels[] = {
+ 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x094b, &delay_200_500_e50, "NT116WHM-N21"),
+ 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0951, &delay_200_500_e80, "NV116WHM-N47"),
+ 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x095f, &delay_200_500_e50, "NE135FBM-N41 v8.1"),
++	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0964, &delay_200_500_e50, "NV116WUM-N61"),
+ 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x096e, &delay_200_500_e50_po2e200, "NV116WHM-T07 V8.0"),
+ 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x0979, &delay_200_500_e50, "NV116WHM-N49 V8.0"),
+ 	EDP_PANEL_ENTRY('B', 'O', 'E', 0x098d, &boe_nv110wtm_n61.delay, "NV110WTM-N61"),
+-- 
+2.49.0
+
