@@ -1,96 +1,86 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445454B1E52;
-	Thu, 15 May 2025 13:40:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361AB746E;
+	Thu, 15 May 2025 13:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747316409; cv=none; b=YjivjaKnn45R1Ra8aJXTiwFbhGiwz7ZxpF0SnZO++ovQmu6raZGmqxW6JABs0TeGhfWvLIqY08PkbgQ+a+olc50HWee4Xbtt9FfnorYQiybCqD0pAx4Bl414yOAkf3wxEEicASjSamvKAyCs26jYEc2LI0l5kV0WArCfLIbIUkk=
+	t=1747316632; cv=none; b=t068l9/53v+3Kxj2BwIEcyp7h95moIsKHtfNcBQV95UCc04G4vwfc/piWadrPeGMHwcJbjsZNUCsayLKNPpWVFDZsnt4IEQBTF4LJ4CJckiHndSwXDVpf2sPaQ3ijq22kGyZtEI5jciPUGyQMpYyO/FMOuNXZELbCNmO3hs70KI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747316409; c=relaxed/simple;
-	bh=bLsm45s9D0qARSqkBSIJVd3zYZoqeCxjGRV/ULXVIrA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ny6r4n7qe3PgZiqGRquCvRZqiidcLcZL0HGKG0M2Cuv5A/JGdlgG/G1xd7/z0lWMe5Z52v9JSC994GP3DPOmFQSbGi7ZSzlQlpS/SGfaa3ENReeAQb/m6SvQC8awzeJsztlj/oHSQlR0Ehg9985CVEK0g/FkwE2kSEr85U+5Mjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-03 (Coremail) with SMTP id rQCowAAXxUGm7iVorh3cFQ--.28807S2;
-	Thu, 15 May 2025 21:39:54 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: mustafa.ismail@intel.com,
-	tatyana.e.nikolova@intel.com,
-	jgg@ziepe.ca,
-	leon@kernel.org
-Cc: linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] RDMA/irdma: puda: Clear entries after allocation to ensure clean state
-Date: Thu, 15 May 2025 21:39:28 +0800
-Message-ID: <20250515133929.1222-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1747316632; c=relaxed/simple;
+	bh=8MTb86WtHPIIKwMQGNsvwYBlq3tR7OBJIhM8yr8RDVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YjLIEQdaVyGb/gbvd2IDGfe3GXLSr60OT/UMi4AfvbEdLBB5aWDqEHr47zMdJ6Jyiog9Ar8418ttBIEg8/Vl7cXxhLuktOE8iZfgLX5GjJvXw4WfMOBv6XvgCuJ0M2Scknjk/a0/ss3CJ7Irj6oLTo8oEMuX6Hfrae2WMZvACjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F4f9KJuI; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F4f9KJuI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B39F1C4CEE7;
+	Thu, 15 May 2025 13:43:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747316631;
+	bh=8MTb86WtHPIIKwMQGNsvwYBlq3tR7OBJIhM8yr8RDVI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F4f9KJuIdu2JV5VvDlxTIP7U+NJsb89js0dcU6bKRpSJFK5HQiXjeD7/5AOMOZ+kf
+	 utfwJQOvfbsvNPuwZwV47NMcLFl/56uiZG4rzMnwSNjQsNbgNlSnDcuQPmRpYRnLCi
+	 RTXOCDClEYgn0GAshgYUDL8IQ270Rm1WO3Tj5sgZSPgjWTx2HrRdVe9i0nLQX+5iBk
+	 4NDoi6k5nHD3GaJc13BH5OWYKxOHiwCtQ5e0HSkZFw6Jb5mfX0Nu63jVZt0MoE1H5b
+	 lk+RGYDgAhldk4d6UqtZks62P7Ew5R06OukYJfIJwXL/HiBxL06XTjYAWmmvY+VZCC
+	 fKf2I809VA6EA==
+Date: Thu, 15 May 2025 15:43:46 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>, linux-arch@vger.kernel.org,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org
+Subject: Re: [PATCH 14/15] bugs/sh: Concatenate 'cond_str' with '__FILE__' in
+ __WARN_FLAGS(), to extend WARN_ON/BUG_ON output
+Message-ID: <aCXvknfaKRzvXLxz@gmail.com>
+References: <20250515124644.2958810-1-mingo@kernel.org>
+ <20250515124644.2958810-15-mingo@kernel.org>
+ <ba1e1ae6824f47bcb49387ae4f2c70dfd45209bc.camel@physik.fu-berlin.de>
+ <aCXtGRr5pSLKoKg8@gmail.com>
+ <bb170eb0524d04de13cb5b2a1cca9467bc2def87.camel@physik.fu-berlin.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAAXxUGm7iVorh3cFQ--.28807S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uw45Zr18Gw4rur18uF1kuFg_yoW8Gry3pa
-	yDJr1q9rZ0qa1UWa1DG393CFW3Xa17Gr9FvrZFk3s3ZF45Jr10qF1kGryj9F4kGr1xuw4x
-	Xrnrtr15C3Wrur7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
-	6r4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
-	JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUf8nOUUU
-	UU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCQ8DA2glvjRVYQAEsx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bb170eb0524d04de13cb5b2a1cca9467bc2def87.camel@physik.fu-berlin.de>
 
-The irdma_puda_send() calls the irdma_puda_get_next_send_wqe() to get
-entries, but does not clear the entries after the function call. This
-could lead to wqe data inconsistency. A proper implementation can be
-found in irdma_uk_send().
 
-Add the irdma_clr_wqes() after irdma_puda_get_next_send_wqe(). Add the
-headfile of the irdma_clr_wqes().
+* John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de> wrote:
 
-Fixes: a3a06db504d3 ("RDMA/irdma: Add privileged UDA queue implementation")
-Cc: stable@vger.kernel.org # v5.14
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/infiniband/hw/irdma/puda.c | 3 +++
- 1 file changed, 3 insertions(+)
+> On Thu, 2025-05-15 at 15:33 +0200, Ingo Molnar wrote:
+> > > It's too long and the prefix "bugs/sh:" is very confusing. I usually just
+> > > use "sh:" to mark anything that affects arch/sh.
+> > 
+> > Fair enough, I've changed the title to and pushed out the new tree:
+> > 
+> >   sh: Concatenate 'cond_str' with '__FILE__' in __WARN_FLAGS(), to extend WARN_ON/BUG_ON output
+> 
+> Thanks! Minor nitpick: I think that comma is wrong and should be removed
+> (I'm not a native speaker though ;-)).
 
-diff --git a/drivers/infiniband/hw/irdma/puda.c b/drivers/infiniband/hw/irdma/puda.c
-index 7e3f9bca2c23..1d113ad05500 100644
---- a/drivers/infiniband/hw/irdma/puda.c
-+++ b/drivers/infiniband/hw/irdma/puda.c
-@@ -7,6 +7,7 @@
- #include "protos.h"
- #include "puda.h"
- #include "ws.h"
-+#include "user.h"
- 
- static void irdma_ieq_receive(struct irdma_sc_vsi *vsi,
- 			      struct irdma_puda_buf *buf);
-@@ -444,6 +445,8 @@ int irdma_puda_send(struct irdma_sc_qp *qp, struct irdma_puda_send_info *info)
- 	if (!wqe)
- 		return -ENOMEM;
- 
-+	irdma_clr_wqes(qp, wqe_idx);
-+
- 	qp->qp_uk.sq_wrtrk_array[wqe_idx].wrid = (uintptr_t)info->scratch;
- 	/* Third line of WQE descriptor */
- 	/* maclen is in words */
--- 
-2.42.0.windows.2
+Yeah, so both with and without a comma this sentence is proper English 
+grammar, but a comma before the 'to' adverb slightly emphasizes the 
+second part of the sentence, which was my intent with this phrasing.
 
+> > > Can I pick this patch for my sh-linux tree?
+> > 
+> > So since it depends on the previous patches, in isolation this would 
+> > break the build.
+> > 
+> > Can I add your Reviewed-by or Acked-by?
+> 
+> Yes, sure.
+> 
+> Reviewed-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+
+Thanks!
+
+	Ingo
