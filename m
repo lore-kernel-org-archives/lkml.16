@@ -1,115 +1,132 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C58C220F36;
-	Thu, 15 May 2025 16:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C65E22DFB1;
+	Thu, 15 May 2025 16:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747327444; cv=none; b=paiAy+qthwnEaZKifI3GRSdrM/zBk+OeoTaDEGlcz4sCxE/gcSUjLEoEqRWnEcSsSG3Ay932e4UQGPoHQ9qZykmScNmzlBo3TJiT/t0JxUwFcAfoF65HXRMWpYw1klz4/02ENMl/Mwu5fudHYKEMf2sVSSgsWeyblO2gVTa3KY0=
+	t=1747327463; cv=none; b=fuJzgBWnFcwAiiyT8RtFSANWD/goyxRI9nVtXYr2FxstnApkCx9sEDgRvmNeN8APw3O3VXrE6Ner2sX8sjZ378Pj+0d2kFIP0lRCLovD4y5lkfK836iyETAl14UYKt4UnZOxx9w0SLEUc3H1B4ED4OWy04tavVBXtYACLiCGnLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747327444; c=relaxed/simple;
-	bh=hUuvLAlxl36gzoPyWEpN4pSZaYUNo3hhA/Y82uDCWvI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q8X+GEOLFn9RGe4oApkdS+cghvVxAjk2CJAoKRc0Zc47cekbZdsO+tiCoTzQlnbbXC8yT56p+SkrOvJsMqiZpXW+GgIHJfqpZkKdsHpNLWP9qqlA3cWST02MS4UsgrQNn1BwAHsVEf4lbmWq9KGzwhdTuG2RBuwjFEXNe0TS9rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=NEYY0NGj; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1747327463; c=relaxed/simple;
+	bh=5UwQbhuNjFGZo6RKdVNTzky/Efdd8Q0+VemdjCv8GgI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Wftv9kzpZVPrCPkQoj4IfeZWSdwLoGuVRavALxaQpBaEueQrCQoIeLlLDDShqgtiqL3rcPB0bIqDt45zmof6HOi12boMG2vcvkc7yuJozhZvrVfujcog7RLaa4JBLiatXkiaEwpVJqv459TISSpv4P1jsgcKLmib4IH0oDOjRFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qpvpPDgd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="NEYY0NGj"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A598140E01ED;
-	Thu, 15 May 2025 16:43:58 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id DKdTbWNw82uG; Thu, 15 May 2025 16:43:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747327434; bh=heO/KKccK7/qsTVyu/x6gPewEvLAKaNyPahysf1Wvno=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NEYY0NGjCf2etHNpYOdE6F1X2bmjkcx2E/BEQGyuhS/iDfgI0XCsRAK2DRndXxGN8
-	 xGZt2g4glR0jfkJMBgIeseEqknKTFDcjFcZNZ0nS3Omhi8io3eM+pxgFjW+dwU7afZ
-	 r0Rjz/hsL9nmuhmQEIkcRJDnQPCffTJFMchzCftd2FwWjCYMsu3Oqk4uVUyKVxtmWU
-	 ctc5rQrvH3NwrJteaDoY2zHvddKPzB9rD7Y2ll9kf24gYjqcp8Cy3aJOA2VNL5RBjp
-	 A1UKtiPhw9pl/ZGUvpnmwDWqhxgcctQF3G0IpnV9NpJ1vyjga6ciG7ZlXhofFVWBLm
-	 NHwh0gdMIds8PKDEa7jlyRGiWTfAg+tqePHUt+s9BxB/TJ5TyG6u/smsoKdZmozub+
-	 LPaxP8yu1lGagWJd0nkj4qckhR/UsXu3x0j7zEDFYPP0Dbu9RcKGDMRqKSv0Nrhds7
-	 CNeGoZXtRwz+28zE3yylq6TpGfv2GkJiNeVD/62snH8LciZ1aFjN4eHuQF8kXYgkFt
-	 5cg9eLkJ6GIoEf+orKpCN1bk0Zyp6364QJUK++YgXnvydU2+gyRpQVFeBkqn8t1IKX
-	 OzMl1I1DQlNiUNb6onK+punbviq5T0yx0XunBn7BRJfWoADXZDaiRV/Q+BXUnEwy4i
-	 O8H1Ph/0ANc35433TMHc02g8=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2036440E0196;
-	Thu, 15 May 2025 16:43:45 +0000 (UTC)
-Date: Thu, 15 May 2025 18:43:37 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [RFT PATCH v3 02/21] x86/sev: Use MSR protocol for remapping
- SVSM calling area
-Message-ID: <20250515164337.GDaCYZuXXjJkfRlK8k@fat_crate.local>
-References: <20250512190834.332684-23-ardb+git@google.com>
- <20250512190834.332684-25-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qpvpPDgd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7BECC4CEE7;
+	Thu, 15 May 2025 16:44:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747327463;
+	bh=5UwQbhuNjFGZo6RKdVNTzky/Efdd8Q0+VemdjCv8GgI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qpvpPDgde1MeBaEmPhmrJXybCYuIJXGBoAFCjd7dWpEJDo8+yHDnecRUWARKjDV++
+	 MrT/2afhjbPoIITDJU7iU2BotQmZRTr8mkE0+zmdTPNTJYvFdIMDA36C958qPIRwV9
+	 u0ThZeBsDC/UEgHeuLJVYyh6WIHLdhWXr0GBpo+2o3YniXpYzrDc2anEGJm0Rb82gM
+	 wzxSCbFKZExKBd4+1vbOmL8kOrXM6/txVXHUOShzaw06k/aTsBio84hQCl8APn2puM
+	 bxOp+W/FldIXD1ql8amrCWEtSdGVYo2ivu09llA0RDK2uwG5rvE8JTzdCJnO3MOYzg
+	 yuaRblVzvpSPQ==
+Date: Thu, 15 May 2025 17:44:16 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: =?UTF-8?B?VMOzdGggSsOhbm9z?= via B4 Relay
+ <devnull+gomba007.gmail.com@kernel.org>
+Cc: gomba007@gmail.com, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] iio: chemical: Add driver for SEN0322
+Message-ID: <20250515174416.0d5c49cc@jic23-huawei>
+In-Reply-To: <20250506-iio-chemical-sen0322-v4-2-1465ac8dc190@gmail.com>
+References: <20250506-iio-chemical-sen0322-v4-0-1465ac8dc190@gmail.com>
+	<20250506-iio-chemical-sen0322-v4-2-1465ac8dc190@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250512190834.332684-25-ardb+git@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 12, 2025 at 09:08:37PM +0200, Ard Biesheuvel wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
-> 
-> As the preceding code comment already indicates, remapping the SVSM
-> calling area occurs long before the GHCB page is configured, and so
-> calling svsm_perform_call_protocol() is guaranteed to result in a call
-> to svsm_perform_msr_protocol().
-> 
-> So just call the latter directly. This allows most of the GHCB based API
-> infrastructure to be moved out of the startup code in a subsequent
-> patch.
-> 
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  arch/x86/boot/startup/sev-startup.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/boot/startup/sev-startup.c b/arch/x86/boot/startup/sev-startup.c
-> index 435853a55768..a1d5a5632d58 100644
-> --- a/arch/x86/boot/startup/sev-startup.c
-> +++ b/arch/x86/boot/startup/sev-startup.c
-> @@ -325,7 +325,9 @@ static __head void svsm_setup(struct cc_blob_sev_info *cc_info)
->  	call.caa = svsm_get_caa();
->  	call.rax = SVSM_CORE_CALL(SVSM_CORE_REMAP_CA);
->  	call.rcx = pa;
-> -	ret = svsm_perform_call_protocol(&call);
-> +	do {
-> +		ret = svsm_perform_msr_protocol(&call);
-> +	} while (ret == -EAGAIN);
+On Tue, 06 May 2025 11:01:16 +0200
+T=C3=B3th J=C3=A1nos via B4 Relay <devnull+gomba007.gmail.com@kernel.org> w=
+rote:
 
-Right, a future cleanup for another patch would be to wrap that loop into
-a function. But not now.
+> From: T=C3=B3th J=C3=A1nos <gomba007@gmail.com>
+>=20
+> Add support for the DFRobot SEN0322 oxygen sensor.
+>=20
+> To instantiate (assuming device is connected to I2C-2):
+> 	echo 'sen0322 0x73' > /sys/class/i2c-dev/i2c-2/device/new_device
+>=20
+> To get the oxygen concentration (assuming device is iio:device0) multiply
+> the values read from:
+> 	/sys/bus/iio/devices/iio:device0/in_concentration_raw
+> 	/sys/bus/iio/devices/iio:device0/in_concentration_scale
+>=20
+> Datasheet: https://wiki.dfrobot.com/Gravity_I2C_Oxygen_Sensor_SKU_SEN0322
+>=20
+Datasheet is a tag so no blank line here.
 
->  	if (ret)
->  		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_SVSM_CA_REMAP_FAIL);
->  
-> -- 
+> Signed-off-by: T=C3=B3th J=C3=A1nos <gomba007@gmail.com>
 
-Reviewed-by: Borislav Petkov (AMD) <bp@alien8.de>
+Will shortly appear in the testing branch of iio.git.  I'll push it out
+as togreg once it's had minimal 0-day build coverage.
 
--- 
-Regards/Gruss,
-    Boris.
+Applied with this diff:
+diff --git a/drivers/iio/chemical/sen0322.c b/drivers/iio/chemical/sen0322.c
+index 088f8947083e..96c6fc1203ad 100644
+--- a/drivers/iio/chemical/sen0322.c
++++ b/drivers/iio/chemical/sen0322.c
+@@ -28,7 +28,7 @@ struct sen0322 {
+=20
+ static int sen0322_read_data(struct sen0322 *sen0322)
+ {
+-       u8 data[3] =3D { 0 };
++       u8 data[3] =3D { };
+        int ret;
+=20
+        ret =3D regmap_bulk_read(sen0322->regmap, SEN0322_REG_DATA, data,
+@@ -42,9 +42,7 @@ static int sen0322_read_data(struct sen0322 *sen0322)
+         * but it is multiplied by 100 here to avoid floating-point math
+         * and the scale is divided by 100 to compensate this.
+         */
+-       ret =3D data[0] * 100 + data[1] * 10 + data[2];
+-
+-       return ret;
++       return data[0] * 100 + data[1] * 10 + data[2];
+ }
+=20
+ static int sen0322_read_scale(struct sen0322 *sen0322, int *num, int *den)
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
+> +
+> +static int sen0322_read_data(struct sen0322 *sen0322)
+> +{
+> +	u8 data[3] =3D { 0 };
+Slight preference for { };
+
+> +	int ret;
+> +
+> +	ret =3D regmap_bulk_read(sen0322->regmap, SEN0322_REG_DATA, data,
+> +			       sizeof(data));
+> +	if (ret < 0)
+regmap is always 0 or < 0 so checking just if (ret) is cleaner.
+> +		return ret;
+> +
+> +	/*
+> +	 * The actual value in the registers is:
+> +	 *	val =3D data[0] + data[1] / 10 + data[2] / 100
+> +	 * but it is multiplied by 100 here to avoid floating-point math
+> +	 * and the scale is divided by 100 to compensate this.
+> +	 */
+> +	ret =3D data[0] * 100 + data[1] * 10 + data[2];
+
+return data[0] ...
+
+If nothing else comes up I'll fix this.
+
+> +
+> +	return ret;
+> +}
