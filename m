@@ -1,31 +1,31 @@
 Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2809825A646;
-	Thu, 15 May 2025 19:58:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45812269B07;
+	Thu, 15 May 2025 19:58:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747339104; cv=none; b=kpBfkENUyIaxX+dJzGtrvyU7akIvDOhGL92IzT7NIZmhPIur3Z0Rc52z1g8OE2ujiSSKLVxa+VSSxDcF2bXC2f5j4NrOJmCcBxvJRstL04sw+Ycf1qbJB8s8Stbfo+eAr6gRsPQ8ugvjaq33dEw5IcbzhHL2Ra09YQ0Ca8YD3+I=
+	t=1747339105; cv=none; b=NRS7eXYiQMUVSSs+OM6+6zuSpRgkxEj9jmpoqUjW4bMt8qSkoxvdu6LcO6zi5QnKgBW5mLtL27UMDEZS9ho6YapKocWvaTnpjNGlNoeWNaxLV/+xPnRI1pdcTe6MUrlDBNDxSBmj9oNCxjYaGAzFk4hY/GcRdBGOTt3VsW7aU3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747339104; c=relaxed/simple;
-	bh=Pg5hG2NXJIJ2AsojvxyH+DEumI/6ZQZsHN1YJrvIni4=;
+	s=arc-20240116; t=1747339105; c=relaxed/simple;
+	bh=kSM1bMW0+DdV7v7mJM3vOo2rB0NxykmWPI2GBmXW580=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YmKsga/GzL21hovK4gk/YXlaPpRkHfbboJKQ47zdopB/0RReYmhf49hDfPFrjSEShegu2SkrRYx8LHGUz9SX+xtkCdRJWBnZcqlAbXdQJtM2Yutm5wmpRevdh/TYkXwvr7oM91tcOA0aDK9AUcxCgJQkQJ6FQIV4/yPO8onJm9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=Oete7QE9; arc=none smtp.client-ip=159.69.126.157
+	 In-Reply-To:To:Cc; b=JpMgL+3S89Lbo6Qzgp1pVIgpeagGmfKwE6hvMEugn/gxJbQbfogVM+GtyvNk0o89FnIGtxssovskaxG8oQPW9f36YRspRPafM+rStNr/dyzJnNnB+o2yXRFUeJz9xdbD26qDEuHbxwo1QGjVInF8wJqpfYZ5kzvzGDLMBs++aMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=JSV+bIcU; arc=none smtp.client-ip=159.69.126.157
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="Oete7QE9"
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="JSV+bIcU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
 	s=mail; t=1747339092;
-	bh=Pg5hG2NXJIJ2AsojvxyH+DEumI/6ZQZsHN1YJrvIni4=;
+	bh=kSM1bMW0+DdV7v7mJM3vOo2rB0NxykmWPI2GBmXW580=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Oete7QE9FEy5ARoDlAAWYcFZ+QJWuJ3IO3NylIUU1Ff+JUNVWUFO1hYTw0uXoteYW
-	 rBYLiFPr/LZIud10uikynE7UtEMPHAzehHC1/jujNc5oNyYSGNg4kGQZX4qph/mnti
-	 Y6V1wPkoGbxNgwgeVaNIkIAU+eLlRhHmwdMdHyEA=
+	b=JSV+bIcUPO2ZGvCByrzetPHwmG2F0KwurIrITftorgw2nkuqrLaVmIRGmt7JdtZnP
+	 zXZBVXD4iIeZBTq998BMJE3Kq8EE2qAv2t5lVMQLsooOxr/Ylmmj1L0B7o3mVvt02a
+	 IzpHUnFCCYXeY6V3hovIrf2Fqx9/W3w9ZjwWYVjg=
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Thu, 15 May 2025 21:57:50 +0200
-Subject: [PATCH 4/9] tools/nolibc: move reboot() to sys/reboot.h
+Date: Thu, 15 May 2025 21:57:47 +0200
+Subject: [PATCH 1/9] tools/nolibc: move ioctl() to sys/ioctl.h
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,18 +34,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250515-nolibc-sys-v1-4-74f82eea3b59@weissschuh.net>
+Message-Id: <20250515-nolibc-sys-v1-1-74f82eea3b59@weissschuh.net>
 References: <20250515-nolibc-sys-v1-0-74f82eea3b59@weissschuh.net>
 In-Reply-To: <20250515-nolibc-sys-v1-0-74f82eea3b59@weissschuh.net>
 To: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747339091; l=3644;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747339091; l=2838;
  i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=Pg5hG2NXJIJ2AsojvxyH+DEumI/6ZQZsHN1YJrvIni4=;
- b=TXd33KbCdsy+Zqu3NmNWddnRa1h3aM9OEjjUt42dUhnIxfEm+M4UhoPoO/m/Fs4rLG4aqsr3J
- GJT56Y8bS46AfNRjiQtZjGLW2IjERegD1KrQ+IHbZ+SH0LnR1vmw6zc
+ bh=kSM1bMW0+DdV7v7mJM3vOo2rB0NxykmWPI2GBmXW580=;
+ b=xdJfwjYCyN0LOEllnfA0IzlQCNpGMTh01WdmXuSRwrGbv2rIrDbF9EZji13+Z+v/wTo7cbqXQ
+ X+yB9na3+5WBb4AixxJeHEEeg0Bs6E+ObS64cAXkcIKfwEGXwg00n1U
 X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
  pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
@@ -53,118 +53,94 @@ This is the location regular userspace expects this definition.
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 ---
- tools/include/nolibc/Makefile     |  1 +
- tools/include/nolibc/nolibc.h     |  1 +
- tools/include/nolibc/sys.h        | 18 ------------------
- tools/include/nolibc/sys/reboot.h | 34 ++++++++++++++++++++++++++++++++++
- tools/include/nolibc/types.h      |  1 -
- 5 files changed, 36 insertions(+), 19 deletions(-)
+ tools/include/nolibc/Makefile    |  1 +
+ tools/include/nolibc/nolibc.h    |  1 +
+ tools/include/nolibc/sys.h       | 12 ------------
+ tools/include/nolibc/sys/ioctl.h | 29 +++++++++++++++++++++++++++++
+ 4 files changed, 31 insertions(+), 12 deletions(-)
 
 diff --git a/tools/include/nolibc/Makefile b/tools/include/nolibc/Makefile
-index 35cfbc84d499b0a57689bdfed95a45023904d256..4850501b8d53be6b603ecbb04d6f952cd5370cf0 100644
+index 4c4b7b5ff605ac5dde11628331378489d76d4466..7d66847df91a94ca784c04ced278eb6d7099bab4 100644
 --- a/tools/include/nolibc/Makefile
 +++ b/tools/include/nolibc/Makefile
-@@ -54,6 +54,7 @@ all_files := \
- 		sys/mount.h \
- 		sys/prctl.h \
+@@ -49,6 +49,7 @@ all_files := \
+ 		string.h \
+ 		sys.h \
+ 		sys/auxv.h \
++		sys/ioctl.h \
+ 		sys/mman.h \
  		sys/random.h \
-+		sys/reboot.h \
  		sys/stat.h \
- 		sys/syscall.h \
- 		sys/time.h \
 diff --git a/tools/include/nolibc/nolibc.h b/tools/include/nolibc/nolibc.h
-index 1c159e32a248d46fa4d36a2c35e92eb9da91e9f6..36ea7a02c7434cc006a7b12d413add04a2f85565 100644
+index 51c423a36b5957e2528e94d717d88e2383230cba..d6048d1e9ea5d4b5d504e156aafc5651dcd6b8c1 100644
 --- a/tools/include/nolibc/nolibc.h
 +++ b/tools/include/nolibc/nolibc.h
-@@ -102,6 +102,7 @@
- #include "sys/mount.h"
- #include "sys/prctl.h"
+@@ -97,6 +97,7 @@
+ #include "types.h"
+ #include "sys.h"
+ #include "sys/auxv.h"
++#include "sys/ioctl.h"
+ #include "sys/mman.h"
  #include "sys/random.h"
-+#include "sys/reboot.h"
  #include "sys/stat.h"
- #include "sys/syscall.h"
- #include "sys/time.h"
 diff --git a/tools/include/nolibc/sys.h b/tools/include/nolibc/sys.h
-index a17fe98968a29081661eaf235111482a543f87ba..6c89dd0316dd0ebf03ebde6fa5c14273df6a0c62 100644
+index 5733fe54911dca44c7423951ff85fb166d95c06f..313c210173c804f728b0be4ab8e67542bb3a7219 100644
 --- a/tools/include/nolibc/sys.h
 +++ b/tools/include/nolibc/sys.h
-@@ -730,24 +730,6 @@ ssize_t read(int fd, void *buf, size_t count)
+@@ -517,18 +517,6 @@ uid_t getuid(void)
  }
  
  
 -/*
-- * int reboot(int cmd);
-- * <cmd> is among LINUX_REBOOT_CMD_*
+- * int ioctl(int fd, unsigned long cmd, ... arg);
 - */
 -
 -static __attribute__((unused))
--ssize_t sys_reboot(int magic1, int magic2, int cmd, void *arg)
+-long sys_ioctl(unsigned int fd, unsigned int cmd, unsigned long arg)
 -{
--	return my_syscall4(__NR_reboot, magic1, magic2, cmd, arg);
+-	return my_syscall3(__NR_ioctl, fd, cmd, arg);
 -}
 -
--static __attribute__((unused))
--int reboot(int cmd)
--{
--	return __sysret(sys_reboot(LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, cmd, 0));
--}
--
+-#define ioctl(fd, cmd, arg) __sysret(sys_ioctl(fd, cmd, (unsigned long)(arg)))
 -
  /*
-  * int getrlimit(int resource, struct rlimit *rlim);
-  * int setrlimit(int resource, const struct rlimit *rlim);
-diff --git a/tools/include/nolibc/sys/reboot.h b/tools/include/nolibc/sys/reboot.h
+  * int kill(pid_t pid, int signal);
+  */
+diff --git a/tools/include/nolibc/sys/ioctl.h b/tools/include/nolibc/sys/ioctl.h
 new file mode 100644
-index 0000000000000000000000000000000000000000..727363fbfd8a6f8994a0cf13829b7347ced198bb
+index 0000000000000000000000000000000000000000..cb34be92a5f96aa566afa53a0f19932c2d5fe1eb
 --- /dev/null
-+++ b/tools/include/nolibc/sys/reboot.h
-@@ -0,0 +1,34 @@
++++ b/tools/include/nolibc/sys/ioctl.h
+@@ -0,0 +1,29 @@
 +/* SPDX-License-Identifier: LGPL-2.1 OR MIT */
 +/*
-+ * Reboot definitions for NOLIBC
++ * Ioctl definitions for NOLIBC
 + * Copyright (C) 2017-2021 Willy Tarreau <w@1wt.eu>
 + */
 +
 +/* make sure to include all global symbols */
 +#include "nolibc.h"
 +
-+#ifndef _NOLIBC_SYS_REBOOT_H
-+#define _NOLIBC_SYS_REBOOT_H
++#ifndef _NOLIBC_SYS_IOCTL_H
++#define _NOLIBC_SYS_IOCTL_H
 +
 +#include "../sys.h"
 +
-+#include <linux/reboot.h>
++#include <linux/ioctl.h>
 +
 +/*
-+ * int reboot(int cmd);
-+ * <cmd> is among LINUX_REBOOT_CMD_*
++ * int ioctl(int fd, unsigned long cmd, ... arg);
 + */
 +
 +static __attribute__((unused))
-+ssize_t sys_reboot(int magic1, int magic2, int cmd, void *arg)
++long sys_ioctl(unsigned int fd, unsigned int cmd, unsigned long arg)
 +{
-+	return my_syscall4(__NR_reboot, magic1, magic2, cmd, arg);
++	return my_syscall3(__NR_ioctl, fd, cmd, arg);
 +}
 +
-+static __attribute__((unused))
-+int reboot(int cmd)
-+{
-+	return __sysret(sys_reboot(LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, cmd, 0));
-+}
++#define ioctl(fd, cmd, arg) __sysret(sys_ioctl(fd, cmd, (unsigned long)(arg)))
 +
-+#endif /* _NOLIBC_SYS_REBOOT_H */
-diff --git a/tools/include/nolibc/types.h b/tools/include/nolibc/types.h
-index 93da29fe7719c9f196fba38d1f3f31cad0fc02f1..74c7694b2d5e54f7a86854697ac32a2ea2b62e86 100644
---- a/tools/include/nolibc/types.h
-+++ b/tools/include/nolibc/types.h
-@@ -12,7 +12,6 @@
- 
- #include "std.h"
- #include <linux/mman.h>
--#include <linux/reboot.h> /* for LINUX_REBOOT_* */
- #include <linux/stat.h>
- #include <linux/time.h>
- #include <linux/wait.h>
++#endif /* _NOLIBC_SYS_IOCTL_H */
 
 -- 
 2.49.0
