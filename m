@@ -1,86 +1,146 @@
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680BD2949EF
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 03:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E4B28CF73
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 03:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747279557; cv=none; b=lSJKGEs0KE5snl66/jyoSgxJdWWkQoAHsTcXz978W2VWFDg1u/r2JD1MeehwKgk5OsagoAtl73BrbFVJAR36aiDtp+lYlyQjUEs2jk+SKCmeaeVZ5PQZssiDjIkVFuzQEUXg6key2SPFuCn0NQFJb+KbxhdcTc9TV8jzRGiypMw=
+	t=1747279564; cv=none; b=Y7m2JruNlduasTDtt57HX1FnT35GwJcGFeSz4MlXDXrH1IjsRejjDQnz1cRepGUctG8jZXPCW+Mu37DT7hfKH/y6mXD89paobCOOoj/GAsiisJh/V0K6iG74Ha5gc4Fjo9r+Ip/PwYkBQcwwmCck1WNjHnt0sTDMwJHzlcM5w/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747279557; c=relaxed/simple;
-	bh=c9FOqSmy+dz5v5MPKHqrj/nnkAEXt32yKE4f9nKCPeA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j9xAVjqG1s8IYCwDreFX6uUtDkywkB5e73q8GnadQQA8qJAtd4USdRICVg/8zJjTAOYOd9rlQzADKaeyQv4YRWqAsGS7yxnAPSYMfWpwapj4JXatAS9Xm4AWAbYkV6iF9x3HsZlPIDxjFUUdS0qGzgJb2D/px+JgkpYCtjSpcYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from mail.andestech.com (ATCPCS34.andestech.com [10.0.1.134])
-	by Atcsqr.andestech.com with ESMTPS id 54F3PIfo056447
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK);
-	Thu, 15 May 2025 11:25:18 +0800 (+08)
-	(envelope-from ben717@andestech.com)
-Received: from atctrx.andestech.com (10.0.15.173) by ATCPCS34.andestech.com
- (10.0.1.134) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 15 May
- 2025 11:25:18 +0800
-Date: Thu, 15 May 2025 11:25:18 +0800
-From: Ben Zong-You Xie <ben717@andestech.com>
-To: Rob Herring <robh@kernel.org>
-CC: <krzk+dt@kernel.org>, <tglx@linutronix.de>, <magnus.damm@gmail.com>,
-        <prabhakar.mahadev-lad.rj@bp.renesas.com>, <paul.walmsley@sifive.com>,
-        <alex@ghiti.fr>, <daniel.lezcano@linaro.org>, <conor+dt@kernel.org>,
-        <aou@eecs.berkeley.edu>, <devicetree@vger.kernel.org>,
-        <tim609@andestech.com>, <linux-kernel@vger.kernel.org>,
-        <geert+renesas@glider.be>, <palmer@dabbelt.com>,
-        <linux-riscv@lists.infradead.org>
-Subject: Re: [PATCH v4 3/9] dt-bindings: interrupt-controller: add Andes
- QiLai PLIC
-Message-ID: <aCVenXTis5Hq5Uek@atctrx.andestech.com>
-References: <20250514095350.3765716-1-ben717@andestech.com>
- <20250514095350.3765716-4-ben717@andestech.com>
- <174723438154.2170160.6461910184012543621.robh@kernel.org>
- <20250514150134.GB2180131-robh@kernel.org>
+	s=arc-20240116; t=1747279564; c=relaxed/simple;
+	bh=WOupC6E4HpO8mX5nlK6W7ryVaOhAjAR0LIPnaWVxKwc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=W+bq1TzMNeJ/Kc5ypcSKvj71fMBiDLzAu+bRYAecKxV9/llyyZrjW60ykrd+dPQr4HiamyT99fmblR6Ihzm1BfyFtNKwhUBlR3bqgWqxOUck/ajBOEdHZDhlKDOSJd3d5HArpFtdZJJCUKxRyfnB9HftKTsKU6Xfoj9bO67HsYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i9pyHTd8; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i9pyHTd8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747279562;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ahT4btz576S69wvUnfwsCRHjbpr8W2QT0Gxup0BuO2U=;
+	b=i9pyHTd8C5ddgR0CSyXvPVpADfMxEswmpOHsB29GEAYbXSjyHQT+6YgGv8XQBB+6sVSMDI
+	ghfLEtVOC7LwiN0UOFZqcRrAPwjkBULQjlJbh/FaKHQShN4XCINj/DTBla4bxkhnRp3/Wz
+	Sbpcck6QdsqYLNQzq8ss0AHju+vcdJY=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-669-KOhIuteWMa2BBXwiIcLjhg-1; Wed,
+ 14 May 2025 23:25:59 -0400
+X-MC-Unique: KOhIuteWMa2BBXwiIcLjhg-1
+X-Mimecast-MFC-AGG-ID: KOhIuteWMa2BBXwiIcLjhg_1747279555
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EB38619560B0;
+	Thu, 15 May 2025 03:25:54 +0000 (UTC)
+Received: from h1.redhat.com (unknown [10.22.88.116])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1C2ED18008F4;
+	Thu, 15 May 2025 03:25:39 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: david@redhat.com,
+	ziy@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	corbet@lwn.net,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	akpm@linux-foundation.org,
+	baohua@kernel.org,
+	willy@infradead.org,
+	peterx@redhat.com,
+	wangkefeng.wang@huawei.com,
+	usamaarif642@gmail.com,
+	sunnanyong@huawei.com,
+	vishal.moola@gmail.com,
+	thomas.hellstrom@linux.intel.com,
+	yang@os.amperecomputing.com,
+	kirill.shutemov@linux.intel.com,
+	aarcange@redhat.com,
+	raquini@redhat.com,
+	anshuman.khandual@arm.com,
+	catalin.marinas@arm.com,
+	tiwai@suse.de,
+	will@kernel.org,
+	dave.hansen@linux.intel.com,
+	jack@suse.cz,
+	cl@gentwo.org,
+	jglisse@google.com,
+	surenb@google.com,
+	zokeefe@google.com,
+	hannes@cmpxchg.org,
+	rientjes@google.com,
+	mhocko@suse.com,
+	rdunlap@infradead.org,
+	Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: [PATCH v7 12/12] Documentation: mm: update the admin guide for mTHP collapse
+Date: Wed, 14 May 2025 21:22:26 -0600
+Message-ID: <20250515032226.128900-13-npache@redhat.com>
+In-Reply-To: <20250515032226.128900-1-npache@redhat.com>
+References: <20250515032226.128900-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250514150134.GB2180131-robh@kernel.org>
-User-Agent: Mutt/2.1.4 (2021-12-11)
-X-ClientProxiedBy: ATCPCS33.andestech.com (10.0.1.100) To
- ATCPCS34.andestech.com (10.0.1.134)
-X-DKIM-Results: atcpcs34.andestech.com; dkim=none;
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 54F3PIfo056447
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Wed, May 14, 2025 at 10:01:34AM -0500, Rob Herring wrote:
-> [EXTERNAL MAIL]
-> 
-> On Wed, May 14, 2025 at 09:53:08AM -0500, Rob Herring (Arm) wrote:
-> >
-> > On Wed, 14 May 2025 17:53:44 +0800, Ben Zong-You Xie wrote:
-> > > Add a new compatible string for Andes QiLai PLIC.
-> > >
-> > > Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> > > Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
-> > > ---
-> > >  .../bindings/interrupt-controller/sifive,plic-1.0.0.yaml         | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> >
-> > Applied, thanks!
-> 
-> And now dropped.
-> 
-> Rob
+Now that we can collapse to mTHPs lets update the admin guide to
+reflect these changes and provide proper guidence on how to utilize it.
 
-This patch was applied but has now been dropped. Could you please clarify
-the reason for dropping it?
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+Signed-off-by: Nico Pache <npache@redhat.com>
+---
+ Documentation/admin-guide/mm/transhuge.rst | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-Thanks,
-Ben
+diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+index dff8d5985f0f..5c63fe51b3ad 100644
+--- a/Documentation/admin-guide/mm/transhuge.rst
++++ b/Documentation/admin-guide/mm/transhuge.rst
+@@ -63,7 +63,7 @@ often.
+ THP can be enabled system wide or restricted to certain tasks or even
+ memory ranges inside task's address space. Unless THP is completely
+ disabled, there is ``khugepaged`` daemon that scans memory and
+-collapses sequences of basic pages into PMD-sized huge pages.
++collapses sequences of basic pages into huge pages.
+ 
+ The THP behaviour is controlled via :ref:`sysfs <thp_sysfs>`
+ interface and using madvise(2) and prctl(2) system calls.
+@@ -144,6 +144,18 @@ hugepage sizes have enabled="never". If enabling multiple hugepage
+ sizes, the kernel will select the most appropriate enabled size for a
+ given allocation.
+ 
++khugepaged uses max_ptes_none scaled to the order of the enabled mTHP size
++to determine collapses. When using mTHPs it's recommended to set
++max_ptes_none low-- ideally less than HPAGE_PMD_NR / 2 (255 on 4k page
++size). This will prevent undesired "creep" behavior that leads to
++continuously collapsing to a larger mTHP size; When we collapse, we are
++bringing in new non-zero pages that will, on a subsequent scan, cause the
++max_ptes_none check of the +1 order to always be satisfied. By limiting
++this to less than half the current order, we make sure we don't cause this
++feedback loop. max_ptes_shared and max_ptes_swap have no effect when
++collapsing to a mTHP, and mTHP collapse will fail on shared or swapped out
++pages.
++
+ It's also possible to limit defrag efforts in the VM to generate
+ anonymous hugepages in case they're not immediately free to madvise
+ regions or to never try to defrag memory and simply fallback to regular
+-- 
+2.49.0
 
