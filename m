@@ -1,142 +1,152 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B42A18BC3B
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 14:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0501A5BAB;
+	Thu, 15 May 2025 14:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747320467; cv=none; b=nag5/mn25/d8JOQ43va5BJyZpymK0/TQo+fIWYVW6EqmRHw96xe9PIaD5v0QNi3m7CfMUKzJiSLjKtX6PyU/ReX8iIcCThlinYFq2IagPpPBwM/9g2d8a7xG+SWuc3l8xI0pl6RMVCtCaUH4x/CUdIw+dMD+jG9p8cUfoDV4EEs=
+	t=1747320533; cv=none; b=X2LMMzNG4uVYanEntOZIIXHAOUGQ1f7vGXCwkW95rPugagOHBQ+XxrW9KgaNGqzOAq+/IjIcuPTptwuhf55qTG4C6l0dqO/mGBvY40E0RacW4GI069mf6t0QKougbPj56Z8fLOexcoBMzXTN49Htz5w9ukLV6j7cLGdfJ0UDS4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747320467; c=relaxed/simple;
-	bh=AvwUHYD5Fq/xQFEh8ap3xvw+zJioAhbtQpwDB2R8wKU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R1GKfR7VZ46Mhu4sa/dtZtdgPUPG0+RGB5mLLwLnF5Z/0IxL9dyYyHl3kSNePfRWdyprkkdNZWdyLJAgUEzcgcsQ4IGGA/vyOXPGhUhxEaaziv2pLM+3nRJsdOgRHKS1l+OaUTcQBOOqC27uu49uUg1UIIDtYemt1M+k1U+o1zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=RVDvK/YZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WzvYZd68; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=RVDvK/YZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=WzvYZd68; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1747320533; c=relaxed/simple;
+	bh=sHAOrLfoP9W72YbPlypXyXEkxapheQXBsW9OcIkElqw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cZrsw6ta0QQIF+rTwli86uSTrflbNDYpDcLeK29bdke9XMGdmi+9F/sPHUY5INJQ75L7kFB6+coEfpTfVD2yE6xWYnbL6VDGuMSa7Z2lmHGrZevt+6NJrEH0PL/pkT3JSvS/6fGDDuou0PcDTMNMDweBrircCOC/c/EqZRwOAVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T0Hk2iVo; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="RVDvK/YZ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WzvYZd68";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="RVDvK/YZ";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="WzvYZd68"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 336E01F443;
-	Thu, 15 May 2025 14:47:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747320464;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jnYHtBKASPLAOtuGt4YsnZvc9ic2L7xSRfx99ZJ5p/w=;
-	b=RVDvK/YZP1EEiZxvHk+93x3yX7RsZekLXYm7ukeSEzkaKm2ivTyiVGaId69YsyR6pS94Ul
-	lLntYc/mgK7xpwy72p9SeuCJ8Di1IkLskZUFYXz4M7GG8+L8TsfDcSHdHEyLFpAema1ujf
-	iHWjoIjAVL+BQVbBo0rEAGf5s9nH4RQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747320464;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jnYHtBKASPLAOtuGt4YsnZvc9ic2L7xSRfx99ZJ5p/w=;
-	b=WzvYZd68lc8mlnj1RfCEmSdDxaCPJpenEGx3Qfau24xp2sdYAIxhPTTKC+Vn0XQkgOI2Zn
-	WcmEvZYMR2jvYmDw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="RVDvK/YZ";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=WzvYZd68
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747320464;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jnYHtBKASPLAOtuGt4YsnZvc9ic2L7xSRfx99ZJ5p/w=;
-	b=RVDvK/YZP1EEiZxvHk+93x3yX7RsZekLXYm7ukeSEzkaKm2ivTyiVGaId69YsyR6pS94Ul
-	lLntYc/mgK7xpwy72p9SeuCJ8Di1IkLskZUFYXz4M7GG8+L8TsfDcSHdHEyLFpAema1ujf
-	iHWjoIjAVL+BQVbBo0rEAGf5s9nH4RQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747320464;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jnYHtBKASPLAOtuGt4YsnZvc9ic2L7xSRfx99ZJ5p/w=;
-	b=WzvYZd68lc8mlnj1RfCEmSdDxaCPJpenEGx3Qfau24xp2sdYAIxhPTTKC+Vn0XQkgOI2Zn
-	WcmEvZYMR2jvYmDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1508C137E8;
-	Thu, 15 May 2025 14:47:44 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id AtLlBJD+JWiTOAAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Thu, 15 May 2025 14:47:44 +0000
-Date: Thu, 15 May 2025 16:47:42 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Daniel Vacek <neelx@suse.com>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] btrfs: btrfs_backref_link_edge() cleanup
-Message-ID: <20250515144742.GH9140@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20250514131240.3343747-1-neelx@suse.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0Hk2iVo"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3da741bcedcso1865435ab.1;
+        Thu, 15 May 2025 07:48:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747320531; x=1747925331; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8UcpEFBY6ddNvtG+RJyIJB7SfDGpOmaoMi5EF4Kq9Vk=;
+        b=T0Hk2iVo0dE/9IkwrtMuLl4zEPYrmXemKPB4fTH1MOZA25fPw8j7zkthAKcJKICl+m
+         JsdbR0mymBBmJ7QxH3z0mVJwRVFI3MxF38EaqoZMA30Y8sAjY+kfDJtUN8/nZh8rJ1+T
+         1qxhpZCpbXF5bMR07/vh7cz/xChNMbfq6ZtaDIKdu3pclao9/44h2AmiYgZtbMPDywGd
+         fG9JWk4KLBViH2+pixnvKuH4DxMmsWe87d6KZkFfh25Ugw+4G5lVOzwRWaKyWuIRgGN1
+         1Zr2yLoODb1Lu79pXFXe66kKCDWFUFXV0638OtDyz8csnpN1A2pLOP7s0YJuV/aB0NZv
+         0vAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747320531; x=1747925331;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8UcpEFBY6ddNvtG+RJyIJB7SfDGpOmaoMi5EF4Kq9Vk=;
+        b=gr/z4K2pwLTsZ6JJidwLeY1wqs7K2sf3QIGvQFVW7fC/Bvig+p4gb4GU3LQRKYelcK
+         jViN7edHPp6ztprImyJ440VWUB+5EMmmWJg8F9YC4SbDBtcnvlOiuzaivHPqfD8RTCqh
+         HZGXJ4CXHjgYgNb7L4hCBPzKG+0jNYb73oFnnmhY2Qo++26npbkT5aJkqAR3AryWRl26
+         utIv6iC1x8u6/lo9dWq3rWqfk0moWzcAwVRALokLaT/e33mLVMwWFR7qeba59rrinnKp
+         D1et4fom06Tmgi/RBcziuArwENjN3qkvdzq1yMhLVHdBm3YgI3vE30Lu89O5JPt2dtea
+         4h0A==
+X-Forwarded-Encrypted: i=1; AJvYcCUAjGsXGKjRzUkiUvuUfG5He/G53WOI+5iXIv98TfydeSj0dkC9uwUFfbQdR8Wh54MJMn5u2P+rmsfVVgPu@vger.kernel.org, AJvYcCX9zxXzpOYPvli0w6vEbLbGuzgoePZ/n6nKRVwjnC3OLNikIrLFxhqwWp87fhTqdugMUGT97cxNeksrHprl@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9LH3w2COk3oG8yx19c4Ws46AR6hWfa/ZeB/yU4XPRUnPVB8FN
+	4AMa0MunqEoxgEQ2LeIpy6PE4/hZkL8Ej4aTau5I3d8dEY04jp8lmeGOFLQw4GwuE0wObN46UtU
+	SrKaANrbrtay9rW24KmBvZOhiIXA=
+X-Gm-Gg: ASbGncsAjLpAumEpi9gxQpOTll2g5YtMV4KfTGDia5qjT8jr02c0UG7LVV77TSUfyUv
+	3TBvPnaG5eFwcbXIS4G3kVAWKKlhh7eaiDdaXAg54S+b4MGusZlrlKhCzOwigfZUjED3IKfN3cq
+	I+NBuy8segR5SBY4DmRRCXfDi7uoK4oNTUYjc+l3+QZF2wRcG2sjqFAJG+6ooK9w==
+X-Google-Smtp-Source: AGHT+IFtWg4FcpaQcpwpTvAAxNygeksmyF1l4sqwxDFcYvvnKFT5/XBtYVHhM71RjDfHHRY+SZGmXPFPj2VfnOhCfgs=
+X-Received: by 2002:a05:6e02:5e08:b0:3d8:2023:d048 with SMTP id
+ e9e14a558f8ab-3db6f7fa0c1mr68163045ab.22.1747320531316; Thu, 15 May 2025
+ 07:48:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514131240.3343747-1-neelx@suse.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 336E01F443
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.21 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	ARC_NA(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:replyto,suse.cz:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Spam-Score: -4.21
+References: <20250514175527.42488-1-robdclark@gmail.com> <20250514175527.42488-6-robdclark@gmail.com>
+ <20250515143309.GA12165@willie-the-truck>
+In-Reply-To: <20250515143309.GA12165@willie-the-truck>
+From: Rob Clark <robdclark@gmail.com>
+Date: Thu, 15 May 2025 07:48:39 -0700
+X-Gm-Features: AX0GCFtBF3BgAWnijILzbnLfQ8NIY_C-HxQIavKJnQ_xQacCvqpfSyafYx2RZYo
+Message-ID: <CAF6AEGsnOD8fZmTXAEZZNrdK-NXdUJF51s51EhYQ6Ed7dCFM0A@mail.gmail.com>
+Subject: Re: [PATCH v4 05/40] iommu/io-pgtable-arm: Add quirk to quiet WARN_ON()
+To: Will Deacon <will@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, 
+	Rob Clark <robdclark@chromium.org>, Robin Murphy <robin.murphy@arm.com>, 
+	Joerg Roedel <joro@8bytes.org>, Jason Gunthorpe <jgg@ziepe.ca>, Nicolin Chen <nicolinc@nvidia.com>, 
+	Kevin Tian <kevin.tian@intel.com>, Joao Martins <joao.m.martins@oracle.com>, 
+	"moderated list:ARM SMMU DRIVERS" <linux-arm-kernel@lists.infradead.org>, 
+	"open list:IOMMU SUBSYSTEM" <iommu@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Please write more descriptive subject lines, related to what is being
-cleaned up, and not just a generic "function() cleanup".
+On Thu, May 15, 2025 at 7:33=E2=80=AFAM Will Deacon <will@kernel.org> wrote=
+:
+>
+> On Wed, May 14, 2025 at 10:53:19AM -0700, Rob Clark wrote:
+> > From: Rob Clark <robdclark@chromium.org>
+> >
+> > In situations where mapping/unmapping sequence can be controlled by
+> > userspace, attempting to map over a region that has not yet been
+> > unmapped is an error.  But not something that should spam dmesg.
+> >
+> > Now that there is a quirk, we can also drop the selftest_running
+> > flag, and use the quirk instead for selftests.
+> >
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > Acked-by: Robin Murphy <robin.murphy@arm.com>
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > ---
+> >  drivers/iommu/io-pgtable-arm.c | 27 ++++++++++++++-------------
+> >  include/linux/io-pgtable.h     |  8 ++++++++
+> >  2 files changed, 22 insertions(+), 13 deletions(-)
+>
+> [...]
+>
+> > diff --git a/include/linux/io-pgtable.h b/include/linux/io-pgtable.h
+> > index bba2a51c87d2..639b8f4fb87d 100644
+> > --- a/include/linux/io-pgtable.h
+> > +++ b/include/linux/io-pgtable.h
+> > @@ -88,6 +88,13 @@ struct io_pgtable_cfg {
+> >        *
+> >        * IO_PGTABLE_QUIRK_ARM_HD: Enables dirty tracking in stage 1 pag=
+etable.
+> >        * IO_PGTABLE_QUIRK_ARM_S2FWB: Use the FWB format for the MemAttr=
+s bits
+> > +      *
+> > +      * IO_PGTABLE_QUIRK_NO_WARN_ON: Do not WARN_ON() on conflicting
+> > +      *      mappings, but silently return -EEXISTS.  Normally an atte=
+mpt
+> > +      *      to map over an existing mapping would indicate some sort =
+of
+> > +      *      kernel bug, which would justify the WARN_ON().  But for G=
+PU
+> > +      *      drivers, this could be under control of userspace.  Which
+> > +      *      deserves an error return, but not to spam dmesg.
+> >        */
+> >       #define IO_PGTABLE_QUIRK_ARM_NS                 BIT(0)
+> >       #define IO_PGTABLE_QUIRK_NO_PERMS               BIT(1)
+> > @@ -97,6 +104,7 @@ struct io_pgtable_cfg {
+> >       #define IO_PGTABLE_QUIRK_ARM_OUTER_WBWA         BIT(6)
+> >       #define IO_PGTABLE_QUIRK_ARM_HD                 BIT(7)
+> >       #define IO_PGTABLE_QUIRK_ARM_S2FWB              BIT(8)
+> > +     #define IO_PGTABLE_QUIRK_NO_WARN_ON             BIT(9)
+>
+> This feels a bit fragile to me:
+>   * IOMMU-API users of io-pgtable shouldn't be passing this quirk
+>     but might end up doing so to paper over driver bugs.
+>
+>   * Low-level users of io-pgtable who expose page-table operations to
+>     userspace need to pass the quirk, but might well not bother because
+>     well-behaved userspace doesn't trigger the warning.
+>
+> So overall, it's all a bit unsatisfactory. Is there a way we could have
+> the warnings only when invoked via the IOMMU API?
 
-On Wed, May 14, 2025 at 03:12:39PM +0200, Daniel Vacek wrote:
-> This function is always called with the LINK_LOWER argument. Thus we can
-> simplify it and remove the LINK_LOWER and LINK_UPPER macros.
-> 
-> The last call with LINK_UPPER was removed with commit
-> 0097422c0dfe0a ("btrfs: remove clone_backref_node() from relocation")
+iommu drivers _not_ setting this flag seems like a good way to achieve that=
+ ;-)
 
-While removing the code is ok, looking to the git history I think
-there's probably more, related to the node linking. Here it's removing
-one half (LINK_UPPER).
+The alternative is to move the warns to the iommu driver... but they
+could just as easily remove the WARN_ON()s as they could set the
+NO_WARN_ON quirk, so :shrug:?
+
+BR,
+-R
