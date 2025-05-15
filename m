@@ -1,185 +1,228 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2065.outbound.protection.outlook.com [40.107.94.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8213E25B697
-	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:20:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747333225; cv=none; b=crytt/WccdZ3HohmXbgPPExAG83vZN99MiGsFMS8RUmP9tk9QcG/QxsoWL8Q8665OTnsiuXQ15qDJOb08Rf05MbPdb2NsnSmi1HK3xoql5QR3PpuKEsLKraQWJvGLrTTTtp5/nc3FMlguUxslAKRkpla8glbSgR8qFWIcSYTbzg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747333225; c=relaxed/simple;
-	bh=OFQJFxNEJqELWJaBN8ZVm02CI2xaoxqAGDZdrfqhTII=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=brZmZuLspSld0QyNCC6v/D0mjVHRYxpZNNoI64GaE8BfP94tJFLwTmd7yvavIhrK93Pi982Qiu+aWE26crhevZZkjlvmTP2h3ND0IB1WGc7UZqf8XQcvHeRFGS27eTCKxopqhCMpt2z1YZ024vIAYw7vKsMDlF//CA1DFdtVZN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XPMh+X0M; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC05925B66A
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:20:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747333233; cv=fail; b=snQqJxH3elmkSZ8W3W8ohMXEDajxb9MgiDk/ZfrZj8pEOkdtVabUtaCX4Rrfg/JsBGNAclJRfp88vHvFyzMSbLF1TFZlPYMIu0QEjZP1I+vfrac3fNyiIG/5mGv8SS/hMcr5A/oqpTHZVpaQOiLZz21+6mUaU9Cy//UXZT6GvJY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747333233; c=relaxed/simple;
+	bh=gEpVDjcBrt0x1E+LpoJbwitz4Yzr0gThN+7VuOluuhc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=V7GorX2h1hU1ZXqX8oeXTvKvhpDVfdT9XKqMkA2hlHeSLsASf3RW3HFt60bQx18Rd7Npm1ejFMW/Ul+h2Cx7+rpMi8QlvnlkdOO31C68KUI3Re2JvnWLX14+vp8mO0x3l9cQyRkVUKBu8SSV6Tnxdqmkf+xVRXYtvheqAtDGIMQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=r66dQzfY; arc=fail smtp.client-ip=40.107.94.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XPMh+X0M"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3da73d35c11so14915ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 11:20:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747333222; x=1747938022; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O63afm2VlIQSQza7BQRIQ/xdhW0az9PDJoewqUEykng=;
-        b=XPMh+X0M1f7nJarUW9bgqZh+OIjpwpXY5/HunbmqJCc8NsY4IYGe5NzwXRa4rIpDe/
-         wcAOje8nWRhHS1aXEgLpfpMPeghUkPfar5F0FGIfAC843FBhisglIUX/jiclH/qaMiMW
-         z0aqmrIEOpl9ieBfjyd4G6D1UNaynEvO+zJNusS644OhCcZVyEUKSlkr+61mRt7n1+wj
-         8eqV/mlLc4nbKR52/gIIJOUHqGTZZx+NrMr/KNgWeQIHV0pQJu4AG/ngvuj4/NHVtf/q
-         fmtMp8aRem8rGscS5hFSkIfJ0SVFTHnKW56Pe+IhvL3/UTupWosqs7O5cMffTD3JmbrW
-         NrtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747333222; x=1747938022;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=O63afm2VlIQSQza7BQRIQ/xdhW0az9PDJoewqUEykng=;
-        b=gqJJTS/cHLT5H0xCwlXjrKEqTWOY0DTM/6dlEkq29hYJSLLWSsU3p9uJH1Y9qQCwa4
-         c4RE0YFxpLQc0LZVGGSBTMx3xC6q5yHDUgjG8E0Oqdes2ifgKhGc6mEssqiQ6qOsqlET
-         wLC/DadhbJ9DBX12C9rd7YU5+qFykRErb4MC+QMeAIC/Vgmy7NejdkZhppnDt2CrjSqN
-         Lc8AIRfYqsT0h53b9OXwPhP2nrmADcbSvYLbzsT4pVyBkyI3tpcUARVMhnf84DYaw/zh
-         pPJVc27d8bifYi/bi0GQh0L+ys+6tggakJHr/1hsx4VPLp6g8JhuzHMOte4eMJ/jgVSP
-         ds+g==
-X-Forwarded-Encrypted: i=1; AJvYcCWZxEnYOVhLykB2C+Hh/IPzwhidVlHQRdmMSnluZn3rgNbvMW7KTDvE5/AdGPPkLGCk8KtNIYEJThmOVRg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbmG56/YE+3qk+HXyORYFd5Q0M6EZ1xYCMi2QDd72tuoyx+DsK
-	FUcp/FedE6oTtOvn39lWr2E8OyZ2yNlJvg22oA8nBq/GSRFt6rNfqBj0ZbHKTz5IelVBV5SHTBY
-	NGDbFVfwQw68ugheXbrVetgbXC37lnvDhbHWnV3Rf
-X-Gm-Gg: ASbGncsSkON+kFRbr6oHPzE+LJejtN6ZuKHBpENEwqLmktQRTHBo1KD6JRJNNjd4/nu
-	S+a2ZwCcPjaXBEDGOuWaVSVnYRX7tyIh9+omGoTgt6q2crtIMUnbfmWKMozAx7qu/PdS09EVMQx
-	2voxhWRmXQTqB7fvtfWAM01ZXEhLn3p7h9r/2Skdqk6rCCBj0r4PrCD3kat4yeu0DbuMh2Xkbq
-X-Google-Smtp-Source: AGHT+IHxywpS3vYTcikvJFkskiAkXcjtoKimej+IX3453AjHRldxM8Iu/0iE5TCAiDL7Ohn6Vyr2bCnr89AIycM2SlY=
-X-Received: by 2002:a05:6e02:3399:b0:3d9:6e55:2aae with SMTP id
- e9e14a558f8ab-3db77f13930mr5539735ab.0.1747333222382; Thu, 15 May 2025
- 11:20:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="r66dQzfY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Kih9mlQ4yKGcIpvbXtJBXrL3YpRP4HcngpD0J+VLz36diYGzsgSEy3Di0l3hZelwN4aXZBpVT6bnk98HXGJF84Sok8ABTYy78EaaEWcQEi7cfVj2+NYGkisen6dz986pQO9xhJlmiFMWWuEFiWBI7jgQPXElMUzvSXphIRXSt6Zv1t8qU34AzBTZQ4RdztX7sHjCAxCbjpnRAIZ/v4gtE9WEGpaEHlvdDqa48S2jFBI2HbwEGvUl6RraVaYiZ09bZNcAtoZWo0+sfdFIFYZ9EVRycuompx8U5ahK+6V4ygbzpPrccIvLsNpY1SO4NBs6fySkIpI4CzfGPYA1FFkrKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0BZsdvZtJnhhupqh1SvTqIYLgNUxnIO2ExDXAMEHFDY=;
+ b=nhPh36jqWyLSKkBOSiQR7Ly79jpLLuJSOiLkCEL687bhiwgkJkvoEzrKDy5nO9lpjim+c3hCbP5TQCVsanp5tix/7zGxe/CBCUoqQ6mVAgbeCBPCL2l265k3B615B+paskaiY40BC4ZcPbfqh2mC7WvLI0qGnmgQWvTMZT12vlqs6Z4BKT4/n1eVJ9tYc5DRdul9roJzmLl3r84Gqa+UeMsYV6CduNYkWQCCU74sUwo11+ZlOmgk3Nw6CcUNCkG94CLEsZLHKctJN82hstcFVqcu2YMse2vGfIveVYSMs7gI+ACxiBVI++cjCDMVG5xU6tSf/KIVthdMyGK4rxppcw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0BZsdvZtJnhhupqh1SvTqIYLgNUxnIO2ExDXAMEHFDY=;
+ b=r66dQzfYTNYZol9EmA8bcdDYH2OEGhvzbYopHd41MO/F0+novMX16OoWF+MjVnQxqfHXzMvjpq6RWHTMQ9TFbBxHdHNfp0xAtW8dzUNAG1/5vhmiDqFGx74ciZjLhe9Il61btzF+KD/ZaLfMAtNWp8bZFTQZ5/4FkSXA2vwm9x0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH2PR12MB4262.namprd12.prod.outlook.com (2603:10b6:610:af::8)
+ by DM6PR12MB4297.namprd12.prod.outlook.com (2603:10b6:5:211::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Thu, 15 May
+ 2025 18:20:25 +0000
+Received: from CH2PR12MB4262.namprd12.prod.outlook.com
+ ([fe80::3bdb:bf3d:8bde:7870]) by CH2PR12MB4262.namprd12.prod.outlook.com
+ ([fe80::3bdb:bf3d:8bde:7870%5]) with mapi id 15.20.8722.027; Thu, 15 May 2025
+ 18:20:25 +0000
+Message-ID: <7c315a0d-1508-4310-b584-ecaeaba52296@amd.com>
+Date: Thu, 15 May 2025 23:50:17 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/7] x86/cpu: Use a new feature flag for 5 level paging
+To: Borislav Petkov <bp@alien8.de>, Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Brian Gerst <brgerst@gmail.com>, "Rao, Bharata Bhasker" <bharata@amd.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
+References: <20250514104242.1275040-9-ardb+git@google.com>
+ <20250514104242.1275040-10-ardb+git@google.com>
+ <20250515131120.GCaCXn-E8zQutUqKLn@fat_crate.local>
+Content-Language: en-US
+From: Shivank Garg <shivankg@amd.com>
+In-Reply-To: <20250515131120.GCaCXn-E8zQutUqKLn@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0113.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:96::18) To CH2PR12MB4262.namprd12.prod.outlook.com
+ (2603:10b6:610:af::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515043818.236807-1-irogers@google.com> <aCYTG12gSmv0OtXN@x1>
- <aCYTaveeziFiF3kw@x1> <CAP-5=fWBdCVSM_QLcLJ66g+LC0ykrJbZA6mQUsH_++xLormFzQ@mail.gmail.com>
- <aCYv9KBA0fYlT143@x1>
-In-Reply-To: <aCYv9KBA0fYlT143@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 15 May 2025 11:20:10 -0700
-X-Gm-Features: AX0GCFvn9tLQx10HojBrW8CVpvMI5SDjtSE51P_ZxB_B3dIPMWecGGXiaF440uE
-Message-ID: <CAP-5=fX2UfyCLwxDzvt=xy_2yA9-450x0gGVebrhzXwWH4-b7g@mail.gmail.com>
-Subject: Re: [PATCH v1] perf pmu intel: Adjust cpumaks for sub-NUMA clusters
- on graniterapids
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Weilin Wang <weilin.wang@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB4262:EE_|DM6PR12MB4297:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3229f538-c56b-46d2-c593-08dd93dd29ae
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bVJBNGJSbGIwN3RNYWU0WlFJYStpWUc4Wmpvb0I5cFA2WnZ4eWZNUTI3cWUx?=
+ =?utf-8?B?em5zZUt2QjE2ZTVPZ3hDamhKY1dOUXlGejZtVnFnTjJyOGR4U3RaU2IwczRE?=
+ =?utf-8?B?bmdmOEdDQWQyNUZWeXdDMzNCTDJsKzZnOU84ZWYwVnhZcHZsS2x6NGMzREdT?=
+ =?utf-8?B?WFBSRUtUeGJtNFVuRmNzWlh6a2NYaGorem1JRWJUUGgzc2pWUnJINHhwZWlh?=
+ =?utf-8?B?bGJmVkNnTS83YWt3L1hHZmt5OExuU2F6MFZUc1loeUVjVGdkeTBOR0hzOWQz?=
+ =?utf-8?B?N0hsVGdCS2l1WHlUMS9MWjJSenRkbXZ3SWk2L0pSYk8yTWN2a3hmbWpVSXBR?=
+ =?utf-8?B?UzFkUWZNL29sRGN2WmI2aGphYlVwRjJpamtDZzkyOXZHMlhmaTU1OVgxNTRZ?=
+ =?utf-8?B?RVIxOVhzbWh0aWJDWGFKOTV2MHBwTmlhWTdCcjZGZEpETlFBRVd6Y2xlaUIx?=
+ =?utf-8?B?QnBISEN5eVVPSklOL1hMbFIwMlR6cnp6MVBkTU5BWk8rUnUzNnFOajhmaVJF?=
+ =?utf-8?B?WGdQNUkrWUk1Z1l5UWYyMXVXQnhRdVMwWm90amIrNk9lSFpKY2xNMTc5Smty?=
+ =?utf-8?B?SHVHK0JHQ3VsUVN6Tk5VeGRrVEtIZmZpa3pDK2pwQzhVeHhubnptWWJxZkU4?=
+ =?utf-8?B?VXZxbXNvMGJjMi80Z3oxT3pUSG8vYThJQnFOOFRMcHVVZHdqUnRCY3A3UFFq?=
+ =?utf-8?B?RWRjZTVmbDBROFh1cWkxaTNkWU5CdGk1K1ZHLzVLa1lOV2d5eW9EbzBiajh5?=
+ =?utf-8?B?QUFSYmVWb0hMSE1kQ2NiaE8yeUdFVExESFliQkZSWHRSUWJ3TjZDL1F2eTRa?=
+ =?utf-8?B?KzRQMGxpUjlKN1QyVUNPVVN1VDBDQ2VKMmtISnp4OFlSWUtlajdBUzBaNUFx?=
+ =?utf-8?B?NCtnVDlsNWpjUjg1Rm84ZXpnb1NheDdXMnA1bVA0cVdJMTNwNW1mODVKeXF4?=
+ =?utf-8?B?bTdEekI4dHdlN2ZBTC8yWld4Z1Y0b1QwZUlqQ2tVQnJEbFBleTJFZ0FQVVZm?=
+ =?utf-8?B?N3lQcHJFWnhDVzZOVnhxRmpwZno3Q1hVK3dLak9Pc1JZNi9uZTZ1aExiY3h0?=
+ =?utf-8?B?SW93S3dGMnVhclZ2dTQ5TU9md1diTGIyTEpNN0xCOHhwUzJNT0ZrdjZ1ZWpq?=
+ =?utf-8?B?T3FEYnF2T0NoMXUxdC9ob3BNVUMvU1N3VVdqL25ZWW1xQjFMbk9SdlVNZTQ0?=
+ =?utf-8?B?aFhiVXZaV09xemtRYklUdzJiNkM1NWhkV3p0WklzWUVocFJqV2ZHZUtPZXR0?=
+ =?utf-8?B?MXRCSStVOVlUcW5LczlCd0RURnB3OG50d3BIMjN2UWgyZ0J1MlRJQ1FHMG9r?=
+ =?utf-8?B?Y3g5ZENyUnpVU0U4U1hHK2JWcDMzQmN4ZjkxYmRuK3BDUDRTNkcvOXp5OTYw?=
+ =?utf-8?B?RnN6eFFSKyt2K29EalB0cFpiYTNobzVLQjJGdzA2YTdVaDBrVU5qaXMyWkY1?=
+ =?utf-8?B?QUVxS1k2VmlVTmJqdm8yQ1JwUXlIV2lUN3F1QzlvY1Nwdnk3V1llOXJPdCtt?=
+ =?utf-8?B?d2pUZGpTU0hQd2U1MXhJNjZESDBEUDlKejI1MzNnMTd5YjUwRUlwMjRzODdC?=
+ =?utf-8?B?YmFvWmlQSUdzL2Faa0M4YktNdW5aaExNamx4YmVPemF0ckw3R0RUY3FjSENO?=
+ =?utf-8?B?NHJGcHJQbHl4endsekVEYXhaaHYxSGl5Mlc0bHJMUldKSkZkaDhpekpRTXk1?=
+ =?utf-8?B?V3V3Qjd0ckFvOEpFbjZOSkFwZDdoaEZPcS9hckZHNmErOVRUeE1jNE9YMXBR?=
+ =?utf-8?B?MXdtTjNma1JISmZJNDFVb3ZKV1dRNWlyK2hmUGdYT1lwR25acUFKcVhzb2Vy?=
+ =?utf-8?B?dW5WMG8zZjlhSThpV2hQY2Rwc3RWV3NNR2hsRmpHK0RadXdKQzNzRVdqbEg3?=
+ =?utf-8?B?SVBHdy82MFh4TC9ocXU0ajE2aXNHd1hpNGRFUDhIdU45TklFYmxPR0pIa0JF?=
+ =?utf-8?Q?yiPmxhZu9Nhze215AQobTUCr1av/kn4g?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB4262.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(13003099007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?L0VBbWJSekhGdFpkNFJQcTNxLzZsRnpZQVdOZzg0TVZKdjJDZDNOSXBka2lB?=
+ =?utf-8?B?TzRTOU9jcWZsZ3RhSXNtNnZsRk12Wmd1YnlyV0tySzYzVWRlZnpFdHk4YUQy?=
+ =?utf-8?B?Y3RCTzZ2T0NBQytFQ0hzeHdhOG91RU1oNTdKc2Z3cXNCM0djMFlPSFZMVjBp?=
+ =?utf-8?B?Z3FuZjRMbHF3M2I1d3FtbzdhT0h5N1IxUTJLTFVPbmtkazYzajc5RjJyYWk0?=
+ =?utf-8?B?ekpPT2w5bForU2dHTmpZYmh4WjVsSFlMdWRmQXc4WXp4K1oreU5VUDRrVjVY?=
+ =?utf-8?B?UW1UQTVWZHNVVEgzTXNKVXppbDBQUWE3a241NFZZcGVkRnlGQWVyaE9yTW9J?=
+ =?utf-8?B?L2xHOU1NTmxuRXFqWmhEZUVJMU9zSGxKanlaODdiZ0MxclI5SGpYb2NuTTBl?=
+ =?utf-8?B?UEJmeklnanpMdk1hRURzbEhoS1E2MWZybngxSVhVMm9GQWhrTkZwUm90bm85?=
+ =?utf-8?B?K0FDeUxvTkZENlYvSVFZNFFvSTF5Z3ZKaVdyMWFDL3RLeU5hbzZ3YmwxNXdm?=
+ =?utf-8?B?Y1gvQkVmMFVoRU5wa3N6bXRLcW1FVDVjWU5KQ1JYTXR4aWpDaDRBbUhTeVRD?=
+ =?utf-8?B?Z1pSYkhSb0M3VjR6QTd0ZzQ0ZmF2R0U1dSt4eVlVM0hudVFKdllTV3RRVm1H?=
+ =?utf-8?B?ajZqTFBSMzN1a3lpaUpqUTg0VGNEU3VmUDJVdWtYZ0JwZkFtektzeGdQY0N5?=
+ =?utf-8?B?VzJJYW9oeExjTXZHQ0V6ZE4rZzdXVUZMUUdyUitaa0hQN0NuNHBFaFpmQy9j?=
+ =?utf-8?B?ckVSanl0MEZjeE9EN3BHN29OZTJaTTcwSG5PUUVWbzdJamo4Sm1ONGdTWXZP?=
+ =?utf-8?B?WDNOUS9MRERKeFo1MkQvSDJkMXNxb2hiVGxQUTRpYmU4ZytEMnJoWW5zdDBu?=
+ =?utf-8?B?WkhlNUFoQjZYMXZ0U3NoWlhUNDFmWEdEVVB3YnErc1ZrZXVmdGl0N2NhSENL?=
+ =?utf-8?B?M2R1eHk0SjRvMkI5Z1JOYVhUMUsxTjNBOVpLSTFXNVQ3VCtsK1hCWUlxdE9r?=
+ =?utf-8?B?Q3FSQkJwTU52WWVEQmJuOHkyOVU3am1MTmhSYU1yeFdTWERHUktQTG1ZT2JC?=
+ =?utf-8?B?N2dBbG1GbVhSc2dzd05qWEE3ME1mQmRCYjhoM3dPcFRNc0R6SmVwU1dXTWVo?=
+ =?utf-8?B?dUlKZ1pvV1lRNHM5d2lEUlYwU0lPLzhGUERhcnJ1SFZMdWVNMW1rZjQ5eXZs?=
+ =?utf-8?B?SVY0Y2Fjb1hmamhvR24wdzVKcjhrRmh0L3VHa21BM3VEUmZ5V0NFbzZGaTdD?=
+ =?utf-8?B?V2JwdDFVODdEWUVVOTBlSGZjN0h1RVU4b2M3ODNaSEpxUXZTc0VuLzExZ3pF?=
+ =?utf-8?B?UkhWT3M5Q3hCOFdXR3NMU2pGU0g4eGlsUEZjdDhYUy9GODhrSUxoU0NSSjll?=
+ =?utf-8?B?aXYrcjkrZ3h1Y2xCaVZWTSs0ZXBwTUhVT0U3VzR1NGw1REJDMjlFeHZybHAy?=
+ =?utf-8?B?QnJ3TU5aNFhwSjUrZmpKQ2tlbGlJdFU1VGo3aXdGaFJ2QndWaDVZbjlYeThL?=
+ =?utf-8?B?UUlVTkhTMTVNZTBmZ2R6ZVVWSGRBZ0t0SFBRbmFKVTROK2o4ZGFjL29OUHdx?=
+ =?utf-8?B?aHVNcHFaemNNbUp4L1VEckNxREpxN0NXL1JlZmxWS0pqdDZrYWlJWGdQaXNT?=
+ =?utf-8?B?QU1ucDlOS2poRURRczhrcUVackVoaDFxTVZUbEh4cEZaWXdLaXZnQllZSWJW?=
+ =?utf-8?B?NlZmaU5EeXJQOXNpS1NpZG9HcTRXaHpmdWdWS2x3SE95TW44Q3NCSDlJOHUv?=
+ =?utf-8?B?OVNINWUwWDNVY1dOK0dhK1RzaDFzRERjd1NJdWhSUVBUbEZWcjZEQVpvMmJD?=
+ =?utf-8?B?QkZQakFETDhkL3lSL0R5aDRXYzhneEdBV1VFWnJWNThGdVgwa1NtTkIrY3VV?=
+ =?utf-8?B?bzZEdWxiUXRQb3JlbXRDNmJITDZTUlNoL0RDdFUvQjd0dVZJZ1JyaXZEL0ky?=
+ =?utf-8?B?UWN1U3llemUxNkhTdGk5NlZ6amZlaWhTUkpIdm90YUR6UTBLbGlnZHB0ZGRE?=
+ =?utf-8?B?Ni90T3N1cGdpV1pBdy9ObkNEU09QRzgraGNNNlI5aFVtVkdIdU0vcExjaEN1?=
+ =?utf-8?B?MlZOY1IzZ1l3bnhiN0RjRkk1VGFGa3NBenJDRlE3ZFQ3WkpMTEVMdHNYNWtM?=
+ =?utf-8?Q?9ZSeAQ1GF991e6G3U8TsWJT/S?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3229f538-c56b-46d2-c593-08dd93dd29ae
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB4262.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2025 18:20:25.7148
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KiKxunMnDs7yMWzqNOFIrZq9JPdd7C7UMJhWurMvqf2b8doEAobDG1qv2K4T/N5Y7xgjEe34H/rwGdiAgQExMw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4297
 
-On Thu, May 15, 2025 at 11:18=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Thu, May 15, 2025 at 10:02:44AM -0700, Ian Rogers wrote:
-> > On Thu, May 15, 2025 at 9:16=E2=80=AFAM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > On Thu, May 15, 2025 at 01:15:26PM -0300, Arnaldo Carvalho de Melo wr=
-ote:
-> > > > On Wed, May 14, 2025 at 09:38:18PM -0700, Ian Rogers wrote:
-> > > > > On graniterapids the cache home agent (CHA) and memory controller
-> > > > > (IMC) PMUs all have their cpumask set to per-socket information. =
-In
-> > > > > order for per NUMA node aggregation to work correctly the PMUs cp=
-umask
-> > > > > needs to be set to CPUs for the relevant sub-NUMA grouping.
-> > > >
-> > > > I'm blindly applying it as I can't test these changes, and I think =
-this
-> > > > is bad.
-> > >
-> > > In the end the only review/action I could do was to turn:
-> > >
-> > > Subject: Re: [PATCH v1] perf pmu intel: Adjust cpumaks for sub-NUMA c=
-lusters
-> > >
-> > > Into:
-> > >
-> > > Subject: Re: [PATCH v1] perf pmu intel: Adjust cpumasks for sub-NUMA =
-clusters
-> > >
-> > > :-(
-> > >
-> > > Besides the build tests, etc.
-> >
-> > It isn't the easiest to test. Let me add Weilin Wang on v3 as I think
-> > she has a graniterapids and could hopefully provide a tested-by tag
-> > :-)
->
-> But, one more review action, will wait for v2:
->
->          make_refcnt_check_O: cd . && make EXTRA_CFLAGS=3D-DREFCNT_CHECKI=
-NG=3D1 FEATURES_DUMP=3D/home/acme/git/perf-tools-next/tools/perf/BUILD_TEST=
-_FEATURE_DUMP -j32 O=3D/tmp/tmp.HAAu6nXJ16 DESTDIR=3D/tmp/tmp.NpycD5uTsi
-> cd . && make EXTRA_CFLAGS=3D-DREFCNT_CHECKING=3D1 FEATURES_DUMP=3D/home/a=
-cme/git/perf-tools-next/tools/perf/BUILD_TEST_FEATURE_DUMP -j32 O=3D/tmp/tm=
-p.HAAu6nXJ16 DESTDIR=3D/tmp/tmp.NpycD5uTsi
->   BUILD:   Doing 'make -j32' parallel build
-> Warning: Kernel ABI header differences:
->   diff -u tools/include/uapi/linux/bits.h include/uapi/linux/bits.h
->   diff -u tools/include/linux/bits.h include/linux/bits.h
->   diff -u tools/include/vdso/unaligned.h include/vdso/unaligned.h
->   diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/c=
-putype.h
->   diff -u tools/perf/trace/beauty/include/uapi/linux/vhost.h include/uapi=
-/linux/vhost.h
-> Makefile.config:968: No libllvm 13+ found, slower source file resolution,=
- please install llvm-devel/llvm-dev
-> Makefile.config:1147: No openjdk development package found, please instal=
-l JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
->
->   GEN     /tmp/tmp.HAAu6nXJ16/common-cmds.h
-> <SNIP>
->   CC      /tmp/tmp.HAAu6nXJ16/arch/x86/util/pmu.o
->   TEST    /tmp/tmp.HAAu6nXJ16/pmu-events/empty-pmu-events.log
->   GEN     /tmp/tmp.HAAu6nXJ16/pmu-events/pmu-events.c
->   CC      /tmp/tmp.HAAu6nXJ16/arch/x86/tests/hybrid.o
->   CC      /tmp/tmp.HAAu6nXJ16/arch/x86/tests/intel-pt-test.o
->   CC      /tmp/tmp.HAAu6nXJ16/util/block-info.o
->   CC      /tmp/tmp.HAAu6nXJ16/util/block-range.o
->   CC      /tmp/tmp.HAAu6nXJ16/util/build-id.o
->   CC      /tmp/tmp.HAAu6nXJ16/tests/pmu.o
->   MKDIR   /tmp/tmp.HAAu6nXJ16/ui/browsers/
->   CC      /tmp/tmp.HAAu6nXJ16/ui/browsers/annotate-data.o
->   CC      /tmp/tmp.HAAu6nXJ16/bench/futex-wake.o
->   CC      /tmp/tmp.HAAu6nXJ16/arch/x86/util/kvm-stat.o
->   CC      /tmp/tmp.HAAu6nXJ16/builtin-help.o
->   MKDIR   /tmp/tmp.HAAu6nXJ16/ui/tui/
->   MKDIR   /tmp/tmp.HAAu6nXJ16/ui/tui/
->   CC      /tmp/tmp.HAAu6nXJ16/ui/tui/setup.o
->   CC      /tmp/tmp.HAAu6nXJ16/ui/browsers/hists.o
->   CC      /tmp/tmp.HAAu6nXJ16/ui/tui/util.o
-> arch/x86/util/pmu.c: In function =E2=80=98gnr_uncore_cha_imc_adjust_cpuma=
-sk_for_snc=E2=80=99:
-> arch/x86/util/pmu.c:249:42: error: =E2=80=98struct perf_cpu_map=E2=80=99 =
-has no member named =E2=80=98map=E2=80=99
->   249 |                         adjusted[pmu_snc]->map[idx].cpu =3D cpu.c=
-pu + cpu_adjust;
->       |                                          ^~
->   CC      /tmp/tmp.HAAu6nXJ16/builtin-buildid-list.o
-> make[8]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:8=
-6: /tmp/tmp.HAAu6nXJ16/arch/x86/util/pmu.o] Error 1
-> make[8]: *** Waiting for unfinished jobs....
->   CC      /tmp/tmp.HAAu6nXJ16/arch/x86/tests/bp-modify.o
->   LD      /tmp/tmp.HAAu6nXJ16/scripts/python/Perf-Trace-Util/perf-util-in=
-.o
->
 
-Yep asan/refcnt checker was fixed in v2. I just sent v3 to hopefully
-address Kan's feedback:
-https://lore.kernel.org/lkml/20250515181417.491401-1-irogers@google.com/
+
+On 5/15/2025 6:41 PM, Borislav Petkov wrote:
+> On Wed, May 14, 2025 at 12:42:44PM +0200, Ard Biesheuvel wrote:
+>> From: Ard Biesheuvel <ardb@kernel.org>
+>>
+>> Currently, the LA57 CPU feature flag is taken to mean two different
+>> things at once:
+>> - whether the CPU implements the LA57 extension, and is therefore
+>>   capable of supporting 5 level paging;
+>> - whether 5 level paging is currently in use.
+> 
+> Btw, that gunk:
+> 
+> We had started simplifying the whole 5-level crap:
+> 
+> https://lore.kernel.org/all/20240621164406.256314-1-kirill.shutemov@linux.intel.com/
+> 
+> Shivank, I hear the performance issues got resolved in the meantime?
+> 
+> Thx.
+> 
+
+Hi Boris,
+
+I've re-tested the performance concerns we discussed earlier regarding 5-level paging.
+Recent tests on a current kernel don't show any performance issues:
+
+AMD EPYC Zen 5 (SMT enabled).
+Linux HEAD 6.15.0-rc6+ 088d13246a46
+
+lmbench/lat_pagefault:
+numactl --membind=1 --cpunodebind=1 bin/x86_64-linux-gnu/lat_pagefault -N 100 1GB_randomfile
+
+Output values (50 runs, Mean, 2.5 percentile and 97.5 percentile, in microseconds):
+
+4-level (no5lvl option)
+Mean: 0.138876
+     2.5%     97.5%
+0.1384988 0.1392532
+
+4-level (CONFIG_X86_5LEVEL=n)
+Mean: 0.137958
+     2.5%     97.5%
+0.1376473 0.1382687
+
+5-level
+Mean: 0.138904
+     2.5%     97.5%
+0.1384789 0.1393291
+
+After repeating the experiments a few times, the observed difference(~1%) in mean values
+is under noise levels.
+I think these results address the performance concerns previously raised[1]. I don't
+foresee any issues in proceeding with the 5-level paging implementation
+simplification efforts[2].
+
+[1] https://lore.kernel.org/all/80734605-1926-4ac7-9c63-006fe3ea6b6a@amd.com
+[2] https://lore.kernel.org/all/20240621164406.256314-1-kirill.shutemov@linux.intel.com
 
 Thanks,
-Ian
+Shivank
+
