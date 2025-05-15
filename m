@@ -1,100 +1,167 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2883D1F8EFF;
-	Thu, 15 May 2025 13:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6244E2581;
+	Thu, 15 May 2025 13:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747314870; cv=none; b=P0a0r2hqBCkstP95oMHTlYZ2Mb/Au+CBWSG9yIdSmWCrzwFkzmNKfGADqx4cGqx2i6hX+en7KhBRAqCHlcqNL7wLPg0N4EqtPkZ7UKr6RdUz4MojfoUegrMLz7nj+4IkUESrMcBCWSOsF4XBL8ZZtAmEPtvlKh//QMoT09Ors+Y=
+	t=1747314978; cv=none; b=dbKIFz215gldemHYxoKqH2j4ntajPv2DTGO8ObD3iPA2id+9QQnMMR0armpC0pE2a3c9GD2d3A01KUnBI18EUGhCyfUl5vixjVocF7JZDFsApFRr68vh77Hc/pTfWoVIgqrLqT2ZaVVzMrEP+tEvkXdqyddihwSosJVkmPp8qTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747314870; c=relaxed/simple;
-	bh=P6Rsl+u4+L2cyHPJnCdS27n5s/M4XNhV8Dla3xUPC0s=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=C7fxzHJ0sG+0IsqEcLZhAPFFTiuVvfA+fWNEYTJGySjDT6ar+EuECmoXi777EnG/Xbhi7WG949F1SbKSMrMyh8U6kzwbBsyi9rlOK/WJJ3i7vlc53BZojZ7/tbnCFv/G7ks807in9wr3GHOppOkuIMuxo/rliFmgKdeGz0ADPlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=8JIIaksp; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1747314978; c=relaxed/simple;
+	bh=/foRtK30244Y6vx7qd0F0GOygInRY+jAMjfoJ/j1WrE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f5UMRCjhsBstSPbFltRH+EASMvj2ItS5m8eTD5N8P/joQDxCl43bd+0GHD8+c+TtHDDRTstiz2Ug2lV1uh0mYoVlBMeKQxWJAk/IJjOq6xtBghw8oi+X5lLVxlhGP4Cbu6qwaTf8UIvJKEurbRPT2ZmLKO/HacZQS1/TZqWfDq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ekz6JbB7; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="8JIIaksp"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54FD6Ohv014139;
-	Thu, 15 May 2025 15:14:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=pLQZAQx7JWYvk7JPinwxnP
-	wYo7F6pB4GfYvlOtuM8X8=; b=8JIIaksp9OUdgBZRqHR9/yAioPTzkUg2dWGRQW
-	rNFzMWqAeUiwD7CojkXQlE+rENf1XgdOnQLh5P3d3kHsODrk+cTcgXUZEe2DhFEC
-	qIPqqPHVT671YsEifYI8wuCVg2hUtGFVmwK/0hWCtFPF46lJ3k/ASRG8ij0wTfyj
-	+Cm8q5JD3g9tKQfKoQ4MWidpCr2chf58qzGfN02fd9vtTVVzvdoeYLst1UM/z1RM
-	u1/FHQVXDM/RW5KqNyBC6jmnz1bezydXg3UdjIfyUq+JkoSra73TCpI5xHYObnnh
-	vo/lVEusH9XnWB8mhG9JMWGSFjSu0Xzw8zM4xfMdtJ8/1nHw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46mbdw8t72-1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ekz6JbB7"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54FCgBGF004810;
+	Thu, 15 May 2025 13:15:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=K8eSWs
+	kk7y1WnwI4RQTrKWmfmUf+E2VpeXbQUkcUybc=; b=ekz6JbB7iUMeaJO8Zgm/xD
+	HiKuN5VxsRPhASWlfw3z9j/4ZXlKZHTlh0+qiPamAMwQzafpe5Shdj99iezgRgoz
+	mmQdzP1STPkxj9Kn028nFKNbe2JP9+8/DjUzKqLPqAAvSCQFUxqKnYrkDlwhMJtr
+	3OWwiCzuYfUad9CBOvc7mnDZVguFNN27n60vE6mMpkpvc8EEmkBI32maBTtpPqov
+	mTFJL4ZbDKXCO1gRAmJIfGMgYSpFSZqLqNwlAKR7tlxp7o6/ZjitC0SPHebcm/GS
+	+A/46xynLr6IwE+5rVrkJxxu+DRoMZUfb44AaF5FN5FvWZecQY2OGRLSWQkhDW0w
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ndfjs5h4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 15 May 2025 15:14:15 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2018B4005D;
-	Thu, 15 May 2025 15:13:20 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3D28BB3B14D;
-	Thu, 15 May 2025 15:12:43 +0200 (CEST)
-Received: from localhost (10.48.86.182) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 15 May
- 2025 15:12:42 +0200
-From: Patrick Delaunay <patrick.delaunay@foss.st.com>
-To: Alexandre TORGUE <alexandre.torgue@foss.st.com>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-CC: Patrick Delaunay <patrick.delaunay@foss.st.com>,
-        Marc Zyngier
-	<marc.zyngier@arm.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH 1/2] arm64: dts: st: fix timer used for ticks
-Date: Thu, 15 May 2025 15:12:39 +0200
-Message-ID: <20250515151238.1.I85271ddb811a7cf73532fec90de7281cb24ce260@changeid>
-X-Mailer: git-send-email 2.25.1
+	Thu, 15 May 2025 13:15:58 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54FD9JMO003541;
+	Thu, 15 May 2025 13:15:57 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ndfjs5h2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 May 2025 13:15:57 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54FAls4p026947;
+	Thu, 15 May 2025 13:15:57 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46mbfpjavc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 15 May 2025 13:15:57 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54FDFtfr33555120
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 15 May 2025 13:15:55 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5FFF32006A;
+	Thu, 15 May 2025 13:15:55 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0C0BC20067;
+	Thu, 15 May 2025 13:15:55 +0000 (GMT)
+Received: from [9.152.212.229] (unknown [9.152.212.229])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 15 May 2025 13:15:54 +0000 (GMT)
+Message-ID: <ec0827aa-0bae-4625-ad60-f1a1765a4811@linux.ibm.com>
+Date: Thu, 15 May 2025 15:15:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 06/15] s390/perf: Remove driver-specific throttle
+ support
+To: kan.liang@linux.intel.com, peterz@infradead.org, mingo@redhat.com,
+        namhyung@kernel.org, irogers@google.com, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: eranian@google.com, ctshao@google.com, linux-s390@vger.kernel.org
+References: <20250514151401.2547932-1-kan.liang@linux.intel.com>
+ <20250514151401.2547932-7-kan.liang@linux.intel.com>
+Content-Language: en-US
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <20250514151401.2547932-7-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
- (10.75.129.71)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: TiGGmCsi-Q4CEQDqJeIsc5m_1DEQCo2c
+X-Authority-Analysis: v=2.4 cv=ecg9f6EH c=1 sm=1 tr=0 ts=6825e90e cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=QyXUC8HyAAAA:8 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=3pcsZ_9yFVMwK54gUSUA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: _xFvpzNXaCvkt0etVGSLJ4aTiaHA05X6
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE1MDEyOSBTYWx0ZWRfX00XKEgoWCOzp H3lB03YVH+jZWCa/UwtLfav8AUW+QPtdjmuVQ9mDElOouHi6fNfP5SCQ3xcxc8WEJs4GVRoxnQd ah8WwpSpfchkibE54oAicenS7Iev+pj0iuuUy7paXW8gkVcVzOr8VxKxSprloUi5PEmUdv51pfE
+ CcwHO16L/UWcfHsBfpFg8msOwx9/x85jDxF2WRky8/fQTC1h/JN59ygteY2CCkB62sSTCCslZYX p4vsBZLoSuopVeyskF82oq48AcwIvUGKKkbYY/YkfzXjivg9JiYv7Rw9En3MbFRknwaTB8Y/i3a 2Vp0CVrvDuUC7PPUI9bTsS+yl8Zpzu+LHB4CEvyvqXwmyeyJB7Pb1GxyafB+wHfVqfKcDube5lb
+ nrnvEtgxqQq4BSAbFv8Efql+sFlroIJ2HVilet9Mo5uWstIfRgZQCipLZZJe1fzEizSAy2YT
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-15_05,2025-05-14_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ impostorscore=0 spamscore=0 clxscore=1015 malwarescore=0 mlxscore=0
+ lowpriorityscore=0 priorityscore=1501 adultscore=0 bulkscore=0
+ suspectscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505150129
 
-Remove always-on on generic ARM timer as the clock source provided by
-STGEN is deactivated in low power mode, STOP1 by example.
+On 5/14/25 17:13, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> The throttle support has been added in the generic code. Remove
+> the driver-specific throttle support.
+> 
+> Besides the throttle, perf_event_overflow may return true because of
+> event_limit. It already does an inatomic event disable. The pmu->stop
+> is not required either.
+> 
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Thomas Richter <tmricht@linux.ibm.com>
+> Cc: linux-s390@vger.kernel.org
+> ---
+>  arch/s390/kernel/perf_cpum_cf.c | 2 --
+>  arch/s390/kernel/perf_cpum_sf.c | 5 +----
+>  2 files changed, 1 insertion(+), 6 deletions(-)
+> 
+> diff --git a/arch/s390/kernel/perf_cpum_cf.c b/arch/s390/kernel/perf_cpum_cf.c
+> index e657fad7e376..6a262e198e35 100644
+> --- a/arch/s390/kernel/perf_cpum_cf.c
+> +++ b/arch/s390/kernel/perf_cpum_cf.c
+> @@ -980,8 +980,6 @@ static int cfdiag_push_sample(struct perf_event *event,
+>  	}
+>  
+>  	overflow = perf_event_overflow(event, &data, &regs);
+> -	if (overflow)
+> -		event->pmu->stop(event, 0);
+>  
+>  	perf_event_update_userpage(event);
+>  	return overflow;
+> diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+> index ad22799d8a7d..91469401f2c9 100644
+> --- a/arch/s390/kernel/perf_cpum_sf.c
+> +++ b/arch/s390/kernel/perf_cpum_sf.c
+> @@ -1072,10 +1072,7 @@ static int perf_push_sample(struct perf_event *event,
+>  	overflow = 0;
+>  	if (perf_event_exclude(event, &regs, sde_regs))
+>  		goto out;
+> -	if (perf_event_overflow(event, &data, &regs)) {
+> -		overflow = 1;
+> -		event->pmu->stop(event, 0);
+> -	}
+> +	overflow = perf_event_overflow(event, &data, &regs);
+>  	perf_event_update_userpage(event);
+>  out:
+>  	return overflow;
 
-Fixes: 5d30d03aaf78 ("arm64: dts: st: introduce stm32mp25 SoCs family")
-Signed-off-by: Patrick Delaunay <patrick.delaunay@foss.st.com>
----
+I have installed patch 1 and 6 on top of the linux-next kernel today.
+The results look good, much better than before, but I still do not
+get both counter values in sync on each iteration all the time.
 
- arch/arm64/boot/dts/st/stm32mp251.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-index 8d87865850a7..74c5f85b800f 100644
---- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
-+++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-@@ -150,7 +150,7 @@ timer {
- 			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>;
--		always-on;
-+		arm,no-tick-in-suspend;
- 	};
- 
- 	soc@0 {
 -- 
-2.25.1
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
 
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
