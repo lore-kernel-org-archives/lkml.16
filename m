@@ -1,157 +1,210 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA2D2820D1;
-	Thu, 15 May 2025 08:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BECBC2063F3
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 08:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747296250; cv=none; b=VGJY5xc2pmzg3Emt8kzYlVcwUJ9ZO3qSeS7lnvxOZpQ8g1bM59poT2MzXYKKNhziqsULnEhwE5PQQPoJiWzACAYLSBF2mgQTKhTaM9KAznFkv51c9XI06vfffW2G2kIiR875eyC/2mvX++ZobbYJbkVFcE9c6CZoozwQ4GCiC5o=
+	t=1747296267; cv=none; b=KVaD95wVRbQgSa/0axduUjFRQca3UTUUaMffv6UiCAVTVihODSAfgPUrMlirvRoNt4iyjWGHTpq6ss4XsCkvOa9NW1gtx9a84W/COTRysf+dLBltUfsDJco2j95d39wDF3uhUK/DMlQFGDCkM9JKxzGri0F04sNVsnP6BFJYDRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747296250; c=relaxed/simple;
-	bh=THKJ2oXHLY+7wr2OH9ge9M0MBGGf76tWox5+99a7hYs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y5b1XKfAOUMeOYN4Kek3NeJIb1xBBQk8zTqxPW4QLdXpyeaUprDgkuFF7AZJoWDogw8J1Ja54riZFXshXOsCEh2frBxaFKQzy4hMuVQNo0wPTVwQ7kM1zGLZGNPti8YaU4z+Y3Obx+FRms2Mp8vgUIl2/U1D1DHiwrDLdcOxqII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eqxQEg+E; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eqxQEg+E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747296249; x=1778832249;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=THKJ2oXHLY+7wr2OH9ge9M0MBGGf76tWox5+99a7hYs=;
-  b=eqxQEg+E2jwHl3hi+VpN/sKvua5PM7/+QBse4BC+tkTl9N2HcdbXZim0
-   yY3QRdUT2CG+EYhonew9kwJvSqOjCHQfETocoNX7NDu0SpLWmRMD2uZ21
-   1cBdIBT7ipsCzWnN2KjvUM5u8mkFm21Yp0+Ahluptgh51vhet8YkYFzoX
-   HrSXQxUJGtEVDbMwU47LNrGVuFn3Gv2BErhmlmhpWPLt0iGBD3pX2jgPr
-   uQkg5JlC9Zt0mGv1nh6UkcLDqKo/AM1nnNcNFnB2balTi22A1BBZVlpIC
-   VyETM38KhjMixpEPnh50mbO14PU+wsNhZFuqAmDorSeldCgF361Lxi7Hl
-   w==;
-X-CSE-ConnectionGUID: iWYo9YSHSBqGp5j2Wl1lvg==
-X-CSE-MsgGUID: Z8gv0nQdSKu1tRLXDXCelg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="48905047"
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="48905047"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 01:04:08 -0700
-X-CSE-ConnectionGUID: WdufQpgQSeOBqsZVRunKWw==
-X-CSE-MsgGUID: DYCyFVPESzuR+6Pf8INw1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,290,1739865600"; 
-   d="scan'208";a="138191068"
-Received: from sschumil-mobl2.ger.corp.intel.com (HELO [10.245.246.202]) ([10.245.246.202])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 01:04:04 -0700
-Message-ID: <69a5dcdd-fa1f-41a8-ad6f-4c2f2c97128d@linux.intel.com>
-Date: Thu, 15 May 2025 11:05:17 +0300
+	s=arc-20240116; t=1747296267; c=relaxed/simple;
+	bh=2tLlNfEtxEHQxa7jEbsw6A5HqqJrIe+CYDIn9siiqKk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EiSdlNVZmBcgB0jojRe3u8fWnLUVM6yxVQ/0Fa5ED6ZIs+jznxiszB2prAjLhLEGifhXCTGWuLpvaAPDf+1pSQO6Li/laCFcXzzWqoScsJKZ8v7qi1YBdQzBZDYgrPmAPNkfTZrkzQUGTlV3NHK8+sAGrb3DDarI0QZD56NwTm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B3D314BF;
+	Thu, 15 May 2025 01:04:12 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 57E9C3F673;
+	Thu, 15 May 2025 01:04:23 -0700 (PDT)
+Date: Thu, 15 May 2025 09:04:21 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: suzuki.poulose@arm.com, mike.leach@linaro.org, james.clark@linaro.org,
+	alexander.shishkin@linux.intel.com, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 3/3] coresight: prevent deactivate active config while
+ enabling the config
+Message-ID: <20250515080421.GB412060@e132581.arm.com>
+References: <20250514161951.3427590-1-yeoreum.yun@arm.com>
+ <20250514161951.3427590-4-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v2] ASoC: SOF: Intel: hda: Fix UAF when reloading
- module
-To: Tavian Barnes <tavianator@tavianator.com>, linux-sound@vger.kernel.org
-Cc: Liam Girdwood <lgirdwood@gmail.com>,
- Bard Liao <yung-chuan.liao@linux.intel.com>,
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
- Daniel Baluta <daniel.baluta@nxp.com>,
- Kai Vehmanen <kai.vehmanen@linux.intel.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Brent Lu <brent.lu@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, sound-open-firmware@alsa-project.org,
- linux-kernel@vger.kernel.org
-References: <5aaee9fdfe8437ef2566b200bea45e4baaba3fcb.1745426811.git.tavianator@tavianator.com>
-Content-Language: en-US
-From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
-In-Reply-To: <5aaee9fdfe8437ef2566b200bea45e4baaba3fcb.1745426811.git.tavianator@tavianator.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514161951.3427590-4-yeoreum.yun@arm.com>
 
+On Wed, May 14, 2025 at 05:19:51PM +0100, Yeoreum Yun wrote:
+> While enable active config via cscfg_csdev_enable_active_config(),
+> active config could be deactivated via configfs' sysfs interface.
+> This could make UAF issue in below scenario:
+> 
+> CPU0                                          CPU1
+> (sysfs enable)                                load module
+>                                               cscfg_load_config_sets()
+>                                               activate config. // sysfs
+>                                               (sys_active_cnt == 1)
+> ...
+> cscfg_csdev_enable_active_config()
+> lock(csdev->cscfg_csdev_lock)
+> // here load config activate by CPU1
+> unlock(csdev->cscfg_csdev_lock)
+> 
+>                                               deactivate config // sysfs
+>                                               (sys_activec_cnt == 0)
+>                                               cscfg_unload_config_sets()
+>                                               unload module
+> 
+> // access to config_desc which freed
+> // while unloading module.
+> cscfg_csdev_enable_config
+> 
+> To address this, use cscfg_config_desc's active_cnt as a reference count
+>  which will be holded when
+>     - activate the config.
+>     - enable the activated config.
+> and put the module reference when config_active_cnt == 0.
+> 
+> Fixes: f8cce2ff3c04 ("coresight: syscfg: Add API to activate and enable configurations")
+> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
 
+Reviewed-by: Leo Yan <leo.yan@arm.com>
 
-On 06/05/2025 18:12, Tavian Barnes wrote:
-> hda_generic_machine_select() appends -idisp to the tplg filename by
-> allocating a new string with devm_kasprintf(), then stores the string
-> right back into the global variable snd_soc_acpi_intel_hda_machines.
-> When the module is unloaded, this memory is freed, resulting in a global
-> variable pointing to freed memory.  Reloading the modules then triggers
-> a use-after-free:
-> 
-> BUG: KFENCE: use-after-free read in string+0x48/0xe0
-> 
-> Use-after-free read at 0x00000000967e0109 (in kfence-#99):
->  string+0x48/0xe0
->  vsnprintf+0x329/0x6e0
->  devm_kvasprintf+0x54/0xb0
->  devm_kasprintf+0x58/0x80
->  hda_machine_select.cold+0x198/0x17a2 [snd_sof_intel_hda_generic]
->  sof_probe_work+0x7f/0x600 [snd_sof]
->  process_one_work+0x17b/0x330
->  worker_thread+0x2ce/0x3f0
->  kthread+0xcf/0x100
->  ret_from_fork+0x31/0x50
->  ret_from_fork_asm+0x1a/0x30
-> 
-> kfence-#99: 0x00000000198a940f-0x00000000ace47d9d, size=64, cache=kmalloc-64
-> 
-> allocated by task 333 on cpu 8 at 17.798069s (130.453553s ago):
->  devm_kmalloc+0x52/0x120
->  devm_kvasprintf+0x66/0xb0
->  devm_kasprintf+0x58/0x80
->  hda_machine_select.cold+0x198/0x17a2 [snd_sof_intel_hda_generic]
->  sof_probe_work+0x7f/0x600 [snd_sof]
->  process_one_work+0x17b/0x330
->  worker_thread+0x2ce/0x3f0
->  kthread+0xcf/0x100
->  ret_from_fork+0x31/0x50
->  ret_from_fork_asm+0x1a/0x30
-> 
-> freed by task 1543 on cpu 4 at 141.586686s (6.665010s ago):
->  release_nodes+0x43/0xb0
->  devres_release_all+0x90/0xf0
->  device_unbind_cleanup+0xe/0x70
->  device_release_driver_internal+0x1c1/0x200
->  driver_detach+0x48/0x90
->  bus_remove_driver+0x6d/0xf0
->  pci_unregister_driver+0x42/0xb0
->  __do_sys_delete_module+0x1d1/0x310
->  do_syscall_64+0x82/0x190
->  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> 
-> Fix it by saving the filename in pdata->tplg_filename instead, just like
-> every other code path that appends to the tplg filename.
-> 
-> Fixes: 5458411d7594 ("ASoC: SOF: Intel: hda: refactoring topology name fixup for HDA mach")
-> Signed-off-by: Tavian Barnes <tavianator@tavianator.com>
 > ---
-> v2: Fix typo
+>  .../hwtracing/coresight/coresight-config.h    |  2 +-
+>  .../hwtracing/coresight/coresight-syscfg.c    | 49 +++++++++++++------
+>  2 files changed, 35 insertions(+), 16 deletions(-)
 > 
->  sound/soc/sof/intel/hda.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> diff --git a/drivers/hwtracing/coresight/coresight-config.h b/drivers/hwtracing/coresight/coresight-config.h
+> index b9ebc9fcfb7f..90fd937d3bd8 100644
+> --- a/drivers/hwtracing/coresight/coresight-config.h
+> +++ b/drivers/hwtracing/coresight/coresight-config.h
+> @@ -228,7 +228,7 @@ struct cscfg_feature_csdev {
+>   * @feats_csdev:references to the device features to enable.
+>   */
+>  struct cscfg_config_csdev {
+> -	const struct cscfg_config_desc *config_desc;
+> +	struct cscfg_config_desc *config_desc;
+>  	struct coresight_device *csdev;
+>  	bool enabled;
+>  	struct list_head node;
+> diff --git a/drivers/hwtracing/coresight/coresight-syscfg.c b/drivers/hwtracing/coresight/coresight-syscfg.c
+> index 23017612f2ea..83dad24e0116 100644
+> --- a/drivers/hwtracing/coresight/coresight-syscfg.c
+> +++ b/drivers/hwtracing/coresight/coresight-syscfg.c
+> @@ -869,6 +869,25 @@ void cscfg_csdev_reset_feats(struct coresight_device *csdev)
+>  }
+>  EXPORT_SYMBOL_GPL(cscfg_csdev_reset_feats);
+>  
+> +static bool cscfg_config_desc_get(struct cscfg_config_desc *config_desc)
+> +{
+> +	if (!atomic_fetch_inc(&config_desc->active_cnt)) {
+> +		/* must ensure that config cannot be unloaded in use */
+> +		if (unlikely(cscfg_owner_get(config_desc->load_owner))) {
+> +			atomic_dec(&config_desc->active_cnt);
+> +			return false;
+> +		}
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +static void cscfg_config_desc_put(struct cscfg_config_desc *config_desc)
+> +{
+> +	if (!atomic_dec_return(&config_desc->active_cnt))
+> +		cscfg_owner_put(config_desc->load_owner);
+> +}
+> +
+>  /*
+>   * This activate configuration for either perf or sysfs. Perf can have multiple
+>   * active configs, selected per event, sysfs is limited to one.
+> @@ -892,22 +911,17 @@ static int _cscfg_activate_config(unsigned long cfg_hash)
+>  			if (config_desc->available == false)
+>  				return -EBUSY;
+>  
+> -			/* must ensure that config cannot be unloaded in use */
+> -			err = cscfg_owner_get(config_desc->load_owner);
+> -			if (err)
+> +			if (!cscfg_config_desc_get(config_desc)) {
+> +				err = -EINVAL;
+>  				break;
+> +			}
+> +
+>  			/*
+>  			 * increment the global active count - control changes to
+>  			 * active configurations
+>  			 */
+>  			atomic_inc(&cscfg_mgr->sys_active_cnt);
+>  
+> -			/*
+> -			 * mark the descriptor as active so enable config on a
+> -			 * device instance will use it
+> -			 */
+> -			atomic_inc(&config_desc->active_cnt);
+> -
+>  			err = 0;
+>  			dev_dbg(cscfg_device(), "Activate config %s.\n", config_desc->name);
+>  			break;
+> @@ -922,9 +936,8 @@ static void _cscfg_deactivate_config(unsigned long cfg_hash)
+>  
+>  	list_for_each_entry(config_desc, &cscfg_mgr->config_desc_list, item) {
+>  		if ((unsigned long)config_desc->event_ea->var == cfg_hash) {
+> -			atomic_dec(&config_desc->active_cnt);
+>  			atomic_dec(&cscfg_mgr->sys_active_cnt);
+> -			cscfg_owner_put(config_desc->load_owner);
+> +			cscfg_config_desc_put(config_desc);
+>  			dev_dbg(cscfg_device(), "Deactivate config %s.\n", config_desc->name);
+>  			break;
+>  		}
+> @@ -1049,7 +1062,7 @@ int cscfg_csdev_enable_active_config(struct coresight_device *csdev,
+>  				     unsigned long cfg_hash, int preset)
+>  {
+>  	struct cscfg_config_csdev *config_csdev_active = NULL, *config_csdev_item;
+> -	const struct cscfg_config_desc *config_desc;
+> +	struct cscfg_config_desc *config_desc;
+>  	unsigned long flags;
+>  	int err = 0;
+>  
+> @@ -1064,8 +1077,8 @@ int cscfg_csdev_enable_active_config(struct coresight_device *csdev,
+>  	raw_spin_lock_irqsave(&csdev->cscfg_csdev_lock, flags);
+>  	list_for_each_entry(config_csdev_item, &csdev->config_csdev_list, node) {
+>  		config_desc = config_csdev_item->config_desc;
+> -		if ((atomic_read(&config_desc->active_cnt)) &&
+> -		    ((unsigned long)config_desc->event_ea->var == cfg_hash)) {
+> +		if (((unsigned long)config_desc->event_ea->var == cfg_hash) &&
+> +				cscfg_config_desc_get(config_desc)) {
+>  			config_csdev_active = config_csdev_item;
+>  			csdev->active_cscfg_ctxt = (void *)config_csdev_active;
+>  			break;
+> @@ -1099,7 +1112,11 @@ int cscfg_csdev_enable_active_config(struct coresight_device *csdev,
+>  				err = -EBUSY;
+>  			raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
+>  		}
+> +
+> +		if (err)
+> +			cscfg_config_desc_put(config_desc);
+>  	}
+> +
+>  	return err;
+>  }
+>  EXPORT_SYMBOL_GPL(cscfg_csdev_enable_active_config);
+> @@ -1138,8 +1155,10 @@ void cscfg_csdev_disable_active_config(struct coresight_device *csdev)
+>  	raw_spin_unlock_irqrestore(&csdev->cscfg_csdev_lock, flags);
+>  
+>  	/* true if there was an enabled active config */
+> -	if (config_csdev)
+> +	if (config_csdev) {
+>  		cscfg_csdev_disable_config(config_csdev);
+> +		cscfg_config_desc_put(config_csdev->config_desc);
+> +	}
+>  }
+>  EXPORT_SYMBOL_GPL(cscfg_csdev_disable_active_config);
+>  
+> -- 
+> LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 > 
-> diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
-> index b34e5fdf10f1..1767977e7cff 100644
-> --- a/sound/soc/sof/intel/hda.c
-> +++ b/sound/soc/sof/intel/hda.c
-> @@ -1069,7 +1069,7 @@ static void hda_generic_machine_select(struct snd_sof_dev *sdev,
->  				if (!tplg_filename)
->  					return;
->  
-> -				hda_mach->sof_tplg_filename = tplg_filename;
-> +				pdata->tplg_filename = tplg_filename;
-
-Did you sent this as a mistake? The v5 patch looks to be the correct
-one, this is not.
-
->  			}
->  
->  			if (codec_num == 2 ||
-
--- 
-Péter
-
