@@ -1,302 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from clean203.mxserver.ro (clean203.mxserver.ro [176.223.127.109])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075D11A28D;
-	Thu, 15 May 2025 08:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CE828A1ED;
+	Thu, 15 May 2025 08:47:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.223.127.109
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747298793; cv=none; b=FRVOi2qTB39pDK8huQkrA2QjTAme/MOhFahxz/s2LSjfrrG3tk42rxOXhuj89IAflGV7S8xgVqMGBlVlLxttH3TZz/oxyBB7mI5AivluPtWDNgChlB8FwV7/wLFrxfjEAYDCw2IzNHAuhvyl0RYpAC42h28WXKAKsLxZ4G5I+ag=
+	t=1747298835; cv=none; b=UHnmHdJaK6z9rXtbex6XF3fx23Eaf43QcH5tzwuP734yKyxk9LbMwlG7JSNnGPWkI5V0YaTPUAaKSJU386xXBhHJan7IBU9ExGyuaEJBAMc1t1QesSu692trGYnI5JFD99nCIVUy+E9vRY9ov91YaF5k4EFKgVKa80S71O4fX5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747298793; c=relaxed/simple;
-	bh=RaBEVejUBWVrVHhrOXFQBMtESL1DRpV6lkC7nuNepHI=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=ehDTbvpOvTQWH0tZuUQYkTF/aTp9d6CD/hwVs9EYVWjaGz+vX++qrCmsVO0TO2UV7ckLeEg35dCVr+80Sxp7+MPXTdxecFgr2lJM53zTZhzp3+SonHmJfsSWaoai/11zAKfNwbobrEQz3pq62gXMYjiKTy8w5AeemR0SWgjMvcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QeXFD3md; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747298835; c=relaxed/simple;
+	bh=BcQ7dOGMy2G6f074qdjFwf6ztnYAuEy9X4leTqnduAo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TOKsNz/2jE+dftqruXHsFHpd3kNBZX4YaGPckieNUlofQHtLgW27/lcel63sLbWGXvh4FXwc1mRuF9s+F6MTg/xuU+tSFw58LCPJzU4FDGybRz7oJniug4WKc/ND0Ely9Ovka+s8YEeKCusY+mw78AE2lLnCtWKF43yiIhQNTTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro; spf=pass smtp.mailfrom=taladin.ro; dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b=fenBMFXb; arc=none smtp.client-ip=176.223.127.109
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=taladin.ro
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=taladin.ro
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QeXFD3md"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47E2BC4CEE7;
-	Thu, 15 May 2025 08:46:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747298792;
-	bh=RaBEVejUBWVrVHhrOXFQBMtESL1DRpV6lkC7nuNepHI=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=QeXFD3mdSVlfAJmSw3M4/M3dFGSG74apaLIocx1dji2b5TfS9wmsszgMdztGV+1tz
-	 FoddcBPvASE/Fh9DdOFWl02YntJbbebW5DzXAHBFt0rDLYDVxqSVqqpPRe1Omu0G5l
-	 m7fjrngM+C2wek+ZYYbN+T02Sjzvwx0XWTMDpmJUD+9MG2OSGENCzws+SE9QQ0e1sz
-	 366we9g7pEhmZmCRjbgWobGY7Z/SbB/mMJBQJBrJsWJGA70aLjS57kmwLsmQpcJ9Ox
-	 TpEvSfE1QTUPkTYqSSWlNExyOzkESNW5cfLnV0JcdQqih+MgRLvPj3TC+vFCANaQiZ
-	 cV+7U5BIGJz5Q==
+	dkim=pass (2048-bit key) header.d=taladin.ro header.i=@taladin.ro header.b="fenBMFXb"
+Received: from cloud347.c-f.ro ([185.236.86.218])
+	by cleanserver2.mxserver.ro with esmtps (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <asoponar@taladin.ro>)
+	id 1uFTlx-001Vt8-Ds; Thu, 15 May 2025 04:17:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=taladin.ro;
+	s=default; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=kA8DKQFtSt4jcUAuOIp1O8zgOjmBlKqw0lLnqHTc59w=; b=fenBMFXbembk3toPDrviTqAU9G
+	ORJ4AR0BA6Ba6Swva8vCMHx4ghdyXMQtA1sMAWC6Uu0Vo9Q278jCOsTwFWpfBBJeAuixYi12c2Hdm
+	VA+gcgC9/Kb42N6CD3J/C6MoZsKKWM4QxNR5upmOH8jUDBGiHYZmcG+8r6FP4UN9pLW3FZ6XkxKX+
+	aWiXx45iEzZmkLVyPexI4x8U0XR5C2uRxND6+cPlWsKr7HwcbUzYNWsndFDvctUjD/M9b7qzLTlnm
+	BPI5leadzWC+y/edqiC48/HZGsvqB/9FXk+rofE8hNdmTvSR6+IuIvUzzX2yXt4/IfSdANlztKrOc
+	f00EdStg==;
+Received: from [109.166.137.172] (port=37864 helo=localhost)
+	by cloud347.c-f.ro with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.98.1)
+	(envelope-from <asoponar@taladin.ro>)
+	id 1uFTll-00000006q7R-0Bbp;
+	Thu, 15 May 2025 11:16:54 +0300
+From: Alexandru Soponar <asoponar@taladin.ro>
+To: linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	linux-watchdog@vger.kernel.org
+Cc: jdelvare@suse.com,
+	linux@roeck-us.net,
+	jic23@kernel.org,
+	pavel@ucw.cz,
+	lee@kernel.org,
+	baocheng.su@siemens.com,
+	wim@linux-watchdog.org,
+	tobias.schaffner@siemens.com,
+	angelogioacchino.delregno@collabora.com,
+	benedikt.niedermayr@siemens.com,
+	matthias.bgg@gmail.com,
+	aardelean@baylibre.com,
+	contact@sopy.one,
+	Alexandru Soponar <asoponar@taladin.ro>
+Subject: [PATCH 01/16] hwmon: w83795: Fix type incompatibility with non-macro find_closest
+Date: Thu, 15 May 2025 11:13:17 +0300
+Message-ID: <20250515081332.151250-2-asoponar@taladin.ro>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250515081332.151250-1-asoponar@taladin.ro>
+References: <20250515081332.151250-1-asoponar@taladin.ro>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 15 May 2025 10:46:22 +0200
-Message-Id: <D9WLQ3J2TRD1.AA50TVOPKMVQ@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "Thomas Gleixner" <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] rust: irq: add support for request_irq()
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Daniel Almeida" <daniel.almeida@collabora.com>, "Gary Guo"
- <gary@garyguo.net>
-X-Mailer: aerc 0.20.1
-References: <20250514-topics-tyr-request_irq-v3-0-d6fcc2591a88@collabora.com> <20250514-topics-tyr-request_irq-v3-1-d6fcc2591a88@collabora.com> <D9W5IX9Z7QMU.3DL48O2KYTN1Z@kernel.org> <497D0D1E-B607-4822-A083-C0C5B9DB3C57@collabora.com>
-In-Reply-To: <497D0D1E-B607-4822-A083-C0C5B9DB3C57@collabora.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SpamExperts-Domain: cloud347.c-f.ro
+X-SpamExperts-Username: 185.236.86.218
+Authentication-Results: mxserver.ro; auth=pass smtp.auth=185.236.86.218@cloud347.c-f.ro
+X-SpamExperts-Outgoing-Class: ham
+X-SpamExperts-Outgoing-Evidence: Combined (0.02)
+X-Recommended-Action: accept
+X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT/O7UgxM56v2QHekgcNkOkZPUtbdvnXkggZ
+ 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5w1OL79HMxE022P+rQy8YAdcSeERs4TOTnIH1kc1IWc5TSx
+ S75yz9IFZiY7BarU/NrpK8SEOwGmfn6ucAKqn/OHRh3BqzFaEnAEj4UixLJBjVNiLZt/QXQnOBRD
+ +jq1HsIBmHTFdhqXZEtguZY7iGKpkcJnJKaJfT+dw1udmv00tbIRNtoyOobb3xnDyRRylAVTYi2b
+ f0F0JzgUQ/o6tR7C8pLPCtTiVLo0r89ClJHDKhDGKgJ+T00JeCnHBmMdB1eMZAyYlfUtEN4pUyes
+ jVRntA/J5DcfwvG53FyVviDO9UET3GKmqv1jT0lY+AQz8YX4CVph7ctC7tRH2SPTQJ/0klTuXKq/
+ B9rqRWsYzNfBLt79i78aPHyWnIqxGMxPZotYvH/es1vXuByXo2bkrYMqq0x5CzaUoJIoBUQayHle
+ UvbvCQmh9x4kn6NeQcRkc6G+OgAcq5x+BzhRyg9rYO6I0H7Q2OEpckvWJAOmdJd77Z9vwc+QHB+X
+ +u7aTqYHtT2CBuxNPBc9JM2jck1NnIBf0tvflhq7Xjhll72AYgnW/6M0ftSpvLIx+X1vKami8KF6
+ jWQ71uVNIY/EFPWeDmcZuFRQy1vmjjPiYw8fUCp0/qY6cmSW9oUDdvKuTRfTGZ6f8nTXoYFaQ71l
+ mMti8uxA0gKVmIzBXtbLDVvAQ/KVNXkmpgMJXtFKnSRCnUwZAiqSAN5VcIfsMVILjVAz6RZsCHxD
+ lgOJwEwCFaF+62b2lf1UUDu9jECN1V/lwmsioRLmNJoHOZOE/9e5UD715p61XAQw85DCXa0iAPEd
+ fYyrF5wMRSLGyY+i0m2IxQLxQUzTb3Mji+CrO1+NTWs5OBXbSDBPqdRoFsq0hfzdx0oxkgNI/jhY
+ WFhu7VV+HdWjdZLlmQ5z83qEVVG/6RJ+BW7FmGcwL889DSW2cZWGkIYVQAbHnYkWUz1gRIjAiMvi
+ vM7um7t0SVa5NVZ2g1u6DnOpQHYV3TsOFMmdrwGhqQDw/U3WHzWVE9linvPYkk5EbvNSKMKZZKIm
+ pSRiVj3Z6FeYyEA/4qyBWyM8TTC6Mg9RWQhL+FDRQ14qhQ8eQiedscRlw3yFXNuLqAW9V7zLFic5
+ yLycIETNRAvUQf+piJ7sPxqZR3KVQgqF/fPYYAfEfsjj4DVdduR90H5McQ+8O8hgib5B6Ms3Nsv9
+ mI56gYdHslb3ihTmJP9jABr7eHobRpHb7qTcIFz1nk+0s72r53zOJqmiissvM9owPzYAr89vN4Ty
+ 64Hw6o+zALSa0P9i1hWLBDMrD7q/cJogwbqzsuokqiEHDvNJ9dv4vz04yOn51wregXgdeECyTJU5
+ oHafInY99O+tX7duRqh2ecfBGkdqDgvfw4SrWEZKgGCi9nibUQlbv5uSE8iz9IIumhIhFIfECWQj
+ OJcjm5IBgwnLvYxWZUtT1DfHQ/HkqSkOfQ8NAR4hBppwR1r+Bof9KZqCMQkyL2PwO4ub1qMH++eM
+ jnOnV9LO1ghGh/DUNuB/g2OV987SVK+CeGpRwqUJT500pacqW637mIaQpIIazbKBmghZMypFVNg9
+ 0N7182QNMEbAtB23JpYTnB2HqfPoGtp9xnk=
+X-Report-Abuse-To: spam@cleanserver1.mxserver.ro
+X-Complaints-To: abuse@cleanserver1.mxserver.ro
 
-On Wed May 14, 2025 at 10:58 PM CEST, Daniel Almeida wrote:
-> Hi Benno, I really appreciate you taking the time to review my patches.
+The pwm_freq_cksel0 array was previously declared as u16 but used with
+find_closest_descending(). Now that find_closest_descending() is
+implemented as a function with 'int' parameters instead of a macro,
+passing unsigned arrays causes type incompatibility errors. This patch
+changes the array type from u16 to int to match the function's signature
+and prevent compilation errors.
 
-Glad I can help :)
-
->> On 14 May 2025, at 17:04, Benno Lossin <lossin@kernel.org> wrote:
->> On Wed May 14, 2025 at 9:20 PM CEST, Daniel Almeida wrote:
->>> Add support for registering IRQ handlers in Rust.
->>>=20
->>> IRQ handlers are extensively used in drivers when some peripheral wants
->>> to obtain the CPU attention. Registering a handler will make the system
->>> invoke the passed-in function whenever the chosen IRQ line is triggered=
-.
->>>=20
->>> Both regular and threaded IRQ handlers are supported through a Handler
->>> (or ThreadedHandler) trait that is meant to be implemented by a type
->>> that:
->>>=20
->>> a) provides a function to be run by the system when the IRQ fires and,
->>>=20
->>> b) holds the shared data (i.e.: `T`) between process and IRQ contexts.
->>>=20
->>> The requirement that T is Sync derives from the fact that handlers migh=
-t
->>> run concurrently with other processes executing the same driver,
->>> creating the potential for data races.
->>>=20
->>> Ideally, some interior mutability must be in place if T is to be
->>> mutated. This should usually be done through the in-flight SpinLockIrq
->>> type.
->>>=20
->>> Co-developed-by: Alice Ryhl <aliceryhl@google.com>
->>> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
->>> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
->>> ---
->>> rust/bindings/bindings_helper.h |   1 +
->>> rust/helpers/helpers.c          |   1 +
->>> rust/helpers/irq.c              |   9 +
->>> rust/kernel/irq.rs              |  24 +++
->>> rust/kernel/irq/flags.rs        | 102 +++++++++
->>> rust/kernel/irq/request.rs      | 455 +++++++++++++++++++++++++++++++++=
-+++++++
->>> rust/kernel/lib.rs              |   1 +
->>> 7 files changed, 593 insertions(+)
->>=20
->> Could you split this patch into smaller chunks?
->
-> How? This patch does one thing: it adds request_irq functionality.
-
-You could split off the threaded irq stuff and the flags module.
-
-Smaller patches are much much easier to review IMO.
-
->>> +pub use request::Handler;
->>> +pub use request::IrqReturn;
->>> +pub use request::Registration;
->>> +pub use request::ThreadedHandler;
->>> +pub use request::ThreadedIrqReturn;
->>> +pub use request::ThreadedRegistration;
->>=20
->> Why not?:
->>=20
->>    pub use request::{Handler, ..., ThreadedRegistration};
->
-> I dislike this notation. It is just a magnet for conflicts.
-
-Rust-analyzer has the "normalize imports" code action that can help with
-that. In one of our meetings, we once discussed having a custom tool
-that could merge imports, but nobody took the time to build it.
-
-I don't see the argument here, as this re-export shouldn't really
-change.
-
->>> diff --git a/rust/kernel/irq/flags.rs b/rust/kernel/irq/flags.rs
->>> new file mode 100644
->>> index 0000000000000000000000000000000000000000..3cfaef65ae14f6c02f55ebc=
-f4d52450c0052df30
->>> --- /dev/null
->>> +++ b/rust/kernel/irq/flags.rs
->>> @@ -0,0 +1,102 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +// SPDX-FileCopyrightText: Copyright 2025 Collabora ltd.
->>> +
->>> +use crate::bindings;
->>> +
->>> +/// Flags to be used when registering IRQ handlers.
->>> +///
->>> +/// They can be combined with the operators `|`, `&`, and `!`.
->>> +#[derive(Clone, Copy, PartialEq, Eq)]
->>> +pub struct Flags(u64);
->>=20
->> The constants below seem to all be 32 bit, why did you choose u64?
->
-> The C code takes in ffi::c_ulong. Shouldn=E2=80=99t this map to u64? Or m=
-aybe usize.
-
-Maybe bindgen is doing some funky stuff, Gary changed the mappings a
-couple months ago (from rust/ffi.rs):
-
-    c_long =3D isize;
-    c_ulong =3D usize;
-
-So this indeed should be usize, what is going on here?
-
->>> +/// A registration of an IRQ handler for a given IRQ line.
->>> +///
->>> +/// # Examples
->>> +///
->>> +/// The following is an example of using `Registration`. It uses a
->>> +/// [`SpinLock`](crate::sync::SpinLockIrq) to provide the interior mut=
-ability.
->>> +/// Note that Spinlocks are not safe to use in IRQ context as of now, =
-but may be
->>> +/// in the future.
->>=20
->> Didn't your commit message mention SpinLockIrq?
->
-> This is not upstream yet. I removed all mentions of SpinLockIrq on
-> purpose, but I apparently missed some as you say.
->
-> We definitely need interrupt-aware spinlocks to access the data in interr=
-upt
-> context. It is just a matter of deciding whether we will be referring to =
-a type
-> whose API is not 100% formalized as we speak, or to SpinLock itself - whi=
-ch is
-> already upstream - with a caveat. I chose the latter.
-
-I don't think we should knowingly do something that is "not safe". If
-this requires `SpinLockIrq`, then that should land first. I think
-referring to a not-yet-existing type is fine.
-
->>> +/// # Invariants
->>> +///
->>> +/// * We own an irq handler using `&self` as its private data.
->>> +///
->>> +#[pin_data(PinnedDrop)]
->>> +pub struct Registration<T: Handler> {
->>> +    irq: u32,
->>> +    #[pin]
->>> +    handler: T,
->>> +    #[pin]
->>> +    /// Pinned because we need address stability so that we can pass a=
- pointer
->>> +    /// to the callback.
->>> +    _pin: PhantomPinned,
->>> +}
->>> +
->>> +impl<T: Handler> Registration<T> {
->>> +    /// Registers the IRQ handler with the system for the given IRQ nu=
-mber. The
->>> +    /// handler must be able to be called as soon as this function ret=
-urns.
->>=20
->> The first line of documentation should be a single sentence description
->> of what the item does. It will get rendered next to it on the summary &
->> search pages.
->
-> Right, I actually rendered the docs before submitting, but apparently I m=
-issed this.
->
->>=20
->> What is meant by the second sentence? What about this phrasing?: "The
->> handler might be called immediately after this function returns.".
->
-> It's a reminder, inherited from the C side, that literally as soon as
-> request_irq() returns, your handler may be called. Anything that you need=
- to
-> setup before your handler can run must already have been done by this poi=
-nt.
->
-> Is this the =E2=80=9Csecond sentence=E2=80=9D you are referring to?
-
-Yes. The sentence was worded in a weird way, since in Rust, I would
-normally expect that anything can happen to a value, if I give up
-ownership.
-
-Also it is not true, since the code in the function body is only run
-once you use the initializer, so running this code doesn't do anything:
-
-    let handler =3D ...;
-    let flags =3D ...;
-    let irg =3D ...;
-   =20
-
-    let reg =3D Registration::register(irq, flags, cstr!("foo"), handler);
-
-    // the registration is not yet created, only an initializer for a regis=
-tration.
-
-    let reg =3D Arc::pin_init(reg);
-
-    // now the registration has been created and the handler can be called.
-
->>> +    pub fn register(
->>> +        irq: u32,
->>> +        flags: Flags,
->>> +        name: &'static CStr,
->>> +        handler: T,
->>> +    ) -> impl PinInit<Self, Error> {
-
->>> +/// The value that can be returned from `ThreadedHandler::handle_irq`.
->>> +#[repr(u32)]
->>> +pub enum ThreadedIrqReturn {
->>> +    /// The interrupt was not from this device or was not handled.
->>> +    None =3D bindings::irqreturn_IRQ_NONE,
->>> +
->>> +    /// The interrupt was handled by this device.
->>> +    Handled =3D bindings::irqreturn_IRQ_HANDLED,
->>> +
->>> +    /// The handler wants the handler thread to wake up.
->>=20
->> How about "The handler wants the handler thread to take care of the
->> interrupt." or is that incorrect?
->
-> This is taken straight from the C docs. As I told Andreas, I=E2=80=99d pr=
-efer if we
-> didn=E2=80=99t add our own docs for C things that have their own docs alr=
-eady.
-
-Fine with me, but we could also change the C docs :)
-
->>> +///     // This will run (in a separate kthread) if and only if `handl=
-e_irq`
->>> +///     // returns `WakeThread`.
->>> +///     fn thread_fn(&self) -> IrqReturn {
->>> +///         // We now have exclusive access to the data by locking the=
- SpinLock.
->>> +///         //
->>> +///         // Ideally, we should disable interrupts while we are doin=
-g this to
->>> +///         // avoid deadlocks, but this is not currently possible.
->>=20
->> Would this be solved by SpinLockIrq?
->
->
-> Yes, that is the point of SpinLockIrq. The exact syntax is still up for d=
-ebate,
-> although by this time I think Lyude & Boqun have already settled on somet=
-hing.
-
-I also was part of the discussion at some point, but dropped out & was
-busy with other things. I'll move it up in my todo-list.
-
+Signed-off-by: Alexandru Soponar <asoponar@taladin.ro>
 ---
-Cheers,
-Benno
+ drivers/hwmon/w83795.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hwmon/w83795.c b/drivers/hwmon/w83795.c
+index 5174db69db5e..1b63bd540f6c 100644
+--- a/drivers/hwmon/w83795.c
++++ b/drivers/hwmon/w83795.c
+@@ -273,7 +273,7 @@ static inline s8 temp_to_reg(long val, s8 min, s8 max)
+ 	return clamp_val(val / 1000, min, max);
+ }
+ 
+-static const u16 pwm_freq_cksel0[16] = {
++static const int pwm_freq_cksel0[16] = {
+ 	1024, 512, 341, 256, 205, 171, 146, 128,
+ 	85, 64, 32, 16, 8, 4, 2, 1
+ };
+-- 
+2.49.0
+
