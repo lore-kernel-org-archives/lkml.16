@@ -1,77 +1,101 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E140D1B960;
-	Thu, 15 May 2025 07:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0DD12CD96
+	for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 07:21:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747293563; cv=none; b=OR25G3v1KteGo7XzseIZRN4dI/eUyZFuIMBZ4ED3efQOciyccQuTHV+IlIy+ufTIdv/Zd6K15TXGcYTAmvGCoUWh6YXeMBT2iywSbZHcqo+oBFWCnnU3Ob19Mi8JWb+CflSSVOnWz7ZLdLHHxr5zvHj4PN2p8I+ehtmXmL6yW5k=
+	t=1747293685; cv=none; b=d2Kwv/eCetr7Oi2JoKxTnTtqPDKGfKZKle2v3ggkQqAYoSxV9mCrW1eEDqFNFQmRXWI1qon1ycMRsitlkF1bAGgDnoEAm2VK0Ocj6+9coEslgqg4UjLjJZsbO2OJYG4WNidsdf5Nvc2fOIttT2oc7qrllmP+MCogaw0eTeCjFlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747293563; c=relaxed/simple;
-	bh=un43Rmr7pThpelAYiq373H0+K8u+aZOSIfYm0dwc0YM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=P3IkrTcxflGSbHIK7gchGq/GfyvQ4v9/q1Z2PeuN8kiKVpTZ5kaRU7B1uHP5xT8MPH0DOYSlYTwk5RHrarzW/XwUV8vld5Cf82EWEJzNzNidlswHEQhfZi5r4ClXOlJhHLa1wAlAGYztcOmpqvig8q8BUQQV9Rr0ToTCPszXSUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dzr0cIvr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WPQc3xvl; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747293685; c=relaxed/simple;
+	bh=rFA23rO8B1u3kvxa4WIKw/RxaGLl6GEtW0gjkkQkqnQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kYTJ5w5IdJJA4gkbmUp/UBXWv1PXdVMiOX9yXINfhjpH5BGl/UrG/xILOUQxXizcDP9Ib4QC2s/xVeekGyQZAAOHeWsA9dQxQnuzy9R/iAAlcmLoGl/74opSlVgI0vw5Rsp4GGJ2vXiL44wKRF5p99QCUP8+MSsU6sToDn6RB10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DoZim4mZ; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dzr0cIvr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WPQc3xvl"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747293558;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6D07CqThBr8ECVgNpKkQgHMewXWhEO/lS7W8K+zKG1M=;
-	b=dzr0cIvrDO9a5IxS6gXJH+20QhY54+m1fbYW4/1nVO27UB0OaiMAhT1f4ge/y3nGCXCorr
-	EH8/EJLjeG6GjQekYPY+BavJV84oN9u2xOSlEOr6nBjk2nb3Meue8Ut2qzoISw/Zhgn4jF
-	bPLMZpiFgayPt0gl/GurlF+lgHD2y0abYOTALvyDdryQqYkoLQXweoe/cBC6sFvUtuM7Ys
-	5Oe3odFCHy3U/fWanUTp3sO4tN2lJkLzygmXCJKyc57KSxYsV78BmBQz5sfxV0keCYJ5lF
-	2a+DQHmWIm0x4NhVLYVogiubDkqELsM7saFOWCHZ49xYRbkeKVUMcUns2Q4DHA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747293558;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6D07CqThBr8ECVgNpKkQgHMewXWhEO/lS7W8K+zKG1M=;
-	b=WPQc3xvl8nzGkuu5aDYjIdp2pLWc0Ds1i6m5/PgOyC8LhlGLtTYap4TCtxwExaYZnsQsW0
-	pjcAmIIjvm8vmaDQ==
-To: Shivank Garg <shivankg@amd.com>, Ingo Molnar <mingo@kernel.org>
-Cc: mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- x86@kernel.org, hpa@zytor.com, luto@kernel.org, peterz@infradead.org,
- rafael@kernel.org, pavel@kernel.org, akpm@linux-foundation.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- sohil.mehta@intel.com, rui.zhang@intel.com, yuntao.wang@linux.dev,
- kai.huang@intel.com, xiaoyao.li@intel.com, peterx@redhat.com,
- sandipan.das@amd.com, ak@linux.intel.com, rostedt@goodmis.org
-Subject: Re: [PATCH RESEND 4/4] x86/apic: Fix W=1 build kernel-doc warning
-In-Reply-To: <51fbdbcd-a895-43b0-bb59-aa3361d77cad@amd.com>
-References: <20250514062637.3287779-1-shivankg@amd.com>
- <20250514062637.3287779-4-shivankg@amd.com> <aCRMpba5mp5YvmY3@gmail.com>
- <51fbdbcd-a895-43b0-bb59-aa3361d77cad@amd.com>
-Date: Thu, 15 May 2025 09:19:17 +0200
-Message-ID: <87o6vuibnu.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DoZim4mZ"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54b09cb06b0so649671e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 00:21:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747293681; x=1747898481; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J6YK9RRVMXkVGqlU6GqJxPV6A7A/9haPaSrRoUXo37E=;
+        b=DoZim4mZARrtzj7AnQpB3ITf5KOj5QfSWZyAVA8sLcfWoPRdLWHMynnKR3U6XRKzC0
+         ks94JYHXBT1VgCvckLijuffJaAjaD5wy4HCHf6TreUkywkmhsbDZ6/EIZ0tthgngmaHz
+         TV19Vh4VWhdVGKPQnIt4Od2/CqVbfSieM6m+PfDop3KVXhDWhBw+rzf/ySNS/UZvj7bY
+         OnhWUTXL/+FzbWiiWDXUvS6h9vYNnefybU8gHgtZwisfRtvN1cFGsZQyshdfkUR8ilS1
+         q9ncl/JIfPPvCeLClbw4GqyV1olE6hnECW6Lv6qXr2HdNWUI6JF7+haWW7hv/tEb34Wz
+         N0rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747293681; x=1747898481;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J6YK9RRVMXkVGqlU6GqJxPV6A7A/9haPaSrRoUXo37E=;
+        b=e8LVyXrV3LxIWH6yVZc5lxVR6gS8J5sfmuZhgc6T542iAq9emC1oGe0adg4S8WoD5s
+         80kGQ2Zb2PKsE/Cm+nIuQbWlE/Hm76VkABPl/gtodrvy1rszZRwstGtc7AnjuV9KgxLi
+         IlY9OEfGums4qoanl6h1HsEosgcdewHPwacFOLlRsYPMf6Ri7hgDu9TVS+WhJdM75Z3t
+         yQaS1kEZQRYS/S2k0KndAl710Q9evWeaDJXZTO8spJ0hypofLmHAZFRTlnTNbK4bsYdN
+         yOZ34szMuCwXH0vnEZkHAlzoxRE6U0WXZS9NPlaw3Wyq+1Fq22/R5R9sJY1MDeSTlSBR
+         7jlg==
+X-Forwarded-Encrypted: i=1; AJvYcCWNEQGe3HwWUq8kyRO/rCZqw82DzorCatxVY8YpSxaZY5MiMrgdHkFwTTN9YLSDbO381xJH6tpSQiTHJ5w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/TzxG2tMVwhIQpIIEhyXo2W5JH5axbmf/VkcyUeLUX8+jCW2k
+	OXV6dnIrj1ByrdXS8TBWtbmiHcNSDd8MR4uL+8QkEB6DjgQsF6VfkRwIVJhB103MZInUTnBvv5F
+	bhotv4hk8Yxu9S/cYhAj3fcO1JYEl6ro/FA57LA==
+X-Gm-Gg: ASbGncs7zImI+JVIGdPvZjIYw9HBqzLzU2Kgo1X26S3xqI/wnue539yLmgLvkwkYnbr
+	ya/XgBIPJt/9BSa29cM0abc4O9oMD//TkwZomqS4iLJedYYjweDb3PxvUTJdWCTswEEPL9eLFet
+	3Kt9KSlG1lb/b086XAnD3QJtP/S6clc139nMhWy0IVO0I=
+X-Google-Smtp-Source: AGHT+IEQDghWbCxuBbPh7MoxRvTvC4TcoQ8cazusXwqfZHPvPiHoVHrYr5jD67moVFO5st3g3yaGcaBX8eP9wX1a9UA=
+X-Received: by 2002:a05:6512:640d:b0:54e:a262:c93b with SMTP id
+ 2adb3069b0e04-550d5f9ff82mr2562008e87.18.1747293681475; Thu, 15 May 2025
+ 00:21:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250513100514.2492545-1-andriy.shevchenko@linux.intel.com> <20250514155955.GS88033@black.fi.intel.com>
+In-Reply-To: <20250514155955.GS88033@black.fi.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 15 May 2025 09:21:10 +0200
+X-Gm-Features: AX0GCFunPKAkQp3YlQHAKcUwsKeCICBeSwG40YsLNZHuw00mxaGy5pSg_nbMeyM
+Message-ID: <CACRpkdbhnoffwtwVTMRaUAGVEpLfAESQNOb1PvYOer=V+og97Q@mail.gmail.com>
+Subject: Re: [PATCH v1 0/4] gpiolib: acpi: Split quirks to its own file
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Mika Westerberg <westeri@kernel.org>, Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15 2025 at 12:03, Shivank Garg wrote:
-> On 5/14/2025 1:26 PM, Ingo Molnar wrote:
->> This is incorrect and is based on a misunderstanding of what the code 
->> does:
->> 
->> DEFINE_IDTENTRY_IRQ(spurious_interrupt)
->> {
->>         handle_spurious_interrupt(vector);
->> }
+On Wed, May 14, 2025 at 6:00=E2=80=AFPM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+
+> >  drivers/gpio/Makefile                         |   1 +
+> >  .../{gpiolib-acpi.c =3D> gpiolib-acpi-core.c}   | 344 +---------------=
+-
+> >  drivers/gpio/gpiolib-acpi-quirks.c            | 363 ++++++++++++++++++
+> >  drivers/gpio/gpiolib-acpi.h                   |  15 +
 >
-> The kernel-doc tool doesn't handle macros properly.
-> Can I change it to a normal comment instead?
-> or if a kernel-doc comment is required how should I make it correct?
+> All this -foo-core things look redundant to me. Why not just split it out
+> and call it gpiolib-quirks.c and put there all the quirks not just ACPI? =
+I
+> Don't think we want to have gpiolib-of-quirks.c and gpiolog-swnode-quirks=
+.c
+> and so on.
 
-Fix the stupid tool and leave the comment alone.
+For OF/device tree the quirks are in gpiolib-of.c and we probably do
+not want to put these into a shared file with ACPI (and swnode?)
+quirks as systems with OF compile objects (Makefile entries)
+and ACPI compile objects are not always included in the same build,
+so having them per-hw-config-principle cuts down compiletime
+overhead. Also it's pretty clear separation of concerns I think.
+
+Yours,
+Linus Walleij
