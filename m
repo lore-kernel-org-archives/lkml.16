@@ -1,137 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94C013B284;
-	Fri, 16 May 2025 13:42:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B87E149DFF;
+	Fri, 16 May 2025 13:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747402930; cv=none; b=dv+1NBCK0FcWEasOtFq7zkqMkQ9uxg6p7hxED1izTHPM4F8Ifrhl8N0YKnVgsqxc+ldMTfrnM8AasMnkRkRh2kS+j5lQq3jHwaH1Zbv/n1uLo7dNV7YA+EdN0r4ZmzMFqJX2pSo1CxKrseooWOQfAJ4QCTJKucLFRHfiRutaEh4=
+	t=1747402961; cv=none; b=Eh82vTNpiOc+uNI4hL5V2jpS3ODfHudX9IzsPm1LWluVg8pKHtiZCO9vB1qYMrafXRwpuyVpucZnCrsN7nlkqb+RWeBPDMOQ/G6+2eE73ocGhIqncr1CBigQRvNQ2mOc/g9XD46nzIzsu4zUzjwwERw/EIbCkIQc3a/FvDDboHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747402930; c=relaxed/simple;
-	bh=xYrmVzF1TSKNpV31o57SSBCmHQQJ7QTKWMUe9SM2OCE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R5D/1mUaxtw4QY23cQFFRqwGuS575dwLDbhCIKuGn7JPZ8CdlDr+eruaNVtLsz3wrS7+WGA+8bIVbQJb4jhAQkVCQ3CbFq1Pq8RV2rO3h5jUOnSd5ZrEKwDO82CITmRUmIVRnFRacE25z9Aai1eDmczxHKh//A060kfpO29gjJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R3fC8AGC; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747402961; c=relaxed/simple;
+	bh=0bUIUe4Sx2DWxLW1yYo6Ms1yEOIpi/0LQIRHc31B0Ik=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XLLq4mxw1KKSQVPzezRvnUgcwarhV8EpbF3vgI0IXpPMUPlJ8ropBlZOuSQTtEi0p44ZkfnJnZwE878qUeGVMuH393SWS9yYA7oUwbYaSpoc42q24AAguT5HfMZDJLXchOi22mQDUetnKGgMEDIFChgO4yCaNlmeRkrIuddB5pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=H4R6vJaT; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R3fC8AGC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747402929; x=1778938929;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xYrmVzF1TSKNpV31o57SSBCmHQQJ7QTKWMUe9SM2OCE=;
-  b=R3fC8AGC2hvHdudClFRN2edin2ydrG6bmRc4lo1AZSP3J+K0vybm4Fpf
-   1PE9WfQOLVHV+tD2Oo+lFDPQhb8H5Jq4Dp6Jioue4tkuHwtIB1ySmZOTT
-   RvzZV306u5l6BJG8N/6SAVM0rkW3/4zQJ0Vr2TTz1Z9nSxiEE2DR+0TeU
-   MIhT8/66LuG2wBnmRkwWASSRbllSnFqdOnM3VP6vz6To0zJ9tEffNW6KF
-   /3HtX6r0kHxTfJZdTRpB3B0tVMLbJMc7JM510p5BZxigyzk4HrXzrSzgF
-   5Fbk2qXSf0QBuFDE7pvisJFanfKdNhBnSvDTv/wN/FXk0c/SEDcrUP5RR
-   w==;
-X-CSE-ConnectionGUID: 67hchGJjSS+10tR2BRYOXA==
-X-CSE-MsgGUID: /2d4TA34QlS/e8tCqbnWhg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49359971"
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="49359971"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 06:42:08 -0700
-X-CSE-ConnectionGUID: 1/ctc2i/SrCNez2NKC/sXg==
-X-CSE-MsgGUID: 2rUPzOIfTAeBLXo40kOOMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="143583158"
-Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.109.57]) ([10.125.109.57])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 06:42:07 -0700
-Message-ID: <30570ca0-8da4-4ebc-84d6-0a4badfb7154@intel.com>
-Date: Fri, 16 May 2025 06:42:03 -0700
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="H4R6vJaT"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54GC6QOd018190;
+	Fri, 16 May 2025 13:42:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=oW5TDyB0lDxwJpPJULvDTcBi
+	kCCDI6hqCKTXY32JOKM=; b=H4R6vJaTK73tW5Cyn7NFCclwh8hfLxS7T3S9ld1R
+	sj9hOeZpIKX24PWFdtF5zofuDtQ/stOEk4loRhcvjLZ0QrhJHW+Ghrwb/Hvmxa07
+	w/IGpehkBawkyo4Mr08LhG2qc2L1hCJtt+GEunxiRIu4sYaWsWlZskE+FA6MAfBg
+	FmXiX4ZcfZJgUKBnUZtfhQ9AWPgYOsE/L0Rej61YF+zpzcFMOz1UW4bcKFGtpLRq
+	zovC6+d+/zbnOOZHn0D/wC4BFGGUAzPjwjkRRdpBqT5ydqWntZ7MnX8i3DSW7yG6
+	Sjpks/V1cO9kQN3M/rRuvDlNDJLXC2g4I14jQFQGm2q89Q==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcnt18s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 13:42:34 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54GDgXdd021142
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 13:42:33 GMT
+Received: from hu-wasimn-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 16 May 2025 06:42:27 -0700
+Date: Fri, 16 May 2025 19:12:17 +0530
+From: Wasim Nazir <quic_wasimn@quicinc.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Richard Cochran
+	<richardcochran@gmail.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <kernel@quicinc.com>, <kernel@oss.qualcomm.com>
+Subject: Re: [PATCH 5/8] dt-bindings: arm: qcom: Add bindings for qam8775p SOM
+Message-ID: <aCdAuTS4pg7arxwC@hu-wasimn-hyd.qualcomm.com>
+References: <20250507065116.353114-1-quic_wasimn@quicinc.com>
+ <20250507065116.353114-6-quic_wasimn@quicinc.com>
+ <55d11250-75b1-4606-a110-84cdc0592c33@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv3 2/4] x86/64/mm: Make SPARSEMEM_VMEMMAP the only memory
- model
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>,
- Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>,
- Michael Roth <michael.roth@amd.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Brijesh Singh <brijesh.singh@amd.com>, Sandipan Das <sandipan.das@amd.com>,
- Juergen Gross <jgross@suse.com>, Tom Lendacky <thomas.lendacky@amd.com>,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-efi@vger.kernel.org, linux-mm@kvack.org
-References: <20250516123306.3812286-1-kirill.shutemov@linux.intel.com>
- <20250516123306.3812286-3-kirill.shutemov@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250516123306.3812286-3-kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <55d11250-75b1-4606-a110-84cdc0592c33@kernel.org>
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: I-jYnTPIFCLUrKBmxL999qlgodyVDq99
+X-Authority-Analysis: v=2.4 cv=aIbwqa9m c=1 sm=1 tr=0 ts=682740ca cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=x0sF0_AxRbDvk2FnIs8A:9 a=CjuIK1q_8ugA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: I-jYnTPIFCLUrKBmxL999qlgodyVDq99
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDEzMiBTYWx0ZWRfX8qDYzt0ATIZz
+ 5ATZwk+WybOWYTcnX7jap2+XdKeCmS2fZyqNG8CmER1uZpra+PPEBsAMrjNx97wYVfyW7Mp1MXH
+ AdlvycoYN0vGdRpyxMjXtH3QZy4mmmNgVXayjDDmF+jO5tDAsPypum2UYy0j2IHC/pFdbpBgAqU
+ y6Hb4G3ki9HiTbE0dHAnaAzrVm+7srFSm4GCjxKQwCgZ+Nsl7yyHXQcSQaP96ga92UnuT80/jdf
+ bFJiKH8keQ/2bBIFQigb/gI/NZHcnzMzDIgtr6U/1kQnaRQdyT13GfoP691DtjjXuhB4kCsvV0N
+ 8CkQEIwjLiW+7rwIIZRWtv23oufcHh/sXF0yBD0RyOri3HuAnA9kVHiL5VLjFRm1/luelq4Tbs4
+ KVfRNKqyZdVhTOXyDh+1e9X35H49rne2WXHK1NDjZIVXLJyHW6zrVph7NAXWSUHzQxWF4q4q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-16_05,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 mlxlogscore=572 malwarescore=0 bulkscore=0 impostorscore=0
+ clxscore=1015 phishscore=0 suspectscore=0 mlxscore=0 spamscore=0
+ lowpriorityscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505160132
 
-On 5/16/25 05:33, Kirill A. Shutemov wrote:
-> 5-level paging only supports SPARSEMEM_VMEMMAP. CONFIG_X86_5LEVEL is
-> being phased out, making 5-level paging support mandatory.
+On Wed, May 07, 2025 at 09:00:18AM +0200, Krzysztof Kozlowski wrote:
+> On 07/05/2025 08:51, Wasim Nazir wrote:
+> > Add devicetree bindings for QAM8775p SOM which is based on sa8775p SOC.
 > 
-> Make CONFIG_SPARSEMEM_VMEMMAP mandatory for x86-64 and eliminate
-> any associated conditional statements.
-I think we have ourselves a catch-22 here.
+> You do not add new bindings. You instead change existing ones without
+> explanation why making that change.
+> 
 
-SPARSEMEM_VMEMMAP was selected because the other sparsemem modes
-couldn't handle a dynamic MAX_PHYS{MEM,ADDR}_BITS introduced by 5-level
-paging. Now you're proposing making it static again, but keeping the
-SPARSEMEM_VMEMMAP dependency.
+I understand your concern. We thought of adding it to define the SOM HW
+which was not done earlier.
+I will drop all the SOM bindings and maintain only SOM DT structure on
+IQ9 target (qcs9100), which we need it to add memory-map updates.
 
-If you remove the dynamic MAX_PHYS{MEM,ADDR}_BITS, you should also
-remove the dependency on SPARSEMEM_VMEMMAP. No?
+Also, I will drop similar change from IQ-9075-evk series [1] for maintaining
+similar dt-bindings for IQ9 (qcs9100 & qcs9075) series of targets.
 
+[1]
+https://lore.kernel.org/all/20250429054906.113317-1-quic_wasimn@quicinc.com/
 
+> 
+> 
+> Best regards,
+> Krzysztof
+
+Regards,
+Wasim
