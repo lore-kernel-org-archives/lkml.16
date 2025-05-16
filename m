@@ -1,505 +1,377 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F4BA32
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 12:22:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2CBA32
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 12:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747398170; cv=none; b=om5pjgei52E0Hk8fzMH6A470I7O+FEA2DC5/yAcv1xt9htaWsIoL+H90HEKO92OU0eiAOLU6JnzrXXTkfM69S8sa6a9DqrvUPyzehMb22RBl3pkCuC00676k1pVaXI7oY+jWZzO+oXfHCSqWdD3WmeP7frnOLxT1R9LWpRQbleA=
+	t=1747398219; cv=none; b=dS/XtwAw7HSCG1NvnWpxHWrsE36Tk/DPDGWHSK3QnUMggVimFNnxnGA8M9xEuXKudwIJXU6SW0OuJqVd576kozWUpJeVbbvkz8vC9oBt7Dfq8cqnnFWiBN3SxusqZKr78Y1i+l2tY4zsiciy5PqbnA25MJl/8yLbba635lW1Q/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747398170; c=relaxed/simple;
-	bh=TJlaW97d0S2WdW45DWlNv/JbrgrnhYr5upoF2C7JhIg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=eWdIJwVSJ+PRvZ7L5+PjcqEeAmluMsn4veb+qdvSvoY6HgkMUBaMZcuVe24Pk40i04BJh8thbJeJZfkHJndD3DtH7dti/5We5MEZpzXi4Y0Z+uD6I8zTIyUzfzT0oZ0qf31pc3hA7EBAGt447InvQzvDlY6ducwgcwCGjVfpMqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=W6bCaG3A; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1747398219; c=relaxed/simple;
+	bh=5cSjmPcJFe08vCHYUQOMP0LFKhHQYhx6GlqEZsgr4Lw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bZucKJoD/mCD8oJATuD1HmJEUZaxsiZ9WDENNqxS1ak1C6FIsPNebNYBZIMNdRtn5EOC8POT7VBiO5WZf7+u8GbpUfnY9BDIrvcfWjCoAp0avFwZVEUOnVhFFbNX6Ii4XfPrvK9TOF614nzReTl7XXZvHywSHjaLNOPM9POqGlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=er4C+rKe; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W6bCaG3A"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54ea69e9352so2710400e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 05:22:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1747398166; x=1748002966; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hveGJuHO3cYrqWgCAiywTBTBwL1Z0k72b5MDhRmdVzU=;
-        b=W6bCaG3AnxzyvyoJwNKTmNZX7Vk73kcL+AhNX3JSZzPBA3eZzRdp8gZbUwT25KpOIs
-         Zf9QebupCnWbUEF3dXOfxmpzzGxamER+P1FJ0xjdyJLpF6RTGh4jwSwDbgRJy2K6nNuY
-         tc64xmTewdlTPnfEyqFWakRLDURS35T1HNz8I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747398166; x=1748002966;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hveGJuHO3cYrqWgCAiywTBTBwL1Z0k72b5MDhRmdVzU=;
-        b=KEkQMvTN0T7IfNDjf3OZJDp9NVufjr60BPtMONi8tra+gMkqdvEaiz3LknhFbxxJMQ
-         kg0y8bqebxKi1wh2xtvz2+EcDoduwIMSmHMS9FRPYAQGBjDMDCg81rz4W045VsAQrylA
-         WTGIPm4DWaPWCfGE+cQpkBs3mdRkp1jyKoNa5Kg5l3iKta1lC+crC8Hwh0H/NCsQxBHy
-         Lq89Q+onK+qsKmhL3ms02fe0YGCZZfC8zTU0BZS6n9m7c2UcgrU9AqhEwz8F61j1B3lg
-         eVuyx+0GXtenRp2dIAi6wrd+B55vJr2WmpqoTcve+XFLm/V+C17neAwcI2bgNHHrgFwY
-         axRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXBFED/y6xh4Wx+vmelmb4uMTvMz2n5dttSViGeMX9hUm7n7k4fDENmdaZfQVzC8Bn65vfLXxCW0JXhZh4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUMzenWAW9n74RaL/ukWmhRo0dvv0mMUa8N3dP4O8llqcdgy7L
-	vJZXi0J5MtyKewgB1QmrKpFA5d9T9RGOgT0ykeubCwLP5TsPIl9JtDEPgaAziECqlg==
-X-Gm-Gg: ASbGncuVM99RyBNSsnUO2SM9v1rn56rQtX1cl9mInc4wIhiHhuBFGrsrjukrfzqqVi/
-	Zcqlo804G5dTB9hbtvZGbuJ8pA0YkyLPTRPCyUHn//qQbnfp5d7iIwB0bzoro2A8mZN6ZL/IXFk
-	ne9FPYoxbJc98wso5EIm0d5GCJvF98B9xX+7onuNQIikfU9glwi4ipzUZ7v4quoSkJXOX4voQ9A
-	sYC5qBXMXWQF0h/ludMFku51nlfJN5bBGJHRW+ws2VZLu3TJbkHs7qoq2o5W7ftuGqazi2AasEK
-	CEpoKvnPy1cyj0aQaf/YYgNgXJDNyWR0U0YTq2Ch2Dif1StuXOaNAEnptTdI3J7dCH5f4I01PcJ
-	7W22psh8omkUj6pTvmK45UWOPmGlAaG0fkYu0
-X-Google-Smtp-Source: AGHT+IFaKQC6d9svxyVpuCwSXjPqozv1HP1HOfxRP7qXMrsShfBpbdcJHmYE+6rveUBMv7rDKFXXCQ==
-X-Received: by 2002:a05:6512:3d91:b0:549:7354:e4d1 with SMTP id 2adb3069b0e04-550e98fca76mr709309e87.38.1747398166097;
-        Fri, 16 May 2025 05:22:46 -0700 (PDT)
-Received: from ribalda.c.googlers.com (90.52.88.34.bc.googleusercontent.com. [34.88.52.90])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f16236sm425011e87.42.2025.05.16.05.22.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 05:22:45 -0700 (PDT)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Fri, 16 May 2025 12:22:44 +0000
-Subject: [PATCH] media: Add automatic sort support for Makefile and Kconfig
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="er4C+rKe"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9A4C21D8;
+	Fri, 16 May 2025 14:23:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1747398191;
+	bh=5cSjmPcJFe08vCHYUQOMP0LFKhHQYhx6GlqEZsgr4Lw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=er4C+rKeFmATxIjgjge+HfUxkVrhHgLDcTcdUOWMIITHKdLXuAFfliDaaKNrDITTs
+	 FfOq6dic+4+PSqAbLbnHSu1paicrc+nyOvY4S1WSiOh0NtiU6+Ez/xSfdA6orF1t5k
+	 Nzp444mvm7dJTMOphOC3Pck1hFvb3RnrhPE3AqDI=
+Message-ID: <19101cd7-5b4d-416d-a00e-6657b81149a6@ideasonboard.com>
+Date: Fri, 16 May 2025 15:23:25 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 0/5] drm/atomic-helper: Re-order CRTC and Bridge ops
+To: Aradhya Bhatia <aradhya.bhatia@linux.dev>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Devarsh Thakkar <devarsht@ti.com>, Praneeth Bajjuri <praneeth@ti.com>,
+ Udit Kumar <u-kumar1@ti.com>, Jayesh Choudhary <j-choudhary@ti.com>,
+ Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+ DRI Development List <dri-devel@lists.freedesktop.org>,
+ Linux Kernel List <linux-kernel@vger.kernel.org>
+References: <20250406131642.171240-1-aradhya.bhatia@linux.dev>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <20250406131642.171240-1-aradhya.bhatia@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250516-keep-sorted-makefile-v1-1-82c6a4d3b1a8@chromium.org>
-X-B4-Tracking: v=1; b=H4sIABMuJ2gC/x2MSwqAMBDFriKzdkCFVvAq4mJonzrUH62IIN7d4
- jKB5KGEqEjUFQ9FXJp03zLUZUFulm0Cq89MTdWYytSWA3Bw2uMJz6sEjLqAIUaca714sZTTI2Z
- //9t+eN8PfXzc/2YAAAA=
-X-Change-ID: 20250516-keep-sorted-makefile-ea5acc7dada6
-To: Hans Verkuil <hans@jjverkuil.nl>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.14.2
 
-Add keep-sorted annotations to the build files in the media subsystem.
-Thanks to this we can enforce the proper sorting with CI.
+Hi all,
 
-We use this occasion to fix the sorting of the files.
+On 06/04/2025 16:16, Aradhya Bhatia wrote:
+> Hello all,
+> 
+> This series re-orders the sequences in which the drm CRTC and the drm
+> Bridge get enabled and disabled with respect to each other.
+> 
+> The bridge pre_enable calls have been shifted before the crtc_enable and
+> the bridge post_disable calls have been shifted after the crtc_disable.
+> 
+> This has been done as per the definition of bridge pre_enable.
+> "The display pipe (i.e. clocks and timing signals) feeding this bridge will
+> not yet be running when this callback is called".
+> 
+> Since CRTC is also a source feeding the bridge, it should not be enabled
+> before the bridges in the pipeline are pre_enabled.
 
-There might be some controversial sorting. Eg:
-obj-y += dvb-usb-v2/
-obj-y += dvb-usb/
+Any further comments to this?
 
-This could be fixed with keep-sorted by_regex parameter, but I think
-it would make the code "uglier" for little benefit.
+All the patches have been reviewed and tested. I can push this, along 
+with the serieses that depend on this, via drm-misc, but I'll need an 
+ack from a maintainer.
 
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
----
- drivers/media/common/Makefile           |  3 ++-
- drivers/media/common/videobuf2/Makefile |  3 ++-
- drivers/media/dvb-frontends/Makefile    |  4 ++--
- drivers/media/pci/Makefile              | 24 +++++++++++++-----------
- drivers/media/platform/Kconfig          |  2 ++
- drivers/media/platform/Makefile         |  6 ++++--
- drivers/media/radio/Makefile            |  9 ++++++---
- drivers/media/rc/Makefile               |  6 ++++--
- drivers/media/rc/keymaps/Makefile       | 19 ++++++++++---------
- drivers/media/spi/Makefile              |  3 ++-
- drivers/media/tuners/Makefile           |  3 ++-
- drivers/media/usb/Makefile              |  8 +++++---
- drivers/media/v4l2-core/Makefile        | 10 +++++-----
- 13 files changed, 59 insertions(+), 41 deletions(-)
+  Tomi
 
-diff --git a/drivers/media/common/Makefile b/drivers/media/common/Makefile
-index c5ab905e7c20017f596d9576b6eabcd5081e9385..7b5feb328371a7a0c93a19b15d1578d0af247447 100644
---- a/drivers/media/common/Makefile
-+++ b/drivers/media/common/Makefile
-@@ -2,9 +2,10 @@
- obj-y += b2c2/ saa7146/ siano/ v4l2-tpg/ videobuf2/
- 
- # Please keep it alphabetically sorted by Kconfig name
--# (e. g. LC_ALL=C sort Makefile)
-+# keep-sorted start
- obj-$(CONFIG_CYPRESS_FIRMWARE) += cypress_firmware.o
- obj-$(CONFIG_TTPCI_EEPROM) += ttpci-eeprom.o
- obj-$(CONFIG_UVC_COMMON) += uvc.o
- obj-$(CONFIG_VIDEO_CX2341X) += cx2341x.o
- obj-$(CONFIG_VIDEO_TVEEPROM) += tveeprom.o
-+# keep-sorted end
-diff --git a/drivers/media/common/videobuf2/Makefile b/drivers/media/common/videobuf2/Makefile
-index a6fe3f304685e9946738fdbaf77d45b967e7205a..dbaa35bfecce9eb6ed194ddd3d38b690fd78d48e 100644
---- a/drivers/media/common/videobuf2/Makefile
-+++ b/drivers/media/common/videobuf2/Makefile
-@@ -7,7 +7,7 @@ ifeq ($(CONFIG_TRACEPOINTS),y)
- endif
- 
- # Please keep it alphabetically sorted by Kconfig name
--# (e. g. LC_ALL=C sort Makefile)
-+# keep-sorted start
- obj-$(CONFIG_VIDEOBUF2_CORE) += videobuf2-common.o
- obj-$(CONFIG_VIDEOBUF2_DMA_CONTIG) += videobuf2-dma-contig.o
- obj-$(CONFIG_VIDEOBUF2_DMA_SG) += videobuf2-dma-sg.o
-@@ -15,3 +15,4 @@ obj-$(CONFIG_VIDEOBUF2_DVB) += videobuf2-dvb.o
- obj-$(CONFIG_VIDEOBUF2_MEMOPS) += videobuf2-memops.o
- obj-$(CONFIG_VIDEOBUF2_V4L2) += videobuf2-v4l2.o
- obj-$(CONFIG_VIDEOBUF2_VMALLOC) += videobuf2-vmalloc.o
-+# keep-sorted end
-diff --git a/drivers/media/dvb-frontends/Makefile b/drivers/media/dvb-frontends/Makefile
-index a93146cb428c310be4e8cbc27d63c272168e9c6c..74d6d6d7d11aff78ce11fe438f81c1b3e42b0bf3 100644
---- a/drivers/media/dvb-frontends/Makefile
-+++ b/drivers/media/dvb-frontends/Makefile
-@@ -17,8 +17,7 @@ stb0899-objs := stb0899_drv.o stb0899_algo.o
- stv0900-objs := stv0900_core.o stv0900_sw.o
- 
- # Please keep it alphabetically sorted by Kconfig name
--# (e. g. LC_ALL=C sort Makefile)
--
-+# keep-sorted start
- obj-$(CONFIG_DVB_A8293) += a8293.o
- obj-$(CONFIG_DVB_AF9013) += af9013.o
- obj-$(CONFIG_DVB_AF9033) += af9033.o
-@@ -136,3 +135,4 @@ obj-$(CONFIG_DVB_ZD1301_DEMOD) += zd1301_demod.o
- obj-$(CONFIG_DVB_ZL10036) += zl10036.o
- obj-$(CONFIG_DVB_ZL10039) += zl10039.o
- obj-$(CONFIG_DVB_ZL10353) += zl10353.o
-+# keep-sorted end
-diff --git a/drivers/media/pci/Makefile b/drivers/media/pci/Makefile
-index 02763ad8851157c04f7a8350e5f6a0a9ed093eea..f7a741cab19f1d100949db98a95a1620f54d1d44 100644
---- a/drivers/media/pci/Makefile
-+++ b/drivers/media/pci/Makefile
-@@ -4,24 +4,25 @@
- #
- 
- # Please keep it alphabetically sorted by directory
--# (e. g. LC_ALL=C sort Makefile)
--obj-y        +=	ttpci/		\
-+# keep-sorted start skip_lines=1
-+obj-y        += \
- 		b2c2/		\
--		pluto2/		\
-+		ddbridge/	\
- 		dm1105/		\
--		pt1/		\
--		pt3/		\
-+		intel/ 		\
- 		mantis/		\
-+		netup_unidvb/	\
- 		ngene/		\
--		ddbridge/	\
-+		pluto2/		\
-+		pt1/		\
-+		pt3/		\
- 		saa7146/	\
- 		smipcie/	\
--		netup_unidvb/	\
--		intel/
-+		ttpci/
-+# keep-sorted end
- 
- # Please keep it alphabetically sorted by Kconfig name
--# (e. g. LC_ALL=C sort Makefile)
--
-+# keep-sorted start
- obj-$(CONFIG_VIDEO_BT848) += bt8xx/
- obj-$(CONFIG_VIDEO_COBALT) += cobalt/
- obj-$(CONFIG_VIDEO_CX18) += cx18/
-@@ -35,6 +36,7 @@ obj-$(CONFIG_VIDEO_SAA7134) += saa7134/
- obj-$(CONFIG_VIDEO_SAA7164) += saa7164/
- obj-$(CONFIG_VIDEO_SOLO6X10) += solo6x10/
- obj-$(CONFIG_VIDEO_TW5864) += tw5864/
--obj-$(CONFIG_VIDEO_TW686X) += tw686x/
- obj-$(CONFIG_VIDEO_TW68) += tw68/
-+obj-$(CONFIG_VIDEO_TW686X) += tw686x/
- obj-$(CONFIG_VIDEO_ZORAN) += zoran/
-+# keep-sorted end
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 9287faafdce5873c78a6a2012bf7f8a8c448b79b..f69969100dc82db5179501d9c8c1667184004786 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -62,6 +62,7 @@ config VIDEO_MUX
- 	  This driver provides support for N:1 video bus multiplexers.
- 
- # Platform drivers - Please keep it alphabetically sorted
-+# keep-sorted start
- source "drivers/media/platform/allegro-dvt/Kconfig"
- source "drivers/media/platform/amlogic/Kconfig"
- source "drivers/media/platform/amphion/Kconfig"
-@@ -90,5 +91,6 @@ source "drivers/media/platform/ti/Kconfig"
- source "drivers/media/platform/verisilicon/Kconfig"
- source "drivers/media/platform/via/Kconfig"
- source "drivers/media/platform/xilinx/Kconfig"
-+# keep-sorted end
- 
- endif # MEDIA_PLATFORM_DRIVERS
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index 6fd7db0541c7ecca04c5da5839e4d3641178aa9d..ccde8ead09781d78f77f5ecdee099aa9b28d7e02 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -4,7 +4,7 @@
- #
- 
- # Place here, alphabetically sorted by directory
--# (e. g. LC_ALL=C sort Makefile)
-+# keep-sorted start
- obj-y += allegro-dvt/
- obj-y += amlogic/
- obj-y += amphion/
-@@ -33,9 +33,11 @@ obj-y += ti/
- obj-y += verisilicon/
- obj-y += via/
- obj-y += xilinx/
-+# keep-sorted end
- 
- # Please place here only ancillary drivers that aren't SoC-specific
- # Please keep it alphabetically sorted by Kconfig name
--# (e. g. LC_ALL=C sort Makefile)
-+# keep-sorted start
- obj-$(CONFIG_VIDEO_MEM2MEM_DEINTERLACE)	+= m2m-deinterlace.o
- obj-$(CONFIG_VIDEO_MUX)			+= video-mux.o
-+# keep-sorted end
-diff --git a/drivers/media/radio/Makefile b/drivers/media/radio/Makefile
-index 1ff46f3a6ed3fa6b23d5f057c15082b92cea2ac9..096b6dce14cd8f849ae449d44606e52180f871a8 100644
---- a/drivers/media/radio/Makefile
-+++ b/drivers/media/radio/Makefile
-@@ -6,20 +6,20 @@
- shark2-objs := radio-shark2.o radio-tea5777.o
- 
- # Please keep it alphabetically sorted by Kconfig name
--# (e. g. LC_ALL=C sort Makefile)
-+# keep-sorted start
- obj-$(CONFIG_RADIO_AZTECH) += radio-aztech.o
- obj-$(CONFIG_RADIO_CADET) += radio-cadet.o
- obj-$(CONFIG_RADIO_GEMTEK) += radio-gemtek.o
- obj-$(CONFIG_RADIO_ISA) += radio-isa.o
- obj-$(CONFIG_RADIO_MAXIRADIO) += radio-maxiradio.o
- obj-$(CONFIG_RADIO_MIROPCM20) += radio-miropcm20.o
--obj-$(CONFIG_RADIO_RTRACK2) += radio-rtrack2.o
- obj-$(CONFIG_RADIO_RTRACK) += radio-aimslab.o
-+obj-$(CONFIG_RADIO_RTRACK2) += radio-rtrack2.o
- obj-$(CONFIG_RADIO_SAA7706H) += saa7706h.o
- obj-$(CONFIG_RADIO_SF16FMI) += radio-sf16fmi.o
- obj-$(CONFIG_RADIO_SF16FMR2) += radio-sf16fmr2.o
--obj-$(CONFIG_RADIO_SHARK2) += shark2.o
- obj-$(CONFIG_RADIO_SHARK) += radio-shark.o
-+obj-$(CONFIG_RADIO_SHARK2) += shark2.o
- obj-$(CONFIG_RADIO_SI470X) += si470x/
- obj-$(CONFIG_RADIO_SI4713) += si4713/
- obj-$(CONFIG_RADIO_SI476X) += radio-si476x.o
-@@ -32,9 +32,12 @@ obj-$(CONFIG_RADIO_TRUST) += radio-trust.o
- obj-$(CONFIG_RADIO_TYPHOON) += radio-typhoon.o
- obj-$(CONFIG_RADIO_WL1273) += radio-wl1273.o
- obj-$(CONFIG_RADIO_ZOLTRIX) += radio-zoltrix.o
-+# keep-sorted end
- 
-+# keep-sorted start
- obj-$(CONFIG_USB_DSBR) += dsbr100.o
- obj-$(CONFIG_USB_KEENE) += radio-keene.o
- obj-$(CONFIG_USB_MA901) += radio-ma901.o
- obj-$(CONFIG_USB_MR800) += radio-mr800.o
- obj-$(CONFIG_USB_RAREMONO) += radio-raremono.o
-+# keep-sorted end
-diff --git a/drivers/media/rc/Makefile b/drivers/media/rc/Makefile
-index 2bca6f7f07bc987a7b5c61f43f717e2b3cd967c8..8e0adabf109d65ba02bd20b5c57e027e92454ef2 100644
---- a/drivers/media/rc/Makefile
-+++ b/drivers/media/rc/Makefile
-@@ -10,7 +10,7 @@ rc-core-$(CONFIG_BPF_LIRC_MODE2) += bpf-lirc.o
- obj-$(CONFIG_RC_CORE) += rc-core.o
- 
- # IR decoders - please keep it alphabetically sorted by Kconfig name
--# (e. g. LC_ALL=C sort Makefile)
-+# keep-sorted start
- obj-$(CONFIG_IR_IMON_DECODER) += ir-imon-decoder.o
- obj-$(CONFIG_IR_JVC_DECODER) += ir-jvc-decoder.o
- obj-$(CONFIG_IR_MCE_KBD_DECODER) += ir-mce_kbd-decoder.o
-@@ -22,9 +22,10 @@ obj-$(CONFIG_IR_SANYO_DECODER) += ir-sanyo-decoder.o
- obj-$(CONFIG_IR_SHARP_DECODER) += ir-sharp-decoder.o
- obj-$(CONFIG_IR_SONY_DECODER) += ir-sony-decoder.o
- obj-$(CONFIG_IR_XMP_DECODER) += ir-xmp-decoder.o
-+# keep-sorted end
- 
- # stand-alone IR receivers/transmitters  - please keep it alphabetically
--# sorted by Kconfig name (e. g. LC_ALL=C sort Makefile)
-+# keep-sorted start
- obj-$(CONFIG_IR_ENE) += ene_ir.o
- obj-$(CONFIG_IR_FINTEK) += fintek-cir.o
- obj-$(CONFIG_IR_GPIO_CIR) += gpio-ir-recv.o
-@@ -54,3 +55,4 @@ obj-$(CONFIG_RC_ATI_REMOTE) += ati_remote.o
- obj-$(CONFIG_RC_LOOPBACK) += rc-loopback.o
- obj-$(CONFIG_RC_ST) += st_rc.o
- obj-$(CONFIG_RC_XBOX_DVD) += xbox_remote.o
-+# keep-sorted end
-diff --git a/drivers/media/rc/keymaps/Makefile b/drivers/media/rc/keymaps/Makefile
-index d04572627cdd0b7962c5035a9202ca265d36eeb1..4ae66312eaf437c3ee25a809ef26cc28fa6c4573 100644
---- a/drivers/media/rc/keymaps/Makefile
-+++ b/drivers/media/rc/keymaps/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- # Please keep keymaps alphabetically sorted by directory name
--#(e. g. LC_ALL=C sort Makefile)
-+# keep-sorted start skip_lines=1
- obj-$(CONFIG_RC_MAP) += \
- 			rc-adstech-dvb-t-pci.o \
- 			rc-alink-dtu-m.o \
-@@ -17,8 +17,8 @@ obj-$(CONFIG_RC_MAP) += \
- 			rc-avermedia-dvbt.o \
- 			rc-avermedia-m135a.o \
- 			rc-avermedia-m733a-rm-k6.o \
--			rc-avermedia.o \
- 			rc-avermedia-rm-ks.o \
-+			rc-avermedia.o \
- 			rc-avertv-303.o \
- 			rc-azurewave-ad-tu700.o \
- 			rc-beelink-gs1.o \
-@@ -44,9 +44,9 @@ obj-$(CONFIG_RC_MAP) += \
- 			rc-dvico-mce.o \
- 			rc-dvico-portable.o \
- 			rc-em-terratec.o \
--			rc-encore-enltv2.o \
- 			rc-encore-enltv-fm53.o \
- 			rc-encore-enltv.o \
-+			rc-encore-enltv2.o \
- 			rc-evga-indtube.o \
- 			rc-eztv.o \
- 			rc-flydvb.o \
-@@ -74,16 +74,16 @@ obj-$(CONFIG_RC_MAP) += \
- 			rc-leadtek-y04g0051.o \
- 			rc-lme2510.o \
- 			rc-manli.o \
--			rc-mecool-kiii-pro.o \
- 			rc-mecool-kii-pro.o \
-+			rc-mecool-kiii-pro.o \
- 			rc-medion-x10-digitainer.o \
--			rc-medion-x10.o \
- 			rc-medion-x10-or2x.o \
-+			rc-medion-x10.o \
- 			rc-minix-neo.o \
--			rc-msi-digivox-iii.o \
- 			rc-msi-digivox-ii.o \
--			rc-msi-tvanywhere.o \
-+			rc-msi-digivox-iii.o \
- 			rc-msi-tvanywhere-plus.o \
-+			rc-msi-tvanywhere.o \
- 			rc-mygica-utv3.o \
- 			rc-nebula.o \
- 			rc-nec-terratec-cinergy-xs.o \
-@@ -126,8 +126,8 @@ obj-$(CONFIG_RC_MAP) += \
- 			rc-total-media-in-hand.o \
- 			rc-trekstor.o \
- 			rc-tt-1500.o \
--			rc-twinhan1027.o \
- 			rc-twinhan-dtv-cab-ci.o \
-+			rc-twinhan1027.o \
- 			rc-vega-s9x.o \
- 			rc-videomate-m1f.o \
- 			rc-videomate-s350.o \
-@@ -135,9 +135,10 @@ obj-$(CONFIG_RC_MAP) += \
- 			rc-videostrong-kii-pro.o \
- 			rc-wetek-hub.o \
- 			rc-wetek-play2.o \
--			rc-winfast.o \
- 			rc-winfast-usbii-deluxe.o \
-+			rc-winfast.o \
- 			rc-x96max.o \
- 			rc-xbox-360.o \
- 			rc-xbox-dvd.o \
- 			rc-zx-irdec.o
-+# keep-sorted end
-diff --git a/drivers/media/spi/Makefile b/drivers/media/spi/Makefile
-index 6ac7adc64124a211035a377c5778af597f9a5a62..ce07bcf8f93ffa358bad20d5588c44e6dd04b13d 100644
---- a/drivers/media/spi/Makefile
-+++ b/drivers/media/spi/Makefile
-@@ -3,6 +3,7 @@
- ccflags-y += -I $(srctree)/drivers/media/dvb-frontends/cxd2880
- 
- # Please keep it alphabetically sorted by Kconfig name
--# (e. g. LC_ALL=C sort Makefile)
-+# keep-sorted start
- obj-$(CONFIG_CXD2880_SPI_DRV) += cxd2880-spi.o
- obj-$(CONFIG_VIDEO_GS1662) += gs1662.o
-+# keep-sorted end
-diff --git a/drivers/media/tuners/Makefile b/drivers/media/tuners/Makefile
-index bd350a285aadad39d44f594c5f672e05f1cf55c4..ac7fc7031c3e3abbf4b37bfc76a0c8ed472aac81 100644
---- a/drivers/media/tuners/Makefile
-+++ b/drivers/media/tuners/Makefile
-@@ -7,7 +7,7 @@ ccflags-y += -I$(srctree)/drivers/media/dvb-frontends
- tda18271-objs := tda18271-maps.o tda18271-common.o tda18271-fe.o
- 
- # Please keep it alphabetically sorted by Kconfig name
--# (e. g. LC_ALL=C sort Makefile)
-+# keep-sorted start
- obj-$(CONFIG_MEDIA_TUNER_E4000) += e4000.o
- obj-$(CONFIG_MEDIA_TUNER_FC0011) += fc0011.o
- obj-$(CONFIG_MEDIA_TUNER_FC0012) += fc0012.o
-@@ -46,3 +46,4 @@ obj-$(CONFIG_MEDIA_TUNER_TUA9001) += tua9001.o
- obj-$(CONFIG_MEDIA_TUNER_XC2028) += xc2028.o
- obj-$(CONFIG_MEDIA_TUNER_XC4000) += xc4000.o
- obj-$(CONFIG_MEDIA_TUNER_XC5000) += xc5000.o
-+# keep-sorted end
-diff --git a/drivers/media/usb/Makefile b/drivers/media/usb/Makefile
-index 6d171beea20d3973db1a46df5e33938e340f2026..14b7a6446d724cd6fcbcf7b626d8f2a887b4362b 100644
---- a/drivers/media/usb/Makefile
-+++ b/drivers/media/usb/Makefile
-@@ -4,17 +4,18 @@
- #
- 
- # DVB USB-only drivers. Please keep it alphabetically sorted by directory name
--# (e. g. LC_ALL=C sort Makefile)
-+# keep-sorted start
- obj-y += b2c2/
--obj-y += dvb-usb/
- obj-y += dvb-usb-v2/
-+obj-y += dvb-usb/
- obj-y += s2255/
- obj-y += siano/
- obj-y += ttusb-budget/
- obj-y += ttusb-dec/
-+# keep-sorted end
- 
- # Please keep it alphabetically sorted by Kconfig name
--# (e. g. LC_ALL=C sort Makefile)
-+# keep-sorted start
- obj-$(CONFIG_DVB_AS102) += as102/
- obj-$(CONFIG_USB_AIRSPY) += airspy/
- obj-$(CONFIG_USB_GSPCA) += gspca/
-@@ -30,3 +31,4 @@ obj-$(CONFIG_VIDEO_HDPVR) += hdpvr/
- obj-$(CONFIG_VIDEO_PVRUSB2) += pvrusb2/
- obj-$(CONFIG_VIDEO_STK1160) += stk1160/
- obj-$(CONFIG_VIDEO_USBTV) += usbtv/
-+# keep-sorted end
-diff --git a/drivers/media/v4l2-core/Makefile b/drivers/media/v4l2-core/Makefile
-index 2177b9d63a8ffc1127c5a70118249a2ff63cd759..8fd4a251c59b80d72264d8e3ac71468b84e1fae2 100644
---- a/drivers/media/v4l2-core/Makefile
-+++ b/drivers/media/v4l2-core/Makefile
-@@ -14,16 +14,16 @@ videodev-objs	:=	v4l2-dev.o v4l2-ioctl.o v4l2-device.o v4l2-fh.o \
- 			v4l2-ctrls-request.o v4l2-ctrls-defs.o
- 
- # Please keep it alphabetically sorted by Kconfig name
--# (e. g. LC_ALL=C sort Makefile)
-+# keep-sorted start
- videodev-$(CONFIG_COMPAT) += v4l2-compat-ioctl32.o
- videodev-$(CONFIG_MEDIA_CONTROLLER) += v4l2-mc.o
- videodev-$(CONFIG_SPI) += v4l2-spi.o
- videodev-$(CONFIG_TRACEPOINTS) += v4l2-trace.o
- videodev-$(CONFIG_VIDEO_V4L2_I2C) += v4l2-i2c.o
-+# keep-sorted end
- 
- # Please keep it alphabetically sorted by Kconfig name
--# (e. g. LC_ALL=C sort Makefile)
--
-+# keep-sorted start
- obj-$(CONFIG_V4L2_ASYNC) += v4l2-async.o
- obj-$(CONFIG_V4L2_CCI) += v4l2-cci.o
- obj-$(CONFIG_V4L2_FLASH_LED_CLASS) += v4l2-flash-led-class.o
-@@ -32,6 +32,6 @@ obj-$(CONFIG_V4L2_H264) += v4l2-h264.o
- obj-$(CONFIG_V4L2_JPEG_HELPER) += v4l2-jpeg.o
- obj-$(CONFIG_V4L2_MEM2MEM_DEV) += v4l2-mem2mem.o
- obj-$(CONFIG_V4L2_VP9) += v4l2-vp9.o
--
--obj-$(CONFIG_VIDEO_TUNER) += tuner.o
- obj-$(CONFIG_VIDEO_DEV) += v4l2-dv-timings.o videodev.o
-+obj-$(CONFIG_VIDEO_TUNER) += tuner.o
-+# keep-sorted end
 
----
-base-commit: 1b83a9f41bd13dae09fabf594918ea36a9bc0cfc
-change-id: 20250516-keep-sorted-makefile-ea5acc7dada6
-
-Best regards,
--- 
-Ricardo Ribalda <ribalda@chromium.org>
+> The original sequence. for display pipe enable looks like:
+> 
+>        crtc_enable
+> 
+>        bridge[n]_pre_enable
+>        ...
+>        bridge[1]_pre_enable
+> 
+>        encoder_enable
+> 
+>        bridge[1]_enable
+>        ...
+>        bridge[n]_enable
+> 
+> The sequence of enable after this patch-set will look like:
+> 
+>        bridge[n]_pre_enable
+>        ...
+>        bridge[1]_pre_enable
+> 
+>        crtc_enable
+>        encoder_enable
+> 
+>        bridge[1]_enable
+>        ...
+>        bridge[n]_enable
+> 
+> 
+> For the disable sequence, this is what the original looks like:
+> 
+>        bridge[n]_disable
+>        ...
+>        bridge[1]_disable
+> 
+>        encoder_disable
+> 
+>        bridge[1]_post_disable
+>        ...
+>        bridge[n]_post_disable
+> 
+>        crtc_disable
+> 	
+> This is what the disable sequence will be, after this series of patches:
+> 
+>        bridge[n]_disable
+>        ...
+>        bridge[1]_disable
+> 
+>        encoder_disable
+>        crtc_disable
+> 
+>        bridge[1]_post_disable
+>        ...
+>        bridge[n]_post_disable
+> 
+> This series further updates the bridge API definitions to accurately
+> reflect the updated scenario.
+> 
+> This series is a subset of its v11[0] which had 14 patches in the revision.
+> 9 of those 14 patches (which were specific to the cdns-dsi bridge driver)
+> were merged[1].
+> 
+> Regards
+> Aradhya
+> 
+> ---
+> * Note on checkpatch warning in patch 2/4 *
+> Patch 2/4 causes the checkpatch to flare up for 1 checkpatch 'check' -
+> 
+> CHECK: Lines should not end with a '('
+> #79: FILE: drivers/gpu/drm/drm_atomic_helper.c:1304:
+> +                       new_crtc_state = drm_atomic_get_new_crtc_state(
+> 
+> This patch is largely duplicating the original code, with minor differences to
+> perform different operations. This line of code pre-exists in the file and
+> have simply been duplicated. I have decided to keep it as is to maintain the
+> uniformity and the originally intended readability. Should perhaps a fix be
+> required, this patch/series is not the right place, and another patch can be
+> created to fix this across the whole file.
+> 
+> References:
+> [0]: Revision v11 of this series.
+> https://lore.kernel.org/all/20250329113925.68204-1-aradhya.bhatia@linux.dev/
+> 
+> [1]: Patches 1 through 9 getting merged.
+> https://lore.kernel.org/all/174335361171.2556605.12634785416741695829.b4-ty@oss.qualcomm.com/
+> 
+> 
+> ---
+> Change Log:
+> 
+>    - Changes in v12:
+>      - Drop patches 1 through 9 since they have been merged.
+>      - Rebase onto newer drm-misc-next.
+>      - Re-word the patch 3/4, ("drm/bridge: Update the bridge enable/disable doc")
+>        to make it more readable.
+> 
+>    - Changes in v11:
+>      - Add patch v11:13/14 ("drm/bridge: Update the bridge enable/disable doc"),
+>        that updates the documentation about the order of the various bridge
+>        enable/disable hooks being called wrt the CRTC and encoder hooks.
+>      - Rebase on drm-misc-next instead of linux-next.
+>        As part of rebase, accommodate the following change:
+>        - Change patch v10:08/13 ("drm/bridge: cdns-dsi: Support atomic bridge
+>          APIs") to v11:08/13 ("drm/bridge: cdns-dsi: Add input format
+>          negotiation"), since Maxime has already updated the bridge hooks to
+>          their atomic versions in commit 68c98e227a96 ("drm/bridge: cdns-csi:
+>          Switch to atomic helpers").
+>          My new patch now only adds the format negotiation hook for the cdns-dsi.
+>          (Note: Since the new patch is now only a subset of the old one, without
+>          any change in logic, I decided to carry forward the R-b and T-b tags.)
+>      - Add Alexander Sverdlin's T-b in patches 10, 11, 12.
+> 
+>    - Changes in v10:
+>      - Rebase on latest linux-next (next-20250226).
+>      - As part of rebase, update the patches to accommodate a couple of
+>        widespread changes in DRM Framework -
+>          - All the ("drm/atomic-helper: Change parameter name of ***") commits.
+>          - All the ("drm/bridge: Pass full state to ***") commits.
+>        (These updates are only trivial substitutions.)
+>      - Add Tomi Valkeinen's T-b tags in all the patches.
+> 
+>    - Changes in v9:
+>      - Fix the oops in 11/13 - where the encoder_bridge_enable _was_ pre_enabling
+>        the bridges instead of enabling.
+>      - Add the following tags:
+>        - Dmitry Baryshkov's R-b in patches 2, 10, 11, and A-b in patch 12.
+>        - Jayesh Choudhary's R-b in patch 12.
+>        - Tomi Valkeinen's R-b in patches 2, 10, 11, 12.
+> 
+>    - Changes in v8:
+>      - Move the phy de-initialization to bridge post_disable() instead of bridge
+>        disable() in patch-3.
+>      - Copy the private bridge state (dsi_cfg), in addition to the bridge_state,
+>        in patch-9.
+>      - Split patch v7:11/12 into three patches, v8:{10,11,12}/13, to separate out
+>        different refactorings into different patches, and improve bisectability.
+>      - Move patch v7:02/12 down to v8:06/12, to keep the initial patches for
+>        fixes only.
+>      - Drop patch v7:04/12 as it doesn't become relevant until patch v7:12/12.
+>      - Add R-b tags of Dmitry Baryshkov in patch-9 and patch-3, and of
+>        Tomi Valkeinen in patch-9.
+>     
+>    - Changes in v7:
+>      - phy_init()/exit() were called from the PM path in v6. Change it back to
+>        the bridge enable/disable path in patch-3, so that the phy_init() can go
+>        back to being called after D-Phy reset assert.
+>      - Reword commit text in patch-5 to explain the need of the fix.
+>      - Drop the stray code in patch-10.
+>      - Add R-b tag of Dmitry Baryshkov in patch-6.
+> 
+>    - Changes in v6:
+>      - Reword patch 3 to better explain the fixes around phy de-init.
+>      - Fix the Lane ready timeout condition in patch 7.
+>      - Fix the dsi _bridge_atomic_check() implementation by adding a new
+>        bridge state structure in patch 10.
+>      - Rework and combine patches v5:11/13 and v5:12/13 to v6:11/12.
+>      - Generate the patches of these series using the "patience" algorithm.
+>        Note: All patches, except v6:11/12, *do not* differ from their default
+>        (greedy) algorithm variants.
+>        For patch 11, the patience algorithm significantly improves the readability.
+>      - Rename and move the Bridge enable/disable enums from public to private
+>        in patch 11.
+>      - Add R-b tags of Tomi Valkeinen in patch 6, and Dmitry Baryshkov in patch 2.
+> 
+>    - Changes in v5:
+>      - Fix subject and description in patch 1/13.
+>      - Add patch to check the return value of
+>        phy_mipi_dphy_get_default_config() (patch: 6/13).
+>      - Change the Clk and Data Lane ready timeout from forever to 5s.
+>      - Print an error instead of calling WARN_ON_ONCE in patch 7/13.
+>      - Drop patch v4-07/11: "drm/bridge: cdns-dsi: Reset the DCS write FIFO".
+>        There has been some inconsistencies found with this patch upon further
+>        testing. This patch was being used to enable a DSI panel based on ILITEK
+>        ILI9881C bridge. This will be debugged separately.
+>      - Add patch to move the DSI mode check from _atomic_enable() to
+>        _atomic_check() (patch: 10/13).
+>      - Split patch v4-10/11 into 2 patches - 11/13 and 12/13.
+>        Patch 11/13 separates out the Encoder-Bridge operations into a helper
+>        function *without* changing the logic. Patch 12/13 then changes the order
+>        of the encoder-bridge operations as was intended in the original patch.
+>      - Add detailed comment for patch 13/13.
+>      - Add Tomi Valkeinen's R-b in patches 1, 2, 4, 5, 7, 8, 9, 13.
+> 
+>    - Changes in v4:
+>      - Add new patch, "drm/bridge: cdns-dsi: Move to devm_drm_of_get_bridge()",
+>        to update to an auto-managed way of finding next bridge in the chain.
+>      - Drop patch "drm/bridge: cdns-dsi: Fix the phy_initialized variable" and
+>        add "drm/bridge: cdns-dsi: Fix Phy _init() and _exit()" that properly
+>        de-initializes the Phy and maintains the initialization state.
+>      - Reword patch "drm/bridge: cdns-dsi: Reset the DCS write FIFO" to explain
+>        the HW concerns better.
+>      - Add R-b tag from Dmitry Baryshkov for patches 1/11 and 8/11.
+> 
+>    - Changes in v3:
+>      - Reword the commit message for patch "drm/bridge: cdns-dsi: Fix OF node
+>        pointer".
+>      - Add a new helper API to figure out DSI host input pixel format
+>        in patch "drm/mipi-dsi: Add helper to find input format".
+>      - Use a common function for bridge pre-enable and enable, and bridge disable
+>        and post-disable, to avoid code duplication.
+>      - Add T-b tag from Dominik Haller in patch 5/10. (Missed to add it in v2).
+>      - Add R-b tag from Dmitry Baryshkov for patch 8/10.
+> 
+>    - Changes in v2:
+>      - Drop patch "drm/tidss: Add CRTC mode_fixup"
+>      - Split patch "drm/bridge: cdns-dsi: Fix minor bugs" into 4 separate ones
+>      - Drop support for early_enable/late_disable APIs and instead re-order the
+>        pre_enable / post_disable APIs to be called before / after crtc_enable /
+>        crtc_disable.
+>      - Drop support for early_enable/late_disable in cdns-dsi and use
+>        pre_enable/post_disable APIs instead to do bridge enable/disable.
+> 
+> 
+> Previous versions:
+> 
+> v1:  https://lore.kernel.org/all/20240511153051.1355825-1-a-bhatia1@ti.com/
+> v2:  https://lore.kernel.org/all/20240530093621.1925863-1-a-bhatia1@ti.com/
+> v3:  https://lore.kernel.org/all/20240617105311.1587489-1-a-bhatia1@ti.com/
+> v4:  https://lore.kernel.org/all/20240622110929.3115714-1-a-bhatia1@ti.com/
+> v5:  https://lore.kernel.org/all/20241019195411.266860-1-aradhya.bhatia@linux.dev/
+> v6:  https://lore.kernel.org/all/20250111192738.308889-1-aradhya.bhatia@linux.dev/
+> v7:  https://lore.kernel.org/all/20250114055626.18816-1-aradhya.bhatia@linux.dev/
+> v8:  https://lore.kernel.org/all/20250126191551.741957-1-aradhya.bhatia@linux.dev/
+> v9:  https://lore.kernel.org/all/20250209121032.32655-1-aradhya.bhatia@linux.dev/
+> v10: https://lore.kernel.org/all/20250226155228.564289-1-aradhya.bhatia@linux.dev/
+> v11: https://lore.kernel.org/all/20250329113925.68204-1-aradhya.bhatia@linux.dev/
+> 
+> ---
+> 
+> Aradhya Bhatia (5):
+>    drm/atomic-helper: Refactor crtc & encoder-bridge op loops into
+>      separate functions
+>    drm/atomic-helper: Separate out bridge pre_enable/post_disable from
+>      enable/disable
+>    drm/atomic-helper: Re-order bridge chain pre-enable and post-disable
+>    drm/bridge: Update the bridge enable/disable doc
+>    drm/bridge: cdns-dsi: Use pre_enable/post_disable to enable/disable
+> 
+>   .../gpu/drm/bridge/cadence/cdns-dsi-core.c    |  64 +++--
+>   drivers/gpu/drm/drm_atomic_helper.c           | 160 +++++++++--
+>   include/drm/drm_bridge.h                      | 249 +++++++++++++-----
+>   3 files changed, 355 insertions(+), 118 deletions(-)
+> 
+> 
+> base-commit: dd717762761807452ca25634652e180a80349cd8
 
