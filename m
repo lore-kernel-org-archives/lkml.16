@@ -1,61 +1,47 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593961B87EB;
-	Fri, 16 May 2025 15:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893181B87EB
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 15:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747409729; cv=none; b=Il/6LyHztwpQZ6jWbpSVy92cuqDakViu1BzeSa6+9GTzP/EG3LqjfnW8oxguuM4QgmfZsSlqwvhHyYcuLbh4Ng6PBD0s3pk55Lbeh0n5iIDnTRbCVKAMIAgjQV+J2HPqsrzGkH1CiiiUKIe2D7cnHIKZwo8RWm/QLT56R0NNGFo=
+	t=1747409738; cv=none; b=SqOk3lj5a62mHNvANGkC33iZ7zVjL8g1Mriafy4uBe06HWJw3rP2+8yhhVRQ2ow/aQ8JeFBxlp4zFPHnkiLvtF6iXJu3cZJ5HGZ3dCNlg5n6eRARPyhkEjJfbmhgRA+o7sn0wUSTVrQdT7q47JlvNDRKdRlhQ/2I+XIiDzxlW5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747409729; c=relaxed/simple;
-	bh=tFBuEkfpTZDqLAksOlNvQnNL7DfHD68oh+9DLHIsuks=;
+	s=arc-20240116; t=1747409738; c=relaxed/simple;
+	bh=4spRlZNhnCEicwsxcWbx2Jkoz9+deyk3RJe76Gi67JI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JAdOwviyIjquJzrUUNbcpITZ2+vrOVXKoKdhkEmn5CBZQ3Sd+OT/1EFJhH3L0dc6OUxkj2zED8QjmqZIqJ/sWsUJWajS3/3MmqIM3p3TqttpMVJWyu6guFq0DWUI0lZNksB0byyxZDIUrcvzngJOo0WBfHFRKBz0UQx5TnEriB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GjOgxn5L; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QVQ8kl1iZCE62PEfbkUlvNl0oLUSTVXNnAatRO1051Vap2CM6qQJ4l0pw1GHZLiw1haqb6kaY/7bL7CaoumVj6g9uWoDBnJ57LgUkxKtGPBlbNGAY9MtIZMH9V/4bcMXU8rcQP8ki7cg1QVt53cGQdDYTjbuVQfAW/TjaPpL/OY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cAx9vsNI; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GjOgxn5L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C10FFC4CEE4;
-	Fri, 16 May 2025 15:35:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747409728;
-	bh=tFBuEkfpTZDqLAksOlNvQnNL7DfHD68oh+9DLHIsuks=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GjOgxn5L6HlZB4ZnV59WnZgXYTasRydElhhX/90ByVYGKA645uJNUCcwDN1MkudLW
-	 I385G8yrdoUqBTB0XqhZqvllLe2wsxKZjeRnR4KKbO5HXWEfFyqn/4NEX62m0tqr/2
-	 aaOKx3eiTkuC/4G20XNhpblZv3nPfyzyk3l18ZDrDVQMEFsB0/RWFkbX3F/v2Jp5Tz
-	 //XKYXg7JDq5PbYSI7NgiwkCIInbZ/e9i8+oMQqpKOd9qksPul59oxrToC359hYxXt
-	 UPGYCcJgt9BB305oJmHH+WHc/mOTeuaHgmYWMsjUit2gy5ooPaGl9bgUaj6Ya5Pojs
-	 Q03v2FKgO1BXg==
-Date: Fri, 16 May 2025 17:35:21 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Kieran Bingham <kbingham@kernel.org>,
-	Michael Roth <michael.roth@amd.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Brijesh Singh <brijesh.singh@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Juergen Gross <jgross@suse.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-efi@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCHv3 2/4] x86/64/mm: Make SPARSEMEM_VMEMMAP the only memory
- model
-Message-ID: <aCdbOeK3EkVUTGD2@gmail.com>
-References: <20250516123306.3812286-1-kirill.shutemov@linux.intel.com>
- <20250516123306.3812286-3-kirill.shutemov@linux.intel.com>
- <30570ca0-8da4-4ebc-84d6-0a4badfb7154@intel.com>
- <rqkfqkkli57fbd5zkj3bwko44kmqqwnfdm766snm26y2so52ss@6it24qxv356q>
- <aCdGzpXSVx15gz90@gmail.com>
- <a0ca765c-a506-4c1f-a38c-24a8074988df@intel.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cAx9vsNI"
+Date: Fri, 16 May 2025 08:34:21 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747409723;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gDu+jRkwpaRbOzcYJWxPfjXvLWF0YO9LpUYPWyot3l4=;
+	b=cAx9vsNICzLyqKSVXLYeLdMpNBqma8I1rnl8JSm8TPTOnHA9zjtZ9WEs7rM9pfJ1oBaxjP
+	Nc5+Uy0/GmWjLJcuLPIdIRB664JgTaGoN+lV/Y+g45NGik3oIoV4MohXMzxjGOP8v54W6h
+	wsRQ29Nmaxnx+/VSJ/PIMK/i4BE0yp0=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
+	Alexei Starovoitov <ast@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	Harry Yoo <harry.yoo@oracle.com>, Yosry Ahmed <yosry.ahmed@linux.dev>, 
+	Peter Zijlstra <peterz@infradead.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH 5/5] memcg: make memcg_rstat_updated nmi safe
+Message-ID: <7v2v2bwgd4jbprimygguwatdi6zhsvidibk2zlddkx7ksg3y6l@u3mlw5bw3tyt>
+References: <20250516064912.1515065-1-shakeel.butt@linux.dev>
+ <20250516064912.1515065-6-shakeel.butt@linux.dev>
+ <8114231b-ec06-44a9-9075-9ccf0809de4a@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,40 +50,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a0ca765c-a506-4c1f-a38c-24a8074988df@intel.com>
+In-Reply-To: <8114231b-ec06-44a9-9075-9ccf0809de4a@suse.cz>
+X-Migadu-Flow: FLOW_OUT
 
+On Fri, May 16, 2025 at 11:45:39AM +0200, Vlastimil Babka wrote:
+> On 5/16/25 08:49, Shakeel Butt wrote:
+> > memcg: convert stats_updates to atomic_t
+> 
+> You have two subjects, I guess delete the second one?
 
-* Dave Hansen <dave.hansen@intel.com> wrote:
+Oops I squashed the patch at the very end and forgot to fix this.
 
-> On 5/16/25 07:08, Ingo Molnar wrote:
-> >> And is there any value to support !SPARSEMEM_VMEMMAP?
-> > Not really IMHO:
+> 
+> > Currently kernel maintains memory related stats updates per-cgroup to
+> > optimize stats flushing. The stats_updates is defined as atomic64_t
+> > which is not nmi-safe on some archs. Actually we don't really need 64bit
+> > atomic as the max value stats_updates can get should be less than
+> > nr_cpus * MEMCG_CHARGE_BATCH. A normal atomic_t should suffice.
 > > 
-> >   .config.opensuse.default:    CONFIG_SPARSEMEM_VMEMMAP_ENABLE=y
-> >   .config.ubuntu.localinstall: CONFIG_SPARSEMEM_VMEMMAP_ENABLE=y
-> >   .config.fedora.generic:      CONFIG_SPARSEMEM_VMEMMAP_ENABLE=y
-> >   .config.rhel.generic:        CONFIG_SPARSEMEM_VMEMMAP_ENABLE=y
+> > Also the function cgroup_rstat_updated() is still not nmi-safe but there
+> > is parallel effort to make it nmi-safe, so until then let's ignore it in
+> > the nmi context.
+> > 
+> > Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 > 
-> I look at the distro configs all the time as well.
-> 
-> But let's also not forget that none of these have lockdep turned on,
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-Not actually true, quite a few distro debug kernel packages have 
-lockdep on, and it's often enabled in internal QA rigs as well.
-
-Not so SPARSEMEM_VMEMMAP...
-
-> [...] and we don't want to toss out lockdep support on x86, for 
-> example. ;)
-
-That's an apples to oranges comparison:
-
- - SPARSEMEM_VMEMMAP is always enabled, in standard and debug kernels 
-   as well.
-
- - lockdep is disabled in standard kernels, enabled in debug kernels 
-   and very much relied on.
-
-Thanks,
-
-	Ingo
+Thanks a lot.
