@@ -1,435 +1,493 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2080.outbound.protection.outlook.com [40.107.223.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE91156237
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 15:06:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747407995; cv=fail; b=JR4Hgore96CHWGp2Ti8L8wY1fIkVghDUkExLdEdHSGhO3r14e8pBCaMefkrcmT3LHm6EPWWATV9ideaS5D/z30NnUaT5QY/ySqPTNNe+HxA1e0szEULZUQZu0DZOMdKRoYwxomwA1i1YhgtOPM+d3hW2oe7PFbUFOPBHIVRzPK8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747407995; c=relaxed/simple;
-	bh=jU96ftgpRMdCnnnzeFUj5cNWP5wDKi9+DSHNYg4TDH8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Y94KQAu9Wk9S4X3txwlTAKpREhlYVyH/eIy4XE6/1VVdMe2Y7rgrq8GkTf6TWelqWqF6gQUCKBn3A77MicoRLCIKgQrcVwNTQusrFAFgWEzPCueK6jk0tpiiviRHJrum+m48uiRHgwQClE9F7SbEz+AwlAm+Hu2fWHkN38xJeUM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gTITwsXI; arc=fail smtp.client-ip=40.107.223.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4074F2A1AA
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 15:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747408088; cv=none; b=bOdWwmwj4cLQxCk1MYuh7x56ct1dMpp8h/nu7yakmlVRe/75YNJmHM6mH0JeHKv0VH9PViSbwpCEZ1ZbuuRwDv1W3kV6CNL3+dyt2js0WI0b0Ivnd2S3ADcPCsWwkNLuGuGB81xr1vgk6swN0rZkmnGVAFThVc2Guh1pn39pEcs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747408088; c=relaxed/simple;
+	bh=+C9rliT9maPpOK+GxOt04e2p68bMN3HFz26gAv08lBg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=RrWP4KP96T1PpjQGcnKfGCJXAEb8XiLFOXgzlq4iy5L6wustl7p64ious104tyYyLswrQ17dEu6eSKx6Ue4juTnpuFFbtD5koRSejmlMgeVY02whGLZdeqFrLxI55P0/vGxHSoQ6iQNj1eFVZ6uJ/VnF6uthJwQ5eKEjAyWRdlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NWpl4Eyj; arc=none smtp.client-ip=209.85.160.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gTITwsXI"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UiVEJaKMGBQwIUn0/dNvm50n0iHdPZuReYWWEXAhnrAN+m+uUgS5ktO42eb770/YTIg9B9ygHBVUJclMMAVq83SiIVC85GJMNsErXvrM8/xdkmEej3+hFv5WJAVavVlkgdGGuA/LBKSTSfqpiiW0HxA3pDPrR7gx8BZWLIAD9K0qw5bLb7AK/apkBLUMmERL9RxUA6aEF2uw0MbDot4TucdSRwDKhFtl1aO6C2vjQ33sZsGnIyPerX238ccw77LX9c15cvLcf76mj5UJBVWpFV53Jr0r4IThqZBQCRYfrLwsPfz2IZzarU9lfaLEJcD2ipmIqCB16XuYJGHO5rEadA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jf1gTb6Qog9W4BoaWTvt0Oj5FvmtzGu/L/P2sGqDmbQ=;
- b=pPLCYqYth+hALewUo7sMx0rsrNl74tI+Mh+OmGPhPe9VHuqbPnXFyhFrOM+ugdoaHsYZxzI1ziDPg+pSmHP1fuESqtinkpS7P2X6ADN04sAHTk6T+/RyEdoyhCZcFsmEZ/knXjjkjqWab9JzwK4X4mcRAcXn02oYBixkqk2Pp2UumhwAxo3RnVE9YK+ChXD/I7Nh0xQs2CizlUEhDdqSbRG+EKLFjWD1ZxtSk8gDEaKE2VDUdQ3u1sVjG/RdgDbrYPpUBLgsrdd6tTjMyQ9uMkkQ3EICoXlUvCecxD37tMP6NbXDw/csvsIdh+UHs2hazMMpSpBSnpsGK275dhs44Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jf1gTb6Qog9W4BoaWTvt0Oj5FvmtzGu/L/P2sGqDmbQ=;
- b=gTITwsXI+d5T7HPkcIlaBcrbzi2MH/ZzZUpwdfs5PU0DXia5BjflpZ43Jf08SsHrA1ZCv9LAKzgDyhzDJ2Ty5CkAHfj3Z84DQJw6pCs8ICSBlUdDzLGFB7F/oJIUF3chZJhXtnX4TGbmKYtrhzmj53BQzfNKeExRuaXtnIhGcxs=
-Received: from LV3PR12MB9265.namprd12.prod.outlook.com (2603:10b6:408:215::14)
- by MN0PR12MB6152.namprd12.prod.outlook.com (2603:10b6:208:3c4::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Fri, 16 May
- 2025 15:06:27 +0000
-Received: from LV3PR12MB9265.namprd12.prod.outlook.com
- ([fe80::cf78:fbc:4475:b427]) by LV3PR12MB9265.namprd12.prod.outlook.com
- ([fe80::cf78:fbc:4475:b427%3]) with mapi id 15.20.8722.031; Fri, 16 May 2025
- 15:06:27 +0000
-From: "Kaplan, David" <David.Kaplan@amd.com>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-CC: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-	Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] x86/bugs: Restructure ITS mitigation
-Thread-Topic: [PATCH] x86/bugs: Restructure ITS mitigation
-Thread-Index: AQHbxfRfDF9rB1p9Bkyl6Afc/NsLxrPVVw4w
-Date: Fri, 16 May 2025 15:06:26 +0000
-Message-ID:
- <LV3PR12MB92653811577802E84DEB6ACE9493A@LV3PR12MB9265.namprd12.prod.outlook.com>
-References: <20250515134756.93274-1-david.kaplan@amd.com>
- <20250515235210.ooq7ogymcdvbtakd@desk>
-In-Reply-To: <20250515235210.ooq7ogymcdvbtakd@desk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ActionId=53fafb70-f23b-4cad-ad4f-2e10e74c2263;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=0;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=true;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
- Internal Distribution
- Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-05-16T14:47:44Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: LV3PR12MB9265:EE_|MN0PR12MB6152:EE_
-x-ms-office365-filtering-correlation-id: e7dc0f01-eef1-4501-cd06-08dd948b3b23
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?rewbFpGEdjPUXFrVOBq/Shqdem6kNe1SU/RypzGPuvXRXJoPBcCLiekF+9Pd?=
- =?us-ascii?Q?lC/tLpwsbIYkzpiSdoEQA+bg1Y+ywDOTzQGrBpl+Q4iVP/wP2ej5uCOgRoUx?=
- =?us-ascii?Q?05YxlJvFsdO+hvsdBAEKYHX6fF6DhBOLYeXpJs7Y+zrQYENNWsBZOLREZqoS?=
- =?us-ascii?Q?raI9ygNUoh7yjoI+5xwhtWqgSeLw7+D5ulyDjTUR2SFZCuMx6i7GVVR2i9bX?=
- =?us-ascii?Q?zviXfpo/93npkaMsMMSbbTZ3mC1xxCuCys2kbGAL5zf91Snsu8CyEext+ok7?=
- =?us-ascii?Q?c+eeoq6NeZi+dvpESWu1xRDfeTgHWZKJT0nzBUA9yz0DPBOA5Ac+d35W5mxn?=
- =?us-ascii?Q?BMqM8X+9YXqzhSYzHrWbx5kGsXpi86PsHGc4LCygbICaeVjsncIT5PLhfdzs?=
- =?us-ascii?Q?hVVoPvpbQR1UoYaTISi84hdDGQFSiYul1DIxPMylR1RZ/N5oMmRGQ1SNUJD7?=
- =?us-ascii?Q?NQI6IQhDTaEBNVGn2B6jglxHDi/3JrTkj0HxT+DuxnOHhUHXZhwaYAOafkbJ?=
- =?us-ascii?Q?2XqAnceGDqYR1vYxBND6XRDJ7EihGyhFZwh2wTh+XaP92AI4fgjg6JSI7yZH?=
- =?us-ascii?Q?71OCIJR+gHe7mrkQwPsxemZWA1rE1CyMUkwNlGagvnDbJULJuY55MbRvQswU?=
- =?us-ascii?Q?bNxlU6KrVmcsvH0e/jSMZtWJaZEk0C5W8XjmsbGZHDHeRkj9grESIFJJBm7w?=
- =?us-ascii?Q?4RRL9OjIAVT0PqKOgwKwke6/87S8Wg3bvslImvioQcft/3aVcS/74pKLpDuT?=
- =?us-ascii?Q?XGg+mnW3idwr8yiR/9DW1ZqU5neGUFZYNDeP4L58FiThFDW3eYC3bbb/JwPf?=
- =?us-ascii?Q?iN5b02h8ASVaVFk2hTxo6Isw3KVd+l34C4rfObc1KowSELCxnhLsim8+42UE?=
- =?us-ascii?Q?qvu8tfi5O5f0xq52u/Ft5yJmLyyrRAgYiCSsEaDdTQnLbtZKmiE+Bcy5+gN4?=
- =?us-ascii?Q?9E9qZt2fv48c23PNTbWX/p9ONM2YdnWYGbC+IS8LlMHRXiBu2G1wf86YralK?=
- =?us-ascii?Q?JXbRCuNBpgBMLn//wQzmf0qgvQBcs9p+J2Xoxo1LhWyDxHWy7/gDyY8sKtSV?=
- =?us-ascii?Q?mbYEI3zOcEtbt5c+ygQdKNFray3nWiXeKHMg+2eCQ4Jrftaobnk5hY/M7YVC?=
- =?us-ascii?Q?yvK6i0iJg6AEE5BlVaDuYqvErfsz8oMae6dM93+EQxaLuY0e6g3DeH1ErrPg?=
- =?us-ascii?Q?9cNTa9rJn7sGbsHKGjmnMrBFo4PlF5rVTsBnE5JnFBdpc95QCwRHA4e82Nfh?=
- =?us-ascii?Q?jooUAgnLIWT6XovLgjsDEbdNngT7oAYapaIz0D2yVmuqrzaRx6SSw3QgJjkL?=
- =?us-ascii?Q?JC5yDtPA8wKjJSx7pAckR5Z6rQNktP51qaXcqXIASf//dsn2atmGPtKrDmXm?=
- =?us-ascii?Q?jm6VD8iCHeV0lwkCgyvWHuQRg0SkuyEiurfW+69QeZAS2OjNf/i9glpOpnP1?=
- =?us-ascii?Q?XwN2t4M6kpd7vMiIxiWi6p+iL8OnMfjlgcRjbFwMTKW50118t6vKlk0moPwy?=
- =?us-ascii?Q?RwqHwH3hCD5jK9I=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR12MB9265.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?HrfitY5pVRtApgZs1JoGVD4E1toH+GNSpgBkwFzuLZEhQisgUNFkFQALD9RR?=
- =?us-ascii?Q?c8GsQFnL7MGGdoNt3XByctF2r/8wPNBJqivVowizDByRIG4NghNeqV9TjXqb?=
- =?us-ascii?Q?dli5tb6u6oSvHc8Ccws1qaXfeKOcq8CRGRRi5PLmFiL4gERAudbrmytKiv14?=
- =?us-ascii?Q?270bgsnSVPgllSL0EYFe5CuGsNBYHe1RwooHGE9Kw9HzpIsWjNIxrlnhODnm?=
- =?us-ascii?Q?5ESo4YO9vrwXIP790EMzZNnyvkC2GL7XsAe2Bb/UcqeDIcz7RzzMt0UoN//i?=
- =?us-ascii?Q?9Ig2PmncT05c+2zEImEWYYhianKfdGNSHzINyFd1BNSdr1Xzm9UZ+20T2a4V?=
- =?us-ascii?Q?tXS6tMAIowRMn/ENUyfZQlVHfvu9LuoRq427bAPOUC6KbpygWpp/Nuxh9QPd?=
- =?us-ascii?Q?lcpdXemtO/ouN6yB+tcAPRJSsn9NfAZoX/x2NpAe/T0NT6pWGRfJc7gjKvWx?=
- =?us-ascii?Q?oK0+g822RPX1loYjAK+j6jyIkhN8YDzin973qn9P2bL8i6GzWjhXmovi6+6v?=
- =?us-ascii?Q?S8LI9h1zSxt52bgWgso3ZxwRk+FEwuEgqqzuKrtca4bL46u3ZvfWVm0RIbAh?=
- =?us-ascii?Q?wujtEVttIVK7D7dpfSZElaBkEn9q3NSHhtMCUizL24Wvy617Oc+XS+vXP6ZT?=
- =?us-ascii?Q?xfu6TYZ8/8xmisEXfuDvd/cPLhq/KOfG5NHPbn7G8T8yq6BSdH8CbT/y2a7G?=
- =?us-ascii?Q?779BcpzBrcXDW97HR87Pt7jl0SJAaMSPlPdAl81EA0flK5LG+LoFGtiBXatr?=
- =?us-ascii?Q?DQnWIOh6ELPGhgH7dbrr+HLqDzJ/IlvPJx9hpNpq3Wi+1Yput5RTdymvwe1u?=
- =?us-ascii?Q?vCW4aiiUa6cyT1hXOMknMLIFMAkzagXcbHymN6SFsZUxOIU1V875oIvsLlJ9?=
- =?us-ascii?Q?a+aaBN+65vBmGvgsjqROKzDGenGceH0LyaRiHvCOPQN/gSPz87jqokxaa+bh?=
- =?us-ascii?Q?VODDfQjOh7qLnyzGGgGrobR3g6NaKmCyUVukPPBQ8NeEQe5g7VTdt1OxlNvk?=
- =?us-ascii?Q?4PbrbJZyX9Yxkn3EkmKWRLGJHZf3RWurPcU2KKo+/bCiCDAhbeSAwBPKBb0t?=
- =?us-ascii?Q?eXaY2tnESUOUvBxTfxzg1PShQkVjchbkoE1hzvMRlHdLEaVFzh6T/pPAir68?=
- =?us-ascii?Q?pkdipuwPZHjOJeexxk1fcgcmU3sEkj9j2XsoME3nR2cqv1h9dsw4A8boWvdY?=
- =?us-ascii?Q?IXdUa+FmLjdOLWyDi+dll7NQa2/0hSS7Zt4+FAG0rEg4sWI83NQwwqOLqpgu?=
- =?us-ascii?Q?MZ6p6linGYOneSJzmul0sddwF4EUqfjCyY427Jjeup2w8ulRvljxpXMUSv33?=
- =?us-ascii?Q?mE6dh6+zQQt7GWUEDqtQukI/qs3HuOqKR2leklDkquPEX9Ne78k6SCcfWvOk?=
- =?us-ascii?Q?9B1yU5WYkvvLN5VhAkhnlu/mmj9STudYFIvfznRh5cfklDMg6y7Jlp9K+8TN?=
- =?us-ascii?Q?1onpDWYklpR0S1o+vRFaCtNi2/Y85ZMx9mycal8XW4ZFX7cU70Kxywjnzh2v?=
- =?us-ascii?Q?XQcfSRKO7lovDtaxNuSPoEhMaTwmPCWxdexiFa+8UMZXQoKK+iDdTwJn2MuB?=
- =?us-ascii?Q?9DkG/nnlc1qJNP5VYx0=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NWpl4Eyj"
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2c76a1b574cso108946fac.2
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:08:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747408085; x=1748012885; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=FcGygX5l2vdAVsI9oNrygA+RGWDoDNg1xUQgMWaAqhY=;
+        b=NWpl4EyjzlmCIDauezvHz3H4Op4RtkJXh3/ZtbXs1l2kXHdLwjULsI24kX0ZZIlK7H
+         hC+QoAL5pkm2b4oZ/TKYDQAs1Uzn3KL11TgXMoZy6HrgtDm2VOOhxGS/HEoiU4d7NwnJ
+         H0HZMmbthXTWxhdFiihKI52Wx+OTwTIlW8t/2OAT6FIDkY2BDgCSeDaAOlWAWOlujAS4
+         exf2YIZo6tcaAz75oJxEyhEfTFSy6rM29RbYIg5ZYHYXx7H2W2CMdRU2jS+CRFzavrD7
+         P7xNN6O5qy/RFK9wxQdRdvZwn5+UjHB11r7JsDnsJQnB84D8X9wRqqtEGqSmjReuy6AP
+         MU7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747408085; x=1748012885;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FcGygX5l2vdAVsI9oNrygA+RGWDoDNg1xUQgMWaAqhY=;
+        b=Y1FhKRZnirEn5L1cI1UwTVx0n4nIc7MiipZvC238hFRNWq92X+ZtqZzwfLlJNVixaH
+         AXwCGfUraEK1qPL5gDk+wWGtyrtv+dm6Bmrp1TKrbnvchcFVIkIkf6STLOAJ9cGVF8br
+         x47qZPNWVOEIp1eX305dSCEw3ivB9QWtyu/Xq9uoMhqiGHdTtX7U5KDXGHM0qM0eKTa/
+         oejuA8H7r3jONCFJ2nRLU7/CXvDSlYtmcMY+OAq55Q8pIXFqT0F7gpVMf2LixpqfoyvV
+         11ECS8yYMmytNFMwAwBWREo8iFQ9yGoK0lPaCNMaVldOoj123Inw13gzpB/dxLxyD3Ic
+         71yQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXLiILaOMB5JpZ7NCqLu6QRarmKVG1md7Mg2OfNCuXkYGnUVb0eYsmwklv7md2GbWyEnmteTp/AFswAnR8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNHThqtmvbQzp2FG5HsTcQpN+S20K8/qecIebkPnlCKWLN9EFI
+	s2GQRkomaBJPdKVUjP9GHtI8cFjpsto6o7ZpMFBtr/+aixrO5geAd6iAY7g7moHQABA=
+X-Gm-Gg: ASbGncuqkhR2+F9BJ8HhQYS/UZiDBGhNbolkVwFdhnkxdaa98SfFOVFc3ccIRBEno0m
+	kZGmWKiiXt1D2MZ5Na9d6dqO9HPM1VBjBkiBVmiTdaMYEvyEz91dZvrexnnT6dvXOiIOuk2RWA6
+	h9738u7CGbbl1LacfL3soVuuqT2abiKSFjTOTI7CB0AbeviXWQPjNiNAdm5YHqBcgtN8Vek352n
+	ULCRmTpNItBVx/A40FxO81ViyiPWNLs6ZnddVSfm9H7CPnW0gnjpydSMkOr8NBYUrWBCg/O3eMD
+	VGANAr/SsObDxqHGEJyU5gGo+UBAipK0z4VFwG9Vn5Btq4RphmVN+/4ud3WwvQP2aYsx2083xgY
+	r7Tn9qbg9KLgBXQ2NWeXl9KOdbKk0dQ5nVPL1
+X-Google-Smtp-Source: AGHT+IGWNv56q5Riz1yHs8SwNE/HTEU8+7oaotMCudi13efC0XmFU7Vb8h1emD165glwN0/lsRuhrQ==
+X-Received: by 2002:a05:6871:d285:b0:2c1:650b:fc86 with SMTP id 586e51a60fabf-2e3c8171a44mr1515082fac.1.1747408084646;
+        Fri, 16 May 2025 08:08:04 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:d2f:9b08:7c22:3090? ([2600:8803:e7e4:1d00:d2f:9b08:7c22:3090])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-734f6a82109sm376154a34.28.2025.05.16.08.08.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 May 2025 08:08:04 -0700 (PDT)
+Message-ID: <ef807996-af5b-4b53-a81b-931ae49a6214@baylibre.com>
+Date: Fri, 16 May 2025 10:08:03 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR12MB9265.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e7dc0f01-eef1-4501-cd06-08dd948b3b23
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2025 15:06:26.9723
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: z1X4VC1Ac93X77MxEoFU4w7vigIcuMFKXfcxfoFwtkCV/dNeHzjnHpFIful2TQQ+
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6152
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/4] iio: adc: ad7405: add ad7405 driver
+To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+ Dragos Bogdan <dragos.bogdan@analog.com>,
+ Antoniu Miclaus <antoniu.miclaus@analog.com>,
+ Olivier Moysan <olivier.moysan@foss.st.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ Matti Vaittinen <mazziesaccount@gmail.com>,
+ Tobias Sperling <tobias.sperling@softing.com>,
+ Marcelo Schmitt <marcelo.schmitt@analog.com>,
+ Alisa-Dariana Roman <alisadariana@gmail.com>,
+ Esteban Blanc <eblanc@baylibre.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250516105810.3028541-1-pop.ioan-daniel@analog.com>
+ <20250516105810.3028541-5-pop.ioan-daniel@analog.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250516105810.3028541-5-pop.ioan-daniel@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-[AMD Official Use Only - AMD Internal Distribution Only]
+On 5/16/25 5:58 AM, Pop Ioan Daniel wrote:
+> Add support for the AD7405/ADUM770x, a high performance isolated ADC,
+> 1-channel, 16-bit with a second-order Σ-Δ modulator that converts an
+> analog input signal into a high speed, single-bit data stream.
+> 
+> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
+> ---
+> changes in v3:
+>  - edit ad7405_chip_info struct instances
+>  - remove lock
+>  - add implementation for IIO_CHAN_INFO_SCALE
+>  - use IIO_CHAN_INFO_OVERSAMPLING_RATIO for controlling the decimation rate
+>  - use IIO_CHAN_INFO_SAMP_FREQ for read-only
+>  - remove dem_clk_get_enabled() function
+>  - remove chip_info variable from probe function
+>  - fix indentation
+>  - remove max_rate
+>  - rename ad7405_set_sampling_rate in ad7405_det_dec_rate
+> add adum7702 and adum7703 chip_info
+>  drivers/iio/adc/Kconfig  |  10 ++
+>  drivers/iio/adc/Makefile |   1 +
+>  drivers/iio/adc/ad7405.c | 276 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 287 insertions(+)
+>  create mode 100644 drivers/iio/adc/ad7405.c
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index ad06cf556785..6ed1042636d9 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -251,6 +251,16 @@ config AD7380
+>  	  To compile this driver as a module, choose M here: the module will be
+>  	  called ad7380.
+>  
+> +config AD7405
+> +	tristate "Analog Device AD7405 ADC Driver"
+> +	select IIO_BACKEND
 
-> -----Original Message-----
-> From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> Sent: Thursday, May 15, 2025 6:52 PM
-> To: Kaplan, David <David.Kaplan@amd.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>; Borislav Petkov <bp@alien8.de>;
-> Peter Zijlstra <peterz@infradead.org>; Josh Poimboeuf <jpoimboe@kernel.or=
-g>;
-> Ingo Molnar <mingo@redhat.com>; Dave Hansen
-> <dave.hansen@linux.intel.com>; x86@kernel.org; H. Peter Anvin
-> <hpa@zytor.com>; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] x86/bugs: Restructure ITS mitigation
->
-> Caution: This message originated from an External Source. Use proper caut=
-ion
-> when opening attachments, clicking links, or responding.
->
->
-> On Thu, May 15, 2025 at 08:47:56AM -0500, David Kaplan wrote:
-> > Restructure the ITS mitigation to use select/update/apply functions
-> > like the other mitigations.
-> >
-> > There is a particularly complex interaction between ITS and Retbleed
-> > as CDT (Call Depth Tracking) is a mitigation for both, and either
-> > its=3Dstuff or retbleed=3Dstuff will attempt to enable CDT.
-> >
-> > retbleed_update_mitigation() runs first and will check the necessary
-> > pre-conditions for CDT if either ITS or Retbleed stuffing is selected.
-> > If checks pass and ITS stuffing is selected, it will select stuffing
-> > for Retbleed as well.
-> >
-> > its_update_mitigation() runs after and will either select stuffing if
-> > retbleed stuffing was enabled, or fall back to the default (aligned
-> > thunks) if stuffing could not be enabled.
-> >
-> > Enablement of CDT is done exclusively in retbleed_apply_mitigation().
-> > its_apply_mitigation() is only used to enable aligned thunks.
-> >
-> > Signed-off-by: David Kaplan <david.kaplan@amd.com>
-> >
-> > @@ -1125,6 +1133,14 @@ enum retbleed_mitigation {
-> >       RETBLEED_MITIGATION_STUFF,
-> >  };
-> >
-> > +enum its_mitigation {
-> > +     ITS_MITIGATION_OFF,
-> > +     ITS_MITIGATION_AUTO,
-> > +     ITS_MITIGATION_VMEXIT_ONLY,
-> > +     ITS_MITIGATION_ALIGNED_THUNKS,
-> > +     ITS_MITIGATION_RETPOLINE_STUFF,
-> > +};
->
-> This is in between retbleed declarations, I would suggest to move this be=
-fore
-> retbleed mitigation starts.
+It might make more sense to make this "depends" instead of "select".
+Otherwise, this will show up for everyone, even if they can't actually
+use it because they don't have a backend.
 
-Ok
+> +	help
+> +	  Say yes here to build support for Analog Devices AD7405, ADUM7701,
+> +	  ADUM7702, ADUM7703 analog to digital converters (ADC).
+> +
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called ad7405.
+> +
+>  config AD7476
+>  	tristate "Analog Devices AD7476 1-channel ADCs driver and other similar devices from AD and TI"
+>  	depends on SPI
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index 07d4b832c42e..8115f30b7862 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -26,6 +26,7 @@ obj-$(CONFIG_AD7291) += ad7291.o
+>  obj-$(CONFIG_AD7292) += ad7292.o
+>  obj-$(CONFIG_AD7298) += ad7298.o
+>  obj-$(CONFIG_AD7380) += ad7380.o
+> +obj-$(CONFIG_AD7405) += ad7405.o
+>  obj-$(CONFIG_AD7476) += ad7476.o
+>  obj-$(CONFIG_AD7606_IFACE_PARALLEL) += ad7606_par.o
+>  obj-$(CONFIG_AD7606_IFACE_SPI) += ad7606_spi.o
+> diff --git a/drivers/iio/adc/ad7405.c b/drivers/iio/adc/ad7405.c
+> new file mode 100644
+> index 000000000000..1a96a283ab01
+> --- /dev/null
+> +++ b/drivers/iio/adc/ad7405.c
+> @@ -0,0 +1,276 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Analog Devices AD7405 driver
+> + *
+> + * Copyright 2025 Analog Devices Inc.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/module.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/util_macros.h>
+> +
+> +#include <linux/iio/backend.h>
+> +#include <linux/iio/iio.h>
+> +
+> +static const unsigned int ad7405_scale_table[][2] = {
+> +	{640, 0},
+> +};
+> +
+> +static const unsigned int adum7702_scale_table[][2] = {
+> +	{128, 0},
+> +};
 
->
-> enum its_mitigation {
->         ITS_MITIGATION_OFF,
->         ITS_MITIGATION_AUTO,
->         ITS_MITIGATION_VMEXIT_ONLY,
->         ITS_MITIGATION_ALIGNED_THUNKS,
->         ITS_MITIGATION_RETPOLINE_STUFF,
-> };
->
-> static enum its_mitigation its_mitigation __ro_after_init =3D
->         IS_ENABLED(CONFIG_MITIGATION_ITS) ? ITS_MITIGATION_AUTO :
-> ITS_MITIGATION_OFF;
->
-> #undef pr_fmt
-> #define pr_fmt(fmt)     "RETBleed: " fmt
->
-> enum retbleed_mitigation {
->
-> >  static const char * const retbleed_strings[] =3D {
-> >       [RETBLEED_MITIGATION_NONE]      =3D "Vulnerable",
-> >       [RETBLEED_MITIGATION_UNRET]     =3D "Mitigation: untrained return=
- thunk",
-> > @@ -1137,6 +1153,9 @@ static const char * const retbleed_strings[] =3D =
-{
-> > static enum retbleed_mitigation retbleed_mitigation __ro_after_init =3D
-> >       IS_ENABLED(CONFIG_MITIGATION_RETBLEED) ?
-> > RETBLEED_MITIGATION_AUTO : RETBLEED_MITIGATION_NONE;
-> >
-> > +static enum its_mitigation its_mitigation __ro_after_init =3D
-> > +     IS_ENABLED(CONFIG_MITIGATION_ITS) ? ITS_MITIGATION_AUTO :
-> > +ITS_MITIGATION_OFF;
->
-> Ditto.
->
-> >  static int __ro_after_init retbleed_nosmt =3D false;
-> >
-> >  static int __init retbleed_parse_cmdline(char *str) @@ -1242,11
-> > +1261,19 @@ static void __init retbleed_update_mitigation(void)
-> >       /*
-> >        * retbleed=3Dstuff is only allowed on Intel.  If stuffing can't =
-be used
-> >        * then a different mitigation will be selected below.
-> > +      *
-> > +      * its=3Dstuff will also attempt to enable stuffing.
-> >        */
-> > -     if (retbleed_mitigation =3D=3D RETBLEED_MITIGATION_STUFF) {
-> > +     if (retbleed_mitigation =3D=3D RETBLEED_MITIGATION_STUFF ||
-> > +         its_mitigation =3D=3D ITS_MITIGATION_RETPOLINE_STUFF) {
-> >               if (spectre_v2_enabled !=3D SPECTRE_V2_RETPOLINE) {
->
-> SPECTRE_V2_EIBRS_RETPOLINE also enables retpoline.
->
-> >                       pr_err("WARNING: retbleed=3Dstuff depends on
-> > spectre_v2=3Dretpoline\n");
->
-> This can be updated to:
->
->                         pr_err("WARNING: retbleed=3Dstuff depends on retp=
-oline\n");
->
+Are there future plans for these scale tables? I don't see the point
+since we only use the first number.
 
-Yeah, I noticed that too.  But the existing upstream code (before my re-wri=
-te) was also only checking spectre_v2_enabled =3D=3D SPECTRE_V2_RETPOLINE i=
-n retbleed_select_mitigation().
+Also, it would make more sense to use the datasheet numbers of 320 and 64.
+Otherwise, we need an explanation of where these values come from.
 
-So it seems like CDT previously wasn't supported with spectre_v2=3Deibrs,re=
-tpoline.
+> +
+> +static const unsigned int ad7405_dec_rates[] = {
+> +	4096, 2048, 1024, 512, 256, 128, 64, 32,
+> +};
+> +
+> +struct ad7405_chip_info {
+> +	const char *name;
+> +	struct iio_chan_spec channel;
+> +	const unsigned int (*scale_table)[2];
+> +};
+> +
+> +struct ad7405_state {
+> +	struct iio_backend *back;
+> +	const struct ad7405_chip_info *info;
 
-If we want to change that, I suggest doing it in a separate patch.
+> +	unsigned int sample_frequency_tbl[ARRAY_SIZE(ad7405_dec_rates)];
 
+This is written but never read, so can be removed.
 
-> >       }
-> >
-> > -     if (cmd =3D=3D ITS_CMD_RSB_STUFF &&
-> > -         (!boot_cpu_has(X86_FEATURE_RETPOLINE) ||
-> !IS_ENABLED(CONFIG_MITIGATION_CALL_DEPTH_TRACKING))) {
-> > +     if (its_mitigation =3D=3D ITS_MITIGATION_RETPOLINE_STUFF &&
-> > +         !IS_ENABLED(CONFIG_MITIGATION_CALL_DEPTH_TRACKING)) {
-> >               pr_err("RSB stuff mitigation not supported, using default=
-\n");
-> > -             cmd =3D ITS_CMD_ON;
-> > +             its_mitigation =3D ITS_MITIGATION_ALIGNED_THUNKS;
->
-> This and ...
->
-> >       }
-> >
-> > -     switch (cmd) {
-> > -     case ITS_CMD_OFF:
-> > +     if (its_mitigation =3D=3D ITS_MITIGATION_VMEXIT_ONLY &&
-> > +         !boot_cpu_has_bug(X86_BUG_ITS_NATIVE_ONLY))
-> > +             its_mitigation =3D ITS_MITIGATION_ALIGNED_THUNKS;
->
-> ... this are essentially resetting the mitigation to default. This will b=
-e more clear if
-> you could change the mitigation to ITS_MITIGATION_AUTO here, and at the e=
-nd
-> have:
->
->         if (its_mitigation =3D=3D ITS_MITIGATION_AUTO)
->                 its_mitigation =3D ITS_MITIGATION_ALIGNED_THUNKS;
+> +	unsigned int sample_frequency;
 
-The point of AUTO is really to say that no cmdline option was specified.  T=
-his is relevant for my attack vector patches because AUTO means "defer to t=
-he enabled attack vectors".
+This is unused and can be removed.
 
-In the attack vector series, AUTO is checked early in the select function a=
-nd the mitigation will be disabled if needed.  If it is needed, the default=
- mitigation is chosen.
+> +	unsigned int ref_frequency;
+> +	unsigned int dec_rate;
+> +};
+> +
+> +static void ad7405_fill_samp_freq_table(struct ad7405_state *st)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ad7405_dec_rates); i++)
+> +		st->sample_frequency_tbl[i] =
+> +			DIV_ROUND_CLOSEST_ULL(st->ref_frequency, ad7405_dec_rates[i]);
+> +}
+> +
+> +static int ad7405_set_dec_rate(struct iio_dev *indio_dev,
+> +			       const struct iio_chan_spec *chan,
+> +			       unsigned int dec_rate)
+> +{
+> +	struct ad7405_state *st = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	ret = iio_backend_oversampling_ratio_set(st->back, 0, dec_rate);
 
-In the current code without attack vectors, AUTO just always means pick the=
- default, but is really a preparatory thing for the attack vector support.
+Should pass e.g. chan->scan_index here instead of 0. Otherwise chan param
+is unused.
 
-The code you highlighted deals with cases where an explicit cmdline option =
-was specified asking for mitigation, but it can't be done.  Falling back to=
- the default option is fine, but calling it AUTO I think would be confusing=
- because AUTO (in the next patch series) means "defer to the attack vectors=
-".  So I would prefer to leave the code as-is.
+> +	if (ret)
+> +		return ret;
+> +
+> +	st->dec_rate = dec_rate;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ad7405_get_scale(struct ad7405_state *st, int *val, int *val2)
+> +{
+> +	unsigned int tmp;
+> +
+> +	tmp = (st->info->scale_table[0][0] * 1000000ULL) >>
+> +		    st->info->channel.scan_type.realbits;
+> +	*val = tmp / 1000000;
+> +	*val2 = tmp % 1000000;
+> +
+> +	return IIO_VAL_INT_PLUS_NANO;
 
+As in the comment above about the scale_tables, the more typical way to do this
+would be to store the full scale voltage in st->info->full_scale_mv (320 or 64),
+then here:
 
-> > +
-> > +}
-> > +
-> > +static void __init its_update_mitigation(void) {
-> > +     if (!boot_cpu_has_bug(X86_BUG_ITS) || cpu_mitigations_off())
-> > +             return;
-> > +
-> > +     switch (spectre_v2_enabled) {
-> > +     case SPECTRE_V2_NONE:
-> > +             pr_err("WARNING: Spectre-v2 mitigation is off, disabling
-> > + ITS\n");
-> >               its_mitigation =3D ITS_MITIGATION_OFF;
-> >               break;
-> > -     case ITS_CMD_VMEXIT:
-> > -             if (boot_cpu_has_bug(X86_BUG_ITS_NATIVE_ONLY)) {
-> > -                     its_mitigation =3D ITS_MITIGATION_VMEXIT_ONLY;
-> > -                     goto out;
-> > -             }
-> > -             fallthrough;
-> > -     case ITS_CMD_ON:
-> > -             its_mitigation =3D ITS_MITIGATION_ALIGNED_THUNKS;
-> > -             if (!boot_cpu_has(X86_FEATURE_RETPOLINE))
-> > -                     setup_force_cpu_cap(X86_FEATURE_INDIRECT_THUNK_IT=
-S);
-> > -             setup_force_cpu_cap(X86_FEATURE_RETHUNK);
-> > -             set_return_thunk(its_return_thunk);
-> > +     case SPECTRE_V2_RETPOLINE:
->
-> Also SPECTRE_V2_EIBRS_RETPOLINE.
+	*val = st->info->full_scale_mv;
+	*val2 = st->info->channel.scan_type.realbits - 1;
 
-See above.
+	return IIO_VAL_FRACTIONAL_LOG2;
 
->
-> > +             /* Retpoline+CDT mitigates ITS */
-> > +             if (retbleed_mitigation =3D=3D RETBLEED_MITIGATION_STUFF)
->
->
->
-> > +                     its_mitigation =3D ITS_MITIGATION_RETPOLINE_STUFF=
-;
-> >               break;
-> > -     case ITS_CMD_RSB_STUFF:
-> > -             its_mitigation =3D ITS_MITIGATION_RETPOLINE_STUFF;
-> > -             setup_force_cpu_cap(X86_FEATURE_RETHUNK);
-> > -             setup_force_cpu_cap(X86_FEATURE_CALL_DEPTH);
-> > -             set_return_thunk(call_depth_return_thunk);
-> > -             if (retbleed_mitigation =3D=3D RETBLEED_MITIGATION_NONE) =
-{
-> > -                     retbleed_mitigation =3D RETBLEED_MITIGATION_STUFF=
-;
-> > -                     pr_info("Retbleed mitigation updated to stuffing\=
-n");
-> > -             }
-> > +     case SPECTRE_V2_LFENCE:
-> > +     case SPECTRE_V2_EIBRS_LFENCE:
-> > +             pr_err("WARNING: ITS mitigation is not compatible with lf=
-ence
-> mitigation\n");
-> > +             its_mitigation =3D ITS_MITIGATION_OFF;
-> > +             break;
-> > +     default:
-> >               break;
-> >       }
-> > -out:
-> > +
-> > +     /*
-> > +      * retbleed_update_mitigation() will try to do stuffing if its=3D=
-stuff.
-> > +      * If it can't, such as if spectre_v2!=3Dretpoline, then fall bac=
-k to
-> > +      * aligned thunks.
-> > +      */
-> > +     if (its_mitigation =3D=3D ITS_MITIGATION_RETPOLINE_STUFF &&
-> > +         retbleed_mitigation !=3D RETBLEED_MITIGATION_STUFF)
-> > +             its_mitigation =3D ITS_MITIGATION_ALIGNED_THUNKS;
->
-> The =3Dstuff mitigation depends on retpoline, not really on retbleed.
-> Shouldn't this be handled in the switch (spectre_v2_enabled) above?
->
-> >       pr_info("%s\n", its_strings[its_mitigation]);  }
-> >
-> > +static void __init its_apply_mitigation(void) {
-> > +     /* its=3Dstuff forces retbleed stuffing and is enabled there. */
->
-> Oh, this is why you are depending on retbleed_mitigation above, this part=
- is a bit
-> confusing.
->
-> Will think about it more later, trying to have a couple of days off.
+> +}
+> +
+> +static int ad7405_read_raw(struct iio_dev *indio_dev,
+> +			   const struct iio_chan_spec *chan, int *val,
+> +			   int *val2, long info)
+> +{
+> +	struct ad7405_state *st = iio_priv(indio_dev);
+> +
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		return ad7405_get_scale(st, val, val2);
+> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+> +		*val = st->dec_rate;
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		*val = DIV_ROUND_CLOSEST_ULL(st->ref_frequency, st->dec_rate);
+> +		return IIO_VAL_INT;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int ad7405_write_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *chan, int val,
+> +			    int val2, long info)
+> +{
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+> +		return ad7405_set_dec_rate(indio_dev, chan, val);
+> +	case IIO_CHAN_INFO_SAMP_FREQ:
+> +		if (val < 1)
+> +			return -EINVAL;
+> +		return ad7405_set_dec_rate(indio_dev, chan, val);
 
-It is a bit confusing, no argument there.  And why I spent most of the comm=
-it log trying to explain it :)
+I would be tempted to just leave the sampling_freqnecy read-only.
+But if we want it to be writeable, we have to divide val by ref_freqnecy
+to convert sampling freqnecy to decimation rate before calling
+ad7405_set_dec_rate().
 
-I do prefer this way of handling it though compared to the existing code.  =
-The existing code would *change* retbleed_mitigation in its_select_mitigati=
-on() which I think is very confusing.  I believe the rule for these functio=
-ns should be that xxx_mitigation is only ever modified in the xxx_select_mi=
-tigation() and xxx_update_mitigation() functions.
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static int ad7405_read_avail(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan,
+> +			     const int **vals, int *type, int *length,
+> +			     long info)
+> +{
+> +	switch (info) {
+> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+> +		*vals = ad7405_dec_rates;
+> +		*length = ARRAY_SIZE(ad7405_dec_rates);
+> +		*type = IIO_VAL_INT;
+> +		return IIO_AVAIL_LIST;
 
-If there's another idea though (or a place where a comment might help), let=
- me know.
+If we have a writeable sampling_frequency, the we should also have
+case IIO_CHAN_INFO_SAMP_FREQ here. (But as above, I think not writeable
+is fine, so this is OK as-is.)
 
-Thanks --David Kaplan
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static const struct iio_info ad7405_iio_info = {
+> +	.read_raw = &ad7405_read_raw,
+> +	.write_raw = &ad7405_write_raw,
+> +	.read_avail = &ad7405_read_avail,
+> +};
+> +
+> +#define AD7405_IIO_CHANNEL {					\
+> +	.type = IIO_VOLTAGE,					\
+> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> +	.info_mask_shared_by_all = IIO_CHAN_INFO_SAMP_FREQ |	\
+> +			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),	\
+> +	.info_mask_shared_by_all_available =			\
+> +			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),	\
+> +	.indexed = 1,						\
+> +	.channel = 0,						\
+> +	.channel2 = 1,						\
+> +	.differential = 1,					\
+> +	.scan_index = 0,					\
+> +	.scan_type = {						\
+> +		.sign = 'u',					\
+
+Since the raw value is unsigned but we can measure negative
+differences, it means we need to implement IIO_CHAN_INFO_OFFSET
+with a value of 2 << 15 so that usespace knows what value
+is 0 volts.
+
+> +		.realbits = 16,					\
+> +		.storagebits = 16,				\
+> +	},							\
+> +}
+> +
+> +static const struct ad7405_chip_info ad7405_chip_info = {
+> +	.name = "AD7405",
+> +	.scale_table = ad7405_scale_table,
+> +	.channel = AD7405_IIO_CHANNEL,
+> +};
+> +
+> +static const struct ad7405_chip_info adum7701_chip_info = {
+> +	.name = "ADUM7701",
+> +	.scale_table = ad7405_scale_table,
+> +	.channel = AD7405_IIO_CHANNEL,
+> +};
+> +
+> +static const struct ad7405_chip_info adum7702_chip_info = {
+> +	.name = "ADUM7702",
+> +	.scale_table = adum7702_scale_table,
+> +	.channel = AD7405_IIO_CHANNEL,
+> +};
+> +
+> +static const struct ad7405_chip_info adum7703_chip_info = {
+> +	.name = "ADUM7703",
+> +	.scale_table = ad7405_scale_table,
+> +	.channel = AD7405_IIO_CHANNEL,
+> +};
+> +
+> +static const char * const ad7405_power_supplies[] = {
+> +	"vdd1",	"vdd2",
+> +};
+> +
+> +static int ad7405_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct iio_dev *indio_dev;
+> +	struct ad7405_state *st;
+> +	struct clk *clk;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	st = iio_priv(indio_dev);
+> +
+> +	st->info = device_get_match_data(dev);
+> +	if (!st->info)
+> +		return dev_err_probe(dev, -EINVAL, "no chip info\n");
+> +
+> +	ret = devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(ad7405_power_supplies),
+> +					     ad7405_power_supplies);
+> +
+
+nit: no blank line here
+
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to get and enable supplies");
+> +
+> +	clk = devm_clk_get_enabled(dev, NULL);
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
+> +
+> +	st->ref_frequency = clk_get_rate(clk);
+> +	if (!st->ref_frequency)
+> +		return -EINVAL;
+> +
+> +	ad7405_fill_samp_freq_table(st);
+> +
+> +	indio_dev->dev.parent = dev;
+> +	indio_dev->name = st->info->name;
+> +	indio_dev->channels = &st->info->channel;
+> +	indio_dev->num_channels = 1;
+> +	indio_dev->info = &ad7405_iio_info;
+> +
+> +	st->back = devm_iio_backend_get(dev, NULL);
+> +	if (IS_ERR(st->back))
+> +		return dev_err_probe(dev, PTR_ERR(st->back),
+> +				     "failed to get IIO backend");
+> +
+> +	ret = iio_backend_chan_enable(st->back, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_iio_backend_request_buffer(dev, st->back, indio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_iio_backend_enable(dev, st->back);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = ad7405_set_dec_rate(indio_dev, &indio_dev->channels[0], 256);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return devm_iio_device_register(dev, indio_dev);
+> +}
+> +
+> +/* Match table for of_platform binding */
+> +static const struct of_device_id ad7405_of_match[] = {
+> +	{ .compatible = "adi,ad7405", .data = &ad7405_chip_info, },
+> +	{ .compatible = "adi,adum7701", .data = &adum7701_chip_info, },
+> +	{ .compatible = "adi,adum7702", .data = &adum7702_chip_info, },
+> +	{ .compatible = "adi,adum7703", .data = &adum7703_chip_info, },
+> +	{ },
+
+no trailing comma please (iio subsystem style)
+
+> +};
+> +MODULE_DEVICE_TABLE(of, ad7405_of_match);
+> +
+> +static struct platform_driver ad7405_driver = {
+> +	.driver = {
+> +		.name = "ad7405",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = ad7405_of_match,
+> +	},
+> +	.probe = ad7405_probe,
+> +};
+> +module_platform_driver(ad7405_driver);
+> +
+> +MODULE_AUTHOR("Dragos Bogdan <dragos.bogdan@analog.com>");
+> +MODULE_AUTHOR("Pop Ioan Daniel <pop.ioan-daniel@analog.com>");
+> +MODULE_DESCRIPTION("Analog Devices AD7405 driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_IMPORT_NS("IIO_BACKEND");
+
