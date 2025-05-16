@@ -1,128 +1,126 @@
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D7327A12D;
-	Fri, 16 May 2025 18:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354511A255C;
+	Fri, 16 May 2025 18:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747420183; cv=none; b=eGVgijTcT7VayT6NIlOWNA2an50xMgcMjjgOoG0v514oTG8GLJY4E3gzAz2K28Cimjeg4U1x4civPpKY1o0t8eK7sZnEBaRakfaVj6831N+7p5zErMjqGTk6EfsXYsSdWSLlFBMV/B/WyapAFr0nzFVXrfgl6HG0L8TUwzxFTts=
+	t=1747420253; cv=none; b=BlQNVICVp0N774qwE7iVwboqw98XtgfZY0RZ9yvKpguYylfO2slQ/gYqwiC4OVjwkaMrFeNTidZjiSIi8uY6Fccdz6yHX5Y+bfyKh76X4TQcY1wFxkmyog1/CHveWEawrpApucALaDBq7NRUphjSlVqLPLwc1eqKJW31zkxvJrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747420183; c=relaxed/simple;
-	bh=4zzkMuAkdOu+W/FfqNTZRI/W+u0p/y15oHql9BpsK8E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=eulgnZkc0/V7i2bti8e62LN7Au6EZQ6yIkS1LpSy9w8Y3r4yFyrVFXl1kT3Dq0874Gi4e65i9rCKqYEa4w/AMqHRBgwBOKI2gg5rQRMoArCi5vYgEqXmKh9mDXgpK8bHJsV/q1WlrgU+9wBvsjOIo1yzXfwccSM3GT2MbU74OM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=W/oE5SRz; arc=none smtp.client-ip=208.88.110.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
+	s=arc-20240116; t=1747420253; c=relaxed/simple;
+	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=qXdX4bCN7HtaX8bdLkO2Ylkgz83iURTt2fDqokY4W11shuWeKdr9wU7cZQ2pcC6YDgiHEpEvtWR2iS2P5vD8yw+7vEmJ0WiiOUHDI13I7npUYoE/YZ2be+hXWjLye7U+QUCBW9DKfemXJuTjqY2o07kwMD9cQntac0/GTSAdP9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NpfJnmbW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="W/oE5SRz"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 1C6C69C8E1D;
-	Fri, 16 May 2025 14:29:39 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id PCbH_wvc2fc9; Fri, 16 May 2025 14:29:38 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 831FD9C8DB5;
-	Fri, 16 May 2025 14:29:38 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 831FD9C8DB5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1747420178; bh=DLFQAbS2Kkiyq94KoakjX8pyAd/UxyLLg1wnyLzv0wU=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=W/oE5SRzPvBArGS1YBG267e4vXhddpcwKe0ifOxp8PunEA+8BljjqOSTndtfjG40b
-	 nkwgw2imxOfsJ7VIjUGEUTF0lji6b/tJInRPAIZ2IHcH6lX8JtHqFzVoykXIcfcenM
-	 C2ULAK8hEjKWuSUFtpfyhq9DaYivuMKg0JFKuDWYAzxRYjyE/rxbHCKL5YwGwI6TjB
-	 /xNYE0UfV3ZNMP04hiZ+YBK8VwLsmKtU3Abl+XOUarEcGFNmTWJGdnKiTYyWSa6C2B
-	 crb7zO5eHU/2OtVk6eqNBWjmQ3926J6TgPtXQG9ipyImYAwFunTSgWMH6iq15gnxhS
-	 kJwSkI1IsSzNA==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id SkOW1hFp7rD3; Fri, 16 May 2025 14:29:38 -0400 (EDT)
-Received: from fedora (unknown [192.168.51.254])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 2BE0C9C0D9F;
-	Fri, 16 May 2025 14:29:38 -0400 (EDT)
-Date: Fri, 16 May 2025 14:29:37 -0400
-From: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
-To: Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Sebastian Reichel <sre@kernel.org>, Robin Gong <yibin.gong@nxp.com>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-imx@nxp.com, linux-input@vger.kernel.org,
-	Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>,
-	Robin Gong <b38343@freescale.com>,
-	Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: [PATCH v2 0/9] add support for pf1550 PMIC MFD-based drivers
-Message-ID: <cover.1747409892.git.samuel.kayode@savoirfairelinux.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NpfJnmbW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F32DC4CEE4;
+	Fri, 16 May 2025 18:30:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747420252;
+	bh=AWPQKMivdFQ6QmrVDoYacp12BqW2VCLe3IzFWlx64xM=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=NpfJnmbWyUqyMYoLy35vtxm0N29rgijba7ENUDqS7YmsKZUjUSF9tmwKOrEJMV3sh
+	 BOJ+AttBuVq8cSt48iOr9mkb3Lh54y/rA743ERhn9bavTxA66G9K4nY+vqUMYyvrUq
+	 pMuoisg9g1acwcd2Ohpqspyw4DZ3Bs72y9MVjchH2UnMlcG7PCQmnOvi7ptszJrLzd
+	 6loH1rBQKNyR4iKiDuf1m96yLUTX/I7GK7ZCZF7FTeW+XK5ihU9YtAH7p8jresWjGY
+	 FFvdQ3mTfy2XP+gLjQR2Cvrb6Xai9RjaFlkRc6wAgftsA5qwcTnVWIpNoT5D17ix6a
+	 YQGHmGwBWpsNw==
+Date: Fri, 16 May 2025 13:30:50 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-This series adds support for pf1550 PMIC. It provides the core mfd driver and a
-set of three sub-drivers for the regulator, power supply and input subsystems.
-
-Patches 1-4 add the DT binding documents. Patches 5-8 add all drivers. Last
-patch adds a MAINTAINERS entry for this device.
-
-Changes since v1 [1]:
-   1. DT bindings for all devices included
-   2. Add onkey driver
-   3. Add driver for the regulators
-   4. Ensure charger is activated as some variants have it off by default
-   5. Update mfd and charger driver per feedback from eballetbo@gmail.com
-   6. Add myself as maintainer for these drivers
-
-[1]: v1: https://lore.kernel.org/1523974819-8711-1-git-send-email-abel.vesa@nxp.com/
-
-Samuel Kayode (9):
-  dt-bindings: power: supply: add pf1550
-  dt-bindings: regulator: add pf1550
-  dt-bindings: input: add pf1550
-  dt-bindings: mfd: add pf1550
-  mfd: pf1550: add core mfd driver
-  regulator: pf1550: add support for regulator
-  input: pf1550: add onkey support
-  power: supply: pf1550: add battery charger support
-  MAINTAINERS: add an entry for pf1550 mfd driver
-
- .../bindings/input/pf1550_onkey.yaml          |  31 +
- .../devicetree/bindings/mfd/pf1550.yaml       | 122 ++++
- .../bindings/power/supply/pf1550_charger.yaml |  44 ++
- .../devicetree/bindings/regulator/pf1550.yaml |  35 +
- MAINTAINERS                                   |  11 +
- drivers/input/keyboard/Kconfig                |   8 +
- drivers/input/keyboard/Makefile               |   1 +
- drivers/input/keyboard/pf1550_onkey.c         | 200 ++++++
- drivers/mfd/Kconfig                           |  14 +
- drivers/mfd/Makefile                          |   2 +
- drivers/mfd/pf1550.c                          | 254 +++++++
- drivers/power/supply/Kconfig                  |   6 +
- drivers/power/supply/Makefile                 |   1 +
- drivers/power/supply/pf1550_charger.c         | 656 ++++++++++++++++++
- drivers/regulator/Kconfig                     |   7 +
- drivers/regulator/Makefile                    |   1 +
- drivers/regulator/pf1550.c                    | 380 ++++++++++
- include/linux/mfd/pf1550.h                    | 246 +++++++
- 18 files changed, 2019 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/pf1550_onkey.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/pf1550.yaml
- create mode 100644 Documentation/devicetree/bindings/power/supply/pf1550_charger.yaml
- create mode 100644 Documentation/devicetree/bindings/regulator/pf1550.yaml
- create mode 100644 drivers/input/keyboard/pf1550_onkey.c
- create mode 100644 drivers/mfd/pf1550.c
- create mode 100644 drivers/power/supply/pf1550_charger.c
- create mode 100644 drivers/regulator/pf1550.c
- create mode 100644 include/linux/mfd/pf1550.h
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: David Airlie <airlied@gmail.com>, devicetree@vger.kernel.org, 
+ Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>, 
+ linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Oded Gabbay <ogabbay@kernel.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+ linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ Simona Vetter <simona@ffwll.ch>, linux-rockchip@lists.infradead.org, 
+ linux-doc@vger.kernel.org
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+In-Reply-To: <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
+References: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
+ <20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net>
+Message-Id: <174742024812.3649303.12389396177218408388.robh@kernel.org>
+Subject: Re: [PATCH v3 01/10] dt-bindings: npu: rockchip,rknn: Add bindings
 
 
-base-commit: b1d8766052eb0534b27edda8af1865d53621bd6a
--- 
-2.49.0
+On Fri, 16 May 2025 18:53:15 +0200, Tomeu Vizoso wrote:
+> Add the bindings for the Neural Processing Unit IP from Rockchip.
+> 
+> v2:
+> - Adapt to new node structure (one node per core, each with its own
+>   IOMMU)
+> - Several misc. fixes from Sebastian Reichel
+> 
+> v3:
+> - Split register block in its constituent subblocks, and only require
+>   the ones that the kernel would ever use (Nicolas Frattaroli)
+> - Group supplies (Rob Herring)
+> - Explain the way in which the top core is special (Rob Herring)
+> 
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  .../bindings/npu/rockchip,rknn-core.yaml           | 162 +++++++++++++++++++++
+>  1 file changed, 162 insertions(+)
+> 
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml: properties:reg-names: 'oneOf' conditional failed, one must be fixed:
+	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too long
+	[{'const': 'pc'}, {'const': 'cna'}, {'const': 'core'}] is too short
+	False schema does not allow 3
+	1 was expected
+	3 is greater than the maximum of 2
+	hint: "minItems" is only needed if less than the "items" list length
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): compatible: 'oneOf' conditional failed, one must be fixed:
+	['rockchip,rk3588-rknn-core-top', 'rockchip,rknn-core-top'] is too long
+	'rockchip,rk3588-rknn-core-top' is not one of ['rockchip,rk3588-rknn-core']
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdab0000 (rockchip,rk3588-rknn-core-top): reg: [[0, 4255842304, 0, 36864]] is too short
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): compatible: 'oneOf' conditional failed, one must be fixed:
+	['rockchip,rk3588-rknn-core', 'rockchip,rknn-core'] is too long
+	'rockchip,rk3588-rknn-core' is not one of ['rockchip,rk3588-rknn-core-top']
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/npu/rockchip,rknn-core.example.dtb: npu-core@fdac0000 (rockchip,rk3588-rknn-core): reg: [[0, 4255907840, 0, 36864]] is too short
+	from schema $id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250516-6-10-rocket-v3-1-7051ac9225db@tomeuvizoso.net
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
