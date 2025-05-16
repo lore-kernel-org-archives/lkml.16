@@ -1,96 +1,181 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3744176AC5;
-	Fri, 16 May 2025 14:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747406091; cv=pass; b=sdK9VWQQbpHqccB5CvRNk8pAk5s+Xlz0yM0VF8RwAh07kWDpJgXqCm3hbcn7b2w/rCIzmSC0TIGODlhjRvOoJFYx+DQs8s2XTTP5xX9VVqt10SBRxFAWCyboAN+QwS6B4f+pjGELarmHJzoRiw6jJiWE/th14gu2ORpGcBuTGFY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747406091; c=relaxed/simple;
-	bh=8fUO6jPaZ/ma/cN8vVRzKW391bHTzvar0NuldUhDY/Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GYjqnrEH8dvaiV5bHVyvOErs4dk4zCXxyx5bsVsuK9HvZU7vsq0/IiSYdU0JysFSy/vKuWo+KqJqfjjiKpufDcZzqmkv0C7JJDJOdgdumDWkQCJ6R2aBKPDJN1zowI16zwokxD79NPUTV46u6knRQUHq8cr4mM5GOHZKaGab2BA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=RAZb5Eb0; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3033218DF6D;
+	Fri, 16 May 2025 14:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747406133; cv=none; b=YZgm0pmCrjt3IvP5xclb7n7bGjNTQIcpTzt4SY9Tcr8fP0twgEdtQBWoQoFuyg455nOUll9taBy++kJBK11nK2sXEil3gb7gK+0/5xnGM2QLJwWyAcckgtDDjO612GtWSSfm9Ep69q3kcXrrPZZqpHe/2qWQ1reEyvrz0XfWKWo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747406133; c=relaxed/simple;
+	bh=J/QIpR8OrpPuQ+5A7yOJJ6px/zqtCG8WzG0h+HuXQ6A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BXiltqAseu1rCYDke/9x5Rf/jn0F8l7Q2kmIlKHG/seVcbJpGKjXtk4rY8Dh9X+UuZfdRlkycPu5gH1YhjZ3/ilYosEqiYDaq+qb4hwi6XKhkw5PomqTjPripR+RUxoshWhQ3R1DlMV509H8lQ471oSbJ7Yl/3KXRwqN21vZFQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ny4brOeJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="RAZb5Eb0"
-ARC-Seal: i=1; a=rsa-sha256; t=1747405956; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Sn9D1aVfzOgg5utsKrvxPQLR8NyYhxPV1Qq8zNxfsZwNAmMJavZAfo3xjFpRuPyLYRWdOweUZ2WGIbGgXffny8QaeaPpid+S6THbXwPlT+s0gJSytwFByYeRClZ2N3w30zVlF6d/jesSaiQi5muYYbTzC0DRMHgE+dRZqwRiPL4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1747405956; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=QG6uFSzxyEei3bUylVnUIeowJOAePKE8Necwb37H82Y=; 
-	b=cV/MS31gf//LmSfnS5cPNEC69gq1ncUBAM9RpwUiuOd4eq2Gv7ovOhWyct68ggH7kEb16DkcHRZ+OgzxqSXkbS3LtQm1jjg5tk5hKWpIctGe0TfmsxaJNHvRcrEEb7Fn3woPElb2dmOhYIpROKLDT1d73BpetAfRekYaXwl5drA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747405956;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=QG6uFSzxyEei3bUylVnUIeowJOAePKE8Necwb37H82Y=;
-	b=RAZb5Eb0o+vYx/PqMiaEyhZIJaiuYlYKIxpRbdxz+Ul6cH2zW3HRTKvbMiIDMRPk
-	J5nIFp+7zomqyvBsmzJuDWqrk0joMaaHNxklzo5uzeWbxw+SOj1BuXCsuEkRS56/SMV
-	P2L3FH11BAQ+jNGIfUE2n4BBngLZW1X3MAud2muM=
-Received: by mx.zohomail.com with SMTPS id 1747405953239802.7434673395758;
-	Fri, 16 May 2025 07:32:33 -0700 (PDT)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH 1/1] cxl/feature: Remove redundant code of get supported features
-Date: Fri, 16 May 2025 22:32:20 +0800
-Message-Id: <20250516143220.35302-1-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ny4brOeJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19C5FC4CEE4;
+	Fri, 16 May 2025 14:35:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747406132;
+	bh=J/QIpR8OrpPuQ+5A7yOJJ6px/zqtCG8WzG0h+HuXQ6A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ny4brOeJKXph/t0D/hx1MGGohyf6S7Y0VZRSXauILnXRs3dGKithzOLuUj201t9yU
+	 TnxIc+MET1ilm8OyXKte1fvFHdiZgsHACSFiYGGv4HWbQpmwkcG2yiJzIIqFSgJj+4
+	 xX4DYsRAxQ2Vpc3WFXMu1Yd+mz4+3apPWO9yKSWTs8zkweOjM6s9VPdSthHyxVdOMH
+	 TZRDRjeuo0YLxkEFR1BDF8aR6DOGWfKySiSrY2HekzLli65jWY+rMZLYkTa3upyuV7
+	 MWIYfzsg8g3wTxPX7ueJ5xJyH7IZvaoDICYNFTieAFzLdjSJT8bAzKzxCB4zUCfk8o
+	 qKYbA5fqhTHqw==
+Date: Fri, 16 May 2025 11:35:29 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: "Wang, Weilin" <weilin.wang@intel.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	"Hunter, Adrian" <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] perf intel-tpebs: Filter non-workload samples
+Message-ID: <aCdNMenCaonhRfJK@x1>
+References: <20250430200108.243234-1-irogers@google.com>
+ <CO6PR11MB5635C6FF9A6C91B68FCE7937EE90A@CO6PR11MB5635.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr0801122736b0a90ac7aa7ae7c66564610000d4e64de8d563496a159a562e7199d7c0f442ffacf5fb3418a1:zu080112273ed26e78e4eb1dc602937c60000034619157c702490e839bac1796efc2e414ff88cdbce4e212cd:rf0801122d63ef59ad5cedc4732de2e9ff000029912dacb55ea11af706d424c59425f8bf728a5aefebe23c7fb2b8930c23d2:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CO6PR11MB5635C6FF9A6C91B68FCE7937EE90A@CO6PR11MB5635.namprd11.prod.outlook.com>
 
-In cxlctl_get_supported_features(), there is a code block that handles
-the case where the requested is equal to 0. But the code following the
-code block can also handle this situation. So the code block is not
-needed.
+On Thu, May 15, 2025 at 08:46:22PM +0000, Wang, Weilin wrote:
+> > -----Original Message-----
+> > From: Ian Rogers <irogers@google.com>
+> > Sent: Wednesday, April 30, 2025 1:01 PM
+> > To: Peter Zijlstra <peterz@infradead.org>; Ingo Molnar <mingo@redhat.com>;
+> > Arnaldo Carvalho de Melo <acme@kernel.org>; Namhyung Kim
+> > <namhyung@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
+> > Alexander Shishkin <alexander.shishkin@linux.intel.com>; Jiri Olsa
+> > <jolsa@kernel.org>; Ian Rogers <irogers@google.com>; Hunter, Adrian
+> > <adrian.hunter@intel.com>; Kan Liang <kan.liang@linux.intel.com>; Wang,
+> > Weilin <weilin.wang@intel.com>; James Clark <james.clark@linaro.org>; linux-
+> > perf-users@vger.kernel.org; linux-kernel@vger.kernel.org
+> > Subject: [PATCH v1] perf intel-tpebs: Filter non-workload samples
+> > 
+> > If perf is running with a benchmark then we want the retirement
+> > latency samples associated with the benchmark rather than from the
+> > system as a whole. Use the workload's PID to filter out samples that
+> > aren't from the workload or its children.
+> > 
+> > Signed-off-by: Ian Rogers <irogers@google.com>
 
-Signed-off-by: Li Ming <ming.li@zohomail.com>
----
-base-commit: 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3 v6.15-rc6
----
- drivers/cxl/core/features.c | 8 --------
- 1 file changed, 8 deletions(-)
+> Tested-by: Weilin Wang <weilin.wang@intel.com>
 
-diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-index 1498e2369c37..2d3a6d36a761 100644
---- a/drivers/cxl/core/features.c
-+++ b/drivers/cxl/core/features.c
-@@ -416,14 +416,6 @@ static void *cxlctl_get_supported_features(struct cxl_features_state *cxlfs,
+Thanks, applied to perf-tools-next,
+
+- Arnaldo
  
- 	rpc_out->size = struct_size(feat_out, ents, requested);
- 	feat_out = &rpc_out->get_sup_feats_out;
--	if (requested == 0) {
--		feat_out->num_entries = cpu_to_le16(requested);
--		feat_out->supported_feats =
--			cpu_to_le16(cxlfs->entries->num_features);
--		rpc_out->retval = CXL_MBOX_CMD_RC_SUCCESS;
--		*out_len = out_size;
--		return no_free_ptr(rpc_out);
--	}
- 
- 	for (i = start, pos = &feat_out->ents[0];
- 	     i < cxlfs->entries->num_features; i++, pos++) {
--- 
-2.34.1
-
+> > ---
+> >  tools/perf/util/intel-tpebs.c | 59
+> > ++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 58 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+> > index 7fd6cae1063e..4ad4bc118ea5 100644
+> > --- a/tools/perf/util/intel-tpebs.c
+> > +++ b/tools/perf/util/intel-tpebs.c
+> > @@ -3,7 +3,7 @@
+> >   * intel_tpebs.c: Intel TPEBS support
+> >   */
+> > 
+> > -
+> > +#include <api/fs/fs.h>
+> >  #include <sys/param.h>
+> >  #include <subcmd/run-command.h>
+> >  #include <thread.h>
+> > @@ -121,6 +121,59 @@ static int evsel__tpebs_start_perf_record(struct
+> > evsel *evsel)
+> >  	return ret;
+> >  }
+> > 
+> > +static bool is_child_pid(pid_t parent, pid_t child)
+> > +{
+> > +	if (parent < 0 || child < 0)
+> > +		return false;
+> > +
+> > +	while (true) {
+> > +		char path[PATH_MAX];
+> > +		char line[256];
+> > +		FILE *fp;
+> > +
+> > +new_child:
+> > +		if (parent == child)
+> > +			return true;
+> > +
+> > +		if (child <= 0)
+> > +			return false;
+> > +
+> > +		scnprintf(path, sizeof(path), "%s/%d/status",
+> > procfs__mountpoint(), child);
+> > +		fp = fopen(path, "r");
+> > +		if (!fp) {
+> > +			/* Presumably the process went away. Assume not a
+> > child. */
+> > +			return false;
+> > +		}
+> > +		while (fgets(line, sizeof(line), fp) != NULL) {
+> > +			if (strncmp(line, "PPid:", 5) == 0) {
+> > +				fclose(fp);
+> > +				if (sscanf(line + 5, "%d", &child) != 1) {
+> > +					/* Unexpected error parsing. */
+> > +					return false;
+> > +				}
+> > +				goto new_child;
+> > +			}
+> > +		}
+> > +		/* Unexpected EOF. */
+> > +		fclose(fp);
+> > +		return false;
+> > +	}
+> > +}
+> > +
+> > +static bool should_ignore_sample(const struct perf_sample *sample, const
+> > struct tpebs_retire_lat *t)
+> > +{
+> > +	pid_t workload_pid = t->evsel->evlist->workload.pid;
+> > +	pid_t sample_pid = sample->pid;
+> > +
+> > +	if (workload_pid < 0 || workload_pid == sample_pid)
+> > +		return false;
+> > +
+> > +	if (!t->evsel->core.attr.inherit)
+> > +		return true;
+> > +
+> > +	return !is_child_pid(workload_pid, sample_pid);
+> > +}
+> > +
+> >  static int process_sample_event(const struct perf_tool *tool
+> > __maybe_unused,
+> >  				union perf_event *event __maybe_unused,
+> >  				struct perf_sample *sample,
+> > @@ -140,6 +193,10 @@ static int process_sample_event(const struct
+> > perf_tool *tool __maybe_unused,
+> >  		mutex_unlock(tpebs_mtx_get());
+> >  		return -EINVAL;
+> >  	}
+> > +	if (should_ignore_sample(sample, t)) {
+> > +		mutex_unlock(tpebs_mtx_get());
+> > +		return 0;
+> > +	}
+> >  	/*
+> >  	 * Need to handle per core results? We are assuming average retire
+> >  	 * latency value will be used. Save the number of samples and the sum
+> > of
+> > --
+> > 2.49.0.906.g1f30a19c02-goog
+> 
