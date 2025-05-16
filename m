@@ -1,154 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1147225A35
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399CD225A35
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747382543; cv=none; b=PPJbH46cbQKdrGqaN2vqmQUFe3befi4IlYMW9lCw9JNUPIQasMVXd+uZTSWdRnLS1076sAN8Xqth0LEIKB/tAaDZmGbcBaEPDnC+xp7HlhPqfq/rhHKp4OlJ1Qj+xzMOva+f0LY0wHjH4R45QaEd9l9PAJu1RLcBJjNr8cq91qs=
+	t=1747382559; cv=none; b=RH3BApd15D4Kt8GGa1JvnhiMi/4aT8SrXi9mFrkg0BKRTefHo95NLUQNIRCMYoxyHffsNU4iMrLBG+kAlND1Ckc1W08sxN0FZ/tedV6yc0k9Fph1+Mz9zqVQCH/o4WQzgsMVe/m6oRhiNT3C+PEPDWRT2kT8jRBD+FuD1UoiXtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747382543; c=relaxed/simple;
-	bh=H3gGoNY17k//3FrPE7INqoVxNAhhPQXH8fJGugRmmyc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NHjI29I+3K7MI8R/n0xde7ecUltM+BeLFg2JOSzLxTaVs6Oa7MDYsXTLo7a5HQ1olBQzC873ZJammpI2DCBtlWKrpsXDyG7AQHNZ5QuH9Z1uEWNYkTdpBdZRRcpA4G2LqfoRoB4j+9BopNFGjZMr/5RbHaJOXB7UvPT0PuLWlYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TxhMNkkH; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747382559; c=relaxed/simple;
+	bh=GG4H/sccbSVzVwAwliBjKqAZoNtWhkKlmZNI68D6kmE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rqR3ceYabhwzki2YqJOcc9lA67SS3BSxk+TH20YUrottxcize/j8bIYZvdj/htefFqN1u0vLIeo61x3F4ckWowBsbalkMwgo7iqJh4zC0j2yiKKOVz8zrntV61VgjM6yEu94JVRCVmJqlc/0/2TiDM9byoFr8+u28GCzVd8/y0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GW/EPIWU; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TxhMNkkH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747382540;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=ZlDySxqINDrxm4UjNN3OmOU4dY+W91mBT9wkqzNyPtk=;
-	b=TxhMNkkH1w8Ms4F5mCaT1Zcr6qt9aydJVcMX1cxpp8X5YYz7CLEYdlPxiPBsgNxzmk8ajE
-	981eRzQZiiitRNDXJU0ix7anMiriQVcmpBfvsLdOvt4Diz1OPBqYssLqKtGGmYRBMWX25s
-	PIXk4A150TsBn+j2Mru7XU1dA/fLCo0=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-544-2bes0w0GNcuThdknEfrhXg-1; Fri, 16 May 2025 04:02:19 -0400
-X-MC-Unique: 2bes0w0GNcuThdknEfrhXg-1
-X-Mimecast-MFC-AGG-ID: 2bes0w0GNcuThdknEfrhXg_1747382538
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43e9b0fd00cso9608535e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 01:02:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GW/EPIWU"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a0be50048eso1735287f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 01:02:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747382555; x=1747987355; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bdKztaKZj+ArxWleSUI2lI0rhw/lHk7zt8SPSV2S+Ko=;
+        b=GW/EPIWUiIO1WEoPmHec93o2Cs0Oi7jXWo5qkJbwKnAPYrjw7QCUEBoFSLs5UtMxNU
+         Yw0XPfckh2ZRAiKuDJJKuRDkA7SzQSvo1A0Cg/mvvcwd22JJFvTn/hYRrAOhvA0KN1TB
+         R8j6LNnyWtwJpvs7At0YyfBN1OhUVzc93ssCve/uLnoCcOT7+Zpiy/PQ5I3jTZhiut6d
+         LUDi+mYahPWaAN1WdXk3qPTY9lMUDUn6yJny20RHRE1qoFi+5+yHFv47es1cBAPKR+cj
+         wrtzAI89HLbjFAudBCoQsnGrS5P3QOhiLkKAjo7OsRE20NooUJsedUmukz92yckDGQbU
+         Dp4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747382538; x=1747987338;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZlDySxqINDrxm4UjNN3OmOU4dY+W91mBT9wkqzNyPtk=;
-        b=RaTT6N+9JtizJZbfXhnI6UEfx1J32RV+vf0QwDF0UFbL3upHeZkXVQchjquGWvj7ZG
-         xyyghdYJyO0BuClYjlTduim/mZZwwGZUCun9i1YgFHHRzB4flAhLRYogaqk5V5tc1Tcs
-         iZvRD6zA9TzTk8xcUKSBj0pEJnjevcB25VimEICSqqLWY9U+0HFDNmEkpUc2lO2SjHc5
-         NX6EEyZTc/Rqme9Bmx8K/j8kGbN0/b/Fu+A7jfVCQYqzqYEfoxoOmbP7k9AhT7vEiq+S
-         JDNvkbOQNoOSpRSXTXAF5LwmjxYqCaVMkC6all+cLzA8EQMd4DGrCTFUvdqswhkQJMly
-         x+Hw==
-X-Forwarded-Encrypted: i=1; AJvYcCVHi5dCOf5zgQKj4nbLtSE2x1MOC67JnqvgppfMm4dSIrTGa+bRaYAxP3cwYjBjZocd04AD7MKpCUEaV08=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEAWWWX/wm22zeznNqku60k/YtSQJluYRePM17rEAKUTz65A4q
-	1ls4Kq4Ac9sabeyE7+yiaUuyJSd6e8TeDhFTkuxU1o0AwCLgXYvDC9SDSjcF2CVg9Fg4/4GUHLM
-	c0vd+aHFgnBelDlXUaS5uojRZEe1K1z+XG+peaIo02SYdwygpB4Cp48SQNDZ4PN+Ynm/UDe1Y2f
-	70
-X-Gm-Gg: ASbGncvx5AicSNstjs0XVf4Ac/fZsYHVqI6vyi9yK3/qmKX68LZ8o8qmxj0cFH69a4X
-	jpN2TdRZF3c94Ea8FljeueefUzT8SP5o6vJvMkcxFrdrNMm6EVGIP9jGmT4nOvLdQ+/b8vk03Xd
-	ElOkLNnmxhU8/yyfRaG7Eq4Buk5zG7/oS7hwcxqgHxuuIyxhpjZ59ZE1AiQjN6w8gNmbzsl3ZXT
-	p1sERFxm6oBkS8KBINk9deq50txbpDZDro8Jb4fKpxCMfoxxVJPeyK6MDkt2/vxkHoTvYy2z88v
-	kNRgzhw2AHdqvTP7JU71Shy1vzpWzZGEfY+zzpsWksFiwwoGmYjws34P3Fpwg42CwvFl/2h5ChI
-	7MVQHg68w0Ou3biL4Xv6LfaoWafxool6xoF/tXbQ=
-X-Received: by 2002:a05:600c:a08c:b0:442:f861:3536 with SMTP id 5b1f17b1804b1-442fd94e353mr20683985e9.7.1747382538219;
-        Fri, 16 May 2025 01:02:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGelgfYf1CtFX2ouWOGPMb4VwIumpsnFvLJhBDDEnBHD32A6BcPQixmIbH4BEGdqHTdU69TsQ==
-X-Received: by 2002:a05:600c:a08c:b0:442:f861:3536 with SMTP id 5b1f17b1804b1-442fd94e353mr20683725e9.7.1747382537878;
-        Fri, 16 May 2025 01:02:17 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f47:4700:e6f9:f453:9ece:7602? (p200300d82f474700e6f9f4539ece7602.dip0.t-ipconnect.de. [2003:d8:2f47:4700:e6f9:f453:9ece:7602])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd583f71sm23537405e9.27.2025.05.16.01.02.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 May 2025 01:02:17 -0700 (PDT)
-Message-ID: <f924f789-5269-4046-99a4-2991f9a3ab3c@redhat.com>
-Date: Fri, 16 May 2025 10:02:16 +0200
+        d=1e100.net; s=20230601; t=1747382555; x=1747987355;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bdKztaKZj+ArxWleSUI2lI0rhw/lHk7zt8SPSV2S+Ko=;
+        b=sm1lsO9wm5d74HI3bzAU1axymvZH/JW8tdkAN5a2lxhyLKyYBRNNBVBCwHAa7MTm1J
+         YStDdURDwCGTzC/PCpnLBBlHw5z4Jf/BxEZ1T8tMiBNe8/VdZurs6RKMJAbX8O+G8tKw
+         qKL2iwrdy7Rkfj2LRHwbuUMYAJwzcHGUI2tLG5QthZy8fp5WY3NjinRLVenjWEhwZV8K
+         YWqkUvEMeSBK26lcwrUoaet296ySJd2Wf1EZjPXgwy4xr+QPMK1mIYOgTXo2V69TYszp
+         2qM9R2V6+kYaY1aNDolMahVlY23Db9JQv8BX1TcJkNkaIdLBOlSp40pOyEuMiBzlLGWz
+         ovFg==
+X-Forwarded-Encrypted: i=1; AJvYcCV2nAqo1UDBsxet5vykOp3VrcE/jFyFIvUui0IPVQG5KRFv4Pv3a33uAEQRR+Ft+6sbqgaSPEBbyC/gb4c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxpm3hSUjtpiFWceCm0fTpqZLA+ixQCDipru2rl7qAxRqrsFU6w
+	eIBEUpUrea9lahSW2RTcTK92/Ps4Nkc4c6/zRBgvYpWNdDvLUu5FJNBj0Z8khvZcEqI=
+X-Gm-Gg: ASbGncu2VLjd8q6ZTeujRzZN7t3+Lp82cgTZOtNRgJsunRZdgw9bHNU/AQmOoeX5iVI
+	A0OLe2DD0V4dYgqGDZ0oJw5QX0+8V493Q/ueGkPBGzvFFNNZQPhWdCERAOtGi1mDorWteDGOi0F
+	LAOaiawpBC2uHTQONxvHr94ub6reWdkgFT+JtucI2Hj8/i6IvMN4H/BCaIm9vevUD86PoAhxwJ7
+	1wZf8JR5evIf+ITw71VPjsZsaB7CHLbQ1c9WHHN0X0QZNXdev/T5QQpVdeAMlYxnvdn40P071x0
+	JiMTMI/IMSU4m+EQQxFPjgGK0B5LwUDvhUGZPd6zz+f/Srq0InY9ws2R+WiP95p7ETWvXkUWWux
+	6oQIw2zvf2s4WYPxO
+X-Google-Smtp-Source: AGHT+IGajP2MNPkEe6N02ds5+ATpXbBcyUjkhr3oNkMVyA1PAD1v31L2wT8EjnkrVr11DTg5FBDOMA==
+X-Received: by 2002:a05:6000:2ca:b0:39a:ca05:54a9 with SMTP id ffacd0b85a97d-3a35c8263d1mr2594040f8f.29.1747382555439;
+        Fri, 16 May 2025 01:02:35 -0700 (PDT)
+Received: from localhost (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca8d185sm2005730f8f.98.2025.05.16.01.02.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 01:02:34 -0700 (PDT)
+Date: Fri, 16 May 2025 11:02:32 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Cristian Marussi <cristian.marussi@arm.com>
+Cc: long.yunjian@zte.com.cn, sudeep.holla@arm.com, peng.fan@nxp.com,
+	justin.chen@broadcom.com, florian.fainelli@broadcom.com,
+	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, fang.yumeng@zte.com.cn,
+	mou.yi@zte.com.cn, ouyang.maochun@zte.com.cn, xu.lifeng1@zte.com.cn
+Subject: Re: [PATCH] firmware: arm_scmi: Use dev_err_probe() simplify the code
+Message-ID: <4c970388-4b1e-4c5c-bc54-d55c2d9cd62b@suswa.mountain>
+References: <20250515203855146Sn9x-Uw9Teur35mOjn41C@zte.com.cn>
+ <aCXzPGvPayVyiMHG@pluto>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/mm: Fix test result reporting in gup_longterm
-To: Mark Brown <broonie@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
-Cc: linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250515-selftests-mm-gup-longterm-dups-v1-1-05f8f731cf63@kernel.org>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250515-selftests-mm-gup-longterm-dups-v1-1-05f8f731cf63@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCXzPGvPayVyiMHG@pluto>
 
-On 15.05.25 10:57, Mark Brown wrote:
-> The kselftest framework uses the string logged when a test result is
-> reported as the unique identifier for a test, using it to track test
-> results between runs. The gup_longterm test completely fails to follow
-> this pattern, it runs a single test function repeatedly with various
-> parameters but each result report is a string logging an error message
-> which is fixed between runs.
+On Thu, May 15, 2025 at 02:59:24PM +0100, Cristian Marussi wrote:
+> On Thu, May 15, 2025 at 08:38:55PM +0800, long.yunjian@zte.com.cn wrote:
+> > From: Yumeng Fang <fang.yumeng@zte.com.cn>
+> > 
+> 
+> Hi,
+> 
+> > In the probe path, dev_err() can be replaced with dev_err_probe()
+> > which will check if error code is -EPROBE_DEFER and prints the
+> > error name. It also sets the defer probe reason which can be
+> > checked later through debugfs.
+> 
+> All true...but...if you look at the main scmi_probe() function all of these
+> failures are trapped at that level currently on the return path...
+> 
+> see the call chain from
+> 
+> scmi_probe()
+> 	....
+> 	ret = scmi_channels_setup(info); 
+> 	...
+> 
+> ...so your probe errors will be overridden there with a more generic message
+> left in debugfs at the top level.
 
+Good point.  But that feels like a mistake in dev_err_probe().
+Ideally, it would print the first error message.  I bet someone
+will eventually fix this.
 
-As the person who wrote that test (that you apparently didn't CC for 
-some reason), what exactly is the problem with that?
-
-We run tests. If all pass, we're happy, if one fails, we investigate.
-
--- 
-Cheers,
-
-David / dhildenb
-
+regards,
+dan carpenter
