@@ -1,39 +1,48 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23F82C9A;
-	Fri, 16 May 2025 07:32:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F712C9A;
+	Fri, 16 May 2025 07:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747380783; cv=none; b=d4rQFZitXD4B44js/UGbHcsTfKleK2JTeNknFIqpxxrbK359/7dpj11209Swgufl19o1SosvgWfWlvT2KfhaAI5CL70+InxLj771zMHQAx6NERHOlNGxwrrhcon/qp+979eMouMiREpltBDV+EHw1WTmsbT1Kt631XbbiAnKwX4=
+	t=1747380908; cv=none; b=IBTihGq3OrhqD8b2kFNMZexkeCPkR6/D5sENm4rsLZY5X81dzVVR85m/NA5QnIpEZ4cJjUx+tu6ZBooL2Ee0i5e9VbY2bxu8eeRvVx7+x2GyYKw2cU2LG0SDNqQMnIG3JvxWjKg1ISl0tGGfHHnCGWhhlxioi/IKn2RAXcuisUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747380783; c=relaxed/simple;
-	bh=XAyo9CtiYwDcUGxuPtMpI7pT9xtaqISwDisrxPASZaQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G/GPU4Uw3F1P6MdcE0afVHlOiUrNhzLnZRQ7uIrI12YGSjwXpEv37uaKdCdhue6rn6xKvT7sYtDdqyMJUfppsdWpgSR0XQeDR9xAJGF9IM8xxAHhFuy0IRpPGGjxOVHQnai6SIlJinuhU3tcr4IRU8nyuo37DBYmxUVBxPNPPzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=qCULTCBA; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1747380908; c=relaxed/simple;
+	bh=fHMu131eeC4O5t5ae3yEgP2HF3PgHSd4g5RekRTUeWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=KFgVBWMkwgY7AGkPezOgWSnfytvIjlPfjdsv95MPHyHD7oiJDRFh/5Nw8flmeQfAobOSbyM+wL7BeoVvvXnW+W3Z7yPNzUj0RNYy208i3HC46nUNfzMqkfnKEQk3BtC+W8qy6dIcQfJmPgCPOoR68IS+S2BnP+LOzdBdPMPSjVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kxQVDB3G; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="qCULTCBA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=BYwXGPJqEjCua/FANHW8c62ptBDFOcBMAOJrBegIM48=; b=qCULTCBAQW/1m75ioAeIj6eMRB
-	Hmh/dl3krr+u4uirzh1dRe6sYEiP5d/5Hwlkej4+fEwvMYAAZB/tuEJKTZttEIAIGeMtfEL/NL76C
-	P6nXwX0VKOohiQFOBpWGdK0bQsYKTB5MD+jrQSr2arJSTpnxcodmXKXgSsRGPKqvRjSU6UKpyno8K
-	og3CyztmiJzABoizt64TZqOE/HfyQ3HQx24C5Kou+MJpPHf7jCWMpRhuy8LB7prBloaETFHo3AYZ9
-	14NXF+Sr/4ToiEYo7Kiz4ysxbPQ2gtU6Wd4CLaNYKwCN0AmAhEKq7+ixPpn4OWUJhUsUyc+pjw19m
-	leq7f3TQ==;
-Received: from 39-12-18-146.adsl.fetnet.net ([39.12.18.146] helo=[192.168.238.43])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uFpSt-008yAE-Qb; Fri, 16 May 2025 09:32:42 +0200
-Message-ID: <b6e00e77-4a8c-4e05-ab79-266bf05fcc2d@igalia.com>
-Date: Fri, 16 May 2025 15:32:35 +0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kxQVDB3G"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G3ExiW020897;
+	Fri, 16 May 2025 07:35:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	u1JbgsRbFNEarkGxDwy5O4rayeHmdGplE+POraV2bwk=; b=kxQVDB3G8LswSYkc
+	sql/AE4/A0m8VL3bA0S+h+tuNk8F85YmrR98aY3xybAABD5dwxpwbMJZ3Wx53Ppc
+	veEzwcAuBcXRVarHHYAaLzKmIbzU/QhQwT7qtzfb9QHgfQ04bidUFxGnt9++ar8F
+	kmD+WfWzh925JtnHW0qtSbXhExW7Xkkm+aLFyUINOz+Z8+340K+Qgfg6/RLaV8le
+	08VXdXKlO6VktppPo1ln66F9Fsm7X15YV8dpy1nxP19H7XoxwpwTG27epTwPXimI
+	ugCqXQgJNl0gmpi6Yc8xHBjWR0uh8sRntTQOdjaQOFunLtXSM1a2HxXvesJVHvzw
+	jEZ/bQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbew8y1s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 07:35:02 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54G7Z1xD029131
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 07:35:01 GMT
+Received: from [10.253.78.92] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 16 May
+ 2025 00:34:57 -0700
+Message-ID: <db059233-523d-420b-81a7-73b02beef4d1@quicinc.com>
+Date: Fri, 16 May 2025 15:34:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,313 +50,99 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/hugetlb: fix a deadlock with pagecache_folio and
- hugetlb_fault_mutex_table
-To: Byungchul Park <byungchul@sk.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev,
- osalvador@suse.de, akpm@linux-foundation.org, mike.kravetz@oracle.com,
- kernel-dev@igalia.com, stable@vger.kernel.org,
- Hugh Dickins <hughd@google.com>, Florent Revest <revest@google.com>,
- Gavin Shan <gshan@redhat.com>, kernel_team@skhynix.com
-References: <20250513093448.592150-1-gavinguo@igalia.com>
- <20250514064729.GA17622@system.software.com>
- <075ae729-1d4a-4f12-a2ba-b4f508e5d0a1@igalia.com>
- <20250516060309.GA51921@system.software.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sm8550: Add support for camss
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Konrad Dybcio
+	<konrad.dybcio@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Depeng Shao <quic_depengs@quicinc.com>
+References: <20250415-sm8550_camss-v1-1-d4b7daa168ac@quicinc.com>
+ <wOxjiEBKO2XU-PikPlT8IMpSGOrP4ocgZEIj_zNhLzzBjySkhGQzupjmJAFhUHcnknLKSASwk33LjBI6WrZ9vg==@protonmail.internalid>
+ <1ee8587b-2bf6-418a-9834-8f8cbf1e94d8@oss.qualcomm.com>
+ <4e81a1fe-3ee5-4f5f-b958-13e6cf9138f7@linaro.org>
 Content-Language: en-US
-From: Gavin Guo <gavinguo@igalia.com>
-In-Reply-To: <20250516060309.GA51921@system.software.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Wenmeng Liu <quic_wenmliu@quicinc.com>
+In-Reply-To: <4e81a1fe-3ee5-4f5f-b958-13e6cf9138f7@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: JfCYi8Cyns4Qnjr4tAGPjJ56VDuktMaY
+X-Proofpoint-ORIG-GUID: JfCYi8Cyns4Qnjr4tAGPjJ56VDuktMaY
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDA3MCBTYWx0ZWRfX0fM2xuQlMEyf
+ HXct4P+bLbW/GcumwqRBf3vGFL+32Np/NPFKgvQbJNo6NNzS9r4uoRg+XXVAS1CsV1CNp7GQjNo
+ +oqbF8UZXo6OL3e6JEe2i8PPd25BMNtc0C6kuJjlx+JmCnqXM3gCxdrmzCXydEOUSF9OKmdyQbD
+ oCkZI78GK5MOA9IBCkuFDzDPNBRo1qxPHv6FtzacGU66T3n6HIoYRJeJ48PS1ajobyB6I0A2Meo
+ FmBWfU2VMevXi1BfihspehZVxmcdW3Fk3G24oeDxMsNlQx3nhxBJtAiVlrs/wjalYNobjPqaq1t
+ SDD9RTyuN1OpinhuB1CSP2i93dpTy8ErMlVkEj7MlB7gWXfqdsugeUvamzMjwkS+4bHkf6/l0Th
+ 4OOX9BjRaYYVziaHbLHbTKNx0P0VNIjN/Eloj4OTo0joddQDwmL3rlNJjkKdRpTjERAlZi08
+X-Authority-Analysis: v=2.4 cv=LOFmQIW9 c=1 sm=1 tr=0 ts=6826eaa6 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=42mon1cdF7M_iQiDyuAA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-16_03,2025-05-15_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 spamscore=0 adultscore=0 priorityscore=1501 suspectscore=0
+ mlxscore=0 malwarescore=0 mlxlogscore=503 impostorscore=0 bulkscore=0
+ clxscore=1011 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505160070
 
-On 5/16/25 14:03, Byungchul Park wrote:
-> On Wed, May 14, 2025 at 04:10:12PM +0800, Gavin Guo wrote:
->> Hi Byungchul,
+
+
+On 2025/5/1 9:15, Bryan O'Donoghue wrote:
+> On 30/04/2025 12:11, Konrad Dybcio wrote:
+>> On 4/15/25 9:38 AM, Wenmeng Liu wrote:
+>>> Add support for the camera subsystem on the SM8550 Qualcomm SoC. This
+>>> includes bringing up the CSIPHY, CSID, VFE/RDI interfaces.
+>>>
+>>> SM8550 provides
+>>> - 3 x VFE, 3 RDI per VFE
+>>> - 2 x VFE Lite, 4 RDI per VFE
+>>> - 3 x CSID
+>>> - 2 x CSID Lite
+>>> - 8 x CSI PHY
+>>>
+>>> Co-developed-by: Depeng Shao <quic_depengs@quicinc.com>
+>>> Signed-off-by: Depeng Shao <quic_depengs@quicinc.com>
+>>> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
+>>> ---
 >>
->> On 5/14/25 14:47, Byungchul Park wrote:
->>> On Tue, May 13, 2025 at 05:34:48PM +0800, Gavin Guo wrote:
->>>> The patch fixes a deadlock which can be triggered by an internal
->>>> syzkaller [1] reproducer and captured by bpftrace script [2] and its log
->>>
->>> Hi,
->>>
->>> I'm trying to reproduce using the test program [1].  But not yet
->>> produced.  I see a lot of segfaults while running [1].  I guess
->>> something goes wrong.  Is there any prerequisite condition to reproduce
->>> it?  Lemme know if any.  Or can you try DEPT15 with your config and
->>> environment by the following steps:
->>>
->>>      1. Apply the patchset on v6.15-rc6.
->>>         https://lkml.kernel.org/r/20250513100730.12664-1-byungchul@sk.com
->>>      2. Turn on CONFIG_DEPT.
->>>      3. Run test program reproducing the deadlock.
->>>      4. Check dmesg to see if dept reported the dependency.
->>>
->>> 	Byungchul
+>> [...]
 >>
->> I have enabled the patchset and successfully reproduced the bug. It
->> seems that there is no warning or error log related to the lock. Did I
->> miss anything? This is the console log:
->> https://drive.google.com/file/d/1dxWNiO71qE-H-e5NMPqj7W-aW5CkGSSF/view?usp=sharing
+>>> +                     <GIC_SPI 604 IRQ_TYPE_EDGE_RISING>,
+>>> +                     <GIC_SPI 688 IRQ_TYPE_EDGE_RISING>,
+>>
+>> It *may* be 689 instead but I'm not 100% sure
+>>
+>> Otherwise the numbers look good
+>>
+>> Bryan, Vlad, please also take a look
+>>
+>> Konrad
+>>
 > 
-> My bad.  I think I found the problem that dept didn't report it.  You
-> might see the report with the following patch applied on the top, there
-> might be a lot of false positives along with that might be annoying tho.
-> 
-> Some of my efforts to suppress false positives, suppressed the real one.
-> 
-> Do you mind if I ask you to run the test with the following patch
-> applied?  It'd be appreciated if you do and share the result with me.
-> 
-> 	Byungchul
+> +                     <GIC_SPI 688 IRQ_TYPE_EDGE_RISING>,
+> This should be 689 yes
 > 
 > ---
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index f31cd68f2935..fd7559e663c5 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -1138,6 +1138,7 @@ static inline bool trylock_page(struct page *page)
->   static inline void folio_lock(struct folio *folio)
->   {
->   	might_sleep();
-> +	dept_page_wait_on_bit(&folio->page, PG_locked);
->   	if (!folio_trylock(folio))
->   		__folio_lock(folio);
->   }
-> diff --git a/kernel/dependency/dept.c b/kernel/dependency/dept.c
-> index b2fa96d984bc..4e96a6a72d02 100644
-> --- a/kernel/dependency/dept.c
-> +++ b/kernel/dependency/dept.c
-> @@ -931,7 +931,6 @@ static void print_circle(struct dept_class *c)
->   	dept_outworld_exit();
->   
->   	do {
-> -		tc->reported = true;
->   		tc = fc;
->   		fc = fc->bfs_parent;
->   	} while (tc != c);
-> diff --git a/kernel/dependency/dept_unit_test.c b/kernel/dependency/dept_unit_test.c
-> index 88e846b9f876..496149f31fb3 100644
-> --- a/kernel/dependency/dept_unit_test.c
-> +++ b/kernel/dependency/dept_unit_test.c
-> @@ -125,6 +125,8 @@ static int __init dept_ut_init(void)
->   {
->   	int i;
->   
-> +	return 0;
-> +
->   	lockdep_off();
->   
->   	dept_ut_results.ecxt_stack_valid_cnt = 0;
-> --
+> bod
 
-Please see the test result:
-https://drive.google.com/file/d/1B20Gu3wLFbAeaXXb7aSQP5T6aeN9Mext/view?usp=sharing
+Hi Bryan,Konrad,
 
-It seems that after the first round, the deadlock is captured:
-ubuntu@localhost:~$ ./repro_20250402_0225_154f8fb0580000
-executing program
-[   80.425842][ T3416] ===================================================
-[   80.426707][ T3416] DEPT: Circular dependency has been detected.
-[   80.427497][ T3416] 6.15.0-rc6+ #31 Not tainted
-[   80.428084][ T3416] ---------------------------------------------------
-[   80.428964][ T3416] summary
-[   80.429330][ T3416] ---------------------------------------------------
-[   80.430078][ T3416] *** DEADLOCK ***
-[   80.430078][ T3416]
-[   80.430736][ T3416] context A
-[   80.431076][ T3416]    [S] (unknown)(pg_locked_map:0)
-[   80.431637][ T3416]    [W] lock(&hugetlb_fault_mutex_table[i]:0)
-[   80.432312][ T3416]    [E] dept_page_clear_bit(pg_locked_map:0)
-[   80.432977][ T3416]
-[   80.433246][ T3416] context B
-[   80.433595][ T3416]    [S] lock(&hugetlb_fault_mutex_table[i]:0)
-[   80.434245][ T3416]    [W] dept_page_wait_on_bit(pg_locked_map:0)
-[   80.434880][ T3416]    [E] unlock(&hugetlb_fault_mutex_table[i]:0)
-[   80.435592][ T3416]
-[   80.435852][ T3416] [S]: start of the event context
-[   80.436369][ T3416] [W]: the wait blocked
-[   80.436789][ T3416] [E]: the event not reachable
-[   80.437275][ T3416] ---------------------------------------------------
-[   80.437950][ T3416] context A's detail
-[   80.438367][ T3416] ---------------------------------------------------
-[   80.439006][ T3416] context A
-[   80.439337][ T3416]    [S] (unknown)(pg_locked_map:0)
-[   80.439883][ T3416]    [W] lock(&hugetlb_fault_mutex_table[i]:0)
-[   80.440489][ T3416]    [E] dept_page_clear_bit(pg_locked_map:0)
-[   80.441075][ T3416]
-[   80.441318][ T3416] [S] (unknown)(pg_locked_map:0):
-[   80.441816][ T3416] (N/A)
-[   80.442077][ T3416]
-[   80.442309][ T3416] [W] lock(&hugetlb_fault_mutex_table[i]:0):
-[   80.442872][ T3416] [<ffffffff82144644>] hugetlb_wp+0xfa4/0x3490
-[   80.443502][ T3416] stacktrace:
-[   80.443810][ T3416]       hugetlb_wp+0xfa4/0x3490
-[   80.444267][ T3416]       hugetlb_fault+0x1505/0x2c70
-[   80.444776][ T3416]       handle_mm_fault+0x1845/0x1ab0
-[   80.445275][ T3416]       do_user_addr_fault+0x637/0x1450
-[   80.445779][ T3416]       exc_page_fault+0x67/0x110
-[   80.446239][ T3416]       asm_exc_page_fault+0x26/0x30
-[   80.446722][ T3416]       __put_user_4+0xd/0x20
-[   80.447157][ T3416]       copy_process+0x1f64/0x3d80
-[   80.447621][ T3416]       kernel_clone+0x216/0x940
-[   80.448068][ T3416]       __x64_sys_clone+0x18d/0x1f0
-[   80.448548][ T3416]       do_syscall_64+0x6f/0x120
-[   80.448999][ T3416]       entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[   80.449556][ T3416]
-[   80.449765][ T3416] [E] dept_page_clear_bit(pg_locked_map:0):
-[   80.450272][ T3416] [<ffffffff8214263b>] hugetlb_fault+0x1ccb/0x2c70
-[   80.450861][ T3416] stacktrace:
-[   80.451148][ T3416]       hugetlb_fault+0x1ccb/0x2c70
-[   80.451611][ T3416]       handle_mm_fault+0x1845/0x1ab0
-[   80.452080][ T3416]       do_user_addr_fault+0x637/0x1450
-[   80.452566][ T3416]       exc_page_fault+0x67/0x110
-[   80.453014][ T3416]       asm_exc_page_fault+0x26/0x30
-[   80.453497][ T3416]       __put_user_4+0xd/0x20
-[   80.453923][ T3416]       copy_process+0x1f64/0x3d80
-[   80.454379][ T3416]       kernel_clone+0x216/0x940
-[   80.454817][ T3416]       __x64_sys_clone+0x18d/0x1f0
-[   80.455277][ T3416]       do_syscall_64+0x6f/0x120
-[   80.455722][ T3416]       entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[   80.456253][ T3416] ---------------------------------------------------
-[   80.456842][ T3416] context B's detail
-[   80.457198][ T3416] ---------------------------------------------------
-[   80.457842][ T3416] context B
-[   80.458122][ T3416]    [S] lock(&hugetlb_fault_mutex_table[i]:0)
-[   80.458661][ T3416]    [W] dept_page_wait_on_bit(pg_locked_map:0)
-[   80.459187][ T3416]    [E] unlock(&hugetlb_fault_mutex_table[i]:0)
-[   80.459763][ T3416]
-[   80.459988][ T3416] [S] lock(&hugetlb_fault_mutex_table[i]:0):
-[   80.460509][ T3416] [<ffffffff82140d36>] hugetlb_fault+0x3c6/0x2c70
-[   80.461074][ T3416] stacktrace:
-[   80.461374][ T3416]       hugetlb_fault+0x3c6/0x2c70
-[   80.461812][ T3416]       handle_mm_fault+0x1845/0x1ab0
-[   80.462281][ T3416]       do_user_addr_fault+0x637/0x1450
-[   80.462775][ T3416]       exc_page_fault+0x67/0x110
-[   80.463220][ T3416]       asm_exc_page_fault+0x26/0x30
-[   80.463694][ T3416]       __put_user_4+0xd/0x20
-[   80.464129][ T3416]       copy_process+0x1f64/0x3d80
-[   80.464577][ T3416]       kernel_clone+0x216/0x940
-[   80.464994][ T3416]       __x64_sys_clone+0x18d/0x1f0
-[   80.465466][ T3416]       do_syscall_64+0x6f/0x120
-[   80.465909][ T3416]       entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[   80.466457][ T3416]
-[   80.466660][ T3416] [W] dept_page_wait_on_bit(pg_locked_map:0):
-[   80.467177][ T3416] [<ffffffff82141187>] hugetlb_fault+0x817/0x2c70
-[   80.467740][ T3416] stacktrace:
-[   80.468032][ T3416]       hugetlb_fault+0x817/0x2c70
-[   80.468479][ T3416]       handle_mm_fault+0x1845/0x1ab0
-[   80.468947][ T3416]       do_user_addr_fault+0x637/0x1450
-[   80.469428][ T3416]       exc_page_fault+0x67/0x110
-[   80.469865][ T3416]       asm_exc_page_fault+0x26/0x30
-[   80.470332][ T3416]       __put_user_4+0xd/0x20
-[   80.470742][ T3416]       copy_process+0x1f64/0x3d80
-[   80.471186][ T3416]       kernel_clone+0x216/0x940
-[   80.471616][ T3416]       __x64_sys_clone+0x18d/0x1f0
-[   80.472060][ T3416]       do_syscall_64+0x6f/0x120
-[   80.472492][ T3416]       entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[   80.473040][ T3416]
-[   80.473271][ T3416] [E] unlock(&hugetlb_fault_mutex_table[i]:0):
-[   80.473863][ T3416] (N/A)
-[   80.474124][ T3416] ---------------------------------------------------
-[   80.474738][ T3416] information that might be helpful
-[   80.475210][ T3416] ---------------------------------------------------
-[   80.475820][ T3416] CPU: 1 UID: 1000 PID: 3416 Comm: repro_20250402_ 
-Not tainted 6.15.0-rc6+ #31 NONE
-[   80.475831][ T3416] Hardware name: QEMU Standard PC (Q35 + ICH9, 
-2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-[   80.475837][ T3416] Call Trace:
-[   80.475841][ T3416]  <TASK>
-[   80.475845][ T3416]  dump_stack_lvl+0x1ad/0x280
-[   80.475858][ T3416]  ? __pfx_dump_stack_lvl+0x10/0x10
-[   80.475867][ T3416]  ? __pfx__printk+0x10/0x10
-[   80.475883][ T3416]  cb_check_dl+0x24a8/0x2530
-[   80.475897][ T3416]  ? bfs_extend_dep+0x271/0x290
-[   80.475909][ T3416]  bfs+0x464/0x5e0
-[   80.475921][ T3416]  ? __pfx_bfs+0x10/0x10
-[   80.475931][ T3416]  ? add_dep+0x387/0x710
-[   80.475943][ T3416]  add_dep+0x3d0/0x710
-[   80.475953][ T3416]  ? __pfx_from_pool+0x10/0x10
-[   80.475963][ T3416]  ? __pfx_bfs_init_check_dl+0x10/0x10
-[   80.475972][ T3416]  ? __pfx_bfs_extend_dep+0x10/0x10
-[   80.475981][ T3416]  ? __pfx_bfs_dequeue_dep+0x10/0x10
-[   80.475990][ T3416]  ? __pfx_cb_check_dl+0x10/0x10
-[   80.475999][ T3416]  ? __pfx_add_dep+0x10/0x10
-[   80.476011][ T3416]  ? put_ecxt+0xda/0x4b0
-[   80.476024][ T3416]  __dept_event+0xee8/0x1590
-[   80.476038][ T3416]  dept_event+0x166/0x240
-[   80.476047][ T3416]  ? hugetlb_fault+0x1ccb/0x2c70
-[   80.476057][ T3416]  folio_unlock+0xb8/0x190
-[   80.476071][ T3416]  hugetlb_fault+0x1ccb/0x2c70
-[   80.476085][ T3416]  ? __pfx_hugetlb_fault+0x10/0x10
-[   80.476100][ T3416]  ? mt_find+0x15a/0x5f0
-[   80.476110][ T3416]  handle_mm_fault+0x1845/0x1ab0
-[   80.476125][ T3416]  ? handle_mm_fault+0xdb/0x1ab0
-[   80.476142][ T3416]  ? __pfx_handle_mm_fault+0x10/0x10
-[   80.476156][ T3416]  ? find_vma+0xec/0x160
-[   80.476164][ T3416]  ? __pfx_find_vma+0x10/0x10
-[   80.476172][ T3416]  ? dept_on+0x1c/0x30
-[   80.476179][ T3416]  ? dept_exit+0x1c5/0x2c0
-[   80.476186][ T3416]  ? lockdep_hardirqs_on_prepare+0x21/0x280
-[   80.476197][ T3416]  ? lock_mm_and_find_vma+0xa1/0x300
-[   80.476211][ T3416]  do_user_addr_fault+0x637/0x1450
-[   80.476219][ T3416]  ? mntput_no_expire+0xc0/0x870
-[   80.476235][ T3416]  ? __pfx_do_user_addr_fault+0x10/0x10
-[   80.476246][ T3416]  ? trace_irq_disable+0x60/0x180
-[   80.476258][ T3416]  exc_page_fault+0x67/0x110
-[   80.476272][ T3416]  asm_exc_page_fault+0x26/0x30
-[   80.476280][ T3416] RIP: 0010:__put_user_4+0xd/0x20
-[   80.476293][ T3416] Code: 66 89 01 31 c9 0f 1f 00 c3 cc cc cc cc 90 
-90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 48 89 cb 48 c1 fb 3f 48 09 
-d9 0f 1f 00 <89> 01 31 c9 0
-[   80.476312][ T3416] RSP: 0018:ffffc90004dffa38 EFLAGS: 00010206
-[   80.476322][ T3416] RAX: 000000000000000c RBX: 0000000000000000 RCX: 
-0000200000000200
-[   80.476329][ T3416] RDX: 0000000000000000 RSI: ffff888016abe300 RDI: 
-ffff888017878c20
-[   80.476335][ T3416] RBP: ffffc90004dffc10 R08: 0000000000000000 R09: 
-0000000000000000
-[   80.476340][ T3416] R10: 0000000000000000 R11: ffffffff82034b65 R12: 
-ffff888017c0a1e8
-[   80.476346][ T3416] R13: ffff88800d6a8200 R14: 0000000000000000 R15: 
-ffff888017c08a38
-[   80.476354][ T3416]  ? __might_fault+0xb5/0x130
-[   80.476367][ T3416]  copy_process+0x1f64/0x3d80
-[   80.476375][ T3416]  ? lockdep_hardirqs_on_prepare+0x21/0x280
-[   80.476388][ T3416]  ? copy_process+0x996/0x3d80
-[   80.476399][ T3416]  ? __pfx_copy_process+0x10/0x10
-[   80.476406][ T3416]  ? from_pool+0x1e1/0x750
-[   80.476416][ T3416]  ? handle_mm_fault+0x122e/0x1ab0
-[   80.476432][ T3416]  kernel_clone+0x216/0x940
-[   80.476440][ T3416]  ? __pfx_llist_del_first+0x10/0x10
-[   80.476448][ T3416]  ? check_new_class+0x28a/0xe90
-[   80.476458][ T3416]  ? __pfx_kernel_clone+0x10/0x10
-[   80.476468][ T3416]  ? from_pool+0x1e1/0x750
-[   80.476478][ T3416]  ? __pfx_from_pool+0x10/0x10
-[   80.476487][ T3416]  ? __pfx_from_pool+0x10/0x10
-[   80.476502][ T3416]  __x64_sys_clone+0x18d/0x1f0
-[   80.476512][ T3416]  ? __pfx___x64_sys_clone+0x10/0x10
-[   80.476520][ T3416]  ? llist_add_batch+0x111/0x1f0
-[   80.476532][ T3416]  ? dept_task+0x5/0x20
-[   80.476539][ T3416]  ? dept_on+0x1c/0x30
-[   80.476545][ T3416]  ? dept_exit+0x1c5/0x2c0
-[   80.476553][ T3416]  ? lockdep_hardirqs_on_prepare+0x21/0x280
-[   80.476565][ T3416]  do_syscall_64+0x6f/0x120
-[   80.476573][ T3416]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[   80.476580][ T3416] RIP: 0033:0x41b26d
-[   80.476588][ T3416] Code: b3 66 2e 0f 1f 84 00 00 00 00 00 66 90 f3 
-0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 
-24 08 0f 05 <48> 3d 01 f0 8
-[   80.476595][ T3416] RSP: 002b:00007ffa1ad2d198 EFLAGS: 00000206 
-ORIG_RAX: 0000000000000038
-[   80.476604][ T3416] RAX: ffffffffffffffda RBX: 00007ffa1ad2dcdc RCX: 
-000000000041b26d
-[   80.476610][ T3416] RDX: 0000200000000200 RSI: 0000000000000000 RDI: 
-0000000000001200
-[   80.476616][ T3416] RBP: 00007ffa1ad2d1e0 R08: 0000000000000000 R09: 
-0000000000000000
-[   80.476621][ T3416] R10: 0000000000000000 R11: 0000000000000206 R12: 
-00007ffa1ad2d6c0
-[   80.476626][ T3416] R13: ffffffffffffffb8 R14: 0000000000000002 R15: 
-00007ffd95d76940
-[   80.476638][ T3416]  </TASK>
+I confirmed that the value is 688 instead of 689. The documentation 
+incorrectly listed it as 689. To CC linux-media, I have resent the patch:
+https://lore.kernel.org/linux-arm-msm/20250516072707.388332-1-quic_wenmliu@quicinc.com/
 
+Thanks,
+wenmeng
