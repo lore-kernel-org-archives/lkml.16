@@ -1,155 +1,83 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D73F10E5;
-	Fri, 16 May 2025 00:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30C7C635;
+	Fri, 16 May 2025 00:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747353732; cv=none; b=cGnxw57Y2SkCP6bS/c6R21tIi69wps/X6cpYBmLscpAOQ71GWO7/nkkn5hvKyhAwncCnGtxMQ4ZoVktaMLZm+HEkAbVJ4n2eqYPzmME5S/RHUq07GbqxKDQE+9UJM8X1eYUPFaLxJTa9FG9Vzs5XYgwTLsqjWb0JQoT/H0QtZ8I=
+	t=1747353980; cv=none; b=SL/Xac6AxrNz+LxSXWyy9ZA07TjIJ8tq59yamZHoG/87u9oOBn9xH/zX+SWMMtmqkdcJRVg2aWaeH5mnu74XPgaFdQBip7DHRFgwKlky8yX2hAaGR8eqE6phC7lmfEuBHEf0AGb/hOf4LCYyz4qFHY4DBdOxpLwj3XrWpjBHnow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747353732; c=relaxed/simple;
-	bh=HQjggEL4lxDsMf822lACHrdhTUTWnjJfP6QrLo8Qgkk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hstKfOYmM/O4TUK534KkVchaTy4kBOwg5htnhU58uVRJ7O0XkYb7/JbH7Xwgr/GT2HnCiM3NomrgLfzotT2vk0GRpBts5rQqqb99qcDMJ3Uq1IP0Ihl4cu/SFJesohQaLwPJeFbtb0ezoXk+semxX4x6ZrbCIgtwFtbgSPrP1Wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=ZMJHzbOP; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1747353980; c=relaxed/simple;
+	bh=PXd6ZKf1wKxdAxE/hamYLFxW+kzwB06LPtm3dawlgpg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=EVaXz5XUZ6FBpBvtu5jYI3of0FRxHgY3DqnE1EA1f4/PZym/ceqfql9YgPSZ1LySK86yWhUxCZv2RU5cW/sTcj8SnpRA3JkL1ougCnJm1CqMYSJGkGWe+Yx/ZMdkdsrsvtz7u0tazTfJrQfcseyYNGUwufVhnI41W++aMZxATi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=P8KIdPx+; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZMJHzbOP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747353725;
-	bh=mmXgyAN3+Ih9k1kswJmzCBhT3sacWuVg4PWgfmpOGUM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=ZMJHzbOPuklXA785/exaa2ORGrwSskCIx3OVhnF3z2PWTYcHKGoqEwGl7OQPTqS43
-	 w5VDSHCdjfU/Y6z7XgNqC6cuPJt8ORCtvsF4YdWR1cVdhiST/izbu+zmbsb07resRZ
-	 nd23/hzAZy3hvzqk6A9Ahe1xA1hcu1F5MxVYeFtoQMN3GCwnibzFliFYY1KAR7j8Dt
-	 bgYTZl1FaMHt2K2q4z/X5YtKsrVHrWuYDDtukqIMl7IoHSeWAVdU86+NyAMElnuLRc
-	 SAlNWWt+yZrFFkOHr8n9szV8E3S+l1tTnCtQ3N/AQF84VH8UJez/7ymWgrnYoUl1Cl
-	 s3Mc9FcmOsZJg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zz6hD5GMNz4wbv;
-	Fri, 16 May 2025 10:02:03 +1000 (AEST)
-Date: Fri, 16 May 2025 10:02:01 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Al Viro <viro@ZenIV.linux.org.uk>, Christian Brauner
- <brauner@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, NeilBrown <neil@brown.name>,
- NeilBrown <neilb@suse.de>
-Subject: linux-next: manual merge of the vfs tree with the vfs-brauner tree
-Message-ID: <20250516100201.01a18903@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="P8KIdPx+"
+Received: by linux.microsoft.com (Postfix, from userid 1053)
+	id 6376C2118E4E; Thu, 15 May 2025 17:06:13 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6376C2118E4E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747353973;
+	bh=UiIxusU4/FRQ34gn/l0ohVCyAmep6rrYVr8lFiSWouY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=P8KIdPx+af9l0mR8ZtfpQP2AwvOi818hk0Z/VrvZ1iV1bzS7acehUDZnxKfdZudaG
+	 24Kbjmcna/r92OwCERGP3+MvLLePLu7om0/cep6Aae4NeMK/UPPJVqqjb+t9ieAFvy
+	 GnSG4XEhWAoS3lsGkc/aZF4Y1WJ9fEE6836Hhpzo=
+From: Vijay Balakrishna <vijayb@linux.microsoft.com>
+To: Borislav Petkov <bp@alien8.de>,
+	Tony Luck <tony.luck@intel.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tyler Hicks <code@tyhicks.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	devicetree@vger.kernel.org,
+	Vijay Balakrishna <vijayb@linux.microsoft.com>
+Subject: [PATCH 3/3] EDAC: Add EDAC driver for Cortex A72
+Date: Thu, 15 May 2025 17:06:13 -0700
+Message-Id: <1747353973-4749-4-git-send-email-vijayb@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1747353973-4749-1-git-send-email-vijayb@linux.microsoft.com>
+References: <1747353973-4749-1-git-send-email-vijayb@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/yn+arXEw30JYiENGvFJZqgN";
- protocol="application/pgp-signature"; micalg=pgp-sha256
 
---Sig_/yn+arXEw30JYiENGvFJZqgN
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The driver is designed to support error detection and reporting for Cortex A72
+cores, specifically within their L1 and L2 cache systems.
 
-Hi all,
+Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
+---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Today's linux-next merge of the vfs tree got a conflict in:
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3563492e4eba..1fa51e39e266 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8430,6 +8430,13 @@ F:	Documentation/driver-api/edac.rst
+ F:	drivers/edac/
+ F:	include/linux/edac.h
+ 
++EDAC-A72
++M:	Vijay Balakrishna <vijayb@linux.microsoft.com>
++M:	Tyler Hicks <code@tyhicks.com>
++L:	linux-edac@vger.kernel.org
++S:	Supported
++F:	drivers/edac/edac_a72.c
++
+ EDAC-DMC520
+ M:	Lei Wang <lewan@microsoft.com>
+ L:	linux-edac@vger.kernel.org
+-- 
+2.49.0
 
-  Documentation/filesystems/porting.rst
-
-between commits:
-
-  5741909697a3 ("VFS: improve interface for lookup_one functions")
-  fa6fe07d1536 ("VFS: rename lookup_one_len family to lookup_noperm and rem=
-ove permission check")
-  06c567403ae5 ("Use try_lookup_noperm() instead of d_hash_and_lookup() out=
-side of VFS")
-
-from the vfs-brauner tree and commit:
-
-  006ff7498fe8 ("saner calling conventions for ->d_automount()")
-
-from the vfs tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Documentation/filesystems/porting.rst
-index 3111ef5592f3,749637231773..000000000000
---- a/Documentation/filesystems/porting.rst
-+++ b/Documentation/filesystems/porting.rst
-@@@ -1206,40 -1206,7 +1206,46 @@@ will fail-safe
- =20
-  ---
- =20
- +** mandatory**
- +
- +lookup_one(), lookup_one_unlocked(), lookup_one_positive_unlocked() now
- +take a qstr instead of a name and len.  These, not the "one_len"
- +versions, should be used whenever accessing a filesystem from outside
- +that filesysmtem, through a mount point - which will have a mnt_idmap.
- +
- +---
- +
- +** mandatory**
- +
- +Functions try_lookup_one_len(), lookup_one_len(),
- +lookup_one_len_unlocked() and lookup_positive_unlocked() have been
- +renamed to try_lookup_noperm(), lookup_noperm(),
- +lookup_noperm_unlocked(), lookup_noperm_positive_unlocked().  They now
- +take a qstr instead of separate name and length.  QSTR() can be used
- +when strlen() is needed for the length.
- +
- +For try_lookup_noperm() a reference to the qstr is passed in case the
- +hash might subsequently be needed.
- +
- +These function no longer do any permission checking - they previously
- +checked that the caller has 'X' permission on the parent.  They must
- +ONLY be used internally by a filesystem on itself when it knows that
- +permissions are irrelevant or in a context where permission checks have
- +already been performed such as after vfs_path_parent_lookup()
- +
- +---
- +
- +** mandatory**
- +
- +d_hash_and_lookup() is no longer exported or available outside the VFS.
- +Use try_lookup_noperm() instead.  This adds name validation and takes
- +arguments in the opposite order but is otherwise identical.
- +
- +Using try_lookup_noperm() will require linux/namei.h to be included.
- +
-++---
-++
-+ **mandatory**
-+=20
-+ Calling conventions for ->d_automount() have changed; we should *not* grab
-+ an extra reference to new mount - it should be returned with refcount 1.
-
---Sig_/yn+arXEw30JYiENGvFJZqgN
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgmgHkACgkQAVBC80lX
-0Gy6Ngf5AUT77GdFG1KSp6uODdryA1OCoShWAHr2o7ZTUYlAx7dzZf3LyqaxVRjn
-ff79UcBx2e5S/lKwZiiTqGOqA/hP+mvFPzFFk5qHj4/NL4kJyfaHeHzgy7EedUae
-qkSTuRwWy7IpnpPPqt8wDJPNo/VO52fmg63sGlLwJ9mC+RQrVfgdqF3jQoSzBjNE
-7hU4u5vt7CcPTJQq7vC3omB982XceNuX/J1FKCiDATuMheeaQtdAZZH8ALo4RaP2
-75RU7c3JC3EvYpU999Lp42sR7EOEyr+94eDgM1T8LQfzgHxWkaW2cfmZR6cZVQh3
-p3yTcmUfaPpLsQdKIQOdO2g+Jx9CVA==
-=Nvhf
------END PGP SIGNATURE-----
-
---Sig_/yn+arXEw30JYiENGvFJZqgN--
