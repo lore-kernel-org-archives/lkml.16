@@ -1,108 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00FA21ABAD
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F6F22370C;
+	Fri, 16 May 2025 06:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747376144; cv=none; b=QmTaMClriA0O/02bNmc/jMr613LquADgtpTs3eObyQviNRpIPCa1pr6CyF0XABVdWasTF5OrndakQD2zyRShpFxVADDv3BybVlhDoKaK6r+Vpb+iBBdcck6QVVZCraB1bIj6FoWw9KUiZrlVWCfEZ7tmLJOVBZl3Oqkl8SR6xiY=
+	t=1747376147; cv=none; b=HYOwiA04FW/Y5jvMTdX3KGJIRvZ8X9V32IBhmidt9K/BUVdCAp3fDwsOF9ICtv51K2g7IZMTkBG8yv4a144oB2UL+0XjJBLbtlenMyiKzDC6+6+/dBIKp1PY/okUq+X/T+8jJb6zs3OKMf2cvC9NfaDzZ5Y66r3G0+TO+yAMTVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747376144; c=relaxed/simple;
-	bh=wo76qnl2ug16fNSNnM4HCCjl4p6Lo/EkBUyFwuA6QrY=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=OsFt2Yh4F0FqeQmqjx2c2dizWnjMLntYARzvaGe1bebxGtbSmMDpL09ZuCDmroOk6268SnqlMuw9M8+phtTYgft3nTHKPtqPy2qcmi4X7HCqtjJCjR+WXeTjmxGQupyTnHq+ajuCCykDs0MlZb8DOoCQywHKk7x3HGQxMBY05pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aN5+Xv4L; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747376147; c=relaxed/simple;
+	bh=o7sl/eKMHWRQLpUyjjDcnK4KRSihAngeYfy95qtlTjY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=WitHRWNvw/T7lg+XWkQNp8tl4GnqQtZWL3cmTn3zeXUxZAzzhu4NztvoL6AJp6VCU45qeQf6amMBYkiFpH6fz/qOThgKSEUAKdwYWoFqRnEMDfLxr0kNWsKReOnUzFZqKnzpeV9/dGoSCL6LJS7v1mn17WuN9Ia2nMhX7O99sII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=UVV403ZC; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aN5+Xv4L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747376143; x=1778912143;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wo76qnl2ug16fNSNnM4HCCjl4p6Lo/EkBUyFwuA6QrY=;
-  b=aN5+Xv4LVJKPDgBAxJK7fA+z7X5tFI7q8jLa4Hyg9Obppfi1wrfx0pMd
-   OmeVU4lNUSFkfFp639FVdeFwPHhVB28t1u8upidzrFE7X51J8wpxGTxx2
-   FETf3p2w3lIQDM4/1np0UDIdjn4/C9BrVRbo0JKejnvOPI00EVZUyzUMs
-   8Ns2BdU2fSj9sjnO9j+Oidb62c331aDm95Rjh/JTtSAAGedUifj+rSm6z
-   fKwOVLq/S6qMQrvHKb+1tOD3Ai+ZbeXT3Swp7zi4G29fk70cDArbYMKaz
-   wQgHkUoAKfs2pMfr4tduxr2u+5uwIay/V4rkffi9QO41pP//uWAOOG6U3
-   A==;
-X-CSE-ConnectionGUID: Jg6aVVvERVeuThgXUXwbRQ==
-X-CSE-MsgGUID: L8lIJhmdQ8+EGREsFSXFiw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="48453616"
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="48453616"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 23:15:42 -0700
-X-CSE-ConnectionGUID: XJmBCUOYT92kJhlM2oKYWw==
-X-CSE-MsgGUID: ahJOLKCJSmu2Oa6Hbe6Y7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="138985586"
-Received: from liuweiji-mobl.ccr.corp.intel.com (HELO [10.124.241.206]) ([10.124.241.206])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 23:15:39 -0700
-Message-ID: <7055e215-4292-4556-a481-7cd5ffe117fe@linux.intel.com>
-Date: Fri, 16 May 2025 14:15:37 +0800
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UVV403ZC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747376143;
+	bh=edUTfuj96/EiihfYwnhVHK6EawxU3y9iZFpYsfs+cpc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=UVV403ZCJfVb9OL1/f4HEhbtEXini6DSFCHSpEA5hwBSs7C+2PiRRRYW7LqxzIGwK
+	 KqsqryE8inLLPO2WmMqLlTt/1B+1L0M1oeuELuRS+sUgWImftdzSrwxLlZDWgZVW6H
+	 wFUYCFN6kNztb3s9rU36f4RvBhLFRQ+kLo4FaGttd3kdNItxdHVbwXXcDfKEXJlp/5
+	 RJIUYSnmOru9OjisqtJXnkjMbHtVFoKx4le6XTJzkYA+kq/p8PBraMAYvBE/9+ECn/
+	 s1gPtn56nVrq5xXmBYagRSi3cWRrPpvkIgss5rQZIqdcfIPu82s2gn6Oia/PMhRigT
+	 wLCh2ehVGZq5Q==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZzGzL0229z4wyR;
+	Fri, 16 May 2025 16:15:41 +1000 (AEST)
+Date: Fri, 16 May 2025 16:15:41 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: "Ahmed S. Darwish" <darwi@linutronix.de>, Artem Bityutskiy
+ <artem.bityutskiy@linux.intel.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, "Rafael J. Wysocki"
+ <rafael.j.wysocki@intel.com>
+Subject: linux-next: manual merge of the tip tree with the pm tree
+Message-ID: <20250516161541.0cff29b8@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] iommu/vt-d: Restore context entry setup order for
- aliased devices
-To: Yi Liu <yi.l.liu@intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Kevin Tian <kevin.tian@intel.com>, Aditya Garg <gargaditya08@live.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, kobarity <kobarity@gmail.com>
-References: <20250514060523.2862195-1-baolu.lu@linux.intel.com>
- <1826e96b-15bd-472d-b535-c72b58e06561@intel.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <1826e96b-15bd-472d-b535-c72b58e06561@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/PkQzNwqZ9vflZOL5na_rhzX";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 5/16/2025 2:11 PM, Yi Liu wrote:
-> 
-> On 2025/5/14 14:05, Lu Baolu wrote:
->> Commit 2031c469f816 ("iommu/vt-d: Add support for static identity 
->> domain")
->> changed the context entry setup during domain attachment from a
->> set-and-check policy to a clear-and-reset approach. This inadvertently
->> introduced a regression affecting PCI aliased devices behind PCIe-to-PCI
->> bridges.
-> 
-> I got what the patch does. But just bit confused on the above description.
-> I didn't see the commit 2031c469f816 mentioned any policy thing on the
-> context entry setup.  To me, the problem looks to be that the info->domain
-> is no more accurate to be used for checking if any domain is attached after
-> the above commit. Maybe I missed something. feel free correct me.
+--Sig_/PkQzNwqZ9vflZOL5na_rhzX
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The problem was introduced by below change:
+Hi all,
 
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -3691,11 +3691,9 @@ int prepare_domain_attach_device(struct 
-iommu_domain *domain,
-  static int intel_iommu_attach_device(struct iommu_domain *domain,
-                                      struct device *dev)
-  {
--       struct device_domain_info *info = dev_iommu_priv_get(dev);
-         int ret;
+Today's linux-next merge of the tip tree got a conflict in:
 
--       if (info->domain)
--               device_block_translation(dev);
-+       device_block_translation(dev);
+  drivers/idle/intel_idle.c
 
-And after the introduction of static identity domain, "info->domain ==
-NULL" doesn't mean no domain attaching to device anymore. So this patch
-uses a specific flag bit to indicate this.
+between commit:
 
-Thanks,
-baolu
+  6138f3451516 ("intel_idle: Add C1 demotion on/off sysfs knob")
+
+from the pm tree and commit:
+
+  968e30006807 ("x86/cpuid: Set <asm/cpuid/api.h> as the main CPUID header")
+
+from the tip tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/idle/intel_idle.c
+index 3292bf74e3c2,433d858b7be1..000000000000
+--- a/drivers/idle/intel_idle.c
++++ b/drivers/idle/intel_idle.c
+@@@ -52,8 -51,7 +52,8 @@@
+  #include <linux/notifier.h>
+  #include <linux/cpu.h>
+  #include <linux/moduleparam.h>
+ +#include <linux/sysfs.h>
+- #include <asm/cpuid.h>
++ #include <asm/cpuid/api.h>
+  #include <asm/cpu_device_id.h>
+  #include <asm/intel-family.h>
+  #include <asm/mwait.h>
+
+--Sig_/PkQzNwqZ9vflZOL5na_rhzX
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgm2A0ACgkQAVBC80lX
+0Gxz8wf/bRW2I7R4SlmS9Ra42fkZF67DasMT6To8uIJLDppw1GuldO0MmuFVPUKW
+S594cc8YGS92/3Kazh4splJ1koG4RWde6vTIVSrB+4k6fW2E0bTbh0nQGNmbQQ2D
+3K9NR7tKzPVc8pClKjCQ4WrGkGmKRHtM8NTtIIztGtJMEPZBUBix/x4ZLjJAHvpS
+Wv4Q6kATvr2sZay5O1YjadPhmG/mZ2c+FgDaCvvqQjtLnNMLF5+rNuSeZR+5V2Th
+RB6GQJFy6uCiKSXDFPVg2UZAx4D3JysDLv4CiWn4CAdAEkWQ1j/TBE7AxKBgnsS7
+hpfgO5ZgjFiQISQzLs3rusX1sfW66Q==
+=7Rwr
+-----END PGP SIGNATURE-----
+
+--Sig_/PkQzNwqZ9vflZOL5na_rhzX--
