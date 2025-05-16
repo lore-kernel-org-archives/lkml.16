@@ -1,76 +1,99 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9E0635;
-	Fri, 16 May 2025 04:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D370635;
+	Fri, 16 May 2025 04:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747370134; cv=none; b=cIfc2one1s+wdS3DQ7ncFR98nrzzhJSnzOZEaqIPqGAFPXBThBGznaPgosqM7wOJpjDkC+UH7x+U2Co6Lih+1DcbChPXthKC79PtBWhLsK/Sk7DgQCI4aentSRNvpwfEgy7noZ3kC/48/Sz+2I4Jh+oZI+98LZBB5JZBxEZrQj4=
+	t=1747370169; cv=none; b=oDDXq1Py3QBL+39gSqjqzeDdlxnZMUrbK2wmEVok4M8/vbtrejdB9nM5rov8whXNOyaY6HEsGCY7b8USB8rGiBG57PUVTfjy+B7bNqPadyRphlBfW0b92M2/JP/gjqdqUX+ihfyKfCVWgnmYiAudkqPBZBEbmn3tOUn9MNdPOaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747370134; c=relaxed/simple;
-	bh=4Qu0SXJnde/mV0+isooheXebpYpL/wmYnnV87EyzTHw=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=NcLYUo1yOqsQ48wGWu2hwKmzMPNxrAd2wc4YWwlYwgdIn6k8UIeiyjhI6h3JnxblhrqeeD3XQVxkesAQNRyicP8CYJ+TwebFp+1EHDvPLgHs2lWktwxoIEAK1wljTbLoy1ssE2YAITh0hve7oxHDu+FJVoLZhqWUgYQmQUuX7Qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=A4xNxreE; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1747370169; c=relaxed/simple;
+	bh=hv/SEzp5vdmYJGqPOg3MBRtQXnOQfCzT2cUlNcn6mBc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o8O/LmRUa00bHLS79NU+Kgj2BJd12LGMGYlvt/jlTQl2kfrtUCd2Sc9666qQMeqOKhoHyGyVV5fCgJBw8RuMTyAvVfcvO1uthRJZ+RlNydNmCcE6QwroGMI76b+6Ti5hyqeJnaqXAbAez7nNgO5YsTaCGZoVHekSw8NOzsuFEwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vWZAhmYD; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="A4xNxreE"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54G4Z2sQ3939295
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 15 May 2025 21:35:03 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54G4Z2sQ3939295
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747370103;
-	bh=4Qu0SXJnde/mV0+isooheXebpYpL/wmYnnV87EyzTHw=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=A4xNxreEeTm3o3i76GLEfq9j/jdCBJkMUxhz4WoOJVjte21rsD9+AtsdukrhXCs8W
-	 gPrYnAoDKiDHTH/uWOUhFnX1FMlFERTNRfNxPDyiMzTLdRSPIjNbTZrrI44X4VhP7T
-	 Y410R41M1ofjA1djek/yLke9jA4droUuxbJ1ybBfx9zp6urgM4NB34ZI3UkRVFEIAC
-	 YMWHvPWKwz2G55qoI0KQX/VkmJMbbNaQceNFZyKNrC3nhQoIiLk7M1tpqlRctTCkzX
-	 fQJ7nKl64Fhqs3x5hcgIcBhxGV5dueKcgqnJsnWUCFKk+Pi8j1FJ7QPhhlnIyUaMj8
-	 TQxnpJ0zKp73A==
-Date: Thu, 15 May 2025 21:35:01 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Willy Tarreau <w@1wt.eu>
-CC: enh <enh@google.com>, Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        libc-alpha@sourceware.org, linux-arch@vger.kernel.org
-Subject: Re: Metalanguage for the Linux UAPI
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250516042246.GA12824@1wt.eu>
-References: <feb98a0f-8d17-495c-b556-b4fe19446d5d@zytor.com> <CAJgzZoqUV6gSfgCWbfe6oSH5k9qt30gpJ0epa+w78WQUgTCqNQ@mail.gmail.com> <e4d114e3-984a-482d-a162-03f896cd2053@zytor.com> <20250516034232.GA12472@1wt.eu> <A89533DF-E2F9-4536-A00D-4E3685565E67@zytor.com> <20250516042246.GA12824@1wt.eu>
-Message-ID: <3913922D-765A-4E54-97E0-37B34F3BE86C@zytor.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vWZAhmYD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=D/sL8xKdHNXpp4F48ilzZqzQNOfczYgnjCBdaBL/BJs=; b=vWZAhmYDTGHkGNmstaLxpNJ3nn
+	GGFyOUpiy9u4mMZvGiGfYPEnRS7CvHXF6Sf8U1C9CvwTqbtQqlVa+FlpwjUx6H/xX+20OGd8A5V5D
+	rW1LzHEmzvo2asYburR5sqStp0ihXeyv+XVtn0PXgHT5g7sySC/nWhSR5xjNWh8yif6LG/N8JD/5n
+	+8j+yEP42x9uyO19JCi2fNMkrdvi3GfxvBlQu4a7xiqqX/OK3O1MjrBbifAi/k1IP97LwtwFuB+0C
+	tA8TLoitJ+6QoHybu2A09UklgJ0i2fqcaoYyCapR4BrVnxEF5PW8VasdJSNR4OljTtR5Rks5iIVLK
+	Zlle1N7w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uFmng-00000002Sry-45J2;
+	Fri, 16 May 2025 04:36:00 +0000
+Date: Thu, 15 May 2025 21:36:00 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: netdev@vger.kernel.org, linux-nvme@lists.infradead.org,
+	linux-sctp@vger.kernel.org, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Sagi Grimberg <sagi@grimberg.me>, Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH net-next 09/10] nvme-tcp: use crc32c() and
+ skb_copy_and_crc32c_datagram_iter()
+Message-ID: <aCbAsCkTPMNE6Ogb@infradead.org>
+References: <20250511004110.145171-1-ebiggers@kernel.org>
+ <20250511004110.145171-10-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250511004110.145171-10-ebiggers@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On May 15, 2025 9:22:46 PM PDT, Willy Tarreau <w@1wt=2Eeu> wrote:
->On Thu, May 15, 2025 at 09:17:14PM -0700, H=2E Peter Anvin wrote:
->> Ah yes, nolibc; basically klibc reinvented=2E=2E=2E
->> <ducks and runs>
->
->:-)
->
->That was not the initial intent though as it started separately and outsi=
-de
->the kernel=2E Also the main difference is that klibc is compiled=2E Here =
-we
->only provide includes so that there's nothing to compile before using it=
-=2E
->We'll see when this becomes an issue, but for now it stands fine=2E
->
->But I agree that both pursue very similar goals=2E
->
->Willy
+On Sat, May 10, 2025 at 05:41:09PM -0700, Eric Biggers wrote:
+> +static inline void nvme_tcp_ddgst_init(u32 *crcp)
+>  {
+> +	*crcp = ~0;
+>  }
 
-Certainly=2E I'm being snarky, but I'm not upset :)
+This helper looks really odd.  It coud just return the value, or
+we could just assign it there using a seed define, e.g. this is what
+XFS does:
+
+#define XFS_CRC_SEED    (~(uint32_t)0)
+
+nd that might in fact be worth lifting to common code with a good
+comment on why all-d is used as the typical crc32 seed.
+
+> +static inline void nvme_tcp_ddgst_final(u32 *crcp, __le32 *ddgst)
+>  {
+> +	*ddgst = cpu_to_le32(~*crcp);
+> +}
+
+Just return the big endian version calculated here?
+
+> +static inline void nvme_tcp_hdgst(void *pdu, size_t len)
+> +{
+> +	put_unaligned_le32(~crc32c(~0, pdu, len), pdu + len);
+>  }
+
+This could also use the seed define mentioned above.
+
+>  	recv_digest = *(__le32 *)(pdu + hdr->hlen);
+> -	nvme_tcp_hdgst(queue->rcv_hash, pdu, pdu_len);
+> +	nvme_tcp_hdgst(pdu, pdu_len);
+>  	exp_digest = *(__le32 *)(pdu + hdr->hlen);
+>  	if (recv_digest != exp_digest) {
+
+This code looks really weird, as it samples the on-the-wire digest
+first and then overwrites it.  I'd expect to just check the on-the-wire
+on against one calculated in a local variable.
+
+Sagi, any idea what is going on here?
+
+Otherwise this looks great.  It's always good to get rid of the
+horrendous crypto API calls.
