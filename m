@@ -1,90 +1,228 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2B7288DA;
-	Fri, 16 May 2025 05:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C675921C9F1
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 05:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747374739; cv=none; b=XqNpncfoeoIX2d3dIKLPCwoUE+23vUIlNcTrAM7PDQv1rOqA0dsEj2Y8Mc5dly6TDO4myOxU2gq+8x0+j3hqFkGPIU9ZYhMXpL6OZC9AEymdYxER6V0vrqBWmIOEvL+T18YYVgp2BpDCV2RY84KNr+M9vRnOipdGvNb5ihYJywg=
+	t=1747374803; cv=none; b=XLJ/ZasGctPcAOBTq+11jwxb1aqj8AVNmhVjxZOajz1v+X51nb8PrfNyHh7rHr9LzH0QgDSPQSACwE61OmjF3BE6hFxfS4havgcOF7N3TqNBq5Ixppan9pFd4aJ2+Vjl0Cu06vKGojuR3Obm0X9rB/yZ0LXXapMp3mDhpMxtzPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747374739; c=relaxed/simple;
-	bh=aw08LBXzt6obXPy/8Vm80GRmMC7w0UnW/0OPYmGgpZM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XB3d8h6mbDOqjzgelvLn5iN8jxjElSkbYAClfd5k20i+ZBIq2eLQ1vv45O5ht7EEuTEEb/PcAn3cyFSw4QZI3Kdpna65CVgOI7XDo62yXk9v5vcXF2USg6zoDrIRqR64qyTjVKgAnYttZfKW0THwOkifU0B99EgXelv+zbTPR/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=IlF8fXdI; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1747374803; c=relaxed/simple;
+	bh=BHHZ00gnZS7ihpq7dJV34WMjTuJhnhw98JEfSSkoT04=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FfhXecB/dGvPtJIAhOkyWaM/1CEenBsD6L91lXl1EezuG8qIh68TqXpG1n7SFy39mvC4nK0eQu0FPDFM5Y/S9MYRdVoyLcpkr5TBW7KkF7mvaqHaHEJpo6I0NeWI+RjViPCaxcHZfSpD5uGeGdMy4MJrFS2zY24c+bFRNRzQRGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eX60zNCe; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IlF8fXdI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=K8UXY7rT/l3eeHRyLbzo//dG7vL4enowgat/pk9HleM=; b=IlF8fXdI+7gIwHPmL36dnwQJYA
-	znkqyKppR4lYlt38el9ZKosOASWE4iHCifZDLGO4IKaOSkyU1ITC+e26DPAeKhH1RMgkMZw3ARfCH
-	DrmNFEE7qFu9Q0tkHCgoo736lnxo/sCz8uBEfBZN11TIGyZ8vmobr+0E3yknxwrs+V8gNwiTyPRSW
-	tdciEteZ7NYUsGCD0oZV7Jlj1L3x9FmxkhtF7f1UkbuPzJSlb3XJaAs4cQJtVmHbrJnVr8+IH4YvS
-	jA0a5kfs1Gb8TfuZgadMUSw4541KHSd85QJQehpyvP6fDV8c9lKLF8QjJGvhQCk9hDGANPx5dEu7W
-	p0nW4LuA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uFnzT-00000002XCz-1Gf0;
-	Fri, 16 May 2025 05:52:15 +0000
-Date: Thu, 15 May 2025 22:52:15 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Benjamin Marzinski <bmarzins@redhat.com>
-Cc: Christoph Hellwig <hch@infradead.org>, Hannes Reinecke <hare@suse.de>,
-	Kevin Wolf <kwolf@redhat.com>, Martin Wilck <mwilck@suse.com>,
-	dm-devel@lists.linux.dev, hreitz@redhat.com, mpatocka@redhat.com,
-	snitzer@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
- paths
-Message-ID: <aCbSj9HLGJD1dK3u@infradead.org>
-References: <20250429165018.112999-1-kwolf@redhat.com>
- <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
- <aCIRUwt5BueQmlMZ@redhat.com>
- <aCLe5UT2kfzI96TQ@infradead.org>
- <0340c51e-6f89-4799-b2f1-19c785a19ff2@suse.de>
- <aCLjPLCztuXhgpnA@infradead.org>
- <d2a7fa68-1890-4367-a2ac-59ec220779bd@suse.de>
- <aCLrbz3bRLwUbA8p@infradead.org>
- <aCNzf7MJa-hLQpmv@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eX60zNCe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747374802; x=1778910802;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=BHHZ00gnZS7ihpq7dJV34WMjTuJhnhw98JEfSSkoT04=;
+  b=eX60zNCeaKa6JGerIjxhMOwuF/78QJRPZ/ddl96Zk/G7mA9qLz9Wj3Ve
+   teGflHkYCSjRXLk0Ik0NZifiShUqqWyOZK7tOTdw9aGbWfTXft2Sm4j+9
+   eOXOpQrAXTNTFaQxTT9egQKolu5CFl1Os3if/xoA10o/8eXfr2a01eJJJ
+   0lSg3FxadXBGx2CzDEN3ycP8o0x7+a9wpauWTvBXBfF2E3eHe4hpifRbO
+   C9oXdFCk/cxr3ATqo4NFnI4hP8jBvMw5PYbEWyp47AeaEnKtVx8JIFzpV
+   asf7CwDojrNsgOFw389FeyCW1WaBi53AX8aVoAgR/PHr3G+5n/3NfNZpf
+   Q==;
+X-CSE-ConnectionGUID: PNMhwso6QRC403SbiSskZg==
+X-CSE-MsgGUID: m2Oel/bZQFSbUf2QMUMYbg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49472729"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="49472729"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 22:53:21 -0700
+X-CSE-ConnectionGUID: C0pslPxbSbi9d38dti5owA==
+X-CSE-MsgGUID: eJ/hEvDASgujbdaG5Pb2lQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="143826003"
+Received: from hongyuni-mobl.ccr.corp.intel.com (HELO [10.124.244.46]) ([10.124.244.46])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 22:53:15 -0700
+Message-ID: <2eda498e-e314-4fdd-a647-3748333e5a09@linux.intel.com>
+Date: Fri, 16 May 2025 13:53:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCNzf7MJa-hLQpmv@redhat.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 00/30] x86/resctrl: Move the resctrl filesystem code
+ to /fs/resctrl
+To: James Morse <james.morse@arm.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, fenghuay@nvidia.com
+References: <20250513171547.15194-1-james.morse@arm.com>
+Content-Language: en-US
+From: "Ning, Hongyu" <hongyu.ning@linux.intel.com>
+In-Reply-To: <20250513171547.15194-1-james.morse@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 13, 2025 at 12:29:51PM -0400, Benjamin Marzinski wrote:
-> On Mon, May 12, 2025 at 11:49:19PM -0700, Christoph Hellwig wrote:
-> > On Tue, May 13, 2025 at 08:32:12AM +0200, Hannes Reinecke wrote:
-> > > Reservations and stuff.
-> > 
-> > They should use the kernel persistent reservation API.
+
+
+On 5/14/2025 1:15 AM, James Morse wrote:
+> Changes since v10:
+>   * Changes the online domains check in patch 7 to walk control and monitor domains
+>     separately.
 > 
-> Currently QEMU isn't sending Persistent Reservation requests to
-> multipath devices at all. It's sending those directly to the underlying
-> scsi devices. The issue here is with all the other SCSI commands that
-> users want to send to their SCSI passthrough device that is actually a
-> multipath device on top of a number of SCSI paths. They expect to
-> get back the actual sense and status information, so QEMU needs to
-> send them via SG_IOs.
+> ---
+> 
+> Patches 24-29 should be squashed together when merged, taking the commit message
+> of patch 25. It probably makes sense to drop the tags at that point as patch 25 is
+> generated by a script, and impossible to review. They are posted like this to allow
+> folk to re-generate patch 25, then review the differences on top. Not squashing them
+> together would expose a ftrace build warning during bisect. (but who does that!)
+> 
+> The result  should look like this:
+> git://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git mpam/move_to_fs/v11_final
+> 
+> I can also post the 'final' version to be picked up if that is less work.
+> 
+> 
+> This series is based on rc5, and can be retrieved from:
+> git://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git mpam/move_to_fs/v11
+> 
 
-And that's the problem.  There is plenty of path (I_T_L) nexus
-specific information in SCSI, and just trying to glob it back
-together above means you'll get path specific information in something
-that doesn't claim to be multi-pathing and will get random and
-changing results depending on the underlying path selection.
+Hi James,
 
-> Without reading that sense and status information in kernel, the
-> multipath target can't know if it needs to fail a path and retry the
-> ioctl down a different path.
+sorry for late jumping in.
 
-The blk_status_t has the information to fail over.  But the whole
-idea of implementing SG_IO in dm-mpath or any other stacking layer
-is just really, really dangerous.
+I've tested this v11 patch series (also v10 from last week) based on 
+Intel 5th Gen Xeon server platform, all basic resctrl functions work fine.
+
+Tested-by: Hongyu Ning <hongyu.ning@linux.intel.com>
+
+> With the exception of invalid configurations for the configurable-events, there
+> should be no changes in behaviour caused by this series. It is now possible for
+> throttle_mode to report 'undefined', but no known platform will do this.
+> resctrl_exit() is now something that can be called, but x86 doesn't do this.
+> 
+> The driving pattern is to make things like struct rdtgroup private to resctrl.
+> Features like pseudo-lock aren't going to work on arm64, the ability to disable
+> it at compile time is added.
+> 
+> After this, I can start posting the MPAM driver to make use of resctrl on arm64.
+> (What's MPAM? See the cover letter of the first series. [1])
+> 
+> As ever - bugs welcome,
+> Thanks,
+> 
+> James
+> 
+> [v10] https://lore.kernel.org/all/20250508171858.9197-1-james.morse@arm.com
+> [v9] https://lore.kernel.org/all/20250425173809.5529-1-james.morse@arm.com
+> [v8] https://lore.kernel.org/all/20250411164229.23413-1-james.morse@arm.com
+> [v7] https://lore.kernel.org/all/20250228195913.24895-1-james.morse@arm.com/
+> [v6] https://lore.kernel.org/lkml/20250207181823.6378-1-james.morse@arm.com/
+> [v5] https://lore.kernel.org/r/20241004180347.19985-1-james.morse@arm.com
+> [v4] https://lore.kernel.org/all/20240802172853.22529-1-james.morse@arm.com/
+> [v3] https://lore.kernel.org/r/20240614150033.10454-1-james.morse@arm.com
+> [v2] https://lore.kernel.org/r/20240426150537.8094-1-Dave.Martin@arm.com
+> [v1] https://lore.kernel.org/r/20240321165106.31602-1-james.morse@arm.com
+> [1] https://lore.kernel.org/lkml/20201030161120.227225-1-james.morse@arm.com/
+> 
+> 
+> 
+> Amit Singh Tomar (1):
+>    x86/resctrl: Remove the limit on the number of CLOSID
+> 
+> Dave Martin (3):
+>    x86/resctrl: Squelch whitespace anomalies in resctrl core code
+>    x86/resctrl: Prefer alloc(sizeof(*foo)) idiom in rdt_init_fs_context()
+>    x86/resctrl: Relax some asm #includes
+> 
+> James Morse (22):
+>    x86/resctrl: Rename resctrl_sched_in() to begin with "resctrl_arch_"
+>    x86/resctrl: Check all domains are offline in resctrl_exit()
+>    x86/resctrl: resctrl_exit() teardown resctrl but leave the mount point
+>    x86/resctrl: Drop __init/__exit on assorted symbols
+>    x86/resctrl: Move is_mba_sc() out of core.c
+>    x86/resctrl: Add end-marker to the resctrl_event_id enum
+>    x86/resctrl: Expand the width of domid by replacing mon_data_bits
+>    x86/resctrl: Split trace.h
+>    x86/resctrl: Add 'resctrl' to the title of the resctrl documentation
+>    fs/resctrl: Add boiler plate for external resctrl code
+>    x86/resctrl: Move the filesystem bits to headers visible to fs/resctrl
+>    x86/resctrl: Move enum resctrl_event_id to resctrl.h
+>    x86/resctrl: Fix types in resctrl_arch_mon_ctx_{alloc,free}() stubs
+>    x86/resctrl: Move pseudo lock prototypes to include/linux/resctrl.h
+>    x86/resctrl: Always initialise rid field in rdt_resources_all[]
+>    x86/resctrl: Remove a newline to avoid confusing the code move script
+>    x86,fs/resctrl: Move the resctrl filesystem code to live in
+>      /fs/resctrl
+>    x86,fs/resctrl: Remove duplicated trace header files
+>    fs/resctrl: Remove unnecessary includes
+>    fs/resctrl: Change internal.h's header guard macros
+>    x86,fs/resctrl: Move resctrl.rst to live under
+>      Documentation/filesystems
+>    MAINTAINERS: Add reviewers for fs/resctrl
+> 
+> Yury Norov [NVIDIA] (4):
+>    cpumask: relax cpumask_any_but()
+>    find: add find_first_andnot_bit()
+>    cpumask: add cpumask_{first,next}_andnot() API
+>    x86/resctrl: Optimize cpumask_any_housekeeping()
+> 
+>   Documentation/arch/x86/index.rst              |    1 -
+>   Documentation/filesystems/index.rst           |    1 +
+>   .../{arch/x86 => filesystems}/resctrl.rst     |    6 +-
+>   MAINTAINERS                                   |    5 +-
+>   arch/Kconfig                                  |    8 +
+>   arch/x86/Kconfig                              |   11 +-
+>   arch/x86/include/asm/resctrl.h                |   19 +-
+>   arch/x86/kernel/cpu/resctrl/Makefile          |    2 +
+>   arch/x86/kernel/cpu/resctrl/core.c            |   31 +-
+>   arch/x86/kernel/cpu/resctrl/ctrlmondata.c     |  635 ---
+>   arch/x86/kernel/cpu/resctrl/internal.h        |  399 +-
+>   arch/x86/kernel/cpu/resctrl/monitor.c         |  918 +---
+>   arch/x86/kernel/cpu/resctrl/pseudo_lock.c     | 1092 +----
+>   .../resctrl/{trace.h => pseudo_lock_trace.h}  |   26 +-
+>   arch/x86/kernel/cpu/resctrl/rdtgroup.c        | 4164 +---------------
+>   arch/x86/kernel/process_32.c                  |    2 +-
+>   arch/x86/kernel/process_64.c                  |    2 +-
+>   fs/Kconfig                                    |    1 +
+>   fs/Makefile                                   |    1 +
+>   fs/resctrl/Kconfig                            |   39 +
+>   fs/resctrl/Makefile                           |    6 +
+>   fs/resctrl/ctrlmondata.c                      |  661 +++
+>   fs/resctrl/internal.h                         |  426 ++
+>   fs/resctrl/monitor.c                          |  929 ++++
+>   fs/resctrl/monitor_trace.h                    |   33 +
+>   fs/resctrl/pseudo_lock.c                      | 1105 +++++
+>   fs/resctrl/rdtgroup.c                         | 4353 +++++++++++++++++
+>   include/linux/cpumask.h                       |   75 +-
+>   include/linux/find.h                          |   25 +
+>   include/linux/resctrl.h                       |   36 +-
+>   include/linux/resctrl_types.h                 |   16 +-
+>   lib/find_bit.c                                |   11 +
+>   32 files changed, 7772 insertions(+), 7267 deletions(-)
+>   rename Documentation/{arch/x86 => filesystems}/resctrl.rst (99%)
+>   rename arch/x86/kernel/cpu/resctrl/{trace.h => pseudo_lock_trace.h} (56%)
+>   create mode 100644 fs/resctrl/Kconfig
+>   create mode 100644 fs/resctrl/Makefile
+>   create mode 100644 fs/resctrl/ctrlmondata.c
+>   create mode 100644 fs/resctrl/internal.h
+>   create mode 100644 fs/resctrl/monitor.c
+>   create mode 100644 fs/resctrl/monitor_trace.h
+>   create mode 100644 fs/resctrl/pseudo_lock.c
+>   create mode 100644 fs/resctrl/rdtgroup.c
+> 
 
