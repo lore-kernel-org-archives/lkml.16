@@ -1,217 +1,202 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C5D2222D5
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B995223DC7;
+	Fri, 16 May 2025 06:25:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747376711; cv=none; b=rSOj8R8HE0kWCJzj2T2YM0pLvAZ8zqqtwja2sz/tVzw79VNv6454zLzewJCJEoza3B+Pb4ier2CjpC+TCEaJ09GUvHu2c57HZJMxR2s9UtkTR5xQUdmon+rG/eNvtjGWEReneY+b6zw+sQXcnn5QM3XJ0erfxe4uyy2SUHfIVgg=
+	t=1747376732; cv=none; b=D8mJxsOyPocMNXva2ARfYhF2ntYwgg5IPt88LVxLJt+Iu8Wv1yrErizhe9kr2sTzJsNmSrosnvDKx3izfh4BGGrjMo/DF1ky99er9EWN+2Z3jAAFSf0SPb+6pw5Nc80iVDwBQWYDBb7iAn9q1ghtAXt8UsCvM/WOWvKH0YxLtm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747376711; c=relaxed/simple;
-	bh=xBNVRBo86wBBG26aPJNI4xSOWygpnrGMslQMi+/hOn0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=UuuPOO6hI7WNzVIZenjfb103HFYEA94QTmDHnbISxH8WhOlTaHGy1ISVG9LNOq8qHT7AzrrQXuuTLYMRdDdERvA/SOW2Y/b1Y7f+Es9HXuldwAd5stL/UWyMTKULhheghU/Vu6Tde4mmm2ImOqKzcbfbTtXCqNCqrG0zqkMs9g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZpxiFw1m; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747376732; c=relaxed/simple;
+	bh=lCwb6qvlkqeYb94a9hs2gM7d9RlJ/96IMNwhyjCb+Lg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FpZAZS5hnqpGB3Ki9bgHAfOIZRwmsd+9HXxoOZ/EkmsNhGfIYZffcd2/y5onbD+khc5ksBsMQt710y5tuRGCRNHB2KaMyQRRnp+nRR6z0h3jQRYBhDoLlWW9EKBzEhcKqwvnpDd+qLEXi0p4LGcEbA/+riBhRCQAE9LHztaXS6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dU+m4VKp; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZpxiFw1m"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dU+m4VKp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747376710; x=1778912710;
-  h=date:from:to:cc:subject:message-id;
-  bh=xBNVRBo86wBBG26aPJNI4xSOWygpnrGMslQMi+/hOn0=;
-  b=ZpxiFw1mKBa4mHm2pOMNAJS5qwxZUP65AcuiNn7TsUP8DqmJ8vVmI4tG
-   +iCaOlAGOVNQKwLxclzKoe/QLUIorUwOgRjQ6Zld50aVo+Sqjp/FhSxng
-   cdT4O4G9Y35TA3WCYVEexa6PJ2FZcmFhIhPkkDPeGCoSB63ohzzamPPfy
-   1M7Bh1h8nNys6WPgufpbtXn90SgEA1BOs6eDF90HMkZ0apVaznb3uM/bg
-   BhrfHC9itJV3EfZkmjWqTFjCtQV6xokDRRDzdivN9GEDMZXw26JHkl58i
-   8sGGJRleTy0ufm9chjHA6ube4ICuZQThJGJQWYVHg9V7tEAOKF+1kJEsk
+  t=1747376731; x=1778912731;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lCwb6qvlkqeYb94a9hs2gM7d9RlJ/96IMNwhyjCb+Lg=;
+  b=dU+m4VKpsYEOmF2tRhwwsasbi+d4bXcwQBJmbmm8xWFAE07FTb7sLox7
+   CdhikvXUECvx584l6sdyyHtF18es9beUjms2WUUvYtOKhkSiYPxc6HIAg
+   hnGsW+jKBNt37RVVHH1dZWEBrnA1HsdObAjKn/V5Z+kvupi8ou2hwcz4s
+   Ogep/XLpnSgJjg8hZlavZR+V5RPyUGCzW0AXf+j78VaO7Tt5qhWvODRNH
+   2s0qmFtinpO9S3gomi4lL1UhKNBTJnYDgUds/RPFm6QO8ybkLuKMqMfoj
+   mC1jxzXuKNIx8VkOwfM4Yqm/VFfAmxJWs7bny7agOnGqy5MSonYukM7V1
    A==;
-X-CSE-ConnectionGUID: VH7co+M2TlGIQwyu1YU21Q==
-X-CSE-MsgGUID: NWbSnoNJScCN5Ti+hDW0SQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="59568002"
+X-CSE-ConnectionGUID: X7TKXzZkR92UfBtuNo9Ehg==
+X-CSE-MsgGUID: hQzWwRlkSgyZwfnW1tFQVQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="66741987"
 X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="59568002"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 23:25:09 -0700
-X-CSE-ConnectionGUID: NNoNgw56RtGnResZXDe3qg==
-X-CSE-MsgGUID: +JUOgzWLTZS4ytUAtGn72Q==
+   d="scan'208";a="66741987"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 23:25:30 -0700
+X-CSE-ConnectionGUID: 5Zv+L4k4Q/GDOPGKqyBYEA==
+X-CSE-MsgGUID: u+Y2gDkpS/CZp7vpWOupPA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="161902880"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 15 May 2025 23:25:08 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uFoVF-000J2d-2V;
-	Fri, 16 May 2025 06:25:05 +0000
-Date: Fri, 16 May 2025 14:24:47 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/sgx] BUILD SUCCESS
- ed16618c380c32c68c06186d0ccbb0d5e0586e59
-Message-ID: <202505161438.IBUmwJCJ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+   d="scan'208";a="143831538"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa004.fm.intel.com with ESMTP; 15 May 2025 23:25:24 -0700
+Date: Fri, 16 May 2025 14:19:45 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Zhi Wang <zhiw@nvidia.com>, Alexey Kardashevskiy <aik@amd.com>,
+	kvm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+	sumit.semwal@linaro.org, christian.koenig@amd.com,
+	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
+	vivek.kasireddy@intel.com, dan.j.williams@intel.com,
+	yilun.xu@intel.com, linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
+	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
+	zhenzhong.duan@intel.com, tao1.su@intel.com
+Subject: Re: [RFC PATCH 00/12] Private MMIO support for private assigned dev
+Message-ID: <aCbZATrK7EPyH4qt@yilunxu-OptiPlex-7050>
+References: <aB4tQHmHzHooDeTE@yilunxu-OptiPlex-7050>
+ <20250509184318.GD5657@nvidia.com>
+ <aB7Ma84WXATiu5O1@yilunxu-OptiPlex-7050>
+ <2c4713b0-3d6c-4705-841b-1cb58cd9a0f5@amd.com>
+ <20250512140617.GA285583@nvidia.com>
+ <20250513130315.0158a626.zhiw@nvidia.com>
+ <aCRmoDupzK9zTqFL@yilunxu-OptiPlex-7050>
+ <20250514230502.6b64da7f.zhiw@nvidia.com>
+ <aCYsNSFQJZzHVOFI@yilunxu-OptiPlex-7050>
+ <20250515192127.GA580805@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515192127.GA580805@nvidia.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/sgx
-branch HEAD: ed16618c380c32c68c06186d0ccbb0d5e0586e59  x86/sgx: Prevent attempts to reclaim poisoned pages
+On Thu, May 15, 2025 at 04:21:27PM -0300, Jason Gunthorpe wrote:
+> On Fri, May 16, 2025 at 02:02:29AM +0800, Xu Yilun wrote:
+> > > IMHO, I think it might be helpful that you can picture out what are the
+> > > minimum requirements (function/life cycle) to the current IOMMUFD TSM
+> > > bind architecture:
+> > > 
+> > > 1.host tsm_bind (preparation) is in IOMMUFD, triggered by QEMU handling
+> > > the TVM-HOST call.
+> > > 2. TDI acceptance is handled in guest_request() to accept the TDI after
+> > > the validation in the TVM)
+> > 
+> > I'll try my best to brainstorm and make a flow in ASCII. 
+> > 
+> > (*) means new feature
+> > 
+> > 
+> >       Guest          Guest TSM       QEMU           VFIO            IOMMUFD       host TSM          KVM 
+> >       -----          ---------       ----           ----            -------       --------          ---
+> > 1.                                                                               *Connect(IDE)
+> > 2.                                 Init vdev            
+> 
+> open /dev/vfio/XX as a VFIO action
+> 
+> Then VFIO attaches to IOMMUFD as an iommufd action creating the idev
+> 
+> > 3.                                *create dmabuf   
+> > 4.                                               *export dmabuf                              
+> > 5.                                create memslot
+> > 6.                                                                                              *import dmabuf
+> > 7.                                setup shared DMA
+> > 8.                                                                 create hwpt
+> > 9.                                               attach hwpt
+> > 10.                                  kvm run
+> > 11.enum shared dev
+> > 12.*Connect(Bind)
+> > 13.                  *GHCI Bind
+> > 14.                                  *Bind
+> > 15                                                                 CC viommu alloc
+> > 16.                                                                vdevice allloc
+> 
+> viommu and vdevice creation happen before KVM run. The vPCI function
+> is visible to the guest from the very start, even though it is in T=0
+> mode. If a platform does not require any special CC steps prior to KVM
+> run then it just has a NOP for these functions.
+> 
 
-elapsed time: 732m
+Fine.
 
-configs tested: 140
-configs skipped: 128
+> What you have here is some new BIND operation against the already
+> existing vdevice as we discussed earlier.
+> 
+> > 16.                                              *attach vdev
+> > 17.                                                               *setup CC viommu
+> > 18                                                                 *tsm_bind
+> > 19.                                                                                  *bind
+> > 20.*Attest
+> > 21.               *GHCI get CC info
+> > 22.                                 *get CC info
+> > 23.                                                                *vdev guest req
+> > 24.                                                                                 *guest req
+> > 25.*Accept
+> > 26.             *GHCI accept MMIO/DMA
+> > 27.                                *accept MMIO/DMA
+> > 28.                                                               *vdev guest req
+> > 29.                                                                                 *guest req
+> > 30.                                                                                              *map private MMIO
+> > 31.             *GHCI start tdi
+> > 32.                                *start tdi
+> > 33.                                                               *vdev guest req
+> > 34.                                                                                 *guest req
+> 
+> This seems reasonable you want to have some generic RPC scheme to
+> carry messages fro mthe VM to the TSM tunneled through the iommufd
+> vdevice (because the vdevice has the vPCI ID, the KVM ID, the VIOMMU
+> id and so on)
+> 
+> > 35.Workload...
+> > 36.*disconnect(Unbind)
+> > 37.              *GHCI unbind
+> > 38.                                *Unbind
+> > 39.                                            *detach vdev
+> 
+> unbind vdev. vdev remains until kvm is stopped.
+> 
+> > 40.                                                               *tsm_unbind
+> > 41.                                                                                 *TDX stop tdi
+> > 42.                                                                                 *TDX disable mmio cb
+> > 43.                                            *cb dmabuf revoke
+> > 44.                                                                                               *unmap private MMIO
+> > 45.                                                                                 *TDX disable dma cb
+> > 46.                                                              *cb disable CC viommu
+> 
+> I don't know why you'd disable a viommu while the VM is running,
+> doesn't make sense.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Here it means remove the CC setup for viommu, shared setup is still
+kept.
 
-tested configs:
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    clang-19
-arc                              allyesconfig    clang-19
-arc                                 defconfig    gcc-14.2.0
-arc                   randconfig-001-20250516    gcc-9.5.0
-arc                   randconfig-002-20250516    gcc-9.5.0
-arm                              allmodconfig    clang-19
-arm                              allyesconfig    clang-19
-arm                                 defconfig    gcc-14.2.0
-arm                            mps2_defconfig    clang-21
-arm                   randconfig-001-20250516    gcc-9.5.0
-arm                   randconfig-002-20250516    gcc-9.5.0
-arm                   randconfig-003-20250516    gcc-9.5.0
-arm                   randconfig-004-20250516    gcc-9.5.0
-arm64                            allmodconfig    clang-19
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250516    gcc-9.5.0
-arm64                 randconfig-002-20250516    gcc-9.5.0
-arm64                 randconfig-003-20250516    gcc-9.5.0
-arm64                 randconfig-004-20250516    gcc-9.5.0
-csky                                defconfig    gcc-14.2.0
-hexagon                             defconfig    gcc-14.2.0
-i386                             alldefconfig    clang-21
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    clang-20
-i386                             allyesconfig    clang-20
-i386        buildonly-randconfig-001-20250516    clang-20
-i386        buildonly-randconfig-002-20250516    clang-20
-i386        buildonly-randconfig-002-20250516    gcc-12
-i386        buildonly-randconfig-003-20250516    clang-20
-i386        buildonly-randconfig-004-20250516    clang-20
-i386        buildonly-randconfig-005-20250516    clang-20
-i386        buildonly-randconfig-006-20250516    clang-20
-i386        buildonly-randconfig-006-20250516    gcc-12
-i386                                defconfig    clang-20
-i386                  randconfig-001-20250516    gcc-12
-i386                  randconfig-002-20250516    gcc-12
-i386                  randconfig-003-20250516    gcc-12
-i386                  randconfig-004-20250516    gcc-12
-i386                  randconfig-005-20250516    gcc-12
-i386                  randconfig-006-20250516    gcc-12
-i386                  randconfig-007-20250516    gcc-12
-i386                  randconfig-011-20250516    gcc-12
-i386                  randconfig-012-20250516    gcc-12
-i386                  randconfig-013-20250516    gcc-12
-i386                  randconfig-014-20250516    gcc-12
-i386                  randconfig-015-20250516    gcc-12
-i386                  randconfig-016-20250516    gcc-12
-i386                  randconfig-017-20250516    gcc-12
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-m68k                          sun3x_defconfig    clang-21
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                          ath79_defconfig    clang-21
-mips                          eyeq6_defconfig    clang-21
-nios2                               defconfig    gcc-14.2.0
-openrisc                          allnoconfig    clang-21
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    clang-21
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-12
-parisc64                            defconfig    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    clang-21
-powerpc                          allyesconfig    gcc-14.2.0
-powerpc                     skiroot_defconfig    clang-21
-riscv                            allmodconfig    gcc-14.2.0
-riscv                             allnoconfig    clang-21
-riscv                            allyesconfig    gcc-14.2.0
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20250516    gcc-7.5.0
-riscv                 randconfig-002-20250516    gcc-7.5.0
-s390                             allmodconfig    gcc-14.2.0
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20250516    gcc-7.5.0
-s390                  randconfig-002-20250516    gcc-7.5.0
-sh                               allmodconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-12
-sh                    randconfig-001-20250516    gcc-7.5.0
-sh                    randconfig-002-20250516    gcc-7.5.0
-sh                            shmin_defconfig    clang-21
-sh                              ul2_defconfig    clang-21
-sparc                            allmodconfig    gcc-14.2.0
-sparc                 randconfig-001-20250516    gcc-7.5.0
-sparc                 randconfig-002-20250516    gcc-7.5.0
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20250516    gcc-7.5.0
-sparc64               randconfig-002-20250516    gcc-7.5.0
-um                                allnoconfig    clang-21
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250516    gcc-7.5.0
-um                    randconfig-002-20250516    gcc-7.5.0
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250516    clang-20
-x86_64      buildonly-randconfig-001-20250516    gcc-12
-x86_64      buildonly-randconfig-002-20250516    gcc-12
-x86_64      buildonly-randconfig-003-20250516    clang-20
-x86_64      buildonly-randconfig-003-20250516    gcc-12
-x86_64      buildonly-randconfig-004-20250516    clang-20
-x86_64      buildonly-randconfig-004-20250516    gcc-12
-x86_64      buildonly-randconfig-005-20250516    gcc-12
-x86_64      buildonly-randconfig-006-20250516    gcc-12
-x86_64                              defconfig    clang-20
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20250516    gcc-12
-x86_64                randconfig-002-20250516    gcc-12
-x86_64                randconfig-003-20250516    gcc-12
-x86_64                randconfig-004-20250516    gcc-12
-x86_64                randconfig-005-20250516    gcc-12
-x86_64                randconfig-006-20250516    gcc-12
-x86_64                randconfig-007-20250516    gcc-12
-x86_64                randconfig-008-20250516    gcc-12
-x86_64                randconfig-071-20250516    clang-20
-x86_64                randconfig-072-20250516    clang-20
-x86_64                randconfig-073-20250516    clang-20
-x86_64                randconfig-074-20250516    clang-20
-x86_64                randconfig-075-20250516    clang-20
-x86_64                randconfig-076-20250516    clang-20
-x86_64                randconfig-077-20250516    clang-20
-x86_64                randconfig-078-20250516    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-12
-x86_64                         rhel-9.4-kunit    gcc-12
-x86_64                           rhel-9.4-ltp    gcc-12
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                randconfig-001-20250516    gcc-7.5.0
-xtensa                randconfig-002-20250516    gcc-7.5.0
+It is still because of the TDX enforcement on Unbind :(
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  1. STOP TDI via TDISP message STOP_INTERFACE
+  2. Private MMIO unmap from Secure EPT
+  3. Trusted Device Context Table cleanup for the TDI
+  4. TDI ownership reclaim and metadata free
+
+It is doing Step 3 so that the TDI could finally been removed.
+
+Please also note I does CC viommu setup on "Bind".
+
+Thanks,
+Yilun
+
+> 
+> > 47.                                                                                 *TDX tdi free
+> > 48.                                                                                 *enable mmio
+> > 49.                                            *cb dmabuf recover
+> > 50.workable shared dev
+> 
+> This is a nice chart, it would be good to see a comparable chart for
+> AMD and ARM
+> 
+> Jason
