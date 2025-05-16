@@ -1,143 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9132230BFF;
-	Fri, 16 May 2025 09:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732E9230BF9;
+	Fri, 16 May 2025 09:53:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747389203; cv=none; b=mXHtGldJi8xcTQD3JOHbPvBzL9zqKikxv/0BQpihOU8ENH8dWgTZGV+wezJ7t1SBsCR++C8obCyR9/rRhD3igFPwNnezE/byxEop0OXqIHy6hulSnnrhOIZseATTqxTsB/dYdATgpwogshCABm28t1KQK/mF1wfDyK6Tnl37UiY=
+	t=1747389220; cv=none; b=nTMT7DfGW9qgv/1uoXQlVhOSiJ99CE4fDZ76elFWAxoB0lBkEb3BS9SzRPOMPnPlWMZMbFNyq+PNAdE0S3x3J6+24UBMX26WQVOL8kyhYeKaXGroSf3/EgfJ8YeXCUyJzVUxHNzpafKdNf6JgqBv/ZBBG5cmAByEwMMGTEUTi6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747389203; c=relaxed/simple;
-	bh=csnhmuPBMvbHmy4ivocukJqDYD46AL3QBOXgr7aDbJs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HuXdaiMFjjdZ45NTLiT7JHROiFKra189K6pUuPCfpku5GH9uQTyt+0G9JpXw1aFxEtI2kw2MGUPlD4z/O2opAUs2u6LY5OKrqOxFjzrayUPM6xybTNFDvLOxjKemFtdx//PiJ+cmw54kJ4r0UZpGm+jWLGi6I/uACqFUhDIsXhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hr6iignh; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1747389220; c=relaxed/simple;
+	bh=kP/eP9CyFOzd2cYwS1iAvjzqmb3Swb4YgY0fKvf6BG4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EqScr49Xe/BcM9JfQ4a6xhM6c3cdZ+rNZXq/DUQGwV0i3JUTGCgy8jEpo0OB4qU4cJ0vc82OzMPc/ln110UHKNUud6lwQPsJyzTdRAmY9qHVjiWH5pgeF3qZfz9IEv0WuY2LFHcSbiI1z5lf1azLm7EcFtzjwdAk0RLFrwmcSRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V/oHqzV5; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hr6iignh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V/oHqzV5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747389202; x=1778925202;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=csnhmuPBMvbHmy4ivocukJqDYD46AL3QBOXgr7aDbJs=;
-  b=Hr6iignhG/XfA7NB9Hr/nklAcil7H1rvamcTmo4xoLUSYWSJNAjsbSaB
-   282AKOFzWJeeIfHEf/oCb+FKwQPpuoY8KCDAkyXqpndwQapczW0GJHtwJ
-   /OzH/cAd+bfT6A7IBNNgRncgdqmOfu8IV7TxJgqp0UT94Hx4Xi/YEdJGf
-   iqLeQtbZJe1QNgpCfxR6GdZBMX71NsWFys12UGNufqnVRLNaKuBmxyqJc
-   Z6I2DOH4/iMJpnJ+zHaBIbYVkq+r6tEdCjJHbZvZ6rSCVA/00A6Y3M3FH
-   HDQA15pMpQacTZIwSrQ51Bmugdle29yHG1fsPZAMazhv2g9LLa9tRGLgx
-   g==;
-X-CSE-ConnectionGUID: rC58i1ivRXemZET3zqXHfw==
-X-CSE-MsgGUID: Rct6MJ3xToKs5fUeWTnvzw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="60693739"
+  t=1747389220; x=1778925220;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kP/eP9CyFOzd2cYwS1iAvjzqmb3Swb4YgY0fKvf6BG4=;
+  b=V/oHqzV52NKBVvlGTDMPTpZy62BP/eUJb3X6/PxI/qi/jyvHevHkO51i
+   oamcrZkz5dDeZhnLF+xzo+Oiw0aJNJ4gsl3cFe/7CGkuYrAb3BAlSlngd
+   QTxHGy7yzcEBCwzhBVO1qECriJvzumTrp4PddWbgWfJzn4PzVFjohk8dJ
+   6VAvc25DDT2OBti6gp4LFrFvfXbkSovMODiRofgUjk1iJvEuZmQAHnY6a
+   P4lsvXUcUo8Kjy0capTrKjBdUkomlz4CRpGHHTfQaX6s9NgbmbUvD8ZZU
+   x9xi4Doi8TS5NMTR6eJz5IQK+RAwix+os9gW15/VYTlAYoZWjQCjaVngN
+   Q==;
+X-CSE-ConnectionGUID: YjI2E9wlT/OtQHt61wxyMA==
+X-CSE-MsgGUID: q1Lj2t4fRu+ah4m7UMVUEw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="60744157"
 X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="60693739"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:53:21 -0700
-X-CSE-ConnectionGUID: evRQ209LQkSgZtAo94MheQ==
-X-CSE-MsgGUID: B5U9kBc4RGKG9e2lP9j1ZQ==
+   d="scan'208";a="60744157"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:53:39 -0700
+X-CSE-ConnectionGUID: vU9s/vPYSHaj3tH7jQvyTw==
+X-CSE-MsgGUID: KhfnSGfJRCSRgwtVcV3uKw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="139127901"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP; 16 May 2025 02:53:18 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id C0F5B23F; Fri, 16 May 2025 12:53:16 +0300 (EEST)
+   d="scan'208";a="161957707"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:53:37 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uFrl1-000000026UO-2Wef;
+	Fri, 16 May 2025 12:53:35 +0300
+Date: Fri, 16 May 2025 12:53:35 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	linux-gpio@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Alex Shi <alexs@kernel.org>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	Dongliang Mu <dzm91@hust.edu.cn>,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH v1 1/1] gpiolib-acpi: Update file references in the Documentation and MAINTAINERS
-Date: Fri, 16 May 2025 12:52:34 +0300
-Message-ID: <20250516095306.3417798-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the gpio-intel tree
+Message-ID: <aCcLH25PSNqtPeSk@smile.fi.intel.com>
+References: <20250516193436.09bdf8cc@canb.auug.org.au>
+ <aCcHKK8FflYRhx2m@smile.fi.intel.com>
+ <20250516194237.03371ba7@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250516194237.03371ba7@canb.auug.org.au>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-The recent changes in the gpiolib-acpi.c need also updates in the Documentation
-and MAINTAINERS. Do the necessary changes here.
+On Fri, May 16, 2025 at 07:42:37PM +1000, Stephen Rothwell wrote:
+> On Fri, 16 May 2025 12:36:40 +0300 Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > On Fri, May 16, 2025 at 07:34:36PM +1000, Stephen Rothwell wrote:
+> > > Hi all,
+> > > 
+> > > After merging the gpio-intel tree, today's linux-next build (htmldocs)
+> > > failed like this:
+> > > 
+> > > Error: Cannot open file /home/sfr/next/next/drivers/gpio/gpiolib-acpi.c
+> > > 
+> > > Caused by commit
+> > > 
+> > >   babb541af627 ("gpiolib: acpi: Move quirks to a separate file")
+> > > 
+> > > I have to run
+> > > 
+> > > make KERNELDOC=$(pwd)/scripts/kernel-doc.pl htmldocs
+> > > 
+> > > as the newer Python version dies without a useful error :-(  
+> > 
+> > Thanks for the report! And can you share the output of the above?
 
-Fixes: babb541af627 ("gpiolib: acpi: Move quirks to a separate file")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Closes: https://lore.kernel.org/r/20250516193436.09bdf8cc@canb.auug.org.au
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- Documentation/driver-api/gpio/index.rst                    | 2 +-
- Documentation/translations/zh_CN/driver-api/gpio/index.rst | 2 +-
- MAINTAINERS                                                | 2 +-
- drivers/platform/x86/intel/int0002_vgpio.c                 | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+I have just sent 20250516095306.3417798-1-andriy.shevchenko@linux.intel.com, it
+should fix the error here.
 
-diff --git a/Documentation/driver-api/gpio/index.rst b/Documentation/driver-api/gpio/index.rst
-index 34b57cee3391..43f6a3afe10b 100644
---- a/Documentation/driver-api/gpio/index.rst
-+++ b/Documentation/driver-api/gpio/index.rst
-@@ -27,7 +27,7 @@ Core
- ACPI support
- ============
- 
--.. kernel-doc:: drivers/gpio/gpiolib-acpi.c
-+.. kernel-doc:: drivers/gpio/gpiolib-acpi-core.c
-    :export:
- 
- Device tree support
-diff --git a/Documentation/translations/zh_CN/driver-api/gpio/index.rst b/Documentation/translations/zh_CN/driver-api/gpio/index.rst
-index e4d54724a1b5..f64a69f771ca 100644
---- a/Documentation/translations/zh_CN/driver-api/gpio/index.rst
-+++ b/Documentation/translations/zh_CN/driver-api/gpio/index.rst
-@@ -42,7 +42,7 @@ ACPI支持
- 
- 该API在以下内核代码中:
- 
--drivers/gpio/gpiolib-acpi.c
-+drivers/gpio/gpiolib-acpi-core.c
- 
- 设备树支持
- ==========
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 96b827049501..d1290bbb6ac6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10105,7 +10105,7 @@ L:	linux-acpi@vger.kernel.org
- S:	Supported
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git
- F:	Documentation/firmware-guide/acpi/gpio-properties.rst
--F:	drivers/gpio/gpiolib-acpi.c
-+F:	drivers/gpio/gpiolib-acpi-*.c
- F:	drivers/gpio/gpiolib-acpi.h
- 
- GPIO AGGREGATOR
-diff --git a/drivers/platform/x86/intel/int0002_vgpio.c b/drivers/platform/x86/intel/int0002_vgpio.c
-index 3b48cd7a4075..b7b98343fdc6 100644
---- a/drivers/platform/x86/intel/int0002_vgpio.c
-+++ b/drivers/platform/x86/intel/int0002_vgpio.c
-@@ -23,7 +23,7 @@
-  * ACPI mechanisms, this is not a real GPIO at all.
-  *
-  * This driver will bind to the INT0002 device, and register as a GPIO
-- * controller, letting gpiolib-acpi.c call the _L02 handler as it would
-+ * controller, letting gpiolib-acpi call the _L02 handler as it would
-  * for a real GPIO controller.
-  */
- 
+> This is already being discussed in another thread.
+> 
+> https://lore.kernel.org/all/20250508184839.656af8f6@canb.auug.org.au/
+
+
+
 -- 
-2.47.2
+With Best Regards,
+Andy Shevchenko
+
 
