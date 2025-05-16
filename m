@@ -1,64 +1,30 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D6A28032B
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 23:53:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E71ED231856;
+	Fri, 16 May 2025 23:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747439620; cv=none; b=ZADPVfx4Q4wlOaKEYHJtQ9MmsKUs82bwGdSTtdHnXGdbfiFVGzk2wQd3eDE5UX0ziitvmDGT+9ZoCe+8MjzGzOxj+c06a4ViicXFmw2Ogel+jXih6lRmIPtBbsh5Jh/n3N7t52meEqiVSqKKAIAUKJ6So1AfOf0v/brTfnHifU4=
+	t=1747439705; cv=none; b=DQIcXEGkahqz+U7VSY+GidFD/Jr4N2cI0yOfX1EdqR7FS0CyOFldImGRa4sO6HybYD6m0ZD4a4o6KbuHe0INtEig0sTNRwzOR6P5sf4gyijxPVabzGt+VlpiaMn5BKAcgQjHYIQQILJwUdTWPFhPdUAT49//lziS70S68pNXbuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747439620; c=relaxed/simple;
-	bh=Jin3yk6dEqe8GxRTxVuJZ/xNO3DOAiT60Ttp+cflGnA=;
+	s=arc-20240116; t=1747439705; c=relaxed/simple;
+	bh=CfqjHVwYMYg0l/h6PF8KpBfyUMOE57166y6yYuTN2a8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bLy51wUOFt14UYmMTuSl5JZcHrpEHYgVo3qMj8uGrRXIqRuUdjnkA5stxPXVQASbozXjMnMSN4gERLeNHNKO9CCaDIZ+evoQgC4P+AYAspofDHZzY0HT5ymNiy2vvFXInHT4xuwzj99ZnIK00zFjz/kNHfClEatkXdMmP/LSCEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ss1zWcoL; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ss1zWcoL"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-232054aa4ebso446685ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:53:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747439617; x=1748044417; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+X0sEMByIYCJp9C2VC0Yrhh05RdaqRYJfaKNmUnn3Dg=;
-        b=ss1zWcoLjm+yyyGpvkpDHNG2ZmRtR4JDINtig19pEH+jr6OVvg+yICzTbzobfg0yty
-         IWPWCxzQf3+c8YM9xjF25PLmrEcT8SCrKnQbAcWIftx2eepjmn2iJ0Sb2RcYmIyOhsrK
-         QN/1xjGYisF0zUIsARxu4ajVnhe4llRazcB5+h21G1Cw8LWI/yI/aqtZbScM7/HNY1Ly
-         2naChlrZ9x4UmrL+Nwj+hen6EKge2ARk1HeRVzlJAak50MYf9LvKVr4/njfNAmQWeHb5
-         VMhnhG7HEZkyxAeHQP96dKWhFhEG+Y+jpkmd3QdNvPk0m3bceEBdRP2s6ZLCz4rG0J5j
-         J2OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747439617; x=1748044417;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+X0sEMByIYCJp9C2VC0Yrhh05RdaqRYJfaKNmUnn3Dg=;
-        b=tmvJwyPL59rV+WPubG8Da/np1kEh46AxVqX5yegYxK5wCQvinJWYQywGizg2go1Wx0
-         Lc29Nw5uUBpEIp6E1bS/Cx3n8oBacKRg3hAFZW0VpmWcTGaLnuJDRVQzQxDCpNF6jY2C
-         Hh1mEXjamUDMvYYuCPsmW8k2uPz8r11IYRsv/sI55DqZS5Bh2WqmWIPwKfiIR//XRkSW
-         ebBIXcJg4BdUv5F2lFeoLEohUeM0MEH0JcFwTT9vTa7RdQ28jXIf1CzLtUUlN2mGcSPd
-         ofQUCjO5V263ElQ/FV8HTeHxf4sOza/0nu/p3SrwYiOpe59C1Ie7W4yQl+pw+V6g8ZfA
-         Ao8w==
-X-Forwarded-Encrypted: i=1; AJvYcCWbtMFcnAQwhUt2/qGMVvAZ7qAjMRqW3vnJaofu8LDdHf0l/dzaNON6JsmvN8zGGN2i+leb1PFCgCVTniw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzop8rFVr9JNu4VL7QR0rz66KPNhNbQJjG2d8+xmkdOhxYVKOR/
-	qd82YapxNzzRM2G4jv5NH8/UKS0T0sRO0XQFZG9EH24nLO+Nf2ZLC6oPrvfls4Se9KU=
-X-Gm-Gg: ASbGnctchQHq7VOxHWdYM8tpaeka6gVjP3eT5fglG3TIqWdPGHsqMcOCghnUktSFff3
-	3GEGEN/E19qC6PJ3s4nTB2UfENmuzKC2DJQiTt5WgEByalDk7D/m7+q2qGfI4NuLT5DCAnExAD5
-	xjQCZpho/+D6Hiq1CTvUMnQ2d+v228/6r8W/jm8YWcnjE66ERjh67cQplm4PJ3pbzdShZ/aJRae
-	FlNyqV5nCsScxUfi51jpceVhROauJrWUYHeLdmxPh3ajAPmelrYc3V8sC4Rg3l9Kw2xR4hPODDB
-	koFogKvVe88/YeSbfnuGU1aXs7+LZhwyGEwST2p3bepypD0pUeQ2
-X-Google-Smtp-Source: AGHT+IFRzWoflz3ycvTOCP0vPm7ds3Ft1eoTh6/GYuCA/U8J5Mo9M+nIUUI5eWrfofGnl4RnIgS3/Q==
-X-Received: by 2002:a17:903:f8d:b0:21f:1549:a563 with SMTP id d9443c01a7336-231d43d56ccmr63299065ad.2.1747439616878;
-        Fri, 16 May 2025 16:53:36 -0700 (PDT)
-Received: from [192.168.1.23] ([50.34.76.202])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ac95e1sm19998765ad.20.2025.05.16.16.53.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 May 2025 16:53:36 -0700 (PDT)
-Message-ID: <386489f5-e814-403f-9997-849e55345210@rivosinc.com>
-Date: Fri, 16 May 2025 16:53:34 -0700
+	 In-Reply-To:Content-Type; b=V8IljFLVgItpe9UfaPQbXOll3PrvUqhN0cITOQnvN5qc+OllrNHImuRaKd9fDd2AeZfZAAy3oCV23u98VmJ2x9cT2H3vcQV8+4YosWXgnJV/CO3hN21lR4fOJkFJE8wxQJeVNwyXiqEv+FcClncJydhvAkmQ5h9f7nzhGH2ANm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZzkT53QB4z4f3jd5;
+	Sat, 17 May 2025 07:54:33 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 5983D1A1382;
+	Sat, 17 May 2025 07:54:58 +0800 (CST)
+Received: from [10.174.176.88] (unknown [10.174.176.88])
+	by APP4 (Coremail) with SMTP id gCh0CgAHa19P0CdoeQWHMg--.3231S3;
+	Sat, 17 May 2025 07:54:58 +0800 (CST)
+Message-ID: <b3d6db6f-61d8-498a-b90c-0716a64f7528@huaweicloud.com>
+Date: Sat, 17 May 2025 07:54:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,110 +32,120 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] RISC-V: KVM: Remove scounteren initialization
-To: Anup Patel <anup@brainfault.org>
-Cc: Atish Patra <atishp@atishpatra.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, kvm@vger.kernel.org,
- kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250515-fix_scounteren_vs-v3-1-729dc088943e@rivosinc.com>
- <CAAhSdy38s0WWc7Cv4KF+0_pGC3xKU3_PLgeedz7Pu04-xKm4jw@mail.gmail.com>
-Content-Language: en-US
-From: Atish Patra <atishp@rivosinc.com>
-In-Reply-To: <CAAhSdy38s0WWc7Cv4KF+0_pGC3xKU3_PLgeedz7Pu04-xKm4jw@mail.gmail.com>
+Subject: Re: [PATCH] fs: Rename the parameter of mnt_get_write_access()
+To: Jan Kara <jack@suse.cz>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ yangerkun@huawei.com
+References: <20250516032147.3350598-1-wozizhi@huaweicloud.com>
+ <vtfnncganindq4q7t4icfaujkgejlbd7repvurpjx6nwf6i7zp@hr44m22ij4qf>
+From: Zizhi Wo <wozizhi@huaweicloud.com>
+In-Reply-To: <vtfnncganindq4q7t4icfaujkgejlbd7repvurpjx6nwf6i7zp@hr44m22ij4qf>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAHa19P0CdoeQWHMg--.3231S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxXFy8tw43Cr17JF18Xr4Utwb_yoW5Aw4kpr
+	WSgFy8Ka1xJry29rnFya9xCa4fW3ykKrZrK34rWw1avrZ8Zr1Sga4vgr4S9F1kAr9rA34x
+	uF40y3s3ur1ayrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUymb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UK2NtUUUUU=
+X-CM-SenderInfo: pzr2x6tkl6x35dzhxuhorxvhhfrp/
 
 
-On 5/16/25 5:18 AM, Anup Patel wrote:
-> On Fri, May 16, 2025 at 4:41 AM Atish Patra <atishp@rivosinc.com> wrote:
->> Scounteren CSR controls the direct access the hpmcounters and cycle/
->> instret/time from the userspace. It's the supervisor's responsibility
->> to set it up correctly for it's user space. They hypervisor doesn't
->> need to decide the policy on behalf of the supervisor.
+
+在 2025/5/16 18:31, Jan Kara 写道:
+> On Fri 16-05-25 11:21:47, Zizhi Wo wrote:
+>> From: Zizhi Wo <wozizhi@huawei.com>
 >>
->> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+>> Rename the parameter in mnt_get_write_access() from "m" to "mnt" for
+>> consistency between declaration and implementation.
+>>
+>> Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
+> 
+> I'm sorry but this is just a pointless churn. I agree the declaration and
+> implementation should better be consistent (although in this particular
+> case it isn't too worrying) but it's much easier (and with much lower
+> chance to cause conflicts) to just fixup the declaration.
+> 
+> 								Honza
+
+Yes, I had considered simply fixing the declaration earlier. However, in
+the include/linux/mount.h file, similar functions like
+"mnt_put_write_access" use "mnt" as the parameter name rather than "m",
+just like "mnt_get_write_access". So I chose to modify the function
+implementation directly, although this resulted in a larger amount of
+changes. So as you can see, for simplicity, I will directly update the
+parameter name in the function declaration in the second version.
+
+Thanks,
+Zizhi Wo
+
+> 
 >> ---
->> Changes in v3:
->> - Removed the redundant declaration
->> - Link to v2: https://lore.kernel.org/r/20250515-fix_scounteren_vs-v2-1-1fd8dc0693e8@rivosinc.com
+>>   fs/namespace.c | 14 +++++++-------
+>>   1 file changed, 7 insertions(+), 7 deletions(-)
 >>
->> Changes in v2:
->> - Remove the scounteren initialization instead of just setting the TM bit.
->> - Link to v1: https://lore.kernel.org/r/20250513-fix_scounteren_vs-v1-1-c1f52af93c79@rivosinc.com
->> ---
->>   arch/riscv/kvm/vcpu.c | 4 ----
->>   1 file changed, 4 deletions(-)
->>
->> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
->> index 60d684c76c58..9bfaae9a11ea 100644
->> --- a/arch/riscv/kvm/vcpu.c
->> +++ b/arch/riscv/kvm/vcpu.c
->> @@ -111,7 +111,6 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+>> diff --git a/fs/namespace.c b/fs/namespace.c
+>> index 1b466c54a357..b1b679433ab3 100644
+>> --- a/fs/namespace.c
+>> +++ b/fs/namespace.c
+>> @@ -483,7 +483,7 @@ static int mnt_is_readonly(struct vfsmount *mnt)
+>>    */
+>>   /**
+>>    * mnt_get_write_access - get write access to a mount without freeze protection
+>> - * @m: the mount on which to take a write
+>> + * @mnt: the mount on which to take a write
+>>    *
+>>    * This tells the low-level filesystem that a write is about to be performed to
+>>    * it, and makes sure that writes are allowed (mnt it read-write) before
+>> @@ -491,13 +491,13 @@ static int mnt_is_readonly(struct vfsmount *mnt)
+>>    * frozen. When the write operation is finished, mnt_put_write_access() must be
+>>    * called. This is effectively a refcount.
+>>    */
+>> -int mnt_get_write_access(struct vfsmount *m)
+>> +int mnt_get_write_access(struct vfsmount *mnt)
 >>   {
->>          int rc;
->>          struct kvm_cpu_context *cntx;
->> -       struct kvm_vcpu_csr *reset_csr = &vcpu->arch.guest_reset_csr;
+>> -	struct mount *mnt = real_mount(m);
+>> +	struct mount *m = real_mount(mnt);
+>>   	int ret = 0;
+>>   
+>>   	preempt_disable();
+>> -	mnt_inc_writers(mnt);
+>> +	mnt_inc_writers(m);
+>>   	/*
+>>   	 * The store to mnt_inc_writers must be visible before we pass
+>>   	 * MNT_WRITE_HOLD loop below, so that the slowpath can see our
+>> @@ -505,7 +505,7 @@ int mnt_get_write_access(struct vfsmount *m)
+>>   	 */
+>>   	smp_mb();
+>>   	might_lock(&mount_lock.lock);
+>> -	while (READ_ONCE(mnt->mnt.mnt_flags) & MNT_WRITE_HOLD) {
+>> +	while (READ_ONCE(m->mnt.mnt_flags) & MNT_WRITE_HOLD) {
+>>   		if (!IS_ENABLED(CONFIG_PREEMPT_RT)) {
+>>   			cpu_relax();
+>>   		} else {
+>> @@ -530,8 +530,8 @@ int mnt_get_write_access(struct vfsmount *m)
+>>   	 * read-only.
+>>   	 */
+>>   	smp_rmb();
+>> -	if (mnt_is_readonly(m)) {
+>> -		mnt_dec_writers(mnt);
+>> +	if (mnt_is_readonly(mnt)) {
+>> +		mnt_dec_writers(m);
+>>   		ret = -EROFS;
+>>   	}
+>>   	preempt_enable();
+>> -- 
+>> 2.39.2
 >>
->>          spin_lock_init(&vcpu->arch.mp_state_lock);
->>
->> @@ -146,9 +145,6 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
->>          if (kvm_riscv_vcpu_alloc_vector_context(vcpu, cntx))
->>                  return -ENOMEM;
->>
->> -       /* By default, make CY, TM, and IR counters accessible in VU mode */
->> -       reset_csr->scounteren = 0x7;
->> -
->>          /* Setup VCPU timer */
->>          kvm_riscv_vcpu_timer_init(vcpu);
->>
->>
->> ---
->> base-commit: 01f95500a162fca88cefab9ed64ceded5afabc12
->> change-id: 20250513-fix_scounteren_vs-fdd86255c7b7
->> --
-> Overall, this looks good.
->
-> Reviewed-by: Anup Patel <anup@brainfault.org>
->
-> Currently, the scounteren.TM bit is only set by the Linux SBI PMU
-> driver but KVM RISC-V only provides SBI PMU for guest when
-> Sscofpmf is available in host so we need the below hunk to
-> completely get rid-off scounteren initialization in KVM RISC-V.
->
-> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> index 356d5397b2a2..bdf3352acf4c 100644
-> --- a/arch/riscv/kernel/head.S
-> +++ b/arch/riscv/kernel/head.S
-> @@ -131,6 +131,12 @@ secondary_start_sbi:
->       csrw CSR_IE, zero
->       csrw CSR_IP, zero
->
-> +#ifndef CONFIG_RISCV_M_MODE
-> +    /* Enable time CSR */
-> +    li t0, 0x2
-> +    csrw CSR_SCOUNTEREN, t0
-> +#endif
-> +
->       /* Load the global pointer */
->       load_global_pointer
->
-> @@ -226,6 +232,10 @@ SYM_CODE_START(_start_kernel)
->        * to hand it to us.
->        */
->       csrr a0, CSR_MHARTID
-> +#else
-> +    /* Enable time CSR */
-> +    li t0, 0x2
-> +    csrw CSR_SCOUNTEREN, t0
->   #endif /* CONFIG_RISCV_M_MODE */
->
->       /* Load the global pointer */
->
-> I have queued this patch for Linux-6.16 with the above hunk squashed.
 
-Yes. Thanks for adding this.
-
-> Thanks,
-> Anup
