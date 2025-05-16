@@ -1,124 +1,77 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D904414884C
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 15:37:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157711B85CC
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 15:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747409854; cv=none; b=nGgyhZnWrbCLSy725SlwiAsMej8hI971Y6tON77XIJTi7iVL0sfxi9GTQhGNlwnHM72qJDDYHBUHRDl+ph8j+f9fBIeF5GqlW5PWjm9NRNvJGRa/LDRRCOwON+vAwDeUycoqsLaneQox7eLVuHtEddAfnrsfrqZfv5RC0G1XIDo=
+	t=1747409875; cv=none; b=J41ki8IzqJbKPQnMQUyKfxwvYvIBLmmLOSjO6lXoe9rrB5gGI8E9b85CHqJYMLXAqLBpeOS102V359wGmjHCVUfvtmkNfp4NaK/5FNUzRzPSUp8urPqVocZ0uHcMKCp0FhwArVe9K2JXrWP2zon2hr2HI8DaoGBV/mCN8nYAPM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747409854; c=relaxed/simple;
-	bh=HtWde3TpgiWAD605YmTLF4fS54hGTe1sdeYFh/LhoE8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PxTU+QVup5OQQ6e179QXjROgZM+LzFL1xhBKRJYj3dbkrNVdMCzwwUMUyBFCuAg1kwBtXNWzwivVgtnM32o+d8J308uQN1BXqORiIoVhmNvVw2MslfBf2CXITV9/IrCwQHOGAu1t/rnHz504PyCM5fAI7IaY+fpRzPZxg22qMm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Zi62pArT; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747409875; c=relaxed/simple;
+	bh=z4tSAygEeJrgHxjp8RduNrZTO6ccDbYrOyWS4Ye800s=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cODoxnr1pg6TAJGrQNB2kq8/gCvBl6iU2n+nNgC/V2ai8hEDNnQOOxI59+TKYpwlpyWHmo7ZrX8GYgqox5N/PECykrS3rgz+RKvG2bX/PfXyV/zQqiG2BRFeo59R2iMZTQBhLpIc2jPbiKmvyV0YqFrccVjc31oC3lbZ9u8AeM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vc/gc3ne; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Zi62pArT"
-Date: Fri, 16 May 2025 08:37:23 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747409850;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GUmB6MysdwfVDrB19QMncGfwBZNU3SIATJ4OxtHukM8=;
-	b=Zi62pArTD9nQONyMVoTOTkWzLtXfSpFp1vYJssLs+SioqtfVLUfCo5UPKpokDCEIRHJ7V7
-	MkjHQSHV01HKIeXg6u3ofnddU32/7s5zv5PrTQE4G2sgZBxxA3wxVfw3XPyZCJncMHcPwF
-	67ljLHnnIhccyilTXh9PP/QLo7HiSOQ=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
-	Alexei Starovoitov <ast@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Harry Yoo <harry.yoo@oracle.com>, Yosry Ahmed <yosry.ahmed@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH 1/5] memcg: disable kmem charging in nmi for unsupported
- arch
-Message-ID: <ukn75zvkgbyjmrhmy7rmt6dx24r47vy6npfdvjx6wxiduxeqnm@kkjoam7gft4v>
-References: <20250516064912.1515065-1-shakeel.butt@linux.dev>
- <20250516064912.1515065-2-shakeel.butt@linux.dev>
- <050484a9-c08c-40d2-b431-76903a639222@suse.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vc/gc3ne"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9824C4CEE4;
+	Fri, 16 May 2025 15:37:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747409874;
+	bh=z4tSAygEeJrgHxjp8RduNrZTO6ccDbYrOyWS4Ye800s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Vc/gc3neqXrUFZIaPBCF23eZ2iLdSzCLqkb7x/tOGNiSvRqhqi5HWkfBDirL5W4X+
+	 09U0tQiOURkq9DybrHGaNSgS8DTzWs0XAsRbtBanyWkRy36YLXicFNMBe7xYk1B3Wd
+	 Wu0EeCAFCg/7pvQzUWGihu7Vhf5w7w5btfarFvtcyV6ljb8FYUkSeYLpVOAugh/mKa
+	 dAzVp1oObnxz4UaF8Rp+fgs11hcVVmMRNEekICGYKf6A01xqauQG2fQGdgo7sKzs8I
+	 FYeA3dpgbbuhetxHwTk5a7qBK9QAvrMEpV36NFJ0TU1/0icuJ9mJi8eWcfbEVAS0j3
+	 ljahUOihKYGaQ==
+From: Will Deacon <will@kernel.org>
+To: linux-arm-kernel@lists.infradead.org,
+	Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3] arm64/mm: Re-organise setting up FEAT_S1PIE registers PIRE0_EL1 and PIR_EL1
+Date: Fri, 16 May 2025 16:37:43 +0100
+Message-Id: <174740439712.2574974.10617041555602541143.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20250429050511.1663235-1-anshuman.khandual@arm.com>
+References: <20250429050511.1663235-1-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <050484a9-c08c-40d2-b431-76903a639222@suse.cz>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 16, 2025 at 11:30:17AM +0200, Vlastimil Babka wrote:
-> On 5/16/25 08:49, Shakeel Butt wrote:
-> > The memcg accounting and stats uses this_cpu* and atomic* ops. There are
-> > archs which define CONFIG_HAVE_NMI but does not define
-> > CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS and ARCH_HAVE_NMI_SAFE_CMPXCHG, so
-> > memcg accounting for such archs in nmi context is not possible to
-> > support. Let's just disable memcg accounting in nmi context for such
-> > archs.
-> > 
-> > Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-> > ---
-> >  include/linux/memcontrol.h |  5 +++++
-> >  mm/memcontrol.c            | 15 +++++++++++++++
-> >  2 files changed, 20 insertions(+)
-> > 
-> > diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> > index f7848f73f41c..53920528821f 100644
-> > --- a/include/linux/memcontrol.h
-> > +++ b/include/linux/memcontrol.h
-> > @@ -62,6 +62,11 @@ struct mem_cgroup_reclaim_cookie {
-> >  
-> >  #ifdef CONFIG_MEMCG
-> >  
-> > +#if defined(CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS) || \
-> > +	!defined(CONFIG_HAVE_NMI) || defined(ARCH_HAVE_NMI_SAFE_CMPXCHG)
-> > +#define MEMCG_SUPPORTS_NMI_CHARGING
-> > +#endif
-> > +
-> >  #define MEM_CGROUP_ID_SHIFT	16
-> >  
-> >  struct mem_cgroup_id {
-> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > index e17b698f6243..dface07f69bb 100644
-> > --- a/mm/memcontrol.c
-> > +++ b/mm/memcontrol.c
-> > @@ -2647,11 +2647,26 @@ static struct obj_cgroup *current_objcg_update(void)
-> >  	return objcg;
-> >  }
-> >  
-> > +#ifdef MEMCG_SUPPORTS_NMI_CHARGING
-> > +static inline bool nmi_charging_allowed(void)
-> > +{
-> > +	return true;
-> > +}
-> > +#else
-> > +static inline bool nmi_charging_allowed(void)
-> > +{
-> > +	return false;
-> > +}
-> > +#endif
-> > +
-> >  __always_inline struct obj_cgroup *current_obj_cgroup(void)
-> >  {
-> >  	struct mem_cgroup *memcg;
-> >  	struct obj_cgroup *objcg;
-> >  
-> > +	if (in_nmi() && !nmi_charging_allowed())
+On Tue, 29 Apr 2025 10:35:11 +0530, Anshuman Khandual wrote:
+> mov_q cannot really move PIE_E[0|1] macros into a general purpose register
+> as expected if those macro constants contain some 128 bit layout elements,
+> that are required for D128 page tables. The primary issue is that for D128,
+> PIE_E[0|1] are defined in terms of 128-bit types with shifting and masking,
+> which the assembler can't accommodate.
 > 
-> Exchange the two as the latter is compile-time constant, so it can shortcut
-> the in_nmi() check away in all the good cases?
+> Instead pre-calculate these PIRE0_EL1/PIR_EL1 constants into asm-offsets.h
+> based PIE_E0_ASM/PIE_E1_ASM which can then be used in arch/arm64/mm/proc.S.
 > 
+> [...]
 
-Oh I thought compiler would figure that out but now that I think about
-it, it can only do so if the first condition does not have any
-side-effects and though in_nmi() does not, I am not sure if compiler can
-extract that information.
+Applied to arm64 (for-next/entry), thanks!
 
-I will fix this and make sure that compiler is doing the right thing.
+[1/1] arm64/mm: Re-organise setting up FEAT_S1PIE registers PIRE0_EL1 and PIR_EL1
+      https://git.kernel.org/arm64/c/29e31da4ed26
+
+Cheers,
+-- 
+Will
+
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
