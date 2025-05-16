@@ -1,201 +1,157 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8B84B1E65
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 00:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3CA15E8B
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 00:22:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747354948; cv=none; b=e8xJKel+C2uDmn4OufFS6J7vCt+jQmOW4ZmGf6GwYnLEkkzgiMbifD0riGj3Z1utV8o22lx9BFw7EixfrEe4uLUEcyQ25TpxE/O4Z9AiSh6s7KpMxxQSHMzBBoskfxJosgAeaTQFhtLyfixHUxS4fyCfUudVqZimRpi2hIMBMsg=
+	t=1747354956; cv=none; b=BRN9DKPmyxRzJtOVLZazKaN+JOJ0yQMnOCZN9bc65hSdoueikSKWXnXb+1oatvBSEA/XgnetVi4cIY/OEnivAkBX2YfOY7v2IVS3WifLfQOtepkBYiNyqa22s80hBWiniqbOCl9uGXjx/ps6JhZZoncMJLztpyPiCcNeRDJwQFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747354948; c=relaxed/simple;
-	bh=FLr14or9G6ctdhc4NjO2TMqj5hlhyJOyOKBdrjBX+q0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=roDviWKC/gt5ETpQfcMoN/kupdjqYqbkJuBfXTdCUAT1H6xL3DS3C142QFBocAVCggLwtICIDEU7KimmWn9LxP0pFYFcTczpidrV6SVAMQMLMntEyJBX1jK6zSXVQ1Qz5Oyn0sZJTLl/DLGP+uafzi3tmhwNEGgu9J8LuAoomI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CUXqAjcz; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1747354956; c=relaxed/simple;
+	bh=9TW8mOZYka0YbshSHwE1KONB6ACt3Bc7zaWs0FWLxo4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=crXc/5XuZFmtAhjDqghW/oLezquLGDZpaxWSjmn9U9YfyfvFPfXQJZIUlGqvJTJ7MXOHNhQcDy9RvGgdef6qJIzI/TVV2hU5AnUsxbcwOUTMUYoA0kOMLIhLDf8y2tncFoPq2XGhfGyu5gQTJmaQqY46IcMTzjwbQlXrRM17sqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f+XR5A0I; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CUXqAjcz"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-741a845cab2so2140143b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:22:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747354945; x=1747959745; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=U2sAkeu7MGicRsmk1eQ6Ys1LarlK/EQzO2qqYVap+q8=;
-        b=CUXqAjczPMuTHriZl6tvaL4123gmRh9zTXElchUlG6gYQCikDJRMz1sCutUHfzgoJf
-         G9sVqQV3rr9ma/GFOyUz8xe0EmS8n2lyWgz3kUK4PfEgNgkm0q9RsJu4xrt7VAlqEksN
-         pPPxv92ER/JvLVvvcpoayrDxJ+hpKqc2oVPgE0fnfwhrKKNDwTtXFbrzBsUgJbMWOFx8
-         En4szy+an3umatgmNrQ+G/cUAbUxOs/cNqgIsjezLCwixE0mU0BLsFO/m7M9C6LT6Oow
-         /dixVeiszZhi/YLzvg/K/CPiFbEsSrQHIOVKmrOrkXlgwMhrhwVuG+r03Qz6rHAug8AW
-         4/KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747354945; x=1747959745;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U2sAkeu7MGicRsmk1eQ6Ys1LarlK/EQzO2qqYVap+q8=;
-        b=Hpzia0zCTx8tab8AGNuFI+Hk3SQqt/rya/wkBGL5PSFn2tvopFgXqR5lPJ5gVkz5Ic
-         dlHyFPEuYOOhiGuOLiy5vSeiymNOijZdCtOdoyNmkY/nGa77K9CXnzCyanCZAcsCopQi
-         YIv2P0DKcgg/5EXT+BR3ioBOWBDuLeE/iEjCZtFacDWKFEMRdzY+XcqNBkmeui9GAu0p
-         jnN3y3hqIWSyib3xf5xQNBYx0uSEpnaqIKTsjzMiO/gYIBx6iRKb8RellNa+ZCE7DBrA
-         n+25DYdEzaqTRmgf5GRHCf+YvNThe0CE5+GfPxodKZ5yM1JMA9+KSaRZam9r4BpG53FM
-         80Mw==
-X-Forwarded-Encrypted: i=1; AJvYcCWDnfmsgWCQnn6ubnZefSdGgTXxM7xlvZDPEKvoYAypXoP0Ksr1zW4EWNeODyAym906QPdiDgI+rQCB8ZQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPFQtyqk5nCyXbHK+riFX+A243gg/rmWB+N3S1EQu6bsawhcmj
-	OR7uqG8ue3HepxtUIB62pJuxFgcMzBaJOVn/0rJ/1THLWmzP55vwXj7oViGBsqa/zVkIXRvgiFR
-	Fii/CyEsSWB3iuivrq3pNfuTvwA==
-X-Google-Smtp-Source: AGHT+IE6+aZ6pB0+4YWi/bOE+1/FrllyYKfVOjrPP4jF0YyDdqPgCbM1S1tbN8ddfEjmhOfVoPvdJc2p2g7nYFoIDA==
-X-Received: from pfbmb27.prod.google.com ([2002:a05:6a00:761b:b0:736:b063:5038])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:4fc2:b0:73e:598:7e5b with SMTP id d2e1a72fcca58-742acc906ccmr622342b3a.1.1747354944946;
- Thu, 15 May 2025 17:22:24 -0700 (PDT)
-Date: Thu, 15 May 2025 17:22:21 -0700
-In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f+XR5A0I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747354952;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L79G3bUaADCLMaIHySbV8zUHfQYcpHCcJ7lOsHDG9sI=;
+	b=f+XR5A0IkDqdblgUJ21alWnfe3xl5WbXwNfrqD1J1O3EQXoPQLyZXYZHpXl1ZjikPYe4CH
+	HBW4n4XkGD6lu2KkZlZocOm0ab8z346ZWHK7k1mLtZiac40i0MF9HnRM/LyFng/wqKG2j6
+	z+vcbSQPBoyApF1Dn5w5UOrhcef1Bwk=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-665-oEVTFpYuO4mDdQi3nftzwA-1; Thu,
+ 15 May 2025 20:22:28 -0400
+X-MC-Unique: oEVTFpYuO4mDdQi3nftzwA-1
+X-Mimecast-MFC-AGG-ID: oEVTFpYuO4mDdQi3nftzwA_1747354947
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 15B3C1800446;
+	Fri, 16 May 2025 00:22:21 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.140])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D4C9030075F7;
+	Fri, 16 May 2025 00:22:18 +0000 (UTC)
+Date: Fri, 16 May 2025 08:22:14 +0800
+From: Baoquan He <bhe@redhat.com>
+To: linux-integrity@vger.kernel.org, kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, zohar@linux.ibm.com,
+	pmenzel@molgen.mpg.de, coxu@redhat.com, ruyang@redhat.com,
+	chenste@linux.microsoft.com
+Subject: Re: [PATCH] ima: add a knob ima= to make IMA be able to be disabled
+Message-ID: <aCaFNvHbYxrCaPbe@MiWiFi-R3L-srv>
+References: <20250515233953.14685-1-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com>
-X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <a2fb493750ee445f8cc779d9fdf18329ec65812f.1747264138.git.ackerleytng@google.com>
-Subject: [RFC PATCH v2 51/51] KVM: selftests: Test guest_memfd for accuracy of st_blocks
-From: Ackerley Tng <ackerleytng@google.com>
-To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-fsdevel@vger.kernel.org
-Cc: ackerleytng@google.com, aik@amd.com, ajones@ventanamicro.com, 
-	akpm@linux-foundation.org, amoorthy@google.com, anthony.yznaga@oracle.com, 
-	anup@brainfault.org, aou@eecs.berkeley.edu, bfoster@redhat.com, 
-	binbin.wu@linux.intel.com, brauner@kernel.org, catalin.marinas@arm.com, 
-	chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com, 
-	david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk, 
-	erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com, 
-	haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
-	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	thomas.lendacky@amd.com, vannapurve@google.com, vbabka@suse.cz, 
-	viro@zeniv.linux.org.uk, vkuznets@redhat.com, wei.w.wang@intel.com, 
-	will@kernel.org, willy@infradead.org, xiaoyao.li@intel.com, 
-	yan.y.zhao@intel.com, yilun.xu@intel.com, yuzenghui@huawei.com, 
-	zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515233953.14685-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Test that st_blocks in struct stat (inode->i_blocks) is updated.
+CC kexec list.
 
-Change-Id: I67d814f130671b6b64b575e6a25fd17b1994c640
-Signed-off-by: Ackerley Tng <ackerleytng@google.com>
----
- .../testing/selftests/kvm/guest_memfd_test.c  | 55 ++++++++++++++++---
- 1 file changed, 46 insertions(+), 9 deletions(-)
-
-diff --git a/tools/testing/selftests/kvm/guest_memfd_test.c b/tools/testing/selftests/kvm/guest_memfd_test.c
-index c8acccaa9e1d..f51cd876d7dc 100644
---- a/tools/testing/selftests/kvm/guest_memfd_test.c
-+++ b/tools/testing/selftests/kvm/guest_memfd_test.c
-@@ -142,41 +142,78 @@ static void test_file_size(int fd, size_t page_size, size_t total_size)
- 	TEST_ASSERT_EQ(sb.st_blksize, page_size);
- }
- 
--static void test_fallocate(int fd, size_t page_size, size_t total_size)
-+static void assert_st_blocks_equals_size(int fd, size_t page_size, size_t expected_size)
- {
-+	struct stat sb;
-+	int ret;
-+
-+	/* TODO: st_blocks is not updated for 4K-page guest_memfd. */
-+	if (page_size == getpagesize())
-+		return;
-+
-+	ret = fstat(fd, &sb);
-+	TEST_ASSERT(!ret, "fstat should succeed");
-+	TEST_ASSERT_EQ(sb.st_blocks, expected_size / 512);
-+}
-+
-+static void test_fallocate(int fd, size_t test_page_size, size_t total_size)
-+{
-+	size_t page_size;
- 	int ret;
- 
- 	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE, 0, total_size);
- 	TEST_ASSERT(!ret, "fallocate with aligned offset and size should succeed");
-+	assert_st_blocks_equals_size(fd, test_page_size, total_size);
- 
- 	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE,
--			page_size - 1, page_size);
-+			test_page_size - 1, test_page_size);
- 	TEST_ASSERT(ret, "fallocate with unaligned offset should fail");
-+	assert_st_blocks_equals_size(fd, test_page_size, total_size);
- 
--	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE, total_size, page_size);
-+	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE, total_size, test_page_size);
- 	TEST_ASSERT(ret, "fallocate beginning at total_size should fail");
-+	assert_st_blocks_equals_size(fd, test_page_size, total_size);
- 
--	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE, total_size + page_size, page_size);
-+	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE, total_size + test_page_size, test_page_size);
- 	TEST_ASSERT(ret, "fallocate beginning after total_size should fail");
-+	assert_st_blocks_equals_size(fd, test_page_size, total_size);
- 
- 	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE,
--			total_size, page_size);
-+			total_size, test_page_size);
- 	TEST_ASSERT(!ret, "fallocate(PUNCH_HOLE) at total_size should succeed");
-+	assert_st_blocks_equals_size(fd, test_page_size, total_size);
- 
- 	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE,
--			total_size + page_size, page_size);
-+			total_size + test_page_size, test_page_size);
- 	TEST_ASSERT(!ret, "fallocate(PUNCH_HOLE) after total_size should succeed");
-+	assert_st_blocks_equals_size(fd, test_page_size, total_size);
- 
- 	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE,
--			page_size, page_size - 1);
-+			test_page_size, test_page_size - 1);
- 	TEST_ASSERT(ret, "fallocate with unaligned size should fail");
-+	assert_st_blocks_equals_size(fd, test_page_size, total_size);
- 
- 	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE,
--			page_size, page_size);
-+			test_page_size, test_page_size);
- 	TEST_ASSERT(!ret, "fallocate(PUNCH_HOLE) with aligned offset and size should succeed");
-+	assert_st_blocks_equals_size(fd, test_page_size, total_size - test_page_size);
- 
--	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE, page_size, page_size);
-+	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE,
-+			test_page_size, test_page_size);
-+	TEST_ASSERT(!ret, "fallocate(PUNCH_HOLE) in a hole should succeed");
-+	assert_st_blocks_equals_size(fd, test_page_size, total_size - test_page_size);
-+
-+	ret = fallocate(fd, FALLOC_FL_KEEP_SIZE, test_page_size, test_page_size);
- 	TEST_ASSERT(!ret, "fallocate to restore punched hole should succeed");
-+	assert_st_blocks_equals_size(fd, test_page_size, total_size);
-+
-+	page_size = getpagesize();
-+	if (test_page_size == page_size) {
-+		ret = fallocate(fd, FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE,
-+				test_page_size + page_size, page_size);
-+		TEST_ASSERT(!ret, "fallocate(PUNCH_HOLE) of a subfolio should succeed");
-+		assert_st_blocks_equals_size(fd, test_page_size, total_size);
-+	}
- }
- 
- static void test_invalid_punch_hole(int fd, size_t page_size, size_t total_size)
--- 
-2.49.0.1045.g170613ef41-goog
+On 05/16/25 at 07:39am, Baoquan He wrote:
+> Kdump kernel doesn't need IMA functionality, and enabling IMA will cost
+> extra memory. It would be very helpful to allow IMA to be disabled for
+> kdump kernel.
+> 
+> And Coiby also mentioned that for kdump kernel incorrect ima-policy loaded
+> by systemd could cause kdump kernel hang, and it's possible the booting
+> process may be stopped by a strict, albeit syntax-correct policy and users
+> can't log into the system to fix the policy. In these cases, allowing to
+> disable IMA is very helpful too for kdump kernel.
+> 
+> Hence add a knob ima=on|off here to allow people to disable IMA in kdump
+> kenrel if needed.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  .../admin-guide/kernel-parameters.txt         |  5 +++++
+>  security/integrity/ima/ima_main.c             | 22 +++++++++++++++++++
+>  2 files changed, 27 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index d9fd26b95b34..762fb6ddcc24 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -2202,6 +2202,11 @@
+>  			different crypto accelerators. This option can be used
+>  			to achieve best performance for particular HW.
+>  
+> +	ima=		[IMA] Enable or disable IMA
+> +			Format: { "off" | "on" }
+> +			Default: "on"
+> +			Note that this is only useful for kdump kernel.
+> +
+>  	init=		[KNL]
+>  			Format: <full_path>
+>  			Run specified binary instead of /sbin/init as init
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index f3e7ac513db3..07af5c6af138 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/fs.h>
+>  #include <linux/iversion.h>
+>  #include <linux/evm.h>
+> +#include <linux/crash_dump.h>
+>  
+>  #include "ima.h"
+>  
+> @@ -38,11 +39,27 @@ int ima_appraise;
+>  
+>  int __ro_after_init ima_hash_algo = HASH_ALGO_SHA1;
+>  static int hash_setup_done;
+> +static int ima_disabled;
+>  
+>  static struct notifier_block ima_lsm_policy_notifier = {
+>  	.notifier_call = ima_lsm_policy_change,
+>  };
+>  
+> +static int __init ima_setup(char *str)
+> +{
+> +	if (strncmp(str, "off", 3) == 0)
+> +		ima_disabled = 1;
+> +	else if (strncmp(str, "on", 2) == 0)
+> +		ima_disabled = 0;
+> +	else
+> +		pr_err("Invalid ima setup option: \"%s\" , please specify ima=on|off.", str);
+> +
+> +	return 1;
+> +}
+> +__setup("ima=", ima_setup);
+> +
+> +
+> +
+>  static int __init hash_setup(char *str)
+>  {
+>  	struct ima_template_desc *template_desc = ima_template_desc_current();
+> @@ -1184,6 +1201,11 @@ static int __init init_ima(void)
+>  {
+>  	int error;
+>  
+> +	if (ima_disabled && is_kdump_kernel()) {
+> +		pr_info("IMA functionality is disabled");
+> +		return 0;
+> +	}
+> +
+>  	ima_appraise_parse_cmdline();
+>  	ima_init_template_list();
+>  	hash_setup(CONFIG_IMA_DEFAULT_HASH);
+> -- 
+> 2.41.0
+> 
 
