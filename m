@@ -1,83 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367843D69;
-	Fri, 16 May 2025 06:05:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B6A220F43;
+	Fri, 16 May 2025 06:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747375516; cv=none; b=V8ESPRoYk+sbhFBHBUK2VBJy7rffIGqQjVStHI3AMfL8PLvSIt06eVqCAfols/7P1DXFgszpxoX1sBAV8e67s9KUatNj+VkAu2MPRXEYd8pA+bGl4jhh0kZ8DZHIRavFZjj+IRpf+5QBZAETFUkuBQoencS5nhOzqB+SbzX6FM8=
+	t=1747375537; cv=none; b=qzDiOrVPKf0teB1dxE4WiosHpSZe96dxfDRSJBH1WvP+znMrDA+5yumWii0l/iAaa4sDC5ISES7MI9tXriadtQ39M2zGGZb3K2ErcG4d37OMuUDrGGtBUqjueBCZR5KLLmD6Sqn42JHdklBTekHHlKkwwZ+5zUOwJ0LipnLFN0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747375516; c=relaxed/simple;
-	bh=bW/BSRnMonxJF09QI4JenGAMerZbgvhvGxO91qgyG40=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VOphZKlnLgw/79GV3Lph1Hi+BciqmXwL6mfNqhkTrN+B/SXFicW6oUW63qqhlrGTmvRno6m+uIfpTvOgzeJ8ACkD9Ft0xrD5wxgmlUu8O7nt4+MK3HVasU7/Yi3SgnvOLaahmPdto2UaQgMEUIjHa5//w/IVD7WDFrPKdxPLqHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=n96Sx2Ok; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747375537; c=relaxed/simple;
+	bh=0jg2LER0GLrklND42PoAivbqYpj6cFxNRoHLdchFWiY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=cLsucXdtGofiaDrBbngW5MF/NVdS574tjJUUQK3BKXip1Y2fubQMTLxB4D2wJZI2eKxomwzf/rfMDV60ZHHXxd5MZIRpXm4CzdHtTV7W5pWCd4Zn41IysHYC9c793NKKWvQxTsBgooF7QArdyrwBFu1yqFT9tTrcVPvMPbTE5Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=D8hUTHzx; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="n96Sx2Ok"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48F3CC4CEE4;
-	Fri, 16 May 2025 06:05:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747375515;
-	bh=bW/BSRnMonxJF09QI4JenGAMerZbgvhvGxO91qgyG40=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n96Sx2OkenwE0kt3YDNfJZlohnuKTqmaWZNUPaZ6CW9WiQIYMcAet01BF7Nfw3kVN
-	 lOe4k+swNbvlzFY+wtcQDBtvSfiaHZFM9SHTbiH/S2Xt53BToRxnP4jbJiE6g/IUD0
-	 wo3hmk8y+YdB/EGpRIQ112qAOTUPNhzYaOs8yXBE=
-Date: Fri, 16 May 2025 08:03:27 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Linux-Kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-	shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	goda <yusuke.goda.sx@renesas.com>,
-	Kurokawa <harunobu.kurokawa.dn@renesas.com>,
-	Kihara <takeshi.kihara.df@renesas.com>,
-	kazuya.mizuguchi.ks@renesas.com, takamitsu.honda.pv@renesas.com
-Subject: Re: Question about UIO vs DT
-Message-ID: <2025051649-commode-brussels-1034@gregkh>
-References: <87o6vutrbw.wl-kuninori.morimoto.gx@renesas.com>
- <2025051549-flannels-lively-a46d@gregkh>
- <871pspti1t.wl-kuninori.morimoto.gx@renesas.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="D8hUTHzx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747375523;
+	bh=uS/WWVI1KP0tJWmvuLUBWtKjVHN5ixMzKCGv+tDyDQw=;
+	h=Date:From:To:Cc:Subject:From;
+	b=D8hUTHzxHKlXVQc6rYiRJkRsfxgC/nLdEsYLOZvyODNure+5IvVbxZfyHtglbZ/0n
+	 L4J16HNf7OEQA2y8o6QoZ5yfXcTh83t1xUn3Qx+seYz87c3BJaUvYK57Vq20ZgY1Ua
+	 CMYPpQp7nUH/hC5+Q45lYdzD8TOruAjhQ51HchFtdEyDdY1SnhZJoOLyAyf99ssX1H
+	 YOw2jPLePQEkOnrXrTXqRt2MEIKb04I2wflQqk61/B5/614xhd1mjbGRLnKqTBD0UC
+	 82IYsstsaIADU51egnIPaNjrRfTGlw4SIBPqzd8bbUChN2GgVeN5yE3xaSoWW6iWDR
+	 gzFpbcP5e0Cdw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZzGlR04HJz4wcm;
+	Fri, 16 May 2025 16:05:22 +1000 (AEST)
+Date: Fri, 16 May 2025 16:05:21 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Joerg Roedel <joro@8bytes.org>, Vinod Koul <vkoul@kernel.org>
+Cc: Joerg Roedel <jroedel@suse.de>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Lu Baolu <baolu.lu@linux.intel.com>, Shuai
+ Xue <xueshuai@linux.alibaba.com>
+Subject: linux-next: manual merge of the iommu tree with the dmaengine-fixes
+ tree
+Message-ID: <20250516160521.6620f401@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <871pspti1t.wl-kuninori.morimoto.gx@renesas.com>
+Content-Type: multipart/signed; boundary="Sig_/s5OYvj.a.WJlzsAT4L8j5_w";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Fri, May 16, 2025 at 02:18:07AM +0000, Kuninori Morimoto wrote:
-> 
-> Hi Greg
-> 
-> Thank you for the reply
-> 
-> > > For example in case of
-> > > the device which needs "2 regs 3 irqs". it will be
-> > > 
-> > > (A)	[1 reg, 1 IRQ] UIO
-> > > (B)	[1 reg, 1 IRQ] UIO
-> > > (C)	[0 reg, 1 IRQ] UIO
-> > > 
-> > > and (C) will be DT error. Is this known issue ? Do we have better solution ?
-> > 
-> > Yes, write a real driver for the device as obviously it is a complex one
-> > and UIO shouldn't be used for it :)
-> > 
-> > What type of device is this that requires this type of hardware control
-> > and why do you feel that UIO is the proper solution?
-> 
-> One of big reason is license.
-> Because it needs to be proprietary licensed driver, we can't create
-> real driver.
+--Sig_/s5OYvj.a.WJlzsAT4L8j5_w
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-That is not a valid reason at all, sorry.  So much so that I, and many
-others, have argued that you can not have UIO drivers in userspace that
-are NOT also released under the GPLv2.
+Hi all,
 
-Go work with your lawyers please, there's nothing I can now do to help
-you out with this due to the expectation that you are attempting to
-evade the license requirements here.
+Today's linux-next merge of the iommu tree got a conflict in:
 
-greg k-h
+  drivers/dma/idxd/init.c
+
+between commit:
+
+  a409e919ca32 ("dmaengine: idxd: Refactor remove call with idxd_cleanup() =
+helper")
+
+from the dmaengine-fixes tree and commit:
+
+  853b01b5efd7 ("dmaengine: idxd: Remove unnecessary IOMMU_DEV_FEAT_IOPF")
+
+from the iommu tree.
+
+I fixed it up (the latter removed a subset of whe the former removed in
+idxd_remove()) and can carry the fix as necessary. This is now fixed as
+far as linux-next is concerned, but any non trivial conflicts should be
+mentioned to your upstream maintainer when your tree is submitted for
+merging.  You may also want to consider cooperating with the maintainer
+of the conflicting tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/s5OYvj.a.WJlzsAT4L8j5_w
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgm1aEACgkQAVBC80lX
+0GwZ5gf+I/X5ZZYoD32sHXvpR5f4Ojf7+FGX5LqheWnEm0D19PqYY03s65BzPsD/
+F4l2iWDlQICky5AWqvYg5zDvrQREv1/SYEHZ1fup4CWNpQes9v2vcGe+LWUBxjIU
+S3i+WdcYhNT2n3MzaFUoOVUfUSIhWlmlYO36b2pFSjzExw8UYLGzWgiFHIaSAky+
+5OZ+zwN0QS68NwU27OWD6cfWJTVzA5Ei9/QseEng46QqlWillOLtm4uK9gBBGt6V
+SONI7uzqVrfKi2prKWkP41mb30MCp5iXuS2P8pzllwZpxCMLEGZZHlM6emS2Wtuh
+yWo0JU+wS7GwD5BWRG6JuxzHfXKjEw==
+=PS2O
+-----END PGP SIGNATURE-----
+
+--Sig_/s5OYvj.a.WJlzsAT4L8j5_w--
