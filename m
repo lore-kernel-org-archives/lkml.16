@@ -1,97 +1,143 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DF15224F6
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:40:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0C631D5CED
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747413635; cv=none; b=oZ+kJCiCm9x/HROs+eEakK5IEpiYBfR5siafptBhxvbWgwD1hYZL9ghDnNFk/3yjL6nYF73m9W5pBDc3jSGIpOt9GXuqRvnUUtyr9gf7wEk3EUlVlRp26Hv4/lO6ctbORbnLj5XhzaY7gOf4p8eUd7EXS6IqtC5nA5laIpuqFYs=
+	t=1747413665; cv=none; b=jxvj7hvm9VC34l9wvLhOldc0GLrzXslvr2wMmkFmOJ5Q2hEeBIm66FO+GkuwkzWHJyihJOEhNoJB/xw+6pLs0M9920GC36Q3pS63qK8j9BHAEYyP1TUku9iiPeN14jfX+kCkTlL+HASCe+x+ifFj6wz1XH1appIG/zNlKBlVbsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747413635; c=relaxed/simple;
-	bh=D0Nh94fTaSsba30kvmokC+CY5lJDNuDYNJDnyIUAOVI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=nOR09c9+S4CYFg/qxvEd1DdNmV5H6PYtjOcskgF0hLt32/ZaR0XhKhXe2790tJTGUBk37Xt3I00ohMCuK3rCfREZHFarTaqorYwo3DeW9P08zhQza9VQ8brCVIhghGOnTO1zOXwRV8nDgJmCto0iTyeSiIsr5QLN5d8O059CdAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=YI5dux/f reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="YI5dux/f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=mOYd48idEXtbPMw0QhLwj9DRwcntZvg3z1v1i5XgcY0=; b=Y
-	I5dux/fW8SyP2eLXyhO2LniB3nJEolTHxJoPMdKFxNWQ4b1sAp12aJnverGJ7SiL
-	exZvLKKs4kCB9Q0GEA2Lru8shCTQ/xkeO2PfCNkhnKKwnX0VdvsLc3DOqr0jrsHX
-	t4Cdk8tVTdAP/jW/u2VLx9q4REi3Wdzih3/Ms+looA=
-Received: from xavier_qy$163.com ( [180.168.35.125] ) by
- ajax-webmail-wmsvr-40-139 (Coremail) ; Sat, 17 May 2025 00:40:03 +0800
- (CST)
-Date: Sat, 17 May 2025 00:40:03 +0800 (CST)
-From: Xavier  <xavier_qy@163.com>
-To: "Thomas Gleixner" <tglx@linutronix.de>
-Cc: anna-maria@linutronix.de, frederic@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re:Re: [PATCH v1] hrtimer: Simplify the logic of
- __hrtimer_get_next_event
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <87ecwoj0bz.ffs@tglx>
-References: <20250516070153.2410363-1-xavier_qy@163.com>
- <87ecwoj0bz.ffs@tglx>
-X-NTES-SC: AL_Qu2fBfiavE4r5SWdbekfmkgWgus/WcW2u/Qj3IRSO5FwjBHo5DIER3tMJHz5/d+OOxC3rheYdwBvztt7e7d6W6E1ODjevpJ83E00cHWk2UQxSQ==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	s=arc-20240116; t=1747413665; c=relaxed/simple;
+	bh=SbLJnw7SOD8K7+g2wLHqb9CIOTD6uo/fYzt5TOvdEYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=n6ItqlFhJyXGjKF/7NacCTr8vmPSRA37yKbIFe9x0zEkcMd3w7Ki0oXS+SRutzA/IQYuTIR8Esok6apdRyq5QvLvHNH5+V1EmmEeV0gD33jZUiZcgmV+VCaHhUl1S1nxPU5IiVaDu5L7EGUiKC7FRwFjCwQIMCLEDfmFw+Faq6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from [2601:18c:8180:83cc:5a47:caff:fe78:8708] (helo=fangorn)
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1uFxzq-0000000047a-0wXp;
+	Fri, 16 May 2025 12:33:18 -0400
+Date: Fri, 16 May 2025 12:33:17 -0400
+From: Rik van Riel <riel@surriel.com>
+To: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, x86@kernel.org, linux-kernel@vger.kernel.org,
+ kernel-team@meta.com
+Subject: [PATCH] x86/mm: resize user_pcid_flush_mask for PTI / broadcast TLB
+ flush combination
+Message-ID: <20250516123317.70506358@fangorn>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <9657931.a6fb.196d9f794f0.Coremail.xavier_qy@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:iygvCgDn71NjaidoD1gGAA--.58690W
-X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiVhlPEGgnFmJI5AAEsD
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: riel@surriel.com
 
-CkhpIFRob21hcywKCkF0IDIwMjUtMDUtMTYgMTg6NTA6NTYsICJUaG9tYXMgR2xlaXhuZXIiIDx0
-Z2x4QGxpbnV0cm9uaXguZGU+IHdyb3RlOgo+T24gRnJpLCBNYXkgMTYgMjAyNSBhdCAxNTowMSwg
-WGF2aWVyIFhpYSB3cm90ZToKPj4gQ3VycmVudGx5LCBfX2hydGltZXJfZ2V0X25leHRfZXZlbnQg
-bWFrZXMgdHdvIHNlcGFyYXRlIGNhbGxzIHRvCj4+IF9faHJ0aW1lcl9uZXh0X2V2ZW50X2Jhc2Ug
-Zm9yIEhSVElNRVJfQUNUSVZFX1NPRlQgYW5kIEhSVElNRVJfQUNUSVZFX0hBUkQKPj4gcmVzcGVj
-dGl2ZWx5IHRvIG9idGFpbiBleHBpcmVzX25leHQuIEhvd2V2ZXIsIF9faHJ0aW1lcl9uZXh0X2V2
-ZW50X2Jhc2UgaXMKPj4gY2FwYWJsZSBvZiB0cmF2ZXJzaW5nIGFsbCB0aW1lciB0eXBlcyBzaW11
-bHRhbmVvdXNseSBieSBzaW1wbHkgY29udHJvbGxpbmcKPj4gdGhlIGFjdGl2ZSBtYXNrLiBUaGVy
-ZSBpcyBubyBuZWVkIHRvIGRpc3Rpbmd1aXNoIHRoZSBvcmRlciBvZiB0cmF2ZXJzYWwKPj4gYmV0
-d2VlbiBzb2Z0IGFuZCBoYXJkIHRpbWVycywgYXMgdGhlIHNvbGUgcHVycG9zZSBpcyB0byBmaW5k
-IHRoZSBlYXJsaWVzdAo+PiBleHBpcmF0aW9uIHRpbWUuCj4+IFRoZXJlZm9yZSwgdGhlIGNvZGUg
-Y2FuIGJlIHNpbXBsaWZpZWQgYnkgcmVkdWNpbmcgdGhlIHR3byBjYWxscyB0byBhIHNpbmdsZQo+
-PiBpbnZvY2F0aW9uIG9mIF9faHJ0aW1lcl9uZXh0X2V2ZW50X2Jhc2UsIG1ha2luZyB0aGUgY29k
-ZSBtb3JlCj4+IHN0cmFpZ2h0Zm9yd2FyZCBhbmQgZWFzaWVyIHRvIHVuZGVyc3RhbmQuCj4KPi4u
-LiBhbmQgYnJva2VuCj4KPj4gLQkJY3B1X2Jhc2UtPnNvZnRpcnFfbmV4dF90aW1lciA9IE5VTEw7
-Cj4+IC0JCW5leHRfdGltZXIgPSBjcHVfYmFzZS0+c29mdGlycV9uZXh0X3RpbWVyOwo+PiAtCQlj
-cHVfYmFzZS0+bmV4dF90aW1lciA9IG5leHRfdGltZXI7Cj4KPmJlY2F1c2UgeW91IHJlbW92ZWQg
-dGhlIGNwdV9iYXNlOjpbc29mdGlycV9dbmV4dF90aW1lciB1cGRhdGUgbG9naWMuCj4KClRoYW5r
-cyBmb3IgeW91ciByZW1pbmRlci4gWW91J3JlIHJpZ2h0LiBXZSBkbyBuZWVkIHRvIHVwZGF0ZQpj
-cHVfYmFzZS0+bmV4dF90aW1lciBhbmQgc29mdGlycV9uZXh0X3RpbWVyIGhlcmUuIERvIHlvdSB0
-aGluawppdCdzIGZlYXNpYmxlIHRvIGRpcmVjdGx5IHBsYWNlIHRoZSB1cGRhdGVzIG9mIHRoZXNl
-IHR3byB2YXJpYWJsZXMKaW5zaWRlIF9faHJ0aW1lcl9uZXh0X2V2ZW50X2Jhc2UsIG1heWJlIGp1
-c3QgbGlrZSB0aGlzOgoKIHN0YXRpYyBrdGltZV90IF9faHJ0aW1lcl9uZXh0X2V2ZW50X2Jhc2Uo
-c3RydWN0IGhydGltZXJfY3B1X2Jhc2UgKmNwdV9iYXNlLAogCQkJCQkgY29uc3Qgc3RydWN0IGhy
-dGltZXIgKmV4Y2x1ZGUsCi0JCQkJCSB1bnNpZ25lZCBpbnQgYWN0aXZlLAorCQkJCQkgdW5zaWdu
-ZWQgaW50IGFjdGl2ZV9tYXNrLAogCQkJCQkga3RpbWVfdCBleHBpcmVzX25leHQpCiB7CiAJc3Ry
-dWN0IGhydGltZXJfY2xvY2tfYmFzZSAqYmFzZTsKIAlrdGltZV90IGV4cGlyZXM7CisJdW5zaWdu
-ZWQgaW50IGFjdGl2ZTsKKwlib29sIGluY2x1ZGVfaGFyZDsKKworCWFjdGl2ZSA9IGNwdV9iYXNl
-LT5hY3RpdmVfYmFzZXMgJiBhY3RpdmVfbWFzazsKKwlpbmNsdWRlX2hhcmQgPSAhIShhY3RpdmVf
-bWFzayAmIEhSVElNRVJfQUNUSVZFX0hBUkQpOyAKKworCWNwdV9iYXNlLT5uZXh0X3RpbWVyID0g
-TlVMTDsKKwljcHVfYmFzZS0+c29mdGlycV9uZXh0X3RpbWVyID0gTlVMTDsKIAogCWZvcl9lYWNo
-X2FjdGl2ZV9iYXNlKGJhc2UsIGNwdV9iYXNlLCBhY3RpdmUpIHsKIAkJc3RydWN0IHRpbWVycXVl
-dWVfbm9kZSAqbmV4dDsKQEAgLTUzOCw4ICs1NDYsMTEgQEAgc3RhdGljIGt0aW1lX3QgX19ocnRp
-bWVyX25leHRfZXZlbnRfYmFzZShzdHJ1Y3QgaHJ0aW1lcl9jcHVfYmFzZSAqY3B1X2Jhc2UsCiAJ
-CQlpZiAoZXhjbHVkZSkKIAkJCQljb250aW51ZTsKIAotCQkJaWYgKHRpbWVyLT5pc19zb2Z0KQor
-CQkJaWYgKHRpbWVyLT5pc19zb2Z0KSB7CiAJCQkJY3B1X2Jhc2UtPnNvZnRpcnFfbmV4dF90aW1l
-ciA9IHRpbWVyOworCQkJCWlmIChpbmNsdWRlX2hhcmQpCisJCQkJCWNwdV9iYXNlLT5uZXh0X3Rp
-bWVyID0gdGltZXI7CisJCQl9CiAJCQllbHNlCiAJCQkJY3B1X2Jhc2UtPm5leHRfdGltZXIgPSB0
-aW1lcjsKIAkJfQoKCkknbSBhIGJpdCBjb25mdXNlZC4gV2h5IGRvZXNuJ3QgdGhlIGhydGltZXJf
-bmV4dF9ldmVudF93aXRob3V0CmZ1bmN0aW9uIG5lZWQgdG8gdXBkYXRlIGNwdV9iYXNlLT5uZXh0
-X3RpbWVyIGxpa2UgdGhlCl9faHJ0aW1lcl9nZXRfbmV4dF9ldmVudCBmdW5jdGlvbiBkb2VzPwoK
-RG8geW91IGtub3cgaWYgdGhlcmUgYXJlIG90aGVyIHRpbWVyLXJlbGF0ZWQgdGVzdCBjYXNlcyBi
-ZXNpZGVzCnRob3NlIGluIHRoZSB0b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy90aW1lcnMgcGF0aD8K
-Ci0tClRoYW5rcywKWGF2aWVyCg==
+Currently no system with AMD INVLPGB support requires the page table
+isolation mitigation. However, people could still enable PTI manually,
+or a vulnerability could be found in the future that makes PTI useful
+on certain AMD CPUs.
+
+Additionally, there are systems that support Intel RAR TLB invalidation,
+where PTI is a useful mitigation.
+
+The combination of PTI and broadcast TLB flush has a problem:
+- invalidate_user_asid() sets a bit corresponding to the process PCID
+- SWITCH_TO_USER_CR3 tests and clears a bit corresponding to the process PCID
+
+However, the PCIDs no longer fit in the range 0-6 when using global ASIDs.
+
+Enlarge user_pcid_flush_mask to fit the PCID numbers that can be present when
+using broadcast TLB flushing. This takes up 256 or 512 bytes per CPU, depending
+on whether or not page table isolation is built into the kernel.
+
+Signed-off-by: Rik van Riel <riel@surriel.com>
+Fixes: c3ed3f5b2550 x86/mm: userspace & pageout flushing using Intel RAR
+Cc: stable@kernel.org
+---
+ arch/x86/include/asm/tlbflush.h | 23 +++++++++++++++++++++++
+ arch/x86/mm/tlb.c               | 19 -------------------
+ 2 files changed, 23 insertions(+), 19 deletions(-)
+
+diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+index e9b81876ebe4..9a1317e0f140 100644
+--- a/arch/x86/include/asm/tlbflush.h
++++ b/arch/x86/include/asm/tlbflush.h
+@@ -23,6 +23,25 @@ void __flush_tlb_all(void);
+ #define TLB_FLUSH_ALL	-1UL
+ #define TLB_GENERATION_INVALID	0
+ 
++/*
++ * When enabled, MITIGATION_PAGE_TABLE_ISOLATION consumes a single bit for
++ * user/kernel switches
++ */
++#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
++# define PTI_CONSUMED_PCID_BITS	1
++#else
++# define PTI_CONSUMED_PCID_BITS	0
++#endif
++
++#define CR3_AVAIL_PCID_BITS (X86_CR3_PCID_BITS - PTI_CONSUMED_PCID_BITS)
++
++/*
++ * ASIDs are zero-based: 0->MAX_AVAIL_ASID are valid.  -1 below to account
++ * for them being zero-based.  Another -1 is because PCID 0 is reserved for
++ * use by non-PCID-aware users.
++ */
++#define MAX_ASID_AVAILABLE ((1 << CR3_AVAIL_PCID_BITS) - 2)
++
+ void cr4_update_irqsoff(unsigned long set, unsigned long clear);
+ unsigned long cr4_read_shadow(void);
+ 
+@@ -121,7 +140,11 @@ struct tlb_state {
+ 	 * the corresponding user PCID needs a flush next time we
+ 	 * switch to it; see SWITCH_TO_USER_CR3.
+ 	 */
++#if defined(CONFIG_X86_TLB_BROADCAST_TLB_FLUSH) && defined(CONFIG_MITIGATION_PAGE_TABLE_ISOLATION)
++	unsigned long user_pcid_flush_mask[(1 << CR3_AVAIL_PCID_BITS) / BITS_PER_LONG];
++#else
+ 	unsigned short user_pcid_flush_mask;
++#endif
+ 
+ 	/*
+ 	 * Access to this CR4 shadow and to H/W CR4 is protected by
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 39f80111e6f1..40b40b36d257 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -90,25 +90,6 @@
+  *
+  */
+ 
+-/*
+- * When enabled, MITIGATION_PAGE_TABLE_ISOLATION consumes a single bit for
+- * user/kernel switches
+- */
+-#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
+-# define PTI_CONSUMED_PCID_BITS	1
+-#else
+-# define PTI_CONSUMED_PCID_BITS	0
+-#endif
+-
+-#define CR3_AVAIL_PCID_BITS (X86_CR3_PCID_BITS - PTI_CONSUMED_PCID_BITS)
+-
+-/*
+- * ASIDs are zero-based: 0->MAX_AVAIL_ASID are valid.  -1 below to account
+- * for them being zero-based.  Another -1 is because PCID 0 is reserved for
+- * use by non-PCID-aware users.
+- */
+-#define MAX_ASID_AVAILABLE ((1 << CR3_AVAIL_PCID_BITS) - 2)
+-
+ /*
+  * Given @asid, compute kPCID
+  */
+-- 
+2.49.0
+
