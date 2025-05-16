@@ -1,169 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C006222592;
-	Fri, 16 May 2025 09:24:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7DD224AEB;
+	Fri, 16 May 2025 09:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747387476; cv=none; b=Me8oh+eXkqgk0+ZuTAD1u6Wg/N+fc6F+rHiAzYXjlC8EQqM4QbKMhCuKRYI40id8bsWZKxFSlrWDpiKXHoHbUfNoW+6W3/mQD7UQqlp2gbBplRRW3E0eMhjFps4RDINGo2thDNFInlHA0q5mPpXRpX4JzkpKIEtax8WthtI6Vpk=
+	t=1747387496; cv=none; b=B/8a1fU/MSNtcgJ23oaJDxJKWWvTd6CU6fSC9XngAW9Y31M8YPDzORo76Iopc1AVVVLkf3HLzoMhfuFpycqTs9TiRylVjlI/h+PFHsqH44nAx7nsFNAlUPr3Dp+Q+qAFCNTblOInZubrEF/7LQR24vqtLtQjCEBvWuIIRLrurjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747387476; c=relaxed/simple;
-	bh=pTcNOg+J4pTuaSi6FGbTNmcNN8Yox9jHEVvxg9j7gto=;
+	s=arc-20240116; t=1747387496; c=relaxed/simple;
+	bh=0gxJ5Nuaa9Hd2/guT1VIQPrisnCfb8est5bYt9sT5LE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AGGDEM9Sy8Tkp0s/iz4nRrhiDtz0Uzv6VSyRRLFs/IIfBrLnSyOKry7l882LfyeFejwIjYwhXdjjszmf2ainipxiTnUb0Ril6sBFsbhCltCUltIhXn4OYmM3lDh8tdVLsjztFtAaXzg7qeDgGxjBfAi8LA8jqXbPEi+YnZGU4bQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LUVBMoQD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LUVBMoQD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64150C4CEE4;
-	Fri, 16 May 2025 09:24:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747387475;
-	bh=pTcNOg+J4pTuaSi6FGbTNmcNN8Yox9jHEVvxg9j7gto=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LUVBMoQDH76Nor+q+vsS8FsU/DmPtdJ4M3/zOKgVkGi0zp8xQ6gbzpafdLRlxgS35
-	 Xu+oNfuiqTL4sstHl7tl90Meb1Zt3Gw49g+p2RM6JplgX8DWIQMPrJQSL09lqpJCOp
-	 wJTij9XrOXG0fawaMpR5ULwkN/PcPs9sTUiawqEwZpuT9nnaOJLC8fAA2x0+QJ7QbR
-	 Jf4g1qC24GP6GHubKbd1rf2qr++XOx/rPQASOh6zfuWa6QLPU4mdIiteBWvePUDZbc
-	 /EPbPZybrYLJF5NshIj3/S9Jf93HgPRR4Z6zzVjZ54Jq8/h2wgiojuBlVYb/0rRHMH
-	 HaFOpEWCj4RGQ==
-Date: Fri, 16 May 2025 11:24:33 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: dimitri.fedrau@liebherr.com
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	Dimitri Fedrau <dima.fedrau@gmail.com>
-Subject: Re: [PATCH v2] pwm: mc33xs2410: add support for temperature sensors
-Message-ID: <mjmrgvw7dg6wlipvku4yzaazbxomsfpr42hdvh37c3r5zybjyh@4olym5bwde45>
-References: <20250515-mc33xs2410-hwmon-v2-1-8d2e78f7e30d@liebherr.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=JLPJqbRNKfGaameypHcYjU1NBk1PeRAK7AsZTTE+nHIEXbqajt69xtP9rhnivNkKDYDPrIfnQ8dnePkR+fX8z0IEoC+zEZ2AVwj8Nj6o2g2vw5p0gPEJFiK6em0M1GkBMUqzFzFhlChLLB0M7pp8+hH/5E+8KQtfMHbaIZNRlYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: 0mfrzuLnT6O7hzLW+uGg7Q==
+X-CSE-MsgGUID: 5L2skAuqTY64fXcLGt/Gnw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="59992352"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="59992352"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:24:53 -0700
+X-CSE-ConnectionGUID: KYD/wBC6QHiiSGteKrTlCw==
+X-CSE-MsgGUID: kyTeyVBrRmqPPAY2L6X8lQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="138557687"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:24:49 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uFrJ8-00000002632-3X8C;
+	Fri, 16 May 2025 12:24:46 +0300
+Date: Fri, 16 May 2025 12:24:46 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Jonathan Santos <Jonathan.Santos@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	nuno.sa@analog.com, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com
+Subject: Re: [PATCH v8 07/11] iio: adc: ad7768-1: add multiple scan types to
+ support 16-bits mode
+Message-ID: <aCcEXgd3My425JRV@smile.fi.intel.com>
+References: <cover.1747175187.git.Jonathan.Santos@analog.com>
+ <0faf8e6acef1493e8e29c75a6098ca0136740780.1747175187.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="md4hhqjtrihbqqci"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250515-mc33xs2410-hwmon-v2-1-8d2e78f7e30d@liebherr.com>
+In-Reply-To: <0faf8e6acef1493e8e29c75a6098ca0136740780.1747175187.git.Jonathan.Santos@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+
+On Thu, May 15, 2025 at 06:13:43PM -0300, Jonathan Santos wrote:
+> When the device is configured to decimation x8, only possible in the
+> sinc5 filter, output data is reduced to 16-bits in order to support
+> 1 MHz of sampling frequency due to clock limitation.
+> 
+> Use multiple scan types feature to enable the driver to switch
+> scan type at runtime, making it possible to support both 24-bit and
+> 16-bit resolution.
+
+...
+
+> +static int ad7768_get_current_scan_type(const struct iio_dev *indio_dev,
+> +					const struct iio_chan_spec *chan)
+> +{
+> +	struct ad7768_state *st = iio_priv(indio_dev);
+> +
+> +	return st->dec_rate == 8 ? AD7768_SCAN_TYPE_HIGH_SPEED :
+> +		AD7768_SCAN_TYPE_NORMAL;
+
+Besides issues with the indentation, the logical split seems to me better:
+
+	return st->dec_rate == 8 ?
+	       AD7768_SCAN_TYPE_HIGH_SPEED : AD7768_SCAN_TYPE_NORMAL;
+
+> +}
+
+But no need to resend just for this. Perhaps Jonathan can update.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---md4hhqjtrihbqqci
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] pwm: mc33xs2410: add support for temperature sensors
-MIME-Version: 1.0
-
-Hello Dimitri,
-
-On Thu, May 15, 2025 at 02:40:54PM +0200, Dimitri Fedrau via B4 Relay wrote:
-> From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
->=20
-> The MC33XS2410 provides temperature sensors for the central die temperatu=
-re
-> and the four outputs. Additionally a common temperature warning threshold
-> can be configured for the outputs. Add hwmon support for the sensors.
->=20
-> Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-> ---
-> Changes in v2:
-> - Remove helper mc33xs2410_hwmon_read_out_status and report the last
->   latched status.
-> - Link to v1: https://lore.kernel.org/r/20250512-mc33xs2410-hwmon-v1-1-ad=
-dba77c78f9@liebherr.com
-> ---
-
-Mostly fine from my POV. I suggest to squash the following change into
-your patch:
-
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index a0c077af9c98..d9bcd1e8413e 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -425,7 +425,6 @@ config PWM_LPSS_PLATFORM
-=20
- config PWM_MC33XS2410
- 	tristate "MC33XS2410 PWM support"
--	depends on HWMON || HWMON=3Dn
- 	depends on OF
- 	depends on SPI
- 	help
-diff --git a/drivers/pwm/pwm-mc33xs2410.c b/drivers/pwm/pwm-mc33xs2410.c
-index c1b99b114314..f5bba1a7bcc5 100644
---- a/drivers/pwm/pwm-mc33xs2410.c
-+++ b/drivers/pwm/pwm-mc33xs2410.c
-@@ -163,7 +163,6 @@ static int mc33xs2410_modify_reg(struct spi_device *spi=
-, u8 reg, u8 mask, u8 val
- 	return mc33xs2410_write_reg(spi, reg, tmp);
- }
-=20
--#if IS_ENABLED(CONFIG_HWMON)
- static const struct hwmon_channel_info * const mc33xs2410_hwmon_info[] =3D=
- {
- 	HWMON_CHANNEL_INFO(temp,
- 			   HWMON_T_LABEL | HWMON_T_INPUT,
-@@ -286,21 +285,20 @@ static const struct hwmon_chip_info mc33xs2410_hwmon_=
-chip_info =3D {
- static int mc33xs2410_hwmon_probe(struct spi_device *spi)
- {
- 	struct device *dev =3D &spi->dev;
--	struct device *hwmon;
-=20
--	hwmon =3D devm_hwmon_device_register_with_info(dev, NULL, spi,
--						     &mc33xs2410_hwmon_chip_info,
--						     NULL);
-+	if (IS_REACHABLE(CONFIG_HWMON)) {
-+		struct device *hwmon;
-=20
--	return PTR_ERR_OR_ZERO(hwmon);
--}
-+		hwmon =3D devm_hwmon_device_register_with_info(dev, NULL, spi,
-+							     &mc33xs2410_hwmon_chip_info,
-+							     NULL);
-=20
--#else
--static int mc33xs2410_hwmon_probe(struct spi_device *spi)
--{
--	return 0;
-+		return PTR_ERR_OR_ZERO(hwmon);
-+	} else {
-+		dev_dbg(dev, "Not registering hwmon sensors\n");
-+		return 0;
-+	}
- }
--#endif
-=20
- static u8 mc33xs2410_pwm_get_freq(u64 period)
- {
-@@ -523,7 +521,11 @@ static int mc33xs2410_probe(struct spi_device *spi)
- 	if (ret < 0)
- 		return dev_err_probe(dev, ret, "Failed to add pwm chip\n");
-=20
--	return mc33xs2410_hwmon_probe(spi);
-+	ret =3D mc33xs2410_hwmon_probe(spi);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "Failed to register hwmon sensors\n");
-+
-+	return 0;
- }
-=20
- static const struct spi_device_id mc33xs2410_spi_id[] =3D {
-Best regards
-Uwe
-
---md4hhqjtrihbqqci
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgnBE4ACgkQj4D7WH0S
-/k6ldwf+P7rvywthCrMgABmoTQ5p+Hlc4ACPxZGG1iH27rTjMPAW67I6NQ6GbEiq
-mmfmuzlAWq35W+YxrEU1XMawlcEzuNAnTcxdk589MOcR4gaqRZadKpkLtVROSOD6
-eBMNdY7FizuCnwyId4h4dMBKn2aLuFxWdCRRFMYV8q6TsdbquHJjC2IqkU4588dk
-dOPy2Aw6p7bRNOX+LHTcVM7scO8/9aQww7c/x5RSDyb6LYAhPe5aGdOLtNOwATXA
-6OE8AkyvcKlm8TJVx5LLBzUI9TPIfBoAbpKxQ5Ivs/DCVz13EBEZchMb1QvOLBOO
-34c9g8Crla8jnt6ZFw/zBpGPtSLGMw==
-=Ul98
------END PGP SIGNATURE-----
-
---md4hhqjtrihbqqci--
