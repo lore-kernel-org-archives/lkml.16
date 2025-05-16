@@ -1,46 +1,49 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46AAC22F743
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4109217642;
+	Fri, 16 May 2025 11:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747396093; cv=none; b=cM7r0qg2+FxA1sEMJ1AJ50HvnKS0j6Gkdi3KHbRsjwXfgxEi+nf/d1zt8VASByD7qEnIEHuVJE0wVGPwdVsoTGzN1aGFbSpgwEZ2tKzLUpArzF60J5MPo9m2DogMRPI1kTNtYVr35CYijPAI1Qv9xmnHNtztBN0yBJwbKAdXvdg=
+	t=1747396152; cv=none; b=ScoRD+6yjGXqkEnUcDsSb0ISesN97+O+2XgXIHKX0MLkmQKajTZLZwR3PaA/u9c2bqaM+wupGMSYdwYfLnXv4q/GeWf511Ejs3C5jJ2uB5tyLjOD3EgeSksdPaMmjgcwm61nGZnA05etahhohPXhBrClnEMV0Xmd+8b/ExWYXM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747396093; c=relaxed/simple;
-	bh=3MYijVPQvpzqVThNCDiXH+5zTAGvUkwSQecbvmdBVoc=;
+	s=arc-20240116; t=1747396152; c=relaxed/simple;
+	bh=DRCUEKziaUleipRlRH9DHWvLypuZB1j2p6igjfcfTDo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d3teHMCL0wnSpfswWeSQAz1WrlJE5W/51kyrJgRnK/gCfB9ohwgVgJvGKQ6fkAmQsaO3LP5DyW4vsM3LLoQ+sO6XmjCOPwNTCHkcSb0LVS/7kvIszTcE1YZtHF1YaiXZ38Bs2W68dCW/HCFIcbj6Hp1vhurIJWucp/qGqBVZ918=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ow/Zig/M; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=L06V3ecnJ9frmpWbVIytMWg1lQV3SQGDayri6KOrg30kMWkVFJKnET0+47irKw688yDlTFhWnGWcONtMpexwi1KCT79tmJ03s7GxUFxaMMIiJq03/eEdjKGShBraxkZB7hgktfPmhH1u8ERhfaSLs9MgWcxqwguudoeupSxeszk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=nBWTjQIA; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ow/Zig/M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61EC6C4CEE4;
-	Fri, 16 May 2025 11:48:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747396092;
-	bh=3MYijVPQvpzqVThNCDiXH+5zTAGvUkwSQecbvmdBVoc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ow/Zig/MtvU9TV1An7IkGMy5ojFoH6ZCFr3m5fXOfb2daB/s2IvbdCwl+pIdOPNHn
-	 +OfoyNdV5npqNeCClbn0lJd3hjNSf30/G0jY15n6nxW+bM+21RaUxHtajhetqs/68h
-	 tuqxp7oa26SeBl8p0HtWn24nAV3OMUI7CNCq7t+0MXAoXQeikOWMzk6Gp6e3VjW1i0
-	 j8UziO5Rdbslm2zpfpq2bj01teEjuK+RG61zZrcTQIXKfrRzQeGirlaWaNI7Shm6Do
-	 3iQpLe277g5Fg4cB3eF2fA9i5QRBa34j/SiVwel0LPB3jNf0FgIRzATvAnNWvTAUjb
-	 8zzbLizIcBP5A==
-Date: Fri, 16 May 2025 13:48:04 +0200
-From: Alexey Gladkov <legion@kernel.org>
-To: Chen Ridong <chenridong@huaweicloud.com>
-Cc: akpm@linux-foundation.org, paulmck@kernel.org, bigeasy@linutronix.de,
-	roman.gushchin@linux.dev, brauner@kernel.org, tglx@linutronix.de,
-	frederic@kernel.org, peterz@infradead.org, oleg@redhat.com,
-	joel.granados@kernel.org, viro@zeniv.linux.org.uk,
-	lorenzo.stoakes@oracle.com, avagin@google.com,
-	mengensun@tencent.com, linux@weissschuh.net, jlayton@kernel.org,
-	ruanjinjie@huawei.com, kees@kernel.org,
-	linux-kernel@vger.kernel.org, lujialin4@huawei.com,
-	Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [RFC next v2 0/5] ucount: add rlimit cache for ucount
-Message-ID: <aCcl9M-BgOJ86gVJ@example.org>
-References: <20250509072054.148257-1-chenridong@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="nBWTjQIA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=DMYQPSw8xpfgz6kQUw4EwQaVl2tLBGwQu1uoyauPgWg=; b=nBWTjQIA9xEL+mt92SH36gD3yZ
+	ylvRM7lchdLGgBa5Eh9lVAOUin8xnBrQT3yaiq04pCn4ONsFchYtND2pbBy2aOGH5IguDzjgo4w0T
+	Tia6w9OE5BpkATy5gTLHyHuf1e1TQ8iflIlo9zuLBMUSguQ13SfIgAkysq3PJ3Den3M6eIP046RID
+	mAk1rE8U3C5fZv5yp0ZHyPHioaI9D2n2zh1egr5QO2qwAH0DCnix1i9n4st6D8NExnKMTWEdtADAX
+	z6T01YV/7eFn8CyU2DKQSX8JaMIXphmSuYWYOBFUKw8/eYyDvd6RhrIVcbNkrFbOYKs/X9tqX+ZbM
+	+zopuV0w==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uFtYa-006Zte-0n;
+	Fri, 16 May 2025 19:48:53 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 16 May 2025 19:48:52 +0800
+Date: Fri, 16 May 2025 19:48:52 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Jain@formenos.rohan.me.apana.org.au, Ayush <Ayush.Jain3@amd.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>, x86-ml <x86@kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org,
+	Eric Biggers <ebiggers@google.com>
+Subject: [PATCH] crypto: lib/sha256 - Disable SIMD
+Message-ID: <aCcmJGuCnuyHmHbx@gondor.apana.org.au>
+References: <20250516112217.GBaCcf6Yoc6LkIIryP@fat_crate.local>
+ <aCcirrsFFrrRqf5A@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,134 +52,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250509072054.148257-1-chenridong@huaweicloud.com>
+In-Reply-To: <aCcirrsFFrrRqf5A@gondor.apana.org.au>
 
-On Fri, May 09, 2025 at 07:20:49AM +0000, Chen Ridong wrote:
-> The will-it-scale test case signal1 [1] has been observed. and the test
-> results reveal that the signal sending system call lacks linearity.
+On Fri, May 16, 2025 at 07:34:06PM +0800, Herbert Xu wrote:
+> 
+> So what's happened is that previously if you call sha256_update
+> from lib/crypto it would only use the generic C code to perform
+> the operation.
+> 
+> This has now been changed to automatically use SIMD instructions
+> which obviously blew up in your case.
 
-The signal1 testcase is pretty synthetic. It sends a signal in a busy loop.
+In the interim you can go back to the old ways and disable SIMD
+for lib/crypto sha256 with this patch:
 
-Do you have an example of a closer-to-life scenario where this delay
-becomes a bottleneck ?
+---8<---
+Disable SIMD usage in lib/crypto sha256 as it is causing crashes.
 
-https://github.com/antonblanchard/will-it-scale/blob/master/tests/signal1.c
+Reported-by: Borislav Petkov <bp@alien8.de>
+Fixes: 950e5c84118c ("crypto: sha256 - support arch-optimized lib and expose through shash")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-> To further investigate this issue, we initiated a series of tests by
-> launching varying numbers of dockers and closely monitored the throughput
-> of each individual docker. The detailed test outcomes are presented as
-> follows:
-> 
-> 	| Dockers     |1      |4      |8      |16     |32     |64     |
-> 	| Throughput  |380068 |353204 |308948 |306453 |180659 |129152 |
-> 
-> The data clearly demonstrates a discernible trend: as the quantity of
-> dockers increases, the throughput per container progressively declines.
-> In-depth analysis has identified the root cause of this performance
-> degradation. The ucouts module conducts statistics on rlimit, which
-> involves a significant number of atomic operations. These atomic
-> operations, when acting on the same variable, trigger a substantial number
-> of cache misses or remote accesses, ultimately resulting in a drop in
-> performance.
-> 
-> Notably, even though a new user_namespace is created upon docker startup,
-> the problem persists. This is because all these dockers share the same
-> parent node, meaning that rlimit statistics continuously modify the same
-> atomic variable.
-> 
-> Currently, when incrementing a specific rlimit within a child user
-> namespace by 1, the corresponding rlimit in the parent node must also be
-> incremented by 1. Specifically, if the ucounts corresponding to a task in
-> Docker B is ucount_b_1, after incrementing the rlimit of ucount_b_1 by 1,
-> the rlimit of the parent node, init_ucounts, must also be incremented by 1.
-> This operation should be ensured to stay within the limits set for the
-> user namespaces.
-> 
-> 	init_user_ns                             init_ucounts
-> 	^                                              ^
-> 	|                        |                     |
-> 	|<---- usr_ns_a(docker A)|usr_ns_a->ucount---->|
-> 	|                        |                     |
-> 	|<---- usr_ns_b(docker B)|usr_ns_a->ucount---->|
-> 					^
-> 					|
-> 					|
-> 					|
-> 					ucount_b_1
-> 
-> What is expected is that dockers operating within separate namespaces
-> should remain isolated and not interfere with one another. Regrettably,
-> the current signal system call fails to achieve this desired level of
-> isolation.
-> 
-> Proposal:
-> 
-> To address the aforementioned issues, the concept of implementing a cache
-> for each namespace's rlimit has been proposed. If a cache is added for
-> each user namespace's rlimit, a certain amount of rlimits can be allocated
-> to a particular namespace in one go. When resources are abundant, these
-> resources do not need to be immediately returned to the parent node. Within
-> a user namespace, if there are available values in the cache, there is no
-> need to request additional resources from the parent node.
-> 
-> 	init_user_ns                             init_ucounts
-> 	^                                              ^
-> 	|                        |                     |
-> 	|<---- usr_ns_a(docker A)|usr_ns_a->ucount---->|
-> 	|                        |                     |
-> 	|<---- usr_ns_b(docker B)|usr_ns_b->ucount---->|
-> 			^		^
-> 			|		|
-> 			cache_rlimit--->|
-> 					|
-> 					ucount_b_1
-> 
-> 
-> The ultimate objective of this solution is to achieve complete isolation
-> among namespaces. After applying this patch set, the final test results
-> indicate that in the signal1 test case, the performance does not
-> deteriorate as the number of containers increases. This effectively meets
-
-> the goal of linear scalability.
-> 
-> 	| Dockers     |1      |4      |8      |16     |32     |64     |
-> 	| Throughput  |381809 |382284 |380640 |383515 |381318 |380120 |
-> 
-> Challenges:
-> 
-> When checking the pending signals in the parent node using the command
->  cat /proc/self/status | grep SigQ, the retrieved value includes the
-> cached signal counts from its child nodes. As a result, the SigQ value
-> in the parent node fails to accurately and instantaneously reflect the
-> actual number of pending signals.
-> 
-> 	# cat /proc/self/status | grep SigQ
-> 	SigQ:	16/6187667
-> 
-> TODO:
-> 
-> Add cache for the other rlimits.
-> 
-> [1] https://github.com/antonblanchard/will-it-scale/blob/master/tests/
-> 
-> Chen Ridong (5):
->   user_namespace: add children list node
->   usernamespace: make usernamespace rcu safe
->   user_namespace: add user_ns iteration helper
->   uounts: factor out __inc_rlimit_get_ucounts/__dec_rlimit_put_ucounts
->   ucount: add rlimit cache for ucount
-> 
->  include/linux/user_namespace.h |  23 ++++-
->  kernel/signal.c                |   2 +-
->  kernel/ucount.c                | 181 +++++++++++++++++++++++++++++----
->  kernel/user.c                  |   2 +
->  kernel/user_namespace.c        |  60 ++++++++++-
->  5 files changed, 243 insertions(+), 25 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
-
+diff --git a/include/crypto/internal/sha2.h b/include/crypto/internal/sha2.h
+index b9bccd3ff57f..e1b0308c0539 100644
+--- a/include/crypto/internal/sha2.h
++++ b/include/crypto/internal/sha2.h
+@@ -32,7 +32,7 @@ static inline void sha256_choose_blocks(
+ 	if (!IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_SHA256) || force_generic)
+ 		sha256_blocks_generic(state, data, nblocks);
+ 	else if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_SHA256_SIMD) &&
+-		 (force_simd || crypto_simd_usable()))
++		 force_simd)
+ 		sha256_blocks_simd(state, data, nblocks);
+ 	else
+ 		sha256_blocks_arch(state, data, nblocks);
 -- 
-Rgrds, legion
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
