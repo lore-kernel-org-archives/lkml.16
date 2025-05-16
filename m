@@ -1,133 +1,152 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002852AD0C;
-	Fri, 16 May 2025 01:44:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8858823AD
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 01:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747359888; cv=none; b=SfIKoFDNnCLC3ohG8srpX8fTHfH379bRJuFJ6rhYTeHXZ956XEqqRJYlIwkr2L2945pcGlTSqyiCYBPAfSq7kyOfl0IJTAwkpM9pmnGTBZSt3izraNO32pUb+ZWl3+bLALsaT0Sc8hfWUSiZ5ggmG/20u0uo0C17YYkjXDJzI1A=
+	t=1747360315; cv=none; b=ag9WbTQSSPu4u6vhj3Uxj789eH6en2XU9/dFbwDHwY5q2rfgyniIqhIK5Xs9lMbXzm3cmdlKq1Nc5/B4FtdKD+I1btYrEawC1hhVBw+l/O0jy9nmoFDcegJpop7Hmd5SkYksTmWyBMympdU3nqq6OaaZCppkp7C5yVG8gshX+TY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747359888; c=relaxed/simple;
-	bh=OLule8vZ6pYFD7KstMmId4kflE7J1eo02CkkvhaIF0M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BIlSVZ55PcEcJIbERi+YQZgSTWZjHFx180P7N8hgrRsKYsTekCDePaIvCkmC9kkAkDcZ2ux0NnGMYmTYIlVDRRptZl2HGQamHKQAQgi+IoJ4cZ/M5J5MEQl97IFWbB6M5YTY21Q1afkkIP9ejGGdcA85aktyGI+NPhn6ojoNgYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L4tK8LiB; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747360315; c=relaxed/simple;
+	bh=Kvi3+MByPKVUnusiq/0ZjYdwk7l60C4sKMs/kucIHB8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PIUmMylPaui73HkhjFPGlca/eHhw5HOSTeTqC19vlDFz9fFX4eKUG6APZJuhmQj9jZRXC93TbMwBkvgnphpiP5on6ksNJeDjMTHO6qSZ4dl5MzCATPTg9o1nJeGohc0eQmHZess0gcqBSGeKDi2+VJbBPfolCuizyk3LqgKALTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=U6Zh2as+; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4tK8LiB"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-70a2c0e7fbbso17296007b3.2;
-        Thu, 15 May 2025 18:44:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747359886; x=1747964686; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=jkvwIib7SJ8VISrZy+6Zl38kwYsQhTVmXH1LNDYr2gI=;
-        b=L4tK8LiBVUhvrwI11sIrWgo20cM3ug+IdGFFXTWgFckv5w3zy4iOBoNHZ7yIM48FTC
-         Lrr/XkjVylc2/emx9NsDG5t6n57YmOUy4yG2fiXFw49ht0Ebs9GmrqJnvt3zvqX2E4WF
-         ohDocencvDaOQeklS2xGZGY/73nZaju3rpQxTJkGPauTJD7VQiuduYpx10Mc8a+zuQHf
-         Ysk+BK7l0wcO3rFVpALFPvt8VOtouJfdBHysefdhX8szWa9laDNNIlk2b36kXfkSmLBU
-         9riuC3wJwdmx7XWL5O+XEJs8bK6yfI4OjN5gsc1Mk4/34SjXJkTFU0ybKNq+05cSCZh9
-         z/ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747359886; x=1747964686;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jkvwIib7SJ8VISrZy+6Zl38kwYsQhTVmXH1LNDYr2gI=;
-        b=uRzOA2GFvTgR0q0DlFiFILaX/IJfqekgAvtN0Bqw1nfosg1rFQSGHp3zNW9RoxfM3K
-         0zgB1vebm8GCbvbTDinep14Vu/YRoCA77naMnc7etXSaEZ/K2UfCPyVTjQbCJuC2KjW1
-         5Zi0w05x+X/VWrsk6ZpBjuP6LhVTvwZZP5PUqmjFnTwxyQiZjy69uH/TcwrGBkTnc8P2
-         jJG0OsU6XTED7YoAPmyeuPUVlgCl3Exz6nSEDBDLpS29AvjpqMFTa27ZtlEBwY/uNQvR
-         Yf6AhZDFBw4u4/GQoYmZKa5e0P6XSHWMXOEaeAH0VIQb7c9W+jQaFhmNQHDqtcGiZtsk
-         rY3g==
-X-Forwarded-Encrypted: i=1; AJvYcCWEWGCd2egPYiAALplG+BMxAickjikIltOJEtZ3VugHxDppjKOB+yMIpI5ddjQrNyJh+iBeGmtFlpsQCTfUTN0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJ3FCeVPHTL1A1jw7UOVp3Lpuxc6cBgve8/P7K4qNYxmTfqWkE
-	KjZuUhPtAYrtR1EwvoVBnwy5p6L4s40/OjnfOenj5ViMDImcpDz4NrkayJamZbHGswR/VtVYmM0
-	3/aTUk3jZB4bGZ43SjzR6MmztS+7un5g=
-X-Gm-Gg: ASbGnctCaOaNz/1UHaozcs2YJKmripMt+s4oHnIQLt4KBqqyX3DtNUscavEe2+k1082
-	xh+xrjPmE8zQhJK8DSK1SBer9i8UnifhhpJnWNeGdlODGhIJDkFV5ORQViqGLkFIEoFaUqjvvAZ
-	tHsSy1iA3oAo9TXhKEiLu+lLaIMu/iFM6fy74tYxOe8M366iwjT9VvIcHJMTxrmk+Rx+Q=
-X-Google-Smtp-Source: AGHT+IHaUQqw1N80C0OWhVA4FjqviBDRh58TKU0yyt8RSMOTTxsx9frZtSeZj+VRFZjfpaa3ZkwPB+opUbCwU3YjrLA=
-X-Received: by 2002:a05:690c:6089:b0:709:1d50:897 with SMTP id
- 00721157ae682-70cab0dcf41mr12450787b3.33.1747359885769; Thu, 15 May 2025
- 18:44:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="U6Zh2as+"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747360309; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=ASU4Fxc7OHYIafbgzFRpS/eCwbldDAYcq+8dy81di+w=;
+	b=U6Zh2as+uxElW7kiMbyAWOw3FimN1ImicwIFNGoDMUJpabEvFtrPCWx23G04FVgxvR/Fy4URDmrKNRdBA7M9NXRndK428uJso0HSUsUtyXaabtEdMXrhtHgRoZDSqRjK8TzVNVff4UABMw9rrX1+Xdzo7oGgziwppKtpIPN9P6k=
+Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WatLZYe_1747360306 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 16 May 2025 09:51:47 +0800
+From: "Huang, Ying" <ying.huang@linux.alibaba.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,  Zi Yan <ziy@nvidia.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,  David Hildenbrand
+ <david@redhat.com>,  Alistair Popple <apopple@nvidia.com>,  Matthew Brost
+ <matthew.brost@intel.com>,  Joshua Hahn <joshua.hahnjy@gmail.com>,  Rakie
+ Kim <rakie.kim@sk.com>,  linux-mm@kvack.org,
+  linux-kernel@vger.kernel.org,  Byungchul Park <byungchul@sk.com>,
+  Gregory Price <gourry@gourry.net>
+Subject: Re: [PATCH] MAINTAINERS: add mm memory policy section
+In-Reply-To: <ed6f0fc2-5608-4eea-b1be-07e3e19be263@lucifer.local> (Lorenzo
+	Stoakes's message of "Thu, 15 May 2025 20:25:17 +0100")
+References: <20250515191358.205684-1-lorenzo.stoakes@oracle.com>
+	<ed6f0fc2-5608-4eea-b1be-07e3e19be263@lucifer.local>
+Date: Fri, 16 May 2025 09:51:46 +0800
+Message-ID: <87bjrtpbkd.fsf@DESKTOP-5N7EMDA>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAG+54DbGpNn-Ps=djpsUy+K-6V+eoNcMbTcJoW8W5upz2OKn+g@mail.gmail.com>
-In-Reply-To: <CAG+54DbGpNn-Ps=djpsUy+K-6V+eoNcMbTcJoW8W5upz2OKn+g@mail.gmail.com>
-From: rujra <braker.noob.kernel@gmail.com>
-Date: Fri, 16 May 2025 07:14:34 +0530
-X-Gm-Features: AX0GCFvnDgljjtOzQ3Gs4asEx8d--Lh61FJjSx4zgR_CjQEsgnkL4Zx2u8VeV98
-Message-ID: <CAG+54DZ1wDTdWPQSw01G4YgTdihezQ966LGa6ttmBgT2D2gTyg@mail.gmail.com>
-Subject: Fwd: [PATCH] selftests : timers : valid-adjtimex.c : Fixed style checks
-To: skhan@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ascii
 
-fixed style checks according to Linux Kernel Coding Style standards.
+Lorenzo Stoakes <lorenzo.stoakes@oracle.com> writes:
 
+> Hi Andrew,
+>
+> Could you also apply the attached fix-patch, as I accidentally missed Ying
+> from the reviewer list.
+>
+> Thanks, Lorenzo
+>
+> On Thu, May 15, 2025 at 08:13:58PM +0100, Lorenzo Stoakes wrote:
+>> As part of the ongoing efforts to sub-divide memory management
+>> maintainership and reviewership, establish a section for memory policy and
+>> migration and add appropriate maintainers and reviewers.
+>>
+>> Reviewed-by: Rakie Kim <rakie.kim@sk.com>
+>> Acked-by: Matthew Brost <matthew.brost@intel.com>
+>> Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+>> Acked-by: David Hildenbrand <david@redhat.com>
+>> Acked-by: Zi Yan <ziy@nvidia.com>
+>> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>> ---
+>> v1:
+>> * un-RFC'd as there seems to be consensus.
+>> * Added Gregory and Byungchui who kindly offered to be reviewers also!
+>> * Removed Alistair as he hasn't been active on-list lately. Alistair - hope
+>>   you don't mind, We can very easily add you later, just don't want put you
+>>   here without your positive consent :)
+>>
+>> RFC:
+>> https://lore.kernel.org/all/20250513160007.132378-1-lorenzo.stoakes@oracle.com/
+>>
+>>  MAINTAINERS | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 314007e2befd..17403329d76f 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -15577,6 +15577,25 @@ W:	http://www.linux-mm.org
+>>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+>>  F:	mm/gup.c
+>>
+>> +MEMORY MANAGEMENT - MEMORY POLICY AND MIGRATION
+>> +M:	Andrew Morton <akpm@linux-foundation.org>
+>> +M:	David Hildenbrand <david@redhat.com>
+>> +R:	Zi Yan <ziy@nvidia.com>
+>> +R:	Matthew Brost <matthew.brost@intel.com>
+>> +R:	Joshua Hahn <joshua.hahnjy@gmail.com>
+>> +R:	Rakie Kim <rakie.kim@sk.com>
+>> +R:	Byungchul Park <byungchul@sk.com>
+>> +R:	Gregory Price <gourry@gourry.net>
+>> +L:	linux-mm@kvack.org
+>> +S:	Maintained
+>> +W:	http://www.linux-mm.org
+>> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+>> +F:	include/linux/mempolicy.h
+>> +F:	include/linux/migrate.h
+>> +F:	mm/mempolicy.c
+>> +F:	mm/migrate.c
+>> +F:	mm/migrate_device.c
+>> +
+>>  MEMORY MANAGEMENT - NUMA MEMBLOCKS AND NUMA EMULATION
+>>  M:	Andrew Morton <akpm@linux-foundation.org>
+>>  M:	Mike Rapoport <rppt@kernel.org>
+>> --
+>> 2.49.0
+>
+> ----8<----
+> From 6e6b63cdce577718d939178625b62fe92e15565f Mon Sep 17 00:00:00 2001
+> From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Date: Thu, 15 May 2025 20:23:27 +0100
+> Subject: [PATCH] add Ying as reviewer
+>
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 17403329d76f..b4f74cdc5304 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15586,6 +15586,7 @@ R:	Joshua Hahn <joshua.hahnjy@gmail.com>
+>  R:	Rakie Kim <rakie.kim@sk.com>
+>  R:	Byungchul Park <byungchul@sk.com>
+>  R:	Gregory Price <gourry@gourry.net>
+> +R:	Ying Huang <ying.huang@linux.alibaba.com>
+>  L:	linux-mm@kvack.org
+>  S:	Maintained
+>  W:	http://www.linux-mm.org
 
-1 : fixed alignment of parenthesis.
-LOG : CHECK: Alignment should match open parenthesis
-+                       printf("ERROR: out of range value %ld actually set!\n",
-+                                       tx.freq);
+Thank Zi for nominating me!
 
-2 : fixed alignment of parenthesis.
-LOG : CHECK: Alignment should match open parenthesis
-+                               printf("Error: No failure on invalid
-ADJ_FREQUENCY %ld\n",
-+                                       invalid_freq[i]);
+It's my pleasure to be listed as reviewer.  Feel free to add my
 
-3 : fixed line length of 106 to 100 and less.
-LOG :  CHECK: line length of 106 exceeds 100 columns
-+               printf("Invalid (sec: %ld  usec: %ld) did not fail! ",
-tmx.time.tv_sec, tmx.time.tv_usec);
+Acked-by: Huang Ying <ying.huang@linux.alibaba.com>
 
-Signed-off-by: Rujra Bhatt <braker.noob.kernel@gmail.com>
+in the future versions.
+
 ---
- tools/testing/selftests/timers/valid-adjtimex.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/tools/testing/selftests/timers/valid-adjtimex.c
-b/tools/testing/selftests/timers/valid-adjtimex.c
-index 6b7801055ad1..5110f9ee285c 100644
---- a/tools/testing/selftests/timers/valid-adjtimex.c
-+++ b/tools/testing/selftests/timers/valid-adjtimex.c
-@@ -157,7 +157,7 @@ int validate_freq(void)
-                if (tx.freq == outofrange_freq[i]) {
-                        printf("[FAIL]\n");
-                        printf("ERROR: out of range value %ld actually set!\n",
--                                       tx.freq);
-+                              tx.freq);
-                        pass = -1;
-                        goto out;
-                }
-@@ -172,7 +172,7 @@ int validate_freq(void)
-                        if (ret >= 0) {
-                                printf("[FAIL]\n");
-                                printf("Error: No failure on invalid
-ADJ_FREQUENCY %ld\n",
--                                       invalid_freq[i]);
-+                                      invalid_freq[i]);
-                                pass = -1;
-                                goto out;
-                        }
-@@ -238,7 +238,8 @@ int set_bad_offset(long sec, long usec, int use_nano)
-        tmx.time.tv_usec = usec;
-        ret = clock_adjtime(CLOCK_REALTIME, &tmx);
-        if (ret >= 0) {
--               printf("Invalid (sec: %ld  usec: %ld) did not fail! ",
-tmx.time.tv_sec, tmx.time.tv_usec);
-+               printf("Invalid (sec: %ld  usec: %ld) did not fail! ",
-+                      tmx.time.tv_sec, tmx.time.tv_usec);
-                printf("[FAIL]\n");
-                return -1;
-        }
---
-2.43.0
+Best Regards,
+Huang, Ying
