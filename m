@@ -1,85 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772B11922FA;
-	Fri, 16 May 2025 09:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EF4163
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747388318; cv=none; b=cINEnA/5T5yEmkCptiBGWI7VtSgf8P5MPvxCM2H4PRxSf92AMzvSadKgYrlXDg8dcu+2fMRddPMMJYBn0ku/WHa73vJrdV+orz5xyYFmxS92njW+ayJ3dEaFVlckjgrwY+lfwpd3QtIvlssY4yQIKx+iGFu3Cxje9k4YztSAnbc=
+	t=1747388423; cv=none; b=CDyyFUArNd7Kbi7ZNq20ZhRCn3ZI6s2CjxDKNfJJVk+pXvXohFbY9klkeMu8MRZ1GaB0LJTkq1h6NG9C3Juxy0h/ndBOB/AXmkUrLFx741kYKeE2kAVq8Ogn3bIqdW897RF8EcfJ2l5/EJVBd6UfsbPiuWTTUHgg5PSFxMKEeEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747388318; c=relaxed/simple;
-	bh=59zsdEdxzDy5BJsnQBMJMTL7R201gGm0SirPB3vYRN0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jE+cc84TALqYbcx3hj26FilxP1bHcG/tLcMTwS76t+bdeSsk0To5nIVsHXl1E2/vrkuVprEgAOaaAgHHdccMboUTgyUmsLzGOAQrDF1vtlu7BJhil13dYIdH0kk4sgdskFgH0MnmIygQqUv+VLUv/bTqArEwNwaXSAswZ8+uD9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: tDLSnDDwQ4+OqZHOx26gug==
-X-CSE-MsgGUID: jVNW1K6pQSeaFk/7c1Qm8w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="71860039"
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="71860039"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:38:36 -0700
-X-CSE-ConnectionGUID: NBuM9J3uT5C+jmHiOau6Gw==
-X-CSE-MsgGUID: A80O8IrXTmWSyJF9zXKB8A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="143527551"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:38:31 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1uFrWO-000000026GK-188w;
-	Fri, 16 May 2025 12:38:28 +0300
-Date: Fri, 16 May 2025 12:38:28 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	nuno.sa@analog.com, Michael.Hennerich@analog.com,
-	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com
-Subject: Re: [PATCH v8 11/11] iio: adc: ad7768-1: add low pass -3dB cutoff
- attribute
-Message-ID: <aCcHlAE8LvO_fLxQ@smile.fi.intel.com>
-References: <cover.1747175187.git.Jonathan.Santos@analog.com>
- <42dc4d7722996a8d64a1bbafd8848609c9e435d8.1747175187.git.Jonathan.Santos@analog.com>
+	s=arc-20240116; t=1747388423; c=relaxed/simple;
+	bh=txK/33NrTZCl4GYsMTYr6JWHHtDzr12jMC72RWogYBY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gH/suHVMIu/tiKv8+nSRz5kSrynTq/TIVfC49adjKqK0gLKiBzv0ect2jps4wQhOMz8ZC74DIyrvo89Nw+uLmVkOvwgG/TfE9wGDmz1Hc25f4rL45WOvBrQO00MsGJ+NpytzDQ6/xmmlWqxzYMQpnG71RKTzJwHmjtFPwSf4mo8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=S1xtfRw/; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="S1xtfRw/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=HwPh2eBNs0hNXHHLT8tt8Qp541jzhDZo++QuI5wHTns=; b=S1xtfRw/E021Pp6I0qsKt4PurZ
+	9YVzcuiyjEoihL0GxI8K13n1cs535UI3B/GFNTgIWviER+j22RK2X/uifKH9Hrvl/fGTvovjKNSTk
+	lSiZlLSMLQ5EVN8RMYRGoRahHMawjKckJzDh0YCSU2dBAHVbDgIiBFmUEtO5hslCLBkOl5k0Ly4YC
+	X7u8nZCiYAe+QrYVEnDh6dAnoxybPzu0Sh+DhthfY2wmFbhzvHgPp7WEako0H1lmXbU0yOfDoByfu
+	SDIrHdXYnCapVb9ztulpwvHk/TEfld9sG9pTJ5eu4ZPUQHwwPAP6Dn5Ur2uvSpaYzusFYfVjDtzLw
+	OPdoIaiQ==;
+Received: from [81.79.92.254] (helo=[192.168.0.101])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uFrSD-0091XF-LP; Fri, 16 May 2025 11:40:08 +0200
+Message-ID: <236644fd-dbf4-48b0-a341-a26c0c8b9515@igalia.com>
+Date: Fri, 16 May 2025 10:40:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <42dc4d7722996a8d64a1bbafd8848609c9e435d8.1747175187.git.Jonathan.Santos@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/6] drm/sched: Warn if pending list is not empty
+To: Philipp Stanner <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250424095535.26119-2-phasta@kernel.org>
+ <20250424095535.26119-5-phasta@kernel.org>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+In-Reply-To: <20250424095535.26119-5-phasta@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 15, 2025 at 06:14:33PM -0300, Jonathan Santos wrote:
-> Ad7768-1 has a different -3db frequency multiplier depending on
-> the filter type configured. The cutoff frequency also varies according
-> to the current ODR.
+
+On 24/04/2025 10:55, Philipp Stanner wrote:
+> drm_sched_fini() can leak jobs under certain circumstances.
 > 
-> Add a readonly low pass -3dB frequency cutoff attribute to clarify to
-> the user which bandwidth is being allowed depending on the filter
-> configurations.
+> Warn if that happens.
+> 
+> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> ---
+>   drivers/gpu/drm/scheduler/sched_main.c | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
+> index c2ad6c70bfb6..0c56b85c574f 100644
+> --- a/drivers/gpu/drm/scheduler/sched_main.c
+> +++ b/drivers/gpu/drm/scheduler/sched_main.c
+> @@ -1457,6 +1457,9 @@ void drm_sched_fini(struct drm_gpu_scheduler *sched)
+>   	sched->ready = false;
+>   	kfree(sched->sched_rq);
+>   	sched->sched_rq = NULL;
+> +
+> +	if (!list_empty(&sched->pending_list))
+> +		dev_err(sched->dev, "Tearing down scheduler while jobs are pending!\n");
 
-...
+Is this expected to trigger for many drivers? In that case I am not sure 
+if it helps anyone, apart from generating bug tracker entries across the 
+world, for the issue we know about and could work
+"quietly" on addressing it? Only if you think we don't really know who 
+leaks and who doesn't and this will help figure out.
 
->  		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
->  		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |
-> -					    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
-> +					    BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |
-> +					    BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY),
+Hm wait, at this point in the series it would fire incorrectly for the 
+mock scheduler. It should go last in the series at minimum.
 
-You can make the diff looking better and easier to review if squeeze the new
-bit in between of the existing one, this will remove +- LoC here.
+Regards,
 
--- 
-With Best Regards,
-Andy Shevchenko
+Tvrtko
 
+>   }
+>   EXPORT_SYMBOL(drm_sched_fini);
+>   
 
