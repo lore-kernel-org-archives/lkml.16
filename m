@@ -1,111 +1,120 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37A1149E17;
-	Fri, 16 May 2025 16:05:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939D17D07D
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747411544; cv=none; b=FmXGe0hjrvD1YSjSR0NvidpG7nuxyNF8oy49seMjPZc4auMKw8/NEFEOHZCuyDVLdyaY4faPPDSH0crkbO1Fp752OnrFCp8k6jaxlfbQfPeR+Ew7j2gPpJfsaDLB4Ne9jcBZFAA/7zJHjU9owjWL13KdLD1Yix/eM0gUA/FEH1U=
+	t=1747411595; cv=none; b=miPHhMuHQTxAFWFbWb8CoMs9kCTMWixSIMPeP3cVBI2Jx/O2k1XSaeRCkiU8mVCcQjBWlnYO5B6p7ODfWVgvXe6mm5KmQ0K8I/xctJ6R3xdXDht4dMLSXyD/5iVsqumLJdEh0kwSxQTWPWqeoqSbbwZGUMUBkAOIsETc3kLKEU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747411544; c=relaxed/simple;
-	bh=Oh4p2T4rJVRiwnDIB2UdYEBdLIkgjeM2RZkYzY86X8c=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=OcHdcmI6pBcL83rgoPiUr2KrMgiiGY7YS3OOisX4Xhs6z5OOjDdrVOHuIyoGTd7NeznAHj4Y3WVq3Nv2To3GLyFGeWoy1WWmGpIsog4KgXuMi+OkovjIVW75EHG82NDJcxQQoHiHz0RxTV1jjRGyD6dH6Gi9a0mW2gYMBWY234s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fTQSutUL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jF4/4po5; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747411595; c=relaxed/simple;
+	bh=HC/H8VnyKJuKuUZ71TLJWBCeSgv7yjRyPzRGx3eOA7w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f0fNvGi5Jxd+Cu6Y95onIyHia/ira3XKVMusG4bPogjYI21du1K2LdJzlfz8UdUN1HFYC3r+/4Am0KWGHrlL3ImygW8y05X1KYKYQVgAL0KkZRini9G8WofxmY5F2B9/XbPvVpFLFn2txxYoEh58MoZTjOywekHdXW3VvSMX08Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y/A9Ngui; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fTQSutUL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jF4/4po5"
-Date: Fri, 16 May 2025 16:05:37 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747411539;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y/A9Ngui"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747411592;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1FqTa/4PKJJzA5SWxU0ImVtUEK3atLiNtBrileBJpbI=;
-	b=fTQSutULWgf0hTG5kqn6TPz8LtDocfEIvdJW6ybHh/TNvP3lGUWoLa16unNlDm1OmgAx2Z
-	wyExeIWw5rEAg+MwJcdJ2srw8NHm4kG0joCsvI5bY3CRoBDC9/S9B/TO1R65uKB2mH+sUl
-	lz1UlNfF8IJINfrrQbp3ddIsdJj+BrxPoaTwcwFMbdHkvxOwHUUsC4x8T9MV6L1F04pgPi
-	EQdoySDgLSp/TI3f+8Rz4VhX1Cv8739bklNswAYhXhDhsh09jWV56YZ3y79ghl/gDx2GTa
-	Sf8pGJjhORPPAgypr2PrjdI/zBF8cAOgJV19V92zEar6r6mF3kOLaiRXCVk/fg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747411539;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1FqTa/4PKJJzA5SWxU0ImVtUEK3atLiNtBrileBJpbI=;
-	b=jF4/4po5CTcy/rpUirbP7N6YhlPy6kS+rISWXY1w1eKXUrBQ0TOJLYLCdgPjRk6dFaKIlg
-	+IcyVPVF2UC0k/CA==
-From: "tip-bot2 for Changbin Du" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/x86/intel/ds: Remove redundant assignments to
- sample.period
-Cc: Changbin Du <changbin.du@huawei.com>, Ingo Molnar <mingo@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250506094907.2724-1-changbin.du@huawei.com>
-References: <20250506094907.2724-1-changbin.du@huawei.com>
+	bh=dRCWQ0WRwb7J9Y3IrAKzkNOuD8+Pdqu2lycZWGkuFKw=;
+	b=Y/A9NguiRLh74QjAVbTrie6hMrfvdG5tHa43ncdi2dnWjiXK32sjuO1LS81QaEI2kbKgXL
+	fnLQGUz5539jxJMVb+SE+YeJ5Q34/oC59zjTIAODjH/rMmjDlercraUKXzqgrQ/YF0PdvO
+	RDyA0y3BFpSyqWtlZnrAWO/SqdyOL2w=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-668-eFYM2NxfNwea_SK1JxIigg-1; Fri,
+ 16 May 2025 12:06:29 -0400
+X-MC-Unique: eFYM2NxfNwea_SK1JxIigg-1
+X-Mimecast-MFC-AGG-ID: eFYM2NxfNwea_SK1JxIigg_1747411587
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B501319560AF;
+	Fri, 16 May 2025 16:06:26 +0000 (UTC)
+Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (unknown [10.6.23.247])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 261B91956094;
+	Fri, 16 May 2025 16:06:25 +0000 (UTC)
+Received: from bmarzins-01.fast.eng.rdu2.dc.redhat.com (localhost [127.0.0.1])
+	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.18.1/8.17.1) with ESMTPS id 54GG6OJ04185925
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 12:06:24 -0400
+Received: (from bmarzins@localhost)
+	by bmarzins-01.fast.eng.rdu2.dc.redhat.com (8.18.1/8.18.1/Submit) id 54GG6LBK4185924;
+	Fri, 16 May 2025 12:06:21 -0400
+Date: Fri, 16 May 2025 12:06:21 -0400
+From: Benjamin Marzinski <bmarzins@redhat.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Kevin Wolf <kwolf@redhat.com>, Martin Wilck <mwilck@suse.com>,
+        dm-devel@lists.linux.dev, hreitz@redhat.com, mpatocka@redhat.com,
+        snitzer@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
+ paths
+Message-ID: <aCdifWdCQCR3Nqb0@redhat.com>
+References: <20250429165018.112999-1-kwolf@redhat.com>
+ <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
+ <aCIRUwt5BueQmlMZ@redhat.com>
+ <d51d6f85b5728648fe9c584f9cb3acee12c4873f.camel@suse.com>
+ <cc2ec011cf286cb5d119f2378ecbd7b818e46769.camel@suse.com>
+ <aCW95f8RGpLJZwSA@redhat.com>
+ <aCbUcdew393RZIkV@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174741153788.406.17877575431461411128.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCbUcdew393RZIkV@infradead.org>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-The following commit has been merged into the perf/core branch of tip:
+On Thu, May 15, 2025 at 11:00:17PM -0700, Christoph Hellwig wrote:
+> On Thu, May 15, 2025 at 12:11:49PM +0200, Kevin Wolf wrote:
+> > If you're talking about SG_IO in dm-mpath, then PRIN/PROUT commands are
+> > actually the one thing that we don't need. libmpathpersist sends the
+> > commands to the individual path devices, so dm-mpath will never see
+> > those. It's mostly about getting the full results on the SCSI level for
+> > normal I/O commands.
+> > 
+> > There has actually been a patch series on qemu-devel last year (that I
+> > haven't found the time to review properly yet) that would add explicit
+> > persistent reservation operations to QEMU's block layer that could then
+> > be used with the emulated scsi-hd device. On the backend, it only
+> > implemented it for iscsi, but I suppose we could implement it for
+> > file-posix, too (using the same libmpathpersist code as for
+> > passthrough). If that works, maybe at least some users can move away
+> > from SCSI passthrough.
+> 
+> Please call into the kernel PR code instead of hacking up more of
+> this, which will just run into problems again.
+> 
+> > The thing that we need to make sure, though, is that the emulated status
+> > we can expose to the guest is actually good enough. That Paolo said that
+> > the problem with reservation conflicts was mostly because -EBADE wasn't
+> > a thing yet gives me some hope that at least this wouldn't be a problem
+> > any more today.
+> 
+> And if you need more information we can add that to the kernel PR API.
 
-Commit-ID:     75a9001bab36f0456f6aae1ab0aa487db456464a
-Gitweb:        https://git.kernel.org/tip/75a9001bab36f0456f6aae1ab0aa487db456464a
-Author:        Changbin Du <changbin.du@huawei.com>
-AuthorDate:    Tue, 06 May 2025 17:49:07 +08:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 16 May 2025 17:53:53 +02:00
+I've run into SCSI arrays that always act like they were called with the
+ALL_TG_PT flag set (or perhaps they were just configured that way, I
+never could get a straight answer about that). libmpathpersist accepts
+this flag, and only sends one registration per initiator & target device
+when it's set, instead of one per initator & target port. dm-multipath
+currently doesn't have the knowledge necessary to figure out which
+devices it needs to send reservations to, even if the kernel PR API
+supported this.
 
-perf/x86/intel/ds: Remove redundant assignments to sample.period
+But I supposed it could just send the registration normally down one
+path and if that works, it could just ignore the existing key when it
+sends the registration down all the other paths.
 
-The perf_sample_data_init() has already set the period of sample, so no
-need to do it again.
+-Ben
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250506094907.2724-1-changbin.du@huawei.com
----
- arch/x86/events/intel/ds.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 61ee698..319d0d4 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1831,8 +1831,6 @@ static void setup_pebs_fixed_sample_data(struct perf_event *event,
- 
- 	perf_sample_data_init(data, 0, event->hw.last_period);
- 
--	data->period = event->hw.last_period;
--
- 	/*
- 	 * Use latency for weight (only avail with PEBS-LL)
- 	 */
-@@ -2085,7 +2083,6 @@ static void setup_pebs_adaptive_sample_data(struct perf_event *event,
- 	sample_type = event->attr.sample_type;
- 	format_group = basic->format_group;
- 	perf_sample_data_init(data, 0, event->hw.last_period);
--	data->period = event->hw.last_period;
- 
- 	setup_pebs_time(event, data, basic->tsc);
- 
