@@ -1,72 +1,103 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359891E5B97
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 19:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2B426C3B5;
+	Fri, 16 May 2025 19:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747422304; cv=none; b=O5w247EjEjpg+SWZt+NLq60AVeNP29e+EYHUhoyqdALnpkvyO1B0c2MMHpqZbL3olzYdLVltoKU/ze6/CmTBeq4BwISGzUtuiZyNnJcbjxzlGHZd4VBzFv0rlHhoskrQ1VxXGlHRG6Yl1+KYhRzaZkfdg/HF+wIpGXKzGGMTDD0=
+	t=1747422406; cv=none; b=BFk8heoueGQYg3gcln+7OeNWGb5a9G1OWTUsbcPZT8s9EXIYwLlNfFDjezRx6g3pp5fczoHGCZYKhNEE9aHpal1Z4wTczrdL5GAk6ZzudsjzIMOPthCmdvGjyyWsV7oyn9KJ/SP0avOYhBB4o9KAOeeTv4fHBIZHPDRTNtHGBB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747422304; c=relaxed/simple;
-	bh=gQlLtupqchd+VGw1m6GFog7hF1kAnH4Py+LcB/09kc8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=adQObOz4yNr27E1q9vS/C7HkmrEkxpvV/3rAINo3hqUBOFGnsaN3O+rmHqWUcjocES4SqGhrVOoXaEECnYV46ZUQBlh6oFcsQZT2WFpMViIVbR8U7UVmaWw5+5h6cSvImEvKXdqBNoxKIB5CnoeOjd+lDtrBZoEwp3K0AaSz4zE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-85c552b10b9so217591039f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 12:05:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747422302; x=1748027102;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tG0uI48XtWaf/yGrkPFaLuTmk7Ns93cu4doQPAqa38A=;
-        b=Ieuosq1+fE5Lka7lUAAx8LxdC6UeyzPsbClkmejz4yZwXcmIZxFdbygwyTZctvWczC
-         UvmjW0Owk9e8mNMbByhqVAjgrqUyvxDq/rgVKUIiKb8JlXHSurqKZlJBfPzi8JlwpG8D
-         hX7+AnveCBfjGoR9BWUzaKuqOijy00pHpdVmosZv/EMQvUHouf5dmj3vgn17yLnu+b8t
-         qurzRuXIwQHdoStPA+zrPL11dxNmOy1AQO2cmEBfjm3yVnlfacjKowlnQnEUJjMXwRzM
-         sOwO/JwaBUkmqy9Hnv2segd6DvY5luuzTd6ZKjHZESj7uUMQvEE4TY/y14JH8dyquAkJ
-         nG5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVX16Smk7/JZDbAAIQQnS1FDyAMdn7SyrCJTmMnlD6YQo34ZM0FpaU3ac/3PEPOLH8/P5Wx5DAphQFhmCY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWRsbDiA711+Y0rwe+p3QnaIo0WqHCERRbKifp9B2IOZcw2qjX
-	hn04QD6F+0TUoJzYGz37e1KaBSXpH0jB13L82ndSK5vb4b7YeYjn5KtfSb88DCeo63d6CEXLUCn
-	ZG6a07zm1/WdHbT17YgzfiaI6qXCYfsC0wG/ZQnlVncIuX+leb8xtinvzsq0=
-X-Google-Smtp-Source: AGHT+IEvrHcKqeiGi7f4tEGfoyJCIL4pm1MR4Wh341A7kttwMiEMC+6SfCDPSGaCqjaLX/jGukj8N8JCMo45yinr01e95D8SiACc
+	s=arc-20240116; t=1747422406; c=relaxed/simple;
+	bh=JDru76EihXPIsk0ZdHga0s1MNz6DJOcO3W/lzu46W3Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n8qhHL85DlP90D8u4ggaRgAj+dLuYyNnn01nC+R5V+k6lrlJ+FblAdsscJanuQP8fk+1rMnTSdh71tkeFThxJeRmYUrdXuIemcjWUgZCsiVzvqtHBAm9wgZn41DOWXNxwFP1oOXh34muFcBvwqugsc8NLIzIjQXCYjtIlRqbTGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GUNMKbcE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GUNMKbcE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7F89C4CEE4;
+	Fri, 16 May 2025 19:06:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747422405;
+	bh=JDru76EihXPIsk0ZdHga0s1MNz6DJOcO3W/lzu46W3Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GUNMKbcE5OzOkskHmbyAw0oaTy7DQvHUO9XDG01tmVvzUPhB0hvtTm61JWYERAnH1
+	 GLL3MB9d+3EM38Vhukjr01bFfpdTxg9Dzf0y64K7/zsbFvp6bsx3hIOYqggRYZb96x
+	 ZgmNgZu5UwTbVZF8WNnBjJ2Kibx4SXKq1TX8cbX5eLIrr37ybtOq0Z0AJM0knHdXo6
+	 QP7/f4OetYCgNt5u0Q36Rh5y/EkOglYknyL+Og/4mJVL7Xwp6tu8buN1wLnwV9ITEE
+	 fULEscEjCy1FAOwZG2UsxMnTeXS+xxRMmomiaZDN2fGlHDmhh2PajnLtyX5PCY7GgE
+	 zIcKT0byDs1GA==
+Date: Fri, 16 May 2025 12:06:37 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>,
+	Jain@formenos.rohan.me.apana.org.au, Ayush <Ayush.Jain3@amd.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>, x86-ml <x86@kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org
+Subject: Re: [PATCH] crypto: lib/sha256 - Disable SIMD
+Message-ID: <20250516190637.GA32835@sol>
+References: <20250516112217.GBaCcf6Yoc6LkIIryP@fat_crate.local>
+ <aCcirrsFFrrRqf5A@gondor.apana.org.au>
+ <aCcmJGuCnuyHmHbx@gondor.apana.org.au>
+ <20250516170316.GD1241@sol>
+ <20250516181322.GGaCeAQjnIVQx_tX_R@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3607:b0:867:237f:381e with SMTP id
- ca18e2360f4ac-86a2317b1f5mr656942039f.2.1747422302275; Fri, 16 May 2025
- 12:05:02 -0700 (PDT)
-Date: Fri, 16 May 2025 12:05:02 -0700
-In-Reply-To: <20250512155843.20034-1-aha310510@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68278c5e.a70a0220.38f255.0006.GAE@google.com>
-Subject: Re: [syzbot] [ext4?] general protection fault in jbd2_journal_dirty_metadata
-From: syzbot <syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com>
-To: aha310510@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250516181322.GGaCeAQjnIVQx_tX_R@fat_crate.local>
 
-Hello,
+On Fri, May 16, 2025 at 08:13:22PM +0200, Borislav Petkov wrote:
+> On Fri, May 16, 2025 at 10:03:16AM -0700, Eric Biggers wrote:
+> > That's silly.  We should just fix x86's irq_fpu_usable() to return false
+> > before the CPU is properly initialized. It already checks a per-cpu bool, so
+> > it shouldn't be too hard to fit that in.
+> 
+> Probably.
+> 
+> There's a fpu__init_cpu() call almost right after load_ucode_ap() which causes
+> this thing.
+> 
+> I'm not sure how much initialized stuff you need for SHA256 SIMD... perhaps
+> swap fpu__init_cpu() and load_ucode_ap() calls after proper code audit whether
+> that's ok.
+> 
+> Or add a "is the FPU initialized" check, as you propose, which is probably
+> easier.
+> 
+> As always, the x86 CPU init path is nasty and needs careful auditing.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+There are a few different ways in which __apply_microcode_amd() can get called:
 
-Reported-by: syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com
-Tested-by: syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com
+    __apply_microcode_amd
+        load_ucode_amd_bsp
+            load_ucode_bsp
+                x86_64_start_kernel
+        apply_microcode_amd
+            load_ucode_amd_ap
+                load_ucode_ap
+                    start_secondary
+            microcode_ops::apply_microcode
+                load_secondary
+                __load_primary
+        reload_ucode_amd
+            reload_early_microcode
+                microcode_bsp_resume
+                    mc_syscore_ops::resume
+                        syscore_resume
+                    __restore_processor_state
+                        restore_processor_state
 
-Tested on:
+What would you say about going back to my earlier plan to make irq_fpu_usable()
+return false when irqs_disabled(), like what arm64 does?  (As I had in
+https://lore.kernel.org/lkml/20250220051325.340691-2-ebiggers@kernel.org/).
+I think that would handle all these cases, as well as others.  We'd need to fix
+__save_processor_state() to save the FPU state directly without pretending that
+it's using kernel-mode FPU, but I don't know of any issues besides that.  Then
+we could also delete the irqs_disabled() checks that I added to
+kernel_fpu_begin() and kernel_fpu_end().
 
-commit:         3c21441e Merge tag 'acpi-6.15-rc7' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=138b76f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=97ce7f89bb9ce135
-dashboard link: https://syzkaller.appspot.com/bug?extid=de24c3fe3c4091051710
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=17ff92f4580000
-
-Note: testing is done by a robot and is best-effort only.
+- Eric
