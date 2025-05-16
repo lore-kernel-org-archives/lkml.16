@@ -1,378 +1,253 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907EC21FF4E;
-	Fri, 16 May 2025 01:33:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747359205; cv=none; b=ioK77YHO2cxoTs8hkDbducGZG6isqf8nCQfE4VxSR5gU8VmGzXKmiyKAVSLUMi+p0HAsBK/UnVFhOirSz0O9Cscz3TlPYTaFxabPmHO3RRwzKrExDZX7Du/PV8kxkeF4JK/pRWoo6fTHyNpkBMdHWGwzqET9JIgeo0N4PmYvzjI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747359205; c=relaxed/simple;
-	bh=6tky0WRUnXN1pVa8ZWtAuOYVr0jmKviuD9iBrzuqbIo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s5GRIXtubpzd8WYabIB3CEF6upx9v72Lcef63QzKrhRoFczaRUbx8Fb5Rg0TesCW5F7fxX/7zWnTZHzbNxgdvDSHFr3ZMoveucy76GASts8mNV3LoxpVmslZ6adMfbvoSbpSsTId3qYo3f5l/Kz0LQcY1HVXG0sBUhloKuM/uL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g7p6hAkV; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66812F2F;
+	Fri, 16 May 2025 01:35:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747359344; cv=fail; b=akhVc/PvsDGgyclAHqWVALrOY80tOl0m0y9NaTBbwwSWUJzhKofmVnds8kztlE2ptCVx2M24gkllWM0mSdHCKZtrSIzNqGJ4rWGNOzzrhAKEk+xt2w0P0Tl2mc2+a6xrWf5UkrWspeEREXhFPfxpDZVVE2gcCmA5msXa3X93Lg8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747359344; c=relaxed/simple;
+	bh=hNoCepLw6RiYT1+dmbL7okV4oTGwL58tHE0PsCYWbaM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=SbVVDn8bZcVyTrcJhno/830B1bFnPeZJOhyigpkKe2TNjB2s6bMCnfJFb58MkB6EYTIx/iymsrjJEdh753gvvXWdCHYBehCMsmtkBR/ziBGtXLt9QiRCG3oXEGRBXwmi0lDOadSLFXUNmnhMZCSzkYLbRecQEdXiJ/AMcKIypEc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eS5AKEty; arc=fail smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g7p6hAkV"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7423fadbe77so1707310b3a.3;
-        Thu, 15 May 2025 18:33:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747359203; x=1747964003; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=WcIMluiDhNsO88W6D0wBkTDK2MX1Icz6eAHmn+54U6U=;
-        b=g7p6hAkV4XOkxcJUTaJ2eqnRUoHjlA8z8SPw7poOJsiNl9igshB0CtY99rbtcdvq8+
-         RPdhoQfl7KhfGDruH6w1wqxcv1otqen8zoNWmaxSTwhjiGjziCkma396/W550D33qRSz
-         vwARo5r3degQ6xxGCXMvK0iS2vndnKusVFIE3/5wU2LGLVPmeGEqmUwXr060RYwsrZop
-         xm6qTCkzVagC+YR7rj548OO1Hu3zkwGE3L6Lm6KMI2bG36ch0sdOgqxTdt8T9DvME9GB
-         F9OHFCiiMbTcmRO+UJ9d6P4y+2fgYVepDRaWDDHXP0RFS7C3RhqK7oUpUY4MztMeV8Pr
-         w66g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747359203; x=1747964003;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WcIMluiDhNsO88W6D0wBkTDK2MX1Icz6eAHmn+54U6U=;
-        b=oIUqQ9ioi8YzjDxx8yTxtZCY8eqaDeeLp63SIgsrzv6OUOgN8qOclF6Yiydvjinol9
-         FRi7Pczm4oYOHIw6ETnb3TN8cdTaY7DnfpryR7QdMcbVbPB0Obku53OC/IGos/DOuxc/
-         qCmRMqL7UD+JkXuFrjx2Xjfbx9vhALdVoWuy7av/w3DBepHa1uPxJTs6nadvz0W6y/bH
-         KCyYc9bMXEXWXBMjV/D3i0KY8vmYOdV6ZbZEduW/wknrptMtQfIzRidAjymL04bDvSAS
-         BSdCP2GGP26w5nDwcxRVWuEE0F9nyebeA8634AUpEkt5FHyPcARU+ZgmaTpXlD3Ge284
-         NLhw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWOl06vY+ir25iwqQE9hjtXMg1Oz1TpU+TirwDKbN6GSA1ZFTABSohYl+x4+vbWu5PI2n+5yxUX6RkuEbr@vger.kernel.org, AJvYcCXMXJWtuVgJ6Vf41fRCJORWO0RePc8DaJ9PamYasb8enbXo4iDtwL1+Nf/V5umXN+gkpey05tARagGChA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/733GwZ32Kr0Naj2e6/D8mNo2JzIZYxKRo8qZwuNZeP40IJCV
-	cjlcGYfd0qbluYhHJdu7BDekKgbkstdDFQ4VPaFzX7eaxJnLHT9UbT+o
-X-Gm-Gg: ASbGncvgncKD7/VlseKDAROlXJS50mkZULsKFHNBLG4mWPkuOK3lx6MtNsDytauc7xM
-	v+K270OaNpOwNUpb8w4L543x1ZCTymxSWvY8yY9v+ijHWotZEVr1Ghf1AL5VZRsYy00rhtr17Qp
-	lvzSXxziJuDnMRzhwEIatbw5pNWcFgZL03QvCyR2sNlHnjVjZcdyBVxVW8kZoXw15Z2ZcjFtm0p
-	xxbft6LFaY0bL9ZNsvi5WoW+0qT7pXTCiYQuvG9pPtBl7+Dd2fKxjbLOQjDfQKOmJAOfreoFTdy
-	tqWGjsEF2smnDhwp80Q6yjy+TboakcoxagwPgZlQGoo+nvvmCIYWjpBHph+I5Ul/WWFa8DpjM3J
-	tE8VqQHKU12CELgj90/hu4h1X
-X-Google-Smtp-Source: AGHT+IFOvsbQY0wUwqEPfbiJr1nsDkpdmDzjCqH9S5CCdbeUWzfv441mFcoUPQncCq6t+RZuyX6cEQ==
-X-Received: by 2002:a05:6a21:710a:b0:215:d4be:b0ad with SMTP id adf61e73a8af0-2170ce19e95mr1233767637.28.1747359202635;
-        Thu, 15 May 2025 18:33:22 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9878b53sm439364b3a.152.2025.05.15.18.33.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 18:33:22 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <55789f60-fd7b-44d6-a757-2b4ca0f727c1@roeck-us.net>
-Date: Thu, 15 May 2025 18:33:20 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eS5AKEty"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747359343; x=1778895343;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=hNoCepLw6RiYT1+dmbL7okV4oTGwL58tHE0PsCYWbaM=;
+  b=eS5AKEtyFHQQbGq92xAcTBi0Jd1I6CWI9A7aGEH3O36sIJnWY33O7i9A
+   BIItt7gS1QrSLMBADp7JXEIbnVtpBz4ExGNtDEOhLpjSbI2ylhDHleNtI
+   vDLH8DzEeU1O4hkhD49r4lKcdJWLydtnt7SmCEfcI9Zaq2cHzmiB9ZjUr
+   ERwDI+Yuik/lV70dTZjvg1N9XBhvS6T2yqKkY2J4uPBKU+CErAkO7OSP0
+   gg0GSuV3L9OV6owS3xYvqAQ6BdlyUnl4v9/8Kq4D4L80ltInUbeFCFGMQ
+   mIFpCOsl/bTNUuBOsEsWk3O/oYwBfHKy/Xy4TIuJT+ZPBYnR+dmO9LxLC
+   g==;
+X-CSE-ConnectionGUID: BmylnJ9yQq+FLAIvx7QeuQ==
+X-CSE-MsgGUID: flKD//9YTTGRXyN8DYtjrg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49220184"
+X-IronPort-AV: E=Sophos;i="6.15,292,1739865600"; 
+   d="scan'208";a="49220184"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 18:35:43 -0700
+X-CSE-ConnectionGUID: vxg5N5koTqKKPzSWWmR3Zw==
+X-CSE-MsgGUID: Dzi4ImCMS0G6g0G8zJrL7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,292,1739865600"; 
+   d="scan'208";a="143663269"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 18:35:42 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 15 May 2025 18:35:41 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 15 May 2025 18:35:41 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.41) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 15 May 2025 18:35:41 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZGYkqzoeKc7tLfvH1TyQA3zETHVa5Ndy6bh9b0AexWDxgbktkZlXEApTvd/DEvA89zKpOJU5sQ3Oh2kd7a1GalWDU4tYEgtHCpVhYIGH7bnlwfCfDhM+bv4VLnfK1Q6D78/ErjngnWBILxBvFR6W2fLorDAypOMV62O4bLFxa0y7OcPAQb4JXbLtaUmLCd3rjfbJSL8aeiSf9MIM0rdmRN317ahuDDyaSVCL+SaRzx+DKe0YAkH2bvbX5c+pNSbi0AEYUwXBG6n+bW6tQdR0TUdbDfGaVVx2o9UOAq/sEPMswhoBUym27Q4nWagojxbnbWf6wdQdXqX3xwpVuRzF1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hNoCepLw6RiYT1+dmbL7okV4oTGwL58tHE0PsCYWbaM=;
+ b=IswdcrpZXRUSzAn3WLgfSw34+bzptWknns3YXZef+sw0UYVQ9RprzTFICT6PxsvmenDNJx22ClniULRg2B09daPE5axOJZpFClV2M5uHxr4jgQLGHseMlhQJVLIcox9Yv+VYghDEA9j11MRdmMfvUcnSZcobMQXTWUTkv0RLq92IntieALbSDkueSprxmLlBKTyZmnPEGGkezkl+IYmSKTZFf2hsb1LuYWhZRCkbtNy4s3JBISBXf3K0a0ZtkXTVP54siv1WXX9u3PjTDyCZOH32YlcqPhBCeKlv3t/1wR7cr9QxiR/pLlQg7cm6bvY+vwu5JTtELIN7qqJTD2LXYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BYAPR11MB3303.namprd11.prod.outlook.com (2603:10b6:a03:18::15)
+ by SN7PR11MB6899.namprd11.prod.outlook.com (2603:10b6:806:2a7::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.26; Fri, 16 May
+ 2025 01:35:37 +0000
+Received: from BYAPR11MB3303.namprd11.prod.outlook.com
+ ([fe80::c67e:581f:46f5:f79c]) by BYAPR11MB3303.namprd11.prod.outlook.com
+ ([fe80::c67e:581f:46f5:f79c%6]) with mapi id 15.20.8722.027; Fri, 16 May 2025
+ 01:35:37 +0000
+From: "Huang, Kai" <kai.huang@intel.com>
+To: "pbonzini@redhat.com" <pbonzini@redhat.com>, "seanjc@google.com"
+	<seanjc@google.com>, "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "Zhao,
+ Yan Y" <yan.y.zhao@intel.com>
+CC: "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao"
+	<xiaoyao.li@intel.com>, "Shutemov, Kirill" <kirill.shutemov@intel.com>,
+	"Hansen, Dave" <dave.hansen@intel.com>, "david@redhat.com"
+	<david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+	"vbabka@suse.cz" <vbabka@suse.cz>, "tabba@google.com" <tabba@google.com>,
+	"Du, Fan" <fan.du@intel.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "Li, Zhiquan1" <zhiquan1.li@intel.com>,
+	"Weiny, Ira" <ira.weiny@intel.com>, "michael.roth@amd.com"
+	<michael.roth@amd.com>, "binbin.wu@linux.intel.com"
+	<binbin.wu@linux.intel.com>, "ackerleytng@google.com"
+	<ackerleytng@google.com>, "Yamahata, Isaku" <isaku.yamahata@intel.com>,
+	"Peng, Chao P" <chao.p.peng@intel.com>, "kvm@vger.kernel.org"
+	<kvm@vger.kernel.org>, "Annapurve, Vishal" <vannapurve@google.com>,
+	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>,
+	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [RFC PATCH 09/21] KVM: TDX: Enable 2MB mapping size after TD is
+ RUNNABLE
+Thread-Topic: [RFC PATCH 09/21] KVM: TDX: Enable 2MB mapping size after TD is
+ RUNNABLE
+Thread-Index: AQHbtMZBhA49+LJMgEuvNu90MMjg/bPRHIEAgAN/lAA=
+Date: Fri, 16 May 2025 01:35:37 +0000
+Message-ID: <c19b4f450d8d079131088a045c0821eeb6fcae52.camel@intel.com>
+References: <20250424030033.32635-1-yan.y.zhao@intel.com>
+		 <20250424030618.352-1-yan.y.zhao@intel.com>
+	 <dc20a7338f615d34966757321a27de10ddcbeae6.camel@intel.com>
+In-Reply-To: <dc20a7338f615d34966757321a27de10ddcbeae6.camel@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BYAPR11MB3303:EE_|SN7PR11MB6899:EE_
+x-ms-office365-filtering-correlation-id: 93c7be82-352e-4a02-c75b-08dd9419f58e
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?MmdKYzdrL0paZWhZTGJjYmMvYVljOFdFWHpONEtGWXp6cWFYdElDKzNMb2lH?=
+ =?utf-8?B?NmtrOWtNRGlNQlBsL1pOUlRYZTNSckJHbFM1cGdpRHNsZGkwU2V6VHVFZ2FE?=
+ =?utf-8?B?SFU5SEFuU3QwTmViNEZBbHRiUEI5SWlwQUtvOWQ1YXZiaTdESzJQVWt1Tmtw?=
+ =?utf-8?B?UGZyTkxxNnBLL2VCTVFibkVSTytmaS9wOXFReVhRb25xdFg4NUxWV0M3NUJm?=
+ =?utf-8?B?bDdyT3RpMHRSNExocFhUTERaclN6SmIxdWhIdHZYMHdwU3J4SzdmcXpBQi9N?=
+ =?utf-8?B?Rncrc29YRExlWkM5QkNOTmswazh0aHJzU0J2NG9IdmFYMmU0RG90cHNMSnNi?=
+ =?utf-8?B?emNTVHhxOG9udDdqaS9HZURvOWhzM1NKZ0g0NVptTW52RGNNOTRKT1Q4Rm9E?=
+ =?utf-8?B?cWEzeGlDazl4MWw1VXNsZCtRT0FxMUJsMzZ0MXVlUUU0ZGZpSDJrdGtjcnpU?=
+ =?utf-8?B?ZXFsVmljLytCUzlDeEdwM0t1NlZuS2xUZzhCQldkTFRMZkNobFZuWlAwRG1Z?=
+ =?utf-8?B?Sjk2YkxvYkphUHA0aTNpV2p0dEFIZVpTUHJpM2hqdE1zYWVWVE9MY3h3d1lv?=
+ =?utf-8?B?anFjam1NWjA5d2dremVoTVc5UFFPZlBWQzVEWnZpOW5Lc0VXZEk0MWMvdUNE?=
+ =?utf-8?B?bFNRNDFUUlE4WXJQYzFvcFRRZCt1Nk8wZ2ZoenVDeUwySHMzT1lWd3djcnRP?=
+ =?utf-8?B?YjlNOVJlSVFyRVo4c0RVN0RDM3p0SGlpY0VHMVhxQm04UGJDajR1V0h3ZCt6?=
+ =?utf-8?B?d2hBNGI1S3FiWUNNMUkxZmloZlB5STNuSFRyOVJBNlhaMUp5SzliZk8vVlhU?=
+ =?utf-8?B?Wnl5VzF6d0U4MmVXMWMrNmE3ckVNVExrcTZGd0ZzemlNVHVtY1JjVUIxYlFE?=
+ =?utf-8?B?NWJrS1ppUy85VklIZWtVeVNGcDVhS0lwcnVTMnNlNEVhckExRFRVdlRESEZl?=
+ =?utf-8?B?L0Y5UFB3dTNHTkJ6U3d3NVVUdkZORlZzb1lTMDRoaW5yUm1tcldmc2JxRGFn?=
+ =?utf-8?B?aTR2YkpIbmk2bzcvaFYyekJXcDN1QitTRzFWRGYvSlhSWStoLzhPRTFoQnNs?=
+ =?utf-8?B?dHVpa0RCZU11WFBkY0poWFZncUZucGdiNlJXSHN5UGZHNmNQekdGOUJtWWZG?=
+ =?utf-8?B?U3NSRE82R0JUeXNaeTNVOUt4ck80RDVKQXo0UzhLMjJEU1kvcW9wSE4wSWtL?=
+ =?utf-8?B?Y3A4elc4WWRaUUV0QVBNTkR5OEFwUEdxMlZCMmN5bCtjS0hyS1R5cHJqcGhK?=
+ =?utf-8?B?UDJtU3R1eTBOaXZkcUZVYjFTNG1LKy9hM21sUkwwWkxvL21IOWF5RXBhK3dK?=
+ =?utf-8?B?S28rSWtHV1RzSlFyK1lTVUdYV0o2dUs1YUFoRENtOVRVQkNmSVZMYTBkQ3pE?=
+ =?utf-8?B?RUtiOWVic1BPRkVIZlQ0NWNGM1ZNdnlsVnc3czZPZlQ4QzA4aDgwL0RvU09j?=
+ =?utf-8?B?NkVzaDMwZnRoM1c4TGl5N1AyUmVZTG5EUEI1VE1mT281VElxUms2ZTBGS0I0?=
+ =?utf-8?B?NS9aR3ZhcnN6UHJTZ1Yvb0FseXd1V0duZERIMDE5UjJhaTdBajBSeHFRb01B?=
+ =?utf-8?B?RnB1ckNQOFgwQmpRMGs4SCtjWTl4bjhKUWxyWGgwcUVac3pKVjEwc3l0MGNH?=
+ =?utf-8?B?LzZmNlJaeTY2UHo1RVlvVzluRWt1MWkrdkRSVTh1bXoxV010MUM3WHJyVXJi?=
+ =?utf-8?B?U1Z5SnM1NkZZNWNpMmtzRTZhK1B4TVJlUUllQit3TW53OXoyZ2YzTnpGNi9v?=
+ =?utf-8?B?bHdqRUUvb25JK1hHNzlJek9OZ0FrVXFvRG9YRXhCNlJPcU5WTW9VUHVNQWFt?=
+ =?utf-8?B?d1BFNG84eVhPMS9lVTQ4Qk93eUdHMHF4dDRBSkVFQmdnaWFlcDhmRi9yT0pN?=
+ =?utf-8?B?dmgwU3ZzOFZMaUhmZG9KVjdZK3A5Y3kwbXhxcTZBU0RzN1hDWG5GWFl6dzZu?=
+ =?utf-8?B?alEzMUNoVUNKMGJCOWxFeUY2SXB1aDhYb2tNUytWVE04TDlob3dVSlNuRGNn?=
+ =?utf-8?B?SmZqTTI1eGVBPT0=?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3303.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?N2I0Rk9FcDFRZU5SeTh4SzRxeTVQVG9mcmtQNmxQRXNkbWhLUk1tZ3pOd1I4?=
+ =?utf-8?B?eVE4emR6KzJRTmFtbGdIOXNHZG81a05IeWZ0SkQrNDN4YzcraWNGTld4ditU?=
+ =?utf-8?B?RVRYZWM0QWZyNFNnVjJ6TnE1TnhxZWkzdnpYb2lkR3hxQ3BnWnlrK2M5K0J6?=
+ =?utf-8?B?QlEvMC9icDJwSk1UOElwY2JYNXQ2N081bDZhdWJEZEt3YWxZcFVPY0c2elNo?=
+ =?utf-8?B?dStMTkEzODBoYXE4U1NLWlA0YTZMSUk2aFpLcm85YnZSOEJFUW0vOFUydHdv?=
+ =?utf-8?B?TGtkMmM2OVdSNlZJYTVleTZpUGlITDIwT0hVSmh1RUVEY1UrcE1lVngzaXVv?=
+ =?utf-8?B?NUZIS2xWcXV3ekdRaTI5YU9hU3NlYitKUUhGblJ3R3B6Q1B3SUV1TTRWUjdQ?=
+ =?utf-8?B?M29ZdzJuNEc3b2lpN25iODgzUXVOaTdyUWFhMU5oUXJzNVhFRkpaamhQTHZB?=
+ =?utf-8?B?YmFnbE4yeTYweWFSdCtVZlRvb2FhYTc5VW05bml3ZGJUckQ1VG9Pa0dueUJl?=
+ =?utf-8?B?QmV1NzVockJ6bFUydnJBWEdpRDJHTnc5RkRVdjZiK0RWRnhtVEtpSGw1N1dX?=
+ =?utf-8?B?UVFjbUNCZWJwNllCUzY3eW15N2lwNlVFdkhOdGVaQUI4Tkg5TGNlQzBLWWVl?=
+ =?utf-8?B?UCtLanV6aXhEeVQ1NW9zL3hQVG1JVlV2Y0xJOTNLemdocHFiNjJSN0NvdXJ4?=
+ =?utf-8?B?TTFKeC9BWURUcEdVN3dCYU1LbUJTRXUwRHZTamtxeWtBYkxDbXlKTXZTdUUv?=
+ =?utf-8?B?bTZMemxRMUJIYVloWDJwNnpPdm5jWjFFcVdaaG5ZNTEzS2ZMOVB5SC9vN3cz?=
+ =?utf-8?B?eU1OeGV5cmhJSmZCSUhnSktGYnNCTVU3azc1N3JNWW56aWtxajJLU3Q4Yldw?=
+ =?utf-8?B?WlpnVmN3TkxNS1dEU3R2U3Fsd3REQWxabG9sZHF6L2tiTHBBL0F0TENidXNU?=
+ =?utf-8?B?bkpnMkpGdEw4RFdoYmlvK25TVXlRV24vdVpaclIrZ3kvK0xCR0N5U2Q3UEZV?=
+ =?utf-8?B?RTBOOXRYRjlIdmNqYmJncW80dXhlWHA0c1Y5VlRqMnFIKzJsbTN6YTIzY0dQ?=
+ =?utf-8?B?T0RhMlFLWWxDWEUySmUvRGRXaDFudGtodVVDd1dFdjgwOHdaVkxQeDJ1OW1O?=
+ =?utf-8?B?dVZiMm1aR240N3VveldEcU5LdDJEM0lWUEZhUnN2b2I0dHg2R01qS0ZFNDlq?=
+ =?utf-8?B?YlhhSVY5UUZmdGFOQ3dOOEFNRTgxQk1RTTU1WDRUbGwxeFRZMUsxcW8rWXo1?=
+ =?utf-8?B?WkdQcExFSGdLcHV0bzNVemdFdWxzc3dkQXRNenhLQ283MXlwc2FqRTZWUlBp?=
+ =?utf-8?B?b3dqNUNORzNNWll2VzFGRWpYWDhjVmVzSlpwaUFETlNhc2hQT2dQdXhzdkdl?=
+ =?utf-8?B?S2VrYlBqd1hYMUNUUEFva1RHdDNtdjlrUkdVaXhvbEFYemlYck1BYTBxd2x1?=
+ =?utf-8?B?VGRLdVQvOWxzVm5jYm5WVVFVZGZKVnZjTlpqZDI4ZmxFNUJqbDg4UUVpbEdk?=
+ =?utf-8?B?aU54MmlHb1pvWFA3WFZSblh2Y0xpVDZnc3ZmcmlXTlQxcGp4SkVFQXJnYmNq?=
+ =?utf-8?B?bUJxQzdSWWNlYkZ5Zis3VjhGMWZ0UDc3TElYMWtwYXRXQmYraW9EcVY5UUVL?=
+ =?utf-8?B?QTA3T1JhYnZZZzlQTmRQci9CdHRhUGlVTEFMdHQvOEplSGl0SnQvc05EUGRZ?=
+ =?utf-8?B?RjlUbmtYc2krZFVIQXM4bEo2Y3ZPbEUyNm9URGd5MkYyaWVPL1FscVlHSDc2?=
+ =?utf-8?B?RHhRYlFmVDZVZis5aGpxQ3BVeU43NS9nWkt4MTNGWDRmcjYzZlM0Z2dvSTRX?=
+ =?utf-8?B?WUtoMDBoQjR4STQ3UjhEQldJcU9RVTJjRDRvUkpFNG1sQTdWR1lQWWlYZVp6?=
+ =?utf-8?B?clJrK0xQL3FnTkdQZFJEbUZRMGV4cEkyNmVOM2JsbkhQakRyWGJMcEZhR1RW?=
+ =?utf-8?B?OHZHU2R4eVdXOVFxNklERVRkQmJYOTh5cS9xbk8wVU1ocXByUTlIcjlEMlVt?=
+ =?utf-8?B?Nm1PVTJiOE82dmRFMW8vUndzdXcrTVRucXR6QUZSQkhGTXdMUEY5akFIZ0ZL?=
+ =?utf-8?B?anZ6SVRwbkRmUXpBQ29QQ2JGRFhUUDVaMmlNSU0zMUxCWlhJT3htQU4wZlM0?=
+ =?utf-8?Q?tSDw4DOCvnfJFYkxGXuzvY4hP?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <28626E90A8F2664B9314C9EBDDE9DA8B@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] pwm: mc33xs2410: add support for temperature sensors
-To: dimitri.fedrau@liebherr.com, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, Jean Delvare <jdelvare@suse.com>
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hwmon@vger.kernel.org, Dimitri Fedrau <dima.fedrau@gmail.com>
-References: <20250515-mc33xs2410-hwmon-v2-1-8d2e78f7e30d@liebherr.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
- RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
- nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
- 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
- gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
- IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
- kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
- VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
- jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
- BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
- ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
- CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
- nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
- hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
- c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
- 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
- GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
- sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
- Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
- HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
- BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
- l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
- 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
- pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
- J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
- pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
- 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
- ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
- I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
- nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
- HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
- JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
- J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
- cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
- wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
- hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
- nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
- QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
- trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
- WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
- HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250515-mc33xs2410-hwmon-v2-1-8d2e78f7e30d@liebherr.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3303.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93c7be82-352e-4a02-c75b-08dd9419f58e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2025 01:35:37.1288
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /hL3/TTAVI2SWKFQtyhzTLEXW3qcGkHPsuzmNqnLiBjnzHHXtW6jqULdnRrgtA9KXdia/sxkM0soo+Y1LnD8pA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB6899
+X-OriginatorOrg: intel.com
 
-On 5/15/25 05:40, Dimitri Fedrau via B4 Relay wrote:
-> From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-> 
-> The MC33XS2410 provides temperature sensors for the central die temperature
-> and the four outputs. Additionally a common temperature warning threshold
-> can be configured for the outputs. Add hwmon support for the sensors.
-> 
-> Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-
- From hwmon perspective:
-
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
-> Changes in v2:
-> - Remove helper mc33xs2410_hwmon_read_out_status and report the last
->    latched status.
-> - Link to v1: https://lore.kernel.org/r/20250512-mc33xs2410-hwmon-v1-1-addba77c78f9@liebherr.com
-> ---
->   drivers/pwm/Kconfig          |   1 +
->   drivers/pwm/pwm-mc33xs2410.c | 164 ++++++++++++++++++++++++++++++++++++++++++-
->   2 files changed, 164 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 6faa8b2ec0a4844f667a84335f30bde44d52378e..0deaf8447f4302e7cfd3b4cb35c7d46ef19e006c 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -425,6 +425,7 @@ config PWM_LPSS_PLATFORM
->   
->   config PWM_MC33XS2410
->   	tristate "MC33XS2410 PWM support"
-> +	depends on HWMON || HWMON=n
->   	depends on OF
->   	depends on SPI
->   	help
-> diff --git a/drivers/pwm/pwm-mc33xs2410.c b/drivers/pwm/pwm-mc33xs2410.c
-> index a1ac3445ccdb4709d92e0075d424a8abc1416eee..c1b99b1143141242ce99782162ae05536dd88163 100644
-> --- a/drivers/pwm/pwm-mc33xs2410.c
-> +++ b/drivers/pwm/pwm-mc33xs2410.c
-> @@ -21,6 +21,7 @@
->   #include <linux/bitfield.h>
->   #include <linux/delay.h>
->   #include <linux/err.h>
-> +#include <linux/hwmon.h>
->   #include <linux/math64.h>
->   #include <linux/minmax.h>
->   #include <linux/module.h>
-> @@ -29,6 +30,8 @@
->   
->   #include <linux/spi/spi.h>
->   
-> +/* ctrl registers */
-> +
->   #define MC33XS2410_GLB_CTRL			0x00
->   #define MC33XS2410_GLB_CTRL_MODE		GENMASK(7, 6)
->   #define MC33XS2410_GLB_CTRL_MODE_NORMAL		FIELD_PREP(MC33XS2410_GLB_CTRL_MODE, 1)
-> @@ -51,6 +54,21 @@
->   
->   #define MC33XS2410_WDT				0x14
->   
-> +#define MC33XS2410_TEMP_WT			0x29
-> +#define MC33XS2410_TEMP_WT_MASK			GENMASK(7, 0)
-> +
-> +/* diag registers */
-> +
-> +/* chan in { 1 ... 4 } */
-> +#define MC33XS2410_OUT_STA(chan)		(0x02 + (chan) - 1)
-> +#define MC33XS2410_OUT_STA_OTW			BIT(8)
-> +
-> +#define MC33XS2410_TS_TEMP_DIE			0x26
-> +#define MC33XS2410_TS_TEMP_MASK			GENMASK(9, 0)
-> +
-> +/* chan in { 1 ... 4 } */
-> +#define MC33XS2410_TS_TEMP(chan)		(0x2f + (chan) - 1)
-> +
->   #define MC33XS2410_PWM_MIN_PERIOD		488282
->   /* step in { 0 ... 3 } */
->   #define MC33XS2410_PWM_MAX_PERIOD(step)		(2000000000 >> (2 * (step)))
-> @@ -125,6 +143,11 @@ static int mc33xs2410_read_reg_ctrl(struct spi_device *spi, u8 reg, u16 *val)
->   	return mc33xs2410_read_reg(spi, reg, val, MC33XS2410_FRAME_IN_DATA_RD);
->   }
->   
-> +static int mc33xs2410_read_reg_diag(struct spi_device *spi, u8 reg, u16 *val)
-> +{
-> +	return mc33xs2410_read_reg(spi, reg, val, 0);
-> +}
-> +
->   static int mc33xs2410_modify_reg(struct spi_device *spi, u8 reg, u8 mask, u8 val)
->   {
->   	u16 tmp;
-> @@ -140,6 +163,145 @@ static int mc33xs2410_modify_reg(struct spi_device *spi, u8 reg, u8 mask, u8 val
->   	return mc33xs2410_write_reg(spi, reg, tmp);
->   }
->   
-> +#if IS_ENABLED(CONFIG_HWMON)
-> +static const struct hwmon_channel_info * const mc33xs2410_hwmon_info[] = {
-> +	HWMON_CHANNEL_INFO(temp,
-> +			   HWMON_T_LABEL | HWMON_T_INPUT,
-> +			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
-> +			   HWMON_T_ALARM,
-> +			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
-> +			   HWMON_T_ALARM,
-> +			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
-> +			   HWMON_T_ALARM,
-> +			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
-> +			   HWMON_T_ALARM),
-> +	NULL,
-> +};
-> +
-> +static umode_t mc33xs2410_hwmon_is_visible(const void *data,
-> +					   enum hwmon_sensor_types type,
-> +					   u32 attr, int channel)
-> +{
-> +	switch (attr) {
-> +	case hwmon_temp_input:
-> +	case hwmon_temp_alarm:
-> +	case hwmon_temp_label:
-> +		return 0444;
-> +	case hwmon_temp_max:
-> +		return 0644;
-> +	default:
-> +		return 0;
-> +	}
-> +}
-> +
-> +static int mc33xs2410_hwmon_read(struct device *dev,
-> +				 enum hwmon_sensor_types type,
-> +				 u32 attr, int channel, long *val)
-> +{
-> +	struct spi_device *spi = dev_get_drvdata(dev);
-> +	u16 reg_val;
-> +	int ret;
-> +	u8 reg;
-> +
-> +	switch (attr) {
-> +	case hwmon_temp_input:
-> +		reg = (channel == 0) ? MC33XS2410_TS_TEMP_DIE :
-> +				       MC33XS2410_TS_TEMP(channel);
-> +		ret = mc33xs2410_read_reg_diag(spi, reg, &reg_val);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		/* LSB is 0.25 degree celsius */
-> +		*val = FIELD_GET(MC33XS2410_TS_TEMP_MASK, reg_val) * 250 - 40000;
-> +		return 0;
-> +	case hwmon_temp_alarm:
-> +		ret = mc33xs2410_read_reg_diag(spi, MC33XS2410_OUT_STA(channel),
-> +					       &reg_val);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		*val = FIELD_GET(MC33XS2410_OUT_STA_OTW, reg_val);
-> +		return 0;
-> +	case hwmon_temp_max:
-> +		ret = mc33xs2410_read_reg_ctrl(spi, MC33XS2410_TEMP_WT, &reg_val);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		/* LSB is 1 degree celsius */
-> +		*val = FIELD_GET(MC33XS2410_TEMP_WT_MASK, reg_val) * 1000 - 40000;
-> +		return 0;
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +}
-> +
-> +static int mc33xs2410_hwmon_write(struct device *dev,
-> +				  enum hwmon_sensor_types type, u32 attr,
-> +				  int channel, long val)
-> +{
-> +	struct spi_device *spi = dev_get_drvdata(dev);
-> +
-> +	switch (attr) {
-> +	case hwmon_temp_max:
-> +		val = clamp_val(val, -40000, 215000);
-> +
-> +		/* LSB is 1 degree celsius */
-> +		val = (val / 1000) + 40;
-> +		return mc33xs2410_modify_reg(spi, MC33XS2410_TEMP_WT,
-> +					     MC33XS2410_TEMP_WT_MASK, val);
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +}
-> +
-> +static const char *const mc33xs2410_temp_label[] = {
-> +	"Central die temperature",
-> +	"Channel 1 temperature",
-> +	"Channel 2 temperature",
-> +	"Channel 3 temperature",
-> +	"Channel 4 temperature",
-> +};
-> +
-> +static int mc33xs2410_read_string(struct device *dev,
-> +				  enum hwmon_sensor_types type,
-> +				  u32 attr, int channel, const char **str)
-> +{
-> +	*str = mc33xs2410_temp_label[channel];
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct hwmon_ops mc33xs2410_hwmon_hwmon_ops = {
-> +	.is_visible = mc33xs2410_hwmon_is_visible,
-> +	.read = mc33xs2410_hwmon_read,
-> +	.read_string = mc33xs2410_read_string,
-> +	.write = mc33xs2410_hwmon_write,
-> +};
-> +
-> +static const struct hwmon_chip_info mc33xs2410_hwmon_chip_info = {
-> +	.ops = &mc33xs2410_hwmon_hwmon_ops,
-> +	.info = mc33xs2410_hwmon_info,
-> +};
-> +
-> +static int mc33xs2410_hwmon_probe(struct spi_device *spi)
-> +{
-> +	struct device *dev = &spi->dev;
-> +	struct device *hwmon;
-> +
-> +	hwmon = devm_hwmon_device_register_with_info(dev, NULL, spi,
-> +						     &mc33xs2410_hwmon_chip_info,
-> +						     NULL);
-> +
-> +	return PTR_ERR_OR_ZERO(hwmon);
-> +}
-> +
-> +#else
-> +static int mc33xs2410_hwmon_probe(struct spi_device *spi)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
->   static u8 mc33xs2410_pwm_get_freq(u64 period)
->   {
->   	u8 step, count;
-> @@ -361,7 +523,7 @@ static int mc33xs2410_probe(struct spi_device *spi)
->   	if (ret < 0)
->   		return dev_err_probe(dev, ret, "Failed to add pwm chip\n");
->   
-> -	return 0;
-> +	return mc33xs2410_hwmon_probe(spi);
->   }
->   
->   static const struct spi_device_id mc33xs2410_spi_id[] = {
-> 
-> ---
-> base-commit: 7395eb13e3a85067de3e083d3781630ea303c0c4
-> change-id: 20250507-mc33xs2410-hwmon-a5ff9efec005
-> 
-> Best regards,
-
+T24gVHVlLCAyMDI1LTA1LTEzIGF0IDIwOjEwICswMDAwLCBFZGdlY29tYmUsIFJpY2sgUCB3cm90
+ZToNCj4gPiBAQCAtMzI2NSw3ICszMjYzLDcgQEAgaW50IHRkeF9nbWVtX3ByaXZhdGVfbWF4X21h
+cHBpbmdfbGV2ZWwoc3RydWN0IGt2bSAqa3ZtLCBrdm1fcGZuX3QgcGZuKQ0KPiA+IMKgwqAJaWYg
+KHVubGlrZWx5KHRvX2t2bV90ZHgoa3ZtKS0+c3RhdGUgIT0gVERfU1RBVEVfUlVOTkFCTEUpKQ0K
+PiA+IMKgwqAJCXJldHVybiBQR19MRVZFTF80SzsNCj4gPiDCoCANCj4gPiAtCXJldHVybiBQR19M
+RVZFTF80SzsNCj4gPiArCXJldHVybiBQR19MRVZFTF8yTTsNCj4gDQo+IE1heWJlIGNvbWJpbmUg
+dGhpcyB3aXRoIHBhdGNoIDQsIG9yIHNwbGl0IHRoZW0gaW50byBzZW5zaWJsZSBjYXRlZ29yaWVz
+Lg0KDQpIb3cgYWJvdXQgbWVyZ2Ugd2l0aCBwYXRjaCAxMg0KDQogIFtSRkMgUEFUQ0ggMTIvMjFd
+IEtWTTogVERYOiBEZXRlcm1pbmUgbWF4IG1hcHBpbmcgbGV2ZWwgYWNjb3JkaW5nIHRvIHZDUFUn
+cyANCiAgQUNDRVBUIGxldmVsDQoNCmluc3RlYWQ/DQoNClBlciBwYXRjaCAxMiwgdGhlIGZhdWx0
+IGR1ZSB0byBUREguTUVNLlBBR0UuQUNDUFQgY29udGFpbnMgZmF1bHQgbGV2ZWwgaW5mbywgc28N
+CktWTSBzaG91bGQganVzdCByZXR1cm4gdGhhdC4gIEJ1dCBzZWVtcyB3ZSBhcmUgc3RpbGwgcmV0
+dXJuaW5nIFBHX0xFVkVMXzJNIGlmIG5vDQpzdWNoIGluZm8gaXMgcHJvdmlkZWQgKElJVUMpOg0K
+DQppbnQgdGR4X2dtZW1fcHJpdmF0ZV9tYXhfbWFwcGluZ19sZXZlbChzdHJ1Y3Qga3ZtX3ZjcHUg
+KnZjcHUsIGt2bV9wZm5fdCBwZm4sIA0KCQkJCSAgICAgICBnZm5fdCBnZm4pDQogew0KKwlzdHJ1
+Y3QgdmNwdV90ZHggKnRkeCA9IHRvX3RkeCh2Y3B1KTsNCisNCiAJaWYgKHVubGlrZWx5KHRvX2t2
+bV90ZHgodmNwdS0+a3ZtKS0+c3RhdGUgIT0gVERfU1RBVEVfUlVOTkFCTEUpKQ0KIAkJcmV0dXJu
+IFBHX0xFVkVMXzRLOw0KIA0KKwlpZiAoZ2ZuID49IHRkeC0+dmlvbGF0aW9uX2dmbl9zdGFydCAm
+JiBnZm4gPCB0ZHgtPnZpb2xhdGlvbl9nZm5fZW5kKQ0KKwkJcmV0dXJuIHRkeC0+dmlvbGF0aW9u
+X3JlcXVlc3RfbGV2ZWw7DQorDQogCXJldHVybiBQR19MRVZFTF8yTTsNCiB9DQoNClNvIHdoeSBu
+b3QgcmV0dXJuaW5nIFBUX0xFVkVMXzRLIGF0IHRoZSBlbmQ/DQoNCkkgYW0gYXNraW5nIGJlY2F1
+c2UgYmVsb3cgdGV4dCBtZW50aW9uZWQgaW4gdGhlIGNvdmVybGV0dGVyOg0KDQogICAgQSByYXJl
+IGNhc2UgdGhhdCBjb3VsZCBsZWFkIHRvIHNwbGl0dGluZyBpbiB0aGUgZmF1bHQgcGF0aCBpcyB3
+aGVuIGEgVEQNCiAgICBpcyBjb25maWd1cmVkIHRvIHJlY2VpdmUgI1ZFIGFuZCBhY2Nlc3NlcyBt
+ZW1vcnkgYmVmb3JlIHRoZSBBQ0NFUFQNCiAgICBvcGVyYXRpb24uIEJ5IHRoZSB0aW1lIGEgdkNQ
+VSBhY2Nlc3NlcyBhIHByaXZhdGUgR0ZOLCBkdWUgdG8gdGhlIGxhY2sNCiAgICBvZiBhbnkgZ3Vl
+c3QgcHJlZmVycmVkIGxldmVsLCBLVk0gY291bGQgY3JlYXRlIGEgbWFwcGluZyBhdCAyTUIgbGV2
+ZWwuDQogICAgSWYgdGhlIFREIHRoZW4gb25seSBwZXJmb3JtcyB0aGUgQUNDRVBUIG9wZXJhdGlv
+biBhdCA0S0IgbGV2ZWwsDQogICAgc3BsaXR0aW5nIGluIHRoZSBmYXVsdCBwYXRoIHdpbGwgYmUg
+dHJpZ2dlcmVkLiBIb3dldmVyLCB0aGlzIGlzIG5vdA0KICAgIHJlZ2FyZGVkIGFzIGEgdHlwaWNh
+bCB1c2UgY2FzZSwgYXMgdXN1YWxseSBURCBhbHdheXMgYWNjZXB0cyBwYWdlcyBpbg0KICAgIHRo
+ZSBvcmRlciBmcm9tIDFHQi0+Mk1CLT40S0IuIFRoZSB3b3JzdCBvdXRjb21lIHRvIGlnbm9yZSB0
+aGUgcmVzdWx0aW5nDQogICAgc3BsaXR0aW5nIHJlcXVlc3QgaXMgYW4gZW5kbGVzcyBFUFQgdmlv
+bGF0aW9uLiBUaGlzIHdvdWxkIG5vdCBoYXBwZW4NCiAgICBmb3IgYSBMaW51eCBndWVzdCwgd2hp
+Y2ggZG9lcyBub3QgZXhwZWN0IGFueSAjVkUuDQoNCkNoYW5naW5nIHRvIHJldHVybiBQVF9MRVZF
+TF80SyBzaG91bGQgYXZvaWQgdGhpcyBwcm9ibGVtLiAgSXQgZG9lc24ndCBodXJ0DQpub3JtYWwg
+Y2FzZXMgZWl0aGVyLCBzaW5jZSBndWVzdCB3aWxsIGFsd2F5cyBkbyBBQ0NFUFQgKHdoaWNoIGNv
+bnRhaW5zIHRoZQ0KYWNjZXB0aW5nIGxldmVsKSBiZWZvcmUgYWNjZXNzaW5nIHRoZSBtZW1vcnku
+DQo=
