@@ -1,177 +1,235 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059601DFDE;
-	Fri, 16 May 2025 12:57:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84EFD242D68;
+	Fri, 16 May 2025 12:57:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747400275; cv=none; b=VvvO/PQyJQXexHxQcFcawK1lN8f9bEDwWy3QYZHj2B7Z4Dx5fSh8RiV9SRJohE0iGXqtBj4EfiCqumRC+rm570nxzfdnWtNnL99Yb7LK2BBWkG1mzpWPv5NgPdwR0NuLJeoHUpbexvRenOIb7MPEpxDvH5vIeYjSG6R1+BtDqPw=
+	t=1747400276; cv=none; b=aXgQkhd0ku5I8baDG0v3lJ5/4o5wAa1nXplZ1aoSkQxJerVQyPAZskp4gSI8dRfqreMmpS7BlQX0cIDrYEe+iKCo5oZrQQRN02TiHQq4Acq2tLqJ7TKqjhhphf3wXeaiM/pk5VU7jJt4Ctvi4Il2H41ThqkHhPW87i06V2UViws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747400275; c=relaxed/simple;
-	bh=YZxxILgmfc1qF1rrNWG6/WtUXq2234pqpZt+RioE+Oc=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Yd2LRPCHzD9ZvFtsfPeDE6r2ZO96Q67AN3/G+5OAx2oSg43xfoUXX6EoiXSah0SL406/AtbmgwRMHZqqt18GUUmgvwUT9eDy0z8oI6oNHUmbdc+1fyCidqvm2Hjdk5zxffUofDjyot1tYDJjUe8/RaTShyEU/qFfRvXy2vHClVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3wJ9KUe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747400276; c=relaxed/simple;
+	bh=bqQBd5PjO+Z7B7y6xL8kSFo8RkFPRhvksEEkPk1FNKo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sXAcO3SYmn2NHxOmfTuKsUZ/YSKqHyWTiXtYDJ0V+ssB+aRvyqou29IuNh6WTvffhy9sjHtKiWSr6qMUiu/CVqrpI0ZYt+tPav4AZFrNmocP7VBsD/xV23M9quM3IUfQrtDpHF2ILPEbtd5n+MI1bFrWD1+y9iHdP65Sl9JRt2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=H3yab2Ai; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3wJ9KUe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2798C4CEE4;
-	Fri, 16 May 2025 12:57:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747400274;
-	bh=YZxxILgmfc1qF1rrNWG6/WtUXq2234pqpZt+RioE+Oc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=c3wJ9KUewGkliyK1GQc3uMF2StFwkDkd44yXnLyqtpOXcMZY+iFDdhz1CMgJvR1JS
-	 QnxWz3HQ7VsoXpbIiUeguYfzo+JHtEjj1Sp3o7PjYG4oOGzi2thZ8XU1Sg2c9wX10g
-	 pzPgsVc5yKRXhPo0LRSO+smBm9BVkKmLcZWORBURWZO4i7gHN+Nd05jXe8PbfFPdrL
-	 IB5xV8xKWoJ5Dl6qdc69cCSvEBJK6we9xOT2fCMDD+AP/O6gT7aBINVnCXv80Jl3RU
-	 E4BSWm+viNGiy5iex/O5cn6lomBwWInw/9XIA9yJe03a3bTxekkYEPg1LjmXgzJ2IO
-	 FukrHGfuxqiVw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uFudM-00FYgz-LR;
-	Fri, 16 May 2025 13:57:52 +0100
-Date: Fri, 16 May 2025 13:57:52 +0100
-Message-ID: <86a57cg1bj.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	qperret@google.com,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kernel-team@android.com
-Subject: Re: [PATCH v4 02/10] KVM: arm64: Introduce for_each_hyp_page
-In-Reply-To: <20250509131706.2336138-3-vdonnefort@google.com>
-References: <20250509131706.2336138-1-vdonnefort@google.com>
-	<20250509131706.2336138-3-vdonnefort@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="H3yab2Ai"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 617B3C4CEE4;
+	Fri, 16 May 2025 12:57:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747400275;
+	bh=bqQBd5PjO+Z7B7y6xL8kSFo8RkFPRhvksEEkPk1FNKo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=H3yab2Aievc6KyEn/HP5yAftNhFIJDyqgLHX3f9HTb70eYjHjFzW9evKQGhgPFWEY
+	 /R0g1GA+IGPO7L9Po8C0OxzSBjOrwQihCO8Znp3YRDQ8yroMoqsiPP8/Z15sAXqeHj
+	 MefhwGSoSlr0ZxLVf6guqsXm204gFVSspJfWlq0M=
+Date: Fri, 16 May 2025 14:56:07 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Cc: mka@chromium.org, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, git@amd.com,
+	Jonathan Stroud <jonathan.stroud@amd.com>
+Subject: Re: [PATCH] usb: misc: onboard_usb_dev: Fix usb5744 initialization
+ sequence
+Message-ID: <2025051659-stood-scary-c3ba@gregkh>
+References: <1747398760-284021-1-git-send-email-radhey.shyam.pandey@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: vdonnefort@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, qperret@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1747398760-284021-1-git-send-email-radhey.shyam.pandey@amd.com>
 
-On Fri, 09 May 2025 14:16:58 +0100,
-Vincent Donnefort <vdonnefort@google.com> wrote:
+On Fri, May 16, 2025 at 06:02:40PM +0530, Radhey Shyam Pandey wrote:
+> From: Jonathan Stroud <jonathan.stroud@amd.com>
 > 
-> Add a helper to iterate over the hypervisor vmemmap. This will be
-> particularly handy with the introduction of huge mapping support
-> for the np-guest stage-2.
+> Introduce i2c APIs to read/write for proper configuration register
+> programming. It ensures that read-modify-write sequence is performed
+> and reserved bit in Runtime Flags 2 register are not touched.
 > 
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> Also legacy smbus block write inserted an extra count value into the
+> i2c data stream which breaks the register write on the usb5744.
 > 
-> diff --git a/arch/arm64/kvm/hyp/include/nvhe/memory.h b/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> index eb0c2ebd1743..676a0a13c741 100644
-> --- a/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> +++ b/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> @@ -96,24 +96,24 @@ static inline struct hyp_page *hyp_phys_to_page(phys_addr_t phys)
->  #define hyp_page_to_virt(page)	__hyp_va(hyp_page_to_phys(page))
->  #define hyp_page_to_pool(page)	(((struct hyp_page *)page)->pool)
+> Switching to new read/write i2c APIs fixes both issues.
+> 
+> Fixes: 6782311d04df ("usb: misc: onboard_usb_dev: add Microchip usb5744 SMBus programming support")
+> Signed-off-by: Jonathan Stroud <jonathan.stroud@amd.com>
+> Co-developed-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+> ---
+>  drivers/usb/misc/onboard_usb_dev.c | 100 +++++++++++++++++++++++++----
+>  1 file changed, 87 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/usb/misc/onboard_usb_dev.c b/drivers/usb/misc/onboard_usb_dev.c
+> index 15fa90f47c70..320278a0ac39 100644
+> --- a/drivers/usb/misc/onboard_usb_dev.c
+> +++ b/drivers/usb/misc/onboard_usb_dev.c
+> @@ -36,9 +36,10 @@
+>  #define USB5744_CMD_CREG_ACCESS			0x99
+>  #define USB5744_CMD_CREG_ACCESS_LSB		0x37
+>  #define USB5744_CREG_MEM_ADDR			0x00
+> +#define USB5744_CREG_MEM_RD_ADDR		0x04
+>  #define USB5744_CREG_WRITE			0x00
+> -#define USB5744_CREG_RUNTIMEFLAGS2		0x41
+> -#define USB5744_CREG_RUNTIMEFLAGS2_LSB		0x1D
+> +#define USB5744_CREG_READ			0x01
+> +#define USB5744_CREG_RUNTIMEFLAGS2		0x411D
+>  #define USB5744_CREG_BYPASS_UDC_SUSPEND		BIT(3)
 >  
-> -static inline enum pkvm_page_state get_host_state(phys_addr_t phys)
-> +static inline enum pkvm_page_state get_host_state(struct hyp_page *p)
->  {
-> -	return (enum pkvm_page_state)hyp_phys_to_page(phys)->__host_state;
-> +	return (enum pkvm_page_state)p->__host_state;
-
-I'm not quite sure why we have this cast the first place. If we are so
-keen on type consistency, why isn't __host_state an enum pkvm_page_state
-the first place?
-
+>  static void onboard_dev_attach_usb_driver(struct work_struct *work);
+> @@ -309,11 +310,88 @@ static void onboard_dev_attach_usb_driver(struct work_struct *work)
+>  		pr_err("Failed to attach USB driver: %pe\n", ERR_PTR(err));
 >  }
 >  
-> -static inline void set_host_state(phys_addr_t phys, enum pkvm_page_state state)
-> +static inline void set_host_state(struct hyp_page *p, enum pkvm_page_state state)
->  {
-> -	hyp_phys_to_page(phys)->__host_state = state;
-> +	p->__host_state = state;
->  }
->  
-> -static inline enum pkvm_page_state get_hyp_state(phys_addr_t phys)
-> +static inline enum pkvm_page_state get_hyp_state(struct hyp_page *p)
->  {
-> -	return hyp_phys_to_page(phys)->__hyp_state_comp ^ PKVM_PAGE_STATE_MASK;
-> +	return p->__hyp_state_comp ^ PKVM_PAGE_STATE_MASK;
-
-And we don't seem that bothered here.
-
->  }
->  
-> -static inline void set_hyp_state(phys_addr_t phys, enum pkvm_page_state state)
-> +static inline void set_hyp_state(struct hyp_page *p, enum pkvm_page_state state)
->  {
-> -	hyp_phys_to_page(phys)->__hyp_state_comp = state ^ PKVM_PAGE_STATE_MASK;
-> +	p->__hyp_state_comp = state ^ PKVM_PAGE_STATE_MASK;
->  }
->  
->  /*
-> diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-> index 23544928a637..4d269210dae0 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-> @@ -60,6 +60,9 @@ static void hyp_unlock_component(void)
->  	hyp_spin_unlock(&pkvm_pgd_lock);
->  }
->  
-> +#define for_each_hyp_page(start, size, page)   \
-> +	for (page = hyp_phys_to_page(start); page < hyp_phys_to_page((start) + (size)); page++)
+> +static int onboard_dev_5744_i2c_read_byte(struct i2c_client *client, u16 addr, u8 *data)
+> +{
+> +	struct i2c_msg msg[2];
+> +	u8 rd_buf[3];
+> +	int ret;
 > +
-
-Huh. This really should be something like:
-
-#define for_each_hyp_page(__p, __st, __sz)   			\
-	for (struct hyp_page *__p = hyp_phys_to_page(__st),	\
-	     *__e = __p + ((__sz) >> PAGE_SHIFT);		\
-	     __p < __e; __p++)
-
-so that:
-
-- the iterator variable comes first and looks like a normal for-loop
-- the iterator has a scope limited to the loop
-- we don't evaluate parameters multiple times
-- we don't evaluate the end of the loop multiple times
-- we try not to reuse common variable names
-
->  static void *host_s2_zalloc_pages_exact(size_t size)
+> +	u8 wr_buf[7] = {0, USB5744_CREG_MEM_ADDR, 4,
+> +			USB5744_CREG_READ, 1,
+> +			addr >> 8 & 0xff,
+> +			addr & 0xff};
+> +	msg[0].addr = client->addr;
+> +	msg[0].flags = 0;
+> +	msg[0].len = sizeof(wr_buf);
+> +	msg[0].buf = wr_buf;
+> +
+> +	ret = i2c_transfer(client->adapter, msg, 1);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	wr_buf[0] = USB5744_CMD_CREG_ACCESS;
+> +	wr_buf[1] = USB5744_CMD_CREG_ACCESS_LSB;
+> +	wr_buf[2] = 0;
+> +	msg[0].len = 3;
+> +
+> +	ret = i2c_transfer(client->adapter, msg, 1);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	wr_buf[0] = 0;
+> +	wr_buf[1] = USB5744_CREG_MEM_RD_ADDR;
+> +	msg[0].len = 2;
+> +
+> +	msg[1].addr = client->addr;
+> +	msg[1].flags = I2C_M_RD;
+> +	msg[1].len = 2;
+> +	msg[1].buf = rd_buf;
+> +
+> +	ret = i2c_transfer(client->adapter, msg, 2);
+> +	if (ret < 0)
+> +		return ret;
+> +	*data = rd_buf[1];
+> +
+> +	return 0;
+> +}
+> +
+> +static int onboard_dev_5744_i2c_write_byte(struct i2c_client *client, u16 addr, u8 data)
+> +{
+> +	struct i2c_msg msg[2];
+> +	int ret;
+> +
+> +	u8 wr_buf[8] = {0, USB5744_CREG_MEM_ADDR, 5,
+> +			USB5744_CREG_WRITE, 1,
+> +			addr >> 8 & 0xff,
+> +			addr & 0xff,
+> +			data};
+> +	msg[0].addr = client->addr;
+> +	msg[0].flags = 0;
+> +	msg[0].len = sizeof(wr_buf);
+> +	msg[0].buf = wr_buf;
+> +
+> +	ret = i2c_transfer(client->adapter, msg, 1);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	msg[0].len = 3;
+> +	wr_buf[0] = USB5744_CMD_CREG_ACCESS;
+> +	wr_buf[1] = USB5744_CMD_CREG_ACCESS_LSB;
+> +	wr_buf[2] = 0;
+> +
+> +	ret = i2c_transfer(client->adapter, msg, 1);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+>  static int onboard_dev_5744_i2c_init(struct i2c_client *client)
 >  {
->  	void *addr = hyp_alloc_pages(&host_s2_pool, get_order(size));
-> @@ -481,7 +484,8 @@ static int host_stage2_adjust_range(u64 addr, struct kvm_mem_range *range)
->  		return -EAGAIN;
+>  #if IS_ENABLED(CONFIG_USB_ONBOARD_DEV_USB5744)
+>  	struct device *dev = &client->dev;
+>  	int ret;
+> +	u8 reg;
 >  
->  	if (pte) {
-> -		WARN_ON(addr_is_memory(addr) && get_host_state(addr) != PKVM_NOPAGE);
-> +		WARN_ON(addr_is_memory(addr) &&
-> +			get_host_state(hyp_phys_to_page(addr)) != PKVM_NOPAGE);
->  		return -EPERM;
->  	}
+>  	/*
+>  	 * Set BYPASS_UDC_SUSPEND bit to ensure MCU is always enabled
+> @@ -321,20 +399,16 @@ static int onboard_dev_5744_i2c_init(struct i2c_client *client)
+>  	 * The command writes 5 bytes to memory and single data byte in
+>  	 * configuration register.
+>  	 */
+> -	char wr_buf[7] = {USB5744_CREG_MEM_ADDR, 5,
+> -			  USB5744_CREG_WRITE, 1,
+> -			  USB5744_CREG_RUNTIMEFLAGS2,
+> -			  USB5744_CREG_RUNTIMEFLAGS2_LSB,
+> -			  USB5744_CREG_BYPASS_UDC_SUSPEND};
+> -
+> -	ret = i2c_smbus_write_block_data(client, 0, sizeof(wr_buf), wr_buf);
+> +	ret = onboard_dev_5744_i2c_read_byte(client,
+> +					     USB5744_CREG_RUNTIMEFLAGS2, &reg);
+>  	if (ret)
+> -		return dev_err_probe(dev, ret, "BYPASS_UDC_SUSPEND bit configuration failed\n");
+> +		return dev_err_probe(dev, ret, "CREG_RUNTIMEFLAGS2 read failed\n");
 >  
-> @@ -507,10 +511,10 @@ int host_stage2_idmap_locked(phys_addr_t addr, u64 size,
+> -	ret = i2c_smbus_write_word_data(client, USB5744_CMD_CREG_ACCESS,
+> -					USB5744_CMD_CREG_ACCESS_LSB);
+> +	reg |= USB5744_CREG_BYPASS_UDC_SUSPEND;
+> +	ret = onboard_dev_5744_i2c_write_byte(client,
+> +					      USB5744_CREG_RUNTIMEFLAGS2, reg);
+>  	if (ret)
+> -		return dev_err_probe(dev, ret, "Configuration Register Access Command failed\n");
+> +		return dev_err_probe(dev, ret, "BYPASS_UDC_SUSPEND bit configuration failed\n");
 >  
->  static void __host_update_page_state(phys_addr_t addr, u64 size, enum pkvm_page_state state)
->  {
-> -	phys_addr_t end = addr + size;
-> +	struct hyp_page *page;
+>  	/* Send SMBus command to boot hub. */
+>  	ret = i2c_smbus_write_word_data(client, USB5744_CMD_ATTACH,
+> 
+> base-commit: 484803582c77061b470ac64a634f25f89715be3f
+> -- 
+> 2.34.1
+> 
+> 
 
-and then these extra declarations can go.
+Hi,
 
-Thanks,
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-	M.
+You are receiving this message because of the following common error(s)
+as indicated below:
 
--- 
-Without deviation from the norm, progress is not possible.
+- You have marked a patch with a "Fixes:" tag for a commit that is in an
+  older released kernel, yet you do not have a cc: stable line in the
+  signed-off-by area at all, which means that the patch will not be
+  applied to any older kernel releases.  To properly fix this, please
+  follow the documented rules in the
+  Documentation/process/stable-kernel-rules.rst file for how to resolve
+  this.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
