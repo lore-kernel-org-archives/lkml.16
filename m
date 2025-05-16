@@ -1,62 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CC727EC9A;
-	Fri, 16 May 2025 20:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C900227E99
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 20:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747426613; cv=none; b=hO58BjzZrobL8PthOMYduA/ZJuI7I0Niw3GGIttGCGbNw86WC/HUb95RU0MrRVRkU2Fe8DY+U2bugHUR0/UCJThB1DqWWFU4o734z6LVJ7vpmK0/W6BP4UUxT5IjQQq1bAxD4LXinCRDZfSjWT1IlzTdtyy9CH0V3Lp/yn2e8FE=
+	t=1747426622; cv=none; b=kjV5CPfmUKjl19kYzhJU1sRzGK6cdc49/h17Dh7OzJMQVIpelxcT85v51MrcT7RWM2vombJfoL11t5hv+I6Y9ckpYv4DERgaKgTwvdrDuRdQB2zTySbj5CM/gAiD879wQBMdB2ygwcWOlyNfWyBIHju/v5vJIFSLGSCUgTOwFJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747426613; c=relaxed/simple;
-	bh=qFF0calRyniBymu6pWsXocIvfCO34tQjr8bYALVmbiA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U/95dYemKqGpQuqIDmLRjuySNH2eCL6mQNlT1fSp6uHTg8hJtYAgllK4pMbN4RynQkwLMqQtR7of3pYV1FlVYCJTN9XnbjPNJLH9Nmq6nJWm4vmd/fAYdVxljerVs9bEa4Sk2MlQgo4PrWa9LU3pTG9+3WDM6i3+1nUG3qqCiX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tDMK3I8b; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747426622; c=relaxed/simple;
+	bh=p1mvHlBdKatl+hMMra0+ZlPP255dxOsU82UwTPZKqI0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GbmhCOzn11Mp+lnisNnh08xlI1r0FMrOvCTVqJRco5rBXyPEB0L4yM3vuYzD7nSOyVP0biclIMm4iPm2reVTbg1DRYC4JUcx8df1086bShVCdxjQnN0oCLBkf+DbmISvGMcvqKARGKWvZB22wD37oRfAKzqPxDvZi5PX0reu67g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lYHoXiqM; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tDMK3I8b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE39CC4CEEF;
-	Fri, 16 May 2025 20:16:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747426613;
-	bh=qFF0calRyniBymu6pWsXocIvfCO34tQjr8bYALVmbiA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tDMK3I8boQcEejsRxDXJqTCEi6T4NZujXSDb8t9AIK+MZRlbYhD3Q3i0JcvQ2i9a4
-	 HQdPz0NUy9EfbG6BkA+/E8iuD0Du+Oz4UVjW1LAGNO7+H/aWiQulL1g5wLh4fZZHo0
-	 U8sF3hxac5XF5SjsZ68pT4NAxk9COp/6sDC7XSrUJy1RDfSKH6MA59HND6URRtXfCn
-	 hXLyjzc0kVoUK7bQSz1z98GhrIOYaLQlijZUuiApAoY/ltvuq+pwFumQNFUFr4g0DS
-	 9GSVbeznufmWECsVbsIMFTd6Id0XqMOe+M3VHbsB4a1FTInVFGc+pPvWrRCQPdfkW3
-	 oQV/mFrSP6Cag==
-Date: Fri, 16 May 2025 21:16:48 +0100
-From: Simon Horman <horms@kernel.org>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] net: airoha: Use dev_err_probe()
-Message-ID: <20250516201648.GJ3339421@horms.kernel.org>
-References: <5c94b9b345017f29ed653e2f05d25620d128c3f0.1746715755.git.christophe.jaillet@wanadoo.fr>
- <bb64aa1ea0205329c377ad32dde46cdf5c232db9.1746715755.git.christophe.jaillet@wanadoo.fr>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lYHoXiqM"
+Message-ID: <b72e8b41-a5ec-4821-a315-8670d7e2e56f@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747426607;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eu2L0rYe7eo1oBRvssRRGMqi4mD0VDsTUXJiSleO2/s=;
+	b=lYHoXiqMOdkSm+VkSphX+fMNRj6jPIoLAJdyJGM+76xrriLOEnBwFE66CK2yzosIL49Ft5
+	/TlBWbE4OuGhVhYYt/b8li2xhMo6iQPl2g1bAj8XZTVWVPnf4Wa5wDX9niAqZNsf0SaYiI
+	yPTbjWT0TnlZUEfMWYBt22A56506gCE=
+Date: Fri, 16 May 2025 21:16:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bb64aa1ea0205329c377ad32dde46cdf5c232db9.1746715755.git.christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH v5] ptp: ocp: Limit signal/freq counts in summary output
+ functions
+To: Sagi Maimon <maimon.sagi@gmail.com>, jonathan.lemon@gmail.com,
+ richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20250514073541.35817-1-maimon.sagi@gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250514073541.35817-1-maimon.sagi@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, May 15, 2025 at 09:59:38PM +0200, Christophe JAILLET wrote:
-> Use dev_err_probe() to slightly simplify the code.
-> It is less verbose, more informational and makes error logging more
-> consistent in the probe.
+On 14/05/2025 08:35, Sagi Maimon wrote:
+> The debugfs summary output could access uninitialized elements in
+> the freq_in[] and signal_out[] arrays, causing NULL pointer
+> dereferences and triggering a kernel Oops (page_fault_oops).
+> This patch adds u8 fields (nr_freq_in, nr_signal_out) to track the
+> number of initialized elements, with a maximum of 4 per array.
+> The summary output functions are updated to respect these limits,
+> preventing out-of-bounds access and ensuring safe array handling.
 > 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
+> ---
+> Addressed comments from Vadim Fedorenko:
+> - https://www.spinics.net/lists/kernel/msg5683022.html
+> Addressed comments from Jakub Kicinski:
+> - https://www.spinics.net/lists/netdev/msg1091131.html
+> Changes since v4:
+> - remove fix from signal/freq show/store routines.
+> ---
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+LGTM, Thanks!
 
+Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
