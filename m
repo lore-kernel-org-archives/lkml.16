@@ -1,105 +1,135 @@
-Received: from mail-yb1-f193.google.com (mail-yb1-f193.google.com [209.85.219.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333A441760
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A241F4CAC;
+	Fri, 16 May 2025 11:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747395755; cv=none; b=dHuJzD/Yv40zHYWR27vdH6ATRq9S10XNBcNj9U2h7XsJWCfceheCemgyOb5MeNMPOAThFkxuduFZXdHvJlGGsbX2ApxowRO59mdKqM0U2z9Qhtcj24WrL2IFmyFQDd0+P2/xh2TzNexn3GJndX/WTe23B+jLKVDID1KH9LLWHRg=
+	t=1747395788; cv=none; b=TKg/YUonWkX8B7TcADeYM+K1/G/aKlkgi3SaYpwvrE7CT1lwM4ql+L54CDAS5jb41tzcO38uHvID8y9npHvmtb6y0rn+cMulIw3IwodOTo5F5Yt7+2AiPFq8IEVsDYkqIAaiO0vFX1fOeJKAKIJ+PyuNwRRmUD2NNHOgmTELhLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747395755; c=relaxed/simple;
-	bh=qiMV3dMi+9DlhdCTYBcFKYMBvMxUD3LJ1STAMRmHlO8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=mcdl/gttZYQv6RVsklrDM4+3fT9OhAsUzFrMyprdjPw6s4VpOyW7p0MS249rAEADjbkZkDteLh+BUeD1vWYxv0Fhg7Xwxu8um04HycWR8PpxyGHCf4a7Udhv+sgUssoRAurCeXygOGFoxk7T2aLaPZZM8QUQwRsF4pWXbg7b0Fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aCPe+Yz8; arc=none smtp.client-ip=209.85.219.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747395788; c=relaxed/simple;
+	bh=qPbN4OrYfMlLyd6HdjCqdPrZoYX+1ffoO5TvIiXPCME=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=A6dxcWMOL/hkszDPD1LmSeuvPG1fn0DW6UGQwl0YxQ09j/822b6c8yjQgxuXFjYF+HaEShklBa6wYEf9FXRAK/0QTVp8IjI7MLF/gZ5phFP6H8eaZHwiq2MiR/aGwHz5YFxq0nk8Ac6oCgH9+c6rgbAl3PErI/UM/SeWeX5XVTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZSO8GkYH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aCPe+Yz8"
-Received: by mail-yb1-f193.google.com with SMTP id 3f1490d57ef6-e78effa4b34so2693794276.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 04:42:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747395753; x=1748000553; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qiMV3dMi+9DlhdCTYBcFKYMBvMxUD3LJ1STAMRmHlO8=;
-        b=aCPe+Yz8G15MyzbyDkOHeb9WfI/Xo10utwQ0lt3hQVJBJGcStgHQAK4w0334lpiuuR
-         nnfbJK8gkKGZ7ULYn2zk8XQWqDym/PUnk8TJy0qTyThQPNhLJnRnCt6tW7qpP7eC2fHd
-         68NFrFRp0b4CskMLKWcXY+4rr32h0BIwXF7Cp+IbrlhCY7ZG7GCyo88VORLjOXY7aHiG
-         6Rp+xwEXEt6WJcNaxylPCwAPYfH/Ss4ZbbgA7oTTpy+2nW8bxEHEtENzsVoc1KykZq8/
-         7MPbDIIB/3oqG14ensbO2/iCXbsChGve+haeKQnkcIl1kqjh5/aS/5d2TZz18QujweqG
-         A+XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747395753; x=1748000553;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qiMV3dMi+9DlhdCTYBcFKYMBvMxUD3LJ1STAMRmHlO8=;
-        b=ww+LczcelnmUHSkpsGHViz+jLlAczxiM8CSsOqfiLm37BnN/rYLEHXOKkrekXh54ky
-         GPPOuhMaxpkxxIENEJA944D9AEuDJw2ZPTUwN78IQ33x7l+3VKTHrFnIywFrxF8P7s1W
-         KZtabFrd1m1HuOX4OjYszoQjB9iJg8F1OSZPDSruD748+vCGtkuEL+2G9eNj1r0CAYZo
-         n+uVzKj3AUrPiO6oj20KdM3sabl/X4PlrQwS7b7UHmxiJVWlrFCmS/3XZDoWG+/V3hxa
-         baeoCyJCMzmabd8nYP1Wvs3UQKPw2MWi+/793g3uYMb/ZtASC0p11wkvaquIycTo45Mu
-         cinw==
-X-Forwarded-Encrypted: i=1; AJvYcCW1g88gqyGUcGRJ0EFch9kTzsKWVyWpDHlfIHHTgIt8wJM+Yu7cnZbxC4H3nPwT9CkT4xIZRpMd8xOKqRs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0/Cs6TFqKE7n2RbDNUjcjyiQCrL2zqdoozfBBNeJ9WfDbG6dE
-	hRYpCh5jdTc0MplNDJLHymlC7OW4O7CguviNiFpYaTbzFBJOOzwOJkx9T/HrXw0qBnnBWnG6Wx2
-	YpS6BZs9it96WsjZpmJHjow1ERfi7k+kFpEYSgvo=
-X-Gm-Gg: ASbGncugU1bWNqlhYAo1mv9YgDkYCcfUemq5DjYUqqsW4iGaCkaDKGuku6N7UvLrzzr
-	4wec/hA0nZZsQp0m01phU3jS2ExfnNTgseE0y12R8MJ+nLlg1tUJsLOUfCUPu7fXEjMhecXZDaH
-	8+j8JM1t2rkrzzBrk9blDZE2BO/g7ZAonZaeQ=
-X-Google-Smtp-Source: AGHT+IEqOHRPI9mMx9Iw5eaBYbZdEYeRPHy72IJwKVqT09nHXqCoGVb4KDCzuftFzMlgMWjU6O9shtHe9RpoQvqfBL0=
-X-Received: by 2002:a05:6902:2b86:b0:e78:f196:5d48 with SMTP id
- 3f1490d57ef6-e7b6b18c7d4mr3667234276.13.1747395753173; Fri, 16 May 2025
- 04:42:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZSO8GkYH"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8948EC4CEF1;
+	Fri, 16 May 2025 11:43:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747395787;
+	bh=qPbN4OrYfMlLyd6HdjCqdPrZoYX+1ffoO5TvIiXPCME=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=ZSO8GkYHQ9yLUk1oEJXOr5L/4iqGyQM1qSng5/4kolLjLLw90ABg+KOLnUt7Qp31f
+	 i88EmRs8t2eq/5wIiQaK/CNvXe1Bpb2LjiFKKYZ30zf4z+aiDJmo3476Hd+AvBhf0S
+	 FwYgOMDBBk+ahEfqiuEpWnAe4BQTVrp/SiXv4prbX1cV73uDzBnC4jauFGcQtolOI3
+	 ZfWjoFgshC2sj3/5KtWPRH3vrDkCfo/6Ad2HhMlmYVLhKwL3m6MRJfEbMlABxMZ5ST
+	 XS3PRiHuRWqZb4JCsKRZnEEAUMI/hRn6gB6zaCDTccdfnt5hzSqRgRK60Q1e3x3t/l
+	 JBXp6LQKWQ9Tg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA20C3ABC9;
+	Fri, 16 May 2025 11:43:07 +0000 (UTC)
+From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
+Date: Fri, 16 May 2025 15:43:07 +0400
+Subject: [PATCH v3 4/5] arm64: dts: ipq5018: Add CMN PLL node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Guoyu Yin <y04609127@gmail.com>
-Date: Fri, 16 May 2025 19:42:22 +0800
-X-Gm-Features: AX0GCFtdxDf5MJAWdsDhhE1EdqPM7pPra-wvzgCAWWruf6VBGH0_LqXshVq0ZUM
-Message-ID: <CAJNGr6vHrsSZ4QrRbRrN8-+tTb7ks8+xY9W7iE2VLsdgZe-eFQ@mail.gmail.com>
-Subject: [BUG]INFO: Slab ADDR objects=NUM used=NUM fp=ADDR flags=ADDR
-To: ericvh@kernel.org
-Cc: lucho@ionkov.net, asmadeus@codewreck.org, linux_oss@crudebyte.com, 
-	v9fs@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250516-ipq5018-cmn-pll-v3-4-f3867c5a2076@outlook.com>
+References: <20250516-ipq5018-cmn-pll-v3-0-f3867c5a2076@outlook.com>
+In-Reply-To: <20250516-ipq5018-cmn-pll-v3-0-f3867c5a2076@outlook.com>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Luo Jie <quic_luoj@quicinc.com>, 
+ Lee Jones <lee@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+ Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ George Moussalem <george.moussalem@outlook.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747395784; l=1868;
+ i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
+ bh=i8rlTNHd6kvpsl8Y56j+yL6A694vfBenSJxiKk+mwOY=;
+ b=Ykxm8UWWNr4u121oM6w2fcnntkQq94oohD7NCtZWepN0eqnthG8/eKoKUs0mNtMeg2icbra7j
+ dI5u5HMcFe8DaNQ3c7sCVs2dMPkNE5lHbxiefMLvSNfR30co/Wc4X/Y
+X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
+ pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
+X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
+ with auth_id=364
+X-Original-From: George Moussalem <george.moussalem@outlook.com>
+Reply-To: george.moussalem@outlook.com
 
-Hi,
+From: George Moussalem <george.moussalem@outlook.com>
 
-I encountered a kernel crash on linux5.10 described as "INFO: Slab
-ADDR objects=NUM used=NUM fp=ADDR." The issue occurs when shutting
-down the 9p-fcall-cache slab cache, with the dmesg log indicating that
-objects remain in the cache, triggering kernel warnings and errors.
+Add CMN PLL node for enabling output clocks to the networking
+hardware blocks on IPQ5018 devices.
 
-According to the dmesg log, the crash occurs in kmem_cache_destroy,
-with the call path p9_client_destroy -> kmem_cache_destroy. This
-happens during resource cleanup after a failed 9P filesystem mount.
-The log shows that the 9p-fcall-cache slab cache still contains
-objects (e.g., "objects=3 used=1"), indicating incomplete cleanup.
+The reference clock of CMN PLL is routed from XO to the CMN PLL
+through the internal WiFi block.
+.XO (48 MHZ) --> WiFi (multiplier/divider)--> 96 MHZ to CMN PLL.
 
-I suspect that p9_client_destroy fails to properly release all fcall
-objects in the cleanup path after a mount failure, possibly due to
-reference count errors or a memory leak. I recommend reviewing the
-p9_client_destroy function in net/9p/client.c to ensure all fcall
-objects are freed before the slab cache is destroyed.
+Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+---
+ arch/arm64/boot/dts/qcom/ipq5018.dtsi | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-This can be reproduced on:
+diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+index 130360014c5e14c778e348d37e601f60325b0b14..6d33cc196f8e61e30deb485b0715255c5e833e38 100644
+--- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+@@ -2,12 +2,13 @@
+ /*
+  * IPQ5018 SoC device tree source
+  *
+- * Copyright (c) 2023 The Linux Foundation. All rights reserved.
++ * Copyright (c) 2023-2025 The Linux Foundation. All rights reserved.
+  */
+ 
+ #include <dt-bindings/clock/qcom,apss-ipq.h>
+-#include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-ipq5018.h>
++#include <dt-bindings/clock/qcom,ipq5018-cmn-pll.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/reset/qcom,gcc-ipq5018.h>
+ 
+ / {
+@@ -16,6 +17,14 @@ / {
+ 	#size-cells = <2>;
+ 
+ 	clocks {
++		ref_96mhz_clk: ref-96mhz-clk {
++			compatible = "fixed-factor-clock";
++			clocks = <&xo_clk>;
++			#clock-cells = <0>;
++			clock-div = <1>;
++			clock-mult = <2>;
++		};
++
+ 		sleep_clk: sleep-clk {
+ 			compatible = "fixed-clock";
+ 			#clock-cells = <0>;
+@@ -25,6 +34,12 @@ xo_board_clk: xo-board-clk {
+ 			compatible = "fixed-clock";
+ 			#clock-cells = <0>;
+ 		};
++
++		xo_clk: xo-clk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <48000000>;
++		};
+ 	};
+ 
+ 	cpus {
 
-HEAD commit:
+-- 
+2.49.0
 
-2c85ebc57b3e1817b6ce1a6b703928e113a90442
 
-console output : https://pastebin.com/raw/4CieLjqM
-
-kernel config : https://pastebin.com/raw/gPbJY2Bq
-
-C reproducer : https://pastebin.com/raw/EanQb7c
-
-The C reproducer may take a few minutes to trigger this crash, please
-wait for a while.
-
-Best regards,
-
-Guoyu
