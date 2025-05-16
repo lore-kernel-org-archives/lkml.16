@@ -1,47 +1,47 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011038.outbound.protection.outlook.com [52.101.62.38])
+Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011070.outbound.protection.outlook.com [52.101.57.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469FE232386;
-	Fri, 16 May 2025 04:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C83242901;
+	Fri, 16 May 2025 04:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.70
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747368855; cv=fail; b=JskKidbtmp6ZEPkrFXxoC8cZAhDFjJ2woCMD2faKudQt08MtObw7WE6is78wHS355TIoDxqyn53d1ec8z6/K1ZLZULtRXk36RON0UddpItK3em+2qKYnDWIvKCGmXU6CwBZlEzfX/f6VcP8uYUQ2BX1t3J31SAH99SETk5CERKo=
+	t=1747368861; cv=fail; b=jSGix36gjgu3JuvixAx3sLoe+aFRf9Cc5Ip5EY7MpgnenkkZYKeKfgQ41cJYk0mShz9NWanDWYZjzfhzsnljou2LNxad06HAYI26KXjwLE2HBrIDGYLMA/6m/oAUj+40gfG77f5UFHeuYsj7lBCGLT+5iKA2Qnh8VTTbISJM07M=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747368855; c=relaxed/simple;
-	bh=ct2NSMMji2cZHPYjvJGSFZ1N/LGWfMtntZzUKQpLcRU=;
+	s=arc-20240116; t=1747368861; c=relaxed/simple;
+	bh=7Uro2zqg18eISd2o/00ro2HMKWYW/uICs7fSs2Qm4mo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=R4kGpGjE9za3fQL7eFxvT2/Wqrk/f+4rK1S9L9h8i+sH5YnL9CHH00C+EEK7mcppi4fiUuSvqx/i/ODAG1ixbzrH0tMJv7+hKTfMxOpZ8eX6dRQBZi39jdj3V08AsB1EU/GYbc7A4H45+hdJdr+U0SAJoFiFD78uhljRS1iVQyU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=MTT3wCjL; arc=fail smtp.client-ip=52.101.62.38
+	 Content-Type:MIME-Version; b=QNcUApiMV1GUQJQDpE7TED4iWXvALPTzMm/HKHEYzdQz4e/xsZ1OyM5vUpDuiTbigdLnYj+vPb56AQqE3Uka8UcsiYKfHIFXl7i8tEwCqGuUHUqLWxrJejohZLHsmoJBXu9/TxBDUetu1CD1o67ttkkrIvuyewRyund9PXRNeEA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=iMIj5eiV; arc=fail smtp.client-ip=52.101.57.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="MTT3wCjL"
+	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="iMIj5eiV"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=c6wUjt8Yw45CCq68hM3kFkcdASCkI126Ro0QJGad1idOVdXCp7ZsAGTRBEhecvizLCnar8r/ohNQh9Aeh3vdMEqhMAcPWpnq8zFTbi36v1vxLoOf1/ZJKqHJJFdgI4ZZR42W24XCRu1xS66cORj1ooybjTSIWqCKq2M6hgyBIBe32nnuaACWv2LTtdbPpxavoCjfCk8earlGvqnVTLCmMVT9Ercyj6zrXbFQwVd/UYZc5a4MAMp5R7tUPcvYK6Zi63g7IHgx/AhxKWctDXHoNqp4E9w0/8+nM3ueAWZ6M8m7Yov25vafSMbt73xXwqGr5Bo+S5h6iPHA/TvpMA/B4Q==
+ b=IpGhhAJZn0jG9/1rDix+aTTiUy5EeiQ6tb1eCNhUuXKTYj2QESHoyi4btnfMYCjN/3U1bpuduGU2Zzi7pEh5FpqCLn1HJ13lV+KlIDo9EBvOwFSR2l9Ot56ZRWyFl9b2nW6RWnPWZ2xeP0oTw94Pbpo/vo4eTwpbnjttw2avUCz9efqbrIno7+T+91xK8QIKX5ZsLUTW4gGnTjH7HMkvvcUN6ppAjlKUZuYB5/gSGZrb4jMNGtTYpGButcFQB/2E43P6HLv89KcjbSy51E9yaT0/L8K91Z4CmV2gUWPCnqaKLn2IKC9synB65PhS6IXwBxQtHapoDTBlUdwMH0V/2g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IdTVoGffjyzFagv8JdKwCSwDE0uUEMHZdsY9UhP93as=;
- b=yAJF3yX/4qSmtmW1PbqOIu6v6d9TqcZ3/+y74acHQUbP0UhVE41qhIr2Me4NtryCGEmMLVnC9vlOyEHbstuiQZhbMfEkC7HMRZNHb/t/rXwtdUP0X2Z4IVeJxfb9FcVu0rg0bmAhICfaTjVdfuJ0IaXn6Y9FpPF4bwkBCxpkfsrNzfm/sDfvYwqKEsiZgg2PnxEjVgqPhjjNMVTbo/ZM8sRjAyYj/4IfXf5NQOQlu1V9z5TmRhcUbdhkRJXYFEJJaqhg1L/hpSOSjPLMpH9Q28QCWcCXV2SCJfWVze1E+pkfvWk84ymeRotc2A0OjPTJOh86R0tSCWJzG98kNehb6w==
+ bh=ShVmcE3qiGPetk2TIlrcBnmiytJEjuwn5yDri4lQRuU=;
+ b=oItcWqRnby2axkCLJJ2jt8JbO3PWpqB7gheildczFwRQ8t+OotwnLMcJcQo53zQBKEy/EvjpUXvC/vR1xqurAeZ1rFpNPgl64y/b2znQ+XD9xlN0dpULyh1thsbvb83d1Ikg1PkStu+pItyoQMI4AEeE3FB7Gn6SGjHjard/hvc0zfzBivkIcSfmNXZHoqtOGGfKFLi7858aAP1S7dBwoTYfJHNFXihpBHSv9n4NMowCU9A3qgJ61RAo+SOAGtFD2BHauELbW7AOviCkYHnd1LeVMIYzElwwM7Ne2YOMJARdD4GmRr7f4Uah9iCqVOFIqxCWOUEsW434zAAY8qtnlA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
  dkim=pass header.d=altera.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IdTVoGffjyzFagv8JdKwCSwDE0uUEMHZdsY9UhP93as=;
- b=MTT3wCjLehJDXAJ0UTJ66dMVivmjzGg8W8ZIytVqFHlVToAYkD1jhehNsVzFJ5hmxP6WIrbrF2KSqBw/7a2tw+Ssu3NN0JP10GkDYovpTTHYXibk92O4pauTUZLaVNKq2aHitu/xmadfFIzsVuChQw/3LgkGistqZuOWrUsbRt0FDphqr2Jo0UsrNHvNArSlv2Q8Km4UESixEAvL2V8vwtgT1EigsQYx8YnLxIC7HRqijRvbJaAxZs3qSqass27WyX1MkTax/Iha6pUuhquDkM4N0NlcsADpNKJtAaGKa+1+Ea5CtK+OXazbO5geSjRu6ig1SJstXVR3rVKZUL99gw==
+ bh=ShVmcE3qiGPetk2TIlrcBnmiytJEjuwn5yDri4lQRuU=;
+ b=iMIj5eiVcNakqJZE5uy8qGsmHD8DFrTuLD1V4WCp/0tn+fnTi0cJSA9gicoMRFFu5Ls/ovShx17K6UFDufqjktfv+oVK97K0plnAMBXFCYqrSCfU9kANfJ/qNZkont6e1qdVi9n6XJudc74gBZwDztj0phfvdtKiXzUJNQLmtMMfALVPeIWSCM13StIN52CRjbnTyn6Yz5xdIoTBjOnDF2J4JLtCq0qXPsqNEfKz1EDys/hidrsIBapLvmz19GGHbx+KdHqD4OqNA3PvmwsVcH8KwxGnMSxfWeJEw3M5ENTfeZoabyFQNN2/bml3GmkUX+2jH4c2u/w4MO1qtarQyg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=altera.com;
 Received: from DM8PR03MB6230.namprd03.prod.outlook.com (2603:10b6:8:3c::13) by
  SJ2PR03MB7093.namprd03.prod.outlook.com (2603:10b6:a03:4fb::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Fri, 16 May
- 2025 04:14:12 +0000
+ 2025 04:14:16 +0000
 Received: from DM8PR03MB6230.namprd03.prod.outlook.com
  ([fe80::c297:4c45:23cb:7f71]) by DM8PR03MB6230.namprd03.prod.outlook.com
  ([fe80::c297:4c45:23cb:7f71%7]) with mapi id 15.20.8722.031; Fri, 16 May 2025
- 04:14:12 +0000
+ 04:14:16 +0000
 From: adrianhoyin.ng@altera.com
 To: dinguyen@kernel.org,
 	robh@kernel.org,
@@ -54,9 +54,9 @@ To: dinguyen@kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: adrianhoyin.ng@altera.com,
 	Matthew Gerlach <matthew.gerlach@altrera.com>
-Subject: [PATCH 1/3] dt-bindings: interrupt-controller: arm,gic-v3-its: Add quirk to support 32 bit addressable range
-Date: Fri, 16 May 2025 12:13:32 +0800
-Message-ID: <30a6bed1494b7bb41466f68533d40bd81f5ee4ab.1747368554.git.adrianhoyin.ng@altera.com>
+Subject: [PATCH 2/3] arm64: dts: socfpga: agilex5: Add dma_32bit_quirk in GIC ITS node
+Date: Fri, 16 May 2025 12:13:33 +0800
+Message-ID: <d07c5660e9db837382956b24e4b063cdb3902f2a.1747368554.git.adrianhoyin.ng@altera.com>
 X-Mailer: git-send-email 2.49.GIT
 In-Reply-To: <cover.1747368554.git.adrianhoyin.ng@altera.com>
 References: <cover.1747368554.git.adrianhoyin.ng@altera.com>
@@ -73,109 +73,104 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DM8PR03MB6230:EE_|SJ2PR03MB7093:EE_
-X-MS-Office365-Filtering-Correlation-Id: a9fa2831-adcb-4c32-9e5d-08dd94301cde
+X-MS-Office365-Filtering-Correlation-Id: 683fb367-8601-4373-ed2c-08dd94301f5d
 X-MS-Exchange-AtpMessageProperties: SA
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cbNLy7On8q5Jk7b9bWBt2aCzIHZW9TI3LyaIvSmygo1WIaJ7xfkQK7aBccVc?=
- =?us-ascii?Q?GCMyxm9RsaWnBcysxe+C3+GRHiOXcK6iS7smVh3r6SoP4hzDGOQe7iHaoy0S?=
- =?us-ascii?Q?hN5PIK1ApCcR7bh8/QyoPcDZ7AWnyNG37Dos+j93m3a8pkUdEN8FCoe4a6Gf?=
- =?us-ascii?Q?fiFgp6iWNjpguX4TiXSxBN/vmvSWn+B12IMnJ5Am/2Y0qHl4uAXGfVVgkQxQ?=
- =?us-ascii?Q?Qg+rvstBhsR+XNFCtwqZMKdaBs/HHy08pVB6jtTx7ZT67GrTTyxzZkBi/nA4?=
- =?us-ascii?Q?3Cg+QSQ0IfM5vq9Lr3oeckq6TmIQ9elBwZmZA+okjLOywJvUpDeezscTbDI/?=
- =?us-ascii?Q?2JbgRMxN7XjOcOjQJBVaiS5ir/Qg/fQ6I2MyfGmMDmvByAQdyhCNT42G0fkL?=
- =?us-ascii?Q?C7d9TdkLffjIwfJb8eCXBEI1F901IX5twyeNqZ4oNOrzLZfufhTs6g1Tgx4+?=
- =?us-ascii?Q?efUVZ6ff3PzSQrPnnwtsIYc63tdyygrOFMh2tNxPr/3jaqXRq59ISP/6NffD?=
- =?us-ascii?Q?dDZ03b5zUigHYz1BSJz82/SrwFyjJ7aTGF7k3XzfUTpPRiGT7SBN/6ClKUQi?=
- =?us-ascii?Q?xAU7fbJax9fESUIr9ckYpw+D+i5b7gUHFMbG8IW+0waVDQCm70eos0N4RxJf?=
- =?us-ascii?Q?Cs9i/H8uJ/LohvvK2iUpoq9klFsvESDax5SCZccbmLDB814sziXXNDFsc/vz?=
- =?us-ascii?Q?zWmAdPsDUjJOpOl17iZHdCSmQEs6GM6SAk7vntX8BfkzP18+bXLE7bufqsln?=
- =?us-ascii?Q?7r7FnAgjeHpjr7cPaTQi7yYbsWqSkLXOW23eQcBEv1J7EQUFKuIO59mzWdpD?=
- =?us-ascii?Q?dnHCo0LZK29YNd6HoyZYSDaPxJqtaOzOMwY6X2ffEyBYy9+qeW7qvnPUTk3e?=
- =?us-ascii?Q?swsNSf4flzHfG0xYB1ULk0/+xVg7Wq9qR9qTrltixxVizpNa5AYL5xuIre33?=
- =?us-ascii?Q?mMUru8C/QjX/fca47zdsGUzCcOFWefC0k3uKCWw5wQxdCzHJKG2tgKEY99dh?=
- =?us-ascii?Q?n/37OB4wdmlISlNxYZgTNsqMOMjm5C+KINy6s4D+POkz+ogp0wAl+K8T6mz6?=
- =?us-ascii?Q?Z9IF2AJVxASBGDg15+4J4IOETVxB8Z5u6zk5/lOeWYh1e5FTlMmoH2xB2WiB?=
- =?us-ascii?Q?4eQuSTHA7ArdmSFyToeEYIa/vpqCP5U4IQTJ45p8q/Ux8PMMW953l6PuWpow?=
- =?us-ascii?Q?Dwm7vGnAAX/2o5B+DPzHRsNeDTjEtFH7/821jB4MkV2MHzDMJIOfFsgXuV3l?=
- =?us-ascii?Q?hrJf8mzVP8NuHfAYymSRpknKET/n2kKUZQDWzApOuwFmKc0F8LYPAMuSs8j9?=
- =?us-ascii?Q?Ho+71sJuni9xrPu9BPRk/sH3U7OxlfiF//kCKPZUmmcCP7QobIzD+VzEuXjX?=
- =?us-ascii?Q?ZSrzzJL7nzyPW5IoFH2hX8rsMSOdZV0aaO8zNx7uyubjXMnRxk9Hz/0Z104S?=
- =?us-ascii?Q?Qx3+8/Rjwqk=3D?=
+	=?us-ascii?Q?L/aMHRtCK0M0yg8r1GcGcOmMwx9CbU0NW4BwIntqwSEE+IElEtfuyr5VAw4w?=
+ =?us-ascii?Q?qyVnPtdyx8evDdKe9pXYyU3bKDE7SBwuK//F35ha2orF2aOpoSQcN3pDZZpG?=
+ =?us-ascii?Q?XGIMjwkVmL8/TNz0/KgE7K9x/4chqtMFMUy+o+9oyZ0KXqDQTE6Jq016Ig/r?=
+ =?us-ascii?Q?eKkZ/yXCkiqiGQAGLzkKEdNqMBQ5JeNu+/LlGRqPALNqS/mSZX4C/qVFzk8a?=
+ =?us-ascii?Q?hikQZsZov7yOMGoyKtrLHFENNvwTIlPMe+scCxd66yqkpIsm1MIBTxRO8Sem?=
+ =?us-ascii?Q?wiZRTBzFbK6KmKpafzma0sMReufaVgHqvXqdWYfUDbQa4Ejr3UWdqYo5ZG7k?=
+ =?us-ascii?Q?hvJLCy7uJRu7s4aUWDGV5M3TFgdVa3ChYo5uSviZq0m7qWV6XUC/SKuw7hw5?=
+ =?us-ascii?Q?kfPINMvmI7aQmDpPr9gQdlTnFE54Mk0dLaUulT3X1c2GzinA4gwyVfA4aoeK?=
+ =?us-ascii?Q?v8UsteG7xhVv+BwgfS0KM15sq54+b981/dOKaVnEHwoENt/+uRW9dqgLolkZ?=
+ =?us-ascii?Q?39Hzirrh5gUBHsauZQtfYZsHCUf2sLjENeDPDgfM81qHqafUQ2MWD02TQYR+?=
+ =?us-ascii?Q?HZZ4nWR0+4ehfFK4vtyxb1x2bYE6qVbtxA5NSUC3B1tvR7eli+zztVzQ3PDd?=
+ =?us-ascii?Q?Py/7B5T+a++sM0+OPM2rGsOyKWML0tmwcNnu2s/+dXNbZcUSRYXKKjCX7Uep?=
+ =?us-ascii?Q?JtQ9Rr+/CVlA509WreObxhVwpBisI21BF/fAf+kG7Lrt/whRj60qjWNG1IXS?=
+ =?us-ascii?Q?u6t4796I7nHwTQnmwH/ULJOWTxzAwZE5zJm5XwZVkONs+iGMpZ0fv3x0TIb3?=
+ =?us-ascii?Q?0OZ1b2p/B98IKGEZkY6Cd8wvfxeU6r8zdZM/AgisGrjQSkn1DiNdWKsHS7HD?=
+ =?us-ascii?Q?s0fwdnka6x50Lga2sLYSQVePMsflxVHFLU9uiuWyVJqn37YLi/J8iS+rBVWm?=
+ =?us-ascii?Q?YB6wEAJy+tR/xdbgGjZrsh0W6GmtDskSoh7cKhLp9Ssg4UrXiMql9kHX2+iK?=
+ =?us-ascii?Q?lMiNhyBbgMHAoHhRljtNfVqbKrD+c9OfyG6Bn3Mm/29omllpqrNF1CgJRBV4?=
+ =?us-ascii?Q?SwENfPfeHShfQWfKlTryoBmwXZNSe7PgISvErwSdl85JmoE+VYbybzrS8QDv?=
+ =?us-ascii?Q?6QqZum3TqnFQUmCphwTi2WRykmkbGvfNeXW0h/7ETsuKOVPnOcdl7s1RXhMQ?=
+ =?us-ascii?Q?V4UN987JnsN2IptjcV3szZBK0hvnb8nzIFgnX9u9D5F63SEfFWIS+C/fa353?=
+ =?us-ascii?Q?vsQIGW3Jybf5I1als/D6u9kY6lIQiwKVjAig3RNN/QSO/fe2GMVUILxDNTcq?=
+ =?us-ascii?Q?ctO1zjrv5xBTd/UmbCaT8Y4o73sILdXARXbIz3t+2vpgDq0PSwMVXicj17DL?=
+ =?us-ascii?Q?6gpRPbBRvLj4WiyWdQqGAA48kRaEsbKri5y/KMRClGwhumFmyoR4gjoBzUNv?=
+ =?us-ascii?Q?JUFNfzUwA8A=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR03MB6230.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Ko3m9D/5hGxWgIuzKdQJbtNgrWS+6I/0umIZm5tsKpVjG0xmCFSd5AVghD6w?=
- =?us-ascii?Q?xH0EupejxTNCntT5W4uHLWvnLNNwUirSQ/dg2ndWo9GNCIzg5ZN5yS5TA7Xj?=
- =?us-ascii?Q?b9Xl9+L8hrGaKvt98tU4uV314bZUD7AduA+7QzWsbNfwiAidyVTjswf3pLli?=
- =?us-ascii?Q?YV+0ZNK2Wql7XA6+6kHrxU6RIpQrSXIqtC2iZRmbatxguJgK8M7fCATmHWTP?=
- =?us-ascii?Q?oaUJcsadxuAKpFV9rPxRTsSsG8AHwDSDM8pxpBKcdQ2GNi2zyHDvBgI5spua?=
- =?us-ascii?Q?E3dyexPVthOGLM+EDb31wrOMCEfeydj+RuwGcTk7FNT1lQmYVg0m+hnv4QzI?=
- =?us-ascii?Q?0UdXDp6LiGvziBvT6iKuJsJtXIMZvxWzs2/EETlnCyMNzzBDwMN3zVw+6BmV?=
- =?us-ascii?Q?hHHGY7NWtgEqxEzm04mibajlOuJ9CsPTzl4zypnhGSxcA5KaibsxVu5g2Gky?=
- =?us-ascii?Q?iQrlrlFXDnCKzZPEMkxt4XbUsRFtgr9/b+N5ZMM53v0ekNsy09kicrFEpSwn?=
- =?us-ascii?Q?7YJIggFwmxy78SFzVSvhr7/VVxP6YAEWkBAFy59aNFlzfi2Ruy6erCJsZf+k?=
- =?us-ascii?Q?BDSsPjIxp/RXS4BiqUsdsHJR1BuhmWqM5ORmyUZnSA9IFSGPQyKtD0wPelei?=
- =?us-ascii?Q?p1BZ9wqO7u+MhFzzZhKOe58g1UJ0tC4ew3xlN4YgPgyQsAXH/1IbInfrLDTp?=
- =?us-ascii?Q?JXK4Cg3iZmL+IzGE4L/+NueFmBqj80Zk0QkkeF94gkbZTl+X1o0M9OHV1o9O?=
- =?us-ascii?Q?4odoEqoIn9Gd0yXsRPFh8J+DSJI7vMGEMr2xAw5k5hGc5N+3SohpVbzWQbMU?=
- =?us-ascii?Q?i6Xbf+kpGQIGvE65I3Bx0G72gQGR065Cq8dFz++IVslN7/E23KcBNftBKGvD?=
- =?us-ascii?Q?7CzT21vyPEmo1z2S+/4X48//sWhfjQwC3caDPglg+rf0wwBbVGDVbovzhD9Q?=
- =?us-ascii?Q?HkhgSA6ya3PQ3arXubllqH4MONfIUgyAwzNQfK5ClGo1fAxspSIJ/mf7HoeT?=
- =?us-ascii?Q?gJX+aVzcYDw5HmST2fGBzJiA9fRiU1W38Ox4p9Z2WDjoOBZBSuEpW6gSrEzw?=
- =?us-ascii?Q?/xnmECZFcynvkXjuljZ5RhtfFan65NHzd6dLcKp5OtuUUvpx5VwVjMAYV6al?=
- =?us-ascii?Q?GVv1xpgqRjkUkUowqTqNXiavIFo7i3XYMN7gYH0utddYqzeXLSxq3gSORAr/?=
- =?us-ascii?Q?fJuxaF2wkq86eTrXCgmRt3Rr7HTduyvxtcf3OyTjYcg0CBK+pZRnhZWsdV3T?=
- =?us-ascii?Q?SL9vIYV+6kbIn1Y62g3PbXP8ig/raoGLm3Um2F3S2HJELzlB/cMVlGjEqr9t?=
- =?us-ascii?Q?0oQr+maD7zvQjPmzq+qDa/8dFfdeVT6TjCTn20S8IR5buwb4ko/LnLQYMX9s?=
- =?us-ascii?Q?CWCsDdsHXXKXBhBWI0nYWKPpnS5GqV7ymAK+YNGGOfXlPXCbmdXNqjIc6PAA?=
- =?us-ascii?Q?xUaMbulIKsFknKHXAtXjUerdzHT4zDGtnkzmq4tXSIacGfqj8UqfwAnEsa5p?=
- =?us-ascii?Q?1Sem92DAsu8byftEuCOoTvjcys+qsqtaVa9r7LdsknksOHnvo8Zkbe7WD8QD?=
- =?us-ascii?Q?8BpoXOu4TjxVmzzv8YT6DHlYMdaWCg4MyFj4cMnQvyOPmiHgrC7ySl7vNUB4?=
- =?us-ascii?Q?Hw=3D=3D?=
+	=?us-ascii?Q?KC4O7X6Uz25VRj7b+HYcmWkQmEdwNUQqd0/O9I9eJ8cVqqGGy5q73vcOeHqr?=
+ =?us-ascii?Q?jCipg11TRJpBRqOfTHuNpMkOZUnnkeZE9UZ3DI0WPk45/AkG2M5i2aUCZE96?=
+ =?us-ascii?Q?g9zjf7H7/wW97BOlsvVUzt0DwSgcq9YNl2P4B+w0dNqX7YwJCvWxZ0gRlNOV?=
+ =?us-ascii?Q?KH88Y7bgpcxojlKw4t1CHPN6kxCf2c/8EDIUbc98uzAXE3XEdef7JVc8qNpo?=
+ =?us-ascii?Q?lKgblwQ8pi5UVNNIhzFleVrt/6i5Ny8EfDqck2b8XbhTTnp7Q74GDjlqOISy?=
+ =?us-ascii?Q?09Hhvxf7uGqHIM2+6SUl+K6JLUKiYk2XxSu7FjzvDj4uvD24NsAD5VtcvvSF?=
+ =?us-ascii?Q?ggAi/gtrL+Q9Ek+d+wo7Ga32wuwQj+dE5m/OL1kw3046pr0UFEDCrAIFE03t?=
+ =?us-ascii?Q?4yaybRNPUM0ZAdvgHp6/7Ux10NmW16+NlBe4017TEyVER9hoOdTUvvmMxy5l?=
+ =?us-ascii?Q?ky20A+UArlOkLX+AyWYdFrTJXJUrZz+jPdkJxHacC+DBToUt2BlPDQ9EcIy1?=
+ =?us-ascii?Q?OcRXSPMMKtGtYWoyL9QTMEhjGWqddmv3lidVh8Oj5FF19Etdt986yy+C4rvL?=
+ =?us-ascii?Q?ZmCYtAZ2UtxTTNqJuizh5WWSQDAYpDV4KJHfbw4CD+rJZn0ISmo7muECka2Z?=
+ =?us-ascii?Q?q/yLRfnsNaI72lCfqEIK76DSj8IA+S0yfBXvWUk0F10zTnbuaOlLzyThHDqT?=
+ =?us-ascii?Q?W0lgLAbb/OZ2IdMW9WhCsXp9f0DzdoZroY4A3v5A46M9XGS63eqQCe3ewLtm?=
+ =?us-ascii?Q?h6MGxSPvZ1lQd/saMETFUjdQhu20VsSNNvbzED8XVlL4sdz5bkj2Py43JcxN?=
+ =?us-ascii?Q?+BMIovOpkXdRSOtXiQzfLZ3Vc/4xKfs0CXFvSB5O8jX0aj5Hb7eUPnRSDiSc?=
+ =?us-ascii?Q?A+ERPCTR9jBH+4Q/xO7VqxARzu3XYfM3ipM2D9vQQHImwcIMUO1R6cTSYBP4?=
+ =?us-ascii?Q?/0eHG2y2nwPUNfV5pvRDWo4DLR+deFbIzEJjPhwmTx+hm1mwfSQa0CBr1pMS?=
+ =?us-ascii?Q?KQh6xM2HkugIAmbsIea3CAp2hIIWEdbZ0ilN2JjcakwNlYbtbV4yvJuPXS97?=
+ =?us-ascii?Q?lfa6aIZXfW94f1xpORS+c99J8LN+IKfZyXKdCkECX2lyK4Oqe0I0lo3Nr7Oz?=
+ =?us-ascii?Q?NS43BmY8H9URNTy2jgqaqLTjwkwMFeXTaJ3rXQnwrE14QE7hRw8aHXML66+m?=
+ =?us-ascii?Q?5MWIDAz0BeIphyUdoCw+Q93QAXMaHCRRNY4k9qCzPVXG8VnLu65VCowX5yjV?=
+ =?us-ascii?Q?m2rIZOOCFs9QAQGFDNexoA3j2SYAImhZGUr9rMhioH/6HjVQj6z9TveHPz9J?=
+ =?us-ascii?Q?n2K211vAUiJfz185DFM7AzwXvdn/TYnsHncVkftGzmF7a6q/6gQnh8DfIhT+?=
+ =?us-ascii?Q?4B0tTkMuQJ+tnqlZePInswDI2OMaDPwPloBWxtaKmeRoYUEySO5zYjI2JAlD?=
+ =?us-ascii?Q?ob9MbMQENv25WUeuztaHHof58y/leXT/OQ0rxlFozS/a6hE9tBgwfUsn3O1d?=
+ =?us-ascii?Q?ZhgGFkZCId+JFlA4W1dOfSx4e9SjViYdJ1q+qjwV/LKWBULRaFik1sDNKeTW?=
+ =?us-ascii?Q?ZUnOIZqjI8/uqk8VRqMZ9Xm/zg0gbmeLwc/M0nuhvYISJhSLFusJr7x1jCYa?=
+ =?us-ascii?Q?AQ=3D=3D?=
 X-OriginatorOrg: altera.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9fa2831-adcb-4c32-9e5d-08dd94301cde
+X-MS-Exchange-CrossTenant-Network-Message-Id: 683fb367-8601-4373-ed2c-08dd94301f5d
 X-MS-Exchange-CrossTenant-AuthSource: DM8PR03MB6230.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2025 04:14:12.3791
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2025 04:14:16.5160
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9BLmP5ulJXe+rp64qfyGPu0nao5vXyHtZlpI0f4HL3aPHSUiyk6PBJ7IeYHXzlSYns4INKTiB+4a6T1YyFGkIOo6umArdKkdVNCLbWNkfYM=
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8TMQ8nTSZ9fOeL2bZtAtf3RahQf5A1gpmttpJegA9Ssoi+JJmQrIWGUweh3o89Lorg6Mf9dH588N061/BJvkK+xpob0jQMbbILft0+feDMM=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR03MB7093
 
 From: Adrian Ng Ho Yin <adrianhoyin.ng@altera.com>
 
-Add quirk to configure gfp flags to only allocate buffers within 32 bit
-addressable range to support devices that cannot support the full 64 bit
-address range.
+Add dma_32bit_quirk in GIC ITS node in Agilex5 dtsi to address hardware
+addressing limitation.
 
 Signed-off-by: Adrian Ng Ho Yin <adrianhoyin.ng@altera.com>
 Reviewed-by: Matthew Gerlach <matthew.gerlach@altrera.com>
 ---
- .../devicetree/bindings/interrupt-controller/arm,gic-v3.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
-index f3247a47f9ee..bd20d857c96d 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
-+++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
-@@ -225,6 +225,11 @@ patternProperties:
-         minItems: 2
-         maxItems: 2
- 
-+      dma-32bit-quirk:
-+        type: boolean
-+        description:
-+          Set when supported addressable range is only 32 bits.
-+
-     required:
-       - compatible
-       - msi-controller
+diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
+index 51c6e19e40b8..e53e8aee3cf9 100644
+--- a/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
+@@ -82,6 +82,7 @@ its: msi-controller@1d040000 {
+ 			compatible = "arm,gic-v3-its";
+ 			reg = <0x0 0x1d040000 0x0 0x20000>;
+ 			msi-controller;
++			dma-32bit-quirk;
+ 			#msi-cells = <1>;
+ 		};
+ 	};
 -- 
 2.49.GIT
 
