@@ -1,105 +1,128 @@
-Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 162B71F956;
-	Fri, 16 May 2025 01:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3E4214813
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 01:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747357777; cv=none; b=J9E+tHjF9F/GxRmejtrzOj5S8OMWgLzeI8cEC5YAnR0RvZWuzzhhQYFI3LMhhu6RIxyMx78ozPkRgASuNCKk1iqQWCdYX3gTSLwNDqcPLyKXJb4FjRlkAnfJMVUyWwYuO17kQGTWZQgxpLvoZPeDvNF02WeXyMinIZPjaqg4Mog=
+	t=1747357820; cv=none; b=PwuVmnQUgs1h/IBRz/YwPyWxyqxEnMaurhsWWLGHbXGYJnTtvec5UKLMsaR+rEy+HFq1JEqBWw93VrDyNUQBaS8UgzgdUJAy5MfIFSzkCZIORZNqTtYYcgnVa2KknTRoXYIqY/H9QVYsQ5q3L+QOiIA1jp4SsCR8PMwt8vaX2bY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747357777; c=relaxed/simple;
-	bh=1o3/YwJrRJuNryCpdoNha+JxfChRAzKipqygCyBmcKc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b2q2p6AbLHOveYLivmQw6nLRsQN7FIfMvCwYwM860eubBT/IcmUlQ8QGBX5DAH9rv+tNBKvl637U26ApQgj/1Dw7bpnLtQGPhNhXmy/kkjKWSjPmASa1ybsow0wP18/4WYGxBVtw4NkL48xn2aeTipPMIreMOjt3b2TuJwK6WDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=209.97.181.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0005182DT.eswin.cn (unknown [10.12.97.162])
-	by app2 (Coremail) with SMTP id TQJkCgDXaJImkCZoiJh8AA--.40410S2;
-	Fri, 16 May 2025 09:08:58 +0800 (CST)
-From: weishangjuan@eswincomputing.com
-To: andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	richardcochran@gmail.com,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com,
-	p.zabel@pengutronix.de,
-	yong.liang.choong@linux.intel.com,
-	rmk+kernel@armlinux.org.uk,
-	jszhang@kernel.org,
-	inochiama@gmail.com,
-	jan.petrous@oss.nxp.com,
-	dfustini@tenstorrent.com,
-	0x1207@gmail.com,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Cc: ningyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	lizhi2@eswincomputing.com,
-	Shangjuan Wei <weishangjuan@eswincomputing.com>
-Subject: [PATCH v1 0/2] Add driver support for Eswin eic7700 SoC ethernet controller
-Date: Fri, 16 May 2025 09:08:48 +0800
-Message-ID: <20250516010849.784-1-weishangjuan@eswincomputing.com>
-X-Mailer: git-send-email 2.49.0.windows.1
+	s=arc-20240116; t=1747357820; c=relaxed/simple;
+	bh=4OvX/SlIoZzCJCssk73J7YDq+IVGREhHUKEp5bnG8Fg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=bVdh9H6QX2bJmGyWviFFe9hAjASpcDI0Pa0tmcKC1yvg+KSFq2axa7JmdAU0BCbrFFRX9iL+x5tIlnUqg3EVfviXNe0V/I4UUtgjH3cea8mBXYyYyACT6b5f+N9WN8jBIso0FRQ5SRZumv92q2mdrmRMyKeLO4+3Es3TQmdr0Gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HgZBkbvX; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HgZBkbvX"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-740adfc7babso1342022b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:10:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747357818; x=1747962618; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BfYmymD4WqB6RcT+A7NSAJ3/ssCfFT/DbabI8Oq16WQ=;
+        b=HgZBkbvXJBPZluMOUSlmAFz96Q7nBfMxQvCen6quVQ/3J7BJhWnm1toiw1CauxFFTU
+         GQWihV2/GoUfsBszNsw+JxDrb9axKkX+eSN3CeH7P9l5Q2n0ypjbRWLPEPpP/MpQU889
+         qtnCejcZaVOXJQjoZ4CXZQitVsNBQYHkdGv4ccMHwjaa4bWxvNG/rn9BakXXhRRPxIRV
+         0zXw2oMYCLNFO+tHcAGdk5etFcouSglCCRK4VMjgiC2tZeZedOzDuNj9ie3vtboWm5FR
+         Kv8C1QWccpkOveapivAg0kdO03mrVdkj5/TULUpv1ZPYqW8UCXIrme3VTO27VcCphcRC
+         //Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747357818; x=1747962618;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BfYmymD4WqB6RcT+A7NSAJ3/ssCfFT/DbabI8Oq16WQ=;
+        b=Xasb5ZIrlpU6nNCus7/P2QHvVu8uWwTRJa8Kxft6tfto0VcJjTv3JbNE0CiwF23BkI
+         naEscVRxk9D13hzflErRk9VsQ+yZr7dK+x8TMIlJ8iM7sSSiMP7HR1HWw5LmduJK2Tu5
+         8OVks4AI/fBtjJxZgaa2ObuwGj7EMU4t2EhBnr8/t85J/kykDBACPJqhN37Dxzra9xrv
+         kn0bBbQDbN4Maa8JykdwUiFkRjTe9QGFMW+zAUcX66b6adutbZqPnEnb4wgsin4HF31L
+         ZZxybV9/AH67Df6PLpcmSheqm5YWb17+qEDXmfi5H4sB8TpHO5BqHONF7V5UYTAm1wEV
+         C8uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUCDOs4WoHywArGySTbsgCt6OJto26vD4EuYA1Hxpf18Z27skIcqPtJeoo2E58ghdS4LwjeZ5R6CY1ZuCk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfP1GHgzpThgCHKq9Nn5ImJxkSOYE/++GKbruHeMNORQE9UOsL
+	LlW+s8SDLgCualoFSUqHIsJoCetmF+Yu+kv6ibmBSn4qro3PZRQ/ajCzR4/aDeKSgavfi5MnM/f
+	WeyW1vw==
+X-Google-Smtp-Source: AGHT+IFN6q5EEUT8mtkOVvJbhI1LPbC36AWs5ckYgMuXXlLBYgP2Ku77QbL5NxcjQXJ1Z0V89/x/Blxa6lU=
+X-Received: from pfblr19.prod.google.com ([2002:a05:6a00:7393:b0:742:9ac3:9e04])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:e89:b0:215:d4be:b0b2
+ with SMTP id adf61e73a8af0-21621a02357mr2171784637.34.1747357818528; Thu, 15
+ May 2025 18:10:18 -0700 (PDT)
+Date: Thu, 15 May 2025 18:10:17 -0700
+In-Reply-To: <20250324173121.1275209-31-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TQJkCgDXaJImkCZoiJh8AA--.40410S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrur1rAr1kXr1kKw4DXw1fWFg_yoWkGwb_Cr
-	1xZr95Ja1UXF4jvayjkrs7uryq9F4DJrySkFZ8AFWYv3sFqrWDGF95ArykZF1UGr4rJF9x
-	Wryft34Iyw12gjkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbHkYjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I
-	6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-	8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0
-	cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwV
-	C2z280aVCY1x0267AKxVW0oVCq3wAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAa
-	Y2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ec7
-	CjxVAajcxG14v26r1j6r4UMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_
-	Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8c
-	xan2IY04v7M4kE6xkIj40Ew7xC0wCY1x0262kKe7AKxVWrXVW3AwCY02Avz4vE-syl42xK
-	82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGw
-	C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48J
-	MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMI
-	IF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
-	87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj4Rz6wtUUUUU
-X-CM-SenderInfo: pzhl2xxdqjy31dq6v25zlqu0xpsx3x1qjou0bp/
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-31-mizhang@google.com>
+Message-ID: <aCaQedEhZwj9BsVK@google.com>
+Subject: Re: [PATCH v4 30/38] KVM: x86/pmu: Handle emulated instruction for
+ mediated vPMU
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
+	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-From: Shangjuan Wei <weishangjuan@eswincomputing.com>
+On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+>  static void kvm_pmu_incr_counter(struct kvm_pmc *pmc)
+>  {
+> -	pmc->emulated_counter++;
+> -	kvm_pmu_request_counter_reprogram(pmc);
+> +	struct kvm_vcpu *vcpu = pmc->vcpu;
+> +
+> +	/*
+> +	 * For perf-based PMUs, accumulate software-emulated events separately
+> +	 * from pmc->counter, as pmc->counter is offset by the count of the
+> +	 * associated perf event. Request reprogramming, which will consult
+> +	 * both emulated and hardware-generated events to detect overflow.
+> +	 */
+> +	if (!kvm_mediated_pmu_enabled(vcpu)) {
+> +		pmc->emulated_counter++;
+> +		kvm_pmu_request_counter_reprogram(pmc);
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * For mediated PMUs, pmc->counter is updated when the vCPU's PMU is
+> +	 * put, and will be loaded into hardware when the PMU is loaded. Simply
+> +	 * increment the counter and signal overflow if it wraps to zero.
+> +	 */
+> +	pmc->counter = (pmc->counter + 1) & pmc_bitmask(pmc);
+> +	if (!pmc->counter) {
 
-  Introduce a driver for the Eswin eic7700 series SoC ethernet controller,
-  adding support for the ethernet functionality in the Linux kernel. The
-  driver provides basic functionality to manage and control the ethernet
-  signals for the eic7700 series chips, which are part of the Eswin SoC family.
+Ugh, this is broken for the fastpath.  If kvm_skip_emulated_instruction() is
+invoked by handle_fastpath_set_msr_irqoff() or handle_fastpath_hlt(), KVM may
+consume stale information (GLOBAL_CTRL, GLOBAL_STATUS and PMCs), and even if KVM
+gets lucky and those are all fresh, the PMC and GLOBAL_STATUS changes won't be
+propagated back to hardware.
 
-  Supported chips:
-    Eswin eic7700 series SoC.
+The best idea I have is to track whether or not the guest may be counting branches
+and/or instruction based on eventsels, and then bail from fastpaths that need to
+skip instructions.  That flag would also be useful to further optimize
+kvm_pmu_trigger_event().
 
-  Test:
-    I tested this patch on the Sifive HiFive Premier P550 (which uses the EIC7700 SoC),
-    including system boot and ethernet.
-
-Shangjuan Wei (2):
-  ethernet: eswin: Document for eic7700 SoC
-  ethernet: eswin: Add eic7700 ethernet driver
-
- .../bindings/net/eswin,eic7700-eth.yaml       | 142 +++++
- drivers/net/ethernet/stmicro/stmmac/Kconfig   |  11 +
- drivers/net/ethernet/stmicro/stmmac/Makefile  |   1 +
- .../ethernet/stmicro/stmmac/dwmac-eic7700.c   | 521 ++++++++++++++++++
- 4 files changed, 675 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml
- create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-eic7700.c
-
--- 
-2.17.1
-
+> +		pmc_to_pmu(pmc)->global_status |= BIT_ULL(pmc->idx);
+> +		if (pmc_pmi_enabled(pmc))
+> +			kvm_make_request(KVM_REQ_PMI, vcpu);
+> +	}
+>  }
+>  
+>  static inline bool cpl_is_matched(struct kvm_pmc *pmc)
+> -- 
+> 2.49.0.395.g12beb8f557-goog
+> 
