@@ -1,75 +1,75 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7D82253FD
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:32:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1415A23507A
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747391546; cv=none; b=EI2CWYWj5pzboTwnU3mL2JoQQJqIaETdELou+6Ne9u/s21xQBldrfxjAjYL9FcmIjLpKB7aYsjlG/tWNHqwFY+U/wsr8olXIerVJC7lu+J8UA8wEkXgcR7aBNC+cyRwwGI5uz3pa7m5xNVyM87hUAZuogoEFJ5tkQdcpXErzXfQ=
+	t=1747391547; cv=none; b=UuPNM0+JmHHk3eFItap3w8SjeVWyLCP/QhbYI0bxqadn463gCYOsL8q/spepqB6US62hO6X+e3UCk1GRiH+gzwSQfPhR22N5DNG7uf2aHgOAbgs4gv6MwQziK6+AJKTusdW3UIOgQKMlMRXcmPjU2DVCPlOwipXSGQdyx2l/M/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747391546; c=relaxed/simple;
-	bh=/C0zCFlmoCu6SwB6lcoMtilSssRPYWVKRmqyPdOjwR8=;
+	s=arc-20240116; t=1747391547; c=relaxed/simple;
+	bh=2aCYsID7h6PKzoWsDWjEbsYtZRpxTQpf8z0Sn6LvenY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ey8MI2VdBHf4Hk+WwrExMOmQDtAJ0pD25CsaJw0v4S/LDrmW3jaD4CkPEvsyued4fSKLnQfkrd9J9eMvt9jeUQvWPN00H2k5zZkPDJOm1r41FjPq1LPaK5myF18PlaHJfxZB85bdkIOEqiz0dcgubSk2BnHl2BQWtUwWjz3RCUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mg7J3dFb; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:Cc; b=clhHASRM0yrkOMd5Zm/tbOkaxkxjPDzeZ3KL6guT9B5s0SqSzxfbKGlFDuy1ekgtFWEZB+n2fveS0Y8eYrpMMXSc1lAILQ0YYEAND4tSoyQmLGMeLeNeUWW7NYnrJBy8Cldrrew7UDkWyQsqPruWNQveV2Vdg5v2Yjm3FuhIvB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PEUFMCAm; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mg7J3dFb"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G3GnFg001798
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:32:23 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PEUFMCAm"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G3J8MY015694
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:32:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	9xe4JJpZYL0oQKo4qYAE5I1ncsvjogZQwLUp9nB2aP0=; b=mg7J3dFbSef0ZfRT
-	LdOHuus7faZ4JxMkfU8Hg2DHOu+wvy2UOzX7b3KEPfHhpzK3mYfHGOXniDbvA0co
-	I3qLz6TFTKVwRtrc6jojmp3QGtvKCnk8pNxwNMUK7n3wglnCDilnmGoIMCnZ0wXy
-	nFFsKM1PyLn9TuZgWCdMJFSZupmVdKXBdaMOfvWLXkoTK2IBkU+J2HxhFXUle+97
-	kj2R64eh/X+32jtNy4C9VnlcpJe7Zyoih22kZF82yURERhk60jk+LwAxofgdEl3c
-	v5IHAbdpN/JmuC3zfQEGSvsgEo8vse5HYC3PGURN1pngu8LdbwdD33bcEy+fxVkH
-	hsYoWg==
+	5DlwmdNmedCKJPdbWIvXijFc/3cbsfXTmrrSp5SO3l0=; b=PEUFMCAmjEecjisW
+	0OcfCooXGYT+YBGJWpaGqi3s0TCFaXdlXKx7N2Wd8aIcAHYreTZ/6ad2NkslX97R
+	Vsj23Q0nUilQ7a1hujr9T7ZOqOIqiE1E/l98p50UReJYSZUZBlOnMoa8GiYHeXKs
+	z4zwIWmeuCk+7FMw/AXapLAB6Zu1efLdDcp97sbfYBftn8mHXh/es8nErSn1RYmb
+	CPOgrfFla5FcOFl2EdzsDqjaRu3z5Iepc+SemW26phszV1kiUhmD59MK3KJ2GCeY
+	xUmhNUUdfDSDhP7StmgzE20l7w38TrWfPL/k05NBugITERY3WaaZeCIcO4/viE61
+	f7unQw==
 Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcrhfwr-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcphrj8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:32:23 +0000 (GMT)
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-73bfc657aefso1490939b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 03:32:23 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:32:25 +0000 (GMT)
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-7398d70abbfso2640957b3a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 03:32:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747391542; x=1747996342;
+        d=1e100.net; s=20230601; t=1747391544; x=1747996344;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9xe4JJpZYL0oQKo4qYAE5I1ncsvjogZQwLUp9nB2aP0=;
-        b=ijoivyZRQb8k7GSYvcDq5YsBoxnTlLFNSnyFv3dj14ykfRy6hWXXTpE1D/LkTf5zMG
-         QXLHBBq1l1fUZt9J6VeCUG2di3Yir6V+exbejh0n8Z2vyePSy331n0kdUDYYJI/oUwZe
-         hIHhpfYzkW/PJq8p3XyYYy4tEPyeaKQA7NynoqAYiKoZqR2WEXFf4UtYTmuGTGrFo8Jp
-         jDjTYXrCi3ismdPHdqOKwAZ+YP3QQIciZqubZ6CB9Al1yRGjWv0e8+B0hmLB0uuRtxQ8
-         LCsa6h0qJjBKg5QWU+5j90GWk2dnGMu19VekB36U73V/ZaifiPaCaYakyU3UpovO9KNQ
-         j2Qw==
-X-Forwarded-Encrypted: i=1; AJvYcCVflyRKlQJNSLJljGj097ooTRtG3IajkOfheypUh0CcQyCk2sDV3tIy61oRRi0XnMELHbjLSeQ+mQuFvTA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYHzvSxjenw6CiUL2qjMNnzxuRsLjloYflWpMU8Xz8t4MSINLF
-	+zHDOT4+DzCCXP6B6caDiqlFdXItLsM/LKRa8hvoji1UbejqWv3wxeSQvJsZfcODHrsIuM10oRK
-	yafvcqgcvAtPoJXeX7g3295yr1g3CFAE5BVG1PDIPgKFLmd4J+b36EfeVHwv7gRyE7wQ=
-X-Gm-Gg: ASbGnctgY8My2qNKqgZ4l1nyDPi0l1qWuGusrQ9oiEKSAr3LlXKdeSoMiTRdg0blWKd
-	MhUqwMnC8O80VqO7sud+atYtX+tYbE1m2RhX9vl7U4qaYSipCvgDmQ//jEsdIo+VE9iL+XNNXCi
-	StU0pLYtrchVDaSfw+775w3XEIL90lmHJJDIl5PXQqyN07FDam85rx+Ha2XYhVvpDja2gbH5Tw0
-	bRED//uTOg8JdzuTQItnHXOh4l7/ADvucv5QFx2hty1iufYwtWeost6HUEaScm2h1plzyLUbvEr
-	z4uaKgari57n+7w8n9hwnvNY23vnwKxsBCX2c+KLy8/az53BoPb6NnDzvGQ9aFB+Lp9SRBNitnc
-	ItNdbgIEL8aiAmfTBNHf4LRx2hRUfIFFbvejN
-X-Received: by 2002:a05:6a00:8593:b0:732:2923:b70f with SMTP id d2e1a72fcca58-742a97bd16emr3417936b3a.11.1747391542049;
-        Fri, 16 May 2025 03:32:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGw+3bj0H7s+N+1VhN7TU4jcgdq8iHHxRkKSKdccszazRmhKVDHpqKbGq8N2Qh/FdfH7ixzfA==
-X-Received: by 2002:a05:6a00:8593:b0:732:2923:b70f with SMTP id d2e1a72fcca58-742a97bd16emr3417899b3a.11.1747391541597;
-        Fri, 16 May 2025 03:32:21 -0700 (PDT)
+        bh=5DlwmdNmedCKJPdbWIvXijFc/3cbsfXTmrrSp5SO3l0=;
+        b=ltKyj3w4hCt6uyv6BzbfdryLrlTYcB7G273buZfozaj/l5LXTsKr1rVOr4qmEdploX
+         6kQyPkCYNyNwQWHpmhCJQBeLvJ1RDGCqIS8qETVlFWr+7uTotMkqhD+y55qUo7ZANiR2
+         ofgNCGdDYN38JcDVJchzRi15nRHV7oL3u2KTu86LQeT+TF+zuhrazoYe1HSJ9JmRHaOh
+         s2ULirk3AmRzg9+UfFBmrYd1Blr3haIIrqoBCo+UPqJ+7g9C7inPxwNJ6hDE80p6+EZH
+         ydifQwJ/a41PCldgiOMH5IBAHFjNllaodJ++O9rgeOgRHRS+2Qc8DOTTHmQ0O4qs3eQQ
+         ywXw==
+X-Forwarded-Encrypted: i=1; AJvYcCXCJbSMrvNPHDkBOBY08CGrJVn20/w/Gbh6ESjIEub7QS4WA/82bAR0nshlpVi1eWHDTdTSRGytUUzjzrM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/pF0csyKQTLpiUm82jK5Qz++MbbmAYJCFJi223QVW77oFm+RQ
+	tZ0K/anmjYAL+HBEzcL2nGihcFyZd+2/I7c1KYrN66O0/wygt468V3NbSqssEH1RD2q+AXMEbk3
+	kEd51YRE6PgHFDHutbpvMonjxpLpOm4zGE9UyqakF2HNxZ8GZ4k/TIemCeCCg1qN9Z7E=
+X-Gm-Gg: ASbGncuMCJiZjTfnPGYpfkXhJqzPd+lreUqroyrjhxf2/Qa2sLsSZPs9XANmnWSX7jD
+	SYAyamYl+cHcgWwwI4iMuHyuko63GX3Ej3vVOHT8+KqaJOIPFTEF86JFkXswtYS6OswnQ0qFU9Z
+	9FJO1k2wcwZfK4h5ytnXy1hT1hj8hryLg2HOCm9e44utywwZVw8VFLHH2b+Qi+ReawymJZxWXVb
+	zL9uhsneXa8w0cJYknnMFWNRbuoOkPHr1ibALJD8jZBT2lNdfhTtY9EauzScUgpzgOe2a4lY4EV
+	CHJ2ySysPhNmMl/EBiPSZZKvlXLj0ZQIG/AaPfly+7TVOjBEbN8mPFi4A6XozcYwMkJwhjctbwC
+	vbX88vo5uBeZvp11FtydvQfXq3guz2+5k6/ps
+X-Received: by 2002:a05:6a00:2d04:b0:73c:a55c:6cdf with SMTP id d2e1a72fcca58-742a978ebbbmr3468648b3a.1.1747391544247;
+        Fri, 16 May 2025 03:32:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFteE3Mw4pPWiE7vfRquHKpv93rwCXiS52hSupKTl7Ckq9iVLreYnHqgng08z9QmeE+vjgsaA==
+X-Received: by 2002:a05:6a00:2d04:b0:73c:a55c:6cdf with SMTP id d2e1a72fcca58-742a978ebbbmr3468606b3a.1.1747391543642;
+        Fri, 16 May 2025 03:32:23 -0700 (PDT)
 Received: from hu-adisi-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a986d8d7sm1247585b3a.130.2025.05.16.03.32.19
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a986d8d7sm1247585b3a.130.2025.05.16.03.32.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 03:32:21 -0700 (PDT)
+        Fri, 16 May 2025 03:32:23 -0700 (PDT)
 From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
-Date: Fri, 16 May 2025 16:02:07 +0530
-Subject: [PATCH wireless-next v2 1/2] wifi: mac80211: validate SCAN_FLAG_AP
- in scan request during MLO
+Date: Fri, 16 May 2025 16:02:08 +0530
+Subject: [PATCH wireless-next v2 2/2] wifi: mac80211: accept probe response
+ on link address as well
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,66 +78,87 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250516-bug_fix_mlo_scan-v2-1-12e59d9110ac@oss.qualcomm.com>
+Message-Id: <20250516-bug_fix_mlo_scan-v2-2-12e59d9110ac@oss.qualcomm.com>
 References: <20250516-bug_fix_mlo_scan-v2-0-12e59d9110ac@oss.qualcomm.com>
 In-Reply-To: <20250516-bug_fix_mlo_scan-v2-0-12e59d9110ac@oss.qualcomm.com>
 To: Johannes Berg <johannes@sipsolutions.net>
 Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
         Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Proofpoint-ORIG-GUID: ukdvG0-kZWf23XwwF2bM67Zy4V6Z27gt
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDEwMCBTYWx0ZWRfX26kDu6+CjVEl
- FZVs5FTUDVe3LAxCLbUtKgLl8Dl21coPuU/XyBr+I23N+eGU1ewfa4fjf3BHxl+CXz2m6xncG3V
- vIxKX0cQEp2GDQwTG9ghnNWyepwCVeyUdmY5WU8W2KN5DmXdgw+ic3yi4jx9xitJQuTQjkOyXnS
- 09tUQmbq/sdNMEoWSAWmiFq6l+fDlUsTSWW+9caQ6UeUDyc4wZ3BMrTz+8C5PggeKTf94AdUC6C
- DzPcpguChkF2iVCSBPgARoGUq6G38J6whlOFGmN4z/BM9NLNNnlf7TvbeTA0/RwZ5WJSsNGdhJ2
- GtEkuRz5ehFti9kRL4YZsQtjgrC0Uh8eOpIrE3iCMcENyCHgXWKEX6htay1Onu04xuVRRmmhwt1
- bPAgcsi6OZd0KN86j9MU51UYK81Q8uvQyyD4XkIQBr5sNbIgY2/HCHqhWNeCbA5UXUXL2Prp
-X-Authority-Analysis: v=2.4 cv=K7UiHzWI c=1 sm=1 tr=0 ts=68271437 cx=c_pps
+X-Proofpoint-GUID: IIqozE59XZRAkuUZP_NvL6JmjuTLsLQ2
+X-Proofpoint-ORIG-GUID: IIqozE59XZRAkuUZP_NvL6JmjuTLsLQ2
+X-Authority-Analysis: v=2.4 cv=cO7gskeN c=1 sm=1 tr=0 ts=68271439 cx=c_pps
  a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=DDi9Blm5zKVmG00JEVUA:9
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=kffUEhMhicqf5g7Do04A:9
  a=QEXdDO2ut3YA:10 a=zc0IvFSfCIW2DFIPzwfm:22
-X-Proofpoint-GUID: ukdvG0-kZWf23XwwF2bM67Zy4V6Z27gt
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDA5OSBTYWx0ZWRfXxjbWqfhVEnAJ
+ ANRWbpj0hnCyvPdB00E7CNuoexc0MIiptX3kDx5UqaWQi0OgBLrkpRNs+Wr1JXM//uEL7KcnIjr
+ GRexyeV/icY1ZsfkXn8CVgSKwh3+r7LjcVzi0teFYLZKKn/BmY7ljqJ63fJM0faZn74iRUarvuJ
+ K7mqHiUqkaYa/ebCMdpCMxqBT/z7GmZqi3/45Tbcw2Fv6OkzN0xp4hrzwNj3oeRb2ri9k57F/Cn
+ cH9NwHRfoSJf16t12R5SeeajDkXC8PnrFEGurmIYBT9He1xP4xFR4gvCVz2J9ulFDlcH1y3dgdO
+ kAsoDoxIck5pueqa8UlUXzRIPhUQ5ZaE4dai3J6PAVOhMWvEcS/v+t8KqoH2vNfI7Lxv5wAVEPm
+ styynMrARQt0tD+LaNss75hunL9GSxenradGEtekgz9LvKHuY9p2vlOCZDvUDdeaQ0fivfIb
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-16_04,2025-05-16_01,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 priorityscore=1501 mlxscore=0 suspectscore=0 malwarescore=0
- phishscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0 impostorscore=0
- lowpriorityscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ mlxlogscore=999 spamscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0
+ adultscore=0 bulkscore=0 malwarescore=0 impostorscore=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505160100
+ definitions=main-2505160099
 
-When an AP interface is already beaconing, a subsequent scan is not allowed
-unless the user space explicitly sets the flag NL80211_SCAN_FLAG_AP in the
-scan request. If this flag is not set, the scan request will be returned
-with the error code -EOPNOTSUPP. However, this restriction currently
-applies only to non-ML interfaces. For ML interfaces, scans are allowed
-without this flag being explicitly set by the user space which is wrong.
-This is because the beaconing check currently uses only the deflink, which
-does not get set during MLO.
+If a random MAC address is not requested during scan request, unicast probe
+response frames are only accepted if the destination address matches the
+interface address. This works fine for non-ML interfaces. However, with
+MLO, the same interface can have multiple links, and a scan on a link would
+be requested with the link address. In such cases, the probe response frame
+gets dropped which is incorrect.
 
-Hence to fix this, during MLO, use the existing helper
-ieee80211_num_beaconing_links() to know if any of the link is beaconing.
+Therefore, add logic to check if any of the link addresses match the
+destination address if the interface address does not match.
 
 Signed-off-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
 ---
- net/mac80211/cfg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mac80211/scan.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
-index 05b7296b152cfbe1e81f8981eee52d72f711706c..d9d88f2f283120ba366401d3ac546e59d8c61c21 100644
---- a/net/mac80211/cfg.c
-+++ b/net/mac80211/cfg.c
-@@ -2924,7 +2924,7 @@ static int ieee80211_scan(struct wiphy *wiphy,
- 		 * the frames sent while scanning on other channel will be
- 		 * lost)
- 		 */
--		if (sdata->deflink.u.ap.beacon &&
-+		if (ieee80211_num_beaconing_links(sdata) &&
- 		    (!(wiphy->features & NL80211_FEATURE_AP_SCAN) ||
- 		     !(req->flags & NL80211_SCAN_FLAG_AP)))
- 			return -EOPNOTSUPP;
+diff --git a/net/mac80211/scan.c b/net/mac80211/scan.c
+index cb707907188585d6874bf290874bdb0ca33bb399..7b8da40a912d020f229a74c67bd5a57fb513a72d 100644
+--- a/net/mac80211/scan.c
++++ b/net/mac80211/scan.c
+@@ -240,6 +240,9 @@ static bool ieee80211_scan_accept_presp(struct ieee80211_sub_if_data *sdata,
+ 					struct ieee80211_channel *channel,
+ 					u32 scan_flags, const u8 *da)
+ {
++	struct ieee80211_link_data *link_sdata;
++	u8 link_id;
++
+ 	if (!sdata)
+ 		return false;
+ 
+@@ -251,7 +254,20 @@ static bool ieee80211_scan_accept_presp(struct ieee80211_sub_if_data *sdata,
+ 
+ 	if (scan_flags & NL80211_SCAN_FLAG_RANDOM_ADDR)
+ 		return true;
+-	return ether_addr_equal(da, sdata->vif.addr);
++
++	if (ether_addr_equal(da, sdata->vif.addr))
++		return true;
++
++	for (link_id = 0; link_id < IEEE80211_MLD_MAX_NUM_LINKS; link_id++) {
++		link_sdata = rcu_dereference(sdata->link[link_id]);
++		if (!link_sdata)
++			continue;
++
++		if (ether_addr_equal(da, link_sdata->conf->addr))
++			return true;
++	}
++
++	return false;
+ }
+ 
+ void ieee80211_scan_rx(struct ieee80211_local *local, struct sk_buff *skb)
 
 -- 
 2.34.1
