@@ -1,108 +1,130 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58122635
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 04:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7589427738
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 04:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747370701; cv=none; b=mticmJBzzahFIXf+QADuFp+DwLVnZXY6pz+afiNHhdRrSGPB4NA1NZVYcsBFugPdAFofjXuULjRYOKSQzd9QKg7aELuiJnDDZwxBbzk/3pnDMN2cvKukwg/RbTOw3LP87jZ6vb7Md/Qz8NugzxKvZZ1w8Lvk0Qhq84XkbuagQWQ=
+	t=1747370708; cv=none; b=sZJApwDgzpFmAWGFGQrXCBOwd+r2EXRFH0HVFbCA7pyxUMTAjnU/fdS2nno2GYlczMGwdJyKHu8HAeBrxCQtQOtDu6WutnreY5y/ZTmox1YWPPdlVMfXd+9oURKF2IwTlAglta9tAoBxAR3ijZGCLfrDcDFxqzuRYIMS1Q5SO2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747370701; c=relaxed/simple;
-	bh=WSpzODpV4dJWy/J5dEH9vbYqEWoBxCuasvmRptIrYNA=;
-	h=Content-Type:From:Mime-Version:Subject:Message-Id:Date:To:Cc; b=KlaI7iBj3lnBUoq/YNg5COV4lAxPpz9ptSMSferHvVy9HwQEEkJBTV5vv/Kv+lLWLxanZiIJBT+6klY9pekNiBPFSWoatZO/rBtIPGDWSZEM7ZT1j4USJMrFNV808J60eK68VbTEyukuO67EuF05lqtWljbKwQraAm6TUO8YpGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fnOanZqk; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747370708; c=relaxed/simple;
+	bh=ggI813HL1rEYRQQ1CuOzJR0geG67OZc8pBHtJF6PLSA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Fsf0vmfkuepRii18hmvK8C+5VgGTigA/G9OIJ8gClq1UJxDUmskiKphZhEIpzTVbvZCBhAH/4rHcdUzeNryJt2e+fkGb2IV0KdZ0UjWbDzisDR9pIe472x+cx+D+ZI76f+HCLOav16UcuUZQw0C5eenJKcH/8NusPPqkXvfAM9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r7m1p7zd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fnOanZqk"
-Content-Type: text/plain; charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747370696;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Bf8BD4LEhzFGD3sMsBfuBuusPKPc5rowAvEBihUw1v0=;
-	b=fnOanZqkBDFdlWMxADgGrlTABQieTPSxlvwkOOOMIYMxxR0XYGG0Nc3qSs8IccxylQFIZO
-	I5eAMoHGMCNbh/AZnyAkvMM1b0zoa1ST26PssFvhy4ZBKhzHIU2RqMmaBn3vPKD67U6JZK
-	2mtk/n3RMp+0yoljoCRlInVRqopzH1I=
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r7m1p7zd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 067D6C4CEE4;
+	Fri, 16 May 2025 04:45:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747370708;
+	bh=ggI813HL1rEYRQQ1CuOzJR0geG67OZc8pBHtJF6PLSA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=r7m1p7zdwhfoBvnOAPaFMclCeqBSFTENrDgBwI2JOS2l2JXFFACHdO2jttlY8WdXK
+	 z22rAIewxLgkFEOxVcrbuShTfulCY+9d5Qtpo4/YevbqxUZ13M+j23vCVA0LZisXzq
+	 AzafeW1Zmmom0d7XP3oSdQFwbbf7HDOZxF0vaSpWazev08gLjAaUjgmLzvAVyAMbbO
+	 Ar/2EgE6INONWrwABIz8/V0ZqcSS4iW+Cd+1slGsWxkL9BJBSg9HPAoTqfCq3sMNnp
+	 oU7hGurLCk4C4QOM5XC1g8cirjjKdsbwl3PnLGUH+uNVDP6y0p2nRYsakEkwxKe4OE
+	 QwH/x2IFzpzTQ==
+Message-ID: <0e79e48c-f466-41f7-bb60-03f45f6b0628@kernel.org>
+Date: Fri, 16 May 2025 06:45:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] workqueue: show the latest function name in /proc/PID/{comm,stat,status}
-Message-Id: <8A1F225D-714C-427C-A0ED-1DE5D93DEAD1@linux.dev>
-Date: Fri, 16 May 2025 12:44:19 +0800
-To: Tejun Heo <tj@kernel.org>
-Cc: Muchun Song <songmuchun@bytedance.com>, jiangshanlai@gmail.com,
- linux-kernel@vger.kernel.org
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] genirq: Bump the size of the local variable for
+ sprintf()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Cc: kernel test robot <lkp@intel.com>
+References: <20250515085516.2913290-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250515085516.2913290-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-=EF=BB=BF
+On 15. 05. 25, 10:55, Andy Shevchenko wrote:
+> GCC is not happy about sprintf() call on a buffer that might be too small for
+> the given formatting string.
+> 
+> kernel/irq/debugfs.c:233:26: warning: 'sprintf' may write a terminating nul past the end of the destination [-Wformat-overflow=]
+> 
+> Fix this by bumping the size of the local variable for sprintf().
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202505151057.xbyXAbEn-lkp@intel.com/
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>   kernel/irq/debugfs.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/irq/debugfs.c b/kernel/irq/debugfs.c
+> index 3d6a5b3cfaf3..3527defd2890 100644
+> --- a/kernel/irq/debugfs.c
+> +++ b/kernel/irq/debugfs.c
+> @@ -225,7 +225,7 @@ void irq_debugfs_copy_devname(int irq, struct device *dev)
+>   
+>   void irq_add_debugfs_entry(unsigned int irq, struct irq_desc *desc)
+>   {
+> -	char name [10];
+> +	char name [12];
 
-> On May 15, 2025, at 23:53, Tejun Heo <tj@kernel.org> wrote:
->=20
-> Hello, Muchun.
->=20
-> On Thu, May 15, 2025 at 12:05:23PM +0800, Muchun Song wrote:
->> Workqueues, such as system_unbound_wq, are shared across the system,
->> making it difficult to determine which tasks are being executed by
->> each worker. This patch improves clarity by displaying the latest
->> function name associated with each workqueue worker in the
->> /proc/PID/{comm,stat,status}. For example:
->>=20
->> Before:
->>  # ps 64 67 68
->>  PID TTY STAT TIME COMMAND
->>  64  ?   I    0:00 [kworker/u34:0-events_unbound]
->>  67  ?   I    0:00 [kworker/u33:1-events_unbound]
->>  68  ?   I    0:00 [kworker/u33:2-events_unbound]
->>=20
->> After:
->>  # ps 64 67 68
->>  PID TTY STAT TIME COMMAND
->>  64  ?   I    0:00 [kworker/u34:0-events_unbound:flush_memcg_stats_dwork]=
+The max irq is ~ 512000, if I am counting correctly, so 7 B should be 
+actually enough for everybody ;).
 
->>  67  ?   I    0:00 [kworker/u33:1-events_unbound:flush_to_ldisc]
->>  68  ?   I    0:00 [kworker/u33:2-events_unbound:idle_cull_fn]
->>=20
->> This change provides a clearer view of the tasks being performed by
->> each worker, enhancing system monitoring and debugging.
->=20
-> One worry I have about this is that these will likely be stale most of the=
+But well, can we silence the warning in a better way? I doubt that...
 
-> time as kworkers are just sitting and waiting, and there's no connection
-> between what a kworker ran before and what it's going to run next, so I'm
-> unsure how useful the extra information is.
+>   
+>   	if (!irq_dir || !desc || desc->debugfs_file)
+>   		return;
 
-Hi Tejun,
-
-Monitoring tools like atop can indeed record comm of processes. When we
-encounter issues such as high CPU usage, these tools can help us identify
-the problem. For instance, if kworkers are consuming most of the CPU, we
-can use this information to pinpoint which specific function is using
-the most CPU.
-
-Another use case is when we use the isolcpus=3D command line option
-to isolate CPUs, we want to make sure that no kworker threads run on
-those CPUs. But sometimes, kworkers might still get scheduled there, causing=
- latency
-issues. By using this information, we can figure out which module's
-function ran on the CPU before and then dig into the code to see how to
-stop it from happening.
-
-
-Muchun,
-Thanks
-
->=20
-> Thanks.
->=20
-> --=20
-> tejun
-
+-- 
+js
+suse labs
 
