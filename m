@@ -1,151 +1,172 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E25A7261D
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 13:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD48A2A1AA;
+	Fri, 16 May 2025 13:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747402593; cv=none; b=SeohcNwqMOTkapubbVLHlsA/4INPaNsLwMTbXlSVyc5FKyIM9imPlllT63O3Hf4duNdg6cnsozkuh3ZLsaaZWw+SSF3EC7rKkuLAHrG50ju6yXQezrmVR5X02Zn5+xDejhCe6tOpvcXmHQFZ/4ivO8q5Fu3f1qO6mFri58NDTqI=
+	t=1747402676; cv=none; b=feL/Ni6823a/QXYn4j6d1obqAm1Y8AOHNsykzUOT+w15q5fD3mX6SV9hIzgTRRqOwAZcPfrt6XYC+ukAFJX7NDjcJ7OisOi35eTomU78+fHBUiDZVLo+suhr68OxBjGguQ9nmDfcmdtxn/w9sa9Cngiq0/QV65h9L4gnhi8OFPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747402593; c=relaxed/simple;
-	bh=gzBy5TTcFJ3Ju+lkxl17/Cv2ww6IlyXb3lMPvTTW0+Y=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=U8gMiiUl8Zb6YHHVqgXYBAqjSyEGOutK4yw26lBjppRWTG9XgWZEuQiXB1/QBW5G1ksQbpej+oUraF6hDvk4vETsYK+hVipK1r0tQGQSh2SuhBiOr9X8QIjsyMjd/z+4twQL4Gga/Z6ZZvmEsf+VcKzdQwiXMHHAkHPqKeMWS28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=htm8yxHC; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747402676; c=relaxed/simple;
+	bh=tfffhHByX5llwjU88/l6Be44Wo41qF7tcM+s9T2He5A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=eqz4PTRzR7SIh42Yhy/TPLaDZLZuLgEJyn/mlhnxnyLS3GtjiAu0nMOgrtdto9PeqitKgWQGEngEb3fD/YPlgvGDpqEmPAqzJw1eTVH5JtlePIT4hPDIoeKqNadYngr1vR71M5cvqTVr0LL4nGhg0LuEAifOVZxhTOrq2FKI9Xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gfWQl+ND; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="htm8yxHC"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7401179b06fso1760523b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:36:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747402591; x=1748007391; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sr0VF1D9f4EdiXRgig2Y19NqlMlaKz9LNUFtzyrU4Tw=;
-        b=htm8yxHCwbnujK5LXLcVoxYrpuPDdapk/TVsm2G1KX0VWhKO9UZWCDKcK+fBD/H4d1
-         BIyv5yfojAxEp1QqGfgnvZmaMRaH5MgnZJgqHTpyb2VdM8811I3B4x5ndZO41cixfs1n
-         vJIMFKrlVXU1ZYuDVBtycpiP/lu+Q4AGT1L0rbN3K7RVu/+wM/DtdVK6JTwchoQ0mu8+
-         YLuODh+kkPP1Vm0/a9fkdy1w+Agh7UiGK5xDe/r8u/6O2KiajcecSZ2Mu/G9d9vGRO2U
-         YzhcD2pT4X8v/4XGnVeHrwzB0DhJl9lJ5czRbesFlKRfFdj3Pt8GbHQfRV6WVocKjbVh
-         j5aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747402591; x=1748007391;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sr0VF1D9f4EdiXRgig2Y19NqlMlaKz9LNUFtzyrU4Tw=;
-        b=AEpFEqCvXZTOQo3qxBl5QfO2dHP9YZA+yCkxqmxUMXOPCTlSi/MUf/ZoYR6VqlItLN
-         F5GdJdHuGilLNY6pgGksITWxueL8TnBAc+Z5w3H8I5hjH0ptlOkRM2L0knO/JKRT4vOB
-         7boW7kMEfg5wk4NKpWpMzSwfKfeqAuF10iSArbOCdpRxRPaxzyMyJ6xbBkk4wGqHlDFD
-         sQMHMpdXIa5kg/eXcF5Un1PyOXwud9ZnhN73jmJ5KfySZWmrAd/QWA42q5uc2JaaLVqu
-         uHM6AvxsKdfeRRoHQqfl0ItavzO1BO2cGAfMJtK9p0JgO82YxtjPUg6Su3KdiVQGT3CE
-         ogEw==
-X-Forwarded-Encrypted: i=1; AJvYcCXwS41XgbjEbImOcVUrtwpZLYPKOnGBVFRQ77BKxqgoMohi/wVVkCsfl5UtjzsuElmfjEsmtpiQmgiWdlY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVQG1MU0p2t1qgolDAYu/X83eo6YFHhPd324l5T5VDl4zVSUzQ
-	wwgfK19U7CSWvan6YHiLYX3u6xqU0xLmdTCgnkMqogmdonfP9F0AhFZSKxCpYtMuLe1IXOHyee7
-	txmc2+w==
-X-Google-Smtp-Source: AGHT+IEhdLfsUKZfqxAmSSK/NZ6cCAotywEPb/wMxpYTMH4NdwOB83MvM0a738g3iK2/V7i3Nl+pBDtNm2c=
-X-Received: from pfbkm42.prod.google.com ([2002:a05:6a00:3c6a:b0:736:3e92:66d7])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3d1f:b0:1f3:3690:bf32
- with SMTP id adf61e73a8af0-216218c644dmr4974759637.18.1747402591371; Fri, 16
- May 2025 06:36:31 -0700 (PDT)
-Date: Fri, 16 May 2025 06:36:30 -0700
-In-Reply-To: <20250324173121.1275209-26-mizhang@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gfWQl+ND"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CE23C4CEE4;
+	Fri, 16 May 2025 13:37:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747402675;
+	bh=tfffhHByX5llwjU88/l6Be44Wo41qF7tcM+s9T2He5A=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=gfWQl+ND0oH81toVcQZ2tJEi6WZaERY7bPhNjhT9QiSs4zThOhvU22YGsJMLo8N07
+	 J8+jdWLARZR4APAaG9eIN6xBu4EAdASj6D7GBkLyWuaSbsoMjkf92yr9Xpkl1pMGJg
+	 yXY7ZXVYX8rbUOjCWbPiRUo7Vi6xt9WI69yz5hX0eGN7TDHkSeR9GjYGXuBkFMDhOU
+	 CPPcH6HxH2NYnbBX4+NxK1Iiyl7QHGZlb0vp9fVbLWkkeHfvsZzhJcuk1Q7Hl1KM9e
+	 nc1Y4ml0J/GIDTeHHhK9+YDcoDtXnHxfpGKDXPeHWL5ip9G2cOza+qJjIMc0FhrUOr
+	 MAptzn8rCo3oA==
+Message-ID: <b3db09da-72f0-465f-b177-ff14fd53608b@kernel.org>
+Date: Fri, 16 May 2025 15:37:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-26-mizhang@google.com>
-Message-ID: <aCc_Xh4hSCL4eVV8@google.com>
-Subject: Re: [PATCH v4 25/38] KVM: x86/pmu: Add AMD PMU registers to direct
- access list
-From: Sean Christopherson <seanjc@google.com>
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
-	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
-	Nikunj Dadhania <nikunj.dadhania@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [EXTERNAL]Re: [PATCH net-next 1/2] dt-bindings: net: pse-pd: Add
+ bindings for Si3474 PSE controller
+To: Piotr Kubik <piotr.kubik@adtran.com>,
+ Oleksij Rempel <o.rempel@pengutronix.de>,
+ Kory Maincent <kory.maincent@bootlin.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <bf9e5c77-512d-4efb-ad1d-f14120c4e06b@adtran.com>
+ <259ad93b-9cc2-4b5d-8323-b427417af747@adtran.com>
+ <f8eb7131-5a5d-47ec-8f3b-d30cdb1364b5@kernel.org>
+ <dccd0e78-81c6-422c-9f8e-11d3e5d55715@adtran.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <dccd0e78-81c6-422c-9f8e-11d3e5d55715@adtran.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 24, 2025, Mingwei Zhang wrote:
-> From: Sandipan Das <sandipan.das@amd.com>
+On 15/05/2025 17:20, Piotr Kubik wrote:
+> On 5/13/25 10:24, Krzysztof Kozlowski wrote:
+>> On 13/05/2025 00:05, Piotr Kubik wrote:
+>>> +
+>>> +maintainers:
+>>> +  - Piotr Kubik <piotr.kubik@adtran.com>
+>>> +
+>>> +allOf:
+>>> +  - $ref: pse-controller.yaml#
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    enum:
+>>> +      - skyworks,si3474
+>>> +
+>>> +  reg-names:
+>>> +    items:
+>>> +      - const: main
+>>> +      - const: slave
+>>
+>> s/slave/secondary/ (or whatever is there in recommended names in coding
+>> style)
+>>
 > 
-> Add all PMU-related MSRs (including legacy K7 MSRs) to the list of
-> possible direct access MSRs.  Most of them will not be intercepted when
-> using passthrough PMU.
+> Well I was thinking about it and decided to use 'slave' for at least two reasons:
+> - si3474 datasheet calls the second part of IC (we configure it here) this way
+
+
+This could be a reason, but specs are changing over time (see I2C, I3C)
+to include different namings. If this annoys certain government sending
+their executive directives, then even better.
+
+
+> - description of i2c_new_ancillary_device() calls this device explicitly slave multiple times
+
+Old driver code should not be an argument. If code changes, which it can
+anytime, are you going to change binding? No, because such change in the
+binding would not be allowed.
+
 > 
-> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> ---
->  arch/x86/kvm/svm/svm.c | 24 ++++++++++++++++++++++++
->  arch/x86/kvm/svm/svm.h |  2 +-
->  2 files changed, 25 insertions(+), 1 deletion(-)
+>>> +
+>>> +  reg:
+>>
+>> First reg, then reg-names. Please follow other bindings/examples.
+>>
+>>> +    maxItems: 2
+>>> +
+>>> +  channels:
+>>> +    description: The Si3474 is a single-chip PoE PSE controller managing
+>>> +      8 physical power delivery channels. Internally, it's structured
+>>> +      into two logical "Quads".
+>>> +      Quad 0 Manages physical channels ('ports' in datasheet) 0, 1, 2, 3
+>>> +      Quad 1 Manages physical channels ('ports' in datasheet) 4, 5, 6, 7.
+>>> +      This parameter describes the relationship between the logical and
+>>> +      the physical power channels.
+>>
+>> How exactly this maps here logical and physical channels? You just
+>> listed channels one after another...
 > 
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index a713c803a3a3..bff351992468 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -143,6 +143,30 @@ static const struct svm_direct_access_msrs {
->  	{ .index = X2APIC_MSR(APIC_TMICT),		.always = false },
->  	{ .index = X2APIC_MSR(APIC_TMCCT),		.always = false },
->  	{ .index = X2APIC_MSR(APIC_TDCR),		.always = false },
-> +	{ .index = MSR_K7_EVNTSEL0,			.always = false },
-
-These are always intercepted, i.e. don't belong in this list.
-
-> +	{ .index = MSR_K7_PERFCTR0,			.always = false },
-> +	{ .index = MSR_K7_EVNTSEL1,			.always = false },
-> +	{ .index = MSR_K7_PERFCTR1,			.always = false },
-> +	{ .index = MSR_K7_EVNTSEL2,			.always = false },
-> +	{ .index = MSR_K7_PERFCTR2,			.always = false },
-> +	{ .index = MSR_K7_EVNTSEL3,			.always = false },
-> +	{ .index = MSR_K7_PERFCTR3,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTL0,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTR0,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTL1,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTR1,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTL2,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTR2,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTL3,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTR3,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTL4,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTR4,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTL5,			.always = false },
-> +	{ .index = MSR_F15H_PERF_CTR5,			.always = false },
-> +	{ .index = MSR_AMD64_PERF_CNTR_GLOBAL_CTL,	.always = false },
-> +	{ .index = MSR_AMD64_PERF_CNTR_GLOBAL_STATUS,	.always = false },
-> +	{ .index = MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR,	.always = false },
-> +	{ .index = MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_SET,	.always = false },
->  	{ .index = MSR_INVALID,				.always = false },
->  };
-
-As with the Intel patch, this absolutely belongs in the patch that supports
-disabling intercepts.
-
-> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-> index 9d7cdb8fbf87..ae71bf5f12d0 100644
-> --- a/arch/x86/kvm/svm/svm.h
-> +++ b/arch/x86/kvm/svm/svm.h
-> @@ -44,7 +44,7 @@ static inline struct page *__sme_pa_to_page(unsigned long pa)
->  #define	IOPM_SIZE PAGE_SIZE * 3
->  #define	MSRPM_SIZE PAGE_SIZE * 2
->  
-> -#define MAX_DIRECT_ACCESS_MSRS	48
-> +#define MAX_DIRECT_ACCESS_MSRS	72
->  #define MSRPM_OFFSETS	32
->  extern u32 msrpm_offsets[MSRPM_OFFSETS] __read_mostly;
->  extern bool npt_enabled;
-> -- 
-> 2.49.0.395.g12beb8f557-goog
+> yes, here in this example it is 1 to 1 simple mapping, but in a real world,
+> depending on hw connections, there is a possibility that 
+> e.g. "pse_pi0" will use "<&phys0_4>, <&phys0_5>" pairset for lan port 3.
 > 
+
+Ack, I see that's actually common for pse-pd. It's fine.
+
+
+Best regards,
+Krzysztof
