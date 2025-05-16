@@ -1,57 +1,57 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FBA02820A1
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 23:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C7628313A
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 23:07:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747436867; cv=none; b=QEyaCKDOGIApR8aHy/KGY78GaZUs+dfB20ulTkKOJvtFrJ7reV3kMzHmU2NaYb/rKolYpvD3WhxfLA3s8KV8aChSpWW2cO5qC9aQ2JzCuOdVHzRh9QLPLFYV7lxSvHhYlYOmtXhR2sZ2GlLs0dpkhdVBNOmTxfxuCTIOaMxfvHg=
+	t=1747436869; cv=none; b=EtkC2AsKxwVLQ5shi8Q57BjDbRNQG+ZYAa3AJYcyQa7IRxQFFuP1EyYQQjx5dW0OUYuKAyvXHesnEzx8MHwgEnGIIZO21xsSUz7WKmxVxkPRUOKx3zrca76LAKk9WP0UVz3s3gQw/YxltJuorbOCVig8PhHu0ZEKiBpniZpw/rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747436867; c=relaxed/simple;
-	bh=LXzlgHyJWhAACXWbAPkfKszMlKXyO2bFe2sK3lMkj8Y=;
+	s=arc-20240116; t=1747436869; c=relaxed/simple;
+	bh=9fbaq6CwF6vLyggy/XV/8/w2/CV/cudq3CDw85TXlSE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=AbxU/HvhPy46iQOm98Pkwg4BvLEyG3xKY45djheF+iD1uE+5wW+vSdSr/wA+YxpDcIjnGECQfq0nNd3igdIOFq1MwfW1Cvl8W4aKwkC/Xhacf2yEx98jdHiOakBoS4zKEPkWPn93gbXepsTvlJ1lmGpmRU/p93s6qbHYxNlP3sM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=n04i6Q1F; arc=none smtp.client-ip=209.85.210.201
+	 To:Cc:Content-Type; b=njWriK2u0OKtaY1j5GhCCutcT2WM/xVQaaedvYkq2nbvuJMmP5pRWh1mdadZJYtLubC3jJUan+Er4SdVUO1m8CXAGjkfSrADChihQ6+Xf+xmcd8gw2uH9UVxLkxfgfHia9zGOJRM7D3DKKAU8CuLjMq8zFwuRIhabpUFtXGalzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y7kY1pKJ; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n04i6Q1F"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7394792f83cso2011159b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:07:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y7kY1pKJ"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-73dcce02a5cso1756740b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:07:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747436866; x=1748041666; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747436867; x=1748041667; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=+HnZi3oDQ4eOcZyXHAiIALwrX3oRAnjbvkn+7/oMfkg=;
-        b=n04i6Q1FjF0oyxPU0NPPY1pHCvagfLJ+q0lPPc7y4T61k1nnWpD8lLB8EhtpU41RYM
-         6UGtz3tpghoZAFUlATDEp4EJjc47VNJk20kCZccOQYiA2J+chYUtLyG+cKOtBume9QZo
-         6F5lph35K86Vma3/YxP03vWV/tl5rn/LOsBs2v+M1w+ZWXyNgcG0bHf1vd0iPmA03aK7
-         RwkbMVsuJy2yTkN99623J9abxmubPEoMV7Qb2CVwtUAmnjocVz2CPLzI4G2pDUArx6gP
-         bqwqRLP1aRzlZwjKsZj4aSKwZ6N5mgAS9hMW/tW6MF9xmRvj1f1VIcB9opVw/o9xp1wN
-         HZ5g==
+        bh=oe5thiWbXg0oQhkHd+uP+1sLcx+Gwe9eK60YPiQS+Fw=;
+        b=Y7kY1pKJnFIDf1qHpybNFR4/E0j2z6oX/y1xW/ATRroSbZ7hmZEXBf7/eOhY5NkUh2
+         +Du3R2D7tR7Ik4wNPhgmPsyoAnYraDYJ1bCF4uyUlMe9Cmqq9NE0DY/x+2gyfrEMGajP
+         xKMdIU9yKF1JxoRWSWgxGAi7tx8L6IvSYf3Z16VLOqVskEGpboSEzwHlDJA6yKGicWxq
+         FrPV4EIJ+ATB5o/ziDxtPibMBDQCe3MDenYxenI7R1ecDlmoCaoGXlpFpFB93+fHxYZO
+         SblxSlI3Llr9mBmdJag2fLpy8fz2mhgEvAmBzkBfPh1F7uG6Vw50qajc4eRllUka3t/W
+         vaNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747436866; x=1748041666;
+        d=1e100.net; s=20230601; t=1747436867; x=1748041667;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+HnZi3oDQ4eOcZyXHAiIALwrX3oRAnjbvkn+7/oMfkg=;
-        b=uJrtVEyfDkfwyaTg5IYA4y4uOjKxd60ni92DNHS2urDDN5iQJify6DbvEf1pdBPNhu
-         89187seYSZpUzT1/zPyfM9R7gluvGf05t0FRV3DOBID0mriRkH+XG60JoeIiYQswPdZW
-         pBntlmDdIgd7JsEggr3LV9l2XciU/0atLOUVjBat7Mq9bUguXA3y/ZtOD1qJl9ri5qvx
-         pGikM0hzN6+5OMInYlC45lEHsMSSpo1bWG4WXm1MdcG4b/t8eK+I5514vOsS7nPN3kuW
-         8z48OKe+ZLI2E8K5Awt1MbHcppbBFwJBRK1HyXusGaInjR9cd2KLQpnasd50nXSJ61k7
-         SezA==
-X-Forwarded-Encrypted: i=1; AJvYcCVJAx125xxb4iCQgEi6kk1npd+NQMw90P9OOYJ60CquesJsOQng7TNDsdmpZ1wLAntg5mDm3x6xW+rk++Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycadysuPa+CUtaKRmlkDtcht5SJeqf/leh35yOwoUBoh5FlJ9s
-	dbDktvwtDp3RtkI7ADKn9y4bTnaXh5jyQB0n3FVdE7Cg6Imtms2W3vP2YMP0MGFAghN2Ts9Qlkp
-	Pvlw2bA==
-X-Google-Smtp-Source: AGHT+IEGr4DLQ/k+zVDPTA3QzCbhpesiuJ3Rc20pXKhfdxG6vKdbrJk/l1JnNXE3bXTLhq+xJb2nY6Mhx3U=
-X-Received: from pfbmc24.prod.google.com ([2002:a05:6a00:7698:b0:740:b53a:e67f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:ca:b0:742:aecc:c47c
- with SMTP id d2e1a72fcca58-742aeccc69cmr4693335b3a.7.1747436865717; Fri, 16
- May 2025 16:07:45 -0700 (PDT)
+        bh=oe5thiWbXg0oQhkHd+uP+1sLcx+Gwe9eK60YPiQS+Fw=;
+        b=gRCIx/CKZdfTqUdKCGlnegpThqdE0KvNTaYoi4c5k/q5jChbD5OdngM7JPa+K+zK8i
+         bVmMq6pPWZgXqQJpTdU9aRTaN62v93az4ceHqxAYWm1z5GnwFG3srTWiJeX7maKFvAwS
+         5fjr+/SYoEFUC9j0CDtG7T84WrugjoaupjQK3kIse4oKhGLqtJsFtXp2zUZnsG2woIqu
+         wj17ErkrF4A9pSKWu6NMIrEJ/y4eHgu2SogEW0V3Ogz3A20ONYw8drfhLFsUyswECdad
+         B3fjTKsYGtdF5uFyIZVwse1Bdi99mn/bMlbXxsTvEx5s2oNuXlXcwEo1VjE53+3z9Zyv
+         U8IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXkcLf0+tGWMNFyfVeNwxkcMZLB/eWIVaQKB76zTeX/Vr0hNNBtX4yMQtV1lwY2SzAB+JZX72SfQA6qYCw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2JI6u1LkdgdTW86wN6dgiLZYzE10M48qePAq8hT3cpleyX970
+	bOt4ARFHDBDIwNCDTEH6K58NbR5oyjtYmhI5VhiDAU1z0cQCEXzsIyxg3WX69UfctN0zABtwmx7
+	0nS9ggg==
+X-Google-Smtp-Source: AGHT+IGwhN0lFa7qi9dcKhCQf1tbewsw4jw8vfokJ04Lk3TJnvb2OFxjdzkHkOC3oXEw4fYXmMusrSpK3XA=
+X-Received: from pjboi16.prod.google.com ([2002:a17:90b:3a10:b0:2fc:2ee0:d38a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:7f96:b0:1f5:7280:1cf2
+ with SMTP id adf61e73a8af0-2170cc66b99mr5833370637.12.1747436867484; Fri, 16
+ May 2025 16:07:47 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 16 May 2025 16:07:30 -0700
+Date: Fri, 16 May 2025 16:07:31 -0700
 In-Reply-To: <20250516230734.2564775-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,8 +61,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250516230734.2564775-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.1112.g889b7c5bd8-goog
-Message-ID: <20250516230734.2564775-5-seanjc@google.com>
-Subject: [PATCH v2 4/8] irqbypass: Explicitly track producer and consumer bindings
+Message-ID: <20250516230734.2564775-6-seanjc@google.com>
+Subject: [PATCH v2 5/8] irqbypass: Use paired consumer/producer to disconnect
+ during unregister
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
@@ -74,102 +75,94 @@ Cc: kvm@vger.kernel.org, virtualization@lists.linux.dev,
 	Binbin Wu <binbin.wu@linux.intel.com>, Yong He <alexyonghe@tencent.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Explicitly track IRQ bypass producer:consumer bindings.  This will allow
-making removal an O(1) operation; searching through the list to find
-information that is trivially tracked (and useful for debug) is wasteful.
+Use the paired consumer/producer information to disconnect IRQ bypass
+producers/consumers in O(1) time (ignoring the cost of __disconnect()).
 
 Reviewed-by: Kevin Tian <kevin.tian@intel.com>
 Acked-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- include/linux/irqbypass.h | 7 +++++++
- virt/lib/irqbypass.c      | 9 +++++++++
- 2 files changed, 16 insertions(+)
+ virt/lib/irqbypass.c | 48 ++++++++------------------------------------
+ 1 file changed, 8 insertions(+), 40 deletions(-)
 
-diff --git a/include/linux/irqbypass.h b/include/linux/irqbypass.h
-index 1b57d15ac4cf..b28197c87483 100644
---- a/include/linux/irqbypass.h
-+++ b/include/linux/irqbypass.h
-@@ -29,10 +29,13 @@ struct irq_bypass_consumer;
-  * pairings are not supported.
-  */
- 
-+struct irq_bypass_consumer;
-+
- /**
-  * struct irq_bypass_producer - IRQ bypass producer definition
-  * @node: IRQ bypass manager private list management
-  * @eventfd: eventfd context used to match producers and consumers
-+ * @consumer: The connected consumer (NULL if no connection)
-  * @irq: Linux IRQ number for the producer device
-  * @add_consumer: Connect the IRQ producer to an IRQ consumer (optional)
-  * @del_consumer: Disconnect the IRQ producer from an IRQ consumer (optional)
-@@ -46,6 +49,7 @@ struct irq_bypass_consumer;
- struct irq_bypass_producer {
- 	struct list_head node;
- 	struct eventfd_ctx *eventfd;
-+	struct irq_bypass_consumer *consumer;
- 	int irq;
- 	int (*add_consumer)(struct irq_bypass_producer *,
- 			    struct irq_bypass_consumer *);
-@@ -59,6 +63,7 @@ struct irq_bypass_producer {
-  * struct irq_bypass_consumer - IRQ bypass consumer definition
-  * @node: IRQ bypass manager private list management
-  * @eventfd: eventfd context used to match producers and consumers
-+ * @producer: The connected producer (NULL if no connection)
-  * @add_producer: Connect the IRQ consumer to an IRQ producer
-  * @del_producer: Disconnect the IRQ consumer from an IRQ producer
-  * @stop: Perform any quiesce operations necessary prior to add/del (optional)
-@@ -72,6 +77,8 @@ struct irq_bypass_producer {
- struct irq_bypass_consumer {
- 	struct list_head node;
- 	struct eventfd_ctx *eventfd;
-+	struct irq_bypass_producer *producer;
-+
- 	int (*add_producer)(struct irq_bypass_consumer *,
- 			    struct irq_bypass_producer *);
- 	void (*del_producer)(struct irq_bypass_consumer *,
 diff --git a/virt/lib/irqbypass.c b/virt/lib/irqbypass.c
-index e8d7c420db52..fdbf7ecc0c21 100644
+index fdbf7ecc0c21..6a183459dc44 100644
 --- a/virt/lib/irqbypass.c
 +++ b/virt/lib/irqbypass.c
-@@ -51,6 +51,10 @@ static int __connect(struct irq_bypass_producer *prod,
- 	if (prod->start)
- 		prod->start(prod);
+@@ -138,32 +138,16 @@ EXPORT_SYMBOL_GPL(irq_bypass_register_producer);
+  */
+ void irq_bypass_unregister_producer(struct irq_bypass_producer *producer)
+ {
+-	struct irq_bypass_producer *tmp;
+-	struct irq_bypass_consumer *consumer;
+-
+ 	if (!producer->eventfd)
+ 		return;
  
-+	if (!ret) {
-+		prod->consumer = cons;
-+		cons->producer = prod;
-+	}
- 	return ret;
+ 	mutex_lock(&lock);
+ 
+-	list_for_each_entry(tmp, &producers, node) {
+-		if (tmp->eventfd != producer->eventfd)
+-			continue;
++	if (producer->consumer)
++		__disconnect(producer, producer->consumer);
+ 
+-		list_for_each_entry(consumer, &consumers, node) {
+-			if (consumer->eventfd == producer->eventfd) {
+-				WARN_ON_ONCE(producer->consumer != consumer);
+-				__disconnect(producer, consumer);
+-				break;
+-			}
+-		}
+-
+-		producer->eventfd = NULL;
+-		list_del(&producer->node);
+-		break;
+-	}
+-
+-	WARN_ON_ONCE(producer->eventfd);
++	producer->eventfd = NULL;
++	list_del(&producer->node);
+ 	mutex_unlock(&lock);
  }
+ EXPORT_SYMBOL_GPL(irq_bypass_unregister_producer);
+@@ -228,32 +212,16 @@ EXPORT_SYMBOL_GPL(irq_bypass_register_consumer);
+  */
+ void irq_bypass_unregister_consumer(struct irq_bypass_consumer *consumer)
+ {
+-	struct irq_bypass_consumer *tmp;
+-	struct irq_bypass_producer *producer;
+-
+ 	if (!consumer->eventfd)
+ 		return;
  
-@@ -72,6 +76,9 @@ static void __disconnect(struct irq_bypass_producer *prod,
- 		cons->start(cons);
- 	if (prod->start)
- 		prod->start(prod);
-+
-+	prod->consumer = NULL;
-+	cons->producer = NULL;
+ 	mutex_lock(&lock);
+ 
+-	list_for_each_entry(tmp, &consumers, node) {
+-		if (tmp != consumer)
+-			continue;
++	if (consumer->producer)
++		__disconnect(consumer->producer, consumer);
+ 
+-		list_for_each_entry(producer, &producers, node) {
+-			if (producer->eventfd == consumer->eventfd) {
+-				WARN_ON_ONCE(consumer->producer != producer);
+-				__disconnect(producer, consumer);
+-				break;
+-			}
+-		}
+-
+-		consumer->eventfd = NULL;
+-		list_del(&consumer->node);
+-		break;
+-	}
+-
+-	WARN_ON_ONCE(consumer->eventfd);
++	consumer->eventfd = NULL;
++	list_del(&consumer->node);
+ 	mutex_unlock(&lock);
  }
- 
- /**
-@@ -145,6 +152,7 @@ void irq_bypass_unregister_producer(struct irq_bypass_producer *producer)
- 
- 		list_for_each_entry(consumer, &consumers, node) {
- 			if (consumer->eventfd == producer->eventfd) {
-+				WARN_ON_ONCE(producer->consumer != consumer);
- 				__disconnect(producer, consumer);
- 				break;
- 			}
-@@ -234,6 +242,7 @@ void irq_bypass_unregister_consumer(struct irq_bypass_consumer *consumer)
- 
- 		list_for_each_entry(producer, &producers, node) {
- 			if (producer->eventfd == consumer->eventfd) {
-+				WARN_ON_ONCE(consumer->producer != producer);
- 				__disconnect(producer, consumer);
- 				break;
- 			}
+ EXPORT_SYMBOL_GPL(irq_bypass_unregister_consumer);
 -- 
 2.49.0.1112.g889b7c5bd8-goog
 
