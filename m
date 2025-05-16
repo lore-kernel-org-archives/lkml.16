@@ -1,65 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9B686359;
-	Fri, 16 May 2025 15:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A6B31A256B;
+	Fri, 16 May 2025 15:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747410903; cv=none; b=gDKFkCcAC8vdwP9bUyJKhpETM8QS1SstCNR60jDrR4IXHkSaB6g5H49B/f1dEqNlvbl/7BeEf8phKJPKvCSUT423sujFfWOSCV3s3tN3+ZWQZQk4+hQDr0Ze+336rQSppPCLOJ2m39KEBozRJKxsMlKB83t58hCkMB2ComWhnuo=
+	t=1747411042; cv=none; b=a2QVsf/FtHdgAAk+eGK9iTdq62GnaJVGfhzGeCrTk2m0xlKVSSRMShPAziKyBfsTy0ZnVhpaFmJkNT1jrUvBEmtb+EC7kz0l9ENGBQ8RdRMrHC66cj2cliAGhlb6NYxg3Nlmh2s8J0TGl9PuQjN/R5fpjJ2LQWfV95nghT+mVsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747410903; c=relaxed/simple;
-	bh=jCR+XOlu938UmhLRf+cXPylXtwXh3iTH9ibsnuXVZ4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uw1BFaR13oXL4SWH+yx9nZDOYX4QgstFjfkDBGeXuETyEMkzxKYFHmf9XRVLGRBnjFdnFuDlYeU9cNashfP65g82PnuAQlF8paFe5aPyedgvLnpcrPHNJ1HqoLIxlggUOTFIw1xjyYce+4VAqwjBqdoQLksIanZlWDDPj2z+S5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SrBTGjCa; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SrBTGjCa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1D3EC4CEED;
-	Fri, 16 May 2025 15:55:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747410902;
-	bh=jCR+XOlu938UmhLRf+cXPylXtwXh3iTH9ibsnuXVZ4Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=SrBTGjCamKGSVwpYT7KZv3j/7qTb7mdF3j5Fmjo570QbAqat85zxD6xYPYDPuE+p2
-	 mzjFLkOIUyvracu0bS6Sy+9UT61QLbUg+HQ45vkZjf+r1juPmtE1lXkKTGR1k7xdsk
-	 5PegGz6m5MtcNdcmf1fzFJ/wPNLH8L23HnnM4XJJbE4bXMwzsh6SyRvwb96WeSGtJy
-	 Iq97Qza7awoKLYYtJOjKRXhBiMj27z61j4UNmsadoebYwVj6zMH8alv9PjDnTtWzMJ
-	 vztTZlqQGt/3CR2tMTpFrSDE3KR/ZJOwxPtED+t3VPbJgaQ6l0GgEzqY6JvRG7RmE7
-	 ZGSYdEb6B2Emw==
-Date: Fri, 16 May 2025 08:55:01 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Andrew Davis
- <afd@ti.com>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Heiner
- Kallweit <hkallweit1@gmail.com>, kernel test robot <lkp@intel.com>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, Samuel Holland
- <samuel@sholland.org>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] mux: mmio: Fix missing CONFIG_REGMAP_MMIO
-Message-ID: <20250516085501.648794e4@kernel.org>
-In-Reply-To: <3172aba1-77f8-46a7-a967-14fae37f66ea@linaro.org>
-References: <20250515140555.325601-2-krzysztof.kozlowski@linaro.org>
-	<174738338644.6332.8007717408731919554.b4-ty@linaro.org>
-	<bfe991fa-f54c-4d58-b2e0-34c4e4eb48f4@linaro.org>
-	<3172aba1-77f8-46a7-a967-14fae37f66ea@linaro.org>
+	s=arc-20240116; t=1747411042; c=relaxed/simple;
+	bh=PrB6OnVM/jT9TdAeEJ83sop1YH97w7DtAGGBKw9INMM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p7bVOohSTHDPizIOc/92ivrqkL69Dp2jy73Jb2qoXete4dLZuGIjVYgWBrTvkjUqvKFevZmbzRc9uUEfoFxxBolcwnOi7dUFCmBX3/mAqICfbYgswKKsDpvXEfB5brkBvGjUo929ZlX/O4ZZ2zk9B4Tx1f8RqaV6hq2kW5U6Fws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A6D93169C;
+	Fri, 16 May 2025 08:57:07 -0700 (PDT)
+Received: from [10.1.27.17] (e122027.cambridge.arm.com [10.1.27.17])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A9013F63F;
+	Fri, 16 May 2025 08:57:15 -0700 (PDT)
+Message-ID: <76e6261d-7b94-45d5-94da-bb96e712b7ab@arm.com>
+Date: Fri, 16 May 2025 16:57:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 00/43] arm64: Support for Arm CCA in KVM
+To: "Emi Kisanuki (Fujitsu)" <fj0570is@fujitsu.com>,
+ "'kvm@vger.kernel.org'" <kvm@vger.kernel.org>,
+ "'kvmarm@lists.linux.dev'" <kvmarm@lists.linux.dev>
+Cc: 'Catalin Marinas' <catalin.marinas@arm.com>,
+ 'Marc Zyngier' <maz@kernel.org>, 'Will Deacon' <will@kernel.org>,
+ 'James Morse' <james.morse@arm.com>, 'Oliver Upton'
+ <oliver.upton@linux.dev>, 'Suzuki K Poulose' <suzuki.poulose@arm.com>,
+ 'Zenghui Yu' <yuzenghui@huawei.com>,
+ "'linux-arm-kernel@lists.infradead.org'"
+ <linux-arm-kernel@lists.infradead.org>,
+ "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+ 'Joey Gouly' <joey.gouly@arm.com>,
+ 'Alexandru Elisei' <alexandru.elisei@arm.com>,
+ 'Christoffer Dall' <christoffer.dall@arm.com>,
+ 'Fuad Tabba' <tabba@google.com>,
+ "'linux-coco@lists.linux.dev'" <linux-coco@lists.linux.dev>,
+ 'Ganapatrao Kulkarni' <gankulkarni@os.amperecomputing.com>,
+ 'Gavin Shan' <gshan@redhat.com>,
+ 'Shanker Donthineni' <sdonthineni@nvidia.com>,
+ 'Alper Gun' <alpergun@google.com>,
+ "'Aneesh Kumar K . V'" <aneesh.kumar@kernel.org>
+References: <20250416134208.383984-1-steven.price@arm.com>
+ <TYCPR01MB11463F53A3487AF7C669A534EC390A@TYCPR01MB11463.jpnprd01.prod.outlook.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <TYCPR01MB11463F53A3487AF7C669A534EC390A@TYCPR01MB11463.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, 16 May 2025 10:58:38 +0200 Krzysztof Kozlowski wrote:
-> My branch fails with above error because I do not have Heiner's commit
-> a3e1c0ad8357 ("net: phy: factor out provider part from mdio_bus.c").
-> Will it reach current RC (rc7) at some point? 
+Hi Emi,
 
-No :( We merged it to net-next, so it will have to wait until the merge
-window. Worst case you can double apply that change? Maybe git will be
-clever enough to auto-resolve. Obviously only if absolutely necessary..
-We could also try to sequence our PRs to Linus so that your changes
-are rebased after net-next merge. We send our PR in the first day or
-two of the MW.
+On 15/05/2025 04:01, Emi Kisanuki (Fujitsu) wrote:
+> We tested this patch in our internal simulator which is a hardware simulator for Fujitsu's next generation CPU known as Monaka. and it produced the expected results.
+> 
+> I have verified the following
+> 1. Launching the realm VM using Internal simulator → Successfully launched by disabling MPAM support in the ID register.
+> 2. Running kvm-unit-tests (with lkvm) → All tests passed except for PMU (as expected, since PMU is not supported by the Internal simulator).[1]
+> 
+> Tested-by: Emi Kisanuki <fj0570is@fujitsu.com> [1] https://gitlab.arm.com/linux-arm/kvm-unit-tests-cca cca/v3
+
+Thanks for testing!
+
+Regards,
+Steve
+
+> Best Regards,
+> Emi Kisanuki
+>> This series adds support for running protected VMs using KVM under the Arm
+>> Confidential Compute Architecture (CCA).
+>>
+>> The related guest support was merged for v6.14-rc1 so you no longer need that
+>> separately.
+>>
+>> There are a few changes since v7, many thanks for the review comments. The
+>> highlights are below, and individual patches have a changelog.
+>>
+>>  * More documentation - the new ioctls and capabilties are now all
+>>    documented.
+>>
+>>  * Initial patch adding "only_private"/"only_shared" to struct
+>>    kvm_gfn_range replaced with already upstream "attr_filter".
+>>
+>>  * Improvement in variable naming and error codes, and some improved/new
+>>    comments. All following valuable review feedback (thanks!).
+>>
+>>  * Drop the final WIP patch for enabling large PAGE_SIZE support. It's
+>>    not ready for merging and I want to focus on landing the 4k support.
+>>
+>>  * Rebased onto v6.15-rc1.
+>>
+>> Things to note:
+>>
+>>  * The magic numbers for capabilities and ioctls have been updated. So
+>>    you'll need to update your VMM. See below for update kvmtool branch.
+>>
+>>  * Patch 42 increases KVM_VCPU_MAX_FEATURES to expose the new feature.
+>>    This also exposes the NV features (as they are currently numbered
+>>    lower). This will resolve when Marc's NV series has landed, see [2].
+>>
+>>  * There are some conflicts with v6.15-rc2, mostly documentation, but
+>>    also commit 26fbdf369227 ("KVM: arm64: Don't translate FAR if
+>>    invalid/unsafe") 'hijacks' HPFAR_EL2_NS as a valid bit. This will
+>>    require corresponding changes to the CCA code.
+>>
+>> The ABI to the RMM (the RMI) is based on RMM v1.0-rel0 specification[1].
+>>
+>> This series is based on v6.15-rc1. It is also available as a git
+>> repository:
+>>
+>> https://gitlab.arm.com/linux-arm/linux-cca cca-host/v8
+>>
+>> Work in progress changes for kvmtool are available from the git repository below:
+>>
+>> https://gitlab.arm.com/linux-arm/kvmtool-cca cca/v6
+>>
+>> [1] https://developer.arm.com/documentation/den0137/1-0rel0/
+>> [2] https://lore.kernel.org/r/20250408105225.4002637-17-maz%40kernel.org
+>>
+>> Jean-Philippe Brucker (7):
+>>   arm64: RME: Propagate number of breakpoints and watchpoints to
+>>     userspace
+>>   arm64: RME: Set breakpoint parameters through SET_ONE_REG
+>>   arm64: RME: Initialize PMCR.N with number counter supported by RMM
+>>   arm64: RME: Propagate max SVE vector length from RMM
+>>   arm64: RME: Configure max SVE vector length for a Realm
+>>   arm64: RME: Provide register list for unfinalized RME RECs
+>>   arm64: RME: Provide accurate register list
+>>
+>> Joey Gouly (2):
+>>   arm64: RME: allow userspace to inject aborts
+>>   arm64: RME: support RSI_HOST_CALL
+>>
+>> Steven Price (31):
+>>   arm64: RME: Handle Granule Protection Faults (GPFs)
+>>   arm64: RME: Add SMC definitions for calling the RMM
+>>   arm64: RME: Add wrappers for RMI calls
+>>   arm64: RME: Check for RME support at KVM init
+>>   arm64: RME: Define the user ABI
+>>   arm64: RME: ioctls to create and configure realms
+>>   KVM: arm64: Allow passing machine type in KVM creation
+>>   arm64: RME: RTT tear down
+>>   arm64: RME: Allocate/free RECs to match vCPUs
+>>   KVM: arm64: vgic: Provide helper for number of list registers
+>>   arm64: RME: Support for the VGIC in realms
+>>   KVM: arm64: Support timers in realm RECs
+>>   arm64: RME: Allow VMM to set RIPAS
+>>   arm64: RME: Handle realm enter/exit
+>>   arm64: RME: Handle RMI_EXIT_RIPAS_CHANGE
+>>   KVM: arm64: Handle realm MMIO emulation
+>>   arm64: RME: Allow populating initial contents
+>>   arm64: RME: Runtime faulting of memory
+>>   KVM: arm64: Handle realm VCPU load
+>>   KVM: arm64: Validate register access for a Realm VM
+>>   KVM: arm64: Handle Realm PSCI requests
+>>   KVM: arm64: WARN on injected undef exceptions
+>>   arm64: Don't expose stolen time for realm guests
+>>   arm64: RME: Always use 4k pages for realms
+>>   arm64: RME: Prevent Device mappings for Realms
+>>   arm_pmu: Provide a mechanism for disabling the physical IRQ
+>>   arm64: RME: Enable PMU support with a realm guest
+>>   arm64: RME: Hide KVM_CAP_READONLY_MEM for realm guests
+>>   KVM: arm64: Expose support for private memory
+>>   KVM: arm64: Expose KVM_ARM_VCPU_REC to user space
+>>   KVM: arm64: Allow activating realms
+>>
+>> Suzuki K Poulose (3):
+>>   kvm: arm64: Include kvm_emulate.h in kvm/arm_psci.h
+>>   kvm: arm64: Don't expose debug capabilities for realm guests
+>>   arm64: RME: Allow checking SVE on VM instance
+>>
+>>  Documentation/virt/kvm/api.rst       |   91 +-
+>>  arch/arm64/include/asm/kvm_emulate.h |   40 +
+>>  arch/arm64/include/asm/kvm_host.h    |   17 +-
+>>  arch/arm64/include/asm/kvm_rme.h     |  137 +++
+>>  arch/arm64/include/asm/rmi_cmds.h    |  508 ++++++++
+>>  arch/arm64/include/asm/rmi_smc.h     |  259 ++++
+>>  arch/arm64/include/asm/virt.h        |    1 +
+>>  arch/arm64/include/uapi/asm/kvm.h    |   49 +
+>>  arch/arm64/kvm/Kconfig               |    1 +
+>>  arch/arm64/kvm/Makefile              |    3 +-
+>>  arch/arm64/kvm/arch_timer.c          |   48 +-
+>>  arch/arm64/kvm/arm.c                 |  160 ++-
+>>  arch/arm64/kvm/guest.c               |  104 +-
+>>  arch/arm64/kvm/hypercalls.c          |    4 +-
+>>  arch/arm64/kvm/inject_fault.c        |    5 +-
+>>  arch/arm64/kvm/mmio.c                |   16 +-
+>>  arch/arm64/kvm/mmu.c                 |  201 ++-
+>>  arch/arm64/kvm/pmu-emul.c            |    6 +
+>>  arch/arm64/kvm/psci.c                |   30 +
+>>  arch/arm64/kvm/reset.c               |   23 +-
+>>  arch/arm64/kvm/rme-exit.c            |  199 +++
+>>  arch/arm64/kvm/rme.c                 | 1708
+>> ++++++++++++++++++++++++++
+>>  arch/arm64/kvm/sys_regs.c            |   49 +-
+>>  arch/arm64/kvm/vgic/vgic-init.c      |    2 +-
+>>  arch/arm64/kvm/vgic/vgic-v3.c        |    6 +-
+>>  arch/arm64/kvm/vgic/vgic.c           |   54 +-
+>>  arch/arm64/mm/fault.c                |   31 +-
+>>  drivers/perf/arm_pmu.c               |   15 +
+>>  include/kvm/arm_arch_timer.h         |    2 +
+>>  include/kvm/arm_pmu.h                |    4 +
+>>  include/kvm/arm_psci.h               |    2 +
+>>  include/linux/perf/arm_pmu.h         |    5 +
+>>  include/uapi/linux/kvm.h             |   29 +-
+>>  33 files changed, 3709 insertions(+), 100 deletions(-)  create mode 100644
+>> arch/arm64/include/asm/kvm_rme.h  create mode 100644
+>> arch/arm64/include/asm/rmi_cmds.h  create mode 100644
+>> arch/arm64/include/asm/rmi_smc.h  create mode 100644
+>> arch/arm64/kvm/rme-exit.c  create mode 100644 arch/arm64/kvm/rme.c
+>>
+>> --
+>> 2.43.0
+
