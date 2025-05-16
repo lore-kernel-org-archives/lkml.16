@@ -1,195 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F84911CAF;
-	Fri, 16 May 2025 13:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01610156CA;
+	Fri, 16 May 2025 13:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747401600; cv=none; b=AQqXsrOgAjX0XVy/ezCCUwDzsioJfXuxIHBS8qyedGqOBXU8qK+FK+lgNLdHOW9hNwprSLscLQhcqDOBfk2nGxSabc70hwRjtfvTAUfKKAptcfTw9DLT8rb1vfp1lOWkFnzdxZQq/Z3Y0Yf8Z/RBcGCX4LsRGEVjuh5n0BidrEI=
+	t=1747401621; cv=none; b=ScDXAPzdkcqi7rxA7RUkETNMzmIjggdakDWbfEOFJ/ULQqIuvqqcHVb28w1RUlttgoCypGPE2oJR0PZFOKYJsOqpq6DO8Gz8LzmqGiWa16z18fsLMRAfg2HRLuclxy7K0qPN0lZcmFX11YFZlJPQXQmT/wahMWkiJVPnjhG6Yxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747401600; c=relaxed/simple;
-	bh=Zxq4lQIG5sIEJG3iSRSF3Y91Onwf6xfW2l+nu/OgvR4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZJCphhu3IjGeAa+WRBzBoQsW+FvSkfVAcbE7kXfsAq1vJ7HRzmEyGr4oF49YJLN7xINKMe+QfTk3Vj+PBRv0n5B66Zf09DlVV2XQrBmfXiFCq0/xby7447FW4VDpAee5XYtYrtrYjlaGyPKx0Lr6Cp1wjxHuZtnCD2wc1gW4AIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f7KYZOki; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f7KYZOki"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCCC7C4CEED;
-	Fri, 16 May 2025 13:19:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747401599;
-	bh=Zxq4lQIG5sIEJG3iSRSF3Y91Onwf6xfW2l+nu/OgvR4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=f7KYZOkiciLVxL06Wz9xBn/s0o2ikDE83HLLpIFwkA3pI/YvVIC+hVNbD1Q0ZqvCe
-	 4YVwXxDzjCXKAZG6feMNdvJHw2lKynyuY0sZg79cYbCbdQ6JOMuNhsZRoPNOLmn25Y
-	 4PiM0cBxMLklZc7JjFsRkl4tL5Y3c3R27pyAdVHKghxQQfnkYoxSZjvnAT3ZZegrdt
-	 NyYl1p79htzJiUzSNhe+t2bfIiOpQ5ODH6N2z+pMysiij/t+E5vew9oVGJRSzxTGsM
-	 D4ntUuDXGqBPOUKYxhxsg2XTDC4HSIDhaipH94NDDk8U4tCoyGDafps7q23FlPNEh+
-	 iRbN9zb42gamQ==
-Message-ID: <01f97fcc-1b6a-41f3-8a62-67fac9f5bae0@kernel.org>
-Date: Fri, 16 May 2025 15:19:52 +0200
+	s=arc-20240116; t=1747401621; c=relaxed/simple;
+	bh=15SWUdBOxhWrtUcvEWdD+U61nUCkcWm9XOdxxA+9ZQk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UM1ejF9ICp/+W4cFM16N4BEJhbDfh2jr7GQLOzCedCqMbyGAyebc34qKA+En3YonwamxU/Dd+TaRLK3V/yuXX6jsLKPL1DRIlLlohOMyf7e8H1kwfStKDGxccYteMqjdJO9uy6ahMUzScMjB/VUvjUtKTLuqziGWrxH6gknMyKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-74237a74f15so2910457b3a.0;
+        Fri, 16 May 2025 06:20:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747401619; x=1748006419;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CuZyi8fQxeS6QeYoUCGwPtOp9OzM97EiYUTwERYEeJg=;
+        b=ccnPG/cK3SUJj00im/r3anAGWrRFIAeIFrxkGZtfPCge4js1TuXR0coXjp5gANJomY
+         hmX39EyjAKZItXdepk6WU9CwugYCLJ72MnL23d8+UhcORQOeN9FJCQxzUjW+1bjJVQ7R
+         ZncJgks+8swuMcqefqYaZulj3N10CeiYy9/t5QG9fSe0uoPn1t7rxwMLh0GrmLeKBJC4
+         rYyQwvN36cRchtgolMn8xbFUV45ZHf9wHSTb8uu3ffgUM34T9byV2ahu1oB0iht8LLsV
+         0LZLSZcgZlp/ZE4siKdDzxgD6Y9azmtRWz/MSJf88kQw6Z6AldMLC3jxzGnqmfDE3uYh
+         FqPg==
+X-Forwarded-Encrypted: i=1; AJvYcCW2K9rattH5L4Hvrbd8GF3IDk5n920WjCxe76RD+Ad0Yi5j/cF+tIV9j9tPnyq2L5tmXKQxgGZpPEr6@vger.kernel.org, AJvYcCXInif2/o+xEJ7XnB8aLDm2DuW1NadY7ieT7Anv+1BVfKAsvK8Z9znvInIZLr6KxEprGOqetqcXUfm2Dlo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhB2LAUplxqcAharu1BeJiIr2uZsYarPkRuCXtMVRG9bn69aqb
+	My/59BDPbBzkS+alYQwD++WBwy/dQgeif56lOh2fv2zonWFbl+ElH6nb
+X-Gm-Gg: ASbGncsXSO1EKzVnvghDs4//l7C273fYgTECVddcIOyIOzP4ZxjVKMmvzDX6jpqjWF1
+	RPl7g47GiZK1lDoP0Pcp6AicU+4b05/debFKtq01DP7AIcvDlhsHSyMrSn18RdHkTXQdOPt4dS0
+	ihPJhnv5RkgaEAJZymLRJVwJG3fSxfKd2BZJeii0XTwmwTHYINF2mZcXXGYPbOLZ0UGaRsgrMGZ
+	+pxzBeKwS2gW6KygVHvn9d4B36u42gQ2TRdjBBXxS3a9f16u4+M2FvplUeVmN1bKin8odVmKTZn
+	JIKM1SwC/QmWEZQzO8Rl+nJtch24ngqGyaqwP5/PtGfedhJ/DMX5vwhIJGYig2QUtcFSzio/fZy
+	KPGji+/SP5Q==
+X-Google-Smtp-Source: AGHT+IEuiZVA40gUNYP45OLiB+Qe3Tiyb27zlSVkJWKAl8AvH6AZBbPTjJF0H4mnm1dFA90bB5i7eg==
+X-Received: by 2002:a05:6a00:4614:b0:736:5822:74b4 with SMTP id d2e1a72fcca58-742a98d4a75mr4729669b3a.21.1747401618989;
+        Fri, 16 May 2025 06:20:18 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-742a970a8bbsm1461358b3a.47.2025.05.16.06.20.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 06:20:18 -0700 (PDT)
+Date: Fri, 16 May 2025 22:20:16 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI: Unnecessary linesplit in __pci_setup_bridge()
+Message-ID: <20250516132016.GA2390647@rocinante>
+References: <20250404124547.51185-1-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] ethernet: eswin: Document for eic7700 SoC
-To: weishangjuan@eswincomputing.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- richardcochran@gmail.com, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
- p.zabel@pengutronix.de, yong.liang.choong@linux.intel.com,
- rmk+kernel@armlinux.org.uk, jszhang@kernel.org, inochiama@gmail.com,
- jan.petrous@oss.nxp.com, dfustini@tenstorrent.com, 0x1207@gmail.com,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-Cc: ningyu@eswincomputing.com, linmin@eswincomputing.com,
- lizhi2@eswincomputing.com
-References: <20250516010849.784-1-weishangjuan@eswincomputing.com>
- <20250516011040.801-1-weishangjuan@eswincomputing.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250516011040.801-1-weishangjuan@eswincomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250404124547.51185-1-ilpo.jarvinen@linux.intel.com>
 
-On 16/05/2025 03:10, weishangjuan@eswincomputing.com wrote:
-> From: Shangjuan Wei <weishangjuan@eswincomputing.com>
-> 
-> Add ESWIN EIC7700 Ethernet controller, supporting
-> multi-rate (10M/100M/1G) auto-negotiation, PHY LED configuration,
-> clock/reset control, and AXI bus parameter optimization.
-> 
-> Signed-off-by: Zhi Li <lizhi2@eswincomputing.com>
-> Signed-off-by: Shangjuan Wei <weishangjuan@eswincomputing.com>
+Hello,
 
-Please use subject prefixes matching the subsystem. You can get them for
-example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
-your patch is touching. For bindings, the preferred subjects are
-explained here:
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+[...]
+> -	pci_info(bridge, "PCI bridge to %pR\n",
+> -		 &bus->busn_res);
+> +	pci_info(bridge, "PCI bridge to %pR\n", &bus->busn_res);
 
+I don't know if there still exists such a thing as "trivial patches
+maintainer" any more, so I will pull this.
 
-> ---
->  .../bindings/net/eswin,eic7700-eth.yaml       | 142 ++++++++++++++++++
->  1 file changed, 142 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml b/Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml
-> new file mode 100644
-> index 000000000000..6cb9c109c036
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml
-> @@ -0,0 +1,142 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/eswin,eic7700-eth.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Eswin EIC7700 SOC Eth Controller
-> +
-> +maintainers:
-> +  - Shuang Liang <liangshuang@eswincomputing.com>
-> +  - Zhi Li <lizhi2@eswincomputing.com>
-> +  - Shangjuan Wei <weishangjuan@eswincomputing.com>
-> +
-> +description: |
+I gather, it must have bothered you a bit. That said, Ilpo... your
+expertise and time could have been spent differently. :)
 
-Same comments apply as for all of your patches.
+Thank you!
 
-> +  The eth controller registers are part of the syscrg block on
-> +  the EIC7700 SoC.
-> +
-> +properties:
-> +  compatible:
-> +    const: eswin,eic7700-qos-eth
-> +
-> +  reg:
-> +    minItems: 1
-> +    items:
-> +      - description: Base address and size
-> +      - description: Extension region (optional)
-
-How it can be optional? This is SoC. It is strictly defined, isn't it?
-
-> +
-> +  interrupt-names:
-> +    const: macirq
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  phy-mode:
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +    enum: [mii, gmii, rgmii, rmii, sgmii]
-> +
-> +  id:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: Controller instance ID
-
-No, drop. IDs are not allowed.
-
-> +
-> +  clocks:
-> +    minItems: 3
-> +    maxItems: 7
-
-No.
-
-I am supposed to repeat the same comments... So no.
-
-All my comments apply to all eswin patches. For driver, bindings,
-everything. I suggest to slow down and learn from one review.
-
-I finish review here.
-
-Best regards,
-Krzysztof
+	Krzysztof
