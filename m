@@ -1,120 +1,134 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50ACC1ACEDC;
-	Fri, 16 May 2025 22:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822372AE8D
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 22:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747434812; cv=none; b=V1DfgTC8XAUErDgTGnlyeo25Fn8i1eD9vc1VoGQrzkYX+YIeyJPVUa5/5SwWj3O76WusLSdaSNX2uONJI8mmYcoLfp7IxQNFKeGWTQKbB6MKv2pWPXmJCJ9zcAbvgj1vTpuLC/YGOea/dnAjsbogJLzXy3CwNyta3vPoihKRMKw=
+	t=1747434881; cv=none; b=uFhFZm8tGPTnNwvlaHS8ZgYSAryO9o8fEZhgetqoWKBJ54lKu/quSLNS4Ix9vE9NomWfrGRW65oKPO0nR4vSr6HQ5edii8qwWb4Qx/XNP81dihDN3TJ8s2Nn55Z6x+cxTCL877Eo64NflRDjb6haHXwSsTQwakJmnFjpw6K+Sds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747434812; c=relaxed/simple;
-	bh=sBSxtxLLdqehJrvz84S5CJ1cYF6ysBF6zqBFj+BR+sc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=CH40sozJntwvWWLfW4uM4Oe0FcFFaTM+jVeokaYauPp5wMGrklLBFIFqmC09y8gB/EBHIgHuwbRfYms/dB+2+uw/iic3HuOn90gXpqRxlKTki9kRxlHbnW/6oLij0edk18jbsCb+3L0+LhX0tB+iFWijFTznMnf1/2gE3vvRfPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=QJhrTkSq; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1747434881; c=relaxed/simple;
+	bh=1Q/aHYWlKWrydy3cLVK8Qq4aGK0NaMxdS1gS1zbr5ZA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JbMNrdNfyMALOAE9QQGyRVnmWJUaE5gzmnsofgivRrTdUSlRXe57Cv9/q2TfaY6An7R4Ce68dN3F+mZNyc+kUPlxrZJs1feA7H87cxeqJRl3QgLkpui/BoLcu34iObbQpDRsXdzGhedeHQAO+rvSF3XhLzOI1JvKvvl+VybneqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ww0iUgyp; arc=none smtp.client-ip=91.218.175.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QJhrTkSq"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54GMXILt418764;
-	Fri, 16 May 2025 17:33:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1747434799;
-	bh=ciUcMocgfF2Sg88n3LV1vyv2J5+DjoDSa+DiepLm+Vs=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=QJhrTkSqB/gMOB68unIrWuVebnxtm6Icu8tvF/JGjQ8yX/TJgh0MMUUkr4XEpWjC/
-	 04LN0pSPksEWdp0AJGsFDjwr87OMj0Xl+D7WRRhGdQd1wZyj0mOelom8CP75xrE6t2
-	 aW6yIiDaaWIUB9mBGjxAv8Okpm8Er/i4AUWk3AOw=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54GMXIDa201975
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 16 May 2025 17:33:18 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 16
- May 2025 17:33:18 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 16 May 2025 17:33:17 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54GMXHhF086916;
-	Fri, 16 May 2025 17:33:17 -0500
-Message-ID: <29e4e325-dac9-4454-9d5f-9521cc3d1865@ti.com>
-Date: Fri, 16 May 2025 17:33:17 -0500
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ww0iUgyp"
+Message-ID: <60092fac-2c8a-4076-9130-8c3e41cba040@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747434875;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=15iMtyH1jixdvcvcU/HjXnbNttGRzvlXzQGL31LvRTI=;
+	b=ww0iUgypAP2aPjYj7IgpdYQ3MYIXgkzo3/tL/pdsSxrOAZUMx8ADEaxfUHAJDsUi0ImibX
+	A3IJHLuRO/48ajbOlSc499S4gwRPQAv80IwrVt/vh2c3Tp0/RR62DKrbkbi+MSt3p/Cdfa
+	rtF6oWO7RaRlCJkA+z3d/iFxYMKycxc=
+Date: Fri, 16 May 2025 15:34:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/7] dt-bindings: soc: ti: pruss: Add documentation for
- PRU UART support
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Santosh
- Shilimkar <ssantosh@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>, Bin Liu <b-liu@ti.com>,
-        Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>,
-        Andrew Davis <afd@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250513215934.933807-1-jm@ti.com>
- <20250513215934.933807-3-jm@ti.com>
- <3f989f5c-312c-4fac-8cc0-f387de84925a@kernel.org>
+Subject: Re: [PATCH bpf-next/net v3 2/5] bpf: Add mptcp_subflow bpf_iter
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
+ Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Martin KaFai Lau <martin.lau@kernel.org>
+References: <20250320-bpf-next-net-mptcp-bpf_iter-subflows-v3-0-9abd22c2a7fd@kernel.org>
+ <20250320-bpf-next-net-mptcp-bpf_iter-subflows-v3-2-9abd22c2a7fd@kernel.org>
 Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <3f989f5c-312c-4fac-8cc0-f387de84925a@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Martin KaFai Lau <martin.lau@linux.dev>
+In-Reply-To: <20250320-bpf-next-net-mptcp-bpf_iter-subflows-v3-2-9abd22c2a7fd@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-Migadu-Flow: FLOW_OUT
 
-On 5/14/25 7:35 AM, Krzysztof Kozlowski wrote:
-> On 13/05/2025 23:59, Judith Mendez wrote:
->> Add documentation for PRU UART node which is for PRU serial UART
->> based-off the industry standard TL16C550 asynchronous communications
->> element.
->>
->> Signed-off-by: Judith Mendez <jm@ti.com>
->> ---
->>   Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml | 7 +++++++
->>   1 file changed, 7 insertions(+)
->>
+On 3/20/25 10:48 AM, Matthieu Baerts (NGI0) wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Nothing in cover letter explains dependency and this the most important
-> part of cover letter. Otherwise how maintainers are supposed to guess
-> what they can take and what cannot?
+> It's necessary to traverse all subflows on the conn_list of an MPTCP
+> socket and then call kfunc to modify the fields of each subflow. In
+> kernel space, mptcp_for_each_subflow() helper is used for this:
 > 
-> Squash the patch with previous in such case.
+> 	mptcp_for_each_subflow(msk, subflow)
+> 		kfunc(subflow);
+> 
+> But in the MPTCP BPF program, this has not yet been implemented. As
+> Martin suggested recently, this conn_list walking + modify-by-kfunc
+> usage fits the bpf_iter use case.
+> 
+> So this patch adds a new bpf_iter type named "mptcp_subflow" to do
+> this and implements its helpers bpf_iter_mptcp_subflow_new()/_next()/
+> _destroy(). And register these bpf_iter mptcp_subflow into mptcp
+> common kfunc set. Then bpf_for_each() for mptcp_subflow can be used
+> in BPF program like this:
+> 
+> 	bpf_for_each(mptcp_subflow, subflow, msk)
+> 		kfunc(subflow);
+> 
+> Suggested-by: Martin KaFai Lau <martin.lau@kernel.org>
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> Notes:
+>   - v2:
+>     - Add BUILD_BUG_ON() checks, similar to the ones done with other
+>       bpf_iter_(...) helpers.
+>     - Replace msk_owned_by_me() by sock_owned_by_user_nocheck() and
+>       !spin_is_locked() (Martin).
+>   - v3:
+>     - Switch parameter from 'struct mptcp_sock' to 'struct sock' (Martin)
+>     - Remove unneeded !msk check (Martin)
+>     - Remove locks checks, add msk_owned_by_me for lockdep (Martin)
+>     - The following note and 2 questions have been added below.
+> 
+> This new bpf_iter will be used by our future BPF packet schedulers and
+> path managers. To see how we are going to use them, please check our
+> export branch [1], especially these two commits:
+> 
+>   - "bpf: Add mptcp packet scheduler struct_ops": introduce a new
+>     struct_ops.
+>   - "selftests/bpf: Add bpf_burst scheduler & test": new test showing
+>     how the new struct_ops and bpf_iter are being used.
+> 
+> [1] https://github.com/multipath-tcp/mptcp_net-next/commits/export
+> 
+> @BPF maintainers: we would like to allow this new mptcp_subflow bpf_iter
+> to be used with struct_ops, but only with the two new ones we are going
+> to introduce that are specific to MPTCP, and with not others struct_ops
+> (TCP CC, sched_ext, etc.). We are not sure how to do that. By chance, do
+> you have examples or doc you could point to us to have this restriction
+> in place, please?
 
-Sure can do.
+The bpf_qdisc.c has done that. Take a look at the "bpf_qdisc_kfunc_filter()".
+
+It is in net-next and bpf-next/net.
 
 > 
->> diff --git a/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
->> index 927b3200e29e..54397297cbf5 100644
->> --- a/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
->> +++ b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
->> @@ -324,6 +324,13 @@ patternProperties:
->>       $ref: /schemas/net/ti,davinci-mdio.yaml#
->>       type: object
->>   
->> +  serial@[a-f0-9]+$:
->> +    description: |
-> 
-> Do not need '|' unless you need to preserve formatting.
+> Also, for one of the two future MPTCP struct_ops, not all callbacks
+> should be allowed to use this new bpf_iter, because they are called from
+> different contexts. How can we ensure such callbacks from a struct_ops
+> cannot call mptcp_subflow bpf_iter without adding new dedicated checks
+> looking if some locks are held for all callbacks? We understood that
+> they wanted to have something similar with sched_ext, but we are not
+> sure if this code is ready nor if it is going to be accepted.
 
-Will fix this and first patch as well.
-
-Thanks
-
-~ Judith
+Same. Take a look at "bpf_qdisc_kfunc_filter()".
 
