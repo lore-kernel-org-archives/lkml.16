@@ -1,179 +1,127 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E9C200A3
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 13:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E0991E48A;
+	Fri, 16 May 2025 13:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747402416; cv=none; b=DL2r+hW+JDmemB/erubX/iNAD3gXxkyql4BsGBo5h+7R6cvbn/XACrGO6M0BLCtJqJ7yDn/tcChQJ5M2KZzqIkhIOQ5hzjNzrLujPoLNmwXEBmvSt9tSi8Use3nRlcFMif0aofSRLsqwQY3ELz5D1PmJeGO7ptJuW3r3sYfsPDk=
+	t=1747402481; cv=none; b=BLPPDDuPIGcOICum7EtvD+/bkR1JWln50ZnjnqgNyRYMRbm/azjFAybsIgdevIAw7/LvrqMw6qgQzTK4INhO4Wc7k19Xanu/V0okGAlk6UeTCPzkZ1/zep1YYvGpJM2SiBbLZeLFSEfnU5P3KOMN0TTUmMpsKgs5HMT0Dvu6mB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747402416; c=relaxed/simple;
-	bh=FRhZIy8C0eW0eRV1rO4kuguYk5yijvbkKsK/cWBDRgs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BOXbsIN++Ifilr4o3s5JRzDniqB5qaOpYIWiAKym3EowKYUGLvKa5GjnF+L6/BJcyqOKib4Qq2wHV0rX7xsoawoWp+pDgB5IQyOFh+KyxgL/5XerdgUWy3Tp985Nxsx4EHWTukEy3oC43dohJtnyrp9boDsiClwe0g56Ery0jU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FncOLA1C; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747402481; c=relaxed/simple;
+	bh=lKcUD295I76uRBBr0ES0OEdjbbwToH1/Rx9lryRYqIE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sl5x9LreDEwXYCxq5LsFJOOTjjjJp+xdJJCIXmkpaTuBAuK4NkBkqKQbb7jNKaderULJKtgFXo1T6NjV+DP66DEGh1ky8iWgLD7ilhhLhb1uR0rjrrf21QWNaK8K99q+fuaJQWLMlZuJt6sEE3fTIkJJhjIOxzX4cweSYMQOmb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hjNJcEVG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FncOLA1C"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30abb33d1d2so4016882a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:33:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747402413; x=1748007213; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KDGUVX2RwhNLT5NPXxVSV0DdRBsVZS86wObxxPPsbk8=;
-        b=FncOLA1Ci+PPI8KkrI4MVo2B1SzWYk4GQH5SBxaCnhOV/Jl/JikxORZrdmn2KLl4Is
-         NHiOJZpi8akdmXOxXG8zUf7mTNTwnCkeGFriZydIOEBn3kj2HVXzSy9QTK40ncVXowFE
-         hq6mqs9bLx7MUMhxtmYyL/yFJluuI+E5fKnmF3rko5LP0+YrpD5IdCTqZJm+QlTxpTrq
-         qnwdLZC3uiMvzA0aL4sdWrrHYkp0RapQ2oHxAUL/66ZGPBmT926BSPZ/EtkiiBnS7aTA
-         1KIRlIkmZq9pys74X/vdh6H3wQLV6zZ0MTx44IIBTkbn++g2pmPIXk2tMA/5I0rNwGoI
-         Y4bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747402413; x=1748007213;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KDGUVX2RwhNLT5NPXxVSV0DdRBsVZS86wObxxPPsbk8=;
-        b=JmenS2q37NrJPAEklU1qnbvNYMdccPjp36CIs+2K0q1NPNTev54f7zJMQW5dRi1qkP
-         L+Tj5Kb3we7eaNRpsUNR5Z7yJY5mJHTa2gH/tEpo1tRLy3lRqTGAa4fZAoRFOGg2kd7E
-         2XAlHxsDylf8jqmJlx+HM8qsSA82Rhz/bSMvBSqVuwOjL97LL6VL9Zw3j71UFMzqt/7Y
-         z+Dcz1endiiULMKo+zDBKTbmHvOrmBKm95nHFLYhR9KKSbtxSvZV6Tm9NKGb/ugH+cj1
-         VoSjj0EY0ou6PhdDNzvQJAO5qUusxxBkUBXNVOKbKw9TKR96DN2Zya+dm6Fuelts3uFz
-         bmiA==
-X-Forwarded-Encrypted: i=1; AJvYcCXkXMoJee0T3lZxWlcB3iKxn4aauPPIKPgM8LC9vIS2U1xP0TPBBiXkLlmELBq2O2t0tUb3NuWkzvgLcWY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8CXFFF4u7DfsYGa474F6A7zRVgp3+Y3nRgNZb3jl4BdjAmQQ9
-	HXhydaec5NHJRpDBeDV0HA/tXXGgHf8Hl4ZdPYy/cdijDl/i10HluKbs6XHxcmdXM5TpKYWse4Q
-	HH97ytw==
-X-Google-Smtp-Source: AGHT+IGqXXBKxkrM7eRDYiPnM7bRnqmiBwCU1lHICfCxR4zzeniMzTPy5RM6XoGiiUxm0AtX4CbnBEq/OEA=
-X-Received: from plgm8.prod.google.com ([2002:a17:902:f648:b0:223:f7b1:99cc])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c949:b0:224:5a8:ba29
- with SMTP id d9443c01a7336-231de3ba251mr35699265ad.43.1747402413061; Fri, 16
- May 2025 06:33:33 -0700 (PDT)
-Date: Fri, 16 May 2025 06:33:31 -0700
-In-Reply-To: <20250324173121.1275209-33-mizhang@google.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hjNJcEVG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 081A2C4CEE4;
+	Fri, 16 May 2025 13:34:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747402480;
+	bh=lKcUD295I76uRBBr0ES0OEdjbbwToH1/Rx9lryRYqIE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hjNJcEVGQ2pfN1eiKZc2ufifDCOQbQI1wpf4s6bxRLcvGyFQp3TTwHOmWH8JAh2x1
+	 6FvpNyViFztNeOvafLs7bh6srWanVoWFkgsGQzQ5TL6XthT0wy9iFqQ3QqQm8X0rfg
+	 CX4sW+9PrqZrfr+uGS98b6BfTuLoohW5hWmX/i4g=
+Date: Fri, 16 May 2025 15:32:52 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: John Hubbard <jhubbard@nvidia.com>, Timur Tabi <timur@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH] rust: add basic ELF sections parser
+Message-ID: <2025051614-scribe-excavator-2d00@gregkh>
+References: <20250515-elf-v1-1-4b53745453c0@nvidia.com>
+ <2025051543-override-rockiness-3ead@gregkh>
+ <D9WLFTPRB9FJ.OL6I760HKALZ@nvidia.com>
+ <D9WP3YU31199.Q8IEDBJZ87LU@nvidia.com>
+ <2025051532-gentleman-reset-58f2@gregkh>
+ <CAOZdJXWKLu0y+kwC+Bm8nBCLizQVpsDdDUoS--hVgz2vnuZJQg@mail.gmail.com>
+ <8b14b078-b899-42e8-8522-599daa65bc63@nvidia.com>
+ <2025051647-urology-think-b8e0@gregkh>
+ <D9XMAV4ERYK7.39TLQBLYTX3TU@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-33-mizhang@google.com>
-Message-ID: <aCc-q_udsn8o1vBT@google.com>
-Subject: Re: [PATCH v4 32/38] KVM: nVMX: Add nested virtualization support for
- mediated PMU
-From: Sean Christopherson <seanjc@google.com>
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
-	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
-	Nikunj Dadhania <nikunj.dadhania@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D9XMAV4ERYK7.39TLQBLYTX3TU@nvidia.com>
 
-This shortlog is unnecessarily confusing.  It reads as if supported for running
-L2 in a vCPU with a mediated PMU is somehow lacking.
-
-On Mon, Mar 24, 2025, Mingwei Zhang wrote:
-> Add nested virtualization support for mediated PMU by combining the MSR
-> interception bitmaps of vmcs01 and vmcs12.
-
-Do not phrase changelogs related to nested virtualization in terms of enabling a
-_KVM_ feature.  KVM has no control over what hypervisor runs in L1.  It's a-ok to
-provide example use cases, but they need to be just that, examples.
-
-> Readers may argue even without this patch, nested virtualization works for
-> mediated PMU because L1 will see Perfmon v2 and will have to use legacy vPMU
-> implementation if it is Linux. However, any assumption made on L1 may be
-> invalid, e.g., L1 may not even be Linux.
+On Fri, May 16, 2025 at 10:26:10PM +0900, Alexandre Courbot wrote:
+> On Fri May 16, 2025 at 10:15 PM JST, Greg KH wrote:
+> > On Thu, May 15, 2025 at 12:17:00PM -0700, John Hubbard wrote:
+> >> On 5/15/25 7:30 AM, Timur Tabi wrote:
+> >> > On Thu, May 15, 2025 at 6:43 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >> >>> Or if ELF is the problem, I don't mind introducing a WAD loader. ;)
+> >> >>
+> >> >> The "problem" I'm not understanding is why does the kernel have to do
+> >> >> any of this parsing at all?
+> >> > 
+> >> > Nova will need to parse ELF headers in order to properly load and boot
+> >> > Nvidia firmware images.  Nouveau does this already:
+> >> > 
+> >> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c#n2931
+> >> 
+> >> Hi Greg!
+> >> 
+> >> Nouveau influenced us heavily here, because having firmware that we
+> >> can post once, and use everywhere (Nouveau and Nova), is very attractive.
+> >> 
+> >> Alex and Timur discuss other details that explain why the standard 
+> >> user-space approach is less simple and clean than it might appear at
+> >> first glance, but I wanted to emphasize that the firmware re-use point
+> >> a little bit, too.
+> >> 
+> >> Oh, and also: the ELF images are going to remain extremely simple,
+> >> because there is nothing now (nor can I see anything in the future)
+> >> that would drive anyone to do complicated things. For example, if
+> >> there is some exotic new thing in the future, it could be put into
+> >> its own firmware image if necessary--because we understand that
+> >> this parser here is intended to be a simple subset of ELF, and
+> >> left alone really.
+> >
+> > Ok, then why not just bury this down in the driver that is going to
+> > actually use it?  This patch series was adding it to ALL kernels, if you
+> > need/want it or not, and as such would be seen as a generic way to
+> > handle all ELF images.  But as that's not the case here, just copy what
+> > you did in the existing C driver and make it private to your code, so
+> > that no one else has to worry about accidentally thinking it would also
+> > work for their code :)
 > 
-> If both L0 and L1 pass through PMU MSRs, the correct behavior is to allow
-> MSR access from L2 directly touch HW MSRs, since both L0 and L1 passthrough
-> the access.
+> Keeping this local to nova-core is perfectly fine if you think this is
+> more acceptable. AFAIK there are no other users for it at the moment.
+
+Then I recommend doing this, thanks.
+
+> > And I still think that having the kernel do this is a mistake, firmware
+> > should always just be a "pass through" otherwise you open yourself up to
+> > all sorts of complexity and vulnerabilities in the kernel, both of which
+> > is generally not a good idea.
 > 
-> However, in current implementation, if without adding anything for nested,
-> KVM always set MSR interception bits in vmcs02. This leads to the fact that
-> L0 will emulate all MSR read/writes for L2, leading to errors, since the
-> current mediated vPMU never implements set_msr() and get_msr() for any
-> counter access except counter accesses from the VMM side.
-> 
-> So fix the issue by setting up the correct MSR interception for PMU MSRs.
+> I agree on principle, but I cannot think of a way to avoid doing this in
+> the kernel without making things overly complex. We're happy to consider
+> alternatives though, if they exist.
 
-This is not a fix.  
+With the exception of the "set the fuse issue", I really don't see why
+sending a bunch of small firmware files through the kernel to the
+hardware is any harder to do in userspace vs. within the kernel itself.
+Either way you have to do the "parsing" and splitting up, it's just
+generally safer to do all of that in userspace instead.
 
-    KVM: nVMX: Disable PMU MSR interception as appropriate while running L2
-    
-    Merge KVM's PMU MSR interception bitmaps with those of L1, i.e. merge the
-    bitmaps of vmcs01 and vmcs12, e.g. so that KVM doesn't interpose on MSR
-    accesses unnecessarily if L1 exposes a mediated PMU (or equivalent) to L2.
+But you all have a beast of a device to control, odds are this is one of
+the only tiny minor issues involved with that overall :)
 
-> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> ---
->  arch/x86/kvm/vmx/nested.c | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index cf557acf91f8..dbec40cb55bc 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -626,6 +626,36 @@ static inline void nested_vmx_set_intercept_for_msr(struct vcpu_vmx *vmx,
->  #define nested_vmx_merge_msr_bitmaps_rw(msr) \
->  	nested_vmx_merge_msr_bitmaps(msr, MSR_TYPE_RW)
->  
-> +/*
-> + * Disable PMU MSRs interception for nested VM if L0 and L1 are
-> + * both mediated vPMU.
-> + */
+thanks,
 
-Again, KVM has no idea what is running in L1.  Drop this.
-
-> +static void nested_vmx_merge_pmu_msr_bitmaps(struct kvm_vcpu *vcpu,
-> +					     unsigned long *msr_bitmap_l1,
-> +					     unsigned long *msr_bitmap_l0)
-> +{
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> +	int i;
-> +
-> +	if (!kvm_mediated_pmu_enabled(vcpu))
-
-This is a worthwhile check, but a comment would be helpful:
-
-	/*
-	 * Skip the merges if the vCPU doesn't have a mediated PMU MSR, i.e. if
-	 * none of the MSRs can possibly be passed through to L1.
-	 */
-	if (!kvm_vcpu_has_mediated_pmu(vcpu))
-		return;
-
-> +		return;
-> +
-> +	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
-> +		nested_vmx_merge_msr_bitmaps_rw(MSR_ARCH_PERFMON_EVENTSEL0 + i);
-
-This is unnecessary, KVM always intercepts event selectors.
-
-> +		nested_vmx_merge_msr_bitmaps_rw(MSR_IA32_PERFCTR0 + i);
-> +		nested_vmx_merge_msr_bitmaps_rw(MSR_IA32_PMC0 + i);
-> +	}
-> +
-> +	for (i = 0; i < pmu->nr_arch_fixed_counters; i++)
-> +		nested_vmx_merge_msr_bitmaps_rw(MSR_CORE_PERF_FIXED_CTR0 + i);
-> +
-> +	nested_vmx_merge_msr_bitmaps_rw(MSR_CORE_PERF_FIXED_CTR_CTRL);
-
-Same thing here.
-
-> +	nested_vmx_merge_msr_bitmaps_rw(MSR_CORE_PERF_GLOBAL_CTRL);
-> +	nested_vmx_merge_msr_bitmaps_read(MSR_CORE_PERF_GLOBAL_STATUS);
-> +	nested_vmx_merge_msr_bitmaps_write(MSR_CORE_PERF_GLOBAL_OVF_CTRL);
-> +}
+greg k-h
