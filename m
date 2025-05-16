@@ -1,157 +1,121 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0C323FC41;
-	Fri, 16 May 2025 12:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1852523E354;
+	Fri, 16 May 2025 12:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747398864; cv=none; b=ut4faeoc3FFOq5SlsG/OVDwoHd7HRiEbR4MxTK5iVBos+hpbLBqtRpQwXhOBDkBFf8tJG1LxRudlu5v1Wc3cRgEXSyJJdi8cb3G2wGaIR44cn1Pi+v0oe5magdyiz8HDatqJ2Yu4QCzoaWLHDATZXHKlyrDDbLvsexJ/uSQ4BEY=
+	t=1747398971; cv=none; b=QfAmzuk5TJ/pXppinK9wYAdmZfTqLpPWQxUxBBMvdiLAYEGQh61occk8EISC17OPNftNkRIogtXqm7SwUr4vo8eFdV3gOnM/C0xOaN0RC3nxw4F2Q0hvpH+zv6Y2qlmMXERKK5klDIFwwfweJCCxhCuOcUUYoB+h/eYVIV06qQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747398864; c=relaxed/simple;
-	bh=+qMIjfa+7kK9fPghuhEoRJqGZazz8er/CgaCIfrLeRk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hZ0yKM56qUwXUF28EtA+S0Dh4nrQ6zIdQHAMqNg8+0LWibnfgpafHhGRg1NQEfUxphPliEIP0cmOFUHU4tghEE6HFCL9XqB+HjG4hCRz+r5JXmxgnUdtxO2B8vCUkEhBNYCSgxAQeaaMN5NutQO8sCLMiyDZ83ywz0R2YCZ9UlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dRJT/7xp; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747398971; c=relaxed/simple;
+	bh=s6mJVg2trpUHXaM+kQ70RjDGFK4205sObTq4U0KZQ4U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=bYxDgwGy4pvWo0qc3HD9CgS0aiIjrNg0TEfXCYFBONvXGKIpG4F1HRrK0fFr9GXSDZvHNX48ZVGrs43wYhaNmYL8ejQOwXnRRCZ3EDcXH6+TaLRyOWkeZtWHCkTHi9ekyAqvCEkhx1hZHDDisKQd3dTI1kuwM29SyW8xQ55BVjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cw3RtLGo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dRJT/7xp"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-73bf5aa95e7so1985762b3a.1;
-        Fri, 16 May 2025 05:34:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747398862; x=1748003662; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sQ8MdKTVw3ECVi8keYANU6Bo31kbzYISRDJG8aBqrlI=;
-        b=dRJT/7xpoHhD4p5WcEz0fH19YPhzdY3pOcigtldxoEIq8LIULZaIVOtfKcsTJTFjuI
-         q7+kYT0pwulLhfCNiZ8rOzbDRWeiHUpIV8SrwJVaKZHrr4+HML3Lk5vy2vUkBgw1Gelx
-         Ae2R+CDPvGmcv4w+QEG6iZn6Vp6oUvYPgkno5mtFTPBkYn4sGdmTuIWUMkvCK7I0qRd2
-         oOk0ylh/qkQepLYk1/0wyzD6IL4JXnU7quvosvmY+faH/PTwCkuJairyItXFuL87AbsU
-         C0U2ySA1TMjLWMb5xsBHI5Vd2fVoY8HmH95UHocDw9B0dzUoivaBliu5oXq2S9tDJ4kf
-         UcbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747398862; x=1748003662;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sQ8MdKTVw3ECVi8keYANU6Bo31kbzYISRDJG8aBqrlI=;
-        b=XiChj+NmGwSA8WIowVb+N88IWI2JKN0tCwG5xThzv+xzr8tzxRacm0Pu2jUVf9BzXs
-         Vmotjn+xIwypAuEawyRHI/S3VJUNCPei+LEo5VdUKOrqgedacclJxmN6nbjGdDihG9nV
-         mUFswIDpMCu4VqHRe+R2Q6tgdUr/8pLd+zJdX2zTgWpEGkcCW39DCQyh2O7qLsNGngCe
-         GyaCUAuLrJJWsCtzz+4DIYSGGEUsYGBLuzma5Bc0Fn3gy7oEELShV/Bb8HBjW52Pieg/
-         BQYvUO/gGbk6AArU4Ev9lwS7mEODUg35eCZWyxm9GrNzEGrhTGUO2+h63l/Rmci6a6nc
-         8aGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVfuX/AeEcjyrboGCOa64bltf5Q1Z3RJMYyJ3AP94Zt5AOO4oN1lHTOC7ZjwZhajc7XyO/VkRMm2N3v58I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKDa/6II9BpMh/g2jO9p+tP1wqSMEC1lt+7gmfQ4QqaTuPP6kd
-	hmphEYyTHoKdrfSXbpjbSTopcxY625sHzO+Ph7CQ/qPnjK1qn0YtBwLVN/UMGQ==
-X-Gm-Gg: ASbGncvAKDR3y4nc3ktrsmK1XxU+S/dCm+UMLoqYEFCP8NHAMTGAt183PLOlvFxobvv
-	JNyvIAAo66RZ5VwpzQOkm30C+alTGeZMqAq/Md8AJgTTl5r9n5CoXGQ1+sA3O7jZzVc2Sp9WeQd
-	MQuAhlJJC4fRdxt8p5FrileA40VOoCtWyfEmFjNkttt0WrXZzXOz1gdOgIRkWCvyyjPJnoX56mg
-	yg0YGdSC0aK6rgLXxEoRxqcqaB1g2fEXIxSiLBL00N4aMMCVyWig+pOuJNcRzdx+juSAptO4UXM
-	3Aom+4NMZFtwODYGCFL6rK6vhbM2VPqPn6j0pbSEYVf6Gxwpduqgi+NsycUEtKfOso6DCd/4eAt
-	2XCDR6Gp5a8IikaJ+Ylpd3Gl9zPe3
-X-Google-Smtp-Source: AGHT+IHxDDmFGa84W12vZqtf53NmGHtdif2gYB6Efz3zCfXjSc47WLKLMkpX9cKPOuKzJ3458fB86w==
-X-Received: by 2002:a05:6a00:18a7:b0:742:a0cf:7753 with SMTP id d2e1a72fcca58-742a97769efmr4786725b3a.3.1747398862149;
-        Fri, 16 May 2025 05:34:22 -0700 (PDT)
-Received: from carrot.. (i223-218-69-4.s41.a014.ap.plala.or.jp. [223.218.69.4])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9829c10sm1443078b3a.96.2025.05.16.05.34.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 05:34:21 -0700 (PDT)
-From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-nilfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Christoph Hellwig <hch@lst.de>
-Subject: [PATCH] nilfs2: remove wbc->for_reclaim handling
-Date: Fri, 16 May 2025 21:31:13 +0900
-Message-ID: <20250516123417.6779-1-konishi.ryusuke@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cw3RtLGo"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6A531C4CEEB;
+	Fri, 16 May 2025 12:36:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747398970;
+	bh=s6mJVg2trpUHXaM+kQ70RjDGFK4205sObTq4U0KZQ4U=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=Cw3RtLGoAbw+RG9lbPGU5gHUy/54hp1o8X2le+UEYHKoNEczQN3oL4+1j/XOrA/y6
+	 xEeTrmp/bGBi9s5BuYbXf42Ox3sAs8qbeFi9a9gc6O2I1lcLKsyMduD4aOHPVXWqJJ
+	 Y5K4w+HGmz12ZO+RzlEGXa9CEKDspOnCZ9XBq2CsPDvmSloZhPbZStVu/4UbyQNlvR
+	 Y+1834R0ueOnOzxDwQE7yA/npc/CwGr3UGMdUH1GF4ZZiepgw6VBpobwr2XBSo20F+
+	 AysmZ6Qpt5e5mL5M7w8k6MdIDyx8LUOV2qwvvM/ZHq6Ln+3eSI68zonDGag7m+MDZ9
+	 RmH0NmWXOLAoQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A9DC54756;
+	Fri, 16 May 2025 12:36:10 +0000 (UTC)
+From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
+Date: Fri, 16 May 2025 16:36:09 +0400
+Subject: [PATCH v4 2/5] dt-bindings: clock: qcom: Add CMN PLL support for
+ IPQ5018 SoC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250516-ipq5018-cmn-pll-v4-2-389a6b30e504@outlook.com>
+References: <20250516-ipq5018-cmn-pll-v4-0-389a6b30e504@outlook.com>
+In-Reply-To: <20250516-ipq5018-cmn-pll-v4-0-389a6b30e504@outlook.com>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Luo Jie <quic_luoj@quicinc.com>, 
+ Lee Jones <lee@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+ Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ George Moussalem <george.moussalem@outlook.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747398968; l=1855;
+ i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
+ bh=aD8B+18ScDcHtu0wgN3a3xFwWsO42AOs4yTmUEt8w/0=;
+ b=1t7T12dLAup2G5W/T5ptKD9g4I6S+cJNO9uRGkXcoO+o320Sw+adzuRnOeew6OUTq8OiKr6kD
+ lRxe0LFukJ/A3XaiUv9gDV0SR0/J1oM9sbUBK978u3TjwbTVH2si9oJ
+X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
+ pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
+X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
+ with auth_id=364
+X-Original-From: George Moussalem <george.moussalem@outlook.com>
+Reply-To: george.moussalem@outlook.com
 
-From: Christoph Hellwig <hch@lst.de>
+From: George Moussalem <george.moussalem@outlook.com>
 
-Since commit 013a07052a1a ("nilfs2: convert metadata aops from writepage
-to writepages"), nilfs_mdt_write_folio can't be called from reclaim
-context any more.  Remove the code keyed of the wbc->for_reclaim flag,
-which is now only set for writing out swap or shmem pages inside the
-swap code, but never passed to file systems.
+The CMN PLL block in the IPQ5018 SoC takes 96 MHZ as the reference
+input clock. Its output clocks are the XO (24Mhz), sleep (32Khz), and
+ethernet (50Mhz) clocks.
 
-Link: https://lkml.kernel.org/r/20250508054938.15894-7-hch@lst.de
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: George Moussalem <george.moussalem@outlook.com>
 ---
-Andrew, please add this to the queue for the next merge cycle.
+ .../devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml  |  1 +
+ include/dt-bindings/clock/qcom,ipq5018-cmn-pll.h         | 16 ++++++++++++++++
+ 2 files changed, 17 insertions(+)
 
-This removes dead code on nilfs2 regarding the for_reclaim flag in
-writeback control.  It is part of Christoph's series "stop passing a
-writeback_control to swap/shmem writeout", but I'm sending it ahead
-separately at his request.
+diff --git a/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml b/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml
+index cb6e09f4247f4b25105b25f4ae746c0b3ef47616..817d51135fbfdf0f518af1007ec7d6b120a91818 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml
++++ b/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml
+@@ -24,6 +24,7 @@ description:
+ properties:
+   compatible:
+     enum:
++      - qcom,ipq5018-cmn-pll
+       - qcom,ipq5424-cmn-pll
+       - qcom,ipq9574-cmn-pll
+ 
+diff --git a/include/dt-bindings/clock/qcom,ipq5018-cmn-pll.h b/include/dt-bindings/clock/qcom,ipq5018-cmn-pll.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..586d1c9b33b374331bef413f543c526212c18494
+--- /dev/null
++++ b/include/dt-bindings/clock/qcom,ipq5018-cmn-pll.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++
++#ifndef _DT_BINDINGS_CLK_QCOM_IPQ5018_CMN_PLL_H
++#define _DT_BINDINGS_CLK_QCOM_IPQ5018_CMN_PLL_H
++
++/* CMN PLL core clock. */
++#define IPQ5018_CMN_PLL_CLK			0
++
++/* The output clocks from CMN PLL of IPQ5018. */
++#define IPQ5018_XO_24MHZ_CLK			1
++#define IPQ5018_SLEEP_32KHZ_CLK			2
++#define IPQ5018_ETH_50MHZ_CLK			3
++#endif
 
-Thanks,
-Ryusuke Konishi
-
- fs/nilfs2/mdt.c     |  2 --
- fs/nilfs2/segment.c | 16 ----------------
- fs/nilfs2/segment.h |  1 -
- 3 files changed, 19 deletions(-)
-
-diff --git a/fs/nilfs2/mdt.c b/fs/nilfs2/mdt.c
-index 2f850a18d6e7..946b0d3534a5 100644
---- a/fs/nilfs2/mdt.c
-+++ b/fs/nilfs2/mdt.c
-@@ -422,8 +422,6 @@ static int nilfs_mdt_write_folio(struct folio *folio,
- 
- 	if (wbc->sync_mode == WB_SYNC_ALL)
- 		err = nilfs_construct_segment(sb);
--	else if (wbc->for_reclaim)
--		nilfs_flush_segment(sb, inode->i_ino);
- 
- 	return err;
- }
-diff --git a/fs/nilfs2/segment.c b/fs/nilfs2/segment.c
-index 83970d97840b..61a4141f8d6b 100644
---- a/fs/nilfs2/segment.c
-+++ b/fs/nilfs2/segment.c
-@@ -2221,22 +2221,6 @@ static void nilfs_segctor_do_flush(struct nilfs_sc_info *sci, int bn)
- 	spin_unlock(&sci->sc_state_lock);
- }
- 
--/**
-- * nilfs_flush_segment - trigger a segment construction for resource control
-- * @sb: super block
-- * @ino: inode number of the file to be flushed out.
-- */
--void nilfs_flush_segment(struct super_block *sb, ino_t ino)
--{
--	struct the_nilfs *nilfs = sb->s_fs_info;
--	struct nilfs_sc_info *sci = nilfs->ns_writer;
--
--	if (!sci || nilfs_doing_construction())
--		return;
--	nilfs_segctor_do_flush(sci, NILFS_MDT_INODE(sb, ino) ? ino : 0);
--					/* assign bit 0 to data files */
--}
--
- struct nilfs_segctor_wait_request {
- 	wait_queue_entry_t	wq;
- 	__u32		seq;
-diff --git a/fs/nilfs2/segment.h b/fs/nilfs2/segment.h
-index f723f47ddc4e..4b39ed43ae72 100644
---- a/fs/nilfs2/segment.h
-+++ b/fs/nilfs2/segment.h
-@@ -226,7 +226,6 @@ extern void nilfs_relax_pressure_in_lock(struct super_block *);
- extern int nilfs_construct_segment(struct super_block *);
- extern int nilfs_construct_dsync_segment(struct super_block *, struct inode *,
- 					 loff_t, loff_t);
--extern void nilfs_flush_segment(struct super_block *, ino_t);
- extern int nilfs_clean_segments(struct super_block *, struct nilfs_argv *,
- 				void **);
- 
 -- 
-2.43.0
+2.49.0
+
 
