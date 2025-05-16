@@ -1,126 +1,78 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412631FAA
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 05:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0771E1FAA;
+	Fri, 16 May 2025 05:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747371957; cv=none; b=sfGrMz8Ca9eJrAgEtsqqHGOet7+FIVhGMM+QympEobU5hVqD24KNRXQREKuPsfCrv8NzfKoOC/gT5+pxTtP4DVNSSwp3rpNaUCb3/YLKEUT+plHxw4VB4h8tOlhc/SYENxNNCANTHM4/waJWIELRyNc7VXh1SDV5jYvfiy+dgBg=
+	t=1747371995; cv=none; b=q3tn5KBRd2rhXLgIhILiKRp/bHjTWcc1OCrxRkwQuUStKP04Tndb8gf5N3HUkva2M246dIdHCJ8woH404NvBHVxc0jdcYhBMP4h4ZhAJQIOk2N8KYabV27iez2hkwfLbO+IG8S+DVi+oqLEb2Fus4itl1Tq9/QmPcxvm9LEOVRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747371957; c=relaxed/simple;
-	bh=pNM4L2X+L/0C3QZ8j2kxPo6S+C9SsxrBucubd4sDLhU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ItObrekFCtMfAipEHT/7dJ2bdr7O9qvG4NTGRDxlfF28VbaK4rHK3ONW8y2B6Nl4viZ25naFPdPEUgAd0UZR5xrdsVR7adNkieC/jU7c13K2u48YihObEvCAItujMKFOwT0TE609YmCRvNszGzeqrZX5uo9mhxc6xmsaWYj5zHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AesWd0/X; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1747371995; c=relaxed/simple;
+	bh=YdryWNyIKuDW1Oc5I6PriD/WKRFUP15ge9Pd6nr4mVQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tRiTurT5+fUCnazSMpSiyXb0ohvQ6ptSbMwfMXM0VwOOx0AzVZDm8DvnJLeilaMWHWm2g/ASZJGfnRpTdET+LC5DM4QWom+iecW6zup2lM0IbY/s9IDt4wakYx16XbpZStqG2RBNc84Y7GHKIu9DunLv98EmFn9hKt6cFJzwlPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EPPlPlGI; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AesWd0/X"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b170c99aa49so1101324a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 22:05:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1747371955; x=1747976755; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FZYfWobUsai4Anc24HWgooUiX7BPMHJRwh278DHkFhg=;
-        b=AesWd0/XCkddMsN0RPgeMbP0qqoZVe4N1wgXPHlUyA2XF35rqxp1LOOSFpgl+SCQAv
-         ID5XeK3ZO8I5W28EYRBOXc9Udl3Q3GZvzO9Xa+76bfEEkK1q+ZuWfNNZtzm+vtLO+aoQ
-         yDvjjq9tK+zRajZuJb/lYyQ7aq8YioMEG58+I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747371955; x=1747976755;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FZYfWobUsai4Anc24HWgooUiX7BPMHJRwh278DHkFhg=;
-        b=XP0dEItLpCFu3pjG/7Qvz5Se6w0zoN4aY2NS2v+CKs/2ssqwbAVKKSL1/1KF7gOA1F
-         /vohKR9Q8lWfF3k1y8yp5S5Ls0Xazg07ACi9xKR5Sid1+JotFrpBPYd3JhM7o8YL3FgV
-         5hZr11Y9CzJUNAm1dMHLJnw+56kE+zCmHyCrZpYhDhs2oKjFKbQLGCjBp6whBZGxeOrL
-         DSGOqUld+jJ1o/i5VD95D0SOtesWNCu+N8Vkb1gQNBkCCv1w4PdqMH9PgsafhHJ3w/nO
-         YAjMQMMMFdiOxWjy4ABwTkXy0/QavMBJspIFokdmO9mUehcgqDEzBFcnuGo+pbFQ7Zb8
-         NC0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVY1ryA/9TT+vnn/FOHAxU4eb0NRCALUvottfmaTCa+lqG64xV4wcXzhs1cgMgyxoEhVtVxaqtiEb+fKBE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8d4UCuh4jRpLjHedsC/Q6G4mp5zdjvHj4PBFER55aQsaI5lo3
-	NWjf/dgyy5Z1ThX2ZfnX71DY62ZR/NpvUFUCPQ+LmLeJuvI3sszUZL6UnfiZIhsMhA==
-X-Gm-Gg: ASbGnctc+JarAxU5vZR2Czgb/h3CrXd6+eSTiTFS2zsRdFuBZQn6EOzmuCswa2+0SMC
-	1DwgGsOC0jRTjbgov82izWae5XzBpu6A9B6ZEi8B6DwZBVLNdEJE43Lbnp7fj7IoSdeEv/M9wOp
-	oYRK+NdGakGjB8dJNmxRGeK9ZfaXDlXOYUpEnDerDUueQr3Hk6JNk3zdn42PGFENjLfjvxRe0hd
-	GjfCepbcQ0RuTxH/bB4xKUZ+ANpgl8uD6P/wmccPgr+oHAbxY58Xu63DbTTnwnoxoPMSnTNLftG
-	fykaX+3pM2AvjiAVxITqi40rVgG4KzUpSbPtnWEFxPwjxyf9vJ0Z9ahmrMBgctXOtgzYxA==
-X-Google-Smtp-Source: AGHT+IH0/GDb4r+wiufJP7iwzsEy+MWQRcekYSbQLeI/kLmTr/rbqnbWo/loA5DWMHtf5lSSzKhPKA==
-X-Received: by 2002:a17:903:22ce:b0:231:b456:b97 with SMTP id d9443c01a7336-231d459a539mr26785735ad.36.1747371955405;
-        Thu, 15 May 2025 22:05:55 -0700 (PDT)
-Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:c43a:aaea:5f52:5763])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e97de4sm6312355ad.144.2025.05.15.22.05.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 22:05:54 -0700 (PDT)
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-sound@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Subject: [PATCH] ASoC: soc-utils: Check string pointer validity in snd_soc_dlc_is_dummy()
-Date: Fri, 16 May 2025 13:05:48 +0800
-Message-ID: <20250516050549.407133-1-wenst@chromium.org>
-X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EPPlPlGI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=c/kXnQe3xBJvxiLTBwNnRGNRT5ysZ3DFWAv0O+/UyX4=; b=EPPlPlGISmDCej/eoIP/GfC61v
+	auBL/4dTZMPc5zVdfq7mq4ssKnR96MpKhEfNOu7Vo2W1AyVA6tB0IMqrN+9ajUdN1JS6lEc1ZaKWg
+	FNIyYFIhOy0uvxcav7UhhM1Tnhp0/vUUokzZsIRNoZ0o/NkXveE/ZeB87WPWRvjZIbCsM19n7XFDM
+	GNMneNUObX71OdbKfyUvQjtiLILGKmyUNa8h6TqZHNRT9FgRxxBMT4mT+YOml01XWIZ1wHPprzajv
+	E8L+1kdVBHoZF1zKnvT/E3+KvV7YL67g+/BAT23jVR8ALFx6eElHSRo5QuvkGkUT+xC5eil4YakEG
+	8EsHlWog==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uFnHB-00000002Ubj-25zH;
+	Fri, 16 May 2025 05:06:29 +0000
+Date: Thu, 15 May 2025 22:06:29 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: Christoph Hellwig <hch@infradead.org>, axboe@kernel.dk,
+	rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Jason Xing <kernelxing@tencent.com>,
+	Yushan Zhou <katrinzhou@tencent.com>
+Subject: Re: [PATCH v2 2/4] relayfs: introduce dump of relayfs statistics
+ function
+Message-ID: <aCbH1eA8Iicg_Fq_@infradead.org>
+References: <20250515061643.31472-1-kerneljasonxing@gmail.com>
+ <20250515061643.31472-3-kerneljasonxing@gmail.com>
+ <aCbBEg-DFYvx0Dpa@infradead.org>
+ <CAL+tcoBtLu6_E1qKL9VHOiCe_RVpEGzMiMqA3GpPi1Z88aMiWw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL+tcoBtLu6_E1qKL9VHOiCe_RVpEGzMiMqA3GpPi1Z88aMiWw@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-In the recently added snd_soc_dlc_is_dummy(), the helper uses the .name
-and .dai_name fields without checking their validity.
+On Fri, May 16, 2025 at 01:02:59PM +0800, Jason Xing wrote:
+> Do you mean make it inline in include/linux/relay.h like how
+> relay_write() works?
+> 
+> Will do that.
 
-For .name, this field is NULL if the component is matched by .of_node
-instead. In fact, only one of these fields may be set. This caused a
-NULL pointer dereference on MediaTek MT8195 and MT8188 platforms with
-the subsequent conversion to snd_soc_dlc_is_dummy() in their machine
-drivers. The codecs are all matches through the device tree, so their
-.name fields are empty.
+Just drop the extern, which is not needed:
 
-For .dai_name, there are cases where this field is empty, such as for
-the following component definitions:
+size_t relay_dump(struct rchan *chan, int flags);
 
-	#define COMP_EMPTY()                    { }
-	#define COMP_PLATFORM(_name)            { .name = _name }
-	#define COMP_AUX(_name)                 { .name = _name }
-	#define COMP_CODEC_CONF(_name)          { .name = _name }
+> >
+> > This export seems unused even with the entire series applied.
+> 
+> My initial thought was to provide a symbol for some kernel modules to use.
 
-Or the single link CPU DAI case in the simple audio card family, as
-covered by simple_util_canonicalize_cpu(), in which the .dai_name
-field is explicitly cleared.
-
-To fix this, check the validity of the fields before using them in
-string comparison.
-
-Fixes: 3e021f3b8115 ("ASoC: soc-utils: add snd_soc_dlc_is_dummy()")
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
----
- sound/soc/soc-utils.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/sound/soc/soc-utils.c b/sound/soc/soc-utils.c
-index a1bcc852a6de..c8adfff826bd 100644
---- a/sound/soc/soc-utils.c
-+++ b/sound/soc/soc-utils.c
-@@ -267,8 +267,8 @@ int snd_soc_dlc_is_dummy(struct snd_soc_dai_link_component *dlc)
- 	if (dlc == &snd_soc_dummy_dlc)
- 		return true;
- 
--	if (strcmp(dlc->name,	  snd_soc_dummy_dlc.name)	== 0 ||
--	    strcmp(dlc->dai_name, snd_soc_dummy_dlc.dai_name)	== 0)
-+	if ((dlc->name     && strcmp(dlc->name,     snd_soc_dummy_dlc.name)     == 0) ||
-+	    (dlc->dai_name && strcmp(dlc->dai_name, snd_soc_dummy_dlc.dai_name) == 0))
- 		return true;
- 
- 	return false;
--- 
-2.49.0.1101.gccaa498523-goog
+The only user is blktrace, which can't be modular.  Or you plan to
+submit a modular user soon, like in the next merge window/  If so
+note that and add a pointer to it in the cover letter.
 
