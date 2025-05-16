@@ -1,217 +1,119 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A13C21171C
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7604E2309BD;
+	Fri, 16 May 2025 09:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747388034; cv=none; b=Vp7Wc/5tWOXVyc04J6a803gjIw/Ob+US/VR84aC7Bvg7hbCPYVFsY2agfm/mkv+xZufilDK37aQ2vodbDGugDAj7L5tzItejtt1WIyOpMbJP+hS0wFR2OvLD5+mpY7ZsOxDXsTcM1xbgRsJUk4OVwMfCQHY0cs130WOG5OsDUZE=
+	t=1747388088; cv=none; b=bp004soj0sTUmDp8FpPpon34u9Rc8em19eu2FcUPiUvp+LWTH9j4KsJEVqDPbdHE7Y285vbC6yKWLbgR1LuBLfU3Y4LsFsH3gzOp1Pzy0aUjPILjJUCy1VoWReVKy5ms9OcJ9SPCwoVqEMcMAVUQ+NDgxKj2OGM6L3ut3FIL/ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747388034; c=relaxed/simple;
-	bh=ZSlGy000gEykfwOcOmdIXPyiWWidh4HnSDVyE1R4rlA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kiugC9GANWKwembpi/fCjaLbHpmiXobkOkcIqtfall7LPD5C3nd24W3TSbqoKY8hoHiwPYLZY18pEDCKdoDeX5qy7C4hBpvVlbgm/mXjQhRTtOPhnrDUc4igP6PI2VeMdcEZ5ifh6B7qNV+N+LPbtu8LMOFX4kAu26XKTP+0aQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=lpXke6mF; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="lpXke6mF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=AjoOsfyXisgNrLF8CSMxt99k4q2kuHs9TnfDI4yhKCk=; b=lpXke6mFsPFAWRyFqNrNKY+fx7
-	43vVe0r4JT74kdag4nXpNAdriSAiEmx/fv9RlG8vk3RW7XTM/WrnEI5Y171IG27t0OGFDiMmFlInL
-	+NGlF+pG4JIAc0/9GoKqtdU1fFYcyERJH2yrAmtXBc4TEiJdk939GTG1PzoH3RMPhQUtqOdYKWYhl
-	7DbhRR40Vu9UpThnFiUE8veoqW6JJPR2wG/MlFESMeIfc0aWAzvK2ZJAn6MOGM/DVw9vNpC5S3ikj
-	OUsjERryuqmhW92PAlJz3+dI26g9CqMB38wQt5EbKL4A+9lHxnXgqNdQSYXFAS9+x9O6aWW+4JrAs
-	EbcLeDnA==;
-Received: from [81.79.92.254] (helo=[192.168.0.101])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uFrLo-0091Lf-PM; Fri, 16 May 2025 11:33:31 +0200
-Message-ID: <1297389f-70f6-4813-8de8-1a0c4f92250a@igalia.com>
-Date: Fri, 16 May 2025 10:33:30 +0100
+	s=arc-20240116; t=1747388088; c=relaxed/simple;
+	bh=LPH3ITaFyNefo+OblDhxJ0ojDQcLwWHzXvs37vIVZp8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O6V0/LDslEPCWJdVlotQYYCLnfkBVtl39G77emuqaAC/SZPNdj9jzTAb6zfZwBXrZAqHT3MgtVQNBDkKbcQ6HDc9uV9AecX9NdmPM7J/mY7udStLobvIr7h8QGhGYQLfkXbm6/eyeJ1kat1UCdGFogRrS+HusSukeABIFO9Mvf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: RA+nlMiRRvi8hhhwuQu69Q==
+X-CSE-MsgGUID: +21mhxjdQmWxtSUsd2xg+g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="60377799"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="60377799"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:34:45 -0700
+X-CSE-ConnectionGUID: fLaAG/btR5SMA2g4YFPH5Q==
+X-CSE-MsgGUID: dq6PJxrSRra9fXN6iR/toQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="138531481"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:34:40 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uFrSe-000000026C6-3j2d;
+	Fri, 16 May 2025 12:34:36 +0300
+Date: Fri, 16 May 2025 12:34:36 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Jonathan Santos <Jonathan.Santos@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	nuno.sa@analog.com, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com,
+	Pop Paul <paul.pop@analog.com>
+Subject: Re: [PATCH v8 10/11] iio: adc: ad7768-1: add filter type and
+ oversampling ratio attributes
+Message-ID: <aCcGrKEIdvnPRq-w@smile.fi.intel.com>
+References: <cover.1747175187.git.Jonathan.Santos@analog.com>
+ <1aff0f813bb3fee55c5483be860b6885abdb81e5.1747175187.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/6] drm/sched: Prevent teardown waitque from blocking
- too long
-To: Philipp Stanner <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>,
- Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, Danilo Krummrich <dakr@redhat.com>
-References: <20250424095535.26119-2-phasta@kernel.org>
- <20250424095535.26119-4-phasta@kernel.org>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-In-Reply-To: <20250424095535.26119-4-phasta@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1aff0f813bb3fee55c5483be860b6885abdb81e5.1747175187.git.Jonathan.Santos@analog.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-
-On 24/04/2025 10:55, Philipp Stanner wrote:
-> The waitqueue that ensures that drm_sched_fini() blocks until the
-> pending_list has become empty could theoretically cause that function to
-> block for a very long time. That, ultimately, could block userspace
-> procesess and prevent them from being killable through SIGKILL.
+On Thu, May 15, 2025 at 06:14:21PM -0300, Jonathan Santos wrote:
+> Separate filter type and decimation rate from the sampling frequency
+> attribute. The new filter type attribute enables sinc3, sinc3+rej60
+> and wideband filters, which were previously unavailable.
 > 
-> When a driver calls drm_sched_fini(), it is safe to assume that all
-> still pending jobs are not needed anymore anyways. Thus, they can be
-> cancelled and thereby it can be ensured that drm_sched_fini() will
-> return relatively quickly.
+> Previously, combining decimation and MCLK divider in the sampling
+> frequency obscured performance trade-offs. Lower MCLK divider
+> settings increase power usage, while lower decimation rates reduce
+> precision by decreasing averaging. By creating an oversampling
+> attribute, which controls the decimation, users gain finer control
+> over performance.
 > 
-> Implement a new helper to stop all work items / submission except for
-> the drm_sched_backend_ops.run_job().
+> The addition of those attributes allows a wider range of sampling
+> frequencies and more access to the device features. Sampling frequency
+> table is updated after every digital filter parameter change.
 > 
-> Implement a driver callback, kill_fence_context(), that instructs the
-> driver to kill the fence context associated with this scheduler, thereby
-> causing all pending hardware fences to be signalled.
-> 
-> Call those new routines in drm_sched_fini() and ensure backwards
-> compatibility if the new callback is not implemented.
-> 
-> Suggested-by: Danilo Krummrich <dakr@redhat.com>
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> ---
->   drivers/gpu/drm/scheduler/sched_main.c | 47 +++++++++++++++++---------
->   include/drm/gpu_scheduler.h            | 11 ++++++
->   2 files changed, 42 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
-> index ea82e69a72a8..c2ad6c70bfb6 100644
-> --- a/drivers/gpu/drm/scheduler/sched_main.c
-> +++ b/drivers/gpu/drm/scheduler/sched_main.c
-> @@ -1390,31 +1390,46 @@ drm_sched_no_jobs_pending(struct drm_gpu_scheduler *sched)
->   	return empty;
->   }
->   
-> +/**
-> + * drm_sched_cancel_jobs_and_wait - trigger freeing of all pending jobs
-> + * @sched: scheduler instance
-> + *
-> + * Must only be called if &struct drm_sched_backend_ops.kill_fence_context is
-> + * implemented.
-> + *
-> + * Instructs the driver to kill the fence context associated with this scheduler,
-> + * thereby signalling all pending fences. This, in turn, will trigger
-> + * &struct drm_sched_backend_ops.free_job to be called for all pending jobs.
-> + * The function then blocks until all pending jobs have been freed.
-> + */
-> +static inline void
-> +drm_sched_cancel_jobs_and_wait(struct drm_gpu_scheduler *sched)
-> +{
-> +	sched->ops->kill_fence_context(sched);
-> +	wait_event(sched->pending_list_waitque, drm_sched_no_jobs_pending(sched));
-> +}
-> +
->   /**
->    * drm_sched_fini - Destroy a gpu scheduler
->    *
->    * @sched: scheduler instance
->    *
-> - * Tears down and cleans up the scheduler.
-> - *
-> - * Note that this function blocks until all the fences returned by
-> - * &struct drm_sched_backend_ops.run_job have been signalled.
-> + * Tears down and cleans up the scheduler. Might leak memory if
-> + * &struct drm_sched_backend_ops.kill_fence_context is not implemented.
->    */
->   void drm_sched_fini(struct drm_gpu_scheduler *sched)
->   {
->   	struct drm_sched_entity *s_entity;
->   	int i;
->   
-> -	/*
-> -	 * Jobs that have neither been scheduled or which have timed out are
-> -	 * gone by now, but jobs that have been submitted through
-> -	 * backend_ops.run_job() and have not yet terminated are still pending.
-> -	 *
-> -	 * Wait for the pending_list to become empty to avoid leaking those jobs.
-> -	 */
-> -	drm_sched_submission_and_timeout_stop(sched);
-> -	wait_event(sched->pending_list_waitque, drm_sched_no_jobs_pending(sched));
-> -	drm_sched_free_stop(sched);
-> +	if (sched->ops->kill_fence_context) {
-> +		drm_sched_submission_and_timeout_stop(sched);
-> +		drm_sched_cancel_jobs_and_wait(sched);
-> +		drm_sched_free_stop(sched);
-> +	} else {
-> +		/* We're in "legacy free-mode" and ignore potential mem leaks */
-> +		drm_sched_wqueue_stop(sched);
-> +	}
->   
->   	for (i = DRM_SCHED_PRIORITY_KERNEL; i < sched->num_rqs; i++) {
->   		struct drm_sched_rq *rq = sched->sched_rq[i];
-> @@ -1502,7 +1517,7 @@ bool drm_sched_wqueue_ready(struct drm_gpu_scheduler *sched)
->   EXPORT_SYMBOL(drm_sched_wqueue_ready);
->   
->   /**
-> - * drm_sched_wqueue_stop - stop scheduler submission
-> + * drm_sched_wqueue_stop - stop scheduler submission and freeing
+> Changes in the sampling frequency are not allowed anymore while in
+> buffered mode.
 
-Looks like the kerneldoc corrections (below too) belong to the previous 
-patch. Irrelevant if you decide to squash them though.
+...
 
->    * @sched: scheduler instance
->    *
->    * Stops the scheduler from pulling new jobs from entities. It also stops
-> @@ -1518,7 +1533,7 @@ void drm_sched_wqueue_stop(struct drm_gpu_scheduler *sched)
->   EXPORT_SYMBOL(drm_sched_wqueue_stop);
->   
->   /**
-> - * drm_sched_wqueue_start - start scheduler submission
-> + * drm_sched_wqueue_start - start scheduler submission and freeing
->    * @sched: scheduler instance
->    *
->    * Restarts the scheduler after drm_sched_wqueue_stop() has stopped it.
-> diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
-> index d0b1f416b4d9..8630b4a26f10 100644
-> --- a/include/drm/gpu_scheduler.h
-> +++ b/include/drm/gpu_scheduler.h
-> @@ -509,6 +509,17 @@ struct drm_sched_backend_ops {
->            * and it's time to clean it up.
->   	 */
->   	void (*free_job)(struct drm_sched_job *sched_job);
-> +
-> +	/**
-> +	 * @kill_fence_context: kill the fence context belonging to this scheduler
-
-Which fence context would that be? ;)
-
-Also, "fence context" would be a new terminology in gpu_scheduler.h API 
-level. You could call it ->sched_fini() or similar to signify at which 
-point in the API it gets called and then the fact it takes sched as 
-parameter would be natural.
-
-We also probably want some commentary on the topic of indefinite (or 
-very long at least) blocking a thread exit / SIGINT/TERM/KILL time. 
-Cover letter touches upon that problem but I don't see you address it. 
-Is the idea to let drivers shoot themselves in the foot or what?
-
-Regards,
-
-Tvrtko
-
-> +	 *
-> +	 * Needed to cleanly tear the scheduler down in drm_sched_fini(). This
-> +	 * callback will cause all hardware fences to be signalled by the driver,
-> +	 * which, ultimately, ensures that all jobs get freed before teardown.
-> +	 *
-> +	 * This callback is optional, but it is highly recommended to implement it.
+> +	/*
+> +	 * Maximum dec_rate is limited by the MCLK_DIV value and by the ODR.
+> +	 * The edge case is for MCLK_DIV = 2, ODR = 50 SPS.
+> +	 * max_dec_rate <= MCLK / (2 * 50)
 > +	 */
-> +	void (*kill_fence_context)(struct drm_gpu_scheduler *sched);
->   };
->   
->   /**
+> +	max_dec_rate = st->mclk_freq / 100;
+> +	dec_rate = clamp(dec_rate, 32, max_dec_rate);
+> +	/*
+> +	 * Calculate the equivalent value to sinc3 decimation ratio
+> +	 * to be written on the SINC3_DEC_RATE register:
+> +	 *  Value = (DEC_RATE / 32) -1
+
+- 1
+(mind the space)
+
+> +	 */
+> +	dec_rate = DIV_ROUND_UP(dec_rate, 32) - 1;
+
+...
+
+>  {
+>  	struct ad7768_state *st = iio_priv(indio_dev);
+>  
+> -	return st->dec_rate == 8 ? AD7768_SCAN_TYPE_HIGH_SPEED :
+> +	return st->oversampling_ratio == 8 ? AD7768_SCAN_TYPE_HIGH_SPEED :
+>  		AD7768_SCAN_TYPE_NORMAL;
+
+With the proposed change in the previous patches this change will become
+clearer to read, i.e. no-one needs to check if the actual value was changed.
+
+>  }
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
