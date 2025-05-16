@@ -1,134 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBB81361
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 12:00:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDC91361;
+	Fri, 16 May 2025 12:06:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747396824; cv=none; b=fmXuO7rHk4GCT/oRvrXDYX7P9OU5Dwq7ys//Ba03pyuDVnrxRpDiiKoRrWHPS9DoHaciko8Vr4iFITFuEHJICzNlLKvD+OOQHwLdH6HtEy7v1/cr9445pprdjoYILncdVzV980XBKL+yW3bDzfAFedbjKslyaUJVWi6XQ5Thd7M=
+	t=1747397213; cv=none; b=UHeNdF2KzTHTvrFaI+8hgS4xqKs9VwxVyBNMdxh9LCd9ukdfkAfNv5ryd7wC/PuBLKt4cr/A/ocS1Curl5/Z+QC9Hy+Ec6HXtRsXFikvGAM06sdyTi0tuYx5DcBybhmAVUO6/PZNyqg1QutuV/wpFBbkgtkyb0c8pUI8vZF8JA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747396824; c=relaxed/simple;
-	bh=Qa4y3GKkOrdDTRVqctWigtG5EuAl1QVHRyJ3XDg5GgQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eDojBTzPRWLUTL5Mtk+u6dk/V2TcLLeHnOPJ5LiAj+BNlpcPJWkw+7eF05Z0/E+g04lnV1cvN4/p+JudalmEzFPCAxL6AXsdNWxr2aUuOQ+z/FUKZjfGncSMptttZukIAQySp23ngNgme3YW1S0YdFG5H0XKUiVK8K6SkDi+4hM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z5JTBLi8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747397213; c=relaxed/simple;
+	bh=YVC5S9ZL3DJBFupA3JCCgZgdIfQCsHEqHZ600McfhKo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rLHZo6YQck1fUD7/+dM3O9NnjI6/0DQwTwGb41jcrBJXQn90/R0pT/1D0zCRnYWO3KK2Xp9OMb9sd4mSTmOBaNkto3yxflQUk3Tr10ItPLC14oJIsUT+sTqfDmM/Z84exq4KrkSiFyBSEBZtxAcntP9v0MUc48VUHyVhy+hXF90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RX6+G9yC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z5JTBLi8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9940C4CEE4;
-	Fri, 16 May 2025 12:00:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RX6+G9yC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35145C4CEE4;
+	Fri, 16 May 2025 12:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747396823;
-	bh=Qa4y3GKkOrdDTRVqctWigtG5EuAl1QVHRyJ3XDg5GgQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z5JTBLi86om3e1ktFqyK9J1w3qVtyTj4drUlCJ8fOOfIx22CBRF4gOwlHPds/Czn1
-	 3OaBhbxhIQwbEkKsJhIN5bpGxzWvoSdzxPejoxiERNzhFhfZBCcAkFiWB4f7jFg3x6
-	 jQ5PQyvsC/nu6Le9Jr3VhGgfsVgsl5lPWBE5Apfx0l8uM0NZDjtscqdk/ItWcqcPGq
-	 gkC8JYIjdrL36c3jrbKiI2bFaRizn6N85qfESnYYyQd1PjZESLKbUxmlaK8lwecnY4
-	 AlVxKcNpvN4/27iLfqLYqe946Du1Npgrw3LUnd1rXyA+mQN9SPlT4SIlqXL5MxaPlz
-	 0LdXI6nFfW6NQ==
-Date: Fri, 16 May 2025 14:00:17 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-Cc: Philipp Stanner <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, Danilo Krummrich <dakr@redhat.com>
-Subject: Re: [PATCH v2 2/6] drm/sched: Prevent teardown waitque from blocking
- too long
-Message-ID: <aCco0RFRVM1POr6J@pollux>
-References: <20250424095535.26119-2-phasta@kernel.org>
- <20250424095535.26119-4-phasta@kernel.org>
- <1297389f-70f6-4813-8de8-1a0c4f92250a@igalia.com>
- <aCcLMhS5kyD60PEX@pollux>
- <e152d20b-c62e-47d9-a891-7910d1d24c6a@igalia.com>
- <aCcZSA79X9Nk2mzh@pollux>
- <24173faf-c2f0-4d08-93db-587891dc8b5d@igalia.com>
+	s=k20201202; t=1747397213;
+	bh=YVC5S9ZL3DJBFupA3JCCgZgdIfQCsHEqHZ600McfhKo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=RX6+G9yCD2cqcY4Ffqv68F3AHQI1luiKN1nyR39iy7FK/dqfN6dyIykaBFIPIbu8Z
+	 TZew2gR9Jaw5f8lLGS4im/wCCP+a7obSfnE285H0ZuuPF/qaSRdPAtaJsk5htiS/Q8
+	 YlvOaP0135woHv4kqXZoaT8mR/1nlrCkJkFMOMUcc0GVHjbW+OLp5/5MYWYKyBhDRJ
+	 0VTzyCbZZdGGl2eJ3rQrrk3f/v0OSVBn40qM3izXoR5XGi+p2deUNSanBeyVv8rpu2
+	 THi/JvbD+lFYxDUW+36YALf8h6aZFNGr//O5Cz4VVZjlnYI40G2tw8IVpot9sMObTm
+	 pktOP2UHrgu0A==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uFtpz-00FXq5-0g;
+	Fri, 16 May 2025 13:06:51 +0100
+From: Marc Zyngier <maz@kernel.org>
+To: Wei-Lin Chang <r09922117@csie.ntu.edu.tw>
+Cc: Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Jintack Lim <jintack@cs.columbia.edu>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: arm64: nv: Remove clearing of ICH_LR<n>.EOI if ICH_LR<n>.HW == 1
+Date: Fri, 16 May 2025 13:06:47 +0100
+Message-Id: <174739720148.2525124.8020669410674069519.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250512133223.866999-1-r09922117@csie.ntu.edu.tw>
+References: <20250512133223.866999-1-r09922117@csie.ntu.edu.tw>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <24173faf-c2f0-4d08-93db-587891dc8b5d@igalia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: r09922117@csie.ntu.edu.tw, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, jintack@cs.columbia.edu, christoffer.dall@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Fri, May 16, 2025 at 12:35:52PM +0100, Tvrtko Ursulin wrote:
+On Mon, 12 May 2025 21:32:23 +0800, Wei-Lin Chang wrote:
+> In the case of ICH_LR<n>.HW == 1, bit 41 of LR is just a part of pINTID
+> without EOI meaning, and bit 41 will be zeroed by the subsequent clearing
+> of ICH_LR_PHYS_ID_MASK anyway.
+> No functional changes intended.
 > 
-> On 16/05/2025 11:54, Danilo Krummrich wrote:
-> > On Fri, May 16, 2025 at 11:19:50AM +0100, Tvrtko Ursulin wrote:
-> > > 
-> > > On 16/05/2025 10:53, Danilo Krummrich wrote:
-> > > > On Fri, May 16, 2025 at 10:33:30AM +0100, Tvrtko Ursulin wrote:
-> > > > > On 24/04/2025 10:55, Philipp Stanner wrote:
-> > > > > > +	 * @kill_fence_context: kill the fence context belonging to this scheduler
-> > > > > 
-> > > > > Which fence context would that be? ;)
-> > > > 
-> > > > There's one one per ring and a scheduler instance represents a single ring. So,
-> > > > what should be specified here?
-> > > 
-> > > I was pointing out the fact not all drivers are 1:1 sched:entity.
-> > 
-> > I'm well aware, but how is that relevant? Entities don't have an associated
-> > fence context, but a GPU Ring (either hardware or software) has, which a
-> > scheduler instance represents.
 > 
-> Aha! Well.. how it is relevant and do entities not have an associated fence
-> context? Well, entity->fence_context.. that was my first association this
-> whole time. Never it crossed my mind this is talking about the hardware
-> fence context. Proof in the pudding naming should be improved.
 
-It says "fence context belonging to this scheduler", which should be
-unambiguous, however I agree that we could mark out the difference even more.
+Applied to next, thanks!
 
-> But I also don't think there is a requirement for fences returned from
-> ->run_job() to have a single context. Which again makes it not the best
-> naming.
+[1/1] KVM: arm64: nv: Remove clearing of ICH_LR<n>.EOI if ICH_LR<n>.HW == 1
+      commit: 92c749e4aa90cd684d87cb5bde6a9d51e83fe6e3
 
-It's implied by the fact that a scheduler instance represents a ring. Having
-multiple fence contexts per ring doesn't make any sense.
+Cheers,
 
-But it's indeed not written down -- we should do that then.
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
 
-> > In the callback the driver should neither tear down an entity, nor the whole
-> > scheduler, hence we shouldn't call it like that. sched_kill() is therefore
-> > misleading as well.
-> 
->  ->sched_exit()? ->sched_stop()? ->sched_cleanup()?
 
-I think this all would throw up questions like "What does {exit,stop,cleanup}
-mean in this context?". And the answer would be "kill the fence context of the
-ring represented by the scheduler".
-
-I think we want a name that represents that without an indirection that we have
-to define.
-
-> > It should be named after what it actually does (or should do). Feel free to
-> > propose a different name that conforms with that.
-> > 
-> > > > > We also probably want some commentary on the topic of indefinite (or very
-> > > > > long at least) blocking a thread exit / SIGINT/TERM/KILL time.
-> > > > 
-> > > > You mean in case the driver does implement the callback, but does *not* properly
-> > > > tear down the fence context? So, you ask for describing potential consequences
-> > > > of drivers having bugs in the implementation of the callback? Or something else?
-> > > 
-> > > I was proposing the kerneldoc for the vfunc should document the callback
-> > > must not block, or if blocking is unavoidable, either document a guideline
-> > > on how long is acceptable. Maybe even enforce a limit in the scheduler core
-> > > itself.
-> > 
-> > Killing the fence context shouldn't block.
-> 
-> Cool. And maybe convert the wait_event to wait_event_timeout with a warning
-> to be robust.
-
-That would make sense if it could deadlock, but even if the driver does nothing
-it should terminate eventually. The rule that we always rely on is that we
-guarantee throughout the kernel that fences are signalled eventually.
