@@ -1,69 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA64FC1D;
-	Fri, 16 May 2025 14:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0FCFC1D;
+	Fri, 16 May 2025 14:04:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747404177; cv=none; b=aysilkJnywP08va3KnY5kTgM+aNzUrbf6Eze9rFt9F5XuyC9OVBLqRg2hYH1rBsASeaz0nxRvWxQOf9l0zZk/s+tPxyfOjKaHrCkGbjgz0DGFvgbfR+PxAHlQvGkmivpI75rQh6NRTd5m9JQwbm59RHWsFi3iIhEFMigNVqlRNk=
+	t=1747404296; cv=none; b=L4RV4rD5noqxQ4+Ge8YVa66cjlz8UabsiXGM/xlfGP9QrTKAdHCqziqSEWZDv/ah8mLLQx5iR5UvlPTbOX9uD8OTGc65HBR534yK7T1Vkim+T03lUPEDvCWNjAxZi9TTp0uOVaUjxtktdc9P7T5WGAkMbPC3gDFGqPCrPz53fkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747404177; c=relaxed/simple;
-	bh=XD5LW1X8Za8qYgmHHCMJojUWKp2P7yuhRCd7itD26lo=;
+	s=arc-20240116; t=1747404296; c=relaxed/simple;
+	bh=AcX7tJ/ZUkuJv8Tg+tmGlLiFwaFyI1AG9s7LQ2m9uK8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U/OqElIWENcUZyQC95gNZJLFCrpys2EEYyRt2SZiTgD7z6Jf32egtPnLoAIQBxxB8/cvNCqVCKl0oQhizaHatAybsrGFsRUG8V2ebz8ZHb5UXftL0EOYW5sdv36ZdMtgrrroE6kV/KoevSXbaYaArpVVf1XsM/s0tnI9dxUARQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JllxqA74; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=njcl3vDJH+uHd1YQ0ZiaJN3Kgo4IFPXjWVM6crvlXVeqHM5001hFKcKIym4PcR3Gj2Xu4mubkzWzs9acO+mU4/ggXt47VZ3q/y5G4WFc4XCGzKMcMXMxfjWjff2uv/5F7lbj5wBzbxprMpiznWB+m31LsUXwrfk6nnz/7HAEkrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FWXEi9y0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JllxqA74"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747404177; x=1778940177;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XD5LW1X8Za8qYgmHHCMJojUWKp2P7yuhRCd7itD26lo=;
-  b=JllxqA74mq/yQjzpbNgf3FK+rzg9hWY+7kjMFUXOPOHQT8CPQyB/GbQr
-   jr2Od9NDw31cOjb+x8t0nQm23S5AqIvXpXZTWrZrvrJisgZJ0QaCy+64D
-   fYIPOs1W/Y1+raWqx/uZcy2DVBEebj3jUJ3sH3gOzoOIvKb2cw2XiKKUh
-   LvIvX7b9AGfwc12eIOxb9oJDdp20YaCQTDicw8rPZq2fxa3auRdQT2kha
-   ljeH8Yky5wlLNK0gB0F3KWM7O/5RHj1PKwTMido0153kAadtJTLnCDEBM
-   p0I6QGmkNNaRITYbMWGo6ukpBErXWh3ZvViGKPfiJQ7WDwML0yTEsa8yQ
-   Q==;
-X-CSE-ConnectionGUID: EdcAXMIaRiWVWSI5ewwPcw==
-X-CSE-MsgGUID: JtsSB7aGQmClbsmOW+U43A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="53049001"
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="53049001"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 07:01:48 -0700
-X-CSE-ConnectionGUID: ZTRg3ApCQOeOOdReIf9O4g==
-X-CSE-MsgGUID: OLEkQDUZR2y+jHsqHAwl6A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="139101238"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa008.fm.intel.com with ESMTP; 16 May 2025 07:01:42 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 0FE981BC; Fri, 16 May 2025 17:01:20 +0300 (EEST)
-Date: Fri, 16 May 2025 17:01:20 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Jan Kiszka <jan.kiszka@siemens.com>, 
-	Kieran Bingham <kbingham@kernel.org>, Michael Roth <michael.roth@amd.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Brijesh Singh <brijesh.singh@amd.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Juergen Gross <jgross@suse.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-efi@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCHv3 2/4] x86/64/mm: Make SPARSEMEM_VMEMMAP the only memory
- model
-Message-ID: <rqkfqkkli57fbd5zkj3bwko44kmqqwnfdm766snm26y2so52ss@6it24qxv356q>
-References: <20250516123306.3812286-1-kirill.shutemov@linux.intel.com>
- <20250516123306.3812286-3-kirill.shutemov@linux.intel.com>
- <30570ca0-8da4-4ebc-84d6-0a4badfb7154@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FWXEi9y0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEE4EC4CEE4;
+	Fri, 16 May 2025 14:04:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747404295;
+	bh=AcX7tJ/ZUkuJv8Tg+tmGlLiFwaFyI1AG9s7LQ2m9uK8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FWXEi9y0sujjRRuBmABfYG8aC8Yb7Ogj/u2xJ6sng23hf5pdWO2uNgvuZ7suPU89g
+	 VuOGWbFRg0G4wOkLNGFvFjeRM03/+EX2ebf8mpM+ftoXYYW5TWTBNpKt2d1IWXM87n
+	 si6S4k12240nPIvNtouc1TuXPp7VzoppyggtYqcCCJ3Mtz/q6UHkkiovr3bA5YwQPw
+	 bvsaONlIpfUmZhIt2kfPfx/PST5Mi5+tl9UivVejq4c0RWDco1eOMGWGMEI1Phr482
+	 GSlJDRrPzIxp+85quro+fUgIgRxIDepmx0Xk9fHJjDw8nm2BxRnMiw2v+vLKc4p6Ri
+	 AHbivDFiHCJHA==
+Date: Fri, 16 May 2025 15:04:50 +0100
+From: Will Deacon <will@kernel.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	john.ogness@linutronix.de,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 17/22] arm64: mm: Add page fault trace points
+Message-ID: <20250516140449.GB13612@willie-the-truck>
+References: <cover.1745999587.git.namcao@linutronix.de>
+ <554038c996662282df8a9d0482ef06f8d44fccc5.1745999587.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,28 +47,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <30570ca0-8da4-4ebc-84d6-0a4badfb7154@intel.com>
+In-Reply-To: <554038c996662282df8a9d0482ef06f8d44fccc5.1745999587.git.namcao@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Fri, May 16, 2025 at 06:42:03AM -0700, Dave Hansen wrote:
-> On 5/16/25 05:33, Kirill A. Shutemov wrote:
-> > 5-level paging only supports SPARSEMEM_VMEMMAP. CONFIG_X86_5LEVEL is
-> > being phased out, making 5-level paging support mandatory.
-> > 
-> > Make CONFIG_SPARSEMEM_VMEMMAP mandatory for x86-64 and eliminate
-> > any associated conditional statements.
-> I think we have ourselves a catch-22 here.
+On Wed, Apr 30, 2025 at 01:02:32PM +0200, Nam Cao wrote:
+> Add page fault trace points, which are useful to implement RV monitor which
+> watches page faults.
 > 
-> SPARSEMEM_VMEMMAP was selected because the other sparsemem modes
-> couldn't handle a dynamic MAX_PHYS{MEM,ADDR}_BITS introduced by 5-level
-> paging. Now you're proposing making it static again, but keeping the
-> SPARSEMEM_VMEMMAP dependency.
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> ---
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> ---
+>  arch/arm64/mm/fault.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> If you remove the dynamic MAX_PHYS{MEM,ADDR}_BITS, you should also
-> remove the dependency on SPARSEMEM_VMEMMAP. No?
+> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> index ef63651099a9..e3f096b0dffd 100644
+> --- a/arch/arm64/mm/fault.c
+> +++ b/arch/arm64/mm/fault.c
+> @@ -44,6 +44,9 @@
+>  #include <asm/tlbflush.h>
+>  #include <asm/traps.h>
+>  
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/exceptions.h>
+> +
+>  struct fault_info {
+>  	int	(*fn)(unsigned long far, unsigned long esr,
+>  		      struct pt_regs *regs);
+> @@ -559,6 +562,11 @@ static int __kprobes do_page_fault(unsigned long far, unsigned long esr,
+>  	if (kprobe_page_fault(regs, esr))
+>  		return 0;
+>  
+> +	if (user_mode(regs))
+> +		trace_page_fault_user(addr, regs, esr);
+> +	else
+> +		trace_page_fault_kernel(addr, regs, esr);
 
-I guess. But how?
+Why is this after kprobe_page_fault()?
 
-And is there any value to support !SPARSEMEM_VMEMMAP?
+It's also a shame that the RV monitor can't hook into perf, as we
+already have a sw event for page faults that you could use instead of
+adding something new.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Will
