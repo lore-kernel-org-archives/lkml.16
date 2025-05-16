@@ -1,84 +1,164 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ECEC21C18A
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:17:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A70F4213E8E
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747390652; cv=none; b=VFXJP6QMabmzTrloBsxz1H5omqxOCyIUH1d2GgCjdy3dE2He5d01KmJ8ywZArSBmnvZ+G+aqVr2OGizfJGW1TXrr8fidZNNuEvJVdGZIpB7hb7UgdDuRl+aU4Ltn1qYPAvf7kneXfu6VOlv8GLCKtmhQ+Q8R2r5unvw115NrfC4=
+	t=1747390665; cv=none; b=LsE0BLJRGbjag6bbiaFy/RvQ6RzlU+vXxay1xJIA6upScS5dRjL4kDdOdqEdaruLbofJDXsxjwTTous/DhSQsjrVN7+bMdYvC5A3Q8hSbKwPE4/ENbwS7zT7Mgg8tHcG1mAUiIyrhiJ7NnNgNWJ5fbzKbKqxkVcWVtSRfC+letg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747390652; c=relaxed/simple;
-	bh=Xol6wi0uV1fmTpSn2Y8V20Qyl8nzYWBqxDUmPlg3yJM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=lUWAorMlH4WqV0q2EFCuvupUdfpuOn3bgZTPuWCkvReDfE+L+IIOtwNnRd9ekJY3cbWxcgva8SChXLTtygpHDdBw/IfumesZG160FX0UisVGWI8bnUuV394SrWK5RFaXCYk+rgkqme3oGR5zAUkrwNoOWk8RL88/wvWZ2aj0kkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3db8522a300so13621085ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 03:17:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747390649; x=1747995449;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6M2DPVjlQQj1l7tZgOW7xpWl0T5tZezkpbkFHSK1Y5E=;
-        b=IyWlDL4JW/YTalZsDiNI/+xWKEXv6BDpeEP4clD9WWUDC6HPFl6086IoApO8Pwg0fZ
-         loECAFPCEA6ZoBSCziS7i0+xvdoNaWXhEcOGX9n+FVOFEX7+jymJR36TcRnRcqRKvcwz
-         TMAvGrmRLLmbu/vPlTVTXPSVoivq4TQBrH8O+veVj9/qhDwIwutS6LH6vAUj4/R5q35B
-         iR9DBE9Gem1SU2nDs+pbSVvlxWO4Kk8Xqfq6KJ38Z/sL3DU0QyUzx2aOLQVr+cAJ7o9I
-         nlBsc46Xz2+b2PXwNyEaYdRFN8rAt9OHghHGflIaJ8iJcDpfhM/gTpKpQ9eqe54Mc02H
-         nsnA==
-X-Forwarded-Encrypted: i=1; AJvYcCX7aUF6r/csRu2tgxCK5uBYiCDkVyraDkF70dMVBb5je/bKJJW7AdzMchDSvM6jPdVT54lMk6gWYpdrihE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0I/Y9aswQ21/hPiHV+RIcdVeOv6l2d8r6sphAJTRma1Axs904
-	+duz1HwfYKJithAMl2UI6Pm9V83xm5c6WhIEHUKkBIoObHbBLXFH4XGIstL4GiplmxZ4e3mhQ0o
-	/trIZ+NcmONPwld6Io+mpBPbS1/mdfsoDu+XruwYBz3nHPansJ/7YHMa9ULY=
-X-Google-Smtp-Source: AGHT+IGfopz6HPz9olGYC+CF+abURQHYa4/P/72pxan4xxCeMOnsBg7LfD2zgeozwxYJl9XRuPS2SrDFjXshZ3Oivd2P5DV71rBk
+	s=arc-20240116; t=1747390665; c=relaxed/simple;
+	bh=mjxgZTlaJ0bk/qVD2RmINx8GDGAic+62Ege7yBhYlZY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=opcPS8bfdbGdrm890rhmuosaJbwfbbzhgpbkNqt8xv6IaYwYsgXrNh8KlWc8yO2gwhoNg7cTTyqDh6cF5G+1H+T9iKnXf+w7NfD+BglFaZ0xGp4T2DBEsnzK7EyZ9CePeIE3z8r+2XUF9im6lrqQH8fQPmdHUNlQkBo/72zs+1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KMz7hydx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=hxWR4sMr; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=KMz7hydx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=hxWR4sMr; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KMz7hydx";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="hxWR4sMr";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="KMz7hydx";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="hxWR4sMr"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id BE35A218B5;
+	Fri, 16 May 2025 10:17:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747390661; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uO9x4Sj1nJ4i5yMk2K2202lgmAIgPbzgztfZFEf1C/Q=;
+	b=KMz7hydxziyn9aIus2oIxGgbw9Nxi7FN7VDzXbj540J145/NeAZoZIZiSCD+FpTEvF+0Yt
+	rrkoI7N/mqH9AKME5HtSF5xcJORpsuhN5lHyk383ZsxYcb0KUrUaBPlsGUS1uJ/Pz2YJTc
+	czO5Yi4iFCEWN9jler0mUvD7Xv0ZSBo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747390661;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uO9x4Sj1nJ4i5yMk2K2202lgmAIgPbzgztfZFEf1C/Q=;
+	b=hxWR4sMrJ1SQRVmnAh2q6k32MzTT6fdNlrbbseEgjYwi7BUUuyFhaItapNla+1sZSjbqAn
+	PHR5XEulWkXhToBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747390661; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uO9x4Sj1nJ4i5yMk2K2202lgmAIgPbzgztfZFEf1C/Q=;
+	b=KMz7hydxziyn9aIus2oIxGgbw9Nxi7FN7VDzXbj540J145/NeAZoZIZiSCD+FpTEvF+0Yt
+	rrkoI7N/mqH9AKME5HtSF5xcJORpsuhN5lHyk383ZsxYcb0KUrUaBPlsGUS1uJ/Pz2YJTc
+	czO5Yi4iFCEWN9jler0mUvD7Xv0ZSBo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747390661;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uO9x4Sj1nJ4i5yMk2K2202lgmAIgPbzgztfZFEf1C/Q=;
+	b=hxWR4sMrJ1SQRVmnAh2q6k32MzTT6fdNlrbbseEgjYwi7BUUuyFhaItapNla+1sZSjbqAn
+	PHR5XEulWkXhToBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B2A8713411;
+	Fri, 16 May 2025 10:17:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id SemZK8UQJ2hVfQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 16 May 2025 10:17:41 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 57F6CA09DD; Fri, 16 May 2025 12:17:37 +0200 (CEST)
+Date: Fri, 16 May 2025 12:17:37 +0200
+From: Jan Kara <jack@suse.cz>
+To: Davidlohr Bueso <dave@stgolabs.net>
+Cc: brauner@kernel.org, jack@suse.cz, viro@zeniv.linux.org.uk, 
+	mcgrof@kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] fs/buffer: optimize discard_buffer()
+Message-ID: <khepgn2kxjm7tcfntoxuocalp6zesrpjbsurwi6ynjetwxocdp@mrhw7g7wa7mh>
+References: <20250515173925.147823-1-dave@stgolabs.net>
+ <20250515173925.147823-5-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:18c7:b0:3d8:1bd0:9a79 with SMTP id
- e9e14a558f8ab-3db84334fa6mr37329945ab.21.1747390649487; Fri, 16 May 2025
- 03:17:29 -0700 (PDT)
-Date: Fri, 16 May 2025 03:17:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <682710b9.a70a0220.38f255.0001.GAE@google.com>
-Subject: [syzbot] Monthly smc report (May 2025)
-From: syzbot <syzbot+listf6f56d6a8ea41d6b17f7@syzkaller.appspotmail.com>
-To: jaka@linux.ibm.com, linux-kernel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, 
-	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com, wenjia@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515173925.147823-5-dave@stgolabs.net>
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -3.80
 
-Hello smc maintainers/developers,
+On Thu 15-05-25 10:39:25, Davidlohr Bueso wrote:
+> While invalidating, the clearing of the bits in discard_buffer()
+> is done in one fully ordered CAS operation. In the past this was
+> done via individual clear_bit(), until e7470ee89f0 (fs: buffer:
+> do not use unnecessary atomic operations when discarding buffers).
+> This implies that there were never strong ordering requirements
+> outside of being serialized by the buffer lock.
+> 
+> As such relax the ordering for archs that can benefit. Further,
+> the implied ordering in buffer_unlock() makes current cmpxchg
+> implied barrier redundant due to release semantics. And while in
+> theory the unlock could be part of the bulk clearing, it is
+> best to leave it explicit, but without the double barriers.
+> 
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 
-This is a 31-day syzbot report for the smc subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/smc
+Yes, we just want to clear several flag bits as cheaply as possible while
+other tasks can be modifying other flags. You change makes sense so feel
+free to add:
 
-During the period, 0 new issues were detected and 0 were fixed.
-In total, 12 issues are still open.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Some of the still happening issues:
+								Honza
 
-Ref Crashes Repro Title
-<1> 299     Yes   general protection fault in smc_diag_dump_proto
-                  https://syzkaller.appspot.com/bug?extid=f69bfae0a4eb29976e44
-<2> 82      Yes   possible deadlock in smc_release
-                  https://syzkaller.appspot.com/bug?extid=621fd56ba002faba6392
-<3> 71      Yes   general protection fault in __smc_diag_dump (3)
-                  https://syzkaller.appspot.com/bug?extid=271fed3ed6f24600c364
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+> ---
+>  fs/buffer.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/buffer.c b/fs/buffer.c
+> index 210b43574a10..f0fc78910abf 100644
+> --- a/fs/buffer.c
+> +++ b/fs/buffer.c
+> @@ -1616,8 +1616,8 @@ static void discard_buffer(struct buffer_head * bh)
+>  	bh->b_bdev = NULL;
+>  	b_state = READ_ONCE(bh->b_state);
+>  	do {
+> -	} while (!try_cmpxchg(&bh->b_state, &b_state,
+> -			      b_state & ~BUFFER_FLAGS_DISCARD));
+> +	} while (!try_cmpxchg_relaxed(&bh->b_state, &b_state,
+> +				      b_state & ~BUFFER_FLAGS_DISCARD));
+>  	unlock_buffer(bh);
+>  }
+>  
+> -- 
+> 2.39.5
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
