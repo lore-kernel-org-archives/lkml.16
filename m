@@ -1,279 +1,197 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9429E1C84A1
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 20:26:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24452222B2;
+	Fri, 16 May 2025 20:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747427178; cv=none; b=n5kd6pc7/SaMZtstfvRDFsZZr9PzqKGpQQIexaXrgsEwJA4NxGIBbgTSxix76Xe0WCkxDL+hxVoRbSvTnRBwVIdos+VKqeURFpv/rA//glPJRaATr6+zHO6r+igxYyVpJ8IPRnuYb1mLpMiK0I+0G23KuTW02ITIkMv9fhZ+css=
+	t=1747427500; cv=none; b=YAFNF1CKFW/xv97rQKsdKGIp8s5eIHB9pYbMtfesQf8taW3noJcthgOZEDa/i19uTI/b/zzld5UeTcmQ+O/z0DQz9n7T9tyOYrRtQAaFKkv4eAWZAiL6oEB/3wC7jwAX2GJ9KBYRwwpk5gZYKfBDEuTdFhGSxS8/PscU83bC0FQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747427178; c=relaxed/simple;
-	bh=aoUi559TcBbVXOT1mOLhinOxSo81UkFp8l42knSwhE0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=TDT72g4MpBJ1cuNThkFWLGC1X5GJDtcRrH5/PpgG+at8JgiSCWfEznD6jj1uZVC9ovICS85pTwJPTXExYDTQ3p+8doOofl1qa5iQi/Ll59lFF2yDWv1kQCaT0k9JHTb9W74WiN8oMPtqxUcHXPlLjX4IFtjpBYxsxAm+DpwNjh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0siapPWH; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1747427500; c=relaxed/simple;
+	bh=qTJ9PhQppKfr6sTEGZkSzY3sxbqWKV4iAdv2JVLwdh0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HtTy1yQwWNJ1w4WibJVVkjs3Efll+saj6OiVEv7/bgyaAjtoW1HsHPEanOrcLdUZx/ub0v34/r5oYFhk67QWOuGSsmbGfAaHBKT3ZmXgR4L0aLTA7s7I1rKJWIeJ9NRBqVyq67XKLQbtTGbpV/+jpEqc4nvGwKMZ+bXWR3cwgBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KFfuKVI4; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0siapPWH"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7394792f83cso1942460b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 13:26:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747427176; x=1748031976; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uNYsA1VxpeAmKMsl0ZmuzjWNkULRjyT0q4ZSttGXwmE=;
-        b=0siapPWHsrYSCYgc++f+j71JGfg+tTNG9SMOdSoD04aVxz3wZNMRG71YP3q4dq5df9
-         49gojksGCvrTnUciJVbKSvkTHDDfXS73eda7DwFQEnN4UeMlHvAJl7y9iSh+3JOeg9ca
-         4qpYVsPmymDjb6DsePDNmtbVc5iTFBGek/lb6yil9W9+p4DVOzYl5kIlckH27VlDwkxc
-         AbR2/BP2mAAltJE4a9ODkamabhfv8MyIRR5QFN+U9BO+RKK/2oSRBNNptqm3QuLBtsx5
-         sHjjS7ZWRNtsQ9w9heFosz2Agjmhu8Til+4dF3xlPA5GWfQ3u3DQJT3BQkBe8aeMlJ1e
-         u/5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747427176; x=1748031976;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uNYsA1VxpeAmKMsl0ZmuzjWNkULRjyT0q4ZSttGXwmE=;
-        b=Cyan7dqbob5dmZOjBWhXflevK0T15iG9S/brB7ouKc5FDq113kVV4/P2i4soeDI4VR
-         Ow5LtpK9BUKsqjRCJVvvwzKTWyhyE0+6vQ/RJIAaerWtrdPhQgDAj1LLFUzuAc9edl21
-         cLd+S0uOO6kBL6o5850IpOkTU9pC6iE5mYneII9AxlQ/GFGaN1KYZIwdDeD7tG/TFTTy
-         isZzpBbafWmevEMvWmf0l1a+eB41eqUijbKnC7lXRyKWzI0MfQ4iyvztcU8h/AYMOS9K
-         x5OgybiaXpgPmccLttBb7IbcoMlRImjGsh+90JZrFYr76LsVyy6MPsWsCyvV6sS1O3YZ
-         hNVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVIw9a3EOW0jBg+pVXC2ZyrDFBxFPlJz+leysDsr9xEcQXd61i2QC8YEgXIkZkskJZC0Cc2zO+3ncdkXgo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyudLNU/cKoPrtDSBocbEqb9WCElya8vCAb5Cz0QNvw5z2ofm60
-	9h4sNCfm7bYW/oOqhYy+J3Nl6FvKgXHdkF1whDvDzrx0sLyfG7A2ZU28pECHDkUYESeml6iqF31
-	MEDeTxqAuIP8MTbUyIop/xbP5YA==
-X-Google-Smtp-Source: AGHT+IGfoQoSez5L7XMlxA74tcaMgsb6OuotCbmC/vXVp/yg3sAHFsjCX4IagThUsKW7q3KLy4Ee5VF0Th4MiQ5ZJw==
-X-Received: from pfgu25.prod.google.com ([2002:a05:6a00:999:b0:736:38eb:5860])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:3c96:b0:73e:30af:f479 with SMTP id d2e1a72fcca58-742a98ad9famr5898497b3a.19.1747427175604;
- Fri, 16 May 2025 13:26:15 -0700 (PDT)
-Date: Fri, 16 May 2025 13:26:14 -0700
-In-Reply-To: <682799177f074_345d2c29482@iweiny-mobl.notmuch>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KFfuKVI4"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54GKVMEg3823228;
+	Fri, 16 May 2025 15:31:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1747427482;
+	bh=q5jd8Ds/yfDobLR7+jYkuWBZogZM9/eXyQcFuNW2VFY=;
+	h=From:To:CC:Subject:Date;
+	b=KFfuKVI415YzdgFKokiz4dnQ0gNrn7QgHjeDd8ASyuLJpfa9DukQGk+SN73Gdvyh6
+	 gPDOZVgmeBCrdLGzSfZ+cJ05XXqbiy7VzUCkzuJLFIF93Mj8NtknRsmxGsLyxpc2oY
+	 c+nv8UhPQyIlMznRiGCCpUzi57iszYGUCWJHsuwI=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54GKVMMJ156872
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Fri, 16 May 2025 15:31:22 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 16
+ May 2025 15:31:21 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 16 May 2025 15:31:22 -0500
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54GKVL0a020449;
+	Fri, 16 May 2025 15:31:21 -0500
+From: Judith Mendez <jm@ti.com>
+To: Judith Mendez <jm@ti.com>, Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf
+ Hansson <ulf.hansson@linaro.org>
+CC: Josua Mayer <josua@solid-run.com>, <linux-mmc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>,
+        Francesco Dolcini
+	<francesco@dolcini.it>,
+        Hiago De Franco <hiagofranco@gmail.com>, Moteen Shah
+	<m-shah@ti.com>
+Subject: [PATCH v6] mmc: sdhci_am654: Add SDHCI_QUIRK2_SUPPRESS_V1P8_ENA quirk to am62 compatible
+Date: Fri, 16 May 2025 15:31:21 -0500
+Message-ID: <20250516203121.3736379-1-jm@ti.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <6827969540b5d_345b8829485@iweiny-mobl.notmuch>
- <682799177f074_345d2c29482@iweiny-mobl.notmuch>
-Message-ID: <diqzh61kfgk9.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH v2 00/51] 1G page support for guest_memfd
-From: Ackerley Tng <ackerleytng@google.com>
-To: Ira Weiny <ira.weiny@intel.com>, kvm@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org, 
-	afranji@google.com
-Cc: aik@amd.com, ajones@ventanamicro.com, akpm@linux-foundation.org, 
-	amoorthy@google.com, anthony.yznaga@oracle.com, anup@brainfault.org, 
-	aou@eecs.berkeley.edu, bfoster@redhat.com, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, catalin.marinas@arm.com, chao.p.peng@intel.com, 
-	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com, 
-	dmatlack@google.com, dwmw@amazon.co.uk, erdemaktas@google.com, 
-	fan.du@intel.com, fvdl@google.com, graf@amazon.com, haibo1.xu@intel.com, 
-	hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
-	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	thomas.lendacky@amd.com, usama.arif@bytedance.com, vannapurve@google.com, 
-	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
-	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
-	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
-	yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Ira Weiny <ira.weiny@intel.com> writes:
+Add a new struct for platform data for the ti,am62-sdhci compatible to
+apply additional quirks, namely "SDHCI_QUIRK2_SUPPRESS_V1P8_ENA", to
+host controllers with am62 compatible.
 
-> Ira Weiny wrote:
->> Ackerley Tng wrote:
->> > Hello,
->> > 
->> > This patchset builds upon discussion at LPC 2024 and many guest_memfd
->> > upstream calls to provide 1G page support for guest_memfd by taking
->> > pages from HugeTLB.
->> > 
->> > This patchset is based on Linux v6.15-rc6, and requires the mmap support
->> > for guest_memfd patchset (Thanks Fuad!) [1].
->> 
->> Trying to manage dependencies I find that Ryan's just released series[1]
->> is required to build this set.
->> 
->> [1] https://lore.kernel.org/all/cover.1747368092.git.afranji@google.com/
->> 
->> Specifically this patch:
->> 	https://lore.kernel.org/all/1f42c32fc18d973b8ec97c8be8b7cd921912d42a.1747368092.git.afranji@google.com/
->> 
->> 	defines
->> 
->> 	alloc_anon_secure_inode()
->
-> Perhaps Ryan's set is not required?  Just that patch?
->
-> It looks like Ryan's 2/13 is the same as your 1/51 patch?
->
-> https://lore.kernel.org/all/754b4898c3362050071f6dd09deb24f3c92a41c3.1747368092.git.afranji@google.com/
->
-> I'll pull 1/13 and see where I get.
->
-> Ira
->
->> 
->> Am I wrong in that?
->>
+Note, the fix was originally introduced by commit 941a7abd4666
+("mmc: sdhci_am654: Add sdhci_am654_start_signal_voltage_switch") but was
+found to be applied too broadly and had to be reverted.
 
-My bad, this patch was missing from this series:
+This fixes MMC init failures seen across am62x boards.
 
-From bd629d1ec6ffb7091a5f996dc7835abed8467f3e Mon Sep 17 00:00:00 2001
-Message-ID: <bd629d1ec6ffb7091a5f996dc7835abed8467f3e.1747426836.git.ackerleytng@google.com>
-From: Ackerley Tng <ackerleytng@google.com>
-Date: Wed, 7 May 2025 07:59:28 -0700
-Subject: [RFC PATCH v2 1/1] fs: Refactor to provide function that allocates a
- secure anonymous inode
-
-alloc_anon_secure_inode() returns an inode after running checks in
-security_inode_init_security_anon().
-
-Also refactor secretmem's file creation process to use the new
-function.
-
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-Change-Id: I4eb8622775bc3d544ec695f453ffd747d9490e40
+Fixes: ac5a41b472b4 ("Revert "mmc: sdhci_am654: Add sdhci_am654_start_signal_voltage_switch"")
+Fixes: 941a7abd4666 ("mmc: sdhci_am654: Add sdhci_am654_start_signal_voltage_switch")
+Cc: stable@vger.kernel.org
+Suggested-by: Nishanth Menon <nm@ti.com>
+Signed-off-by: Judith Mendez <jm@ti.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- fs/anon_inodes.c   | 22 ++++++++++++++++------
- include/linux/fs.h |  1 +
- mm/secretmem.c     |  9 +--------
- 3 files changed, 18 insertions(+), 14 deletions(-)
+Changes since v5:
+- Drop sdhci_am62_4bit_pdata
+- Pick Adrians tag
+- Add note to commit message
 
-diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
-index 583ac81669c2..4c3110378647 100644
---- a/fs/anon_inodes.c
-+++ b/fs/anon_inodes.c
-@@ -55,17 +55,20 @@ static struct file_system_type anon_inode_fs_type = {
- 	.kill_sb	= kill_anon_super,
+Tested on am62x SK, am64x EVM and am64x SK. Tested-bys are welcome
+
+Link to v5:
+https://lore.kernel.org/linux-mmc/20250514002513.1179186-1-jm@ti.com/
+Link to v4:
+https://lore.kernel.org/linux-mmc/20250424180036.1541568-1-jm@ti.com/
+Link to v3 RESEND:
+https://lore.kernel.org/linux-mmc/8678d284-db12-451a-b789-2b75f9932f9f@ti.com
+Link to v2:
+https://lore.kernel.org/linux-mmc/20250417182652.3521104-1-jm@ti.com/
+Link to v1:
+https://lore.kernel.org/linux-mmc/20250407222702.2199047-1-jm@ti.com/
+---
+ drivers/mmc/host/sdhci_am654.c | 35 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
+index f75c31815ab0..73385ff4c0f3 100644
+--- a/drivers/mmc/host/sdhci_am654.c
++++ b/drivers/mmc/host/sdhci_am654.c
+@@ -155,6 +155,7 @@ struct sdhci_am654_data {
+ 	u32 tuning_loop;
+ 
+ #define SDHCI_AM654_QUIRK_FORCE_CDTEST BIT(0)
++#define SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA BIT(1)
  };
  
--static struct inode *anon_inode_make_secure_inode(
--	const char *name,
--	const struct inode *context_inode)
-+static struct inode *anon_inode_make_secure_inode(struct super_block *s,
-+		const char *name, const struct inode *context_inode,
-+		bool fs_internal)
- {
- 	struct inode *inode;
- 	int error;
- 
--	inode = alloc_anon_inode(anon_inode_mnt->mnt_sb);
-+	inode = alloc_anon_inode(s);
- 	if (IS_ERR(inode))
- 		return inode;
--	inode->i_flags &= ~S_PRIVATE;
-+
-+	if (!fs_internal)
-+		inode->i_flags &= ~S_PRIVATE;
-+
- 	error =	security_inode_init_security_anon(inode, &QSTR(name),
- 						  context_inode);
- 	if (error) {
-@@ -75,6 +78,12 @@ static struct inode *anon_inode_make_secure_inode(
- 	return inode;
+ struct window {
+@@ -166,6 +167,7 @@ struct window {
+ struct sdhci_am654_driver_data {
+ 	const struct sdhci_pltfm_data *pdata;
+ 	u32 flags;
++	u32 quirks;
+ #define IOMUX_PRESENT	(1 << 0)
+ #define FREQSEL_2_BIT	(1 << 1)
+ #define STRBSEL_4_BIT	(1 << 2)
+@@ -356,6 +358,29 @@ static void sdhci_j721e_4bit_set_clock(struct sdhci_host *host,
+ 	sdhci_set_clock(host, clock);
  }
  
-+struct inode *alloc_anon_secure_inode(struct super_block *s, const char *name)
++static int sdhci_am654_start_signal_voltage_switch(struct mmc_host *mmc, struct mmc_ios *ios)
 +{
-+	return anon_inode_make_secure_inode(s, name, NULL, true);
-+}
-+EXPORT_SYMBOL_GPL(alloc_anon_secure_inode);
++	struct sdhci_host *host = mmc_priv(mmc);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_am654_data *sdhci_am654 = sdhci_pltfm_priv(pltfm_host);
++	int ret;
 +
- static struct file *__anon_inode_getfile(const char *name,
- 					 const struct file_operations *fops,
- 					 void *priv, int flags,
-@@ -88,7 +97,8 @@ static struct file *__anon_inode_getfile(const char *name,
- 		return ERR_PTR(-ENOENT);
++	if ((sdhci_am654->quirks & SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA) &&
++	    ios->signal_voltage == MMC_SIGNAL_VOLTAGE_180) {
++		if (!IS_ERR(mmc->supply.vqmmc)) {
++			ret = mmc_regulator_set_vqmmc(mmc, ios);
++			if (ret < 0) {
++				pr_err("%s: Switching to 1.8V signalling voltage failed,\n",
++				       mmc_hostname(mmc));
++				return -EIO;
++			}
++		}
++		return 0;
++	}
++
++	return sdhci_start_signal_voltage_switch(mmc, ios);
++}
++
+ static u8 sdhci_am654_write_power_on(struct sdhci_host *host, u8 val, int reg)
+ {
+ 	writeb(val, host->ioaddr + reg);
+@@ -650,6 +675,12 @@ static const struct sdhci_am654_driver_data sdhci_j721e_4bit_drvdata = {
+ 	.flags = IOMUX_PRESENT,
+ };
  
- 	if (make_inode) {
--		inode =	anon_inode_make_secure_inode(name, context_inode);
-+		inode = anon_inode_make_secure_inode(anon_inode_mnt->mnt_sb,
-+						     name, context_inode, false);
- 		if (IS_ERR(inode)) {
- 			file = ERR_CAST(inode);
- 			goto err;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 016b0fe1536e..0fded2e3c661 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3550,6 +3550,7 @@ extern int simple_write_begin(struct file *file, struct address_space *mapping,
- extern const struct address_space_operations ram_aops;
- extern int always_delete_dentry(const struct dentry *);
- extern struct inode *alloc_anon_inode(struct super_block *);
-+extern struct inode *alloc_anon_secure_inode(struct super_block *, const char *);
- extern int simple_nosetlease(struct file *, int, struct file_lease **, void **);
- extern const struct dentry_operations simple_dentry_operations;
++static const struct sdhci_am654_driver_data sdhci_am62_4bit_drvdata = {
++	.pdata = &sdhci_j721e_4bit_pdata,
++	.flags = IOMUX_PRESENT,
++	.quirks = SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA,
++};
++
+ static const struct soc_device_attribute sdhci_am654_devices[] = {
+ 	{ .family = "AM65X",
+ 	  .revision = "SR1.0",
+@@ -872,7 +903,7 @@ static const struct of_device_id sdhci_am654_of_match[] = {
+ 	},
+ 	{
+ 		.compatible = "ti,am62-sdhci",
+-		.data = &sdhci_j721e_4bit_drvdata,
++		.data = &sdhci_am62_4bit_drvdata,
+ 	},
+ 	{ /* sentinel */ }
+ };
+@@ -906,6 +937,7 @@ static int sdhci_am654_probe(struct platform_device *pdev)
+ 	pltfm_host = sdhci_priv(host);
+ 	sdhci_am654 = sdhci_pltfm_priv(pltfm_host);
+ 	sdhci_am654->flags = drvdata->flags;
++	sdhci_am654->quirks = drvdata->quirks;
  
-diff --git a/mm/secretmem.c b/mm/secretmem.c
-index 1b0a214ee558..c0e459e58cb6 100644
---- a/mm/secretmem.c
-+++ b/mm/secretmem.c
-@@ -195,18 +195,11 @@ static struct file *secretmem_file_create(unsigned long flags)
- 	struct file *file;
- 	struct inode *inode;
- 	const char *anon_name = "[secretmem]";
--	int err;
+ 	clk_xin = devm_clk_get(dev, "clk_xin");
+ 	if (IS_ERR(clk_xin)) {
+@@ -940,6 +972,7 @@ static int sdhci_am654_probe(struct platform_device *pdev)
+ 		goto err_pltfm_free;
+ 	}
  
--	inode = alloc_anon_inode(secretmem_mnt->mnt_sb);
-+	inode = alloc_anon_secure_inode(secretmem_mnt->mnt_sb, anon_name);
- 	if (IS_ERR(inode))
- 		return ERR_CAST(inode);
++	host->mmc_host_ops.start_signal_voltage_switch = sdhci_am654_start_signal_voltage_switch;
+ 	host->mmc_host_ops.execute_tuning = sdhci_am654_execute_tuning;
  
--	err = security_inode_init_security_anon(inode, &QSTR(anon_name), NULL);
--	if (err) {
--		file = ERR_PTR(err);
--		goto err_free_inode;
--	}
--
- 	file = alloc_file_pseudo(inode, secretmem_mnt, "secretmem",
- 				 O_RDWR, &secretmem_fops);
- 	if (IS_ERR(file))
+ 	pm_runtime_get_noresume(dev);
+
+base-commit: 8566fc3b96539e3235909d6bdda198e1282beaed
 -- 
-2.49.0.1101.gccaa498523-goog
+2.49.0
 
->> > 
->> > For ease of testing, this series is also available, stitched together,
->> > at https://github.com/googleprodkernel/linux-cc/tree/gmem-1g-page-support-rfc-v2
->> > 
->> 
->> I went digging in your git tree and then found Ryan's set.  So thanks for
->> the git tree.  :-D
-
-Glad that helped!
-
->> 
->> However, it seems this add another dependency which should be managed in
->> David's email of dependencies?
-
-This is a good idea. David, do you think these two patches should be
-managed as a separate patch series in the email of dependencies?
-
-+ (left out of RFCv2, but is above) "fs: Refactor to provide function that allocates a secure anonymous inode"
-+ 01/51 "KVM: guest_memfd: Make guest mem use guest mem inodes instead of anonymous inodes"
-
-They're being used by a few patch series now.
-
->> 
->> Ira
->> 
