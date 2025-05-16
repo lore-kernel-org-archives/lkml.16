@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95EB028031D;
-	Fri, 16 May 2025 21:35:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9D428033C;
+	Fri, 16 May 2025 21:35:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747431345; cv=none; b=lT7v3kmFANZyeMuUfHJxbauh7DM/D4ZTc2o2k7+PUKEQ3EdmqIMH4uZ+982Ug+Kh/gWHbU07dfsYsy2GmOCsW0MK4I1JdSFryUDanJbDSOCh8uD/z9PToJ+75G5rjipH+nNkxK0RL7ZnLMqV89jFOeQ7jPxENgj1Gu3AoUmg/hg=
+	t=1747431346; cv=none; b=ryLbJkjSX45vMii0LUgzHkyBeoZzCUoElv601ZkE8hH4Tm80vCisOhn7HuNVfQYcWvXii9ZDqfG6gNwfqOcD2/zkiVGuK3Xpi5+Jt33EPzAk2ldxiIln/MDNPDAipG3kYOn/HZ5/lJ4bm+yQG5OvJiP+ec+AqTaVGa/6WAqlzJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747431345; c=relaxed/simple;
-	bh=j1ruRMNqvYg22uItOxJBvLjPf2urbsTmYoBaw8oZ93E=;
+	s=arc-20240116; t=1747431346; c=relaxed/simple;
+	bh=BzobJcLxLeRhDRDPjKP3jskHkbluaiGCUjUvUOw9ZAk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sS2blg5tw+8xosv0jry8SndbEOoaGPd627in3QIdKzdRn6bzV5Iw/3XgweT5EqApTYXuIIwls1zBarxV8AKPTT6T9DMZrQkfisCjWEb8741s44ZBmFD5d73VYcm6h8Ro7nUDuYyREoKTW/JjB8gW+pdGHcaPOBwXalo3rRn8EI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hCJVlDCl; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=JbunRWb+VhG31BbD65ubitpEAusUj3C0NCcQNnD3jIZGp6GYDcfo12Kk8yv7O+AM2TFQQgh9LaLCcTV2/3dL2mTXEpsewn9PHS2dRPXN6GzcXUKPT2IhKpIhe80goqJvveDHotv+/0FNlbuwTlN+ef6+t5U0MTKYZnW1M5/IaGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cKfZDR+M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hCJVlDCl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1643C4CEE9;
-	Fri, 16 May 2025 21:35:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cKfZDR+M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8993FC4CEE4;
+	Fri, 16 May 2025 21:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747431343;
-	bh=j1ruRMNqvYg22uItOxJBvLjPf2urbsTmYoBaw8oZ93E=;
+	s=k20201202; t=1747431345;
+	bh=BzobJcLxLeRhDRDPjKP3jskHkbluaiGCUjUvUOw9ZAk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hCJVlDClmNIfMNPDJikF5f8+4dp1aX3y0Hc7Dpnw27kNKONV9qSJUW7TYbtS+sZ+S
-	 RHNhIWNFIcOeJq7K5vz1BBDcVBYBjRhgBUH03IKM9cfTm5PiOO5SWsZQYDjircWlvy
-	 V8Js2a5erk9l1bs0iLQoFpfUR7FLVLJKf/aNaUTeqi7w73OzLd+IxzRhmNtgOIBXky
-	 LYje8srQSekNwzypexSQVLwuZkCWn6X5aQaIi4tujBuJDMNW4CConWdubPDIyy8cwA
-	 HKMylv+9wKX0Mn1HmDkqc2gp8J+GjORvg9F/kaO8ucMovOhCIQ828RvDq/yuaPjyaJ
-	 nNaz+tHUSDFnQ==
-Message-ID: <c8ff6830-5d22-45f0-8130-c6b434dc897d@kernel.org>
-Date: Fri, 16 May 2025 21:34:20 +0200
+	b=cKfZDR+MaIEqFaysttriomJeoCA4Put4Nr85iYrsye09Rd0jfT2Qj3QIvUkIqMvSc
+	 yvakqjZH0+j7/+BQCdzOPwDpV4W0/daEC+J1Sz1JYv/PJLEbi56maTtSkgOH77pKvt
+	 588QrPgb2xPKDPaUwG7d/Iax29pTi9lhGT93J3kstohiXgotPaGvCcxd1nRsoUZ8Q5
+	 aM7MofHFEdoTaxcn5prOMz0Xp4yQsmllo9E1z/0RU5SkYM57vfUeDFrZUTOaC4TbeD
+	 GSvwhvAbOOU5a3I2yO4v4wt+3rCIzLGQ5rLtWzpW4/Dq9SxZzz0RpX5um7fV4g/Fe9
+	 wBkBZfhtD7mjA==
+Message-ID: <efa6b325-4fd5-4e9b-b851-af7f527e340e@kernel.org>
+Date: Fri, 16 May 2025 21:36:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,13 +36,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] dt-bindings:iio:gyroscope:invensense,itg3200: add binding
-To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-Cc: andy@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
- dlechner@baylibre.com, krzk+dt@kernel.org, linux-kernel@vger.kernel.org,
- nuno.sa@analog.com, robh@kernel.org, ~lkcamp/patches@lists.sr.ht,
- jic23@kernel.org, linux-iio@vger.kernel.org
-References: <59220742-18b1-4704-bb5c-8b79f0099139@baylibre.com>
- <20250515221108.3890-1-rodrigo.gobbi.7@gmail.com>
+To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, dlechner@baylibre.com,
+ nuno.sa@analog.com, andy@kernel.org
+Cc: ~lkcamp/patches@lists.sr.ht, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250515002817.81863-1-rodrigo.gobbi.7@gmail.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -88,21 +87,95 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250515221108.3890-1-rodrigo.gobbi.7@gmail.com>
+In-Reply-To: <20250515002817.81863-1-rodrigo.gobbi.7@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 16/05/2025 00:09, Rodrigo Gobbi wrote:
->> Also just noticed that the IIO mailing list and Jonathan are missing
->> from the CC. Need to add those to have a chance of this getting picked
->> up.
+On 15/05/2025 02:21, Rodrigo Gobbi wrote:
+> There is no txt file for it, add yaml for invensense,itg3200 gyroscope.
 > 
-> Adding CC since I`ve missed.
+> Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+> ---
+
+Subject, missing spaces.
+
+Please use subject prefixes matching the subsystem. You can get them for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching. For bindings, the preferred subjects are
+explained here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+
+> Added @Jonathan as the maintainer here due a suggestion in a
+> different thread for a different binding file.
+> Created this yaml using the driver probe and comparing with other gyro bindings.
 > Tks and regards.
+> ---
+>  .../iio/gyroscope/invensense,itg3200.yaml     | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml b/Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml
+> new file mode 100644
+> index 000000000000..0656dbb58cf2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/gyroscope/invensense,itg3200.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Invensense ITG-3200 Gyroscope
+> +
+> +maintainers:
+> +  - Jonathan Cameron <jic23@kernel.org>
+
+Not really, this should be someone interested in the hardware.
+
+> +
+> +description: |
+> +  Triple-axis, digital output gyroscope with a three 16-bit analog-to-digital
+> +  converters (ADCs) for digitizing the gyro outputs, a user-selectable internal
+> +  low-pass filter bandwidth, and a Fast-Mode I2C . Datasheet can be found here:
+> +  https://invensense.tdk.com/wp-content/uploads/2015/02/ITG-3200-Register-Map.pdf
+> +
+> +properties:
+> +  compatible:
+> +    const: invensense,itg3200
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
+
+No, maxItems instead. Look at other bindings.
+
+> +
+> +  mount-matrix:
+> +    description: an optional 3x3 mounting rotation matrix.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        itg3200@68 {
+
+Node names should be generic. See also an explanation and list of
+examples (not exhaustive) in DT specification:
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
 
 
-No, you need to resend. By adding them on Cc they do not magically get
-all the discussions from other emails.
+
 
 Best regards,
 Krzysztof
