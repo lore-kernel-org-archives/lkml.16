@@ -1,130 +1,72 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E2927A92D
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 18:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E428A1D47AD
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 18:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747419668; cv=none; b=LUTk5e+G92sDRYEn4ILQ0GOjMT2hPevSdGrJnhVqz0KgjV/UyulZRKeyZFxyw/yzws0yfvTyzg7FXawnP21fuYCPyFd6erpy3Eb9bHXlfA47skVGtrfDvbhr5aVrh3YKm3Yv8bx1DTiw/uNZts6KX1C4VuSZ9cqjq3IL534oxi0=
+	t=1747419846; cv=none; b=Ax6FLyG8ojWgZkqia88yAfS4EjQjxiJXUTOxjUu33tvUrIEyM7GBNTAGpHpnlpiMkPj5R7vWzZYWPHJZF1QQl3KhUQcdvko7sVLUpel+zbDncgeeHmOaQOF/r3wcTI7jhox8fyCBGhMFtvVBUjZoaRD8EVczTwKcfuqXV2w9PN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747419668; c=relaxed/simple;
-	bh=G+yvEjn9CCpeWu1T/OIdi1As1wUoCTD5yb58f6RGZ4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QKa4zeU8o7jKFxwogPoNDRAZG0R4rqArDSZLg87HVVf1UYY0uNPf2+/arpDgzGK5rGJbP54kx2psaEiUXXdGxgTPe98ZP6VFCxftyzk0IxMJbrnRIvL6DMVN9RRtb5QrHv3QOMfop1okcIt0lA7HdOUdTIt8eKxprFMFy/VPEyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mVIMsqdU; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mVIMsqdU"
-Date: Fri, 16 May 2025 11:20:54 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747419660;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Aijqc4SJocxuCvVY9CsEnm5XULlfxcjJW9An8m2JIBY=;
-	b=mVIMsqdUT72lHBzpWvauLnHJ4jd4fkdk/1nUNgjk0VS+Ur+CB2Pz7/FcHSFYjcjp0ZftQ0
-	NEhL6o0e4Ec55ODNiv2k4zNXmBxUiR39LBdclyfurcbNK7DKL1Dz6LZ8nCDmw9+/MzyJCc
-	YzeANwabOAeuUt2hyY1khgtOzJjRdAw=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
-	Alexei Starovoitov <ast@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Harry Yoo <harry.yoo@oracle.com>, Yosry Ahmed <yosry.ahmed@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	bpf@vger.kernel.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH 1/5] memcg: disable kmem charging in nmi for unsupported
- arch
-Message-ID: <5utpywqjf47slmygpyfwmveabp65kzhq3sqf52j53hxs5owmxg@67ccuh4pmqsh>
-References: <20250516064912.1515065-1-shakeel.butt@linux.dev>
- <20250516064912.1515065-2-shakeel.butt@linux.dev>
- <050484a9-c08c-40d2-b431-76903a639222@suse.cz>
- <ukn75zvkgbyjmrhmy7rmt6dx24r47vy6npfdvjx6wxiduxeqnm@kkjoam7gft4v>
+	s=arc-20240116; t=1747419846; c=relaxed/simple;
+	bh=TCtSOJP9Onst/rlWrTLLiFI1ydiTFe4dnD9Bhsi3VYk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=aLDmKRzzENlMgUuQxJ+08Vu5qdLCWkJt0LGLtEG53eGBGZ698CAYmaun9Pa1B2g7AlQQeAMTXvTfZMIeOH0i5OC3N8x6ZuJHCx8O4s413cIBRVSxZpCQKIX/p9Gopjk8xtCdsEGDo1l5jC7M3LOTQDrcZLels2XzfCXliX75Ut0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3db8522a300so20042095ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:24:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747419844; x=1748024644;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LKu6pgQxY1brmse3Vd/NFTK/uYSaAW7c3E5D/rznrJc=;
+        b=gXY04nfVWngxnb8jvdkhdhpRIVCCPBoYvPxnob1mYHL1+94whpUP5t1MimQrPctk7T
+         ZVwbxZr9fRZQWGvrSrMVEaw30f+VYYAlh99jHTRur6VZK306cV6hF2238hiwyd5mpXCE
+         UxSaryyfJkSZUbG6rm2APYKziZDIrWers5wu8v1UrMYxSv2zvK+GmOAlya2PJH6zyvdl
+         Q6KV3mDtduCN1rTFK8/syb075oH1KULsuE9Htg14OSCocicMVbjko4Kb5GFO3489c/dv
+         ObXASsqslpvZ88ABXpx/H+zPcpEZZOoP65vav2xNNuj1aU1k33SbBEnFYnkZ5b+9fqQ+
+         fUBw==
+X-Forwarded-Encrypted: i=1; AJvYcCVM/yc2S4eCN7sh/hg7z9ET9E7t9/t1M3HTrinb2IsKk832aPcwU8Y5qFCLNC3c7HXafHlRipwrNbMyD+I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxThQTnwWrmEp4DUr1d4sJVSO0oGyfJ1aC8UU0HpwXKbIIw5aP9
+	suppSc3T9242V9VEXB11tjvn5uuP30ARg49/TIo0RHz+MR/Gbz22cUvfWTDbz9I/Q7kzNcZ/jdE
+	doxo2fYyIauma3pYaKh7NC48uw6IIzz6NWCsagHorsmO2NAS9ugtb1mvAed0=
+X-Google-Smtp-Source: AGHT+IHuKv4mVAdiYVr4YiEYI/le9HUzjdP54iS6zdGgbA4vE1+AVpXR6V83/QAuZAhlqP+f1gSRCo0cMZUhWZq1Yv3qybRygU4H
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ukn75zvkgbyjmrhmy7rmt6dx24r47vy6npfdvjx6wxiduxeqnm@kkjoam7gft4v>
-X-Migadu-Flow: FLOW_OUT
+X-Received: by 2002:a05:6e02:1f87:b0:3d1:a75e:65f6 with SMTP id
+ e9e14a558f8ab-3db84324635mr71651295ab.18.1747419844104; Fri, 16 May 2025
+ 11:24:04 -0700 (PDT)
+Date: Fri, 16 May 2025 11:24:04 -0700
+In-Reply-To: <20250512141322.15270-1-aha310510@gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <682782c4.a70a0220.38f255.0004.GAE@google.com>
+Subject: Re: [syzbot] [ext4?] general protection fault in jbd2_journal_dirty_metadata
+From: syzbot <syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com>
+To: aha310510@gmail.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, May 16, 2025 at 08:37:23AM -0700, Shakeel Butt wrote:
-> On Fri, May 16, 2025 at 11:30:17AM +0200, Vlastimil Babka wrote:
-> > On 5/16/25 08:49, Shakeel Butt wrote:
-> > > The memcg accounting and stats uses this_cpu* and atomic* ops. There are
-> > > archs which define CONFIG_HAVE_NMI but does not define
-> > > CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS and ARCH_HAVE_NMI_SAFE_CMPXCHG, so
-> > > memcg accounting for such archs in nmi context is not possible to
-> > > support. Let's just disable memcg accounting in nmi context for such
-> > > archs.
-> > > 
-> > > Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-> > > ---
-> > >  include/linux/memcontrol.h |  5 +++++
-> > >  mm/memcontrol.c            | 15 +++++++++++++++
-> > >  2 files changed, 20 insertions(+)
-> > > 
-> > > diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> > > index f7848f73f41c..53920528821f 100644
-> > > --- a/include/linux/memcontrol.h
-> > > +++ b/include/linux/memcontrol.h
-> > > @@ -62,6 +62,11 @@ struct mem_cgroup_reclaim_cookie {
-> > >  
-> > >  #ifdef CONFIG_MEMCG
-> > >  
-> > > +#if defined(CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS) || \
-> > > +	!defined(CONFIG_HAVE_NMI) || defined(ARCH_HAVE_NMI_SAFE_CMPXCHG)
-> > > +#define MEMCG_SUPPORTS_NMI_CHARGING
-> > > +#endif
-> > > +
-> > >  #define MEM_CGROUP_ID_SHIFT	16
-> > >  
-> > >  struct mem_cgroup_id {
-> > > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > > index e17b698f6243..dface07f69bb 100644
-> > > --- a/mm/memcontrol.c
-> > > +++ b/mm/memcontrol.c
-> > > @@ -2647,11 +2647,26 @@ static struct obj_cgroup *current_objcg_update(void)
-> > >  	return objcg;
-> > >  }
-> > >  
-> > > +#ifdef MEMCG_SUPPORTS_NMI_CHARGING
-> > > +static inline bool nmi_charging_allowed(void)
-> > > +{
-> > > +	return true;
-> > > +}
-> > > +#else
-> > > +static inline bool nmi_charging_allowed(void)
-> > > +{
-> > > +	return false;
-> > > +}
-> > > +#endif
-> > > +
-> > >  __always_inline struct obj_cgroup *current_obj_cgroup(void)
-> > >  {
-> > >  	struct mem_cgroup *memcg;
-> > >  	struct obj_cgroup *objcg;
-> > >  
-> > > +	if (in_nmi() && !nmi_charging_allowed())
-> > 
-> > Exchange the two as the latter is compile-time constant, so it can shortcut
-> > the in_nmi() check away in all the good cases?
-> > 
-> 
-> Oh I thought compiler would figure that out but now that I think about
-> it, it can only do so if the first condition does not have any
-> side-effects and though in_nmi() does not, I am not sure if compiler can
-> extract that information.
-> 
-> I will fix this and make sure that compiler is doing the right thing.
+Hello,
 
-So, gcc 11.5 generates the same code irrespective of checking in_nmi()
-first or second i.e. avoid in_nmi() check altogether on x86_64. I will
-still rearrange the checks to not leave this optimization to compilers.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+
+Reported-by: syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com
+Tested-by: syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         3c21441e Merge tag 'acpi-6.15-rc7' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12080ef4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=97ce7f89bb9ce135
+dashboard link: https://syzkaller.appspot.com/bug?extid=de24c3fe3c4091051710
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
