@@ -1,197 +1,237 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24452222B2;
-	Fri, 16 May 2025 20:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA58822A7E6
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 20:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747427500; cv=none; b=YAFNF1CKFW/xv97rQKsdKGIp8s5eIHB9pYbMtfesQf8taW3noJcthgOZEDa/i19uTI/b/zzld5UeTcmQ+O/z0DQz9n7T9tyOYrRtQAaFKkv4eAWZAiL6oEB/3wC7jwAX2GJ9KBYRwwpk5gZYKfBDEuTdFhGSxS8/PscU83bC0FQ=
+	t=1747427623; cv=none; b=sEs68sUxI++GkTgFS3GiP/yzZMsz2ZcfdiEVOJz782IxI4gpjnmdQCr9iTgQuKXEDiKURVZTnUjt/E4U7Lq1HLjwH5MacynERahVa5Usw9JvuX7QA2l+pFJ+TIJFJkLLJz+lms0tNfkDvKpdh2eft8om7RDsTrItwt6ekrugylY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747427500; c=relaxed/simple;
-	bh=qTJ9PhQppKfr6sTEGZkSzY3sxbqWKV4iAdv2JVLwdh0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HtTy1yQwWNJ1w4WibJVVkjs3Efll+saj6OiVEv7/bgyaAjtoW1HsHPEanOrcLdUZx/ub0v34/r5oYFhk67QWOuGSsmbGfAaHBKT3ZmXgR4L0aLTA7s7I1rKJWIeJ9NRBqVyq67XKLQbtTGbpV/+jpEqc4nvGwKMZ+bXWR3cwgBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KFfuKVI4; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1747427623; c=relaxed/simple;
+	bh=cc97xfAiYvGKTGK8fMD2xSISeNEw80Ypm/iy+wjwmxE=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=SdAglQ4EclT56/02oxWOcAgXG1JMw3Ync6JDjQQKVoaZ3j1YTf8J6oA7rAHyN1lyoTqj662Hhgwtug7MQSGq6wibFo1lcvuxVuLjghj+9p61uwC0xWbzJ6fHY+Paich4dHP1RwZz7igl2n7yAbNpVRfElrErDSM/L6D0twExM9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ED2xmyzS; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KFfuKVI4"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54GKVMEg3823228;
-	Fri, 16 May 2025 15:31:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1747427482;
-	bh=q5jd8Ds/yfDobLR7+jYkuWBZogZM9/eXyQcFuNW2VFY=;
-	h=From:To:CC:Subject:Date;
-	b=KFfuKVI415YzdgFKokiz4dnQ0gNrn7QgHjeDd8ASyuLJpfa9DukQGk+SN73Gdvyh6
-	 gPDOZVgmeBCrdLGzSfZ+cJ05XXqbiy7VzUCkzuJLFIF93Mj8NtknRsmxGsLyxpc2oY
-	 c+nv8UhPQyIlMznRiGCCpUzi57iszYGUCWJHsuwI=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54GKVMMJ156872
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 16 May 2025 15:31:22 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 16
- May 2025 15:31:21 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 16 May 2025 15:31:22 -0500
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54GKVL0a020449;
-	Fri, 16 May 2025 15:31:21 -0500
-From: Judith Mendez <jm@ti.com>
-To: Judith Mendez <jm@ti.com>, Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf
- Hansson <ulf.hansson@linaro.org>
-CC: Josua Mayer <josua@solid-run.com>, <linux-mmc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>,
-        Francesco Dolcini
-	<francesco@dolcini.it>,
-        Hiago De Franco <hiagofranco@gmail.com>, Moteen Shah
-	<m-shah@ti.com>
-Subject: [PATCH v6] mmc: sdhci_am654: Add SDHCI_QUIRK2_SUPPRESS_V1P8_ENA quirk to am62 compatible
-Date: Fri, 16 May 2025 15:31:21 -0500
-Message-ID: <20250516203121.3736379-1-jm@ti.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ED2xmyzS"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22fd34d248eso20303655ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 13:33:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747427621; x=1748032421; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=m5gCf9jZx6CekOZ1/hsjj0G+6GTcjpxM10CINdzrmS8=;
+        b=ED2xmyzSmVecdlJhTu0pcI6tZa5Jedhi2aloKfYKtunzzEbfw+Efleo0MI5AWe01fn
+         Ub7f3GAKCrXDJfX0Sjty0WaHnYrCJeqKf5VKPrXiynLDpDzLlMcbzgjVvktttXny/83e
+         MYDLdRaF8NUownVUYyh9lPVk2frV7WVueX9swPFIUVwrKq8TR7ja17zPVfYnS6eaqjcX
+         sT3JLWKw/Z9rXxcJpkGNksGnTyKjWbMjGQ1kRU7AwUY6sKNvGLHv12MmDfmty2Y9Qg7r
+         eD30m7NKmWdIX3YaQ5JQcCs6hJ+yzcAnKVivzfioBhdhQep5MlixyVxwHjCHU5noUrIb
+         uF1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747427621; x=1748032421;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=m5gCf9jZx6CekOZ1/hsjj0G+6GTcjpxM10CINdzrmS8=;
+        b=UG7JPFWc3lg7cqQNHmnhum4eCe43IhlOOToWQEw6E1HkE7HCIygX76kJOx+RNuk1QR
+         4at4jrrlt/NFbmKJdSBzkQUV0u7x0Zbikcc80ZMBmbWzvQDu4TKIOvFCAMwb6NH+Rpmj
+         yFPODvwkPdoK8ynNFuN666eFNWzPE/M39aGpGXx5GiR3b0r3C20Dj/Dy3/Mi+IDZtvXa
+         ChgbHnXM51HoiP6NEQhoG6PTBqan/CytODkKgW/aEpz1dR41tb20DeyqHu9u4z/DJKkX
+         iW8ihHX5Hdblz8BUNJ1F1yQoIGj20HVsLrTitXRPPX65Cp11sLg5NItrjRL6VxbOLh1g
+         KmHw==
+X-Forwarded-Encrypted: i=1; AJvYcCU362o+CayDWmEVowzmxhaifKB4OI0OjlGcInxqg1m7g7k25tcHxzDnLoCMGR4SLnD7IksBBtMivM6Tcd0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+ngqYz6mmlSkTaifnDjfk1S4Uv3dThNO8rr625UhvLJ4HAkZf
+	nS7xzXK4mAxLa0LK82Y0MlYoxQYWSrZWkV/E10JD9SHkj3T9ngvkyuQeOtDcSFIedtmJ04YuZIt
+	iPb6Bt4xbcPb1udwZuN5lu7Bmvw==
+X-Google-Smtp-Source: AGHT+IGZsqgq2G2XIkR7qcIy/VW6gTpaWqSm/97lo1vVmXSkPBk6jSv3JCyUAX+95O4wmkeQ/wPnsUapN2qJLw24ag==
+X-Received: from plnq12.prod.google.com ([2002:a17:902:f78c:b0:223:5693:a4e9])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:903:2ec8:b0:224:1943:c65 with SMTP id d9443c01a7336-231d44e64e6mr60539585ad.14.1747427620934;
+ Fri, 16 May 2025 13:33:40 -0700 (PDT)
+Date: Fri, 16 May 2025 13:33:39 -0700
+In-Reply-To: <diqzzffcfy3k.fsf@ackerleytng-ctop.c.googlers.com> (message from
+ Ackerley Tng on Fri, 16 May 2025 07:07:27 -0700)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Mime-Version: 1.0
+Message-ID: <diqzecwofg7w.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH v2 29/51] mm: guestmem_hugetlb: Wrap HugeTLB as an
+ allocator for guest_memfd
+From: Ackerley Tng <ackerleytng@google.com>
+To: Ackerley Tng <ackerleytng@google.com>
+Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com, 
+	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
+	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
+	bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org, 
+	catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org, 
+	dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
+	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
+	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
+	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
+	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
+	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
+	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
+	kent.overstreet@linux.dev, kirill.shutemov@intel.com, liam.merwick@oracle.com, 
+	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
+	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
+	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
+	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
+	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
+	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
+	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
+	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
+	thomas.lendacky@amd.com, usama.arif@bytedance.com, vannapurve@google.com, 
+	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
+	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
+	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
+	yuzenghui@huawei.com, zhiquan1.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
 
-Add a new struct for platform data for the ti,am62-sdhci compatible to
-apply additional quirks, namely "SDHCI_QUIRK2_SUPPRESS_V1P8_ENA", to
-host controllers with am62 compatible.
+Ackerley Tng <ackerleytng@google.com> writes:
 
-Note, the fix was originally introduced by commit 941a7abd4666
-("mmc: sdhci_am654: Add sdhci_am654_start_signal_voltage_switch") but was
-found to be applied too broadly and had to be reverted.
+> Ackerley Tng <ackerleytng@google.com> writes:
+>
+>> guestmem_hugetlb is an allocator for guest_memfd. It wraps HugeTLB to
+>> provide huge folios for guest_memfd.
+>>
+>> This patch also introduces guestmem_allocator_operations as a set of
+>> operations that allocators for guest_memfd can provide. In a later
+>> patch, guest_memfd will use these operations to manage pages from an
+>> allocator.
+>>
+>> The allocator operations are memory-management specific and are placed
+>> in mm/ so key mm-specific functions do not have to be exposed
+>> unnecessarily.
+>>
+>> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+>>
+>> Change-Id: I3cafe111ea7b3c84755d7112ff8f8c541c11136d
+>> ---
+>>  include/linux/guestmem.h      |  20 +++++
+>>  include/uapi/linux/guestmem.h |  29 +++++++
+>>  mm/Kconfig                    |   5 +-
+>>  mm/guestmem_hugetlb.c         | 159 ++++++++++++++++++++++++++++++++++
+>>  4 files changed, 212 insertions(+), 1 deletion(-)
+>>  create mode 100644 include/linux/guestmem.h
+>>  create mode 100644 include/uapi/linux/guestmem.h
+>>
+>> <snip>
+>>
+>> diff --git a/mm/Kconfig b/mm/Kconfig
+>> index 131adc49f58d..bb6e39e37245 100644
+>> --- a/mm/Kconfig
+>> +++ b/mm/Kconfig
+>> @@ -1218,7 +1218,10 @@ config SECRETMEM
+>>  
+>>  config GUESTMEM_HUGETLB
+>>  	bool "Enable guestmem_hugetlb allocator for guest_memfd"
+>> -	depends on HUGETLBFS
+>> +	select GUESTMEM
+>> +	select HUGETLBFS
+>> +	select HUGETLB_PAGE
+>> +	select HUGETLB_PAGE_OPTIMIZE_VMEMMAP
+>
+> My bad. I left out CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON=y in
+> my testing and just found that when it is set, I hit
+>
+>   BUG_ON(pte_page(ptep_get(pte)) != walk->reuse_page);
+>
+> with the basic guest_memfd_test on splitting pages on allocation.
+>
+> I'll follow up with the fix soon.
+>
+> Another note about testing: I've been testing in a nested VM for the
+> development process:
+>
+> 1. Host
+> 2. VM for development
+> 3. Nested VM running kernel being developed
+> 4. Nested nested VMs created during selftests
+>
+> This series has not yet been tested on a physical host.
+>
+>>  	help
+>>  	  Enable this to make HugeTLB folios available to guest_memfd
+>>  	  (KVM virtualization) as backing memory.
+>>
+>> <snip>
+>>
 
-This fixes MMC init failures seen across am62x boards.
+Here's the fix for this issue
 
-Fixes: ac5a41b472b4 ("Revert "mmc: sdhci_am654: Add sdhci_am654_start_signal_voltage_switch"")
-Fixes: 941a7abd4666 ("mmc: sdhci_am654: Add sdhci_am654_start_signal_voltage_switch")
-Cc: stable@vger.kernel.org
-Suggested-by: Nishanth Menon <nm@ti.com>
-Signed-off-by: Judith Mendez <jm@ti.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+From 998af6404d4e39920ba42764e7f3815cb9bb9e3d Mon Sep 17 00:00:00 2001
+Message-ID: <998af6404d4e39920ba42764e7f3815cb9bb9e3d.1747427489.git.ackerleytng@google.com>
+From: Ackerley Tng <ackerleytng@google.com>
+Date: Fri, 16 May 2025 13:14:55 -0700
+Subject: [RFC PATCH v2 1/1] KVM: guest_memfd: Reorder undoing vmemmap
+ optimization and stashing hugetlb folio metadata
+
+Without this patch, when HugeTLB folio metadata is stashed, the
+vmemmap_optimized flag, stored in a HugeTLB folio's folio->private was
+stashed as set.
+
+The first splitting works, but on merging, when the folio metadata was
+unstashed, vmemmap_optimized is unstashed as set, making the call to
+hugetlb_vmemmap_optimize_folio() skip actually applying optimizations.
+
+On a second split, hugetlb_vmemmap_restore_folio() attempts to reapply
+optimizations when it was already applied, hence hitting the BUG().
+
+Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 ---
-Changes since v5:
-- Drop sdhci_am62_4bit_pdata
-- Pick Adrians tag
-- Add note to commit message
+ mm/guestmem_hugetlb.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-Tested on am62x SK, am64x EVM and am64x SK. Tested-bys are welcome
-
-Link to v5:
-https://lore.kernel.org/linux-mmc/20250514002513.1179186-1-jm@ti.com/
-Link to v4:
-https://lore.kernel.org/linux-mmc/20250424180036.1541568-1-jm@ti.com/
-Link to v3 RESEND:
-https://lore.kernel.org/linux-mmc/8678d284-db12-451a-b789-2b75f9932f9f@ti.com
-Link to v2:
-https://lore.kernel.org/linux-mmc/20250417182652.3521104-1-jm@ti.com/
-Link to v1:
-https://lore.kernel.org/linux-mmc/20250407222702.2199047-1-jm@ti.com/
----
- drivers/mmc/host/sdhci_am654.c | 35 +++++++++++++++++++++++++++++++++-
- 1 file changed, 34 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-index f75c31815ab0..73385ff4c0f3 100644
---- a/drivers/mmc/host/sdhci_am654.c
-+++ b/drivers/mmc/host/sdhci_am654.c
-@@ -155,6 +155,7 @@ struct sdhci_am654_data {
- 	u32 tuning_loop;
+diff --git a/mm/guestmem_hugetlb.c b/mm/guestmem_hugetlb.c
+index 8727598cf18e..2c0192543676 100644
+--- a/mm/guestmem_hugetlb.c
++++ b/mm/guestmem_hugetlb.c
+@@ -200,16 +200,21 @@ static int guestmem_hugetlb_split_folio(struct folio *folio)
+ 		return 0;
  
- #define SDHCI_AM654_QUIRK_FORCE_CDTEST BIT(0)
-+#define SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA BIT(1)
- };
+ 	orig_nr_pages = folio_nr_pages(folio);
+-	ret = guestmem_hugetlb_stash_metadata(folio);
++
++	/*
++	 * hugetlb_vmemmap_restore_folio() has to be called ahead of the rest
++	 * because it checks page type. This doesn't actually split the folio,
++	 * so the first few struct pages are still intact.
++	 */
++	ret = hugetlb_vmemmap_restore_folio(folio_hstate(folio), folio);
+ 	if (ret)
+ 		return ret;
  
- struct window {
-@@ -166,6 +167,7 @@ struct window {
- struct sdhci_am654_driver_data {
- 	const struct sdhci_pltfm_data *pdata;
- 	u32 flags;
-+	u32 quirks;
- #define IOMUX_PRESENT	(1 << 0)
- #define FREQSEL_2_BIT	(1 << 1)
- #define STRBSEL_4_BIT	(1 << 2)
-@@ -356,6 +358,29 @@ static void sdhci_j721e_4bit_set_clock(struct sdhci_host *host,
- 	sdhci_set_clock(host, clock);
+ 	/*
+-	 * hugetlb_vmemmap_restore_folio() has to be called ahead of the rest
+-	 * because it checks and page type. This doesn't actually split the
+-	 * folio, so the first few struct pages are still intact.
++	 * Stash metadata after vmemmap stuff so the outcome of the vmemmap
++	 * restoration is stashed.
+ 	 */
+-	ret = hugetlb_vmemmap_restore_folio(folio_hstate(folio), folio);
++	ret = guestmem_hugetlb_stash_metadata(folio);
+ 	if (ret)
+ 		goto err;
+ 
+@@ -254,8 +259,7 @@ static int guestmem_hugetlb_split_folio(struct folio *folio)
+ 	return 0;
+ 
+ err:
+-	guestmem_hugetlb_unstash_free_metadata(folio);
+-
++	hugetlb_vmemmap_optimize_folio(folio_hstate(folio), folio);
+ 	return ret;
  }
  
-+static int sdhci_am654_start_signal_voltage_switch(struct mmc_host *mmc, struct mmc_ios *ios)
-+{
-+	struct sdhci_host *host = mmc_priv(mmc);
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_am654_data *sdhci_am654 = sdhci_pltfm_priv(pltfm_host);
-+	int ret;
-+
-+	if ((sdhci_am654->quirks & SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA) &&
-+	    ios->signal_voltage == MMC_SIGNAL_VOLTAGE_180) {
-+		if (!IS_ERR(mmc->supply.vqmmc)) {
-+			ret = mmc_regulator_set_vqmmc(mmc, ios);
-+			if (ret < 0) {
-+				pr_err("%s: Switching to 1.8V signalling voltage failed,\n",
-+				       mmc_hostname(mmc));
-+				return -EIO;
-+			}
-+		}
-+		return 0;
-+	}
-+
-+	return sdhci_start_signal_voltage_switch(mmc, ios);
-+}
-+
- static u8 sdhci_am654_write_power_on(struct sdhci_host *host, u8 val, int reg)
- {
- 	writeb(val, host->ioaddr + reg);
-@@ -650,6 +675,12 @@ static const struct sdhci_am654_driver_data sdhci_j721e_4bit_drvdata = {
- 	.flags = IOMUX_PRESENT,
- };
- 
-+static const struct sdhci_am654_driver_data sdhci_am62_4bit_drvdata = {
-+	.pdata = &sdhci_j721e_4bit_pdata,
-+	.flags = IOMUX_PRESENT,
-+	.quirks = SDHCI_AM654_QUIRK_SUPPRESS_V1P8_ENA,
-+};
-+
- static const struct soc_device_attribute sdhci_am654_devices[] = {
- 	{ .family = "AM65X",
- 	  .revision = "SR1.0",
-@@ -872,7 +903,7 @@ static const struct of_device_id sdhci_am654_of_match[] = {
- 	},
- 	{
- 		.compatible = "ti,am62-sdhci",
--		.data = &sdhci_j721e_4bit_drvdata,
-+		.data = &sdhci_am62_4bit_drvdata,
- 	},
- 	{ /* sentinel */ }
- };
-@@ -906,6 +937,7 @@ static int sdhci_am654_probe(struct platform_device *pdev)
- 	pltfm_host = sdhci_priv(host);
- 	sdhci_am654 = sdhci_pltfm_priv(pltfm_host);
- 	sdhci_am654->flags = drvdata->flags;
-+	sdhci_am654->quirks = drvdata->quirks;
- 
- 	clk_xin = devm_clk_get(dev, "clk_xin");
- 	if (IS_ERR(clk_xin)) {
-@@ -940,6 +972,7 @@ static int sdhci_am654_probe(struct platform_device *pdev)
- 		goto err_pltfm_free;
- 	}
- 
-+	host->mmc_host_ops.start_signal_voltage_switch = sdhci_am654_start_signal_voltage_switch;
- 	host->mmc_host_ops.execute_tuning = sdhci_am654_execute_tuning;
- 
- 	pm_runtime_get_noresume(dev);
-
-base-commit: 8566fc3b96539e3235909d6bdda198e1282beaed
 -- 
-2.49.0
+2.49.0.1101.gccaa498523-goog
 
