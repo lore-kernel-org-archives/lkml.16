@@ -1,147 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E2F188734;
-	Fri, 16 May 2025 14:00:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C556611E;
+	Fri, 16 May 2025 14:01:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747404004; cv=none; b=YP9rkWUw+fkR+O1xx2pN34oX4MOdfNYdeu9AUy4SuNVwP+ksLCFj9iBlgmnJk6yzmSPp2OJvISYsFMFjRkDwAMK5xeBPi9VImXR4oBmBHssZI/PT4g5qWcUsu5rUq0/x8XFfUXvUAqqPOVZe1aaGZJCuVTSPsTH4pFDCIhysIlk=
+	t=1747404099; cv=none; b=sIeJxQvOdvLqizk6k9WRx4SVnmK0ECzTynjoxrXejAuizRsFyuP1rbSCz32Ehu9JEJHBE3FiQEeXXkzPQFc1QQ35teQuXqzlAcm8MHmaMnBYPsApXzoZp1JIpX9Mye+020sUHrAXbvg176Vk1aDkYP2VgRRst6fak2N8p5JhrKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747404004; c=relaxed/simple;
-	bh=BvTzr413V6VBxtMA82ZSx+N0EIx/GNeVC6zTvua2xLo=;
+	s=arc-20240116; t=1747404099; c=relaxed/simple;
+	bh=f/ez5+ZlzlIHnsW5duY84m4TJ3zpnI8DqQZmPZ44+lg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tbOniCPSXClYuGmPRtNMgcytDvId7SkjLiTX3EqGQFvCP8WXFGl4eZMZynK5l+y+4AbU3VPakdo2XpwCk0UY5Lu+fTdZ85wBxeEBvakXBdVGZMPQptfF78IlCoPNqx+SNDr0Lfiry6rIydSaPYbonERkuDH1BboOmx5dBlRWPY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JZFYVSq7; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TgIq41K98Ouw2ozvOAF5WQfcR0EjJECwJjV6i1A7TFb68O/bVKlJKiE1AAodHkZ5kqNB3mD5E0b4Y7JNlMm6UH9GqTSvfR4D9r24SksUlZHRct1zSu1lfHasMEzOK8wSvLao8i63WONQKaSzVmv8k5+oYM9bdyFHAptzkUxgyZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ejfhhv0P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JZFYVSq7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9BD9C4CEED;
-	Fri, 16 May 2025 14:00:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ejfhhv0P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EF1AC4CEE4;
+	Fri, 16 May 2025 14:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747404003;
-	bh=BvTzr413V6VBxtMA82ZSx+N0EIx/GNeVC6zTvua2xLo=;
+	s=k20201202; t=1747404098;
+	bh=f/ez5+ZlzlIHnsW5duY84m4TJ3zpnI8DqQZmPZ44+lg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JZFYVSq7ATDSktvpGBHE8mAJThrw46Bb0fWjBMvnv19GsxTp4CmFa3YWRguMsxOe2
-	 TCFXekBFpJu5UFtvW8g7RPiH4g978YWFGzyfn9qW4krrzD80MD/XvWcHaEmzQPXkmU
-	 J9n+bbp2S1l/fp4yfEGwruHU5FwpTGJUjm5ROVn91XPIm9lfzeHs09jRLYZry1ktUJ
-	 70KmoBr+CYjrBvduMkEA7ty3mCJvr8oFhog02M+XFNm2s2biQc4ZOcCbqwbR4apbYD
-	 7kZnMbhBWfYY+lOOwWLW+DxB3W2lJnkOGb6Hn9ATVh6Zkpg0qeQXLD9yecVu3SR5hH
-	 P1ZOgr9cdp0Fw==
-Date: Fri, 16 May 2025 14:59:59 +0100
-From: Will Deacon <will@kernel.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64/ptrace: Make user_hwdebug_state.dbg_regs[] array
- size as ARM_MAX_BRP
-Message-ID: <20250516135958.GA13612@willie-the-truck>
-References: <20250421055212.123774-1-anshuman.khandual@arm.com>
+	b=Ejfhhv0PvBi+SYE4nZFyhMPQxoZT58IYXUs7Uavx8zK4VbTGbh9wBe+AAdDssxgch
+	 LfrHgH0AfjDnEx1At23KQdOwVHaAef5k0//vM9oHxk2Bpc/liZMtui/P40LS1cbPPu
+	 ffpACuH2zLJJNhU2n5o/pxICbMDUw1vJWVPzdX2lWHdRvBvSalH+4zbLK8gH5qpRbJ
+	 PKzCrp+NsDS0FGsgF6gOGt6MJkaE4VdLHqxVw9r5JGe3LWpDYtuBIgYuwJeFzXiRwd
+	 cnEPQeBzZxkYOVDfLtQY8joUBmlw46JCDKLUh5+Pde9cGNodhimfM8GVmoTf4l0hm5
+	 B9YClHzNq4AKA==
+Date: Fri, 16 May 2025 15:01:34 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Alejandro Enrique <alejandroe1@geotab.com>
+Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] riscv: dts: sophgo: add zfh for sg2042
+Message-ID: <20250516-unfasten-submersed-e854fc9a0142@spud>
+References: <20250514-ubx-m9-v1-0-193973a4f3ca@geotab.com>
+ <20250514-ubx-m9-v1-1-193973a4f3ca@geotab.com>
+ <20250514-saggy-shifter-e4ac7152f823@spud>
+ <CAN=L63qsjEAvfocgP0tGrpe-x6Rx1gvTAkPE9i99Ai2zJj6ssA@mail.gmail.com>
+ <20250515-varying-swan-31ca63615b43@spud>
+ <CAN=L63oc7a6+_e+nhiyCkttX-TSbcjcwBmSzPsSk94m1ebGt4w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="igPO54Zv7iTQt/LL"
 Content-Disposition: inline
-In-Reply-To: <20250421055212.123774-1-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAN=L63oc7a6+_e+nhiyCkttX-TSbcjcwBmSzPsSk94m1ebGt4w@mail.gmail.com>
 
-On Mon, Apr 21, 2025 at 11:22:12AM +0530, Anshuman Khandual wrote:
-> Array elements inside 'struct user_hwdebug_state.dbg_regs[]' are inherently
-> coupled with maximum breakpoints or watchpoints which could be present on a
-> platform and which are defined with macros ARM_MAX_[BRP|WRP].
-> 
-> Rather than explicitly trying to keep the array elements in sync with these
-> macros and then adding a BUILD_BUG_ON() just to ensure continued compliance
-> , move these two macros into the uapi ptrace header itself thus making them
-> available both for user space and kernel.
-> 
-> While here also ensure that ARM_MAX_BRP and ARM_MAX_WRP are always the same
-> via a new BUILD_BUG_ON(). This helps in making sure that user_hwdebug_state
-> structure remains usable both for breakpoint and watchpoint registers set
-> via ptrace() system call interface.
-> 
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-> This patch applies on v6.15-rc3
-> 
->  arch/arm64/include/asm/hw_breakpoint.h |  7 -------
->  arch/arm64/include/uapi/asm/ptrace.h   | 10 +++++++++-
->  arch/arm64/kernel/hw_breakpoint.c      |  9 +++++++++
->  3 files changed, 18 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/hw_breakpoint.h b/arch/arm64/include/asm/hw_breakpoint.h
-> index bd81cf17744a..63c21b515647 100644
-> --- a/arch/arm64/include/asm/hw_breakpoint.h
-> +++ b/arch/arm64/include/asm/hw_breakpoint.h
-> @@ -75,13 +75,6 @@ static inline void decode_ctrl_reg(u32 reg,
->  #define ARM_KERNEL_STEP_ACTIVE	1
->  #define ARM_KERNEL_STEP_SUSPEND	2
->  
-> -/*
-> - * Limits.
-> - * Changing these will require modifications to the register accessors.
-> - */
-> -#define ARM_MAX_BRP		16
-> -#define ARM_MAX_WRP		16
-> -
->  /* Virtual debug register bases. */
->  #define AARCH64_DBG_REG_BVR	0
->  #define AARCH64_DBG_REG_BCR	(AARCH64_DBG_REG_BVR + ARM_MAX_BRP)
-> diff --git a/arch/arm64/include/uapi/asm/ptrace.h b/arch/arm64/include/uapi/asm/ptrace.h
-> index 0f39ba4f3efd..8683f541a467 100644
-> --- a/arch/arm64/include/uapi/asm/ptrace.h
-> +++ b/arch/arm64/include/uapi/asm/ptrace.h
-> @@ -99,6 +99,14 @@ struct user_fpsimd_state {
->  	__u32		__reserved[2];
->  };
->  
-> +/*
-> + * Maximum number of breakpoint and watchpoint registers
-> + * on the platform. These macros get used both in kernel
-> + * and user space as well.
-> + */
-> +#define ARM_MAX_BRP		16
-> +#define ARM_MAX_WRP		16
-> +
->  struct user_hwdebug_state {
->  	__u32		dbg_info;
->  	__u32		pad;
-> @@ -106,7 +114,7 @@ struct user_hwdebug_state {
->  		__u64	addr;
->  		__u32	ctrl;
->  		__u32	pad;
-> -	}		dbg_regs[16];
-> +	}		dbg_regs[ARM_MAX_BRP];	/* Or ARM_MAX_WRP */
->  };
->  
->  /* SVE/FP/SIMD state (NT_ARM_SVE & NT_ARM_SSVE) */
-> diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-> index 722ac45f9f7b..9bc51682713d 100644
-> --- a/arch/arm64/kernel/hw_breakpoint.c
-> +++ b/arch/arm64/kernel/hw_breakpoint.c
-> @@ -981,6 +981,15 @@ static int __init arch_hw_breakpoint_init(void)
->  {
->  	int ret;
->  
-> +	/*
-> +	 * Maximum supported breakpoint and watchpoint registers must
-> +	 * always be the same - regardless of actual register numbers
-> +	 * found on a given platform. This is because the user facing
-> +	 * ptrace structure 'user_hwdebug_state' actually depends on
-> +	 * these macros to be the same.
-> +	 */
-> +	BUILD_BUG_ON(ARM_MAX_BRP != ARM_MAX_WRP);
 
-Sorry, but I don't understand why this patch is an improvement over what
-we have.
+--igPO54Zv7iTQt/LL
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Will
+On Fri, May 16, 2025 at 12:23:35PM +0200, Alejandro Enrique wrote:
+> On Thu, May 15, 2025 at 5:02=E2=80=AFPM Conor Dooley <conor@kernel.org> w=
+rote:
+> >
+> > On Wed, May 14, 2025 at 06:53:25PM +0200, Alejandro Enrique wrote:
+> > > On Wed, May 14, 2025 at 5:49=E2=80=AFPM Conor Dooley <conor@kernel.or=
+g> wrote:
+> > >
+> > > > On Wed, May 14, 2025 at 01:55:54PM +0200, Alejandro Enrique via B4 =
+Relay
+> > > > wrote:
+> > > > > From: Alejandro Enrique <alejandroe1@geotab.com>
+> > > > >
+> > > > > Add compatible for u-blox NEO-9M GPS module.
+> > > > >
+> > > > > Signed-off-by: Alejandro Enrique <alejandroe1@geotab.com>
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml | 1 +
+> > > > >  1 file changed, 1 insertion(+)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m=
+=2Eyaml
+> > > > b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
+> > > > > index
+> > > > 7d4b6d49e5eea2201ac05ba6d54b1c1721172f26..cf5ff051b9ab03e5bfed8156a=
+72170965929bb7e
+> > > > 100644
+> > > > > --- a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
+> > > > > @@ -22,6 +22,7 @@ properties:
+> > > > >        - u-blox,neo-6m
+> > > > >        - u-blox,neo-8
+> > > > >        - u-blox,neo-m8
+> > > > > +      - u-blox,neo-m9
+> > > >
+> > > > No match data in the driver, why is a fallback not sufficient?
+> > > >
+> > >
+> > > I added the match data in the driver in the PATCH 2/2 of this series
+> > > in the same fashion as previously supported modules.
+> >
+> > Did you? When I looked, there was just a compatible and no match data.
+>=20
+> You are right. I just added a compatible string, no match data. Sorry,
+> I was not following.
+> I just added the neo-m9 compatible the same way the neo-6m was previously
+> added.
+>=20
+> What do you mean by using a fallback? Using one of the existent
+> compatibles (none have match data) or adding a new fallback
+> compatible, something like just "u-blox,neo"?
+
+Falling back to one of the existing ones, like neo-m8.
+
+--igPO54Zv7iTQt/LL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCdFPgAKCRB4tDGHoIJi
+0ocGAQDHwFYrWtOhkM7bBrSaY1o6vT9VhtALmzyAvFmHMp5xxgD+JEp+ke3NWLEX
+J/kjxRcrW9CCIDlDo8vL9Kjc4unbngU=
+=hpUU
+-----END PGP SIGNATURE-----
+
+--igPO54Zv7iTQt/LL--
