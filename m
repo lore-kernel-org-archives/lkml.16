@@ -1,755 +1,420 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2064.outbound.protection.outlook.com [40.107.20.64])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EFD92512F3;
-	Fri, 16 May 2025 17:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13B026B956;
+	Fri, 16 May 2025 17:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747415792; cv=fail; b=BwGAYxhhKmEq+xJYpYGNSswnsrwIzTmsCuyR4oBtZbHMvPg7GfY9wx7diaQLUdKti/fFHG5bIQ24gn1R/TN9fNW3TyG92vK/TouFTkXYH9R39NGf5opzH8Hy1kFYdM8Y/avxTJjTrSBby2JqR/rucv5SVeoVACg6qRGkcT+D1V8=
+	t=1747415853; cv=fail; b=r+G5J4uaSd6auPJuh6QiXbscspLsu0t+lgJqRR1LJ5RU8GsD3sjsZaMxkcbQBM/G0wG2N1urX9kOSojfsuILq2KES3BcZhKT4jB8xFkofoOswt2VOIP4JNFDzYwnwXyNBps02OjPmMVLpW6wmczUx1+qXhXxSbuEZGjFhYkq620=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747415792; c=relaxed/simple;
-	bh=4ElQwiWETiUW33QLEu0d3YGcoEiqdZ0L6Vg90I8TwR0=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=vGEU+2cIOo7afH50u67PGJSjMIxQ6EiG5NbKgWuWuAm7aUK2J7E7sXjCRScaJr32SiacNYBbWNg/uFNTcY3gDgIioj1sdE65u1lBGkz9FCev5gvWlXNzgxOejtqc+5GZvs8OAHHyKk9Ref7hivFTxjq3RhlGY2w2naGbGl6kny4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=FcUMhVo1; arc=fail smtp.client-ip=40.107.20.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
+	s=arc-20240116; t=1747415853; c=relaxed/simple;
+	bh=X2kYngezYVF7srnL3US087W25rLj+x2onkYiYbExP1Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=lS9XvhaHOYuS3rBfAAfivetF6OSGeRHQpEJIfLmXqiUTiRA8QeWu7b2I6u4zjzyRMKSvsdeJfOcLhLK9jHut5pfVfmV0WZJmButwlzVvhqVKkehKCCRMUhJMyqxTsY6MfTjgDXDfByObxXXML6MKHBpbTOyf32RCxO437AyBmPM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=CJkllwQ1; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=R4ixK2ec; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="FcUMhVo1"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CJkllwQ1";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="R4ixK2ec"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54GGfsNV000984;
+	Fri, 16 May 2025 17:12:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=E7UhZbTH0tA5T63w8X
+	2JQBOZan0wB++Fz+Xit5kZjms=; b=CJkllwQ17q7IgTKsTNlXvr/bHcqsHKpMFj
+	9UYLi+bEiribOwj2lStTrvUzkZTGOidcp6HBWOwaAS1lVowtlNIhiAFWSzzhckbJ
+	UDkmZkNE+2LoUTnlaJ90xSZXxvKPjDU4MbFrgjpEhPFwOkcduKuLvcFtE0HpuIfm
+	T9eiHprTi6/JkcfaPUS6u5jpB7NHwCHMvaeBThIaCqk8oKLNidmW33SskO6tTyWs
+	GbyNovN1dTmUSlNDk+3v0C8b0ysqQjYMC90RY5NFWotCYfWCVgGfvxBdF8NsVWKK
+	Z4nN8z7DZgiYXx3hVCQCk5jj5A4SbX7/9oSL/cypsUa5FlfME6YQ==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46nre01ugg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 16 May 2025 17:12:19 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54GFRDxN004284;
+	Fri, 16 May 2025 17:12:18 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2175.outbound.protection.outlook.com [104.47.55.175])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46mrmfkphw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 16 May 2025 17:12:18 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JVppdUFMt0jqLP+kZiK+IjYZbXv9uufhE0XH6vzDi0SNsQmTCYpM4ESNc3VwoleVsaajnch49BF1dGab9U53nv8utML4WmW8oUaW658IPJCIWcYL/esUTxHiUCtdadYyNF9j91wNGREYGIlCEz2k2G0cl7iqIX51JnWuzzCFt1qzyCpAVP5kRiYl6Dn3vCFCQMGqiPVqaHJxOO6sFcjAYQADC8sy0X9iqFWiC36OchSmJAC+CKX6EAkrfOID4OnbckNJ5FyV8upPn5tb+K4fZPUUXoBH/AVwc858hOypXDG4B6V3k37GdJgoKJkqCpbFe4mOkijYd44bbLBFtQx9VQ==
+ b=ZJ/xZI9NcO0hhTiwVN/AhnHC/dD2H1gHuKsUF0GsYIElrGCAC5gMLoJ702CbhLhX+ahUU9rvF7UFx0chCIQjifObWx4UJvB0WA1p2bBKPyTjwqIS29og2Hdr+QWBf3WS1zaHn7KEesremxSYgaQMGZDyAiwkCLRIXzY0oMuDu2Zdp1scDA36hOyYwbzDz9QpE7+tCcnw1dDykDo5iHL58z5VDSUEciQPiJC3BXicAZz6ZqGOlt1uD+pfSKwmWyTfJ0E4D9+6AZ+D83TT/cQ36dXxh88n3X0GCqEWBoLGba2xh1f3KC87OO++AYjHpbKqDH1Hrey0J/KgXD2894XTpA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JDZ4BjBRF0DPWv+aKHzhXxvS7M11ik1emqRQH4VTWT8=;
- b=ysgZHTrEG2nrSqRdAfMtMCxFCyTQ6KTT8hQ4UTOK9fs2FCh/oi1n8UkRdG+Ala5hnpGeVMbTffqZwpCSekbK7+w3n1qRSvwCKWPcwjWRsT8HtqtAf30aV/15zKqK3mg0mRk5lMBY+lGZVYTmGk+K3LVgN5jgAmEo98adE5vlPGYZ3exWyds5aDjz/Ys9It5cwUo5MO+8jcFjAd5tSIrovLt0IpudRQUlh7/YXL7m26R4CvVJBmOGaqwNPZhAhT2BJIGpz6/FylrEmksBMlX3prTtZNFPtAdvoLEsExJo6TTJ5xJ05yV0/fqBWsoGwbLkR3YpOKwfhTKWcsL+Y6IrBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 195.60.68.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=axis.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=axis.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ bh=E7UhZbTH0tA5T63w8X2JQBOZan0wB++Fz+Xit5kZjms=;
+ b=SNfp3Hkx6B5VQeScw2gwb1kfLzISHM9mFkSoBiRE15/5wzc/7Sm4Hui0Kx1D+CwRxp2SM0nUk1H4VWqwUf1drLHnU/3ua2YWg+osSSG4xzGzEpN2jG5/X3g5i/SAC3Z5iEH825pa9CAo3wevkMwrmWzQXYXxwD5cQkLsCsCW9o3aEyM5ESvw/0lvHqvHufVEPF4r62g9KCPj0n1GHlCMa9+N/fGL5/TRp6NELXgCjDY5HphJBpJUg3cHpi13UVG/McR6H1cWpZeUPXRCfVtI71p+uGW9RqD2A20qoe42P/NZ2nWCmZBIWNexImSHZ0eem1NsjeiThRfUGirmSx5UVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JDZ4BjBRF0DPWv+aKHzhXxvS7M11ik1emqRQH4VTWT8=;
- b=FcUMhVo1V9eRtoQSA+pb+HwiLmzCZRpDPput6kif8AmMHkxFjwxPrIhTDZTPZ0LLaezqAVOowCjrwEaQ4tugi3W57gB4jHfzl3qomFFpIBpf0erk5VWqDfQ8CrG1WjIwxeaD9AbFfzIb0yH/0RjynuK2XpZseblhla7k6ZkdF1s=
-Received: from DUZPR01CA0106.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4bb::14) by AM9PR02MB7139.eurprd02.prod.outlook.com
- (2603:10a6:20b:262::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.25; Fri, 16 May
- 2025 17:16:27 +0000
-Received: from DU6PEPF0000A7DD.eurprd02.prod.outlook.com
- (2603:10a6:10:4bb:cafe::a9) by DUZPR01CA0106.outlook.office365.com
- (2603:10a6:10:4bb::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.21 via Frontend Transport; Fri,
- 16 May 2025 17:16:32 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
- smtp.mailfrom=axis.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=axis.com;
-Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
- 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=195.60.68.100; helo=mail.axis.com; pr=C
-Received: from mail.axis.com (195.60.68.100) by
- DU6PEPF0000A7DD.mail.protection.outlook.com (10.167.8.37) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8746.27 via Frontend Transport; Fri, 16 May 2025 17:16:27 +0000
-Received: from pc52311-2249 (10.4.0.13) by se-mail01w.axis.com (10.20.40.7)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Fri, 16 May
- 2025 19:16:25 +0200
-From: Waqar Hameed <waqar.hameed@axis.com>
-To: Jonathan Cameron <jic23@kernel.org>
-CC: Lars-Peter Clausen <lars@metafoo.de>, <kernel@axis.com>,
-	<linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH 3/3] iio: Add driver for Nicera D3-323-AA PIR sensor
-In-Reply-To: <20250511131432.1c6e381c@jic23-huawei> (Jonathan Cameron's
-	message of "Sun, 11 May 2025 13:14:32 +0100")
-References: <cover.1746802541.git.waqar.hameed@axis.com>
-	<c5184074d85b68ca35ccb29ab94d774203b93535.1746802541.git.waqar.hameed@axis.com>
-	<20250511131432.1c6e381c@jic23-huawei>
-User-Agent: a.out
-Date: Fri, 16 May 2025 19:16:25 +0200
-Message-ID: <pndldqwiihi.fsf@axis.com>
+ bh=E7UhZbTH0tA5T63w8X2JQBOZan0wB++Fz+Xit5kZjms=;
+ b=R4ixK2ecLNM7FYL1UpVQ4/spFfJ4hKsallh8VNIL08t3zy4yGvXsZ4YLk4JmTGfkwIgc2M3tm5+vGSWIIdZ9iq1aRcbgKNYg7Tk/GkKCrPvC88lVER2Zr6KVWvP5dcBUx1M10FTCv4TW+R9nk0QnEpkSmYu8W+qGwnudwLpDb6c=
+Received: from PH0PR10MB5777.namprd10.prod.outlook.com (2603:10b6:510:128::16)
+ by DS0PR10MB8103.namprd10.prod.outlook.com (2603:10b6:8:1f9::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.29; Fri, 16 May
+ 2025 17:12:15 +0000
+Received: from PH0PR10MB5777.namprd10.prod.outlook.com
+ ([fe80::75a8:21cc:f343:f68c]) by PH0PR10MB5777.namprd10.prod.outlook.com
+ ([fe80::75a8:21cc:f343:f68c%6]) with mapi id 15.20.8722.027; Fri, 16 May 2025
+ 17:12:15 +0000
+Date: Fri, 16 May 2025 13:12:01 -0400
+From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+To: Nico Pache <npache@redhat.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
+        lorenzo.stoakes@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
+        corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
+        mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
+        baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
+        wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
+        sunnanyong@huawei.com, vishal.moola@gmail.com,
+        thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+        kirill.shutemov@linux.intel.com, aarcange@redhat.com,
+        raquini@redhat.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
+        tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com,
+        jack@suse.cz, cl@gentwo.org, jglisse@google.com, surenb@google.com,
+        zokeefe@google.com, hannes@cmpxchg.org, rientjes@google.com,
+        mhocko@suse.com, rdunlap@infradead.org
+Subject: Re: [PATCH v7 02/12] introduce khugepaged_collapse_single_pmd to
+ unify khugepaged and madvise_collapse
+Message-ID: <db37bakzupqagevhjvngsu7vzcqugp6coy635bvhoy6cdrzk53@mrldbtuep3gk>
+Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Nico Pache <npache@redhat.com>, linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, david@redhat.com, 
+	ziy@nvidia.com, baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com, 
+	ryan.roberts@arm.com, dev.jain@arm.com, corbet@lwn.net, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, 
+	baohua@kernel.org, willy@infradead.org, peterx@redhat.com, 
+	wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com, 
+	vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
+	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
+	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org, 
+	dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, jglisse@google.com, 
+	surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, rientjes@google.com, 
+	mhocko@suse.com, rdunlap@infradead.org
+References: <20250515032226.128900-1-npache@redhat.com>
+ <20250515032226.128900-3-npache@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515032226.128900-3-npache@redhat.com>
+User-Agent: NeoMutt/20240425
+X-ClientProxiedBy: YQXPR0101CA0003.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:15::16) To PH0PR10MB5777.namprd10.prod.outlook.com
+ (2603:10b6:510:128::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: se-mail02w.axis.com (10.20.40.8) To se-mail01w.axis.com
- (10.20.40.7)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU6PEPF0000A7DD:EE_|AM9PR02MB7139:EE_
-X-MS-Office365-Filtering-Correlation-Id: 31d573a7-f490-48c0-b733-08dd949d6479
+X-MS-TrafficTypeDiagnostic: PH0PR10MB5777:EE_|DS0PR10MB8103:EE_
+X-MS-Office365-Filtering-Correlation-Id: fe2de2b8-1fb0-4916-f330-08dd949cce33
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
+	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?qCbr4tW+TcLojfD7GPx4awg6dD447dhjzj5US6KRU0rpXio9twj+tHZ5+Wtz?=
- =?us-ascii?Q?mibpFtEAlo6/h6bY0WiLgpumUTRJiTSvweo23BLnTf/76W++pN6g2nLk25nv?=
- =?us-ascii?Q?RkvBdWli9pdDCs6K7cpwxUtZjH+T4jMvxyOElcMqMmI1ILXML0oh1FSPpBbY?=
- =?us-ascii?Q?uBfH72i1fTBErt4YrqabEFcBLi5hxKyqOp63aEGr0tWQ771ctcfBjehA+U0T?=
- =?us-ascii?Q?W1ureFpy4L7dhFjuvVTnKh3vKCbkkIbx58jQEjOovoFH5yw8KluHt6HAshQd?=
- =?us-ascii?Q?lVCt7W24ZvNAWo8Hj1W+e+gBg8CYcBHRlnH6GPRwkjzhw5GNu1Y1Kggki97N?=
- =?us-ascii?Q?rUOc/p2SmJF6G3frs+sbVJzS4A1yVn+3Yh6PCC66LL09qcWnOBFyP9x/WAal?=
- =?us-ascii?Q?ymfXyRMyECj/G8K83Gz/ytrqHh/ljStMyI0I9pG1nQ7h4zRUon+oQ3dzijRU?=
- =?us-ascii?Q?ujlM9qOKBamtjxXl3p56FKIWO64z0FeSGkHJJqdnaUN0/RJJJotkUPxJT9Bz?=
- =?us-ascii?Q?Xgxlukw1s8zPQPmNam7VzfwP5lKaZW4mq4sHpm47/Q2aztMZoab0sq2oQB9l?=
- =?us-ascii?Q?bM+dibpOFTdvUtupvjuwBITVpVknSRkBQXYxY/oAYhBstYf6vHx3yEQb6Jkz?=
- =?us-ascii?Q?xv7g8DrIiXSOtk0it+P4NtQ7SytapOJY+ugHe2AeQY2i3e8LUCDpHwDv89+T?=
- =?us-ascii?Q?vb9XMg6aerSqOAEOpVH6GCxnynZTMFiyIsPQcq+WujAFu1STwFGL1G06pu0d?=
- =?us-ascii?Q?bqeSpinOmD25X1KxD0+Sem6/Rh0s3O/6qUYACdk/bPbZ904sdDKp4i6pFAbG?=
- =?us-ascii?Q?gyLWx5+Blmmgr7uxxr8nExnn0D8Ogt9bil7j8NdKqJ9YwasUlypAWK7a/NzH?=
- =?us-ascii?Q?pUEE8vSungw79eBQLU0f8IWkeeQ98TwRyuIA11W94rb+Bs0ZwyOHR+yVgh/m?=
- =?us-ascii?Q?G4kXlP9RqrZOHdXf/Y+XVy8E1LCgcAv2PMdGAQcEefiAzY6SLxph4SkYOpRm?=
- =?us-ascii?Q?vAwiftDmJAnnWWAEZsbpI06lJcG6gCw0Oeo7ZbXAVNCvqjOeuA2LMxnRBhlS?=
- =?us-ascii?Q?6rwcZkMOYsxfikR5fQ4waY1HK85uDtpfrO9UGYkEeHuduCmqJoY8JOq/Woyx?=
- =?us-ascii?Q?VlOIqgLLYqU12bKxio4G8awoWe1bYwNFDtNQhhodH6yPW9CMu00CyO/bF75P?=
- =?us-ascii?Q?Bflwc7Ro7suOmoMOd1smRYoVkopv9JoLvbdyAyKQ+EtduR9Q0AcGczGv1T39?=
- =?us-ascii?Q?k6G7eknJut7QuLayrqktBqAppYoM19zrNFQeAnSFpO+IyvO8sNX8DwaiRG4V?=
- =?us-ascii?Q?EpKKQ8hxLKjC0roZNgaJ+XKV7u1K6QYtxN3M5WMvL0EBz0yLjL0D3XXQagfG?=
- =?us-ascii?Q?DOPk/A2+l1mHhTH2BpGzmw1dL4/Yi9EqIDM42hG8399Lch5RywbBe1YgbXCG?=
- =?us-ascii?Q?R6bIU2b63fTtotqcjwrW+cwjnikBxBHt2IvPtLUfOMlJ6ovHGIn5pv0wXdTk?=
- =?us-ascii?Q?3nEpwTjrK8mm9JqpuXi3VwAIVdaQTVkoVUZn?=
+	=?us-ascii?Q?X/aURo2xWPgFGE/ON+Nh31f87V3OLptUJ9NvokChtWorq353Y+lAb9LNF0WS?=
+ =?us-ascii?Q?fIGUPkNf7rBg9QEph55YfI3ZLjgqGVDjxJfeO4bohfFY/dBbmq2CZmbfpO7V?=
+ =?us-ascii?Q?RTp4hp4Xw6R96sAJ/KLlVKv5rSx/d2cjSwf3I0Di2Q8P9BJ8CNc+fzq3Qjib?=
+ =?us-ascii?Q?a12oxL29V+jrMqF2pkLWaEFSXn6YF7kHzy82fjBlZgW/DkqhN308+/Ohexzd?=
+ =?us-ascii?Q?0XuILXTpSwxV62AVZmyybVdJtyvvotZU+csb3fVjCKmTRaJMtRguo/HFOor/?=
+ =?us-ascii?Q?DVOshqi1KKeKg1KLap1263Cl0kCTuP1pHXrcbgMhzezHXYgQszUvwABZvHFN?=
+ =?us-ascii?Q?R0D5bE9iNjU+8raahMhHBln2PuCdoaFsbQqDqkdGZI/sZ/N5qaIwcMqJ0TMS?=
+ =?us-ascii?Q?oWYTqv/NnwVONrUEBRoJI4Nzr/hzu7+I/HHiVJ/27duh1sql+Wsh/h3JZ8og?=
+ =?us-ascii?Q?OEqCdO61sJqCCitvNqv8Ond3k4ZU9INET1qQe5BSFddEeo3p9PrqmcDijYDT?=
+ =?us-ascii?Q?2rditkm+S2QGJuDwieNMfNaKXOMj2wUA9/JaHLKsj9nrTDt7te0hebbelXsB?=
+ =?us-ascii?Q?yriDQbwOEjNBEmglkdVnld5cIic2im1uU8fnHHgofjn992WG6bXhP9U3PUn6?=
+ =?us-ascii?Q?l8W0qIjBFicqklOsWd0l99Q5X0BMl7VuKHKrJXO0h9r8B/go6QRPHfnidhVO?=
+ =?us-ascii?Q?wfa5Rky8Gd+MoJMgJNgOu3QBLAYNXJVtauydOhDp9aZJm/k42iYuNhfxZPBl?=
+ =?us-ascii?Q?sefqYl00vNsroLtRs2yaF/Ymqxrucqz/yTuTGhgFKVE+cUDPNmQH6WdQ2RR1?=
+ =?us-ascii?Q?jCPAU2GsUc4lSh9WWYs9idIjPyGRm8OqsXbLFjsNj80+afqId3UXeFtP/WUx?=
+ =?us-ascii?Q?Ng80WjqjvDMR9AumPF1NsuvgIwKPJnPFccgjqjzrYNGw8sf2Sm/AYHxkRhT0?=
+ =?us-ascii?Q?L2LJx6YKRxRA5bhF8xcSdM179iPTb5gVn8rDjxdO6/XWNbeDLx0zjIDhmWG9?=
+ =?us-ascii?Q?N+6fUhjSZvGjJ9R9JhAe7cqG3SlfbnjzqNz7rIIgas7ck1dbVUZ9bfzzliH1?=
+ =?us-ascii?Q?5kstmRAJdtrTQ7v8SV3UJE2NTMefNVV9Tyurw9hPMcq5y3Eo5w0wWrgMTCA1?=
+ =?us-ascii?Q?u+KmaLyCaifqsgmbFnE80Hs+4VXdVZeVgvSqnqcYGSMJDE+fDVv5QBMStII7?=
+ =?us-ascii?Q?rfAXGpkqf0ZvsafesuH487HHo5cl5RtMp2oE9Ln6qYxL8uJVBgxT/3k0R+g6?=
+ =?us-ascii?Q?opO0mnHHjxc6er+gKPfhFdyoWRC22r+9MGX210yJuV7f7ts0LhOMB0gE7Ag+?=
+ =?us-ascii?Q?Ji/J4c7L2VU+xRws6QTvX4lqnAKQjEwtFFLnKmO0P2xmUTiO2k+pNrxHan8Z?=
+ =?us-ascii?Q?spsKwQE7JFWmcxZKtRijn0M59mO/+Wqopgr2qN8Uxq3A5TCpFGUDcIWQm+JY?=
+ =?us-ascii?Q?c8wLaQ1PSH4=3D?=
 X-Forefront-Antispam-Report:
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2025 17:16:27.2393
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5777.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?NY4+pKI8wDvUALwvVF+lYiA/Wx0XcoBUmbmDwC76qMDvNNJ1zcdZkFQHu/li?=
+ =?us-ascii?Q?pfQEWVF5ryxOKmC39swHIHdWiLd/iO5sEmoXntgHzFfbdkFDUd4LlDhBjSxX?=
+ =?us-ascii?Q?VFOIic8rScybNNVUGO2IJSDxBzNLCE5Zjue0CeILjMAQUi0kaVgDiw9lC2pG?=
+ =?us-ascii?Q?gFgiLnWtUvLOhuGnpba2OFeUKm0XKcyKqQTpBnARYQbJluq5Umb9lXlQOkFN?=
+ =?us-ascii?Q?8WHg1Nb0oydKDkwM3Bf1XBvTuc8cs5iAqg7UDTS9myUXi2YYXAuqABgQS2wP?=
+ =?us-ascii?Q?r1EjCOnylWHpqrp3I/E2s2w9uhU16swEj3Hfo8WHIzBChQnTh8yEWuberYD4?=
+ =?us-ascii?Q?cfbX03mvGw5ievDRFybejNXRw2jiiV3tCr6cCJyzNJh43NTwShH531WIxVeJ?=
+ =?us-ascii?Q?jZJqBfh3wAOHDw9ZecoO3z7SBJgWvqxaGRWKynau+F1NX7VtFfsTp5Nn5+cX?=
+ =?us-ascii?Q?BIjuKBjml/Le4wcorFFIxvuII21ydoMDNSjbTw/AejuK2Y+7FHMIbiIEJgCP?=
+ =?us-ascii?Q?y7fKWi7h/xz8katSN1uFtq36hkQ0VRe/R9y6xgzVtL+cCHnwjODJjxhmXJzd?=
+ =?us-ascii?Q?2T9QLUUcJVdJCULXi5G3pINQAp7UaWAO/0ihhw/lnUdiW6zbF0NyJ9BGeGaG?=
+ =?us-ascii?Q?GTkx7C82w7+xnQlRMOdL8lhEgrI8cURcW5eIjZFMbj6e7Nph8o8Xg3RH+SWW?=
+ =?us-ascii?Q?/SoTw4WcaKVFEsxIVABsPjpdU1f8KJoyigvWvqykD1TzPsP2NUijXTd0fn5l?=
+ =?us-ascii?Q?HdaCzHnblXLSzCSj1oo1kvWX9GIBHbuBlkRn8L4lUOFk74ir9JFkQoKOFs3m?=
+ =?us-ascii?Q?UfyqcZ9X23RBx3+bv4ZsQdNSob+zbF+rJWWrgvcMrkFdfQ91hKAKxASBl914?=
+ =?us-ascii?Q?Y9wvXq0cBRWZX7HDoBqc6gYIOn2zeN2yR5GfxPdseoNAhLP4xdcUlm1ufQON?=
+ =?us-ascii?Q?epgb6oN3IetPmM83L759+4y3zBjjDG5gAgKziaRDn83T6iuVKVF876833AhI?=
+ =?us-ascii?Q?CzR5gdso52q0V5sCeua98L7pH7wk/xJiwnyOM2KQR1pRIO+IbiJT0mPbNYAb?=
+ =?us-ascii?Q?s4JEq2HrZ1nUI4x2SKQHYfVJT0RtPGyporEp8jNbB9fxoQUb1ZmgQKlyC5Hx?=
+ =?us-ascii?Q?6VS4hiQIIEpLj+i6N+HYCrCm5iFMt4mUWCl8RIeWqKsQH00BFS2hft3xg5wD?=
+ =?us-ascii?Q?X3rrkgwKQwviZsj/xr2BSV6911i/qkSdfDjB0rMVGGi+EJzeRSOeugRsGuAE?=
+ =?us-ascii?Q?6Idwo5uySAWzeSKcJZjJdnTNyBctjgitRbiX6AE06QnmNao8ToPt9Z9cLF5h?=
+ =?us-ascii?Q?6C9Le1D+4r+ke4SCTTPw2Jz2X18Ac2mzmU6LRQCZ8P7AWRanoVikrY2SGTYQ?=
+ =?us-ascii?Q?MCxClLNbWYIJG1z5vDRXbC8b5vP+04ZJBDL7cqYF1r120bCUO46qxynPiy/Q?=
+ =?us-ascii?Q?4vP7UZzH3bSyL90ShkJM3ygwWnMHX+H2pwOnVgTj9hSbqybWthcr6eBesR27?=
+ =?us-ascii?Q?5/7Qik8Y4NJruqpjOB5qVOFEqDzFQsO24+idHNoloo49tjI/ZcsabsEtzTvj?=
+ =?us-ascii?Q?9LLh/5FOg5g9b3u0gz4uDi0utcPIUE0T3dSHfjgc?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	14mhcS+Sl5UiA4R/IoBPm4Op8BzxiofohdgmGN4Ujl0rMI1I0Uc7wR8ihjDLcHkfj194ydXJvCPsT7Ndx90QOPqh2TzonCKhH645tqbl6VVmZHYJaB3AtegemiQxuFdFlnUprOVTNVfz3Yj5D8Bj+FlGM8zef4nv3Kl7yzgmczaLNQ9FsrgnIgsnrTs+dIIa1QfxuvdUVDgc+0XnVwK3xQD6JkfRJYkJPUCLWPR8TzAZintEPBTovTykC6c3tA1EA5LiIrf7+N9hZImt2vfdLcdcqTrwnA/lVzIgP52RseSnijaSbws6LE1HZqc0ZN1pEkXP6DB1+iMIRxKxhEm26zt8g+ziHTZs+y4ON9LoFKfJUdDrJtRpfqwRJkdwdcqbyrmDsL9rzKvANTeqUFrOUY9P+JZsBwhuOyH/iH8eQHAlSKJQzpHzbC3lHFWiu4PORFlCoTw+Rf2VBcG2G2KoxaHz7aIfj/C4fbQcBJ+9ZzwZOl7e+v4DeKjLU0J1HC7k2x4ELQl2i87s2gI1IRmq8IDtHkJ2tNsjBe96xJTVYpd69W5r3/gR15pC373ucbIaw/CtmjEVQoaPjY3M16HKvpGVFR3QiEJ0AXisARabvhc=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe2de2b8-1fb0-4916-f330-08dd949cce33
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5777.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2025 17:12:15.4466
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31d573a7-f490-48c0-b733-08dd949d6479
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DU6PEPF0000A7DD.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR02MB7139
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VB7hBOHGpDJ0CSnZA9e4hPtaJ3pYW/iLs3Sn2EwYuXVBZOPRG1CBBJZphctZv9xs3kdSuFu0vPVv6gxy+lqKSA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB8103
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-16_05,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
+ suspectscore=0 mlxscore=0 phishscore=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505070000 definitions=main-2505160168
+X-Proofpoint-GUID: 3fx4zjnLyLGMl9Cqe06n60OZFY0W4-ZW
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDE2OCBTYWx0ZWRfX1HHRK8DTImnC 4mGPUfJbSFSvk7kV0Qf7HT4GtJY+RRIGDh+f0ypm34EAPsb1HrCipzsssbgllVze6/Lj90Q6kRC 7ho9jf1uk0+iX9qeJbYQF8nHj3SZJt7CRrsT9Jm45kFFmEebzdoA9Cxny/wS5eAXqBRCyYbpIv1
+ pC7HVXysxDvMVaev3ckHa5Jh5gPHagegHGpwHUQX4dKOiQHS8nZJwaRbtYvRa2x/Dxd8L6/7wmM +yoUZvT96Jmw3FdG7n0g1iKiEpkXGcRKYUFUZdycOj1AcGbBQPqteXvMjS0sFzTxfYy+6tWmEAz j1p3SDggOXhTlHrGSLLM3GiFKIf7oD2me74U4UfY5MiXpyKvSI9d3SYYrs7EmxnGq01/0ESEoFO
+ u+TbbfKgF2ksQR8njSV24yJnHGGIgc0IahTWDqTHku1BNLrW1Uumt5uL1t+8kpXmjJto+hnQ
+X-Proofpoint-ORIG-GUID: 3fx4zjnLyLGMl9Cqe06n60OZFY0W4-ZW
+X-Authority-Analysis: v=2.4 cv=O9s5vA9W c=1 sm=1 tr=0 ts=682771f3 cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10
+ a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=20KFwNOVAAAA:8 a=SRrdq9N9AAAA:8 a=1g_mlD8uFuv8L6U3cTIA:9 a=CjuIK1q_8ugA:10
 
-On Sun, May 11, 2025 at 13:14 +0100 Jonathan Cameron <jic23@kernel.org> wrote:
-
-[...]
-
-> Hi Waqar,
->
-> Biggest suggestion in here is hide those bitmaps. They are of interest
-> only at point of reading and writing. I wouldn't use them for device state
-> elsewhere as they make for much less readable code than using simple
-> fields in iio_priv() for the state elements and building up the bitmaps
-> only where needed.
-
-Hi Jonathan!
-
-Thank you for thorough (as usual) review!
-
-[...]
-
->> +#define D3323AA_DRV_NAME "d3323aa"
->
-> Put that inline where used.  A define like this both implies that various values
-> must be the same when they need not be and means that we have to go find the
-> define to fine out what they are set to.  Just setting the strings directly
-> tends to end up more readable.
-
-Sure, we can do that. (There are a bunch of IIO-drivers doing this, so I
-just thought that was the "convention".)
-
->> +
->> +/*
->> + * Register bitmap.
->> + * For some reason the first bit is denoted as F37 in the datasheet, the second
->> + * as F38 and so on. Note the gap between F60 and F64.
->> + */
->> +#define D3323AA_REG_BIT_SLAVEA1		0	/* F37. */
->> +#define D3323AA_REG_BIT_SLAVEA2		1	/* F38. */
->> +#define D3323AA_REG_BIT_SLAVEA3		2	/* F39. */
->> +#define D3323AA_REG_BIT_SLAVEA4		3	/* F40. */
->> +#define D3323AA_REG_BIT_SLAVEA5		4	/* F41. */
->> +#define D3323AA_REG_BIT_SLAVEA6		5	/* F42. */
->> +#define D3323AA_REG_BIT_SLAVEA7		6	/* F43. */
->> +#define D3323AA_REG_BIT_SLAVEA8		7	/* F44. */
->> +#define D3323AA_REG_BIT_SLAVEA9		8	/* F45. */
-> Perhaps these can be represented as masks using GENMASK() rather than
-> bits.  A lot of this will be hidden away if you follow suggesting to
-> only expose that you are using a bitmap to bitbang in the read/write
-> functions.
-
-Yes, that would be the natural thing to do when moving the bitmap stuff
-to the read/write functions (as answered below).
-
-[...]
-
->> +/*
->> + * This is denoted as "step" in datasheet and corresponds to the gain at peak
->> + * for the band-pass filter. The index in this array is the corresponding index
->> + * in d3323aa_filter_gain_regval for the register bitmap value.
->> + */
->> +static const int d3323aa_filter_gain[] = {
->> +	1,
->> +	2,
->> +	3,
->> +};
-> 	1, 2, 3,
-> is fine for such a short list.
-
-Sure, I'll change the corresponding array below as well then.
-
->> +
->> +/*
->> + * Register bitmap values for the filter gain. The index in this array is the
->> + * corresponding index in d3323aa_filter_gain for the gain value.
->> + */
->> +static const u8 d3323aa_filter_gain_regval[] = {
->> +	1,
->> +	3,
->> +	0,
->> +};
->> +
->> +struct d3323aa_data {
->> +	struct completion reset_completion;
->> +	/*
->> +	 *  Since the setup process always requires a complete write of the
->> +	 *  _whole_ register bitmap, we need to synchronize it with a lock.
->> +	 */
->> +	struct mutex regmap_lock;
->> +	atomic_t irq_reset_count;
->> +	unsigned int irq;
->> +
->> +	struct device *dev;
->> +
->> +	/* Supply voltage. */
->> +	struct gpio_desc *gpiod_vdd;
->> +	/* Input clock or output detection signal (Vout). */
->
-> I'd rename. Vout kind of suggests a variable voltage. This seems to just
-> be a level signal.
-
->> +	struct gpio_desc *gpiod_clk_vout;
-
-Yeah, it's a weird pin with multiple use-cases... I just named it
-according to what the datasheet calls it. What about
-`gpiod_clk_detection`?
-
->> +	/* Input (setting) or output data. */
->> +	struct gpio_desc *gpiod_data;
->> +
->> +	DECLARE_BITMAP(regmap, D3323AA_REG_NR_BITS);
->> +
->> +	/*
->> +	 * Indicator for operational mode (configuring or detecting), i.e.
->> +	 * d3323aa_irq_detection() registered or not.
->> +	 */
->> +	bool detecting;
->> +};
->> +
->> +static int d3323aa_read_settings(struct iio_dev *indio_dev,
->> +				 unsigned long *regmap)
->> +{
->> +	struct d3323aa_data *data = iio_priv(indio_dev);
->> +	size_t i;
->> +	int ret;
->> +
->> +	/* Bit bang the clock and data pins. */
->> +	ret = gpiod_direction_output(data->gpiod_clk_vout, 0);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = gpiod_direction_input(data->gpiod_data);
->> +	if (ret)
->> +		return ret;
->> +
->> +	dev_dbg(data->dev, "Reading settings...\n");
->> +
->> +	for (i = 0; i < D3323AA_REG_NR_BITS; ++i) {
->> +		/* Clock frequency needs to be 1 kHz. */
->> +		gpiod_set_value(data->gpiod_clk_vout, 1);
->> +		udelay(500);
->> +
->> +		/* The data seems to change when clock signal is high. */
->> +		if (gpiod_get_value(data->gpiod_data))
->> +			set_bit(i, regmap);
->> +
->> +		gpiod_set_value(data->gpiod_clk_vout, 0);
->> +		udelay(500);
->> +	}
->> +
->> +	/* The first bit (F37) is just dummy data. Discard it. */
->> +	clear_bit(0, regmap);
->> +
->> +	/* Datasheet says to wait 30 ms after reading the settings. */
->> +	msleep(30);
->> +
->> +	return 0;
->> +}
->> +
->> +static int d3323aa_write_settings(struct iio_dev *indio_dev,
->> +				  const unsigned long *regmap)
->
-> Rename regmap. regmap means some specific stuff in the kernel register_bm or something
-> like that avoids that potential confusion.
->
-> However, it would be much easier to read this driver if only this
-> function and the read one knew about the bitmap stuff.  Inside the reset
-> of the driver just store and pass around a structure with the various fields.
-> Then in here use that to build up the bitmap locally and write to the device.
-> The opposite in read which decodes the bitmap into those fields.
->
-> That will make for a more standard and easier to review driver.
-
-Hm, maybe it would be easier to understand it if we remove the bitmap
-from `struct d3323aa_data` and instead only store the relevant state
-variables. We still would need to have the `regmap_lock` but to instead
-protect all of the variables.
-
-Let's go for that then! I actually don't have any strong arguments (or
-opinions) against it.
-
->> +{
->> +	DECLARE_BITMAP(end_pattern, D3323AA_SETTING_END_PATTERN_NR_BITS);
->> +	struct d3323aa_data *data = iio_priv(indio_dev);
->> +	size_t i;
->> +	int ret;
->> +
->> +	/* Bit bang the clock and data pins. */
->> +	ret = gpiod_direction_output(data->gpiod_clk_vout, 0);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = gpiod_direction_output(data->gpiod_data, 0);
->> +	if (ret)
->> +		return ret;
->> +
->> +	dev_dbg(data->dev, "Writing settings...\n");
->> +
->> +	/* First bit (F37) is not used when writing the register map. */
->> +	for (i = 1; i < D3323AA_REG_NR_BITS; ++i) {
->> +		gpiod_set_value(data->gpiod_data, test_bit(i, regmap));
->> +
->> +		/* Clock frequency needs to be 1 kHz. */
->> +		gpiod_set_value(data->gpiod_clk_vout, 1);
->> +		udelay(500);
->> +		gpiod_set_value(data->gpiod_clk_vout, 0);
->> +		udelay(500);
->> +	}
->> +
->> +	/* Compulsory end pattern. */
->> +	bitmap_write(end_pattern, D3323AA_SETTING_END_PATTERN, 0,
->> +		     D3323AA_SETTING_END_PATTERN_NR_BITS);
+* Nico Pache <npache@redhat.com> [250514 23:23]:
+> The khugepaged daemon and madvise_collapse have two different
+> implementations that do almost the same thing.
+> 
+> Create khugepaged_collapse_single_pmd to increase code
+> reuse and create an entry point for future khugepaged changes.
+> 
+> Refactor madvise_collapse and khugepaged_scan_mm_slot to use
+> the new khugepaged_collapse_single_pmd function.
+> 
+> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+>  mm/khugepaged.c | 96 +++++++++++++++++++++++++------------------------
+>  1 file changed, 49 insertions(+), 47 deletions(-)
+> 
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 806bcd8c5185..5457571d505a 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -2353,6 +2353,48 @@ static int khugepaged_scan_file(struct mm_struct *mm, unsigned long addr,
+>  	return result;
+>  }
 >  
-> Why not use a larger bitmap with padding for this end pattern
-> and just write this into that?  At which point this can all be one loop.
+> +/*
+> + * Try to collapse a single PMD starting at a PMD aligned addr, and return
+> + * the results.
+> + */
+> +static int khugepaged_collapse_single_pmd(unsigned long addr,
+> +				   struct vm_area_struct *vma, bool *mmap_locked,
+> +				   struct collapse_control *cc)
+> +{
+> +	int result = SCAN_FAIL;
+> +	struct mm_struct *mm = vma->vm_mm;
+> +
+> +	if (IS_ENABLED(CONFIG_SHMEM) && !vma_is_anonymous(vma)) {
 
-Will do! It will be natural to do that after moving the bitmap stuff and
-only scope it here.
+why IS_ENABLED(CONFIG_SHMEM) here, it seems new?
 
->> +	for (i = 0; i < D3323AA_SETTING_END_PATTERN_NR_BITS; ++i) {
->> +		gpiod_set_value(data->gpiod_data, test_bit(i, end_pattern));
->> +
->> +		gpiod_set_value(data->gpiod_clk_vout, 1);
->> +		udelay(500);
->> +		gpiod_set_value(data->gpiod_clk_vout, 0);
->> +		udelay(500);
->> +	}
->> +
->> +	/* Datasheet says to wait 30 ms after writing the settings. */
->> +	msleep(30);
->> +
->> +	return 0;
->> +}
->> +
->> +static irqreturn_t d3323aa_irq_detection(int irq, void *dev_id)
->> +{
->> +	struct iio_dev *indio_dev = dev_id;
->> +	struct d3323aa_data *data = iio_priv(indio_dev);
->> +	enum iio_event_direction dir;
->> +	int val;
->> +
->> +	val = gpiod_get_value(data->gpiod_clk_vout);
->
-> Ideally I'd like a setup where we can wire the interrupt side of this
-> to one pin and the gpio needed for writing to another.  In practice
-> they may well be the same pin but that does introduced a bunch of races
-> and dependency on what the interrupt controller does when an irq
-> is disabled.
->
-> Using one pin as an irq and as a data line is prone to some nasty
-> corner cases though it works on some SoCs.
+> +		struct file *file = get_file(vma->vm_file);
+> +		pgoff_t pgoff = linear_page_index(vma, addr);
+> +
+> +		mmap_read_unlock(mm);
+> +		*mmap_locked = false;
+> +		result = khugepaged_scan_file(mm, addr, file, pgoff, cc);
+> +		fput(file);
+> +		if (result == SCAN_PTE_MAPPED_HUGEPAGE) {
+> +			mmap_read_lock(mm);
+> +			*mmap_locked = true;
+> +			if (khugepaged_test_exit_or_disable(mm)) {
+> +				result = SCAN_ANY_PROCESS;
+> +				goto end;
+> +			}
+> +			result = collapse_pte_mapped_thp(mm, addr,
+> +							 !cc->is_khugepaged);
+> +			if (result == SCAN_PMD_MAPPED)
+> +				result = SCAN_SUCCEED;
+> +			mmap_read_unlock(mm);
+> +			*mmap_locked = false;
+> +		}
+> +	} else {
+> +		result = khugepaged_scan_pmd(mm, vma, addr, mmap_locked, cc);
+> +	}
+> +	if (cc->is_khugepaged && result == SCAN_SUCCEED)
+> +		++khugepaged_pages_collapsed;
+> +end:
+> +	return result;
 
-Hm, that's an interesting idea. However, as you say there might then be
-other issues to take care of.
+This function can return with mmap_read_locked or unlocked..
 
-On the other hand, the scope of the clock bit bang is quite small (only in
-`*read/write_settings()`). So I guess we just leave it then?
+> +}
+> +
+>  static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
+>  					    struct collapse_control *cc)
+>  	__releases(&khugepaged_mm_lock)
+> @@ -2427,34 +2469,12 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
+>  			VM_BUG_ON(khugepaged_scan.address < hstart ||
+>  				  khugepaged_scan.address + HPAGE_PMD_SIZE >
+>  				  hend);
+> -			if (!vma_is_anonymous(vma)) {
+> -				struct file *file = get_file(vma->vm_file);
+> -				pgoff_t pgoff = linear_page_index(vma,
+> -						khugepaged_scan.address);
+> -
+> -				mmap_read_unlock(mm);
+> -				mmap_locked = false;
+> -				*result = hpage_collapse_scan_file(mm,
+> -					khugepaged_scan.address, file, pgoff, cc);
+> -				fput(file);
+> -				if (*result == SCAN_PTE_MAPPED_HUGEPAGE) {
+> -					mmap_read_lock(mm);
+> -					if (hpage_collapse_test_exit_or_disable(mm))
+> -						goto breakouterloop;
+> -					*result = collapse_pte_mapped_thp(mm,
+> -						khugepaged_scan.address, false);
+> -					if (*result == SCAN_PMD_MAPPED)
+> -						*result = SCAN_SUCCEED;
+> -					mmap_read_unlock(mm);
+> -				}
+> -			} else {
+> -				*result = hpage_collapse_scan_pmd(mm, vma,
+> -					khugepaged_scan.address, &mmap_locked, cc);
+> -			}
+> -
+> -			if (*result == SCAN_SUCCEED)
+> -				++khugepaged_pages_collapsed;
+>  
+> +			*ngle_pmd(khugepaged_scan.address,
+> +						vma, &mmap_locked, cc);
+> +			/* If we return SCAN_ANY_PROCESS we are holding the mmap_lock */
 
->
->
->> +	if (val < 0) {
->> +		dev_err_ratelimited(data->dev,
->> +				    "Could not read from GPIO clk-vout (%d)\n",
->> +				    val);
->> +		return IRQ_HANDLED;
->> +	}
->> +
->> +	dir = val ? IIO_EV_DIR_RISING : IIO_EV_DIR_FALLING;
->> +	iio_push_event(indio_dev,
->> +		       IIO_UNMOD_EVENT_CODE(IIO_PROXIMITY, 0,
->> +					    IIO_EV_TYPE_THRESH, dir),
->> +		       iio_get_time_ns(indio_dev));
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static irqreturn_t d3323aa_irq_reset(int irq, void *dev_id)
->> +{
->> +	struct iio_dev *indio_dev = dev_id;
->> +	struct d3323aa_data *data = iio_priv(indio_dev);
->> +	int count = atomic_inc_return(&data->irq_reset_count);
->> +
->
-> As below. It should be easy enough to have a unified handler and avoid
-> the need to unregister / reregister the irq.
+But this comment makes it obvious that you know that..
 
-Alright (see longer response below).
+> +			if (*result == SCAN_ANY_PROCESS)
+> +				goto breakouterloop;
 
->> +	if (count == D3323AA_IRQ_RESET_COUNT)
->> +		complete(&data->reset_completion);
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static int d3323aa_reset(struct iio_dev *indio_dev)
->> +{
->> +	struct d3323aa_data *data = iio_priv(indio_dev);
->> +	long time;
->> +	int ret;
->> +
->> +	/*
->> +	 * Datasheet says VDD needs to be low at least for 30 ms. Let's add a
->> +	 * couple more to allow VDD to completely discharge as well.
->> +	 */
->> +	gpiod_set_value(data->gpiod_vdd, 0);
->> +	msleep(30 + 5);
->> +
->> +	/*
->> +	 * After setting VDD to high, the device signals with
->> +	 * D3323AA_IRQ_RESET_COUNT falling edges on CLK/Vout that it is now
->> +	 * ready for configuration. Datasheet says that this should happen
->> +	 * within D3323AA_RESET_TIMEOUT ms. Count these two edges within that
->> +	 * timeout.
->> +	 */
->> +	atomic_set(&data->irq_reset_count, 0);
->> +	reinit_completion(&data->reset_completion);
->> +
->> +	ret = gpiod_direction_input(data->gpiod_clk_vout);
->> +	if (ret)
->> +		return ret;
->> +
->> +	dev_dbg(data->dev, "Resetting...\n");
->> +
->> +	gpiod_set_value(data->gpiod_vdd, 1);
->> +
->> +	/*
->> +	 * Datasheet doesn't mention this but measurements have shown that
->> +	 * CLK/Vout signal slowly ramps up during the first 1.5 ms after reset.
->> +	 * This means that the digital signal will have bogus values during this
->> +	 * period. Let's wait for this ramp-up before counting the "real"
->> +	 * falling edges.
->> +	 */
->> +	usleep_range(2000, 5000);
->> +
->> +	if (data->detecting) {
->> +		/*
->> +		 * Device had previously been set up and was in operational
->> +		 * mode. Thus, free that detection IRQ handler before requesting
->> +		 * the reset IRQ handler.
->> +		 */
->> +		free_irq(data->irq, indio_dev);
->> +		data->detecting = false;
->> +	}
->> +
->> +	ret = request_irq(data->irq, d3323aa_irq_reset, IRQF_TRIGGER_FALLING,
->> +			  dev_name(data->dev), indio_dev);
->
-> Can you keep to a single handler with a check on device state?  This
-> dance with releasing and requesting irqs is rather complex when all you need
-> to know is what the irq means and that is state the driver knows.
+But later..
 
-We can do that. Ironically, I opted for separating them just for the
-sake of simplicity, and thought it would be easier to understand this
-way :)
+breakouterloop:                                                                                                          
+        mmap_read_unlock(mm); /* exit_mmap will destroy ptes after this */                                               
+breakouterloop_mmap_lock:
 
->> +	if (ret)
->> +		return ret;
->> +
->> +	time = wait_for_completion_killable_timeout(
->> +		&data->reset_completion,
->> +		msecs_to_jiffies(D3323AA_RESET_TIMEOUT));
->> +	free_irq(data->irq, indio_dev);
->> +	if (time == 0) {
->> +		return -ETIMEDOUT;
->> +	} else if (time < 0) {
->> +		/* Got interrupted. */
->> +		return time;
->> +	}
->> +
->> +	dev_dbg(data->dev, "Reset completed\n");
->> +
->> +	return 0;
->> +}
->> +
->> +static int d3323aa_setup(struct iio_dev *indio_dev, const unsigned long *regmap)
->> +{
->> +	DECLARE_BITMAP(read_regmap, D3323AA_REG_NR_BITS);
->> +	struct d3323aa_data *data = iio_priv(indio_dev);
->> +	unsigned long start_time;
->> +	int ret;
->> +
->> +	ret = d3323aa_reset(indio_dev);
->> +	if (ret) {
->> +		if (ret != -ERESTARTSYS)
->> +			dev_err(data->dev, "Could not reset device (%d)\n",
->> +				ret);
->> +
->> +		return ret;
->> +	}
->> +
->> +	/*
->> +	 * Datasheet says to wait 10 us before setting the configuration.
->> +	 * Moreover, the total configuration should be done within
->> +	 * D3323AA_CONFIG_TIMEOUT ms. Clock it.
->> +	 */
->> +	usleep_range(10, 20);
->> +	start_time = jiffies;
->> +
->> +	ret = d3323aa_write_settings(indio_dev, regmap);
->> +	if (ret) {
->> +		dev_err(data->dev, "Could not write settings (%d)\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	ret = d3323aa_read_settings(indio_dev, read_regmap);
->> +	if (ret) {
->> +		dev_err(data->dev, "Could not read settings (%d)\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	if (time_is_before_jiffies(start_time +
->> +				   msecs_to_jiffies(D3323AA_CONFIG_TIMEOUT))) {
->> +		dev_err(data->dev, "Could not set up configuration in time\n");
->> +		return -EAGAIN;
->> +	}
->> +
->> +	/* Check if settings were set successfully. */
->> +	if (!bitmap_equal(regmap, read_regmap, D3323AA_REG_NR_BITS)) {
->> +		dev_err(data->dev, "Settings data mismatch\n");
->> +		return -EIO;
->> +	}
->> +
->> +	/* Now in operational mode. */
->> +	ret = gpiod_direction_input(data->gpiod_clk_vout);
->> +	if (ret) {
->> +		dev_err(data->dev,
->> +			"Could not set GPIO clk-vout as input (%d)\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	ret = gpiod_direction_input(data->gpiod_data);
->> +	if (ret) {
->> +		dev_err(data->dev, "Could not set GPIO data as input (%d)\n",
->> +			ret);
->> +		return ret;
->> +	}
->> +
->> +	ret = request_irq(data->irq, d3323aa_irq_detection,
->> +			  IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
->
-> Why both ways?  Add a comment.
 
-Good point! I'll add a comment.
+So if you return with SCAN_ANY_PROCESS, we are holding the lock and go
+immediately and drop it.  This seems unnecessarily complicated and
+involves a lock.
 
->
->> +			  dev_name(data->dev), indio_dev);
->> +	if (ret) {
->> +		dev_err(data->dev, "Could not request IRQ for detection (%d)\n",
->> +			ret);
->> +		return ret;
->> +	}
->> +
->> +	bitmap_copy(data->regmap, regmap, D3323AA_REG_NR_BITS);
->> +	data->detecting = true;
->> +
->> +	dev_dbg(data->dev, "Setup done\n");
->> +
->> +	return 0;
->> +}
->
->> +
->> +static int d3323aa_write_raw(struct iio_dev *indio_dev,
->> +			     struct iio_chan_spec const *chan, int val,
->> +			     int val2, long mask)
->> +{
->> +	struct d3323aa_data *data = iio_priv(indio_dev);
->> +	DECLARE_BITMAP(regmap, D3323AA_REG_NR_BITS);
->> +	int ret;
->> +
->> +	guard(mutex)(&data->regmap_lock);
->> +
->> +	bitmap_copy(regmap, data->regmap, D3323AA_REG_NR_BITS);
->> +
->> +	switch (mask) {
->> +	case IIO_CHAN_INFO_HIGH_PASS_FILTER_3DB_FREQUENCY:
->> +		/*
->> +		 * We only allow to set the low-pass cutoff frequency, since
->> +		 * that is the only way to unambigously choose the type of
->> +		 * band-pass filter. For example, both filter type B and C have
->> +		 * 0.3 Hz as high-pass cutoff frequency (see
->> +		 * d3323aa_hp_filter_freq).
->
-> This is somewhat unintiutive userspace inteface.  I'd try and do the best
-> possible in response to a userspace request.  So if the lp frequency is
-> already set to one of the values that matches requested hp then use that.
-> If it's not then pick the one that has best match lp (so nearest) on
-> assumption userspace is probably about to update the lp side anyway.
->
-> Slight fiddlier code than you have here, but a better attempt to figure
-> out what the users is after than rejecting writes.
+That would leave just the khugepaged_scan_pmd() path with the
+unfortunate locking mess - which is a static function and called in one
+location..
 
-To be honest, I wasn't super keen on doing this either and figured you
-would have some suggestions on it. It was the easiest way to just set a
-policy instead :)
+Looking at what happens after the return seems to indicate we could
+clean that up as well, sometime later.
 
-Your suggestion is reasonable. Let's do that!
+>  			/* move to next address */
+>  			khugepaged_scan.address += HPAGE_PMD_SIZE;
+>  			progress += HPAGE_PMD_NR;
+> @@ -2773,36 +2793,18 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
+>  		mmap_assert_locked(mm);
+>  		memset(cc->node_load, 0, sizeof(cc->node_load));
+>  		nodes_clear(cc->alloc_nmask);
+> -		if (!vma_is_anonymous(vma)) {
+> -			struct file *file = get_file(vma->vm_file);
+> -			pgoff_t pgoff = linear_page_index(vma, addr);
+>  
+> -			mmap_read_unlock(mm);
+> -			mmap_locked = false;
+> -			result = hpage_collapse_scan_file(mm, addr, file, pgoff,
+> -							  cc);
+> -			fput(file);
+> -		} else {
+> -			result = hpage_collapse_scan_pmd(mm, vma, addr,
+> -							 &mmap_locked, cc);
+> -		}
+> +		result = khugepaged_collapse_single_pmd(addr, vma, &mmap_locked, cc);
+> +
+>  		if (!mmap_locked)
+>  			*prev = NULL;  /* Tell caller we dropped mmap_lock */
+>  
+> -handle_result:
+>  		switch (result) {
+>  		case SCAN_SUCCEED:
+>  		case SCAN_PMD_MAPPED:
+>  			++thps;
+>  			break;
+>  		case SCAN_PTE_MAPPED_HUGEPAGE:
+> -			BUG_ON(mmap_locked);
+> -			BUG_ON(*prev);
+> -			mmap_read_lock(mm);
+> -			result = collapse_pte_mapped_thp(mm, addr, true);
+> -			mmap_read_unlock(mm);
+> -			goto handle_result;
 
->> +		 */
->> +		return -EINVAL;
->> +	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
->> +		ret = d3323aa_set_lp_filter_freq(regmap, val, val2);
->> +		if (ret)
->> +			return ret;
->> +		break;
->> +	case IIO_CHAN_INFO_HARDWAREGAIN:
->> +		ret = d3323aa_set_filter_gain(regmap, val);
->> +		if (ret)
->> +			return ret;
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	return d3323aa_setup(indio_dev, regmap);
->
-> I'd bury this call in set_lp_filter() and set_fillter_gain() so they
-> actually do the setting.
+All of the above should probably be replaced with a BUG_ON(1) since it's
+not expected now?  Or at least WARN_ON_ONCE(), but it should be safe to
+continue if that's the case.
 
-Alright, let's do that then.
+It looks like the mmap_locked boolean is used to ensure that *prev is
+safe, but we are now dropping the lock and re-acquiring it (and
+potentially returning here) with it set to true, so perv will not be set
+to NULL like it should.
 
->
->> +}
->
->> +
->> +static int d3323aa_probe(struct platform_device *pdev)
->> +{
->> +	DECLARE_BITMAP(default_regmap, D3323AA_REG_NR_BITS);
->> +	struct d3323aa_data *data;
->> +	struct iio_dev *indio_dev;
->> +	int ret;
->> +
->> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*data));
->> +	if (!indio_dev)
->> +		return dev_err_probe(&pdev->dev, -ENOMEM,
->> +				     "Could not allocate iio device\n");
->> +
->> +	data = iio_priv(indio_dev);
->> +	data->dev = &pdev->dev;
->> +	platform_set_drvdata(pdev, indio_dev);
->
-> Should be unnecessary with the suggested change below.
+I think you can handle this by ensuring that
+khugepaged_collapse_single_pmd() returns with mmap_locked false in the
+SCAN_ANY_PROCESS case.
 
-Yup, will be removed.
+> -		/* Whitelisted set of results where continuing OK */
 
->
->> +
->> +	init_completion(&data->reset_completion);
->> +
->> +	ret = devm_mutex_init(data->dev, &data->regmap_lock);
->> +	if (ret)
->> +		return dev_err_probe(data->dev, ret,
->> +				     "Could not initialize mutex (%d)\n", ret);
->
-> As already pointed out in other review - look at what dev_err_probe()
-> does.
+This seems worth keeping?
 
-Yeah, will fix!
+>  		case SCAN_PMD_NULL:
+>  		case SCAN_PTE_NON_PRESENT:
+>  		case SCAN_PTE_UFFD_WP:
 
->
->> +
->> +	/* Request GPIOs. */
->
-> This sort of code structure comment adds nothing useful. We can see
-> you are requesting gpios from the code.  As such, all it can do is
-> become wrong in future if code is reorganised.  Hence drop the comment.
+I guess SCAN_ANY_PROCESS should be handled by the default case
+statement?  It should probably be added to the switch?
 
-Sure, let's drop it.
+That is to say, before your change the result would come from either
+hpage_collapse_scan_file(), then lead to collapse_pte_mapped_thp()
+above.
 
->> +	data->gpiod_vdd = devm_gpiod_get(data->dev, "vdd", GPIOD_OUT_LOW);
->
-> This seems to be a supply, not a gpio.  Use the regulator framework.
-> Make sure to request exclusive use though so you can turn it on and off.
-> _get_exclusive() etc should ensure no one else is using it.
+Now, you can have khugepaged_test_exit_or_disable() happen to return
+SCAN_ANY_PROCESS and it will fall through to the default in this switch
+statement, which seems like new behaviour?
 
-Alright, will do!
+At the very least, this information should be added to the git log on
+what this patch does - if it's expected?
 
->> +	if (IS_ERR(data->gpiod_vdd))
->> +		return dev_err_probe(data->dev, PTR_ERR(data->gpiod_vdd),
->> +				     "Could not get GPIO vdd (%ld)\n",
->> +				     PTR_ERR(data->gpiod_vdd));
->> +
-
-[...]
-
->> +static void d3323aa_remove(struct platform_device *pdev)
->> +{
->> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
->> +	struct d3323aa_data *data = iio_priv(indio_dev);
->> +
->> +	if (data->detecting)
->> +		free_irq(data->irq, indio_dev);
->
-> So this is an ordering mess.  You should never mix devm handling and
-> non devm handling - once something happens in probe that is non devm
-> you stop using devm_* from that point on.
->
-> The irq handling in here is complex, but not on fast paths. As such I'd
-> do devm_irq_request() and if you need to free it do so with devm_free_irq()
-> in the places where you immediately re request it.  However see above.
-> That should allow you to to drop this remove callabck.
-
-Yes, we'll merge the IRQ handlers into one and thus we'll drop this
-altogether.
-
->> +}
->> +
->> +static const struct of_device_id d3323aa_of_match[] = {
->> +	{
->> +		.compatible = "nicera,d3323aa",
->> +	},
->> +	{}
-> 	{ }
->
-> Is now standard format for these in IIO.
->
->> +};
->> +MODULE_DEVICE_TABLE(of, d3323aa_of_match);
-
-Oh ok. I'll change it to:
-
-static const struct of_device_id d3323aa_of_match[] = {
-	{ .compatible = "nicera,d3323aa", },
-	{ }
-};
-
-If that's more according to the style (I was relying on `clang-format`
-here).
-
-[...]
-
+Thanks,
+Liam
