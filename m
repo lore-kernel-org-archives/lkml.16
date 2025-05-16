@@ -1,25 +1,24 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BBA08F58;
-	Fri, 16 May 2025 10:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112FA233159;
+	Fri, 16 May 2025 10:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747390283; cv=none; b=QQ9Mj6egeR4SEXlt+ANw3YAWXIN3AoplVl1Ho7WPVrbfCUB1o09Xy7WaK5ADs/BvqEmur6WurDtixoK/m8oP8GrTFprdExNQ45PZsGtcZ/kl6vXmYZquT6Im0QoKvGx2ApbJACjFcks/3c11Dj2csgL6ITMDiLIMQDJLbT2VWGQ=
+	t=1747390284; cv=none; b=ip7F9i0heTFwra0JzzbbkpXEHupPid/4CRJPIjdQMaqtjJokn/BxjWwOgbtWPZv0DdqADt2kDk6Jo+45R4xkGJ/GhZkhIhhyExHkp5XcC5NE0wK91bBMapSB3AbcbFinET2TTLpRsm+svi5stsGNyNXYunm+HI7Hw8UJF2sjILs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747390283; c=relaxed/simple;
-	bh=8eKraBA6ag2WRjUmlRbTiPM4gQnifhxiQFHkkEMRhK4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HhqIEqJQnD/Qz38YChE3NqbIzT3xX3JEnMcstKp33+JXkYAYBF5TXQNKibatz/yBOX8D7u6lLby+VbCoGJ1v73WUNbMvZt4TPV0lIpizps/vQPFSyDST0+lnL/vrjdI4k4/HjfA0qn5rKyXUKMU+ukJESxUPxeGD76uAQMDKsKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=pankajraghav.com; arc=none smtp.client-ip=80.241.56.161
+	s=arc-20240116; t=1747390284; c=relaxed/simple;
+	bh=aaTOj7kfhFSOVIoJP8tXQ3B2wT5QtcvJnD+E2EI11lw=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=JAlY2PYXcKMEuTGJibYlbyCZVDmUVMO5oy8/kuv+TcmI8aF1xlXuPXsA3tvSTE3And4i9rz/I+812AUA1birqwO8b9r+lLkqnnDP62m6H9e5OVt83Vp9TaaJJ4ITHRUfaQMr9RXro758U8b761wXU8b6Zzpm7zw7Zus6xOiCaeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=pankajraghav.com; arc=none smtp.client-ip=80.241.56.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZzNC70M28z9tBW;
-	Fri, 16 May 2025 12:11:15 +0200 (CEST)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4ZzNC35VRsz9stK;
+	Fri, 16 May 2025 12:11:11 +0200 (CEST)
 From: Pankaj Raghav <p.raghav@samsung.com>
 To: "Darrick J . Wong" <djwong@kernel.org>,
 	hch@lst.de,
@@ -33,11 +32,10 @@ Cc: linux-kernel@vger.kernel.org,
 	Andrew Morton <akpm@linux-foundation.org>,
 	kernel@pankajraghav.com,
 	Pankaj Raghav <p.raghav@samsung.com>
-Subject: [RFC 1/3] mm: add large zero page for efficient zeroing of larger segments
-Date: Fri, 16 May 2025 12:10:52 +0200
-Message-ID: <20250516101054.676046-2-p.raghav@samsung.com>
-In-Reply-To: <20250516101054.676046-1-p.raghav@samsung.com>
-References: <20250516101054.676046-1-p.raghav@samsung.com>
+Subject: [RFC 0/3] add large zero page for zeroing out larger segments
+Date: Fri, 16 May 2025 12:10:51 +0200
+Message-ID: <20250516101054.676046-1-p.raghav@samsung.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,9 +43,29 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4ZzNC35VRsz9stK
 
-Introduce LARGE_ZERO_PAGE of size 2M as an alternative to ZERO_PAGE of
-size PAGE_SIZE.
+Introduce LARGE_ZERO_PAGE of size 2M as an alternative to ZERO_PAGE.
+Similar to ZERO_PAGE, LARGE_ZERO_PAGE is also a global shared page.
+2M seems to be a decent compromise between memory usage and performance.
+
+This idea (but not the implementation) was suggested during the review of
+adding LBS support to XFS[1][2].
+
+NOTE:
+===
+This implementation probably has a lot of holes, and it is not complete.
+For example, this implementation only works on x86.
+
+The intent of the RFC is:
+- To understand if this is something we still need in the kernel.
+- If this is the approach we want to take to implement a feature like
+  this or should we explore other alternatives.
+
+I have excluded a lot of Maintainers/mailing list and only included relevant
+folks in this RFC to understand the direction we want to take if this
+feature is needed.
+===
 
 There are many places in the kernel where we need to zeroout larger
 chunks but the maximum segment we can zeroout at a time is limited by
@@ -56,121 +74,45 @@ PAGE_SIZE.
 This is especially annoying in block devices and filesystems where we
 attach multiple ZERO_PAGEs to the bio in different bvecs. With multipage
 bvec support in block layer, it is much more efficient to send out
-larger zero pages as a part of single bvec.
+larger zero pages as a part of a single bvec.
+
+Some examples of places in the kernel where this could be useful:
+- blkdev_issue_zero_pages()
+- iomap_dio_zero()
+- vmalloc.c:zero_iter()
+- rxperf_process_call()
+- fscrypt_zeroout_range_inline_crypt()
+- bch2_checksum_update()
+...
+
+I have converted blkdev_issue_zero_pages() and iomap_dio_zero() as an
+example as a part of this series.
 
 While there are other options such as huge_zero_page, they can fail
-based on the system memory pressure requiring a fallback to ZERO_PAGE[3].
-
-This idea (but not the implementation) was suggested during the review of
-adding LBS support to XFS[1][2].
+based on the system conditions requiring a fallback to ZERO_PAGE[3].
 
 LARGE_ZERO_PAGE is added behind a config option so that systems that are
 constrained by memory are not forced to use it.
 
+Looking forward to some feedback.
+
 [1] https://lore.kernel.org/linux-xfs/20231027051847.GA7885@lst.de/
 [2] https://lore.kernel.org/linux-xfs/ZitIK5OnR7ZNY0IG@infradead.org/
-[3] https://lore.kernel.org/linux-xfs/3pqmgrlewo6ctcwakdvbvjqixac5en6irlipe5aiz6vkylfyni@2luhrs36ke5r/
 
-Suggested-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
----
+Pankaj Raghav (3):
+  mm: add large zero page for efficient zeroing of larger segments
+  block: use LARGE_ZERO_PAGE in __blkdev_issue_zero_pages()
+  iomap: use LARGE_ZERO_PAGE in iomap_dio_zero()
+
  arch/Kconfig                   |  8 ++++++++
  arch/x86/include/asm/pgtable.h | 20 +++++++++++++++++++-
  arch/x86/kernel/head_64.S      |  9 ++++++++-
- 3 files changed, 35 insertions(+), 2 deletions(-)
+ block/blk-lib.c                |  4 ++--
+ fs/iomap/direct-io.c           | 31 +++++++++----------------------
+ 5 files changed, 46 insertions(+), 26 deletions(-)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index b0adb665041f..aefa519cb211 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -218,6 +218,14 @@ config USER_RETURN_NOTIFIER
- 	  Provide a kernel-internal notification when a cpu is about to
- 	  switch to user mode.
- 
-+config LARGE_ZERO_PAGE
-+	bool "Large zero pages"
-+	def_bool n
-+	help
-+	  2M sized zero pages for zeroing. This will reserve 2M sized
-+	  physical pages for zeroing. Not suitable for memory constrained
-+	  systems.
-+
- config HAVE_IOREMAP_PROT
- 	bool
- 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 3f59d7a16010..78eb83f2da34 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -17,6 +17,7 @@
- 
- #ifndef __ASSEMBLER__
- #include <linux/spinlock.h>
-+#include <linux/sizes.h>
- #include <asm/x86_init.h>
- #include <asm/pkru.h>
- #include <asm/fpu/api.h>
-@@ -47,14 +48,31 @@ void ptdump_walk_user_pgd_level_checkwx(void);
- #define debug_checkwx_user()	do { } while (0)
- #endif
- 
-+#ifdef CONFIG_LARGE_ZERO_PAGE
-+/*
-+ * LARGE_ZERO_PAGE is a global shared page that is always zero: used
-+ * for zero-mapped memory areas etc..
-+ */
-+extern unsigned long empty_large_zero_page[(SZ_2M) / sizeof(unsigned long)]
-+	__visible;
-+#define ZERO_LARGE_PAGE(vaddr) ((void)(vaddr),virt_to_page(empty_large_zero_page))
-+
-+#define ZERO_PAGE(vaddr) ZERO_LARGE_PAGE(vaddr)
-+#define ZERO_LARGE_PAGE_SIZE SZ_2M
-+#else
- /*
-  * ZERO_PAGE is a global shared page that is always zero: used
-  * for zero-mapped memory areas etc..
-  */
--extern unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
-+extern unsigned long empty_zero_page[(PAGE_SIZE) / sizeof(unsigned long)]
- 	__visible;
- #define ZERO_PAGE(vaddr) ((void)(vaddr),virt_to_page(empty_zero_page))
- 
-+#define ZERO_LARGE_PAGE(vaddr) ZERO_PAGE(vaddr)
-+
-+#define ZERO_LARGE_PAGE_SIZE PAGE_SIZE
-+#endif
-+
- extern spinlock_t pgd_lock;
- extern struct list_head pgd_list;
- 
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index fefe2a25cf02..ebcd12f72966 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -14,6 +14,7 @@
- #include <linux/threads.h>
- #include <linux/init.h>
- #include <linux/pgtable.h>
-+#include <linux/sizes.h>
- #include <asm/segment.h>
- #include <asm/page.h>
- #include <asm/msr.h>
-@@ -708,8 +709,14 @@ EXPORT_SYMBOL(phys_base)
- #include "../xen/xen-head.S"
- 
- 	__PAGE_ALIGNED_BSS
-+#ifdef CONFIG_LARGE_ZERO_PAGE
-+SYM_DATA_START_PAGE_ALIGNED(empty_large_zero_page)
-+	.skip SZ_2M
-+SYM_DATA_END(empty_large_zero_page)
-+EXPORT_SYMBOL(empty_large_zero_page)
-+#else
- SYM_DATA_START_PAGE_ALIGNED(empty_zero_page)
- 	.skip PAGE_SIZE
- SYM_DATA_END(empty_zero_page)
- EXPORT_SYMBOL(empty_zero_page)
--
-+#endif
+
+base-commit: 9e619cd4fefd19cdce16e169d5827bc64ae01aa1
 -- 
 2.47.2
 
