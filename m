@@ -1,143 +1,139 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6269229B07
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:50:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0470282F1;
+	Fri, 16 May 2025 06:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747378217; cv=none; b=eh6lcSoiOp77qhiUhNpleUyTRC1CR+oL5X4HV+H6rpeQMEJJAjX1vbRJ3ftlDo60uiXKSYgkfxoDJPMpPM8c60ovyIcscs6P46MkRudy9ejsb5NDQMcBUkzM3sH9/LNXEgQdkkmGl9bBUWn9Aa03PWujaZwrjb3qAEczaFtT5es=
+	t=1747378576; cv=none; b=Mdftu1y/RmIkTOXegsOAGeYhSynaihpRt6bikfmYohWBof5/CPLLK6/vJuEaYte5zVVIFz5n4N801YSaDA9Wl/2wOGF9wcwg98QtbaltH7KLZzmFp2LuIcVihODALqnK7Abuq/HdnBho9vlcgcRV8ypBlV2GsTDeKEb+HawmJSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747378217; c=relaxed/simple;
-	bh=TN0aHevHnfhcWVGThCRs5qFeEEsKBRAAG6+XURYRKRA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jxyhWq27smQ5fiwBQQTpHg6NA4KkzXESdzq28e5uniCxY9skEj49X/7icQYvUayKuZZQcuLNe+tXSqhiHheUhARzwbFUeGpauFqmn2t4jZtdlsZPWwE2Kzlu8VQ9faK6/aNjXMqqubXejRSyOiKIg5V16PiPrmIrebjlJmcAlb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=siOP1XI+; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747378576; c=relaxed/simple;
+	bh=6rfuUKsjOTxXxT8uLY3kxtdvK2WPbv9CQZT5mG0czjU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jjlcaE7ECiIv2nxocCpajNoGxhp3lshMeTkA4zWLfzsTPrb7osZFyya7PHS2HjqBMsi57VP+wKWHXib9CTxcFFdZhHhfSDFeRdvCLNpiMwgM30csNpJNfTd81u1sTzEj5DJG5WIBKcHLSplcD2aXwW7KJq9ziZt1BWisoYjReFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XVStc5d+; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="siOP1XI+"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747378214;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rMkhHE3/mY4LwdWFLkKMdTI5kaoAKFQu40eQRc8Gq7c=;
-	b=siOP1XI+4UsJf4QcPdJTLENFgNL3vd8HYedjMVroCwakJlLDn86JD4Qc4+nqwIm8+F87sI
-	kqlqdNKpEZ4nDYd76Re7gsHiCM1qQT38MtpIP7DJ7FJAY/lWAM3GbK7iGbZo2mD3WJdZyJ
-	4jB0niGQ+ZYUpCNX1Oa1k50J3tj2xwE=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	bpf@vger.kernel.org,
-	linux-mm@kvack.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: [PATCH 5/5] memcg: make memcg_rstat_updated nmi safe
-Date: Thu, 15 May 2025 23:49:12 -0700
-Message-ID: <20250516064912.1515065-6-shakeel.butt@linux.dev>
-In-Reply-To: <20250516064912.1515065-1-shakeel.butt@linux.dev>
-References: <20250516064912.1515065-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XVStc5d+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747378575; x=1778914575;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6rfuUKsjOTxXxT8uLY3kxtdvK2WPbv9CQZT5mG0czjU=;
+  b=XVStc5d+Cez+rAX9YiRsil8c4f3b8g/lUcIsnOtzSCG54wNlxEXnhSIj
+   I6E2eMKQ+oWvW/xC3icoHq7qMUxOPExiRusFE4gByj+FxbNKlb6BTTVkB
+   Beu4uGjOkrIzv2CYoB9BSHltQegSv4zDWUGgVGv0idxP0cx7vcE4xDbV6
+   UdIrHLi8Q7ChzXZCSgldExULNiuOmJTFgMPnRtQC7PxN7Ntg5T25jM/Hp
+   fdmLvSidj9WM9MnKGIkxWhdfiVeN4LVTRYpXooTYwKWxO2GW1ROV10T22
+   ACmR5MnvSQLoS9Q+f317vOz2GZGl36vnyCroqInMv9Wwk6WxBspfIVXdF
+   g==;
+X-CSE-ConnectionGUID: YlU8t5dBQWuxydaNzqKCDA==
+X-CSE-MsgGUID: NO6i86uQTDCKUTu+1Oo8Mw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="74738750"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="74738750"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 23:56:14 -0700
+X-CSE-ConnectionGUID: O0/Va5nMQmqorCi9kxe9jw==
+X-CSE-MsgGUID: 9O/mnJV4RoG4sk0/ylvhkA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="138345283"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 15 May 2025 23:56:11 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uFozI-000J4N-1Z;
+	Fri, 16 May 2025 06:56:08 +0000
+Date: Fri, 16 May 2025 14:55:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Alexey Charkov <alchark@gmail.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>
+Cc: oe-kbuild-all@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, Alexey Charkov <alchark@gmail.com>
+Subject: Re: [PATCH v3 4/4] watchdog: Add support for VIA/WonderMedia SoC
+ watchdog functionality
+Message-ID: <202505161430.wdURc0TG-lkp@intel.com>
+References: <20250515-vt8500-timer-updates-v3-4-2197a1b062bd@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515-vt8500-timer-updates-v3-4-2197a1b062bd@gmail.com>
 
-memcg: convert stats_updates to atomic_t
+Hi Alexey,
 
-Currently kernel maintains memory related stats updates per-cgroup to
-optimize stats flushing. The stats_updates is defined as atomic64_t
-which is not nmi-safe on some archs. Actually we don't really need 64bit
-atomic as the max value stats_updates can get should be less than
-nr_cpus * MEMCG_CHARGE_BATCH. A normal atomic_t should suffice.
+kernel test robot noticed the following build warnings:
 
-Also the function cgroup_rstat_updated() is still not nmi-safe but there
-is parallel effort to make it nmi-safe, so until then let's ignore it in
-the nmi context.
+[auto build test WARNING on 92a09c47464d040866cf2b4cd052bc60555185fb]
 
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
----
- mm/memcontrol.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Alexey-Charkov/dt-bindings-timer-via-vt8500-timer-Convert-to-YAML/20250516-025729
+base:   92a09c47464d040866cf2b4cd052bc60555185fb
+patch link:    https://lore.kernel.org/r/20250515-vt8500-timer-updates-v3-4-2197a1b062bd%40gmail.com
+patch subject: [PATCH v3 4/4] watchdog: Add support for VIA/WonderMedia SoC watchdog functionality
+config: sparc-allmodconfig (https://download.01.org/0day-ci/archive/20250516/202505161430.wdURc0TG-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250516/202505161430.wdURc0TG-lkp@intel.com/reproduce)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 85519ce37f18..06d5d5407b00 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -533,7 +533,7 @@ struct memcg_vmstats {
- 	unsigned long		events_pending[NR_MEMCG_EVENTS];
- 
- 	/* Stats updates since the last flush */
--	atomic64_t		stats_updates;
-+	atomic_t		stats_updates;
- };
- 
- /*
-@@ -559,7 +559,7 @@ static u64 flush_last_time;
- 
- static bool memcg_vmstats_needs_flush(struct memcg_vmstats *vmstats)
- {
--	return atomic64_read(&vmstats->stats_updates) >
-+	return atomic_read(&vmstats->stats_updates) >
- 		MEMCG_CHARGE_BATCH * num_online_cpus();
- }
- 
-@@ -573,7 +573,9 @@ static inline void memcg_rstat_updated(struct mem_cgroup *memcg, int val,
- 	if (!val)
- 		return;
- 
--	cgroup_rstat_updated(memcg->css.cgroup, cpu);
-+	/* TODO: add to cgroup update tree once it is nmi-safe. */
-+	if (!in_nmi())
-+		cgroup_rstat_updated(memcg->css.cgroup, cpu);
- 	statc_pcpu = memcg->vmstats_percpu;
- 	for (; statc_pcpu; statc_pcpu = statc->parent_pcpu) {
- 		statc = this_cpu_ptr(statc_pcpu);
-@@ -591,7 +593,7 @@ static inline void memcg_rstat_updated(struct mem_cgroup *memcg, int val,
- 			continue;
- 
- 		stats_updates = this_cpu_xchg(statc_pcpu->stats_updates, 0);
--		atomic64_add(stats_updates, &statc->vmstats->stats_updates);
-+		atomic_add(stats_updates, &statc->vmstats->stats_updates);
- 	}
- }
- 
-@@ -599,7 +601,7 @@ static void __mem_cgroup_flush_stats(struct mem_cgroup *memcg, bool force)
- {
- 	bool needs_flush = memcg_vmstats_needs_flush(memcg->vmstats);
- 
--	trace_memcg_flush_stats(memcg, atomic64_read(&memcg->vmstats->stats_updates),
-+	trace_memcg_flush_stats(memcg, atomic_read(&memcg->vmstats->stats_updates),
- 		force, needs_flush);
- 
- 	if (!force && !needs_flush)
-@@ -4132,8 +4134,8 @@ static void mem_cgroup_css_rstat_flush(struct cgroup_subsys_state *css, int cpu)
- 	}
- 	WRITE_ONCE(statc->stats_updates, 0);
- 	/* We are in a per-cpu loop here, only do the atomic write once */
--	if (atomic64_read(&memcg->vmstats->stats_updates))
--		atomic64_set(&memcg->vmstats->stats_updates, 0);
-+	if (atomic_read(&memcg->vmstats->stats_updates))
-+		atomic_set(&memcg->vmstats->stats_updates, 0);
- }
- 
- static void mem_cgroup_fork(struct task_struct *task)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505161430.wdURc0TG-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/watchdog/vt8500-wdt.c: In function 'vt8500_wdt_probe':
+>> drivers/watchdog/vt8500-wdt.c:98:44: warning: conversion from 'long unsigned int' to 'unsigned int' changes value from '6148914691236517' to '3287081637' [-Woverflow]
+      98 |         drvdata->wdd.max_hw_heartbeat_ms = -1UL / (VT8500_TIMER_HZ / 1000);
+         |                                            ^
+
+
+vim +98 drivers/watchdog/vt8500-wdt.c
+
+    75	
+    76	static int vt8500_wdt_probe(struct platform_device *pdev)
+    77	{
+    78		struct device *dev = &pdev->dev;
+    79		struct vt8500_wdt *drvdata;
+    80	
+    81		drvdata = devm_kzalloc(dev, sizeof(struct vt8500_wdt), GFP_KERNEL);
+    82		if (!drvdata)
+    83			return -ENOMEM;
+    84	
+    85		/*
+    86		 * The register area where the timer and watchdog reside is disarranged.
+    87		 * Hence mapping individual register blocks for the timer and watchdog
+    88		 * is not recommended as they would have access to each others
+    89		 * registers. The timer driver creates the watchdog as a child device.
+    90		 * During the watchdogs creation, the timer driver passes the base
+    91		 * address to the watchdog over the private interface.
+    92		 */
+    93	
+    94		drvdata->regbase = (void __iomem *)dev->platform_data;
+    95	
+    96		drvdata->wdd.info = &vt8500_watchdog_info;
+    97		drvdata->wdd.ops = &vt8500_watchdog_ops;
+  > 98		drvdata->wdd.max_hw_heartbeat_ms = -1UL / (VT8500_TIMER_HZ / 1000);
+    99		drvdata->wdd.parent = dev;
+   100	
+   101		watchdog_set_drvdata(&drvdata->wdd, drvdata);
+   102	
+   103		return devm_watchdog_register_device(dev, &drvdata->wdd);
+   104	}
+   105	
+
 -- 
-2.47.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
