@@ -1,121 +1,91 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4942D22F776;
-	Fri, 16 May 2025 13:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610761E521E;
+	Fri, 16 May 2025 13:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747400547; cv=none; b=GQqf+p8JfRedO6E6y4BKU5ixUlw4HRP385kE8nQHezrCIxVGrmr7kkke33JydDLFOaL904gONMqcM0msAVbOYiPocBeGqTUiV2cHgHdq1IDzGiDxvboj9aUfkdWmfyBaoiOUpXGlAwxsgiAd50+A+kDuiTJjxUaS1ymh9CGXcHo=
+	t=1747400625; cv=none; b=dAM7MhNnDWY9+232AsqWJc8qneggg7LYPMfVypdnRddCqFWv1/oH2IEX7i5ZgzfEJXuSJ8H6NWqwmXMzHA5Qn8UIr6gfj0f/LZffxoZj2NMonE/XHRTVwfJ8/ijqpBM8+OS3UBM9TzELR/Nlsu5SaVE5mgmurbq33RfmOhCgryo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747400547; c=relaxed/simple;
-	bh=KVS47/XoSWd+fNXjULjdUBqXz+ZFamPMM11G3krrkqA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iG6le0y0eLe01mizk9gwayCY/COdZ6x4wm3ap28AmEkvxUbq9jr9re6XSO1FZbe3BPke6J8276jk4h0SCE61mo5dAcRg6xnVcm8L4/sviB6Dwp3xM230zhEvA0JuA+H4lL5WyVWiGkka0wCHbCyPxmcJyyDXHzKZCAmjAbgWhvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E2nr14y1; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747400625; c=relaxed/simple;
+	bh=smfuN5fe6M/tq9D8lt3z+Q09J9nsqYyj9JERtoh++yk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B/0MDsm1KGVIumlykeSiK4zT4cPb02YHaeiUP9/yG0/EgFLXmxQoGfQHNWd3/W7S4B1QPJEu+ODPQhdNclBfBJz1fWHN+rAdj/KaEeQHPgx0WPir/F6u+40LdfqfCHzOMkP++VK+xO3njRgr+Js0UrRF4KkkdxrK1iVbAnimZoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=QhyCkFW3; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E2nr14y1"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4769aef457bso25868051cf.2;
-        Fri, 16 May 2025 06:02:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747400545; x=1748005345; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8EAaXCcBODOqPPRNoOnVtfPFAMjr1gPjPXMHsuSlMuo=;
-        b=E2nr14y1g1Lz/4z7YUukoAjnZgKb8b25fCNOYcHTzzHx2kN2C5X684cWPHDEVz9Tyf
-         K6Q5pZWQvRk7qHd9rDgJSLUSOCmrnkgt/Q3AOO4jTSgLT4Fs0RovchS9R8MAPIpOwnhV
-         cBVZ/Cmib6swuxrQvqxAvdbJC2BgxJjI55ILTdXECyZRRJoerC0l0OfjtQpXW2YpzLWh
-         cs1hPBT7X70WEMQz+aEMaqKDeNYmP9SiGN8BZoCysMEZz6FhNIqHblV+RX5GesEBxTI1
-         0Ge2Ua9njXlATNNuS7i3ZDSAvBpthhtA8Leyn0XEUzRvNR55CTn0iZ1W5qDnyFzFoztJ
-         scBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747400545; x=1748005345;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8EAaXCcBODOqPPRNoOnVtfPFAMjr1gPjPXMHsuSlMuo=;
-        b=HyHnjiAxXSs2jZ9P+2FHD4oBrhet+d267HRIhWvOEWNviWuViWr5+e82NLY7APZzby
-         QS+l7iXF8AfEPxFcZPjCXU2Ruq0aTLODvOPZTGugucwNroyPR2bNY8mrHNNBEBlTtycE
-         rO9Ct1OihbGJViqm5uPbxt7gSaGIN6SkuUX+6AMZ+LueEzmTlaL/VCUrAQ5mY4rUn68V
-         dpP3FNVzzlLDAYIAMkYAQv1inv8OXjMkC6H066qghCJN625hh5d8bjFbf1VTZm4HUHrX
-         MDsnjX2b14gZ/vtZk2xE4TidIm14Of3cH5W1+0xBr3aNbdtPISlcMnl/l5eZdYeD9uuu
-         SnUA==
-X-Forwarded-Encrypted: i=1; AJvYcCVc965D/XG0d42qoacOnDWVDYFi3rC+DUCcudUQuaGn3T4XL/6HZpdsJx9DUfop0QDucqbG0YavRbSw@vger.kernel.org, AJvYcCVwtyDgCW1ZcpP2IRTI2Rgg3OCTmNdgawohNwVgl1Ai0B+f74EN19pZs80Lq8R4JPpGPyl7Z7QkERQMn06Z@vger.kernel.org, AJvYcCWQ2VBHUSSjWZjenNnza9o54n+b79G1hfLMs/zTdWvPF9Q2ZB3DRDfZheGxmNqa8+uedZNBJZn+KolaazTBH+Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0drwebIekIbu2qK7g6KlE7RhR9YTdMRXn4mAaxIYMBRW2Xq2e
-	ds0qOLxv5EPR+pyPi1DP4Z9n+LRG/V+ONAH7CpVgYUYiWClR7FbdKVX0dnEtsS/40V9Z/ekhBz5
-	qbG3U1/16sWM3A1PistxPTPifi1QprAk=
-X-Gm-Gg: ASbGncu8XG6vKkNrhJs4dPa4N+nkrtalOpxKg/7HN11wC9glgAqWYTYhyCw7uwysdKk
-	Ew9a3zFButJ2BJbIojgUVmLCY+jWfQeVTsGC9pDTCgGDR8/3oe350atVzV96kAd4XtbGMfmrIv8
-	xy9LR0J8E5aXwhJHIR4JSsXoievqWMc0Fbd/gB5gTcpKk=
-X-Google-Smtp-Source: AGHT+IHZyJqid//wCBlVNP3pcnUuvkjajKER+xeFHB1o8i8ij6OKhPHYHUDAmLQb9yNNQCp7v0lXFOO9XZFKzyx4pHM=
-X-Received: by 2002:ac8:6f1b:0:b0:48b:5656:bb01 with SMTP id
- d75a77b69052e-494ae352f98mr41415291cf.10.1747400544544; Fri, 16 May 2025
- 06:02:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="QhyCkFW3"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4ZzS2237KPz9svH;
+	Fri, 16 May 2025 15:03:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1747400618;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k5jIIhYbIkxt9gsUjYrJMapDzXrc41ocEumqPERe5Cs=;
+	b=QhyCkFW31XORoLY8RESpZbYqT50XjDBcU+SVfRlQPDM0GXbC1rqrz42fO+APu6Vt7KFGpk
+	52oevjikdjxD5HPX2wsR/CLt+/Rr+lLllu800VS9lTCYKKaTwJpQUdwnK6X9VAqKycemSe
+	1Bdd7XrEqt2UdBXwWiIVDM2kUpq/Zdt5SP9KN0nEY1wd9d/p0KKyKyiQZpOGj6/e7VwRQA
+	/AMn3ZclX85uUcBA8+2MKbpzutKJDhQObyF8pnZp4Ol6DSLpzxwtLShv9WmJ5OzUEL04jN
+	ehK9qq9MlhDifqNjW2mmaibRQXHSTBy2aGPcNZrtHXW7pwumV0T7bxHfljhm6Q==
+Date: Fri, 16 May 2025 15:03:30 +0200
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Pankaj Raghav <p.raghav@samsung.com>, 
+	"Darrick J . Wong" <djwong@kernel.org>, hch@lst.de, willy@infradead.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, mcgrof@kernel.org, 
+	gost.dev@samsung.com, Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [RFC 1/3] mm: add large zero page for efficient zeroing of
+ larger segments
+Message-ID: <d2gqsc55wnzckszesku3xsa33nseueul4vnwfpjcb37flm5su4@xx6nahf5h3vu>
+References: <20250516101054.676046-1-p.raghav@samsung.com>
+ <20250516101054.676046-2-p.raghav@samsung.com>
+ <cb52312d-348b-49d5-b0d7-0613fb38a558@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515-vt8500-timer-updates-v3-4-2197a1b062bd@gmail.com> <202505161430.wdURc0TG-lkp@intel.com>
-In-Reply-To: <202505161430.wdURc0TG-lkp@intel.com>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Fri, 16 May 2025 16:02:13 +0300
-X-Gm-Features: AX0GCFuUyfeKPyuuQKwLTH_a0JHlANkAjiXIiU8TmkAt1AD4XrUds-vQSs5nQng
-Message-ID: <CABjd4YykcZckQFfyuSpMtCJybq2nQuj9TYAP2S7RfivPLYPUnw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] watchdog: Add support for VIA/WonderMedia SoC
- watchdog functionality
-To: kernel test robot <lkp@intel.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
-	oe-kbuild-all@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cb52312d-348b-49d5-b0d7-0613fb38a558@redhat.com>
+X-Rspamd-Queue-Id: 4ZzS2237KPz9svH
 
-On Fri, May 16, 2025 at 9:56=E2=80=AFAM kernel test robot <lkp@intel.com> w=
-rote:
->
-> Hi Alexey,
->
-> kernel test robot noticed the following build warnings:
->
-> [auto build test WARNING on 92a09c47464d040866cf2b4cd052bc60555185fb]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/Alexey-Charkov/dt-=
-bindings-timer-via-vt8500-timer-Convert-to-YAML/20250516-025729
-> base:   92a09c47464d040866cf2b4cd052bc60555185fb
-> patch link:    https://lore.kernel.org/r/20250515-vt8500-timer-updates-v3=
--4-2197a1b062bd%40gmail.com
-> patch subject: [PATCH v3 4/4] watchdog: Add support for VIA/WonderMedia S=
-oC watchdog functionality
-> config: sparc-allmodconfig (https://download.01.org/0day-ci/archive/20250=
-516/202505161430.wdURc0TG-lkp@intel.com/config)
-> compiler: sparc64-linux-gcc (GCC) 14.2.0
-> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
-ve/20250516/202505161430.wdURc0TG-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202505161430.wdURc0TG-lkp=
-@intel.com/
->
-> All warnings (new ones prefixed by >>):
->
->    drivers/watchdog/vt8500-wdt.c: In function 'vt8500_wdt_probe':
-> >> drivers/watchdog/vt8500-wdt.c:98:44: warning: conversion from 'long un=
-signed int' to 'unsigned int' changes value from '6148914691236517' to '328=
-7081637' [-Woverflow]
->       98 |         drvdata->wdd.max_hw_heartbeat_ms =3D -1UL / (VT8500_TI=
-MER_HZ / 1000);
+On Fri, May 16, 2025 at 02:21:04PM +0200, David Hildenbrand wrote:
+> On 16.05.25 12:10, Pankaj Raghav wrote:
+> > Introduce LARGE_ZERO_PAGE of size 2M as an alternative to ZERO_PAGE of
+> > size PAGE_SIZE.
+> > 
+> > There are many places in the kernel where we need to zeroout larger
+> > chunks but the maximum segment we can zeroout at a time is limited by
+> > PAGE_SIZE.
+> > 
+> > This is especially annoying in block devices and filesystems where we
+> > attach multiple ZERO_PAGEs to the bio in different bvecs. With multipage
+> > bvec support in block layer, it is much more efficient to send out
+> > larger zero pages as a part of single bvec.
+> > 
+> > While there are other options such as huge_zero_page, they can fail
+> > based on the system memory pressure requiring a fallback to ZERO_PAGE[3].
+> 
+> Instead of adding another one, why not have a config option that will always
+> allocate the huge zeropage, and never free it?
+> 
+> I mean, the whole thing about dynamically allocating/freeing it was for
+> memory-constrained systems. For large systems, we just don't care.
 
-Will change to U32_MAX in the next version.
+That sounds like a good idea. I was just worried about wasting too much
+memory with a huge page in systems with 64k page size. But it can always be
+disabled by putting it behind a config.
 
-Best regards,
-Alexey
+Thanks, David. I will wait to see what others think but what you
+suggested sounds like a good idea on how to proceed.
+
+-- 
+Pankaj Raghav
