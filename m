@@ -1,131 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64DF442C
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4F1442C;
+	Fri, 16 May 2025 07:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747379009; cv=none; b=r8XuXYzKVe3x1q29JHC/mLa19p6rnO5AZ+SL4z56pGPz9nE2/zLQuJhKtceakA4RcPInk06rmswVJrhoveQ2DHTJO9IaLp3haDsrqFGY+CP2j0X5OhiiXFJWaORV1zK/BYoVC9PjCrbipr+ke0p8G+XyZ1tBd1nhch5RLWTwTCg=
+	t=1747379037; cv=none; b=OL/79/XXgKU+eCtynVEujYgxoLmOBo/Ar8G+5yp2jVnEKJfIY5zZTgft/xSR0lt7FoQ5giUUpXzTpE+HvLvYOJJzVn2S4uxHonheOeLUAWp8fFkcEyGU1xevlrQqZ0gvLZdpoTgAyS7GrbPUzw9NC9EnUxg03i62Fv1yGsoM7CA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747379009; c=relaxed/simple;
-	bh=yhtrPlJ9qmNyVnIMkIRuxU21wfsbr+ewaXgbpucVwKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O4e/ceQg/aOutoN/tEL477Sj+7Iq5vjPN5YQIiKMnSU0jtjnhpro758Z3aA3/nzxNp3R5E2NVHqzVhc4RPD4dl0iDuJ9pBtazd+w/U2+coYJXgh/FyT3+Rl/thkyCZ5a+EGrxYM25usrNr2XSW2btYSkdoOGQumoDNLy8hJCTNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PxXWUALT; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747379037; c=relaxed/simple;
+	bh=BSOuz0Sa7NnM27jLiJyPK8CIt/5UN80833LDwnsMzN8=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=epGPn9fylTnMgQqb/f/6n8v7cGtHIU34PDPXnSTZ6zNKiTeMh5boXzfWo75ELYm4/uKD1BTsCgqZgO/1YtaeusOEhuZH8t+1wjlpZSnVgdiDzG8d21vqGdDyprtNhsPqnhWeUpZYz15/BZxvPzsOgaMxIdYuKmnpP43yWUoJbAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N+Dv1/8Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PxXWUALT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747379008; x=1778915008;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=yhtrPlJ9qmNyVnIMkIRuxU21wfsbr+ewaXgbpucVwKI=;
-  b=PxXWUALT6CJroVYhm487f0msRNuVn7xqyn40PdHmgQWQ3pEpWsbtyNob
-   KnzeDSWnkxV9JyrQQYX8mHAM8ycztj86AsT+7eLDudKAOfx1rQrYe2Oxj
-   5+IXM33+PIik82V6Uf28RMUA9y+Hq47daKCpQH1nzw25op0iBGpQghpZ/
-   Ag864dm6JoB5s8Zr0RnPFFgVDloDE6XSe7MUhhUCKDob9EnOb08+Ko1qJ
-   Aha5d6dbIuWRfBAPNs4Bf9DDJtrBJaKSfGT4A0o1wkNcBNh9b41Av95bd
-   4HKF1fVh1qPIc2Nv0ZDxIL0124VFvEim3KPr1jOVto9Yoxiia3S6TP4IF
-   A==;
-X-CSE-ConnectionGUID: dVYSaEYDT9iDHd0nK9Nfzw==
-X-CSE-MsgGUID: YVQi0j8mQgCI7fbR9HA45A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49477437"
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="49477437"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 00:03:27 -0700
-X-CSE-ConnectionGUID: vXCqJWCVTqKRwiW6nA2nnQ==
-X-CSE-MsgGUID: ZVjwAZNZQ0OfN1RXidy/aw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="143724385"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 00:03:23 -0700
-Date: Fri, 16 May 2025 10:03:19 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	siqueira@igalia.com, airlied@gmail.com, simona@ffwll.ch,
-	rodrigo.vivi@intel.com, jani.nikula@linux.intel.com,
-	Xaver Hugl <xaver.hugl@gmail.com>,
-	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-	Krzysztof Karas <krzysztof.karas@intel.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	kernel-dev@igalia.com, amd-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH v3 2/3] drm/doc: Add a section about "App information"
- for the wedge API
-Message-ID: <aCbjN9lqP4ZWV_lY@black.fi.intel.com>
-References: <20250512203437.989894-1-andrealmeid@igalia.com>
- <20250512203437.989894-3-andrealmeid@igalia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N+Dv1/8Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78D05C4CEE4;
+	Fri, 16 May 2025 07:03:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747379036;
+	bh=BSOuz0Sa7NnM27jLiJyPK8CIt/5UN80833LDwnsMzN8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=N+Dv1/8Q1cgZN/Y++AHMGsWADynJKYdRP8jW01IKZ6dz3QrY9iC6aNokjBOa8iC6l
+	 /04aAzMecEWdquyQtHN8u2sL6c6nEE+NW+lvWw+os9sPeu2YBFPG19TeXY0DXq3zYf
+	 tPybNfh1OU/VNQMN8WNoDRWuSxcILXxK1LZ7NfByw2LLLvtwe/GQBLNSsN0QVF8a2h
+	 oG6XQahOhUEGS56gl8iI6NLCSo6pRFMklCccjeFVnH0erxDkunfbf2z53rJkMT/y+u
+	 O7mL0V1vgYPqDw1Wzz3O+nFAARBvnhMpWqHR7DHpXhFaFln8VjPrH2F4n8Oz8tsSAU
+	 U5LT5sy3KXyEA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uFp6o-00FTKu-4X;
+	Fri, 16 May 2025 08:03:54 +0100
+Date: Fri, 16 May 2025 08:03:53 +0100
+Message-ID: <86h61lf352.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: adrianhoyin.ng@altera.com
+Cc: dinguyen@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	tglx@linutronix.de,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] Add quirk to support address bus size limitation
+In-Reply-To: <cover.1747368554.git.adrianhoyin.ng@altera.com>
+References: <cover.1747368554.git.adrianhoyin.ng@altera.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250512203437.989894-3-andrealmeid@igalia.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: adrianhoyin.ng@altera.com, dinguyen@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Mon, May 12, 2025 at 05:34:36PM -0300, André Almeida wrote:
-> Add a section about "App information" for the wedge API.
+On Fri, 16 May 2025 05:13:31 +0100,
+adrianhoyin.ng@altera.com wrote:
 > 
-> Signed-off-by: André Almeida <andrealmeid@igalia.com>
-> ---
-> v3:
->  - Change "app that caused ..." to "app involved ..."
->  - Clarify that devcoredump have more information about what happened
->  - Update that PID and APP will be empty if there's no app info
-> ---
->  Documentation/gpu/drm-uapi.rst | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+> From: Adrian Ng Ho Yin <adrianhoyin.ng@altera.com>
 > 
-> diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
-> index 69f72e71a96e..3300a928d8ef 100644
-> --- a/Documentation/gpu/drm-uapi.rst
-> +++ b/Documentation/gpu/drm-uapi.rst
-> @@ -446,6 +446,23 @@ telemetry information (devcoredump, syslog). This is useful because the first
->  hang is usually the most critical one which can result in consequential hangs or
->  complete wedging.
->  
-> +App information
-> +---------------
-> +
-> +The information about which application (if any) was involved in the device
-> +wedging is useful for userspace if they want to notify the user about what
-> +happened (e.g. the compositor display a message to the user "The <app name>
-> +caused a graphical error and the system recovered") or to implement policies
-> +(e.g. the daemon may "ban" an app that keeps resetting the device). If the app
-> +information is available, the uevent will display as ``PID=<pid>`` and
-> +``APP=<task name>``. Otherwise, ``PID`` and ``APP`` will not appear in the event
-
-Personally I'd use Linux specific naming for consistency.
-
-s/APP/TASK
-
-But in any case,
-
-Reviewed-by: Raag Jadav <raag.jadav@intel.com>
-
-> +string.
-> +
-> +The reliability of this information is driver and hardware specific, and should
-> +be taken with a caution regarding it's precision. To have a big picture of what
-> +happened,
-
-Nit: what *really* happened
-
-> the devcoredump file provides should have much more detailed
-> +information about the device state and about the event.
-> +
->  Consumer prerequisites
->  ----------------------
->  
-> -- 
-> 2.49.0
+> This patch set adds support for the address bus size limitation by
+> allocating buffers with in a 32 bit address range.
 > 
+> -Add device tree binding to enable a quirk to support a limited address
+> bus size.
+> -Update ITS node for Agilex5 with dma_32bit_quirk.
+> -Add implementation to configure gfp flags to allocate buffers within
+> 32 bit addressable range when quirk is set.
+
+No. Please join the pack of other totally broken integrations and
+reuse the *existing* infrastructure. You'll be in good company.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
