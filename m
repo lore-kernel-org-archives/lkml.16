@@ -1,195 +1,191 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2081.outbound.protection.outlook.com [40.107.220.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F022F3211;
-	Fri, 16 May 2025 02:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747362652; cv=fail; b=B1ke9ZRUa4458JfgbFGD66Y326tWVxwxOPYJDvW3PxPi2HWxv+Kc8d7HMEb7WYrjaapFXacj46EX65GLncJLkeFZRjU8z7NFyML4DMZGlQInxKrlfreIve30IPCIAtVT7QDp3KmrOsy2w6bKCBK3YzE0WAZBXYY321iu9x7wlcg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747362652; c=relaxed/simple;
-	bh=T6w+hLMIms5L10CGb1HsP92IIh9H31sM6Mbz1YaZqiI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mEDTC5Pw6QZP3dfd7Nan1GRiiRyXfs6ejz6txz+g/WYBvCRSNy65SN9cZg9dvvA6/s6fH9AXEK9IWkQdxetxPUdQDtbYnw01FnnsNtzIAULjL+1/BD5FSz4JWI7LRkhJQ4VJmVB6uM6ULHhT6lER/DCPvsyTnHlCU/PqjdMQqww=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=aWX6XFQg; arc=fail smtp.client-ip=40.107.220.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52D11DFE8;
+	Fri, 16 May 2025 02:33:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747362789; cv=none; b=PUbYaXhtWdjmtWwQHuQ6BEliuJhbpW2cJgTa1gnzdOZ2T/RggnYBec7wPaz6EH/m64qfWuotukdXmoIN3YO2bGPcv0IR91KH+F4FM/1qJ9rFRKiRz2SsHyoOeJAnqcdpLWexxZ8m0nGZsAj88RBn2N/purKzZcNIysGWBxa6yLg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747362789; c=relaxed/simple;
+	bh=T7qM7dRp59Fy5lY4eb20+paUlrx1Lrk82Cxc+XpO064=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JvEO4Fka+5sTGh6IvW0n5rT8G28WFo039COmXfOujGaL4DdNY61odKBMe6Wmea6O0m7UxYfJVqlVFr/dRYs48Lf95KvEpy8XphSi+Ph7ovzZhyfwVJhv/Qt2+Jlum9AAPiXNuZuhRFWiopGDd2IU6SrEl6UsUqZb+2VYmRBQ2dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i1RiMws0; arc=none smtp.client-ip=209.85.166.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aWX6XFQg"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FVEG4msEoioSY+3qwo+01ILb4ZArPXUDrTB9hX9jld1NBX2zzuqiFEQm1FA9lPSLxTo3o1WiZT/FNYTfgj9bZZF+Ejy8smBNuONxFXWGvz7c/WsHjzjnpkyH+05PhSC0cCDVhgISjmjCg5cMFfDYTp7Gqp/1t0hO+iHs8UyW9iyC9vBTOtTItWMM1hXAdQP67coKot6uDafakczr+GN66Xw6JxOpprdO5Y4cLvW8jbcAt55wI13lyQse5zqIlyCFNkprsQJfHkqDtG2COWogSy9LXS1qnMYUE0ruuco94lrV/0dKwUDEDSPEHKelc0hYcGjFBZR+wRN8oowLa8yjGw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GIbPJVkzAr9i1y8u5OkFuRzurirdRvNQlqhB05X5awg=;
- b=oPtszWby8Gzuz0Nu0T3FN3bqS3VEBv8vQiXtAw7ojwfogPc3NRn7XDu+UhXb5enwPdZKyebWAQXj0yV4oH+CAvA6XRq7rkQzHrGSsXM6v2H3XbgoMXTqIOyaa661LJ/VhX73T5KzghWSEwNa7wV5RzCLmOl+cDgvf4FWIfZOX+lxbsB5LZNfbZcbxLjvyzJxkhbT8UlVuGAt3KfEHP/JNoeimYI9Q9yOaAQ93jB08lcdClRxp+NCF1hNwRGixzz1rPPDJ7Ou7Jh+uDnh1oeKyryg9hlQVeffxyXkWA2ZkoWkBgWVF1zPrek/HuzLgO/ElLZ4chiBbmQzwxLnG82MUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GIbPJVkzAr9i1y8u5OkFuRzurirdRvNQlqhB05X5awg=;
- b=aWX6XFQg+KxVkj3iB4AL6+PB+dafafmMOs86u9NmEfAOovNd9LMUKIo33EO0UgRMHEe3nGfP4heNu8c75Ag8BHwI1Rhkn8wXDMVdreGkeuMC3DSaRlOhSTjhOT4ktfX2D2dRA8JJ9/hHjKAsb31XXnka3+uLb6BDkQpJ5ht2HwHV+pH1BMRh6b5UokL2nOUkxxwtJ2YCR65nkbO2wBdgBRwEomPstu9mYdNiCmIn+6l6YIwXCXtkmAn9P5c3MbwAj+xAFPRfdssTXsrmyjszOO7h6pdIxcX6CPNSDRttJ2eJz9oXDVMkCslPY5VuzaO3iXCFGJk093xK87B6hCzrPQ==
-Received: from DS7PR03CA0267.namprd03.prod.outlook.com (2603:10b6:5:3b3::32)
- by DM4PR12MB8451.namprd12.prod.outlook.com (2603:10b6:8:182::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Fri, 16 May
- 2025 02:30:47 +0000
-Received: from DS2PEPF00003445.namprd04.prod.outlook.com
- (2603:10b6:5:3b3:cafe::f4) by DS7PR03CA0267.outlook.office365.com
- (2603:10b6:5:3b3::32) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.28 via Frontend Transport; Fri,
- 16 May 2025 02:30:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- DS2PEPF00003445.mail.protection.outlook.com (10.167.17.72) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.18 via Frontend Transport; Fri, 16 May 2025 02:30:47 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 15 May
- 2025 19:30:32 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 15 May
- 2025 19:30:31 -0700
-Received: from Asurada-Nvidia (10.127.8.11) by mail.nvidia.com (10.129.68.8)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Thu, 15 May 2025 19:30:30 -0700
-Date: Thu, 15 May 2025 19:30:29 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-CC: "jgg@nvidia.com" <jgg@nvidia.com>, "corbet@lwn.net" <corbet@lwn.net>,
-	"will@kernel.org" <will@kernel.org>, "bagasdotme@gmail.com"
-	<bagasdotme@gmail.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"joro@8bytes.org" <joro@8bytes.org>, "thierry.reding@gmail.com"
-	<thierry.reding@gmail.com>, "vdumpa@nvidia.com" <vdumpa@nvidia.com>,
-	"jonathanh@nvidia.com" <jonathanh@nvidia.com>, "shuah@kernel.org"
-	<shuah@kernel.org>, "jsnitsel@redhat.com" <jsnitsel@redhat.com>,
-	"nathan@kernel.org" <nathan@kernel.org>, "peterz@infradead.org"
-	<peterz@infradead.org>, "Liu, Yi L" <yi.l.liu@intel.com>,
-	"mshavit@google.com" <mshavit@google.com>, "praan@google.com"
-	<praan@google.com>, "zhangzekun11@huawei.com" <zhangzekun11@huawei.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
-	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
-	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
-	<patches@lists.linux.dev>, "mochs@nvidia.com" <mochs@nvidia.com>,
-	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>, "vasant.hegde@amd.com"
-	<vasant.hegde@amd.com>
-Subject: Re: [PATCH v4 10/23] iommufd/viommu: Introduce IOMMUFD_OBJ_HW_QUEUE
- and its related struct
-Message-ID: <aCajRTEU3vPQAzpD@Asurada-Nvidia>
-References: <cover.1746757630.git.nicolinc@nvidia.com>
- <bedd9de4e24bb89f18f4b13b52c5fdb6db6bd889.1746757630.git.nicolinc@nvidia.com>
- <BN9PR11MB52765915FACBF590E09EC46E8C90A@BN9PR11MB5276.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i1RiMws0"
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-86135af1045so173432939f.1;
+        Thu, 15 May 2025 19:33:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747362787; x=1747967587; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rVGPAcMbIDDAE+CGMGoNk6Yx5l7mc/llgWDfx/5zSXY=;
+        b=i1RiMws0x11N0AqPAPAsj+YFRadWEsTFj78oiWnPFVeJB3GC21Aeg5ZUzValkkpeO5
+         hftVA3m30Em3GN6T63ScYvGMgZu5PMiooDPu9wY3noVm56F+YD4Jxz7T1j2dvdDb8Bc0
+         zd4AvUl1vRfa9/Q+xYkgR1bVSDsD7dWJceIyS8sskyhXjU3vaHGcARsBBNPYwVDxKGqH
+         6kkSioYFPbnGC5Hvz+qGIuVIRk+uKh6FD9X8lkwQeldVQg94O9EEWpQQKQs7Dkg+Xgon
+         hJ9a0gYGX3m8DSnmpXTJkLqhVprIQIG1ORjibWOljPaauVQTmomar56YASZL0WRt0sBk
+         BhMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747362787; x=1747967587;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rVGPAcMbIDDAE+CGMGoNk6Yx5l7mc/llgWDfx/5zSXY=;
+        b=HLNqnIfCRdDhDipmd1/I5sMwZCZOUXr7yPm3JmsnyX2gP0nTVChUTEsdjj/wIfrbCw
+         H6VgJUpKZSTIaW9yUVFym/bxqWDNTWYHn828cqoivyZzQawVGsdcOp/X0Mz529hyhC5a
+         VGvocTGD464KpA4XOqTzQYwws95N/SK0dV8wpMWQ0l0WeAvO5ZH1w6Hezb5UDC6O2gLf
+         DIyAJDhdehjhqFJ2BkuXHpA1nzs8oGvJbbe3JCzjUuKpmt1E/BFQ/h3iKt41pQz8A4hE
+         S3Sd4ov+oUfIj7XbIP/x5aVZrq+djmjzuLscPQYcVTOQl2xNDNgqMjIJLRtjYnQ7waD6
+         mGXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVmnlhlohjoZhsp9BR6jfUH7SQRzrNME0QGO0mRbdUEqJmVMqG0ze6ymvCXj+e4maUU65MHWhRHXq9DOQ==@vger.kernel.org, AJvYcCX5YKiVyHxl79s1INnRl7r65NYK6GukQURxq81vuJFgdefdK7A3VsJN7vqlXt2/ADt6Yr7hbXs086ToHx3U@vger.kernel.org, AJvYcCXPZjQMQ4VaT2rsrBhtxgnngL0UzmeJMcR0br2qpniz0Uh0OWPeXumce7nOiiBgjK4gk0tzhPs6+WftBCPgacho/dV5@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzrz8OUKXOwoQV2fokabqguHZjdEr0t3UrPNBruEi9gs/lYGS0z
+	w7pCmOfTwuBtB48wCNcAPawYsvcJ9OjjPbB3Bi5Bf/uS5cAmJgwYsxPlE+k3QwCfRUX0+71xrND
+	54L5wI2EBX7YgnppS1Iij4JW3B+51Q7A=
+X-Gm-Gg: ASbGncsDQCIzHuenm4e3sJK/C/6RXjdbyC2t0fg7rbZceL0QtyZkrMDjkGTDqaUB3/d
+	67Sw9x5VFeiQvDNYOSk8qSARRs3hz1JJOm8DmBIeY62a7d8FQC9p+kDopvh+X5+pXlP0SeRHW1C
+	RVJPqIefxP91JN4NL22DNIB9alcW/FE5H+
+X-Google-Smtp-Source: AGHT+IEArUWw7fv+2aLvDYNuJ2lUNmN9w0DfhWr7EyePZ0E/QR1dcxoznx1PWONJdRZnCm99AXsqb1zC2xVwpUD4tyU=
+X-Received: by 2002:a05:6602:3e94:b0:864:4a82:15ec with SMTP id
+ ca18e2360f4ac-86a231b703amr347766039f.6.1747362786828; Thu, 15 May 2025
+ 19:33:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB52765915FACBF590E09EC46E8C90A@BN9PR11MB5276.namprd11.prod.outlook.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PEPF00003445:EE_|DM4PR12MB8451:EE_
-X-MS-Office365-Filtering-Correlation-Id: 85501780-4a43-412f-93f5-08dd9421aae6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|7416014|376014|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?qeTDjau3q23NlfjielUrENgkbAhhpmO6yHiQr8ZfaMIc4n+7IQF41gt+rc+i?=
- =?us-ascii?Q?YkvDX8Cl6fQcq2d6FRRz/PmOeFhKiTSzJKOVe9BzDqhLYDcl/+qG91p7MZs+?=
- =?us-ascii?Q?O3IzRrevKZ4Cv3UQoF7hq9pnbzLvEN6OeeYlS8ShKGumYnv4/jKG0wWfFgku?=
- =?us-ascii?Q?/Ss16i+ehyBb7k5fPIC9QyyZhYA9/fJtdkBAQqiCaLWjAnqBRr6LPHDCTA+v?=
- =?us-ascii?Q?MokHU2aHC2kL/ICUTf4JQ4/5H27v0KuXJMwC3CG5naPem6c5EplpvaHNDxPi?=
- =?us-ascii?Q?ysVxF67dzRtnV57MaySCOww0A8xKYyh4FcgykDPE2mNLcEoEDeqjc/DMmZGs?=
- =?us-ascii?Q?HUTWt7v9Iws5Aj3ckD5WcGe0VrXpZnikrN9qGSnfk4KIJuYnFWhfNS0FdORU?=
- =?us-ascii?Q?MXBF1mdenRfIfu38XkGVGr/zFUjTOAgWpiOT720BO2XhScu4DqP3bmhIMMQI?=
- =?us-ascii?Q?qNmjSiCkBTqFGjFTAAYW44Dlj/QbUbKXSguRgiXTDoET1LL3jjhV05+hPr6/?=
- =?us-ascii?Q?AQAHW24XDJJ0cIM9oqeL2lyFioAuUTobO0GkxJHygad0Z7842NybI2Jc7tY1?=
- =?us-ascii?Q?cXUxvBxgcU6OmSj8oJBBKvEiVEm9bxBzSAd1M2c2xC7y4bA1zSrmGKRoFadk?=
- =?us-ascii?Q?giHpNmDePmNbMH2bk9vQ2cE1QbQYCK1tNFS0F1bOm/3TG7RduQHu/eYEWALP?=
- =?us-ascii?Q?Yp7nkVE6gRIJUGCNVZkE16s/gGszGcvXhgsKrzMkO5xhTgvCEqvaLKHXD7Na?=
- =?us-ascii?Q?I6IOjTs7/K014nkUnaydUvtTVD4XDpK22sQJTw4yVZSuI/8P6YOSl2qnkXqW?=
- =?us-ascii?Q?lJjMoSdRbrgQWBFzdXfzigCFifaL6bwnvwbyne/Axz8p5mS1v6hOjhvYy+ct?=
- =?us-ascii?Q?s/YY3xmRC0G+XLU+LJLHt9XNkxC0ih1srfNlJUIaAg2kMaTJQ1wWyqRloAWh?=
- =?us-ascii?Q?gBBVPx/DMpiKANqpL9Flw5hupzzEQ59leGGgEpn3/cHA1wu+63h85n/ZqAtL?=
- =?us-ascii?Q?S6PgWszTQGSjmgUgDIOAr8OAh8/anixZb5Nwvg1/c3PTi+7D5leFwBmk+afu?=
- =?us-ascii?Q?wXtWOq2/5zAUmEAqV4lWb1r+KDVrkgH4Fu281st1T3Eur6sPp85HPZehLlrD?=
- =?us-ascii?Q?n1e7nejXUabO8oAOmG+uYjyvoyEduLXTEwZjwmvUsu58rikooLE3RDE752Ik?=
- =?us-ascii?Q?+irzF9AatBdPi0ugkQNioap13yqN93MpZkqD0TWkS5GO558kLXl1Vbfvsdje?=
- =?us-ascii?Q?8ImFxRp3sdEtdval2ne80uZBK7/Dr+mcsw+B3jeviSE4BNhpcwiGHzoAdDB5?=
- =?us-ascii?Q?MLVvzqz8fhvabLb4nXVynvhaapKj6sjPbzQYmE/Mn6FHlZEPjSO+0hLZEt7O?=
- =?us-ascii?Q?2agMrN/LQcjxY70k+L9OQHBDr71ufOb4uJELvBQzKga38XKNMGszRNQ4mPLu?=
- =?us-ascii?Q?/YtO9P40oQpU2sqzek3Uf68NFKP6+fMxvp1303oED8+UryxDnje9JhopJ11U?=
- =?us-ascii?Q?lkG6HDfjh0keqXQe+Tz7k68oQlueJOvrSTB3bLGGZRtFc04+RICaP99Whg?=
- =?us-ascii?Q?=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(7416014)(376014)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2025 02:30:47.7012
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85501780-4a43-412f-93f5-08dd9421aae6
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS2PEPF00003445.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8451
+References: <20250515061643.31472-1-kerneljasonxing@gmail.com>
+ <20250515061643.31472-3-kerneljasonxing@gmail.com> <20250516110837.355d963224cf74ea2b020d9d@kernel.org>
+In-Reply-To: <20250516110837.355d963224cf74ea2b020d9d@kernel.org>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Fri, 16 May 2025 10:32:30 +0800
+X-Gm-Features: AX0GCFvwEQ1j5Z-FoSMzorQ-dGuNPeoemf9Wczbrn1TtjwBZRE-D6iQkLDrHgM8
+Message-ID: <CAL+tcoB=HYB-EnyYTK=HzpgsosbOwo2VxMw-_mzbkSYnEWAVqw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] relayfs: introduce dump of relayfs statistics function
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: axboe@kernel.dk, rostedt@goodmis.org, mathieu.desnoyers@efficios.com, 
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Jason Xing <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2025 at 05:58:41AM +0000, Tian, Kevin wrote:
-> > From: Nicolin Chen <nicolinc@nvidia.com>
-> > Sent: Friday, May 9, 2025 11:03 AM
-> > 
-> > Add IOMMUFD_OBJ_HW_QUEUE with an iommufd_hw_queue structure,
-> > representing
-> > a HW-accelerated queue type of IOMMU's physical queue that can be passed
-> > through to a user space VM for direct hardware control, such as:
-> >  - NVIDIA's Virtual Command Queue
-> >  - AMD vIOMMU's Command Buffer, Event Log Buffer, and PPR Log Buffer
-> > 
-> > Introduce an allocator iommufd_hw_queue_alloc(). And add a pair of
-> > viommu
-> > ops for iommufd to forward user space ioctls to IOMMU drivers.
-> > 
-> > Given that the first user of this HW QUEUE (tegra241-cmdqv) will need to
-> > ensure the queue memory to be physically contiguous, add a flag property
-> > in iommufd_viommu_ops and
-> > IOMMUFD_VIOMMU_FLAG_HW_QUEUE_READS_PA to allow
-> > driver to flag it so that the core will validate the physical pages of a
-> > given guest queue.
-> 
-> 'READS' is confusing here. What about xxx_CONTIG_PAS?
+On Fri, May 16, 2025 at 10:08=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.=
+org> wrote:
+>
+> On Thu, 15 May 2025 14:16:41 +0800
+> Jason Xing <kerneljasonxing@gmail.com> wrote:
+>
+> > From: Jason Xing <kernelxing@tencent.com>
+> >
+> > In this version, only support dumping the counter for buffer full and
+> > implement the framework of how it works.
+> >
+> > Users can pass certain flag to fetch what field/statistics they expect
+> > to know. Each time it only returns one result. So do not pass multiple
+> > flags.
+> >
+> > Reviewed-by: Yushan Zhou <katrinzhou@tencent.com>
+> > Signed-off-by: Jason Xing <kernelxing@tencent.com>
+> > ---
+> > v2
+> > 1. refactor relay_dump() and make it only return a pure size_t result
+> > of the value that users specifies.
+> > 2. revise the commit log.
+> > ---
+> >  include/linux/relay.h |  7 +++++++
+> >  kernel/relay.c        | 31 +++++++++++++++++++++++++++++++
+> >  2 files changed, 38 insertions(+)
+> >
+> > diff --git a/include/linux/relay.h b/include/linux/relay.h
+> > index ce7a1b396872..3fb285716e34 100644
+> > --- a/include/linux/relay.h
+> > +++ b/include/linux/relay.h
+> > @@ -31,6 +31,12 @@
+> >  /*
+> >   * Relay buffer statistics dump
+> >   */
+> > +enum {
+> > +     RELAY_DUMP_BUF_FULL =3D (1 << 0),
+> > +
+> > +     RELAY_DUMP_LAST =3D RELAY_DUMP_BUF_FULL,
+> > +};
+> > +
+> >  struct rchan_buf_stats
+> >  {
+> >       unsigned int full_count;        /* counter for buffer full */
+> > @@ -167,6 +173,7 @@ struct rchan *relay_open(const char *base_filename,
+> >                        void *private_data);
+> >  extern void relay_close(struct rchan *chan);
+> >  extern void relay_flush(struct rchan *chan);
+> > +extern size_t relay_dump(struct rchan *chan, int flags);
+> >  extern void relay_subbufs_consumed(struct rchan *chan,
+> >                                  unsigned int cpu,
+> >                                  size_t consumed);
+> > diff --git a/kernel/relay.c b/kernel/relay.c
+> > index eb3f630f3896..f47fc750e559 100644
+> > --- a/kernel/relay.c
+> > +++ b/kernel/relay.c
+> > @@ -701,6 +701,37 @@ void relay_flush(struct rchan *chan)
+> >  }
+> >  EXPORT_SYMBOL_GPL(relay_flush);
+> >
+> > +/**
+> > + *   relay_dump - dump channel buffer statistics
+>
+> nit: relay_dump() can mislead to dump relay channel contents.
+> Can you rename it to relay_stats() or relay_get_stats()?
 
-Combining Jason's first comments here:
-https://lore.kernel.org/linux-iommu/20250515160620.GJ382960@nvidia.com/
+Sure, both are good names. I would choose relay_stats().
 
-So, pinning should be optional too. And I think there would be
-unlikely a case where HW needs contiguous physical pages while
-not requiring to pin the pages, right?
+Thanks,
+Jason
 
-So, we need an flag that could indicate to do both tests. Yet,
-"xxx_CONTIG_PAS" doesn't sound very fitting, compared to this
-"IOMMUFD_VIOMMU_FLAG_HW_QUEUE_READS_PA".
-
-Perhaps, we should just add some comments to clarify a bit. Or
-do you have some better naming?
-
-Thanks
-Nicolin
+>
+> Thanks,
+>
+> > + *   @chan: the channel
+> > + *   @flags: select particular information to dump
+> > + *
+> > + *   Returns the count of certain field that caller specifies.
+> > + */
+> > +size_t relay_dump(struct rchan *chan, int flags)
+> > +{
+> > +     unsigned int i, count =3D 0;
+> > +     struct rchan_buf *rbuf;
+> > +
+> > +     if (!chan || flags > RELAY_DUMP_LAST)
+> > +             return 0;
+> > +
+> > +     if (chan->is_global) {
+> > +             rbuf =3D *per_cpu_ptr(chan->buf, 0);
+> > +             if (flags & RELAY_DUMP_BUF_FULL)
+> > +                     count =3D rbuf->stats.full_count;
+> > +     } else {
+> > +             for_each_online_cpu(i) {
+> > +                     if ((rbuf =3D *per_cpu_ptr(chan->buf, i)))
+> > +                             if (flags & RELAY_DUMP_BUF_FULL)
+> > +                                     count +=3D rbuf->stats.full_count=
+;
+> > +             }
+> > +     }
+> > +
+> > +     return count;
+> > +}
+> > +EXPORT_SYMBOL_GPL(relay_dump);
+> > +
+> >  /**
+> >   *   relay_file_open - open file op for relay files
+> >   *   @inode: the inode
+> > --
+> > 2.43.5
+> >
+>
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
