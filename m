@@ -1,282 +1,388 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0CC230BDC
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F81230BE6
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747386069; cv=none; b=tZI2R6L6YtA/GN2ZaD/Yxj+UObTHggB02g2Yvb5DcnY9sXPWgSZq8iyqDvtVxtcI8fMh/7iBuUuvIqP3RsFoBE4lgVggFJ1h7CJkzwwcokuvowNtAVDGWRfOKz3F0YOjILwdHoEobZBHjsKVlNyyDbQfBEJEiwXMAUL9URM8JIo=
+	t=1747386072; cv=none; b=Hj1KmjbFLJZ41cThkzjYDBSRpWu9XWYURrYjsxv5lJzzbJJR+9jSlUoCxy5MKIugadCgl+6cpm/4F6VH38VJnzk+VRisjHfjKgIZ5dibyrysdBoBW1oUOwFoNR1Qv2nFvRMS0ji1eLCX90aAJQBVKXB2YpnGw88Z4JBdKypOxGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747386069; c=relaxed/simple;
-	bh=ZbPxXtCPwmWQcmOtwDbmwXuuweRUuckOL3a9tn9T7cQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ma8lZWlQjyep+9JMkJE/OuCgQftXdFUcejRpU8UjzMp8sB7uTZ0yd6IegasRWv/S0b62MxLgDlmhwkEtRne2UOscqVDLe1f0XwSgYZCxqTxv2Br7p18c1Hr33BxvoOhbUD7lMrj/0Zqc3BtZxLwyQ5//u0w+iblWnTOvCjzDgxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iMjntPLU; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747386072; c=relaxed/simple;
+	bh=qytcSDUeqn2AhnCTzkvDS+ojSWiShvINuV4e4CKoQKw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mHV2g17rWf//XI6spn6OGOHbZ5grqPrKJtTemWO5He0peaC5Gr6FUTqX4PylMkNaWWIy9xaOS/xSIINvHvSat7M3fN7iwPn/NC2aSnO3DGMoM8blvbYc/HwCkVRtr/xchz543U66FYWUt2pic8YbNNMhLrQwIk5vA23PTZG4Gis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=dxeL/aXj; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iMjntPLU"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-742596d8b95so2504792b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 02:01:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747386067; x=1747990867; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XkthQPsz64TyOCZT4K9/BOr4xyvnTi+7/s58T/M8D44=;
-        b=iMjntPLUkMvygnfWoPiiQJFzKtJ3unpkDi7KX0q+nJYvEQvmK7Tv9BxdpFYB0ZWYsa
-         OAN8WZBRlykg5blUrgxJ1vBU7aDOWP02O95jBDW1HucTJldx8hBDU0gpLujaVeOHT70S
-         +MPV098wmqXjhhIPa2rKPYeF0gnrkFJ3+l6t/IMX8z4JkkmZGDPDRpB8i0MxnPdFH/1L
-         IpE+bTLNqVDWI95eSNPOSDSZFCOO6Y9fP2JAN9oID/2HwXldE1GQD51iiktKGX5yaf3/
-         6ELXarUSjlhEvg1mX173YOx011QF+aQck5hD/kAA6uQrLEtHH5zXhWQyW9BeS22cF/O5
-         gkRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747386067; x=1747990867;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XkthQPsz64TyOCZT4K9/BOr4xyvnTi+7/s58T/M8D44=;
-        b=jYZVp1tfTZWIATE0YTYu0IlxbFB3YYZCWBWeBJC085poA2H7NGkX707QBiYjWI8OKs
-         ZP0yrc3+E7Op/ZnHIhYZJZBJmQfrXOdHfSekNijh2ka8kdHxhM2eXGkHpp+BwhbuiAlD
-         wjOiF8nax7UDMQIMbY6+NeAIGAZKxy2o4mQQD9Qk0r1MFK6hV3kojqMT75XwCpl5PBs2
-         1wws2vMue+SjgFXbkkkBaOk1iaH7jyDSc1KnD4dAZfErzFP5TbNOa8YYu3MjQ1Uv8G2M
-         NMY+Cw20k9Whzs/qreIOBbHBIZiY6wasEtPKGgNJ3ItjAwaNzvJ2nJYdjHiTW6gTXQt0
-         s5jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWU5i6XciiNSYgEnBI6AAz9blw6rt9on6hR+YT2OLV5W+BmaOgnrUcTKCS3UqXKgykmkyeGLQulKegFboA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMASceKvKFalZ5+jOwRu2Z7bvg/OQVj5WVthnKAm/FXPHHZhQG
-	gNG4Ht3GMIAoJ3ZxYNL0hDsnci79bc8gPe4Zk68sMKUrWpnrhxdiWWQi
-X-Gm-Gg: ASbGncvbp9suM7p1N56Tr1xfgZ/wu66hB9jAO/5RLyz48peOGs6DoFDf4QENrz9+Osb
-	JBpL8T+/vSSvupdOZYntGBe+oZEvIMW7AV3m9CUsfFuXLyZxvwSkJPeaE80z6wYZnGiy1l9aSlh
-	Cnevx7VdpR2e0yaTM10tgn0vGRcBHfrEI9mgttwsk19Ewe6jyJhaJxxGCRSMNDWKnnWBQ/fSwSd
-	HdN4Ahl9A9WZganW4SZURiqeShJ9KSJ4sJDSTb6vSMIIuZAd4U9/AeBH0wBgq6GOu7n409v5Cr9
-	s2UigRYqKevMDB7X64y+WkZnb0mY4SZ8gXffkwzI0SfSOBEabANX4JvXkLss+pSClvkD
-X-Google-Smtp-Source: AGHT+IGajjN7pnf+hHSGHrxpstiUL1UW4ewfRZKOSQkXmuUgiVPDQ3ZQIP4+oKjUfkNL2UV5TS1YLw==
-X-Received: by 2002:a05:6a20:3d11:b0:1f5:7d57:830f with SMTP id adf61e73a8af0-216219c83a3mr3041893637.33.1747386067028;
-        Fri, 16 May 2025 02:01:07 -0700 (PDT)
-Received: from PC.mioffice.cn ([43.224.245.249])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb084428sm1133402a12.57.2025.05.16.02.01.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 02:01:06 -0700 (PDT)
-From: Sheng Yong <shengyong2021@gmail.com>
-X-Google-Original-From: Sheng Yong <shengyong1@xiaomi.com>
-To: xiang@kernel.org,
-	hsiangkao@linux.alibaba.com,
-	chao@kernel.org,
-	zbestahu@gmail.com,
-	jefflexu@linux.alibaba.com,
-	dhavale@google.com,
-	lihongbo22@huawei.com
-Cc: linux-erofs@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	Sheng Yong <shengyong1@xiaomi.com>,
-	Wang Shuai <wangshuai12@xiaomi.com>
-Subject: [PATCH v6] erofs: add 'fsoffset' mount option for file-backed & bdev-based mounts
-Date: Fri, 16 May 2025 17:00:55 +0800
-Message-ID: <20250516090055.3343777-1-shengyong1@xiaomi.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="dxeL/aXj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=S7aux+kj8gQ8QGSp6GxYHHNN+3p7fRTeAIsrjdB94Os=; b=dxeL/aXj6cnZeJqwkVWIJ5evwn
+	fbQbvN9R/Vgmjx96Ox1FQf2bpnrT0Z15I+pmUuYb/fsInl0tht5lqrn/inD9+J6WEkIVHP8eq+B5I
+	uztPjcgoT3ypKTSCsPgDN1smqnv6EemP1nKljhfNr5bnBYfjcM0nE2874RHgAYfm0bLlWzhFsXhl6
+	+Im7ddUOAuQh3mltfhNkEc3URbN0le+H3f6rDDSvIo/bMwgfzHbSgdDEJ44ceFFnVsXs0s8XqabOP
+	iOTs8KgbjzRLFG3oYS5r0EfU3c+mI86jUjYgZyMJOcdfEyoUcqFbHJJCz3jZ0DBwmcf1Q0mu1t7eC
+	KS9A6k1w==;
+Received: from [81.79.92.254] (helo=[192.168.0.101])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uFqq8-0090ON-50; Fri, 16 May 2025 11:00:46 +0200
+Message-ID: <ac454a95-15ed-4de2-8bff-e67bcc9831ec@igalia.com>
+Date: Fri, 16 May 2025 10:00:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/6] drm/sched: Port unit tests to new cleanup design
+To: phasta@kernel.org, Lyude Paul <lyude@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250424095535.26119-2-phasta@kernel.org>
+ <20250424095535.26119-8-phasta@kernel.org>
+ <894cf4cdb7e14b2a21dcf87bfeac4776cb695395.camel@mailbox.org>
+ <a1c9c680-2927-428c-95e9-2e79d14cec58@igalia.com>
+ <84021a2461db55617018050b7c0e07a15dceb634.camel@mailbox.org>
+ <1d753b0f-4770-4f90-b2fb-48193262d713@igalia.com>
+ <b98ac3e08922f5d1a6a83d1caa9f8d1d4a7aaac2.camel@mailbox.org>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+In-Reply-To: <b98ac3e08922f5d1a6a83d1caa9f8d1d4a7aaac2.camel@mailbox.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Sheng Yong <shengyong1@xiaomi.com>
 
-When attempting to use an archive file, such as APEX on android,
-as a file-backed mount source, it fails because EROFS image within
-the archive file does not start at offset 0. As a result, a loop
-device is still needed to attach the image file at an appropriate
-offset first. Similarly, if an EROFS image within a block device
-does not start at offset 0, it cannot be mounted directly either.
+On 14/05/2025 10:19, Philipp Stanner wrote:
+> On Wed, 2025-05-14 at 09:30 +0100, Tvrtko Ursulin wrote:
+>>
+>> On 12/05/2025 09:00, Philipp Stanner wrote:
+>>> On Thu, 2025-05-08 at 13:51 +0100, Tvrtko Ursulin wrote:
+>>>>
+>>>> Hi Philipp,
+>>>>
+>>>> On 08/05/2025 12:03, Philipp Stanner wrote:
+>>>>> On Thu, 2025-04-24 at 11:55 +0200, Philipp Stanner wrote:
+>>>>>> The unit tests so far took care manually of avoiding memory
+>>>>>> leaks
+>>>>>> that
+>>>>>> might have occurred when calling drm_sched_fini().
+>>>>>>
+>>>>>> The scheduler now takes care by itself of avoiding memory
+>>>>>> leaks
+>>>>>> if
+>>>>>> the
+>>>>>> driver provides the callback
+>>>>>> drm_sched_backend_ops.kill_fence_context().
+>>>>>>
+>>>>>> Implement that callback for the unit tests. Remove the manual
+>>>>>> cleanup
+>>>>>> code.
+>>>>>
+>>>>> @Tvrtko: On a scale from 1-10, how much do you love this patch?
+>>>>> :)
+>>>>
+>>>> Specific patch aside, it is the series as a whole I would like to
+>>>> be
+>>>> sure there isn't a more elegant way to achieve the same end
+>>>> result.
+>>>
+>>> I count this as a 9/10 \o/
+>>
+>> :) Yes, sorry, it would a bit lower than that, at least until someone
+>> can point out a fatal flaw in my alternative. :)
+> 
+> There's no fatal flaw in my approach either :)
+> 
+>>
+>>> But jokes aside:
+>>>
+>>>>
+>>>> Like that sketch of a counter proposal I sent for the reasons
+>>>> listed
+>>>> with it. Which were, AFAIR, to avoid needing to add more state
+>>>> machine,
+>>>
+>>> Well the state machine added is basically just the waitqueue. The
+>>> WRITE_ONCE booleans are currently just for correctness and clarity.
+>>> I've looked at them and want to remove them all in an other patch,
+>>> because I think they're not needed (workqueue handles that)
+>>>
+>>> But yes, the added state is > 0
+>>>
+>>>> to avoid mandating drivers have to keep an internal list,
+>>>
+>>> That's not mandated by the scheduler, but by logic itself. All
+>>> drivers
+>>> need to have a list of on-flight fences. Otherwise the drivers
+>>> would
+>>> have no chance of signaling those fences once their GPU tells them
+>>> to
+>>> do so.
+>>
+>> Probably it would be hard to signal without tracking of some sort
+>> yes,
+>> although it wouldn't have to be indexed by fence context, or looked
+>> up
+>> by it so maybe still simpler.
+> 
+> Well, the decisive point remains that all drivers must know all on-air
+> fences, so they all are able to signal those fences.
+> 
+>>
+>> More importantly I think with this comment I was thinking about the
+>> fact
+>> that with ops->cancel_job() approach I was able to remove the _done_
+>> list tracking from the mock scheduler.
+> 
+> If the done_list is just about avoiding memory leaks, then I should
+> also be able to remove it completely, shouldn't I? In this patch here I
+> already remove the leak-related code in drm_mock_sched_fini(), but
+> hadn't looked too deeply into what else the done_list does. Is it just
+> about the leaks?
 
-To address this issue, this patch adds a new mount option `fsoffset=x'
-to accept a start offset for both file-backed and bdev-based mounts.
-The offset should be aligned to block size. EROFS will add this offset
-before performing read requests.
+Yes, I added it specifically to enable freeing completed jobs before 
+calling drm_sched_fini (so mock scheduler does not have to look at the 
+scheduler internal sched->job_list). On a glance you should be able to 
+remove it too and it looks it should just work. You can peek at my patch 
+for how to remove it completely if it helps.
 
-Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
-Signed-off-by: Wang Shuai <wangshuai12@xiaomi.com>
----
- Documentation/filesystems/erofs.rst |  1 +
- fs/erofs/data.c                     |  8 ++++++--
- fs/erofs/fileio.c                   |  3 ++-
- fs/erofs/internal.h                 |  2 ++
- fs/erofs/super.c                    | 12 +++++++++++-
- fs/erofs/zdata.c                    |  3 ++-
- 6 files changed, 24 insertions(+), 5 deletions(-)
----
-v6: * fix fsoffset value type in documentation
-    * change `off' type to u64
+>>> I have now provided two users of the new API, nouveau and the unit
+>>> tests. Can you think of a party for which the suggested approach
+>>> wouldn't work?
+>>
+>> I did not think along those lines yet so don't know. I just thought
+>> it
+>> was too much code to implement a relatively simple thing and that
+>> also a
+>> few things in the design bothered me.
+>>
+>> If you look at the diffstat from my proposal and ignore kerneldoc and
+>> unit test stats, it literally adds 8 lines to drm_sched_fini() and a
+>> single line to gpu_scheduler.h:
+>>
+>> +       void (*cancel_job)(struct drm_sched_job *sched_job);
+>>
+>> And in the former after it stops the workers:
+>>
+>> +       if (sched->ops->cancel_job) {
+>> +               struct drm_sched_job *job;
+>> +
+>> +               list_for_each_entry_reverse(job, &sched-
+>>> pending_list,
+>> list) {
+>> +                       sched->ops->cancel_job(job);
+>> +                       sched->ops->free_job(job);
+>> +               }
+>> +       }
+>>
+>> To me this looks quite clean. Unless, I say this again, I am missing
+>> some fatal flaw why it doesn't work.
+> 
+> It does work. I've stated that before. But mine works, too. And mine
+> doesn't have a hard blocker either, as far as I can see.
+> 
+> So let's focus on the main differences:
+> 
+> Your version adds fewer lines of code, that's correct.
+> 
+> I think cleaning up through just having the driver signal the fences
+> all at once is better because
+>     1. The very same code path both for "legacy-fini" and "new-fini" is
+>        responsible for cleaning up the jobs. Notably, the free_job()
+>        callback is only invoked by the same parties as before, primarily
+>        the work items. We don't add a new, only sometimes running, code
+>        path *that free's jobs*.
+>     2. The scheduler's already fractured design doesn't fracture
+>        further: the free_job work item remains responsible for calling
+>        free_job(). Having just one party being responsible for one thing
+>        is a desirable design goal.
+>     3. Considering that many drivers generously (ab)use API internals of
+>        the scheduler, and considering that there is already ambiguity of
+>        who's responsible for handling job lifetimes, I believe it is
+>        safer not to add an additional code path that can free jobs, but
+>        keep that one path.
 
-v5: * fix fsoffset on multiple device by adding off when creating io
-      request, erofs_map_device selects the target device an only
-      primary device has an off
-    * remove unnecessary checks of fsoffset value
-    * try to combine off and dax_part_off, but it is not easy to do
-      that, because dax_part_off is not needed when reading metadata
-    https://lore.kernel.org/linux-erofs/f62b0d18-f5af-4063-b644-f6b8069ca200@gmail.com
+All three look the same root argument. I would not be too concerned 
+since it is still "one party" - the scheduler internals.
 
-v4: * change mount option `offset=x' to `fsoffset=x'
-    https://lore.kernel.org/linux-erofs/c5110e03-90ea-40be-b05f-bc920332a1e1@linux.alibaba.com
+>     4. It reads more cleanly: "We're not canceling a single job here,
+>        we're killing all associated jobs now all at once", raising
+>        awareness for driver programmers that this is a significant
+>        event: we're tearing down while not all of your jobs have
+>        finished on your GPU.
 
-v3: * rename `offs' to `off'
-    * parse offset using fsparam_u64 and validate it in fill_super
-    * update bi_sector inline
-    https://lore.kernel.org/linux-erofs/98585dd8-d0b6-4000-b46d-a08c64eae44d@linux.alibaba.com
+It looks we simply may end up not agreeing.
 
-v2: * add a new mount option `offset=X' for start offset, and offset
-       should be aligned to PAGE_SIZE
-    * add start offset for both file-backed and bdev-based mounts
-    https://lore.kernel.org/linux-erofs/0725c2ec-528c-42a8-9557-4713e7e35153@linux.alibaba.com
+I don't see most of the points above as significant, or even valid as a 
+differentiator between the two approaches, while what I object to the 
+most is adding of more state machine stuff. Because that is what I think 
+makes the scheduler harder to maintain. More flags, more stopping some 
+workers while leaving some run, etc.
 
-v1: https://lore.kernel.org/all/20250324022849.2715578-1-shengyong1@xiaomi.com/
+A new callback to cancel a single job is IMO completely clean. 
+Equivalent to how we already have ->timedout_job(), which, in the 
+context of the recent discussions, really has the semantics of "cancel 
+if it hasn't completed in the meantime". So I even wonder if there could 
+be scope to share something with ->cancel_job(). The design or the 
+implementation.
 
-diff --git a/Documentation/filesystems/erofs.rst b/Documentation/filesystems/erofs.rst
-index c293f8e37468..b24cb0d5d4d6 100644
---- a/Documentation/filesystems/erofs.rst
-+++ b/Documentation/filesystems/erofs.rst
-@@ -128,6 +128,7 @@ device=%s              Specify a path to an extra device to be used together.
- fsid=%s                Specify a filesystem image ID for Fscache back-end.
- domain_id=%s           Specify a domain ID in fscache mode so that different images
-                        with the same blobs under a given domain ID can share storage.
-+fsoffset=%lu           Specify image offset for file-backed or bdev-based mounts.
- ===================    =========================================================
- 
- Sysfs Entries
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 2409d2ab0c28..599a44d5d782 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -27,9 +27,12 @@ void erofs_put_metabuf(struct erofs_buf *buf)
- 
- void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset, bool need_kmap)
- {
--	pgoff_t index = offset >> PAGE_SHIFT;
-+	pgoff_t index;
- 	struct folio *folio = NULL;
- 
-+	offset += buf->off;
-+	index = offset >> PAGE_SHIFT;
-+
- 	if (buf->page) {
- 		folio = page_folio(buf->page);
- 		if (folio_file_page(folio, index) != buf->page)
-@@ -54,6 +57,7 @@ void erofs_init_metabuf(struct erofs_buf *buf, struct super_block *sb)
- 	struct erofs_sb_info *sbi = EROFS_SB(sb);
- 
- 	buf->file = NULL;
-+	buf->off = sbi->dif0.off;
- 	if (erofs_is_fileio_mode(sbi)) {
- 		buf->file = sbi->dif0.file;	/* some fs like FUSE needs it */
- 		buf->mapping = buf->file->f_mapping;
-@@ -299,7 +303,7 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 		iomap->private = buf.base;
- 	} else {
- 		iomap->type = IOMAP_MAPPED;
--		iomap->addr = mdev.m_pa;
-+		iomap->addr = mdev.m_dif->off + mdev.m_pa;
- 		if (flags & IOMAP_DAX)
- 			iomap->addr += mdev.m_dif->dax_part_off;
- 	}
-diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
-index 60c7cc4c105c..a2c7001ff789 100644
---- a/fs/erofs/fileio.c
-+++ b/fs/erofs/fileio.c
-@@ -147,7 +147,8 @@ static int erofs_fileio_scan_folio(struct erofs_fileio *io, struct folio *folio)
- 				if (err)
- 					break;
- 				io->rq = erofs_fileio_rq_alloc(&io->dev);
--				io->rq->bio.bi_iter.bi_sector = io->dev.m_pa >> 9;
-+				io->rq->bio.bi_iter.bi_sector =
-+					(io->dev.m_dif->off + io->dev.m_pa) >> 9;
- 				attached = 0;
- 			}
- 			if (!bio_add_folio(&io->rq->bio, folio, len, cur))
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 4ac188d5d894..cd8c738f5eb8 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -43,6 +43,7 @@ struct erofs_device_info {
- 	char *path;
- 	struct erofs_fscache *fscache;
- 	struct file *file;
-+	u64 off;
- 	struct dax_device *dax_dev;
- 	u64 dax_part_off;
- 
-@@ -199,6 +200,7 @@ enum {
- struct erofs_buf {
- 	struct address_space *mapping;
- 	struct file *file;
-+	u64 off;
- 	struct page *page;
- 	void *base;
- };
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index da6ee7c39290..512877d7d855 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -356,7 +356,7 @@ static void erofs_default_options(struct erofs_sb_info *sbi)
- 
- enum {
- 	Opt_user_xattr, Opt_acl, Opt_cache_strategy, Opt_dax, Opt_dax_enum,
--	Opt_device, Opt_fsid, Opt_domain_id, Opt_directio,
-+	Opt_device, Opt_fsid, Opt_domain_id, Opt_directio, Opt_fsoffset,
- };
- 
- static const struct constant_table erofs_param_cache_strategy[] = {
-@@ -383,6 +383,7 @@ static const struct fs_parameter_spec erofs_fs_parameters[] = {
- 	fsparam_string("fsid",		Opt_fsid),
- 	fsparam_string("domain_id",	Opt_domain_id),
- 	fsparam_flag_no("directio",	Opt_directio),
-+	fsparam_u64("fsoffset",		Opt_fsoffset),
- 	{}
- };
- 
-@@ -506,6 +507,9 @@ static int erofs_fc_parse_param(struct fs_context *fc,
- 		errorfc(fc, "%s option not supported", erofs_fs_parameters[opt].name);
- #endif
- 		break;
-+	case Opt_fsoffset:
-+		sbi->dif0.off = result.uint_64;
-+		break;
- 	}
- 	return 0;
- }
-@@ -599,6 +603,10 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 				&sbi->dif0.dax_part_off, NULL, NULL);
- 	}
- 
-+	if (sbi->dif0.off & ((1 << sbi->blkszbits) - 1))
-+		return invalfc(fc, "fsoffset %lld not aligned to block size",
-+			       sbi->dif0.off);
-+
- 	err = erofs_read_superblock(sb);
- 	if (err)
- 		return err;
-@@ -947,6 +955,8 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
- 	if (sbi->domain_id)
- 		seq_printf(seq, ",domain_id=%s", sbi->domain_id);
- #endif
-+	if (sbi->dif0.off)
-+		seq_printf(seq, ",fsoffset=%lld", sbi->dif0.off);
- 	return 0;
- }
- 
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index b8e6b76c23d5..4f910d7ffb2f 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -1707,7 +1707,8 @@ static void z_erofs_submit_queue(struct z_erofs_frontend *f,
- 					bio = bio_alloc(mdev.m_bdev, BIO_MAX_VECS,
- 							REQ_OP_READ, GFP_NOIO);
- 				bio->bi_end_io = z_erofs_endio;
--				bio->bi_iter.bi_sector = cur >> 9;
-+				bio->bi_iter.bi_sector =
-+						(mdev.m_dif->off + cur) >> 9;
- 				bio->bi_private = q[JQ_SUBMIT];
- 				if (readahead)
- 					bio->bi_opf |= REQ_RAHEAD;
--- 
-2.43.0
+Regards,
+
+Tvrtko
+
+>>
+>>> Don't get me wrong, your approach does work and it definitely has
+>>> its
+>>> charm. However, I think what I propose here is syntactically a bit
+>>> cleaner because the classical order of a fence first being signaled
+>>> in
+>>> the driver and then the associated job being freed as usual by the
+>>> scheduler is guaranteed. IOW, we primarily rely on the signaling
+>>> path.
+>>>
+>>> Either way, neither your nor my approach would have worked out of
+>>> the
+>>> box in Nouveau without that driver exploding.
+>>
+>> What do you mean by this - the latest version of your series does or
+>> does not work for nouveau?
+> 
+> Mine works with Nouveau, but revealed a bug in Nouveau [1]. Yours would
+> have ran into that bug, too.
+> 
+> My point is just that your job-by-job approach wouldn't have been
+> superior to my approach in practice, i.e., when implementing it in the
+> first "beta tester", Nouveau. Would have been the same problem in
+> different color.
+> 
+> So just because a cancel_job() callback would result in fewer lines of
+> code wouldn't mean it's superior in practice. I expect the same to be
+> the case for other drivers, especially those who use scheduler
+> internals.
+> 
+> So, summarizing:
+>   * My approach works. Your approach works.
+>   * It works for all drivers, because they all have a list of fences.
+>   * It communicates more clearly to the driver what this is all about.
+>   * It keeps the scheduler's design more consistent regarding
+>     responsibility / code paths for job life times.
+> 
+> P.
+> 
+> [1] https://lore.kernel.org/dri-devel/20250415121900.55719-2-phasta@kernel.org/
+> 
+>>
+>> Regards,
+>>
+>> Tvrtko
+>>
+>>>
+>>>>    and to align
+>>>> better with the existing prototypes in the sched ops table (where
+>>>> everything operates on jobs).
+>>>
+>>> That's not a hard criteria IMO. Those are sched_backend_ops, not
+>>> sched_job_backend_ops, and prepare_job() already takes a parameter
+>>> other than a job.
+>>>
+>>>
+>>> Cheers,
+>>> P.
+>>>
+>>>>
+>>>> Regards,
+>>>>
+>>>> Tvrtko
+>>>>
+>>>>>> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+>>>>>> ---
+>>>>>>     .../gpu/drm/scheduler/tests/mock_scheduler.c  | 34
+>>>>>> ++++++++++++-----
+>>>>>> --
+>>>>>>     1 file changed, 21 insertions(+), 13 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+>>>>>> b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+>>>>>> index f999c8859cf7..a72d26ca8262 100644
+>>>>>> --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+>>>>>> +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+>>>>>> @@ -228,10 +228,30 @@ static void mock_sched_free_job(struct
+>>>>>> drm_sched_job *sched_job)
+>>>>>>      /* Mock job itself is freed by the kunit framework. */
+>>>>>>     }
+>>>>>>     
+>>>>>> +static void mock_sched_fence_context_kill(struct
+>>>>>> drm_gpu_scheduler
+>>>>>> *gpu_sched)
+>>>>>> +{
+>>>>>> + struct drm_mock_scheduler *sched =
+>>>>>> drm_sched_to_mock_sched(gpu_sched);
+>>>>>> + struct drm_mock_sched_job *job;
+>>>>>> + unsigned long flags;
+>>>>>> +
+>>>>>> + spin_lock_irqsave(&sched->lock, flags);
+>>>>>> + list_for_each_entry(job, &sched->job_list, link) {
+>>>>>> + spin_lock(&job->lock);
+>>>>>> + if (!dma_fence_is_signaled_locked(&job-
+>>>>>>> hw_fence)) {
+>>>>>> + dma_fence_set_error(&job->hw_fence, -
+>>>>>> ECANCELED);
+>>>>>> + dma_fence_signal_locked(&job->hw_fence);
+>>>>>> + }
+>>>>>> + complete(&job->done);
+>>>>>> + spin_unlock(&job->lock);
+>>>>>> + }
+>>>>>> + spin_unlock_irqrestore(&sched->lock, flags);
+>>>>>> +}
+>>>>>> +
+>>>>>>     static const struct drm_sched_backend_ops
+>>>>>> drm_mock_scheduler_ops = {
+>>>>>>      .run_job = mock_sched_run_job,
+>>>>>>      .timedout_job = mock_sched_timedout_job,
+>>>>>> - .free_job = mock_sched_free_job
+>>>>>> + .free_job = mock_sched_free_job,
+>>>>>> + .kill_fence_context = mock_sched_fence_context_kill,
+>>>>>>     };
+>>>>>>     
+>>>>>>     /**
+>>>>>> @@ -300,18 +320,6 @@ void drm_mock_sched_fini(struct
+>>>>>> drm_mock_scheduler *sched)
+>>>>>>      drm_mock_sched_job_complete(job);
+>>>>>>      spin_unlock_irqrestore(&sched->lock, flags);
+>>>>>>     
+>>>>>> - /*
+>>>>>> - * Free completed jobs and jobs not yet processed by the
+>>>>>> DRM
+>>>>>> scheduler
+>>>>>> - * free worker.
+>>>>>> - */
+>>>>>> - spin_lock_irqsave(&sched->lock, flags);
+>>>>>> - list_for_each_entry_safe(job, next, &sched->done_list,
+>>>>>> link)
+>>>>>> - list_move_tail(&job->link, &list);
+>>>>>> - spin_unlock_irqrestore(&sched->lock, flags);
+>>>>>> -
+>>>>>> - list_for_each_entry_safe(job, next, &list, link)
+>>>>>> - mock_sched_free_job(&job->base);
+>>>>>> -
+>>>>>>      drm_sched_fini(&sched->base);
+>>>>>>     }
+>>>>>>     
+>>>>>
+>>>>
+>>>
+>>
+> 
 
