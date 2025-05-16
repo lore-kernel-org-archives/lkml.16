@@ -1,217 +1,228 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD6121FF2E
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2FC1FF7DC;
+	Fri, 16 May 2025 06:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747377019; cv=none; b=b1u6GDvxVwqArqGmtCHtAxTvHVGnah2fizVVh+RtNtG7dstoemKbl5ftue9VsijuCLmoUU3qxN8ePmbwhIClXUBjbFhfAgTeqx6AUihcS3CaNxEbCMgL6C5+33nnRmpjFmwNYJETz/LG6ojIINVeiRovYcwQ1dHzjJftYY212lE=
+	t=1747377108; cv=none; b=KY9hsZVxsZvUsezLW1eQQtcvr06lEOKp1VJH0xns9A5srEf604EW3b+l5PqOugEK2VJynA2YXpLbB72gbZRb25y6BjiCOeCEw4Ws0UqxIlr9IpaY7Im34AGqFhiPiTsv07INKF2UjT0lQbftp8KdozFHKqg7vcAB6ay+TrjwYOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747377019; c=relaxed/simple;
-	bh=VUGan+omI6h4jj7V2lZJACg1h+Qseb8likTCCX8qd1o=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=GE3OqZiZxf5PaABXx66HMIggHtysMl/O2CEx4yBCrRuZ9OM5Jzd+qMVSod0ppankkNk0dC0kFO7TeWlGUq/N5vIYxLdrhpF9OucjbnfC9cItuCG7TcLkQZBJQjx4dbTpPtE33JUWsVL8MRQCMjfZuM6SxQgmTg/aGNnuTOr3UOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=myS+KzW7; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747377108; c=relaxed/simple;
+	bh=ezqwvE80IS8sf3hJ0C4YdG2Ea1FOROaDMhT4zDNXY20=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hkr2b2G86d1M8+6ucgsganqq8/xfAWkvJFfrdSo8pG17aLdvzU0il3/AkmPGdgWG+QvTsvD0UTfEsZanndU3h2bD7kQrBtl3C7kofe4iFnp2lCJxhuD/ylLcqoSig/N3RF7G2bt/8z/EQAypphe1zHS5H8h3sfLXMn6kexKfZhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yzv/vCmJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="myS+KzW7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747377017; x=1778913017;
-  h=date:from:to:cc:subject:message-id;
-  bh=VUGan+omI6h4jj7V2lZJACg1h+Qseb8likTCCX8qd1o=;
-  b=myS+KzW7h0zctrijnHhLo55MMuxGLn6Nb8dOkRwlP8pI5gDZl2RFLdDQ
-   hQNLE6C2WVRFrtya8G91wSJ1cDAcz0GtHxathbOc6El1e+/USGspbrRfB
-   dp1T7O0oRozx92hhjuyh1IbQyeRirW3HyU+N/Z9kg1IU8sjrWLMbn9L5L
-   aORBpBUNMS7pCa/DA+kLAmPdnfht+hElMBNXMHItpvgzDTrFXijZAmrtd
-   QA1N/4f5zjsfmNUnkST1d0V+EUHsgYqRlk1jLdyoghMnwX0P05WrcVbya
-   JQsDcqdnEUhLUfGEQ2uUBOtkr1vknvEMeXlvepixNRUmEtcc7m6r1N8JT
-   A==;
-X-CSE-ConnectionGUID: X4UwNZnySTmUH2n8ESoRBA==
-X-CSE-MsgGUID: tMRjy+9yQcOGjfHTU9sq8A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="60361265"
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="60361265"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 23:30:10 -0700
-X-CSE-ConnectionGUID: G67x8KtcQLSKkDRQ0DPu8w==
-X-CSE-MsgGUID: UF6KsqCHQwSl8YE9x5/UZg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="175728974"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 15 May 2025 23:30:09 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uFoa6-000J35-14;
-	Fri, 16 May 2025 06:30:06 +0000
-Date: Fri, 16 May 2025 14:29:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:perf/urgent] BUILD SUCCESS
- 99bcd91fabada0dbb1d5f0de44532d8008db93c6
-Message-ID: <202505161419.7jmHkovd-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yzv/vCmJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60CA1C4CEE4;
+	Fri, 16 May 2025 06:31:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747377107;
+	bh=ezqwvE80IS8sf3hJ0C4YdG2Ea1FOROaDMhT4zDNXY20=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Yzv/vCmJQazk338RJdSyI3Bogq2yYl6pNwGzFtTb5PizAllilZAKlB0Wl4ZXtK6Eh
+	 BpynlIiHJ0acJ2B4Y0anKGA7ufum3XEqSV6QcI878bfUv6Y+49f39jQmmMZYmCd/Iu
+	 hycyfP8ck8w4Ati/uoaHp4RzQndn2rM7wihD+18vx6Oq2ZG4uNtE6ZCw8AoSXsJb28
+	 eve8rZVg4FY4ZZUrK3R4jinIE3YbdiPKdphKAdjYExuefMPawwC0HRU3toiYQZzAdW
+	 mHj2jjJiJkKMSSlaqf3uGlBoYhdtde2uPEpkkep/INdGL7kEC9tkxg8jqb1fX9Bak4
+	 w2dTtsOCEOnmw==
+Message-ID: <a5463522-1fa8-4ede-aec9-73f8a0aee196@kernel.org>
+Date: Fri, 16 May 2025 08:31:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] vt: add VT_GETCONSIZECSRPOS to retrieve console
+ size and cursor position
+To: Nicolas Pitre <nico@fluxnic.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250514194710.6709-1-nico@fluxnic.net>
+ <20250514194710.6709-3-nico@fluxnic.net>
+ <8fb2c16f-0e9b-402d-a7f2-4881de8c7bd9@kernel.org>
+ <3o3q5896-8540-nro6-534o-307nn81r7r5r@syhkavp.arg>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <3o3q5896-8540-nro6-534o-307nn81r7r5r@syhkavp.arg>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/urgent
-branch HEAD: 99bcd91fabada0dbb1d5f0de44532d8008db93c6  perf/x86/intel: Fix segfault with PEBS-via-PT with sample_freq
+On 15. 05. 25, 18:02, Nicolas Pitre wrote:
+> On Thu, 15 May 2025, Jiri Slaby wrote:
+> 
+>> On 14. 05. 25, 21:42, Nicolas Pitre wrote:
+>>> From: Nicolas Pitre <npitre@baylibre.com>
+>>>
+>>> The console dimension and cursor position are available through the
+>>> /dev/vcsa interface already. However the /dev/vcsa header format uses
+>>> single-byte fields therefore those values are clamped to 255.
+>>>
+>>> As surprizing as this may seem, some people do use 240-column 67-row
+>>> screens (a 1920x1080 monitor with 8x16 pixel fonts) which is getting
+>>> close to the limit. Monitors with higher resolution are not uncommon
+>>> these days (3840x2160 producing a 480x135 character display) and it is
+>>> just a matter of time before someone with, say, a braille display using
+>>> the Linux VT console and BRLTTY on such a screen reports a bug about
+>>> missing and oddly misaligned screen content.
+>>>
+>>> Let's add VT_GETCONSIZECSRPOS for the retrieval of console size and cursor
+>>> position without byte-sized limitations. The actual console size limit as
+>>> encoded in vt.c is 32767x32767 so using a short here is appropriate. Then
+>>> this can be used to get the cursor position when /dev/vcsa reports 255.
+>>>
+>>> The screen dimension may already be obtained using TIOCGWINSZ and adding
+>>> the same information to VT_GETCONSIZECSRPOS might be redundant. However
+>>> applications that care about cursor position also care about display
+>>> size and having 2 separate system calls to obtain them separately is
+>>> wasteful. Also, the cursor position can be queried by writing "\e[6n" to
+>>> a tty and reading back the result but that may be done only by the actual
+>>> application using that tty and not a sideline observer.
+>>>
+>>> Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+>>> ---
+>>>    drivers/tty/vt/vt_ioctl.c | 16 ++++++++++++++++
+>>>    include/uapi/linux/vt.h   |  9 +++++++++
+>>>    2 files changed, 25 insertions(+)
+>>>
+>>> diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
+>>> index 4b91072f3a4e..83a3d49535e5 100644
+>>> --- a/drivers/tty/vt/vt_ioctl.c
+>>> +++ b/drivers/tty/vt/vt_ioctl.c
+>>> @@ -951,6 +951,22 @@ int vt_ioctl(struct tty_struct *tty,
+>>>     				(unsigned short __user *)arg);
+>>>     case VT_WAITEVENT:
+>>>    		return vt_event_wait_ioctl((struct vt_event __user *)arg);
+>>> +
+>>> +	case VT_GETCONSIZECSRPOS:
+>>> +	{
+>>> +		struct vt_consizecsrpos concsr;
+>>> +
+>>> +		console_lock();
+>>> +		concsr.con_cols = vc->vc_cols;
+>>> +		concsr.con_rows = vc->vc_rows;
+>>> +		concsr.csr_col = vc->state.x;
+>>> +		concsr.csr_row = vc->state.y;
+>>> +		console_unlock();
+>>
+>> Makes a lot of sense!
+>>
+>>> +		if (copy_to_user(up, &concsr, sizeof(concsr)))
+>>> +			return -EFAULT;
+>>> +		return 0;
+>>> +	}
+>>> +
+>>>     default:
+>>>     	return -ENOIOCTLCMD;
+>>>    	}
+>>> diff --git a/include/uapi/linux/vt.h b/include/uapi/linux/vt.h
+>>> index e9d39c48520a..e93c8910133b 100644
+>>> --- a/include/uapi/linux/vt.h
+>>> +++ b/include/uapi/linux/vt.h
+>>> @@ -84,4 +84,13 @@ struct vt_setactivate {
+>>>    
+>>>    #define VT_SETACTIVATE	0x560F	/* Activate and set the mode of a
+>>>    console */
+>>>    
+>>> +struct vt_consizecsrpos {
+>>> +	unsigned short con_rows;	/* number of console rows */
+>>> +	unsigned short con_cols;	/* number of console columns */
+>>> +	unsigned short csr_row;		/* current cursor's row */
+>>> +	unsigned short csr_col;		/* current cursor's column */
+>>
+>> Use __u16 pls.
+> 
+> I beg to differ. Not because __u16 is fundamentally wrong.
 
-elapsed time: 737m
+Fundamentaly wrong -- for what reason? These types are exactly what 
+should be used in userspace APIs instead of bare C types.
 
-configs tested: 140
-configs skipped: 128
+> But
+> everything else in this file uses only basic C types already and adding
+> one struct with __u16 would look odd.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The whole file needs to be fixed, eventually. It's no reason to add 
+another bad entry.
 
-tested configs:
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    clang-19
-arc                              allyesconfig    clang-19
-arc                                 defconfig    gcc-14.2.0
-arc                   randconfig-001-20250516    gcc-9.5.0
-arc                   randconfig-002-20250516    gcc-9.5.0
-arm                              allmodconfig    clang-19
-arm                              allyesconfig    clang-19
-arm                                 defconfig    gcc-14.2.0
-arm                            mps2_defconfig    clang-21
-arm                   randconfig-001-20250516    gcc-9.5.0
-arm                   randconfig-002-20250516    gcc-9.5.0
-arm                   randconfig-003-20250516    gcc-9.5.0
-arm                   randconfig-004-20250516    gcc-9.5.0
-arm64                            allmodconfig    clang-19
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20250516    gcc-9.5.0
-arm64                 randconfig-002-20250516    gcc-9.5.0
-arm64                 randconfig-003-20250516    gcc-9.5.0
-arm64                 randconfig-004-20250516    gcc-9.5.0
-csky                                defconfig    gcc-14.2.0
-hexagon                             defconfig    gcc-14.2.0
-i386                             alldefconfig    clang-21
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    clang-20
-i386                             allyesconfig    clang-20
-i386        buildonly-randconfig-001-20250516    clang-20
-i386        buildonly-randconfig-002-20250516    clang-20
-i386        buildonly-randconfig-002-20250516    gcc-12
-i386        buildonly-randconfig-003-20250516    clang-20
-i386        buildonly-randconfig-004-20250516    clang-20
-i386        buildonly-randconfig-005-20250516    clang-20
-i386        buildonly-randconfig-006-20250516    clang-20
-i386        buildonly-randconfig-006-20250516    gcc-12
-i386                                defconfig    clang-20
-i386                  randconfig-001-20250516    gcc-12
-i386                  randconfig-002-20250516    gcc-12
-i386                  randconfig-003-20250516    gcc-12
-i386                  randconfig-004-20250516    gcc-12
-i386                  randconfig-005-20250516    gcc-12
-i386                  randconfig-006-20250516    gcc-12
-i386                  randconfig-007-20250516    gcc-12
-i386                  randconfig-011-20250516    gcc-12
-i386                  randconfig-012-20250516    gcc-12
-i386                  randconfig-013-20250516    gcc-12
-i386                  randconfig-014-20250516    gcc-12
-i386                  randconfig-015-20250516    gcc-12
-i386                  randconfig-016-20250516    gcc-12
-i386                  randconfig-017-20250516    gcc-12
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                           defconfig    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                                defconfig    gcc-14.2.0
-m68k                          sun3x_defconfig    clang-21
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-microblaze                          defconfig    gcc-14.2.0
-mips                          ath79_defconfig    clang-21
-mips                          eyeq6_defconfig    clang-21
-nios2                               defconfig    gcc-14.2.0
-openrisc                          allnoconfig    clang-21
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-12
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    clang-21
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-12
-parisc64                            defconfig    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    clang-21
-powerpc                          allyesconfig    gcc-14.2.0
-powerpc                     skiroot_defconfig    clang-21
-riscv                            allmodconfig    gcc-14.2.0
-riscv                             allnoconfig    clang-21
-riscv                            allyesconfig    gcc-14.2.0
-riscv                               defconfig    gcc-12
-riscv                 randconfig-001-20250516    gcc-7.5.0
-riscv                 randconfig-002-20250516    gcc-7.5.0
-s390                             allmodconfig    gcc-14.2.0
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    gcc-12
-s390                  randconfig-001-20250516    gcc-7.5.0
-s390                  randconfig-002-20250516    gcc-7.5.0
-sh                               allmodconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-12
-sh                    randconfig-001-20250516    gcc-7.5.0
-sh                    randconfig-002-20250516    gcc-7.5.0
-sh                            shmin_defconfig    clang-21
-sh                              ul2_defconfig    clang-21
-sparc                            allmodconfig    gcc-14.2.0
-sparc                 randconfig-001-20250516    gcc-7.5.0
-sparc                 randconfig-002-20250516    gcc-7.5.0
-sparc64                             defconfig    gcc-12
-sparc64               randconfig-001-20250516    gcc-7.5.0
-sparc64               randconfig-002-20250516    gcc-7.5.0
-um                                allnoconfig    clang-21
-um                                  defconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250516    gcc-7.5.0
-um                    randconfig-002-20250516    gcc-7.5.0
-um                           x86_64_defconfig    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250516    clang-20
-x86_64      buildonly-randconfig-001-20250516    gcc-12
-x86_64      buildonly-randconfig-002-20250516    gcc-12
-x86_64      buildonly-randconfig-003-20250516    clang-20
-x86_64      buildonly-randconfig-003-20250516    gcc-12
-x86_64      buildonly-randconfig-004-20250516    clang-20
-x86_64      buildonly-randconfig-004-20250516    gcc-12
-x86_64      buildonly-randconfig-005-20250516    gcc-12
-x86_64      buildonly-randconfig-006-20250516    gcc-12
-x86_64                              defconfig    clang-20
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20250516    gcc-12
-x86_64                randconfig-002-20250516    gcc-12
-x86_64                randconfig-003-20250516    gcc-12
-x86_64                randconfig-004-20250516    gcc-12
-x86_64                randconfig-005-20250516    gcc-12
-x86_64                randconfig-006-20250516    gcc-12
-x86_64                randconfig-007-20250516    gcc-12
-x86_64                randconfig-008-20250516    gcc-12
-x86_64                randconfig-071-20250516    clang-20
-x86_64                randconfig-072-20250516    clang-20
-x86_64                randconfig-073-20250516    clang-20
-x86_64                randconfig-074-20250516    clang-20
-x86_64                randconfig-075-20250516    clang-20
-x86_64                randconfig-076-20250516    clang-20
-x86_64                randconfig-077-20250516    clang-20
-x86_64                randconfig-078-20250516    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-12
-x86_64                         rhel-9.4-kunit    gcc-12
-x86_64                           rhel-9.4-ltp    gcc-12
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                randconfig-001-20250516    gcc-7.5.0
-xtensa                randconfig-002-20250516    gcc-7.5.0
+> And adding some include to define
+> that type would be needed since there are currently no such includes in
+> that file currently, and that could potentially cause issues with
+> existing consumers of that header file that didn't expect extra
+> definitions, etc.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On one side yes, on the other side, sticking with ancient coding style 
+while being afraid to include basic headers would be moot.
+
+> So I think that such a change, if it is to happen,
+> should be done for the whole file at once and in a separate patch.
+
+Let me bite the bullet and send something. (Likely on Mon -- now queued 
+up in my queue for build tests).
+
+>>> +};
+>>> +
+>>> +#define VT_GETCONSIZECSRPOS 0x5610  /* get console size and cursor position
+>>> */
+>>
+>> Can we define that properly as
+>>    _IOR(0x56, 0x10, struct vt_consizecsrpos)
+>> ? Note this would still differ from "conflicting":
+>> #define VIDIOC_G_FBUF            _IOR('V', 10, struct v4l2_framebuffer)
+> 
+> Similarly as the reason above: given that no other definitions in that
+> file use the _IO*() scheme for historical reasons, it is preferable to
+> follow what's already there to avoid unsuspected confusion. The VT layer
+> is pretty much unlykely to grow many additional ioctls in the
+> foreseeable future so I'd lean towards keeping things simple and in line
+> with the existing code.
+
+I tend to disagree. We should not follow bad practices only because they 
+are already there.
+
+-- 
+js
+suse labs
