@@ -1,33 +1,42 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC7543D69;
-	Fri, 16 May 2025 06:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367843D69;
+	Fri, 16 May 2025 06:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747375406; cv=none; b=F/GR/LQM79BMJTYWHse9mTByex1L+FpH/RLTDSiEmax4yWCEEldOpBji/zjEmYEMiq3wiXwIT4YekWvUP60FtvfASmmsf5aq9ZgxnKTNw0ufj7tijTRK+4jsgRilterNMXtvzXKSxG/sZuQ4peNYUNWLpk3dZmqJLKaiHxvjy9I=
+	t=1747375516; cv=none; b=V8ESPRoYk+sbhFBHBUK2VBJy7rffIGqQjVStHI3AMfL8PLvSIt06eVqCAfols/7P1DXFgszpxoX1sBAV8e67s9KUatNj+VkAu2MPRXEYd8pA+bGl4jhh0kZ8DZHIRavFZjj+IRpf+5QBZAETFUkuBQoencS5nhOzqB+SbzX6FM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747375406; c=relaxed/simple;
-	bh=oOpjNen7QUYebQBY79f3YikSpSsA8ABTeD0DigpqGZI=;
+	s=arc-20240116; t=1747375516; c=relaxed/simple;
+	bh=bW/BSRnMonxJF09QI4JenGAMerZbgvhvGxO91qgyG40=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t6uVcgm9wMBA7zaL5ylwMIoNctwN/rD0c+gsO/5KckRzTPM8NgSbk6CWJTrJNJ2kQwgJWcaHPGgucQ3myCDjSH8kOpNCGAfGBSCRGItVVMGe5f5r60kPfqUJBSxjgtMRESIL4rEzWQhJjdsiOl6RI5q46u6GVobLZ9k6d6u5AzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-3f-6826d52339f8
-Date: Fri, 16 May 2025 15:03:09 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Gavin Guo <gavinguo@igalia.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev,
-	osalvador@suse.de, akpm@linux-foundation.org,
-	mike.kravetz@oracle.com, kernel-dev@igalia.com,
-	stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
-	Florent Revest <revest@google.com>, Gavin Shan <gshan@redhat.com>,
-	kernel_team@skhynix.com
-Subject: Re: [PATCH] mm/hugetlb: fix a deadlock with pagecache_folio and
- hugetlb_fault_mutex_table
-Message-ID: <20250516060309.GA51921@system.software.com>
-References: <20250513093448.592150-1-gavinguo@igalia.com>
- <20250514064729.GA17622@system.software.com>
- <075ae729-1d4a-4f12-a2ba-b4f508e5d0a1@igalia.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=VOphZKlnLgw/79GV3Lph1Hi+BciqmXwL6mfNqhkTrN+B/SXFicW6oUW63qqhlrGTmvRno6m+uIfpTvOgzeJ8ACkD9Ft0xrD5wxgmlUu8O7nt4+MK3HVasU7/Yi3SgnvOLaahmPdto2UaQgMEUIjHa5//w/IVD7WDFrPKdxPLqHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=n96Sx2Ok; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="n96Sx2Ok"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48F3CC4CEE4;
+	Fri, 16 May 2025 06:05:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747375515;
+	bh=bW/BSRnMonxJF09QI4JenGAMerZbgvhvGxO91qgyG40=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n96Sx2OkenwE0kt3YDNfJZlohnuKTqmaWZNUPaZ6CW9WiQIYMcAet01BF7Nfw3kVN
+	 lOe4k+swNbvlzFY+wtcQDBtvSfiaHZFM9SHTbiH/S2Xt53BToRxnP4jbJiE6g/IUD0
+	 wo3hmk8y+YdB/EGpRIQ112qAOTUPNhzYaOs8yXBE=
+Date: Fri, 16 May 2025 08:03:27 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Linux-Kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
+	shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	goda <yusuke.goda.sx@renesas.com>,
+	Kurokawa <harunobu.kurokawa.dn@renesas.com>,
+	Kihara <takeshi.kihara.df@renesas.com>,
+	kazuya.mizuguchi.ks@renesas.com, takamitsu.honda.pv@renesas.com
+Subject: Re: Question about UIO vs DT
+Message-ID: <2025051649-commode-brussels-1034@gregkh>
+References: <87o6vutrbw.wl-kuninori.morimoto.gx@renesas.com>
+ <2025051549-flannels-lively-a46d@gregkh>
+ <871pspti1t.wl-kuninori.morimoto.gx@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,110 +45,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <075ae729-1d4a-4f12-a2ba-b4f508e5d0a1@igalia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpgkeLIzCtJLcpLzFFi42LhesuzUFf5qlqGwdRVAhZz1q9hs1iy9gyz
-	xctd25gsnn7qY7E49+I7k8XlXXPYLO6t+c9q8XF/sMWynQ9ZLM5MK7LonvmD1WLBxkeMDjwe
-	CzaVekyY3c3msenTJHaPEzN+s3gsbJjK7PHx6S0Wj/f7rrJ5bD5d7fF5k1wAZxSXTUpqTmZZ
-	apG+XQJXxsMurYLjYhXnjnUwNzBOEOpi5OSQEDCR2HW9nQXGvrDxBpjNIqAqsXzuCzYQm01A
-	XeLGjZ/MILaIgLLEhykHgWq4OJgFTjBJXJy3iB0kISyQInHtwDawZl4BC4nj+5YzgxQJCcxh
-	lLh59Ss7REJQ4uTMJ2BFzAJaEjf+vWTqYuQAsqUllv/jAAlzCthJ3O/ewwRiiwItO7DtOBPI
-	HAmB12wSDX9eMEJcKilxcMUNlgmMArOQjJ2FZOwshLELGJlXMQpl5pXlJmbmmOhlVOZlVugl
-	5+duYgTGy7LaP9E7GD9dCD7EKMDBqMTD63BdNUOINbGsuDL3EKMEB7OSCO/1LOUMId6UxMqq
-	1KL8+KLSnNTiQ4zSHCxK4rxG38pThATSE0tSs1NTC1KLYLJMHJxSDYzVAn3rz9saqB4VPHhR
-	69aq/lCb7L021tseR7eqdHkwLN/+zaXHRyV/zqufE0Q3SVgVFpxnOnzoxWoPnuybs6J/346T
-	ZUp3tni2+yfHgSwPn9un2i/KcVVMf5oSdEqA7UdPyn+HDq5/tm/d6zZZft7/5Xreug4Bq2+2
-	i4vN1NaqT41sY9Le7abEUpyRaKjFXFScCAAsr5bMkwIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGLMWRmVeSWpSXmKPExsXC5WfdrKt8VS3DoFXZYs76NWwWS9aeYbZ4
-	uWsbk8XTT30sFudefGeyODz3JKvF5V1z2CzurfnPavFxf7DFsp0PWSzOTCuy6J75g9ViwcZH
-	jA68Hgs2lXpMmN3N5rHp0yR2jxMzfrN4LGyYyuzx8ektFo/3+66yeSx+8YHJY/Ppao/Pm+QC
-	uKK4bFJSczLLUov07RK4Mh52aRUcF6s4d6yDuYFxglAXIyeHhICJxIWNN1hAbBYBVYnlc1+w
-	gdhsAuoSN278ZAaxRQSUJT5MOQhUw8XBLHCCSeLivEXsIAlhgRSJawe2gTXzClhIHN+3nBmk
-	SEhgDqPEzatf2SESghInZz4BK2IW0JK48e8lUxcjB5AtLbH8HwdImFPATuJ+9x4mEFsUaNmB
-	bceZJjDyzkLSPQtJ9yyE7gWMzKsYRTLzynITM3NM9YqzMyrzMiv0kvNzNzECQ39Z7Z+JOxi/
-	XHY/xCjAwajEw+twXTVDiDWxrLgy9xCjBAezkgjv9SzlDCHelMTKqtSi/Pii0pzU4kOM0hws
-	SuK8XuGpCUIC6YklqdmpqQWpRTBZJg5OqQbGQwbXnn4RcGZydr7ReDpuw/s3agHMT+61uXC6
-	sr//J37grZbO8rfO7oFVLYvelnSau+mbc+Ve+bnngFXu3kvhB1M9mi1r03eHiwcqrJ8l28aq
-	5XghatGDp0qWS2Q3W3PWP1/z0Z9vAfeqVeFbog98d8n471S5PyPp0cJzd5/cOm7l6P702JvJ
-	SizFGYmGWsxFxYkA9ttclnkCAAA=
-X-CFilter-Loop: Reflected
+In-Reply-To: <871pspti1t.wl-kuninori.morimoto.gx@renesas.com>
 
-On Wed, May 14, 2025 at 04:10:12PM +0800, Gavin Guo wrote:
-> Hi Byungchul,
+On Fri, May 16, 2025 at 02:18:07AM +0000, Kuninori Morimoto wrote:
 > 
-> On 5/14/25 14:47, Byungchul Park wrote:
-> > On Tue, May 13, 2025 at 05:34:48PM +0800, Gavin Guo wrote:
-> > > The patch fixes a deadlock which can be triggered by an internal
-> > > syzkaller [1] reproducer and captured by bpftrace script [2] and its log
-> > 
-> > Hi,
-> > 
-> > I'm trying to reproduce using the test program [1].  But not yet
-> > produced.  I see a lot of segfaults while running [1].  I guess
-> > something goes wrong.  Is there any prerequisite condition to reproduce
-> > it?  Lemme know if any.  Or can you try DEPT15 with your config and
-> > environment by the following steps:
-> > 
-> >     1. Apply the patchset on v6.15-rc6.
-> >        https://lkml.kernel.org/r/20250513100730.12664-1-byungchul@sk.com
-> >     2. Turn on CONFIG_DEPT.
-> >     3. Run test program reproducing the deadlock.
-> >     4. Check dmesg to see if dept reported the dependency.
-> > 
-> > 	Byungchul
+> Hi Greg
 > 
-> I have enabled the patchset and successfully reproduced the bug. It
-> seems that there is no warning or error log related to the lock. Did I
-> miss anything? This is the console log:
-> https://drive.google.com/file/d/1dxWNiO71qE-H-e5NMPqj7W-aW5CkGSSF/view?usp=sharing
+> Thank you for the reply
+> 
+> > > For example in case of
+> > > the device which needs "2 regs 3 irqs". it will be
+> > > 
+> > > (A)	[1 reg, 1 IRQ] UIO
+> > > (B)	[1 reg, 1 IRQ] UIO
+> > > (C)	[0 reg, 1 IRQ] UIO
+> > > 
+> > > and (C) will be DT error. Is this known issue ? Do we have better solution ?
+> > 
+> > Yes, write a real driver for the device as obviously it is a complex one
+> > and UIO shouldn't be used for it :)
+> > 
+> > What type of device is this that requires this type of hardware control
+> > and why do you feel that UIO is the proper solution?
+> 
+> One of big reason is license.
+> Because it needs to be proprietary licensed driver, we can't create
+> real driver.
 
-My bad.  I think I found the problem that dept didn't report it.  You
-might see the report with the following patch applied on the top, there
-might be a lot of false positives along with that might be annoying tho.
+That is not a valid reason at all, sorry.  So much so that I, and many
+others, have argued that you can not have UIO drivers in userspace that
+are NOT also released under the GPLv2.
 
-Some of my efforts to suppress false positives, suppressed the real one.
+Go work with your lawyers please, there's nothing I can now do to help
+you out with this due to the expectation that you are attempting to
+evade the license requirements here.
 
-Do you mind if I ask you to run the test with the following patch
-applied?  It'd be appreciated if you do and share the result with me.
-
-	Byungchul
-
----
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index f31cd68f2935..fd7559e663c5 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -1138,6 +1138,7 @@ static inline bool trylock_page(struct page *page)
- static inline void folio_lock(struct folio *folio)
- {
- 	might_sleep();
-+	dept_page_wait_on_bit(&folio->page, PG_locked);
- 	if (!folio_trylock(folio))
- 		__folio_lock(folio);
- }
-diff --git a/kernel/dependency/dept.c b/kernel/dependency/dept.c
-index b2fa96d984bc..4e96a6a72d02 100644
---- a/kernel/dependency/dept.c
-+++ b/kernel/dependency/dept.c
-@@ -931,7 +931,6 @@ static void print_circle(struct dept_class *c)
- 	dept_outworld_exit();
- 
- 	do {
--		tc->reported = true;
- 		tc = fc;
- 		fc = fc->bfs_parent;
- 	} while (tc != c);
-diff --git a/kernel/dependency/dept_unit_test.c b/kernel/dependency/dept_unit_test.c
-index 88e846b9f876..496149f31fb3 100644
---- a/kernel/dependency/dept_unit_test.c
-+++ b/kernel/dependency/dept_unit_test.c
-@@ -125,6 +125,8 @@ static int __init dept_ut_init(void)
- {
- 	int i;
- 
-+	return 0;
-+
- 	lockdep_off();
- 
- 	dept_ut_results.ecxt_stack_valid_cnt = 0;
---
+greg k-h
