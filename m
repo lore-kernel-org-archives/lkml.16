@@ -1,98 +1,102 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A60F135A53;
-	Fri, 16 May 2025 14:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D06A13FD86;
+	Fri, 16 May 2025 14:14:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747404854; cv=none; b=S2EhycB+zVtb6kRYZABAev7yD6v4TL8psOaaZW0XxvphE2qcV71bNt9/iSbn+nQMpn50CffUwh/IgrmqFkIylZ2ZJG8ujbTYEocreu0nkl6qr5HzWDd0/P6ZWv1v/p4SHqAA2OWbaDIV1JM7NGcPK2IOkLpBhILjK8EhpQ1Lut0=
+	t=1747404899; cv=none; b=ZwUEYL/6Rm4kIQ94hS2IspetPBPKay4eHBYrQ+A9hOxkYTNDTxrMHy1NfANiNLTVbbw1oVINfwYQrXwxXUt6L9JNE6bA5fqMIrrt9Mvt6UmZ1pwQU6z+BazYo9MaJqRphLs4l3kkovzsrJ4I/7+eaiIJnF7kSgj7pQc5fdxmVkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747404854; c=relaxed/simple;
-	bh=E3fcoFFmMIs5yprPO6Uymi4+DPTsHexOcpOpad3qr6U=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=bzho3FOXA1MEeNw/HXeK3OtpXgg2VCHDkAaJwTjPwpEQfTJhhvh8oqE9HUNt+QmX7JLzqag/zAfDoWqWO2yRrDTEcJjHoM7A8QDQK61HdwbDlmzWUIafDoD9tsgvONVDPo6QUE5T4GPxCaVawUGPZbOHNEQjD2N3msdplik8b6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WbVJvmqx; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747404899; c=relaxed/simple;
+	bh=xoNEu7nlqt0Uzf5QdINb8sbgrCfpe8hWPCqdZRSYtDM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=srlZdRpCHg/TstENFAqpcF31CWVEaSNCWMZcXxYehLwYEuqORHS86btzQLIzicJqeaIazAbPPT0QO/grEz+R3wt8shOHk3X567fJqqFukaAYrjF6GsCP0J0OOJTAgwfKoorGym+AYpwMykeFe/qTFjm2wHpgYDpDWLLDIDAaqIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=LfOh5ag5; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WbVJvmqx"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0F38F43B30;
-	Fri, 16 May 2025 14:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747404843;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nFxrTARUlK2wFNTl5JJRwfbFdvOaKS20BeXfCwf1OTM=;
-	b=WbVJvmqx5SngaVM6UbdN+k9MvlZmejh+STd37xHqMa6/V80ztCv5TTyvQqSF2ZFbZuwKLG
-	wqcf/iCEFmf8tLYq3LMumYMnGDFOseajphKL6i+k31pj7vzXlinRSTRo8CT9Z0F1SB40zI
-	BHSk0xRU9k/soVzGY9kc3SAipmmXKrorQxSmg2aGvmDWSBguOJBCOn407tmRTQoOfqXv0n
-	d9NWSnlxHF7WhTkWf8Qm1B+4bSnL3GejLkgtR1fC3GEQrtmP0adKgUX/P4EW0pMh7CgfPj
-	NHTpSKDUXR1oQCOIhrvdO+6740uBOxG+S7nZM5LxV3WNBvF8uWtl1jPLG7wn7g==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Md Sadre Alam <quic_mdalam@quicinc.com>
-Cc: Gabor Juhos <j4g8y7@gmail.com>,  Mark Brown <broonie@kernel.org>,
-  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,  Richard
- Weinberger <richard@nod.at>,  Vignesh Raghavendra <vigneshr@ti.com>,
-  Varadarajan Narayanan <quic_varada@quicinc.com>,  Sricharan Ramabadhran
- <quic_srichara@quicinc.com>,  <linux-spi@vger.kernel.org>,
-  <linux-mtd@lists.infradead.org>,  <linux-arm-msm@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH next 2/2] spi: spi-qpic-snand: add support for 8 bits
- ECC strength
-In-Reply-To: <007881c9-e03c-1473-d8eb-53fbad8c6a8e@quicinc.com> (Md Sadre
-	Alam's message of "Tue, 13 May 2025 21:05:09 +0530")
-References: <20250502-qpic-snand-8bit-ecc-v1-0-95f3cd08bbc5@gmail.com>
-	<20250502-qpic-snand-8bit-ecc-v1-2-95f3cd08bbc5@gmail.com>
-	<8aa3d4da-da3e-2af4-e0f9-cd56d6259d8f@quicinc.com>
-	<c1729d39-9f7f-4c6d-b8a4-72dfee4bfca5@gmail.com>
-	<878qn2nsa0.fsf@bootlin.com>
-	<16195524-1f31-4968-a3fd-f3d24f1c4223@gmail.com>
-	<87msbhezjf.fsf@bootlin.com>
-	<007881c9-e03c-1473-d8eb-53fbad8c6a8e@quicinc.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Fri, 16 May 2025 16:14:00 +0200
-Message-ID: <87frh4ej87.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="LfOh5ag5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1747404895;
+	bh=xoNEu7nlqt0Uzf5QdINb8sbgrCfpe8hWPCqdZRSYtDM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=LfOh5ag5Xzifqx/OH6UpSuEIMv+WLdumB0zh3Y8sZcRVu9KUkf2UsHDl56iTm3jrZ
+	 xplKT+L8HgbIOmX9NE3nzuuMtsrBpsNJ/SphLX3CvFk6B21YkB0dVDossIQwNGt7oP
+	 NEjYSV4NnnzO58Wv7TsBORQTJRZc9EQhMFDvjbtjJ1Jpn8u+JCy/rHAcdck88u4UP4
+	 Qi5QzkLa8QiX9GhugT3h+n6jyGGR06EMumjbOmVIZJKOk49M9HD+aK0vCPyL4JR0Rk
+	 QxLYu8hEPz/Wgo2cntM/mC2nPIGa8i0YeM2ZBhwxrhaIiXzecmNzlAenL7vF19cHn3
+	 bKXnMLbPOo6Yg==
+Received: from 2a01cb0892f2d600c8f85cf092d4af51.ipv6.abo.wanadoo.fr (2a01cb0892f2D600C8F85cF092d4af51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: jmassot)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id C921317E07E4;
+	Fri, 16 May 2025 16:14:54 +0200 (CEST)
+Message-ID: <dcc085b131ec0b8769630bee6ee89ca0b6eacc73.camel@collabora.com>
+Subject: Re: [PATCH 1/3] dt-bindings: clock: mediatek: Add #reset-cells
+ property for MT8188
+From: Julien Massot <julien.massot@collabora.com>
+To: Conor Dooley <conor@kernel.org>, AngeloGioacchino Del Regno
+	 <angelogioacchino.delregno@collabora.com>
+Cc: kernel@collabora.com, Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>, Garmin Chang	
+ <garmin.chang@mediatek.com>, Friday Yang <friday.yang@mediatek.com>, Conor
+ Dooley <conor.dooley@microchip.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, 	linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, 	linux-mediatek@lists.infradead.org
+Date: Fri, 16 May 2025 16:14:54 +0200
+In-Reply-To: <20250515-deploy-wiring-5829acc3d82e@spud>
+References: <20250515-dtb-check-mt8188-v1-0-cda383cbeb4f@collabora.com>
+	 <20250515-dtb-check-mt8188-v1-1-cda383cbeb4f@collabora.com>
+	 <20250515-playpen-dislodge-80245fb8b7a9@spud>
+	 <cbd170a3-cbfe-4b4f-a059-efe33fed0e5d@collabora.com>
+	 <20250515-deploy-wiring-5829acc3d82e@spud>
+Organization: Collabora Ltd.
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefuddvleeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopehquhhitggpmhgurghlrghmsehquhhitghinhgtrdgtohhmpdhrtghpthhtohepjhegghekhiejsehgmhgrihhlrdgtohhmpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrnhhivhgrnhhnrghnrdhsrgguhhgrshhivhgrmheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhto
- hepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehquhhitggpvhgrrhgruggrsehquhhitghinhgtrdgtohhmpdhrtghpthhtohepqhhuihgtpghsrhhitghhrghrrgesqhhuihgtihhntgdrtghomh
-X-GND-Sasl: miquel.raynal@bootlin.com
 
 
->>> Interestingly enough, it reports the correct number of bit errors now.
->>> For me it seems, that the hardware reports the number of the corrected
->>> *bytes* instead of the corrected *bits*.
->> I doubt that, nobody counts bytes of errors.
->> You results are surprising. I initially though in favour of a software
->> bug, but then it looks even weirder than that. Alam?
-> I have checked with HW team , the QPIC ECC HW engine reports the bit
-> error byte wise not bit wise.
->
-> e.g
->     Byte0 --> 2-bitflips --> QPIC ECC counts 1 only
->     Byte1 --> 3-bitflips --> QPIC ECC counts 1 only
->     Byte2 --> 1-bitflips --> QPIC ECC counts 1 only
->     Byte3 --> 4-bitflips --> QPIC ECC counts 1 only (in 8-bit ecc)
->     Byte4 --> 6-bitflips --> QPIC ECC counts 1 only (in 8-bit ecc)
->
-> Hope this can clearify the things now.
-
-o_O ????
-
-How is that even useful? This basically means UBI will never refresh the
-data because we will constantly underestimate the number of bitflips! We
-need to know the actual number, this averaging does not make any sense
-for Linux. Is there another way to get the raw number of bitflips?
+Hi Conor, Angelo,
+On Thu, 2025-05-15 at 17:17 +0100, Conor Dooley wrote:
+> On Thu, May 15, 2025 at 05:11:13PM +0200, AngeloGioacchino Del Regno wrot=
+e:
+> > Il 15/05/25 17:03, Conor Dooley ha scritto:
+> > > On Thu, May 15, 2025 at 03:31:43PM +0200, Julien Massot wrote:
+> > > > The '#reset-cells' property is required for some of the MT8188
+> > > > clock controllers, but not listed as a valid property.
+> > >=20
+> > > "required for some" but not marked required on those platforms.
+> > > Why not?
+> > >=20
+> >=20
+> > Yeah now that I read that for the third time, the wording is a bit inco=
+rrect.
+> >=20
+> > It's not "required", some clock controllers do have reset controllers, =
+but it
+> > is facultative to actually use the latter.
+>=20
+> I don't think I've ever seen this word before.
+>=20
+> > I'm not sure if the ones that do have reset controllers inside should h=
+ave the
+> > #reset-cells property as required...
+> >=20
+> > Conor, what do you think?
+>=20
+> If "required for some" in the OP was meant as "permitted for some",
+> change the wording to that and it is fine.
+Changed 'required' by 'permitted' in v2.
 
 Thanks,
-Miqu=C3=A8l
+Julien
