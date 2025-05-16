@@ -1,343 +1,140 @@
-Received: from mail.prodrive-technologies.com (mail.prodrive-technologies.com [212.61.153.67])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2459314885B
-	for <linux-kernel@vger.kernel.org>; Fri, 23 May 2025 13:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.61.153.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2349914885B;
+	Fri, 23 May 2025 13:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748005954; cv=none; b=TyrBzYahsFKShMFbxUhXv3XmDjAESq6gaD5E8TwGv/nmO+iXS746+EUosBZHX1emmciz8oGJZoHMhG2eBxq9/1hQujfoDDOg6F+G2en8qL4vV42gBaix6wKIjoQhv+Vg/qa6S6+XPTMjw9enapEXcmQwsq1rOgd6D7fkfWYuQY0=
+	t=1748005960; cv=none; b=tlNLByJ7L34/8fWljh6dDetkFkoMGPYEiyAB242WaY9gVWb+NBAQe7IVDs0dpxCqXHwztpddvhqRKS1b07zSrBxB8EATEtSs4QQoHX2nTHioBGFw4zkBVp6a/dy2qrgbZoOlN6ChrDtfpAfZl7tfquWwSpbr+y1+oID0AwxirIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748005954; c=relaxed/simple;
-	bh=mZg2oIPQ97lsMGT1hixTjniybVCl4tNDCzPpcYD93+E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZU5PAluk2CZGI7xX/CWUJq7zxRN0oohETbywfu5e6XdA1iTJgxVq57v48D357xbKY2NpNJIfrC8Yd7DP4LFzoIHU9/e5a+XT+gx2v/ej+pdPWl2019cUoCN2WLBunDhiaV1V7N6XjUOKlFBoGidUU2Ooslg4oGTsQ0iPN03V77k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com; spf=pass smtp.mailfrom=prodrive-technologies.com; arc=none smtp.client-ip=212.61.153.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prodrive-technologies.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prodrive-technologies.com
-Received: from EXCOP01.bk.prodrive.nl (10.1.0.22) by EXCOP01.bk.prodrive.nl
- (10.1.0.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 23 May
- 2025 15:12:29 +0200
-Received: from lnxdevrm02.prodrive.nl (10.1.1.121) by EXCOP01.bk.prodrive.nl
- (10.1.0.22) with Microsoft SMTP Server id 15.2.1544.4 via Frontend Transport;
- Fri, 23 May 2025 15:12:29 +0200
-From: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-CC: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 2/2] regulator: pca9450: Add support for mode operations
-Date: Fri, 23 May 2025 15:12:12 +0200
-Message-ID: <20250523131214.955970-2-martijn.de.gouw@prodrive-technologies.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250523131214.955970-1-martijn.de.gouw@prodrive-technologies.com>
-References: <20250523131214.955970-1-martijn.de.gouw@prodrive-technologies.com>
+	s=arc-20240116; t=1748005960; c=relaxed/simple;
+	bh=9SugXRrE9PpqZwWLIG/qzbGhzadN0J1Xh2e9tSKDdFQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jOZVbtVoC/0jWkieM5vPeDRUrnbP3CLzZqMAnfNTwyy0ec4sjKQ04RyELlLeDScIF5AJdF5sbyOy28rRM/AQHuWb0Ec7aU/ic2ECKyqLN3xn1y0VqU74d3ZIWcJsbPSM4J5P2LdpRKgkVe8V67i+J69BebGMbck/3zIM1LttqOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MPxVG9Do; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MPxVG9Do"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1748005958; x=1779541958;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9SugXRrE9PpqZwWLIG/qzbGhzadN0J1Xh2e9tSKDdFQ=;
+  b=MPxVG9Dob5fYGZ0t77KCD8ESDvuZSr5wo0sBlfgWBr64GZ11OYWc/6/q
+   ngAzCK0gMIyq+WxuywE1lUftOxUyMIgJpmV1j9pjMhKMfndT0ZoAfnPQf
+   ciKJ9WcEupDda5awZoNUaRCVHayB7ImsVyNfMfmh4VdMsNeHiZ5OxUJdg
+   OUWgZ2sRwxGeH2zMvy2UXLN2IoWFQFkwkhE8k2Yjpc1O813sZ/nbE6MH6
+   YJBFchX2+KHcpupIANmg4JYbQgehpGSyFj3hB4erblDjgTT2//g9YYMTS
+   UVybV33I2jkxUWZ0aImCBfXqAnh5wNnNRqZlSSef4iIVkKRj5zZXbxPSp
+   Q==;
+X-CSE-ConnectionGUID: bSSJGygTTreFkJfZrwL4fw==
+X-CSE-MsgGUID: EuaUNaTWTMS48SiYhvJZaQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="49766784"
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="49766784"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 06:12:37 -0700
+X-CSE-ConnectionGUID: FS7zd6hQRtaKz/WmDWSIhw==
+X-CSE-MsgGUID: Zxpj9SUSS+SuYp4TB3pPog==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,308,1739865600"; 
+   d="scan'208";a="146126629"
+Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.109.147]) ([10.125.109.147])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 06:12:36 -0700
+Message-ID: <509a5751-f2a4-45af-8bfb-1058dae549fb@intel.com>
+Date: Fri, 16 May 2025 08:19:18 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 0/6] Introduce CET supervisor state support
+To: Ingo Molnar <mingo@kernel.org>, Chao Gao <chao.gao@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ tglx@linutronix.de, seanjc@google.com, pbonzini@redhat.com,
+ peterz@infradead.org, rick.p.edgecombe@intel.com, weijiang.yang@intel.com,
+ john.allen@amd.com, bp@alien8.de, chang.seok.bae@intel.com,
+ xin3.li@intel.com, Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Eric Biggers
+ <ebiggers@google.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Ingo Molnar <mingo@redhat.com>, Kees Cook <kees@kernel.org>,
+ Maxim Levitsky <mlevitsk@redhat.com>, Mitchell Levy
+ <levymitchell0@gmail.com>, Nikolay Borisov <nik.borisov@suse.com>,
+ Oleg Nesterov <oleg@redhat.com>, Samuel Holland <samuel.holland@sifive.com>,
+ Sohil Mehta <sohil.mehta@intel.com>, Stanislav Spassov <stanspas@amazon.de>,
+ Uros Bizjak <ubizjak@gmail.com>, Vignesh Balasubramanian <vigbalas@amd.com>,
+ Zhao Liu <zhao1.liu@intel.com>
+References: <20250512085735.564475-1-chao.gao@intel.com>
+ <aCYLMY00dKbiIfsB@gmail.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
+ oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
+ 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
+ ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
+ VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
+ iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
+ c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
+ pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
+ ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
+ QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzUVEYXZpZCBDaHJp
+ c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
+ LmNvbT7CwXgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
+ lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
+ MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
+ IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
+ aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
+ I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
+ E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
+ F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
+ CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
+ P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
+ 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lczsFNBFRjzmoBEACyAxbvUEhd
+ GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
+ MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
+ Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
+ lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
+ 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
+ qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
+ BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
+ 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
+ vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
+ FCRl0Bvyj1YZUql+ZkptgGjikQARAQABwsFfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
+ l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
+ yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
+ +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
+ asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
+ WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
+ sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
+ KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
+ MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
+ hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
+ vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
+In-Reply-To: <aCYLMY00dKbiIfsB@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Make the PWM mode on the buck controllers configurable from
-devicetree. Some boards require forced PWM mode to keep the supply
-ripple within acceptable limits under light load conditions.
+On 5/15/25 08:41, Ingo Molnar wrote:
+> * Chao Gao <chao.gao@intel.com> wrote:
+>> I kindly request your consideration for merging this series. Most of 
+>> patches have received Reviewed-by/Acked-by tags.
+> I don't see anything objectionable in this series.
+> 
+> The upcoming v6.16 merge window is already quite crowded in terms of 
+> FPU changes, so I think at this point we are looking at a v6.17 merge, 
+> done shortly after v6.16-rc1 if everything goes well. Dave, what do you 
+> think?
 
-Signed-off-by: Martijn de Gouw <martijn.de.gouw@prodrive-technologies.com>
----
-Changes in v2:
-  - Add the header to the binding patch
-  - Improve commit message
+It's getting into shape, but it has a slight shortage of reviews. For
+now, it's an all-Intel patch even though I _thought_ AMD had this
+feature too. It's also purely for KVM and has some suggested-by's from
+Sean, but no KVM acks on it.
 
- drivers/regulator/pca9450-regulator.c | 120 +++++++++++++++++++++++++-
- 1 file changed, 116 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/regulator/pca9450-regulator.c b/drivers/regulator/pca9450-regulator.c
-index a56f3ab754fa9..8aed8c858a47b 100644
---- a/drivers/regulator/pca9450-regulator.c
-+++ b/drivers/regulator/pca9450-regulator.c
-@@ -16,12 +16,18 @@
- #include <linux/regulator/machine.h>
- #include <linux/regulator/of_regulator.h>
- #include <linux/regulator/pca9450.h>
-+#include <dt-bindings/regulator/nxp,pca9450-regulator.h>
-+
-+static unsigned int pca9450_buck_get_mode(struct regulator_dev *rdev);
-+static int pca9450_buck_set_mode(struct regulator_dev *rdev, unsigned int mode);
- 
- struct pc9450_dvs_config {
- 	unsigned int run_reg; /* dvs0 */
- 	unsigned int run_mask;
- 	unsigned int standby_reg; /* dvs1 */
- 	unsigned int standby_mask;
-+	unsigned int mode_reg; /* ctrl */
-+	unsigned int mode_mask;
- };
- 
- struct pca9450_regulator_desc {
-@@ -78,6 +84,8 @@ static const struct regulator_ops pca9450_dvs_buck_regulator_ops = {
- 	.get_voltage_sel = regulator_get_voltage_sel_regmap,
- 	.set_voltage_time_sel = regulator_set_voltage_time_sel,
- 	.set_ramp_delay	= regulator_set_ramp_delay_regmap,
-+	.set_mode = pca9450_buck_set_mode,
-+	.get_mode = pca9450_buck_get_mode,
- };
- 
- static const struct regulator_ops pca9450_buck_regulator_ops = {
-@@ -88,6 +96,8 @@ static const struct regulator_ops pca9450_buck_regulator_ops = {
- 	.set_voltage_sel = regulator_set_voltage_sel_regmap,
- 	.get_voltage_sel = regulator_get_voltage_sel_regmap,
- 	.set_voltage_time_sel = regulator_set_voltage_time_sel,
-+	.set_mode = pca9450_buck_set_mode,
-+	.get_mode = pca9450_buck_get_mode,
- };
- 
- static const struct regulator_ops pca9450_ldo_regulator_ops = {
-@@ -283,7 +293,64 @@ static int pca9450_set_dvs_levels(struct device_node *np,
- 	return ret;
- }
- 
--static const struct pca9450_regulator_desc pca9450a_regulators[] = {
-+static inline unsigned int pca9450_map_mode(unsigned int mode)
-+{
-+	switch (mode) {
-+	case PCA9450_BUCK_MODE_AUTO:
-+		return REGULATOR_MODE_NORMAL;
-+	case PCA9450_BUCK_MODE_FORCE_PWM:
-+		return REGULATOR_MODE_FAST;
-+	default:
-+		return REGULATOR_MODE_INVALID;
-+	}
-+}
-+
-+static int pca9450_buck_set_mode(struct regulator_dev *rdev, unsigned int mode)
-+{
-+	struct pca9450_regulator_desc *desc = container_of(rdev->desc,
-+					struct pca9450_regulator_desc, desc);
-+	const struct pc9450_dvs_config *dvs = &desc->dvs;
-+	int val;
-+
-+	switch (mode) {
-+	case REGULATOR_MODE_FAST:
-+		val = dvs->mode_mask;
-+		break;
-+	case REGULATOR_MODE_NORMAL:
-+		val = 0;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	dev_dbg(&rdev->dev, "pca9450 buck set_mode %#x, %#x, %#x\n",
-+		dvs->mode_reg, dvs->mode_mask, val);
-+
-+	return regmap_update_bits(rdev->regmap, dvs->mode_reg,
-+				  dvs->mode_mask, val);
-+}
-+
-+static unsigned int pca9450_buck_get_mode(struct regulator_dev *rdev)
-+{
-+	struct pca9450_regulator_desc *desc = container_of(rdev->desc,
-+					struct pca9450_regulator_desc, desc);
-+	const struct pc9450_dvs_config *dvs = &desc->dvs;
-+	int ret = 0, regval;
-+
-+	ret = regmap_read(rdev->regmap, dvs->mode_reg, &regval);
-+	if (ret != 0) {
-+		dev_err(&rdev->dev,
-+			"Failed to get pca9450 buck mode: %d\n", ret);
-+		return ret;
-+	}
-+
-+	if ((regval & dvs->mode_mask) == dvs->mode_mask)
-+		return REGULATOR_MODE_FAST;
-+
-+	return REGULATOR_MODE_NORMAL;
-+}
-+
-+static struct pca9450_regulator_desc pca9450a_regulators[] = {
- 	{
- 		.desc = {
- 			.name = "buck1",
-@@ -306,12 +373,15 @@ static const struct pca9450_regulator_desc pca9450a_regulators[] = {
- 			.enable_val = BUCK_ENMODE_ONREQ,
- 			.owner = THIS_MODULE,
- 			.of_parse_cb = pca9450_set_dvs_levels,
-+			.of_map_mode = pca9450_map_mode,
- 		},
- 		.dvs = {
- 			.run_reg = PCA9450_REG_BUCK1OUT_DVS0,
- 			.run_mask = BUCK1OUT_DVS0_MASK,
- 			.standby_reg = PCA9450_REG_BUCK1OUT_DVS1,
- 			.standby_mask = BUCK1OUT_DVS1_MASK,
-+			.mode_reg = PCA9450_REG_BUCK1CTRL,
-+			.mode_mask = BUCK1_FPWM,
- 		},
- 	},
- 	{
-@@ -336,12 +406,15 @@ static const struct pca9450_regulator_desc pca9450a_regulators[] = {
- 			.n_ramp_values = ARRAY_SIZE(pca9450_dvs_buck_ramp_table),
- 			.owner = THIS_MODULE,
- 			.of_parse_cb = pca9450_set_dvs_levels,
-+			.of_map_mode = pca9450_map_mode,
- 		},
- 		.dvs = {
- 			.run_reg = PCA9450_REG_BUCK2OUT_DVS0,
- 			.run_mask = BUCK2OUT_DVS0_MASK,
- 			.standby_reg = PCA9450_REG_BUCK2OUT_DVS1,
- 			.standby_mask = BUCK2OUT_DVS1_MASK,
-+			.mode_reg = PCA9450_REG_BUCK2CTRL,
-+			.mode_mask = BUCK2_FPWM,
- 		},
- 	},
- 	{
-@@ -366,12 +439,15 @@ static const struct pca9450_regulator_desc pca9450a_regulators[] = {
- 			.n_ramp_values = ARRAY_SIZE(pca9450_dvs_buck_ramp_table),
- 			.owner = THIS_MODULE,
- 			.of_parse_cb = pca9450_set_dvs_levels,
-+			.of_map_mode = pca9450_map_mode,
- 		},
- 		.dvs = {
- 			.run_reg = PCA9450_REG_BUCK3OUT_DVS0,
- 			.run_mask = BUCK3OUT_DVS0_MASK,
- 			.standby_reg = PCA9450_REG_BUCK3OUT_DVS1,
- 			.standby_mask = BUCK3OUT_DVS1_MASK,
-+			.mode_reg = PCA9450_REG_BUCK3CTRL,
-+			.mode_mask = BUCK3_FPWM,
- 		},
- 	},
- 	{
-@@ -391,6 +467,11 @@ static const struct pca9450_regulator_desc pca9450a_regulators[] = {
- 			.enable_mask = BUCK4_ENMODE_MASK,
- 			.enable_val = BUCK_ENMODE_ONREQ,
- 			.owner = THIS_MODULE,
-+			.of_map_mode = pca9450_map_mode,
-+		},
-+		.dvs = {
-+			.mode_reg = PCA9450_REG_BUCK4CTRL,
-+			.mode_mask = BUCK4_FPWM,
- 		},
- 	},
- 	{
-@@ -410,6 +491,11 @@ static const struct pca9450_regulator_desc pca9450a_regulators[] = {
- 			.enable_mask = BUCK5_ENMODE_MASK,
- 			.enable_val = BUCK_ENMODE_ONREQ,
- 			.owner = THIS_MODULE,
-+			.of_map_mode = pca9450_map_mode,
-+		},
-+		.dvs = {
-+			.mode_reg = PCA9450_REG_BUCK5CTRL,
-+			.mode_mask = BUCK5_FPWM,
- 		},
- 	},
- 	{
-@@ -429,6 +515,11 @@ static const struct pca9450_regulator_desc pca9450a_regulators[] = {
- 			.enable_mask = BUCK6_ENMODE_MASK,
- 			.enable_val = BUCK_ENMODE_ONREQ,
- 			.owner = THIS_MODULE,
-+			.of_map_mode = pca9450_map_mode,
-+		},
-+		.dvs = {
-+			.mode_reg = PCA9450_REG_BUCK6CTRL,
-+			.mode_mask = BUCK6_FPWM,
- 		},
- 	},
- 	{
-@@ -527,7 +618,7 @@ static const struct pca9450_regulator_desc pca9450a_regulators[] = {
-  * Buck3 removed on PCA9450B and connected with Buck1 internal for dual phase
-  * on PCA9450C as no Buck3.
-  */
--static const struct pca9450_regulator_desc pca9450bc_regulators[] = {
-+static struct pca9450_regulator_desc pca9450bc_regulators[] = {
- 	{
- 		.desc = {
- 			.name = "buck1",
-@@ -550,12 +641,15 @@ static const struct pca9450_regulator_desc pca9450bc_regulators[] = {
- 			.n_ramp_values = ARRAY_SIZE(pca9450_dvs_buck_ramp_table),
- 			.owner = THIS_MODULE,
- 			.of_parse_cb = pca9450_set_dvs_levels,
-+			.of_map_mode = pca9450_map_mode,
- 		},
- 		.dvs = {
- 			.run_reg = PCA9450_REG_BUCK1OUT_DVS0,
- 			.run_mask = BUCK1OUT_DVS0_MASK,
- 			.standby_reg = PCA9450_REG_BUCK1OUT_DVS1,
- 			.standby_mask = BUCK1OUT_DVS1_MASK,
-+			.mode_reg = PCA9450_REG_BUCK1CTRL,
-+			.mode_mask = BUCK1_FPWM,
- 		},
- 	},
- 	{
-@@ -580,12 +674,15 @@ static const struct pca9450_regulator_desc pca9450bc_regulators[] = {
- 			.n_ramp_values = ARRAY_SIZE(pca9450_dvs_buck_ramp_table),
- 			.owner = THIS_MODULE,
- 			.of_parse_cb = pca9450_set_dvs_levels,
-+			.of_map_mode = pca9450_map_mode,
- 		},
- 		.dvs = {
- 			.run_reg = PCA9450_REG_BUCK2OUT_DVS0,
- 			.run_mask = BUCK2OUT_DVS0_MASK,
- 			.standby_reg = PCA9450_REG_BUCK2OUT_DVS1,
- 			.standby_mask = BUCK2OUT_DVS1_MASK,
-+			.mode_reg = PCA9450_REG_BUCK2CTRL,
-+			.mode_mask = BUCK2_FPWM,
- 		},
- 	},
- 	{
-@@ -605,6 +702,11 @@ static const struct pca9450_regulator_desc pca9450bc_regulators[] = {
- 			.enable_mask = BUCK4_ENMODE_MASK,
- 			.enable_val = BUCK_ENMODE_ONREQ,
- 			.owner = THIS_MODULE,
-+			.of_map_mode = pca9450_map_mode,
-+		},
-+		.dvs = {
-+			.mode_reg = PCA9450_REG_BUCK4CTRL,
-+			.mode_mask = BUCK4_FPWM,
- 		},
- 	},
- 	{
-@@ -624,6 +726,11 @@ static const struct pca9450_regulator_desc pca9450bc_regulators[] = {
- 			.enable_mask = BUCK5_ENMODE_MASK,
- 			.enable_val = BUCK_ENMODE_ONREQ,
- 			.owner = THIS_MODULE,
-+			.of_map_mode = pca9450_map_mode,
-+		},
-+		.dvs = {
-+			.mode_reg = PCA9450_REG_BUCK5CTRL,
-+			.mode_mask = BUCK5_FPWM,
- 		},
- 	},
- 	{
-@@ -643,6 +750,11 @@ static const struct pca9450_regulator_desc pca9450bc_regulators[] = {
- 			.enable_mask = BUCK6_ENMODE_MASK,
- 			.enable_val = BUCK_ENMODE_ONREQ,
- 			.owner = THIS_MODULE,
-+			.of_map_mode = pca9450_map_mode,
-+		},
-+		.dvs = {
-+			.mode_reg = PCA9450_REG_BUCK6CTRL,
-+			.mode_mask = BUCK6_FPWM,
- 		},
- 	},
- 	{
-@@ -737,7 +849,7 @@ static const struct pca9450_regulator_desc pca9450bc_regulators[] = {
- 	},
- };
- 
--static const struct pca9450_regulator_desc pca9451a_regulators[] = {
-+static struct pca9450_regulator_desc pca9451a_regulators[] = {
- 	{
- 		.desc = {
- 			.name = "buck1",
-@@ -969,7 +1081,7 @@ static int pca9450_i2c_probe(struct i2c_client *i2c)
- {
- 	enum pca9450_chip_type type = (unsigned int)(uintptr_t)
- 				      of_device_get_match_data(&i2c->dev);
--	const struct pca9450_regulator_desc	*regulator_desc;
-+	const struct pca9450_regulator_desc *regulator_desc;
- 	struct regulator_config config = { };
- 	struct regulator_dev *ldo5;
- 	struct pca9450 *pca9450;
--- 
-2.39.2
+I have the feeling Sean would speak up if this was going in a bad
+direction for KVM, but I do love to see acks accompanying suggested-by's
+to indicate that the suggestion was interpreted properly.
