@@ -1,181 +1,214 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9D428033C;
-	Fri, 16 May 2025 21:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B00280308
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 21:35:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747431346; cv=none; b=ryLbJkjSX45vMii0LUgzHkyBeoZzCUoElv601ZkE8hH4Tm80vCisOhn7HuNVfQYcWvXii9ZDqfG6gNwfqOcD2/zkiVGuK3Xpi5+Jt33EPzAk2ldxiIln/MDNPDAipG3kYOn/HZ5/lJ4bm+yQG5OvJiP+ec+AqTaVGa/6WAqlzJ8=
+	t=1747431346; cv=none; b=tR4i9X+BxOavqlhtgti5/dJqfLNUZiaesgLfHJer/X6/ZuZ0KrSMhOnMBgwvgMDl0MjGoqlA+hlWduYzUSsYo+OnoS/uw/rw2cZhyUKENXvpamAWU+KIzRcyv49/V+QOLwJO6NeY9PVykVD8lKQX1VW/vLihJzQ6dcj7xGH1H7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747431346; c=relaxed/simple;
-	bh=BzobJcLxLeRhDRDPjKP3jskHkbluaiGCUjUvUOw9ZAk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JbunRWb+VhG31BbD65ubitpEAusUj3C0NCcQNnD3jIZGp6GYDcfo12Kk8yv7O+AM2TFQQgh9LaLCcTV2/3dL2mTXEpsewn9PHS2dRPXN6GzcXUKPT2IhKpIhe80goqJvveDHotv+/0FNlbuwTlN+ef6+t5U0MTKYZnW1M5/IaGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cKfZDR+M; arc=none smtp.client-ip=10.30.226.201
+	bh=TPssax79sxW9s4Uhhkr+BKlQZkVGnbippa0fsIPWqo0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Ar6BKIPhMtJWVkXvt1t4Ri6QC/rTzx41/O57rwHKrqFORAMQu0MPWq1vbLRBliVOZnBpsFu0yt4L63njFVdhlzx6cw6LZtakU8WTJ72bKZRCfjLu/+SFYjh0n0Fu2Y973GgEV5nMoJ1EyFJP1+3sdZri4N/whMGaKfpJvePgf3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Fxhgg+MY; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cKfZDR+M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8993FC4CEE4;
-	Fri, 16 May 2025 21:35:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747431345;
-	bh=BzobJcLxLeRhDRDPjKP3jskHkbluaiGCUjUvUOw9ZAk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cKfZDR+MaIEqFaysttriomJeoCA4Put4Nr85iYrsye09Rd0jfT2Qj3QIvUkIqMvSc
-	 yvakqjZH0+j7/+BQCdzOPwDpV4W0/daEC+J1Sz1JYv/PJLEbi56maTtSkgOH77pKvt
-	 588QrPgb2xPKDPaUwG7d/Iax29pTi9lhGT93J3kstohiXgotPaGvCcxd1nRsoUZ8Q5
-	 aM7MofHFEdoTaxcn5prOMz0Xp4yQsmllo9E1z/0RU5SkYM57vfUeDFrZUTOaC4TbeD
-	 GSvwhvAbOOU5a3I2yO4v4wt+3rCIzLGQ5rLtWzpW4/Dq9SxZzz0RpX5um7fV4g/Fe9
-	 wBkBZfhtD7mjA==
-Message-ID: <efa6b325-4fd5-4e9b-b851-af7f527e340e@kernel.org>
-Date: Fri, 16 May 2025 21:36:18 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fxhgg+MY"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22fb8cfff31so19787165ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 14:35:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747431344; x=1748036144; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=32n3PJO9GBTARszoinMNB66MtnH1QTCvI0q5z3orUsw=;
+        b=Fxhgg+MYRKX5u3T6BOnRhHghesd9cKMdhtf01T/Hh6CHbGYy9e2vNKfxoorrmO6lZr
+         nclYniCFXiI0OaAvTofyKGSyP4y9CaR5JJKgv0eEcnxFQV94R0eXb3EYgq5uTuGdHnG3
+         KRc/RvhajwMb/JWpeK6CfjyMLPcHdg4dsc1f999Lo7QRp+SpgGrKFyVKESr3B0W/xYuP
+         QavTBXWxDHsHFQ2LxOLIJ5CPbN5Osk90Gc+TnyW/fMuhFfp+HqXjLZ7flHpq9+FNmZfz
+         dqZPRgaSd53l/QectZLZ0HXHjUocg62OuYQfINagQBwY2tLtFIg/DMsrWi32Hh8k8tqF
+         dwww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747431344; x=1748036144;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=32n3PJO9GBTARszoinMNB66MtnH1QTCvI0q5z3orUsw=;
+        b=jF0roK73X/Ql2UQqaerFd8XjeKVztEyjCbMBAZ0xpJbiDYzM28RqTXnQojHRTPtA5a
+         qltfxGsWHoKn39ugQq4paF/xM38wvsxJjlcU3hyS5SuI1IMt8qcrPjlAdadJxGyuNZMt
+         ZgXmVYA2TBXhEHvoJ9fRYCKcGxqH3+QzORniMnARx5VINzNxWH0aLZLXen5H+lQevN7A
+         SC7YEF09dpLGW120RGBSINdRjdNPTenoLUvKhSdDsEsBbLt+oi9Q4CJbaQME0P4efFRC
+         UQzmqvpGxXgenqWQy74n/ijYovbmkt/PWkHjSIfH25i/Ejg8WLxAR98Sq1dD27FqoE7S
+         ochg==
+X-Forwarded-Encrypted: i=1; AJvYcCVze1l7XV+Whj7G7BDj4oHhENzV/ISUOMNmFca0oDvHZe8/bEcAOwgDZmVnhpGHuZLA8mfPqrfhhDGQ5C8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbvTSClSUL/wmwBQWB5dWtvGx6dJjElxAxOSylPb8DmbVGpXnq
+	W8TSrnjbhyUyTlYereg7VaAuJLpdisksawM1QZSAfWBgJFcPanK6eLzcInr2/+T3HHM1saLptBJ
+	Iga9SCQ==
+X-Google-Smtp-Source: AGHT+IG5j10n9pBrXztcWjA8kxz2B2rfIvBK/g2w38KT4xlpjVSYu39IgoUnHrzq9k9yoHJvwCdr38hRT4s=
+X-Received: from plht15.prod.google.com ([2002:a17:903:2f0f:b0:223:225b:3d83])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e787:b0:224:26fd:82e5
+ with SMTP id d9443c01a7336-231d455d9ddmr69825065ad.48.1747431344204; Fri, 16
+ May 2025 14:35:44 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Fri, 16 May 2025 14:35:35 -0700
+In-Reply-To: <20250516213540.2546077-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings:iio:gyroscope:invensense,itg3200: add binding
-To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, dlechner@baylibre.com,
- nuno.sa@analog.com, andy@kernel.org
-Cc: ~lkcamp/patches@lists.sr.ht, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250515002817.81863-1-rodrigo.gobbi.7@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250515002817.81863-1-rodrigo.gobbi.7@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250516213540.2546077-1-seanjc@google.com>
+X-Mailer: git-send-email 2.49.0.1112.g889b7c5bd8-goog
+Message-ID: <20250516213540.2546077-2-seanjc@google.com>
+Subject: [PATCH v3 1/6] KVM: Bound the number of dirty ring entries in a
+ single reset at INT_MAX
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Peter Xu <peterx@redhat.com>, Yan Zhao <yan.y.zhao@intel.com>, 
+	Maxim Levitsky <mlevitsk@redhat.com>, Binbin Wu <binbin.wu@linux.intel.com>, 
+	James Houghton <jthoughton@google.com>, Sean Christopherson <seanjc@google.com>, 
+	Pankaj Gupta <pankaj.gupta@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 15/05/2025 02:21, Rodrigo Gobbi wrote:
-> There is no txt file for it, add yaml for invensense,itg3200 gyroscope.
-> 
-> Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-> ---
+Cap the number of ring entries that are reset in a single ioctl to INT_MAX
+to ensure userspace isn't confused by a wrap into negative space, and so
+that, in a truly pathological scenario, KVM doesn't miss a TLB flush due
+to the count wrapping to zero.  While the size of the ring is fixed at
+0x10000 entries and KVM (currently) supports at most 4096, userspace is
+allowed to harvest entries from the ring while the reset is in-progress,
+i.e. it's possible for the ring to always have harvested entries.
 
-Subject, missing spaces.
+Opportunistically return an actual error code from the helper so that a
+future fix to handle pending signals can gracefully return -EINTR.  Drop
+the function comment now that the return code is a stanard 0/-errno (and
+because a future commit will add a proper lockdep assertion).
 
-Please use subject prefixes matching the subsystem. You can get them for
-example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
-your patch is touching. For bindings, the preferred subjects are
-explained here:
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+Opportunistically drop a similarly stale comment for kvm_dirty_ring_push().
 
-> Added @Jonathan as the maintainer here due a suggestion in a
-> different thread for a different binding file.
-> Created this yaml using the driver probe and comparing with other gyro bindings.
-> Tks and regards.
-> ---
->  .../iio/gyroscope/invensense,itg3200.yaml     | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml b/Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml
-> new file mode 100644
-> index 000000000000..0656dbb58cf2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/gyroscope/invensense,itg3200.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/gyroscope/invensense,itg3200.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Invensense ITG-3200 Gyroscope
-> +
-> +maintainers:
-> +  - Jonathan Cameron <jic23@kernel.org>
+Cc: Peter Xu <peterx@redhat.com>
+Cc: Yan Zhao <yan.y.zhao@intel.com>
+Cc: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: Binbin Wu <binbin.wu@linux.intel.com>
+Fixes: fb04a1eddb1a ("KVM: X86: Implement ring-based dirty memory tracking")
+Reviewed-by: James Houghton <jthoughton@google.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ include/linux/kvm_dirty_ring.h | 18 +++++-------------
+ virt/kvm/dirty_ring.c          | 10 +++++-----
+ virt/kvm/kvm_main.c            |  9 ++++++---
+ 3 files changed, 16 insertions(+), 21 deletions(-)
 
-Not really, this should be someone interested in the hardware.
+diff --git a/include/linux/kvm_dirty_ring.h b/include/linux/kvm_dirty_ring.h
+index da4d9b5f58f1..eb10d87adf7d 100644
+--- a/include/linux/kvm_dirty_ring.h
++++ b/include/linux/kvm_dirty_ring.h
+@@ -49,9 +49,10 @@ static inline int kvm_dirty_ring_alloc(struct kvm *kvm, struct kvm_dirty_ring *r
+ }
+ 
+ static inline int kvm_dirty_ring_reset(struct kvm *kvm,
+-				       struct kvm_dirty_ring *ring)
++				       struct kvm_dirty_ring *ring,
++				       int *nr_entries_reset)
+ {
+-	return 0;
++	return -ENOENT;
+ }
+ 
+ static inline void kvm_dirty_ring_push(struct kvm_vcpu *vcpu,
+@@ -77,17 +78,8 @@ bool kvm_arch_allow_write_without_running_vcpu(struct kvm *kvm);
+ u32 kvm_dirty_ring_get_rsvd_entries(struct kvm *kvm);
+ int kvm_dirty_ring_alloc(struct kvm *kvm, struct kvm_dirty_ring *ring,
+ 			 int index, u32 size);
+-
+-/*
+- * called with kvm->slots_lock held, returns the number of
+- * processed pages.
+- */
+-int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring);
+-
+-/*
+- * returns =0: successfully pushed
+- *         <0: unable to push, need to wait
+- */
++int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring,
++			 int *nr_entries_reset);
+ void kvm_dirty_ring_push(struct kvm_vcpu *vcpu, u32 slot, u64 offset);
+ 
+ bool kvm_dirty_ring_check_request(struct kvm_vcpu *vcpu);
+diff --git a/virt/kvm/dirty_ring.c b/virt/kvm/dirty_ring.c
+index d14ffc7513ee..77986f34eff8 100644
+--- a/virt/kvm/dirty_ring.c
++++ b/virt/kvm/dirty_ring.c
+@@ -105,19 +105,19 @@ static inline bool kvm_dirty_gfn_harvested(struct kvm_dirty_gfn *gfn)
+ 	return smp_load_acquire(&gfn->flags) & KVM_DIRTY_GFN_F_RESET;
+ }
+ 
+-int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring)
++int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring,
++			 int *nr_entries_reset)
+ {
+ 	u32 cur_slot, next_slot;
+ 	u64 cur_offset, next_offset;
+ 	unsigned long mask;
+-	int count = 0;
+ 	struct kvm_dirty_gfn *entry;
+ 	bool first_round = true;
+ 
+ 	/* This is only needed to make compilers happy */
+ 	cur_slot = cur_offset = mask = 0;
+ 
+-	while (true) {
++	while (likely((*nr_entries_reset) < INT_MAX)) {
+ 		entry = &ring->dirty_gfns[ring->reset_index & (ring->size - 1)];
+ 
+ 		if (!kvm_dirty_gfn_harvested(entry))
+@@ -130,7 +130,7 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring)
+ 		kvm_dirty_gfn_set_invalid(entry);
+ 
+ 		ring->reset_index++;
+-		count++;
++		(*nr_entries_reset)++;
+ 		/*
+ 		 * Try to coalesce the reset operations when the guest is
+ 		 * scanning pages in the same slot.
+@@ -167,7 +167,7 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring)
+ 
+ 	trace_kvm_dirty_ring_reset(ring);
+ 
+-	return count;
++	return 0;
+ }
+ 
+ void kvm_dirty_ring_push(struct kvm_vcpu *vcpu, u32 slot, u64 offset)
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index b24db92e98f3..571688507204 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -4903,15 +4903,18 @@ static int kvm_vm_ioctl_reset_dirty_pages(struct kvm *kvm)
+ {
+ 	unsigned long i;
+ 	struct kvm_vcpu *vcpu;
+-	int cleared = 0;
++	int cleared = 0, r;
+ 
+ 	if (!kvm->dirty_ring_size)
+ 		return -EINVAL;
+ 
+ 	mutex_lock(&kvm->slots_lock);
+ 
+-	kvm_for_each_vcpu(i, vcpu, kvm)
+-		cleared += kvm_dirty_ring_reset(vcpu->kvm, &vcpu->dirty_ring);
++	kvm_for_each_vcpu(i, vcpu, kvm) {
++		r = kvm_dirty_ring_reset(vcpu->kvm, &vcpu->dirty_ring, &cleared);
++		if (r)
++			break;
++	}
+ 
+ 	mutex_unlock(&kvm->slots_lock);
+ 
+-- 
+2.49.0.1112.g889b7c5bd8-goog
 
-> +
-> +description: |
-> +  Triple-axis, digital output gyroscope with a three 16-bit analog-to-digital
-> +  converters (ADCs) for digitizing the gyro outputs, a user-selectable internal
-> +  low-pass filter bandwidth, and a Fast-Mode I2C . Datasheet can be found here:
-> +  https://invensense.tdk.com/wp-content/uploads/2015/02/ITG-3200-Register-Map.pdf
-> +
-> +properties:
-> +  compatible:
-> +    const: invensense,itg3200
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 1
-
-No, maxItems instead. Look at other bindings.
-
-> +
-> +  mount-matrix:
-> +    description: an optional 3x3 mounting rotation matrix.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +        itg3200@68 {
-
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-
-
-
-
-Best regards,
-Krzysztof
