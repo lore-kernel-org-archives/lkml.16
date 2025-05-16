@@ -1,148 +1,129 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F712C9A;
-	Fri, 16 May 2025 07:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85382C9A
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747380908; cv=none; b=IBTihGq3OrhqD8b2kFNMZexkeCPkR6/D5sENm4rsLZY5X81dzVVR85m/NA5QnIpEZ4cJjUx+tu6ZBooL2Ee0i5e9VbY2bxu8eeRvVx7+x2GyYKw2cU2LG0SDNqQMnIG3JvxWjKg1ISl0tGGfHHnCGWhhlxioi/IKn2RAXcuisUU=
+	t=1747380980; cv=none; b=L8zsApdd1QMDkToLgb5qVV89ikG+vn3nEzFyB/Loh2/VCSxdsx2FIKlR7w7Xx91xPMYZLVa2tsKkQHRjOJtl2qfEb6VIf2FlwsaABFZhNHS/7KyiEdhN3KMgH6sUtXslWcPj1nMjwRYScmpGahHgXI0Iwt4DoHI95jM5cyxCDGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747380908; c=relaxed/simple;
-	bh=fHMu131eeC4O5t5ae3yEgP2HF3PgHSd4g5RekRTUeWM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=KFgVBWMkwgY7AGkPezOgWSnfytvIjlPfjdsv95MPHyHD7oiJDRFh/5Nw8flmeQfAobOSbyM+wL7BeoVvvXnW+W3Z7yPNzUj0RNYy208i3HC46nUNfzMqkfnKEQk3BtC+W8qy6dIcQfJmPgCPOoR68IS+S2BnP+LOzdBdPMPSjVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kxQVDB3G; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747380980; c=relaxed/simple;
+	bh=WyijhUO0vfCazPTmjj8L4gst+H0Jhzn8MOknmFSSA94=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=c8pQ6lIqZOAKWwdxXSK2AnilBD5UdQCe49tdih/F0znnn8A85vSFE+eabunh9UF2Nc42i5K8+gAIo4IMaQwLxycTIopkPtibBJgakS6ts8bzxrBmuUPwzsZzjdGOXx4/sa2Wv9AZQ2Cl/zssggjWnfeLwtah6ztJ9F7eirdFUxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uBPagzMx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2BhK2P6R; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kxQVDB3G"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G3ExiW020897;
-	Fri, 16 May 2025 07:35:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	u1JbgsRbFNEarkGxDwy5O4rayeHmdGplE+POraV2bwk=; b=kxQVDB3G8LswSYkc
-	sql/AE4/A0m8VL3bA0S+h+tuNk8F85YmrR98aY3xybAABD5dwxpwbMJZ3Wx53Ppc
-	veEzwcAuBcXRVarHHYAaLzKmIbzU/QhQwT7qtzfb9QHgfQ04bidUFxGnt9++ar8F
-	kmD+WfWzh925JtnHW0qtSbXhExW7Xkkm+aLFyUINOz+Z8+340K+Qgfg6/RLaV8le
-	08VXdXKlO6VktppPo1ln66F9Fsm7X15YV8dpy1nxP19H7XoxwpwTG27epTwPXimI
-	ugCqXQgJNl0gmpi6Yc8xHBjWR0uh8sRntTQOdjaQOFunLtXSM1a2HxXvesJVHvzw
-	jEZ/bQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbew8y1s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 May 2025 07:35:02 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54G7Z1xD029131
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 May 2025 07:35:01 GMT
-Received: from [10.253.78.92] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 16 May
- 2025 00:34:57 -0700
-Message-ID: <db059233-523d-420b-81a7-73b02beef4d1@quicinc.com>
-Date: Fri, 16 May 2025 15:34:28 +0800
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uBPagzMx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2BhK2P6R"
+Date: Fri, 16 May 2025 09:36:13 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747380974;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=5cgzWsQ8I/J4IHzkw06AbhnUPCnKULK4+BfgY7N/Ues=;
+	b=uBPagzMx7tAIzLYWSdPRX2S12koia6mdKq4gz8vG4JZYaHO71XHlTjWWZ/3Mk3F7l3VBv/
+	5Kj87o9odUszT2XIUcUPaOxYjuZ2Q8JjfrsIsoSX2Avyna6OIpDiv1Pg/RRvcg2OPebNbh
+	RfGiX2Ah8CJbhJuzjsFoLNqYRDVvIhhgYtVPSgl1So1ki4BjzebqWhShN7TYuHyaSqi9ib
+	Hrc/HV8HuVlOxzLSa8JZvTC+bCCrdRc5SWYjKIANhutyst2R/ot3CLRwGN7/zDHf4S5r3F
+	Mg1ruvE7tQMPCaQP30jZ2hFPzn42Dg6P6qQsaode/EW/shXz/1oWzJt4uZ6DUg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747380974;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=5cgzWsQ8I/J4IHzkw06AbhnUPCnKULK4+BfgY7N/Ues=;
+	b=2BhK2P6RsnA6P4kw3DaVXQ/ZJP5/vXJmOOiNCvMbp9MhBM4Cuky7LsaEf0gcSc4/u05V5b
+	ZW5CQ0E4lqSVzCAA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Borislav Petkov <bp@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>, Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>
+Subject: [PATCH v2] futex: Fix kernel-doc comments
+Message-ID: <20250516073613.ZYaQZ1wZ@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: sm8550: Add support for camss
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Konrad Dybcio
-	<konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Depeng Shao <quic_depengs@quicinc.com>
-References: <20250415-sm8550_camss-v1-1-d4b7daa168ac@quicinc.com>
- <wOxjiEBKO2XU-PikPlT8IMpSGOrP4ocgZEIj_zNhLzzBjySkhGQzupjmJAFhUHcnknLKSASwk33LjBI6WrZ9vg==@protonmail.internalid>
- <1ee8587b-2bf6-418a-9834-8f8cbf1e94d8@oss.qualcomm.com>
- <4e81a1fe-3ee5-4f5f-b958-13e6cf9138f7@linaro.org>
-Content-Language: en-US
-From: Wenmeng Liu <quic_wenmliu@quicinc.com>
-In-Reply-To: <4e81a1fe-3ee5-4f5f-b958-13e6cf9138f7@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: JfCYi8Cyns4Qnjr4tAGPjJ56VDuktMaY
-X-Proofpoint-ORIG-GUID: JfCYi8Cyns4Qnjr4tAGPjJ56VDuktMaY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDA3MCBTYWx0ZWRfX0fM2xuQlMEyf
- HXct4P+bLbW/GcumwqRBf3vGFL+32Np/NPFKgvQbJNo6NNzS9r4uoRg+XXVAS1CsV1CNp7GQjNo
- +oqbF8UZXo6OL3e6JEe2i8PPd25BMNtc0C6kuJjlx+JmCnqXM3gCxdrmzCXydEOUSF9OKmdyQbD
- oCkZI78GK5MOA9IBCkuFDzDPNBRo1qxPHv6FtzacGU66T3n6HIoYRJeJ48PS1ajobyB6I0A2Meo
- FmBWfU2VMevXi1BfihspehZVxmcdW3Fk3G24oeDxMsNlQx3nhxBJtAiVlrs/wjalYNobjPqaq1t
- SDD9RTyuN1OpinhuB1CSP2i93dpTy8ErMlVkEj7MlB7gWXfqdsugeUvamzMjwkS+4bHkf6/l0Th
- 4OOX9BjRaYYVziaHbLHbTKNx0P0VNIjN/Eloj4OTo0joddQDwmL3rlNJjkKdRpTjERAlZi08
-X-Authority-Analysis: v=2.4 cv=LOFmQIW9 c=1 sm=1 tr=0 ts=6826eaa6 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=42mon1cdF7M_iQiDyuAA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-16_03,2025-05-15_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 spamscore=0 adultscore=0 priorityscore=1501 suspectscore=0
- mlxscore=0 malwarescore=0 mlxlogscore=503 impostorscore=0 bulkscore=0
- clxscore=1011 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505160070
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+=46rom: "Borislav Petkov (AMD)" <bp@alien8.de>
 
+Fix those:
 
-On 2025/5/1 9:15, Bryan O'Donoghue wrote:
-> On 30/04/2025 12:11, Konrad Dybcio wrote:
->> On 4/15/25 9:38 AM, Wenmeng Liu wrote:
->>> Add support for the camera subsystem on the SM8550 Qualcomm SoC. This
->>> includes bringing up the CSIPHY, CSID, VFE/RDI interfaces.
->>>
->>> SM8550 provides
->>> - 3 x VFE, 3 RDI per VFE
->>> - 2 x VFE Lite, 4 RDI per VFE
->>> - 3 x CSID
->>> - 2 x CSID Lite
->>> - 8 x CSI PHY
->>>
->>> Co-developed-by: Depeng Shao <quic_depengs@quicinc.com>
->>> Signed-off-by: Depeng Shao <quic_depengs@quicinc.com>
->>> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
->>> ---
->>
->> [...]
->>
->>> +                     <GIC_SPI 604 IRQ_TYPE_EDGE_RISING>,
->>> +                     <GIC_SPI 688 IRQ_TYPE_EDGE_RISING>,
->>
->> It *may* be 689 instead but I'm not 100% sure
->>
->> Otherwise the numbers look good
->>
->> Bryan, Vlad, please also take a look
->>
->> Konrad
->>
-> 
-> +                     <GIC_SPI 688 IRQ_TYPE_EDGE_RISING>,
-> This should be 689 yes
-> 
-> ---
-> bod
+  ./kernel/futex/futex.h:208: warning: Function parameter or struct member =
+'drop_hb_ref' not described in 'futex_q'
+  ./kernel/futex/waitwake.c:343: warning: expecting prototype for futex_wai=
+t_queue(). Prototype was for futex_do_wait() instead
+  ./kernel/futex/waitwake.c:594: warning: Function parameter or struct memb=
+er 'task' not described in 'futex_wait_setup'
 
-Hi Bryan,Konrad,
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Closes: https://lore.kernel.org/r/20250512185218.6bfd18b4@canb.auug.org.au
+Closes: https://lore.kernel.org/r/20250512185641.0450a99b@canb.auug.org.au
+Fixes: 93f1b6d79a73 ("futex: Move futex_queue() into futex_wait_setup()")
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Acked-by: Ingo Molnar <mingo@kernel.org>
+---
+v1=E2=80=A6v2: https://lore.kernel.org/all/20250515171641.24073-1-bp@kernel=
+=2Eorg/
+  - Add tags, references.
+  - Futex spelling.
 
-I confirmed that the value is 688 instead of 689. The documentation 
-incorrectly listed it as 689. To CC linux-media, I have resent the patch:
-https://lore.kernel.org/linux-arm-msm/20250516072707.388332-1-quic_wenmliu@quicinc.com/
+ kernel/futex/futex.h    | 1 +
+ kernel/futex/waitwake.c | 5 ++---
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-Thanks,
-wenmeng
+diff --git a/kernel/futex/futex.h b/kernel/futex/futex.h
+index 069fc2a83080d..6d163003ef7f6 100644
+--- a/kernel/futex/futex.h
++++ b/kernel/futex/futex.h
+@@ -175,6 +175,7 @@ typedef void (futex_wake_fn)(struct wake_q_head *wake_q=
+, struct futex_q *q);
+  * @requeue_pi_key:	the requeue_pi target futex key
+  * @bitset:		bitset for the optional bitmasked wakeup
+  * @requeue_state:	State field for futex_requeue_pi()
++ * @drop_hb_ref:	Waiter must drop the extra hash bucket reference if true
+  * @requeue_wait:	RCU wait for futex_requeue_pi() (RT only)
+  *
+  * We use this hashed waitqueue, instead of a normal wait_queue_entry_t, so
+diff --git a/kernel/futex/waitwake.c b/kernel/futex/waitwake.c
+index bd8fef0f8d180..b3738fbe83c62 100644
+--- a/kernel/futex/waitwake.c
++++ b/kernel/futex/waitwake.c
+@@ -334,8 +334,7 @@ int futex_wake_op(u32 __user *uaddr1, unsigned int flag=
+s, u32 __user *uaddr2,
+ static long futex_wait_restart(struct restart_block *restart);
+=20
+ /**
+- * futex_wait_queue() - futex_queue() and wait for wakeup, timeout, or sig=
+nal
+- * @hb:		the futex hash bucket, must be locked by the caller
++ * futex_do_wait() - wait for wakeup, timeout, or signal
+  * @q:		the futex_q to queue up on
+  * @timeout:	the prepared hrtimer_sleeper, or null for no timeout
+  */
+@@ -578,7 +577,7 @@ int futex_wait_multiple(struct futex_vector *vs, unsign=
+ed int count,
+  * @flags:	futex flags (FLAGS_SHARED, etc.)
+  * @q:		the associated futex_q
+  * @key2:	the second futex_key if used for requeue PI
+- * task:	Task queueing this futex
++ * @task:	Task queueing this futex
+  *
+  * Setup the futex_q and locate the hash_bucket.  Get the futex value and
+  * compare it with the expected value.  Handle atomic faults internally.
+--=20
+2.49.0
+
