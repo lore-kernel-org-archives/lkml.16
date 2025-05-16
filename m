@@ -1,96 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8722AE8D;
-	Fri, 16 May 2025 10:00:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B689A381C4;
+	Fri, 16 May 2025 10:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747389619; cv=none; b=UeA5yxuuuvM5DPwdT9Kx/Z/rQoP/p1tUA/sgP3z9SvZFlkDJbx/T+A2uc8XJqOuhZj+6oYjbAHz4000ligjByXOOsZoEtJAUski/nmH0axbjoDIBFeqIdYhgRNJZ6Dh2oa/wGC3OGfz1egMWCDZvDS2jNPBPfhXuDBvHE7tLgMI=
+	t=1747389740; cv=none; b=QI9WMCqj2r7PD2MhwNe25iKxMolE0+JoLLlH3XMB/DJpQ7rS4b+bbQlb1L5hEB5DL7exJ7gEP8MfDSF+Iy1DH9aMSVYYmDgsg8YH1/1PXQG3SPLrWAXP2IZ7BJizTiFPqXyiyUFNenywtwzDoRU3ppiX5ySRpdSx/sDw2aOiIBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747389619; c=relaxed/simple;
-	bh=5gBmY6Zk+Ryoef5Q5jQQugVJJObL7Jg/Otn27Xfx+H8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NQV3oTW2inuxWcwnoP1aWgM7l2UBgUyRjKfzTUgWacwGNibQFi4my2aoeFEmTown/2gGrUw4tj64Va5PpEDubGW1imk1yQOj/cH95354EPAznUGnGllRxpYE6bCif7yeKcRDBrZGRaEpCY1vwkV9Vr9ADUrr8T3V6BLPS+VzT1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VSx8XvD4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747389740; c=relaxed/simple;
+	bh=Zo0mLYI7PTasv5NS4tt2CBRcfHw3mgF8eIsR/STkXhc=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=qbrISeZcXXAnxwU4G5Nqmb/RpesV8K4bA5NeUF5rmp9IBQw2BWnfsL63dNRjlZNiWp/JvuXhhyCaQg/AqpYC70ERwjBG3ha9u65CFALeHQBxwkImH6NbAQDSZsFfsnILIxgH+QZD0Y6+zRKkl3xR9uCHsBavaTlNzFhnoW8L8yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0hEYGTWJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=b7toz3Rt; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VSx8XvD4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBF03C4CEE4;
-	Fri, 16 May 2025 10:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747389619;
-	bh=5gBmY6Zk+Ryoef5Q5jQQugVJJObL7Jg/Otn27Xfx+H8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=VSx8XvD4L3DRtchGh9gq++02KQtnShOLeYGZ7ch9CAbebcnQtg7Jk8J9jHU41wEVp
-	 wMpRPxUCauKCBiVgz7BD9HVQhZupWTqXR3dEvwPQaGXK3H3XL5ZJ5Cf5GRq065j4M4
-	 /JYU7bV+k/s5oGYr73DRfrrq6wPPSTCGkHFwANEgQ6jszgKZbaMpYnV6UB60gpOVWt
-	 nIqvnKCGwQW6Kj2WgY7YB0aRwX8kcZfEE6UP3nRh1t0QDGVSRVFLwoLlE+kMm/PuSV
-	 RIaeJL3q83gvYF77uQV9u1yQ4X+5WS/2hMIxeUmjXWgs/ljpoPtexsKnnbgCEcDyj2
-	 6LvbSjYmsUu9g==
-From: Conor Dooley <conor@kernel.org>
-To: linux-pci@vger.kernel.org
-Cc: conor@kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] dt-bindings: PCI: microchip,pcie-host: fix dma coherency property
-Date: Fri, 16 May 2025 10:59:39 +0100
-Message-ID: <20250516-datebook-senator-ff7a1c30cbd5@spud>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0hEYGTWJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="b7toz3Rt"
+Date: Fri, 16 May 2025 10:02:15 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747389736;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gVdEFOPePVWP+XNE68ekxQwWLaXcQrvLw9VJVNSpv9w=;
+	b=0hEYGTWJ/6G7vDoTnzT5xU0diyLrGGKNtrizQJT2TnlDWErP49qzL2A7v3RiINs8sDAw1a
+	Apy0jWAxc5BnDcYSyoSH78pNWs0KIhSqtjFedK/C4tsTIsH7KCT5pBV98iCSJcofsCUMk7
+	+FgpN8nJ14tzEqf2bm12TgguMYZrZKNlPlDzcxTAL/MDfwBfw39HJGGW2EaGri9RMDGzz8
+	Ctm1yFgTLJIG2xSR6S0mlb6eztM1uQEz0GZWzq6bE8LN6E2jJ78a/03HQUmgsF0i9ewHXM
+	hr9hoUx8GqsN38jmdRUMUv6w0UG5evYYobT7IftktsA00LOVJxQKP4ObDdFndw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747389736;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gVdEFOPePVWP+XNE68ekxQwWLaXcQrvLw9VJVNSpv9w=;
+	b=b7toz3Rt9PTp8kgOlY6ff/01ske56Fju00x2K8+D3XEj+QawwpdJyZCgIr9tCeYkdXQ3gV
+	CO7FaBN24t6w/FAg==
+From: "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: irq/msi] irqchip/gic-v3-its: Use allocation size from the prepare call
+Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250513163144.2215824-6-maz@kernel.org>
+References: <20250513163144.2215824-6-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1569; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=kx7hE+1jGLWfA9X6Bwyb2haBWtsA8+rtUy5OmaCwQdc=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDBnqPN0/mbbyiVTk71zjNSupn+nhry1TFJJP7L48+fCrs xnbD1XkdZSyMIhxMMiKKbIk3u5rkVr/x2WHc89bmDmsTCBDGLg4BWAiZ2IY/hm+nJUe9Gld8wLf 7CnWB6b/vbbZyba/dNqUW8yepffZxMoZ/ofZF6yoTZrN8VlGquy85/MuPq0Fsa5dXTYtvUG7HY7 l8gIA
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+Message-ID: <174738973542.406.15298612282594894247.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-From: Conor Dooley <conor.dooley@microchip.com>
+The following commit has been merged into the irq/msi branch of tip:
 
-PolarFire SoC may be configured in a way that requires non-coherent DMA
-handling. On RISC-V, buses are coherent by default & the dma-noncoherent
-property is required to denote buses or devices that are non-coherent.
-For some reason, instead of adding dma-noncoherent to the binding
-the pointless, NOP, property dma-coherent was. Swap dma-coherent for
-dma-noncoherent.
+Commit-ID:     7dd20bf2f010430b75b109e4d4101cd1616afba3
+Gitweb:        https://git.kernel.org/tip/7dd20bf2f010430b75b109e4d4101cd1616afba3
+Author:        Marc Zyngier <maz@kernel.org>
+AuthorDate:    Tue, 13 May 2025 17:31:44 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 14 May 2025 12:36:42 +02:00
 
-Fixes: 04aa999eb96fd ("dt-bindings: PCI: microchip,pcie-host: Allow dma-noncoherent")
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+irqchip/gic-v3-its: Use allocation size from the prepare call
+
+Now that .msi_prepare() gets called at the right time and not
+with semi-random parameters, remove the ugly hack that tried
+to fix up the number of allocated vectors.
+
+It is now correct by construction.
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250513163144.2215824-6-maz@kernel.org
+
 ---
-CC: Daire McNamara <daire.mcnamara@microchip.com>
-CC: Bjorn Helgaas <bhelgaas@google.com>
-CC: Lorenzo Pieralisi <lpieralisi@kernel.org>
-CC: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: Rob Herring <robh@kernel.org>
-CC: Krzysztof Kozlowski <krzk+dt@kernel.org>
-CC: Conor Dooley <conor+dt@kernel.org>
-CC: linux-pci@vger.kernel.org
-CC: devicetree@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
----
- Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/irqchip/irq-gic-v3-its-msi-parent.c | 19 -------------------
+ 1 file changed, 19 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-index 103574d18dbc2..56397df2a6eec 100644
---- a/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
-@@ -50,7 +50,7 @@ properties:
-     items:
-       pattern: '^fic[0-3]$'
+diff --git a/drivers/irqchip/irq-gic-v3-its-msi-parent.c b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
+index 9587366..6a5f64f 100644
+--- a/drivers/irqchip/irq-gic-v3-its-msi-parent.c
++++ b/drivers/irqchip/irq-gic-v3-its-msi-parent.c
+@@ -68,17 +68,6 @@ static int its_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
+ 	info->scratchpad[0].ul = pci_msi_domain_get_msi_rid(domain->parent, pdev);
  
--  dma-coherent: true
-+  dma-noncoherent: true
+ 	/*
+-	 * @domain->msi_domain_info->hwsize contains the size of the
+-	 * MSI[-X] domain, but vector allocation happens one by one. This
+-	 * needs some thought when MSI comes into play as the size of MSI
+-	 * might be unknown at domain creation time and therefore set to
+-	 * MSI_MAX_INDEX.
+-	 */
+-	msi_info = msi_get_domain_info(domain);
+-	if (msi_info->hwsize > nvec)
+-		nvec = msi_info->hwsize;
+-
+-	/*
+ 	 * Always allocate a power of 2, and special case device 0 for
+ 	 * broken systems where the DevID is not wired (and all devices
+ 	 * appear as DevID 0). For that reason, we generously allocate a
+@@ -151,14 +140,6 @@ static int its_pmsi_prepare(struct irq_domain *domain, struct device *dev,
+ 	/* ITS specific DeviceID, as the core ITS ignores dev. */
+ 	info->scratchpad[0].ul = dev_id;
  
-   ranges:
-     minItems: 1
--- 
-2.45.2
-
+-	/*
+-	 * @domain->msi_domain_info->hwsize contains the size of the device
+-	 * domain, but vector allocation happens one by one.
+-	 */
+-	msi_info = msi_get_domain_info(domain);
+-	if (msi_info->hwsize > nvec)
+-		nvec = msi_info->hwsize;
+-
+ 	/* Allocate at least 32 MSIs, and always as a power of 2 */
+ 	nvec = max_t(int, 32, roundup_pow_of_two(nvec));
+ 
