@@ -1,116 +1,127 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11309221F16;
-	Fri, 16 May 2025 10:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B91A221283
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747391032; cv=none; b=C7W/fPBYKmwkD8aoMVbZ6Byh27R53EwLkWwyOO2eo7xMG1lJQhWUSdeV7TBQu5szgxUeir7VAI+tfWQBBKf0Uk4v9/B9L7J1lZpUUERcfTNJGEmH880h0pfxDW/lA5e8/tneany/9GJsgYo78OoVARVtK/+DFtYpOqXu9h2DxEE=
+	t=1747391040; cv=none; b=TpSMvRQlFF09dmNqRC1iuHp7rF++zurmlxnDG1xloetCopOmpeBZzryDdJ5ahMrWfM0bWU5mE6ypVXsVrip7VpM7F74m20MMM2cqzuD4MNwJ5yKdF4tyV75IB9vYhRAa3g9QSuTnCZNCgcgfY6zwpwfnqftIrw539VFkwYOlU5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747391032; c=relaxed/simple;
-	bh=P2lFc/bkY5cvF730Q+sUmSV9UQLe4DUANrZ+6JT6Vto=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pGsAYJW/TQOOz2EkEFTKc2FO+zD1IxjWqd1AwRZS+GjIqf5uVx2jv1u56wmua7xUp4/IOtVYyOFl9VLZYvrUwhitiv//M6U7RB5KlYbYvP1SETCb1IKvQVlGnXkF7lSQiR/UVYHtICBmzW7ZKuEcXdyH0DH38hCsyGgUnp6qyw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=tcq88ql3; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1747391040; c=relaxed/simple;
+	bh=kX8C4riqmdvhNYzjXAN9FBLZqrBSEMscQB6yaApzJbU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GL2o8feBI8mbN/m+zlucKvHCRSKmIthVjJRkFagwVavbwJ1uozAUqZKHskHBAnKsZGiv5NGWuW5YgaPSTQ4UiliK7SaZDQLt6n+OKCC2rT5gMkfRj3RmxI8R4DaEe7zfdkPi1BXEXIs5eGm1VChfdB9F62ieev22WYvCYMkdjv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geotab.com; spf=pass smtp.mailfrom=geotab.com; dkim=pass (2048-bit key) header.d=geotab.com header.i=@geotab.com header.b=VwdjB6u8; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geotab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geotab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tcq88ql3"
-X-UUID: d9ab70ec323f11f082f7f7ac98dee637-20250516
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=zzwGRueTXdqiA1x5+m8noznkR/L46ared2SRPTQyfVE=;
-	b=tcq88ql3Jc7+ogYlsS5OUcAWOWQ9zXiQtpllSedfLcAhlsWH3t5UF8c7PyoTmNUOQhTun4mTgxbKJOOjGSzoYsPn+dln2lNvSQAaj+ZZbjZL4yN4ZWK3Zps5XpPY1sEAjWQOAm2dMFMs2ne6xFmTmPjrmMjkYbH3OALcgZ8C7So=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:23705266-3a8d-40ba-a825-7aedbc796970,IP:0,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:-5
-X-CID-META: VersionHash:0ef645f,CLOUDID:c031153e-da74-431d-a7be-5e6761de3b64,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
-	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
-	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: d9ab70ec323f11f082f7f7ac98dee637-20250516
-Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw02.mediatek.com
-	(envelope-from <skylake.huang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 668623883; Fri, 16 May 2025 18:23:46 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Fri, 16 May 2025 18:23:44 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Fri, 16 May 2025 18:23:44 +0800
-From: Sky Huang <SkyLake.Huang@mediatek.com>
-To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Daniel Golle
-	<daniel@makrotopia.org>, Qingfang Deng <dqfext@gmail.com>, SkyLake Huang
-	<SkyLake.Huang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
-CC: Steven Liu <Steven.Liu@mediatek.com>, Sky Huang
-	<skylake.huang@mediatek.com>
-Subject: [PATCH net-next v4 1/2] net: phy: mediatek: Sort config and file names in Kconfig and Makefile
-Date: Fri, 16 May 2025 18:23:26 +0800
-Message-ID: <20250516102327.2014531-2-SkyLake.Huang@mediatek.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250516102327.2014531-1-SkyLake.Huang@mediatek.com>
-References: <20250516102327.2014531-1-SkyLake.Huang@mediatek.com>
+	dkim=pass (2048-bit key) header.d=geotab.com header.i=@geotab.com header.b="VwdjB6u8"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6f0c30a1ca3so18119026d6.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 03:23:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=geotab.com; s=google; t=1747391038; x=1747995838; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sSWKgyvnroR1BW7IVNgVxry/JzplDnRtvXjCHt5HFJ8=;
+        b=VwdjB6u8fC9ENZxJdhpzJFPlMOEVQdsj0mqHjCYShTcggjLiF08C6ZCCoJ5fM9hM65
+         a6WG8/13j3svPRiPOQtS4rTd4bskzRjIm3cwq3KRohX11X64c/1/IqUQT6rBTcepiQiV
+         rxCRkLZir0XJRKlKQS/Hcz7iEoZjQLQ2j5IjYUZx0hX4NoSylwhlVp4foKYRo6yS183f
+         frNWFwj+U6sbbBygjhtfrdF+zFL1wYD6CwPxq4mCurpZ+v/fj3yoeyLrrJohmoJlultG
+         8eG2VTOqctlYDVpPuT5QoumOwPmV0DNfvQLtO0+hg7+RvN6y2Pvdb838m2dfb8YN8vga
+         ERfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747391038; x=1747995838;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sSWKgyvnroR1BW7IVNgVxry/JzplDnRtvXjCHt5HFJ8=;
+        b=SGuIDAxyrUaDxL3BIicqhwoc6bH354k9uLfglgC2BVFJgkeYkDZSvukSP5EyiihAEM
+         4ZhxSquMgy9yzjvoCbBPZysSRxPrZvpgwjBcZk0tXeNTnlAdFpo1sHuWHohj+5zTVf0c
+         wrmKeyIE2LHXvY98n5rvtb7STwlizr7xOgkz1SlfeXV22jWHJk7HGEkMJV115YwXv+qD
+         E4ZcseYc8tNVJZ2ugpo5IEsrVFLg6LTX8WeCYahnhZ2iI5FgIPJy1X4uBFbypObEVl+H
+         2RfxuQnmFDtiYLAamwk27mGfssA8sSB1JGSuBMVfsrcWOqUrwTcNTpwGEDliZa61oabk
+         nxeg==
+X-Forwarded-Encrypted: i=1; AJvYcCUvOzNlOCDpNmLUYs6vVEmckMIEPFqgRE2rnJwa2HkA/d04rh2Ih97hE3IGnWfmyFh1mmAhDS2QsFhMoaE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOJsuSlgiMyJihF/hVELejakbEYPa82JjpaksVmcqyIYHc2QSn
+	bf5KKDyPkM2Z75Nle39lDmuGzY53L7mLbApWJJlv1f+1E4/LZ3q6VCribCQqB8HMflkMg2DZZaC
+	9/hVzDUVRrSipe8Aeuctae803l7yaXlV1Y/4StRFstAZgbS4oYn8QULOzlA==
+X-Gm-Gg: ASbGncsmm/A3WnKIRdpX5b9a+Agztk4zKHZJlqvNjZRXKya0Ugd8M7acsjx9wzw2ba2
+	tGKpptGs4QFQPwhrGkMH2xLi2zDHLG8+uiuWgdOrrGGX8Q1eQ19E0eE11NbwjUmZMaDIs1g4nI8
+	U/GnEgb5uhtyKD2fHN+O4hHi6o2eOECoguLA28wn3IxvcTYYyCQ1DczSbRvxwDTGw8sw==
+X-Google-Smtp-Source: AGHT+IFh8efmf9PRAMrZc4K2Z8Gvs4gsieCI9x444infnsCJARCipPRL4wFTODnmENO1rPgK7fNUDGBrvA0uGWbk5LM=
+X-Received: by 2002:a05:6602:3a81:b0:867:3889:45e2 with SMTP id
+ ca18e2360f4ac-86a2322a6cfmr379802039f.10.1747391026352; Fri, 16 May 2025
+ 03:23:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+References: <20250514-ubx-m9-v1-0-193973a4f3ca@geotab.com> <20250514-ubx-m9-v1-1-193973a4f3ca@geotab.com>
+ <20250514-saggy-shifter-e4ac7152f823@spud> <CAN=L63qsjEAvfocgP0tGrpe-x6Rx1gvTAkPE9i99Ai2zJj6ssA@mail.gmail.com>
+ <20250515-varying-swan-31ca63615b43@spud>
+In-Reply-To: <20250515-varying-swan-31ca63615b43@spud>
+From: Alejandro Enrique <alejandroe1@geotab.com>
+Date: Fri, 16 May 2025 12:23:35 +0200
+X-Gm-Features: AX0GCFuBOqb1SIowingiNrMQQe0Y70xsdgvTHYHt-8V_ptqMp7MjogQl5JSOXCY
+Message-ID: <CAN=L63oc7a6+_e+nhiyCkttX-TSbcjcwBmSzPsSk94m1ebGt4w@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] riscv: dts: sophgo: add zfh for sg2042
+To: Conor Dooley <conor@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Sky Huang <skylake.huang@mediatek.com>
+On Thu, May 15, 2025 at 5:02=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
+te:
+>
+> On Wed, May 14, 2025 at 06:53:25PM +0200, Alejandro Enrique wrote:
+> > On Wed, May 14, 2025 at 5:49=E2=80=AFPM Conor Dooley <conor@kernel.org>=
+ wrote:
+> >
+> > > On Wed, May 14, 2025 at 01:55:54PM +0200, Alejandro Enrique via B4 Re=
+lay
+> > > wrote:
+> > > > From: Alejandro Enrique <alejandroe1@geotab.com>
+> > > >
+> > > > Add compatible for u-blox NEO-9M GPS module.
+> > > >
+> > > > Signed-off-by: Alejandro Enrique <alejandroe1@geotab.com>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.y=
+aml
+> > > b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
+> > > > index
+> > > 7d4b6d49e5eea2201ac05ba6d54b1c1721172f26..cf5ff051b9ab03e5bfed8156a72=
+170965929bb7e
+> > > 100644
+> > > > --- a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
+> > > > +++ b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
+> > > > @@ -22,6 +22,7 @@ properties:
+> > > >        - u-blox,neo-6m
+> > > >        - u-blox,neo-8
+> > > >        - u-blox,neo-m8
+> > > > +      - u-blox,neo-m9
+> > >
+> > > No match data in the driver, why is a fallback not sufficient?
+> > >
+> >
+> > I added the match data in the driver in the PATCH 2/2 of this series
+> > in the same fashion as previously supported modules.
+>
+> Did you? When I looked, there was just a compatible and no match data.
 
-Sort config and file names in Kconfig and Makefile in
-drivers/net/phy/mediatek/ in alphabetical order.
+You are right. I just added a compatible string, no match data. Sorry,
+I was not following.
+I just added the neo-m9 compatible the same way the neo-6m was previously
+added.
 
-Signed-off-by: Sky Huang <skylake.huang@mediatek.com>
----
- drivers/net/phy/mediatek/Kconfig  | 6 +++---
- drivers/net/phy/mediatek/Makefile | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/phy/mediatek/Kconfig b/drivers/net/phy/mediatek/Kconfig
-index 2a8ac5aed0f8..29a09d39ff6f 100644
---- a/drivers/net/phy/mediatek/Kconfig
-+++ b/drivers/net/phy/mediatek/Kconfig
-@@ -1,7 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
--config MTK_NET_PHYLIB
--	tristate
--
- config MEDIATEK_GE_PHY
- 	tristate "MediaTek Gigabit Ethernet PHYs"
- 	select MTK_NET_PHYLIB
-@@ -25,3 +22,6 @@ config MEDIATEK_GE_SOC_PHY
- 	  the MT7981 and MT7988 SoCs. These PHYs need calibration data
- 	  present in the SoCs efuse and will dynamically calibrate VCM
- 	  (common-mode voltage) during startup.
-+
-+config MTK_NET_PHYLIB
-+	tristate
-diff --git a/drivers/net/phy/mediatek/Makefile b/drivers/net/phy/mediatek/Makefile
-index 814879d0abe5..14b2c17b3f8f 100644
---- a/drivers/net/phy/mediatek/Makefile
-+++ b/drivers/net/phy/mediatek/Makefile
-@@ -1,4 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
--obj-$(CONFIG_MTK_NET_PHYLIB)		+= mtk-phy-lib.o
- obj-$(CONFIG_MEDIATEK_GE_PHY)		+= mtk-ge.o
- obj-$(CONFIG_MEDIATEK_GE_SOC_PHY)	+= mtk-ge-soc.o
-+obj-$(CONFIG_MTK_NET_PHYLIB)		+= mtk-phy-lib.o
--- 
-2.45.2
-
+What do you mean by using a fallback? Using one of the existent
+compatibles (none have match data) or adding a new fallback
+compatible, something like just "u-blox,neo"?
