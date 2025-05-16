@@ -1,143 +1,175 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72F9F223DC5;
-	Fri, 16 May 2025 06:35:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4ED21CC4D;
+	Fri, 16 May 2025 06:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747377317; cv=none; b=FutoGa6IS4XuwCbHfPEFRI+GZHIa2vK8CnrTuBfDXJtnGVPQsUhCFiRVduo4bixeWZMQ79omxIH4Sz0FTebeYHJ0OXnoLtRH0DON2eRT0wQde1Hzz1Xn+EbSNN5jcN3SPrNBIz+7EJHN5gQKJ/BWg/Tru5V2puX2H2K4s37XwYk=
+	t=1747377390; cv=none; b=pBYo81BvZLLZAUaAWpaNWvz1YDxfXFXRgVLW4NgH2se/ntQgDnMkfGNy/BoXj5iDHt3kwZCVGzYbo5zJIgRikRbLDfxzRWwsOunDhqP2McRQwktRrz0iMwTM06LiSNeEjdKbLZYGFVayOJVIR6lAYPHApXxpe9XFaZaqcyY/zSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747377317; c=relaxed/simple;
-	bh=EWO6CZzwsD8bIRRFpNMF4OS0mHTBB1Wpe5eviDCIk8E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KoelOqJvMVuUx8Gxupes25mDOBQR/uluzh1vJo798GIT8RN5PYA6+eCSXVyIolKjXu8Qh71g1P7WVyNnjG7RCEHReNOpJh2HiB0xC0NNHhvu8yD2kZfZLsRdWakflF9cOu33ha10VUg+BoOkYX41waWt0HdS40uUSie2s094G28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Phrsj/DR; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747377390; c=relaxed/simple;
+	bh=ha4URqno53+8IBqXFpktJS1GXjWV40bui4aNG0QuF8g=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=Xr+1Gv54EIm66w/Xzwo293QbOh8d0g+/rThTSFir0HpSSw0ks+9yxMyDjBLNF5UYwVkhAu5D62jD31HPkqAyqJTAO1V6l67v8m6gSOr6Ss9TVFquwsSnkkdPIJx+pst4U7BjOns12+L64ip5bhlAbHIJ3bSQaO3BPCMafVjwz/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZacF8oTr; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Phrsj/DR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747377316; x=1778913316;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=EWO6CZzwsD8bIRRFpNMF4OS0mHTBB1Wpe5eviDCIk8E=;
-  b=Phrsj/DRgzc7qmMvEHL/x38r1X2T2R+6Yf86oyOdYN2DjWBo9FCKzkbo
-   YfZihoYvO1CfFva81fV5nBY3jKmxWNlmrcari3oj1Z183Iw/LyoA0tte6
-   VIkTaSPb5bjwQzLvYz2HHEzxYEtgfmyad5UT0KMw46SvPBKvv7o7N2fqi
-   7IVb0g+qfs1CZ5SUYkrA5tbGp3BVmBIY42flWtmHC9yE9lCdHTuXSpdpP
-   h4jxqYAsaZwXE+vrai5A2o9EYg/M5sRM9dhtxkyegDjFjpZnxadM4qhLx
-   qiaWTpcro4quaDZILIZU3CE9Rbrrt7NKMAvsCYS1hZ2TkJFPYFS45ia21
-   Q==;
-X-CSE-ConnectionGUID: Fe+2de0HTGu7pnLwRt46Zw==
-X-CSE-MsgGUID: 5/R8HrB5SZek0NdlE3/knA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49323335"
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="49323335"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 23:35:14 -0700
-X-CSE-ConnectionGUID: FdBqF5OARzSE8VaoJNoetw==
-X-CSE-MsgGUID: 4TNMa49+RSqU+LxFVGFPHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="138990800"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 15 May 2025 23:35:09 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uFoew-000J3N-2g;
-	Fri, 16 May 2025 06:35:06 +0000
-Date: Fri, 16 May 2025 14:34:47 +0800
-From: kernel test robot <lkp@intel.com>
-To: "paul-pl.chen" <paul-pl.chen@mediatek.com>, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, chunkuang.hu@kernel.org,
-	angelogioacchino.delregno@collabora.com
-Cc: oe-kbuild-all@lists.linux.dev, matthias.bgg@gmail.com,
-	p.zabel@pengutronix.de, jason-jh.lin@mediatek.com,
-	nancy.lin@mediatek.com, singo.chang@mediatek.com,
-	xiandong.wang@mediatek.com, sirius.wang@mediatek.com,
-	paul-pl.chen@mediatek.com, sunny.shen@mediatek.com,
-	fshao@chromium.org, treapking@chromium.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	Project_Global_Chrome_Upstream_Group@mediatek.com
-Subject: Re: [PATCH v3 15/17] drm/mediatek: add ovlsys_adaptor support for
- MT8196
-Message-ID: <202505161422.JeAeW3Pd-lkp@intel.com>
-References: <20250515093454.1729720-16-paul-pl.chen@mediatek.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZacF8oTr"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G37mmC001154;
+	Fri, 16 May 2025 06:36:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	WaMAGfBbgDWG1NFAeAULSkUJlJOsNpmee8ZzO7nXfBc=; b=ZacF8oTrBc0LqKLx
+	P0TgtGmMl5Muu690TCV8cZlH52BH0NOj8ltic8NRNgE+sUzpVPHwnQuszZLvoiBo
+	0LDg4/zVCUf0/vF8qmFlfdwz9OvDGr+o6fFkowoasFXLDCwhCSIVHrZjl1SSehGi
+	kVfrq9ttV4f/peQrPchYdH19+5Mhx4rGEfsfl3q+QaqKgPX38QedT7rue8wM5+O4
+	57BhgQVeeRGfbb+MvSNoaj7KRcHHH2teuCpW209cAtPeOWHDta4ylcu5ezYDgRWl
+	6J0iJ+AlkNIdRA/v5WTYNxqC3s7cIavhMqOxZEMs6FCCJ5y+liI5w3OB3pLj5fQr
+	JqC/EQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcp0w6q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 06:36:24 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54G6aN4s010065
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 06:36:23 GMT
+Received: from [10.218.32.171] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 15 May
+ 2025 23:36:17 -0700
+Message-ID: <df6386a1-5b4e-46d5-a431-6ca136a87980@quicinc.com>
+Date: Fri, 16 May 2025 12:06:14 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515093454.1729720-16-paul-pl.chen@mediatek.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/8] dt-bindings: serial: describe SA8255p
+From: Praveen Talari <quic_ptalari@quicinc.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC: <psodagud@quicinc.com>, <djaggi@quicinc.com>, <quic_msavaliy@quicinc.com>,
+        <quic_vtanuku@quicinc.com>, <quic_arandive@quicinc.com>,
+        <quic_mnaresh@quicinc.com>, <quic_shazhuss@quicinc.com>,
+        Nikunj Kela
+	<quic_nkela@quicinc.com>
+References: <20250506180232.1299-1-quic_ptalari@quicinc.com>
+ <20250506180232.1299-2-quic_ptalari@quicinc.com>
+ <35659475-862a-4678-a2a5-173c2254ae60@kernel.org>
+ <2f3e608b-5536-4c6d-b7ca-c8cf4c9d0b1b@quicinc.com>
+ <4b2c24e4-d515-481d-a00b-d50ae57304dd@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <4b2c24e4-d515-481d-a00b-d50ae57304dd@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 9LDWp9enGqWWGUhQVSS3gMVl2DXkuiyY
+X-Proofpoint-ORIG-GUID: 9LDWp9enGqWWGUhQVSS3gMVl2DXkuiyY
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDA2MCBTYWx0ZWRfX8QSRwKutBXH1
+ ZTw81ApNsrFIp8iecc7noiNQ6l3Gc7NvTl9krPdGVlBbfZjbBdvzv2qhJ08RnUylaaQExr9Cgfz
+ gatUHQ7vr5bIA8ReKdI8pNa5Vupi3FOGVn/MX/K77MBhTTlwnzd0YSzpVJo/7FRr4XPV8nBPDNw
+ fftTO6svgaamIvfBmsTx+bL5WnSKFO4LPkXNrN85qGQcIUsEXS0Drain/WqBVFwbDTlp1o3Vd2c
+ K1qZd4n4So78WpEP/IBejfOw5Ks85RUnPhNUIakD2iibRjFwfDNJwrnNyVSjN0WXO56qqMZ9cLu
+ GPX/QMDSU1hxTABD+Jc8gfcoRALFRNqQn9yVdnqF8FvfbkcJssMu1b6e7MrCd9L/UsVOoONZ5bm
+ AdQuCroGNwkCee1TOT5YHWr2yt5KQbb+QXvjmtrUMaeidd+IE/K3AyUsJ8VJcBrLm5gQXx+1
+X-Authority-Analysis: v=2.4 cv=Gp9C+l1C c=1 sm=1 tr=0 ts=6826dce8 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=Am187KbwW9CzcosyEMcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-16_02,2025-05-15_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0 impostorscore=0
+ bulkscore=0 adultscore=0 suspectscore=0 priorityscore=1501 mlxscore=0
+ malwarescore=0 mlxlogscore=943 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505160060
 
-Hi paul-pl.chen,
+Hi Krzysztof
 
-kernel test robot noticed the following build errors:
+Gentle reminder!!
 
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on linus/master v6.15-rc6 next-20250515]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On 5/9/2025 10:02 AM, Praveen Talari wrote:
+> Hi Krzysztof,
+>
+> Thank for you review and valuable inputs.
+>
+> On 5/8/2025 11:15 AM, Praveen Talari wrote:
+>> Hi Krzysztof
+>>
+>> Thank you for your patience. I consider your inputs as valuable 
+>> learning.
+>>
+>> On 5/6/2025 11:53 PM, Krzysztof Kozlowski wrote:
+>>> On 06/05/2025 20:02, Praveen Talari wrote:
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    enum:
+>>>> +      - qcom,sa8255p-geni-uart
+>>>> +      - qcom,sa8255p-geni-debug-uart
+>>>> +
+>>>> +  reg:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  interrupts:
+>>>> +    minItems: 1
+>>> Nothing changed here, this should be dropped based on previous 
+>>> discussion.
+>>>
+>>> You sent this v5 on 8:02 PM of my time. *THEN* you responded to my
+>>> comment at v4 at 8:05 PM. That's the way to waste everyone's time.
+>>>
+>>> I do not understand why interrupt is optional for a new, complete 
+>>> device
+>>> description.
+>
+> To put it simply, because we are using the RX GPIO line as wake up IRQ 
+> and not all SE related pins are mapped in the PDC,
+>
+> there is no specific wake-up pin to define. Therefore, the wake-up IRQ 
+> should be considered optional.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/paul-pl-chen/dt-bindings-soc-mediatek-add-mutex-yaml-for-MT8196/20250515-173733
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20250515093454.1729720-16-paul-pl.chen%40mediatek.com
-patch subject: [PATCH v3 15/17] drm/mediatek: add ovlsys_adaptor support for MT8196
-config: arm64-randconfig-001-20250516 (https://download.01.org/0day-ci/archive/20250516/202505161422.JeAeW3Pd-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 9.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250516/202505161422.JeAeW3Pd-lkp@intel.com/reproduce)
+I hope this response has addressed your query.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505161422.JeAeW3Pd-lkp@intel.com/
+Thanks,
 
-All error/warnings (new ones prefixed by >>):
+Praveen
 
-   drivers/gpu/drm/mediatek/mtk_drm_drv.c: In function 'mtk_drm_ovl_adaptor_probe':
->> drivers/gpu/drm/mediatek/mtk_drm_drv.c:1071:32: error: storage size of 'ovlsys_priv' isn't known
-    1071 |  struct mtk_drm_ovlsys_private ovlsys_priv;
-         |                                ^~~~~~~~~~~
->> drivers/gpu/drm/mediatek/mtk_drm_drv.c:1071:32: warning: unused variable 'ovlsys_priv' [-Wunused-variable]
-   drivers/gpu/drm/mediatek/mtk_drm_drv.c: In function 'mtk_drm_probe':
-   drivers/gpu/drm/mediatek/mtk_drm_drv.c:1145:50: error: 'DDP_COMPONENT_DRM_OVLSYS_ADAPTOR2' undeclared (first use in this function); did you mean 'DDP_COMPONENT_DRM_OVLSYS_ADAPTOR0'?
-    1145 |  mtk_drm_ovl_adaptor_probe(dev, private, &match, DDP_COMPONENT_DRM_OVLSYS_ADAPTOR2);
-         |                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-         |                                                  DDP_COMPONENT_DRM_OVLSYS_ADAPTOR0
-   drivers/gpu/drm/mediatek/mtk_drm_drv.c:1145:50: note: each undeclared identifier is reported only once for each function it appears in
-
-
-vim +1071 drivers/gpu/drm/mediatek/mtk_drm_drv.c
-
-  1066	
-  1067	static void mtk_drm_ovl_adaptor_probe(struct device *dev, struct mtk_drm_private *private,
-  1068					      struct component_match **match, enum mtk_ddp_comp_id id)
-  1069	{
-  1070		struct platform_device *ovl_adaptor;
-> 1071		struct mtk_drm_ovlsys_private ovlsys_priv;
-  1072		bool is_ovlsys = (id != DDP_COMPONENT_DRM_OVL_ADAPTOR);
-  1073		char *dev_name = is_ovlsys ? "mediatek-disp-ovlsys-adaptor" : "mediatek-disp-ovl-adaptor";
-  1074		void *drv_data = is_ovlsys ? (void *)&ovlsys_priv : (void *)private->mmsys_dev;
-  1075		size_t data_size = is_ovlsys ? sizeof(ovlsys_priv) : sizeof(*private->mmsys_dev);
-  1076	
-  1077		if (mtk_drm_find_mmsys_comp(private, id, &ovlsys_priv.use_path)) {
-  1078			ovlsys_priv.mmsys_dev = private->mmsys_dev;
-  1079			ovl_adaptor = platform_device_register_data(dev, dev_name, PLATFORM_DEVID_AUTO,
-  1080								    drv_data, data_size);
-  1081			private->ddp_comp[id].dev = &ovl_adaptor->dev;
-  1082			mtk_ddp_comp_init(NULL, &private->ddp_comp[id], id);
-  1083			component_match_add(dev, match, compare_dev, &ovl_adaptor->dev);
-  1084		}
-  1085	}
-  1086	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>
+> Thanks,
+>
+> Praveen
+>
+>>
+>> On this platform, there is no use case of waking up UART, so we 
+>> consider the  wake up IRQ as optional.
+>>
+>> Thanks,
+>>
+>> Praveen
+>>
+>>>
+>>> Best regards,
+>>> Krzysztof
