@@ -1,98 +1,209 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D2F323D
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8C9323D;
+	Fri, 16 May 2025 16:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747412017; cv=none; b=I4vhQ1bkcseiI5m5hcxStu7INoxs7HS5/Z4Pb5AaLsNJGyrY2e36ZgHbqihAy0+W+dqtRvN4P/QTKHrh/HA+HPJ3iWMeHNlVT+6ZZucYP6BvuQRLzpypqyMtEqdj9RKaMMDly9KA6XlEzIi0JYgouc5qDTFsPlQsOJ+WbOgIFcA=
+	t=1747412068; cv=none; b=kFxnmU8Ecu3H/MCrPhVR8f4NwyiAsMtO0OMLJbHCKcDQN/XjnIT+BGv0/yF1LzdaIHYh+L2qArrrlZS1UvN0rtwzunbFM58DAn03PO5xRa33WbeiU0ikdo5j0Dcy++jTiP/QnaTc2mBGSFL2UsHFZCQgMNfb/NYyPOIyC8285+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747412017; c=relaxed/simple;
-	bh=9P1+jTbwVXosxLyIAH8N3hBYwS2bNN24xtek80rU0xc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XveEwNlnObk5FfACaYh91T1W1K+QkxCspmtl+buVDYoV9uZO4cj/Z+S6L6IFPHEzcKGRh7u6XgnZB42iv6IHUOzP/g12vPWtvXQG7n2y1QHQfR5Bt99m7PCuKWOVorUbdlvSMyQ1ROeGxQ2FhNFl34bu25nk5pMOZF5lwIS6Rzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=OWrQ/E9y; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1747412068; c=relaxed/simple;
+	bh=TQwoIsavedMixi6HIUcBuliBMSH+GXXDpKFXeS611+A=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=QuGMe01nqav3e80QBGiyjQ4Ot9/YgzL8vSYzTS5UBa7NdNGE4/mgovr5aYzwAIKD3hr491/UvB5xltZ99Iq2fmicv6AKw94U4hYrOvE7JCn1GR5t2a+Agf4yXqH6UDR1dd1iIC/DJcqCrfBYAUhP4JkDOdeIWmtqBwHVDFBZJkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=H6zMPEOi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PK3nj3Ko; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="OWrQ/E9y"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-acacb8743a7so377588466b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:13:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1747412013; x=1748016813; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GUHk+mLN9wCUmOIy98ic92M1EtSWfUZlafBbykfM/JM=;
-        b=OWrQ/E9y7IH7qjGeyT7eNPV5xD3LjKpARztKm/4zMh04iF3/m1hKW5NNfNjKVkgscV
-         L8/6U0WGyFZvW8tKyhRAimn3m7T6scTRlvHLa1g66Lck2DXl4pgAzJnrOihj9oNBtTVd
-         lCATgjfACA28hIbZ3dL5LsoGccN/wIB+hQnzg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747412013; x=1748016813;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GUHk+mLN9wCUmOIy98ic92M1EtSWfUZlafBbykfM/JM=;
-        b=HJdM+dnQwhD9MAC4erqX8ZCxn9CxHCwUSyU4zAkYS7XDfAe6abpwNCg9GRxnq9Y7W8
-         EMZLUokzhXBa1r68ipK9RKXhFsRUJ0oYtMNpYg9pUf9fLGYwsYT/QhZSMAYoVoB9a9BJ
-         00Wr4t8ANJ9M2G4wHXQsy6mOv59AtOzRPOk69KkWuw1GQVrrnLGuelQ0cRAeQY0rHREc
-         mIQZMpTObktpwB4P+46hPrUg02yqbQDcNJ2e7ZKsQwTurPDQs4Yz58vPsjg5AqEOEwTg
-         X+Y1ek5LweMMlwGqDjxGJEuJTpclm8zE2GAw8WIObdiebOfEsmKIEUxJ4wavBTLWk9LG
-         eVjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWD+519hpAPT0X0ELiR+Qbs3qlUi31YWcq8pV44OjAD5QeNqKGaMRhWaDIohpvE5dc2L6pmOQ3w/DSe78=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxr1RtLC+5m/wSzvAeDSVpM4/DeTl2xaH5PYZ2n756iYe1KUFyS
-	akt681ab6x4GeqfEARdTMrq1BK/kdNBswfDHLFitKadnondmJr+FQ4uy/9PRWQyFhVzn33oPztM
-	PgjNqmeQ=
-X-Gm-Gg: ASbGncte9gGGTQYP+/QR6MAP1gYK8clIBw+oUpSVfVylha3INB599HquZMc/0I24IM6
-	6ggZfQ8ODAFfkEoUAHpI5GB8/unyJgS4tdB0ZrxHF2vU8KPlxYyrZQu1YUmLYJu0WLxvBOCWNsi
-	1fzmbANNSCQjkmpMPg/2xe4A1ySveHJDYncRzyqoJugEgC+2xckxrz1h0NpiywipoiGDriOqOjr
-	Mk67vj5vfzMGfpIhbc9Ubia1nC2t5tC3ONMOH3e9f0MraMIeROKb93TkM+FnJq5cpIeCUX2b9cy
-	bD2SwU73Dzi4upJAbWYs0W2q3sQIv27AtLrv/r0z9ZbXHkfOilmsBdFD5OWGAmxYkH3L0trFJLU
-	GQyejAu0bPlDd4gk3m453IppbHw==
-X-Google-Smtp-Source: AGHT+IFTGunhkRP0W87ga/JD8v982IgvO5K6O7/l4ytFym8Foo0MX9PCrfFmVgKuIshAl3wV8P35lw==
-X-Received: by 2002:a17:907:960a:b0:ad3:e742:69ea with SMTP id a640c23a62f3a-ad52f86c635mr331428066b.14.1747412013468;
-        Fri, 16 May 2025 09:13:33 -0700 (PDT)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d047bd6sm177171066b.29.2025.05.16.09.13.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 May 2025 09:13:32 -0700 (PDT)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f63ac6ef0fso515947a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:13:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVaaGre508Xw+7ixsJb9XHQHWvRHL7ujUxvlyXBE4pTb54tK4TSsmb1lafb6CCMOuDwnhfEx4Av1d6JHHw=@vger.kernel.org
-X-Received: by 2002:a05:6402:210b:b0:601:9586:8fe3 with SMTP id
- 4fb4d7f45d1cf-6019586930emr978668a12.16.1747412012273; Fri, 16 May 2025
- 09:13:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H6zMPEOi";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PK3nj3Ko"
+Date: Fri, 16 May 2025 18:14:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747412064;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=RiZabCUJ9teCjROosFErp6pWxnyNRbJPG8vV5rKTy3g=;
+	b=H6zMPEOi2H8B5t4AjHjWP4/QMg5HudewWW+saulj9ZLVVDneXHXUQ5Iw9MaF9lHfDYe+K+
+	f6ox8UQxmlvWy/JZX3tj+dz9ZOPtUUZkU1qLUkX+3gBf1VRmIRe+Xuh8gUyBnFTKb2Bg3X
+	daiZpwYD0XBb5nfoHThZQ6kxiejRRwapEo9bG9fcqC5qiwtzB86u8/I+8sEcVKW1evVV8S
+	hNi4ZIkIBjzyBwYDTtYdKh1k4bkZCOiNSyK8WyIPsVcLEFIzccYHf1NUfKaYoAbXsECvwx
+	j4bkqFsjCUhBdhs2gRgMhIeJ633T3RXAqKxwhYOt8j9QNWUk1PSC2vuwmxRnrg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747412064;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=RiZabCUJ9teCjROosFErp6pWxnyNRbJPG8vV5rKTy3g=;
+	b=PK3nj3KoAupU5WVxA3Q1pnN85CFlCBPLAEdUWCbu7+8/xjA8qMI1Hh+bbihcmgp6vh0PbK
+	CF6wV4ccsJJ7MuCA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Alejandro Colomar <alx@kernel.org>
+Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
+	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH] prctl: Add documentation for PR_FUTEX_HASH
+Message-ID: <20250516161422.BqmdlxlF@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <871psp56yb.fsf@kernel.org>
-In-Reply-To: <871psp56yb.fsf@kernel.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 16 May 2025 09:13:15 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whXcQu-TcP8q7xpYsADyXSN8GSX8sV3-chjQOo-SK59Ng@mail.gmail.com>
-X-Gm-Features: AX0GCFtELJDcm4uocIJ51dUy47z0Fuppeouo-29gMxYswtmtUoCWpz6c6Jgr0Ns
-Message-ID: <CAHk-=whXcQu-TcP8q7xpYsADyXSN8GSX8sV3-chjQOo-SK59Ng@mail.gmail.com>
-Subject: Re: [GIT PULL] configfs for v6.16
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Breno Leitao <leitao@debian.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>, Christian Brauner <brauner@kernel.org>, 
-	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-On Fri, 16 May 2025 at 00:51, Andreas Hindborg <a.hindborg@kernel.org> wrote:
->
-> This is my first pull request after picking up configfs [1], and my
-> first pull request to you. I hope I got everything right!
+The prctl(PR_FUTEX_HASH) is queued for the v6.16 merge window.
+Add some documentation of the interface.
 
-From a quick look everything looks fine. Proper signed tag that
-verifies ok, and the pull request looks good.
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ man/man2/prctl.2                   |   3 +
+ man/man2const/PR_FUTEX_HASH.2const | 112 +++++++++++++++++++++++++++++
+ 2 files changed, 115 insertions(+)
+ create mode 100644 man/man2const/PR_FUTEX_HASH.2const
 
-I've obviously not actually merged it, but it's in my queue for when
-the merge window opens.
+diff --git a/man/man2/prctl.2 b/man/man2/prctl.2
+index 7a6b73e25e7a8..30c868d051a0c 100644
+--- a/man/man2/prctl.2
++++ b/man/man2/prctl.2
+@@ -150,6 +150,8 @@ with a significance depending on the first one.
+ .B PR_GET_MDWE
+ .TQ
+ .B PR_RISCV_SET_ICACHE_FLUSH_CTX
++.TQ
++.B PR_FUTEX_HASH
+ .SH RETURN VALUE
+ On success,
+ a nonnegative value is returned.
+@@ -262,4 +264,5 @@ so these operations should be used with care.
+ .BR PR_SET_MDWE (2const),
+ .BR PR_GET_MDWE (2const),
+ .BR PR_RISCV_SET_ICACHE_FLUSH_CTX (2const),
++.BR PR_FUTEX_HASH (2const),
+ .BR core (5)
+diff --git a/man/man2const/PR_FUTEX_HASH.2const b/man/man2const/PR_FUTEX_HASH.2const
+new file mode 100644
+index 0000000000000..c6a6396729770
+--- /dev/null
++++ b/man/man2const/PR_FUTEX_HASH.2const
+@@ -0,0 +1,112 @@
++.\" Copyright, The contributors to the Linux man-pages project
++.\"
++.\" SPDX-License-Identifier: Linux-man-pages-copyleft
++.\"
++.TH PR_FUTEX_HASH 2const (date) "Linux man-pages (unreleased)"
++.SH NAME
++PR_FUTEX_HASH
++\-
++configure the private futex hash
++.SH LIBRARY
++Standard C library
++.RI ( libc ,\~ \-lc )
++.SH SYNOPSIS
++.nf
++.BR "#include <linux/prctl.h>" "  /* Definition of " PR_* " constants */"
++.B #include <sys/prctl.h>
++.P
++.BI "int prctl(PR_FUTEX_HASH, long " op ", ...);"
++.fi
++.SH DESCRIPTION
++Configure the attributes for the underlying hash used by the
++.BR futex (2)
++family of operations. The Linux kernel uses a hash to distributes the
++.BR futex (2)
++users on different data structures. The data structure holds the in-kernel
++representation of the operation and keeps track of the current users which are
++enqueued and wait for a wake up and those who perform a wake up. The size of
++the global hash is determined at boot time and is based on the number of CPUs
++in the system. Since the mapping from the provided
++.I uaddr
++value to the in-kernel representation is based on a hash, two unrelated tasks
++in the system can share the same hash bucket. This in turn can lead to delays
++of the due
++.BR futex (2)
++operation due to to lock contention of the data structure. These delays can be
++problematic on a PREEMPT_RT system since random tasks can share in-kernel locks
++and it is not deterministic which tasks will be involved.
++.P
++Linux v6.16 implements a process wide private hash which is used by all
++.BR futex (2)
++operations which specify the
++.B FUTEX_PRIVATE_FLAG
++as part of the operation.
++Without any configuration the kernel will allocate 16 hash slots once the first
++thread has been created. If the process continues to create threads, the kernel
++will try to resize the private hash based on the number of threads and
++available CPUs in the system. The kernel will only increase the size and will
++make sure it does not exceed the size of the global hash.
++.P
++The user can configure the size of the private hash which will also disable the
++automatic resize provided by the kernel.
++.P
++The following values for
++.I op
++can be specified:
++.TP
++.BI "int prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, " hash_size ", " hash_flags ");
++Set the number of slots to use for the private hash.
++.P
++.RS
++.TP
++.I hash_size
++Specifies the size of private hash to allocate. Possible values are:
++.RS
++.TP
++.I 0
++Use the global hash. This is the behaviour used before v6.16. The operation can
++not be undone.
++.TP
++.I >0
++Specifies the number of slots to allocate. The value must be power of two and
++lowest possible value is 2. The upper limit depends on available memory in
++the system. Each slot requires 64bytes of memory. Kernels compiled with
++.I CONFIG_PROVE_LOCKING
++will consume more than that.
++.RE
++.TP
++.I hash_flags
++.RS
++The following flags can be specified:
++.TP
++.I FH_FLAG_IMMUTABLE
++The private hash can no longer be changed. By using an immutable privat hash
++the kernel can avoid some accounting for the data structure. This accounting
++is visible in benchmarks if many
++.BR futex (2)
++operations are invoked in parallel on different CPUs.
++.RE
++.RE
++.TP
++.BI "int prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_SLOTS);
++Returns the current size of the the private hash. A value of 0 means that a
++private has not been allocated or the global hash is used. A value >0 specifies
++the size of the private hash.
++.TP
++.BI "int prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_IMMUTABLE);
++Return 1 if the hash has been made immutable and not be changed. Otherwise 0.
++
++.SH RETURN VALUE
++On success,
++these calls return a value >=0.
++On error, \-1 is returned, and
++.I errno
++is set to indicate the error.
++.SH STANDARDS
++Linux.
++.SH HISTORY
++Linux 6.16.
++.SH SEE ALSO
++.BR prctl (2) ,
++.BR futex (2) ,
++.BR futex (7)
+-- 
+2.49.0
 
-Thanks,
-               Linus
