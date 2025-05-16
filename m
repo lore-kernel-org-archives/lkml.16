@@ -1,129 +1,169 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85382C9A
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50FED2C9A;
+	Fri, 16 May 2025 07:36:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747380980; cv=none; b=L8zsApdd1QMDkToLgb5qVV89ikG+vn3nEzFyB/Loh2/VCSxdsx2FIKlR7w7Xx91xPMYZLVa2tsKkQHRjOJtl2qfEb6VIf2FlwsaABFZhNHS/7KyiEdhN3KMgH6sUtXslWcPj1nMjwRYScmpGahHgXI0Iwt4DoHI95jM5cyxCDGw=
+	t=1747381016; cv=none; b=nGW1MBVqH8z7zZKBySq7nYVLXny4T1zydIla7xt0pS1AdhiB5Z6mJovshoUf1/A2LlatMdrg2jYlXrlXmoYKo1eQ/SB9qhFgjVB7/VpRisp9JEsinLe+HmPn8peqxUl24hxcBQF9Abtx5O+6BbUJSWOlmYqqDBwVcGUJcVbCbyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747380980; c=relaxed/simple;
-	bh=WyijhUO0vfCazPTmjj8L4gst+H0Jhzn8MOknmFSSA94=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=c8pQ6lIqZOAKWwdxXSK2AnilBD5UdQCe49tdih/F0znnn8A85vSFE+eabunh9UF2Nc42i5K8+gAIo4IMaQwLxycTIopkPtibBJgakS6ts8bzxrBmuUPwzsZzjdGOXx4/sa2Wv9AZQ2Cl/zssggjWnfeLwtah6ztJ9F7eirdFUxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uBPagzMx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2BhK2P6R; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747381016; c=relaxed/simple;
+	bh=ebMWSNcomhxWojXZp1ru/Hufic5cRGG/SEvw/kLxl+I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GychGH/hNTbRWUQkRYVr5ykQpXXsRVPjpGUco+VekkdegeIc6mspt0eexHOdn/bSec/ku5aV86fCJTzMqzV3CxbnrqKuIwPYk2Yo4Lf1U2BBVpsOam9RAcpvWBOP6eDfjj1ADDxTOLx7O2IIPNyJAJpBLQ5QR422EPQKivjUzYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RPiTBkWD; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uBPagzMx";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2BhK2P6R"
-Date: Fri, 16 May 2025 09:36:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747380974;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=5cgzWsQ8I/J4IHzkw06AbhnUPCnKULK4+BfgY7N/Ues=;
-	b=uBPagzMx7tAIzLYWSdPRX2S12koia6mdKq4gz8vG4JZYaHO71XHlTjWWZ/3Mk3F7l3VBv/
-	5Kj87o9odUszT2XIUcUPaOxYjuZ2Q8JjfrsIsoSX2Avyna6OIpDiv1Pg/RRvcg2OPebNbh
-	RfGiX2Ah8CJbhJuzjsFoLNqYRDVvIhhgYtVPSgl1So1ki4BjzebqWhShN7TYuHyaSqi9ib
-	Hrc/HV8HuVlOxzLSa8JZvTC+bCCrdRc5SWYjKIANhutyst2R/ot3CLRwGN7/zDHf4S5r3F
-	Mg1ruvE7tQMPCaQP30jZ2hFPzn42Dg6P6qQsaode/EW/shXz/1oWzJt4uZ6DUg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747380974;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=5cgzWsQ8I/J4IHzkw06AbhnUPCnKULK4+BfgY7N/Ues=;
-	b=2BhK2P6RsnA6P4kw3DaVXQ/ZJP5/vXJmOOiNCvMbp9MhBM4Cuky7LsaEf0gcSc4/u05V5b
-	ZW5CQ0E4lqSVzCAA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Borislav Petkov <bp@kernel.org>, linux-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>, Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>
-Subject: [PATCH v2] futex: Fix kernel-doc comments
-Message-ID: <20250516073613.ZYaQZ1wZ@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RPiTBkWD"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-30e4865d949so1785163a91.0;
+        Fri, 16 May 2025 00:36:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747381014; x=1747985814; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=m9OMCtiLZCfc2YVjRFKF+JcKQO+Z+1J6zwpzAKX8QEY=;
+        b=RPiTBkWDOqXXCPg97GJ3il7wNjip3iUvgx3FSZ3ZHtnShlVfecKbBFAcLUSUtzLngX
+         wm/Y9rs2bfvdbYQRIZ/RzMywrM4olZLMrkjrz0BNWUfDrNjSdsC2VUGDc2Bdol+hIWC0
+         wQS3gfhEdTC0FL2uZvL78hd/7OznTbSx3NA/oviXV2F+rcn2BE6ydqxeukhiViUs28vn
+         jqJC5vKaSyfetZJZf2d20hWlByPLCCvEy2x220QC+QPCE0WoDeRAue+rPAouT84sohGG
+         UjdQ03QJ8XcgenR+004ZjFY57eq4PtxLJ7eef802aCU31hS1inUnHCVXo3iGk/TstCm+
+         +3Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747381014; x=1747985814;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=m9OMCtiLZCfc2YVjRFKF+JcKQO+Z+1J6zwpzAKX8QEY=;
+        b=Kr5IixaEwcbgcY1Ov8uAps3FRieMM9SXw45ypVGDDWo/yTmjzyozXyOZBPZA/3ttH8
+         +Vpn1herCZ5dJ1qiR8JKcbTI6L1ramuq+K1lstd7+WfDNwiFVm9YN5PMJBUUVlbc78eP
+         TIxGBbLQrAiXT6I2i3rYOjM4nDEmegNvRyXYVyCR1KpkC6cpCCFBk+LxS9j9orIPubOB
+         fOzbXo+iZjU0AuD482Aq90KFVXx0J6jtNzNK/XLVZydvT5ZPGz4xW9xzFIaod1cNUAXv
+         Xr20EzIGB/FaqpEFbIhY0/D4x1hmOYWCptnUtT0Kzddx2w9jKAVrkae/zowUOU13DdGv
+         gz0g==
+X-Forwarded-Encrypted: i=1; AJvYcCV9yQxSgmqwGqSB6uGKqE5T4STBw8Yuis2qgP4uDZeV31lmuZxCAL2zvT/20HtJqRfpm+8=@vger.kernel.org, AJvYcCVePf0x8jNWsYtmcAqOy/7qzC2wPFHVVIafGc6Fgq+w2GLSbD7GeMpmvl455MslC0MhxznF1tiJFv64@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCFhSs5cq8V7rTeDZsYiCPjjS0/ogRNZDjVZPJIPme6n6YsX4A
+	VEupbcH7/mPHqr18lG05UvB5zXYgboUmZtJdH6/+ZN0QT8uzF1e0Zic3
+X-Gm-Gg: ASbGnctY0aQMjvQDS1SqtqmXXXdzI8cEKOIa/MAuDeOHYN74sNc5CvFemvJRaWRYBMz
+	SYEe/cyclYf5t7gP+TEM15akGdvLFpNdnmOnzbz34fBiMkLl1uCDcR2cZ2NAB47KFeNhcg8lYKt
+	C4AH7pS7gQKA49Ci4TTqbLb7e0TbsYPL6Z9e5FP9rwmGFjVZVuGtJcDpBtkIK/cmYdPP5CracLH
+	9rMldqQ/5sDdcejt1g8y2itYCZ7Px4yDEzmStbDJ2ByFefoy4Is9dPjwa3NRlgzrgD6zVVYhnSw
+	MCPhicYvaxJ76Z0Z5oHRx/VVSqm1d28iCauCxrCFl5waQ2Fy5lQ=
+X-Google-Smtp-Source: AGHT+IGa8Co7Rw2A1GJhpE9BjFMOQ61U2FsxzqSQ+Qpkl1VLWQ3Iaxn4Js0s63XHdVwcuK6Xjp4ACg==
+X-Received: by 2002:a17:90b:3f4c:b0:2ee:5958:828 with SMTP id 98e67ed59e1d1-30e7d522155mr3676752a91.9.1747381014411;
+        Fri, 16 May 2025 00:36:54 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e7d4aa777sm977405a91.21.2025.05.16.00.36.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 00:36:52 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 6685242439CF; Fri, 16 May 2025 14:36:50 +0700 (WIB)
+Date: Fri, 16 May 2025 14:36:50 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>,
+	Linux KVM <kvm@vger.kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+	Binbin Wu <binbin.wu@linux.intel.com>,
+	Isaku Yamahata <isaku.yamahata@intel.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v2] Documentation/virt/kvm: Fix TDX whitepaper footnote
+ reference
+Message-ID: <aCbrEqzBcN3yZKfl@archie.me>
+References: <20250425015150.7228-1-bagasdotme@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="t5PBsglYtbDugZ88"
+Content-Disposition: inline
+In-Reply-To: <20250425015150.7228-1-bagasdotme@gmail.com>
+
+
+--t5PBsglYtbDugZ88
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-=46rom: "Borislav Petkov (AMD)" <bp@alien8.de>
+On Fri, Apr 25, 2025 at 08:51:50AM +0700, Bagas Sanjaya wrote:
+> Sphinx reports unreferenced footnote warning on TDX docs:
+>=20
+> Documentation/virt/kvm/x86/intel-tdx.rst:255: WARNING: Footnote [1] is no=
+t referenced. [ref.footnote]
+>=20
+> Fix footnote reference to the TDX docs on Intel website to squash away
+> the warning.
 
-Fix those:
+Review ping...
 
-  ./kernel/futex/futex.h:208: warning: Function parameter or struct member =
-'drop_hb_ref' not described in 'futex_q'
-  ./kernel/futex/waitwake.c:343: warning: expecting prototype for futex_wai=
-t_queue(). Prototype was for futex_do_wait() instead
-  ./kernel/futex/waitwake.c:594: warning: Function parameter or struct memb=
-er 'task' not described in 'futex_wait_setup'
+>=20
+> Fixes: 52f52ea79a4c ("Documentation/virt/kvm: Document on Trust Domain Ex=
+tensions (TDX)")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Closes: https://lore.kernel.org/linux-next/20250409131356.48683f58@canb.a=
+uug.org.au/
+> Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+> Link: https://lore.kernel.org/r/20250410014057.14577-1-bagasdotme@gmail.c=
+om
+> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+> ---
+>=20
+> Changes since v1 [1]:
+>   - Add Reviewed-by: tag from Binbin Wu
+>=20
+> [1]: https://lore.kernel.org/linux-doc/20250410014057.14577-1-bagasdotme@=
+gmail.com/
+>=20
+>  Documentation/virt/kvm/x86/intel-tdx.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/virt/kvm/x86/intel-tdx.rst b/Documentation/vir=
+t/kvm/x86/intel-tdx.rst
+> index de41d4c01e5c68..2ab90131a6402a 100644
+> --- a/Documentation/virt/kvm/x86/intel-tdx.rst
+> +++ b/Documentation/virt/kvm/x86/intel-tdx.rst
+> @@ -11,7 +11,7 @@ host and physical attacks.  A CPU-attested software mod=
+ule called 'the TDX
+>  module' runs inside a new CPU isolated range to provide the functionalit=
+ies to
+>  manage and run protected VMs, a.k.a, TDX guests or TDs.
+> =20
+> -Please refer to [1] for the whitepaper, specifications and other resourc=
+es.
+> +Please refer to [1]_ for the whitepaper, specifications and other resour=
+ces.
+> =20
+>  This documentation describes TDX-specific KVM ABIs.  The TDX module need=
+s to be
+>  initialized before it can be used by KVM to run any TDX guests.  The host
+>=20
+> base-commit: 45eb29140e68ffe8e93a5471006858a018480a45
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Closes: https://lore.kernel.org/r/20250512185218.6bfd18b4@canb.auug.org.au
-Closes: https://lore.kernel.org/r/20250512185641.0450a99b@canb.auug.org.au
-Fixes: 93f1b6d79a73 ("futex: Move futex_queue() into futex_wait_setup()")
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Acked-by: Ingo Molnar <mingo@kernel.org>
----
-v1=E2=80=A6v2: https://lore.kernel.org/all/20250515171641.24073-1-bp@kernel=
-=2Eorg/
-  - Add tags, references.
-  - Futex spelling.
+FYI: Stephen is still complaining [1].
+Paolo: Would you like to take this patch through kvm tree? If there's no
+response until 6.16 merge window, I'm intending to resend and route it
+through docs tree as doc fixes for 6.16 after merge window.
 
- kernel/futex/futex.h    | 1 +
- kernel/futex/waitwake.c | 5 ++---
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Thanks.
 
-diff --git a/kernel/futex/futex.h b/kernel/futex/futex.h
-index 069fc2a83080d..6d163003ef7f6 100644
---- a/kernel/futex/futex.h
-+++ b/kernel/futex/futex.h
-@@ -175,6 +175,7 @@ typedef void (futex_wake_fn)(struct wake_q_head *wake_q=
-, struct futex_q *q);
-  * @requeue_pi_key:	the requeue_pi target futex key
-  * @bitset:		bitset for the optional bitmasked wakeup
-  * @requeue_state:	State field for futex_requeue_pi()
-+ * @drop_hb_ref:	Waiter must drop the extra hash bucket reference if true
-  * @requeue_wait:	RCU wait for futex_requeue_pi() (RT only)
-  *
-  * We use this hashed waitqueue, instead of a normal wait_queue_entry_t, so
-diff --git a/kernel/futex/waitwake.c b/kernel/futex/waitwake.c
-index bd8fef0f8d180..b3738fbe83c62 100644
---- a/kernel/futex/waitwake.c
-+++ b/kernel/futex/waitwake.c
-@@ -334,8 +334,7 @@ int futex_wake_op(u32 __user *uaddr1, unsigned int flag=
-s, u32 __user *uaddr2,
- static long futex_wait_restart(struct restart_block *restart);
-=20
- /**
-- * futex_wait_queue() - futex_queue() and wait for wakeup, timeout, or sig=
-nal
-- * @hb:		the futex hash bucket, must be locked by the caller
-+ * futex_do_wait() - wait for wakeup, timeout, or signal
-  * @q:		the futex_q to queue up on
-  * @timeout:	the prepared hrtimer_sleeper, or null for no timeout
-  */
-@@ -578,7 +577,7 @@ int futex_wait_multiple(struct futex_vector *vs, unsign=
-ed int count,
-  * @flags:	futex flags (FLAGS_SHARED, etc.)
-  * @q:		the associated futex_q
-  * @key2:	the second futex_key if used for requeue PI
-- * task:	Task queueing this futex
-+ * @task:	Task queueing this futex
-  *
-  * Setup the futex_q and locate the hash_bucket.  Get the futex value and
-  * compare it with the expected value.  Handle atomic faults internally.
+[1]: https://lore.kernel.org/linux-next/20250516101604.7261c44a@canb.auug.o=
+rg.au/
+
 --=20
-2.49.0
+An old man doll... just what I always wanted! - Clara
 
+--t5PBsglYtbDugZ88
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaCbrDQAKCRD2uYlJVVFO
+o6ugAP46uvTrNN8O2FRYE0MWDP+yh69WbP5Tz2TL4dheV/mAGAEA057sY8/rt4Ww
+Y5Mf0Umv+QQ083hoYx21UEW0UIRaJQc=
+=5Jn3
+-----END PGP SIGNATURE-----
+
+--t5PBsglYtbDugZ88--
