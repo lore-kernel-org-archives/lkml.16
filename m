@@ -1,90 +1,130 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DFF255F3E;
-	Fri, 16 May 2025 18:47:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E30221FC9;
+	Fri, 16 May 2025 18:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747421254; cv=none; b=RWrfvJ8Xx41YyjxuD1qyYNnH4yRiE9BiEqUBTlog37k05ZmXP/ra4KA73Wl0Xu0+zFaDQPj7hdQmanaoeJuZSHLRUz3n5NuSh+nfRfkbP4ftcBTrDua55J7fOid1LlAP+ae1ewWT72xm953pLbfW8RWVtGaCEhrWFnlxUxxwHm0=
+	t=1747421268; cv=none; b=HaiAWWwuFE9hK0scqqwR/3YnJg56mg1/yCzooVD/OXKPM6ck/b8XR4gHfjS6uAkoRKUwVvTjHu2yUR6pqNqof5V1XKMd1XGOunZCkNGJlWj67vt8MB5KMmG0MQTh9J5ZF09uzO2r7jXxbA/CjQrTtYwQYe1AlhODNLvvYGUv8CM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747421254; c=relaxed/simple;
-	bh=a2dOMHP3kj4+jm6fRlYBj5slYaX05QFOPhyjS1UDZxM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YPRNpUlEzwnQF1oQAlc0oRvg1ZOJqrX99ghY+zBa9x33gQwHK9yAGy/0LuD6ssMS3Bx5z5EPdvdCcQ7RCsXpKYRYEx+MW22M5CPCACB9xxJfv7Fd2QGtk3/GzFV11u4RE4KxWsvdwiRrjEtMmmNLlUKDut9RKAr5GGAVoap6iKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Mh11vKnp; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747421268; c=relaxed/simple;
+	bh=AxPJvm0FQ0jefqPO0WREeRAuJuPS67Jv84UZGd6Rk5w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NUCCXE/tZdSLuXDb93SZIKpK62IYKcMjE6ZbHk4X/f411oIB/HMqlH/35gtWpQiIC1hmI7/s1eem3a619eXpidc6NyGtHe1rnF9o3ETO6x7kawkt9V26dzvk4mXWGM2/Nx/EI/Xu/TL3QTg4E4pcgBzncv9LagnLCTiv826HdEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=rJ0hJckl; arc=none smtp.client-ip=208.88.110.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Mh11vKnp"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2D57543155;
-	Fri, 16 May 2025 18:47:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747421250;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9lqQXD9Q9jfyGYo4y6j27XcbvfdwUtHoucCG3UKJI5E=;
-	b=Mh11vKnpY6MONWDMsThK7Cqb138ZIMoMt5g3566QT39UcP4s+R/AphtZisgoYg2wMrmt26
-	uCHmHUiwoBS/d+k4ypoFmoU6PwGx/5SCPw242o5BRNbZ9Brta2/XM7w61rXy0V+DVsjG/b
-	4gByw4R4GGCDNAs0Z8TrpkuGwtLCZsCp5ggAIFAQPv+ZXfY2zCZEr639AnTYMvwHL69Hv2
-	rmhO3i28gLr471jhvk2d8qisOXRIPRK77FLgicXJTG8vVCLvWg44teiH4UMa2O0LPJDCWa
-	lBct2WiiHT4TnLlHeUmE5q8g3BWDWEggx1CIZdBzdqYSWyy3OApp2llreF768w==
-Date: Fri, 16 May 2025 20:47:27 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>
-Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
-Subject: Re: [PATCH v4 6/8] backlight: led-backlight: add devlink to
- supplier LEDs
-Message-ID: <20250516204727.4d87e700@booty>
-In-Reply-To: <b5d2b71ffc38eb1980ce72994a20e8f6ee7869bd.camel@siemens.com>
-References: <20240917-hotplug-drm-bridge-v4-0-bc4dfee61be6@bootlin.com>
-	<20240917-hotplug-drm-bridge-v4-6-bc4dfee61be6@bootlin.com>
-	<fa87471d31a62017067d4c3ba559cf79d6c3afec.camel@siemens.com>
-	<b5d2b71ffc38eb1980ce72994a20e8f6ee7869bd.camel@siemens.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="rJ0hJckl"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 954ED9C8DB5;
+	Fri, 16 May 2025 14:47:44 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id bRob_rRLX19x; Fri, 16 May 2025 14:47:44 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 131A49C8DBE;
+	Fri, 16 May 2025 14:47:44 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 131A49C8DBE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1747421264; bh=u+SI7YO3huugnHnGaiAAHUUQSVwwcqVrH+3aKJw6igA=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=rJ0hJcklXEaHKw/3g7ftTLPZgkxSzlAXJ874cgYdznVzB7UwRKgZgfCvw0JfFVTF2
+	 14mFRfPwbD1Xyq4tdxDRw7H2M99Hs/FiOHWsVfwSqruTQt8efdtlEs6Hip4UsVT3j2
+	 nTafqYS8/TW9SA+3S90zKf598aY/5DBQ+MI7h1BykT4Kv1VlloFujBvQbBmE2A0sqm
+	 Vk3yplJFbTxuzfwS10zd/837mY+QKruY0AVBySOWASLubtBXRZnfiNM0NrhhZz6BHB
+	 0NY9T+yAMwjJB4w+62OP8vQ2bpqDBZSFO5qHGQ+xkL1kMXjuoS7I5L/dPmwMc0yLZe
+	 bh9n6nZuczaHg==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id ZxFcXrFd6owZ; Fri, 16 May 2025 14:47:43 -0400 (EDT)
+Received: from fedora (unknown [192.168.51.254])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id CED529C8DB5;
+	Fri, 16 May 2025 14:47:43 -0400 (EDT)
+Date: Fri, 16 May 2025 14:47:42 -0400
+From: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
+To: Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Sebastian Reichel <sre@kernel.org>, Robin Gong <yibin.gong@nxp.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-imx@nxp.com, linux-input@vger.kernel.org,
+	Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>,
+	Robin Gong <b38343@freescale.com>,
+	Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: [PATCH v2 1/9] dt-bindings: power: supply: add pf1550
+Message-ID: <21b1bc2ba4d266b0d69e447e60927d5985c8ae74.1747409892.git.samuel.kayode@savoirfairelinux.com>
+References: <cover.1747409892.git.samuel.kayode@savoirfairelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefudefheduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemrgegiedvmedusgguugemledutddumedvleegfhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemrgegiedvmedusgguugemledutddumedvleegfhdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedprhgtphhtthhopegrlhgvgigrnhguvghrrdhsvhgvrhgulhhinhesshhivghmvghnshdrtghomhdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhto
- heplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqfhgsuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1747409892.git.samuel.kayode@savoirfairelinux.com>
 
-Hello Alexander,
+Add the DT binding document for the battery charger module of pf1550.
 
-On Mon, 12 May 2025 12:13:54 +0000
-"Sverdlin, Alexander" <alexander.sverdlin@siemens.com> wrote:
+Signed-off-by: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
+---
+ .../bindings/power/supply/pf1550_charger.yaml | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/pf1550_charger.yaml
 
-> > I've tested the patch wit LP8864 LED as a provider for led_bl, removing the
-> > underlying I2C bus. The patch avoids the crash for me (by removing led_bl device as well),
-> > thanks for fixing it!
-> > 
-> > Tested-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>  
-
-Thanks for the feedback! I will have a look next week, perhaps sending
-a new version of this patch alone (outside of the series).
-
-> Would it make sense to add
-> 
-> Fixes: ae232e45acf9 ("backlight: add led-backlight driver")
-> 
-> ?
-
-Probably.
-
-Luca
-
+diff --git a/Documentation/devicetree/bindings/power/supply/pf1550_charger.yaml b/Documentation/devicetree/bindings/power/supply/pf1550_charger.yaml
+new file mode 100644
+index 000000000000..10fc0b35917c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/pf1550_charger.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/supply/pf1550_charger.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Battery charger driver for PF1550 PMIC from NXP.
++
++maintainers:
++  - Samuel Kayode <samuel.kayode@savoirfairelinux.com>
++
++description: |
++  This module is part of the PF1550 MFD device. For more details
++  see Documentation/devicetree/bindings/mfd/pf1550.yaml.
++
++  The charger is represented as a sub-node of the PMIC node on the device tree.
++
++properties:
++  compatible:
++    const: fsl,pf1550-charger
++
++  fsl,constant-microvolt:
++    description:
++      Constant charge voltage (in microvolts).
++    minimum: 3500000
++    maximum: 4400000
++
++  fsl,min-system-microvolt:
++    description:
++      Minimum charge voltage (in microvolts).
++    enum: [ 3500000, 3700000, 4300000 ]
++
++  fsl,thermal-regulation:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Temperature (in degrees Celsius) threshold past which the charging
++      current is reduced.
++    enum: [ 60, 75, 90, 105 ]
++
++required:
++  - compatible
++additionalProperties: false
++
++...
 -- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.49.0
+
