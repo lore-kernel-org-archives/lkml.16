@@ -1,321 +1,117 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5570A215077;
-	Fri, 16 May 2025 18:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747421445; cv=pass; b=l6RB075f2enUpiY94sZ507If+8n7lB9D+7tlXHxw2so7AC/dxk5Kr4BvDpDzNVRMC5QeSKkneHmGiivZREhlt+SLJFeaEiVcAYzNQ7avM7/oUhyzcv17vBZNhShec+gMYExQ3OwBkjq5cws7hn9MHhrycxEsOM48BBXP1FowL3g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747421445; c=relaxed/simple;
-	bh=YYbxpqln432zbFpcywTJ9yPrmxEIr90NnzMzOaWAGHU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fRTDC0JxtIWW433in8LTDJE8wUtKjwakrxr6HE2oyx8CN0n1ZnVVBaDPE2YZ8s4dfB4gx8NV9HBHqPSXtLySmuyjjF5RRp+Zfiqdq4nJ/r8Hay0wFmgZpFr01rpZhGxtHUG6+cmYEG390vZDNB9hzHINkUOsv1OX1x/sN/h7ahU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=cChckwWz; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB1D2E628;
+	Fri, 16 May 2025 18:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747421526; cv=none; b=trCZyu+hW3BfbfjLgKl33KNJYmxhfA7Lwx/jv1665tTEJ0fomTt62tYmcZLyRy9yBQJqGWtYpMi99NgV1ioWnfNe3Km5L/+ksOG2HHozDNY6qHWH8HKzES0c7vqO8jraMRIR1BZ/AQGPIdL7QdmnICnTRW1kxGX8ZqOr0VY0VFs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747421526; c=relaxed/simple;
+	bh=3E09u6U7E2io67Ymr2RG+oHARDJaNwa8aO5y50uDuqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c7QuGW7gy3rrrLCrFP6hHId5G60XZvs98LVXEGiBqJs2tHGtjQvydfXKJlf4cZTa6VU0DQR4f6bmY18Mk+V+z9CTIjKEydDis5VLsbp4pVKeQD12x8c00YG3RCj2xxPUpUecG+ev+kOrzaIBuPyhob3M9E5SrTyhNgFS4J7hykQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=BLyzrMt1; arc=none smtp.client-ip=208.88.110.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="cChckwWz"
-ARC-Seal: i=1; a=rsa-sha256; t=1747421406; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=AAP57uW6B6fOCyh2siDNbMel5T2gxeEdBBfwQjjX2lCrhZBNKJ0nrs0tRakehNEpuT2hDQwGMSeVNsHI453eP11ENr4I/Dy0Ck/z5abr3MCxgr6kyF/+6bC+sFtDY3aLXlLaL2np7k1jK+JekgiYET8JvUJKc0EX0gkO7Bycch0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1747421406; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=+V1LIIZE/4PTJ/0+kf9DzpB3WSRQm9lC1ZOsq4EdtU4=; 
-	b=kLqcEygvCLdSmfIP7npS1PaNwzk1i1QpWAMuAc0ZJ8NfYD7yNrizUuVZ7Zc7rFqzzCU1NEO8fJqHIMJ1ZlpmvqnxLST9nkdnKGx15NAiaALFsgQdYUidB9PcHPY88A9hUY2ciUuNm9ZVSlvOFbtTpBtYDkWNW6MyzTQ4Hbo7VQs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
-	dmarc=pass header.from=<usama.anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747421406;
-	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=+V1LIIZE/4PTJ/0+kf9DzpB3WSRQm9lC1ZOsq4EdtU4=;
-	b=cChckwWzVlOp/97d/mw3MH6Y6wYPGiTiF0zcVHGr3qPyqd9KKLmHamACT//mC7Je
-	2raHw548gwH8uqQftgvMIvKJwBKoYPGxqlLlV9Ap4CZ3WH+kStDmF1AMZs6++oLHQp/
-	33mZrG0qm3p4wOptly0lu+WIhaSsLjEMp7PxmbJg=
-Received: by mx.zohomail.com with SMTPS id 1747421405001183.04623401027902;
-	Fri, 16 May 2025 11:50:05 -0700 (PDT)
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Jeff Johnson <jjohnson@kernel.org>,
-	Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
-	Youssef Samir <quic_yabdulra@quicinc.com>,
-	Matthew Leung <quic_mattleun@quicinc.com>,
-	Carl Vanderlip <quic_carlv@quicinc.com>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	Yan Zhen <yanzhen@vivo.com>,
-	Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
-	Alex Elder <elder@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Kunwu Chan <chentao@kylinos.cn>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	Troy Hanson <quic_thanson@quicinc.com>
-Cc: kernel@collabora.com,
-	sebastian.reichel@collabora.com,
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	Baochen Qiang <quic_bqiang@quicinc.com>,
-	Sumit Garg <sumit.garg@kernel.org>,
-	mhi@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	ath11k@lists.infradead.org,
-	ath12k@lists.infradead.org
-Subject: [PATCH v6] bus: mhi: host: don't free bhie tables during suspend/hibernation
-Date: Fri, 16 May 2025 23:49:31 +0500
-Message-ID: <20250516184952.878726-1-usama.anjum@collabora.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="BLyzrMt1"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 73B0D9C9060;
+	Fri, 16 May 2025 14:52:03 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id F1PiPYXGVcmr; Fri, 16 May 2025 14:52:03 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id EB6AB9C905E;
+	Fri, 16 May 2025 14:52:02 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com EB6AB9C905E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1747421523; bh=EDrtCERjeggy1F5Mvt3jo+Ghmjeat8adSrQGsX/ghDo=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=BLyzrMt14szf/1NYzft8El3sE1JTMfudKedONm+J5C6lMfwzrrqGzgC5E035sg2Sh
+	 vZ25JRhp1dh4EWq3gY6JvPHlFGMyY63hmkoeyqssr1alz9BlVHGWtACuBBQrHqvmLL
+	 dUEk7RW2c820n4bkxydf9LmDW53bIRQcS7aC6T/8lQvW/j9G6OqfQTnY9NKDlHrVxW
+	 lW7Mb/WA36V0s8IT86KXiFAUkv52k4+XlYbDNW1ObKU5y8b7EbtHb8XYqQgMfGhmG8
+	 v3e/KatWt5YJ2VBcS6eBaXOdizar472rcksN37vOUDa0Cr9yaDl+ECuqpg+5oS39G/
+	 koM7rwBBJpPRw==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id dbK4OqA5uaHS; Fri, 16 May 2025 14:52:02 -0400 (EDT)
+Received: from fedora (unknown [192.168.51.254])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id B69149C905D;
+	Fri, 16 May 2025 14:52:02 -0400 (EDT)
+Date: Fri, 16 May 2025 14:52:01 -0400
+From: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
+To: Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Sebastian Reichel <sre@kernel.org>, Robin Gong <yibin.gong@nxp.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-imx@nxp.com, linux-input@vger.kernel.org,
+	Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>,
+	Robin Gong <b38343@freescale.com>,
+	Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: [PATCH v2 3/9] dt-bindings: input: add pf1550
+Message-ID: <ceed690bd200eb03bc47c0d462292a5230aa2fbf.1747409892.git.samuel.kayode@savoirfairelinux.com>
+References: <cover.1747409892.git.samuel.kayode@savoirfairelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1747409892.git.samuel.kayode@savoirfairelinux.com>
 
-Fix dma_direct_alloc() failure at resume time during bhie_table
-allocation because of memory pressure. There is a report where at
-resume time, the memory from the dma doesn't get allocated and MHI
-fails to re-initialize.
+Add the DT binding document for the onkey module of pf1550.
 
-To fix it, don't free the memory at power down during suspend /
-hibernation. Instead, use the same allocated memory again after every
-resume / hibernation. This patch has been tested with resume and
-hibernation both.
-
-Optimize the rddm and fbc bhie allocations. The rddm is of constant
-size for a given hardware. While the fbc_image size depends on the
-firmware. If the firmware changes, we'll free and allocate new memory
-for it. This patch is motivated from the ath12k [1] and ath11k [2]
-patches. They don't free the memory and reuse the same memory if new
-size is same. The firmware caching hasn't been implemented for the
-drivers other than in the nouveau. (The changing of firmware isn't
-tested/supported for wireless drivers. But let's follow the example
-patches here.)
-
-[1] https://lore.kernel.org/all/20240419034034.2842-1-quic_bqiang@quicinc.com/
-[2] https://lore.kernel.org/all/20220506141448.10340-1-quic_akolli@quicinc.com/
-
-Tested-on: WCN6855 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
-Tested-on: WCN7850 hw2.0 WLAN.HMT.1.1.c5-00284-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
-
-Acked-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Tested-by: Baochen Qiang <quic_bqiang@quicinc.com>
-Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Signed-off-by: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
 ---
-Changes since v1:
-- Don't free bhie tables during suspend/hibernation only
-- Handle fbc_image changed size correctly
-- Remove fbc_image getting set to NULL in *free_bhie_table()
+ .../bindings/input/pf1550_onkey.yaml          | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/pf1550_onkey.yaml
 
-Changes since v2:
-- Remove the new mhi_partial_unprepare_after_power_down() and instead
-  update mhi_power_down_keep_dev() to use
-  mhi_power_down_unprepare_keep_dev() as suggested by Mani
-- Update all users of this API such as ath12k (previously only ath11k
-  was updated)
-- Define prev_fw_sz in docs
-- Do better alignment of comments
-
-Changes since v3:
-- Fix state machine of ath12k by setting ATH12K_MHI_DEINIT with
-  ATH12K_MHI_POWER_OFF_KEEP_DEV state (Thanks Sebastian for testing and
-  finding the problem)
-- Use static with mhi_power_down_unprepare_keep_dev()
-- Remove crash log as it was showing that kworker wasn't able to
-  allocate memory.
-
-Changes since v4:
-- Update description
-- Use __mhi_power_down_unprepare_keep_dev() in
-  mhi_unprepare_after_power_down()
-
-Changes since v5:
-- Update description to don't give an impression that all bhie
-  allocations are being fixed. mhi_load_image_bhie() doesn't require
-  this optimization.
-
-This patch doesn't have fixes tag as we are avoiding error in case of
-memory pressure. We are just making this driver more robust by not
-freeing the memory and using the same after resuming.
----
- drivers/bus/mhi/host/boot.c           | 15 +++++++++++----
- drivers/bus/mhi/host/init.c           | 18 ++++++++++++------
- drivers/bus/mhi/host/internal.h       |  2 ++
- drivers/bus/mhi/host/pm.c             |  1 +
- drivers/net/wireless/ath/ath11k/mhi.c |  8 ++++----
- drivers/net/wireless/ath/ath12k/mhi.c | 14 ++++++++++----
- include/linux/mhi.h                   |  2 ++
- 7 files changed, 42 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/bus/mhi/host/boot.c b/drivers/bus/mhi/host/boot.c
-index efa3b6dddf4d2..bc8459798bbee 100644
---- a/drivers/bus/mhi/host/boot.c
-+++ b/drivers/bus/mhi/host/boot.c
-@@ -584,10 +584,17 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
- 	 * device transitioning into MHI READY state
- 	 */
- 	if (fw_load_type == MHI_FW_LOAD_FBC) {
--		ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->fbc_image, fw_sz);
--		if (ret) {
--			release_firmware(firmware);
--			goto error_fw_load;
-+		if (mhi_cntrl->fbc_image && fw_sz != mhi_cntrl->prev_fw_sz) {
-+			mhi_free_bhie_table(mhi_cntrl, mhi_cntrl->fbc_image);
-+			mhi_cntrl->fbc_image = NULL;
-+		}
-+		if (!mhi_cntrl->fbc_image) {
-+			ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->fbc_image, fw_sz);
-+			if (ret) {
-+				release_firmware(firmware);
-+				goto error_fw_load;
-+			}
-+			mhi_cntrl->prev_fw_sz = fw_sz;
- 		}
- 
- 		/* Load the firmware into BHIE vec table */
-diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
-index 13e7a55f54ff4..8419ea8a5419b 100644
---- a/drivers/bus/mhi/host/init.c
-+++ b/drivers/bus/mhi/host/init.c
-@@ -1173,8 +1173,9 @@ int mhi_prepare_for_power_up(struct mhi_controller *mhi_cntrl)
- 		/*
- 		 * Allocate RDDM table for debugging purpose if specified
- 		 */
--		mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image,
--				     mhi_cntrl->rddm_size);
-+		if (!mhi_cntrl->rddm_image)
-+			mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image,
-+					     mhi_cntrl->rddm_size);
- 		if (mhi_cntrl->rddm_image) {
- 			ret = mhi_rddm_prepare(mhi_cntrl,
- 					       mhi_cntrl->rddm_image);
-@@ -1200,6 +1201,14 @@ int mhi_prepare_for_power_up(struct mhi_controller *mhi_cntrl)
- }
- EXPORT_SYMBOL_GPL(mhi_prepare_for_power_up);
- 
-+void __mhi_unprepare_keep_dev(struct mhi_controller *mhi_cntrl)
-+{
-+	mhi_cntrl->bhi = NULL;
-+	mhi_cntrl->bhie = NULL;
+diff --git a/Documentation/devicetree/bindings/input/pf1550_onkey.yaml b/Documentation/devicetree/bindings/input/pf1550_onkey.yaml
+new file mode 100644
+index 000000000000..7079f5284b73
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/pf1550_onkey.yaml
+@@ -0,0 +1,31 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/pf1550_onkey.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	mhi_deinit_dev_ctxt(mhi_cntrl);
-+}
++title: Onkey for PF1550 PMIC from NXP.
 +
- void mhi_unprepare_after_power_down(struct mhi_controller *mhi_cntrl)
- {
- 	if (mhi_cntrl->fbc_image) {
-@@ -1212,10 +1221,7 @@ void mhi_unprepare_after_power_down(struct mhi_controller *mhi_cntrl)
- 		mhi_cntrl->rddm_image = NULL;
- 	}
- 
--	mhi_cntrl->bhi = NULL;
--	mhi_cntrl->bhie = NULL;
--
--	mhi_deinit_dev_ctxt(mhi_cntrl);
-+	__mhi_unprepare_keep_dev(mhi_cntrl);
- }
- EXPORT_SYMBOL_GPL(mhi_unprepare_after_power_down);
- 
-diff --git a/drivers/bus/mhi/host/internal.h b/drivers/bus/mhi/host/internal.h
-index ce566f7d2e924..41b3fb835880b 100644
---- a/drivers/bus/mhi/host/internal.h
-+++ b/drivers/bus/mhi/host/internal.h
-@@ -427,4 +427,6 @@ void mhi_unmap_single_no_bb(struct mhi_controller *mhi_cntrl,
- void mhi_unmap_single_use_bb(struct mhi_controller *mhi_cntrl,
- 			     struct mhi_buf_info *buf_info);
- 
-+void __mhi_unprepare_keep_dev(struct mhi_controller *mhi_cntrl);
++maintainers:
++  - Samuel Kayode <samuel.kayode@savoirfairelinux.com>
 +
- #endif /* _MHI_INT_H */
-diff --git a/drivers/bus/mhi/host/pm.c b/drivers/bus/mhi/host/pm.c
-index e6c3ff62bab1d..c2c09c308b9b7 100644
---- a/drivers/bus/mhi/host/pm.c
-+++ b/drivers/bus/mhi/host/pm.c
-@@ -1263,6 +1263,7 @@ void mhi_power_down_keep_dev(struct mhi_controller *mhi_cntrl,
- 			       bool graceful)
- {
- 	__mhi_power_down(mhi_cntrl, graceful, false);
-+	__mhi_unprepare_keep_dev(mhi_cntrl);
- }
- EXPORT_SYMBOL_GPL(mhi_power_down_keep_dev);
- 
-diff --git a/drivers/net/wireless/ath/ath11k/mhi.c b/drivers/net/wireless/ath/ath11k/mhi.c
-index acd76e9392d31..c5dc776b23643 100644
---- a/drivers/net/wireless/ath/ath11k/mhi.c
-+++ b/drivers/net/wireless/ath/ath11k/mhi.c
-@@ -460,12 +460,12 @@ void ath11k_mhi_stop(struct ath11k_pci *ab_pci, bool is_suspend)
- 	 * workaround, otherwise ath11k_core_resume() will timeout
- 	 * during resume.
- 	 */
--	if (is_suspend)
-+	if (is_suspend) {
- 		mhi_power_down_keep_dev(ab_pci->mhi_ctrl, true);
--	else
-+	} else {
- 		mhi_power_down(ab_pci->mhi_ctrl, true);
--
--	mhi_unprepare_after_power_down(ab_pci->mhi_ctrl);
-+		mhi_unprepare_after_power_down(ab_pci->mhi_ctrl);
-+	}
- }
- 
- int ath11k_mhi_suspend(struct ath11k_pci *ab_pci)
-diff --git a/drivers/net/wireless/ath/ath12k/mhi.c b/drivers/net/wireless/ath/ath12k/mhi.c
-index 08f44baf182a5..3af524ccf4a5a 100644
---- a/drivers/net/wireless/ath/ath12k/mhi.c
-+++ b/drivers/net/wireless/ath/ath12k/mhi.c
-@@ -601,6 +601,12 @@ static int ath12k_mhi_set_state(struct ath12k_pci *ab_pci,
- 
- 	ath12k_mhi_set_state_bit(ab_pci, mhi_state);
- 
-+	/* mhi_power_down_keep_dev() has been updated to DEINIT without
-+	 * freeing bhie tables
-+	 */
-+	if (mhi_state == ATH12K_MHI_POWER_OFF_KEEP_DEV)
-+		ath12k_mhi_set_state_bit(ab_pci, ATH12K_MHI_DEINIT);
++description: |
++  This module is part of the pf1550 MFD device. For more details
++  see Documentation/devicetree/bindings/mfd/pf1550.yaml.
 +
- 	return 0;
- 
- out:
-@@ -635,12 +641,12 @@ void ath12k_mhi_stop(struct ath12k_pci *ab_pci, bool is_suspend)
- 	 * workaround, otherwise ath12k_core_resume() will timeout
- 	 * during resume.
- 	 */
--	if (is_suspend)
-+	if (is_suspend) {
- 		ath12k_mhi_set_state(ab_pci, ATH12K_MHI_POWER_OFF_KEEP_DEV);
--	else
-+	} else {
- 		ath12k_mhi_set_state(ab_pci, ATH12K_MHI_POWER_OFF);
--
--	ath12k_mhi_set_state(ab_pci, ATH12K_MHI_DEINIT);
-+		ath12k_mhi_set_state(ab_pci, ATH12K_MHI_DEINIT);
-+	}
- }
- 
- void ath12k_mhi_suspend(struct ath12k_pci *ab_pci)
-diff --git a/include/linux/mhi.h b/include/linux/mhi.h
-index dd372b0123a6d..6fd218a877855 100644
---- a/include/linux/mhi.h
-+++ b/include/linux/mhi.h
-@@ -306,6 +306,7 @@ struct mhi_controller_config {
-  *           if fw_image is NULL and fbc_download is true (optional)
-  * @fw_sz: Firmware image data size for normal booting, used only if fw_image
-  *         is NULL and fbc_download is true (optional)
-+ * @prev_fw_sz: Previous firmware image data size, when fbc_download is true
-  * @edl_image: Firmware image name for emergency download mode (optional)
-  * @rddm_size: RAM dump size that host should allocate for debugging purpose
-  * @sbl_size: SBL image size downloaded through BHIe (optional)
-@@ -382,6 +383,7 @@ struct mhi_controller {
- 	const char *fw_image;
- 	const u8 *fw_data;
- 	size_t fw_sz;
-+	size_t prev_fw_sz;
- 	const char *edl_image;
- 	size_t rddm_size;
- 	size_t sbl_size;
++allOf:
++  - $ref: input.yaml#
++
++properties:
++  compatible:
++    const: fsl,pf1550-onkey
++
++  linux,keycodes:
++    description: Keycode to emit
++    default: 116  # KEY_POWER
++
++required:
++  - compatible
++additionalProperties: false
++
++...
 -- 
-2.43.0
+2.49.0
 
