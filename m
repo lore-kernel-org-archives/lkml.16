@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3926281341;
-	Fri, 16 May 2025 23:09:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C8C281522;
+	Fri, 16 May 2025 23:10:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747436999; cv=none; b=ooHexJyjqUUw5zXxUfz4ttMau84BxpgTXkTQUj/nDWmPU2Wj7R3KAYbP+sJVNtzDIsyAY8CbpDjcEFNxngRqMkyRL3j5gggUiZM3jEyTbhaClywJrmmsXoMj3Y1nvkzCcbII2FLm14dd1uutzy7mtqDvDFQkFNUBVVFPjPq0/Fo=
+	t=1747437008; cv=none; b=tQz5qdFA0iKa1pH2kxTIbWfnujR1LUjwUi2YbzlweUZwg+QIGCEXph96vY2jXeGAuTH8/QWg7Y1ZlaBoSbJHK85BihQ+bKePRa/alZvBm2Wv8S//1fj4QpJb96BWkCDQoZbYIlhj4dgZ8MUUpokrtQHCS5iyjz2rEJksMnAnczU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747436999; c=relaxed/simple;
-	bh=0Vy5sVsDWeE1upI11kp7jf8llc1Sgop4vwX+lM3uqqE=;
+	s=arc-20240116; t=1747437008; c=relaxed/simple;
+	bh=n1Ys8fduDTQfh07Uv44a8weNu3dw6dL75vBGO3h3aiE=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=O9DGKW74mlsaRtvWwwvOmuN5CHy8eEO2NFcJ4mPp6X3rHwpePCbZysE+R4Ig5ra1Et2NMNFd12PBmsicHaSF6V0YP1MqvFp2LCmR1c7wKk9iRmhypW8Lx0s4uhcUQYwoJ0Fa5Bl9UATENAXwNy1iZtMDT5lRNalM/1UQbBzHD+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rXBpW32j; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=kB7AL7sX/dxWy8ly2R43g6704/qtk+9MFa86NPjWCEppBv4o7+6Wf940MSoNZdWdz911ozwFaR00JTATPyIfQp7eWemAjaPrkjeK5iig+fk/NyUBERJX9QfL0I2mYjLOQ8urrCD9oZrclbCFBO2FwewEe5oDWfT/aoZ82JRjj0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NhGF5hOP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rXBpW32j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F244C4CEE4;
-	Fri, 16 May 2025 23:09:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NhGF5hOP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A707C4CEE4;
+	Fri, 16 May 2025 23:10:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747436999;
-	bh=0Vy5sVsDWeE1upI11kp7jf8llc1Sgop4vwX+lM3uqqE=;
+	s=k20201202; t=1747437008;
+	bh=n1Ys8fduDTQfh07Uv44a8weNu3dw6dL75vBGO3h3aiE=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=rXBpW32jnG6dEgUMelOxf0P8M7pgwVkpQllW/tmkUXccZqOOWUCaujfR7V6WFiqII
-	 +P2oKssOl9b4MyQgoAL56GhppRm+5FUtMWJqZZXqfPDbxF3cNQyXWfd7L6QCi2aonW
-	 QNoZpP3UXHkhjZZxN1R0Y7xfT6QejpDRoZodv54iMruJTn0KMXnUKjPxcuGsjiFsH8
-	 I/w+6xyXZFEF6XyPI9orwHf3A5MKww2uY4XcZsG992uS/lyENuEm3Li1zvmMeBru6d
-	 03+S3nmXo+zRodS3jKgR6g1t8NbpByuAazu05PSQe8xwEBA2ZLSzutnoW/sTs0R65+
-	 G3YZusIeFPJTQ==
+	b=NhGF5hOPyqymaVvl/XzTHfBbjAZOWj/gV5SjMn1ZEAw4jBoEcv4bi/tkp58y5AkC5
+	 0usQdPuR81YE7M7q4MbZEkudxsXGbdbzPPKPl4p0mk/M98O2saP8+x7YND+Og0+W0W
+	 2LC2Up+PFBBZLNY4hsmJFLwT4gpnBKv7+wNCcvWyzxEy+p3kgYp8+tG+NL3dxn+HjB
+	 a5NimUPR+gF8ZK6++/CgZq6miuj9HZIBZGH+DzgBjLFVvVSRTSxgqns3m3GXA26+6F
+	 uArofe5er3zpApHEnyMroMxMZzmP6lTDBkJG26Q1mEVJmnon8YM6l5oVsABBln+gAn
+	 6U5Usa94hTbYQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33E903806659;
-	Fri, 16 May 2025 23:10:37 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D513806659;
+	Fri, 16 May 2025 23:10:46 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,40 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2] vmxnet3: update MTU after device quiesce
+Subject: Re: [PATCH net-next v2] r8169: add support for RTL8127A
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <174743703575.4089123.13792303088374756172.git-patchwork-notify@kernel.org>
-Date: Fri, 16 May 2025 23:10:35 +0000
-References: <20250515190457.8597-1-ronak.doshi@broadcom.com>
-In-Reply-To: <20250515190457.8597-1-ronak.doshi@broadcom.com>
-To: Ronak Doshi <ronak.doshi@broadcom.com>
-Cc: netdev@vger.kernel.org, stable@vger.kernel.org, guolin.yang@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, andrew+netdev@lunn.ch,
+ <174743704474.4089123.4668526819376444633.git-patchwork-notify@kernel.org>
+Date: Fri, 16 May 2025 23:10:44 +0000
+References: <20250515095303.3138-1-hau@realtek.com>
+In-Reply-To: <20250515095303.3138-1-hau@realtek.com>
+To: ChunHao Lin <hau@realtek.com>
+Cc: hkallweit1@gmail.com, nic_swsd@realtek.com, andrew+netdev@lunn.ch,
  davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- ronghua@vmware.com, sbhatewara@vmware.com, bhavesh@vmware.com,
- linux-kernel@vger.kernel.org
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
 Hello:
 
-This patch was applied to netdev/net.git (main)
+This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Thu, 15 May 2025 19:04:56 +0000 you wrote:
-> Currently, when device mtu is updated, vmxnet3 updates netdev mtu, quiesces
-> the device and then reactivates it for the ESXi to know about the new mtu.
-> So, technically the OS stack can start using the new mtu before ESXi knows
-> about the new mtu.
+On Thu, 15 May 2025 17:53:03 +0800 you wrote:
+> This adds support for 10Gbs chip RTL8127A.
 > 
-> This can lead to issues for TSO packets which use mss as per the new mtu
-> configured. This patch fixes this issue by moving the mtu write after
-> device quiesce.
+> Signed-off-by: ChunHao Lin <hau@realtek.com>
+> ---
+> v1 -> v2: update phy parameters
 > 
-> [...]
+>  drivers/net/ethernet/realtek/r8169.h          |   1 +
+>  drivers/net/ethernet/realtek/r8169_main.c     |  29 ++-
+>  .../net/ethernet/realtek/r8169_phy_config.c   | 166 ++++++++++++++++++
+>  3 files changed, 193 insertions(+), 3 deletions(-)
 
 Here is the summary with links:
-  - [net,v2] vmxnet3: update MTU after device quiesce
-    https://git.kernel.org/netdev/net/c/43f0999af011
+  - [net-next,v2] r8169: add support for RTL8127A
+    https://git.kernel.org/netdev/net-next/c/f24f7b2f3af9
 
 You are awesome, thank you!
 -- 
