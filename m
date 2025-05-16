@@ -1,133 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF02923C505;
-	Fri, 16 May 2025 13:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006B6242D8B;
+	Fri, 16 May 2025 13:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747400982; cv=none; b=ZYyWjmBiazbcep4aniGgBgDYFjd0yrmD1DqMuCnoIeuiDwcRMotmdwb1M+AOWevVd/H8ioKJYqlgxZDRcDhkASs7pmJs+eO9kXG5UQ/Ktr/8aLGPFVYKPBQZmGBihcjVOlk1+GyZf9A6B0KiovfVY1RA9lMoxaTRGNtwh6CVyDo=
+	t=1747400989; cv=none; b=u+TF3oBuxvWXVu3HUO3//j9Uo+0dpn7JECGDxgaBgp5CSSGyME9fY9EBGrX5OwmI8MS9R4WqjfoycVLyRPMJTMjhzYnHuiSdxcJ9r/bZdg5IOafbPcgMOwz0bhhqd5mBljjBglolg0tL11VnfYjBMMvicxv2S8vooy3L48Xg6mU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747400982; c=relaxed/simple;
-	bh=eTlu4M+xbKe7S6ap+yHpZH/r7OM70xHL1rfiqO94rFY=;
+	s=arc-20240116; t=1747400989; c=relaxed/simple;
+	bh=kgV4jLI+lHbevVtE/xrY035nKOIawFE2ady5GL4s7Ro=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AP3ovBnPRSfiNaeHWj3hQw9eAIkjElL/7jUVwyIaDYBU5uyshZBLrBIRGRUFDmHVAIZSGr7vE+Ds2EwPXH/9g5Za4VF1pxWSdw1Gk1tidDERqMOTbJn6S710+Xxmt0haYNBIRyy92XIGgCulC1jC526TAjGYlNPqGdk6Rfi8SBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tO6DLC78; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=m+b/IuCce2DeT+hKZc4iKyzh2lHT4Eoq2WbbpFhAIlKdBX1ZNnWMcqiZJvEBTrVEwZpvUXhEHAXRmYVFFv6+ZfTAVHDTaSY5HYz9RPIgyX8tJa/jyiQysx0e98gM+Xd8aTOBqaxe454sbQ1Q1VD8HBgD8ue5vLVgSU6x5oDfg8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cPClHFTp; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tO6DLC78"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD240C4CEE4;
-	Fri, 16 May 2025 13:09:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747400982;
-	bh=eTlu4M+xbKe7S6ap+yHpZH/r7OM70xHL1rfiqO94rFY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tO6DLC78WaCvA9TWV/6GhHmgol9yYAgAo+jD6bzHVZabXzg3nP6cHaGyh29M3J4n5
-	 TgCcOKrDAscv3Iv6wJIuomZwAbxDCM+tQsYLyEgpdZcqd1ue+bpB0n33qRcXqQcfYo
-	 dcz9N976+ynkHRqCKDX8lq9xVil0hJC5BAG/hDqoxCPX/Sua/JoUbK2mzsD+mKTeoC
-	 o5L/fLh6nwcB0Hrr0hyA5O0Vwmj/e4nzW5ryJ9oiDBdFhrTzVROoNz06S7R6Od38Kr
-	 JRdb9USomzZ2D8H/gUtODeuZkdJ0tQtqM/zFt3FuOeqcEG+M65tEVintEvYRoKkNai
-	 0HD2iChLsPVQg==
-Date: Fri, 16 May 2025 15:09:39 +0200
-From: Mark Brown <broonie@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests/mm: Fix test result reporting in gup_longterm
-Message-ID: <aCc5E-wB4nBwrKEP@finisterre.sirena.org.uk>
-References: <20250515-selftests-mm-gup-longterm-dups-v1-1-05f8f731cf63@kernel.org>
- <f924f789-5269-4046-99a4-2991f9a3ab3c@redhat.com>
- <aCcvxaFc6DE_Mhr1@finisterre.sirena.org.uk>
- <58dbef73-6e37-46de-9092-365456306b27@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cPClHFTp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747400988; x=1778936988;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kgV4jLI+lHbevVtE/xrY035nKOIawFE2ady5GL4s7Ro=;
+  b=cPClHFTpFWKKq/0xgJvowD4D5hnwUEl4GyXU5W+XNgv4QfxB1eGPRTzn
+   HQ5gyAoyzcimgWIX4s5q6PqW5STATMLCIKjKQ8MYcdnT/+9MGG2E0Ws4C
+   C0ZDfSYntZBpRJMRZT8Id23Ka4+7GwFddpZNUkdvOobF1nTKvhI+LgE/u
+   Tkg4LRZXgYgV0T4LFbDlWN6vvVRTZ9HMRasGblnD5rifg6CFSBGFMMSqD
+   Zjn0xz+bBU5xrRkt2Q7Y/KnqiU8lUMTwKe1uzCekfaYAuVEp/FPiaA4s4
+   enx9FUnWRRdfLwSvUiHL6Wbjf9GyLE1aCETKVkvCb+t6VnDVGp9KbaZWC
+   g==;
+X-CSE-ConnectionGUID: BmaIt31gSEiePPo1AGCLYw==
+X-CSE-MsgGUID: mzyS6wPbQqWcjWdRC7G+VA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="60010924"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="60010924"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 06:09:47 -0700
+X-CSE-ConnectionGUID: RCWs+DXOSeapkbm9PVWYEA==
+X-CSE-MsgGUID: AIqY6aH4QA6e6m/Zp5UAZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="143810615"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 16 May 2025 06:09:44 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uFuon-000JMZ-20;
+	Fri, 16 May 2025 13:09:41 +0000
+Date: Fri, 16 May 2025 21:09:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jens Glathe via B4 Relay <devnull+jens.glathe.oldschoolsolutions.biz@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+	Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+Subject: Re: [PATCH 4/4] arm64: dts: qcom: x1p42100-lenovo-thinkbook-16: dt
+ definition for Thinkbook 16
+Message-ID: <202505162035.hYLdjmWr-lkp@intel.com>
+References: <20250515-tb16-dt-v1-4-dc5846a25c48@oldschoolsolutions.biz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="d6KOq/7pGm4K+LcT"
-Content-Disposition: inline
-In-Reply-To: <58dbef73-6e37-46de-9092-365456306b27@redhat.com>
-X-Cookie: Well begun is half done.
-
-
---d6KOq/7pGm4K+LcT
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250515-tb16-dt-v1-4-dc5846a25c48@oldschoolsolutions.biz>
 
-On Fri, May 16, 2025 at 02:55:24PM +0200, David Hildenbrand wrote:
-> On 16.05.25 14:29, Mark Brown wrote:
-> > On Fri, May 16, 2025 at 10:02:16AM +0200, David Hildenbrand wrote:
+Hi Jens,
 
-> > > reason), what exactly is the problem with that?
+kernel test robot noticed the following build errors:
 
-> > > We run tests. If all pass, we're happy, if one fails, we investigate.
+[auto build test ERROR on bdd609656ff5573db9ba1d26496a528bdd297cf2]
 
-> > None of the tooling is able to either distinguish between the multiple
-> > tests that are being run in gup_longterm, nor compare the results of
-> > multiple runs effectively.  If all the tests run they report themselves
+url:    https://github.com/intel-lab-lkp/linux/commits/Jens-Glathe-via-B4-Relay/dt-bindings-arm-qcom-Add-Lenovo-Thinkbook-16/20250516-044052
+base:   bdd609656ff5573db9ba1d26496a528bdd297cf2
+patch link:    https://lore.kernel.org/r/20250515-tb16-dt-v1-4-dc5846a25c48%40oldschoolsolutions.biz
+patch subject: [PATCH 4/4] arm64: dts: qcom: x1p42100-lenovo-thinkbook-16: dt definition for Thinkbook 16
+config: arm64-randconfig-001-20250516 (https://download.01.org/0day-ci/archive/20250516/202505162035.hYLdjmWr-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 9.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250516/202505162035.hYLdjmWr-lkp@intel.com/reproduce)
 
-> Okay, so this is purely to make tooling happy. Humans are smart enough to
-> figure it out.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505162035.hYLdjmWr-lkp@intel.com/
 
-Not just the tools, humans interact with the selftests and their results
-via tools (unless I'm actively working on something and running the
-specific test for that thing I'm unlikely to ever directly look at
-results...).
+All errors (new ones prefixed by >>):
 
-> What mechanism do we have in place to reliably prevent that from happening?
-> And is this at least documented somewhere ("unique identifier for a test")>
+>> Error: arch/arm64/boot/dts/qcom/x1p42100-lenovo-thinkbook-16.dts:22.15-30 Label or path pm8010_thermal not found
+>> FATAL ERROR: Syntax error parsing input tree
 
-It comes from TAP, I can't see a direct reference to anything in the
-kernel documentation.  The main thing enforcing this is people running
-tooling noticing bad output, unfortunately.
-
-> I guess when using kselftest_harness, we get a single identifier per tests
-> (and much less output) just automatically.
-
-Nothing stops something using the harness from logging during the test,
-the harness tests actually tend to be a little chattier than a lot of
-the things written directly to kselftest.h as they log the start and end
-of tests as well as the actual TAP result line as standard.
-
-> > If a selftest is reporting multiple tests it should report them with
-> > names that are stable and unique.
-
-> I'm afraid we have other such tests that report duplicate conditions. cow.c
-> is likely another candidate (written by me ;) ).
-
-That one's not come up for me (this was one of four different patches
-for mm selftests I sent the other day cleaning up duplicate test names).
-
-> Probably, the affected tests should be converted to use kselftest_harness,
-> where we just report the result for a single tests, and not the individual
-> assertions.
-
-> That would reduce the output of these tests drastically as well.
-
-> So that is likely the way to clean this up properly and make tooling happy?
-
-That'd certainly work, though doing that is more surgery on the test
-than I personally have the time/enthusiasm for right now.
-
-Having the tests being chatty isn't a terrible thing, so long as they're
-not so chatty they cause execution time problems on serial console - it
-can be useful if they do blow up and you're looking at a failure on a
-machine you only have automated access to.
-
---d6KOq/7pGm4K+LcT
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgnORAACgkQJNaLcl1U
-h9B+pwgAgQVI4RTsNN2lzXvLnrlwDdIqpmgNGC3XSHUJbPoJ2nAfwS/2l7Nawj1y
-6V4ovdGnJ8pxwYHjz3kNcKK6+3ECE71vuP3EG3EcVjL4U/qQjZHqp1UgKKGflDjj
-1ywYE3rpjVVXjJAkCjatqoOkmhoD+QHL98eHsdlGCeryC6+Pk3fBW8XthiSUHVL6
-gjJrut71YcAa4hB2RDr5QHsYSFzfNQ1VGJCkBgPQ2KhBCMLIW5XbAKdgmTKcLppI
-h2CEGFp44SVYVLVMKh7xDZHOnRC5Rn630a7Agm+DNX++otprAW3tJom/xUkWmrS7
-o8Bd4y0MXgryLagMcd9fid7VAgtKMw==
-=LiQi
------END PGP SIGNATURE-----
-
---d6KOq/7pGm4K+LcT--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
