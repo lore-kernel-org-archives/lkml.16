@@ -1,109 +1,106 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809E11D88AC;
-	Fri, 16 May 2025 06:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5521D88AC;
+	Fri, 16 May 2025 06:34:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747377218; cv=none; b=QDu+MvvzkE9unJdwTcJdxJMjIviVFd8EIXbGe92Kw/HBc9yv9eMc0my2ylfPj79g602A+ZftmQOOour55fHyobp/IpyYqgstN/Bbly8Vdm7yCmhCc87glYcy048ZUkW+X/A36A/CsXX0Le90f2gXt7md0TNeVQDs3yfcf7sous8=
+	t=1747377294; cv=none; b=qmgbFqJGDnDUArFZYCHl6gLtBnYKTO9cbUfgRDxY2h0s7t9oVm9/bcAeMU4+FAmK+55LWS7jP6uDo/A5CZguaGqCW5QjjSc4DTwLHPse7gV9sAdlX/rCIG800noSDm+vh01VpXPM3GU2E/kGFzuvweb1ABwkkO6pFRxkbcXwB/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747377218; c=relaxed/simple;
-	bh=ITiHYvPVbIk9Cqhu0/8qKyPCQGSeXSdTjNGJyN7gjH0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JTAf5sSxvBCoNcNbhtqmPGdTYndvF/y0i5/Pqk/wkKsmwT6leQobepQ6qn1XiTcptALWu1oiHhNo5QLzx1UWG9JMzFPSV/7BCZf5ZtzmIiVnIi+Ops6Nqegh3YK25IHjObxootiQIsThMeWBXv0cqdpc7V/uY6l8RAid6RgrKZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TyrfVW3k; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TyrfVW3k"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54e816aeca6so2361162e87.2;
-        Thu, 15 May 2025 23:33:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747377214; x=1747982014; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SBTw7n47tA9Za/6wjkrYsmCiKYOHmpnvJ9njSK+TKlc=;
-        b=TyrfVW3kpw2t2MLaY2NqUpFrFM1gC9j4Yio7aSGz4HW3Ncsh7YpQ79U/1PCc1h7Bs0
-         em8SSPUsIMMsZ5U/FEneK6MWbPOGIuBlf+cOtV/XdhTipUoq6lFI+ZNpAvMppm71VN42
-         n+X6zj/7Z/VvHhfEc1zoH78wglZ+0G6bpOoL1H6znYV5Cm7mJdyeqcMpYO5zvJyHAkKY
-         xdu0GOO3cnaQm2KtsKmXVWHN5i5EgP2C8hCCJjqb2Yc4X4OpVosXJKvLHut7zTQFtLSM
-         5ai8Oxkft+gb1fl3ph+sFveilrusaXqCAqBuUliB0WqWQCptCbYSNZyHQmcWSkt5gWoc
-         IfNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747377214; x=1747982014;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SBTw7n47tA9Za/6wjkrYsmCiKYOHmpnvJ9njSK+TKlc=;
-        b=SjzeirCs2n2u2C5j8/5l5zjAG3Yr4/2lsp2d+s1sb4bO6nOMaaDGM9W7Uly303jSDO
-         XWWANuv2JNGse7JzqwK2udknytCjvGn2AftvxDp9dcTTxIwM71yZ/glccXnTISQJPkfR
-         bzFzK4fB6GemzRfTYOD2aMwJERqy7w5fBhCsc8ehgb06WuZenNBXoHA4rYbnv6EPwD+f
-         iqGnxYhw/HqLgo9RNUFK2VZFlQBRp4fxdTQB0J8paoWqlRWN2TGQPLBKK5AOjX3xWxXV
-         AMOi1fLBTl+dM5i1M1EFP/CyYIE/vOTLd4NkCP0+e5FS8sCw60bTUGXB1nTvZbWjv1SM
-         j84Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUWswgoxlTBGU0U9Z7LbhipjoKfjBA4vHkD0Ysjp5YTv6EKU7BpVvz0vAnoNnUvojbCm79WVW3L@vger.kernel.org, AJvYcCVibBifrna5eTRWjs7eVQfqiCeygXPMV9+0GCasZJELK2iX34gC/mAI4qlIk/SUjLRUh4G7KKaDMavZ/Y8=@vger.kernel.org, AJvYcCX8+JgfsQhDBTEwgJQzp89vEDewzuOkKUkyajtcjZPzhjX+6l4SopYg6BYy4iEYwEiERs/jtrWWiDoL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yym2FK5R98JGcolF9zf55poJ4gflxpp5TCb6HsFQCqjx8G+LjIw
-	//VDQCr1DSRBDODFUcud5AeKK1lGf+CXvFCXjV7jBi3stkpmTJwgGSWS
-X-Gm-Gg: ASbGnctluEClmoMAX3ZtUCMbGbZfPDTlpl3SF3YKuFOV6UsRItymfpIehlF/3Gvi/pi
-	9khYKxdYJuMcpElzDj9VrT5FdyRC7dpgkm+l7ox8FzoMPi7v3LWEwSfZtUTk0l3jm4Omud9rl2j
-	MXg+KMN40J3tLMJoCMvKAbfSyV+DNENg2qaaaw90nNx3Kk+OC/Oikom2DV5DYRMgLilAn0kxcHt
-	Vx48zIq5dPPS2QlH7Lv36IE1HEAHwsMqjvQLvTYGFSP1+5VYiH7PQ9N9js2z8COPG4VBru0SlIi
-	1215BUl6wIJ1SET8CD9oXsQ+Y6v5LtkLdNM1Rm6FNpxwoCknstn3zikjWJYDxzbwypp0gf9UwUF
-	W+Ow=
-X-Google-Smtp-Source: AGHT+IFXuvhTg0HwM4B7G448RH8kbjZAcl27kGgPEEicb7hYFOL5VilJkbVwHq1ibwD1yMKVeyUIrQ==
-X-Received: by 2002:a05:6512:2616:b0:54d:6aa1:8f5a with SMTP id 2adb3069b0e04-550e71a732dmr438740e87.13.1747377214256;
-        Thu, 15 May 2025 23:33:34 -0700 (PDT)
-Received: from foxbook (adqk186.neoplus.adsl.tpnet.pl. [79.185.144.186])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f30e6csm281840e87.67.2025.05.15.23.33.32
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Thu, 15 May 2025 23:33:33 -0700 (PDT)
-Date: Fri, 16 May 2025 08:33:28 +0200
-From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: Roy Luo <royluo@google.com>, "mathias.nyman@intel.com"
- <mathias.nyman@intel.com>, "quic_ugoswami@quicinc.com"
- <quic_ugoswami@quicinc.com>, "gregkh@linuxfoundation.org"
- <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org"
- <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org"
- <stable@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] xhci: Add a quirk for full reset on removal
-Message-ID: <20250516083328.228813ec@foxbook>
-In-Reply-To: <20250515234244.tpqp375x77jh53fl@synopsys.com>
-References: <20250515185227.1507363-1-royluo@google.com>
-	<20250515185227.1507363-2-royluo@google.com>
-	<20250515234244.tpqp375x77jh53fl@synopsys.com>
+	s=arc-20240116; t=1747377294; c=relaxed/simple;
+	bh=TKu5/yJLwlz0W5cl8c+lO8cbA5gUEqmahbihBE2G8QM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZWW1TSsNKmRdV8Hq5iNyPljZsfRO2YpEkOVviSXK4ULz+7ly6gDlwQ6qElwfXTxk5kj/VytK5bHBfaLv4guk1TR90nNVy3L5hM8xIo2zyE+vZ3VtyjYcRPx6TXrffVswLLzM590ezTw8/WfjFdhpzvUKmzPuQB3bEjfgmmivbbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 9E4B368AA6; Fri, 16 May 2025 08:34:47 +0200 (CEST)
+Date: Fri, 16 May 2025 08:34:47 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Dave Chinner <david@fromorbit.com>
+Cc: Christoph Hellwig <hch@lst.de>, Carlos Maiolino <cem@kernel.org>,
+	linux-xfs@vger.kernel.org, cen zhang <zzzccc427@gmail.com>,
+	lkmm@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: mark the i_delayed_blks access in
+ xfs_file_release as racy
+Message-ID: <20250516063447.GA14632@lst.de>
+References: <20250513052614.753577-1-hch@lst.de> <aCO7injOF7DFJGY9@dread.disaster.area> <FezVRpM-CK9-HuEp3IpLjF-tP7zIL0rzKfhspjIkdGvS3giuWzM9eeby5_eQjL5_gNG1YC4Zu0snd2lBHnL0xg==@protonmail.internalid> <20250514042946.GA23355@lst.de> <ymjsjb7ich2s5f7tmhslhlnymjmso5o2lsvdoudy3dtbr7vjwk@moxzvvjdh6zl> <20250514130417.GA21064@lst.de> <aCUlXbEg9wuyPEB6@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCUlXbEg9wuyPEB6@dread.disaster.area>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Thu, 15 May 2025 23:42:50 +0000, Thinh Nguyen wrote:
-> In any case, this is basically a revert of this change:
-> 6ccb83d6c497 ("usb: xhci: Implement xhci_handshake_check_state()
-> helper")
+On Thu, May 15, 2025 at 09:21:01AM +1000, Dave Chinner wrote:
+> > I'd like to understand that one a bit more.  It might be because the
+> > validator doesn't understand a semaphore used as lock is a lock, but
+> > I'll follow up there.
 > 
-> Can't we just revert or fix the above patch that causes a regression?
+> Even so, it's not a race because at that point in time the object
+> cannot be seen by anything other than the process that is
+> initialising it.
 
-Also note that 6ccb83d6c497 claimed to fix actual problems, so
-disabling it on selected hardware could bring the old bug back:
+In the current tree after the folio/vmalloc series b_addr is only
+assigned during buffer allocation.  But I suspect they tested before that
+where b_addr can be set at runtime.  Either way it always happens under
+b_sema because that is initialized to locked just after allocating
+the memory for the buffer.
 
-> In some situations where xhci removal happens parallel to
-> xhci_handshake, we encounter a scenario where the xhci_handshake
-> can't succeed, and it polls until timeout.
+> I'm wary of this, because at this point I suspect that there aren't
+> a lot of people with sufficient time and knowledge to adequately
+> address these issues.
+
+I'm more than happy to address these, because proper documentation
+of concurrency helps fixing a huge number of bugs, and also really
+helps documenting the code.  I hate having to spend hours trying to
+figure out why something can be safely used lockless or not.
+
+> We should have learnt this lesson from lockdep - false positive
+> whack-a-mole shut up individual reports but introduced technical
+> debt that had to be addressed later because whack-a-mole didn't
+> address the underlying issues.
+
+I'm not sure who "we" is, but I've always pushed back to hacks just
+to shut up lockdep.  And at the same time I'm immensively grateful
+for having lockdep and can't think of working without it anymore.
+
+> We need functions like xfs_vn_getattr(), the allocation AG selection
+> alogrithms and object initialisation functions to be marked as
+> inherently racy, because they intentionally don't hold locks for any
+> of the accesses they make. kcsan provides:
+
+Functions never are racy, specific data access are.  So a function wide
+assignment is just the dumbest thing ever, this already badly failed
+for things like early Java object-level synchronization.
+
 > 
-> If xhci_handshake runs until timeout it can on some platforms result
-> in a long wait which might lead to a watchdog timeout.
+> For variables like ip->i_delayed_blks, where we intentionally
+> serialise modifications but do not serialise readers, we have:
+> 
+> -	uint64_t                i_delayed_blks; /* count of delay alloc blks */
+> +	uint64_t __data_racy    i_delayed_blks; /* count of delay alloc blks */
+> 
+> This means all accesses to the variable are considered to be racy
+> and kcsan will ignore it and not report it. We can do the same for
+> lip->li_lsn and other variables.
 
-But on the other hand, xhci_handshake() has long timeouts because
-the handshakes themselves can take a surprisingly long time (and
-sometimes still succeed), so any reliance on handshake completing
-before timeout is frankly a bug in itself.
+But not all access are racy.  We rely on proper synchronized accesses
+for accounting.  Now for something that has a lot of unsynchronized
+access, adding a wrapper for them might be fine, but for i_delayed_blks
+I don't think we actually have enough for them to bother.
 
-Regards,
-Michal
+> IOWs, we do not need to spew data_race() wrappers or random
+> READ_ONCE/WRITE_ONCE macros all over the code to silence known false
+> positives.  If we mark the variables and functions we know have racy
+> accesses, these one-line changes will avoid -all- false positives on
+> those variables/from those functions.
+
+And also drop a lot of the actually useful checks. That's exaxctly
+the kind of hack you rant about above.
+
