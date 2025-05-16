@@ -1,196 +1,154 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E0522E3E9
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54ECD21B9E2
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747386114; cv=none; b=eh7OhyKv+c14E3ATQAm2YlA+R8QTOeGzr0cElpu4o7FhMFybQTkPioGeHnpfA1H0tSqZlzX5BayDpNwH38LdDndV8tppU9VSgADjXqqkUy//ApXvV3TlwsmuFzenJqMm7xHLvhslXMljEwnjVDcSLHik9k8+48uyJAbhr8Sjiw4=
+	t=1747386150; cv=none; b=O/UIzfT2W0xPtvwutpkUh+izZmDSy7Odd8JiA4KM/gaid1zhStSogkVQHJSjSbMvMUGVGapSAHlHTMzxvY+aWMVbcIYQRJRJ1fhGEwmo7Qk441qNK51TTkvD5DPQ4UCm47p0ABqh6jL6FTxCepNcT9CLcAciqW3WfnZay+t/gMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747386114; c=relaxed/simple;
-	bh=7bT7R25mgjoEOCenNMiog5d8jmrLGzIX7hwwnkSWCAc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q1FUpERPIGy600EOkMRLafIDxU5QlPxQHW7JYEzi0RHc8W7KHBhbfjyMjSy8k5uaBQFkfQtRwvF2I7KOAKDOMHOjvMszjXpSbzyWf1p4gl4nh6drxFfG4uFAo715QeChmuBYWnHUjsvE2fFO0/lpbhvmqyG/KbTU5XplECdqwLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZefljwAr; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747386150; c=relaxed/simple;
+	bh=ToaiqUQC7wPPT5md+Z2ox6pr7GllCWLM1JPpGSY8rRQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KtU7tqWl0hS8yxrQvWsfU7YrgKeQB8WXfZNSEbNGZePMPCGAGtX8xgqoGE9SSXX/jKxE2vjhILfj+j46P8IXpfRSIdTu+RmCNXP/aD5XOmTNY8rN9P9xREVGxyipZmV0ujxYl60/hZV47U/E7MBo0LDsSBE9LgJGOkRY70mO8Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0CfjQ+CV; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZefljwAr"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G3IH8Q001035
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:01:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	crwjkXwm2Mz61rb2CTsqxEUEHdKgDUcWAhJbvyh6c70=; b=ZefljwArl0RZ+5yA
-	w/twY6QCR1H5umDn0PkBv5sUhppB/T+ozvB+9nkuEo+7ucBaPG/yQloNRcXXB0CG
-	Ot9UEY77w0Al8sVTW/DiG+4uvsUA5xBOeP3ZEcWigvO1FLaIJWWYrjnUmXm/96nF
-	fuEVH7f8Zb038p1KfmJOiira5Kynnybz6BU730VNT2FW4RepTi1ZZ2T3loXhJ8/H
-	mCe+6ziA5qwTxojmKzqjwhcB2732QPxK2D2kScXSpH6bHs201ThuwZgq5RJ6bjDh
-	O9rUuvGpoqRC8cY47Ke75h8JsWRXZSg7dT07QHuUEAuxMcM7sdrtG2TcjN7zH8c0
-	jm7Kdg==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcp1arh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:01:51 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5ad42d6bcso53974485a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 02:01:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0CfjQ+CV"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-47ae894e9b7so35383571cf.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 02:02:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747386148; x=1747990948; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=in60ugGemjVltqB0vsq8GkvN3HfzICH3JQbCmYrTXHA=;
+        b=0CfjQ+CVeZIrR3erYCAkt48d9ZGpgJ/5566vyjp7Ki2o6DWgyrw6zSOSFT/tdv3DqT
+         XBHfN4QSXYiF3fna8nRYuhc3S83KlMbpIkhfuMxEBk4JcALsUlqaYNvPWzqEVbdNkdcF
+         nH3Eo6wI0BTXxyC6cww4h785FP0qqeL4E1A3vlpOeLceQtpfwjtSVc7QQ2O0bbr4mlri
+         bwq4KZDWLg3wFPzDHlpSnY87Dd2i1/lEfr4P8hxaYwsjOx0biXCwc9dIbxLTnxHJMGZl
+         //2vtFL9ozypqt64uoKkzhnZMdpcL90IbJDyzb3jLMEUG1lU1vdYrEIc6WZ+rZSSZ96D
+         NiUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747386110; x=1747990910;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=crwjkXwm2Mz61rb2CTsqxEUEHdKgDUcWAhJbvyh6c70=;
-        b=i/2IGv9VfKOPj2FmAu2WQekm02PMs8A5WiMi0agqL7a7p3c3rofmEOH7nMVB/jTaD6
-         0R4kT0vXtYlT93ISSc57SfRhAZLh52WQdS2nHfzLgUSrVQ8/eOs1qYV5c4XgCq5Z4Ci2
-         mTa8+h5k7ev0E2OIn4AgktDY7xcqB07TNB4czeQ6SV8J5buqlQwFahhNmDu9v/W+gVKN
-         sOrqJVYlNfGwyiGqfrilfKQ0k8F1QCWUpcDQ/8/EXFPniDyzLYOOp3nLPI5IsCMzkp5h
-         rxJyYTOZEWo1/kF4/5ybqLUe7q8esckI9bqbHqK6RELBe+oedEznH5CcCEOrScJeWUkT
-         AR3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWyk8pYH7ENow1ntQ6IogmcBjZoj6DRce4F9kNp0v0jhDVxJyJIR2JBMbp5os5TohHV4vXo5BBnpanUA0I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyIwvySey6PSKcdXFMJh1KYqmlkDLnMLM2dhmNgZlivK6fpaga
-	EL2t2U3XvT0AA3QYIM8xrCGCBeX0MHuIFosloNlN9TFr81EDnW4nQrY8LIV6pOrmNe6OGNsxumQ
-	qqtyfYWLI8zeL5fsPMmEO/LXkGOxW2MbEXFPzDBiuaGMRZ/fThujpawaWuuIDJT9ZmE0=
-X-Gm-Gg: ASbGncuyPAhwoogmMm3dQvEQOlQ0eftkaMcTiVcK7aCFdXb7BUYRu8pieNNTecSDe0b
-	OJtSllFsrqJ4FwJFZdjzdc/K0oXpFgifbu83xD2O0VbBY7FB+3oXtY78/IQTMyehHNBzNyq8K60
-	IMZMU1brBIrq8incjuojcPTawcic/CpaSi2Lpb5n55fFX98x/XFgu+hz6bdpEsTjjsWRtkXut1V
-	+PlYVmpHMT9SbMULn8HQHS/ptZFPTLdedhyBzZpGT0/6s/6i6J3nmB6hHEdsE/Zkfk/VopdG2Uk
-	eweUKZ1fmDZ5yULD8zlaoj3OcFu4UFOxhzive6KPWN0Vp2Zrx/sERry9sqOVuDX6MA==
-X-Received: by 2002:ac8:7c4e:0:b0:47a:e6e1:c071 with SMTP id d75a77b69052e-494ae373c48mr13480611cf.7.1747386110135;
-        Fri, 16 May 2025 02:01:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEk5/GJR09r13nfBtnkiEoEavjVSinfCHNYuKjToVdC/aopOQxGYHzKPdlMHftGKbnMw1zIxQ==
-X-Received: by 2002:ac8:7c4e:0:b0:47a:e6e1:c071 with SMTP id d75a77b69052e-494ae373c48mr13480231cf.7.1747386109485;
-        Fri, 16 May 2025 02:01:49 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6005a6e745fsm1094479a12.48.2025.05.16.02.01.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 May 2025 02:01:48 -0700 (PDT)
-Message-ID: <5190dc77-3ea5-492b-ac52-8523d8188ab8@oss.qualcomm.com>
-Date: Fri, 16 May 2025 11:01:46 +0200
+        d=1e100.net; s=20230601; t=1747386148; x=1747990948;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=in60ugGemjVltqB0vsq8GkvN3HfzICH3JQbCmYrTXHA=;
+        b=xAFhc3Lg7oi3q7dF/Ke6CQ/Vuk8DuiTXrx/T6+njoHCtnnOGHvshuxBdofGsqCDCKY
+         ehygg9hiO+/HlcLJ5hfUVIU/4qYNPBpAG+Swpf/jGkVk7OnIAY+b729KVia6tlfuRP8o
+         wH5LDBXI4blCd1wad4+G3aWgHuJTSA64MZ+TrnatdvM0jZpa/gNVdnicJOONAeHUzDFQ
+         s87JtFO5LLkximkUeq4GNciiIMFCSAAqmTkT+2p9Ktc7Wjymf7+U/Ge1s5ZY0062YGDI
+         Iv3V76fEYHFq06HSPZagxUX/hRKQZTxPBgLadSwU43f6p0qd1eqTa9xpxUrLrNaWnoHt
+         Yk/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXeSB9jRIMfQZI8UJg97VHezAO1s2EtKxJmJw/6xZAbfEWnO4s51yBR17lmcl7k71pVIJEQQGBwK5p5Iqs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6HR1rG/kKs9L7LKkV5ar984wECGNkrUHzbAlXvqg5kbgVLDSE
+	fKT0Te+fOl02KYRu2jw8DDROpbX2YJCUpIPkaqlsjB5xa2dSII9BVKto58YA9tQoHvvkfvSwZ9j
+	sKJeIZKpCxDDBdGy7q5k/nycyteriX/0zdYzQjQTn
+X-Gm-Gg: ASbGncveZC5GqSzs2mvQNPTpj1aDwoAzKKaDrDv8dFSXwTwBeGV1aQc/GncGF/QtJhx
+	NZ7FRB4GB61hhLdNJK+ijvzZPy/gOp04ZaXKFZ5TL9NyVOogcyNqiNUNfBe901LvL8bD0FlA7Jf
+	e4wMJJJT05okXCwyhmpCS8ZbHAVMKFmIPTpz+uWrllDw==
+X-Google-Smtp-Source: AGHT+IFKFpZ4mx7Ab6FBiCu2VumXKtdpAlGDqqg8Aj8q1gzbtDvdx2Ql++WSEromWm41RhpIINOkMLSPD9lHuaS6/qU=
+X-Received: by 2002:a05:622a:986:b0:48d:7c95:4878 with SMTP id
+ d75a77b69052e-494b07f782bmr30946581cf.29.1747386147888; Fri, 16 May 2025
+ 02:02:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/6] clk: qcom: ipq5018: keep XO clock always on
-To: George Moussalem <george.moussalem@outlook.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Luo Jie <quic_luoj@quicinc.com>,
-        Lee Jones <lee@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250506-ipq5018-cmn-pll-v2-0-c0a9fcced114@outlook.com>
- <20250506-ipq5018-cmn-pll-v2-1-c0a9fcced114@outlook.com>
- <a3c3dbe8-b73e-40a4-b86f-ff9f371b1a46@oss.qualcomm.com>
- <DS7PR19MB888370ACC69E0A1ABC46D3BB9D91A@DS7PR19MB8883.namprd19.prod.outlook.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <DS7PR19MB888370ACC69E0A1ABC46D3BB9D91A@DS7PR19MB8883.namprd19.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: dyK2wfSXCgWprAGXbGj6p9flZ6yS1cAh
-X-Proofpoint-ORIG-GUID: dyK2wfSXCgWprAGXbGj6p9flZ6yS1cAh
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDA4NSBTYWx0ZWRfX/KhbhnV+QnZM
- Nk4Kyw45Da1F+Ud9O78GbKzShKUZRDOUq+ltwnLHy/mCOk4fCvOrOPjtLyoRzJlcefb07dlZrHL
- nYtzLDy0nrOJPbjqg45EV/MlY+HA3Pt8fOBHVQTB0pcYjmptr/QWltlEXEOTbtY7pwcayrvSJQM
- 3r+be3EcRBCbDWxVZ3mHRFvdT0dJBb+Nbd5zmkSbgUI7yQq3YpUB3hGUWuDjqGr8z7O/KYFJvHa
- jNlPOr7uih4BNoGkqdx9k6yOmqO9V/T6EYlkGH8caSOWjLeT+DTyjca6fHyM1QH9o1ff+rVGJFl
- WdD4k00SpCBojDAMEFaPDr2dTOnp2pMLAqLOvF+UGtyYHI9h2smHuY8g5yCrM1YXMk0iVCUXvnv
- oN6XtCogrpnrmaSVHGyyNl6ETbKF5YPEHwlgsu22UrGyrhrjSPQcxkYFLYMSN29nwi3R1U3Y
-X-Authority-Analysis: v=2.4 cv=Gp9C+l1C c=1 sm=1 tr=0 ts=6826feff cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=UqCG9HQmAAAA:8 a=f-fEU4NQkEpfBDf4STYA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-16_04,2025-05-15_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0 impostorscore=0
- bulkscore=0 adultscore=0 suspectscore=0 priorityscore=1501 mlxscore=0
- malwarescore=0 mlxlogscore=984 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505160085
+References: <20250509104755.46464-1-ayberkdemir@gmail.com> <20250516084334.2463-1-ayberkdemir@gmail.com>
+In-Reply-To: <20250516084334.2463-1-ayberkdemir@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Fri, 16 May 2025 02:02:16 -0700
+X-Gm-Features: AX0GCFvBaGcVFtA7dJExvGgGKSE3KqWHsolC66wfst2hICjQRgoMunWZPUzYXDk
+Message-ID: <CANn89iJ9iAP0GXk_qmzu+2MjWHi_NDOjG1QdLAiY1YSj+RjZQw@mail.gmail.com>
+Subject: Re: [PATCH net v4] net: axienet: safely drop oversized RX frames
+To: Can Ayberk Demir <ayberkdemir@gmail.com>
+Cc: netdev@vger.kernel.org, Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Michal Simek <michal.simek@amd.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Suraj Gupta <suraj.gupta2@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/14/25 10:04 AM, George Moussalem wrote:
-> 
-> 
-> On 5/10/25 01:47, Konrad Dybcio wrote:
->> On 5/6/25 7:43 AM, George Moussalem via B4 Relay wrote:
->>> From: George Moussalem <george.moussalem@outlook.com>
->>>
->>> The XO clock must not be disabled to avoid the kernel trying to disable
->>> the it (when parenting it under the CMN PLL reference clock), else the
->>> kernel will panic and the below message will appear in the kernel logs.
->>> So let's enable the XO and its source CLK and keep them always on.
->>>
->>> [    0.916515] ------------[ cut here ]------------
->>> [    0.918890] gcc_xo_clk_src status stuck at 'on'
->>> [    0.918944] WARNING: CPU: 0 PID: 8 at drivers/clk/qcom/clk-branch.c:86 clk_branch_wait+0x114/0x124
->>> [    0.927926] Modules linked in:
->>> [    0.936945] CPU: 0 PID: 8 Comm: kworker/0:0 Not tainted 6.6.74 #0
->>> [    0.939982] Hardware name: Linksys MX2000 (DT)
->>> [    0.946151] Workqueue: pm pm_runtime_work
->>> [    0.950489] pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->>> [    0.954566] pc : clk_branch_wait+0x114/0x124
->>> [    0.961335] lr : clk_branch_wait+0x114/0x124
->>> [    0.965849] sp : ffffffc08181bb50
->>> [    0.970101] x29: ffffffc08181bb50 x28: 0000000000000000 x27: 61c8864680b583eb
->>> [    0.973317] x26: ffffff801fec2168 x25: ffffff800000abc0 x24: 0000000000000002
->>> [    0.980437] x23: ffffffc0809f6fd8 x22: 0000000000000000 x21: ffffffc08044193c
->>> [    0.985276] loop: module loaded
->>> [    0.987554] x20: 0000000000000000 x19: ffffffc081749278 x18: 000000000000007c
->>> [    0.987573] x17: 0000000091706274 x16: 000000001985c4f7 x15: ffffffc0816bbdf0
->>> [    0.987587] x14: 0000000000000174 x13: 000000000000007c x12: 00000000ffffffea
->>> [    0.987601] x11: 00000000ffffefff x10: ffffffc081713df0 x9 : ffffffc0816bbd98
->>> [    0.987615] x8 : 0000000000017fe8 x7 : c0000000ffffefff x6 : 0000000000057fa8
->>> [    1.026268] x5 : 0000000000000fff x4 : 0000000000000000 x3 : ffffffc08181b950
->>> [    1.033385] x2 : ffffffc0816bbd30 x1 : ffffffc0816bbd30 x0 : 0000000000000023
->>> [    1.040507] Call trace:
->>> [    1.047618]  clk_branch_wait+0x114/0x124
->>> [    1.049875]  clk_branch2_disable+0x2c/0x3c
->>> [    1.054043]  clk_core_disable+0x60/0xac
->>> [    1.057948]  clk_core_disable+0x68/0xac
->>> [    1.061681]  clk_disable+0x30/0x4c
->>> [    1.065499]  pm_clk_suspend+0xd4/0xfc
->>> [    1.068971]  pm_generic_runtime_suspend+0x2c/0x44
->>> [    1.072705]  __rpm_callback+0x40/0x1bc
->>> [    1.077392]  rpm_callback+0x6c/0x78
->>> [    1.081038]  rpm_suspend+0xf0/0x5c0
->>> [    1.084423]  pm_runtime_work+0xf0/0xfc
->>> [    1.087895]  process_one_work+0x17c/0x2f8
->>> [    1.091716]  worker_thread+0x2e8/0x4d4
->>> [    1.095795]  kthread+0xdc/0xe0
->>> [    1.099440]  ret_from_fork+0x10/0x20
->>> [    1.102480] ---[ end trace 0000000000000000 ]---
->>>
->>> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
->>> ---
->>
->> [...]
->>
->>> +    /* Keep some clocks always-on */
->>> +    qcom_branch_set_clk_en(regmap, 0x30018); /* GCC_XO_CLK_SRC */
->>
->> this clock is not a clk_branch2 - its control register is different and
->> this call is incorrect - you can drop it altogether, as if the XO source
->> clock isn't running, the system is dead
->>
->>> +    qcom_branch_set_clk_en(regmap, 0x30030); /* GCC_XO_CLK */
->>
->> This one actually is likely supposed to be always-on too - does removing
->> these two lines do any harm?
-> 
-> removing these lines AND the clock structs works AND updating the parents for clocks that reference the xo_clk_src works. There kernel is not complaining about anything. The other option is setting the CLK_IS_CRITICAL flag. What would your preference be?
+On Fri, May 16, 2025 at 1:44=E2=80=AFAM Can Ayberk Demir <ayberkdemir@gmail=
+.com> wrote:
+>
+> From: Can Ayberk DEMIR <ayberkdemir@gmail.com>
+>
+> In AXI Ethernet (axienet) driver, receiving an Ethernet frame larger
+> than the allocated skb buffer may cause memory corruption or kernel panic=
+,
+> especially when the interface MTU is small and a jumbo frame is received.
+>
+> This bug was discovered during testing on a Kria K26 platform. When an
+> oversized frame is received and `skb_put()` is called without checking
+> the tailroom, the following kernel panic occurs:
+>
+>   skb_panic+0x58/0x5c
+>   skb_put+0x90/0xb0
+>   axienet_rx_poll+0x130/0x4ec
+>   ...
+>   Kernel panic - not syncing: Oops - BUG: Fatal exception in interrupt
+>
+> Fixes: 8a3b7a252dca ("drivers/net/ethernet/xilinx: added Xilinx AXI Ether=
+net driver")
+>
+> Signed-off-by: Can Ayberk DEMIR <ayberkdemir@gmail.com>
+> Tested-by: Suraj Gupta <suraj.gupta2@amd.com>
+> ---
+> Changes in v4:
+> - Moved Fixes: tag before SOB as requested
+> - Added Tested-by tag from Suraj Gupta
+>
+> Changes in v3:
+> - Fixed 'ndev' undeclared error =E2=86=92 replaced with 'lp->ndev'
+> - Added rx_dropped++ for statistics
+> - Added Fixes: tag
+>
+> Changes in v2:
+> - This patch addresses style issues pointed out in v1.
+> ---
+>  .../net/ethernet/xilinx/xilinx_axienet_main.c | 47 +++++++++++--------
+>  1 file changed, 28 insertions(+), 19 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/=
+net/ethernet/xilinx/xilinx_axienet_main.c
+> index 1b7a653c1f4e..7a12132e2b7c 100644
+> --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> @@ -1223,28 +1223,37 @@ static int axienet_rx_poll(struct napi_struct *na=
+pi, int budget)
+>                         dma_unmap_single(lp->dev, phys, lp->max_frm_size,
+>                                          DMA_FROM_DEVICE);
+>
+> -                       skb_put(skb, length);
+> -                       skb->protocol =3D eth_type_trans(skb, lp->ndev);
+> -                       /*skb_checksum_none_assert(skb);*/
+> -                       skb->ip_summed =3D CHECKSUM_NONE;
+> -
+> -                       /* if we're doing Rx csum offload, set it up */
+> -                       if (lp->features & XAE_FEATURE_FULL_RX_CSUM) {
+> -                               csumstatus =3D (cur_p->app2 &
+> -                                             XAE_FULL_CSUM_STATUS_MASK) =
+>> 3;
+> -                               if (csumstatus =3D=3D XAE_IP_TCP_CSUM_VAL=
+IDATED ||
+> -                                   csumstatus =3D=3D XAE_IP_UDP_CSUM_VAL=
+IDATED) {
+> -                                       skb->ip_summed =3D CHECKSUM_UNNEC=
+ESSARY;
+> +                       if (unlikely(length > skb_tailroom(skb))) {
 
-Let's do critical after all
+If really the NIC copied more data than allowed, we already have
+corruption of kernel memory.
 
-Konrad
+Dropping the packet here has undetermined behavior.
+
+If the NIC only reports the big length but has not performed any DMA,
+then the skb can be recycled.
+No point freeing it, and re-allocate a new one.
