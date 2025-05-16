@@ -1,125 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E85027AC5C;
-	Fri, 16 May 2025 18:07:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6209253B42;
+	Fri, 16 May 2025 18:09:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747418870; cv=none; b=B9pF3AQBZ11MoxOhTSVMc2IsYon3T1/jiOQDiSk3Xa9lC0JTHFO1Z2tBDJJ/n9aVoq1UdK7fSzuVHGZHvk6T/9Osjl+9uEUddEXdQD7NRk/9cyAn2KxZW+bj8UUkCrG+aN5mnowcRmhq1A4DdKDEIqro4BpFb5cnPp0mg0VuK7Q=
+	t=1747418940; cv=none; b=NcvuibjmyOSHhcq2eCmGcyhVcGerUBKGDXNTYoLzkqup69ZVODBN1ANE3VUBuhVZmZydey+3vTurhIwPcmVE05ZZ6gkHHYmQgS/uhnPmxZzJE74t3qdt8jk4VzMx0PSOQpWZupcA1Hag/hoUYvHJj148uAZESwzr5lq9TBGFq3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747418870; c=relaxed/simple;
-	bh=NDQ3oIAK81gY0XPqiwX0d/dvGcwzYLnE7nxbmPCbTY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UfgVNoSmdyslng6qvN/zuWJm2m/Dv+tV+1s+D0L0x+4+Nuhxbcj0PrnNmneLdN4UPz0/8DqprhRRvUVlN/vUqMu6cG5OkUhiZVhR/OreqHF0mL/z8GQoz3IHQnz7dCfxeiaj1e+O1IJVy8OzCMUdOZiqgEMhnyGttnF0qmo6+Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nsiu26Qy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747418940; c=relaxed/simple;
+	bh=nIzQCir6ILa7ha3r8U4meO+bdj9K3CMQGPn7EESq2Ek=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=caqj8XVvBSPtu4Lb37w3JwG8vuhzlwiyySl9VGmRnPpNu3gR+yiY2bebJfjMwhfYR6P2Mi0xnvh49pDkgKl43wsg+XCmSolx3jO7fw1YKA/bDMxs5tZmvqTm4roNS9NlKAjHUHYMoyUKwXIOvdbJqMZX8tEtvX4/AzI6Mjbt77Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CU4i+upl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nsiu26Qy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F24ECC4CEE4;
-	Fri, 16 May 2025 18:07:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CU4i+upl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1890C4CEE4;
+	Fri, 16 May 2025 18:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747418869;
-	bh=NDQ3oIAK81gY0XPqiwX0d/dvGcwzYLnE7nxbmPCbTY8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Nsiu26QyPbRgf5TPznJIJOzpQVrbSTQCNVVmXUO2pDu4VVs+n/+Qe22sAVXpTMy6j
-	 WBMLzciw4Te+AsPPcBApI/0IKX7LT3BffjFhTegMYG6W6AlL8+3ZjUe+ibjBOqNPfj
-	 zQfqZh1/a6j2rIvQr3SToofPTZ8Oq7KA9b6qhiFWpdFLBldDPF0rUw43Qo1xwvaTeQ
-	 PUZ8ZV5AFX1kHeYP1IoZ5OHtMQURg4oKW04Vspj0SdcD0XBSPaMNlOaHS4wZMr71B9
-	 stVbSD0z+TfaWA0Vv/UJHgyC9tvIiHdFbJPZbxCRZgmZxxWdxdU0FLcKuAJOHZPq0J
-	 MWaCTb7kHwbCQ==
-Date: Fri, 16 May 2025 19:07:46 +0100
+	s=k20201202; t=1747418940;
+	bh=nIzQCir6ILa7ha3r8U4meO+bdj9K3CMQGPn7EESq2Ek=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=CU4i+upleR6/sspOqSCiXt3HTvOsaQySBAlmLE+RoZuoxxOtqtF2+jZnT10uE1CVU
+	 P9hYsoeAgJSNFLWoP7xt4gChAxSy1m77Y4/lsnDda7ldgS4kHU2YE09SOa+UHaB+Uy
+	 9BrLSUZfvgosbmGB51lx6/hglQun+UF8haRZikG8/OWoZjHYQVmceAWKGYH+SuB7Y+
+	 PMZKrRXqsU9UjSyzhWasAfdKpeIxnTBU7WhTM4TxsyC6oUV/aQYyxnw9wPyxETrQlW
+	 f+Jpqe4CL0p3zijMhRB1ACNrHKry1Svhub+uviL0RpsknogRILnxuJpApqQkulkAwA
+	 j/UsxpO+foLMg==
 From: Mark Brown <broonie@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests/mm: Fix test result reporting in gup_longterm
-Message-ID: <aCd-8kEyDm2f2w0z@finisterre.sirena.org.uk>
-References: <20250515-selftests-mm-gup-longterm-dups-v1-1-05f8f731cf63@kernel.org>
- <f924f789-5269-4046-99a4-2991f9a3ab3c@redhat.com>
- <aCcvxaFc6DE_Mhr1@finisterre.sirena.org.uk>
- <58dbef73-6e37-46de-9092-365456306b27@redhat.com>
- <aCc5E-wB4nBwrKEP@finisterre.sirena.org.uk>
- <46d151d7-c04b-4538-9725-dc4f46ac8ac1@redhat.com>
+To: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
+ mario.limonciello@amd.com, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Talhah Peerbhai <talhah.peerbhai@gmail.com>
+In-Reply-To: <20250515222741.144616-1-talhah.peerbhai@gmail.com>
+References: <20250515222741.144616-1-talhah.peerbhai@gmail.com>
+Subject: Re: [PATCH] ASoC: amd: yc: Add quirk for Lenovo Yoga Pro 7 14ASP9
+Message-Id: <174741893817.384649.2381968008958380317.b4-ty@kernel.org>
+Date: Fri, 16 May 2025 19:08:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="F0Ea/dgySH8XhVmb"
-Content-Disposition: inline
-In-Reply-To: <46d151d7-c04b-4538-9725-dc4f46ac8ac1@redhat.com>
-X-Cookie: Well begun is half done.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
+On Fri, 16 May 2025 01:27:41 +0300, Talhah Peerbhai wrote:
+> Similar to many other Lenovo models with AMD chips, the Lenovo
+> Yoga Pro 7 14ASP9 (product name 83HN) requires a specific quirk
+> to ensure internal mic detection. This patch adds a quirk fixing this.
+> 
+> 
 
---F0Ea/dgySH8XhVmb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to
 
-On Fri, May 16, 2025 at 04:12:08PM +0200, David Hildenbrand wrote:
-> On 16.05.25 15:09, Mark Brown wrote:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-> > > I'm afraid we have other such tests that report duplicate conditions.=
- cow.c
-> > > is likely another candidate (written by me ;) ).
+Thanks!
 
-> > That one's not come up for me (this was one of four different patches
-> > for mm selftests I sent the other day cleaning up duplicate test names).
+[1/1] ASoC: amd: yc: Add quirk for Lenovo Yoga Pro 7 14ASP9
+      commit: a28206060dc5848a1a2a15b7f6ac6223d869084d
 
-> $ sudo ./cow
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-=2E..
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> 1..778
-> # [INFO] Anonymous memory tests in private mappings
-> # [RUN] Basic COW after fork() ... with base page
-> ok 1 No leak from parent into child
-> # [RUN] Basic COW after fork() ... with swapped out base page
-> ok 2 No leak from parent into child
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> Aren't the duplicate "No leak from parent into child" the problematic bit=
-s?
-> But maybe I am getting it wrong, what needs to be "unique" :)
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Ah, yes - that's got the same issue.  I'm not running that program one
-way or another, it's not immediately clear to me why not - I can't see
-any sign of it being invoked by the runner script but I also can't see
-anything that I'd expect to stop that happening.  I'll have to have a
-poke at it, thanks for flagging that.
+Thanks,
+Mark
 
-[Converting to kselftet_harness]
-> > That'd certainly work, though doing that is more surgery on the test
-> > than I personally have the time/enthusiasm for right now.
-
-> Same over here.
-
-> But probably if we touch it, we should just clean it up right away. Well,
-> if we decide that that is the right cleanup. (you mention something like =
-that
-> in your patch description :)=20
-
-OTOH there's something to be said for just making incremental
-improvements in the tests where we can, they tend not to get huge
-amounts of love in general which means perfect can very much be the
-enemy of good.  If there's some immediate prospect of someone doing a
-bigger refactoring then that'd be amazing, but if not then it seems
-useful to make things play better with the automation for now.
-
---F0Ea/dgySH8XhVmb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgnfuwACgkQJNaLcl1U
-h9C+1Qf/RpnzjkDNIVJbiN4XdRsp/uDYe3/nV7RLlL/fbTisY3dHyhvFom59dhod
-1Ii/9OxAP4NDn5QeNPrvPN+mS4G1qhwz9EMIkqGKZVT+LhZnHoIWOv2XrpK0nzSV
-EavRh5bwqqkANX4d1ArzLTbNaF9Y7jehxFp9AkxKUfR20NgIC7fSZUVBtOCteOoK
-J0plCu8UuZECzL79JZ9PB3FMlm81yNFCczCMQP2XjFs+ECFuFYZef+Jv06lI2M7m
-FY1Q5l7ILhEprXZJXrL4MKbgWZxRpe8s9uv/JQ3NRDeiXORWV8AyFMXZYSNTurwK
-xhdCIS1qJRYcDjecpJE5vGMlk3xi4A==
-=67hP
------END PGP SIGNATURE-----
-
---F0Ea/dgySH8XhVmb--
