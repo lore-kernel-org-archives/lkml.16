@@ -1,329 +1,125 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B09219E93;
-	Fri, 16 May 2025 17:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062DA272E69
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 17:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747417017; cv=none; b=frQDAQsCPVZqLgfnaY/RX4u3KOtVxrJKQm7AkBevrkru/xubXxBjT46GZCcqJ2Qw047lDaEDOhAM7O7zEJDFO+hMtYbWaeeGTwLd2qukXh1jXgOgVuNmEUqcQk0Dm2bORLarRhz6T0nbT15eKo916q58Grp/cnnmC77xPv7PmIk=
+	t=1747417248; cv=none; b=ov9UGkdDKJe9Y8g+KpzBtAWhtBw13j88SJPnAxAGSVPL9kVC8AiWQxA9fnS1/1Z5rMrsrOU0SZhAwDPdgbpMXaaZR3TdDcdCGMTjfA2lACxpk9MYD70CbvkQKXX+BNd2GVwHs9fc1Go9uhZVkMX5A+oVNkMJi1u9yOBGdMpDKzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747417017; c=relaxed/simple;
-	bh=11KTuzLPta8PuFq5HMGHeyAAbypq6bhKZBp2eFuQvHk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lcCyt+yBCnOzas7If3woOvwDWSwzeMchJqNL7Go+pb+SuPfMjDpx2Wy5V7U9xc3PNG932W50pS1PppEtUFSx2qqf/A45jpup3qf1EHG4oBXQZROnxPy5BNr+ohHyae7KV0gB7CUnUwZu5PXSPJJcKrn1n8/ZXy4iWzhbsnL8pto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fC2Jws7P; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747417248; c=relaxed/simple;
+	bh=0c1yrSJrjxCsVlYq4tbr45bgKKiXASQqbAogZUlWQRg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=pBh11DqB7mzLIzG5fig22fZ+CzA1v0njsyiyce7Jh6Z0yxrIicv3PeUJhSnlCED27qZwTDUB7ZM7T/dFTzI2GVCmhuehsFe1tzj6MwIfoKxdRkDxaMz4ybXM8G7aXMlXZ13XSJqijaZai6mVozh3eZR8crIB5GsrbrPeFll2PEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Og6rGCC5; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fC2Jws7P"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so18108855e9.1;
-        Fri, 16 May 2025 10:36:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747417014; x=1748021814; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=f6QQjxjPgk5p/ILY4E/8DWRz+jrN/FDqH9hiUDq8BOE=;
-        b=fC2Jws7PLCN6GV6k6RM26Aaz4z4jOi8MS3w18U9WnI5eUzGGRdXrw4tuSKZDpF9vV3
-         DG5/nTza0xkpIZ4in5PvW7nRxWdKiG9Up8qp1Ym5bfP4C2x8ollMKSecwRzmOwgc1pfD
-         8fpeWN3/0SAOXD+4Qv5Zgp5J+qbzsSoi1ZipfrX7vmzVgxaWLapDdxx93Lmk516kM6tp
-         qfFejrZwZr8VOKMEZxv5W9UHzOP4RNeGfWydf2EbIDVdmfg5aTII0CSUlngrxFk1UDzi
-         Iz7t9S6uv85CWAcgsoOYb+sTtFcrT3/nD7DHXLvMY5LZDV8/oOZLQwBCxHJUKFfDHuYm
-         DFfA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Og6rGCC5"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54GBKN1k024402
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 17:40:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Z2w10jA8jhawj7mJ7gHQ2d+FYBPDhiimjY7HiQ61Q6c=; b=Og6rGCC5PoNgGNyX
+	tWn4KKbvRjmChKrDiHMely+CPmhtNIW0Fr85RQnsZECXVYdlE6JsqzjN3pALKZ5w
+	jqObYK4zDatp+vrlzMqB1BZxV570ZRxK/2nAGPBHpJDRSJvejPuulJXTOfG4AgDQ
+	Z/hWDERlTEG69jVbZ22epvZV1+/Q/gKGjRexfN9efzSbUcrfpAuDTN3TwICDwogF
+	h3xdo38hDAjF9Us3e1TXRIjwH6WoLh320zNWPlueuCnvS2xWi026dzQK+pabMq2W
+	KGBVdtbP5szSC2zRvrG6VU/z9Ue5xMKotzc0TlVXpyam/cDkI/JEJEQSLGEwqqhB
+	Zi0khw==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcn2y0x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 17:40:46 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-22e7f041997so40306925ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:40:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747417014; x=1748021814;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=f6QQjxjPgk5p/ILY4E/8DWRz+jrN/FDqH9hiUDq8BOE=;
-        b=gj9E1fpDj7VS46/Ol0yW5nIp4z/bKROVG3KAucFxWPbi1LmfpEl8BZJBLiDPjslABu
-         4BMR6XiFzdNICxRN8U8FOLTyLmcq533j7Ibm33CC7idzYlhSYdAPufJvblfSq6Q2fVTN
-         4ewohR7mPlemzw7WS6+ntNfI1HxCljOrOTDBaSTm+QZgWfcxxNxBLobUlr0U7rAMI19R
-         UtEBOeodWbkmtrzA44wDLQ1I5TyZliSFs7T9mzyJQrDLAjqZCfscsTAHxwb7nqp9VLxW
-         DRF5KxATznmSDtg481OmB2rB0PLhcztMAgOJNVSC1CnTTC+B9k6FzGy3fhcsvrYkjQLk
-         AXkg==
-X-Forwarded-Encrypted: i=1; AJvYcCVKOVX28nSesBW/QPN9rpIJ2UW2jZo+cDKem7U5KZaRQ2IrhSGHyFbSWgz5GC6GEGqsv5U2KwDGij83VYwt@vger.kernel.org, AJvYcCWNM/bD328ZThegupuM4pqDOUtrFVVfLRkd3+CPHbxpJ0943b5MtcdAD5nEHcJqWKeLWU03+iVfkY7OUD4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2beXKT4pcmaZerc/d1bZud7tICECcN+s7N/sZxL4uLkUZ0LM8
-	czoY0Spqih7uhpwbtqmZqgFJM7+3/rmOx6WN0bnVWDpRHnhn+q9OBlN0
-X-Gm-Gg: ASbGncsaEc1tJHylr3/fZZzZvTfROc5Q+l0Elnb5ICpmTEC/5IxPWMzKZOXlUrIRXBW
-	9W/baGTSdt+ab8eN7+cd251HvJ8fkfrgEDqiTxixHmCPFgOoMDxgYEiBK4mfno6g1IFhluV4Wgd
-	gYcBtL+kllO/YshrQk3ZsdL8Yqh8Iw+g0VeYt9p0X3p/tztxmz4ZwJB1JjYGjD3n+zVGwlo1jk5
-	jhTs89jorB0xpEBMIKPt81YL2R5/11Sc74lBJ90ZnDi4ePjhSTTvdy2uaFsAAWvxN++qIonkI+U
-	LzrXv+JmRbPls2d0FZ5JAaxPbt4xBakmnYZHeY04GbBvzujPQYn5aCbjWEXl9eXey2VT/ZsacMi
-	dGsh8GO5IcU2fZfcK8IY=
-X-Google-Smtp-Source: AGHT+IFnqfp6SFZgUJPa88LnSIu45A0pT+iLF/neMjMZKyLAyAHtZGTZaRKNnyn+H6ZF2Onk3+NMNA==
-X-Received: by 2002:a05:600c:297:b0:435:edb0:5d27 with SMTP id 5b1f17b1804b1-442f84d5776mr61793195e9.9.1747417013347;
-        Fri, 16 May 2025 10:36:53 -0700 (PDT)
-Received: from ?IPv6:2a02:168:6806:0:4563:288:ad48:133a? ([2a02:168:6806:0:4563:288:ad48:133a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f33804d9sm113362765e9.12.2025.05.16.10.36.52
+        d=1e100.net; s=20230601; t=1747417245; x=1748022045;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z2w10jA8jhawj7mJ7gHQ2d+FYBPDhiimjY7HiQ61Q6c=;
+        b=NSgUCyCL+Ct0RtJT+VAhaRJsOKDX06LRnL2dY45lPk6JJsd8dBJ6783Qcl7zCwVvTT
+         dnz0DQ+tSqVFXyIg5yowe9GwgCbaACeLH+gS8nZBdy0zPDKzOpFt+xE22J8JWZlbUX27
+         N7YBpiPocR/nU0UMYi0U/8zx0JaBD2H3ZTeLfqvrCaaQQ2eCTTAox5XUAn+Po5EbBJhS
+         /VAVpiKcieB1B5WWKPHyNZK4lP6b85FP8aLXHem1tV7IqX3XpGT2rv4556xyYy2yMmTV
+         ISiStEOph5AwFGAP1CDZPVlyWQtiTIqLckN7jTYGdVlYreaSncoi5GFtPxrw5gcPGdRd
+         6Ckw==
+X-Forwarded-Encrypted: i=1; AJvYcCW5Tnmb1IpsYBwXszb9ZpMtmciVjBKyxjSjcpRT85yX7JRFMLxwSZvcr3BjMqUPAYI512uCq+N5McF4qkQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywo9NKclwUzJ8EbdBdEfMys/geRHBb9bVCusuYGxHy1eSkbzDZk
+	p/pys8TgEmufl3TOGOKio2IfQPTqDpen0eXc/9Ll8QUCU6KFOzA66Xg/3yudpMmfskr8S0jy70K
+	zQkRJT8EKfReUzhGzYFCuEANONkZ57hiDqeHd8GxjMY5DaalYm2R/8wu7vUET+hrm4Xo=
+X-Gm-Gg: ASbGncvqG3LmqgPURXAY0bt3Jav6ISX4NOnmh6olOq0yUGML7aV/jvjKpchfCEGO4OE
+	SUUME0dwPajY0hbe1NHEQsp54t58G7PjqXjO7QDOdH0+PQahsghtCjFq15WZfl6jbTZB0LG+Bz1
+	qXYU275c3qfOygfiozRFOEbtp4cRyxgvzizXDtO3pyyjwwS4niGiB66pW4HiWgM7tR4a67F2t8Z
+	I97nlmlQxWpJU6B3oZl9mdM2S2T6/idxZeHK3S8HykVuBrvwczFWd6NobiQenq3q+FV+dQeVKLe
+	9S1vefhYMee6XQft8+UK+zqyK6QfJrZLaA6szHqb72/+r77b
+X-Received: by 2002:a17:903:1983:b0:22e:62c3:6990 with SMTP id d9443c01a7336-231d44e7182mr57457955ad.16.1747417245445;
+        Fri, 16 May 2025 10:40:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IExtF4TLFrrPoEt4gmfmLFTd9XEB50AQ+2oIAkdKuvYSP0egvrOWfC3m/7jstWY5dO6hzURnA==
+X-Received: by 2002:a17:903:1983:b0:22e:62c3:6990 with SMTP id d9443c01a7336-231d44e7182mr57457635ad.16.1747417245053;
+        Fri, 16 May 2025 10:40:45 -0700 (PDT)
+Received: from [169.254.0.1] (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ade573sm16994125ad.80.2025.05.16.10.40.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 10:36:52 -0700 (PDT)
-Message-ID: <c01e9b258e024e745ef8711bb94e0d5f6d7d4f96.camel@gmail.com>
-Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
-From: Klaus Kudielka <klaus.kudielka@gmail.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Corentin Labbe <clabbe.montjoie@gmail.com>, regressions@lists.linux.dev,
- 	linux-kernel@vger.kernel.org, Linux Crypto Mailing List	
- <linux-crypto@vger.kernel.org>, Boris Brezillon <bbrezillon@kernel.org>, 
- EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>, Romain Perier
- <romain.perier@gmail.com>
-Date: Fri, 16 May 2025 19:36:52 +0200
-In-Reply-To: <aCa7J3I8DyRs7pP_@gondor.apana.org.au>
-References: <aB8W4iuvjvAZSJoc@gondor.apana.org.au>
-	 <41680c5d41ed568e8c65451843e3ff212fd340c4.camel@gmail.com>
-	 <aB8t1ZTVBexqGlcm@gondor.apana.org.au>
-	 <dcb0b04e479d6f3cfed87795d100ea09e4fbcf53.camel@gmail.com>
-	 <aCAX8rj2ie4QMnTo@gondor.apana.org.au>
-	 <28184fb96e2de8a0af32816f5ff1b3d776b57217.camel@gmail.com>
-	 <aCMOyWVte4tw85_F@gondor.apana.org.au>
-	 <8e9b45bdafe6ac3f12bcbb5fce5bc9949566344f.camel@gmail.com>
-	 <aCQm0aHYnI6ciyPz@gondor.apana.org.au>
-	 <20dde00750d803a9a364ded99dab1e3e22daec77.camel@gmail.com>
-	 <aCa7J3I8DyRs7pP_@gondor.apana.org.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1 
+        Fri, 16 May 2025 10:40:44 -0700 (PDT)
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+To: Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
+        ath10k@lists.infradead.org, Colin Ian King <colin.i.king@gmail.com>
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250418115627.534833-1-colin.i.king@gmail.com>
+References: <20250418115627.534833-1-colin.i.king@gmail.com>
+Subject: Re: [PATCH] wifi: ath10k: Fix spelling mistake "comple" ->
+ "complete"
+Message-Id: <174741724396.2935573.18125129643312875821.b4-ty@oss.qualcomm.com>
+Date: Fri, 16 May 2025 10:40:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.0
+X-Proofpoint-ORIG-GUID: 7pzZyuRui0UYTbgSchp7Q4ukc7yJ8ri0
+X-Authority-Analysis: v=2.4 cv=HZ4UTjE8 c=1 sm=1 tr=0 ts=6827789e cx=c_pps
+ a=cmESyDAEBpBGqyK7t0alAg==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=uQsNN5m5feiSJzJ953YA:9
+ a=QEXdDO2ut3YA:10 a=1OuFwYUASf3TG4hYMiVC:22
+X-Proofpoint-GUID: 7pzZyuRui0UYTbgSchp7Q4ukc7yJ8ri0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDE3MiBTYWx0ZWRfX9BPn+PnNc82N
+ k8vS6TMchvO4M6vwaz5stqfuE++PUDaEPyB2q9+M3iYiVy2tiUYte5pv//mCFQ9f+VUrsTGdRrJ
+ mXPf9jwnmFjfcHJCtZ53VQ5iW22RtiF+8EDqEQVvaaMM6IgDcBQf0wIWdAa8Ki1aSctAtORqFdk
+ sl+9MGvVUBEWNrkIdr3vtfDvCzg1ueonVKKzGY3yMHKxfpnvrG2cmRZwxPO9XTeNJi9BKrN4O+U
+ nw+vYq+N5DCvdmdjtF5oY2oS9SuQmhk4z8DrQTXNazy4C/JcCHFIiGZJTfs1s8rcoQROocBQ28s
+ gCC3RFwWLyGT6wiaPQr+xKNbzuD2RfFeTsaBdA5AtwQgBp1VwqMKhg107GZPg9PmBTZewj2gP58
+ rMOMSV5xzzA5XjkQISswPV7ed3aT6a9yFqjVKUpgIn3pmS326fzID1TUb6zfkOlMPMRkVK1A
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-16_05,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 adultscore=0 spamscore=0 clxscore=1015 priorityscore=1501
+ suspectscore=0 mlxscore=0 mlxlogscore=811 lowpriorityscore=0 malwarescore=0
+ bulkscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505160172
 
-On Fri, 2025-05-16 at 12:12 +0800, Herbert Xu wrote:
->=20
-> Something doesn't look right.=C2=A0 There are zero ahash lines in your
-> dmesg.=C2=A0 IOW all the output was from skcipher tests alone.
->=20
-> That could explain why ahash appears to be working.
->=20
-> What does /proc/crypto show after boot-up? Do the cesa ahash
-> algorithms show up as tested in there?
->=20
-> Cheers,
 
-Plain cryptodev tree, marvell-cesa as module.
-Directly after boot, only the builtin crc32c-generic shows up.
-After loading the module, the marvell-cesa ahash show up with "selftest : p=
-assed".
-But whether they REALLY were tested, I can't say.
+On Fri, 18 Apr 2025 12:56:27 +0100, Colin Ian King wrote:
+> There is a spelling mistake in a ath10k_warn message. Fix it and
+> remove space before colon to tidy up message.
+> 
+> 
 
-# cat /proc/crypto=20
-name         : crc32c
-driver       : crc32c-generic
-module       : kernel
-priority     : 100
-refcnt       : 1
-selftest     : passed
-internal     : no
-type         : shash
-blocksize    : 1
-digestsize   : 4
+Applied, thanks!
 
-# modprobe marvell-cesa
-# cat /proc/crypto=20
-name         : hmac(sha256)
-driver       : mv-hmac-sha256
-module       : marvell_cesa
-priority     : 0
-refcnt       : 1
-selftest     : passed
-internal     : no
-type         : ahash
-async        : yes
-blocksize    : 64
-digestsize   : 32
+[1/1] wifi: ath10k: Fix spelling mistake "comple" -> "complete"
+      commit: 2ef2d31925f0414ff0f37862b6c33f62b49089c5
 
-name         : hmac(sha1)
-driver       : mv-hmac-sha1
-module       : marvell_cesa
-priority     : 0
-refcnt       : 1
-selftest     : passed
-internal     : no
-type         : ahash
-async        : yes
-blocksize    : 64
-digestsize   : 20
-
-name         : hmac(md5)
-driver       : mv-hmac-md5
-module       : marvell_cesa
-priority     : 0
-refcnt       : 1
-selftest     : passed
-internal     : no
-type         : ahash
-async        : yes
-blocksize    : 64
-digestsize   : 16
-
-name         : sha256
-driver       : mv-sha256
-module       : marvell_cesa
-priority     : 0
-refcnt       : 1
-selftest     : passed
-internal     : no
-type         : ahash
-async        : yes
-blocksize    : 64
-digestsize   : 32
-
-name         : sha1
-driver       : mv-sha1
-module       : marvell_cesa
-priority     : 0
-refcnt       : 1
-selftest     : passed
-internal     : no
-type         : ahash
-async        : yes
-blocksize    : 64
-digestsize   : 20
-
-name         : md5
-driver       : mv-md5
-module       : marvell_cesa
-priority     : 0
-refcnt       : 1
-selftest     : passed
-internal     : no
-type         : ahash
-async        : yes
-blocksize    : 64
-digestsize   : 16
-
-name         : cbc(aes)
-driver       : mv-cbc-aes
-module       : marvell_cesa
-priority     : 300
-refcnt       : 1
-selftest     : passed
-internal     : no
-type         : skcipher
-async        : yes
-blocksize    : 16
-min keysize  : 16
-max keysize  : 32
-ivsize       : 16
-chunksize    : 16
-walksize     : 16
-statesize    : 0
-
-name         : ecb(aes)
-driver       : mv-ecb-aes
-module       : marvell_cesa
-priority     : 300
-refcnt       : 1
-selftest     : passed
-internal     : no
-type         : skcipher
-async        : yes
-blocksize    : 16
-min keysize  : 16
-max keysize  : 32
-ivsize       : 0
-chunksize    : 16
-walksize     : 16
-statesize    : 0
-
-name         : cbc(des3_ede)
-driver       : mv-cbc-des3-ede
-module       : marvell_cesa
-priority     : 300
-refcnt       : 1
-selftest     : passed
-internal     : no
-type         : skcipher
-async        : yes
-blocksize    : 8
-min keysize  : 24
-max keysize  : 24
-ivsize       : 8
-chunksize    : 8
-walksize     : 8
-statesize    : 0
-
-name         : ecb(des3_ede)
-driver       : mv-ecb-des3-ede
-module       : marvell_cesa
-priority     : 300
-refcnt       : 1
-selftest     : passed
-internal     : no
-type         : skcipher
-async        : yes
-blocksize    : 8
-min keysize  : 24
-max keysize  : 24
-ivsize       : 0
-chunksize    : 8
-walksize     : 8
-statesize    : 0
-
-name         : cbc(des)
-driver       : mv-cbc-des
-module       : marvell_cesa
-priority     : 300
-refcnt       : 1
-selftest     : passed
-internal     : no
-type         : skcipher
-async        : yes
-blocksize    : 8
-min keysize  : 8
-max keysize  : 8
-ivsize       : 8
-chunksize    : 8
-walksize     : 8
-statesize    : 0
-
-name         : ecb(des)
-driver       : mv-ecb-des
-module       : marvell_cesa
-priority     : 300
-refcnt       : 1
-selftest     : passed
-internal     : no
-type         : skcipher
-async        : yes
-blocksize    : 8
-min keysize  : 8
-max keysize  : 8
-ivsize       : 0
-chunksize    : 8
-walksize     : 8
-statesize    : 0
-
-name         : crc32c
-driver       : crc32c-generic
-module       : kernel
-priority     : 100
-refcnt       : 1
-selftest     : passed
-internal     : no
-type         : shash
-blocksize    : 1
-digestsize   : 4
-
-# dmesg | tail
-[    4.883366] mv88e6085 f1072004.mdio-mii:10 lan2: configuring for phy/gmi=
-i link mode
-[    4.884517] br0: port 3(lan4) entered blocking state
-[    4.884527] br0: port 3(lan4) entered forwarding state
-[   88.867746] marvell-cesa f1090000.crypto: CESA device successfully regis=
-tered
-[   89.034292] alg: skcipher: skipping comparison tests for mv-cbc-des beca=
-use cbc(des-generic) is unavailable
-[   89.045265] alg: skcipher: skipping comparison tests for mv-cbc-des3-ede=
- because cbc(des3_ede-generic) is unavailable
-[   89.052456] alg: skcipher: skipping comparison tests for mv-cbc-aes beca=
-use cbc(aes-generic) is unavailable
-[   89.099763] alg: skcipher: skipping comparison tests for mv-ecb-aes beca=
-use ecb(aes-generic) is unavailable
-[   89.099819] alg: skcipher: skipping comparison tests for mv-ecb-des3-ede=
- because ecb(des3_ede-generic) is unavailable
-[   89.099908] alg: skcipher: skipping comparison tests for mv-ecb-des beca=
-use ecb(des-generic) is unavailable
+Best regards,
+-- 
+Jeff Johnson <jeff.johnson@oss.qualcomm.com>
 
