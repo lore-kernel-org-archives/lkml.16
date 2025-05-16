@@ -1,89 +1,66 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B307D226D02;
-	Fri, 16 May 2025 06:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FF164A0C;
+	Fri, 16 May 2025 06:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747377829; cv=none; b=LOzGnqYRxliJEmxLEqDD/ZSArvHnGbJqXv6SWZV8JvBYP7T490WIf4K+w7OSsgiglGrjLu+MS6kQroBuLJD2g5wJaolXVKZAxWM16fNL1S18vyGKns1XWWrGGQxs5fjZihJCX+i0Zj1ESEIk+jds69Xze5mZcwWQysg/ILZJvdQ=
+	t=1747377932; cv=none; b=bGy5iYdqHxqrvXAsNudy4zhbowyTBD68CzqIOehxI2Tn8TZR+jqcyMa8zWGE6tJM7wRy2inEJYcceUyn2xk5PlHuUz447Tn19aoQ0WC2h782lOIPpOcSVY+Lnz6NfnFchKD+5SzqW8gMevslgItFDGCSG9KKiIvNCnTNI8v6pEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747377829; c=relaxed/simple;
-	bh=J6HrDU/iuBOpVReUxjtn9Tl+I8U41M1recE9tRet0no=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=r+7sgMLqIwukYt2fVwKXQbb7diYS9pphEMRFwnzwfKDstcn/eDOGixDDbND8yGlDIr0WlHdwcHOOKq2CzgEYgORJITwqZVVxi1pTv3n3aQ7COHvSLAzdua/Bd/UVfB+jE3mpEktW6PA/2MkhZ/0lD/ZWpAY3aXsJTl/DLJs44SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=nLU87bF7; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1747377932; c=relaxed/simple;
+	bh=4PqGR88p/sS4l3DEwVrJvao/LMbDQhYsWmLuThxyg3s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YPX8JyBZkMCSKVGxLPrkce0V+37F37uF9sLiW2KLia7R8dnVA5W9aeZJIiKZHTm/sfVUwvYaBlhTEiIBx/4Cqf/L7qNRY8eyyO3FplE7UPfLA7aJDbxYIRf9vKtz4nKplUOXlCQ9fNfuAEHI3oYptmNT3rqIsZiOSi7C3S0VZfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=kQKAcxKs; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nLU87bF7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747377822;
-	bh=v5gJB5Uo3vfH1d27TDYKjmjTHs2E6N8QSAXQq1fHv68=;
-	h=Date:From:To:Cc:Subject:From;
-	b=nLU87bF7MLnTnmBvySiAIbp+RnbwYh8V4Aw9e1pqJ9OCDXdFOZ1x1IkKse9F586jp
-	 62Ic5uKnUVgtFRdDS9KzW8hdGANQ936jGM5+rlnf31Y8rtVuJIariieRw1iOau5GQP
-	 zYgC6eD2+wQY5Xeu1fusCxTV4cEnMRULJlgYgW4h3C5ScmD39iQ5z7HUM7/3otkSZW
-	 fJkxLFEHrmGW6rxpGePUX6GuGi9hawWgJbE6mx0v5/R0/+MdyH+yR8Z8Bza41IwcZd
-	 zZjvpRXAsAxEgrbrRu7AvwrRnE4UT0CwzbxrqpVD9IpQ+WcsT5xi9cQZxJUQ9x2E1F
-	 aM59ygwllgP2A==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="kQKAcxKs"
+Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZzHbf56vhz4wcm;
-	Fri, 16 May 2025 16:43:42 +1000 (AEST)
-Date: Fri, 16 May 2025 16:43:42 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin"
- <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patch in the clockevents tree
-Message-ID: <20250516164342.74fd3f15@canb.auug.org.au>
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id 016414B65F;
+	Fri, 16 May 2025 08:45:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1747377928;
+	bh=4PqGR88p/sS4l3DEwVrJvao/LMbDQhYsWmLuThxyg3s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kQKAcxKsFPco0m28bnXz2F5leyXo9CnHTkcYL8qBTwXhpEQMM7SXUTpKbCxnts6Rj
+	 Ise9D+crSeRxaKpcLsPFEvmC2uH7Lff5FBe64QQ/YpfBKFG15LTiHkhVGM2jKhCAhj
+	 xaYPRbCen5ROusk5ZNwXyiXL/7YfxRYJR/3lHBs9T/DSKufE+ByKzdTr0aO/Rb5N/l
+	 saX6fZrg/GP0lfbQYEoUfuZcIkQabR67fr+nUqhuB+EJVmrJlzgPueWgXo/Jf1oMKc
+	 W2w1A06khpq9iNfJocAm+Ays7eDv35Nu+qIgUA9pbby+Nmw2+SqyeKSdaHBgukepx9
+	 7691hl/E2sVaw==
+Date: Fri, 16 May 2025 08:45:26 +0200
+From: Joerg Roedel <joro@8bytes.org>
+To: Tushar Dave <tdave@nvidia.com>
+Cc: will@kernel.org, robin.murphy@arm.com, kevin.tian@intel.com,
+	jgg@nvidia.com, yi.l.liu@intel.com, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v3 rc] iommu: Skip PASID validation for devices without
+ PASID capability
+Message-ID: <aCbfBqVu1C9Jtk7F@8bytes.org>
+References: <20250505211524.1001511-1-tdave@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/=4sMk/VZQ54LsROEIw6ae59";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250505211524.1001511-1-tdave@nvidia.com>
 
---Sig_/=4sMk/VZQ54LsROEIw6ae59
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Tushar,
 
-Hi all,
+On Mon, May 05, 2025 at 02:15:24PM -0700, Tushar Dave wrote:
+>  drivers/iommu/iommu.c | 27 +++++++++++++++++++--------
+>  1 file changed, 19 insertions(+), 8 deletions(-)
 
-The following commit is also in the tip tree as a different commit
-(but the same patch):
+This doesn't apply to v6.15-rc6, can you please rebase and send a new
+version?
 
-  1732e45b79bb ("genirq: Fix typo in IRQ_NOTCONNECTED comment")
+Thanks,
 
-This is commit
-
-  0128816c42b5 ("genirq: Fix typo in IRQ_NOTCONNECTED comment")
-
-in the tip tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/=4sMk/VZQ54LsROEIw6ae59
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgm3p4ACgkQAVBC80lX
-0Gww/Af/RWnJi4UI5eawhE2KSkjNBrCWgR6m5jwpJ74kTEdFZVNAYJyBHs1SPG2v
-CpY44kNmtGk72cZN2JF0nAa7B8Ye0WFrSC1JbBlO4Kd8eUukzKDFQU10AwHQOf5h
-NbnDG8D7PVU37NS50ZPYqazcZV9pk3LVgwfl5U5WM94H5uA7NTcBrZkOtOriihkG
-R3RKdiJSvhePwVdjtjv52dSPhBeXMAItVUu6knbLnnt1aUAhmj6mIfToKJVVeYSs
-3dBgFxW0ebsSOlZqJcsatteiFqukFyc2rraLIzjroYkYnJGsPiFtgykDfxUucsqY
-XUnH29rEblWVE8UwAInkRimx1g6v7A==
-=DxfE
------END PGP SIGNATURE-----
-
---Sig_/=4sMk/VZQ54LsROEIw6ae59--
+	Joerg
+> 
