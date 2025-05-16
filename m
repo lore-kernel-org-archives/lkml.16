@@ -1,72 +1,48 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5166E22C328
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:18:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0281288DA;
+	Fri, 16 May 2025 11:18:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747394293; cv=none; b=qUd1SYpbxthqynUA+YID/HOg7SF3H/DN0HIvSQ1RTrQ3aZmKY1bzWCoFeVA9yztniEKvqoZNO1bjVWqznixIMK+1C6AQe2Tkyf87FCstnOp6NPe0QEAK61wBjNEuoTF3JZ9SmMRkXHrKOuQkD8fb4/d9H7RlL8//82s7LJLvZKk=
+	t=1747394324; cv=none; b=TyDnTKSKmTR3oWjq4TrdevLNHG4Ltzr/uZ8AfHIZZGhk6scBh30oOZ8DXtPKZTlp9RjictTK3m4HfgBAfY5dKhAzVsoAtTNNpk7Y3HPUj0p5ZhtK7u3HtS4JHEqVaUnrsOt4EgFue50CHpCdJUu9WnQWmZGcG0ZaYBl8yUuN/9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747394293; c=relaxed/simple;
-	bh=2j5qkobccot9LL1RM0m5iDEPEb8bSMGKA6Syb6/7mEU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FdosiBvQQYZJR0PnQWR1JqbzlGybeahUk9lxGwfClzjoX/pHhWzPlyoh0bgC/dhsRXx60Qrq1+egdxWN2WYMLx4D1N5ASnMfFd3bwYh/GonO3Sg3uXTTXvDrqBVjIl9mqQdAya+vIfbCQ+sq5aMfSykeHTjnkfTSOztEcitgZEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=G9dlIQuW; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747394324; c=relaxed/simple;
+	bh=Z6ix2AobmqPSTyYspV+r9Ykk1K6VOdLVqiA4ZaQNw4Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=gODO9BkcN+bExTIvTtNTkXe2G76I8sumcSL7xpQ9J7XKS/eF76YIVeyJ1gg6mXxYLP6FSADTiavp2FBH5nXcgO4tRuversC4LiCaRCuRCq1RmNzedC2LSCbFpqBahYXApuenhfdBuN/xvqZDzIFz/OiathWYu3Vsn92ZBZv3t6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GJU0Mw3d; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="G9dlIQuW"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G4Mh9u014002
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:18:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GJU0Mw3d"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G3ZFU5014464;
+	Fri, 16 May 2025 11:18:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	3I2uY5YtBknRZgs8vRXNey7xsxmE+I1qZE/v1ysmnR8=; b=G9dlIQuWI1U5kXYF
-	bfOSZgrRVn7CQZW7eBn5Z/2HgDKBRXwiHibG0WUNAAmj7pZ6Rw+BDKjfp0M8HoMI
-	BqSApYwq88Uq7Aiba2k5ujcYI+56peCzsPl4bSmXc1TVIvcZTGwOGH4FNfoiTR0y
-	GEOahr+90WUdNaqGtwgCjqtW2hCm1coUVzp0EUWFae4AuGMd8tfuRGGv18i4rX0h
-	g4IHY7sURdf20ijRqFJC3Q2vL9vReNSuDXOseAjQgAWBSdGaQshQKgw4yroRwDat
-	Zl5Xb3UbwrwhRfgInxtvd89Y+/S6sBo4ZAVNwwJoHMcNwO2xaoYU1ZKGDt+Ksu1G
-	Ak65lw==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46nx9js632-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:18:08 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6f0c76e490cso4874056d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 04:18:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747394285; x=1747999085;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3I2uY5YtBknRZgs8vRXNey7xsxmE+I1qZE/v1ysmnR8=;
-        b=nHlpRANdAWHrYchVrOuZvICqNBHFO8QjvxBL3hQ/rTFMnqp1WKqltGMsfg9yqyvFbk
-         Whxjm4kDVehjuD5KoyT7SI1oYXax1/35RFNDwsVHjonYuW42WCGElswC/oCrSy7yNvvt
-         RheZKFyYw2MOztgkZ8H3/dm0uXFK2MQs/tfXzMN7cvp7PjLJG34nyQ6KrWnH5QObWG+T
-         MKrPRJbTyIbnKY8AH4cWptRAX5gdS3OVLv2jVJsGk6z7GNlM1QrzOvAF7aAm/7tl3vQZ
-         NWT8gT3YsyqQZtYL/HsQVvkC45YJ1ZbSq45a3oUooOnsi8fs7WQiwXnEbqvllB7Csv7K
-         LXFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVlEYkNrYgQWnO/mNVP7SD31lKtZRn8jPvAPzunXDvbLG5V9LQqAZGGcnXer+DR8sdN+YE4ZiOhA7VaB2M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNxg8wFxt4ot93nACJkGzpdovNiPNm0uiU1uehCfjmPxlh7rck
-	LlNGIGAzeOiNThmBjnJF5Wh8nF22kOex5wsPhdyAqE6kjNIICz/S6/moy9kAL4IRSRIHRRAwY/9
-	+dYduDTni2gq/VTpLbMS7XCgBHdX7cNkBpXh/2eZQCjqNeld2AiAr+WDT8tdg9QOihqc=
-X-Gm-Gg: ASbGnctRIx8w5EjMmKr+7zkMccThgTysGPHRmdHl3JrUgxUUYXzeRqfNehd8NZlXMYM
-	ANMAESqJdiERjlCegiMPrf9hJfq10GLTH2gNyfTcjEpzwDMxhGijw/p3CPwDGgsPQ32hDlHHr0P
-	bO9KteSwcAMie1IshNfYKEkclgkxZlTAlt4Qbg9ywEMEyYVZGSwDll2ezey2OTElF6IWjAhJsLa
-	bJgm6yGI2yNnxThhs5F8BpLTG/MwCpj1EndF4ShMTNsqS8mAQNdXlDN8E7NwQ5Z+1TbvKwrxx8e
-	QnbuYX0Z+CK3Ypbd60cP5pCONADb9AEXkB1f74n4BvCpOY2Pzn2B5yKkdiYQqoj91w==
-X-Received: by 2002:a05:6214:1c09:b0:6f2:c10b:db04 with SMTP id 6a1803df08f44-6f8b0835130mr20320836d6.1.1747394284660;
-        Fri, 16 May 2025 04:18:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGYedXsXWaYRFu3TMFMA0Ooxjh8cjz2T+AoU7nKygC1w6HBVJRE7mCkn7yTavhKYax2hXyneQ==
-X-Received: by 2002:a05:6214:1c09:b0:6f2:c10b:db04 with SMTP id 6a1803df08f44-6f8b0835130mr20320616d6.1.1747394284092;
-        Fri, 16 May 2025 04:18:04 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6004d502b03sm1287390a12.29.2025.05.16.04.18.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 May 2025 04:18:03 -0700 (PDT)
-Message-ID: <6274641a-7366-41cd-a0a7-a9e9cc41b8e6@oss.qualcomm.com>
-Date: Fri, 16 May 2025 13:18:00 +0200
+	zs8WGsYXClyT002JkjXgz6mVO9bx4X9BuJeaUjLHDcA=; b=GJU0Mw3dp7ivwKjd
+	03j37FKLL7IBI9TxUZzTgzhLt/OhNLJVeuoynqdYsxQrGLXB3XbT6ws8GzKhkv1+
+	GY2RX29yiTtG3yvEZNYhv8zmeQpz0Alm6cKmpOFs4QUXuQSXUeitec3dcWhpIHIc
+	fqCcCsiGqM/6m3bhI+hT/Cur1ow0A2vP7MK0LGJmQbawdncKF6yDrwGDn5H3wQQk
+	X+a6Z+owadqEftP6QBmb6UvLqGydkugTrQJHO2fMaK8UFC5skbPJcwtvvKk/ekbn
+	ITWVWqhDFfX+QNMfTWXMmJCO0gaTNBCgc9QW3OVbggbUuzLs8vtCvxZTobkX2nhZ
+	rmOz1w==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcphvgu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 11:18:24 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54GBIN5p026069
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 11:18:23 GMT
+Received: from [10.253.35.32] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 16 May
+ 2025 04:18:18 -0700
+Message-ID: <582a87e0-ed91-452e-8acf-eeff79990802@quicinc.com>
+Date: Fri, 16 May 2025 19:18:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,113 +50,218 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] watchdog: qcom: add support to read the restart
- reason from IMEM
-To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Rob Herring
- <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck
- <linux@roeck-us.net>, bod.linux@nxsw.ie,
-        Srinivas Kandagatla <srini@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <20250502-wdt_reset_reason-v3-0-b2dc7ace38ca@oss.qualcomm.com>
- <20250502-wdt_reset_reason-v3-4-b2dc7ace38ca@oss.qualcomm.com>
- <2036ef2f-c7ef-4f42-858d-8d95c430c21a@oss.qualcomm.com>
- <68d280db-f7df-48c8-821d-f7d408c302ad@oss.qualcomm.com>
- <8a763c70-adcf-4a14-bb68-72ddc61fa045@oss.qualcomm.com>
- <8c2a53c2-c11b-4d49-bfb5-b948767ba6c7@oss.qualcomm.com>
- <1e871aed-705f-4142-b72d-4232ae729a37@oss.qualcomm.com>
+Subject: Re: [PATCH net-next v5 0/5] Add PCS support for Qualcomm IPQ9574 SoC
+To: <mr.nuke.me@gmail.com>, "Russell King (Oracle)" <linux@armlinux.org.uk>,
+        Jakub Kicinski <kuba@kernel.org>
+CC: Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Paolo Abeni
+	<pabeni@redhat.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Andrew Lunn
+	<andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <quic_kkumarcs@quicinc.com>,
+        <quic_suruchia@quicinc.com>, <quic_pavir@quicinc.com>,
+        <quic_linchen@quicinc.com>, <quic_luoj@quicinc.com>,
+        <srinivas.kandagatla@linaro.org>, <bartosz.golaszewski@linaro.org>,
+        <vsmuthu@qti.qualcomm.com>, <john@phrozen.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250207-ipq_pcs_6-14_rc1-v5-0-be2ebec32921@quicinc.com>
+ <20250211195934.47943371@kernel.org> <Z6x1xD0krK0_eycB@shell.armlinux.org.uk>
+ <71a69eb6-9e24-48ab-8301-93ec3ff43cc7@quicinc.com>
+ <0c1a0dbd-fd24-40d7-bec9-c81583be1081@gmail.com>
+ <c6a78dd6-763c-41a0-8a6e-2e81723412be@quicinc.com>
+ <62c98d4f-8f02-43cc-8af6-99edfa5f6c88@gmail.com>
+ <df2fa427-00d9-4d74-adec-c81feda69df5@quicinc.com>
+ <be7f0fda-ac21-4f94-a6cf-b4c3ca59630a@gmail.com>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <1e871aed-705f-4142-b72d-4232ae729a37@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
+From: Lei Wei <quic_leiwei@quicinc.com>
+In-Reply-To: <be7f0fda-ac21-4f94-a6cf-b4c3ca59630a@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: paANxhTMUxBHmVaAMIxD6cmiQklxZbis
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDEwNyBTYWx0ZWRfXylECb2h0wZ1/
- YRLiyHTwkcfEerYW4IxkLLi7rlQ1Ia9CkfFaYp9imE1l+h9suceE9o2lAD7Q6TJkNpGfGQJeO2O
- E0AIeWFX8H/NpZpJvkNKglamQBYWr3moZ0XEx863mzTfJ6BG8hb/xOz+YAlcpjBY8xgdhIpf5pn
- ro5G56dfbK4HrwUmHo5gjYJlSD0bT5gKtTFsogZOhP70K3npEFWOYuWWpoZSEZrByH/ingvuVAK
- atorR/Dx2dhcqAbL+WjsT+kqnjoJN+X2vkZF8QJFrv/ZIRUPp8dWpC5aBNFYnap0NVVd96o7iFb
- MsvvX148jkxbdytYE8XsK9EGeb48U7CCJPDASiqoKwws1O3S+DBTOJi6pLklk/yOCDp7mD7ulT2
- g0InwQsAYp0cB9XqA6m6aYcCbhFHvml5Xp+KC4SpN9T8GYx9TvUurAvPNjQsKbQNADPd0YQa
-X-Authority-Analysis: v=2.4 cv=CIIqXQrD c=1 sm=1 tr=0 ts=68271ef2 cx=c_pps
- a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=IBNWLNMZBAz7KTYeBUwA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=pJ04lnu7RYOZP9TFuWaZ:22
-X-Proofpoint-GUID: paANxhTMUxBHmVaAMIxD6cmiQklxZbis
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 3HYvdMJmqexQwJIflig_w5gep5NqMpfU
+X-Proofpoint-ORIG-GUID: 3HYvdMJmqexQwJIflig_w5gep5NqMpfU
+X-Authority-Analysis: v=2.4 cv=cO7gskeN c=1 sm=1 tr=0 ts=68271f00 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=NEAV23lmAAAA:8 a=pGLkceISAAAA:8 a=COk6AnOGAAAA:8 a=mI-91yCrK8bXjQCpjj0A:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDEwNyBTYWx0ZWRfXwAPMj1GnZuSc
+ uvIe7qO3WJYHNH43U8cE3YRvkx+mcYBuNmr0bS1lo2CXbz1LTZNG3oDbcoxrWFO+np5EU2F2hBU
+ KE59MH2l1xFTmn/yFd7fDCUaKW/x7kzcMZfxNzkzOjdUqRnLW5KJXfNxr3Zn/3iKIedgi2+TNQG
+ rNktdj7/NAraehAvf5ojVnkJQyJofaEHE3dqbrzQUrXM2bjeoc2TlgY/r4ySYMDicBcCzshV/0Z
+ 7wbuUWU94SElXotpSdemShIAK2Mf0lk37n7eHZdXfq7egRoJYCWDJf2a6NrmrNLpXzjQ3BxozKs
+ DYhr850hnrcxyXSJVW7BXG5FygpEwHBlWXodmJUUMbaPZr6sSfaeBzKJLbn2CDRyygu+fv8izLm
+ jpvfZynT28J3X9HpL/oUV9bRvebb1wEi7LpbVcBGIUnZA7G0ynpivzVx86cQyb/SJOlDbvED
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-16_04,2025-05-16_02,2025-03-28_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 mlxscore=0 suspectscore=0 lowpriorityscore=0
- phishscore=0 mlxlogscore=999 spamscore=0 impostorscore=0 clxscore=1015
- priorityscore=1501 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ mlxlogscore=999 spamscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0
+ adultscore=0 bulkscore=0 malwarescore=0 impostorscore=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
  definitions=main-2505160107
 
-On 5/14/25 3:15 PM, Kathiravan Thirumoorthy wrote:
-> 
-> On 5/6/2025 4:31 PM, Kathiravan Thirumoorthy wrote:
+
+
+On 5/16/2025 9:40 AM, mr.nuke.me@gmail.com wrote:
+> On 5/15/25 10:27 AM, Lei Wei wrote:
 >>
->> On 5/3/2025 3:53 AM, Konrad Dybcio wrote:
->>> On 5/2/25 6:28 PM, Kathiravan Thirumoorthy wrote:
->>>> On 5/2/2025 7:33 PM, Konrad Dybcio wrote:
->>>>>> +static int qcom_wdt_get_restart_reason(struct qcom_wdt *wdt,
->>>>>> +                    const struct qcom_wdt_match_data *data)
->>>>>> +{
->>>>>> +    struct regmap *imem;
->>>>>> +    unsigned int val;
->>>>>> +    int ret;
->>>>>> +
->>>>>> +    imem = syscon_regmap_lookup_by_compatible(data->imem_compatible);
->>>>> Try syscon_regmap_lookup_by_phandle_args() and pass a phandle, see e.g.
->>>>> drivers/phy/qualcomm/phy-qcom-qmp-pcie.c & phy@1bfc000 in x1e80100.dtsi
+>>
+>> On 5/15/2025 10:32 AM, Alex G. wrote:
+>>> On 5/14/25 11:03, Lei Wei wrote:> On 5/13/2025 6:56 AM, 
+>>> mr.nuke.me@gmail.com wrote:
+>>>>> On 2/19/25 4:46 AM, Lei Wei wrote:
 >>>>>
->>>>> That way all platform specifics will live in the DT, requiring no
->>>>> hardcode-y driver changes on similar platforms
+>>>>> I tried this PCS driver, and I am seeing a circular dependency in 
+>>>>> the clock init. If the clock tree is:
+>>>>>      GCC -> NSSCC -> PCS(uniphy) -> NSSCC -> PCS(mii)
+>>>>>
+>>>>> The way I understand it, the UNIPHY probe depends on the MII probe. 
+>>>>> If MII .probe() returns -EPROBE_DEFER, then so will the 
+>>>>> UNIPHY .probe(). But the MII cannot probe until the UNIPHY is done, 
+>>>>> due to the clock dependency. How is it supposed to work?
+>>>>>
+>>>>> The way I found to resolve this is to move the probing of the MII 
+>>>>> clocks to ipq_pcs_get().
+>>>>>
+>>>>> This is the kernel log that I see:
+>>>>>
+>>>>> [   12.008754] platform 39b00000.clock-controller: deferred probe 
+>>>>> pending: platform: supplier 7a00000.ethernet-pcs not ready
+>>>>> [   12.008788] mdio_bus 90000.mdio-1:18: deferred probe pending: 
+>>>>> mdio_bus: supplier 7a20000.ethernet-pcs not ready
+>>>>> [   12.018704] mdio_bus 90000.mdio-1:00: deferred probe pending: 
+>>>>> mdio_bus: supplier 90000.mdio-1:18 not ready
+>>>>> [   12.028588] mdio_bus 90000.mdio-1:01: deferred probe pending: 
+>>>>> mdio_bus: supplier 90000.mdio-1:18 not ready
+>>>>> [   12.038310] mdio_bus 90000.mdio-1:02: deferred probe pending: 
+>>>>> mdio_bus: supplier 90000.mdio-1:18 not ready
+>>>>> [   12.047943] mdio_bus 90000.mdio-1:03: deferred probe pending: 
+>>>>> mdio_bus: supplier 90000.mdio-1:18 not ready
+>>>>> [   12.057579] platform 7a00000.ethernet-pcs: deferred probe 
+>>>>> pending: ipq9574_pcs: Failed to get MII 0 RX clock
+>>>>> [   12.067209] platform 7a20000.ethernet-pcs: deferred probe 
+>>>>> pending: ipq9574_pcs: Failed to get MII 0 RX clock
+>>>>> [   12.077200] platform 3a000000.qcom-ppe: deferred probe pending: 
+>>>>> platform: supplier 39b00000.clock-controller not ready
+>>>>>
+>>>>>
 >>>>
->>>> Thanks. I thought about this API but it didn't strike that I can use the args to fetch and match the value.
+>>>> Hello, thanks for bringing this to our notice. Let me try to 
+>>>> understand the reason for the probe failure:
 >>>>
->>>> I need a suggestion here. There is a plan to extend this feature to other IPQ targets and also support WDIOF_POWERUNDER and WDIOF_OVERHEAT cause as well. For IPQ5424, all 3 cause will support and for other IPQ platforms, we are exploring how to integrate WDIOF_OVERHEAT. In any case, can I define the DT entry like below
+>>>> The merged NSSCC DTS does not reference the PCS node directly in the 
+>>>> "clocks" property. It uses a placeholder phandle '<0>' for the 
+>>>> reference. Please see below patch which is merged.
+>>>> https://lore.kernel.org/all/20250313110359.242491-6- 
+>>>> quic_mmanikan@quicinc.com/
 >>>>
->>>>          imem,phandle = <&imem 0x7b0 <Non secure WDT value> <Power Under value> <Overheat value>>;
+>>>> Ideally there should be no direct dependency from NSSCC to PCS 
+>>>> driver if
+>>>> we use this version of the NSSCC DTS.
 >>>>
->>>> and store these in values args[1], args[2] and args[3] respectively and use it for manipulation? If any of the platform doesn't support all 3, I can update the bindings and define the number of args as required.
->>> Let's call the property qcom,restart-reason and only pass the register value
+>>>> Hence it seems that you may have a modified patch here, and DTS 
+>>>> changes have been applied to enable all the Ethernet components 
+>>>> including PCS and NSSCC, and NSSCC modified to have a direct 
+>>>> reference to PCS? However even in this case, I think the driver 
+>>>> probe should work if the drivers are built as modules. Can you 
+>>>> please confirm if the NSSCC and PCS drivers are built-in to the 
+>>>> kernel and not built as modules
 >>>
->>> Because we may have any number of crazy combinations of various restart
->>> reasons, we can go two paths:
+>>> The NSSCC and PCS built-in. I also added the uniphy PCS clocks to the 
+>>> NSSCC in order to expose the issue.
 >>>
->>> 1. promise really really really hard we won't be too crazy with the number
->>>     of possible values and put them in the driver
->>> 2. go all out on DT properties (such as `bootstatus-overheat`,
->>> `bootstatus-fanfault` etc.
+>>> I have a heavily patched tree with PPE driver and EDMA support. 
+>>> That's the final use case in order to support ethernet, right?
+>>>
 >>
+>> Yes, all the drivers are eventually for enabling the Ethernet function
+>> on IPQ9574.
 >>
->> Thanks Konrad for the suggestions and the offline discussions.
+>>>
+>>>> For the case where the drivers are built-in to kernel, and the NSSCC 
+>>>> DTS
+>>>> node has a direct reference to PCS node, we can use the below solution:
+>>>> [Note that the 'UNIPHY' PCS clocks are not needed for NSSCC clocks
+>>>> initialization/registration.]
+>>>>
+>>>>      Enable 'post-init-providers' property in the NSSCC DTS node to 
+>>>> mark
+>>>>     'UNIPHY' PCS as post-initialization providers to NSSCC. This will
+>>>>      ensure following probe order by the kernel:
+>>>>
+>>>>      1.) NSSCC driver
+>>>>      2.) PCS driver.
+>>>>
+>>>> Please let me know if the above suggestion can help.
+>>>
+>>> I see. Adding the 'post-init-providers' property does fix the 
+>>> circular dependency. Thank you!
+>>>
+>>> I have another question. Do you have a public repository with the 
+>>> unmerged IPQ9574 patches, including, PCS, PPE, EDMA, QCA8084 ?
+>>>
 >>
->> @Guenter, I need a suggestion here. Currently as part of this series, we are planning to expose WDIOF_CARDRESET, WDIOF_POWERUNDER, WDIOF_OVERHEAT reasons.
+>> May I know the source of your PPE/EDMA changes using which this issue
+>> is seen?
+> 
+> I use a mix of upstream submissions, and openwrt patches. As noted, 
+> using 'post-init-providers' takes care of the problem.
+> 
+> https://github.com/mrnuke/linux/commits/ipq95xx-devel-20250515/
+> 
 >>
->> Once this is done, we do have the custom reason codes like Kernel Panic, Secure Watchdog Bite, Bus error timeout, Bus error access and few many. Is it okay to expose these values also via the bootstatus sysFS by extending the current list of reasons? Since these are outside the scope of watchdog, need your thoughts on this.
+>> The openwrt repository contains the unmerged IPQ9574 patches, Although
+>> this version will be updated very soon with latest code(with some 
+>> fixes), the version of the code in the repo currently is also 
+>> functional and tested.
+>>
+>> https://github.com/CodeLinaro/openwrt/tree/main/target/linux/ 
+>> qualcommbe/ patches-6.6
 > 
 > 
-> Konrad / Guenter,
+> Will you be updating a clock example with IPQ9574 + QCA8084 to the repo?
 > 
-> We had a further discussion on this internally. Outcome is, it wouldn't be ideal to hook the custom restart reason codes in watchdog framework, since there is no involvement of watchdog in such cases. Also I don't find any references to hook the custom values in watchdog's bootstatus.
+> Alex
 > 
-> If this is fine, I'm planning to resend the series to handle only the non secure watchdog timeout case. In that case, as suggested by Konrad, everything will be handled in DT like below to avoid the device data.
-> 
-> imem,phandle = <&phandle <imem_offset> <value>>;
 
-the part before the comma is a vendor prefix, so that must be qcom,xyz
+Yes. We are planning to post the updated version of QCA8084 PHY driver 
+along with the QCA8084 PHY DT example in the DT bindings. This should be 
+available by the next review cycle.
 
-what are your plans for the other reboot reasons? are we scrapping them?
+>>>
+>>>> Later once the IPQ PCS driver is merged, we are planning to push the 
+>>>> PCS DTS changes, along with an update of the NSSCC DTS to point to 
+>>>> the PCS node and mark the "post-init-providers" property. This 
+>>>> should work for all cases.
+>>>>
+>>>> Also, in my view, it is not suitable to move PCS MII clocks get to
+>>>> "ipq_pcs_get()" because the natural loading order for the drivers
+>>>> is as below:
+>>>>
+>>>> 1) NSSCC driver
+>>>> 2) PCS driver
+>>>> 3) Ethernet driver.
+>>>>
+>>>> Additionally, the community is currently working on an 
+>>>> infrastructure to
+>>>> provide a common pcs get method. (Christian and Sean Anderson has 
+>>>> been working on this). Therefore, I expect "ipq_pcs_get" to be 
+>>>> dropped in the future and replaced with the common pcs get method 
+>>>> once this common infra is merged.
+>>>
+>>> That makes sense. Thank you for clarifying.
+>>
+> 
 
-Konrad
