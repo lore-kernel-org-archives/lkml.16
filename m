@@ -1,88 +1,161 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63CAE3D69;
-	Fri, 16 May 2025 03:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49933D69
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 03:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747365660; cv=none; b=WofnVF2r2Er7ubX+TGKxafnmeRP048w388KNkalEKj/4nqdgSRU9QeqjY0qhIAXB5BvYXg61JqvbTWxRYzgR/JEoj3ejhGfuwrOw0X2V69L2XSeRmAfi39AZCIwwLjitH1fJI6MYG8IOeVUpRr1YcuR1ufzVhHmSED/GT1q2X6o=
+	t=1747365816; cv=none; b=Y90CZ9s716EzmUQTs0FBNU2gAnYunDqFTqG8zSu5DD+tvXc2JPkgyJtGwztQLwznRpAile4r/j/a2zGLflCCljgC1hU2eRHZtt4NTPW5henG2Txn7U5zo7/XlU04U8CNK7G3ObE1IpOwLamLW3a56fMElr2IHob3DYjc/NEVk2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747365660; c=relaxed/simple;
-	bh=hO+rR+dWcD6f6Hge8HMHr7Cb8QAg8f4oCX2KJ+iFwGg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ThYBdsP6hx/dFQoSi5G7HUkYLbGRsGFAJWJiJ/JAQDeoGjHA+G1N/dpvlG0riiLGbzy6n/JSHiX1Teek4gatIb11DwM8C2ow3S/IBdQuC8K4jMp3Ihc9gVZBEf6Gt0B4YyCfWQGKq9yzW/VnFclJZPOzTiQwBn6BJSx5ZX8PoJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Qe2vQ5ES; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1747365816; c=relaxed/simple;
+	bh=AWkkCfi6oA0nYFHIzzJUA86K0s0118UVGL/IWo3IBko=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R22GFZEKNcVRx/t1ULON0Fa0T8tc9v6jWtgI00Ao422QRLzUGk2YkhYIG1kMz81O+yAHGQOTCUv01IFC5qhe0TofU7d61HqYi7afxPdM7s5HikQUtzh9aFW44KmK2SugSAkmpJvl8mONK3JmRPFV/Ru6icP+3Ai3hlVUAc1NncU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=b3MNX5FS; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Qe2vQ5ES"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747365649; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=GExNtFmUWMDmQxbl32tS+x8auE8iVSf/kkBrvwmxa6I=;
-	b=Qe2vQ5EScnbO8JSIBIePdAgK5F+iwDwlWl4bdEp+3E8ZhAvyGiZWaPpNeFweKwaA47898Zp+6bEWBnG3dJzSHeqU9toaqcH4ZkIRu6WDU1KY6NNykvf05JhEu8cdGtExjm1413XDlB0o+ABqA7EsEcKGnXWpLXF9nuxHV1pkib0=
-Received: from 30.74.144.109(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WatldDB_1747365643 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 16 May 2025 11:20:45 +0800
-Message-ID: <9c54397f-3cbf-4fa2-bf69-ba89613d355f@linux.alibaba.com>
-Date: Fri, 16 May 2025 11:20:42 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="b3MNX5FS"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747365811;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=THgsYtDm20+Ng95cWON+GsyudgBoMpP632XoGpT/cRk=;
+	b=b3MNX5FSuRHSqbwaLZQekRg3fE+NTlXITswQDvhm7fbOiJGUh/g73UGeCslJoRTqVTdkM4
+	M2/EOBoZ3Y172ZjSJqbKlR0l09k7/VPCTyZiY52F1yWG/q224d737WxcoxAScRd+Xa4gfc
+	XTbGmGU6CAyso+ekhLVhcBrvypUpYl4=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: bpf@vger.kernel.org
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
+	Quentin Monnet <qmo@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mykyta Yatsenko <yatsenko@meta.com>,
+	Daniel Xu <dxu@dxuuu.xyz>,
+	Tao Chen <chen.dylane@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v3] bpftool: Add support for custom BTF path in prog load/loadall
+Date: Fri, 16 May 2025 11:23:06 +0800
+Message-ID: <20250516032312.275261-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 06/12] khugepaged: introduce khugepaged_scan_bitmap for
- mTHP support
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
- corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
- baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
- wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
- vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
- yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
- aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
- catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
- dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org
-References: <20250515032226.128900-1-npache@redhat.com>
- <20250515032226.128900-7-npache@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250515032226.128900-7-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+This patch exposes the btf_custom_path feature to bpftool, allowing users
+to specify a custom BTF file when loading BPF programs using prog load or
+prog loadall commands.
 
+The argument 'btf_custom_path' in libbpf is used for those kernels that
+don't have CONFIG_DEBUG_INFO_BTF enabled but still want to perform CO-RE
+relocations.
 
-On 2025/5/15 11:22, Nico Pache wrote:
-> khugepaged scans anons PMD ranges for potential collapse to a hugepage.
-> To add mTHP support we use this scan to instead record chunks of utilized
-> sections of the PMD.
-> 
-> khugepaged_scan_bitmap uses a stack struct to recursively scan a bitmap
-> that represents chunks of utilized regions. We can then determine what
-> mTHP size fits best and in the following patch, we set this bitmap while
-> scanning the anon PMD. A minimum collapse order of 2 is used as this is
-> the lowest order supported by anon memory.
-> 
-> max_ptes_none is used as a scale to determine how "full" an order must
-> be before being considered for collapse.
-> 
-> When attempting to collapse an order that has its order set to "always"
-> lets always collapse to that order in a greedy manner without
-> considering the number of bits set.
-> 
-> Signed-off-by: Nico Pache <npache@redhat.com>
+Suggested-by: Quentin Monnet <qmo@kernel.org>
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
 
-Sigh. You still haven't addressed or explained the issues I previously 
-raised [1], so I don't know how to review this patch again...
+---
+V2 -> V3: Optimized document grammar and some prompts
+https://lore.kernel.org/bpf/20250515065018.240188-1-jiayuan.chen@linux.dev/
+V1 -> V2: Added bash completion and documentation
+https://lore.kernel.org/bpf/20250513035853.75820-1-jiayuan.chen@linux.dev/
+---
+ tools/bpf/bpftool/Documentation/bpftool-prog.rst |  8 +++++++-
+ tools/bpf/bpftool/bash-completion/bpftool        |  4 ++--
+ tools/bpf/bpftool/prog.c                         | 12 +++++++++++-
+ 3 files changed, 20 insertions(+), 4 deletions(-)
 
-[1] 
-https://lore.kernel.org/all/83a66442-b7c7-42e7-af4e-fd211d8ed6f8@linux.alibaba.com/
+diff --git a/tools/bpf/bpftool/Documentation/bpftool-prog.rst b/tools/bpf/bpftool/Documentation/bpftool-prog.rst
+index d6304e01afe0..4dce43e8e8a3 100644
+--- a/tools/bpf/bpftool/Documentation/bpftool-prog.rst
++++ b/tools/bpf/bpftool/Documentation/bpftool-prog.rst
+@@ -127,7 +127,7 @@ bpftool prog pin *PROG* *FILE*
+     Note: *FILE* must be located in *bpffs* mount. It must not contain a dot
+     character ('.'), which is reserved for future extensions of *bpffs*.
+ 
+-bpftool prog { load | loadall } *OBJ* *PATH* [type *TYPE*] [map { idx *IDX* | name *NAME* } *MAP*] [{ offload_dev | xdpmeta_dev } *NAME*] [pinmaps *MAP_DIR*] [autoattach]
++bpftool prog { load | loadall } *OBJ* *PATH* [type *TYPE*] [map { idx *IDX* | name *NAME* } *MAP*] [{ offload_dev | xdpmeta_dev } *NAME*] [pinmaps *MAP_DIR*] [autoattach] [kernel_btf *BTF_FILE*]
+     Load bpf program(s) from binary *OBJ* and pin as *PATH*. **bpftool prog
+     load** pins only the first program from the *OBJ* as *PATH*. **bpftool prog
+     loadall** pins all programs from the *OBJ* under *PATH* directory. **type**
+@@ -153,6 +153,12 @@ bpftool prog { load | loadall } *OBJ* *PATH* [type *TYPE*] [map { idx *IDX* | na
+     program does not support autoattach, bpftool falls back to regular pinning
+     for that program instead.
+ 
++    The **kernel_btf** option allows specifying an external BTF file to replace
++    the system's own vmlinux BTF file for CO-RE relocations. Note that any
++    other feature relying on BTF (such as fentry/fexit programs, struct_ops)
++    requires the BTF file for the actual kernel running on the host, often
++    exposed at /sys/kernel/btf/vmlinux.
++
+     Note: *PATH* must be located in *bpffs* mount. It must not contain a dot
+     character ('.'), which is reserved for future extensions of *bpffs*.
+ 
+diff --git a/tools/bpf/bpftool/bash-completion/bpftool b/tools/bpf/bpftool/bash-completion/bpftool
+index 1ce409a6cbd9..27512feb5c70 100644
+--- a/tools/bpf/bpftool/bash-completion/bpftool
++++ b/tools/bpf/bpftool/bash-completion/bpftool
+@@ -505,13 +505,13 @@ _bpftool()
+                             _bpftool_get_map_names
+                             return 0
+                             ;;
+-                        pinned|pinmaps)
++                        pinned|pinmaps|kernel_btf)
+                             _filedir
+                             return 0
+                             ;;
+                         *)
+                             COMPREPLY=( $( compgen -W "map" -- "$cur" ) )
+-                            _bpftool_once_attr 'type pinmaps autoattach'
++                            _bpftool_once_attr 'type pinmaps autoattach kernel_btf'
+                             _bpftool_one_of_list 'offload_dev xdpmeta_dev'
+                             return 0
+                             ;;
+diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+index f010295350be..96eea8a67225 100644
+--- a/tools/bpf/bpftool/prog.c
++++ b/tools/bpf/bpftool/prog.c
+@@ -1681,8 +1681,17 @@ static int load_with_options(int argc, char **argv, bool first_prog_only)
+ 		} else if (is_prefix(*argv, "autoattach")) {
+ 			auto_attach = true;
+ 			NEXT_ARG();
++		} else if (is_prefix(*argv, "kernel_btf")) {
++			NEXT_ARG();
++
++			if (!REQ_ARGS(1))
++				goto err_free_reuse_maps;
++
++			open_opts.btf_custom_path = GET_ARG();
+ 		} else {
+-			p_err("expected no more arguments, 'type', 'map' or 'dev', got: '%s'?",
++			p_err("expected no more arguments, "
++			      "'type', 'map', 'offload_dev', 'xdpmeta_dev', 'pinmaps', "
++			      "'autoattach', or 'kernel_btf', got: '%s'?",
+ 			      *argv);
+ 			goto err_free_reuse_maps;
+ 		}
+@@ -2474,6 +2483,7 @@ static int do_help(int argc, char **argv)
+ 		"                         [map { idx IDX | name NAME } MAP]\\\n"
+ 		"                         [pinmaps MAP_DIR]\n"
+ 		"                         [autoattach]\n"
++		"                         [kernel_btf BTF_FILE]\n"
+ 		"       %1$s %2$s attach PROG ATTACH_TYPE [MAP]\n"
+ 		"       %1$s %2$s detach PROG ATTACH_TYPE [MAP]\n"
+ 		"       %1$s %2$s run PROG \\\n"
+-- 
+2.47.1
+
