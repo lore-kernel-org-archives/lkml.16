@@ -1,369 +1,371 @@
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D2272601
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 13:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC5772601;
+	Fri, 16 May 2025 13:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747403723; cv=none; b=CRcNA5bJH9JbZoVL0lauN78fqgYKXbdFzSjTBdvnRAfkkAFKu0pJeiarx5dE+FWS9TunUw5qF9b1ilpKA2aaNzd4l88byZSYx6kyHcDiWNQ/oqDMRc58sKy8ZnjEp52gzeXRlWZj+wAxxqsSp1z2Q3uZs6m9I6ajOLfUqUwgAow=
+	t=1747403731; cv=none; b=HBtJkYhr7mOgcu6xakLFwCMLV1dwaReKuU3B3Q05hV7JTAEJC0lGxPNM5Qb3CctgDxLaxehXzpotkl6UnY1T5eUTeH1HPYb9v/gl4jVI2seIOGzdY2WuVxQZvS22B5LxNagiAZQGtjO46oEht+lgk2fBr01pzQs7EungjrokaZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747403723; c=relaxed/simple;
-	bh=xz4KXyjxxqtJo8+UfJLQNE8G+31IXEyHgzP5kBGQ10M=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=gqctd3XCf0zCjWofj+ONniOdcSjwstWdipWps6+v38UKU1br/3EO+XXwSpo2TMIqhMWwb3VEWBboIEtaxBtnmCoeZsh9heEahrkp/jkYsfPSbEtkXi8rDuWhayOZuC+zAvV1bdAZBacPg+EanG6SUIBI5ofea7IBy4iIp5Pcfb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.216.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-30abb33d1d2so4043104a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:55:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747403720; x=1748008520;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2zy8RBHcYgjVtPGhPQMOjOPgSn15KXqetvy8zLm/jew=;
-        b=Sv5b1V1htHgotYxbe7f39AmNERYP5bNsy48Q48rPzayNTLAlASvTJlZvWLz0TRVU+N
-         F1sQ5v/VcWuc3bEv83wK92ACOSMHv9oSwUUN0AOhpoSXAX3XTQp1nIeLoO3h6iR0loMi
-         SmMBpgXuJuGSekjXVTYYKhLjvMhyBcW745++OI0lxbG1ZyxsZK//hW7lyWUytnMiTy++
-         IVWBdkwzJnGy6jgw7UxzXGIubB9jH29FXsLvvvV33YgeGCD5Ui8vgbaOa9gSaQ1GLWZg
-         OSpa0Qh0vUH0UwH4yscE6EtEnKEBKcD01TD+v77dT/cxhuy6+mzrZnFYdNM4ohhv1RRn
-         5wZw==
-X-Gm-Message-State: AOJu0Yw9Ea25oFiDNsA5DNgn49ZdnLit2gB/Ah9ZZ3sz1tOOvIvHRG1H
-	t+j3hs7yyri6Vs6AEQ8MyFKpQEmIdshkdyGqjpn5OZ2TzGiZnkMHY+NUkvVdoxMFUCelBNWcDM/
-	HnYStFPzMpPzxe61pCV1a2OThTsbWy6/a8Wh8NwAxZMMgoZXoGvTsgAzRSpw=
-X-Google-Smtp-Source: AGHT+IH3XUl9aompvJnJEAsKnM94Meosso6TmVx4alFS0b298QJJoQXXQvsFf5bFVRUeq+XnKuYRdjRFvTaleEV6gCvrSkDM7suc
+	s=arc-20240116; t=1747403731; c=relaxed/simple;
+	bh=kXogt4iFZiSuDOpJ1zpztLcK0rga4wuTYqF+xCSgbUA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bGB7Le431tZGg5Hu4cm7XBO59mGBVAHKwzoZTQKpLMbxIId973bPcBDLwJiAQMBMyNx5pcqY50leql+OrEdZe2+W95Hq5L27TpOae15rHoYlKL7b3P7yiTCBbvvsXs5otQxDNq7bLPlcLJRi0XfS8W697YwblFjG0HqSUbCLl/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=krPohU+b; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="krPohU+b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33606C4CEE4;
+	Fri, 16 May 2025 13:55:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747403730;
+	bh=kXogt4iFZiSuDOpJ1zpztLcK0rga4wuTYqF+xCSgbUA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=krPohU+bQPLALzxQxCOYbyNE0JlUjbZL1llaENNkLxxhIO1ety0ZCKuWQXROnCIPq
+	 uFVOuGuZTcifZAF6u9gtSiFqTBAV7jJvYcOdF1nKulYhx8QE5H1IIJy4bcNh8h/30O
+	 fZ/20rGdYex1Ax73T9756NO2Sp+TIaRvZVhBu5POiIDJ6zpmjNCv/6V9TZTPnTIh/q
+	 PGFgQkvyogowh2uaKzlh3vNQSUfH1503gxwd1TZzLNsb5mQBZB8GS3fSrMel3WCCJA
+	 8yrYWWjZnZfR1mRp89bSvXww797lysxXkeF/KmV5Vt6msKRCBivdxa1BWnv337+MaQ
+	 SehUL8Q1tli4Q==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uFvX5-00FZrY-Sr;
+	Fri, 16 May 2025 14:55:28 +0100
+Date: Fri, 16 May 2025 14:55:27 +0100
+Message-ID: <864ixkfynk.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	qperret@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kernel-team@android.com
+Subject: Re: [PATCH v4 10/10] KVM: arm64: np-guest CMOs with PMD_SIZE fixmap
+In-Reply-To: <20250509131706.2336138-11-vdonnefort@google.com>
+References: <20250509131706.2336138-1-vdonnefort@google.com>
+	<20250509131706.2336138-11-vdonnefort@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6602:721b:b0:86a:1fce:f1a6 with SMTP id
- ca18e2360f4ac-86a24bdaac0mr415099839f.5.1747403710462; Fri, 16 May 2025
- 06:55:10 -0700 (PDT)
-Date: Fri, 16 May 2025 06:55:10 -0700
-In-Reply-To: <000000000000ffc5d80616fea23d@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <682743be.a00a0220.398d88.020d.GAE@google.com>
-Subject: Re: [syzbot] Re: possible deadlock in team_del_slave (3)
-From: syzbot <syzbot+705c61d60b091ef42c04@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: vdonnefort@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, qperret@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+On Fri, 09 May 2025 14:17:06 +0100,
+Vincent Donnefort <vdonnefort@google.com> wrote:
+> 
+> With the introduction of stage-2 huge mappings in the pKVM hypervisor,
+> guest pages CMO is needed for PMD_SIZE size. Fixmap only supports
+> PAGE_SIZE and iterating over the huge-page is time consuming (mostly due
+> to TLBI on hyp_fixmap_unmap) which is a problem for EL2 latency.
+> 
+> Introduce a shared PMD_SIZE fixmap (hyp_fixblock_map/hyp_fixblock_unmap)
+> to improve guest page CMOs when stage-2 huge mappings are installed.
+> 
+> On a Pixel6, the iterative solution resulted in a latency of ~700us,
+> while the PMD_SIZE fixmap reduces it to ~100us.
+> 
+> Because of the horrendous private range allocation that would be
+> necessary, this is disabled for 64KiB pages systems.
+> 
+> Suggested-by: Quentin Perret <qperret@google.com>
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> Signed-off-by: Quentin Perret <qperret@google.com>
+> 
+> diff --git a/arch/arm64/include/asm/kvm_pgtable.h b/arch/arm64/include/asm/kvm_pgtable.h
+> index 1b43bcd2a679..2888b5d03757 100644
+> --- a/arch/arm64/include/asm/kvm_pgtable.h
+> +++ b/arch/arm64/include/asm/kvm_pgtable.h
+> @@ -59,6 +59,11 @@ typedef u64 kvm_pte_t;
+>  
+>  #define KVM_PHYS_INVALID		(-1ULL)
+>  
+> +#define KVM_PTE_TYPE			BIT(1)
+> +#define KVM_PTE_TYPE_BLOCK		0
+> +#define KVM_PTE_TYPE_PAGE		1
+> +#define KVM_PTE_TYPE_TABLE		1
+> +
+>  #define KVM_PTE_LEAF_ATTR_LO		GENMASK(11, 2)
+>  
+>  #define KVM_PTE_LEAF_ATTR_LO_S1_ATTRIDX	GENMASK(4, 2)
+> diff --git a/arch/arm64/kvm/hyp/include/nvhe/mm.h b/arch/arm64/kvm/hyp/include/nvhe/mm.h
+> index 230e4f2527de..b0c72bc2d5ba 100644
+> --- a/arch/arm64/kvm/hyp/include/nvhe/mm.h
+> +++ b/arch/arm64/kvm/hyp/include/nvhe/mm.h
+> @@ -13,9 +13,11 @@
+>  extern struct kvm_pgtable pkvm_pgtable;
+>  extern hyp_spinlock_t pkvm_pgd_lock;
+>  
+> -int hyp_create_pcpu_fixmap(void);
+> +int hyp_create_fixmap(void);
+>  void *hyp_fixmap_map(phys_addr_t phys);
+>  void hyp_fixmap_unmap(void);
+> +void *hyp_fixblock_map(phys_addr_t phys);
+> +void hyp_fixblock_unmap(void);
+>  
+>  int hyp_create_idmap(u32 hyp_va_bits);
+>  int hyp_map_vectors(void);
+> diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> index 97e0fea9db4e..9f3ffa4e0690 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> @@ -220,16 +220,52 @@ static void guest_s2_put_page(void *addr)
+>  	hyp_put_page(&current_vm->pool, addr);
+>  }
+>  
+> +static void *__fixmap_guest_page(void *va, size_t *size)
+> +{
+> +	if (IS_ALIGNED(*size, PMD_SIZE)) {
+> +		void *addr = hyp_fixblock_map(__hyp_pa(va));
+> +
+> +		if (addr)
+> +			return addr;
+> +
+> +		*size = PAGE_SIZE;
+> +	}
+> +
+> +	if (IS_ALIGNED(*size, PAGE_SIZE))
+> +		return hyp_fixmap_map(__hyp_pa(va));
+> +
+> +	WARN_ON(1);
+> +
+> +	return NULL;
+> +}
+> +
+> +static void __fixunmap_guest_page(size_t size)
+> +{
+> +	switch (size) {
+> +	case PAGE_SIZE:
+> +		hyp_fixmap_unmap();
+> +		break;
+> +	case PMD_SIZE:
+> +		hyp_fixblock_unmap();
+> +		break;
+> +	default:
+> +		WARN_ON(1);
+> +	}
 
-***
+This is pretty ugly. How can we end-up there the first place? I'd
+rather you make sure we can't reach this default path at all. See also
+towards the end of this patch (tl;dr: hyp_fixblock_unmap() should
+never explode).
 
-Subject: Re: possible deadlock in team_del_slave (3)
-Author: penguin-kernel@i-love.sakura.ne.jp
+> +}
+> +
+>  static void clean_dcache_guest_page(void *va, size_t size)
+>  {
+>  	WARN_ON(!PAGE_ALIGNED(size));
+>  
+>  	while (size) {
+> -		__clean_dcache_guest_page(hyp_fixmap_map(__hyp_pa(va)),
+> -					  PAGE_SIZE);
+> -		hyp_fixmap_unmap();
+> -		va += PAGE_SIZE;
+> -		size -= PAGE_SIZE;
+> +		size_t fixmap_size = size == PMD_SIZE ? size : PAGE_SIZE;
+> +		void *addr = __fixmap_guest_page(va, &fixmap_size);
+> +
+> +		__clean_dcache_guest_page(addr, fixmap_size);
+> +		__fixunmap_guest_page(fixmap_size);
+> +
+> +		size -= fixmap_size;
+> +		va += fixmap_size;
 
-#syz test
+Can this ever be called with a *multiple* of PMD_SIZE? In this case
+you'd still end-up doing PAGE_SIZEd-bite CMOs until there is only
+PMD_SIZE left, ruining the optimisation.
 
-diff --git a/drivers/net/team/team_core.c b/drivers/net/team/team_core.c
-index d8fc0c79745d..96bbe146b884 100644
---- a/drivers/net/team/team_core.c
-+++ b/drivers/net/team/team_core.c
-@@ -933,7 +933,7 @@ static bool team_port_find(const struct team *team,
-  * Enable/disable port by adding to enabled port hashlist and setting
-  * port->index (Might be racy so reader could see incorrect ifindex when
-  * processing a flying packet, but that is not a problem). Write guarded
-- * by team->lock.
-+ * by RTNL.
-  */
- static void team_port_enable(struct team *team,
- 			     struct team_port *port)
-@@ -1660,8 +1660,6 @@ static int team_init(struct net_device *dev)
- 		goto err_options_register;
- 	netif_carrier_off(dev);
- 
--	lockdep_register_key(&team->team_lock_key);
--	__mutex_init(&team->lock, "team->team_lock_key", &team->team_lock_key);
- 	netdev_lockdep_set_classes(dev);
- 
- 	return 0;
-@@ -1682,7 +1680,7 @@ static void team_uninit(struct net_device *dev)
- 	struct team_port *port;
- 	struct team_port *tmp;
- 
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	list_for_each_entry_safe(port, tmp, &team->port_list, list)
- 		team_port_del(team, port->dev);
- 
-@@ -1691,9 +1689,8 @@ static void team_uninit(struct net_device *dev)
- 	team_mcast_rejoin_fini(team);
- 	team_notify_peers_fini(team);
- 	team_queue_override_fini(team);
--	mutex_unlock(&team->lock);
-+	ASSERT_RTNL();
- 	netdev_change_features(dev);
--	lockdep_unregister_key(&team->team_lock_key);
- }
- 
- static void team_destructor(struct net_device *dev)
-@@ -1814,11 +1811,11 @@ static int team_set_mac_address(struct net_device *dev, void *p)
- 	if (dev->type == ARPHRD_ETHER && !is_valid_ether_addr(addr->sa_data))
- 		return -EADDRNOTAVAIL;
- 	dev_addr_set(dev, addr->sa_data);
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	list_for_each_entry(port, &team->port_list, list)
- 		if (team->ops.port_change_dev_addr)
- 			team->ops.port_change_dev_addr(team, port);
--	mutex_unlock(&team->lock);
-+	ASSERT_RTNL();
- 	return 0;
- }
- 
-@@ -1832,7 +1829,7 @@ static int team_change_mtu(struct net_device *dev, int new_mtu)
- 	 * Alhough this is reader, it's guarded by team lock. It's not possible
- 	 * to traverse list in reverse under rcu_read_lock
- 	 */
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	team->port_mtu_change_allowed = true;
- 	list_for_each_entry(port, &team->port_list, list) {
- 		err = dev_set_mtu(port->dev, new_mtu);
-@@ -1843,7 +1840,7 @@ static int team_change_mtu(struct net_device *dev, int new_mtu)
- 		}
- 	}
- 	team->port_mtu_change_allowed = false;
--	mutex_unlock(&team->lock);
-+	ASSERT_RTNL();
- 
- 	WRITE_ONCE(dev->mtu, new_mtu);
- 
-@@ -1853,7 +1850,7 @@ static int team_change_mtu(struct net_device *dev, int new_mtu)
- 	list_for_each_entry_continue_reverse(port, &team->port_list, list)
- 		dev_set_mtu(port->dev, dev->mtu);
- 	team->port_mtu_change_allowed = false;
--	mutex_unlock(&team->lock);
-+	ASSERT_RTNL();
- 
- 	return err;
- }
-@@ -1907,20 +1904,20 @@ static int team_vlan_rx_add_vid(struct net_device *dev, __be16 proto, u16 vid)
- 	 * Alhough this is reader, it's guarded by team lock. It's not possible
- 	 * to traverse list in reverse under rcu_read_lock
- 	 */
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	list_for_each_entry(port, &team->port_list, list) {
- 		err = vlan_vid_add(port->dev, proto, vid);
- 		if (err)
- 			goto unwind;
- 	}
--	mutex_unlock(&team->lock);
-+	ASSERT_RTNL();
- 
- 	return 0;
- 
- unwind:
- 	list_for_each_entry_continue_reverse(port, &team->port_list, list)
- 		vlan_vid_del(port->dev, proto, vid);
--	mutex_unlock(&team->lock);
-+	ASSERT_RTNL();
- 
- 	return err;
- }
-@@ -1930,10 +1927,10 @@ static int team_vlan_rx_kill_vid(struct net_device *dev, __be16 proto, u16 vid)
- 	struct team *team = netdev_priv(dev);
- 	struct team_port *port;
- 
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	list_for_each_entry(port, &team->port_list, list)
- 		vlan_vid_del(port->dev, proto, vid);
--	mutex_unlock(&team->lock);
-+	ASSERT_RTNL();
- 
- 	return 0;
- }
-@@ -1955,9 +1952,9 @@ static void team_netpoll_cleanup(struct net_device *dev)
- {
- 	struct team *team = netdev_priv(dev);
- 
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	__team_netpoll_cleanup(team);
--	mutex_unlock(&team->lock);
-+	ASSERT_RTNL();
- }
- 
- static int team_netpoll_setup(struct net_device *dev)
-@@ -1966,7 +1963,7 @@ static int team_netpoll_setup(struct net_device *dev)
- 	struct team_port *port;
- 	int err = 0;
- 
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	list_for_each_entry(port, &team->port_list, list) {
- 		err = __team_port_enable_netpoll(port);
- 		if (err) {
-@@ -1974,7 +1971,7 @@ static int team_netpoll_setup(struct net_device *dev)
- 			break;
- 		}
- 	}
--	mutex_unlock(&team->lock);
-+	ASSERT_RTNL();
- 	return err;
- }
- #endif
-@@ -1985,9 +1982,9 @@ static int team_add_slave(struct net_device *dev, struct net_device *port_dev,
- 	struct team *team = netdev_priv(dev);
- 	int err;
- 
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	err = team_port_add(team, port_dev, extack);
--	mutex_unlock(&team->lock);
-+	ASSERT_RTNL();
- 
- 	if (!err)
- 		netdev_change_features(dev);
-@@ -2000,18 +1997,13 @@ static int team_del_slave(struct net_device *dev, struct net_device *port_dev)
- 	struct team *team = netdev_priv(dev);
- 	int err;
- 
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	err = team_port_del(team, port_dev);
--	mutex_unlock(&team->lock);
-+	ASSERT_RTNL();
- 
- 	if (err)
- 		return err;
- 
--	if (netif_is_team_master(port_dev)) {
--		lockdep_unregister_key(&team->team_lock_key);
--		lockdep_register_key(&team->team_lock_key);
--		lockdep_set_class(&team->lock, &team->team_lock_key);
--	}
- 	netdev_change_features(dev);
- 
- 	return err;
-@@ -2319,13 +2311,13 @@ static struct team *team_nl_team_get(struct genl_info *info)
- 	}
- 
- 	team = netdev_priv(dev);
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	return team;
- }
- 
- static void team_nl_team_put(struct team *team)
- {
--	mutex_unlock(&team->lock);
-+	ASSERT_RTNL();
- 	dev_put(team->dev);
- }
- 
-@@ -2961,11 +2953,9 @@ static void __team_port_change_port_removed(struct team_port *port)
- 
- static void team_port_change_check(struct team_port *port, bool linkup)
- {
--	struct team *team = port->team;
--
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	__team_port_change_check(port, linkup);
--	mutex_unlock(&team->lock);
-+	ASSERT_RTNL();
- }
- 
- 
-diff --git a/drivers/net/team/team_mode_activebackup.c b/drivers/net/team/team_mode_activebackup.c
-index e0f599e2a51d..4e133451f4d6 100644
---- a/drivers/net/team/team_mode_activebackup.c
-+++ b/drivers/net/team/team_mode_activebackup.c
-@@ -68,7 +68,7 @@ static void ab_active_port_get(struct team *team, struct team_gsetter_ctx *ctx)
- 	struct team_port *active_port;
- 
- 	active_port = rcu_dereference_protected(ab_priv(team)->active_port,
--						lockdep_is_held(&team->lock));
-+						rtnl_is_locked());
- 	if (active_port)
- 		ctx->data.u32_val = active_port->dev->ifindex;
- 	else
-diff --git a/drivers/net/team/team_mode_loadbalance.c b/drivers/net/team/team_mode_loadbalance.c
-index 00f8989c29c0..79ac52d086e0 100644
---- a/drivers/net/team/team_mode_loadbalance.c
-+++ b/drivers/net/team/team_mode_loadbalance.c
-@@ -302,7 +302,7 @@ static int lb_bpf_func_set(struct team *team, struct team_gsetter_ctx *ctx)
- 		/* Clear old filter data */
- 		__fprog_destroy(lb_priv->ex->orig_fprog);
- 		orig_fp = rcu_dereference_protected(lb_priv->fp,
--						lockdep_is_held(&team->lock));
-+						    rtnl_is_locked());
- 	}
- 
- 	rcu_assign_pointer(lb_priv->fp, fp);
-@@ -325,7 +325,7 @@ static void lb_bpf_func_free(struct team *team)
- 
- 	__fprog_destroy(lb_priv->ex->orig_fprog);
- 	fp = rcu_dereference_protected(lb_priv->fp,
--				       lockdep_is_held(&team->lock));
-+				       rtnl_is_locked());
- 	bpf_prog_destroy(fp);
- }
- 
-@@ -336,7 +336,7 @@ static void lb_tx_method_get(struct team *team, struct team_gsetter_ctx *ctx)
- 	char *name;
- 
- 	func = rcu_dereference_protected(lb_priv->select_tx_port_func,
--					 lockdep_is_held(&team->lock));
-+					 rtnl_is_locked());
- 	name = lb_select_tx_port_get_name(func);
- 	BUG_ON(!name);
- 	ctx->data.str_val = name;
-@@ -471,6 +471,7 @@ static void lb_stats_refresh(struct work_struct *work)
- 	bool changed = false;
- 	int i;
- 	int j;
-+	bool locked;
- 
- 	lb_priv_ex = container_of(work, struct lb_priv_ex,
- 				  stats.refresh_dw.work);
-@@ -478,7 +479,8 @@ static void lb_stats_refresh(struct work_struct *work)
- 	team = lb_priv_ex->team;
- 	lb_priv = get_lb_priv(team);
- 
--	if (!mutex_trylock(&team->lock)) {
-+	locked = rtnl_is_locked();
-+	if (!locked && !rtnl_trylock()) {
- 		schedule_delayed_work(&lb_priv_ex->stats.refresh_dw, 0);
- 		return;
- 	}
-@@ -515,7 +517,8 @@ static void lb_stats_refresh(struct work_struct *work)
- 	schedule_delayed_work(&lb_priv_ex->stats.refresh_dw,
- 			      (lb_priv_ex->stats.refresh_interval * HZ) / 10);
- 
--	mutex_unlock(&team->lock);
-+	if (!locked)
-+		rtnl_unlock();
- }
- 
- static void lb_stats_refresh_interval_get(struct team *team,
-diff --git a/include/linux/if_team.h b/include/linux/if_team.h
-index cdc684e04a2f..ce97d891cf72 100644
---- a/include/linux/if_team.h
-+++ b/include/linux/if_team.h
-@@ -191,8 +191,6 @@ struct team {
- 
- 	const struct header_ops *header_ops_cache;
- 
--	struct mutex lock; /* used for overall locking, e.g. port lists write */
--
- 	/*
- 	 * List of enabled ports and their count
- 	 */
-@@ -223,7 +221,6 @@ struct team {
- 		atomic_t count_pending;
- 		struct delayed_work dw;
- 	} mcast_rejoin;
--	struct lock_class_key team_lock_key;
- 	long mode_priv[TEAM_MODE_PRIV_LONGS];
- };
- 
+I think this needs fixing.
 
+>  	}
+>  }
+>  
+> @@ -238,11 +274,14 @@ static void invalidate_icache_guest_page(void *va, size_t size)
+>  	WARN_ON(!PAGE_ALIGNED(size));
+>  
+>  	while (size) {
+> -		__invalidate_icache_guest_page(hyp_fixmap_map(__hyp_pa(va)),
+> -					       PAGE_SIZE);
+> -		hyp_fixmap_unmap();
+> -		va += PAGE_SIZE;
+> -		size -= PAGE_SIZE;
+> +		size_t fixmap_size = size == PMD_SIZE ? size : PAGE_SIZE;
+> +		void *addr = __fixmap_guest_page(va, &fixmap_size);
+> +
+> +		__invalidate_icache_guest_page(addr, fixmap_size);
+> +		__fixunmap_guest_page(fixmap_size);
+> +
+> +		size -= fixmap_size;
+> +		va += fixmap_size;
+>  	}
+>  }
+>  
+> diff --git a/arch/arm64/kvm/hyp/nvhe/mm.c b/arch/arm64/kvm/hyp/nvhe/mm.c
+> index f41c7440b34b..e3b1bece8504 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/mm.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/mm.c
+> @@ -229,9 +229,8 @@ int hyp_map_vectors(void)
+>  	return 0;
+>  }
+>  
+> -void *hyp_fixmap_map(phys_addr_t phys)
+> +static void *fixmap_map_slot(struct hyp_fixmap_slot *slot, phys_addr_t phys)
+>  {
+> -	struct hyp_fixmap_slot *slot = this_cpu_ptr(&fixmap_slots);
+>  	kvm_pte_t pte, *ptep = slot->ptep;
+>  
+>  	pte = *ptep;
+> @@ -243,10 +242,21 @@ void *hyp_fixmap_map(phys_addr_t phys)
+>  	return (void *)slot->addr;
+>  }
+>  
+> +void *hyp_fixmap_map(phys_addr_t phys)
+> +{
+> +	return fixmap_map_slot(this_cpu_ptr(&fixmap_slots), phys);
+> +}
+> +
+>  static void fixmap_clear_slot(struct hyp_fixmap_slot *slot)
+>  {
+>  	kvm_pte_t *ptep = slot->ptep;
+>  	u64 addr = slot->addr;
+> +	u32 level;
+> +
+> +	if (FIELD_GET(KVM_PTE_TYPE, *ptep) == KVM_PTE_TYPE_PAGE)
+> +		level = KVM_PGTABLE_LAST_LEVEL;
+> +	else
+> +		level = KVM_PGTABLE_LAST_LEVEL - 1; /* create_fixblock() guarantees PMD level */
+
+Seeing this, (KVM_PGTABLE_LAST_LEVEL - 1) looks nicee than the "2" I
+suggested in one of the previous patches.
+
+>
+>  	WRITE_ONCE(*ptep, *ptep & ~KVM_PTE_VALID);
+>  
+> @@ -260,7 +270,7 @@ static void fixmap_clear_slot(struct hyp_fixmap_slot *slot)
+>  	 * https://lore.kernel.org/kvm/20221017115209.2099-1-will@kernel.org/T/#mf10dfbaf1eaef9274c581b81c53758918c1d0f03
+>  	 */
+>  	dsb(ishst);
+> -	__tlbi_level(vale2is, __TLBI_VADDR(addr, 0), KVM_PGTABLE_LAST_LEVEL);
+> +	__tlbi_level(vale2is, __TLBI_VADDR(addr, 0), level);
+>  	dsb(ish);
+>  	isb();
+>  }
+> @@ -273,9 +283,9 @@ void hyp_fixmap_unmap(void)
+>  static int __create_fixmap_slot_cb(const struct kvm_pgtable_visit_ctx *ctx,
+>  				   enum kvm_pgtable_walk_flags visit)
+>  {
+> -	struct hyp_fixmap_slot *slot = per_cpu_ptr(&fixmap_slots, (u64)ctx->arg);
+> +	struct hyp_fixmap_slot *slot = (struct hyp_fixmap_slot *)ctx->arg;
+>  
+> -	if (!kvm_pte_valid(ctx->old) || ctx->level != KVM_PGTABLE_LAST_LEVEL)
+> +	if (!kvm_pte_valid(ctx->old) || (ctx->end - ctx->start) != kvm_granule_size(ctx->level))
+>  		return -EINVAL;
+>  
+>  	slot->addr = ctx->addr;
+> @@ -296,13 +306,73 @@ static int create_fixmap_slot(u64 addr, u64 cpu)
+>  	struct kvm_pgtable_walker walker = {
+>  		.cb	= __create_fixmap_slot_cb,
+>  		.flags	= KVM_PGTABLE_WALK_LEAF,
+> -		.arg = (void *)cpu,
+> +		.arg = (void *)per_cpu_ptr(&fixmap_slots, cpu),
+
+Do you really need this cast?
+
+>  	};
+>  
+>  	return kvm_pgtable_walk(&pkvm_pgtable, addr, PAGE_SIZE, &walker);
+>  }
+>  
+> -int hyp_create_pcpu_fixmap(void)
+> +#ifndef CONFIG_ARM64_64K_PAGES
+
+I don't have much faith in this symbol. We have changed the config
+stuff so often over the years that I wouldn't trust it long term.
+
+Using something like PAGE_SIZE or PAGE_SHIFT is likely to be more
+robust.
+
+> +static struct hyp_fixmap_slot hyp_fixblock_slot;
+> +static DEFINE_HYP_SPINLOCK(hyp_fixblock_lock);
+> +
+> +void *hyp_fixblock_map(phys_addr_t phys)
+> +{
+> +	hyp_spin_lock(&hyp_fixblock_lock);
+> +	return fixmap_map_slot(&hyp_fixblock_slot, phys);
+> +}
+> +
+> +void hyp_fixblock_unmap(void)
+> +{
+> +	fixmap_clear_slot(&hyp_fixblock_slot);
+> +	hyp_spin_unlock(&hyp_fixblock_lock);
+> +}
+> +
+> +static int create_fixblock(void)
+> +{
+> +	struct kvm_pgtable_walker walker = {
+> +		.cb	= __create_fixmap_slot_cb,
+> +		.flags	= KVM_PGTABLE_WALK_LEAF,
+> +		.arg = (void *)&hyp_fixblock_slot,
+> +	};
+> +	unsigned long addr;
+> +	phys_addr_t phys;
+> +	int ret, i;
+> +
+> +	/* Find a RAM phys address, PMD aligned */
+> +	for (i = 0; i < hyp_memblock_nr; i++) {
+> +		phys = ALIGN(hyp_memory[i].base, PMD_SIZE);
+> +		if (phys + PMD_SIZE < (hyp_memory[i].base + hyp_memory[i].size))
+> +			break;
+> +	}
+> +
+> +	if (i >= hyp_memblock_nr)
+> +		return -EINVAL;
+> +
+> +	hyp_spin_lock(&pkvm_pgd_lock);
+> +	addr = ALIGN(__io_map_base, PMD_SIZE);
+> +	ret = __pkvm_alloc_private_va_range(addr, PMD_SIZE);
+> +	if (ret)
+> +		goto unlock;
+> +
+> +	ret = kvm_pgtable_hyp_map(&pkvm_pgtable, addr, PMD_SIZE, phys, PAGE_HYP);
+> +	if (ret)
+> +		goto unlock;
+> +
+> +	ret = kvm_pgtable_walk(&pkvm_pgtable, addr, PMD_SIZE, &walker);
+> +
+> +unlock:
+> +	hyp_spin_unlock(&pkvm_pgd_lock);
+> +
+> +	return ret;
+> +}
+> +#else
+> +void hyp_fixblock_unmap(void) { WARN_ON(1); }
+> +void *hyp_fixblock_map(phys_addr_t phys) { return NULL; }
+> +static int create_fixblock(void) { return 0; }
+> +#endif
+
+I can't say I like this. Can't you have a fallback that does the
+iteration rather than these placeholders that are only there to make
+things catch fire?
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
