@@ -1,143 +1,117 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541D722A4EF
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4316B22ACD3;
+	Fri, 16 May 2025 07:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747382263; cv=none; b=vDx7OTDOZWqngy9vc0Mo74evkuoBTPNMkNMAsI4/JUBOpHuQ0KY7GnKNl/5+/bD5ahZlolfr1Nz6UCmrir9x5A0ZSWfhhlEA0xnilD2rXeWXbt5ONCPZwqgGwLbpJpDRQp6w2hpE68ID2H8uKB+c2EaznFlJ8FXVEIo9FMFFFiY=
+	t=1747382288; cv=none; b=pLNDoESj9s11ezXyOus7uF2dDOyD9533N9H7iD4sPjrd94ZLbg3Mqs8gXIpHB7+a5AXB2VWy51gLsz3CxCamoMBJRb/Up8ZJ/u6gcjK9wCKxD0AveCSW3r3I69qV/+UD2M1tQaW/J8P2zDn96mpfAUQcFdDzWXrTDQQ5BBPxFgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747382263; c=relaxed/simple;
-	bh=8utIiyd9CQDss9kAzJcZaPUjnFZOAVM615J5C3Qh7B4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ff0hDI073EgKpCE7kZJ0zuJ5M6E1i/7+c7JBsWVLaz8zeoVg2cgBes7v9+Sx1H2o8mPcwg6a0/kqCmDW3uZCKkCuIg7+xsgHn4rVVgVzxum7d/9ed5atSrOqQw5a5pjx0WDPjYKS+hdiiyla/uUE1AEghTA1f3njpxo4/KJP/c8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cAn2T6op; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Tow4f+0p; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=cAn2T6op; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Tow4f+0p; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747382288; c=relaxed/simple;
+	bh=KQzgvdfnxhFmKbgaGYV4sNqWFHEH1innGGJwJp7KDIc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kYPVDWUqJMA8aXu6AtrgVzHHP55vFBovJCzq+zayBnq6LrA1BZ+TyqVAXUfab2PGHJwOOrWhPbLouwZvcvz+sNDDuw+qc8W8e5ryG1TlHHQPYnE/kW6XVVJYAYPin2CEOC3XgjkZcp98ItiFrXZ1serM3LATzjQO98jwHBb2Nak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=fv2zWKYn; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cAn2T6op";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Tow4f+0p";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="cAn2T6op";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Tow4f+0p"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="fv2zWKYn"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 55A461F7EE;
-	Fri, 16 May 2025 07:57:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747382259; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZzK2l34QKz9sq3;
+	Fri, 16 May 2025 09:48:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1747381727; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7F6ASfUhy3Ogjv0fj23qSGbSfm30A8DjwOn6lXKJ40Y=;
-	b=cAn2T6opIFUdBjYpxHX6NOOu6PQmhDf3E1u1omE0NMH1ikbvCurS6cpK4DNr34dq8caNuA
-	XnOibxZ8Uvf9v24fNpil4MqxlgIfle82b/FDkfdr4sA4IZMB5PXtETTJDQAYdj4iRxl9nz
-	pX8+Z1YlNLxvs4rlmZhP+2/WGpvUU+c=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747382259;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7F6ASfUhy3Ogjv0fj23qSGbSfm30A8DjwOn6lXKJ40Y=;
-	b=Tow4f+0puezh5xwlZ0G2U/V3TFfSuCLezanvSNL8/uFgppTp26viQpBwiFzBK+OcuNliH3
-	CQoQlJv6f1z7NVAQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=cAn2T6op;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Tow4f+0p
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747382259; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7F6ASfUhy3Ogjv0fj23qSGbSfm30A8DjwOn6lXKJ40Y=;
-	b=cAn2T6opIFUdBjYpxHX6NOOu6PQmhDf3E1u1omE0NMH1ikbvCurS6cpK4DNr34dq8caNuA
-	XnOibxZ8Uvf9v24fNpil4MqxlgIfle82b/FDkfdr4sA4IZMB5PXtETTJDQAYdj4iRxl9nz
-	pX8+Z1YlNLxvs4rlmZhP+2/WGpvUU+c=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747382259;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7F6ASfUhy3Ogjv0fj23qSGbSfm30A8DjwOn6lXKJ40Y=;
-	b=Tow4f+0puezh5xwlZ0G2U/V3TFfSuCLezanvSNL8/uFgppTp26viQpBwiFzBK+OcuNliH3
-	CQoQlJv6f1z7NVAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2530F13977;
-	Fri, 16 May 2025 07:57:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gv3sB/PvJmg8TQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 16 May 2025 07:57:39 +0000
-Date: Fri, 16 May 2025 09:57:38 +0200
-Message-ID: <87wmahvvgt.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Chen Ni <nichen@iscas.ac.cn>
-Cc: g@b4.vu,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: usb: fcp: Use USB API functions rather than constants
-In-Reply-To: <20250516070938.12520-1-nichen@iscas.ac.cn>
-References: <20250516070938.12520-1-nichen@iscas.ac.cn>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	bh=BNKQroZcyCu5Hf7yNgyeFiNusKguz3mFzcsyXu/Esv8=;
+	b=fv2zWKYnimboxIx7CSjtJkLgAYLzafYZQdAGoeB0Y7E4YhI7oN5gylgLCCKI8EhFG9DDuC
+	SwLivhT/bAUGLTCfTn+GatbiycJjUImNpuQ+m2nPKneRZEcRqhxHWBMDeUag1FpLb/Bv20
+	G8u6qs9H6xeTwozzmrc1AR/ODRqIxVaZZ8OmGl8q2c5lsJ8JQi5h3wbzCDykjDwreOTkLP
+	MijZXrgvapDnlTpmgyYkd84hJmgGItWQiXY76mm17J1FKoY9oqYYdRTZLz84aXzvm818Q6
+	6x5E9lJQnmiZ4WOPczxFVUOuZTcAOaEEF3lcOlmX2m9dStkRPLlaEOe/fNIaBw==
+Message-ID: <4592c50fd3168eb3319f4b24cb072e8d8357562d.camel@mailbox.org>
+Subject: Re: [PATCH 4/7] PCI: Remove request_flags relict from devres
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Philipp Stanner
+	 <phasta@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Mark Brown <broonie@kernel.org>, David Lechner <dlechner@baylibre.com>,
+ Zijun Hu <quic_zijuhu@quicinc.com>,  Yang Yingliang
+ <yangyingliang@huawei.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>,  linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  linux-pci@vger.kernel.org
+Date: Fri, 16 May 2025 09:48:42 +0200
+In-Reply-To: <aCXlWoPm2XVA5m7M@smile.fi.intel.com>
+References: <20250515124604.184313-2-phasta@kernel.org>
+	 <20250515124604.184313-6-phasta@kernel.org>
+	 <aCXlWoPm2XVA5m7M@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 55A461F7EE
-X-Spam-Flag: NO
-X-Spam-Score: -3.51
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Action: no action
+MIME-Version: 1.0
+X-MBO-RS-META: 1fftmgenrs6wkrfi1wuig4pbwnnuxmua
+X-MBO-RS-ID: aabbcd1ec9dfca90bf6
 
-On Fri, 16 May 2025 09:09:38 +0200,
-Chen Ni wrote:
-> 
-> Use the function usb_endpoint_num() rather than constants.
-> 
-> The Coccinelle semantic patch is as follows:
-> 
-> @@ struct usb_endpoint_descriptor *epd; @@
-> 
-> - (epd->bEndpointAddress & \(USB_ENDPOINT_NUMBER_MASK\|0x0f\))
-> + usb_endpoint_num(epd)
-> 
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+On Thu, 2025-05-15 at 16:00 +0300, Andy Shevchenko wrote:
+> On Thu, May 15, 2025 at 02:46:02PM +0200, Philipp Stanner wrote:
+> > pcim_request_region_exclusive(), the only user in PCI devres that
+> > needed
+> > exclusive region requests, has been removed.
+> >=20
+> > All features related to exclusive requests can, therefore, be
+> > removed,
+> > too. Remove them.
+>=20
+> ...
+>=20
+> > =C2=A0int pcim_request_region(struct pci_dev *pdev, int bar, const char
+> > *name)
+> > =C2=A0{
+> > -	return _pcim_request_region(pdev, bar, name, 0);
+> > +	int ret;
+> > +	struct pcim_addr_devres *res;
+> > +
+> > +	if (!pci_bar_index_is_valid(bar))
+> > +		return -EINVAL;
+> > +
+> > +	res =3D pcim_addr_devres_alloc(pdev);
+> > +	if (!res)
+> > +		return -ENOMEM;
+> > +	res->type =3D PCIM_ADDR_DEVRES_TYPE_REGION;
+> > +	res->bar =3D bar;
+> > +
+> > +	ret =3D __pcim_request_region(pdev, bar, name, 0);
+>=20
+> > +	if (ret !=3D 0) {
+>=20
+> While at it, drop the=C2=A0 ' !=3D 0' part?
 
-Thanks, applied.
+I want it to be clear to be just a pure code move. It's a shame that
+the git-diff can't just handle that through the function head,
+resulting in a +/-2 diff
 
+Style adjustments, which might also be necessary in pci.c in many
+places, could be done through dedicated commits.
 
-Takashi
+P.
+
+>=20
+> > +		pcim_addr_devres_free(res);
+> > +		return ret;
+> > +	}
+> > +
+> > +	devres_add(&pdev->dev, res);
+> > +	return 0;
+> > =C2=A0}
+>=20
+
