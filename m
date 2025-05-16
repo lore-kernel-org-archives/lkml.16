@@ -1,209 +1,113 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF6722F383
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB05231838;
+	Fri, 16 May 2025 08:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747383397; cv=none; b=tteiXtwSEcK/AN29o7Q0v/YFvEvG1nD0R34RU48WfP/Of7P33Y7gT3cUpdpwoNzDryraSvT4Zg1QOzjnXpdLXK2Xuhz/5nC1ngJ7FlXuf7jOEUbB1lKxv36nmznMeWolP9uIQ98qf2LdqCQVwTaH0V5m4/OkyJT3zkkp9YIx+6s=
+	t=1747383399; cv=none; b=Xb+Msiihpilnce9A26JIdRdLHfkgXrWJSVcIl0LQ1PhIPqAeHRt2x9LDFwSruIUdWxvFjKSVqKIBRQW58wfkrU89kGB39wQJqCJlhvZZD2TaFUUDYRgrYoBrTFUu9ODrpfxn2D12tr1jjf1GAxybJWU90qfeIcCMOLWYsQiiK4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747383397; c=relaxed/simple;
-	bh=PqgeI6KNd9dfvMFjO+MUux9+7/4y055Ts4/mxEWkxwE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HQbholZ60+f2dSmQwybdtgRyV4PzS6qiyoH4Qh2TJnWB177ijS2QZG/l/p79hnnAwWvhsgdVZuhvsFoxio4fS/DkmvAI3hYNUU6h+bu3JvPgdMAdlbRTVwayjDQwBR7lWZbYiBL7J3WbTVs9cxrFoLmqHOzMSEG3X2WGrt3LISA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=DJ+31PtA; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1747383399; c=relaxed/simple;
+	bh=+hZAqH08xCVXK8kytHytBGpF9HetP+6wRwFHX9OnASY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nmAgjr26sDngyhIoTbyRLd/rvWhuusewbsNAkAA7Gus8tuHUcZPVRhPFpXobwmBufWqFcFomiAtVxzJfu4g9lFFiyxdOHkSoVeNp9RF2aoJSNy3U/2a8MRzmwiri45wooPYu/WVETJGP1wIabKSl77v3mJ7RxoPv7deAOl6jHHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YSJX8yJk; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="DJ+31PtA"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c53b9d66fdso247177885a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 01:16:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YSJX8yJk"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad24b7e0331so285091566b.0;
+        Fri, 16 May 2025 01:16:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1747383394; x=1747988194; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3sqLyXB121iu/Ux2S4uUFO89KPL9TBqnWTY9YgSrPFo=;
-        b=DJ+31PtAbI2CPvi3SuaE9V3d4t8g05KfC2zwGfrZz4jBUUirxyw30+Sfb5ARHKfQC7
-         jpuT0nUjO7yCMDQMCFupKADG2onFAqEfIzj/8S9JlPB2ktRldSCBXff/O31MQ/Yb7A+K
-         7BIxksdoWFxJcyV4BP/joUQVy38o4ob5+NTzBHSXAgmV1h6wRZmtUPGn11Im74mBi0KI
-         jyJ3ycmjigGyvPsTWkOdP55g3byNsHVNeHFQhBbvuGIF4IJP+bPBwGByBTe5TF5xZu80
-         MG0Yev4QFbVSimEUXWlarS97VVLg4J9aUnc4EAbuFj+M+Lke/xifaDWq1qJXwsQegD0U
-         bSuQ==
+        d=gmail.com; s=20230601; t=1747383396; x=1747988196; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=p5uMs6FkdhW0yuPSJiF5IsCQmeoDxyXFi4ZKMZV6l28=;
+        b=YSJX8yJkGJipwbEhJqwW8U50h21QpaAZIqtzVWOZoJZMar0AkEq0h8QcUcfdduTXaQ
+         hZNkbYwOo11aJI1l+04W1K1+ICu8+5qPQu+BFJq7soyW/kCX2++A4Hto1g/jpYCshN8d
+         MokGEEkfSC4JGbVCPwJWZVkfmjqETnFcEkeZsKT8Iwu3jbwHYDEhbpWCUvzRjSET/eNu
+         NQ6EcJesJ2rC0oem092bpjBB/XNHqcIZULJOg+f7UvNlT3xxx3UYArMdzbO/xdFTk3dg
+         AcWl0GGmkvXjHS0OSvaFxDtBep3yYK3JNeJnMzL4mY3N0NmKl3r9L8TZibonxGj7k6RQ
+         ghjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747383394; x=1747988194;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3sqLyXB121iu/Ux2S4uUFO89KPL9TBqnWTY9YgSrPFo=;
-        b=oozctl2mqoWgKo2y5Mtp1i57BftEgGqaUOPp7/IhasgnEiu2afhuugoYZiCSveMt7/
-         L0t1VnNNRcq8q/Za/RfhJ2oc7ddNkbM4txlw02TrBW9EThADbSPoi9t3NYNszc+Xftvl
-         W2YkxwkyyCz7ZBQWZkqbFdOK32FT5DkLteJfz+wyxbUFnvRJdW7QxdQUxFLCasm6nyQG
-         FZSuMMwHm7scVJtcK1EA/XABotVLmNdvufJuAX93ylYZLGZtyKfwmAn7jtBkb8xJu9km
-         aivybGi/qESSNJ1WyCYC1+OZSYicruvJgrTcSO+reU2swHV64ZOL2oLADne5vjUwsHEs
-         1BSg==
-X-Forwarded-Encrypted: i=1; AJvYcCXKaVS+Gi9leocmQIsbrordYDhP+q9OwBpfTV9CeV7j4ZCPhXZFHgAwxeH1FpKZB3bhmxIwjnJ3T750X0s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNjeVtA13N1gvU50OaG92GJ2ZraCz2fPORpGPI0x5UOGQmSfjc
-	0XhVT+f/wAp24ADAm6TCiTkClKqi9UFLuSr6KZvHcuPWCJGMG2+6rIhJxfL5YphU5bJRmY/5bDA
-	wyktY
-X-Gm-Gg: ASbGncsHjTGRpe8hjVydYWimXxyZHqQlCbLVqEOySpoikbzkoTg3hvi+Sa3RlbpnCmS
-	S+TtqdFlv8aBtfnwJYlEo/okOPZsu2SfMCGCjuAfCYFUci3GBU8J1WdMvqkVu/UpaqpWNH37/PL
-	YqOFUMPg7lFHo2O1LmtgXYtNPl8ZazI7xiDSPahzM1W/bdm+UlHTQsiXWw4ZlZ7ZczloG8U6RtK
-	LqI0yE892HE3oxX5qrR6HIT9ZbkysjsR+Qds4C2Ya3Vk4cIIHJEKz3T3pUYGvNQCtovy6s5TcFC
-	/C7FGxqfZZmtmoW6kbt4sEs8YyEoVS63Z2sWgWQSfYuYpbszRouTj13Ga0bIjCVJImw4iF1LgG6
-	eVQ==
-X-Google-Smtp-Source: AGHT+IEr22vSw+ZqySumyL1nO/Q9dyJfDfxfA3GzkDraC668SVjDmD7pyN/KZTUegXTa+Xrss41vLA==
-X-Received: by 2002:a17:902:f78c:b0:21f:85ee:f2df with SMTP id d9443c01a7336-231de35f324mr25086705ad.15.1747383382994;
-        Fri, 16 May 2025 01:16:22 -0700 (PDT)
-Received: from localhost.localdomain ([203.208.189.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231e2f57f0csm5586765ad.251.2025.05.16.01.16.20
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 16 May 2025 01:16:22 -0700 (PDT)
-From: lizhe.67@bytedance.com
-To: alex.williamson@redhat.com
-Cc: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lizhe.67@bytedance.com,
-	muchun.song@linux.dev,
-	peterx@redhat.com
-Subject: Re: [PATCH] vfio/type1: optimize vfio_pin_pages_remote() for hugetlbfs folio
-Date: Fri, 16 May 2025 16:16:16 +0800
-Message-ID: <20250516081616.73039-1-lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250515151946.1e6edf8b.alex.williamson@redhat.com>
-References: <20250515151946.1e6edf8b.alex.williamson@redhat.com>
+        d=1e100.net; s=20230601; t=1747383396; x=1747988196;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=p5uMs6FkdhW0yuPSJiF5IsCQmeoDxyXFi4ZKMZV6l28=;
+        b=ZbnGS+tds9lEng8HUmXR1T8TEbME+W7Aq59JMYRGtmqt6M4sKnUNAxMIizQfFuFF94
+         61Cby69vtoMVTkgMLhgUWmXCZLsBwLOmO0gtD46sdv92QGlRhTpAR4nbDvs8ONyPDWEX
+         cGCgoY7vQTKGMzkhyizr60Fgfe+46/Q9aWLG64fk4+U88V4UpNrrT1KTGvpNz4yu96h1
+         QvOMg/cd9ENnU1gfIZBjP6ICrLBDFFZl9pvpkWoXrMqUiB1KCHMyuQZJzSYgM8HpV8Eu
+         jYJcyxgdLkFNztChZtfKzQ5KwUT9x5Sx7lS7B0/LgYIf6gFe2dZsjhOs7DHqVH5uIrgm
+         M3RA==
+X-Forwarded-Encrypted: i=1; AJvYcCWcz8qZdv3fqC7kqdnBYUYfaWWo9Z1QVM1eOLfbEWxV3qCSrQ50kto4HT7GL0Js2p1jlclL6+rr/Rlb2pM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6LuKkoW0a+XJ8OAVTXQaamaLYHwFsmBi0r0dRwCNppJxMSiYH
+	5JCSufQYFrux9kGYd47GfVkEVbmVRGgvu7uIJTYWxzDx+2CWeyt0vh/a
+X-Gm-Gg: ASbGncvQAPi2H7s8zHGvC4J3TGSC7f9UYtyY2KsZ0iTYtEbKp3+MUbYGuwLjXKKb1+P
+	pNO3A1Om08oXk4LZjDMbGQN7qG8eyMT45r1pdps2dLBQKpwvYMukNqaeO42PPF6MfqxZC2VcT7m
+	kUU18agEQ79kIw/O09NUJIO45GtEhWXMu/9Rc8KMFt2cE11ouxEE23KjdfL2JCEyQh+kNiH40NP
+	3I6dWxTiQxyy76jf44UT4wzK9r5vNNW7L/OL+jlP1Q3iyCUI1Ll3nE/bbA9XosuCq+qzsX+HDsx
+	p+8vSjxLn1hvLDjOAJo7T9v89yoWfPn6aiik+eF82Ihk5mrXqozBmtw9IoHu
+X-Google-Smtp-Source: AGHT+IGUyQ4WvvI8Y54HOBmPIQUwWgTnB7hUofnygJIB5iOp5HSMPI4dclX6JAUQZWevtotWc6mVOA==
+X-Received: by 2002:a17:907:9811:b0:ad2:3371:55cd with SMTP id a640c23a62f3a-ad52d46ae67mr221922866b.5.1747383395358;
+        Fri, 16 May 2025 01:16:35 -0700 (PDT)
+Received: from [192.168.1.130] ([188.193.103.108])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6004d4f1c90sm1016490a12.12.2025.05.16.01.16.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 May 2025 01:16:34 -0700 (PDT)
+Message-ID: <e53f54ad-df31-4b1e-a2a5-2d14a138c9eb@gmail.com>
+Date: Fri, 16 May 2025 10:16:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 4/4] ARM: dts: stm32: add initial support for
+ stm32mp157-ultra-fly-sbc board
+To: Alexandre TORGUE <alexandre.torgue@foss.st.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ =?UTF-8?B?QsO2cmdlIFN0csO8bXBmZWw=?= <boerge.struempfel@gmail.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250508143818.2574558-1-goran.radni@gmail.com>
+ <20250508143818.2574558-5-goran.radni@gmail.com>
+ <8e25c2e3-fbc6-4d60-8362-2b0fb3066821@foss.st.com>
+Content-Language: en-US
+From: Goran Radenovic <goran.radni@gmail.com>
+In-Reply-To: <8e25c2e3-fbc6-4d60-8362-2b0fb3066821@foss.st.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On Thu, 15 May 2025 15:19:46 -0600, alex.williamson@redhat.com wrote:
+Hi Alex
 
->> +/*
->> + * Find a random vfio_pfn that belongs to the range
->> + * [iova, iova + PAGE_SIZE * npage)
->> + */
->> +static struct vfio_pfn *vfio_find_vpfn_range(struct vfio_dma *dma,
->> +		dma_addr_t iova, unsigned long npage)
->> +{
->> +	struct vfio_pfn *vpfn;
->> +	struct rb_node *node = dma->pfn_list.rb_node;
->> +	dma_addr_t end_iova = iova + PAGE_SIZE * npage;
->> +
->> +	while (node) {
->> +		vpfn = rb_entry(node, struct vfio_pfn, node);
->> +
->> +		if (end_iova <= vpfn->iova)
->> +			node = node->rb_left;
->> +		else if (iova > vpfn->iova)
->> +			node = node->rb_right;
->> +		else
->> +			return vpfn;
->> +	}
->> +	return NULL;
->> +}
->
->This essentially duplicates vfio_find_vpfn(), where the existing
->function only finds a single page.  The existing function should be
->extended for this new use case and callers updated.  Also the vfio_pfn
+that is great. Thank You!
 
-How about implementing it in this way?
+Best regards
+Goran
 
-static inline struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
-{
-	return vfio_find_vpfn_range(dma, iova, 1);
-}
+Alexandre TORGUE wrote:
+> Hi Goran
+> 
+> On 5/8/25 16:38, Goran Rađenović wrote:
+>> Add support for Ultratronik's stm32mp157c fly board. This board embeds
+>> a STM32MP157c SOC and 1GB of DDR3. Several connections are available on
+>> this boards: 2*USB2.0, 1*USB2.0 MiniUSB, Debug UART, 1*UART, 1*USART,
+>> SDcard, RJ45, ...
+>>
+>> This patch enables basic support for a kernel boot - SD-card or eMMC.
+>>
+>> Signed-off-by: Goran Rađenović <goran.radni@gmail.com>
+>>
+> 
+> Series applied on stm32-next.
+> 
+> regards
+> alex
 
-With this implement, the caller who calls vfio_find_vpfn() won't need to
-be modified.
-
->is not "random", it's the first vfio_pfn overlapping the range.
-
-Yes you are right. I will modify the comments to "Find the first vfio_pfn
-overlapping the range [iova, iova + PAGE_SIZE * npage) in rb tree" in v2.
-
->> +
->>  static void vfio_link_pfn(struct vfio_dma *dma,
->>  			  struct vfio_pfn *new)
->>  {
->> @@ -670,6 +694,31 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
->>  				iova += (PAGE_SIZE * ret);
->>  				continue;
->>  			}
->> +
->
->Spurious new blank line.
->
->> +		}
->
->A new blank line here would be appreciated.
-
-Thank you. I will address this in v2.
-
->> +		/* Handle hugetlbfs page */
->> +		if (likely(!disable_hugepages) &&
->
->Isn't this already accounted for with npage = 1?
-
-Yes. This check is not necessary. I will remove it in v2.
-
->> +				folio_test_hugetlb(page_folio(batch->pages[batch->offset]))) {
->
->I don't follow how this guarantees the entire batch->size is
->contiguous.  Isn't it possible that a batch could contain multiple
->hugetlb folios?  Is the assumption here only true if folio_nr_pages()
->(or specifically the pages remaining) is >= batch->capacity?  What
-
-Yes.
-
->happens if we try to map the last half of one 2MB hugetlb page and
->first half of the non-physically-contiguous next page?  Or what if the
->hugetlb size is 64KB and the batch contains multiple folios that are
->not physically contiguous?
-
-Sorry for my problematic implementation. I will fix it in v2.
-
->> +			if (pfn != *pfn_base + pinned)
->> +				goto out;
->> +
->> +			if (!rsvd && !vfio_find_vpfn_range(dma, iova, batch->size)) {
->> +				if (!dma->lock_cap &&
->> +				    mm->locked_vm + lock_acct + batch->size > limit) {
->> +					pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n",
->> +						__func__, limit << PAGE_SHIFT);
->> +					ret = -ENOMEM;
->> +					goto unpin_out;
->> +				}
->> +				pinned += batch->size;
->> +				npage -= batch->size;
->> +				vaddr += PAGE_SIZE * batch->size;
->> +				iova += PAGE_SIZE * batch->size;
->> +				lock_acct += batch->size;
->> +				batch->offset += batch->size;
->> +				batch->size = 0;
->> +				continue;
->> +			}
->
->There's a lot of duplication with the existing page-iterative loop.  I
->think they could be consolidated if we extract the number of known
->contiguous pages based on the folio into a variable, default 1.
-
-Good idea! I will try to implement this optimization based on this idea
-in v2.
-
->Also, while this approach is an improvement, it leaves a lot on the
->table in scenarios where folio_nr_pages() exceeds batch->capacity.  For
->example we're at best incrementing 1GB hugetlb pages in 2MB increments.
->We're also wasting a lot of cycles to fill pages points we mostly don't
->use.  Thanks,
-
-Yes, this is the ideal case. However, we are uncertain whether the pages
-to be pinned are hugetlbfs folio, and increasing batch->capacity would
-lead to a significant increase in memory usage. Additionally, since
-pin_user_pages_remote() currently lacks a variant that can reduce the
-overhead of "filling pages points" of hugetlbfs folio (maybe not correct).
-I suggest we proceeding with additional optimizations after further
-infrastructure improvements.
