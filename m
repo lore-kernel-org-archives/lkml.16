@@ -1,81 +1,90 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF4FC221FC9
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 18:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DFF255F3E;
+	Fri, 16 May 2025 18:47:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747421228; cv=none; b=TUzstTLwMDSqSoca6SWCJgLuG6CRr2R5gIuanUvN/VUL6PKFtrgzOoTZQx8V1TNaDRwayF//fyWa8ip6E6Yqb7aqzc33j02SEnJoshPidX8m03DDSWNc86uDd5ZbS/qkk5DGN3AsJdNffhLZ5kGyKyGbcZISVvzoBsqcIjMZ2LU=
+	t=1747421254; cv=none; b=RWrfvJ8Xx41YyjxuD1qyYNnH4yRiE9BiEqUBTlog37k05ZmXP/ra4KA73Wl0Xu0+zFaDQPj7hdQmanaoeJuZSHLRUz3n5NuSh+nfRfkbP4ftcBTrDua55J7fOid1LlAP+ae1ewWT72xm953pLbfW8RWVtGaCEhrWFnlxUxxwHm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747421228; c=relaxed/simple;
-	bh=XQzr/P8LSzc1fGmKf5TzJFNWuKpMYhmvBe/dgZKthmA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=cNamipeSbHn2mVtilvz6hk7zUQqdFW8fOoCdIKtOMhUcND8MEbAs6k1njZhPlEoViOfqNH6VLQO6F8cRoXHKvXD3OQ1VDjEFuThVKWbvBIraSqz/lASfOaPiVbopRWZ1qPasb4bp880nmZkbuYlF4WcKF/Df3aZyQSL+v6DcjYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xmoktlVs; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747421254; c=relaxed/simple;
+	bh=a2dOMHP3kj4+jm6fRlYBj5slYaX05QFOPhyjS1UDZxM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YPRNpUlEzwnQF1oQAlc0oRvg1ZOJqrX99ghY+zBa9x33gQwHK9yAGy/0LuD6ssMS3Bx5z5EPdvdCcQ7RCsXpKYRYEx+MW22M5CPCACB9xxJfv7Fd2QGtk3/GzFV11u4RE4KxWsvdwiRrjEtMmmNLlUKDut9RKAr5GGAVoap6iKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Mh11vKnp; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xmoktlVs"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-231e8ec895bso5155275ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:47:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747421226; x=1748026026; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qmq5yOzKEYHGMlWUHQrdCglzBtv7bOn/Y4UXiljdeIs=;
-        b=xmoktlVs5hMz9PDKC8NIaTrKDZRwzdbCk4gj1oH3op/wJ9crQFte+iJl8WtOSDuW13
-         j+55aZFs4lVQU9VNhg7Puk38H7HQzqFnYeE/flXuxOqrx44kNm5juM/5NumeacWOgIUn
-         h5w8RJVRgSd1/7WYX2PNff7ySpEYsZLkqPMIO0LVRl1yQVaOkQKHX3Ttq7vE0mKBSER7
-         YQ/blYHQtfhLUMod6mfVDb+/Ls8SdB2zAlLvc2HjnyiNMtZcBCRmJe5VGxotqkF+JLGV
-         RYRB55wwxrqy7yCl+RzR9g84g0pObt5boQBp8jfig4xSZqf/PHZCuKpc0UaIIJjp33kY
-         K90w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747421226; x=1748026026;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qmq5yOzKEYHGMlWUHQrdCglzBtv7bOn/Y4UXiljdeIs=;
-        b=dXDdbiHqcFY673Qutn/n8FzPjS9LhJfu/q1kaM62xs8DGEIK1oBqL1bf7WEpQuh41U
-         EBmZbuO1DADaIdBziObmGsG3xRU/KDOtP+cdqedrX38PylKGvKuIh3ilHMINMG0M+Q0M
-         NqN55KHuYzHVDhP/QRkiW7jYGbwmXYghYNw5st9H+TUsvtm3jSK5ebRVrpbnYKuLbVFw
-         E4bjPXPepRMCk998TEUDGXQzymQwarT9h/n8LWNx3hMmALOshIXmaAExC19wzb0mI2Hs
-         zG0TV/uwEJ+ZQAj6HRPFJYi0NMOIVydkzEgOU5VexK1u6KJSVsF7Oa3Y6tq4iDGHPgAi
-         UWvw==
-X-Forwarded-Encrypted: i=1; AJvYcCV6do6is6MEenNxVTfpY5MLbfG9BdEh3otqWGWGek1J5iI4Wukj2PHAONsGr7q45HxdbVR1+fopOjJzhY4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzu2MwLEzC7ATn3Jxs1IPK7ec12EAXtAUBjjuoqacl7eRorDG0U
-	98UYGPkzTg9iKs8xxAPlQ8gbAtTPaxqufUWR+l/WaWTv+GrzTnThhQwL/xI/Av0GG7DYi4VAcET
-	y1Frwpg==
-X-Google-Smtp-Source: AGHT+IEoABAHTdXlaeskcgYJu03drz+RNn79bIJemm7dWQc6taI6oQUGfiZBOrFd1GdJMi2Hp8JwioagtxQ=
-X-Received: from pllb5.prod.google.com ([2002:a17:902:e945:b0:231:e3f0:e373])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d4d2:b0:231:faf5:c1d0
- with SMTP id d9443c01a7336-231faf5c3ecmr19177195ad.24.1747421226086; Fri, 16
- May 2025 11:47:06 -0700 (PDT)
-Date: Fri, 16 May 2025 11:47:04 -0700
-In-Reply-To: <20250508184649.2576210-8-jthoughton@google.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Mh11vKnp"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2D57543155;
+	Fri, 16 May 2025 18:47:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747421250;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9lqQXD9Q9jfyGYo4y6j27XcbvfdwUtHoucCG3UKJI5E=;
+	b=Mh11vKnpY6MONWDMsThK7Cqb138ZIMoMt5g3566QT39UcP4s+R/AphtZisgoYg2wMrmt26
+	uCHmHUiwoBS/d+k4ypoFmoU6PwGx/5SCPw242o5BRNbZ9Brta2/XM7w61rXy0V+DVsjG/b
+	4gByw4R4GGCDNAs0Z8TrpkuGwtLCZsCp5ggAIFAQPv+ZXfY2zCZEr639AnTYMvwHL69Hv2
+	rmhO3i28gLr471jhvk2d8qisOXRIPRK77FLgicXJTG8vVCLvWg44teiH4UMa2O0LPJDCWa
+	lBct2WiiHT4TnLlHeUmE5q8g3BWDWEggx1CIZdBzdqYSWyy3OApp2llreF768w==
+Date: Fri, 16 May 2025 20:47:27 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
+Subject: Re: [PATCH v4 6/8] backlight: led-backlight: add devlink to
+ supplier LEDs
+Message-ID: <20250516204727.4d87e700@booty>
+In-Reply-To: <b5d2b71ffc38eb1980ce72994a20e8f6ee7869bd.camel@siemens.com>
+References: <20240917-hotplug-drm-bridge-v4-0-bc4dfee61be6@bootlin.com>
+	<20240917-hotplug-drm-bridge-v4-6-bc4dfee61be6@bootlin.com>
+	<fa87471d31a62017067d4c3ba559cf79d6c3afec.camel@siemens.com>
+	<b5d2b71ffc38eb1980ce72994a20e8f6ee7869bd.camel@siemens.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250508184649.2576210-1-jthoughton@google.com> <20250508184649.2576210-8-jthoughton@google.com>
-Message-ID: <aCeIKDbwVIlBLtGz@google.com>
-Subject: Re: [PATCH v4 7/7] KVM: selftests: access_tracking_perf_test: Use
- MGLRU for access tracking
-From: Sean Christopherson <seanjc@google.com>
-To: James Houghton <jthoughton@google.com>
-Cc: kvm@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Axel Rasmussen <axelrasmussen@google.com>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, mkoutny@suse.com, Yosry Ahmed <yosry.ahmed@linux.dev>, 
-	Yu Zhao <yuzhao@google.com>, David Matlack <dmatlack@google.com>, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefudefheduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemrgegiedvmedusgguugemledutddumedvleegfhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemrgegiedvmedusgguugemledutddumedvleegfhdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedprhgtphhtthhopegrlhgvgigrnhguvghrrdhsvhgvrhgulhhinhesshhivghmvghnshdrtghomhdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhto
+ heplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqfhgsuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Thu, May 08, 2025, James Houghton wrote:
-> @@ -372,7 +501,7 @@ static void help(char *name)
->  	printf(" -v: specify the number of vCPUs to run.\n");
->  	printf(" -o: Overlap guest memory accesses instead of partitioning\n"
->  	       "     them into a separate region of memory for each vCPU.\n");
-> -	printf(" -w: Control whether the test warns or fails if more than 10%\n"
-> +	printf(" -w: Control whether the test warns or fails if more than 10%%\n"
+Hello Alexander,
 
-This belongs in patch 2.  I'll fixup when applying.
+On Mon, 12 May 2025 12:13:54 +0000
+"Sverdlin, Alexander" <alexander.sverdlin@siemens.com> wrote:
+
+> > I've tested the patch wit LP8864 LED as a provider for led_bl, removing the
+> > underlying I2C bus. The patch avoids the crash for me (by removing led_bl device as well),
+> > thanks for fixing it!
+> > 
+> > Tested-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>  
+
+Thanks for the feedback! I will have a look next week, perhaps sending
+a new version of this patch alone (outside of the series).
+
+> Would it make sense to add
+> 
+> Fixes: ae232e45acf9 ("backlight: add led-backlight driver")
+> 
+> ?
+
+Probably.
+
+Luca
+
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
