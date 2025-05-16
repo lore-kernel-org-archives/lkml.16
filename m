@@ -1,103 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f202.google.com (mail-qk1-f202.google.com [209.85.222.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2B426C3B5;
-	Fri, 16 May 2025 19:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD3027FB09
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 19:06:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747422406; cv=none; b=BFk8heoueGQYg3gcln+7OeNWGb5a9G1OWTUsbcPZT8s9EXIYwLlNfFDjezRx6g3pp5fczoHGCZYKhNEE9aHpal1Z4wTczrdL5GAk6ZzudsjzIMOPthCmdvGjyyWsV7oyn9KJ/SP0avOYhBB4o9KAOeeTv4fHBIZHPDRTNtHGBB0=
+	t=1747422410; cv=none; b=fgye95Yq0KXgXD7+J7wfJwDzSSV+wrlS1oUMR7nbxRXV4M/AG06egIgAojoVOWP35HAl4945eh1p3s+eiTdcahwJAWPTG8xpCVpJfEhYvNg6SblIJFupezs7OFjndryWtw5SsYZoavy15h0eI+/5N4gOfCYNGpTjNHN3sJzNcc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747422406; c=relaxed/simple;
-	bh=JDru76EihXPIsk0ZdHga0s1MNz6DJOcO3W/lzu46W3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n8qhHL85DlP90D8u4ggaRgAj+dLuYyNnn01nC+R5V+k6lrlJ+FblAdsscJanuQP8fk+1rMnTSdh71tkeFThxJeRmYUrdXuIemcjWUgZCsiVzvqtHBAm9wgZn41DOWXNxwFP1oOXh34muFcBvwqugsc8NLIzIjQXCYjtIlRqbTGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GUNMKbcE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747422410; c=relaxed/simple;
+	bh=/SLjNTUbM63R26k/UsXUlQlnoCKD2zOJwWHIFiGKmAY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=JBDZrH3f/9S2I9CNmq5mTMZ3gLCFenD6RCnst6VxCIgPmu4j8KMKqnyDpBpiZcgs8jg+CfrdEO2J3hiCozMntHycPpUdRBsiciJbvTRe+tVMfd01rgbOyFGfu4yo2xHWXLh/26abrd2RLggseBYXtbuz2hcbi/eVJboiONFPcGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rmoar.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=00Bl9u8A; arc=none smtp.client-ip=209.85.222.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rmoar.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GUNMKbcE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7F89C4CEE4;
-	Fri, 16 May 2025 19:06:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747422405;
-	bh=JDru76EihXPIsk0ZdHga0s1MNz6DJOcO3W/lzu46W3Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GUNMKbcE5OzOkskHmbyAw0oaTy7DQvHUO9XDG01tmVvzUPhB0hvtTm61JWYERAnH1
-	 GLL3MB9d+3EM38Vhukjr01bFfpdTxg9Dzf0y64K7/zsbFvp6bsx3hIOYqggRYZb96x
-	 ZgmNgZu5UwTbVZF8WNnBjJ2Kibx4SXKq1TX8cbX5eLIrr37ybtOq0Z0AJM0knHdXo6
-	 QP7/f4OetYCgNt5u0Q36Rh5y/EkOglYknyL+Og/4mJVL7Xwp6tu8buN1wLnwV9ITEE
-	 fULEscEjCy1FAOwZG2UsxMnTeXS+xxRMmomiaZDN2fGlHDmhh2PajnLtyX5PCY7GgE
-	 zIcKT0byDs1GA==
-Date: Fri, 16 May 2025 12:06:37 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-	Jain@formenos.rohan.me.apana.org.au, Ayush <Ayush.Jain3@amd.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>, x86-ml <x86@kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org
-Subject: Re: [PATCH] crypto: lib/sha256 - Disable SIMD
-Message-ID: <20250516190637.GA32835@sol>
-References: <20250516112217.GBaCcf6Yoc6LkIIryP@fat_crate.local>
- <aCcirrsFFrrRqf5A@gondor.apana.org.au>
- <aCcmJGuCnuyHmHbx@gondor.apana.org.au>
- <20250516170316.GD1241@sol>
- <20250516181322.GGaCeAQjnIVQx_tX_R@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="00Bl9u8A"
+Received: by mail-qk1-f202.google.com with SMTP id af79cd13be357-7c5f3b94827so429732785a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 12:06:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747422407; x=1748027207; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4gPgjbGOtp9/GSKJFp4SYCjxvoZAvNM0YP1ZbYCo9U4=;
+        b=00Bl9u8Ay7iaaI6L5Bj93B+AZ0wGIUKRiu6uW5E+pGY9cLg4nWe98n/dALsXAmppZh
+         m3KRg6h9e8KErSUa9iig8kE3FwWPlzpH5938lDzS1ZgDgzEQZgILO94rHnHH9siOfzeW
+         uAvqj9zXBADJ4D28m/RjqvuqCpaTkA5ntqBHCEYknTTLMMc+Vxy9A3tKx+JrNxkoWexU
+         K3Eo3mRCRaJeidTPh9T0HZlERxVOafvrpKKOn6EoYrS4HRyZh9pYN6TWXXdoDOpt1smQ
+         mx7Q6cMTZ0VX4EdX4iebuN4Sw0UIWVGGFz6a+9MP2YMGbyYYSXg6v/D3sFyt+DwRwGPh
+         DXwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747422407; x=1748027207;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4gPgjbGOtp9/GSKJFp4SYCjxvoZAvNM0YP1ZbYCo9U4=;
+        b=A/jsjvtEZSuHfI8p8FRhTFSUg9U0uuBC5H6lTLvodubYljsIHt21UR6bDt38uiKlEI
+         yJ2fdt9h7LiQpFNOQBmMGWvsf9xncRef1tNzgj+h51kvtCgUj15b9it7H4f6CuJKDBMi
+         JxvLH7qlvCSuUWJURCpO0I+dpNuix2uKxBAD1mqgES4kVkdMpeL99DcwaOSw6+D45luD
+         PBfTHd2CMzS/SS4Xpj2J/5zx2GvLFykZhjBkk6LZdD9SzcbVALYUK6YbX00h+ZFT3DeW
+         tP6Nj9JbmPk/JUNjyOqxGk2Eoo584VQjjwnCBoja4hk3zs+OKLSzoBHCcIqeoIpXa2AQ
+         Do+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWtUsDibvnKdaSidl3pJ0ZGRqh32ZkFNzE1DKQ1XoqJRFjdGH1IIuv+0nzKRPQ/ITh54I1LT6a26jncvpc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxq8DKTOxQ/7y1cu5FK7aah5NneOmfanxrn9xnr5P0FuL0TjeaP
+	c3V1vusfW0ivPBjw4WAVd6l+hT5UuftVnnRrdvEgCCPjLafb2o2nspbylc1B58EIeGpYmxYjiRq
+	vbQ==
+X-Google-Smtp-Source: AGHT+IEgPOuqk/3cE/2H7zq0b0LsLPaHlURhVDCFbXNlXfbY8uO9X5+SEluiCVEb+7gsQvjh7IayMq5ggg==
+X-Received: from qkpf18.prod.google.com ([2002:a05:620a:2812:b0:7ca:da19:5cc1])
+ (user=rmoar job=prod-delivery.src-stubby-dispatcher) by 2002:a05:620a:4091:b0:7ca:eb5b:6b99
+ with SMTP id af79cd13be357-7cd4671fd0dmr645557085a.15.1747422407087; Fri, 16
+ May 2025 12:06:47 -0700 (PDT)
+Date: Fri, 16 May 2025 19:06:31 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250516181322.GGaCeAQjnIVQx_tX_R@fat_crate.local>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
+Message-ID: <20250516190631.1214081-1-rmoar@google.com>
+Subject: [PATCH] Documentation: kunit: improve example on testing static functions
+From: Rae Moar <rmoar@google.com>
+To: davidgow@google.com, brendan.higgins@linux.dev, skhan@linuxfoundation.org
+Cc: dlatypov@google.com, kunit-dev@googlegroups.com, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Rae Moar <rmoar@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, May 16, 2025 at 08:13:22PM +0200, Borislav Petkov wrote:
-> On Fri, May 16, 2025 at 10:03:16AM -0700, Eric Biggers wrote:
-> > That's silly.  We should just fix x86's irq_fpu_usable() to return false
-> > before the CPU is properly initialized. It already checks a per-cpu bool, so
-> > it shouldn't be too hard to fit that in.
-> 
-> Probably.
-> 
-> There's a fpu__init_cpu() call almost right after load_ucode_ap() which causes
-> this thing.
-> 
-> I'm not sure how much initialized stuff you need for SHA256 SIMD... perhaps
-> swap fpu__init_cpu() and load_ucode_ap() calls after proper code audit whether
-> that's ok.
-> 
-> Or add a "is the FPU initialized" check, as you propose, which is probably
-> easier.
-> 
-> As always, the x86 CPU init path is nasty and needs careful auditing.
+The documentation on testing static functions using the KUnit macros
+VISIBLE_IF_KUNIT and EXPORT_SYMBOL_IF_KUNIT is lacking clarity and
+missing key steps in the example. This has caused bugs and confusion
+among developers.
 
-There are a few different ways in which __apply_microcode_amd() can get called:
+Improve wording of description and add missing steps to the example.
+This entails adding the "#include <kunit/visibility.h>" line and the
+"MODULE_IMPORT_NS(EXPORTED_FOR_KUNIT_TESTING);" line. Both of which were
+missing from the original example and key to exposing static functions.
 
-    __apply_microcode_amd
-        load_ucode_amd_bsp
-            load_ucode_bsp
-                x86_64_start_kernel
-        apply_microcode_amd
-            load_ucode_amd_ap
-                load_ucode_ap
-                    start_secondary
-            microcode_ops::apply_microcode
-                load_secondary
-                __load_primary
-        reload_ucode_amd
-            reload_early_microcode
-                microcode_bsp_resume
-                    mc_syscore_ops::resume
-                        syscore_resume
-                    __restore_processor_state
-                        restore_processor_state
+Signed-off-by: Rae Moar <rmoar@google.com>
+---
+ Documentation/dev-tools/kunit/usage.rst | 38 +++++++++++++++++++------
+ 1 file changed, 30 insertions(+), 8 deletions(-)
 
-What would you say about going back to my earlier plan to make irq_fpu_usable()
-return false when irqs_disabled(), like what arm64 does?  (As I had in
-https://lore.kernel.org/lkml/20250220051325.340691-2-ebiggers@kernel.org/).
-I think that would handle all these cases, as well as others.  We'd need to fix
-__save_processor_state() to save the FPU state directly without pretending that
-it's using kernel-mode FPU, but I don't know of any issues besides that.  Then
-we could also delete the irqs_disabled() checks that I added to
-kernel_fpu_begin() and kernel_fpu_end().
+diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
+index 22955d56b379..038f480074fd 100644
+--- a/Documentation/dev-tools/kunit/usage.rst
++++ b/Documentation/dev-tools/kunit/usage.rst
+@@ -670,28 +670,50 @@ with ``kunit_remove_action``.
+ Testing Static Functions
+ ------------------------
+ 
+-If we do not want to expose functions or variables for testing, one option is to
+-conditionally export the used symbol. For example:
++If you want to test static functions without exposing those functions outside of
++testing, one option is conditionally export the symbol. When KUnit is enabled,
++the symbol is exposed but remains static otherwise. To use this method, follow
++the template below.
+ 
+ .. code-block:: c
+ 
+-	/* In my_file.c */
++	/* In the file containing functions to test "my_file.c" */
+ 
+-	VISIBLE_IF_KUNIT int do_interesting_thing();
++	#include <kunit/visibility.h>
++	#include <my_file.h>
++	...
++	VISIBLE_IF_KUNIT int do_interesting_thing()
++	{
++	...
++	}
+ 	EXPORT_SYMBOL_IF_KUNIT(do_interesting_thing);
+ 
+-	/* In my_file.h */
++	/* In the header file "my_file.h" */
+ 
+ 	#if IS_ENABLED(CONFIG_KUNIT)
+ 		int do_interesting_thing(void);
+ 	#endif
+ 
+-Alternatively, you could conditionally ``#include`` the test file at the end of
+-your .c file. For example:
++	/* In the KUnit test file "my_file_test.c" */
++
++	#include <kunit/visibility.h>
++	#include <my_file.h>
++	...
++	MODULE_IMPORT_NS(EXPORTED_FOR_KUNIT_TESTING);
++	...
++	// Use do_interesting_thing() in tests
++
++For a full example, see this `patch <https://lore.kernel.org/all/20221207014024.340230-3-rmoar@google.com/>`_
++where a test is modified to conditionally expose static functions for testing
++using the macros above.
++
++As an **alternative** to the method above, you could conditionally ``#include``
++the test file at the end of your .c file. This is not recommended but works
++if needed. For example:
+ 
+ .. code-block:: c
+ 
+-	/* In my_file.c */
++	/* In "my_file.c" */
+ 
+ 	static int do_interesting_thing();
+ 
 
-- Eric
+base-commit: c2493384e8110d5a4792fff4b9d46e47b78ea10a
+-- 
+2.49.0.1101.gccaa498523-goog
+
