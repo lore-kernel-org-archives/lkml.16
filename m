@@ -1,102 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FE622F77D;
-	Fri, 16 May 2025 09:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C1022F77D;
+	Fri, 16 May 2025 09:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747389387; cv=none; b=O3k/qlkO4ist8jk00lHz2o66jDfHYtiA+ETsr+wt0pBfYjm/XtXcpuFsGkuvjow+QzXNq6ydMZZmeHTZBdO7/gAVce7+AlZ6/i0DwXn8bSnWl5a63YLn5FXZqnKpsiiCo6Ki/A5UO0tYTJWWIDRV7wpKJIPni+Tnwvqr8kNdBL0=
+	t=1747389394; cv=none; b=hjEKYS5oljpbQUrK09UYu8D/Trj9qGKyRgmfPeZdq7DtJpkhLKv1LUQ9fwyp/AYXcDgW1EZZYDjlO7DXDXacSm+9r3gsX+DG1JN6Ns1pAX061D/rhf1b1vZ42XBNOky/YiJnHw/5AJWTKSaj/z5ZfeR89n9U5v5yFp4bAkjyOJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747389387; c=relaxed/simple;
-	bh=6qeyCCT7zpD3fvBMzDh5PQih0K0gpp9zF5Ci9QuAQKU=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=j6zqHdszEPoKWDOsLD1oNfh74L9VvYip1pyfB1iX9GyHR/rzhC3jxt3lTSahjGO7uNlVCTLI8lVX8bBEiOFx6IZ94trFku+zLRwjR7paFJ3quzjAAfyW4XbCqFRAAUCBO360YCXitVbx+Q8X+T6I7yJjRF0tqi1hXyAOjlGDbbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OQaiVqgc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747389394; c=relaxed/simple;
+	bh=wEsq/EugUrAourWcqA+9i7TXsSPX8Xeax5oxtp8ZnZI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pxw1tKly8+GWlSzz0lpi2jyY0PQG/WFM7dGLeBm670K/nYJSizOQ5wVEI27SrSEJl8JGqjUhXLIy1ZgVm28uAGxG0w/GpgWm47X39oR6upv6hJ0xk9nlciTvy6cl5KNunFlvte6Gm58KvSVjUdnql1cMefaBy6NW/pzVM2X0eXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=fIaI54+B; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OQaiVqgc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5FFDC4CEE4;
-	Fri, 16 May 2025 09:56:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747389387;
-	bh=6qeyCCT7zpD3fvBMzDh5PQih0K0gpp9zF5Ci9QuAQKU=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=OQaiVqgcB4Yu1+5FQF3O+JYdhQOUxOL6ue+z9lgTS/63FWdwt5JKcjGthvKHTelL5
-	 TYjZ2XGort85qrI+rPdUCj8Q3qSh/keXgZA3DHr11CyS0Bq29vB3m4+gJej5K7FMbe
-	 Itl5Wkwu4n+sUioWXy+vOpUpbqq7AFlRRAYuLJfcqsowHRpiojOwyWTlnA44AHzH/I
-	 dE2nIpCf5drU842wxWPDW4iZpBQAztXf7VHzLBgclkDOunJJ579HZJLYmRT+N0bWaW
-	 rPUzRJtCNGFz0uDL6VS1Z7UOASHz6QpDPbHytF6TmyuPT+R9c3Y8Bs7yjGfEWHtnjC
-	 jbZDXoW9puzpQ==
-Date: Fri, 16 May 2025 04:56:25 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fIaI54+B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747389390;
+	bh=cb85dVWg1we1fk0xY734p3uoIb9PJIpo3bgtAyyB54s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fIaI54+BJyZE9e5dGkmNvGliH3tKiEShmEwFIi5tgj7ZBT0VexU1j+EXH4veIXFCv
+	 JWSzKwbwIow3YuyKl/jezue3kk/FbHap/wDunssKJuv3uniX+UegDGk5GxDT2TeI8o
+	 61dUr2pojsVxoucr5dxtwddWeJGphmNmpmUZUyM+pmm1s9C3G0/wNxmLlh4YyNwt3K
+	 Xj1fMEuQN2G5YJjUcUM2uGo9Yrmlu5wscoB1tvbK1PSOBmTtMtmSKw3Rmpaiu7/Tdj
+	 z1YavU6cMX8MQcQZDSkWyHyjSBG1hnLjQYuPfW0ydKKgYHo3Y9bw9Y1XtdHGlpZHoe
+	 pPJK4OLFGMijA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZzMt56gYyz4wbX;
+	Fri, 16 May 2025 19:56:29 +1000 (AEST)
+Date: Fri, 16 May 2025 19:56:29 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the gpio-intel tree
+Message-ID: <20250516195629.1d15d4ad@canb.auug.org.au>
+In-Reply-To: <aCcLH25PSNqtPeSk@smile.fi.intel.com>
+References: <20250516193436.09bdf8cc@canb.auug.org.au>
+	<aCcHKK8FflYRhx2m@smile.fi.intel.com>
+	<20250516194237.03371ba7@canb.auug.org.au>
+	<aCcLH25PSNqtPeSk@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Kevin Hilman <khilman@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
- linux-clk@vger.kernel.org, Tero Kristo <kristo@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>, Andreas Kemnade <andreas@kemnade.info>, 
- devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>
-To: Sukrut Bellary <sbellary@baylibre.com>
-In-Reply-To: <20250516081612.767559-2-sbellary@baylibre.com>
-References: <20250516081612.767559-1-sbellary@baylibre.com>
- <20250516081612.767559-2-sbellary@baylibre.com>
-Message-Id: <174738938517.2667160.10906175729020548648.robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: clock: ti: Convert autoidle
- binding to yaml
+Content-Type: multipart/signed; boundary="Sig_/=b8W_+jr=YSpoRK=0sSj0Gt";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/=b8W_+jr=YSpoRK=0sSj0Gt
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 16 May 2025 01:16:10 -0700, Sukrut Bellary wrote:
-> Autoidle clock is not an individual clock; it is always a derivate of some
-> basic clock like a gate, divider, or fixed-factor. This binding will be
-> referred in ti,divider-clock.yaml, and ti,fixed-factor-clock.yaml.
-> 
-> As all clocks don't support the autoidle feature e.g.,
-> in DRA77xx/AM57xx[1], dpll_abe_x2* and dpll_per_x2 don't have
-> autoidle, remove required properties from the binding.
-> 
-> Add the creator of the original binding as a maintainer.
-> 
-> [1] https://www.ti.com/lit/ug/spruhz6l/spruhz6l.pdf
-> 
-> Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
-> ---
->  .../devicetree/bindings/clock/ti/autoidle.txt | 37 -------------------
->  .../bindings/clock/ti/ti,autoidle.yaml        | 34 +++++++++++++++++
->  2 files changed, 34 insertions(+), 37 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/ti/autoidle.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/ti/ti,autoidle.yaml
-> 
+Hi Andy,
 
-My bot found errors running 'make dt_binding_check' on your patch:
+On Fri, 16 May 2025 12:53:35 +0300 Andy Shevchenko <andriy.shevchenko@linux=
+.intel.com> wrote:
+>=20
+> I have just sent 20250516095306.3417798-1-andriy.shevchenko@linux.intel.c=
+om, it
+> should fix the error here.
 
-yamllint warnings/errors:
+Thanks.  Hopefully that will be in the gpio-intel tree soon.
 
-dtschema/dtc warnings/errors:
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/=b8W_+jr=YSpoRK=0sSj0Gt
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-doc reference errors (make refcheckdocs):
-Warning: Documentation/devicetree/bindings/clock/ti/fixed-factor-clock.txt references a file that doesn't exist: Documentation/devicetree/bindings/clock/ti/autoidle.txt
-Warning: Documentation/devicetree/bindings/clock/ti/ti,divider-clock.yaml references a file that doesn't exist: Documentation/devicetree/bindings/clock/ti/autoidle.txt
-Documentation/devicetree/bindings/clock/ti/fixed-factor-clock.txt: Documentation/devicetree/bindings/clock/ti/autoidle.txt
-Documentation/devicetree/bindings/clock/ti/ti,divider-clock.yaml: Documentation/devicetree/bindings/clock/ti/autoidle.txt
+-----BEGIN PGP SIGNATURE-----
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250516081612.767559-2-sbellary@baylibre.com
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgnC80ACgkQAVBC80lX
+0GxXeAgApki5Oi+6edw7affeeRPVktBIOt85z5oiQWChJXF6yPhmRZ9y98jIbCkz
+bCPuAlCIFJXGqUznkJ4AtZ5WHeLSimn52ht0oF9BDaDtWlJjLkW3W4tcLYVI58zn
+O9udWIF0riaROrrjGh7fNDitG6ppa4XtGgk5iSely/DC64KRSkUidSPzKBz597ny
+4JgCd4HZ7HlNXrHKtUtKPpZpgMNw5+aUW+0kwRbTkak+oC5QH2Gbj3ulHiD5p82B
+EqP3Io7mryfzDY9e3C9a9n9bA+DO4fTU+a3aysMkQEYbwT8YrxECksqzM7TsUgVw
+VAKbhYXusPOOssD9O6hxU9ELjR6+ug==
+=oEdG
+-----END PGP SIGNATURE-----
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+--Sig_/=b8W_+jr=YSpoRK=0sSj0Gt--
