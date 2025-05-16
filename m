@@ -1,64 +1,25 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B764B1E73
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 13:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DEFF4B1E73;
+	Fri, 16 May 2025 13:50:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747403423; cv=none; b=gbDvqIskYypKG2yrCDEG+oj/CJ3bW20cAldgBFVh4VBQ+AkuJAvfPWXPE+EJycBGOkWek+47a3TTxJjlM9bP8PZ4LJoIawYTNjRjcbQZuxfqXqdWka1qfMlStqhg+Yc5HgDNGLgjmm+F7vGrgabapuWE4PdpMg2pQ0UJzhSAfrw=
+	t=1747403438; cv=none; b=kT24H2td1vtcFLehX5HMItc5vwqvEY0rpy0e2gthF3KsFQ2s4o4c57nx61hwZUNtGkF1lX7AV2zNffiIWSz/aBlKU3z23uDNrEJ04PgKtbNljEYNLeB2WUf6hHO9st62SIo4sfZNzmGditpE5p/QonHMAn7YH4939fB/+tpwE/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747403423; c=relaxed/simple;
-	bh=SIxnaViebb8SJO0kPsSvZwZDgxllKGzKOTbgQ323x4E=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=bqBU5EN2Vl2nQlojx6FuJBdUA9qEAsKQcUFA7r5gzPMGV4SzJ6Dksnl4QUzE6SrCtInk2mbAD09W5lhCCgthpToyuP5ZS/XGEwY5rsMAgbvl3Nwuzx/XFWt9RidHwOinRPGCg9VhMFzN8BaaVeEbgJDw/pWHZI8P0UwOJGXGAxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ug1QzWi/; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ug1QzWi/"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7426c44e014so2296157b3a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:50:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747403421; x=1748008221; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mbTN8OiwD5zdwfgv2rkO0h5HgYpmF/CJHvXv3sUMCYQ=;
-        b=Ug1QzWi/uSWyhU309XYx0hYFQfUvdTZMUKh4WXFUkP9uwxOMigz0yuTEY/7c/f1+19
-         9noFyrZ4HOmUtd6oFD8p/EaDo8qLYAniz6I+jcm8/zYNEaOhwMQIKzqK5uAVtX1PPA30
-         d0NPrqkb898q9iaO3nuXiHDOSEV6aznmEGyKng5kGABldutK2BgxANMbO7fQlW8AxIlm
-         eRfVvHpYXxFBWr6ekTgcZho4H5kyJHGCdX6PkbPvygKL13DcHoHwuUOEy4zHoKJhT5Ra
-         lL+E/gF047traDGIjKG7ejyBSF3dbAFquFasIx4Veb5f0atROiGWTZrs0LE+brn+rCnf
-         Yvcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747403421; x=1748008221;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mbTN8OiwD5zdwfgv2rkO0h5HgYpmF/CJHvXv3sUMCYQ=;
-        b=i9q2+2etmMkjR4vkKTmjvQ3sr16ogGOyW/IqavM35hS+jWcN4jhvy5UyAZvZfG1xme
-         +h3zXAEJGQPaND/9LjAdJmisOuthL7vKKpnw57DRxU8uLCzoCoRcwUJkHERe/Bh0H6vX
-         1OutHkYWKA3TdA7F1ZUCkiXvH2x7FA9eMCIVRvciCJv893AUGiEYXKCq12SXmXN1Isjx
-         rh9Fqx2u1UPXUhI7Au91MHa8KH/DHKo8vLO9wJcZ8M7y1dSRuXE8OUEe67BnhWA25YjB
-         K+ovOJHlEONEvEtRx1LqiZ8Y6rRqEwTpOI9fqoAxAyKUvZy6YAl6yMJq1krSOYsdNejL
-         wJMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDrrTAy6ISbWOtydBHbiw4+gjTWmSQQmKS4AVzdbUYTyTzmNB8Ld2TYu+XNvqpGr11V8zhjd/2Nd37WdA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUqCKf6WbAmOEDRyEDPrqMNQCkZjOjZXfMgQ58R4AHZtjcDIyo
-	S5vgEcQvpNPKZ7LhfFCiX2f+fLPEqIedVujL5rl1LgDvmz9sVY7AQBBV
-X-Gm-Gg: ASbGnctQR5EYEXsf3fH7YP/1TtWAThmtiEYTGvoGo7XUpzf+jaOXVsdf3NbX7WE1syq
-	d4yan19//atrPQBekM3YZrSx7QsAQZwktdrTfjANNKlE8iO0yctMdKF0SavADFE7rnPZXvYLX1d
-	w2svgs0Lw9fId9jNcpUaaWFElxuBeqFBKn8ypEs7GPOQNdaJt3vAid0wc8XkjHb60jQ51zAwra+
-	PECBdRBC8Dwuqy8FHxLA6ExchXszD46hEafK38gPHg6BIfeb4+1AxqhQnc3qmXY0DIbBfJR7L81
-	QRA5RJdX2QnrRVpTBWUWPfPGGC2XX5s4TpNmSW5fOVWeGsdqCn8tIwobKLYm3tQ=
-X-Google-Smtp-Source: AGHT+IENqp8l1SqhqATNaENvpHyiis/Yg7n1lv5p90HaZKZVWGv7mVdgeRU8YtBlXUFoYfiXsgUdyQ==
-X-Received: by 2002:a05:6a00:2401:b0:736:ab1d:83c4 with SMTP id d2e1a72fcca58-742a9633dfamr4227851b3a.0.1747403421034;
-        Fri, 16 May 2025 06:50:21 -0700 (PDT)
-Received: from [10.189.144.225] ([43.224.245.249])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf8e13csm1564506a12.45.2025.05.16.06.50.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 May 2025 06:50:20 -0700 (PDT)
-Message-ID: <4f26b365-bca1-4ca7-99b7-f4b80cff26be@gmail.com>
-Date: Fri, 16 May 2025 21:50:16 +0800
+	s=arc-20240116; t=1747403438; c=relaxed/simple;
+	bh=0THkZyxxSuZVTH5og5hjwibotSM4qUDA6bNyzgM51BM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GWgTWM5899gOyN1kFSEjQbKuMqU4xwi7fGB4Oqtwl3QX2mbmQQFYllF5UxKHLDzM8aJl2oTxDXRcEtBIfVSRSIvq5dV60BzzJnKstPjtP4atXXysre8mcwm6yJsq0IDDj6o271xATnHv+BUIYNfU7tas8Zse/ka7S5dD3Eh9e1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C511169C;
+	Fri, 16 May 2025 06:50:23 -0700 (PDT)
+Received: from [10.1.27.17] (e122027.cambridge.arm.com [10.1.27.17])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EAE733F673;
+	Fri, 16 May 2025 06:50:30 -0700 (PDT)
+Message-ID: <c4c2d45a-0c9f-41ee-8659-d119edda457b@arm.com>
+Date: Fri, 16 May 2025 14:50:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,246 +27,203 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Sheng Yong <shengyong2021@gmail.com>
-Subject: Re: [PATCH v6] erofs: add 'fsoffset' mount option for file-backed &
- bdev-based mounts
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, xiang@kernel.org,
- chao@kernel.org, zbestahu@gmail.com, jefflexu@linux.alibaba.com,
- dhavale@google.com, lihongbo22@huawei.com
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- Sheng Yong <shengyong1@xiaomi.com>, Wang Shuai <wangshuai12@xiaomi.com>
-References: <20250516090055.3343777-1-shengyong1@xiaomi.com>
- <b91b9f2c-3a07-4726-95d9-75d36bb59871@linux.alibaba.com>
-Content-Language: en-US, fr-CH
-In-Reply-To: <b91b9f2c-3a07-4726-95d9-75d36bb59871@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v8 17/43] arm64: RME: Handle RMI_EXIT_RIPAS_CHANGE
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
+ <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
+ Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
+ Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
+ <aneesh.kumar@kernel.org>
+References: <20250416134208.383984-1-steven.price@arm.com>
+ <20250416134208.383984-18-steven.price@arm.com>
+ <54a21b12-2b17-4e0a-9cbf-f68406fb003a@arm.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <54a21b12-2b17-4e0a-9cbf-f68406fb003a@arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Xiang,
-
-On 5/16/25 17:15, Gao Xiang wrote:
-> Hi Yong,
-> 
-> On 2025/5/16 17:00, Sheng Yong wrote:
-> 
-> ...
-> 
->> diff --git a/Documentation/filesystems/erofs.rst b/Documentation/ 
->> filesystems/erofs.rst
->> index c293f8e37468..b24cb0d5d4d6 100644
->> --- a/Documentation/filesystems/erofs.rst
->> +++ b/Documentation/filesystems/erofs.rst
->> @@ -128,6 +128,7 @@ device=%s              Specify a path to an extra 
->> device to be used together.
->>   fsid=%s                Specify a filesystem image ID for Fscache 
->> back-end.
->>   domain_id=%s           Specify a domain ID in fscache mode so that 
->> different images
->>                          with the same blobs under a given domain ID 
->> can share storage.
->> +fsoffset=%lu           Specify image offset for file-backed or bdev- 
->> based mounts.
-> 
-> Maybe document it as:
-> fsoffset=%lu              Specify filesystem offset for the primary device.
-
-OK, this makes sense. But if we need to handle offset for extra devices,
-we might need to use an array or a string to temporarily store the values.
-This is because devices are not initialized during parsing parameters.
-And set `off' for each extra device during scan devices.
-For now, I prefer to add fsoffset for the primary device only. I think
-the primary device which has an offset is the more generic case.
-
-> 
-> Since I'm not sure if we need later
-> fsoffset=%lu,[%lu,...]    Specify filesystem offset for all devices.
-> 
->>   ===================    
->> =========================================================
->>   Sysfs Entries
->> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
->> index 2409d2ab0c28..599a44d5d782 100644
->> --- a/fs/erofs/data.c
->> +++ b/fs/erofs/data.c
->> @@ -27,9 +27,12 @@ void erofs_put_metabuf(struct erofs_buf *buf)
->>   void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset, bool 
->> need_kmap)
->>   {
->> -    pgoff_t index = offset >> PAGE_SHIFT;
->> +    pgoff_t index;
-> 
-> How about just
->      pgoff_t index = (offset + buf->off) >> PAGE_SHIFT;
-> 
-> since it's not complex to break it into two statements..
-> 
->>       struct folio *folio = NULL;
->> +    offset += buf->off;
->> +    index = offset >> PAGE_SHIFT;
->> +
->>       if (buf->page) {
->>           folio = page_folio(buf->page);
->>           if (folio_file_page(folio, index) != buf->page)
->> @@ -54,6 +57,7 @@ void erofs_init_metabuf(struct erofs_buf *buf, 
->> struct super_block *sb)
->>       struct erofs_sb_info *sbi = EROFS_SB(sb);
->>       buf->file = NULL;
->> +    buf->off = sbi->dif0.off;
->>       if (erofs_is_fileio_mode(sbi)) {
->>           buf->file = sbi->dif0.file;    /* some fs like FUSE needs it */
->>           buf->mapping = buf->file->f_mapping;
->> @@ -299,7 +303,7 @@ static int erofs_iomap_begin(struct inode *inode, 
->> loff_t offset, loff_t length,
->>           iomap->private = buf.base;
->>       } else {
->>           iomap->type = IOMAP_MAPPED;
->> -        iomap->addr = mdev.m_pa;
->> +        iomap->addr = mdev.m_dif->off + mdev.m_pa;
-> 
-> I mean, could we update erofs_init_device() and then
-> `mdev.pa` is already an number added by `mdev.m_dif->off`...
-> 
-> Is it possible? since mdev.pa is already a device-based
-> offset.
-
-I think in most cases we can add `off' to mdev.m_pa directly in
-erofs_map_dev(). But for readdir, erofs_read_metabuf(mdev.m_pa)
-is called after erofs_map_dev() in dir's erofs_iomap_begin().
-However, read metabuf needs `off'.
-
-> 
->>           if (flags & IOMAP_DAX)
->>               iomap->addr += mdev.m_dif->dax_part_off;
->>       }
->> diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
->> index 60c7cc4c105c..a2c7001ff789 100644
->> --- a/fs/erofs/fileio.c
->> +++ b/fs/erofs/fileio.c
->> @@ -147,7 +147,8 @@ static int erofs_fileio_scan_folio(struct 
->> erofs_fileio *io, struct folio *folio)
->>                   if (err)
->>                       break;
->>                   io->rq = erofs_fileio_rq_alloc(&io->dev);
->> -                io->rq->bio.bi_iter.bi_sector = io->dev.m_pa >> 9;
->> +                io->rq->bio.bi_iter.bi_sector =
->> +                    (io->dev.m_dif->off + io->dev.m_pa) >> 9;
-> 
-> So we don't need here.
-> 
->>                   attached = 0;
->>               }unambiguous
->>               if (!bio_add_folio(&io->rq->bio, folio, len, cur))
->> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
->> index 4ac188d5d894..cd8c738f5eb8 100644
->> --- a/fs/erofs/internal.h
->> +++ b/fs/erofs/internal.h
->> @@ -43,6 +43,7 @@ struct erofs_device_info {
->>       char *path;
->>       struct erofs_fscache *fscache;
->>       struct file *file;
->> +    u64 off;
->>       struct dax_device *dax_dev;
->>       u64 dax_part_off;
-> 
-> Maybe `u64 off, dax_part_off;` here?
-> 
-> Also I'm still not quite sure `off` is unambiguous...
-> Maybe `dataoff`? not quite sure.
-
-What about fsoff accroding to fsoffset?
-
-> 
->> @@ -199,6 +200,7 @@ enum {
->>   struct erofs_buf {
->>       struct address_space *mapping;
->>       struct file *file;
->> +    u64 off;
->>       struct page *page;
->>       void *base;
->>   };
->> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
->> index da6ee7c39290..512877d7d855 100644
->> --- a/fs/erofs/super.c
->> +++ b/fs/erofs/super.c
->> @@ -356,7 +356,7 @@ static void erofs_default_options(struct 
->> erofs_sb_info *sbi)
->>   enum {
->>       Opt_user_xattr, Opt_acl, Opt_cache_strategy, Opt_dax, Opt_dax_enum,
->> -    Opt_device, Opt_fsid, Opt_domain_id, Opt_directio,
->> +    Opt_device, Opt_fsid, Opt_domain_id, Opt_directio, Opt_fsoffset,
->>   };
->>   static const struct constant_table erofs_param_cache_strategy[] = {
->> @@ -383,6 +383,7 @@ static const struct fs_parameter_spec 
->> erofs_fs_parameters[] = {
->>       fsparam_string("fsid",        Opt_fsid),
->>       fsparam_string("domain_id",    Opt_domain_id),
->>       fsparam_flag_no("directio",    Opt_directio),
->> +    fsparam_u64("fsoffset",        Opt_fsoffset),
->>       {}
->>   };
->> @@ -506,6 +507,9 @@ static int erofs_fc_parse_param(struct fs_context 
->> *fc,
->>           errorfc(fc, "%s option not supported", 
->> erofs_fs_parameters[opt].name);
->>   #endif
->>           break;
->> +    case Opt_fsoffset:
->> +        sbi->dif0.off = result.uint_64;
->> +        break;
->>       }
->>       return 0;
+On 07/05/2025 11:42, Suzuki K Poulose wrote:
+> On 16/04/2025 14:41, Steven Price wrote:
+>> The guest can request that a region of it's protected address space is
+>> switched between RIPAS_RAM and RIPAS_EMPTY (and back) using
+>> RSI_IPA_STATE_SET. This causes a guest exit with the
+>> RMI_EXIT_RIPAS_CHANGE code. We treat this as a request to convert a
+>> protected region to unprotected (or back), exiting to the VMM to make
+>> the necessary changes to the guest_memfd and memslot mappings. On the
+>> next entry the RIPAS changes are committed by making RMI_RTT_SET_RIPAS
+>> calls.
+>>
+>> The VMM may wish to reject the RIPAS change requested by the guest. For
+>> now it can only do with by no longer scheduling the VCPU as we don't
+>> currently have a usecase for returning that rejection to the guest, but
+>> by postponing the RMI_RTT_SET_RIPAS changes to entry we leave the door
+>> open for adding a new ioctl in the future for this purpose.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>> Changes since v7:
+>>   * Rework the loop in realm_set_ipa_state() to make it clear when the
+>>     'next' output value of rmi_rtt_set_ripas() is used.
+>> New patch for v7: The code was previously split awkwardly between two
+>> other patches.
+>> ---
+>>   arch/arm64/kvm/rme.c | 88 ++++++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 88 insertions(+)
+>>
+>> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+>> index bee9dfe12e03..fe0d5b8703d2 100644
+>> --- a/arch/arm64/kvm/rme.c
+>> +++ b/arch/arm64/kvm/rme.c
+>> @@ -624,6 +624,65 @@ void kvm_realm_unmap_range(struct kvm *kvm,
+>> unsigned long start,
+>>           realm_unmap_private_range(kvm, start, end);
 >>   }
->> @@ -599,6 +603,10 @@ static int erofs_fc_fill_super(struct super_block 
->> *sb, struct fs_context *fc)
->>                   &sbi->dif0.dax_part_off, NULL, NULL);
->>       }
->> +    if (sbi->dif0.off & ((1 << sbi->blkszbits) - 1))
->> +        return invalfc(fc, "fsoffset %lld not aligned to block size",
-> 
-> is `sbi->blkszbits` valid here? I think it should be moved down
-> to "erofs_read_superblock(sb)".
-> 
->              "fsoffset %llu is not aligned to block size %u",
->              sbi->dif0.off, (1 << sbi->blkszbits)
-> 
->> +                   sbi->dif0.off);
-> 
-> If fscache doesn't work, we might need to fail out here too.
-> 
-OK, will fix that in the next version.
-
-thanks,
-shengyong
-> 
-> 
+>>   +static int realm_set_ipa_state(struct kvm_vcpu *vcpu,
+>> +                   unsigned long start,
+>> +                   unsigned long end,
+>> +                   unsigned long ripas,
+>> +                   unsigned long *top_ipa)
+>> +{
+>> +    struct kvm *kvm = vcpu->kvm;
+>> +    struct realm *realm = &kvm->arch.realm;
+>> +    struct realm_rec *rec = &vcpu->arch.rec;
+>> +    phys_addr_t rd_phys = virt_to_phys(realm->rd);
+>> +    phys_addr_t rec_phys = virt_to_phys(rec->rec_page);
+>> +    struct kvm_mmu_memory_cache *memcache = &vcpu->arch.mmu_page_cache;
+>> +    unsigned long ipa = start;
+>> +    int ret = 0;
 >> +
->>       err = erofs_read_superblock(sb);
->>       if (err)
->>           return err;
->> @@ -947,6 +955,8 @@ static int erofs_show_options(struct seq_file 
->> *seq, struct dentry *root)
->>       if (sbi->domain_id)
->>           seq_printf(seq, ",domain_id=%s", sbi->domain_id);
->>   #endif
->> +    if (sbi->dif0.off)
->> +        seq_printf(seq, ",fsoffset=%lld", sbi->dif0.off);
->>       return 0;
+>> +    while (ipa < end) {
+>> +        unsigned long next;
+>> +
+>> +        ret = rmi_rtt_set_ripas(rd_phys, rec_phys, ipa, end, &next);
+>> +
+>> +        if (RMI_RETURN_STATUS(ret) == RMI_SUCCESS) {
+>> +            ipa = next;
+>> +        } else if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT) {
+>> +            int walk_level = RMI_RETURN_INDEX(ret);
+>> +            int level = find_map_level(realm, ipa, end);
+>> +
+>> +            /*
+>> +             * If the RMM walk ended early then more tables are
+>> +             * needed to reach the required depth to set the RIPAS.
+>> +             */
+>> +            if (walk_level < level) {
+>> +                ret = realm_create_rtt_levels(realm, ipa,
+>> +                                  walk_level,
+>> +                                  level,
+>> +                                  memcache);
+>> +                /* Retry with RTTs created */
+> 
+> minor nit: Do we need to add a comment here, saying, we stop processing
+> the request if we run out of RTT pages in this go and Realm could retry
+> it.
+
+I'm not really sure this is the right place, and following Gavin's
+comment I've combined this with the INIT_RIPAS code.
+
+Also the situation at the moment isn't that we return to the guest -
+kvm_complete_ripas_change() will topup the memory cache and retry until
+the whole region is covered. There is an argument that perhaps it
+shouldn't, but I'm not sure what a guest can usefully do beyond retry in
+the case of a partial RIPAS change. In which case why have the overhead
+of returning to the guest?
+
+>> +                if (!ret)
+>> +                    continue;
+>> +            } else {
+>> +                ret = -EINVAL;
+>> +            }
+>> +
+>> +            break;
+>> +        } else {
+>> +            WARN(1, "Unexpected error in %s: %#x\n", __func__,
+>> +                 ret);
+>> +            ret = -ENXIO;
+>> +            break;
+>> +        }
+> 
+> minor nit: Following from Gavin's comment on another patch, could
+> switch() make the above code more readable and remove the continue; ?
+> 
+>         switch (RMI_RETURN_STATUS(ret)) {
+>         case RMI_SUCCESS:
+>             ipa = next;
+>             break;
+>         case RMI_ERROR_RTT: {
+> 
+>        
+>         }
+>             break;
+>         default:
+>             WARN(..);
+>             ret = -ENXIO;
+>             goto out;
+>         }
+> 
+> I am fine either way.
+
+Since I'm combining the two functions, I've kept just the switch()
+version of the code.
+
+>> +    }
+>> +
+> 
+> out:
+> 
+>> +    *top_ipa = ipa;
+>> +
+>> +    if (ripas == RMI_EMPTY && ipa != start)
+>> +        realm_unmap_private_range(kvm, start, ipa);
+>> +
+>> +    return ret;
+>> +}
+>> +
+>>   static int realm_init_ipa_state(struct realm *realm,
+>>                   unsigned long ipa,
+>>                   unsigned long end)
+>> @@ -863,6 +922,32 @@ void kvm_destroy_realm(struct kvm *kvm)
+>>       kvm_free_stage2_pgd(&kvm->arch.mmu);
 >>   }
->> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
->> index b8e6b76c23d5..4f910d7ffb2f 100644
->> --- a/fs/erofs/zdata.c
->> +++ b/fs/erofs/zdata.c
->> @@ -1707,7 +1707,8 @@ static void z_erofs_submit_queue(struct 
->> z_erofs_frontend *f,
->>                       bio = bio_alloc(mdev.m_bdev, BIO_MAX_VECS,
->>                               REQ_OP_READ, GFP_NOIO);
->>                   bio->bi_end_io = z_erofs_endio;
->> -                bio->bi_iter.bi_sector = cur >> 9;
->> +                bio->bi_iter.bi_sector =
->> +                        (mdev.m_dif->off + cur) >> 9;
+>>   +static void kvm_complete_ripas_change(struct kvm_vcpu *vcpu)
+>> +{
+>> +    struct kvm *kvm = vcpu->kvm;
+>> +    struct realm_rec *rec = &vcpu->arch.rec;
+>> +    unsigned long base = rec->run->exit.ripas_base;
+>> +    unsigned long top = rec->run->exit.ripas_top;
+>> +    unsigned long ripas = rec->run->exit.ripas_value;
+>> +    unsigned long top_ipa;
+>> +    int ret;
+>> +
+>> +    do {
+>> +        kvm_mmu_topup_memory_cache(&vcpu->arch.mmu_page_cache,
+>> +                       kvm_mmu_cache_min_pages(vcpu->arch.hw_mmu));
+>> +        write_lock(&kvm->mmu_lock);
+>> +        ret = realm_set_ipa_state(vcpu, base, top, ripas, &top_ipa);
+>> +        write_unlock(&kvm->mmu_lock);
+>> +
+>> +        if (WARN_RATELIMIT(ret && ret != -ENOMEM,
+>> +                   "Unable to satisfy RIPAS_CHANGE for %#lx - %#lx,
+>> ripas: %#lx\n",
+>> +                   base, top, ripas))
+>> +            break;
+>> +
+>> +        base = top_ipa;
+>> +    } while (top_ipa < top);
+>> +}
+>> +
 > 
-> So we don't need here as well.
-> 
-> Thanks,
-> Gao Xiang
+> Rest looks good to me.
+
+Thanks,
+Steve
+
 
