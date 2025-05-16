@@ -1,124 +1,116 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19333230996;
-	Fri, 16 May 2025 09:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4F117B425;
+	Fri, 16 May 2025 09:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747387665; cv=none; b=WBcyv7P75t9TIpaffG2LM6BxOOMuoCKrRXpZFw7gjbhezdCIOpTVkNELksQ4GY6S4eh4sx5ujDfRAg2i0BxkddIJkNJwV0oHNmo4IvHZzAOJiLGZ1Qh6DbYbhJ/xCMpT/c9neYdiOIdtMNwwgxrrLfsKPq5NMWY8bSRP98pKbEY=
+	t=1747387689; cv=none; b=mOsTS9tpg7jwzMiFBINNHb8sNX6f8vXcQDGVG+qTpmSa+1NuXzNuwGgazg4XJ6+yHPPBXFy1UMxysyiXoU/XF7TW/Qf3dCU6MZNRgUc4u4N6yalwd9vQLDr664PtKtRVjsBaR/0JvY0JplUXqlydJMfRmxTWG7n09JV7IvYXIJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747387665; c=relaxed/simple;
-	bh=sdUImjzjVy4p7BDx4hRMRTA3WkUJEPjx2WrucSq/Rhk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O0tC8HnJfmzmzvZ74qIbOzx0hrIWCbgTb77OcqeHT/zJkZEVu9V2uj6I19oX7OjMjpyfYu6IPgwx2BZ7+zYuUAN8Eja4vwOYpwqLWOOz7iJb9I05HgwVFp+FYGd6tkKix2mQqEKMPkOFOVCeJvqoYDU0GzNjmmAgGITaytvShSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a3ymyftK; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747387689; c=relaxed/simple;
+	bh=dlDha9z2voc3K7ZndzuXEpZISD4Js5B+4bqJb6RluJk=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=rS7xTA3Ar+EJPRJFlIh76fnGPKOm6rhtKJZYksvqZq9QQ4rWU/rQMPgycfG/Mh9L7ng6c7shN+xyfMswisExa2JqUaG2PzXS/Nn2HKUesoihPdvZ1eHb4N5kMoNmPsnL44G3L2udeY5M/aYUWdbdaLYhCt48dzV9OeEeQv7wlIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MTDI9d0Y; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LMLui3hf; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a3ymyftK"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3d8020ba858so18596995ab.0;
-        Fri, 16 May 2025 02:27:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747387663; x=1747992463; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D8iSHQXbhi/neDEe92uz7f1bQeL28XTLFAqRPlVNKA4=;
-        b=a3ymyftKFtGceLyoFovGXAIu3vy9vWpOi4BjEgrxRSUxZ8T4paZXKRlvbcMJ1lUIRY
-         41E523UNkPAPBETqLFzDhY2OBfSYfNBcedkaqjnlj1A4kcOmDoapMLjd/7p6qanIlahA
-         mpJHNzM8x5cjIp2u7xq9z4miaLjHNDT+mSQ+parUoVLufgjTvd+jQku8VrNzySNKnN6K
-         LK6G5/t925qCSeImuVxrrakXIvzLuPfvh/5VAoDQ0MN/Pkz067wvL5Lz9Mcy1XkqFdem
-         tLot3YErXu9cDi7U4yiPUzyfC1Jyd9Ln2KGRpVdgdCozChfoEAWPy7ZkQrdvGW3DclZE
-         /qkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747387663; x=1747992463;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D8iSHQXbhi/neDEe92uz7f1bQeL28XTLFAqRPlVNKA4=;
-        b=bpFu7rv6ul6SpxbETMb6ZijldEAnOBZvERnybeSm92pO2xRqOkaDvRbMO73FBeMR1A
-         Lge9cdSnql2eIXzhMeB+/ltK+eAQJbyJlRQiIjK9wIEkh+U2zw4MIGDoEUrgC/h3L9UJ
-         kLNNEONfiFWHlkNipuy35MytrG17PrBafB1jc1qsiAp3rz+0j/fbutNscbU4/zGhCQVa
-         gopKpbvSkUfPMSLtCyx162NK/aMCR0sdbZgOLcUZNISrLG9m6s2k1Yk2SBQwd7Lar2yj
-         YAG2yr7Ty4O5vIqotFlrICOw24VB0snanksvoN9O/fRh8PB8WeC/bAtIjGvHuXUhSFJ8
-         SZPA==
-X-Forwarded-Encrypted: i=1; AJvYcCVkXnfCLNUZ5uCwauGw4hFg39298hrYh8AL/BDCIqDB9YKDgWunm/gp6eUYn4neV+MuVRcqkfH0PUgJ3bY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzd9FCJtq/Yvfik1vH7k2GcBOVx2uRDXWMEKeFRZNvtboM/9nsR
-	y+29fe6vcMnn8oiXmXFVr5VeFTTQL7maUJ3Ob56t/ktw/9pJGKI7IBioyqAV08Om
-X-Gm-Gg: ASbGncvaWSN8hgSxH8f4103gv/phP6QjXLs9H+saL4WW9//4z7Az0ZarGJdbg+hgEtd
-	J4beAagl0ksCrkYOZZlo8UyQJvxxkt2IQAZ6V8KkGrdnr3oGrMoTRFKDB9s6f/ERDPkPHITj6jr
-	gdre1QxFAvecmt5niAQUwxw2+hbOG/tiT/s3kgrxLNwDb8non7CoiMBYDdPi0JZ3d+a/1apDe7l
-	cu/mQLTpAvW3Jj27HY5H6PD25LxPnn8UYjMTzMTKgjFL3NmZ6KkowjIJxF2OOqf87QDPA8BVloA
-	SPHxJ066Awf0v1v2ne/+Y0z3pnxemqIkV4dnYN5lPQxXX/J9Q+YVwVGJ3kUYKqgsFEzYbQ==
-X-Google-Smtp-Source: AGHT+IE1XJ5Z5xCiFKErRNaoPDqXr9FhYolWOGpyckFKjyLcbSwBeSW7W8gtMDB25EvygpXbWVdU5A==
-X-Received: by 2002:a05:6a00:2da5:b0:73f:f816:dd78 with SMTP id d2e1a72fcca58-742a98b2e69mr3131007b3a.15.1747387651912;
-        Fri, 16 May 2025 02:27:31 -0700 (PDT)
-Received: from victorshih.. ([2402:7500:577:397a:896b:66ce:fdf5:6801])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a98a229esm1097876b3a.161.2025.05.16.02.27.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 02:27:31 -0700 (PDT)
-From: Victor Shih <victorshihgli@gmail.com>
-To: ulf.hansson@linaro.org,
-	adrian.hunter@intel.com
-Cc: linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	benchuanggli@gmail.com,
-	HL.Liu@genesyslogic.com.tw,
-	Greg.tu@genesyslogic.com.tw,
-	Victor Shih <victorshihgli@gmail.com>,
-	Ben Chuang <ben.chuang@genesyslogic.com.tw>,
-	Victor Shih <victor.shih@genesyslogic.com.tw>
-Subject: [PATCH V1 1/2] mmc: core: Adjust some error messages for SD UHS-II cards
-Date: Fri, 16 May 2025 17:27:15 +0800
-Message-ID: <20250516092716.3918-2-victorshihgli@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250516092716.3918-1-victorshihgli@gmail.com>
-References: <20250516092716.3918-1-victorshihgli@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MTDI9d0Y";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LMLui3hf"
+Date: Fri, 16 May 2025 09:28:05 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747387686;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GNq/58C7E9N6itWByJdcWr2Jvl1DPdIstlbH/Sr6pkg=;
+	b=MTDI9d0Y7t2KbNfzLS34Rr9YLkerz3fWKux0rJTAudwq8Wdw7ztDh/39HDQmRQtADr6ZNw
+	s4BV3g3xdpJ5K5OtR2K2lGK5f+06brIHqCi4BluG8Mg3eq1Uj1vk6xm9YL/bvDJUT5Z9QB
+	3cW1t2MLQKl54gcRLs7d/JtqgrY+Mj5YFuaj10xjTgiyRs8OqxPro6x+zrMrWki/l0jdfk
+	0PrdHY557F19/NgUV4SJC6aJRTXZ6zBJcjDe7yPrGU8zK3+4DOsgxnaJYPnh4hBUOtqe7N
+	ajMglc3kMW9nF2sBPvDD3klteycObGxdoCUoYebVuS/uTNHqxcsnLDrrzpB88A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747387686;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GNq/58C7E9N6itWByJdcWr2Jvl1DPdIstlbH/Sr6pkg=;
+	b=LMLui3hfuFH/TR4IXT/ZAn8gOu8qNRSk58PQlrBXtIQvPg/bbvGGNdtE/X0P5v2pGr3asB
+	IUzZ6aVTv1XZ5PCA==
+From: "tip-bot2 for Lukas Bulwahn" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/mm: Remove duplicated word in warning message
+Cc: Lukas Bulwahn <lukas.bulwahn@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+ Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, kernel-janitors@vger.kernel.org,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250516090810.556623-1-lukas.bulwahn@redhat.com>
+References: <20250516090810.556623-1-lukas.bulwahn@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <174738768534.406.13532690829248851233.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-From: Victor Shih <victor.shih@genesyslogic.com.tw>
+The following commit has been merged into the x86/urgent branch of tip:
 
-Adjust some error messages to debug mode to avoid causing
-misunderstanding it is an error.
+Commit-ID:     03680913744de17fa49e62b1d8f71bab42b0b721
+Gitweb:        https://git.kernel.org/tip/03680913744de17fa49e62b1d8f71bab42b0b721
+Author:        Lukas Bulwahn <lukas.bulwahn@redhat.com>
+AuthorDate:    Fri, 16 May 2025 11:08:10 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 16 May 2025 11:16:52 +02:00
 
-Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-Signed-off-by: Victor Shih <victor.shih@genesyslogic.com.tw>
+x86/mm: Remove duplicated word in warning message
+
+Commit bbeb69ce3013 ("x86/mm: Remove CONFIG_HIGHMEM64G support") introduces
+a new warning message MSG_HIGHMEM_TRIMMED, which accidentally introduces a
+duplicated 'for for' in the warning message.
+
+Remove this duplicated word.
+
+This was noticed while reviewing for references to obsolete kernel build
+config options.
+
+Fixes: bbeb69ce3013 ("x86/mm: Remove CONFIG_HIGHMEM64G support")
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: kernel-janitors@vger.kernel.org
+Link: https://lore.kernel.org/r/20250516090810.556623-1-lukas.bulwahn@redhat.com
 ---
- drivers/mmc/core/sd_uhs2.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/mm/init_32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/core/sd_uhs2.c b/drivers/mmc/core/sd_uhs2.c
-index 1c31d0dfa961..58c4cef37f7c 100644
---- a/drivers/mmc/core/sd_uhs2.c
-+++ b/drivers/mmc/core/sd_uhs2.c
-@@ -36,6 +36,10 @@
- #include "sd_ops.h"
- #include "mmc_ops.h"
+diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+index ad662cc..148eba5 100644
+--- a/arch/x86/mm/init_32.c
++++ b/arch/x86/mm/init_32.c
+@@ -565,7 +565,7 @@ static void __init lowmem_pfn_init(void)
+ 	"only %luMB highmem pages available, ignoring highmem size of %luMB!\n"
  
-+#define DRIVER_NAME "sd_uhs2"
-+#define DBG(f, x...) \
-+	pr_debug(DRIVER_NAME " [%s()]: " f, __func__, ## x)
-+
- #define UHS2_WAIT_CFG_COMPLETE_PERIOD_US  (1 * 1000)
- #define UHS2_WAIT_CFG_COMPLETE_TIMEOUT_MS 100
- 
-@@ -91,8 +95,8 @@ static int sd_uhs2_phy_init(struct mmc_host *host)
- 
- 	err = host->ops->uhs2_control(host, UHS2_PHY_INIT);
- 	if (err) {
--		pr_err("%s: failed to initial phy for UHS-II!\n",
--		       mmc_hostname(host));
-+		DBG("%s: failed to initial phy for UHS-II!\n",
-+		    mmc_hostname(host));
- 	}
- 
- 	return err;
--- 
-2.43.0
-
+ #define MSG_HIGHMEM_TRIMMED \
+-	"Warning: only 4GB will be used. Support for for CONFIG_HIGHMEM64G was removed!\n"
++	"Warning: only 4GB will be used. Support for CONFIG_HIGHMEM64G was removed!\n"
+ /*
+  * We have more RAM than fits into lowmem - we try to put it into
+  * highmem, also taking the highmem=x boot parameter into account:
