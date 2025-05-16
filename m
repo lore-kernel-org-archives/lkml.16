@@ -1,50 +1,73 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C63145323;
-	Fri, 16 May 2025 06:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9561D88AC
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:02:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747375221; cv=none; b=PbaCnrnC0VNt0zk/JoqUKC3PrPVtzhQoSn5i4N4Ce4/CB3+pf/h3ARC5UFHPWlUPP4TwbLK4jYjDsywQq3VuSQtDKbmSP5rBvhoXqBZ3q8euSXmk6bPiMvNN+Qy1+KeFb/Eg0PDUMISSn9ZY4Amo2EbtUKBzY9hTTBjbgyN4HNE=
+	t=1747375361; cv=none; b=hPMbrxwNTL+pvi0c8EnGt9LVQwdrfmWWKqNeCPjHOY1mFLXD6qSvGUxbNCwoB49wpZa3SvQ5MK8nJ/a3UbcH+oa+efO5l1bQFWIZzYnCdHPl09V40n9AgfmJMJoq1kbLH23oDp7YyK01kFK7/tTfASHjVMISuFMmJQ/bz2L8Mlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747375221; c=relaxed/simple;
-	bh=jRcCQqKoajgCHcqKZL2fKVR9zn8kYTEKLbF6ph3kb9s=;
+	s=arc-20240116; t=1747375361; c=relaxed/simple;
+	bh=FFW0hqGTqpSSQEt0oM9VrJkvsbPrdiAwXszFH8NO5sc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I6VSauzHnOeKJGTAYIz2vtWIYdqQCljtPEXbTDpPa++EQcCriuyhftuk9P6AeeBH0z0n/aBfqaI3aI3GcbtESVyPzWniEr/KXcGcfm4p4C2888BD5sGMVxP9NfeeKrG9xiEApVBzzLoMGZfawytOwarIHCHz5SuFscDWO9swaLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=W6r+kAM3; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=U74bKw9bHaAk84GhAImUI3Mcxjn9OkJjXJr8NlpbvraSTsJJ7RolcecZp6cekCIZq3AEwNMAO1hSCukfVnunq9Eh2q11jdNxPFbgVafXdWep33dSFcvTDdRHoQf8Kq301TloKm7CuwvK7aFAd6BsOl+bgCoDpOYQMiGD3miqh/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dwOsgyFC; arc=none smtp.client-ip=209.85.128.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W6r+kAM3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=tMkAG2SFACdyzL8iUB+Wxh6SJJ+34J1Qx1KU18J0p3Y=; b=W6r+kAM3drfZk7z4FiEyTqXGFI
-	OxPSN+0oTLerhucmtXvIp5AGqSP8Uvx0I9gq2toJ4ceOjhz7qpFE+MLAs9kDey6PorkOLeNK2yDRr
-	tfAGBIBdkiWUF9VAztyncBX/uNpYOgk3gwEsIpOsQo89sQsJiVsVylWGs4IUr/olWnjweBPX8d6JT
-	BzjVdH5QbCgiXTQDu/i/c4uu3668SH3OXLKyQGlNQneOIvT7NwMZj8h6kibCK8ZJa2c1TOMk2yMOX
-	TAqQGT25siJz2NolUgJ0qJZ5kJnI+kzZGGCjh2e7U33i7m+M4wGHeGEL4O5nn7gaFA52T62/R7PZp
-	7uK8hPdw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uFo7F-00000002Xly-0cgy;
-	Fri, 16 May 2025 06:00:17 +0000
-Date: Thu, 15 May 2025 23:00:17 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Kevin Wolf <kwolf@redhat.com>
-Cc: Martin Wilck <mwilck@suse.com>, Christoph Hellwig <hch@infradead.org>,
-	Benjamin Marzinski <bmarzins@redhat.com>, dm-devel@lists.linux.dev,
-	hreitz@redhat.com, mpatocka@redhat.com, snitzer@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
- paths
-Message-ID: <aCbUcdew393RZIkV@infradead.org>
-References: <20250429165018.112999-1-kwolf@redhat.com>
- <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
- <aCIRUwt5BueQmlMZ@redhat.com>
- <d51d6f85b5728648fe9c584f9cb3acee12c4873f.camel@suse.com>
- <cc2ec011cf286cb5d119f2378ecbd7b818e46769.camel@suse.com>
- <aCW95f8RGpLJZwSA@redhat.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dwOsgyFC"
+Received: by mail-wm1-f67.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so13278275e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 23:02:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1747375358; x=1747980158; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YRCpYLM2KigShkSCMx1Qo6LnPBeFu9CM55DsyR/vk34=;
+        b=dwOsgyFCqUtAcxaArAly5u3HlrR0tZeCOZA5XgIZrvlgwqzqD8uisx2IOdMkXBU49w
+         W1DzTjO/Hhg4Av5PY5hNm/SeQ1V5J6IH/7ZLOPBZJJ8g/2ZTcZuxIRqFOJW3J/Z/ZJH4
+         ewH3fpXljxZToAHhvsKJ/AebACnS37CgT1HU8oJz7kNpDCpZF5MiYoJ2kTBkRn/VorzC
+         0bQ0M+wUYBpa0WvNBbk8TJEGU2QItB0RNlqzb20EJ6wQ4dDrwQ5lTTgiWfUGZv0lN5Op
+         ixN7sFbfiuQJONpzX9jtJegEwuserDLS6C233GiEx/Wh2F5fAjCE+IDslThlgd6QQScP
+         HmFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747375358; x=1747980158;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YRCpYLM2KigShkSCMx1Qo6LnPBeFu9CM55DsyR/vk34=;
+        b=vCXXbtCpR8SdJ7IvEmRvgh2nD5FUnJYmuIN46YFvjYXOSF0bDm4BZG3SJ+I05RFxD7
+         PbFGd8qk3ZEn8Gp8M0rt7R+lvBzuNah+41ePUJ4dYWZjfoy1JpMdPon3j6YJEkyIfel2
+         lPAZQigQb22Inp3wLJ7HJxo+qeEnyAiR/Wg1JYKvgcHp2cS2J+CQ+XO2F08jHNIhU6fE
+         gQxbZczYEKiH/jJejHM19W4xoVZEXWa87E8r3As/rh+C/P85w1P+UppOVQOaiRiLJKBG
+         y1I9wwv0LquF+ye94iGm6YFIaI1+HbCScabXC0KgiG8XOTDTB9jUT8Gmeb0Jsh9+zc6S
+         EPcw==
+X-Forwarded-Encrypted: i=1; AJvYcCW+bnC6a0WBZRZ9Xa+yg3J6tjrWTavoXWW6JDDo49xpGSmQPiJ87/dX15YvWrUCx+2Yy1rhoMjQUo9qfEE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx29n4tZH8IER/hOCXk7Yogvm6bKxyzx5R0QVHSPagiLryUncqU
+	ZXNCkvpXV1Hr7ujmrlrd1aP0inTdu2uG8wbXhO+tpSsS24XiuGPt3U7SUCF9BQ0GFzk=
+X-Gm-Gg: ASbGncvhQa40Mfg4QHXnx51+w39PB5CzJBcCgi6IjtNOE5acxfURyaCAlqt4ISdb5YC
+	q4gWhIdLYxVNkjqiXo0yjhsqvKKz7pXE0/LRPwwg1LQDrd0tYUma2N4bhQmAbkGZPCrAnGuBo0W
+	ip8PnSssdttzUhyXpokckYtEXxENIPA8YM1EqV+JojHc8sVZwKJ7p7E6sVHY16H9Akz5cbMwUYO
+	nSt7lfZ5f02WlBj833OFl+2xV2UYz4PtNRP5PgELGjunfjCCr0HAGA7A7JrpMpacv4XYDH6gAkd
+	ua3UfslqDR7tHiKY1U85ZerFSAuJAmmWN2mm9PEs2hRQkx/yT22Rf9rkNjr+ZNh1PaFSRYU=
+X-Google-Smtp-Source: AGHT+IExAX5L6jhpudxoopt/jOxKXl18l7eevqO0BjrQScjyjlt4zB8dW0pf982EIRtAZl2LOgjSqw==
+X-Received: by 2002:a5d:4567:0:b0:391:4999:778b with SMTP id ffacd0b85a97d-3a35c84428fmr1663501f8f.28.1747375357714;
+        Thu, 15 May 2025 23:02:37 -0700 (PDT)
+Received: from u94a (27-51-34-195.adsl.fetnet.net. [27.51.34.195])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87bec12287esm1112560241.10.2025.05.15.23.02.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 23:02:37 -0700 (PDT)
+Date: Fri, 16 May 2025 14:02:22 +0800
+From: Shung-Hsi Yu <shung-hsi.yu@suse.com>
+To: Kees Cook <kees@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Uladzislau Rezki <urezki@gmail.com>, Erhard Furtner <erhard_f@mailbox.org>, 
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	bpf@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 0/2] mm: vmalloc: Actually use the in-place vrealloc
+ region
+Message-ID: <yw7aumjfrefi5cdejjgtjfeusaihfh5yjuhry3xvetjld36fgi@ob4a6lwdlqt4>
+References: <20250515214020.work.519-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,33 +76,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aCW95f8RGpLJZwSA@redhat.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20250515214020.work.519-kees@kernel.org>
 
-On Thu, May 15, 2025 at 12:11:49PM +0200, Kevin Wolf wrote:
-> If you're talking about SG_IO in dm-mpath, then PRIN/PROUT commands are
-> actually the one thing that we don't need. libmpathpersist sends the
-> commands to the individual path devices, so dm-mpath will never see
-> those. It's mostly about getting the full results on the SCSI level for
-> normal I/O commands.
+On Thu, May 15, 2025 at 02:42:14PM -0700, Kees Cook wrote:
+> Hi,
 > 
-> There has actually been a patch series on qemu-devel last year (that I
-> haven't found the time to review properly yet) that would add explicit
-> persistent reservation operations to QEMU's block layer that could then
-> be used with the emulated scsi-hd device. On the backend, it only
-> implemented it for iscsi, but I suppose we could implement it for
-> file-posix, too (using the same libmpathpersist code as for
-> passthrough). If that works, maybe at least some users can move away
-> from SCSI passthrough.
+> This fixes a performance regression[1] with vrealloc(). This needs to
+> get into v6.15, which is where the regression originates, and then it'll
+> get backport to the -stable releases as well.
+> 
+> Thanks!
+> 
+> -Kees
+> 
+> [1] https://lore.kernel.org/lkml/20250515-bpf-verifier-slowdown-vwo2meju4cgp2su5ckj@6gi6ssxbnfqg/
+> 
+> Kees Cook (2):
+>   mm: vmalloc: Actually use the in-place vrealloc region
+>   mm: vmalloc: Only zero-init on vrealloc shrink
 
-Please call into the kernel PR code instead of hacking up more of
-this, which will just run into problems again.
+Thank you for the prompt fix! I'll remember to include a more thorough
+note on reproducing the issue next time.
 
-> The thing that we need to make sure, though, is that the emulated status
-> we can expose to the guest is actually good enough. That Paolo said that
-> the problem with reservation conflicts was mostly because -EBADE wasn't
-> a thing yet gives me some hope that at least this wouldn't be a problem
-> any more today.
+With the patchset applied, BPF selftests on both 6.15-rc6 and 6.14.7-rc2
+passes successfully.
 
-And if you need more information we can add that to the kernel PR API.
-
+Tested-by: Shung-Hsi Yu <shung-hsi.yu@suse.com>
