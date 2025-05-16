@@ -1,119 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7604E2309BD;
-	Fri, 16 May 2025 09:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B69921171C;
+	Fri, 16 May 2025 09:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747388088; cv=none; b=bp004soj0sTUmDp8FpPpon34u9Rc8em19eu2FcUPiUvp+LWTH9j4KsJEVqDPbdHE7Y285vbC6yKWLbgR1LuBLfU3Y4LsFsH3gzOp1Pzy0aUjPILjJUCy1VoWReVKy5ms9OcJ9SPCwoVqEMcMAVUQ+NDgxKj2OGM6L3ut3FIL/ME=
+	t=1747388086; cv=none; b=uLXWREvfkbgjys59UBhMp/lb1sU/BxIW58RoizqUDISQWl/jrt/FGqlOYVwDLridA3KNZeTBvUc+PSo93q32NEYU7Lxr+g2cljOFe9SN+KzKaLSJsqAykBpTaK4hAyunp2sWfkIGDXALNJ6T6pbCPyAMSxU7e+NxVOPKkgchyPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747388088; c=relaxed/simple;
-	bh=LPH3ITaFyNefo+OblDhxJ0ojDQcLwWHzXvs37vIVZp8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O6V0/LDslEPCWJdVlotQYYCLnfkBVtl39G77emuqaAC/SZPNdj9jzTAb6zfZwBXrZAqHT3MgtVQNBDkKbcQ6HDc9uV9AecX9NdmPM7J/mY7udStLobvIr7h8QGhGYQLfkXbm6/eyeJ1kat1UCdGFogRrS+HusSukeABIFO9Mvf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: RA+nlMiRRvi8hhhwuQu69Q==
-X-CSE-MsgGUID: +21mhxjdQmWxtSUsd2xg+g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="60377799"
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="60377799"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:34:45 -0700
-X-CSE-ConnectionGUID: fLaAG/btR5SMA2g4YFPH5Q==
-X-CSE-MsgGUID: dq6PJxrSRra9fXN6iR/toQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="138531481"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:34:40 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1uFrSe-000000026C6-3j2d;
-	Fri, 16 May 2025 12:34:36 +0300
-Date: Fri, 16 May 2025 12:34:36 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Jonathan Santos <Jonathan.Santos@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	nuno.sa@analog.com, Michael.Hennerich@analog.com,
-	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, jonath4nns@gmail.com, dlechner@baylibre.com,
-	Pop Paul <paul.pop@analog.com>
-Subject: Re: [PATCH v8 10/11] iio: adc: ad7768-1: add filter type and
- oversampling ratio attributes
-Message-ID: <aCcGrKEIdvnPRq-w@smile.fi.intel.com>
-References: <cover.1747175187.git.Jonathan.Santos@analog.com>
- <1aff0f813bb3fee55c5483be860b6885abdb81e5.1747175187.git.Jonathan.Santos@analog.com>
+	s=arc-20240116; t=1747388086; c=relaxed/simple;
+	bh=wg/GPJVdLPEC+gSEBaN1lU7J1t4soGADWVLMY+y+l3E=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=lCXtjfSKzLnEyflDr0bDe/TMdyExagfKbjEIrGSbZjDTH6HfB2KrmVp0lZa4BoN+JiKNF7J1WJE0vCQHMSNEsri5vXHsM0+hitujeFoIMXJyXzd0H5PIyfHPM1DhKnOTkF2iOYdluxOPOXQP8tEcM13kkTFJ7y8j4U6k9SkuyaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=EMGj1zM+; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EMGj1zM+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747388077;
+	bh=GsZzdzXbwpNssNiYOZ+UZVg+t7owYof120Ekr6TiPAY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=EMGj1zM+NuykO3EYKAa5D+YnQ/ceh6bjOYs4Y2xkBrRSMFf5+hhTfc8XjD8ZaYwZC
+	 3qbrj/UjA/lM37RjvhliKxNY3AELDOWcROH+HN5BPFnP2J7zrdGAN7IA3+DtFRkZOw
+	 648mBIEJD9BXBBfNyEYcCcMpRvrAVIZ8wNdATaIsIegyy30eVsleilrGXeUFsKvJcY
+	 oYxqphxyWWS/OXMF1YJmdXtnxDruj0xWWPwmSTSfrQDWuLNmZ6xidl5bf9nm6Ebmip
+	 M4wj1uQthHsLcZ1mXbXiMilFOzrw7pSYYL+17Js8TdeRia2zQsuNP99AAsSFzeaLTr
+	 /mcA1GeTawiIw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZzMNs36yQz4wcm;
+	Fri, 16 May 2025 19:34:37 +1000 (AEST)
+Date: Fri, 16 May 2025 19:34:36 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the gpio-intel tree
+Message-ID: <20250516193436.09bdf8cc@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1aff0f813bb3fee55c5483be860b6885abdb81e5.1747175187.git.Jonathan.Santos@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: multipart/signed; boundary="Sig_//hpPeofs0fieQui==85s0z/";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Thu, May 15, 2025 at 06:14:21PM -0300, Jonathan Santos wrote:
-> Separate filter type and decimation rate from the sampling frequency
-> attribute. The new filter type attribute enables sinc3, sinc3+rej60
-> and wideband filters, which were previously unavailable.
-> 
-> Previously, combining decimation and MCLK divider in the sampling
-> frequency obscured performance trade-offs. Lower MCLK divider
-> settings increase power usage, while lower decimation rates reduce
-> precision by decreasing averaging. By creating an oversampling
-> attribute, which controls the decimation, users gain finer control
-> over performance.
-> 
-> The addition of those attributes allows a wider range of sampling
-> frequencies and more access to the device features. Sampling frequency
-> table is updated after every digital filter parameter change.
-> 
-> Changes in the sampling frequency are not allowed anymore while in
-> buffered mode.
+--Sig_//hpPeofs0fieQui==85s0z/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-...
+Hi all,
 
-> +	/*
-> +	 * Maximum dec_rate is limited by the MCLK_DIV value and by the ODR.
-> +	 * The edge case is for MCLK_DIV = 2, ODR = 50 SPS.
-> +	 * max_dec_rate <= MCLK / (2 * 50)
-> +	 */
-> +	max_dec_rate = st->mclk_freq / 100;
-> +	dec_rate = clamp(dec_rate, 32, max_dec_rate);
-> +	/*
-> +	 * Calculate the equivalent value to sinc3 decimation ratio
-> +	 * to be written on the SINC3_DEC_RATE register:
-> +	 *  Value = (DEC_RATE / 32) -1
+After merging the gpio-intel tree, today's linux-next build (htmldocs)
+failed like this:
 
-- 1
-(mind the space)
+Error: Cannot open file /home/sfr/next/next/drivers/gpio/gpiolib-acpi.c
 
-> +	 */
-> +	dec_rate = DIV_ROUND_UP(dec_rate, 32) - 1;
+Caused by commit
 
-...
+  babb541af627 ("gpiolib: acpi: Move quirks to a separate file")
 
->  {
->  	struct ad7768_state *st = iio_priv(indio_dev);
->  
-> -	return st->dec_rate == 8 ? AD7768_SCAN_TYPE_HIGH_SPEED :
-> +	return st->oversampling_ratio == 8 ? AD7768_SCAN_TYPE_HIGH_SPEED :
->  		AD7768_SCAN_TYPE_NORMAL;
+I have to run
 
-With the proposed change in the previous patches this change will become
-clearer to read, i.e. no-one needs to check if the actual value was changed.
+make KERNELDOC=3D$(pwd)/scripts/kernel-doc.pl htmldocs
 
->  }
+as the newer Python version dies without a useful error :-(
 
--- 
-With Best Regards,
-Andy Shevchenko
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_//hpPeofs0fieQui==85s0z/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgnBqwACgkQAVBC80lX
+0Gxriwf/a0FzFSl6cWitS6CwzVEHuenVUltpcP0G9balLbo7JWb8NU4QZfq3PEDE
+TSopAtjo/k/TCI9xX6cnK55SToTHgtUsrLqlOA9BKQHCaru8pkPIaRWXbhMV5t+Q
+psPbYJKRpTAThu6RWueCphFyR5attqY2UQcRIpFvYZJnFEPXUO4J/HYqd3Irhg8N
+7b9YwLyN1O8EnkZicNfWiAbsZ9bgMr+T106Y/Ze9ZBTemDFFYeZvEIZqBiU2d9N4
+YvFZin9S4nRpsP1Xd/2GiSw1LREhpuF03T2ty2tiVqLUigrUlFMUxycvEFzNToxG
+Y1LUVQOfFxMV/3JlxzQBFZhcqmx9nQ==
+=S1Pu
+-----END PGP SIGNATURE-----
+
+--Sig_//hpPeofs0fieQui==85s0z/--
