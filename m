@@ -1,101 +1,170 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7A323D28B
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 12:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85CF01E871;
+	Fri, 16 May 2025 12:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747398789; cv=none; b=jIFOWRKUQXo24IZhRbnoKiv4wydstvDVFgP96SBQDyu6K/W979+D4UjA/q8O9n+WCKoGFMhVcyZ6emGoOfZccbcJfJL+mlpD8E96ndv9EQhoZpEDyUM3eNmErDm+nfcJB0BiIGyqwb9a+iQrbAbjomU/3A6cJkWZlxgEeK5iolw=
+	t=1747398808; cv=none; b=L3FJpdamsrsGoI0kpRsrdiycfhGBHurwWleVNS/94KNrB+jh2EimrKtlQwuiKDIXF3ggzoFZopXNp43ra1IuUPM9AItW5y2brNhGRhbuYjsE0FSlZVuTmvivlZPTFTFBXXYei8H8DvX47vPvH3Vbbq7KMELGdWDQSITSsYHsO4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747398789; c=relaxed/simple;
-	bh=0tAXt3mnsy+2oybe3qYYZC8YhgHb4GE7oyn/jQHPSxA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jMhGFhLEPpMnjE1HZtFa+OyuofsP4jg4tnlyNJQywnxujxQLyJbb+OZ/fvFWiL2JqqA8/90r1xsFxo+1Xp+vid/uUpYw/bgVvQ89yfMdrlE/B7XBrxCqifNPaKigWAeEK9OFyI2uJfb4AdLlTsW+qk89+0EKAbmQVMxuyVUYarY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=3ZGU2PbG; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1747398808; c=relaxed/simple;
+	bh=ralu6RICTpQnyjwnYm0KblIg9bXK3LZesJ0Nb9yI6wI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fte1/LMhXgIvyYnbmUPW/cLUPEm0H5d197CFMzCh+Cvl+WNMKyheGcY40A2P0oWD4Yk1AeNdaWTSuA18BqiUBMcOk5C/ftMLAdgDlPVcW8rkXH8HYyOYpmL4vIVU6aHhjLqAc8GhamIK1lgSQw9smZ03HbL2rI3s1F+OY098NQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m9y+kmP7; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="3ZGU2PbG"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-54d6f933152so2895281e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 05:33:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747398786; x=1748003586; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0tAXt3mnsy+2oybe3qYYZC8YhgHb4GE7oyn/jQHPSxA=;
-        b=3ZGU2PbGiDH7JBxrJpoSsiMQxICvwt7mUzdwZcxANytUv7VxMGXWR2tuEyUTID/CRo
-         4VuqIhdfzIHzuf+Kt8ppJU44PPHu3NPuuggr5oGqcbrNYmt9rHJHeSpY0X107WuNfYoR
-         WfvAwPgRKCiZ0ChmSznttfLuZA5UCv61W8CjMTkPCajdyhnwqfqwO/4qsUmaR+jGN3Xy
-         fhx1Xa0/fZQ08s5e5za5LwuC7dS11PSgBM+hHvs8gXqRY+HlWCymVAa1maQhwjA8ppS7
-         fx+XNaRP2hoYKxPdzBlifed9kYIaw2jNMgMviqUPGa4Szd1o56goJad0/Fl6fEKXhemj
-         9b1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747398786; x=1748003586;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0tAXt3mnsy+2oybe3qYYZC8YhgHb4GE7oyn/jQHPSxA=;
-        b=sM4W0DPqvLZ0RxwtjEXMTsv/oQfUfqENe+/pcK7t1yyOPPUh5WiFKxSWtCwak8UAYS
-         DVEQ/+5v86/LTLJUAcKpN5vGdfevSy6pz9nE5zQslBHDE8rhCGaRdBOGa8kUOHnWhlOa
-         LJC3wmNGTsH9M5UKjaCW3Qtd/+fH+42FJ1difN3xMi7GGTOXi7Mrcd9VXprzcRqI3SYT
-         eFogcXfRw8/oIePieFpizmJcsAuOZ96X9Riu5V8vNNaibeZc8BboVSgvS0+kvgvjXdWf
-         nrvhbtjRkBMm+2Rd14/LwQObveBdgQEGZRF1c5WDELYdzq1p16ojQTt1S81z1+8xgPOw
-         YZ9A==
-X-Forwarded-Encrypted: i=1; AJvYcCVk5KALOZQGIjLQq47XPiQ0goHGKGN5LEvk4lgyMXY+PNJt2u8W7ufI+5tgECpy0I/RbeM4a+8ST6GyhUI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZznIqIyMwuo+akFC0Gwt4bWj86NiZKcBab/SuSX2bYFr+kRxx
-	J3itMeyvC99OqRZOzjn7V18Lk3GlVUjrR6orutllziv74/avXBZAq++EZt9RYHfmYodFLdNwjeW
-	LdICOBBZR9oMbrqf0Bq1c+HxKhr4UO2rWwHevMKduVw==
-X-Gm-Gg: ASbGnctAhyZYZ7X0SlGnf7q5sypm8e0RkkmJNHWNJ/HzWiQyh0scQ42dT4Ti4V+lVHF
-	vJ3YmMvIwWnRGY9FUWTQxmGZWvwAsNMw4tCXRh1HHbi3obCJfgA9U+Z4KPjzvAo6eGNBDuy+NJV
-	jW8duSXNyh3/s/yOAZJ8hRPk21MAkcaQ0=
-X-Google-Smtp-Source: AGHT+IHDRCpxLBD4ciAXOEsbtKSxPOvDHMDc/rr4GKx+Mm0MMW/Jvf6eXKQOYFOADgDXdhM2YfIXxALJS+NyEENhTis=
-X-Received: by 2002:a05:6512:4387:b0:54a:fa58:a6f7 with SMTP id
- 2adb3069b0e04-550e97cc2d4mr953395e87.24.1747398785922; Fri, 16 May 2025
- 05:33:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m9y+kmP7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747398807; x=1778934807;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ralu6RICTpQnyjwnYm0KblIg9bXK3LZesJ0Nb9yI6wI=;
+  b=m9y+kmP73V3KdCNuJLFdAGD7rYfFU+SnW4uzbRPs5Kl0i38PSKUEJdCs
+   reR/xg1cnINnwTMQd6ILpTMMD4V8eOBNOeZXkUWOM47x/ovssTbbzQbL5
+   mXj7xD6spgF79k0UOsAcW9IUAmfAJ8LbfU+V2f/dOBFu2DVbi7lk6Gq64
+   +CQvj7uK0UJ7utYXZinfynUQsU0GzT3+CCV7sWKtlZN3Rg/zsLPkVITh3
+   MhOggtxCbO4ixEdogoeNmIlXw+XboCyT3MPjMiqOCkfYC/f3UUIs94EHF
+   7fjEAzuF932wJ+JOladbCJucgt0Mk9a+aXxfqflVscrLGBoWDk6jST7l+
+   g==;
+X-CSE-ConnectionGUID: St1/buTmQcmm5sDJvwYb5Q==
+X-CSE-MsgGUID: Xl2UV874S56ETGD7cUldYQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="53041500"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="53041500"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 05:33:25 -0700
+X-CSE-ConnectionGUID: ufwtGiO9Sx+Nj2lVwjM4gg==
+X-CSE-MsgGUID: S0Enck1iT7ioNUavPLVvaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="139216320"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa007.jf.intel.com with ESMTP; 16 May 2025 05:33:20 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 84F571E0; Fri, 16 May 2025 15:33:19 +0300 (EEST)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Kieran Bingham <kbingham@kernel.org>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Brijesh Singh <brijesh.singh@amd.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Juergen Gross <jgross@suse.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCHv3 4/4] x86/paravirt: Restrict PARAVIRT_XXL to 64-bit only
+Date: Fri, 16 May 2025 15:33:06 +0300
+Message-ID: <20250516123306.3812286-5-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250516123306.3812286-1-kirill.shutemov@linux.intel.com>
+References: <20250516123306.3812286-1-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250516104023.20561-1-brgl@bgdev.pl> <aCckl9cC8fCBhHQT@hovoldconsulting.com>
-In-Reply-To: <aCckl9cC8fCBhHQT@hovoldconsulting.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 16 May 2025 14:32:54 +0200
-X-Gm-Features: AX0GCFu5kkLp3T0MfIjd7ZcDhu29GuDKlrHblkONIj2lvZBjQLsBkle6dM8L9Hs
-Message-ID: <CAMRc=Mf=xW6HFVYOOVS2W6GOGHS2tCRtDYAco0rz4wmEpMZhmA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sysfs: add missing mutex_destroy()
-To: Johan Hovold <johan@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 16, 2025 at 1:42=E2=80=AFPM Johan Hovold <johan@kernel.org> wro=
-te:
->
-> On Fri, May 16, 2025 at 12:40:23PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > We initialize the data->mutex in gpiod_export() but lack the
-> > corresponding mutex_destroy() in gpiod_unexport() causing a resource
-> > leak with mutex debugging enabled. Add the call right before kfreeing
-> > the GPIO data.
->
-> No, there's no resource leak and it's perfectly fine not to call
-> mutex_destroy().
->
+PARAVIRT_XXL is exclusively utilized by XEN_PV, which is only compatible
+with 64-bit machines.
 
-No, there's no leak but with lock debugging it still warns if the
-mutex is locked when it's being destroyed so the change still makes
-sense with a modified commit message.
+Clearly designate PARAVIRT_XXL as 64-bit only and remove ifdefs to
+support CONFIG_PGTABLE_LEVELS < 5.
 
-> You can't just make shit up and then pretend to fix it...
->
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ arch/x86/Kconfig                      | 1 +
+ arch/x86/include/asm/paravirt.h       | 4 ----
+ arch/x86/include/asm/paravirt_types.h | 2 --
+ arch/x86/kernel/paravirt.c            | 2 --
+ 4 files changed, 1 insertion(+), 8 deletions(-)
 
-There's no need for this kind of comment. You made your point clear in
-the first sentence.
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 7aed3fa0e780..a9d4c715b9fc 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -799,6 +799,7 @@ config PARAVIRT
+ 
+ config PARAVIRT_XXL
+ 	bool
++	depends on X86_64
+ 
+ config PARAVIRT_DEBUG
+ 	bool "paravirt-ops debugging"
+diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
+index 03f680d1057a..b5e59a7ba0d0 100644
+--- a/arch/x86/include/asm/paravirt.h
++++ b/arch/x86/include/asm/paravirt.h
+@@ -463,8 +463,6 @@ static inline void set_p4d(p4d_t *p4dp, p4d_t p4d)
+ 	PVOP_VCALL2(mmu.set_p4d, p4dp, val);
+ }
+ 
+-#if CONFIG_PGTABLE_LEVELS >= 5
+-
+ static inline p4d_t __p4d(p4dval_t val)
+ {
+ 	p4dval_t ret = PVOP_ALT_CALLEE1(p4dval_t, mmu.make_p4d, val,
+@@ -496,8 +494,6 @@ static inline void __set_pgd(pgd_t *pgdp, pgd_t pgd)
+ 		set_pgd(pgdp, native_make_pgd(0));			\
+ } while (0)
+ 
+-#endif  /* CONFIG_PGTABLE_LEVELS == 5 */
+-
+ static inline void p4d_clear(p4d_t *p4dp)
+ {
+ 	set_p4d(p4dp, native_make_p4d(0));
+diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
+index b08b9d3122d6..37a8627d8277 100644
+--- a/arch/x86/include/asm/paravirt_types.h
++++ b/arch/x86/include/asm/paravirt_types.h
+@@ -189,12 +189,10 @@ struct pv_mmu_ops {
+ 
+ 	void (*set_p4d)(p4d_t *p4dp, p4d_t p4dval);
+ 
+-#if CONFIG_PGTABLE_LEVELS >= 5
+ 	struct paravirt_callee_save p4d_val;
+ 	struct paravirt_callee_save make_p4d;
+ 
+ 	void (*set_pgd)(pgd_t *pgdp, pgd_t pgdval);
+-#endif	/* CONFIG_PGTABLE_LEVELS >= 5 */
+ 
+ 	struct pv_lazy_ops lazy_mode;
+ 
+diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
+index 015bf298434f..ab3e172dcc69 100644
+--- a/arch/x86/kernel/paravirt.c
++++ b/arch/x86/kernel/paravirt.c
+@@ -211,12 +211,10 @@ struct paravirt_patch_template pv_ops = {
+ 
+ 	.mmu.set_p4d		= native_set_p4d,
+ 
+-#if CONFIG_PGTABLE_LEVELS >= 5
+ 	.mmu.p4d_val		= PTE_IDENT,
+ 	.mmu.make_p4d		= PTE_IDENT,
+ 
+ 	.mmu.set_pgd		= native_set_pgd,
+-#endif /* CONFIG_PGTABLE_LEVELS >= 5 */
+ 
+ 	.mmu.pte_val		= PTE_IDENT,
+ 	.mmu.pgd_val		= PTE_IDENT,
+-- 
+2.47.2
 
-Bartosz
