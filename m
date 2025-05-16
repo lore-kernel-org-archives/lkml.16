@@ -1,158 +1,172 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA481F872A
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 17:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00AB275869
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 17:53:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747418015; cv=none; b=GCaIMMXVrONTraavtcK2cEn29nMpDjwqQaPRe27AeBw0DDNahOSXBU3KnllmxQ7UxyNUfGP0eBEad1H7twlabY3ei2NAe/X5kkGeydDkLCuSjSwn0DX2uK+6ZP7bYmTVKMPGgjB+B10WIajuKni/nG1t+xSgmXDoTTLXtgxTXe4=
+	t=1747418021; cv=none; b=WFcd/edZrWIveBxSuyX4Bf3lfVk/YE9CNP7BaYVBic9XJZ96dWp1suJUOBbn/rx/J6QzJ/vwnAahei1po1xNcnvhSW3tvb3ie2kCKLmDayO5oE4VPwt1YX+hYPy8KDo7yrDGms8DteN4Y/lZobf2uWQDWQCfwXFm1evYgR/Txw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747418015; c=relaxed/simple;
-	bh=8upEJ/Pro8IkXndSvkiwT/kFxgoDTzCkAC7XhGjYZVk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HwbQpaN01wsZ3ayZmMBwX1OwgABnsku7VC44kfLmI34Mcj7G5RM6ZhHDHLlRHfutRrlQ06WVCveyZGfy+f+tORk/zcDgs84/vbg7hob/ylDgAKwd3iAQlpTOwsJh/jfOiMTrDTuoXnvinedtKnCsChDiy6QVJgonaozfQZuj10A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eE8eh02m; arc=none smtp.client-ip=209.85.128.42
+	s=arc-20240116; t=1747418021; c=relaxed/simple;
+	bh=HJfPGu9SHo5W2l3D7Ly+k/GNEpBm/EasByT5N7ysZac=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Un66IC1M/0xPzzSDZmtgr6tluWZA+fmUHBU2jrDoRQ5X6Fr320eOJFbS8PFC6qaByJcxSt+kbwmG8Dini9MXuKxLyq4pIgJZ5WYlo2szVM+GtqufvGrPDpv4gEuadSU5aTZ2gmq1bJmLUPAJkJMyd5gCpuVnTMSp/6tvBib2mzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mG7GnUsT; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eE8eh02m"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-442ec3ce724so19157905e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:53:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mG7GnUsT"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7425efba1a3so2152154b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:53:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747418012; x=1748022812; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2PUV/bkg4QUBVAIj3GMyPK/efOdWpKA1GWmXkehoUR4=;
-        b=eE8eh02mM/eskQiOjORWmd/L6TFgoscMWFVXaMSGliPi8Pe1YVB+x+VX8gXkDwi5d1
-         2i/ILNZw1z4G4DpYWQUUybD6cF0mw4GRp7OmfEmqzvuo306uoQl1usdsHsypJhnUQxnO
-         bZCidHvQhijyG7F0j3NwcAnpBVsw2+22a04wfZNJbqsQV7CEeekKbXrnsDNTiB9wR5M/
-         9HQWLybSZ7xWatxVPpqbR4uCiCY6Q3zIeDFGVUMWqyVmNDgXYsXg8oCJ5OCeAFfyxrub
-         nLidioA2cz7EcpldAXE+tu0QmYaZIMmH41bvntU9q/Kz0ACy7dU74GlPE+AlDA0dlEOB
-         bNqA==
+        d=google.com; s=20230601; t=1747418019; x=1748022819; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8cF3oG0ZvlxQApliLAWy8AhC33oXxmPcmw1u1Vqb2bU=;
+        b=mG7GnUsToXtW+YWIzm9HwjARtlPmALFGp58UoOIWR0XDUiiAvVPhQVDeA+s7gtJTQn
+         6o9VMxY9vH5/EpB+pO706VumTrw9OXc8LkCIIctGmugQAoHgY9cONBTcArwYbHOh92Ow
+         T8BZVX2yElEuKOZ/LCn3bQvVH2YXE3ZMMU4XuBlzjUxnpD7tyyjdySQWyDSsrZ+QpWcj
+         tBomF7OU+NTx1YL27Dy0Az32h9G2XNjgFRSgDoGkyw1Sv4zGtXW9tw7V5IpfC+dq5jqU
+         VTVwxLroNSRm8r7H92pGqdQfh4KIQ/uKmRMu2NJSV/0yAehLPihClVF2PjtTi3/mjmsL
+         ByKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747418012; x=1748022812;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2PUV/bkg4QUBVAIj3GMyPK/efOdWpKA1GWmXkehoUR4=;
-        b=LHBZPdO04q6nWrqLGGa8GM2wrsRNH4qLfQWBntwJUf92CHxe1f7IDIwv4cCWLjW71F
-         3fB+7Aib/MBT47g6gDhUL6KvJAKxYNQf3BaRIDbnyda0nZ4oeVh8posTDVQBx3xxYOh8
-         /Q8hXggnX3aSg56eBzjmKf+0zCpHZWyTHsn1WZILk5CHeY1Tem/rN1U9iHOeGA57/l3/
-         PB9bRpWc98S4//f25Ze7ZL6yJpjC9KhqyKoaOhpVmxWC+O4KlvjpYuou1D9NL/2gdz1z
-         7Enbqf35P/vUwwPqFzDXwWPxej2H7cOi+mGTg9QemyCAb9taGeip99VXqghsHJq4m3aE
-         ZsXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWBpUnLXAlMRI+ceSqWNUl8mjUwBTExwc6YgjAl5VvjMihUU3124KfBFpsMJ9CHUeRtDsaOS9nmcSgoa4U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzahenjpaA/3w8c3Q89N71qDzp4+3IppmAWzSC6CYYeHa73LCPy
-	80ea1TcG0MByrMr1w0lyWBY4ZMjoPkTBji1Zk0XrY+IFU4zs0gre8rNNJvCTQDyRbA==
-X-Gm-Gg: ASbGncsYMMAcLrUyhfkwlzR0gmIzwDIxsT+NoohsiOhoJJUniweHhkcKPwYx2KxKTd2
-	xC5KtaN48FUgC0UcPTLH8qkLFMvV+kM7J+IxJvsyvNM2sVl3dbwJ0aW4tUMbMhDuyEcYi8PlwpV
-	ShNO6usFDhBJESKZC3v6e0d8QVsIRpnmukTXAWsZGdv7k30V5bXsjdzBUJO6Q9ro1faQPcREuNg
-	TUG/fxgyOGi+FazVcxfBuSv5HPT/9GfTh1yxVwKMgEzXBFJmv7BaBtEfkQeqUAht3Rze1xjtqtr
-	ZGfL7E90uGmMxZph8U4de+wjfM/11Ez/l02+ljqharYkytWGSswjPRNM7pcHtH/VT11y0Dc1Pok
-	GcAYeCnumqdsm/KtFlFTmxDy5RFI=
-X-Google-Smtp-Source: AGHT+IEv0Zz+YAfIIihBgvDHDhxHsSF6QrQSMcho8CQZS8XKX5FCrwPQKgycTnORAz6U0zTZnRbJsw==
-X-Received: by 2002:a05:600c:1e09:b0:43c:f616:f08 with SMTP id 5b1f17b1804b1-442fd624854mr45671515e9.8.1747418012214;
-        Fri, 16 May 2025 10:53:32 -0700 (PDT)
-Received: from google.com (218.131.22.34.bc.googleusercontent.com. [34.22.131.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd50b9b2sm42329115e9.12.2025.05.16.10.53.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 10:53:31 -0700 (PDT)
-Date: Fri, 16 May 2025 18:53:27 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org,
-	qperret@google.com, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	kernel-team@android.com
-Subject: Re: [PATCH v4 01/10] KVM: arm64: Handle huge mappings for np-guest
- CMOs
-Message-ID: <aCd7l455qd4NmOeb@google.com>
-References: <20250509131706.2336138-1-vdonnefort@google.com>
- <20250509131706.2336138-2-vdonnefort@google.com>
- <86bjrsg3az.wl-maz@kernel.org>
+        d=1e100.net; s=20230601; t=1747418019; x=1748022819;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8cF3oG0ZvlxQApliLAWy8AhC33oXxmPcmw1u1Vqb2bU=;
+        b=wudipEw6BiX82NnWCvVL4yaohFRnvQLBetk4zzD/1CnjD9OdXPDaOUwTKHrQQ54ycm
+         UeWTzX5p3SDmPdeNqMnYLCFbTwsXMR/oiM4OmFR8dDSUNmDQv8K8ORAoGW8aXVfKsPH5
+         PvAHghTlQ9OHrQ4ZGYNlj+NAxjq8w0Sm60U7uwsrkVQRKsITrl+CV5Fmy5Rf4Ghexk9B
+         cQW3RBZQQHIGqrtrSA0cLTETSKBPAMZGzqoJR8NmoilIVxrF678GX9gvxOQ28G5pC0Z9
+         8CUVLE65eZhPCfLuaovk0WrKdKvLZ4Dtgb5u1g+T9GjD6rbfT9LPsZmseltssrAi+DAH
+         7r8w==
+X-Forwarded-Encrypted: i=1; AJvYcCV3SrxbbKrspb/A4jNIUBLPqY35CCSzCVNaHIHVKOQCVO5qO7uDmt+Ma0yxJq6h7C5nayqo1BdSCaTG5Ss=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyihU4muq7Emcde6/JgIvE52C+lr+5XXY15jW/FXYOBM3UACbpF
+	EAG+jBDekdzbM3K+vlTh0cN0SNUbup3haHT7uhFI7hptJ2nQcHMJgSoKIclLVQUJeQTIjMHxVV/
+	2JNyX+lYRo2tSMggcVVqYOb6Lxg==
+X-Google-Smtp-Source: AGHT+IHTUNH+ccDKQDLHandSLB8Cs2YqxqxBQL8lX50pqIiEe34TWuIXzn9EkbeNJjz0gF0OHqoknNNeE+FoIqCs2g==
+X-Received: from pfbmc24.prod.google.com ([2002:a05:6a00:7698:b0:740:b53a:e67f])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a20:d494:b0:215:eb10:9f13 with SMTP id adf61e73a8af0-2165f87269fmr5223554637.17.1747418018754;
+ Fri, 16 May 2025 10:53:38 -0700 (PDT)
+Date: Fri, 16 May 2025 10:53:37 -0700
+In-Reply-To: <6825ff323cc63_337c39294e3@iweiny-mobl.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86bjrsg3az.wl-maz@kernel.org>
+Mime-Version: 1.0
+References: <cover.1747264138.git.ackerleytng@google.com> <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
+ <6825ff323cc63_337c39294e3@iweiny-mobl.notmuch>
+Message-ID: <diqzjz6gfnmm.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
+ KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
+From: Ackerley Tng <ackerleytng@google.com>
+To: Ira Weiny <ira.weiny@intel.com>, kvm@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org
+Cc: aik@amd.com, ajones@ventanamicro.com, akpm@linux-foundation.org, 
+	amoorthy@google.com, anthony.yznaga@oracle.com, anup@brainfault.org, 
+	aou@eecs.berkeley.edu, bfoster@redhat.com, binbin.wu@linux.intel.com, 
+	brauner@kernel.org, catalin.marinas@arm.com, chao.p.peng@intel.com, 
+	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com, 
+	dmatlack@google.com, dwmw@amazon.co.uk, erdemaktas@google.com, 
+	fan.du@intel.com, fvdl@google.com, graf@amazon.com, haibo1.xu@intel.com, 
+	hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
+	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
+	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
+	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
+	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
+	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
+	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
+	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
+	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
+	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
+	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
+	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
+	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
+	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
+	thomas.lendacky@amd.com, usama.arif@bytedance.com, vannapurve@google.com, 
+	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
+	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
+	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
+	yuzenghui@huawei.com, zhiquan1.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+Ira Weiny <ira.weiny@intel.com> writes:
 
-Thanks for having a look at the series.
+> Ackerley Tng wrote:
+>
+> [snip]
+>
+>> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+>> 
+>
+> [snip]
+>
+>> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+>> index 590932499eba..f802116290ce 100644
+>> --- a/virt/kvm/guest_memfd.c
+>> +++ b/virt/kvm/guest_memfd.c
+>> @@ -30,6 +30,10 @@ enum shareability {
+>>  };
+>>  
+>>  static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index);
+>> +static void kvm_gmem_invalidate_begin(struct kvm_gmem *gmem, pgoff_t start,
+>> +				      pgoff_t end);
+>> +static void kvm_gmem_invalidate_end(struct kvm_gmem *gmem, pgoff_t start,
+>> +				    pgoff_t end);
+>>  
+>>  static struct kvm_gmem_inode_private *kvm_gmem_private(struct inode *inode)
+>>  {
+>> @@ -85,6 +89,306 @@ static struct folio *kvm_gmem_get_shared_folio(struct inode *inode, pgoff_t inde
+>>  	return kvm_gmem_get_folio(inode, index);
+>>  }
+>>  
+>> +/**
+>> + * kvm_gmem_shareability_store() - Sets shareability to @value for range.
+>> + *
+>> + * @mt: the shareability maple tree.
+>> + * @index: the range begins at this index in the inode.
+>> + * @nr_pages: number of PAGE_SIZE pages in this range.
+>> + * @value: the shareability value to set for this range.
+>> + *
+>> + * Unlike mtree_store_range(), this function also merges adjacent ranges that
+>> + * have the same values as an optimization.
+>
+> Is this an optimization or something which will be required to convert
+> from shared back to private and back to a huge page mapping?
+>
 
-On Fri, May 16, 2025 at 01:15:00PM +0100, Marc Zyngier wrote:
-> On Fri, 09 May 2025 14:16:57 +0100,
-> Vincent Donnefort <vdonnefort@google.com> wrote:
-> > 
-> > clean_dcache_guest_page() and invalidate_icache_guest_page() accept a
-> > size as an argument. But they also rely on fixmap, which can only map a
-> > single PAGE_SIZE page.
-> > 
-> > With the upcoming stage-2 huge mappings for pKVM np-guests, those
-> > callbacks will get size > PAGE_SIZE. Loop the CMOs on a PAGE_SIZE basis
-> > until the whole range is done.
-> > 
-> > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> > 
-> > diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-> > index 31173c694695..23544928a637 100644
-> > --- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-> > +++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-> > @@ -219,14 +219,28 @@ static void guest_s2_put_page(void *addr)
-> >  
-> >  static void clean_dcache_guest_page(void *va, size_t size)
-> >  {
-> > -	__clean_dcache_guest_page(hyp_fixmap_map(__hyp_pa(va)), size);
-> > -	hyp_fixmap_unmap();
-> > +	WARN_ON(!PAGE_ALIGNED(size));
-> 
-> What if "va" isn't aligned?
+This is an optimization.
 
-So the only callers are either for PAGE_SIZE or PMD_SIZE with the right
-alignment addr alignment.
+> If this is purely an optimization it might be best to leave it out for now
+> to get functionality first.
+>
 
-But happy to make this more future-proof, after all an ALIGN() is quite cheap.
+I see this (small) optimization as part of using maple trees.
 
-> 
-> > +
-> > +	while (size) {
-> > +		__clean_dcache_guest_page(hyp_fixmap_map(__hyp_pa(va)),
-> > +					  PAGE_SIZE);
-> > +		hyp_fixmap_unmap();
-> > +		va += PAGE_SIZE;
-> > +		size -= PAGE_SIZE;
-> > +	}
-> 
-> I know pKVM dies on WARN, but this code "looks" unsafe. Can you align
-> va and size to be on page boundaries, so that we are 100% sure the
-> loop terminates?
-> 
-> >  }
-> >  
-> >  static void invalidate_icache_guest_page(void *va, size_t size)
-> >  {
-> > -	__invalidate_icache_guest_page(hyp_fixmap_map(__hyp_pa(va)), size);
-> > -	hyp_fixmap_unmap();
-> > +	WARN_ON(!PAGE_ALIGNED(size));
-> > +
-> > +	while (size) {
-> > +		__invalidate_icache_guest_page(hyp_fixmap_map(__hyp_pa(va)),
-> > +					       PAGE_SIZE);
-> > +		hyp_fixmap_unmap();
-> > +		va += PAGE_SIZE;
-> > +		size -= PAGE_SIZE;
-> > +	}
-> 
-> Same here.
-> 
-> Thanks,
-> 
-> 	M.
-> 
-> -- 
-> Without deviation from the norm, progress is not possible.
+Fuad's version [1] uses xarrays and has 1 xarray entry per page
+offset. I wanted to illustrate that by using maple trees, we can share
+just 1 entry for a whole range, and part of that sharing involves
+merging adjacent shareability entries that have the same value.
+
+IIUC, these other users of maple trees also do some kind of
+expansion/range merging:
+
++ VMAs in vma_expand() [2]
++ regcache in regcache_maple_write() [3]
+
+> I have more to review but wanted to ask this.
+>
+> Ira
+>
+> [snip]
+
+[1] https://lore.kernel.org/all/20250328153133.3504118-4-tabba@google.com/
+[2] https://elixir.bootlin.com/linux/v6.14.6/source/mm/vma.c#L1059
+[3] https://elixir.bootlin.com/linux/v6.14.6/source/drivers/base/regmap/regcache-maple.c#L38
