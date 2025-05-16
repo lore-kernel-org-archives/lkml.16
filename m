@@ -1,155 +1,148 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 641B921FF4D;
-	Fri, 16 May 2025 08:07:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D913B1F866B
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:08:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747382837; cv=none; b=ui7apUUAtgYvmDMuxUOtyf5BCBoRXbdfNHyO2qWgp4PEA8cAH8pXMpIpH6x9HjINh/JkKefhwO6uM+iDbhBNl9XGe7DMpYLwSGfKCBEqt2nbr3sYT3Rw8lut1JZh6yhozJf7utX/wBUF7iS9EbI5lR+yBHkdjcHcUiSg/Vxwn4k=
+	t=1747382889; cv=none; b=giK1s79f0hHPzZvSD6OBhlVHCuKRt7TP2oN61FetVLlirfTE/LcbGrrU5rmFLeemQGOO6S7iD9JQtRC09rEFBe6ta7X66r711BGPDOJa2bws+Z2jbTrUK7hfCaRM9tys+NxCv8/fzGTAIALkkv72jHr+AQfkdhyQAJ202X9SmMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747382837; c=relaxed/simple;
-	bh=UBvjaIp8Waej5vlBi/RKzzjiqZNfMRFLiFIwcKpqqNU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a7JgwMdIR+yEMBNOHkpFxbCIt/gY+ezwZClAlyxmXyck7yslqEogueK2q6OXvWBkGAb70vp703ksxqPGxqs/onag0V8kB2g+VtLHVbJQf0pf45JQN2yJElGySG2u/2EwAhHqLFW6SOWISljYhhADZdXDePVigWPdK665MlbgSs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-4c-6826f22eb14b
-Date: Fri, 16 May 2025 17:07:04 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: kernel test robot <lkp@intel.com>
-Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev, kernel_team@skhynix.com,
-	torvalds@linux-foundation.org, damien.lemoal@opensource.wdc.com,
-	linux-ide@vger.kernel.org, adilger.kernel@dilger.ca,
-	linux-ext4@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
-	will@kernel.org, tglx@linutronix.de, rostedt@goodmis.org,
-	joel@joelfernandes.org, sashal@kernel.org, daniel.vetter@ffwll.ch,
-	duyuyang@gmail.com, johannes.berg@intel.com, tj@kernel.org,
-	tytso@mit.edu, willy@infradead.org, david@fromorbit.com,
-	amir73il@gmail.com, gregkh@linuxfoundation.org, kernel-team@lge.com,
-	linux-mm@kvack.org, akpm@linux-foundation.org, mhocko@kernel.org,
-	minchan@kernel.org, hannes@cmpxchg.org, vdavydov.dev@gmail.com
-Subject: Re: [PATCH v15 33/43] dept: assign unique dept_key to each distinct
- dma fence caller
-Message-ID: <20250516080704.GA56738@system.software.com>
-References: <20250513100730.12664-34-byungchul@sk.com>
- <202505140631.FOWO8B5L-lkp@intel.com>
+	s=arc-20240116; t=1747382889; c=relaxed/simple;
+	bh=j3extryNYX99Y3axXGjKNPMgXw6fOhT5rheFwRAMaDs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AgKF3SPBGTCqtyiBOvW3D2wQcUxjONymn7mL98TxXWLxmVI2oMVlnZu8aDJ8xAqXWkOnUxYCWlMrOsl8Nibg1YQBhLMgSIGBF/FDQlT26vfKDGOLOdNICBof8d8GPYt7zC4uQLv2nQDbBrBvupFRbjlaLH3u74seh9LDfMw3GMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A/tDJHAI; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A/tDJHAI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747382886;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=zHuUJbvyNQrOm2zTFjoo7gQWM2M1MQ5Ysz72OI6O49k=;
+	b=A/tDJHAIu1k3JpT77ZspqUA2QncrHjbYI5KUhz6YGEUqEVkCsYcU4oAQarZyvfaIjKqXQ5
+	gUbo9POOgCWSqGYerX6BLyjDUOjvsetFHIQAtTX1nosV/Xwy94zdaG9OyK0YEG9V14t7NF
+	gOuw93T8YRXoSkMqT0NGrwav6kkIMYM=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-644-S7zna9jyMpOr-PtnUspR6Q-1; Fri, 16 May 2025 04:08:05 -0400
+X-MC-Unique: S7zna9jyMpOr-PtnUspR6Q-1
+X-Mimecast-MFC-AGG-ID: S7zna9jyMpOr-PtnUspR6Q_1747382884
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43eea5a5d80so10020365e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 01:08:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747382884; x=1747987684;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zHuUJbvyNQrOm2zTFjoo7gQWM2M1MQ5Ysz72OI6O49k=;
+        b=PACGND3Jud7DhzEV09jHjdiFzJwKUN5yV4xT7ZpqpVSZqVIUFWSHw2NMle9fSxMbTe
+         cq4YmOiXnIXYo1QIt9cgcCN4lFMRxIzg5n6Suqoa7yczLURh8/oZHN/ioTsILjCL+03a
+         LjjN2pt3j8+sXDHqvORSP67HPhl6SlbF1KL0znGeGzGiz81HHO3RelxP6mkUz/O/+7ap
+         VahxkQACVlNyWtL2yHZAkbainOQYQxmZHU2yeg2j2c1W/+Ky8rtAIXGm+Th7d13H6q+Z
+         D/RA9gwC2UIf4QVwq7ipsQGqiCjaB+/cvF87zYLyrDlGt4s5g1IqDVUpYEnu4TrMoE6l
+         CHKg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUFIK/LkIcbzdB0UmwXAQtrvSawrHasy9icJqaRnyvoDOhE2wipT9HJJ80abodFin4vB5Ff71/hoojp8A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCSjSxhnJ+4XPIDhT+xoZzV9ZDXx7ZVDME4GKp5W8LFvj987Mo
+	+hI9bPxlm7a7/3mu/ImNKEdDqZtMPFjLGs9JBMnjJBqgTSq7ApoCA9eiS5giQehIz7AGDQM8hWy
+	pv9p65FvJr405G2N/d6SOdg3H9oxz5tZuM3a09bPU2B286/nqWmuCqVjUzca6Y0kUSg==
+X-Gm-Gg: ASbGncuvU/GA/sTTxwUw0jQDHNnWkFRw3AtwDGiHe6t+B9zVSBAjmMGNZZUkdrf53Qt
+	ZJFx99eTgn2X2lnOGNiJgJ54qxxcx3+VyohsQ5d9jWn1Z4XMzMxMb6WKWjy+bSF39/WqDz+ATVy
+	gp3HCA2WZR8qMsgXS9l9jrllcEHNtKfYqKepLWnbkMaZi+Igoq0jk6jbklqUwYopr2W8JSgnsOL
+	YbUVHgkrZ2xuUWoc08lhEPVJ7bbjsBT6yH2IfLkUS8SkAgSKsDJoOqUmnBQPhLNQeqlK/8wktID
+	dvPG/erNGQ/PsHnvepmIfLH9Cc4mk6h0gi/9l5urmg2qNQ8L3AYL7fLUg48t9Fv+lDU4YHolII0
+	T0eV6neogNlmYg6noYi1bQ9e9/U+/I+dlm9A3nSs=
+X-Received: by 2002:a05:600c:528b:b0:43d:4e9:27f3 with SMTP id 5b1f17b1804b1-442fefee1b8mr14471965e9.9.1747382883823;
+        Fri, 16 May 2025 01:08:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGnRyHzg3xjRyTJ/6CojUJX48c7k8S81NAsuB8SYooxFzQtVqZx/z/z4dxA3LlaC9tmLxkWJw==
+X-Received: by 2002:a05:600c:528b:b0:43d:4e9:27f3 with SMTP id 5b1f17b1804b1-442fefee1b8mr14471625e9.9.1747382883407;
+        Fri, 16 May 2025 01:08:03 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f47:4700:e6f9:f453:9ece:7602? (p200300d82f474700e6f9f4539ece7602.dip0.t-ipconnect.de. [2003:d8:2f47:4700:e6f9:f453:9ece:7602])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44300160fd0sm9361675e9.4.2025.05.16.01.08.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 May 2025 01:08:02 -0700 (PDT)
+Message-ID: <ab11c309-1fc3-4bf5-9fed-5cf3d9b2abf9@redhat.com>
+Date: Fri, 16 May 2025 10:08:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202505140631.FOWO8B5L-lkp@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRjG+59zds7ZcnFchv+0DzJTQWqWWb0fIqIL/LELgeAHw2zpqa28
-	1DTLIDJyotPsgqs2rDRpXtPYNDVLbV3tYjdJMbMaWpqZMXJm2m0LqW8/nufhed4PL08r9BI/
-	XpucJuqS1YlKVsbIRrxKFqqcwZpF+s6ZMPY1h4Gi2moWntZUIZh8/ISGknevaai724eg3ZjH
-	wtHSWhaqrBvBkhkEjnIzB+19LyVgOt/Lwt1GBwUvrhWx0Ff9SwIfjzpY6C9sZWHYZaHBMjbK
-	wfO2YgrsFZ0U3DvWRkFLzlsKrNUvWbBZjTR8L7uDwFEwwoE+f4KDPP1pBrJ6l8LktyJ2VQC5
-	9WmUJlm2/eSGq5ghDy5i0mR+zZGslh6O2MpDSen1IYqUOMckxFqZyxKr8xRHDCOdFPnc0cGR
-	+2cnGdJ6rpojgzYT2uwTI1uRICZq00Vd2MptMs2HT830HmvEgeZbmVwmMi4wICmPhQhc017C
-	TPOjvJOcmxkhCOubztBuZoUQ3N094WGfP3rjOwtlQDKeFsYl+MrtVuQ2Zgtx2GS0e0JyAfDo
-	l3HWgHheIWzFA6VRf2Vv3G7q92zRQiju/jlEuSO04I/LfvJuWSqE49LzLzyROUIgbrt6zzOF
-	hUs8bs4voP/eORffLO9mTiDB/F+t+b9a87/aYkRXIoU2OT1JrU2MUGkykrUHVPEpSVb05zks
-	h6a2NCLn0yg7Enik9JKv6grSKCTq9NSMJDvCPK30kXftCtQo5AnqjIOiLiVOty9RTLUjf55R
-	+srDXfsTFMJOdZq4WxT3iLppl+Klfplo17LVwSdE++DzGNeRedmHXQfDnEtic1UDQ8por+XR
-	0oe2GT277z8LOe6IMmgss+qH18yeb75ef3yqZ0ek0Xs7G1C3SY9FU69v0vD7wnR/1VDC2o2X
-	X623wEBcg8s8qH4Tl+s6dWE80jf2xw3iakgJ0m/QZlftlUY2rdv7ML5CIlEyqRr14lBal6r+
-	De+8Zj0YAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Rf0yMcRzH932e557n6bh5OqWvGltHbE2IzGcj4sSz/JhhM2bVjUd3VHSX
-	q5BlFbmUmNKdtHJ250eUq1lEtYu4hKamRkU31g/9sH4cSeEy47/X3u/X+683S0o7KU9WFR0r
-	qKMVkTJaTIm3rEj28xucp1xc37AcRobTKMgrLqKh4c4tBGMvXpFQ2NFGQlltOwJbdjoNycZi
-	Gm5ZNoMpyQfs1w0M2NrfiKDmik0E+vxWGmrL7QQ0Psijob3opwh6ku00fLxYRcNnh4kE08gA
-	A6+rCwiw3mgi4GlGNQGVaR8IsBS9oaHUkk3Cd/MTBPbMPgZSz44ykJ6aQ0FK6zIY+5ZHB3nz
-	Nb0DJJ9SGsc/chRQfN1VzN83tDF8SuVbhi+97ssbH3YTfOHgiIi33DxD85bBCwyv62si+P6X
-	Lxn+We4YxVddKWL4rlI92uq+W7xynxCp0grqRavCxcrO3grysCUgvqImiUlC2Qt0yIXFXACu
-	Tz/POJnifHDq/Uukk2luPm5pGZ1kt995eYeJ0CExS3JfRbjkcRVyFtO5MKzPtk5KEg7wwJev
-	tA6xrJQLxZ+M2//Ertim/0g5meR8cctEN+FUSM4LmydYZ+zCLcHG/MZJxZ2bg6vvPSWykMTw
-	39rw39rwb12AyJvITRWtjVKoIpct1BxUJkSr4hfuPRRlQb/vNyX+OF+Ohhs3WBHHItlUSVCz
-	j1IqUmg1CVFWhFlS5iZpPjBHKZXsUyQcFdSHwtRHIgWNFXmxlMxDErJTCJdyEYpY4aAgHBbU
-	f1uCdfFMQo3flsrvho6vCcZBQ7kex0NOVVtcJ+wvcuseHcmMGdqBDDEnTwR3euy/nKY8FiKv
-	68/VZLjKKzfOtjnM6+J7AuWG8XBtzururtsR057rm+ulgYkzzr2vgEtD78Znrncz+5uzfuac
-	vubATXPX7pni1X/Nb92skl3eN0blm7zLtsXETZdRGqXC35dUaxS/AKmkskj6AgAA
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: Rename page->index to page->__folio_index
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250514181508.3019795-1-willy@infradead.org>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250514181508.3019795-1-willy@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 14, 2025 at 06:49:42AM +0800, kernel test robot wrote:
-> Hi Byungchul,
+On 14.05.25 20:15, Matthew Wilcox (Oracle) wrote:
+> All users of page->index have been converted to not refer to it any more.
+> Update a few pieces of documentation that were missed and prevent new
+> users from appearing (or at least make them easy to grep for).
 > 
-> kernel test robot noticed the following build warnings:
-> 
-> [auto build test WARNING on 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Byungchul-Park/llist-move-llist_-head-node-definition-to-types-h/20250513-181346
-> base:   82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3
-> patch link:    https://lore.kernel.org/r/20250513100730.12664-34-byungchul%40sk.com
-> patch subject: [PATCH v15 33/43] dept: assign unique dept_key to each distinct dma fence caller
-> config: arm-randconfig-002-20250514 (https://download.01.org/0day-ci/archive/20250514/202505140631.FOWO8B5L-lkp@intel.com/config)
-> compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250514/202505140631.FOWO8B5L-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202505140631.FOWO8B5L-lkp@intel.com/
-> 
-> All warnings (new ones prefixed by >>):
-> 
-> >> drivers/dma-buf/dma-fence.c:503: warning: expecting prototype for dma_fence_wait_timeout(). Prototype was for __dma_fence_wait_timeout() instead
-> >> drivers/dma-buf/dma-fence.c:763: warning: expecting prototype for dma_fence_default_wait(). Prototype was for __dma_fence_default_wait() instead
-> >> drivers/dma-buf/dma-fence.c:853: warning: expecting prototype for dma_fence_wait_any_timeout(). Prototype was for __dma_fence_wait_any_timeout() instead
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
 
-I have just fixed it.  Thanks.
+Acked-by: David Hildenbrand <david@redhat.com>
 
-	Byungchul
-> 
-> vim +503 drivers/dma-buf/dma-fence.c
-> 
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  482  
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  483  /**
-> f54d1867005c33 drivers/dma-buf/dma-fence.c Chris Wilson      2016-10-25  484   * dma_fence_wait_timeout - sleep until the fence gets signaled
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  485   * or until timeout elapses
-> 4dd3cdb281f7a3 drivers/dma-buf/dma-fence.c Simona Vetter     2018-07-04  486   * @fence: the fence to wait on
-> 4dd3cdb281f7a3 drivers/dma-buf/dma-fence.c Simona Vetter     2018-07-04  487   * @intr: if true, do an interruptible wait
-> 4dd3cdb281f7a3 drivers/dma-buf/dma-fence.c Simona Vetter     2018-07-04  488   * @timeout: timeout value in jiffies, or MAX_SCHEDULE_TIMEOUT
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  489   *
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  490   * Returns -ERESTARTSYS if interrupted, 0 if the wait timed out, or the
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  491   * remaining timeout in jiffies on success. Other error values may be
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  492   * returned on custom implementations.
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  493   *
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  494   * Performs a synchronous wait on this fence. It is assumed the caller
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  495   * directly or indirectly (buf-mgr between reservation and committing)
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  496   * holds a reference to the fence, otherwise the fence might be
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  497   * freed before return, resulting in undefined behavior.
-> 4dd3cdb281f7a3 drivers/dma-buf/dma-fence.c Simona Vetter     2018-07-04  498   *
-> 4dd3cdb281f7a3 drivers/dma-buf/dma-fence.c Simona Vetter     2018-07-04  499   * See also dma_fence_wait() and dma_fence_wait_any_timeout().
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  500   */
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  501  signed long
-> 15fe92c1e1cf69 drivers/dma-buf/dma-fence.c Byungchul Park    2025-05-13  502  __dma_fence_wait_timeout(struct dma_fence *fence, bool intr, signed long timeout)
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01 @503  {
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  504  	signed long ret;
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  505  
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  506  	if (WARN_ON(timeout < 0))
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  507  		return -EINVAL;
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  508  
-> ef8255506f6682 drivers/dma-buf/dma-fence.c Simona Vetter     2020-05-19  509  	might_sleep();
-> ef8255506f6682 drivers/dma-buf/dma-fence.c Simona Vetter     2020-05-19  510  
-> 5fbff813a4a328 drivers/dma-buf/dma-fence.c Simona Vetter     2020-07-07  511  	__dma_fence_might_wait();
-> 5fbff813a4a328 drivers/dma-buf/dma-fence.c Simona Vetter     2020-07-07  512  
-> b96fb1e724ae68 drivers/dma-buf/dma-fence.c Arvind Yadav      2022-09-14  513  	dma_fence_enable_sw_signaling(fence);
-> b96fb1e724ae68 drivers/dma-buf/dma-fence.c Arvind Yadav      2022-09-14  514  
-> f54d1867005c33 drivers/dma-buf/dma-fence.c Chris Wilson      2016-10-25  515  	trace_dma_fence_wait_start(fence);
-> 418cc6ca06071e drivers/dma-buf/dma-fence.c Simona Vetter     2018-05-03  516  	if (fence->ops->wait)
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  517  		ret = fence->ops->wait(fence, intr, timeout);
-> 418cc6ca06071e drivers/dma-buf/dma-fence.c Simona Vetter     2018-05-03  518  	else
-> 418cc6ca06071e drivers/dma-buf/dma-fence.c Simona Vetter     2018-05-03  519  		ret = dma_fence_default_wait(fence, intr, timeout);
-> f54d1867005c33 drivers/dma-buf/dma-fence.c Chris Wilson      2016-10-25  520  	trace_dma_fence_wait_end(fence);
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  521  	return ret;
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  522  }
-> 15fe92c1e1cf69 drivers/dma-buf/dma-fence.c Byungchul Park    2025-05-13  523  EXPORT_SYMBOL(__dma_fence_wait_timeout);
-> e941759c74a44d drivers/dma-buf/fence.c     Maarten Lankhorst 2014-07-01  524  
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+-- 
+Cheers,
+
+David / dhildenb
+
