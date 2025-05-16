@@ -1,282 +1,397 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB0D22A7FC
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0F722AE7E
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747381525; cv=none; b=ck/elxdOoAWQUQqPG71aojLk/F5pfjULBfdxaCErp1pE6IM3CcxF4Jxr51jWupoztzuRED5Gm2i4ONw32qBcBMLElx09qodXDqMRLPcaGjAym5FEsGpKZutrYkDe+l3VK6QOV9BVkLwIspl/U0mZLWe1U2KaR4Sp41g2h7CQkog=
+	t=1747381530; cv=none; b=ffm9NabyX36VNzOQxc3xfuOJX59kxgJs1G9AYrRNvAbcfFx//R5+Q8cfZuoAHd4FAxyELg2tOg2Hlu9WhQlUHJUQlmexuY+5MMz0fS2UkWyxF2rclesyBe6XXopD74jlLydaoBV5YylNBWxUyMUzMYh/2sHDNxKOy5tIuBry15w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747381525; c=relaxed/simple;
-	bh=C7rVBhoqg2fhCcfqPz4M3/cK4f2h20bD32cxQFtYzps=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n8LvxS/Ox4XPhFla7u9fuLRIDmTLYiOeMU7NReP3LZXl0l2o6U3AOMBrbeLCCe2Yq1fF+2bA8Ztbt+OsgTt1gf/jGzxG7sbkd1F0dDEX4miSZlo4BIMc+GcsWbdpeks6KGzHrvpS0We9+/aSe7xrdYSRpUK7FsqddM+Floskddc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CEGwkxVj; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747381530; c=relaxed/simple;
+	bh=zmsyEGHt0YEiLHsN9pLmXbeY8A3fT8E4IrNHgiyUews=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ADwi7Vr7O4NjueMeY1NmM2W2vahpNxA2Tc5I5Da53xyvRGoTgQMRZuXvL7DhG4K1HHkCIiQMWZGO4YQPCIb5SxJ4aWcWGSRgJ0tNnGgPfqFQiiaP9O2K7tAaVJXOr/nXL14Q1pH2SAY8zVKqiZE/IyvOrWvlKJy5aC4t4K5NnwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FM/HYJoF; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CEGwkxVj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747381522;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=lMjMcG0O15sp/rKT+u4bCwdeNCZ7CqWtNoGNMxwJIX8=;
-	b=CEGwkxVjEyfPax/nIB378K4kksoOL5G3EtCYQg4RGkrz8ptvYrqJGxRYvZi+uqTN0TNtof
-	EiVgk9z+m0ZDtCdFeWj7oamGhasXSMX3fTJAyGYK+hVk2ybWaVKPqVgL1+oxdvpQ+BVT6D
-	9qee5iFshmHZSsXdfoYST/B3Ul4AcQs=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-94-aqt8iTrWP9msjBD1r1HqmQ-1; Fri, 16 May 2025 03:45:20 -0400
-X-MC-Unique: aqt8iTrWP9msjBD1r1HqmQ-1
-X-Mimecast-MFC-AGG-ID: aqt8iTrWP9msjBD1r1HqmQ_1747381519
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a0b1798d69so959602f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 00:45:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FM/HYJoF"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-3104ddb8051so19778861fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 00:45:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747381526; x=1747986326; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hI46q2/HMrgYXwAsW6z4GpzR4isBPsAyHmvgP/K9kHI=;
+        b=FM/HYJoFJLpgr49jNV5ANLYFjXD/CcSaNf42aRnZIX+NUL/HNQtHEx1FnJ4sB/r5jj
+         WBdOpF3SJU3IR1o6Ail118UblFz99z0JuTEiERkLECEyp+/atXyJw5WGJ7z8QGPxzehM
+         hVnHj/Q+CMniAh2tg2qwvsi8OPTorHMT5cgBjCWoTB4eN7d8G577FtYIaDTcKX4BBl5x
+         XFtxckD5WTDyGUgrppnHsfLjN6ScWmj7Toc1QrvTvMEyurQqEffRu1Rj+HcYzXap+jPa
+         C/SMh6tvpYqWoVWs6kEZ5va6cwa8YWMEPDdid7UvZ/ZOxRMU2sEhp6KoDAfJ1HrEf6CF
+         KluQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747381519; x=1747986319;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=lMjMcG0O15sp/rKT+u4bCwdeNCZ7CqWtNoGNMxwJIX8=;
-        b=tu+uAOX8+/s4Xs1sxDi+jE+kjabgHYbBLbZAScXPTiHCA2XN8aYNUvFReGtwKt7W95
-         Dwaw3tkQ0pusRy67gnp1u8l8c2MbkHFLCNtCPqRVt7TQx33OmiUhgzEOAc0lfU1SqGal
-         0PyQ4R0SZhsrRf9LuEU6/B/yrZ2DV7pD1lWgukjQ7RADkJOh7fbkVGsN3/6IkbBlR/wt
-         Pvo9Wgr7XYddk6JjMyCIelAercYv9pKUWVK5NzhWBj8W8qd6Y0Gjfhwk8tM+p1BYxzwI
-         yqiDiXIvl4blbBdFRiNtyRWRao3ZKnofI472jgVPjyz3UNnsXHXN9mTewFJL7vgdji9J
-         2xVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbsI4gzOsiuri/u2OSlGY2HnOXlYIHdnkJ4LFVkn7Ju9AvOD0uw1wpI4cTDJAjqvgoUF1R9RoBWkX4iWk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgLsKHKQA0Jb2tDsYASSF80Y8gfwwEhwfEgw1vyG/yRp1n1ndy
-	ahzg5lP06MTexR7xMs3EFwpxDpl0Fj72aV893Eho2cXcAKJM7nKRcwfvh/UmiLOBjl0ySZySzj1
-	xwc+Omlu6NI9UFcrxgpSf2/FpQ8Zpeaniz5hBwTYkPkMmEhXsjcpniPW2SaPs1iS9zw==
-X-Gm-Gg: ASbGncvWHYrI5SCR1AF4rK5TtYUsc6UsMWMHaPD3ailej4yQpAgOXolEeyqzmjivJTV
-	YurMR18ojJrEeG/ULuP+qHCbtzJr4ZQFhiW+WFvfIecSA1eLbsJLhr4QwOdHYikbKfTnKMb9eRx
-	4pvuLdHXYmIz2iDQdKT2jOn2yy5QlZL7F5F6rxS5LOzbUl5SIje0i6+wGcJQ+b6jpylwW716Dmf
-	dTGfBAAQAvnrl9y4yQtpHQJiN2oVoSIiZP6aKgauqw2+D0RHGR+k7DzYVdp9oS3/ZhAARfp9cQv
-	BJq/e/AI3tJHtgZZxNrClvIROEND0BB7kUixBEJUtQOnav4QKGEoTFHIPGSQulfSIgCW8yv69TI
-	UlwF8HPHO/hMOJV2SVIlnV+jdZqlSiNgXmb3Ekoc=
-X-Received: by 2002:a5d:5f46:0:b0:3a3:5c94:d893 with SMTP id ffacd0b85a97d-3a35c94d943mr2154942f8f.53.1747381519433;
-        Fri, 16 May 2025 00:45:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHEt+8zD82dbtdWqrQPrXzsPhK3/5RjTAd+PcbyJvH6QGII3907552ejyISHB2xJ3ewXiyAeg==
-X-Received: by 2002:a5d:5f46:0:b0:3a3:5c94:d893 with SMTP id ffacd0b85a97d-3a35c94d943mr2154906f8f.53.1747381519023;
-        Fri, 16 May 2025 00:45:19 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f47:4700:e6f9:f453:9ece:7602? (p200300d82f474700e6f9f4539ece7602.dip0.t-ipconnect.de. [2003:d8:2f47:4700:e6f9:f453:9ece:7602])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca8d185sm1956924f8f.98.2025.05.16.00.45.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 May 2025 00:45:18 -0700 (PDT)
-Message-ID: <8f0a22c2-3176-4942-994d-58d940901ecf@redhat.com>
-Date: Fri, 16 May 2025 09:45:17 +0200
+        d=1e100.net; s=20230601; t=1747381526; x=1747986326;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hI46q2/HMrgYXwAsW6z4GpzR4isBPsAyHmvgP/K9kHI=;
+        b=wrHl1qi9kyGyyEUhui7GE6fKiYikQztvM3yOl85oLcP/ojv1FjylB2EgY4WPyz2xLx
+         ZPyVPyHSqS7SNXts4lVoZ9c08py47kmAezoRPfhNx0HcTVETycJKWh+KejoXovZSKI1N
+         dc4zFLLiRIX6yV42VXQIAMTXzEvKV5vSrAO+XDT58keA54g9lxEbXmiueLZr08QuT52u
+         3uO1lGFIrN1ponHS/c3Bm8qpsnH+B5THShh8GumCaLlS43djpSMPGhHQmBZY5+0+Ud8W
+         rAjYF2is8oZUydhuZkj1FyxLkqaKzVYyIbpC0FcMjQwuwCWWTwwdXOfmHT6QxpdRK+Sh
+         2hOg==
+X-Forwarded-Encrypted: i=1; AJvYcCXEjOAysbRlF/E+PxSU70m8m2dtwQAmsR5rUdyvovp7naoUedLjHlPytb6F+jdp0Mk8aV68TkrdNruyQFU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+sYvGcCk0fqef3Bah79D5eiaEEMQJnvauIfkJ4EMXLEZUlrd5
+	xSG1EcYisHsTmrN+I0TQHuHjKenWL20F1AxEyIWLtpdeS1A7gvHQsXzpNlF5MsRS9daD+f+QJPi
+	VvzJaXI005kX3/nxrPpH//cv6pDUrbXY=
+X-Gm-Gg: ASbGncsFEWpChCVAiM1ucbTtbu+e+diBV8LuGK0GrFog8+AfGwTMNJYmeAzfxDcROqF
+	yB7JSU7DZjx013/wPis4PRwLOu5LiO5uEuJJ+fRRVrJPwcauF+3v/BvoN40M8dNsKzdEpjHrrhf
+	OOLz5Q1wX7BqhSQYqXf8nhOF6g28BZgIE=
+X-Google-Smtp-Source: AGHT+IE8OTrafodRzlwsNQ0LbGEoU7Z4K2jZxv2+PaWYwl+yJohaTcyWEEq/j5hYkoQ+jvirHnqjLCLO/khyRjYncEA=
+X-Received: by 2002:a2e:a98e:0:b0:308:f860:7c1 with SMTP id
+ 38308e7fff4ca-328077a3117mr8773871fa.30.1747381525559; Fri, 16 May 2025
+ 00:45:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] prctl: introduce PR_THP_POLICY_DEFAULT_HUGE for the
- process
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Usama Arif <usamaarif642@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- hannes@cmpxchg.org, shakeel.butt@linux.dev, riel@surriel.com,
- ziy@nvidia.com, laoar.shao@gmail.com, baolin.wang@linux.alibaba.com,
- Liam.Howlett@oracle.com, npache@redhat.com, ryan.roberts@arm.com,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, kernel-team@meta.com
-References: <20250515133519.2779639-1-usamaarif642@gmail.com>
- <20250515133519.2779639-2-usamaarif642@gmail.com>
- <c0af0eb2-d10f-4ee3-87dd-c23cca6cfd1a@lucifer.local>
- <ddc0dd46-8541-4d4a-ac59-287e11e1d3ff@gmail.com>
- <02ead03b-339b-45c8-b252-d31a66501c39@lucifer.local>
- <3a2a329d-2592-4e31-a763-d87dcd925966@redhat.com>
- <8ea288f2-5196-41f9-bd65-e29f22bb29e8@lucifer.local>
- <5f77366d-e100-46bb-ac85-aa4b216eb2cf@redhat.com>
- <cbc95f9b-1c13-45ec-8d34-38544d3f2dd3@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <cbc95f9b-1c13-45ec-8d34-38544d3f2dd3@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <202505161438.9009cf47-lkp@intel.com> <CAMgjq7C4oX2nCPHzoWC1LXrxwybMDswYoovJ+hGhxwPXs5u_XA@mail.gmail.com>
+ <c4e7cb39-7c2e-9507-d7e4-dff4ac542be3@huaweicloud.com>
+In-Reply-To: <c4e7cb39-7c2e-9507-d7e4-dff4ac542be3@huaweicloud.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Fri, 16 May 2025 15:45:07 +0800
+X-Gm-Features: AX0GCFswC6j0TLVd98lh9U5fR-YYcAHDxe-Vt4VAjeRl7WcdhnGzLfFtf6HCWLY
+Message-ID: <CAMgjq7D=8k_1qS4oDow7BnnwmpZc9V9_fh68sCjUshGKScpT7Q@mail.gmail.com>
+Subject: Re: [linus:master] [mm, swap] b487a2da35: BUG:soft_lockup-CPU##stuck_for#s![stress-ng-swap:#]
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com, 
+	linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Baoquan He <bhe@redhat.com>, 
+	Barry Song <v-songbaohua@oppo.com>, Chris Li <chrisl@kernel.org>, 
+	"Huang, Ying" <ying.huang@linux.alibaba.com>, Hugh Dickins <hughd@google.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Kalesh Singh <kaleshsingh@google.com>, 
+	Matthew Wilcow <willy@infradead.org>, Nhat Pham <nphamcs@gmail.com>, 
+	Yosry Ahmed <yosryahmed@google.com>, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 15.05.25 22:35, Lorenzo Stoakes wrote:
-> On Thu, May 15, 2025 at 09:12:13PM +0200, David Hildenbrand wrote:
->> On 15.05.25 20:08, Lorenzo Stoakes wrote:
->>> On Thu, May 15, 2025 at 06:11:55PM +0200, David Hildenbrand wrote:
->>>>>>> So if you're not overriding VM_NOHUGEPAGE, the whole point of this exercise
->>>>>>> is to override global 'never'?
->>>>>>>
->>>>>>
->>>>>> Again, I am not overriding never.
->>>>>>
->>>>>> hugepage_global_always and hugepage_global_enabled will evaluate to false
->>>>>> and you will not get a hugepage.
->>>>>
->>>>> Yeah, again ack, but I kind of hate that we set VM_HUGEPAGE everywhere even
->>>>> if the policy is never.
->>>>
->>>> I think it should behave just as if someone does manually an madvise(). So
->>>> whatever we do here during an madvise, we should try to do the same thing
->>>> here.
->>>
->>> Ack I agree with this.
->>>
->>> It actually simplifies things a LOT to view it this way - we're saying 'by
->>> default apply madvise(...) to new VMAs'.
->>>
->>> Hm I wonder if we could have a more generic version of this...
->>>
->>> Note though that we're not _quite_ doing this.
->>>
->>> So in hugepage_madvise():
->>>
->>> int hugepage_madvise(struct vm_area_struct *vma,
->>> 		     unsigned long *vm_flags, int advice)
->>> {
->>> 	...
->>>
->>> 	switch (advice) {
->>> 	case MADV_HUGEPAGE:
->>> 		*vm_flags &= ~VM_NOHUGEPAGE;
->>> 		*vm_flags |= VM_HUGEPAGE;
->>>
->>> 		...
->>>
->>> 		break;
->>>
->>> 		...
->>> 	}
->>>
->>> 	...
->>> }
->>>
->>> So here we're actually clearing VM_NOHUGEPAGE and overriding it, but in the
->>> proposed code we're not.
->>
->> Yeah, I think I suggested that, but probably we should just do exactly what
->> madvise() does.
-> 
-> Yes, agreed.
-> 
-> Usama - do you have any issue with us switching to how madvise() does it?
-> 
->>
->>>
->>> So we're back into confusing territory again :)
->>>
->>> I wonder if we could...
->>>
->>> 1. Add an MADV_xxx that mimics the desired behaviour here.
->>>
->>> 2. Add a generic 'madvise() by default' thing at a process level?
->>>
->>> Is this crazy?
->>
->> I think that's what I had in mind, just a bit twisted.
->>
->> What could work is
->>
->> 1) prctl to set the default
->>
->> 2) madvise() to adjust all existing VMAs
->>
->>
->> We might have to teach 2) to ignore non-compatible VMAs / holes. Maybe not,
->> worth an investigation.
-> 
-> Yeah, I think it'd _probably_ be ok except on s390 (which can fail, and so
-> we'd have to be able to say - skip on error, carry on).
-> 
-> We'll just get an -ENOMEM at the end for the gaps (god how I hate
-> that). Otherwise I don't think MADV_HUGEPAGE actually is really that
-> restrictive.
-> 
-> That would simplify :)
-> 
-> But I still so hate using prctl()... this might be one of those cases where
-> we simply figure out we have no other choice.
- > > But when you put it as simply as this maybe it's not so bad. With the
-> flags2 gone by fixing this stupid 32-bit limit it's less awful.
-> 
-> Perhaps worth seeing what an improved RFC of this series looks like with
-> all the various bits fixed to give an idea.
+On Fri, May 16, 2025 at 3:40=E2=80=AFPM Kemeng Shi <shikemeng@huaweicloud.c=
+om> wrote:
+>
+>
+>
+> on 5/16/2025 3:19 PM, Kairui Song wrote:
+> > On Fri, May 16, 2025 at 2:37=E2=80=AFPM kernel test robot <oliver.sang@=
+intel.com> wrote:
+> >>
+> >>
+> >>
+> >> Hello,
+> >>
+> >> kernel test robot noticed "BUG:soft_lockup-CPU##stuck_for#s![stress-ng=
+-swap:#]" on:
+> >>
+> >> commit: b487a2da3575b6cdfb6d6559311830c8fea70bb9 ("mm, swap: simplify =
+folio swap allocation")
+> >> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> >>
+> >> [test failed on linus/master      fee3e843b309444f48157e2188efa6818bae=
+85cf]
+> >> [test failed on linux-next/master 484803582c77061b470ac64a634f25f89715=
+be3f]
+> >>
+> >> in testcase: stress-ng
+> >> version: stress-ng-x86_64-f76f86ffb-1_20250412
+> >> with following parameters:
+> >>
+> >>         nr_threads: 100%
+> >>         disk: 1HDD
+> >>         testtime: 60s
+> >>         fs: xfs
+> >>         test: swap
+> >>         cpufreq_governor: performance
+> >>
+> >>
+> >>
+> >> config: x86_64-rhel-9.4
+> >> compiler: gcc-12
+> >> test machine: 64 threads 2 sockets Intel(R) Xeon(R) Gold 6346 CPU @ 3.=
+10GHz (Ice Lake) with 256G memory
+> >>
+> >> (please refer to attached dmesg/kmsg for entire log/backtrace)
+> >>
+> >>
+> >>
+> >> If you fix the issue in a separate patch/commit (i.e. not just a new v=
+ersion of
+> >> the same patch/commit), kindly add following tags
+> >> | Reported-by: kernel test robot <oliver.sang@intel.com>
+> >> | Closes: https://lore.kernel.org/oe-lkp/202505161438.9009cf47-lkp@int=
+el.com
+> >>
+> >>
+> >> [   76.825919][   C17] watchdog: BUG: soft lockup - CPU#17 stuck for 2=
+6s! [stress-ng-swap:3017]
+> >> [   76.825921][   C17] Modules linked in: xfs ipmi_ssif intel_rapl_msr=
+ intel_rapl_common intel_uncore_frequency intel_uncore_frequency_common i10=
+nm_edac skx_edac_common nfit libnvdimm x86_pkg_temp_thermal coretemp kvm_in=
+tel btrfs kvm sd_mod sg snd_pcm blake2b_generic ghash_clmulni_intel xor dax=
+_hmem ast raid6_pq snd_timer rapl cxl_acpi drm_client_lib ahci intel_cstate=
+ cxl_port drm_shmem_helper snd libahci cxl_core intel_th_gth nvme acpi_powe=
+r_meter isst_if_mbox_pci isst_if_mmio soundcore intel_th_pci mei_me intel_u=
+ncore ioatdma i2c_i801 megaraid_sas ipmi_si einj acpi_ipmi pcspkr libata dr=
+m_kms_helper nvme_core mei isst_if_common intel_th intel_pch_thermal i2c_sm=
+bus intel_vsec dca wmi ipmi_devintf ipmi_msghandler joydev binfmt_misc drm =
+fuse dm_mod loop ip_tables
+> >> [   76.825949][   C17] CPU: 17 UID: 0 PID: 3017 Comm: stress-ng-swap N=
+ot tainted 6.14.0-rc6-00228-gb487a2da3575 #1
+> >> [   76.825951][   C17] Hardware name: Inspur NF5180M6/NF5180M6, BIOS 0=
+6.00.04 04/12/2022
+> >> [ 76.825952][ C17] RIP: 0010:shmem_unuse (include/linux/list.h:119 inc=
+lude/linux/list.h:215 include/linux/list.h:287 mm/shmem.c:1497)
+> >> [ 76.825959][ C17] Code: 30 48 8d 6b 30 4c 8d 60 d0 48 81 fd 20 e3 26 =
+83 0f 84 8a 00 00 00 48 83 7b 18 00 75 89 48 8b 43 38 48 8b 53 30 48 39 28 =
+75 6c <48> 39 6a 08 75 66 48 89 42 08 48 89 10 48 89 6b 30 48 89 6b 38 4c
+> >> All code
+> >> =3D=3D=3D=3D=3D=3D=3D=3D
+> >>    0:   30 48 8d                xor    %cl,-0x73(%rax)
+> >>    3:   6b 30 4c                imul   $0x4c,(%rax),%esi
+> >>    6:   8d 60 d0                lea    -0x30(%rax),%esp
+> >>    9:   48 81 fd 20 e3 26 83    cmp    $0xffffffff8326e320,%rbp
+> >>   10:   0f 84 8a 00 00 00       je     0xa0
+> >>   16:   48 83 7b 18 00          cmpq   $0x0,0x18(%rbx)
+> >>   1b:   75 89                   jne    0xffffffffffffffa6
+> >>   1d:   48 8b 43 38             mov    0x38(%rbx),%rax
+> >>   21:   48 8b 53 30             mov    0x30(%rbx),%rdx
+> >>   25:   48 39 28                cmp    %rbp,(%rax)
+> >>   28:   75 6c                   jne    0x96
+> >>   2a:*  48 39 6a 08             cmp    %rbp,0x8(%rdx)           <-- tr=
+apping instruction
+> >>   2e:   75 66                   jne    0x96
+> >>   30:   48 89 42 08             mov    %rax,0x8(%rdx)
+> >>   34:   48 89 10                mov    %rdx,(%rax)
+> >>   37:   48 89 6b 30             mov    %rbp,0x30(%rbx)
+> >>   3b:   48 89 6b 38             mov    %rbp,0x38(%rbx)
+> >>   3f:   4c                      rex.WR
+> >>
+> >> Code starting with the faulting instruction
+> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>    0:   48 39 6a 08             cmp    %rbp,0x8(%rdx)
+> >>    4:   75 66                   jne    0x6c
+> >>    6:   48 89 42 08             mov    %rax,0x8(%rdx)
+> >>    a:   48 89 10                mov    %rdx,(%rax)
+> >>    d:   48 89 6b 30             mov    %rbp,0x30(%rbx)
+> >>   11:   48 89 6b 38             mov    %rbp,0x38(%rbx)
+> >>   15:   4c                      rex.WR
+> >> [   76.825961][   C17] RSP: 0018:ffa00000232ffce0 EFLAGS: 00000246
+> >> [   76.825964][   C17] RAX: ff110020c063bde0 RBX: ff110020c063bdb0 RCX=
+: 0000000000000006
+> >> [   76.825965][   C17] RDX: ff110020c063bde0 RSI: 0000000000000000 RDI=
+: ff110020c063be2c
+> >> [   76.825966][   C17] RBP: ff110020c063bde0 R08: ffffffffffffffc0 R09=
+: 0000000000000000
+> >> [   76.825967][   C17] R10: 000000000000ffff R11: ffa000000cafa000 R12=
+: ff110020c063bdb0
+> >> [   76.825968][   C17] R13: ff110020c063be2c R14: 0000000000000014 R15=
+: ff110020c063bdb0
+> >> [   76.825969][   C17] FS:  00007fcb691d2580(0000) GS:ff11003fbac80000=
+(0000) knlGS:0000000000000000
+> >> [   76.825970][   C17] CS:  0010 DS: 0000 ES: 0000 CR0: 00000000800500=
+33
+> >> [   76.825971][   C17] CR2: 00007fcb6490f000 CR3: 00000001897e4006 CR4=
+: 0000000000773ef0
+> >> [   76.825972][   C17] DR0: 0000000000000000 DR1: 0000000000000000 DR2=
+: 0000000000000000
+> >> [   76.825973][   C17] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7=
+: 0000000000000400
+> >> [   76.825973][   C17] PKRU: 55555554
+> >> [   76.825974][   C17] Call Trace:
+> >> [   76.825975][   C17]  <IRQ>
+> >> [ 76.825976][ C17] ? watchdog_timer_fn (kernel/watchdog.c:770)
+> >> [ 76.825980][ C17] ? __pfx_watchdog_timer_fn (kernel/watchdog.c:685)
+> >> [ 76.825981][ C17] ? __hrtimer_run_queues (kernel/time/hrtimer.c:1801 =
+kernel/time/hrtimer.c:1865)
+> >> [ 76.825985][ C17] ? hrtimer_interrupt (kernel/time/hrtimer.c:1930)
+> >> [ 76.825986][ C17] ? __sysvec_apic_timer_interrupt (arch/x86/kernel/ap=
+ic/apic.c:1038 arch/x86/kernel/apic/apic.c:1055)
+> >> [ 76.825989][ C17] ? sysvec_apic_timer_interrupt (arch/x86/kernel/apic=
+/apic.c:1049 arch/x86/kernel/apic/apic.c:1049)
+> >> [   76.825992][   C17]  </IRQ>
+> >> [   76.825992][   C17]  <TASK>
+> >> [ 76.825993][ C17] ? asm_sysvec_apic_timer_interrupt (arch/x86/include=
+/asm/idtentry.h:702)
+> >> [ 76.825997][ C17] ? shmem_unuse (include/linux/list.h:119 include/lin=
+ux/list.h:215 include/linux/list.h:287 mm/shmem.c:1497)
+> >> [ 76.825999][ C17] try_to_unuse (mm/swapfile.c:2295)
+> >> [ 76.826003][ C17] __do_sys_swapoff (mm/swapfile.c:2736)
+> >> [ 76.826005][ C17] do_syscall_64 (arch/x86/entry/common.c:52 arch/x86/=
+entry/common.c:83)
+> >> [ 76.826008][ C17] ? __rseq_handle_notify_resume (kernel/rseq.c:420)
+> >> [ 76.826012][ C17] ? syscall_exit_to_user_mode (include/linux/rseq.h:3=
+8 include/linux/resume_user_mode.h:62 kernel/entry/common.c:114 include/lin=
+ux/entry-common.h:329 kernel/entry/common.c:207 kernel/entry/common.c:218)
+> >> [ 76.826013][ C17] ? do_syscall_64 (arch/x86/entry/common.c:102)
+> >> [ 76.826015][ C17] ? __perf_sw_event (kernel/events/internal.h:229 ker=
+nel/events/core.c:10210 kernel/events/core.c:10235)
+> >> [ 76.826016][ C17] ? handle_mm_fault (include/linux/perf_event.h:1503 =
+mm/memory.c:6106 mm/memory.c:6233)
+> >> [ 76.826020][ C17] ? do_user_addr_fault (arch/x86/mm/fault.c:1338)
+> >> [ 76.826022][ C17] ? clear_bhb_loop (arch/x86/entry/entry_64.S:1538)
+> >> [ 76.826024][ C17] ? clear_bhb_loop (arch/x86/entry/entry_64.S:1538)
+> >> [ 76.826026][ C17] ? clear_bhb_loop (arch/x86/entry/entry_64.S:1538)
+> >> [ 76.826028][ C17] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entr=
+y_64.S:130)
+> >> [   76.826030][   C17] RIP: 0033:0x7fcb69976fc7
+> >> [ 76.826031][ C17] Code: 73 01 c3 48 8b 0d 39 2e 0d 00 f7 d8 64 89 01 =
+48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 a8 00 00 00 =
+0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 09 2e 0d 00 f7 d8 64 89 01 48
+> >> All code
+> >> =3D=3D=3D=3D=3D=3D=3D=3D
+> >>    0:   73 01                   jae    0x3
+> >>    2:   c3                      ret
+> >>    3:   48 8b 0d 39 2e 0d 00    mov    0xd2e39(%rip),%rcx        # 0xd=
+2e43
+> >>    a:   f7 d8                   neg    %eax
+> >>    c:   64 89 01                mov    %eax,%fs:(%rcx)
+> >>    f:   48 83 c8 ff             or     $0xffffffffffffffff,%rax
+> >>   13:   c3                      ret
+> >>   14:   66 2e 0f 1f 84 00 00    cs nopw 0x0(%rax,%rax,1)
+> >>   1b:   00 00 00
+> >>   1e:   0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+> >>   23:   b8 a8 00 00 00          mov    $0xa8,%eax
+> >>   28:   0f 05                   syscall
+> >>   2a:*  48 3d 01 f0 ff ff       cmp    $0xfffffffffffff001,%rax       =
+  <-- trapping instruction
+> >>   30:   73 01                   jae    0x33
+> >>   32:   c3                      ret
+> >>   33:   48 8b 0d 09 2e 0d 00    mov    0xd2e09(%rip),%rcx        # 0xd=
+2e43
+> >>   3a:   f7 d8                   neg    %eax
+> >>   3c:   64 89 01                mov    %eax,%fs:(%rcx)
+> >>   3f:   48                      rex.W
+> >>
+> >> Code starting with the faulting instruction
+> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>    0:   48 3d 01 f0 ff ff       cmp    $0xfffffffffffff001,%rax
+> >>    6:   73 01                   jae    0x9
+> >>    8:   c3                      ret
+> >>    9:   48 8b 0d 09 2e 0d 00    mov    0xd2e09(%rip),%rcx        # 0xd=
+2e19
+> >>   10:   f7 d8                   neg    %eax
+> >>   12:   64 89 01                mov    %eax,%fs:(%rcx)
+> >>   15:   48                      rex.W
+> >> [   76.826032][   C17] RSP: 002b:00007ffd6d92dbd8 EFLAGS: 00000206 ORI=
+G_RAX: 00000000000000a8
+> >> [   76.826033][   C17] RAX: ffffffffffffffda RBX: 0000000000000019 RCX=
+: 00007fcb69976fc7
+> >> [   76.826034][   C17] RDX: fffffffffffffccc RSI: 000000000003d000 RDI=
+: 00007ffd6d92e690
+> >> [   76.826035][   C17] RBP: 00007fcb64910000 R08: 0000000000000007 R09=
+: 0000559500e1f530
+> >> [   76.826036][   C17] R10: c7c9ff097bf742d3 R11: 0000000000000206 R12=
+: 00007fcb691d2180
+> >> [   76.826036][   C17] R13: 00007ffd6d92e690 R14: 0000000000000001 R15=
+: 0000000000000000
+> >> [   76.826037][   C17]  </TASK>
+> >> [   76.826038][   C17] Kernel panic - not syncing: softlockup: hung ta=
+sks
+> >> [   77.239533][   C17] CPU: 17 UID: 0 PID: 3017 Comm: stress-ng-swap T=
+ainted: G             L     6.14.0-rc6-00228-gb487a2da3575 #1
+> >> [   77.251353][   C17] Tainted: [L]=3DSOFTLOCKUP
+> >> [   77.255672][   C17] Hardware name: Inspur NF5180M6/NF5180M6, BIOS 0=
+6.00.04 04/12/2022
+> >> [   77.263635][   C17] Call Trace:
+> >> [   77.266915][   C17]  <IRQ>
+> >> [ 77.269756][ C17] panic (kernel/panic.c:354)
+> >> [ 77.273643][ C17] watchdog_timer_fn (kernel/watchdog.c:735)
+> >> [ 77.278568][ C17] ? __pfx_watchdog_timer_fn (kernel/watchdog.c:685)
+> >> [ 77.284015][ C17] __hrtimer_run_queues (kernel/time/hrtimer.c:1801 ke=
+rnel/time/hrtimer.c:1865)
+> >> [ 77.289201][ C17] hrtimer_interrupt (kernel/time/hrtimer.c:1930)
+> >> [ 77.294040][ C17] __sysvec_apic_timer_interrupt (arch/x86/kernel/apic=
+/apic.c:1038 arch/x86/kernel/apic/apic.c:1055)
+> >> [ 77.299835][ C17] sysvec_apic_timer_interrupt (arch/x86/kernel/apic/a=
+pic.c:1049 arch/x86/kernel/apic/apic.c:1049)
+> >> [   77.305454][   C17]  </IRQ>
+> >> [   77.308382][   C17]  <TASK>
+> >> [ 77.311313][ C17] asm_sysvec_apic_timer_interrupt (arch/x86/include/a=
+sm/idtentry.h:702)
+> >> [ 77.317275][ C17] RIP: 0010:shmem_unuse (include/linux/list.h:119 inc=
+lude/linux/list.h:215 include/linux/list.h:287 mm/shmem.c:1497)
+> >> [ 77.322373][ C17] Code: 30 48 8d 6b 30 4c 8d 60 d0 48 81 fd 20 e3 26 =
+83 0f 84 8a 00 00 00 48 83 7b 18 00 75 89 48 8b 43 38 48 8b 53 30 48 39 28 =
+75 6c <48> 39 6a 08 75 66 48 89 42 08 48 89 10 48 89 6b 30 48 89 6b 38 4c
+> >> All code
+> >> =3D=3D=3D=3D=3D=3D=3D=3D
+> >>    0:   30 48 8d                xor    %cl,-0x73(%rax)
+> >>    3:   6b 30 4c                imul   $0x4c,(%rax),%esi
+> >>    6:   8d 60 d0                lea    -0x30(%rax),%esp
+> >>    9:   48 81 fd 20 e3 26 83    cmp    $0xffffffff8326e320,%rbp
+> >>   10:   0f 84 8a 00 00 00       je     0xa0
+> >>   16:   48 83 7b 18 00          cmpq   $0x0,0x18(%rbx)
+> >>   1b:   75 89                   jne    0xffffffffffffffa6
+> >>   1d:   48 8b 43 38             mov    0x38(%rbx),%rax
+> >>   21:   48 8b 53 30             mov    0x30(%rbx),%rdx
+> >>   25:   48 39 28                cmp    %rbp,(%rax)
+> >>   28:   75 6c                   jne    0x96
+> >>   2a:*  48 39 6a 08             cmp    %rbp,0x8(%rdx)           <-- tr=
+apping instruction
+> >>   2e:   75 66                   jne    0x96
+> >>   30:   48 89 42 08             mov    %rax,0x8(%rdx)
+> >>   34:   48 89 10                mov    %rdx,(%rax)
+> >>   37:   48 89 6b 30             mov    %rbp,0x30(%rbx)
+> >>   3b:   48 89 6b 38             mov    %rbp,0x38(%rbx)
+> >>   3f:   4c                      rex.WR
+> >>
+> >>
+> >> The kernel config and materials to reproduce are available at:
+> >> https://download.01.org/0day-ci/archive/20250516/202505161438.9009cf47=
+-lkp@intel.com
+> >>
+> >>
+> >>
+> >> --
+> >> 0-DAY CI Kernel Test Service
+> >> https://github.com/intel/lkp-tests/wiki
+> >>
+> >>
+> >
+> > It seems this is exactly the problem "mm/shmem: Fix potential dead
+> > loop in shmem_unuse" trying to fix?
+> > https://lore.kernel.org/linux-mm/20250515154758.956521-4-shikemeng@huaw=
+eicloud.com/
+> >
+> > Hi Kemeng,
+> >
+> > Can you help take a look? And maybe add a "Closes:
+> > https://lore.kernel.org/oe-lkp/202505161438.9009cf47-lkp@intel.com" in
+> > your patch?
+> >
+> > BTW I also just found there is another potential problem with shmem,
+> > the "list_del_init(&info->swaplist);" in shmem_writepage could lead to
+> > leaked shmem inode on swapoff, it's unrelated to this problem though,
+> > I can fix it posting one patch for that after double checking.
+> >
+> Hi Kairui,
+> The "list_del_init(&info->swaplist);" issue is also fixed in my patchset,=
+ see
+> https://lore.kernel.org/linux-mm/20250515154758.956521-5-shikemeng@huawei=
+cloud.com/.
+> This issue could also lead to a dead loop.
+>
+> I have not taken a deep look, but I think the "list_del_init(&info->swapl=
+ist);" issue
+> is more likely to blame as it happens to be introduced in
+> b487a2da3575b6cdfb6d6559311830c8fea70bb9 ("mm,  swap: simplify folio swap=
+ allocation").
+>
+> With these information helps.
 
-Yes.
-
-> 
-> But you do then wonder if we could make this _generic_ for _any_ madvise(),
-> and how _that_ would look.
-> 
-> But perhaps that's insane because many VMAs would simply not be suited to
-> having certain madvise flags set hmm.
-
-Same thinking. I think this is rather special.
-
-In a perfect world not even the madvise(*HUGEPAGE) would exist.
-
-But here we are ... 14 years (wow!) after
-
-commit 0af4e98b6b095c74588af04872f83d333c958c32
-Author: Andrea Arcangeli <aarcange@redhat.com>
-Date:   Thu Jan 13 15:46:55 2011 -0800
-
-     thp: madvise(MADV_HUGEPAGE)
-
-
-
-(I'm surprised you don't complain about madvise(). IMHO, prctl() is even 
-a better interface than catch-all madvise(); a syscall where an advise 
-might not be an advise. I saw some funny rants about MADV_DONTNEED on 
-reddit at some point ... :) mctrl() would have been clearer, at least 
-for me :D )
-
--- 
-Cheers,
-
-David / dhildenb
-
+Yes, thanks, I think you can add a Closes for this report, with both
+patches applied this should be fixed just fine.
