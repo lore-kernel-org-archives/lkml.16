@@ -1,171 +1,217 @@
-Received: from mta20.hihonor.com (mta20.honor.com [81.70.206.69])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4D17483;
-	Fri, 16 May 2025 09:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.206.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A13C21171C
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747387943; cv=none; b=erv6UZLppyNvMHa8dL4R2O6dCB1AeKp1HKt+uu94dwQHfgXH7nCjd+iW09R1FgqkItC7rc22YQVR/tJrEfm5/9cOjcbMS2j5qAdy0vm8hdmQiZEzt9Yp6ZiJslYvfSXCjbm/R7cOm+SIqQRpsWQdmx9lSHIrhVD89/HAKdnGrnU=
+	t=1747388034; cv=none; b=Vp7Wc/5tWOXVyc04J6a803gjIw/Ob+US/VR84aC7Bvg7hbCPYVFsY2agfm/mkv+xZufilDK37aQ2vodbDGugDAj7L5tzItejtt1WIyOpMbJP+hS0wFR2OvLD5+mpY7ZsOxDXsTcM1xbgRsJUk4OVwMfCQHY0cs130WOG5OsDUZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747387943; c=relaxed/simple;
-	bh=WSFU4n/axdeaDEjWRdFN8SACosPXM8iaSf+kxliEvzg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m2INCiSqe3ysHJmHswgkd5V4gDtVIi1qvf+TXHhVwRQuhrpVtne8SGCpypyjXTj1iDGeaQl/qwkFBjdXQFJp6NSqAWvcfZmP0QvrfhBOdCfvjv4Na+sW5z915HF5Yodx7WyBanfeM/+uxOEsnfqRSnANsqWHoQsZnmisehcSMXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.206.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w002.hihonor.com (unknown [10.68.28.120])
-	by mta20.hihonor.com (SkyGuard) with ESMTPS id 4ZzMGh2Tt6zYlfv7;
-	Fri, 16 May 2025 17:29:16 +0800 (CST)
-Received: from a010.hihonor.com (10.68.16.52) by w002.hihonor.com
- (10.68.28.120) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 16 May
- 2025 17:31:21 +0800
-Received: from localhost.localdomain (10.144.18.117) by a010.hihonor.com
- (10.68.16.52) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 16 May
- 2025 17:31:20 +0800
-From: wangtao <tao.wangtao@honor.com>
-To: <sumit.semwal@linaro.org>, <christian.koenig@amd.com>,
-	<benjamin.gaignard@collabora.com>, <Brian.Starkey@arm.com>,
-	<jstultz@google.com>, <tjmercier@google.com>
-CC: <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-	<linaro-mm-sig@lists.linaro.org>, <linux-kernel@vger.kernel.org>,
-	<bintian.wang@honor.com>, <yipengxiang@honor.com>, <liulu.liu@honor.com>,
-	<feng.han@honor.com>, wangtao <tao.wangtao@honor.com>
-Subject: [PATCH v2 1/2] dmabuf: add DMA_BUF_IOCTL_RW_FILE
-Date: Fri, 16 May 2025 17:21:47 +0800
-Message-ID: <20250516092148.12778-2-tao.wangtao@honor.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250516092148.12778-1-tao.wangtao@honor.com>
-References: <20250516092148.12778-1-tao.wangtao@honor.com>
+	s=arc-20240116; t=1747388034; c=relaxed/simple;
+	bh=ZSlGy000gEykfwOcOmdIXPyiWWidh4HnSDVyE1R4rlA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kiugC9GANWKwembpi/fCjaLbHpmiXobkOkcIqtfall7LPD5C3nd24W3TSbqoKY8hoHiwPYLZY18pEDCKdoDeX5qy7C4hBpvVlbgm/mXjQhRTtOPhnrDUc4igP6PI2VeMdcEZ5ifh6B7qNV+N+LPbtu8LMOFX4kAu26XKTP+0aQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=lpXke6mF; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="lpXke6mF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=AjoOsfyXisgNrLF8CSMxt99k4q2kuHs9TnfDI4yhKCk=; b=lpXke6mFsPFAWRyFqNrNKY+fx7
+	43vVe0r4JT74kdag4nXpNAdriSAiEmx/fv9RlG8vk3RW7XTM/WrnEI5Y171IG27t0OGFDiMmFlInL
+	+NGlF+pG4JIAc0/9GoKqtdU1fFYcyERJH2yrAmtXBc4TEiJdk939GTG1PzoH3RMPhQUtqOdYKWYhl
+	7DbhRR40Vu9UpThnFiUE8veoqW6JJPR2wG/MlFESMeIfc0aWAzvK2ZJAn6MOGM/DVw9vNpC5S3ikj
+	OUsjERryuqmhW92PAlJz3+dI26g9CqMB38wQt5EbKL4A+9lHxnXgqNdQSYXFAS9+x9O6aWW+4JrAs
+	EbcLeDnA==;
+Received: from [81.79.92.254] (helo=[192.168.0.101])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uFrLo-0091Lf-PM; Fri, 16 May 2025 11:33:31 +0200
+Message-ID: <1297389f-70f6-4813-8de8-1a0c4f92250a@igalia.com>
+Date: Fri, 16 May 2025 10:33:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: w002.hihonor.com (10.68.28.120) To a010.hihonor.com
- (10.68.16.52)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/6] drm/sched: Prevent teardown waitque from blocking
+ too long
+To: Philipp Stanner <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Danilo Krummrich <dakr@redhat.com>
+References: <20250424095535.26119-2-phasta@kernel.org>
+ <20250424095535.26119-4-phasta@kernel.org>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+In-Reply-To: <20250424095535.26119-4-phasta@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add DMA_BUF_IOCTL_RW_FILE to save/restore data to/from a dma-buf.
 
-For large dmabuf operations (model loading, real-time data capture,
-task snapshots), Direct I/O with zero-copy boosts performance
-by avoiding file cache/memory copies, cuts CPU/power use. On UFS 4.0
-(@4GB/s): dmabuf Direct I/O hits 3776MB/s read speed.
+On 24/04/2025 10:55, Philipp Stanner wrote:
+> The waitqueue that ensures that drm_sched_fini() blocks until the
+> pending_list has become empty could theoretically cause that function to
+> block for a very long time. That, ultimately, could block userspace
+> procesess and prevent them from being killable through SIGKILL.
+> 
+> When a driver calls drm_sched_fini(), it is safe to assume that all
+> still pending jobs are not needed anymore anyways. Thus, they can be
+> cancelled and thereby it can be ensured that drm_sched_fini() will
+> return relatively quickly.
+> 
+> Implement a new helper to stop all work items / submission except for
+> the drm_sched_backend_ops.run_job().
+> 
+> Implement a driver callback, kill_fence_context(), that instructs the
+> driver to kill the fence context associated with this scheduler, thereby
+> causing all pending hardware fences to be signalled.
+> 
+> Call those new routines in drm_sched_fini() and ensure backwards
+> compatibility if the new callback is not implemented.
+> 
+> Suggested-by: Danilo Krummrich <dakr@redhat.com>
+> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> ---
+>   drivers/gpu/drm/scheduler/sched_main.c | 47 +++++++++++++++++---------
+>   include/drm/gpu_scheduler.h            | 11 ++++++
+>   2 files changed, 42 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
+> index ea82e69a72a8..c2ad6c70bfb6 100644
+> --- a/drivers/gpu/drm/scheduler/sched_main.c
+> +++ b/drivers/gpu/drm/scheduler/sched_main.c
+> @@ -1390,31 +1390,46 @@ drm_sched_no_jobs_pending(struct drm_gpu_scheduler *sched)
+>   	return empty;
+>   }
+>   
+> +/**
+> + * drm_sched_cancel_jobs_and_wait - trigger freeing of all pending jobs
+> + * @sched: scheduler instance
+> + *
+> + * Must only be called if &struct drm_sched_backend_ops.kill_fence_context is
+> + * implemented.
+> + *
+> + * Instructs the driver to kill the fence context associated with this scheduler,
+> + * thereby signalling all pending fences. This, in turn, will trigger
+> + * &struct drm_sched_backend_ops.free_job to be called for all pending jobs.
+> + * The function then blocks until all pending jobs have been freed.
+> + */
+> +static inline void
+> +drm_sched_cancel_jobs_and_wait(struct drm_gpu_scheduler *sched)
+> +{
+> +	sched->ops->kill_fence_context(sched);
+> +	wait_event(sched->pending_list_waitque, drm_sched_no_jobs_pending(sched));
+> +}
+> +
+>   /**
+>    * drm_sched_fini - Destroy a gpu scheduler
+>    *
+>    * @sched: scheduler instance
+>    *
+> - * Tears down and cleans up the scheduler.
+> - *
+> - * Note that this function blocks until all the fences returned by
+> - * &struct drm_sched_backend_ops.run_job have been signalled.
+> + * Tears down and cleans up the scheduler. Might leak memory if
+> + * &struct drm_sched_backend_ops.kill_fence_context is not implemented.
+>    */
+>   void drm_sched_fini(struct drm_gpu_scheduler *sched)
+>   {
+>   	struct drm_sched_entity *s_entity;
+>   	int i;
+>   
+> -	/*
+> -	 * Jobs that have neither been scheduled or which have timed out are
+> -	 * gone by now, but jobs that have been submitted through
+> -	 * backend_ops.run_job() and have not yet terminated are still pending.
+> -	 *
+> -	 * Wait for the pending_list to become empty to avoid leaking those jobs.
+> -	 */
+> -	drm_sched_submission_and_timeout_stop(sched);
+> -	wait_event(sched->pending_list_waitque, drm_sched_no_jobs_pending(sched));
+> -	drm_sched_free_stop(sched);
+> +	if (sched->ops->kill_fence_context) {
+> +		drm_sched_submission_and_timeout_stop(sched);
+> +		drm_sched_cancel_jobs_and_wait(sched);
+> +		drm_sched_free_stop(sched);
+> +	} else {
+> +		/* We're in "legacy free-mode" and ignore potential mem leaks */
+> +		drm_sched_wqueue_stop(sched);
+> +	}
+>   
+>   	for (i = DRM_SCHED_PRIORITY_KERNEL; i < sched->num_rqs; i++) {
+>   		struct drm_sched_rq *rq = sched->sched_rq[i];
+> @@ -1502,7 +1517,7 @@ bool drm_sched_wqueue_ready(struct drm_gpu_scheduler *sched)
+>   EXPORT_SYMBOL(drm_sched_wqueue_ready);
+>   
+>   /**
+> - * drm_sched_wqueue_stop - stop scheduler submission
+> + * drm_sched_wqueue_stop - stop scheduler submission and freeing
 
-Signed-off-by: wangtao <tao.wangtao@honor.com>
----
- drivers/dma-buf/dma-buf.c    |  8 ++++++++
- include/linux/dma-buf.h      | 15 +++++++++++++++
- include/uapi/linux/dma-buf.h | 28 ++++++++++++++++++++++++++++
- 3 files changed, 51 insertions(+)
+Looks like the kerneldoc corrections (below too) belong to the previous 
+patch. Irrelevant if you decide to squash them though.
 
-diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index 5baa83b85515..95d8b0158ffd 100644
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -460,6 +460,7 @@ static long dma_buf_ioctl(struct file *file,
- 	struct dma_buf *dmabuf;
- 	struct dma_buf_sync sync;
- 	enum dma_data_direction direction;
-+	struct dma_buf_rw_file kfile;
- 	int ret;
- 
- 	dmabuf = file->private_data;
-@@ -504,6 +505,13 @@ static long dma_buf_ioctl(struct file *file,
- 		return dma_buf_import_sync_file(dmabuf, (const void __user *)arg);
- #endif
- 
-+	case DMA_BUF_IOCTL_RW_FILE:
-+		if (copy_from_user(&kfile, (void __user *) arg, sizeof(kfile)))
-+			return -EFAULT;
-+		if (!dmabuf->ops->rw_file)
-+			return -EINVAL;
-+		return dmabuf->ops->rw_file(dmabuf, &kfile);
-+
- 	default:
- 		return -ENOTTY;
- 	}
-diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
-index 36216d28d8bd..6d2e6eae0611 100644
---- a/include/linux/dma-buf.h
-+++ b/include/linux/dma-buf.h
-@@ -22,6 +22,7 @@
- #include <linux/fs.h>
- #include <linux/dma-fence.h>
- #include <linux/wait.h>
-+#include <uapi/linux/dma-buf.h>
- 
- struct device;
- struct dma_buf;
-@@ -285,6 +286,20 @@ struct dma_buf_ops {
- 
- 	int (*vmap)(struct dma_buf *dmabuf, struct iosys_map *map);
- 	void (*vunmap)(struct dma_buf *dmabuf, struct iosys_map *map);
-+
-+	/**
-+	 * @rw_file:
-+	 *
-+	 * If an Exporter needs to support Direct I/O file operations, it can
-+	 * implement this optional callback. The exporter must verify that no
-+	 * other objects hold the sg_table, ensure exclusive access to the
-+	 * dmabuf's sg_table, and only then proceed with the I/O operation.
-+	 *
-+	 * Returns:
-+	 *
-+	 * 0 on success or a negative error code on failure.
-+	 */
-+	int (*rw_file)(struct dma_buf *dmabuf, struct dma_buf_rw_file *file);
- };
- 
- /**
-diff --git a/include/uapi/linux/dma-buf.h b/include/uapi/linux/dma-buf.h
-index 5a6fda66d9ad..9b33279fef00 100644
---- a/include/uapi/linux/dma-buf.h
-+++ b/include/uapi/linux/dma-buf.h
-@@ -167,6 +167,28 @@ struct dma_buf_import_sync_file {
- 	__s32 fd;
- };
- 
-+/**
-+ * struct dma_buf_rw_file - read/write file associated with a dma-buf
-+ *
-+ * Userspace can performs a DMA_BUF_IOCTL_BACK to save data from a dma-buf or
-+ * restore data to a dma-buf.
-+ */
-+struct dma_buf_rw_file {
-+	/** @flags: Flags indicating read/write for this dma-buf. */
-+	__u32 flags;
-+	/** @fd: File descriptor of the file associated with this dma-buf. */
-+	__s32 fd;
-+	/** @file_offset: Offset within the file where this dma-buf starts.
-+	 *
-+	 *  Offset and Length must be page-aligned for direct I/O.
-+	 */
-+	__u64 file_offset;
-+	/** @buf_offset: Offset within this dma-buf where the read/write starts. */
-+	__u64 buf_offset;
-+	/** @buf_len: Length of this dma-buf read/write. */
-+	__u64 buf_len;
-+};
-+
- #define DMA_BUF_BASE		'b'
- #define DMA_BUF_IOCTL_SYNC	_IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
- 
-@@ -179,4 +201,10 @@ struct dma_buf_import_sync_file {
- #define DMA_BUF_IOCTL_EXPORT_SYNC_FILE	_IOWR(DMA_BUF_BASE, 2, struct dma_buf_export_sync_file)
- #define DMA_BUF_IOCTL_IMPORT_SYNC_FILE	_IOW(DMA_BUF_BASE, 3, struct dma_buf_import_sync_file)
- 
-+#define DMA_BUF_RW_FLAGS_OP_MASK (0xFF << 0)
-+#define DMA_BUF_RW_FLAGS_READ (1 << 0) /* Restore dma-buf data */
-+#define DMA_BUF_RW_FLAGS_WRITE (2 << 0) /* Save dma-buf data */
-+#define DMA_BUF_RW_FLAGS_DIRECT (1u << 31) /* Direct read/write file */
-+#define DMA_BUF_IOCTL_RW_FILE	_IOW(DMA_BUF_BASE, 4, struct dma_buf_rw_file)
-+
- #endif
--- 
-2.17.1
+>    * @sched: scheduler instance
+>    *
+>    * Stops the scheduler from pulling new jobs from entities. It also stops
+> @@ -1518,7 +1533,7 @@ void drm_sched_wqueue_stop(struct drm_gpu_scheduler *sched)
+>   EXPORT_SYMBOL(drm_sched_wqueue_stop);
+>   
+>   /**
+> - * drm_sched_wqueue_start - start scheduler submission
+> + * drm_sched_wqueue_start - start scheduler submission and freeing
+>    * @sched: scheduler instance
+>    *
+>    * Restarts the scheduler after drm_sched_wqueue_stop() has stopped it.
+> diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
+> index d0b1f416b4d9..8630b4a26f10 100644
+> --- a/include/drm/gpu_scheduler.h
+> +++ b/include/drm/gpu_scheduler.h
+> @@ -509,6 +509,17 @@ struct drm_sched_backend_ops {
+>            * and it's time to clean it up.
+>   	 */
+>   	void (*free_job)(struct drm_sched_job *sched_job);
+> +
+> +	/**
+> +	 * @kill_fence_context: kill the fence context belonging to this scheduler
+
+Which fence context would that be? ;)
+
+Also, "fence context" would be a new terminology in gpu_scheduler.h API 
+level. You could call it ->sched_fini() or similar to signify at which 
+point in the API it gets called and then the fact it takes sched as 
+parameter would be natural.
+
+We also probably want some commentary on the topic of indefinite (or 
+very long at least) blocking a thread exit / SIGINT/TERM/KILL time. 
+Cover letter touches upon that problem but I don't see you address it. 
+Is the idea to let drivers shoot themselves in the foot or what?
+
+Regards,
+
+Tvrtko
+
+> +	 *
+> +	 * Needed to cleanly tear the scheduler down in drm_sched_fini(). This
+> +	 * callback will cause all hardware fences to be signalled by the driver,
+> +	 * which, ultimately, ensures that all jobs get freed before teardown.
+> +	 *
+> +	 * This callback is optional, but it is highly recommended to implement it.
+> +	 */
+> +	void (*kill_fence_context)(struct drm_gpu_scheduler *sched);
+>   };
+>   
+>   /**
 
