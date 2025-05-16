@@ -1,97 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015F31DDC2A;
-	Fri, 16 May 2025 16:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BE020D4E9;
+	Fri, 16 May 2025 16:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747414429; cv=none; b=IGj9IbCOUBGVkZxPU2Qg8SJUN+2XROKWz48dJHSEalGlj4PydETPjP2HwSDZAE2Y4U4VEvl9BVIScZ1I0oJpUbT6QFL/Ec5dZo+G5TDT0jewT9fmYWNS0TTGe5/kaCF6bMtj2xW5tMsgfDqYqdGq3wSZMnVo56E1uBDPtgnBuGI=
+	t=1747414431; cv=none; b=pc/R+pBl0Yt6prm8AutVZQQvKGbJe9mgA6FvRYKGuFFNPaPvsECwqWeVORBLocJ77xpgmd8QYmO/qXeQ/UmbDGxVp30nVeY1j9VD3Ai24x4dvvxlzAQtrCJMQT+ZyuWWhqWignNVKZRnpvbW4ISVx0v+mzy6IS66D5m2fPBs42A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747414429; c=relaxed/simple;
-	bh=gNW+7TtMUM7lGkKFYvhyFcX7e8P3pZT4KoiVlpFjICo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DIkwkGD7g4c2NPFRI+WyCrvQb1W7wYBS0PIJkqmDD97f+3Ek9NFIZj4/hQpqzHX/dYWPixNfXvgFyzO7a3v8BMF+/FV+3HzyvF6cNCvKR8rZOqw+6M6FD+XTi59nmwD2uLtriWeVHqCd7McmSWjXQV36Aho19sp24i+RgF6ht4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K0AZM/WH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K0AZM/WH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F529C4CEF3;
-	Fri, 16 May 2025 16:53:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747414428;
-	bh=gNW+7TtMUM7lGkKFYvhyFcX7e8P3pZT4KoiVlpFjICo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=K0AZM/WHkIM/qkUypevLdnzzY800HqjD+DQk3EspbBN0pK+1enPyE1noNGvw2ISAv
-	 sUGRiH8wlgjpHocu4xNNEmFGK920dEw58CkP7ulNE9K1WSfm9nNRleFZBked/yJ71K
-	 k5HSSaToM/eFv03ACXW88lKF/+e5QLQgPB4wJjEh5MdnKNulfZLYGaPkeFhI3ChvTN
-	 aQlJx2Ixr/hRimseN8QEYqtyhv04e7uwllTn6AyQgSVbUr0zk2+9uWgxBg8/okmU0R
-	 S7vAyrAOLrSNFUxD/lBG+VFxmJobAYDNnNLR4zzJRvEJh3Bx7FIezs8Rj1NiDNvH8m
-	 rcZA+KYgOakBw==
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c9376c4bddso268406085a.3;
+	s=arc-20240116; t=1747414431; c=relaxed/simple;
+	bh=qcLANFQYB6F1aTadtJclYNPeTflXqceuvsxjG9tl5Gg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=J9sGmrIxaXtFe/uSKg+AjwQNjc45Ad+YT3eQn/AycI+Uiaqfw/0FH/VMjhWcF9iArlHI0UC81O2iPQ/rgDVgW8IHvo78AXb9cvS3W+zGOY5xPLD4NZ+Bn6XPT01fuX/U7/sL61EtNsGSn14HXOvgd8qjmgbNV7YIku3w22Ql6iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so17783365e9.1;
+        Fri, 16 May 2025 09:53:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747414428; x=1748019228;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=anhtEfC+aYWJeJvUly60jdWH8rm+sVcW8pcF9vb2eMk=;
+        b=KCt5o+7X+Hens7w2Ctq/xlpM5IvaUTYOCHqgMFkEhA3+bBZDDuPetdrqLhj1eRJ4QO
+         0dSjxb1xN645F0Goo4pJ81zrSjxYKu6SwypDXdT3CBzUYmzDJ/TsGShI1nlXVm2JOFKy
+         6jsdDprL+2pqCwvCwjQyMhVsbSHMc2Umxm1G/YnfUBmJzN5AJO9ebl5X9SJBRJ7zTR+H
+         Pvm7IACd3TZY3RlJCDJIQxtSIhC6wm0c91jiTZI3mj9e1i3IFlgZ3Zdqh2Fni+hVsAP7
+         Eyp5ClKGg+AubYWrGcQuCMqBStPk7PhfJirme91Rwc+TJ5WRgYCoexkXF9pg6pfMPBJU
+         2qfw==
+X-Forwarded-Encrypted: i=1; AJvYcCVcPoUOpgmy2cPa7W9zUpjQ2d5oldDVuS317eNP6gQHqUv6uEoEKOWVQ+C3sS+MnqI5Brm8+Di4uymA2R0=@vger.kernel.org, AJvYcCVg8hCcsb/zpyERzRZwVE+zifspg3MBvSo3nGzks1s8D7qCdexd6O7htRYGQdfpPn+UOiZJ/+KPhpE=@vger.kernel.org, AJvYcCXTPkjrtGjBn6Fj1OdwAA+M3zbzvQN/qks3hFAZOXrybSUx5I2cpG0Bc0e9sYEGosw4X58kmZWS3g4rCNSw@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaQcQS2Qq3b7CwrjuqJ7wKVy+mT5u1XgWJfcxHNLwUzo4q4v8c
+	X4jDPN8z8vNLCKFj8bNaq8nxRne4n3xbCGwJSJ/7saep/Myym/fBchxY
+X-Gm-Gg: ASbGnct12pEknxqQUGQCTKe/7tx8ZypUtJymM4Kb8/kN/iwcFDuhrHT2DKoDu88Gnwl
+	3FWuDm7Ni1NMrLO8oVzpsK1OA8hF3h7JfWxPMbg0I6+WSLilhw2jm8Cd92nqlTEUYq/SmTBRRlf
+	d8jaOmJCafKUvS2gGzeMu8AVY0xniNC6YaQG1tKThh0jjBzZIPtagE09F3jgIPNwssongco0Fgx
+	Q+lnfvkymoCImgm6A8iASHJmOEvRi3hMha6b7aZEyDF2zb+kQOfTULfEouJpqHPPAavAFkhUF0s
+	SMe+6I6AKiS5lmkalfp3hOoiUAFIdrhBu1v7HMacwmkd4vRMGCBI6D/PaKcuy1gunkIfaKWIsdu
+	7dpwkwGqdIw==
+X-Google-Smtp-Source: AGHT+IEYfDmifEa0iTxLazrxFoXXzBf3KmDVOnp4+FnO5DW5ap6WM75YN8wmhjMrbGLA/7/G7xIfqw==
+X-Received: by 2002:a05:600c:5012:b0:440:69f5:f179 with SMTP id 5b1f17b1804b1-442f84d5511mr89042655e9.7.1747414428190;
         Fri, 16 May 2025 09:53:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVPCyhAbgi0VcNA0KkBnORp/53zTdbiqIW5fJSHtlZwvn6Ls37fZJ+Sjx/0OSd+l2iJei23CbBcEjcwdBwDLJvJ1w==@vger.kernel.org, AJvYcCVWGWNvOihBWc/2nn8rHTWfE2re2A/VqA6GvxZjvXCrbRzA4M2HuOCc+by4gtcdG21GP+aZX8c+xUL7mVL1Bg==@vger.kernel.org, AJvYcCX7+W8EDcC1jbKyKRAWYaRU7Kys2xVVB329cUWLyr9g1IHyzLuM3uTY60lZeP7xHURzqVOQNTcCkHsVej8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsIftRMHgnFbp+LcyoZhnST9YrO7+z44bOSMQI2PLaQP9lwyIM
-	a/TEWaZdvf/78DVBGrD0CaNzlnLuOSBIrslJd0PImm4X2l9tlWkmC7RmOmtRdVyL74f2JQp0IwD
-	HYJvqE88lZziA7n5VOQ+E+GtiQ0hcA4Y=
-X-Google-Smtp-Source: AGHT+IFYMPM8sSmrqIW21t3SlXlT3FCCm2dJlRMJ71bVHCSHc3IMxpcI15wCR4GKjvDMf42liz3czXx0mNeec5L+ncA=
-X-Received: by 2002:a05:620a:4551:b0:7c5:5f38:b78f with SMTP id
- af79cd13be357-7cd4673b9femr581672585a.29.1747414427420; Fri, 16 May 2025
- 09:53:47 -0700 (PDT)
+Received: from [10.42.0.1] (cst-prg-46-162.cust.vodafone.cz. [46.135.46.162])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3380498sm116511755e9.11.2025.05.16.09.53.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 09:53:46 -0700 (PDT)
+From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Date: Fri, 16 May 2025 18:53:24 +0200
+Subject: [PATCH v3 10/10] arm64: dts: rockchip: enable NPU on ROCK 5B
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320171559.3423224-1-song@kernel.org> <Z_fhAyzPLNtPf5fG@pathway.suse.cz>
-In-Reply-To: <Z_fhAyzPLNtPf5fG@pathway.suse.cz>
-From: Song Liu <song@kernel.org>
-Date: Fri, 16 May 2025 09:53:36 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4MAcVpXmZVQauoaYe0o3tDvvZfgmCrYFFyFojYpNiWWg@mail.gmail.com>
-X-Gm-Features: AX0GCFswWuh29mi00OXRAzuYoajxd21bc-p1p3_IOZYYbVK2ROe03x1xdxnX9VM
-Message-ID: <CAPhsuW4MAcVpXmZVQauoaYe0o3tDvvZfgmCrYFFyFojYpNiWWg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] arm64: livepatch: Enable livepatch without sframe
-To: Petr Mladek <pmladek@suse.com>
-Cc: mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-toolchains@vger.kernel.org, 
-	live-patching@vger.kernel.org, indu.bhagat@oracle.com, puranjay@kernel.org, 
-	wnliu@google.com, irogers@google.com, joe.lawrence@redhat.com, 
-	jpoimboe@kernel.org, peterz@infradead.org, roman.gushchin@linux.dev, 
-	rostedt@goodmis.org, will@kernel.org, kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250516-6-10-rocket-v3-10-7051ac9225db@tomeuvizoso.net>
+References: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
+In-Reply-To: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org, 
+ Tomeu Vizoso <tomeu@tomeuvizoso.net>
+X-Mailer: b4 0.14.2
 
-On Thu, Apr 10, 2025 at 8:17=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrot=
-e:
->
-[...]
-> >
-> > [1] https://lore.kernel.org/live-patching/20250127213310.2496133-1-wnli=
-u@google.com/
-> > [2] https://lore.kernel.org/live-patching/20250129232936.1795412-1-song=
-@kernel.org/
-> > [3] https://sourceware.org/bugzilla/show_bug.cgi?id=3D32589
-> > [4] https://lore.kernel.org/linux-arm-kernel/20241017092538.1859841-1-m=
-ark.rutland@arm.com/
-> >
-> > Changes v2 =3D> v3:
-> > 1. Remove a redundant check for -ENOENT. (Josh Poimboeuf)
-> > 2. Add Tested-by and Acked-by on v1. (I forgot to add them in v2.)
->
-> The approach and both patches look reasonable:
->
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
->
-> Is anyone, Arm people, Mark, against pushing this into linux-next,
-> please?
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
-Ping.
+The NPU on the ROCK5B uses the same regulator for both the sram-supply
+and the npu's supply. Add this regulator, and enable all the NPU bits.
+Also add the regulator as a domain-supply to the pd_npu power domain.
 
-ARM folks, please share your thoughts on this work. To fully support
-livepatching of kernel modules, we also need [1]. We hope we can
-land this in the 6.16 kernel.
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+---
+ arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts | 56 +++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-Thanks,
-Song
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+index d22068475c5dc6cb885f878f3f527a66edf1ba70..49500f7cbcb14af4919a6c1997e9e53a01d84973 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+@@ -316,6 +316,28 @@ regulator-state-mem {
+ 	};
+ };
+ 
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1m2_xfer>;
++	status = "okay";
++
++	vdd_npu_s0: regulator@42 {
++		compatible = "rockchip,rk8602";
++		reg = <0x42>;
++		fcs,suspend-voltage-selector = <1>;
++		regulator-name = "vdd_npu_s0";
++		regulator-boot-on;
++		regulator-min-microvolt = <550000>;
++		regulator-max-microvolt = <950000>;
++		regulator-ramp-delay = <2300>;
++		vin-supply = <&vcc5v0_sys>;
++
++		regulator-state-mem {
++			regulator-off-in-suspend;
++		};
++	};
++};
++
+ &i2c6 {
+ 	status = "okay";
+ 
+@@ -440,6 +462,10 @@ &pd_gpu {
+ 	domain-supply = <&vdd_gpu_s0>;
+ };
+ 
++&pd_npu {
++	domain-supply = <&vdd_npu_s0>;
++};
++
+ &pinctrl {
+ 	hdmirx {
+ 		hdmirx_hpd: hdmirx-5v-detection {
+@@ -500,6 +526,36 @@ &pwm1 {
+ 	status = "okay";
+ };
+ 
++&rknn_core_top {
++	npu-supply = <&vdd_npu_s0>;
++	sram-supply = <&vdd_npu_s0>;
++	status = "okay";
++};
++
++&rknn_core_1 {
++	npu-supply = <&vdd_npu_s0>;
++	sram-supply = <&vdd_npu_s0>;
++	status = "okay";
++};
++
++&rknn_core_2 {
++	npu-supply = <&vdd_npu_s0>;
++	sram-supply = <&vdd_npu_s0>;
++	status = "okay";
++};
++
++&rknn_mmu_top {
++	status = "okay";
++};
++
++&rknn_mmu_1 {
++	status = "okay";
++};
++
++&rknn_mmu_2 {
++	status = "okay";
++};
++
+ &saradc {
+ 	vref-supply = <&avcc_1v8_s0>;
+ 	status = "okay";
 
-[1] https://lore.kernel.org/linux-arm-kernel/20250412010940.1686376-1-dylan=
-bhatch@google.com/
+-- 
+2.49.0
+
