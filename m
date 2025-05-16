@@ -1,97 +1,122 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D386023BCFD;
-	Fri, 16 May 2025 12:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865FCA32;
+	Fri, 16 May 2025 12:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747398439; cv=none; b=VZVQPWEXRsjm/aF/PYZpvBgxIe1muKPbvU97CttXbyYMWMR7/e1O+Gz4yTv28lFvQNJ5rR5unYrAfdUv4a0NufwxeibYRO2xql3i5OsdmDwta8MLJaUnRH/rSKAoLhTNmLmil118Q7Hv6NH5o8OLyuyDbZcJb3gBGKwCX0HjBcM=
+	t=1747398458; cv=none; b=P5oVONDRk5ofQezZrFEy0EhhtTo5jRFIAZFcRZ854PiQg7KNmGNOgXxkGa4zu7UntuxpcIfLzCX6FCmNa7H/nFHdGxACOj6sjlmXMKccG9UPYc/jKoFtz5/gjT8C9me0bSvzOP6ihrMo4MiwKjMW0GUcppjvMIlYHFzjp06mE6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747398439; c=relaxed/simple;
-	bh=2rdGqXw7AfrRRaOQP+na8kTQVMdvqlpLUB82mSFCUGQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qBxmvwnCcwOmcnn6dnr4wB+GItozk6bigI60pmWFPaBmh9zXjqBOrS3mNPIQ0Pk9MSSDEZCLNc9AfWxxeIVswv++q02JUYG1Wh909HKLFC4FEn5rTG67CEzoXMGVHSLtudtKm4FoqTo1eg7kEMKRcBOsNdd4VNiWTDcxugXYf6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Dizg8vMt; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1747398458; c=relaxed/simple;
+	bh=msf1u6psXmm5YGgNc/J1e9yKeJ4zJ9sPS2p6grmcTnI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iZ33gIeQlarrO8hmZ6eUIGzqmcHnukaJmw0NoPyfMalAN2v1e3fvrEVjkyPBSNglxrFgM+P1LO7Q8EVAzLaxJdFuwb/n8dX6PNyAZIIVfNh0yrYS5wDvHJRbRiQJxIkh0RX201yLKFtjhVslCsa8e7C4+wmOeHpgUK31fAQVMNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=OX8m74ex; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Dizg8vMt"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54GCQuQE304622;
-	Fri, 16 May 2025 07:26:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1747398416;
-	bh=TbvbuPGxlecn7wtqGTgeAXKNkgtiSVnlsBSL6kZYvN8=;
-	h=From:To:CC:Subject:Date;
-	b=Dizg8vMt1vpw2wm3cGLAykypSOUdcDSHIBCRwtC1OoQiRLazosCHDmSsZs+GKJrec
-	 pIDTE1b3SgJntcXSy1LhVsRSu4IpDp99zfEUDVAc+Rlv78zuaHbjMyJCOAgEehHwpz
-	 H6k4fHXQF8vq9L/GNlnBSG4yfvkeAQG4pDXNKfqs=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54GCQu9w3280508
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 16 May 2025 07:26:56 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 16
- May 2025 07:26:55 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 16 May 2025 07:26:55 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54GCQtPa105204;
-	Fri, 16 May 2025 07:26:55 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Andrew Lunn <andrew+netdev@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>,
-        Roger Quadros
-	<rogerq@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, Nishanth Menon <nm@ti.com>
-Subject: [PATCH] net: ethernet: ti: am65-cpsw: Lower random mac address error print to info
-Date: Fri, 16 May 2025 07:26:55 -0500
-Message-ID: <20250516122655.442808-1-nm@ti.com>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="OX8m74ex"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 57C6D40E0241;
+	Fri, 16 May 2025 12:27:33 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id uwSaCqau6FpN; Fri, 16 May 2025 12:27:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747398447; bh=sG2uaaEQ4UYwgNQ5ATaaMB63qAcs03C2EG0pb4eWOjE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OX8m74expZfER3T0uDYUZICIDGPSBDimfLXl0fR3OhC6yCduNSpf2QC5eX8Rr2Gq8
+	 jWt4NplxvGpKuKhjX7+GliN3GLBAJ9ZpCkhkZ6LEAGhz5kEpW4Bg5eCaW9eIObotoF
+	 VUa8dSBKzkbMjviHTTr+tcvR3ypKNpWipnfjjDQMdkIoS/QveX80eoF6+GahuLDanr
+	 Jx2uBfv2K4teXJMO0mBewwkyy9q0aNCNcKVjMj5RS8eTQLvagFDqmoyzDkiuaZ8xG3
+	 +mqxZf8JpEIJw3QdgslBdtWqqrVZ9iNNIm/7n4+cSFs9gTeqCf6fVuF9rg5QYC1dol
+	 UWA5OvdJv8zjiy2mWJhOoN1QwAB+OlWGLuTslMfyeXdPm1J7Z+sg9hQfAACSy+PyvS
+	 Ngr1jdA3qW0PCW7M3NIKOLYx2DGwFIpWER21u8D9+QSwdFy11ADQBG1nzj4iqC0MHh
+	 bF5eENJpkrCiMnkoR1GE3NH2+0/ogpmJ/zycq553b73j658M8XG195yUJAKZFHbEtJ
+	 FjBAGWtjNQTZHn0a0DglVcqazBEEUXt5LOAgbE3ne2LDJDSHJJP02Zk8z200WTAkI3
+	 7u2f/e+4qXKPZYfC/jtlF3QjbFJvLRAwgjbUgIySb28oIBS1otWhLBUsQE9yObQr33
+	 Im30v/0KYKyoT+Q9wZAdBO8Q=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C178740E0239;
+	Fri, 16 May 2025 12:27:20 +0000 (UTC)
+Date: Fri, 16 May 2025 14:27:15 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Ayush Jain <Ayush.Jain3@amd.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>, x86-ml <x86@kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org,
+	Eric Biggers <ebiggers@google.com>
+Subject: Re: [PATCH] crypto: lib/sha256 - Disable SIMD
+Message-ID: <20250516122715.GCaCcvI7vq-DBzlNtK@fat_crate.local>
+References: <20250516112217.GBaCcf6Yoc6LkIIryP@fat_crate.local>
+ <aCcirrsFFrrRqf5A@gondor.apana.org.au>
+ <aCcmJGuCnuyHmHbx@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aCcmJGuCnuyHmHbx@gondor.apana.org.au>
 
-Using random mac address is not an error since the driver continues to
-function, it should be informative that the system has not assigned
-a MAC address. This is inline with other drivers such as ax88796c,
-dm9051 etc. Drop the error level to info level.
+On Fri, May 16, 2025 at 07:48:52PM +0800, Herbert Xu wrote:
+> On Fri, May 16, 2025 at 07:34:06PM +0800, Herbert Xu wrote:
+> > 
+> > So what's happened is that previously if you call sha256_update
+> > from lib/crypto it would only use the generic C code to perform
+> > the operation.
+> > 
+> > This has now been changed to automatically use SIMD instructions
+> > which obviously blew up in your case.
+> 
+> In the interim you can go back to the old ways and disable SIMD
+> for lib/crypto sha256 with this patch:
+> 
+> ---8<---
+> Disable SIMD usage in lib/crypto sha256 as it is causing crashes.
+> 
+> Reported-by: Borislav Petkov <bp@alien8.de>
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
+Please make that
 
-This is esp irritating on platforms such as J721E-IDK-GW which has a
-bunch of ethernet interfaces, and not all of them have MAC address
-assigned from Efuse.
-Example log (next-20250515):
-https://gist.github.com/nmenon/8edbc1773c150a5be69f5b700d907ceb#file-j721e-idk-gw-L1588
+Reported-by: Ayush Jain <Ayush.Jain3@amd.com>
 
- drivers/net/ethernet/ti/am65-cpsw-nuss.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'm just the messenger.
 
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index 1e6d2335293d..30665ffe78cf 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -2685,7 +2685,7 @@ static int am65_cpsw_nuss_init_slave_ports(struct am65_cpsw_common *common)
- 							port->slave.mac_addr);
- 			if (!is_valid_ether_addr(port->slave.mac_addr)) {
- 				eth_random_addr(port->slave.mac_addr);
--				dev_err(dev, "Use random MAC address\n");
-+				dev_info(dev, "Use random MAC address\n");
- 			}
- 		}
- 
+> Fixes: 950e5c84118c ("crypto: sha256 - support arch-optimized lib and expose through shash")
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> 
+> diff --git a/include/crypto/internal/sha2.h b/include/crypto/internal/sha2.h
+> index b9bccd3ff57f..e1b0308c0539 100644
+> --- a/include/crypto/internal/sha2.h
+> +++ b/include/crypto/internal/sha2.h
+> @@ -32,7 +32,7 @@ static inline void sha256_choose_blocks(
+>  	if (!IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_SHA256) || force_generic)
+>  		sha256_blocks_generic(state, data, nblocks);
+>  	else if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_SHA256_SIMD) &&
+> -		 (force_simd || crypto_simd_usable()))
+> +		 force_simd)
+>  		sha256_blocks_simd(state, data, nblocks);
+>  	else
+>  		sha256_blocks_arch(state, data, nblocks);
+> -- 
+
+If you end up doing this, that fixes it, obviously:
+
+Tested-by: Ayush Jain <Ayush.Jain3@amd.com>
+
+Thx.
+
 -- 
-2.47.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
