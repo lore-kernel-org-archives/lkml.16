@@ -1,47 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157711B85CC
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 15:37:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489FF1C6FF3
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 15:37:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747409875; cv=none; b=J41ki8IzqJbKPQnMQUyKfxwvYvIBLmmLOSjO6lXoe9rrB5gGI8E9b85CHqJYMLXAqLBpeOS102V359wGmjHCVUfvtmkNfp4NaK/5FNUzRzPSUp8urPqVocZ0uHcMKCp0FhwArVe9K2JXrWP2zon2hr2HI8DaoGBV/mCN8nYAPM8=
+	t=1747409877; cv=none; b=hnbgX9REVmI30NIj+QNeTVZMb8rO2aCeiK63pp6aKUAHZuB5Chr3/yZleKLnqA2PizJGEOCIHaSe1OUmS993mKahtfgzptm4vIyrsxb92CDBeUh0G+Y6jl7CfzkBaBdmjvGyEEw3gTSD2LxHE/eXQ6NtaBMXYNUQ4HKpy6ysZ80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747409875; c=relaxed/simple;
-	bh=z4tSAygEeJrgHxjp8RduNrZTO6ccDbYrOyWS4Ye800s=;
+	s=arc-20240116; t=1747409877; c=relaxed/simple;
+	bh=GPLWfIxhxeI+gEoZlD4EGy1WAmfKbNh7zDOUf73kHr4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cODoxnr1pg6TAJGrQNB2kq8/gCvBl6iU2n+nNgC/V2ai8hEDNnQOOxI59+TKYpwlpyWHmo7ZrX8GYgqox5N/PECykrS3rgz+RKvG2bX/PfXyV/zQqiG2BRFeo59R2iMZTQBhLpIc2jPbiKmvyV0YqFrccVjc31oC3lbZ9u8AeM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vc/gc3ne; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=swhCT7n+GDUuFi6LKO0Xi8YkIXoAQSGNVDQDV4utBzxfjn8e3cl6iEOPLMDmcwINCX4AdKw2e8dYTv9+Ez2ESrZMXOE+mCCgYhiZb1tROlwsp8IWzvyddOLt0fyoCVScZd1JUfjk+z5/tWzXbi0zNRON8OuQNREPZbxU+S7sviQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tWrjbSnt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vc/gc3ne"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9824C4CEE4;
-	Fri, 16 May 2025 15:37:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tWrjbSnt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED770C4CEED;
+	Fri, 16 May 2025 15:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747409874;
-	bh=z4tSAygEeJrgHxjp8RduNrZTO6ccDbYrOyWS4Ye800s=;
+	s=k20201202; t=1747409876;
+	bh=GPLWfIxhxeI+gEoZlD4EGy1WAmfKbNh7zDOUf73kHr4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Vc/gc3neqXrUFZIaPBCF23eZ2iLdSzCLqkb7x/tOGNiSvRqhqi5HWkfBDirL5W4X+
-	 09U0tQiOURkq9DybrHGaNSgS8DTzWs0XAsRbtBanyWkRy36YLXicFNMBe7xYk1B3Wd
-	 Wu0EeCAFCg/7pvQzUWGihu7Vhf5w7w5btfarFvtcyV6ljb8FYUkSeYLpVOAugh/mKa
-	 dAzVp1oObnxz4UaF8Rp+fgs11hcVVmMRNEekICGYKf6A01xqauQG2fQGdgo7sKzs8I
-	 FYeA3dpgbbuhetxHwTk5a7qBK9QAvrMEpV36NFJ0TU1/0icuJ9mJi8eWcfbEVAS0j3
-	 ljahUOihKYGaQ==
+	b=tWrjbSntMZnHCoWWroihESxoAMFpKMGUBnZ83YpMR9MpmhslxLmHGbnWQZtZiJFC9
+	 jBHieqIOARhil/WWM7HWsh4XkVNku68fvwCaV2R4WnBsBlPED4nrXW0a1/ON6KX7N+
+	 zhM3dGZM2heN6iMrTpSPH7eeZvLOsN7mcT9CuNeC2IToG2nonNuuWHXrvaa2lCJfD1
+	 HsvIk75tfo617e3YeKrOAX78f0r9SkLhSNque1A78cvth+h7p7hJtUEMoD2M9pkftC
+	 2tbDRyqOZQ6wMLPTOiFBZLt7w37A0icH5f6ZfOcQjMd5D7Eai6N/d88CNyVzmuw6Zv
+	 BfxWTghSNUGOA==
 From: Will Deacon <will@kernel.org>
 To: linux-arm-kernel@lists.infradead.org,
-	Anshuman Khandual <anshuman.khandual@arm.com>
+	Ard Biesheuvel <ardb+git@google.com>
 Cc: catalin.marinas@arm.com,
 	kernel-team@android.com,
 	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+	linux-kernel@vger.kernel.org,
+	mark.rutland@arm.com,
 	Ard Biesheuvel <ardb@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3] arm64/mm: Re-organise setting up FEAT_S1PIE registers PIRE0_EL1 and PIR_EL1
-Date: Fri, 16 May 2025 16:37:43 +0100
-Message-Id: <174740439712.2574974.10617041555602541143.b4-ty@kernel.org>
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: Re: [PATCH v2 0/3] arm64/boot: Forbid the use of BSS symbols in startup code
+Date: Fri, 16 May 2025 16:37:44 +0100
+Message-Id: <174740792413.188921.9613065517341295309.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250429050511.1663235-1-anshuman.khandual@arm.com>
-References: <20250429050511.1663235-1-anshuman.khandual@arm.com>
+In-Reply-To: <20250508114328.2460610-5-ardb+git@google.com>
+References: <20250508114328.2460610-5-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,22 +51,28 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Tue, 29 Apr 2025 10:35:11 +0530, Anshuman Khandual wrote:
-> mov_q cannot really move PIE_E[0|1] macros into a general purpose register
-> as expected if those macro constants contain some 128 bit layout elements,
-> that are required for D128 page tables. The primary issue is that for D128,
-> PIE_E[0|1] are defined in terms of 128-bit types with shifting and masking,
-> which the assembler can't accommodate.
+On Thu, 08 May 2025 13:43:29 +0200, Ard Biesheuvel wrote:
+> Move any variables accessed or assigned by the startup code out of BSS,
+> and into .data, so that we can forbid the use of BSS variables
+> altogether, by ASSERT()'ing in the linker script that each symbol made
+> available to the startup code lives before __bss_start in the linker
+> map.
 > 
-> Instead pre-calculate these PIRE0_EL1/PIR_EL1 constants into asm-offsets.h
-> based PIE_E0_ASM/PIE_E1_ASM which can then be used in arch/arm64/mm/proc.S.
+> Changes since v1:
+> - fix build error due to missing declaration in #1
+> - work around Clang complaining about the ASSERT() expression in the
+>   linker script
 > 
 > [...]
 
-Applied to arm64 (for-next/entry), thanks!
+Applied to arm64 (for-next/mm), thanks!
 
-[1/1] arm64/mm: Re-organise setting up FEAT_S1PIE registers PIRE0_EL1 and PIR_EL1
-      https://git.kernel.org/arm64/c/29e31da4ed26
+[1/3] arm64/boot: Move init_pgdir[] and init_idmap_pgdir[] into __pi_ namespace
+      https://git.kernel.org/arm64/c/93d0d6f8a654
+[2/3] arm64/boot: Move global CPU override variables out of BSS
+      https://git.kernel.org/arm64/c/4afff6cc9a55
+[3/3] arm64/boot: Disallow BSS exports to startup code
+      https://git.kernel.org/arm64/c/90530521079e
 
 Cheers,
 -- 
