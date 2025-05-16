@@ -1,161 +1,72 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7131A0BF1;
-	Fri, 16 May 2025 18:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747420993; cv=pass; b=jiqWumT/zXKp5614m+0dAAGoj2n/bnarKxJywKzZ/5BrRqE/huqeZ19atqJS9mxmfGSRexYmCLH6E7hNxNLH+aa4kiqWi/cDCz5sSRluMVYqVzQOlOifu+YC7eCwZ0SYvtYkA7fHJeP5Lpi/nKx6G1zNJt7tSKITxweyuPHNQb4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747420993; c=relaxed/simple;
-	bh=zBZfFiPZUzPpPv3FClLAoIyveXSca1TLINgJk/0B2s0=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ATd+zC+w5lqLUmFSAFDR7RJdUbBJ4zJx1u1k8AByElzxDW2/kX7eRZHyCF98xu63jV+CedYCAr2vIooLhdk/GePwRGYornW0R6TVJiv9z6jLoEfpBItmEdWZ5BITliX5A/ItP3p6hsZ1T04xr7cgCEu7/aKo83kW4P6zDqd6CSo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=DDyMzMFq; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="DDyMzMFq"
-ARC-Seal: i=1; a=rsa-sha256; t=1747420952; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=UB58WcAzPfmeQxe/5HlsaQ5qwCCfD3VwmFuzrSEowItxfPOF5c3Q2xLQQNXim4CWyY/t2tGz7TA0digxQxndyRoFUiCbuvsz90gQJR2hBB6QetgDJdSO2yavqNdkbtvowdFwQzig8zgTOslXFazXQApQd9TdwdVuyYpsrVMjt/c=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1747420952; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=MzzkSiZrg4oJeY3DBEUNx4n2bS19YxHxGP5sLJRKfY8=; 
-	b=MDf3bxyMFRUmfvwUSN8BfhmOcz5TC5subx1VSeD/d3+mEQR475vYKDlIiAbNMUlY9MVfp75dWp5TbwYtJ4lmhsPRjEKqIttwy/QpXSfUB+/ogf4uFsDc/5oZxjYllJsjzwrBZA4CsMdPv/quI4fKmHerHrGy3qjTevFWALK37So=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
-	dmarc=pass header.from=<usama.anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747420952;
-	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=MzzkSiZrg4oJeY3DBEUNx4n2bS19YxHxGP5sLJRKfY8=;
-	b=DDyMzMFqhCtktAIbag3MZAEfhMX2KogDJacB8zTo/0Ctr7PTYEvaLiHmFt44rQtI
-	x8jrfeV3A04XflvyyemEfVEa2J8laJZOKUJg/ojNjePSC9OWS6zcvHvkYK2dm+6z5mZ
-	BcVokWCp3hz5UmDeuY+VDrMYm2egk1Y8T6MKMGfo=
-Received: by mx.zohomail.com with SMTPS id 17474209503341.7831844100325043;
-	Fri, 16 May 2025 11:42:30 -0700 (PDT)
-Message-ID: <0e21b693-e03e-4a76-aada-0c48aeae6eec@collabora.com>
-Date: Fri, 16 May 2025 23:42:21 +0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D819A27CCC4
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 18:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747421105; cv=none; b=pb9/B4vZjmnn+qDgYonLLNUVy21sxPsJ0q8rFCsCPNONREY3zVvo5er+wEEdePjQTbixaSamE1gZbf+Um4Tw2FYwGVhYZEYRS3PkMUyVfeLsLyKPkCCmdLjSwC17Px5KBYJhy4hBXeB2ZoE8/FkLck5a0XwbFXkeYDev5HpBD8o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747421105; c=relaxed/simple;
+	bh=3zU5lccxYisa2c0Xm+1YCDe5bhQDtMkyttxk/rAVZk0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=UNzbjzXtDnRkwMygZV9R9pFK1gLV+0P2NwlS/KgWlmLI9z73tQpsOQFmtMnOxkL5ZDHsZHpJinUKhVSDvQZzDx+iZjFspN6hRuHVTuFqZFZObLrS25+GJnTvGZvNWdFHg2EldcdZChn1XHOoXcncLiLTEbDCRzjNTeXJ5gjs96M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3db7fba1219so32242595ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:45:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747421103; x=1748025903;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SWK0DMruRfzJJrvDKUJQJO/B2fDC4JRex327zZ+JgOQ=;
+        b=OgAZEpW20w/6927aCWGiIrgQbOq/htDqxenKy5sIui3IO0mKNHNaGiptMEwDbcPnIQ
+         4bqSa5++293cD4y/6ms0zOoo2kiwinm+vqnZbE/O+L0lfvevrzD6f+pu33y2wPdvGCGu
+         VSl2uVMc802lzwGwgEVk7Wl3N9WJ8LS8B7q4IzLE0bMtQfEtqXB7xadXKt4COEO0OT/v
+         JC72QuwsheKkIi9+BlSMhZbHWekAJFF4FIsLdRjd0tIAOTes0pHMPoPX95taexur+Bp3
+         VucdoNTqpAKeGlfp0Pruf7P6Z43NNbxYXvC+Ywvvwy2chNEjxbdeJlN4L7xzJSPK/fGg
+         3XoA==
+X-Forwarded-Encrypted: i=1; AJvYcCVu9OZgJ2SLmw+ofkb5A2wtLnFhsKfEYt2tH79+YP8PsRmVHjvEpcwnWCxmDLGigxha5mW8PEbopcaOd94=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPkcjzwJfIQhN9JAC66fE+UKsiPNMt7cXaOhWBI+GCjSvTyTgL
+	FxBZ1PiqQktRll1M1uMon3vrnFJ/Rl1XvSKlXMPXDqojvfiRVU9Oiyi49WXododjMVYhX0plVMD
+	q//661cvoNXbS+nZj3Dc6yESpNlZ6dk9shZ8CyRidIhNNjsqegvoS31PwO1A=
+X-Google-Smtp-Source: AGHT+IEZGdBh2jj7st6w0Qn0GagFq2h0HfkJfGl8dHN1/CGdCJN73hMHWpECKCzRhYJwsaNFF4T3ENJLALeaB/qO0iLv7ypEQ1zt
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: usama.anjum@collabora.com, kernel@collabora.com,
- sebastian.reichel@collabora.com, Jeff Johnson
- <jeff.johnson@oss.qualcomm.com>, Baochen Qiang <quic_bqiang@quicinc.com>,
- mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
- ath11k@lists.infradead.org, ath12k@lists.infradead.org
-Subject: Re: [PATCH v5] bus: mhi: host: don't free bhie tables during
- suspend/hibernation
-To: Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Jeff Johnson <jjohnson@kernel.org>, Youssef Samir
- <quic_yabdulra@quicinc.com>, Matthew Leung <quic_mattleun@quicinc.com>,
- Yan Zhen <yanzhen@vivo.com>, Alex Elder <elder@kernel.org>,
- Kunwu Chan <chentao@kylinos.cn>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
- "Dr. David Alan Gilbert" <linux@treblig.org>
-References: <20250514081447.279981-1-usama.anjum@collabora.com>
- <f6eac84d-3d67-4f99-a9c5-a9f03d748010@oss.qualcomm.com>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <f6eac84d-3d67-4f99-a9c5-a9f03d748010@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+X-Received: by 2002:a05:6e02:7:b0:3da:71ea:91c2 with SMTP id
+ e9e14a558f8ab-3db843350f5mr56687795ab.22.1747421102945; Fri, 16 May 2025
+ 11:45:02 -0700 (PDT)
+Date: Fri, 16 May 2025 11:45:02 -0700
+In-Reply-To: <20250512150134.GB200944@mit.edu>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <682787ae.a00a0220.398d88.021d.GAE@google.com>
+Subject: Re: [syzbot] [ext4?] general protection fault in jbd2_journal_dirty_metadata
+From: syzbot <syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com>
+To: aha310510@gmail.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/16/25 7:59 PM, Jeff Hugo wrote:
-> On 5/14/2025 2:14 AM, Muhammad Usama Anjum wrote:
->> Fix dma_direct_alloc() failure at resume time during bhie_table
->> allocation because of memory pressure. There is a report where at
->> resume time, the memory from the dma doesn't get allocated and MHI
->> fails to re-initialize.
->>
->> To fix it, don't free the memory at power down during suspend /
->> hibernation. Instead, use the same allocated memory again after every
->> resume / hibernation. This patch has been tested with resume and
->> hibernation both.
->>
->> There are two allocations of bhie; rddm and fbc. Optimize both of those
-> 
-> There are 3, but you touch 2.  I just commented on this in v4.  Only
-> touching two is fine (the device for the 3rd one doesn't need this), but
-> the documentation must be accurate.
-Yeah, for 3rd one in mhi_load_image_bhie(), this optimization isn't
-needed. Let me rephrase and resent v6.
+Hello,
 
-> 
->> allocations. The rddm is of constant size for a given hardware. While
->> the fbc_image size depends on the firmware. If the firmware changes,
->> we'll free and allocate new memory for it. This patch is moticated from
-> 
-> moticated?  Motivated maybe?
-I'm using checkpatch --strict --codespell and hopping that it'll catch
-typos. But it misses some of them. Do you use any such tool?
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-> 
->> the ath12k [1] and ath11k [2] patches. They don't free the memory and
->> reuse the same memory if new size is same. The firmware caching hasn't
->> been implemented for the drivers other than the nouveau. (The changing
->> of firmware isn't tested/supported for wireless drivers. But let's
->> follow the example patches here.)
->>
->> [1] https://lore.kernel.org/all/20240419034034.2842-1-
->> quic_bqiang@quicinc.com/
->> [2] https://lore.kernel.org/all/20220506141448.10340-1-
->> quic_akolli@quicinc.com/
->>
->> Tested-on: WCN6855 WLAN.HSP.1.1-03926.13-
->> QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
->> Tested-on: WCN7850 hw2.0 WLAN.HMT.1.1.c5-00284-
->> QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
->>
->> Acked-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
->> Tested-by: Baochen Qiang <quic_bqiang@quicinc.com>
->> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->> ---
->> Changes since v1:
->> - Don't free bhie tables during suspend/hibernation only
->> - Handle fbc_image changed size correctly
->> - Remove fbc_image getting set to NULL in *free_bhie_table()
->>
->> Changes since v2:
->> - Remove the new mhi_partial_unprepare_after_power_down() and instead
->>    update mhi_power_down_keep_dev() to use
->>    mhi_power_down_unprepare_keep_dev() as suggested by Mani
->> - Update all users of this API such as ath12k (previously only ath11k
->>    was updated)
->> - Define prev_fw_sz in docs
->> - Do better alignment of comments
->>
->> Changes since v3:
->> - Fix state machine of ath12k by setting ATH12K_MHI_DEINIT with
->>    ATH12K_MHI_POWER_OFF_KEEP_DEV state (Thanks Sebastian for testing and
->>    finding the problem)
->> - Use static with mhi_power_down_unprepare_keep_dev()
->> - Remove crash log as it was showing that kworker wasn't able to
->>    allocate memory.
->>
->> Changes since v4:
->> - Update desctiption
-> 
-> While I'm commenting on spelling, "description"
-> 
-> 
-> Code looks ok to me. I think we just need to hash out some of the
-> documentation and this will be good to go.
-Thanks
+Reported-by: syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com
+Tested-by: syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com
 
-> 
+Tested on:
 
+commit:         3c21441e Merge tag 'acpi-6.15-rc7' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1630ae70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=97ce7f89bb9ce135
+dashboard link: https://syzkaller.appspot.com/bug?extid=de24c3fe3c4091051710
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
 
--- 
-Regards,
-Usama
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
