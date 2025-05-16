@@ -1,139 +1,235 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20F4A32;
-	Fri, 16 May 2025 15:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87F0198E81
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 15:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747408564; cv=none; b=QiGAwJBQ7D4Th5EatNXuhXJp5nCCeK54U0CaMOl0B+QSe91shIqNekeMU6fxkGPzfZVPbaEvIXF6suquFrO4jVuAmGFRPNMqkNWNBMJo+lTcau47QMdTYZZ11Et8qbMb1fg7iidHvTtPpqPhlUDf8NoASnnyGLV3ZSDgOigJuzs=
+	t=1747408577; cv=none; b=mTn1ja0Ri7ZLP8Wfl4KMRmIg6rPb2x7O2kYZy7c2jshXtcSZHOVSLfhQ+zBWczMFY7TVMJo6t5XcJeY9cupiUt78MGOhUU86t0U3XNNe4i3hWLQm7usfAcqQkUJ9nsKRvl29qyPd11u1jE9S/7h1a39906/cw97bysvPL9NQ3FQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747408564; c=relaxed/simple;
-	bh=vEBIl8tRqFavb9QBa5cg62PnWhBzpEuTVXC/1xqhe5I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fzQFNKP5qkWHtTm8zrJYp3Dyly2M0ivV40b9/sF/rGMGPShCuaQBfl9VWjYKjgar1ceOJlLULOyx4yBoYsUKpaupHRTujLupSCTfnhrvfzKfMJSUdAlJysO10tlSuYNcFX/l+uDsrH8qYA5mng3V9WqlOKJCTaKszkXqQmmHiPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IYIkOC2j; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747408577; c=relaxed/simple;
+	bh=t+2Gst9xAi5hlIwYx/cxza1UHimWoYdHPusTdQrrccY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hInffBfy02RBSdsIusjCwGbretEJZ7SnKc6kdKa58fFZ12AkZlEiAJLtOsnyuzdhs5Q6aOf36a8PG68ljyNtx2JmeQzTyeIiAjVP6SpO9sbI8NfyOvJVqw9uWOoMf6RhazTwAd5Sl/ip0euTtosrFPMVZMbMQ1YjeSf05sXKiA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=GQfsSeGy; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IYIkOC2j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747408562; x=1778944562;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vEBIl8tRqFavb9QBa5cg62PnWhBzpEuTVXC/1xqhe5I=;
-  b=IYIkOC2jct3EemZMfOzUp/wda6MVnEaoyD9PyWMFH2Z8O++6JjqxJE1A
-   qW7gmUBO3el6S96a0oxlNj29kEKMps5AkDE1nIwFjB7i4p6fvir8sRQfU
-   cgenNJUxiMQ6rWzifZC8qYtUBxIcLdBY0d6jKR71UnxXGhRHbdLUp3/Ha
-   j/O5Z/BC+Ti7ISL7D5AoQCsMup8mgXSQlb5KsjTGAj95GGPlWRmx81PLN
-   3aRd1uGQpSjtiTZx8ECi8wA3ruSTzeuoJucmg5fv2mvwhGV43PNjt1fFX
-   OEecIbUess9pYPoMZItbp4R4njD756gqcCMD22BeKUBtkJVLI4jHhcaXG
-   w==;
-X-CSE-ConnectionGUID: lFfYHNkiT5iIs/0EOvwCXw==
-X-CSE-MsgGUID: 39jTxqs7SaK4i8UA3HKtug==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="66788379"
-X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="66788379"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 08:16:01 -0700
-X-CSE-ConnectionGUID: 3WXheEOBS+GAS6bIIqZvwQ==
-X-CSE-MsgGUID: guEkRw5GTpSSdJobFhFjHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="139121301"
-Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.109.57]) ([10.125.109.57])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 08:16:00 -0700
-Message-ID: <ede5efc3-1a6d-45c7-807d-ac83d3de223e@intel.com>
-Date: Fri, 16 May 2025 08:15:56 -0700
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="GQfsSeGy"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22e033a3a07so23783775ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:16:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747408574; x=1748013374; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=0GNirFBXfZksDmcLkIx7giCST3II4UpjpZdHFvaex5s=;
+        b=GQfsSeGyAB7JAoCVcMbV98hs3mI84XNwIJHFtrgZ90GXZKudh64JoDvi+O3SUidgzX
+         wiBkIPz47Q97T6sfusCfCzh0Dk5lLz3omyUJigHsvb/MvSSSToZxSPeDs55kTmN+Dje6
+         Ki0sQL/oLrJp6rWPCpfIOTDzB9OS/ZWkGpE4op+b3+LdLJw9FuUA61krpV1YlMV3tJPq
+         sjiDQ/w1EIWBYEb6Q1/yCANfG3KI4kwTvTy0TolvE/EhUPFv+EAYz+RSaAjDs5FwXb24
+         QgtLTuDiBW3kzQCZJyeDIGKyfXtcikj3A4LntFRTfkmy/zOIk4iF1Nso18z8PWPcJ3sj
+         3wIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747408574; x=1748013374;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0GNirFBXfZksDmcLkIx7giCST3II4UpjpZdHFvaex5s=;
+        b=MRgKgIIIWDuESwb+7bZaXmBm9syb7TiXn+ficrNyaBj7hM4SMlzzO3wOipRfioFgUH
+         FFFaVcWfjSFvGavazAlM+rMDtx0rDaH41mPfLOPejzwYWuN1schCyoCFDgD4WTSQgqgV
+         ELce+JrrGu8bc3B5I/JNQkbsU3Zp0tVJ/z8m+aGW+UoTFzBYy++BTYO6194NVki6t6qC
+         LZqKYsLhQLaI/GKPBm9SAnjT985C/xJiBTa6yNL0jU67VKZLKhBstEY9XU8MwYY1bdYb
+         KOod1bPfVrTWa8oDmG6uRHvav1e0NuCSCnktfcWHjtcLiYkjytnjaMnDsX4w/KeDIMes
+         gHUg==
+X-Forwarded-Encrypted: i=1; AJvYcCUH0VazpEeons+o7lkZIzMwD6pTCw1PHYzoZoq/z0Xku4qv5jyklSAsMQL6Cahz1nR7igbkMu8JQ+Wkreg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMXNk4ls3qhFU3c25G1nsGWtUiOJEzoojXmMh+zyVkVTwqki4a
+	38ogTm8/hx9HCNRow0n1CItI5oY7VaxQSXRJ6ib9dnXBBl7qDE2t7WGIlUKkKxGMmf0=
+X-Gm-Gg: ASbGncurnje1Wrlwy0dEd/OwANIxfxZhRDXaKzBM487V+MWB4844EgLmJpXutRUu7o3
+	tFDr1Nj2DCo/pBrJux223YcaA9h/kELsvP2m+TrCK6LMvT1OULMHj/LVHti5SInEiwy+1Bgm7vw
+	BqcVfb+rc+IwbJ6UKjUiX5MSv7gf2C1LmEL/bgzdGloV3Gbhy7HtFxuM4vRGlQ17BykUQIM7Ii7
+	pbLZRLRo16op+cFrv+FBP/YKniaxKIH08s98SrJggdSviuIcNJYgOSaEntGClgKo6d5XWcOFvLo
+	fDCdkmcsTUouslHmxCU735zNDBfDOhgK6K5Py26gvAzxy/ev2If1RGV7qBxxwg==
+X-Google-Smtp-Source: AGHT+IHSSRQv6UaVUp1uY7YxcQ7Fp0Nkh/iVwU/C9R2BEes+S1JYlxj3SIRdl94BDLGOoJJBYixrLQ==
+X-Received: by 2002:a17:903:faf:b0:224:c46:d167 with SMTP id d9443c01a7336-231d44e7049mr42573705ad.16.1747408573939;
+        Fri, 16 May 2025 08:16:13 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ebb0d4sm15446025ad.195.2025.05.16.08.16.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 08:16:13 -0700 (PDT)
+Date: Fri, 16 May 2025 08:16:09 -0700
+From: Deepak Gupta <debug@rivosinc.com>
+To: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	alistair.francis@wdc.com, richard.henderson@linaro.org,
+	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
+	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
+	cleger@rivosinc.com, alexghiti@rivosinc.com,
+	samitolvanen@google.com, broonie@kernel.org,
+	rick.p.edgecombe@intel.com, rust-for-linux@vger.kernel.org,
+	Zong Li <zong.li@sifive.com>
+Subject: Re: [PATCH v15 22/27] riscv: enable kernel access to shadow stack
+ memory via FWFT sbi call
+Message-ID: <aCdWueNaGeru4CRW@debug.ba.rivosinc.com>
+References: <20250502-v5_user_cfi_series-v15-0-914966471885@rivosinc.com>
+ <20250502-v5_user_cfi_series-v15-22-914966471885@rivosinc.com>
+ <c911eead-30c4-497d-8a56-1450792b24bd@ghiti.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 0/6] Introduce CET supervisor state support
-To: Uros Bizjak <ubizjak@gmail.com>, Chao Gao <chao.gao@intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- tglx@linutronix.de, seanjc@google.com, pbonzini@redhat.com,
- peterz@infradead.org, rick.p.edgecombe@intel.com, weijiang.yang@intel.com,
- john.allen@amd.com, bp@alien8.de, chang.seok.bae@intel.com,
- xin3.li@intel.com, Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Eric Biggers
- <ebiggers@google.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Ingo Molnar <mingo@redhat.com>, Kees Cook <kees@kernel.org>,
- Maxim Levitsky <mlevitsk@redhat.com>, Mitchell Levy
- <levymitchell0@gmail.com>, Nikolay Borisov <nik.borisov@suse.com>,
- Oleg Nesterov <oleg@redhat.com>, Samuel Holland <samuel.holland@sifive.com>,
- Sohil Mehta <sohil.mehta@intel.com>, Stanislav Spassov <stanspas@amazon.de>,
- Vignesh Balasubramanian <vigbalas@amd.com>, Zhao Liu <zhao1.liu@intel.com>
-References: <20250512085735.564475-1-chao.gao@intel.com>
- <CAFULd4Y3VvqNS8VEvw0ObnqnVDtsC-q3kDEnyc070=gZ9oehgg@mail.gmail.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <CAFULd4Y3VvqNS8VEvw0ObnqnVDtsC-q3kDEnyc070=gZ9oehgg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c911eead-30c4-497d-8a56-1450792b24bd@ghiti.fr>
 
-On 5/16/25 00:51, Uros Bizjak wrote:
-> I wonder if the same approach can be used to optimize switching of
-> Intel PT configuration context. There was a patch series [1] posted
-> some time ago that showed substantial reduction of overhead when
-> switching Intel PT configuration context on VM-Entry/Exit using
-> XSAVES/XRSTORS instructions:
-> 
-> Manual save(rdmsr):     ~334  cycles
-> Manual restore(wrmsr):  ~1668 cycles
-> 
-> XSAVES insturction:     ~124  cycles
-> XRSTORS instruction:    ~378  cycles
+On Thu, May 15, 2025 at 09:10:08AM +0200, Alexandre Ghiti wrote:
+>Hi Deepak,
+>
+>On 03/05/2025 01:30, Deepak Gupta wrote:
+>>Kernel will have to perform shadow stack operations on user shadow stack.
+>>Like during signal delivery and sigreturn, shadow stack token must be
+>>created and validated respectively. Thus shadow stack access for kernel
+>>must be enabled.
+>>
+>>In future when kernel shadow stacks are enabled for linux kernel, it must
+>>be enabled as early as possible for better coverage and prevent imbalance
+>>between regular stack and shadow stack. After `relocate_enable_mmu` has
+>>been done, this is as early as possible it can enabled.
+>>
+>>Reviewed-by: Zong Li <zong.li@sifive.com>
+>>Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+>>---
+>>  arch/riscv/kernel/asm-offsets.c |  4 ++++
+>>  arch/riscv/kernel/head.S        | 27 +++++++++++++++++++++++++++
+>>  2 files changed, 31 insertions(+)
+>>
+>>diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
+>>index f33945432f8f..7ab41f01aa17 100644
+>>--- a/arch/riscv/kernel/asm-offsets.c
+>>+++ b/arch/riscv/kernel/asm-offsets.c
+>>@@ -514,4 +514,8 @@ void asm_offsets(void)
+>>  	DEFINE(FREGS_A6,	    offsetof(struct __arch_ftrace_regs, a6));
+>>  	DEFINE(FREGS_A7,	    offsetof(struct __arch_ftrace_regs, a7));
+>>  #endif
+>>+	DEFINE(SBI_EXT_FWFT, SBI_EXT_FWFT);
+>>+	DEFINE(SBI_EXT_FWFT_SET, SBI_EXT_FWFT_SET);
+>>+	DEFINE(SBI_FWFT_SHADOW_STACK, SBI_FWFT_SHADOW_STACK);
+>>+	DEFINE(SBI_FWFT_SET_FLAG_LOCK, SBI_FWFT_SET_FLAG_LOCK);
+>
+>
+>kernel test robot reported errors when !RV64 and !SBI, the following 
+>diff fixes it:
+>
+>diff --git a/arch/riscv/kernel/asm-offsets.c 
+>b/arch/riscv/kernel/asm-offsets.c
+>index 7fc085d27ca79..3aa5f56a84e9a 100644
+>--- a/arch/riscv/kernel/asm-offsets.c
+>+++ b/arch/riscv/kernel/asm-offsets.c
+>@@ -532,8 +532,10 @@ void asm_offsets(void)
+>        DEFINE(FREGS_A6,            offsetof(struct 
+>__arch_ftrace_regs, a6));
+>        DEFINE(FREGS_A7,            offsetof(struct 
+>__arch_ftrace_regs, a7));
+> #endif
+>+#ifdef CONFIG_RISCV_SBI
+>        DEFINE(SBI_EXT_FWFT, SBI_EXT_FWFT);
+>        DEFINE(SBI_EXT_FWFT_SET, SBI_EXT_FWFT_SET);
+>        DEFINE(SBI_FWFT_SHADOW_STACK, SBI_FWFT_SHADOW_STACK);
+>        DEFINE(SBI_FWFT_SET_FLAG_LOCK, SBI_FWFT_SET_FLAG_LOCK);
+>+#endif
+> }
+>
+>No need to resend the whole series, I'll squash it.
 
-There's nothing stopping us from using XSAVES/XRSTORS for PT,
-independent of the kernel FPU infrastructure. RFBM exists for a reason.
-
-There's also WRMSRLIST which we're not using yet either. It's an even
-better fit and doesn't have the goofiness that using XSAVE does like the
-legacy portion of the save area including the header.
+Thanks.
+>
+>Thanks,
+>
+>Alex
+>
+>
+>>  }
+>>diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+>>index 356d5397b2a2..7eae9a172351 100644
+>>--- a/arch/riscv/kernel/head.S
+>>+++ b/arch/riscv/kernel/head.S
+>>@@ -15,6 +15,7 @@
+>>  #include <asm/image.h>
+>>  #include <asm/scs.h>
+>>  #include <asm/xip_fixup.h>
+>>+#include <asm/usercfi.h>
+>>  #include "efi-header.S"
+>>  __HEAD
+>>@@ -164,6 +165,19 @@ secondary_start_sbi:
+>>  	call relocate_enable_mmu
+>>  #endif
+>>  	call .Lsetup_trap_vector
+>>+#if defined(CONFIG_RISCV_SBI) && defined(CONFIG_RISCV_USER_CFI)
+>>+	li a7, SBI_EXT_FWFT
+>>+	li a6, SBI_EXT_FWFT_SET
+>>+	li a0, SBI_FWFT_SHADOW_STACK
+>>+	li a1, 1 /* enable supervisor to access shadow stack access */
+>>+	li a2, SBI_FWFT_SET_FLAG_LOCK
+>>+	ecall
+>>+	beqz a0, 1f
+>>+	la a1, riscv_nousercfi
+>>+	li a0, CMDLINE_DISABLE_RISCV_USERCFI_BCFI
+>>+	REG_S a0, (a1)
+>>+1:
+>>+#endif
+>>  	scs_load_current
+>>  	call smp_callin
+>>  #endif /* CONFIG_SMP */
+>>@@ -320,6 +334,19 @@ SYM_CODE_START(_start_kernel)
+>>  	la tp, init_task
+>>  	la sp, init_thread_union + THREAD_SIZE
+>>  	addi sp, sp, -PT_SIZE_ON_STACK
+>>+#if defined(CONFIG_RISCV_SBI) && defined(CONFIG_RISCV_USER_CFI)
+>>+	li a7, SBI_EXT_FWFT
+>>+	li a6, SBI_EXT_FWFT_SET
+>>+	li a0, SBI_FWFT_SHADOW_STACK
+>>+	li a1, 1 /* enable supervisor to access shadow stack access */
+>>+	li a2, SBI_FWFT_SET_FLAG_LOCK
+>>+	ecall
+>>+	beqz a0, 1f
+>>+	la a1, riscv_nousercfi
+>>+	li a0, CMDLINE_DISABLE_RISCV_USERCFI_BCFI
+>>+	REG_S a0, (a1)
+>>+1:
+>>+#endif
+>>  	scs_load_current
+>>  #ifdef CONFIG_KASAN
+>>
