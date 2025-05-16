@@ -1,121 +1,135 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1187127464F
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 18:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E2721516D
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 18:06:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747418602; cv=none; b=WAY/QK7OF6L1QOANBganfLbGYa77X9tdMpYXsy9GjjwvjjbhBLIiEpT61nIu0TdWLuqjEgTgJgvvOOHVFaN8CHzsVRjM4Vm6sM7AzD75ZVlIc1MgqbXuR7pym2Retup+1Qel6No5aBTkxMbO1DBtmzV4CRipT4RQdAl9r5RD7RQ=
+	t=1747418816; cv=none; b=ImlR0woWTSIGFd1b8JiSUcV4VXzB3NNE9gq2qeowdd56noxBb25JMsr/iwH5srWOgKdwlI7Kn/YlBlNAC6qq1MIcQu6fXLUVlYr7gERiOub574Qb5QBBYHqFEVeeh6QS4GA0LGSUDI4fMZS2bYpVH6LH91a9gDEutsqCWzCgnI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747418602; c=relaxed/simple;
-	bh=QwHSSZaz008TktgLseIpVKn/WtCsa93KH8iOr30Ak3w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BsDTyV858kwaQUD065f7wUeoZWDRM5SGB93ApLY/m2FboUdxXBtoIF2PuN4kZW50FbXEEYqOMDrbQLyUmtMlpehxkGrQY0gghoTKPLjauMIsQ/o5w7wMoZXcuPLa29ge+I8vpuipSs1DGoG0zSY8E/shm/+p+Ah4cEO+fDdv7Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SVI7rcbu; arc=none smtp.client-ip=209.85.128.44
+	s=arc-20240116; t=1747418816; c=relaxed/simple;
+	bh=EaGhh9y9W0mWJ2B10mg/vhu02sSfHCRzfLE0DGJv0cs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QVY8o/L2PFMm5Do7nonQo35uuGeSBQZZL5Waoi/k1XeDLEy0fRc5CYuOzaVv2AW5GuNXcidP+gVBepsef9YuAlwXzBg0hWNI6rZh4Dy1aUuKTRPVvVEiF93eJvrB2zVezrX/Fb2XVFNWv760HwewJjhVyeFmjT0PqNn6w1gMNqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yv5/rPHL; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SVI7rcbu"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cf848528aso19616295e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:03:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yv5/rPHL"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6000791e832so1235a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:06:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747418599; x=1748023399; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6K4DAi8oh2JImogQbX7MYeT2JhKWy+PA/O4SxBmk53g=;
-        b=SVI7rcbun07bRlJG1uYFGFPHWnmoiwRc64//HN+f1yXCVT4SI40mqc+aN35G7+JbWK
-         sbL48bq+SVPOqukEQSNBDAY6Tg3YtkZq25AYkX1DaeaBNYViTIQkOomov4o4fG8nAQII
-         idVfhvlpXUh3Bl/CXrGGlp+NIFepDJjr/vfFmAuwK2NkSXcsvhC3xzaTpXVOFtFv7isH
-         gDho2WIDcHdqy4IZm4FRarBdfdDb+XA8ddO2NfnsaXAxuw92z/s+857ha8kWX4VzkBXn
-         QdHfZfyY3K09Qu0mwNwH0W0LgSg0ReIV8BTqAuNY2kcLntK9jndz3RVZPScjLCWIGUNs
-         ng6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747418599; x=1748023399;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1747418813; x=1748023613; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6K4DAi8oh2JImogQbX7MYeT2JhKWy+PA/O4SxBmk53g=;
-        b=E1ucwuAYB2Bxo6ems654aZ1dXFIoeqK45cnb3CMQ79nK+ItZZlArCuUoGFD9oeKuq4
-         hHyWRDc93T/Xos7eJKFOFz06MQtnBqhjSy1AYLzrafEQmuE1hzJnAyITWC/ffaIkbc7I
-         oUMrznsFoK7MnmtaDNBAzA1EadmmL1/eH04I5NFOdyP3LQZ6iACzu+/LU50LbXBYGxHC
-         Vl3D2yqib5LJ0yIazl/75I+qYlwmU8izscMKaEb+TPrWD4YH4iWFqd2+JOm+fLc6dG3e
-         Z62BBo3JPIUY5AFSzZqnAdm7DSCAioQlqKpNKnV+Hg7BxE6Y/1Tsj5wf0kzf09HafV9z
-         ptLA==
-X-Forwarded-Encrypted: i=1; AJvYcCXkunLUeQAcxd/RjD34w2SzjLWnXZCMoEZTyVkYBCX7VOn/zh3t8dCyMA54QE7+O7vY2hUCqN4oJNcbYjk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZjbTRtSiNdDgLgGMC049ztWKi0OaKvYnepevKuNtrqNuXKkCb
-	R3zbXq+JK3rE9UyxgTw0dlYF/Dw25cHqIz6loD6g5xtu5UiS5aCd2r+CIRlLPUxRHQ==
-X-Gm-Gg: ASbGncvqsPxkUDM2nakaC1Yigd7fAAY01gFU23VLjNvJGL0M1/z5HzEmn/Vr7MesHV/
-	G/1+UmFgBGClHTj+FkZZroXWEBG0ay3YbhVbCq/SOdjdwPIfK3oGxAAEh6HouM4+Xrcvzpi0Crt
-	tVkXHef6hFQUDzA7XMKpbBT+kAuSw/fBAipI3X6rO8/ChigrdWZ+FFMMZhw7cZte6uGLEx4wHVC
-	QmYwC0FwsP6OCejhJStoj87KlGnnyl4rtw7YM+G7ikadWZN5XJ8MQ2nwwYqM6ZqNeDwQPvp8Euy
-	D4H82NUcdXvn8cTUs1RvgZimuXp/57+RZDdqD0zRr2pPGID+Jh8PWxp37PUpVI3CDjSoX28OcmO
-	d3TJSspIbA2tDOgJC
-X-Google-Smtp-Source: AGHT+IFQSsiI9vrwradpXzloXrnGaAlmo3vSdM82TZe2t7ORRAfPE4k7Pcg48JUAfkH5OLuMwkRHsQ==
-X-Received: by 2002:a05:600c:1c18:b0:43d:40b0:5b with SMTP id 5b1f17b1804b1-442fd6607eamr37352735e9.25.1747418599028;
-        Fri, 16 May 2025 11:03:19 -0700 (PDT)
-Received: from google.com (218.131.22.34.bc.googleusercontent.com. [34.22.131.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3380539sm118985205e9.16.2025.05.16.11.03.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 11:03:18 -0700 (PDT)
-Date: Fri, 16 May 2025 19:03:14 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org,
-	qperret@google.com, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	kernel-team@android.com
-Subject: Re: [PATCH v4 10/10] KVM: arm64: np-guest CMOs with PMD_SIZE fixmap
-Message-ID: <aCd94sBdThAj6jT9@google.com>
-References: <20250509131706.2336138-1-vdonnefort@google.com>
- <20250509131706.2336138-11-vdonnefort@google.com>
- <864ixkfynk.wl-maz@kernel.org>
+        bh=ffBJsle0Lwjz8ccEmGsxhnpnfJLHOgF0YGAm3DFQxjI=;
+        b=yv5/rPHLfOC52xCUvO3ijjcn2nup1tXhC3T8uA8ZcL8G5hKRWrJbTBaVpYTYXOtJ0C
+         0RkIj8exEquEIept8NAp3pGfo82aiIx7bVM1E0gDee7f4AalbEUJpAzkOHj55N7LTBa1
+         SHS7zyhzAifbN9KL6qtnBOYQsBr5BwzuniUajjPdZZmOS0l4yEwNz6bMA7/7RIogVpEk
+         Chk/ZLTfxn7sGZp+XrC+qoWbC86DEeRI+rOeNZXf6yaCYptWG1JqTWW6AAjiZfBB1nLE
+         KhcaNpVWGrOfsvRUrqhunuZIPK9MQCRBBplLQgE87aSNH0bSX+SoqudovrlbMQI2uzNc
+         xIPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747418813; x=1748023613;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ffBJsle0Lwjz8ccEmGsxhnpnfJLHOgF0YGAm3DFQxjI=;
+        b=ku6/QAAeaBLTwC1on+54cHiXWZ+iXzhNLXC3fdqTX4KUGR80O2MeyAw/6btYw8ZKzL
+         sxXc2NmI1bs4taPkYZ3aUcELXU7oMRrLj5qHQ3rzLATa6mhyql+/5WjV1f7VfAo6+Vx1
+         RRO+1wFOhqPpvyMPi+oK7S4BOVDOfTxsvIqNSDOs2LTvzTq9gMFegGyS0TMfWad3/FZm
+         h44qdwCdMoGZ8WTvON+csazVaw7plRzj4l5F1jjL7CsHGZSWEMpXj6TYjzTrcx2u3LFL
+         fjYyWKJqdqzQ856aalZVE08xmVKEAD2V0HzqvS8HRnk0g3p7VLHcNSfe6nZa3kWGxzKl
+         LrHw==
+X-Forwarded-Encrypted: i=1; AJvYcCWwcb1pj0pkqYWuXeeI0vcoUzrAsbv9jTjbreRQ1I/mDF/MAx2t5yfG7dsZ5QzZipikz6AECM1N6XGhqZY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSj8+zlEK46hqbY8F+TZVy+f9rwiYyDs0qBzcOUUn1q07eCHui
+	LwuwLajq6OtLA/zIBNRooVzL0LsA6/01795cGtkls0x4kHNPDSCEu1FkxbWirL53If6rt9F+Qr8
+	OLkMimHHvB4LIjwger5Dh3ZZ2UkRBFu8ga1GaUOYM
+X-Gm-Gg: ASbGnct5K7V8HDSzmMXVhBZSutwDM8657e6Qpqo6usuC7VCgxrA20dPy4I6aHZbT1uA
+	4cTvQH4kAUCglFwL3ajdlcb9orULR/hzhySHanIvxRNmhrM5HSdnYCStQUgWxS6tMYPFHbZ0X0H
+	dEuQuXP11nADfsg5OqjwFUQUdKBTBflEQomV7SsOQpXQsjIZKdxDEpezv/YDGaP+XEUOoRYps=
+X-Google-Smtp-Source: AGHT+IHjVT1gKmVLBj3knAgZ7m159qYk3Ok4v0D1Bg/SE2WIJQB4Z3hZw0B78cj70OkvwZmrrSyMeN4kzMZtpVX3b1g=
+X-Received: by 2002:a05:6402:f85:b0:5fd:28:c3f6 with SMTP id
+ 4fb4d7f45d1cf-6019c8884b4mr2262a12.4.1747418813012; Fri, 16 May 2025 11:06:53
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <864ixkfynk.wl-maz@kernel.org>
+References: <20250306082615.174777-1-max.kellermann@ionos.com>
+ <878qmxsuy8.fsf@email.froward.int.ebiederm.org> <202505151451.638C22B@keescook>
+ <87ecwopofp.fsf@email.froward.int.ebiederm.org>
+In-Reply-To: <87ecwopofp.fsf@email.froward.int.ebiederm.org>
+From: Jann Horn <jannh@google.com>
+Date: Fri, 16 May 2025 20:06:15 +0200
+X-Gm-Features: AX0GCFsTNJfHA0lDPOLsfx2AHvwhpi8BaLe2zu9yZK-Y_kwCHJr4mJE3cbEsjCU
+Message-ID: <CAG48ez1VpuTR9_cvLrJEMmjOxTCYpYFswXVPmN6fE3NcSmPPVA@mail.gmail.com>
+Subject: Re: [PATCH] exec: Correct the permission check for unsafe exec
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Kees Cook <kees@kernel.org>, Max Kellermann <max.kellermann@ionos.com>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, paul@paul-moore.com, jmorris@namei.org, 
+	Andy Lutomirski <luto@kernel.org>, morgan@kernel.org, 
+	Christian Brauner <christian@brauner.io>, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > +}
-> > +
-> >  static void clean_dcache_guest_page(void *va, size_t size)
-> >  {
-> >  	WARN_ON(!PAGE_ALIGNED(size));
-> >  
-> >  	while (size) {
-> > -		__clean_dcache_guest_page(hyp_fixmap_map(__hyp_pa(va)),
-> > -					  PAGE_SIZE);
-> > -		hyp_fixmap_unmap();
-> > -		va += PAGE_SIZE;
-> > -		size -= PAGE_SIZE;
-> > +		size_t fixmap_size = size == PMD_SIZE ? size : PAGE_SIZE;
-> > +		void *addr = __fixmap_guest_page(va, &fixmap_size);
-> > +
-> > +		__clean_dcache_guest_page(addr, fixmap_size);
-> > +		__fixunmap_guest_page(fixmap_size);
-> > +
-> > +		size -= fixmap_size;
-> > +		va += fixmap_size;
-> 
-> Can this ever be called with a *multiple* of PMD_SIZE? In this case
-> you'd still end-up doing PAGE_SIZEd-bite CMOs until there is only
-> PMD_SIZE left, ruining the optimisation.
-> 
-> I think this needs fixing.
-
-So this can be only called with size either equal to PAGE_SIZE or PMD_SIZE. I
-wasn't sure if it was worth to make it more generic than it needs.
-
-But like for the first patch, I can make it more future-proof by handling size >
-PMD_SIZE.
-
-> 
-> >  	}
-> >  }
+On Fri, May 16, 2025 at 5:26=E2=80=AFPM Eric W. Biederman <ebiederm@xmissio=
+n.com> wrote:
+> Kees Cook <kees@kernel.org> writes:
+>
+> > On Thu, May 15, 2025 at 11:24:47AM -0500, Eric W. Biederman wrote:
+> >> I have condensed the logic from Linux-2.4.0-test12 to just:
+> >>      id_changed =3D !uid_eq(new->euid, old->euid) || !in_group_p(new->=
+egid);
+> >>
+> >> This change is userspace visible, but I don't expect anyone to care.
+> >> [...]
+> >> -static inline bool __is_setuid(struct cred *new, const struct cred *o=
+ld)
+> >> -{ return !uid_eq(new->euid, old->uid); }
+> >> -
+> >> -static inline bool __is_setgid(struct cred *new, const struct cred *o=
+ld)
+> >> -{ return !gid_eq(new->egid, old->gid); }
+> >> -
+> >> [...]
+> >> -    is_setid =3D __is_setuid(new, old) || __is_setgid(new, old);
+> >> +    id_changed =3D !uid_eq(new->euid, old->euid) || !in_group_p(new->=
+egid);
 > >
+> > The core change here is testing for differing euid rather than
+> > mismatched uid/euid. (And checking for egid in the set of all groups.)
+>
+> Yes.
+>
+> For what the code is trying to do I can't fathom what was trying to
+> be accomplished by the "mismatched" uid/euid check.
 
-[...]
+I remember that when I was looking at this code years ago, one case I
+was interested in was what happens when a setuid process (running with
+something like euid=3D1000,ruid=3D0) execve()'s a normal binary. Clearly
+the LSM_UNSAFE_* stuff is not so interesting there, because we're
+already coming from a privileged context; but the behavior of
+bprm->secureexec could be important.
+
+Like, I think currently a setuid binary like this is probably (?) not
+exploitable:
+
+int main(void) {
+  execl("/bin/echo", "echo", "hello world");
+}
+
+but after your proposed change, I think it might (?) become
+exploitable because "echo" would not have AT_SECURE set (I think?) and
+would therefore load libraries based on environment variables?
+
+To be clear, I think this would be a stupid thing for userspace to do
+- a setuid binary just should not be running other binaries with the
+caller-provided environment while having elevated privileges. But if
+userspace was doing something like that, this change might make it
+more exploitable, and I imagine that the check for mismatched uid/euid
+was intended to catch cases like this?
