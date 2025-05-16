@@ -1,54 +1,47 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D4318FDBD
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 14:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CE31632DF
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 14:17:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747405067; cv=none; b=LmQa234iaLoW355QiLj2vttXrqzizDQ+eEvAmxBXptwofjHbC3fZ/xUymKBc2GBie3jam6ooBEHkDx0xeRmqOkwAgcM6GwfxONjagEZjDEBPblp/zUo8SCEVhq33Evl2pYzn3IF38AX7WUjg99NwhvUJpnQwKFqN4hDKXofiuWY=
+	t=1747405074; cv=none; b=FUmsMrKo6yeVFyMB9XEeOF7R6VMbYbW39vzTEhEPlgJ5rVCitvSPRqDZS8qmBCNuIJ79oN7bH/2JZ/RvNPIT5U7moCOsH6dq4kKxDPEAYgtwrf+LidTo26SGU6Lb8hQZI/WFCt6f7CFGv7mfKXQOTgZFJduOIiNS2uU8c+CSWy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747405067; c=relaxed/simple;
-	bh=Rv9YuN8PcxnH6qBRFisMj3kyT2NyDCuhQHnAabFr0wU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JO+LVrM/Y1VuipFFnB++tde8y00JfzFgrYjS3ynw/Ds/9UuTxVVvN7cULHSWVdIUco0C4C81YspMogkQtqdJvnN1tCm6ExTLe8HnHWJUEStvSFYWuw56/MW9RFhf+CAylNtZb3HkkbZrPBDYzVigISqztMwUpXMDHE1uQc8KX2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=p0rely7s; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1747405074; c=relaxed/simple;
+	bh=di7VcqmsOR/ksmcCT55gbdF3amMK+ETAgYq2FlW2QA8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jJw0W+Qn03M1Hj5tFAcyF8x8xh2tcj4va464YfJpNvYcarIXGOuoH8iaP/eQETSnD+aoFGOTyrkd9CMcfaZinVBTUSs39gI4uKfBF7PB6QXbjr61eP/E6PwEDeLjsMhx9qqPsdBcW0C88iyt7H1ZEVBK3Vag/h96ajkvJ2tifmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XtXRnzWg; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="p0rely7s"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54GEHOGX3751570;
-	Fri, 16 May 2025 09:17:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1747405044;
-	bh=1PXDkf8DvBkrfNtvQAwfknII+pFLGvvQYZ5kAGobN48=;
-	h=From:To:CC:Subject:Date;
-	b=p0rely7sQz9icdrn165Qn2JoafU8RGB7ArHkokool6gpdotqTVl847mVO6Urux6Mx
-	 uvVlM2SBAUtPtRzyB/jhVKYCx7iHx9XTeQ2L9P2iL6KrCv68JC7+NjmPl5We7QP4FH
-	 zDoBc4/WlVBCneZzCca4naau8a7vF43QLrP36ajs=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54GEHOIM016270
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Fri, 16 May 2025 09:17:24 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 16
- May 2025 09:17:24 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 16 May 2025 09:17:23 -0500
-Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54GEHNu4037368;
-	Fri, 16 May 2025 09:17:23 -0500
-From: Andrew Davis <afd@ti.com>
-To: Mark Brown <broonie@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, Andrew Davis <afd@ti.com>
-Subject: [PATCH RFC] regmap: Move selecting for REGMAP_MDIO and REGMAP_IRQ
-Date: Fri, 16 May 2025 09:17:22 -0500
-Message-ID: <20250516141722.13772-1-afd@ti.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XtXRnzWg"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747405060;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=2WuqP8hVhA8NoR8vkcRmgIaGt57MUyF4WZKw8XNlY3A=;
+	b=XtXRnzWg1XOU15tFoqBgtCFbrOgBRiT7vGUxMP8epA3uZ4lF0it8pMe1uNaV+HyNBzFFrn
+	sGv4+MERAu4wsBhIr4sEv6MvLdRkj7lshSJoDgWgxbrajRIK8lbexfkw6+wwTag7erT9E1
+	qFouPCUZPmw/ouaJeyusQBLxSkzKA0A=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: bpf@vger.kernel.org
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
+	Michal Luczaj <mhal@rbox.co>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Jakub Sitnicki <jakub@cloudflare.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Thadeu Lima de Souza Cascardo <cascardo@igalia.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v6] bpf, sockmap: avoid using sk_socket after free when sending
+Date: Fri, 16 May 2025 22:17:12 +0800
+Message-ID: <20250516141713.291150-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,59 +49,125 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-Migadu-Flow: FLOW_OUT
 
-If either REGMAP_IRQ or REGMAP_MDIO are set then REGMAP is also set.
-This then enables the selecting of IRQ_DOMAIN or MDIO_BUS from REGMAP
-based on the above two symbols respectively. This makes it very easy
-to end up with "circular dependencies".
+The sk->sk_socket is not locked or referenced in backlog thread, and
+during the call to skb_send_sock(), there is a race condition with
+the release of sk_socket. All types of sockets(tcp/udp/unix/vsock)
+will be affected.
 
-Instead select the IRQ_DOMAIN or MDIO_BUS from the symbols that make
-use of them. This is almost equivalent to before but makes it less
-likely to end up with false circular dependency detections.
+Race conditions:
+'''
+CPU0                               CPU1
 
-Signed-off-by: Andrew Davis <afd@ti.com>
+backlog::skb_send_sock
+  sendmsg_unlocked
+    sock_sendmsg
+      sock_sendmsg_nosec
+                                   close(fd):
+                                     ...
+                                     ops->release() -> sock_map_close()
+                                     sk_socket->ops = NULL
+                                     free(socket)
+      sock->ops->sendmsg
+            ^
+            panic here
+'''
+
+The ref of psock become 0 after sock_map_close() executed.
+'''
+void sock_map_close()
+{
+    ...
+    if (likely(psock)) {
+    ...
+    // !! here we remove psock and the ref of psock become 0
+    sock_map_remove_links(sk, psock)
+    psock = sk_psock_get(sk);
+    if (unlikely(!psock))
+        goto no_psock; <=== Control jumps here via goto
+        ...
+        cancel_delayed_work_sync(&psock->work); <=== not executed
+        sk_psock_put(sk, psock);
+        ...
+}
+'''
+
+Based on the fact that we already wait for the workqueue to finish in
+sock_map_close() if psock is held, we simply increase the psock
+reference count to avoid race conditions.
+
+With this patch, if the backlog thread is running, sock_map_close() will
+wait for the backlog thread to complete and cancel all pending work.
+
+If no backlog running, any pending work that hasn't started by then will
+fail when invoked by sk_psock_get(), as the psock reference count have
+been zeroed, and sk_psock_drop() will cancel all jobs via
+cancel_delayed_work_sync().
+
+In summary, we require synchronization to coordinate the backlog thread
+and close() thread.
+
+The panic I catched:
+'''
+Workqueue: events sk_psock_backlog
+RIP: 0010:sock_sendmsg+0x21d/0x440
+RAX: 0000000000000000 RBX: ffffc9000521fad8 RCX: 0000000000000001
+...
+Call Trace:
+ <TASK>
+ ? die_addr+0x40/0xa0
+ ? exc_general_protection+0x14c/0x230
+ ? asm_exc_general_protection+0x26/0x30
+ ? sock_sendmsg+0x21d/0x440
+ ? sock_sendmsg+0x3e0/0x440
+ ? __pfx_sock_sendmsg+0x10/0x10
+ __skb_send_sock+0x543/0xb70
+ sk_psock_backlog+0x247/0xb80
+...
+'''
+
+Reported-by: Michal Luczaj <mhal@rbox.co>
+Fixes: 4b4647add7d3 ("sock_map: avoid race between sock_map_close and sk_psock_put")
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+
 ---
+V5 -> V6: Use correct "Fixes" tag.
+V4 -> V5:
+This patch is extracted from my previous v4 patchset that contained
+multiple fixes, and it remains unchanged. Since this fix is relatively
+simple and easy to review, we want to separate it from other fixes to
+avoid any potential interference.
+---
+ net/core/skmsg.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Sending as RFC as I haven't tested all the possible permutations
-on config options right now to make sure this causes no changes,
-but wanted to suggest this as a possible solution to the circular
-dependency described here[0].
-
-[0] https://www.spinics.net/lists/kernel/msg5686254.html
-
- drivers/base/regmap/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/base/regmap/Kconfig b/drivers/base/regmap/Kconfig
-index b1affac70d5dc..ffb2ef4882981 100644
---- a/drivers/base/regmap/Kconfig
-+++ b/drivers/base/regmap/Kconfig
-@@ -6,8 +6,6 @@
- config REGMAP
- 	bool
- 	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_SOUNDWIRE || REGMAP_SOUNDWIRE_MBQ || REGMAP_SCCB || REGMAP_I3C || REGMAP_SPI_AVMM || REGMAP_MDIO || REGMAP_FSI)
--	select IRQ_DOMAIN if REGMAP_IRQ
--	select MDIO_BUS if REGMAP_MDIO
- 	help
- 	  Enable support for the Register Map (regmap) access API.
+diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+index 276934673066..34c51eb1a14f 100644
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -656,6 +656,13 @@ static void sk_psock_backlog(struct work_struct *work)
+ 	bool ingress;
+ 	int ret;
  
-@@ -58,12 +56,14 @@ config REGMAP_W1
++	/* Increment the psock refcnt to synchronize with close(fd) path in
++	 * sock_map_close(), ensuring we wait for backlog thread completion
++	 * before sk_socket freed. If refcnt increment fails, it indicates
++	 * sock_map_close() completed with sk_socket potentially already freed.
++	 */
++	if (!sk_psock_get(psock->sk))
++		return;
+ 	mutex_lock(&psock->work_mutex);
+ 	while ((skb = skb_peek(&psock->ingress_skb))) {
+ 		len = skb->len;
+@@ -708,6 +715,7 @@ static void sk_psock_backlog(struct work_struct *work)
+ 	}
+ end:
+ 	mutex_unlock(&psock->work_mutex);
++	sk_psock_put(psock->sk, psock);
+ }
  
- config REGMAP_MDIO
- 	tristate
-+	select MDIO_BUS
- 
- config REGMAP_MMIO
- 	tristate
- 
- config REGMAP_IRQ
- 	bool
-+	select IRQ_DOMAIN
- 
- config REGMAP_RAM
- 	tristate
+ struct sk_psock *sk_psock_init(struct sock *sk, int node)
 -- 
-2.39.2
+2.47.1
 
