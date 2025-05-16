@@ -1,157 +1,192 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3CA15E8B
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 00:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3534217E4;
+	Fri, 16 May 2025 00:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747354956; cv=none; b=BRN9DKPmyxRzJtOVLZazKaN+JOJ0yQMnOCZN9bc65hSdoueikSKWXnXb+1oatvBSEA/XgnetVi4cIY/OEnivAkBX2YfOY7v2IVS3WifLfQOtepkBYiNyqa22s80hBWiniqbOCl9uGXjx/ps6JhZZoncMJLztpyPiCcNeRDJwQFs=
+	t=1747355246; cv=none; b=UCfV/DrPUFFcqjr5vL5rUHAvu1XufnlFieRbiDGSJoplLFjHy1ibRp3JZejNXouvNwJmA+f+O7L8l0LyKXNnFYk6Cg6zZzHO/ofqUOpgYAzJV0ovyBA9K+ffKXPhOFvLBkDZ/gjWn1pv10veq+dz6eR0FCaG2VT0rJOM+UUe2PA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747354956; c=relaxed/simple;
-	bh=9TW8mOZYka0YbshSHwE1KONB6ACt3Bc7zaWs0FWLxo4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=crXc/5XuZFmtAhjDqghW/oLezquLGDZpaxWSjmn9U9YfyfvFPfXQJZIUlGqvJTJ7MXOHNhQcDy9RvGgdef6qJIzI/TVV2hU5AnUsxbcwOUTMUYoA0kOMLIhLDf8y2tncFoPq2XGhfGyu5gQTJmaQqY46IcMTzjwbQlXrRM17sqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f+XR5A0I; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747355246; c=relaxed/simple;
+	bh=N8sOvo4FwSgkli1GbdXZABMRKYXeBpInBEb9HE55zSo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=uGb7/aBBga/r9VJYuZCsR9dCuxg9kokQETlEI5A/WxAoFGmia7Z1QdoJFpaJ8U8fi1xY3vQf0WNV2y/lQAW7irHlCPgeM4oLx6uFXM1k/+QhmAnfpm98QfKIiUhZXRViF3OJrZSJPGOxNwlZ/HhF16vd/Ip41csSyRDx5MAvsZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ViiTfVGN; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f+XR5A0I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747354952;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L79G3bUaADCLMaIHySbV8zUHfQYcpHCcJ7lOsHDG9sI=;
-	b=f+XR5A0IkDqdblgUJ21alWnfe3xl5WbXwNfrqD1J1O3EQXoPQLyZXYZHpXl1ZjikPYe4CH
-	HBW4n4XkGD6lu2KkZlZocOm0ab8z346ZWHK7k1mLtZiac40i0MF9HnRM/LyFng/wqKG2j6
-	z+vcbSQPBoyApF1Dn5w5UOrhcef1Bwk=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-665-oEVTFpYuO4mDdQi3nftzwA-1; Thu,
- 15 May 2025 20:22:28 -0400
-X-MC-Unique: oEVTFpYuO4mDdQi3nftzwA-1
-X-Mimecast-MFC-AGG-ID: oEVTFpYuO4mDdQi3nftzwA_1747354947
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 15B3C1800446;
-	Fri, 16 May 2025 00:22:21 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.140])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D4C9030075F7;
-	Fri, 16 May 2025 00:22:18 +0000 (UTC)
-Date: Fri, 16 May 2025 08:22:14 +0800
-From: Baoquan He <bhe@redhat.com>
-To: linux-integrity@vger.kernel.org, kexec@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, zohar@linux.ibm.com,
-	pmenzel@molgen.mpg.de, coxu@redhat.com, ruyang@redhat.com,
-	chenste@linux.microsoft.com
-Subject: Re: [PATCH] ima: add a knob ima= to make IMA be able to be disabled
-Message-ID: <aCaFNvHbYxrCaPbe@MiWiFi-R3L-srv>
-References: <20250515233953.14685-1-bhe@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ViiTfVGN"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4769aef457bso19752091cf.2;
+        Thu, 15 May 2025 17:27:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747355244; x=1747960044; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m6pURmVL5pc7CL/4Z+XDERMVUMwy4OEE/W3/L9YQ5D0=;
+        b=ViiTfVGNyvm0KJF8YTiQMvSQSfgfXlbrXmL/+y5bMNmVjPJ29SZVOQedQ2TKtSUrw6
+         4LeNcJrkak4vHRiHBqHwWy3JBcC9xc7cQgu+QgEXZOR+du5LATbeg7EJ7DrbJ2oi74SO
+         0w344/XoUktWKNjyMZ1nwsftvdCv8OUnxN6ZerpPgvjrQwieChFYQ07vxoPMc1Vf5tDW
+         ODO7PVajj8fq54AB/m5P6Elg8UXQ8VtgRVNudzdyIVdy4nmo5+AfhlacEjSP78OhWVYd
+         SPd0qLa0C/ewgq8GB4/phclU2eM/OR4+Zr5fo9FhCdK06ju9xZV/myrcrP9WjD3dErJe
+         UNcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747355244; x=1747960044;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m6pURmVL5pc7CL/4Z+XDERMVUMwy4OEE/W3/L9YQ5D0=;
+        b=o++gK3ikkTAOjZnVV9+sKOfWVtPiZ+nyrkYVNi7s9QsuxzRt0GDjjf+p7oarX/R+MB
+         w8Cq3c61s8f3B45W72j4Rtc3VCWROdmwS19uI0vU23lXxTIjnAfscPang2RgGZ63yWAE
+         MbIaSgJlToV75Z3seJItF4gjwzvdW9Pg01HikpuH3z8K8ai8a+FhQa0bnwhfr+dZ8swG
+         OEK3AkSffNt6BifJTDbNXRxw4M+kOlv/O+BdgZWTInAezc0Cq+4dqEuUN1c7GPDGXvMX
+         nPHS1FYC41TtQRaYObUXdlra0ZfFK/1I2k1SBU2AFG4s+90K08Mx1CaHkp3bSs4lsP5L
+         6yZg==
+X-Forwarded-Encrypted: i=1; AJvYcCWxKDmY4JpDgIvG/cl6K1W9VErbCngBr99revCtg5+TvH9IksovOpWNHh2Bjj5iIMTkXlPt/YPw4Nqi@vger.kernel.org, AJvYcCX8DWptX2t3dgGSC/d4m+ByFQjq0T6AAxxunUaCOU8S6Nt8IO/TagHGyOBcX8/zTABn6ANK1wd7tP3uDbNy@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8ltjWqI+87uelgSYejp2COBNPcWCkItIjqrfMeHaBts62K+5S
+	HJyy7q8uDNORJCEwFREYPokwu+plCp/RUEMp7ZC/P5UnS2cJ/f5j+2iM
+X-Gm-Gg: ASbGncsOgJSg12ff3fucjCyF075aVboftd2ijdiWWqvL/EKtdYPEjihZhpTy6Hrwei5
+	XU1xtRVEFEFPv8mgegWB1URzPFK/HnsUe0KVw3+2ylNniJ3qURlMT84UHjFEhwX+KPcYEI+fWpY
+	HKuMY+Ust2dY2wqqa31fyI5fX0jOvurE5/Gih44WlqMywgc6M+BVkp/1jvBTDTB1VWD/ya/qA2A
+	xDVmGDUl1uNUnYd4RwjxLOBUHYue2Hv6sN4j/GQ0Ib0+oXu2AqMORIOVPlKURODsJy+NqeJYsvc
+	UHlAOpbpys0SrCa2Rgb8rXPS1iSs3uYr1eY3fi1+dxtidpWBnDB3ZSllHybVnXw=
+X-Google-Smtp-Source: AGHT+IGri81tUaY4oEPMDFBUBSTE06hP6AeMH0PFD71DE1XCAFR5XnVVmfT9+56UOC1NwRJLmcI+KA==
+X-Received: by 2002:a05:622a:98d:b0:48f:5d4f:8e86 with SMTP id d75a77b69052e-494ae4ac4b0mr30273961cf.50.1747355243930;
+        Thu, 15 May 2025 17:27:23 -0700 (PDT)
+Received: from localhost.localdomain ([216.237.233.165])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-494ae3cef1fsm4563991cf.9.2025.05.15.17.27.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 17:27:22 -0700 (PDT)
+From: John Clark <inindev@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: Quentin Schulz <quentin.schulz@cherry.de>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	John Clark <inindev@gmail.com>
+Subject: [PATCH v5 0/3] [PATCH v5 0/3] Add device tree support for Luckfox Omni3576 and Core3576
+Date: Thu, 15 May 2025 20:27:10 -0400
+Message-Id: <20250516002713.145026-1-inindev@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515233953.14685-1-bhe@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-CC kexec list.
+Subject: [PATCH v5 0/3] Add device tree support for Luckfox Omni3576 and Core3576
 
-On 05/16/25 at 07:39am, Baoquan He wrote:
-> Kdump kernel doesn't need IMA functionality, and enabling IMA will cost
-> extra memory. It would be very helpful to allow IMA to be disabled for
-> kdump kernel.
-> 
-> And Coiby also mentioned that for kdump kernel incorrect ima-policy loaded
-> by systemd could cause kdump kernel hang, and it's possible the booting
-> process may be stopped by a strict, albeit syntax-correct policy and users
-> can't log into the system to fix the policy. In these cases, allowing to
-> disable IMA is very helpful too for kdump kernel.
-> 
-> Hence add a knob ima=on|off here to allow people to disable IMA in kdump
-> kenrel if needed.
-> 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  .../admin-guide/kernel-parameters.txt         |  5 +++++
->  security/integrity/ima/ima_main.c             | 22 +++++++++++++++++++
->  2 files changed, 27 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index d9fd26b95b34..762fb6ddcc24 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -2202,6 +2202,11 @@
->  			different crypto accelerators. This option can be used
->  			to achieve best performance for particular HW.
->  
-> +	ima=		[IMA] Enable or disable IMA
-> +			Format: { "off" | "on" }
-> +			Default: "on"
-> +			Note that this is only useful for kdump kernel.
-> +
->  	init=		[KNL]
->  			Format: <full_path>
->  			Run specified binary instead of /sbin/init as init
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index f3e7ac513db3..07af5c6af138 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -27,6 +27,7 @@
->  #include <linux/fs.h>
->  #include <linux/iversion.h>
->  #include <linux/evm.h>
-> +#include <linux/crash_dump.h>
->  
->  #include "ima.h"
->  
-> @@ -38,11 +39,27 @@ int ima_appraise;
->  
->  int __ro_after_init ima_hash_algo = HASH_ALGO_SHA1;
->  static int hash_setup_done;
-> +static int ima_disabled;
->  
->  static struct notifier_block ima_lsm_policy_notifier = {
->  	.notifier_call = ima_lsm_policy_change,
->  };
->  
-> +static int __init ima_setup(char *str)
-> +{
-> +	if (strncmp(str, "off", 3) == 0)
-> +		ima_disabled = 1;
-> +	else if (strncmp(str, "on", 2) == 0)
-> +		ima_disabled = 0;
-> +	else
-> +		pr_err("Invalid ima setup option: \"%s\" , please specify ima=on|off.", str);
-> +
-> +	return 1;
-> +}
-> +__setup("ima=", ima_setup);
-> +
-> +
-> +
->  static int __init hash_setup(char *str)
->  {
->  	struct ima_template_desc *template_desc = ima_template_desc_current();
-> @@ -1184,6 +1201,11 @@ static int __init init_ima(void)
->  {
->  	int error;
->  
-> +	if (ima_disabled && is_kdump_kernel()) {
-> +		pr_info("IMA functionality is disabled");
-> +		return 0;
-> +	}
-> +
->  	ima_appraise_parse_cmdline();
->  	ima_init_template_list();
->  	hash_setup(CONFIG_IMA_DEFAULT_HASH);
-> -- 
-> 2.41.0
-> 
+This series adds device tree support for the Luckfox Omni3576 Carrier
+Board with the Core3576 Module, powered by the Rockchip RK3576 SoC
+(four Cortex-A72 cores, four Cortex-A53 cores, Mali-G52 MC3 GPU). It
+enables essential functionality for booting Linux and basic connectivity,
+with plans for future support of peripherals like WiFi, MIPI-DSI, HDMI,
+and Ethernet.
 
+Tested features (on Linux 6.15-rc4):
+ - UART: Serial console operational
+ - SD card: Mounts and reads/writes successfully
+ - PCIe: NVMe SSD detected, mounted, and fully functional
+ - USB 2.0: Host ports operational
+ - RTC: Timekeeping and wake-up tested
+ - LED: Heartbeat trigger functional
+ - eMMC: Enabled in device tree, not populated on tested hardware
+
+The series includes three patches:
+ 1. dt-bindings: vendor-prefixes: Add Luckfox vendor prefix
+ 2. dt-bindings: arm: rockchip: Add Luckfox Omni3576 and Core3576 bindings
+ 3. arm64: dts: rockchip: Add Luckfox Omni3576 board support
+
+The device tree is covered by the existing ROCKCHIP ARCHITECTURE entry in
+MAINTAINERS. I am aware of ongoing RK3576 upstreaming efforts (e.g., by
+Collabora) and welcome feedback or collaboration to align with mainline
+driver development.
+
+Changes in v5:
+ - Patch 1: Moved luckfox vendor prefix to correct alphabetical position
+   between lsi and lunzn (Quentin Schulz, v4).
+   Acked-by: Conor Dooley <conor.dooley@microchip.com>
+   Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ - Patch 2: Unchanged from v4.
+   Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
+   Acked-by: Rob Herring (Arm) <robh@kernel.org>
+ - Patch 3:
+   - Updated copyright to include John Clark (Quentin Schulz, v4).
+   - Reordered top-level nodes alphabetically per DTS coding style
+     (Quentin Schulz, v4).
+   - Reordered CPU node overrides to match alphabetical order (cpu_bX
+     before cpu_lX) (Quentin Schulz, v4).
+   - Moved mmc0 alias to rk3576-luckfox-core3576.dtsi for module-level
+     eMMC; kept mmc1 in rk3576-luckfox-omni3576.dts for board-specific
+     SD (Quentin Schulz, v4).
+   - Added regulator-state-mem to top-level regulator-fixed nodes with
+     blank lines, omitting deprecated regulator-suspend-microvolt; PMIC
+     regulators retain regulator-suspend-microvolt to preserve Luckfox
+     SDK behavior, with a future patch planned after RK806 driver
+     validation (Quentin Schulz, v4).
+   - Removed redundant max-frequency from &sdmmc, as it matches
+     rk3576.dtsi (Quentin Schulz, v4).
+   - Added vmmc-supply and vqmmc-supply to &sdhci to support eMMC (Jonas
+     Karlman, v2).
+   - Confirmed blank line style compliance across DTSI and DTS (Jonas
+     Karlman, v2).
+
+Changes in v4:
+ - Patch 1: Unchanged, Acked-by: Conor Dooley.
+ - Patch 2: Fixed binding for Omni3576 to use correct enum syntax (enum:
+   [luckfox,omni3576]), added luckfox,core3576 to compatible string
+   (Heiko Stuebner, v3).
+ - Patch 3: Updated compatible string in rk3576-luckfox-omni3576.dts to
+   match revised binding.
+
+Changes in v3:
+ - Split device tree into rk3576-luckfox-core3576.dtsi and
+   rk3576-luckfox-omni3576.dts for modularity (Jonas Karlman, v2).
+ - Patch 3:
+   - Added pinctrl for green LED GPIO (Jonas Karlman, v2).
+   - Reordered regulator node properties for consistency (Jonas
+     Karlman, v2).
+   - Used gpios instead of deprecated gpio in regulators (Jonas
+     Karlman, v2).
+   - Removed vendor-specific pmic-power-off pinctrl and pwrkey from
+     RK806 PMIC (Jonas Karlman, v2).
+   - Removed no-mmc from &sdmmc to enable MMC support (Jonas Karlman, v2).
+   - Removed Ethernet nodes (gmac0/gmac1) due to unreliable PHY driver
+     (Andrew Lunn, v2).
+   - Addressed DTB warnings within scope (Rob Herring, v2).
+   - Added RNG node per Nicolas Frattaroli’s patch (v3).
+
+Changes in v2:
+ - Enabled HDMI node, untested due to driver issues (Heiko Stuebner,
+   Nicolas Frattaroli, v1).
+ - Enabled Ethernet 1 node, removed in v3 (Heiko Stuebner, v1).
+ - Clarified eMMC enabled but unpopulated (Heiko Stuebner, v1).
+ - Patch 1: Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ - Patch 2: Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Signed-off-by: John Clark <inindev@gmail.com>
+---
+John Clark (3):
+ dt-bindings: vendor-prefixes: Add luckfox prefix
+ dt-bindings: arm: rockchip: Add Luckfox Omni3576 and Core3576 bindings
+ arm64: dts: rockchip: Add Luckfox Omni3576 Board support
+
+ .../devicetree/bindings/arm/rockchip.yaml     |   7 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../dts/rockchip/rk3576-luckfox-core3576.dtsi | 748 ++++++++++++++++++
+ .../dts/rockchip/rk3576-luckfox-omni3576.dts  |  50 ++
+ 5 files changed, 808 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3576-luckfox-core3576.dtsi
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3576-luckfox-omni3576.dts
+
+-- 
+2.39.5
