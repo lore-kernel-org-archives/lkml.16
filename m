@@ -1,232 +1,132 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723A028003B
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 22:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85D7222FF4E
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 22:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747433386; cv=none; b=u4ANme0kt/GtSTFvHbN8TE23yCDACTSW0k+uqvmxq1KM390S95HDE5J5ImzfnvwuJZEUsQ3YLeEthD0yFxY4lFli94l61S8W/9A2IUuCjz2vEP3Yf3bOr3gxiOPgy/9irhLHUhWg5DikVDTy0U3JbCfYlVmOURHLls7SpzT/6pQ=
+	t=1747433489; cv=none; b=mrLPtBeGp9kyykxChCFDXDHQIJXwpWhdPE51haTf4dRdtyzQTHRS4sneTCEwCGzx1pB0WgRP91LsUrwJXwsLi7xV3L3vglbFMceA/uV4hd+McTaUIjnUAicp/VNO00XRqAY4ZJqvNIvBa3iYnzdBMMOlB3twtD1NHqDuZ2k5Rfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747433386; c=relaxed/simple;
-	bh=7+FvtjEG7eARyYDx+d80MRGsByjUX5PV97tLQHjDxvw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jNQHv88RirSvDo0XwOIOfNPuDLgFUrGf90RnBbghgmH5Bg4U1K6AWp8f/GzxodBefhhHgqL/URGqh8UVnbrEIm/a/s3hHNZJ45gfaBrNZpcp8qcZEGf//JE7lMOSunO20wnv50IMGwuQXGCdRVixEUBjBcHRgCQmcGNQW2jo2kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D556620006;
-	Fri, 16 May 2025 22:07:24 +0000 (UTC)
-Authentication-Results: smtp-out2.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3006B13411;
-	Fri, 16 May 2025 22:09:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id cAkgOqW3J2hmGwAAD6G6ig
-	(envelope-from <ematsumiya@suse.de>); Fri, 16 May 2025 22:09:41 +0000
-From: Enzo Matsumiya <ematsumiya@suse.de>
-To: netdev@vger.kernel.org
-Cc: Enzo Matsumiya <ematsumiya@suse.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Willem de Bruijn <willemb@google.com>,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 1/1] net: socket: hint netns refcounting through @kern arg
-Date: Fri, 16 May 2025 19:09:19 -0300
-Message-ID: <20250516220920.1142578-2-ematsumiya@suse.de>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250516220920.1142578-1-ematsumiya@suse.de>
-References: <20250516220920.1142578-1-ematsumiya@suse.de>
+	s=arc-20240116; t=1747433489; c=relaxed/simple;
+	bh=sx/nZ8ANqCHg1XZRS+aNuOi9Z1CoaOzMIuQZpulm7w8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cTblKu6uzblxKd+B7Jw82LkfjuWe1QcWyrm4FdJLegXe7vBn/wyoiSOmq235FCFmVLgXGKn/hhv25DquVHeWCqnTzRey9HsPiRIv5dZjKZoaHRxcXAw9jJq64m+91mg/O7b9noMgfdpU4UplUe/CGVLuOe4zidEmXGbK+2ufVBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jnJN7jpz; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jnJN7jpz"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54GCa7jA001807
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 22:11:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=Nm/4NfT8gFS0Xa8OiBIX3tBr
+	yuDvlEcD31Ih0TOw8JA=; b=jnJN7jpzu2HKvMfZ2SyV7OSu0TK5p9GKW7wh3xYm
+	y0jH4ZNjc19cSoKZCXiogTyJ/IckYnbGwAhZumYnGNcfAkF6xaPI8XKUce3Mfp1C
+	PUozfldrHfQVo72HZemGPjssD3owpczCUjy6jJooY0u4mm1stjDvYzZSEAFzfuHq
+	AyHQl8uROQ77/t3aYEorFnGMOZddldV6ioeQUTOQizqI6GiOfJ1uCib4paxYGNrV
+	K1qSzvr0gOVSaFAPrAaeOivbP690kPGUdk0JKol878+vXGRCOEf9gG7F5/egVOrV
+	RklBJeYD5wvZ8tZZSzPYpwoMfoKNoSvhiYLkHwG+WaHQGA==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcrk34e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 22:11:26 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f6e57ffb40so59053876d6.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 15:11:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747433485; x=1748038285;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nm/4NfT8gFS0Xa8OiBIX3tBryuDvlEcD31Ih0TOw8JA=;
+        b=XF0rlBOodXyFYehv5NbmesPgWcutNlG0Txs1YnqeIyC2vVydn8/gWcpZroI+VCgPg0
+         leZdwwF3UW34KKqmP5C/fd6X2a4Nm+uUqASuFShFaMc3RY/tXNoB3qXAoixPf6tO2Wbg
+         q4ZbAcTpYOj77mIoCUhRPzmGX86qdo/c0MAhRu/VAKNbbYPeE/Uwq49f14HbuLw1kwvr
+         OFXln1eTTmEtlTwJxCUYjIwKHmJ2v8BBO8LYRrMJm8yo+SaukwMwm/XCNv4z8AGLVBHP
+         /tj9Pk7238PDTZowZz2vbhSeisXygaB+nZQtOLcT38rmBSF5NF9YEcc6Q2yf8SqooOUr
+         juyg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8EjYb7jCNVUpVE2X/efasaq2Hwy+Nww7wiI+rgpHlnNrUe3R/vSM96lV5QQbLaBYAMPTiM9usCuhI4AY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7cLbvz53RzWBCFljjfpWz7QgxCRVkXV3b3ChuYr/qT80b3QMx
+	efSfm61GB7toojy8ZbYrZ4EzrxPUxeoe9O8AbHZA/e/b52YaXc5CM5bi6tpCxNciyVfN3voKuKn
+	JCDIbv41yM5E8WuP9m2kZben+BKmaCiVs0GPtKkd/EXgTqxigOEssuL6zAn1n3zWdgZg=
+X-Gm-Gg: ASbGncvvao00yctcYp9Idf6dNok9Kfg9s+U1plsNEU4G77Q7YmRdouP+uI0o52Mx3SY
+	T7UXlc/uQZsK8493xc4afljDb1k1h3LvIPOIBNZn3YPuIsPPafkRtjrY/7QYnqKCFGJfuOCT5PM
+	MyuB8i+yvLTi7Ns4Zeqn+7u7/ipghXegE1x3vqTQ+SilHkUjFZlBiNrWtUwZFXUSexlhKGG4B2+
+	sVYj9O6fb/hEK+TthZdLsI3uWJKKunF6c8imFSn0OD/brpOjNba91VsDakKotAIhCfB76649vZl
+	APHXJFvAGAejsG4Ij/1XF5DwgPHOVslasv7vWrxd5ImEiJ8Ewrqcg9hrkxgGVOEY0R3J8Y+8PmY
+	=
+X-Received: by 2002:a05:6214:da5:b0:6f5:e0c:b203 with SMTP id 6a1803df08f44-6f8b2c59b60mr67813946d6.11.1747433485492;
+        Fri, 16 May 2025 15:11:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEU6DgtmcjBL2iVwjhEQQMnBzBgU/+jxc+isjl2mVSHAPdsCVtuT0yhaLNg+VN9yVOb9Q7+Zg==
+X-Received: by 2002:a05:6214:da5:b0:6f5:e0c:b203 with SMTP id 6a1803df08f44-6f8b2c59b60mr67813646d6.11.1747433485155;
+        Fri, 16 May 2025 15:11:25 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e9cb4d69sm502623e87.21.2025.05.16.15.11.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 15:11:24 -0700 (PDT)
+Date: Sat, 17 May 2025 01:11:22 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Lijuan Gao <quic_lijuang@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, kernel@quicinc.com,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v3 5/6] arm64: dts: qcom: qcs615: add ADSP and CDSP nodes
+Message-ID: <thtk5vv2hpbnoapmt6j7nlgrcyedjzjbi3ntlyb3ll7atks46n@bp4isaoert67>
+References: <20250516-add_qcs615_remoteproc_support-v3-0-ad12ceeafdd0@quicinc.com>
+ <20250516-add_qcs615_remoteproc_support-v3-5-ad12ceeafdd0@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU]
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
-X-Rspamd-Queue-Id: D556620006
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250516-add_qcs615_remoteproc_support-v3-5-ad12ceeafdd0@quicinc.com>
+X-Proofpoint-ORIG-GUID: _oWwcgjSG8t2v32rSK-ppio69Tk0Wp24
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDIxNiBTYWx0ZWRfX+d8UpFfUbudC
+ N2HgqHXPjGWSSpbB0MzbWg7+Ey2UcA7T41uYbRlWe2O+W0ypei3aP22DwCPDrKlvZV1c1z3dZjN
+ JboIFiCSCdSaxOo14/Gj0KlIbQm4sQJ3/kSd7Wkm8cuG7Ia7CUA69LU0DL1rS9y7ZrQV7CAI5Rx
+ JaCxK9w6EHQ4BaQXyKcRJ07PMDPkFbhU6JbQTxoufVApMRHOM0kwFKL2jYTzhkCFMWxnkAIvfEj
+ uyebyQUZGN9spicRm8v6T3z2y/y48F2zaqnFFbYYPd9IowJzwlkE98hei+LmFKS4+mh9ceTTgiY
+ 8o75mgr2E9Z5Kwe3rOl8q8csOcCcJnwbAPJUDvAoBYs++4CIdJ2DaPxgHqmVAnIJSU+pSKpKFxT
+ UAVleXJBDk2seDQd5oHb72KV45EwBl5x2lHo37juZ8CmpPR92ZWXmtOqP8YrU5+m/T6igvss
+X-Authority-Analysis: v=2.4 cv=K7UiHzWI c=1 sm=1 tr=0 ts=6827b80e cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=jONUQADHCp84k9KtN9AA:9
+ a=CjuIK1q_8ugA:10 a=iYH6xdkBrDN1Jqds4HTS:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: _oWwcgjSG8t2v32rSK-ppio69Tk0Wp24
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-16_07,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 priorityscore=1501 mlxscore=0 suspectscore=0 malwarescore=0
+ phishscore=0 mlxlogscore=586 clxscore=1015 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505160216
 
-Some modules require the netns a socket resides in to be properly
-refcounted to avoid UAF (e.g. netns is gone before socket, socket goes
-away before TCP timers kicking in).
+On Fri, May 16, 2025 at 11:27:06AM +0800, Lijuan Gao wrote:
+> Add nodes for remoteprocs: ADSP and CDSP for QCS615 SoC to enable proper
+> remoteproc functionality.
+> 
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Signed-off-by: Lijuan Gao <quic_lijuang@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs615.dtsi | 86 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
 
-Such refcounting is done based on sk->sk_net_refcnt, which, in turn, is
-set based on @kern arg -- kernel sockets are not netns refcounted by
-default.
+Is the MPSS not present on the QCS615? It was a part of the SM6150
+design.
 
-In order to deal with that, modules are allocating a kernel socket, and,
-right after, calling sk_net_refcnt_upgrade() (which sets sk->sk_net_refcnt
-to 1 and do the proper setup for the netns refcounter).
-
-This patch aims to centralize this behaviour on sk_alloc() by changing
-the @kern arg to accept newly added SOCK_NETNS_REFCNT_* values.
-
-Practically it only adds a third value which means "kernel socket with
-netns refcounting".
-
-To maintain compatibility with the previous boolean behaviour
-(@kern/!@kern), SOCK_NETNS_REFCNT_USER is 0 and
-SOCK_NETNS_REFCNT_KERN_* > 0.
-
-Also add a sock_create_netns() wrapper.  Callers that need a kernel
-socket with netns refcounting may use this wrapper.
-
-Follow up patch will update callers of sk_net_refcnt_upgrade()
-to use this new option instead.
-
-Signed-off-by: Enzo Matsumiya <ematsumiya@suse.de>
----
- include/linux/net.h | 15 +++++++++++++++
- net/core/sock.c     | 10 ++++++----
- net/socket.c        | 27 +++++++++++++++++++++++++--
- 3 files changed, 46 insertions(+), 6 deletions(-)
-
-diff --git a/include/linux/net.h b/include/linux/net.h
-index 0ff950eecc6b..bf5e2e68cee5 100644
---- a/include/linux/net.h
-+++ b/include/linux/net.h
-@@ -247,6 +247,20 @@ enum {
- 	SOCK_WAKE_URG,
- };
- 
-+/*
-+ * sock netns refcounting modes:
-+ *
-+ * @SOCK_NETNS_REFCNT_USER: user sockets always hold a netns reference
-+ * @SOCK_NETNS_REFCNT_KERN_NONE: kernel socket will not hold active netns reference
-+ * @SOCK_NETNS_REFCNT_KERN_ANY: kernel socket will hold active reference for any netns
-+ *				(but init_net)
-+ */
-+enum {
-+	SOCK_NETNS_REFCNT_USER,
-+	SOCK_NETNS_REFCNT_KERN_NONE,
-+	SOCK_NETNS_REFCNT_KERN_ANY,
-+};
-+
- int sock_wake_async(struct socket_wq *sk_wq, int how, int band);
- int sock_register(const struct net_proto_family *fam);
- void sock_unregister(int family);
-@@ -255,6 +269,7 @@ int __sock_create(struct net *net, int family, int type, int proto,
- 		  struct socket **res, int kern);
- int sock_create(int family, int type, int proto, struct socket **res);
- int sock_create_kern(struct net *net, int family, int type, int proto, struct socket **res);
-+int sock_create_netns(struct net *net, int family, int type, int protocol, struct socket **res);
- int sock_create_lite(int family, int type, int proto, struct socket **res);
- struct socket *sock_alloc(void);
- void sock_release(struct socket *sock);
-diff --git a/net/core/sock.c b/net/core/sock.c
-index e54449c9ab0b..1b987d47e4d8 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -2244,7 +2244,7 @@ static void sk_prot_free(struct proto *prot, struct sock *sk)
-  *	@family: protocol family
-  *	@priority: for allocation (%GFP_KERNEL, %GFP_ATOMIC, etc)
-  *	@prot: struct proto associated with this new sock instance
-- *	@kern: is this to be a kernel socket?
-+ *	@kern: hint for netns refcounting (%SOCK_NETNS_REFCNT_USER, ...)
-  */
- struct sock *sk_alloc(struct net *net, int family, gfp_t priority,
- 		      struct proto *prot, int kern)
-@@ -2259,13 +2259,15 @@ struct sock *sk_alloc(struct net *net, int family, gfp_t priority,
- 		 * why we need sk_prot_creator -acme
- 		 */
- 		sk->sk_prot = sk->sk_prot_creator = prot;
--		sk->sk_kern_sock = kern;
-+		sk->sk_kern_sock = !!kern;
- 		sock_lock_init(sk);
--		sk->sk_net_refcnt = kern ? 0 : 1;
--		if (likely(sk->sk_net_refcnt)) {
-+		if (likely(kern == SOCK_NETNS_REFCNT_USER) ||
-+		    (kern == SOCK_NETNS_REFCNT_KERN_ANY && !net_eq(net, &init_net))) {
-+			sk->sk_net_refcnt = 1;
- 			get_net_track(net, &sk->ns_tracker, priority);
- 			sock_inuse_add(net, 1);
- 		} else {
-+			sk->sk_net_refcnt = 0;
- 			net_passive_inc(net);
- 			__netns_tracker_alloc(net, &sk->ns_tracker,
- 					      false, priority);
-diff --git a/net/socket.c b/net/socket.c
-index 9a0e720f0859..9cce213b3fc2 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -1459,11 +1459,12 @@ EXPORT_SYMBOL(sock_wake_async);
-  *	@type: communication type (SOCK_STREAM, ...)
-  *	@protocol: protocol (0, ...)
-  *	@res: new socket
-- *	@kern: boolean for kernel space sockets
-+ *	@kern: hint for netns refcounting (%SOCK_NETNS_REFCNT_USER, ...)
-  *
-  *	Creates a new socket and assigns it to @res, passing through LSM.
-  *	Returns 0 or an error. On failure @res is set to %NULL. @kern must
-- *	be set to true if the socket resides in kernel space.
-+ *	be set to %SOCK_NETNS_REFCNT_* -- handled as boolean in most places,
-+ *	effectively handled only in sk_alloc().
-  *	This function internally uses GFP_KERNEL.
-  */
- 
-@@ -1609,6 +1610,7 @@ EXPORT_SYMBOL(sock_create);
-  *	@res: new socket
-  *
-  *	A wrapper around __sock_create().
-+ *	Created socket will not hold a reference on @net.
-  *	Returns 0 or an error. This function internally uses GFP_KERNEL.
-  */
- 
-@@ -1618,6 +1620,27 @@ int sock_create_kern(struct net *net, int family, int type, int protocol, struct
- }
- EXPORT_SYMBOL(sock_create_kern);
- 
-+/**
-+ *	sock_create_netns - creates a socket (kernel space)
-+ *	@net: net namespace
-+ *	@family: protocol family (AF_INET, ...)
-+ *	@type: communication type (SOCK_STREAM, ...)
-+ *	@protocol: protocol (0, ...)
-+ *	@res: new socket
-+ *
-+ *	A wrapper around __sock_create().
-+ *	If @net == %init_net (checked in sk_alloc), created socket will
-+ *	not hold a reference on @net (i.e. same as sock_create_kern).
-+ *	Otherwise, created socket will hold a reference on @net.
-+ *	Returns 0 or an error. This function internally uses GFP_KERNEL.
-+ */
-+
-+int sock_create_netns(struct net *net, int family, int type, int protocol, struct socket **res)
-+{
-+	return __sock_create(net, family, type, protocol, res, SOCK_NETNS_REFCNT_KERN_ANY);
-+}
-+EXPORT_SYMBOL(sock_create_netns);
-+
- static struct socket *__sys_socket_create(int family, int type, int protocol)
- {
- 	struct socket *sock;
 -- 
-2.48.1
-
+With best wishes
+Dmitry
