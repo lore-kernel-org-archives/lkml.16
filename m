@@ -1,216 +1,144 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC342282E1;
-	Fri, 16 May 2025 08:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B04922DF86;
+	Fri, 16 May 2025 08:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747384872; cv=none; b=aUJQ3uuPXbhLO332C3gArkRwTxSEF8KPJMIzFD1534BRVCYI0prP6KpAzQJR8RLXp7JQdLfJ6qLpXuODfryr6kBKUwNoOn943iaYXL96JX6tYV02tqlwXYxEqj4wlDZGvAnuOOnEejl4ECOiGN74bI08N4sheNjQJjXqMcOkw3w=
+	t=1747384882; cv=none; b=lylVRebVa4ZN3VwCxBesuEDtfE8SmNQVF59WWC84ck4DNSTbFA4kas6/vCYV4D5Rq/hTKdZuEgABmt/6AAHrprF4qPSqpcPaWcug4TmK8XXX2asM0ZIwVVh3dwY+KDfZn34t0pPuePJE19+anaJ2Qk6Od4Fs9rMvk+pYOHNuWQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747384872; c=relaxed/simple;
-	bh=vFvunMkscxWQ2aGc2PjT/YAlhcjkc5XfDLQnAOD2iUw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=buKg6F0QIo9qutB6srUb2VO+Do3iunzOKfT1h0QjoNZQdaizeFKs7oOlFQ4EO7r8CKjq6RagQ6B2cjL2ei8qBZAVTcm/4/CzXt2M3TyQgIvr9m2dirtHxhLkuCnU7auZ0OTZ8XDB1EQTaqH7rHZoWUi9/qpX9lzQz2a6T1Aig5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=bV5T8TAK; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1747384882; c=relaxed/simple;
+	bh=ga8uMoclPYWxWqyGnwmzZy2O0Wejc180iQMMhqu/Cs8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=E0In6Zxi7rMjzTWLYG5wapYN1SL02etkTh01aFUUI7Pey7hEx78MzzPKVle6aRdiBGr1dBM8uPBc7JG7f68yLpeOMJ0BO2QxCYBODtylpgL1MjlH+d5qK76pyJTczbbW5SRS3JiGE1Ag3iaC3G9fKIQwRTaMfX/5INWrpLSVMa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=BoDs1aoM; arc=none smtp.client-ip=54.204.34.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="bV5T8TAK"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G7PoHT028005;
-	Fri, 16 May 2025 10:40:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	jOVQbSyRtvHqlvBwmgwbNuyQyI33ggIazbqG1gBI7zE=; b=bV5T8TAK7sCLOU2a
-	M33BxFPl4Hm54I2NCmUuqlxss0eiqlrpXONjMgoIpqqFYl9vfMqMaiq6qtGd/vzM
-	uclxTteUpXmPMHaztuyyZt/g08HdkcZUJPPBwTdFYlt5yfQGh+0uYeu3FnQ33LBc
-	PpNV8gAuTu8Dq64zPc3NeGa1igIHNyp6GqRpfsP5ssE9mGe1nYwF2B1gkREIqFDl
-	2mG5Qw8Pwm2iwD0FUjuypOyhDZw3ezcK1msu1YhxZESXebfmFJ/vFuBxFHRlX906
-	c6aKPkBTAjFxL7spZ2AmChDAqzVt0NRJnZbJOz5QkJpvZL2+5s+6qCWpAdbLbZ0E
-	bvA56A==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46mbdy4g62-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 May 2025 10:40:13 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1FCE04002D;
-	Fri, 16 May 2025 10:38:37 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8E7B0B34A7F;
-	Fri, 16 May 2025 10:37:18 +0200 (CEST)
-Received: from [10.130.77.120] (10.130.77.120) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 16 May
- 2025 10:37:17 +0200
-Message-ID: <7df0c1e5-f53b-4a44-920a-c2dfe8842481@foss.st.com>
-Date: Fri, 16 May 2025 10:37:16 +0200
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="BoDs1aoM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1747384825;
+	bh=c1YnD1TyFT+luDI+a7+0AZCF+F460a+LPXJtzr8FLFQ=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version;
+	b=BoDs1aoMlWlkSJMvWnHQQ/XlHLGgBHnwa6G1/XiIVL6xtnvNO7URTNqOLGuJeDysi
+	 jjfbcz2ib0lllGeHuemnp/N+Gz+hQ+aAnFZjkjsFIprqGSQNaBJXNK8J2PdxqSpM0j
+	 GjKB3TdBBc36yTKuqdcwceD3jBzODf6+mPxurKu8=
+X-QQ-mid: zesmtpip3t1747384816t5b9abf65
+X-QQ-Originating-IP: bhZSdmGCSMuPEf6NgEQlQqYXKfI0eW7gzxxAjCosu5s=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 16 May 2025 16:40:14 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 114709977927235088
+EX-QQ-RecipientCnt: 8
+From: tuhaowen <tuhaowen@uniontech.com>
+To: pavel@kernel.org,
+	len.brown@intel.com
+Cc: rafael@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	huangbibo@uniontech.com,
+	tuhaowen@uniontech.com,
+	wangyuli@uniontech.com
+Subject: [PATCH v2] PM/console: Fix the black screen issue
+Date: Fri, 16 May 2025 16:40:11 +0800
+Message-Id: <20250516084011.29309-1-tuhaowen@uniontech.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <CAJZ5v0gOa8H-yABSepfy-WyOKJqRjCMhYPdbAHox3qUVmOXS6w@mail.gmail.com>
+References: <CAJZ5v0gOa8H-yABSepfy-WyOKJqRjCMhYPdbAHox3qUVmOXS6w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/9] PCI: stm32: Add PCIe host support for STM32MP25
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <p.zabel@pengutronix.de>, <thippeswamy.havalige@amd.com>,
-        <shradha.t@samsung.com>, <quic_schintav@quicinc.com>,
-        <cassel@kernel.org>, <johan+linaro@kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20250423090119.4003700-1-christian.bruel@foss.st.com>
- <20250423090119.4003700-3-christian.bruel@foss.st.com>
- <gzw3rcuwuu7yswljzde2zszqlzkfsilozdfv2ebrcxjpvngpkk@hvzqb5wbjalb>
- <c01d0d72-e43c-4e10-b298-c8ed4f5d1942@foss.st.com>
- <ec33uuugief45swij7eu3mbx7htfxov6qa5miucqsrdp36z7qe@svpbhliveks4>
-From: Christian Bruel <christian.bruel@foss.st.com>
-Content-Language: en-US
-In-Reply-To: <ec33uuugief45swij7eu3mbx7htfxov6qa5miucqsrdp36z7qe@svpbhliveks4>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-16_03,2025-05-15_01,2025-03-28_01
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NRN3UPsLzYKVYGzjsdZpHcg0+ccKtc0shznsOYMMQkmAKUbgDnfdqOR6
+	OIQT4gb/nyhm17g6IwiK+6ltOlBNI5iuXLJxf7G+f7zQ0UrAyDf14X0U/61ysrA0aR3mzud
+	6lQ/EF8B/g8kxOyEp9LmnM4OnYsaLz6z6h5uclAi4jGHSxCTxqZA7BY/OD2yALnSNlA7k/E
+	0TAvffIf04KdyJFXw7RTGQTgPIFs6hhlxoQip0RT2YsOdwwPF8tae6JkIogaiPef7erYq3w
+	Zh2fvUqzoa6VwjIek5xBNN6mFenPtb70dPbw3UqZ3aO2H6nVi6XAlPf/1g4eA75aQd5j9cK
+	7Hb9ELdIjQPwXF7WiMNn8NfhNDba/AFaBlDfJyJu3Mvj3MLlq2DrUadUTIjGmbLLimCoaLI
+	rg3I0l4XH1PYtFWjhmUvn3FlY4Wf08H4sMhA1k23KCihURgDGNw+dAnve3uFHpzPVZqgU6n
+	Z4Nt6XuUujhBpPP+iPgmSDy3zmVamVKxN8coh+ZtCdQfFOpA22pYEuUaSCzV2AtyjzSGd2/
+	AJkEBYU+GEfP8tQJJBfT3CA7oIwoWyiD+Q5GU48GKlvbevuLopXtGYwaGx6PMiqAdjCpz6G
+	L7mf2pQecBJhnvMh7rxwY5f8KJboOUf7B2evVycW2rtG8pZ8KVcLiRqEJxRyQgcth1tiCSb
+	70Y4Y6fXgE19Kevt5AZQgfBg5s5DNKtTuAkmKbUDhig8pLcqn/XHwmgMQhjLzIFBuO0oTWG
+	XD5KE3h9IF0ea+ycmfBlcKr4+/+nYaTT8hESGNi+a2M6Uj0iuic8co9XL5VeUUGYLORYpu4
+	pSfVlDv8dFkoWdgwb1QNXdVjQPIMi0Yqjcmh9WOrLZEYUU29JYRZopSoBV+n0Nn6Ked3Wgm
+	FyXsyqmTDNFQOopTEha+QyvGWQM6qaxnYw98tYw1vnyOx3hIGQoo5psAXXQE60TuBiSqTuk
+	qEGkiPFSsS7TDQH/S0tRcmb667AnxdffMh/bPcFxE86FOMRK3eY4i1EYvtJmoj/s+p9Mwtd
+	m2I5KhTOOz4fwQ81LNzOQsXUQW5ogcGqhkTQzgbV99HnJIPdlLtxTBovWPHy4=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
+When the computer enters sleep status without a monitor
+connected, the system switches the console to the virtual
+terminal tty63(SUSPEND_CONSOLE).
 
+If a monitor is subsequently connected before waking up,
+the system skips the required VT restoration process
+during wake-up, leaving the console on tty63 instead of
+switching back to tty1.
 
-On 5/15/25 13:29, Manivannan Sadhasivam wrote:
-> On Mon, May 12, 2025 at 05:08:13PM +0200, Christian Bruel wrote:
->> Hi Manivannan,
->>
->> On 4/30/25 09:30, Manivannan Sadhasivam wrote:
->>> On Wed, Apr 23, 2025 at 11:01:12AM +0200, Christian Bruel wrote:
->>>> Add driver for the STM32MP25 SoC PCIe Gen1 2.5 GT/s and Gen2 5GT/s
->>>> controller based on the DesignWare PCIe core.
->>>>
->>>> Supports MSI via GICv2m, Single Virtual Channel, Single Function
->>>>
->>>> Supports WAKE# GPIO.
->>>>
->>>
->>> Mostly looks good. Just a couple of comments below.
->>>
->>>> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
->>>> ---
->>>>    drivers/pci/controller/dwc/Kconfig      |  12 +
->>>>    drivers/pci/controller/dwc/Makefile     |   1 +
->>>>    drivers/pci/controller/dwc/pcie-stm32.c | 368 ++++++++++++++++++++++++
->>>>    drivers/pci/controller/dwc/pcie-stm32.h |  15 +
->>>>    4 files changed, 396 insertions(+)
->>>>    create mode 100644 drivers/pci/controller/dwc/pcie-stm32.c
->>>>    create mode 100644 drivers/pci/controller/dwc/pcie-stm32.h
->>>>
->>>
->>> [...]
->>>
->>>> +static int stm32_pcie_probe(struct platform_device *pdev)
->>>> +{
->>>> +	struct stm32_pcie *stm32_pcie;
->>>> +	struct device *dev = &pdev->dev;
->>>> +	int ret;
->>>> +
->>>> +	stm32_pcie = devm_kzalloc(dev, sizeof(*stm32_pcie), GFP_KERNEL);
->>>> +	if (!stm32_pcie)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	stm32_pcie->pci.dev = dev;
->>>> +	stm32_pcie->pci.ops = &dw_pcie_ops;
->>>> +	stm32_pcie->pci.pp.ops = &stm32_pcie_host_ops;
->>>> +
->>>> +	stm32_pcie->regmap = syscon_regmap_lookup_by_compatible("st,stm32mp25-syscfg");
->>>> +	if (IS_ERR(stm32_pcie->regmap))
->>>> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->regmap),
->>>> +				     "No syscfg specified\n");
->>>> +
->>>> +	stm32_pcie->clk = devm_clk_get(dev, NULL);
->>>> +	if (IS_ERR(stm32_pcie->clk))
->>>> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->clk),
->>>> +				     "Failed to get PCIe clock source\n");
->>>> +
->>>> +	stm32_pcie->rst = devm_reset_control_get_exclusive(dev, NULL);
->>>> +	if (IS_ERR(stm32_pcie->rst))
->>>> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->rst),
->>>> +				     "Failed to get PCIe reset\n");
->>>> +
->>>> +	ret = stm32_pcie_parse_port(stm32_pcie);
->>>> +	if (ret)
->>>> +		return ret;
->>>> +
->>>> +	platform_set_drvdata(pdev, stm32_pcie);
->>>> +
->>>> +	ret = pm_runtime_set_active(dev);
->>>> +	if (ret < 0) {
->>>> +		dev_err(dev, "Failed to activate runtime PM %d\n", ret);
->>>
->>> Please use dev_err_probe() here and below.
->>
->> OK, will report this in the EP driver also.
->>
->>>
->>>> +		return ret;
->>>> +	}
->>>> +
->>>> +	ret = devm_pm_runtime_enable(dev);
->>>> +	if (ret < 0) {
->>>> +		dev_err(dev, "Failed to enable runtime PM %d\n", ret);
->>>> +		return ret;
->>>> +	}
->>>> +
->>>> +	pm_runtime_get_noresume(dev);
->>>> +
->>>
->>> I know that a lot of the controller drivers do this for no obvious reason. But
->>> in this case, I believe you want to enable power domain or genpd before
->>> registering the host bridge. Is that right?
->>
->> We call pm_runtime_enable() before stm32_add_pcie_port() and
->> dw_pcie_host_init(). This ensures that PCIe is active during the PERST#
->> sequence and before accessing the DWC registers.
->>
-> 
-> What do you mean by 'PCIe is active'? Who is activating it other than this
-> driver?
+To fix this issue, a global flag vt_switch_done is introduced
+to record whether the system has successfully switched to
+the suspend console via vt_move_to_console() during suspend.
 
-"PCIe is active" in the sense of pm_runtime_active() and PM runtime_enabled.
+If the switch was completed, vt_switch_done is set to 1.
+Later during resume, this flag is checked to ensure that
+the original console is restored properly by calling
+vt_move_to_console(orig_fgconsole, 0).
 
-A better call point would be just before dw_host_init(), after the PCIe 
-controller is reset :
+This prevents scenarios where the resume logic skips console
+restoration due to incorrect detection of the console state,
+especially when a monitor is reconnected before waking up.
 
-stm32_add_pcie_port()
-clk_prepare_enable()
-devm_pm_runtime_enable()
-dw_pcie_host_init()
+Signed-off-by: tuhaowen <tuhaowen@uniontech.com>
+---
+Changes in v2:
+- Added explanation in the commit message on how the issue is fixed.
+- Link to v1: https://lore.kernel.org/all/20250516034643.22355-1-tuhaowen@uniontech.com
+---
+ kernel/power/console.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-with this sequence, the stm32_pcie_suspend_noirq() is well balanced. 
-does that sound better ?
+diff --git a/kernel/power/console.c b/kernel/power/console.c
+index fcdf0e14a47d..832e04bf5439 100644
+--- a/kernel/power/console.c
++++ b/kernel/power/console.c
+@@ -16,6 +16,7 @@
+ #define SUSPEND_CONSOLE	(MAX_NR_CONSOLES-1)
+ 
+ static int orig_fgconsole, orig_kmsg;
++static int vt_switch_done;
+ 
+ static DEFINE_MUTEX(vt_switch_mutex);
+ 
+@@ -136,15 +137,19 @@ void pm_prepare_console(void)
+ 	if (orig_fgconsole < 0)
+ 		return;
+ 
++	vt_switch_done = 1;
++
+ 	orig_kmsg = vt_kmsg_redirect(SUSPEND_CONSOLE);
+ 	return;
+ }
+ 
+ void pm_restore_console(void)
+ {
+-	if (!pm_vt_switch())
++	if (!pm_vt_switch() && !vt_switch_done)
+ 		return;
+ 
++	vt_switch_done = 0;
++
+ 	if (orig_fgconsole >= 0) {
+ 		vt_move_to_console(orig_fgconsole, 0);
+ 		vt_kmsg_redirect(orig_kmsg);
+-- 
+2.20.1
 
-> 
->>> And the fact that you are not
->>> decrementing the runtime usage count means, you want to keep it ON all the time?
->>> Beware that your system suspend/resume calls would never get executed.
->>
->> We do not support PM runtime autosuspend, so we must notify PM runtime that
->> PCIe is always active. Without invoking pm_runtime_get_noresume(), PCIe
->> would mistakenly be marked as suspended.
-> 
-> This cannot happen unless the child devices are also suspended? Or if there are
-> no child devices connected.
-
-If no device is connected or if one is active, without 
-pm_runtime_get_noresume(), pm_genpd_summary says "PCIe suspended" 
-despite being clocked and having accessible configuration space
-
-thank you,
-
-Christian
-
-> 
-> - Mani
-> 
