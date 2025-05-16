@@ -1,324 +1,255 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2079.outbound.protection.outlook.com [40.107.244.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C4D440C;
-	Fri, 16 May 2025 04:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479FA440C;
+	Fri, 16 May 2025 04:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.79
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747368216; cv=fail; b=Jms4yUKOn5zSS+mju0SLzYCpK1BBPJHWVRX8noUXZScy7SyMYLJ3YXdBUS+evutWis4qDf5PMsr95bUDiOBan6y4k1T/tra5pnqlu2HJvGC3e33AxqGAOgABUuOMBc1qrhsVG+R4ADvLbQf7ZOBFKO4IVSSMXAt4iOAbYus1MJ8=
+	t=1747368331; cv=fail; b=pukrOOthoU9QYl8SU/+DYUSQ0JbLUCfNToRqUwyyfzX+sn0NF3RnP2/gp0+s9Db6pl4LlPZMBpYLOL0ImkI0BfTuAXdLtgIVZmUVBCvNt8jWBYZBXOTv8pOsOJvxGiy2XAv9mqfI71gjj9e5vKgDbToVoBJ3PjyjzcflbE+SJlQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747368216; c=relaxed/simple;
-	bh=lzODdpDrMzqceFWxQPc7A9Q8LOeLVAUVhDbT4tus5fA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=mSszy17AEf8xi9aqEKZm5L9NcHdnW9f9LTjGlDToRXRvGKmzi20Rlw1L4vzDpFg9xWIxRo3yQReL+DtFc/lMj1PdwixLIRmQBJENtXFBPeXlqDRg9/yyadefQ1pKeTrE6MXP3RaO0bTDCOC8Ejytx+iv5IbOJoDqvRM12LS+Wk4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aV75NRJr; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747368331; c=relaxed/simple;
+	bh=3U9dYsN+8uFZX+C6iXXbHCuXB0KrIbut6VJJ9Ev3EmQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HF6Bqti2gLhJK1X6EL/b6Ae39g4D+ax2t5qWn20MChV0uH6WqqSy11vG/bip3m2Exrd3ftxiHWXm0I4uISOKhOP4yWAZHjrJbpNvc0c0PA1Jpuy2qBPTOtkjliHORCvhGfwD6xDQsZmFxMD1zg0zzgdgIWvuqrrtwIuFvFsB1p4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CiCuWzXj; arc=fail smtp.client-ip=40.107.244.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aV75NRJr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747368214; x=1778904214;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   in-reply-to:mime-version;
-  bh=lzODdpDrMzqceFWxQPc7A9Q8LOeLVAUVhDbT4tus5fA=;
-  b=aV75NRJrPFYoNURKCVYr/V9KBQ6s+XWF9m3BsYFYuQFEQjkPV4/1t9GS
-   636yteStMvVrtXwbNCjcHSqREgvZl859YIUxc7sxxLjcD1m1Bn3GtovRY
-   Bf+cD2rmj4aIA2o3h2WdoDhEHx0GNAwtvyKTu/7ZtAzwdn5VaEV7qpps5
-   UIBqDghtoIgMKl+ajiSR6d4x9IaJMnf7209QiRRzbLX+txntWFEjpvvJH
-   hWgSBRUDO6BRnoa6cGPlNZn92nFuZh2gAms/ggrM3XUl60qBHEyhHbbuO
-   DJEKrpxaU+tnWQUhxl92iyA34q7/M0GWamjb7mXbPN04BJONEKDQSZMU7
-   Q==;
-X-CSE-ConnectionGUID: nFk8krb3T9OVweX+dl9vdg==
-X-CSE-MsgGUID: itimsI9ZT166+WqDmeBd+g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49024950"
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="49024950"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 21:03:33 -0700
-X-CSE-ConnectionGUID: tXTBmqj2QzOX0sO1VSjR+w==
-X-CSE-MsgGUID: qml4ywlWRmmsoipWouOg0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="139453912"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 21:03:33 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 15 May 2025 21:03:32 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 15 May 2025 21:03:32 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.40) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 15 May 2025 21:03:32 -0700
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CiCuWzXj"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=S9MRDzvOQCcHxVH8XlKO0MnSgThjJekUlvBlDG7D/3vGHqUzXeci2g3TCKyFFlQ9qQrHDAty7wgmvW6hmxMC4i4UR/5P0foAz0Gg+r4xM6pjs1du9NT6UgcNoMQrW9YjRbvp8QkT9mtl71YfYnn6WwBqeuHD0d7vlYk//Clv0RFNDiB+XCBqzwE8eF/HSvJX+/hhkYH2gyMLI/M7upPh1sVwlHQENNjhApLpYr/ZIGg3RbrBfVyLAMaFpFzfSyzqKj5DzD6gzKQrZ2sf2ZFJiGQMITp3hDoZIqW4kHMx+VvVkVaj+uQatthuvH1kmEBb7DOoOfmqADW7sauRwXdXAw==
+ b=HIP8phn8JheeoQnt5bUm3KsWfSZmH7k2vDzi91md8+u3SCiAj698wAeqIy837pgTCEflYit3j7NEYuNnSEOulJkmTWn0ECz5jQ0DFnT3RTcT5I5B9jTg0Gtx06gLcvHYgCAdo54129l0p2hbWtWNTTKwAORuhW4UJdLh+uIKc0Jw8D4cZibCjNRA1FTYnP8/EBciChltyRqwapyyZdnwIj0luMRHkwukfE+3fzamIcwKLDMBaGkLjsTqNRszHfzJkoeh1iPBa2usGwLb/bWRYKW71zvBsPF10pUZ4bxsAadp/UIZXtCkvEA+DDPWlLzTHxjbyh7MZt+LiSPSecAYwA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SN5A+OtWesqNq0D6Orxq/xmzbbkYcSeKnt/YBsXSFNM=;
- b=V/NQRjQasFUSdwBdrGBKiI+DPF5KEozTKDjzQnvL8TYH7xr01xIBVGcoh+JEz9n6C8RgIH+YlS7fByo4JJxQ+Yi9+l1okXSzPk7YHUZMVacs1DHAcW8JGmnyZYbdYv7EtmEPl6NOcktxH/bnj/UVLLHLe6al5L+8ffbcahoNtNh+ug+m9MnYg92k4gnQvhc3Njix4IxNovirvhKeZFTYPwOX6YT5tOOtnOKreT7G0KmScL6ldJ+RmlqpR/Sh5SAYQkuf8r1T4OUbN+KJZbjJZMUJmsF7oAOkRffYizr4RkwT+nnSkShh82FWOicoMNK8wluo31+mFmCMbt5Z8BGJlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
- PH8PR11MB7023.namprd11.prod.outlook.com (2603:10b6:510:221::21) with
+ bh=0KQZsYuF5Zj1b5clzhzIPVLxBId0xARUK/WSURvzz8g=;
+ b=UxHswhZtu/BcmIx6V1iDNsN2uRwbtNSQCkWlkDzjzpLnM2JCcMfRoXOSJmozFq84sKccJT+eby0ftKEWanm2rR5GL3EglpAp0DrW5Vi6kWnb3sar1Bdn04QC1PXg5Tt4ICyeqCsr06SnPN3xWwx+RYKQWes4MtfO4ljz+1sCAgQz/bb/Siea7y7FUztBsaZEMU0bsIjEWz5Pl1PH7peANePY+znO8rNfOsJBpQffLWeisBvzbqpgYvk6Bj3Hh3YsUchnUu6SIc9KOFNfOtp9jWRmfbpGto37jvTkJP2Gh5LqPXftWfJGUBUYSKjT0LZT6BIiflTweS4Jn1O0FRAJVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0KQZsYuF5Zj1b5clzhzIPVLxBId0xARUK/WSURvzz8g=;
+ b=CiCuWzXjlfHkMCNPkHhttncmAgoVYbVvppTescuiprFrqSH5FvK/MWPZkJHYBcF68ipDVEyYicIffuTACGZx4RB0XCwDYDMrwy5czFB/i0zrrlWn6tsEnJl5dKb5+GpIzBk4XwrJcryWML0/0L+zoNGPw7Ffj046OE29JO4XtW9yYQYiU/qrqSX3Asfctljf8xcyVxl0JqUx8Y1pFKKliwfC4YNsJ1eNmlggxn1E1/JRMvJsdehrkIqqmX07KqN6ZIEqprIrXgmjEdcyyek68fWhH0a0x3Q0W1fqm/FrNvTax8OFkudNvv9nuycuQeCz+mDBbpW2jIHJ++wMNg3azA==
+Received: from SA0PR11CA0102.namprd11.prod.outlook.com (2603:10b6:806:d1::17)
+ by SN7PR12MB7177.namprd12.prod.outlook.com (2603:10b6:806:2a5::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.30; Fri, 16 May
- 2025 04:03:29 +0000
-Received: from DS7PR11MB5966.namprd11.prod.outlook.com
- ([fe80::e971:d8f4:66c4:12ca]) by DS7PR11MB5966.namprd11.prod.outlook.com
- ([fe80::e971:d8f4:66c4:12ca%6]) with mapi id 15.20.8722.031; Fri, 16 May 2025
- 04:03:29 +0000
-Date: Fri, 16 May 2025 12:01:19 +0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-CC: "pbonzini@redhat.com" <pbonzini@redhat.com>, "seanjc@google.com"
-	<seanjc@google.com>, "Shutemov, Kirill" <kirill.shutemov@intel.com>,
-	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao"
-	<xiaoyao.li@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Hansen,
- Dave" <dave.hansen@intel.com>, "david@redhat.com" <david@redhat.com>,
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "tabba@google.com"
-	<tabba@google.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>, "Du, Fan"
-	<fan.du@intel.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "michael.roth@amd.com"
-	<michael.roth@amd.com>, "Weiny, Ira" <ira.weiny@intel.com>, "vbabka@suse.cz"
-	<vbabka@suse.cz>, "binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>,
-	"ackerleytng@google.com" <ackerleytng@google.com>, "Yamahata, Isaku"
-	<isaku.yamahata@intel.com>, "Peng, Chao P" <chao.p.peng@intel.com>,
-	"Annapurve, Vishal" <vannapurve@google.com>, "jroedel@suse.de"
-	<jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, "pgonda@google.com"
-	<pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [RFC PATCH 10/21] KVM: x86/mmu: Disallow page merging (huge page
- adjustment) for mirror root
-Message-ID: <aCa4jyAeZ9gFQUUQ@yzhao56-desk.sh.intel.com>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20250424030033.32635-1-yan.y.zhao@intel.com>
- <20250424030634.369-1-yan.y.zhao@intel.com>
- <9d18a0edab6e25bf785fd3132bc5f345493a6649.camel@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <9d18a0edab6e25bf785fd3132bc5f345493a6649.camel@intel.com>
-X-ClientProxiedBy: SG3P274CA0005.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::17)
- To DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Fri, 16 May
+ 2025 04:05:25 +0000
+Received: from SN1PEPF000252A2.namprd05.prod.outlook.com
+ (2603:10b6:806:d1:cafe::d3) by SA0PR11CA0102.outlook.office365.com
+ (2603:10b6:806:d1::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.16 via Frontend Transport; Fri,
+ 16 May 2025 04:05:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ SN1PEPF000252A2.mail.protection.outlook.com (10.167.242.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.18 via Frontend Transport; Fri, 16 May 2025 04:05:25 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 15 May
+ 2025 21:05:11 -0700
+Received: from drhqmail202.nvidia.com (10.126.190.181) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 15 May 2025 21:05:10 -0700
+Received: from Asurada-Nvidia (10.127.8.11) by mail.nvidia.com
+ (10.126.190.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Thu, 15 May 2025 21:05:09 -0700
+Date: Thu, 15 May 2025 21:05:08 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: "jgg@nvidia.com" <jgg@nvidia.com>, "Tian, Kevin" <kevin.tian@intel.com>
+CC: "corbet@lwn.net" <corbet@lwn.net>, "will@kernel.org" <will@kernel.org>,
+	"bagasdotme@gmail.com" <bagasdotme@gmail.com>, "robin.murphy@arm.com"
+	<robin.murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>,
+	"thierry.reding@gmail.com" <thierry.reding@gmail.com>, "vdumpa@nvidia.com"
+	<vdumpa@nvidia.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+	"shuah@kernel.org" <shuah@kernel.org>, "jsnitsel@redhat.com"
+	<jsnitsel@redhat.com>, "nathan@kernel.org" <nathan@kernel.org>,
+	"peterz@infradead.org" <peterz@infradead.org>, "Liu, Yi L"
+	<yi.l.liu@intel.com>, "mshavit@google.com" <mshavit@google.com>,
+	"praan@google.com" <praan@google.com>, "zhangzekun11@huawei.com"
+	<zhangzekun11@huawei.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
+	<patches@lists.linux.dev>, "mochs@nvidia.com" <mochs@nvidia.com>,
+	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>, "vasant.hegde@amd.com"
+	<vasant.hegde@amd.com>
+Subject: Re: [PATCH v4 11/23] iommufd/viommu: Add IOMMUFD_CMD_HW_QUEUE_ALLOC
+ ioctl
+Message-ID: <aCa5dLKso2WXliut@Asurada-Nvidia>
+References: <cover.1746757630.git.nicolinc@nvidia.com>
+ <f52937c027e2fd25d76bc47f4965ba46f82c77c0.1746757630.git.nicolinc@nvidia.com>
+ <BN9PR11MB52761EF8360BEF5C19C2382F8C90A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <aCY2GKfMh6f+vXHj@Asurada-Nvidia>
+ <BN9PR11MB52761839AABD5AA55DF3FE118C93A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <aCauEGCqk5lVikwR@Asurada-Nvidia>
+ <BN9PR11MB5276C2D25DCF30A7367EFD168C93A@BN9PR11MB5276.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <BN9PR11MB5276C2D25DCF30A7367EFD168C93A@BN9PR11MB5276.namprd11.prod.outlook.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|PH8PR11MB7023:EE_
-X-MS-Office365-Filtering-Correlation-Id: 192b985e-7dfc-43ee-c2dc-08dd942e9dc8
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: SN1PEPF000252A2:EE_|SN7PR12MB7177:EE_
+X-MS-Office365-Filtering-Correlation-Id: e41645a4-87bd-4952-ddbe-08dd942ee2f2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?pD0FEed0QTXellz34OKt9zbWaqu4+fRlFHYO5PRKnkGMBaCTIR+N+VBMNweP?=
- =?us-ascii?Q?lJ7Fk49saUYCkWISWmkrPaobfDjJcWR81MdaLt7Dz+ZzAfR6JKQ+/h+bgaUD?=
- =?us-ascii?Q?9jXOW/9Uhv/6AWphUjntaZip3Qc3I8Y38s3IjjooqlxF/DD2Ll1A/9+UTYK8?=
- =?us-ascii?Q?yvSOrWEVD/kcgAwr1DLdK/L5ExjQIpqHbNyezRj1HKr9JnrTUKqpSxZGfDG4?=
- =?us-ascii?Q?tDyIT5knjD4QSs/dnIOBrzRhkQiRFhwE9QtPs1VgBU8ggF0vExAV1tBtV7cP?=
- =?us-ascii?Q?b3r5pNNii0Yhy9/0CEvE1LU2dzn0VEOL3iAyYaRqpe1sum09wN9iT+Vi6DIL?=
- =?us-ascii?Q?rbfI9i56LquNmGFeSkkvFxWQQQ6935kiwPbQgVefkpX9k3dXDv47ozwp1Sby?=
- =?us-ascii?Q?fSQX3W/BDzxBJ4WTVDygEtQogA6ZkCrWfiZr+yDQy1OVOXKlARFgtvhLYfQc?=
- =?us-ascii?Q?IfTzoRdKpHOQp6fWAbKmombWrBVeMP45oTsouTEGd9Dao/j/Xr7tFrTnKQJf?=
- =?us-ascii?Q?1BIHmLBK3H3sggUqRg1Z2WsDoB8bNg++gj1lz2nplzdnwGqhezXN2d0WIZL8?=
- =?us-ascii?Q?joZhnf5gyXphBQWyuUcmx226kMg+gSg+54z0tJqfH/jNQF39pZvhhApJMXPN?=
- =?us-ascii?Q?JVAfU9QlpuvhYt/JnlUfMOhlCmneQ6iVgbssgFX/IKO8BbL5iKzejObE5qCm?=
- =?us-ascii?Q?BjdjG+62Wa08hnch2oM2A4qc0aRFTnror6Z+PeEyiS3a0qBFYnLa1K80oshs?=
- =?us-ascii?Q?jf2nRHxZcyOdFY+3OfmjGyL+70MhyN055aFU4uh1f8ewdMTBYtjisL13vAeL?=
- =?us-ascii?Q?Zw4PNfSZ5NKvtTPYS+758khQ2HzDqwGnesY+qYXXKMvg4XzrHOIAXmNoVlik?=
- =?us-ascii?Q?eArsXgizI+wfd+/jrMaRn/uzbHfU1AZP+HCYH9QI8FMVHc+qof1GaIahNcGA?=
- =?us-ascii?Q?MaGVz6LoMwoyVRORLFpmUIJX/jpkfTJk715+zdT9MLIO3PNws9FuQ6toCz74?=
- =?us-ascii?Q?fTjxaKRM2CQx4VHm/LQEYDyWJqEXk6cNYoqg9hsPgYH+ZfLO9n0m+Wuh7A9t?=
- =?us-ascii?Q?u3C3y3VlfHklrEbHaOBmT9gCgCABHrH2yJK6BkyPoF0FokHgIlWaou2QsEbw?=
- =?us-ascii?Q?0jjAN3oobgTMvjaode7lS+daO132fud9/BSZNo1fYS8pVK30tJxBba7/1STS?=
- =?us-ascii?Q?f2e/XQ1FJPFWiVeHY1r1UyZk+LniBRLroYB8ig5eti4E6lP61Sg+20lJUA3X?=
- =?us-ascii?Q?1nKfgcf5iWSA66MPHgwd0RU+v2prRJL18iIacdjMINl3bsW82aU3Dx9tlqOE?=
- =?us-ascii?Q?bWw0VLOc3Y+9PNOkkGPw8NP6uhK4ywJo6+PrWLFO69SdlNdNy+wIBR1K7Qut?=
- =?us-ascii?Q?MgFD1SNu4L5NmHmCU1q0wao+vm/hDVposJwtofJMGoUUKLkNgA=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?PYQGkk0w5V+SWdXpLEUCZhandSngJZKQtO/xqByPyeaFexGAbEX30SKK8H1O?=
- =?us-ascii?Q?PTYdd8uarFEi0qLGu3L7+sewPgtORdZniooRkO4A8eHluJVaqM66HmOor7hl?=
- =?us-ascii?Q?ANCxQLiB98OQ7HK8COlHcC2WbLUt767xIMzXL5JwKngj9B/+aIhqvdTbRgaO?=
- =?us-ascii?Q?G3a9nV/OTNVvT2PLxs4vjIFDtLoSuDo5vTwkRPC20jYR6Z6fhemQ6H23R7BV?=
- =?us-ascii?Q?54ieYriQgdTFN4HTh3kWWXr/1q7htGRPMyZxOc0BiyE3ZLxgEsWFWkpW7b+V?=
- =?us-ascii?Q?aWb+XclPYM79NjDin2jOlT3b30BSUdSWbA3siGpsNoHo2Kj7cs+WPb9RIVl+?=
- =?us-ascii?Q?391V84yySkT7Rmz5h2Ju+gy1GOqMmiNnhjXANKrk6lQ6mqdWhgXsB988/yir?=
- =?us-ascii?Q?+TE+iBs9YwwW0Yx8xqs9Uv2uhNk1b5o912NVvtJcFbD0X9cldkpJrX5+2YcJ?=
- =?us-ascii?Q?OsOg74fE6qpiYSqc8e6UO1om5lwPCKb1+r5XwfJ6M6Xvy4DQLr759g7iHvEK?=
- =?us-ascii?Q?LfiP5wsjGoOUeDmbPawTgAjONwf6x+w5+uRIjZ/HjsbKmPKiUUZOfdMpIwxQ?=
- =?us-ascii?Q?6BPoa56+SjEGqZt0jw7hI07UwRJqFkN9ZshhnBfsZZ4yRbZnOrGLNBwxCy1u?=
- =?us-ascii?Q?64xoaePU4zqwJHqY1kUK8/CmYNeTI4EP7OVaBcXgOuA06lczbCo/CW8c2geC?=
- =?us-ascii?Q?vHPZxMfB437ydQwbImezQsAlTyb9LGF6kmK3XADtP1H1Ks7js2bnvJ6ykCOT?=
- =?us-ascii?Q?A52QdqxERkWeI1PL8kKHjrrqjFyXTWHiF+7oriHk78uv56C4yj94Lcc7TXQA?=
- =?us-ascii?Q?zwXNsdapGHha9DbE7Er3II2MV31UVqnbZh0K9c2H4XUlZspiArppN1IxHOe3?=
- =?us-ascii?Q?crnElVCMAyfef96huYCWXlj3Dw8SN+xoVaQqpXRImuAWKeOiKoKkDvw/yxvD?=
- =?us-ascii?Q?ScUmgt1R0OL348NPSjX7kzP3T1KQe9iizdUWJi5ol1x3K6jk8J0XOsUPtW7g?=
- =?us-ascii?Q?AVRWBN/ClVSbURTjFvvNb6MCvLeN9hagCwWu54pGhoMQlplL5Wi75cmDfecf?=
- =?us-ascii?Q?b9dWvoF9wgmt5INzCVvNgKdcRYBbh6ztYCcuWLiLu7FHzLOHtz5uh7awrmB1?=
- =?us-ascii?Q?T7OK6VNOKXLxZBIC08VCQJ7cMYnCuQuqTxE6geE9y9Wtc2LmQgp0YRT3+zln?=
- =?us-ascii?Q?tNfUdob1OcpIOfjagJ+cb+54tBVQ2Weyj+qJsH9HahFnZAJEXpXLjstU3OWs?=
- =?us-ascii?Q?2VX0ZLUrQBViTFValWettaKBv7MSH4qiiy+12LPUabOJbkZLzFSQNXoOpgpi?=
- =?us-ascii?Q?CnhPlJ/qkKgZ4XDAPwRH1CKkN9ZCT3tc9AI2st2E/aQAcdtTVlDXm57pCc/J?=
- =?us-ascii?Q?8hgoyPCreVsfC4Oj/oWft6r1JHGjvyxaO1tLQsi7bruhhJpUKI4FbUNLLURk?=
- =?us-ascii?Q?j72MnaX9BQtuZCiJvefVl+0PGehpQn2TkqksUe++moVAx6lFcKMI4v7p3S+Z?=
- =?us-ascii?Q?cDUniwW2bVFls0FxsOsi1DdVTNMeQygogCs15a5B/RsaSoLrOdzj8f2oHjTN?=
- =?us-ascii?Q?pWue05WWJ5zjfCxK8i7Mu48Sl5pF3td4NiyeldmVf5XE98OeGmnKlzP4FH5v?=
- =?us-ascii?Q?xA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 192b985e-7dfc-43ee-c2dc-08dd942e9dc8
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2025 04:03:29.4793
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Pq1kumWf2OOkzWvFmj6bcJ1KSdxKgQU0vre7EP/tRXpMfPaZ5Mwe6e0+Y0jD?=
+ =?us-ascii?Q?vAASKODU7baVulV1FhNhbU6QAYmTMGWgJSG52Zh2c7eTi9kKfBCjqIPGIOUl?=
+ =?us-ascii?Q?heYc4Kj1hmk29+TLcScB2p9GC1x+tSlejR37p2HLUK0oIG6++94H7zlIA5dz?=
+ =?us-ascii?Q?2Ntx9QwfM6ny9GAjc0YfwWgGuURyDP182bDxjbwfvqATQtg7JtaTZEafnC7r?=
+ =?us-ascii?Q?C/LZN4adL5zFj4NB9k6wEcnHsLn1/3SjGHTEVlMkiDL06JjTxXOwgdlwX6D1?=
+ =?us-ascii?Q?YZArLMj1JW8bgBTJW83eyFOWPB4+uhj2xRSgx3XazhJGf56Zf0uFdVpz32c0?=
+ =?us-ascii?Q?6oEmwjnuQpNyg6CjeTPu9F7PcYCojJxD9uvQJX3bV2Vx62eLannyaZverc3V?=
+ =?us-ascii?Q?b6381BxYp8SDtfEsK/hxAY7Vca6ZIzYfwBYilmLlFcwAz6k7wYrZn48FBDlV?=
+ =?us-ascii?Q?ci2+GqrzfJsRbPOb3WoYavlpqJI9aws2qsNsgsKAEGOEk+jH66cM7NOEYRvl?=
+ =?us-ascii?Q?Q3nDDDrCTEkJT7FR2fMsjndTJtk7TFlRWnvpkwP1ZeShvrIjvmrb7TQBIj/9?=
+ =?us-ascii?Q?CrxjMn7oz1AQc2beyB1aIxKKGmx+kLoHPproYtWoaQLaOQtCkk73ltcIZ8dB?=
+ =?us-ascii?Q?OCU6AlYPePXIXckIDXL4YCLdTv3VaefMdGgxYdt0xaVrGCakXDflkPuAMkFz?=
+ =?us-ascii?Q?PxcmVe4Cm1sk4pGmrFQlsEn016lrwDGvAolcTCdnkOGj4dG3FudkWMOC2LSn?=
+ =?us-ascii?Q?OH+fU1RWlpNaws+0/dov/F/zin67w7/zbv31B7k0PkG4xnpY6cp1hjNzERPG?=
+ =?us-ascii?Q?a3SHLr+p0D3zk+p+2rK/TkiknOt/0pNrtySJc94rj67MmEEWRZ+LNZAU/Gm/?=
+ =?us-ascii?Q?znWn8oaqkZKQXSz+lO0flziDiYTOWXVoHrLvxL8e0OUg807qwkKtYDj1FDTt?=
+ =?us-ascii?Q?LR+vrPguwqT3FtxhxKh/5kFuYrEr/MXdtR0Vbskr+NOfM+xg/aoGse4gfE3c?=
+ =?us-ascii?Q?K+38csVmhl+CxOzZNCgj5Lt+S0numgub65PDkzVwHiAA/w7892GN8etKSWEC?=
+ =?us-ascii?Q?gzeCfHM4CZLoh+d0CmJTt28Qg5bC1SXtCNG4ZIx6Xuvew14hJCH4mvEJfETE?=
+ =?us-ascii?Q?3Q/KVOmlPW2oT5VFjw1rHm2Ux5sBhKRM8BDWaJ0VpWzNOafhgaYeNWWp8gV/?=
+ =?us-ascii?Q?7jiPWCYEz3K78LCgtb4/FX5VnW44F4lILL/ycHdjWQzKnjA2BWy8mwdCe/sN?=
+ =?us-ascii?Q?lEnzyUU5SShU23iB/wG+Y6dcCB1xIYpklBcsGpbwyPCifh2D1EAu4RMKsKOw?=
+ =?us-ascii?Q?ReUwfKOyJn6JLZH4RDI+NgRMvXhdCPZwmj6TryKZ6IBNartiJlEwIGuQG1Q5?=
+ =?us-ascii?Q?VP7cCnKNqbQFoeTHSg//odrAQiO35GJngrel8WhZkajd9X372KnEWm488tv+?=
+ =?us-ascii?Q?CcXqr7uDNxU8qEEhc/zZ0JIhElrSiLdOIgwHAwRE+IygO1qaHmNIHNSt5jm1?=
+ =?us-ascii?Q?ZO1VV/49plOrE4ZHPmCsQ8ijH8XyMYT30DaT?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2025 04:05:25.2145
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3efC/Kf2pA8fhFT5aia2acD2sZ4XYml59udSQpAOsXKBrAD7L9p3sLkx3o+78UvqOLYuhRgLcYqSnCF3NQyvVw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB7023
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e41645a4-87bd-4952-ddbe-08dd942ee2f2
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF000252A2.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7177
 
-On Wed, May 14, 2025 at 04:15:14AM +0800, Edgecombe, Rick P wrote:
-> On Thu, 2025-04-24 at 11:06 +0800, Yan Zhao wrote:
-> > From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+On Fri, May 16, 2025 at 03:52:16AM +0000, Tian, Kevin wrote:
+> > From: Nicolin Chen <nicolinc@nvidia.com>
+> > Sent: Friday, May 16, 2025 11:17 AM
 > > 
-> > Disallow page merging (huge page adjustment) for mirror root by leveraging
-> > the disallowed_hugepage_adjust().
+> > On Fri, May 16, 2025 at 02:49:44AM +0000, Tian, Kevin wrote:
+> > > > From: Nicolin Chen <nicolinc@nvidia.com>
+> > > > Sent: Friday, May 16, 2025 2:45 AM
+> > > >
+> > > > On Thu, May 15, 2025 at 06:30:27AM +0000, Tian, Kevin wrote:
+> > > > > > From: Nicolin Chen <nicolinc@nvidia.com>
+> > > > > > Sent: Friday, May 9, 2025 11:03 AM
+> > > > > >
+> > > > > > +
+> > > > > > +/**
+> > > > > > + * struct iommu_hw_queue_alloc - ioctl(IOMMU_HW_QUEUE_ALLOC)
+> > > > > > + * @size: sizeof(struct iommu_hw_queue_alloc)
+> > > > > > + * @flags: Must be 0
+> > > > > > + * @viommu_id: Virtual IOMMU ID to associate the HW queue with
+> > > > > > + * @type: One of enum iommu_hw_queue_type
+> > > > > > + * @index: The logical index to the HW queue per virtual IOMMU for
+> > a
+> > > > > > multi-queue
+> > > > > > + *         model
+> > > > >
+> > > > > I'm thinking of an alternative way w/o having the user to assign index
+> > > > > and allowing the driver to poke object dependency (next patch).
+> > > > >
+> > > > > Let's say the index is internally assigned by the driver. so this cmd is
+> > > > > just for allowing a hw queue and it's the driver to decide the allocation
+> > > > > policy, e.g. in ascending order.
+> > > > >
+> > > > > Introduce a new flag in viommu_ops to indicate to core that the
+> > > > > new hw queue should hold a reference to the previous hw queue.
+> > > > >
+> > > > > core maintains a last_queue field in viommu. Upon success return
+> > > > > from @hw_queue_alloc() the core increments the users refcnt of
+> > > > > last_queue, records the dependency in iommufd_hw_queue struct,
+> > > > > and update viommu->last_queue.
+> > > > >
+> > > > > Then the destroy order is naturally guaranteed.
+> > > >
+> > > > I have thought about that too. It's nice that the core can easily
+> > > > maintain the dependency for the driver.
+> > > >
+> > > > But there would still need an out_index to mark each dynamically
+> > > > allocated queue. So VMM would know where it should map the queue.
+> > > >
+> > > > For example, if VMM wants to allocate a queue at its own index=1
+> > > > without allocating index=0 first, kernel cannot fail that as VMM
+> > > > doesn't provide the index. The only way left for kernel would be
+> > > > to output the allocated queue with index=0 and then wish VMM can
+> > > > validate it, which doesn't sound safe..
+> > > >
+> > >
+> > > VMM's index is virtual which could be mapped to whatever queue
+> > > object created at its own disposal.
+> > >
+> > > the uAPI just requires VMM to remember a sequential list of  allocated
+> > > queue objects and destroy them in reverse order of allocation, instead
+> > > of in the reverse order of virtual indexes.
 > > 
-> > [Yan: Passing is_mirror to disallowed_hugepage_adjust()]
+> > But that's not going to work for VCMDQ.
 > > 
-> > Signed-off-by: Edgecombe, Rick P <rick.p.edgecombe@intel.com>
-> > Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-> > ---
-> >  arch/x86/kvm/mmu/mmu.c          | 6 +++---
-> >  arch/x86/kvm/mmu/mmu_internal.h | 2 +-
-> >  arch/x86/kvm/mmu/paging_tmpl.h  | 2 +-
-> >  arch/x86/kvm/mmu/tdp_mmu.c      | 7 ++++---
-> >  4 files changed, 9 insertions(+), 8 deletions(-)
+> > VINTF mmaps only a single page that controls multiple queues. And
+> > all queues have to be mapped correctly between HW and VM indexes.
+> > Otherwise, it won't work if VMM maps:
 > > 
-> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> > index a284dce227a0..b923deeeb62e 100644
-> > --- a/arch/x86/kvm/mmu/mmu.c
-> > +++ b/arch/x86/kvm/mmu/mmu.c
-> > @@ -3326,13 +3326,13 @@ void kvm_mmu_hugepage_adjust(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
-> >  	fault->pfn &= ~mask;
-> >  }
-> >  
-> > -void disallowed_hugepage_adjust(struct kvm_page_fault *fault, u64 spte, int cur_level)
-> > +void disallowed_hugepage_adjust(struct kvm_page_fault *fault, u64 spte, int cur_level, bool is_mirror)
-> >  {
-> >  	if (cur_level > PG_LEVEL_4K &&
-> >  	    cur_level == fault->goal_level &&
-> >  	    is_shadow_present_pte(spte) &&
-> >  	    !is_large_pte(spte) &&
-> > -	    spte_to_child_sp(spte)->nx_huge_page_disallowed) {
-> > +	    (spte_to_child_sp(spte)->nx_huge_page_disallowed || is_mirror)) {
-> >  		/*
-> >  		 * A small SPTE exists for this pfn, but FNAME(fetch),
-> >  		 * direct_map(), or kvm_tdp_mmu_map() would like to create a
-> > @@ -3363,7 +3363,7 @@ static int direct_map(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
-> >  		 * large page, as the leaf could be executable.
-> >  		 */
-> >  		if (fault->nx_huge_page_workaround_enabled)
-> > -			disallowed_hugepage_adjust(fault, *it.sptep, it.level);
-> > +			disallowed_hugepage_adjust(fault, *it.sptep, it.level, false);
-> >  
-> >  		base_gfn = gfn_round_for_level(fault->gfn, it.level);
-> >  		if (it.level == fault->goal_level)
-> > diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-> > index db8f33e4de62..1c1764f46e66 100644
-> > --- a/arch/x86/kvm/mmu/mmu_internal.h
-> > +++ b/arch/x86/kvm/mmu/mmu_internal.h
-> > @@ -411,7 +411,7 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
-> >  int kvm_mmu_max_mapping_level(struct kvm *kvm,
-> >  			      const struct kvm_memory_slot *slot, gfn_t gfn);
-> >  void kvm_mmu_hugepage_adjust(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault);
-> > -void disallowed_hugepage_adjust(struct kvm_page_fault *fault, u64 spte, int cur_level);
-> > +void disallowed_hugepage_adjust(struct kvm_page_fault *fault, u64 spte, int cur_level, bool is_mirror);
-> >  
-> >  void track_possible_nx_huge_page(struct kvm *kvm, struct kvm_mmu_page *sp);
-> >  void untrack_possible_nx_huge_page(struct kvm *kvm, struct kvm_mmu_page *sp);
-> > diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-> > index 68e323568e95..1559182038e3 100644
-> > --- a/arch/x86/kvm/mmu/paging_tmpl.h
-> > +++ b/arch/x86/kvm/mmu/paging_tmpl.h
-> > @@ -717,7 +717,7 @@ static int FNAME(fetch)(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
-> >  		 * large page, as the leaf could be executable.
-> >  		 */
-> >  		if (fault->nx_huge_page_workaround_enabled)
-> > -			disallowed_hugepage_adjust(fault, *it.sptep, it.level);
-> > +			disallowed_hugepage_adjust(fault, *it.sptep, it.level, false);
-> >  
-> >  		base_gfn = gfn_round_for_level(fault->gfn, it.level);
-> >  		if (it.level == fault->goal_level)
-> > diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-> > index 405874f4d088..8ee01277cc07 100644
-> > --- a/arch/x86/kvm/mmu/tdp_mmu.c
-> > +++ b/arch/x86/kvm/mmu/tdp_mmu.c
-> > @@ -1244,6 +1244,7 @@ int kvm_tdp_mmu_map(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
-> >  	struct tdp_iter iter;
-> >  	struct kvm_mmu_page *sp;
-> >  	int ret = RET_PF_RETRY;
-> > +	bool is_mirror = is_mirror_sp(root);
-> >  
-> >  	kvm_mmu_hugepage_adjust(vcpu, fault);
-> >  
-> > @@ -1254,8 +1255,8 @@ int kvm_tdp_mmu_map(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
-> >  	for_each_tdp_pte(iter, kvm, root, fault->gfn, fault->gfn + 1) {
-> >  		int r;
-> >  
-> > -		if (fault->nx_huge_page_workaround_enabled)
-> > -			disallowed_hugepage_adjust(fault, iter.old_spte, iter.level);
-> > +		if (fault->nx_huge_page_workaround_enabled || is_mirror)
+> > HW-level VINTF1 LVCMDQ0 <==> VM-level VINTF0 LVCMDQ1
+> > HW-level VINTF1 LVCMDQ1 <==> VM-level VINTF0 LVCMDQ0
+> > 
+> > So, one way or another, kernel has to ensure the static mappings
+> > of the indexes. And I think it's safer in the way that VMM tells
+> > what index to allocate..
+> > 
 > 
-> Maybe we should rename nx_huge_page_workaround_enabled to something more generic
-> and do the is_mirror logic in kvm_mmu_do_page_fault() when setting it. It should
-> shrink the diff and centralize the logic.
-Hmm, I'm reluctant to rename nx_huge_page_workaround_enabled, because
-
-(1) Invoking disallowed_hugepage_adjust() for mirror root is to disable page
-    promotion for TDX private memory, so is only applied to TDP MMU.
-(2) nx_huge_page_workaround_enabled is used specifically for nx huge pages.
-    fault->huge_page_disallowed = fault->exec && fault->nx_huge_page_workaround_enabled;
-
-    if (fault->huge_page_disallowed)
-        account_nx_huge_page(vcpu->kvm, sp,
-                             fault->req_level >= it.level);
-    
-    sp->nx_huge_page_disallowed = fault->huge_page_disallowed.
-
-    Affecting fault->huge_page_disallowed would impact
-    sp->nx_huge_page_disallowed as well and would disable huge pages entirely.
-
-    So, we still need to keep nx_huge_page_workaround_enabled.
-
-If we introduce a new flag fault->disable_hugepage_adjust, and set it in
-kvm_mmu_do_page_fault(), we would also need to invoke
-tdp_mmu_get_root_for_fault() there as well.
-
-Checking for mirror root for non-TDX VMs is not necessary, and the invocation of
-tdp_mmu_get_root_for_fault() seems redundant with the one in kvm_tdp_mmu_map().
-
-
-> > +			disallowed_hugepage_adjust(fault, iter.old_spte, iter.level, is_mirror);
-> >  
-> >  		/*
-> >  		 * If SPTE has been frozen by another thread, just give up and
-> > @@ -1278,7 +1279,7 @@ int kvm_tdp_mmu_map(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
-> >  		 */
-> >  		sp = tdp_mmu_alloc_sp(vcpu);
-> >  		tdp_mmu_init_child_sp(sp, &iter);
-> > -		if (is_mirror_sp(sp))
-> > +		if (is_mirror)
-> >  			kvm_mmu_alloc_external_spt(vcpu, sp);
-> >  
-> >  		sp->nx_huge_page_disallowed = fault->huge_page_disallowed;
+> Okay, that's a valid point.
 > 
+> But hey, we are already adding various restrictions to the uAPI
+> about dependency, contiguity, etc. which the VMM should conform
+> to. What hurts if we further say that the VMM should allocate
+> virtual index in an ascending order along with hw queue allocation?
+
+You mean adding another flag to manage the dependency in the core,
+right?
+
+I talked with Jason offline when adding that depend API. He didn't
+want it to be in the core, saying that is a driver thing.
+
+But that was before we added pin and contiguity, which he doesn't
+really enjoy being in the core either.
+
+So, yea, I think you have a point here..
+
+@Jason?
+
+Thanks
+Nicolin
