@@ -1,63 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A09327FD7B
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 23:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147CA227B9A;
+	Fri, 16 May 2025 23:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747438845; cv=none; b=jyloOJaKr2+8Li5hqiHGCgoDf5z96KHn8Sd/GD18Mhqp5uaAEPWsZXaFtRwxRSladu4ERXiSkaUuirccNrd3W9bZ0oLdDgG+p3K55rg2Q69jzCF9GdkA44PDzoc5Ghz0mMUidhqcdYGtQMjNiWml53N/xEsJ4cG9KC85DnjGHQY=
+	t=1747438955; cv=none; b=c0MNpUqugw+Dlv0r1IiFT2P5UOYi6AW9tFJED8cjNQLYh1IWnDwAeMSXXwiIykz92mrebEkFW3b4eKxGJgRyScB8qSUd7x2k9vuki+yXY/eHcRTvNeDC4kM0QPjZxM7rOJtdexvQH/G/WWYX3H+mKgc8j4Pz+cRAUthY+nYX7xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747438845; c=relaxed/simple;
-	bh=xrXiwvcDvwTciw4SLVynORnx+1TUmtqOisuAk39oEmI=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=uq2TPhc5QX5iuJLNv8dHYjCLXwCSkPQgU1sflwy9fKUWZG3LaP6gDqGWYLZUTp+2+7IEWJTwM9Ca2opIZsnteYNUT6oSyntnaX0zcD57VnKCw1SPAp1EVMLHghxjoH+69Mm85bKLzwMJtkl5m09KIUwPPr30xVqe099ckIu/yZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qA1d7TXQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747438955; c=relaxed/simple;
+	bh=enhUdYLZNGuxjvV2Ouo1ieQ/uQBsaB2W9PP8wdHqgjk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=en0etCTSbxETnkNxymUkH2O5csNbG48B8tpnKRISnDGVZhs31qQmpr4h1+F+7fyiLjrtzU9fIRMoGWVyOgKVzwXGuekUpZZbUT8VYG3S1tZtBfx3OATo81DdVAw37P3X7iwfH2Y+4cPAeBgx95e068FaIeJApsklPkJHBhr+HEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I6XuD7X5; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qA1d7TXQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D610C4CEE4;
-	Fri, 16 May 2025 23:40:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747438845;
-	bh=xrXiwvcDvwTciw4SLVynORnx+1TUmtqOisuAk39oEmI=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=qA1d7TXQHqUMkHFl1bYMJQy5ormuVuG+ROWvpa2Z5A8WVk8FNGHAHjD/MT6WRGGdL
-	 HID+yJO4xNWQmB8G+R8eUUnUEOSgRdo54yHZ6Q47zeaw2HfT+Cv5zEJqfFW5aTBHKn
-	 awm6WznAQKvz9SZqf+fLre9zsy/z4fRXYRZbA2jiMPvMtFny8GG3rZlT9MfZfp5BDN
-	 l2ngSJteDegYIdvPJRMlmwbXhCj+jNmnrhYZ6wqiotEDtX3yE1mLu0ikPWoFk2Q7rq
-	 Ue2EfHnGZOjv4omu/2TB2oHZzkibY5hoL2hNPnL1sI8Gj1AIgsXfU6Dis1JOfXmkwV
-	 kmC9c+83h6ExA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D913806659;
-	Fri, 16 May 2025 23:41:23 +0000 (UTC)
-Subject: Re: [git pull] drm fixes for 6.15-rc7
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <CAPM=9tzOu5FL6KXJDSJbAScqJjWnn12KLi3Va8V_WDrg6KUrPQ@mail.gmail.com>
-References: <CAPM=9tzOu5FL6KXJDSJbAScqJjWnn12KLi3Va8V_WDrg6KUrPQ@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAPM=9tzOu5FL6KXJDSJbAScqJjWnn12KLi3Va8V_WDrg6KUrPQ@mail.gmail.com>
-X-PR-Tracked-Remote: https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-05-17
-X-PR-Tracked-Commit-Id: c81dbc490bcdfd0dd6199c5c382dc923cea0029b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 12b6c62c038e85354154aee4eb2cf7a2168b3ecc
-Message-Id: <174743888206.4096732.638912975486071931.pr-tracker-bot@kernel.org>
-Date: Fri, 16 May 2025 23:41:22 +0000
-To: Dave Airlie <airlied@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Sima Vetter <sima@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I6XuD7X5"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30bf7d0c15eso23730691fa.0;
+        Fri, 16 May 2025 16:42:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747438952; x=1748043752; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xLZr7VPDkLZEOG2In4Hkybds2QcDTETRuyHOMbZn0I0=;
+        b=I6XuD7X5LQTLk9YlaNyizK71YWGu58XD4lSgFcBSYNqnJ6y3xShemrqn4ZHTwR4IYm
+         eAx4GOseKWVlPsAZB98CWvJyWnOxgkKY/9IFOhuJH/9FP5hQPsQ8nra7EI4quY13qaHW
+         j2+eFXeEFNdUpHEs1lQlfzewe497kc/LwcydcWcgjDAt/c1mUPj+y3ZY2JoyYQi2hjcM
+         7KrO8RowU8XcXf8bsk0By71E7s5d2vZi+4yH13m8c88rXqfQF+E7L6IGUeqR2GXsAfWF
+         X2TFG548qpBwqSAPAQS7JUh77gQ4LVUOaBcGtCz1i9JHpl53E8N8xvDXlKhiTdln+9Bw
+         mUmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747438952; x=1748043752;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xLZr7VPDkLZEOG2In4Hkybds2QcDTETRuyHOMbZn0I0=;
+        b=cdIdGZ+P9Qncp5ikjTce+BU49dOi3dei6sONQ344PGnRhDSxd9A5VuGiIn+ciTFzFO
+         oeRh4SvnyGNmE3PIxy0dTXpGJ8vrsdaZEb3X0VcOYuJ2eyxwXOVMpVFWlvcudYWbTOKW
+         JsD5N7MTDsllzDwm9NrwLtb+q47RqjlvPgaGNMCZDIzrUt6Oy9nmywSVkQZNviTyC+p1
+         WsKe08ux0txWXHtehNvCTMrZ/NF6x1OdFTIgpq6fS9zK2VmdjxiIl/oqcq4HsU9tYRYW
+         5yTK6EysDWMFei8PDhYTMF86i9PsjyUfLKGboHz6w9hhCxnyXw8OmdJ1Ev1sTbnw7yYL
+         hOFA==
+X-Forwarded-Encrypted: i=1; AJvYcCXA599CjJ8sd2NfWOcVo+eCjyZFqHTKRrJyboVc70pGlBHbVCp8k9WT1vmE3a5vVU2myyH919DwOw8qsS8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEEEJkDGtBKpuUpTSFOqZOnzng1ZTiyxzq5LGUTQFqwbQW8SBT
+	LPlJFRLCuooGOGaO8yL+tB5I8dDcLcapPhcULYpHDC+r1ILiEXt0UO1kRpW25Qs4Clg3oxR8rag
+	BRiWtr6FWExR+7bcGqVPCGxFJLOJfilghbu3f
+X-Gm-Gg: ASbGncsIF5PrJZx29E3pibjdDNHLfw5fEdUISx6/f+6LzpzmedvBOCMVBzu4XF66K+K
+	EROgtepHeimKwKaVPvNQZGfoDgFtCzHEzVvpwdlDE2Tw9jdnHYmDioeGoNOpJqjjwdFrblMCEhC
+	M4mSmsjijRFD/HCtqWzhRGJPtDuTbQ453FyPd3eFje2bT6S5OouCc33vDzJ04awM4=
+X-Google-Smtp-Source: AGHT+IHWA0Q42Yme9yar+nJKETqGN6P6XPgO5dgbsqiCW7CZnmvrdQJh1/OATeYw3Dk1Wp5wXUDmiePYru76htQVZGc=
+X-Received: by 2002:a2e:8a88:0:b0:30c:b2c:edb6 with SMTP id
+ 38308e7fff4ca-328096cee8amr12394851fa.18.1747438951796; Fri, 16 May 2025
+ 16:42:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+From: Steve French <smfrench@gmail.com>
+Date: Fri, 16 May 2025 18:42:19 -0500
+X-Gm-Features: AX0GCFvohLs-QQrzZlsilxheGT-EDcZhxA3HzyLs6TaG3uT-eoyVlqE2sQ2H3bo
+Message-ID: <CAH2r5mu7-vNnVE+1fdESnV4kJ-sr3gV4YnAQJ==BuXve2QOjpQ@mail.gmail.com>
+Subject: [GIT PULL] smb3 client fixes
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: CIFS <linux-cifs@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-The pull request you sent on Sat, 17 May 2025 06:44:48 +1000:
+Please pull the following changes since commit
+82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3:
 
-> https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-05-17
+  Linux 6.15-rc6 (2025-05-11 14:54:11 -0700)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/12b6c62c038e85354154aee4eb2cf7a2168b3ecc
+are available in the Git repository at:
 
-Thank you!
+  git://git.samba.org/sfrench/cifs-2.6.git tags/6.15-rc6-smb3-client-fixes
+
+for you to fetch changes up to 3965c23773e81c476f6de30ccc5d201c59ff9714:
+
+  smb: client: fix zero rsize error messages (2025-05-14 19:26:38 -0500)
+
+----------------------------------------------------------------
+Two smb3 client fixes
+- Fix memory leak in mkdir error path
+- Fix max rsize miscalculation after channel reconnect
+----------------------------------------------------------------
+Jethro Donaldson (1):
+      smb: client: fix memory leak during error handling for POSIX mkdir
+
+Paulo Alcantara (1):
+      smb: client: fix zero rsize error messages
+
+ fs/smb/client/file.c    | 6 ++++--
+ fs/smb/client/smb2pdu.c | 2 +-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Thanks,
+
+Steve
