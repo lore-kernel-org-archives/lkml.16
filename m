@@ -1,117 +1,216 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31A8B218ADE
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+Received: from azure-sdnproxy.icoremail.net (l-sdnproxy.icoremail.net [20.188.111.126])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8D3722CBC9;
+	Fri, 16 May 2025 09:17:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.188.111.126
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747387032; cv=none; b=Sodm8ScDitVSos1RxDMa3oXYO94uPQrPXaJ8fWhoYY0wDOps/mo7aWjGHgINZVuJRKxMj5o6DbAM3CdX5rmrBa/xami7+T7m39g0uPFJmMdaavJZL8nKpGRa4LFJTNOvJymMg3MPo623zu9BJiXs/8rZJsc+SeZ/RixtmZKz+3U=
+	t=1747387041; cv=none; b=U7tnjCNgtOrp60Qu+hPJC4U2j59q5qBJ2G2c6pSadz14vc/UtIXzd1KmlgZGIqFG2nsC3mJ/H7J1ruPPmcyZBONUW/tDO/8+mL6X8/ZXEli2mcEGlinsDClig+NfHa3Ij8X07r2hGbDCmE8XVdJ5xVHfEgJAZ8sz+h3vNi8xa60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747387032; c=relaxed/simple;
-	bh=pimeC/qsqgIfobUJN8Bs2+IJtIqeP3hE2aG6NHmBa9I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XQL6M6Zxr7dtu9SUq+xSOr/dz9IrTYsMUJ3BNZC1Ko4+ocTQKbLLR1kKJwdT/EH/fANixtUMpSTLDIm2F9UZat45LVBGT5rjOaDey33J6HEqsK7MlIGHz0vvxZH3hAmdNmGCy2xRm7Py/1u2ix7F9GO/vdl5JbZ+DObYIQAX814=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GZogxHPl; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GZogxHPl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747387031; x=1778923031;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pimeC/qsqgIfobUJN8Bs2+IJtIqeP3hE2aG6NHmBa9I=;
-  b=GZogxHPl/iEUk1EkE9dJ8Uo0greY21nupZY/jyr6XeqAqQ5kPGLUJ4mg
-   l5oUZb/msZKRBjpFUJiMKEaEWjm0aZnemi5G1yldQ1T9Ua/nEKS6N5MwT
-   43m9I1E5gZrELSojx+uEoApSh2WgshbIqK3NrL7hjV7V/WOElDZikAwsV
-   pd/eCcxED0aTwu+fm9iSJGympDkYxHqkEQ/SOjDtS3EQCKEWFyGVoj9iT
-   +PxmiOMZbmS8JpTGMip0Tis8ptX9+DHPkz61Qdc8iFKGczY0kRetzM058
-   EfYD33mVAkRJSWsTdRO+Ss/WwMwTAKgxw8qFfNeW4BNVjCV6aSSlfdC4f
-   Q==;
-X-CSE-ConnectionGUID: IcVeP0MTRduBxwQRfc5uhQ==
-X-CSE-MsgGUID: bgaRz4JGSY2XgtsmHkhXwQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="66756378"
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="66756378"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:17:10 -0700
-X-CSE-ConnectionGUID: +7ckBq6NR5uBMCWiGD8KUg==
-X-CSE-MsgGUID: m4j//WphSFSOl7JE6Y8CIQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="138492992"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa010.jf.intel.com with ESMTP; 16 May 2025 02:17:07 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id F15D438D; Fri, 16 May 2025 12:17:05 +0300 (EEST)
-Date: Fri, 16 May 2025 12:17:05 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Shivank Garg <shivankg@amd.com>, Ard Biesheuvel <ardb+git@google.com>, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, 
-	Ingo Molnar <mingo@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Brian Gerst <brgerst@gmail.com>, "Rao, Bharata Bhasker" <bharata@amd.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v3 1/7] x86/cpu: Use a new feature flag for 5 level paging
-Message-ID: <xoigewp763crp6r5nxbrvlwjjcnhivbkfmyx4vc3kcjq63pzgr@znwfmvny6mha>
-References: <20250514104242.1275040-9-ardb+git@google.com>
- <20250514104242.1275040-10-ardb+git@google.com>
- <20250515131120.GCaCXn-E8zQutUqKLn@fat_crate.local>
- <7c315a0d-1508-4310-b584-ecaeaba52296@amd.com>
- <20250515191131.GNaCY8Y7PI44akybDM@fat_crate.local>
+	s=arc-20240116; t=1747387041; c=relaxed/simple;
+	bh=xJfQfSHH/0PyHDRDTuD+QGC9oCH7IyYYHmP0zFExXzg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PGqgEbVlZyYcBlQQt2zfH1UvDWOPge6djZ7OUt1g/YpML8OBI+Qhu7hcCuMAnpgxrsTVhz33sL7U2Wr+6wonQFgQtjmVb1tI2+yzI7fRNAJmXUWOHXAQRrlK6qoWShNBGzqZJkEv//H2xb4aE9E77oKuKAPH7O7VEqXVqetUwbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=20.188.111.126
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
+	by app2 (Coremail) with SMTP id TQJkCgAXqZKEAidohNF8AA--.49748S2;
+	Fri, 16 May 2025 17:16:54 +0800 (CST)
+From: dongxuyang@eswincomputing.com
+To: ulf.hansson@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-mmc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	adrian.hunter@intel.com,
+	p.zabel@pengutronix.de,
+	shanchun1218@gmail.com
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	xuxiang@eswincomputing.com,
+	Xuyang Dong <dongxuyang@eswincomputing.com>
+Subject: [PATCH v1 1/2] dt-bindings: sdhci: eswin: Documentation for eic7700 SoC
+Date: Fri, 16 May 2025 17:16:50 +0800
+Message-Id: <20250516091650.832-1-dongxuyang@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
+In-Reply-To: <20250516091259.774-1-dongxuyang@eswincomputing.com>
+References: <20250516091259.774-1-dongxuyang@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515191131.GNaCY8Y7PI44akybDM@fat_crate.local>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TQJkCgAXqZKEAidohNF8AA--.49748S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxAF1UKFWfJF48Kr17Gw17Wrg_yoWrWFyDpF
+	4xGw1UAr1fXF1fua1rKw10kF1agan8GF1IyrnrXw1Yy3WYgFy0qw1ayFy5Ga4UAr1xZay3
+	XFyY934xAa17AF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-wCF04
+	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
+	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
+	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
+	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUXJ5wUUUUU=
+X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
 
-On Thu, May 15, 2025 at 09:11:31PM +0200, Borislav Petkov wrote:
-> On Thu, May 15, 2025 at 11:50:17PM +0530, Shivank Garg wrote:
-> > I've re-tested the performance concerns we discussed earlier regarding 5-level paging.
-> > Recent tests on a current kernel don't show any performance issues:
-> > 
-> > AMD EPYC Zen 5 (SMT enabled).
-> > Linux HEAD 6.15.0-rc6+ 088d13246a46
-> > 
-> > lmbench/lat_pagefault:
-> > numactl --membind=1 --cpunodebind=1 bin/x86_64-linux-gnu/lat_pagefault -N 100 1GB_randomfile
-> > 
-> > Output values (50 runs, Mean, 2.5 percentile and 97.5 percentile, in microseconds):
-> > 
-> > 4-level (no5lvl option)
-> > Mean: 0.138876
-> >      2.5%     97.5%
-> > 0.1384988 0.1392532
-> > 
-> > 4-level (CONFIG_X86_5LEVEL=n)
-> > Mean: 0.137958
-> >      2.5%     97.5%
-> > 0.1376473 0.1382687
-> > 
-> > 5-level
-> > Mean: 0.138904
-> >      2.5%     97.5%
-> > 0.1384789 0.1393291
-> > 
-> > After repeating the experiments a few times, the observed difference(~1%) in mean values
-> > is under noise levels.
-> > I think these results address the performance concerns previously raised[1]. I don't
-> > foresee any issues in proceeding with the 5-level paging implementation
-> > simplification efforts[2].
-> > 
-> > [1] https://lore.kernel.org/all/80734605-1926-4ac7-9c63-006fe3ea6b6a@amd.com
-> > [2] https://lore.kernel.org/all/20240621164406.256314-1-kirill.shutemov@linux.intel.com
-> 
-> I guess Kirill could dust off his patchset from [2] and that would get rid of
-> CONFIG_X86_5LEVEL and likely simplify that aspect considerably...
+From: Xuyang Dong <dongxuyang@eswincomputing.com>
 
-https://lore.kernel.org/all/20250516091534.3414310-1-kirill.shutemov@linux.intel.com/
+Add device tree binding documentation for the ESWIN
+eic7700 sdhci controller module.
 
+Signed-off-by: Xiang Xu <xuxiang@eswincomputing.com>
+Signed-off-by: Xuyang Dong <dongxuyang@eswincomputing.com>
+---
+ .../bindings/mmc/eswin,sdhci-eic7700.yaml     | 131 ++++++++++++++++++
+ 1 file changed, 131 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/eswin,sdhci-eic7700.yaml
+
+diff --git a/Documentation/devicetree/bindings/mmc/eswin,sdhci-eic7700.yaml b/Documentation/devicetree/bindings/mmc/eswin,sdhci-eic7700.yaml
+new file mode 100644
+index 000000000000..d4826f2aa619
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/eswin,sdhci-eic7700.yaml
+@@ -0,0 +1,131 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mmc/eswin,sdhci-eic7700.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ESWIN EIC7700 SoC SDHCI controller
++
++maintainers:
++  - Shuang Liang <liangshuang@eswincomputing.com>
++  - Xuyang Dong <dongxuyang@eswincomputing.com>
++
++allOf:
++  - $ref: /schemas/mmc/mmc-controller.yaml#
++
++properties:
++  compatible:
++    const: eswin,eic7700-emmc-sdhci
++
++  reg:
++    maxItems: 1
++    description: Common configuration registers
++  "#address-cells":
++    const: 1
++  "#size-cells":
++    const: 1
++
++  interrupts:
++    maxItems: 1
++
++  assigned-clocks:
++    maxItems: 1
++    description: should contain "core_clk" phandle + clock-specifier pairs.
++
++  assigned-clock-rates:
++    maxItems: 1
++
++  clocks:
++    minItems: 2
++    description: handles to clock for the sdhci controller.
++
++  clock-names:
++    minItems: 2
++    description: the name of each clock.
++
++  clock-output-names:
++    maxItems: 1
++
++  '#clock-cells':
++    enum: [0]
++    description:
++      With this property in place we will export one clock
++      representing the Card Clock. These clocks are expected to be
++      consumed by our PHY.
++
++  resets:
++    description: resets to be used by the controller.
++
++  reset-names:
++    description: names of the resets listed in resets property in the same order.
++
++  bus-width:
++    enum: [4, 8]
++    description: for emmc bus-width is 8, for sdio bus-width is 4.
++
++  eswin,hsp_sp_csr:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: hsp_sp_csr regs to be used by the controller.
++    items:
++      - description: phandle to HSP_SP_CSR register block
++      - description: status register offset
++      - description: control register offset
++      - description: configuration register offset
++
++  eswin,syscrg_csr:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: syscrg_csr regs to be used by the controller.
++    items:
++      - description: phandle to SYS_CRG_CSR register block
++      - description: status register offset
++      - description: control register offset
++      - description: configuration register offset
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - assigned-clocks
++  - assigned-clock-rates
++  - clocks
++  - clock-names
++  - clock-output-names
++  - resets
++  - reset-names
++  - bus-width
++  - eswin,hsp_sp_csr
++  - eswin,syscrg_csr
++
++unevaluatedProperties: false
++
++examples:
++  - |
++
++    sdhci_emmc: mmc@50450000 {
++      compatible = "eswin,eic7700-emmc-sdhci";
++      reg = <0x50450000 0x10000>;
++      interrupt-parent = <&plic>;
++      interrupts = <79>;
++      clocks = <&clock 554>, <&clock 546>;
++      clock-names = "clk_xin", "clk_ahb";
++      assigned-clocks = <&clock 554>;
++      assigned-clock-rates = <200000000>;
++      clock-output-names = "emmc_cardclock";
++      #clock-cells = <0>;
++
++      resets = <&reset 7 (1 << 6)>,
++        <&reset 7 (1 << 3)>,
++        <&reset 7 (1 << 19)>,
++        <&reset 7 (1 << 23)>;
++      reset-names = "txrx_rst", "phy_rst", "prstn", "arstn";
++
++      core-clk-reg = <0x51828160>;
++      disable-cqe-dcmd;
++      bus-width = <8>;
++      non-removable;
++      mmc-hs400-1_8v;
++      max-frequency = <200000000>;
++      eswin,hsp_sp_csr = <&hsp_sp_csr 0x1038 0x508 0x50c>;
++      eswin,syscrg_csr = <&sys_crg 0x160 0x148 0x14c>;
++      status = "disabled";
++    };
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.17.1
+
