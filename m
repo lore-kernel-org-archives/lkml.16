@@ -1,51 +1,51 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86CF1ACEDC;
-	Fri, 16 May 2025 14:58:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F181A08CA;
+	Fri, 16 May 2025 14:58:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747407509; cv=none; b=WtTjgIgOP+a4US7dv2pUbyJizRRpM1j8vYCEFKb7Y6yxzzjNLzj52f6wuTTYe1WgPM7iUusUtptJu5wcp7wTVLVLa7iC1s05w1J3v56lFc/SkiPuO1lH2HDUvhF0sTuQlwYqj6xX1ygszOQ6U1iQbEmOBtAQeLVcG8Le++GA3Zo=
+	t=1747407513; cv=none; b=Cog4BrQd00sdIM8JA1/oCGoH6Kxm7oKGJUG3ZKfqPD6POjeQ+NyqUEPPPOLoorylAa9TdG+hq3qzZOThH7gRIkPz/y//UxJmcUvw8/ExqHkF3g2nKkkYYaKok6nk0irnQ0c/zFeVO8M6l1SPP2eieSvvnDtzi7uV2CuAnaMFJIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747407509; c=relaxed/simple;
-	bh=WKgsyOUGz1C6sRGSqDQP6WDZrgidJ/+9Ev7RtodCw7w=;
+	s=arc-20240116; t=1747407513; c=relaxed/simple;
+	bh=yayUarAX8X3tfzX0SpaAvhwTSPtyJvnXGGy5hl5BI4s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fyJ4127KPbY40r4++O5+hz+dfxJU0nILGCdtoRrvhNxIeWjbFEgPKeHILD9kYDKKdXLeqie5PTsLBaVU5bs6cpM60eq4+3qwpPG/7/tKjLUc8KYBUczHiQcH32yGEc/XW97iZW+UmgBN0D2i9QUBcZBI5x7gJdXt7xq5Fd09E74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gq1iV5YA; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=LtdVgZGmfs3eA+FdjZdK5Nkeb8crsHkmMDWB+dgK7RU/4jiaxYdVhJDZYofb1xlbkePs91scneXmSmVXVL8TCdsIXS/BsSMz3ZYocBxpnJAJYetDLHzqOXkOK5/Hvh3EEheDbS8OHm7iYtPiz1jLekanUJmRApIU4VVJIw0JU/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GD6eU8zv; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gq1iV5YA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GD6eU8zv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747407508; x=1778943508;
+  t=1747407512; x=1778943512;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=WKgsyOUGz1C6sRGSqDQP6WDZrgidJ/+9Ev7RtodCw7w=;
-  b=Gq1iV5YAo1TBe/cYULS7maxt9V+iC8ZGKqp0MGc71NyefwPdDMnB5B1N
-   fALgTMXyGfbV2EXV3bwI6XyR7Wo+xJv84AjOSrlwR3TVkaj4AnGUNheYN
-   BpgoCm7/52enJo6Kbnw8hghy1wgnXPgEpfr7YrRMErwNoafxVnb0RFg7r
-   uTSVV7/mG0L37IGb6rJdAJ+F9aaAVMP8lgl6pZGB7Lb0LuTsnG38S1haz
-   KG6abhqAiGG8TTjUvRdfggFIENFJ5ZxICDxwMH7c+LfiNiD7I1ZRy7Df+
-   0gqvm40KWpt5lM40QyinbonjXzKNAWK30v6avGnDlfvniMwEsSMgVxkfb
+  bh=yayUarAX8X3tfzX0SpaAvhwTSPtyJvnXGGy5hl5BI4s=;
+  b=GD6eU8zvGjeFichBHbQz47PNku710KTG8myq/7KthovEQFS+W+1h4VhD
+   FIHZjNuPuMnmHAqVXF+ACADUioDyOXOty/BRtkIKXn/KZNfE1/EdKdgzI
+   hpNUygPXbkaQWJU37zM05Q4uJ5llOn1VzSfhjmjj78pUzYXtpwcOp1C1C
+   c/WZgFqW1CYozGd8jloApxpHcR6wlm/+yLm69nRMuD0DQ4OJeuVl9Xo/K
+   MeFEE2wuUBlGKM2hkhVbZ2YO9hoEE6MkDFMAuEcQb+2RnJCAxTyxnlcEZ
+   g2faDokB/8yJIekjNBf+q8GkJvnwn5tpe1s4RtDkC2G6sbjNMSt92aRPq
    g==;
-X-CSE-ConnectionGUID: VOo+RcgTRjiW5f5ck4dujQ==
-X-CSE-MsgGUID: l4gArjhlSiuknYxMJpWHig==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49308565"
+X-CSE-ConnectionGUID: 1OBu0HxZRwiBmDGH03vH3Q==
+X-CSE-MsgGUID: cZKeMB08Q0GRA/5V9LhMdw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49308594"
 X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="49308565"
+   d="scan'208";a="49308594"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 07:58:27 -0700
-X-CSE-ConnectionGUID: ZOgHh65ARVyw8bMVM1dJww==
-X-CSE-MsgGUID: z3+WKfZxS567wMNU8fXCDQ==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 07:58:31 -0700
+X-CSE-ConnectionGUID: iQsxK0aFQViMIcFRETzWBg==
+X-CSE-MsgGUID: c/RtVw/mScGSO0rKKjLx9Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="142717904"
+   d="scan'208";a="142717929"
 Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by fmviesa003.fm.intel.com with ESMTP; 16 May 2025 07:58:21 -0700
+  by fmviesa003.fm.intel.com with ESMTP; 16 May 2025 07:58:25 -0700
 Received: from mglak.igk.intel.com (mglak.igk.intel.com [10.237.112.146])
-	by irvmail002.ir.intel.com (Postfix) with ESMTP id 7139E34326;
-	Fri, 16 May 2025 15:58:19 +0100 (IST)
+	by irvmail002.ir.intel.com (Postfix) with ESMTP id 7B58F34328;
+	Fri, 16 May 2025 15:58:23 +0100 (IST)
 From: Larysa Zaremba <larysa.zaremba@intel.com>
 To: intel-wired-lan@lists.osuosl.org,
 	Tony Nguyen <anthony.l.nguyen@intel.com>
@@ -80,9 +80,9 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	Milena Olech <milena.olech@intel.com>,
 	pavan.kumar.linga@intel.com,
 	"Singhai, Anjali" <anjali.singhai@intel.com>
-Subject: [PATCH iwl-next v4 02/15] virtchnl: introduce control plane version fields
-Date: Fri, 16 May 2025 16:57:59 +0200
-Message-ID: <20250516145814.5422-3-larysa.zaremba@intel.com>
+Subject: [PATCH iwl-next v4 04/15] libeth: allow to create fill queues without NAPI
+Date: Fri, 16 May 2025 16:58:01 +0200
+Message-ID: <20250516145814.5422-5-larysa.zaremba@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <20250516145814.5422-1-larysa.zaremba@intel.com>
 References: <20250516145814.5422-1-larysa.zaremba@intel.com>
@@ -94,41 +94,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Victor Raj <victor.raj@intel.com>
+From: Pavan Kumar Linga <pavan.kumar.linga@intel.com>
 
-In the virtchnl header file, add the Control Plane software version fields.
+Control queues can utilize libeth_rx fill queues, despite working outside
+of NAPI context. The only problem is standard fill queues requiring NAPI
+that provides them with the device pointer.
 
-Signed-off-by: Victor Raj <victor.raj@intel.com>
-Reviewed-by: Sridhar Samudrala <sridhar.samudrala@intel.com>
+Introduce a way to provide the device directly without using NAPI.
+
+Suggested-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+Reviewed-by: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
+Signed-off-by: Pavan Kumar Linga <pavan.kumar.linga@intel.com>
 Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
 ---
- include/linux/intel/virtchnl2.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/intel/libeth/rx.c | 9 +++++----
+ include/net/libeth/rx.h                | 4 +++-
+ 2 files changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/intel/virtchnl2.h b/include/linux/intel/virtchnl2.h
-index af0f975060c9..c6db143371bb 100644
---- a/include/linux/intel/virtchnl2.h
-+++ b/include/linux/intel/virtchnl2.h
-@@ -502,7 +502,8 @@ VIRTCHNL2_CHECK_STRUCT_LEN(8, virtchnl2_version_info);
-  *			    sent per transmit packet without needing to be
-  *			    linearized.
-  * @pad: Padding.
-- * @reserved: Reserved.
-+ * @cp_ver_major: Control Plane major version number.
-+ * @cp_ver_minor: Control Plane minor version number.
-  * @device_type: See enum virtchl2_device_type.
-  * @min_sso_packet_len: Min packet length supported by device for single
-  *			segment offload.
-@@ -551,7 +552,8 @@ struct virtchnl2_get_capabilities {
- 	__le16 max_tx_hdr_size;
- 	u8 max_sg_bufs_per_tx_pkt;
- 	u8 pad[3];
--	u8 reserved[4];
-+	__le16 cp_ver_major;
-+	__le16 cp_ver_minor;
- 	__le32 device_type;
- 	u8 min_sso_packet_len;
- 	u8 max_hdr_buf_per_lso;
+diff --git a/drivers/net/ethernet/intel/libeth/rx.c b/drivers/net/ethernet/intel/libeth/rx.c
+index c0be9cb043a1..b077454c4100 100644
+--- a/drivers/net/ethernet/intel/libeth/rx.c
++++ b/drivers/net/ethernet/intel/libeth/rx.c
+@@ -143,19 +143,20 @@ static bool libeth_rx_page_pool_params_zc(struct libeth_fq *fq,
+ /**
+  * libeth_rx_fq_create - create a PP with the default libeth settings
+  * @fq: buffer queue struct to fill
+- * @napi: &napi_struct covering this PP (no usage outside its poll loops)
++ * @napi_dev: &napi_struct for NAPI (data) queues, &device for others
+  *
+  * Return: %0 on success, -%errno on failure.
+  */
+-int libeth_rx_fq_create(struct libeth_fq *fq, struct napi_struct *napi)
++int libeth_rx_fq_create(struct libeth_fq *fq, void *napi_dev)
+ {
++	struct napi_struct *napi = fq->no_napi ? NULL : napi_dev;
+ 	struct page_pool_params pp = {
+ 		.flags		= PP_FLAG_DMA_MAP | PP_FLAG_DMA_SYNC_DEV,
+ 		.order		= LIBETH_RX_PAGE_ORDER,
+ 		.pool_size	= fq->count,
+ 		.nid		= fq->nid,
+-		.dev		= napi->dev->dev.parent,
+-		.netdev		= napi->dev,
++		.dev		= napi ? napi->dev->dev.parent : napi_dev,
++		.netdev		= napi ? napi->dev : NULL,
+ 		.napi		= napi,
+ 	};
+ 	struct libeth_fqe *fqes;
+diff --git a/include/net/libeth/rx.h b/include/net/libeth/rx.h
+index 5d991404845e..0e736846c5e8 100644
+--- a/include/net/libeth/rx.h
++++ b/include/net/libeth/rx.h
+@@ -69,6 +69,7 @@ enum libeth_fqe_type {
+  * @type: type of the buffers this queue has
+  * @hsplit: flag whether header split is enabled
+  * @xdp: flag indicating whether XDP is enabled
++ * @no_napi: the queue is not a data queue and does not have NAPI
+  * @buf_len: HW-writeable length per each buffer
+  * @nid: ID of the closest NUMA node with memory
+  */
+@@ -85,12 +86,13 @@ struct libeth_fq {
+ 	enum libeth_fqe_type	type:2;
+ 	bool			hsplit:1;
+ 	bool			xdp:1;
++	bool			no_napi:1;
+ 
+ 	u32			buf_len;
+ 	int			nid;
+ };
+ 
+-int libeth_rx_fq_create(struct libeth_fq *fq, struct napi_struct *napi);
++int libeth_rx_fq_create(struct libeth_fq *fq, void *napi_dev);
+ void libeth_rx_fq_destroy(struct libeth_fq *fq);
+ 
+ /**
 -- 
 2.47.0
 
