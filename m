@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF4B27D781;
-	Fri, 16 May 2025 18:29:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B24C27D770;
+	Fri, 16 May 2025 18:29:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747420163; cv=none; b=BzmhfP43iysd67cUOn9WsyalM7F8GAgumcJLtrFyNMLK3Z9IZWb++kf3Rz+ErGmz2HZgFjGFNgQb1GJGckE6EcFQPXvIJdiMQmkkhVOSvD9PoRLrZYbB5fvwu6rPmEC43UDeUuJOrXBPxFHcr0Be2Ic9gfkK/P+VXqqsL0vjPkY=
+	t=1747420164; cv=none; b=jHVB2i514LSnhqlngh0KWT5hK76HPwyUvhOQUcD3lkDSB4VJ0vmK7KyE0iS/hLdBj4Q0vA868kvQwVQ9fUWqlrmOAN0s6BtRpKlh8A8oBeG1KU8OoRARj5mre61EafZnPBxDyQjlvnmSLm6iXMD3VlLbkv+/vKjeOSQlxM51ek4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747420163; c=relaxed/simple;
-	bh=aBznW+kb4PCda6hhX4PByAqMfcQG6U6QJyqTE4hQTSk=;
+	s=arc-20240116; t=1747420164; c=relaxed/simple;
+	bh=mmZ9nbgB5fwwHNOO/FW7dHFDnAhM6aTO/E4japeEfI4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sk8ArBPVc6Xb4X2QwshJhPih4ICuehlPbfmNTrxqbfMiw3MIkpv3o9FI9yu3TOcb9QwGLpQF5hRFnqk2B7kbNcy/W8KVcKe1AJq90Yg+jK/uRg9W7ro9frU1qFXf1C/DwN9fkQkIqONq63NRN5Bs8VF1t0mcdlbBVYG31fhkC8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZJ8uMbsf; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version; b=TFcT1pLJidHBHTTfIcTrqRsnx4K/FYUoVX0NDNxTvnwyApVW7Ok/vPKTSnultNhSi9y7ylG7ppNKeOp+jgfhByKivZLREz67z7pFNgYgvHj8BzKsHT2wCKCQSiAykdgapY0awlc3ccDutrQVEto8UvEu9D5Wlt2kngK6kLGAesc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dxVSa2KK; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZJ8uMbsf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dxVSa2KK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747420162; x=1778956162;
+  t=1747420163; x=1778956163;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=aBznW+kb4PCda6hhX4PByAqMfcQG6U6QJyqTE4hQTSk=;
-  b=ZJ8uMbsfe1OXCII4eSBVoqNk8zRQLTOKsQVaAOJbombob2tAKf8yKlX2
-   nDS1sXjlsJcQXZlswisqJj32oHyb3m70v9L0q7P9wQy6imrFwL4es/R0V
-   qbms9xSMZG73BqHFLxE4cTaR7Qtnqp8GtChwT24/5P3JfjCjlyXkJ8Pii
-   U/TNK1Ltq8fTmB4uQQfmiQvAvWUP9BEgk3nkSOdrZvZExBxmNxR87dDi3
-   T6eQJ1qcF7AmLz9W532liiBJ/HIKRk/uk+r9K85PXqUuydQTmIZNjKJE8
-   fHpWc36S+JIQ5dYTx08EJDPGyA3bLL2xI/9Mu7bE8OGusiA5VL6XA79Hc
-   Q==;
-X-CSE-ConnectionGUID: iZ+SjU3TT96Ze1MohHtLJQ==
-X-CSE-MsgGUID: KfACV4j/S+ORLcg1bbzjdA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49328795"
+  bh=mmZ9nbgB5fwwHNOO/FW7dHFDnAhM6aTO/E4japeEfI4=;
+  b=dxVSa2KKRHLH/LEDryGwMsgbwfb2Jfo+WfcPkVloiqw2F2mSfEuFK/W7
+   rQEnUVGS85P45pyagL3MOulRI27/mJWsiLokHXq6twsJR2Zqf0l8Eqe/h
+   1yTObTGFDbbmfB/T6jlgE5l15Mawuo/+WxvoX4OAv5XbkyOMi4zgy2WSq
+   dOCZVcCBwudZdNzZ/s1JXaO8jvScbzWtEs2W/01Cf6+YMJQzm9g2xmv6P
+   YwzhVbwOTq52ImgIlstDM5vxcbysu0n2gNFZ/CBgzTaU5X3Uh1QBIo351
+   9xMnRb2/7bGqFZWUFI8z01ZbQ0MnKwZfSNFUK+G2gyu9Jsp6W8LFqR69z
+   w==;
+X-CSE-ConnectionGUID: EEl7ojkJRwmmUnm162SzVw==
+X-CSE-MsgGUID: ShBs62X/SOaQCV2e21y8bg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49328816"
 X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="49328795"
+   d="scan'208";a="49328816"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 11:29:20 -0700
-X-CSE-ConnectionGUID: WipQ0unySySNlA1LKuP6iA==
-X-CSE-MsgGUID: 2715bz6/Tdqhu4zaYARP+w==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 11:29:21 -0700
+X-CSE-ConnectionGUID: vslG2EC7SwWo9ImaBWdTQw==
+X-CSE-MsgGUID: uPzGL08mTTWhWlT6wVgjWg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="169802596"
+   d="scan'208";a="169802603"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa001.fm.intel.com with ESMTP; 16 May 2025 11:29:19 -0700
+  by fmviesa001.fm.intel.com with ESMTP; 16 May 2025 11:29:21 -0700
 From: kan.liang@linux.intel.com
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -55,10 +55,12 @@ Cc: eranian@google.com,
 	ctshao@google.com,
 	tmricht@linux.ibm.com,
 	leo.yan@arm.com,
-	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 01/16] perf: Clean up event in freq mode check
-Date: Fri, 16 May 2025 11:28:38 -0700
-Message-Id: <20250516182853.2610284-2-kan.liang@linux.intel.com>
+	Kan Liang <kan.liang@linux.intel.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Sandipan Das <sandipan.das@amd.com>
+Subject: [PATCH V3 04/16] perf/x86/amd: Remove driver-specific throttle support
+Date: Fri, 16 May 2025 11:28:41 -0700
+Message-Id: <20250516182853.2610284-5-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20250516182853.2610284-1-kan.liang@linux.intel.com>
 References: <20250516182853.2610284-1-kan.liang@linux.intel.com>
@@ -72,73 +74,51 @@ Content-Transfer-Encoding: 8bit
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Add a helper to check if an event is in freq mode to improve the
-readability.
+The throttle support has been added in the generic code. Remove
+the driver-specific throttle support.
 
-No functional change.
+Besides the throttle, perf_event_overflow may return true because of
+event_limit. It already does an inatomic event disable. The pmu->stop
+is not required either.
 
+Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: Sandipan Das <sandipan.das@amd.com>
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>
 ---
- kernel/events/core.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ arch/x86/events/amd/core.c | 3 +--
+ arch/x86/events/amd/ibs.c  | 4 +---
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index a84abc2b7f20..af78ec118e8f 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2442,6 +2442,11 @@ event_filter_match(struct perf_event *event)
- 	       perf_cgroup_match(event);
- }
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 30d6ceb4c8ad..5e64283b9bf2 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -1003,8 +1003,7 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
  
-+static inline bool is_event_in_freq_mode(struct perf_event *event)
-+{
-+	return event->attr.freq && event->attr.sample_freq;
-+}
-+
- static void
- event_sched_out(struct perf_event *event, struct perf_event_context *ctx)
- {
-@@ -2479,7 +2484,7 @@ event_sched_out(struct perf_event *event, struct perf_event_context *ctx)
+ 		perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
  
- 	if (!is_software_event(event))
- 		cpc->active_oncpu--;
--	if (event->attr.freq && event->attr.sample_freq) {
-+	if (is_event_in_freq_mode(event)) {
- 		ctx->nr_freq--;
- 		epc->nr_freq--;
+-		if (perf_event_overflow(event, &data, regs))
+-			x86_pmu_stop(event, 0);
++		perf_event_overflow(event, &data, regs);
  	}
-@@ -2780,7 +2785,7 @@ event_sched_in(struct perf_event *event, struct perf_event_context *ctx)
  
- 	if (!is_software_event(event))
- 		cpc->active_oncpu++;
--	if (event->attr.freq && event->attr.sample_freq) {
-+	if (is_event_in_freq_mode(event)) {
- 		ctx->nr_freq++;
- 		epc->nr_freq++;
- 	}
-@@ -4391,11 +4396,11 @@ static void perf_adjust_freq_unthr_events(struct list_head *event_list)
- 		if (hwc->interrupts == MAX_INTERRUPTS) {
- 			hwc->interrupts = 0;
- 			perf_log_throttle(event, 1);
--			if (!event->attr.freq || !event->attr.sample_freq)
-+			if (!is_event_in_freq_mode(event))
- 				event->pmu->start(event, 0);
- 		}
+ 	/*
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index 0252b7ea8bca..4bbbca02aeb1 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -1373,9 +1373,7 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+ 		hwc->sample_period = perf_ibs->min_period;
  
--		if (!event->attr.freq || !event->attr.sample_freq)
-+		if (!is_event_in_freq_mode(event))
- 			continue;
- 
- 		/*
-@@ -13129,7 +13134,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 
- 	hwc = &event->hw;
- 	hwc->sample_period = attr->sample_period;
--	if (attr->freq && attr->sample_freq)
-+	if (is_event_in_freq_mode(event))
- 		hwc->sample_period = 1;
- 	hwc->last_period = hwc->sample_period;
- 
+ out:
+-	if (throttle) {
+-		perf_ibs_stop(event, 0);
+-	} else {
++	if (!throttle) {
+ 		if (perf_ibs == &perf_ibs_op) {
+ 			if (ibs_caps & IBS_CAPS_OPCNTEXT) {
+ 				new_config = period & IBS_OP_MAX_CNT_EXT_MASK;
 -- 
 2.38.1
 
