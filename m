@@ -1,333 +1,189 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84EAF14884C
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 14:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239B9189B80;
+	Fri, 16 May 2025 14:33:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747405947; cv=none; b=jY3kx3RMqMvIi1aaftc4bqVLJS3mb4WxjWfjAsCVSGsEVFMfdNuki6/ygT2YLzs1csyL9SVyD4RlvskdRG4CxF0sngC0WGOmFBivSvrBLFSKRYpyMbz1EW7+roob9VW+1aMMM9XQ6xhJwdt7l7ZEzEeSC3GAqheQ1ZuHKPuoPps=
+	t=1747405989; cv=none; b=jylvTGPQFhgY3A4aWwO7G/QnJlwm+9aopJjRjt3eXinsYTMJZIpn9qZG2SGdR3Qpl+nAjCJXABBxGuRBllSbn3ducy2dZ254ncUMKhynKq2NxWjkjvfY1GrBw7tex57sQGXkoGrExZKLNSEbfxniSSa94YeOhneWwtvoW4K4NkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747405947; c=relaxed/simple;
-	bh=AUSWPpp8SI2mmg4oBzYhM6nAv/gioMP9u8pxX9JHqAM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UdhtStEXA+aBkuSJr6XuEs8EUYSyCr9hcqfdQNey6WjLRpozLeYcp3oXaNpb8GB63bugkEOpD7lI5g8eqssW1uq0ZS7poJCYZPSy+UN2OAAF2/iZrUUmRTuKb0aluaj0OYFkXJoVhSs5t1c1Kt6rwZ/txA5t6p5/wdHYndlXR1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=oK4UAnTZ; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747405989; c=relaxed/simple;
+	bh=aYQZZ/fxotvUcgwXlq+GHbWS05l2JDt1inCS2b8+FKQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HVdCeOfyCn46FTXauv12wkjjcu3dseMFnXxI0u5AutsJs6oFdcps0VRMVyxmJEmKt9SpoUkNVRgrdlVz3U6kA5rhRQ/LSZ8RMeMt7rJvP4bO1V0OlaTufojb6u73LsP3ZIDDwCsvUsrQVm71gB3A0ZnVzMAvO9yRKhz7cV+g4ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hy89Ql2B; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="oK4UAnTZ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C03B843B63;
-	Fri, 16 May 2025 14:32:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747405937;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Cx+R6Ss+hRUkdPKaV+SmJaLvjR4vIHIih0chKUPxnCs=;
-	b=oK4UAnTZbf3QFQSp7nPHE1kshQcN+92jeNk5DmLXcz3ZnCf5oD4mLLn+nn1FVl5tQ4FqQ8
-	SKzN53hHN7Grvbf3dYNhr/my9mH75FZ/nMpxklZJYIU5D6/DS31ZVgY5EYg44BkH8yZ2mG
-	hqJYqe8ALXiw2L/HeFt2N/wzwO/bJ5XesgIE40pJxVUYralBRd5CxfUSlLtAfBxGSufVAN
-	n+hiavGZsyv2oe496seLHTh70/TMfYXCcKgNSktZbhZVASDUinctI8WGxftoCgE4/PVYuV
-	YPunZJJEpzwevwEq2daR1DCInvI7TQAqHnBWSBg7YtW/3sfZ3LcfZuHJkQnMww==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez?= Rojas <noltari@gmail.com>
-Cc: linux-mtd@lists.infradead.org,  dregan@broadcom.com,
-  bcm-kernel-feedback-list@broadcom.com,  florian.fainelli@broadcom.com,
-  rafal@milecki.pl,  computersforpeace@gmail.com,  kamal.dasu@broadcom.com,
-  dan.beygelman@broadcom.com,  william.zhang@broadcom.com,
-  frieder.schrempf@kontron.de,  linux-kernel@vger.kernel.org,
-  vigneshr@ti.com,  richard@nod.at,  bbrezillon@kernel.org,
-  kdasu.kdev@gmail.com,  jaimeliao.tw@gmail.com,  kilobyte@angband.pl,
-  jonas.gorski@gmail.com,  dgcbueu@gmail.com
-Subject: Re: [PATCH v4] mtd: rawnand: brcmnand: legacy exec_op implementation
-In-Reply-To: <20250515050759.1016697-1-noltari@gmail.com> (=?utf-8?Q?=22?=
- =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez?=
-	Rojas"'s message of "Thu, 15 May 2025 07:07:59 +0200")
-References: <20250515050759.1016697-1-noltari@gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Fri, 16 May 2025 16:32:16 +0200
-Message-ID: <87o6vsd3tb.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hy89Ql2B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747405989; x=1778941989;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=aYQZZ/fxotvUcgwXlq+GHbWS05l2JDt1inCS2b8+FKQ=;
+  b=hy89Ql2B8Oh8yvIb2pPVoysg95nUvaX7Ox+/49SEUlaiti60YRI1pWiu
+   MdCvau5jUvRpsIV8xV0SXsd57sHzIL0jrGxfI/TGJ6K+EaeGke809agag
+   F0uCzI3ruQimY38zlLUvTH518kzg+GjAeDxEuZLITEcXmAH7nOI6UeVbH
+   oinyqSq35S4323/UaghDT5/GxzhLrfyqYBGE5U68oSx5AnIpZuO6jy+Xx
+   v57MQZ+eBajPLdwgYX5M7l6xpt0vseFxpyP+j5hKjYMhJ1BC2+7j1OORD
+   yvSIOooHDxRY/LXwCa8FGhrrGhJuNPtEhdoR/PuE6Vsp9/hfW6Usd3sDt
+   g==;
+X-CSE-ConnectionGUID: IeexyeDsQOaxC+aPFNRyLg==
+X-CSE-MsgGUID: yA95Czh7TkO58t9IpPQePQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49255585"
+X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
+   d="scan'208";a="49255585"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 07:33:08 -0700
+X-CSE-ConnectionGUID: memuGYkjTWS4iVnevWgJdg==
+X-CSE-MsgGUID: 36kBbGyESc2yjJOJjmQkOA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
+   d="scan'208";a="138455990"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 07:33:07 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 7A01A20B5736;
+	Fri, 16 May 2025 07:33:05 -0700 (PDT)
+Message-ID: <bdd3f129-18c6-4dae-95be-847d13938e2f@linux.intel.com>
+Date: Fri, 16 May 2025 10:33:04 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: 0
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefuddvleelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecunecujfgurhephffvvefujghffgffkfggtgfgsehtqhertddtreejnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepueeijeduvefgkeeuveffgeejleegledtvdduveeftdetfeejvdfffedvgfduffeknecuffhomhgrihhnpegsuhhfrdhinhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopehnohhlthgrrhhisehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopegurhgvghgrnhessghrohgruggtohhmrdgtohhmpdhrtghpthhtohepsggtmhdqkhgvrhhnvghlqdhfvggvuggsrggtkhdqlhhishhtsegsrhhorggutghomhdrtghomhdprhgtphhtthhopehflhhorhhirghnrdhfrghin
- hgvlhhlihessghrohgruggtohhmrdgtohhmpdhrtghpthhtoheprhgrfhgrlhesmhhilhgvtghkihdrphhlpdhrtghpthhtoheptghomhhpuhhtvghrshhfohhrphgvrggtvgesghhmrghilhdrtghomhdprhgtphhtthhopehkrghmrghlrdgurghsuhessghrohgruggtohhmrdgtohhm
-X-GND-Sasl: miquel.raynal@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 01/15] perf: Fix the throttle logic for a group
+To: Leo Yan <leo.yan@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+ irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com,
+ tmricht@linux.ibm.com
+References: <20250514151401.2547932-1-kan.liang@linux.intel.com>
+ <20250514151401.2547932-2-kan.liang@linux.intel.com>
+ <20250515094300.GC412060@e132581.arm.com>
+ <4a44b8cb-7c73-4926-8b9f-1f63929ea48f@linux.intel.com>
+ <20250516125146.GE412060@e132581.arm.com>
+ <b0d1b369-3d1a-47a5-befe-9c723ed5bb79@linux.intel.com>
+ <20250516141739.GG412060@e132581.arm.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250516141739.GG412060@e132581.arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello Alvaro,
 
-On 15/05/2025 at 07:07:59 +02, =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gm=
-ail.com> wrote:
 
-> Commit 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
-> removed legacy interface functions, breaking < v5.0 controllers support.
-> In order to fix older controllers we need to add an alternative exec_op
-> implementation which doesn't rely on low level registers.
+On 2025-05-16 10:17 a.m., Leo Yan wrote:
+> On Fri, May 16, 2025 at 09:28:07AM -0400, Liang, Kan wrote:
+> 
+> [...]
+> 
+>>> Just a minor suggestion. Seems to me, the parameter "start" actually
+>>> means "only_enable_sibling". For more readable, the function can be
+>>> refine as:
+>>>
+>>> static void perf_event_unthrottle_group(struct perf_event *event,
+>>>                                         bool only_enable_sibling)
+>>> {
+>>> 	struct perf_event *sibling, *leader = event->group_leader;
+>>>
+>>> 	perf_event_unthrottle(leader,
+>>>                 only_enable_sibling ? leader != event : true);
+>>>         ...
+>>> }
+>>>
+>>
+>> It should work for the perf_adjust_freq_unthr_events(), which only start
+>> the leader.
+> 
+>> But it's possible that the __perf_event_period() update a
+>> sibling, not leader.
+> 
+> Should not perf_event_unthrottle_group() always enable sibling events?
 >
-> Fixes: 3c8260ce7663 ("mtd: rawnand: brcmnand: exec_op implementation")
-> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
 
-Since you have a precise list of what is supported and what's not, I'd
-have expected the rest of the behavior to be identical. Are these
-controllers so different in how to program them? Can't we use the
-existing exec_op() implementation without some of the opcodes?
+No. __perf_event_period() can reset the period of a sibling event. I
+know it sounds weird, but it's doable.
 
 
-> +/* Native command conversion */
+> The only difference is how the leader event to be enabled.  It can be
+> enabled in perf_event_unthrottle_group() in period mode, or in
+> frequency mode due to a new period value is generated, the leader
+> event is enabled in perf_adjust_freq_unthr_events() or in
+> __perf_event_period().
+> 
+> This is why I suggested to rename the flag to only_enable_sibling:
+> 
+>   true: only enable sibling events
+>   false: enable all events (leader event and sibling events)
+> 
+> Or, we can rename the flag as "skip_start_event", means to skip
+> enabling the event specified in the argument.
 
-Should mention "legacy" somewhere I guess, and even what legacy means in
-this context, which is version(controller) < XXX.
-
-> +static const u8 native_cmd_conv[] =3D {
-> +	[NAND_CMD_READ0]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_READ1]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_RNDOUT]	=3D CMD_PARAMETER_CHANGE_COL,
-> +	[NAND_CMD_PAGEPROG]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_READOOB]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_ERASE1]	=3D CMD_BLOCK_ERASE,
-> +	[NAND_CMD_STATUS]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_SEQIN]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_RNDIN]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_READID]	=3D CMD_DEVICE_ID_READ,
-> +	[NAND_CMD_ERASE2]	=3D CMD_NULL,
-> +	[NAND_CMD_PARAM]	=3D CMD_PARAMETER_READ,
-> +	[NAND_CMD_GET_FEATURES]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_SET_FEATURES]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_RESET]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_READSTART]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_READCACHESEQ]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_READCACHEEND]	=3D CMD_NOT_SUPPORTED,
-> +	[NAND_CMD_RNDOUTSTART]	=3D CMD_NULL,
-> +	[NAND_CMD_CACHEDPROG]	=3D CMD_NOT_SUPPORTED,
-> +};
-> +
->  /* Controller feature flags */
->  enum {
->  	BRCMNAND_HAS_1K_SECTORS			=3D BIT(0),
-> @@ -237,6 +262,10 @@ struct brcmnand_controller {
->  	/* List of NAND hosts (one for each chip-select) */
->  	struct list_head host_list;
->=20=20
-> +	/* Function to be called from exec_op */
-> +	int (*exec_instr)(struct nand_chip *chip,
-> +			  const struct nand_operation *op);
-> +
->  	/* EDU info, per-transaction */
->  	const u16               *edu_offsets;
->  	void __iomem            *edu_base;
-> @@ -2490,14 +2519,152 @@ static int brcmnand_op_is_reset(const struct nan=
-d_operation *op)
->  	return 0;
->  }
->=20=20
-> +static int brcmnand_exec_instructions(struct nand_chip *chip,
-> +				      const struct nand_operation *op)
-> +{
-> +	struct brcmnand_host *host =3D nand_get_controller_data(chip);
-> +	unsigned int i;
-> +	int ret =3D 0;
-> +
-> +	for (i =3D 0; i < op->ninstrs; i++) {
-> +		ret =3D brcmnand_exec_instr(host, i, op);
-> +		if (ret)
-> +			break;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int brcmnand_exec_instructions_legacy(struct nand_chip *chip,
-> +					     const struct nand_operation *op)
-> +{
-> +	struct mtd_info *mtd =3D nand_to_mtd(chip);
-> +	struct brcmnand_host *host =3D nand_get_controller_data(chip);
-> +	struct brcmnand_controller *ctrl =3D host->ctrl;
-> +	const struct nand_op_instr *instr;
-> +	unsigned int i, j;
-> +	u8 cmd =3D CMD_NULL, last_cmd =3D CMD_NULL;
-> +	int ret =3D 0;
-> +	u64 last_addr;
-> +
-> +	for (i =3D 0; i < op->ninstrs; i++) {
-> +		instr =3D &op->instrs[i];
-> +
-> +		if (instr->type =3D=3D NAND_OP_CMD_INSTR) {
-
-Could we use a switch case here? Seems more appropriate.
-
-> +			cmd =3D native_cmd_conv[instr->ctx.cmd.opcode];
-> +			if (cmd =3D=3D CMD_NOT_SUPPORTED) {
-> +				dev_err(ctrl->dev, "unsupported cmd=3D%d\n",
-> +					instr->ctx.cmd.opcode);
-> +				ret =3D -EOPNOTSUPP;
-> +				break;
-> +			}
-> +		} else if (instr->type =3D=3D NAND_OP_ADDR_INSTR) {
-> +			u64 addr =3D 0;
-> +
-> +			if (cmd =3D=3D CMD_NULL)
-> +				continue;
-> +
-> +			if (instr->ctx.addr.naddrs > 8) {
-> +				dev_err(ctrl->dev, "unsupported naddrs=3D%u\n",
-> +					instr->ctx.addr.naddrs);
-> +				ret =3D -EOPNOTSUPP;
-> +				break;
-> +			}
-> +
-> +			for (j =3D 0; j < instr->ctx.addr.naddrs; j++)
-> +				addr |=3D (instr->ctx.addr.addrs[j]) << (j << 3);
-> +
-> +			if (cmd =3D=3D CMD_BLOCK_ERASE)
-> +				addr <<=3D chip->page_shift;
-> +			else if (cmd =3D=3D CMD_PARAMETER_CHANGE_COL)
-> +				addr &=3D ~((u64)(FC_BYTES - 1));
-> +
-> +			brcmnand_set_cmd_addr(mtd, addr);
-> +			brcmnand_send_cmd(host, cmd);
-> +			last_addr =3D addr;
-> +			last_cmd =3D cmd;
-> +			cmd =3D CMD_NULL;
-> +			brcmnand_waitfunc(chip);
-
-Waitfunc is a legacy interface, are you sure this is the correct
-function call here?
-
-> +
-> +			if (last_cmd =3D=3D CMD_PARAMETER_READ ||
-> +			    last_cmd =3D=3D CMD_PARAMETER_CHANGE_COL) {
-> +				/* Copy flash cache word-wise */
-> +				u32 *flash_cache =3D (u32 *)ctrl->flash_cache;
-> +
-> +				brcmnand_soc_data_bus_prepare(ctrl->soc, true);
-> +
-> +				/*
-> +				 * Must cache the FLASH_CACHE now, since changes in
-> +				 * SECTOR_SIZE_1K may invalidate it
-> +				 */
-> +				for (j =3D 0; j < FC_WORDS; j++)
-> +					/*
-> +					 * Flash cache is big endian for parameter pages, at
-> +					 * least on STB SoCs
-> +					 */
-> +					flash_cache[j] =3D be32_to_cpu(brcmnand_read_fc(ctrl, j));
-> +
-> +				brcmnand_soc_data_bus_unprepare(ctrl->soc, true);
-> +			}
-> +		} else if (instr->type =3D=3D NAND_OP_DATA_IN_INSTR) {
-> +			u8 *in =3D instr->ctx.data.buf.in;
-> +
-> +			if (last_cmd =3D=3D CMD_DEVICE_ID_READ) {
-> +				u32 val;
-> +
-> +				if (instr->ctx.data.len > 8) {
-> +					dev_err(ctrl->dev, "unsupported len=3D%u\n",
-> +						instr->ctx.data.len);
-> +					ret =3D -EOPNOTSUPP;
-> +					break;
-> +				}
-> +
-> +				for (j =3D 0; j < instr->ctx.data.len; j++) {
-> +					if (j =3D=3D 0)
-> +						val =3D brcmnand_read_reg(ctrl, BRCMNAND_ID);
-> +					else if (j =3D=3D 4)
-> +						val =3D brcmnand_read_reg(ctrl, BRCMNAND_ID_EXT);
-> +
-> +					in[j] =3D (val >> (24 - ((j % 4) << 3))) & 0xff;
-> +				}
-> +			} else if (last_cmd =3D=3D CMD_PARAMETER_READ ||
-> +				   last_cmd =3D=3D CMD_PARAMETER_CHANGE_COL) {
-> +				u64 addr;
-> +				u32 offs;
-> +
-> +				for (j =3D 0; j < instr->ctx.data.len; j++) {
-> +					addr =3D last_addr + j;
-> +					offs =3D addr & (FC_BYTES - 1);
-> +
-> +					if (j > 0 && offs =3D=3D 0)
-> +						nand_change_read_column_op(chip, addr, NULL, 0,
-> +									   false);
-> +
-> +					in[j] =3D ctrl->flash_cache[offs];
-> +				}
-> +			}
-> +		} else if (instr->type =3D=3D NAND_OP_WAITRDY_INSTR) {
-> +			ret =3D bcmnand_ctrl_poll_status(host, NAND_CTRL_RDY, NAND_CTRL_RDY, =
-0);
-> +			if (ret)
-> +				break;
-> +		} else {
-> +			dev_err(ctrl->dev, "unsupported instruction type: %d\n", instr->type);
-> +			ret =3D -EINVAL;
-
-EOPNOTSUPP I guess?
-
-> +			break;
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static int brcmnand_exec_op(struct nand_chip *chip,
->  			    const struct nand_operation *op,
->  			    bool check_only)
->  {
->  	struct brcmnand_host *host =3D nand_get_controller_data(chip);
-> +	struct brcmnand_controller *ctrl =3D host->ctrl;
->  	struct mtd_info *mtd =3D nand_to_mtd(chip);
->  	u8 *status;
-> -	unsigned int i;
->  	int ret =3D 0;
->=20=20
->  	if (check_only)
-[adding one more context line]
-                 return 0;
-
-There is a lot that is unsupported, and this is okay, but you need to
-control all these earlier and implement a function that does all the
-checks when exec_op() is called with the check_only parameter set (just
-above). The support for the old SoCs *must* not return 0 by default and
-instead check the validity of the op when requested.
-
-> @@ -2525,11 +2692,7 @@ static int brcmnand_exec_op(struct nand_chip *chip,
->  	if (op->deassert_wp)
->  		brcmnand_wp(mtd, 0);
->=20=20
-> -	for (i =3D 0; i < op->ninstrs; i++) {
-> -		ret =3D brcmnand_exec_instr(host, i, op);
-> -		if (ret)
-> -			break;
-> -	}
-> +	ret =3D ctrl->exec_instr(chip, op);
->=20=20
->  	if (op->deassert_wp)
->  		brcmnand_wp(mtd, 1);
-> @@ -3142,6 +3305,12 @@ int brcmnand_probe(struct platform_device *pdev, s=
-truct brcmnand_soc *soc)
->  	if (ret)
->  		goto err;
->=20=20
-> +	/* Only v5.0+ controllers have low level ops support */
-> +	if (ctrl->nand_version >=3D 0x0500)
-
-Did I just read that 4 or 4.1 was the correct boundary instead of 5?
-
-> +		ctrl->exec_instr =3D brcmnand_exec_instructions;
-> +	else
-> +		ctrl->exec_instr =3D brcmnand_exec_instructions_legacy;
-> +
->  	/*
->  	 * Most chips have this cache at a fixed offset within 'nand' block.
->  	 * Some must specify this region separately.
+The name "skip_start_event" sounds good to me. I will use it in V3.
 
 Thanks,
-Miqu=C3=A8l
+Kan>
+>> I think I can check the name to bool event_has_start.
+>> Is the name OK?
+> 
+> I am still confused for the naming "event_has_start" :)
+> 
+> What exactly does it mean?
+> 
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index a270fcda766d..b1cb07fa9c18 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -2749,13 +2749,13 @@ static void perf_event_throttle(struct
+>> perf_event *event)
+>>  	perf_log_throttle(event, 0);
+>>  }
+>>
+>> -static void perf_event_unthrottle_group(struct perf_event *event, bool
+>> start)
+>> +static void perf_event_unthrottle_group(struct perf_event *event, bool
+>> event_has_start)
+>>  {
+>>  	struct perf_event *sibling, *leader = event->group_leader;
+>>
+>> -	perf_event_unthrottle(leader, leader != event || start);
+>> +	perf_event_unthrottle(leader, event_has_start ? leader != event : true);
+>>  	for_each_sibling_event(sibling, leader)
+>> -		perf_event_unthrottle(sibling, sibling != event || start);
+>> +		perf_event_unthrottle(sibling, event_has_start ? sibling != event :
+>> true);
+>>  }
+>>
+>>  static void perf_event_throttle_group(struct perf_event *event)
+>> @@ -4423,7 +4423,7 @@ static void perf_adjust_freq_unthr_events(struct
+>> list_head *event_list)
+>>
+>>  		if (hwc->interrupts == MAX_INTERRUPTS) {
+>>  			perf_event_unthrottle_group(event,
+>> -				!event->attr.freq || !event->attr.sample_freq);
+>> +				(event->attr.freq && event->attr.sample_freq));
+>>  		}
+>>
+>>  		if (!event->attr.freq || !event->attr.sample_freq)
+>> @@ -6466,7 +6466,7 @@ static void __perf_event_period(struct perf_event
+>> *event,
+>>  		 * while we already re-started the event/group.
+>>  		 */
+>>  		if (event->hw.interrupts == MAX_INTERRUPTS)
+>> -			perf_event_unthrottle_group(event, false);
+>> +			perf_event_unthrottle_group(event, true);
+>>  		perf_pmu_enable(event->pmu);
+> 
+> The logic in the updated code is correct for me.
+> 
+> Thanks,
+> Leo
+> 
+
