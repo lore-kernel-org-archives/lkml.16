@@ -1,127 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47AA623AD;
-	Fri, 16 May 2025 01:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D3223AD;
+	Fri, 16 May 2025 01:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747360566; cv=none; b=YLzeLGKEroo6BDuszDLpLDfLbePcQ+GGl88hugqmDdUXeDKFhChPd7pKajhd3hPan8SjSHyT7vf5lOX1c+D/SuiJIqPLdi10aOoJTZx0STN7rRAT7ZRHueYjHjdyqeyCLtumTUiDcWhHr/YoGQx6ItcZHBXBmifqEuRBA66huRI=
+	t=1747360619; cv=none; b=uMwqCQev/qfX6y8mPuUha0M4xGXtp85RkefsiV6uaEuCDaWEhqZGdtXS7gM1kjp7933x3l8Y62pnHfkiRKCnkpDWENS3tqwkgxxM+ssqcGs3/Zw2pSTFPLSdXXxwnFiEzzUZ9qvLCphReoh8VS+qLXuSwitW6QZRU//ThvcRNUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747360566; c=relaxed/simple;
-	bh=GL5gVAuFOk2LeSHFbYE6Y3fD6MyXSNNeP8jl2yiUPQw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hKSvjdhQrHJCDvy4VM853lAtGBhvawNukCrAVnQziBcD0LoUqFdOtdbbPU08DQsL1MoLKlvGng2je6ZBj8WIUE3yclUC5flxoic8wcJudv58IQ8NzLznmsZVeHk+kIH6cjrSngm/UJwdnXqyGkPdfzhKb/lly9HF8XuqIJICisI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dbUFM4le; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747360619; c=relaxed/simple;
+	bh=lg2RswOoCVT4JrW3TwQs/AOKgg/d8/NK9CoRbhd7LRI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Dk3swGQhwkTV/xn8y/Eh/3QK/ds4rUoKZ9XNnxdHD7hYNfHtDYhhC8nLRx0UsO0CjgPmi5pIh7N1mbEx4tMiLvs6l+2ls8mBuzXBAwjL0e1zSoHKlhhuOieteXVx32crjIduQwGdKQLN0tTl3g7NWcMH3ICxoJzM3Q+tmtCnTwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=HyB3yr7j; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=U0JllwPP; arc=none smtp.client-ip=202.12.124.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dbUFM4le"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747360563; x=1778896563;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=GL5gVAuFOk2LeSHFbYE6Y3fD6MyXSNNeP8jl2yiUPQw=;
-  b=dbUFM4leqw9kdMvY3M2soKQsid0bVYwBliv/6iM0Z2Es3ptPY2tSSy0s
-   SDFJ+NyH4fS7pxg6+xBFJpqXunEBbqJZS6svpIQnrA+1+p0jqatMgElLX
-   CrA702bpdWVYgnWdWyXnbq1T9xWg7CfXNiCqvnfTcQO/Qr9pMWScpxoX1
-   wFGX4S5j9BSQw9VmcYGUkgd3Ewpf8QmeQTtz39E8LEvp5aKXS3P9uT/2e
-   xNtlVfCEet2o/5LSMOtKCZHet9/swmYDjiax2jHuuj+gju06CD6WSK5HR
-   jwPLw3w579RD1n+UcbejyTJDHlDWDH5kY2Ge9KkpMrTgGMK4QIGiuwKdQ
-   g==;
-X-CSE-ConnectionGUID: QU8mtAOhTUGL3CWVgF6ihg==
-X-CSE-MsgGUID: mtyS4GBuQhWmoCz6Xa97xQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49305488"
-X-IronPort-AV: E=Sophos;i="6.15,292,1739865600"; 
-   d="scan'208";a="49305488"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 18:56:02 -0700
-X-CSE-ConnectionGUID: Gona/V5USEaobqVLBA23VA==
-X-CSE-MsgGUID: ezm2cH0fT5SpLASKbSf+CQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,292,1739865600"; 
-   d="scan'208";a="138428560"
-Received: from wopr.jf.intel.com ([10.54.75.146])
-  by orviesa006.jf.intel.com with ESMTP; 15 May 2025 18:56:02 -0700
-From: Todd Brandt <todd.e.brandt@intel.com>
-To: platform-driver-x86@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com,
-	xi.pardee@linux.intel.com
-Cc: linux-kernel@vger.kernel.org,
-	todd.e.brandt@linux.intel.com,
-	todd.e.brandt@intel.com
-Subject: [PATCH] platform/x86/intel/pmc Fix Arrow Lake U/H support to intel_pmc_core driver
-Date: Thu, 15 May 2025 18:56:00 -0700
-Message-Id: <3492e00e6e343d03e28bc58c4365b282e71e786d.1747360275.git.todd.e.brandt@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="HyB3yr7j";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="U0JllwPP"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 243F0254011B;
+	Thu, 15 May 2025 21:56:55 -0400 (EDT)
+Received: from phl-imap-18 ([10.202.2.89])
+  by phl-compute-02.internal (MEProxy); Thu, 15 May 2025 21:56:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1747360614;
+	 x=1747447014; bh=jorEOfVhRuwZqY7DZl1lH+R2d25d21QYNH3JcMu4gfw=; b=
+	HyB3yr7jxSvggdH3/vXZ2f89Y7OpJrA9xeRRbR87IWa8KKbhDw6a9QK0OclaVvmP
+	fv879vYMXAKehKCc3aPR89aruoQ15G5NogwDSvxVD5dWOHD1xyqG6kRFutqzwDDo
+	ITfmSX8DM7Dg+r9NYb8mx7m1E2Bcj3ASlLdeh5arf4ldqX/+/u3JO2LyNtmBfR+b
+	+0aD9Wsb/JL4pQp/4Qs/EeInSq/qNRIa8RYLdWh+JX667NCAKYu1iUSO7D1C+z2m
+	5IRUZSh8NmmZjQ2we4c2pcc06s4ApTLQ1144gaO1ZjQKgOjhFZYuYw8fjyUnob+Z
+	Z4cfUEMWKqI8VJSTSyBKkA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747360614; x=
+	1747447014; bh=jorEOfVhRuwZqY7DZl1lH+R2d25d21QYNH3JcMu4gfw=; b=U
+	0JllwPPAhlmQMj4mHYhMFmIxvYqBPeX76bZ94SjfBRdJfIfpLSD+CfXtE4fsM/OH
+	NhgB9nEKdsV9/6bnriormhwryFvsn/6U77uN9wal61WX2VbbkH3/pxW+ajCYvEEZ
+	zhe691xwS2kALSNRUS6PBhewhfaIc5EN47a5UWHzSqkk/hVxwLEVTdCWsAwbh5zw
+	uUUIfw+SlWgGjiClAe5eS8j5/5BPihe9SBymCJLC/c/jnKyd6xCw8brajfd6hBVW
+	G0uJXrCQ8I5+t6p0QQ2Jjl+Y0nYp3U0cVQ/LDC8fkVl1jqaGhVjNqOwPX+n3tyVU
+	ua5B3fCi4UbFGj44bc5Dg==
+X-ME-Sender: <xms:ZpsmaGBmP0qH6pBF1-7ua7RnEw8enrdlchNxu604BwcJZVPB0Ugmsg>
+    <xme:ZpsmaAjzbns8BzoV5xfnEvWo0T1lgryF5cTPVhgbPeB0i6AY6Nzh8Dwow8nxnaJvu
+    usVZWtPES108h7ZjQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefuddugeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnegfrhhlucfvnfffucdlfeehmdenucfjughrpefoggffhffv
+    vefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdffrghnihgvlhcuighufdcuoe
+    gugihusegugihuuhhurdighiiiqeenucggtffrrghtthgvrhhnpefgleeitefgvefffedu
+    fefhffdtieetgeetgeegheeufeeufeekgfefueffvefhffenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihusegugihuuhhurdighiiipdhn
+    sggprhgtphhtthhopeduvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuggrvh
+    gvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopeifihhllhgvmhguvggsrhhu
+    ihhjnhdrkhgvrhhnvghlsehgmhgrihhlrdgtohhmpdhrtghpthhtohepvgguuhhmrgiivg
+    htsehgohhoghhlvgdrtghomhdprhgtphhtthhopehjrggtohgsrdgvrdhkvghllhgvrhes
+    ihhnthgvlhdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepjhgrshhofigrnhhg
+    sehrvgguhhgrthdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtoh
+    hmpdhrtghpthhtohepsghpfhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:ZpsmaJkCVy_11Ajx9LuGyPyerWRlWJpvLckODbwrVdgLd0rZySZ7tA>
+    <xmx:ZpsmaEz9UKzw_rGHOsRZLQMSSK3nUKVSQQ-F908mCr141b7JFLKexA>
+    <xmx:ZpsmaLTlYchxHheIoaaDYGGRQKtGPCc5sNODgoo07DXknhL0nil6ug>
+    <xmx:ZpsmaPYh5aDICpu5v0vdb67bM3PX7VefJqRTrKvQcyOTkY5MiUL07A>
+    <xmx:ZpsmaH6Y8a49c2zq46SgonXYSE8L7qRXid5G4DiLRaKWKcWivzHCHYrV>
+Feedback-ID: i6a694271:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 3CDDE15C0068; Thu, 15 May 2025 21:56:54 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: T995aa454cfce42d7
+Date: Thu, 15 May 2025 18:56:34 -0700
+From: "Daniel Xu" <dxu@dxuuu.xyz>
+To: "Willem de Bruijn" <willemdebruijn.kernel@gmail.com>,
+ "Alexander Shalimov" <alex-shalimov@yandex-team.ru>
+Cc: andrew@lunn.ch, "David Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, jacob.e.keller@intel.com,
+ jasowang@redhat.com, "Jakub Kicinski" <kuba@kernel.org>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ "Paolo Abeni" <pabeni@redhat.com>,
+ "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Message-Id: <0bcc08e4-9f22-431c-97f3-c7d5784d2652@app.fastmail.com>
+In-Reply-To: <6825f65ae82b5_24bddc29422@willemb.c.googlers.com.notmuch>
+References: <681a63e3c1a6c_18e44b2949d@willemb.c.googlers.com.notmuch>
+ <20250514233931.56961-1-alex-shalimov@yandex-team.ru>
+ <6825f65ae82b5_24bddc29422@willemb.c.googlers.com.notmuch>
+Subject: Re: [PATCH] net/tun: expose queue utilization stats via ethtool
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The ARL requires that the GMA and NPU devices both be in D3Hot in order
-for PC10 and S0iX to be achieved in S2idle. The original ARL-H/U addition
-to the intel_pmc_core driver attempted to do this by switching them to D3
-in the init and resume calls of the intel_pmc_core driver.
+On Thu, May 15, 2025, at 7:12 AM, Willem de Bruijn wrote:
+> Alexander Shalimov wrote:
+>> 06.05.2025, 22:32, "Willem de Bruijn" <willemdebruijn.kernel@gmail.co=
+m>:
+>> > Perhaps bpftrace with a kfunc at a suitable function entry point to
+>> > get access to these ring structures.
+>>=20
+>> Thank you for your responses!
+>>=20
+>> Initially, we implemented such monitoring using bpftrace but we were
+>> not satisfied with the need to double-check the structure definitions
+>> in tun.c for each new kernel version.
+>>=20
+>> We attached kprobe to the "tun_net_xmit()" function. This function
+>> gets a "struct net_device" as an argument, which is then explicitly
+>> cast to a tun_struct - "struct tun_struct *tun =3D netdev_priv(dev)".
+>> However, performing such a cast within bpftrace is difficult because
+>> tun_struct is defined in tun.c - meaning the structure definition
+>> cannot be included directly (not a header file). As a result, we were
+>> forced to add fake "struct tun_struct" and "struct tun_file"
+>> definitions, whose maintenance across kernel versions became
+>> cumbersome (see below). The same problems exists even with kfunc and
+>> btf - we are not able to cast properly netdev to tun_struct.
+>>=20
+>> That=E2=80=99s why we decided to add this functionality directly to t=
+he kernel.
+>
+> Let's solve this in bpftrace instead. That's no reason to rever to
+> hardcoded kernel APIs.
+>
+> It quite possibly already is. I'm no bpftrace expert. Cc:ing bpf@
 
-The problem is the ARL-H/U have a different NPU device and thus are not
-being properly set and thus S0iX does not work properly in ARL-H/U. This
-patch creates a new ARL-H specific device id that is correct and also
-adds the D3 fixup to the suspend callback. This way if the PCI devies
-drop from D3 to D0 after resume they can be corrected for the next
-suspend. Thus there is no dropout in S0iX.
+Yeah, should be possible. You haven't needed to include header
+files to access type information available in BTF for a while now.
+This seems to work for me - mind giving this a try?
 
-Signed-off-by: Todd Brandt <todd.e.brandt@intel.com>
----
- drivers/platform/x86/intel/pmc/arl.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+```
+fentry:tun:tun_net_xmit {
+    $tun =3D (struct tun_struct *)args->dev->priv;
+    print($tun->numqueues);  // or whatever else you want
+}
+```
 
-diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
-index 320993bd6d31..5053e3dd8f5e 100644
---- a/drivers/platform/x86/intel/pmc/arl.c
-+++ b/drivers/platform/x86/intel/pmc/arl.c
-@@ -681,6 +681,7 @@ static struct pmc_info arl_pmc_info_list[] = {
- 
- #define ARL_NPU_PCI_DEV			0xad1d
- #define ARL_GNA_PCI_DEV			0xae4c
-+#define ARL_H_NPU_PCI_DEV		0x7d1d
- #define ARL_H_GNA_PCI_DEV		0x774c
- /*
-  * Set power state of select devices that do not have drivers to D3
-@@ -694,7 +695,7 @@ static void arl_d3_fixup(void)
- 
- static void arl_h_d3_fixup(void)
- {
--	pmc_core_set_device_d3(ARL_NPU_PCI_DEV);
-+	pmc_core_set_device_d3(ARL_H_NPU_PCI_DEV);
- 	pmc_core_set_device_d3(ARL_H_GNA_PCI_DEV);
- }
- 
-@@ -705,6 +706,13 @@ static int arl_resume(struct pmc_dev *pmcdev)
- 	return cnl_resume(pmcdev);
- }
- 
-+static void arl_h_suspend(struct pmc_dev *pmcdev)
-+{
-+	arl_h_d3_fixup();
-+
-+	cnl_suspend(pmcdev);
-+}
-+
- static int arl_h_resume(struct pmc_dev *pmcdev)
- {
- 	arl_h_d3_fixup();
-@@ -739,7 +747,7 @@ struct pmc_dev_info arl_h_pmc_dev = {
- 	.dmu_guid = ARL_PMT_DMU_GUID,
- 	.regmap_list = arl_pmc_info_list,
- 	.map = &mtl_socm_reg_map,
--	.suspend = cnl_suspend,
-+	.suspend = arl_h_suspend,
- 	.resume = arl_h_resume,
- 	.init = arl_h_core_init,
- };
--- 
-2.25.1
+fentry probes are better in general than kprobes if all you're doing
+is attaching to the entry of a function.
 
+You could do the same with kprobes like this if you really want, though:
+
+```
+kprobe:tun:tun_net_xmit {
+    $dev =3D (struct net_device *)arg1;
+    $tun =3D (struct tun_struct *)$dev->priv;
+    print($tun->numqueues);  // or whatever else you want
+}
+```
+
+Although it looks like there's a bug when you omit the module name
+where bpftrace doesn't find the struct definition. I'll look into that.
+
+Thanks,
+Daniel
