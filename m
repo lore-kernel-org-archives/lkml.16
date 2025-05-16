@@ -1,78 +1,169 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A32815530C
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C006222592;
+	Fri, 16 May 2025 09:24:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747387466; cv=none; b=Fm9hPIa3hoYKbgvO4izSt7cqFdhTEAUW+0z55mB/bHR5jFEUgB7aDBuvN0wzbyDwWVs0dcERpVDEnzq+nfC8u8uqKFnS4ypxNPLFE8kqbl4JR8gyW62mTYf/huIF7LyjLlntFTBlkGKv/VjgqOPl450e/URCFzQdweYEowNktDU=
+	t=1747387476; cv=none; b=Me8oh+eXkqgk0+ZuTAD1u6Wg/N+fc6F+rHiAzYXjlC8EQqM4QbKMhCuKRYI40id8bsWZKxFSlrWDpiKXHoHbUfNoW+6W3/mQD7UQqlp2gbBplRRW3E0eMhjFps4RDINGo2thDNFInlHA0q5mPpXRpX4JzkpKIEtax8WthtI6Vpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747387466; c=relaxed/simple;
-	bh=/ZFMIpLs6h2/doDXwg0M82XGokZD8rAL9KluIl3aZoE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VEToNxpBx9Rzr1ogzlxyDUtNYxvbD79lUsTi0oU966SYcJi51SuzzOI0WnKfZ6tqWHpkiuy/lUawugKYcGpG30y2zuph7U7EIgj7+HlPzIwgaZ2KQ2df5OeLC2JqvjoCud8q8ygknZ+Q0Jxc0D7DlUIJN4ltIGw2B9Y5e3AilWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ohFhW1oB; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747387476; c=relaxed/simple;
+	bh=pTcNOg+J4pTuaSi6FGbTNmcNN8Yox9jHEVvxg9j7gto=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AGGDEM9Sy8Tkp0s/iz4nRrhiDtz0Uzv6VSyRRLFs/IIfBrLnSyOKry7l882LfyeFejwIjYwhXdjjszmf2ainipxiTnUb0Ril6sBFsbhCltCUltIhXn4OYmM3lDh8tdVLsjztFtAaXzg7qeDgGxjBfAi8LA8jqXbPEi+YnZGU4bQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LUVBMoQD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ohFhW1oB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=HT
-	Nhmctmjx4Z/bGQiWHj5z1Zlft6woH0PtPOT4ao6Qo=; b=ohFhW1oBCY9KWubs99
-	QZ+/ZhJcN8vxocqeGvn5kO4cUuHjX1eNq0jog+ptxQnx1kU9e3NDHzndkK7Wj93d
-	FaUud4rsrqOwzlhTc2+gXc6M/AjQARW3/X0et8NMFQY3PtKGZrUgG/ia9yA/SRij
-	N9YyU56Uq9a+diF9UJFj25x4Q=
-Received: from ProDesk.. (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgD3_3UgBCdo+HWMAw--.22577S2;
-	Fri, 16 May 2025 17:23:48 +0800 (CST)
-From: Andy Yan <andyshrk@163.com>
-To: tzimmermann@suse.de
-Cc: airlied@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	simona@ffwll.ch,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Andy Yan <andyshrk@163.com>
-Subject: [PATCH] drm: Fix one indentation issue in drm_auth.h
-Date: Fri, 16 May 2025 17:23:38 +0800
-Message-ID: <20250516092343.3206846-1-andyshrk@163.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LUVBMoQD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64150C4CEE4;
+	Fri, 16 May 2025 09:24:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747387475;
+	bh=pTcNOg+J4pTuaSi6FGbTNmcNN8Yox9jHEVvxg9j7gto=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LUVBMoQDH76Nor+q+vsS8FsU/DmPtdJ4M3/zOKgVkGi0zp8xQ6gbzpafdLRlxgS35
+	 Xu+oNfuiqTL4sstHl7tl90Meb1Zt3Gw49g+p2RM6JplgX8DWIQMPrJQSL09lqpJCOp
+	 wJTij9XrOXG0fawaMpR5ULwkN/PcPs9sTUiawqEwZpuT9nnaOJLC8fAA2x0+QJ7QbR
+	 Jf4g1qC24GP6GHubKbd1rf2qr++XOx/rPQASOh6zfuWa6QLPU4mdIiteBWvePUDZbc
+	 /EPbPZybrYLJF5NshIj3/S9Jf93HgPRR4Z6zzVjZ54Jq8/h2wgiojuBlVYb/0rRHMH
+	 HaFOpEWCj4RGQ==
+Date: Fri, 16 May 2025 11:24:33 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: dimitri.fedrau@liebherr.com
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	Dimitri Fedrau <dima.fedrau@gmail.com>
+Subject: Re: [PATCH v2] pwm: mc33xs2410: add support for temperature sensors
+Message-ID: <mjmrgvw7dg6wlipvku4yzaazbxomsfpr42hdvh37c3r5zybjyh@4olym5bwde45>
+References: <20250515-mc33xs2410-hwmon-v2-1-8d2e78f7e30d@liebherr.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PygvCgD3_3UgBCdo+HWMAw--.22577S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrtrWrAr4xZry5XrWrJFWxXrb_yoWxCrc_Aa
-	4xW3W8Wry8u343Ar1xZa95Aryaga4rXan0qFn5XF47AF1kJr4Yqas5GFyUta4rWr18GrZ3
-	Wan8Jr9xAr13KjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRpVbqPUUUUU==
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqBFPXmgnAPF43gAAsw
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="md4hhqjtrihbqqci"
+Content-Disposition: inline
+In-Reply-To: <20250515-mc33xs2410-hwmon-v2-1-8d2e78f7e30d@liebherr.com>
 
-This should be one space.
 
-Signed-off-by: Andy Yan <andyshrk@163.com>
----
+--md4hhqjtrihbqqci
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] pwm: mc33xs2410: add support for temperature sensors
+MIME-Version: 1.0
 
- include/drm/drm_auth.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hello Dimitri,
 
-diff --git a/include/drm/drm_auth.h b/include/drm/drm_auth.h
-index 50131383ed81..830386804f91 100644
---- a/include/drm/drm_auth.h
-+++ b/include/drm/drm_auth.h
-@@ -86,7 +86,7 @@ struct drm_master {
- 	 * ID for lessees. Owners (i.e. @lessor is NULL) always have ID 0.
- 	 * Protected by &drm_device.mode_config's &drm_mode_config.idr_mutex.
- 	 */
--	int	lessee_id;
-+	int lessee_id;
- 
- 	/**
- 	 * @lessee_list:
--- 
-2.43.0
+On Thu, May 15, 2025 at 02:40:54PM +0200, Dimitri Fedrau via B4 Relay wrote:
+> From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+>=20
+> The MC33XS2410 provides temperature sensors for the central die temperatu=
+re
+> and the four outputs. Additionally a common temperature warning threshold
+> can be configured for the outputs. Add hwmon support for the sensors.
+>=20
+> Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> ---
+> Changes in v2:
+> - Remove helper mc33xs2410_hwmon_read_out_status and report the last
+>   latched status.
+> - Link to v1: https://lore.kernel.org/r/20250512-mc33xs2410-hwmon-v1-1-ad=
+dba77c78f9@liebherr.com
+> ---
 
-base-commit: a4f3be422d87958ef9f17d96df142e5d573d2f23
-branch: drm-misc-next
+Mostly fine from my POV. I suggest to squash the following change into
+your patch:
 
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index a0c077af9c98..d9bcd1e8413e 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -425,7 +425,6 @@ config PWM_LPSS_PLATFORM
+=20
+ config PWM_MC33XS2410
+ 	tristate "MC33XS2410 PWM support"
+-	depends on HWMON || HWMON=3Dn
+ 	depends on OF
+ 	depends on SPI
+ 	help
+diff --git a/drivers/pwm/pwm-mc33xs2410.c b/drivers/pwm/pwm-mc33xs2410.c
+index c1b99b114314..f5bba1a7bcc5 100644
+--- a/drivers/pwm/pwm-mc33xs2410.c
++++ b/drivers/pwm/pwm-mc33xs2410.c
+@@ -163,7 +163,6 @@ static int mc33xs2410_modify_reg(struct spi_device *spi=
+, u8 reg, u8 mask, u8 val
+ 	return mc33xs2410_write_reg(spi, reg, tmp);
+ }
+=20
+-#if IS_ENABLED(CONFIG_HWMON)
+ static const struct hwmon_channel_info * const mc33xs2410_hwmon_info[] =3D=
+ {
+ 	HWMON_CHANNEL_INFO(temp,
+ 			   HWMON_T_LABEL | HWMON_T_INPUT,
+@@ -286,21 +285,20 @@ static const struct hwmon_chip_info mc33xs2410_hwmon_=
+chip_info =3D {
+ static int mc33xs2410_hwmon_probe(struct spi_device *spi)
+ {
+ 	struct device *dev =3D &spi->dev;
+-	struct device *hwmon;
+=20
+-	hwmon =3D devm_hwmon_device_register_with_info(dev, NULL, spi,
+-						     &mc33xs2410_hwmon_chip_info,
+-						     NULL);
++	if (IS_REACHABLE(CONFIG_HWMON)) {
++		struct device *hwmon;
+=20
+-	return PTR_ERR_OR_ZERO(hwmon);
+-}
++		hwmon =3D devm_hwmon_device_register_with_info(dev, NULL, spi,
++							     &mc33xs2410_hwmon_chip_info,
++							     NULL);
+=20
+-#else
+-static int mc33xs2410_hwmon_probe(struct spi_device *spi)
+-{
+-	return 0;
++		return PTR_ERR_OR_ZERO(hwmon);
++	} else {
++		dev_dbg(dev, "Not registering hwmon sensors\n");
++		return 0;
++	}
+ }
+-#endif
+=20
+ static u8 mc33xs2410_pwm_get_freq(u64 period)
+ {
+@@ -523,7 +521,11 @@ static int mc33xs2410_probe(struct spi_device *spi)
+ 	if (ret < 0)
+ 		return dev_err_probe(dev, ret, "Failed to add pwm chip\n");
+=20
+-	return mc33xs2410_hwmon_probe(spi);
++	ret =3D mc33xs2410_hwmon_probe(spi);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "Failed to register hwmon sensors\n");
++
++	return 0;
+ }
+=20
+ static const struct spi_device_id mc33xs2410_spi_id[] =3D {
+Best regards
+Uwe
+
+--md4hhqjtrihbqqci
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgnBE4ACgkQj4D7WH0S
+/k6ldwf+P7rvywthCrMgABmoTQ5p+Hlc4ACPxZGG1iH27rTjMPAW67I6NQ6GbEiq
+mmfmuzlAWq35W+YxrEU1XMawlcEzuNAnTcxdk589MOcR4gaqRZadKpkLtVROSOD6
+eBMNdY7FizuCnwyId4h4dMBKn2aLuFxWdCRRFMYV8q6TsdbquHJjC2IqkU4588dk
+dOPy2Aw6p7bRNOX+LHTcVM7scO8/9aQww7c/x5RSDyb6LYAhPe5aGdOLtNOwATXA
+6OE8AkyvcKlm8TJVx5LLBzUI9TPIfBoAbpKxQ5Ivs/DCVz13EBEZchMb1QvOLBOO
+34c9g8Crla8jnt6ZFw/zBpGPtSLGMw==
+=Ul98
+-----END PGP SIGNATURE-----
+
+--md4hhqjtrihbqqci--
