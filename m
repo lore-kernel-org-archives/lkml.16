@@ -1,116 +1,84 @@
 Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FDD231856
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 23:55:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80E423644F;
+	Fri, 16 May 2025 23:57:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747439714; cv=none; b=sunVNPLQISZJhvrSKB/n/TlLgsYIc7lynPxWy9HPParCbbqYZb3eXsKXFnXyyaY6tENVsYk3EAouWg6qbVf7eXMKlTM1bSQi3+TOyWxetk7JjDfUKP5z+0VSMmfF7Cmvoz/iLQru4BU1/4cOI+fQ4z1ojtWLvuadZ0LMEuN0AvM=
+	t=1747439862; cv=none; b=twQbfrvakR2Kur8XpDDlJP68Ye8q2AUv7/OLuCagsSWnaD9Oa67TNuU89zPJ2oofks2+LHnlNP+VuevocP/bhNxQz1Hj1laJVEfqHmSil8plYfuC4AucIsPuH71n2ykYz6+tMWuloEjyFEorCW4ds84e2w7h0WpgmPjxA9aLpmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747439714; c=relaxed/simple;
-	bh=Pmrs3YtR+8uHw+Xhv5T/KJy1yN833vO/VdMql11vq2k=;
+	s=arc-20240116; t=1747439862; c=relaxed/simple;
+	bh=aC4uD0ITTl/JDgfgCUKDW0jP6UX1KG9IQNgPkE3lK94=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PjEBLE2RblqioaVxXywcx10qeffydHYZvfa11tA3xK4a9cT3/EU9J5rbH6qp/FRkwmv+vT6r/p52QilmvN8XnZPdBL67h1IPjNaejc35T0oomT8W6C2nqgu5B5kk/UvdsRGaofvBKZrWyIfsgteCCvNkn6ddp/RH08Re/4bbIlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=Z/MmDALx; arc=none smtp.client-ip=62.89.141.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=B/S25uOs9MAhauXEWDqIx+E5XBD9Ovw7IBt+/ccYEn9LKabXzhGpztHR93B84q+AtnvdQCvywxB6lP+we7qXjuaYh1N3ZSS4jbFLPgYs255rP5mENBdZQS3Dzm0SO9gGLFg8i6bo3i6B1zvsFOFdcSTr0k5D2XvmtHofABjL238=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=tzVom2iz; arc=none smtp.client-ip=62.89.141.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="Z/MmDALx"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="tzVom2iz"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=bwbGl9ljDPJOyozHAfIOsfkTHOvkwPpRcGdW6147QLs=; b=Z/MmDALxRFkcjCJbKoYot+1t/B
-	mWbWxB0jOqmd25LyHkcHepahdH0vXzw8/hSXMUHtb1OwovLif+SIi7ic7V0RO8cu8nCyK6tM3u3VF
-	NdkgHxPlUR96F0+kAKyeC+9OJXAkHDn8qdQAV6MBlH5PVtEyr3od4AXf0Obz7WUMloXtW5PXfpSo1
-	sV7fyvt+c1TFUbURBgIzkncmxZFlQTtv8n+ky7v1qsQ0VTkWLMwRI3E6LKCro0qcPCdyCLxWggEpO
-	FZWPgT1v9rsXMBpoejNxEQoCMocQuXLHSZLpqHHmJHOxJi+CdxLqpDG7IAKJgr2U+LMUGv2TjCTe3
-	MmTEydRQ==;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
+	bh=CqWZwZQKIafLZoktjyxhluo+wFu9cppa1wUYPy14yRA=; b=tzVom2izoVb5qZSGJvmxeRe3oi
+	L7H7X5HPVBTtWdjtxozkKjarX8sM9YBpDbyS+oPS5+8w+UCyezJBUi0yBBtMSatvP1RyeU1GYLhGS
+	O9XG59+Y2bZsVUIxOlBJ7RxEi2Nisph3r+KTK7Y8hr2Lvtoz3mXCRNhcvbk4b+tJpHmDiZ7ldlQ0R
+	dA36Ed9DwVtu0SN6IEUVK7TAYDHcaxd5+1lWSWx19fXcknnkATzRU2zhd9zbmbXB6MGX0gQbylPJU
+	lUOih/c1ig8gzv2oOp/p+m9N+pBUWqNOZnKfQ1crJOcRR2Qob3JWbvUM7hOuxvZDEs2evfArwB2y/
+	IOpGBRHA==;
 Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uG4tR-00000003wPv-3sXw;
-	Fri, 16 May 2025 23:55:10 +0000
-Date: Sat, 17 May 2025 00:55:09 +0100
+	id 1uG4vr-00000003xBs-0UGa;
+	Fri, 16 May 2025 23:57:39 +0000
+Date: Sat, 17 May 2025 00:57:39 +0100
 From: Al Viro <viro@zeniv.linux.org.uk>
-To: Ozgur Kara <ozgur@goosey.org>
-Cc: Christian Brauner <brauner@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Jeff Layton <jlayton@kernel.org>, Song Liu <song@kernel.org>,
-	Joel Granados <joel.granados@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kernel: fix acct.c first test openai codex
-Message-ID: <20250516235509.GU2023217@ZenIV>
-References: <01100196db61ea58-123409dc-7381-487b-91b6-166193f3f349-000000@eu-north-1.amazonses.com>
+To: Zizhi Wo <wozizhi@huaweicloud.com>
+Cc: Jan Kara <jack@suse.cz>, brauner@kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	yangerkun@huawei.com
+Subject: Re: [PATCH] fs: Rename the parameter of mnt_get_write_access()
+Message-ID: <20250516235739.GV2023217@ZenIV>
+References: <20250516032147.3350598-1-wozizhi@huaweicloud.com>
+ <vtfnncganindq4q7t4icfaujkgejlbd7repvurpjx6nwf6i7zp@hr44m22ij4qf>
+ <b3d6db6f-61d8-498a-b90c-0716a64f7528@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <01100196db61ea58-123409dc-7381-487b-91b6-166193f3f349-000000@eu-north-1.amazonses.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b3d6db6f-61d8-498a-b90c-0716a64f7528@huaweicloud.com>
 Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Fri, May 16, 2025 at 11:15:49PM +0000, Ozgur Kara wrote:
-> From: Ozgur Karatas <ozgur@goosey.org>
+On Sat, May 17, 2025 at 07:54:55AM +0800, Zizhi Wo wrote:
 > 
-> Hello,
 > 
-> i want to try out the openai codex and it seemed like a logical
-> process so with rcu_read_lock() a protection is started but we dont
-> call rcu_read_unlock(); it has to be called to end rcu read lock.
+> 在 2025/5/16 18:31, Jan Kara 写道:
+> > On Fri 16-05-25 11:21:47, Zizhi Wo wrote:
+> > > From: Zizhi Wo <wozizhi@huawei.com>
+> > > 
+> > > Rename the parameter in mnt_get_write_access() from "m" to "mnt" for
+> > > consistency between declaration and implementation.
+> > > 
+> > > Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
+> > 
+> > I'm sorry but this is just a pointless churn. I agree the declaration and
+> > implementation should better be consistent (although in this particular
+> > case it isn't too worrying) but it's much easier (and with much lower
+> > chance to cause conflicts) to just fixup the declaration.
+> > 
+> > 								Honza
 > 
-> I guess, this means rcu stays open forever and data structures are not
-> cleaned which causes performance degradation.
-> 
-> Regards
-> 
-> Ozgur
-> 
-> Reported-by: Ozgur Karatas <ozgur@goosey.org>
+> Yes, I had considered simply fixing the declaration earlier. However, in
+> the include/linux/mount.h file, similar functions like
+> "mnt_put_write_access" use "mnt" as the parameter name rather than "m",
+> just like "mnt_get_write_access". So I chose to modify the function
+> implementation directly, although this resulted in a larger amount of
+> changes. So as you can see, for simplicity, I will directly update the
+> parameter name in the function declaration in the second version.
 
-... showing that one needs *something* that would be able to reason somewhere
-in the loop.
-
-Your "I guess, this means" is an excellent example - you've got something
-(openai codex, visual examination, whatever) pointing you to unusual pattern -
-rcu_read_lock() + call of function with no rcu_read_unlock() in sight.
-
-Next step: hypothesis that unlock might be missing.
-
-Next step: blindly send a patch adding an unlock on the strength of that
-hypothesis?
-
-Sorry, no.  It's not just that hypothesis is wrong - it is, but that's not
-the real issue.  It's that instead of
-	* asking how the hell could that work
-	* trying to trigger that and checking whether the hypothesis is
-corrent
-	* looking around for similar places to see whether it looks intentional
-(in which case it still might be a bug, but if it's inconsistent, the odds of
-a bug are going up)
-	* looking through the history (e.g. with git blame) to see if there
-might be any explanations in commit message
-	* looking through the function in question (git grep would immediately
-point to fs/fs_pin.c, and the first glance would show rcu_read_unlock() on
-all paths through it, with the total balance of lock/unlock being -1 on
-each)
-you've chosen to post a patch "fixing" the problem as a way to see whether
-it's actually there.
-
-Folks, programming tools can be very useful in directing to places that might
-be worth checking.  The codebase is huge, so any heuristics useful in triage
-are Good Things(tm); if instead of "bug found because somebody looked at
-random line picked out of millions such and it turned out to be broken" you
-have "bug found because such-and-such heuristic had picked that line as
-odd-looking and it turned out to be broken", you win even if it lists
-20 places and only one of them turns out to be actually broken.
-
-But you really can't treat that as anything beyond a hint to bump that
-particular place in the list of things to look through.  It might tell you
-what looks unusual, but that's it.  Same as with any warning from any
-source.
-
-Asking around is fine; so's experimenting, so's reasoning, etc.
-But you can't go from "tool gives a warning, I guess it translates into plain
-language this way" to "modify that place so that the tool doesn't point to
-that place anymore".  You really need to understand what's going on first.
+FWIW, "mnt for vfsmount, m for mount" is an informal convention in that
+area, so I'd say go for it if there had been any change in the function
+in question.  Same as with coding style, really...
