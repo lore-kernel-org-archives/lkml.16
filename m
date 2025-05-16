@@ -1,93 +1,108 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0625C635;
-	Fri, 16 May 2025 04:37:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58122635
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 04:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747370268; cv=none; b=iCM1JYW63EDdDFHhoXZWfo/KVW3wKC/nYKj+TJ4qLXgDozjM8IpscI110nwOXnee2PNVNsLLZVALnQFFcHeVOu8xyvRyNvhqb5LzQtLUsqZhPXKlEQhd4CBAu5HianfvRHrfafcNpLDKBg+9OZirN9Nzkz/3LSBF3vzRsRkpNLI=
+	t=1747370701; cv=none; b=mticmJBzzahFIXf+QADuFp+DwLVnZXY6pz+afiNHhdRrSGPB4NA1NZVYcsBFugPdAFofjXuULjRYOKSQzd9QKg7aELuiJnDDZwxBbzk/3pnDMN2cvKukwg/RbTOw3LP87jZ6vb7Md/Qz8NugzxKvZZ1w8Lvk0Qhq84XkbuagQWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747370268; c=relaxed/simple;
-	bh=oUR/Vyyy5jkz6oI8KlHpxl1LYLVxP+UCkAjxtCLMq84=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=AlzbzkUECL0sQTXW3Q655gHVLG7WSG/nQ5E+EBjFfKFNozHGNBK0OUxZpNxqlgU3CkSanlbyQ5AJOeIIrlN1V8lm84st04+3j5PaV6C5o1jIpKPLU6cs2f6PdLv0fkky7UNdoVdF3ACdSh02FRBSqXZ8MGbEsqeDGc5eIzK2f5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-ed-6826c1131c3e
-Message-ID: <7cf5da27-4542-49f9-90e2-88ba0eaba682@sk.com>
-Date: Fri, 16 May 2025 13:37:39 +0900
+	s=arc-20240116; t=1747370701; c=relaxed/simple;
+	bh=WSpzODpV4dJWy/J5dEH9vbYqEWoBxCuasvmRptIrYNA=;
+	h=Content-Type:From:Mime-Version:Subject:Message-Id:Date:To:Cc; b=KlaI7iBj3lnBUoq/YNg5COV4lAxPpz9ptSMSferHvVy9HwQEEkJBTV5vv/Kv+lLWLxanZiIJBT+6klY9pekNiBPFSWoatZO/rBtIPGDWSZEM7ZT1j4USJMrFNV808J60eK68VbTEyukuO67EuF05lqtWljbKwQraAm6TUO8YpGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fnOanZqk; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fnOanZqk"
+Content-Type: text/plain; charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747370696;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Bf8BD4LEhzFGD3sMsBfuBuusPKPc5rowAvEBihUw1v0=;
+	b=fnOanZqkBDFdlWMxADgGrlTABQieTPSxlvwkOOOMIYMxxR0XYGG0Nc3qSs8IccxylQFIZO
+	I5eAMoHGMCNbh/AZnyAkvMM1b0zoa1ST26PssFvhy4ZBKhzHIU2RqMmaBn3vPKD67U6JZK
+	2mtk/n3RMp+0yoljoCRlInVRqopzH1I=
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: kernel_team@skhynix.com, Andrew Morton <akpm@linux-foundation.org>,
- "Huang, Ying" <ying.huang@linux.alibaba.com>, gourry@gourry.net,
- yunjeong.mun@sk.com, gregkh@linuxfoundation.org, rafael@kernel.org,
- lenb@kernel.org, dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
- dave.jiang@intel.com, horen.chuang@linux.dev, hannes@cmpxchg.org,
- osalvador@suse.de, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-mm@kvack.org, kernel-team@meta.com
-Subject: Re: [PATCH v8] mm/mempolicy: Weighted Interleave Auto-tuning
-To: Joshua Hahn <joshua.hahnjy@gmail.com>
-References: <20250512141412.3792050-1-joshua.hahnjy@gmail.com>
-Content-Language: ko
-From: Honggyu Kim <honggyu.kim@sk.com>
-In-Reply-To: <20250512141412.3792050-1-joshua.hahnjy@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBIsWRmVeSWpSXmKPExsXC9ZZnoa7wQbUMg/OfjC3mrF/DZjF96gVG
-	ixM3G9ksft49zm7RvHg9m8XqTb4Wt/vPsVqsWniNzeL41nnsFvsuAtXufPiWzWL5vn5Gi8u7
-	5rBZ3Fvzn9XizLQii7lfpjJbrF6T4SDocfjNe2aPnbPusnt0t11m92g58pbVY/Gel0wem1Z1
-	snls+jSJ3ePEjN8sHjsfWnosbJjK7LF/7hp2j3MXKzw2n672+LxJLoAvissmJTUnsyy1SN8u
-	gSujYfl79oI3bBWHlrSzNTCeZe1iZOeQEDCReFTUxcgJYf14zQxi8wpYSqw43AVmswioSvyc
-	2s8IEReUODnzCQuILSogL3H/1gz2LkYuDmaBG8wSHfvmgiWEBVwlbq87BtYgIqApcaJ1Etgg
-	IQE7ibbpG1hBbGYBEYnZnW1gcTYBNYkrLycxgdicAvYSt1f8YIOoMZPo2trFCGHLS2x/O4cZ
-	ZJmEwCl2iRXLlzNDXC0pcXDFDZYJjIKzkBw4C8mOWUhmzUIyawEjyypGocy8stzEzBwTvYzK
-	vMwKveT83E2MwPhdVvsnegfjpwvBhxgFOBiVeHgdrqtmCLEmlhVX5h5ilOBgVhLhvZ6lnCHE
-	m5JYWZValB9fVJqTWnyIUZqDRUmc1+hbeYqQQHpiSWp2ampBahFMlomDU6qBUern3pRaHcWD
-	NeXixfyfAtUPC8kJGazblJ+23Hjz8Ree23if/7z10vJzdOLtZb6zjlvlLJ9yJ7BX2rNm6p0n
-	G5bFd9dLz3OsfjHNZof/pr98glKXti52Y560f7XjtyWK9ouubTpntkJwz5fL7IHhF87/fs0w
-	g9t0l239zbgWV975vnIldRvW/1FiKc5INNRiLipOBAAUxezm2wIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsXCNUNLT1f4oFqGwfTVqhZz1q9hs5g+9QKj
-	xYmbjWwWP+8eZ7doXryezWL1Jl+L2/3nWC1WLbzGZnF86zx2i30XgWoPzz3JarHz4Vs2i+X7
-	+hktLu+aw2Zxb81/Vosz04os5n6Zymyxek2Gxe9tK9gchD0Ov3nP7LFz1l12j+62y+weLUfe
-	snos3vOSyWPTqk42j02fJrF7nJjxm8Vj50NLj4UNU5k99s9dw+5x7mKFx7fbHh6LX3xg8th8
-	utrj8ya5AIEoLpuU1JzMstQifbsEroyG5e/ZC96wVRxa0s7WwHiWtYuRk0NCwETi0Y/XzCA2
-	r4ClxIrDXWA2i4CqxM+p/YwQcUGJkzOfsIDYogLyEvdvzWDvYuTiYBa4wSzRsW8uWEJYwFXi
-	9rpjYA0iApoSJ1ongQ0SErCTaJu+AWwZs4CIxOzONrA4m4CaxJWXk5hAbE4Be4nbK36wQdSY
-	SXRt7WKEsOUltr+dwzyBkW8WkjtmIRk1C0nLLCQtCxhZVjGKZOaV5SZm5pjqFWdnVOZlVugl
-	5+duYgTG6LLaPxN3MH657H6IUYCDUYmH1+G6aoYQa2JZcWXuIUYJDmYlEd7rWcoZQrwpiZVV
-	qUX58UWlOanFhxilOViUxHm9wlMThATSE0tSs1NTC1KLYLJMHJxSDYxbJijHyn10iRepad7l
-	P+vjL5Hkvecjvzac3tyTZRyw5c7rPZJnbp57uPBbteGO1HY77YfTvP8wLnHPEd6fvOzUmZLX
-	a1mF3B0Dn/k+Dg2cJFHD5pa+Zgu7uPJX0wlhytN2NP+6oVw/xaBqr/bbhexRJ5t2TjjPLCV7
-	/aiHYwZ35tx1PwKaj5QpsRRnJBpqMRcVJwIASyQiE80CAAA=
-X-CFilter-Loop: Reflected
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] workqueue: show the latest function name in /proc/PID/{comm,stat,status}
+Message-Id: <8A1F225D-714C-427C-A0ED-1DE5D93DEAD1@linux.dev>
+Date: Fri, 16 May 2025 12:44:19 +0800
+To: Tejun Heo <tj@kernel.org>
+Cc: Muchun Song <songmuchun@bytedance.com>, jiangshanlai@gmail.com,
+ linux-kernel@vger.kernel.org
+X-Migadu-Flow: FLOW_OUT
 
-Hi Joshua,
+=EF=BB=BF
 
-On 5/12/2025 11:14 PM, Joshua Hahn wrote:
-> Hi Honggyu, thank you for reviewing & testing my patch (again)!
+> On May 15, 2025, at 23:53, Tejun Heo <tj@kernel.org> wrote:
+>=20
+> Hello, Muchun.
+>=20
+> On Thu, May 15, 2025 at 12:05:23PM +0800, Muchun Song wrote:
+>> Workqueues, such as system_unbound_wq, are shared across the system,
+>> making it difficult to determine which tasks are being executed by
+>> each worker. This patch improves clarity by displaying the latest
+>> function name associated with each workqueue worker in the
+>> /proc/PID/{comm,stat,status}. For example:
+>>=20
+>> Before:
+>>  # ps 64 67 68
+>>  PID TTY STAT TIME COMMAND
+>>  64  ?   I    0:00 [kworker/u34:0-events_unbound]
+>>  67  ?   I    0:00 [kworker/u33:1-events_unbound]
+>>  68  ?   I    0:00 [kworker/u33:2-events_unbound]
+>>=20
+>> After:
+>>  # ps 64 67 68
+>>  PID TTY STAT TIME COMMAND
+>>  64  ?   I    0:00 [kworker/u34:0-events_unbound:flush_memcg_stats_dwork]=
 
-[...snip...]
+>>  67  ?   I    0:00 [kworker/u33:1-events_unbound:flush_to_ldisc]
+>>  68  ?   I    0:00 [kworker/u33:2-events_unbound:idle_cull_fn]
+>>=20
+>> This change provides a clearer view of the tasks being performed by
+>> each worker, enhancing system monitoring and debugging.
+>=20
+> One worry I have about this is that these will likely be stale most of the=
 
->> Hi Andrew,
->>
->> I'm not sure if Joshua is better to post v9, but if you want to fold and update,
->> then could you please add my tags as follows when you fold this change?
->>
->>     Reviewed-by: Honggyu Kim <honggyu.kim@sk.com>
->>     Tested-by: Honggyu Kim <honggyu.kim@sk.com>
->>
->> I added the same tags in v7 but not included in v8 somehow.
->> https://lore.kernel.org/linux-mm/5fdd7db9-96fb-49ea-9803-977158cb0132@sk.com
-> 
-> I must have missed including these tags. Sorry about the confusion --
-> hopefully we can incorporate them into v8!
+> time as kworkers are just sitting and waiting, and there's no connection
+> between what a kworker ran before and what it's going to run next, so I'm
+> unsure how useful the extra information is.
 
-I found it wasn't again :)
-https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/commit/?h=mm-new&id=c021f31a3b73d8e5ae2abdd658d837c44929cad7
+Hi Tejun,
 
-Thanks,
-Honggyu
+Monitoring tools like atop can indeed record comm of processes. When we
+encounter issues such as high CPU usage, these tools can help us identify
+the problem. For instance, if kworkers are consuming most of the CPU, we
+can use this information to pinpoint which specific function is using
+the most CPU.
+
+Another use case is when we use the isolcpus=3D command line option
+to isolate CPUs, we want to make sure that no kworker threads run on
+those CPUs. But sometimes, kworkers might still get scheduled there, causing=
+ latency
+issues. By using this information, we can figure out which module's
+function ran on the CPU before and then dig into the code to see how to
+stop it from happening.
+
+
+Muchun,
+Thanks
+
+>=20
+> Thanks.
+>=20
+> --=20
+> tejun
+
+
