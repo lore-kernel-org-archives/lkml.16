@@ -1,58 +1,56 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8811A704B;
-	Fri, 16 May 2025 09:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A705C21ABBF
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:13:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747386764; cv=none; b=RXymRvdf7t4fcq1VgHofwB7AYX2zjiHpc5P7JShb55KsMMcyAfEEovHd2xGOThXHq33WQ2nrqyKbl1lKSPkhf959UFakTHVtGImaTCeWzYrXO+ViZShv+F2zaiEg150tt0nPzxj7zcrnf51zEoy4guH4xL7nuN0lxSVT3MwU9QI=
+	t=1747386794; cv=none; b=LfLfVHCZHBoFlx41wxHkNFFcM7gadVb7AQ9ePOZAonSic1nh+BfkROD8vTZg1UNH6zrX3hzl+D1g+C8y4/jDz617EdZg3NCk2/lGqWEDncRaEloa4G+44ZVNGqa0JE/QaCvf1AnGRIeq+t7+XCaoS/rCYzsolBGI20dMoNQkrQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747386764; c=relaxed/simple;
-	bh=To9rgQRvNKeScnKbTmPrF+XAs6vdvnfL46mXdQcYXdk=;
+	s=arc-20240116; t=1747386794; c=relaxed/simple;
+	bh=ksekMZVhPXdIuET0lg2g9cXAvBNY/5XmvEQhXStTji0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ezc4EjwWt5HFte+IPz5cBE5YnjXdAYbcEWevCvuQ3kaP2v3EaGyACLzhfslNwwaTw5s2zp6T5KxBmQwaefC7LWbsaMI5arcEFBkvms7ROGKCSSqihnghXdSwyiOmvcLb95+yl3szt5TNumIdjAq0a55R0ZpOag1tknCPKgze0KY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tUNsK4qB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tUNsK4qB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6047C4CEE4;
-	Fri, 16 May 2025 09:12:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747386764;
-	bh=To9rgQRvNKeScnKbTmPrF+XAs6vdvnfL46mXdQcYXdk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tUNsK4qBaBBxJzi+e2ykS/6qWXVQddxS9Y6QIEcvzHTxHXg/f62zmMKWHawGqlyhY
-	 AWznps5s1J2sUy03zPQGgriWJAI46hZiHkcwLdUcYvrlzEaZSifRuMYd5CDLAYeOaK
-	 tQWaDgR1CUnEHhVo+S4SF26NLDVXZ1oVNeqRt8D6MX2sqcH/w+ZS1Hy/wMeY9hVSRi
-	 tp8ZMZZjwvfReMsf5czOmR/92uPN8/eM+K0sw+iCkp8v2EHxW2l1UhdX3ryV/gi1U9
-	 oSxvAN0F46d4DT00wP2bNtstMUrrDyV16NmgxbKeSSpN/pgWsU5ELUb0KtYda+7rNU
-	 yxF4Txjj8Ilgg==
-Date: Fri, 16 May 2025 11:12:37 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	john.ogness@linutronix.de, Petr Mladek <pmladek@suse.com>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	 Content-Type:Content-Disposition:In-Reply-To; b=e3xmtKSFOm6ixp7jYjKEub3ScmEZ4PVvtQK2A/EK42KsH4C+xGlu9+p+mfRPFawlnBZ4H3/xwGASfS6/x2cFuDHgl05xS848Si37amgGH4yLwkrrM8PTh294neouCYKWO28jjzi6rIGpuMjcL0Y1lo0PdtpYoLKAEUoYR/A9OY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+X-CSE-ConnectionGUID: 978PjgOEQTOin37xaoX0Lg==
+X-CSE-MsgGUID: Lmt7C9DnQBaRvgW9/vOBeQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="71856940"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="71856940"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:13:12 -0700
+X-CSE-ConnectionGUID: Y87Srr0sRye6sqqtksERhw==
+X-CSE-MsgGUID: QazlszgLTlWhAADhp7qgHw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="142644054"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:13:04 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy.shevchenko@gmail.com>)
+	id 1uFr7l-000000025sp-1nBT;
+	Fri, 16 May 2025 12:13:01 +0300
+Date: Fri, 16 May 2025 12:13:01 +0300
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Juergen Gross <jgross@suse.com>,
 	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v8 00/22] RV: Linear temporal logic monitors for RT
- application
-Message-ID: <aCcBhY3zYpuH_oIr@gmail.com>
-References: <cover.1747046848.git.namcao@linutronix.de>
- <aCb1kBEkiriPbMo4@gmail.com>
- <20250516085522.g9Uq2WBN@linutronix.de>
+	Thomas Gleixner <tglx@linutronix.de>,
+	David Woodhouse <dwmw@amazon.co.uk>
+Subject: Re: [PATCH 05/29] x86/boot/e820: Print gaps in the E820 table
+Message-ID: <aCcBnWbfKalvndCI@smile.fi.intel.com>
+References: <20250421185210.3372306-1-mingo@kernel.org>
+ <20250421185210.3372306-6-mingo@kernel.org>
+ <aAc6aj5FVMkwDo06@surfacebook.localdomain>
+ <aCXBvRe6PrY_zlvU@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,33 +59,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250516085522.g9Uq2WBN@linutronix.de>
+In-Reply-To: <aCXBvRe6PrY_zlvU@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
+On Thu, May 15, 2025 at 12:28:13PM +0200, Ingo Molnar wrote:
+> * Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > Mon, Apr 21, 2025 at 08:51:45PM +0200, Ingo Molnar kirjoitti:
 
-* Nam Cao <namcao@linutronix.de> wrote:
+...
 
-> On Fri, May 16, 2025 at 10:21:36AM +0200, Ingo Molnar wrote:
+> > > +		u64 range_start, range_end;
 > > 
-> > * Nam Cao <namcao@linutronix.de> wrote:
-> > 
-> > > Nam Cao (22):
-> > >   x86/tracing: Remove redundant trace_pagefault_key
-> > >   x86/tracing: Move page fault trace points to generic
-> > 
-> > Does the renaming of the tracepoint class from 'x86_exceptions' to
-> > 'exceptions' have any negative effects on tooling?
+> > struct range (from range.h) and...
 > 
-> No, tracepoint class name doesn't affect userspace. The tracepoints' names
-> seen from userspace are the same after the patches:
-> 	exceptions:page_fault_kernel
-> 	exceptions:page_fault_user
+> Yeah, using those primitives makes sense, but right now the e820 code 
+> isn't using them, and it's better to have similar & unified range 
+> handling code patterns.
+> 
+> In principle I wouldn't be opposed to patches that convert the e820 
+> code to <linux/range.h> types.
 
-Perfect, thank you!
+Okay, perhaps a separate cleanup in the future. Not sure if I will have time,
+but let's see...
 
-Since there's been no new review feedback about these two patches since 
--v5, I've applied them to tip:x86/debug, with a v6.15-rc6 base, because 
-IMO they make sense independently of your series as well.
+...
 
-Thanks,
+> > > +		if (range_start > range_end_prev) {
+> > > +			pr_info("%s: [gap %#018Lx-%#018Lx]\n",
+> > > +				who,
+> > > +				range_end_prev,
+> > > +				range_start-1);
+> > 
+> > %pra
+> 
+> This would be part of any <linux/range.h> conversion patches.
+> 
+> > with who mentioned the "gap"?
+> 
+> Not sure I understand?
 
-	Ingo
+With the range.h in place and the mentioned specifier, the above will be like
+
+BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+BIOS-e820: [range 0x00000000000a0000-0x00000000000effff] gap
+BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
