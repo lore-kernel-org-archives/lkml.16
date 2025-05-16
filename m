@@ -1,196 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEA1946F;
-	Fri, 16 May 2025 00:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15D6BE49
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 00:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747355827; cv=none; b=WGE7un/StfxLPB7nS2iG5Fib7hlhAuxa5N7fwareoMVkeZRSTFFQ+jx8wd2tFNhKpNBn1ysfb9lTNVzQ1T853NJYn4tdqjrbRWtJX+aiu9nNL+2HLwXG0JDSq5Ltea68KGpnKq1dyx1XPfjxUzblSvgULeMAwZWUEmTUAj28/ik=
+	t=1747355952; cv=none; b=c68PoDQsEp5C6qLyBrninlwWS4VStcgrWVesPgQbl6dXB2YIr9c5BF8fwK06AL2sGdGHoM3YV3Jy29crxYt6IuRdC/efA7WnAcktHk7Q9knw9O86AW7ZR6Tq33meZNjwbzo24Uhy0oo0fjPZ6cQ+NJeSci/DuCci1mdEp1SxLng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747355827; c=relaxed/simple;
-	bh=ZKJIhBBOYIGRq+D/DEN4BwXfRp/sspw1dXfcAIV4Vuc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GHsT/JdtJfQsxSiJ4XBDtjj4VUm0s8egcVvxQ1aSCP5qtgiSqmhtuhN6Hryimo+MbfJYfhrFaDHViIW0ZHk0+5oUoYfpmlzjriTJHAqmF9FsrYbUzXBO3TR73YgR9+1ebXbVUBvxJgKtLqw5jPmZRM5ZlhIQlpjVKcBgbrm+D+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jZiHFTEZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747355952; c=relaxed/simple;
+	bh=5f1s3Ff09Aq59wDQTqmIS2t0zVSVSDCLVqyAzxPQp9Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=do+34VWVxaLTrheoc+I/3xZUaCUiNS4rKfyJbSIBjpo+ufPMSTerEbhMiXULotrRsxuVxIUUkGmdfPcetO+Ul1GdmD/gD3Mc9bLbeEkswq6hz6SfkC0fqT/EQ7IeeEyUtWIptHmeXhIOgWerwxz2aosu0XyKkwjIwnYZbdIVADc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dhWIqLhA; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jZiHFTEZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0E97C4CEE7;
-	Fri, 16 May 2025 00:37:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747355824;
-	bh=ZKJIhBBOYIGRq+D/DEN4BwXfRp/sspw1dXfcAIV4Vuc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=jZiHFTEZxXukOfyL+zyYJ34h0BfHtpticv3sCZ3JVh8ll2o9qi4BQRRhgdm6RQzsh
-	 FaS4fhCF0gQziboAssz8Bn+ou20m1YaTXf5/AAHX27OqgoE1QmxoMGQt19AlnUMp4Y
-	 2sOv6MC0xZZswwtYvKfvXcttAccrGuKhq/vI/WdQ0jK9RhSHw4r5/LHl4jwqyCEwK6
-	 7IItpjCKvJZo8OaLDiFxAJlvVt7zx4xH27J3nFvS01RBb9yBkesvx/4lxODb00vGCs
-	 Cyg2XL402nEgxlUOV1ZI40bs+hyJXBYGm8Gm49oq+hGeE/0hocwtq2We+f9SnHjl1W
-	 2QL79BTlzPqFg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id EB67ECE08FE; Thu, 15 May 2025 17:37:03 -0700 (PDT)
-Date: Thu, 15 May 2025 17:37:03 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [paulmckrcu:dev.2025.05.05a] [rcutorture]  54d0803f63:
- WARNING:at_kernel/rcu/rcutorture.c:#rcu_torture_stats_print[rcutorture]
-Message-ID: <620852c4-c2ae-4242-9996-1af248afba2c@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <202505131651.af6e81d7-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dhWIqLhA"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54FEFCYL024592
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 00:39:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	GlqhZcs+erk3iBh+80fphQbFA+uOB/LMqliG0REwbBc=; b=dhWIqLhAtjrxwtE2
+	pPBq6XHxgW9JdIiD1TWG0LkoytjCi2O4joojeUGxcMzCW5YfWAuWuxlidB3ZCaLE
+	AtamsNgvWmIJtIGm/SOEQCWpX8F88vPLs0yNxK1Bw2HZ+R380ZJbvqlNaY+OPOaY
+	Np1gumqPX7sYhMznsiZuKrxFvWQafOFTY3/c78erAGmsyRq3vIWz5j+WhOGIDdRn
+	QdmKDxsWRK2OyxMTc8dtvvdFKbyBknu4TTxelCJD6tGR/pjk+juLUrHTtSmSHjYr
+	ERK8JrINMKfa7rgA0SZASrpsiucWkln624roJfPHnhr4ZH1deH2OFTJGLX5mYi/2
+	Z2nxIA==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcp049r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 00:39:09 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2318043effaso16893595ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:39:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747355949; x=1747960749;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GlqhZcs+erk3iBh+80fphQbFA+uOB/LMqliG0REwbBc=;
+        b=Qjy2lgCd6+ceHvdr2QeqRz5y1NHNSahGHxgN3kp29qlmemzCtsafUVgKONFKh9Hnm6
+         rBSJj4nNPPDCa5EJSWq3tsVAbtmgeECQZDQJEEpkVytwddsitrWz+n0CY/ns8XMiQBRN
+         ux5cRS6HX4wT7MTdeCmnqkRDsEzwFEo4wZUZ1MofqnCAPvIygbQpvpGtu8Wi9FnXanm7
+         7AUMp7Smx9+YFC1XDYnu5rmfqQ69fiT58O0yA9O25VBIa4UjT5ikDnHnLjjhDvCVC0sT
+         TZGeh4HsiHye9IIMXsvH/Q9s/7ZQv4jdKJkABBlHkyX155/g5iBaEVmxHbmElzK7ula6
+         vcVw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5ywROFbbeF8f90vG0CPOUUQwE/JXhXpVxU4QRi0wnUGZnWW9BTO+3VqKjbdohXC9LiX+p/z9Li8o2KBo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylMPAG1Bd7C+Fri6MQq9maXVNVx4MAeKG9oGTcSJquBIJD+TUa
+	JBVqsXmqjwGlOgIC3tcWNGs86NHmGAkEUbHLCkfLHJyOOHHjl+4fnsLB4hTbVDdkHDNKmcbfqiX
+	xDM9uUmIMpULLBkG+/R6qb12NvFeEZlRLfP2tWcrknl8P79eq3zRcXStC6i8oMyDSXtc=
+X-Gm-Gg: ASbGnculit7jOWcSZuA0Aox8Cmy4GHv2ltHUnU2PzlrFaTqMgDkSXvJN9qCiadoqB9l
+	3Ng4i1zZghGlGmJ7CWN/LTD9iERobttAYE9C+8yUCrWuRF8KkZY+oXoTj8g9Z5xiuiXplaO0lkB
+	2z1M5ABjpA96ibtvKKs9UCAZH3BckVHrqN/GUisNJ3JOEBkJU3OrZNt12b5Ratx5kLLVedDPGUW
+	QxBASQ96KxBib4DsOVGGr6j1Xv/qVRSzWus2y2ofIdZxuydyotB9vAoYjvVDCYmfsYSdFIj3PJV
+	drYW562F1qWr0G7bb7fH17mzQaT7+dK7QDLJXFwLiS6J240d/rkQJVhWVa/xRMqvo+lIgA==
+X-Received: by 2002:a17:903:f8d:b0:224:f12:3734 with SMTP id d9443c01a7336-231d43d36ffmr15463025ad.30.1747355948946;
+        Thu, 15 May 2025 17:39:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFCIxa42I2fd9QBBq3jcy1OxAa7Gi6L2HevXKicZ0G0GjWZp48BnGCRKieCJE4fuG/o3RumIg==
+X-Received: by 2002:a17:903:f8d:b0:224:f12:3734 with SMTP id d9443c01a7336-231d43d36ffmr15462825ad.30.1747355948541;
+        Thu, 15 May 2025 17:39:08 -0700 (PDT)
+Received: from [10.134.71.99] (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231e069c592sm755765ad.100.2025.05.15.17.39.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 17:39:08 -0700 (PDT)
+Message-ID: <24e419da-71f8-4b0d-9416-0fe4c63eed0f@oss.qualcomm.com>
+Date: Thu, 15 May 2025 17:39:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202505131651.af6e81d7-lkp@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] drm/msm/dpu: Check mode against PINGPONG or DSC max
+ width
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Abhinav Kumar <abhinav.kumar@oss.qualcomm.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250514-max-mixer-width-v1-0-c8ba0d9bb858@oss.qualcomm.com>
+ <20250514-max-mixer-width-v1-3-c8ba0d9bb858@oss.qualcomm.com>
+ <f2brfgvsnwqu5rudr32fkjx6qiuut2im546mjqrk2ouego4npx@g6avls6o7kws>
+Content-Language: en-US
+From: Jessica Zhang <jessica.zhang@oss.qualcomm.com>
+In-Reply-To: <f2brfgvsnwqu5rudr32fkjx6qiuut2im546mjqrk2ouego4npx@g6avls6o7kws>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: GyPFquNOCqpoMetzfouwF9bFR03-q2AO
+X-Authority-Analysis: v=2.4 cv=D8dHKuRj c=1 sm=1 tr=0 ts=6826892d cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=lZyNh1K7jJI6hNXvg3QA:9
+ a=QEXdDO2ut3YA:10 a=324X-CrmTo6CU4MGRt3R:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDAwMyBTYWx0ZWRfX9YzOm8yv52it
+ mMq+K9D5hhBUbdDWmE5Co+FCZ9gh3pmWa5Uoz/vxuv39G6kct/tTAheoXxnMJok/PVyR74wgCf+
+ Uq5hEYdu9dQDuLM+LF73aCvdnfMNylfsiVOQBOOX/oxHHVVQLhn5st9vKSmer492w1uBGkBp6Pp
+ kRROcTzFwJt+7PHh2vyIqxnR3dicOLnbvIfxzP0GsFHavq9sbVCj42ENvkFCWk8cwpvlhBJMTOv
+ uHymsWXY97dhEsryGONtR+GP63byZBLTg8UhFMp/otU++lRWaaF7zzjKv+M7uWGAPRXPYaDgyq4
+ HGR+XDjhrYCcCpEyBE2l4tOj9ASPapsGYYzkGQRtDTtQcFFonQC7PUVMAzxiKLWQM5VhSL4NQkY
+ Gb70W9sznOAoSU2QlqrvJsf3LnwVM1lnDMgugQIuIMYpFW+pAXhIVkOyvpUmMpQ64ONOcZlS
+X-Proofpoint-GUID: GyPFquNOCqpoMetzfouwF9bFR03-q2AO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-15_11,2025-05-15_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=999 spamscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
+ suspectscore=0 malwarescore=0 mlxscore=0 adultscore=0 phishscore=0
+ clxscore=1015 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505160003
 
-On Wed, May 14, 2025 at 10:23:26AM +0800, kernel test robot wrote:
-> 
-> hi, Paul,
-> 
-> we noticed various issues for both 54d0803f63/parent in this test.
-> 
-> =========================================================================================
-> tbox_group/testcase/rootfs/kconfig/compiler/runtime/test/torture_type:
->   vm-snb/rcutorture/debian-11.1-i386-20220923.cgz/i386-randconfig-061-20250510/clang-20/300s/default/trivial
-> 
-> ec3f43f72b268d44 54d0803f632b402e519c7d97a6b
-> ---------------- ---------------------------
->        fail:runs  %reproduction    fail:runs
->            |             |             |
->            :100         71%          71:98    rcutorture.trivial.fail   <--- (1)
->            :100         71%          71:98    dmesg.EIP:rcu_torture_stats_print   <--- (2)
->          94:100          0%          94:98    dmesg.EIP:synchronize_rcu_trivial
->         100:100         -2%          98:98    dmesg.UBSAN:implicit-conversion_in_drivers/firewire/core-transaction.c
->         100:100         -2%          98:98    dmesg.UBSAN:negation-overflow_in_lib/sort.c
->         100:100         -2%          98:98    dmesg.UBSAN:negation-overflow_in_mm/memcontrol.c
->            :100         71%          71:98    dmesg.WARNING:at_kernel/rcu/rcutorture.c:#rcu_torture_stats_print[rcutorture]   <--- (3)
->          94:100          0%          94:98    dmesg.WARNING:at_kernel/rcu/rcutorture.c:#synchronize_rcu_trivial[rcutorture]
->         100:100         -2%          98:98    dmesg.boot_failures
-> 
-> 
-> but seems (1)(2)(3) are quite persistent on 54d0803f63 and clean on parent.
-> 
-> 
-> Hello,
-> 
-> kernel test robot noticed "WARNING:at_kernel/rcu/rcutorture.c:#rcu_torture_stats_print[rcutorture]" on:
-> 
-> commit: 54d0803f632b402e519c7d97a6b52d5ffb78ae78 ("rcutorture: Start rcu_torture_writer() after rcu_torture_reader()")
-> https://github.com/paulmckrcu/linux dev.2025.05.05a
-> 
-> in testcase: rcutorture
-> version: 
-> with following parameters:
-> 
-> 	runtime: 300s
-> 	test: default
-> 	torture_type: trivial
 
-Huh.  This is the trivial RCU implementation that is not used in the
-Linux kernel (aside from rcutorture testing it), but verifies that my
-slideware/textbook implementation actually works.
 
-So you didn't manage to break the Linux kernel, just some of my
-presentations.  ;-)
-
-Still, this clearly needs to be fixed.
-
-> config: i386-randconfig-061-20250510
-> compiler: clang-20
-> test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+On 5/14/2025 5:28 PM, Dmitry Baryshkov wrote:
+> On Wed, May 14, 2025 at 04:52:31PM -0700, Jessica Zhang wrote:
+>> Validate requested mode and topology based on the PINGPONG or DSC encoder
+>> max width. In addition, drop MAX_HDISPLAY_SPLIT and base LM reservation
+>> off of PINGPONG or DSC encoder max width
 > 
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
+> Separate commit for num_lm, please.
+
+Hi Dmitry,
+
+Ack.
+
 > 
+>>
+>> As noted in the patch, while DPU 8.x+ supports a max linewidth of 8960
+>> for PINGPONG_0, there is some additional logic that needs to be added to
+>> the resource manager to specifically try and reserve PINGPONG_0 for
+>> modes that are greater than 5k.
+>>
+>> Since this is out of the scope of this series, add a helper that will
+>> get the overall minimum PINGPONG max linewidth for a given chipset.
+>>
+>> Signed-off-by: Jessica Zhang <jessica.zhang@oss.qualcomm.com>
+>> ---
+>>   drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 46 +++++++++++++++++++++++++++-----
+>>   1 file changed, 39 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+>> index 0714936d8835..6131d071b051 100644
+>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+>> @@ -723,6 +723,31 @@ void dpu_crtc_complete_commit(struct drm_crtc *crtc)
+>>   	_dpu_crtc_complete_flip(crtc);
+>>   }
+>>   
+>> +static int msm_display_get_max_pingpong_width(struct dpu_kms *dpu_kms)
+>> +{
+>> +	const struct dpu_pingpong_cfg *pingpong;
+>> +	u32 max_pingpong_width = dpu_kms->catalog->pingpong[0].max_linewidth;
+>> +
+>> +	/*
+>> +	 * Find the smallest overall PINGPONG max_linewidth in the catalog since
+>> +	 * max_linewidth can differ between PINGPONGs even within the same
+>> +	 * chipset.
+>> +	 *
+>> +	 * Note: While, for DPU 8.x+, PINGPONG_0 can technically support up to
+>> +	 * 8k resolutions, this requires reworking the RM to try to reserve
+>> +	 * PINGPONG_0 for modes greater than 5k.
+>> +	 *
+>> +	 * Once this additional logic is implemented, we can drop this helper
+>> +	 * and use the reserved PINGPONG's max_linewidth
+>> +	 */
+>> +	for (int i = 1; i < dpu_kms->catalog->pingpong_count; i++) {
+>> +		pingpong = &dpu_kms->catalog->pingpong[i];
+>> +		max_pingpong_width = min(max_pingpong_width, pingpong->max_linewidth);
+>> +	}
 > 
+> Since we are skipping PINGPONG_0, wouldn't it be enough to return
+> max_linewidth of PP_1 ?
+
+I don't think we're skipping PINGPONG_0 here since `u32 
+max_pingpong_width = dpu_kms->catalog->pingpong[0].max_linewidth;` at 
+the top of the function.
+
 > 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202505131651.af6e81d7-lkp@intel.com
+> I think, it would be easier to follow .max_dsc_encoder_width and store
+> .max_pingpong_linewidth in dpu_caps (and later add special
+> .max_pp0_linewidth).
+
+Ack. I think my only concern for this is that max_pp0_linewidth won't be 
+set for all chipsets. But if you're fine with that I'll go ahead and 
+make this change.
+
+Thanks,
+
+Jessica Zhang
+
 > 
+>> +
+>> +	return max_pingpong_width;
+>> +}
+>> +
+>>   static int _dpu_crtc_check_and_setup_lm_bounds(struct drm_crtc *crtc,
+>>   		struct drm_crtc_state *state)
+>>   {
 > 
-> The kernel config and materials to reproduce are available at:
-> https://download.01.org/0day-ci/archive/20250513/202505131651.af6e81d7-lkp@intel.com
-> 
-> 
-> [  232.971337][  T965] trivial-torture: rtc: ef358cc0 ver: 9677 tfle: 0 rta: 9677 rtaf: 0 rtf: 9668 rtmbe: 0 rtmbkf: 0/0 rtbe: 0 rtbke: 0 rtbf: 0 rtb: 0 nt: 3782 onoff: 0/0:0/0 -1,0:-1,0 0:0 (HZ=300) barrier: 0/0:0 read-exits: 64 nocb-toggles: 0:0 gpwraps: 0
-> [  232.974503][  T965] trivial-torture: !!! 
-> [  232.974595][  T965] ------------[ cut here ]------------
-> [  232.976982][  T965] WARNING: CPU: 0 PID: 965 at kernel/rcu/rcutorture.c:2730 rcu_torture_stats_print+0x8e4/0x8f0 [rcutorture]
 
-And this is a too-short grace period...
-
-> [  232.980999][  T965] Modules linked in: rcutorture torture
-> [  232.982356][  T965] CPU: 0 UID: 0 PID: 965 Comm: rcu_torture_sta Tainted: G        W       T   6.15.0-rc1-00059-g54d0803f632b #1 PREEMPT(full)  5f9cb9cacb9aba8a18caee0ed4d4cf4452094bc2
-> [  232.990730][  T965] Tainted: [W]=WARN, [T]=RANDSTRUCT
-> [  232.992782][  T965] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-> [  232.995869][  T965] EIP: rcu_torture_stats_print+0x8e4/0x8f0 [rcutorture]
-> [  232.997526][  T965] Code: ff ff 0f 0b 83 3d 88 8f 35 ef 00 0f 84 b0 fb ff ff 0f 0b 83 3d 8c 8f 35 ef 00 0f 84 ae fb ff ff 0f 0b 84 db 0f 84 ac fb ff ff <0f> 0b e9 a5 fb ff ff 00 00 00 00 00 55 89 e5 53 57 56 83 ec 14 e8
-> [  233.002674][  T965] EAX: 00000004 EBX: 00000001 ECX: 00000000 EDX: 00000000
-> [  233.004477][  T965] ESI: 00000000 EDI: 00000000 EBP: 47efbf58 ESP: 47efbedc
-> [  233.006060][  T965] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00010202
-> [  233.007496][  T965] CR0: 80050033 CR2: 353667f8 CR3: 7c473000 CR4: 000406d0
-> [  233.009173][  T965] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-> [  233.010612][  T965] DR6: fffe0ff0 DR7: 00000400
-> [  233.011678][  T965] Call Trace:
-> [  233.012511][  T965]  ? rcu_torture_stats+0x24/0x70 [rcutorture 7eef68a8ad9c4bc219a4bda0dc180602dd9a9416]
-> [  233.014416][  T965]  ? kthread+0x1af/0x200
-> [  233.016388][  T965]  ? rcu_nocb_toggle+0x1c0/0x1c0 [rcutorture 7eef68a8ad9c4bc219a4bda0dc180602dd9a9416]
-> [  233.018427][  T965]  ? schedule_tail+0x79/0xf0
-> [  233.019297][  T965]  ? kthread_blkcg+0x30/0x30
-> [  233.020404][  T965]  ? kthread_blkcg+0x30/0x30
-> [  233.021230][  T965]  ? ret_from_fork+0x2c/0x40
-> [  233.022315][  T965]  ? ret_from_fork_asm+0x12/0x20
-> [  233.023169][  T965]  ? entry_INT80_32+0x10d/0x10d
-> [  233.024178][  T965] irq event stamp: 495
-> [  233.024991][  T965] hardirqs last  enabled at (509): [<4f981d9b>] __console_unlock+0x5b/0x70
-> [  233.026606][  T965] hardirqs last disabled at (520): [<4f981d82>] __console_unlock+0x42/0x70
-> [  233.028125][  T965] softirqs last  enabled at (282): [<51ba356a>] __do_softirq+0xa/0xe
-> [  233.029924][  T965] softirqs last disabled at (267): [<51ba356a>] __do_softirq+0xa/0xe
-> [  233.031571][  T965] ---[ end trace 0000000000000000 ]---
-> [  233.033193][  T965] Reader Pipe:  23875253 3963 1 0 0 0 0 0 0 0 0
-
-... as further indicated by the "1" after the "3963".  This means that
-there was one too-short trivial-RCU grace period in not quite four
-minutes of testing.
-
-> [  233.034030][  T965] trivial-torture: Reader Batch:  23879217 0 0 0 0 0 0 0 0 0 0
-> [  233.035198][  T965] trivial-torture: Free-Block Circulation:  9676 9676 9675 9674 9673 9672 9671 9670 9669 9668 0
-> 
-> ...
-> 
-> [  472.316419][ T2339] trivial-torture:--- End of test: FAILURE: nreaders=1 nfakewriters=4 stat_interval=60 verbose=1 test_no_idle_hz=1 shuffle_interval=3 stutter=5 irqreader=1 fqs_duration=0 fqs_holdoff=0 fqs_stutter=3 test_boost=1/0 test_boost_interval=7 test_boost_duration=4 test_boost_holdoff=0 shutdown_secs=0 stall_cpu=0 stall_cpu_holdoff=10 stall_cpu_irqsoff=0 stall_cpu_block=0 stall_cpu_repeat=0 n_barrier_cbs=0 onoff_interval=0 onoff_holdoff=0 read_exit_delay=13 read_exit_burst=16 reader_flavor=1 nocbs_nthreads=0 nocbs_toggle=1000 test_nmis=0 preempt_duration=0 preempt_interval=1000 n_up_down=32
-
-And this is one possible reason why:  "shuffle_interval=3".
-
-The way that trivial RCU works is to schedule itself on each online CPU
-in turn in this function:
-
-static void synchronize_rcu_trivial(void)
-{
-	int cpu;
-
-	for_each_online_cpu(cpu) {
-		torture_sched_setaffinity(current->pid, cpumask_of(cpu), true);
-		WARN_ON_ONCE(raw_smp_processor_id() != cpu);
-	}
-}
-
-If torture_shuffle_tasks() moves this writer kthread just after the above
-torture_sched_setaffinity() completes, then synchronize_rcu_trivial()
-might miss its intended CPU, thus failing to wait for RCU readers on
-that CPU.  This can in turn result in a too-short grace period.
-
-Except that I would expect the WARN_ON_ONCE() to trigger in that scenario.
-
-I will play with this a bit.  I don't want to force-disable shuffle
-in the torture_type=trivial case because it is a useful way of testing
-rcutorture itself.  But perhaps I can make the complaint more explicit.
-
-							Thanx, Paul
