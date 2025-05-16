@@ -1,279 +1,460 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019D5481C4;
-	Fri, 16 May 2025 05:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747372929; cv=fail; b=ZmuSVwhWC6VvIqRntt4lyEHV8getXuUjrSnFD2LWlAPBE9IFDDlq/xAH+at32lNMVrBVeP82QqgLjDFwuDT+DPjL9cJE7d5fUZXawHKG5ZyFMpbvGsXPKBxZq5prwuwob2Tw0X0MrCIA+37FLWMS/0IdnjJSFlaaAD0rcgKIQ78=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747372929; c=relaxed/simple;
-	bh=exMrN42pGm57P40u8jcOcTM3oKivl0CCSJzd8XJQT2o=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=APlGlmTK558y2YCMxirjlRJz48o3B27PB/vf6BNBtNNh7vGnKLPrHr3BjlXI8jTXX+nX+z8d+cgp5O/Bwlz5wHUfjv4lryoD6wdsAim9R9kZA7UlO7ea7VLVZ8J4VCdP49D/Qzna1UOn697OxtXVinKPLNxqIbZkxY45ZeKRaT0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Gn0jAJDu; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Jy3vBpSl; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1481BE67;
+	Fri, 16 May 2025 05:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747373468; cv=none; b=n4IPBk4/uhlYmShMpSOY0LOLGHBHqQQYwX2yPT7B17WQxhghHi6c22iBhgZcvJ+6P7sKpxLzGkD7tCN3+skSAg/lEq2Q2A7pZws7QCxiZrTlSMoXdm2DFzuc1bFgrg19jmkCFULZM81KZBQdw3kyLKxuYsQ2x3HZr6iUpFfnPnE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747373468; c=relaxed/simple;
+	bh=l6lDp7QR8574vZaalIIFj1DhoZ8IXApodiTEJ76851E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jbc5KHy7zOUU5wKunogIaaKIXAnjttsltZlpgUkfUTeXG3bFgUhxx2d6kFnGcUDeLVHioSu4/euaLZVzLm2JijMdqb5Xe0XIAggysU1YQW6MH8mPXr2QNSjiJYTuiLPmf/F4ricuMXUaLQKJXnJN0KRpl8c7fe4r7TNi5Ko6Sbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nxtis54f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Gn0jAJDu";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Jy3vBpSl"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54FLbQWi028800;
-	Fri, 16 May 2025 05:21:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=QcdnFFbJ+5ZXVOAfzEp7PQrE1Sx/LxPe5DDnB4ucwLs=; b=
-	Gn0jAJDuqowfbBcF4p+KxYjpS9UiDQ7VeZP5yG7KIglnxr47aETFVOfvtlfTi4Tg
-	w95aXyWiZY2MfDfjMeEBYQw3g62auHhdBmtIQEJSxuwXoVSUEpTxibBMQoOU7or+
-	ikxsapD9n210RKXKNQp0tDCPMwepHyI9ILrLAD3j+FlhhSttHfudBk7qmk04gs8P
-	2QfODbt87L5lKYTu6EsNJ47yQ+HYreZUhFOiogOHWSjPVK/iPKe2QR3rqphPsbZO
-	AK9G7Ia4D6dngSdr5uh3qR5U/SRCa/PUygropelpewS4/CJ2NF7CYW8HatcA8cT/
-	C14vGZXe10+3mKJCQX6IFA==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46nrbjrns5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 16 May 2025 05:21:42 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54G4E8Dt026750;
-	Fri, 16 May 2025 05:21:41 GMT
-Received: from sj2pr03cu002.outbound.protection.outlook.com (mail-westusazlp17013079.outbound.protection.outlook.com [40.93.1.79])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46mbta6tnt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 16 May 2025 05:21:41 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hGHknbZBqeA2CxL/jeqhsHRqe/pfuwTflZ4kMBLogrEgygI3+Tv12tfTItS8V6fgr+UdgVGxJuFs7/DKgtFhGSaOBQR9Gb4bq+1Hp6rbZOBNot1eIeQ7y0tdjg8wBX+UJ3fGaRKgjHaral0pHNtb53DVEPC4NnrWwhSIRqbmtYM1gKx8XSP1JXnTuq4tGKKhCVBlRYM+FxYZ+iheaY8ap/vvG6FL3kEYbJOXFPuxAQwOjTCD0OXHbxAk5xLubZeBpsbsxS8JFsPmyVg+t5suJdBNLaLpWG4HzAmdac4rzMGEZhDioB5hbKFIW4PEFH+cF7z2zgga1Na3DlTzeJoBDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QcdnFFbJ+5ZXVOAfzEp7PQrE1Sx/LxPe5DDnB4ucwLs=;
- b=WIwkE9COBErsGzyZcBUkI9QDSQTg1glvkMJFgxJm/89AHPiczjfPwK0HaLsBjpcZnWiF2JjXhjaiG9FW04slTZVt8Mnl9rSF/sgOL8+pBvIP0xSWd3Ec3i0mlXLckwZYhTG8MMjOZfdN3R/QrIiXftklxfimlbC3S6KxRO5qU3zsV+kyKkZcCk2vaQSfdIe/DeRbAZ2ApVHQ2zr0KZqGzsXXKrkhXutbKC9HewXNXHeAaiFTUosYqHnKBuBPjaf6kdU2zA7jnKIPIO7wSVCr99Dn7uspwEQfQlIA/Xm4ZR3ToQpR7lTc3GljNLSOqvJlfMUq/IFaxyIk+hJD1s2TDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QcdnFFbJ+5ZXVOAfzEp7PQrE1Sx/LxPe5DDnB4ucwLs=;
- b=Jy3vBpSlKkejgHjejTnnoiJBYQhoFVgckMKO9GD0fWRVA1Qk2SfeoeyMJx+rG3RlYr1o4S9huieDuD+6yRFJNSpw2VIoCU8qgjlTKgA5U/PU0YgxOJpnIWowz1Djzl6zzTIKZ/Z0W9HUDo+MfJX8oty7ax2Uq3p2p6bJGFCrHCc=
-Received: from DS7PR10MB5328.namprd10.prod.outlook.com (2603:10b6:5:3a6::12)
- by CH3PR10MB7863.namprd10.prod.outlook.com (2603:10b6:610:1bd::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.33; Fri, 16 May
- 2025 05:21:38 +0000
-Received: from DS7PR10MB5328.namprd10.prod.outlook.com
- ([fe80::ea13:c6c1:9956:b29c]) by DS7PR10MB5328.namprd10.prod.outlook.com
- ([fe80::ea13:c6c1:9956:b29c%2]) with mapi id 15.20.8699.022; Fri, 16 May 2025
- 05:21:38 +0000
-Message-ID: <b39ee402-c681-4bd3-94a4-e703b63032f1@oracle.com>
-Date: Fri, 16 May 2025 10:51:30 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4] net: dsa: microchip: Add SGMII port support
- to KSZ9477 switch
-To: Tristram.Ha@microchip.com, Andrew Lunn <andrew@lunn.ch>,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Russell King
- <linux@armlinux.org.uk>,
-        Vladimir Oltean <olteanv@gmail.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, UNGLinuxDriver@microchip.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250516024123.24910-1-Tristram.Ha@microchip.com>
-Content-Language: en-US
-From: ALOK TIWARI <alok.a.tiwari@oracle.com>
-In-Reply-To: <20250516024123.24910-1-Tristram.Ha@microchip.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR02CA0065.apcprd02.prod.outlook.com
- (2603:1096:4:54::29) To DS7PR10MB5328.namprd10.prod.outlook.com
- (2603:10b6:5:3a6::12)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nxtis54f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8D79C4CEE9;
+	Fri, 16 May 2025 05:31:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747373468;
+	bh=l6lDp7QR8574vZaalIIFj1DhoZ8IXApodiTEJ76851E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Nxtis54fx1xh8rLK5lqCUusTQNB2c52pOfkRAr12Z+9TZR/mw+kI5B4t9gX/tPzwu
+	 DN9D0nOnMeml/9lEHqYA7MpnK6+ke6VU/BJAP2TXrvpGEI+DFIGwOrkGoP5xfcqQVm
+	 MXqDcWW2hUIyjzomE6I0e7Mblq11k5eGb1zatHPCp1ExR47EFm586v4o40xqL52geh
+	 otWBnmpxk+E6GPV26zvp4SuX7HeGLk7GyGBWHM8w+4WFcNW+J6xYdqiSaN1CUSAH7s
+	 BwhheMW85ciLjE7Euk/815QKFuJVQISVDy+gO9ROoO6LAvpSsJ5uKXefNPsnsahgR1
+	 XXVlgPYlKBuLw==
+Date: Thu, 15 May 2025 22:31:00 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: netdev@vger.kernel.org, linux-nvme@lists.infradead.org,
+	linux-sctp@vger.kernel.org, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Sagi Grimberg <sagi@grimberg.me>, Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH net-next 09/10] nvme-tcp: use crc32c() and
+ skb_copy_and_crc32c_datagram_iter()
+Message-ID: <20250516053100.GA10488@sol>
+References: <20250511004110.145171-1-ebiggers@kernel.org>
+ <20250511004110.145171-10-ebiggers@kernel.org>
+ <aCbAsCkTPMNE6Ogb@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR10MB5328:EE_|CH3PR10MB7863:EE_
-X-MS-Office365-Filtering-Correlation-Id: e3ab81b3-0ecf-442c-444c-08dd943988ad
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OVlnNHY4bGY2NTN3bG13TGdhcWFWWU9rMW1DVDQ2T2N0UHR0QXc2cG1Qb2c2?=
- =?utf-8?B?blI1TDFxZGI1ZWtaL0grWjdlYUJKNDBjVTBZdkpOM3VySmdlWXE3Zjc0c2dX?=
- =?utf-8?B?WnAxMkh1Z256U3A0Y3VmSy9nR0RrM2IvZEJBMDZaZUtDL2hZcXMzWThkcFlV?=
- =?utf-8?B?cnI0aFZhNDlQTDdDa1NJYlRmWmpTZDlXV3hnR2ZXQlBKbldHaEE1OUtubnp4?=
- =?utf-8?B?YkxtY056TTF1L3dTam1POTN6OWRURkZGLzlzN1hET215QS81c2UrWHVBYlhS?=
- =?utf-8?B?Qy81cE8vU0V2V0FPZlRXS3I0cHFPQlBIc1dZSVNIbmppc0hOSWpDeUxaNkdz?=
- =?utf-8?B?ZzlpMWFxQ3ZHaGR2cXhYaDBIa3cwbnRIUnVyWDFkL0ozcW1ob2twZ1lIdHE5?=
- =?utf-8?B?WFJZaFhwOG8xYVozcWxtSEg5VFhNSFVpNUljNTJ0Z2drazJmMFA5dDZINmpH?=
- =?utf-8?B?RnNZZ0NCNjlQYUJzR2E1cG90VDB1cFJzV1V2b0lBOGJnZlozTUIzd2FveTFw?=
- =?utf-8?B?WHRabDQvNnplbjRKWFI3NnZlTG4zeldBTDBkTmlKRyt3eG55YVRVcnNiWC9z?=
- =?utf-8?B?Q00zOUs5MHNhMjYzMzh5UDgrd0dxdlpDMmdITnIrT2UyMW91NUZjK0hqS0Ry?=
- =?utf-8?B?cjIyRFVNQ3NTbDQyb1hMY2xJMUtOSGJUbVM3NnRmQ1Z1YWFITFd0UmJQRmRN?=
- =?utf-8?B?NlBmOWxzRkxSTHJReXFHWlkyRjkvQU4xWEVTYjRmKzFtaDVOeFZaRnN1Q3Ba?=
- =?utf-8?B?UzNGR1NXU3hHQW56c1Z1K2t6OWVFbjl0c0s4WDZ1ajVlRVlmYk96Nit5VEI5?=
- =?utf-8?B?VlM3bzd5dlB3MkVCK1NHMUhiMVkra09rVVE2V1pUNStpbkY5NVhEZkwrcGtI?=
- =?utf-8?B?b2w3RTEycVFUMU9yK1pSTzlFUS8yS2I4am5pT0dCU0MraTdrYW5UVFhYK2s3?=
- =?utf-8?B?T2luOHpjczJGcDdCUUh3OEU5QitmZHo4bVB4NmpGc3l2Um5OYUF3cnhzRzJm?=
- =?utf-8?B?T2lleHJITWxDZ1FjUlJOMnhhbi9vQzFIUFJ4dWpuMjVXTG5HZzlJdnZUbHkx?=
- =?utf-8?B?S05PUUtNUFY3VkRUNUZCTWdINjBqbkpvMjdzU3lvbGRwM3l5TUE5Wk92cHBh?=
- =?utf-8?B?Y1JuK2JzV3greWFKNmRkakdwd0JwbFppR2VLWjhrKzNnd1pRK05uN0FzNkY5?=
- =?utf-8?B?ZStQb2FxUEhlNG9hbktFY0dBbXNCaFYxcFNqeHc2Q2oyWWsrOVRWRklxcGlt?=
- =?utf-8?B?TnBuQ1lMYmNMZ0pqUlFqc0oxbkVmZkxBNTZhcGoyd1dWWUdOVlhGdWhTLzh6?=
- =?utf-8?B?b1dJbk5POVkxakJ0bjR4cEM2ZTgwa0NDU3JhbFhHeXdxYzJJaG4xZVdnU3R1?=
- =?utf-8?B?QjZ0bHBsWkJQelVPeUhpZVRUY3NxZmpqT1k5OHBPK3pDRlkxVjJTN0U2MlpR?=
- =?utf-8?B?eGtCM1RHczd6WjdYQ0ZEL3VQN0VEY0tGVnpVVlFwVkFLelBxM1RmM1NybURB?=
- =?utf-8?B?QVdnYWxTL1FETGtzQmI5WjdzR1V5Z1BXVnVWbXpxSWlqZmk3YWNkOVlQZHN1?=
- =?utf-8?B?Sm5YSWxNUFliT1gzeVFSWmNSUGNra1pnK1FhczAxRWNRN0hOSnNqM2tPSWNL?=
- =?utf-8?B?VEV0YmZyZEdvbVN4bmR2QzNQeG5GSjJsckxxSlA4RmJXRkxiaVpGbi9STWdp?=
- =?utf-8?B?WlgxZFhpckNid2VHN3N6WSszT0xTNmkzeVRrNFRrbWNESUpCS0pSL2J1TEVC?=
- =?utf-8?B?S0lHWDVtTk82RFYwckw0RlNHWENaaFlWZ20xQmhRV25yVnlkZm1ueVd6R0lh?=
- =?utf-8?B?NCtCY1VvUVc3YkMzYTVFK004Wi9KZldrYno5STcxWGU5RkJmT3hKMWNvcHJl?=
- =?utf-8?B?WVJob3hUa3FxNFNMQjRXSHhWYmtrcEdZZGxzeWxUM0R1SE9qTTY5RkkwaG5F?=
- =?utf-8?Q?7eFg7EaiXCs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5328.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WTgxdGVzT1RRR3Q2VXd6eGgwVmY1K0tqTDFmdmE0UkNFWW51TlBjd21QUjRp?=
- =?utf-8?B?RHpiT29kMVlrc1A4UU1sNTVjMnovR2FXMTVvL0lZYzd2cmFqZEF5WFdCSGVM?=
- =?utf-8?B?aVRQZGdPMCtKc0tPMXl6cCszUEorRkUvZEdIT1JPOVZMQURTUGhFbmcweGRl?=
- =?utf-8?B?VU5RT3QrZGc5bHdxY2FsR2NoNkNUQ0ZCdVRidTFodzk1RnpjL0RoWkxSVTVQ?=
- =?utf-8?B?enpXQ3JkYmZMbXJra1RXU2RtZnpGS0ZnL1JDZXY5KzgyUWhrcm85T1R5Q1hz?=
- =?utf-8?B?dk1oeERwNFdtQnp0WGx5ZGhTZDJ4ditSVE5Ecm9KTFRWdGM4ZGFJVnNkWlBx?=
- =?utf-8?B?Y1QvRC91ZlNSUlpVUUMzelZOZ0RYZFY0T3dlc2Flb2theGZ6QVV4OW5MaE5N?=
- =?utf-8?B?M25MVnp1R0pqMGZZb1A0bHZOUEJSN3hpbzJONCtaR3BYeGFCbU1CcDVwUHBh?=
- =?utf-8?B?b1JWOWFkVkpWT0xxV1hJQmxXMGRHa2k2OXdFTHlJUVdQTUNaT2EvRDhTczQw?=
- =?utf-8?B?TmYxSWQzUzFSb0dvMlRWWGovbGJCT3RZaFJZMzRRRW4wT3VUVmQ4eG4vcEZX?=
- =?utf-8?B?VnFjSmcyWnd6bXBBM1VJM1R6UUUwcXdJVENNT1g3am8zY2k3NHBaUmVwdFB0?=
- =?utf-8?B?TlpWalZReUpWb29FNkRCYU5mTTBUc3hFQU11QUo5SGZNR004T0w1M2RMK1Fp?=
- =?utf-8?B?UjNJQUxJd2VFMUxkK2czNHBWSklWVFJWbHUrQ0NOVlpLVTM3SWZmYlNDODR5?=
- =?utf-8?B?OXd6N29UQXNpUDk5ZUxpeWh2R1Q3OFR6VGFUZnhxNEFJZmZkT1ZBNlZWQ3NF?=
- =?utf-8?B?ZFFLUUlUcVErai96SEVoaWo4MHhtbVE5eWhFbFArci9jbVN2SXBvWkNlYXNY?=
- =?utf-8?B?WjhpY0hPVkRrbGx5TitkNFdDSHNiYlZZUzc4cVdZK3NPYkVYZXdIajBIVTI0?=
- =?utf-8?B?VzZCa0VyaDhvMG1yTjhxOENpc2xMQkhkcXZlUjM5ZFEyWnQ3T3pnRllRRUdH?=
- =?utf-8?B?ZDNoN1plbnBtNER3OXVVWENDejVDei90b1I4OWxkRVpiUWw5OEFTSEVUNGlF?=
- =?utf-8?B?MS9Zd1NlendvUTRuMXRvUUMvSThmYVppZHpITDJYR21vMmF4a1JmUVpWbDdL?=
- =?utf-8?B?UDM4ZkEzNTZ6V1dGa1ZUcUpxWUJBMDdRYmpoS2dWU2d2QUZWUUo2dFJuMmxZ?=
- =?utf-8?B?djYzSzFkdTM2T2VtMU55RFVoVXUyT3pmaXpYMHdwaGZHQ1lNRzM0RlkwOVMr?=
- =?utf-8?B?U3pwQXhINlJFRWtOOVNDaVBBZU1VYTFDcVc1MDZ3U2w0TWFqWUk5ZkFSKzFx?=
- =?utf-8?B?M3JOMVhxU2dLd3NnN2RCL0h0RndDSTlsZkJqQ2JYMmViWGhtb281cUl4QUR1?=
- =?utf-8?B?dFkvSHV1aWJiSjhWb0k1Tm96R0hxbzJJWmNMdU9MUytNNmFocjIwSHlqWXNM?=
- =?utf-8?B?SGpBcGJzN3lwZkxxZ09NSGVXalVtaEhuUW9UaERydkw0SisweVh2T2pwZFNU?=
- =?utf-8?B?UVpXZ3hJeTFVbWVTb2l3RlY3bEhtTEN2TjhMT21mLzNvT1U2VFVhTS9TWnRZ?=
- =?utf-8?B?ZW1jQS9QbzlwMDB3azR3VjJ1dDBPOGpKS2dGN2lhYVlqTm54VHB6QmpwK2gx?=
- =?utf-8?B?VXJydEZoK0dZTWtnZW4vQzJJWE1UbXcrYzQyNEhOb21SbVRocU1DdHBkSENV?=
- =?utf-8?B?aHp6amNqN1BCSTd4eTV1ZWYvU1krc21iRFZBYmoxeXdCeFNtWDVwVExMVUlp?=
- =?utf-8?B?WXl5b3A2RkYvSUlxc0pZV2NRQTh3UzdraXJGYUNvQjV0enU4aHF1SXJteis0?=
- =?utf-8?B?ODQ1NWsyY1dzZDZSZER5bTE4d3hNOHhpenlZSVRsYW1tbXM4WGRPaXk2OTV2?=
- =?utf-8?B?SDZqRU9pMGVYSmsrQ3BkRFRZbnFxeWxQK3FjV1ExZ1RwWWhkZWRVU0dSRjJD?=
- =?utf-8?B?OVZYQlB3SEkxVGFiUXVlUEY0b0JSbHY3NGVKY0kzVHpNZGZZenBXVE9qUXBG?=
- =?utf-8?B?UjdueUdoQmI3cE1HYkxBRE1KZ1I4NFgveTVmZmJlTFRkendCL2RvdVNxQWFp?=
- =?utf-8?B?RzE2NU9hZFlYeXBYTTRxQ1ZuMkxxbWdjZ1lXd3ZLM21LaU1ndHh4SklSWXVG?=
- =?utf-8?B?MGxoUEE5ZnR5VS94NHBxd01ZcGYvRjgwR0VQakpiQWlUZVQ0QlcrZ3VlaXdH?=
- =?utf-8?B?b0E9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	LPR0CuYZxb+VFRAxt2u4AA5yvnVX0SFiE4+cC226z5+fq6h/OMD7hLfILs43g6GSGK5QPXIRMMowAsnZ5nEKIITMkQmlIMmNFIGSEx1CPN9pWUlTVQDre94hJl/J2NNSZe5P9DhEb5YogA5RHVAHmcZKYJiIewlCK+RWWAZ/grcoPcZQW04X1iG2wmP1cqNbThPg/yaYNoV2keW/9U4YR+o96o1GZuz81N8GgHMLOVJAch9S/ryr7Wygp3jaGp2EETkm5Laf4U4FWmIP93etKrg2kYqPkTocA0zu56oVDCK7zP1NVtLrXBbwpBSe2F7LTXs/DNpAoOlCZbLlusA2s+Ikr/Daa1zcXppeonJOJuZA1e0c2LKPPYBKkJqM9vs6CdFGnqXDoWM7lrGFqOb4NgBts0v5l8L35EIyzR8md09l5czdYgVPaUBtK7F2xVcqT+AImLkoQ4wgOiIDVH1/3QZTBx8lkDzveyy7ZVY9a9e8AKqnyf1VxNP8ORJzixbIXr4lFBy1uHEdrUnTJPrdYv3TagVw57FeMbGHYeXfL9aaRNYYLNTYK3vac31CfInaWYiPlbTUW5zHub2hVj0/OvHDY/MS8qszG/Q61Q24Y6k=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e3ab81b3-0ecf-442c-444c-08dd943988ad
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5328.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2025 05:21:38.4986
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RqTSbCbP5eh2p64SSsOVUeREEQWhVn+VvQTVvmqjELuGBF8f+ampibpgK6VobZGCFGZgSv5Lk1QMv9FzfBpeVwhjJImEvfniNzpUzAgBxQ4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB7863
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-16_02,2025-05-15_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- mlxlogscore=999 phishscore=0 bulkscore=0 mlxscore=0 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505070000 definitions=main-2505160048
-X-Proofpoint-ORIG-GUID: GrAIc89gjHfNJRm7p6k6KLQLYmQRYvkv
-X-Proofpoint-GUID: GrAIc89gjHfNJRm7p6k6KLQLYmQRYvkv
-X-Authority-Analysis: v=2.4 cv=aYxhnQot c=1 sm=1 tr=0 ts=6826cb66 b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
- a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=XYAwZIGsAAAA:8 a=gVveEQt4LPd7VXW5NyEA:9 a=QEXdDO2ut3YA:10 a=E8ToXWR_bxluHZ7gmE-Z:22 cc=ntf awl=host:14694
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDA0OCBTYWx0ZWRfX262uOONccztH 0ZcwzJRQJ55/jaKbKS8MrSmObvDXSAN/L1JmopYOFnDaIUdbXzi7Qm+jAtiUD/7rWYIDaQUyKyy ewtCq9w+pzdC5e3/EIWOBlMsZTmCPSLW1XL7BdNj9GyinckUAC+15KdHJpetltQPbi1ssjclsOe
- MmchL7Kwn92rEIuJaXzDMBPjC7Fj71x8MWJTvTuSKy7Riv+GoAbSWmLCDlCS1a/NLohGjcFGq+U F6AtoRsfN3CWUdoOyROKmmkzb+l0gYyShNoqerySgvLXtXMB2dKiRfEQOm1GnDha14ObKCl6Igi d3N73E+/A8bTSGRcjEfFg1qWFhLXQSjWGN08r5dy2EDG/k6hiWTsgyDwk8RYA+ozItO3GH/H1Mz
- myeBhV9Tjm5NCmQkNzk7bluyespjDLQ8yRH0RWoWzlvACAT/Utv4nz/Przu1CdPF7umeRymZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCbAsCkTPMNE6Ogb@infradead.org>
 
+On Thu, May 15, 2025 at 09:36:00PM -0700, Christoph Hellwig wrote:
+> On Sat, May 10, 2025 at 05:41:09PM -0700, Eric Biggers wrote:
+> > +static inline void nvme_tcp_ddgst_init(u32 *crcp)
+> >  {
+> > +	*crcp = ~0;
+> >  }
+> 
+> This helper looks really odd.  It coud just return the value, or
+> we could just assign it there using a seed define, e.g. this is what
+> XFS does:
+> 
+> #define XFS_CRC_SEED    (~(uint32_t)0)
+> 
+> nd that might in fact be worth lifting to common code with a good
+> comment on why all-d is used as the typical crc32 seed.
 
+Yes, there is CRC8_INIT_VALUE for crc8 but nothing for crc32.  It might be worth
+adding a CRC32_INIT_VALUE to <linux/crc32.h>.  Though typically there's an
+inversion at the end too, which can't be abstracted out the same way...  And
+many users initialize with 0 instead of ~0, even though ~0 is the "right" way.
 
-On 16-05-2025 08:11, Tristram.Ha@microchip.com wrote:
-> +static int ksz9477_pcs_write(struct mii_bus *bus, int phy, int mmd, int reg,
-> +			     u16 val)
-> +{
-> +	struct ksz_device *dev = bus->priv;
-> +	int port = ksz_get_sgmii_port(dev);
-> +
-> +	if (mmd == MDIO_MMD_VEND2) {
-> +		struct ksz_port *p = &dev->ports[port];
-> +
-> +		if (reg == MMD_SR_MII_AUTO_NEG_CTRL) {
-> +			u16 sgmii_mode = SR_MII_PCS_SGMII << SR_MII_PCS_MODE_S;
-> +
-> +			/* Need these bits for 1000BASE-X mode to work with
-> +			 * AN on.
-> +			 */
-> +			if (!(val & sgmii_mode))
-> +				val |= SR_MII_SGMII_LINK_UP |
-> +				       SR_MII_TX_CFG_PHY_MASTER;
-> +
-> +			/* SGMII interrupt in the port cannot be masked, so
-> +			 * make sure interrupt is not enabled as it is not
-> +			 * handled.
-> +			 */
-> +			val &= ~SR_MII_AUTO_NEG_COMPLETE_INTR;
-> +		} else if (reg == MII_BMCR) {
-> +			/* The MII_ADVERTISE register needs to write once
-> +			 * before doing auto-negotiation for the correct
-> +			 * config_word to be sent out after reset.
-> +			 */
-> +			if ((val & BMCR_ANENABLE) && !p->sgmii_adv_write) {
-> +				u16 adv;
-> +
-> +				/* The SGMII port cannot disable flow contrl
+> > +static inline void nvme_tcp_ddgst_final(u32 *crcp, __le32 *ddgst)
+> >  {
+> > +	*ddgst = cpu_to_le32(~*crcp);
+> > +}
+> 
+> Just return the big endian version calculated here?
+> 
+> > +static inline void nvme_tcp_hdgst(void *pdu, size_t len)
+> > +{
+> > +	put_unaligned_le32(~crc32c(~0, pdu, len), pdu + len);
+> >  }
+> 
+> This could also use the seed define mentioned above.
+> 
+> >  	recv_digest = *(__le32 *)(pdu + hdr->hlen);
+> > -	nvme_tcp_hdgst(queue->rcv_hash, pdu, pdu_len);
+> > +	nvme_tcp_hdgst(pdu, pdu_len);
+> >  	exp_digest = *(__le32 *)(pdu + hdr->hlen);
+> >  	if (recv_digest != exp_digest) {
+> 
+> This code looks really weird, as it samples the on-the-wire digest
+> first and then overwrites it.  I'd expect to just check the on-the-wire
+> on against one calculated in a local variable.
+> 
+> Sagi, any idea what is going on here?
 
-typo contrl -> control
+It was probably just written that way to reuse nvme_tcp_hdgst() which writes to
+the hdgst field.
 
-> +				 * so it is better to just advertise symmetric
-> +				 * pause.
-> +				 */
-> +				port_sgmii_r(dev, port, mmd, MII_ADVERTISE,
-> +					     &adv);
-> +				adv |= ADVERTISE_1000XPAUSE;
-> +				adv &= ~ADVERTISE_1000XPSE_ASYM;
-> +				port_sgmii_w(dev, port, mmd, MII_ADVERTISE,
-> +					     adv);
-> +				p->sgmii_adv_write = 1;
-> +			} else if (val & BMCR_RESET) {
-> +				p->sgmii_adv_write = 0;
-> +			}
-> +		} else if (reg == MII_ADVERTISE) {
-> +			/* XPCS driver writes to this register so there is no
-> +			 * need to update it for the errata.
-> +			 */
-> +			p->sgmii_adv_write = 1;
-> +		}
-> +	}
-> +	port_sgmii_w(dev, port, mmd, reg, val);
+Anyway, I was trying to keep the translation to the new API as straightforward
+as possible, but I'll take your suggestions.  The following is what I ended up
+with, but I'll resend the series formally after giving a bit more time.
 
-a '\n' before return, Apply in other relevant locations as well.
-
-> +	return 0;
-> +}
-
-
-Thanks,
-Alok
-
+diff --git a/drivers/nvme/host/Kconfig b/drivers/nvme/host/Kconfig
+index 4d64b6935bb91..7dca58f0a237b 100644
+--- a/drivers/nvme/host/Kconfig
++++ b/drivers/nvme/host/Kconfig
+@@ -82,13 +82,13 @@ config NVME_FC
+ 
+ config NVME_TCP
+ 	tristate "NVM Express over Fabrics TCP host driver"
+ 	depends on INET
+ 	depends on BLOCK
++	select CRC32
++	select NET_CRC32C
+ 	select NVME_FABRICS
+-	select CRYPTO
+-	select CRYPTO_CRC32C
+ 	help
+ 	  This provides support for the NVMe over Fabrics protocol using
+ 	  the TCP transport.  This allows you to use remote block devices
+ 	  exported using the NVMe protocol set.
+ 
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index aba365f97cf6b..0c139d844422b 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -6,19 +6,19 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
+ #include <linux/err.h>
++#include <linux/crc32.h>
+ #include <linux/nvme-tcp.h>
+ #include <linux/nvme-keyring.h>
+ #include <net/sock.h>
+ #include <net/tcp.h>
+ #include <net/tls.h>
+ #include <net/tls_prot.h>
+ #include <net/handshake.h>
+ #include <linux/blk-mq.h>
+-#include <crypto/hash.h>
+ #include <net/busy_poll.h>
+ #include <trace/events/sock.h>
+ 
+ #include "nvme.h"
+ #include "fabrics.h"
+@@ -166,12 +166,12 @@ struct nvme_tcp_queue {
+ 	bool			rd_enabled;
+ 
+ 	bool			hdr_digest;
+ 	bool			data_digest;
+ 	bool			tls_enabled;
+-	struct ahash_request	*rcv_hash;
+-	struct ahash_request	*snd_hash;
++	u32			rcv_crc;
++	u32			snd_crc;
+ 	__le32			exp_ddgst;
+ 	__le32			recv_ddgst;
+ 	struct completion       tls_complete;
+ 	int                     tls_err;
+ 	struct page_frag_cache	pf_cache;
+@@ -454,36 +454,37 @@ nvme_tcp_fetch_request(struct nvme_tcp_queue *queue)
+ 
+ 	list_del(&req->entry);
+ 	return req;
+ }
+ 
+-static inline void nvme_tcp_ddgst_final(struct ahash_request *hash,
+-		__le32 *dgst)
+-{
+-	ahash_request_set_crypt(hash, NULL, (u8 *)dgst, 0);
+-	crypto_ahash_final(hash);
+-}
++#define NVME_TCP_CRC_SEED (~0)
+ 
+-static inline void nvme_tcp_ddgst_update(struct ahash_request *hash,
+-		struct page *page, off_t off, size_t len)
++static inline void nvme_tcp_ddgst_update(u32 *crcp,
++		struct page *page, size_t off, size_t len)
+ {
+-	struct scatterlist sg;
++	page += off / PAGE_SIZE;
++	off %= PAGE_SIZE;
++	while (len) {
++		const void *vaddr = kmap_local_page(page);
++		size_t n = min(len, (size_t)PAGE_SIZE - off);
+ 
+-	sg_init_table(&sg, 1);
+-	sg_set_page(&sg, page, len, off);
+-	ahash_request_set_crypt(hash, &sg, NULL, len);
+-	crypto_ahash_update(hash);
++		*crcp = crc32c(*crcp, vaddr + off, n);
++		kunmap_local(vaddr);
++		page++;
++		off = 0;
++		len -= n;
++	}
+ }
+ 
+-static inline void nvme_tcp_hdgst(struct ahash_request *hash,
+-		void *pdu, size_t len)
++static inline __le32 nvme_tcp_ddgst_final(u32 crc)
+ {
+-	struct scatterlist sg;
++	return cpu_to_le32(~crc);
++}
+ 
+-	sg_init_one(&sg, pdu, len);
+-	ahash_request_set_crypt(hash, &sg, pdu + len, len);
+-	crypto_ahash_digest(hash);
++static inline __le32 nvme_tcp_hdgst(const void *pdu, size_t len)
++{
++	return cpu_to_le32(~crc32c(NVME_TCP_CRC_SEED, pdu, len));
+ }
+ 
+ static int nvme_tcp_verify_hdgst(struct nvme_tcp_queue *queue,
+ 		void *pdu, size_t pdu_len)
+ {
+@@ -497,12 +498,11 @@ static int nvme_tcp_verify_hdgst(struct nvme_tcp_queue *queue,
+ 			nvme_tcp_queue_id(queue));
+ 		return -EPROTO;
+ 	}
+ 
+ 	recv_digest = *(__le32 *)(pdu + hdr->hlen);
+-	nvme_tcp_hdgst(queue->rcv_hash, pdu, pdu_len);
+-	exp_digest = *(__le32 *)(pdu + hdr->hlen);
++	exp_digest = nvme_tcp_hdgst(pdu, pdu_len);
+ 	if (recv_digest != exp_digest) {
+ 		dev_err(queue->ctrl->ctrl.device,
+ 			"header digest error: recv %#x expected %#x\n",
+ 			le32_to_cpu(recv_digest), le32_to_cpu(exp_digest));
+ 		return -EIO;
+@@ -524,11 +524,11 @@ static int nvme_tcp_check_ddgst(struct nvme_tcp_queue *queue, void *pdu)
+ 		dev_err(queue->ctrl->ctrl.device,
+ 			"queue %d: data digest flag is cleared\n",
+ 		nvme_tcp_queue_id(queue));
+ 		return -EPROTO;
+ 	}
+-	crypto_ahash_init(queue->rcv_hash);
++	queue->rcv_crc = NVME_TCP_CRC_SEED;
+ 
+ 	return 0;
+ }
+ 
+ static void nvme_tcp_exit_request(struct blk_mq_tag_set *set,
+@@ -924,12 +924,12 @@ static int nvme_tcp_recv_data(struct nvme_tcp_queue *queue, struct sk_buff *skb,
+ 		/* we can read only from what is left in this bio */
+ 		recv_len = min_t(size_t, recv_len,
+ 				iov_iter_count(&req->iter));
+ 
+ 		if (queue->data_digest)
+-			ret = skb_copy_and_hash_datagram_iter(skb, *offset,
+-				&req->iter, recv_len, queue->rcv_hash);
++			ret = skb_copy_and_crc32c_datagram_iter(skb, *offset,
++				&req->iter, recv_len, &queue->rcv_crc);
+ 		else
+ 			ret = skb_copy_datagram_iter(skb, *offset,
+ 					&req->iter, recv_len);
+ 		if (ret) {
+ 			dev_err(queue->ctrl->ctrl.device,
+@@ -943,11 +943,11 @@ static int nvme_tcp_recv_data(struct nvme_tcp_queue *queue, struct sk_buff *skb,
+ 		queue->data_remaining -= recv_len;
+ 	}
+ 
+ 	if (!queue->data_remaining) {
+ 		if (queue->data_digest) {
+-			nvme_tcp_ddgst_final(queue->rcv_hash, &queue->exp_ddgst);
++			queue->exp_ddgst = nvme_tcp_ddgst_final(queue->rcv_crc);
+ 			queue->ddgst_remaining = NVME_TCP_DIGEST_LENGTH;
+ 		} else {
+ 			if (pdu->hdr.flags & NVME_TCP_F_DATA_SUCCESS) {
+ 				nvme_tcp_end_request(rq,
+ 						le16_to_cpu(req->status));
+@@ -1145,11 +1145,11 @@ static int nvme_tcp_try_send_data(struct nvme_tcp_request *req)
+ 		ret = sock_sendmsg(queue->sock, &msg);
+ 		if (ret <= 0)
+ 			return ret;
+ 
+ 		if (queue->data_digest)
+-			nvme_tcp_ddgst_update(queue->snd_hash, page,
++			nvme_tcp_ddgst_update(&queue->snd_crc, page,
+ 					offset, ret);
+ 
+ 		/*
+ 		 * update the request iterator except for the last payload send
+ 		 * in the request where we don't want to modify it as we may
+@@ -1159,12 +1159,12 @@ static int nvme_tcp_try_send_data(struct nvme_tcp_request *req)
+ 			nvme_tcp_advance_req(req, ret);
+ 
+ 		/* fully successful last send in current PDU */
+ 		if (last && ret == len) {
+ 			if (queue->data_digest) {
+-				nvme_tcp_ddgst_final(queue->snd_hash,
+-					&req->ddgst);
++				req->ddgst =
++					nvme_tcp_ddgst_final(queue->snd_crc);
+ 				req->state = NVME_TCP_SEND_DDGST;
+ 				req->offset = 0;
+ 			} else {
+ 				if (h2cdata_left)
+ 					nvme_tcp_setup_h2c_data_pdu(req);
+@@ -1192,11 +1192,11 @@ static int nvme_tcp_try_send_cmd_pdu(struct nvme_tcp_request *req)
+ 		msg.msg_flags |= MSG_MORE;
+ 	else
+ 		msg.msg_flags |= MSG_EOR;
+ 
+ 	if (queue->hdr_digest && !req->offset)
+-		nvme_tcp_hdgst(queue->snd_hash, pdu, sizeof(*pdu));
++		*(__le32 *)(pdu + 1) = nvme_tcp_hdgst(pdu, sizeof(*pdu));
+ 
+ 	bvec_set_virt(&bvec, (void *)pdu + req->offset, len);
+ 	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, &bvec, 1, len);
+ 	ret = sock_sendmsg(queue->sock, &msg);
+ 	if (unlikely(ret <= 0))
+@@ -1205,11 +1205,11 @@ static int nvme_tcp_try_send_cmd_pdu(struct nvme_tcp_request *req)
+ 	len -= ret;
+ 	if (!len) {
+ 		if (inline_data) {
+ 			req->state = NVME_TCP_SEND_DATA;
+ 			if (queue->data_digest)
+-				crypto_ahash_init(queue->snd_hash);
++				queue->snd_crc = NVME_TCP_CRC_SEED;
+ 		} else {
+ 			nvme_tcp_done_send_req(queue);
+ 		}
+ 		return 1;
+ 	}
+@@ -1227,11 +1227,11 @@ static int nvme_tcp_try_send_data_pdu(struct nvme_tcp_request *req)
+ 	u8 hdgst = nvme_tcp_hdgst_len(queue);
+ 	int len = sizeof(*pdu) - req->offset + hdgst;
+ 	int ret;
+ 
+ 	if (queue->hdr_digest && !req->offset)
+-		nvme_tcp_hdgst(queue->snd_hash, pdu, sizeof(*pdu));
++		*(__le32 *)(pdu + 1) = nvme_tcp_hdgst(pdu, sizeof(*pdu));
+ 
+ 	if (!req->h2cdata_left)
+ 		msg.msg_flags |= MSG_SPLICE_PAGES;
+ 
+ 	bvec_set_virt(&bvec, (void *)pdu + req->offset, len);
+@@ -1242,11 +1242,11 @@ static int nvme_tcp_try_send_data_pdu(struct nvme_tcp_request *req)
+ 
+ 	len -= ret;
+ 	if (!len) {
+ 		req->state = NVME_TCP_SEND_DATA;
+ 		if (queue->data_digest)
+-			crypto_ahash_init(queue->snd_hash);
++			queue->snd_crc = NVME_TCP_CRC_SEED;
+ 		return 1;
+ 	}
+ 	req->offset += ret;
+ 
+ 	return -EAGAIN;
+@@ -1382,45 +1382,10 @@ static void nvme_tcp_io_work(struct work_struct *w)
+ 	} while (!time_after(jiffies, deadline)); /* quota is exhausted */
+ 
+ 	queue_work_on(queue->io_cpu, nvme_tcp_wq, &queue->io_work);
+ }
+ 
+-static void nvme_tcp_free_crypto(struct nvme_tcp_queue *queue)
+-{
+-	struct crypto_ahash *tfm = crypto_ahash_reqtfm(queue->rcv_hash);
+-
+-	ahash_request_free(queue->rcv_hash);
+-	ahash_request_free(queue->snd_hash);
+-	crypto_free_ahash(tfm);
+-}
+-
+-static int nvme_tcp_alloc_crypto(struct nvme_tcp_queue *queue)
+-{
+-	struct crypto_ahash *tfm;
+-
+-	tfm = crypto_alloc_ahash("crc32c", 0, CRYPTO_ALG_ASYNC);
+-	if (IS_ERR(tfm))
+-		return PTR_ERR(tfm);
+-
+-	queue->snd_hash = ahash_request_alloc(tfm, GFP_KERNEL);
+-	if (!queue->snd_hash)
+-		goto free_tfm;
+-	ahash_request_set_callback(queue->snd_hash, 0, NULL, NULL);
+-
+-	queue->rcv_hash = ahash_request_alloc(tfm, GFP_KERNEL);
+-	if (!queue->rcv_hash)
+-		goto free_snd_hash;
+-	ahash_request_set_callback(queue->rcv_hash, 0, NULL, NULL);
+-
+-	return 0;
+-free_snd_hash:
+-	ahash_request_free(queue->snd_hash);
+-free_tfm:
+-	crypto_free_ahash(tfm);
+-	return -ENOMEM;
+-}
+-
+ static void nvme_tcp_free_async_req(struct nvme_tcp_ctrl *ctrl)
+ {
+ 	struct nvme_tcp_request *async = &ctrl->async_req;
+ 
+ 	page_frag_free(async->pdu);
+@@ -1449,13 +1414,10 @@ static void nvme_tcp_free_queue(struct nvme_ctrl *nctrl, int qid)
+ 	unsigned int noreclaim_flag;
+ 
+ 	if (!test_and_clear_bit(NVME_TCP_Q_ALLOCATED, &queue->flags))
+ 		return;
+ 
+-	if (queue->hdr_digest || queue->data_digest)
+-		nvme_tcp_free_crypto(queue);
+-
+ 	page_frag_cache_drain(&queue->pf_cache);
+ 
+ 	noreclaim_flag = memalloc_noreclaim_save();
+ 	/* ->sock will be released by fput() */
+ 	fput(queue->sock->file);
+@@ -1865,25 +1827,17 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl, int qid,
+ 		}
+ 	}
+ 
+ 	queue->hdr_digest = nctrl->opts->hdr_digest;
+ 	queue->data_digest = nctrl->opts->data_digest;
+-	if (queue->hdr_digest || queue->data_digest) {
+-		ret = nvme_tcp_alloc_crypto(queue);
+-		if (ret) {
+-			dev_err(nctrl->device,
+-				"failed to allocate queue %d crypto\n", qid);
+-			goto err_sock;
+-		}
+-	}
+ 
+ 	rcv_pdu_size = sizeof(struct nvme_tcp_rsp_pdu) +
+ 			nvme_tcp_hdgst_len(queue);
+ 	queue->pdu = kmalloc(rcv_pdu_size, GFP_KERNEL);
+ 	if (!queue->pdu) {
+ 		ret = -ENOMEM;
+-		goto err_crypto;
++		goto err_sock;
+ 	}
+ 
+ 	dev_dbg(nctrl->device, "connecting queue %d\n",
+ 			nvme_tcp_queue_id(queue));
+ 
+@@ -1912,13 +1866,10 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl, int qid,
+ 
+ err_init_connect:
+ 	kernel_sock_shutdown(queue->sock, SHUT_RDWR);
+ err_rcv_pdu:
+ 	kfree(queue->pdu);
+-err_crypto:
+-	if (queue->hdr_digest || queue->data_digest)
+-		nvme_tcp_free_crypto(queue);
+ err_sock:
+ 	/* ->sock will be released by fput() */
+ 	fput(queue->sock->file);
+ 	queue->sock = NULL;
+ err_destroy_mutex:
