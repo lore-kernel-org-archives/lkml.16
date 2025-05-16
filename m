@@ -1,114 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0F2481C4;
-	Fri, 16 May 2025 10:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14751216E24
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747392429; cv=none; b=qgMXKKmFcWkK1UwzL4XYjIttydPIjoT/0J+WpbzUm+hJolCcC/I77skgWEyjpDC/Ip1IqXEXAs7E4QY7m3e398iU7Vjx4h3hBLA5/+/LW4uBo1TWY6zIOr6oJY4a60aSsHpVKUdkgAhCNjxu55LqAn900Q69G3D3J63+k2SS8VQ=
+	t=1747392566; cv=none; b=I2569WKZ1tluPrykkQpgu5TgoIKIXDeR1BOynKTHAsUcRzthJE9U3J1lj3TGWzbQBj5Hrx4iVSfUWs7/61FvWBrMhkSTkPLqZs3h2L4ZqHQG9GkPkZHtkAdgL6vdFMAk0m3wV+qsDD8Dwsi/BIQDFS54alAdEHkoMZeJpRuyyq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747392429; c=relaxed/simple;
-	bh=wnlx75nUqVQTrziZstHIwtvkVh18itP172z7pvYH7/0=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pPw28bnn734KB0zyKHptBv2wX9w9hXhps57g6GuVduWn58RLGo+Hp5jrTjELYJF6OQ/s9aqzHAcPoA9yyYj6h4fYiIamrVY8t1230O+IwLVk+p11K194QZPluJ7r3hlP0GRHnyWWE1lyHqGwGAQDHEOISVhw2k/A+57iA8+p0cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hI/LTokV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747392566; c=relaxed/simple;
+	bh=Ry3gqvuwLYxCPEe58dK0PM8l9IrA9rWjO77DhXM11dY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=frdj0c98xC0909LVmKdK0H7ctoGpLdMdwLKTCQ1YXwRjdPHqlwZEzHDS9qXIPxvoV8GsXjT7DA4Uvt5/thqj/eenByuOhkd2gqZ2hrRszlwZOecQZ1NoAjKqV94oKWVOpD50sTgh1UkyavszEKQF1vt+qICi7+Ue5RtmyMTrp/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yuw1Vew4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AXhuwIwj; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hI/LTokV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A729C4CEE4;
-	Fri, 16 May 2025 10:47:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747392429;
-	bh=wnlx75nUqVQTrziZstHIwtvkVh18itP172z7pvYH7/0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hI/LTokVQGuf/bVLK8oMBqtsGbr404Fi9ixRTDh/ICpHf5I1UHDkl3W4zut2SQQ4x
-	 /0kxG8ipFe0AfiEt0iVsxHh/+CooD/CnIU+/+O8HFCM+rOSdKqcqsRYqGHy4K8uFLG
-	 PUhV5RZKyE5++NPcrid2+1CmREHzLnGnKF/jCa+oVDIXLklJRlUu0Uo0ELx35MIFtZ
-	 2zDisLNrG3Oky+l6Ml31I9xi68iAWsBm6REEXyrzBci0rMDpXfumllzJP9atv4jHU/
-	 AARVr71OsdcW80D6VfxOyyvY350n/pAHnLv5IL1IHpk6ddO7t9wjjhUyt9ZHwtMmo2
-	 NrTSoNMA8JPMg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uFsao-00FWsh-OP;
-	Fri, 16 May 2025 11:47:06 +0100
-Date: Fri, 16 May 2025 11:47:05 +0100
-Message-ID: <86cyc8g7di.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org,	linux-arm-kernel@lists.infradead.org,
-	linux-pci@vger.kernel.org,	Andrew Lunn <andrew@lunn.ch>,	Gregory Clement
- <gregory.clement@bootlin.com>,	Sebastian Hesselbarth
- <sebastian.hesselbarth@gmail.com>,	Lorenzo Pieralisi
- <lpieralisi@kernel.org>,	Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
- <kw@linux.com>,	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,	Toan Le <toan@os.amperecomputing.com>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,	Thierry Reding
- <thierry.reding@gmail.com>,	Jonathan Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v2 3/9] irqchip/gic: Convert to msi_create_parent_irq_domain() helper
-In-Reply-To: <87h61kj10o.ffs@tglx>
-References: <20250513172819.2216709-1-maz@kernel.org>
-	<20250513172819.2216709-4-maz@kernel.org>
-	<87h61kj10o.ffs@tglx>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yuw1Vew4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AXhuwIwj"
+Date: Fri, 16 May 2025 12:49:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747392563;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=R5dBZwZOInTb8Xoa71QPFJcZFd6PF6TpQBto51aEBo4=;
+	b=yuw1Vew4jVDKAfbNV7N6/ibe/VHyDCKTPmSx5OBVef5MMQwsQee5+8cQZYmUdcvDHNrS1j
+	ZbXStWjUOqvjHwiyR3KmVa+zj87lW4sU47lSJhUQQFvq9jqH1ZMTjzdB8CphBnEf2G063m
+	GrHp8+6qI10v9U5KBn7pGMofpSDl/nv+KYG00v4D0ctcM9czEo7Af1vmg1fYAjww5VzI7x
+	SHiX76O3sTa1Zbt1OCORUc6q6C8UUYA7Tl3oVF2YZnrU9NEfJrO4s7C+slhHxPqKpW3zYf
+	gK6+Xe8d9RIxSposHrQSB7CyN8max5rIRAzv2sRrQIuwJii0/a92DrHSp98VZQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747392563;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=R5dBZwZOInTb8Xoa71QPFJcZFd6PF6TpQBto51aEBo4=;
+	b=AXhuwIwjxDokse1Uw2RIoifMIxjkWLSeJ695XUV4G5j0+XzkCCfdG28xA6hSfAhb89dbKf
+	trYSzCGal02thIDA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: =?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>
+Cc: linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v12 14/21] futex: Allow to resize the private local hash
+Message-ID: <20250516104921.sy7Z-oy_@linutronix.de>
+References: <20250416162921.513656-1-bigeasy@linutronix.de>
+ <20250416162921.513656-15-bigeasy@linutronix.de>
+ <986dcbc0-0505-496a-ae75-e0c1bd7c2725@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, bhelgaas@google.com, toan@os.amperecomputing.com, alyssa@rosenzweig.io, thierry.reding@gmail.com, jonathanh@nvidia.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <986dcbc0-0505-496a-ae75-e0c1bd7c2725@igalia.com>
 
-On Fri, 16 May 2025 11:36:07 +0100,
-Thomas Gleixner <tglx@linutronix.de> wrote:
-> 
-> On Tue, May 13 2025 at 18:28, Marc Zyngier wrote:
-> >  	if (!v2m)
-> >  		return 0;
-> >  
-> > -	inner_domain = irq_domain_create_hierarchy(parent, 0, 0, v2m->fwnode,
-> > -						   &gicv2m_domain_ops, v2m);
-> > +	inner_domain = msi_create_parent_irq_domain(&(struct irq_domain_info){
-> > +			.fwnode		= v2m->fwnode,
-> > +			.ops		= &gicv2m_domain_ops,
-> > +			.host_data	= v2m,
-> > +			.parent		= parent,
-> > +		}, &gicv2m_msi_parent_ops);
+On 2025-05-08 17:32:24 [-0300], Andr=C3=A9 Almeida wrote:
+> > @@ -1290,26 +1466,102 @@ static int futex_hash_allocate(unsigned int ha=
+sh_slots, bool custom)
+> >   	for (i =3D 0; i < hash_slots; i++)
+> >   		futex_hash_bucket_init(&fph->queues[i], fph);
+> > -	mm->futex_phash =3D fph;
+>=20
+> If (hash_slots =3D=3D 0), do we still need to do all of this work bellow?=
+ I
+> thought that using the global hash would allow to skip this.
+
+Not sure what you mean by below. We need to create a smaller struct
+futex_private_hash and initialize it. We also need to move all current
+futex waiters, which might be on the private hash that is going away,
+over to the global hash. So yes, all this is needed.
+
+> > +	if (custom) {
+> > +		/*
+> > +		 * Only let prctl() wait / retry; don't unduly delay clone().
+> > +		 */
+> > +again:
+> > +		wait_var_event(mm, futex_pivot_pending(mm));
+> > +	}
 > > +
-> 
-> This really makes my eyes bleed. 
-> 
->  	if (!v2m)
->  		return 0;
->  
-> -	inner_domain = irq_domain_create_hierarchy(parent, 0, 0, v2m->fwnode,
-> -						   &gicv2m_domain_ops, v2m);
-> +	struct irq_domain_info info = {
-> +		.fwnode		= v2m->fwnode,
-> +		.ops		= &gicv2m_domain_ops,
-> +		.host_data	= v2m,
-> +		.parent		= parent,
-> +	};
-> +
-> +	inner_domain = msi_create_parent_irq_domain(&info, &gicv2m_msi_parent_ops);
-> 
-> That's too readable, right?
-> 
-> No need to resend, I just hacked up a few lines of coccinelle script to
-> eliminate this offense.
+> > +	scoped_guard(mutex, &mm->futex_hash_lock) {
+> > +		struct futex_private_hash *free __free(kvfree) =3D NULL;
+> > +		struct futex_private_hash *cur, *new;
+> > +
+> > +		cur =3D rcu_dereference_protected(mm->futex_phash,
+> > +						lockdep_is_held(&mm->futex_hash_lock));
+> > +		new =3D mm->futex_phash_new;
+> > +		mm->futex_phash_new =3D NULL;
+> > +
+> > +		if (fph) {
+> > +			if (cur && !new) {
+> > +				/*
+> > +				 * If we have an existing hash, but do not yet have
+> > +				 * allocated a replacement hash, drop the initial
+> > +				 * reference on the existing hash.
+> > +				 */
+> > +				futex_private_hash_put(cur);
+> > +			}
+> > +
+> > +			if (new) {
+> > +				/*
+> > +				 * Two updates raced; throw out the lesser one.
+> > +				 */
+> > +				if (futex_hash_less(new, fph)) {
+> > +					free =3D new;
+> > +					new =3D fph;
+> > +				} else {
+> > +					free =3D fph;
+> > +				}
+> > +			} else {
+> > +				new =3D fph;
+> > +			}
+> > +			fph =3D NULL;
+> > +		}
+> > +
+> > +		if (new) {
+> > +			/*
+> > +			 * Will set mm->futex_phash_new on failure;
+> > +			 * futex_private_hash_get() will try again.
+> > +			 */
+> > +			if (!__futex_pivot_hash(mm, new) && custom)
+> > +				goto again;
+>=20
+> Is it safe to use a goto inside a scoped_guard(){}?
 
-I personally find the rework much uglier than the original contraption.
-Variables declared in the middle of the code, Rust-style? Meh.
+We jump outside of the scoped_guard() and while testing I've been
+looking at the assembly and gcc did the right thing. So I would say why
+not. The alternative would be to do manual lock/unlock and think about
+the unlock just before the goto statement so this looks "easier".
 
-But hey, your call.
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Sebastian
