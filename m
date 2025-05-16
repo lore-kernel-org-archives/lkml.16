@@ -1,114 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8D621ADC6;
-	Fri, 16 May 2025 07:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E181921ADC6
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747382081; cv=none; b=rlyIIXUjVWBlWoHCYmRMIQiuipbCZNinhDDwrTD9cEwsxJ2i3IwcckU7Mc75HgxjYLcM9eEdKFg27/JaCdojAs6l6+VE+jjRCRe7Mv8XlWXWYHSWU3pE7KwrsfSTFyGwtxMM+WJBFPqZ4T+YHhnaeu8GUWCCWl4V2U+JggTOsJA=
+	t=1747382246; cv=none; b=dHNUGTfno8bMml3887qiJ4oZm2x7MxZEx/JhV51bnRUqcnWfyHESQ0MI7L4BR7zPNL7wwxTjbJAIODliF2qjTh82gZlEOSbuCpUf7ggUiObvoq2CgnUE6uIP/LSvEk0U4gjLex/aZs0J4GiiAx7tZDNa88nZ3Cem3kUhY4ZBly4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747382081; c=relaxed/simple;
-	bh=YSfKbVIwu+plTobu2WYKYnvMg3HxLlYHFzSqEGbrl5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OLz/RVmAOtjQzxV6ANjzVJRVvg5/ggz2c1DLuSPQhuHYevccPz9ajeMxuXa9ANry1zbI5JZZ3OgN4nD9ko+rgWTzmbx/aDqLPCf1kWOBrSDcxDoRQmKIXlmRhy/bhXbJ3RpooPRgR059Fd0AsitBnKOdNTtnV/CBjkRNJO6RPFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fCGEQZ3R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747382246; c=relaxed/simple;
+	bh=h+ZLQF886DPWyAx8bIzvZvBejNwbMd5cBA0T6CiVgk0=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bX23dloLqpBvpEBwaEavTO9ISMrn/MZ3+asbadCxWB109g5RMrtnG7mbrKSqxkHX9CejpQt7Fs5YzzuOXyap8YdMsHk8Ea5IkqT7E+Do/MoOlACvtH+c3KmyLivsPHAM5Toinv9lAb+hsRWmacgf9STB/sI7oshHG6cM8EXX6L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=D5CPXVP8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=63yRS3Yh; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=H6+3TOjM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jWUGYwdf; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fCGEQZ3R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2907AC4CEE4;
-	Fri, 16 May 2025 07:54:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747382080;
-	bh=YSfKbVIwu+plTobu2WYKYnvMg3HxLlYHFzSqEGbrl5U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fCGEQZ3R4xBnG/qpktNbb559KyutB+p2jB0QbMZCILVVHQlEwItbEwy/6xXdebMfH
-	 r/eZJ/QFNrUs3YjEXbZBmnOv8mi7vfs7RsPbIcOdCpakJWxztEE2TBM/UMxpI+ejBm
-	 JPh2KY7HXIiXZPOE69bcj8VN2oS5i61m27OL+EOXHoaUxAXSQ9WDtKapebOiIBv29T
-	 bdVo12fLIPXme7Tc9iy+UEdE0Zb5+CcznELOq23v6tdTUsZZ9sbsRi6o1/+PMb1EFl
-	 iIw+OwkydtpPtlMobipbcwUBmXjuumIafJ/hqxDV6Huzf2B4i02hs8GyMiwX/6IokS
-	 neW62ogPVTjyQ==
-Date: Fri, 16 May 2025 09:54:35 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
-	"Ahmed S. Darwish" <darwi@linutronix.de>,
-	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: linux-next: manual merge of the tip tree with the pm tree
-Message-ID: <aCbvO5Q0B3yYxji4@gmail.com>
-References: <20250516161541.0cff29b8@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="D5CPXVP8";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="63yRS3Yh";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="H6+3TOjM";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jWUGYwdf"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D9A7D216E7;
+	Fri, 16 May 2025 07:57:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747382242; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K3gkvYB0XTRh8Gd5Dje2X8qgVwuSi/OTcBFjYgDROJQ=;
+	b=D5CPXVP8VrNG3Zw/fVU6jlhs8uKBszNyZ98hR/zuB5/f6z1f7Eq4TgbiQvdj/bc4PotY76
+	IlBQF21HSonL6sD92KPcygelPyS90jWduUUsaXC8ZfaiQhJum5R6hH1kacvdwz+Lly8b7m
+	31QvkKsZ5qShQDJhCZXrwXX9UyyiZ4Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747382242;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K3gkvYB0XTRh8Gd5Dje2X8qgVwuSi/OTcBFjYgDROJQ=;
+	b=63yRS3YhQSA7+/zyBCoI1pDizh5dpArAbQi68MfBhkmswal8KSE7u4QdbiEd31As5HT8GC
+	E6gHbRjPfusMCHCw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=H6+3TOjM;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=jWUGYwdf
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747382241; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K3gkvYB0XTRh8Gd5Dje2X8qgVwuSi/OTcBFjYgDROJQ=;
+	b=H6+3TOjMTssJdLOM70SW+4PTkuqcOiV4C/plwFCASjtP5ygZx9ZmNbfgUjw3R+LC/dHYG0
+	jLgHlf4g+4zpAhirSpQ9oUvkk24VDVYz6nFCctafR3Gp6CHykJml5CMhcjnG9vz/57/k8F
+	/dFTxJcMFPHOpeXo+lYS4KTL65HMikc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747382241;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K3gkvYB0XTRh8Gd5Dje2X8qgVwuSi/OTcBFjYgDROJQ=;
+	b=jWUGYwdfwCWz6YPF+gc4av3E0qf9WHvEVOdO8Y7asEY/g3G0sr+J5bwZKilvq0lDiby7rx
+	RNEG+AyNuU5FRqAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9C37313977;
+	Fri, 16 May 2025 07:57:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id //PUJOHvJmgYTQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 16 May 2025 07:57:21 +0000
+Date: Fri, 16 May 2025 09:57:21 +0200
+Message-ID: <87y0uxvvha.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Chen Ni <nichen@iscas.ac.cn>
+Cc: g@b4.vu,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: scarlett2: Use USB API functions rather than constants
+In-Reply-To: <20250516070416.12458-1-nichen@iscas.ac.cn>
+References: <20250516070416.12458-1-nichen@iscas.ac.cn>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250516161541.0cff29b8@canb.auug.org.au>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: D9A7D216E7
+X-Spam-Flag: NO
+X-Spam-Score: -3.51
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Action: no action
+
+On Fri, 16 May 2025 09:04:16 +0200,
+Chen Ni wrote:
+> 
+> Use the function usb_endpoint_num() rather than constants.
+> 
+> The Coccinelle semantic patch is as follows:
+> 
+> @@ struct usb_endpoint_descriptor *epd; @@
+> 
+> - (epd->bEndpointAddress & \(USB_ENDPOINT_NUMBER_MASK\|0x0f\))
+> + usb_endpoint_num(epd)
+> 
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+
+Thanks, applied.
 
 
-* Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-
-> Hi all,
-> 
-> Today's linux-next merge of the tip tree got a conflict in:
-> 
->   drivers/idle/intel_idle.c
-> 
-> between commit:
-> 
->   6138f3451516 ("intel_idle: Add C1 demotion on/off sysfs knob")
-> 
-> from the pm tree and commit:
-> 
->   968e30006807 ("x86/cpuid: Set <asm/cpuid/api.h> as the main CPUID header")
-> 
-> from the tip tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
-> diff --cc drivers/idle/intel_idle.c
-> index 3292bf74e3c2,433d858b7be1..000000000000
-> --- a/drivers/idle/intel_idle.c
-> +++ b/drivers/idle/intel_idle.c
-> @@@ -52,8 -51,7 +52,8 @@@
->   #include <linux/notifier.h>
->   #include <linux/cpu.h>
->   #include <linux/moduleparam.h>
->  +#include <linux/sysfs.h>
-> - #include <asm/cpuid.h>
-> + #include <asm/cpuid/api.h>
->   #include <asm/cpu_device_id.h>
->   #include <asm/intel-family.h>
->   #include <asm/mwait.h>
-
-So I don't think the <asm/cpuid.h> change is needed - the header still 
-fully exists:
-
-  starship:~/tip> ls -lh arch/x86/include/asm/cpuid/api.h arch/x86/include/asm/cpuid.h
-  -rw-rw-r-- 1 mingo mingo 6.1K May 16 09:34 arch/x86/include/asm/cpuid/api.h
-  -rw-rw-r-- 1 mingo mingo  149 May 16 09:34 arch/x86/include/asm/cpuid.h
-
-And the <linux/sysfs.h> addition is probably a build fix for the PM 
-tree? The <asm/cpuid.h> header's indirect header dependencies did not 
-change. Should probably not be carried in -next, as this masks a build 
-failure that will then trigger in Linus's tree?
-
-(Unless I'm missing something that is.)
-
-Thanks,
-
-	Ingo
+Takashi
