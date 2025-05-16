@@ -1,194 +1,67 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06AEA227E83
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC5F622617F
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747378188; cv=none; b=oOAo0xBZhM7QmqQ5Hkeu7lzbrUn9pLY0HgfTwTZ9otlLQ/3vMOEK9G8AUwL9RZcqkXPPUvYXFD7rUrBQhtYoC700p7JP6y6t0kLXAYfmysmwNm66t1yCsVUN3DPWSDDCR4isRDlKE1/rAHKoCRuaIYHZADdAzcIEpMaZy3WVFoQ=
+	t=1747378197; cv=none; b=gG+wmdbv1Wsl1UkHxeJNQm5Tc3jyUGfpA5rQ0+YcKPRRwpm6eFPKeAnscJufa0zshP0xuNb+Se9NxwYzY/m8TIXOJIUhEv3SFdWQnI4+JIuOwaChIHpnLQy+J99ctcvDAcr4QiLlhBWZ2pBbRIo1n0gZFk/inB5zQbOw8DWn/0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747378188; c=relaxed/simple;
-	bh=tEf3IX+SKfryTgjjjr+5wg6/0dH9CvOVe0W0Gxmney4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oVSRY+mbfZ9yN57dziKU4eHHUOBWkllM1nQBH/8B/L0QTb572wMCsZM+kNBaaBfeYHL9jDqU7Zzg/Mcx4r+bCXn2Dyqxi0wIdugG/koRtcDXIiCsyJAN9Kvp5fpcn1LHslUqTQLQ7j+EVkiJw4jQc78hxRm8pjTisNypiFDYAUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WSR4/oQs; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747378197; c=relaxed/simple;
+	bh=lvZN8ysfJIxtlbmf2W6ZNOmXfkWyntAbEQLSjdeK6Sg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J8u8bdOdB3xFzCl4AlNF9+39dJj6tAbdum2eqkGxLh/Ernep526KQoar/7SPup/HVm4s/hj5BxQhODjuzNOr4L+Rr9jnnenS+ikTbH0JsftFBnGmmvlCBKfypDsUh8ygXHA0Ev7CbIBTuLhviSZHt6N2XmAf+TxuOsoN/OoAY8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=OmzugMIF; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WSR4/oQs"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747378183;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wjgeN2qjXaFT2yhGcnf6ojnEDqDgQ6jiTAUoDbWljT0=;
-	b=WSR4/oQsdzkHgky5kgsfe7Q3covs1cTkeEfb8OaN46IWjcemjgSUOJOSDHT4tf9q8JeusI
-	f3f8hayqZo9C32j3hvK/L+zPzmYInvz8GgshCBLLJP5qKhCIT7a0GiQI/HtJW0fGIIkigw
-	dj+8morZoI+7sBShj5rXkhBOH0jZGtk=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	bpf@vger.kernel.org,
-	linux-mm@kvack.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: [PATCH 2/5] memcg: nmi safe memcg stats for specific archs
-Date: Thu, 15 May 2025 23:49:09 -0700
-Message-ID: <20250516064912.1515065-3-shakeel.butt@linux.dev>
-In-Reply-To: <20250516064912.1515065-1-shakeel.butt@linux.dev>
-References: <20250516064912.1515065-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="OmzugMIF"
+Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id BF9554B709;
+	Fri, 16 May 2025 08:49:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1747378194;
+	bh=lvZN8ysfJIxtlbmf2W6ZNOmXfkWyntAbEQLSjdeK6Sg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OmzugMIFy9I9MsjspOeLFtK7NKdkManP5FRIFLfK5GMviXeOjr+bkCrDLTVRyYe3X
+	 9v3pyG5VriexOAnyHfTcv750WLw/IBJhhFKG1w6ADEtsapKBAm9N7UmvY+5bJIkbUT
+	 Xd17DE86fTfsQRunKbPz2W++xTkZHIMWafoDAr9Q3fHp7mvD0+ubyPwYucaGo/RraK
+	 R59QfPSRMIR3tV6tUMnj2/DIsjrXO19AYRRRAQFsPWDyG5I0+xjR/m1QEdwLU1eR5s
+	 pp82Rmk5Q8EZbKVY9TKTekdPpgIEP2s0gI80gq3KuLsC2cU5/TRbEn2RSpOSY89SYb
+	 +sLH1YYWRA2NQ==
+Date: Fri, 16 May 2025 08:49:53 +0200
+From: Joerg Roedel <joro@8bytes.org>
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] [PULL REQUEST] Intel IOMMU updates for v6.16
+Message-ID: <aCbgEdv-dMX7wa6G@8bytes.org>
+References: <20250513030739.2718555-1-baolu.lu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250513030739.2718555-1-baolu.lu@linux.intel.com>
 
-There are archs which have NMI but does not support this_cpu_* ops
-safely in the nmi context but they support safe atomic ops in nmi
-context. For such archs, let's add infra to use atomic ops for the memcg
-stats which can be updated in nmi.
+On Tue, May 13, 2025 at 11:07:34AM +0800, Lu Baolu wrote:
+> Jason Gunthorpe (1):
+>   iommu/vt-d: Restore WO permissions on second-level paging entries
+> 
+> Lu Baolu (2):
+>   iommu/vt-d: Use ida to manage domain id
+>   iommu/vt-d: Replace spin_lock with mutex to protect domain ida
+> 
+> Wei Wang (2):
+>   iommu/vt-d: Eliminate pci_physfn() in dmar_find_matched_satc_unit()
+>   iommu/vt-d: Change dmar_ats_supported() to return boolean
+> 
+>  drivers/iommu/intel/dmar.c  |   4 ++
+>  drivers/iommu/intel/iommu.c | 113 ++++++++++--------------------------
+>  drivers/iommu/intel/iommu.h |  21 +++++--
+>  3 files changed, 51 insertions(+), 87 deletions(-)
 
-At the moment, the memcg stats which get updated in the objcg charging
-path are MEMCG_KMEM, NR_SLAB_RECLAIMABLE_B & NR_SLAB_UNRECLAIMABLE_B.
-Rather than adding support for all memcg stats to be nmi safe, let's
-just add infra to make these three stats nmi safe which this patch is
-doing.
-
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
----
- include/linux/memcontrol.h | 20 ++++++++++++++--
- mm/memcontrol.c            | 49 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 67 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 53920528821f..b10ae2388c27 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -62,9 +62,15 @@ struct mem_cgroup_reclaim_cookie {
- 
- #ifdef CONFIG_MEMCG
- 
--#if defined(CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS) || \
--	!defined(CONFIG_HAVE_NMI) || defined(ARCH_HAVE_NMI_SAFE_CMPXCHG)
-+#if defined(CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS) || !defined(CONFIG_HAVE_NMI)
-+
-+#define MEMCG_SUPPORTS_NMI_CHARGING
-+
-+#elif defined(ARCH_HAVE_NMI_SAFE_CMPXCHG)
-+
- #define MEMCG_SUPPORTS_NMI_CHARGING
-+#define MEMCG_NMI_NEED_ATOMIC
-+
- #endif
- 
- #define MEM_CGROUP_ID_SHIFT	16
-@@ -118,6 +124,12 @@ struct mem_cgroup_per_node {
- 	CACHELINE_PADDING(_pad2_);
- 	unsigned long		lru_zone_size[MAX_NR_ZONES][NR_LRU_LISTS];
- 	struct mem_cgroup_reclaim_iter	iter;
-+
-+#ifdef MEMCG_NMI_NEED_ATOMIC
-+	/* slab stats for nmi context */
-+	atomic_t		slab_reclaimable;
-+	atomic_t		slab_unreclaimable;
-+#endif
- };
- 
- struct mem_cgroup_threshold {
-@@ -241,6 +253,10 @@ struct mem_cgroup {
- 	atomic_long_t		memory_events[MEMCG_NR_MEMORY_EVENTS];
- 	atomic_long_t		memory_events_local[MEMCG_NR_MEMORY_EVENTS];
- 
-+#ifdef MEMCG_NMI_NEED_ATOMIC
-+	/* MEMCG_KMEM for nmi context */
-+	atomic_t		kmem_stat;
-+#endif
- 	/*
- 	 * Hint of reclaim pressure for socket memroy management. Note
- 	 * that this indicator should NOT be used in legacy cgroup mode
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index dface07f69bb..102fdec3f49e 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -3979,6 +3979,53 @@ static void mem_cgroup_stat_aggregate(struct aggregate_control *ac)
- 	}
- }
- 
-+#ifdef MEMCG_NMI_NEED_ATOMIC
-+static void flush_nmi_stats(struct mem_cgroup *memcg, struct mem_cgroup *parent,
-+			    int cpu)
-+{
-+	int nid;
-+
-+	if (atomic_read(&memcg->kmem_stat)) {
-+		int kmem = atomic_xchg(&memcg->kmem_stat, 0);
-+		int index = memcg_stats_index(MEMCG_KMEM);
-+
-+		memcg->vmstats->state[index] += kmem;
-+		if (parent)
-+			parent->vmstats->state_pending[index] += kmem;
-+	}
-+
-+	for_each_node_state(nid, N_MEMORY) {
-+		struct mem_cgroup_per_node *pn = memcg->nodeinfo[nid];
-+		struct lruvec_stats *lstats = pn->lruvec_stats;
-+		struct lruvec_stats *plstats = NULL;
-+
-+		if (parent)
-+			plstats = parent->nodeinfo[nid]->lruvec_stats;
-+
-+		if (atomic_read(&pn->slab_reclaimable)) {
-+			int slab = atomic_xchg(&pn->slab_reclaimable, 0);
-+			int index = memcg_stats_index(NR_SLAB_RECLAIMABLE_B);
-+
-+			lstats->state[index] += slab;
-+			if (plstats)
-+				plstats->state_pending[index] += slab;
-+		}
-+		if (atomic_read(&pn->slab_unreclaimable)) {
-+			int slab = atomic_xchg(&pn->slab_unreclaimable, 0);
-+			int index = memcg_stats_index(NR_SLAB_UNRECLAIMABLE_B);
-+
-+			lstats->state[index] += slab;
-+			if (plstats)
-+				plstats->state_pending[index] += slab;
-+		}
-+	}
-+}
-+#else
-+static void flush_nmi_stats(struct mem_cgroup *memcg, struct mem_cgroup *parent,
-+			    int cpu)
-+{}
-+#endif
-+
- static void mem_cgroup_css_rstat_flush(struct cgroup_subsys_state *css, int cpu)
- {
- 	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
-@@ -3987,6 +4034,8 @@ static void mem_cgroup_css_rstat_flush(struct cgroup_subsys_state *css, int cpu)
- 	struct aggregate_control ac;
- 	int nid;
- 
-+	flush_nmi_stats(memcg, parent, cpu);
-+
- 	statc = per_cpu_ptr(memcg->vmstats_percpu, cpu);
- 
- 	ac = (struct aggregate_control) {
--- 
-2.47.1
-
+Applied all, thanks Baolu.
