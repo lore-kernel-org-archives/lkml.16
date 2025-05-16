@@ -1,65 +1,65 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD78B22CBFD;
-	Fri, 16 May 2025 07:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDCD22D7AD;
+	Fri, 16 May 2025 07:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747381930; cv=none; b=uyHv8D+2ZhBX0QUf6vVLdZ2FNIDKNxpGYI1YFu/O2H1pIm/e6YeSpKdNjea8cKhlLY4r2UL9YmLAX9xQ/7FIwPB9gguV1ECr6wUmb5S8W9p7E+lJyFvKlE/O5NQAQMevy5yvGH99T6ncRqVmloWgqe+Xt73IdBlVNJu1iAdSeJ4=
+	t=1747381937; cv=none; b=OI+pJGcYcw5aKwPZfG2dpqCdtPx+aZEZY4Rx0lu2T95CPOjWcb/4r729DXLoeVSqmHMaTuxHOOHiUiK3i5eO9IH8ImWaurHrH+DfBJmkcLoqBzUQre4qw7BG3YNNBDCzdSGtEu245tTEWoiW0MxNsj5ixSpyUeCkciKrM5ViSpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747381930; c=relaxed/simple;
-	bh=RZtLTcaCAo+O8/+jAdnD3rctE0timMssgJeF/PO5j/M=;
+	s=arc-20240116; t=1747381937; c=relaxed/simple;
+	bh=gGhKxd4MfJ8gSyOxkV9cgiFXqIbGm6a2vqq6gJUGHy4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rxhuhIn7IFAvymV9AfMjYnvfu+IY/DKMUr1DA0Zp9Ut4bNNpBFRfEneCnb7nFAnUMLiRprADfKG81ii2jPPHILuO6IHieCxCn/CnYcop4eS7phr/kGX9aFpnAAePtaxfNCVFHNYWQfDfmXweMJoKiz0J0ojfTRgRHrtF2nKmg+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pys3D+Iu; arc=none smtp.client-ip=209.85.167.43
+	 In-Reply-To:Content-Type; b=B1MeaaukPk6vVMVQsQCIqS41kHRJMwlFo8qS3gs41TGaSJ46epKF62tEpgwN22n9K+aJhnCry6AZfXz0AMgTcIAYkhLNGXJicEI5iHJ4arr+ocdmVjljoWzHomEVCvdu2Rx5zVFGSsW5Q61ge7IX0tJqRxBPkT1NC3TECeachdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U4UX3TkG; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pys3D+Iu"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54fcc593466so2031417e87.0;
-        Fri, 16 May 2025 00:52:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U4UX3TkG"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54e7967cf67so1894506e87.0;
+        Fri, 16 May 2025 00:52:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747381926; x=1747986726; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747381933; x=1747986733; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=2p13BRBCFT1dwDPSwRtVCH9OWQNWR2IO/8d7NZCQkfI=;
-        b=Pys3D+IunvhoywzwU6opncMvDihjvc7uXGl3o0jaK9UOcZMgM1r4iShecjzlZfbT8F
-         QbCeSU+6XqM7p4OjGVbPR+vUM6CAr2QU+CwHCgHKWEVdFyYIRoxXxeXRusBFuU9N7KK2
-         8qc48aBaps92HvfSwSitmgJNPDCspgxqElFs6TfjYHuvL+wMVUYTxRzAjuBQCKThMtsj
-         48DOBIQXxOGwkbNczBQQpeOLar3qqAashvl5AXly8Ch6KN4bWgnHeQRvEXvyeMwpeJu+
-         eeH0luI18H5g8Q6lmACDeKeZhGp5xRDG8TS117Y5xXNohFh89Z/uAI16ug07H2es7VQl
-         CX2g==
+        bh=uyhhlTCQC+PpXTytpRM3Qb4SBbdAcsxAzz/OOOJadJM=;
+        b=U4UX3TkG27OP3z6mydY/2ZwWN/H9KWJ+0pDhcg5lxDZIk/uJu0yPZTE1Abw4pSkPgO
+         EOph1zW2xqMkM7cY9RB362yUNVjNaP1hP1i+CxMGAoCNM2zg05+I760DhdXg5pBaFyd4
+         zowFXcDUWsaAF0qyKgV7oxmD41iMljHYDQyvZU3nkJEtGHgjuafultLAkZq7B+0FQGq3
+         mo83OrtD6cIqMNF8QYfBHK45wXSMpZyXl/lXQl8pxFvTK/Jysy5P5d4dVmFQ9C/EPSwi
+         ZYfTiCsOwS9NCuLLcAz4GWhkURbsEKsAWGy2pvYuNFD4YtMkBC/IZYy3p0z2tqqOJWK9
+         t0jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747381926; x=1747986726;
+        d=1e100.net; s=20230601; t=1747381933; x=1747986733;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2p13BRBCFT1dwDPSwRtVCH9OWQNWR2IO/8d7NZCQkfI=;
-        b=LcSYSHGIciGVGajoqe8mMBh42/ZsDad3t/R4DKYLSF3GJdUnX6hzjm63RJ/mRpgMUr
-         u0G8aMDOecfy/E01mxD1lM/2Xh+jrXMSNrhtXfFj6jXhkL9wEkMgnHYAT4A3TSmmq+h2
-         8hhLWNCwO9aVvKBXXAf3cE9Ci3SzyvJfrWw2+7MANw9wsrJxswpwDeFrJO3ABSk7VzJ8
-         bY87erlw8o8+JA7biXv6ewOxPsAlUs9Kyr4PxnqhhTNb4bw6/GM43CcI5SD+mQ9odJe1
-         z2c/lhtkvz0SWgq2Lo36/iAYPAeFuRhZvAtYpeix6o4MDEUGDp52LiZ43O3fn0mJFsPf
-         hvVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUAvi/6Gh1KCvEkWkNf5sOXyfG9O+ZJVJST43R6mLoOUpNOrBxif2OBfLUJfzv217HL6YymfIqTxGMIcKEtOqU=@vger.kernel.org, AJvYcCWSfsY7ziZzGq9snqxwoPZuigPeqYA1rUAG7+zJbZhLbtRMD3BAOR7HvHnvp1nrfuCfNKCVdhGU9VX6XIU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMMzJ3qjvnY3Ml5q7/h33RDx/cX0KBayvKxPeR1ZJRSP4Kpx6x
-	ahkXHMRJlCfVkYmJLKtgmEnEcajyLsxWK7EsmPuOgiEXSrT+e5B2sG6+
-X-Gm-Gg: ASbGncs9yWvq5XdTwHJnqGCGGb68ySk6b+j12WhwMose2q7zClG3rJ3ZZ/zsb2RtLOn
-	QL1THj6WRNU144PoAT8bjB8188X8zOKn0XVLce8zCgdJmrtXBQiqXDHl5EYCDaoWUxIZTmsqPR6
-	bugYs+oExlqoX7NtZjEY09kZUAG2hUfChtjK01bh1/70sAAJfA0QnAKx4CyVWgFQ4Qa459TyXCA
-	PT61x0fUMsqYhZ8GIzViQWqW9KZGXF8naq9H5FYK5QPj7oof9vj+XjX7uIW3PRX4JGiesekAW0f
-	YrSkpk0mfEWnkkUPcxyxQ/Qhiv6+OVIxCPfIw1rY3uaDKmljl3PQpIr0QfLDkg1UQqfQGW+gqwf
-	jTzMbYLsAihzUB7SMqH8WM2j8ahOW
-X-Google-Smtp-Source: AGHT+IEcluKzAsdcCcYSxVEC0m54JCo1lSRIWpxTXMTxyf0b695CL0VEKO3BNKmqHRgH4RatP6CCTQ==
-X-Received: by 2002:a05:6512:4508:b0:54a:c514:76f0 with SMTP id 2adb3069b0e04-550e9764327mr437100e87.14.1747381925232;
-        Fri, 16 May 2025 00:52:05 -0700 (PDT)
+        bh=uyhhlTCQC+PpXTytpRM3Qb4SBbdAcsxAzz/OOOJadJM=;
+        b=OUqs+X+gvlNKxwGa3xrkbs1oJO0/j8ZeZ3l/Q0uob0XCVAAx8COG+Uri7HvESnIa0Y
+         OmA9Oant57knqwiuFlDzVUxb6XZQxoop2H154XO4cdH5v1YAV/tbUf49riV0dFZ3+Bel
+         ic36uksL/JFCWxlTbdV8PwD3nh2gpx5JsxKJ/NfNCntQscaU5eZxQnrAhIJOylPdJlGY
+         oCielo1nhLFDLEvlQsm/t0ymWwo7/+ZXdsOMPRWpDgyXgcvsG+Wv+Xmdlen5yJtJ6R5O
+         EIEpK3+JXlRPZsrLpa8bYzGS5i99+DJZAR4iPKI+OhR4z+5qQM6EleEaFkSxz5a5qGpm
+         ZNxw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPl/Na+k5RbaSeuyWWWoBC/ziKA6iLQ67PjcuNqCuVk7EAh5EAdy+MOd/tEkCJc0wnWdkcoWUhebFurxc=@vger.kernel.org, AJvYcCUmJLiSU43TLgsUJFDt3tTp1ojboNjL6llI0jMrlfSrig7NKsIlJkUl2ohomfeh6FA+8lcGrBkLZZqJvBV8iLg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx50mwtfDXtl71S3h+7Dq0EnxcSbLnUF8SVyyFtYXk/9C3DrxoE
+	KKPpW8EF2AZrIf/yC8cwrDthrCKPoTtNa3EE5IF+Js2bdWK6pPiF4WTB
+X-Gm-Gg: ASbGncuYUd1seEi/7Vktm0034fLJIx27tgdP5HbJ3ZY6flRPenH03u+hYjt8aUpZprA
+	zsmMPKXD8MvNVOC6DHMP/vzxqR9LbEcQRwFAGPe/gud/AaPT+YYcWHPvMzU3H6XPWKDY1CT9zNa
+	Su+QapkRXWlrfgIbfd3Ng7YBINd2NfGQ5ONZoFRfCroTeAXd65fjj0gnnHEx/SkEjwbeke7mi0x
+	6hPjfGg4oSzxU861GA2Tfx8NWAITYZCRwYR4JhAKOkZtwZMbBZ6vEQLRQcQqtqSam4y/b89e/Ud
+	7ukx4GaXpB1XrZ93sG83sXmVVh8aVb1DbUWqlCukZuku0IT46sKgNnW/CCXAlSjPa7IUvDHK4uE
+	BZMrDGJyN8e0v696wDI9t6VZbSpzL
+X-Google-Smtp-Source: AGHT+IGUwRD8SrdUFp/6fy69XEpREOdcAlMGf0IrBmrI/0/o5tUR3qJ92f+enoVLZn0u4NDeuQxn4w==
+X-Received: by 2002:a05:6512:2913:b0:545:f4b:ed66 with SMTP id 2adb3069b0e04-550e71c2872mr533138e87.21.1747381932888;
+        Fri, 16 May 2025 00:52:12 -0700 (PDT)
 Received: from [192.168.1.146] (dsl-hkibng22-54f8dc-251.dhcp.inet.fi. [84.248.220.251])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e7038518sm307786e87.210.2025.05.16.00.52.04
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e702cfedsm310589e87.183.2025.05.16.00.52.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 May 2025 00:52:04 -0700 (PDT)
-Message-ID: <777e3d93-ab43-4335-9a95-cf0fed98ad63@gmail.com>
-Date: Fri, 16 May 2025 10:52:03 +0300
+        Fri, 16 May 2025 00:52:12 -0700 (PDT)
+Message-ID: <c4126cbe-e14a-48a6-942d-ff2685b8859f@gmail.com>
+Date: Fri, 16 May 2025 10:52:11 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [RFC PATCH 1/2] rust: add initial scatterlist bindings
-To: Lyude Paul <lyude@redhat.com>, dakr@kernel.org
+To: Alexandre Courbot <acourbot@nvidia.com>, dakr@kernel.org, lyude@redhat.com
 Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
  Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
  =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
@@ -86,443 +86,126 @@ Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
  Michael Kelley <mhklinux@outlook.com>
 References: <20250512095544.3334680-1-abdiel.janulgue@gmail.com>
  <20250512095544.3334680-2-abdiel.janulgue@gmail.com>
- <36b45e41522a61409b379c15f21bb547d4913d1e.camel@redhat.com>
+ <D9VQQAY6G20X.RVU8H169KQL2@nvidia.com>
+ <D9VWA9ZQLY85.277DFA3YTH5R0@nvidia.com>
 Content-Language: en-US
 From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-In-Reply-To: <36b45e41522a61409b379c15f21bb547d4913d1e.camel@redhat.com>
+In-Reply-To: <D9VWA9ZQLY85.277DFA3YTH5R0@nvidia.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 15/05/2025 23:01, Lyude Paul wrote:
-> On Mon, 2025-05-12 at 12:53 +0300, Abdiel Janulgue wrote:
->> Add the rust abstraction for scatterlist. This allows use of the C
->> scatterlist within Rust code which the caller can allocate themselves
->> or to wrap existing kernel sg_table objects.
+On 14/05/2025 15:50, Alexandre Courbot wrote:
+> On Wed May 14, 2025 at 5:29 PM JST, Alexandre Courbot wrote:
+>>> +/// The base interface for a scatter-gather table of DMA address spans.
+>>> +///
+>>> +/// This structure represents the Rust abstraction for a C `struct sg_table`. This implementation
+>>> +/// abstracts the usage of an already existing C `struct sg_table` within Rust code that we get
+>>> +/// passed from the C side.
+>>> +///
+>>> +/// # Invariants
+>>> +///
+>>> +/// The `sg_table` pointer is valid for the lifetime of an SGTable instance.
+>>> +#[repr(transparent)]
+>>> +pub struct SGTable(Opaque<bindings::sg_table>);
+>>> +
+>>> +impl SGTable {
+>>> +    /// Convert a raw `struct sg_table *` to a `&'a SGTable`.
+>>> +    ///
+>>> +    /// # Safety
+>>> +    ///
+>>> +    /// Callers must ensure that the `struct sg_table` pointed to by `ptr` is initialized and valid for
+>>> +    /// the lifetime of the returned reference.
+>>> +    pub unsafe fn as_ref<'a>(ptr: *mut bindings::sg_table) -> &'a Self {
+>>> +        // SAFETY: Guaranteed by the safety requirements of the function.
+>>> +        unsafe { &*ptr.cast() }
+>>> +    }
+>>> +
+>>> +    /// Obtain the raw `struct sg_table *`.
+>>> +    pub fn as_raw(&self) -> *mut bindings::sg_table {
+>>> +        self.0.get()
+>>> +    }
+>>> +
+>>> +    /// Returns a mutable iterator over the scather-gather table.
+>>> +    pub fn iter_mut(&mut self) -> SGTableIterMut<'_> {
+>>> +        SGTableIterMut {
+>>> +            // SAFETY: dereferenced pointer is valid due to the type invariants on `SGTable`.
+>>> +            pos: Some(unsafe { SGEntry::as_mut((*self.0.get()).sgl) }),
+>>> +        }
+>>> +    }
+>>> +
+>>> +    /// Returns an iterator over the scather-gather table.
+>>> +    pub fn iter(&self) -> SGTableIter<'_> {
+>>> +        SGTableIter {
+>>> +            // SAFETY: dereferenced pointer is valid due to the type invariants on `SGTable`.
+>>> +            pos: Some(unsafe { SGEntry::as_ref((*self.0.get()).sgl) }),
+>>> +        }
+>>> +    }
 >>
->> Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
->> ---
->>   rust/bindings/bindings_helper.h |   1 +
->>   rust/helpers/helpers.c          |   1 +
->>   rust/helpers/scatterlist.c      |  25 +++
->>   rust/kernel/lib.rs              |   1 +
->>   rust/kernel/scatterlist.rs      | 275 ++++++++++++++++++++++++++++++++
->>   5 files changed, 303 insertions(+)
->>   create mode 100644 rust/helpers/scatterlist.c
->>   create mode 100644 rust/kernel/scatterlist.rs
+>> I think Jason mentioned this already, but you should really have two
+>> iterators, one for the CPU side and one for the device side. The two
+>> lists are not even guaranteed to be the same size IIUC, so having both
+>> lists in the same iterator is a receipe for confusion and bugs.
 >>
->> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
->> index ab37e1d35c70..a7d3b97cd4e0 100644
->> --- a/rust/bindings/bindings_helper.h
->> +++ b/rust/bindings/bindings_helper.h
->> @@ -14,6 +14,7 @@
->>   #include <linux/cred.h>
->>   #include <linux/device/faux.h>
->>   #include <linux/dma-mapping.h>
->> +#include <linux/dma-direction.h>
->>   #include <linux/errname.h>
->>   #include <linux/ethtool.h>
->>   #include <linux/file.h>
->> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
->> index 1e7c84df7252..f45a15f88e25 100644
->> --- a/rust/helpers/helpers.c
->> +++ b/rust/helpers/helpers.c
->> @@ -28,6 +28,7 @@
->>   #include "rbtree.c"
->>   #include "rcu.c"
->>   #include "refcount.c"
->> +#include "scatterlist.c"
->>   #include "security.c"
->>   #include "signal.c"
->>   #include "slab.c"
->> diff --git a/rust/helpers/scatterlist.c b/rust/helpers/scatterlist.c
->> new file mode 100644
->> index 000000000000..5ab0826f7c0b
->> --- /dev/null
->> +++ b/rust/helpers/scatterlist.c
->> @@ -0,0 +1,25 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +#include <linux/dma-direction.h>
->> +
->> +void rust_helper_sg_set_page(struct scatterlist *sg, struct page *page,
->> +			     unsigned int len, unsigned int offset)
->> +{
->> +	return sg_set_page(sg, page, len, offset);
->> +}
->> +
->> +dma_addr_t rust_helper_sg_dma_address(struct scatterlist *sg)
->> +{
->> +	return sg_dma_address(sg);
->> +}
->> +
->> +unsigned int rust_helper_sg_dma_len(struct scatterlist *sg)
->> +{
->> +	return sg_dma_address(sg);
->> +}
->> +
->> +void rust_helper_dma_unmap_sgtable(struct device *dev, struct sg_table *sgt,
->> +				   enum dma_data_direction dir, unsigned long attrs)
->> +{
->> +	return dma_unmap_sgtable(dev, sgt, dir, attrs);
->> +}
->> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
->> index fa852886d4d1..a8d5fcb55388 100644
->> --- a/rust/kernel/lib.rs
->> +++ b/rust/kernel/lib.rs
->> @@ -87,6 +87,7 @@
->>   pub mod print;
->>   pub mod rbtree;
->>   pub mod revocable;
->> +pub mod scatterlist;
->>   pub mod security;
->>   pub mod seq_file;
->>   pub mod sizes;
->> diff --git a/rust/kernel/scatterlist.rs b/rust/kernel/scatterlist.rs
->> new file mode 100644
->> index 000000000000..122a6f94bf56
->> --- /dev/null
->> +++ b/rust/kernel/scatterlist.rs
->> @@ -0,0 +1,275 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +//! Scatterlist
->> +//!
->> +//! C header: [`include/linux/scatterlist.h`](srctree/include/linux/scatterlist.h)
->> +
->> +use crate::{
->> +    bindings,
->> +    device::Device,
->> +    error::{Error, Result},
->> +    page::Page,
->> +    types::{ARef, Opaque},
->> +};
->> +use core::ops::{Deref, DerefMut};
->> +
->> +/// A single scatter-gather entry, representing a span of pages in the device's DMA address space.
->> +///
->> +/// # Invariants
->> +///
->> +/// The `scatterlist` pointer is valid for the lifetime of an SGEntry instance.
->> +#[repr(transparent)]
->> +pub struct SGEntry(Opaque<bindings::scatterlist>);
->> +
->> +impl SGEntry {
->> +    /// Convert a raw `struct scatterlist *` to a `&'a SGEntry`.
->> +    ///
->> +    /// # Safety
->> +    ///
->> +    /// Callers must ensure that the `struct scatterlist` pointed to by `ptr` is valid for the lifetime
->> +    /// of the returned reference.
->> +    pub unsafe fn as_ref<'a>(ptr: *mut bindings::scatterlist) -> &'a Self {
->> +        // SAFETY: The pointer is valid and guaranteed by the safety requirements of the function.
->> +        unsafe { &*ptr.cast() }
->> +    }
+>> I have an (absolutely awful) implementation of that if you want to take
+>> a look:
+>>
+>> https://github.com/Gnurou/linux/blob/nova-gsp/drivers/gpu/nova-core/firmware/radix3.rs#L200
+>>
+>> It's probably wrong in many places, and I just wrote it as a temporary
+>> alternative until this series lands, but please steal any idea that you
+>> think is reusable.
+>>
+>> There is also the fact that SG tables are not always necessarily mapped
+>> on the device side, so we would have to handle that as well, e.g.
+>> through a typestate or maybe by just returning a dedicated error in that
+>> case.
 > 
-> We might want this to be pub(crate) for the time being. Since it's easier to
-> go from private to public then it is to go in the other direction, and I think
-> this function is likely only to be used by other kernel crates rather than
-> drivers.
+> Gave this some more thought, and basically it appears this is a
+> two-parts problem:
 > 
->> +
->> +    /// Convert a raw `struct scatterlist *` to a `&'a mut SGEntry`.
->> +    ///
->> +    /// # Safety
->> +    ///
->> +    /// See safety requirements of [`SGEntry::as_ref`]. In addition, callers must ensure that only
->> +    /// a single mutable reference can be taken from the same raw pointer, i.e. for the lifetime of the
->> +    /// returned reference, no other call to this function on the same `struct scatterlist *` should
->> +    /// be permitted.
->> +    unsafe fn as_mut<'a>(ptr: *mut bindings::scatterlist) -> &'a mut Self {
->> +        // SAFETY: The pointer is valid and guaranteed by the safety requirements of the function.
->> +        unsafe { &mut *ptr.cast() }
->> +    }
->> +
->> +    /// Returns the DMA address of this SG entry.
->> +    pub fn dma_address(&self) -> bindings::dma_addr_t {
->> +        // SAFETY: By the type invariant of `SGEntry`, ptr is valid.
->> +        unsafe { bindings::sg_dma_address(self.0.get()) }
->> +    }
->> +
->> +    /// Returns the length of this SG entry.
->> +    pub fn dma_len(&self) -> u32 {
->> +        // SAFETY: By the type invariant of `SGEntry`, ptr is valid.
->> +        unsafe { bindings::sg_dma_len(self.0.get()) }
->> +    }
->> +
->> +    /// Set this entry to point at a given page.
->> +    pub fn set_page(&mut self, page: &Page, length: u32, offset: u32) {
->> +        let c: *mut bindings::scatterlist = self.0.get();
->> +        // SAFETY: according to the `SGEntry` invariant, the scatterlist pointer is valid.
->> +        // `Page` invariant also ensure the pointer is valid.
->> +        unsafe { bindings::sg_set_page(c, page.as_ptr(), length, offset) };
->> +    }
->> +
->> +    /// Obtain the raw `struct scatterlist *`.
->> +    pub fn as_raw(&self) -> *mut bindings::scatterlist {
->> +        self.0.get()
->> +    }
+> 1) Iterating over an already-existing sg_table (which might have been
+>     created by your `as_ref` function, although as Daniel suggested it
+>     needs a better name),
+> 2) Building a sg_table.
 > 
-> Should probably also be pub(crate)
+> The C API for both is a bit quirky, but 1) looks the most pressing to
+> address and should let us jump to 2) with a decent base.
 > 
->> +}
->> +
->> +/// DMA mapping direction.
->> +///
->> +/// Corresponds to the kernel's [`enum dma_data_direction`].
->> +///
->> +/// [`enum dma_data_direction`]: srctree/include/linux/dma-direction.h
->> +#[derive(Copy, Clone, PartialEq, Eq)]
->> +#[repr(u32)]
->> +pub enum DmaDataDirection {
->> +    /// Direction isn't known.
->> +    DmaBidirectional = bindings::dma_data_direction_DMA_BIDIRECTIONAL,
->> +    /// Data is going from the memory to the device.
->> +    DmaToDevice = bindings::dma_data_direction_DMA_TO_DEVICE,
->> +    /// Data is coming from the device to the memory.
->> +    DmaFromDevice = bindings::dma_data_direction_DMA_FROM_DEVICE,
->> +    /// No direction (used for debugging).
->> +    DmaNone = bindings::dma_data_direction_DMA_NONE,
->> +}
->> +
->> +/// The base interface for a scatter-gather table of DMA address spans.
->> +///
->> +/// This structure represents the Rust abstraction for a C `struct sg_table`. This implementation
->> +/// abstracts the usage of an already existing C `struct sg_table` within Rust code that we get
->> +/// passed from the C side.
->> +///
->> +/// # Invariants
->> +///
->> +/// The `sg_table` pointer is valid for the lifetime of an SGTable instance.
->> +#[repr(transparent)]
->> +pub struct SGTable(Opaque<bindings::sg_table>);
->> +
->> +impl SGTable {
->> +    /// Convert a raw `struct sg_table *` to a `&'a SGTable`.
->> +    ///
->> +    /// # Safety
->> +    ///
->> +    /// Callers must ensure that the `struct sg_table` pointed to by `ptr` is initialized and valid for
->> +    /// the lifetime of the returned reference.
->> +    pub unsafe fn as_ref<'a>(ptr: *mut bindings::sg_table) -> &'a Self {
->> +        // SAFETY: Guaranteed by the safety requirements of the function.
->> +        unsafe { &*ptr.cast() }
->> +    }
+> Since an sg_table can exist in two states (mapped or unmapped), I think
+> it is a good candidate for the typestate pattern, i.e. `SgTable` can be
+> either `SgTable<Unmapped>` or `SgTable<Mapped>`, the state allowing us
+> to limit the availability of some methods. For instance, an iterator
+> over the DMA addresses only makes sense in the `Mapped` state.
 > 
-> pub(crate)
+> A `SgTable<Unmapped>` can turn into a `SgTable<Mapped>` through its
+> `map(self, device: &Device)` method (and vice-versa via an `unmap`
+> method for `SgTable<Mapped>`. This has the benefit of not binding the
+> `SgTable` to a device until we need to map it. `SgTable<Unmapped>` could
+> also implement `Clone` for convenience, but not `SgTable<Mapped>`.
 > 
->> +
->> +    /// Obtain the raw `struct sg_table *`.
->> +    pub fn as_raw(&self) -> *mut bindings::sg_table {
->> +        self.0.get()
->> +    }
+> Then there are the iterators. All SgTables can iterate over the CPU
+> addresses, but only `SgTable<Mapped>` provides a DMA addresses iterator.
+> The items for each iterator would be their own type, containing only the
+> information needed (or references to the appropriate fields of the
+> `struct scatterlist`).
 > 
-> pub(crate)
-> 
->> +
->> +    /// Returns a mutable iterator over the scather-gather table.
->> +    pub fn iter_mut(&mut self) -> SGTableIterMut<'_> {
->> +        SGTableIterMut {
->> +            // SAFETY: dereferenced pointer is valid due to the type invariants on `SGTable`.
-> 
-> This seems to be missing a justification for the other part of the safety
-> contract for this function, e.g. proving that you hold the only possible
-> reference to this data - thus a mutable reference is safe.
-> 
-> should be easy here though, you can just say that &mut self proves we have
-> exclusive access
+> Mapped tables should be immutable, so a mutable iterator to CPU
+> addresses would only be provided in the `Unmapped` state - if we want
+> to allow mutability at all.
 
-Good catch!
+Good suggestions, I have a quick PoC based on this and this actually 
+works. Need to clean it up a bit for v2.
+
+/Abdiel
 
 > 
->> +            pos: Some(unsafe { SGEntry::as_mut((*self.0.get()).sgl) }),
->> +        }
->> +    }
->> +
->> +    /// Returns an iterator over the scather-gather table.
->> +    pub fn iter(&self) -> SGTableIter<'_> {
->> +        SGTableIter {
->> +            // SAFETY: dereferenced pointer is valid due to the type invariants on `SGTable`.
->> +            pos: Some(unsafe { SGEntry::as_ref((*self.0.get()).sgl) }),
->> +        }
->> +    }
->> +}
->> +
->> +/// SAFETY: The `SGTable` should be `Send` across threads.
->> +unsafe impl Send for SGTable {}
->> +
->> +/// A mutable iterator through `SGTable` entries.
->> +pub struct SGTableIterMut<'a> {
->> +    pos: Option<&'a mut SGEntry>,
->> +}
->> +
->> +impl<'a> IntoIterator for &'a mut SGTable {
->> +    type Item = &'a mut SGEntry;
->> +    type IntoIter = SGTableIterMut<'a>;
->> +
->> +    fn into_iter(self) -> Self::IntoIter {
->> +        self.iter_mut()
->> +    }
->> +}
->> +
->> +impl<'a> Iterator for SGTableIterMut<'a> {
->> +    type Item = &'a mut SGEntry;
->> +
->> +    fn next(&mut self) -> Option<Self::Item> {
->> +        self.pos.take().map(|entry| {
->> +            let sg = entry.as_raw();
->> +            // SAFETY: `sg` is guaranteed to be valid and non-NULL while inside this closure. The calls
->> +            // to `SGEntry::as_mut` are unique for each scatterlist entry object as well.
->> +            unsafe {
->> +                let next = bindings::sg_next(sg);
->> +                self.pos = (!next.is_null()).then(|| SGEntry::as_mut(next));
->> +                SGEntry::as_mut(sg)
->> +            }
->> +        })
->> +    }
->> +}
->> +
->> +/// An iterator through `SGTable` entries.
->> +pub struct SGTableIter<'a> {
->> +    pos: Option<&'a SGEntry>,
->> +}
->> +
->> +impl<'a> IntoIterator for &'a SGTable {
->> +    type Item = &'a SGEntry;
->> +    type IntoIter = SGTableIter<'a>;
->> +
->> +    fn into_iter(self) -> Self::IntoIter {
->> +        self.iter()
->> +    }
->> +}
->> +
-> 
-> I think you might have made a mistake below
-> 
->> +impl<'a> Iterator for SGTableIter<'a> {
->> +    type Item = &'a SGEntry;
->> +
->> +    fn next(&mut self) -> Option<Self::Item> {
->> +        self.pos.map(|entry| {
->> +            let sg = entry.as_raw();
-> 
->                 ^ sg is the last iterator position
-> 
->> +            // SAFETY: `sg` is guaranteed to be valid and non-NULL while inside this closure.
->> +            unsafe {
->> +                let next = bindings::sg_next(sg);
-> 
->                     ^ and we fetch the next iterator position
-> 
->> +                self.pos = (!next.is_null()).then(|| SGEntry::as_ref(next));
->> +                SGEntry::as_ref(sg)
-> 
->                     ^ but then we return the previous iterator position, sg
->> +            }
-> 
-> Bit of a nickpit here - but we might want to break this into two unsafe
-> blocks. Something I don't think most people realize is that unsafe blocks can
-> technically have a slight performance penalty since they invalidate various
-> assumptions the compiler relies on that would hold true otherwise, making
-> certain optimizations impossible. That's the main reason why when I previously
-> showed you this iterator I kept the `self.pos` assignment outside of the
-> unsafe block.
-> 
-> (BTW - just so you know you're totally welcome to take or leave the version of
-> this iterator I wrote. I'm not super concerned with authorship for a small
-> piece of code like this, but the choice is yours of course :)
-> 
+> Because the tricky part of building or modifying a SG table is
+> preventing it from reaching an invalid state. I don't have a good idea
+> yet of how this should be done, and there are many different ways to
+> build a SG table - one or several builder types can be involved here,
+> that output the `SgTable` in their final stage. Probably people more
+> acquainted with the scatterlist API have ideas.
 
-Hey no worries, I can attribute you in v2 :)
-
->> +        })
->> +    }
->> +}
->> +
->> +/// A scatter-gather table that owns the allocation and can be mapped for DMA operation using `Device`.
-> 
-> Probably want `Device` to be [`Device`]
-> 
->> +pub struct DeviceSGTable {
->> +    sg: SGTable,
->> +    dir: DmaDataDirection,
->> +    dev: ARef<Device>,
->> +}
->> +
->> +impl DeviceSGTable {
->> +    /// Allocate and construct the scatter-gather table.
->> +    pub fn alloc_table(dev: &Device, nents: usize, flags: kernel::alloc::Flags) -> Result<Self> {
-> 
-> Maybe just call this new() for consistency
-> 
->> +        let sgt: Opaque<bindings::sg_table> = Opaque::uninit();
->> +
->> +        // SAFETY: The sgt pointer is from the Opaque-wrapped `sg_table` object hence is valid.
->> +        let ret = unsafe { bindings::sg_alloc_table(sgt.get(), nents as _, flags.as_raw()) };
->> +        if ret != 0 {
->> +            return Err(Error::from_errno(ret));
->> +        }
-> 
-> You can just use from_result here btw
->> +
->> +        Ok(Self {
->> +            sg: SGTable(sgt),
->> +            dir: DmaDataDirection::DmaNone,
->> +            dev: dev.into(),
->> +        })
->> +    }
->> +
->> +    /// Map this scatter-gather table describing a buffer for DMA.
->> +    pub fn dma_map(&mut self, dir: DmaDataDirection) -> Result {
->> +        // SAFETY: Invariants on `Device` and `SGTable` ensures that the `self.dev` and `self.sg`
->> +        // pointers are valid.
->> +        let ret = unsafe {
->> +            bindings::dma_map_sgtable(
->> +                self.dev.as_raw(),
->> +                self.sg.as_raw(),
->> +                dir as _,
->> +                bindings::DMA_ATTR_NO_WARN as _,
->> +            )
->> +        };
->> +        if ret != 0 {
->> +            return Err(Error::from_errno(ret));
->> +        }
-> 
-> Same for here: from_result()
-> 
->> +        self.dir = dir;
->> +        Ok(())
->> +    }
->> +}
->> +
->> +// TODO: Implement these as macros for objects that want to derive from `SGTable`.
->> +impl Deref for DeviceSGTable {
->> +    type Target = SGTable;
->> +
->> +    fn deref(&self) -> &Self::Target {
->> +        &self.sg
->> +    }
->> +}
->> +
->> +impl DerefMut for DeviceSGTable {
->> +    fn deref_mut(&mut self) -> &mut Self::Target {
->> +        &mut self.sg
->> +    }
->> +}
->> +
->> +impl Drop for DeviceSGTable {
->> +    fn drop(&mut self) {
->> +        if self.dir != DmaDataDirection::DmaNone {
->> +            // SAFETY: Invariants on `Device` and `SGTable` ensures that the `self.dev` and `self.sg`
->> +            // pointers are valid.
->> +            unsafe {
->> +                bindings::dma_unmap_sgtable(self.dev.as_raw(), self.sg.as_raw(), self.dir as _, 0)
->> +            };
->> +        }
->> +        // SAFETY: Invariant on `SGTable` ensures that the `self.sg` pointer is valid.
->> +        unsafe { bindings::sg_free_table(self.sg.as_raw()) };
->> +    }
->> +}
-> 
 
