@@ -1,188 +1,146 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DDB22DA1C;
-	Fri, 16 May 2025 08:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D5C22DF82
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:44:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747385043; cv=none; b=j5cLuxK7BemHu4GPNCZ+HQ9RBjYuUxnZh9atvmwkvoIO8/U5YvTsgMMz14Nw0XKXTK8hCaTCVT58Xxe9k8o040O8uvx2BFHF3wHufayBREP+48DLEhd1/MslM8rahwT6wJwChcjWP017PmgbMNu+jgaDhBQaphOHJ9OQ1OlV+JI=
+	t=1747385050; cv=none; b=iWyNq+lCUdEuUN6zqG2wPJmNbD8+EI78KPJZlPUm7gsDUG//deP1LBc4Z1EfxoGwnTaOvAgmsaGUtIKXuDmRpszc0CNYIJ2OkEDyT4ifcly/o/lp1gd8rGxVcp5whyEVvLX3n18s06UXGNgeCgE7ibTn5r1MctkV4YF7EVqqTI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747385043; c=relaxed/simple;
-	bh=PEe/BWeTXTas3wR7l/W/bpH8YZaNXD6PalA0ThrUNZg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BF4iF9P3TPbp8yyPCswxPtWFe7+3lIx71OV93l1aqnKmGFiBKsJXyoIq0MQocfdllDL5eDRjd2xQfmHNjTeWsvRT/Gf5/P1xcRglvK4GgNKw6+dgqt3f511ijVNmjuGOEMNnYmZl+nyEHxjmxZNV0y/AcqnTyt9rC6z+hbW7RFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dj84Ptfj; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747385050; c=relaxed/simple;
+	bh=guqbbcJJ4uygibkW9rYzLym8SwwKXe1+y8iLv5mlONg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=udBOBta8FpKnJCw3Q+WztrCEQ7ZrYjO7VnwUGTqK3iVMRGq9HaBmHoFSs0OJR1FyMRLbbbDJplm8NMf+xI/uIWKcMTUuqx9L4uIXHXkYQy+HtRBi9V+0Qun/XiitLWnDY1v4i+64e8B8s/HNPItqLfHSnfvIvexFwK8nWA5Lc8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=gQGNE+2E; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dj84Ptfj"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cf257158fso13212605e9.2;
-        Fri, 16 May 2025 01:44:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747385040; x=1747989840; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wtu7zpoEhIazPVBR9VLrQ2O+ovOuUIuW+9nEGJrTJjc=;
-        b=Dj84PtfjvZS/Q5NV3i06KBdZTUEhBpm3wn8GDOk9qb6ySr6Avbz5x6JzFL+pE7QskY
-         PPK6/erIMm97OqRHdobfvHVJlr8cxT8FxW9aiLAeyKT7KYK2C1KELsaOlz3xGQnoKxhT
-         X5Ky95f75t2NGix6ricmpZRm4OMX7m1fjdcmyLEVN794Avjs+FYsrgBndkHAMrVTRoz3
-         cfSenpPx7a4nKtnjNX80962rVHQLhQmOotMKCSjFsPRdI1RVzdkdTwikWUmMR9z9cSZH
-         jObhu4t014ODbByHh4MR4+mrkGW4gDbeICHEW89kvjM+Adecvgb/b31v2snougubA01m
-         nKYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747385040; x=1747989840;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wtu7zpoEhIazPVBR9VLrQ2O+ovOuUIuW+9nEGJrTJjc=;
-        b=bpjx7RTf/L9J3/jK3s63hoggOgD6FgII6uQeyUsclfASvQWgS+HeebwAhOt7m16fwq
-         t4VEIn+qYkGv0JSAHLNxIiudD9+3yeWKbUJCf/6hKntLhNiWeJKvxFzgj/JlYVYTsx87
-         sn15nTS8R5o1sCV/tD2GoUJr5EraPyhFR+XB477XhAyzRCUAYekL8qXOpc/scLhNgRoC
-         CP9fhEyji7feUvY90TP5lVHsnqkszVF+AF2+JKqdx3b1Ji2S+8ToMcZIJ1l+zBPSUHPo
-         QUIoO6Z2umPCflfnkHZFRUJ5rzX9l1tJVeIB7K2S0/aSXuyMn27hi3kxzErUfDwbuN/u
-         I4Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCVgC/+Q/H1FsGGyJYxaqp7ofY80tZDWu3dxNSjrdfqfqQM0E6askpaX2Kv05sS5JcDOV0CFTI+7LsltH7Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/azEuUQhT+oJL3fy4nXRUEyCdE8DdlUPC9CWwNtEoBsnyB0Wo
-	s4yL4NYSsvyNP5yDvcadOgLo07v8spK9jdh+ZoKHjpfLe822AqLXyTNoyh9x3ZfK
-X-Gm-Gg: ASbGncvyRDUK/uDn6ZIr79UKMs7roH+AXBl/63FOtgByhZy5sy8DBffmqN95GP+ZpLC
-	cjtg031NaKiYIULTmdbLv//2bWABBLnvl3Q3FLfFOrGzYcFemMoG4J3vFTOOdCxi6B4jZPF35tT
-	0KPLEEih6SO1AacFgXthMqQA3zZVyKcz0NEWq9SShvUvcAfkOaS7LkpaUFwVR58ghDTz4ZRw7LS
-	p6/NM4/iBR7jri0bFVtvRf5of9USOWzpfZ3J8JPnYehey+z9nCeYpbg/jcCSDb3tLfTi++ZQb6F
-	ehpSxsf+BYK5KSglphN/Uv8itxTAoaDFXDqT7d7RreQ8xx9E9aYdt+c55eLQ9GjWRSrh9TVVqH0
-	B
-X-Google-Smtp-Source: AGHT+IEYZb/TzXzZVFqdhqGt3K1l/2137LORafBeymggFrs92Lp+L3YIGu5RsSNqD4chBhDRXMQG/Q==
-X-Received: by 2002:a05:600c:821b:b0:442:ccfa:18c with SMTP id 5b1f17b1804b1-442ff03c671mr12712175e9.32.1747385039900;
-        Fri, 16 May 2025 01:43:59 -0700 (PDT)
-Received: from localhost.localdomain ([213.74.214.99])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd50ee03sm25352005e9.14.2025.05.16.01.43.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 01:43:59 -0700 (PDT)
-From: Can Ayberk Demir <ayberkdemir@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Michal Simek <michal.simek@amd.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Can Ayberk DEMIR <ayberkdemir@gmail.com>,
-	Suraj Gupta <suraj.gupta2@amd.com>
-Subject: [PATCH net v4] net: axienet: safely drop oversized RX frames
-Date: Fri, 16 May 2025 11:43:34 +0300
-Message-Id: <20250516084334.2463-1-ayberkdemir@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250509104755.46464-1-ayberkdemir@gmail.com>
-References: <20250509104755.46464-1-ayberkdemir@gmail.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gQGNE+2E"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250516084407epoutp016054175dcd75ede678548b8aacbff5df~-9XE1n4ps0465104651epoutp01f
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:44:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250516084407epoutp016054175dcd75ede678548b8aacbff5df~-9XE1n4ps0465104651epoutp01f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1747385047;
+	bh=XRRW8JE+xbSHTpm27mlbstWCdqSF3fKhZAwkdWaRTdk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gQGNE+2EPvPF+iCMZtVfYMYhRDyKcWRFz982atQJJWV01fw0DK2RN7WT4rfkyzSy/
+	 x2uultatOq2uudMidoj8uVzK2TuKGK696RysjmkG7BSG2Sbwt2aD2gJc3iezQkNg1o
+	 ZVdjQPKOsiWg9z7dmNnfKwMQlMii/hnwA6aoFONQ=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250516084406epcas5p22cef9118cb10f452d1682f6b43f2a0df~-9XELQzyP0158101581epcas5p2l;
+	Fri, 16 May 2025 08:44:06 +0000 (GMT)
+Received: from epcas5p2.samsung.com (unknown [182.195.38.179]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4ZzLGX2wzDz2SSKm; Fri, 16 May
+	2025 08:44:04 +0000 (GMT)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250516070439epcas5p40c4425b8bf9bdb2719f23a1c830b2abd~-8APBfH-u1963319633epcas5p4K;
+	Fri, 16 May 2025 07:04:39 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250516070439epsmtrp1b78e6d258643dfbf4a7dd8fa5d9cc59f~-8APATblx2478024780epsmtrp1k;
+	Fri, 16 May 2025 07:04:39 +0000 (GMT)
+X-AuditID: b6c32a29-55afd7000000223e-bd-6826e387abe6
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	A3.66.08766.783E6286; Fri, 16 May 2025 16:04:39 +0900 (KST)
+Received: from bose.samsungds.net (unknown [107.108.83.9]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250516070436epsmtip26ad8a9cc70cfcd548fec0f8af8f930b2~-8AMnymaO0739207392epsmtip2H;
+	Fri, 16 May 2025 07:04:36 +0000 (GMT)
+From: Pritam Manohar Sutar <pritam.sutar@samsung.com>
+To: gregkh@linuxfoundation.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, alim.akhtar@samsung.com, Thinh.Nguyen@synopsys.com
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rosa.pila@samsung.com, dev.tailor@samsung.com,
+	faraz.ata@samsung.com, muhammed.ali@samsung.com, selvarasu.g@samsung.com,
+	pritam.sutar@samsung.com, Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v3 1/2] dt-bindings: usb: samsung,exynos-dwc3: add dt-schema
+ ExynosAutov920
+Date: Fri, 16 May 2025 12:43:32 +0530
+Message-Id: <20250516071333.3223226-2-pritam.sutar@samsung.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250516071333.3223226-1-pritam.sutar@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgkeLIzCtJLcpLzFFi42LZdlhJXrf9sVqGwf4OAYsH87axWazZe47J
+	4t6OZewW84+cY7W4dmMhu0Xz4vVsFi9n3WOz2Pt6K7vFpsfXWC0u75rDZjHj/D4mi0XLWpkt
+	zr/oYrV4dm8Fm8X/PTvYLb78fMBscWT5RyaLVQsOsDsIeWxa1cnmcefaHjaP/XPXsHtsXlLv
+	0bdlFaPHlv2fGT0+b5ILYI/isklJzcksSy3St0vgyljUPI+pYBV3xe/bfcwNjFs5uhg5OSQE
+	TCRW3DrF0sXIxSEksJtR4tqvFUwQCRmJR9M2skLYwhIr/z1nhyh6yyjxcuk2xi5GDg42AVOJ
+	iXsSQOIiAtMYJY407AebxCzwn0ni96czYN3CAtESByd9B7NZBFQlrh3+DWbzCthLnDm4kxli
+	g7zE/oNnwWxOAQeJo29es4HYQkA1c3q+MEPUC0qcnPmEBcRmBqpv3jqbeQKjwCwkqVlIUgsY
+	mVYxSqYWFOem5xYbFhjmpZbrFSfmFpfmpesl5+duYgRHlpbmDsbtqz7oHWJk4mA8xCjBwawk
+	wns9SzlDiDclsbIqtSg/vqg0J7X4EKM0B4uSOK/4i94UIYH0xJLU7NTUgtQimCwTB6dUAxNH
+	5u8ufvZS4Qa2fO8t7fGpzm52DjKWKs2y/NN7OXQu1Tx6Zq9i039XKveHn7jotSgGVSkW+w+n
+	N7xf1JCmPPvV2umzbgU27712989Tu+B1phpcpxQOsK/aveiS3A/biRluvc22a50/Nuus/3/P
+	MVbqVOf9r1N1Yl9sTc16dl1yXxwPv9TBAGenxe8XBx8SF2DR3L0zfk8HlxZ/bQf3VuP7vBnX
+	NsXeXNfp2hXpepjZ5COrxeSWe6fjBC81f5F5fO1iVlL2po98kfHLGgMESqfveu/neMo4JaPS
+	8dTB8+HveV8x96oYuAebbFI2Wjn9w/e2Uyoc+bHhjIk5QVNXR3zUX+HwKCn+uVp6iOVvJZbi
+	jERDLeai4kQA00jIcBsDAAA=
+X-CMS-MailID: 20250516070439epcas5p40c4425b8bf9bdb2719f23a1c830b2abd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250516070439epcas5p40c4425b8bf9bdb2719f23a1c830b2abd
+References: <20250516071333.3223226-1-pritam.sutar@samsung.com>
+	<CGME20250516070439epcas5p40c4425b8bf9bdb2719f23a1c830b2abd@epcas5p4.samsung.com>
 
-From: Can Ayberk DEMIR <ayberkdemir@gmail.com>
+Add a dedicated compatible for USB controller found in this SoC
 
-In AXI Ethernet (axienet) driver, receiving an Ethernet frame larger
-than the allocated skb buffer may cause memory corruption or kernel panic,
-especially when the interface MTU is small and a jumbo frame is received.
-
-This bug was discovered during testing on a Kria K26 platform. When an
-oversized frame is received and `skb_put()` is called without checking
-the tailroom, the following kernel panic occurs:
-
-  skb_panic+0x58/0x5c
-  skb_put+0x90/0xb0
-  axienet_rx_poll+0x130/0x4ec
-  ...
-  Kernel panic - not syncing: Oops - BUG: Fatal exception in interrupt
-
-Fixes: 8a3b7a252dca ("drivers/net/ethernet/xilinx: added Xilinx AXI Ethernet driver")
-
-Signed-off-by: Can Ayberk DEMIR <ayberkdemir@gmail.com>
-Tested-by: Suraj Gupta <suraj.gupta2@amd.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Pritam Manohar Sutar <pritam.sutar@samsung.com>
 ---
-Changes in v4:
-- Moved Fixes: tag before SOB as requested
-- Added Tested-by tag from Suraj Gupta
+ .../bindings/usb/samsung,exynos-dwc3.yaml        | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-Changes in v3:
-- Fixed 'ndev' undeclared error → replaced with 'lp->ndev'
-- Added rx_dropped++ for statistics
-- Added Fixes: tag
-
-Changes in v2:
-- This patch addresses style issues pointed out in v1.
----
- .../net/ethernet/xilinx/xilinx_axienet_main.c | 47 +++++++++++--------
- 1 file changed, 28 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 1b7a653c1f4e..7a12132e2b7c 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -1223,28 +1223,37 @@ static int axienet_rx_poll(struct napi_struct *napi, int budget)
- 			dma_unmap_single(lp->dev, phys, lp->max_frm_size,
- 					 DMA_FROM_DEVICE);
+diff --git a/Documentation/devicetree/bindings/usb/samsung,exynos-dwc3.yaml b/Documentation/devicetree/bindings/usb/samsung,exynos-dwc3.yaml
+index 892545b477ac..6d39e5066944 100644
+--- a/Documentation/devicetree/bindings/usb/samsung,exynos-dwc3.yaml
++++ b/Documentation/devicetree/bindings/usb/samsung,exynos-dwc3.yaml
+@@ -20,6 +20,7 @@ properties:
+           - samsung,exynos7-dwusb3
+           - samsung,exynos7870-dwusb3
+           - samsung,exynos850-dwusb3
++          - samsung,exynosautov920-dwusb3
+       - items:
+           - const: samsung,exynos990-dwusb3
+           - const: samsung,exynos850-dwusb3
+@@ -179,6 +180,21 @@ allOf:
+       required:
+         - vdd10-supply
  
--			skb_put(skb, length);
--			skb->protocol = eth_type_trans(skb, lp->ndev);
--			/*skb_checksum_none_assert(skb);*/
--			skb->ip_summed = CHECKSUM_NONE;
--
--			/* if we're doing Rx csum offload, set it up */
--			if (lp->features & XAE_FEATURE_FULL_RX_CSUM) {
--				csumstatus = (cur_p->app2 &
--					      XAE_FULL_CSUM_STATUS_MASK) >> 3;
--				if (csumstatus == XAE_IP_TCP_CSUM_VALIDATED ||
--				    csumstatus == XAE_IP_UDP_CSUM_VALIDATED) {
--					skb->ip_summed = CHECKSUM_UNNECESSARY;
-+			if (unlikely(length > skb_tailroom(skb))) {
-+				netdev_warn(lp->ndev,
-+					    "Dropping oversized RX frame (len=%u, tailroom=%u)\n",
-+					    length, skb_tailroom(skb));
-+				dev_kfree_skb(skb);
-+				lp->ndev->stats.rx_dropped++;
-+				skb = NULL;
-+			} else {
-+				skb_put(skb, length);
-+				skb->protocol = eth_type_trans(skb, lp->ndev);
-+				/*skb_checksum_none_assert(skb);*/
-+				skb->ip_summed = CHECKSUM_NONE;
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: samsung,exynosautov920-dwusb3
++    then:
++      properties:
++        clocks:
++          minItems: 2
++          maxItems: 2
++        clock-names:
++          items:
++            - const: ref
++            - const: susp_clk
 +
-+				/* if we're doing Rx csum offload, set it up */
-+				if (lp->features & XAE_FEATURE_FULL_RX_CSUM) {
-+					csumstatus = (cur_p->app2 &
-+							XAE_FULL_CSUM_STATUS_MASK) >> 3;
-+					if (csumstatus == XAE_IP_TCP_CSUM_VALIDATED ||
-+					    csumstatus == XAE_IP_UDP_CSUM_VALIDATED) {
-+						skb->ip_summed = CHECKSUM_UNNECESSARY;
-+					}
-+				} else if (lp->features & XAE_FEATURE_PARTIAL_RX_CSUM) {
-+					skb->csum = be32_to_cpu(cur_p->app3 & 0xFFFF);
-+					skb->ip_summed = CHECKSUM_COMPLETE;
- 				}
--			} else if (lp->features & XAE_FEATURE_PARTIAL_RX_CSUM) {
--				skb->csum = be32_to_cpu(cur_p->app3 & 0xFFFF);
--				skb->ip_summed = CHECKSUM_COMPLETE;
--			}
+ additionalProperties: false
  
--			napi_gro_receive(napi, skb);
-+				napi_gro_receive(napi, skb);
- 
--			size += length;
--			packets++;
-+				size += length;
-+				packets++;
-+			}
- 		}
- 
- 		new_skb = napi_alloc_skb(napi, lp->max_frm_size);
+ examples:
 -- 
-2.39.5 (Apple Git-154)
+2.34.1
 
