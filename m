@@ -1,184 +1,265 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2422F2116F4;
-	Fri, 16 May 2025 16:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E93214216;
+	Fri, 16 May 2025 17:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747414752; cv=pass; b=s3cbkMbAAhFaqkXmoRGsHzrWM3WZ1yLfsPchi2J6eNso6wso2Oznpv4/fD5Nhn3j+JHgELODWXBsmjy9FREx1entzUJyBhE/JU4/wDAJGLwZCQe+zOsBQKNXPjPvT0B/WimYYw3qpR0uvXBV91YxIoS2z5nkwjrbKBMmpaLTBgI=
+	t=1747414810; cv=fail; b=CMzIBUuDbTowdHt7fKVHoHMFwO2bGKKBUAIc5qF+o63yYC2Lz2d29vEPbcb/Yce4D/4eb7bQyXyYoF8GRuQKOoxj6EXQ1sXZxd6YYYt6rE8msWGUUcpK1HcT2cZcpmhm5nVf8kqR9c1v1xJqdjTK8N7xQobIW2Ae14t4x2mXz1s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747414752; c=relaxed/simple;
-	bh=u9CnnsxgBHYiMqrlH88scXaMolkI1hCUr/OKugbhe5w=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=pixG/EZULAcVfl0rpVnmQd0IA/C8c4jNFP8NIPDheBqP1DsyR2W7O4aNDDteKdUc/7iq0gDMU0aVj/KFFPaWnC0w9ro9ejnkocB7iQM/E7yvNXjftLeiPETEPi5YeZzwOH3hpZ4M2cdQvn4z5CaFFi59UkGKey3lsBJbFULWQhc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=FbziE6P3; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1747414810; c=relaxed/simple;
+	bh=TlKutT+afnCmYj3oF7/+VwGGJlz6+DAX+SgdiKc9yNw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=iUvQhpKXahW3xTl8hFLO19OS5nxnENjzcqHS2CWkvE98maDVEpDP5cF74gDMmGqtbnG+QR4I1YGHKS5/QmJp5+rrpd/7op/CfNkC1Icy0qZW0zg3B1+qe7iT4Ejul8tyEhlPndza1lSOX5uheu6SbaReJi8m5J3YtJlLgR1l4Uo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ei65mA/T; arc=fail smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="FbziE6P3"
-ARC-Seal: i=1; a=rsa-sha256; t=1747414698; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ACyHRvfJmA7Y2Kox0fwKg6zSpbnFTWJWZE/4EHlZDMSQZFrU8DeFj2P9BRvL6oWv72ZAPcWkCiLVq8Fr5kYNhkY7KskQ2TGrFRhCLgRPhNunmksAQXsxUqbmX78LJl86QREzTQ9TLSr9gCZSFxiHE+KQX7Sr5qd+0wzEZyQYY9w=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1747414698; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=74P/MVvEdQBxgBZoK6QuPVyfTK+cWj6e2b7brUvTP/I=; 
-	b=SYPfq2OYs9F78KHHzfZ01ofNRtneVGNZLZi+ha5tQkeg44WCU54zq0dMx7gOblNp9AE5QwKU1bW3hTXl6nxtw4etoPZepWqjeNKq3v4BhSHAhvCC2c8Thz5UWF8Utqq2ggVvEbuXGgrWYOyJp4sstQqp1fV8HU/bwxQzghwcPrw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747414698;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=74P/MVvEdQBxgBZoK6QuPVyfTK+cWj6e2b7brUvTP/I=;
-	b=FbziE6P3W0Kl3k2r5njdXfq6gpVRmRRn2+f5FaytbMT7wdfA8gASt6BaYNVWUSbO
-	MiwOjO9FRVDrstgCM+QkGV6HFjpYPs0+C7WrYjTsjjtHeIkKQyfJ9mYCiBnmEzTEGNo
-	kcdieD+cO/XeoWkueu2dVKeTlFGmMor/OBe2ew9k=
-Received: by mx.zohomail.com with SMTPS id 1747414696338270.7222041661928;
-	Fri, 16 May 2025 09:58:16 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ei65mA/T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747414808; x=1778950808;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=TlKutT+afnCmYj3oF7/+VwGGJlz6+DAX+SgdiKc9yNw=;
+  b=ei65mA/T/oeHTgvvEXan7qnvha6EMcnYeoSnJitMzcZQr8qein6goiD+
+   Z3PxsHi0y6k2RDa3txKw6CvtrJWJcTKc2v9kmsprPqos9o1OSH/kkD58o
+   p2p3kc8EO7B1/YSPXobgMmBVS3J2DWl43Y6K2cA646kBv8FMbWywQSDJt
+   PpgL0BkTBQocWpARpdXJZMsg+V3wTEUrvpXYvyDD6bS+dAEcqJS/ihV62
+   tIDkeyOocYlve5gmlnzW2s7x5ir0bbHFs8/+7SlpVufu8LLtSpVe7i9k/
+   wOt7hjCxNi2tIhIotyfwcVH/2BsoHepICGp0tYqaaqEC/WesMRmNd848w
+   w==;
+X-CSE-ConnectionGUID: nsgn8T4dTNetblPj/YAiCg==
+X-CSE-MsgGUID: nFamdqhDQCS2+/zvQ5Vp1g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="66798601"
+X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
+   d="scan'208";a="66798601"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 10:00:07 -0700
+X-CSE-ConnectionGUID: 1NC5T0UuRquJRSs7d8FUgA==
+X-CSE-MsgGUID: x7lAcfX3Qwaox15m+xJ7cA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
+   d="scan'208";a="138482961"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 10:00:08 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Fri, 16 May 2025 10:00:07 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Fri, 16 May 2025 10:00:07 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.177)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Fri, 16 May 2025 10:00:06 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=zVEi+/D43RRIk7GfIsZe7017ePGeDRabh+uAFdkzgXJFZv/++7y4r3MSl4m0DSrHwfZKxz+6VNl4jepyEpLbt77USCS4RYM+LFbxnkRQNtmx26ZVRbyTiQQe8wg7o1my9NGcglqrZDrRFGqR9orIwftLedig9igQaMlqU9OEtoWux4a5Wa6a5+inE3GoyC51au79o91ln1TwB2vAkuNZNBydF3vMCwqdQkdll4+/2E7NSKEVMjHumB0TLr3gAf6ndAMd6s1OUVWvVr8ruqMeFPPKHEtzoTHD6B0C1Iud/vcY7gGoOkJImhax+jTeocOIRr0dE1UGcXftc3NjxdTzag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lPwgcZK4EEs7j35S5MCg1d4quF1LKaclWgN+OHTSefc=;
+ b=Oxw68tHs4unFUukZngU8s92U8yJzDlLHK2rdjLRQcgGGCbtVm/+rF5glHp3NatN+UPGh29sezovyVjqwwYVPJvJpGuIURAVhOwyNg0DICtBdgCPQQ5+76TaOJJT/6hSKD9iTYvX66aF/Kg8pmpwc0ZWP9Cqgg7nsFZi/iM3nXYrMXosccorOIqmvV71ZOl/gkTMBJ8L9DJqcDT+hb60yqt2MoTqDWaj051DHD2LEwUwOmYbLOlaYhmYRPk898F1MDacTCqFNnSsCniSEMcQ0VPzKOVwWQH2EZpThwPNLJzjsfa62spDJjM//GaIbWJAkISvDcx8hyozsFXdF9FPuvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from IA1PR11MB6267.namprd11.prod.outlook.com (2603:10b6:208:3e5::8)
+ by DM4PR11MB6120.namprd11.prod.outlook.com (2603:10b6:8:af::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.21; Fri, 16 May
+ 2025 16:59:59 +0000
+Received: from IA1PR11MB6267.namprd11.prod.outlook.com
+ ([fe80::30b6:4b51:6cde:faa9]) by IA1PR11MB6267.namprd11.prod.outlook.com
+ ([fe80::30b6:4b51:6cde:faa9%5]) with mapi id 15.20.8722.031; Fri, 16 May 2025
+ 16:59:59 +0000
+From: "Brandt, Todd E" <todd.e.brandt@intel.com>
+To: =?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+CC: "platform-driver-x86@vger.kernel.org"
+	<platform-driver-x86@vger.kernel.org>, "xi.pardee@linux.intel.com"
+	<xi.pardee@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>,
+	"todd.e.brandt@linux.intel.com" <todd.e.brandt@linux.intel.com>
+Subject: RE: [PATCH] platform/x86/intel/pmc Fix Arrow Lake U/H support to
+ intel_pmc_core driver
+Thread-Topic: [PATCH] platform/x86/intel/pmc Fix Arrow Lake U/H support to
+ intel_pmc_core driver
+Thread-Index: AQHbxgWzbGCMJZdozkqdaIs1djNzgLPVIroAgABYoaA=
+Date: Fri, 16 May 2025 16:59:58 +0000
+Message-ID: <IA1PR11MB6267D36BB8F94253A7BA4E2DBE93A@IA1PR11MB6267.namprd11.prod.outlook.com>
+References: <3492e00e6e343d03e28bc58c4365b282e71e786d.1747360275.git.todd.e.brandt@intel.com>
+ <faee2ba9-dfb5-a4c4-77b0-7291400e0ad6@linux.intel.com>
+In-Reply-To: <faee2ba9-dfb5-a4c4-77b0-7291400e0ad6@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA1PR11MB6267:EE_|DM4PR11MB6120:EE_
+x-ms-office365-filtering-correlation-id: 62b0b5aa-054a-4b2f-5cbd-08dd949b1760
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info: =?iso-8859-1?Q?UGCn6WWDQ73f9wjuoHAyRwwKpiWUAB3ejbgJEpOhFBqf7DwTtMjv1RA/k4?=
+ =?iso-8859-1?Q?Wc5p2rP3feHZxQQcPSZlpAjX/7cuZ3Z0qncAtykadDHtz4ZOP2tICWbv2u?=
+ =?iso-8859-1?Q?P8Z1tFLJ2o0gdwbAxoiYCX2ankT6e2VLsiE4IKPVZQBZLOH2DfSPRO5MrN?=
+ =?iso-8859-1?Q?zFjNjxLgnlfdAJmiY+I76Dra4Vo1UvyoILF7eKcsBiPaJ+qLT28SjX72w5?=
+ =?iso-8859-1?Q?JMU4E4cU5mGIhbGtw01nhBo6uQLJOO5iIRaFbE+R24q6kJlscL6olrMs6u?=
+ =?iso-8859-1?Q?X98/oS1/MZRzzbK6h4K1GReSE6YvmYlEh+j58ph59t8j7rSWj4NaBaEQlu?=
+ =?iso-8859-1?Q?xbzLf1E7fVEnxrgopQhRv+17QwEZ3n6gwkxo6avFSRW4OO3+xewelqH0Mj?=
+ =?iso-8859-1?Q?C8w8QbVfu/lIpfMrT3AHv/fFLJT/6W0Ls+fyYuAcrduGS957ONwjyd/VNQ?=
+ =?iso-8859-1?Q?Rgi7tbaEhiQVBAKwRHGWVacqUWLbFz2SCjQzkcVz80a6FHv0jlmPreFShT?=
+ =?iso-8859-1?Q?z26h4d4M8RvF5fKgU9AAdrYCXuwPh/aPiQxFKGIl6xmbEVmbOklWfOGz3X?=
+ =?iso-8859-1?Q?BN5M16a3H0aatV4rMDqpoXGuA2r6ZKFN4TYMzrfjTdA3PgVO92cC5/lqD0?=
+ =?iso-8859-1?Q?5k+V8OaV+slYMz0oqyFsMMhEjgtug/oN0GB40TtBapy0XF/mTvG3Ew4dx5?=
+ =?iso-8859-1?Q?XfvCvh65Y6d6o0Q1g+t6Xz+12lVUuANsYl6tep3r/gfxbNKo9Zg1WBulWo?=
+ =?iso-8859-1?Q?WosizzX/lnlktLnu2mqx5wwoWmtmNfhXirYLUDEAWieNKlJM2YyKEOP27i?=
+ =?iso-8859-1?Q?7TRWUvxE6pClHHJzjRRiLdRx3Af2A/UdmK84XEjSoCyEbvua2p2atfR+EY?=
+ =?iso-8859-1?Q?7tZkfn1dibtGoydr53E0/syR9E5yvXdaICEIgVMiDYaPCU5zqN+Y0FChg7?=
+ =?iso-8859-1?Q?ULon9HsMibb99jPCGdJFusGsvcDqYanbSA6m8ZyqVjb7rweaXVRkZBShtk?=
+ =?iso-8859-1?Q?bHbmsouGrTouS28nu8uZGLeXsDbXpyY3jlOPDgJ2sRo+BNj+6zDSBm3DhV?=
+ =?iso-8859-1?Q?S7ey5n3vKN9lqXxFg9mbRIWg5zjzLTCYBin9k3TEku8zWFpKAo9jB9PskS?=
+ =?iso-8859-1?Q?Vqrc6FhMzgXRZ5tvtxqwq4FV3+9vE9GY7MOvB1sPMgk3J8oBeTJbLER0eK?=
+ =?iso-8859-1?Q?7a77R5QcZYnT1aMuttZ2tDFt5kQm2ZxNq+mhINqHdIOB5Iox2ICiZJes6U?=
+ =?iso-8859-1?Q?huFMun9DEK6YgBIQ/byCmM25FlOS0eLA7Izg/luSdSbZPBRPT6SZJTXn/S?=
+ =?iso-8859-1?Q?bv9MDcJH5q68GUVbUpHI/LUU7mue2wF97M//bBx3Hvf5Z5Nde7ZJqkO255?=
+ =?iso-8859-1?Q?7IBzX0RE5CKwoWXOmMs7Kc81zIii6PaRC/6CBD3T44KBW56mYyYwrAIxhX?=
+ =?iso-8859-1?Q?j+NX4zQeKm/4L/hF7LBh3tf2miz7/aITIwP3XlVMNBUBW9OgmKDtKsz9Gu?=
+ =?iso-8859-1?Q?swVLct618uH/iA51y+zFyxd+1NEBS/sNpNCCOZE02UwA=3D=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB6267.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?B6vfqHv4cY0eFfTsiFFasy9A3JEY53Oporn/yxNdp3uDReDbgLanZgEEUN?=
+ =?iso-8859-1?Q?G7wBSOIBvi6koU45iDQWOgRJWWWBUeTUOSO4U8JwK9bnAv/zGt+Ya6esaX?=
+ =?iso-8859-1?Q?EjOLlF0ARzJV+r74Fwrbr/PegZ/BV9MLKcSfPnv+sxug+KkZZcMYn6ms76?=
+ =?iso-8859-1?Q?dO71Hp0htTavMP89Kcm0+yH0qAUI5LAiCxo++a9ciF5/vNev7Jit/7BBJV?=
+ =?iso-8859-1?Q?NRoNjeRrHnERgwdyFad4dMSFkxp1maDKEnqh8M+vytlIYUjQxPXtVtptGM?=
+ =?iso-8859-1?Q?zkQ5IXH5KzFuXQvedF4N74nq0KBtGhfVEg9UJKlzBvaDR/OsjaesjB9kdI?=
+ =?iso-8859-1?Q?67+U6uabkHkNvpSX/a4x22WKwH6hbAbhpZ47I/bzDBO6d4tH9pz2uJq7Jw?=
+ =?iso-8859-1?Q?Iw5soKuvkgEtoiWTMqDovhFRCFdwjzUA4gBmASKThyeF9SRRoSOsq4SS+N?=
+ =?iso-8859-1?Q?t5QDXBdYLtMs9soWE18+kC2KAac8rr3SsGWfStGOgvfe3rhzxdYBrWBqTv?=
+ =?iso-8859-1?Q?S3YaOE4T2loT6UfU/Ug/MAj/7x/kXtNDXTBaqxPcKCGoPDElRVoryT+EvP?=
+ =?iso-8859-1?Q?VeO6KjTImod68rEVhER3nSfmlivB12WceZkN+eCXngCCjfCLoDYX4TsXZf?=
+ =?iso-8859-1?Q?lHWTTAzal96bvmNIe+o7h0ExIzxYOke4rgpOQcz7RzHGAM2UElKRKc5+1b?=
+ =?iso-8859-1?Q?3Q5CQQjK8ojM0s+wf1SKiYE6q829aKEFoeL++viqbWVs+SIL/323u3BD6G?=
+ =?iso-8859-1?Q?P5L+8JlBgxFmbQqDHjKsYys8alCKRZtfPqrOPWPEArx1i7yWvt6PDI92qc?=
+ =?iso-8859-1?Q?mbPaV62ER/YdoKbVeLtqktQQsiY2BYws+2tiHko8/Jdm1MPetepHN9MO6s?=
+ =?iso-8859-1?Q?C2wqIK7pbDcGenf7vswQ7Oa+sGxRB1YOdfbx7bov1v68HXMJvWyhqJhTaz?=
+ =?iso-8859-1?Q?EurbLygp9U7lvlISYBNBMTu6kh8hp1zS2UgVq12ZsS4oCVnoESJj8eEAAP?=
+ =?iso-8859-1?Q?6WFR652sQIIic8XeboDbECIRejDQfpuTPyXEF/yXp5+7yL3ax87AhpPeZp?=
+ =?iso-8859-1?Q?ZJZ9QqfufoGeUhI5O2gDHgGlJYu/trTA36Kiqfc8u7IA6/3QEm2et4U8ZX?=
+ =?iso-8859-1?Q?d/MPExrfS5x0ST5ZceTgUVKCALF0FaBmk6ug2HBlP1bFQBddnBDai2qm93?=
+ =?iso-8859-1?Q?LPgN5f80ktsxaE1Zs2ctSltUJ1fm/Pz6cC4r3V2d+jV4GAQMN6w63OEJ8w?=
+ =?iso-8859-1?Q?tJwdzZs5KBLrkZgJbhQlJTIsEJ7qrS83qRnb7mXmmIgGs7QFmFPQm8kP42?=
+ =?iso-8859-1?Q?0lj3cAy8Yblnw6vp4IyycSVjMYcuveKGHBIaZAKubduqhw4WvfBCW1vWsN?=
+ =?iso-8859-1?Q?i2bnPYDx4CsrWK6v1seKIaZEaMzZwVoYcn0nuk6Bia3NvzqLRMhwO34zMx?=
+ =?iso-8859-1?Q?apcNlU7N5cemWhmhkMnEDG+nNVABn3ZSXO4ewL+baiHI0oTF1rVXQ8ylJ4?=
+ =?iso-8859-1?Q?S9VxE4kH020ZFfKBLvj6XJ1HtYlygRdnLpkdaUO7T7nl9EPdLIagx9a6P+?=
+ =?iso-8859-1?Q?c7W1OEvmxZ98mIclN919qTNnsNQp4KjZmalyQdqThnmax6544WP6jO4Lsz?=
+ =?iso-8859-1?Q?Fcj2qjOWnooIYo6XoqSNo9TuiojtyMMkwt?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [RFC PATCH 1/2] rust: add initial scatterlist bindings
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <aCZYcs6Aj-cz81qs@pollux>
-Date: Fri, 16 May 2025 13:57:59 -0300
-Cc: Abdiel Janulgue <abdiel.janulgue@gmail.com>,
- lyude@redhat.com,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Valentin Obst <kernel@valentinobst.de>,
- open list <linux-kernel@vger.kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>,
- airlied@redhat.com,
- rust-for-linux@vger.kernel.org,
- "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
- Petr Tesarik <petr@tesarici.cz>,
- Andrew Morton <akpm@linux-foundation.org>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- Sui Jingfeng <sui.jingfeng@linux.dev>,
- Randy Dunlap <rdunlap@infradead.org>,
- Michael Kelley <mhklinux@outlook.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E2F129BE-777A-4DBD-BC3E-44033BCD11E4@collabora.com>
-References: <20250512095544.3334680-1-abdiel.janulgue@gmail.com>
- <20250512095544.3334680-2-abdiel.janulgue@gmail.com>
- <B3564D77-9E26-4019-9B75-B0C53B26B64F@collabora.com>
- <aCZYcs6Aj-cz81qs@pollux>
-To: Danilo Krummrich <dakr@kernel.org>
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB6267.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62b0b5aa-054a-4b2f-5cbd-08dd949b1760
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2025 16:59:58.8867
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: H06eaGU9tt2Q4xLxEY2INnBx4GhQRe/hvZDeGsz/QQALHWYN9UxI+HDqSlj7TOhSybpxRGp713fLbw5uUtbAfg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6120
+X-OriginatorOrg: intel.com
 
-Hi Danilo,=20
+Let me resend with a fixes tag (sorry about that), however this might be to=
+o late to be included in the upstream 6.15.0-rc7 kernel. So maybe we can sl=
+ate this for 6.16.0-c1. I also want to get Xi's feedback and she's out this=
+ week.
 
-Replying to you and Lyude here at the same time.
+-----Original Message-----
+From: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>=20
+Sent: Friday, May 16, 2025 4:41 AM
+To: Brandt, Todd E <todd.e.brandt@intel.com>
+Cc: platform-driver-x86@vger.kernel.org; xi.pardee@linux.intel.com; LKML <l=
+inux-kernel@vger.kernel.org>; todd.e.brandt@linux.intel.com
+Subject: Re: [PATCH] platform/x86/intel/pmc Fix Arrow Lake U/H support to i=
+ntel_pmc_core driver
 
-> On 15 May 2025, at 18:11, Danilo Krummrich <dakr@kernel.org> wrote:
+On Thu, 15 May 2025, Todd Brandt wrote:
+
+> The ARL requires that the GMA and NPU devices both be in D3Hot in=20
+> order for PC10 and S0iX to be achieved in S2idle. The original ARL-H/U=20
+> addition to the intel_pmc_core driver attempted to do this by=20
+> switching them to D3 in the init and resume calls of the intel_pmc_core d=
+river.
 >=20
-> On Mon, May 12, 2025 at 08:39:36AM -0300, Daniel Almeida wrote:
->>> On 12 May 2025, at 06:53, Abdiel Janulgue =
-<abdiel.janulgue@gmail.com> wrote:
->>> +impl SGEntry {
->>> +    /// Convert a raw `struct scatterlist *` to a `&'a SGEntry`.
->>> +    ///
->>> +    /// # Safety
->>> +    ///
->>> +    /// Callers must ensure that the `struct scatterlist` pointed =
-to by `ptr` is valid for the lifetime
->>> +    /// of the returned reference.
->>> +    pub unsafe fn as_ref<'a>(ptr: *mut bindings::scatterlist) -> =
-&'a Self {
->>> +        // SAFETY: The pointer is valid and guaranteed by the =
-safety requirements of the function.
->>> +        unsafe { &*ptr.cast() }
->>> +    }
->>=20
->> Hmm, this name is not good. When people see as_ref() they will think =
-of the
->> standard library where it is used to convert from &T to &U. This is =
-not what is
->> happening here. Same in other places where as_ref() is used in this =
-patch.
->=20
-> as_ref() is fine, we use this exact way commonly in the kernel, e.g. =
-for Device,
-> GlobalLockedBy, Cpumask and for various DRM types.
->=20
-> Rust std does the same, e.g. in [1].
->=20
-> I think I also asked for this in your Resource patch for consistency, =
-where you
-> call this from_ptr() instead.
->=20
-> [1] =
-https://doc.rust-lang.org/std/ptr/struct.NonNull.html#method.as_ref
+> The problem is the ARL-H/U have a different NPU device and thus are=20
+> not being properly set and thus S0iX does not work properly in=20
+> ARL-H/U. This patch creates a new ARL-H specific device id that is=20
+> correct and also adds the D3 fixup to the suspend callback. This way=20
+> if the PCI devies drop from D3 to D0 after resume they can be=20
+> corrected for the next suspend. Thus there is no dropout in S0iX.
 >=20
 
-That is not the same thing. What you've linked to still takes &self and =
-returns
-&T. In order words, it converts *from* &self to another type:
+Shouldn't this have a Fixes tag?
 
-pub trait AsRef<T>
-where
-T: ?Sized,
-{
-    // Required method
-    fn as_ref(&self) -> &T;
-}
+> Signed-off-by: Todd Brandt <todd.e.brandt@intel.com>
+> ---
+>  drivers/platform/x86/intel/pmc/arl.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/intel/pmc/arl.c=20
+> b/drivers/platform/x86/intel/pmc/arl.c
+> index 320993bd6d31..5053e3dd8f5e 100644
+> --- a/drivers/platform/x86/intel/pmc/arl.c
+> +++ b/drivers/platform/x86/intel/pmc/arl.c
+> @@ -681,6 +681,7 @@ static struct pmc_info arl_pmc_info_list[] =3D {
+> =20
+>  #define ARL_NPU_PCI_DEV			0xad1d
+>  #define ARL_GNA_PCI_DEV			0xae4c
+> +#define ARL_H_NPU_PCI_DEV		0x7d1d
+>  #define ARL_H_GNA_PCI_DEV		0x774c
+>  /*
+>   * Set power state of select devices that do not have drivers to D3=20
+> @@ -694,7 +695,7 @@ static void arl_d3_fixup(void)
+> =20
+>  static void arl_h_d3_fixup(void)
+>  {
+> -	pmc_core_set_device_d3(ARL_NPU_PCI_DEV);
+> +	pmc_core_set_device_d3(ARL_H_NPU_PCI_DEV);
+>  	pmc_core_set_device_d3(ARL_H_GNA_PCI_DEV);
+>  }
+> =20
+> @@ -705,6 +706,13 @@ static int arl_resume(struct pmc_dev *pmcdev)
+>  	return cnl_resume(pmcdev);
+>  }
+> =20
+> +static void arl_h_suspend(struct pmc_dev *pmcdev) {
+> +	arl_h_d3_fixup();
+> +
+> +	cnl_suspend(pmcdev);
+> +}
+> +
+>  static int arl_h_resume(struct pmc_dev *pmcdev)  {
+>  	arl_h_d3_fixup();
+> @@ -739,7 +747,7 @@ struct pmc_dev_info arl_h_pmc_dev =3D {
+>  	.dmu_guid =3D ARL_PMT_DMU_GUID,
+>  	.regmap_list =3D arl_pmc_info_list,
+>  	.map =3D &mtl_socm_reg_map,
+> -	.suspend =3D cnl_suspend,
+> +	.suspend =3D arl_h_suspend,
+>  	.resume =3D arl_h_resume,
+>  	.init =3D arl_h_core_init,
+>  };
+>=20
 
-The signature in the kernel is different, i.e.:
-
-fn as_ref<'a>(ptr: *mut bindings::scatterlist) -> &'a Self =20
-
-This takes a pointer and converts *to* &self, which is a bit in the =
-wrong
-direction IMHO. You also have to provide `ptr`, which is a departure =
-from the
-syntax used elsewhere in Rust, i.e.:
-
-// no explicit arguments:
-let bar: &Bar =3D foo.as_ref();
-
-vs
-
-// slightly confusing:
-//
-// Bar::as_ref() creates &Bar instead of taking it as an argument to =
-return something else
-let bar =3D Bar::as_ref(foo_ptr);  =20
-
-
-Which is more akin to how the "from" prefix works, starting from the =
-=46rom trait
-itself, i.e.:
-
-let bar  =3D Bar::from(...); // Ok: creates Bar,
-
-...to other similar nomenclatures:
-
-let bar =3D Bar::from_ptr(foo_ptr); // Ok, creates &Bar
-
-So, IMHO, the problem is not conflicting with the std AsRef, in the =
-sense that the
-code might not compile because of it. The problem is taking a very well
-known name and then changing its semantics.
-
-Anyways, this is just a small observation. I'll drop my case, specially
-considering that the current as_ref() is already prevalent in a lot of =
-code upstream :)
-
-=E2=80=94 Daniel
+--
+ i.
 
