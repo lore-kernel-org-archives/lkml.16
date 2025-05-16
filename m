@@ -1,73 +1,100 @@
-Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 005BB4A0C
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747378064; cv=none; b=W/woLGs/365/4GPTqKV4WTSnEKCai3XL4iyIddmhMiuc8h/j4gz9J0tJQ4FJW4sYVvEPvHp82arPZHbxbjvcKKQPGZUColwDLxhTncRpBH03tESgwMOiT3Y/nLtitUq+7O9zq5+QzPu1n1pFOTUsZZuB8jLIdN3mBwO5uug8yjo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747378064; c=relaxed/simple;
-	bh=+8BDgBey691VNSBZjd0HdnlUxaTWfqka20xfk0knP2I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mg95nVUl4VL97QxMARUXZGV/lDubZWQ2Aax8yUfudgNK2mvtQuFGYs2zGr4IPM9gSpIX8v490GTU8Dx5ungboFShxKQz3HUfHY3o8ACTqQpfoy4cXso+xNrUqBAT/o86KVVwndJlYyVvTdUf2cQ8oHadijepGVAZt3zDtdSbkp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=Zxt4LPLt; arc=none smtp.client-ip=85.214.250.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="Zxt4LPLt"
-Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mail.8bytes.org (Postfix) with ESMTPSA id B313E4B65F;
-	Fri, 16 May 2025 08:47:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
-	s=default; t=1747378061;
-	bh=+8BDgBey691VNSBZjd0HdnlUxaTWfqka20xfk0knP2I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Zxt4LPLtGk6no+szvy+NXvA+Ht3Jtx7Aar2bjG3i1RiJH9XNy/PYQyYaOxNJQyEpD
-	 InxkiYozGyqipO4XuCZtmEJ9kce2ntz8qAf1N9pPbNjydsVkchuqxuGyHP8/jCoKY3
-	 l2uD0APUgVPbF3hlnv+NkZGoBrEiwfHAatECWlPvxGsTfuOASNomR4iXalz/Xka/7m
-	 kNq55SJGGK3wjQyLZ9NBzxMTYc8etZhQkfszRdDIzN51wzszWH3zTpQ1HxvFfxhuYZ
-	 ZyosvMdYr6lVmYvQ6wHpUmwP/9DlilvcFOTyge/fPGoyPgAyHXHouzMTnl/KFlGH3I
-	 AGpV++QVB6OKA==
-Date: Fri, 16 May 2025 08:47:40 +0200
-From: Joerg Roedel <joro@8bytes.org>
-To: Rolf Eike Beer <eb@emlix.com>
-Cc: Will Deacon <will@kernel.org>, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Bert Karwatzki <spasswolf@web.de>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Jerry Snitselaar <jsnitsel@redhat.com>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Tomasz Jeznach <tjeznach@rivosinc.com>,
-	Nick Kossifidis <mick@ics.forth.gr>,
-	Sebastien Boeuf <seb@rivosinc.com>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Robin Murphy <robin.murphy@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>
-Subject: Re: [PATCHv3 0/6] make vendor specific subdirectory inclusion
- conditional
-Message-ID: <aCbfjD5kybvl_hqG@8bytes.org>
-References: <1926170.CQOukoFCf9@devpool92.emlix.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B511361
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747378171; cv=none; b=bt2PSQC3/bkNS4JaNaZ7ruey2pT7hgQkvY+t5ypNoleVrUVj9nquzJ0O0/byepm1EEx72q04L20mJnhGgg+DSWo2KdePsyiQtKQ8Dd4SCsBh0YuKWSjkPgdsg7x/8KztL/rDjHYwi7m/tR9nBfGMQ+T10UKG7wgVlI/ofhQ6h6o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747378171; c=relaxed/simple;
+	bh=e8r1SG5uF0AGuIuWMo1sjUPbjjtceKfnrtYwGLiHFFA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mj1jTHeIujjGYut9bebOvMg12TWwnPMwxAguXtR4ia2U3K4/zWvq1l/jxJnaz7ZKvGpvmBQSfLpUv6ca87GDnkWU4k8zz4qOIMaU39E35Cr1pNmmXNzhW9jeoCkFnRAL/7Vh9ceY8B1LKqWfSOaE9TS9eolhtWWXlyqwTZKXQJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IS2daRuV; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IS2daRuV"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747378165;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=N8MF/1Uk3+uCWuILTHwuEMDSb4CJ6HZopL8JvlOIAxY=;
+	b=IS2daRuVt6grSmCBySyYJFrYDTQq2xzVVh98f5j6v/FVRycDKx5zl9i8cYVR7XovQBgeQJ
+	NR0bCPZrJHRM/QALkFwoqJpfJpG04xcz9lnChUQojZSNLATLNmKdkaZYT/rJbPHQM+W6rn
+	rvC3kucOzu0LVhLIQlnmiWYOvAsKVSU=
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Yosry Ahmed <yosry.ahmed@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	bpf@vger.kernel.org,
+	linux-mm@kvack.org,
+	cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: [PATCH v2 0/5] memcg: nmi-safe kmem charging
+Date: Thu, 15 May 2025 23:49:07 -0700
+Message-ID: <20250516064912.1515065-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1926170.CQOukoFCf9@devpool92.emlix.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, May 12, 2025 at 03:07:27PM +0200, Rolf Eike Beer wrote:
-> I found it strange that the vendor specific subdirectories were unconditionally 
-> added. Everything in these directories obviously depends on the specific Kconfig 
-> option. This series cleans this up by making the directory itself depend on 
-> the respective option which looks more natural to me.
-> 
-> I must confess that I am too lazy to find a good solution for the "arm/" 
-> directory, so I left it as is.
+Users can attached their BPF programs at arbitrary execution points in
+the kernel and such BPF programs may run in nmi context. In addition,
+these programs can trigger memcg charged kernel allocations in the nmi
+context. However memcg charging infra for kernel memory is not equipped
+to handle nmi context for all architectures.
 
-Applied, thanks.
+This series removes the hurdles to enable kmem charging in the nmi
+context for most of the archs. For archs without CONFIG_HAVE_NMI, this
+series is a noop. For archs with NMI support and have
+CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS, the previous work to make memcg
+stats re-entrant is sufficient for allowing kmem charging in nmi
+context. For archs with NMI support but without
+CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS and with
+ARCH_HAVE_NMI_SAFE_CMPXCHG, this series added infra to support kmem
+charging in nmi context. Lastly those archs with NMI support but without
+CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS and ARCH_HAVE_NMI_SAFE_CMPXCHG,
+kmem charging in nmi context is not supported at all.
+
+Mostly used archs have support for CONFIG_ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
+and this series should be almost a noop (other than making
+memcg_rstat_updated nmi safe) for such archs. 
+
+Changes since v1:
+- The main change was to explicitly differentiate between archs which
+  have sane NMI support from others and make the series almost a noop
+  for such archs. (Suggested by Vlastimil)
+- This version very explicitly describes where kmem charging in nmi
+  context is supported and where it is not.
+
+Shakeel Butt (5):
+  memcg: disable kmem charging in nmi for unsupported arch
+  memcg: nmi safe memcg stats for specific archs
+  memcg: add nmi-safe update for MEMCG_KMEM
+  memcg: nmi-safe slab stats updates
+  memcg: make memcg_rstat_updated nmi safe
+
+ include/linux/memcontrol.h |  21 ++++++
+ mm/memcontrol.c            | 136 +++++++++++++++++++++++++++++++++----
+ 2 files changed, 145 insertions(+), 12 deletions(-)
+
+-- 
+2.47.1
+
