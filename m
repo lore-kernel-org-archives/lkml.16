@@ -1,68 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CE422D79D;
-	Fri, 16 May 2025 08:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5AB7282E1;
+	Fri, 16 May 2025 08:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747384763; cv=none; b=rnW5zC+pn+calR8EA6MAQWyzDGmlwpfG5z5XzZU0z46a/WrfQH0DfCNvdgmXCm9PRDxyvdQy9Nzay46UGfpbQOmreFFTWb3jPSVTCbEXrrU5q/Lz+5IY6MELNwx2pwppL9ljgz1ormDd6JYT6t9e0XGsD3rU+vut13IVUtvXjH4=
+	t=1747384766; cv=none; b=Cmjf4jBseqx5p0FaDvYAIgjmtdQ6pF06YK/O/Cl7kUkr5GmbDeaOAWCaZnPFU9l+A780qiBSX1Ap8j1db7+ncI65M1Bwb+2kaZcyoRJcx2scLdMCt+jrk6d2L/e+yzZyfp8RGoen60G8Qzl8IITBl841+2u3TTOw0JAMpG1drlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747384763; c=relaxed/simple;
-	bh=H0odFVdYFn4C9hDrXHlEI4anEVr44q9kFLG4xs2B2pA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NdMF99yDQ59gnYYvA9OMAzEzN+y/3y9VzZfsZ/O1RxKzwag4wiHcp3xLhSVS+we0VBwHDcI0HpCIdT9Z7TgRJ5E+YBYICY9PhAMZk0pLQvTEu97E9k8w+klW8jMmaYst8IEl1jfKTJZR3IvZyIl2bvwGXHvAkHBYVGqF1uAmfNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M5/tRmMQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M5/tRmMQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E924FC4CEED;
-	Fri, 16 May 2025 08:39:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747384760;
-	bh=H0odFVdYFn4C9hDrXHlEI4anEVr44q9kFLG4xs2B2pA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M5/tRmMQfeFyvXdfGzyzX03b7n8Mov6N0Sw6gXe/vg9/jibSILlWrFOkwhtEz9AnB
-	 LsLg3IENV7KG6wuZO6oKxlIbBoGYZaiTBcBv2O2Sh0OI/TGFbPXJuJvQTJxjEU4Nez
-	 Muy4x+FZYzReJ1YKgd6KzTu4jZb5lZieAwaF7+sk+4emhqyfIRj+ZTy8s644TfJBgy
-	 Y9kQ5XfKymMhRkb9dlGyK80TCfmOKvaArz0+BgmWMjWvNOG3M8KMekchZGK5clMHz1
-	 C7vQdgKMUFj71IndKSLTy5xzDlmUBxpW0bg1FzhkjW3ucJELEG4h2M6N3/f0NqGPOJ
-	 ogVF1F492nqUQ==
-Date: Fri, 16 May 2025 10:39:09 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Ying Huang <huang.ying.caritas@gmail.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v8 3/3] rust: platform: allow ioremap of platform
- resources
-Message-ID: <aCb5rTrg-OmlB1Cq@pollux>
-References: <20250509-topics-tyr-platform_iomem-v8-0-e9f1725a40da@collabora.com>
- <20250509-topics-tyr-platform_iomem-v8-3-e9f1725a40da@collabora.com>
+	s=arc-20240116; t=1747384766; c=relaxed/simple;
+	bh=RYjeXy5eHZRl5Mt/8DZrayKgM7iSHvClpWchztY8Rac=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k5PE1JWQC41HFmaVAUD3Wg4a4j3Qi3lkZRfIlrITdCqz2GAqpyvejlf3m4SkzAC1Ud3RaO8aRFh9llNx1vBAUX0eRidKfHZoiIGDz2PODK2+E+pQpLa9czUGD5U7SUCHdfZyNpsMRPwaGd/NTZsI0b66oty8fCcQydn8jMv484M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-03 (Coremail) with SMTP id rQCowAA3pkKt+SZoThhgFg--.38627S2;
+	Fri, 16 May 2025 16:39:13 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: ajay.kathat@microchip.com,
+	claudiu.beznea@tuxon.dev,
+	kvalo@kernel.org
+Cc: linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH] wifi: wilc1000: Add error handling for wilc_sdio_cmd52()
+Date: Fri, 16 May 2025 16:38:41 +0800
+Message-ID: <20250516083842.903-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250509-topics-tyr-platform_iomem-v8-3-e9f1725a40da@collabora.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowAA3pkKt+SZoThhgFg--.38627S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr4fWFWxKF4fXFW7AF1fWFg_yoW8Cr4rpF
+	WxWr4Yqw1qkrWrZw17JFsYyF95ta4ktrWUuFWI9w1rZr4kZw1Skr4fXFy5Xrn0q3W7Cw18
+	Xr1vqF4jgF10vFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvq14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r12
+	6r1DMxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+	wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+	v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
+	jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
+	ZFpf9x0JU7KsbUUUUU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwkEA2gmkZXk+wABsd
 
-On Fri, May 09, 2025 at 05:29:48PM -0300, Daniel Almeida wrote:
-> +impl Device<device::Core> {
+The wilc_sdio_read_size() calls wilc_sdio_cmd52() but does not check the
+return value. This could lead to execution with potentially invalid data
+if wilc_sdio_cmd52() fails. A proper implementation can be found in
+wilc_sdio_read_reg().
 
-For the ioremap_*() ones, `impl Device<device::Bound>` should be enough.
+Add error handling for wilc_sdio_cmd52(). If wilc_sdio_cmd52() fails,
+log an error message via dev_err().
 
-Also, PCI names those just iomap_*(), maybe we should align those names for
-consistency.
+Fixes: 0e1af73ddeb9 ("staging/wilc1000: use proper naming for global symbols")
+Cc: stable@vger.kernel.org # v4.15
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+ drivers/net/wireless/microchip/wilc1000/sdio.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/microchip/wilc1000/sdio.c b/drivers/net/wireless/microchip/wilc1000/sdio.c
+index 5262c8846c13..e7a2bc9f9902 100644
+--- a/drivers/net/wireless/microchip/wilc1000/sdio.c
++++ b/drivers/net/wireless/microchip/wilc1000/sdio.c
+@@ -771,6 +771,8 @@ static int wilc_sdio_read_size(struct wilc *wilc, u32 *size)
+ {
+ 	u32 tmp;
+ 	struct sdio_cmd52 cmd;
++	struct sdio_func *func = dev_to_sdio_func(wilc->dev);
++	int ret;
+ 
+ 	/**
+ 	 *      Read DMA count in words
+@@ -780,12 +782,20 @@ static int wilc_sdio_read_size(struct wilc *wilc, u32 *size)
+ 	cmd.raw = 0;
+ 	cmd.address = WILC_SDIO_INTERRUPT_DATA_SZ_REG;
+ 	cmd.data = 0;
+-	wilc_sdio_cmd52(wilc, &cmd);
++	ret = wilc_sdio_cmd52(wilc, &cmd);
++	if (ret) {
++		dev_err(&func->devm, "Fail cmd 52, interrupt data register...\n");
++		return ret;
++	}
+ 	tmp = cmd.data;
+ 
+ 	cmd.address = WILC_SDIO_INTERRUPT_DATA_SZ_REG + 1;
+ 	cmd.data = 0;
+-	wilc_sdio_cmd52(wilc, &cmd);
++	ret = wilc_sdio_cmd52(wilc, &cmd);
++	if (ret) {
++		dev_err(&func->devm, "Fail cmd 52, interrupt data register...\n");
++		return ret;
++	}
+ 	tmp |= (cmd.data << 8);
+ 
+ 	*size = tmp;
+-- 
+2.42.0.windows.2
+
