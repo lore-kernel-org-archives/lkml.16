@@ -1,192 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0F44B1E4A;
-	Fri, 16 May 2025 13:15:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66372940F
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 13:16:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747401348; cv=none; b=Px8Sh4BJ0IJrTi2AmZxTDn27XPXS8eMnvCv91Z3ktEMAtwX0HV6IXQ/gs0VTJdDJlvgRGlf9L2skUCo8/MQ7es9E7QyNWigXEBtk/7iLL6x0JMWPxqaif/7yURqTfMLB1TBKsd9vAnjeUK70wXFMnMELJQ43/6RZBfjQZ72CNbg=
+	t=1747401361; cv=none; b=cmAXuyJvL99fGlqq6jec7kE0JfpMcRJGr4ZsypnqkhAX9mNe8dyR8ky/vaKGKo/MfmGiablpDtxvPyRSi7LUvJFhAd16VdfdcaAPxZcn5irHdm17XP9WBLzkvUi1UKA0JZWqPHobrPdjONiZgy/kKONcDaJXIAScVzFVFaLfeB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747401348; c=relaxed/simple;
-	bh=aIVuP15lLI18U0B27tPS187TYHrY2xiLduyapf9Ur+w=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VxfOEvHlScoI7RsfoL/HE16/Hundk69aiaqs1JBgq1RlSK22c1takfUPit/YU0Re5W5KQAOzy4nA3REhaA1zYb2ISmviXQYh1NvTYr/wpcw5AfG13IQjVqtfYbMSLy8xIOXR5NOWqk0lcrrsVQma2MLtrgsfG4xtkplqshlbhQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WNzvVjlX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747401361; c=relaxed/simple;
+	bh=uvvI8RXh4rZJqEJHK/WRU2hAsaJ0v4o/pfgSZSgKH6E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CaMfhXfcBCvEpNywp0G3F6hF/3p4P5QzSvq5Ptp45/OHGcUSnzbFQA63jLcNqYLrp4FVHYQMc5WS4CBhePFF3b56nDzyqSBvxyo3anCE1LxVqW/K9ZOOrkRAz3ngIxR1LV6PDEo8qIexaTG0DRy3UUqgW/2NonmBTPUI82wpWJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZndHyWnU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WNzvVjlX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B674BC4CEE4;
-	Fri, 16 May 2025 13:15:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZndHyWnU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 325BCC4CEE4;
+	Fri, 16 May 2025 13:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747401347;
-	bh=aIVuP15lLI18U0B27tPS187TYHrY2xiLduyapf9Ur+w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WNzvVjlXL2rom+TaLrRhnGLzOtPPIqPH2Sbaww3H4+/4s0Qab7I7VpvL7EcI1G/RF
-	 zmDbBDdnWAQtcWwrJe5DkLutsVGA0NpDDFFXf+3ZnXVgI+f6tI92fJD1EwVyMIfsW1
-	 w+5RkzWnstATQtjzh8qEZyLM3Sqbv2fXqWqnHZdRn9fVXMCIQ7Pst+4XdkI8AZCesZ
-	 VYj45a3d2Gi4dFdKWQxiQ7dFXXCWJZbLBKW9Qq9bQua0ohw8+gKzOkOPaGcoE5tT/d
-	 0jc/vxhwoXL1VzKAAeOKplXupXTuA+rtwdNxGTShHGod077hHA1Uwss0N62W9dIrbX
-	 uDO/SeJiH+5hQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uFuuf-00FYy4-Nm;
-	Fri, 16 May 2025 14:15:45 +0100
-Date: Fri, 16 May 2025 14:15:45 +0100
-Message-ID: <867c2gg0hq.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	qperret@google.com,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kernel-team@android.com
-Subject: Re: [PATCH v4 07/10] KVM: arm64: Convert pkvm_mappings to interval tree
-In-Reply-To: <20250509131706.2336138-8-vdonnefort@google.com>
-References: <20250509131706.2336138-1-vdonnefort@google.com>
-	<20250509131706.2336138-8-vdonnefort@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1747401360;
+	bh=uvvI8RXh4rZJqEJHK/WRU2hAsaJ0v4o/pfgSZSgKH6E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZndHyWnUtTl2Ohswj3nHyvVAXeQ6TjP9gkXk8xPOjGtX+f72esC2vbnNw1DiGIsWJ
+	 lVmTjzE6CFCeoxIoO7Fzxlzlpv6FYXhIYKd8Df5jjx3X0QECNmguPuz39ToUNPw4SR
+	 +2TlFO+0konrNtwjzaoH1QfK5O8JErI6U271cSAk7f0buYA0Cst4GxwngMj9+d6Y13
+	 i2kluMysPKw/7TCqX7HtmVaMcS0DowRMkuDGNek6kb7JH8M4bCglgD1FFzLFHy1nkK
+	 4l+rSc8F8qckDFHv15znnxQsvBRYX1wX8rF3f0ySanQYhuMr/UqkF/gOkTu4ik8IDa
+	 ZSUQMXC7NUzAA==
+Date: Fri, 16 May 2025 15:15:56 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Dmitry Baryshkov <lumag@kernel.org>, kernel@collabora.com, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 12/23] drm/tests: helpers: Add a (re)try helper
+ variant to enable CRTC connector
+Message-ID: <n2ojf77winz6b4kchmt6bnppomb6cpg4okrwnh6iibsemou4as@t5lhg3m24bjm>
+References: <20250425-hdmi-conn-yuv-v4-0-5e55e2aaa3fa@collabora.com>
+ <20250425-hdmi-conn-yuv-v4-12-5e55e2aaa3fa@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: vdonnefort@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, qperret@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="btnk46swg4gpsgrg"
+Content-Disposition: inline
+In-Reply-To: <20250425-hdmi-conn-yuv-v4-12-5e55e2aaa3fa@collabora.com>
 
-On Fri, 09 May 2025 14:17:03 +0100,
-Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> From: Quentin Perret <qperret@google.com>
-> 
-> In preparation for supporting stage-2 huge mappings for np-guest, let's
-> convert pgt.pkvm_mappings to an interval tree.
-> 
-> No functional change intended.
-> 
-> Suggested-by: Vincent Donnefort <vdonnefort@google.com>
-> Signed-off-by: Quentin Perret <qperret@google.com>
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> 
-> diff --git a/arch/arm64/include/asm/kvm_pgtable.h b/arch/arm64/include/asm/kvm_pgtable.h
-> index 6b9d274052c7..1b43bcd2a679 100644
-> --- a/arch/arm64/include/asm/kvm_pgtable.h
-> +++ b/arch/arm64/include/asm/kvm_pgtable.h
-> @@ -413,7 +413,7 @@ static inline bool kvm_pgtable_walk_lock_held(void)
->   */
->  struct kvm_pgtable {
->  	union {
-> -		struct rb_root					pkvm_mappings;
-> +		struct rb_root_cached				pkvm_mappings;
->  		struct {
->  			u32					ia_bits;
->  			s8					start_level;
-> diff --git a/arch/arm64/include/asm/kvm_pkvm.h b/arch/arm64/include/asm/kvm_pkvm.h
-> index d91bfcf2db56..da75d41c948c 100644
-> --- a/arch/arm64/include/asm/kvm_pkvm.h
-> +++ b/arch/arm64/include/asm/kvm_pkvm.h
-> @@ -173,6 +173,7 @@ struct pkvm_mapping {
->  	struct rb_node node;
->  	u64 gfn;
->  	u64 pfn;
-> +	u64 __subtree_last;	/* Internal member for interval tree */
->  };
->  
->  int pkvm_pgtable_stage2_init(struct kvm_pgtable *pgt, struct kvm_s2_mmu *mmu,
-> diff --git a/arch/arm64/kvm/pkvm.c b/arch/arm64/kvm/pkvm.c
-> index 057874bbe3e1..6febddbec69e 100644
-> --- a/arch/arm64/kvm/pkvm.c
-> +++ b/arch/arm64/kvm/pkvm.c
-> @@ -5,6 +5,7 @@
->   */
->  
->  #include <linux/init.h>
-> +#include <linux/interval_tree_generic.h>
->  #include <linux/kmemleak.h>
->  #include <linux/kvm_host.h>
->  #include <asm/kvm_mmu.h>
-> @@ -256,80 +257,63 @@ static int __init finalize_pkvm(void)
+
+--btnk46swg4gpsgrg
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 12/23] drm/tests: helpers: Add a (re)try helper
+ variant to enable CRTC connector
+MIME-Version: 1.0
+
+Hi,
+
+On Fri, Apr 25, 2025 at 01:27:03PM +0300, Cristian Ciocaltea wrote:
+> Provide a wrapper over drm_kunit_helper_enable_crtc_connector() to
+> automatically handle EDEADLK.
+>=20
+> This is going to help improve the error handling in a bunch of test
+> cases without open coding the restart of the atomic sequence.
+>=20
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> ---
+>  drivers/gpu/drm/tests/drm_kunit_helpers.c | 39 +++++++++++++++++++++++++=
+++++++
+>  include/drm/drm_kunit_helpers.h           |  7 ++++++
+>  2 files changed, 46 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/tests/drm_kunit_helpers.c b/drivers/gpu/drm/=
+tests/drm_kunit_helpers.c
+> index 5f7257840d8ef0aeabe5f00802f5037ed652ae66..4e1174c50b1f2b6358eb740cd=
+73c6d86e53d0df9 100644
+> --- a/drivers/gpu/drm/tests/drm_kunit_helpers.c
+> +++ b/drivers/gpu/drm/tests/drm_kunit_helpers.c
+> @@ -332,6 +332,45 @@ int drm_kunit_helper_enable_crtc_connector(struct ku=
+nit *test,
 >  }
->  device_initcall_sync(finalize_pkvm);
->  
-> -static int cmp_mappings(struct rb_node *node, const struct rb_node *parent)
-> +static u64 __pkvm_mapping_start(struct pkvm_mapping *m)
->  {
-> -	struct pkvm_mapping *a = rb_entry(node, struct pkvm_mapping, node);
-> -	struct pkvm_mapping *b = rb_entry(parent, struct pkvm_mapping, node);
-> -
-> -	if (a->gfn < b->gfn)
-> -		return -1;
-> -	if (a->gfn > b->gfn)
-> -		return 1;
-> -	return 0;
-> +	return m->gfn * PAGE_SIZE;
->  }
->  
-> -static struct rb_node *find_first_mapping_node(struct rb_root *root, u64 gfn)
-> +static u64 __pkvm_mapping_end(struct pkvm_mapping *m)
->  {
-> -	struct rb_node *node = root->rb_node, *prev = NULL;
-> -	struct pkvm_mapping *mapping;
-> -
-> -	while (node) {
-> -		mapping = rb_entry(node, struct pkvm_mapping, node);
-> -		if (mapping->gfn == gfn)
-> -			return node;
-> -		prev = node;
-> -		node = (gfn < mapping->gfn) ? node->rb_left : node->rb_right;
-> -	}
-> -
-> -	return prev;
-> +	return (m->gfn + 1) * PAGE_SIZE - 1;
->  }
->  
-> -/*
-> - * __tmp is updated to rb_next(__tmp) *before* entering the body of the loop to allow freeing
-> - * of __map inline.
-> - */
-> +INTERVAL_TREE_DEFINE(struct pkvm_mapping, node, u64, __subtree_last,
-> +		     __pkvm_mapping_start, __pkvm_mapping_end, static,
-> +		     pkvm_mapping);
+>  EXPORT_SYMBOL_GPL(drm_kunit_helper_enable_crtc_connector);
+> =20
+> +/**
+> + * drm_kunit_helper_try_enable_crtc_connector - (Re)tries to enable a CR=
+TC -> Connector output
+> + * @test: The test context object
+> + * @drm: The device to alloc the plane for
+> + * @crtc: The CRTC to enable
+> + * @connector: The Connector to enable
+> + * @mode: The display mode to configure the CRTC with
+> + * @ctx: Locking context
+> + *
+> + * This function is a wrapper over @drm_kunit_helper_enable_crtc_connect=
+or
+> + * to automatically handle EDEADLK and (re)try to enable the route from
+> + * @crtc to @connector, with the given @mode.
+> + *
+> + * Returns:
+> + *
+> + * A pointer to the new CRTC, or an ERR_PTR() otherwise.
+> + */
+> +int drm_kunit_helper_try_enable_crtc_connector(struct kunit *test,
+> +					       struct drm_device *drm,
+> +					       struct drm_crtc *crtc,
+> +					       struct drm_connector *connector,
+> +					       const struct drm_display_mode *mode,
+> +					       struct drm_modeset_acquire_ctx *ctx)
+> +{
+> +	int ret;
 > +
->  #define for_each_mapping_in_range_safe(__pgt, __start, __end, __map)				\
-> -	for (struct rb_node *__tmp = find_first_mapping_node(&(__pgt)->pkvm_mappings,		\
-> -							     ((__start) >> PAGE_SHIFT));	\
-> +	for (struct pkvm_mapping *__tmp = pkvm_mapping_iter_first(&(__pgt)->pkvm_mappings,	\
-> +								  __start, __end - 1);		\
->  	     __tmp && ({									\
-> -				__map = rb_entry(__tmp, struct pkvm_mapping, node);		\
-> -				__tmp = rb_next(__tmp);						\
-> +				__map = __tmp;							\
-> +				__tmp = pkvm_mapping_iter_next(__map, __start, __end - 1);	\
->  				true;								\
->  		       });									\
-> -	    )											\
-> -		if (__map->gfn < ((__start) >> PAGE_SHIFT))					\
-> -			continue;								\
-> -		else if (__map->gfn >= ((__end) >> PAGE_SHIFT))					\
-> -			break;									\
-> -		else
-> +	    )
+> +retry_enable:
+> +	ret =3D drm_kunit_helper_enable_crtc_connector(test, drm, crtc, connect=
+or,
+> +						     mode, ctx);
+> +	if (ret =3D=3D -EDEADLK) {
+> +		ret =3D drm_modeset_backoff(ctx);
+> +		if (!ret)
+> +			goto retry_enable;
+> +	}
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(drm_kunit_helper_try_enable_crtc_connector);
 
-The removal of the comment worries me a bit. Is this iterator still
-safe wrt freeing of the iterator in the loop?
+I'm not sure it's a good idea. This function might affect the locking
+context of the caller without even reporting it.
 
-Thanks,
+Generally speaking, I'd really prefer to have explicit locking, even if
+it means slightly more boilerplate.
 
-	M.
+Maxime
 
--- 
-Without deviation from the norm, progress is not possible.
+--btnk46swg4gpsgrg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaCc6hwAKCRAnX84Zoj2+
+dvcBAYDcTwDF538RFQHBgVAINQXEsJRaLAEAcd9prk21mK44LnqoDRgF5/Yg5F+n
+we44oSABgKmQossFkY00emM9Nm+PKxJYxKdSsPJzFceIrdumROrLzgfYnB1zHpOz
+wWLd/RlkyA==
+=kUrs
+-----END PGP SIGNATURE-----
+
+--btnk46swg4gpsgrg--
