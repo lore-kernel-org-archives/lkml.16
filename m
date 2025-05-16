@@ -1,177 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9844A1632DD;
-	Fri, 16 May 2025 14:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323B676410;
+	Fri, 16 May 2025 14:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747405113; cv=none; b=ruvBkkgK3UJ29487jWHqVUMkItZYJLBb+wV1rxa2e1Mzv7Hrt+Ji6gKPbi3mTNIgVX6m8ldJMIUODL83ZNVvCtMKbfICB4NsFcJs3xumexN1iYsXA76Dan06GJx4euElafRFrFexmSk7ZcHrlHQK/A0ovZiiRNx2qiQwSy7HfEI=
+	t=1747405131; cv=none; b=du2QnG7rV4bFzR+X4+U9JaYc9NKC0PcxwNZQP66gIovxlh5SUj5GgJZ0ZFGbxHce1dwrMwz0zRXlC3SUmI28v3THOmpZLcoRuSJ9tKANyMpTcNJhVF2ZyByzwKphCtX2rt4BqE7MpS4za02mfj1iAOtBpqYZyGCOYLyD6CLg0yU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747405113; c=relaxed/simple;
-	bh=wJC6zw4ize8YvwX8KINR0uybINw/Jty0tJPjNkm1idc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kSaxyY/RULiVrdXI8Ler8aPust1Wqef6qQ03+aVZ6tMJrlgNBwwCoWSE9vrxa9ZlX3FhGwxg+XG1gOD8ef6M1XBOEan+Dloy7XSLH7bS/4zxzAhWOkHn03/75fwLljhaINsQAjVqi8kyS6L1uXFIP3KCcjpIUc43t4N3EL/WTyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SWXG33jt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747405131; c=relaxed/simple;
+	bh=Ibiq5vywsLVTHhNY4g9MBbPn3teE5YJJw1Xxj2f+BA4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=QuUd4CSNsTixExQCkIyTMLtd5YcE5hJGin++0cdbmmrr4/YiVrH1IhA4739UVREE9YsLcXJSDrGKWNKeC/VfB2crEezoq8480LxfwdIekgTYELbqTpgdF3ee5VWb1PNA5FV/7Z6AVO5AJGWrR6AoYbJIu2MJGZa2SN1RPYsCwY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=VbS9prBQ; arc=none smtp.client-ip=199.89.3.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SWXG33jt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD18FC4CEE4;
-	Fri, 16 May 2025 14:18:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747405113;
-	bh=wJC6zw4ize8YvwX8KINR0uybINw/Jty0tJPjNkm1idc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SWXG33jt+z9gQJKbLLztRaIhXu3GxC1mAa0ZSlSKQm4IUJrXys/tLQgoGbEyVpyzM
-	 Qkm/KgG7O9POchBxw24pZSWhDuSVXN8Uq3SJ6t/fpj/U+LZY4DBL6KVdey57i1t107
-	 Wz8m0xxe5beLiFlhw50FKELh6evnhdQeRWIez/HvjJe4JM7SMKb41KReJ1EKkgDVa5
-	 ON3tGUogQzuKCn/x+F8hSYJdrXps3pXqwKiyMCyd74KSJf1heyoHdnUXD1v58AxsAq
-	 DRPJ10U3WnmwNAeUyRM2bJwlqTeCfAfRS9jybP5N90hW04pb0QPs2twM8qtkGgiElS
-	 vgs7yd6MmjdKw==
-Date: Fri, 16 May 2025 15:18:26 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
-	Dragos Bogdan <dragos.bogdan@analog.com>,
-	Antoniu Miclaus <antoniu.miclaus@analog.com>,
-	Olivier Moysan <olivier.moysan@foss.st.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Tobias Sperling <tobias.sperling@softing.com>,
-	Alisa-Dariana Roman <alisadariana@gmail.com>,
-	Marcelo Schmitt <marcelo.schmitt@analog.com>,
-	Trevor Gamblin <tgamblin@baylibre.com>,
-	Matteo Martelli <matteomartelli3@gmail.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] dt-bindings: iio: adc: add ad7405
-Message-ID: <20250516-moonshine-engine-006e72665702@spud>
-References: <20250516105810.3028541-1-pop.ioan-daniel@analog.com>
- <20250516105810.3028541-4-pop.ioan-daniel@analog.com>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="VbS9prBQ"
+Received: from localhost (localhost [127.0.0.1])
+	by 003.mia.mailroute.net (Postfix) with ESMTP id 4ZzThf1LpCzltNQ5;
+	Fri, 16 May 2025 14:18:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1747405119; x=1749997120; bh=uTy2Ns3D7T0t6OmoA1ZQh4tj
+	VkxjjMFC2vhAtN8QcwU=; b=VbS9prBQT3VpJ5fDhtR2eThY/3IFckHYrDixYzWw
+	3GPP9BFpE1OulTlLedUKQGZWqw28rkQ1B+l9KZfcW75RO+y95TRtFOAPlVFMy+Ab
+	OEmmZr1F6mS0OhY5UpxlBq0Eu9+/SsHghWONiB2V8tH1oyPcbcg2lg+PXSfhzrqb
+	vT/n56y59bj2veKyR7E1l/s0mTTJ20gC8wlalNcg03xHB83+3UUpxWbeNZ4EwCmc
+	Mb0f7daw1EaBFfcXsPzq2Kfts+hJc/BlstkYlwKO5ZIbAXs8NG9yjcBQgFJ52E/a
+	/uwUbiuBB1BJh5UTP6v7IFeicaiBg07AcJQLK4jaZAEFUQ==
+X-Virus-Scanned: by MailRoute
+Received: from 003.mia.mailroute.net ([127.0.0.1])
+ by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id a2LzUo3fKmFs; Fri, 16 May 2025 14:18:39 +0000 (UTC)
+Received: from [192.168.51.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4ZzThM57h4zlvfmv;
+	Fri, 16 May 2025 14:18:26 +0000 (UTC)
+Message-ID: <432a58c0-8b1c-4585-b299-f35286ee4b62@acm.org>
+Date: Fri, 16 May 2025 07:18:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zCsU3JcOku4xXmfF"
-Content-Disposition: inline
-In-Reply-To: <20250516105810.3028541-4-pop.ioan-daniel@analog.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] scsi: ufs: mcq: delete ufshcd_release_scsi_cmd in
+ ufshcd_mcq_abort
+To: "ping.gao" <ping.gao@samsung.com>, alim.akhtar@samsung.com,
+ avri.altman@wdc.com, James.Bottomley@HansenPartnership.com,
+ martin.petersen@oracle.com, peter.wang@mediatek.com, minwoo.im@samsung.com,
+ manivannan.sadhasivam@linaro.org, chenyuan0y@gmail.com,
+ cw9316.lee@samsung.com, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <CGME20250516083723epcas5p216a21ffb81631d35f0a12f7a583ea248@epcas5p2.samsung.com>
+ <20250516083812.3894396-1-ping.gao@samsung.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250516083812.3894396-1-ping.gao@samsung.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 5/16/25 1:38 AM, ping.gao wrote:
+> after ufs UFS_ABORT_TASK process successfully , host will generate
+> mcq irq for abort tag with response OCS_ABORTED
+> ufshcd_compl_one_cqe ->
+>      ufshcd_release_scsi_cmd
+> 
+> But in ufshcd_mcq_abort already do ufshcd_release_scsi_cmd, this means
+>   __ufshcd_release will be done twice.
+> 
+> This means hba->clk_gating.active_reqs also will be decrease twice, it
+> will be negtive, so delete ufshcd_release_scsi_cmd in ufshcd_mcq_abort
+> function.
+> 
+> static void __ufshcd_release(struct ufs_hba *hba)
+> {
+>      if (!ufshcd_is_clkgating_allowed(hba))
+>          return;
+> 
+>      hba->clk_gating.active_reqs--;
+> 
+>      if (hba->clk_gating.active_reqs < 0) {
+>          panic("ufs abnormal active_reqs!!!!!!");
+>      }
+> 
+>      ...
+> }
+> Signed-off-by: ping.gao <ping.gao@samsung.com>
+A blank line is required between a patch description and a Signed-off-by 
+tag. Additionally, please add a Fixes: tag to the patch description.
 
---zCsU3JcOku4xXmfF
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks,
 
-On Fri, May 16, 2025 at 01:58:03PM +0300, Pop Ioan Daniel wrote:
-> Add devicetree bindings for ad7405/adum770x family.
->=20
-> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-> ---
-> changes in v2:
->  - fix properties: clocks issue
->  .../bindings/iio/adc/adi,ad7405.yaml          | 60 +++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7405.=
-yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7405.yaml b/=
-Documentation/devicetree/bindings/iio/adc/adi,ad7405.yaml
-> new file mode 100644
-> index 000000000000..939de3bd6f26
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7405.yaml
-> @@ -0,0 +1,60 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright 2025 Analog Devices Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7405.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD7405 family
-> +
-> +maintainers:
-> +  - Dragos Bogdan <dragos.bogdan@analog.com>
-> +  - Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-> +
-> +description: |
-> +  Analog Devices AD7405 is a high performance isolated ADC, 1-channel,
-> +  16-bit with a second-order =CE=A3-=CE=94 modulator that converts an an=
-alog input signal
-> +  into a high speed, single-bit data stream.
-> +
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad=
-7405.pdf
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad=
-um7701.pdf
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad=
-um7702.pdf
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/AD=
-uM7703.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad7405
-> +      - adi,adum7701
-> +      - adi,adum7702
-> +      - adi,adum7703
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  vdd1-supply: true
-> +
-> +  vdd2-supply: true
-> +
-> +  io-backends:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - clocks
-> +  - vdd1-supply
-> +  - vdd2-supply
-> +  - io-backends
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    adc {
-> +        compatible =3D "adi,ad7405";
-> +        clocks =3D <&axi_clk_gen 0>;
-
-No reg here, how do you actually access this device?
-Is it entirely via the backend?
-
-> +        vdd1-supply =3D <&vdd1>;
-> +        vdd2-supply =3D <&vdd2>;
-> +        io-backends =3D <&iio_backend>;
-> +    };
-> +...
-> --=20
-> 2.34.1
->=20
-
---zCsU3JcOku4xXmfF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCdJMgAKCRB4tDGHoIJi
-0ttWAQCZHPR/d5g4pOwzwPU+IPLwJ/U2F1ULaSQn8yETrxSQWAD+ONIA7VlcVA3U
-hsAHlnrxHmukjdGZA9cYEdL/iJeBug8=
-=hq22
------END PGP SIGNATURE-----
-
---zCsU3JcOku4xXmfF--
+Bart.
