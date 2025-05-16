@@ -1,208 +1,205 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2064.outbound.protection.outlook.com [40.107.223.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C13118C937;
-	Fri, 16 May 2025 21:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747429699; cv=fail; b=U6HJhahkaglcbmsRHXO1Z+tCJbPOpZvUaHsWnGDGAIl4aethL0XRcppWGey0mSIHxlNqMFMNZh1EE52QAaNlbyte2tLKeeieXU6b8gs7MO5SPzKssBuw8z4J1LVMhMmOmuuNEw6BTy4wjEft++MLaMbdAkvlJzoKjSXHeqoL91Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747429699; c=relaxed/simple;
-	bh=+iUw407Mf/ZSvnXSvmc69p5sKKrdwGg0OuAUXLYXD7Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=d6oUWjVA0/oTvXstKX05i0rMOdOl2p7JXqptZ+NgcyDcDdiNMP8psGZ37utcstdNNiumLOk1mzfIwPvaEIQc1I/YLxgRcgcYvSTpLMa7G7bHsbvLGM5GqicBYqb6YLYQyoZMnD/FP1fBSotHMeSuKmgKaomRhvjkNlpIZAMEw8k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=cEk/7aOd; arc=fail smtp.client-ip=40.107.223.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1306B22B59A;
+	Fri, 16 May 2025 21:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747429978; cv=none; b=X1WoqRkh1sTs1lJLpfwEbIzrJglqK17xL9wr3ZpadGTY6/0T+8/kOL5m/l4fGnVpu/Z66ybH44tfx9pKXcrlpTFqztrwH0FOeY7MG8XyPkQvt02hSy69EXr5DYyaFbSJIRHg64ZGkBiTpJ6qKRmOFZq68FJ9d5BpAjV/C5pFvV4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747429978; c=relaxed/simple;
+	bh=Fy4Y8kipSijwELgR6UsjOYS9RkWbQZVC+gC58ePPZLg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MiRBwEkEbqHesITh5I6DeRsMWN7vnPt3JSL83H1rJ8Q/pylBIkdUWvTP4oMf5wbrefrWvseBEnmQg0dyu/4TfdBCN1e6rbshG2R7Hr1Flf5leHjgD9l96lFSB1p7km+cKD76Ti0JwDORro6cDrOpe+PALoI06pbr7mEIzSxulH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SNl6fTz9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="cEk/7aOd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=F+X4AmnAUO7uIRd+FMsWYDoqDotx8IVqk0PUBIrRF7bi0pUlkp6UDB2g+zxKUarXnYT5A87Mf4+Sx8Mu/DRVVJVrOV3eqfKInOs0PMRlkxEgp4Q6iVRccOFXt0cKZWfQL9wL/qCjj0tAyyt9RBRR1Izn63NNhEV9qPUFsWEw4Iu1JqICvpNKTCWiYJ1fYgNVRGBEuicYcYkKjlUhWZQUDRYjGRFidiKLMT9zdq0SVE8IoDa6aRFVve8S/8WSlnLfBCvB0v+KH8NsupanEqvpfk7DwLmr8t5VXWa8vJ3prDXh2cfw7eP7UIFYG4zSbCOJJ40ppNsUVLfs191DDGDL7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dBsPHUCbeX4N4xN+J6t6ViZvShX6Lewhw7VoKMfWNfg=;
- b=j69sE/QSMNRZyehBENDNDmwgy9E0fwJ5bqAYJjr2sh88g8S5zy31YjLheJ8dgbjPEthCiIexZTXguvyYd/U6RYCMPv5hudyp9WfeQ/vDzSMFh/aRPnjtjWa0zWoyJPtojMhZnDReBw3rz/rve3jB/mgC1PhooRh85wsgL122ZpXebRWKLYM7/UhQg0wxDJi6jDOlJaSP7mtYIEMiceVwCN9YigVz4jUFCeHQtAfe8FZXnt7X77YSz5WKTmTXfr030/zwZZWPy2mcEq4Oi2nX76uLxaeEiObHMTmCeQ47iUqIz5q4MTk3Gq7nk3ZEwQJ+g5arVHESQuIA5Q0UUB1Ltw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dBsPHUCbeX4N4xN+J6t6ViZvShX6Lewhw7VoKMfWNfg=;
- b=cEk/7aOdUj3XJGODMoIk4k/gDYTqW/CKXTm+MvlGlNUW1T8itkgbEmfBbAZqWZe6gCyIi6M84CpCDzcUu7BEL1/L9zbGDtKO4bSqyBVUJHkQ7zGjRpNbbM7i0GPDUB4YZOy9D0NhMhfW+gw2n2WnfGgx4mWOP7zugr4aKVIIXBs5Sc+AZwKUyzuB1xxvVAJjlgHokp/SouKg7sg+o/KPa0jKnfDLirvjAP4MUZifeBakUPlzpzNLjxPdJlZNhDComzgwVkjpXLxBjI6H0lA9+ljg2I/w9/fm1aOdxRJsEKMVphwmMFHmthmcHMJCuB8ZNFybkbBwaUbGmXmtkzjeLA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- DM6PR12MB4369.namprd12.prod.outlook.com (2603:10b6:5:2a1::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8722.31; Fri, 16 May 2025 21:08:13 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8722.031; Fri, 16 May 2025
- 21:08:13 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
- kvm@vger.kernel.org, linux-mm@kvack.org,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Thomas Huth <thuth@redhat.com>,
- Matthew Wilcox <willy@infradead.org>,
- Sebastian Mitterle <smitterl@redhat.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] s390/uv: don't return 0 from make_hva_secure() if
- the operation was not successful
-Date: Fri, 16 May 2025 17:08:10 -0400
-X-Mailer: MailMate (2.0r6255)
-Message-ID: <60DDE99E-E09D-4BD4-AC58-569186E45660@nvidia.com>
-In-Reply-To: <20250516123946.1648026-2-david@redhat.com>
-References: <20250516123946.1648026-1-david@redhat.com>
- <20250516123946.1648026-2-david@redhat.com>
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: BN9PR03CA0709.namprd03.prod.outlook.com
- (2603:10b6:408:ef::24) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SNl6fTz9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64B76C4CEE4;
+	Fri, 16 May 2025 21:12:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747429977;
+	bh=Fy4Y8kipSijwELgR6UsjOYS9RkWbQZVC+gC58ePPZLg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=SNl6fTz9uH+SOeIbbcCtvO1w9eJd9Ta1wE5TQMXvNMn0M8vJaFilkyJ3U0RZgBAnJ
+	 PP9D4Hl6Z38j6CSU90HE8SiPq0JkIaDZckRIpqZgQxrcDeQUEh9QPzRvydQg5lHjo2
+	 8NsLdjzzN0viiXyo4i4TpN6kKoRSFWVVoorC5maXf5K+Eg/Av+mfEv8VJys0clMMh7
+	 omAXsSVMuvCgAqnjw8Nc+Vy3cVwBnCIimP02CGVYguSutAG6zqBgDrZZBHV6mEV4Ix
+	 M2p2XZr/3PbpuLW6hc/x4Y8qUC0oWybFiW9BPDDVf42gXaARQM2m7xQK9rnNbm4gIo
+	 /BWNIy/sn2vvw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 6CF7CCE0C93; Fri, 16 May 2025 14:12:56 -0700 (PDT)
+Date: Fri, 16 May 2025 14:12:56 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: kernel test robot <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [paulmckrcu:dev.2025.05.05a] [rcutorture]  54d0803f63:
+ WARNING:at_kernel/rcu/rcutorture.c:#rcu_torture_stats_print[rcutorture]
+Message-ID: <7b11b0e1-9c96-4441-8905-a7fc5a3b49a0@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <202505131651.af6e81d7-lkp@intel.com>
+ <620852c4-c2ae-4242-9996-1af248afba2c@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|DM6PR12MB4369:EE_
-X-MS-Office365-Filtering-Correlation-Id: f3e02449-6307-4374-7022-08dd94bdc521
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?17lRT6IcUKwTRFUQj2zFnEyaT0VNnvVW0u4XYtl5lI5aYzM8onxYkf6R5WBc?=
- =?us-ascii?Q?yARU3+uOjSpkImK9WCugDpwXVvz1Flevm6DaFcCYt8y0bMa8j3D2SOry6Ytb?=
- =?us-ascii?Q?kpggS3AqviC6I8qu2MN0UEKI9CN/YDY8oRxCF9iouA2Ye+wHIjWrCwVQ9OL/?=
- =?us-ascii?Q?qlBuF3aaaW9/dXrh4/lEKVX0mvJinOvUX75mUGehegJNCniGWzufWbglTyUs?=
- =?us-ascii?Q?4t8RHPF51rgotSxEwU1aJ7obQewz9JtwUfgRD9i4yEMWeO1X2Vs78fWGHbYH?=
- =?us-ascii?Q?oxpSWlDRVoa3FygnobwtbwJCi6OpLxBIDYgoHgJtMltOyH542U9q6xWjM2L/?=
- =?us-ascii?Q?7tEadDcf+gAlK5x5NHcjxR8UgbfnCJrrLygDqxM3rdTuB46g/5uh2tDrZY3D?=
- =?us-ascii?Q?y23YKOqIJM8gShBQHaSsx/83VxVvmTCZWu4Y1C8aKUVhYWrIHVtSKG6TihM3?=
- =?us-ascii?Q?9+jutC07BowBm2fXwRgpOOx8qggvzc2VGownuYWvKcslQUDPGmNy0Dudd065?=
- =?us-ascii?Q?3vKHBMM8mCu7jDPxyR2h6fyzz5KE6vsw1pzvAicTDWp/trojPRnD5hPPMDHI?=
- =?us-ascii?Q?Liq7aBaJky8hYuzWYuAZ6y3NZ33DTjGAHutHiehSQJg7F1tmXhxEDa+4JKkA?=
- =?us-ascii?Q?qUk0/Q9lMmjLRHVphbJKqsGWFHBnpXgKfflfImJCWVo2Hqio/atWkgzwshRw?=
- =?us-ascii?Q?Qs8/xHqxFfZx900OyDomQN+cg0k9jx52itkKqwdDXLZUnBLKkgaL5uhYkL6d?=
- =?us-ascii?Q?jzv1GcfGHIpjUdvlspigRK/az2349ddvvty/mz9icQZVbMieF7VbHAwTMnKD?=
- =?us-ascii?Q?UFtVNRVLZnGAXbpmnyPWegfHMvPXFW7Hd4XNTSKxtyuw7QtYRR55V/fM0Vyb?=
- =?us-ascii?Q?L7bfDIvCZ0Rl245KvasQ35W1G5wkwwTn0FEvjfVaUFFaywaFcQQU+QtFAHew?=
- =?us-ascii?Q?iCbkkTASeW5EI+lWDKSbFjSP3CzOaERb6qRddL3KmvscdOavlqdzxoxbsSqa?=
- =?us-ascii?Q?GYGw/rEx6alcf+/FJ9nesYjptB1P9WFY4QZj3uQEsvapOpEvpbrrnl9t2AeN?=
- =?us-ascii?Q?W9DZRLxjoMLdPzcrIuwqDpQJg0EbTjjLpXRDkUWx3WhROnll6rvTtQNzpS/L?=
- =?us-ascii?Q?kdlkepfoW+A6PCtgl/8Qr456mhwNsgX7RSza3rusMRPuCzl60EW9GTVguXPq?=
- =?us-ascii?Q?T+wj52fuQITUuh4IElHjA8jDNLGHH4wWI90QDyIdJ3af5ybvyCTfA9KaCiVi?=
- =?us-ascii?Q?bDkd396RhLLFglqIlXNJ2hghyhdcv/vL5LwP2/NKOboLqSOFZYaYis9maPGC?=
- =?us-ascii?Q?A31faZcelfwW4Cc4LuxSFYSLPqsecTWSknMjeFLXPggwiwnNn/zLSG22Xsih?=
- =?us-ascii?Q?dtIdmu1slE6eIWWX7eG31mE8hFc5XKK/M9hrKij0AZGZIbLrs3CXrMSfJ+FG?=
- =?us-ascii?Q?unKegN+RsLE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9q6K1okCQr1JsiDu5DYir5Fy7IZjdSxVHuKByZHvKFd5FLPGUxAaSG+wEAm7?=
- =?us-ascii?Q?PncoeGM7GZsv53gn730R0nIHLhbxWEKLEk9zLU99OSAxQdDbM6sUqNlltEpz?=
- =?us-ascii?Q?LntRZbdtT3k4vVc4fXWKMtTG8fr/aSBPquXXzWj2VivX2/2F6YGqnBLYK0x1?=
- =?us-ascii?Q?PV1viyPK7QVw24/ohvItsL8n4EATseZfsmWgyRx0As66+ze0AGVlclp+qbvN?=
- =?us-ascii?Q?w7qVZoJShHRXLWE+wa+uBGRkJ+IfqjcqguysYX0IwydA3i4rAeU2CmgBn2iw?=
- =?us-ascii?Q?v7RHOGxfW34ZvgSzhhdc881zjW6cyICpLOH/oPuRYh4HuP4YfNx1wtPqWrBH?=
- =?us-ascii?Q?SdYE9/5USJlkEu677x2DY/DBHB0owDemM/SHWlRbqK6nlGXM5fviGqxTAYDy?=
- =?us-ascii?Q?YfUHUSNErx/uue0WUf7auO/Ild4/o+IEM3E3Ba2ZY/tqiruZpkHcijWKs4Be?=
- =?us-ascii?Q?xwfWXV7ESeHKNZd5PACaQEU7d4jOq5LcuWRK3hJpBGsiQVzjrwahQDy0QQJD?=
- =?us-ascii?Q?mZPl6lLkvT3HEHAusAr1MaBqF55c16pvYyxusTkPM8G5/tBg/OTxH+ZXB1u8?=
- =?us-ascii?Q?De8GHP0s8+aVa6M/MYv3h/PfJa2RJi9giykpi4Ih91IgFB1KfjphRwTmTHlj?=
- =?us-ascii?Q?JTP7gyevOoIPe8rakV2G02CvfJtzPQl4ndN8ACGPey9gZH5dEAgC6vuqFRHN?=
- =?us-ascii?Q?2/ZbnW3fZObBJBkW6UEKXd/24kblMZHThCdI5bRgb+KxGx8H/6V4LZuGWU/x?=
- =?us-ascii?Q?9Iq0fZzV3SHy2kdfLxTqdD8OGvH3h4Sru/oefOy6xiC+m7g38c44hrESrNGE?=
- =?us-ascii?Q?AYYViI4zIGmK2goH4N9PQ8Iz5w7ma4qrm+gRw9wJXvqWyLY0NQ4DDVyTevoW?=
- =?us-ascii?Q?c9ug1kwfI21iLR+QwUodXE8/WA8bXOINnOd4cryvdH7IhOy9gNjY/iyto7AX?=
- =?us-ascii?Q?KFd3Tga5MuuEQIszWfk8Zqn4ZCEpbbb+CZ4UuVT++V35r9gdDUhgugfBohXh?=
- =?us-ascii?Q?2g1t0ahf41fBYvYFsgz8YAWkA6vZaiFdv2RxEUvHCJU5fOu1EP/hQ0izLHzG?=
- =?us-ascii?Q?657ey8xlVMsaMI6oJH9LtiST83HPLp0KIKBa3xt73uIQZ0kbqHIc/gs8SRka?=
- =?us-ascii?Q?oZjaTyKNGAH2moM4nt9OVcwVcnRZ4KixUVakddQCPc8HSUC+U4C4B6h8PmmL?=
- =?us-ascii?Q?o5enkjZ/o3bXzydyni07/kgZefWcQNHEINvAviZXFOFre1wV13VqvhfnD0FU?=
- =?us-ascii?Q?69onMSn2oXrbBQzi54wT+L6iQEGE9Ns5XlYlE8lYlpF2imXC83cGkckRfxkp?=
- =?us-ascii?Q?dOhFNS7ny7ye7UjqQsZvvO3FKhqvsHoNjFoZFBBZ4GbB625uNkC2ucacEWdE?=
- =?us-ascii?Q?oK5VkMhVYqzYb9IgRLxcNrdUewBs3T8zYtfh2DBf8Dis4nETEhFBGHieYNL2?=
- =?us-ascii?Q?7rglsSLKOgKoY0+Kn5UJCOA5IwLtkV0JhJcdo2+mi7ckep7ydmSR7wC5/XbU?=
- =?us-ascii?Q?EKZH2JbRzyRROQ1VZ+1qbr9cXjwI97ZWzPcXUrLwqRqIB9vyxw6IsKoNengX?=
- =?us-ascii?Q?tTykky7R00+Dj8qPg+nkw8AXTIbb079Wuke5CmBM?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3e02449-6307-4374-7022-08dd94bdc521
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2025 21:08:13.4986
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3cp/Dar2mR+1HJ8De9pIbS5Clx754Ca2pj8S92UvaovdwUvjOQlrKZV7vdAayrZl
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4369
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <620852c4-c2ae-4242-9996-1af248afba2c@paulmck-laptop>
 
-On 16 May 2025, at 8:39, David Hildenbrand wrote:
+On Thu, May 15, 2025 at 05:37:03PM -0700, Paul E. McKenney wrote:
+> On Wed, May 14, 2025 at 10:23:26AM +0800, kernel test robot wrote:
+> > 
+> > hi, Paul,
+> > 
+> > we noticed various issues for both 54d0803f63/parent in this test.
+> > 
+> > =========================================================================================
+> > tbox_group/testcase/rootfs/kconfig/compiler/runtime/test/torture_type:
+> >   vm-snb/rcutorture/debian-11.1-i386-20220923.cgz/i386-randconfig-061-20250510/clang-20/300s/default/trivial
+> > 
+> > ec3f43f72b268d44 54d0803f632b402e519c7d97a6b
+> > ---------------- ---------------------------
+> >        fail:runs  %reproduction    fail:runs
+> >            |             |             |
+> >            :100         71%          71:98    rcutorture.trivial.fail   <--- (1)
+> >            :100         71%          71:98    dmesg.EIP:rcu_torture_stats_print   <--- (2)
+> >          94:100          0%          94:98    dmesg.EIP:synchronize_rcu_trivial
+> >         100:100         -2%          98:98    dmesg.UBSAN:implicit-conversion_in_drivers/firewire/core-transaction.c
+> >         100:100         -2%          98:98    dmesg.UBSAN:negation-overflow_in_lib/sort.c
+> >         100:100         -2%          98:98    dmesg.UBSAN:negation-overflow_in_mm/memcontrol.c
+> >            :100         71%          71:98    dmesg.WARNING:at_kernel/rcu/rcutorture.c:#rcu_torture_stats_print[rcutorture]   <--- (3)
+> >          94:100          0%          94:98    dmesg.WARNING:at_kernel/rcu/rcutorture.c:#synchronize_rcu_trivial[rcutorture]
+> >         100:100         -2%          98:98    dmesg.boot_failures
+> > 
+> > 
+> > but seems (1)(2)(3) are quite persistent on 54d0803f63 and clean on parent.
+> > 
+> > 
+> > Hello,
+> > 
+> > kernel test robot noticed "WARNING:at_kernel/rcu/rcutorture.c:#rcu_torture_stats_print[rcutorture]" on:
+> > 
+> > commit: 54d0803f632b402e519c7d97a6b52d5ffb78ae78 ("rcutorture: Start rcu_torture_writer() after rcu_torture_reader()")
+> > https://github.com/paulmckrcu/linux dev.2025.05.05a
+> > 
+> > in testcase: rcutorture
+> > version: 
+> > with following parameters:
+> > 
+> > 	runtime: 300s
+> > 	test: default
+> > 	torture_type: trivial
+> 
+> Huh.  This is the trivial RCU implementation that is not used in the
+> Linux kernel (aside from rcutorture testing it), but verifies that my
+> slideware/textbook implementation actually works.
+> 
+> So you didn't manage to break the Linux kernel, just some of my
+> presentations.  ;-)
+> 
+> Still, this clearly needs to be fixed.
+> 
+> > config: i386-randconfig-061-20250510
+> > compiler: clang-20
+> > test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+> > 
+> > (please refer to attached dmesg/kmsg for entire log/backtrace)
+> > 
+> > 
+> > 
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <oliver.sang@intel.com>
+> > | Closes: https://lore.kernel.org/oe-lkp/202505131651.af6e81d7-lkp@intel.com
+> > 
+> > 
+> > The kernel config and materials to reproduce are available at:
+> > https://download.01.org/0day-ci/archive/20250513/202505131651.af6e81d7-lkp@intel.com
+> > 
+> > 
+> > [  232.971337][  T965] trivial-torture: rtc: ef358cc0 ver: 9677 tfle: 0 rta: 9677 rtaf: 0 rtf: 9668 rtmbe: 0 rtmbkf: 0/0 rtbe: 0 rtbke: 0 rtbf: 0 rtb: 0 nt: 3782 onoff: 0/0:0/0 -1,0:-1,0 0:0 (HZ=300) barrier: 0/0:0 read-exits: 64 nocb-toggles: 0:0 gpwraps: 0
+> > [  232.974503][  T965] trivial-torture: !!! 
+> > [  232.974595][  T965] ------------[ cut here ]------------
+> > [  232.976982][  T965] WARNING: CPU: 0 PID: 965 at kernel/rcu/rcutorture.c:2730 rcu_torture_stats_print+0x8e4/0x8f0 [rcutorture]
+> 
+> And this is a too-short grace period...
+> 
+> > [  232.980999][  T965] Modules linked in: rcutorture torture
+> > [  232.982356][  T965] CPU: 0 UID: 0 PID: 965 Comm: rcu_torture_sta Tainted: G        W       T   6.15.0-rc1-00059-g54d0803f632b #1 PREEMPT(full)  5f9cb9cacb9aba8a18caee0ed4d4cf4452094bc2
+> > [  232.990730][  T965] Tainted: [W]=WARN, [T]=RANDSTRUCT
+> > [  232.992782][  T965] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+> > [  232.995869][  T965] EIP: rcu_torture_stats_print+0x8e4/0x8f0 [rcutorture]
+> > [  232.997526][  T965] Code: ff ff 0f 0b 83 3d 88 8f 35 ef 00 0f 84 b0 fb ff ff 0f 0b 83 3d 8c 8f 35 ef 00 0f 84 ae fb ff ff 0f 0b 84 db 0f 84 ac fb ff ff <0f> 0b e9 a5 fb ff ff 00 00 00 00 00 55 89 e5 53 57 56 83 ec 14 e8
+> > [  233.002674][  T965] EAX: 00000004 EBX: 00000001 ECX: 00000000 EDX: 00000000
+> > [  233.004477][  T965] ESI: 00000000 EDI: 00000000 EBP: 47efbf58 ESP: 47efbedc
+> > [  233.006060][  T965] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00010202
+> > [  233.007496][  T965] CR0: 80050033 CR2: 353667f8 CR3: 7c473000 CR4: 000406d0
+> > [  233.009173][  T965] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+> > [  233.010612][  T965] DR6: fffe0ff0 DR7: 00000400
+> > [  233.011678][  T965] Call Trace:
+> > [  233.012511][  T965]  ? rcu_torture_stats+0x24/0x70 [rcutorture 7eef68a8ad9c4bc219a4bda0dc180602dd9a9416]
+> > [  233.014416][  T965]  ? kthread+0x1af/0x200
+> > [  233.016388][  T965]  ? rcu_nocb_toggle+0x1c0/0x1c0 [rcutorture 7eef68a8ad9c4bc219a4bda0dc180602dd9a9416]
+> > [  233.018427][  T965]  ? schedule_tail+0x79/0xf0
+> > [  233.019297][  T965]  ? kthread_blkcg+0x30/0x30
+> > [  233.020404][  T965]  ? kthread_blkcg+0x30/0x30
+> > [  233.021230][  T965]  ? ret_from_fork+0x2c/0x40
+> > [  233.022315][  T965]  ? ret_from_fork_asm+0x12/0x20
+> > [  233.023169][  T965]  ? entry_INT80_32+0x10d/0x10d
+> > [  233.024178][  T965] irq event stamp: 495
+> > [  233.024991][  T965] hardirqs last  enabled at (509): [<4f981d9b>] __console_unlock+0x5b/0x70
+> > [  233.026606][  T965] hardirqs last disabled at (520): [<4f981d82>] __console_unlock+0x42/0x70
+> > [  233.028125][  T965] softirqs last  enabled at (282): [<51ba356a>] __do_softirq+0xa/0xe
+> > [  233.029924][  T965] softirqs last disabled at (267): [<51ba356a>] __do_softirq+0xa/0xe
+> > [  233.031571][  T965] ---[ end trace 0000000000000000 ]---
+> > [  233.033193][  T965] Reader Pipe:  23875253 3963 1 0 0 0 0 0 0 0 0
+> 
+> ... as further indicated by the "1" after the "3963".  This means that
+> there was one too-short trivial-RCU grace period in not quite four
+> minutes of testing.
+> 
+> > [  233.034030][  T965] trivial-torture: Reader Batch:  23879217 0 0 0 0 0 0 0 0 0 0
+> > [  233.035198][  T965] trivial-torture: Free-Block Circulation:  9676 9676 9675 9674 9673 9672 9671 9670 9669 9668 0
+> > 
+> > ...
+> > 
+> > [  472.316419][ T2339] trivial-torture:--- End of test: FAILURE: nreaders=1 nfakewriters=4 stat_interval=60 verbose=1 test_no_idle_hz=1 shuffle_interval=3 stutter=5 irqreader=1 fqs_duration=0 fqs_holdoff=0 fqs_stutter=3 test_boost=1/0 test_boost_interval=7 test_boost_duration=4 test_boost_holdoff=0 shutdown_secs=0 stall_cpu=0 stall_cpu_holdoff=10 stall_cpu_irqsoff=0 stall_cpu_block=0 stall_cpu_repeat=0 n_barrier_cbs=0 onoff_interval=0 onoff_holdoff=0 read_exit_delay=13 read_exit_burst=16 reader_flavor=1 nocbs_nthreads=0 nocbs_toggle=1000 test_nmis=0 preempt_duration=0 preempt_interval=1000 n_up_down=32
+> 
+> And this is one possible reason why:  "shuffle_interval=3".
+> 
+> The way that trivial RCU works is to schedule itself on each online CPU
+> in turn in this function:
+> 
+> static void synchronize_rcu_trivial(void)
+> {
+> 	int cpu;
+> 
+> 	for_each_online_cpu(cpu) {
+> 		torture_sched_setaffinity(current->pid, cpumask_of(cpu), true);
+> 		WARN_ON_ONCE(raw_smp_processor_id() != cpu);
+> 	}
+> }
+> 
+> If torture_shuffle_tasks() moves this writer kthread just after the above
+> torture_sched_setaffinity() completes, then synchronize_rcu_trivial()
+> might miss its intended CPU, thus failing to wait for RCU readers on
+> that CPU.  This can in turn result in a too-short grace period.
+> 
+> Except that I would expect the WARN_ON_ONCE() to trigger in that scenario.
 
-> If s390_wiggle_split_folio() returns 0 because splitting a large folio
-> succeeded, we will return 0 from make_hva_secure() even though a retry
-> is required. Return -EAGAIN in that case.
->
-> Otherwise, we'll return 0 from gmap_make_secure(), and consequently fro=
-m
-> unpack_one(). In kvm_s390_pv_unpack(), we assume that unpacking
-> succeeded and skip unpacking this page. Later on, we run into issues
-> and fail booting the VM.
->
-> So far, this issue was only observed with follow-up patches where we
-> split large pagecache XFS folios. Maybe it can also be triggered with
-> shmem?
->
-> We'll cleanup s390_wiggle_split_folio() a bit next, to also return 0
-> if no split was required.
->
-> Fixes: d8dfda5af0be ("KVM: s390: pv: fix race when making a page secure=
-")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  arch/s390/kernel/uv.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-> index 9a5d5be8acf41..2cc3b599c7fe3 100644
-> --- a/arch/s390/kernel/uv.c
-> +++ b/arch/s390/kernel/uv.c
-> @@ -393,8 +393,11 @@ int make_hva_secure(struct mm_struct *mm, unsigned=
- long hva, struct uv_cb_header
->  	folio_walk_end(&fw, vma);
->  	mmap_read_unlock(mm);
->
-> -	if (rc =3D=3D -E2BIG || rc =3D=3D -EBUSY)
-> +	if (rc =3D=3D -E2BIG || rc =3D=3D -EBUSY) {
->  		rc =3D s390_wiggle_split_folio(mm, folio, rc =3D=3D -E2BIG);
-> +		if (!rc)
-> +			rc =3D -EAGAIN;
+Which you do have, now that I actually looked at the dmesg.  ;-)
 
-Why not just folio_put() then jump back to the beginning of the
-function to do the retry? This could avoid going all the way back
-to kvm_s390_unpack().
+> I will play with this a bit.  I don't want to force-disable shuffle
+> in the torture_type=trivial case because it is a useful way of testing
+> rcutorture itself.  But perhaps I can make the complaint more explicit.
 
-> +	}
->  	folio_put(folio);
->
->  	return rc;
-> -- =
+And 200 hours of testing passed.  I am adding a change to splat, but to
+force these kernel boot parameters to zero so as to avoid the spurious
+grace-period failure.  I expect this to reach mainline during the v6.17
+merge window.
 
-> 2.49.0
-
-
---
-Best Regards,
-Yan, Zi
+							Thanx, Paul
