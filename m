@@ -1,44 +1,45 @@
-Received: from trager.us (trager.us [52.5.81.116])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA21BE49;
-	Fri, 16 May 2025 16:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.5.81.116
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47D952AD0F;
+	Fri, 16 May 2025 16:53:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747414312; cv=none; b=XdyENGlacsYQJ8B3EfM25ozuP72OcKUnL4b1SQeneP4BRdLoGYD7Hu8js8CG71O4wPM6w6OVIxNGAmGpxdyiNvQb6iPm4qLYmWn4/4Wxw8Rsmnws/eEBnMmXwQptSc9ga4U92Vb3Of1x/afRTpSQ5DGkjlVIaK9RRjxgNJvBe/I=
+	t=1747414392; cv=none; b=kJuSby9qjU4ZZuPl3z0PoYGFR6lHBBhTsBYzIjijWFQSEmxOz4KxQ2s7dZAlJ9IrICxd/cW6/ZEnL35/yQuP47SF23qJbVTZiQ0bdX+CasqEB09AQNIt3VaaRqgmHu7PF+HkpINJwDtzaYmtoardBB/BPlywvH73lJdb9FG+F0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747414312; c=relaxed/simple;
-	bh=Tt2r9xz8sdUiv4K9lYnzrHLicK9+65q1WYWpfLsk8d4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lMvePdWmZECnq3uls/vdfkdaUUUcuCGPP3GI0kAGyYUni6GQjysEJRf8Agg+ym09oDsvQyYfW8FdjcJ/w3eTZXYj3WeuttNLIcKZ+6IY7N/fI0dot+rdJn1yOtq/ERm30ZSyw4MfsthclT6/h3tM/F8kxiAeh5RBh7dEECk4Ecg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us; spf=pass smtp.mailfrom=trager.us; arc=none smtp.client-ip=52.5.81.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trager.us
-Received: from c-76-104-255-50.hsd1.wa.comcast.net ([76.104.255.50] helo=localhost)
-	by trager.us with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92.3)
-	(envelope-from <lee@trager.us>)
-	id 1uFyHS-00021S-7A; Fri, 16 May 2025 16:51:30 +0000
-From: Lee Trager <lee@trager.us>
-To: Alexander Duyck <alexanderduyck@fb.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	kernel-team@meta.com,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Lee Trager <lee@trager.us>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Simon Horman <horms@kernel.org>,
-	Sanman Pradhan <sanmanpradhan@meta.com>,
-	Su Hui <suhui@nfschina.com>,
-	Mohsin Bashir <mohsin.bashr@gmail.com>
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] eth: fbnic: Replace kzalloc/fbnic_fw_init_cmpl with fbnic_fw_alloc_cmpl
-Date: Fri, 16 May 2025 09:46:41 -0700
-Message-ID: <20250516164804.741348-1-lee@trager.us>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1747414392; c=relaxed/simple;
+	bh=71V2WD5iJ1/cS/2PgOjbEu21WKvPBUiTc4SL8cYGR2Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=a2kVU2ruZQ+iB/UIb7hZYJP/qFM6FMo1crV1v8zbiDONNBy4MJh0JQC7ZlTmdCpeGoeZtv9w7mria9RiPZ25oRBQrwdgPvB4cJ4PzVnDN34QFxIRU+eRmu4X/tvsOtPo5qaOg4w2M4Qhwp6PbV7E2WeMvtY/KkBMPSjB1w+YIUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=mfbsT3ko; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="mfbsT3ko"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=qY
+	XamXMCEiPr/RpJK9bkK+Cvqo2tYDscATM5TdHK+B4=; b=mfbsT3koj4pL2eQgt5
+	ThcfNFwpvyuWE5VC3SHViLKE4U0YRfhOaDVFJTEdyk4vdwNy7eEKXEknn51Xj5DO
+	Yji5EnRnFQBB+vMeyhwdITCrme9CHAvoYPPLw4/CSUSYA4kcGwSVZ/OiU+5W7bW4
+	vnoRFXqXCh0YdKNyY1sVovn/U=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wDn1+RLbSdo12CoBw--.59952S4;
+	Sat, 17 May 2025 00:52:29 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: bhelgaas@google.com,
+	tglx@linutronix.de,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	mahesh@linux.ibm.com
+Cc: oohall@gmail.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Hans Zhang <hans.zhang@cixtech.com>
+Subject: [PATCH 2/2] PCI/AER: Use bool for AER disable state tracking
+Date: Sat, 17 May 2025 00:52:23 +0800
+Message-Id: <20250516165223.125083-3-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250516165223.125083-1-18255117159@163.com>
+References: <20250516165223.125083-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,110 +47,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDn1+RLbSdo12CoBw--.59952S4
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Xr4kCrWDXrW7ZrWfAw1rCrg_yoWfWFg_ur
+	yY9a17Gr4Y9rsxur1YkrsxZry0va4qvFWIgF40qa4fCFy2kr15tF9rZr1fAF4DWryfJFyD
+	u3ZrAF13CryjkjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8aFAJUUUUU==
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxVPo2gnaDZ9cQAAsr
 
-Replace the pattern of calling and validating kzalloc then
-fbnic_fw_init_cmpl with a single function, fbnic_fw_alloc_cmpl.
+From: Hans Zhang <hans.zhang@cixtech.com>
 
-Signed-off-by: Lee Trager <lee@trager.us>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Change pcie_aer_disable variable to bool and update pci_no_aer()
+to set it to true. Improves code readability and aligns with modern
+kernel practices.
+
+Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
 ---
- drivers/net/ethernet/meta/fbnic/fbnic_devlink.c |  6 ++----
- drivers/net/ethernet/meta/fbnic/fbnic_fw.c      | 17 ++++++++++++-----
- drivers/net/ethernet/meta/fbnic/fbnic_fw.h      |  3 +--
- drivers/net/ethernet/meta/fbnic/fbnic_mac.c     |  5 +----
- 4 files changed, 16 insertions(+), 15 deletions(-)
+ drivers/pci/pcie/aer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c b/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c
-index 71d9461a0d1b..4c4938eedd7b 100644
---- a/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c
-+++ b/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c
-@@ -166,11 +166,10 @@ fbnic_flash_start(struct fbnic_dev *fbd, struct pldmfw_component *component)
- 	struct fbnic_fw_completion *cmpl;
- 	int err;
-
--	cmpl = kzalloc(sizeof(*cmpl), GFP_KERNEL);
-+	cmpl = fbnic_fw_alloc_cmpl(FBNIC_TLV_MSG_ID_FW_START_UPGRADE_REQ);
- 	if (!cmpl)
- 		return -ENOMEM;
-
--	fbnic_fw_init_cmpl(cmpl, FBNIC_TLV_MSG_ID_FW_START_UPGRADE_REQ);
- 	err = fbnic_fw_xmit_fw_start_upgrade(fbd, cmpl,
- 					     component->identifier,
- 					     component->component_size);
-@@ -237,11 +236,10 @@ fbnic_flash_component(struct pldmfw *context,
- 	 * Setup completions for write before issuing the start message so
- 	 * the driver can catch both messages.
- 	 */
--	cmpl = kzalloc(sizeof(*cmpl), GFP_KERNEL);
-+	cmpl = fbnic_fw_alloc_cmpl(FBNIC_TLV_MSG_ID_FW_WRITE_CHUNK_REQ);
- 	if (!cmpl)
- 		return -ENOMEM;
-
--	fbnic_fw_init_cmpl(cmpl, FBNIC_TLV_MSG_ID_FW_WRITE_CHUNK_REQ);
- 	err = fbnic_mbx_set_cmpl(fbd, cmpl);
- 	if (err)
- 		goto cmpl_free;
-diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_fw.c b/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
-index 6a803a59dc25..e2368075ab8c 100644
---- a/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
-+++ b/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
-@@ -1232,12 +1232,19 @@ void fbnic_get_fw_ver_commit_str(struct fbnic_dev *fbd, char *fw_version,
- 				 fw_version, str_sz);
- }
-
--void fbnic_fw_init_cmpl(struct fbnic_fw_completion *fw_cmpl,
--			u32 msg_type)
-+struct fbnic_fw_completion *fbnic_fw_alloc_cmpl(u32 msg_type)
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index a1cf8c7ef628..ade98c5a19b9 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -111,12 +111,12 @@ struct aer_stats {
+ 					PCI_ERR_ROOT_MULTI_COR_RCV |	\
+ 					PCI_ERR_ROOT_MULTI_UNCOR_RCV)
+ 
+-static int pcie_aer_disable;
++static bool pcie_aer_disable;
+ static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
+ 
+ void pci_no_aer(void)
  {
--	fw_cmpl->msg_type = msg_type;
--	init_completion(&fw_cmpl->done);
--	kref_init(&fw_cmpl->ref_count);
-+	struct fbnic_fw_completion *cmpl;
-+
-+	cmpl = kzalloc(sizeof(*cmpl), GFP_KERNEL);
-+	if (!cmpl)
-+		return NULL;
-+
-+	cmpl->msg_type = msg_type;
-+	init_completion(&cmpl->done);
-+	kref_init(&cmpl->ref_count);
-+
-+	return cmpl;
+-	pcie_aer_disable = 1;
++	pcie_aer_disable = true;
  }
+ 
+ bool pci_aer_available(void)
+-- 
+2.25.1
 
- void fbnic_fw_clear_cmpl(struct fbnic_dev *fbd,
-diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_fw.h b/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
-index 6baac10fd688..08bc4b918de7 100644
---- a/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
-+++ b/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
-@@ -80,8 +80,7 @@ int fbnic_fw_xmit_fw_write_chunk(struct fbnic_dev *fbd,
- 				 int cancel_error);
- int fbnic_fw_xmit_tsene_read_msg(struct fbnic_dev *fbd,
- 				 struct fbnic_fw_completion *cmpl_data);
--void fbnic_fw_init_cmpl(struct fbnic_fw_completion *cmpl_data,
--			u32 msg_type);
-+struct fbnic_fw_completion *fbnic_fw_alloc_cmpl(u32 msg_type);
- void fbnic_fw_clear_cmpl(struct fbnic_dev *fbd,
- 			 struct fbnic_fw_completion *cmpl_data);
- void fbnic_fw_put_cmpl(struct fbnic_fw_completion *cmpl_data);
-diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_mac.c b/drivers/net/ethernet/meta/fbnic/fbnic_mac.c
-index 4ba6f8d10775..10e108c1fcd0 100644
---- a/drivers/net/ethernet/meta/fbnic/fbnic_mac.c
-+++ b/drivers/net/ethernet/meta/fbnic/fbnic_mac.c
-@@ -687,13 +687,10 @@ static int fbnic_mac_get_sensor_asic(struct fbnic_dev *fbd, int id,
- 	int err = 0, retries = 5;
- 	s32 *sensor;
-
--	fw_cmpl = kzalloc(sizeof(*fw_cmpl), GFP_KERNEL);
-+	fw_cmpl = fbnic_fw_alloc_cmpl(FBNIC_TLV_MSG_ID_TSENE_READ_RESP);
- 	if (!fw_cmpl)
- 		return -ENOMEM;
-
--	/* Initialize completion and queue it for FW to process */
--	fbnic_fw_init_cmpl(fw_cmpl, FBNIC_TLV_MSG_ID_TSENE_READ_RESP);
--
- 	switch (id) {
- 	case FBNIC_SENSOR_TEMP:
- 		sensor = &fw_cmpl->u.tsene.millidegrees;
---
-2.47.1
