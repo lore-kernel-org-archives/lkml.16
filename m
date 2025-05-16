@@ -1,125 +1,95 @@
-Received: from mail-qk1-f201.google.com (mail-qk1-f201.google.com [209.85.222.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D66272E4E
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 20:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FE41F956;
+	Fri, 16 May 2025 20:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747426657; cv=none; b=YehktjCA9x4iE5J2wabLfWQQexFk6Y+B12R/lamc2n172N/6QLG+9FsoZbynCVDhK8EDrihkXbCnfiaSPDtczRfQXn/an+8+AGzvPNPtk1kKrV5/K0No4tDRNQO4AhfMFuX2t3vZ2WNvzp3/+qDuZCpFVNBdaLzLQt7HpsWs28c=
+	t=1747426913; cv=none; b=sqh1bydgbvAburS+7nt0y0RuDpk6Ry9O3FH/axl0rnfX5Yswq/Eh9J9vrohxAEhKkEn3m9dUjCgeyato4crGr+BTpqMjiC0xVpfWSfcJrwyFWNtXhtuVwBjhG7yc1evSjKXaN2UJrklGj8b1rspnB2n3Evrhth7qi4Q5Qd0MLpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747426657; c=relaxed/simple;
-	bh=Bu/MHyg4YHVuyS3LOBxtHZLr7L1GcDOPIZ8uDIhpLxE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ohIo4fcrWHd1iRWB36PMQdUGNVRKbCliCKIT3pOsypBGU9B+ak9QCSbH1sIN+DUD9KiGkHCnpd4ml2SGbU+8gDal7VHrm87v5s/b4otcptNge5SyNh8TFYnC0ZtvGmZQ8aShY8zz5/XeSr5IA8CPUOUj/FPKDMxgSvxcRUYvqW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rmoar.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wA7+KUkT; arc=none smtp.client-ip=209.85.222.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rmoar.bounces.google.com
+	s=arc-20240116; t=1747426913; c=relaxed/simple;
+	bh=0eZbYvSMOyz0txO7McOUt7WBCXP3fLg51sadhpP/XeE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C/V7DJgWMopi/Zxw4b9DDfgD5hGMnFf5OTHxM/cpqL1TpgddvTSAgKOnmKcHzTAYDUoStOvTjEnEsp3BIdMilKlYtG5DW16lAMlA6DGCbORuaSqLHeyxYY1jKTpVOUImX1Hn4h4xfrBk8GRfi+g5PgcGdyvWMxoFGXjevP58sys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mff0oXGC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wA7+KUkT"
-Received: by mail-qk1-f201.google.com with SMTP id af79cd13be357-7c95556f824so252119685a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 13:17:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747426655; x=1748031455; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9CHB9wwhPWWYDPfcbzkF4W4PL5+L+ibby6qD0MEp0ho=;
-        b=wA7+KUkTZfDZHWUzAQZEc/j43NZtxeO0xvYKRFAOOEBw5HhFLqRCLmVhZyU6AUXsmE
-         sbeXGCG/+E1XAxoNMHWt8uLAplyuiG0eD0FDOWCA9iePoWTcTR4NYLpiC73paNcVSGJA
-         vdKUgUfbS2ZWV5cKMPuCoiyeFt95o8b3fyH7aSqhTaq3Ddlkl0whTqHjImQZDvl8Ci7+
-         /KEa0vsg5oKet608rnx199jPnO0NDkMcEXd6QUgFctxdD1vVVKGxVaO/Ghk1C5yX3Umj
-         GMrQTwkd+W9Eo48NmhDVTlWAtDD4gaU95aRuawDMWGakd0avlm8UhYOfQ/aB8XiqL5Fy
-         cPSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747426655; x=1748031455;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9CHB9wwhPWWYDPfcbzkF4W4PL5+L+ibby6qD0MEp0ho=;
-        b=GdYEeJDDfD3RjcqYKqUep9q5mdFNRm3D51WqY6JY7NAyUsZfN5gaoZP72MOvrOwY4i
-         Sz19s2Rz+HReJWg3asl3ryrcs5weaY08mw+6Q/ufC4aF1a3JiHvZ4gNWTBgxFD4FKlQf
-         SYaSDswgBjT5wxckmhsT1/VMooG+QSiSgRWS5e7x7BFyLy3hw2Htb4pP3vTDUHhzgMWb
-         v2MBn3TBmgPDsCmKic9s5oNlnT4u3xZORKQqkJ8eQlnPGKCXyyeIEXooS0cfuJs6ID4F
-         L8c1VF+6fvrXSMqShzAXeb1R/LLYgvqdcl4JfRCgH0FIci6NBWmINmsPh2LfdtYyvgHW
-         Nj2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUbhY11zzTNf+RHWONq6n0jrbL1lrDXZRkVS0vzY5zyc3HATYM1OELPoE+63+vCN3AiTjEcIVlQs3fPJis=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQ2ei/lec9IXF6AAD83WAtrIQFiL4WcykWZrFrorOiz6ait2z9
-	lcsdjdvpoWqr+Ms7sHMI2dhLpUHlR4VlxayyCiwvW21gvL/BcF/gvyQi4K6UgsLcC4svVFDEw5+
-	xAA==
-X-Google-Smtp-Source: AGHT+IGFEFtE0VXSdQwE4QdE7XZfEG6vLdmjRQWUL17HoHMazJClUlrpqfyCzriA1nm9WNAdMI+aZK50Dw==
-X-Received: from qknqj9.prod.google.com ([2002:a05:620a:8809:b0:7cd:177:9ba4])
- (user=rmoar job=prod-delivery.src-stubby-dispatcher) by 2002:a05:620a:1a26:b0:7c5:592c:c27
- with SMTP id af79cd13be357-7cd46721b89mr656986685a.21.1747426654978; Fri, 16
- May 2025 13:17:34 -0700 (PDT)
-Date: Fri, 16 May 2025 20:16:15 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mff0oXGC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24984C4CEE4;
+	Fri, 16 May 2025 20:21:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747426913;
+	bh=0eZbYvSMOyz0txO7McOUt7WBCXP3fLg51sadhpP/XeE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mff0oXGCBELo0hzgvl1WaEJjdXKZ7PB2yucYnPxgvfRfJtsyfndb2MF2nqpMWRNd6
+	 6QSwslLlHkotLfTgLKNJDZHKas5G61PIZ/7a43kJkNtGjgaIc8kTZS7vUdaNF6VwlI
+	 4HEg/c7NAuCUCMiawrmi2SVkxEVnd8Tkok6WC8ytZqBAw3HWVws7GIwYuklMxNJe2D
+	 RbBYKJALQSY4+ByUVtcQNY+Os6YPOLpagZk37B529LWkEru4lU5HBNRiNL+5zJEkcd
+	 e6OVlAMc47gBuo8m5D+6j5sVAzDeDPn1nm1dvDPlhVPLU/RZXeGoh1YtJZ+wGyAX+0
+	 HSJbIwqpTSQvQ==
+Date: Fri, 16 May 2025 21:21:49 +0100
+From: Simon Horman <horms@kernel.org>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] net: airoha: Fix an error handling path in
+ airoha_alloc_gdm_port()
+Message-ID: <20250516202149.GL3339421@horms.kernel.org>
+References: <5c94b9b345017f29ed653e2f05d25620d128c3f0.1746715755.git.christophe.jaillet@wanadoo.fr>
+ <20250516201606.GH3339421@horms.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250516201615.1237037-1-rmoar@google.com>
-Subject: [PATCH] kunit: tool: add test counts to JSON output
-From: Rae Moar <rmoar@google.com>
-To: davidgow@google.com, brendan.higgins@linux.dev, skhan@linuxfoundation.org
-Cc: dlatypov@google.com, kunit-dev@googlegroups.com, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Rae Moar <rmoar@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250516201606.GH3339421@horms.kernel.org>
 
-Add the test counts to the JSON output from kunit.py. For example:
+On Fri, May 16, 2025 at 09:16:13PM +0100, Simon Horman wrote:
+> On Thu, May 15, 2025 at 09:59:35PM +0200, Christophe JAILLET wrote:
+> > If register_netdev() fails, the error handling path of the probe will not
+> > free the memory allocated by the previous airoha_metadata_dst_alloc() call
+> > because port->dev->reg_state will not be NETREG_REGISTERED.
+> > 
+> > So, an explicit airoha_metadata_dst_free() call is needed in this case to
+> > avoid a memory leak.
+> > 
+> > Fixes: af3cf757d5c9 ("net: airoha: Move DSA tag in DMA descriptor")
+> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> > ---
+> > Changes in v3:
+> >   - None
+> > 
+> > Changes in v2:
+> >   - New patch
+> > v2: https://lore.kernel.org/all/5c94b9b3850f7f29ed653e2205325620df28c3ff.1746715755.git.christophe.jaillet@wanadoo.fr/
+> > 
+> > Compile tested only.
+> 
+> Reviewed-by: Simon Horman <horms@kernel.org>
 
-...
-"git_branch": "kselftest",
-"misc":
-{
-    "tests": 2,
-    "passed": 1.
-    "failed": 1,
-    "crashed": 0,
-    "skipped": 0,
-    "errors": 0,
-}
-...
+Sorry, I was a little too hasty.
 
-To output the JSON using the following command:
-./tools/testing/kunit/kunit.py run example --json
+This patch looks good to me, but as this is a fix for change
+present in net it should be targeted at net.
 
-This has been requested by KUnit users. The counts are in a "misc"
-field because the JSON output needs to be compliant with the KCIDB
-submission guide. There are no counts fields but there is a "misc" field
-in the guide.
+  Subject: [PATCH v4 net] ...
 
-Signed-off-by: Rae Moar <rmoar@google.com>
----
- tools/testing/kunit/kunit_json.py | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+And it should be split out from the patchset comprising the remaining
+patches in this series, which appear to be clean-ups (or at least not
+but fixes). This rump patch-set should be targeted at net-next.
+And ideally, IMHO, have a cover letter.
 
-diff --git a/tools/testing/kunit/kunit_json.py b/tools/testing/kunit/kunit_json.py
-index 10ff65689dd8..80fa4e354a17 100644
---- a/tools/testing/kunit/kunit_json.py
-+++ b/tools/testing/kunit/kunit_json.py
-@@ -39,10 +39,20 @@ def _get_group_json(test: Test, common_fields: JsonObj) -> JsonObj:
- 		status = _status_map.get(subtest.status, "FAIL")
- 		test_cases.append({"name": subtest.name, "status": status})
- 
-+	test_counts = test.counts
-+	counts_json = {
-+		"tests": test_counts.total(),
-+		"passed": test_counts.passed,
-+		"failed": test_counts.failed,
-+		"crashed": test_counts.crashed,
-+		"skipped": test_counts.skipped,
-+		"errors": test_counts.errors,
-+	}
- 	test_group = {
- 		"name": test.name,
- 		"sub_groups": sub_groups,
- 		"test_cases": test_cases,
-+		"misc": counts_json
- 	}
- 	test_group.update(common_fields)
- 	return test_group
+  Subject: [PATCH v4 net-next 0/3] ...
 
-base-commit: c2493384e8110d5a4792fff4b9d46e47b78ea10a
+Thanks!
+
 -- 
-2.49.0.1101.gccaa498523-goog
-
+pw-bot: changes-requested
