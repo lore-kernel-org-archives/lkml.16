@@ -1,168 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from e240-11.smtp-out.eu-north-1.amazonses.com (e240-11.smtp-out.eu-north-1.amazonses.com [23.251.240.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D4A41DE2CD;
-	Fri, 16 May 2025 23:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803431581F0
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 23:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.240.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747437290; cv=none; b=lu5MpTQuAmZnR//KQ5bg8Vp19BcQX1H9QZt/JRHiwywCPvgVuP7l31Uh1LSxAP5J6g3S+9ZNqlIZpRBQwqlRZP+CvIxDOUpFHv56C34r7TDSSygf8ytsMaQ0DkYmwt+820Qke6JJeVcJJILlXDHOCFxADaeAN7rd+dua6cTAcQc=
+	t=1747437353; cv=none; b=aRS0edQbXbvJ2dnQbXR3cBoZWEd3KELtruDKM4/lqeEiUAyD3jQBvORFgoi4LZy04FwzcKOxFej+om1M+H5X6hTwULWnMrLeppM7mwJLpqduxXCT2x01V+32x/JgbLAlU7oTpCx2L7uwPRXDQZRnf7x7JInDvr552Qqg2eledbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747437290; c=relaxed/simple;
-	bh=PHSF/GQelpbTFixsSKKvinSFQZDIOLsx35wwaHp6R4s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oERwYV/XPIJMOWGvnEZTIiAED5xDlZdH5DKQGufOpoY4zh+X4leAnbzLXWWFON2nB3Zp7KfPsRX8nWRqKKrrvTICTFvSbV4DwYVoS//5+N5SsrUS6tonEfJfuYZHNnFq64QcOHYwzRvd/+hJ21cFXdpNwEj4XbLessViJKqTLLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iBoIwwvZ; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747437353; c=relaxed/simple;
+	bh=cPvggfarQmyIci66SqtwkqSQNZt+BSso3h/As/SvT5E=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=T3h6S5g7eDrVn5y2x60gYsts01Urm7I8mBEiBIake5o7kkzD9awqNUyNt79ABrJkwPk8KY3yDKqYXbG9QVJx732mhTNd3GMvlj0WYzywvA/cd7qwb3Lqpc2mQGk+9iFv36cvvXtQL2gMS5ZhEPKwQaLcjI254rFkeM13A4CDrd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com; dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b=Zu4xB87s; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=IkiUHCO6; arc=none smtp.client-ip=23.251.240.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iBoIwwvZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747437289; x=1778973289;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=PHSF/GQelpbTFixsSKKvinSFQZDIOLsx35wwaHp6R4s=;
-  b=iBoIwwvZyizXRRRxGVCWZT2b7nd611BqC2f4wj8UVEKwAnQjAVQ/rN+7
-   wzFnAnnGfa1/uFxXsMW4V8q/6WKNIiJTizQ25J/oPyxxBmIx+uAf4QcEF
-   s3h/qsy17FzQ1Wq3xAMLuhuCxUhcf9ERFtKNzyrWhMombIE9sfXU523GC
-   FX/2FTN9VAiTpGiShQNkYHnkmtEfFEC5KLWFt1thgHXnt2vXFthKTUNVf
-   eNVjkw8+qkjeuDNn7qwoNNdlopIXgduuBjWS+Xj9KEMDyQhKZ79Idljjx
-   At2tQ2oShi4W6nMiPgVsdunLHn8fqta42ivwhDu5oc4arVZxO3Z4M/D+0
-   g==;
-X-CSE-ConnectionGUID: JF5eZDpmQYm8pCptX7AuyA==
-X-CSE-MsgGUID: hiZxludkQ+qDCw2iMIC/ng==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49489639"
-X-IronPort-AV: E=Sophos;i="6.15,295,1739865600"; 
-   d="scan'208";a="49489639"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 16:14:48 -0700
-X-CSE-ConnectionGUID: js51SXZoQrO+DUpr7Ypkqw==
-X-CSE-MsgGUID: j2yxrjfiQcuEn8ANbRWW8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,295,1739865600"; 
-   d="scan'208";a="143698813"
-Received: from tfalcon-desk.amr.corp.intel.com (HELO [10.124.220.15]) ([10.124.220.15])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 16:14:48 -0700
-Message-ID: <d399dd38-b26f-413f-ab02-49680ff87ed1@linux.intel.com>
-Date: Fri, 16 May 2025 16:14:47 -0700
+	dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b="Zu4xB87s";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="IkiUHCO6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=iuunfi4kzpbzwuqjzrd5q2mr652n55fx; d=goosey.org; t=1747437349;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type;
+	bh=cPvggfarQmyIci66SqtwkqSQNZt+BSso3h/As/SvT5E=;
+	b=Zu4xB87sYoCVlDImMv56Rv1PQ5dhVbaQ2yjPqhxX2AUslp6UD0C84Ump1rtOlOlP
+	beqUbIWushOhW4N3R5867DyTnWJddh6FeFq2ttr//6pbRPSJmZso12LNDNVw4csAOff
+	lLa6HDJk2ZLozELQW3ryOCkfZKJ4lel4Vha2pshhME0H+2iUAXmg9SQXYNG8OpukShj
+	qKZ9R0qiZ0seRr8cajij0jTNdPBxt35jBsn+jEuEEqIGG7avtDbD2sQsW856j6p3/yz
+	1l8nBfWZFMcQYKHVv6zGllsKjmV8AV3r7vsyp/B1LEdOKe7aMLmDJnVmLAgaLMVnYrq
+	dxBs72WpeA==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=bw45wyq3hkghdoq32obql4uyexcghmc7; d=amazonses.com; t=1747437349;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type:Feedback-ID;
+	bh=cPvggfarQmyIci66SqtwkqSQNZt+BSso3h/As/SvT5E=;
+	b=IkiUHCO6gY9nVp/W/c9+FE1H5OuSOLAA+WZ9uBpkxsFjLYmj864euxBREEshqm0M
+	mgGazQaWt96ZAWGeYSBqeIVW4yGKuZeslrQ+DeobJtXLTXzONb3zh8F1DnmKxVyAxUf
+	CaOMgcUiIyRxiBZIt8taDK5/Y4eZALK1mFkoEZco=
+X-Gm-Message-State: AOJu0YztL8+8M3HgfPfTH7fP9ZYnvSNaoOmPaTwNVpMXQaswzoeD1TKo
+	0RRvF33HazkuYpabnYB/FD8g7IR1S76RI27u8pY5+qv06JZBml8IKSW4BOOcxEN8gvUHbNFjZXm
+	G9vaNZk5bwb8Q7svEqUR8biVqI5Gt9tc=
+X-Google-Smtp-Source: AGHT+IEPcYWy16TJXz10BUaONSoxvf1D8udTQFlJh6bPU72MAnG2M2ehgw/pB1K67HIQKz4bp/55wOoqDmKNowqrFlg=
+X-Received: by 2002:a17:902:e786:b0:22e:5e82:66fa with SMTP id
+ d9443c01a7336-231d450f307mr67312705ad.19.1747437347096; Fri, 16 May 2025
+ 16:15:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/6] PCI: Remove hybrid-devres region requests
-To: Philipp Stanner <phasta@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Bjorn Helgaas <bhelgaas@google.com>, Mark Brown <broonie@kernel.org>,
- David Lechner <dlechner@baylibre.com>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Zijun Hu <quic_zijuhu@quicinc.com>, Yang Yingliang
- <yangyingliang@huawei.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20250516174141.42527-1-phasta@kernel.org>
-Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250516174141.42527-1-phasta@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Ozgur Kara <ozgur@goosey.org>
+Date: Fri, 16 May 2025 23:15:49 +0000
+X-Gmail-Original-Message-ID: <CADvZ6Epno6+tMP0CAP-zPpXvpgRy+C_Y8DwDj1Tz5Jb_RycYsA@mail.gmail.com>
+X-Gm-Features: AX0GCFuTmo2oBGGIqK4gBdHsKIzDFG2M6kqJVXrSUAkJhL9lUXZrM6aADG2maug
+Message-ID: <01100196db61ea58-123409dc-7381-487b-91b6-166193f3f349-000000@eu-north-1.amazonses.com>
+Subject: [PATCH] kernel: fix acct.c first test openai codex
+To: Christian Brauner <brauner@kernel.org>, Jens Axboe <axboe@kernel.dk>, 
+	Jeff Layton <jlayton@kernel.org>, Song Liu <song@kernel.org>, 
+	Joel Granados <joel.granados@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Feedback-ID: ::1.eu-north-1.jZlAFvO9+f8tc21Z4t7ANdAU3Nw/ALd5VHiFFAqIVOg=:AmazonSES
+X-SES-Outgoing: 2025.05.16-23.251.240.11
 
+From: Ozgur Karatas <ozgur@goosey.org>
 
-On 5/16/25 10:41 AM, Philipp Stanner wrote:
-> Changes in v2:
->    - Drop patch for removing forgotten header. Patch is unrelated. Will
->      resend seperately. (Andy)
->    - Make docu patch headline "Documentation/driver-api:". There seems to
->      be no canonical way, but this style is quite frequent. (Andy)
->    - Apply Andy's RBs where applicable.
->
-> Howdy,
->
-> the great day has finally arrived, I managed to get rid of one of the
-> big three remaining problems in the PCI devres API (the other two being
-> MSI having hybrid-devres, too, and the good old pcim_iomap_tablle)!
->
-> It turned out that there aren't even that many users of the hybrid API,
-> where pcim_enable_device() switches certain functions in pci.c into
-> managed devres mode, which we want to remove.
->
-> The affected drivers can be found with:
->
-> grep -rlZ "pcim_enable_device" | xargs -0 grep -l "pci_request"
->
-> These were:
->
-> 	ASoC [1]
-> 	alsa [2]
-> 	cardreader [3]
-> 	cirrus [4]
-> 	i2c [5]
-> 	mmc [6]
-> 	mtd [7]
-> 	mxser [8]
-> 	net [9]
-> 	spi [10]
-> 	vdpa [11]
-> 	vmwgfx [12]
->
-> All of those have been merged and are queued up for the merge window.
-> The only possible exception is vdpa, but it seems to be ramped up right
-> now; vdpa, however, doesn't even use the hybrid behavior, so that patch
-> is just for generic cleanup anyways.
->
-> With the users of the hybrid feature gone, the feature itself can
-> finally be burned.
->
-> So I'm sending out this series now to probe whether it's judged to be
-> good enough for the upcoming merge window. If we could take it, we would
-> make it impossible that anyone adds new users of the hybrid thing.
->
-> If it's too late for the merge window, then that's what it is, of
-> course.
->
-> In any case I'm glad we can get rid of most of that legacy stuff now.
+Hello,
 
-Looks good to me.
+i want to try out the openai codex and it seemed like a logical
+process so with rcu_read_lock() a protection is started but we dont
+call rcu_read_unlock(); it has to be called to end rcu read lock.
 
-Reviewed-by: Kuppuswamy Sathyanarayanan 
-<sathyanarayanan.kuppuswamy@linux.intel.com>
+I guess, this means rcu stays open forever and data structures are not
+cleaned which causes performance degradation.
 
+Regards
 
->
-> Regards,
-> Philipp
->
-> [1] https://lore.kernel.org/all/174657893832.4155013.12131767110464880040.b4-ty@kernel.org/
-> [2] https://lore.kernel.org/all/8734dy3tvz.wl-tiwai@suse.de/
-> [3] https://lore.kernel.org/all/20250417091532.26520-2-phasta@kernel.org/ (private confirmation mail from Greg KH)
-> [4] https://lore.kernel.org/dri-devel/e7c45c099f8981257866396e01a91df1afcfbf97.camel@mailbox.org/
-> [5] https://lore.kernel.org/all/l26azmnpceka2obq4gtwozziq6lbilb2owx57aajtp3t6jhd3w@llmeikgjvqyh/
-> [6] https://lore.kernel.org/all/CAPDyKFqqV2VEqi17UHmFE0b9Y+h5q2YaNfHTux8U=7DgF+svEw@mail.gmail.com/
-> [7] https://lore.kernel.org/all/174591865790.993381.15992314896975862083.b4-ty@bootlin.com/
-> [8] https://lore.kernel.org/all/20250417081333.20917-2-phasta@kernel.org/ (private confirmation mail from Greg KH)
-> [9] https://lore.kernel.org/all/174588423950.1081621.6688170836136857875.git-patchwork-notify@kernel.org/
-> [10] https://lore.kernel.org/all/174492457740.248895.3318833401427095151.b4-ty@kernel.org/
-> [11] https://lore.kernel.org/all/20250515072724-mutt-send-email-mst@kernel.org/
-> [12] https://lore.kernel.org/dri-devel/CABQX2QNQbO4dMq-Hi6tvpi7OTwcVfjM62eCr1OGkzF8Phy-Shw@mail.gmail.com/
->
-> Philipp Stanner (6):
->    PCI: Remove hybrid devres nature from request functions
->    Documentation/driver-api: Update pcim_enable_device()
->    PCI: Remove pcim_request_region_exclusive()
->    PCI: Remove request_flags relict from devres
->    PCI: Remove redundant set of request funcs
->    PCI: Remove hybrid-devres hazzard warnings from doc
->
->   .../driver-api/driver-model/devres.rst        |   2 +-
->   drivers/pci/devres.c                          | 201 +++---------------
->   drivers/pci/iomap.c                           |  16 --
->   drivers/pci/pci.c                             |  42 ----
->   drivers/pci/pci.h                             |   3 -
->   5 files changed, 32 insertions(+), 232 deletions(-)
->
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Ozgur
 
+Reported-by: Ozgur Karatas <ozgur@goosey.org>
+---
+ kernel/acct.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/acct.c b/kernel/acct.c
+index 6520baa13669..8a2b75063d16 100644
+--- a/kernel/acct.c
++++ b/kernel/acct.c
+@@ -330,6 +330,7 @@ SYSCALL_DEFINE1(acct, const char __user *, name)
+        } else {
+                rcu_read_lock();
+                pin_kill(task_active_pid_ns(current)->bacct);
++               rcu_read_unlock();
+        }
+
+        return error;
+--
+2.39.5
