@@ -1,50 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF3C22DA15
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 23:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FB522DA15;
+	Fri, 16 May 2025 23:20:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747437620; cv=none; b=Y5kh1ZmSg7IsD378kOcvRQ/gtCLxoM+Mftw22ky5a9ndcLHt9rgYiyaJEF1TVv/4HqmN+qOAmEzO31dQJV3Ngx9e0BVco4b/f4VeicVV8+tPQR6dRt9vT+uS80dDMAOE4BwbzeKm1XN7NeYjWSSDZN0iODlLBGb8+Gey9RR9PPU=
+	t=1747437655; cv=none; b=Fhi6iWlOvWF2gPkcF055qy+t9lHstHZYQCYBvZCnzSaBssipi72JwrADQHSsC/7u4Pvznjb0ucS7V/LMatWEm/S9uFZdlzvj4jQex1xpdUScBghHQAaW7+5SHSZAnu7tI9qVRG1lwgH95N3XtLvRPwUWFTPooDEdopPTgYu0ZgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747437620; c=relaxed/simple;
-	bh=GMJAExymKlyzpKcXEpE4D10c3rl+qsRVgQASHsL38Os=;
+	s=arc-20240116; t=1747437655; c=relaxed/simple;
+	bh=e2F/6StyG52CwA2JYoo0AgukZ0keLwK7GLH8EnBa/DA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l6PSH+2vCHhimm5giteFJoAG89XaFzFRnBIoewo3yB68HCK6ODh56loRKfl3+MhxILaK/YbQa5lG576zZbEX/ox/FPj/2AyjJgdx7Ap9QrqurA3xbe3fKvOEisktEdScje0f1luEPxuNZhVX9ZDLIgqE5by8IiLbpAZQzKS1rR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SANjnk6V; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UYtInoaV2myeNAYk67Y0HpL7TT4NDpuJtTHH+lapWepb0g3K3y7MV4b7dPZce6cElW1n2p3kDVlpcHCGJREe4l9EV/nsXcI5TfiOe67Nr6qExItKqtr4Ael+5/3SetJRp1rDGOK2l/AwKgJTfsHFAwKuG4EIaL0bXxsziJQNuwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=kUxpfF0T; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SANjnk6V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60C0DC4CEE4;
-	Fri, 16 May 2025 23:20:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747437617;
-	bh=GMJAExymKlyzpKcXEpE4D10c3rl+qsRVgQASHsL38Os=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SANjnk6Vb+BV6/eaioMfhryZ33AY8VS2FmqNMrzTFR8ZTUNHsHHzgjFwy7FLyh9Q9
-	 w9mmRCZbD3O7pVuMFz2cIDTgHudJEP/u3r1yH/DKpQrDx1xbOuOysg/hnlUTLDo9yx
-	 7bL/ud3bRhN9+U/2mxdtBknOrMvmFJORsxTLzKuQcXEon+ez+ZAQ9lYW5c3SLFreAF
-	 bk2C0N4ViNAg5kUXMt6mEdZPXmHogrFcJXOdpsp7erOY3+a+tMUUfcJNvoaA7q9Gj8
-	 EXt9SL6LEItndZ3iT0s/ozN9ye1yEuPRnjOnBY2DPf31QGNZuChnvwPc+GQ3W+VDc1
-	 A0DmVYAR4sulg==
-Date: Fri, 16 May 2025 16:20:13 -0700
-From: Kees Cook <kees@kernel.org>
-To: Baoquan He <bhe@redhat.com>
-Cc: Coiby Xu <coxu@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
-	fuqiang wang <fuqiang.wang@easystack.cn>,
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [PATCH v4] x86/kexec: fix potential cmem->ranges out of bounds
-Message-ID: <202505161616.F4C1BCCF6A@keescook>
-References: <20240108130720.228478-1-fuqiang.wang@easystack.cn>
- <ZZzBhy5bLj0JuZZw@MiWiFi-R3L-srv>
- <4de3c2onosr7negqnfhekm4cpbklzmsimgdfv33c52dktqpza5@z5pb34ghz4at>
- <20250507225959.174dd1eed6b0b1354c95a0fd@linux-foundation.org>
- <2754f4evjfumjqome63bc3inqb7ozepemejn2lcl57ryio2t6k@35l3tnn73gei>
- <aB3RqS85p6DiHKHm@MiWiFi-R3L-srv>
- <20250509183518.bf7cd732ac667a9c20f1fee1@linux-foundation.org>
- <sn775iwfnogyvgxetbcfneuuzsnr5wva6kc4vachyzc7r6uhfi@ozhimoihtk4b>
- <aCaycGEtgNvynjNQ@MiWiFi-R3L-srv>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="kUxpfF0T"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=xp7EErupILxnMLXfB+a4CcMjkMukegAOKV+BDImfBaU=; b=kUxpfF0TrVITUX+ZdAUJOlD4gx
+	7SrKFRysiIniVlUZsaKRDFTkQBFyKkk74wVPIJpgStOuB4sO5QASze1G7O5j3xJjHW+oVoPkDzFOS
+	c+q+dBcXA8W3z6dfJAYWNL0cIK8QoT2Z9yypYcjVLF6uBgboBQxObzsoRiNsAJSs8Jkv0OOtSbUjQ
+	fhKmWPZ17QpjMbFerL0JMf0mtE4y8Y+1gJteh2UhRwdXs4aXi6YQDH3MajyyuQ9GlYgdpfSYMjYUx
+	tKG3Yn6tpNBebVT42RLxrsWP7Bx2rC9443snis91f6dtdrMQEqFyOOFJHbY1C6Q7Xs8CMJdlgisYH
+	2cvZApJQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uG4MA-00000003kwv-1vED;
+	Fri, 16 May 2025 23:20:46 +0000
+Date: Sat, 17 May 2025 00:20:46 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: syzbot+321477fad98ea6dd35b7@syzkaller.appspotmail.com,
+	brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: [pox on syzbot - again][exfat] exfat_mkdir() breakage on corrupted
+ image
+Message-ID: <20250516232046.GT2023217@ZenIV>
+References: <680809f3.050a0220.36a438.0003.GAE@google.com>
+ <tencent_55ACA45C1762977206C3B376C36BA96B8305@qq.com>
+ <20250516193122.GS2023217@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,76 +49,101 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aCaycGEtgNvynjNQ@MiWiFi-R3L-srv>
+In-Reply-To: <20250516193122.GS2023217@ZenIV>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Fri, May 16, 2025 at 11:35:12AM +0800, Baoquan He wrote:
-> On 05/11/25 at 10:19am, Coiby Xu wrote:
-> > On Fri, May 09, 2025 at 06:35:18PM -0700, Andrew Morton wrote:
-> > > On Fri, 9 May 2025 17:58:01 +0800 Baoquan He <bhe@redhat.com> wrote:
-> > > 
-> > > > > The bad commit was introduced in 2021 but only recent gcc-15 supports
-> > > > > __counted_by. That's why we don't see this UBSAN warning until this
-> > > > > year. And although this UBSAN warning is scary enough, fortunately it
-> > > > > doesn't cause a real problem.
-> > > > >
-> > > > > >
-> > > > > > Baoquan, please re-review this?
-> > > > > >
-> > > > > > A -stable backport is clearly required.  A Fixes: would be nice, but I
-> > > > > > assume this goes back a long time so it isn't worth spending a lot of
-> > > > > > time working out when this was introduced.
-> > > > >
-> > > > > So I believe the correct fix should be as follows,
-> > > > 
-> > > > Thanks for testing and investigation into these. Could you arrange this
-> > > > into formal patches based on your testing and analysis?
-> > > > 
-> > > > It would be great if you can include Fuqiang's patch since it has
-> > > > conflict with your LUKS patch. This can facilitate patch merging for
-> > > > Andrew. Thanks in advance.
-> > > 
-> > > Yes please, I'm a bit lost here.
-> > > x86-kexec-fix-potential-cmem-ranges-out-of-bounds.patch is not
-> > > presently in mm.git and I'd appreciate clarity on how to resolve the
-> > > conflicts which a new version of
-> > > x86-kexec-fix-potential-cmem-ranges-out-of-bounds.patch will produce.
+On Fri, May 16, 2025 at 08:31:22PM +0100, Al Viro wrote:
+> On Wed, May 14, 2025 at 06:39:40AM +0800, Edward Adam Davis wrote:
+> > In the reproducer, when calling renameat2(), olddirfd and newdirfd passed
+> > are the same value r0, see [1]. This situation should be avoided.
 > > 
-> > I'll resolve any conflict between these patches. Before that, I'm not sure
-> > if a separate patch to fix the UBSAN warnings alone is needed to Cc
-> > stable@vger.kernel.org because 1) the UBSAN warnings don't mean there is a
-> > real problem;
-> > 2) both Fuqiang's patch and my kdump LUKS support patches fix the UBSAN
-> > warnings as a by-product.
+> > [1]
+> > renameat2(r0, &(0x7f0000000240)='./bus/file0\x00', r0, &(0x7f00000001c0)='./file0\x00', 0x0)
 > > 
-> > It seems the answer largely depends on if the stable tree or longterm
-> > trees need it. Currently, only longterm tree 6.12.28 and the stable tree
-> > 6.14.6 have the UBSAN warnings if they are compiled with gcc-15 or
-> > clang-18. Any advice will be appreciated! Thanks!
+> > Reported-by: syzbot+321477fad98ea6dd35b7@syzkaller.appspotmail.com
+> > Closes: https://syzkaller.appspot.com/bug?extid=321477fad98ea6dd35b7
+> > Tested-by: syzbot+321477fad98ea6dd35b7@syzkaller.appspotmail.com
+> > Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+> > ---
+> >  fs/namei.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/namei.c b/fs/namei.c
+> > index 84a0e0b0111c..ff843007ca94 100644
+> > --- a/fs/namei.c
+> > +++ b/fs/namei.c
+> > @@ -5013,7 +5013,7 @@ int vfs_rename(struct renamedata *rd)
+> >  	struct name_snapshot old_name;
+> >  	bool lock_old_subdir, lock_new_subdir;
+> >  
+> > -	if (source == target)
+> > +	if (source == target || old_dir == target)
+> >  		return 0;
 > 
-> I personally think UBSAN warning fix is not necessary for stable kernel.
+> What the hell?
 > 
-> Hi Kees, Andrew,
+> 1) olddirfd and newdirfd have nothing to do with vfs_rename() - they are
+> bloody well gone by the time we get there.
 > 
-> Could you help answer Coiby's question about whether we need post a
-> standalone patch to fix the UBSAN warning fix so that it can be back
-> ported to stable kernel?
+> 2) there's nothing wrong with having the same value passed in both -
+> and it's certainly not a "quietly do nothing".
+> 
+> 3) the check added in this patch is... odd.  You are checking essentically
+> for rename("foo/bar", "foo").  It should fail (-ENOTEMPTY or -EINVAL, depending
+> upon RENAME_EXCHANGE in flags) without having reached vfs_rename().
 
-I went back through the thread and the referenced threads and I can't
-find any details on the USBAN splat. Can that please get reproduced in a
-commit log? That would help understand if it's a false positive or not.
+4) it's definitely an exfat bug, since we are getting
+	old_dentry->d_parent != target
+	old_dentry->d_parent->d_inode == target->d_inode
+	S_ISDIR(target->d_inode->i_mode)
+All objects involved are on the same super_block, which has "exfat" for
+->s_type->name, so it's exfat ending up with multiple dentries for
+the same directory inode, and once that kind of thing has happened,
+the system is FUBAR.
 
-Also, referencing the commit would be good. I assume this is discussing
-commit 15fcedd43a08 ("kexec: Annotate struct crash_mem with __counted_by")?
+As for the root cause, almost certainly their ->mkdir() is deciding
+that it has just created a new inode - and ending up with existing one,
+already in icache and already with a dentry attached to it.
 
-> In the case exposed during reviewing this patch, the code UBSAN warned
-> is not risky.
+<adds BUG_ON(!hlist_empty(&inode->i_dentry)) into exfat_mkdir()>
 
-Given that this makes things work correctly with newer compilers, I
-would say it should be backported to whatever -stable kernels have the
-"counted_by" annotation. (Hence the request to add a "Fixes" line so
-that it will happen automatically.)
+   [   84.780875] exFAT-fs (loop0): Volume was not properly unmounted. Some data may be corrupt. Please run fsck.
+   [   84.781411] exFAT-fs (loop0): Medium has reported failures. Some data may be lost.
+   [   84.782209] exFAT-fs (loop0): failed to load upcase table (idx : 0x00010000, chksum : 0xe62de5da, utbl_chksum : 0xe619d30d)
+   [   84.783272] ------------[ cut here ]------------
+   [   84.783546] kernel BUG at fs/exfat/namei.c:881!
 
--Kees
+... and there we go.  exfat_mkdir() getting an existing in-core inode
+and attaching an alias to it, with expected fun results.
 
--- 
-Kees Cook
+For crying out loud, how many times do syzbot folks need to be told that
+getting report to attention of relevant filesystem folks is important?
+
+Subject: [syzbot] [fs?] INFO: task hung in vfs_rename (2)
+
+mentionings of anything exfat-related: 0.
+
+Cc: brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
+	 linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+		 viro@zeniv.linux.org.uk
+
+mentionings of anything exfat-related: 0.
+
+In message body:
+  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=12655204580000)
+
+Why, that does sound like some filesystem bug might be involved
+and presumably the damn thing knows which type had it been.
+<start browser, cut'n'paste the sodding link>
+... and the very first line is
+fsck.exfat -n exited with status code 4
+
+Result: 3 weeks later it *STILL* hasn't reached the relevant fs
+maintainers.  Could that be a sufficient evidence to convince the
+fine fellows working on syzbot that "you just need to click a few
+links" DOES NOT WORK?
+
+We'd been there several times already.  For relatively polite example,
+see https://lore.kernel.org/all/Y5ZDjuSNuSLJd8Mn@ZenIV/ - I can't be arsed
+to explain that again and again, and you don't seem to mind following
+links in email, so...
