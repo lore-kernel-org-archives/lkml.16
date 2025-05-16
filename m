@@ -1,25 +1,40 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DEFF4B1E73;
-	Fri, 16 May 2025 13:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mout.web.de (mout.web.de [212.227.15.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9347132111;
+	Fri, 16 May 2025 13:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747403438; cv=none; b=kT24H2td1vtcFLehX5HMItc5vwqvEY0rpy0e2gthF3KsFQ2s4o4c57nx61hwZUNtGkF1lX7AV2zNffiIWSz/aBlKU3z23uDNrEJ04PgKtbNljEYNLeB2WUf6hHO9st62SIo4sfZNzmGditpE5p/QonHMAn7YH4939fB/+tpwE/E=
+	t=1747403470; cv=none; b=JGjaivJMRyHe/h96wo41GwbjtVE4CCIzej4alhkgpOQ0ympww/JG6dAvN7hf2Q+rf4iWMKTG5XZ58r68EFWjUWGDQYshkBQykckotoywj8BKPXVGItV37W0ulxm3W3tz9JIfsdvV7/1d7ey7Hwz6OoaSm8mAtrPcOSzVQsBSBmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747403438; c=relaxed/simple;
-	bh=0THkZyxxSuZVTH5og5hjwibotSM4qUDA6bNyzgM51BM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GWgTWM5899gOyN1kFSEjQbKuMqU4xwi7fGB4Oqtwl3QX2mbmQQFYllF5UxKHLDzM8aJl2oTxDXRcEtBIfVSRSIvq5dV60BzzJnKstPjtP4atXXysre8mcwm6yJsq0IDDj6o271xATnHv+BUIYNfU7tas8Zse/ka7S5dD3Eh9e1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C511169C;
-	Fri, 16 May 2025 06:50:23 -0700 (PDT)
-Received: from [10.1.27.17] (e122027.cambridge.arm.com [10.1.27.17])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EAE733F673;
-	Fri, 16 May 2025 06:50:30 -0700 (PDT)
-Message-ID: <c4c2d45a-0c9f-41ee-8659-d119edda457b@arm.com>
-Date: Fri, 16 May 2025 14:50:28 +0100
+	s=arc-20240116; t=1747403470; c=relaxed/simple;
+	bh=UO5COJwLunfQkJ0IseRANaLKRFoZaYHPD/nywAmitNA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=I07faU5vpjekLVJbYVISENHG0hBmywsWUu1HYGlJ0PhAJ++/HOPPdJE0r739ep9QU9zo0qF6C92vRl2kic0nHI0Eu7J2CpDF1Fj4NeDHLUbdry3TA8rzXxGky8zKMugZymiLTYB28/bqd04r3fP92mdc1BWGv1SIQnCWthRn36c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=r41OFq5m; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="r41OFq5m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1747403454; x=1748008254; i=markus.elfring@web.de;
+	bh=UO5COJwLunfQkJ0IseRANaLKRFoZaYHPD/nywAmitNA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=r41OFq5mcbBkCHEVjv85plhQWVc8A5GZmaFap3mV1M7S7G5XA5Z7RHjwdGCkyZ5+
+	 eS/aFNXj9K4L3/lwQPjzMmylHRSfGr8PQM4BftYc5GDdVB4I1+P2HFHt//6sAEfZz
+	 SoblIfq4wYMh76064w6ZUiaM8mKBrukCfajg0X7BKT3XvOUmWTO0x+DIUuMJnKMWN
+	 x3SSdKtUWPugZzb5ax3T9tpsrjJvmAQqgXeMhV/wOYPqd5YH+17gjx0T80GIAzPwF
+	 JF+4NQvdxd4H9vbDiAEFbFzUSOcBw4dge4CVvJl9mAiQMrWetppKl8RldjLmv3HJz
+	 EPOZ/VPwTckRRByOGQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.69.218]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MaHWj-1uRjpr05kz-00SyGn; Fri, 16
+ May 2025 15:50:54 +0200
+Message-ID: <22ba7622-a838-47a8-b0f8-29a90d6df34c@web.de>
+Date: Fri, 16 May 2025 15:50:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,203 +42,73 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 17/43] arm64: RME: Handle RMI_EXIT_RIPAS_CHANGE
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
- Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
- <aneesh.kumar@kernel.org>
-References: <20250416134208.383984-1-steven.price@arm.com>
- <20250416134208.383984-18-steven.price@arm.com>
- <54a21b12-2b17-4e0a-9cbf-f68406fb003a@arm.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <54a21b12-2b17-4e0a-9cbf-f68406fb003a@arm.com>
+To: vulab@iscas.ac.cn, linux-wireless@vger.kernel.org,
+ Ajay Singh <ajay.kathat@microchip.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, Kalle Valo <kvalo@kernel.org>
+Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20250516083842.903-1-vulab@iscas.ac.cn>
+Subject: Re: [PATCH] wifi: wilc1000: Add error handling for wilc_sdio_cmd52()
+Content-Language: en-GB, de-DE
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250516083842.903-1-vulab@iscas.ac.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:wvPKIqwNlwdJ+3qyvQ13V1xe2fDlQc9TjkNtNq6k1vkiNlYHWqv
+ r0FJSlZ9/snVxnSZN+A4NB50jvx7DweMqmZ2fNpRrR3UeQ+dZwrRt5egnNVNbl9/0gR42Bg
+ cyxX0SMlrGfTqd2Y2DVc/Hsb0f01I/lWXqK9I+MOqo/+20MCSKDf5Dgcp+6bsOOWSmjK9xa
+ IbAT+PzFahwPlVTNKtqyg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:A6cV/us5kUc=;yQpV0bwcnIbLYQEbDS6fAy3jHOz
+ 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
 
-On 07/05/2025 11:42, Suzuki K Poulose wrote:
-> On 16/04/2025 14:41, Steven Price wrote:
->> The guest can request that a region of it's protected address space is
->> switched between RIPAS_RAM and RIPAS_EMPTY (and back) using
->> RSI_IPA_STATE_SET. This causes a guest exit with the
->> RMI_EXIT_RIPAS_CHANGE code. We treat this as a request to convert a
->> protected region to unprotected (or back), exiting to the VMM to make
->> the necessary changes to the guest_memfd and memslot mappings. On the
->> next entry the RIPAS changes are committed by making RMI_RTT_SET_RIPAS
->> calls.
->>
->> The VMM may wish to reject the RIPAS change requested by the guest. For
->> now it can only do with by no longer scheduling the VCPU as we don't
->> currently have a usecase for returning that rejection to the guest, but
->> by postponing the RMI_RTT_SET_RIPAS changes to entry we leave the door
->> open for adding a new ioctl in the future for this purpose.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->> Changes since v7:
->>   * Rework the loop in realm_set_ipa_state() to make it clear when the
->>     'next' output value of rmi_rtt_set_ripas() is used.
->> New patch for v7: The code was previously split awkwardly between two
->> other patches.
->> ---
->>   arch/arm64/kvm/rme.c | 88 ++++++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 88 insertions(+)
->>
->> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
->> index bee9dfe12e03..fe0d5b8703d2 100644
->> --- a/arch/arm64/kvm/rme.c
->> +++ b/arch/arm64/kvm/rme.c
->> @@ -624,6 +624,65 @@ void kvm_realm_unmap_range(struct kvm *kvm,
->> unsigned long start,
->>           realm_unmap_private_range(kvm, start, end);
->>   }
->>   +static int realm_set_ipa_state(struct kvm_vcpu *vcpu,
->> +                   unsigned long start,
->> +                   unsigned long end,
->> +                   unsigned long ripas,
->> +                   unsigned long *top_ipa)
->> +{
->> +    struct kvm *kvm = vcpu->kvm;
->> +    struct realm *realm = &kvm->arch.realm;
->> +    struct realm_rec *rec = &vcpu->arch.rec;
->> +    phys_addr_t rd_phys = virt_to_phys(realm->rd);
->> +    phys_addr_t rec_phys = virt_to_phys(rec->rec_page);
->> +    struct kvm_mmu_memory_cache *memcache = &vcpu->arch.mmu_page_cache;
->> +    unsigned long ipa = start;
->> +    int ret = 0;
->> +
->> +    while (ipa < end) {
->> +        unsigned long next;
->> +
->> +        ret = rmi_rtt_set_ripas(rd_phys, rec_phys, ipa, end, &next);
->> +
->> +        if (RMI_RETURN_STATUS(ret) == RMI_SUCCESS) {
->> +            ipa = next;
->> +        } else if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT) {
->> +            int walk_level = RMI_RETURN_INDEX(ret);
->> +            int level = find_map_level(realm, ipa, end);
->> +
->> +            /*
->> +             * If the RMM walk ended early then more tables are
->> +             * needed to reach the required depth to set the RIPAS.
->> +             */
->> +            if (walk_level < level) {
->> +                ret = realm_create_rtt_levels(realm, ipa,
->> +                                  walk_level,
->> +                                  level,
->> +                                  memcache);
->> +                /* Retry with RTTs created */
-> 
-> minor nit: Do we need to add a comment here, saying, we stop processing
-> the request if we run out of RTT pages in this go and Realm could retry
-> it.
+=E2=80=A6
+> Add error handling for wilc_sdio_cmd52(). If wilc_sdio_cmd52() fails,
+> log an error message via dev_err().
 
-I'm not really sure this is the right place, and following Gavin's
-comment I've combined this with the INIT_RIPAS code.
+Please avoid duplicate exception handling code.
+Can another jump target become nicer for this purpose?
 
-Also the situation at the moment isn't that we return to the guest -
-kvm_complete_ripas_change() will topup the memory cache and retry until
-the whole region is covered. There is an argument that perhaps it
-shouldn't, but I'm not sure what a guest can usefully do beyond retry in
-the case of a partial RIPAS change. In which case why have the overhead
-of returning to the guest?
-
->> +                if (!ret)
->> +                    continue;
->> +            } else {
->> +                ret = -EINVAL;
->> +            }
->> +
->> +            break;
->> +        } else {
->> +            WARN(1, "Unexpected error in %s: %#x\n", __func__,
->> +                 ret);
->> +            ret = -ENXIO;
->> +            break;
->> +        }
-> 
-> minor nit: Following from Gavin's comment on another patch, could
-> switch() make the above code more readable and remove the continue; ?
-> 
->         switch (RMI_RETURN_STATUS(ret)) {
->         case RMI_SUCCESS:
->             ipa = next;
->             break;
->         case RMI_ERROR_RTT: {
-> 
->        
->         }
->             break;
->         default:
->             WARN(..);
->             ret = -ENXIO;
->             goto out;
->         }
-> 
-> I am fine either way.
-
-Since I'm combining the two functions, I've kept just the switch()
-version of the code.
-
->> +    }
->> +
-> 
-> out:
-> 
->> +    *top_ipa = ipa;
->> +
->> +    if (ripas == RMI_EMPTY && ipa != start)
->> +        realm_unmap_private_range(kvm, start, ipa);
->> +
->> +    return ret;
->> +}
->> +
->>   static int realm_init_ipa_state(struct realm *realm,
->>                   unsigned long ipa,
->>                   unsigned long end)
->> @@ -863,6 +922,32 @@ void kvm_destroy_realm(struct kvm *kvm)
->>       kvm_free_stage2_pgd(&kvm->arch.mmu);
->>   }
->>   +static void kvm_complete_ripas_change(struct kvm_vcpu *vcpu)
->> +{
->> +    struct kvm *kvm = vcpu->kvm;
->> +    struct realm_rec *rec = &vcpu->arch.rec;
->> +    unsigned long base = rec->run->exit.ripas_base;
->> +    unsigned long top = rec->run->exit.ripas_top;
->> +    unsigned long ripas = rec->run->exit.ripas_value;
->> +    unsigned long top_ipa;
->> +    int ret;
->> +
->> +    do {
->> +        kvm_mmu_topup_memory_cache(&vcpu->arch.mmu_page_cache,
->> +                       kvm_mmu_cache_min_pages(vcpu->arch.hw_mmu));
->> +        write_lock(&kvm->mmu_lock);
->> +        ret = realm_set_ipa_state(vcpu, base, top, ripas, &top_ipa);
->> +        write_unlock(&kvm->mmu_lock);
->> +
->> +        if (WARN_RATELIMIT(ret && ret != -ENOMEM,
->> +                   "Unable to satisfy RIPAS_CHANGE for %#lx - %#lx,
->> ripas: %#lx\n",
->> +                   base, top, ripas))
->> +            break;
->> +
->> +        base = top_ipa;
->> +    } while (top_ipa < top);
->> +}
->> +
-> 
-> Rest looks good to me.
-
-Thanks,
-Steve
-
-
+Regards,
+Markus
