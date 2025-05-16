@@ -1,128 +1,243 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3E4214813
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 01:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [13.75.44.102])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 656371D07BA;
+	Fri, 16 May 2025 01:11:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.75.44.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747357820; cv=none; b=PwuVmnQUgs1h/IBRz/YwPyWxyqxEnMaurhsWWLGHbXGYJnTtvec5UKLMsaR+rEy+HFq1JEqBWw93VrDyNUQBaS8UgzgdUJAy5MfIFSzkCZIORZNqTtYYcgnVa2KknTRoXYIqY/H9QVYsQ5q3L+QOiIA1jp4SsCR8PMwt8vaX2bY=
+	t=1747357875; cv=none; b=Os3BbvoBMz5//5Gie5z5mf8UTvtGrxA8iIq3y12H6FK+f2veZ7MAkVxUxKYAlN3HyQBUjtGhUlUvAYReLGQWhIH5Bx60chDMKusppM4K/X9tb1QUPvUwSxFArHI2h2XKt5lAttyeXu+RV4nU/ahyCm0FwOH8rKR9N90Q71fjjH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747357820; c=relaxed/simple;
-	bh=4OvX/SlIoZzCJCssk73J7YDq+IVGREhHUKEp5bnG8Fg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bVdh9H6QX2bJmGyWviFFe9hAjASpcDI0Pa0tmcKC1yvg+KSFq2axa7JmdAU0BCbrFFRX9iL+x5tIlnUqg3EVfviXNe0V/I4UUtgjH3cea8mBXYyYyACT6b5f+N9WN8jBIso0FRQ5SRZumv92q2mdrmRMyKeLO4+3Es3TQmdr0Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HgZBkbvX; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HgZBkbvX"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-740adfc7babso1342022b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:10:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747357818; x=1747962618; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BfYmymD4WqB6RcT+A7NSAJ3/ssCfFT/DbabI8Oq16WQ=;
-        b=HgZBkbvXJBPZluMOUSlmAFz96Q7nBfMxQvCen6quVQ/3J7BJhWnm1toiw1CauxFFTU
-         GQWihV2/GoUfsBszNsw+JxDrb9axKkX+eSN3CeH7P9l5Q2n0ypjbRWLPEPpP/MpQU889
-         qtnCejcZaVOXJQjoZ4CXZQitVsNBQYHkdGv4ccMHwjaa4bWxvNG/rn9BakXXhRRPxIRV
-         0zXw2oMYCLNFO+tHcAGdk5etFcouSglCCRK4VMjgiC2tZeZedOzDuNj9ie3vtboWm5FR
-         Kv8C1QWccpkOveapivAg0kdO03mrVdkj5/TULUpv1ZPYqW8UCXIrme3VTO27VcCphcRC
-         //Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747357818; x=1747962618;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BfYmymD4WqB6RcT+A7NSAJ3/ssCfFT/DbabI8Oq16WQ=;
-        b=Xasb5ZIrlpU6nNCus7/P2QHvVu8uWwTRJa8Kxft6tfto0VcJjTv3JbNE0CiwF23BkI
-         naEscVRxk9D13hzflErRk9VsQ+yZr7dK+x8TMIlJ8iM7sSSiMP7HR1HWw5LmduJK2Tu5
-         8OVks4AI/fBtjJxZgaa2ObuwGj7EMU4t2EhBnr8/t85J/kykDBACPJqhN37Dxzra9xrv
-         kn0bBbQDbN4Maa8JykdwUiFkRjTe9QGFMW+zAUcX66b6adutbZqPnEnb4wgsin4HF31L
-         ZZxybV9/AH67Df6PLpcmSheqm5YWb17+qEDXmfi5H4sB8TpHO5BqHONF7V5UYTAm1wEV
-         C8uQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCDOs4WoHywArGySTbsgCt6OJto26vD4EuYA1Hxpf18Z27skIcqPtJeoo2E58ghdS4LwjeZ5R6CY1ZuCk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfP1GHgzpThgCHKq9Nn5ImJxkSOYE/++GKbruHeMNORQE9UOsL
-	LlW+s8SDLgCualoFSUqHIsJoCetmF+Yu+kv6ibmBSn4qro3PZRQ/ajCzR4/aDeKSgavfi5MnM/f
-	WeyW1vw==
-X-Google-Smtp-Source: AGHT+IFN6q5EEUT8mtkOVvJbhI1LPbC36AWs5ckYgMuXXlLBYgP2Ku77QbL5NxcjQXJ1Z0V89/x/Blxa6lU=
-X-Received: from pfblr19.prod.google.com ([2002:a05:6a00:7393:b0:742:9ac3:9e04])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:e89:b0:215:d4be:b0b2
- with SMTP id adf61e73a8af0-21621a02357mr2171784637.34.1747357818528; Thu, 15
- May 2025 18:10:18 -0700 (PDT)
-Date: Thu, 15 May 2025 18:10:17 -0700
-In-Reply-To: <20250324173121.1275209-31-mizhang@google.com>
+	s=arc-20240116; t=1747357875; c=relaxed/simple;
+	bh=Uk+ouYBSqfF+sojNd0fpIAc1Xj9+JWYSvuWORoLECmI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=M+fNv2QSPKNZBLlnUfrwfunKLENmuo7Ro5Nen+rJ/+SdNrERbryzpjEYbLXpbiTSaMwUTCX309GEBeleTRqgQqTA6sCC1Xp8HIQIrGn0RRqZbdc3MNqNhVhIH0jxgCI8WF0fOmKmyXk1Af4b6OT/D+NNhAPVNGOBaHF41QHy2vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=13.75.44.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0005182DT.eswin.cn (unknown [10.12.97.162])
+	by app2 (Coremail) with SMTP id TQJkCgBn+ZKVkCZowph8AA--.41039S2;
+	Fri, 16 May 2025 09:10:49 +0800 (CST)
+From: weishangjuan@eswincomputing.com
+To: andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	richardcochran@gmail.com,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mcoquelin.stm32@gmail.com,
+	alexandre.torgue@foss.st.com,
+	p.zabel@pengutronix.de,
+	yong.liang.choong@linux.intel.com,
+	rmk+kernel@armlinux.org.uk,
+	jszhang@kernel.org,
+	inochiama@gmail.com,
+	jan.petrous@oss.nxp.com,
+	dfustini@tenstorrent.com,
+	0x1207@gmail.com,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	lizhi2@eswincomputing.com,
+	Shangjuan Wei <weishangjuan@eswincomputing.com>
+Subject: [PATCH v1 1/2] ethernet: eswin: Document for eic7700 SoC
+Date: Fri, 16 May 2025 09:10:38 +0800
+Message-ID: <20250516011040.801-1-weishangjuan@eswincomputing.com>
+X-Mailer: git-send-email 2.49.0.windows.1
+In-Reply-To: <20250516010849.784-1-weishangjuan@eswincomputing.com>
+References: <20250516010849.784-1-weishangjuan@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-31-mizhang@google.com>
-Message-ID: <aCaQedEhZwj9BsVK@google.com>
-Subject: Re: [PATCH v4 30/38] KVM: x86/pmu: Handle emulated instruction for
- mediated vPMU
-From: Sean Christopherson <seanjc@google.com>
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
-	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
-	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
-	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
-	Nikunj Dadhania <nikunj.dadhania@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TQJkCgBn+ZKVkCZowph8AA--.41039S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxXF1DKr4rCF4rur17GFy8Xwb_yoWrWFy7pF
+	WxC34UJF4SqF13XayxtF10kF13tan7Gr1YkrnFqa43t395Xa4Yqr4ak3W5GFy7Cr1xXa45
+	WayYy34xA3WUArJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUm014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1Y6r17McIj6xkF7I0En7xvr7AKxVWUJVW8JwAv7VC2z280aVAFwI
+	0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CE
+	Vc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAaw2
+	AFwI0_GFv_Wrylc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7
+	AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE
+	2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
+	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
+	vjDU0xZFpf9x0pRVyxiUUUUU=
+X-CM-SenderInfo: pzhl2xxdqjy31dq6v25zlqu0xpsx3x1qjou0bp/
 
-On Mon, Mar 24, 2025, Mingwei Zhang wrote:
->  static void kvm_pmu_incr_counter(struct kvm_pmc *pmc)
->  {
-> -	pmc->emulated_counter++;
-> -	kvm_pmu_request_counter_reprogram(pmc);
-> +	struct kvm_vcpu *vcpu = pmc->vcpu;
-> +
-> +	/*
-> +	 * For perf-based PMUs, accumulate software-emulated events separately
-> +	 * from pmc->counter, as pmc->counter is offset by the count of the
-> +	 * associated perf event. Request reprogramming, which will consult
-> +	 * both emulated and hardware-generated events to detect overflow.
-> +	 */
-> +	if (!kvm_mediated_pmu_enabled(vcpu)) {
-> +		pmc->emulated_counter++;
-> +		kvm_pmu_request_counter_reprogram(pmc);
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * For mediated PMUs, pmc->counter is updated when the vCPU's PMU is
-> +	 * put, and will be loaded into hardware when the PMU is loaded. Simply
-> +	 * increment the counter and signal overflow if it wraps to zero.
-> +	 */
-> +	pmc->counter = (pmc->counter + 1) & pmc_bitmask(pmc);
-> +	if (!pmc->counter) {
+From: Shangjuan Wei <weishangjuan@eswincomputing.com>
 
-Ugh, this is broken for the fastpath.  If kvm_skip_emulated_instruction() is
-invoked by handle_fastpath_set_msr_irqoff() or handle_fastpath_hlt(), KVM may
-consume stale information (GLOBAL_CTRL, GLOBAL_STATUS and PMCs), and even if KVM
-gets lucky and those are all fresh, the PMC and GLOBAL_STATUS changes won't be
-propagated back to hardware.
+Add ESWIN EIC7700 Ethernet controller, supporting
+multi-rate (10M/100M/1G) auto-negotiation, PHY LED configuration,
+clock/reset control, and AXI bus parameter optimization.
 
-The best idea I have is to track whether or not the guest may be counting branches
-and/or instruction based on eventsels, and then bail from fastpaths that need to
-skip instructions.  That flag would also be useful to further optimize
-kvm_pmu_trigger_event().
+Signed-off-by: Zhi Li <lizhi2@eswincomputing.com>
+Signed-off-by: Shangjuan Wei <weishangjuan@eswincomputing.com>
+---
+ .../bindings/net/eswin,eic7700-eth.yaml       | 142 ++++++++++++++++++
+ 1 file changed, 142 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml
 
-> +		pmc_to_pmu(pmc)->global_status |= BIT_ULL(pmc->idx);
-> +		if (pmc_pmi_enabled(pmc))
-> +			kvm_make_request(KVM_REQ_PMI, vcpu);
-> +	}
->  }
->  
->  static inline bool cpl_is_matched(struct kvm_pmc *pmc)
-> -- 
-> 2.49.0.395.g12beb8f557-goog
-> 
+diff --git a/Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml b/Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml
+new file mode 100644
+index 000000000000..6cb9c109c036
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml
+@@ -0,0 +1,142 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/eswin,eic7700-eth.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Eswin EIC7700 SOC Eth Controller
++
++maintainers:
++  - Shuang Liang <liangshuang@eswincomputing.com>
++  - Zhi Li <lizhi2@eswincomputing.com>
++  - Shangjuan Wei <weishangjuan@eswincomputing.com>
++
++description: |
++  The eth controller registers are part of the syscrg block on
++  the EIC7700 SoC.
++
++properties:
++  compatible:
++    const: eswin,eic7700-qos-eth
++
++  reg:
++    minItems: 1
++    items:
++      - description: Base address and size
++      - description: Extension region (optional)
++
++  interrupt-names:
++    const: macirq
++
++  interrupts:
++    maxItems: 1
++
++  phy-mode:
++    $ref: /schemas/types.yaml#/definitions/string
++    enum: [mii, gmii, rgmii, rmii, sgmii]
++
++  id:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Controller instance ID
++
++  clocks:
++    minItems: 3
++    maxItems: 7
++
++  clock-names:
++    minItems: 3
++    items:
++      - const: app
++      - const: stmmaceth
++      - const: tx
++      - const: slave_bus
++      - const: master_bus
++      - const: ptp_ref
++      - const: phy_ref_clk
++
++  resets:
++    maxItems: 1
++
++  reset-names:
++    items:
++      - const: ethrst
++
++  dma-noncoherent: true
++
++  # Custom properties
++  eswin,hsp_sp_csr:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: HSP SP control registers
++
++  eswin,syscrg_csr:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: System clock registers
++
++  eswin,dly_hsp_reg:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description: HSP delay control registers
++
++  snps,axi-config:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: AXI bus configuration
++
++  stmmac-axi-config:
++    type: object
++    unevaluatedProperties: false
++    properties:
++      snps,lpi_en:
++        type: boolean
++        $ref: /schemas/types.yaml#/definitions/flag
++        description: Low Power Interface enable flag (true/false)
++
++required:
++  - compatible
++  - reg
++  - interrupt-names
++  - interrupts
++  - phy-mode
++  - id
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++  - eswin,hsp_sp_csr
++  - eswin,syscrg_csr
++  - eswin,dly_hsp_reg
++  - snps,axi-config
++  - snps,blen
++  - snps,rd_osr_lmt
++  - snps,wr_osr_lmt
++  - snps,lpi_en
++
++additionalProperties: false
++
++examples:
++  - |
++    gmac0: ethernet@50400000 {
++        compatible = "eswin,eic7700-qos-eth";
++        reg = <0x0 0x50400000 0x0 0x10000>;
++        interrupt-parent = <&plic>;
++        interrupt-names = "macirq";
++        interrupts = <61>;
++        phy-mode = "rgmii";
++        id = <0>;
++        status = "disabled";
++        clocks = <&clock 550>,
++                 <&clock 551>,
++                 <&clock 552>;
++        clock-names = "app", "stmmaceth", "tx";
++        resets = <&reset 0x07 (1 << 26)>;
++        reset-names = "ethrst";
++        dma-noncoherent;
++        eswin,hsp_sp_csr = <&hsp_sp_csr 0x1030 0x100 0x108>;
++        eswin,syscrg_csr = <&sys_crg 0x148 0x14c>;
++        eswin,dly_hsp_reg = <0x114 0x118 0x11c>;
++        snps,axi-config = <&stmmac_axi_setup>;
++        stmmac_axi_setup: stmmac-axi-config {
++            snps,blen = <0 0 0 0 16 8 4>;
++            snps,rd_osr_lmt = <2>;
++            snps,wr_osr_lmt = <2>;
++            snps,lpi_en;
++        };
++    };
+-- 
+2.17.1
+
