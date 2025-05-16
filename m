@@ -1,96 +1,69 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660DB242900
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 12:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDCD24167F;
+	Fri, 16 May 2025 12:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747400261; cv=none; b=R2RaUtRiBG7jCpNno4uX08O9P7SlR70bFC7+4eDktwOysomzcI71ePRlRVnQS4tdiu6oEPVz7LUbcrIxtctYCjqb1GZRslAC50IlKq9KRV4RYBOELj0hLXLhBSxMG7iU2q0geFdrmGYLoO/9sbg+tmuGPSa5xRGpJaJ+BlxjAJg=
+	t=1747400270; cv=none; b=lBAp64iHRIAZFRXhdlKIPSynBcZXRnbWtnwz+9+j9G2jxEzaYzuMypEeQipiJs5i1ejECpaNr7dRF2FZ2+uDxmEU5oDFbfr2Jczgz9IIMlxS2iR+ckEqAGTGZIy6YG35Byi37l8e1eJgkKa/QQRoGS3hzGfpxNcLmiS2FDRox7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747400261; c=relaxed/simple;
-	bh=+FSC98TIvnpgQW12nqD/3kXRZ0Fs9oV3gTLvM68micU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WEJPmkM8gjn/hdm36KmEBZZIX7rIUIXqoOzu99tBDwBqpNfReCldCxRpZJiCyZCKkDtKJX34TDvjFn9re4gz+vTN0raVBqQ8bw8vrnoxsTllvBKI9sqonBIP5bvPfBcTl3jMTf10yC9ggl6A5VRo6sIpo0tJDfeDrsIAwqxSh5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fpJb7Dqz; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747400270; c=relaxed/simple;
+	bh=CDLNoimx0vQw/PJHszEc6cc1jXi/roULCzRSmz61Cd8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RFhz/ywNMl07SlVFKF+ocl2HhuZP5qyX3tJ/b+Crj7oLbZoDxJ/t62PpygDM1GVz2W+1Jc2umDNuTEXlFiVmJDqiQNeybJs1wLe3/8HfhQRq+FQzRHwuVXwp53qeQxujzDN7KwldIfHYqc8+Nn/44H8pDBkrB0jtuC/GmK4e6j0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q1+TY3+2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fpJb7Dqz"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a206845eadso1344621f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 05:57:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747400258; x=1748005058; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VW89Tj8c9PUVGNCzuX2ZlyTNAUa8vPwg+B5bpWF7mn4=;
-        b=fpJb7DqzyAbJKili4GDbkMbpmkUDvXrS2d5hAlKrghuFlzF8lVgUy/uVbdbrT4snUm
-         1So37OH5BKCDVAbJ7FkS99CrS4o7NplOUX4BOhq4OrYCEcMfVYqUycug5i9RdTW2oSZF
-         aNfh9GCrZYh4s3zIp8CrSLPHYflw5N7bVXkVzAEhdY1B5g/d5kiJXMs59xQxfq+ZXo39
-         EdTJhqoBBY6mIEqjGSq+NHD/4/4ev8vbf75zMzT6Ca17fBMF/MraxNEqas08iRg5Yz6l
-         Z4pCnzR+zekyMQ47d9kOKXKCmDtYWyzElD4K3KM6VbeEoRiXmKTjz7PqeaUaYYeuPXmx
-         boow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747400258; x=1748005058;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VW89Tj8c9PUVGNCzuX2ZlyTNAUa8vPwg+B5bpWF7mn4=;
-        b=bTUwfOCLqTAs+IgZrDf4aLATZ2F9FE/UsBp6d4LzJk3hC3KYtVhC12XUvmrpJ+v3Bm
-         tMwcHPUNpRDYuunc9uDUWPQiadNPYPIco9rxhxT7YEDsjzwxFqLiapQG9GKTu0pJ61vJ
-         J09fe68uviy0NK5q8cn/4rN3uDh63tHwLp2/ATZJ0D0w0K7kxQjQOx3fh0Byyifp/Msv
-         eGV9M1Mv9WR8fHc7MtRpQguiRiLkn62pC7EZs84iIQVNx2vxXbyuaXTxLg24XH+dy4sW
-         UFWiww9u6fVjbg+DwpJ0IFEGTqzVPrbqR6tfSVJeCasCNdUefxqgkcWcZefSdrzXKbBP
-         VsRg==
-X-Forwarded-Encrypted: i=1; AJvYcCVLjswDdcuyPdNc4dHK60b3NSXEAZIZSXUmZrTOdecp6UYaz1mSNY04ivkyZOPFNqp6FRrz2Q3dRs+ql08=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeIe8zekUuTqcXWSeLwnzEv5lLETmmSnhahjWMUmrcSAJXWS8e
-	g1FS5s7h2hN8KiIioYQ/FD9R2r/Ga3p3dJ2a0FqoeUpZ+qqAkKkokndx
-X-Gm-Gg: ASbGncsJzrWyrh0Ui12AkDOegVKLW+DHN0EFzhS6eIXRz9+c8ry48ldWBUh1DVO9r/H
-	mWfbZ+r0SJK4mjTVz/e72i9eryrL8OUdok3fIRZt3MspZhzYNEAEd7GC9tZ2TTkDL2PRgUCbBpY
-	Ujbcvfg5yMnXaSzYK8SnOrSSDR9+RD0uPeZItTVxvvR5TGGv26ce+owJwC128S0bfXZojJN1qlw
-	vHFL83qW83hrOY1WIJJZDdxEr6DrYeHjHIowo+Asl3a2Uq3DLSPLuLlIjlE4lGierTAOTcN3gHW
-	DGGpeoKB8rukweXx5IASSZTGzmWHdBcmu3WMNiPkotoAzEUMPiyi4r2ETEN5jOTNE+8jLqsFON9
-	n6uSgEwVLLKGOg4ovswi+6caVCbzlbc9MpfHcZy+PH8QT
-X-Google-Smtp-Source: AGHT+IG0G1UCWDav1n+DgzbFKo/1bZ6LmsukOQf7dpPE+qHxbbihNA8ofnaXhsPLIKr+h/EAOWcePg==
-X-Received: by 2002:a05:6000:1881:b0:3a1:f635:1136 with SMTP id ffacd0b85a97d-3a35fead113mr2208312f8f.28.1747400257319;
-        Fri, 16 May 2025 05:57:37 -0700 (PDT)
-Received: from localhost.localdomain (host86-152-218-15.range86-152.btcentralplus.com. [86.152.218.15])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca8d119sm2777040f8f.92.2025.05.16.05.57.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 05:57:36 -0700 (PDT)
-From: Thomas Thelen <tommythelen@gmail.com>
-To: linux-kernel-mentees@lists.linux.dev,
-	skhan@linuxfoundation.org,
-	linux-kernel@vger.kernel.org
-Cc: Thomas Thelen <tommythelen@gmail.com>
-Subject: [PATCH] Fix spelling error for 'Celsius'
-Date: Fri, 16 May 2025 05:56:12 -0700
-Message-ID: <20250516125733.5778-1-tommythelen@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q1+TY3+2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5413C4CEE4;
+	Fri, 16 May 2025 12:57:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747400269;
+	bh=CDLNoimx0vQw/PJHszEc6cc1jXi/roULCzRSmz61Cd8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q1+TY3+2gaXVqmWEukihQjznIEvGIVbeSarhOyMbn6u3iYhIcfMU1R9TJmOpws15z
+	 iA0rRV3OiEZO1KI/HGdCGUxuIGjMvy7VNw8Y0sT8z6GapsTFhbLmd/60eUD7YNNV2T
+	 l55mUrB1h6wEpYqYVUASv/4jjA1NVFol2pRIZm7WMjhcdZvWnPI44gou1kuSQC07Gf
+	 lQLG5NNnqLfOJELl0eF45Iyk7/4x3KaU7qwloDpIpS86oJiROkln2/g7wB1TjpjXPN
+	 EmjnFFJcz5ytMLMNajtrpWZ3O7Gh9EJG8SuXnQw9tL7J5F3EbL6IX0Qo24apX2l5EF
+	 EKBM7mOy/LfYQ==
+Date: Fri, 16 May 2025 13:57:45 +0100
+From: Simon Horman <horms@kernel.org>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH net-next v4 3/4] net: selftests: add checksum mode
+ support and SW checksum handling
+Message-ID: <20250516125745.GE3339421@horms.kernel.org>
+References: <20250515083100.2653102-1-o.rempel@pengutronix.de>
+ <20250515083100.2653102-4-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515083100.2653102-4-o.rempel@pengutronix.de>
 
-Signed-off-by: Thomas Thelen <tommythelen@gmail.com>
----
- .../devicetree/bindings/thermal/nvidia,tegra124-soctherm.yaml   | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, May 15, 2025 at 10:30:59AM +0200, Oleksij Rempel wrote:
+> Introduce `enum net_test_checksum_mode` to support both CHECKSUM_COMPLETE
+> and CHECKSUM_PARTIAL modes in selftest packet generation.
+> 
+> Add helpers to calculate and apply software checksums for TCP/UDP in
+> CHECKSUM_COMPLETE mode, and refactor checksum handling into a dedicated
+> function `net_test_set_checksum()`.
+> 
+> Update PHY loopback tests to use CHECKSUM_COMPLETE by default to avoid
+> hardware offload dependencies and improve reliability.
+> 
+> Also rename loopback test names to clarify checksum type and transport.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-diff --git a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.yaml b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.yaml
-index 19bb1f324183..f28de8cd983a 100644
---- a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.yaml
-+++ b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.yaml
-@@ -160,7 +160,7 @@ properties:
-       SOCTHERM hardware will assert the thermal trigger signal to the Power
-       Management IC, which can be configured to reset or shutdown the device.
-       It is an array of pairs where each pair represents a tsensor ID followed
--      by a temperature in milli Celcius. In the absence of this property the
-+      by a temperature in milli Celsius. In the absence of this property the
-       critical trip point will be used for thermtrip temperature.
- 
-       Note:
--- 
-2.48.1
+Reviewed-by: Simon Horman <horms@kernel.org>
 
