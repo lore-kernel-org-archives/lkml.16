@@ -1,209 +1,94 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E77192B84
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 14:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBE178F5E;
+	Fri, 16 May 2025 14:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747406726; cv=none; b=TA4+ocqeGOp/UJGegONYNKfXUvIFzoa1o4WW0xohUS68VaIrFLi9GzCInF2eUvWVMUgF6TEP2qZGUIyw/v7NHKJ0BVsI7TY4iWInnxsElCDTllNWIl5paNsHGy1KzkZg5ebs4eLKKq3uv/R2flU12pCE+Iouy1uCgEInqe6weYw=
+	t=1747406815; cv=none; b=tOqGjdO1coQDbwmdcL2oedi9lH7vhbBzcpxQ4thLonddH4VPvOmSYg/WxWTiuO46Yd+ulDdcELYLiT6bR9DkoKrctmP1N/mx95sExyjEz/PCEw/YclrS3JIeFQQvqn9FFpZYpKWsVQFkPgMu8mkPisdaNW13vTzRv9uQG0UmE+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747406726; c=relaxed/simple;
-	bh=N7Liw7c36pTdZuHiUAWTD2kfaxk2DuwfaFnr0fCGPWw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=smLkef8amhrHyOsh39dZCqe1raRmG4XFMeVgTOeJ8xVaIIVim2W//2AToxkPAmO23tPCdPax332Eoon/z/AOMB2wKjc2BL1E7CNy/ghOpGqFydbKOS/QZqDmFU4GmBpGf3nPUsIQy6D5TWDhc5jd7ykAWoW1iAfv9zd2JaYbwlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nAwbAjAV; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747406815; c=relaxed/simple;
+	bh=Kyp6Fcc6ndTs83RZdUFSqeJ1lvhFZT/9qSd08CQk4G8=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=Yo9pOl2cKjsFxgtEYmSbCWqOwSMGgNR8sxhiM6NyHeN7A99s/56q6xP+NpfLwG6YN/EAvbTIE9zGf09AKydBrGQnUEI9Y1WhjU5ua5BRnYCc9PmXf737HfURaucjD9V2WE+dxArLXrFxhZXbi3UwErPzFKiCwjxLKTuZeg/5Wlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aNF0kcQV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L/5qwxCl; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nAwbAjAV"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-441d437cfaaso13003985e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:45:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747406723; x=1748011523; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8DPdNi4T7V/yvBz4It+xorfOv4L6Xc1BemGmrvImCwg=;
-        b=nAwbAjAVYXguOh2v1ojCDYJdRwpiiehEWq2Nh0DiI7BrSbLVOVFU6xhF76fJh8Z4UW
-         7et80Lk5STd/TVvdJWToEBAtE0Slkam0PSD/YLeMbLyOqhXTjt+Om8fzzJDPJLmjeGgw
-         64IMz/OpF8syIhUAaDOHLvEXWsdPVT72SccI91+nljYtqp3Q/Kdtp8TZqIXUHYjk4PKN
-         pnc1mtwqH+gKEofmerWiCyJXr8LEPtBlvD1JmHmjF6Ea7fxOlnC2ozotWHBacWRI+rUg
-         XTaX6yPrzX1EtGfK6P+oXI212smJbti15ouCktGnFoOeI2SsttKipKTrdH5ocmIYzyMR
-         OZ5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747406723; x=1748011523;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8DPdNi4T7V/yvBz4It+xorfOv4L6Xc1BemGmrvImCwg=;
-        b=wF0gojU6jCxz/lOwkZhRpDO6bRJuKQpnIEiNI50yWwk+mJHsJAOrgJlORse5a6D/Xd
-         101+sEq4MZqRRmIKWrP1KmPvtvOzcXFOv4igzQUTwfYpzXmPSqtY5iqXsiW17MKaNtYl
-         kOHnTXFCx1lHqOYtBonV1i6rz8Li6YJU4kSkHbz5VI2hTZRanHr/dqDkQiBt4Rf0u1Lw
-         eDF0SnMRUX4ruKBg4a2heNckMq9p35jAwZsRMVZq6GGYkXs37cT5l1TdcigxbSx++iy/
-         +fyZU6zYGAAJdAASo/EgZaLSllP7uNdw6NjoP4+J/uiVx2X/2c2cO1rzlv97gQmSkFcf
-         nlYw==
-X-Forwarded-Encrypted: i=1; AJvYcCWJP47r2ry2s0o3U7fPm24Ba3cFvOX3BeC7RFSgVtUDyobBEzm/G+afBexlP77d9cK9mGy3qvaIHGgGJB0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrYFPnaf1FY+Ze1IE+y3GV9rzE+NOqj+vjcQV2E/doMaoaz9Co
-	Cwf2X0dQkzQDsUC97t0wSU1hVbVjyg2I12E/t0E9qNaM+qCSMGg1y4LwxSt8g9YXo9Q=
-X-Gm-Gg: ASbGncsfGqaQ57SmnWMobyDnoE6cjtGGJerGeJPwtng7o03vnX8n6NJc62kGVQfvYQW
-	1sqrAKd76FJnlwOzIzBzG3tgYXVbLgAFA5r7n8WQra4krc/3/INAhnHd1N/D8KqlqyKisJiUXHb
-	ShqEhDpI1RIXVjORZtKDgloeMjg+6+uMMZxbMxQrQBMu6rtY2xVJSyLDekKz8iI6zltejmsl6Fz
-	/oZQN5ipzFRxrLIjqCmcz0Tb8X+/z44YmLFGLu4+Fx9LGpkokig+vHZr170jIKIbusITdChJ7TP
-	CL2MaZOFz2zb9RAZ/y+7Vp2qGvu7yP6UdqU+6fo43JBiQ8nb1upDt0C+7JOvpBkQBOAb0usS6Y7
-	ZDtJGMgsjPjRg
-X-Google-Smtp-Source: AGHT+IE+e8uUfU2U7RrsspDQy+hqfnS3XZDgVHe+ewX3FxYMCsEn5Vbv/9CZ6GBFRep73wxKvvMGnw==
-X-Received: by 2002:a05:600c:34d5:b0:43c:e7a7:1e76 with SMTP id 5b1f17b1804b1-442fefd5e7fmr30145935e9.1.1747406722689;
-        Fri, 16 May 2025 07:45:22 -0700 (PDT)
-Received: from [192.168.2.1] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-442f39e84acsm112377585e9.25.2025.05.16.07.45.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 May 2025 07:45:22 -0700 (PDT)
-Message-ID: <3c44154c-7261-4b03-bd12-bddf4d493e74@linaro.org>
-Date: Fri, 16 May 2025 16:45:17 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aNF0kcQV";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L/5qwxCl"
+Date: Fri, 16 May 2025 14:46:44 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747406805;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=nw6Gq099c+xX+chvoJbtymvejdXDDLgljNwvrtCl4pM=;
+	b=aNF0kcQVAXDywxN7HckTG6Vd4SgXgO96RBxKjfe5/ChSqum0fCIZ9LFs0JBhIoVnJ2/nqd
+	mtx/vs5fCgpvzuAXIx08NQJOIYZKvXCPSmeGPmQcYmobCkOrXRfxdl7Hg4O2QVXEs5ugDE
+	cBnDOo1dpZL6TC+eslC+VXcLtK2232QH7mr6Cq+cQHEIxe7Izihc0aEif+WZ7nQ7V82MmL
+	1DIgx8I0WZDzugjT9uU503735j71C0P7CgWD9+kZ36lb3HNaSOhUjujUhfmjL1QDgWPT0h
+	n5cJmmKv2bslb1J/+YFQuH9gVHu5Z4f7eb2BUccu2sg9IMbSzKlS8pBcAekc4Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747406805;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=nw6Gq099c+xX+chvoJbtymvejdXDDLgljNwvrtCl4pM=;
+	b=L/5qwxClI10xo2C8vSXIPi9BdCoy7WHwj4PAuh9nx8rdHbCz6mBYto3l9wvSxGSXQYFAkt
+	91WmBTfqTx3qSrDQ==
+From: "tip-bot2 for Borislav Petkov (AMD)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/core] x86/bugs: Fix indentation due to ITS merge
+Cc: "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/4] Exynos Thermal code improvement
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
- Krzysztof Kozlowski <krzk@kernel.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Alim Akhtar <alim.akhtar@samsung.com>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- "open list:SAMSUNG THERMAL DRIVER" <linux-pm@vger.kernel.org>,
- "open list:SAMSUNG THERMAL DRIVER" <linux-samsung-soc@vger.kernel.org>,
- "moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:CLANG/LLVM BUILD SUPPORT:Keyword:b(?i:clang|llvm)b"
- <llvm@lists.linux.dev>
-References: <20250430123306.15072-1-linux.amoon@gmail.com>
- <aCR9RzGMWEuI0pxS@mai.linaro.org>
- <CANAwSgSA-JHMRD7-19wijOY=TSWD-sv6yyrT=mH+wkUJuvxFAw@mail.gmail.com>
- <92c2949e-2fc1-40e9-9dea-e3d9f7aa571d@linaro.org>
- <CANAwSgQryVLdRVd9KRBnaUcjtX8xR9w9BBTCvoqKH6funkj=2A@mail.gmail.com>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <CANAwSgQryVLdRVd9KRBnaUcjtX8xR9w9BBTCvoqKH6funkj=2A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Message-ID: <174740680468.406.372152086131806707.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On 5/15/25 20:01, Anand Moon wrote:
-> Hi Daniel,
-> 
-> On Thu, 15 May 2025 at 18:59, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->>
->> On 5/15/25 13:10, Anand Moon wrote:
->>> Hi Daniel,
->>>
->>> On Wed, 14 May 2025 at 16:53, Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->>>>
->>>> On Wed, Apr 30, 2025 at 06:02:56PM +0530, Anand Moon wrote:
->>>>> Hi All,
->>>>
->>>> Hi Anand,
->>>>
->>>> if the goal of the changes is to do cleanups, I recommend to rework
->>>> how the code is organized. Instead of having the data->soc check all
->>>> around the functions, write per platform functions and store them in
->>>> struct of_device_id data field instead of the soc version.
->>>>
->>>> Basically get rid of exynos_map_dt_data by settings the different ops
->>>> in a per platform structure.
->>>>
->>>> Then the initialization routine would be simpler to clean.
->>>>
->>>
->>> Thanks, I had previously attempted this approach.
->>> The goal is to split the exynos_tmu_data structure to accommodate
->>> SoC-specific callbacks for initialization and configuration.
->>>
->>> In my earlier attempt, I tried to refactor the code to achieve this.
->>> However, the main challenge I encountered was that the
->>> exynos_sensor_ops weren’t being correctly mapped for each SoC.
->>>
->>> Some SoC have multiple sensor
->>> exynos4x12
->>>                       tmu: tmu@100c0000
->>> exynos5420
->>>                   tmu_cpu0: tmu@10060000
->>>                   tmu_cpu1: tmu@10064000
->>>                   tmu_cpu2: tmu@10068000
->>>                   tmu_cpu3: tmu@1006c000
->>>                   tmu_gpu: tmu@100a0000
->>>    exynos5433
->>>                   tmu_atlas0: tmu@10060000
->>>                   tmu_atlas1: tmu@10068000
->>>                   tmu_g3d: tmu@10070000
->>> exynos7
->>>                   tmu@10060000
->>>
->>> It could be a design issue of the structure.or some DTS issue.
->>> So what I found in debugging it is not working correctly.
->>>
->>> static const struct thermal_zone_device_ops exynos_sensor_ops = {
->>>           .get_temp = exynos_get_temp,
->>>           .set_emul_temp = exynos_tmu_set_emulation,
->>>           .set_trips = exynos_set_trips,
->>> };
->>>
->>> The sensor callback will not return a valid pointer and soc id for the get_temp.
->>>
->>> Here is my earlier version of local changes.
->>> [1] https://pastebin.com/bbEP04Zh exynos_tmu.c
->>> [2] https://pastebin.com/PzNz5yve Odroid U3 dmesg.log
->>> [3] https://pastebin.com/4Yjt2d2u    Odroid Xu4 dmesg.log
->>>
->>> I want to re-model the structure to improve the code.
->>> Once Its working condition I will send this for review.
->>>
->>> If you have some suggestions please let me know.
->>
->> I suggest to do the conversion step by step beginning by
->> exynos4210_tmu_clear_irqs, then by exynos_map_dt_data as the first
->> cleanup iteration
->>
-> Ok you want IRQ handle per SoC call back functions?
-> so on all the changes depending on SoC id should be moved to
-> respective callback functions to reduce the code.
+The following commit has been merged into the x86/core branch of tip:
 
-I think you can keep the same irq handler function but move the 
-tmu_intstat, tmu_intclear in the persoc structure and remove the 
-exynos4210_tmu_clear_irqs function.
+Commit-ID:     ff8f7a889abd9741abde6e83d33a3a7d9d6e7d83
+Gitweb:        https://git.kernel.org/tip/ff8f7a889abd9741abde6e83d33a3a7d9d6e7d83
+Author:        Borislav Petkov (AMD) <bp@alien8.de>
+AuthorDate:    Fri, 16 May 2025 16:31:38 +02:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Fri, 16 May 2025 16:31:38 +02:00
 
-You should end up with something like:
+x86/bugs: Fix indentation due to ITS merge
 
-static irqreturn_t exynos_tmu_threaded_irq(int irq, void *id)
-{
-	struct exynos_tmu_data *data = id;
-	unsigned int val_irq;
+No functional changes.
 
-	thermal_zone_device_update(data->tzd, THERMAL_EVENT_UNSPECIFIED);
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+---
+ arch/x86/kernel/cpu/bugs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-	mutex_lock(&data->lock);
-	clk_enable(data->clk);
-
-	val_irq = readl(data->base + data->tmu_intstat);
-         writel(val_irq, data->base + data->tmu_intclear);
-
-	clk_disable(data->clk);
-	mutex_unlock(&data->lock);
-
-	return IRQ_HANDLED;
-}
-
-But if the irq handler has some soc specific code, then it should be a 
-separate function
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index dd8b50b..d1a03ff 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -2975,10 +2975,10 @@ static void __init srso_apply_mitigation(void)
+ 
+ 		if (boot_cpu_data.x86 == 0x19) {
+ 			setup_force_cpu_cap(X86_FEATURE_SRSO_ALIAS);
+-				set_return_thunk(srso_alias_return_thunk);
++			set_return_thunk(srso_alias_return_thunk);
+ 		} else {
+ 			setup_force_cpu_cap(X86_FEATURE_SRSO);
+-				set_return_thunk(srso_return_thunk);
++			set_return_thunk(srso_return_thunk);
+ 		}
+ 		break;
+ 	case SRSO_MITIGATION_IBPB:
