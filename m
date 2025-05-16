@@ -1,56 +1,56 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8739428151D
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 19:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3622820BA
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 19:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747423204; cv=none; b=nfuyv34fKDecGkobEGWobMOjmkdj/RQu5M8rQdk2bwEhi2fABo+SpJYc1a9xcKUfhUTn9JQjCidXqeHg7Ql3GiNFzeunJLtAHZ60zNPayZ/UCySM4IbKTHuS5r4mwy4vLyO8tTcFfjgPNB1Xqsr7nkmamHnrKpmGHp1aCHX3fjE=
+	t=1747423206; cv=none; b=iWY+mpVRqNg7+wvKShfqMp+rs0kCPHlOFez69fcgU+6kwG8XK+VpSibnEwxyVTaCQe97dFpQwXgc2btmlZ0eJr+L+qQxeUuANCIVT3msDQXzoH3RK+IDFVN5Hj3iUB7hgs5MK25fNpNax81A73rftoKXcyajKo7K8Mfzh0MxDeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747423204; c=relaxed/simple;
-	bh=NuB/f6nkq4OHFjVHs3gXXIOsYIstssVeMan9gyJklK8=;
+	s=arc-20240116; t=1747423206; c=relaxed/simple;
+	bh=zI703iJCDbnk2s6d61LSt5o9bFxMF1iFazDfQ6c+5lo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VsAqd7JgF/jEOwry2UJKN1WpDWfkSFBTMPnxo8Q8MOqlcnwq6CXpyUIYekf3rAoealtkQq90ECjAY30Hmo3b6QKeX7zINZd0U8U+MXlWjZA3YHR4nVGb8pu9Nv8zwVPLNjlFvgAgI8JUIdMg+M0OB81pUN2fjD5JZAgjpGSSRWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--afranji.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mjwW8P6m; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=fACpItGi7adDXc2OFomIxIUK0oERt/UpPiAWFSFH4gOMPhCR8HLoIElhpaJYQXqYfQHqfUsikqa4MUzOZ2KJdmVou+KRi9A8S3LtoSckteqehuiKCSdCk189RuWdwD1c8RkAPboMCJQNmvhRtTeEEZhWnETeNR+0vNXSIcr2AjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--afranji.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kjBaW/fa; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--afranji.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mjwW8P6m"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22e7e097ef7so20843545ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 12:20:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kjBaW/fa"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30e9e81d4b0so243873a91.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 12:20:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747423202; x=1748028002; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747423203; x=1748028003; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pcD6u0JZ2o5dpCGxWEFpq76ioIg39n0Fm+ILo2b7fTo=;
-        b=mjwW8P6maoDIIbGFFNwK97/yj8bo7I0LSYbVCYRHIkRdmadi0sB2A+stpItNvu/amb
-         XfMiDf9/M1UBoxk3h/um2ikuxsa2cyWBpssL6pN5v+ATJXvTQPlrxLQ5QYtJPf7VU9Mm
-         3yQLA2gsHV+YLaf1x5vDZpxfgzVCLctzeGLv2n/USSrEegGY009AEeobfhJcsUk13dkJ
-         S0cSUmyUuLp2JkjarNbkujX9H8PvhvpOiHCIN8uGSNhHLIxa5Y17nzZe1lyBtlbJ7PRI
-         X06dRR8vSfOVMdAuTnayTVxJUXhmyPpiPFIoFDJG88CeEgtaXPYinrGHi4KSGFzwRUr9
-         pRPw==
+        bh=Xw0kwmlCHmpdsX/DiL844LcPhYI529J79EzDxXuX1+o=;
+        b=kjBaW/faJLsmRpkYDLcpuE44pBFxM774oWFWGs/U/exePEWWfWzkgCyILUbXl0VE0m
+         RiVmZymxIHz7xgF/RhaBIji8SNXkNa0GspmhXEd7gC4ZmnYJnLM/CQLytwtNuqBmoMb7
+         24xrFyevRQ4MrIQDCfndBhBzF2DTo1K8Fx32xGJ6JORBiigVC9oHzC3z6vBm6qRVpejm
+         TaQi7QWvqJtemLU56lf9CDA0BzwEMB0SjZ585RksO3a+VZ6Xbp5Wn0FBmPn5wV5o/bvN
+         A9lgJH46+n8QXo0A13epSqB9XEO/+Q/bEDCJVkoFfdL4Uygplw6ehIoImmRYsZlQBKWK
+         kqzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747423202; x=1748028002;
+        d=1e100.net; s=20230601; t=1747423203; x=1748028003;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pcD6u0JZ2o5dpCGxWEFpq76ioIg39n0Fm+ILo2b7fTo=;
-        b=jSFJvNeUhDpBOEkbvB0C4s6koiNYS7egRrlUQASFB2aIJ76td1xAXh4DZmOqDMv9Vk
-         coMFT6tlvgFF2F8LWPxHVH/0zGOal1PUspelwtYCDZI4FLDbTvoM+6PMUud+5sfVmQI8
-         3kjhOPyI/i5HTVh9G1vyhIqYnwhsqNSY8cqwe3wI+Qw7pIyhCXmNxGBGuNf8hyTz7Uzc
-         SEjUBJhTjWIYgat5Que1Zcze+sKilgF6stCfMrMmf7Xb6IRS/RYGC3dmmG7x7dRqOqqt
-         /txl8eRjZrTgvR1pCibQkAFNf8W7D3DjWM69xYenaVCkYAwHDKW02Lb5nkqlXSJOCmNi
-         6Ehw==
-X-Forwarded-Encrypted: i=1; AJvYcCVSYFv4AfBO5yLK4JCSltoLZy2WYP13mbiQjXv3ZCPbx4PPboVcbUTUI+tij2xolOUMv+sbb+8jE2FxBog=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjD3g8Ca+A4rDOVO0D/6xZplffUMMqw638wsSXDl9fOolBictz
-	UEXgDCbkmiQO15ZD2GfLG8djVJnIRnvLqzcyhgkLPlIbINf/KBVCJ2BLeVO46oj37WFakc0VrOq
-	gqUA2EvJXrirrfcF7yfm92/bTRjWnZn0wEACzcvtz66kvYGwBEuCjd60cnyXQTec4QNKANtLNHY
-	I=
-X-Google-Smtp-Source: AGHT+IHAks9p6aEl1daXh7zR8tIAiKXLPdB+oQKMTtgz7kcarMzyttyq7vXQeQX44ygO4jg4JLr2qMfpus3k
-X-Received: from plpe4.prod.google.com ([2002:a17:903:3c24:b0:22e:4288:ad7])
- (user=afranji job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:40d0:b0:224:194c:694c
- with SMTP id d9443c01a7336-231de3764d3mr58245605ad.28.1747423201887; Fri, 16
- May 2025 12:20:01 -0700 (PDT)
-Date: Fri, 16 May 2025 19:19:29 +0000
+        bh=Xw0kwmlCHmpdsX/DiL844LcPhYI529J79EzDxXuX1+o=;
+        b=XIiJWqPSZeJv+WyUf8czRFWCPrRJgYfoDoHC9v0dvWTToq33f6kvy70JCIfMvkC303
+         QRcD6PU21xZvopkxMAE3x6X2GGF6obUMYQjy3U1S+m7k1TmBT5NUaUNkPGNCHVXED1E0
+         CtSMhq1uOZI530uCNBsr5XsQiGqDHeg1mcmoLDq2h6tM+UkcmXHKpDSlfgDc4zlg5kDY
+         LvH4G+49f0jAYkkVJFgaIvLAKX1f/ldFtOZpi7y7dtt7aLk4zJIs3n/4djRvCxEysQk/
+         qoaCHkwrOHnnoHDz2b22nCIYjkCAEz/EJ0scflOreyeoYzWpqYm2/8hBT195g47SiZwe
+         OlSg==
+X-Forwarded-Encrypted: i=1; AJvYcCWk0N9+mBs9jW2sY+tM/oJDeREdnaQYWI0xkjLBJirC1J2lDAn0njs3cnhl0njZEONBz/7vNnHqQWT1+kI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPyrs1HzUsrqAlam6DSEdIPtT5RmZ11TibPQY0qRVbmekhprbd
+	flfJ260VY2AoCPKLBciWIcQpfkMMBPrbCAvoimqhPUeU/b2rfyChC2EBSvTGI8m744M8Ke6aIue
+	w3HmjQK7opnwaxYa8Rh9W+KE0peNyxP2wIVmSj9Hq11pCq50nW0bxEukCOmvJR/ZJIjIGqNOPp2
+	c=
+X-Google-Smtp-Source: AGHT+IHuWIFRKFYUeYZ/E0Mn4pw8FwJ4Uk8VOlO7RIg7ETTqbymvwLUfY9oGU3oIEt0b7BaEDlNyVDhXpsne
+X-Received: from pjb12.prod.google.com ([2002:a17:90b:2f0c:b0:30a:a05c:6e7d])
+ (user=afranji job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:558e:b0:2ee:8ea0:6b9c
+ with SMTP id 98e67ed59e1d1-30e830fb83cmr6780268a91.12.1747423203424; Fri, 16
+ May 2025 12:20:03 -0700 (PDT)
+Date: Fri, 16 May 2025 19:19:30 +0000
 In-Reply-To: <cover.1747368092.git.afranji@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -60,9 +60,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747368092.git.afranji@google.com>
 X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <02fa2a32b0628bf9e8e9700a79fa02f0b13b2e90.1747368093.git.afranji@google.com>
-Subject: [RFC PATCH v2 09/13] KVM: x86: Refactor common migration preparation
- code out of sev_vm_move_enc_context_from
+Message-ID: <7c51d4ae251323ce8c224aa362a4be616b4cfeba.1747368093.git.afranji@google.com>
+Subject: [RFC PATCH v2 10/13] KVM: x86: Let moving encryption context be configurable
 From: Ryan Afranji <afranji@google.com>
 To: afranji@google.com, ackerleytng@google.com, pbonzini@redhat.com, 
 	seanjc@google.com, tglx@linutronix.de, x86@kernel.org, kvm@vger.kernel.org, 
@@ -80,155 +79,66 @@ X-ccpol: medium
 
 From: Ackerley Tng <ackerleytng@google.com>
 
-Co-developed-by: Sagi Shahar <sagis@google.com>
-Signed-off-by: Sagi Shahar <sagis@google.com>
+SEV-capable VMs may also use the KVM_X86_SW_PROTECTED_VM type, but
+they will still need architecture-specific handling to move encryption
+context. Hence, we let moving of encryption context be configurable
+and store that configuration in a flag.
+
 Co-developed-by: Vishal Annapurve <vannapurve@google.com>
 Signed-off-by: Vishal Annapurve <vannapurve@google.com>
 Signed-off-by: Ackerley Tng <ackerleytng@google.com>
 Signed-off-by: Ryan Afranji <afranji@google.com>
 ---
- arch/x86/include/asm/kvm_host.h |  2 +-
- arch/x86/kvm/svm/sev.c          | 29 +++---------------------
- arch/x86/kvm/svm/svm.h          |  2 +-
- arch/x86/kvm/x86.c              | 39 ++++++++++++++++++++++++++++++++-
- 4 files changed, 43 insertions(+), 29 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 1 +
+ arch/x86/kvm/svm/sev.c          | 2 ++
+ arch/x86/kvm/x86.c              | 9 ++++++++-
+ 3 files changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 6c06f3d6e081..179618300270 100644
+index 179618300270..db37ce814611 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -1871,7 +1871,7 @@ struct kvm_x86_ops {
- 	int (*mem_enc_register_region)(struct kvm *kvm, struct kvm_enc_region *argp);
- 	int (*mem_enc_unregister_region)(struct kvm *kvm, struct kvm_enc_region *argp);
- 	int (*vm_copy_enc_context_from)(struct kvm *kvm, unsigned int source_fd);
--	int (*vm_move_enc_context_from)(struct kvm *kvm, unsigned int source_fd);
-+	int (*vm_move_enc_context_from)(struct kvm *kvm, struct kvm *source_kvm);
- 	void (*guest_memory_reclaimed)(struct kvm *kvm);
+@@ -1576,6 +1576,7 @@ struct kvm_arch {
+ #define SPLIT_DESC_CACHE_MIN_NR_OBJECTS (SPTE_ENT_PER_PAGE + 1)
+ 	struct kvm_mmu_memory_cache split_desc_cache;
  
- 	int (*get_feature_msr)(u32 msr, u64 *data);
++	bool use_vm_enc_ctxt_op;
+ 	gfn_t gfn_direct_bits;
+ 
+ 	/*
 diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index b3048ec411e2..689521d9e26f 100644
+index 689521d9e26f..95083556d321 100644
 --- a/arch/x86/kvm/svm/sev.c
 +++ b/arch/x86/kvm/svm/sev.c
-@@ -2000,34 +2000,15 @@ static int sev_check_source_vcpus(struct kvm *dst, struct kvm *src)
- 	return 0;
- }
+@@ -442,6 +442,8 @@ static int __sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp,
+ 	if (ret)
+ 		goto e_no_asid;
  
--int sev_vm_move_enc_context_from(struct kvm *kvm, unsigned int source_fd)
-+int sev_vm_move_enc_context_from(struct kvm *kvm, struct kvm *source_kvm)
- {
- 	struct kvm_sev_info *dst_sev = to_kvm_sev_info(kvm);
- 	struct kvm_sev_info *src_sev, *cg_cleanup_sev;
--	CLASS(fd, f)(source_fd);
--	struct kvm *source_kvm;
- 	bool charged = false;
- 	int ret;
- 
--	if (fd_empty(f))
--		return -EBADF;
--
--	if (!file_is_kvm(fd_file(f)))
--		return -EBADF;
--
--	source_kvm = fd_file(f)->private_data;
--	ret = kvm_mark_migration_in_progress(kvm, source_kvm);
--	if (ret)
--		return ret;
--	ret = kvm_lock_two_vms(kvm, source_kvm);
--	if (ret)
--		goto out_mark_migration_done;
--
--	if (kvm->arch.vm_type != source_kvm->arch.vm_type ||
--	    sev_guest(kvm) || !sev_guest(source_kvm)) {
--		ret = -EINVAL;
--		goto out_unlock;
--	}
-+	if (sev_guest(kvm) || !sev_guest(source_kvm))
-+		return -EINVAL;
- 
- 	src_sev = to_kvm_sev_info(source_kvm);
- 
-@@ -2066,10 +2047,6 @@ int sev_vm_move_enc_context_from(struct kvm *kvm, unsigned int source_fd)
- 		sev_misc_cg_uncharge(cg_cleanup_sev);
- 	put_misc_cg(cg_cleanup_sev->misc_cg);
- 	cg_cleanup_sev->misc_cg = NULL;
--out_unlock:
--	kvm_unlock_two_vms(kvm, source_kvm);
--out_mark_migration_done:
--	kvm_mark_migration_done(kvm, source_kvm);
- 	return ret;
- }
- 
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 35df8be621c5..7bd31c0b135a 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -757,7 +757,7 @@ int sev_mem_enc_register_region(struct kvm *kvm,
- int sev_mem_enc_unregister_region(struct kvm *kvm,
- 				  struct kvm_enc_region *range);
- int sev_vm_copy_enc_context_from(struct kvm *kvm, unsigned int source_fd);
--int sev_vm_move_enc_context_from(struct kvm *kvm, unsigned int source_fd);
-+int sev_vm_move_enc_context_from(struct kvm *kvm, struct kvm *source_kvm);
- void sev_guest_memory_reclaimed(struct kvm *kvm);
- int sev_handle_vmgexit(struct kvm_vcpu *vcpu);
- 
++	kvm->arch.use_vm_enc_ctxt_op = true;
++
+ 	init_args.probe = false;
+ 	ret = sev_platform_init(&init_args);
+ 	if (ret)
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 422c66a033d2..637540309456 100644
+index 637540309456..3a7e05c47aa8 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -6597,6 +6597,43 @@ int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *irq_event,
- 	return 0;
- }
+@@ -6624,7 +6624,14 @@ static int kvm_vm_move_enc_context_from(struct kvm *kvm, unsigned int source_fd)
+ 	if (r)
+ 		goto out_mark_migration_done;
  
-+static int kvm_vm_move_enc_context_from(struct kvm *kvm, unsigned int source_fd)
-+{
-+	int r;
-+	struct kvm *source_kvm;
-+	struct fd f = fdget(source_fd);
-+	struct file *file = fd_file(f);
-+
-+	r = -EBADF;
-+	if (!file)
-+		return r;
-+
-+	if (!file_is_kvm(file))
-+		goto out_fdput;
-+
-+	r = -EINVAL;
-+	source_kvm = file->private_data;
-+	if (kvm->arch.vm_type != source_kvm->arch.vm_type)
-+		goto out_fdput;
-+
-+	r = kvm_mark_migration_in_progress(kvm, source_kvm);
-+	if (r)
-+		goto out_fdput;
-+
-+	r = kvm_lock_two_vms(kvm, source_kvm);
-+	if (r)
-+		goto out_mark_migration_done;
-+
-+	r = kvm_x86_call(vm_move_enc_context_from)(kvm, source_kvm);
-+
-+	kvm_unlock_two_vms(kvm, source_kvm);
-+out_mark_migration_done:
-+	kvm_mark_migration_done(kvm, source_kvm);
-+out_fdput:
-+	fdput(f);
-+	return r;
-+}
-+
- int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 			    struct kvm_enable_cap *cap)
- {
-@@ -6738,7 +6775,7 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 		if (!kvm_x86_ops.vm_move_enc_context_from)
- 			break;
+-	r = kvm_x86_call(vm_move_enc_context_from)(kvm, source_kvm);
++	/*
++	 * Different types of VMs will allow userspace to define if moving
++	 * encryption context should be required.
++	 */
++	if (kvm->arch.use_vm_enc_ctxt_op &&
++	    kvm_x86_ops.vm_move_enc_context_from) {
++		r = kvm_x86_call(vm_move_enc_context_from)(kvm, source_kvm);
++	}
  
--		r = kvm_x86_call(vm_move_enc_context_from)(kvm, cap->args[0]);
-+		r = kvm_vm_move_enc_context_from(kvm, cap->args[0]);
- 		break;
- 	case KVM_CAP_EXIT_HYPERCALL:
- 		if (cap->args[0] & ~KVM_EXIT_HYPERCALL_VALID_MASK) {
+ 	kvm_unlock_two_vms(kvm, source_kvm);
+ out_mark_migration_done:
 -- 
 2.49.0.1101.gccaa498523-goog
 
