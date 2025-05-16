@@ -1,146 +1,223 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7081C19D09C
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45A8217F34
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747388887; cv=none; b=G1evqsRhB7FDZDAnmrmHdZXAw7+19xQKjTbAdM28ZnXmuHDBPg8AA+nboICaQwY9RhGeYSxw50gLI/wX5v2RNfjtTblA9hiE56CPbMBsePkhw+IhLCtxi1ulwAWNDD9Ox4gdFCjc9s90wYCm2gpK1NDz+J3SI9tcBY0W/cd8jeA=
+	t=1747388904; cv=none; b=R6oFriCKpLMMtf0qNpr66h5A3BP6gqVDW/X81/m4ROql52I6ca5RJQI1059ZN2v84MXSTrluuQH+rH9MKCJVYimvboK1J1yKoCsvfA0UIod/5cOXk5K4JhvRFfxmhuTAQrMZ8dvPE3MesyckztkiJOkG2AW4s7+tnWh/V3s6rfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747388887; c=relaxed/simple;
-	bh=W9yiciXbWFwESLz4lZbhQMYlRO09ym6rv1NxjEABbXM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=En3uD6cLi8lcJaA/eYT7EP0i9B8KWeJPKKkdhJc3hvMZcdebQR55XEvDx11ISleQInDeZJZfut9ixu+B3C9WEiMoXHnzBGarrKmceMUvg6Z6PWcvWXHk0I100dei2hURjF1YvHrE4GfLrxv7KigE6/otv4gfHJxCg3jpEGUkiDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Wl7ExH/k; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1747388904; c=relaxed/simple;
+	bh=E8hHokSYiknM4wfbcbYPmZeauO7Fqiy7Iy/M9ZRBbgQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=J+qIEoef4NmWTu4LjM1K+vQryDLgMF2Ux6Ts4wTMBh1M2SElX2CJa4EIc42aykz7Psal62zwIAk9DERocwLv0qZiESNzI0HawdaBoHqhe9/Hv769gqZ/7t0D4NC76qagy4D5hYxBgakr5RjaAK69iNShThTUGRJUF7mmO+J3uak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CJrLLXT+; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Wl7ExH/k"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-441d437cfaaso11224105e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 02:48:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747388882; x=1747993682; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1o7lm4gr/IyiRMX/+f11iAYJHPvnzys+snbbXOa+wNA=;
-        b=Wl7ExH/kpVn6SDZrUcCa346cA1azAB2FRz6InUXniVc3Mm4Lvs+Bzk6fxfnuPniFvA
-         0WjqTP3mpN9cfoY93zfeE21TOYjjEhQAvve0GfNZjkJ73A5YYGbbb/grIL5B4M9spQfA
-         7r74sDAIrgeLgbBCAXhTe4tdZuM61xTkBtXgWUU6FI2bY8KbmMbngv9t0qq7E9zMESvz
-         uD7P/nX184ZOQM5tKb9wobuNVMWCVLFx3ZUW8/v1CwkgxZK98AIzKWcJmvmraGd0vUaG
-         dWCWWBr4TINBO63lpAcWtRDVzb4z8yIYHqKnfGNlyiF07/USPWcGot9+96d6hvmyeosz
-         cKeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747388882; x=1747993682;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1o7lm4gr/IyiRMX/+f11iAYJHPvnzys+snbbXOa+wNA=;
-        b=v4ElshAeQOTtNGj/894aOuNAj9g4pBZXpG8r+CnQiMolrs4sqX/CQZZ45rXkQrdQkY
-         URvIX/AsGhKnizsfBQraPEo6xBf2SKGR822nkBlkx+o6DevpumlYmicFuZUrYXn6jI2g
-         PmMW0V9mW/6aG3gnfhiBX5LGs3etahyUWw8Brzee83XTmR9rMW1/dlvu0XLpYvVLD6iT
-         sccpYOdYm3X8rw6DXEhMiFcGb7JZboIE50GKHe4sg/I4MeAApRV26+9kAcQhpHpkfooy
-         rCIyfM9tM5fgL5bTMppBmJPlajZE+3T5UVWRrWeK/MjXA6uqMZeQ8JeaXCwJVaYSQinL
-         uaXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUjKCoLVhiWnrEBu+kB78a4KSll+IRsrgFAkvz8Q9x21gBzkCpj1k14GDuE8TaTK+r0VG3Ezhcqbrni/dU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwerQQAZgf+cAjftbMSum8fCafvG/kuVuUr8ASpddMs1IEh+InX
-	OPWrwphW47nZ26tS1EFfd5g5+VAXmQXHtNTnq91WUareiR7XVM/ipiVqcaqIWROzudksAjSFN3o
-	7hVrv
-X-Gm-Gg: ASbGncuYSBknTBPPKsWNEUOKf6h7tmg003Mjz+SPtRUIn3zgRhGP//+PfPokhUxWXfy
-	s28V0xbCfMNSZ4DeO3COcGXQWSREzcaUabijxbo269n9+72zIBQfubvah7SAZjrkNLGMCLE2tuc
-	PqXSB+gEe/pfTNvmSRza/g3kx5SVyWWL6vrnHl1oVHjYuRShY1B1S0IiR/w2QBgtLV94nv593FY
-	1L+V0pGyB8v5v33SfiZ41Sd8tEBUR5D/d4Ip4ANKIwCSxJF3WSO1L4bxnasffp+7Cg+Al1ZMw9I
-	WquofhKAL8z1qKSwHCeJDb+l8cCxPJ4HvbcxxfM3l+bE8k5AHa8drA6mp6SiR+04iUnDTm8TxdA
-	XPaY3CCxw1oLeZ6Aczw==
-X-Google-Smtp-Source: AGHT+IEa9rVKVe/qm3F1BdozCJUZfiqzDLgpfCsXae50LbSS8/KfRVMyVFH3BkKinN0aJYn/T+9iaw==
-X-Received: by 2002:a05:600c:4f51:b0:43c:fffc:7886 with SMTP id 5b1f17b1804b1-442fefedff9mr16219475e9.8.1747388881641;
-        Fri, 16 May 2025 02:48:01 -0700 (PDT)
-Received: from localhost (p200300f65f00780800000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f00:7808::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442f39e8578sm105125315e9.29.2025.05.16.02.48.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 02:48:01 -0700 (PDT)
-Date: Fri, 16 May 2025 11:47:58 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, Nicolas Pitre <npitre@baylibre.com>, 
-	Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH next 0/3] lib: Implement mul_u64_u64_div_u64_roundup()
-Message-ID: <5e7mp3nreaadppjhxhpffyff2d2ccwcjf2suonxe43eofngddu@qfufr2wiw7yn>
-References: <20250405204530.186242-1-david.laight.linux@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CJrLLXT+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747388902; x=1778924902;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=E8hHokSYiknM4wfbcbYPmZeauO7Fqiy7Iy/M9ZRBbgQ=;
+  b=CJrLLXT+EEJh8dsxfMMkwZZ9O73sp8sBpIu2OKEvnE7Su1vCAjcvw09X
+   5SSA2ifUs/rwR1KnX57taKjBZ2ICLckAyx53fj6tsXDlIOy7XdWRmo2Sb
+   9ULhGfqo4ekP193HTv4Z5yEWsdE7y44dRkMwqakhMuNQkT2IeA8Hw3MYR
+   BvwA+rHahVYzIcWyyLH2i3HsNwbyjhcbqKhbBLOtS6n9spx89lF6qzt6l
+   mlOzUlK73zynjEd/+EGg1nODHRc2rQqbtU/B81gi8hBxMgB5i4lK7Iogp
+   uJw4mJ10zgGQbChOChFLwT1jjSLXldzSWsem4frnWxMa+F2JpLpRKGn8K
+   A==;
+X-CSE-ConnectionGUID: ugHdq8o7ReWVlithnPdg0w==
+X-CSE-MsgGUID: 0GFjwYN4SKSSZCZ60mDYgg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49051223"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="49051223"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:48:22 -0700
+X-CSE-ConnectionGUID: DFjD7rQQQ0iEXRYOQ7F61g==
+X-CSE-MsgGUID: 1EXQVm3MQiySvPagkZ/Cdw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="142652590"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.133])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:48:19 -0700
+From: Jani Nikula <jani.nikula@intel.com>
+To: Bill Wendling <isanbard@gmail.com>, dri-devel@lists.freedesktop.org
+Cc: intel-gfx@lists.freedesktop.org, gustavo.sousa@intel.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+ tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+ linux-kernel@vger.kernel.org, kees@kernel.org
+Subject: Re: [PATCH 5/5] drm/print: require struct drm_device for drm_err()
+ and friends
+In-Reply-To: <98201050-82eb-453d-a669-036eeefa354e@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <cover.1737644530.git.jani.nikula@intel.com>
+ <dfe6e774883e6ef93cfaa2b6fe92b804061ab9d9.1737644530.git.jani.nikula@intel.com>
+ <98201050-82eb-453d-a669-036eeefa354e@gmail.com>
+Date: Fri, 16 May 2025 12:48:16 +0300
+Message-ID: <87tt5kx4wv.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="muvmm3ueazlwdz6b"
-Content-Disposition: inline
-In-Reply-To: <20250405204530.186242-1-david.laight.linux@gmail.com>
+Content-Type: text/plain
+
+On Thu, 15 May 2025, Bill Wendling <isanbard@gmail.com> wrote:
+> On 1/23/25 7:09 AM, Jani Nikula wrote:
+>> The expectation is that the struct drm_device based logging helpers get
+>> passed an actual struct drm_device pointer rather than some random
+>> struct pointer where you can dereference the ->dev member.
+>> 
+>> Add a static inline helper to convert struct drm_device to struct
+>> device, with the main benefit being the type checking of the macro
+>> argument.
+>> 
+>> As a side effect, this also reduces macro argument double references.
+>> 
+>> Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+>> ---
+>>   include/drm/drm_print.h | 41 +++++++++++++++++++++++------------------
+>>   1 file changed, 23 insertions(+), 18 deletions(-)
+>> 
+>> diff --git a/include/drm/drm_print.h b/include/drm/drm_print.h
+>> index 9732f514566d..f31eba1c7cab 100644
+>> --- a/include/drm/drm_print.h
+>> +++ b/include/drm/drm_print.h
+>> @@ -584,9 +584,15 @@ void __drm_dev_dbg(struct _ddebug *desc, const struct device *dev,
+>>    * Prefer drm_device based logging over device or prink based logging.
+>>    */
+>>   
+>> +/* Helper to enforce struct drm_device type */
+>> +static inline struct device *__drm_to_dev(const struct drm_device *drm)
+>> +{
+>> +	return drm ? drm->dev : NULL;
+>> +}
+>> +
+>>   /* Helper for struct drm_device based logging. */
+>>   #define __drm_printk(drm, level, type, fmt, ...)			\
+>> -	dev_##level##type((drm) ? (drm)->dev : NULL, "[drm] " fmt, ##__VA_ARGS__)
+>> +	dev_##level##type(__drm_to_dev(drm), "[drm] " fmt, ##__VA_ARGS__)
+>>   
+>>   
+>>   #define drm_info(drm, fmt, ...)					\
+>> @@ -620,25 +626,25 @@ void __drm_dev_dbg(struct _ddebug *desc, const struct device *dev,
+>>   
+>>   
+>>   #define drm_dbg_core(drm, fmt, ...)					\
+>> -	drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_CORE, fmt, ##__VA_ARGS__)
+>> -#define drm_dbg_driver(drm, fmt, ...)						\
+>> -	drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_DRIVER, fmt, ##__VA_ARGS__)
+>> +	drm_dev_dbg(__drm_to_dev(drm), DRM_UT_CORE, fmt, ##__VA_ARGS__)
+>> +#define drm_dbg_driver(drm, fmt, ...)					\
+>> +	drm_dev_dbg(__drm_to_dev(drm), DRM_UT_DRIVER, fmt, ##__VA_ARGS__)
+>>   #define drm_dbg_kms(drm, fmt, ...)					\
+>> -	drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_KMS, fmt, ##__VA_ARGS__)
+>> +	drm_dev_dbg(__drm_to_dev(drm), DRM_UT_KMS, fmt, ##__VA_ARGS__)
+>>   #define drm_dbg_prime(drm, fmt, ...)					\
+>> -	drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_PRIME, fmt, ##__VA_ARGS__)
+>> +	drm_dev_dbg(__drm_to_dev(drm), DRM_UT_PRIME, fmt, ##__VA_ARGS__)
+>>   #define drm_dbg_atomic(drm, fmt, ...)					\
+>> -	drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_ATOMIC, fmt, ##__VA_ARGS__)
+>> +	drm_dev_dbg(__drm_to_dev(drm), DRM_UT_ATOMIC, fmt, ##__VA_ARGS__)
+>>   #define drm_dbg_vbl(drm, fmt, ...)					\
+>> -	drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_VBL, fmt, ##__VA_ARGS__)
+>> +	drm_dev_dbg(__drm_to_dev(drm), DRM_UT_VBL, fmt, ##__VA_ARGS__)
+>>   #define drm_dbg_state(drm, fmt, ...)					\
+>> -	drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_STATE, fmt, ##__VA_ARGS__)
+>> +	drm_dev_dbg(__drm_to_dev(drm), DRM_UT_STATE, fmt, ##__VA_ARGS__)
+>>   #define drm_dbg_lease(drm, fmt, ...)					\
+>> -	drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_LEASE, fmt, ##__VA_ARGS__)
+>> +	drm_dev_dbg(__drm_to_dev(drm), DRM_UT_LEASE, fmt, ##__VA_ARGS__)
+>>   #define drm_dbg_dp(drm, fmt, ...)					\
+>> -	drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_DP, fmt, ##__VA_ARGS__)
+>> +	drm_dev_dbg(__drm_to_dev(drm), DRM_UT_DP, fmt, ##__VA_ARGS__)
+>>   #define drm_dbg_drmres(drm, fmt, ...)					\
+>> -	drm_dev_dbg((drm) ? (drm)->dev : NULL, DRM_UT_DRMRES, fmt, ##__VA_ARGS__)
+>> +	drm_dev_dbg(__drm_to_dev(drm), DRM_UT_DRMRES, fmt, ##__VA_ARGS__)
+>>   
+>>   #define drm_dbg(drm, fmt, ...)	drm_dbg_driver(drm, fmt, ##__VA_ARGS__)
+>>   
+>> @@ -727,10 +733,9 @@ void __drm_err(const char *format, ...);
+>>   #define __DRM_DEFINE_DBG_RATELIMITED(category, drm, fmt, ...)					\
+>>   ({												\
+>>   	static DEFINE_RATELIMIT_STATE(rs_, DEFAULT_RATELIMIT_INTERVAL, DEFAULT_RATELIMIT_BURST);\
+>> -	const struct drm_device *drm_ = (drm);							\
+>>   												\
+>>   	if (drm_debug_enabled(DRM_UT_ ## category) && __ratelimit(&rs_))			\
+>> -		drm_dev_printk(drm_ ? drm_->dev : NULL, KERN_DEBUG, fmt, ## __VA_ARGS__);	\
+>> +		drm_dev_printk(__drm_to_dev(drm), KERN_DEBUG, fmt, ## __VA_ARGS__);		\
+>>   })
+>>   
+>>   #define drm_dbg_ratelimited(drm, fmt, ...) \
+>> @@ -752,13 +757,13 @@ void __drm_err(const char *format, ...);
+>>   /* Helper for struct drm_device based WARNs */
+>>   #define drm_WARN(drm, condition, format, arg...)			\
+>>   	WARN(condition, "%s %s: [drm] " format,				\
+>> -			dev_driver_string((drm)->dev),			\
+>> -			dev_name((drm)->dev), ## arg)
+>> +			dev_driver_string(__drm_to_dev(drm)),		\
+>> +			dev_name(__drm_to_dev(drm)), ## arg)
+>>   
+>>   #define drm_WARN_ONCE(drm, condition, format, arg...)			\
+>>   	WARN_ONCE(condition, "%s %s: [drm] " format,			\
+>> -			dev_driver_string((drm)->dev),			\
+>> -			dev_name((drm)->dev), ## arg)
+>> +			dev_driver_string(__drm_to_dev(drm)),		\
+>> +			dev_name(__drm_to_dev(drm)), ## arg)
+>>
+> Hi Jani,
+>
+> These two changes introduce undefined behavior into these macros. The final
+> code generation becomes this (from 'bxt_port_to_phy_channel'):
+>
+> 	__warn_printk("%s %s: [drm] " "PHY not found for PORT %c",
+> 		      dev_driver_string(__drm_to_dev(display->drm)),
+> 		      dev_name(__drm_to_dev(display->drm)),
+> 		      (port + 'A'));
+>
+> The issue lies in 'dev_name(__drm_to_dev(display->drm))'. After inlining, it
+> becomes this (pseudo code):
+>
+> 	struct device *device = display->drm ? display->drm->dev : NULL;
+> 	const char *name = device->init_name ? device->init_name
+> 					     : kobject_name(&device->kobj);
+>
+> 	__warn_printk("%s %s: [drm] " "PHY not found for PORT %c",
+> 		      dev_driver_string(device), name, (port + 'A'));
+>
+> The issue, of course, is that the 'device' may be NULL when attempting 
+> to get
+> 'device->init_name'. The compiler sees this as undefined behavior, which may
+> lead to unexpected outcomes, especially with Clang where paths 
+> determined to be
+> undefined are removed entirely under certain conditions.
+
+Would it be better to just revert the drm_WARN() and drm_WARN_ONCE()
+macros to use (drm)->dev directly?
+
+It's not ideal, but as the quick fix.
+
+I don't think adding the check in dev_name() would go down well, as
+there are roughly 5k users of it, and feels like unnecessary code size
+bloat.
 
 
---muvmm3ueazlwdz6b
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH next 0/3] lib: Implement mul_u64_u64_div_u64_roundup()
-MIME-Version: 1.0
+BR,
+Jani.
 
-Hello David,
 
-On Sat, Apr 05, 2025 at 09:45:27PM +0100, David Laight wrote:
-> The pwm-stm32.c code wants a 'rounding up' version of mul_u64_u64_div_u64=
-().
-> This can be done simply by adding 'divisor - 1' to the 128bit product.
-> Implement mul_u64_add_u64_div_u64(a, b, c, d) =3D (a * b + c)/d based on =
-the
-> existing code.
-> Define mul_u64_u64_div_u64(a, b, d) as mul_u64_add_u64_div_u64(a, b, 0, d=
-) and
-> mul_u64_u64_div_u64_roundup(a, b, d) as mul_u64_add_u64_div_u64(a, b, d-1=
-, d).
->=20
-> Only x86-64 has an optimsed (asm) version of the function.
-> That is optimised to avoid the 'add c' when c is known to be zero.
-> In all other cases the extra code will be noise compared to the software
-> divide code.
->=20
-> I've updated the test module to test mul_u64_u64_div_u64_roundup() and
-> also enhanced it to verify the C division code on x86-64.
->=20
-> Note that the code generated by gcc (eg for 32bit x86) just for the multi=
-ply
-> is rather more horrid than one would expect (clang does better).
-> I dread to think how long the divide loop takes.
-> And I'm not at all sure the call in kernel/sched/cputime.c isn't in a
-> relatively common path (rather than just hardware initialisation).
->=20
-> David Laight (3):
->   lib: Add mul_u64_add_u64_div_u64() and mul_u64_u64_div_u64_roundup()
->   lib: Add tests for mul_u64_u64_div_u64_roundup()
->   lib: Update the muldiv64 tests to verify the C on x86-64
 
-I wonder what happend to this series. I'd like to make use of
-mul_u64_u64_div_u64_roundup() so I'd be interested to get this into the
-mainline.
+>
+> (Note, I'm working on making this behavior less draconian by adopting a GCC
+> pass, but this will take time to filter out to Linux devs.)
+>
+> Regards,
+> -bw
+>
 
-Best regards
-Uwe
-
---muvmm3ueazlwdz6b
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgnCcoACgkQj4D7WH0S
-/k6J/wgAt0QlUI211RhaxikR09Mc04wMY0JBljO9vugTluirsnJiZl1k7p3b4oVe
-gSS/l5pfQQDopT+5tQlXVIb1uy4SQP+1ToUcTNUTcaJAP48oRdF0C7ggvYyGmyM+
-qB0Fg21wqIQBtqHZK+DU2JV/CLpQBc8xbf51CcZ7ut9ayfpRuDKi/A8QjIJsLmRg
-aq/JEjS/chl2noJ8JYRjAC8L6FInzhigdIQfVaDe9HsC0RhYhtFHcFz948KnpEjN
-/BWDNfZOn91rArQ1fw2s/vEi6Lx4GXc/oR1kCHm7q8zW/TYd13RixybR7p1BZl9+
-OUXdD8xQ2WHfU62LGUiBA1YJajrycg==
-=pgnw
------END PGP SIGNATURE-----
-
---muvmm3ueazlwdz6b--
+-- 
+Jani Nikula, Intel
