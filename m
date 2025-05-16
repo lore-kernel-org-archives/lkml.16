@@ -1,33 +1,56 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF51235975;
-	Fri, 16 May 2025 13:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD45219E0;
+	Fri, 16 May 2025 13:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747402050; cv=none; b=dP0Xu7SocuvWEufvGYFh+VBFl/mD/xkedXGu0kJcTy+MgyUio3OVlzpukGTdX3L0/TxbUhQDqyodffEuwzdwEKjtUrWtqOFp78jRi7wFQjomwMAzOBMwcrf9rLqs+X6pMEYXvvcgNiucaAUOEz1ltobBD4Sdsc2SDqZnLJTZmx8=
+	t=1747402092; cv=none; b=dN76cG4oL7QePs6ezamm5GbR8Q5AMW22FhY0W5KAJ83WjlneVmzj2uZllWP6Gmht2ZkmfcCXikfzJeZXOd4wOzIOgTwLs3Y4eZwRDjqbmMSoPJajdL4vAmapxOwF84xI/lksSYiXw82f9z8FEHIhmU0RqZhqLxSbEPE9NxurfTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747402050; c=relaxed/simple;
-	bh=GQH4vjzbq/e3q06rdz3MkAysTEwVc8CsqS1cU11LWMY=;
+	s=arc-20240116; t=1747402092; c=relaxed/simple;
+	bh=G6CMzWauq5+AzogSdJMeQVmUl+TKhUo8l0EXfMlhalY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OUrXDEjhIZe8+dY1714LMAJ4lbyiI93wVK2zjNlWEV1u6g/c4fSa8PD4+U1CpubvwDy4dB2ub584IcNU7BztwADH+qr/s0mfRHnMB7mJIPcXrze+/GTb0gCrxnnd4FyTG2q/2VHZ3AKqdFC8EHnZwqyY9YAm/qS+gjwdsxNDBLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H8jGqE6/; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Fp9IKSajqf/jJMTdDjS51wp8vOkP8i6cf6VWoB29KV42Xc4NlIw/0U2qzxSI2JIjpi6D2kiVpSFbmks5vJlBx+mn2kacl5TmBoSa0qY4l37O7SAWIeuWRbOHjKglArUTkmw7dI05ypO8MVYJKtphtOmOCFqREoKRS/fOOGi3qZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k4Vi/6ly; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H8jGqE6/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2101C4CEE4;
-	Fri, 16 May 2025 13:27:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747402050;
-	bh=GQH4vjzbq/e3q06rdz3MkAysTEwVc8CsqS1cU11LWMY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=H8jGqE6/RU8FID9CdY+1PxxTwwfZlhsnz+701bzBzDybJIxzNDM2Md2xA7HKkmqNO
-	 iqrsPtWAEgPRkNJV4RcNPTBXI0p893dZNQTCxOMgQLC3JwhK4uMr9iyvS4pvy2Ufbz
-	 tS9Ac6k2JMwpmnQ6ipHLp3am+dzgFnrmN85021yWLrbH7RL0L01lihVlZFWPLaj0dO
-	 mD9m33cOBWX2IwAC9lg6fpe/G/a+EQJvoJAVDnvMudX+rM4tmBYaIDO2BQWRUyT+ly
-	 Ow8GZe28t5K+OaJ6RLA+SSjaVVmXNZrhB5uiMIqCPWRapKfzhYXBtjko7Fuvp3BNq3
-	 EhHeYNFKSwUzQ==
-Message-ID: <43341d97-e6fc-4b09-82cf-ea81d9f877bb@kernel.org>
-Date: Fri, 16 May 2025 15:27:26 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k4Vi/6ly"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747402091; x=1778938091;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=G6CMzWauq5+AzogSdJMeQVmUl+TKhUo8l0EXfMlhalY=;
+  b=k4Vi/6ly2k1Qql8LVHzqqFZa7oLbWZhOm2GrOlxe4ap6nJ+oQN2B0yjU
+   b4tQRR2nzn7EgQyjv1phMM56PN9RKJSsIMC4R31H68RgnWlmhbD0iC/qi
+   6hxHRYP+5I/ODYNH+/QStyO+qHp0DNKBDCmkyJTtw7AY43vdMhoP1hjuF
+   uKq+QaGj46VNDjzdRbnqrb/Y9jyhujSoJYl/xsn9GW7GM8ay9T1wQPKOj
+   JL0Od3oUTYJPlMkcMOdVVrL/O/vFjHh39/QuSNL7+WY9a7nu8Dsl0SZQl
+   T8Rj9cKh4Gzc7xDzdzTfJKsHT1bRQUn/4XVb4kxCgEsAwA/ae7FO4eLTd
+   g==;
+X-CSE-ConnectionGUID: pNqcDumXRTK+8L4iBLs+Vg==
+X-CSE-MsgGUID: jRrlq64rTIuvogVR9UcIig==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="53045832"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="53045832"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 06:28:10 -0700
+X-CSE-ConnectionGUID: NkgiRhwHQbiqQX9YY7ptUw==
+X-CSE-MsgGUID: GxJFaurSSN+30mOuiqx8eQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="143936128"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 06:28:10 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id CBC5220B5736;
+	Fri, 16 May 2025 06:28:08 -0700 (PDT)
+Message-ID: <b0d1b369-3d1a-47a5-befe-9c723ed5bb79@linux.intel.com>
+Date: Fri, 16 May 2025 09:28:07 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,97 +58,127 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: reset: eswin: Documentation for eic7700
- SoC
-To: dongxuyang@eswincomputing.com, p.zabel@pengutronix.de, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: ningyu@eswincomputing.com, linmin@eswincomputing.com,
- huangyifeng@eswincomputing.com
-References: <20250514002945.415-1-dongxuyang@eswincomputing.com>
- <20250514003121.473-1-dongxuyang@eswincomputing.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH V2 01/15] perf: Fix the throttle logic for a group
+To: Leo Yan <leo.yan@arm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+ irogers@google.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com,
+ tmricht@linux.ibm.com
+References: <20250514151401.2547932-1-kan.liang@linux.intel.com>
+ <20250514151401.2547932-2-kan.liang@linux.intel.com>
+ <20250515094300.GC412060@e132581.arm.com>
+ <4a44b8cb-7c73-4926-8b9f-1f63929ea48f@linux.intel.com>
+ <20250516125146.GE412060@e132581.arm.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250514003121.473-1-dongxuyang@eswincomputing.com>
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250516125146.GE412060@e132581.arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 14/05/2025 02:31, dongxuyang@eswincomputing.com wrote:
-> diff --git a/include/dt-bindings/reset/eswin,eic7700-reset.h b/include/dt-bindings/reset/eswin,eic7700-reset.h
-> new file mode 100644
-> index 000000000000..fcf004620db9
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/eswin,eic7700-reset.h
-> @@ -0,0 +1,460 @@
-> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-> +/*
-> + * Copyright 2024, Beijing ESWIN Computing Technology Co., Ltd.. All rights reserved.
-> + *
-> + * Device Tree binding constants for EIC7700 reset controller.
-> + *
-> + * Authors:
-> + *	Yifeng Huang <huangyifeng@eswincomputing.com>
-> + *	Xuyang Dong <dongxuyang@eswincomputing.com>
-> + */
-> +
-> +#ifndef __DT_ESWIN_EIC7700_RESET_H__
-> +#define __DT_ESWIN_EIC7700_RESET_H__
-> +
-> +#define SNOC_RST_CTRL 0X00
-
-No, IDs are abstract, decimal numbers going from 0. Not hex.
-
-...
-
-> +#define SW_NOC_NSP_RSTN (1 << 0)
-
-All these are not really bindings IDs either. This all should be 0, 1, 2
-etc. Do not treat hardware numbers as bindings, because it is not needed
-and it does not bring any benefits.
 
 
-Best regards,
-Krzysztof
+On 2025-05-16 8:51 a.m., Leo Yan wrote:
+> On Thu, May 15, 2025 at 08:55:05AM -0400, Liang, Kan wrote:
+> 
+> [...]
+> 
+>>>> +static void perf_event_unthrottle_group(struct perf_event *event, bool start)
+>>>> +{
+>>>> +	struct perf_event *sibling, *leader = event->group_leader;
+>>>> +
+>>>> +	perf_event_unthrottle(leader, leader != event || start);
+>>>> +	for_each_sibling_event(sibling, leader)
+>>>> +		perf_event_unthrottle(sibling, sibling != event || start);
+>>>
+>>> Seems to me that the condition "leader != event || start" is bit tricky
+>>> (similarly for the check "sibling != event || start").
+>>>
+>>> If a session sets the frequency (with option -F in perf tool), the
+>>> following flow is triggered:
+>>>
+>>>   perf_adjust_freq_unthr_events()
+>>>     `> perf_event_unthrottle_group(event, false);
+>>>
+>>> The argument "start" is false, so all sibling events will be enabled,
+>>> but the event pointed by the "event" argument remains disabled.  
+>>
+>> Right. Because the following code will adjust the period of the event
+>> and start it.
+>> The PMU is disabled at the moment. There is no difference in starting
+>> the leader first or the member first.
+> 
+> Thanks for explaination. In the case above, as you said, all events will
+> be enabled either in perf_event_unthrottle_group() or in
+> perf_adjust_freq_unthr_events() with a recalculated period.
+> 
+> Just a minor suggestion. Seems to me, the parameter "start" actually
+> means "only_enable_sibling". For more readable, the function can be
+> refine as:
+> 
+> static void perf_event_unthrottle_group(struct perf_event *event,
+>                                         bool only_enable_sibling)
+> {
+> 	struct perf_event *sibling, *leader = event->group_leader;
+> 
+> 	perf_event_unthrottle(leader,
+>                 only_enable_sibling ? leader != event : true);
+>         ...
+> }
+> 
+
+It should work for the perf_adjust_freq_unthr_events(), which only start
+the leader. But it's possible that the __perf_event_period() update a
+sibling, not leader.
+
+I think I can check the name to bool event_has_start.
+Is the name OK?
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index a270fcda766d..b1cb07fa9c18 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2749,13 +2749,13 @@ static void perf_event_throttle(struct
+perf_event *event)
+ 	perf_log_throttle(event, 0);
+ }
+
+-static void perf_event_unthrottle_group(struct perf_event *event, bool
+start)
++static void perf_event_unthrottle_group(struct perf_event *event, bool
+event_has_start)
+ {
+ 	struct perf_event *sibling, *leader = event->group_leader;
+
+-	perf_event_unthrottle(leader, leader != event || start);
++	perf_event_unthrottle(leader, event_has_start ? leader != event : true);
+ 	for_each_sibling_event(sibling, leader)
+-		perf_event_unthrottle(sibling, sibling != event || start);
++		perf_event_unthrottle(sibling, event_has_start ? sibling != event :
+true);
+ }
+
+ static void perf_event_throttle_group(struct perf_event *event)
+@@ -4423,7 +4423,7 @@ static void perf_adjust_freq_unthr_events(struct
+list_head *event_list)
+
+ 		if (hwc->interrupts == MAX_INTERRUPTS) {
+ 			perf_event_unthrottle_group(event,
+-				!event->attr.freq || !event->attr.sample_freq);
++				(event->attr.freq && event->attr.sample_freq));
+ 		}
+
+ 		if (!event->attr.freq || !event->attr.sample_freq)
+@@ -6466,7 +6466,7 @@ static void __perf_event_period(struct perf_event
+*event,
+ 		 * while we already re-started the event/group.
+ 		 */
+ 		if (event->hw.interrupts == MAX_INTERRUPTS)
+-			perf_event_unthrottle_group(event, false);
++			perf_event_unthrottle_group(event, true);
+ 		perf_pmu_enable(event->pmu);
+ 	}
+ }
+
+Thanks,
+Kan
+
