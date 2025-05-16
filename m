@@ -1,134 +1,103 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6C9229B23;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A66212288F9;
 	Fri, 16 May 2025 07:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747381714; cv=none; b=AoylL5EZQE09byIoXqFregTE4RSnn8fHblZnFo4Ri1nr+/E/Zbe2siDjlOcCWBUownrhubMw72fG5uw9pCuQ9GhXwNyB8lBGWrCKcQuvwVQdyOp07a7LXvnoKX/a+STWNLLVIYjxLYZE/9k9mFvJWaIyFhnDpPeeIc4zW5CPb34=
+	t=1747381717; cv=none; b=GB2xPeeCIPquD8axmpVSxm8GBjmZBAHYdifl0DxAjLBtQzphcykDR1eAXUvoCNGzMJoYVcjsLZXngHCxm3KRtRV52mFOMKY5wTH6enmxll4MqO7pdjo+3fRjx/5VmaDUOC+wBIg7SRCYmoEnOb449yzWWYuYtx7j7CFyzbVIQoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747381714; c=relaxed/simple;
-	bh=yJ4eeh3gaJOcoU4+afEl+yxc4psLx6TXSfoqGfCoUvk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pps2u6O4CMJ7QaGIEFkyTbgcevP+Rxoi5S5//WWSzqRjJShbWUuLEX2EQ+o12gWIx2M+7QR+9/Q3+CknHPHysB7NCgDQkGW4GXNLC5oCYoWyA/N9KrwjL7oN/gLwHsQCH9sMl9p2OqXBLr33cx8lNS1xkyWcQ0gVlb9c7hl5nSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EeXQZuaf; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747381717; c=relaxed/simple;
+	bh=NGGea+Xl9PhfLPNnOL1TZgnMozKaFETgeW8lvayNJEs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y1qEDu/LsaL2Yw4s66yyTd9/Q+JR27V2Hntd5+C0ADxRHp4EkT0b8YlEVBBgmZHjJR0wdVLjBvwWubIxY9eRpq6KhKp9oC5LPIeV5cklUKJuDLJ1C5GKkDkOssqQblMm+3A8KovbrsMhlP5mBRq7c8Qu4YV/aXTuwRhgX5BiJp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HdTE/7lO; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EeXQZuaf"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a0adcc3e54so1044052f8f.1;
-        Fri, 16 May 2025 00:48:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747381711; x=1747986511; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zj81kqK8affdtjubv87y2JDhLX7IQ97jJyY8iNhrq0o=;
-        b=EeXQZuafi71fZywGEmb1yf3iDP3P9RYpfMEqo16D7AI+yvqc5mzx7rDDwmNQFa+bfp
-         9PlZ7a5pvu6Rft3kl7W6SDkl3UUxQeyfAOWRifSrkvbsJOnDkJtMj3XPBH8dat1MJDc/
-         /ku1JH1aEHiOZnbXXUcNAo2zrQmRW1muUV+WY45dV2CtPu6Syz06q9ygHsoWe7MV70ME
-         oB1qa4sIpHwslcHQlXMmzbFcH5Fl2pPaPJYGXnEFcTN1T4K2FNkXn5yE3QYyMCg1/wTr
-         dtoUQjtu6LPIkfmOVsSFUeOFvmGAY7uDhPLoGr7GT9dhYuc6KnxXAFmsE7Byw4K+z0jT
-         e8qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747381711; x=1747986511;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zj81kqK8affdtjubv87y2JDhLX7IQ97jJyY8iNhrq0o=;
-        b=LA83cHFK2XdtD69TLIabhB/ttB/9qpq7DfcFfeEM8OaKnMss1NYvKcFv6o4v8KQWki
-         fDoNXcL5OLX3LGNsxt4PwykOtJBrNENmPXqThpIUH9WNjzQCz5qXrrtrFGEbRChJNvJg
-         KeRpzk0wyxEfhiVEipGaFQr2fth1FyV5ZVF+4a5CZ/8i5pA5ja4L2fklsBE34CN7EA/f
-         EvbNiyz3NemzfUtylPtj/eD25FX5cGp6sY3etel30uQs8RZ+Yp07o/lBlpGpMvv2ZlEx
-         Y4HG3fp5HW2bWlVajHAppd8MtHCfqERykbRcG2F/tgzGYMMY/+s2qptSdmAxkEutEzXI
-         nR3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUhP6UcTzeD1Fuoi5cJCkYB+e3Wi3HbRsin6upDKhTODtHBojx32BniLGs/EsbcCIcWjRV7qFG1ZXBFDiQ2@vger.kernel.org, AJvYcCVQ5RuBSKojyRnxAYH6KI13kk+Jeq2bQRPITBFFfM7LZf4+qpR+PRN4KJQKeusBU1NhMsfVe5Hi/canzeP5bQcjWrDv@vger.kernel.org, AJvYcCX+D4MNjUTZ3L2p1OxeNoawDMqMYcJTEul6i0hRHw9yewGPuO066q4sZ/CTGYUDSnaw66U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwszpG4zhOMuJ07F4m3khvooc0hFNs5XYhVFnWYB2E9uEipBR/A
-	xBUIfHLKXzbKNMM9tmuxCNlpw/Lfvjraq6cAt/zY0sgKPBfV8c3RH8WR
-X-Gm-Gg: ASbGncvdl9vmd3Slmj/TQ2yWV8kwlDKHa8BM/xO7V4KKJ+wxtDEdFtZ7DRsunxrwTa+
-	NcAmSFt1hg6XFABuaWWyvt38WVm4Pk3X89PJh1xNvLgJ/f5SFaGfmI2S+EY0cC1GJBtcLW0ijyi
-	xisDptwd+vhqwRq/R/hWjELKp4o5CgjLJ7uUuS6yfqX6QX2R+Gym88CyCbtBZQ7YG87o5ONA5gh
-	6KqY4OY7vvShqIJX3Iqx93+wa/g9eUlGY7ALteRZA4BkgfpG4ufS+rP0zOAq/O1CoBJQSvC5sgd
-	hJDvPXd4QxFHyA+iQ10YTo0W5epL88CcMEtnjTbG2qnR
-X-Google-Smtp-Source: AGHT+IGHTU82kXZx6lIN7IxPuoTuMuTDQwYaf4gBEapadFPqcunG55jLDUgKzk0cTALdy1+y7y5BeA==
-X-Received: by 2002:a05:6000:228a:b0:3a1:2df6:822c with SMTP id ffacd0b85a97d-3a35fead9ebmr1200262f8f.31.1747381710912;
-        Fri, 16 May 2025 00:48:30 -0700 (PDT)
-Received: from krava ([2a00:102a:401a:bc81:9db7:192e:9f02:9c0c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd4fdcccsm25151935e9.6.2025.05.16.00.48.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 00:48:30 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 16 May 2025 09:48:27 +0200
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv2 perf/core 15/22] selftests/bpf: Add hit/attach/detach
- race optimized uprobe test
-Message-ID: <aCbtyzGX-5UPjiaL@krava>
-References: <20250515121121.2332905-1-jolsa@kernel.org>
- <20250515121121.2332905-16-jolsa@kernel.org>
- <CAEf4Bza3cd5cMRvouUiVNrt5MRU4Nhpo7i0KEy1Gm5DTgOFszw@mail.gmail.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HdTE/7lO"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B5EA540E01ED;
+	Fri, 16 May 2025 07:48:29 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id s4U2TzRhrVR5; Fri, 16 May 2025 07:48:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747381706; bh=N7Zdp89bjOj4FjeUAF9kFqVmlf6VStnPSEwpdOdDTRo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HdTE/7lOnT2f6hY8ww9RAXnyBcXkrxsLYTIMiemYtpol/JQr9zNik2VRthZmd/JC+
+	 8fqOYkA9nHsUS8SXSrgHNbss/zDP2jyIOyT/DVqjUwKewv4DV/RJxuqOfD19XbZ+G/
+	 i0MCaMZsW9SdM1tbJ4clokpf6NTbK4ko5lHhGO4zwWguMjpF0xBXDXVIuP3Wa5oYE1
+	 MPD385I+O68yukhzdizfu4a+EsNWWZWyUkjjoQQ9aNW06l7rp1MHLQp3cN3xA0vw14
+	 Dsml7w8Az4Xnk/gfbJzp654iBAWXdrOAUNoEAox3H5iFcKhtjC7waIlSn6K3FawkNG
+	 dqcrwhcCfCquXuBzCsH3sWN1xiLBmtK3HUjpDSf642Q3yvUed5mTI+Djjn8cwguEts
+	 8HnovGW0Fk7blveZN6CI5YL8e2eEgZKPfphIKSR69oTZ3K1BcpoCsf4KWC7XXD7Ukd
+	 4TCqd3esqtY3YM9PbGP4tMgQswh0yFah18TQEYAilO0r/4O35wSSWtVrJ42b5hwYfK
+	 7CM1YVXSQ62mP2djQl9ICzl4wfQK+e9R+YW5sU8S4EERZ1WUCPwsw1iWVM/4TWz1FC
+	 N62Gf6zTrTaIjOwlvgoqP0ocynsbPOUVcJT3tGeQIAdLZWqjC3IYRBcRQI3cZ24rm1
+	 ur9k4jHjrGvaz5vpHAdQSsAE=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 25AC940E0239;
+	Fri, 16 May 2025 07:48:15 +0000 (UTC)
+Date: Fri, 16 May 2025 09:48:06 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Suraj Jitindar Singh <surajjs@amazon.com>,
+	David Kaplan <David.Kaplan@amd.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] x86/bugs: Don't WARN() when overwriting
+ retbleed_return_thunk with srso_return_thunk
+Message-ID: <20250516074806.GAaCbttptX_H2Gn8OZ@fat_crate.local>
+References: <20250515173830.uulahmrm37vyjopx@desk>
+ <20250515233433.105054-1-surajjs@amazon.com>
+ <20250515233433.105054-2-surajjs@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAEf4Bza3cd5cMRvouUiVNrt5MRU4Nhpo7i0KEy1Gm5DTgOFszw@mail.gmail.com>
+In-Reply-To: <20250515233433.105054-2-surajjs@amazon.com>
 
-On Thu, May 15, 2025 at 10:31:28AM -0700, Andrii Nakryiko wrote:
+On Thu, May 15, 2025 at 04:34:33PM -0700, Suraj Jitindar Singh wrote:
+> -	WARN(x86_return_thunk != __x86_return_thunk,
+> +	WARN((x86_return_thunk != __x86_return_thunk) &&
+> +	     (thunk != srso_return_thunk ||
+> +	      x86_return_thunk != retbleed_return_thunk),
+>  	     "x86/bugs: return thunk changed from %ps to %ps\n",
+>  	     x86_return_thunk, thunk);
 
-SNIP
+This is still adding that nasty conditional which I'd like to avoid.
 
-> > +static void test_uprobe_race(void)
-> > +{
-> > +       int err, i, nr_threads;
-> > +       pthread_t *threads;
-> > +
-> > +       nr_threads = libbpf_num_possible_cpus();
-> > +       if (!ASSERT_GT(nr_threads, 0, "libbpf_num_possible_cpus"))
-> > +               return;
-> > +       nr_threads = max(2, nr_threads);
-> > +
-> > +       threads = malloc(sizeof(*threads) * nr_threads);
-> 
-> leaking this? maybe just use `pthread_t thread[nr_threads];`? or alloca()?
+And I just had this other idea: we're switching to select/update/apply logic
+with the mitigations and I'm sure we can use that new ability to select the
+proper mitigation when other mitigations are influencing the decision, to
+select the proper return thunk.
 
-ugh.. will fix
+I'm thinking for retbleed and SRSO we could set it only once, perhaps in
+srso_select_mitigation() as it runs last.
 
-> 
-> > +       if (!ASSERT_OK_PTR(threads, "malloc"))
-> > +               return;
-> > +
-> > +       for (i = 0; i < nr_threads; i++) {
-> > +               err = pthread_create(&threads[i], NULL, i % 2 ? worker_trigger : worker_attach,
-> > +                                    NULL);
-> > +               if (!ASSERT_OK(err, "pthread_create"))
-> > +                       goto cleanup;
-> > +       }
-> > +
-> > +       sleep(4);
-> 
-> 4 seconds... can we make it much shorter and allow to define the
-> actual runtime with envvar? So for thorough testing you'll define
-> something multi-second, but once things land and settle we can run it
-> for 100ms at most and not slow down CI significantly? All these slow
-> tests do add up :(
+I don't want to introduce an amd_return_thunk... :-)
 
-ok, makes sense
+But David might have a better idea...
 
-thanks,
-jirka
+Thx.
 
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
