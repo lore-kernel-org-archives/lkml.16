@@ -1,136 +1,108 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD3B28002F
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 21:35:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95EB028031D;
+	Fri, 16 May 2025 21:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747431344; cv=none; b=mE/4mm8TjHwrhdjF/NGKmf+MScKgUvDiJStOo/RS7VcO9ABQ3rB4RsUNplicCFiag78Ltjo/yQY/vevzBe2wqcQfNsGTuvBaLAePrONDDAHMqmiEMERtE2prbdyi3OMWxaod6eqompMcFDv3aVoji7wI3DwYCskWg7Ehjh7DqZ8=
+	t=1747431345; cv=none; b=lT7v3kmFANZyeMuUfHJxbauh7DM/D4ZTc2o2k7+PUKEQ3EdmqIMH4uZ+982Ug+Kh/gWHbU07dfsYsy2GmOCsW0MK4I1JdSFryUDanJbDSOCh8uD/z9PToJ+75G5rjipH+nNkxK0RL7ZnLMqV89jFOeQ7jPxENgj1Gu3AoUmg/hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747431344; c=relaxed/simple;
-	bh=hPL5e/P/cV9diBrTyzd7jSCS8KcQA3rmpSv703Ir/mA=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=nDtFQ1Kaivn2MHnb6RpOmW4GzZI9oobYCsER40nfdHu+rfMUNJk2zh/Y+O/K8YrSVjQhBZgVJsGu8rhrCzWctUVNqocVJgbnu8IWAMRt1xr32D9OYGihz4KVIzm/j0BB3SQvJK1uzX/tWIyfWatHfDWXMpvncJsvgcarC0mAy24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fKNYuCzp; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747431345; c=relaxed/simple;
+	bh=j1ruRMNqvYg22uItOxJBvLjPf2urbsTmYoBaw8oZ93E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sS2blg5tw+8xosv0jry8SndbEOoaGPd627in3QIdKzdRn6bzV5Iw/3XgweT5EqApTYXuIIwls1zBarxV8AKPTT6T9DMZrQkfisCjWEb8741s44ZBmFD5d73VYcm6h8Ro7nUDuYyREoKTW/JjB8gW+pdGHcaPOBwXalo3rRn8EI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hCJVlDCl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fKNYuCzp"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30e9b2e7a34so308671a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 14:35:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747431342; x=1748036142; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xNHr7Po9X4IY3i+xCFCFaGljs9bw7WMHVo7Wciw81Ak=;
-        b=fKNYuCzptjRrJ/2VP6KkiDeawUaee+ngU3wTPYo+etQBz9sTgYegt6ZKemaHZIGWNT
-         //QGsxD7NrmLeaNcNFMKxTa9Q3Bd/oTChsf4VZpy/21rxpGiv9R8ehrau+lkA2B0TC8y
-         ARd+Zz1InG+Ox0Er5HQ4V+7FATYeF2ZCVx3UjhOzYMVvpaltNvQHT9/H7dCrr09N7jMn
-         M96IZT9bB7j/4vipVdL0Y29HCbdt5bBkS5B7l4nhAdpzSzMN+mMFlproe6yCuiqbqXtr
-         rteNfmfkjiXAG90ZoJKgnwQs9V+dcmOjJ3dkhH7L0yx4NvlkGrPTvI7oi1hjfm11gxFR
-         7lqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747431342; x=1748036142;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xNHr7Po9X4IY3i+xCFCFaGljs9bw7WMHVo7Wciw81Ak=;
-        b=Lay30SviUhmh1NDdyY4XjnxQiuDB9LstxHyl4omTI23coU8oUHinSUWuI8F/hywc/d
-         FLrAM3lNj+4SX9a6nueIIR14lcHsLTaN7G7PX2RDPjb0sOuVRsAW/FCQGT5JVyR3H1bl
-         c9YIzj7pl7U9UnrNAOk8TF7EOu5Lts0HW0CQYFnGhcitJDuqUW1u7L6jtr6Uzkstt7H2
-         8N8XxheHJjoRkFzHjp9Nth2al+LGWOOKoia+zhwSs1T75RPdE0k6jpKTZLJsDXrmX4K8
-         y5m9Awjj+y23kaKV+tx8mMobyiT7upIJ4x0JeacAFtQYdd1VpjMiO8oyoe/LJYxY5/8e
-         wtlA==
-X-Forwarded-Encrypted: i=1; AJvYcCVzfaQuRHtbTF48ER/hlcgqsjkS47xRiFNfnogI/d4vGooJS3fWnLvDzxI+o2UVtb8YfdmpT/B8psqQ84Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBv1klmRdqrilZ4p9rVnSkNpskgWK+oWnk9pHFPWbSqXuKglhv
-	iel07iDL3WBSug0jugBi2HZMaKeP7LKaiaOTkmMf2KHvNIOwp0DftqIHxxDvL3xM7tS6qhJYl0f
-	ljc7rPA==
-X-Google-Smtp-Source: AGHT+IG+XyFJvw9Pd7od/AslUHXgv3/EqoXQrpwCSuULnqlUWxViE7nATwFTEJvFMOEYURtUCNEgKSxbh84=
-X-Received: from pjbsy8.prod.google.com ([2002:a17:90b:2d08:b0:30e:65cf:2614])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1c05:b0:2ff:5ec1:6c6a
- with SMTP id 98e67ed59e1d1-30e7d55ba27mr7784969a91.18.1747431342299; Fri, 16
- May 2025 14:35:42 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 16 May 2025 14:35:34 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hCJVlDCl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1643C4CEE9;
+	Fri, 16 May 2025 21:35:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747431343;
+	bh=j1ruRMNqvYg22uItOxJBvLjPf2urbsTmYoBaw8oZ93E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hCJVlDClmNIfMNPDJikF5f8+4dp1aX3y0Hc7Dpnw27kNKONV9qSJUW7TYbtS+sZ+S
+	 RHNhIWNFIcOeJq7K5vz1BBDcVBYBjRhgBUH03IKM9cfTm5PiOO5SWsZQYDjircWlvy
+	 V8Js2a5erk9l1bs0iLQoFpfUR7FLVLJKf/aNaUTeqi7w73OzLd+IxzRhmNtgOIBXky
+	 LYje8srQSekNwzypexSQVLwuZkCWn6X5aQaIi4tujBuJDMNW4CConWdubPDIyy8cwA
+	 HKMylv+9wKX0Mn1HmDkqc2gp8J+GjORvg9F/kaO8ucMovOhCIQ828RvDq/yuaPjyaJ
+	 nNaz+tHUSDFnQ==
+Message-ID: <c8ff6830-5d22-45f0-8130-c6b434dc897d@kernel.org>
+Date: Fri, 16 May 2025 21:34:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.1112.g889b7c5bd8-goog
-Message-ID: <20250516213540.2546077-1-seanjc@google.com>
-Subject: [PATCH v3 0/6]  KVM: Dirty ring fixes and cleanups
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Xu <peterx@redhat.com>, Yan Zhao <yan.y.zhao@intel.com>, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Binbin Wu <binbin.wu@linux.intel.com>, 
-	James Houghton <jthoughton@google.com>, Sean Christopherson <seanjc@google.com>, 
-	Pankaj Gupta <pankaj.gupta@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings:iio:gyroscope:invensense,itg3200: add binding
+To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+Cc: andy@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
+ dlechner@baylibre.com, krzk+dt@kernel.org, linux-kernel@vger.kernel.org,
+ nuno.sa@analog.com, robh@kernel.org, ~lkcamp/patches@lists.sr.ht,
+ jic23@kernel.org, linux-iio@vger.kernel.org
+References: <59220742-18b1-4704-bb5c-8b79f0099139@baylibre.com>
+ <20250515221108.3890-1-rodrigo.gobbi.7@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250515221108.3890-1-rodrigo.gobbi.7@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Fix issues with dirty ring harvesting where KVM doesn't bound the processing
-of entries in any way, which allows userspace to keep KVM in a tight loop
-indefinitely.
-
-E.g.
-
-        struct kvm_dirty_gfn *dirty_gfns = vcpu_map_dirty_ring(vcpu);
-
-        if (fork()) {
-                int r;
-
-                for (;;) {
-                        r = kvm_vm_reset_dirty_ring(vcpu->vm);
-                        if (r)
-                                printf("RESET %d dirty ring entries\n", r);
-                }
-        } else {
-                int i;
-
-                for (i = 0; i < test_dirty_ring_count; i++) {
-                        dirty_gfns[i].slot = TEST_MEM_SLOT_INDEX;
-                        dirty_gfns[i].offset = (i * 64) % host_num_pages;
-                }
-
-                for (;;) {
-                        for (i = 0; i < test_dirty_ring_count; i++)
-                                WRITE_ONCE(dirty_gfns[i].flags, KVM_DIRTY_GFN_F_RESET);
-                }
-        }
-
-Patches 1-3 address that class of bugs.  Patches 4-6 are cleanups.
-
-v3:
- - Fix typos (I apparently can't spell opportunistically to save my life).
-   [Binbin, James]
- - Clean up stale comments. [Binbin]
- - Collect reviews. [James, Pankaj]
- - Add a lockdep assertion on slots_lock, along with a comment. [James]
-
-v2:
- - https://lore.kernel.org/all/20250508141012.1411952-1-seanjc@google.com
- - Expand on comments in dirty ring harvesting code. [Yan]
-
-v1: https://lore.kernel.org/all/20250111010409.1252942-1-seanjc@google.com
-
-Sean Christopherson (6):
-  KVM: Bound the number of dirty ring entries in a single reset at
-    INT_MAX
-  KVM: Bail from the dirty ring reset flow if a signal is pending
-  KVM: Conditionally reschedule when resetting the dirty ring
-  KVM: Check for empty mask of harvested dirty ring entries in caller
-  KVM: Use mask of harvested dirty ring entries to coalesce dirty ring
-    resets
-  KVM: Assert that slots_lock is held when resetting per-vCPU dirty
-    rings
-
- include/linux/kvm_dirty_ring.h |  18 ++----
- virt/kvm/dirty_ring.c          | 111 +++++++++++++++++++++++----------
- virt/kvm/kvm_main.c            |   9 ++-
- 3 files changed, 89 insertions(+), 49 deletions(-)
+On 16/05/2025 00:09, Rodrigo Gobbi wrote:
+>> Also just noticed that the IIO mailing list and Jonathan are missing
+>> from the CC. Need to add those to have a chance of this getting picked
+>> up.
+> 
+> Adding CC since I`ve missed.
+> Tks and regards.
 
 
-base-commit: 7ef51a41466bc846ad794d505e2e34ff97157f7f
--- 
-2.49.0.1112.g889b7c5bd8-goog
+No, you need to resend. By adding them on Cc they do not magically get
+all the discussions from other emails.
 
+Best regards,
+Krzysztof
