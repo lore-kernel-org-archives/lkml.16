@@ -1,165 +1,111 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406AC78F5D
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 14:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1AAF13B590;
+	Fri, 16 May 2025 14:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747404450; cv=none; b=tZaCXUwb3o0oE0Gyc9RsT649d7bwWg3/9xU2BHwyocGd14h8OhSBioUKz6/16/wnIwLKl59gEI4XjO+laoylahSEs1/lqnypRluUZ2dePVlopLFdK63wbObJKJfegNDWsblp4dGB9HnXeJ2LAJrS5/5IV9z0XjPwAO536anhQqo=
+	t=1747404464; cv=none; b=JqMgzh8zqq4u6jzfApkvm0xRN1jxyBWdNNMxT24/4Dep3SKNngLsZtKBIFMeeXZj96SitVstE648WoOOrBArsERwvUdzAxISFKTvcEjgcGy2J7qeWcC+OPhYnHeqAwa+15tO8O0UgkQoEFEgXRt2mHHukxbFipM75K6XfuP6OEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747404450; c=relaxed/simple;
-	bh=ZiJQtCrV56w4/Y1W+Sd1A8QY8PZatBWXeocXad9ibgg=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=e22Z1ehVebCsKxdHdNvvDQTWYkHIMhVM3cZmnTqwF91MJv6ZoLVRlzdo7ZyEJZpnyy/d36eMV2UULp16ybFgoCj2UfJQb6bGE97GU8QrE8YDsm/ZRB8nhNkAGWcdWgpHqC+uG2yuZCYZbE9q1PdXSogvlQqGTTxJYSUsXeRyhP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=idtMLIEf; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1747404464; c=relaxed/simple;
+	bh=z5CJXSHYb56Hs6grzL8lMrLCv9J6o+xPsjvhA8R4mN8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KwezeUm1xd88gmleAiEJY0+D6kv0jcJLxcGKiWjkhK3dMyenSO9Py403ycRaPLBRd8m/EN9BlgetsRT2pQdL1EKCdX5c+P8AGhVqoiNhCymnrmsCA8DM8DmQeTil4JXO+YOt29UQJz3XMiT2JHoLR6PC6+kqRAZOTC6mu7q+R/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=byNQzAgX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="idtMLIEf"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-73bfc657aefso1616357b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:07:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747404448; x=1748009248; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=I0BEoaGPs7E0lHGHqMtx20JU7Z7mIAdbQ03kowt/oEI=;
-        b=idtMLIEfiyQRD6EJjBSQqU6I0nM3t0N49ASuI9AsmxSORZZjg7PTZJe7Pu1/6ljRUo
-         JYs1vLhGN8/vXI+0YYJnISfclbcul9ilyjI6gxvwxQ3oNJEbrUtpMCAOj3vpgo2+HYke
-         xjsb/zWmHVAut0NPgXLvppVfXSKzckVvffKVJ/zo8SpIklO4huTgSW2Z6VvNtbxXjubP
-         HNo08DOadfNYsWP+6tq20NUf6NLSBJRvpIoRLFfuEUjKZoUKFra16T/waDeum5JskYRp
-         vr1q1gm9w2T5Oevxx6PxfJXF1OF3lv/+7OD5O2fM4dFcpHZBAFQtQWXU8tX/32xiEf92
-         mUgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747404448; x=1748009248;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I0BEoaGPs7E0lHGHqMtx20JU7Z7mIAdbQ03kowt/oEI=;
-        b=q/kDM/8tG8qVrJqTjE2aMVK589hACMw8OxGG7cVnAm6c85L47LDajzYdORyV3mBtGw
-         hfqTAIjjFwnlBIol5e0UFw7oEpjBTRrt40w6r166HClcylmnOo1OUGbRag8s1ksKg70k
-         KfLHsx7Bn0rSD6XJwESLfHDDY4IbS6qPa/SxHP+xhi3FlCgPjO5w3YYYwETBEYmcZCL9
-         i9NrsLXTKUa8ED9cnXErykFJMWvDKu8lpFtHlDVIqIiABwQ7ZWg6AAcpmt2xAsZqIpoM
-         lrWBoaZtXkCNpf3gKe2FAa2v9UdO/TYGu7qgyPaNnasOZD5CXh+30Zudc3W88Vxc1CII
-         BK5g==
-X-Forwarded-Encrypted: i=1; AJvYcCUe8SJm9oa4Wt2LqbjYT7P+Ixm3a+BFtVz9qUCaR8sHhRZWPNBVjgnRF+YO1fo4GH3zd0jXAJlguMKc8JM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxao/UUHJYe309HGT7qcRWXlB1yPKZJ0FwcoV56c+jHk6fjFK1o
-	stuj+Zy1JAgxze45OFdNtm+loZTBLF8KkrZW4v3VLdftmdfsYsw1B2mljfyvg2gKT1M4e8Tky+l
-	de5whdJLFnK27Ohm6Vtib3C/noA==
-X-Google-Smtp-Source: AGHT+IHjj8hb/RVvZ0IOpTAd6gcfF67ZbXjAX68CTThBkFnrnLTw7dIsH6cNRpPgLu+DDO0Lal4k3FXkbzgyillaoQ==
-X-Received: from pffl14.prod.google.com ([2002:a62:be0e:0:b0:73e:1cf2:cd5c])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:c8d:b0:740:6f69:f52a with SMTP id d2e1a72fcca58-742a9616b19mr4851938b3a.0.1747404448303;
- Fri, 16 May 2025 07:07:28 -0700 (PDT)
-Date: Fri, 16 May 2025 07:07:27 -0700
-In-Reply-To: <b3c2da681c5bf139e2eaf0ea82c7422f972f6288.1747264138.git.ackerleytng@google.com>
- (message from Ackerley Tng on Wed, 14 May 2025 16:42:08 -0700)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="byNQzAgX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 117BDC4CEED;
+	Fri, 16 May 2025 14:07:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747404463;
+	bh=z5CJXSHYb56Hs6grzL8lMrLCv9J6o+xPsjvhA8R4mN8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=byNQzAgXeHEilmF9wp+3Hx/ikqXyGzH4MZuC/KUbg1TswccvypwhKqERitNRQba5h
+	 675MuUPGrPTv/Khfh+XQ88Z7stYfx5ezYWgh8rovA8Mj8lyP/Roeufjo7253KwOPno
+	 CA8/sKoZ7TYjQziUqxHMKxYnocjaDhm+LsV+HiKQfL3NErwAaEwjBodF7fkU07sFQr
+	 IEX6CfbfNO/fMvueo2in2YZyxjcEg1mFIpNaNCVC5U1vn6XscH08p3wpPvUJJYgwx5
+	 /MhwMQ1jlSMRoC/6wIZmtsi87KXybWUyjXVeiF9jROBUn6Ehf+Qy47vI+AaI67P3bL
+	 W3UOWuk4P/T2g==
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3fefbbc7dd4so1934421b6e.2;
+        Fri, 16 May 2025 07:07:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXbZk6hPT0+EImprv1EPX9YD6ZG+slbnLr3xqBksUYhcckxxIoU4eSX7w4r7qw6lJAf8WjDFG0qsZvexshH@vger.kernel.org, AJvYcCXojnOTthlNUhwHeVhYcz4tnxS7wqs5XEWy+s5ZYdCL6brk0n8FtJKTJNDu8iFZjk1YfsglYTKcg0nH@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnjDFEYhjqKXlfeUP4s73+30iJ5koXTcJETnetw5U6lXWLWK1O
+	BP0kQzUt2qqEOPJ42PVZb81AfbKqXeL6warf8hpmo45eXro0mL5enKs5R6bnqDcQX3a2QjYl0F3
+	j53aiRZC+lcwrKWHkYOjShObxeHzO7/E=
+X-Google-Smtp-Source: AGHT+IHj3cGtBESuyk5acA7ZnDt3cc0CYgGRZbKlMhvz8S2gwW5RE5WldFPS7054QkWZhHJ8KMK2aFDgQO9tBiCnlVg=
+X-Received: by 2002:a05:6808:22a5:b0:403:28ab:cfe4 with SMTP id
+ 5614622812f47-404da76769amr1853099b6e.22.1747404462401; Fri, 16 May 2025
+ 07:07:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <diqzzffcfy3k.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH v2 29/51] mm: guestmem_hugetlb: Wrap HugeTLB as an
- allocator for guest_memfd
-From: Ackerley Tng <ackerleytng@google.com>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com, 
-	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
-	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
-	bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org, 
-	catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org, 
-	dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
-	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
-	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
-	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
-	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
-	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
-	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
-	kent.overstreet@linux.dev, kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	thomas.lendacky@amd.com, usama.arif@bytedance.com, vannapurve@google.com, 
-	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
-	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
-	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
-	yuzenghui@huawei.com, zhiquan1.li@intel.com
+MIME-Version: 1.0
+References: <20250411194820.3976363-1-chenyuan0y@gmail.com>
+In-Reply-To: <20250411194820.3976363-1-chenyuan0y@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 16 May 2025 16:07:30 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0g9YZLct_OkQsNDeh3HUv9YccvvT18JJd8Hu9JpQ0ksRw@mail.gmail.com>
+X-Gm-Features: AX0GCFuEcBC0DziP9FKUFxc2cysX_VpvY51zJLLdcAALPBZeB4AP_nFhQUWz_eM
+Message-ID: <CAJZ5v0g9YZLct_OkQsNDeh3HUv9YccvvT18JJd8Hu9JpQ0ksRw@mail.gmail.com>
+Subject: Re: [PATCH] x86/acpi: fix potential NULL deref in acpi_wakeup_cpu()
+To: Chenyuan Yang <chenyuan0y@gmail.com>
+Cc: rafael@kernel.org, lenb@kernel.org, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	bhe@redhat.com, kai.huang@intel.com, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ackerley Tng <ackerleytng@google.com> writes:
+On Fri, Apr 11, 2025 at 9:48=E2=80=AFPM Chenyuan Yang <chenyuan0y@gmail.com=
+> wrote:
+>
+> The result of memremap() may be NULL on failure, leading to a NULL
+> dereference. Add explicit checks after memremap() call: if the
+> MADT mailbox fails to map, return immediately.
 
-> guestmem_hugetlb is an allocator for guest_memfd. It wraps HugeTLB to
-> provide huge folios for guest_memfd.
+This mailbox is called Multiprocessor Wakeup Mailbox in the
+specification, so please follow the established terminology.
+
+> This is similar to the commit 966d47e1f27c
+> ("efi: fix potential NULL deref in efi_mem_reserve_persistent").
 >
-> This patch also introduces guestmem_allocator_operations as a set of
-> operations that allocators for guest_memfd can provide. In a later
-> patch, guest_memfd will use these operations to manage pages from an
-> allocator.
+> This is found by our static analysis tool KNighter.
 >
-> The allocator operations are memory-management specific and are placed
-> in mm/ so key mm-specific functions do not have to be exposed
-> unnecessarily.
->
-> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
->
-> Change-Id: I3cafe111ea7b3c84755d7112ff8f8c541c11136d
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+> Fixes: 2b5e22afae07 ("x86/acpi: Extract ACPI MADT wakeup code into a sepa=
+rate file")
 > ---
->  include/linux/guestmem.h      |  20 +++++
->  include/uapi/linux/guestmem.h |  29 +++++++
->  mm/Kconfig                    |   5 +-
->  mm/guestmem_hugetlb.c         | 159 ++++++++++++++++++++++++++++++++++
->  4 files changed, 212 insertions(+), 1 deletion(-)
->  create mode 100644 include/linux/guestmem.h
->  create mode 100644 include/uapi/linux/guestmem.h
+>  arch/x86/kernel/acpi/madt_wakeup.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 >
-> <snip>
+> diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/ma=
+dt_wakeup.c
+> index f36f28405dcc..b386ec4b87c2 100644
+> --- a/arch/x86/kernel/acpi/madt_wakeup.c
+> +++ b/arch/x86/kernel/acpi/madt_wakeup.c
+> @@ -143,6 +143,10 @@ static int acpi_wakeup_cpu(u32 apicid, unsigned long=
+ start_ip)
+>                 acpi_mp_wake_mailbox =3D memremap(acpi_mp_wake_mailbox_pa=
+ddr,
+>                                                 sizeof(*acpi_mp_wake_mail=
+box),
+>                                                 MEMREMAP_WB);
+> +               if (!acpi_mp_wake_mailbox) {
+> +                       pr_err("Failed to remap MADT mailbox\n");
+
+Please follow Kirill's advice on using pr_err_once() here and use the
+proper terminology in the message (also this is mapping, not
+remapping, even though memremap() is used).
+
+> +                       return -ENOMEM;
+> +               }
+>         }
 >
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index 131adc49f58d..bb6e39e37245 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -1218,7 +1218,10 @@ config SECRETMEM
->  
->  config GUESTMEM_HUGETLB
->  	bool "Enable guestmem_hugetlb allocator for guest_memfd"
-> -	depends on HUGETLBFS
-> +	select GUESTMEM
-> +	select HUGETLBFS
-> +	select HUGETLB_PAGE
-> +	select HUGETLB_PAGE_OPTIMIZE_VMEMMAP
+>         /*
+> --
 
-My bad. I left out CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON=y in
-my testing and just found that when it is set, I hit
-
-  BUG_ON(pte_page(ptep_get(pte)) != walk->reuse_page);
-
-with the basic guest_memfd_test on splitting pages on allocation.
-
-I'll follow up with the fix soon.
-
-Another note about testing: I've been testing in a nested VM for the
-development process:
-
-1. Host
-2. VM for development
-3. Nested VM running kernel being developed
-4. Nested nested VMs created during selftests
-
-This series has not yet been tested on a physical host.
-
->  	help
->  	  Enable this to make HugeTLB folios available to guest_memfd
->  	  (KVM virtualization) as backing memory.
->
-> <snip>
->
+Thanks!
