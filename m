@@ -1,70 +1,148 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66DA122D7B5
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 20:52:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADAC122D4C4
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 20:54:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747428782; cv=none; b=jhqjM9SnBLq13u4twknzRzGMsO8RSCjbfmxgxNEu1pXLFpd2I6QJXxflKG7+e9YNvJfieeVVuh+FJ75RcxDcd6Fdz0fm+JmANao/12bHfZ65fmI+6T3TbM55Y3cYjFF4ElCu9ccw985UyZ3q+/uRkNTxDbzggQMw5D97BLLF46I=
+	t=1747428883; cv=none; b=a4g5xhFVLZfIDHhrRYeNB2qx9NHCxKooCkbj7N3zdvsAgE0aq5OWWebsYxm1dwAJei73XNHzPvAl8mOQtMifCVl3noVWS17blM1n3Us+y/eMah5LRYL4tv4PN5u6snyYmYWadv90CIP+0CrfK+v+Ajk39ShzeW4ZhfCoRX1Z7Cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747428782; c=relaxed/simple;
-	bh=m3S0XpbiaHEmOTQFd7wsSo1Y7TTbUT0TtuI2heJSPvI=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=NxPTUGEbqFyp/bGLr6PJH/i3Oj3xt2aJwwJVEf6d/n0oLyFZhNVVIdXAhTq9C8nJ8/oubFd5Ku9S1FyuKs70reqx6CGOthRoh3KbFTQZ5sj5RhN9ZmMhJ3KO9TDG1JWTO0e/1Zc/UE9P1lrPoaSfrzg19tpwZiI1k8dsPcfahzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=ImvYb2ur; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1747428883; c=relaxed/simple;
+	bh=QWFG0Ylh5oGGQ0y5MXw7J0v9cLYgY8UG3wLXOKRNB6I=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ewMZK7C+0fYs7JxrFyY2x+Z060y9TXqwScUIpmywZRZD4fWYz8SnN2I+tGIOGGG961cfhx7/sa7uSUWBHy6ih8DILTtbtcJt3VRu/eQqemgQou7oCkYERiPg40Wv/M204GwFqKvgN59TVM8KndIMocxMLTGbe0vk1WXlc4s49JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P3B7bveB; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="ImvYb2ur"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
-	Cc:To:Subject:From:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=p7hZMnAjaDBzYbpb421535ssCDDcfVd9fB504+oCGGA=; b=ImvYb2urvm0sH43X1efYjAxBqA
-	e+NCvqV3M4dE1Fire7Oy18DnAqz/8hSIXcNQoCP6R6sVz80cJoDh2zZd8udz47S+e93fMSVUfisae
-	QTluJmNHBdLZoNYH9qaXUx5aMExVAy15fvEXqdQN90KUQwzKXKS375PK4kdFXKfT2isaIglxaTFQy
-	a1cD2WDzJoxE+u0/8SNnaHwr80iRFcCroNnRgcuD3b09smwIW02f5OiV73IKz9RDlowVnSCP7EDDr
-	ci4lxHO9QCUJErA6EWh6wgnJazPsNfH9vwzimNEcXqUOUBI+jUQJ/evlCUDYZcI0gJyVb47bmMLAp
-	xqV5hHlA==;
-Received: from [191.204.192.64] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uG1xK-009FB6-3O; Fri, 16 May 2025 22:52:56 +0200
-Message-ID: <6f47c731-47dc-401a-9337-013f5f96ab1c@igalia.com>
-Date: Fri, 16 May 2025 17:52:54 -0300
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P3B7bveB"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b26f30486f0so997829a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 13:54:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747428881; x=1748033681; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pUEdh5iBFBvuEiqTMp07Lu/KDXTezSp1m3vHIrINdEA=;
+        b=P3B7bveBkhciad9rpRDaft6/0HMMZhqJpG1nEqbLj0xg7kYpV3HaLTu52g5UGJDvko
+         Vqg9uYus3ZFT9vj40IHW7WeniOxJXjeaYh2lCNE0/RPGuEhvUQGCLBYORocESV9cwVf4
+         aaBnXSbVwzu6dgn6zcucOKbaSTrPU1z2mVP6rLMuBJLXlXZZNqVlDx9Tn2krXkKBzmlk
+         RvW96lbx5MmYIBF7mGAs53/j+gMcnBnM1U1FlkNKncDYQPr+2ervoCAa1veL2W2Ns79G
+         izjRG+89orqrv9SIQT1954b5s3Yyw/bee2kWd2si3c+/uT8E86LPMOxg1mQ4lESPZwqE
+         v4EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747428881; x=1748033681;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pUEdh5iBFBvuEiqTMp07Lu/KDXTezSp1m3vHIrINdEA=;
+        b=Oe8IPHbI3xAqNkEcGGyGaDRcIc7/1E5ytw+0pUkK5SuKehC/+kGS+xIaVSfVlw5I77
+         en3IedkT+x7li3r6Vh2UkFKWVX9u8xuq+GfWKvpcCIwiDdHO7jJnl29TM1sd0T8hykyw
+         +zaVY6HcSA6L58PEbRlqJf24d4bbPbQyo6dLjtDf9zf/95akXcq5yINuDwQ6iyxmAY5I
+         Ytpn9jmlfOCMxxW9VgI3k17f44dj9fLRPAVVoHl+CZlVQL5/nKL4dROBEuQWVjpf2uJj
+         IMIifEHU6cBozp1pWTD1qkEER2ARiN6A5ZhDuC7YS4ZmHK4TcbOsDFJD7/TFl3eiPyLi
+         UTQw==
+X-Forwarded-Encrypted: i=1; AJvYcCWGIyxUbFydksvzu1R1BmlpyvHGPxRtxFZfnz5itBxYV1338g0iFbScGG6KOcjTyWIgwymPMmCNK5D2dos=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDK64BqDPq52hOCrCMS81NFH47AYmedSGbhB93vLv+Dk9MPw89
+	I5mT+3Y25X1ttA4CXXTaK7pmX6WG4cfMubIIVg2GLGSh6fYdbJ6Eize8espyQpUhtcuuW68GUBA
+	VZfSnFA==
+X-Google-Smtp-Source: AGHT+IEKXMvi6p5AYfeWYVVxoOJp0+T+HCMSwZBivOJAwnUFY68sURx/OiAsfMQfNNX7Rux9VtkV5C8ZiFM=
+X-Received: from pgid6.prod.google.com ([2002:a63:ed06:0:b0:b26:de99:6f81])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:6f83:b0:1f5:619a:8f79
+ with SMTP id adf61e73a8af0-21621876910mr7462694637.1.1747428880970; Fri, 16
+ May 2025 13:54:40 -0700 (PDT)
+Date: Fri, 16 May 2025 13:54:34 -0700
+In-Reply-To: <2d0d274c-6bc0-43c7-a8a8-92aa11872675@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-Subject: Re: [PATCH 5/5] futex: Correct the kernedoc return value for
- futex_wait_setup()
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- linux-kernel@vger.kernel.org
-Cc: Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
- Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
- Valentin Schneider <vschneid@redhat.com>, Waiman Long <longman@redhat.com>
-References: <20250516160339.1022507-1-bigeasy@linutronix.de>
- <20250516160339.1022507-6-bigeasy@linutronix.de>
-Content-Language: en-US
-In-Reply-To: <20250516160339.1022507-6-bigeasy@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-28-mizhang@google.com>
+ <2d0d274c-6bc0-43c7-a8a8-92aa11872675@linux.intel.com>
+Message-ID: <aCemClX6rKnVFqLt@google.com>
+Subject: Re: [PATCH v4 27/38] KVM: x86/pmu: Handle PMU MSRs interception and
+ event filtering
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
+	Shukla Manali <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Em 16/05/2025 13:03, Sebastian Andrzej Siewior escreveu:
-> The kerneldoc for futex_wait_setup() states it can return "0" or "<1".
-> This isn't true because the error case is "<0" not less than 1.
-> 
-> Document that <0 is returned on error. Drop the possible return values
-> and state possible reasons.
-> 
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
+On Fri, May 16, 2025, Dapeng Mi wrote:
+> On 3/25/2025 1:31 AM, Mingwei Zhang wrote:
+> > +	if (kvm_mediated_pmu_enabled(pmu_to_vcpu(pmu))) {
+> > +		bool allowed =3D check_pmu_event_filter(pmc);
+> > +
+> > +		if (pmc_is_gp(pmc)) {
+> > +			if (allowed)
+> > +				pmc->eventsel_hw |=3D pmc->eventsel &
+> > +						    ARCH_PERFMON_EVENTSEL_ENABLE;
+> > +			else
+> > +				pmc->eventsel_hw &=3D ~ARCH_PERFMON_EVENTSEL_ENABLE;
+> > +		} else {
+> > +			int idx =3D pmc->idx - KVM_FIXED_PMC_BASE_IDX;
+> > +
+> > +			if (allowed)
+> > +				pmu->fixed_ctr_ctrl_hw =3D pmu->fixed_ctr_ctrl;
+>=20
+> Sean, just found there is a potential bug here.=C2=A0 The
+> "pmu->fixed_ctr_ctrl_hw" should not be assigned to "pmu->fixed_ctr_ctrl"
+> here, otherwise the other filtered fixed counter (not this allowed fixed
+> counter) could be enabled accidentally.
+>=20
+> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> index ba9d336f1d1d..f32e5f66f73b 100644
+> --- a/arch/x86/kvm/pmu.c
+> +++ b/arch/x86/kvm/pmu.c
+> @@ -473,7 +473,8 @@ static int reprogram_counter(struct kvm_pmc *pmc)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int idx =
+=3D pmc->idx - KVM_FIXED_PMC_BASE_IDX;
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (allo=
+wed)
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmu->fixed_ctr_ctrl_hw =3D pmu->fixed_ctr=
+_ctrl;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmu->fixed_ctr_ctrl_hw |=3D pmu->fixed_ct=
+r_ctrl &
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> intel_fixed_bits_by_idx(idx, 0xf);
 
-Reviewed-by: André Almeida <andrealmeid@igalia.com>
+Hmm, I think that's fine, since pmu->fixed_ctr_ctrl should have changed?  B=
+ut I'd
+rather play it safe and do (completely untested):
+
+	if (pmc_is_gp(pmc)) {
+		pmc->eventsel_hw &=3D ~ARCH_PERFMON_EVENTSEL_ENABLE;
+		if (allowed)
+			pmc->eventsel_hw |=3D pmc->eventsel &
+					    ARCH_PERFMON_EVENTSEL_ENABLE;
+	} else {
+		u64 mask =3D intel_fixed_bits_by_idx(pmc->idx - KVM_FIXED_PMC_BASE_IDX, 0=
+xf);
+
+		pmu->fixed_ctr_ctrl_hw &=3D ~mask;
+		if (allowed)
+			pmu->fixed_ctr_ctrl_hw |=3D pmu->fixed_ctr_ctrl & mask;
+	}
