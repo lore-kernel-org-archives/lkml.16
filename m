@@ -1,131 +1,152 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB072220F47
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AAF1FECB1
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747383862; cv=none; b=W+i+W8JFx1upiO0xYsoamvmTC2Tzp7myksOZrZ6koowDEbVNq7k8khIma4NzA7ct6F80GoktcCKvFeuMJrAjf6E5U5cPIZTB0hx9jR3CkZ9DetMygLHL1yD2eKS51ObxkKJYvquaxGvZHGnwJQrOu2H14qKJYH2+RtKq12PytcY=
+	t=1747383958; cv=none; b=L/5JS29RFhqzOujyWzFgwqdcZpi+wmVYfo4UJNW6KmxpSJ2t2RkRPhOxlH6gW+DwWtFZN7SGADzZvC4qN7paqizxWepsIKKB/lI64t4a7BCCaetkU1VQ3kEVP8p3npP1efoMFKqhZdRpA6f/Iv5uhUQ4tPZxzvhZ323adabJy+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747383862; c=relaxed/simple;
-	bh=YwKjx0fEQ0UuhQ++E/oLz5zeEhVCz3xdDGClQFFBPq4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M3sMVDTMqj8vjoo3vU/9+0Ui1UrSgdaX8VauUM2Z/tL/cihgcfUXj68o3gXnB87jl2Eby4C8J07Di5LBvWmPc86M3LDH65PpADMOEI64agaWibPhE4r/F97tZh9bRFDisSGZQp66nQbLCQM3PTOb2WOtTU8GTB+Ddz5m8XZC9KY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=P3pvnsnD; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747383958; c=relaxed/simple;
+	bh=f4rF2p6vDDn9deOD2CBFm4gmqmPJqyLZliHBYAsZo6o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EV8GKxCnr+S/sLDBvYspyXVcEVf65rwa5uNfn2Kk9DZ7EtZvjbt+c0Zp7FUEQvavAY+pJwYpp8zPZcgREfTwXK3TusBMCHqGaaVyil7aRGFF4iOXtLz/XyohDh5GCDsOdssWu5gbt4ODnhPONF/Q1mGGP0efWITqhWIb8Mlmepw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LQYJD0NE; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P3pvnsnD"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43d4ff56136so2549515e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 01:24:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747383859; x=1747988659; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EMYA3hP9yM4YaD28axG+SVccD5Rf7aF501EOBYAvQkI=;
-        b=P3pvnsnD+hl9+Rz2AJK04TNOgKBzgs+A+mFiJAGqgnR8ffMQglx46XLGKxvmqvHY8F
-         02NhrMLZnniOL4egtac0omHquOs9WJfo5g2QOS8YmBy6XP+SC5KpWaQf8cYeQLCGR8e6
-         /ffnNp2DFkppAh2u2w40/rtPNnK3sw1RGFkCKfI7NxyCoD8UMofA+Hlo65G4CpnW00Fx
-         LbcHD1x/dTfOLcaWbboyOJVBSCL1iXJFD58jnqyKj0m9bFHxEUnMO9wBroonLt5Y6RBX
-         vBAdMLJMBbBV2hs2dG1ScVW9OUCC4hBiPQ3ZrkYkCMCubg4/Qc6LQ6UpVjGrSAPKC9Yx
-         JG2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747383859; x=1747988659;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EMYA3hP9yM4YaD28axG+SVccD5Rf7aF501EOBYAvQkI=;
-        b=JC84YLV4anC/ZBhBe8N1jUzmfpKsHCSpeYWpouT/y88PrFDPmQYDNS6zsZXnhh/3jZ
-         R11U7iZTMsyaulj9eM4ATiy6Y1cbvnry5/6vewuaRTgW1Vaywbki2ZhxCTgemXZilBGw
-         bsamFj2Hlyq/LFanJXXPOlJPmiG1znP6HSc8wwXKibp2S3zWmOsXFZtH0HRFFaOmr8lZ
-         3BobBeRjcJI9Yl4xMCLdwlQLCl62aJDH7WA0g3qdipeq9VJnqWNrMwNmOZ76g5Nr8/m1
-         dmOwTehFUC7LeIvxI0XijxQgqHGMZlJydq3xYHstuxihhEQL5a8xzbdsTa/VKdxO2H4u
-         RT4g==
-X-Forwarded-Encrypted: i=1; AJvYcCU/00t2HUTIwtQ6LG2dATLR7xShUvh/BqtdjTbsuH1UOk/xdFLvsXmg8IwpyNv0MN59nTJP5lkJFwqL4os=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw21znjYnbTHGUuLc98dN/PEOGSaXiB2SXLqm6+Uthl2ULThkDF
-	WRBNc09t44HjtZbZd1s3zF+QR2jcdRiHiDVDp8e3r1LI+jznazpGhgilUKJpb60YWjU=
-X-Gm-Gg: ASbGnct7bwicH5R8x39KVWHzeZShq8VGWh3a5/IcVPEH8f01z2YmgtyGFlp9dVdhIsE
-	CNdQunJ3xDg4VrQLsBjG7cY4qo2fVQ8hkzNJC2DukDXjD+ynASZS6O+gHCX6GV4AwchADoPgsfU
-	cfP+ljtE8br+ZHMATs/zc1NMlV8dWKkA+jGOPouSezghP3YaZ1sjImMBB4mIlyLdwQbW1RkMcBw
-	GR0/WXaxKvR8vuTlbSkBG4FHmrL0wPWkOF+wAtakgm55NfhHbWQrwLiZ22zaW3Z04y/46VdRQBu
-	bNXgsh+NJhi6y1Nr2xIOkfio0RgnVtaFzVCzWlHDRfqIm/ylhtKFBtj8wDec4jhvadZG3W1upBj
-	A+jF5wgCtaALKx42Xot1h9RdqNGlRYyo8zYpJHak=
-X-Google-Smtp-Source: AGHT+IGKToQImfBiAVkuAUoU+7wSjsQ/54y3m2rmtsbkq3t65m/SkGnjmXSlnYIdMc3OVZVxVfOLNg==
-X-Received: by 2002:a05:600c:1991:b0:439:9a40:aa1a with SMTP id 5b1f17b1804b1-442fd675d79mr8193005e9.6.1747383859026;
-        Fri, 16 May 2025 01:24:19 -0700 (PDT)
-Received: from kuoka.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f39ef400sm93411555e9.33.2025.05.16.01.24.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 01:24:18 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Arnd Bergmann <arnd@arndb.de>,
-	soc@lists.linux.dev
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [GIT PULL] memory: drivers for v6.16, part two
-Date: Fri, 16 May 2025 10:24:15 +0200
-Message-ID: <20250516082415.7871-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LQYJD0NE"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G5utB3014153;
+	Fri, 16 May 2025 08:20:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=6nbeIW
+	fPgmSdzJgtHDSYDHI6Wi/sK9JWvegm6vZV/4I=; b=LQYJD0NEoOkuXwc+otQKF/
+	0t0c5x0Q38bt5LlnryuaP1+TF0fYDW+MuyRD3p/1q5Cx2EEX7AYEvSaTKMPU2dEv
+	zkvUvtpX7QJgaEAuMXoiPSa2ahz4yqwUMoUrSDzxacKAkLLzn9YVd9+/gFpVjJSw
+	5xaG0GpUxW9M9ycklkEF/E28NnPX9/JCpB6aQ3emy/oejsUDVNaow/kixQLkaHlJ
+	LdZ8eHC8n3iUwhCPF3ERyVruwX0lsOclKsV12gn9y0vZf2EGXnzLR04ure0e8Vnx
+	FMc2qDI1+cegGx1C2yGCDvWG77wu7i3TMQH12fQxPESA+M9Hn1aKGNXml/YkcD0A
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46nhg34as3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 08:20:37 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54G8Hb4C032758;
+	Fri, 16 May 2025 08:20:37 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46nhg34as0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 08:20:37 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54G5hJOI021408;
+	Fri, 16 May 2025 08:20:36 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46mbfrxjts-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 08:20:36 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54G8KYvd56099324
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 16 May 2025 08:20:34 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5C5E0201EB;
+	Fri, 16 May 2025 08:20:34 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CCF4A201EC;
+	Fri, 16 May 2025 08:20:31 +0000 (GMT)
+Received: from ltczz402-lp1.aus.stglabs.ibm.com (unknown [9.40.194.31])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 16 May 2025 08:20:31 +0000 (GMT)
+From: Donet Tom <donettom@linux.ibm.com>
+To: David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>,
+        Zi Yan <ziy@nvidia.com>
+Cc: Ritesh Harjani <ritesh.list@gmail.com>, rafael@kernel.org,
+        Danilo Krummrich <dakr@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
+        Donet Tom <donettom@linux.ibm.com>
+Subject: [PATCH v4 3/4] Remove register_memory_blocks_under_node() function call from register_one_node
+Date: Fri, 16 May 2025 03:19:53 -0500
+Message-ID: <e0ef6ae9348f46bcc135f0e6cb7663d763e40b72.1747376551.git.donettom@linux.ibm.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <f94685be9cdc931a026999d236d7e92de29725c7.1747376551.git.donettom@linux.ibm.com>
+References: <f94685be9cdc931a026999d236d7e92de29725c7.1747376551.git.donettom@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1468; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=YwKjx0fEQ0UuhQ++E/oLz5zeEhVCz3xdDGClQFFBPq4=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoJvYvRK2E98+gpKrkbPvu1UMNGJxkSJ7aBGB0X
- HDrDM5EEgSJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaCb2LwAKCRDBN2bmhouD
- 1+i2D/9drp29FyK0+15NezDZLAPtkNoejrB9ufc9VlWOXwcQbp+3JsrgMDh0zV33cJRDiVmpOsA
- lRGEDBgxRa3QTDQzIqSYRWt8FDMqSsTlLLInyGSvI+El301TUf8LRpJFOURHMEt3AMhYXUBeLNn
- IKMnoog4YfMdI8zoabS0/wDs2qpZz1apY16TlLyt17ShdsxJXs4xQqNYsM5kzSPu+910oS9f4kT
- PooTBogiZBY0jHt/8wnZL1xFRnJPWGxvPL/ABVaYs0Hm9dE6mfGUJsGBjpIhLVGzBzkp2exgfpe
- JeW6cvl23jCT+npgpUQh161JUtN8bx39UYUr8ZREvF98igmzbQnvp/v540Zb4mJlheZEbb17Sqa
- iaoMTbSPOE2OO2IDOjnO61655sygMcv+TkoIqPve+hkMsv6RWYQRdbRJkyxBt92uZSddhd9367M
- YAEUjaxyXl60SAFhObkCPXDkj0VeG1LZSJ7+uFKbwmZtU26AitsKajMCqGodVxVxSx8GpJRZfNj
- Fb3K07RWsHwww61pqZeM/GKtsOXN5Q/K76DB8zdZ0BEiPAv2itrapXRyxjbXChERnyHeg58JKi7
- QC01u3CV32bkt+9+hPvs6nKDDa0Ih9ia0sNOAL8UPhDRS6HgBILdBPOXj3Maae2AoeGj3qvgHcN VA0kMwq29gBcsRw==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=Cf0I5Krl c=1 sm=1 tr=0 ts=6826f555 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=aznVoBAsOnskw8r2mgMA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDA3NSBTYWx0ZWRfXypFikYKBjWxu phxyK4pmimcXyJ0YuOIb1FNYwf6VzMrFB7YemVSo4Enm1TTVGM/1xgpvlL+7IYFrkAawnXyE4G6 cz91VsDldNh3YKFXWXgo48loqVuXqBZzNcqoHVZfjemo1ntunDnShFJ8QKSGjhS18TWHstxxfHo
+ kw5AOlk8BbPCpZZsOyM0AU9OIHaUGLKY9l6HJn2bGyaW7hpNPphnMaLbhh4cTlO7xFot86wlQSY 28J06/+vbYVF7cuxb+Jbsx1CUAOk0tYY2evHGzurLAFsq1vYWy5Yo+qPkxr9aa9Jqd/ZfiG7tYt uamBJx8mOISWa3Fxx+HkqK8W7VdVeJhpl3Ats7O+nb71ZapLESTtgkIi7YyAjypjtAeKBFCq+PV
+ OtW/kXENL/oIN21cuMc38pruyxvGa1pMMa6zXzUeurrCMCr1cyBB8S96fHTMJcn8FyoiE5jw
+X-Proofpoint-GUID: aO0xNzaezBjp-tI_reYSbW-8nNA5qIDT
+X-Proofpoint-ORIG-GUID: rBlDIF-PZ8Sp8UWD4TIDm2PPNl9IAB0m
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-16_03,2025-05-15_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ spamscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=913
+ impostorscore=0 phishscore=0 priorityscore=1501 mlxscore=0 bulkscore=0
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505160075
 
-Hi,
+register_one_node() is now only called via cpu_up() → __try_online_node()
+during CPU hotplug operations to online a node. At this stage, the node has
+not yet had any memory added. As a result, there are no memory blocks to
+walk or register, so calling register_memory_blocks_under_node() is
+unnecessary. Therefore, the call to register_memory_blocks_under_node()
+has been removed from register_one_node().
 
-Second pull request with fixes for introduced driver in previous pull. On top
-of the previous pull request.
+Signed-off-by: Donet Tom <donettom@linux.ibm.com>
 
-Best regards,
-Krzysztof
+---
+v3->v4
 
+Addressed Mike's comment by dropping the call to
+register_memory_blocks_under_node() from register_one_node()
 
-The following changes since commit 02eaee70babd860d76dc23f9165f4496d0ffe77f:
+v3 - https://lore.kernel.org/all/b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com/
+v2 - https://lore.kernel.org/all/fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.1745852397.git.donettom@linux.ibm.com/
+v1 - https://lore.kernel.org/all/50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com/
+---
+ include/linux/node.h | 6 ------
+ 1 file changed, 6 deletions(-)
 
-  MAINTAINERS: add entry for STM32 OCTO MEMORY MANAGER driver (2025-05-07 11:27:03 +0200)
+diff --git a/include/linux/node.h b/include/linux/node.h
+index 806e62638cbe..8b8f96ca5b06 100644
+--- a/include/linux/node.h
++++ b/include/linux/node.h
+@@ -137,15 +137,9 @@ static inline int register_one_node(int nid)
+ 	int error = 0;
+ 
+ 	if (node_online(nid)) {
+-		struct pglist_data *pgdat = NODE_DATA(nid);
+-		unsigned long start_pfn = pgdat->node_start_pfn;
+-		unsigned long end_pfn = start_pfn + pgdat->node_spanned_pages;
+-
+ 		error = __register_one_node(nid);
+ 		if (error)
+ 			return error;
+-		register_memory_blocks_under_node(nid, start_pfn, end_pfn,
+-						  MEMINIT_EARLY);
+ 	}
+ 
+ 	return error;
+-- 
+2.43.5
 
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-mem-ctrl.git tags/memory-controller-drv-6.16-2
-
-for you to fetch changes up to 388d0cc33cc6fc876e053644d6af694b9d5c639f:
-
-  memory: stm32_omm: Fix error handling in stm32_omm_disable_child() (2025-05-14 09:54:22 +0200)
-
-----------------------------------------------------------------
-Memory controller drivers for v6.16, part two
-
-Few fixes for STM32 Octo Memory Manager driver introduced for the same
-cycle in few commits before.  These fixes were reported only after wider
-coverage by bots through linux-next exposure.
-
-----------------------------------------------------------------
-Colin Ian King (1):
-      memory: stm32: Fix spelling mistake "resset" -> "reset"
-
-Dan Carpenter (2):
-      memory: stm32_omm: Fix error handling in stm32_omm_configure()
-      memory: stm32_omm: Fix NULL vs IS_ERR() check in probe()
-
-Patrice Chotard (1):
-      memory: stm32_omm: Fix error handling in stm32_omm_disable_child()
-
- drivers/memory/stm32_omm.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
