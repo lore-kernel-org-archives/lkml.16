@@ -1,289 +1,226 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 765883232
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 13:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747401217; cv=none; b=Z9ORnl4igAxfFLACR/tbKTJ57ihcGqAKFZJZkO2OwVi6fe3fEnGWr1BAYRbjU+cZttGr4Yl5jp9EDjvCbD8dTvd+Iju92U6EJncl854oFqihaSy/nb3HYTauEFj3VCV1u0eGcGv/4SjNTWGcab6b5+wkSUJqeu987fAXTUo4FOg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747401217; c=relaxed/simple;
-	bh=IsAANWVCLZd+B/824y5ZEsdIagzG8xZ0ELPRfSy6Y/E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GACGMjmljkcXQ7D14NHDX2Zy1YgWMFqeOIMLK65EV7Hd0u+ag7nVpFfqovnLPR5iWhaFaYpSpNu0tCdoVaQjhFwhS/ZNuX3dgJMh54ZceM/hmLrkPdSlnhDlnQ96176ij6vplLWzG3MHhlDAG1IdI9Hr+JdAWTDViUTM8L9CD9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=SNSNO+ih; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02olkn2045.outbound.protection.outlook.com [40.92.43.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35C63232
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 13:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.43.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747401262; cv=fail; b=n1abPzG+EITheUhlBLyLWKsVajOcxCJ4vCPQSdxPPXKtZ7ZHrL02Dh1kNfmuh7pKnSdURF7MSPD5q8+uYmmiOySH/aUWOHKdFsuWGYhGc6PcNCetB0GNkQPOujkmSiXuh/l1px/wJLGhLzy1CQxyHUVdC0K2p2gh/+fkOAQPYl8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747401262; c=relaxed/simple;
+	bh=o3/lReg8bdawlF+UMHUr34aE33CiUS4U+Rnty9bbXgE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=GrKM2+K3G2OMU0uiXwZMCu5M9BeN3+TlqwuRSJlWZ2SnCxiqi1Y63T9OSLQ8UsXyMTyclLM7uJKfQdjDFMHr0wFQfEcOqncFtTEUX72/NN91uXrvJjq92AmZqSr+sZhf1Te5N3Mqww61bmkqM5uuo68KLbezb8Jq2M2uz/RhXGA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=VGXWV8Bk; arc=fail smtp.client-ip=40.92.43.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="SNSNO+ih"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Oo
-	CdmYL9Qu8u5gGOwJxG6K2/QoL5v6Jy0+zblOekNy4=; b=SNSNO+ihhAX4Yh6pvq
-	AsEOgG8XKgJO2VaNrvwVdwCni1Xf/DmD9WUeVFQ4+deGaHeghzSbnFILy3Ef5M6V
-	IFuVMSEL05KNjsAoF0b6cBD5MQgsQd1oVwfUc73xy1QcXjKlS5kIc47Sncr8DO3V
-	BFWFZ5eCU5DuHo/6hh8ml6rgg=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wDHAl_POSdoJXONBw--.60693S4;
-	Fri, 16 May 2025 21:13:04 +0800 (CST)
-From: David Wang <00107082@163.com>
-To: surenb@google.com,
-	kent.overstreet@linux.dev
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: BUG: unable to handle page fault for address
-Date: Fri, 16 May 2025 21:12:46 +0800
-Message-Id: <20250516131246.6244-1-00107082@163.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="VGXWV8Bk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=W31pnxpjYx9XHztU3pm2qCHYz2e8UHq8RfiYJ8OxfCgJ+Qzl9WFT4y3cfrtHY3b8J7myL+Jq56B/3NgNI/LrsVHEnicF1IUQlNcf39FzQT+JVL0Om1NyiDJb2OaYu31qPHXTbqAnqMMaIvcpkZ/915zOgxgwxfWxhBQwxB4Zvru4wNM/e4nzc9M7cSir43AG47fV+C3ONAGh7+dg3gWjqGyFpMzeRlwE670I7TjkifjLpmZfBUsO7M/EsYDxS6vzgxQ6O7fVTrBEQSliOboWDA3ELGs37TWwcdO4VrHciUKpw2Jwg226uzDQ9rAnDKTAkvigxOkGbyNgT6I7Cpij9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WQPgHKFhovU25qrydCP85U8CfbzgGAmrcu9VuVAqFv8=;
+ b=PURN9K0Hux5ASPWGRn/gfqVS8w7+1qi8PW7Cvvx4etSJPz3uhzJZad9oAUHVlM8a7aFN2NMps5SZH8njV4X6uWnID+/gFwdW/dbAQjbuUxkDz2qbOyKevyxBCAV0B/qFrqZA/9VMSfuxp/5eOtc2Fms9vnf1iO1gZN6Lbrmm3jcMzy27hgw8piSAMQZLZ0JbrPLxt6AOg6bzy1n7g7TbHgg/ft61ryFRolt61uCLDSCY26tVMz+6C1lygU2h3/SRCWcVT72SOZN9xk3rWmCixDjmDzSu/N3h4BDXg8NSU4ezczHbVNczNd8kO9M3S76i/6vMfu2sflKcUJe6xNi0AA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WQPgHKFhovU25qrydCP85U8CfbzgGAmrcu9VuVAqFv8=;
+ b=VGXWV8Bkhk1Hfzn3NkUfCwoeQK3v8JyzOZUYU69LmjQvQlCKnJYcl0t3SU/ulAvCN+nU71uS82f/H415KCniYbGG8/qYFJ8ppaUYdcGzXaZZZK9mGZQNwDZS9vbSO8psn3sWcUbVvQJ+Nz/KBogdBrhcwHVy0XkQ85tTdqvzRI87CYTt5yg+iDCr6pZtxW68VDI6ErxVLkJOvqUszPWw5+o55GfQBIxLTGR0Yc20YNK7RxraFr+GssDqWAWWhGiSxWK+F8plcfMkQT7a+gjJNxy5MbF9mSEJyhCf1IpITJ6ybeGn2TljVsliGEyklHjADmlBQ3ZZ8Njxedi2pyyOTg==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by IA0PR02MB9242.namprd02.prod.outlook.com (2603:10b6:208:435::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.23; Fri, 16 May
+ 2025 13:14:18 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8722.027; Fri, 16 May 2025
+ 13:14:18 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Ingo Molnar <mingo@kernel.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vitaly
+ Kuznetsov <vkuznets@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, Linus
+ Torvalds <torvalds@linux-foundation.org>, Peter Zijlstra
+	<peterz@infradead.org>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner
+	<tglx@linutronix.de>, =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Ard Biesheuvel
+	<ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Carlos Bilbao
+	<carlos.bilbao@kernel.org>, David Woodhouse <dwmw@amazon.co.uk>, Elena
+ Reshetova <elena.reshetova@intel.com>, Fei Li <fei1.li@intel.com>, Jan Kiszka
+	<jan.kiszka@siemens.com>, Masahiro Yamada <yamada.masahiro@socionext.com>,
+	Michal Marek <michal.lkml@markovi.net>, Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>, Stefano Stabellini
+	<sstabellini@kernel.org>
+Subject: RE: [PATCH 07/13] x86/kconfig/64: Enable more virtualization guest
+ options in the defconfig: enable Xen, Xen_PVH, Jailhouse, ACRN, Intel TDX and
+ Hyper-V
+Thread-Topic: [PATCH 07/13] x86/kconfig/64: Enable more virtualization guest
+ options in the defconfig: enable Xen, Xen_PVH, Jailhouse, ACRN, Intel TDX and
+ Hyper-V
+Thread-Index: AQHbxZ1YC+PpYlMrdEWmJA8YTn00c7PUVs8wgACMEACAAFqXMA==
+Date: Fri, 16 May 2025 13:14:17 +0000
+Message-ID:
+ <SN6PR02MB41576D388C805D8AF497ADBBD493A@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20250515132719.31868-1-mingo@kernel.org>
+ <20250515132719.31868-8-mingo@kernel.org>
+ <SN6PR02MB4157B1676A6284ECD21E494FD490A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <aCbuCMCRqScuEJwH@gmail.com>
+In-Reply-To: <aCbuCMCRqScuEJwH@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|IA0PR02MB9242:EE_
+x-ms-office365-filtering-correlation-id: fac9926c-4172-460b-b02d-08dd947b9059
+x-ms-exchange-slblob-mailprops:
+ ZILSnhm0P3mDoogZiIYtj6aHx7ik50F026XcSlSp3XWrYpWUSsuMgCr5pSE7AAsPW/UwLdjqtc1w6ZytMkILHO9riZwZo5e4HjXHpCGhlrifsUZRHkH22ueu0fRihdWyhEcdaBUwn/zJd6sYKVNdUeWYo09rrkL0XJPhu+zUKaTXeXVOqUC1emQHZVX5f1Nmmx9eerGNb10xF3xAbp70rOctOVw1z1YduAmLwVZX/Y3lc2NLDbE6WE3FeK7NRDO6O5oOnXXtBLAhipuUv0AOjEC27zKKV1A0cx1wF+elU24Q0qhH+4Md3qSVn4xfW9WBt+/o3Y3cVcHk5Fulh6ODOlAFymn1YwcVpzps68q7fShmZyX7zXlUgOWL3swmFd72zJSy9G1hvaM+fN7FMQetPeg4AmJ4VuTUIJCGYBUsi/3+azrqJFfXmJiLWA4Dne0suZCnXDkLII2jwAMl6DyIbPrJ8iwf0LEeShFwKdAlpJR2FCUKWdpcGGuuogq/ozdq+JTFG89oF/ghbGoyh/1BH2vvpV/20+ihV7UdkOnmhRR+/+ElRnshoKQmNrhkmgApOZ4W+v6nPzLTKQWrGaemL7DN6I1osuEYMtRwP3uC1+0X9o6le6cn4gVwCnhBwz6Se89UZ4N1piF1ykEWqU9y+W20zpVre3B6gVM6ppvoYbVyqg2NlBmeYDtF5ehHzr2Foxplt8lWzrFE001udNi+s5kA0yBLPvGElcnp8mW4CYCD7vhThaOY1FOIl/PA2bT/uGOb+0fjVXtLYltV4Y2xcDwazoMjRf7p
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|461199028|19110799006|15080799009|8060799009|8062599006|102099032|440099028|3412199025;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?q6R/ae1AT6NmiGvavaA6tQZZ/emzuvb5DkwhWLTG4a+znK5So3Pvt+OChj?=
+ =?iso-8859-1?Q?iAmdOmHsHkl1Pno9bvhqGsyb2EqiIO1Bzt+0WrYbx+iYjIKJFI7a9lBliz?=
+ =?iso-8859-1?Q?TI1lp5lzZk0VuNDNXqgej+tsf9x56cvBDxvZlqaX0itDfjLCKJweRwl3NJ?=
+ =?iso-8859-1?Q?KBjQngvQrk009+vnuRC5G06VbS7BwXst9g8K6PbIsWV3yCmAgTzcBt0gz1?=
+ =?iso-8859-1?Q?P5ffOcFb0FqDB0fifYXcM+Xbw6xgtG6XlZsnn1xzZDatqq77GB3edgAD63?=
+ =?iso-8859-1?Q?X2bqUx7bWPxLpKYHp1XiJfAwf2XWjBMqaRkqvn88+1l8QL7kiW9P2gJo7c?=
+ =?iso-8859-1?Q?OeSAHCCXK+2mcrIhI9Uhgjx0XwnumUvtvPWX4LtEL8Ycp3q8o8i7khrh5G?=
+ =?iso-8859-1?Q?ixh87aqWhrU+5sbKkvnWfR3YefWT42HfTz02WAW9MEY/YoUGh103Jd/DTo?=
+ =?iso-8859-1?Q?GqjRCC9L7Uw8Fe4xzUDrDjyomkC/UjANoyepWHPEg8e9DPDl6meo6vlwKE?=
+ =?iso-8859-1?Q?7i+pP6S/J8PWlEdtR9cDm+0Io6+6s7/iLO5dJpPKY8nGjTRmpzIXJW9s8E?=
+ =?iso-8859-1?Q?oRt3NQy7f9f7+m6jlDudTr3geocTRMXFc/xYK99FwqejdIfZyVrqq0yx/b?=
+ =?iso-8859-1?Q?xNG5se1rAqkmiMqkB/qvn1Ip2vzecevO2yWMUBzDDUi77PDxfUYZRLxzoq?=
+ =?iso-8859-1?Q?RU530uYSU3KBV7WSGrahG2cHHeInKqh7oGEk8UIy9HTIj3MGm6drM7R7LC?=
+ =?iso-8859-1?Q?TelIv20Ydo4gMd15rvmO+WQ0yqmTX1+Gj8GN5VXu84HFgb9cIxX1EQDbYV?=
+ =?iso-8859-1?Q?0QuSseHcYTDWtACopa9w8wcu6Z1M+lkRxJRS78yiYvQN3bjMvuejI+WFjX?=
+ =?iso-8859-1?Q?xF7vTTFw6nZEz6nZYzk50+HdPFb4Imdi5NBjS6HPQH1vAaqP9/INemEx2I?=
+ =?iso-8859-1?Q?rnBCh9MXZD/UbNcBTsDvp23DD+Wx4ZSRuKHL93A+KQjJxIZHnkb89kSWUI?=
+ =?iso-8859-1?Q?I9KnqlS36kczwvWpn5Fvaz6VMHOgh0QzKspDEvytyGvtPixRE6hwzNLMbJ?=
+ =?iso-8859-1?Q?/VVAkZyVtL7JmuteWL4EEzda2o8hXbjW3n6idtD+LLJ3xqC/S6ELUsoHRb?=
+ =?iso-8859-1?Q?LpUSnhdQ=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?lCO4UtZGPt9RX9zK9g74eqdN4xTQm6eXoS9K8ydFsWXFFL5nCj+IfPxk1j?=
+ =?iso-8859-1?Q?YeCLUVokUlk9TU9GhXcSFGfvNn26BdTFxuVofgJmxgbRZOfrVP1HDJjC3X?=
+ =?iso-8859-1?Q?knCWESK01SSAUa7IBKLOyyTqqjDEqLDqmcx6/b6v6kufvLORDKoBxyg/yV?=
+ =?iso-8859-1?Q?alRTHvUxKKXeXHJjdBje52pbw0fcziejm26YcsnMniOYiM9VRykNtXnHFT?=
+ =?iso-8859-1?Q?aiooLOjeQy141vRYYn6cVq7YRR2TnITZztBwbwRSlVbyEv0532pSBnqvI0?=
+ =?iso-8859-1?Q?Paz84nuAgAJQxZecugzhCH/HBk6wQP2cRsFknJiXNmmTf4uNlyaEQ5H8KT?=
+ =?iso-8859-1?Q?d6H4D4O4RXCycqEQN3MKFGrXzZUFi2bbm96tJmUpH5zRqH0YjHDAda/mQg?=
+ =?iso-8859-1?Q?q//FyaOmB7S8jgKs/YhPe+vdHv4REzYzdAyRiFgXve+fTQlt31p9k3ZQkn?=
+ =?iso-8859-1?Q?2wDWfwyZR4p0TRX74TdqxF38aw2DkNK0RW2LbF7SwMj0BMAcUUcRWPwLX4?=
+ =?iso-8859-1?Q?wFUNqrYWu3hZCX3G+AC8fUZs2tzbE1IZqHw0CCHsldz+cLGVHSxDMIAKUr?=
+ =?iso-8859-1?Q?LbqXOAzF3KEIrDA9Ml9r226kU7+e7U/v+kYMbM2DaglTBwkE5PMZmnzZps?=
+ =?iso-8859-1?Q?papWglUBNfLsfnZde5V8QYWAdCdlboQA/1pFpjh7ZDgZoJ5gS3tkbYn653?=
+ =?iso-8859-1?Q?m1o+ZH9hy+Vk4Pe16xFZeZP2YjYWknOJ+133GRhVPTvXZXYEDhpb088XA5?=
+ =?iso-8859-1?Q?EedclDxi2iWZfl+8tbmcSufVvyvLOOiC3OlOTHNvWHzEGqFBuAeZcJVcDq?=
+ =?iso-8859-1?Q?NgasRdSY3coWpE+1CJZVTrZUXZ0m4fXDAP9+O+cOqu1ACikq+cK5gTpsI5?=
+ =?iso-8859-1?Q?xc/XGwACdImBQOxMQewiY18uO2Enu+7IKMwrGL7cU46ZB//1WmWapsVtV3?=
+ =?iso-8859-1?Q?A6DVWdpmmW14Puld6ADskZFVpXDVbcqabts+TtXZhWzDgEFUtynbysN3JO?=
+ =?iso-8859-1?Q?u7zboKNhBGdPYKUy7o9qUj5bYL9CzbrcftC1ivECz8xkpIo4fLHGebbU33?=
+ =?iso-8859-1?Q?Z6ksi3FE2gPMM7H7n/4lTtyu98KppNxvhVicpkBIO7z/GIotp8UOi2pTyA?=
+ =?iso-8859-1?Q?161z/HH9rFWLnKwTu/iBSqsc9+npC8A71yPgzVs2KJYFHbsnh5NiUm13Bg?=
+ =?iso-8859-1?Q?Lh2n0IJ7bEdrXPl+QCcQy/M73Yda7mopw3gTnA5FAZfBUKxYLfsxYS2Ro0?=
+ =?iso-8859-1?Q?PW96YUhfuOWn6CyRw+VUpl/RW/BjGVMAjslEqhhbQ=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:_____wDHAl_POSdoJXONBw--.60693S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWfGw48uw45ZF48Cw1DGF45Wrg_yoWkKrWxpr
-	yFgFW7KF48Jr1kXFs7J3W3tw4UAwnrCa15WryxKr1F93WUu3yDJF9rAr1UJFZ8Jr47ta12
-	vFn2q3WjyF1rXaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UEjgsUUUUU=
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkAlPqmgnM2XZCQAAs1
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: fac9926c-4172-460b-b02d-08dd947b9059
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2025 13:14:18.0050
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR02MB9242
 
-Hi,
+From: Ingo Molnar <mingo@kernel.org> Sent: Friday, May 16, 2025 12:49 AM
+>=20
+> * Michael Kelley <mhklinux@outlook.com> wrote:
+>=20
+> > From: Ingo Molnar <mingo@kernel.org> Sent: Thursday, May 15, 2025 6:27 =
+AM
+> > >
+> > > Since the x86 defconfig aims to be a distro kernel work-alike with
+> > > fewer drivers and a shorter build time, refresh all the virtualizatio=
+n
+> > > guest Kconfig features, enabling paravirt spinlocks, and
+> > > enabling the guest support code for the following guests:
+> > >
+> > >  - Xen
+> > >  - Xen_PVH
+> > >  - Jailhouse
+> > >  - ACRN
+> > >  - Intel TDX
+> > >  - Hyper-V
+> >
+> > I built and tested a Hyper-V guest with defconfig.
+>=20
+> Thank you!
+>=20
+> > The Hyper-V storage and keyboard drivers are pulled in automatically,
+> > so my previous comment about them being "missing" is moot.
+>=20
+> Yeah. "defconfig compression" is a bit non-obvious, as the file doesn't
+> carry indirect select and default-y-enabled options.
+>=20
+> > But the Linux console for each Hyper-V guest is a synthetic graphics
+> > console, and that didn't work with the DRM_HYPERV driver. Missing
+> > the console pretty much kills any usefulness. DRM doesn't have
+> > Linux console support, so it needs CONFIG_DRM_FBDEV_EMULATION
+> > to be set, and defconfig doesn't have it.
+> >
+> > So either CONFIG_DRM_FBDEV_EMULATION needs to be added, or
+> > defconfig should switch to the older HYPERV_FB driver. I think we'd
+> > rather do the former. Vitaly -- any thoughts?
+>=20
+> We can certainly enable that option, and it's likely useful for other
+> guests as well - see the delta patch below I applied.
+>=20
+> Based on your description I also added your Tested-by tag:
+>=20
+>     Tested-by: Michael Kelley <mhklinux@outlook.com> # On Hyper-V
+>=20
 
-I caught a page fault when I was changing my nvidia driver:
-(This happens randomly, I can reproduce it with about 1/3 probability)
+Sounds good!  Thank you.
 
-[Fri May 16 12:05:41 2025] BUG: unable to handle page fault for address: ff=
-ff9d28984c3000
-[Fri May 16 12:05:41 2025] #PF: supervisor read access in kernel mode
-[Fri May 16 12:05:41 2025] #PF: error_code(0x0000) - not-present page
-...
-[Fri May 16 12:05:41 2025] RIP: 0010:release_module_tags+0x103/0x1b0
-...
-[Fri May 16 12:05:41 2025] Call Trace:
-[Fri May 16 12:05:41 2025]  <TASK>
-[Fri May 16 12:05:41 2025]  codetag_unload_module+0x135/0x160
-[Fri May 16 12:05:41 2025]  free_module+0x19/0x1a0
-...
-(full kernel logs are pasted at the end.)
+Michael
 
-Using a image with DEBUG_INFO, the calltrack parses as:
-
-RIP: 0010:release_module_tags (./include/linux/alloc_tag.h:134 lib/alloc_ta=
-g.c:352 lib/alloc_tag.c:573)=20
-[Fri May 16 12:05:41 2025] codetag_unload_module (lib/codetag.c:355)=20
-[Fri May 16 12:05:41 2025] free_module (kernel/module/main.c:1305)=20
-[Fri May 16 12:05:41 2025] __do_sys_delete_module (kernel/module/main.c:795)
-
-The offending lines in my codebase:
-	126 static inline struct alloc_tag_counters alloc_tag_read(struct alloc_ta=
-g *tag)
-	127 {
-	...
-	131=20
-	132         for_each_possible_cpu(cpu) {
-	133                 counter =3D per_cpu_ptr(tag->counters, cpu);
->>>>	134                 v.bytes +=3D counter->bytes;   <--------------here
-	135                 v.calls +=3D counter->calls;
-
-
-Nvidia drivers are out-tree... there could be some strange behavior in it c=
-auses this.. but,
-when I check the code, I got concerned about lifecycle of tag->counters.
-Based on following defination:
-	108 #define DEFINE_ALLOC_TAG(_alloc_tag)                                  =
-          \
-	109         static DEFINE_PER_CPU(struct alloc_tag_counters, _alloc_tag_cn=
-tr);      \
-	110         static struct alloc_tag _alloc_tag __used __aligned(8)        =
-          \
-	111         __section(ALLOC_TAG_SECTION_NAME) =3D {                       =
-            \
-	112                 .ct =3D CODE_TAG_INIT,                                =
-            \
-	113                 .counters =3D &_alloc_tag_cntr };
-	114=20
-_alloc_tag_cntr is the data referenced by tag->counters, but they are in di=
-fferent section,
-and alloc_tag only prepare storage for section ALLOC_TAG_SECTION_NAME.
-right?
-Then what happens to those ".data..percpu" section when module is unloaded?
-Is it safe to keep using those ".data..percpu" section after module unloade=
-d,
-or even during module is unloading?
-
-I was expecting page fault when I make following experiments:
-
-1.Load module A
-2.Load module B
-3.module B alloc memory, and handover the memory to A
-4.unload module B
-(memory profiling report module B has memory not freed)
-... after a while....
-5.unload module A, where A free the memory. (when A kfree the memory,
-the counters used to be in module B's ".data..percpu" section should
-be referenced, it that section is gone, a pagefault should happen).
-
-But, after several trials, not page fault reported....
-Would kernel keeps ".data..percpu" since ALLOC_TAG_SECTION_NAME has referen=
-ce to it,
-or I just need wait longer for kernel to "purge" those sections.
-
-
-Full logs:
-[Fri May 16 12:02:28 2025] nvidia-modeset: Loading NVIDIA Kernel Mode Setti=
-ng Driver for UNIX platforms  550.144.03  Mon Dec 30 17:10:10 UTC 2024
-[Fri May 16 12:02:28 2025] [drm] [nvidia-drm] [GPU ID 0x00002600] Loading d=
-river
-[Fri May 16 12:02:28 2025] [drm] Initialized nvidia-drm 0.0.0 for 0000:26:0=
-0.0 on minor 0
-[Fri May 16 12:03:45 2025] [drm] [nvidia-drm] [GPU ID 0x00002600] Unloading=
- driver
-[Fri May 16 12:03:46 2025] nvidia-modeset: Unloading
-[Fri May 16 12:03:46 2025] nvidia-nvlink: Unregistered Nvlink Core, major d=
-evice number 240
-[Fri May 16 12:04:38 2025] VFIO - User Level meta-driver version: 0.3
-[Fri May 16 12:04:38 2025] nvidia-nvlink: Nvlink Core is being initialized,=
- major device number 239
-
-[Fri May 16 12:04:38 2025] nvidia 0000:26:00.0: vgaarb: VGA decodes changed=
-: olddecodes=3Dnone,decodes=3Dnone:owns=3Dnone
-[Fri May 16 12:04:38 2025] NVRM: loading NVIDIA UNIX x86_64 Kernel Module  =
-570.144  Thu Apr 10 20:33:29 UTC 2025
-[Fri May 16 12:04:38 2025] nvidia-modeset: Loading NVIDIA Kernel Mode Setti=
-ng Driver for UNIX platforms  570.144  Thu Apr 10 20:03:03 UTC 2025
-[Fri May 16 12:04:38 2025] nvidia_drm: Unknown symbol drm_client_setup (err=
- -2)
-[Fri May 16 12:04:40 2025] nvidia-modeset: Unloading
-[Fri May 16 12:04:40 2025] nvidia-nvlink: Unregistered Nvlink Core, major d=
-evice number 239
-[Fri May 16 12:05:40 2025] VFIO - User Level meta-driver version: 0.3
-[Fri May 16 12:05:40 2025] nvidia-nvlink: Nvlink Core is being initialized,=
- major device number 239
-
-[Fri May 16 12:05:40 2025] nvidia 0000:26:00.0: vgaarb: VGA decodes changed=
-: olddecodes=3Dnone,decodes=3Dnone:owns=3Dnone
-[Fri May 16 12:05:40 2025] NVRM: loading NVIDIA UNIX x86_64 Kernel Module  =
-570.144  Thu Apr 10 20:33:29 UTC 2025
-[Fri May 16 12:05:40 2025] nvidia-modeset: Loading NVIDIA Kernel Mode Setti=
-ng Driver for UNIX platforms  570.144  Thu Apr 10 20:03:03 UTC 2025
-[Fri May 16 12:05:40 2025] [drm] [nvidia-drm] [GPU ID 0x00002600] Loading d=
-river
-[Fri May 16 12:05:40 2025] [drm] Initialized nvidia-drm 0.0.0 for 0000:26:0=
-0.0 on minor 0
-[Fri May 16 12:05:40 2025] [drm] [nvidia-drm] [GPU ID 0x00002600] Unloading=
- driver
-[Fri May 16 12:05:40 2025] nvidia-modeset: Unloading
-[Fri May 16 12:05:41 2025] nvidia-nvlink: Unregistered Nvlink Core, major d=
-evice number 239
-[Fri May 16 12:05:41 2025] BUG: unable to handle page fault for address: ff=
-ff9d28984c3000
-[Fri May 16 12:05:41 2025] #PF: supervisor read access in kernel mode
-[Fri May 16 12:05:41 2025] #PF: error_code(0x0000) - not-present page
-[Fri May 16 12:05:41 2025] PGD 163001067 P4D 163001067 PUD 0=20
-[Fri May 16 12:05:41 2025] Oops: Oops: 0000 [#1] SMP NOPTI
-[Fri May 16 12:05:41 2025] CPU: 0 UID: 0 PID: 35898 Comm: modprobe Tainted:=
- G           OE       6.15.0-rc6-linan-0 #587 PREEMPT(voluntary)=20
-[Fri May 16 12:05:41 2025] Tainted: [O]=3DOOT_MODULE, [E]=3DUNSIGNED_MODULE
-[Fri May 16 12:05:41 2025] Hardware name: Micro-Star International Co., Ltd=
-. MS-7B89/B450M MORTAR MAX (MS-7B89), BIOS 2.L0 07/18/2024
-[Fri May 16 12:05:41 2025] RIP: 0010:release_module_tags+0x103/0x1b0
-[Fri May 16 12:05:41 2025] Code: e3 4c 03 64 24 08 4c 39 e3 72 bf 8b 0d 86 =
-02 f6 00 31 ed 31 c0 eb 17 48 63 f0 49 8b 54 24 20 83 c0 01 48 8b 34 f5 40 =
-e6 d4 95 <48> 03 2c 16 89 ce 48 63 d0 48 c7 c7 c0 fd d4 95 e8 78 3f f5 ff 8b
-[Fri May 16 12:05:41 2025] RSP: 0018:ffffb2eb40bdfe00 EFLAGS: 00010202
-[Fri May 16 12:05:41 2025] RAX: 0000000000000001 RBX: ffffffffc04609d7 RCX:=
- 0000000000000008
-[Fri May 16 12:05:41 2025] RDX: 0000000000000000 RSI: ffff9d28984c3000 RDI:=
- ffffffff95d4fdc0
-[Fri May 16 12:05:41 2025] RBP: 0000000000000000 R08: ffff9d25035aed08 R09:=
- 000000000000fcf8
-[Fri May 16 12:05:41 2025] R10: ffffb2eb40bdfe00 R11: 0000000000000001 R12:=
- ffffffffc04609b0
-[Fri May 16 12:05:41 2025] R13: ffffffffc19ef000 R14: ffff9d2502ab6870 R15:=
- 0000000000000000
-[Fri May 16 12:05:41 2025] FS:  00007fe9ee051040(0000) GS:ffff9d28984c3000(=
-0000) knlGS:0000000000000000
-[Fri May 16 12:05:41 2025] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[Fri May 16 12:05:41 2025] CR2: ffff9d28984c3000 CR3: 000000011278d000 CR4:=
- 0000000000350ef0
-[Fri May 16 12:05:41 2025] Call Trace:
-[Fri May 16 12:05:41 2025]  <TASK>
-[Fri May 16 12:05:41 2025]  codetag_unload_module+0x135/0x160
-[Fri May 16 12:05:41 2025]  free_module+0x19/0x1a0
-[Fri May 16 12:05:41 2025]  __do_sys_delete_module+0x274/0x310
-[Fri May 16 12:05:41 2025]  ? srso_return_thunk+0x5/0x5f
-[Fri May 16 12:05:41 2025]  ? fpregs_assert_state_consistent+0x21/0x50
-[Fri May 16 12:05:41 2025]  ? srso_return_thunk+0x5/0x5f
-[Fri May 16 12:05:41 2025]  do_syscall_64+0x4b/0x120
-[Fri May 16 12:05:41 2025]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[Fri May 16 12:05:41 2025] RIP: 0033:0x7fe9ed928a67
-[Fri May 16 12:05:41 2025] Code: 73 01 c3 48 8b 0d 99 83 0c 00 f7 d8 64 89 =
-01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 b0 00 00 =
-00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 69 83 0c 00 f7 d8 64 89 01 48
-[Fri May 16 12:05:41 2025] RSP: 002b:00007ffe17759568 EFLAGS: 00000206 ORIG=
-_RAX: 00000000000000b0
-[Fri May 16 12:05:41 2025] RAX: ffffffffffffffda RBX: 0000564f850b7e70 RCX:=
- 00007fe9ed928a67
-[Fri May 16 12:05:41 2025] RDX: 0000000000000000 RSI: 0000000000000800 RDI:=
- 0000564f850b7ed8
-[Fri May 16 12:05:41 2025] RBP: 0000000000000000 R08: 1999999999999999 R09:=
- 0000000000000000
-[Fri May 16 12:05:41 2025] R10: 00007fe9ed99bac0 R11: 0000000000000206 R12:=
- 0000000000000000
-[Fri May 16 12:05:41 2025] R13: 0000000000000000 R14: 00007ffe177595a0 R15:=
- 00007ffe1775aa60
-[Fri May 16 12:05:41 2025]  </TASK>
-[Fri May 16 12:05:41 2025] Modules linked in: vfio_pci_core(E-) vfio(E) drm=
-_client_lib(E) amd_atl(E) intel_rapl_msr(E) intel_rapl_common(E) binfmt_mis=
-c(E) edac_mce_amd(E) kvm_amd(E) snd_hda_codec_realtek(E) nls_ascii(E) iwlmv=
-m(E) nls_cp437(E) snd_hda_codec_generic(E) snd_hda_codec_hdmi(E) kvm(E) snd=
-_hda_scodec_component(E) mac80211(E) irqbypass(E) uvcvideo(E) vfat(E) snd_h=
-da_intel(E) libarc4(E) ghash_clmulni_intel(E) fat(E) videobuf2_vmalloc(E) s=
-nd_intel_dspcfg(E) sha256_ssse3(E) uvc(E) snd_usb_audio(E) sha1_ssse3(E) sn=
-d_hda_codec(E) videobuf2_memops(E) iwlwifi(E) drm_ttm_helper(E) videobuf2_v=
-4l2(E) aesni_intel(E) snd_usbmidi_lib(E) snd_hda_core(E) ttm(E) snd_rawmidi=
-(E) gf128mul(E) snd_pcsp(E) snd_seq_device(E) ppdev(E) snd_hwdep(E) crypto_=
-simd(E) drm_kms_helper(E) videodev(E) cryptd(E) cfg80211(E) snd_pcm(E) vide=
-obuf2_common(E) rapl(E) snd_timer(E) sp5100_tco(E) drm(E) mc(E) wmi_bmof(E)=
- k10temp(E) tpm_crb(E) rfkill(E) snd(E) sha3_generic(E) video(E) soundcore(=
-E) jitterentropy_rng(E) sha512_ssse3(E) tpm_tis(E) ccp(E)
-[Fri May 16 12:05:41 2025]  sha512_generic(E) tpm_tis_core(E) joydev(E) drb=
-g(E) tpm(E) ansi_cprng(E) libaescfb(E) ecdh_generic(E) ecc(E) parport_pc(E)=
- parport(E) sg(E) rng_core(E) evdev(E) msr(E) loop(E) fuse(E) efi_pstore(E)=
- dm_mod(E) configfs(E) ip_tables(E) x_tables(E) autofs4(E) ext4(E) crc16(E)=
- mbcache(E) jbd2(E) btrfs(E) blake2b_generic(E) efivarfs(E) raid10(E) raid4=
-56(E) async_raid6_recov(E) async_memcpy(E) async_pq(E) async_xor(E) async_t=
-x(E) xor(E) raid6_pq(E) raid1(E) raid0(E) md_mod(E) hid_generic(E) usbhid(E=
-) hid(E) sd_mod(E) ahci(E) xhci_pci(E) libahci(E) nvme(E) xhci_hcd(E) libat=
-a(E) i2c_piix4(E) i2c_smbus(E) r8169(E) nvme_core(E) realtek(E) usbcore(E) =
-scsi_mod(E) scsi_common(E) usb_common(E) wmi(E) gpio_amdpt(E) gpio_generic(=
-E) button(E) [last unloaded: vfio_pci_core(E)]
-[Fri May 16 12:05:41 2025] CR2: ffff9d28984c3000
-[Fri May 16 12:05:41 2025] ---[ end trace 0000000000000000 ]---
-[Fri May 16 12:05:41 2025] RIP: 0010:release_module_tags+0x103/0x1b0
-[Fri May 16 12:05:41 2025] Code: e3 4c 03 64 24 08 4c 39 e3 72 bf 8b 0d 86 =
-02 f6 00 31 ed 31 c0 eb 17 48 63 f0 49 8b 54 24 20 83 c0 01 48 8b 34 f5 40 =
-e6 d4 95 <48> 03 2c 16 89 ce 48 63 d0 48 c7 c7 c0 fd d4 95 e8 78 3f f5 ff 8b
-[Fri May 16 12:05:41 2025] RSP: 0018:ffffb2eb40bdfe00 EFLAGS: 00010202
-[Fri May 16 12:05:41 2025] RAX: 0000000000000001 RBX: ffffffffc04609d7 RCX:=
- 0000000000000008
-[Fri May 16 12:05:41 2025] RDX: 0000000000000000 RSI: ffff9d28984c3000 RDI:=
- ffffffff95d4fdc0
-[Fri May 16 12:05:41 2025] RBP: 0000000000000000 R08: ffff9d25035aed08 R09:=
- 000000000000fcf8
-[Fri May 16 12:05:41 2025] R10: ffffb2eb40bdfe00 R11: 0000000000000001 R12:=
- ffffffffc04609b0
-[Fri May 16 12:05:41 2025] R13: ffffffffc19ef000 R14: ffff9d2502ab6870 R15:=
- 0000000000000000
-[Fri May 16 12:05:41 2025] FS:  00007fe9ee051040(0000) GS:ffff9d28984c3000(=
-0000) knlGS:0000000000000000
-[Fri May 16 12:05:41 2025] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[Fri May 16 12:05:41 2025] CR2: ffff9d28984c3000 CR3: 000000011278d000 CR4:=
- 0000000000350ef0
-[Fri May 16 12:05:41 2025] note: modprobe[35898] exited with irqs disabled
-[Fri May 16 12:05:41 2025] note: modprobe[35898] exited with preempt_count 1
-
-
-
-
-Thanks
-David
-
+> And pushed it all out to:
+>=20
+>   git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/kco=
+nfig
+>=20
+> Thanks,
+>=20
+> 	Ingo
+>=20
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D>
+>  arch/x86/configs/x86_64_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/arch/x86/configs/x86_64_defconfig b/arch/x86/configs/x86_64_=
+defconfig
+> index df786b8b4e85..15c6b5f3b2fc 100644
+> --- a/arch/x86/configs/x86_64_defconfig
+> +++ b/arch/x86/configs/x86_64_defconfig
+> @@ -203,6 +203,7 @@ CONFIG_AGP=3Dy
+>  CONFIG_AGP_AMD64=3Dy
+>  CONFIG_AGP_INTEL=3Dy
+>  CONFIG_DRM=3Dy
+> +CONFIG_DRM_FBDEV_EMULATION=3Dy
+>  CONFIG_DRM_I915=3Dy
+>  CONFIG_DRM_VIRTIO_GPU=3Dy
+>  CONFIG_DRM_HYPERV=3Dy
