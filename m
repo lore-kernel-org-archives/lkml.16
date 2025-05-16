@@ -1,110 +1,134 @@
-Received: from baidu.com (mx24.baidu.com [111.206.215.185])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C823E47B
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.206.215.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9D61F4CAC;
+	Fri, 16 May 2025 11:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747395475; cv=none; b=q3pfQZNdjI/6nN66fEoE8baCDrDjUD9t0YO0/09L17Jt0UBwVAATzOVhjKsaYpmcvznI/TYU9U/VsUuXml88F+tMGzQ+d6bW4WgzaFcwkzYv8gIJkF+ekGFW+2z9Ro1vJ3xfYBk0WgzXP+hNKZXwc2taDZM01v4dA2Ut7rvnzBs=
+	t=1747395663; cv=none; b=dKYT9+FdudhbUns90gnaQNa8DRAtYfTs0ESEJyAcyTTLA5XvwOlBnJvGRkEGKSmANOGSOrcJwtcJyKJMMfT/mIIGFrAMAvxWRT8NDBsYGBrHXjojq761sOh8dporPe77j/4XcSbjI3Low8aICZsnASqS3NCvKnaV1qwwqWOQcFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747395475; c=relaxed/simple;
-	bh=awl/7E1ji534cXc/ww/L2rcWUhrfX+LPnJudYVkFZ5c=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PNmDSar8mLlACbQZk5NQZDP9mz3RDUPr1ovhUZ2SvXFNEClHNKk26eaBb1JH5l7s/MBgQ0vVzl9dofmIFPniTBdIrhWbZAhGB0i6JVAnse6u+a0Rxdj61sqyYcOD7yMElnlGIUEI7sAELBuFGWM4UVccDs3CUsE7hp2gqBYm5s4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=111.206.215.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
-From: Wenjie Xu <xuwenjie04@baidu.com>
-To: <muchun.song@linux.dev>, <osalvador@suse.de>, <akpm@linux-foundation.org>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, Wenjie Xu
-	<xuwenjie04@baidu.com>, Li RongQing <lirongqing@baidu.com>
-Subject: [PATCH] hugetlb: two-phase hugepage allocation when reservation is high
-Date: Fri, 16 May 2025 19:35:52 +0800
-Message-ID: <20250516113552.17648-1-xuwenjie04@baidu.com>
-X-Mailer: git-send-email 2.41.0
+	s=arc-20240116; t=1747395663; c=relaxed/simple;
+	bh=20aZcMbMNgVFfCVwfILHEP1FD+MzlukGpj2gEzXwLB0=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=JkqF7l6xlbIU+uxBRdjdInB4FnbVMd7esFxMGR39oiuCkuqadFER3rgGMFh0JqroRttQEoTT6tUzjM7XAUorJRMijNTYUAW1SHnMU+LhKWSKvDtKlxvOQzFTvAa5K8NEvDVCmH8Pdr3tGjVCDybOhzY9AoZ0igScPvNE+cjFZbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d50UH2x+; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d50UH2x+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747395662; x=1778931662;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=20aZcMbMNgVFfCVwfILHEP1FD+MzlukGpj2gEzXwLB0=;
+  b=d50UH2x+UtFBCBfp1sdTEPtRmcoVspeIMBaB2gXHy3q7WoFW2auYS2V8
+   GPqQWpFRsaSJ9DPOLLhXVqetE5PHG4Y8eL2Xigbnr4sXvAa+nP0zkAhpd
+   twGPFSNwxMtJXo/RsxHLetAwCAl7EaPXDEV2e8IP4SZnsx69ZBaAGAUGE
+   sH99mwDhNBinmXiAaoexuw2taad18z/YV4R0aRkVCTNeU2fmABg80q7Xp
+   nzMpjWzKEEzOScSq3iUmOvEBZJydLWBIDaL5qw+BNWfUTVW6yn/8ZvaN+
+   esTI1R7P0yk/up9CeHTEKIlizavgf1oixF4P63o9Vf/ArSxQCFk247NmA
+   A==;
+X-CSE-ConnectionGUID: Xg1T5rdDS5mFO9U9uw3vlQ==
+X-CSE-MsgGUID: +6mN9JQUTOuc4CP12ryZsg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="53036880"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="53036880"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 04:41:01 -0700
+X-CSE-ConnectionGUID: Wlv0JIzOR76NfvTuHX3AVQ==
+X-CSE-MsgGUID: wllDDEK7ShGk+AwirRAv2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="138714912"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.94])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 04:40:59 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 16 May 2025 14:40:56 +0300 (EEST)
+To: Todd Brandt <todd.e.brandt@intel.com>
+cc: platform-driver-x86@vger.kernel.org, xi.pardee@linux.intel.com, 
+    LKML <linux-kernel@vger.kernel.org>, todd.e.brandt@linux.intel.com
+Subject: Re: [PATCH] platform/x86/intel/pmc Fix Arrow Lake U/H support to
+ intel_pmc_core driver
+In-Reply-To: <3492e00e6e343d03e28bc58c4365b282e71e786d.1747360275.git.todd.e.brandt@intel.com>
+Message-ID: <faee2ba9-dfb5-a4c4-77b0-7291400e0ad6@linux.intel.com>
+References: <3492e00e6e343d03e28bc58c4365b282e71e786d.1747360275.git.todd.e.brandt@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BJHW-Mail-Ex10.internal.baidu.com (10.127.64.33) To
- BJHW-MAIL-EX28.internal.baidu.com (10.127.64.43)
-X-FEAS-Client-IP: 10.127.64.36
-X-FE-Policy-ID: 52:10:53:SYSTEM
+Content-Type: text/plain; charset=US-ASCII
 
-When the total reserved hugepages account for 95% or more of system RAM
-(common in cloud computing on physical servers), allocating them all in one
-go can starve the rest of the kernel and lead to OOM during early boot.
+On Thu, 15 May 2025, Todd Brandt wrote:
 
-The previous hugetlb vmemmap batching change (91f386bf0772) can worsen
-peak memory pressure under these conditions by deferring page frees,
-exacerbating allocation failures. To prevent this, split the allocation
-into two equal batches whenever
-huge_reserved_pages >= total_base_pages * 95ULL / 100UL.
+> The ARL requires that the GMA and NPU devices both be in D3Hot in order
+> for PC10 and S0iX to be achieved in S2idle. The original ARL-H/U addition
+> to the intel_pmc_core driver attempted to do this by switching them to D3
+> in the init and resume calls of the intel_pmc_core driver.
+> 
+> The problem is the ARL-H/U have a different NPU device and thus are not
+> being properly set and thus S0iX does not work properly in ARL-H/U. This
+> patch creates a new ARL-H specific device id that is correct and also
+> adds the D3 fixup to the suspend callback. This way if the PCI devies
+> drop from D3 to D0 after resume they can be corrected for the next
+> suspend. Thus there is no dropout in S0iX.
+> 
 
-This change does not alter the number of padata worker threads per batch;
-it merely introduces a second round of padata_do_multithreaded(). The added
-overhead of restarting the worker threads is minimal.
+Shouldn't this have a Fixes tag?
 
-Fixes: 91f386bf0772 ("hugetlb: batch freeing of vmemmap pages")
+> Signed-off-by: Todd Brandt <todd.e.brandt@intel.com>
+> ---
+>  drivers/platform/x86/intel/pmc/arl.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
+> index 320993bd6d31..5053e3dd8f5e 100644
+> --- a/drivers/platform/x86/intel/pmc/arl.c
+> +++ b/drivers/platform/x86/intel/pmc/arl.c
+> @@ -681,6 +681,7 @@ static struct pmc_info arl_pmc_info_list[] = {
+>  
+>  #define ARL_NPU_PCI_DEV			0xad1d
+>  #define ARL_GNA_PCI_DEV			0xae4c
+> +#define ARL_H_NPU_PCI_DEV		0x7d1d
+>  #define ARL_H_GNA_PCI_DEV		0x774c
+>  /*
+>   * Set power state of select devices that do not have drivers to D3
+> @@ -694,7 +695,7 @@ static void arl_d3_fixup(void)
+>  
+>  static void arl_h_d3_fixup(void)
+>  {
+> -	pmc_core_set_device_d3(ARL_NPU_PCI_DEV);
+> +	pmc_core_set_device_d3(ARL_H_NPU_PCI_DEV);
+>  	pmc_core_set_device_d3(ARL_H_GNA_PCI_DEV);
+>  }
+>  
+> @@ -705,6 +706,13 @@ static int arl_resume(struct pmc_dev *pmcdev)
+>  	return cnl_resume(pmcdev);
+>  }
+>  
+> +static void arl_h_suspend(struct pmc_dev *pmcdev)
+> +{
+> +	arl_h_d3_fixup();
+> +
+> +	cnl_suspend(pmcdev);
+> +}
+> +
+>  static int arl_h_resume(struct pmc_dev *pmcdev)
+>  {
+>  	arl_h_d3_fixup();
+> @@ -739,7 +747,7 @@ struct pmc_dev_info arl_h_pmc_dev = {
+>  	.dmu_guid = ARL_PMT_DMU_GUID,
+>  	.regmap_list = arl_pmc_info_list,
+>  	.map = &mtl_socm_reg_map,
+> -	.suspend = cnl_suspend,
+> +	.suspend = arl_h_suspend,
+>  	.resume = arl_h_resume,
+>  	.init = arl_h_core_init,
+>  };
+> 
 
-Co-developed-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Wenjie Xu <xuwenjie04@baidu.com>
----
- mm/hugetlb.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 6ea1be71aa42..7bdcaab6f7ec 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -3616,12 +3616,21 @@ static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
- 		.numa_aware	= true
- 	};
- 
-+	unsigned long huge_pages;
-+	int i, hugetlb_page_alloc_iter;
-+
-+	unsigned long total_base_pages = totalram_pages();
-+	unsigned long huge_reserved_pages = h->max_huge_pages << h->order;
-+
-+	hugetlb_page_alloc_iter = (huge_reserved_pages >= total_base_pages * 95ULL / 100UL)
-+				 ? 2 : 1;
-+
-+	huge_pages = h->max_huge_pages / hugetlb_page_alloc_iter;
-+
- 	unsigned long jiffies_start;
- 	unsigned long jiffies_end;
- 
- 	job.thread_fn	= hugetlb_pages_alloc_boot_node;
--	job.start	= 0;
--	job.size	= h->max_huge_pages;
- 
- 	/*
- 	 * job.max_threads is 25% of the available cpu threads by default.
-@@ -3645,10 +3654,17 @@ static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
- 	}
- 
- 	job.max_threads	= hugepage_allocation_threads;
--	job.min_chunk	= h->max_huge_pages / hugepage_allocation_threads;
-+	job.min_chunk	= huge_pages / hugepage_allocation_threads;
- 
- 	jiffies_start = jiffies;
--	padata_do_multithreaded(&job);
-+	for (i = 0; i < hugetlb_page_alloc_iter; i++) {
-+		job.start = huge_pages * i;
-+		job.size = (i + 1 == hugetlb_page_alloc_iter)
-+			 ? h->max_huge_pages - huge_pages * i
-+			 : huge_pages;
-+		padata_do_multithreaded(&job);
-+	}
-+
- 	jiffies_end = jiffies;
- 
- 	pr_info("HugeTLB: allocation took %dms with hugepage_allocation_threads=%ld\n",
 -- 
-2.41.0
+ i.
 
