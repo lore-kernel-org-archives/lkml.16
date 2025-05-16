@@ -1,81 +1,407 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51EC442C;
-	Fri, 16 May 2025 10:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41BC233D9C
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747392928; cv=none; b=DoBXsxlDHEiGpVforXBpXMv5W6Onhmn6Ngc+lP53BAYdv6ZE+BcX+E+SQ+NYzFJSdAV4Uv4I+wyUCzy4XFYUiJVW2cHchFk4gp1lWCZVanrOwLCYI6cih7/Gcp2HB/IwMF7qgiexSpZXJedHZJVeLUGoR2dm9sbuztPG1naPEaw=
+	t=1747392977; cv=none; b=iomfCjYVRpI45VWi7siEoraVCIdLEQx5RK8k4blB4YSIDB59RHsPdCrBN4/atjTxbRiU5KZ6K3vKT3f2hringhHCLmcv1MNhmBUtSYaKZYHa0OenA7O6neLblXM8Q6ZcB8/7ofbK2d2NxOLLjU6A9vYK9DEdwWpXFZtxPtUgouU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747392928; c=relaxed/simple;
-	bh=w7QeoE83CYUeWMXWHItYCFwhRoh7O5YrA1CtSYqaC5w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=CqlGyYlL6hpFmEV0/w3eEQk0l5YORV+rIqIVgTTWo529dVsM6ATNNuPSD/q49f1jcOWrrMVVB036bb8hdud/p8Uq03Evzfxy0NyUilvYJv7bieEnZ3A3kOaF1C5yZtueuyOoXj/g2+cNojlj1stJje9Ygb15yxF3n8Y3Wkby7Ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wFRyTgh5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hj8ucecR; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747392977; c=relaxed/simple;
+	bh=IRrrSdP2uqh02wzXH9M7KBTL5iRQN9j2xYfXsWMp6OY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kRNbOnZcekEHNbkNI1H1pcamrb8ozM3AN91TEkG2N5fhIfhSP3CHJxOm9R/WfGw2MA/sO5OBqD1YOKQYOllL7SMMGKdH/O6HfVa5+XCS4ZYU7E1YJljhk1OcFmfG8UyOE/CpB5CLImXmqeYIbhk53tNuAx/E2UN/0wPNElXePHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=tomeuvizoso.net; dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b=da+2tWSO; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tomeuvizoso.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wFRyTgh5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hj8ucecR"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747392924;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dAqrnR9lpSHDZlAAETS+32VSLf1k30Eg11RRVWeYS6I=;
-	b=wFRyTgh5iLzemsXj0MthjLhFkFk+T/oUw5so4tKc93df/qp3XUEjP0//91ABrO72LDZWWA
-	6DOqZ2GdO8dB4KQ2fvSWcSImMetRprkZTdyqi/suBJgic+6Y7YktkkK+V/cvBNH41gSLu9
-	yxTqypSv5u0VKOLcKwO+MNZgkYC/ZYnZk4DUfAt0g3yWrDfpvXbYUkJPw+KY9wu2lmt4uo
-	9zAL3k32Mig1jq4ZJeU+OndA1bjZdk2F2666NyE+R16DTtb78uW7YJyWTRR7G+Qo3zJ/vW
-	xL6O8xtEU5h251EoV00skrMpgNGcr0pV95olUSRyz/dbeEzfpRcvtf0t2+Z0kA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747392924;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dAqrnR9lpSHDZlAAETS+32VSLf1k30Eg11RRVWeYS6I=;
-	b=hj8ucecRwdmcFj2oYvgQ0kQwtzo7OZ50CexMIsZVvD8IvuPM4gpusBdRiJjRlyhDME/vuO
-	sYiPVi1U5uXAp6AA==
-To: Marc Zyngier <maz@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-pci@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Gregory Clement
- <gregory.clement@bootlin.com>, Sebastian Hesselbarth
- <sebastian.hesselbarth@gmail.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>, Manivannan
- Sadhasivam <manivannan.sadhasivam@linaro.org>, Bjorn Helgaas
- <bhelgaas@google.com>, Toan Le <toan@os.amperecomputing.com>, Alyssa
- Rosenzweig <alyssa@rosenzweig.io>, Thierry Reding
- <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v2 3/9] irqchip/gic: Convert to
- msi_create_parent_irq_domain() helper
-In-Reply-To: <86cyc8g7di.wl-maz@kernel.org>
-References: <20250513172819.2216709-1-maz@kernel.org>
- <20250513172819.2216709-4-maz@kernel.org> <87h61kj10o.ffs@tglx>
- <86cyc8g7di.wl-maz@kernel.org>
-Date: Fri, 16 May 2025 12:55:23 +0200
-Message-ID: <87bjrsj04k.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=tomeuvizoso-net.20230601.gappssmtp.com header.i=@tomeuvizoso-net.20230601.gappssmtp.com header.b="da+2tWSO"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-70ca2888e99so9791967b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 03:56:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tomeuvizoso-net.20230601.gappssmtp.com; s=20230601; t=1747392973; x=1747997773; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wvq8SJtHkSgAHowZhDbqFL61WnW2AkvgYvOEybV9RGs=;
+        b=da+2tWSOUAhNemGjnnnD6vW4hmbI12RH9aHIHucBuqdkBC4kt/79aBjXGvxZahRE/v
+         gB/o8wBPsjCUU6NLhhSZ7jqFFySlgtZrTZEjqzMKU12vOlIfVtCsNf2viZnv7A453k8z
+         O5o6+fYdTLvRGL2yJH87ZTzlwCqrq6l0yVqr1DBsctKUso+aNSrGE72GA2NeCwalEKpg
+         8H64krw3xwQZRjetUcbCDpIrfOh3qS24p6BWGLaYE3+X3/BtDUIOhn9H6VFa2IuHrNux
+         hLlB7aVpafatt41OI/txl6EkhXoC7ZQKZ0j2Hof1yGIm3DXOQmimZlfhBplvy3IeSrwb
+         C/dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747392973; x=1747997773;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wvq8SJtHkSgAHowZhDbqFL61WnW2AkvgYvOEybV9RGs=;
+        b=oTTnYlfz5woNh1r9ri/QIzytLqNKOoSfd7n4nLlS8QNuR6aDOC9ia/dNoHMnL3jzLP
+         uPwxhiQzYOrFL3Uk2zXhKi2jCR/IV072A21g8fooKasoVe7bRTnrHbyOJvDC6J4rBpDU
+         IrQRktu4QvQ08MJnzerIhdzUSWyXHxHCWeqHeDflPWCrj+cLfI/SoEBobcmiF+ekif9u
+         pBh6zwHKnKdwWpLEWFHrZtQ6+wv0Pz5KnBbFr9bVN5NimcOA8h2Ew4H8i68lkXiLrNSk
+         XcNBwofyD3XSv/XRf9VR1E0o3+RTwONzVflNfJG5ZyNX+WkocnrRbfBLMBb1lmeCr4YY
+         dZmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUALwf/wTUa5nIPlEtD4RI5bt9as3GBETQtWTuvpNTRnHGW1jIcJLrMblRig7gYO1ijBzlMW9IJp4ebjeE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/lPnBbzPshTl3KiFAV90ryZ6PDMh19nY4bHoH4fP8FQ5uAgcC
+	Fh7XxXCbJBVeq09x2nRBTKKEZo9bc6XoVrnUh+P3bmbZywPzwxA/NUTZW8DGVwTim3warzMVqZE
+	bBHpQU8Q=
+X-Gm-Gg: ASbGncvECnPz2zhSY4bQQTe7gp6uVwztu87INuKKfQVy3DyFp2O5Ouxxzk8z6JeMTih
+	lJDuwC67stCX6iSB3sQLHdcdeyn8L2JEwqrUfoE7bPF90e83KeoWGPlKRhWZAVvrtHfsIzQB03z
+	rNCp5SzLphbtbQ1B6OAmpboYV6qGYh1QVq9n7b5F/QRL9T0CD6auZf2TM4UvuB16Idgr4yJXnx7
+	B8k3rWJFWdOz/LeP/ZatgvPgr4Q5PHsMBjNIGE0Wa5SKpf2HALa90Lt4pIn6XUgCTIQCv0jrmhz
+	9h9taWrS5ex1FqgaktKdN2heiuT517+bbswFN9DxJm12VhcYr8BczKCho2UMrjmvQO0VanbYJkt
+	e6TMI4O4qytBbJyzYW50=
+X-Google-Smtp-Source: AGHT+IE0BSzctv3wwMpozhnU80k69/QXe6M6bale5k7Ttq3u4RvTeq2L5ZQTyobpec4KDJitemoZ9Q==
+X-Received: by 2002:a05:690c:6e06:b0:70c:a34b:5288 with SMTP id 00721157ae682-70ca7a572cfmr49865157b3.27.1747392973681;
+        Fri, 16 May 2025 03:56:13 -0700 (PDT)
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70ca852d942sm3386897b3.102.2025.05.16.03.56.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 May 2025 03:56:13 -0700 (PDT)
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e733cd55f9eso1914228276.1;
+        Fri, 16 May 2025 03:56:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUKGGOW50hj+LvpQsxSol/h7BR/Ijctm34OdZFhAeGIItG1IpS1VlrrVTUBb08ZcIt9WRcg4qQHTHT0@vger.kernel.org, AJvYcCUpn2+Iweqju9CICYxMxQmqXCOnP7UYy9TgHzyvV5Q1mCUxQrOkEJRdloHqsgI6w3vAdGTU2yPJ/UT5@vger.kernel.org, AJvYcCUwOOpBG/J8ND67/4O8sSAK9Nh1Yp1LrWNv5pRpK+low3GcjHjvLjPK2TayftuZQz8BcqTVFUzT4rYSzj8=@vger.kernel.org, AJvYcCXbYOJNiIW43VaJaVcPEpciZDXGCuNe3M9Pz6rn9BgwLBi1IzicELvTBPFyh9KxoOIqhKQ0qfd68DogvifO@vger.kernel.org
+X-Received: by 2002:a05:6902:1890:b0:e6d:e962:f317 with SMTP id
+ 3f1490d57ef6-e7b69d5b0d2mr3967716276.10.1747392973185; Fri, 16 May 2025
+ 03:56:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250225-6-10-rocket-v2-0-d4dbcfafc141@tomeuvizoso.net>
+ <3628015.iIbC2pHGDl@workhorse> <CAAObsKDYpDt15NePk7DZbfwXnn5uaJxCu-pwZd-+PDEi56C73A@mail.gmail.com>
+ <6549034.lOV4Wx5bFT@workhorse>
+In-Reply-To: <6549034.lOV4Wx5bFT@workhorse>
+From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Date: Fri, 16 May 2025 12:56:02 +0200
+X-Gmail-Original-Message-ID: <CAAObsKC_h2iQWsjeTQm71Q2Vp4yTne+xP5_zc+X2u-_sP8_CDg@mail.gmail.com>
+X-Gm-Features: AX0GCFvfyIhbJSWWie1awNYiOYU4KhI_m0n6kxRk7hmgZ7cUnrZxeaiTgoKbzoU
+Message-ID: <CAAObsKC_h2iQWsjeTQm71Q2Vp4yTne+xP5_zc+X2u-_sP8_CDg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] dt-bindings: npu: rockchip,rknn: Add bindings
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Oded Gabbay <ogabbay@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Sebastian Reichel <sebastian.reichel@collabora.com>, Jeffrey Hugo <quic_jhugo@quicinc.com>, 
+	linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 16 2025 at 11:47, Marc Zyngier wrote:
-> On Fri, 16 May 2025 11:36:07 +0100,
-> Thomas Gleixner <tglx@linutronix.de> wrote:
->> No need to resend, I just hacked up a few lines of coccinelle script to
->> eliminate this offense.
+On Fri, May 16, 2025 at 12:25=E2=80=AFPM Nicolas Frattaroli
+<nicolas.frattaroli@collabora.com> wrote:
 >
-> I personally find the rework much uglier than the original contraption.
-> Variables declared in the middle of the code, Rust-style? Meh.
+> On Thursday, 15 May 2025 10:30:14 Central European Summer Time Tomeu Vizo=
+so wrote:
+> > On Wed, May 14, 2025 at 7:50=E2=80=AFPM Nicolas Frattaroli
+> > <nicolas.frattaroli@collabora.com> wrote:
+> > >
+> > > On Wednesday, 14 May 2025 17:18:22 Central European Summer Time Tomeu=
+ Vizoso wrote:
+> > > > Hi Nicolas,
+> > > >
+> > > > Thanks for looking at this. Some thoughts below:
+> > > >
+> > > > On Fri, Apr 25, 2025 at 8:50=E2=80=AFPM Nicolas Frattaroli
+> > > > <nicolas.frattaroli@collabora.com> wrote:
+> > > > >
+> > > > > On Tuesday, 25 February 2025 08:55:47 Central European Summer Tim=
+e Tomeu Vizoso wrote:
+> > > > > > Add the bindings for the Neural Processing Unit IP from Rockchi=
+p.
+> > > > > >
+> > > > > > v2:
+> > > > > > - Adapt to new node structure (one node per core, each with its=
+ own
+> > > > > >   IOMMU)
+> > > > > > - Several misc. fixes from Sebastian Reichel
+> > > > > >
+> > > > > > Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> > > > > > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.c=
+om>
+> > > > > > ---
+> > > > > >  .../bindings/npu/rockchip,rknn-core.yaml           | 152 +++++=
+++++++++++++++++
+> > > > > >  1 file changed, 152 insertions(+)
+> > > > > >
+> > > > > > diff --git a/Documentation/devicetree/bindings/npu/rockchip,rkn=
+n-core.yaml b/Documentation/devicetree/bindings/npu/rockchip,rknn-core.yaml
+> > > > > > new file mode 100644
+> > > > > > index 0000000000000000000000000000000000000000..e8d0afe4a7d1c4f=
+166cf13a9f4aa7c1901362a3f
+> > > > > > --- /dev/null
+> > > > > > +++ b/Documentation/devicetree/bindings/npu/rockchip,rknn-core.=
+yaml
+> > > > > > @@ -0,0 +1,152 @@
+> > > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > > > +%YAML 1.2
+> > > > > > +---
+> > > > > > +$id: http://devicetree.org/schemas/npu/rockchip,rknn-core.yaml=
+#
+> > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > > +
+> > > > > > +title: Neural Processing Unit IP from Rockchip
+> > > > > > +
+> > > > > > +maintainers:
+> > > > > > +  - Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> > > > > > +
+> > > > > > +description:
+> > > > > > +  Rockchip IP for accelerating inference of neural networks, b=
+ased on NVIDIA's
+> > > > > > +  open source NVDLA IP.
+> > > > > > +
+> > > > > > +properties:
+> > > > > > +  $nodename:
+> > > > > > +    pattern: '^npu-core@[a-f0-9]+$'
+> > > > > > +
+> > > > > > +  compatible:
+> > > > > > +    oneOf:
+> > > > > > +      - items:
+> > > > > > +          - enum:
+> > > > > > +              - rockchip,rk3588-rknn-core-top
+> > > > > > +          - const: rockchip,rknn-core-top
+> > > > > > +      - items:
+> > > > > > +          - enum:
+> > > > > > +              - rockchip,rk3588-rknn-core
+> > > > > > +          - const: rockchip,rknn-core
+> > > > > > +
+> > > > > > +  reg:
+> > > > > > +    maxItems: 1
+> > > > >
+> > > > > Hi Tomeu,
+> > > > >
+> > > > > as you probably know, RK3576 has quite a similar NPU. This is why=
+ I'm currently
+> > > > > poking at this patch series. One of the differences I ran into wa=
+s that the
+> > > > > IOMMU of each NPU core now sits within the reg address space rang=
+e of the core
+> > > > > as described by the single reg item binding and assumed by the dr=
+iver.
+> > > >
+> > > > But this is not a difference, right?
+> > >
+> > > It is. E.g. on RK3588, you use reg =3D <0x0 0xfdab0000 0x0 0x9000>; f=
+or
+> > > rknn_core_top, and rknn_mmu_top then sits at 0xfdab9000, which is jus=
+t
+> > > outside the reg range of the rknn_core_top node. That means acquiring=
+ the
+> > > iomem as a resource succeeds for you, whereas for me it fails.
+> >
+> > Ah, got it now, thanks.
+> >
+> > > >
+> > > > > This seemed weird to me at first, since I would've guessed the co=
+res would be
+> > > > > exactly the same, but I noticed that they kind of still are; the =
+RK3588's NPU
+> > > > > also has a "hole" between 0x2000 and 0x2fff on each core, which i=
+s where RK3576
+> > > > > put its IOMMU.
+> > > >
+> > > > So this is the same in both RK3576 and RK3588, right?
+> > >
+> > > Yes, both RK3576 and RK3588 have a hole in the same area. RK3562 also=
+ has
+> > > the same hole. RK3568 doesn't have the offsets for the individual par=
+ts of
+> > > the NPU in the TRM, making all the relative register offsets the TRM =
+then
+> > > goes on to document completely pointless as it omits what those offse=
+ts
+> > > are based on, so we don't know if it has a hole there. I vaguely reca=
+ll
+> > > that it has the IOMMU either before or past the global range (not sur=
+e if
+> > > I wrote these findings down anywhere?), so if it has a hole at 0x2000
+> > > then it's unused like on the RK3588. I don't have access to the RV110=
+6
+> > > Part 2 TRM where the NPU is described, so I don't know whether that h=
+as a
+> > > hole there unless we dig into the downstream code.
+> > >
+> > > >
+> > > > > This is some information I gleaned from the RK3588 TRM, specifica=
+lly section
+> > > > > 36.4.1 "Internal Address Mapping", which shows where each "part" =
+of the NPU core
+> > > > > has its address space.
+> > > > >
+> > > > > Right now we just represent this as a single reg item per core. I=
+'ve played
+> > > > > with the idea of splitting this up into the distinct ranges the T=
+RM lists and
+> > > > > giving each a reg-names entry, but this would require a major rew=
+ork of the
+> > > > > driver from what I can tell, including to the auto-generated regi=
+ster header.
+> > > > >
+> > > > > For now, my hack on RK3576 is to just ioremap the range defined b=
+y resource
+> > > > > start to resource end inside rocket manually if I get -EBUSY tryi=
+ng to ioremap
+> > > > > the resource proper. This is quite an ugly hack though, it means =
+the IOMMU node
+> > > > > still has its address overlapping with another node in the DT, an=
+d it also means
+> > > > > we have an unavoidable error message printed into the kernel log.=
+ This is also
+> > > > > what the vendor driver seems to do.
+> > > > >
+> > > > > What do you reckon is a reg setup in the binding that is both rea=
+sonable to
+> > > > > implement in the driver while accurately describing the hardware?
+> > > >
+> > > > Guess we could go with some smaller granularity and have 3 register
+> > > > areas per core, instead of 10:
+> > > >
+> > > > - CORE: PC+CNA (0x0000 ~ 0x1fff)
+> > > > - AUX: CORE+DPU+PPU+DDMA+SDMA (0x3000 ~ 0x9fff)
+> > > > - GLOBAL (0xf000 ~ 0xf004)
+> > > >
+> > > > So the IOMMU on all the known SoCs can have its own regmap. I have
+> > > > chosen to call the first one CORE because these are the components
+> > > > that are absolutely needed in any NPU that is oriented towards
+> > > > convolutional networks (convolutions, basically). I have named the
+> > > > second AUX because it contains hardware units that are optional and
+> > > > are used to implement operations that may be common but that aren't=
+ as
+> > > > computational expensive as convolutions and thus might be skipped i=
+n
+> > > > lower-end versions of the IP.
+> > > >
+> > > > What do you think?
+> > >
+> > > I'm personally fine with this approach. I've floated a two-area appro=
+ach
+> > > to Sebastian Reichel before who, as far as I can recall, expressed hi=
+s
+> > > distaste for  it as it seemed like an arbitrary division. I do concur=
+ in
+> > > that, it seems very arbitrary, so it's hard to say whether the bindin=
+gs
+> > > maintainers would let us get away with it if they get wind of it.
+> > > Unfortunately they are Cc'd on this E-Mail, so the cat is out of the =
+bag
+> > > in this regard.
+> >
+> > Actually, after thinking a bit more about it I'm leaning towards only
+> > having the PC, CNA and CORE areas in the DT, as those are the only
+> > ones that should be accessible from the CPU.
+>
+> That does make sense to me. I've just checked the RK3576 specific reg
+> fiddling code I hacked in and it doesn't appear to be writing to any
+> other areas either.
 
-That's not a Rust invention and we already moved over to do this to make
-the __free() magic more obvious.
+Cool.
 
-Thanks,
+> >
+> > The registers for the other units should be set by the PC, as it reads
+> > the command stream.
+> >
+> > So three register areas that can be set to wherever Rockchip has
+> > placed them, and we just ignore the others in the kernel, as we don't
+> > have any business messing with them ourselves.
+> >
+> > What do you think?
+>
+> This seems like a good solution. Any further reg ranges that are used in
+> other variants (e.g. RK3562/RK3576 and maybe RV1106) introduce something
+> called "CBUF" and I'm not yet sure if that'll need any writes to its regs
+> from the driver, but if it does then it's easy to add another range for i=
+t
+> in the binding for just those compatibles.
 
-        tglx
+Do you have any further info on those CBUF regs? In the NVDLA
+documentation, CBUF is the block that handles the Convolution Buffer,
+but on the RK3588 it is part of the CNA block.
+
+In any case, I don't think the kernel will have to do anything about it.
+
+Cheers,
+
+Tomeu
+
+> >
+> > Thanks,
+> >
+> > Tomeu
+>
+> Kind regards,
+> Nicolas Frattaroli
+>
+> >
+> > > What speaks for the 3 register area split is that anything that bring=
+s
+> > > more holes and doubly mapped things into the AUX area is probably goi=
+ng
+> > > to be so radically different it'll ideally have its own binding anywa=
+y,
+> > > or needs more than just a compatible added to the binding.
+> > >
+> > > I think as far as arbitrary splits goes, the one you propose is proba=
+bly
+> > > the one most closely aligned with reality. Certain register areas do
+> > > seem like something they'd never move away from its corresponding
+> > > companion, whereas adding parts to the AUX area or removing from it i=
+s
+> > > probably going to be quite common. So it can essentially be treated a=
+s
+> > > the area where optional things will most likely land as you pointed o=
+ut,
+> > > which then don't need more bindings fiddling to add those optional th=
+ings
+> > > as explicitly named areas in the bindings as long as we treat it as j=
+ust
+> > > one opaque area s far as the binding is concerned.
+> > >
+> > > Also, unless there's some virtual combined sparse iomem API in the ke=
+rnel
+> > > that I'm not aware of, that's probably the easiest path forward for t=
+he
+> > > driver as well.
+> > >
+> > > >
+> > > > Regards,
+> > > >
+> > > > Tomeu
+> > >
+> > > Kind regards,
+> > > Nicolas Frattaroli
+> > >
+> > > >
+> > > > > The RK3568, which uses a similar NPU design has the IOMMU at an o=
+ffset of 0xb000
+> > > > > from the core's start of PC, so probably after any core specifics=
+ but before the
+> > > > > global registers if I hazard a guess.
+> > > > >
+> > > > > For those without access to the TRM: splitting this up into multi=
+ple reg items
+> > > > > per core precisely the way the TRM does it would result in no les=
+s than 10 reg
+> > > > > items on RK3588, if I count correctly.
+> > > > >
+> > > > > Kind regards,
+> > > > > Nicolas Frattaroli
+> > > > >
+> > > > >
+> > > >
+> > >
+> > >
+> > >
+> > >
+> >
+>
+>
+>
+>
