@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03FE238176;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14801361;
 	Fri, 16 May 2025 12:14:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747397651; cv=none; b=u+cuuq4W8aUdc2YcInjl3prH9P4ctLOg7z9QwZcil0NSrrgjntfV4xqM2FzTKPR+AcwLOM8QvX8Y8ndz9yis8XSlovrJiyrNNRyhaSanmUlDP1JHhtxpt/IP2Jq2NveP1dyFZSIIOd/AwxsEYYgwO/sgCR310DZTCwgSc+nzPF8=
+	t=1747397650; cv=none; b=UT7ZxIw8EBtLDXxn0PVyhY/fwxPZI9HHoCT++3gtpj+8t7BW3wARnH6YnTH4cyV2j5Rk6uoG8r1CS3a6NhMhln/g2kaRL8I5TRYMmjXbX8kctKiTpVCTPr6hqwoD+HeqCvNsShqeRSvFw9q1wm2jjP5N4zeAE6G/FiLpEfBvp0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747397651; c=relaxed/simple;
-	bh=J6h7ILB6u2p92bToPEUMc7SmKaX4SeQ7fwuvz6UJhcs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=h1YV92xB3VY+YpcJBEGE6KtkT2Jjq122jPnKGbJxEHmGTrt+CtshiL8u70YgMGWsQiWlqHq17pcBNXTonYL1eoCyR0uds7TXceC9DLrHsO/G9gJMMMx7wJnXsup0Ugx3QRD4a8Eel8tNfmFZ9sUQafukJfmCgdtkyUmyIYckQFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnWfOWd7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747397650; c=relaxed/simple;
+	bh=y+mm5weWo+9kNZUrNcHd1yv3c9QMyVj137bK/yu+2IQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NWA9PmSJwRQnr5DbQiQJVKiTUjAnqgLgEy+4hpmJEdwS8/ryRpNwS3NDRV0t1jdg+RiGFRXdDA6YFpLVyZzCgLPn/7wLHhrExN4x1bFG2fFBdhSYX/BxP9TQU8W6v32xwzVZKyaiqtDCpkGDJbkW2t5o93RjNK65NLed1UkzFsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NcQkNwe1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnWfOWd7"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C455DC4CEEF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NcQkNwe1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A77F7C4CEE4;
 	Fri, 16 May 2025 12:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1747397650;
-	bh=J6h7ILB6u2p92bToPEUMc7SmKaX4SeQ7fwuvz6UJhcs=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=pnWfOWd7x8ZqLFiLqji8GuMFYGRlkL44Gmp95jUD+8eMD3NQ85TPQOzIMJ+AT6o9P
-	 ey5w4/CL/MPwHVdoUNau8Nt3NLemauCaoUXNz36ztZTtByAwdQnfNEpz7C962QOj8o
-	 Zz6XHfh3NqZT23ql2Of7V4TYJNlV93uVz0CsbZjtEzQmyuS55PhLpEoiMtefEpmp0p
-	 YltinF5AAAPPj/5emS9I2BcUEmFaRq97oEbmYk8arufAyIKMfMCtfBhywGaO3exwfY
-	 qu8B+SlnBuB1bf5aNzbR8LglrHSq8OhSr5MKP+mc8Hw2Ksbk2tStqj3ShjyLI8akPZ
-	 77LyswhUI9MgQ==
+	bh=y+mm5weWo+9kNZUrNcHd1yv3c9QMyVj137bK/yu+2IQ=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=NcQkNwe1hRAblU0y/Z8KxQG3iGYAn8ePBhZwT6u6ClIzUdOSsusdpIvBJWKPkuriw
+	 a6eKE+D6vMBXeUdXmt7JeZc1NHS0XxbxY8Bz+wnCjadFGhUal8eyt3NZxmJ/NOYimv
+	 adnXTTbdFbIFobwr2fhPHrzlwzKy3EDIcAjE2v2ATLY20RMkUIFHhxgvIyG/Q3y1Y+
+	 6rL/J7+tCuhnWQWwIT5YsHtl02uxa+ePePqOPCW1TlLw8P4pkwS5jpukQuULEV99FK
+	 6KQbO6wYsM17culeW9Qz/dzsoQ6zA+QMa5bsi7uSeXfxDrkjCM7k9fb4prHSpAQ4JU
+	 FhzLCnoKivR9w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B42EEC3DA6D;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94302C3ABC9;
 	Fri, 16 May 2025 12:14:10 +0000 (UTC)
 From: Per Larsen via B4 Relay <devnull+perlarsen.google.com@kernel.org>
-Date: Fri, 16 May 2025 12:14:01 +0000
-Subject: [PATCH v4 2/5] KVM: arm64: Zero x4-x7 in ffa_set_retval
+Subject: [PATCH v4 0/5] KVM: arm64: Support FF-A 1.2 and SEND_DIRECT2 ABI
+Date: Fri, 16 May 2025 12:13:59 +0000
+Message-Id: <20250516-virtio-msg-ffa-v4-0-580ee70e5081@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,9 +40,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250516-virtio-msg-ffa-v4-2-580ee70e5081@google.com>
-References: <20250516-virtio-msg-ffa-v4-0-580ee70e5081@google.com>
-In-Reply-To: <20250516-virtio-msg-ffa-v4-0-580ee70e5081@google.com>
+X-B4-Tracking: v=1; b=H4sIAAgsJ2gC/2WOQW7DIBAAvxJx7kawGOLklH9UPVC82CsFE4GLW
+ kX+e7GlSml7nMOM5iEKZaYiLoeHyFS5cJobdC8H4Sc3jwQ8NBYo0UgjLVTOCyeIZYQQHCC6cEJ
+ /RmWkaNI9U+DPPfj61jjkFGGZMrnnDMomyP6oETvdKVBwp3y7cowfs5uXo09xi01clpS/9rmKW
+ /In0P/9qAgSaOi70Eujz9Zcx5TGG+2pbaTqJ1/pf75u/mCtP9kQ1Dv6X/66rt/O9UQQKgEAAA=
+ =
+X-Change-ID: 20250506-virtio-msg-ffa-22af72c92150
 To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
  Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
  Zenghui Yu <yuzenghui@huawei.com>, 
@@ -53,13 +56,14 @@ Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
  qwandor@google.com, arve@android.com, perl@immunant.com, 
  lpieralisi@kernel.org, kernel-team@android.com, tabba@google.com, 
  james.morse@arm.com, armellel@google.com, jean-philippe@linaro.org, 
- ahomescu@google.com, Per Larsen <perlarsen@google.com>
+ ahomescu@google.com, Per Larsen <perlarsen@google.com>, 
+ Ayrton Munoz <ayrton@google.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747397650; l=1625;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747397650; l=3725;
  i=perlarsen@google.com; s=20250508; h=from:subject:message-id;
- bh=LMpReGw/k7MiHAdq22ZI2li2EKc28upqB6Z9WwV7U10=;
- b=N184+8YrogmptYxdr3tgUwyC5QKpJKyFjClV6vICc1bfnlLMzk27GqfoI0om0EZaAnwByKu4P
- H0Cwk+3GMLaDSotY4mVB+EHKJ30m2U4cLwAJkAqPXCg2hkFuJbi8xcA
+ bh=y+mm5weWo+9kNZUrNcHd1yv3c9QMyVj137bK/yu+2IQ=;
+ b=YzR/YMJmP2O7HT5umZO1tXDefZXVOIPW3ZjT4X/487ou9ZmBRtFIlzlCHKeURiH7NXnrHvjh+
+ AAqajWtMT4DDZqFxrcC7Cys3ubzFbX+mFNYnYzaTAfcbfXtEPsWX6Ic
 X-Developer-Key: i=perlarsen@google.com; a=ed25519;
  pk=jjc/Ta4VmrLRmMoahP6d1mBcKzvWU+nsmdtYe2oS2kQ=
 X-Endpoint-Received: by B4 Relay for perlarsen@google.com/20250508 with
@@ -67,50 +71,96 @@ X-Endpoint-Received: by B4 Relay for perlarsen@google.com/20250508 with
 X-Original-From: Per Larsen <perlarsen@google.com>
 Reply-To: perlarsen@google.com
 
-From: Per Larsen <perlarsen@google.com>
+Hi,
 
-FF-A 1.0 references SMCCC 1.2 (reference [4] on page xi). The results of
-an SMC32/HVC32 are returned in W1-W7 in SMCCC 1.2. However, W4-W7 must be
-preserved unless they contain results according to the function definition.
+The FF-A 1.2 specification introduces a new SEND_DIRECT2 ABI which
+allows registers x4-x17 to be used for the message payload. This patch
+set prevents the host from using a lower FF-A version than what has
+already been negotiated with the hypervisor. This is necessary because
+the hypervisor does not have the necessary compatibility paths to
+translate from the hypervisor FF-A version to a previous version.
 
-ffa_set_retval is commonly used to report FFA_SUCCESS or FFA_ERROR back to
-the caller. FFA_SUCCESS requires that x2-x7 must be zero (MBZ) unless a
-register is explicitly used in the function response. FFA_ERROR requires
-x3-x7 MBZ.
+Support for FF-A 1.2 in the hypervisor is added as a precursor to the
+addition of the FFA_MSG_SEND_DIRECT_REQ2 messaging interface. The bulk
+of this change has to do with the upgrade to SMCCC 1.2 required by
+FF-A 1.2. Additionally, unimplemented FF-A 1.2 interfaces are added to
+the list of unsupported functions.
 
-ffa_set_retval is also used to return results of:
-- FFA_VERSION which requires x1-x7 MBZ
-- FFA_MEM_FRAG_TX which returns FFA_MEM_FRAG_RX or FFA_ERROR.
-  FFA_MEM_FRAG_RAX always requires that x5-x7 MBZ and x4 MBZ
-  at any virtual FF-A instance (applies to kvm).
+Tested by booting Android under QEMU and loading Trusty as the guest
+VM and observing the SEND_DIRECT2 ABI being used successfully during
+guest boot.
 
-Messaging interfaces such as FFA_MSG_SEND_DIRECT_{REQ,REQ2}, will not use
-ffa_set_retval.
+Changes since v3:
+- all:        Remove Signed-off-by: Per Larsen <perl@immunant.com>
+- 2/5:        Split out from 2/3, zero x4-x7 in set_ffa_retval
+- 3/5:        Split out from 2/3, Mark FFA_NOTIFICATION_* calls as
+              unsupported
+- 2/3 -> 4/5: Drop ffa_get_hypervisor_version, access hyp_ffa_version
+              directly when version negotiation is complete.
+- 3/3 -> 5/5: Call ffa_to_smccc_1_2_error directly in
+              do_do_ffa_direct_msg2
+              Push call to ffa_call_needs_smccc_1_2 lower down by adding
+              ffa_get_func_id and ffa_set_retval_smccc_1_x.
+              Drop ffa_to_smccc_1_2_regs and ffa_to_smccc_1_2_regs_prop
+              as they are no longer used.
+- Link to v3: https://lore.kernel.org/r/20250513-virtio-msg-ffa-v3-0-d66c76ff1b2c@google.com 
 
-Given the above, it is safe to zero x4-x7 in ffa_set_retval.
+Changes since v2:
+- 2/3: Removed files added by mistake.
+       Add and use ffa_get_hypervisor_version to access hyp_ffa_version
+- 3/3: Use ffa_get_hypervisor_version to access hyp_ffa_version safely
+- Link to v2: https://lore.kernel.org/r/20250508-virtio-msg-ffa-v2-0-ed84f8053965@google.com
 
-Signed-off-by: Per Larsen <perlarsen@google.com>
+Changes since v1:
+- 1/3: Simplify commit message; drop long comment in do_ffa_version
+- 2/3: Correct use of Co-developed-by: footer
+       s/arm_smccc_1_2_smc_fallback/arm_smccc_1_x_smc/
+       Always access hyp_ffa_version w/lock held
+       Remove superfluous comments in ffa_call_supported
+       Add and use FFA_FEAT_RXTX_MIN_SZ_MASK instead of constant
+       Add FFA_PARTITION_INFO_GET_REGS to calls that require SMCCC 1.2
+- 3/3: Always access hyp_ffa_version w/lock held
+       Correct formatting
+
+Thanks,
+Per Larsen
+
+--
+2.49.0
+
 ---
- arch/arm64/kvm/hyp/nvhe/ffa.c | 4 ++++
- 1 file changed, 4 insertions(+)
+To: Marc Zyngier <maz@kernel.org>
+To: Oliver Upton <oliver.upton@linux.dev>
+To: Joey Gouly <joey.gouly@arm.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+To: Zenghui Yu <yuzenghui@huawei.com>
+To: Catalin Marinas <catalin.marinas@arm.com>
+To: Will Deacon <will@kernel.org>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: kvmarm@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org
 
-diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
-index 2c199d40811efb5bfae199c4a67d8ae3d9307357..b3d016bee404ce3f8c72cc57befb4ef4e6c1657f 100644
---- a/arch/arm64/kvm/hyp/nvhe/ffa.c
-+++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
-@@ -101,6 +101,10 @@ static void ffa_set_retval(struct kvm_cpu_context *ctxt,
- 	cpu_reg(ctxt, 1) = res->a1;
- 	cpu_reg(ctxt, 2) = res->a2;
- 	cpu_reg(ctxt, 3) = res->a3;
-+	cpu_reg(ctxt, 4) = 0;
-+	cpu_reg(ctxt, 5) = 0;
-+	cpu_reg(ctxt, 6) = 0;
-+	cpu_reg(ctxt, 7) = 0;
- }
- 
- static bool is_ffa_call(u64 func_id)
+---
 
+---
+Per Larsen (5):
+      KVM: arm64: Restrict FF-A host version renegotiation
+      KVM: arm64: Zero x4-x7 in ffa_set_retval
+      KVM: arm64: Mark FFA_NOTIFICATION_* calls as unsupported
+      KVM: arm64: Bump the supported version of FF-A to 1.2
+      KVM: arm64: Support FFA_MSG_SEND_DIRECT_REQ2 in host handler
+
+ arch/arm64/kvm/hyp/nvhe/Makefile |   1 +
+ arch/arm64/kvm/hyp/nvhe/ffa.c    | 186 +++++++++++++++++++++++++++++++++++++--
+ include/linux/arm_ffa.h          |   3 +
+ 3 files changed, 182 insertions(+), 8 deletions(-)
+---
+base-commit: fee3e843b309444f48157e2188efa6818bae85cf
+change-id: 20250506-virtio-msg-ffa-22af72c92150
+
+Best regards,
 -- 
-2.49.0.1101.gccaa498523-goog
+Per Larsen <perlarsen@google.com>
 
 
