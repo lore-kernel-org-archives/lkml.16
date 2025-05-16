@@ -1,73 +1,48 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF22926B098
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 17:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF4D25CC77;
+	Fri, 16 May 2025 17:41:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747417272; cv=none; b=V09Bm7EIsxb62FBwjaWnOvoQnbuf4m3eWcnojh59HFhiUMmivFCQ8yCzc7cTUgXlmKYm5EGYgBq5y+DsL7Bf7eeDaoqtgukdXKn7kd8/1kyBeuO3aGPcDerqldDF+bRYCoEQduDHzvqz7LdySkU3M0EeeogTnEXBn+CEcyN9710=
+	t=1747417310; cv=none; b=DShxqFMAddL91DJSJ6wQHugKETF1HM8hy0+Dbs3xT+/r748nD43BjIMSgbgAvjyBTDApsM9ATFYF7JXvGqmweusbGbErxxeJgS4RqW1B6yrvw5WCtXEJYahSTaYl95VZfNKOeWB/L6JwcnwhQErowNEgti8FVB7HGee3qmM9a5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747417272; c=relaxed/simple;
-	bh=UFNrjMUVg8DFjBXD+zhnzO1QA5PUaz5+Ak1O79HlU5s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MzW71vr7wSBVjU7J9W0DwtoMwT/t+X759jX/aIrV0rWxO2Uc3teuYEbW9bJ3wSGou+7BDNR1Ruukx2MOIM+n94Dic4WrfJmjEHxn7BHog+WyZrcQUB2wRtCA/Bb/AnjObvXSNpsqorov0kPm0wCdrRJl0vcAx7KqL49WzhdRJQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mW6MttKf; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747417310; c=relaxed/simple;
+	bh=FqfDVZ8sK98Vx3ih8ZP0NXhSIP8giKOMw4w7k8L3Dug=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M0shHuw9X1lI0jg6onqPDJHL5sVxXXtImtEu3gORnHElwKHXQHEdnPTUxB2Z3RmdRuN6FvYejq/j8jatoHzVHQ/CzF2io/I+rtMv1N1yST0oTZMl8ZUsP4itFvLsC0OQrgXJj3tvKXJsS4q7Z3HQIZTd/taSACAYnXsEYSwI0+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JkzQErQb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mW6MttKf"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3f6aa4b3a7fso1188645b6e.3
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:41:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747417270; x=1748022070; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/29LGpyzNn0MDmWeJV1bJItc3uLZZ/lzjGkN5WG7MvI=;
-        b=mW6MttKfXYEmOvptENnyoKqwqKllgkIo+aaO6VUvcZZpYaTjQnLTVHkUVR+P/QWqfP
-         +UrKgifQ4pMGI1EMT1rDbnnl7RMRHr9Y+OHdr6Zq/fuJb0mpdW6nJOgQYpgCv42i/O1b
-         tsHowsKCgx/QGcRYt3MLgZH/lnolbXcJ1ocZh1FUrkELro14LJS/NRS/Zs2k0+9TLkjS
-         X00bb+kOojqLJ9+KTUluf/wWMcrmUfP6QYr448tP9TRPPrpy3AaqW0iujdXlhMWgz+Jb
-         lpQytVkgtwbsfvgMZ9G8PARTCOD399MQBgnM2mEu75M3Wj1umx1kWBNE2KZWO4t6l1Tw
-         91aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747417270; x=1748022070;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/29LGpyzNn0MDmWeJV1bJItc3uLZZ/lzjGkN5WG7MvI=;
-        b=ATNFpGU9t96wdtzKww08Fjd1x3zZ1+F/J5kIYteqvcH6rHqO/zq5qUQN4svGzO3jnh
-         MnTJO/Gq2b9PAndlT1orP7eY6NIGgmueL1NUm4iSqHuCj9jNetpYvN2WeWM2OUg049TD
-         n8wU6SN1b/tAg5dWDPEN+MpwFER6/aDFVH1b8b6GzRoZoewvwsQFtSkKcE7o0A1h5HcR
-         C2LCEUG2mDxW3MUSUG+iYq3KqIBALDy4HRkYFjBST/o6RRalUKUm5PjNq9GAtygM9P44
-         rc6eTzUZiB7SLiqLJW9JILNRswBl569zTvSwqVdG6mYnhwW+0tDciVuaaj3ODl51tjos
-         XsRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXTT+BxV6Bm14ecpwk+c0YvrXHFUySCdWK5JbH9h2PWVyPYQjHkoapDqky/qERuPhJYLgNzGMfIESY1pEY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2TDIZzpnXY77RqKnVeXslUDCynfxGHh9sGlQEX89vx+VFOnP6
-	JteIBv8QegyB6dtmK3Yaods6eWTQTyVrbwdKBDc0Z78tt0J7aBWUWKAD
-X-Gm-Gg: ASbGnctCbxdxxVqtBBvIwpd7Ltt7f7YZdUvz20hiRNRTdSce1vXSCImahCJF+PHEysz
-	fKcpw+kYGM4a/6pg5ZtUfmQRk5AucMjudIWxHSnfPqm7U2/tyUUhikPWUtnJOwP/qh80j6mLuwD
-	SPG1dzM+SinWmHseiSyuF1m1N/uK4XB1UrXg4TlVrj0AD+n/19VlYmJTXiXCH0nOtltxKcEtU9M
-	arXCIAzlb0OBctjpqT41XS+UKHzssUJMUplM7NDgDuCzegEcZ8r02Nwz4Shdvvt3luxjZ9PdmCQ
-	sxX/G7es4JVubUdHcWCJZg0iFMEA8l7O+4BbXiGkzMJmXll0zybvbeN82yXjKrsc1uc=
-X-Google-Smtp-Source: AGHT+IFq1fljpgopT1vLIk7PkA3q31CtPQYKrJznKVQmapb2Fn0PnllI3YghbkK3ca3bGaQXVeOtcw==
-X-Received: by 2002:a05:6808:608e:b0:3fe:b1fd:527f with SMTP id 5614622812f47-404d8616f1emr2407180b6e.1.1747417269657;
-        Fri, 16 May 2025 10:41:09 -0700 (PDT)
-Received: from OST2.. ([166.196.113.177])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-404d9809bccsm377854b6e.29.2025.05.16.10.41.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 10:41:09 -0700 (PDT)
-From: Sravan Kumar Gundu <sravankumarlpu@gmail.com>
-To: skhan@linuxfoundation.org,
-	pmladek@suse.com,
-	jani.nikula@intel.com,
-	john.ogness@linutronix.de,
-	gregkh@linuxfoundation.org,
-	akpm@linux-foundation.org
-Cc: Sravan Kumar Gundu <sravankumarlpu@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] kernel: Format kernel-doc comments
-Date: Fri, 16 May 2025 17:40:31 +0000
-Message-ID: <20250516174031.2937-1-sravankumarlpu@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JkzQErQb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5CE4C4CEE4;
+	Fri, 16 May 2025 17:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747417310;
+	bh=FqfDVZ8sK98Vx3ih8ZP0NXhSIP8giKOMw4w7k8L3Dug=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JkzQErQbKVJyIeMPEtPEPhj/JO9Oo5nffZxbFSfVWYNu0WQ+pK+k1pN93CdkH4T1h
+	 LlrjOcrfH65Wz/e2VSywpqSw5uL0zin9tZGuuQ1FEO/XIC6P5lRnHMgG3lYLmwv5TM
+	 frzOh+AJe7tzCPWXjxSnl4lEMMna6BustnDNLacpRYcV2AfvnefordFIxI61LKksLa
+	 ivhwU6U0y+8Nd1t+xlxMGYHXNEw11R5tAQszibBYA4o8frtZ3stYivVi1e1II7Xyty
+	 qOpicbCCF5wyrKLBsVOhvRfESnRQWja2oAK3MycyXmsvz2eFgxGAgQLMVnEDNsv7Di
+	 yFcWJsSrVu1VA==
+From: Philipp Stanner <phasta@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Philipp Stanner <phasta@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Yang Yingliang <yangyingliang@huawei.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v2 0/6] PCI: Remove hybrid-devres region requests
+Date: Fri, 16 May 2025 19:41:35 +0200
+Message-ID: <20250516174141.42527-1-phasta@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,37 +51,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-kernel-doc function comment doesn't follows documentation commenting style
-misinterpreting arguments description with function description
+Changes in v2:
+  - Drop patch for removing forgotten header. Patch is unrelated. Will
+    resend seperately. (Andy)
+  - Make docu patch headline "Documentation/driver-api:". There seems to
+    be no canonical way, but this style is quite frequent. (Andy)
+  - Apply Andy's RBs where applicable.
 
-please see latest docs generated before applying this patch
-https://docs.kernel.org/driver-api/basics.html#c.panic
+Howdy,
 
-Signed-off-by: Sravan Kumar Gundu <sravankumarlpu@gmail.com>
----
- kernel/panic.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+the great day has finally arrived, I managed to get rid of one of the
+big three remaining problems in the PCI devres API (the other two being
+MSI having hybrid-devres, too, and the good old pcim_iomap_tablle)!
 
-diff --git a/kernel/panic.c b/kernel/panic.c
-index a3889f38153d..1f52922d1b2e 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -277,12 +277,10 @@ static void panic_other_cpus_shutdown(bool crash_kexec)
- }
- 
- /**
-- *	panic - halt the system
-- *	@fmt: The text string to print
-+ * panic - halt the system
-+ * @fmt: The text string to print
-  *
-- *	Display a message, then perform cleanups.
-- *
-- *	This function never returns.
-+ * Display a message, then perform cleanups. This function never returns.
-  */
- void panic(const char *fmt, ...)
- {
+It turned out that there aren't even that many users of the hybrid API,
+where pcim_enable_device() switches certain functions in pci.c into
+managed devres mode, which we want to remove.
+
+The affected drivers can be found with:
+
+grep -rlZ "pcim_enable_device" | xargs -0 grep -l "pci_request"
+
+These were:
+
+	ASoC [1]
+	alsa [2] 
+	cardreader [3]
+	cirrus [4]
+	i2c [5]
+	mmc [6]
+	mtd [7]
+	mxser [8]
+	net [9]
+	spi [10]
+	vdpa [11]
+	vmwgfx [12]
+
+All of those have been merged and are queued up for the merge window.
+The only possible exception is vdpa, but it seems to be ramped up right
+now; vdpa, however, doesn't even use the hybrid behavior, so that patch
+is just for generic cleanup anyways.
+
+With the users of the hybrid feature gone, the feature itself can
+finally be burned.
+
+So I'm sending out this series now to probe whether it's judged to be
+good enough for the upcoming merge window. If we could take it, we would
+make it impossible that anyone adds new users of the hybrid thing.
+
+If it's too late for the merge window, then that's what it is, of
+course.
+
+In any case I'm glad we can get rid of most of that legacy stuff now.
+
+Regards,
+Philipp
+
+[1] https://lore.kernel.org/all/174657893832.4155013.12131767110464880040.b4-ty@kernel.org/
+[2] https://lore.kernel.org/all/8734dy3tvz.wl-tiwai@suse.de/
+[3] https://lore.kernel.org/all/20250417091532.26520-2-phasta@kernel.org/ (private confirmation mail from Greg KH)
+[4] https://lore.kernel.org/dri-devel/e7c45c099f8981257866396e01a91df1afcfbf97.camel@mailbox.org/
+[5] https://lore.kernel.org/all/l26azmnpceka2obq4gtwozziq6lbilb2owx57aajtp3t6jhd3w@llmeikgjvqyh/
+[6] https://lore.kernel.org/all/CAPDyKFqqV2VEqi17UHmFE0b9Y+h5q2YaNfHTux8U=7DgF+svEw@mail.gmail.com/
+[7] https://lore.kernel.org/all/174591865790.993381.15992314896975862083.b4-ty@bootlin.com/
+[8] https://lore.kernel.org/all/20250417081333.20917-2-phasta@kernel.org/ (private confirmation mail from Greg KH)
+[9] https://lore.kernel.org/all/174588423950.1081621.6688170836136857875.git-patchwork-notify@kernel.org/
+[10] https://lore.kernel.org/all/174492457740.248895.3318833401427095151.b4-ty@kernel.org/
+[11] https://lore.kernel.org/all/20250515072724-mutt-send-email-mst@kernel.org/
+[12] https://lore.kernel.org/dri-devel/CABQX2QNQbO4dMq-Hi6tvpi7OTwcVfjM62eCr1OGkzF8Phy-Shw@mail.gmail.com/
+
+Philipp Stanner (6):
+  PCI: Remove hybrid devres nature from request functions
+  Documentation/driver-api: Update pcim_enable_device()
+  PCI: Remove pcim_request_region_exclusive()
+  PCI: Remove request_flags relict from devres
+  PCI: Remove redundant set of request funcs
+  PCI: Remove hybrid-devres hazzard warnings from doc
+
+ .../driver-api/driver-model/devres.rst        |   2 +-
+ drivers/pci/devres.c                          | 201 +++---------------
+ drivers/pci/iomap.c                           |  16 --
+ drivers/pci/pci.c                             |  42 ----
+ drivers/pci/pci.h                             |   3 -
+ 5 files changed, 32 insertions(+), 232 deletions(-)
+
 -- 
-2.43.0
+2.49.0
 
