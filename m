@@ -1,114 +1,195 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27EEF17548;
-	Fri, 16 May 2025 13:19:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F84911CAF;
+	Fri, 16 May 2025 13:19:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747401568; cv=none; b=RLFMSXw05F3Iu2PBgGFNiqQOk1kIreKEoqI2q0J7Inv0Ta0AJynUVRdumRpplyJYidoLIiivvjm0n0uGQ4pcZ5CYugFRsnf/lNNdzPZZAiKwDaKYr3cIbC+PpelaIqzOHdT87123OHYF73QSzxfuhHCtswB2BqsXhYzL15adUGQ=
+	t=1747401600; cv=none; b=AQqXsrOgAjX0XVy/ezCCUwDzsioJfXuxIHBS8qyedGqOBXU8qK+FK+lgNLdHOW9hNwprSLscLQhcqDOBfk2nGxSabc70hwRjtfvTAUfKKAptcfTw9DLT8rb1vfp1lOWkFnzdxZQq/Z3Y0Yf8Z/RBcGCX4LsRGEVjuh5n0BidrEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747401568; c=relaxed/simple;
-	bh=oaUy859dTcPr4O32A6D5WWt1R4OnjuyJMMmb5wlJIm8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RAphg8uhdTh8VFMXviIzKcOI437dFdakaPrh4nCPpkQLcFgjKqNeQx6Dwqb9JD8HexAHTJxoKQVDAp5Hyfxq9KfZBa40KYiWsracIfSmNW6t6xNZ+mZ3sMp/B6XO92eWld9XRmZUDouNXiqdkxYar0lJkx4Fk+WibjhHoKtwS0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iDb+IMC/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747401600; c=relaxed/simple;
+	bh=Zxq4lQIG5sIEJG3iSRSF3Y91Onwf6xfW2l+nu/OgvR4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZJCphhu3IjGeAa+WRBzBoQsW+FvSkfVAcbE7kXfsAq1vJ7HRzmEyGr4oF49YJLN7xINKMe+QfTk3Vj+PBRv0n5B66Zf09DlVV2XQrBmfXiFCq0/xby7447FW4VDpAee5XYtYrtrYjlaGyPKx0Lr6Cp1wjxHuZtnCD2wc1gW4AIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f7KYZOki; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iDb+IMC/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A561C4CEE4;
-	Fri, 16 May 2025 13:19:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f7KYZOki"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCCC7C4CEED;
+	Fri, 16 May 2025 13:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747401566;
-	bh=oaUy859dTcPr4O32A6D5WWt1R4OnjuyJMMmb5wlJIm8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iDb+IMC//aX/x5nhjvb58hALgb2f9WnP8dQdFi/IebqgY5NZyymEASPMa46QOmkWZ
-	 UwZIAvwWdTMFwlWSD1mbNEG3NbjSq/QjvKT13dtrEo1aUk2O8tRxHucWSK5dk6kThQ
-	 bipJC1UdM2t4QT3UqsmsOb3VzB/qCF3/JW9p5hVp3y4kRdiSUIZikQrfMyi1Xhvf4J
-	 d20/f+L6D11ww1wFQ0jhbLfou8JcteHWU5X5taApXcwEULk8fY38p2DN7OE5RJUhmU
-	 suyOC+HV2K0rQH8RccDoV8gFbBjEj6AK8VkT4BudkAqXTIsT8s3XdSfw+bo563odYv
-	 SVS86C9BWl1ow==
-Date: Fri, 16 May 2025 15:19:20 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Xin Li <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-	linux-acpi@vger.kernel.org, tglx@linutronix.de, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	peterz@infradead.org, jgross@suse.com, boris.ostrovsky@oracle.com,
-	rafael@kernel.org, lenb@kernel.org
-Subject: Re: [PATCH v1 2/3] x86/xen/msr: Fix uninitialized symbol 'err'
-Message-ID: <aCc7WG9eniyTCgHl@gmail.com>
-References: <20250512084552.1586883-1-xin@zytor.com>
- <20250512084552.1586883-3-xin@zytor.com>
- <aCYIblffvBGUuxWf@gmail.com>
- <30affad5-4f26-4e22-9d64-b8ece1199773@zytor.com>
+	s=k20201202; t=1747401599;
+	bh=Zxq4lQIG5sIEJG3iSRSF3Y91Onwf6xfW2l+nu/OgvR4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=f7KYZOkiciLVxL06Wz9xBn/s0o2ikDE83HLLpIFwkA3pI/YvVIC+hVNbD1Q0ZqvCe
+	 4YVwXxDzjCXKAZG6feMNdvJHw2lKynyuY0sZg79cYbCbdQ6JOMuNhsZRoPNOLmn25Y
+	 4PiM0cBxMLklZc7JjFsRkl4tL5Y3c3R27pyAdVHKghxQQfnkYoxSZjvnAT3ZZegrdt
+	 NyYl1p79htzJiUzSNhe+t2bfIiOpQ5ODH6N2z+pMysiij/t+E5vew9oVGJRSzxTGsM
+	 D4ntUuDXGqBPOUKYxhxsg2XTDC4HSIDhaipH94NDDk8U4tCoyGDafps7q23FlPNEh+
+	 iRbN9zb42gamQ==
+Message-ID: <01f97fcc-1b6a-41f3-8a62-67fac9f5bae0@kernel.org>
+Date: Fri, 16 May 2025 15:19:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <30affad5-4f26-4e22-9d64-b8ece1199773@zytor.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] ethernet: eswin: Document for eic7700 SoC
+To: weishangjuan@eswincomputing.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ richardcochran@gmail.com, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+ p.zabel@pengutronix.de, yong.liang.choong@linux.intel.com,
+ rmk+kernel@armlinux.org.uk, jszhang@kernel.org, inochiama@gmail.com,
+ jan.petrous@oss.nxp.com, dfustini@tenstorrent.com, 0x1207@gmail.com,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+Cc: ningyu@eswincomputing.com, linmin@eswincomputing.com,
+ lizhi2@eswincomputing.com
+References: <20250516010849.784-1-weishangjuan@eswincomputing.com>
+ <20250516011040.801-1-weishangjuan@eswincomputing.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <20250516011040.801-1-weishangjuan@eswincomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-* Xin Li <xin@zytor.com> wrote:
-
-> On 5/15/2025 8:29 AM, Ingo Molnar wrote:
-> > 
-> > * Xin Li (Intel) <xin@zytor.com> wrote:
-> > 
-> > > xen_read_msr_safe() currently passes an uninitialized argument err to
-> > > xen_do_read_msr().  But as xen_do_read_msr() may not set the argument,
-> > > xen_read_msr_safe() could return err with an unpredictable value.
-> > > 
-> > > To ensure correctness, initialize err to 0 (representing success)
-> > > in xen_read_msr_safe().
-> > > 
-> > > Because xen_read_msr_safe() is essentially a wrapper of xen_do_read_msr(),
-> > > the latter should be responsible for initializing the value of *err to 0.
-> > > Thus initialize *err to 0 in xen_do_read_msr().
-> > > 
-> > > Fixes: 502ad6e5a619 ("x86/msr: Change the function type of native_read_msr_safe()")
-> > > Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > > Closes: https://lore.kernel.org/xen-devel/aBxNI_Q0-MhtBSZG@stanley.mountain/
-> > > Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> > > ---
-> > >   arch/x86/xen/enlighten_pv.c | 5 ++++-
-> > >   1 file changed, 4 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-> > > index 3be38350f044..01f1d441347e 100644
-> > > --- a/arch/x86/xen/enlighten_pv.c
-> > > +++ b/arch/x86/xen/enlighten_pv.c
-> > > @@ -1091,6 +1091,9 @@ static u64 xen_do_read_msr(u32 msr, int *err)
-> > >   {
-> > >   	u64 val = 0;	/* Avoid uninitialized value for safe variant. */
-> > > +	if (err)
-> > > +		*err = 0;
-> > > +
-> > >   	if (pmu_msr_chk_emulated(msr, &val, true))
-> > >   		return val;
-> > > @@ -1162,7 +1165,7 @@ static void xen_do_write_msr(u32 msr, u64 val, int *err)
-> > >   static int xen_read_msr_safe(u32 msr, u64 *val)
-> > >   {
-> > > -	int err;
-> > > +	int err = 0;
-> > >   	*val = xen_do_read_msr(msr, &err);
-> > >   	return err;
-> > 
-> > So why not initialize 'err' with 0 in both callers, xen_read_msr_safe()
-> > and xen_read_msr(), and avoid all the initialization trouble in
-> > xen_do_read_msr()?
+On 16/05/2025 03:10, weishangjuan@eswincomputing.com wrote:
+> From: Shangjuan Wei <weishangjuan@eswincomputing.com>
 > 
-> Yeah, I should make the change in xen_read_msr() too.
+> Add ESWIN EIC7700 Ethernet controller, supporting
+> multi-rate (10M/100M/1G) auto-negotiation, PHY LED configuration,
+> clock/reset control, and AXI bus parameter optimization.
 > 
-> However xen_do_read_msr() should be implemented in a defensive way to
-> set *err properly as it's part of its return value.  Actually it was so,
-> but one of my previous cleanup patch removed it because err is no longer
-> passed to pmu_msr_chk_emulated().
+> Signed-off-by: Zhi Li <lizhi2@eswincomputing.com>
+> Signed-off-by: Shangjuan Wei <weishangjuan@eswincomputing.com>
 
-Maybe. It's up to Juergen though.
+Please use subject prefixes matching the subsystem. You can get them for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching. For bindings, the preferred subjects are
+explained here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
 
-Thanks,
 
-	Ingo
+> ---
+>  .../bindings/net/eswin,eic7700-eth.yaml       | 142 ++++++++++++++++++
+>  1 file changed, 142 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml b/Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml
+> new file mode 100644
+> index 000000000000..6cb9c109c036
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/eswin,eic7700-eth.yaml
+> @@ -0,0 +1,142 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/eswin,eic7700-eth.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Eswin EIC7700 SOC Eth Controller
+> +
+> +maintainers:
+> +  - Shuang Liang <liangshuang@eswincomputing.com>
+> +  - Zhi Li <lizhi2@eswincomputing.com>
+> +  - Shangjuan Wei <weishangjuan@eswincomputing.com>
+> +
+> +description: |
+
+Same comments apply as for all of your patches.
+
+> +  The eth controller registers are part of the syscrg block on
+> +  the EIC7700 SoC.
+> +
+> +properties:
+> +  compatible:
+> +    const: eswin,eic7700-qos-eth
+> +
+> +  reg:
+> +    minItems: 1
+> +    items:
+> +      - description: Base address and size
+> +      - description: Extension region (optional)
+
+How it can be optional? This is SoC. It is strictly defined, isn't it?
+
+> +
+> +  interrupt-names:
+> +    const: macirq
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  phy-mode:
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    enum: [mii, gmii, rgmii, rmii, sgmii]
+> +
+> +  id:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Controller instance ID
+
+No, drop. IDs are not allowed.
+
+> +
+> +  clocks:
+> +    minItems: 3
+> +    maxItems: 7
+
+No.
+
+I am supposed to repeat the same comments... So no.
+
+All my comments apply to all eswin patches. For driver, bindings,
+everything. I suggest to slow down and learn from one review.
+
+I finish review here.
+
+Best regards,
+Krzysztof
