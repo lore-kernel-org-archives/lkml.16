@@ -1,193 +1,124 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42870277022
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 17:42:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B078022B595
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 17:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747417371; cv=none; b=PuIfB6ULtnnu/35t4hwxy2rusCDFCcTRCCoerRN8PdAXblICaKClAcQvmAqZVvJIb8ycZJocpYcbHjXuEGgjn5vI6XTjsZpwfai5/5CeVyfZ4ruSCS/iRiBsIGfVIoAN16iTIUGF4r7a/1vJMIHx2PRqwkE42sOFaNQ9yt9Mw+0=
+	t=1747417395; cv=none; b=KmqvvWExaKa33F5eK4OOyE5pHT4njLbGb5Zbezy+3x4IVoDZ+otQZGk5OfkkCxBanRX6K6aD3r9eQai0A7G7GZ7cgPFTXj6DrwGyljrmUkaozgiQzlM/HFscNzLg2rnLI7HvOkdAX3/NgHBnbolSX0IkoFyR6kJ6Z4jadLlXAWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747417371; c=relaxed/simple;
-	bh=/oZWTLboJ1r1HwZnL8ol3rHmbO0GkMBVgO/nSs8EhQA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=GW2b7vEPe44207RlY5QXo8zDmwo08mpX94XZaFElbnYR8ypdjN2VvkzkZ7kaNUIbPsm6XUVcOWn5yAtmD47eicD4qr1Ikiktd5zzHE70vJq9NbShAA3UKElU2rpcBZ7sF/s0/SHkHj87vDBvnG2FHsYvFcUx+oIAVqe2NVnNaOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HVWo5UR8; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1747417395; c=relaxed/simple;
+	bh=sBay1aenEjXfkacn+ZY+Cr1OwhROHPoxGk23mUtmbX8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H4iXxWYyVfMLHJMSuSwG+Q/7xXZvd+cCHCzsUEc2nNN6Hx1JNiP7wBO+wG10ClnyZUJOTKoI+ps2DJ5PBD1rpCivCNk7Rd5EgYbvdI3TgcQYedGM7MyvxGBSBEWkCPWiKKGPbcDzkeaNWiLQJMcuepMwm1EslvWzHcZWoeUFHKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=g5G0G4u1; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HVWo5UR8"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30e78145dc4so1681438a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:42:49 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g5G0G4u1"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-30e542e4187so1796529a91.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:43:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747417369; x=1748022169; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UHtggF1Xmmx8sunRLPpEo5y2n3Fbz0jNKo8YthXyxlY=;
-        b=HVWo5UR8opSBCFI1dc6meoyTzedjbObtgTVC7ltLORi93kHV7ixtoQEMROus9pT0AX
-         TyF197cPYWhbksqBQIsqYBZ+0L6mWfDswI4sgOe8UEguzphY3grD5c0wDwmvENLA6Gn1
-         fRzhBwSVJn6aJj041vnfaDo/eZde1L7Qlmo9xyj7DU2n5cnaeJ2U/9JpvqHTAMKuWTeq
-         YZscX//icFQF0qWHdkjqF+zrRmfHRc9L+iyd6HQUqmZxzwypx4O5zqTwV4osA+wnwZd8
-         tljaUaYnsMoFa4EaR5kKIJHuiqwiQ/SFP33dUffo59CoPmm4dJ8GW/dwz6gNp5crU7Ha
-         8rWA==
+        d=chromium.org; s=google; t=1747417388; x=1748022188; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+KFX83QNItwP0IuJnpM+8MJlz755t87bEyDF8uRue2k=;
+        b=g5G0G4u1eTfA8MEoVGpWxpd+FWroIHC9MMRqy3UQr4kiDvpo0yC9WlACpp3B4f88PE
+         0ju9DvlYO1SZ9e2pG8c8oKDzN9MDXMSxBvtwF1WGbkG09uXmwDg2EAKAz5bcjcK0tt9e
+         T7/VyE0mPm+dWmdTCXKEREvmY+N1C3YGKGEk4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747417369; x=1748022169;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UHtggF1Xmmx8sunRLPpEo5y2n3Fbz0jNKo8YthXyxlY=;
-        b=QLbQzJMpbm4mBojPjydtFn3c1DTAWEGunw/q2ZPONcNONLTI5ckS5750tHTrUknEMp
-         xCrLvx5Av9sgY8BRDEwDEqvaYLTEtPdVXW2rtOMwpmrviPiVjsLHJp+rHLqAodL8TNCJ
-         rsjHZuAuZdZZrm6qaCdqQQ2mV8RrWzNozsDU7ts8PuFVNMdjh7onwz0HnIRCv/yBpu70
-         cQ/Q2zZH4wF5tQsHhHW4W0GrPTFfPVrKco/sf2b8/wvZNY176JN65QQoS9K+fB/vLi+4
-         FPIQOuJIQ+q1cp4yCOYYphHp+ClaDrT1Bk7gTDTnQUX5Yo5gpRbf9SXDivrIw3mAbd9/
-         gHDw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXD7kKf4AQ/IvyNDGJ3WeFNKprhRNKw9OQkfQH2J/YSAf37RQR2tqLOE5rbudYaJPZOTVHg5V9dnaezPY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNd3IeedzZk6W+bVCObsmDOTeVhERYLaA0GgxMVdGPKR9uA9oN
-	/TdplGZRu87qUEqo6rkuW7p4Px2Thw85dClVW5MLRPTJEuO2223ADwgKSNgF2CBHrRHWypzOJpc
-	nA6ZE7MfLuAEAUrCKutlhM6LaSw==
-X-Google-Smtp-Source: AGHT+IFZZue4eVCNyGlBlVu3FOMYDdiN/+lNxD2W2guGukj7N1aj09nrbw9YDmV/sDzoeyH8oFlR4vBN8C7KtAQknw==
-X-Received: from pjyp15.prod.google.com ([2002:a17:90a:e70f:b0:2ef:d283:5089])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:4b0f:b0:2fe:b907:562f with SMTP id 98e67ed59e1d1-30e7d527e41mr6797759a91.14.1747417369222;
- Fri, 16 May 2025 10:42:49 -0700 (PDT)
-Date: Fri, 16 May 2025 10:42:47 -0700
-In-Reply-To: <6825f0f3ac8a7_337c392942d@iweiny-mobl.notmuch>
+        d=1e100.net; s=20230601; t=1747417388; x=1748022188;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+KFX83QNItwP0IuJnpM+8MJlz755t87bEyDF8uRue2k=;
+        b=Fe0uixW3u+p0oMrUbaI9kFN8LSsFozYu2unIvYy3MyttYNxgEB9ktQNS/kPc9ke/kw
+         TJQ7SxvFyLEvLh+yY8R3Aez65sisTap0tdfnWuNjAqGE4KXKJp+uEE9EboSd4Y8ulvqG
+         Mzi/hGBjSxbSYuDOdkerXIB2zCtwR9cnuC79gbqmBpnqO3ZSL4HSsQpfBXYt3e1LdJ72
+         TGfEqW2uic9VjGwYE49mRQIJ6suE0CfqUMhme92VdwJ8JFHjBVn5RKuow9HXTFFzwFuW
+         pYY3ovs2UuN7+gr6ihFvcrS2FbJhfVzQe5P+hPGYAM5PkGghjzCG9EiXjLBCFgNmwcXR
+         RzBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUf/AlXJ+CKJzH6W5uUa3OL9guJWZlHRVBzi3V+LYvC3NMzoY6S1M4jXpWltrWcxInpgFUIZeq8SCnCfVM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHQlYu/XyoP7aHngBVBT7b/nNI+n4ET9Z2AlrrfBo+NoZ0MzGL
+	UkBL98VDoHJwtHPAyurBnbUmsY6ef6FckQZ0sqN1rzeRqVd5G6BE5te4o59ZAXc/ghsbOaLPQQ+
+	MAUM=
+X-Gm-Gg: ASbGncvG62KlAUtQgbfXSaQUz6b8e136Ay4da376+Iwxp1AxCdLPWt2qQMKeqoxPtoF
+	XBb9/kTIbxieCrIyo8S6Lkk6GO7P5SWkuJz/LZo9t5Aqlqv+//WYAHTHfRhkdOek24Klbx0LPk9
+	4NAETrq7o1MS8JwjZcOFY8o1kt8xFTHQ62565DiAgu8cAfo9ED+kkejnZZfg92tMdjm7iy2y8RY
+	Y2hvn9NMubWPQjK9Oc9MB1k0CauDyAY9HL7/SthNONeZ6yAVjuZGNq1qlg6xKO4faNPC6GqQMBD
+	CaxiABVdalRQXxzQ9+JVMA3N8Ph5S+dx8ue6lG9Ep6v01BrNubzwLuhMqiD9ocCSUGb4ye+Rjgy
+	Ak268DlOcSRO51Px63Ss=
+X-Google-Smtp-Source: AGHT+IFP6v9PwzmDfuWBuEezudX2s5gibQ6Z6LxElR52J30FLGXHxgl6bbKcezWP3rDDGKftGVTysw==
+X-Received: by 2002:a17:90b:38c5:b0:30e:9aa2:6d35 with SMTP id 98e67ed59e1d1-30e9aa26ef5mr1958030a91.0.1747417387886;
+        Fri, 16 May 2025 10:43:07 -0700 (PDT)
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com. [209.85.210.175])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e334390b7sm5992024a91.19.2025.05.16.10.43.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 May 2025 10:43:05 -0700 (PDT)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-74248a3359fso2650130b3a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:43:05 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW8mDBIeWuB+qMwhHownQDZgSwEedAJSoBPrJ//VdPQ3Zoi0IWYJdqX8BKxQ5AGE6q6Mb/bMrPKawbkswg=@vger.kernel.org
+X-Received: by 2002:a17:903:3d0f:b0:231:7e15:f7a with SMTP id
+ d9443c01a7336-231d453469cmr47600355ad.27.1747417384710; Fri, 16 May 2025
+ 10:43:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <65afac3b13851c442c72652904db6d5755299615.1747264138.git.ackerleytng@google.com>
- <6825f0f3ac8a7_337c392942d@iweiny-mobl.notmuch>
-Message-ID: <diqzmsbcfo4o.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH v2 03/51] KVM: selftests: Update guest_memfd_test for
- INIT_PRIVATE flag
-From: Ackerley Tng <ackerleytng@google.com>
-To: Ira Weiny <ira.weiny@intel.com>, kvm@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org
-Cc: aik@amd.com, ajones@ventanamicro.com, akpm@linux-foundation.org, 
-	amoorthy@google.com, anthony.yznaga@oracle.com, anup@brainfault.org, 
-	aou@eecs.berkeley.edu, bfoster@redhat.com, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, catalin.marinas@arm.com, chao.p.peng@intel.com, 
-	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com, 
-	dmatlack@google.com, dwmw@amazon.co.uk, erdemaktas@google.com, 
-	fan.du@intel.com, fvdl@google.com, graf@amazon.com, haibo1.xu@intel.com, 
-	hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
-	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	thomas.lendacky@amd.com, usama.arif@bytedance.com, vannapurve@google.com, 
-	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
-	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
-	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
-	yuzenghui@huawei.com, zhiquan1.li@intel.com
+MIME-Version: 1.0
+References: <20250515211110.8806-1-robdclark@gmail.com>
+In-Reply-To: <20250515211110.8806-1-robdclark@gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Fri, 16 May 2025 10:42:53 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VhOhGHnHZKBmzFKAFG-WnGhWRyqPm=FwK5mxUJ-ChWGQ@mail.gmail.com>
+X-Gm-Features: AX0GCFsvr22QrX8yE42n8nz9bH4x0JASq7vWnUdqtPzSrItPo7-Ymzm-4RYVtfc
+Message-ID: <CAD=FV=VhOhGHnHZKBmzFKAFG-WnGhWRyqPm=FwK5mxUJ-ChWGQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/panel-edp: Add BOE NV133WUM-N61 panel entry
+To: Rob Clark <robdclark@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
+	Rob Clark <robdclark@chromium.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ira Weiny <ira.weiny@intel.com> writes:
+Hi,
 
-> Ackerley Tng wrote:
->> Test that GUEST_MEMFD_FLAG_INIT_PRIVATE is only valid when
->> GUEST_MEMFD_FLAG_SUPPORT_SHARED is set.
->> 
->> Change-Id: I506e236a232047cfaee17bcaed02ee14c8d25bbb
->> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
->> ---
->>  .../testing/selftests/kvm/guest_memfd_test.c  | 36 ++++++++++++-------
->>  1 file changed, 24 insertions(+), 12 deletions(-)
->> 
->> diff --git a/tools/testing/selftests/kvm/guest_memfd_test.c b/tools/testing/selftests/kvm/guest_memfd_test.c
->> index 60aaba5808a5..bf2876cbd711 100644
->> --- a/tools/testing/selftests/kvm/guest_memfd_test.c
->> +++ b/tools/testing/selftests/kvm/guest_memfd_test.c
->> @@ -401,13 +401,31 @@ static void test_with_type(unsigned long vm_type, uint64_t guest_memfd_flags,
->>  	kvm_vm_release(vm);
->>  }
->>  
->> +static void test_vm_with_gmem_flag(struct kvm_vm *vm, uint64_t flag,
->> +				   bool expect_valid)
->> +{
->> +	size_t page_size = getpagesize();
->> +	int fd;
->> +
->> +	fd = __vm_create_guest_memfd(vm, page_size, flag);
->> +
->> +	if (expect_valid) {
->> +		TEST_ASSERT(fd > 0,
->> +			    "guest_memfd() with flag '0x%lx' should be valid",
->> +			    flag);
->> +		close(fd);
->> +	} else {
->> +		TEST_ASSERT(fd == -1 && errno == EINVAL,
->> +			    "guest_memfd() with flag '0x%lx' should fail with EINVAL",
->> +			    flag);
->> +	}
->> +}
->> +
->>  static void test_vm_type_gmem_flag_validity(unsigned long vm_type,
->>  					    uint64_t expected_valid_flags)
->>  {
->> -	size_t page_size = getpagesize();
->>  	struct kvm_vm *vm;
->>  	uint64_t flag = 0;
->> -	int fd;
->>  
->>  	if (!(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(vm_type)))
->>  		return;
->> @@ -415,17 +433,11 @@ static void test_vm_type_gmem_flag_validity(unsigned long vm_type,
->>  	vm = vm_create_barebones_type(vm_type);
->>  
->>  	for (flag = BIT(0); flag; flag <<= 1) {
->> -		fd = __vm_create_guest_memfd(vm, page_size, flag);
->> +		test_vm_with_gmem_flag(vm, flag, flag & expected_valid_flags);
->>  
->> -		if (flag & expected_valid_flags) {
->> -			TEST_ASSERT(fd > 0,
->> -				    "guest_memfd() with flag '0x%lx' should be valid",
->> -				    flag);
->> -			close(fd);
->> -		} else {
->> -			TEST_ASSERT(fd == -1 && errno == EINVAL,
->> -				    "guest_memfd() with flag '0x%lx' should fail with EINVAL",
->> -				    flag);
->> +		if (flag == GUEST_MEMFD_FLAG_SUPPORT_SHARED) {
->> +			test_vm_with_gmem_flag(
->> +				vm, flag | GUEST_MEMFD_FLAG_INIT_PRIVATE, true);
+On Thu, May 15, 2025 at 2:11=E2=80=AFPM Rob Clark <robdclark@gmail.com> wro=
+te:
 >
-> I don't understand the point of this check.  In 2/51 we set 
-> GUEST_MEMFD_FLAG_INIT_PRIVATE when GUEST_MEMFD_FLAG_SUPPORT_SHARED is set.
+> From: Rob Clark <robdclark@chromium.org>
 >
-> When can this check ever fail?
+> Add an eDP panel for BOE NV133WUM-N61, which appears to be a 3rd panel
+> option on the lenevo x13s laptop.
 >
-> Ira
+> edid:
+> 00 ff ff ff ff ff ff 00 09 e5 64 09 00 00 00 00
+> 16 1e 01 04 a5 1d 12 78 03 55 8e a7 51 4c 9c 26
+> 0f 52 53 00 00 00 01 01 01 01 01 01 01 01 01 01
+> 01 01 01 01 01 01 74 3c 80 a0 70 b0 28 40 30 20
+> 36 00 1e b3 10 00 00 1a 5d 30 80 a0 70 b0 28 40
+> 30 20 36 00 1e b3 10 00 00 1a 00 00 00 fe 00 42
+> 4f 45 20 48 46 0a 20 20 20 20 20 20 00 00 00 fe
+> 00 4e 56 31 33 33 57 55 4d 2d 4e 36 31 0a 00 7d
+>
+> datasheet: https://datasheet4u.com/pdf-down/N/V/1/NV133WUM-N61-BOE.pdf
+>
+> v2: Actually get the panel name correct in the table
+>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  drivers/gpu/drm/panel/panel-edp.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-In 02/51, GUEST_MEMFD_FLAG_INIT_PRIVATE is not set by default,
-GUEST_MEMFD_FLAG_INIT_PRIVATE is set as one of the valid_flags.
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
-The intention is that GUEST_MEMFD_FLAG_INIT_PRIVATE is only valid if
-GUEST_MEMFD_FLAG_SUPPORT_SHARED is requested by userspace.
+Pushed to drm-misc-next
 
-In this test, the earlier part before the if block calls
-test_vm_with_gmem_flag() all valid flags, and that already tests
-GUEST_MEMFD_FLAG_SUPPORT_SHARED individually.
-
-Specifically if GUEST_MEMFD_FLAG_SUPPORT_SHARED is set, this if block
-adds a test for when both GUEST_MEMFD_FLAG_SUPPORT_SHARED and
-GUEST_MEMFD_FLAG_INIT_PRIVATE are set, and sets that expect_valid is
-true.
-
-This second test doesn't fail, it is meant to check that the kernel
-allows the pair of flags to be set. Hope that makes sense.
+[1/1] drm/panel-edp: Add BOE NV133WUM-N61 panel entry
+      commit: 3330b71caff6cdc387fdad68a895c9c81cc2f477
