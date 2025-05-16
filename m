@@ -1,134 +1,141 @@
-Received: from e240-7.smtp-out.eu-north-1.amazonses.com (e240-7.smtp-out.eu-north-1.amazonses.com [23.251.240.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E196214A60
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 01:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.240.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8DE42048
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 01:15:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747358063; cv=none; b=TbmBAlSeC0g+l8WXBpCDkg4y4zKP7YfOYtm+QdzKkuGdMay0jRMtuCCy+O1tm3cF3TyZQO6/7Rfo0gekQ3RLEzDAs6PGQY+yuIyAeVtrVyxQIO8iVmzoACNKf+rh8em0RQwQDKIJax/b0pbSL3g0Q1EfWcvWwQA3qwhk+503s0Y=
+	t=1747358147; cv=none; b=XXfHLn+DsRAus/Q2bepeqa16eDi1RV5l4uBPHrghcjB8fItFT106b54Z9ksiIrjiHahTp2ognCxXKAetS7wohiEBCS0uGOI7B4Zg+RZruHlY0Kb1cInZaJXrICIMQd1DCiUyRz7d8v1n2RlI8RbbVgItPYJIrdj2jHM/Po99vZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747358063; c=relaxed/simple;
-	bh=VUd+ALkXjEUHrsEEy0a1rDVd+8FPx0NlAjh/ShtBrls=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=msQr/Juh2Gx/0WXFyE0wktOHv0rUu3mwPTLCa3SiZeU7+BB6O2BxXlae7bxkcuWnlPvmkr+aPt+G6HOXZ6DgK53g9kIhb3Rn0OleSLlpSGuBa0NdZ8FPomxYd/KUGXwvdCob+tgGhBKDTN0peGDKgGe4FcpU1DBqpE4YglnooLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com; dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b=YPrKiY0C; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=0NmR6uNT; arc=none smtp.client-ip=23.251.240.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com
+	s=arc-20240116; t=1747358147; c=relaxed/simple;
+	bh=NIzlTsdcB+N3toFqpEFnhBW4WHNKbcmfhgrOkvMx7bE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=SHtpW/uM/cazeSBviXmQQNRtNdm0MriY08C6Y2nK6/QsOuNstj8u6Z9eekwY3JDCoraWxRil0PSusL0JQJjSHzQmwec86slp1opR5EBtIwWoV4rdX0oumAT3W5iYT5/UPbV8Yt3II7RL7jErio2/E+biGipDArJ4toLZwaAjTF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yasT5pOt; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b="YPrKiY0C";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="0NmR6uNT"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=iuunfi4kzpbzwuqjzrd5q2mr652n55fx; d=goosey.org; t=1747358059;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	bh=VUd+ALkXjEUHrsEEy0a1rDVd+8FPx0NlAjh/ShtBrls=;
-	b=YPrKiY0CLoWCAK8iiwzxPgmKZvIr8cTrY36+ONZEA59NY8CMeSqIcOZZ6gvVSTEB
-	bILsmtmJnPSW6g27IiSsIQFZy15EN8RnJzBnFlJiJP69PRzIjtf/YZSax918AyjyilB
-	mgYUGmpBTExUh/KnTZnmvdG9KQ3IoP3yK1KLE37nT7OGRFESLvnCMe+Uw+Q5oMI3Dv1
-	9q/SVVnDZKiuHLp89tZ9fENpHaxuNowGFZ+DzVIAj9SRSs0dky72jApCWLpSHaJ21rF
-	qxqa/9HgVKIQGOSxqPsH4rYmPY7kPbgAYzWpnd7FXL8zrJKplT0/AbsJmmlRCDO9wib
-	JFQAvfETYw==
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=bw45wyq3hkghdoq32obql4uyexcghmc7; d=amazonses.com; t=1747358059;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-	bh=VUd+ALkXjEUHrsEEy0a1rDVd+8FPx0NlAjh/ShtBrls=;
-	b=0NmR6uNTcFoPjlOD5n8sjc36Z6wGIbR9+E7z0eMQ1+UJV9+T7wTQgwOxz5QsRQdh
-	foytB/yu0T8QOQrHEoEh1Tpks5Eu9NZtzBuSi/II5QI/Hh6zOyH7Z9rrsopiztAgG11
-	Zj04L4uU3YJlrOuSUg5KDksdOGuMZFjgdyhTFcxA=
-X-Forwarded-Encrypted: i=1; AJvYcCXOlw2EDWunfLQvf+7gtKOP6/N8/Gh/EMMGqJKVRD/U+fv7fhaM2YpCmxJyPm9T/xujluhMX5zm1aeodeI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBfv/94AYXQ6JW6HpXqKwS5uGWQZPHN2LGwXWPfFX2HmLj01QS
-	lU5sg+NP/pY0/5MVwMjqEWm6nQbleFtd4Dq3K0L0TnWcdN1SHO0vWmgVZ9iurw3ZdQVQB7rhTLW
-	S3oWjYhh9Q9GYOF00Wnp/n8R6RvZWey8=
-X-Google-Smtp-Source: AGHT+IGFxTYweNvp4VT3A9C0IdSu2acn1zl32ihrjG5FOzDgKxK/ZBImr/Ij0kEq54w7X4X0HcZOS9/KGvV+5ZDhm9A=
-X-Received: by 2002:a17:902:f70e:b0:22e:4db0:6b2 with SMTP id
- d9443c01a7336-231d438a132mr16656415ad.9.1747358056752; Thu, 15 May 2025
- 18:14:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yasT5pOt"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30ab4d56096so1886095a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 18:15:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747358145; x=1747962945; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XVMuD/PalT/pmzH7BG3QdDQAVO8SDVrpqfTHUU96orc=;
+        b=yasT5pOtkKZ2HIA+K53Sqk6H4Ev8CXGSUQ58YSHc821Ly+j4DoAPt9SguA4b+QGp7p
+         3kXm3LYhtjpsz+pRT6dskwUlHoo1nU+BtBUHdivyiBqYR7IeWMld0yiWyG63qXqOkZim
+         PpwHdxjrSeV8Se24vrlRbQl/1p1HvizesDBX++ds8cl2eg+nE3NQ7WiutdmQSHRq2hY0
+         2obLDB+RR2cz4uNHhrVhhkLrbEqcVkJA8sRydxDA7reF+FlstnY4L89fNTYBN5JyZAC6
+         UqRO7Q2G0L1M8bHS91dmzw7fnyphVs0p5QNOIg3d2kM7AqpoFLvxsBEjWlJETHO+BgaB
+         iAvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747358145; x=1747962945;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XVMuD/PalT/pmzH7BG3QdDQAVO8SDVrpqfTHUU96orc=;
+        b=epQ7swP2nZp7Dyyp1c+aFuXMBGOHkVWKFr4XPAkhR8rogju73Jl/UGnoB1adbK7emV
+         l2KyFkVRxQvs10yKb8WalweYyVM5TGL7i8G1+9DyfhAOETbaGlP4LuFR18cJPOdlBmBS
+         x7Nm92rD100X5dWnxqPe1PBq1J+0P6+0OR/pw3QxjJkm8Zy/U1WN2A2sU/XCIFB6dKZP
+         I7ujjKFqnq3YdngeHmmhE+cMrawlsigE3yScaANuiyaObtdjsdcdpUAYQ0zaOkVB0QDc
+         pxDxW5I39+8adws2kFYfydYTm0+J84SW8tknLcYegJP/uv/ls9EiPMcKFoYh94qpzOyu
+         jY/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWb/Wu95W4GaJJf5nsHG0f72KLEVj/YM1YHmaMHMIYHA3bUclbKUQDEIPX/HKDDvdrtNQagea0OYw+jZp4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+Gy6+U7N+q9u5uMTfvw5Zm49NGraLNWxEe7ri1u/+j87t3/Sb
+	9ta17ENm7LHTUI00ycGyEw4EzBK97MDZ73frxEN0SJmp1SMW+RDtcHZrtC4J+2IFPxyEkWzvetL
+	dZ5RC7g==
+X-Google-Smtp-Source: AGHT+IG5J9s2NMDhY7/8A4O+MyMGUN6e8x3str2oF1VXVAVtOy4jEWK/Fd7BwjZNXFkmEs5DGaZLrHwGgt0=
+X-Received: from pjyp5.prod.google.com ([2002:a17:90a:e705:b0:30e:7783:edb6])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3905:b0:30e:6a25:e4e6
+ with SMTP id 98e67ed59e1d1-30e7d5acafcmr1469988a91.22.1747358145046; Thu, 15
+ May 2025 18:15:45 -0700 (PDT)
+Date: Thu, 15 May 2025 18:15:43 -0700
+In-Reply-To: <e12abcca-b7b4-404d-b379-8636e5b68813@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CAPGyJDMv-N3HkdV4znQg=_i2owE2sbnRhzFem_Uv_15GjADBFQ@mail.gmail.com>
- <2025051301-projector-earlobe-9542@gregkh>
-In-Reply-To: <2025051301-projector-earlobe-9542@gregkh>
-From: Ozgur Kara <ozgur@goosey.org>
-Date: Fri, 16 May 2025 01:14:19 +0000
-X-Gmail-Original-Message-ID: <CADvZ6Eo+vBCCpygcoh2BRJwZzfK3bEUqyprX3RUxCAY1MjpOBg@mail.gmail.com>
-X-Gm-Features: AX0GCFufAia8Y4u-CiYf_PQFqdt3f6c74Sjt3Xj2TPz1il-2Ss_PKQ7KTXUBc_A
-Message-ID: <01100196d6a80a26-64ce1517-e29e-441c-b3e1-3c73f62a41ea-000000@eu-north-1.amazonses.com>
-Subject: Re: [PATCH] staging: rtl8723bs: fix spacing around '+' in rtw_cmd.c
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Tanav Chinthapatla <tanavc01@gmail.com>, linux-staging@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Feedback-ID: ::1.eu-north-1.jZlAFvO9+f8tc21Z4t7ANdAU3Nw/ALd5VHiFFAqIVOg=:AmazonSES
-X-SES-Outgoing: 2025.05.16-23.251.240.7
+Mime-Version: 1.0
+References: <20250513203803.2636561-1-sohil.mehta@intel.com>
+ <20250513203803.2636561-2-sohil.mehta@intel.com> <aCSljsvI0A-HC_DT@google.com>
+ <e12abcca-b7b4-404d-b379-8636e5b68813@intel.com>
+Message-ID: <aCaRvwnkXf07Mtue@google.com>
+Subject: Re: [PATCH v6 1/9] x86/fred, KVM: VMX: Pass event data to the FRED
+ entry point from KVM
+From: Sean Christopherson <seanjc@google.com>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Tony Luck <tony.luck@intel.com>, Zhang Rui <rui.zhang@intel.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Andrew Cooper <andrew.cooper3@citrix.com>, 
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-edac@vger.kernel.org, kvm@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-Greg KH <gregkh@linuxfoundation.org>, 13 May 2025 Sal, 09:41 tarihinde
-=C5=9Funu yazd=C4=B1:
->
-> On Tue, May 13, 2025 at 01:53:20AM -0400, Tanav Chinthapatla wrote:
-> > Hi,
-> >
-> > This patch fixes a checkpatch style issue in the rtl8723bs driver by
-> > correcting spacing around a '+' operator.
-> >
-> > The patch is attached to this email.
+On Wed, May 14, 2025, Sohil Mehta wrote:
+> On 5/14/2025 7:15 AM, Sean Christopherson wrote:
+> > Compile tested only...
+> > 
+> 
+> No worries. I'll test it out. I am assuming you want this patch to go as
+> part of this series.
 
-Hello,
+Yes please.  I can also post it separately, but that seems unnecessary.
 
-I dont think kernel developers will patch email additional files but
-try this method.
+> > --
+> > From: Sean Christopherson <seanjc@google.com>
+> > Date: Wed, 14 May 2025 07:07:55 -0700
+> > Subject: [PATCH] x86/fred: Provide separate IRQ vs. NMI wrappers for "entry"
+> >  from KVM
+> > 
+> > Provide separate wrappers for forwarding IRQs vs NMIs from KVM in
+> > anticipation of adding support for NMI source reporting, which will add
+> > an NMI-only parameter, i.e. will further pollute the current API with a
+> > param that is a hardcoded for one of the two call sites.
+> > 
+> > Opportunistically tag the non-FRED NMI wrapper __always_inline, as the
+> > compiler could theoretically generate a function call and trigger and a
+> > (completely benign) "leaving noinstr" warning.
+> > 
+> 
+> If this is really a concern, wouldn't there be similar semantics in
+> other places as well?
 
-Fix this file you are looking at with checkpatch.pl script,
+There are, e.g. the stubs in include/linux/context_tracking_state.h and many
+other places.  It looks ridiculous, but the compiler will generate RET+CALL for
+literal nops if the right sanitizers are enabled.  E.g. see commit
+432727f1cb6e ("KVM: VMX: Always inline to_vmx() and to_kvm_vmx()").
 
-then run add this file to your git repo command: git add file.c
-and run a commit command: git commit -s -m "[PATCH] staging: x x"
-finally, run patch command: git format-patch -1
+> > @@ -70,14 +71,26 @@ __visible void fred_entry_from_user(struct pt_regs *regs);
+> >  __visible void fred_entry_from_kernel(struct pt_regs *regs);
+> >  __visible void __fred_entry_from_kvm(struct pt_regs *regs);
+> >  
+> > -/* Can be called from noinstr code, thus __always_inline */
+> > -static __always_inline void fred_entry_from_kvm(unsigned int type, unsigned int vector)
+> > +/* Must be called from noinstr code, thus __always_inline */
+> > +static __always_inline void fred_nmi_from_kvm(void)
+> >  {
+> >  	struct fred_ss ss = {
+> >  		.ss     =__KERNEL_DS,
+> > -		.type   = type,
+> > +		.type   = EVENT_TYPE_NMI,
+> > +		.vector = NMI_VECTOR,
+> > +		.nmi    = true,
+> > +		.lm     = 1,
+> > +	};
+> > +
+> > +	asm_fred_entry_from_kvm(ss);
+> > +}
+> > +
+> 
+> The original code uses spaces for alignment. Since we are modifying it,
+> I am thinking of changing it to tabs.
 
-in the end, it gives you a file called 0001-**.patch file and you can
-literally email this file content here,
-maybe if you look at the other patch emails sent they contain lines like
-
-changed, insertions, deletions
-foo
-bar
-end with diff version like for example 2.39.5.
-
-Regards
-
-Ozgur
-
->
->
-> Hi,
->
-> This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-> a patch that has triggered this response.  He used to manually respond
-> to these common problems, but in order to save his sanity (he kept
-> writing the same thing over and over, yet to different people), I was
-> created.  Hopefully you will not take offence and will fix the problem
-> in your patch and resubmit it so that it can be accepted into the Linux
-> kernel tree.
->
-> You are receiving this message because of the following common error(s)
-> as indicated below:
->
-> - Your patch was attached, please place it inline so that it can be
->   applied directly from the email message itself.
->
-> - Your email was sent in HTML format, which is rejected by the mailing
->   lists and does not work for kernel development.
->
-> If you wish to discuss this problem further, or you have questions about
-> how to resolve this issue, please feel free to respond to this email and
-> Greg will reply once he has dug out from the pending patches received
-> from other developers.
->
-> thanks,
->
-> greg k-h's patch email bot
->
->
->
+Oof, yeah, definitely do that.
