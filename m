@@ -1,140 +1,68 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A231C282E1
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:37:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CE422D79D;
+	Fri, 16 May 2025 08:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747384655; cv=none; b=W4/vlh7jjv1vNdIt++nU2X60O3aQ9B50PwqOIpq2eaAjvB/JaCX6JtlV7194FIH2WExl/MMx3n+LzlyLnuGwbng8Vp1YQXjS/J/PMJdL9FyoZ1VEBx+ne/JITVDVZNTqSpg9rn/5K1wTzyzPAH2yB+fXR1GdMimCTBDX270tRuc=
+	t=1747384763; cv=none; b=rnW5zC+pn+calR8EA6MAQWyzDGmlwpfG5z5XzZU0z46a/WrfQH0DfCNvdgmXCm9PRDxyvdQy9Nzay46UGfpbQOmreFFTWb3jPSVTCbEXrrU5q/Lz+5IY6MELNwx2pwppL9ljgz1ormDd6JYT6t9e0XGsD3rU+vut13IVUtvXjH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747384655; c=relaxed/simple;
-	bh=fi7qBQVzRR/BDXaQCkUxtll5IWUl9/nKV++lPsLDtZQ=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=a9K4427of+2JJGi8d+2coli4r5DywO/dcRrgjJiQOhq7DJ0PSOLd9jPX5faCXNee9S8ywtiHYpfGxkUM5A0plTdmZvkboDKMMzMo7BEmTFbmXqraAIYMYX3TUm7TGeZkvuK2v5iUZZTFubP//qWNTbxqXAh5x6SR6f8J/a51GhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=VY6vauHw; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1747384763; c=relaxed/simple;
+	bh=H0odFVdYFn4C9hDrXHlEI4anEVr44q9kFLG4xs2B2pA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NdMF99yDQ59gnYYvA9OMAzEzN+y/3y9VzZfsZ/O1RxKzwag4wiHcp3xLhSVS+we0VBwHDcI0HpCIdT9Z7TgRJ5E+YBYICY9PhAMZk0pLQvTEu97E9k8w+klW8jMmaYst8IEl1jfKTJZR3IvZyIl2bvwGXHvAkHBYVGqF1uAmfNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M5/tRmMQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VY6vauHw"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250516083724epoutp0172ecd7822acefab5da2412f9b686f0a5~-9ROaW2h63199431994epoutp01z
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:37:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250516083724epoutp0172ecd7822acefab5da2412f9b686f0a5~-9ROaW2h63199431994epoutp01z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1747384645;
-	bh=4Zhu/vBMgvVq9L8aEv9dFQUEhIuLX61Uo6B2T4FP0rQ=;
-	h=From:To:Subject:Date:References:From;
-	b=VY6vauHwa5U9PyfKXdlk9vquDD00fnqFsuIhWrnH7SMEbZ2W2CJSuV0RqUODVSPXj
-	 fDNgzVFiRpP1ubiUkfB1iYDIW4BaIqFegfHtjUxTgM90lIjcS0l0oAgfCoMx2cz8/j
-	 fN7Sugzi7y8vZ1rBkE8NceAVOKnoEn7EMXO3ZD4E=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250516083724epcas5p4e69fbb3781dec4dabd3d5811f4184ca7~-9RNveLRe2035120351epcas5p4J;
-	Fri, 16 May 2025 08:37:24 +0000 (GMT)
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4ZzL6r1h0Vz6B9mB; Fri, 16 May
-	2025 08:37:24 +0000 (GMT)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250516083723epcas5p216a21ffb81631d35f0a12f7a583ea248~-9RNeGMEZ1166711667epcas5p2C;
-	Fri, 16 May 2025 08:37:23 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250516083723epsmtrp1dfd1976faf326d98147978e81e3b387b~-9RNdRYxX1472814728epsmtrp1K;
-	Fri, 16 May 2025 08:37:23 +0000 (GMT)
-X-AuditID: b6c32a28-460ee70000001e8a-d5-6826f9430553
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	76.4E.07818.349F6286; Fri, 16 May 2025 17:37:23 +0900 (KST)
-Received: from hzsscr.. (unknown [109.120.22.104]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250516083723epsmtip12f72bf26ad708cadebac3e7b790a3275~-9RMrqrIA1581115811epsmtip11;
-	Fri, 16 May 2025 08:37:23 +0000 (GMT)
-From: "ping.gao" <ping.gao@samsung.com>
-To: alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org,
-	James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
-	peter.wang@mediatek.com, minwoo.im@samsung.com,
-	manivannan.sadhasivam@linaro.org, chenyuan0y@gmail.com,
-	ping.gao@samsung.com, cw9316.lee@samsung.com, linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: ufs: mcq: delete ufshcd_release_scsi_cmd in
- ufshcd_mcq_abort
-Date: Fri, 16 May 2025 16:38:12 +0800
-Message-Id: <20250516083812.3894396-1-ping.gao@samsung.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M5/tRmMQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E924FC4CEED;
+	Fri, 16 May 2025 08:39:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747384760;
+	bh=H0odFVdYFn4C9hDrXHlEI4anEVr44q9kFLG4xs2B2pA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M5/tRmMQfeFyvXdfGzyzX03b7n8Mov6N0Sw6gXe/vg9/jibSILlWrFOkwhtEz9AnB
+	 LsLg3IENV7KG6wuZO6oKxlIbBoGYZaiTBcBv2O2Sh0OI/TGFbPXJuJvQTJxjEU4Nez
+	 Muy4x+FZYzReJ1YKgd6KzTu4jZb5lZieAwaF7+sk+4emhqyfIRj+ZTy8s644TfJBgy
+	 Y9kQ5XfKymMhRkb9dlGyK80TCfmOKvaArz0+BgmWMjWvNOG3M8KMekchZGK5clMHz1
+	 C7vQdgKMUFj71IndKSLTy5xzDlmUBxpW0bg1FzhkjW3ucJELEG4h2M6N3/f0NqGPOJ
+	 ogVF1F492nqUQ==
+Date: Fri, 16 May 2025 10:39:09 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Ying Huang <huang.ying.caritas@gmail.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v8 3/3] rust: platform: allow ioremap of platform
+ resources
+Message-ID: <aCb5rTrg-OmlB1Cq@pollux>
+References: <20250509-topics-tyr-platform_iomem-v8-0-e9f1725a40da@collabora.com>
+ <20250509-topics-tyr-platform_iomem-v8-3-e9f1725a40da@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCLMWRmVeSWpSXmKPExsWy7bCSnK7zT7UMgz3fTCwezNvGZvHy51U2
-	i2kffjJbvJyxlNlixqk2VouN/RwWl3fNYbPovr6DzeJuSyerxfLj/5gsnp0+wGyx9dNvVovP
-	TxcwOfB6XL7i7bFz1l12j2mTTrF53Lm2h82j5eR+Fo+PT2+xePRtWcXo8XmTnEf7gW6mAM4o
-	LpuU1JzMstQifbsErozGpVvZCtZyVbQ27mFuYDzI0cXIySEhYCLx4dIP1i5GLg4hgd2MEjs7
-	lzJDJCQkPnf+YYWwhSVW/nvODlH0lFFi1vn57CAJNgF1iT/X74J1iwi8Z5I4eq+VBSQhLBAs
-	sefREbAiFgFVidNr7oNN5RWwlri68DQbxFR5if0Hz0LFBSVOznwC1ssMFG/eOpt5AiPvLCSp
-	WUhSCxiZVjFKphYU56bnJhsWGOallusVJ+YWl+al6yXn525iBAe8lsYOxnffmvQPMTJxMB5i
-	lOBgVhLhvZ6lnCHEm5JYWZValB9fVJqTWnyIUZqDRUmcd6VhRLqQQHpiSWp2ampBahFMlomD
-	U6qBKae/IO0il9XujNpTdz66L1WK8pJn26n/L7iPsZ9josiRBbYHexLZjQQV8m96SK4JnuFz
-	WeSTlFvxagZvXePwhxumhHpd7TMRYLQIkI/ovy1oyO+v+5cvOu+XxuwFLs+O/vyzIu7l3UUS
-	qY/fzdBU/1/yWd5B1C7huXXb8sgd7wvy6/r2clmXzPO9c1ff5eyZ9/w8JX8NOT5nv2NOKtp7
-	iondcqmRjeEE777/tf1Jq5fk7jfJaY1lOs0T8WblL0GRzSk7ol7uOmf5/0vV1R2ZKxsf8Py6
-	/OlixboZnm33vQ8uV4g45PrvImvCljsRzZGKL8wKOn5nXlNeeLL2yLpihsoNlo4PAxbK3b5o
-	rxylxFKckWioxVxUnAgA5yrrAOcCAAA=
-X-CMS-MailID: 20250516083723epcas5p216a21ffb81631d35f0a12f7a583ea248
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20250516083723epcas5p216a21ffb81631d35f0a12f7a583ea248
-References: <CGME20250516083723epcas5p216a21ffb81631d35f0a12f7a583ea248@epcas5p2.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509-topics-tyr-platform_iomem-v8-3-e9f1725a40da@collabora.com>
 
-after ufs UFS_ABORT_TASK process successfully , host will generate
-mcq irq for abort tag with response OCS_ABORTED
-ufshcd_compl_one_cqe ->
-    ufshcd_release_scsi_cmd
+On Fri, May 09, 2025 at 05:29:48PM -0300, Daniel Almeida wrote:
+> +impl Device<device::Core> {
 
-But in ufshcd_mcq_abort already do ufshcd_release_scsi_cmd, this means
- __ufshcd_release will be done twice.
+For the ioremap_*() ones, `impl Device<device::Bound>` should be enough.
 
-This means hba->clk_gating.active_reqs also will be decrease twice, it
-will be negtive, so delete ufshcd_release_scsi_cmd in ufshcd_mcq_abort
-function.
-
-static void __ufshcd_release(struct ufs_hba *hba)
-{
-    if (!ufshcd_is_clkgating_allowed(hba))
-        return;
-
-    hba->clk_gating.active_reqs--;
-
-    if (hba->clk_gating.active_reqs < 0) {
-        panic("ufs abnormal active_reqs!!!!!!");
-    }
-
-    ...
-}
-Signed-off-by: ping.gao <ping.gao@samsung.com>
----
- drivers/ufs/core/ufs-mcq.c | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/drivers/ufs/core/ufs-mcq.c b/drivers/ufs/core/ufs-mcq.c
-index f1294c29f484..2106c63db5ca 100644
---- a/drivers/ufs/core/ufs-mcq.c
-+++ b/drivers/ufs/core/ufs-mcq.c
-@@ -713,10 +713,5 @@ int ufshcd_mcq_abort(struct scsi_cmnd *cmd)
- 		return FAILED;
- 	}
- 
--	spin_lock_irqsave(&hwq->cq_lock, flags);
--	if (ufshcd_cmd_inflight(lrbp->cmd))
--		ufshcd_release_scsi_cmd(hba, lrbp);
--	spin_unlock_irqrestore(&hwq->cq_lock, flags);
--
- 	return SUCCESS;
- }
--- 
-2.25.1
-
+Also, PCI names those just iomap_*(), maybe we should align those names for
+consistency.
