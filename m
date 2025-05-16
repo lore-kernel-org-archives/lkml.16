@@ -1,107 +1,209 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CE4230BD6
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:16:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF6722F383
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:16:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747383391; cv=none; b=SerjDvHmArFqc9lkD1i/jyMIVD3BMPhV3x5edKbEmaBM/mf3MiecbYFYAvp+ynt5jwS3R2TCFmCvHNsXef2LOK88Yh5d0c/uNmp8BYtVOTKpnzcoWvi0U/npgj2YKamwlI9VlEUp8TRq06+FjqJxmzntGFC/Hh6pgKZB4jA8CIM=
+	t=1747383397; cv=none; b=tteiXtwSEcK/AN29o7Q0v/YFvEvG1nD0R34RU48WfP/Of7P33Y7gT3cUpdpwoNzDryraSvT4Zg1QOzjnXpdLXK2Xuhz/5nC1ngJ7FlXuf7jOEUbB1lKxv36nmznMeWolP9uIQ98qf2LdqCQVwTaH0V5m4/OkyJT3zkkp9YIx+6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747383391; c=relaxed/simple;
-	bh=9Om3pCVh4DQs/g5WxN71tZrY8Z5myBckCvfA7xSo7S8=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=CQXseWKG1peKjgzTgCTmW37Nwfa2X0O/RW5jphbS9bR6FocVUqt1/XICGUPZT+iTJmi/20zYIKXA4tYvjTUqNPAVnQf9II5Ed67bvv16HhnTreVXlJkLO2E2VQNOKw40yfw9/Y3/1SQGVpCY0o5j27r52VaH594he4aHx8xnP5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Dq76bI5L; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747383397; c=relaxed/simple;
+	bh=PqgeI6KNd9dfvMFjO+MUux9+7/4y055Ts4/mxEWkxwE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HQbholZ60+f2dSmQwybdtgRyV4PzS6qiyoH4Qh2TJnWB177ijS2QZG/l/p79hnnAwWvhsgdVZuhvsFoxio4fS/DkmvAI3hYNUU6h+bu3JvPgdMAdlbRTVwayjDQwBR7lWZbYiBL7J3WbTVs9cxrFoLmqHOzMSEG3X2WGrt3LISA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=DJ+31PtA; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dq76bI5L"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-441c0d8eb3bso2671745e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 01:16:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="DJ+31PtA"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c53b9d66fdso247177885a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 01:16:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747383388; x=1747988188; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+        d=bytedance.com; s=google; t=1747383394; x=1747988194; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7Tv+bX6ZlmsD2MRpJhDybpIJBQMc8p+o4XGgPlDD6Nw=;
-        b=Dq76bI5LfkjFzuOI8RJKVdK5jr1DdiSTsDu5uXepnQ9TLJdRc4Sg9Y9imPxZmrLaga
-         z8br3TJXE6PPX3+yc7yJl0zWWmNLo2sQN+HncrTKq8TClrYZrCm1Sgb0QcF++1O8fLBt
-         RWhhXtRcfeX/iyoxgJwrZZ5losDUWm6LbACXbT5oRFdYXdkOqxeMobLcVKc0d4sHc237
-         Mw3gA5HdXsJ1DHobSho5UDXnjEwnPzGusD7UZXgUqIup6ruJmXMtXhO0pK5mEQyDQpcz
-         xf7MsTSW5dGLdrpYQmVOvtU9eXbQC7/Ftxt01PxvBhjAMOQZsfdH1ddIVibqg0tkSTPD
-         z6VQ==
+        bh=3sqLyXB121iu/Ux2S4uUFO89KPL9TBqnWTY9YgSrPFo=;
+        b=DJ+31PtAbI2CPvi3SuaE9V3d4t8g05KfC2zwGfrZz4jBUUirxyw30+Sfb5ARHKfQC7
+         jpuT0nUjO7yCMDQMCFupKADG2onFAqEfIzj/8S9JlPB2ktRldSCBXff/O31MQ/Yb7A+K
+         7BIxksdoWFxJcyV4BP/joUQVy38o4ob5+NTzBHSXAgmV1h6wRZmtUPGn11Im74mBi0KI
+         jyJ3ycmjigGyvPsTWkOdP55g3byNsHVNeHFQhBbvuGIF4IJP+bPBwGByBTe5TF5xZu80
+         MG0Yev4QFbVSimEUXWlarS97VVLg4J9aUnc4EAbuFj+M+Lke/xifaDWq1qJXwsQegD0U
+         bSuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747383388; x=1747988188;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1747383394; x=1747988194;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7Tv+bX6ZlmsD2MRpJhDybpIJBQMc8p+o4XGgPlDD6Nw=;
-        b=Zzkx9WqNrpZeubZ3o9vUr4wRq9dQ3mDngDc7uaJfn2Q1sYpkiz8ehvFclrRiw/t9SK
-         66D8Cqx10HxvuaNDbhM7mW1oc0DnZU26R1fWvWPqsCq4lIThqZLRqqLSp2m0KH2VrFm3
-         P0N6ctds0tYNTNFZJzpdMQ3u8fa11VrMsr25w3u9m3yRgCZwvK7nTfKHkDpcTUvJXMnZ
-         /yZKHx7OKLlIh9VxvzNSXo3LAc/yalBXTvQiqiYFCkRhGihGnQ7MDZluBo/bNzlviis2
-         iLkY8AhUQO4i+vJnVl/d7Fg4R/ZPDKBaGz5tpra5hXGBF81DH6bXPT5RZ1j7hce7DKn3
-         QGKA==
-X-Forwarded-Encrypted: i=1; AJvYcCWe2oaMZCbC83YiCXT8YRow9PDKwSKfSMIqEtZxSUAPNasgzVStkN1lwawmmgBdSJ3EtNdvRgKmjazR7Xw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4FGAZ1DSt/aXC2x3X0gcwG+RJvdh99yh226jw5FdCAkDbQNCt
-	pJxlsgkeq+hSU6fQmE6jPTmXH92lmNUU9WCOWkxBX0Qm7OUWNxYq37S+wbWkax5dFcg=
-X-Gm-Gg: ASbGncv/qDEnenFj12ibh92K/A01tWESP6hY4m+MGCDDYcJ+RhPwXy3TwFWsA95c3d8
-	k/nFFvsgm3rD9r1FRwubLVMIqCsfKr1Nah8VmSPp37mxjqfgDlC+/L+bFzmbDumItkdRKynzgxt
-	PqEqlFULhmFeePTVnLTOo6eOx+IK5sT/MwP0P/r3TYo2GQ8yFS9hUHTphPELuUbeZKWUW9NJCgy
-	SrcU5ODLxRaIXNm9coSQQTbX8d9En8Jz0w6qB+4JOLlEmOdWVezd7oeWRBipL+Y6UPdDdiLFf88
-	+Qyd5hk6AfBRzjM/+agh2yil8pKKUS0dOwcFixpjhlZvtGePwmMuUg/rVBaQCZH2zAsO+NcMBsx
-	YQm2/C5NGECJlZJ8DLg==
-X-Google-Smtp-Source: AGHT+IEkIkw5elhOyTB83C87OFiQ0tJrARVHpD24DDqhIh7HG2A3aYWsL0sD6JFgRgRzOP8Mln1ztg==
-X-Received: by 2002:a05:600c:46cf:b0:43e:94fa:4aef with SMTP id 5b1f17b1804b1-442fd6845d2mr8039595e9.8.1747383387870;
-        Fri, 16 May 2025 01:16:27 -0700 (PDT)
-Received: from [10.61.0.48] (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd515130sm23980885e9.18.2025.05.16.01.16.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 01:16:27 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Peter Rosin <peda@axentia.se>, Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Andrew Davis <afd@ti.com>, linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: kernel test robot <lkp@intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Samuel Holland <samuel@sholland.org>, Arnd Bergmann <arnd@arndb.de>
-In-Reply-To: <20250515140555.325601-2-krzysztof.kozlowski@linaro.org>
-References: <20250515140555.325601-2-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH] mux: mmio: Fix missing CONFIG_REGMAP_MMIO
-Message-Id: <174738338644.6332.8007717408731919554.b4-ty@linaro.org>
-Date: Fri, 16 May 2025 10:16:26 +0200
+        bh=3sqLyXB121iu/Ux2S4uUFO89KPL9TBqnWTY9YgSrPFo=;
+        b=oozctl2mqoWgKo2y5Mtp1i57BftEgGqaUOPp7/IhasgnEiu2afhuugoYZiCSveMt7/
+         L0t1VnNNRcq8q/Za/RfhJ2oc7ddNkbM4txlw02TrBW9EThADbSPoi9t3NYNszc+Xftvl
+         W2YkxwkyyCz7ZBQWZkqbFdOK32FT5DkLteJfz+wyxbUFnvRJdW7QxdQUxFLCasm6nyQG
+         FZSuMMwHm7scVJtcK1EA/XABotVLmNdvufJuAX93ylYZLGZtyKfwmAn7jtBkb8xJu9km
+         aivybGi/qESSNJ1WyCYC1+OZSYicruvJgrTcSO+reU2swHV64ZOL2oLADne5vjUwsHEs
+         1BSg==
+X-Forwarded-Encrypted: i=1; AJvYcCXKaVS+Gi9leocmQIsbrordYDhP+q9OwBpfTV9CeV7j4ZCPhXZFHgAwxeH1FpKZB3bhmxIwjnJ3T750X0s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNjeVtA13N1gvU50OaG92GJ2ZraCz2fPORpGPI0x5UOGQmSfjc
+	0XhVT+f/wAp24ADAm6TCiTkClKqi9UFLuSr6KZvHcuPWCJGMG2+6rIhJxfL5YphU5bJRmY/5bDA
+	wyktY
+X-Gm-Gg: ASbGncsHjTGRpe8hjVydYWimXxyZHqQlCbLVqEOySpoikbzkoTg3hvi+Sa3RlbpnCmS
+	S+TtqdFlv8aBtfnwJYlEo/okOPZsu2SfMCGCjuAfCYFUci3GBU8J1WdMvqkVu/UpaqpWNH37/PL
+	YqOFUMPg7lFHo2O1LmtgXYtNPl8ZazI7xiDSPahzM1W/bdm+UlHTQsiXWw4ZlZ7ZczloG8U6RtK
+	LqI0yE892HE3oxX5qrR6HIT9ZbkysjsR+Qds4C2Ya3Vk4cIIHJEKz3T3pUYGvNQCtovy6s5TcFC
+	/C7FGxqfZZmtmoW6kbt4sEs8YyEoVS63Z2sWgWQSfYuYpbszRouTj13Ga0bIjCVJImw4iF1LgG6
+	eVQ==
+X-Google-Smtp-Source: AGHT+IEr22vSw+ZqySumyL1nO/Q9dyJfDfxfA3GzkDraC668SVjDmD7pyN/KZTUegXTa+Xrss41vLA==
+X-Received: by 2002:a17:902:f78c:b0:21f:85ee:f2df with SMTP id d9443c01a7336-231de35f324mr25086705ad.15.1747383382994;
+        Fri, 16 May 2025 01:16:22 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231e2f57f0csm5586765ad.251.2025.05.16.01.16.20
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 16 May 2025 01:16:22 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: alex.williamson@redhat.com
+Cc: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lizhe.67@bytedance.com,
+	muchun.song@linux.dev,
+	peterx@redhat.com
+Subject: Re: [PATCH] vfio/type1: optimize vfio_pin_pages_remote() for hugetlbfs folio
+Date: Fri, 16 May 2025 16:16:16 +0800
+Message-ID: <20250516081616.73039-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250515151946.1e6edf8b.alex.williamson@redhat.com>
+References: <20250515151946.1e6edf8b.alex.williamson@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
+On Thu, 15 May 2025 15:19:46 -0600, alex.williamson@redhat.com wrote:
 
-On Thu, 15 May 2025 16:05:56 +0200, Krzysztof Kozlowski wrote:
-> MMIO mux uses now regmap_init_mmio(), so one way or another
-> CONFIG_REGMAP_MMIO should be enabled, because there are no stubs for
-> !REGMAP_MMIO case:
-> 
->   ERROR: modpost: "__regmap_init_mmio_clk" [drivers/mux/mux-mmio.ko] undefined!
-> 
-> REGMAP_MMIO should be, because it is a non-visible symbol, but this
-> causes a circular dependency:
-> 
-> [...]
+>> +/*
+>> + * Find a random vfio_pfn that belongs to the range
+>> + * [iova, iova + PAGE_SIZE * npage)
+>> + */
+>> +static struct vfio_pfn *vfio_find_vpfn_range(struct vfio_dma *dma,
+>> +		dma_addr_t iova, unsigned long npage)
+>> +{
+>> +	struct vfio_pfn *vpfn;
+>> +	struct rb_node *node = dma->pfn_list.rb_node;
+>> +	dma_addr_t end_iova = iova + PAGE_SIZE * npage;
+>> +
+>> +	while (node) {
+>> +		vpfn = rb_entry(node, struct vfio_pfn, node);
+>> +
+>> +		if (end_iova <= vpfn->iova)
+>> +			node = node->rb_left;
+>> +		else if (iova > vpfn->iova)
+>> +			node = node->rb_right;
+>> +		else
+>> +			return vpfn;
+>> +	}
+>> +	return NULL;
+>> +}
+>
+>This essentially duplicates vfio_find_vpfn(), where the existing
+>function only finds a single page.  The existing function should be
+>extended for this new use case and callers updated.  Also the vfio_pfn
 
-Applied, thanks!
+How about implementing it in this way?
 
-[1/1] mux: mmio: Fix missing CONFIG_REGMAP_MMIO
-      https://git.kernel.org/krzk/linux/c/39bff565b40d26cc51f6e85b3b224c86a563367e
+static inline struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
+{
+	return vfio_find_vpfn_range(dma, iova, 1);
+}
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+With this implement, the caller who calls vfio_find_vpfn() won't need to
+be modified.
 
+>is not "random", it's the first vfio_pfn overlapping the range.
+
+Yes you are right. I will modify the comments to "Find the first vfio_pfn
+overlapping the range [iova, iova + PAGE_SIZE * npage) in rb tree" in v2.
+
+>> +
+>>  static void vfio_link_pfn(struct vfio_dma *dma,
+>>  			  struct vfio_pfn *new)
+>>  {
+>> @@ -670,6 +694,31 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
+>>  				iova += (PAGE_SIZE * ret);
+>>  				continue;
+>>  			}
+>> +
+>
+>Spurious new blank line.
+>
+>> +		}
+>
+>A new blank line here would be appreciated.
+
+Thank you. I will address this in v2.
+
+>> +		/* Handle hugetlbfs page */
+>> +		if (likely(!disable_hugepages) &&
+>
+>Isn't this already accounted for with npage = 1?
+
+Yes. This check is not necessary. I will remove it in v2.
+
+>> +				folio_test_hugetlb(page_folio(batch->pages[batch->offset]))) {
+>
+>I don't follow how this guarantees the entire batch->size is
+>contiguous.  Isn't it possible that a batch could contain multiple
+>hugetlb folios?  Is the assumption here only true if folio_nr_pages()
+>(or specifically the pages remaining) is >= batch->capacity?  What
+
+Yes.
+
+>happens if we try to map the last half of one 2MB hugetlb page and
+>first half of the non-physically-contiguous next page?  Or what if the
+>hugetlb size is 64KB and the batch contains multiple folios that are
+>not physically contiguous?
+
+Sorry for my problematic implementation. I will fix it in v2.
+
+>> +			if (pfn != *pfn_base + pinned)
+>> +				goto out;
+>> +
+>> +			if (!rsvd && !vfio_find_vpfn_range(dma, iova, batch->size)) {
+>> +				if (!dma->lock_cap &&
+>> +				    mm->locked_vm + lock_acct + batch->size > limit) {
+>> +					pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n",
+>> +						__func__, limit << PAGE_SHIFT);
+>> +					ret = -ENOMEM;
+>> +					goto unpin_out;
+>> +				}
+>> +				pinned += batch->size;
+>> +				npage -= batch->size;
+>> +				vaddr += PAGE_SIZE * batch->size;
+>> +				iova += PAGE_SIZE * batch->size;
+>> +				lock_acct += batch->size;
+>> +				batch->offset += batch->size;
+>> +				batch->size = 0;
+>> +				continue;
+>> +			}
+>
+>There's a lot of duplication with the existing page-iterative loop.  I
+>think they could be consolidated if we extract the number of known
+>contiguous pages based on the folio into a variable, default 1.
+
+Good idea! I will try to implement this optimization based on this idea
+in v2.
+
+>Also, while this approach is an improvement, it leaves a lot on the
+>table in scenarios where folio_nr_pages() exceeds batch->capacity.  For
+>example we're at best incrementing 1GB hugetlb pages in 2MB increments.
+>We're also wasting a lot of cycles to fill pages points we mostly don't
+>use.  Thanks,
+
+Yes, this is the ideal case. However, we are uncertain whether the pages
+to be pinned are hugetlbfs folio, and increasing batch->capacity would
+lead to a significant increase in memory usage. Additionally, since
+pin_user_pages_remote() currently lacks a variant that can reduce the
+overhead of "filling pages points" of hugetlbfs folio (maybe not correct).
+I suggest we proceeding with additional optimizations after further
+infrastructure improvements.
