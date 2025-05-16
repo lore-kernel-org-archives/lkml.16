@@ -1,88 +1,102 @@
-Received: from mail-m49198.qiye.163.com (mail-m49198.qiye.163.com [45.254.49.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E397442C;
-	Fri, 16 May 2025 07:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.198
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E511C442C
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747378888; cv=none; b=LUXcJAJz4TUvGoTXPKvMk72ZxTt7+fgcabV+QYU9en1Dw9U99F3PMf1cm+3kUor6wovAdSY1GONkRWKr+lIKseNfY9qVIxjUt++EKesiFDeO3OV1NOgQ7AcGpl1MqWU8hBpsFf6trulm3apdOChc5pYTaewqGKx4C2UWk0FgMzU=
+	t=1747378952; cv=none; b=Jnij3AmeAM1L55PVaMlc2tKlTB3FH1bj/Dqce9OrqdGI7RjqkmGJL0fsn/5OaUL5B1gyBWNcUR3rD7TMKua2s3ngFDxJttrbjhXPZ157KbGm2h9Z33L+RzvXateaeKklwAuO3NlcJvAAb1hfIbFJ5sVUHYVqOTGxqfdk3jrNb7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747378888; c=relaxed/simple;
-	bh=1N5jwTXEg+BGFZFpJAscn66ihhhPz8zD1yN3bMEpZaY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dNNRymFPZ8/hBeKUAV/aon13VNOSTmsB4QVwcKCNgsdTsWj2nznSjCWXuAafAU9le0MbBLwJLQqklxnaRq7wrf8ADtFaZwU+MhR27ChmGaTocywhkjqp6V8E+s0wtKIgjU8Rn7gwslS2dNRQdIIn8JtLS1Gc8GM8g+t/jNHBNTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from localhost.localdomain (unknown [119.122.215.244])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 15416c95d;
-	Fri, 16 May 2025 15:01:13 +0800 (GMT+08:00)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: kever.yang@rock-chips.com
-Cc: conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	finley.xiao@rock-chips.com,
-	heiko@sntech.de,
-	krzk+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Chukun Pan <amadeus@jmu.edu.cn>
-Subject: Re: [PATCH v7 4/5] arm64: dts: rockchip: add core dtsi for RK3562 SoC
-Date: Fri, 16 May 2025 15:01:06 +0800
-Message-Id: <20250516070106.653870-1-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250509102308.761424-5-kever.yang@rock-chips.com>
-References: <20250509102308.761424-5-kever.yang@rock-chips.com>
+	s=arc-20240116; t=1747378952; c=relaxed/simple;
+	bh=NSm3l2AjyEQJZbJ+kTPiI26S8Hs8lJR8uhbihum8Fm0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s1cxEQggGKgB1MRMz6pawXlkJhwNQvdis0otmfNyBuvQebU1C0+kquH+2myRorUCCIPF0lZ0pzXV8SjXec2j1oWs4Tvv2Buslx/Tv2PTiPl2m9GS8I+3OO4zQEoM3lDty8bK7RhGXseU5oIIZezoQ+nCzD8XpCoJ+FXYclWTR1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=EYiNaQiO; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="EYiNaQiO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=3D
+	p87Pol0DiDHOxWLqgQHJiIDQ96ZatGbX/ZyoNiUI0=; b=EYiNaQiOpTS4W5pAT3
+	F5pL9XRrbUhAuTOQshamureTUN9VUEPuYW+BfgsrmMdOV5E5A2qHSHsLeRk/xUbt
+	/MMFS9sNp5kWoCTkXJHvxyqlwNeMSBsgOe4sxKh5u1CNoI0dpUVBiDtTv/eOuzuC
+	TAXCJ2VJbPmNV+romc+rYHpqY=
+Received: from localhost (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgDnF1Xk4iZoNbqAAw--.63522S2;
+	Fri, 16 May 2025 15:01:56 +0800 (CST)
+From: Xavier Xia <xavier_qy@163.com>
+To: anna-maria@linutronix.de,
+	frederic@kernel.org,
+	tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org,
+	Xavier Xia <xavier_qy@163.com>
+Subject: [PATCH v1] hrtimer: Simplify the logic of __hrtimer_get_next_event
+Date: Fri, 16 May 2025 15:01:53 +0800
+Message-Id: <20250516070153.2410363-1-xavier_qy@163.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTR5NVh5KSh5DSkpOS09CTlYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlKSkJVSklJVUlKTlVJT09ZV1kWGg8SFR0UWUFZT0tIVUpLSUhCSEJVSktLVU
-	pCS0tZBg++
-X-HM-Tid: 0a96d7e5a5d103a2kunm15416c95d
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NRg6Pio5LTE9PjYhLzMYOgxL
-	Tk5PChFVSlVKTE9MSExDQ0xPTUhIVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUpK
-	QlVKSUlVSUpOVUlPT1lXWQgBWUFJS0pJNwY+
+X-CM-TRANSID:PygvCgDnF1Xk4iZoNbqAAw--.63522S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ZF15tF15AryrXF4ftF4Utwb_yoW8uw15pa
+	1xG3sxtr4UJF15XF4rJa1DZry7G3Z3Ar1xJF40q397AFna9348Kay0gF4fZF43urWvvrW3
+	A3yxJw15Aa9rAa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piO6pkUUUUU=
+X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiVg5PEGgm3jms8gAAsw
 
-Hi,
+Currently, __hrtimer_get_next_event makes two separate calls to
+__hrtimer_next_event_base for HRTIMER_ACTIVE_SOFT and HRTIMER_ACTIVE_HARD
+respectively to obtain expires_next. However, __hrtimer_next_event_base is
+capable of traversing all timer types simultaneously by simply controlling
+the active mask. There is no need to distinguish the order of traversal
+between soft and hard timers, as the sole purpose is to find the earliest
+expiration time.
+Therefore, the code can be simplified by reducing the two calls to a single
+invocation of __hrtimer_next_event_base, making the code more
+straightforward and easier to understand.
 
-I posted to the wrong thread before, so I resent this.
-Sorry for the noise.
+Signed-off-by: Xavier Xia <xavier_qy@163.com>
+---
+ kernel/time/hrtimer.c | 21 ++++++---------------
+ 1 file changed, 6 insertions(+), 15 deletions(-)
 
-> <snip>
-> +		pcie2x1: pcie@ff500000 {
-> +			compatible = "rockchip,rk3562-pcie", "rockchip,rk3568-pcie";
-> +			bus-range = <0x0 0xff>;
-> <snip>
-> +			interrupt-names = "sys", "pmc", "msg", "legacy", "err", "msi";
-
-I noticed that the bsp 5.10 kernel said that pcie only has 8 MSI vectors,
-[1][2] but in the bsp 6.1 kernel it changed to 32 MSI vectors [3].
-
-The rockchip documentation also says there are only 8 MSI vectors:
-
-[4] Page37 8.8 "RK3528/RK3562/RK3576可分配的MSI或者MSI-X总数是8个"
-Translate into English: "The total number of MSI or MSI-X that
-can be allocated by RK3528/RK3562/RK3576 is 8"
-
-We noticed this when supporting rk3528, so which one is correct?
-
-[1] https://github.com/rockchip-linux/kernel/commit/4f0c9ccc79c373aa97084b3b1ab0651ca4248227
-[2] https://github.com/rockchip-linux/kernel/commit/afb85c759cfadc4051c42a9703860071a9877f2e
-[3] https://github.com/coolpi-george/coolpi-kernel/commit/522b94122ec797760dcd466851250cbdfafff50f
-[4] https://github.com/ArmSoM/rk3506-rkr4.2-sdk/blob/main/docs/cn/Common/PCIe/Rockchip_Developer_Guide_PCIe_CN.pdf
-
-Thanks,
-Chukun
-
---
-2.25.1
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 517ee2590a29..7c23115d25b0 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -577,24 +577,15 @@ static ktime_t __hrtimer_next_event_base(struct hrtimer_cpu_base *cpu_base,
+ static ktime_t
+ __hrtimer_get_next_event(struct hrtimer_cpu_base *cpu_base, unsigned int active_mask)
+ {
+-	unsigned int active;
+-	struct hrtimer *next_timer = NULL;
+ 	ktime_t expires_next = KTIME_MAX;
+ 
+-	if (!cpu_base->softirq_activated && (active_mask & HRTIMER_ACTIVE_SOFT)) {
+-		active = cpu_base->active_bases & HRTIMER_ACTIVE_SOFT;
+-		cpu_base->softirq_next_timer = NULL;
+-		expires_next = __hrtimer_next_event_base(cpu_base, NULL,
+-							 active, KTIME_MAX);
++	if (cpu_base->softirq_activated)
++		active_mask &= ~HRTIMER_ACTIVE_SOFT;
+ 
+-		next_timer = cpu_base->softirq_next_timer;
+-	}
+-
+-	if (active_mask & HRTIMER_ACTIVE_HARD) {
+-		active = cpu_base->active_bases & HRTIMER_ACTIVE_HARD;
+-		cpu_base->next_timer = next_timer;
+-		expires_next = __hrtimer_next_event_base(cpu_base, NULL, active,
+-							 expires_next);
++	active_mask &= cpu_base->active_bases;
++	if (active_mask) {
++		expires_next = __hrtimer_next_event_base(cpu_base, NULL, active_mask,
++							 KTIME_MAX);
+ 	}
+ 
+ 	return expires_next;
+-- 
+2.34.1
 
