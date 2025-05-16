@@ -1,552 +1,210 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C0910E5;
-	Fri, 16 May 2025 02:42:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747363340; cv=none; b=rrVDptwb8vy5d8/wg/KzAS/UtbPSkiL/I9J8XCBWciE++y2u5I5BZUYpwfGK72Ogw2JrFYTTZ3wCnIv3oJ6QbdGvMppaKREVlx32X00dDa6m0X5IPF4ILASd2hcFJTI9phM37CpO7C9vOnECSzm5jWhKoyN2AqJlZK48aXcHmc4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747363340; c=relaxed/simple;
-	bh=ZxhRR3y2/7riVOVTmdyWiKFs86uKt8r7P2uv4KWCulE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BRminyHKZNESxrxT6oGnl5Z7mNRglnGwqrZ3HBddWQYSIGeTcwn+QDYlX6VMZHywBzhmiJ7h1x/0UOYKDHjzNuxsE7h3zRSFNVNocQ1r9JcpoVo5fSE9xnsPTP2i7V3tdsz/3WrUmISsRNwKFcmONN/0NJ48/PUPBgJOho1/G2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=xgog5Vqc; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41E74414;
+	Fri, 16 May 2025 02:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747363371; cv=fail; b=DZeJ1yh+eiL6bc4mYAIUhOgWKDkpDvW623rVYVVw4pNJkdu+vQtE1ZwxvPOgxWe4Ri8yRLN+DcPohTvolONz2kV3eZfQog1cxanalP6P7H38gRkb8kS/xDZCL255iw2xuRCjy69njOq1HaeTFAX2fejyLaAIjTK8aWFPJ0cEtqU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747363371; c=relaxed/simple;
+	bh=8A83o+hjRDfICM/B80DEN37S/XtCRxLvMaJLIuN5/oY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=s8aLixKHXgJMviet9LkrW2VyNA/Q1ADd45BJb0JGqgQeQco37hII88jrywpLYV4AIBD04Gk+jTi3DPFH/P3kseh9smIHdHyBAVH2TzoXAFJjD4O6dNJlifWbaaLuySBrT7eBR5FrhAj8/7SVRbb6zlUgUORj+9YBqYGmz9bj/3s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NiIms3l4; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="xgog5Vqc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NiIms3l4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1747363339; x=1778899339;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ZxhRR3y2/7riVOVTmdyWiKFs86uKt8r7P2uv4KWCulE=;
-  b=xgog5VqcFeHvtnc0C0h3Q/k+ZJZZPH1iKgpnzDYzIZnZXTjlRYg6seZQ
-   Ib7VU5E2Y9eM+yULPzLUheqKQmyh0g4WQMvM3KvjWz8Upnfu4pN0L2Y8v
-   R0V8FCuPYiSHEh+iBSATQeZo/V+5GwJptMRPvWqYEfcu10a3aH50waN4J
-   NXytmSnbSixnLWd1CRdcb0krWwFf2ysaUI+Y4pDzWckOaehraZ22/T8mx
-   QpVFezFBmj4wFPzLscRS5a/dXgeujz2NMAox5O/T3Ij7holEADuUWnyAA
-   PXWIps+zUvIsLmIifXjb8woyV04Hl3nINPt6B8UvaeuKwHjGAq7cctR7v
-   w==;
-X-CSE-ConnectionGUID: rboPt5xVSQ2lQrsVPtDY1w==
-X-CSE-MsgGUID: FPsyOVA1QQeEQFiGr9B/xg==
-X-IronPort-AV: E=Sophos;i="6.15,293,1739862000"; 
-   d="scan'208";a="273026732"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 May 2025 19:42:13 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 15 May 2025 19:41:21 -0700
-Received: from pop-os.microchip.com (10.10.85.11) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
- Transport; Thu, 15 May 2025 19:41:21 -0700
-From: <Tristram.Ha@microchip.com>
-To: Andrew Lunn <andrew@lunn.ch>, Woojung Huh <woojung.huh@microchip.com>,
-	Russell King <linux@armlinux.org.uk>, Vladimir Oltean <olteanv@gmail.com>
-CC: Heiner Kallweit <hkallweit1@gmail.com>, Maxime Chevallier
-	<maxime.chevallier@bootlin.com>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, "Paolo
- Abeni" <pabeni@redhat.com>, <UNGLinuxDriver@microchip.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Tristram Ha
-	<tristram.ha@microchip.com>
-Subject: [PATCH net-next v4] net: dsa: microchip: Add SGMII port support to KSZ9477 switch
-Date: Thu, 15 May 2025 19:41:23 -0700
-Message-ID: <20250516024123.24910-1-Tristram.Ha@microchip.com>
-X-Mailer: git-send-email 2.34.1
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747363370; x=1778899370;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=8A83o+hjRDfICM/B80DEN37S/XtCRxLvMaJLIuN5/oY=;
+  b=NiIms3l4bgBsDt0zDpUhV97nDQsntPv0KS2/2FUsBsGXseF9w9WEya+p
+   mEEd+BcXcp0Kw/PF2N2Rt1yfpqrcn+mxLIY8qXASJ3Bm+KAuolwGTxynO
+   VGRZ/FOY1YPuRnmx2IFjVeS6StHmXIVVf3/6ddoiA23sLaRG1i4JhRCMc
+   NiYFFGKB7qDLQIeTrCbMlC+EXdf3jtXrX0reTcmX35zpwlYN196y2i+Oa
+   QL4cUd3ALO23zczyntBVETpfTGOlnF1WBgiH+6/lFt/KSUI22dI0DX52b
+   h1AX/ixRbJBeIV9mdCYloA7zvgVcDxqeymoBjNO2rUYE3H+IPYyywMmHP
+   A==;
+X-CSE-ConnectionGUID: ZENfQxP7S26gNU5uclLZGA==
+X-CSE-MsgGUID: 7/0C62s4RJO9oEX+lFXiwg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="36943222"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="36943222"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 19:42:49 -0700
+X-CSE-ConnectionGUID: JD/T4cG+QVCvE/Rfc0ehoA==
+X-CSE-MsgGUID: 722wnKmJQhCmOM5Z6Gqf4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="138601213"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 19:42:49 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 15 May 2025 19:42:47 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 15 May 2025 19:42:47 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.175)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 15 May 2025 19:42:47 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fVKfID2o9HxGDTFejsFbohzAo9ux5IyJzsw21lwQccS/OsiwJx+PR/s2uigzE9GiH83JKUURN9QrTjHfqikBlJ3o9px05ZCq4yyT6G2QibuLm4FFzvUOJdGOK+AelceIn/uh+qxoopoLgWpYQJTkWjwstp5MhjovDxdvsedIz4ORceFtI4WiMZ/7KNP/c2W2//hx+HvAwcmVy4jDOSiEJMLDwIgHuhaR81oqXbAPEsjA4Ks40RL4o81EtrJRTZhHWyT+VokqUiwfxr8Oq/0WQYwXoPHmNKPxuiWx5N9ZPZq2z6FwdMoHBVNQr8MTrBe8OPP4eovyzW/kLhhboGl7GA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8A83o+hjRDfICM/B80DEN37S/XtCRxLvMaJLIuN5/oY=;
+ b=eNnH2UicN4UIgGNPYsGd9IRexPiFshflpqbKzD0VjalFss1E2u1Qz88Wgw+7FOUVCOrj515YaiWxGHFvlrNx0c3McjOa1SzMZ/JFCo2UX79n6XKYSczmOOSIqgcOZrxasSP0kI6tiCswU8qokNqUMhAyaw4nqGOSSb9r8US5/xZ9GVgMOEEnAjbJts1C6BIebmwme1uM88NJkP0hzXdgidxHdiy9kiUeSWTVrmdM1c8lzZg3Xo80w/p9C4ydTaMvVG2wwKVmY4pYb2z9NlavAhIaZ6yFDF4zGkHMbROb1ga0eclsnYf+rlR+b0MPb3hfAOVk7nHYwhhAzog9uK2zhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by IA4PR11MB9011.namprd11.prod.outlook.com (2603:10b6:208:56b::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.32; Fri, 16 May
+ 2025 02:42:32 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1%4]) with mapi id 15.20.8722.031; Fri, 16 May 2025
+ 02:42:32 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: Jason Gunthorpe <jgg@nvidia.com>, Nicolin Chen <nicolinc@nvidia.com>
+CC: "corbet@lwn.net" <corbet@lwn.net>, "will@kernel.org" <will@kernel.org>,
+	"bagasdotme@gmail.com" <bagasdotme@gmail.com>, "robin.murphy@arm.com"
+	<robin.murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>,
+	"thierry.reding@gmail.com" <thierry.reding@gmail.com>, "vdumpa@nvidia.com"
+	<vdumpa@nvidia.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+	"shuah@kernel.org" <shuah@kernel.org>, "jsnitsel@redhat.com"
+	<jsnitsel@redhat.com>, "nathan@kernel.org" <nathan@kernel.org>,
+	"peterz@infradead.org" <peterz@infradead.org>, "Liu, Yi L"
+	<yi.l.liu@intel.com>, "mshavit@google.com" <mshavit@google.com>,
+	"praan@google.com" <praan@google.com>, "zhangzekun11@huawei.com"
+	<zhangzekun11@huawei.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
+	<patches@lists.linux.dev>, "mochs@nvidia.com" <mochs@nvidia.com>,
+	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>, "vasant.hegde@amd.com"
+	<vasant.hegde@amd.com>
+Subject: RE: [PATCH v4 11/23] iommufd/viommu: Add IOMMUFD_CMD_HW_QUEUE_ALLOC
+ ioctl
+Thread-Topic: [PATCH v4 11/23] iommufd/viommu: Add IOMMUFD_CMD_HW_QUEUE_ALLOC
+ ioctl
+Thread-Index: AQHbwI8AVK9WzAglbEaPfz4i9w6907PT5XkAgACwUgA=
+Date: Fri, 16 May 2025 02:42:32 +0000
+Message-ID: <BN9PR11MB52761C3553652A790934129B8C93A@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <cover.1746757630.git.nicolinc@nvidia.com>
+ <f52937c027e2fd25d76bc47f4965ba46f82c77c0.1746757630.git.nicolinc@nvidia.com>
+ <20250515160620.GJ382960@nvidia.com>
+In-Reply-To: <20250515160620.GJ382960@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|IA4PR11MB9011:EE_
+x-ms-office365-filtering-correlation-id: 8bdc98ee-df78-41ac-08fa-08dd94234eee
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7416014|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?EciEGSkIvsadC1Xn7Ev3vWNZVaTcCAYl438kJITP6XFqzTNCbfyQEcfsHNfF?=
+ =?us-ascii?Q?8zsd3kzPlHPYRh0IW23jLCX/gKsntajb2cNddVQpFDI4lbj5bq/TfQRFnK7c?=
+ =?us-ascii?Q?xvQIOVpy8gmkaPRvCGSz+99iea/WeAtMmqDVwvT6vIBil/DJanyJiwlWW3Rp?=
+ =?us-ascii?Q?dE/vrYdRfz8QEMpZgCcFlYfSd+j5xWabsM8DWopwakLamFfqCGi0E1OoBkKa?=
+ =?us-ascii?Q?4wwy7FLiq9tvjeD/JeOqksPosx2mcm+HoqMO+uoHZ4xIg6mkMHHaGwqFDGEe?=
+ =?us-ascii?Q?ueJqk8JYXlwJkvizsDFK5u6hWI4OBPjCp3o9glMwXwpgrEUAv5VWRSfgrdsv?=
+ =?us-ascii?Q?Nf4l2Wl8pYsHTFXtK3kQDOUXOzsJ07N3dqrJpS4VwOPN3/zozhc1sCghsarh?=
+ =?us-ascii?Q?51eQuVfxzlPD+JcsvvUjrhgN/uvivRf2eOynjSV8kPtOdQ924SVBE6b7a6cj?=
+ =?us-ascii?Q?omrpLcRfENOwvDOoATu9AUiodr2er+nPNdTgLEO92SkLcAroSvfUGVc4jSBS?=
+ =?us-ascii?Q?iqEgFrgnEavydUAukFz8ZO4Obpz9Kft4KUJYAmPIJDQeqkusRKwGK+hgVo8U?=
+ =?us-ascii?Q?0DIKaEcSkzze1hzVcEDyPt+tck7n4ZSgYLNtrm0agPWK18ro9YgdHJbrRObs?=
+ =?us-ascii?Q?V34px9+o58GWf02iiunWcOiX9QCtjqaLXdcjO32THseSRWiXShGOJ0eDBC3q?=
+ =?us-ascii?Q?070SpqxrKBuZPle95u+jJXtM5OdYsO9duxMcQ7pqOrR8NeDv2iarPVpiaufT?=
+ =?us-ascii?Q?z6MDw6yxghiRfmV7n9anX4BLA4EUWVzWNVdLTdGXCuvreIdxe49GJ0Y61hN2?=
+ =?us-ascii?Q?wJGIql+VRgglQH5+z485Pv5U4YZ6JUe1zUcBWSVPfbSg+GnvVi+RSVEFZUqU?=
+ =?us-ascii?Q?TGvCJWuTGMYBpkhep1Li1CltxpCjhNsYv69Ms5MizvCa4Omydo3MyQrI2T+i?=
+ =?us-ascii?Q?wI5lJ3uof9QexYdzR0vhpB8ucClZYDHpQ3fAWBxvRZ0huJm/pgq+AisG9h+D?=
+ =?us-ascii?Q?nFP70jgBb+mNVps+RtYUBypI7oL57c8fxVgB9ZmekwfyrCyT+aT+sFZRYzu7?=
+ =?us-ascii?Q?PVJ6XMSKVz60qVWNgmCbs+kDf22u6Ib6J2MVaZxd7oep+DDGazlBKt1PwZ1u?=
+ =?us-ascii?Q?Sf97GgsTEbr4TXmk+H+44RDGeCH317VsP/7ze0zMBjLhdzS5wJcF/mZ2KW+C?=
+ =?us-ascii?Q?QLm48Pz/rMN9BfnG4Cw7y64OfaF7RyICzFrInZU5FjN+bzwl83Iy9jUpBy3S?=
+ =?us-ascii?Q?F5Uu1QxmTOkdsMGtMqgEHKhhu31/o+l2Ib+yME5vX04g2Do3L3qT8QsO2NfK?=
+ =?us-ascii?Q?+1HUvQaWMbtcLLgdbsbMvxx9czRDxR8a4AYEmTE1alNYgvSGbN6MovfuWY0G?=
+ =?us-ascii?Q?A68KYjO980+MeyLF9etFLCjeP6jyAkOU0T/wlLg/EElbtMUM53oEdakJsuA8?=
+ =?us-ascii?Q?BZWIx1X5TvwaQHk3KJkcmvcw5+Yu+XXur3fhIU5QhqTSSCk+GXIKeA=3D=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?29OypDyqBCaLu52nO+qkof74sA3j43VcCWawCBco1VcKK+ipL541FjQu2iQw?=
+ =?us-ascii?Q?bM33CtvjwxR3Btys7dR10LMrFCpfuRDZ46JrX+h1Kf43ARwEHNQtnCCv8Ucr?=
+ =?us-ascii?Q?5lJzuPUFFVzob51rkEN5k3HQQqKaYrHEk2w1UvQLeqzmfcVNLK9KFL8bI3jB?=
+ =?us-ascii?Q?xzkW/4twiaVVpllSihhS6zwAUITfmefey0804CgiUjerf8SKQNS2XVFgi9eh?=
+ =?us-ascii?Q?A9A5GEYeQV+QF/9xO3ZB/RdN6Vh9EKYpyYZG/43HN1yQguusmgTcroAm4oN9?=
+ =?us-ascii?Q?E7ycuaslQCvHzJaLJbeNrsflq/LyaTTl2PQlZLDHz11vUpJuF2DYnSJd7YxD?=
+ =?us-ascii?Q?DTpbBzr1H8Ab//YkFNTtATPV9XdHZRVlzWO4Iv864YbaUIFdexoe6+K1wQjd?=
+ =?us-ascii?Q?98J+sQKLPxVNhhdRcziDEFa7+OD2VtCL2W+hOctOnl8MugZgyj8Lt4S1YsjG?=
+ =?us-ascii?Q?PjxL5mLRG57+9wPUKMRTsY3kTo4gsp0WfREdt+rfWToORm99NHt7iwxxmvVO?=
+ =?us-ascii?Q?Skq15WHeIjUT4JHQaa4TEE90ovo/LNntdwXMiXiBaktD5pWicEk6idpxAUCr?=
+ =?us-ascii?Q?y8JpnhBNxXTYh+aQwstvhDO98nPA1y50GD5xs5hDZxleQnePOeqDltBR8Clj?=
+ =?us-ascii?Q?ZPKdY3WclhqlE9mEV1KOrAIN3Xc9Pk/9LZMpjfCOGy+W3zZ66xzC5VMcXO+9?=
+ =?us-ascii?Q?bhiA4ns1xL7wHLJ5wMIHA6F65kk7Aqk5qViN6FgE0Ulvj2/g22Th3w30xixg?=
+ =?us-ascii?Q?PDbqOnl1/MXm+IKAcixc9fpCI3TR87W1hMOLNqIif1pLnWFDeQQ+i1xJcLHe?=
+ =?us-ascii?Q?ieTgQh9V9+12huDR09CrKhQiBS4183HCLUGlk3c3B6IBwuaxmoj0Sy8UJlge?=
+ =?us-ascii?Q?X1hpAzf3mbVVUL7n08t/H5O4/uyvooMw2x7FqHHMJQPLdkIFIyLBOrm369RM?=
+ =?us-ascii?Q?r47mUa78uCarFuocY0/DU+5lWHOjHLFC6fnflQSWAvzay5pYbEpUYpxLv/D7?=
+ =?us-ascii?Q?e9tbMSDNeetsfyonjrjODLA+RzDJUUBWPsmURpQ4eLsCQueJN0lrGMI8tCbc?=
+ =?us-ascii?Q?vQ/eNuosbhUXujbexI8w/PB2yiDyd51XP/RDKpBgD3bmnSM2SvzMkuS3zpxl?=
+ =?us-ascii?Q?pFIWH4rK0Rb4597JoQgi2nU1adPd7GNeodkUc/5QwqYo8frwmCKlT6gNYsWq?=
+ =?us-ascii?Q?t3aXgY2cuosIcHXVf2LL85SBdvY3Ml95AuGXlWEXxsQcVgZyuEE9F3ENDBtF?=
+ =?us-ascii?Q?QfJpTnxdAUHH9buG5uKpup0ymJledXoeUBLZd8IaHsMATNn92YWKwY6AY/p/?=
+ =?us-ascii?Q?sV9PTCmfNf7jJ0MG8Wck881TfBnsyhBwsoFPZ/E/C8QMtunt0mapaISUiM7X?=
+ =?us-ascii?Q?7rT+xPltyoPCCx1HwFXOM+DUj1mPYYuPOgvJvHHp6OnHUx5DSXinijVv7nSR?=
+ =?us-ascii?Q?o0YN5XB1J1BwEBooivcWlcXxgqUCLj00XyPkvYbs1NCqZF26XpYiScyN45rT?=
+ =?us-ascii?Q?ir7xKtiFr5NLb1cN/+pFD+rkusY/gbrr5t33+DkKJDdS7yxwqYlOuNWx2y4A?=
+ =?us-ascii?Q?R1FNY43STS8H1+HU33H1rKlPep0NIifZOfvTYsY9?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8bdc98ee-df78-41ac-08fa-08dd94234eee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2025 02:42:32.4992
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PWfAtciJEAn2pNHj97wgJUnc4PN4AdfkmtzyrkIqNGJ8bjITjo+AwN5BgWt+6UU92j5JDhgj6M3OsE8iyhYuIw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR11MB9011
+X-OriginatorOrg: intel.com
 
-From: Tristram Ha <tristram.ha@microchip.com>
+> From: Jason Gunthorpe <jgg@nvidia.com>
+> Sent: Friday, May 16, 2025 12:06 AM
+>=20
+> Do we have way to make the pinning optional?
+>=20
+> As I understand AMD's system the iommu HW itself translates the
+> base_addr through the S2 page table automatically, so it doesn't need
+> pinned memory and physical addresses but just the IOVA.
+>=20
 
-The KSZ9477 switch driver uses the XPCS driver to operate its SGMII
-port.  However there are some hardware bugs in the KSZ9477 SGMII
-module so workarounds are needed.  There was a proposal to update the
-XPCS driver to accommodate KSZ9477, but the new code is not generic
-enough to be used by other vendors.  It is better to do all these
-workarounds inside the KSZ9477 driver instead of modifying the XPCS
-driver.
+Though using IOVA could eliminate pinning conceptually, implementation
+wise an IOMMU may not tolerate translation errors in its access to guest
+queues with assumption that S2 is pinned.
 
-There are 3 hardware issues.  The first is the MII_ADVERTISE register
-needs to be write once after reset for the correct code word to be
-sent.  The XPCS driver disables auto-negotiation first before
-configuring the SGMII/1000BASE-X mode and then enables it back.  The
-KSZ9477 driver then writes the MII_ADVERTISE register before enabling
-auto-negotiation.  In 1000BASE-X mode the MII_ADVERTISE register will
-be set, so KSZ9477 driver does not need to write it.
-
-The second issue is the MII_BMCR register needs to set the exact speed
-and duplex mode when running in SGMII mode.  During link polling the
-KSZ9477 will check the speed and duplex mode are different from
-previous ones and update the MII_BMCR register accordingly.
-
-The last issue is 1000BASE-X mode does not work with auto-negotiation
-on.  The cause is the local port hardware does not know the link is up
-and so network traffic is not forwarded.  The workaround is to write 2
-additional bits when 1000BASE-X mode is configured.
-
-Note the SGMII interrupt in the port cannot be masked.  As that
-interrupt is not handled in the KSZ9477 driver the SGMII interrupt bit
-will not be set even when the XPCS driver sets it.
-
-Signed-off-by: Tristram Ha <tristram.ha@microchip.com>
----
-v4
- - update for last ksz_common.c merge
-
-v3
- - rebase with latest commit
-
-v2
- - add Kconfig for required XPCS driver build
-
- drivers/net/dsa/microchip/Kconfig      |   1 +
- drivers/net/dsa/microchip/ksz9477.c    | 191 ++++++++++++++++++++++++-
- drivers/net/dsa/microchip/ksz9477.h    |   4 +-
- drivers/net/dsa/microchip/ksz_common.c |  36 ++++-
- drivers/net/dsa/microchip/ksz_common.h |  23 ++-
- 5 files changed, 248 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/net/dsa/microchip/Kconfig b/drivers/net/dsa/microchip/Kconfig
-index 12a86585a77f..c71d3fd5dfeb 100644
---- a/drivers/net/dsa/microchip/Kconfig
-+++ b/drivers/net/dsa/microchip/Kconfig
-@@ -6,6 +6,7 @@ menuconfig NET_DSA_MICROCHIP_KSZ_COMMON
- 	select NET_DSA_TAG_NONE
- 	select NET_IEEE8021Q_HELPERS
- 	select DCB
-+	select PCS_XPCS
- 	help
- 	  This driver adds support for Microchip KSZ8, KSZ9 and
- 	  LAN937X series switch chips, being KSZ8863/8873,
-diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/microchip/ksz9477.c
-index 29fe79ea74cd..825aa570eed9 100644
---- a/drivers/net/dsa/microchip/ksz9477.c
-+++ b/drivers/net/dsa/microchip/ksz9477.c
-@@ -2,7 +2,7 @@
- /*
-  * Microchip KSZ9477 switch driver main logic
-  *
-- * Copyright (C) 2017-2024 Microchip Technology Inc.
-+ * Copyright (C) 2017-2025 Microchip Technology Inc.
-  */
- 
- #include <linux/kernel.h>
-@@ -161,6 +161,187 @@ static int ksz9477_wait_alu_sta_ready(struct ksz_device *dev)
- 					10, 1000);
- }
- 
-+static void port_sgmii_s(struct ksz_device *dev, uint port, u16 devid, u16 reg)
-+{
-+	u32 data;
-+
-+	data = (devid & MII_MMD_CTRL_DEVAD_MASK) << 16;
-+	data |= reg;
-+	ksz_pwrite32(dev, port, REG_PORT_SGMII_ADDR__4, data);
-+}
-+
-+static void port_sgmii_r(struct ksz_device *dev, uint port, u16 devid, u16 reg,
-+			 u16 *buf)
-+{
-+	port_sgmii_s(dev, port, devid, reg);
-+	ksz_pread16(dev, port, REG_PORT_SGMII_DATA__4 + 2, buf);
-+}
-+
-+static void port_sgmii_w(struct ksz_device *dev, uint port, u16 devid, u16 reg,
-+			 u16 buf)
-+{
-+	port_sgmii_s(dev, port, devid, reg);
-+	ksz_pwrite32(dev, port, REG_PORT_SGMII_DATA__4, buf);
-+}
-+
-+static int ksz9477_pcs_read(struct mii_bus *bus, int phy, int mmd, int reg)
-+{
-+	struct ksz_device *dev = bus->priv;
-+	int port = ksz_get_sgmii_port(dev);
-+	u16 val;
-+
-+	port_sgmii_r(dev, port, mmd, reg, &val);
-+
-+	/* Simulate a value to activate special code in the XPCS driver if
-+	 * supported.
-+	 */
-+	if (mmd == MDIO_MMD_PMAPMD) {
-+		if (reg == MDIO_DEVID1)
-+			val = 0x9477;
-+		else if (reg == MDIO_DEVID2)
-+			val = 0x22 << 10;
-+	} else if (mmd == MDIO_MMD_VEND2) {
-+		struct ksz_port *p = &dev->ports[port];
-+
-+		/* Need to update MII_BMCR register with the exact speed and
-+		 * duplex mode when running in SGMII mode and this register is
-+		 * used to detect connected speed in that mode.
-+		 */
-+		if (reg == MMD_SR_MII_AUTO_NEG_STATUS) {
-+			int duplex, speed;
-+
-+			if (val & SR_MII_STAT_LINK_UP) {
-+				speed = (val >> SR_MII_STAT_S) & SR_MII_STAT_M;
-+				if (speed == SR_MII_STAT_1000_MBPS)
-+					speed = SPEED_1000;
-+				else if (speed == SR_MII_STAT_100_MBPS)
-+					speed = SPEED_100;
-+				else
-+					speed = SPEED_10;
-+
-+				if (val & SR_MII_STAT_FULL_DUPLEX)
-+					duplex = DUPLEX_FULL;
-+				else
-+					duplex = DUPLEX_HALF;
-+
-+				if (!p->phydev.link ||
-+				    p->phydev.speed != speed ||
-+				    p->phydev.duplex != duplex) {
-+					u16 ctrl;
-+
-+					p->phydev.link = 1;
-+					p->phydev.speed = speed;
-+					p->phydev.duplex = duplex;
-+					port_sgmii_r(dev, port, mmd, MII_BMCR,
-+						     &ctrl);
-+					ctrl &= BMCR_ANENABLE;
-+					ctrl |= mii_bmcr_encode_fixed(speed,
-+								      duplex);
-+					port_sgmii_w(dev, port, mmd, MII_BMCR,
-+						     ctrl);
-+				}
-+			} else {
-+				p->phydev.link = 0;
-+			}
-+		} else if (reg == MII_BMSR) {
-+			p->phydev.link = (val & BMSR_LSTATUS);
-+		}
-+	}
-+	return val;
-+}
-+
-+static int ksz9477_pcs_write(struct mii_bus *bus, int phy, int mmd, int reg,
-+			     u16 val)
-+{
-+	struct ksz_device *dev = bus->priv;
-+	int port = ksz_get_sgmii_port(dev);
-+
-+	if (mmd == MDIO_MMD_VEND2) {
-+		struct ksz_port *p = &dev->ports[port];
-+
-+		if (reg == MMD_SR_MII_AUTO_NEG_CTRL) {
-+			u16 sgmii_mode = SR_MII_PCS_SGMII << SR_MII_PCS_MODE_S;
-+
-+			/* Need these bits for 1000BASE-X mode to work with
-+			 * AN on.
-+			 */
-+			if (!(val & sgmii_mode))
-+				val |= SR_MII_SGMII_LINK_UP |
-+				       SR_MII_TX_CFG_PHY_MASTER;
-+
-+			/* SGMII interrupt in the port cannot be masked, so
-+			 * make sure interrupt is not enabled as it is not
-+			 * handled.
-+			 */
-+			val &= ~SR_MII_AUTO_NEG_COMPLETE_INTR;
-+		} else if (reg == MII_BMCR) {
-+			/* The MII_ADVERTISE register needs to write once
-+			 * before doing auto-negotiation for the correct
-+			 * config_word to be sent out after reset.
-+			 */
-+			if ((val & BMCR_ANENABLE) && !p->sgmii_adv_write) {
-+				u16 adv;
-+
-+				/* The SGMII port cannot disable flow contrl
-+				 * so it is better to just advertise symmetric
-+				 * pause.
-+				 */
-+				port_sgmii_r(dev, port, mmd, MII_ADVERTISE,
-+					     &adv);
-+				adv |= ADVERTISE_1000XPAUSE;
-+				adv &= ~ADVERTISE_1000XPSE_ASYM;
-+				port_sgmii_w(dev, port, mmd, MII_ADVERTISE,
-+					     adv);
-+				p->sgmii_adv_write = 1;
-+			} else if (val & BMCR_RESET) {
-+				p->sgmii_adv_write = 0;
-+			}
-+		} else if (reg == MII_ADVERTISE) {
-+			/* XPCS driver writes to this register so there is no
-+			 * need to update it for the errata.
-+			 */
-+			p->sgmii_adv_write = 1;
-+		}
-+	}
-+	port_sgmii_w(dev, port, mmd, reg, val);
-+	return 0;
-+}
-+
-+int ksz9477_pcs_create(struct ksz_device *dev)
-+{
-+	/* This chip has a SGMII port. */
-+	if (ksz_has_sgmii_port(dev)) {
-+		int port = ksz_get_sgmii_port(dev);
-+		struct ksz_port *p = &dev->ports[port];
-+		struct phylink_pcs *pcs;
-+		struct mii_bus *bus;
-+		int ret;
-+
-+		bus = devm_mdiobus_alloc(dev->dev);
-+		if (!bus)
-+			return -ENOMEM;
-+
-+		bus->name = "ksz_pcs_mdio_bus";
-+		snprintf(bus->id, MII_BUS_ID_SIZE, "%s-pcs",
-+			 dev_name(dev->dev));
-+		bus->read_c45 = &ksz9477_pcs_read;
-+		bus->write_c45 = &ksz9477_pcs_write;
-+		bus->parent = dev->dev;
-+		bus->phy_mask = ~0;
-+		bus->priv = dev;
-+
-+		ret = devm_mdiobus_register(dev->dev, bus);
-+		if (ret)
-+			return ret;
-+
-+		pcs = xpcs_create_pcs_mdiodev(bus, 0);
-+		if (IS_ERR(pcs))
-+			return PTR_ERR(pcs);
-+		p->pcs = pcs;
-+	}
-+	return 0;
-+}
-+
- int ksz9477_reset_switch(struct ksz_device *dev)
- {
- 	u8 data8;
-@@ -978,6 +1159,14 @@ void ksz9477_get_caps(struct ksz_device *dev, int port,
- 
- 	if (dev->info->gbit_capable[port])
- 		config->mac_capabilities |= MAC_1000FD;
-+
-+	if (ksz_is_sgmii_port(dev, port)) {
-+		struct ksz_port *p = &dev->ports[port];
-+
-+		phy_interface_or(config->supported_interfaces,
-+				 config->supported_interfaces,
-+				 p->pcs->supported_interfaces);
-+	}
- }
- 
- int ksz9477_set_ageing_time(struct ksz_device *dev, unsigned int msecs)
-diff --git a/drivers/net/dsa/microchip/ksz9477.h b/drivers/net/dsa/microchip/ksz9477.h
-index d2166b0d881e..0d1a6dfda23e 100644
---- a/drivers/net/dsa/microchip/ksz9477.h
-+++ b/drivers/net/dsa/microchip/ksz9477.h
-@@ -2,7 +2,7 @@
- /*
-  * Microchip KSZ9477 series Header file
-  *
-- * Copyright (C) 2017-2022 Microchip Technology Inc.
-+ * Copyright (C) 2017-2025 Microchip Technology Inc.
-  */
- 
- #ifndef __KSZ9477_H
-@@ -97,4 +97,6 @@ void ksz9477_acl_match_process_l2(struct ksz_device *dev, int port,
- 				  u16 ethtype, u8 *src_mac, u8 *dst_mac,
- 				  unsigned long cookie, u32 prio);
- 
-+int ksz9477_pcs_create(struct ksz_device *dev);
-+
- #endif
-diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
-index f492fa9f6dd4..248f8027e0cf 100644
---- a/drivers/net/dsa/microchip/ksz_common.c
-+++ b/drivers/net/dsa/microchip/ksz_common.c
-@@ -2,7 +2,7 @@
- /*
-  * Microchip switch driver main logic
-  *
-- * Copyright (C) 2017-2024 Microchip Technology Inc.
-+ * Copyright (C) 2017-2025 Microchip Technology Inc.
-  */
- 
- #include <linux/delay.h>
-@@ -408,12 +408,28 @@ static void ksz9477_phylink_mac_link_up(struct phylink_config *config,
- 					int speed, int duplex, bool tx_pause,
- 					bool rx_pause);
- 
-+static struct phylink_pcs *
-+ksz_phylink_mac_select_pcs(struct phylink_config *config,
-+			   phy_interface_t interface)
-+{
-+	struct dsa_port *dp = dsa_phylink_to_port(config);
-+	struct ksz_device *dev = dp->ds->priv;
-+	struct ksz_port *p = &dev->ports[dp->index];
-+
-+	if (ksz_is_sgmii_port(dev, dp->index) &&
-+	    (interface == PHY_INTERFACE_MODE_SGMII ||
-+	    interface == PHY_INTERFACE_MODE_1000BASEX))
-+		return p->pcs;
-+	return NULL;
-+}
-+
- static const struct phylink_mac_ops ksz9477_phylink_mac_ops = {
- 	.mac_config	= ksz_phylink_mac_config,
- 	.mac_link_down	= ksz_phylink_mac_link_down,
- 	.mac_link_up	= ksz9477_phylink_mac_link_up,
- 	.mac_disable_tx_lpi = ksz_phylink_mac_disable_tx_lpi,
- 	.mac_enable_tx_lpi = ksz_phylink_mac_enable_tx_lpi,
-+	.mac_select_pcs	= ksz_phylink_mac_select_pcs,
- };
- 
- static const struct ksz_dev_ops ksz9477_dev_ops = {
-@@ -451,6 +467,7 @@ static const struct ksz_dev_ops ksz9477_dev_ops = {
- 	.reset = ksz9477_reset_switch,
- 	.init = ksz9477_switch_init,
- 	.exit = ksz9477_switch_exit,
-+	.pcs_create = ksz9477_pcs_create,
- };
- 
- static const struct phylink_mac_ops lan937x_phylink_mac_ops = {
-@@ -1093,8 +1110,7 @@ static const struct regmap_range ksz9477_valid_regs[] = {
- 	regmap_reg_range(0x701b, 0x701b),
- 	regmap_reg_range(0x701f, 0x7020),
- 	regmap_reg_range(0x7030, 0x7030),
--	regmap_reg_range(0x7200, 0x7203),
--	regmap_reg_range(0x7206, 0x7207),
-+	regmap_reg_range(0x7200, 0x7207),
- 	regmap_reg_range(0x7300, 0x7301),
- 	regmap_reg_range(0x7400, 0x7401),
- 	regmap_reg_range(0x7403, 0x7403),
-@@ -1610,6 +1626,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
- 				   true, false, false},
- 		.gbit_capable	= {true, true, true, true, true, true, true},
- 		.ptp_capable = true,
-+		.sgmii_port = 7,
- 		.wr_table = &ksz9477_register_set,
- 		.rd_table = &ksz9477_register_set,
- 	},
-@@ -2002,6 +2019,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
- 		.internal_phy	= {true, true, true, true,
- 				   true, false, false},
- 		.gbit_capable	= {true, true, true, true, true, true, true},
-+		.sgmii_port = 7,
- 		.wr_table = &ksz9477_register_set,
- 		.rd_table = &ksz9477_register_set,
- 	},
-@@ -2137,7 +2155,7 @@ void ksz_r_mib_stats64(struct ksz_device *dev, int port)
- 
- 	spin_unlock(&mib->stats64_lock);
- 
--	if (dev->info->phy_errata_9477) {
-+	if (dev->info->phy_errata_9477 && !ksz_is_sgmii_port(dev, port)) {
- 		ret = ksz9477_errata_monitor(dev, port, raw->tx_late_col);
- 		if (ret)
- 			dev_err(dev->dev, "Failed to monitor transmission halt\n");
-@@ -2845,6 +2863,12 @@ static int ksz_setup(struct dsa_switch *ds)
- 	if (ret)
- 		return ret;
- 
-+	if (ksz_has_sgmii_port(dev) && dev->dev_ops->pcs_create) {
-+		ret = dev->dev_ops->pcs_create(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	/* set broadcast storm protection 10% rate */
- 	regmap_update_bits(ksz_regmap_16(dev), regs[S_BROADCAST_CTRL],
- 			   BROADCAST_STORM_RATE,
-@@ -3692,6 +3716,10 @@ static void ksz_phylink_mac_config(struct phylink_config *config,
- 	if (dev->info->internal_phy[port])
- 		return;
- 
-+	/* No need to configure XMII control register when using SGMII. */
-+	if (ksz_is_sgmii_port(dev, port))
-+		return;
-+
- 	if (phylink_autoneg_inband(mode)) {
- 		dev_err(dev->dev, "In-band AN not supported!\n");
- 		return;
-diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
-index a034017568cd..a08417df2ca4 100644
---- a/drivers/net/dsa/microchip/ksz_common.h
-+++ b/drivers/net/dsa/microchip/ksz_common.h
-@@ -1,7 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- /* Microchip switch driver common header
-  *
-- * Copyright (C) 2017-2024 Microchip Technology Inc.
-+ * Copyright (C) 2017-2025 Microchip Technology Inc.
-  */
- 
- #ifndef __KSZ_COMMON_H
-@@ -10,6 +10,7 @@
- #include <linux/etherdevice.h>
- #include <linux/kernel.h>
- #include <linux/mutex.h>
-+#include <linux/pcs/pcs-xpcs.h>
- #include <linux/phy.h>
- #include <linux/regmap.h>
- #include <net/dsa.h>
-@@ -93,6 +94,7 @@ struct ksz_chip_data {
- 	bool internal_phy[KSZ_MAX_NUM_PORTS];
- 	bool gbit_capable[KSZ_MAX_NUM_PORTS];
- 	bool ptp_capable;
-+	u8 sgmii_port;
- 	const struct regmap_access_table *wr_table;
- 	const struct regmap_access_table *rd_table;
- };
-@@ -132,6 +134,7 @@ struct ksz_port {
- 	u32 force:1;
- 	u32 read:1;			/* read MIB counters in background */
- 	u32 freeze:1;			/* MIB counter freeze is enabled */
-+	u32 sgmii_adv_write:1;
- 
- 	struct ksz_port_mib mib;
- 	phy_interface_t interface;
-@@ -141,6 +144,7 @@ struct ksz_port {
- 	void *acl_priv;
- 	struct ksz_irq pirq;
- 	u8 num;
-+	struct phylink_pcs *pcs;
- #if IS_ENABLED(CONFIG_NET_DSA_MICROCHIP_KSZ_PTP)
- 	struct kernel_hwtstamp_config tstamp_config;
- 	bool hwts_tx_en;
-@@ -440,6 +444,8 @@ struct ksz_dev_ops {
- 	int (*reset)(struct ksz_device *dev);
- 	int (*init)(struct ksz_device *dev);
- 	void (*exit)(struct ksz_device *dev);
-+
-+	int (*pcs_create)(struct ksz_device *dev);
- };
- 
- struct ksz_device *ksz_switch_alloc(struct device *base, void *priv);
-@@ -731,6 +737,21 @@ static inline bool is_lan937x_tx_phy(struct ksz_device *dev, int port)
- 		dev->chip_id == LAN9372_CHIP_ID) && port == KSZ_PORT_4;
- }
- 
-+static inline int ksz_get_sgmii_port(struct ksz_device *dev)
-+{
-+	return dev->info->sgmii_port - 1;
-+}
-+
-+static inline bool ksz_has_sgmii_port(struct ksz_device *dev)
-+{
-+	return dev->info->sgmii_port > 0;
-+}
-+
-+static inline bool ksz_is_sgmii_port(struct ksz_device *dev, int port)
-+{
-+	return dev->info->sgmii_port == port + 1;
-+}
-+
- /* STP State Defines */
- #define PORT_TX_ENABLE			BIT(2)
- #define PORT_RX_ENABLE			BIT(1)
--- 
-2.34.1
-
+@Vasant, can you help confirm?
