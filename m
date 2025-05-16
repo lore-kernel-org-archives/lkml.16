@@ -1,292 +1,196 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1721213E8E
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C174235340;
+	Fri, 16 May 2025 10:34:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747391658; cv=none; b=kuP0VX0iHADNlPrBuLXvB4GRTF33A/I2eR18+wOjhFW5J3cv40ClvWhA1bq3MAPGWS68prwOJm8n2JJq87nyqDiLwEY8GmbWE4zYN5tVbXnYTx0d/q9QZhVGPy0tObvDwUlUxsEMD7GX7/ktrg53pLCgHQiJn2+tBB1cPhCo+Y4=
+	t=1747391661; cv=none; b=HD7NGSVUvWJ0Yr8m6CyFxXJmM5dHaU47D2oYbfsjG3qX81bbAy7GcvSm6beS89nzMKuzm9xH9NpF30XXN9cAexdz0VIQQEo0gJ/uJ+sanCpozZFgQZON7b5KNzzxWXvjf7Lax5bhVWh48PTxxGy8ZJK/ruPE2mVX8MSHh2+noOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747391658; c=relaxed/simple;
-	bh=s3mcFWVrw/kUYNxQAJ2yQ+KeXqojzE8420WB/F6fHMg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mXH1tdix0cadnRwou4FLI5q8ACDsZODiS+N2XE8bCNoQH6JQ1K+PoUbTBdJ/Qgs/3JB582+2RADhXRkhsxhG9XbXu9uIWgnhhuhNLakVTizLPjVNdyAZqkFfNW5thN0nsuKrIRRqsvehTRZscBbS3eNhRwpBiihfMyy5SCtJs3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=r/DU9WND; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1747391661; c=relaxed/simple;
+	bh=OLawM77/pj4I/rWOm9zcrUGjJDrRfHM+96CF1DvxGgE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YOgncdb6HKyYU3XDs0mUD+sevSA+eIIo26TKBdhBzd1ny4q1NEGYtd5vgMitezXo64X9iZuf5xJzT0GxQcsKZhW4afHtoR9kKfEoD7eGU7KeSyrXIbB+1XJHP3J+q2NHMVrgo1ABUIU24xcOqZMv5saq7Dl7PdL0naWrCAFldJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cuymrrxn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="r/DU9WND"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=BJf7n8meUFE1D7xOQ8/mGDyCpXfo3hlFKbxw8pTZT+U=; b=r/DU9WNDGhjYMULtQaU0d2tcf2
-	pZKf3WrysA9bhojOYYposAfWyV93LQL51bP4+zy3COFl2XHstZQrCoJmVo5+poP3rKfEkx8KcFt7F
-	yNA8mXSs4DJEK5PDev0BbilMhymIr2b2cV5seVWwLskJg9Mv+1JVhvIDFo4/jbK30nbD3+oymV/81
-	/NGz+y0+kHA5foEMf+Kei/4wuQlYw5kdvKVUPNfk1iNncPGdMxhjakS+b9ypB3RFIC0tcmii26a60
-	cTbzTSk3y8Ycu68MDrmonOR18/S/db7HSUfKDRxT2Ixn/w+HKIBFKSRzI+G1kG7TswSO/bGJAFZST
-	wo59B8fw==;
-Received: from [81.79.92.254] (helo=[192.168.0.101])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uFsIQ-0092iv-LR; Fri, 16 May 2025 12:34:05 +0200
-Message-ID: <d66518e3-8670-454b-a290-21ecb5d57702@igalia.com>
-Date: Fri, 16 May 2025 11:34:04 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cuymrrxn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 129F2C4CEE4;
+	Fri, 16 May 2025 10:34:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747391660;
+	bh=OLawM77/pj4I/rWOm9zcrUGjJDrRfHM+96CF1DvxGgE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CuymrrxnrYD7Ka9ndiuRflWUEVaTAgCxSrx9m0FttyMA/0+bEBf6qUQ6FPX+Hz6Aq
+	 CF4eK0pP8zob9s6zmluMBPjGdN74rEWgBFe78tKoE4uziB7Qlz8wwji1Z0ce0okA7s
+	 ZsnpJnqhnQR89Sq+fvfoB9AT8cfcKM0PeX8onZ/Bkw51RHSvBM0V4ak7GeW5DOWCxe
+	 0Ar0E4GowdLJ3hv0z34NBPzPSu1WP2ohiNGtE+NiKgI6crDJwRr7PNBPwBAczlVOVD
+	 pNEg9Y18vGKbkgArlgswDlLjhowyQVQkUIlze6UwPRZcjT2nOeWYhOpmkhiZis/0Cf
+	 3rCsO6VLK7Z8Q==
+Date: Fri, 16 May 2025 12:34:13 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Jann Horn <jannh@google.com>
+Cc: linux-fsdevel@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Eric Dumazet <edumazet@google.com>, 
+	Oleg Nesterov <oleg@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
+	David Rheinsberg <david@readahead.eu>, Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, Alexander Mikhalitsyn <alexander@mihalicyn.com>
+Subject: Re: [PATCH v7 5/9] pidfs, coredump: add PIDFD_INFO_COREDUMP
+Message-ID: <20250516-anfliegen-mausklick-adf097dad304@brauner>
+References: <20250515-work-coredump-socket-v7-0-0a1329496c31@kernel.org>
+ <20250515-work-coredump-socket-v7-5-0a1329496c31@kernel.org>
+ <CAG48ez3-=B1aTftz0srNjV7_t6QqGuk41LFAe6_qeXtXWL3+PA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/6] drm/sched: Prevent teardown waitque from blocking
- too long
-To: phasta@kernel.org, Lyude Paul <lyude@redhat.com>,
- Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
-Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, Danilo Krummrich <dakr@redhat.com>
-References: <20250424095535.26119-2-phasta@kernel.org>
- <20250424095535.26119-4-phasta@kernel.org>
- <1297389f-70f6-4813-8de8-1a0c4f92250a@igalia.com>
- <e627335ea7d0cbb1f8b92ad5fd936466b19c3ec7.camel@mailbox.org>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-In-Reply-To: <e627335ea7d0cbb1f8b92ad5fd936466b19c3ec7.camel@mailbox.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAG48ez3-=B1aTftz0srNjV7_t6QqGuk41LFAe6_qeXtXWL3+PA@mail.gmail.com>
 
-
-On 16/05/2025 10:54, Philipp Stanner wrote:
-> On Fri, 2025-05-16 at 10:33 +0100, Tvrtko Ursulin wrote:
->>
->> On 24/04/2025 10:55, Philipp Stanner wrote:
->>> The waitqueue that ensures that drm_sched_fini() blocks until the
->>> pending_list has become empty could theoretically cause that
->>> function to
->>> block for a very long time. That, ultimately, could block userspace
->>> procesess and prevent them from being killable through SIGKILL.
->>>
->>> When a driver calls drm_sched_fini(), it is safe to assume that all
->>> still pending jobs are not needed anymore anyways. Thus, they can
->>> be
->>> cancelled and thereby it can be ensured that drm_sched_fini() will
->>> return relatively quickly.
->>>
->>> Implement a new helper to stop all work items / submission except
->>> for
->>> the drm_sched_backend_ops.run_job().
->>>
->>> Implement a driver callback, kill_fence_context(), that instructs
->>> the
->>> driver to kill the fence context associated with this scheduler,
->>> thereby
->>> causing all pending hardware fences to be signalled.
->>>
->>> Call those new routines in drm_sched_fini() and ensure backwards
->>> compatibility if the new callback is not implemented.
->>>
->>> Suggested-by: Danilo Krummrich <dakr@redhat.com>
->>> Signed-off-by: Philipp Stanner <phasta@kernel.org>
->>> ---
->>>    drivers/gpu/drm/scheduler/sched_main.c | 47 +++++++++++++++++----
->>> -----
->>>    include/drm/gpu_scheduler.h            | 11 ++++++
->>>    2 files changed, 42 insertions(+), 16 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/scheduler/sched_main.c
->>> b/drivers/gpu/drm/scheduler/sched_main.c
->>> index ea82e69a72a8..c2ad6c70bfb6 100644
->>> --- a/drivers/gpu/drm/scheduler/sched_main.c
->>> +++ b/drivers/gpu/drm/scheduler/sched_main.c
->>> @@ -1390,31 +1390,46 @@ drm_sched_no_jobs_pending(struct
->>> drm_gpu_scheduler *sched)
->>>    	return empty;
->>>    }
->>>    
->>> +/**
->>> + * drm_sched_cancel_jobs_and_wait - trigger freeing of all pending
->>> jobs
->>> + * @sched: scheduler instance
->>> + *
->>> + * Must only be called if &struct
->>> drm_sched_backend_ops.kill_fence_context is
->>> + * implemented.
->>> + *
->>> + * Instructs the driver to kill the fence context associated with
->>> this scheduler,
->>> + * thereby signalling all pending fences. This, in turn, will
->>> trigger
->>> + * &struct drm_sched_backend_ops.free_job to be called for all
->>> pending jobs.
->>> + * The function then blocks until all pending jobs have been
->>> freed.
->>> + */
->>> +static inline void
->>> +drm_sched_cancel_jobs_and_wait(struct drm_gpu_scheduler *sched)
->>> +{
->>> +	sched->ops->kill_fence_context(sched);
->>> +	wait_event(sched->pending_list_waitque,
->>> drm_sched_no_jobs_pending(sched));
->>> +}
->>> +
->>>    /**
->>>     * drm_sched_fini - Destroy a gpu scheduler
->>>     *
->>>     * @sched: scheduler instance
->>>     *
->>> - * Tears down and cleans up the scheduler.
->>> - *
->>> - * Note that this function blocks until all the fences returned by
->>> - * &struct drm_sched_backend_ops.run_job have been signalled.
->>> + * Tears down and cleans up the scheduler. Might leak memory if
->>> + * &struct drm_sched_backend_ops.kill_fence_context is not
->>> implemented.
->>>     */
->>>    void drm_sched_fini(struct drm_gpu_scheduler *sched)
->>>    {
->>>    	struct drm_sched_entity *s_entity;
->>>    	int i;
->>>    
->>> -	/*
->>> -	 * Jobs that have neither been scheduled or which have
->>> timed out are
->>> -	 * gone by now, but jobs that have been submitted through
->>> -	 * backend_ops.run_job() and have not yet terminated are
->>> still pending.
->>> -	 *
->>> -	 * Wait for the pending_list to become empty to avoid
->>> leaking those jobs.
->>> -	 */
->>> -	drm_sched_submission_and_timeout_stop(sched);
->>> -	wait_event(sched->pending_list_waitque,
->>> drm_sched_no_jobs_pending(sched));
->>> -	drm_sched_free_stop(sched);
->>> +	if (sched->ops->kill_fence_context) {
->>> +		drm_sched_submission_and_timeout_stop(sched);
->>> +		drm_sched_cancel_jobs_and_wait(sched);
->>> +		drm_sched_free_stop(sched);
->>> +	} else {
->>> +		/* We're in "legacy free-mode" and ignore
->>> potential mem leaks */
->>> +		drm_sched_wqueue_stop(sched);
->>> +	}
->>>    
->>>    	for (i = DRM_SCHED_PRIORITY_KERNEL; i < sched->num_rqs;
->>> i++) {
->>>    		struct drm_sched_rq *rq = sched->sched_rq[i];
->>> @@ -1502,7 +1517,7 @@ bool drm_sched_wqueue_ready(struct
->>> drm_gpu_scheduler *sched)
->>>    EXPORT_SYMBOL(drm_sched_wqueue_ready);
->>>    
->>>    /**
->>> - * drm_sched_wqueue_stop - stop scheduler submission
->>> + * drm_sched_wqueue_stop - stop scheduler submission and freeing
->>
->> Looks like the kerneldoc corrections (below too) belong to the
->> previous
->> patch. Irrelevant if you decide to squash them though.
->>
->>>     * @sched: scheduler instance
->>>     *
->>>     * Stops the scheduler from pulling new jobs from entities. It
->>> also stops
->>> @@ -1518,7 +1533,7 @@ void drm_sched_wqueue_stop(struct
->>> drm_gpu_scheduler *sched)
->>>    EXPORT_SYMBOL(drm_sched_wqueue_stop);
->>>    
->>>    /**
->>> - * drm_sched_wqueue_start - start scheduler submission
->>> + * drm_sched_wqueue_start - start scheduler submission and freeing
->>>     * @sched: scheduler instance
->>>     *
->>>     * Restarts the scheduler after drm_sched_wqueue_stop() has
->>> stopped it.
->>> diff --git a/include/drm/gpu_scheduler.h
->>> b/include/drm/gpu_scheduler.h
->>> index d0b1f416b4d9..8630b4a26f10 100644
->>> --- a/include/drm/gpu_scheduler.h
->>> +++ b/include/drm/gpu_scheduler.h
->>> @@ -509,6 +509,17 @@ struct drm_sched_backend_ops {
->>>             * and it's time to clean it up.
->>>    	 */
->>>    	void (*free_job)(struct drm_sched_job *sched_job);
->>> +
->>> +	/**
->>> +	 * @kill_fence_context: kill the fence context belonging
->>> to this scheduler
->>
->> Which fence context would that be? ;)
->>
->> Also, "fence context" would be a new terminology in gpu_scheduler.h
->> API
->> level. You could call it ->sched_fini() or similar to signify at
->> which
->> point in the API it gets called and then the fact it takes sched as
->> parameter would be natural.
->>
->> We also probably want some commentary on the topic of indefinite (or
->> very long at least) blocking a thread exit / SIGINT/TERM/KILL time.
->> Cover letter touches upon that problem but I don't see you address
->> it.
->> Is the idea to let drivers shoot themselves in the foot or what?
+On Thu, May 15, 2025 at 10:56:26PM +0200, Jann Horn wrote:
+> On Thu, May 15, 2025 at 12:04 AM Christian Brauner <brauner@kernel.org> wrote:
+> > Extend the PIDFD_INFO_COREDUMP ioctl() with the new PIDFD_INFO_COREDUMP
+> > mask flag. This adds the fields @coredump_mask and @coredump_cookie to
+> > struct pidfd_info.
 > 
-> You didn't seriously just write that, did you?
+> FWIW, now that you're using path-based sockets and override_creds(),
+> one option may be to drop this patch and say "if you don't want
+> untrusted processes to directly connect to the coredumping socket,
+> just set the listening socket to mode 0000 or mode 0600"...
 > 
-> Yes, my intention clearly has been since September to make things
-> worse, more ambiguous and destroy drivers. That's why I'm probably the
-> only individual after Sima (who added some of the FIXMEs) who ever
-> bothered documenting all this mess here, and warning people about the
-> five hundred pitfalls, like three different start and stop functions,
-> implicit refcount rules and God knows which other insane hacks that
-> simply move driver problems into common infrastructure.
+> > Signed-off-by: Christian Brauner <brauner@kernel.org>
+> [...]
+> > diff --git a/fs/coredump.c b/fs/coredump.c
+> > index e1256ebb89c1..bfc4a32f737c 100644
+> > --- a/fs/coredump.c
+> > +++ b/fs/coredump.c
+> [...]
+> > @@ -876,8 +880,34 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+> >                         goto close_fail;
+> >                 }
+> >
+> > +               /*
+> > +                * Set the thread-group leader pid which is used for the
+> > +                * peer credentials during connect() below. Then
+> > +                * immediately register it in pidfs...
+> > +                */
+> > +               cprm.pid = task_tgid(current);
+> > +               retval = pidfs_register_pid(cprm.pid);
+> > +               if (retval) {
+> > +                       sock_release(socket);
+> > +                       goto close_fail;
+> > +               }
+> > +
+> > +               /*
+> > +                * ... and set the coredump information so userspace
+> > +                * has it available after connect()...
+> > +                */
+> > +               pidfs_coredump(&cprm);
+> > +
+> > +               /*
+> > +                * ... On connect() the peer credentials are recorded
+> > +                * and @cprm.pid registered in pidfs...
 > 
-> Reconsider your attitude.
+> I don't understand this comment. Wasn't "@cprm.pid registered in
+> pidfs" above with the explicit `pidfs_register_pid(cprm.pid)`?
 
-I don't know what kind of attitude you think I was expressing. If the 
-last sentence was a hyperbole too much for you then sorry. Point was in 
-the paragraph ending with that - to document callback must not block, or 
-if it has to to discuss for how long. And to perhaps discuss if 
-scheduler code should impose a limit. Otherwise the indefinite block on 
-thread exit from the cover letter can still happen. I don't see raising 
-those point is a criticism of your overall work. (Fact that we don't see 
-eye to eye regarding more state machine vs the ->cancel_job() 
-alternative aside.)
-
-Regards,
-
-Tvrtko
-
+I'll answer both questions in one go below...
 
 > 
-> P.
+> > +                */
+> >                 retval = kernel_connect(socket, (struct sockaddr *)(&addr),
+> >                                         addr_len, O_NONBLOCK | SOCK_COREDUMP);
+> > +
+> > +               /* ... So we can safely put our pidfs reference now... */
+> > +               pidfs_put_pid(cprm.pid);
 > 
->>
->> Regards,
->>
->> Tvrtko
->>
->>> +	 *
->>> +	 * Needed to cleanly tear the scheduler down in
->>> drm_sched_fini(). This
->>> +	 * callback will cause all hardware fences to be signalled
->>> by the driver,
->>> +	 * which, ultimately, ensures that all jobs get freed
->>> before teardown.
->>> +	 *
->>> +	 * This callback is optional, but it is highly recommended
->>> to implement it.
->>> +	 */
->>> +	void (*kill_fence_context)(struct drm_gpu_scheduler
->>> *sched);
->>>    };
->>>    
->>>    /**
->>
-> 
+> Why can we safely put the pidfs reference now but couldn't do it
+> before the kernel_connect()? Does the kernel_connect() look up this
+> pidfs entry by calling something like pidfs_alloc_file()? Or does that
+> only happen later on, when the peer does getsockopt(SO_PEERPIDFD)?
 
+AF_UNIX sockets support SO_PEERPIDFD as you know. Users such as dbus or
+systemd want to be able to retrieve a pidfd for the peer even if the
+peer has already been reaped. To support this AF_UNIX ensures that when
+the peer credentials are set up (connect(), listen()) the corresponding
+@pid will also be registered in pidfs. This ensures that exit
+information is stored in the inode if we hand out a pidfd for a reaped
+task. IOW, we only hand out pidfds for reaped task if at the time of
+reaping a pidfs entry existed for it.
+
+Since we're setting coredump information on the pidfd here we're calling
+pidfs_register_pid() even before connect() sets up the peer credentials
+so we're sure that the coredump information is stored in the inode.
+
+Then we delay our pidfs_put_pid() call until the connect() took it's own
+reference and thus continues pinning the inode. IOW, connect() will also
+call pidfs_register_pid() but it will ofc just increment the reference
+count ensuring that our pidfs_put_pid() doesn't drop the inode.
+
+If we immediately did a pidfs_put_pid() before connect() we'd loose the
+coredump information.
+
+> 
+> >                 if (retval) {
+> >                         if (retval == -EAGAIN)
+> >                                 coredump_report_failure("Coredump socket %s receive queue full", addr.sun_path);
+> [...]
+> > diff --git a/fs/pidfs.c b/fs/pidfs.c
+> > index 3b39e471840b..d7b9a0dd2db6 100644
+> > --- a/fs/pidfs.c
+> > +++ b/fs/pidfs.c
+> [...]
+> > @@ -280,6 +299,13 @@ static long pidfd_info(struct file *file, unsigned int cmd, unsigned long arg)
+> >                 }
+> >         }
+> >
+> > +       if (mask & PIDFD_INFO_COREDUMP) {
+> > +               kinfo.mask |= PIDFD_INFO_COREDUMP;
+> > +               smp_rmb();
+> 
+> I assume I would regret it if I asked what these barriers are for,
+> because the answer is something terrifying about how we otherwise
+> don't have a guarantee that memory accesses can't be reordered between
+> multiple subsequent syscalls or something like that?
+
+No, not really. It's just so that when someone calls PIDFD_GET_INFO with
+PIDFD_INFO_COREDUMP but one gotten from the coredump socket that they
+don't see half-initialized information. I can just use WRITE_ONCE() for
+that.
+
+> 
+> checkpatch complains about the lack of comments on these memory barriers.
+
+I'll just use WRITE_ONCE().
+
+> 
+> > +               kinfo.coredump_cookie = READ_ONCE(pidfs_i(inode)->__pei.coredump_cookie);
+> > +               kinfo.coredump_mask = READ_ONCE(pidfs_i(inode)->__pei.coredump_mask);
+> > +       }
+> > +
+> >         task = get_pid_task(pid, PIDTYPE_PID);
+> >         if (!task) {
+> >                 /*
+> [...]
+> > diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+> > index a9d1c9ba2961..053d2e48e918 100644
+> > --- a/net/unix/af_unix.c
+> > +++ b/net/unix/af_unix.c
+> [...]
+> > @@ -742,6 +743,7 @@ static void unix_release_sock(struct sock *sk, int embrion)
+> >
+> >  struct unix_peercred {
+> >         struct pid *peer_pid;
+> > +       u64 cookie;
+> 
+> Maybe add a comment here documenting that for now, this is assumed to
+> be used exclusively for coredump sockets.
+
+I think we should just drop it.
