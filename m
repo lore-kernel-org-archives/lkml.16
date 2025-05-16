@@ -1,113 +1,112 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB05231838;
-	Fri, 16 May 2025 08:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD33B22F755;
+	Fri, 16 May 2025 08:16:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747383399; cv=none; b=Xb+Msiihpilnce9A26JIdRdLHfkgXrWJSVcIl0LQ1PhIPqAeHRt2x9LDFwSruIUdWxvFjKSVqKIBRQW58wfkrU89kGB39wQJqCJlhvZZD2TaFUUDYRgrYoBrTFUu9ODrpfxn2D12tr1jjf1GAxybJWU90qfeIcCMOLWYsQiiK4U=
+	t=1747383407; cv=none; b=Bx9ALWG+XdI/rf87S28j7DOR8bJihEsqR9xg9FF/CbGHliDEyj0hamFd8MAYc35/YUa8Tb5s5dihfdSBQ2T91SXXkPxZbkS8dGcHy2pRJ6ck+iK1N0suM2KXdr/ASqgJgI0DjpbUqqIwrIK43/9h6sSKleOgJP4vgRirVlTVzFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747383399; c=relaxed/simple;
-	bh=+hZAqH08xCVXK8kytHytBGpF9HetP+6wRwFHX9OnASY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nmAgjr26sDngyhIoTbyRLd/rvWhuusewbsNAkAA7Gus8tuHUcZPVRhPFpXobwmBufWqFcFomiAtVxzJfu4g9lFFiyxdOHkSoVeNp9RF2aoJSNy3U/2a8MRzmwiri45wooPYu/WVETJGP1wIabKSl77v3mJ7RxoPv7deAOl6jHHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YSJX8yJk; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747383407; c=relaxed/simple;
+	bh=YuSWZZOXW5nwd8/g09UEEj9ynyi/7FJ4AUQZG0YjXnI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UlyQTbdZfVVas4KfCk6XTwxwpBxAifBZTLuE+gZ4XTSofXHuAjsP0KjwsnNKkv0hJKPh0z8y0fNA99UCN35PhVOeIvS5GVntkfQa2RwvA4bKi94gTAmwo41xIXUk0WhWxOs8TLA6BbYJAyMFm5aBe4TFC54rh5R3TLahVOeLd4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxrb4wbX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YSJX8yJk"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad24b7e0331so285091566b.0;
-        Fri, 16 May 2025 01:16:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747383396; x=1747988196; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=p5uMs6FkdhW0yuPSJiF5IsCQmeoDxyXFi4ZKMZV6l28=;
-        b=YSJX8yJkGJipwbEhJqwW8U50h21QpaAZIqtzVWOZoJZMar0AkEq0h8QcUcfdduTXaQ
-         hZNkbYwOo11aJI1l+04W1K1+ICu8+5qPQu+BFJq7soyW/kCX2++A4Hto1g/jpYCshN8d
-         MokGEEkfSC4JGbVCPwJWZVkfmjqETnFcEkeZsKT8Iwu3jbwHYDEhbpWCUvzRjSET/eNu
-         NQ6EcJesJ2rC0oem092bpjBB/XNHqcIZULJOg+f7UvNlT3xxx3UYArMdzbO/xdFTk3dg
-         AcWl0GGmkvXjHS0OSvaFxDtBep3yYK3JNeJnMzL4mY3N0NmKl3r9L8TZibonxGj7k6RQ
-         ghjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747383396; x=1747988196;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p5uMs6FkdhW0yuPSJiF5IsCQmeoDxyXFi4ZKMZV6l28=;
-        b=ZbnGS+tds9lEng8HUmXR1T8TEbME+W7Aq59JMYRGtmqt6M4sKnUNAxMIizQfFuFF94
-         61Cby69vtoMVTkgMLhgUWmXCZLsBwLOmO0gtD46sdv92QGlRhTpAR4nbDvs8ONyPDWEX
-         cGCgoY7vQTKGMzkhyizr60Fgfe+46/Q9aWLG64fk4+U88V4UpNrrT1KTGvpNz4yu96h1
-         QvOMg/cd9ENnU1gfIZBjP6ICrLBDFFZl9pvpkWoXrMqUiB1KCHMyuQZJzSYgM8HpV8Eu
-         jYJcyxgdLkFNztChZtfKzQ5KwUT9x5Sx7lS7B0/LgYIf6gFe2dZsjhOs7DHqVH5uIrgm
-         M3RA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcz8qZdv3fqC7kqdnBYUYfaWWo9Z1QVM1eOLfbEWxV3qCSrQ50kto4HT7GL0Js2p1jlclL6+rr/Rlb2pM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6LuKkoW0a+XJ8OAVTXQaamaLYHwFsmBi0r0dRwCNppJxMSiYH
-	5JCSufQYFrux9kGYd47GfVkEVbmVRGgvu7uIJTYWxzDx+2CWeyt0vh/a
-X-Gm-Gg: ASbGncvQAPi2H7s8zHGvC4J3TGSC7f9UYtyY2KsZ0iTYtEbKp3+MUbYGuwLjXKKb1+P
-	pNO3A1Om08oXk4LZjDMbGQN7qG8eyMT45r1pdps2dLBQKpwvYMukNqaeO42PPF6MfqxZC2VcT7m
-	kUU18agEQ79kIw/O09NUJIO45GtEhWXMu/9Rc8KMFt2cE11ouxEE23KjdfL2JCEyQh+kNiH40NP
-	3I6dWxTiQxyy76jf44UT4wzK9r5vNNW7L/OL+jlP1Q3iyCUI1Ll3nE/bbA9XosuCq+qzsX+HDsx
-	p+8vSjxLn1hvLDjOAJo7T9v89yoWfPn6aiik+eF82Ihk5mrXqozBmtw9IoHu
-X-Google-Smtp-Source: AGHT+IGUyQ4WvvI8Y54HOBmPIQUwWgTnB7hUofnygJIB5iOp5HSMPI4dclX6JAUQZWevtotWc6mVOA==
-X-Received: by 2002:a17:907:9811:b0:ad2:3371:55cd with SMTP id a640c23a62f3a-ad52d46ae67mr221922866b.5.1747383395358;
-        Fri, 16 May 2025 01:16:35 -0700 (PDT)
-Received: from [192.168.1.130] ([188.193.103.108])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6004d4f1c90sm1016490a12.12.2025.05.16.01.16.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 May 2025 01:16:34 -0700 (PDT)
-Message-ID: <e53f54ad-df31-4b1e-a2a5-2d14a138c9eb@gmail.com>
-Date: Fri, 16 May 2025 10:16:33 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jxrb4wbX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25C4EC4CEED;
+	Fri, 16 May 2025 08:16:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747383407;
+	bh=YuSWZZOXW5nwd8/g09UEEj9ynyi/7FJ4AUQZG0YjXnI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=jxrb4wbXeLX097lBe0l2yOJTNQo2ooPu5/TSmGK7tmIuGhqM8fHy3ds8jbqolhTTr
+	 y/86K1hu8J2+a2l45RfrlOaXYE4r1hRKqcXGwI8nqeBKZ5ZKGhlA8a73OHtLzrlGKb
+	 2mma5fNJGL734qDO6vSCoVTzjT1eIHDLx843c94dGgyvJC/B2Ovn0GkgQfdUki/Nmt
+	 7Pjbvh2OqHcmzkk4TRgvB/33dwJnWhUWRF3U2i1XGM/TVE33LUbR5IpbMsjlt5Blaf
+	 sTOo/bpQMki0CIkLkNTrCp3R7uYYpF2u/+5IndcvXZjwWow0Jxbr+bFyUTDPaE5zT7
+	 5Bnrn0z3lSxlw==
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-606477d77easo1387935eaf.1;
+        Fri, 16 May 2025 01:16:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUqIiBqBf9XdJUA8j6TMWHopgHdse4tNkx+rIPdaKse0w+zx2981NWhSqSqA6L/mVfgzfkpcQz8+qI=@vger.kernel.org, AJvYcCXUM2Np5ZnkI+onkJxBPuQifPWb+Wp2f2biF+KS6nLHMUr8FDPYioz/5yqlXnYpY69V99zgH1mkSmhRjNY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0qjL8md8sDkOtajbyzEKkZYwWUHCBaCVSQHIOES2rVhW/dyJi
+	au3CEHfnIUMCeLAvMFiNGmxyBFkIvHwqnOnnsdUV0OWpBaUgA08Q/rBygUa0W/LXlM35iFwCU5n
+	iG57vSVn+CDRGUB4BmgzEmKIAxUBKQJY=
+X-Google-Smtp-Source: AGHT+IGU+OiYk/HmnmOf9Q8Pyet01k8RnxHx/UB263Imk66HeNojsQ+LIV2yskkJsnuPr7z7SR5fhsvdDicaifDwhBw=
+X-Received: by 2002:a05:6820:1792:b0:606:3abb:1934 with SMTP id
+ 006d021491bc7-609f3876c16mr1325324eaf.2.1747383406351; Fri, 16 May 2025
+ 01:16:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/4] ARM: dts: stm32: add initial support for
- stm32mp157-ultra-fly-sbc board
-To: Alexandre TORGUE <alexandre.torgue@foss.st.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- =?UTF-8?B?QsO2cmdlIFN0csO8bXBmZWw=?= <boerge.struempfel@gmail.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org
-References: <20250508143818.2574558-1-goran.radni@gmail.com>
- <20250508143818.2574558-5-goran.radni@gmail.com>
- <8e25c2e3-fbc6-4d60-8362-2b0fb3066821@foss.st.com>
-Content-Language: en-US
-From: Goran Radenovic <goran.radni@gmail.com>
-In-Reply-To: <8e25c2e3-fbc6-4d60-8362-2b0fb3066821@foss.st.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250516034643.22355-1-tuhaowen@uniontech.com>
+In-Reply-To: <20250516034643.22355-1-tuhaowen@uniontech.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 16 May 2025 10:16:34 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gOa8H-yABSepfy-WyOKJqRjCMhYPdbAHox3qUVmOXS6w@mail.gmail.com>
+X-Gm-Features: AX0GCFvkwebfrY7vYOfseAbGgrzcABf6FBWoSGyrSz7apM0MdLxFDsazrF_I740
+Message-ID: <CAJZ5v0gOa8H-yABSepfy-WyOKJqRjCMhYPdbAHox3qUVmOXS6w@mail.gmail.com>
+Subject: Re: [PATCH] PM/console: Fix the black screen issue
+To: tuhaowen <tuhaowen@uniontech.com>
+Cc: pavel@kernel.org, len.brown@intel.com, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, huangbibo@uniontech.com, wangyuli@uniontech.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Alex
+On Fri, May 16, 2025 at 5:47=E2=80=AFAM tuhaowen <tuhaowen@uniontech.com> w=
+rote:
+>
+> When the computer enters sleep status without a monitor
+> connected, the system switches the console to the virtual
+> terminal tty63(SUSPEND_CONSOLE).
+>
+> If a monitor is subsequently connected before waking up,
+> the system skips the required VT restoration process
+> during wake-up, leaving the console on tty63 instead of
+> switching back to tty1.
 
-that is great. Thank You!
+Please add some information here on how exactly the issue is being
+fixed.  Reverse-engineering code changes is hard.
 
-Best regards
-Goran
-
-Alexandre TORGUE wrote:
-> Hi Goran
-> 
-> On 5/8/25 16:38, Goran Rađenović wrote:
->> Add support for Ultratronik's stm32mp157c fly board. This board embeds
->> a STM32MP157c SOC and 1GB of DDR3. Several connections are available on
->> this boards: 2*USB2.0, 1*USB2.0 MiniUSB, Debug UART, 1*UART, 1*USART,
->> SDcard, RJ45, ...
->>
->> This patch enables basic support for a kernel boot - SD-card or eMMC.
->>
->> Signed-off-by: Goran Rađenović <goran.radni@gmail.com>
->>
-> 
-> Series applied on stm32-next.
-> 
-> regards
-> alex
-
+> Signed-off-by: tuhaowen <tuhaowen@uniontech.com>
+> ---
+>  kernel/power/console.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/power/console.c b/kernel/power/console.c
+> index fcdf0e14a47d..832e04bf5439 100644
+> --- a/kernel/power/console.c
+> +++ b/kernel/power/console.c
+> @@ -16,6 +16,7 @@
+>  #define SUSPEND_CONSOLE        (MAX_NR_CONSOLES-1)
+>
+>  static int orig_fgconsole, orig_kmsg;
+> +static int vt_switch_done;
+>
+>  static DEFINE_MUTEX(vt_switch_mutex);
+>
+> @@ -136,15 +137,19 @@ void pm_prepare_console(void)
+>         if (orig_fgconsole < 0)
+>                 return;
+>
+> +       vt_switch_done =3D 1;
+> +
+>         orig_kmsg =3D vt_kmsg_redirect(SUSPEND_CONSOLE);
+>         return;
+>  }
+>
+>  void pm_restore_console(void)
+>  {
+> -       if (!pm_vt_switch())
+> +       if (!pm_vt_switch() && !vt_switch_done)
+>                 return;
+>
+> +       vt_switch_done =3D 0;
+> +
+>         if (orig_fgconsole >=3D 0) {
+>                 vt_move_to_console(orig_fgconsole, 0);
+>                 vt_kmsg_redirect(orig_kmsg);
+> --
