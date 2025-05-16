@@ -1,261 +1,352 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079BF27FD71;
-	Fri, 16 May 2025 23:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7A7CA6B
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 23:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747437729; cv=none; b=WvRa29D/uCJzKRRpNu4QZXxRIcJeQml/kP2SpDe68BrgY+uC/mmM7aBleQ/RvdOJLrm39ZemA+RKjgMDSfkarEiT+zpklxhQ05bs4gggAuJnOPRhSmZH+jXORk4ROG5k5j7EyiYPmSZvwOfp95Abvh8+qZygVTmfZeAQxCzTqWg=
+	t=1747437827; cv=none; b=LWbCEy4Gb7xI5iTvYTkOpje0C5pV8wONp+nUFvHF3Q4PL+ul74kY7DMfDUMeQkJTDoahRoHv7HFCjXs1EfZ5iHSV/MMoEmQlJwJuqqV4IoxtDk1FID4RTopmWSrp5Ol5MbAYGHYq/I81zeGW7UfFHNWzZzDvOEZkKMap/ytQIdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747437729; c=relaxed/simple;
-	bh=omyiBN9CVpzxRF+YaRFnHa1UxZdu58NwQocHXX6hruQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MsfN4B10fnyN5ugBVF1d0h4jywQpgtOmktyYe10FHFrR+j0TeHfQbVj7GpWXCa0KLtWdqYg9As+wgacHKSTN9Vi1IqxuJPOxDB7pmZul4h/SsN//BuV8a6wTejNm+tXBEMXSNGzVzjm0X1/vzgsp30QW/1xePdMa/MfQ1jOvJMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OEHv7Z1P; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747437827; c=relaxed/simple;
+	bh=CvbXUKeS4In5BNmfC7cG82BHB4VXR8B7hpqt4ms4S8U=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=UTbOCrGYQMROikoffxF7s1/auDkTIrLFpHtKYjApzJIqq/fAFUYVjSTwu+eJ2Hzz8UC1zhho550ieFdhijLf9Cqpn2CfJp2qRHWGV4wyRR2UNPRW0/wG+FzCh3L2f93iqC8mKlWOQ+/cDs4DW/WE5kWpLNTvwW1zmQ4hEijD5Gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jyescas.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jYLfc4GK; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jyescas.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OEHv7Z1P"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso2824717b3a.2;
-        Fri, 16 May 2025 16:22:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jYLfc4GK"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-742512d307bso4328682b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:23:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747437726; x=1748042526; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2RBRW+BDhhR5QWYvsH1webo+qjc0apKgnSK3fhSjcVE=;
-        b=OEHv7Z1PVKqY2N2BvVABjlKKGPnmtN8E7GuKG+3HlhQQsTIVDpANWsPk8H/5/b0EDv
-         NZiejrgD13NRQZjS1d31LRn9Bf4RC62aGPk+4O8hVODtqM9ZWGkZUMidPZ6d45fkzOe/
-         5yqJDNMyy6i4JdGYEQCnEPscMNXOw3f+jrDrp+Hng3x/YXw0g2ILEpdCNwxKvUgX47NS
-         DjvNq9zTBDwuEkIJpLPVEzuGIWd10rbV5Uh4X2094YT2M+XTuaIfVHOlBIEEI4IgWQmy
-         /9oX+7bBkXOEMimh2dMXamsSKUMrozaap78cwC8bc5YTUw9+lDclhOMFFj8jXLaX1RHx
-         Yd9A==
+        d=google.com; s=20230601; t=1747437825; x=1748042625; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/Qy75UNCDbhvgShF7QirTdkT6HEAxA37LSBHQ4luFaE=;
+        b=jYLfc4GKeaRlkVz4jpXBAx0wu3fXjtmLzxBSMtNRYYKRxvHxTVJa+feY7gh63cZwxD
+         mpojJ6srFLDsIqWlm4SbTUKe3vN8foyoPdExX5vpWPckEqJ4BmcKBHTLpzmvVxnGXMgw
+         qtv7P8AwR0Ab/K9GCwCyt9+Brnp1aq3ZwY1BYqcfAsG8CrCCWfJb0v6stXs+l3OLjlD8
+         QpgNCuTvMt1jPS8G4aWmSsAS9NOxv46ooHvN3BmcpZrZvkWqRKFSdVuIXWZXJievBwW3
+         hJfaYCF50ggWEV/ZU6hAOtvLAOBwqjuK588HoLCcpS6UThhXgiKiC/+HUu8TVBtUScQ4
+         IazA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747437726; x=1748042526;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2RBRW+BDhhR5QWYvsH1webo+qjc0apKgnSK3fhSjcVE=;
-        b=fqvwOYT/r6RSCsOpyGxiJWUOHhXDn6lBdYio9WiUbMb5f9nMMBJzOkd7FKqpulmZ+L
-         bFYp4E0G2kwF6FV6Tdt2YOChOYSg9wrwpm62IIQKhmLUELjLPmgMC1p4tUzGoGcWJuyX
-         x1OqiqZfwHXV8j1cRPtzNolagCsRSus5eWkCPRR9EtjVQE3cihPgqXxSIsrvgHgd+ges
-         WpqIsBTbj6MgcMjvjYLeq3QP2cKmq3ay5AZqOuHvOXWhy25T4VFUyTlETfG3TJUPOukb
-         B/GR2E7eQUoQn8H2thjbCIPIMG9sqco86L7fxgM7cB74NT1iJPS4fAYyXbyoj4Pj88/D
-         gI+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUfxEKa4kI/jL+rlra2V23blWEVKZpDbmCDCzniRtulIxlpo0R5fJYJl2NzMAFzr3QkMYpSw5f2HRm7+kILAZle@vger.kernel.org, AJvYcCXooH2JP/J61XTONnyx4n5mKIcNJBuLW59C2ZRdhHppk1FkFddsgA/fr1uxQ5cLTyFRLzct2K3ECXvBtn8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd5L7pwd3Ffq4PpmKlUlBavWplgdW1FLpX4/lRaNM8tM4ZHRcK
-	BnWZDR+WhiCdyuZH6MwCVfGSfFgiijn5PYHAmNA9oq5CJ8FSxk44SYWl8jp/hQU=
-X-Gm-Gg: ASbGncvaQtFhIgSR1RKJBfntmqfyNpIe+2SgTmed0GH1uXpjZT3pBspC5R9vlatKJPo
-	6fly2KFA4kFLkHFZQNLx2MgDquV0Ulne6f1fwzthMYjYRR/N3Kz+h53G6jR0d73xxdN9/kWIuDr
-	gMM6mbQPjBh6RoFhTXHdoASeBDyvt09gvdHuruEIzppeaI3MGXra5D1849BIyNWwU665o6w3Lm1
-	pW0UhwrDMuBbY1EzZgPvK0zVQDSjqz1Ah0Wrf1aXOHMfYtOPQSdifbB9lAnmEamrqzgUFqdvw13
-	xGounyL50+OYw0KtM2c5rGb6doLxWSW7axaTUnaToD8k4ek85veELlhEjs1PCRYPjHeFsyyh37A
-	Mw35agdA8jKHY9fm6ivfOqks=
-X-Google-Smtp-Source: AGHT+IHO//0EqEc7AdSy3HOjDEMiPF4k0UYR10/bdF7j6q/cjrIDSgjLD6NXd4/l6YDSJO91wQyowQ==
-X-Received: by 2002:a05:6a21:710a:b0:201:8a13:f392 with SMTP id adf61e73a8af0-2170ccb38e2mr6079231637.20.1747437726407;
-        Fri, 16 May 2025 16:22:06 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b26eaf6dc3csm2097088a12.24.2025.05.16.16.22.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 16:22:05 -0700 (PDT)
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	andrew+netdev@lunn.ch,
-	horms@kernel.org,
-	jiri@resnulli.us,
-	shuah@kernel.org,
-	stfomichev@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH net v2] selftests: net: validate team flags propagation
-Date: Fri, 16 May 2025 16:22:05 -0700
-Message-ID: <20250516232205.539266-1-stfomichev@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1747437825; x=1748042625;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/Qy75UNCDbhvgShF7QirTdkT6HEAxA37LSBHQ4luFaE=;
+        b=wRfIPqmUIcyf0hAFdFDQx+GXJsqZovCFxffqDn2n4F2xQRVsIR8zq2bAVcxXfrnlxZ
+         y2+FMuTsNFA3NL9Zg8smqAEAPnUZYfjW5TmfyaTpoi5YzY/1jZVXcyHAyeeGStykdUoz
+         SLqZcFdHjo7T+uXev50Aat8DJPOLRYtOLcLXI5f9xhvL3CT2NyDF2ReyXRzo1elR5nV7
+         xw+L+tA9DGUGuMWItWTzkbcYhfqM+vdm6CGAR2Ya+wYcPc0puDXaBugYQoS5El/n76kB
+         k/Keua6IWdSWRRuconzqAUvxYHbkqUgBB8597l6TS4aqvzBnpqf+wIkwfakwtFCzDk3C
+         YRVA==
+X-Forwarded-Encrypted: i=1; AJvYcCU3U/iZL+Bfeg7Y+yQUgizep3F+/73/KUAhYol/TEFbcvRquVWxUwm3i4ETQW49+QUqB4FS+E6E3QeKNEk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywb1M0mSio+NcmGVirXSZGLaLVJgQyB3f6YOdbYpp66bVgOZwEu
+	ReNXNQkvwL5zCAb3LXzYKyCFYjFJ1Z3v+/1rpddpLZIDmoVArwRd/ydfKkLAYatskXctbUlKmBZ
+	2m2fNk+cGAg==
+X-Google-Smtp-Source: AGHT+IE5elXbSEvAhAu/1u+W1DmV8E5CTaDvcfkH0DVNNds39b3JQLhXRejeRYVGv96d8CPoJ59HFSZvuyk4
+X-Received: from pgbdv10.prod.google.com ([2002:a05:6a02:446a:b0:b21:13c5:ed97])
+ (user=jyescas job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:9183:b0:215:dd02:4473
+ with SMTP id adf61e73a8af0-2170cde5191mr7338958637.32.1747437824945; Fri, 16
+ May 2025 16:23:44 -0700 (PDT)
+Date: Fri, 16 May 2025 16:23:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
+Message-ID: <20250516232341.659513-1-jyescas@google.com>
+Subject: [PATCH v5] mm: Add CONFIG_PAGE_BLOCK_ORDER to select page block order
+From: Juan Yescas <jyescas@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Juan Yescas <jyescas@google.com>, Zi Yan <ziy@nvidia.com>, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc: tjmercier@google.com, isaacmanjarres@google.com, kaleshsingh@google.com, 
+	Minchan Kim <minchan@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Cover three recent cases:
-1. missing ops locking for the lowers during netdev_sync_lower_features
-2. missing locking for dev_set_promiscuity (plus netdev_ops_assert_locked
-   with a comment on why/when it's needed)
-3. rcu lock during team_change_rx_flags
+Problem: On large page size configurations (16KiB, 64KiB), the CMA
+alignment requirement (CMA_MIN_ALIGNMENT_BYTES) increases considerably,
+and this causes the CMA reservations to be larger than necessary.
+This means that system will have less available MIGRATE_UNMOVABLE and
+MIGRATE_RECLAIMABLE page blocks since MIGRATE_CMA can't fallback to them.
 
-Verified that each one triggers when the respective fix is reverted.
-Not sure about the placement, but since it all relies on teaming,
-added to the teaming directory.
+The CMA_MIN_ALIGNMENT_BYTES increases because it depends on
+MAX_PAGE_ORDER which depends on ARCH_FORCE_MAX_ORDER. The value of
+ARCH_FORCE_MAX_ORDER increases on 16k and 64k kernels.
 
-One ugly bit is that I add NETIF_F_LRO to netdevsim; there is no way
-to trigger netdev_sync_lower_features without it.
+For example, in ARM, the CMA alignment requirement when:
 
-Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+- CONFIG_ARCH_FORCE_MAX_ORDER default value is used
+- CONFIG_TRANSPARENT_HUGEPAGE is set:
+
+PAGE_SIZE | MAX_PAGE_ORDER | pageblock_order | CMA_MIN_ALIGNMENT_BYTES
+-----------------------------------------------------------------------
+   4KiB   |      10        |      10         |  4KiB * (2 ^ 10)  =  4MiB
+  16Kib   |      11        |      11         | 16KiB * (2 ^ 11) =  32MiB
+  64KiB   |      13        |      13         | 64KiB * (2 ^ 13) = 512MiB
+
+There are some extreme cases for the CMA alignment requirement when:
+
+- CONFIG_ARCH_FORCE_MAX_ORDER maximum value is set
+- CONFIG_TRANSPARENT_HUGEPAGE is NOT set:
+- CONFIG_HUGETLB_PAGE is NOT set
+
+PAGE_SIZE | MAX_PAGE_ORDER | pageblock_order |  CMA_MIN_ALIGNMENT_BYTES
+------------------------------------------------------------------------
+   4KiB   |      15        |      15         |  4KiB * (2 ^ 15) = 128MiB
+  16Kib   |      13        |      13         | 16KiB * (2 ^ 13) = 128MiB
+  64KiB   |      13        |      13         | 64KiB * (2 ^ 13) = 512MiB
+
+This affects the CMA reservations for the drivers. If a driver in a
+4KiB kernel needs 4MiB of CMA memory, in a 16KiB kernel, the minimal
+reservation has to be 32MiB due to the alignment requirements:
+
+reserved-memory {
+    ...
+    cma_test_reserve: cma_test_reserve {
+        compatible = "shared-dma-pool";
+        size = <0x0 0x400000>; /* 4 MiB */
+        ...
+    };
+};
+
+reserved-memory {
+    ...
+    cma_test_reserve: cma_test_reserve {
+        compatible = "shared-dma-pool";
+        size = <0x0 0x2000000>; /* 32 MiB */
+        ...
+    };
+};
+
+Solution: Add a new config CONFIG_PAGE_BLOCK_ORDER that
+allows to set the page block order in all the architectures.
+The maximum page block order will be given by
+ARCH_FORCE_MAX_ORDER.
+
+By default, CONFIG_PAGE_BLOCK_ORDER will have the same
+value that ARCH_FORCE_MAX_ORDER. This will make sure that
+current kernel configurations won't be affected by this
+change. It is a opt-in change.
+
+This patch will allow to have the same CMA alignment
+requirements for large page sizes (16KiB, 64KiB) as that
+in 4kb kernels by setting a lower pageblock_order.
+
+Tests:
+
+- Verified that HugeTLB pages work when pageblock_order is 1, 7, 10
+on 4k and 16k kernels.
+
+- Verified that Transparent Huge Pages work when pageblock_order
+is 1, 7, 10 on 4k and 16k kernels.
+
+- Verified that dma-buf heaps allocations work when pageblock_order
+is 1, 7, 10 on 4k and 16k kernels.
+
+Benchmarks:
+
+The benchmarks compare 16kb kernels with pageblock_order 10 and 7. The
+reason for the pageblock_order 7 is because this value makes the min
+CMA alignment requirement the same as that in 4kb kernels (2MB).
+
+- Perform 100K dma-buf heaps (/dev/dma_heap/system) allocations of
+SZ_8M, SZ_4M, SZ_2M, SZ_1M, SZ_64, SZ_8, SZ_4. Use simpleperf
+(https://developer.android.com/ndk/guides/simpleperf) to measure
+the # of instructions and page-faults on 16k kernels.
+The benchmark was executed 10 times. The averages are below:
+
+           # instructions         |     #page-faults
+    order 10     |  order 7       | order 10 | order 7
+--------------------------------------------------------
+ 13,891,765,770	 | 11,425,777,314 |    220   |   217
+ 14,456,293,487	 | 12,660,819,302 |    224   |   219
+ 13,924,261,018	 | 13,243,970,736 |    217   |   221
+ 13,910,886,504	 | 13,845,519,630 |    217   |   221
+ 14,388,071,190	 | 13,498,583,098 |    223   |   224
+ 13,656,442,167	 | 12,915,831,681 |    216   |   218
+ 13,300,268,343	 | 12,930,484,776 |    222   |   218
+ 13,625,470,223	 | 14,234,092,777 |    219   |   218
+ 13,508,964,965	 | 13,432,689,094 |    225   |   219
+ 13,368,950,667	 | 13,683,587,37  |    219   |   225
+-------------------------------------------------------------------
+ 13,803,137,433  | 13,131,974,268 |    220   |   220    Averages
+
+There were 4.85% #instructions when order was 7, in comparison
+with order 10.
+
+     13,803,137,433 - 13,131,974,268 = -671,163,166 (-4.86%)
+
+The number of page faults in order 7 and 10 were the same.
+
+These results didn't show any significant regression when the
+pageblock_order is set to 7 on 16kb kernels.
+
+- Run speedometer 3.1 (https://browserbench.org/Speedometer3.1/) 5 times
+ on the 16k kernels with pageblock_order 7 and 10.
+
+order 10 | order 7  | order 7 - order 10 | (order 7 - order 10) %
+-------------------------------------------------------------------
+  15.8	 |  16.4    |         0.6        |     3.80%
+  16.4	 |  16.2    |        -0.2        |    -1.22%
+  16.6	 |  16.3    |        -0.3        |    -1.81%
+  16.8	 |  16.3    |        -0.5        |    -2.98%
+  16.6	 |  16.8    |         0.2        |     1.20%
+-------------------------------------------------------------------
+  16.44     16.4            -0.04	          -0.24%   Averages
+
+The results didn't show any significant regression when the
+pageblock_order is set to 7 on 16kb kernels.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: David Hildenbrand <david@redhat.com>
+CC: Mike Rapoport <rppt@kernel.org>
+Cc: Zi Yan <ziy@nvidia.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Signed-off-by: Juan Yescas <jyescas@google.com>
+Acked-by: Zi Yan <ziy@nvidia.com>
 ---
-v2: fix cleanup and wrong exit code (Jakub)
----
- drivers/net/netdevsim/netdev.c                |  2 +
- net/core/dev.c                                | 10 ++-
- .../selftests/drivers/net/team/Makefile       |  2 +-
- .../testing/selftests/drivers/net/team/config |  1 +
- .../selftests/drivers/net/team/propagation.sh | 80 +++++++++++++++++++
- 5 files changed, 93 insertions(+), 2 deletions(-)
- create mode 100755 tools/testing/selftests/drivers/net/team/propagation.sh
 
-diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
-index 0e0321a7ddd7..3bd1f8cffee8 100644
---- a/drivers/net/netdevsim/netdev.c
-+++ b/drivers/net/netdevsim/netdev.c
-@@ -879,11 +879,13 @@ static void nsim_setup(struct net_device *dev)
- 			 NETIF_F_SG |
- 			 NETIF_F_FRAGLIST |
- 			 NETIF_F_HW_CSUM |
-+			 NETIF_F_LRO |
- 			 NETIF_F_TSO;
- 	dev->hw_features |= NETIF_F_HW_TC |
- 			    NETIF_F_SG |
- 			    NETIF_F_FRAGLIST |
- 			    NETIF_F_HW_CSUM |
-+			    NETIF_F_LRO |
- 			    NETIF_F_TSO;
- 	dev->max_mtu = ETH_MAX_MTU;
- 	dev->xdp_features = NETDEV_XDP_ACT_HW_OFFLOAD;
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 0d891634c692..4debd4b8e0f5 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -9188,8 +9188,16 @@ static int __dev_set_promiscuity(struct net_device *dev, int inc, bool notify)
+Changes in v5:
+  - Remove the ranges for CONFIG_PAGE_BLOCK_ORDER. The
+    ranges with config definitions don't work in Kconfig,
+    for example (range 1 MY_CONFIG).
+  - Add PAGE_BLOCK_ORDER_MANUAL config for the
+    page block order number. The default value was not
+    defined.
+  - Fix typos reported by Andrew.
+  - Test default configs in powerpc. 
+
+Changes in v4:
+  - Set PAGE_BLOCK_ORDER in incluxe/linux/mmzone.h to
+    validate that MAX_PAGE_ORDER >= PAGE_BLOCK_ORDER at
+    compile time.
+  - This change fixes the warning in:
+    https://lore.kernel.org/oe-kbuild-all/202505091548.FuKO4b4v-lkp@intel.com/
+
+Changes in v3:
+  - Rename ARCH_FORCE_PAGE_BLOCK_ORDER to PAGE_BLOCK_ORDER
+    as per Matthew's suggestion.
+  - Update comments in pageblock-flags.h for pageblock_order
+    value when THP or HugeTLB are not used.
+
+Changes in v2:
+  - Add Zi's Acked-by tag.
+  - Move ARCH_FORCE_PAGE_BLOCK_ORDER config to mm/Kconfig as
+    per Zi and Matthew suggestion so it is available to
+    all the architectures.
+  - Set ARCH_FORCE_PAGE_BLOCK_ORDER to 10 by default when
+    ARCH_FORCE_MAX_ORDER is not available.
+
+
+ include/linux/mmzone.h          | 16 ++++++++++++++++
+ include/linux/pageblock-flags.h |  8 ++++----
+ mm/Kconfig                      | 30 ++++++++++++++++++++++++++++++
+ 3 files changed, 50 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 6ccec1bf2896..6fdb8f7f74d6 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -37,6 +37,22 @@
  
- 		dev_change_rx_flags(dev, IFF_PROMISC);
- 	}
--	if (notify)
-+	if (notify) {
-+		/* The ops lock is only required to ensure consistent locking
-+		 * for `NETDEV_CHANGE` notifiers. This function is sometimes
-+		 * called without the lock, even for devices that are ops
-+		 * locked, such as in `dev_uc_sync_multiple` when using
-+		 * bonding or teaming.
-+		 */
-+		netdev_ops_assert_locked(dev);
- 		__dev_notify_flags(dev, old_flags, IFF_PROMISC, 0, NULL);
-+	}
- 	return 0;
- }
+ #define NR_PAGE_ORDERS (MAX_PAGE_ORDER + 1)
  
-diff --git a/tools/testing/selftests/drivers/net/team/Makefile b/tools/testing/selftests/drivers/net/team/Makefile
-index 2d5a76d99181..eaf6938f100e 100644
---- a/tools/testing/selftests/drivers/net/team/Makefile
-+++ b/tools/testing/selftests/drivers/net/team/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- # Makefile for net selftests
++/* Defines the order for the number of pages that have a migrate type. */
++#ifndef CONFIG_PAGE_BLOCK_ORDER_MANUAL
++#define PAGE_BLOCK_ORDER MAX_PAGE_ORDER
++#else
++#define PAGE_BLOCK_ORDER CONFIG_PAGE_BLOCK_ORDER_MANUAL
++#endif /* CONFIG_PAGE_BLOCK_ORDER_MANUAL */
++
++/*
++ * The MAX_PAGE_ORDER, which defines the max order of pages to be allocated
++ * by the buddy allocator, has to be larger or equal to the PAGE_BLOCK_ORDER,
++ * which defines the order for the number of pages that can have a migrate type
++ */
++#if (PAGE_BLOCK_ORDER > MAX_PAGE_ORDER)
++#error MAX_PAGE_ORDER must be >= PAGE_BLOCK_ORDER
++#endif
++
+ /*
+  * PAGE_ALLOC_COSTLY_ORDER is the order at which allocations are deemed
+  * costly to service.  That is between allocation orders which should
+diff --git a/include/linux/pageblock-flags.h b/include/linux/pageblock-flags.h
+index fc6b9c87cb0a..e73a4292ef02 100644
+--- a/include/linux/pageblock-flags.h
++++ b/include/linux/pageblock-flags.h
+@@ -41,18 +41,18 @@ extern unsigned int pageblock_order;
+  * Huge pages are a constant size, but don't exceed the maximum allocation
+  * granularity.
+  */
+-#define pageblock_order		MIN_T(unsigned int, HUGETLB_PAGE_ORDER, MAX_PAGE_ORDER)
++#define pageblock_order		MIN_T(unsigned int, HUGETLB_PAGE_ORDER, PAGE_BLOCK_ORDER)
  
--TEST_PROGS := dev_addr_lists.sh
-+TEST_PROGS := dev_addr_lists.sh propagation.sh
+ #endif /* CONFIG_HUGETLB_PAGE_SIZE_VARIABLE */
  
- TEST_INCLUDES := \
- 	../bonding/lag_lib.sh \
-diff --git a/tools/testing/selftests/drivers/net/team/config b/tools/testing/selftests/drivers/net/team/config
-index b5e3a3aad4bf..636b3525b679 100644
---- a/tools/testing/selftests/drivers/net/team/config
-+++ b/tools/testing/selftests/drivers/net/team/config
-@@ -1,5 +1,6 @@
- CONFIG_DUMMY=y
- CONFIG_IPV6=y
- CONFIG_MACVLAN=y
-+CONFIG_NETDEVSIM=m
- CONFIG_NET_TEAM=y
- CONFIG_NET_TEAM_MODE_LOADBALANCE=y
-diff --git a/tools/testing/selftests/drivers/net/team/propagation.sh b/tools/testing/selftests/drivers/net/team/propagation.sh
-new file mode 100755
-index 000000000000..4bea75b79878
---- /dev/null
-+++ b/tools/testing/selftests/drivers/net/team/propagation.sh
-@@ -0,0 +1,80 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
+ #elif defined(CONFIG_TRANSPARENT_HUGEPAGE)
+ 
+-#define pageblock_order		MIN_T(unsigned int, HPAGE_PMD_ORDER, MAX_PAGE_ORDER)
++#define pageblock_order		MIN_T(unsigned int, HPAGE_PMD_ORDER, PAGE_BLOCK_ORDER)
+ 
+ #else /* CONFIG_TRANSPARENT_HUGEPAGE */
+ 
+-/* If huge pages are not used, group by MAX_ORDER_NR_PAGES */
+-#define pageblock_order		MAX_PAGE_ORDER
++/* If huge pages are not used, group by PAGE_BLOCK_ORDER */
++#define pageblock_order		PAGE_BLOCK_ORDER
+ 
+ #endif /* CONFIG_HUGETLB_PAGE */
+ 
+diff --git a/mm/Kconfig b/mm/Kconfig
+index e113f713b493..bd8012b30b39 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -989,6 +989,36 @@ config CMA_AREAS
+ 
+ 	  If unsure, leave the default value "8" in UMA and "20" in NUMA.
+ 
++config PAGE_BLOCK_ORDER
++	bool "Allow setting a custom page block order"
++	default n
++	help
++	  This config allows overriding the default page block order when the
++	  page block order is required to be smaller than ARCH_FORCE_MAX_ORDER or
++	  MAX_PAGE_ORDER.
 +
-+set -e
++	  If unsure, do not enable it.
 +
-+NSIM_LRO_ID=$((256 + RANDOM % 256))
-+NSIM_LRO_SYS=/sys/bus/netdevsim/devices/netdevsim$NSIM_LRO_ID
++#
++# When PAGE_BLOCK_ORDER is not enabled or ARCH_FORCE_MAX_ORDER is not defined,
++# the default page block order is MAX_PAGE_ORDER (10) as per
++# include/linux/mmzone.h.
++#
++config PAGE_BLOCK_ORDER_MANUAL
++	int "Page Block Order"
++	depends on PAGE_BLOCK_ORDER
++	help
++	  The page block order refers to the power of two number of pages that
++	  are physically contiguous and can have a migrate type associated to
++	  them. The maximum size of the page block order is limited by
++	  ARCH_FORCE_MAX_ORDER.
 +
-+NSIM_DEV_SYS_NEW=/sys/bus/netdevsim/new_device
-+NSIM_DEV_SYS_DEL=/sys/bus/netdevsim/del_device
++	  Reducing pageblock order can negatively impact THP generation
++	  success rate. If your workloads uses THP heavily, please use this
++	  option with caution.
 +
-+cleanup()
-+{
-+	set +e
-+	ip link del dummyteam &>/dev/null
-+	ip link del team0 &>/dev/null
-+	echo $NSIM_LRO_ID > $NSIM_DEV_SYS_DEL
-+	modprobe -r netdevsim
-+}
++	  Don't change if unsure.
 +
-+# Trigger LRO propagation to the lower.
-+# https://lore.kernel.org/netdev/aBvOpkIoxcr9PfDg@mini-arch/
-+team_lro()
-+{
-+	# using netdevsim because it supports NETIF_F_LRO
-+	NSIM_LRO_NAME=$(find $NSIM_LRO_SYS/net -maxdepth 1 -type d ! \
-+		-path $NSIM_LRO_SYS/net -exec basename {} \;)
-+
-+	ip link add name team0 type team
-+	ip link set $NSIM_LRO_NAME down
-+	ip link set dev $NSIM_LRO_NAME master team0
-+	ip link set team0 up
-+	ethtool -K team0 large-receive-offload off
-+
-+	ip link del team0
-+}
-+
-+# Trigger promisc propagation to the lower during IFLA_MASTER.
-+# https://lore.kernel.org/netdev/20250506032328.3003050-1-sdf@fomichev.me/
-+team_promisc()
-+{
-+	ip link add name dummyteam type dummy
-+	ip link add name team0 type team
-+	ip link set dummyteam down
-+	ip link set team0 promisc on
-+	ip link set dev dummyteam master team0
-+	ip link set team0 up
-+
-+	ip link del team0
-+	ip link del dummyteam
-+}
-+
-+# Trigger promisc propagation to the lower via netif_change_flags (aka
-+# ndo_change_rx_flags).
-+# https://lore.kernel.org/netdev/20250514220319.3505158-1-stfomichev@gmail.com/
-+team_change_flags()
-+{
-+	ip link add name dummyteam type dummy
-+	ip link add name team0 type team
-+	ip link set dummyteam down
-+	ip link set dev dummyteam master team0
-+	ip link set team0 up
-+	ip link set team0 promisc on
-+
-+	# Make sure we can add more L2 addresses without any issues.
-+	ip link add link team0 address 00:00:00:00:00:01 team0.1 type macvlan
-+	ip link set team0.1 up
-+
-+	ip link del team0.1
-+	ip link del team0
-+	ip link del dummyteam
-+}
-+
-+trap cleanup EXIT
-+modprobe netdevsim || :
-+echo $NSIM_LRO_ID > $NSIM_DEV_SYS_NEW
-+udevadm settle
-+team_lro
-+team_promisc
-+team_change_flags
+ config MEM_SOFT_DIRTY
+ 	bool "Track memory changes"
+ 	depends on CHECKPOINT_RESTORE && HAVE_ARCH_SOFT_DIRTY && PROC_FS
 -- 
-2.49.0
+2.49.0.1101.gccaa498523-goog
 
