@@ -1,102 +1,131 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E511C442C
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64DF442C
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:03:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747378952; cv=none; b=Jnij3AmeAM1L55PVaMlc2tKlTB3FH1bj/Dqce9OrqdGI7RjqkmGJL0fsn/5OaUL5B1gyBWNcUR3rD7TMKua2s3ngFDxJttrbjhXPZ157KbGm2h9Z33L+RzvXateaeKklwAuO3NlcJvAAb1hfIbFJ5sVUHYVqOTGxqfdk3jrNb7M=
+	t=1747379009; cv=none; b=r8XuXYzKVe3x1q29JHC/mLa19p6rnO5AZ+SL4z56pGPz9nE2/zLQuJhKtceakA4RcPInk06rmswVJrhoveQ2DHTJO9IaLp3haDsrqFGY+CP2j0X5OhiiXFJWaORV1zK/BYoVC9PjCrbipr+ke0p8G+XyZ1tBd1nhch5RLWTwTCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747378952; c=relaxed/simple;
-	bh=NSm3l2AjyEQJZbJ+kTPiI26S8Hs8lJR8uhbihum8Fm0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s1cxEQggGKgB1MRMz6pawXlkJhwNQvdis0otmfNyBuvQebU1C0+kquH+2myRorUCCIPF0lZ0pzXV8SjXec2j1oWs4Tvv2Buslx/Tv2PTiPl2m9GS8I+3OO4zQEoM3lDty8bK7RhGXseU5oIIZezoQ+nCzD8XpCoJ+FXYclWTR1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=EYiNaQiO; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747379009; c=relaxed/simple;
+	bh=yhtrPlJ9qmNyVnIMkIRuxU21wfsbr+ewaXgbpucVwKI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O4e/ceQg/aOutoN/tEL477Sj+7Iq5vjPN5YQIiKMnSU0jtjnhpro758Z3aA3/nzxNp3R5E2NVHqzVhc4RPD4dl0iDuJ9pBtazd+w/U2+coYJXgh/FyT3+Rl/thkyCZ5a+EGrxYM25usrNr2XSW2btYSkdoOGQumoDNLy8hJCTNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PxXWUALT; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="EYiNaQiO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=3D
-	p87Pol0DiDHOxWLqgQHJiIDQ96ZatGbX/ZyoNiUI0=; b=EYiNaQiOpTS4W5pAT3
-	F5pL9XRrbUhAuTOQshamureTUN9VUEPuYW+BfgsrmMdOV5E5A2qHSHsLeRk/xUbt
-	/MMFS9sNp5kWoCTkXJHvxyqlwNeMSBsgOe4sxKh5u1CNoI0dpUVBiDtTv/eOuzuC
-	TAXCJ2VJbPmNV+romc+rYHpqY=
-Received: from localhost (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgDnF1Xk4iZoNbqAAw--.63522S2;
-	Fri, 16 May 2025 15:01:56 +0800 (CST)
-From: Xavier Xia <xavier_qy@163.com>
-To: anna-maria@linutronix.de,
-	frederic@kernel.org,
-	tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org,
-	Xavier Xia <xavier_qy@163.com>
-Subject: [PATCH v1] hrtimer: Simplify the logic of __hrtimer_get_next_event
-Date: Fri, 16 May 2025 15:01:53 +0800
-Message-Id: <20250516070153.2410363-1-xavier_qy@163.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PxXWUALT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747379008; x=1778915008;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=yhtrPlJ9qmNyVnIMkIRuxU21wfsbr+ewaXgbpucVwKI=;
+  b=PxXWUALT6CJroVYhm487f0msRNuVn7xqyn40PdHmgQWQ3pEpWsbtyNob
+   KnzeDSWnkxV9JyrQQYX8mHAM8ycztj86AsT+7eLDudKAOfx1rQrYe2Oxj
+   5+IXM33+PIik82V6Uf28RMUA9y+Hq47daKCpQH1nzw25op0iBGpQghpZ/
+   Ag864dm6JoB5s8Zr0RnPFFgVDloDE6XSe7MUhhUCKDob9EnOb08+Ko1qJ
+   Aha5d6dbIuWRfBAPNs4Bf9DDJtrBJaKSfGT4A0o1wkNcBNh9b41Av95bd
+   4HKF1fVh1qPIc2Nv0ZDxIL0124VFvEim3KPr1jOVto9Yoxiia3S6TP4IF
+   A==;
+X-CSE-ConnectionGUID: dVYSaEYDT9iDHd0nK9Nfzw==
+X-CSE-MsgGUID: YVQi0j8mQgCI7fbR9HA45A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49477437"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="49477437"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 00:03:27 -0700
+X-CSE-ConnectionGUID: vXCqJWCVTqKRwiW6nA2nnQ==
+X-CSE-MsgGUID: ZVjwAZNZQ0OfN1RXidy/aw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="143724385"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 00:03:23 -0700
+Date: Fri, 16 May 2025 10:03:19 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	siqueira@igalia.com, airlied@gmail.com, simona@ffwll.ch,
+	rodrigo.vivi@intel.com, jani.nikula@linux.intel.com,
+	Xaver Hugl <xaver.hugl@gmail.com>,
+	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+	Krzysztof Karas <krzysztof.karas@intel.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	kernel-dev@igalia.com, amd-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH v3 2/3] drm/doc: Add a section about "App information"
+ for the wedge API
+Message-ID: <aCbjN9lqP4ZWV_lY@black.fi.intel.com>
+References: <20250512203437.989894-1-andrealmeid@igalia.com>
+ <20250512203437.989894-3-andrealmeid@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PygvCgDnF1Xk4iZoNbqAAw--.63522S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ZF15tF15AryrXF4ftF4Utwb_yoW8uw15pa
-	1xG3sxtr4UJF15XF4rJa1DZry7G3Z3Ar1xJF40q397AFna9348Kay0gF4fZF43urWvvrW3
-	A3yxJw15Aa9rAa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0piO6pkUUUUU=
-X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiVg5PEGgm3jms8gAAsw
+In-Reply-To: <20250512203437.989894-3-andrealmeid@igalia.com>
 
-Currently, __hrtimer_get_next_event makes two separate calls to
-__hrtimer_next_event_base for HRTIMER_ACTIVE_SOFT and HRTIMER_ACTIVE_HARD
-respectively to obtain expires_next. However, __hrtimer_next_event_base is
-capable of traversing all timer types simultaneously by simply controlling
-the active mask. There is no need to distinguish the order of traversal
-between soft and hard timers, as the sole purpose is to find the earliest
-expiration time.
-Therefore, the code can be simplified by reducing the two calls to a single
-invocation of __hrtimer_next_event_base, making the code more
-straightforward and easier to understand.
+On Mon, May 12, 2025 at 05:34:36PM -0300, André Almeida wrote:
+> Add a section about "App information" for the wedge API.
+> 
+> Signed-off-by: André Almeida <andrealmeid@igalia.com>
+> ---
+> v3:
+>  - Change "app that caused ..." to "app involved ..."
+>  - Clarify that devcoredump have more information about what happened
+>  - Update that PID and APP will be empty if there's no app info
+> ---
+>  Documentation/gpu/drm-uapi.rst | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
+> index 69f72e71a96e..3300a928d8ef 100644
+> --- a/Documentation/gpu/drm-uapi.rst
+> +++ b/Documentation/gpu/drm-uapi.rst
+> @@ -446,6 +446,23 @@ telemetry information (devcoredump, syslog). This is useful because the first
+>  hang is usually the most critical one which can result in consequential hangs or
+>  complete wedging.
+>  
+> +App information
+> +---------------
+> +
+> +The information about which application (if any) was involved in the device
+> +wedging is useful for userspace if they want to notify the user about what
+> +happened (e.g. the compositor display a message to the user "The <app name>
+> +caused a graphical error and the system recovered") or to implement policies
+> +(e.g. the daemon may "ban" an app that keeps resetting the device). If the app
+> +information is available, the uevent will display as ``PID=<pid>`` and
+> +``APP=<task name>``. Otherwise, ``PID`` and ``APP`` will not appear in the event
 
-Signed-off-by: Xavier Xia <xavier_qy@163.com>
----
- kernel/time/hrtimer.c | 21 ++++++---------------
- 1 file changed, 6 insertions(+), 15 deletions(-)
+Personally I'd use Linux specific naming for consistency.
 
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 517ee2590a29..7c23115d25b0 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -577,24 +577,15 @@ static ktime_t __hrtimer_next_event_base(struct hrtimer_cpu_base *cpu_base,
- static ktime_t
- __hrtimer_get_next_event(struct hrtimer_cpu_base *cpu_base, unsigned int active_mask)
- {
--	unsigned int active;
--	struct hrtimer *next_timer = NULL;
- 	ktime_t expires_next = KTIME_MAX;
- 
--	if (!cpu_base->softirq_activated && (active_mask & HRTIMER_ACTIVE_SOFT)) {
--		active = cpu_base->active_bases & HRTIMER_ACTIVE_SOFT;
--		cpu_base->softirq_next_timer = NULL;
--		expires_next = __hrtimer_next_event_base(cpu_base, NULL,
--							 active, KTIME_MAX);
-+	if (cpu_base->softirq_activated)
-+		active_mask &= ~HRTIMER_ACTIVE_SOFT;
- 
--		next_timer = cpu_base->softirq_next_timer;
--	}
--
--	if (active_mask & HRTIMER_ACTIVE_HARD) {
--		active = cpu_base->active_bases & HRTIMER_ACTIVE_HARD;
--		cpu_base->next_timer = next_timer;
--		expires_next = __hrtimer_next_event_base(cpu_base, NULL, active,
--							 expires_next);
-+	active_mask &= cpu_base->active_bases;
-+	if (active_mask) {
-+		expires_next = __hrtimer_next_event_base(cpu_base, NULL, active_mask,
-+							 KTIME_MAX);
- 	}
- 
- 	return expires_next;
--- 
-2.34.1
+s/APP/TASK
 
+But in any case,
+
+Reviewed-by: Raag Jadav <raag.jadav@intel.com>
+
+> +string.
+> +
+> +The reliability of this information is driver and hardware specific, and should
+> +be taken with a caution regarding it's precision. To have a big picture of what
+> +happened,
+
+Nit: what *really* happened
+
+> the devcoredump file provides should have much more detailed
+> +information about the device state and about the event.
+> +
+>  Consumer prerequisites
+>  ----------------------
+>  
+> -- 
+> 2.49.0
+> 
