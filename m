@@ -1,52 +1,53 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BE020D4E9;
-	Fri, 16 May 2025 16:53:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8563202C26;
+	Fri, 16 May 2025 16:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747414431; cv=none; b=pc/R+pBl0Yt6prm8AutVZQQvKGbJe9mgA6FvRYKGuFFNPaPvsECwqWeVORBLocJ77xpgmd8QYmO/qXeQ/UmbDGxVp30nVeY1j9VD3Ai24x4dvvxlzAQtrCJMQT+ZyuWWhqWignNVKZRnpvbW4ISVx0v+mzy6IS66D5m2fPBs42A=
+	t=1747414431; cv=none; b=ENbeUHiKbkP8jkdcz9CiXOJ4uq/OrZlX4xHCo333M4PN1sZCZVlen38hXUF/fH3vYLJxzKPlLsCkSIN/DQHn6gaNIcJp853Gw/skzsOjPERfSthFxRXvy+U5ccQnAfre31xkC6wDP51bYSA+7b/jx4ZyLBkqBKhVnXRvi/5bhm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747414431; c=relaxed/simple;
-	bh=qcLANFQYB6F1aTadtJclYNPeTflXqceuvsxjG9tl5Gg=;
+	bh=q/Cq8Ko0xIVDfVyvCtxXclzryhAsQiJ6NK8PK5J4bdc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=J9sGmrIxaXtFe/uSKg+AjwQNjc45Ad+YT3eQn/AycI+Uiaqfw/0FH/VMjhWcF9iArlHI0UC81O2iPQ/rgDVgW8IHvo78AXb9cvS3W+zGOY5xPLD4NZ+Bn6XPT01fuX/U7/sL61EtNsGSn14HXOvgd8qjmgbNV7YIku3w22Ql6iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.49
+	 In-Reply-To:To:Cc; b=mHt9YyR7qjS8C59Jb5aiqyfa4zLt+Kfg6E+awTyHDF+IysYf++uaT6G3wvKoxFeRIVUbvle2oRvXv5AW7kopGKwBETmIDf627bYHPju8Fxrn9t19+tF+z3ANECuGgInWZzqBoW/U3zUFJD11TIeRd/SddqjiR/iEBk4fTHlyTik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so17783365e9.1;
-        Fri, 16 May 2025 09:53:49 -0700 (PDT)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-442d146a1aaso20749435e9.1;
+        Fri, 16 May 2025 09:53:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747414428; x=1748019228;
+        d=1e100.net; s=20230601; t=1747414424; x=1748019224;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=anhtEfC+aYWJeJvUly60jdWH8rm+sVcW8pcF9vb2eMk=;
-        b=KCt5o+7X+Hens7w2Ctq/xlpM5IvaUTYOCHqgMFkEhA3+bBZDDuPetdrqLhj1eRJ4QO
-         0dSjxb1xN645F0Goo4pJ81zrSjxYKu6SwypDXdT3CBzUYmzDJ/TsGShI1nlXVm2JOFKy
-         6jsdDprL+2pqCwvCwjQyMhVsbSHMc2Umxm1G/YnfUBmJzN5AJO9ebl5X9SJBRJ7zTR+H
-         Pvm7IACd3TZY3RlJCDJIQxtSIhC6wm0c91jiTZI3mj9e1i3IFlgZ3Zdqh2Fni+hVsAP7
-         Eyp5ClKGg+AubYWrGcQuCMqBStPk7PhfJirme91Rwc+TJ5WRgYCoexkXF9pg6pfMPBJU
-         2qfw==
-X-Forwarded-Encrypted: i=1; AJvYcCVcPoUOpgmy2cPa7W9zUpjQ2d5oldDVuS317eNP6gQHqUv6uEoEKOWVQ+C3sS+MnqI5Brm8+Di4uymA2R0=@vger.kernel.org, AJvYcCVg8hCcsb/zpyERzRZwVE+zifspg3MBvSo3nGzks1s8D7qCdexd6O7htRYGQdfpPn+UOiZJ/+KPhpE=@vger.kernel.org, AJvYcCXTPkjrtGjBn6Fj1OdwAA+M3zbzvQN/qks3hFAZOXrybSUx5I2cpG0Bc0e9sYEGosw4X58kmZWS3g4rCNSw@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaQcQS2Qq3b7CwrjuqJ7wKVy+mT5u1XgWJfcxHNLwUzo4q4v8c
-	X4jDPN8z8vNLCKFj8bNaq8nxRne4n3xbCGwJSJ/7saep/Myym/fBchxY
-X-Gm-Gg: ASbGnct12pEknxqQUGQCTKe/7tx8ZypUtJymM4Kb8/kN/iwcFDuhrHT2DKoDu88Gnwl
-	3FWuDm7Ni1NMrLO8oVzpsK1OA8hF3h7JfWxPMbg0I6+WSLilhw2jm8Cd92nqlTEUYq/SmTBRRlf
-	d8jaOmJCafKUvS2gGzeMu8AVY0xniNC6YaQG1tKThh0jjBzZIPtagE09F3jgIPNwssongco0Fgx
-	Q+lnfvkymoCImgm6A8iASHJmOEvRi3hMha6b7aZEyDF2zb+kQOfTULfEouJpqHPPAavAFkhUF0s
-	SMe+6I6AKiS5lmkalfp3hOoiUAFIdrhBu1v7HMacwmkd4vRMGCBI6D/PaKcuy1gunkIfaKWIsdu
-	7dpwkwGqdIw==
-X-Google-Smtp-Source: AGHT+IEYfDmifEa0iTxLazrxFoXXzBf3KmDVOnp4+FnO5DW5ap6WM75YN8wmhjMrbGLA/7/G7xIfqw==
-X-Received: by 2002:a05:600c:5012:b0:440:69f5:f179 with SMTP id 5b1f17b1804b1-442f84d5511mr89042655e9.7.1747414428190;
-        Fri, 16 May 2025 09:53:48 -0700 (PDT)
+        bh=hkJKBkDUJRJ7bEb2VzWEqCdNMs8+V5XyH/wwMnfIh5o=;
+        b=vK20A8EfeHnfv0T0B4uVYkM4hcQlkoVP7adjo3V5HsSwYrFPBtsNg6HQSf8lm55CMh
+         /Adm4AJcA5GHpGbfQCpbogeNNv/zAFFNKEmoiabqA0s6W/llIGQa2LzLojiNKChGkP6b
+         IFftVFppbhASpPhJtX1beVUufvrcVJ5VRe03jFChlwGN2KqTWGH2aKMjtj0Ad9DkNhMh
+         e791Go3S3sAuP6ii4vwN3SXCL2NBbGlxnC1tG8u1ZeKZCIloPWygNrlUfM491SJkhOXD
+         Yz98meLg6vL0W0iPVwE8mnabuLZR3Hl8kRvj7GtIaGo/mjhfrhxlt+e55YYSaAQbno3H
+         Q62w==
+X-Forwarded-Encrypted: i=1; AJvYcCVqBxDlNBEtEVfS/MuBQmr56R47I7soE6CQM4XWEG+zsNJwVkF+eaoYhYISeh+uqQ1QxfavqHds+g3ZRfs=@vger.kernel.org, AJvYcCVrZXm+/ChKrURIlaI3a5aoiD7f/nSzMPHgclOgNpOMQ7WryoZYB/tv6bCzD2OLt+/K7scLRXbRmti1urkO@vger.kernel.org, AJvYcCXT3CF0yLC0f97bUWvG/QBPaUP2R7c8wlG6hJudWWpu19E9j9vNXAjaBjnFeNHsvORNUWqvr/3eT14=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy77uhEyatWqj28fR+AGV5yklV4FmsZm47jGJ5XoYMKHPkH8y5s
+	4dheWiGHoiTvxZHpgQKiEAzw5rneIRCtDkpXTgeFl0nz0WYc0JlBJQzH
+X-Gm-Gg: ASbGnctBACqe09hV1+4KSUxb4X7G7etWGuxYufJCc5Tf4AzBkXu3EjLQJwwtLaRabFe
+	TZUwXP5njSRVXbEwLGVKIVE+ZVGVDVPIJ27mN9lJjAr6QI2UXyZg2CTEVyrxy1s9WvmJaQ47N/4
+	IRtX5YecY2Gsj1VG6bKay8Y6za+wH+4Mvk9oMJCNC/febVymMEPcojOM9dzzoP/djXksNE3SSVB
+	290vhEnjjAmDcgrvSfSVttJlKBkw83C6eRWh5QA1q/OfAUkUO1dAqIAHTlKl3CNf3Nq8Jp6H5+v
+	f2dy4j7kj/jGDnpAJpTZ8zehz1XRUwTrCkP/EFkIMxX5yAOWF59F2w1rYqHgcUDFkRJmfNkI0Pp
+	Nf3ruObCctg==
+X-Google-Smtp-Source: AGHT+IGw5JIgx7HqIbGrEYnlEsefAk1beGSNisgnRK7qNU0koGoWWuj6HFwKCOCyrDxBWxPyXARd6A==
+X-Received: by 2002:a05:600c:3ba1:b0:43d:762:e0c4 with SMTP id 5b1f17b1804b1-442ff03bbaemr34135475e9.27.1747414423883;
+        Fri, 16 May 2025 09:53:43 -0700 (PDT)
 Received: from [10.42.0.1] (cst-prg-46-162.cust.vodafone.cz. [46.135.46.162])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3380498sm116511755e9.11.2025.05.16.09.53.45
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3380498sm116511755e9.11.2025.05.16.09.53.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 09:53:46 -0700 (PDT)
+        Fri, 16 May 2025 09:53:43 -0700 (PDT)
 From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Date: Fri, 16 May 2025 18:53:24 +0200
-Subject: [PATCH v3 10/10] arm64: dts: rockchip: enable NPU on ROCK 5B
+Date: Fri, 16 May 2025 18:53:22 +0200
+Subject: [PATCH v3 08/10] accel/rocket: Add IOCTLs for synchronizing memory
+ accesses
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,7 +56,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250516-6-10-rocket-v3-10-7051ac9225db@tomeuvizoso.net>
+Message-Id: <20250516-6-10-rocket-v3-8-7051ac9225db@tomeuvizoso.net>
 References: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
 In-Reply-To: <20250516-6-10-rocket-v3-0-7051ac9225db@tomeuvizoso.net>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -76,99 +77,210 @@ Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  Tomeu Vizoso <tomeu@tomeuvizoso.net>
 X-Mailer: b4 0.14.2
 
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+The NPU cores have their own access to the memory bus, and this isn't
+cache coherent with the CPUs.
 
-The NPU on the ROCK5B uses the same regulator for both the sram-supply
-and the npu's supply. Add this regulator, and enable all the NPU bits.
-Also add the regulator as a domain-supply to the pd_npu power domain.
+Add IOCTLs so userspace can mark when the caches need to be flushed, and
+also when a writer job needs to be waited for before the buffer can be
+accessed from the CPU.
 
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Initially based on the same IOCTLs from the Etnaviv driver.
+
+v2:
+- Don't break UABI by reordering the IOCTL IDs (Jeff Hugo)
+
+v3:
+- Check that padding fields in IOCTLs are zero (Jeff Hugo)
+
 Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
 ---
- arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts | 56 +++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+ drivers/accel/rocket/rocket_drv.c |  2 +
+ drivers/accel/rocket/rocket_gem.c | 80 +++++++++++++++++++++++++++++++++++++++
+ drivers/accel/rocket/rocket_gem.h |  5 +++
+ include/uapi/drm/rocket_accel.h   | 37 ++++++++++++++++++
+ 4 files changed, 124 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-index d22068475c5dc6cb885f878f3f527a66edf1ba70..49500f7cbcb14af4919a6c1997e9e53a01d84973 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-@@ -316,6 +316,28 @@ regulator-state-mem {
- 	};
+diff --git a/drivers/accel/rocket/rocket_drv.c b/drivers/accel/rocket/rocket_drv.c
+index 18ff051c336a14b7dda72d235faffb7a55a0a8ee..75ccf6e14b2bed80005a70b8cc06925b7c3ac405 100644
+--- a/drivers/accel/rocket/rocket_drv.c
++++ b/drivers/accel/rocket/rocket_drv.c
+@@ -58,6 +58,8 @@ static const struct drm_ioctl_desc rocket_drm_driver_ioctls[] = {
+ 
+ 	ROCKET_IOCTL(CREATE_BO, create_bo),
+ 	ROCKET_IOCTL(SUBMIT, submit),
++	ROCKET_IOCTL(PREP_BO, prep_bo),
++	ROCKET_IOCTL(FINI_BO, fini_bo),
  };
  
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1m2_xfer>;
-+	status = "okay";
-+
-+	vdd_npu_s0: regulator@42 {
-+		compatible = "rockchip,rk8602";
-+		reg = <0x42>;
-+		fcs,suspend-voltage-selector = <1>;
-+		regulator-name = "vdd_npu_s0";
-+		regulator-boot-on;
-+		regulator-min-microvolt = <550000>;
-+		regulator-max-microvolt = <950000>;
-+		regulator-ramp-delay = <2300>;
-+		vin-supply = <&vcc5v0_sys>;
-+
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
-+	};
-+};
-+
- &i2c6 {
- 	status = "okay";
+ DEFINE_DRM_ACCEL_FOPS(rocket_accel_driver_fops);
+diff --git a/drivers/accel/rocket/rocket_gem.c b/drivers/accel/rocket/rocket_gem.c
+index 8a8a7185daac4740081293aae6945c9b2bbeb2dd..cdc5238a93fa5978129dc1ac8ec8de955160dc18 100644
+--- a/drivers/accel/rocket/rocket_gem.c
++++ b/drivers/accel/rocket/rocket_gem.c
+@@ -129,3 +129,83 @@ int rocket_ioctl_create_bo(struct drm_device *dev, void *data, struct drm_file *
  
-@@ -440,6 +462,10 @@ &pd_gpu {
- 	domain-supply = <&vdd_gpu_s0>;
+ 	return ret;
+ }
++
++static inline enum dma_data_direction rocket_op_to_dma_dir(u32 op)
++{
++	if (op & ROCKET_PREP_READ)
++		return DMA_FROM_DEVICE;
++	else if (op & ROCKET_PREP_WRITE)
++		return DMA_TO_DEVICE;
++	else
++		return DMA_BIDIRECTIONAL;
++}
++
++int rocket_ioctl_prep_bo(struct drm_device *dev, void *data, struct drm_file *file)
++{
++	struct drm_rocket_prep_bo *args = data;
++	unsigned long timeout = drm_timeout_abs_to_jiffies(args->timeout_ns);
++	struct rocket_device *rdev = to_rocket_device(dev);
++	struct drm_gem_object *gem_obj;
++	struct drm_gem_shmem_object *shmem_obj;
++	bool write = !!(args->op & ROCKET_PREP_WRITE);
++	long ret = 0;
++
++	if (args->op & ~(ROCKET_PREP_READ | ROCKET_PREP_WRITE))
++		return -EINVAL;
++
++	gem_obj = drm_gem_object_lookup(file, args->handle);
++	if (!gem_obj)
++		return -ENOENT;
++
++	ret = dma_resv_wait_timeout(gem_obj->resv, dma_resv_usage_rw(write),
++				    true, timeout);
++	if (!ret)
++		ret = timeout ? -ETIMEDOUT : -EBUSY;
++
++	shmem_obj = &to_rocket_bo(gem_obj)->base;
++
++	for (unsigned int core = 1; core < rdev->num_cores; core++) {
++		dma_sync_sgtable_for_cpu(rdev->cores[core].dev, shmem_obj->sgt,
++					 rocket_op_to_dma_dir(args->op));
++	}
++
++	to_rocket_bo(gem_obj)->last_cpu_prep_op = args->op;
++
++	drm_gem_object_put(gem_obj);
++
++	return ret;
++}
++
++int rocket_ioctl_fini_bo(struct drm_device *dev, void *data, struct drm_file *file)
++{
++	struct rocket_device *rdev = to_rocket_device(dev);
++	struct drm_rocket_fini_bo *args = data;
++	struct drm_gem_shmem_object *shmem_obj;
++	struct rocket_gem_object *rkt_obj;
++	struct drm_gem_object *gem_obj;
++
++	if (args->reserved != 0) {
++		drm_dbg(dev, "Reserved field in drm_rocket_fini_bo struct should be 0.\n");
++		return -EINVAL;
++	}
++
++	gem_obj = drm_gem_object_lookup(file, args->handle);
++	if (!gem_obj)
++		return -ENOENT;
++
++	rkt_obj = to_rocket_bo(gem_obj);
++	shmem_obj = &rkt_obj->base;
++
++	WARN_ON(rkt_obj->last_cpu_prep_op == 0);
++
++	for (unsigned int core = 1; core < rdev->num_cores; core++) {
++		dma_sync_sgtable_for_device(rdev->cores[core].dev, shmem_obj->sgt,
++					    rocket_op_to_dma_dir(rkt_obj->last_cpu_prep_op));
++	}
++
++	rkt_obj->last_cpu_prep_op = 0;
++
++	drm_gem_object_put(gem_obj);
++
++	return 0;
++}
+diff --git a/drivers/accel/rocket/rocket_gem.h b/drivers/accel/rocket/rocket_gem.h
+index 41497554366961cfe18cf6c7e93ab1e4e5dc1886..2caa268f7f496f782996c6ad2c4eb851a225a86f 100644
+--- a/drivers/accel/rocket/rocket_gem.h
++++ b/drivers/accel/rocket/rocket_gem.h
+@@ -11,12 +11,17 @@ struct rocket_gem_object {
+ 
+ 	size_t size;
+ 	u32 offset;
++	u32 last_cpu_prep_op;
  };
  
-+&pd_npu {
-+	domain-supply = <&vdd_npu_s0>;
-+};
+ struct drm_gem_object *rocket_gem_create_object(struct drm_device *dev, size_t size);
+ 
+ int rocket_ioctl_create_bo(struct drm_device *dev, void *data, struct drm_file *file);
+ 
++int rocket_ioctl_prep_bo(struct drm_device *dev, void *data, struct drm_file *file);
 +
- &pinctrl {
- 	hdmirx {
- 		hdmirx_hpd: hdmirx-5v-detection {
-@@ -500,6 +526,36 @@ &pwm1 {
- 	status = "okay";
++int rocket_ioctl_fini_bo(struct drm_device *dev, void *data, struct drm_file *file);
++
+ static inline
+ struct  rocket_gem_object *to_rocket_bo(struct drm_gem_object *obj)
+ {
+diff --git a/include/uapi/drm/rocket_accel.h b/include/uapi/drm/rocket_accel.h
+index cb1b5934c201160e7650aabd1b3a2b1c77b1fd7b..b5c80dd767be56e9720b51e4a82617a425a881a1 100644
+--- a/include/uapi/drm/rocket_accel.h
++++ b/include/uapi/drm/rocket_accel.h
+@@ -13,9 +13,13 @@ extern "C" {
+ 
+ #define DRM_ROCKET_CREATE_BO			0x00
+ #define DRM_ROCKET_SUBMIT			0x01
++#define DRM_ROCKET_PREP_BO			0x02
++#define DRM_ROCKET_FINI_BO			0x03
+ 
+ #define DRM_IOCTL_ROCKET_CREATE_BO		DRM_IOWR(DRM_COMMAND_BASE + DRM_ROCKET_CREATE_BO, struct drm_rocket_create_bo)
+ #define DRM_IOCTL_ROCKET_SUBMIT			DRM_IOW(DRM_COMMAND_BASE + DRM_ROCKET_SUBMIT, struct drm_rocket_submit)
++#define DRM_IOCTL_ROCKET_PREP_BO		DRM_IOW(DRM_COMMAND_BASE + DRM_ROCKET_PREP_BO, struct drm_rocket_prep_bo)
++#define DRM_IOCTL_ROCKET_FINI_BO		DRM_IOW(DRM_COMMAND_BASE + DRM_ROCKET_FINI_BO, struct drm_rocket_fini_bo)
+ 
+ /**
+  * struct drm_rocket_create_bo - ioctl argument for creating Rocket BOs.
+@@ -39,6 +43,39 @@ struct drm_rocket_create_bo {
+ 	__u64 offset;
  };
  
-+&rknn_core_top {
-+	npu-supply = <&vdd_npu_s0>;
-+	sram-supply = <&vdd_npu_s0>;
-+	status = "okay";
++#define ROCKET_PREP_READ        0x01
++#define ROCKET_PREP_WRITE       0x02
++
++/**
++ * struct drm_rocket_prep_bo - ioctl argument for starting CPU ownership of the BO.
++ *
++ * Takes care of waiting for any NPU jobs that might still use the NPU and performs cache
++ * synchronization.
++ */
++struct drm_rocket_prep_bo {
++	/** Input: GEM handle of the buffer object. */
++	__u32 handle;
++
++	/** Input: mask of ROCKET_PREP_x, direction of the access. */
++	__u32 op;
++
++	/** Input: Amount of time to wait for NPU jobs. */
++	__s64 timeout_ns;
 +};
 +
-+&rknn_core_1 {
-+	npu-supply = <&vdd_npu_s0>;
-+	sram-supply = <&vdd_npu_s0>;
-+	status = "okay";
++/**
++ * struct drm_rocket_fini_bo - ioctl argument for finishing CPU ownership of the BO.
++ *
++ * Synchronize caches for NPU access.
++ */
++struct drm_rocket_fini_bo {
++	/** Input: GEM handle of the buffer object. */
++	__u32 handle;
++
++	/** Reserved, must be zero. */
++	__u32 reserved;
 +};
 +
-+&rknn_core_2 {
-+	npu-supply = <&vdd_npu_s0>;
-+	sram-supply = <&vdd_npu_s0>;
-+	status = "okay";
-+};
-+
-+&rknn_mmu_top {
-+	status = "okay";
-+};
-+
-+&rknn_mmu_1 {
-+	status = "okay";
-+};
-+
-+&rknn_mmu_2 {
-+	status = "okay";
-+};
-+
- &saradc {
- 	vref-supply = <&avcc_1v8_s0>;
- 	status = "okay";
+ /**
+  * struct drm_rocket_task - A task to be run on the NPU
+  *
 
 -- 
 2.49.0
