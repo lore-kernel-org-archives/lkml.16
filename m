@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A467028466D;
-	Fri, 16 May 2025 21:35:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787AC28466D;
+	Fri, 16 May 2025 21:35:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747431355; cv=none; b=pwSj5jNXHfvLJQx/bqbsZkuJ30W5q9nkELDVBxqzjQXk5uF7zsJ8682BtEFixQ9n0vJJL1Xk44Hejq2M0RYI0OutMQ3MrUCZdjQQ0P7x5rBKbCqxo3TvEC8ax1lj1UsDl9PiSeeR4yOCPLUZQ6J8963EPSxsacIT+aeF8rPOJfY=
+	t=1747431359; cv=none; b=H4RnnNhNYDaPg9KiP9eMWJkGzrrVbXNctADXlUU0WWYvSmuOgktNBL+d5zo0FqfJU6blF1g4MpLUm3ykLutZB4gYolZGXstM7O6CG587nqmazIZKJCw5cLqbEp+t2l5EhxIippuHr+hWb8w7dYV0Ifqr4IGGT5WGpJzdx/1eovw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747431355; c=relaxed/simple;
-	bh=bLyZNDh57twuZ5u/SwC20jaSbr5jsZ/x4elmufChQC0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NUvyW1QimCpToZll27Wb/nDxOQSBQqngNwv3IYIsFSdweYmDGjCOhw396H1vgWndx1D9xURiA7P2ODflIxb8MXQdsJvfHZrW8Ma290fWZEM1LKSaooL8/rJnw9HNQhOt6MQ+Q27srhA3Gphgr1UKn5x/uU2fJQ4Q5nSLEXPLFxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sJ/fjkd5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747431359; c=relaxed/simple;
+	bh=rez+Gcm5qi16mulIlqMeuXT0dnqUZjHmsCwK+GG3nHs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=MY8PwUcCKgKtOq5MbrhMhicrZfZ1GahULlY9+UxhC5I9CZ30N8MOjvFFEwd6gAd7rwxAwCQcGTYejXnnsrhlTbWfaY2/j+dwAA6XhlkPIKoS724A48SzhGQ6dgUoYlME2ip7HmydJgy5J4f5pkh15kts9KYK4odYK2WKK3ugih0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5x9h1ot; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sJ/fjkd5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90F65C4CEE4;
-	Fri, 16 May 2025 21:35:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5x9h1ot"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8ED0C4CEE9;
+	Fri, 16 May 2025 21:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747431355;
-	bh=bLyZNDh57twuZ5u/SwC20jaSbr5jsZ/x4elmufChQC0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sJ/fjkd5HQpsmR9FBzcNfeQ/H4ZUDgUgeEVkg3CnFA1D07wR5QPrWCZEWoAB/Zkeq
-	 bMXvO4zDJKbmsyRi0lyTLbG/BdwTJfP90kgMfhHV58sS63MORa7CKZF0gcsEpqEjq0
-	 dFcxnrRK/kroHB4xNmsndNh2953U7dpqscH3sWQVcGo/3HZtSHugB+kP6f9QQsqPIy
-	 3lP67LiGuER55cLqO4dTiwBCXi8i1WyNab2fGB8Lx+THgKH6+vbSNGWvpgPYx8Dy7i
-	 3Wyo9XMyE9418BuuDUKu3zfzBHkze8ckbj0hIl72IgYuY9P0QaPBZJd2hSl9QsLKZY
-	 mIh7iNa7VV7Ng==
-Message-ID: <a66eb6b7-3121-4383-b604-949090fc08d9@kernel.org>
-Date: Fri, 16 May 2025 21:44:10 +0200
+	s=k20201202; t=1747431359;
+	bh=rez+Gcm5qi16mulIlqMeuXT0dnqUZjHmsCwK+GG3nHs=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=C5x9h1otf0TQF1HmhUBVeBGvKZjlCdP+9nq6PqiAEA3wjcvhM9OFlP1Rc1QltJnlf
+	 UWlTxdpHkZGUHq1L1bvvZxFoe6IgAeRx0I66IFXwCKrEfI4yn3QwCh+DTP/gZDKojl
+	 fIrub+Sy+hreVL47kzjxhpNQwWSaa95qaED1nJf7a3GVEZ/aHg/G/5imHZB95cjZ6y
+	 BATkPStKXSKTUuFcKkV7HyEqB6oonTpiQLHoByxOc3oOYcKz1BLaUjbxmadHClg/kI
+	 GGZI3ifIZ8lfT2X/RG2kkhgWShbcCWojlnNpoPc+2e4ER+USetL25MQSzw+TTphj0v
+	 +zs0wAtKhnIvQ==
+Message-ID: <e69630d5-1816-400a-8a76-6d5490d3a6b2@kernel.org>
+Date: Fri, 16 May 2025 21:46:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,22 +35,21 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] arm64: dts: ls1028a-qds: make the QIXIS CPLD use the
- simple-mfd-i2c.c driver
-To: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: Ioana Ciornei <ioana.ciornei@nxp.com>, Lee Jones <lee@kernel.org>,
+Subject: Re: [PATCH net-next v3 1/2] dt-bindings: net: pse-pd: Add bindings
+ for Si3474 PSE controller
+To: Piotr Kubik <piotr.kubik@adtran.com>,
+ Oleksij Rempel <o.rempel@pengutronix.de>,
+ Kory Maincent <kory.maincent@bootlin.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250430153634.2971736-1-ioana.ciornei@nxp.com>
- <20250430153634.2971736-6-ioana.ciornei@nxp.com>
- <20250502-savvy-eccentric-hog-b4fed5@kuoka>
- <smfuskvhdhrfrgbpjflgymoadms6vfiwgjmipsmkrxldtor6we@tyvafv626bwr>
- <8ec115f7-1a35-4506-a20a-b4de27f10960@kernel.org>
- <z7knkmi7kjhwlqwokikozos7whwaj5vmseh7kjrdl2la3kmj5e@wwzlsxpq573v>
- <7d6b529e-ab26-4efe-8b91-1facbd041ba3@kernel.org>
- <20250507153811.ukkficut2f3jm2hg@skbuf>
+ Conor Dooley <conor+dt@kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <f975f23e-84a7-48e6-a2b2-18ceb9148675@adtran.com>
+ <ebe9a9f5-db9c-4b82-a5e9-3b108a0c6338@adtran.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -96,64 +95,20 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250507153811.ukkficut2f3jm2hg@skbuf>
+In-Reply-To: <ebe9a9f5-db9c-4b82-a5e9-3b108a0c6338@adtran.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 07/05/2025 17:38, Vladimir Oltean wrote:
->> This sounds reasonable, thanks for providing context. Most of this (so a
->> summary) should be in the commit msg as the rationale for changing the
->> ABI, so please grow a bit the commit msg part:
->> "The MDIO mux on the LS1028A-QDS never worked in mainline because ...".
->>
->> With all this I still do not get why do you need to affect the
->> compatibles. What is wrong with the actual compatibles?
->>
->> Best regards,
->> Krzysztof
+On 16/05/2025 15:07, Piotr Kubik wrote:
+> From: Piotr Kubik <piotr.kubik@adtran.com>
 > 
-> I really care about not breaking compatibility with device trees too,
-> and that's why I occasionally report issues such as
-> https://lore.kernel.org/all/20250412001703.qbbfhtb6koofvner@skbuf/,
-> but in this case the compatibility breakage is not something to worry
-> about.
+> Add the Si3474 I2C Power Sourcing Equipment controller device tree
+> bindings documentation.
 > 
-> The QDS (QorIQ Development System) boards are not made to deploy any
-> production software on them, they are more fully-featured variants of
-> our RDB (Reference Design Boards) which sit in labs and are used
-> exclusively by engineers to test/prototype SoC features in order to
-> develop for other (production) platforms. Most if not all engineers use
-> TFTP to load the kernel and device tree at the same time. I think it's
-> going to be a case of a tree falling in a forest with no one to hear it.
+> Signed-off-by: Piotr Kubik <piotr.kubik@adtran.com>
+> ---
 
-OK, this has to be clearly documented so the platform maintainer can
-understand the impact.
-
-> 
-> In terms of other projects using the Linux device tree bindings - in
-> this case that would be U-Boot, which unfortunately has yet another
-> schema for the QIXIS CPLD:
-> https://github.com/u-boot/u-boot/blob/master/arch/arm/dts/fsl-ls1028a-qds.dtsi#L134
-> So not really a concern right now, but we will take it as an action item
-> to resync U-Boot with the upstream device trees for the LS1028A-QDS too,
-> like was done for the LS1028A-RDB.
-> 
-> In this case, why would changing the compatible string be preferable to
-> using the node as is? It would be nice for the QIXIS CPLD to have child
-> nodes with "reg". The current format lacks that, so we thought it would
-> be a cleaner break if we just introduced a new compatible string, to
-
-So change the current form. I do not see any point in changing
-compatibles. Whatever your drivers are doing is not really relevant
-here, because you can change the implementation behind the ABI.
-
-> make it easier to distinguish:
-> - "fsl,ls1028aqds-fpga", "fsl,fpga-qixis-i2c", "simple-mfd" doesn't
->   expect children with "reg"
-> - "fsl,ls1028a-qds-qixis-i2c" does.
-
-Sorry but no, we are not going to have two different compatibles for the
-same device.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 
 Best regards,
