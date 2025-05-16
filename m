@@ -1,64 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E94281359;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD13281538;
 	Fri, 16 May 2025 19:37:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747424249; cv=none; b=GImHR6r+8EfVLqmmpq2MVA3JnHOiSMcvS77mYPIqpZS5ySJkK4pvzfRL14eenU5hFhZGv0fuSr7ngE0f2Gwk7LOeIw4eXOxOMRTqKGXr0FsjFF+PYNBpY+zP8bKBgARVUAkZEe+fmPz2LxjZUr71WpKW2ck+OsZ6IOLALT8lFP0=
+	t=1747424251; cv=none; b=qFKpBojl0i/8Wjg3Gpfy6m5nf6yBPHw1LFnOtHDOIFE298bGr/mmd/mEjEhvO5Kz964tfvbtd4yI1YaylkEBGHW6wYPkRiXj2Qv8aJTS47kpQaSfHXVx+a4hn+SWV/Fl5shyhmEGLdJBer6atErLQ72a1zB9Jvzj0NHXPhi6vog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747424249; c=relaxed/simple;
-	bh=5uuiCxGfEFh4nsF8gcmyi93poz8DNnuKvoYUb5Y1KoM=;
+	s=arc-20240116; t=1747424251; c=relaxed/simple;
+	bh=o2CeTlE8X2pS41bZ+QDR8UuJ2kJESoUcCrlW71oWfPI=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=bemxCqmiPbRtqh9gLLpWNseGrkYYn7NCWhOnIYN/SB5cn4igaIZgpZEzOfI2XQNN0e9MVbnLxQjn5EcwVkSY2eZup2UENWfOfjLlyuVOGZXc+sfpeW0NYDFjdqBcq6sfd8szOAQUrV3KkQThFRSYG9NIvjh9KtiIQziYMFOV9Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yTa4nLrI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gUO52ZbB; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=LBGSfgmjjcSRWEI76TAJogP7ITuNxhoU/j6pcbJ3ifSXN34AfGhR5IYrt1U6ExhovlE5A8eDqWxFay+rXotgWy4jMW3HWhF7wtoS/XgKXCJBJg6CjcT9sJwAbbxY8NOMC7FsWerdaizftutkKXxvwXgZW02tcz9181ZhiDKYljE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LLMgcFsl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IC1lMkrv; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yTa4nLrI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gUO52ZbB"
-Date: Fri, 16 May 2025 19:37:25 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LLMgcFsl";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IC1lMkrv"
+Date: Fri, 16 May 2025 19:37:26 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747424246;
+	s=2020; t=1747424247;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Mc087CB1bq0TIIb7LIseJMb+Kp8ok6Ikp2Dgzg/mpvQ=;
-	b=yTa4nLrIave8+fRByILq4Gm2aZnyl3mSpTT3zKRcEGFc6vIHlujR6xB6L108qKpYDa/GhT
-	5inmjN7hL/GRw40088jUUiOi9AuZWOHPezUuZlqXgsAeFyXAXeA/2VT1lqnbHlyyCbRnp8
-	zq85anVmYYHW0NYA3p4rwgNClsytb6NHGGDoUQ1ZjtlVTkFLIDY28UzeLH+f3kVcymvwBa
-	xl/0j6lOcqsDVzLynOW98x96JjaQjAvykL74eGT7g0aa+XhAh435ziXaZm8nHRReWLc11p
-	/ieKgSSpl3KjkEubnFs5kyuDrEpLqzrp9uSVvfPMiRB9pRpZZttjckXAdzdODg==
+	bh=r/3QqguxT6nSQDNuoUT6LyMnxDxuwGobxQSVTYneJck=;
+	b=LLMgcFslmrMJgyv/YcetiTLh3pJN3Df0d1tKfsbQSp1SnmMwKv4xm6qQLhX767Q7PaZy4J
+	I6DWpJmD5wGTWgVGDDC5dP6kZGqgmtnSL63zWYRUzIAVSt0188rNnYGQMeKXVGE8IYs7cc
+	vzbWs6ROzhTEEimQP/cgu+N9vvpEWnxVZqzhndS4E4Lp1/womcnJadXRvNSQpjkI0tyJWi
+	JL/6wkFfb+wevbemmM7HEO8DQH4u274mHHtUIfUaKenUPGm9xiwUiM5KUbiORiKTf1M2oJ
+	MLKIVBQaaj/46pUohFrW2RuFx5ri1QA+3IeezwM+yPTV9cAYMQaG4WBB+UMs4A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747424246;
+	s=2020e; t=1747424247;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Mc087CB1bq0TIIb7LIseJMb+Kp8ok6Ikp2Dgzg/mpvQ=;
-	b=gUO52ZbBK1PNtrPpRd6SvbdEOt8mSmcxoiqO1RimI6/nVXgfm2qB/fPIAjWWNS9cbZTdNH
-	FYTkvz8I9YhLxhAg==
+	bh=r/3QqguxT6nSQDNuoUT6LyMnxDxuwGobxQSVTYneJck=;
+	b=IC1lMkrvpgFVoxZHZCMXHOA4zkv7yIOM9vbczMlJtOtIu/xGQZfbxn4FlOESsXWy62wgKl
+	vx13hYX08S3kRqDA==
 From: "tip-bot2 for Jiri Slaby (SUSE)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/cleanups] gpio: idt3243x: Switch to irq_find_mapping()
+Subject: [tip: irq/cleanups] sh: Switch to irq_find_mapping()
 Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Linus Walleij <linus.walleij@linaro.org>, x86@kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250319092951.37667-44-jirislaby@kernel.org>
-References: <20250319092951.37667-44-jirislaby@kernel.org>
+In-Reply-To: <20250319092951.37667-43-jirislaby@kernel.org>
+References: <20250319092951.37667-43-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174742424595.406.8395178426577538878.tip-bot2@tip-bot2>
+Message-ID: <174742424668.406.7440081478973429750.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,14 +67,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/cleanups branch of tip:
 
-Commit-ID:     30b6692ceda0dae971e9471479285b6b2b914aee
-Gitweb:        https://git.kernel.org/tip/30b6692ceda0dae971e9471479285b6b2b914aee
+Commit-ID:     f569ac9cabfd983d3d3904dbc9d7dbbf13368f4b
+Gitweb:        https://git.kernel.org/tip/f569ac9cabfd983d3d3904dbc9d7dbbf13368f4b
 Author:        Jiri Slaby (SUSE) <jirislaby@kernel.org>
-AuthorDate:    Wed, 19 Mar 2025 10:29:36 +01:00
+AuthorDate:    Wed, 19 Mar 2025 10:29:35 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Fri, 16 May 2025 21:06:12 +02:00
 
-gpio: idt3243x: Switch to irq_find_mapping()
+sh: Switch to irq_find_mapping()
 
 irq_linear_revmap() is deprecated, so remove all its uses and supersede
 them by an identical call to irq_find_mapping().
@@ -84,25 +83,38 @@ them by an identical call to irq_find_mapping().
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/all/20250319092951.37667-44-jirislaby@kernel.org
+Link: https://lore.kernel.org/all/20250319092951.37667-43-jirislaby@kernel.org
 
 
 
 ---
- drivers/gpio/gpio-idt3243x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/sh/boards/mach-se/7343/irq.c | 2 +-
+ arch/sh/boards/mach-se/7722/irq.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-idt3243x.c b/drivers/gpio/gpio-idt3243x.c
-index 00f547d..535f255 100644
---- a/drivers/gpio/gpio-idt3243x.c
-+++ b/drivers/gpio/gpio-idt3243x.c
-@@ -37,7 +37,7 @@ static void idt_gpio_dispatch(struct irq_desc *desc)
- 	pending = readl(ctrl->pic + IDT_PIC_IRQ_PEND);
- 	pending &= ~ctrl->mask_cache;
- 	for_each_set_bit(bit, &pending, gc->ngpio) {
--		virq = irq_linear_revmap(gc->irq.domain, bit);
-+		virq = irq_find_mapping(gc->irq.domain, bit);
- 		if (virq)
- 			generic_handle_irq(virq);
- 	}
+diff --git a/arch/sh/boards/mach-se/7343/irq.c b/arch/sh/boards/mach-se/7343/irq.c
+index 8241bde..730c01b 100644
+--- a/arch/sh/boards/mach-se/7343/irq.c
++++ b/arch/sh/boards/mach-se/7343/irq.c
+@@ -71,7 +71,7 @@ static void __init se7343_gc_init(void)
+ 	struct irq_chip_type *ct;
+ 	unsigned int irq_base;
+ 
+-	irq_base = irq_linear_revmap(se7343_irq_domain, 0);
++	irq_base = irq_find_mapping(se7343_irq_domain, 0);
+ 
+ 	gc = irq_alloc_generic_chip(DRV_NAME, 1, irq_base, se7343_irq_regs,
+ 				    handle_level_irq);
+diff --git a/arch/sh/boards/mach-se/7722/irq.c b/arch/sh/boards/mach-se/7722/irq.c
+index 9a460a8..49aa3a2 100644
+--- a/arch/sh/boards/mach-se/7722/irq.c
++++ b/arch/sh/boards/mach-se/7722/irq.c
+@@ -69,7 +69,7 @@ static void __init se7722_gc_init(void)
+ 	struct irq_chip_type *ct;
+ 	unsigned int irq_base;
+ 
+-	irq_base = irq_linear_revmap(se7722_irq_domain, 0);
++	irq_base = irq_find_mapping(se7722_irq_domain, 0);
+ 
+ 	gc = irq_alloc_generic_chip(DRV_NAME, 1, irq_base, se7722_irq_regs,
+ 				    handle_level_irq);
