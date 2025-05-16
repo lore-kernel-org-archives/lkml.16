@@ -1,76 +1,111 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ACA721D00A;
-	Fri, 16 May 2025 12:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099B7238C1D;
+	Fri, 16 May 2025 12:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747397294; cv=none; b=rGXlSFMr8UT6krRDavXc4CNIljej1OXDngU3yfLir6DmNSLmqCaj7oJzUqxdfrf4ekDbp2x0MP+56Hsg97w/Py2ysk706G2POpCWTWzBEu1NIbCLi2HW9n3lGsK0er/XqeoK40fau2wDrhtPot3/ehKSA6A3lghgbTiw9UwgQrg=
+	t=1747397308; cv=none; b=hzJkMYJ8PfhA4hLmorSo1nuGBzoAwWNUxzZZR5f4GWYuR2rLYjmHBIRqxZOd7BS0cLVstPQnc0FXTbS3GCDKwnhd7vy79VVq0Mzxcxb0ZXw5gqKHtktxeDYntDz97h3VHiy/tm1j+aEpn/xm453XLFDLyISZcruO5MYH82uI82Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747397294; c=relaxed/simple;
-	bh=vvInzG+WhOwuClFT+hBEQCpv3Ilc02wgtTPwylfKFcs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l6cgTNXU8Wh4cE8W5a23ZCDG7z2r+7LgeCdOK3UTKr4HMI/yoGRC+3kGlrw4mrc8x+QA0yczuuxb9BxSHlknZgKN5zZB3edcCg4G7Nxo2eTsihb9MtMXXlND21jSXAe7lGJe0Z/oS/PTK1KKw1ggA3jqNbcAlrflhmab15x8YWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zt08rREA; arc=none smtp.client-ip=209.85.215.182
+	s=arc-20240116; t=1747397308; c=relaxed/simple;
+	bh=LLFTaXnhleq34jL/n5gBjVlQjNQtKROkYDnqUvpqa5U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FPtK4UGFLx06E2jj8iJ8lgKMgBiPAInYPBvUC/Ex73QbD+gnYhNt8bJHPI/VXE6a6S++LXzUygugZzamXRWZ+9VhZbZ8lLJxdmOEouiAUuNSIvEDCl6J46n00pex3DwPeA1aok+25sT7jyh+/NkG08dpsavQaPi3lJccuqVMao4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i+9LraLU; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zt08rREA"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-879d2e419b9so1816790a12.2;
-        Fri, 16 May 2025 05:08:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i+9LraLU"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cfa7e7f54so15204145e9.1;
+        Fri, 16 May 2025 05:08:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747397292; x=1748002092; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=vvInzG+WhOwuClFT+hBEQCpv3Ilc02wgtTPwylfKFcs=;
-        b=Zt08rREA6SiuLLxrm4DRz1ooQ7lP2n9VI1h9ss/QeIWNVDE/sPfC2HBVBvVraM4mqu
-         n7jf1BQEHIa2PxHpoBZNPBAg2DRs7hvbKqNx0Wd7j/bGTpA7BLvFry77RSTSZenTC9If
-         6hwfeFrQKy2R1UT+jRMMncTtBrR5e4qC8hrt3DFfr8YsKhzPKP1Wf357qu+xDd+l1oNw
-         0KGzvcS6HhPJu2QDg/pSt49HQqj33eMjx656r+UW0kpo9m/V3DsL9qvLAfXWns17fb2C
-         ebnh/56obAKu/wdVeCxnfzAHzbmq18xH/0JdL8uMuQKtvrdi3dhBDD2imjYEqR3Ki3j7
-         Bz3w==
+        d=gmail.com; s=20230601; t=1747397305; x=1748002105; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=l7S/vG1lp5geqRglunYVLNLd5lLTAffxPlQ/qp918/4=;
+        b=i+9LraLU+vxLQtPtNgarbmStQYEmWuOTuoxvpQRl/yiPpQhDXn9PdfgWT92Sje4+B5
+         Egfat00fnh33qd0tgDLhT2OtlOvX0QI9KIrzkkmBc73Dx4Tm5i82EFOZ0hY1MaGdeOQD
+         0vF7zUVYOle4JK6MUxY+CZZdZ2R7rIoD3wV15c5e6t2gDg9AxpNmdeG4WcfBKSvZCgm3
+         R3AUdggWy1YcHppL5+KhmUmMQAECkR0qVTwWXJOITFbZ5WcBmWCxN8RWoKL2zSlDw6XL
+         SW8W1hrw5IJkhvrM5JhirC9fRU0ZAFBSKFudSxAaDuc8NyrNmrJbo8lA6f6YzzThnDpK
+         YRbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747397292; x=1748002092;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1747397305; x=1748002105;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=vvInzG+WhOwuClFT+hBEQCpv3Ilc02wgtTPwylfKFcs=;
-        b=jLce9OFYVpo89NaKI6DX8OmVANDJ4zyvEIS7PUTdc+rxvUxjMYe4W1wgKJBdyeA/ae
-         q7ZHjxHB8c2zBiGH+U4Xxn+3JDA7kBP5/7kOHV7n3ITFNEQpPp2t4gfa8UdZTgk4//RA
-         T2o6odSpWY+AJFb16ug8bzVM9rSCPuFp8TGrA5RhtTCcc84jiqAgR4moWHONBgPBidfe
-         wJAPebWMVUe+uwHxFzgfrnhOfDVqSZqt5k/ULvxs4hN85ZN/XPmwheXCZz70c0451ZUy
-         8HyMwn7ISKLye1Sy8MAi32pvKMv1pqeS79fBXKZmCGFJ9L0beLR/+morH1xmpCLQ1+j8
-         RGbw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPfz8fFo3vLUq8Odn933ZJcbhjqRdVwknwWk81yMLG76XqvkTI0CHqitY13k9/clxghx+UyHch@vger.kernel.org, AJvYcCWGOyzH/fFaE3NoqLgrrp7RWeXoN4vSbRh7/yPynrzpbb9INJPIfVyJPGktp7o8ToGdfWmGsXuxEdPcp5I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzauKbu5nClB57/mCdcvwtsBdDY6RhPz+Alx0oEf8C0yzQ/9fPC
-	292oBOUYaAQnlI4cmQFWqNv2vlmk1DBB8Ix56AuE6L9gdrNDn4AGwYz2Pl800piNw3n+c1oQZbu
-	mkWApyQUgj6K+53pD2JDSEv8W0ufjEq4=
-X-Gm-Gg: ASbGnct7xSokVEexJ6G5KfRTXWox6VRW20hcAkTTzl98N5dTC5yPp3Jlt4WvOfVHV6z
-	DLMxyYwwSiqJiiEe1qGaX9gK7LEFilqs1SgUWMYnEeY6NZUe30BKSjtEj9+w6cG4vU1QcviC9ry
-	gLTWkCF+d3RF4UyZu2WsFchteAHS1vj6s=
-X-Google-Smtp-Source: AGHT+IHOrDmbHxv5DER6XUzHCdNLptqi6Yl/kppUI/qzVCXsv5Y5EK81JcGT+mIeDr/DOLOoxGm31qXAeLeUTcgBjTE=
-X-Received: by 2002:a17:902:cecf:b0:22d:e57a:279b with SMTP id
- d9443c01a7336-231d4519b0bmr49246575ad.24.1747397292421; Fri, 16 May 2025
- 05:08:12 -0700 (PDT)
+        bh=l7S/vG1lp5geqRglunYVLNLd5lLTAffxPlQ/qp918/4=;
+        b=uQsZtH0ewakaqNDN4dpedQgMlyHc7QMZ06vYk5hA6UQsVawhgH7cZLUzskNpajw7AZ
+         +KJVP6w+oAGlb0yPaea0NxOBDneWZyI4FvRLcZEf/5/4t0YuoYbFVrGrRoP26hBACK2o
+         FdP2X0dg8X3qqQ3FCFTssal6stFEMHjnlYLVdWMUC0uLhhI/2Th8f6HeYvzU50gWKikb
+         iSI4wNdWQlx7v9fHD2Qv9Y7JiGuNFYFEmI6Z9ioF1oH+gCxELckm3GF87EQMzYuc+Wyk
+         xWjBJuriSfhq2P9Zimys7mH4G7RJBZ8SF5MPmGSx0EyCNKUz0TVrpERt8BvI7axEtJx2
+         BUeA==
+X-Forwarded-Encrypted: i=1; AJvYcCVKa9dtH638AxQ/baUR2FPCyxwnLtsDHIGAt65tzm9pvOQR5PmrQlquyLgc3Hj3zVJ/EKRgGK8YSR//NFN8@vger.kernel.org, AJvYcCWJLl9JZv8U+zvjtJe0bF73Qu0BRspPqcKL8Dyh+oofgl80wbDKjBl+uNlaxNNy4CWbiVjVqQhjYluxq3c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypjvX3jFeQYMjx3ew1OLu6c2Y7lxWTs9uO4aKmGlMTWIuyatax
+	YTFSG/O6dgIyefzcgdDacTXfNSUvM3oa+v9+ipFxx2jUPU0UM2pzSAWH
+X-Gm-Gg: ASbGncvLoFBJZiUuHAA070ACAIDMkAY3Xb2hXmkR0o0H8OU6vYK7W2BwE16NmcRyuee
+	MhnXcGuxBg6EHSRxNh5HG6TqDYy7Xxedkssm5OoERN72c6zmzmd+5pCHBklqsNHVadzzAfOYlgq
+	T/LijH6Ffr53HMaXUiAQlKgHPSz0saVajmvNT6ND87qQu5Y5/ovGLFVXVNC/0G1Nfrdd2fWRa77
+	TXSl8i1UO9tOoYqqamtKF60/nowI569Br/bRhygcohrnOVfh4O3sVDhcnExMfyv4YUaAdinCLCr
+	ju3YGr6hckDpZyXUdPC/WeznEO6tGkaXmIOgDVhbp6a10xyP50q0WaY8ZnpQd9DfORZIf/cQfnO
+	2fUY=
+X-Google-Smtp-Source: AGHT+IETHNO4PZaxAV5fQzFYG7nB1lHUisZaUbqvlKR7l0R0thhXbB9LDnls9f0950ZGMS0nNFwq9w==
+X-Received: by 2002:a05:600c:821b:b0:43b:bfa7:c7d with SMTP id 5b1f17b1804b1-442f84c2008mr72290655e9.2.1747397304833;
+        Fri, 16 May 2025 05:08:24 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:2f07:610b:a400:6472:d2f9:d536:4c30])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f338050csm102275725e9.10.2025.05.16.05.08.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 05:08:24 -0700 (PDT)
+From: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+To: clabbe.montjoie@gmail.com,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	linux-crypto@vger.kernel.org
+Cc: wens@csie.org,
+	jernej.skrabec@gmail.com,
+	samuel@sholland.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+Subject: [PATCH] crypto: sun8i-ce - move fallback ahash_request to the end of the struct
+Date: Fri, 16 May 2025 15:06:56 +0300
+Message-ID: <20250516120656.3610623-1-ovidiu.panait.oss@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515175500.12128-1-kitotavrik.s@gmail.com> <enhxf3daymfubn226ha4ywvh74k3zhacdya2mgfln7g2kzsq6x@llwzvp3vejsk>
-In-Reply-To: <enhxf3daymfubn226ha4ywvh74k3zhacdya2mgfln7g2kzsq6x@llwzvp3vejsk>
-From: Kitotavrik <kitotavrik.s@gmail.com>
-Date: Fri, 16 May 2025 15:08:01 +0300
-X-Gm-Features: AX0GCFtAc7jQ5C9dsDEktognTcJ9Mvl7g7BjNAjuCOqFs1-0YBxSmiPN41nxW4o
-Message-ID: <CAJFzNq5Qwb3o5WHSq2c_k3-Nj1KTbcLQL-L6e03o+nZvRxpoVA@mail.gmail.com>
-Subject: Re: [PATCH v3] fs: minix: Fix handling of corrupted directories
-To: Jan Kara <jack@suse.cz>
-Cc: Christian Brauner <brauner@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Josef Bacik <josef@toxicpanda.com>, NeilBrown <neilb@suse.de>, linux-kernel@vger.kernel.org, 
-	lvc-project@linuxtesting.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-No, because the live directory has nlinks = 2 when deleted. But if I
-understand correctly, it's worth adding a check for parent
-directory(dir->i_nlinks <= 2)
+'struct ahash_request' has a flexible array at the end, so it must be the
+last member in a struct, to avoid overwriting other struct members.
+
+Therefore, move 'fallback_req' to the end of the 'sun8i_ce_hash_reqctx'
+struct.
+
+Fixes: 56f6d5aee88d ("crypto: sun8i-ce - support hash algorithms")
+Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+---
+ drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
+index 3b5c2af013d0..83df4d719053 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
+@@ -308,8 +308,8 @@ struct sun8i_ce_hash_tfm_ctx {
+  * @flow:	the flow to use for this request
+  */
+ struct sun8i_ce_hash_reqctx {
+-	struct ahash_request fallback_req;
+ 	int flow;
++	struct ahash_request fallback_req; // keep at the end
+ };
+ 
+ /*
+-- 
+2.48.1
+
