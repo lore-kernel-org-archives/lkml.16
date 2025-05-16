@@ -1,490 +1,563 @@
-Received: from unicom146.biz-email.net (unicom146.biz-email.net [210.51.26.146])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CA9224B1C
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A1622CBD8;
+	Fri, 16 May 2025 08:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747384225; cv=none; b=ru63znz4fCkofyZbDi+NL96+XNw+7WIyC/Yn0PGKz0SU6E6kCJheEV8/fj/JRC51LYxGuJEiU5ZauwQ68bH4+e3FIfQDLtAaoIarney5+U9tk9c9QslVaJKU4wdygiTlJ7kgan98t6AKQ7Zlj179Sq9daKpWU6ywbc9JQD8znz0=
+	t=1747384229; cv=none; b=UQOMaUkRYykSUe0mOieOl9P3KjXeTCcUhxN4sQdBFCaH6tuqvZhTdU0SRQbx+w7JFzegAQaLJh2M6PqyYgG7EvYpDrq2smrN3nF2KAazSAbPKHyliXe+lRhJ7I+NXAmoJBbH0vNaDltNmglM/q0GsHfJSNOYdrdoqinq7xjO9vQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747384225; c=relaxed/simple;
-	bh=ErY6nz941wKMOUhC2DrxeBtcdq+eadoPHdYMamSQA60=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rLkkC6FRQgXupGLJE0a+3e9fvgOnyhqB11blw1y0zfiNHTgFNUj62xomIFrYqMWTRucim14kPbUhfdbHxaYGAGfOzNKaMCLIFdRcX9s+E/tMl8KTwE/BZKIK1mUr2chO1mgvvlbyyCdGQCuMGbML5Jr8nfJR/R8ZiuYLy7Tw6Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from jtjnmail201610.home.langchao.com
-        by unicom146.biz-email.net ((D)) with ASMTP (SSL) id 202505161629018466;
-        Fri, 16 May 2025 16:29:01 +0800
-Received: from localhost.localdomain (10.94.17.51) by
- jtjnmail201610.home.langchao.com (10.100.2.10) with Microsoft SMTP Server id
- 15.1.2507.39; Fri, 16 May 2025 16:29:01 +0800
-From: Bo Liu <liubo03@inspur.com>
-To: <xiang@kernel.org>, <chao@kernel.org>
-CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, Bo Liu
-	<liubo03@inspur.com>
-Subject: [PATCH v3] erofs: support deflate decompress by using Intel QAT
-Date: Fri, 16 May 2025 04:26:34 -0400
-Message-ID: <20250516082634.3801-1-liubo03@inspur.com>
-X-Mailer: git-send-email 2.18.2
+	s=arc-20240116; t=1747384229; c=relaxed/simple;
+	bh=ldZOGhtmx7WUb/eVybYY09LSeO494Ab8oT8AD/pa9aQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YJUomaeMvEfFFUHBBX9wsiZJgrZwUm41oLUrOrlVyrnY6/Qr25l6YWNt/P76ufdQazgP74ojcqZn9ejp76bkorJ0aQuKiA/DbpRSCfWX09HD/r4BN7HlA6+cUkO06bKlWvHZEYqmorNKXdkheYedSKlZiQvM00yUCS+oR2cwGTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=MkFIOiVY; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="MkFIOiVY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=3vnlmYkF5eL5zF22fjVEtExR7M5wVeYjulZM7+TVb9U=; b=MkFIOiVYCPPiCgm/L5jbqjC2eP
+	wwevs8d5eTp3Eu8m5JQAE0coJ45o0Uh5dt7mU/LXcfF63nvwAJ1u18AeYdZyIU7MqAUzVv22tUdTx
+	N6Hi7OE7NXikgwHMNTIQk82JBObxpQy5fC8vlb6PRrj5gx7XJ0cM1y5snCcfAOtuUAON4zSu8/RYw
+	BocfbX388afHuYwLgWHol5fl1F6BBDih017o0EN60iKdrD3c99iEcOoFCnl7VSyJOJQSrIKpAZOBa
+	6Ht1f4ZHC0bgnBNze1ERAT/0QVSEVd2oOTAA3PCa7NlaZ+4CmCxqjSGw+eD/AliHvnltTsody3voa
+	CNFUprKg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45458)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uFqSK-0001lH-0I;
+	Fri, 16 May 2025 09:30:12 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uFqSG-00067T-1L;
+	Fri, 16 May 2025 09:30:08 +0100
+Date: Fri, 16 May 2025 09:30:08 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Tristram.Ha@microchip.com
+Cc: Andrew Lunn <andrew@lunn.ch>, Woojung Huh <woojung.huh@microchip.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v4] net: dsa: microchip: Add SGMII port support
+ to KSZ9477 switch
+Message-ID: <aCb3kNniIhtmIhf1@shell.armlinux.org.uk>
+References: <20250516024123.24910-1-Tristram.Ha@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-tUid: 202551616290110875e0ba356e9856e2240661ed931c2
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250516024123.24910-1-Tristram.Ha@microchip.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-This patch introdueces the use of the Intel QAT to decompress compressed
-data in the EROFS filesystem, aiming to improve the decompression speed
-of compressed datea.
+I think I gave comments on the previous version about this approach
+but I don't see any change. Maybe I missed your response, I don't know,
+I'm only occasionally dipping into the mass of emails I get.
 
-We created a 285MiB compressed file and then used the following command to
-create EROFS images with different cluster size.
-     # mkfs.erofs -zdeflate,level=9 -C16384
+On Thu, May 15, 2025 at 07:41:23PM -0700, Tristram.Ha@microchip.com wrote:
+> From: Tristram Ha <tristram.ha@microchip.com>
+> 
+> The KSZ9477 switch driver uses the XPCS driver to operate its SGMII
+> port.  However there are some hardware bugs in the KSZ9477 SGMII
+> module so workarounds are needed.  There was a proposal to update the
+> XPCS driver to accommodate KSZ9477, but the new code is not generic
+> enough to be used by other vendors.  It is better to do all these
+> workarounds inside the KSZ9477 driver instead of modifying the XPCS
+> driver.
+> 
+> There are 3 hardware issues.  The first is the MII_ADVERTISE register
+> needs to be write once after reset for the correct code word to be
+> sent.  The XPCS driver disables auto-negotiation first before
+> configuring the SGMII/1000BASE-X mode and then enables it back.  The
+> KSZ9477 driver then writes the MII_ADVERTISE register before enabling
+> auto-negotiation.  In 1000BASE-X mode the MII_ADVERTISE register will
+> be set, so KSZ9477 driver does not need to write it.
+> 
+> The second issue is the MII_BMCR register needs to set the exact speed
+> and duplex mode when running in SGMII mode.  During link polling the
+> KSZ9477 will check the speed and duplex mode are different from
+> previous ones and update the MII_BMCR register accordingly.
+> 
+> The last issue is 1000BASE-X mode does not work with auto-negotiation
+> on.  The cause is the local port hardware does not know the link is up
+> and so network traffic is not forwarded.  The workaround is to write 2
+> additional bits when 1000BASE-X mode is configured.
+> 
+> Note the SGMII interrupt in the port cannot be masked.  As that
+> interrupt is not handled in the KSZ9477 driver the SGMII interrupt bit
+> will not be set even when the XPCS driver sets it.
+> 
+> Signed-off-by: Tristram Ha <tristram.ha@microchip.com>
+> ---
+> v4
+>  - update for last ksz_common.c merge
+> 
+> v3
+>  - rebase with latest commit
+> 
+> v2
+>  - add Kconfig for required XPCS driver build
+> 
+>  drivers/net/dsa/microchip/Kconfig      |   1 +
+>  drivers/net/dsa/microchip/ksz9477.c    | 191 ++++++++++++++++++++++++-
+>  drivers/net/dsa/microchip/ksz9477.h    |   4 +-
+>  drivers/net/dsa/microchip/ksz_common.c |  36 ++++-
+>  drivers/net/dsa/microchip/ksz_common.h |  23 ++-
+>  5 files changed, 248 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/net/dsa/microchip/Kconfig b/drivers/net/dsa/microchip/Kconfig
+> index 12a86585a77f..c71d3fd5dfeb 100644
+> --- a/drivers/net/dsa/microchip/Kconfig
+> +++ b/drivers/net/dsa/microchip/Kconfig
+> @@ -6,6 +6,7 @@ menuconfig NET_DSA_MICROCHIP_KSZ_COMMON
+>  	select NET_DSA_TAG_NONE
+>  	select NET_IEEE8021Q_HELPERS
+>  	select DCB
+> +	select PCS_XPCS
+>  	help
+>  	  This driver adds support for Microchip KSZ8, KSZ9 and
+>  	  LAN937X series switch chips, being KSZ8863/8873,
+> diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/microchip/ksz9477.c
+> index 29fe79ea74cd..825aa570eed9 100644
+> --- a/drivers/net/dsa/microchip/ksz9477.c
+> +++ b/drivers/net/dsa/microchip/ksz9477.c
+> @@ -2,7 +2,7 @@
+>  /*
+>   * Microchip KSZ9477 switch driver main logic
+>   *
+> - * Copyright (C) 2017-2024 Microchip Technology Inc.
+> + * Copyright (C) 2017-2025 Microchip Technology Inc.
+>   */
+>  
+>  #include <linux/kernel.h>
+> @@ -161,6 +161,187 @@ static int ksz9477_wait_alu_sta_ready(struct ksz_device *dev)
+>  					10, 1000);
+>  }
+>  
+> +static void port_sgmii_s(struct ksz_device *dev, uint port, u16 devid, u16 reg)
+> +{
+> +	u32 data;
+> +
+> +	data = (devid & MII_MMD_CTRL_DEVAD_MASK) << 16;
+> +	data |= reg;
+> +	ksz_pwrite32(dev, port, REG_PORT_SGMII_ADDR__4, data);
+> +}
+> +
+> +static void port_sgmii_r(struct ksz_device *dev, uint port, u16 devid, u16 reg,
+> +			 u16 *buf)
+> +{
+> +	port_sgmii_s(dev, port, devid, reg);
+> +	ksz_pread16(dev, port, REG_PORT_SGMII_DATA__4 + 2, buf);
+> +}
+> +
+> +static void port_sgmii_w(struct ksz_device *dev, uint port, u16 devid, u16 reg,
+> +			 u16 buf)
+> +{
+> +	port_sgmii_s(dev, port, devid, reg);
+> +	ksz_pwrite32(dev, port, REG_PORT_SGMII_DATA__4, buf);
+> +}
+> +
+> +static int ksz9477_pcs_read(struct mii_bus *bus, int phy, int mmd, int reg)
+> +{
+> +	struct ksz_device *dev = bus->priv;
+> +	int port = ksz_get_sgmii_port(dev);
+> +	u16 val;
+> +
+> +	port_sgmii_r(dev, port, mmd, reg, &val);
+> +
+> +	/* Simulate a value to activate special code in the XPCS driver if
+> +	 * supported.
+> +	 */
+> +	if (mmd == MDIO_MMD_PMAPMD) {
+> +		if (reg == MDIO_DEVID1)
+> +			val = 0x9477;
+> +		else if (reg == MDIO_DEVID2)
+> +			val = 0x22 << 10;
+> +	} else if (mmd == MDIO_MMD_VEND2) {
+> +		struct ksz_port *p = &dev->ports[port];
+> +
+> +		/* Need to update MII_BMCR register with the exact speed and
+> +		 * duplex mode when running in SGMII mode and this register is
+> +		 * used to detect connected speed in that mode.
+> +		 */
+> +		if (reg == MMD_SR_MII_AUTO_NEG_STATUS) {
+> +			int duplex, speed;
+> +
+> +			if (val & SR_MII_STAT_LINK_UP) {
+> +				speed = (val >> SR_MII_STAT_S) & SR_MII_STAT_M;
+> +				if (speed == SR_MII_STAT_1000_MBPS)
+> +					speed = SPEED_1000;
+> +				else if (speed == SR_MII_STAT_100_MBPS)
+> +					speed = SPEED_100;
+> +				else
+> +					speed = SPEED_10;
+> +
+> +				if (val & SR_MII_STAT_FULL_DUPLEX)
+> +					duplex = DUPLEX_FULL;
+> +				else
+> +					duplex = DUPLEX_HALF;
+> +
+> +				if (!p->phydev.link ||
+> +				    p->phydev.speed != speed ||
+> +				    p->phydev.duplex != duplex) {
+> +					u16 ctrl;
+> +
+> +					p->phydev.link = 1;
+> +					p->phydev.speed = speed;
+> +					p->phydev.duplex = duplex;
+> +					port_sgmii_r(dev, port, mmd, MII_BMCR,
+> +						     &ctrl);
+> +					ctrl &= BMCR_ANENABLE;
+> +					ctrl |= mii_bmcr_encode_fixed(speed,
+> +								      duplex);
+> +					port_sgmii_w(dev, port, mmd, MII_BMCR,
+> +						     ctrl);
+> +				}
+> +			} else {
+> +				p->phydev.link = 0;
+> +			}
+> +		} else if (reg == MII_BMSR) {
+> +			p->phydev.link = (val & BMSR_LSTATUS);
+> +		}
+> +	}
+> +	return val;
+> +}
+> +
+> +static int ksz9477_pcs_write(struct mii_bus *bus, int phy, int mmd, int reg,
+> +			     u16 val)
+> +{
+> +	struct ksz_device *dev = bus->priv;
+> +	int port = ksz_get_sgmii_port(dev);
+> +
+> +	if (mmd == MDIO_MMD_VEND2) {
+> +		struct ksz_port *p = &dev->ports[port];
+> +
+> +		if (reg == MMD_SR_MII_AUTO_NEG_CTRL) {
+> +			u16 sgmii_mode = SR_MII_PCS_SGMII << SR_MII_PCS_MODE_S;
+> +
+> +			/* Need these bits for 1000BASE-X mode to work with
+> +			 * AN on.
+> +			 */
+> +			if (!(val & sgmii_mode))
+> +				val |= SR_MII_SGMII_LINK_UP |
+> +				       SR_MII_TX_CFG_PHY_MASTER;
+> +
+> +			/* SGMII interrupt in the port cannot be masked, so
+> +			 * make sure interrupt is not enabled as it is not
+> +			 * handled.
+> +			 */
+> +			val &= ~SR_MII_AUTO_NEG_COMPLETE_INTR;
+> +		} else if (reg == MII_BMCR) {
+> +			/* The MII_ADVERTISE register needs to write once
+> +			 * before doing auto-negotiation for the correct
+> +			 * config_word to be sent out after reset.
+> +			 */
+> +			if ((val & BMCR_ANENABLE) && !p->sgmii_adv_write) {
+> +				u16 adv;
+> +
+> +				/* The SGMII port cannot disable flow contrl
+> +				 * so it is better to just advertise symmetric
+> +				 * pause.
+> +				 */
+> +				port_sgmii_r(dev, port, mmd, MII_ADVERTISE,
+> +					     &adv);
+> +				adv |= ADVERTISE_1000XPAUSE;
+> +				adv &= ~ADVERTISE_1000XPSE_ASYM;
+> +				port_sgmii_w(dev, port, mmd, MII_ADVERTISE,
+> +					     adv);
+> +				p->sgmii_adv_write = 1;
+> +			} else if (val & BMCR_RESET) {
+> +				p->sgmii_adv_write = 0;
+> +			}
+> +		} else if (reg == MII_ADVERTISE) {
+> +			/* XPCS driver writes to this register so there is no
+> +			 * need to update it for the errata.
+> +			 */
+> +			p->sgmii_adv_write = 1;
+> +		}
+> +	}
+> +	port_sgmii_w(dev, port, mmd, reg, val);
+> +	return 0;
+> +}
+> +
+> +int ksz9477_pcs_create(struct ksz_device *dev)
+> +{
+> +	/* This chip has a SGMII port. */
+> +	if (ksz_has_sgmii_port(dev)) {
+> +		int port = ksz_get_sgmii_port(dev);
+> +		struct ksz_port *p = &dev->ports[port];
+> +		struct phylink_pcs *pcs;
+> +		struct mii_bus *bus;
+> +		int ret;
+> +
+> +		bus = devm_mdiobus_alloc(dev->dev);
+> +		if (!bus)
+> +			return -ENOMEM;
+> +
+> +		bus->name = "ksz_pcs_mdio_bus";
+> +		snprintf(bus->id, MII_BUS_ID_SIZE, "%s-pcs",
+> +			 dev_name(dev->dev));
+> +		bus->read_c45 = &ksz9477_pcs_read;
+> +		bus->write_c45 = &ksz9477_pcs_write;
+> +		bus->parent = dev->dev;
+> +		bus->phy_mask = ~0;
+> +		bus->priv = dev;
+> +
+> +		ret = devm_mdiobus_register(dev->dev, bus);
+> +		if (ret)
+> +			return ret;
+> +
+> +		pcs = xpcs_create_pcs_mdiodev(bus, 0);
+> +		if (IS_ERR(pcs))
+> +			return PTR_ERR(pcs);
+> +		p->pcs = pcs;
+> +	}
+> +	return 0;
+> +}
+> +
+>  int ksz9477_reset_switch(struct ksz_device *dev)
+>  {
+>  	u8 data8;
+> @@ -978,6 +1159,14 @@ void ksz9477_get_caps(struct ksz_device *dev, int port,
+>  
+>  	if (dev->info->gbit_capable[port])
+>  		config->mac_capabilities |= MAC_1000FD;
+> +
+> +	if (ksz_is_sgmii_port(dev, port)) {
+> +		struct ksz_port *p = &dev->ports[port];
+> +
+> +		phy_interface_or(config->supported_interfaces,
+> +				 config->supported_interfaces,
+> +				 p->pcs->supported_interfaces);
+> +	}
+>  }
+>  
+>  int ksz9477_set_ageing_time(struct ksz_device *dev, unsigned int msecs)
+> diff --git a/drivers/net/dsa/microchip/ksz9477.h b/drivers/net/dsa/microchip/ksz9477.h
+> index d2166b0d881e..0d1a6dfda23e 100644
+> --- a/drivers/net/dsa/microchip/ksz9477.h
+> +++ b/drivers/net/dsa/microchip/ksz9477.h
+> @@ -2,7 +2,7 @@
+>  /*
+>   * Microchip KSZ9477 series Header file
+>   *
+> - * Copyright (C) 2017-2022 Microchip Technology Inc.
+> + * Copyright (C) 2017-2025 Microchip Technology Inc.
+>   */
+>  
+>  #ifndef __KSZ9477_H
+> @@ -97,4 +97,6 @@ void ksz9477_acl_match_process_l2(struct ksz_device *dev, int port,
+>  				  u16 ethtype, u8 *src_mac, u8 *dst_mac,
+>  				  unsigned long cookie, u32 prio);
+>  
+> +int ksz9477_pcs_create(struct ksz_device *dev);
+> +
+>  #endif
+> diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
+> index f492fa9f6dd4..248f8027e0cf 100644
+> --- a/drivers/net/dsa/microchip/ksz_common.c
+> +++ b/drivers/net/dsa/microchip/ksz_common.c
+> @@ -2,7 +2,7 @@
+>  /*
+>   * Microchip switch driver main logic
+>   *
+> - * Copyright (C) 2017-2024 Microchip Technology Inc.
+> + * Copyright (C) 2017-2025 Microchip Technology Inc.
+>   */
+>  
+>  #include <linux/delay.h>
+> @@ -408,12 +408,28 @@ static void ksz9477_phylink_mac_link_up(struct phylink_config *config,
+>  					int speed, int duplex, bool tx_pause,
+>  					bool rx_pause);
+>  
+> +static struct phylink_pcs *
+> +ksz_phylink_mac_select_pcs(struct phylink_config *config,
+> +			   phy_interface_t interface)
+> +{
+> +	struct dsa_port *dp = dsa_phylink_to_port(config);
+> +	struct ksz_device *dev = dp->ds->priv;
+> +	struct ksz_port *p = &dev->ports[dp->index];
+> +
+> +	if (ksz_is_sgmii_port(dev, dp->index) &&
+> +	    (interface == PHY_INTERFACE_MODE_SGMII ||
+> +	    interface == PHY_INTERFACE_MODE_1000BASEX))
+> +		return p->pcs;
+> +	return NULL;
+> +}
+> +
+>  static const struct phylink_mac_ops ksz9477_phylink_mac_ops = {
+>  	.mac_config	= ksz_phylink_mac_config,
+>  	.mac_link_down	= ksz_phylink_mac_link_down,
+>  	.mac_link_up	= ksz9477_phylink_mac_link_up,
+>  	.mac_disable_tx_lpi = ksz_phylink_mac_disable_tx_lpi,
+>  	.mac_enable_tx_lpi = ksz_phylink_mac_enable_tx_lpi,
+> +	.mac_select_pcs	= ksz_phylink_mac_select_pcs,
+>  };
+>  
+>  static const struct ksz_dev_ops ksz9477_dev_ops = {
+> @@ -451,6 +467,7 @@ static const struct ksz_dev_ops ksz9477_dev_ops = {
+>  	.reset = ksz9477_reset_switch,
+>  	.init = ksz9477_switch_init,
+>  	.exit = ksz9477_switch_exit,
+> +	.pcs_create = ksz9477_pcs_create,
+>  };
+>  
+>  static const struct phylink_mac_ops lan937x_phylink_mac_ops = {
+> @@ -1093,8 +1110,7 @@ static const struct regmap_range ksz9477_valid_regs[] = {
+>  	regmap_reg_range(0x701b, 0x701b),
+>  	regmap_reg_range(0x701f, 0x7020),
+>  	regmap_reg_range(0x7030, 0x7030),
+> -	regmap_reg_range(0x7200, 0x7203),
+> -	regmap_reg_range(0x7206, 0x7207),
+> +	regmap_reg_range(0x7200, 0x7207),
+>  	regmap_reg_range(0x7300, 0x7301),
+>  	regmap_reg_range(0x7400, 0x7401),
+>  	regmap_reg_range(0x7403, 0x7403),
+> @@ -1610,6 +1626,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+>  				   true, false, false},
+>  		.gbit_capable	= {true, true, true, true, true, true, true},
+>  		.ptp_capable = true,
+> +		.sgmii_port = 7,
+>  		.wr_table = &ksz9477_register_set,
+>  		.rd_table = &ksz9477_register_set,
+>  	},
+> @@ -2002,6 +2019,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+>  		.internal_phy	= {true, true, true, true,
+>  				   true, false, false},
+>  		.gbit_capable	= {true, true, true, true, true, true, true},
+> +		.sgmii_port = 7,
+>  		.wr_table = &ksz9477_register_set,
+>  		.rd_table = &ksz9477_register_set,
+>  	},
+> @@ -2137,7 +2155,7 @@ void ksz_r_mib_stats64(struct ksz_device *dev, int port)
+>  
+>  	spin_unlock(&mib->stats64_lock);
+>  
+> -	if (dev->info->phy_errata_9477) {
+> +	if (dev->info->phy_errata_9477 && !ksz_is_sgmii_port(dev, port)) {
+>  		ret = ksz9477_errata_monitor(dev, port, raw->tx_late_col);
+>  		if (ret)
+>  			dev_err(dev->dev, "Failed to monitor transmission halt\n");
+> @@ -2845,6 +2863,12 @@ static int ksz_setup(struct dsa_switch *ds)
+>  	if (ret)
+>  		return ret;
+>  
+> +	if (ksz_has_sgmii_port(dev) && dev->dev_ops->pcs_create) {
+> +		ret = dev->dev_ops->pcs_create(dev);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>  	/* set broadcast storm protection 10% rate */
+>  	regmap_update_bits(ksz_regmap_16(dev), regs[S_BROADCAST_CTRL],
+>  			   BROADCAST_STORM_RATE,
+> @@ -3692,6 +3716,10 @@ static void ksz_phylink_mac_config(struct phylink_config *config,
+>  	if (dev->info->internal_phy[port])
+>  		return;
+>  
+> +	/* No need to configure XMII control register when using SGMII. */
+> +	if (ksz_is_sgmii_port(dev, port))
+> +		return;
+> +
+>  	if (phylink_autoneg_inband(mode)) {
+>  		dev_err(dev->dev, "In-band AN not supported!\n");
+>  		return;
+> diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
+> index a034017568cd..a08417df2ca4 100644
+> --- a/drivers/net/dsa/microchip/ksz_common.h
+> +++ b/drivers/net/dsa/microchip/ksz_common.h
+> @@ -1,7 +1,7 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+>  /* Microchip switch driver common header
+>   *
+> - * Copyright (C) 2017-2024 Microchip Technology Inc.
+> + * Copyright (C) 2017-2025 Microchip Technology Inc.
+>   */
+>  
+>  #ifndef __KSZ_COMMON_H
+> @@ -10,6 +10,7 @@
+>  #include <linux/etherdevice.h>
+>  #include <linux/kernel.h>
+>  #include <linux/mutex.h>
+> +#include <linux/pcs/pcs-xpcs.h>
+>  #include <linux/phy.h>
+>  #include <linux/regmap.h>
+>  #include <net/dsa.h>
+> @@ -93,6 +94,7 @@ struct ksz_chip_data {
+>  	bool internal_phy[KSZ_MAX_NUM_PORTS];
+>  	bool gbit_capable[KSZ_MAX_NUM_PORTS];
+>  	bool ptp_capable;
+> +	u8 sgmii_port;
+>  	const struct regmap_access_table *wr_table;
+>  	const struct regmap_access_table *rd_table;
+>  };
+> @@ -132,6 +134,7 @@ struct ksz_port {
+>  	u32 force:1;
+>  	u32 read:1;			/* read MIB counters in background */
+>  	u32 freeze:1;			/* MIB counter freeze is enabled */
+> +	u32 sgmii_adv_write:1;
+>  
+>  	struct ksz_port_mib mib;
+>  	phy_interface_t interface;
+> @@ -141,6 +144,7 @@ struct ksz_port {
+>  	void *acl_priv;
+>  	struct ksz_irq pirq;
+>  	u8 num;
+> +	struct phylink_pcs *pcs;
+>  #if IS_ENABLED(CONFIG_NET_DSA_MICROCHIP_KSZ_PTP)
+>  	struct kernel_hwtstamp_config tstamp_config;
+>  	bool hwts_tx_en;
+> @@ -440,6 +444,8 @@ struct ksz_dev_ops {
+>  	int (*reset)(struct ksz_device *dev);
+>  	int (*init)(struct ksz_device *dev);
+>  	void (*exit)(struct ksz_device *dev);
+> +
+> +	int (*pcs_create)(struct ksz_device *dev);
+>  };
+>  
+>  struct ksz_device *ksz_switch_alloc(struct device *base, void *priv);
+> @@ -731,6 +737,21 @@ static inline bool is_lan937x_tx_phy(struct ksz_device *dev, int port)
+>  		dev->chip_id == LAN9372_CHIP_ID) && port == KSZ_PORT_4;
+>  }
+>  
+> +static inline int ksz_get_sgmii_port(struct ksz_device *dev)
+> +{
+> +	return dev->info->sgmii_port - 1;
+> +}
+> +
+> +static inline bool ksz_has_sgmii_port(struct ksz_device *dev)
+> +{
+> +	return dev->info->sgmii_port > 0;
+> +}
+> +
+> +static inline bool ksz_is_sgmii_port(struct ksz_device *dev, int port)
+> +{
+> +	return dev->info->sgmii_port == port + 1;
+> +}
+> +
+>  /* STP State Defines */
+>  #define PORT_TX_ENABLE			BIT(2)
+>  #define PORT_RX_ENABLE			BIT(1)
+> -- 
+> 2.34.1
+> 
+> 
 
-fio command was used to test random read and small random read(~5%) and
-sequential read performance.
-     # fio -filename=testfile  -bs=4k -rw=read -name=job1
-     # fio -filename=testfile  -bs=4k -rw=randread -name=job1
-     # fio -filename=testfile  -bs=4k -rw=randread --io_size=14m -name=job1
-
-Here are some performance numbers for reference:
-
-Processors: Intel(R) Xeon(R) 6766E(144 core)
-Memory:     521 GiB
-
-|-----------------------------------------------------------------------------|
-|           | Cluster size | sequential read | randread  | small randread(5%) |
-|-----------|--------------|-----------------|-----------|--------------------|
-| Intel QAT |    4096      |    538  MiB/s   | 112 MiB/s |     20.76 MiB/s    |
-| Intel QAT |    16384     |    699  MiB/s   | 158 MiB/s |     21.02 MiB/s    |
-| Intel QAT |    65536     |    917  MiB/s   | 278 MiB/s |     20.90 MiB/s    |
-| Intel QAT |    131072    |    1056 MiB/s   | 351 MiB/s |     23.36 MiB/s    |
-| Intel QAT |    262144    |    1145 MiB/s   | 431 MiB/s |     26.66 MiB/s    |
-| deflate   |    4096      |    499  MiB/s   | 108 MiB/s |     21.50 MiB/s    |
-| deflate   |    16384     |    422  MiB/s   | 125 MiB/s |     18.94 MiB/s    |
-| deflate   |    65536     |    452  MiB/s   | 159 MiB/s |     13.02 MiB/s    |
-| deflate   |    131072    |    452  MiB/s   | 177 MiB/s |     11.44 MiB/s    |
-| deflate   |    262144    |    466  MiB/s   | 194 MiB/s |     10.60 MiB/s    |
-
-Signed-off-by: Bo Liu <liubo03@inspur.com>
----
-v1: https://lore.kernel.org/linux-erofs/20250410042048.3044-1-liubo03@inspur.com/
-v2: https://lore.kernel.org/linux-erofs/20250410042048.3044-1-liubo03@inspur.com/T/#t
-
-Changes since v2:
- - Add a new kernel config option CONFIG_EROFS_FS_ZIP_CRYPTO. 
- - Modify the sysfs interface to merge enable and disable into
-   a single entry point, and add a read function to view the current state.
- - Optimize the relevant code,use the sg_alloc_table_from_pages_segment interface.
-
- fs/erofs/Kconfig                |  14 +++
- fs/erofs/Makefile               |   1 +
- fs/erofs/compress.h             |  14 +++
- fs/erofs/decompressor_crypto.c  | 199 ++++++++++++++++++++++++++++++++
- fs/erofs/decompressor_deflate.c |  16 ++-
- fs/erofs/sysfs.c                |  36 ++++++
- 6 files changed, 279 insertions(+), 1 deletion(-)
- create mode 100644 fs/erofs/decompressor_crypto.c
-
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-index 331e49cd1b8d..db49ae3c1922 100644
---- a/fs/erofs/Kconfig
-+++ b/fs/erofs/Kconfig
-@@ -144,6 +144,20 @@ config EROFS_FS_ZIP_ZSTD
- 
- 	  If unsure, say N.
- 
-+config EROFS_FS_ZIP_CRYPTO
-+	bool "EROFS hardware decompression support (crypto interface)"
-+	depends on EROFS_FS_ZIP
-+	help
-+	  Saying Y here includes support for reading EROFS file systems
-+	  containing crypto compressed data.  It gives better decompression
-+	  speed than the software-implemented compression, and it costs
-+	  lower CPU overhead.
-+
-+	  Crypto support is an experimental feature for now and so most
-+	  file systems will be readable without selecting this option.
-+
-+	  If unsure, say N.
-+
- config EROFS_FS_ONDEMAND
- 	bool "EROFS fscache-based on-demand read support (deprecated)"
- 	depends on EROFS_FS
-diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
-index 4331d53c7109..247b263eb667 100644
---- a/fs/erofs/Makefile
-+++ b/fs/erofs/Makefile
-@@ -7,5 +7,6 @@ erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o zutil.o
- erofs-$(CONFIG_EROFS_FS_ZIP_LZMA) += decompressor_lzma.o
- erofs-$(CONFIG_EROFS_FS_ZIP_DEFLATE) += decompressor_deflate.o
- erofs-$(CONFIG_EROFS_FS_ZIP_ZSTD) += decompressor_zstd.o
-+erofs-$(CONFIG_EROFS_FS_ZIP_CRYPTO) += decompressor_crypto.o
- erofs-$(CONFIG_EROFS_FS_BACKED_BY_FILE) += fileio.o
- erofs-$(CONFIG_EROFS_FS_ONDEMAND) += fscache.o
-diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
-index 2704d7a592a5..356ae2473bd5 100644
---- a/fs/erofs/compress.h
-+++ b/fs/erofs/compress.h
-@@ -70,10 +70,24 @@ struct z_erofs_stream_dctx {
- 	bool bounced;			/* is the bounce buffer used now? */
- };
- 
-+struct z_erofs_crypto_engine {
-+	char *crypto_name;
-+	bool enabled;
-+	struct crypto_acomp *erofs_tfm;
-+};
-+
-+extern struct z_erofs_crypto_engine z_erofs_crypto[Z_EROFS_COMPRESSION_MAX][2];
-+
- int z_erofs_stream_switch_bufs(struct z_erofs_stream_dctx *dctx, void **dst,
- 			       void **src, struct page **pgpl);
- int z_erofs_fixup_insize(struct z_erofs_decompress_req *rq, const char *padbuf,
- 			 unsigned int padbufsize);
- int __init z_erofs_init_decompressor(void);
- void z_erofs_exit_decompressor(void);
-+int z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
-+						struct crypto_acomp *erofs_tfm, struct page **pgpl);
-+struct crypto_acomp *z_erofs_crypto_get_engine(int type);
-+int z_erofs_crypto_enable_engine(const char *name);
-+void z_erofs_crypto_disable_engine(void);
-+int z_erofs_crypto_engine_format(char *buf);
- #endif
-diff --git a/fs/erofs/decompressor_crypto.c b/fs/erofs/decompressor_crypto.c
-new file mode 100644
-index 000000000000..55f6a9e6dcf6
---- /dev/null
-+++ b/fs/erofs/decompressor_crypto.c
-@@ -0,0 +1,199 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+#include <linux/scatterlist.h>
-+#include <crypto/acompress.h>
-+
-+#include "compress.h"
-+
-+static int z_erofs_crypto_decompress_mem(struct z_erofs_decompress_req *rq,
-+				struct crypto_acomp *erofs_tfm)
-+{
-+	struct sg_table st_src, st_dst;
-+	struct acomp_req *req;
-+	struct crypto_wait wait;
-+	u8 *headpage;
-+	int ret;
-+
-+	headpage = kmap_local_page(*rq->in);
-+	ret = z_erofs_fixup_insize(rq, headpage + rq->pageofs_in,
-+				min_t(unsigned int, rq->inputsize,
-+							rq->sb->s_blocksize - rq->pageofs_in));
-+	kunmap_local(headpage);
-+	if (ret)
-+		return ret;
-+
-+	req = acomp_request_alloc(erofs_tfm);
-+	if (!req) {
-+		erofs_err(rq->sb, "failed to alloc decompress request");
-+		return -ENOMEM;
-+	}
-+
-+	ret = sg_alloc_table_from_pages_segment(&st_src,
-+					rq->in, rq->inpages, rq->pageofs_in,
-+					rq->inputsize, UINT_MAX, GFP_KERNEL);
-+	if (ret < 0)
-+		goto failed_src_alloc;
-+
-+	ret = sg_alloc_table_from_pages_segment(&st_dst,
-+					rq->out, rq->outpages, rq->pageofs_out,
-+					rq->outputsize, UINT_MAX, GFP_KERNEL);
-+	if (ret < 0)
-+		goto failed_dst_alloc;
-+
-+	acomp_request_set_params(req, st_src.sgl,
-+		st_dst.sgl, rq->inputsize, rq->outputsize);
-+
-+	crypto_init_wait(&wait);
-+	acomp_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
-+				crypto_req_done, &wait);
-+
-+	ret = crypto_wait_req(crypto_acomp_decompress(req), &wait);
-+	if (ret < 0) {
-+		erofs_err(rq->sb, "failed to decompress %d in[%u, %u] out[%u]",
-+					ret, rq->inputsize, rq->pageofs_in, rq->outputsize);
-+		ret = -EIO;
-+	} else
-+		ret = 0;
-+
-+	sg_free_table(&st_dst);
-+failed_dst_alloc:
-+	sg_free_table(&st_src);
-+failed_src_alloc:
-+	acomp_request_free(req);
-+	return ret;
-+}
-+
-+int z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
-+				struct crypto_acomp *erofs_tfm, struct page **pgpl)
-+{
-+	int i;
-+
-+	for (i = 0; i < rq->outpages; i++) {
-+		struct page *const page = rq->out[i];
-+		struct page *victim;
-+
-+		if (!page) {
-+			victim = __erofs_allocpage(pgpl, rq->gfp, true);
-+			if (!victim)
-+				return -ENOMEM;
-+			set_page_private(victim, Z_EROFS_SHORTLIVED_PAGE);
-+			rq->out[i] = victim;
-+		}
-+	}
-+
-+	return z_erofs_crypto_decompress_mem(rq, erofs_tfm);
-+}
-+
-+struct crypto_acomp *z_erofs_crypto_get_engine(int type)
-+{
-+	int i = 0;
-+
-+	while (z_erofs_crypto[type][i].crypto_name) {
-+		if (z_erofs_crypto[type][i].enabled)
-+			return z_erofs_crypto[type][i].erofs_tfm;
-+		i++;
-+	}
-+	return NULL;
-+}
-+
-+static int z_erofs_crypto_get_compress_type(const char *name)
-+{
-+	int i, j;
-+
-+	for (i = 0; i < Z_EROFS_COMPRESSION_MAX; i++) {
-+		j = 0;
-+		while (z_erofs_crypto[i][j].crypto_name) {
-+			if (!strcmp(name, z_erofs_crypto[i][j].crypto_name))
-+				return i;
-+
-+			j++;
-+		}
-+	}
-+	return -EINVAL;
-+}
-+
-+int z_erofs_crypto_enable_engine(const char *name)
-+{
-+	int i = 0, type;
-+
-+	type = z_erofs_crypto_get_compress_type(name);
-+	if (type < 0)
-+		return -EINVAL;
-+
-+	while (z_erofs_crypto[type][i].crypto_name) {
-+		if (!strcmp(z_erofs_crypto[type][i].crypto_name, name)) {
-+			if (z_erofs_crypto[type][i].enabled)
-+				break;
-+
-+			z_erofs_crypto[type][i].erofs_tfm =
-+				crypto_alloc_acomp(z_erofs_crypto[type][i].crypto_name, 0, 0);
-+			if (IS_ERR(z_erofs_crypto[type][i].erofs_tfm)) {
-+				z_erofs_crypto[type][i].erofs_tfm = NULL;
-+				return -ENXIO;
-+			}
-+			z_erofs_crypto[type][i].enabled = true;
-+		} else if (z_erofs_crypto[type][i].enabled) {
-+			if (z_erofs_crypto[type][i].erofs_tfm)
-+				crypto_free_acomp(z_erofs_crypto[type][i].erofs_tfm);
-+			z_erofs_crypto[type][i].enabled = false;
-+		}
-+		i++;
-+	}
-+	return 0;
-+}
-+
-+void z_erofs_crypto_disable_engine(void)
-+{
-+	int i = 0, type;
-+
-+	for (type = 0; type < Z_EROFS_COMPRESSION_MAX; type++) {
-+		i = 0;
-+		while (z_erofs_crypto[type][i].crypto_name) {
-+			if (z_erofs_crypto[type][i].enabled &&
-+					z_erofs_crypto[type][i].erofs_tfm) {
-+				crypto_free_acomp(z_erofs_crypto[type][i].erofs_tfm);
-+				z_erofs_crypto[type][i].erofs_tfm = NULL;
-+				z_erofs_crypto[type][i].enabled = false;
-+			}
-+			i++;
-+		}
-+	}
-+}
-+
-+int z_erofs_crypto_engine_format(char *buf)
-+{
-+	int type, i, len = 0;
-+
-+	for (type = 0; type < Z_EROFS_COMPRESSION_MAX; type++) {
-+		i = 0;
-+		while (z_erofs_crypto[type][i].crypto_name) {
-+			if (z_erofs_crypto[type][i].enabled)
-+				len += scnprintf(buf + len, PATH_MAX - len, "%s ",
-+							z_erofs_crypto[type][i].crypto_name);
-+			i++;
-+		}
-+	}
-+	return len;
-+}
-+
-+struct z_erofs_crypto_engine z_erofs_crypto[Z_EROFS_COMPRESSION_MAX][2] = {
-+	[Z_EROFS_COMPRESSION_LZ4] = {
-+		(struct z_erofs_crypto_engine) {NULL},
-+		(struct z_erofs_crypto_engine) {NULL},
-+	},
-+	[Z_EROFS_COMPRESSION_LZMA] = {
-+		(struct z_erofs_crypto_engine) {NULL},
-+		(struct z_erofs_crypto_engine) {NULL},
-+	},
-+	[Z_EROFS_COMPRESSION_DEFLATE] = {
-+		(struct z_erofs_crypto_engine) {
-+			.crypto_name = "qat_deflate",
-+			.enabled = false,
-+			.erofs_tfm = NULL,
-+		},
-+		(struct z_erofs_crypto_engine) {NULL},
-+	},
-+	[Z_EROFS_COMPRESSION_ZSTD] = {
-+		(struct z_erofs_crypto_engine) {NULL},
-+		(struct z_erofs_crypto_engine) {NULL},
-+	},
-+};
-diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_deflate.c
-index c6908a487054..bebbf1eccd3d 100644
---- a/fs/erofs/decompressor_deflate.c
-+++ b/fs/erofs/decompressor_deflate.c
-@@ -97,7 +97,7 @@ static int z_erofs_load_deflate_config(struct super_block *sb,
- 	return -ENOMEM;
- }
- 
--static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
-+static int __z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
- 				      struct page **pgpl)
- {
- 	struct super_block *sb = rq->sb;
-@@ -178,6 +178,20 @@ static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
- 	return err;
- }
- 
-+static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
-+				struct page **pgpl)
-+{
-+#ifdef CONFIG_EROFS_FS_ZIP_CRYPTO
-+	struct crypto_acomp *erofs_tfm = NULL;
-+
-+	erofs_tfm = z_erofs_crypto_get_engine(Z_EROFS_COMPRESSION_DEFLATE);
-+	if (erofs_tfm && !rq->partial_decoding)
-+		return z_erofs_crypto_decompress(rq, erofs_tfm, pgpl);
-+	else
-+#endif
-+		return __z_erofs_deflate_decompress(rq, pgpl);
-+}
-+
- const struct z_erofs_decompressor z_erofs_deflate_decomp = {
- 	.config = z_erofs_load_deflate_config,
- 	.decompress = z_erofs_deflate_decompress,
-diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
-index dad4e6c6c155..00123c4d3196 100644
---- a/fs/erofs/sysfs.c
-+++ b/fs/erofs/sysfs.c
-@@ -7,12 +7,14 @@
- #include <linux/kobject.h>
- 
- #include "internal.h"
-+#include "compress.h"
- 
- enum {
- 	attr_feature,
- 	attr_drop_caches,
- 	attr_pointer_ui,
- 	attr_pointer_bool,
-+	attr_crypto,
- };
- 
- enum {
-@@ -60,6 +62,9 @@ static struct erofs_attr erofs_attr_##_name = {			\
- EROFS_ATTR_RW_UI(sync_decompress, erofs_mount_opts);
- EROFS_ATTR_FUNC(drop_caches, 0200);
- #endif
-+#ifdef CONFIG_EROFS_FS_ZIP_CRYPTO
-+EROFS_ATTR_FUNC(crypto, 0644);
-+#endif
- 
- static struct attribute *erofs_attrs[] = {
- #ifdef CONFIG_EROFS_FS_ZIP
-@@ -95,6 +100,9 @@ static struct attribute *erofs_feat_attrs[] = {
- 	ATTR_LIST(fragments),
- 	ATTR_LIST(dedupe),
- 	ATTR_LIST(48bit),
-+#ifdef CONFIG_EROFS_FS_ZIP_CRYPTO
-+	ATTR_LIST(crypto),
-+#endif
- 	NULL,
- };
- ATTRIBUTE_GROUPS(erofs_feat);
-@@ -128,6 +136,10 @@ static ssize_t erofs_attr_show(struct kobject *kobj,
- 		if (!ptr)
- 			return 0;
- 		return sysfs_emit(buf, "%d\n", *(bool *)ptr);
-+#ifdef CONFIG_EROFS_FS_ZIP_CRYPTO
-+	case attr_crypto:
-+		return z_erofs_crypto_engine_format(buf);
-+#endif
- 	}
- 	return 0;
- }
-@@ -141,6 +153,10 @@ static ssize_t erofs_attr_store(struct kobject *kobj, struct attribute *attr,
- 	unsigned char *ptr = __struct_ptr(sbi, a->struct_type, a->offset);
- 	unsigned long t;
- 	int ret;
-+#ifdef CONFIG_EROFS_FS_ZIP_CRYPTO
-+	char *crypto_name;
-+	size_t sz;
-+#endif
- 
- 	switch (a->attr_id) {
- 	case attr_pointer_ui:
-@@ -181,6 +197,26 @@ static ssize_t erofs_attr_store(struct kobject *kobj, struct attribute *attr,
- 		if (t & 1)
- 			invalidate_mapping_pages(MNGD_MAPPING(sbi), 0, -1);
- 		return len;
-+#endif
-+#ifdef CONFIG_EROFS_FS_ZIP_CRYPTO
-+	case attr_crypto:
-+		buf = skip_spaces(buf);
-+		sz = strlen(buf);
-+		crypto_name = kstrdup(buf, GFP_KERNEL);
-+		if (!crypto_name)
-+			return -ENOMEM;
-+
-+		/* ignore trailing newline */
-+		if (sz > 0 && crypto_name[sz - 1] == '\n')
-+			crypto_name[sz - 1] = 0x00;
-+
-+		if (strlen(crypto_name) > 0) {
-+			ret = z_erofs_crypto_enable_engine(crypto_name);
-+			if (ret < 0)
-+				return ret;
-+		} else
-+			z_erofs_crypto_disable_engine();
-+		return len;
- #endif
- 	}
- 	return 0;
 -- 
-2.31.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
