@@ -1,209 +1,87 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8C9323D;
-	Fri, 16 May 2025 16:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DBF81FAA;
+	Fri, 16 May 2025 16:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747412068; cv=none; b=kFxnmU8Ecu3H/MCrPhVR8f4NwyiAsMtO0OMLJbHCKcDQN/XjnIT+BGv0/yF1LzdaIHYh+L2qArrrlZS1UvN0rtwzunbFM58DAn03PO5xRa33WbeiU0ikdo5j0Dcy++jTiP/QnaTc2mBGSFL2UsHFZCQgMNfb/NYyPOIyC8285+I=
+	t=1747412168; cv=none; b=Zcrud36wcGWJtIM9ygMpS01B/2REypYz1AhXtvEVYLqIlkWwTBkilTTOurCQGLrOVVyeSF36eiqE4gc2IrZGwx+HhFLoxQeTZBXGg8bMnITmwCr8/aevUEw/UP+q6YVDmdyfrCeBiFiReHu9YqqNAuLXSCFWzeJHHkKxxZ+iRBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747412068; c=relaxed/simple;
-	bh=TQwoIsavedMixi6HIUcBuliBMSH+GXXDpKFXeS611+A=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=QuGMe01nqav3e80QBGiyjQ4Ot9/YgzL8vSYzTS5UBa7NdNGE4/mgovr5aYzwAIKD3hr491/UvB5xltZ99Iq2fmicv6AKw94U4hYrOvE7JCn1GR5t2a+Agf4yXqH6UDR1dd1iIC/DJcqCrfBYAUhP4JkDOdeIWmtqBwHVDFBZJkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=H6zMPEOi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PK3nj3Ko; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747412168; c=relaxed/simple;
+	bh=yjD13qd8TH3MTmxXGa6HwrUxPQnDRVChHd1GPusVJr0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=uN3qpxqju9TxFE0BXMl2jLZl/wfKslcz1tKvpQreDYAzjkUN/Mj8m1gQx/zPpg5z6O8+7H6EaBwjwXZndy/lCkudFTYaO7A5x/UwL9lejVOGEi/o2M044eGJLZil8K/PtW5hL7up46dvfMxbZZz3RXPkYnZL2fSTX+T7AoZLG7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZXFneLah; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H6zMPEOi";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PK3nj3Ko"
-Date: Fri, 16 May 2025 18:14:22 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747412064;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=RiZabCUJ9teCjROosFErp6pWxnyNRbJPG8vV5rKTy3g=;
-	b=H6zMPEOi2H8B5t4AjHjWP4/QMg5HudewWW+saulj9ZLVVDneXHXUQ5Iw9MaF9lHfDYe+K+
-	f6ox8UQxmlvWy/JZX3tj+dz9ZOPtUUZkU1qLUkX+3gBf1VRmIRe+Xuh8gUyBnFTKb2Bg3X
-	daiZpwYD0XBb5nfoHThZQ6kxiejRRwapEo9bG9fcqC5qiwtzB86u8/I+8sEcVKW1evVV8S
-	hNi4ZIkIBjzyBwYDTtYdKh1k4bkZCOiNSyK8WyIPsVcLEFIzccYHf1NUfKaYoAbXsECvwx
-	j4bkqFsjCUhBdhs2gRgMhIeJ633T3RXAqKxwhYOt8j9QNWUk1PSC2vuwmxRnrg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747412064;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=RiZabCUJ9teCjROosFErp6pWxnyNRbJPG8vV5rKTy3g=;
-	b=PK3nj3KoAupU5WVxA3Q1pnN85CFlCBPLAEdUWCbu7+8/xjA8qMI1Hh+bbihcmgp6vh0PbK
-	CF6wV4ccsJJ7MuCA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-man@vger.kernel.org, linux-kernel@vger.kernel.org,
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>
-Subject: [PATCH] prctl: Add documentation for PR_FUTEX_HASH
-Message-ID: <20250516161422.BqmdlxlF@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZXFneLah"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE8D0C4CEEF;
+	Fri, 16 May 2025 16:16:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747412167;
+	bh=yjD13qd8TH3MTmxXGa6HwrUxPQnDRVChHd1GPusVJr0=;
+	h=From:Date:Subject:To:Cc:From;
+	b=ZXFneLahaNsa1axN90QbHt9Jugmv50OJdblzGLfGpqIFnngw/VJXZiqBA8/JgNvdf
+	 LrmbMRDFj5QYkuHZYD+bRkchgxMBk7zz9DTtZVHIGfhPB0oXUvQ7WmbDo3d3JOD8zn
+	 /kR9E+P+ZM27vJyjolssb9eOMlQt4hU0NHg674H+XnrGyJ3DTantLn3XDLEIZMgZKZ
+	 lpoIH5L1+NBoslFvBE1l4XSOMlUDnqMhIvYOdmXHVnKQRbt7GWdbM/CZ5KQ8ZwsF7d
+	 NY9Fl7LXRFp14rFhwONhfmMPVrLXY7QpV2w3d1nthY/j/Oci1GGWIQVXWRb108a8at
+	 Sb7/Ks2R4d+aQ==
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-605f7d3216bso737020eaf.1;
+        Fri, 16 May 2025 09:16:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXxUqj2jgrlYz2gmkdBFAiEK2EG3aJkcUyW56QBcoVmFWdOCopQLGUJJBJWgP6u/8KWUzx5wcz4DaW8eXY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqbVDuOZd0hDWedOcgr9MBDmR5WDMU2OsVhZ5+YtFQs4uCUF30
+	8YXMowM1y+a0Pbyw/qCPJBD6yA93ZlrdeclGfDHatUhRcCpbf13efdlgYeq4IYgMNG7OOVZb49N
+	NmF8szzY2ME5hbzOG5cLguUXcC/apfAY=
+X-Google-Smtp-Source: AGHT+IF3NFxCjmzUF7rlTm405mQS1/usElZoPbU+64c32LTOYfvoWKpq7JVwh4LUOFXzlx4RepwS0ytrkeLKujPcy+Y=
+X-Received: by 2002:a05:6820:1896:b0:603:f903:c85a with SMTP id
+ 006d021491bc7-609f3736881mr2120181eaf.4.1747412167116; Fri, 16 May 2025
+ 09:16:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 16 May 2025 18:15:54 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0i8HbDaYStdN-isATh-+gPM2ztacvvgdux1WHy2aiiSoQ@mail.gmail.com>
+X-Gm-Features: AX0GCFt8c8zb29qic_Nvq8ZGhU_v4STg0J4BORTdTS4YuXzyt3Dpdw9E5wXeOes
+Message-ID: <CAJZ5v0i8HbDaYStdN-isATh-+gPM2ztacvvgdux1WHy2aiiSoQ@mail.gmail.com>
+Subject: [GIT PULL] ACPI fix for v6.15-rc7
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-The prctl(PR_FUTEX_HASH) is queued for the v6.16 merge window.
-Add some documentation of the interface.
+Hi Linus,
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- man/man2/prctl.2                   |   3 +
- man/man2const/PR_FUTEX_HASH.2const | 112 +++++++++++++++++++++++++++++
- 2 files changed, 115 insertions(+)
- create mode 100644 man/man2const/PR_FUTEX_HASH.2const
+Please pull from the tag
 
-diff --git a/man/man2/prctl.2 b/man/man2/prctl.2
-index 7a6b73e25e7a8..30c868d051a0c 100644
---- a/man/man2/prctl.2
-+++ b/man/man2/prctl.2
-@@ -150,6 +150,8 @@ with a significance depending on the first one.
- .B PR_GET_MDWE
- .TQ
- .B PR_RISCV_SET_ICACHE_FLUSH_CTX
-+.TQ
-+.B PR_FUTEX_HASH
- .SH RETURN VALUE
- On success,
- a nonnegative value is returned.
-@@ -262,4 +264,5 @@ so these operations should be used with care.
- .BR PR_SET_MDWE (2const),
- .BR PR_GET_MDWE (2const),
- .BR PR_RISCV_SET_ICACHE_FLUSH_CTX (2const),
-+.BR PR_FUTEX_HASH (2const),
- .BR core (5)
-diff --git a/man/man2const/PR_FUTEX_HASH.2const b/man/man2const/PR_FUTEX_HASH.2const
-new file mode 100644
-index 0000000000000..c6a6396729770
---- /dev/null
-+++ b/man/man2const/PR_FUTEX_HASH.2const
-@@ -0,0 +1,112 @@
-+.\" Copyright, The contributors to the Linux man-pages project
-+.\"
-+.\" SPDX-License-Identifier: Linux-man-pages-copyleft
-+.\"
-+.TH PR_FUTEX_HASH 2const (date) "Linux man-pages (unreleased)"
-+.SH NAME
-+PR_FUTEX_HASH
-+\-
-+configure the private futex hash
-+.SH LIBRARY
-+Standard C library
-+.RI ( libc ,\~ \-lc )
-+.SH SYNOPSIS
-+.nf
-+.BR "#include <linux/prctl.h>" "  /* Definition of " PR_* " constants */"
-+.B #include <sys/prctl.h>
-+.P
-+.BI "int prctl(PR_FUTEX_HASH, long " op ", ...);"
-+.fi
-+.SH DESCRIPTION
-+Configure the attributes for the underlying hash used by the
-+.BR futex (2)
-+family of operations. The Linux kernel uses a hash to distributes the
-+.BR futex (2)
-+users on different data structures. The data structure holds the in-kernel
-+representation of the operation and keeps track of the current users which are
-+enqueued and wait for a wake up and those who perform a wake up. The size of
-+the global hash is determined at boot time and is based on the number of CPUs
-+in the system. Since the mapping from the provided
-+.I uaddr
-+value to the in-kernel representation is based on a hash, two unrelated tasks
-+in the system can share the same hash bucket. This in turn can lead to delays
-+of the due
-+.BR futex (2)
-+operation due to to lock contention of the data structure. These delays can be
-+problematic on a PREEMPT_RT system since random tasks can share in-kernel locks
-+and it is not deterministic which tasks will be involved.
-+.P
-+Linux v6.16 implements a process wide private hash which is used by all
-+.BR futex (2)
-+operations which specify the
-+.B FUTEX_PRIVATE_FLAG
-+as part of the operation.
-+Without any configuration the kernel will allocate 16 hash slots once the first
-+thread has been created. If the process continues to create threads, the kernel
-+will try to resize the private hash based on the number of threads and
-+available CPUs in the system. The kernel will only increase the size and will
-+make sure it does not exceed the size of the global hash.
-+.P
-+The user can configure the size of the private hash which will also disable the
-+automatic resize provided by the kernel.
-+.P
-+The following values for
-+.I op
-+can be specified:
-+.TP
-+.BI "int prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, " hash_size ", " hash_flags ");
-+Set the number of slots to use for the private hash.
-+.P
-+.RS
-+.TP
-+.I hash_size
-+Specifies the size of private hash to allocate. Possible values are:
-+.RS
-+.TP
-+.I 0
-+Use the global hash. This is the behaviour used before v6.16. The operation can
-+not be undone.
-+.TP
-+.I >0
-+Specifies the number of slots to allocate. The value must be power of two and
-+lowest possible value is 2. The upper limit depends on available memory in
-+the system. Each slot requires 64bytes of memory. Kernels compiled with
-+.I CONFIG_PROVE_LOCKING
-+will consume more than that.
-+.RE
-+.TP
-+.I hash_flags
-+.RS
-+The following flags can be specified:
-+.TP
-+.I FH_FLAG_IMMUTABLE
-+The private hash can no longer be changed. By using an immutable privat hash
-+the kernel can avoid some accounting for the data structure. This accounting
-+is visible in benchmarks if many
-+.BR futex (2)
-+operations are invoked in parallel on different CPUs.
-+.RE
-+.RE
-+.TP
-+.BI "int prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_SLOTS);
-+Returns the current size of the the private hash. A value of 0 means that a
-+private has not been allocated or the global hash is used. A value >0 specifies
-+the size of the private hash.
-+.TP
-+.BI "int prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_GET_IMMUTABLE);
-+Return 1 if the hash has been made immutable and not be changed. Otherwise 0.
-+
-+.SH RETURN VALUE
-+On success,
-+these calls return a value >=0.
-+On error, \-1 is returned, and
-+.I errno
-+is set to indicate the error.
-+.SH STANDARDS
-+Linux.
-+.SH HISTORY
-+Linux 6.16.
-+.SH SEE ALSO
-+.BR prctl (2) ,
-+.BR futex (2) ,
-+.BR futex (7)
--- 
-2.49.0
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ acpi-6.15-rc7
 
+with top-most commit adfab6b39202481bb43286fff94def4953793fdb
+
+ ACPI: PPTT: Fix processor subtable walk
+
+on top of commit 92a09c47464d040866cf2b4cd052bc60555185fb
+
+ Linux 6.15-rc5
+
+to receive an ACPI fix for 6.15-rc7.
+
+This fixes ACPI PPTT parsing code to address a regression introduced
+recently and add more sanity checking of data supplied by the platform
+firmware to avoid using invalid data (Jeremy Linton).
+
+Thanks!
+
+
+---------------
+
+Jeremy Linton (1):
+      ACPI: PPTT: Fix processor subtable walk
+
+---------------
+
+ drivers/acpi/pptt.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
