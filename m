@@ -1,125 +1,207 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9082B7D07D
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 15:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF0F1A5BAE
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 15:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747409789; cv=none; b=fSH6A8QDQ08176NwrP2fJHQIMUMchmrVBma3TaLlkzrVcbyHs3pnEBBs6bITghFoXXeNI1Q5d9+MKBKP/KUB1D8055i8c6OKsUlIlmC4O+qgZjIX2sdDrZQ1DJlpPN5KdxRR5mROWtbplQh1T4WfoXdnz2YDsjaGKlQQcsC1gYc=
+	t=1747409821; cv=none; b=r2l/wBhjVXa1NGa4RSeD3rUY2pJgaHKIpiOAvNBkxXHjsX8Yz/l7CzR85Y4uQczxZTZgB/i6eeXwA5uevcL8LBqeULcLwOIkEA/0yq+rnUmZHhPxk+uAOSXa948zA9ngqLDrIWtVuz7hRSYkNXmTCzdaLtiQPVzHAWZJVAY610M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747409789; c=relaxed/simple;
-	bh=P1NBSj1eq39QecxLoJyeHu/kz5IOGEhwerhf2QzfY+Q=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Um0eZXJywryucpT1QgACiBkZM4zJLmm5JPEtmDOrHSfpzLkwo6VX7dFeZ7BrghJAdC1oljCFZt0XBgYHxTyuylR7CEQ+oKg54Ua4X5qCN6S/8k3UxY3Wj4TcgyhGBioBCVaz1ornH97NOnTL89w4qdj81R+3e85sFw5Rziy4E7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=Ugkppw6R; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1747409821; c=relaxed/simple;
+	bh=v1TDWlu0Q2ujzeTIQKLD+n34j31vmP/65sZKxoxDvu8=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=QqMJCVgpSOZQPd4BzXSBzmdWmPElqUVigjE01XtB1iF51lb5IwxmBb+aNeer8DkBx+BUS7665BX/ERo9+t1OpOHv/OJMXYSq1oyNsdhPGnQOO4NwWm8bPPu6gqPrsXPVUnT8MwbodBiLsJEZURWctCyiCYbi4I/Vlvau//l/msc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YTBtR5DB; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="Ugkppw6R"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YTBtR5DB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747409819; x=1778945819;
+  h=date:from:to:cc:subject:message-id;
+  bh=v1TDWlu0Q2ujzeTIQKLD+n34j31vmP/65sZKxoxDvu8=;
+  b=YTBtR5DBzewd8C9MLEJ/ez7Oy8hqFanwXseWH/zN0tZltc5NsOKiGjVd
+   VMHRKIV7IOadXdshJa7+Pvt1nAAbAjpkyS2ekrQISHB8G+phSlGQfQvFH
+   n3sKTr4v6eFp72Ei/y78mgK5gEwB3/nOSso52Y68M39hbflRltwIdo3ey
+   /Kwz/G5DtK91UXb1uVNYFtV6e083KCM+YLLKofecNxQSwW0JHatSMW7An
+   6qpJmWwksOUcFkgOtybCOCs1Betg8oyH0+PA5COrvXtEQoswtYBENB/zG
+   5kGnE+VrgTZY5vGetnw52GDSRhWM8m/8/vSttInW1P9wAucJZPUEKYimi
+   w==;
+X-CSE-ConnectionGUID: +E1RrSkPTtytASpQA/u0Zg==
+X-CSE-MsgGUID: Ccmjso0cTSKGi5NrhCA7Yw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="60776701"
+X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
+   d="scan'208";a="60776701"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 08:36:59 -0700
+X-CSE-ConnectionGUID: c0H5V/XWSwCXXaV9MD0ZDA==
+X-CSE-MsgGUID: /8NMezJUTkynnRIR5sppMQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
+   d="scan'208";a="169764799"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 16 May 2025 08:36:57 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uFx7G-000JSv-2q;
+	Fri, 16 May 2025 15:36:54 +0000
+Date: Fri, 16 May 2025 23:36:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:irq/drivers] BUILD SUCCESS
+ 3e402acd5c4f9d447849b9bfb5a5c61f10668b7e
+Message-ID: <202505162305.8hrQYF5d-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1747409781;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/xLpzXLDxZFznf7ZK/2dQevdcoaxfl4Bbl5Mnla1OJ8=;
-	b=Ugkppw6RmCnoJd2DKDWZzPVEZEjDn/9hCK4qnI0TpOLPLUuvfQNCHHUdOvuh6kFs4vv+t9
-	Ves3EJ0SVqZLKsCS6kMDn1YDUZN7zQKNUk1wDbh6tHYmAwsZfdfUNXG3Hr48coYp3Vghq2
-	GvbVYhA6VrZb88xTK9AMA8hygyIXfgu7SCZn7JgrQTHISZ4CztzgUEBZEfv5MXLAoik5yG
-	OYYkvMfl/avknVDq7qSom2skyBUSW64yMxYmANF54aZsX99Kl4KDcKzz7i7oTzyY1wfhdT
-	BKdP3RqlXn77sPVIeukYM9dKk+Oh3Tf4LbsjHfogqvf38DcbjZs1PIxn3o5Lvw==
-Content-Type: multipart/signed;
- boundary=e3f6915d507f3921306840e72f19538d4bf9137df94a047009cab4a1be07;
- micalg=pgp-sha512; protocol="application/pgp-signature"
-Date: Fri, 16 May 2025 17:36:03 +0200
-Message-Id: <D9XP2BH2CU02.1R9E1GSXQD9JB@cknow.org>
-Cc: <linux-phy@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] phy: phy-rockchip-samsung-hdptx: Fix PHY PLL output
- 50.25MHz error
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: "Algea Cao" <algea.cao@rock-chips.com>, <vkoul@kernel.org>,
- <kishon@kernel.org>, <heiko@sntech.de>, <cristian.ciocaltea@collabora.com>,
- <andy.yan@rock-chips.com>
-References: <20250427095124.3354439-1-algea.cao@rock-chips.com>
-In-Reply-To: <20250427095124.3354439-1-algea.cao@rock-chips.com>
-X-Migadu-Flow: FLOW_OUT
 
---e3f6915d507f3921306840e72f19538d4bf9137df94a047009cab4a1be07
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/drivers
+branch HEAD: 3e402acd5c4f9d447849b9bfb5a5c61f10668b7e  irqchip/irq-pruss-intc: Simplify chained interrupt handler setup
 
-Hi,
+elapsed time: 1443m
 
-On Sun Apr 27, 2025 at 11:51 AM CEST, Algea Cao wrote:
-> When using HDMI PLL frequency division coefficient at 50.25MHz
-> that is calculated by rk_hdptx_phy_clk_pll_calc(), it fails to
-> get PHY LANE lock. Although the calculated values are within the
-> allowable range of PHY PLL configuration.
->
-> In order to fix the PHY LANE lock error and provide the expected
-> 50.25MHz output, manually compute the required PHY PLL frequency
-> division coefficient and add it to ropll_tmds_cfg configuration
-> table.
->
-> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
-> Reviewed-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
->
-> ---
->  drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c b/drivers/=
-phy/rockchip/phy-rockchip-samsung-hdptx.c
-> index fe7c05748356..77236f012a1f 100644
-> --- a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-> +++ b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-> @@ -476,6 +476,8 @@ static const struct ropll_config ropll_tmds_cfg[] =3D=
- {
->  	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
->  	{ 650000, 162, 162, 1, 1, 11, 1, 1, 1, 1, 1, 1, 1, 54, 0, 16, 4, 1,
->  	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
-> +	{ 502500, 84, 84, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 11, 1, 4, 5,
-> +	  4, 11, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
->  	{ 337500, 0x70, 0x70, 1, 1, 0xf, 1, 1, 1, 1, 1, 1, 1, 0x2, 0, 0x01, 5,
->  	  1, 1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
->  	{ 400000, 100, 100, 1, 1, 11, 1, 1, 0, 1, 0, 1, 1, 0x9, 0, 0x05, 0,
+configs tested: 130
+configs skipped: 2
 
-I found this patch in the 'fixes' branch in linux-phy:
-https://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git/commit/?h=
-=3Dfixes&id=3Df9475055b11c0c70979bd1667a76b2ebae638eb7
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-In the 'next' branch in linux-phy, I found this commit:
-0edf9d2bb9b4 ("phy: rockchip: samsung-hdptx: Avoid Hz<->hHz unit conversion=
- overhead")
-https://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git/commit/?h=
-=3Dnext&id=3D0edf9d2bb9b4ba7566dfdc7605883e04575129d9
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                   randconfig-001-20250516    gcc-13.3.0
+arc                   randconfig-002-20250516    gcc-13.3.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                          gemini_defconfig    clang-20
+arm                            mps2_defconfig    clang-21
+arm                   randconfig-001-20250516    gcc-7.5.0
+arm                   randconfig-002-20250516    clang-21
+arm                   randconfig-003-20250516    clang-21
+arm                   randconfig-004-20250516    clang-21
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250516    gcc-9.5.0
+arm64                 randconfig-002-20250516    gcc-9.5.0
+arm64                 randconfig-003-20250516    gcc-5.5.0
+arm64                 randconfig-004-20250516    gcc-9.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250516    gcc-14.2.0
+csky                  randconfig-002-20250516    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250516    clang-19
+hexagon               randconfig-002-20250516    clang-21
+i386                             alldefconfig    gcc-12
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250516    clang-20
+i386        buildonly-randconfig-002-20250516    gcc-12
+i386        buildonly-randconfig-003-20250516    clang-20
+i386        buildonly-randconfig-004-20250516    clang-20
+i386        buildonly-randconfig-005-20250516    clang-20
+i386        buildonly-randconfig-006-20250516    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250516    gcc-14.2.0
+loongarch             randconfig-002-20250516    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                          hp300_defconfig    gcc-14.2.0
+m68k                          sun3x_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                          ath79_defconfig    gcc-14.2.0
+mips                          eyeq6_defconfig    clang-21
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250516    gcc-13.3.0
+nios2                 randconfig-002-20250516    gcc-13.3.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250516    gcc-10.5.0
+parisc                randconfig-002-20250516    gcc-12.4.0
+powerpc                    adder875_defconfig    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                      bamboo_defconfig    clang-21
+powerpc                     mpc83xx_defconfig    clang-21
+powerpc                      pasemi_defconfig    clang-21
+powerpc               randconfig-001-20250516    gcc-5.5.0
+powerpc               randconfig-002-20250516    gcc-5.5.0
+powerpc               randconfig-003-20250516    clang-17
+powerpc                     sequoia_defconfig    clang-17
+powerpc                     skiroot_defconfig    clang-21
+powerpc64             randconfig-001-20250516    clang-21
+powerpc64             randconfig-002-20250516    clang-21
+powerpc64             randconfig-003-20250516    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250516    gcc-7.5.0
+riscv                 randconfig-002-20250516    gcc-14.2.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250516    gcc-7.5.0
+s390                  randconfig-002-20250516    gcc-7.5.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                    randconfig-001-20250516    gcc-7.5.0
+sh                    randconfig-002-20250516    gcc-9.3.0
+sh                            shmin_defconfig    gcc-14.2.0
+sh                              ul2_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250516    gcc-8.5.0
+sparc                 randconfig-002-20250516    gcc-8.5.0
+sparc                       sparc64_defconfig    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250516    gcc-12.4.0
+sparc64               randconfig-002-20250516    gcc-14.2.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250516    clang-21
+um                    randconfig-002-20250516    gcc-12
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250516    clang-20
+x86_64      buildonly-randconfig-002-20250516    gcc-12
+x86_64      buildonly-randconfig-003-20250516    clang-20
+x86_64      buildonly-randconfig-004-20250516    clang-20
+x86_64      buildonly-randconfig-005-20250516    gcc-12
+x86_64      buildonly-randconfig-006-20250516    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250516    gcc-10.5.0
+xtensa                randconfig-002-20250516    gcc-10.5.0
 
-Where the values in ropll_tmds_cfg are converted from hHz to Hz and the
-data type changes from u32 to unsigned long long.
-But AFAICT it does NOT convert this '502500' value, which IIUC means
-most values are in Hz, while this one is in hHz.
-
-Am I missing something or should this new value also be converted?
-
-Cheers,
-  Diederik
-
---e3f6915d507f3921306840e72f19538d4bf9137df94a047009cab4a1be07
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaCdbbgAKCRDXblvOeH7b
-bpKdAP9nbGhd2ZklAuFhWkPyfq1E751VrBYpaG2s6vej3MuJ/AEA+2ctn4xQ8Sql
-3eLb23byWcZ+57mBEnn1lCzKXoFTrAg=
-=A/lr
------END PGP SIGNATURE-----
-
---e3f6915d507f3921306840e72f19538d4bf9137df94a047009cab4a1be07--
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
