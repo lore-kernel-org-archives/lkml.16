@@ -1,114 +1,109 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075CE176AC5;
-	Fri, 16 May 2025 14:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB9B39ACC
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 14:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747406254; cv=none; b=a2e6iIcDfAn1UZRdhsdmxhv6vxamJyvzmi8Nv+FqlKx4T74JzXzLOB1lIm8kU+xdOKW2uLeSbHWgedzhnm+79Lj5Rlw/lzTE8q0neJARBFTtngNFc+rW2kOFpM4y0+AInXXbGwbwKBoKkll665IAHyE4MuHAJC+9lVTdnMI95m4=
+	t=1747406309; cv=none; b=oI+Su9/HQX4z2hopZOES7b/4914iXj5wxuC58U8ER+Dkg8EYlb4kKlOlARIVwSpqI/tznlsaeIaXOExaa89XGxfqDXpwos9RdhjDabThxIlPb3mjMX0AiujkAgdEUMfu8p1oc/aSKdssT/S4Ymfno6b9HypWl65XqtNvkBd5bG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747406254; c=relaxed/simple;
-	bh=WwD/N93JoWvoK7UwKqwSLDauyBcOUESITur/eQjy79M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SssKDeg7Bh2LnM3H2TBjgCGQEjqHRQNGRfs4FNF07KA8mPWrUWgr1xZuLRVHxphXSjCniDr+AmzxMRqM4Uf6ExsOJR9R13wOjgPCtKKscBdpTP+Zf7e3nzAJDSTfljlf0v/lCIE9TOBbcfSKSKkOQ9x6XBV/hTIh8Uq/mtLAtvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B98C143865;
-	Fri, 16 May 2025 14:37:20 +0000 (UTC)
-Message-ID: <57352cc0-420b-42e6-a493-2764794a5206@ghiti.fr>
-Date: Fri, 16 May 2025 16:37:20 +0200
+	s=arc-20240116; t=1747406309; c=relaxed/simple;
+	bh=x4z2xCYwo9fPX793BRjCTj4nqlE0ZVIMCsmio1DpU7s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IWbj6AA82lYbRIjuKk1mzFS9WomdTXH6tEPg3CHAR5CQlVuLoRZUIZS25dZLz72dlTQmWaviolHxRoKWOXeI1e6XpM1aimkn2X3pvZMvnhjgVXFoPwMkwGYxrmuT4BI1u7MtsJjPHsBE1xOibZQtG4EC2QkmJh5dzBpgIu1VULA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ylGodoks; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ylGodoks"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5fce6c7598bso12514a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:38:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747406305; x=1748011105; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1sUYusB+kyJ76xlLEHH5qRi/bk9NwvxZ5fkLN1rm8tM=;
+        b=ylGodoks6gEtouvpWiK2FouRrMpwv2Eh1sJF33X1TF2ipa209I7hRwmNWjpOXHpEPo
+         07w2HZyHsUgkM9T7xqmbPEwZpj/qdWAPQvxYqKuwTiTaUY4AR3LFNgbbiC/KYqQg3Q/a
+         3+LPt3qRDwMWan6jgP+oLaCspe2RCg3JULoj4ezt1niCXv7xYEywUqtO1ONlsOj8qvRb
+         zb0R+Mk921gYpg+E2LZkK9P9VjI/V6Vk6CA9CrDzP60gY8Iu39XFnqQuyaKj2QwJHsWR
+         QYQYXhdFlr2+gshcB9eHxm6mliW/f4Ik35K8CHx45fEdoq9USw0tbNtG7GrGww7QKvPj
+         7Vcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747406305; x=1748011105;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1sUYusB+kyJ76xlLEHH5qRi/bk9NwvxZ5fkLN1rm8tM=;
+        b=FoIr6pTn43XbktsZN1sb/YReIJp1qQV4ztFGaEwYd7h4wTH1f4JzxH2g9tVgtw4uL/
+         QxBCIix0E/HSGnE65Mp2nstZQHxYrgUQAzhguDFVz2PydxtwOycnPCGemnrRE/1YSziI
+         3lsBRxg05ZZ3cWcc62slKeddTUjy9yEDokmWx5SD8SfiDpIF74xIqxb/wZKo8IIUdRrQ
+         wDpXhB//O5GU+W+5L4Jjaw6no+8sSirju9TqYBtbx8vJQ4mXKvnrCHCmMCuzBKxjXdQs
+         1jICzyuXiqh8xi8llhc0Jt+Iyp/BRLCZEYXEY645kyJOwY+4+V+TXkmIw9bRFlq5vWV/
+         cnjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUS9Ltt1ngy3InRfOZbqj95Ok4ErngWaHbcq/BGHYUyhka3vahpilREN/JNBPdjcgY83vB9lUCU9ff/jWo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNGAHQ+lbVMlx/NeWcljZrBiT2lDDHMAx7+OeRbuoDeLoXDtxO
+	2E2Mo8pf6DtM02dmbDLu3468G2F3V12zKFQZHTREUHq/2a78W+KGG6MVnIwdySym7PkgHSRTZQb
+	oybPi/YaLZVpUav15Qq0E94UgUoNo9dCsmSNAxCAZ
+X-Gm-Gg: ASbGncuZfZKc5zvNDaa8XT+t2QJ6VDrCVcw6jMbAvm2XElfzcQGhRtPSd57xN8yEB7T
+	+P4tLbuPsOtg3CFOK2EBN75j0OQaJ8G3gXrTpVs0yqLPKxaDVUhE3RIVAyZkDiCh2Xfc5VFYw76
+	8HF4q/QQYuZZJJfF89R3yLc0yWpkvd7ZKHQayMywzH+VHm9bpFG7BPopuIFjcXtN6LIUdpruw=
+X-Google-Smtp-Source: AGHT+IHjVPydHL7cpnwkAmy+wB0lfXFTh8aEtdxrJqk903N82gHmcHf1UJhj/sj7jHSEWrx43rmp+OotJ5wNqgsIi3c=
+X-Received: by 2002:a50:c049:0:b0:5fd:28:c3f6 with SMTP id 4fb4d7f45d1cf-5ffc9dbe5b8mr231155a12.4.1747406305152;
+ Fri, 16 May 2025 07:38:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] Implement endianess swap macros for RISC-V
-Content-Language: en-US
-To: Ignacio Encinas <ignacio@iencinas.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Eric Biggers <ebiggers@kernel.org>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
- skhan@linuxfoundation.org, Zhihang Shao <zhihang.shao.iscas@gmail.com>,
- =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
- linux-arch@vger.kernel.org
-References: <20250426-riscv-swab-v4-0-64201404a68c@iencinas.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250426-riscv-swab-v4-0-64201404a68c@iencinas.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefudeftdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpefhhfdutdevgeelgeegfeeltdduhfduledvteduhfegffffiefggfektefhjedujeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemsgeiugehmeegfhduleemiegrledumeejkehftdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemsgeiugehmeegfhduleemiegrledumeejkehftddphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemsgeiugehmeegfhduleemiegrledumeejkehftdgnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtohepihhgnhgrtghiohesihgvnhgtihhnrghsrdgtohhmpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhto
- hepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvgdprhgtphhtthhopegvsghighhgvghrsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhdqmhgvnhhtvggvsheslhhishhtshdrlhhinhhugidruggvvh
-X-GND-Sasl: alex@ghiti.fr
+References: <20250516-work-coredump-socket-v8-0-664f3caf2516@kernel.org> <20250516-work-coredump-socket-v8-5-664f3caf2516@kernel.org>
+In-Reply-To: <20250516-work-coredump-socket-v8-5-664f3caf2516@kernel.org>
+From: Jann Horn <jannh@google.com>
+Date: Fri, 16 May 2025 16:37:49 +0200
+X-Gm-Features: AX0GCFsuzCC3CmbLLxfWpRPaI0gyUSqgeVs70kejvwFPyqgeFolUzQNjXbEK5Yo
+Message-ID: <CAG48ez2ewzKuVoUQp=nyMiVS9euPts3fKaexwXMGhVefQXqoig@mail.gmail.com>
+Subject: Re: [PATCH v8 5/9] pidfs, coredump: add PIDFD_INFO_COREDUMP
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Eric Dumazet <edumazet@google.com>, Oleg Nesterov <oleg@redhat.com>, 
+	"David S. Miller" <davem@davemloft.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, David Rheinsberg <david@readahead.eu>, 
+	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <luca.boccassi@gmail.com>, 
+	Mike Yuan <me@yhndnzj.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, 
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Arnd,
+On Fri, May 16, 2025 at 1:26=E2=80=AFPM Christian Brauner <brauner@kernel.o=
+rg> wrote:
+> Extend the PIDFD_INFO_COREDUMP ioctl() with the new PIDFD_INFO_COREDUMP
+> mask flag. This adds the @coredump_mask field to struct pidfd_info.
+>
+> When a task coredumps the kernel will provide the following information
+> to userspace in @coredump_mask:
+>
+> * PIDFD_COREDUMPED is raised if the task did actually coredump.
+> * PIDFD_COREDUMP_SKIP is raised if the task skipped coredumping (e.g.,
+>   undumpable).
+> * PIDFD_COREDUMP_USER is raised if this is a regular coredump and
+>   doesn't need special care by the coredump server.
+> * PIDFD_COREDUMP_ROOT is raised if the generated coredump should be
+>   treated as sensitive and the coredump server should restrict to the
+>   generated coredump to sufficiently privileged users.
+>
+> The kernel guarantees that by the time the connection is made the all
+> PIDFD_INFO_COREDUMP info is available.
+>
+> Acked-by: Luca Boccassi <luca.boccassi@gmail.com>
+> Reviewed-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
 
-Do you think we can merge that for 6.16? It is nice improvement for us.
+Reviewed-by: Jann Horn <jannh@google.com>
 
-Thanks,
-
-Alex
-
-On 26/04/2025 16:56, Ignacio Encinas wrote:
-> Motivated by [1]. A couple of things to note:
->
-> RISC-V needs a default implementation to fall back on. There is one
-> available in include/uapi/linux/swab.h but that header can't be included
-> from arch/riscv/include/asm/swab.h. Therefore, the first patch in this
-> series moves the default implementation into asm-generic.
->
-> Tested with crc_kunit as pointed out here [2]. I can't provide
-> performance numbers as I don't have RISC-V hardware yet.
->
-> [1] https://lore.kernel.org/all/20250302220426.GC2079@quark.localdomain/
-> [2] https://lore.kernel.org/all/20250216225530.306980-1-ebiggers@kernel.org/
->
-> Signed-off-by: Ignacio Encinas <ignacio@iencinas.com>
-> ---
-> Changes in v4:
->
-> - Add missing include in the 1st patch, reported by
->    https://lore.kernel.org/all/202504042300.it9RcOSt-lkp@intel.com/
-> - Rewrite the ARCH_SWAB macro as suggested by Arnd
-> - Define __arch_swab64 for CONFIG_32BIT (Ben)
-> - Link to v3: https://lore.kernel.org/r/20250403-riscv-swab-v3-0-3bf705d80e33@iencinas.com
->
-> Arnd, I know you don't like Patch 1 but I tried your suggestions and
-> couldn't make them work. Please let me know if I missed anything [3] [4]
->
-> [3] https://lore.kernel.org/linux-riscv/f5464e26-faa0-48f1-8585-9ce52c8c9f5f@iencinas.com/
-> [4] https://lore.kernel.org/linux-riscv/b3b59747-0484-4042-bdc4-c067688e3bfe@iencinas.com/
->
-> Changes in v3:
->
-> PATCH 2:
->    Use if(riscv_has_extension_likely) instead of asm goto (Eric). It
->    looks like both versions generate the same assembly. Perhaps we should
->    do the same change in other places such as arch/riscv/include/asm/bitops.h
-> - Link to v2: https://lore.kernel.org/r/20250319-riscv-swab-v2-0-d53b6d6ab915@iencinas.com
->
-> Changes in v2:
-> - Introduce first patch factoring out the default implementation into
->    asm-generic
-> - Remove blank line to make checkpatch happy
-> - Link to v1: https://lore.kernel.org/r/20250310-riscv-swab-v1-1-34652ef1ee96@iencinas.com
->
-> ---
-> Ignacio Encinas (2):
->        include/uapi/linux/swab.h: move default implementation for swab macros into asm-generic
->        riscv: introduce asm/swab.h
->
->   arch/riscv/include/asm/swab.h   | 62 +++++++++++++++++++++++++++++++++++++++++
->   include/uapi/asm-generic/swab.h | 33 ++++++++++++++++++++++
->   include/uapi/linux/swab.h       | 33 +---------------------
->   3 files changed, 96 insertions(+), 32 deletions(-)
-> ---
-> base-commit: a7f2e10ecd8f18b83951b0bab47ddaf48f93bf47
-> change-id: 20250307-riscv-swab-b81b94a9ac1b
->
-> Best regards,
+Thanks for clarifying the comments!
