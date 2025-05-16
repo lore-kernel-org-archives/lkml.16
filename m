@@ -1,101 +1,124 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B7A5CDF1;
-	Fri, 16 May 2025 13:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE047082A;
+	Fri, 16 May 2025 13:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747402096; cv=none; b=ZPMtdm/Cu47lnwImxh3HezhqSIkxWpq+dPckr0x56vI8riXFUN3vJ+U8hhMrESwOvNQ8izGwJOzPB4FsqZmFY8sD6jFYNrjKzftZaWg3Qd0BbHUdrulKu4rWHXi3u7NLFIsAyj8PjRgXYCfmHqjN9qsyRtEUszLahQ0szxZMDgA=
+	t=1747402110; cv=none; b=WjLYlVhZ/RBeR9ibaMEQFb+nFiora5OSFG28bZW/iDYcaWD+4Ppe5MR71kj0B42B/0qdGcsjqrjLkXR/CSBIMEhzgPhPpweNwXilzcOEnzv0ng9Zdc//BWBKsrZZ5/XxBcyAnFrmR9xGKayLTzNUE9YPXpHrZACu4howXuEB8mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747402096; c=relaxed/simple;
-	bh=K3Mri+3mKdcXJmgWsJ5BPT9+NHh6gPs8IQSFgn0Ww0M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dSGC4mfKMLJ1fUgALkbsbK6bMdm351+wjNc+X8VKmWkE+pOXAMQa5Xj0o+I9nMQ1CIfOVWW2hawg/fOZsE3DD6mqmfYxqTbuMBKl8a1iKzjcVBbJ+NoQarXqUJb89e6KtJkryVHLcI4cTMU2FNZ4TQBzBsqrf96tf7YII2MJCKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-74294fa4bb5so2902527b3a.1;
-        Fri, 16 May 2025 06:28:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747402094; x=1748006894;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Lxnk5Xg0HoZixKR0uUNtrpbpAmw4XxOJhKZyPHpd9qc=;
-        b=Hl/sBo4m31/d0FwbJDEUTM2S5Vzwz+RfYYLiIpP5mz33y6FtCdrQWRDxTZWH0NiM1b
-         /JPVsfONIuASy+PSuy9GFy8wFKYStipnmUo0oIWHzy3wwpzRs8n6m0oIi1llZi9/GbxS
-         kACQjN/bdwKeYPtfr4sDW7GQ6OAp8fYKAjSZbTBZRH7XKLy6FQDDCeTVHhewqfeOq4dr
-         RTif48Cv/yRim+Ob9F+Bl9JCzvJ+k843QwQkS3MggzQs2wptNrn76f+mGbS00dRgJUYJ
-         yIsXS6xFX4KApNG6qH3j/x3AZBvNf0KvvgaHie24suiaY/qH7d8FJ5eM/g9Om36vCoCu
-         PWjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVF6ZXrV1Azkd1l01WzVndhs66PV0OfDVScaq9XIY9VtpqPGccwPJEK+u+fqutbQ3snYuVbLRiD7+iYw7Jn@vger.kernel.org, AJvYcCWApkijU9UCbcQaZcQUeyhj/kvenLi2Mj2hTtowGX8lXdVohb3lcAaNtlen1g/PvAGnN3JvK6gS/OM=@vger.kernel.org, AJvYcCWTNkTJULh/L1l0ipUrkDodcNH386Qvn1xATqZGrS+f9BN8DQGQdCg3DLxas+IDGMbS85Cz8UV7QwtL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7FurrJP5OhFZyFwp3BuOJrq7p52QPNdB/kmq5ONRW7qbW5X//
-	DWCA0YwfqstdkfGqzPIuPrpD1N4v85M7v5wEiGxtZKOXl7uhzJXUeWgy
-X-Gm-Gg: ASbGncvw25y4KLtG4zzqvFXCFG+sivD/NflhCU5hV7T6YSRflUhoo0QiVtvCWGdVALi
-	t7WH4ZtPK7T97e97ghq/SabpHW6LNfLBJZ/08xs2rOezPygcnWsBHcb+1BLjqGe/3obKDyHjNe1
-	lz45VMLO9INhUWHe10Ok2IG7a9pdz9/WZqmXlmkqcvZ5Li/j1rQUol8pT0KM0AUcPDEuIriYh7o
-	V25bInRVhk6WRRYitO+qNiKsOb1bFXCysXkQSaLoDRQsnNBSiaGtMxq6NPXWvEytlIF//iUAGYv
-	PeKocZ9IS87RbJNsu35/9L39cGnxI4Phv1INOQ/XnJ83Bbm4xemOmCo8L1u38/Yr4Q8Zdm+t0Ip
-	Byvdfa8TMWw==
-X-Google-Smtp-Source: AGHT+IEHkuGefvWoBY+p8sOtRyAEKJgSr03lGawkXgJEdTBtBOyug/BtxaivjhWxH4dl6SD+WQkCHg==
-X-Received: by 2002:a05:6a21:502:b0:203:ca66:e30 with SMTP id adf61e73a8af0-216219edf88mr5305508637.37.1747402093928;
-        Fri, 16 May 2025 06:28:13 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b26eaf5a2cesm1537079a12.9.2025.05.16.06.28.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 06:28:13 -0700 (PDT)
-Date: Fri, 16 May 2025 22:28:11 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: phasta@kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/7] Docu: PCI: Update pcim_enable_device()
-Message-ID: <20250516132811.GB2390647@rocinante>
-References: <20250515124604.184313-2-phasta@kernel.org>
- <20250515124604.184313-4-phasta@kernel.org>
- <aCXk2eDUJF2UbQ47@smile.fi.intel.com>
- <e44d880e842440d51c14f38df1d20176694e0d57.camel@mailbox.org>
+	s=arc-20240116; t=1747402110; c=relaxed/simple;
+	bh=3sB616abDAZb5EfAV8UVfyzoSDpEdedb+Tq6sVApafs=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VQ5zy/R/SJWKGFT+/bjn/WqFXf7tIGyi3GCA0O7PWvbBhnRLUdvnO4fBo0dvR5j7wuML5pH73NPkcOz4taMpUNFICmIbZJRQRYOxqvxATOoaBQgGc5uzvI2hNJr6NwDKgwSu2HFS/RDESkQnZYdj7nZ7CLnsUOefJE80f9CJQWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tAXSSID3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tAXSSID3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98826C4CEE4;
+	Fri, 16 May 2025 13:28:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747402110;
+	bh=3sB616abDAZb5EfAV8UVfyzoSDpEdedb+Tq6sVApafs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tAXSSID34gaLT7yTutbPqUGXCPqNDpcju20eDMkAm/NIZ6RUyjVcTtewhn/OQSwQR
+	 9W4/+ZCRGTe77wpfOlJDgGjffsjTo0mtzd2Wj72RlMFajFPntjcMdG34s7JBmj94+6
+	 I6lAwCARa+DL+ZpywiThTkmY0fHM8CvPygtcR9lVjDwzg6PELcWXlblPscZ5XvwVMi
+	 H8/4J7OjKbIHbukh/bulZOKm1g7NCbvzgtsI7sLaQz46F5YZRIbp0FdQDTu33WLkF0
+	 Wv+ffmd40ig0YN5MVZvcZZTTko1EsZ+9Wyu055ti6MCM7SGycbKkczQKVveJ9qxAdg
+	 lpn9iBHEBDJVw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uFv6y-00FZ8u-CD;
+	Fri, 16 May 2025 14:28:28 +0100
+Date: Fri, 16 May 2025 14:28:27 +0100
+Message-ID: <865xi0fzwk.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	qperret@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kernel-team@android.com
+Subject: Re: [PATCH v4 09/10] KVM: arm64: Stage-2 huge mappings for np-guests
+In-Reply-To: <20250509131706.2336138-10-vdonnefort@google.com>
+References: <20250509131706.2336138-1-vdonnefort@google.com>
+	<20250509131706.2336138-10-vdonnefort@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e44d880e842440d51c14f38df1d20176694e0d57.camel@mailbox.org>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: vdonnefort@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, qperret@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hello,
-
-[...]
-> > > pcim_enable_device() is not related anymore to switching the mode
-> > > of
-> > > operation of any functions. It merely sets up a devres callback for
-> > > automatically disabling the PCI device on driver detach.
-> > > 
-> > > Adjust the function's documentation.
-> > 
-> > Is the "Docu" prefix in thew Subject aligned with the git history of
-> > this file?
-> > 
+On Fri, 09 May 2025 14:17:05 +0100,
+Vincent Donnefort <vdonnefort@google.com> wrote:
 > 
-> Seems its "Documentation: ". Can fix.
+> Now np-guests hypercalls with range are supported, we can let the
+> hypervisor to install block mappings whenever the Stage-1 allows it,
+> that is when backed by either Hugetlbfs or THPs. The size of those block
+> mappings is limited to PMD_SIZE.
+> 
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> index 78fb9cea2034..97e0fea9db4e 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> @@ -167,7 +167,7 @@ int kvm_host_prepare_stage2(void *pgt_pool_base)
+>  static bool guest_stage2_force_pte_cb(u64 addr, u64 end,
+>  				      enum kvm_pgtable_prot prot)
+>  {
+> -	return true;
+> +	return false;
+>  }
 
-Has Andy been sending his review off-list?  Or something is broken on my
-side...
+Can we get rid of this callback now? And of the .force_pte_cb field in
+the kvm_pgtable struct?
 
-Philipp, if you have a v2 ready, then I would love to pull it, while we
-await for more reviews, just to get enough soak time and allow for the
-0-day and KernelCI to run their usual tests, etc.
+>  
+>  static void *guest_s2_zalloc_pages_exact(size_t size)
+> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+> index 754f2fe0cc67..7c8be22e81f9 100644
+> --- a/arch/arm64/kvm/mmu.c
+> +++ b/arch/arm64/kvm/mmu.c
+> @@ -1537,7 +1537,7 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>  	 * logging_active is guaranteed to never be true for VM_PFNMAP
+>  	 * memslots.
+>  	 */
+> -	if (logging_active || is_protected_kvm_enabled()) {
+> +	if (logging_active) {
+>  		force_pte = true;
+>  		vma_shift = PAGE_SHIFT;
+>  	} else {
+> @@ -1547,7 +1547,8 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+>  	switch (vma_shift) {
+>  #ifndef __PAGETABLE_PMD_FOLDED
+>  	case PUD_SHIFT:
+> -		if (fault_supports_stage2_huge_mapping(memslot, hva, PUD_SIZE))
+> +		if (!is_protected_kvm_enabled() &&
+> +		    fault_supports_stage2_huge_mapping(memslot, hva, PUD_SIZE))
 
-Thank you!
+Can you move this new condition into the fault_supports...() helper instead?
 
-	Krzysztof
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
