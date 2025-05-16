@@ -1,192 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7681FFC77
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D3B1FFC77
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747391978; cv=none; b=RFdrYnMKZFV/hUp9TixCc6QISZVA+3dbyB4kbzRGgyHxzNLHZeVx9KSQRaVNScD/sY17kQcX9kZXMgNFWDN3p9H6wCwpHipNjVAr/rbJjwPOYmynjVMtslc7907ng4PoiMOQ+IKTlHppu2/m47d1cqQIIsut4uuIMBpNss2aCHk=
+	t=1747392033; cv=none; b=AgBqKIeVLo1H2uJOBET1FJxQ3KCA1pwTIxO/EKJvKWqhrRvZfjcWHZ4whmyUVyJR2qOAz71Not74KO8/c0xTZJecd0Q1jiklCtv5VqgM0dRNDt+wV2QXYiSxtrJ4w0T+C2BlBv9C6+0DwTHSntSLpYQ+OIUJfI32/lKMQgTAlGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747391978; c=relaxed/simple;
-	bh=NCB+3lMyOx+fn/S3zX/Y6sTtiI24gcvf+J1THi9Qmbg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=khqLC62kEOyMA/91FfK8djt7LxRNsVpDilaqejJPvZMvv1WYhvmyJ3Lkh+1uU7W2jIqokIhYobYpIxGAfvTbV2kmFULV57WaNHjQJjz6DLnH5FulaO0vYBsJm8KEqMQEWXct+ieCA6k9puTI5eGbaBWI3sPLIKk8Pz+YQ0iloF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B5dqFsSx; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747392033; c=relaxed/simple;
+	bh=fAilwiO7dEF17O9fXmgvqXjSp0ceiL5RFE6YjkH+XWA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=exmvDJRvAzsBMTIWH6qM9FXgVAsxJN4WBAfbjBHYJY0qVIM6TFSmi/WfrhDm7ptwVPQ71iE/IpmYe+QzHcQmLkoz1VIV0e+ZMZ2fN1QD5ofnVczl9DLF8Pk0TIIAsYEKc/e01d6m5n+y7vSXQqHjRa8mWcC+hnDK5wQxZaHgwLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=sGl/Y0g3; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B5dqFsSx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747391975;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QQQMDEIIwXkuHEhIKpxJjnKfw2Oug4GMJkHufoFzpm8=;
-	b=B5dqFsSxml6oHX7pN5tWu9qoVVPEC/Q8Pxy+4GVfBbr64/hk5JxNdjmxUzUSFpbn54VVgj
-	LU8hu4SiOqv8Yg3/rOcyBhFPUvIjijoMgX1utLsJB9HO+0iKwBA0cIKtYucylEs+amLLrJ
-	TmcA3PQxAoygds3VH5E8LXnwX0fvmyY=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-645-PstIIOt5NXyhRnBGiuY3MA-1; Fri, 16 May 2025 06:39:34 -0400
-X-MC-Unique: PstIIOt5NXyhRnBGiuY3MA-1
-X-Mimecast-MFC-AGG-ID: PstIIOt5NXyhRnBGiuY3MA_1747391974
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43efa869b19so14874845e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 03:39:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="sGl/Y0g3"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so19309115e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 03:40:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747392029; x=1747996829; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9/D6lYZls2BWjWpZt2g/sTx/5BxVlF4dtuEMmn0jBB0=;
+        b=sGl/Y0g3SBdzgomtqh7aAIhIM9+2524vqHynVRriIf0dYgjq/bqsQyuPrc9y/Jn0A5
+         PNOIiweLwX588EVl26TrVCGxcim47UqtICay3p7BcMvZmNfqSLCeU8EQI4leqdt01q2V
+         xs7cHNb26jpnWTEbZaXXNaST4hlX9cQ6GPgpPZ1WUSItxllS4h1k90H8mBsqnYXKB5qG
+         TnjVt2zoslckNDnj9XPd4a/RUbZzow0Yz9ICfvoqlfB7cIT1Y8rWluI0eoBslKDYrKZL
+         gg40PMI+njZQ95jQcDepjpA2AgveCzBN8VTDZf90iQsnlgB12ZVYSFeOqatpfnUj7Eji
+         pCIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747391973; x=1747996773;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QQQMDEIIwXkuHEhIKpxJjnKfw2Oug4GMJkHufoFzpm8=;
-        b=kn1t3esPdnzflKdPoUYrSYMmMgbuBlpzrVyItUT5V5pnau1FxSWS9d2T4LGJgyrzVh
-         M+DqXh1e+QI0A/A8GLj0gdqzd+MU7D/ekX2TovQQPKKvIm5Gdsw0fNApcZBc3iLY5Nt5
-         VGkQoSOe/kBVcZptRGZdLs1Abght4iTQfMTZB+408EVGTzCxzcPV92xlFKQinaXZDGhi
-         XiS/s0uPL93cQm9YiVgYrf0BRQuiQpCp+8l5fiTJpvBX9IDT0N85ouz44Gdiw3VB84nG
-         x+Ps3VpKzkynTkeQTvNONCFNKokWWR7VjlZM5Y2HXu3ncr59akFMmc+ams41qLSteOWo
-         MDtg==
-X-Forwarded-Encrypted: i=1; AJvYcCVgdcPX3XFFFBD7/BCsFmRJPseN0GRWF5r02IYy4U3AJnJTd5IbYqFc3dx8mg/26rc/Azq0TJiF9eukgFY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdXCMNXYswugGIf5ySMoWDiy/jDy7FJN6ppCbPW7VIYTqZP0C0
-	y2/umUtIcHzJuFlEIgQzu82cirGlfAO+yXsNlLrfcl3o/LdVvQZce2zcX6m/mKOoiRjuS8k5OFr
-	kx8yIcJoVGZ3vszPL8Ow3zYQhRKWvp3PYbctJXONJhWt6o/qetDebvPblVuRUJaEnGg==
-X-Gm-Gg: ASbGncuiDNe+Y9hmgbDhpS3xEvxxweyUzbV85HYc56ThkFMuRFajwtmMrmLisANDgmF
-	2H0xY4BgDKd7n5Mgsq+8u7+AWlWQtlijwc6Kp35qnBbgq30yiuWZt7EmL5eiyGLnKhlaDBNW5m+
-	u/XAwqWa2fGdFOmqizOcj681uDCCKemxRszwaOkMqCv4j/MzD+GSaw+qiRwW4+LKHJZTDrQOvR9
-	ncXiFFPbYYSCP+YOiH9DWNwWFaBln/k2feFm2lxi90UuhHrhKQI3az2cS8fXV36d1sxl7mKuxJM
-	cSpwXw==
-X-Received: by 2002:a05:600c:1c12:b0:43c:fa52:7d2d with SMTP id 5b1f17b1804b1-442ff0316bamr14689585e9.20.1747391973553;
-        Fri, 16 May 2025 03:39:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHDKW6n87RVrzA4EIoIWUAPNw+ypMh5iiPl+xjV6leqnmea0yfCg/OCjfh+iHgxZSJtpf0sYw==
-X-Received: by 2002:a05:600c:1c12:b0:43c:fa52:7d2d with SMTP id 5b1f17b1804b1-442ff0316bamr14689315e9.20.1747391973129;
-        Fri, 16 May 2025 03:39:33 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f338070csm100008995e9.15.2025.05.16.03.39.30
+        d=1e100.net; s=20230601; t=1747392029; x=1747996829;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9/D6lYZls2BWjWpZt2g/sTx/5BxVlF4dtuEMmn0jBB0=;
+        b=fV8IahvQatuO3Ug5K9Ed1D0TCisv2nmB3rdwmrAavQwjXy5cRcbT/ZaG/Y8rD5qcch
+         U9okWjQ2yqlF+MlydUM2GU/8CP9WKKnqsjghy30NXiic4zvEFTcmpmJW0lvAebiN4ZFa
+         6fD8U97g2WkACbucXvpz1L2PzsYJspLiZ4kso0vXi3xQEKsxYBtE6/WX3E1IV6DVTfgA
+         BcC9WgXZWHqAxTy9a1JCHyYG3GkgYK+kIOtCVybpIRbUU7qCzKQf4O7u6MiTQ6sWxYYs
+         VA0020lzoo97vsMwxOrlvCEIZ7UlMoOScyK+vZLEodQl0k6OGf5idfjLHyrFdXAA+ei+
+         UE1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUcL6bmXDzyIw8Bjx2FJrFm84t1gGeW7niiEZwkqzgSq75sMzs9NeTrS9kqFWByvRf9+w9n7RGNA7z4nTE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUrmJctC1tdZRzo1ci7iFXMlbh1ZQoEI7IFdz56XlqUFjnqHj4
+	3lCD9Y8sQ/yArWBaY2B2FaBjX5KolXcdDQd02SkaTS70+X2b5Lpg2AyrHdR6r9i5V6I=
+X-Gm-Gg: ASbGncvOjyGSFAiT83Rm/x6GLagO4LVCwHCWwxFxaDP4ZqoeHnP2fS+xJSCOEBS0ybm
+	1rgC45yOK+smpWIrIrdn6IQ1GCfNYriYOK4A7SfN0K+maa2MEopuyopQJd4p2ovhkCgSA+MQDo9
+	MELYQrHN1FEZ35et4E1rYgO/bpDLEZDe7OqHd+wvssEcRQ1XdxfVHmHNqOVsSCAcutwG2Qnw7EH
+	2/ZutCGNT3R1UFjNpU1ZbccmOn/TbFqoRWJP6gc7LtD2yXoiYHwpw3r6041HtGbrAy9X6gvDJ2a
+	d3j40LF/xCNWL5LDd4kK6RX/8UpM4Ls4AApspoPkXOAvO0HFTY1TNCZ7PcLYBkFadBgAyLripzq
+	8Bi36QB04TRisMOSoZBnQW6+u
+X-Google-Smtp-Source: AGHT+IEkveirfZoVjmBNTeL1wlQxfdi/+yuj3FFTnYkHDey8ix0A99YrVgeOzmWXo2/MPNYmRSeKCg==
+X-Received: by 2002:a05:600c:4ec6:b0:442:e147:bea6 with SMTP id 5b1f17b1804b1-442fd950bd4mr25855615e9.11.1747392029382;
+        Fri, 16 May 2025 03:40:29 -0700 (PDT)
+Received: from brgl-uxlite.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f3369293sm104607025e9.6.2025.05.16.03.40.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 03:39:32 -0700 (PDT)
-Date: Fri, 16 May 2025 06:39:29 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Jason Wang <jasowang@redhat.com>
-Cc: Cindy Lu <lulu@redhat.com>, michael.christie@oracle.com,
-	sgarzare@redhat.com, linux-kernel@vger.kernel.org,
-	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v9 4/4] vhost: Add a KConfig knob to enable IOCTL
- VHOST_FORK_FROM_OWNER
-Message-ID: <20250516063659-mutt-send-email-mst@kernel.org>
-References: <CACGkMEte6Lobr+tFM9ZmrDWYOpMtN6Xy=rzvTy=YxSPkHaVdPA@mail.gmail.com>
- <CACGkMEstbCKdHahYE6cXXu1kvFxiVGoBw3sr4aGs4=MiDE4azg@mail.gmail.com>
- <20250429065044-mutt-send-email-mst@kernel.org>
- <CACGkMEteBReoezvqp0za98z7W3k_gHOeSpALBxRMhjvj_oXcOw@mail.gmail.com>
- <20250430052424-mutt-send-email-mst@kernel.org>
- <CACGkMEub28qBCe4Mw13Q5r-VX4771tBZ1zG=YVuty0VBi2UeWg@mail.gmail.com>
- <20250513030744-mutt-send-email-mst@kernel.org>
- <CACGkMEtm75uu0SyEdhRjUGfbhGF4o=X1VT7t7_SK+uge=CzkFQ@mail.gmail.com>
- <20250515021319-mutt-send-email-mst@kernel.org>
- <CACGkMEvQaUtpsaWYkU6SC=i1tXVbupNrAVPBsXm3eMfAJHzC=Q@mail.gmail.com>
+        Fri, 16 May 2025 03:40:28 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Johan Hovold <johan@kernel.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	stable@vger.kernel.org
+Subject: [PATCH] gpio: sysfs: add missing mutex_destroy()
+Date: Fri, 16 May 2025 12:40:23 +0200
+Message-ID: <20250516104023.20561-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACGkMEvQaUtpsaWYkU6SC=i1tXVbupNrAVPBsXm3eMfAJHzC=Q@mail.gmail.com>
 
-On Fri, May 16, 2025 at 09:31:42AM +0800, Jason Wang wrote:
-> On Thu, May 15, 2025 at 2:14 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> >
-> > On Wed, May 14, 2025 at 10:52:58AM +0800, Jason Wang wrote:
-> > > On Tue, May 13, 2025 at 3:09 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > >
-> > > > On Tue, May 13, 2025 at 12:08:51PM +0800, Jason Wang wrote:
-> > > > > On Wed, Apr 30, 2025 at 5:27 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > > > >
-> > > > > > On Wed, Apr 30, 2025 at 11:34:49AM +0800, Jason Wang wrote:
-> > > > > > > On Tue, Apr 29, 2025 at 6:56 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > > > > > > >
-> > > > > > > > On Tue, Apr 29, 2025 at 11:39:37AM +0800, Jason Wang wrote:
-> > > > > > > > > On Mon, Apr 21, 2025 at 11:46 AM Jason Wang <jasowang@redhat.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > On Mon, Apr 21, 2025 at 11:45 AM Jason Wang <jasowang@redhat.com> wrote:
-> > > > > > > > > > >
-> > > > > > > > > > > On Mon, Apr 21, 2025 at 10:45 AM Cindy Lu <lulu@redhat.com> wrote:
-> > > > > > > > > > > >
-> > > > > > > > > > > > Introduce a new config knob `CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL`,
-> > > > > > > > > > > > to control the availability of the `VHOST_FORK_FROM_OWNER` ioctl.
-> > > > > > > > > > > > When CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL is set to n, the ioctl
-> > > > > > > > > > > > is disabled, and any attempt to use it will result in failure.
-> > > > > > > > > > >
-> > > > > > > > > > > I think we need to describe why the default value was chosen to be false.
-> > > > > > > > > > >
-> > > > > > > > > > > What's more, should we document the implications here?
-> > > > > > > > > > >
-> > > > > > > > > > > inherit_owner was set to false: this means "legacy" userspace may
-> > > > > > > > > >
-> > > > > > > > > > I meant "true" actually.
-> > > > > > > > >
-> > > > > > > > > MIchael, I'd expect inherit_owner to be false. Otherwise legacy
-> > > > > > > > > applications need to be modified in order to get the behaviour
-> > > > > > > > > recovered which is an impossible taks.
-> > > > > > > > >
-> > > > > > > > > Any idea on this?
-> > > > > > > > >
-> > > > > > > > > Thanks
-> > > > > >
-> > > > > > So, let's say we had a modparam? Enough for this customer?
-> > > > > > WDYT?
-> > > > >
-> > > > > Just to make sure I understand the proposal.
-> > > > >
-> > > > > Did you mean a module parameter like "inherit_owner_by_default"? I
-> > > > > think it would be fine if we make it false by default.
-> > > > >
-> > > > > Thanks
-> > > >
-> > > > I think we should keep it true by default, changing the default
-> > > > risks regressing what we already fixes.
-> > >
-> > > I think it's not a regression since it comes since the day vhost is
-> > > introduced. To my understanding the real regression is the user space
-> > > noticeable behaviour changes introduced by vhost thread.
-> > >
-> > > > The specific customer can
-> > > > flip the modparam and be happy.
-> > >
-> > > If you stick to the false as default, I'm fine.
-> > >
-> > > Thanks
-> >
-> > That would be yet another behaviour change.
-> 
-> Back to the original behaviour.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-yes but the original was also a bugfix.
+We initialize the data->mutex in gpiod_export() but lack the
+corresponding mutex_destroy() in gpiod_unexport() causing a resource
+leak with mutex debugging enabled. Add the call right before kfreeing
+the GPIO data.
 
-> > I think one was enough, don't you think?
-> 
-> I think such kind of change is unavoidable if we want to fix the
-> usersapce behaviour change.
-> 
-> Thanks
+Fixes: 6ffcb7971486 ("gpio: sysfs: use per-gpio locking")
+Cc: stable@vger.kernel.org
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpiolib-sysfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I feel it is too late to "fix". the new behaviour is generally ok, and I
-feel the right thing so to give management control knobs do pick the
-desired behaviour.
-And really modparam is wrong here because different userspace
-can have different requirements, and in ~10 years I want to see us
-disable the legacy behaviour altogether.
-But given your time constraints, a modparam knob as a quick workaround
-for the specific customer is kind of not very terrible.
-
-> >
-> >
-> > > >
-> > > > > >
-> > > > > > --
-> > > > > > MST
-> > > > > >
-> > > >
-> >
+diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
+index 4a3aa09dad9d..cd3381a4bc93 100644
+--- a/drivers/gpio/gpiolib-sysfs.c
++++ b/drivers/gpio/gpiolib-sysfs.c
+@@ -713,6 +713,7 @@ void gpiod_unexport(struct gpio_desc *desc)
+ 	}
+ 
+ 	put_device(dev);
++	mutex_destroy(&data->mutex);
+ 	kfree(data);
+ }
+ EXPORT_SYMBOL_GPL(gpiod_unexport);
+-- 
+2.45.2
 
