@@ -1,107 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB62728137A;
-	Fri, 16 May 2025 18:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D7327A12D;
+	Fri, 16 May 2025 18:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747420173; cv=none; b=rpEjHbIqHC32+Obq0YCsVwbTfnXlox9Is2oZLuEaLNQr3ySZfarQlWcfYtv/Z3Fo1wbfVqBr9eN5ihG8Y40vqY5R+gnWBoQacII9TsBCSdteJAhVLWoPCJda3upb386n6Do+WqfbRd57tAiicB/1h7Xzgr1ZF7NUV1IhHkggdRg=
+	t=1747420183; cv=none; b=eGVgijTcT7VayT6NIlOWNA2an50xMgcMjjgOoG0v514oTG8GLJY4E3gzAz2K28Cimjeg4U1x4civPpKY1o0t8eK7sZnEBaRakfaVj6831N+7p5zErMjqGTk6EfsXYsSdWSLlFBMV/B/WyapAFr0nzFVXrfgl6HG0L8TUwzxFTts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747420173; c=relaxed/simple;
-	bh=W83BuCBEGVgUrqk/CNpFhmFYGiaT4zNHiSxidabkeh4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Lwz5aJa1grgz+6OXt1jN7tuQsGz2FA/6kyeFuGwNA2gCTRlM0sW46XVMN+XuMOA0Ms9jEgA9c0OxXuMsAPgxyrEdf0bcvl0cNjGUUqHsKuMfKq0BiVU8bGh2av7aujo6FJ9/eJL5wfGnEc4ORO52kAGzvBwtFmYf0F87LGXDLuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zzyadty/; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747420183; c=relaxed/simple;
+	bh=4zzkMuAkdOu+W/FfqNTZRI/W+u0p/y15oHql9BpsK8E=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=eulgnZkc0/V7i2bti8e62LN7Au6EZQ6yIkS1LpSy9w8Y3r4yFyrVFXl1kT3Dq0874Gi4e65i9rCKqYEa4w/AMqHRBgwBOKI2gg5rQRMoArCi5vYgEqXmKh9mDXgpK8bHJsV/q1WlrgU+9wBvsjOIo1yzXfwccSM3GT2MbU74OM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=W/oE5SRz; arc=none smtp.client-ip=208.88.110.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zzyadty/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747420172; x=1778956172;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=W83BuCBEGVgUrqk/CNpFhmFYGiaT4zNHiSxidabkeh4=;
-  b=Zzyadty/ag4goQKn25udEESyhwObFVCJA07RNE+J+7syeJZUeN7ieMkt
-   6+Gm/dErxEe9uy2Jzu38t4JO6g/U3spRW2WnRj1herevMbRZoIgg+8XQY
-   1z+aploUOi5sUte431G9n5ybGI/ophh/tZxVsXhN2fbUzQyEmHM7JM4mb
-   ftOIH/4uWfruqb2Jd7xRFxmCy0qlj+vZsU2zsY+yqPFgqTTAAa7/ZpC8B
-   N2De6C7f1hf/xy6FGA8LArNbHFZuMRYgLcukuD285JuYn8NjaVGf2fwzT
-   I6IAbD1akN2rjwi/R5IYIrbWq9yUsjswhd0J0oQg7uYzBqS7eEX6Uw2/X
-   A==;
-X-CSE-ConnectionGUID: Hm1TOsNEQuygO/raj41f1A==
-X-CSE-MsgGUID: dLIykaq/QKqhhkmKiYit/w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49328919"
-X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="49328919"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 11:29:26 -0700
-X-CSE-ConnectionGUID: 45kEMhpORqi9xmyQRIxyyg==
-X-CSE-MsgGUID: u0tF4969TS+ewt2PfEmthQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="169802628"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa001.fm.intel.com with ESMTP; 16 May 2025 11:29:25 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	irogers@google.com,
-	mark.rutland@arm.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: eranian@google.com,
-	ctshao@google.com,
-	tmricht@linux.ibm.com,
-	leo.yan@arm.com,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-mips@vger.kernel.org
-Subject: [PATCH V3 16/16] mips/perf: Remove driver-specific throttle support
-Date: Fri, 16 May 2025 11:28:53 -0700
-Message-Id: <20250516182853.2610284-17-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20250516182853.2610284-1-kan.liang@linux.intel.com>
-References: <20250516182853.2610284-1-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="W/oE5SRz"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 1C6C69C8E1D;
+	Fri, 16 May 2025 14:29:39 -0400 (EDT)
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id PCbH_wvc2fc9; Fri, 16 May 2025 14:29:38 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.savoirfairelinux.com (Postfix) with ESMTP id 831FD9C8DB5;
+	Fri, 16 May 2025 14:29:38 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 831FD9C8DB5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
+	t=1747420178; bh=DLFQAbS2Kkiyq94KoakjX8pyAd/UxyLLg1wnyLzv0wU=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=W/oE5SRzPvBArGS1YBG267e4vXhddpcwKe0ifOxp8PunEA+8BljjqOSTndtfjG40b
+	 nkwgw2imxOfsJ7VIjUGEUTF0lji6b/tJInRPAIZ2IHcH6lX8JtHqFzVoykXIcfcenM
+	 C2ULAK8hEjKWuSUFtpfyhq9DaYivuMKg0JFKuDWYAzxRYjyE/rxbHCKL5YwGwI6TjB
+	 /xNYE0UfV3ZNMP04hiZ+YBK8VwLsmKtU3Abl+XOUarEcGFNmTWJGdnKiTYyWSa6C2B
+	 crb7zO5eHU/2OtVk6eqNBWjmQ3926J6TgPtXQG9ipyImYAwFunTSgWMH6iq15gnxhS
+	 kJwSkI1IsSzNA==
+X-Virus-Scanned: amavis at mail.savoirfairelinux.com
+Received: from mail.savoirfairelinux.com ([127.0.0.1])
+ by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id SkOW1hFp7rD3; Fri, 16 May 2025 14:29:38 -0400 (EDT)
+Received: from fedora (unknown [192.168.51.254])
+	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 2BE0C9C0D9F;
+	Fri, 16 May 2025 14:29:38 -0400 (EDT)
+Date: Fri, 16 May 2025 14:29:37 -0400
+From: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
+To: Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Sebastian Reichel <sre@kernel.org>, Robin Gong <yibin.gong@nxp.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-imx@nxp.com, linux-input@vger.kernel.org,
+	Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>,
+	Robin Gong <b38343@freescale.com>,
+	Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: [PATCH v2 0/9] add support for pf1550 PMIC MFD-based drivers
+Message-ID: <cover.1747409892.git.samuel.kayode@savoirfairelinux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Kan Liang <kan.liang@linux.intel.com>
+This series adds support for pf1550 PMIC. It provides the core mfd driver and a
+set of three sub-drivers for the regulator, power supply and input subsystems.
 
-The throttle support has been added in the generic code. Remove
-the driver-specific throttle support.
+Patches 1-4 add the DT binding documents. Patches 5-8 add all drivers. Last
+patch adds a MAINTAINERS entry for this device.
 
-Besides the throttle, perf_event_overflow may return true because of
-event_limit. It already does an inatomic event disable. The pmu->stop
-is not required either.
+Changes since v1 [1]:
+   1. DT bindings for all devices included
+   2. Add onkey driver
+   3. Add driver for the regulators
+   4. Ensure charger is activated as some variants have it off by default
+   5. Update mfd and charger driver per feedback from eballetbo@gmail.com
+   6. Add myself as maintainer for these drivers
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: linux-mips@vger.kernel.org
----
- arch/mips/kernel/perf_event_mipsxx.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+[1]: v1: https://lore.kernel.org/1523974819-8711-1-git-send-email-abel.vesa@nxp.com/
 
-diff --git a/arch/mips/kernel/perf_event_mipsxx.c b/arch/mips/kernel/perf_event_mipsxx.c
-index c4d6b09136b1..196a070349b0 100644
---- a/arch/mips/kernel/perf_event_mipsxx.c
-+++ b/arch/mips/kernel/perf_event_mipsxx.c
-@@ -791,8 +791,7 @@ static void handle_associated_event(struct cpu_hw_events *cpuc,
- 	if (!mipspmu_event_set_period(event, hwc, idx))
- 		return;
- 
--	if (perf_event_overflow(event, data, regs))
--		mipsxx_pmu_disable_event(idx);
-+	perf_event_overflow(event, data, regs);
- }
- 
- 
+Samuel Kayode (9):
+  dt-bindings: power: supply: add pf1550
+  dt-bindings: regulator: add pf1550
+  dt-bindings: input: add pf1550
+  dt-bindings: mfd: add pf1550
+  mfd: pf1550: add core mfd driver
+  regulator: pf1550: add support for regulator
+  input: pf1550: add onkey support
+  power: supply: pf1550: add battery charger support
+  MAINTAINERS: add an entry for pf1550 mfd driver
+
+ .../bindings/input/pf1550_onkey.yaml          |  31 +
+ .../devicetree/bindings/mfd/pf1550.yaml       | 122 ++++
+ .../bindings/power/supply/pf1550_charger.yaml |  44 ++
+ .../devicetree/bindings/regulator/pf1550.yaml |  35 +
+ MAINTAINERS                                   |  11 +
+ drivers/input/keyboard/Kconfig                |   8 +
+ drivers/input/keyboard/Makefile               |   1 +
+ drivers/input/keyboard/pf1550_onkey.c         | 200 ++++++
+ drivers/mfd/Kconfig                           |  14 +
+ drivers/mfd/Makefile                          |   2 +
+ drivers/mfd/pf1550.c                          | 254 +++++++
+ drivers/power/supply/Kconfig                  |   6 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/pf1550_charger.c         | 656 ++++++++++++++++++
+ drivers/regulator/Kconfig                     |   7 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/pf1550.c                    | 380 ++++++++++
+ include/linux/mfd/pf1550.h                    | 246 +++++++
+ 18 files changed, 2019 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/pf1550_onkey.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/pf1550.yaml
+ create mode 100644 Documentation/devicetree/bindings/power/supply/pf1550_charger.yaml
+ create mode 100644 Documentation/devicetree/bindings/regulator/pf1550.yaml
+ create mode 100644 drivers/input/keyboard/pf1550_onkey.c
+ create mode 100644 drivers/mfd/pf1550.c
+ create mode 100644 drivers/power/supply/pf1550_charger.c
+ create mode 100644 drivers/regulator/pf1550.c
+ create mode 100644 include/linux/mfd/pf1550.h
+
+
+base-commit: b1d8766052eb0534b27edda8af1865d53621bd6a
 -- 
-2.38.1
+2.49.0
 
