@@ -1,315 +1,552 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C857220F2C
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 02:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747363192; cv=fail; b=avQkcC5X1eTqeupoHAL9VEwLVQrIoSWPt21JoYvEBXQ3Jj9pS2FLbIrNgmGu5VPW/R1skOBqpfvojt/j97ZEDFvT0khn2U5bmyDwfZRR0292CaTgnS0kfbHgtMTGGVmVcunxKVgP7ZxpHRgTlppNXTj40FCMfDLOL5Bf11FEAGs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747363192; c=relaxed/simple;
-	bh=MbXEY3WgGZ3h+FMUUtKWwuICNxuuBKL5L9kxzoIQFQE=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=uqAnhRCParEd3QSInDNdllk8iT0ALFGMlTF7oe2r7atua4EfB/SEADhQPHVXw0xD2mBaGfRyG10Rqer+feyqmgdTfdt9pf+ggGUVSHXE2QAbj1qaBcothXhu3PCPLpVFs+5md+fm6OZNstEqp+Fbcx9Q4LtMmhUvDABjdEC2GHE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JUaW4vHZ; arc=fail smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C0910E5;
+	Fri, 16 May 2025 02:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747363340; cv=none; b=rrVDptwb8vy5d8/wg/KzAS/UtbPSkiL/I9J8XCBWciE++y2u5I5BZUYpwfGK72Ogw2JrFYTTZ3wCnIv3oJ6QbdGvMppaKREVlx32X00dDa6m0X5IPF4ILASd2hcFJTI9phM37CpO7C9vOnECSzm5jWhKoyN2AqJlZK48aXcHmc4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747363340; c=relaxed/simple;
+	bh=ZxhRR3y2/7riVOVTmdyWiKFs86uKt8r7P2uv4KWCulE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BRminyHKZNESxrxT6oGnl5Z7mNRglnGwqrZ3HBddWQYSIGeTcwn+QDYlX6VMZHywBzhmiJ7h1x/0UOYKDHjzNuxsE7h3zRSFNVNocQ1r9JcpoVo5fSE9xnsPTP2i7V3tdsz/3WrUmISsRNwKFcmONN/0NJ48/PUPBgJOho1/G2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=xgog5Vqc; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JUaW4vHZ"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="xgog5Vqc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747363190; x=1778899190;
-  h=date:from:to:cc:subject:message-id:
-   content-transfer-encoding:mime-version;
-  bh=MbXEY3WgGZ3h+FMUUtKWwuICNxuuBKL5L9kxzoIQFQE=;
-  b=JUaW4vHZWSaE0Vtcyr0PkwgF542j/VB/GH7xyI4aBLMi2O7WQY4pmcSv
-   Dl/8Dt6BsxIzz2G0gq7p+1UDljRPKlW/Ww/8oVlgUSuphi70ZQ3wO59KD
-   D45zxvvFkzFVDZ3ys5wILHGvzqpDKL7lQCfimat0yLgK/MgjMDStLBUVq
-   q1uNC2o0gaUqWl8f/9KY4vcqvWSLUwM6DVK3TD0zB/SgU7UXuKObh2LWO
-   zihWA26yR+rGSGRi+sj62mAHjdjUnSs9RvwEgX4nOot64NJ5a9/ugzotq
-   3VQSsMoG5vQtgnB/9HG7bm11z7r5lMtlRV7ljOBF/IwxTZ7hPchNrCkF7
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1747363339; x=1778899339;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ZxhRR3y2/7riVOVTmdyWiKFs86uKt8r7P2uv4KWCulE=;
+  b=xgog5VqcFeHvtnc0C0h3Q/k+ZJZZPH1iKgpnzDYzIZnZXTjlRYg6seZQ
+   Ib7VU5E2Y9eM+yULPzLUheqKQmyh0g4WQMvM3KvjWz8Upnfu4pN0L2Y8v
+   R0V8FCuPYiSHEh+iBSATQeZo/V+5GwJptMRPvWqYEfcu10a3aH50waN4J
+   NXytmSnbSixnLWd1CRdcb0krWwFf2ysaUI+Y4pDzWckOaehraZ22/T8mx
+   QpVFezFBmj4wFPzLscRS5a/dXgeujz2NMAox5O/T3Ij7holEADuUWnyAA
+   PXWIps+zUvIsLmIifXjb8woyV04Hl3nINPt6B8UvaeuKwHjGAq7cctR7v
    w==;
-X-CSE-ConnectionGUID: dkk5zpHISbK4yqzuHYGMyA==
-X-CSE-MsgGUID: CibteMIQTb+OseswsF4lNA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="71831838"
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="71831838"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 19:39:50 -0700
-X-CSE-ConnectionGUID: +BCKINbTQ0CzAEZXU0qi3g==
-X-CSE-MsgGUID: cGdqNKMNSCW3uBpLwEM7hg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="139437680"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 19:39:49 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 15 May 2025 19:39:49 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 15 May 2025 19:39:49 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.170)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 15 May 2025 19:39:48 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PcqNDiORp/LNNZAJFZfu9qZg9gZm6Cb2wLzWo8sJg7gazQHJhKFA5Q2avWew9AaoCMmojThXUA0dQn2w4xgCzVemm2eZmzDl4XO9MgMuSYOeJXoAfRVxALFS3cq3wa85MvyD1V2Xt3LmdYfzQy/XDLRKVes9DO+pzOnKe0aYBBmganVLaXgPCp8YGmkwNGoY/uoZKxomJZahX0tc0fCL0z0L7RG/LS6Ndz2ThLLR4+BwbH3KxQCtS3jmkNHGBFyZYsk5xblzIu8qT4oWC4LQOmvEyvY4oooQeF3yyLAZ25d2BzplsEdWib8FY2yL+NIipxUJZ6fz/4jLoEFd6ZSOIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lm/FoylRqL9soRFUJCDIzv9aYelJon1ATCxu1hM0F9w=;
- b=fQ1bOt5dBvD75Cc9YmIVwynGfEYfK3rka6vheLblFJs+7amQN+ZTOrEMjSAm3OtNis2z9MWMy5nEI8/LUcJPpXhKkZY8KYnm8t8Op0MJBVIUCtYKSldAkei4gye1BKNZhRNHASutscdnODLySV7947eaBVkc/1bcT1WNvPz0jDCemFYWLPRRw2w/qm44E28sD7nyTrHxbBExN/R+3MkjmRZEhUZ7EDr9k0ChwlvPfiLT2AA08HJ0jjKhk0vj3s+Syq75DZqSU2s8fsElI7M1++iAC9T/osdGILs9CXiHo3cTqO/zqrhLFiWfgnGssgcrY/Cdtj1cA2bA+GpEj7XRMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by DM4PR11MB5248.namprd11.prod.outlook.com (2603:10b6:5:38b::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.32; Fri, 16 May
- 2025 02:39:41 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%5]) with mapi id 15.20.8722.027; Fri, 16 May 2025
- 02:39:41 +0000
-Date: Fri, 16 May 2025 10:39:32 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
-	<x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Alexandre Ghiti
-	<alexghiti@rivosinc.com>, <oliver.sang@intel.com>
-Subject: [tip:core/entry] [entry]  e43b8bb56e:
- stress-ng.personality.ops_per_sec 3.2% improvement
-Message-ID: <202505160902.c72854e8-lkp@intel.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG2PR02CA0105.apcprd02.prod.outlook.com
- (2603:1096:4:92::21) To LV3PR11MB8603.namprd11.prod.outlook.com
- (2603:10b6:408:1b6::9)
+X-CSE-ConnectionGUID: rboPt5xVSQ2lQrsVPtDY1w==
+X-CSE-MsgGUID: FPsyOVA1QQeEQFiGr9B/xg==
+X-IronPort-AV: E=Sophos;i="6.15,293,1739862000"; 
+   d="scan'208";a="273026732"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 May 2025 19:42:13 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Thu, 15 May 2025 19:41:21 -0700
+Received: from pop-os.microchip.com (10.10.85.11) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Thu, 15 May 2025 19:41:21 -0700
+From: <Tristram.Ha@microchip.com>
+To: Andrew Lunn <andrew@lunn.ch>, Woojung Huh <woojung.huh@microchip.com>,
+	Russell King <linux@armlinux.org.uk>, Vladimir Oltean <olteanv@gmail.com>
+CC: Heiner Kallweit <hkallweit1@gmail.com>, Maxime Chevallier
+	<maxime.chevallier@bootlin.com>, "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, "Paolo
+ Abeni" <pabeni@redhat.com>, <UNGLinuxDriver@microchip.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Tristram Ha
+	<tristram.ha@microchip.com>
+Subject: [PATCH net-next v4] net: dsa: microchip: Add SGMII port support to KSZ9477 switch
+Date: Thu, 15 May 2025 19:41:23 -0700
+Message-ID: <20250516024123.24910-1-Tristram.Ha@microchip.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|DM4PR11MB5248:EE_
-X-MS-Office365-Filtering-Correlation-Id: 748368bc-d41b-444f-319c-08dd9422e8d1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?R2kyYtPw39Cv6lN5ZX9IRLCYR/SAbj7AwwtS6pqlGh82fcIBIhDYnaX2Ig?=
- =?iso-8859-1?Q?+Q65MKqdPzd4ccXGtjaeRiGVKs7cdaAbFOIgswPCCmG9ayCckiopuG5VKW?=
- =?iso-8859-1?Q?SF9IFoeTeiWW+C70X9GA5YAQRG4DLQXaPqIUHTu4C2MtUAuQtkk9gisfJK?=
- =?iso-8859-1?Q?uUrKCuivD4Fd9jkqQR9T/RvoIu1p1f3XMvoO69ZJ1AQ+c7SUrOex7hlLIw?=
- =?iso-8859-1?Q?1TNN1hjSqD13lpiqNuRKdubPOvaU5Jo/l1wHY/aJUs0FJAubQ7uGZPZu86?=
- =?iso-8859-1?Q?KTBOaIeHJRXoMtET06kRmjb9A/SkEwFKDo/g9AyLOr21I5oLbgwbjvV9wg?=
- =?iso-8859-1?Q?JWUB+qF8VDCUgsdFtxPKfw0rv6QeNiXTkL0FGYgol/TIJKdYFrRklyfici?=
- =?iso-8859-1?Q?/C2JkO6Ddcl42eX7sebdocy93l8xns5aBa9mxVcS/78ApOECMYodMDoXt4?=
- =?iso-8859-1?Q?KIGKzWs9uKk04/4G45fktHut6iXk/VUS9+NIySL5YqWQ/2RRxw4SJbkYp5?=
- =?iso-8859-1?Q?DsCtnH7qExPvd/irVV6n0c6EXwFiaSHS3g0WpYQoGjErXsgTvg2MjUdJ2W?=
- =?iso-8859-1?Q?XWexj3Quykk7Qzad7FoaoJekExKHzZ821ql6nlL2YHx69bAPNAux5S60i7?=
- =?iso-8859-1?Q?voK3b03PUV1M9nCVc07UTUTYpAF4FKhc07PPVaqJNgqyIT6aLosuX/b21m?=
- =?iso-8859-1?Q?9Sacm8CFN90yQf/Z5OHAUIMUzNTDCiP6O/DvHX2HnaCTQPPSPqbHwok++t?=
- =?iso-8859-1?Q?Ka8FglR1SVVw85iZbEGKaJTLQJb9W2cLnCvSXBGLvmXABwFYzqdkK9nMvU?=
- =?iso-8859-1?Q?jSFIjzN3tFUAjYoG0cL/PMbUqHmPEKrHjrlJsAvrMyVUbU3KS3oSDhtEvK?=
- =?iso-8859-1?Q?BTeWB0nrzP8BPnvyymjN6+B/YNKSalEXfNeIx1e7xK7l+PJXQyxcdKDai3?=
- =?iso-8859-1?Q?IH9BWgVwmKnabIZwSotNbGAmY3ZJY6oLk9ySi0+OdGGaiHTCoQiPly/K9I?=
- =?iso-8859-1?Q?xKeR/GVnqgNDcV2Nn/MjrmrgJL1InoKwZBcP3eaOY8hwInnYnE66L9P1c1?=
- =?iso-8859-1?Q?ym4ccW+PSm8JBg1itUmL1eXZCYqzwrPGnvfstpX0TFDa9S339QfKRf+Z0/?=
- =?iso-8859-1?Q?6XSEJuCsGulJJ7ao6jDHiXtKXtGqD3j4fH7A13m8CBOXNmhBvvwkYfLLjj?=
- =?iso-8859-1?Q?OCX362rHST6Rr7sgEVLpV8lzxznLovhu8miDv3UyY3ZwY5npIlPjPt1ERv?=
- =?iso-8859-1?Q?xwlsHrd/KQ9dvZqiyDPZVYDnrZ9ryRyxIy+d9FBMJoFuYi0cmLGblUcjLS?=
- =?iso-8859-1?Q?sBGNBktY4SD8cBPoNwxJsZ66PrTn0x3MTPqOcm0vm42VLTMWzDJc6Bqfdr?=
- =?iso-8859-1?Q?rS9FcTR7J/JhKtMu8rBM4sR9zFBFzqCwNf1dAnGgKRUBtUeNUABOJpiljI?=
- =?iso-8859-1?Q?5nBMkKCwjPE6RmRr?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?8zi/xJjZIzJ7iKOiDwcDoV6of9yVbT/7PRJRGutV+ES5E7yIZyqiWJ0PCn?=
- =?iso-8859-1?Q?eR2SR2odVuI6AMexOucvJEo5UYZIr+Tv6Tmy7D8ybAzuAe36vLRsJNNiGr?=
- =?iso-8859-1?Q?DBhuAvJiZVb4gjCump+E1wrWjFxnt63N8KbqHafPLnJo1g6eTdCDNzTYZe?=
- =?iso-8859-1?Q?IKcKw3ODhjqoISHwi4q4OZgfeX61y6WnAdKAsMf/vAmRRy39k4RBjI9hmR?=
- =?iso-8859-1?Q?aPfrxogGOgnp9hsGFL7qbG1CtisCrxWlntsKvTlo8dgggfIKMNrJvXuMS8?=
- =?iso-8859-1?Q?0TqTVueFP2el9ze0Y0zVCD1tmJBZMSsYb+wOUwGEokXycg8gtDSE6QYVNU?=
- =?iso-8859-1?Q?RiZLcPr6cOlaXe81h2oamyhwfpuHoPNtKUDA6FlouYDKYeqPaUbI9+Ao6v?=
- =?iso-8859-1?Q?Jq6zztis/3epNYuUx8BulvhM04PyXzrZazLPHDKA01wuDp0awrbuOka1jj?=
- =?iso-8859-1?Q?9fYyzNwsfRTGa+wUFapVhzdgwQEP42X7S81+k2OhQ/Otcu8k/4JCUUJto1?=
- =?iso-8859-1?Q?K9fcJctHZBCD2mVfYuylKxBtDSRNI+E2RcO074yfwy8500Fz+ZBxNZvhUk?=
- =?iso-8859-1?Q?cke7oIOE9AK3Jwhi4lL2nQB/gE4tyRII+MIwaAxMOFy+/+Iv70ZZcOP5Ng?=
- =?iso-8859-1?Q?dwRahWAlLGGP6HmTII7rlaVTLdmtgNAArUgVdwSppCkFFex7Fyz33cHhJo?=
- =?iso-8859-1?Q?w17a9EHyS47KmzL7M4mcWS7m3nJ8WiJ0uZVpIqyUd7bsM1bJhApALjR8dD?=
- =?iso-8859-1?Q?SuevcUsvTtzAWQTHLt/HQYT+lI/GlrmFq7SFGXEiv+32jQPkKzUXvrDPlv?=
- =?iso-8859-1?Q?Ew5GYHA+7ePq+RvCD7K9eY8D/ypWcMuL/+AlOLmZFTaH9o6IYfBQmUy+kO?=
- =?iso-8859-1?Q?ZdoK0W7e5ERxy7cEOmE2a12x8cARWILj59NvjIBRBbn78qHxBcCBNf4cDW?=
- =?iso-8859-1?Q?B3x+63SowndEAghHhSCEx4Irwl5ncb4kbRPWJ7Yf2d+EymmpNlvRr5KGyT?=
- =?iso-8859-1?Q?7uEguelWB0ZI4MnOyXIhL2A45d+5Pv2SQCKNOUqefWELEgdwm4PE58HkeJ?=
- =?iso-8859-1?Q?RWoTKvUWVZYiffH4wjzgexMkneSyJz7LRL7GX4qDyBHDcX9KHukXWal2B7?=
- =?iso-8859-1?Q?UKG3kOhl73rN57b7C2UGXoDNX28KPPVlbvIAx/9P0tzkNoas8A4Vu8doWz?=
- =?iso-8859-1?Q?f5Vd08nsWrE/pwRmyFXGB0VPhK7rB+KIIxN7yJIjI/f1H8Nw2jj3aQZWJB?=
- =?iso-8859-1?Q?as+WT0schE/l8/ln1oyPGf0HCRJePuxdjlmQIiE5uf1GNeXh1fjjE2qy/P?=
- =?iso-8859-1?Q?96tB4v8DCrviXEmdB77yehww7QnG08JfiUUOBgu3TlYWKpZIGAOcbLbsW6?=
- =?iso-8859-1?Q?mLoC2FUCZ1XPQYlhTSDzyfRPiMT8m3oiDDbU+noQA3zNve7J8/JCxBdldQ?=
- =?iso-8859-1?Q?MtwWUMC3fsJuRY0f1BQOlnkmHKEXe4tedkoxe0Pnpv2hFvdyD6K+YBv/Jp?=
- =?iso-8859-1?Q?cICvbtz5PcQytF03UZq9WDw07hkvDD1gjxJmuBBfK2uhLJWyJYIkMkKKfj?=
- =?iso-8859-1?Q?N+LkNPNFxrU9fCrWS8YI6pqWw0mTlSZO+ktd4Li+1Ssv+G7V3l5wex+Gfq?=
- =?iso-8859-1?Q?HuSVpKsCP/bGar2YuRm8hbGPIw+xKzoNs4xz9+7df5q+XoLhuxw5ugGw?=
- =?iso-8859-1?Q?=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 748368bc-d41b-444f-319c-08dd9422e8d1
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2025 02:39:41.3463
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FXAsCbsA5uYxCZ84YEOlYaHyDQpPg+eYyYc77s9wkIxEpsKZpOsoasdr05HnY423/LWndHiR0lMj3Bbm5XdE0w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5248
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+From: Tristram Ha <tristram.ha@microchip.com>
 
+The KSZ9477 switch driver uses the XPCS driver to operate its SGMII
+port.  However there are some hardware bugs in the KSZ9477 SGMII
+module so workarounds are needed.  There was a proposal to update the
+XPCS driver to accommodate KSZ9477, but the new code is not generic
+enough to be used by other vendors.  It is better to do all these
+workarounds inside the KSZ9477 driver instead of modifying the XPCS
+driver.
 
-Hello,
+There are 3 hardware issues.  The first is the MII_ADVERTISE register
+needs to be write once after reset for the correct code word to be
+sent.  The XPCS driver disables auto-negotiation first before
+configuring the SGMII/1000BASE-X mode and then enables it back.  The
+KSZ9477 driver then writes the MII_ADVERTISE register before enabling
+auto-negotiation.  In 1000BASE-X mode the MII_ADVERTISE register will
+be set, so KSZ9477 driver does not need to write it.
 
-kernel test robot noticed a 3.2% improvement of stress-ng.personality.ops_per_sec on:
+The second issue is the MII_BMCR register needs to set the exact speed
+and duplex mode when running in SGMII mode.  During link polling the
+KSZ9477 will check the speed and duplex mode are different from
+previous ones and update the MII_BMCR register accordingly.
 
+The last issue is 1000BASE-X mode does not work with auto-negotiation
+on.  The cause is the local port hardware does not know the link is up
+and so network traffic is not forwarded.  The workaround is to write 2
+additional bits when 1000BASE-X mode is configured.
 
-commit: e43b8bb56e537bfc8d9076793091e7679020fc9c ("entry: Inline syscall_exit_to_user_mode()")
-https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git core/entry
+Note the SGMII interrupt in the port cannot be masked.  As that
+interrupt is not handled in the KSZ9477 driver the SGMII interrupt bit
+will not be set even when the XPCS driver sets it.
 
+Signed-off-by: Tristram Ha <tristram.ha@microchip.com>
+---
+v4
+ - update for last ksz_common.c merge
 
-testcase: stress-ng
-config: x86_64-rhel-9.4
-compiler: gcc-12
-test machine: 64 threads 2 sockets Intel(R) Xeon(R) Gold 6346 CPU @ 3.10GHz (Ice Lake) with 256G memory
-parameters:
+v3
+ - rebase with latest commit
 
-	nr_threads: 100%
-	testtime: 60s
-	test: personality
-	cpufreq_governor: performance
+v2
+ - add Kconfig for required XPCS driver build
 
+ drivers/net/dsa/microchip/Kconfig      |   1 +
+ drivers/net/dsa/microchip/ksz9477.c    | 191 ++++++++++++++++++++++++-
+ drivers/net/dsa/microchip/ksz9477.h    |   4 +-
+ drivers/net/dsa/microchip/ksz_common.c |  36 ++++-
+ drivers/net/dsa/microchip/ksz_common.h |  23 ++-
+ 5 files changed, 248 insertions(+), 7 deletions(-)
 
-In addition to that, the commit also has significant impact on the following tests:
-
-+------------------+--------------------------------------------------------------------------------+
-| testcase: change | stress-ng: stress-ng.context.swapcontext_calls_per_sec 2.1% improvement        |
-| test machine     | 384 threads 2 sockets Intel(R) Xeon(R) 6972P (Granite Rapids) with 128G memory |
-| test parameters  | cpufreq_governor=performance                                                   |
-|                  | nr_threads=100%                                                                |
-|                  | test=context                                                                   |
-|                  | testtime=60s                                                                   |
-+------------------+--------------------------------------------------------------------------------+
-
-
-
-
-Details are as below:
--------------------------------------------------------------------------------------------------->
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20250516/202505160902.c72854e8-lkp@intel.com
-
-=========================================================================================
-compiler/cpufreq_governor/kconfig/nr_threads/rootfs/tbox_group/test/testcase/testtime:
-  gcc-12/performance/x86_64-rhel-9.4/100%/debian-12-x86_64-20240206.cgz/lkp-icl-2sp7/personality/stress-ng/60s
-
-commit: 
-  7ace1602ab ("LoongArch: entry: Migrate ret_from_fork() to C")
-  e43b8bb56e ("entry: Inline syscall_exit_to_user_mode()")
-
-7ace1602abf21da5 e43b8bb56e537bfc8d907679309 
----------------- --------------------------- 
-         %stddev     %change         %stddev
-             \          |                \  
-      6.44 ±100%      -6.4        0.00        perf-profile.calltrace.cycles-pp.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.personality
-      6.84 ±100%      -6.8        0.00        perf-profile.children.cycles-pp.syscall_exit_to_user_mode
-      5.76 ±100%      -5.8        0.00        perf-profile.self.cycles-pp.syscall_exit_to_user_mode
- 3.346e+08            +3.2%  3.455e+08        stress-ng.personality.ops
-   5577357            +3.2%    5758223        stress-ng.personality.ops_per_sec
-      1278            +1.5%       1297        stress-ng.time.user_time
-      1.31            +3.5%       1.36        perf-stat.i.cpi
-  1.48e+11            -3.1%  1.435e+11        perf-stat.i.instructions
-      0.76            -3.4%       0.74        perf-stat.i.ipc
-      1.31            +3.5%       1.36        perf-stat.overall.cpi
-      0.76            -3.4%       0.74        perf-stat.overall.ipc
- 1.456e+11            -3.1%  1.411e+11        perf-stat.ps.instructions
- 8.985e+12            -3.6%  8.659e+12        perf-stat.total.instructions
-      0.97 ±111%     -99.9%       0.00 ±141%  perf-sched.sch_delay.avg.ms.irqentry_exit_to_user_mode.asm_exc_page_fault.[unknown]
-      1.55 ±  4%    -100.0%       0.00        perf-sched.sch_delay.avg.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-      1.30 ±103%     -99.9%       0.00 ±141%  perf-sched.sch_delay.max.ms.irqentry_exit_to_user_mode.asm_exc_page_fault.[unknown]
-      5.64 ± 25%    -100.0%       0.00        perf-sched.sch_delay.max.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-      2.42 ± 37%     +49.9%       3.62 ±  4%  perf-sched.sch_delay.max.ms.wait_for_partner.fifo_open.do_dentry_open.vfs_open
-    698.88 ± 15%     -40.0%     419.17 ± 20%  perf-sched.wait_and_delay.avg.ms.__cond_resched.smpboot_thread_fn.kthread.ret_from_fork.ret_from_fork_asm
-      3.61 ± 12%    -100.0%       0.00        perf-sched.wait_and_delay.avg.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-      3781 ±  7%    -100.0%       0.00        perf-sched.wait_and_delay.count.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-    504.70 ± 98%    -100.0%       0.00        perf-sched.wait_and_delay.max.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-    698.87 ± 15%     -40.0%     419.16 ± 20%  perf-sched.wait_time.avg.ms.__cond_resched.smpboot_thread_fn.kthread.ret_from_fork.ret_from_fork_asm
-      2.06 ± 23%    -100.0%       0.00        perf-sched.wait_time.avg.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-    502.38 ± 98%    -100.0%       0.00        perf-sched.wait_time.max.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-
-
-***************************************************************************************************
-lkp-gnr-2ap2: 384 threads 2 sockets Intel(R) Xeon(R) 6972P (Granite Rapids) with 128G memory
-=========================================================================================
-compiler/cpufreq_governor/kconfig/nr_threads/rootfs/tbox_group/test/testcase/testtime:
-  gcc-12/performance/x86_64-rhel-9.4/100%/debian-12-x86_64-20240206.cgz/lkp-gnr-2ap2/context/stress-ng/60s
-
-commit: 
-  7ace1602ab ("LoongArch: entry: Migrate ret_from_fork() to C")
-  e43b8bb56e ("entry: Inline syscall_exit_to_user_mode()")
-
-7ace1602abf21da5 e43b8bb56e537bfc8d907679309 
----------------- --------------------------- 
-         %stddev     %change         %stddev
-             \          |                \  
-     49055 ±  2%      -4.1%      47032        proc-vmstat.pgreuse
-     96.00 ± 19%     -42.5%      55.17 ± 37%  sched_debug.cpu.nr_uninterruptible.max
-      4.04 ± 70%      -4.0        0.00        perf-profile.calltrace.cycles-pp.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.swapcontext
-      4.25 ± 70%      -4.2        0.00        perf-profile.children.cycles-pp.syscall_exit_to_user_mode
-      3.55 ± 70%      -3.6        0.00        perf-profile.self.cycles-pp.syscall_exit_to_user_mode
- 1.047e+08            +2.1%  1.069e+08        stress-ng.context.ops
-   1745421            +2.1%    1781401        stress-ng.context.ops_per_sec
-   4541476            +2.1%    4636071        stress-ng.context.swapcontext_calls_per_sec
-      9344            -1.6%       9196        stress-ng.time.system_time
-     13524            +1.1%      13679        stress-ng.time.user_time
-      0.06 ± 11%    -100.0%       0.00        perf-sched.sch_delay.avg.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-     10.75 ± 79%    -100.0%       0.00        perf-sched.sch_delay.max.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-      0.91 ± 97%    -100.0%       0.00        perf-sched.wait_and_delay.avg.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-      3274 ±  2%    -100.0%       0.00        perf-sched.wait_and_delay.count.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-    512.24 ± 95%    -100.0%       0.00        perf-sched.wait_and_delay.max.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-      0.86 ±104%    -100.0%       0.00        perf-sched.wait_time.avg.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-    505.95 ± 97%    -100.0%       0.00        perf-sched.wait_time.max.ms.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
- 1.173e+11            -3.6%   1.13e+11        perf-stat.i.branch-instructions
-      1.49            +0.1        1.57        perf-stat.i.branch-miss-rate%
- 1.727e+09            +2.3%  1.767e+09        perf-stat.i.branch-misses
-      2.10            +4.2%       2.19        perf-stat.i.cpi
- 6.241e+11            -3.6%  6.019e+11        perf-stat.i.instructions
-      0.48            -4.2%       0.46        perf-stat.i.ipc
-      1.47            +0.1        1.56        perf-stat.overall.branch-miss-rate%
-      2.11            +4.0%       2.19        perf-stat.overall.cpi
-      0.47            -3.9%       0.46        perf-stat.overall.ipc
- 1.154e+11            -3.6%  1.112e+11        perf-stat.ps.branch-instructions
- 1.698e+09            +2.3%  1.738e+09        perf-stat.ps.branch-misses
- 6.136e+11            -3.5%  5.919e+11        perf-stat.ps.instructions
- 3.804e+13            -4.6%  3.628e+13        perf-stat.total.instructions
-
-
-
-
-
-Disclaimer:
-Results have been estimated based on internal Intel analysis and are provided
-for informational purposes only. Any difference in system hardware or software
-design or configuration may affect actual performance.
-
-
+diff --git a/drivers/net/dsa/microchip/Kconfig b/drivers/net/dsa/microchip/Kconfig
+index 12a86585a77f..c71d3fd5dfeb 100644
+--- a/drivers/net/dsa/microchip/Kconfig
++++ b/drivers/net/dsa/microchip/Kconfig
+@@ -6,6 +6,7 @@ menuconfig NET_DSA_MICROCHIP_KSZ_COMMON
+ 	select NET_DSA_TAG_NONE
+ 	select NET_IEEE8021Q_HELPERS
+ 	select DCB
++	select PCS_XPCS
+ 	help
+ 	  This driver adds support for Microchip KSZ8, KSZ9 and
+ 	  LAN937X series switch chips, being KSZ8863/8873,
+diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/microchip/ksz9477.c
+index 29fe79ea74cd..825aa570eed9 100644
+--- a/drivers/net/dsa/microchip/ksz9477.c
++++ b/drivers/net/dsa/microchip/ksz9477.c
+@@ -2,7 +2,7 @@
+ /*
+  * Microchip KSZ9477 switch driver main logic
+  *
+- * Copyright (C) 2017-2024 Microchip Technology Inc.
++ * Copyright (C) 2017-2025 Microchip Technology Inc.
+  */
+ 
+ #include <linux/kernel.h>
+@@ -161,6 +161,187 @@ static int ksz9477_wait_alu_sta_ready(struct ksz_device *dev)
+ 					10, 1000);
+ }
+ 
++static void port_sgmii_s(struct ksz_device *dev, uint port, u16 devid, u16 reg)
++{
++	u32 data;
++
++	data = (devid & MII_MMD_CTRL_DEVAD_MASK) << 16;
++	data |= reg;
++	ksz_pwrite32(dev, port, REG_PORT_SGMII_ADDR__4, data);
++}
++
++static void port_sgmii_r(struct ksz_device *dev, uint port, u16 devid, u16 reg,
++			 u16 *buf)
++{
++	port_sgmii_s(dev, port, devid, reg);
++	ksz_pread16(dev, port, REG_PORT_SGMII_DATA__4 + 2, buf);
++}
++
++static void port_sgmii_w(struct ksz_device *dev, uint port, u16 devid, u16 reg,
++			 u16 buf)
++{
++	port_sgmii_s(dev, port, devid, reg);
++	ksz_pwrite32(dev, port, REG_PORT_SGMII_DATA__4, buf);
++}
++
++static int ksz9477_pcs_read(struct mii_bus *bus, int phy, int mmd, int reg)
++{
++	struct ksz_device *dev = bus->priv;
++	int port = ksz_get_sgmii_port(dev);
++	u16 val;
++
++	port_sgmii_r(dev, port, mmd, reg, &val);
++
++	/* Simulate a value to activate special code in the XPCS driver if
++	 * supported.
++	 */
++	if (mmd == MDIO_MMD_PMAPMD) {
++		if (reg == MDIO_DEVID1)
++			val = 0x9477;
++		else if (reg == MDIO_DEVID2)
++			val = 0x22 << 10;
++	} else if (mmd == MDIO_MMD_VEND2) {
++		struct ksz_port *p = &dev->ports[port];
++
++		/* Need to update MII_BMCR register with the exact speed and
++		 * duplex mode when running in SGMII mode and this register is
++		 * used to detect connected speed in that mode.
++		 */
++		if (reg == MMD_SR_MII_AUTO_NEG_STATUS) {
++			int duplex, speed;
++
++			if (val & SR_MII_STAT_LINK_UP) {
++				speed = (val >> SR_MII_STAT_S) & SR_MII_STAT_M;
++				if (speed == SR_MII_STAT_1000_MBPS)
++					speed = SPEED_1000;
++				else if (speed == SR_MII_STAT_100_MBPS)
++					speed = SPEED_100;
++				else
++					speed = SPEED_10;
++
++				if (val & SR_MII_STAT_FULL_DUPLEX)
++					duplex = DUPLEX_FULL;
++				else
++					duplex = DUPLEX_HALF;
++
++				if (!p->phydev.link ||
++				    p->phydev.speed != speed ||
++				    p->phydev.duplex != duplex) {
++					u16 ctrl;
++
++					p->phydev.link = 1;
++					p->phydev.speed = speed;
++					p->phydev.duplex = duplex;
++					port_sgmii_r(dev, port, mmd, MII_BMCR,
++						     &ctrl);
++					ctrl &= BMCR_ANENABLE;
++					ctrl |= mii_bmcr_encode_fixed(speed,
++								      duplex);
++					port_sgmii_w(dev, port, mmd, MII_BMCR,
++						     ctrl);
++				}
++			} else {
++				p->phydev.link = 0;
++			}
++		} else if (reg == MII_BMSR) {
++			p->phydev.link = (val & BMSR_LSTATUS);
++		}
++	}
++	return val;
++}
++
++static int ksz9477_pcs_write(struct mii_bus *bus, int phy, int mmd, int reg,
++			     u16 val)
++{
++	struct ksz_device *dev = bus->priv;
++	int port = ksz_get_sgmii_port(dev);
++
++	if (mmd == MDIO_MMD_VEND2) {
++		struct ksz_port *p = &dev->ports[port];
++
++		if (reg == MMD_SR_MII_AUTO_NEG_CTRL) {
++			u16 sgmii_mode = SR_MII_PCS_SGMII << SR_MII_PCS_MODE_S;
++
++			/* Need these bits for 1000BASE-X mode to work with
++			 * AN on.
++			 */
++			if (!(val & sgmii_mode))
++				val |= SR_MII_SGMII_LINK_UP |
++				       SR_MII_TX_CFG_PHY_MASTER;
++
++			/* SGMII interrupt in the port cannot be masked, so
++			 * make sure interrupt is not enabled as it is not
++			 * handled.
++			 */
++			val &= ~SR_MII_AUTO_NEG_COMPLETE_INTR;
++		} else if (reg == MII_BMCR) {
++			/* The MII_ADVERTISE register needs to write once
++			 * before doing auto-negotiation for the correct
++			 * config_word to be sent out after reset.
++			 */
++			if ((val & BMCR_ANENABLE) && !p->sgmii_adv_write) {
++				u16 adv;
++
++				/* The SGMII port cannot disable flow contrl
++				 * so it is better to just advertise symmetric
++				 * pause.
++				 */
++				port_sgmii_r(dev, port, mmd, MII_ADVERTISE,
++					     &adv);
++				adv |= ADVERTISE_1000XPAUSE;
++				adv &= ~ADVERTISE_1000XPSE_ASYM;
++				port_sgmii_w(dev, port, mmd, MII_ADVERTISE,
++					     adv);
++				p->sgmii_adv_write = 1;
++			} else if (val & BMCR_RESET) {
++				p->sgmii_adv_write = 0;
++			}
++		} else if (reg == MII_ADVERTISE) {
++			/* XPCS driver writes to this register so there is no
++			 * need to update it for the errata.
++			 */
++			p->sgmii_adv_write = 1;
++		}
++	}
++	port_sgmii_w(dev, port, mmd, reg, val);
++	return 0;
++}
++
++int ksz9477_pcs_create(struct ksz_device *dev)
++{
++	/* This chip has a SGMII port. */
++	if (ksz_has_sgmii_port(dev)) {
++		int port = ksz_get_sgmii_port(dev);
++		struct ksz_port *p = &dev->ports[port];
++		struct phylink_pcs *pcs;
++		struct mii_bus *bus;
++		int ret;
++
++		bus = devm_mdiobus_alloc(dev->dev);
++		if (!bus)
++			return -ENOMEM;
++
++		bus->name = "ksz_pcs_mdio_bus";
++		snprintf(bus->id, MII_BUS_ID_SIZE, "%s-pcs",
++			 dev_name(dev->dev));
++		bus->read_c45 = &ksz9477_pcs_read;
++		bus->write_c45 = &ksz9477_pcs_write;
++		bus->parent = dev->dev;
++		bus->phy_mask = ~0;
++		bus->priv = dev;
++
++		ret = devm_mdiobus_register(dev->dev, bus);
++		if (ret)
++			return ret;
++
++		pcs = xpcs_create_pcs_mdiodev(bus, 0);
++		if (IS_ERR(pcs))
++			return PTR_ERR(pcs);
++		p->pcs = pcs;
++	}
++	return 0;
++}
++
+ int ksz9477_reset_switch(struct ksz_device *dev)
+ {
+ 	u8 data8;
+@@ -978,6 +1159,14 @@ void ksz9477_get_caps(struct ksz_device *dev, int port,
+ 
+ 	if (dev->info->gbit_capable[port])
+ 		config->mac_capabilities |= MAC_1000FD;
++
++	if (ksz_is_sgmii_port(dev, port)) {
++		struct ksz_port *p = &dev->ports[port];
++
++		phy_interface_or(config->supported_interfaces,
++				 config->supported_interfaces,
++				 p->pcs->supported_interfaces);
++	}
+ }
+ 
+ int ksz9477_set_ageing_time(struct ksz_device *dev, unsigned int msecs)
+diff --git a/drivers/net/dsa/microchip/ksz9477.h b/drivers/net/dsa/microchip/ksz9477.h
+index d2166b0d881e..0d1a6dfda23e 100644
+--- a/drivers/net/dsa/microchip/ksz9477.h
++++ b/drivers/net/dsa/microchip/ksz9477.h
+@@ -2,7 +2,7 @@
+ /*
+  * Microchip KSZ9477 series Header file
+  *
+- * Copyright (C) 2017-2022 Microchip Technology Inc.
++ * Copyright (C) 2017-2025 Microchip Technology Inc.
+  */
+ 
+ #ifndef __KSZ9477_H
+@@ -97,4 +97,6 @@ void ksz9477_acl_match_process_l2(struct ksz_device *dev, int port,
+ 				  u16 ethtype, u8 *src_mac, u8 *dst_mac,
+ 				  unsigned long cookie, u32 prio);
+ 
++int ksz9477_pcs_create(struct ksz_device *dev);
++
+ #endif
+diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
+index f492fa9f6dd4..248f8027e0cf 100644
+--- a/drivers/net/dsa/microchip/ksz_common.c
++++ b/drivers/net/dsa/microchip/ksz_common.c
+@@ -2,7 +2,7 @@
+ /*
+  * Microchip switch driver main logic
+  *
+- * Copyright (C) 2017-2024 Microchip Technology Inc.
++ * Copyright (C) 2017-2025 Microchip Technology Inc.
+  */
+ 
+ #include <linux/delay.h>
+@@ -408,12 +408,28 @@ static void ksz9477_phylink_mac_link_up(struct phylink_config *config,
+ 					int speed, int duplex, bool tx_pause,
+ 					bool rx_pause);
+ 
++static struct phylink_pcs *
++ksz_phylink_mac_select_pcs(struct phylink_config *config,
++			   phy_interface_t interface)
++{
++	struct dsa_port *dp = dsa_phylink_to_port(config);
++	struct ksz_device *dev = dp->ds->priv;
++	struct ksz_port *p = &dev->ports[dp->index];
++
++	if (ksz_is_sgmii_port(dev, dp->index) &&
++	    (interface == PHY_INTERFACE_MODE_SGMII ||
++	    interface == PHY_INTERFACE_MODE_1000BASEX))
++		return p->pcs;
++	return NULL;
++}
++
+ static const struct phylink_mac_ops ksz9477_phylink_mac_ops = {
+ 	.mac_config	= ksz_phylink_mac_config,
+ 	.mac_link_down	= ksz_phylink_mac_link_down,
+ 	.mac_link_up	= ksz9477_phylink_mac_link_up,
+ 	.mac_disable_tx_lpi = ksz_phylink_mac_disable_tx_lpi,
+ 	.mac_enable_tx_lpi = ksz_phylink_mac_enable_tx_lpi,
++	.mac_select_pcs	= ksz_phylink_mac_select_pcs,
+ };
+ 
+ static const struct ksz_dev_ops ksz9477_dev_ops = {
+@@ -451,6 +467,7 @@ static const struct ksz_dev_ops ksz9477_dev_ops = {
+ 	.reset = ksz9477_reset_switch,
+ 	.init = ksz9477_switch_init,
+ 	.exit = ksz9477_switch_exit,
++	.pcs_create = ksz9477_pcs_create,
+ };
+ 
+ static const struct phylink_mac_ops lan937x_phylink_mac_ops = {
+@@ -1093,8 +1110,7 @@ static const struct regmap_range ksz9477_valid_regs[] = {
+ 	regmap_reg_range(0x701b, 0x701b),
+ 	regmap_reg_range(0x701f, 0x7020),
+ 	regmap_reg_range(0x7030, 0x7030),
+-	regmap_reg_range(0x7200, 0x7203),
+-	regmap_reg_range(0x7206, 0x7207),
++	regmap_reg_range(0x7200, 0x7207),
+ 	regmap_reg_range(0x7300, 0x7301),
+ 	regmap_reg_range(0x7400, 0x7401),
+ 	regmap_reg_range(0x7403, 0x7403),
+@@ -1610,6 +1626,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 				   true, false, false},
+ 		.gbit_capable	= {true, true, true, true, true, true, true},
+ 		.ptp_capable = true,
++		.sgmii_port = 7,
+ 		.wr_table = &ksz9477_register_set,
+ 		.rd_table = &ksz9477_register_set,
+ 	},
+@@ -2002,6 +2019,7 @@ const struct ksz_chip_data ksz_switch_chips[] = {
+ 		.internal_phy	= {true, true, true, true,
+ 				   true, false, false},
+ 		.gbit_capable	= {true, true, true, true, true, true, true},
++		.sgmii_port = 7,
+ 		.wr_table = &ksz9477_register_set,
+ 		.rd_table = &ksz9477_register_set,
+ 	},
+@@ -2137,7 +2155,7 @@ void ksz_r_mib_stats64(struct ksz_device *dev, int port)
+ 
+ 	spin_unlock(&mib->stats64_lock);
+ 
+-	if (dev->info->phy_errata_9477) {
++	if (dev->info->phy_errata_9477 && !ksz_is_sgmii_port(dev, port)) {
+ 		ret = ksz9477_errata_monitor(dev, port, raw->tx_late_col);
+ 		if (ret)
+ 			dev_err(dev->dev, "Failed to monitor transmission halt\n");
+@@ -2845,6 +2863,12 @@ static int ksz_setup(struct dsa_switch *ds)
+ 	if (ret)
+ 		return ret;
+ 
++	if (ksz_has_sgmii_port(dev) && dev->dev_ops->pcs_create) {
++		ret = dev->dev_ops->pcs_create(dev);
++		if (ret)
++			return ret;
++	}
++
+ 	/* set broadcast storm protection 10% rate */
+ 	regmap_update_bits(ksz_regmap_16(dev), regs[S_BROADCAST_CTRL],
+ 			   BROADCAST_STORM_RATE,
+@@ -3692,6 +3716,10 @@ static void ksz_phylink_mac_config(struct phylink_config *config,
+ 	if (dev->info->internal_phy[port])
+ 		return;
+ 
++	/* No need to configure XMII control register when using SGMII. */
++	if (ksz_is_sgmii_port(dev, port))
++		return;
++
+ 	if (phylink_autoneg_inband(mode)) {
+ 		dev_err(dev->dev, "In-band AN not supported!\n");
+ 		return;
+diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
+index a034017568cd..a08417df2ca4 100644
+--- a/drivers/net/dsa/microchip/ksz_common.h
++++ b/drivers/net/dsa/microchip/ksz_common.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /* Microchip switch driver common header
+  *
+- * Copyright (C) 2017-2024 Microchip Technology Inc.
++ * Copyright (C) 2017-2025 Microchip Technology Inc.
+  */
+ 
+ #ifndef __KSZ_COMMON_H
+@@ -10,6 +10,7 @@
+ #include <linux/etherdevice.h>
+ #include <linux/kernel.h>
+ #include <linux/mutex.h>
++#include <linux/pcs/pcs-xpcs.h>
+ #include <linux/phy.h>
+ #include <linux/regmap.h>
+ #include <net/dsa.h>
+@@ -93,6 +94,7 @@ struct ksz_chip_data {
+ 	bool internal_phy[KSZ_MAX_NUM_PORTS];
+ 	bool gbit_capable[KSZ_MAX_NUM_PORTS];
+ 	bool ptp_capable;
++	u8 sgmii_port;
+ 	const struct regmap_access_table *wr_table;
+ 	const struct regmap_access_table *rd_table;
+ };
+@@ -132,6 +134,7 @@ struct ksz_port {
+ 	u32 force:1;
+ 	u32 read:1;			/* read MIB counters in background */
+ 	u32 freeze:1;			/* MIB counter freeze is enabled */
++	u32 sgmii_adv_write:1;
+ 
+ 	struct ksz_port_mib mib;
+ 	phy_interface_t interface;
+@@ -141,6 +144,7 @@ struct ksz_port {
+ 	void *acl_priv;
+ 	struct ksz_irq pirq;
+ 	u8 num;
++	struct phylink_pcs *pcs;
+ #if IS_ENABLED(CONFIG_NET_DSA_MICROCHIP_KSZ_PTP)
+ 	struct kernel_hwtstamp_config tstamp_config;
+ 	bool hwts_tx_en;
+@@ -440,6 +444,8 @@ struct ksz_dev_ops {
+ 	int (*reset)(struct ksz_device *dev);
+ 	int (*init)(struct ksz_device *dev);
+ 	void (*exit)(struct ksz_device *dev);
++
++	int (*pcs_create)(struct ksz_device *dev);
+ };
+ 
+ struct ksz_device *ksz_switch_alloc(struct device *base, void *priv);
+@@ -731,6 +737,21 @@ static inline bool is_lan937x_tx_phy(struct ksz_device *dev, int port)
+ 		dev->chip_id == LAN9372_CHIP_ID) && port == KSZ_PORT_4;
+ }
+ 
++static inline int ksz_get_sgmii_port(struct ksz_device *dev)
++{
++	return dev->info->sgmii_port - 1;
++}
++
++static inline bool ksz_has_sgmii_port(struct ksz_device *dev)
++{
++	return dev->info->sgmii_port > 0;
++}
++
++static inline bool ksz_is_sgmii_port(struct ksz_device *dev, int port)
++{
++	return dev->info->sgmii_port == port + 1;
++}
++
+ /* STP State Defines */
+ #define PORT_TX_ENABLE			BIT(2)
+ #define PORT_RX_ENABLE			BIT(1)
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
 
