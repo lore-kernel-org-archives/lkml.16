@@ -1,144 +1,98 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC6D25CC58;
-	Fri, 16 May 2025 03:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEB72192EB;
+	Fri, 16 May 2025 03:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747366092; cv=none; b=qtXSqbuflXSTtoJDqAx2ndUsNokrjDWCA4iec62JGGQNX7A3OIObU0zZdBJpj3jyMid2zvm3c8xgYHuiUOwI/gWBMCaNYwo3ttu0e3jeTHKhdxgqwQHxxzbC3OSE+Gk+bKg61VjJay6yDRQ/BnsbXey/bXQO9QpKJEprdplw6Ck=
+	t=1747366149; cv=none; b=tlIF6/FVaJBgNVx/g7E5hlxZnN10EsGjhnkZ+mcBHtqOwV17HdHt+essUqv/cPqsYqi0iQbwlqrW/7LJQzt73HB9kjsDTJHLFBCOY5UCHJkRF5VNjqPyIaKbz+2g0QjABAykTFJFgixCTaQnrEG6mDZFxZxLrRRsN8Y1NFAdyLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747366092; c=relaxed/simple;
-	bh=WbclKrKNpH+XumO8udCZ+WnQuj7DovTwmfHCDYT4Vbo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=SoSAiEu4A45Bkw02uq3ySL4povcE6hyDGOEr6oIFWObk/QWkHIxoDuUS/YSWwk3BphOAlX2vsmbARIFrrGO8+T8RtGQ4ui9I4s58umY0DaI9Aq3xYuPZ2zUZLmkTPyuX8dFAKq1ZDXEHzA1nQnhZjmqHpkX7yRp5EPJ4QP+r5eU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mWyrktOk; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747366149; c=relaxed/simple;
+	bh=qykaAmrt0fiJaOPZFM0q6IKoWOzYGwEEmiBfiUtXGVo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T6CVT1EW6ZCSFKrbh1muyhmY50Etd2c1HLcx83z3v1fMOdKIc1Jex3WsgQW3NeFdkDO4F2Pa+pt8I2zTJbUckUBbh1X4C1YFGrJ0cqmQ5oBiYgKOjqsGoroYKAkyKNVFJsliguXJ02GlTGbB1sNpC3hDREL0NEyHZWb1JTYN1rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UQQMnaV9; arc=none smtp.client-ip=209.85.210.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mWyrktOk"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54FEFCjB024320;
-	Fri, 16 May 2025 03:28:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	2xgZgVXFHKNEqF2MV79SagmshPphfRqIpWisK7VReKk=; b=mWyrktOkY7xqov48
-	SOgyQYggFjmAJgQujfYUbY3HSLQ/A8OozKDu9pUA9rwEax5KQvk7ucRw3s7bmu9t
-	xNG+DZn+zMG7kRPYKkLsa/vpfeEzfbCHKn1FrwkYUj8O6ALjXuw/K2+9xplYvD/u
-	OYZvN5syQHzYlH1fTlDcTqdG/QToP/wc0MPRFXaWJQKH5uAF6acpq0iYbPmc+Pi2
-	IXdLgpl022jcq0sb/he+tvsChJN36eOShn7WUrx2Y10sUWy0gFfpKX8epVf/bbX4
-	7rYcKNd//oBu8jtSnP53MTwtqKPK+j0M868NfIlKHe7DEGGV7aRhM9BWtVr+Znf3
-	HNrqNg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcn0kwt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 May 2025 03:28:06 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54G3S5Ca019335
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 May 2025 03:28:06 GMT
-Received: from lijuang3-gv.ap.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 15 May 2025 20:27:59 -0700
-From: Lijuan Gao <quic_lijuang@quicinc.com>
-Date: Fri, 16 May 2025 11:27:07 +0800
-Subject: [PATCH v3 6/6] arm64: dts: qcom: qcs615-ride: enable remoteprocs
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UQQMnaV9"
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-7300069c447so1536301a34.2;
+        Thu, 15 May 2025 20:29:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747366146; x=1747970946; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZjWVCNUbb27cqpL8lz3saxtPoltKk51BxDAUjAb3qlo=;
+        b=UQQMnaV9VX/hOZgfdPiDzVfzlt2jE5zEEyKbsWhU9/ClJ/1VUtz4XNvR7Z7cxq40ZJ
+         JGPl9oeIHWc84ML1rdRYM8d6tm6mBmera4LhCaiN89QE8Sp9H7u4/DF6SDLElUqhgPZa
+         A5XSZKPGlR07iRWNO4nNgpsXVznyulYJJ1Ah6sDYyOp1EeiglCv5Fga837KGNGrK08wi
+         0bVOTjFnWU31kXFyT5P5wlzVbP3bWO0UQjZgl5WnDYTcTtv+xX7G3nq8yqehuJXjJwUe
+         5ABLkTSet2Bi9H5bGo8qzI18x9IFSLIyqFKJUjhRP8h4ZZz1Hfv1Y2a7q+GIYG0Cju6T
+         hVOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747366146; x=1747970946;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZjWVCNUbb27cqpL8lz3saxtPoltKk51BxDAUjAb3qlo=;
+        b=Lsjba3DItUcU5NtyZcay2XrnOdpwAxrbzX2oZBUeJJ0mEdixTQTMs6Y68UoA9C6H61
+         Yi7mNPgG2QQ6UeOF/7uCK4OhgbJ7+FphvfBknF/GwzRfQaJ7srjzaX5SDvPgtFYAvNMl
+         xlaWNzYCRJA551lpPRjIr3tIiLooY7tjNgoXZhLe3z6iMd+5PzBJwpkDOFaPHtQyJpES
+         lk/ETrdhmq6CeiJ6S1XbOvF6pKTaujksOSfpPJL6mGS7Sh4CrRuHlQPpC+Tiop7TgmgM
+         4ABnPLjNEsSJMhXgV0DHraa2e43Llownu3TJBY8EOnqhqqgdy7cuDa5CtJ7ct1TEicrW
+         qYdA==
+X-Forwarded-Encrypted: i=1; AJvYcCXNQ7hJiXi/W1avHWZaPtJs4xsq0g1scIVhM1QuaVhe43dULKAm+1J/LxWcvqmBVhMeV9F4iclcPO4=@vger.kernel.org, AJvYcCXvRFordKTj8GkZe54AwWBLvyQkjZkBgxAtFzrii/rOJk+mPJo2FfhWR+8rx8a0G+GmERQN5LnKLtFjFOmK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+u+vGVecyAD3UukHkL5qGe1Bg9Eb98DOk2WEQ19YOol+p1NWQ
+	QsFltHGopy1/W3OpK1H7kn1eHDLnkjw4dxjhR4DpvAVNmyvRZyUrWDi+
+X-Gm-Gg: ASbGnctJdYiLTcRzuid4tBdsWKqexWBDbu7gO67NuFzfXQzCjSGbfrmLfPmnsDjHFB4
+	TdtWxevwkDbQmtMTnILgEXZ4tqDbGp6MSVDh88z3AsKcTeWpcFECXTE+FO0Sn0S9buTRyMhxPdf
+	pA4kaQ8JuWC7q2xUvK3LK7h2/BPOzQ7BkvSi5oARfI5C6SMu9zaN8qzvf4nMi3uPKEhJWhpeft/
+	at5k3TnCib9MfgNCExjyUIJgkyNvGuhV48H8W0PiPta2MEXk6lAJ9N/HRHdAlsDIucEaP92R8ve
+	wDbjcqlE4TvJZOj9OhakDpeQR9xYK+YilpSj8ggw7kEerpNT0U2Y6x48urTLhl05olbh+PrwJiQ
+	q3yM=
+X-Google-Smtp-Source: AGHT+IEGMDnSOq3he1EH+1aAF01gXDsDaoR4guIYTd4cbcSz5Jpq7bPGL2qgfd7mqZFoUj+ovmZTiw==
+X-Received: by 2002:a05:6830:601b:b0:72c:3235:9c5a with SMTP id 46e09a7af769-734f6ab3705mr1240915a34.1.1747366146481;
+        Thu, 15 May 2025 20:29:06 -0700 (PDT)
+Received: from localhost.localdomain ([129.244.19.62])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-734f6a7ffe2sm209711a34.23.2025.05.15.20.29.05
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 15 May 2025 20:29:06 -0700 (PDT)
+From: Benton Raymer <benton.raymer@gmail.com>
+To: corbet@lwn.net,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Benton Raymer <benton.raymer@gmail.com>
+Subject: [PATCH] docs: memory-devices: fix typo in emif.rst
+Date: Thu, 15 May 2025 22:27:59 -0500
+Message-ID: <20250516032837.42124-1-benton.raymer@gmail.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250516-add_qcs615_remoteproc_support-v3-6-ad12ceeafdd0@quicinc.com>
-References: <20250516-add_qcs615_remoteproc_support-v3-0-ad12ceeafdd0@quicinc.com>
-In-Reply-To: <20250516-add_qcs615_remoteproc_support-v3-0-ad12ceeafdd0@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier
-	<mathieu.poirier@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>
-CC: <kernel@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Lijuan Gao <quic_lijuang@quicinc.com>,
-        "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747366059; l=980;
- i=quic_lijuang@quicinc.com; s=20240827; h=from:subject:message-id;
- bh=WbclKrKNpH+XumO8udCZ+WnQuj7DovTwmfHCDYT4Vbo=;
- b=C6B/hKz39+Z00u7JGfkomlnzf4sxE4nfViUaqYJQXCRecnJ6QFBZ8OuO5JOVQ21a2NRrCk/kg
- AVHv4XwfBllB+xr0ysfz146Dvku0Qf1t8S7UBT0189boILM+kQ1qVNi
-X-Developer-Key: i=quic_lijuang@quicinc.com; a=ed25519;
- pk=1zeM8FpQK/J1jSFHn8iXHeb3xt7F/3GvHv7ET2RNJxE=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: VbX_RiCtxAdk9hU11s_XdC-fKtv43rTM
-X-Authority-Analysis: v=2.4 cv=HZ4UTjE8 c=1 sm=1 tr=0 ts=6826b0c6 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8
- a=COk6AnOGAAAA:8 a=tk-iKo2JpmutBzwaR1gA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: VbX_RiCtxAdk9hU11s_XdC-fKtv43rTM
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDAzMSBTYWx0ZWRfXz72LvI9zet5S
- bHzGFV92xW0y+rYFVdLCksfN5y4M1wIxCSkH46rqpuVJSRnJ3t4uPEogOTgwvHvZPO4YW5nP7/j
- APsglEXUIzuLG3YybAgGluBwRTrgsjDc6WQY5tJfaLQtiJqBTIyX/bRZhdSNHok/yzU439RigPY
- wNn4sqXY/eGiPZDupL2zp3oDqy4FP3UBx4kY2AFV9Z86bXle6o+cn0z1IJktp9tAr9D/B7fzjsx
- rKfmTX1Q7zT0PcSh+sNgLqk472kFbNQx1T9u0XAYotJGF50Vrl9fjvs5aK0LjIf4G6hOnjBj2yg
- JCTtXXxEOEJ30+a3Ua3qIpiVZ5oVb/1RumdODVyuJp3rFj3u1lgxU8eCw/Wrb6QDj06ijtz89AH
- erFlsMocCIGRIBrL7SnJvRAr8Gb9sok68Zw5zpD3tlKeFTr+hdOQw+GYNTUXNHbJeMrkVLtN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-16_01,2025-05-15_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 adultscore=0 spamscore=0 clxscore=1015 priorityscore=1501
- suspectscore=0 mlxscore=0 mlxlogscore=637 lowpriorityscore=0 malwarescore=0
- bulkscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505160031
+Content-Transfer-Encoding: 8bit
 
-Enable all remoteproc nodes on the qcs615-ride board and point to the
-appropriate firmware files to allow proper functioning of the remote
-processors.
+Fixes a minor typo in the /Documentation/driver-api/memory-devices/ti-emif.rst file
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Lijuan Gao <quic_lijuang@quicinc.com>
+Signed-off-by: Benton Raymer <benton.raymer@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/qcs615-ride.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ Documentation/driver-api/memory-devices/ti-emif.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs615-ride.dts b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
-index 2b5aa3c66867676bda59ff82b902b6e4974126f8..a6652e4817d1c218c7981b04daeb035e2852ac1a 100644
---- a/arch/arm64/boot/dts/qcom/qcs615-ride.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
-@@ -240,6 +240,18 @@ &qupv3_id_0 {
- 	status = "okay";
- };
+diff --git a/Documentation/driver-api/memory-devices/ti-emif.rst b/Documentation/driver-api/memory-devices/ti-emif.rst
+index dea2ad9bcd7e..d824cc0dce89 100644
+--- a/Documentation/driver-api/memory-devices/ti-emif.rst
++++ b/Documentation/driver-api/memory-devices/ti-emif.rst
+@@ -29,7 +29,7 @@ This driver is for the EMIF module available in Texas Instruments
+ SoCs. EMIF is an SDRAM controller that, based on its revision,
+ supports one or more of DDR2, DDR3, and LPDDR2 SDRAM protocols.
+ This driver takes care of only LPDDR2 memories presently. The
+-functions of the driver includes re-configuring AC timing
++functions of the driver include re-configuring AC timing
+ parameters and other settings during frequency, voltage and
+ temperature changes
  
-+&remoteproc_adsp {
-+	firmware-name = "qcom/qcs615/adsp.mbn";
-+
-+	status = "okay";
-+};
-+
-+&remoteproc_cdsp {
-+	firmware-name = "qcom/qcs615/cdsp.mbn";
-+
-+	status = "okay";
-+};
-+
- &rpmhcc {
- 	clocks = <&xo_board_clk>;
- };
-
 -- 
-2.34.1
+2.46.0
 
