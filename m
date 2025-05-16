@@ -1,102 +1,270 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B88921E097;
-	Fri, 16 May 2025 22:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1B0A31;
+	Fri, 16 May 2025 23:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747436393; cv=none; b=cD7e4zTgF/QSL8URDjJjCI6zjFpLJrsRdqgTrE0U1C/iKcTE9ZCxuaosgwX0ATEkFUg7MxxX8YXrwCmlmGDW0tVfmAaYDpERKwtOV/VqQ9OfvBAve9UzxKoS/voEPmgV2CX8JxGEcsa7H/n9tRMs2X2WJr7+e3X94brHoSZTcmg=
+	t=1747436490; cv=none; b=ozB/XJY6ZX0oqsuoP2xjqQ3RMxfS4T6jlzBOJiD7HiEoQyFDTpm1/3okUmAuUATA68/aV48uIiTaQHV6Mv/i7fddreEA/7b2gx6vSHH/RU9nmMrYEbq98NjD+hcS32vNojIiP17NIcnMx9ZOtjcEwxCP/wsZz4i1OsHaSf8kFHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747436393; c=relaxed/simple;
-	bh=4p4BKKhO0VjPlWgoVJGz3XP8j9PNfF1KOKg2YQjyDrk=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=mx6vIjbRu22TgvUXvI40fTtPb4Ag9bLMt0yEKBBHEEH4SgPFYctZN9w/U+Nlqxs/Q6RA9M4IhRhsBQZi58KQy+FL3Rn768brd+wuL4l1CEHzrTy4Spf290h7qtyNEvTuoXpsxKd1pePGwAKd2mYwBuVvZ4aA625EQhle2Nkyl2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YU9NBwIN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747436490; c=relaxed/simple;
+	bh=/naZ7p4stFk45kxF1mgy+kt7i+8EFoznhA0Owr2TBZs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N+LAwXcsOpnpzRYemW/TYuG70GhDY4PjZftVaGqahCbRzNRDamEKUgPHyK/e2pUBfWEoRdu6FR5sXbM02jhF3HLdPf/MYeN7aQ71JTWPBiDuf0KFgNIM85noPBTKXLYcTGlGGvCvyNdU2/RQgCtJL3/0o7k5i+DI3bfW4s1i/QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=F9fQ3QdG; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YU9NBwIN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB336C4CEE4;
-	Fri, 16 May 2025 22:59:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747436392;
-	bh=4p4BKKhO0VjPlWgoVJGz3XP8j9PNfF1KOKg2YQjyDrk=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=YU9NBwINLhTmPliIbo+wevQ5cqqS4s0dim3ueCVLiCr1sGb8XBljF0gI7NwBo2rpQ
-	 GACA4x3kVAEt4++wPKjLyAnXmf1Ss0W86rma/VF0qRCKUcm7DLTSxCSMeZ5Dzf1lvz
-	 zbKWX5OLUIM6bm7QNReDJh4gIYqfjB06dYsxu+KE21/7FDjwXOFHyijYOHbyk15fEj
-	 cuFcUsSgTGGYDvyhm6z9msB2f709Xc0u7M+UMU2ByIxDQeyPz9tpdx5SAVavd52JSl
-	 11YVxiX3rXx3VTecC1ZGduwBmDs8F9WTSlEoP8jl3R6hFA+U6X3CI24RtXNPVgS6mN
-	 +j5EJtJplWn2Q==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD973806659;
-	Fri, 16 May 2025 23:00:30 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="F9fQ3QdG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1747436481; x=1748041281; i=w_armin@gmx.de;
+	bh=dQsoGmrq1VX8LhkKFYpfAR6yBuZxPrBmH7/USFajCNw=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=F9fQ3QdG1iADrAS1njwesbh4WHLpoTqPY3cF/KsyMuycJ/hNjlBsBwdDpFsuZ0+d
+	 gyhjtRV1H3wQG++c3rH5PzfcrRBNT592McvmFuMaJFEIIB/yV/V/NNKhPF8QHrJJy
+	 0yDCbIRWnfplaFcbTJbynT+KiyzoFQmU95YbwZRR7csYdu/G62wJtJS3I7hn+UfOX
+	 h10PNMorSeTFclT8fq9yCBvz5C/Gg2Xr1mqb6TDj1u6FdMyjN04wqLW5GWxgpOTpD
+	 3+gwbKOZMVLM1MAUU9lCJdtMYpFfjv9Kx5XpHaFw5qtKN6Wkql+z0WVYjDtPf4qY0
+	 2x34Rm23geDi1xqDSw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M26vB-1uHzrc0wH3-004RFu; Sat, 17
+ May 2025 01:01:21 +0200
+Message-ID: <f4fd8852-b1c9-4d85-8d40-c4ab00c14fca@gmx.de>
+Date: Sat, 17 May 2025 01:01:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] team: grab team lock during team_change_rx_flags
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174743642955.4086697.10700383700149322566.git-patchwork-notify@kernel.org>
-Date: Fri, 16 May 2025 23:00:29 +0000
-References: <20250514220319.3505158-1-stfomichev@gmail.com>
-In-Reply-To: <20250514220319.3505158-1-stfomichev@gmail.com>
-To: Stanislav Fomichev <stfomichev@gmail.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, jiri@resnulli.us, andrew+netdev@lunn.ch,
- sdf@fomichev.me, linux-kernel@vger.kernel.org,
- syzbot+53485086a41dbb43270a@syzkaller.appspotmail.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] ACPI: thermal: Properly support the _SCP control
+ method
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: rui.zhang@intel.com, lenb@kernel.org, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250410165456.4173-1-W_Armin@gmx.de>
+ <91ea8aed-5f98-4e4e-b3ee-fdc86d54f787@gmx.de>
+ <CAJZ5v0jOR9=jA=8XASBpxJyXaB4TvXmxcZQWq1qUgq1J4h_tEg@mail.gmail.com>
+ <90cba8fa-e6a9-4dab-a4ea-fa96d570a870@gmx.de>
+ <c8127d88-194a-4a23-b22e-040e2c6b3e9b@gmx.de>
+ <CAJZ5v0icUnepOwb87k44nAt1ZwfHp_BqSBzS-TrQWJ_4E3Ls=g@mail.gmail.com>
+ <5cec046e-c495-4517-82c8-83ae3cdb63a1@gmx.de>
+ <CAJZ5v0iEni2ie-6sCiZBfwugZ--NmJQX6=2EYKXnHwRCfpqUzQ@mail.gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <CAJZ5v0iEni2ie-6sCiZBfwugZ--NmJQX6=2EYKXnHwRCfpqUzQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:hgqOeO+wBmz+IMsJE9m614d9ioZHD8NttVzAAJikMiRQXh94Nt6
+ NAV4xw6zovrD2/JIUSxGXM0daemQ4MBOtdQ8Kq+gAwDQxc2Wmbi/rk1/26r+G43pDmPZCTH
+ E/+opcX7AQCF7j4Qf6155HVmAIXd24QmKa+VpgS4sAwxdpvNUYBxp62t219CXayhT8LdWGg
+ o1gNHGDeBfWzy7oE//+eQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:qoxt2YrQe7I=;RRC/drA0EiQeinFz1rvrw7JfP02
+ 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
 
-Hello:
+Am 16.05.25 um 15:59 schrieb Rafael J. Wysocki:
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+> On Sat, May 3, 2025 at 12:29=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrot=
+e:
+>> Am 28.04.25 um 14:34 schrieb Rafael J. Wysocki:
+>>
+>>> On Mon, Apr 28, 2025 at 2:31=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wr=
+ote:
+>>>> Am 27.04.25 um 00:52 schrieb Armin Wolf:
+>>>>
+>>>>> Am 26.04.25 um 15:12 schrieb Rafael J. Wysocki:
+>>>>>
+>>>>>> On Sat, Apr 26, 2025 at 1:20=E2=80=AFAM Armin Wolf <W_Armin@gmx.de>=
+ wrote:
+>>>>>>> Am 10.04.25 um 18:54 schrieb Armin Wolf:
+>>>>>>>
+>>>>>>>> The ACPI specification defines an interface for the operating sys=
+tem
+>>>>>>>> to change the preferred cooling mode of a given ACPI thermal zone=
+.
+>>>>>>>> This interface takes the form of a special ACPI control method ca=
+lled
+>>>>>>>> _SCP (see section 11.4.13 for details) and is already supported b=
+y the
+>>>>>>>> ACPI thermal driver.
+>>>>>>>>
+>>>>>>>> However this support as many issues:
+>>>>>>>>
+>>>>>>>>      - the kernel advertises support for the "3.0 _SCP Extensions=
+"
+>>>>>>>> yet the
+>>>>>>>>        ACPI thermal driver does not support those extensions. Thi=
+s may
+>>>>>>>>        confuse the ACPI firmware.
+>>>>>>>>
+>>>>>>>>      - the execution of the _SCP control method happens after the=
+ driver
+>>>>>>>>        retrieved the trip point values. This conflicts with the A=
+CPI
+>>>>>>>>        specification:
+>>>>>>>>
+>>>>>>>>          "OSPM will automatically evaluate _ACx and _PSV objects =
+after
+>>>>>>>>           executing _SCP."
+>>>>>>>>
+>>>>>>>>      - the cooling mode is hardcoded to active cooling and cannot=
+ be
+>>>>>>>>        changed by the user.
+>>>>>>>>
+>>>>>>>> Those issues are fixed in this patch series. In the end the user
+>>>>>>>> will be able to tell the ACPI firmware wether he prefers active o=
+r
+>>>>>>>> passive cooling. This setting will also be interesting for
+>>>>>>>> applications like TLP (https://linrunner.de/tlp/index.html).
+>>>>>>>>
+>>>>>>>> The whole series was tested on various devices supporting the _SC=
+P
+>>>>>>>> control method and on a device without the _SCP control method an=
+d
+>>>>>>>> appears to work flawlessly.
+>>>>>>> Any updates on this? I can proof that the new interface for settin=
+g
+>>>>>>> the cooling mode
+>>>>>>> works. Additionally the first two patches fix two issues inside th=
+e
+>>>>>>> underlying code
+>>>>>>> itself, so having them inside the mainline tree would be beneficia=
+l
+>>>>>>> to users.
+>>>>>> Sure.
+>>>>>>
+>>>>>> I'm going to get to them next week, probably on Monday.
+>>>>> Ok, thanks.
+>>>>>
+>>>>> Armin Wolf
+>>>>>
+>>>> I am a bit ashamed of myself but i think we need to put this patch se=
+ries on hold after all :(.
+>>>>
+>>>> The reason of this is that i am confused by the ACPI specification re=
+garding _SCP:
+>>>>
+>>>>           11.1.2.1. OSPM Change of Cooling Policy
+>>>>
+>>>>           When OSPM changes the platform=E2=80=99s cooling policy fro=
+m one cooling mode to the other, the following occurs:
+>>>>
+>>>>           1. OSPM notifies the platform of the new cooling mode by ru=
+nning the Set Cooling Policy (_SCP) control method in all thermal zones an=
+d invoking the OS-specific Set Cooling Policy interface to all participati=
+ng devices in each thermal zone.
+>>>>
+>>>>           2. Thresholds are updated in the hardware and OSPM is notif=
+ied of the change.
+>>>>
+>>>>           3. OSPM re-evaluates the active and passive cooling tempera=
+ture trip points for the zone and all devices in the zone to obtain the ne=
+w temperature thresholds.
+>>>>
+>>>> This section of the ACPI specification tells me that we need to evalu=
+ate the _SCP control method of all ACPI thermal zones
+>>>> at the same time, yet section 11.4.13. tells me that each _SCP contro=
+l methods belongs to the individual thermal zone.
+>>>>
+>>>> The reason why i am concerned by this is because Windows adheres to s=
+ection 11.1.2.1. and only exposes this setting
+>>>> as a global tunable. This might cause device manufacturers to depend =
+on this behavior and lead to strange things
+>>>> should two thermal zones have different _SCP settings.
+>>>>
+>>>> I will ask the UEFI mailing list which behavior is expected by the AC=
+PI specification. Until then i suggest that
+>>>> we put this patch series on hold.
+>>> Sure, no problem.
+>>>
+>>> Please resend it when you think it is good to go.
+>>>
+>>> Thanks!
+>> Alright, the UEFI mailing list gave no response, so i am kind of stuck.
+>>
+>> It seems that many firmware implementation only have a single cooling p=
+olicy register which is set by all _SCP control methods inside the whole s=
+ystem.
+>> The reason for this seems to be that Windows treats this setting as glo=
+bal, but the ACPI specification seemingly does not directly mandate this.
+>>
+>> Do you think we should take the risk and allow users to control each _S=
+CP instance manually?
+> No, I don't.
+>
+> Doing things that are not done in Windows with ACPI objects is
+> generally asking for trouble unless there is a specific use case and
+> there is high confidence that it is actually going to work.
+>
+> At least to begin with, I wouldn't do it.
 
-On Wed, 14 May 2025 15:03:19 -0700 you wrote:
-> Syzkaller reports the following issue:
-> BUG: sleeping function called from invalid context at kernel/locking/mutex.c:578
-> 
->  netdev_lock include/linux/netdevice.h:2751 [inline]
->  netdev_lock_ops include/net/netdev_lock.h:42 [inline]
->  dev_set_promiscuity+0x10e/0x260 net/core/dev_api.c:285
->  bond_set_promiscuity drivers/net/bonding/bond_main.c:922 [inline]
->  bond_change_rx_flags+0x219/0x690 drivers/net/bonding/bond_main.c:4732
->  dev_change_rx_flags net/core/dev.c:9145 [inline]
->  __dev_set_promiscuity+0x3f5/0x590 net/core/dev.c:9189
->  netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9201
->  dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:286
->  ^^ all of the above is under rcu lock
->  team_change_rx_flags+0x1b3/0x330 drivers/net/team/team_core.c:1785
->  dev_change_rx_flags net/core/dev.c:9145 [inline]
->  __dev_set_promiscuity+0x3f5/0x590 net/core/dev.c:9189
->  netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9201
->  dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:286
->  hsr_del_port+0x25e/0x2d0 net/hsr/hsr_slave.c:233
->  hsr_netdev_notify+0x827/0xb60 net/hsr/hsr_main.c:104
->  notifier_call_chain+0x1b3/0x3e0 kernel/notifier.c:85
->  call_netdevice_notifiers_extack net/core/dev.c:2214 [inline]
->  call_netdevice_notifiers net/core/dev.c:2228 [inline]
->  unregister_netdevice_many_notify+0x15d8/0x2330 net/core/dev.c:11970
->  rtnl_delete_link net/core/rtnetlink.c:3522 [inline]
->  rtnl_dellink+0x488/0x710 net/core/rtnetlink.c:3564
->  rtnetlink_rcv_msg+0x7cc/0xb70 net/core/rtnetlink.c:6955
->  netlink_rcv_skb+0x219/0x490 net/netlink/af_netlink.c:2534
->  netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
->  netlink_unicast+0x758/0x8d0 net/netlink/af_netlink.c:1339
->  netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
-> 
-> [...]
+Alright, i will go with a single global interface then.
 
-Here is the summary with links:
-  - [net] team: grab team lock during team_change_rx_flags
-    https://git.kernel.org/netdev/net/c/6b1d3c5f675c
+I am already thinking of using the platform profile interface (with perfor=
+mance and quiet profiles) instead of a custom
+sysfs interface to allow for better integration with tuned/platform-profil=
+es-daemon/etc.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+I am currently a bit preoccupied so this will take a while.
 
+>> Apart from that the first two patches should be safe, so you can still =
+pick them.
+> Done.
 
+Thanks :)
+
+Armin Wolf
+
+>> Only the last patch needs some more work.
+> OK
+>
+> Thanks!
