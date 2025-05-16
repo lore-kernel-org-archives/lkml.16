@@ -1,346 +1,183 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32FA37F9;
-	Fri, 16 May 2025 00:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80047376
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 00:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747353980; cv=none; b=pPz/Mhw4/643Sstfl+qxdR2RYpQALPPugxXV6Kpnt/qsNSTXQe7MIQPVs70KrAdnRd1W3Q0/8btqPFEECRPMB2qghdw7OF8IfOKtytr/NEqOChIyA60IgMd4JSj7HRE7FbAj9vz6Jr793a7VRncgjazO5B8tSuPc14bcqlFxvaI=
+	t=1747354418; cv=none; b=lBbFwC3SbhNhqaKnBuBYaX7sZuuiRGFc/JeUx0Igxe2Fn0Hu/V+h/Htjn5wm/IuHa4+ZZYe0n0OIUyMnpdN/ojsbhhPMNK+uEPsU8VVsT4bvFgbKDVHg+xKSiyuhwHS84Dg4siiO5aunHJclb84bh1RMJA0EILVUQBx8BRgLVE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747353980; c=relaxed/simple;
-	bh=czfM8A/rzw/VHOF2/8qGrNBD7VpfqaYYZKNOS88jI4k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=lQyng7PJizpgPEhqIvka8TVt0Z6euW24T6DnT8xkOAMLSDwc6cP7m/Slb/EXPas0cx2mNaP1tc+1rb7poDyvWbNXTAcQnIMc48UcIa1CBkhY8qLdhUzJJ/1KWDGn5uE1/KFDv1y4VQaHvIY1Kg4d/u250Nel/4rqX9UAAa809aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=CXttBQTm; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1747354418; c=relaxed/simple;
+	bh=CGG6jGXMIinSQ0YSIHvn85mnGlEINaaQlo/+CW6AhP8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TCfkTkSU1NTU+RDpwvccfIQRAsbvPmiJ+mIKDsPq82UmU+vVPxj97OV1gqmDNvGJ1oAQj8QsqLKmCGzCvXLr2ny9g+les0VI06csGWGfwT2gKbTv88n14B8j4mGIafAXqvO4gtQ6PU/wzVLVyhwEgv91uVaHM1UXvgPamg6lX7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=KLt8igYK; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CXttBQTm"
-Received: by linux.microsoft.com (Postfix, from userid 1053)
-	id 491802118E45; Thu, 15 May 2025 17:06:13 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 491802118E45
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1747353973;
-	bh=HOPZO0ZRPQiXBLuci7uH5F7hOb/Usu+R9XxWKm/OJvY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CXttBQTmODmmP+cC3stWDEyY+fnMQ7LC0MxC3wZtGvGKHLeyX+Up34UuysT2dTP0Q
-	 IZpb50wlhz+/Rz12T0fmKY0BgNo44//4OIzws1cubVCCNp5EOFU0JS7lo7+7K/f1js
-	 QsEcrrFH0o4VI2vv8WJAPmLwHm0XNns09k1VNFMA=
-From: Vijay Balakrishna <vijayb@linux.microsoft.com>
-To: Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tyler Hicks <code@tyhicks.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	devicetree@vger.kernel.org,
-	Vijay Balakrishna <vijayb@linux.microsoft.com>
-Subject: [PATCH 1/3] drivers/edac: Add L1 and L2 error detection for A72
-Date: Thu, 15 May 2025 17:06:11 -0700
-Message-Id: <1747353973-4749-2-git-send-email-vijayb@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1747353973-4749-1-git-send-email-vijayb@linux.microsoft.com>
-References: <1747353973-4749-1-git-send-email-vijayb@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="KLt8igYK"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3fb3f4bf97aso874401b6e.2
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:13:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1747354414; x=1747959214; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fIQzh+d2Cl2iQMRyzQRgpL9ZV/FSzUS9sLNvNDM8pQA=;
+        b=KLt8igYKlyM4HV0pKbdTyuu8GU2D7C05GSikv+1kCHjhbRjIfnBrH6eiXow0kVQE+2
+         iqmKyjBINNqHUm106f8ban0PT4YGVbFYw8dQdHmoiQO/e/Z6mF0jsXDrvxwp8zlT1u9k
+         Nq34Adlk1yagXoXST9lgb9u6Ml7ltvzA5Wg0h1s1LsP07LsmVUDV/pPIshP5wk2WnjLR
+         IOZOzva+6u4q/VQ75UP+a0PnEZdg61bwX4w4Y5DEi9TOi4Pos/nGo8HxNAu24ASrf0lv
+         azheBEezhjzj+BJjvjcjRBHXxmIG1lhdStS6JLVbMIInMPSFCPx/IT443V8nVA4Hpw96
+         wg0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747354414; x=1747959214;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fIQzh+d2Cl2iQMRyzQRgpL9ZV/FSzUS9sLNvNDM8pQA=;
+        b=iIly+U6vN2kZ7EUklshFFewzr5HyTtjDL/RHDq6uGlN0RuvBlhRvyagPulLObebi2l
+         Ef9Sqy4enhV7a7fkvvANyTu24htGRUbm2hPsx+/Y9YOo03TjBPZdAnPYUUKyzrHXCd5r
+         rRXqDMY5sxobrKSkRliToGYlSpgjTa3V3OkR3igBbRLNqsXQmuNlpBims+5ZgABELEne
+         ZCZJi89RnnsxbQG2RSMi0aoLHtHOKrmWEof1AQmXNR4L7iJgnPgjpZZxAFw3/EMwYlr3
+         bdXWiUD3VZNe4u02Mvg+cmPyWz7dDre/aztjoN/5X7okyrNywpWG4tmq5vKJPNdkC7vy
+         VBeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUNKyAK1mu5IGliYp50D9OUYTsqVz3tD7VejTyhJCAUZhvapNOeI06kx3pVNBDtUftXgkGqqb1POp7QUOA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yze0eAkXksVK7puiaNj+bAtqaVxKDwSCGMdStjpy8i/34Us+oER
+	kUC5t+ezKgGzIfEL0XA+dwVGy9nA5KDnKLdneBIJwi66nhQsLazKxaw3iDsNGSVwv6M=
+X-Gm-Gg: ASbGncsMV1t9bNYzGiEDDDnWJ3evu9NqMlZOAUh04sBUTNiOF14OMiEn1qwu3csV5+4
+	kDqIZUeae/nKSVICnobO7zaVCWqSwGRwLB+gyXs630L+F05u/ZMU+JSDMrr2V6P5uNIIlzvT9cw
+	aYa5zGFfbV+IBgMynvo4KfRxy/pottFuGaB0t2QQfYG9dbrm5nhVpfNY0BHA1JNfKIhktD7rpwm
+	ppt/qpg37e3nZmRiQwnE7ScXAmX4AW8uVFqQnnzbgeol0gsZ4JIkoQRTzk8FWbiGO+BfBTxTLUW
+	XN9Pov/8jPeYlvQ44UVVAGVc7TtvKeZxlX9kErpwrEIoL0QJ0HwNXQ0=
+X-Google-Smtp-Source: AGHT+IHw+xOETWTyOT89ZTuJ4/7y2Jcun/+WyMsgKHv9WFHVKeTtE/CECud8o+oMJFlD/SDqIiuTug==
+X-Received: by 2002:a05:6808:338c:b0:3f9:2fdc:ee93 with SMTP id 5614622812f47-404d87b897dmr1274677b6e.30.1747354414372;
+        Thu, 15 May 2025 17:13:34 -0700 (PDT)
+Received: from mail.minyard.net ([2001:470:b8f6:1b:d0c5:1ce0:9035:258c])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-609f2f43884sm188602eaf.15.2025.05.15.17.13.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 17:13:32 -0700 (PDT)
+Date: Thu, 15 May 2025 19:13:27 -0500
+From: Corey Minyard <corey@minyard.net>
+To: Praveen Balakrishnan <praveen.balakrishnan@magd.ox.ac.uk>
+Cc: corbet@lwn.net, openipmi-developer@lists.sourceforge.net,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] docs: ipmi: fix spelling and grammar mistakes
+Message-ID: <aCaDJyq18soCNMqa@mail.minyard.net>
+Reply-To: corey@minyard.net
+References: <20250515234757.19710-1-praveen.balakrishnan@magd.ox.ac.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515234757.19710-1-praveen.balakrishnan@magd.ox.ac.uk>
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+On Fri, May 16, 2025 at 12:47:57AM +0100, Praveen Balakrishnan wrote:
+> Corrected various spelling and grammatical mistakes in
+> Documentation/driver-api/ipmi.rst to improve readability.
+> 
+> No changes to the technical content has been made.
 
-The Cortex A72 cores have error detection capabilities for
-the L1/L2 Caches, this patch adds a driver for them. The selected errors
-to detect/report are by reading CPU/L2 memory error syndrome registers.
+Thank you, I have added this to my tree.
 
-Unfortunately there is no robust way to inject errors into the caches,
-so this driver doesn't contain any code to actually test it. It has
-been tested though with code taken from an older version [1] of this
-driver.  For reasons stated in thread [1], the error injection code is
-not suitable for mainline, so it is removed from the driver.
+-corey
 
-[1] https://lore.kernel.org/all/1521073067-24348-1-git-send-email-york.sun@nxp.com/#t
-
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Co-developed-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
-Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
----
- drivers/edac/Kconfig    |   8 ++
- drivers/edac/Makefile   |   1 +
- drivers/edac/edac_a72.c | 233 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 242 insertions(+)
- create mode 100644 drivers/edac/edac_a72.c
-
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 19ad3c3b675d..7c99bb04b0c4 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -576,4 +576,12 @@ config EDAC_LOONGSON
- 	  errors (CE) only. Loongson-3A5000/3C5000/3D5000/3A6000/3C6000
- 	  are compatible.
- 
-+config EDAC_CORTEX_A72
-+	tristate "ARM Cortex A72"
-+	depends on ARM64
-+	help
-+	  Support for L1/L2 cache error detection for ARM Cortex A72 processor.
-+	  The detected and reported erros are from reading CPU/L2 memory error
-+	  syndrome registers.
-+
- endif # EDAC
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index a8f2d8f6c894..835539b5d5af 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -88,3 +88,4 @@ obj-$(CONFIG_EDAC_NPCM)			+= npcm_edac.o
- obj-$(CONFIG_EDAC_ZYNQMP)		+= zynqmp_edac.o
- obj-$(CONFIG_EDAC_VERSAL)		+= versal_edac.o
- obj-$(CONFIG_EDAC_LOONGSON)		+= loongson_edac.o
-+obj-$(CONFIG_EDAC_CORTEX_A72)	+= edac_a72.o
-diff --git a/drivers/edac/edac_a72.c b/drivers/edac/edac_a72.c
-new file mode 100644
-index 000000000000..13acd7e7cef0
---- /dev/null
-+++ b/drivers/edac/edac_a72.c
-@@ -0,0 +1,233 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Cortex A72 EDAC L1 and L2 cache error detection
-+ *
-+ * Copyright (c) 2020 Pengutronix, Sascha Hauer <s.hauer@pengutronix.de>
-+ *
-+ * Based on Code from:
-+ * Copyright (c) 2018, NXP Semiconductor
-+ * Author: York Sun <york.sun@nxp.com>
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/bitfield.h>
-+#include <asm/smp_plat.h>
-+
-+#include "edac_module.h"
-+
-+#define DRVNAME				"edac-a72"
-+
-+#define CPUMERRSR_EL1_RAMID		GENMASK(30, 24)
-+
-+#define CPUMERRSR_EL1_VALID		BIT(31)
-+#define CPUMERRSR_EL1_FATAL		BIT(63)
-+
-+#define L1_I_TAG_RAM			0x00
-+#define L1_I_DATA_RAM			0x01
-+#define L1_D_TAG_RAM			0x08
-+#define L1_D_DATA_RAM			0x09
-+#define TLB_RAM				0x18
-+
-+#define L2MERRSR_EL1_CPUID_WAY	GENMASK(21, 18)
-+
-+#define L2MERRSR_EL1_VALID		BIT(31)
-+#define L2MERRSR_EL1_FATAL		BIT(63)
-+
-+struct merrsr {
-+	u64 cpumerr;
-+	u64 l2merr;
-+};
-+
-+#define MESSAGE_SIZE 64
-+
-+#define SYS_CPUMERRSR_EL1			sys_reg(3, 1, 15, 2, 2)
-+#define SYS_L2MERRSR_EL1			sys_reg(3, 1, 15, 2, 3)
-+
-+static struct cpumask compat_mask;
-+
-+static void report_errors(struct edac_device_ctl_info *edac_ctl, int cpu,
-+			  struct merrsr *merrsr)
-+{
-+	char msg[MESSAGE_SIZE];
-+	u64 cpumerr = merrsr->cpumerr;
-+	u64 l2merr = merrsr->l2merr;
-+
-+	if (cpumerr & CPUMERRSR_EL1_VALID) {
-+		const char *str;
-+		bool fatal = cpumerr & CPUMERRSR_EL1_FATAL;
-+
-+		switch (FIELD_GET(CPUMERRSR_EL1_RAMID, cpumerr)) {
-+		case L1_I_TAG_RAM:
-+			str = "L1-I Tag RAM";
-+			break;
-+		case L1_I_DATA_RAM:
-+			str = "L1-I Data RAM";
-+			break;
-+		case L1_D_TAG_RAM:
-+			str = "L1-D Tag RAM";
-+			break;
-+		case L1_D_DATA_RAM:
-+			str = "L1-D Data RAM";
-+			break;
-+		case TLB_RAM:
-+			str = "TLB RAM";
-+			break;
-+		default:
-+			str = "Unspecified";
-+			break;
-+		}
-+
-+		snprintf(msg, MESSAGE_SIZE, "%s %s error(s) on CPU %d",
-+			 str, fatal ? "fatal" : "correctable", cpu);
-+
-+		if (fatal)
-+			edac_device_handle_ue(edac_ctl, cpu, 0, msg);
-+		else
-+			edac_device_handle_ce(edac_ctl, cpu, 0, msg);
-+	}
-+
-+	if (l2merr & L2MERRSR_EL1_VALID) {
-+		bool fatal = l2merr & L2MERRSR_EL1_FATAL;
-+
-+		snprintf(msg, MESSAGE_SIZE, "L2 %s error(s) on CPU %d CPUID/WAY 0x%lx",
-+			 fatal ? "fatal" : "correctable", cpu,
-+			 FIELD_GET(L2MERRSR_EL1_CPUID_WAY, l2merr));
-+		if (fatal)
-+			edac_device_handle_ue(edac_ctl, cpu, 1, msg);
-+		else
-+			edac_device_handle_ce(edac_ctl, cpu, 1, msg);
-+	}
-+}
-+
-+static void read_errors(void *data)
-+{
-+	struct merrsr *merrsr = data;
-+
-+	merrsr->cpumerr = read_sysreg_s(SYS_CPUMERRSR_EL1);
-+	if (merrsr->cpumerr & CPUMERRSR_EL1_VALID) {
-+		write_sysreg_s(0, SYS_CPUMERRSR_EL1);
-+		isb();
-+	}
-+	merrsr->l2merr = read_sysreg_s(SYS_L2MERRSR_EL1);
-+	if (merrsr->l2merr & L2MERRSR_EL1_VALID) {
-+		write_sysreg_s(0, SYS_L2MERRSR_EL1);
-+		isb();
-+	}
-+}
-+
-+static void cortex_arm64_edac_check(struct edac_device_ctl_info *edac_ctl)
-+{
-+	struct merrsr merrsr;
-+	int cpu;
-+
-+	for_each_cpu_and(cpu, cpu_online_mask, &compat_mask) {
-+		smp_call_function_single(cpu, read_errors, &merrsr, true);
-+		report_errors(edac_ctl, cpu, &merrsr);
-+	}
-+}
-+
-+static int cortex_arm64_edac_probe(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_ctl;
-+	struct device *dev = &pdev->dev;
-+	int rc;
-+
-+	edac_ctl = edac_device_alloc_ctl_info(0, "cpu",
-+					      num_possible_cpus(), "L", 2, 1,
-+					      edac_device_alloc_index());
-+	if (!edac_ctl)
-+		return -ENOMEM;
-+
-+	edac_ctl->edac_check = cortex_arm64_edac_check;
-+	edac_ctl->dev = dev;
-+	edac_ctl->mod_name = dev_name(dev);
-+	edac_ctl->dev_name = dev_name(dev);
-+	edac_ctl->ctl_name = DRVNAME;
-+	dev_set_drvdata(dev, edac_ctl);
-+
-+	rc = edac_device_add_device(edac_ctl);
-+	if (rc)
-+		goto out_dev;
-+
-+	return 0;
-+
-+out_dev:
-+	edac_device_free_ctl_info(edac_ctl);
-+
-+	return rc;
-+}
-+
-+static void cortex_arm64_edac_remove(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *edac_ctl = dev_get_drvdata(&pdev->dev);
-+
-+	edac_device_del_device(edac_ctl->dev);
-+	edac_device_free_ctl_info(edac_ctl);
-+}
-+
-+static const struct of_device_id cortex_arm64_edac_of_match[] = {
-+	{ .compatible = "arm,cortex-a72" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, cortex_arm64_edac_of_match);
-+
-+static struct platform_driver cortex_arm64_edac_driver = {
-+	.probe = cortex_arm64_edac_probe,
-+	.remove = cortex_arm64_edac_remove,
-+	.driver = {
-+		.name = DRVNAME,
-+	},
-+};
-+
-+static int __init cortex_arm64_edac_driver_init(void)
-+{
-+	struct device_node *np;
-+	int cpu;
-+	struct platform_device *pdev;
-+	int err;
-+
-+	for_each_possible_cpu(cpu) {
-+		np = of_get_cpu_node(cpu, NULL);
-+
-+		if (!np) {
-+			pr_warn("failed to find device node for cpu %d\n", cpu);
-+			continue;
-+		}
-+		if (!of_match_node(cortex_arm64_edac_of_match, np))
-+			continue;
-+		if (!of_property_read_bool(np, "edac-enabled"))
-+			continue;
-+		cpumask_set_cpu(cpu, &compat_mask);
-+		of_node_put(np);
-+	}
-+
-+	if (cpumask_empty(&compat_mask))
-+		return 0;
-+
-+	err = platform_driver_register(&cortex_arm64_edac_driver);
-+	if (err)
-+		return err;
-+
-+	pdev = platform_device_register_simple(DRVNAME, -1, NULL, 0);
-+	if (IS_ERR(pdev)) {
-+		pr_err("failed to register cortex arm64 edac device\n");
-+		platform_driver_unregister(&cortex_arm64_edac_driver);
-+		return PTR_ERR(pdev);
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit cortex_arm64_edac_driver_exit(void)
-+{
-+		platform_driver_unregister(&cortex_arm64_edac_driver);
-+}
-+
-+module_init(cortex_arm64_edac_driver_init);
-+module_exit(cortex_arm64_edac_driver_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Sascha Hauer <s.hauer@pengutronix.de>");
-+MODULE_DESCRIPTION("Cortex A72 L1 and L2 cache EDAC driver");
--- 
-2.49.0
-
+> 
+> Signed-off-by: Praveen Balakrishnan <praveen.balakrishnan@magd.ox.ac.uk>
+> ---
+>  Documentation/driver-api/ipmi.rst | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/Documentation/driver-api/ipmi.rst b/Documentation/driver-api/ipmi.rst
+> index dfa021eacd63..d9fb2376e8da 100644
+> --- a/Documentation/driver-api/ipmi.rst
+> +++ b/Documentation/driver-api/ipmi.rst
+> @@ -45,7 +45,7 @@ manual), choose the 'IPMI SI handler' option.  A driver also exists
+>  for direct I2C access to the IPMI management controller.  Some boards
+>  support this, but it is unknown if it will work on every board.  For
+>  this, choose 'IPMI SMBus handler', but be ready to try to do some
+> -figuring to see if it will work on your system if the SMBIOS/APCI
+> +figuring to see if it will work on your system if the SMBIOS/ACPI
+>  information is wrong or not present.  It is fairly safe to have both
+>  these enabled and let the drivers auto-detect what is present.
+>  
+> @@ -63,7 +63,7 @@ situation, you need to read the section below named 'The SI Driver' or
+>  IPMI defines a standard watchdog timer.  You can enable this with the
+>  'IPMI Watchdog Timer' config option.  If you compile the driver into
+>  the kernel, then via a kernel command-line option you can have the
+> -watchdog timer start as soon as it initializes.  It also have a lot
+> +watchdog timer start as soon as it initializes.  It also has a lot
+>  of other options, see the 'Watchdog' section below for more details.
+>  Note that you can also have the watchdog continue to run if it is
+>  closed (by default it is disabled on close).  Go into the 'Watchdog
+> @@ -317,13 +317,13 @@ This gives the receiver a place to actually put the message.
+>  
+>  If the message cannot fit into the data you provide, you will get an
+>  EMSGSIZE error and the driver will leave the data in the receive
+> -queue.  If you want to get it and have it truncate the message, us
+> +queue.  If you want to get it and have it truncate the message, use
+>  the IPMICTL_RECEIVE_MSG_TRUNC ioctl.
+>  
+>  When you send a command (which is defined by the lowest-order bit of
+>  the netfn per the IPMI spec) on the IPMB bus, the driver will
+>  automatically assign the sequence number to the command and save the
+> -command.  If the response is not receive in the IPMI-specified 5
+> +command.  If the response is not received in the IPMI-specified 5
+>  seconds, it will generate a response automatically saying the command
+>  timed out.  If an unsolicited response comes in (if it was after 5
+>  seconds, for instance), that response will be ignored.
+> @@ -367,7 +367,7 @@ channel bitmasks do not overlap.
+>  
+>  To respond to a received command, set the response bit in the returned
+>  netfn, use the address from the received message, and use the same
+> -msgid that you got in the receive message.
+> +msgid that you got in the received message.
+>  
+>  From userland, equivalent IOCTLs are provided to do these functions.
+>  
+> @@ -440,7 +440,7 @@ register would be 0xca6.  This defaults to 1.
+>  
+>  The regsizes parameter gives the size of a register, in bytes.  The
+>  data used by IPMI is 8-bits wide, but it may be inside a larger
+> -register.  This parameter allows the read and write type to specified.
+> +register.  This parameter allows the read and write type to be specified.
+>  It may be 1, 2, 4, or 8.  The default is 1.
+>  
+>  Since the register size may be larger than 32 bits, the IPMI data may not
+> @@ -481,8 +481,8 @@ If your IPMI interface does not support interrupts and is a KCS or
+>  SMIC interface, the IPMI driver will start a kernel thread for the
+>  interface to help speed things up.  This is a low-priority kernel
+>  thread that constantly polls the IPMI driver while an IPMI operation
+> -is in progress.  The force_kipmid module parameter will all the user to
+> -force this thread on or off.  If you force it off and don't have
+> +is in progress.  The force_kipmid module parameter will allow the user
+> +to force this thread on or off.  If you force it off and don't have
+>  interrupts, the driver will run VERY slowly.  Don't blame me,
+>  these interfaces suck.
+>  
+> @@ -583,7 +583,7 @@ kernel command line as::
+>  These are the same options as on the module command line.
+>  
+>  The I2C driver does not support non-blocking access or polling, so
+> -this driver cannod to IPMI panic events, extend the watchdog at panic
+> +this driver cannot do IPMI panic events, extend the watchdog at panic
+>  time, or other panic-related IPMI functions without special kernel
+>  patches and driver modifications.  You can get those at the openipmi
+>  web page.
+> @@ -610,7 +610,7 @@ Parameters are::
+>  	ipmi_ipmb.retry_time_ms=<Time between retries on IPMB>
+>  	ipmi_ipmb.max_retries=<Number of times to retry a message>
+>  
+> -Loading the module will not result in the driver automatcially
+> +Loading the module will not result in the driver automatically
+>  starting unless there is device tree information setting it up.  If
+>  you want to instantiate one of these by hand, do::
+>  
+> -- 
+> 2.39.5
+> 
