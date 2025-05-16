@@ -1,90 +1,162 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28152701A7;
-	Fri, 16 May 2025 18:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E5B27D766;
+	Fri, 16 May 2025 18:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747420145; cv=none; b=E8uQlPYviDlq6L5TRUyyXNKaiOie37a2nJ0pOj7T+DLPZNCAtk0iqIBIUp2cSYF/dHBlzcEzwEs8gkRQKLf/E4uPrmWQyA2t6EV6xesGaSe7XGh39dzgwSIXgEoS/HNkhqNEav5iL1+nJtHupEo9iBJPYuKeXsZpG44ndLMvMfc=
+	t=1747420162; cv=none; b=B/Iv7FSOG/ZoeFalIXlViLpYoS1hB4k3dRZosiA1Ew89O2+SojI7HCM0y33xE6ZfK/qfwrndlvi2Dv7sGtnAzx2vngXAijubTWdtSjAW/fqV77twaSPGLVOP4eAElsP1X26kiKeM3vb6rY6IlmUy88//k9fAf5M4PCuDvogJ7As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747420145; c=relaxed/simple;
-	bh=1fx++dC2G7xSlPOJeN/lnsabkaaWW/8faZQ+ylHw9QY=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=m+2/cO7NyR4ewDsZZsEUkbTXpWOkiduoO9TgJdzN8gwxLrbpib7NBmJYTESCnMzh7XY/oxiAffstPCByJ4JYTOkH4gPUHcq3RWpfNkyeS1DFsLvItAnSpApCmXZ6xNTj4l/BA2e2ZDU1GNNtZ8J8KzyrDLXMqUlok3tnuHsRi6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=GCnfT63U; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1747420162; c=relaxed/simple;
+	bh=F5v+X75TI1z2DmZCu4oTc6EMB0xD1BlN+j0QoXwycsA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MxKdTKutHk5NMkg/6ym8VmEXLguNs9G/ofePphWrb7kZ5NYRzMzNvWtO7VRXFKcfTurA7PgrWwVfBZxMUIXWrKuNC24FJMCv9JjQ1HCFO4CpuR0ZOjNUTuXRuqwbxsdJHPx8DCBY6tMgvCOXY+E0SoeFck8FWT6N69PJ0bSmJnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KrjIupDX; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="GCnfT63U"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54GISMke189240
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 16 May 2025 11:28:22 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54GISMke189240
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1747420104;
-	bh=3kdcS+HU5yAUDKLqMb85cLKeCxs+E5AFWAZY7/43xqA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=GCnfT63UVHPPWk3YILYl72t8nFDrdhAUhsSKpxTGreTT2ddjyna85jiy6hjBNoU+H
-	 zO0Amspxwwj3SrM0jc56ax9egcxoqYJ0Mtq2SZJYd4neyBWLdaIJY4ZKeLWT5063eG
-	 GPKZ8dzj0/p5DYkqI2VD1Y24LSyVzviNL2aaV5LWGeTsVbr3rTqY4jOc1mjP6inPtv
-	 RQVuKLUT27Sxx7NTlIMfs8SzYGZF1GEc7dzddouFfGdMSkTcHAYM/IC8oclN28dELh
-	 rx0KqNw70zDrEFNuq7sZbnxlNMP+YfNXvQUThV8kiFSVLTFtl/CEhlQU9m/8QVROkV
-	 7d7Ljwnra47+A==
-Date: Fri, 16 May 2025 11:28:20 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Dave Hansen <dave.hansen@intel.com>, Ingo Molnar <mingo@kernel.org>
-CC: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Jonathan Corbet <corbet@lwn.net>, Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ard Biesheuvel <ardb@kernel.org>, Jan Kiszka <jan.kiszka@siemens.com>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Michael Roth <michael.roth@amd.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Sandipan Das <sandipan.das@amd.com>, Juergen Gross <jgross@suse.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCHv3_2/4=5D_x86/64/mm=3A_Make_SP?=
- =?US-ASCII?Q?ARSEMEM=5FVMEMMAP_the_only_memory_model?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <6c33159d-8e4f-474b-a60a-bfa95eca6042@intel.com>
-References: <20250516123306.3812286-1-kirill.shutemov@linux.intel.com> <20250516123306.3812286-3-kirill.shutemov@linux.intel.com> <30570ca0-8da4-4ebc-84d6-0a4badfb7154@intel.com> <rqkfqkkli57fbd5zkj3bwko44kmqqwnfdm766snm26y2so52ss@6it24qxv356q> <aCdGzpXSVx15gz90@gmail.com> <a0ca765c-a506-4c1f-a38c-24a8074988df@intel.com> <aCdbOeK3EkVUTGD2@gmail.com> <6c33159d-8e4f-474b-a60a-bfa95eca6042@intel.com>
-Message-ID: <304EB2DB-3EB9-4D2E-8807-E170B9061A63@zytor.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KrjIupDX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747420161; x=1778956161;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=F5v+X75TI1z2DmZCu4oTc6EMB0xD1BlN+j0QoXwycsA=;
+  b=KrjIupDXmJHpqVyrAfKQixWix4XhGZ6SgZiQCdnXfJzALmLn9AkVDMIS
+   FH8xABSpUKteDUoEpsm85MPWw3dq3WBJwWChryhzXrDQ6GcX64WzZOgyr
+   fQpfVZDBVW4YDY3C2DBu7E9xI6fXRVeKXmPmj1nju/7EWYL9fm0D7oA1k
+   CiGI8koWeNzbpkp4AmkslEy3VxLkR1v2HcXMwgkygHSWuy4vw2+9INDhH
+   UqZrGEi6orq3MzmWgWHUQbTWYtAblgc5Fy5mYM+LHIyQf4aIizeVA8r6G
+   drLfHU0B0J2PxZNXUaTyI+yhyL+O8P0G6PHBqbtOhhZWuJBihQ+53QDoZ
+   A==;
+X-CSE-ConnectionGUID: F+uLjmaHRnuFfiMcjGtxMw==
+X-CSE-MsgGUID: SmdcqjQbRz+NHBwCOQtX1A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49328788"
+X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
+   d="scan'208";a="49328788"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 11:29:20 -0700
+X-CSE-ConnectionGUID: bkyRZkbbRpmBiYV5WyKIIw==
+X-CSE-MsgGUID: 4YmH+m5pR8WCBM/6eDB5Hw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
+   d="scan'208";a="169802595"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by fmviesa001.fm.intel.com with ESMTP; 16 May 2025 11:29:19 -0700
+From: kan.liang@linux.intel.com
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	namhyung@kernel.org,
+	irogers@google.com,
+	mark.rutland@arm.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: eranian@google.com,
+	ctshao@google.com,
+	tmricht@linux.ibm.com,
+	leo.yan@arm.com,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V3 00/16] perf: Fix the throttle logic for group
+Date: Fri, 16 May 2025 11:28:37 -0700
+Message-Id: <20250516182853.2610284-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On May 16, 2025 8:46:07 AM PDT, Dave Hansen <dave=2Ehansen@intel=2Ecom> wro=
-te:
->On 5/16/25 08:35, Ingo Molnar wrote:
->>   =2Econfig=2Eopensuse=2Edefault:    CONFIG_SPARSEMEM_VMEMMAP_ENABLE=3D=
-y
->>   =2Econfig=2Eubuntu=2Elocalinstall: CONFIG_SPARSEMEM_VMEMMAP_ENABLE=3D=
-y
->>   =2Econfig=2Efedora=2Egeneric:      CONFIG_SPARSEMEM_VMEMMAP_ENABLE=3D=
-y
->>   =2Econfig=2Erhel=2Egeneric:        CONFIG_SPARSEMEM_VMEMMAP_ENABLE=3D=
-y
->
->That reminds me=2E=2E=2E
->
->Does everybody keep their own local copies of these configs in their
->environment? I do, and I refresh them periodically from the distros=2E I
->assume everybody else is doing something similar=2E
->
->Is there a better way?
+From: Kan Liang <kan.liang@linux.intel.com>
 
-What I do is keep a set of minimal configs which are the deltas from the d=
-efault=2E=20
+Changes since V2:
+- Add a cleanup patch to check if an event is in freq mode
+- Rename the parameter of the perf_event_unthrottle_group()
+- Add Tested-by from Leo and Thomas
+- Add Acked-by from Guo Ren
+
+Changes since V1:
+- Apply the suggested throttle/unthrottle functions from Peter.
+  The MAX_INTERRUPTS and throttle logs are applied to all events.
+- Update the description and comments accordingly
+- Add Reviewed-by from Ravi and Max
+
+The sampling read doesn't work well with a group.
+The issue was originally found by the 'Basic leader sampling test' case
+failed on s390.
+https://lore.kernel.org/all/20250228062241.303309-1-tmricht@linux.ibm.com/
+
+Stephane debugged it and found it was caused by the throttling logic.
+https://lore.kernel.org/all/CABPqkBQzCMNS_PfLZBWVuX9o8Z55PovwJvpVWMWzyeExFJ5R4Q@mail.gmail.com/
+
+The throttle logic is generic and shared by all ARCHs.
+It also impacts other ARCHs, e.g., X86.
+
+On an Intel GNR machine,
+$ perf record -e "{cycles,cycles}:S" ...
+
+$ perf report -D | grep THROTTLE | tail -2
+            THROTTLE events:        426  ( 9.0%)
+          UNTHROTTLE events:        425  ( 9.0%)
+
+$ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
+0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
+... sample_read:
+.... group nr 2
+..... id 0000000000000327, value 000000000cbb993a, lost 0
+..... id 0000000000000328, value 00000002211c26df, lost 0
+
+The patch set tries to provide a generic fix for the group throttle
+support. So the buggy driver-specific implementation can be removed.
+
+The patch set is verified on newer Intel platforms (Kan), ARM (Leo Yan),
+and s390 (Thomas Richter).
+
+Kan Liang (16):
+  perf: Clean up event in freq mode check
+  perf: Fix the throttle logic for a group
+  perf/x86/intel: Remove driver-specific throttle support
+  perf/x86/amd: Remove driver-specific throttle support
+  perf/x86/zhaoxin: Remove driver-specific throttle support
+  powerpc/perf: Remove driver-specific throttle support
+  s390/perf: Remove driver-specific throttle support
+  perf/arm: Remove driver-specific throttle support
+  perf/apple_m1: Remove driver-specific throttle support
+  alpha/perf: Remove driver-specific throttle support
+  arc/perf: Remove driver-specific throttle support
+  csky/perf: Remove driver-specific throttle support
+  loongarch/perf: Remove driver-specific throttle support
+  sparc/perf: Remove driver-specific throttle support
+  xtensa/perf: Remove driver-specific throttle support
+  mips/perf: Remove driver-specific throttle support
+
+ arch/alpha/kernel/perf_event.c       | 11 ++---
+ arch/arc/kernel/perf_event.c         |  6 +--
+ arch/csky/kernel/perf_event.c        |  3 +-
+ arch/loongarch/kernel/perf_event.c   |  3 +-
+ arch/mips/kernel/perf_event_mipsxx.c |  3 +-
+ arch/powerpc/perf/core-book3s.c      |  6 +--
+ arch/powerpc/perf/core-fsl-emb.c     |  3 +-
+ arch/s390/kernel/perf_cpum_cf.c      |  2 -
+ arch/s390/kernel/perf_cpum_sf.c      |  5 +-
+ arch/sparc/kernel/perf_event.c       |  3 +-
+ arch/x86/events/amd/core.c           |  3 +-
+ arch/x86/events/amd/ibs.c            |  4 +-
+ arch/x86/events/core.c               |  3 +-
+ arch/x86/events/intel/core.c         |  6 +--
+ arch/x86/events/intel/ds.c           |  7 ++-
+ arch/x86/events/intel/knc.c          |  3 +-
+ arch/x86/events/intel/p4.c           |  3 +-
+ arch/x86/events/zhaoxin/core.c       |  3 +-
+ arch/xtensa/kernel/perf_event.c      |  3 +-
+ drivers/perf/apple_m1_cpu_pmu.c      |  3 +-
+ drivers/perf/arm_pmuv3.c             |  3 +-
+ drivers/perf/arm_v6_pmu.c            |  3 +-
+ drivers/perf/arm_v7_pmu.c            |  3 +-
+ drivers/perf/arm_xscale_pmu.c        |  6 +--
+ kernel/events/core.c                 | 73 ++++++++++++++++++++--------
+ 25 files changed, 84 insertions(+), 87 deletions(-)
+
+-- 
+2.38.1
+
