@@ -1,198 +1,193 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2070.outbound.protection.outlook.com [40.107.244.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88BA27701C;
-	Fri, 16 May 2025 17:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747417354; cv=fail; b=jZzpSyB5sa4yUjuj73+axemCWxkDuCdgKh5+Tr6Mluuyd9+KfeXu57Txe7ok0xHYmA59vcavWuHxQIYlBUEpIgGt86eVu+5Lmxx6wAtTW8ZIapp9MeHYvtFrZwa2V7spJ4WUjGzwETu6zrKhmd8SEajDKLGgVkVEpXifwkbkFqo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747417354; c=relaxed/simple;
-	bh=STQnDVT7NIjB782rkHrbl0ojbQ+9b4iHXVfFRGlrnbI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YOaAriOCQ3UPKRsLa0Ij2WtaH4Qq7QZi34zMHX7wvSBVyTvZ5kgwc/zBbhIlXKYL9WkKzr6FgcU+GewVQnpSmguBFYX69DubgrhbNC86FrB45Sb/jtt3acJVczOCSswHWU1011TuIUO0hhQ3NHSq5TQ6ONpv+iXmcEMdpM7M9pg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=oQAd8iHE; arc=fail smtp.client-ip=40.107.244.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42870277022
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 17:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747417371; cv=none; b=PuIfB6ULtnnu/35t4hwxy2rusCDFCcTRCCoerRN8PdAXblICaKClAcQvmAqZVvJIb8ycZJocpYcbHjXuEGgjn5vI6XTjsZpwfai5/5CeVyfZ4ruSCS/iRiBsIGfVIoAN16iTIUGF4r7a/1vJMIHx2PRqwkE42sOFaNQ9yt9Mw+0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747417371; c=relaxed/simple;
+	bh=/oZWTLboJ1r1HwZnL8ol3rHmbO0GkMBVgO/nSs8EhQA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=GW2b7vEPe44207RlY5QXo8zDmwo08mpX94XZaFElbnYR8ypdjN2VvkzkZ7kaNUIbPsm6XUVcOWn5yAtmD47eicD4qr1Ikiktd5zzHE70vJq9NbShAA3UKElU2rpcBZ7sF/s0/SHkHj87vDBvnG2FHsYvFcUx+oIAVqe2NVnNaOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HVWo5UR8; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="oQAd8iHE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yBvbZdsAyyhW7cbRBIF3z9fnsU4OwRTUt/cwmJDCg8qwUzXzgcQWsi/XIuLMPqpwp+an4qgeZtYUN6jkhlq9pCWZ8wvXJRSkU/wYO6sM9iC1vJQDA8I6UZrvVStxlzSZ5NOeXKyUw4O31sWB92k2nLyHEPZAqvuDWxZDKKzZsXsGBgOz2ZaWpYpupnIKwFisRW7/f/83Uh2MYOCq6rS7spFxSrHcjGfx5wm8hx5fQ8+trYfcU0XEirH9q5AuVpGKE7ZlLnlrT5USJo0xy7KWcCag4WOeqvHfzfqBawp7n2Few8I9fqpdXmLSk4cE1o7Uy39hlT6Dt74VEXWBhlaajA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VBuix9+5i4O7j2nW/2+lOP/4K0j9Eh3l3iuhLALehy8=;
- b=vq5Avv0cVv/8pGgx94pnU5Sc1o07doIvZjoNcuHAemF/xAOzr8kjbvVMlUImFcmPuHihse/LLZJ3h49YlMxCyl4bWCfJes4Rpol9FYp7RwzchDVidabU5VEUCzbZwkZVD7/94o2wYGWScFbR1MkL80HFYSBtuRcJWY3VrajhJXx0OM6yXnaKfRxAXgOQ4N3fMs61TIYL0pFpbwZEGfbce17b/VlKk9Vyxx7sWagkfTDps1TOrfQjQnjHgxJ4ObTbMDmxxp6bxuKo0z93d5nFUkjqGtWzxuErTk9LMod9R1RUnjfxhrdbUD5C7+VcZDCeVJDiDdlInv+v+j+LUo3ZBA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VBuix9+5i4O7j2nW/2+lOP/4K0j9Eh3l3iuhLALehy8=;
- b=oQAd8iHEq+SPoeIfkCuJW6h16jEX4nMtXIpkzWFttuQgz7oXkO4n1Mw77Yb6zKQfwwtuK3Nwzo6DzG9ZPshvqtZWpFvsM0CICm0Ba/SedQOUgg9CA836OPFzu8uh5M3av4amVayLy977Cj5ywInFI+Sfl7dnw9yGNq3pO5a/6mvxNmf5xqG8H8ovggxwnVZkvMi8VXA/UQ21cB4xts8PeujlNcyW/sDfRnpV7qaoOJkQu8ShnExamVqZ0aWo/pIdhhQyde/H9J1ZuD1LFgrYOvArbOwTXsuPDeqnWn+9iEu7Ij4TVYYWGPs+d2aNee+HVYusBJHe3xOgp+ruQWP/Lg==
-Received: from SN7PR04CA0157.namprd04.prod.outlook.com (2603:10b6:806:125::12)
- by DS0PR12MB8341.namprd12.prod.outlook.com (2603:10b6:8:f8::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.32; Fri, 16 May
- 2025 17:42:27 +0000
-Received: from SN1PEPF000252A4.namprd05.prod.outlook.com
- (2603:10b6:806:125:cafe::40) by SN7PR04CA0157.outlook.office365.com
- (2603:10b6:806:125::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8722.30 via Frontend Transport; Fri,
- 16 May 2025 17:42:27 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SN1PEPF000252A4.mail.protection.outlook.com (10.167.242.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8746.27 via Frontend Transport; Fri, 16 May 2025 17:42:27 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 16 May
- 2025 10:42:08 -0700
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 16 May
- 2025 10:42:08 -0700
-Received: from Asurada-Nvidia (10.127.8.11) by mail.nvidia.com (10.129.68.9)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Fri, 16 May 2025 10:42:06 -0700
-Date: Fri, 16 May 2025 10:42:05 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: "Tian, Kevin" <kevin.tian@intel.com>, "corbet@lwn.net" <corbet@lwn.net>,
-	"will@kernel.org" <will@kernel.org>, "bagasdotme@gmail.com"
-	<bagasdotme@gmail.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"joro@8bytes.org" <joro@8bytes.org>, "thierry.reding@gmail.com"
-	<thierry.reding@gmail.com>, "vdumpa@nvidia.com" <vdumpa@nvidia.com>,
-	"jonathanh@nvidia.com" <jonathanh@nvidia.com>, "shuah@kernel.org"
-	<shuah@kernel.org>, "jsnitsel@redhat.com" <jsnitsel@redhat.com>,
-	"nathan@kernel.org" <nathan@kernel.org>, "peterz@infradead.org"
-	<peterz@infradead.org>, "Liu, Yi L" <yi.l.liu@intel.com>,
-	"mshavit@google.com" <mshavit@google.com>, "praan@google.com"
-	<praan@google.com>, "zhangzekun11@huawei.com" <zhangzekun11@huawei.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
-	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
-	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
-	<patches@lists.linux.dev>, "mochs@nvidia.com" <mochs@nvidia.com>,
-	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>, "vasant.hegde@amd.com"
-	<vasant.hegde@amd.com>
-Subject: Re: [PATCH v4 14/23] iommufd: Add mmap interface
-Message-ID: <aCd47XNQPL2FUx8S@Asurada-Nvidia>
-References: <cover.1746757630.git.nicolinc@nvidia.com>
- <ee9ee287264fd75eb4fc64a63f20d03e9ba18161.1746757630.git.nicolinc@nvidia.com>
- <20250515164717.GL382960@nvidia.com>
- <BN9PR11MB5276DD2F2CDC313FA04155C18C93A@BN9PR11MB5276.namprd11.prod.outlook.com>
- <20250516132956.GI613512@nvidia.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HVWo5UR8"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30e78145dc4so1681438a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:42:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747417369; x=1748022169; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UHtggF1Xmmx8sunRLPpEo5y2n3Fbz0jNKo8YthXyxlY=;
+        b=HVWo5UR8opSBCFI1dc6meoyTzedjbObtgTVC7ltLORi93kHV7ixtoQEMROus9pT0AX
+         TyF197cPYWhbksqBQIsqYBZ+0L6mWfDswI4sgOe8UEguzphY3grD5c0wDwmvENLA6Gn1
+         fRzhBwSVJn6aJj041vnfaDo/eZde1L7Qlmo9xyj7DU2n5cnaeJ2U/9JpvqHTAMKuWTeq
+         YZscX//icFQF0qWHdkjqF+zrRmfHRc9L+iyd6HQUqmZxzwypx4O5zqTwV4osA+wnwZd8
+         tljaUaYnsMoFa4EaR5kKIJHuiqwiQ/SFP33dUffo59CoPmm4dJ8GW/dwz6gNp5crU7Ha
+         8rWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747417369; x=1748022169;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UHtggF1Xmmx8sunRLPpEo5y2n3Fbz0jNKo8YthXyxlY=;
+        b=QLbQzJMpbm4mBojPjydtFn3c1DTAWEGunw/q2ZPONcNONLTI5ckS5750tHTrUknEMp
+         xCrLvx5Av9sgY8BRDEwDEqvaYLTEtPdVXW2rtOMwpmrviPiVjsLHJp+rHLqAodL8TNCJ
+         rsjHZuAuZdZZrm6qaCdqQQ2mV8RrWzNozsDU7ts8PuFVNMdjh7onwz0HnIRCv/yBpu70
+         cQ/Q2zZH4wF5tQsHhHW4W0GrPTFfPVrKco/sf2b8/wvZNY176JN65QQoS9K+fB/vLi+4
+         FPIQOuJIQ+q1cp4yCOYYphHp+ClaDrT1Bk7gTDTnQUX5Yo5gpRbf9SXDivrIw3mAbd9/
+         gHDw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXD7kKf4AQ/IvyNDGJ3WeFNKprhRNKw9OQkfQH2J/YSAf37RQR2tqLOE5rbudYaJPZOTVHg5V9dnaezPY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNd3IeedzZk6W+bVCObsmDOTeVhERYLaA0GgxMVdGPKR9uA9oN
+	/TdplGZRu87qUEqo6rkuW7p4Px2Thw85dClVW5MLRPTJEuO2223ADwgKSNgF2CBHrRHWypzOJpc
+	nA6ZE7MfLuAEAUrCKutlhM6LaSw==
+X-Google-Smtp-Source: AGHT+IFZZue4eVCNyGlBlVu3FOMYDdiN/+lNxD2W2guGukj7N1aj09nrbw9YDmV/sDzoeyH8oFlR4vBN8C7KtAQknw==
+X-Received: from pjyp15.prod.google.com ([2002:a17:90a:e70f:b0:2ef:d283:5089])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:4b0f:b0:2fe:b907:562f with SMTP id 98e67ed59e1d1-30e7d527e41mr6797759a91.14.1747417369222;
+ Fri, 16 May 2025 10:42:49 -0700 (PDT)
+Date: Fri, 16 May 2025 10:42:47 -0700
+In-Reply-To: <6825f0f3ac8a7_337c392942d@iweiny-mobl.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250516132956.GI613512@nvidia.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000252A4:EE_|DS0PR12MB8341:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7131b388-4b87-4d0c-e4ca-08dd94a1065d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|7416014|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?xcrO2OwQ1sge5Un64RarzrYVdrEoowPt9m81uwqTcckXQZIl7/MpbdLewgI8?=
- =?us-ascii?Q?xkFAUVtD02/c/oKYWLZYjkDFDizD+HDyOWAqzUTYswDQvoQfFWB87sNbKxou?=
- =?us-ascii?Q?PxwzgLXOywsCorXjTec9c0MXJgbiF4YkQPhctgIhzhtrIH/KnMzhfMDUtSNc?=
- =?us-ascii?Q?PF/fimBsdtTn2r548XpYyB2O++8rSbn+0ylGrgUZWn/P1RlmRtr7YNO5YQho?=
- =?us-ascii?Q?DGfOmzBFyh7Ik/USKGMs6yX9flEHVx6rtYCKPi0nJ1AI/lhSugeW8KOquY0/?=
- =?us-ascii?Q?1RltOLmSFLzHTLq9cjDApF7xlXnPuvDLjpUeGNTe8pI1qtKwSaEXx1NHR0Mx?=
- =?us-ascii?Q?KMLYA5FBEGpuqdPekAdi13UcSoHeIsvWIY5A+1Uog8V9wDMnq4hDlXwK3dXg?=
- =?us-ascii?Q?gcUweroVgpiDiD2GFSsMCnyf4gc5chHFDh6Vt3nIR1gqYfNE57hj4tt2uFEz?=
- =?us-ascii?Q?liAQP5/w+zZEQ8cozHdI9BCD5c/b3bW3CBiKu8lFy3jQ4JfDSHFnCNSi9+xl?=
- =?us-ascii?Q?QwiFs2eCBEu7sfZ+IEBO4SvN1ZBvyOY41enGzgnr9CNnKhiKx3whiqMclk+p?=
- =?us-ascii?Q?uj4tHS9Yld8p3Oq+XtsyoxxN+SJ/p3YRnCgAMw05aEIlUHgUNji2WLbbCO/O?=
- =?us-ascii?Q?M/znRCFxvOF3lj8suJ/+hha92tocYtP7+9AK4egK0je2A6ZEe6j+EFM6pSu8?=
- =?us-ascii?Q?wB3+BFy+oYVCgXKSvRAZc3e5q5th/abQhmihARTpU72vok6lTx8gdRmifua2?=
- =?us-ascii?Q?zLCx3G0EmYsqICFEV+8wE3PK4thLck06YKEle37dDOhZpdl2NJb4u8HZWl6W?=
- =?us-ascii?Q?nTv/wwnKOtTOpRn8lNE5o9+Y7p4bsYwBa3ZI/QiDI6hMZPUuZNukB+vDXLH1?=
- =?us-ascii?Q?/Y4UJKBMkZ1o8Q1jOX1HT/93gmhUyKSPFNMbZRb7I8qdmWRTjsSXTAJwh6ES?=
- =?us-ascii?Q?z9J0h79J5lL6T3douUD8JfGskRC5RrUQg8MHfVSU3P1tvjU7LdMmj7VsEbMW?=
- =?us-ascii?Q?vvhVdZGEQZ4zgUqcUEeodqXcJLVBH5pmd75M7ORiCGnhWltwpPOITaC81VLH?=
- =?us-ascii?Q?2KgnQ3VQFbJVkCJgBMo9EeBf/T3lVly14LvPD0UkvilnPI8ijdRUpke/YurO?=
- =?us-ascii?Q?nPO4f+OVehoglUY4H9jibxQt8Dy7pMpXuVcvhNgztS3Rgw+Hn8JYy0L1qfFf?=
- =?us-ascii?Q?WrLjx+FNXnYGPmfyUJ+Bgil++QXmnlmxKi/WMi4dT3mKEHWMMkHBhihNDMrf?=
- =?us-ascii?Q?cF5OgdO0b2Rxiv18j2R1DmKwEYYKOeX8Q+zTQt3iQGxk+v7/8NkYPN9UMYUq?=
- =?us-ascii?Q?7kC4gUTZteLcZK2Oijki8xitRs2wWtzw+ua+H7izQEYV3ZDwa1Cv25tmCQDu?=
- =?us-ascii?Q?zL0vPMjtbOI7KqSuZQXePnRzJeNDEoQ2Ncl2q802wZrrfhktok1B7uMeIGk+?=
- =?us-ascii?Q?D5xzTw9CX0A3DW9UDq0UDkBdrUCUPKA4tMHRA64eyOfUFvWOeaqKA1MgvRRj?=
- =?us-ascii?Q?i5aHfmgTHGdVRS9IfOY20Bk1dNYiWO9CdmEz?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(7416014)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2025 17:42:27.2542
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7131b388-4b87-4d0c-e4ca-08dd94a1065d
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF000252A4.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8341
+Mime-Version: 1.0
+References: <cover.1747264138.git.ackerleytng@google.com> <65afac3b13851c442c72652904db6d5755299615.1747264138.git.ackerleytng@google.com>
+ <6825f0f3ac8a7_337c392942d@iweiny-mobl.notmuch>
+Message-ID: <diqzmsbcfo4o.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH v2 03/51] KVM: selftests: Update guest_memfd_test for
+ INIT_PRIVATE flag
+From: Ackerley Tng <ackerleytng@google.com>
+To: Ira Weiny <ira.weiny@intel.com>, kvm@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org
+Cc: aik@amd.com, ajones@ventanamicro.com, akpm@linux-foundation.org, 
+	amoorthy@google.com, anthony.yznaga@oracle.com, anup@brainfault.org, 
+	aou@eecs.berkeley.edu, bfoster@redhat.com, binbin.wu@linux.intel.com, 
+	brauner@kernel.org, catalin.marinas@arm.com, chao.p.peng@intel.com, 
+	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com, 
+	dmatlack@google.com, dwmw@amazon.co.uk, erdemaktas@google.com, 
+	fan.du@intel.com, fvdl@google.com, graf@amazon.com, haibo1.xu@intel.com, 
+	hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
+	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
+	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
+	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
+	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
+	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
+	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
+	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
+	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
+	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
+	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
+	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
+	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
+	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
+	thomas.lendacky@amd.com, usama.arif@bytedance.com, vannapurve@google.com, 
+	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
+	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
+	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
+	yuzenghui@huawei.com, zhiquan1.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, May 16, 2025 at 10:29:56AM -0300, Jason Gunthorpe wrote:
-> On Fri, May 16, 2025 at 04:08:25AM +0000, Tian, Kevin wrote:
-> > > From: Jason Gunthorpe <jgg@nvidia.com>
-> > > Sent: Friday, May 16, 2025 12:47 AM
-> > > 
-> > > On Thu, May 08, 2025 at 08:02:35PM -0700, Nicolin Chen wrote:
-> > > > +	/* vma->vm_pgoff carries an index to an mtree entry (immap) */
-> > > > +	immap = mtree_load(&ictx->mt_mmap, vma->vm_pgoff);
-> > > > +	if (!immap)
-> > > > +		return -ENXIO;
-> > > > +	if (length >> PAGE_SHIFT != immap->num_pfns)
-> > > > +		return -ENXIO;
-> > > 
-> > > This needs to validate that vm_pgoff is at the start of the immap or
-> > > num_pfns is the wrong thing to validate length against.
-> > > 
-> > 
-> > vm_pgoff is the index into mtree. If it's wrong mtree_load() will
-> > fail already?
-> 
-> I'm not sure? I thought mtree_load will return any range that
-> intersects with the given index?
-> 
-> Otherwise what is the point of having a range based datastructure?
+Ira Weiny <ira.weiny@intel.com> writes:
 
-Yea, I can confirm that providing a vm_pgoff that's in the range
-(though not the startp) could get immap too.
+> Ackerley Tng wrote:
+>> Test that GUEST_MEMFD_FLAG_INIT_PRIVATE is only valid when
+>> GUEST_MEMFD_FLAG_SUPPORT_SHARED is set.
+>> 
+>> Change-Id: I506e236a232047cfaee17bcaed02ee14c8d25bbb
+>> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+>> ---
+>>  .../testing/selftests/kvm/guest_memfd_test.c  | 36 ++++++++++++-------
+>>  1 file changed, 24 insertions(+), 12 deletions(-)
+>> 
+>> diff --git a/tools/testing/selftests/kvm/guest_memfd_test.c b/tools/testing/selftests/kvm/guest_memfd_test.c
+>> index 60aaba5808a5..bf2876cbd711 100644
+>> --- a/tools/testing/selftests/kvm/guest_memfd_test.c
+>> +++ b/tools/testing/selftests/kvm/guest_memfd_test.c
+>> @@ -401,13 +401,31 @@ static void test_with_type(unsigned long vm_type, uint64_t guest_memfd_flags,
+>>  	kvm_vm_release(vm);
+>>  }
+>>  
+>> +static void test_vm_with_gmem_flag(struct kvm_vm *vm, uint64_t flag,
+>> +				   bool expect_valid)
+>> +{
+>> +	size_t page_size = getpagesize();
+>> +	int fd;
+>> +
+>> +	fd = __vm_create_guest_memfd(vm, page_size, flag);
+>> +
+>> +	if (expect_valid) {
+>> +		TEST_ASSERT(fd > 0,
+>> +			    "guest_memfd() with flag '0x%lx' should be valid",
+>> +			    flag);
+>> +		close(fd);
+>> +	} else {
+>> +		TEST_ASSERT(fd == -1 && errno == EINVAL,
+>> +			    "guest_memfd() with flag '0x%lx' should fail with EINVAL",
+>> +			    flag);
+>> +	}
+>> +}
+>> +
+>>  static void test_vm_type_gmem_flag_validity(unsigned long vm_type,
+>>  					    uint64_t expected_valid_flags)
+>>  {
+>> -	size_t page_size = getpagesize();
+>>  	struct kvm_vm *vm;
+>>  	uint64_t flag = 0;
+>> -	int fd;
+>>  
+>>  	if (!(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(vm_type)))
+>>  		return;
+>> @@ -415,17 +433,11 @@ static void test_vm_type_gmem_flag_validity(unsigned long vm_type,
+>>  	vm = vm_create_barebones_type(vm_type);
+>>  
+>>  	for (flag = BIT(0); flag; flag <<= 1) {
+>> -		fd = __vm_create_guest_memfd(vm, page_size, flag);
+>> +		test_vm_with_gmem_flag(vm, flag, flag & expected_valid_flags);
+>>  
+>> -		if (flag & expected_valid_flags) {
+>> -			TEST_ASSERT(fd > 0,
+>> -				    "guest_memfd() with flag '0x%lx' should be valid",
+>> -				    flag);
+>> -			close(fd);
+>> -		} else {
+>> -			TEST_ASSERT(fd == -1 && errno == EINVAL,
+>> -				    "guest_memfd() with flag '0x%lx' should fail with EINVAL",
+>> -				    flag);
+>> +		if (flag == GUEST_MEMFD_FLAG_SUPPORT_SHARED) {
+>> +			test_vm_with_gmem_flag(
+>> +				vm, flag | GUEST_MEMFD_FLAG_INIT_PRIVATE, true);
+>
+> I don't understand the point of this check.  In 2/51 we set 
+> GUEST_MEMFD_FLAG_INIT_PRIVATE when GUEST_MEMFD_FLAG_SUPPORT_SHARED is set.
+>
+> When can this check ever fail?
+>
+> Ira
 
-I am adding negative test coverage for the vm_pgoff/length input
-for the following ifs:
+In 02/51, GUEST_MEMFD_FLAG_INIT_PRIVATE is not set by default,
+GUEST_MEMFD_FLAG_INIT_PRIVATE is set as one of the valid_flags.
 
-+       /* vma->vm_pgoff carries an index to an mtree entry (immap) */
-+       immap = mtree_load(&ictx->mt_mmap, vma->vm_pgoff);
-+       if (!immap)
-+               return -ENXIO;
-+       /* Validate the vm_pgoff and length against the registered region */
-+       if (vma->vm_pgoff != immap->startp)
-+               return -ENXIO;
-+       if (length != immap->num_pfns << PAGE_SHIFT)
-+               return -ENXIO;
+The intention is that GUEST_MEMFD_FLAG_INIT_PRIVATE is only valid if
+GUEST_MEMFD_FLAG_SUPPORT_SHARED is requested by userspace.
 
-Thanks
-Nicolin
+In this test, the earlier part before the if block calls
+test_vm_with_gmem_flag() all valid flags, and that already tests
+GUEST_MEMFD_FLAG_SUPPORT_SHARED individually.
+
+Specifically if GUEST_MEMFD_FLAG_SUPPORT_SHARED is set, this if block
+adds a test for when both GUEST_MEMFD_FLAG_SUPPORT_SHARED and
+GUEST_MEMFD_FLAG_INIT_PRIVATE are set, and sets that expect_valid is
+true.
+
+This second test doesn't fail, it is meant to check that the kernel
+allows the pair of flags to be set. Hope that makes sense.
