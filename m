@@ -1,118 +1,80 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFCF22A1A4
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8FA6149E17
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747411376; cv=none; b=LgNolh3076NfQYxzxJoBC1M9GSDbbEKhKKX9Z0LYo3HWljXFfZV510GW9fP8x6be1t8zlMOL1G51OZ2+pGIvcFh9wnPrd5tUOQxkWpofC1ZIgH0RNHQnG1V1pTn8NQggJHtdx4uCXjn2FhEc524wxgao+v1upA0Ac4Ov59crRNA=
+	t=1747411432; cv=none; b=e4a2MfmxAdJbsO2//gFsJjZgkUhEW1f/S/ISmKQOYADhJhYeaokEFL60+jSgSnDS5LQD7wtPeNGVf9EktUJySSx1qnZcndSNDCNU2faMx86lg/1HaWb0vsruWy6R/y7LyqSuwRoUypKzvCLEtydOjMtU/ShE+9K42nkZU0YJsno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747411376; c=relaxed/simple;
-	bh=2sRpjTjXUI2i074c5+izzfCmO5OrPoSU+VPMCR9Tems=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E8DvFntXQiT5IGfUZ3V8ZW/9lsJnCCp0Xemcuuidogh4GbKN9/y2FEPsOxZQM8Oj5kcSMA7vG0YpyjkQZu3fGyin9SPANK0kJHV29axz0sIG1LxeldrozVqSi88i7dqivRVrexrM5P3tDNN7+1OUAcgFBMzhX5uem8uZET2elU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JvFL2HNW; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1747411432; c=relaxed/simple;
+	bh=aDJKtBJc2olD3DQ9++T2sX3skqClVk5Dg68YE/5XlN4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GkJd1SeWHansOkmOOeSbg3/UgU8AliT6Wa590aiqUBvBP0pUFQQ+w1VtVS2FVV8Nv7EQYcD/ANK+njwsed3GrYxhOkn0ZeumKQ0T8WL/IhDAfXRAK0emF1YkhWQcXmf4ien0Nwxi2DhwAaBuiNsNLenIMnB8PyiVWVHS5+dWm4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=R1i+RHul; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I6QXiq//; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JvFL2HNW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1747411372;
-	bh=2sRpjTjXUI2i074c5+izzfCmO5OrPoSU+VPMCR9Tems=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JvFL2HNWYLPg3wIq9VGjlr8j7PGoNnrPsL7NLMjEbTcnr+A9T5w2t1xfLVdStnWFe
-	 xPcKE9VEX3T/qyg7PsLJpZcn5vf+SWJFp3y3d9BoqQaVHbgoA7Fbd2vt8zqz2JQD1a
-	 SO+IvTLLUsxs6ljvQ2BGVDYt1OGHvJ0bo6ITkl/fkVs99atWXVT0uTmBMDL8zluUyB
-	 8MGFvFVH2nXLI5J37vxShVzoAMNfeCa8HrCUV3Dsd5ymg+KZDU/CoJbM++bLUxjBKy
-	 B9HALIY/CnPzin2CvKocUrKPwNwRAMEuszvAc+Zz4zR0iHHZ4meZPvZHo5lPASNUMG
-	 WHiR8SeMKSNNw==
-Received: from [192.168.1.90] (unknown [82.76.59.134])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4B63817E07C9;
-	Fri, 16 May 2025 18:02:52 +0200 (CEST)
-Message-ID: <9e29ef0e-c373-4f48-8f37-7111987d2dd0@collabora.com>
-Date: Fri, 16 May 2025 19:02:51 +0300
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R1i+RHul";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I6QXiq//"
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747411428;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=uHe59XcU4cGSTRD8v/6I5Z1xJNrJaboHuOjvcgCOWxM=;
+	b=R1i+RHul2Qgb/uvveLHr7GVKEnYYi0ARzJOf6w1y2hGXtAPvc5q9YzlYZciBkW9S/eP6cI
+	g2hqpGBOZ27Ji64IDcxJFkegApNtOm0uJQblN2797F1BdUfQt+OpU+vabNngRKjVeyGILj
+	ETna9zU1sEnOknZohk6QUuiAUNm+J/mch5NhnX/I9raGJ+MDwalhmsS0p9/lbNlrPR55Jd
+	M+KmJSZPG1AGtFbY886ovylWg4NhCJQ6s/RNnnghjZXvbulYkBWM0dfh5BviXhMwqRta7W
+	ZPcwwP9Zl9slt/HGAMtJfE1h+X+Rqyw9xt0B93PT3IWsNSDO3NXk9ISBu1ZVVQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747411428;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=uHe59XcU4cGSTRD8v/6I5Z1xJNrJaboHuOjvcgCOWxM=;
+	b=I6QXiq//33iBFB3pflDL6zi/Az1+Z5vaVeIg+otp/dIoGiJKYGywC0bn9oNgtLXYdmpjLF
+	jwxO0QvnfatxMGAA==
+To: linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 0/5] futex: Random fixes after the private-hash series.
+Date: Fri, 16 May 2025 18:03:34 +0200
+Message-ID: <20250516160339.1022507-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] phy: phy-rockchip-samsung-hdptx: Fix PHY PLL output
- 50.25MHz error
-To: Diederik de Haas <didi.debian@cknow.org>,
- Algea Cao <algea.cao@rock-chips.com>, vkoul@kernel.org, kishon@kernel.org,
- heiko@sntech.de, andy.yan@rock-chips.com
-Cc: linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250427095124.3354439-1-algea.cao@rock-chips.com>
- <D9XP2BH2CU02.1R9E1GSXQD9JB@cknow.org>
-Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <D9XP2BH2CU02.1R9E1GSXQD9JB@cknow.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-Hi Diederik,
+A few things were raised after the private-hash series has been merged.
+Here are the fixes for it. Nothing serious but should be merged before
+it hits ht merge window.
 
-On 5/16/25 6:36 PM, Diederik de Haas wrote:
-> Hi,
-> 
-> On Sun Apr 27, 2025 at 11:51 AM CEST, Algea Cao wrote:
->> When using HDMI PLL frequency division coefficient at 50.25MHz
->> that is calculated by rk_hdptx_phy_clk_pll_calc(), it fails to
->> get PHY LANE lock. Although the calculated values are within the
->> allowable range of PHY PLL configuration.
->>
->> In order to fix the PHY LANE lock error and provide the expected
->> 50.25MHz output, manually compute the required PHY PLL frequency
->> division coefficient and add it to ropll_tmds_cfg configuration
->> table.
->>
->> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
->> Reviewed-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
->>
->> ---
->>  drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
->> index fe7c05748356..77236f012a1f 100644
->> --- a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
->> +++ b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
->> @@ -476,6 +476,8 @@ static const struct ropll_config ropll_tmds_cfg[] = {
->>  	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
->>  	{ 650000, 162, 162, 1, 1, 11, 1, 1, 1, 1, 1, 1, 1, 54, 0, 16, 4, 1,
->>  	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
->> +	{ 502500, 84, 84, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 11, 1, 4, 5,
->> +	  4, 11, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
->>  	{ 337500, 0x70, 0x70, 1, 1, 0xf, 1, 1, 1, 1, 1, 1, 1, 0x2, 0, 0x01, 5,
->>  	  1, 1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
->>  	{ 400000, 100, 100, 1, 1, 11, 1, 1, 0, 1, 0, 1, 1, 0x9, 0, 0x05, 0,
-> 
-> I found this patch in the 'fixes' branch in linux-phy:
-> https://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git/commit/?h=fixes&id=f9475055b11c0c70979bd1667a76b2ebae638eb7
-> 
-> In the 'next' branch in linux-phy, I found this commit:
-> 0edf9d2bb9b4 ("phy: rockchip: samsung-hdptx: Avoid Hz<->hHz unit conversion overhead")
-> https://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git/commit/?h=next&id=0edf9d2bb9b4ba7566dfdc7605883e04575129d9
-> 
-> Where the values in ropll_tmds_cfg are converted from hHz to Hz and the
-> data type changes from u32 to unsigned long long.
-> But AFAICT it does NOT convert this '502500' value, which IIUC means
-> most values are in Hz, while this one is in hHz.
-> 
-> Am I missing something or should this new value also be converted?
+Sebastian Andrzej Siewior (5):
+  selftests/futex: Use TAP output in futex_priv_hash
+  selftests/futex: Use TAP output in futex_numa_mpol
+  futex: Use RCU_INIT_POINTER() in futex_mm_init().
+  tools headers: Synchronize prctl.h ABI header
+  futex: Correct the kernedoc return value for futex_wait_setup().
 
-Yeah, the conversion is necessary. FWIW, this has been already fixed by
-Stephen Rothwell in linux-next, while Vinod will handle it before
-sending the PR:
+ include/linux/futex.h                         |   9 +-
+ kernel/futex/waitwake.c                       |   3 +-
+ tools/include/uapi/linux/prctl.h              |   1 +
+ .../futex/functional/futex_numa_mpol.c        |  65 ++++---
+ .../futex/functional/futex_priv_hash.c        | 168 ++++++++----------
+ 5 files changed, 108 insertions(+), 138 deletions(-)
 
-https://lore.kernel.org/all/aCXEOGUDcnaoGKWW@vaman/
-
-Regards,
-Cristian
+Sebastian
