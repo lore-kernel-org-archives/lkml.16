@@ -1,134 +1,136 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3556027FD67
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 18:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA6A1D6DB9
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 18:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747420447; cv=none; b=g6B2VjwQAeBeWuVyl3jcfgY7nRXm+L5VfgnL3N5OTIyGYmgkFNo6HiizwBrUhJ3VDfCtAsWeMJ5/kGBAiZvbbW/mH6gayhIaLmT2K1AN3wUR+xgX6NjOkBWzgi+ic5U+7sUsAWB+Ugl85r3i8XtRbB0du/ulfGQ0/sZ0p7yr5sI=
+	t=1747420520; cv=none; b=XXzB6GloDfOKTZnDQ3EafaZqeVIlLwoLqbuNcVj/9gt69usew+H2KFDHYJtvwkc82TjEZOysgEDAghzVXWJkMNH/P70eel3p8+ZEZt1YD2ouW8qDm3IaTrlICRUzwsyx2WfkAV61ghRZT4JGtXEovtEpyYE6luCuqpLuON6nR8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747420447; c=relaxed/simple;
-	bh=l7wfDBiV7fPwNluX/sbXVzXO2k5L/69mo0OWFXFZ0uM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=QKT50PO76S1wxC8j0TYzzSDI/zBsojpWFQJGrr0FRl3i7ZUeaINRR40+OtwGBjqbb5ZyXUFmVQuf6fvFpWv5SEKaGKn4k0tZDo6vk+xRr+A64DscMhRYXSeAOuMeCH1PvXb3QRjrbydNy5DY9CIWjoz+7MmC/waQqA+Q3qm39yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=C1RRrQjR; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747420520; c=relaxed/simple;
+	bh=/NlBqMOy3OEkgCo+YWYlCYiH+NIpaT+BAv6J6HbLuGg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JH00yLb//8aD+HRrWUpmwrYhtZTuOaekdPf7Hq/ckIhVDpQeUIEE1ob5kBLIm4FNcB2QbYv+/f4ehbWQLyNLlWVF0/GDC3qWC+yqtvA6dvnfC2eRT+oc2vNPxiCnFvW/zyCBX2T3OqXa4V4yZsxU4dFTyJzAt9jxipQQM4lo09c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=PsIeL1TE; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="C1RRrQjR"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54GBRuEu023203
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 18:34:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	bMwJC17N0LZE/PF1Re+m8j8/ER7di5Fs7MKJCmuSolY=; b=C1RRrQjRL8kVmzyP
-	LZlAkZBgprpLpZBM4LpXi1qGUPvJwia+ag+l4xyW3Eu9mfSc2NaiTQcl0cxwcP6W
-	g74hyL+S+VS4ijJsngIh+2JGVP+yNwRqtmItbP42pkdNIPrOcfqW5YwIkSWdfG10
-	6oU9TqL+HIFaD0U70Z26kPulz60Cj9LNad1cISjKRb9Ty6jSDnlhXs+gbSzpchUV
-	y8QWiqR/Y/2Vbh4rNG3obH4fRNhf6ZhGDG8CJSecruAz5ukjI+7nsoVZ0MYIf6/R
-	9cf/oJ8Hh9cWMl+47vF2kYRhZ/WSedt0QUYCEwn8MvZg/iZDOuwgdXINg/KWfKb6
-	8/B6HA==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46p4gq953p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 18:34:05 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-30e8baf5754so462866a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:34:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="PsIeL1TE"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-47ae894e9b7so44047051cf.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:35:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1747420517; x=1748025317; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1BXn+vfm77+VTgYfWSD052O3sih3pqOBHF3asuJA1BI=;
+        b=PsIeL1TEcrC89ToAXFivYCsA6aRbflHAzB0Z4H7A5iGBAQLSNWm3iBdktnmZ4Qwegn
+         /RkqGiHR94Gg3WwgpaXjHcrbd0gGsVw4efyCzU03ezZxiPTEqk2ExyvX3wJonMpGsayf
+         8cZynTkRnNNqGh8TLi2MhLDuhDgs5enJ/WkjWab1OCCT/3cSckCqfpGLr3PG8HDOxESY
+         zSErgRo2WRc9g6s4osmO2VQylzKC8tGWUAgl7Xar+nA0Fp1lElPkFhhOVsBTovBNbsy4
+         eI5jtu09d7ZqMVYRO0UNwCZyvphf3qsAYv5uvCMr+8MhdpQFU0cGCHksk/i4gLdw1DHz
+         +HfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747420444; x=1748025244;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bMwJC17N0LZE/PF1Re+m8j8/ER7di5Fs7MKJCmuSolY=;
-        b=vGAzS20DGaLT1hRMXcAl7OIZNUkjkNSdJjEXo5AVrzTW9Z9w6ldkH5WHQkbM40RyC0
-         UEroAUaz5uJhWmIaQdONVYOXxHw5pLprNB1i4o80L9XItMKLukfe+vcP0l+r+5M5eXLw
-         qxvcRtsv0STWhXfUZll0P2vabi3zPQW70A53fgA87iahlJ+QnMfI+XCR4/nkFqrJQ+9n
-         e22c9w6r9agJ6TbyieWqV46FMHmE2J0zRacUYgqGIy3EJ2zp4OVls55JslRf5tJtRGUO
-         dbWua7nqfqctCurj55EuJoXShcGP5uhPpm9ETwc0lLmDg4/96qk0C4nfm2GKm6nMAXiW
-         6FlA==
-X-Forwarded-Encrypted: i=1; AJvYcCULkDJQ6ASXV9GZoxj9wbHgoSqYFIUIch93qsuAOvceOummMLSLAA1tUSenKZvw6U3Ub7IXFSWvJ66LmWA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywzeoyjv3d7u/ru5Wn48zie7Yaw4vztFETOMrXOB/W1w99zwon0
-	z7CUEdkkM6yQWHMG1s6MnruuijNOp57juAeuGbVQbKPsl8afLdh8sSd+QZChS46mEzup+iCw+Pk
-	YWB3Itg1gjOyrhJjmAIAl8RAnFBMt6ul3p0LU1IxzWGJBTIcb+zsuY4ObQebBT5qIjxs=
-X-Gm-Gg: ASbGncvVPhnBkKm04+YTphqhqUzXD2CmsEP2a6RpU21p20MX5KFkEy+8yWqzaVAu/ue
-	ZVRwmrNpmwY6ibZJzWjcn7KAe6bI4m3Jb+aNbg5WxLZzjjBjTHsG/BubxyoUAZ1IC9MOn1c/N+R
-	tt+2HiHdSqswtsimuXWrAeFzEKolEf72hDHCMOBAYnpidJKrB27OAWAGuU0oZQEalS4Qho5epXG
-	z3AX/KiVsU8EtDcDaKNnqpkTyEKLabYzP1kyKvytwNsaIDBUJymFvc/JCHiIP42qboHhFKQCgzY
-	4VaA2PbLfdxdOUGwMuY4+JauhGi077spmwYQ16Kg0GdXvhpB
-X-Received: by 2002:a17:90a:e28e:b0:30e:823f:ef2d with SMTP id 98e67ed59e1d1-30e83216f6emr3390123a91.22.1747420444342;
-        Fri, 16 May 2025 11:34:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEKrnTa0VFLRTEBZCfV/Z7H4WzAhUIJOQQAV7WI7LhPnP/umk4KgcKmhJ1vHpXH01VjBGHX2w==
-X-Received: by 2002:a17:90a:e28e:b0:30e:823f:ef2d with SMTP id 98e67ed59e1d1-30e83216f6emr3390085a91.22.1747420443852;
-        Fri, 16 May 2025 11:34:03 -0700 (PDT)
-Received: from [169.254.0.1] (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e7d576babsm1886299a91.33.2025.05.16.11.34.02
+        d=1e100.net; s=20230601; t=1747420517; x=1748025317;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1BXn+vfm77+VTgYfWSD052O3sih3pqOBHF3asuJA1BI=;
+        b=VsBoiPc+NaRhFH2lAaSTv28dsIdLvRrKDDKe/TM2393lxORkSfdbeUtDBKnCUKwJ24
+         9W7KxPxqmQbmeAZx4FzJcXxZYiFB5c1klpfiAtfscvgE6axhVu2WWPc3zVsZPCA3iv0M
+         LgCc2sg/V6xPcm6NW9avebHMu8uozc7RJGCKv8RPa1znb2pIXXXfb5lCLT4MUHz7+1xb
+         4rCQKPF6Qch15zTeU1XuCIs8I7wnE3g53E6Yb5n0R5GVE3cqAnNDC5zWAu2xMUnSXanE
+         chLRj6I08B92JteBR/+yvDz9lBuRRzk52HByhg1XGNd3vAljFam8/g6T7cUAfvjxOGaU
+         be5g==
+X-Forwarded-Encrypted: i=1; AJvYcCVpuZse0jhPug6U7ofPMzofzDYcwIMos1Fe4ptAreHrsM6/m+zTATI3z9NNbFMsxrVuW0WnjCHYyLUNCzc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFl7+RHyUFj2mU6zJ78PGlfXgBK+Ezf1U84MF2OEGU/yP868Sh
+	djasOCDKbDwYojw/iavlODKAEKRmS4zg9r5tBBbY2XalIQpc0TOjWFc6SmE9Q7vhnUw=
+X-Gm-Gg: ASbGncu2ssIIcPVvEH+nLjYobDFC7IUXDZfs9jcIUaKdtmp73xlVJIVsB0W00Hlx1oQ
+	u0IBo4YqbQo7Sdih2PkWwNGfK5l3a3SL2y2xYpJXAsNor4dYKj8u25iTw8RiQ4s1d8yyO5TlI0C
+	hXWw6bSRFK5Ly6Czg3fxYmrmsyiINjE6/7JChm33/VVd4vtODxaiX684sFhkHfMkGcOFF0GwBdU
+	PO8gP1/DWtq0vPE3ucimuq6Fwfn3vxkKqgFH+JQidF1KEj41DWFOVyhFiJw7euZr4ab+vHY7sD2
+	2gp6UbdiOngT0XgmeNSO/uRVBPFomZHGwOtZ+Tdy/w17uclxTYpYsDmuUqt8OeIg3KCsGQPPO2W
+	qpYWBx4TsJ1EmV7AIjg+dOsZKEJ4=
+X-Google-Smtp-Source: AGHT+IGpq5KJYj/l1wOATwpZyhjeFxOQMatSSzVckaT9OfEIElh7VK70Bh6VZHAPSqyTk3x1rBi/hQ==
+X-Received: by 2002:a05:622a:2292:b0:494:7837:90d0 with SMTP id d75a77b69052e-494b098b2ccmr52651911cf.51.1747420517420;
+        Fri, 16 May 2025 11:35:17 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd467ef2fbsm149338685a.59.2025.05.16.11.35.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 11:34:02 -0700 (PDT)
-From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-To: Jeff Johnson <jjohnson@kernel.org>, Johan Hovold <johan+linaro@kernel.org>
-Cc: Miaoqing Pan <quic_miaoqing@quicinc.com>,
-        Steev Klimaszewski <steev@kali.org>,
-        Clayton Craft <clayton@craftyguy.net>,
-        Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
-        ath11k@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-In-Reply-To: <20250321145302.4775-1-johan+linaro@kernel.org>
-References: <20250321145302.4775-1-johan+linaro@kernel.org>
-Subject: Re: [PATCH] wifi: ath11k: fix rx completion meta data corruption
-Message-Id: <174742044217.3092151.7410193996690738196.b4-ty@oss.qualcomm.com>
-Date: Fri, 16 May 2025 11:34:02 -0700
+        Fri, 16 May 2025 11:35:16 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uFzts-00000002iAn-15rd;
+	Fri, 16 May 2025 15:35:16 -0300
+Date: Fri, 16 May 2025 15:35:16 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Chathura Rajapaksha <chathura.abeyrathne.lk@gmail.com>
+Cc: Yunxiang.Li@amd.com, alex.williamson@redhat.com, audit@vger.kernel.org,
+	avihaih@nvidia.com, bhelgaas@google.com, chath@bu.edu,
+	eparis@redhat.com, giovanni.cabiddu@intel.com, kevin.tian@intel.com,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	paul@paul-moore.com, schnelle@linux.ibm.com, xin.zeng@intel.com,
+	yahui.cao@intel.com, zhangdongdong@eswincomputing.com
+Subject: Re: [RFC PATCH 0/2] vfio/pci: Block and audit accesses to unassigned
+ config regions
+Message-ID: <20250516183516.GA643473@ziepe.ca>
+References: <20250429134408.GC2260621@ziepe.ca>
+ <20250516181754.7283-1-chath@bu.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.0
-X-Proofpoint-ORIG-GUID: oNZhg3kp-IObXpaOsLLIpdCu6tVgDc_7
-X-Authority-Analysis: v=2.4 cv=KulN2XWN c=1 sm=1 tr=0 ts=6827851d cx=c_pps
- a=vVfyC5vLCtgYJKYeQD43oA==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=WD2RVSGR4ZOmZR8fVjQA:9
- a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10 a=rl5im9kqc5Lf4LNbBjHf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDE4MiBTYWx0ZWRfXxmLyB7cseGbK
- x3tYQ2JSRGxqLwINqbL3lO231683Oe5ZZZhacmLLaZ0CgqUEL0ORC/j2ZaW459zawL40E7xMJyK
- mLJdXfEcfuubrHvSY+qBqduJvFRSM7D0RmlcOQYbViwfFHLEuiqRrRP5xs0ltQ8OQloxbFWX8j3
- SzNDxvv1QOcGKANEl6YMuAtXOf1CyyR53SFqgielX+2Eus36cmRW4CHxC14ZIWhGypaOfqNgNxS
- DmeJp6OMvPQ3Sh3ztBUgpAAdg61FU0nZPpF2tsx/kSznLp1S58gIQZtVfJNJ9COLSuZSdzQpkSx
- npjPXuFbqAEH0jVypTOIhbXtj+eAiytDFUbU76Xh+nN2Ompfx56xEqggvHzg8owaZWa2d7LMbM7
- 5rcRHHBlJO2VPCvsDebuBqb4i+LjPV9imug4S+2DRLoqWqcUd8qs9Am0NW2weXnlvJd2i5pH
-X-Proofpoint-GUID: oNZhg3kp-IObXpaOsLLIpdCu6tVgDc_7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-16_06,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 mlxscore=0 suspectscore=0 adultscore=0 priorityscore=1501
- mlxlogscore=947 clxscore=1015 bulkscore=0 lowpriorityscore=0 phishscore=0
- impostorscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505160182
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250516181754.7283-1-chath@bu.edu>
 
-
-On Fri, 21 Mar 2025 15:53:02 +0100, Johan Hovold wrote:
-> Add the missing memory barrier to make sure that the REO dest ring
-> descriptor is read after the head pointer to avoid using stale data on
-> weakly ordered architectures like aarch64.
+On Fri, May 16, 2025 at 06:17:54PM +0000, Chathura Rajapaksha wrote:
+> Hi Jason and Alex,
 > 
-> This may fix the ring-buffer corruption worked around by commit
-> f9fff67d2d7c ("wifi: ath11k: Fix SKB corruption in REO destination
-> ring") by silently discarding data, and may possibly also address user
-> reported errors like:
+> Thank you for the comments, and apologies for the delayed response.
 > 
-> [...]
+> On Mon, Apr 28, 2025 at 9:24 AM
+> Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > Some PCIe devices trigger PCI bus errors when accesses are made to
+> > > unassigned regions within their PCI configuration space. On certain
+> > > platforms, this can lead to host system hangs or reboots.
+> >
+> > Do you have an example of this? What do you mean by bus error?
+> 
+> By PCI bus error, I was referring to AER-reported uncorrectable errors.
+> For example:
+> pcieport 0000:c0:01.1: PCIe Bus Error: severity=Uncorrected (Fatal), type=Transaction Layer, (Requester ID)
+> pcieport 0000:c0:01.1:   device [1022:1483] error status/mask=00004000/07a10000
+> pcieport 0000:c0:01.1:    [14] CmpltTO                (First)
 
-Applied, thanks!
+That's sure looks like a device bug. You should not ever get time out
+for a config space read.
 
-[1/1] wifi: ath11k: fix rx completion meta data corruption
-      commit: ab52e3e44fe9b666281752e2481d11e25b0e3fdd
+> In another case, with a different device on a separate system, we
+> observed an uncorrectable machine check exception:
+> mce: [Hardware Error]: CPU 10: Machine Check Exception: 5 Bank 6: fb80000000000e0b
 
-Best regards,
--- 
-Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+FW turning AER into a MCE is not suitable to use as a virtualization
+host, IMHO. It is not possible to contain PCIe errors when they are
+turned into MCE.
 
+> Is it feasible to support such use cases using a quirk-based mechanism?
+> For example, could we implement a quirk table that’s updateable via
+> sysfs, as you suggested?
+
+Dynamically updateable might be overkill, I think you have one
+defective device. Have you talked to the supplier to see if it can be
+corrected?
+
+I think Alex is right to worry, if the device got this wrong, what
+other mistakes have been made? Supporting virtualization is more than
+just making a PCI device and using VFIO. You need to robustly design
+HW to have full containment as well, including managing errors.
+
+Alternatively you could handle this in qemu by sanitizing the config
+space..
+
+Jason
