@@ -1,266 +1,139 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57CF288DA;
-	Fri, 16 May 2025 06:12:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B5B13790B;
+	Fri, 16 May 2025 06:13:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747375954; cv=none; b=TUaSdDXlBJh3fbaiVFzt2rzq/yvwWv8x1zxItd4pKEp/BAtIyleN1MjVMNaphE8ZrsDVaYvlNI/I8x/I1FtZ35XYrHl0lAOa6YRKkIp9Fg5RW922STdq0C8UAfgjrIorxgYl64F9isIkv3f0sCF30vauQyULBIK/lgIA5TUN318=
+	t=1747375994; cv=none; b=foHYuz9B4D2fqjhCEbaodTUXeIGALQZp/kAeoQbjfpkXmjI7d4+BnZcDKhM7pVWfLIC0Pit8W3mbBdg+00OC6cafeH+braopM8fL+sgm2RBeuikTMMh5k+e0TLFn1aX9n8kMywNFTbJ2VawFWAjDrDNhemcy66DhNvee+kioL4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747375954; c=relaxed/simple;
-	bh=FXJJuD5jXOT+dSjJ8hYrzWm4ZIuQAV4ZkWc07jObaR0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gi1Bx0YSo8QPwoge6c1wmr9mLShp9qT7OXg7HhvhbBaXX5YIYAByyupzy3+4cGBXelYOsxxm9LIqe427xjNVV83uTohkvMqr4VszJGJse1dHYApTZo/LxCNSppDUeIJ5545kMNjGuW71HHqhfmBF/P2wGLE6DUUwB2qgbZVsur8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j/wWULno; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1747375994; c=relaxed/simple;
+	bh=hN756PFDYwpxi3vn2aCpPBzEC1JszHdPAOlWRrGK+wQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HKMxxka+CCRuW3rgqEb7i3wL44l1FrsEj83CZUwaRXvtbGG/p7qAWkvCcr2YfxYnj24f79vdd65jBH95wqqRY508H2za/7xGxPkXULPzlBBkNweB2ZIUp39fGWwYg2DzobGOPpKsXk03knubh91SFt5zbh27S7iexY63K35hrTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HsoWQjaS; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j/wWULno"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HsoWQjaS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747375953; x=1778911953;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=FXJJuD5jXOT+dSjJ8hYrzWm4ZIuQAV4ZkWc07jObaR0=;
-  b=j/wWULnoLBLaLnccm+7RpPtL6AlBDL/XFHtai176Xv/NVzsQyeRzuFQj
-   t5O1CutE5Ej5lOEL9kqYds6iJGW1BFxovwL2v78o2T9ZfK1qW8ujk7vgG
-   CTCLqLWL7CDACp5hAQNSnLXijOGZ9PBLHKYMQlO/oNz3J8++F+uLaYxL9
-   xZAh952OOn++KW+clbda2FVvJfSnknVb1I9127gEseLe0NVhMgM1Gx/5O
-   bOgIXxxpGlRacFWsK6SClBGurJR5QtsNsI0Vezb9kDrfKr847/HKGAa3g
-   m5TCyxMjfFNsVQ136wYIPPbuT/e9FSgmOErKv/2eKDylLW+WJwBphwdmd
-   w==;
-X-CSE-ConnectionGUID: cqaMnoj+RgezVE/nuYwjrA==
-X-CSE-MsgGUID: cmqJAakUTtCvw5j1zo+F7A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="71841926"
+  t=1747375992; x=1778911992;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hN756PFDYwpxi3vn2aCpPBzEC1JszHdPAOlWRrGK+wQ=;
+  b=HsoWQjaSAbnPALqqGTyWG+kjwjEDyTu+5E9sG9YmlmBuhwElgXS71owG
+   gj6uk/DxHi7T6Wc6WuHMkxia2tO9jV6hENXYS45dzndBXGZsiVktLtvCq
+   YVnFS8YbFOPe7UQB2oGECmaPX1UkeANz3GTjTHXCdI5ZT866iuBNzlhXQ
+   xPJi3J0rHMnwH+vRae5ARlc21qBfduUuYb9UxRf5jtOyhDkXsxPAB6qPt
+   arBesmifJeDwkQF+H/kzcBQfRofTgtrbFSByJXi1+0hhgqkzZKnInKUiQ
+   bz5EJKM23JBkiLP34+5IGPU2wUD3WKFj3hMMttZVJXnhrBRM5kAOr4Rib
+   g==;
+X-CSE-ConnectionGUID: 0jWvdxNkT6OEol/EgK7Jwg==
+X-CSE-MsgGUID: DwbmBvehQu6BPzhFKomv7g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="71841955"
 X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="71841926"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 23:12:31 -0700
-X-CSE-ConnectionGUID: a30BiE9MSKaJm3NirxBLdg==
-X-CSE-MsgGUID: t1KXl3QeSYmAIJXFwsvjDw==
+   d="scan'208";a="71841955"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 23:13:11 -0700
+X-CSE-ConnectionGUID: kPCLE4fySIaaqYmRHertSw==
+X-CSE-MsgGUID: 72gcq/j9TGiB5dYRJx1Gbw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="142601145"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 23:12:25 -0700
-Message-ID: <f105f60b-5823-451f-ae26-8a103aa003d4@intel.com>
-Date: Fri, 16 May 2025 14:12:21 +0800
+   d="scan'208";a="139480996"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 15 May 2025 23:13:08 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uFoJc-000J2F-3A;
+	Fri, 16 May 2025 06:13:04 +0000
+Date: Fri, 16 May 2025 14:12:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Usama Arif <usamaarif642@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>, david@redhat.com
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	hannes@cmpxchg.org, shakeel.butt@linux.dev, riel@surriel.com,
+	ziy@nvidia.com, laoar.shao@gmail.com, baolin.wang@linux.alibaba.com,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+	npache@redhat.com, ryan.roberts@arm.com,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	kernel-team@meta.com, Usama Arif <usamaarif642@gmail.com>
+Subject: Re: [PATCH 1/6] prctl: introduce PR_THP_POLICY_DEFAULT_HUGE for the
+ process
+Message-ID: <202505161340.aOL3UHxo-lkp@intel.com>
+References: <20250515133519.2779639-2-usamaarif642@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 12/21] KVM: TDX: Determine max mapping level according
- to vCPU's ACCEPT level
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
- "pbonzini@redhat.com" <pbonzini@redhat.com>,
- "seanjc@google.com" <seanjc@google.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>
-Cc: "Shutemov, Kirill" <kirill.shutemov@intel.com>,
- "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "Hansen, Dave" <dave.hansen@intel.com>, "david@redhat.com"
- <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
- "tabba@google.com" <tabba@google.com>, "Li, Zhiquan1"
- <zhiquan1.li@intel.com>, "Du, Fan" <fan.du@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "michael.roth@amd.com" <michael.roth@amd.com>,
- "Weiny, Ira" <ira.weiny@intel.com>, "vbabka@suse.cz" <vbabka@suse.cz>,
- "binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>,
- "ackerleytng@google.com" <ackerleytng@google.com>,
- "Yamahata, Isaku" <isaku.yamahata@intel.com>,
- "Peng, Chao P" <chao.p.peng@intel.com>,
- "Annapurve, Vishal" <vannapurve@google.com>,
- "jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>,
- "pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
-References: <20250424030033.32635-1-yan.y.zhao@intel.com>
- <20250424030713.403-1-yan.y.zhao@intel.com>
- <7307f6308d6e506bad00749307400fc6e65bc6e4.camel@intel.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <7307f6308d6e506bad00749307400fc6e65bc6e4.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515133519.2779639-2-usamaarif642@gmail.com>
 
-On 5/14/2025 5:20 AM, Edgecombe, Rick P wrote:
-> On Thu, 2025-04-24 at 11:07 +0800, Yan Zhao wrote:
->> Determine the max mapping level of a private GFN according to the vCPU's
->> ACCEPT level specified in the TDCALL TDG.MEM.PAGE.ACCEPT.
->>
->> When an EPT violation occurs due to a vCPU invoking TDG.MEM.PAGE.ACCEPT
->> before any actual memory access, the vCPU's ACCEPT level is available in
->> the extended exit qualification. Set the vCPU's ACCEPT level as the max
->> mapping level for the faulting GFN. This is necessary because if KVM
->> specifies a mapping level greater than the vCPU's ACCEPT level, and no
->> other vCPUs are accepting at KVM's mapping level, TDG.MEM.PAGE.ACCEPT will
->> produce another EPT violation on the vCPU after re-entering the TD, with
->> the vCPU's ACCEPT level indicated in the extended exit qualification.
-> 
-> Maybe a little more info would help. It's because the TDX module wants to
-> "accept" the smaller size in the real S-EPT, but KVM created a huge page. It
-> can't demote to do this without help from KVM.
-> 
->>
->> Introduce "violation_gfn_start", "violation_gfn_end", and
->> "violation_request_level" in "struct vcpu_tdx" to pass the vCPU's ACCEPT
->> level to TDX's private_max_mapping_level hook for determining the max
->> mapping level.
->>
->> Instead of taking some bits of the error_code passed to
->> kvm_mmu_page_fault() and requiring KVM MMU core to check the error_code for
->> a fault's max_level, having TDX's private_max_mapping_level hook check for
->> request level avoids changes to the KVM MMU core. This approach also
->> accommodates future scenarios where the requested mapping level is unknown
->> at the start of tdx_handle_ept_violation() (i.e., before invoking
->> kvm_mmu_page_fault()).
->>
->> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
->> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
->> ---
->>   arch/x86/kvm/vmx/tdx.c      | 36 +++++++++++++++++++++++++++++++++++-
->>   arch/x86/kvm/vmx/tdx.h      |  4 ++++
->>   arch/x86/kvm/vmx/tdx_arch.h |  3 +++
->>   3 files changed, 42 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
->> index 86775af85cd8..dd63a634e633 100644
->> --- a/arch/x86/kvm/vmx/tdx.c
->> +++ b/arch/x86/kvm/vmx/tdx.c
->> @@ -1859,10 +1859,34 @@ static inline bool tdx_is_sept_violation_unexpected_pending(struct kvm_vcpu *vcp
->>   	return !(eq & EPT_VIOLATION_PROT_MASK) && !(eq & EPT_VIOLATION_EXEC_FOR_RING3_LIN);
->>   }
->>   
->> +static inline void tdx_get_accept_level(struct kvm_vcpu *vcpu, gpa_t gpa)
->> +{
->> +	struct vcpu_tdx *tdx = to_tdx(vcpu);
->> +	int level = -1;
->> +
->> +	u64 eeq_type = tdx->ext_exit_qualification & TDX_EXT_EXIT_QUAL_TYPE_MASK;
->> +
->> +	u32 eeq_info = (tdx->ext_exit_qualification & TDX_EXT_EXIT_QUAL_INFO_MASK) >>
->> +			TDX_EXT_EXIT_QUAL_INFO_SHIFT;
->> +
->> +	if (eeq_type == TDX_EXT_EXIT_QUAL_TYPE_ACCEPT) {
->> +		level = (eeq_info & GENMASK(2, 0)) + 1;
->> +
->> +		tdx->violation_gfn_start = gfn_round_for_level(gpa_to_gfn(gpa), level);
->> +		tdx->violation_gfn_end = tdx->violation_gfn_start + KVM_PAGES_PER_HPAGE(level);
->> +		tdx->violation_request_level = level;
->> +	} else {
->> +		tdx->violation_gfn_start = -1;
->> +		tdx->violation_gfn_end = -1;
->> +		tdx->violation_request_level = -1;
-> 
-> We had some internal conversations on how KVM used to stuff a bunch of fault
-> stuff in the vcpu so it didn't have to pass it around, but now uses the fault
-> struct for this. The point was (IIRC) to prevent stale data from getting
-> confused on future faults, and it being hard to track what came from where.
-> 
-> In the TDX case, I think the potential for confusion is still there. The MMU
-> code could use stale data if an accept EPT violation happens and control returns
-> to userspace, at which point userspace does a KVM_PRE_FAULT_MEMORY. Then it will
-> see the stale  tdx->violation_*. Not exactly a common case, but better to not
-> have loose ends if we can avoid it.
-> 
-> Looking more closely, I don't see why it's too hard to pass in a max_fault_level
-> into the fault struct. Totally untested rough idea, what do you think?
+Hi Usama,
 
-the original huge page support patch did encode the level info in 
-error_code. So it has my vote.
+kernel test robot noticed the following build errors:
 
-https://lore.kernel.org/all/4d61104bff388a081ff8f6ae4ac71e05a13e53c3.1708933624.git.isaku.yamahata@intel.com/
+[auto build test ERROR on akpm-mm/mm-everything]
+[also build test ERROR on perf-tools-next/perf-tools-next tip/perf/core perf-tools/perf-tools linus/master v6.15-rc6]
+[cannot apply to acme/perf/core next-20250515]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index faae82eefd99..3dc476da6391 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -282,7 +282,11 @@ enum x86_intercept_stage;
->    * when the guest was accessing private memory.
->    */
->   #define PFERR_PRIVATE_ACCESS   BIT_ULL(49)
-> -#define PFERR_SYNTHETIC_MASK   (PFERR_IMPLICIT_ACCESS | PFERR_PRIVATE_ACCESS)
-> +
-> +#define PFERR_FAULT_LEVEL_MASK (BIT_ULL(50) | BIT_ULL(51) | BIT_ULL(52))
-> +#define PFERR_FAULT_LEVEL_SHIFT 50
-> +
-> +#define PFERR_SYNTHETIC_MASK   (PFERR_IMPLICIT_ACCESS | PFERR_PRIVATE_ACCESS |
-> PFERR_FAULT_LEVEL_MASK)
->   
->   /* apic attention bits */
->   #define KVM_APIC_CHECK_VAPIC   0
-> diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-> index 1c1764f46e66..bdb1b0eabd67 100644
-> --- a/arch/x86/kvm/mmu/mmu_internal.h
-> +++ b/arch/x86/kvm/mmu/mmu_internal.h
-> @@ -361,7 +361,7 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu
-> *vcpu, gpa_t cr2_or_gpa,
->                  .nx_huge_page_workaround_enabled =
->                          is_nx_huge_page_enabled(vcpu->kvm),
->   
-> -               .max_level = KVM_MAX_HUGEPAGE_LEVEL,
-> +               .max_level = (err & PFERR_FAULT_LEVEL_MASK) >>
-> PFERR_FAULT_LEVEL_SHIFT,
->                  .req_level = PG_LEVEL_4K,
->                  .goal_level = PG_LEVEL_4K,
->                  .is_private = err & PFERR_PRIVATE_ACCESS,
-> diff --git a/arch/x86/kvm/vmx/common.h b/arch/x86/kvm/vmx/common.h
-> index 8f46a06e2c44..2f22b294ef8b 100644
-> --- a/arch/x86/kvm/vmx/common.h
-> +++ b/arch/x86/kvm/vmx/common.h
-> @@ -83,7 +83,8 @@ static inline bool vt_is_tdx_private_gpa(struct kvm *kvm,
-> gpa_t gpa)
->   }
->   
->   static inline int __vmx_handle_ept_violation(struct kvm_vcpu *vcpu, gpa_t gpa,
-> -                                            unsigned long exit_qualification)
-> +                                            unsigned long exit_qualification,
-> +                                            u8 max_fault_level)
->   {
->          u64 error_code;
->   
-> @@ -107,6 +108,10 @@ static inline int __vmx_handle_ept_violation(struct
-> kvm_vcpu *vcpu, gpa_t gpa,
->          if (vt_is_tdx_private_gpa(vcpu->kvm, gpa))
->                  error_code |= PFERR_PRIVATE_ACCESS;
->   
-> +       BUILD_BUG_ON(KVM_MAX_HUGEPAGE_LEVEL >= (1 <<
-> hweight64(PFERR_FAULT_LEVEL_MASK)));
-> +
-> +       error_code |= (u64)max_fault_level << PFERR_FAULT_LEVEL_SHIFT;
-> +
->          return kvm_mmu_page_fault(vcpu, gpa, error_code, NULL, 0);
->   }
->   
-> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> index e994a6c08a75..19047de4d98d 100644
-> --- a/arch/x86/kvm/vmx/tdx.c
-> +++ b/arch/x86/kvm/vmx/tdx.c
-> @@ -2027,7 +2027,7 @@ static int tdx_handle_ept_violation(struct kvm_vcpu *vcpu)
->           * handle retries locally in their EPT violation handlers.
->           */
->          while (1) {
-> -               ret = __vmx_handle_ept_violation(vcpu, gpa, exit_qual);
-> +               ret = __vmx_handle_ept_violation(vcpu, gpa, exit_qual,
-> KVM_MAX_HUGEPAGE_LEVEL);
->   
->                  if (ret != RET_PF_RETRY || !local_retry)
->                          break;
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index ef2d7208dd20..b70a2ff35884 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -5782,7 +5782,7 @@ static int handle_ept_violation(struct kvm_vcpu *vcpu)
->          if (unlikely(allow_smaller_maxphyaddr && !kvm_vcpu_is_legal_gpa(vcpu,
-> gpa)))
->                  return kvm_emulate_instruction(vcpu, 0);
->   
-> -       return __vmx_handle_ept_violation(vcpu, gpa, exit_qualification);
-> +       return __vmx_handle_ept_violation(vcpu, gpa, exit_qualification,
-> KVM_MAX_HUGEPAGE_LEVEL);
->   }
->   
->   static int handle_ept_misconfig(struct kvm_vcpu *vcpu)
-> 
-> 
+url:    https://github.com/intel-lab-lkp/linux/commits/Usama-Arif/prctl-introduce-PR_THP_POLICY_DEFAULT_HUGE-for-the-process/20250515-213850
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20250515133519.2779639-2-usamaarif642%40gmail.com
+patch subject: [PATCH 1/6] prctl: introduce PR_THP_POLICY_DEFAULT_HUGE for the process
+config: sparc-allnoconfig (https://download.01.org/0day-ci/archive/20250516/202505161340.aOL3UHxo-lkp@intel.com/config)
+compiler: sparc-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250516/202505161340.aOL3UHxo-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505161340.aOL3UHxo-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   mm/vma.c: In function '__mmap_new_vma':
+>> mm/vma.c:2486:9: error: implicit declaration of function 'vma_set_thp_policy'; did you mean 'vma_dup_policy'? [-Wimplicit-function-declaration]
+    2486 |         vma_set_thp_policy(vma);
+         |         ^~~~~~~~~~~~~~~~~~
+         |         vma_dup_policy
+
+
+vim +2486 mm/vma.c
+
+  2472	
+  2473		/* Lock the VMA since it is modified after insertion into VMA tree */
+  2474		vma_start_write(vma);
+  2475		vma_iter_store_new(vmi, vma);
+  2476		map->mm->map_count++;
+  2477		vma_link_file(vma);
+  2478	
+  2479		/*
+  2480		 * vma_merge_new_range() calls khugepaged_enter_vma() too, the below
+  2481		 * call covers the non-merge case.
+  2482		 */
+  2483		if (!vma_is_anonymous(vma))
+  2484			khugepaged_enter_vma(vma, map->flags);
+  2485		ksm_add_vma(vma);
+> 2486		vma_set_thp_policy(vma);
+  2487		*vmap = vma;
+  2488		return 0;
+  2489	
+  2490	free_iter_vma:
+  2491		vma_iter_free(vmi);
+  2492	free_vma:
+  2493		vm_area_free(vma);
+  2494		return error;
+  2495	}
+  2496	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
