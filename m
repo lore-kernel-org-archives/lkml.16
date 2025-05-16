@@ -1,73 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E46224AEB
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:18:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA260218ADE
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:19:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747387115; cv=none; b=EjwbL/b+nTRGqwHZg7RripyrUbn6IBLZ7VpVGU5DUWdEqWjxg8YzIc6qbK+8zQPZ3+FpMCqAo+qkLPmDBfCcPsz2eRaB8DUc+8c0Z2cfrelUq5L/d0eMpaeB7+jC6HAGFiualkKcEbCCSYSZacPHZHEQG5TkM0Czp3GJCWBklYk=
+	t=1747387143; cv=none; b=oEktaSdSo1lz6wCxfULnrwnrXZsLJ2AyHCj3vT2syDPGuCowVyN/uZhLztOVuJMC9Khs0PUaXpBuQYAf53hegWZH4xQk68dM9/SUIVJ/clh7LqmWk4Fv0F2MrVPDie2EFsOntVZ821NDEq8u9q38n/ReF+BrShZfOitpORnDKP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747387115; c=relaxed/simple;
-	bh=Hj7gtvvI+cFuSNKb/xgFIhAwZ9vdyxvWov2g1MS7JQA=;
+	s=arc-20240116; t=1747387143; c=relaxed/simple;
+	bh=GkVWeGkx69YhNRPyZYnFt5gBdg4GMFnc89KN8GnPwgM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GGLiuQaBrCzSqv9zUqxmzcv3rp0OByRcaJXPpV5vEK5UYf6L5ifrWtGpjY414QSbYqEZs4LnP7qgbNjQaygK5euluU2KToUVKYbzDrZspg81dtXVnyUQunJcuaXAXbzpnGgZ80vApaxpvG1whTqZFgcGs+EcDdVJgs2SaEXgRXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TjpcEnh2; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=OgBwJCZJmXuoOoM3PY0wNj6GnZLxEflAXYviWuoCpLTS/EG+6XhpqLBx+hd1i4i6L/d1XiM0Lw64P0j8mgJqdHCO0hJa+xbpDMMjdrsr7RIMBKKhoFCwRuUI5x/aaW11ytGHoV92vY+q6RIO0VBFqX9r00D17QNEEXyy75sZcmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Vmjj4754; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TjpcEnh2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vmjj4754"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747387112;
+	s=mimecast20190719; t=1747387140;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=BnyL+8xhsHOx/hwMbuje6f9Jmtf+N+7ay81zs9ZK45E=;
-	b=TjpcEnh2MX69AMkuaVuufzD1xxn+JTQL3ECjXTedu+Bc+55OxuN0XmcHUQCYioFlxIaR5r
-	zen1rNEbJcwdCK5hTB+GnSSqQEeYmYgco/4rv3+yh/CHIOKWpgwE18BQNMEdSraVm+SzuH
-	6uTZ8bhhBFXLUw1fYOi7LTvFye8BC7Q=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=+jM7R5cB1X/Hhu5ZTbBeg1lPKvgel12L6JDjfnk5wA0=;
+	b=Vmjj4754FtYXYIey3Zx94kpGJfriVot/oCn9kFcLZTiMHXspruZhV61YtF8r90CX7nMENl
+	cZt04asq24Y2T7+oA31kNbfdNLLBBmgEYNN4+g3XYA+rBTFxVGd4wW0pik+dNCO/LG5qMe
+	z57fqi/f7NQizcUmmM1Af/0PsL+j7WI=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-144-Gk8Xr-19N3mt8urGzIIYSA-1; Fri, 16 May 2025 05:18:31 -0400
-X-MC-Unique: Gk8Xr-19N3mt8urGzIIYSA-1
-X-Mimecast-MFC-AGG-ID: Gk8Xr-19N3mt8urGzIIYSA_1747387110
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a34f19c977so915806f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 02:18:30 -0700 (PDT)
+ us-mta-652-u89Okz9aOOq3Txy8igJ_XQ-1; Fri, 16 May 2025 05:18:59 -0400
+X-MC-Unique: u89Okz9aOOq3Txy8igJ_XQ-1
+X-Mimecast-MFC-AGG-ID: u89Okz9aOOq3Txy8igJ_XQ_1747387138
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43cec217977so11004415e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 02:18:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747387110; x=1747991910;
+        d=1e100.net; s=20230601; t=1747387138; x=1747991938;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=BnyL+8xhsHOx/hwMbuje6f9Jmtf+N+7ay81zs9ZK45E=;
-        b=D06VF/cHkRg/t48xyMok7Ss4s+5cxd0JoxGqSzpjXam1ShcESL6i9Vish/KDFaQgtG
-         k1epBDXIxOMd1wIQeG9W5gPyndMWwHjRAQUxOX5uUEBq8eLkEguyJCyjAlyTR62rG+VF
-         ilf0Jr4SDav6P2ZYmoesUOoReUy78BtkmO/qn2SZj0dOqwJvXtTthW6avgRBDraL7SIu
-         B7ganSAfYUvHE9v78yidm2GyW/lTliyB1kUrB9s7q2qzEj6BpTgjcgKcQ4vUB/57AZCH
-         yKxmQSodjzQNO+h+R7zt2fHcBENZnWbe4r+mu3PeIYpGI64Ac6dhQNV0Wu6tYJQIupfN
-         Te/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUxqPGCFFEMX3skXYMk6KH4SUDL825HJNkxbhKfsfAx9+iylQBiEzk6oIGLh77IF19ugrenfCMiXzJOXuw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyspEeJQil7fXOyplsnXzrayoIfPTdXeNKn+VBqcFzi8CZ1DwRj
-	hVXz405Uo0TnIukgK4o2wGEpQg2cWA1CjNgpN4fmslkb9uLiZUnqjJ7WrCN4uR4skzES6gX5xip
-	YAmRw7C2jVyw2WUE+rK5QCE0X6iasi2cnh85tAhNGD54e9bKCOs4VBhPOdFkLfdqH2A==
-X-Gm-Gg: ASbGnctboGuFLDotUr6805VWYzeBcvmqqoTz9Tfo7uhUJ/3dip73KSIK6Yp/gX2eGsI
-	BzbWuRHEKERobZKyBJDB2zoblFxEzrmjyjvV9KLVRkKryqX/wwVou5lI1AV6sinvk7qp8n/uoVA
-	pG4E4ypvfI6y8rEGJOgw3JZoOBabR3zfZvzItUs2IOxYeF0ZKLXXO0dvRb/eKRApfOKSJhueL6E
-	UquAqCYSt6iG/VhzcMqKAADXvrYL3e8b3xxOaSR1tC0kIUOwwJkuHBRj7NKU2ZSEkH/7iHYL8IC
-	NCveEdxXzvD3aJGxEh0EaRmL0g9pF/tLwc9lcMEMrgIuIxq/vscwtCenr9vpRYVgRn+blhskyaI
-	Gy6v9q19JKyXW9W8zbTFDcLbizm/KeNZLl0k87g4=
-X-Received: by 2002:a05:6000:22c5:b0:3a3:42cd:3701 with SMTP id ffacd0b85a97d-3a35121006dmr6177666f8f.23.1747387109441;
-        Fri, 16 May 2025 02:18:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEKgMzwSlMBVhcC/FPwYFo4rG2hT+TNdLoFs9mvpWOK1Lt/3LuMG8CN5jCXDf6HMpWA8XXtvA==
-X-Received: by 2002:a05:6000:22c5:b0:3a3:42cd:3701 with SMTP id ffacd0b85a97d-3a35121006dmr6177579f8f.23.1747387108032;
-        Fri, 16 May 2025 02:18:28 -0700 (PDT)
+        bh=+jM7R5cB1X/Hhu5ZTbBeg1lPKvgel12L6JDjfnk5wA0=;
+        b=uxhy/zvemvItsKZW20FxkhiVQllKhxSSBLqJta9nBxagxYbBwxS0emGVSIHjp18jVa
+         lAgOBm7jmhs4HvoTW1JLDchYldqHc/BOIoU6mONlrNKAG2bmEDVYxLCZtPzGeNgdaXvA
+         kxn20U/Hq7Vr4lnWuskYBy5J03+VmfgUXqi5lbUklUFafh1K1rPVFflX+hVyRX14+pO3
+         y26+tJEzM2+OnnuPSKcEcQ8GKFVU6gtISDDKEldH78d3Wvi+7Y1klwo5rpZdS5VPht4L
+         8toa9+7P3PcL27i8+jeqUkn1udv+qyaSnQGbgLyffu/luDIadFmbA2MQdt01/ikTPdSg
+         R8Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCUmx051kM40P1XvYYamBnzpXRstNkYVautdteD+1MXO1F/0MhwM3vj7vsk/iRl+LFeV/TvLYtOkaBTAaF8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHLx5xNb0p0IkTOLTQZZKesiWu+12o87QD8B3U36q3ggHx22U8
+	iOmgmGB81U3tL7SyTZd5vKHYrApL9N7cLFjzUvCntSaqcv0VZK2LiWaH4JmNcd7EXWDO5EpDKjt
+	ywQHM2PZgESXfh8avwDhhheLjvS3lS6YYxz9Dbt2YNBcfGigxTKnLtoOy3lDK2s1WSQ==
+X-Gm-Gg: ASbGnctWKamEaDZWbSHTevLlKa1aCMyULWjS7PRDZIg+5k57u39d2euvNxS89X/oms9
+	Mbwaq8m+GOYlN5JLlGN/d2HWmtvCN8QCM3vX7wOiIc+GOGFwPbUqoKD4pI+wwiMYffel4w/rNCF
+	PDEYt9X6Tfh3+2xtovxrLndhighJ+faIlyMAVBDvPWf8Ebdqq8L/8jQ8qwi5cX6g7YTQ8WYFW37
+	hWe+WMQ9CGwasxYHOaxiblt19Ja8nA+yZ8NSYofmmGHzL+1w04Gbd8H6NMoRD9nAHlFWRl1zDez
+	tChhFC+YBHqBI6VQj+c0xcqRJzfUFLQcsJuUuqd4TSPOM6q5grmXeDcIjH2xBhCgtXREjWf2EKW
+	iLbe/YIuzIMC9fVJsFqZzUOwp4lYTIBcVblQrXmw=
+X-Received: by 2002:a05:600c:1e1c:b0:43d:9d5:474d with SMTP id 5b1f17b1804b1-442fef3e822mr20179715e9.0.1747387137972;
+        Fri, 16 May 2025 02:18:57 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGu41PMhn40bMFMs9KUgi+ojtEQmcb0pQkVNj1wAqaOxQi8O7rZ0vMMF9SBmpohZ5LZ82I02A==
+X-Received: by 2002:a05:600c:1e1c:b0:43d:9d5:474d with SMTP id 5b1f17b1804b1-442fef3e822mr20179345e9.0.1747387137555;
+        Fri, 16 May 2025 02:18:57 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f47:4700:e6f9:f453:9ece:7602? (p200300d82f474700e6f9f4539ece7602.dip0.t-ipconnect.de. [2003:d8:2f47:4700:e6f9:f453:9ece:7602])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd4fdbfcsm26451055e9.3.2025.05.16.02.18.26
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442ebdc362fsm89885065e9.1.2025.05.16.02.18.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 May 2025 02:18:27 -0700 (PDT)
-Message-ID: <f23e8df8-5836-4ffb-83ef-d19c7c04947f@redhat.com>
-Date: Fri, 16 May 2025 11:18:26 +0200
+        Fri, 16 May 2025 02:18:57 -0700 (PDT)
+Message-ID: <2e81ac64-5459-4157-832b-ddd5ed451f4d@redhat.com>
+Date: Fri, 16 May 2025 11:18:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,8 +75,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/4] Remove register_memory_blocks_under_node()
- function call from register_one_node
+Subject: Re: [PATCH v4 4/4] drivers/base : Rename
+ register_memory_blocks_under_node() and remove context argument
 To: Donet Tom <donettom@linux.ibm.com>,
  Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>,
  Oscar Salvador <osalvador@suse.de>, Zi Yan <ziy@nvidia.com>
@@ -88,7 +88,7 @@ Cc: Ritesh Harjani <ritesh.list@gmail.com>, rafael@kernel.org,
  Alison Schofield <alison.schofield@intel.com>,
  Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>
 References: <f94685be9cdc931a026999d236d7e92de29725c7.1747376551.git.donettom@linux.ibm.com>
- <e0ef6ae9348f46bcc135f0e6cb7663d763e40b72.1747376551.git.donettom@linux.ibm.com>
+ <bb7bbc113a2f6d3b700f7e73eafd911f77748bbb.1747376551.git.donettom@linux.ibm.com>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -136,68 +136,28 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <e0ef6ae9348f46bcc135f0e6cb7663d763e40b72.1747376551.git.donettom@linux.ibm.com>
+In-Reply-To: <bb7bbc113a2f6d3b700f7e73eafd911f77748bbb.1747376551.git.donettom@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 On 16.05.25 10:19, Donet Tom wrote:
-> register_one_node() is now only called via cpu_up() → __try_online_node()
-> during CPU hotplug operations to online a node. At this stage, the node has
-> not yet had any memory added. As a result, there are no memory blocks to
-> walk or register, so calling register_memory_blocks_under_node() is
-> unnecessary. Therefore, the call to register_memory_blocks_under_node()
-> has been removed from register_one_node().
-
-It might help to throw in some empty lines to make this easier to read.
-
-Patch subject should start with something like
-
-"node:" or "mm:"
-
+> The function register_memory_blocks_under_node() is now only called from
+> the memory hotplug path, as register_memory_blocks_under_node_early()
+> handles registration during early boot. Therefore, the context argument
+> used to differentiate between early boot and hotplug is no longer needed
+> and was removed.
 > 
+> Since the function is only called from the hotplug path, we renamed
+> register_memory_blocks_under_node() to
+> register_memory_blocks_under_node_hotplug()
+> 
+> Acked-by: Zi Yan <ziy@nvidia.com>
 > Signed-off-by: Donet Tom <donettom@linux.ibm.com>
 > 
 > ---
-> v3->v4
 > 
-> Addressed Mike's comment by dropping the call to
-> register_memory_blocks_under_node() from register_one_node()
-> 
-> v3 - https://lore.kernel.org/all/b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com/
-> v2 - https://lore.kernel.org/all/fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.1745852397.git.donettom@linux.ibm.com/
-> v1 - https://lore.kernel.org/all/50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com/
-> ---
->   include/linux/node.h | 6 ------
->   1 file changed, 6 deletions(-)
-> 
-> diff --git a/include/linux/node.h b/include/linux/node.h
-> index 806e62638cbe..8b8f96ca5b06 100644
-> --- a/include/linux/node.h
-> +++ b/include/linux/node.h
-> @@ -137,15 +137,9 @@ static inline int register_one_node(int nid)
->   	int error = 0;
->   
->   	if (node_online(nid)) {
-> -		struct pglist_data *pgdat = NODE_DATA(nid);
-> -		unsigned long start_pfn = pgdat->node_start_pfn;
-> -		unsigned long end_pfn = start_pfn + pgdat->node_spanned_pages;
-> -
->   		error = __register_one_node(nid);
->   		if (error)
->   			return error;
-> -		register_memory_blocks_under_node(nid, start_pfn, end_pfn,
-> -						  MEMINIT_EARLY);
->   	}
 
-Can be further simplified
-
-if (node_online(nid))
-	error = __register_one_node(nid);
-return error;
-
->   
->   	return error;
-
+Acked-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Cheers,
