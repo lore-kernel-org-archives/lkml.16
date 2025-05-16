@@ -1,183 +1,194 @@
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from e240-10.smtp-out.eu-north-1.amazonses.com (e240-10.smtp-out.eu-north-1.amazonses.com [23.251.240.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80047376
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 00:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88513182
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 00:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.240.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747354418; cv=none; b=lBbFwC3SbhNhqaKnBuBYaX7sZuuiRGFc/JeUx0Igxe2Fn0Hu/V+h/Htjn5wm/IuHa4+ZZYe0n0OIUyMnpdN/ojsbhhPMNK+uEPsU8VVsT4bvFgbKDVHg+xKSiyuhwHS84Dg4siiO5aunHJclb84bh1RMJA0EILVUQBx8BRgLVE0=
+	t=1747354462; cv=none; b=gFz138QpiYanLHMYYQXxysAAknMfi1D35D69bG9RoLBF8HW+HWJIn5vkSA14qsAkoSXl4xMiXgwGsiIMYMUUC5XcoB44BaW5k8TFNNoVdRJZ/MY2kMGIoFRtNSm4J9oeH4mK710/eFv0LuKnVWtRgTbpztp19LNS3Ue/UMbqark=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747354418; c=relaxed/simple;
-	bh=CGG6jGXMIinSQ0YSIHvn85mnGlEINaaQlo/+CW6AhP8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TCfkTkSU1NTU+RDpwvccfIQRAsbvPmiJ+mIKDsPq82UmU+vVPxj97OV1gqmDNvGJ1oAQj8QsqLKmCGzCvXLr2ny9g+les0VI06csGWGfwT2gKbTv88n14B8j4mGIafAXqvO4gtQ6PU/wzVLVyhwEgv91uVaHM1UXvgPamg6lX7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=KLt8igYK; arc=none smtp.client-ip=209.85.167.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
+	s=arc-20240116; t=1747354462; c=relaxed/simple;
+	bh=40YuEF0BXVSPmUd11buss1IDSQh8b3ZUf+t6aV6WdLQ=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=EZGob32oZspAZhajW35Ao7tzRXlz7EdzDa0BqWFWNB1G9hqcK+uS4UB/dOTwE834dVYNTmWcoyOMUXFaDzP59LOLQci5nF2DtbSkhtMJdfgT7cHlVkac6ZTpWFw2mfaDg10Tj8gUQsXwkHOHLt3fOPax2yEELHEwbdEgh9Duevw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com; dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b=AkirRqa7; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=1Saxtj1J; arc=none smtp.client-ip=23.251.240.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="KLt8igYK"
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3fb3f4bf97aso874401b6e.2
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:13:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1747354414; x=1747959214; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fIQzh+d2Cl2iQMRyzQRgpL9ZV/FSzUS9sLNvNDM8pQA=;
-        b=KLt8igYKlyM4HV0pKbdTyuu8GU2D7C05GSikv+1kCHjhbRjIfnBrH6eiXow0kVQE+2
-         iqmKyjBINNqHUm106f8ban0PT4YGVbFYw8dQdHmoiQO/e/Z6mF0jsXDrvxwp8zlT1u9k
-         Nq34Adlk1yagXoXST9lgb9u6Ml7ltvzA5Wg0h1s1LsP07LsmVUDV/pPIshP5wk2WnjLR
-         IOZOzva+6u4q/VQ75UP+a0PnEZdg61bwX4w4Y5DEi9TOi4Pos/nGo8HxNAu24ASrf0lv
-         azheBEezhjzj+BJjvjcjRBHXxmIG1lhdStS6JLVbMIInMPSFCPx/IT443V8nVA4Hpw96
-         wg0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747354414; x=1747959214;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fIQzh+d2Cl2iQMRyzQRgpL9ZV/FSzUS9sLNvNDM8pQA=;
-        b=iIly+U6vN2kZ7EUklshFFewzr5HyTtjDL/RHDq6uGlN0RuvBlhRvyagPulLObebi2l
-         Ef9Sqy4enhV7a7fkvvANyTu24htGRUbm2hPsx+/Y9YOo03TjBPZdAnPYUUKyzrHXCd5r
-         rRXqDMY5sxobrKSkRliToGYlSpgjTa3V3OkR3igBbRLNqsXQmuNlpBims+5ZgABELEne
-         ZCZJi89RnnsxbQG2RSMi0aoLHtHOKrmWEof1AQmXNR4L7iJgnPgjpZZxAFw3/EMwYlr3
-         bdXWiUD3VZNe4u02Mvg+cmPyWz7dDre/aztjoN/5X7okyrNywpWG4tmq5vKJPNdkC7vy
-         VBeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNKyAK1mu5IGliYp50D9OUYTsqVz3tD7VejTyhJCAUZhvapNOeI06kx3pVNBDtUftXgkGqqb1POp7QUOA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yze0eAkXksVK7puiaNj+bAtqaVxKDwSCGMdStjpy8i/34Us+oER
-	kUC5t+ezKgGzIfEL0XA+dwVGy9nA5KDnKLdneBIJwi66nhQsLazKxaw3iDsNGSVwv6M=
-X-Gm-Gg: ASbGncsMV1t9bNYzGiEDDDnWJ3evu9NqMlZOAUh04sBUTNiOF14OMiEn1qwu3csV5+4
-	kDqIZUeae/nKSVICnobO7zaVCWqSwGRwLB+gyXs630L+F05u/ZMU+JSDMrr2V6P5uNIIlzvT9cw
-	aYa5zGFfbV+IBgMynvo4KfRxy/pottFuGaB0t2QQfYG9dbrm5nhVpfNY0BHA1JNfKIhktD7rpwm
-	ppt/qpg37e3nZmRiQwnE7ScXAmX4AW8uVFqQnnzbgeol0gsZ4JIkoQRTzk8FWbiGO+BfBTxTLUW
-	XN9Pov/8jPeYlvQ44UVVAGVc7TtvKeZxlX9kErpwrEIoL0QJ0HwNXQ0=
-X-Google-Smtp-Source: AGHT+IHw+xOETWTyOT89ZTuJ4/7y2Jcun/+WyMsgKHv9WFHVKeTtE/CECud8o+oMJFlD/SDqIiuTug==
-X-Received: by 2002:a05:6808:338c:b0:3f9:2fdc:ee93 with SMTP id 5614622812f47-404d87b897dmr1274677b6e.30.1747354414372;
-        Thu, 15 May 2025 17:13:34 -0700 (PDT)
-Received: from mail.minyard.net ([2001:470:b8f6:1b:d0c5:1ce0:9035:258c])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-609f2f43884sm188602eaf.15.2025.05.15.17.13.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 17:13:32 -0700 (PDT)
-Date: Thu, 15 May 2025 19:13:27 -0500
-From: Corey Minyard <corey@minyard.net>
-To: Praveen Balakrishnan <praveen.balakrishnan@magd.ox.ac.uk>
-Cc: corbet@lwn.net, openipmi-developer@lists.sourceforge.net,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH] docs: ipmi: fix spelling and grammar mistakes
-Message-ID: <aCaDJyq18soCNMqa@mail.minyard.net>
-Reply-To: corey@minyard.net
-References: <20250515234757.19710-1-praveen.balakrishnan@magd.ox.ac.uk>
+	dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b="AkirRqa7";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="1Saxtj1J"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=iuunfi4kzpbzwuqjzrd5q2mr652n55fx; d=goosey.org; t=1747354456;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type;
+	bh=40YuEF0BXVSPmUd11buss1IDSQh8b3ZUf+t6aV6WdLQ=;
+	b=AkirRqa7ccMcRAJx9C0+UL+9e3OiaIZtCrIbo47wbCqtaVP4MbLZ0X6BpjnHWouB
+	i+E1OzBZ/FdTDT5MWWnExhJ63i/b3PfFYPLRE6zmfiu4earK12PEVqPgdWPVNm66FGI
+	PRz7B1XRNSGVDFY41EmppEBPDLe93Gsq8BBHQeJaEgl18DUW4lbkwa1WAmTcpBCUtub
+	fdHMZaeAuwdQK6Se/jyij0NEtP0Hbf5T00fXc6cFWUej/8z/exr3mk98qDK+797BZac
+	FKiRd2gTfWdeGR1eXJ36E36w642VOXZzTW9kWZd634ZfYb7gxndRBlH2t/unWl17CE4
+	JnKaKbouEQ==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=bw45wyq3hkghdoq32obql4uyexcghmc7; d=amazonses.com; t=1747354456;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type:Feedback-ID;
+	bh=40YuEF0BXVSPmUd11buss1IDSQh8b3ZUf+t6aV6WdLQ=;
+	b=1Saxtj1J/jo+GY/qYgL64/XJmZoF82wJcyGwsnpVjVy3XTUK3/7fh/3rSRnAHLuO
+	cynAnuHaOzont2MW++QsRrkEALDomJYV8L4vTAnEvmlNM6hi6I560Yh7EHzm/emgjEe
+	5t+b6mh+JRwCzUWkpuXTwDEptgY/fEkpDMbhj6OA=
+X-Gm-Message-State: AOJu0YyIYEbO6bp0u37v064P8Tbhyh4wRDesbSWkb26aVncBYohbCU4W
+	f/bArLVS0DZueYGWFVNNsSuxyVlA7tlNwBV/CfPJfCrG3g8wejfPY7SsNsmmlXAQo4Dzj5KlosK
+	uRudxYtpL6pUUYMKLWca4cnc77/XIyUE=
+X-Google-Smtp-Source: AGHT+IFF/ob0ULM/EFw+7iRbeynl416QjfHtIZ7al6OQcTPIz1M2C/WX6VLM0tOQoGzeZKMQ74F+oHde7UU/YtEiVb8=
+X-Received: by 2002:a17:902:ef4e:b0:225:ac99:ae08 with SMTP id
+ d9443c01a7336-231de2e6bbfmr6812305ad.5.1747354454200; Thu, 15 May 2025
+ 17:14:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515234757.19710-1-praveen.balakrishnan@magd.ox.ac.uk>
+From: Ozgur Kara <ozgur@goosey.org>
+Date: Fri, 16 May 2025 00:14:16 +0000
+X-Gmail-Original-Message-ID: <CADvZ6EoYpsBBcyxPvFu8OY-0kZEthGw3DPVfMaeNSFM3Gn_f5Q@mail.gmail.com>
+X-Gm-Features: AX0GCFuaN45udZn3fyuvYm8Wz2FD-L2rxcVY9ixGvetLNxOd2AcGm8OdcWZs1Pc
+Message-ID: <01100196d67111b3-13591f7a-0c75-43c1-a45e-5814b193d259-000000@eu-north-1.amazonses.com>
+Subject: CREDITS: fix and update for some formats
+To: linux-kernel@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>, 
+	torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
+Feedback-ID: ::1.eu-north-1.jZlAFvO9+f8tc21Z4t7ANdAU3Nw/ALd5VHiFFAqIVOg=:AmazonSES
+X-SES-Outgoing: 2025.05.16-23.251.240.10
 
-On Fri, May 16, 2025 at 12:47:57AM +0100, Praveen Balakrishnan wrote:
-> Corrected various spelling and grammatical mistakes in
-> Documentation/driver-api/ipmi.rst to improve readability.
-> 
-> No changes to the technical content has been made.
+From: Ozgur Karatas <ozgur@goosey.org>
 
-Thank you, I have added this to my tree.
+Hello,
 
--corey
+I have corrected some email addresses and website addresses also a
+misspelling for Mr. Ian Murdock, which would be nice to have.
 
-> 
-> Signed-off-by: Praveen Balakrishnan <praveen.balakrishnan@magd.ox.ac.uk>
-> ---
->  Documentation/driver-api/ipmi.rst | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/Documentation/driver-api/ipmi.rst b/Documentation/driver-api/ipmi.rst
-> index dfa021eacd63..d9fb2376e8da 100644
-> --- a/Documentation/driver-api/ipmi.rst
-> +++ b/Documentation/driver-api/ipmi.rst
-> @@ -45,7 +45,7 @@ manual), choose the 'IPMI SI handler' option.  A driver also exists
->  for direct I2C access to the IPMI management controller.  Some boards
->  support this, but it is unknown if it will work on every board.  For
->  this, choose 'IPMI SMBus handler', but be ready to try to do some
-> -figuring to see if it will work on your system if the SMBIOS/APCI
-> +figuring to see if it will work on your system if the SMBIOS/ACPI
->  information is wrong or not present.  It is fairly safe to have both
->  these enabled and let the drivers auto-detect what is present.
->  
-> @@ -63,7 +63,7 @@ situation, you need to read the section below named 'The SI Driver' or
->  IPMI defines a standard watchdog timer.  You can enable this with the
->  'IPMI Watchdog Timer' config option.  If you compile the driver into
->  the kernel, then via a kernel command-line option you can have the
-> -watchdog timer start as soon as it initializes.  It also have a lot
-> +watchdog timer start as soon as it initializes.  It also has a lot
->  of other options, see the 'Watchdog' section below for more details.
->  Note that you can also have the watchdog continue to run if it is
->  closed (by default it is disabled on close).  Go into the 'Watchdog
-> @@ -317,13 +317,13 @@ This gives the receiver a place to actually put the message.
->  
->  If the message cannot fit into the data you provide, you will get an
->  EMSGSIZE error and the driver will leave the data in the receive
-> -queue.  If you want to get it and have it truncate the message, us
-> +queue.  If you want to get it and have it truncate the message, use
->  the IPMICTL_RECEIVE_MSG_TRUNC ioctl.
->  
->  When you send a command (which is defined by the lowest-order bit of
->  the netfn per the IPMI spec) on the IPMB bus, the driver will
->  automatically assign the sequence number to the command and save the
-> -command.  If the response is not receive in the IPMI-specified 5
-> +command.  If the response is not received in the IPMI-specified 5
->  seconds, it will generate a response automatically saying the command
->  timed out.  If an unsolicited response comes in (if it was after 5
->  seconds, for instance), that response will be ignored.
-> @@ -367,7 +367,7 @@ channel bitmasks do not overlap.
->  
->  To respond to a received command, set the response bit in the returned
->  netfn, use the address from the received message, and use the same
-> -msgid that you got in the receive message.
-> +msgid that you got in the received message.
->  
->  From userland, equivalent IOCTLs are provided to do these functions.
->  
-> @@ -440,7 +440,7 @@ register would be 0xca6.  This defaults to 1.
->  
->  The regsizes parameter gives the size of a register, in bytes.  The
->  data used by IPMI is 8-bits wide, but it may be inside a larger
-> -register.  This parameter allows the read and write type to specified.
-> +register.  This parameter allows the read and write type to be specified.
->  It may be 1, 2, 4, or 8.  The default is 1.
->  
->  Since the register size may be larger than 32 bits, the IPMI data may not
-> @@ -481,8 +481,8 @@ If your IPMI interface does not support interrupts and is a KCS or
->  SMIC interface, the IPMI driver will start a kernel thread for the
->  interface to help speed things up.  This is a low-priority kernel
->  thread that constantly polls the IPMI driver while an IPMI operation
-> -is in progress.  The force_kipmid module parameter will all the user to
-> -force this thread on or off.  If you force it off and don't have
-> +is in progress.  The force_kipmid module parameter will allow the user
-> +to force this thread on or off.  If you force it off and don't have
->  interrupts, the driver will run VERY slowly.  Don't blame me,
->  these interfaces suck.
->  
-> @@ -583,7 +583,7 @@ kernel command line as::
->  These are the same options as on the module command line.
->  
->  The I2C driver does not support non-blocking access or polling, so
-> -this driver cannod to IPMI panic events, extend the watchdog at panic
-> +this driver cannot do IPMI panic events, extend the watchdog at panic
->  time, or other panic-related IPMI functions without special kernel
->  patches and driver modifications.  You can get those at the openipmi
->  web page.
-> @@ -610,7 +610,7 @@ Parameters are::
->  	ipmi_ipmb.retry_time_ms=<Time between retries on IPMB>
->  	ipmi_ipmb.max_retries=<Number of times to retry a message>
->  
-> -Loading the module will not result in the driver automatcially
-> +Loading the module will not result in the driver automatically
->  starting unless there is device tree information setting it up.  If
->  you want to instantiate one of these by hand, do::
->  
-> -- 
-> 2.39.5
-> 
+Regards
+
+Reported-by: Ozgur Karatas <ozgur@goosey.org>
+
+---
+ CREDITS | 27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
+
+diff --git a/CREDITS b/CREDITS
+index f74d230992d6..57118d6e7fa2 100644
+--- a/CREDITS
++++ b/CREDITS
+@@ -153,7 +153,7 @@ S: Cambridge, Massachusetts 02139
+ S: USA
+
+ N: Michel Aubry
+-E: giovanni <giovanni@sudfr.com>
++E: giovanni@sudfr.com
+ D: Aladdin 1533/1543(C) chipset IDE
+ D: VIA MVP-3/TX Pro III chipset IDE
+
+@@ -1025,7 +1025,7 @@ D: Ralink rt2x00 WLAN driver
+ S: Haarlem, The Netherlands
+
+ N: John G Dorsey
+-E: john+@cs.cmu.edu
++E: jd5q@andrew.cmu.edu
+ D: ARM Linux ports to Assabet/Neponset, Spot
+ S: Department of Electrical and Computer Engineering
+ S: Carnegie Mellon University
+@@ -2128,8 +2128,8 @@ E: knaack.h@gmx.de
+ D: IIO subsystem and drivers
+
+ N: Thorsten Knabe
+-E: Thorsten Knabe <tek@rbg.informatik.tu-darmstadt.de>
+-E: Thorsten Knabe <tek01@hrzpub.tu-darmstadt.de>
++E: tek@rbg.informatik.tu-darmstadt.de
++E: tek01@hrzpub.tu-darmstadt.de
+ W: http://www.student.informatik.tu-darmstadt.de/~tek
+ W: http://www.tu-darmstadt.de/~tek01
+ P: 1024/3BC8D885 8C 29 C5 0A C0 D1 D6 F4  20 D4 2D AB 29 F6 D0 60
+@@ -2146,9 +2146,9 @@ S: L-1148 Luxembourg-City
+ S: Luxembourg
+
+ N: Gerd Knorr
+-W: http://bytesex.org
+ E: kraxel@bytesex.org
+ E: kraxel@suse.de
++W: http://bytesex.org
+ D: video4linux, bttv, vesafb, some scsi, misc fixes
+
+ N: Hans J. Koch
+@@ -2448,7 +2448,8 @@ S: 75141 Paris Cedex 03
+ S: France
+
+ N: Siegfried "Frieder" Loeffler (dg1sek)
+-E: floeff@tunix.mathematik.uni-stuttgart.de, fl@LF.net
++E: floeff@tunix.mathematik.uni-stuttgart.de
++E: fl@LF.net
+ W: http://www.mathematik.uni-stuttgart.de/~floeff
+ D: Busmaster driver for HP 10/100 Mbit Network Adapters
+ S: University of Stuttgart, Germany and
+@@ -2908,6 +2909,7 @@ D: SuperH maintainer
+ N: Ian A. Murdock
+ E: imurdock@gnu.ai.mit.edu
+ D: Creator of Debian distribution
++D: He passed away in 2015, and will be greatly missed.
+ S: 30 White Tail Lane
+ S: Lafayette, Indiana 47905
+ S: USA
+@@ -3602,7 +3604,7 @@ D: added PCI support to the serial driver
+ S: Buckenhof, Germany
+
+ N: Michael Schmitz
+-E:
++E: schmitzmic@gmail.com
+ D: Macintosh IDE Driver
+
+ N: Peter De Schrijver
+@@ -3711,7 +3713,7 @@ S: USA
+
+ N: Jaspreet Singh
+ E: jaspreet@sangoma.com
+-W: www.sangoma.com
++W: http://www.sangoma.com
+ D: WANPIPE drivers & API Support for Sangoma S508/FT1 cards
+ S: Sangoma Technologies Inc.,
+ S: 1001 Denison Street
+@@ -3720,7 +3722,7 @@ S: Markham, Ontario L3R 2Z6
+ S: Canada
+
+ N: Haavard Skinnemoen
+-M: Haavard Skinnemoen <hskinnemoen@gmail.com>
++M: hskinnemoen@gmail.com
+ D: AVR32 architecture port to Linux and maintainer.
+
+ N: Rick Sladkey
+@@ -3980,7 +3982,7 @@ S: Cambridge, Massachusetts 02139
+ S: USA
+
+ N: Luben Tuikov
+-E: Luben Tuikov <ltuikov89@gmail.com>
++E: ltuikov89@gmail.com
+ D: Maintainer of the DRM GPU Scheduler
+
+ N: Simmule Turner
+@@ -4273,7 +4275,7 @@ W: ftp://ftp.uk.linux.org/pub/linux/people/willy/
+ D: Linux/PARISC hacker.  Filesystem hacker.  Random other hacking.  Custom
+ D: PPC port hacking.
+
+-N: G\"unter Windau
++N: Gunter Windau
+ E: gunter@mbfys.kun.nl
+ D: Some bug fixes in the polling printer driver (lp.c)
+ S: University of Nijmegen
+@@ -4455,7 +4457,8 @@ E: tsahee@annapurnalabs.com
+ D: Annapurna Labs Alpine Architecture
+
+ N: Richard Zidlicky
+-E: rz@linux-m68k.org, rdzidlic@geocities.com
++E: rz@linux-m68k.org
++E: rdzidlic@geocities.com
+ W: http://www.geocities.com/rdzidlic
+ D: Q40 port - see arch/m68k/q40/README
+ D: various m68k hacks
+--
+2.39.5
