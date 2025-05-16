@@ -1,142 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9959317B425;
-	Fri, 16 May 2025 14:44:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF8219CD17
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 14:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747406642; cv=none; b=FG3R9oQH6BQ85c3sNthms6zDpotsEpIkWwxN9r23Ab5Hv6rTzZ9GFhkH1jnuX5KV/c+fslTM/Ev4D2cI2Y1RuiNWuHxVxceLYannGwOOXcGDFEQo323PTe9xysKRZM7pBb1beEnsoJxv3+M2VWSdB0pUhureaGUFHJgoTz8bIA0=
+	t=1747406705; cv=none; b=Q7IQ8tqynOUgWIXI/dDS5ohuWNOCpNgTXBPAtpjhPnoVMNVykpPTGeUnVuUf99TGp5vAgnbVoJwR60PIYOA1rfdHZ3SQcRDkCDedaBYfBLliL3mgLqvM3d8tA7mQ1YByMnV38mI2oOljVj10qbKbq+FrMhhdKuANZaGp3BDVoZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747406642; c=relaxed/simple;
-	bh=iCxsZZd0sUHuM8uPNwEJRgf0yHo14GFLJbNsIXTJHCk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UX3Q2+LY5oSZPLbHmuGryPN4+/aOOqNIMIL1F1rReAhZ9QCTFhBwieyd0cMFMo4olzJc4QHQ9+nxszimq/fVfDcQO0whr/yXfY2c59vvfw3f/VRSbPjL03tUTTZL1IMZYrHzbs99vVFcbUw99SG2cTQNCZxPm1JV3a3VcHeAwaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hIohOczF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747406705; c=relaxed/simple;
+	bh=ai4HsUXe8Hf6sgaIpmcQ3fB9qzjUu4+7671cWfxzTsc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=TvqrpnLBRP3P6fUstSDqAVS/QYtgulbGqUg7nUP4g/1CijfQQqnY+rmYGFk8TeK8N/XMfuIgVRMVzLyci+YxTfmLNRgdHJLTZjrZKsiKVg/PKmeOT/FNGMht/6v5ukgO7+tZL89K95u7Ltp/Dcx/BwoFan8X6AgPDsjC26MIKfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uH3oPosz; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hIohOczF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 005DBC4CEE4;
-	Fri, 16 May 2025 14:43:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747406642;
-	bh=iCxsZZd0sUHuM8uPNwEJRgf0yHo14GFLJbNsIXTJHCk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hIohOczFCMGxH0/70imo1ujChKe5GEWHRCHsR66xM45yd6eQtEFuv2nDD1IygFjFR
-	 uGHdFIRwC4p1q3x0tGbJZkTVnd5KOH7Evciy4JaKq6GXI+92GymaIwtHc4bPBXiS2Q
-	 BFA2xrbmPqlqWC0H/YCzJmSRasnCs98j9k/gJmoVHxgXP8bCfMkZtqfmvFFktqmmqs
-	 b9oUxiuzhoAYHuAZOavyaM/CgIc2OGVM9sdE7ANtLks37HVbPmLggZiHIJawMCAFXK
-	 JbXQux7MUwMnoNWDMwQ/mVscAy0yKEFlUJ8fjPlAOHXDF1xNqXKCS9VSH7r+OEH6HG
-	 K5Iy+wwNY8jJw==
-Message-ID: <09377c1a-dac5-487d-9fc1-d973b20b04dd@kernel.org>
-Date: Fri, 16 May 2025 16:43:54 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uH3oPosz"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7370e73f690so2515477b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:45:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747406703; x=1748011503; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JxpWO6d9RGjAdSroDlrJKpnDNm7YQaegewDBnMK2Spc=;
+        b=uH3oPosztB48FWUBaOZobTU4C6fJCfrxU1ukw5ExcGD3P1MTmO/z9rK38yiwd3NAqE
+         nQj3zIXF5RS9LpfGka2ur2ZMa7WsXFpm3s4x2kDjsxiR6xUmMcRACBbaRRqPajI4zRY6
+         Bgl+y6NJAR/cXmCiqUlNTN+O/PEABZWf8yHOaIvW/EA7wJYyJoDMI+MSap1Urzj0CfmE
+         n7g01DxrBstx+XiCDeNxWqSUPzM6iXoytAT2qFe8HhPcpa5dsLQleYQjqBqWyELYwVyQ
+         mHBQa2rZh6cw1iUxF1zEJHw4euKXj1SGnQp15PCHS8uC66EjIp69sTdurH/5RFjJ3FR4
+         5Jfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747406703; x=1748011503;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JxpWO6d9RGjAdSroDlrJKpnDNm7YQaegewDBnMK2Spc=;
+        b=E7Co4IWZGRsYbZ0bUMt1LyHgkxf+sxCYx/6QbbCjmgb5rA9mq8fas2o9lJnWm3Cous
+         hdnLriXWh4f1ecxOXiJ9zPGMtfx5fIAYPESs59dlghHLtL/vP1oV2c1C9KyuOB1YAEzk
+         FZSVW2JVw8a0ArT/2NM4dTUlji4pdgNSBcvJ+HPAseuOqLvkKtQD0bw/2ifgz1GYaGrD
+         lEatUtxtXjiWkzVi1qhjbr2ZO+Gqx1Gf6mQDfruf8llFYEhq2+V7BIw0l5CUx8eGiprd
+         /Q3aDNOdWtu1+UwhxQL76gNnT6c5KvowHtR80Eph5CQiC6koaxXrWH0txTZsKMegN0VW
+         /fYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVdi9D7vwU/8LkMNfqBAp+acjyB0F9EL7Avj8U3eMruXdHGRJLnFsjnI4clxxFuShY4s6AQKSHabpthQiU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIclMD6n95edIrrY1MnjVkh/vDc+rjaoKvsBhFMqgFV/NuR5rY
+	am4sGZDex0b2MvMdnagFXpvRzO84c31tNCUU75a/kisuf4O217y/myxW+6MAlMl24NM7e2KUtUb
+	sKwuKpw==
+X-Google-Smtp-Source: AGHT+IFUIIMoWvWfo/p1yEuFxXr/0VSd/5n+vRtdSY5Ojpq4Jm9/+IMOBJg1hmy8i1Fg/Wi7gFvmjRxoy+4=
+X-Received: from pfbdf3.prod.google.com ([2002:a05:6a00:4703:b0:740:41eb:584c])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2e9b:b0:73e:1e21:b653
+ with SMTP id d2e1a72fcca58-742a978e6a3mr5100316b3a.5.1747406702664; Fri, 16
+ May 2025 07:45:02 -0700 (PDT)
+Date: Fri, 16 May 2025 07:45:01 -0700
+In-Reply-To: <aCc_LmORNibXBt8V@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] net/mlx5e: Reuse per-RQ XDP buffer to avoid
- stack zeroing overhead
-To: Tariq Toukan <ttoukan.linux@gmail.com>,
- Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Eric Dumazet <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Network Development <netdev@vger.kernel.org>, linux-rdma@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
- Moshe Shemesh <moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>,
- Gal Pressman <gal@nvidia.com>, Carolina Jubran <cjubran@nvidia.com>,
- Sebastiano Miano <mianosebastiano@gmail.com>,
- Samuel Dobron <sdobron@redhat.com>
-References: <1747253032-663457-1-git-send-email-tariqt@nvidia.com>
- <CAADnVQLSMvk3uuzTCjqQKXs6hbZH9-_XeYo2Uvu2uHAiYrnkog@mail.gmail.com>
- <dcb3053f-6588-4c87-be42-a172dacb1828@gmail.com>
-Content-Language: en-US
-From: Jesper Dangaard Brouer <hawk@kernel.org>
-In-Reply-To: <dcb3053f-6588-4c87-be42-a172dacb1828@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-25-mizhang@google.com>
+ <aCc_LmORNibXBt8V@google.com>
+Message-ID: <aCdPbZiYmtni4Bjs@google.com>
+Subject: Re: [PATCH v4 24/38] KVM: x86/pmu: Exclude PMU MSRs in vmx_get_passthrough_msr_slot()
+From: Sean Christopherson <seanjc@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>, 
+	Eranian Stephane <eranian@google.com>, Shukla Manali <Manali.Shukla@amd.com>, 
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
+On Fri, May 16, 2025, Sean Christopherson wrote:
+> On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+> > Reject PMU MSRs interception explicitly in
+> > vmx_get_passthrough_msr_slot() since interception of PMU MSRs are
+> > specially handled in intel_passthrough_pmu_msrs().
+> > 
+> > Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> > Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> > Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> > ---
+> >  arch/x86/kvm/vmx/vmx.c | 12 +++++++++++-
+> >  1 file changed, 11 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 38ecf3c116bd..7bb16bed08da 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -165,7 +165,7 @@ module_param(allow_smaller_maxphyaddr, bool, S_IRUGO);
+> >  
+> >  /*
+> >   * List of MSRs that can be directly passed to the guest.
+> > - * In addition to these x2apic, PT and LBR MSRs are handled specially.
+> > + * In addition to these x2apic, PMU, PT and LBR MSRs are handled specially.
 
+Except y'all forgot to actually do the "special" handling, vmx_msr_filter_changed()
+needs to refresh the PMU MSR filters.  Only the x2APIC MSRs are excluded from
+userspace filtering (see kvm_msr_allowed()), everything else can be intercepted
+by userespace.  E.g. if an MSR filter is set _before_ PMU refresh, KVM's behavior
+will diverge from a filter that is set after PMU refresh.
 
-On 16/05/2025 15.47, Tariq Toukan wrote:
+> >   */
+> >  static u32 vmx_possible_passthrough_msrs[MAX_POSSIBLE_PASSTHROUGH_MSRS] = {
+> >  	MSR_IA32_SPEC_CTRL,
+> > @@ -691,6 +691,16 @@ static int vmx_get_passthrough_msr_slot(u32 msr)
+> >  	case MSR_LBR_CORE_FROM ... MSR_LBR_CORE_FROM + 8:
+> >  	case MSR_LBR_CORE_TO ... MSR_LBR_CORE_TO + 8:
+> >  		/* LBR MSRs. These are handled in vmx_update_intercept_for_lbr_msrs() */
+> > +	case MSR_IA32_PMC0 ...
+> > +		MSR_IA32_PMC0 + KVM_MAX_NR_GP_COUNTERS - 1:
+> > +	case MSR_IA32_PERFCTR0 ...
+> > +		MSR_IA32_PERFCTR0 + KVM_MAX_NR_GP_COUNTERS - 1:
+> > +	case MSR_CORE_PERF_FIXED_CTR0 ...
+> > +		MSR_CORE_PERF_FIXED_CTR0 + KVM_MAX_NR_FIXED_COUNTERS - 1:
+> > +	case MSR_CORE_PERF_GLOBAL_STATUS:
+> > +	case MSR_CORE_PERF_GLOBAL_CTRL:
+> > +	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
+> > +		/* PMU MSRs. These are handled in intel_passthrough_pmu_msrs() */
+> >  		return -ENOENT;
+> >  	}
 > 
-> 
-> On 15/05/2025 3:26, Alexei Starovoitov wrote:
->> On Wed, May 14, 2025 at 1:04 PM Tariq Toukan <tariqt@nvidia.com> wrote:
->>>
->>> From: Carolina Jubran <cjubran@nvidia.com>
->>>
->>> CONFIG_INIT_STACK_ALL_ZERO introduces a performance cost by
->>> zero-initializing all stack variables on function entry. The mlx5 XDP
->>> RX path previously allocated a struct mlx5e_xdp_buff on the stack per
->>> received CQE, resulting in measurable performance degradation under
->>> this config.
->>>
->>> This patch reuses a mlx5e_xdp_buff stored in the mlx5e_rq struct,
->>> avoiding per-CQE stack allocations and repeated zeroing.
->>>
->>> With this change, XDP_DROP and XDP_TX performance matches that of
->>> kernels built without CONFIG_INIT_STACK_ALL_ZERO.
->>>
->>> Performance was measured on a ConnectX-6Dx using a single RX channel
->>> (1 CPU at 100% usage) at ~50 Mpps. The baseline results were taken from
->>> net-next-6.15.
->>>
->>> Stack zeroing disabled:
->>> - XDP_DROP:
->>>      * baseline:                     31.47 Mpps
->>>      * baseline + per-RQ allocation: 32.31 Mpps (+2.68%)
->>>
+> This belongs in the patch that configures interception.  A better split would be
+> to have an Intel patch and an AMD patch, 
 
-31.47 Mpps = 31.77 nanosec per packet
-32.31 Mpps = 30.95 nanosec per packet
-Improvement:  0.82 nanosec faster
-
->>> - XDP_TX:
->>>      * baseline:                     12.41 Mpps
->>>      * baseline + per-RQ allocation: 12.95 Mpps (+4.30%)
->>
-
-The XDP_TX number are actually lower than I expected.
-Hmm... I wonder if we regressed here(?)
-
-12.41 Mpps = 80.58 nanosec per packet
-12.95 Mpps = 77.22 nanosec per packet
-Improvement:  3.36 nanosec faster
-
->> Looks good, but where are these gains coming from ?
->> The patch just moves mxbuf from stack to rq.
->> The number of operations should really be the same.
->>
-> 
-> I guess it's cache related. Hot/cold areas, alignments, movement of 
-> other fields in the mlx5e_rq structure...
-
-The improvements for XDP_DROP (see calc above) in nanosec is so small
-that it is hard to measure accurately/stable on any system.
-
-The improvement for XDP_TX is above 2 nanosec, which looks like an 
-actual improvement...
-
-
->>> Stack zeroing enabled:
->>> - XDP_DROP:
->>>      * baseline:                     24.32 Mpps
->>>      * baseline + per-RQ allocation: 32.27 Mpps (+32.7%)
->>
->> This part makes sense.
-> 
-
-Yes, this makes sense as it is a measurable improvement.
-
-24.32 Mpps = 41.12 nanosec per packet
-32.27 Mpps = 30.99 nanosec per packet
-Improvement: 10.13 nanosec faster
-
-Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
-
---Jesper
+I take that back, splitting the Intel and AMD logic makes is just as messy,
+because the control logic is very much shared between VMX and SVM.
