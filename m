@@ -1,116 +1,177 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987CF21FF37;
-	Fri, 16 May 2025 17:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08AE425CC77;
+	Fri, 16 May 2025 17:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747416046; cv=none; b=RcTHEuGOHHC9Nk82dGYWeazfj8VFbUeVSgp6DtrXz21kmVIKiynlxL10fGM4Ttg60NJK/dW4DBaJ5Mj9jWBm30klXjjgOyE8B+qHGvwyEpLJKAPZ/thj7dIlpHdX3yyz8gLV0ceP/MGgwtsdg8DilesJLnOxMYIiqjoXGH7JE7o=
+	t=1747416168; cv=none; b=hcN/O5v8ZIPAkfg6w2yI76/Woze971/rS4Zl45tZMyiLdPnnm5uBi5qSdAE874y8Akr+RC4Gyd7HRTC4FfG8Bps/mbMHyXaaCsCBrO3QnBZ8ErEQOsAjeAJyPTSx5ds+bnaAYc1tr17HrWXJ2Ms/fnsAhD+uTSSNypNKgHqoslY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747416046; c=relaxed/simple;
-	bh=DC+LF9SGjcfT92Y5JqC02qXqj/9+0Jg/AwCb9dl45Mg=;
-	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
-	 In-Reply-To:References; b=XDqDALpasEK2pABQqqj+suTRNE43Wz/L/XuPe+Kbuskhhe6CBjTEAuGfgQLvUCX8K5UBNteS0c7GkuSuOLP1w4NNKR1b0SAkz2xcFTCMUDDMCqcjWPBkOyUHxwshzqRBKQk31/MHo1VCa1fElJ4v6dzrYkG/m134296dGKWFt6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=CKuhJn/f; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
+	s=arc-20240116; t=1747416168; c=relaxed/simple;
+	bh=gHDnfoajrPghe0uHWBzNeNQBRVEv0TYcue3CT7aNfik=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=K0kkd5B08+9yOWV1GhsT78an6VFc41vggcXjkle1S487Ittf/yZ2u1aEP9rNKGULU907Ig9lbBFIdRkBwND+a9FsXnR3B4Kab8IhfdtjX8zDiOxclViDR3KtjhTmJC9xssk9f04CfFUW2EtlN16bNaVxIbXe2pSpgHuBOY0ennM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NJARW/kx; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="CKuhJn/f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
-	s=s31663417; t=1747416032; x=1748020832; i=frank-w@public-files.de;
-	bh=DC+LF9SGjcfT92Y5JqC02qXqj/9+0Jg/AwCb9dl45Mg=;
-	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
-	 Content-Type:Date:In-Reply-To:References:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=CKuhJn/fNqAguZJniEVLva7cBEwPadDuOmmePr1eF/lJXa1a017rkoGim3XDhGCR
-	 GxyVvWUYIX2RqPzCWkm7F8a3Quf8hhvL6DvQ2N8gxw0DwLPu6KklYA36K8CN4eRLG
-	 4ouaBxg1J4wYSStcezbM35PUEQzQTBOMHdnD5xMLT5xDoLhPMR+5Yxauelx9nY/Vi
-	 jmkQJtxX14ZadVt3ZYgqvc+dQMB01Seyq5R8/+XDLog6XLgEM9jwAp1hjl1sNzrtW
-	 5eVRGzlKAf4Yio/bMa7/QKdxAetoRfdmmI7+MEmvSfNngaWV+YZNHYrPNobDGr1i8
-	 u+/gzx9mUS5JWYA80Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [100.69.124.0] ([100.69.124.0]) by
- trinity-msg-rest-gmx-gmx-live-f4858f84-lcsp7 (via HTTP); Fri, 16 May 2025
- 17:20:32 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NJARW/kx"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c5568355ffso204946385a.0;
+        Fri, 16 May 2025 10:22:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747416165; x=1748020965; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rijU/iw06s1As7dK45CRJ6ZUYyr3AoRxB/Rs1KgsH2c=;
+        b=NJARW/kxHAezzeVEWXZdhZTVlQ7NAXZCjbWZGoS9DvUtB2TFwXlOOUcx0dOpLym0LN
+         tE2gkQkuymuWH+4tU4dhHetH/QRUgF/RAK6V9848vS64MKBb4yX73y//XrU4B/+y3Cbw
+         zdJ0WWHOnnb4ScpXgWWHATk1Ex22yj6sgEgkQfok0DI+QUTi/wpAqMjsNpxAHKjLg6pS
+         vfDF7BeMen5Q9cYLXkAY1DKa+TuCHBCS1/aK3ioGK6sLK25bgOSoM7RnnFQRVNawhzUf
+         n8Lb0iRzzfTqp0SDUi28h/z43fDJ/CpUleAnsDMVnqJQgICeuCc4/OFU6mUi3McRG/7k
+         Y1rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747416165; x=1748020965;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rijU/iw06s1As7dK45CRJ6ZUYyr3AoRxB/Rs1KgsH2c=;
+        b=t5GNa/iEJmT5wKlWjgspeqzv36spvkvT8F1I4qLskQndKSQbaIES3P4ScrFcX+teZD
+         4Sh2B9RcBQr1p1LRtyAH22iv76nWN0DSvjpG6m8zOWnR0qKtMsKlWIAWMndNiK/n4d+/
+         cCFYr1J6HJva0kXXG2w7Q4EpNxXnAi1Ql+M07Gr7G0cZGTw1mmDRhS1P1UP7RvynJhd3
+         xgir3+hcSyRC0Q2jXg2AlYBjbXIyBmanF70oeXbVc7I6kMaMx6PuGA7pRdYbOEdCiaeN
+         Z1FQjRhgeqFnZ+cK68ihXmlolQgn4KlajtgaoB87Z2KZz64jGuZh7jrZvwo7qxcjbatS
+         53Aw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2YGptP5LNs1fgZ6UQZfizVQysU9cG7RFNe3CjbyMCSY18jyL/U5jIOW/5+9LnOz8gvco=@vger.kernel.org, AJvYcCVdAn/SZ21e3g0qt6361tGvAqgqsHlNDywZlPpBMEcZvjyxEq3iDnvUwlxCGOyug3cVuTSZeAwML4S/lbSU@vger.kernel.org, AJvYcCVgafJd4HnJwNogd9bLuKbq1yoVEVmJ7GRLoqjRJvAJ00paQhCXgxn00AE7N8tpl0To/8PBgBBS@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzxi6X/S85/+KfEBBLwHKsBWugAAP7f7Qr6pv3cTEYYpRV7uiwj
+	7q2QB30UaPgt+H4mcvbYxfgkoRuwdz86Y9D9Xsd4uUwOViDaoQbeBsbW
+X-Gm-Gg: ASbGnctRoUx7uoAG8wWZP2f/uD+5tIW+qNO6Aninjxz051L6cO8InNDWF9FtXQHid/R
+	dZCPMR3UDcA/paKEE4RqQaKbw7Lkpd2CB0ip4yaudhOTFo/s7L3fp4Kssqbx5WjxrwEhPJZ3SHI
+	rWdHdArNKO7h8UGz++tqEpx80L40RzTTshhyDHmeZRe+K19uTRIBgFrLd3WJnaH2dbW4Ls38RxK
+	g0vU3Tp/sC34v1WtQ0qQkWNRR8AxPo1L4mYcUaA9CkzQuanVGOaW+WU2XmNdJD/w5CUmSW0IsbQ
+	uf6+7YcT/sbMoBDoPeMuxlMDc2Pz+BAchXg7qi0Otw9lML0u5Vst0Vl36W1WasJlbYBzVfae01z
+	BYSjB8SxJvLe1wmYpC30vmzI=
+X-Google-Smtp-Source: AGHT+IGgbFIs4gVRzBrRl+Z/NMLlfhcLYA4US1p+mqyo1Padg1fqO6Wvl/Kd4VdVk1OpuKSb+zZPyw==
+X-Received: by 2002:a05:620a:4593:b0:7c5:3b3b:c9da with SMTP id af79cd13be357-7cd4677d5bbmr725106685a.40.1747416164763;
+        Fri, 16 May 2025 10:22:44 -0700 (PDT)
+Received: from localhost (23.67.48.34.bc.googleusercontent.com. [34.48.67.23])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7cd467bc7d1sm144103785a.1.2025.05.16.10.22.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 10:22:44 -0700 (PDT)
+Date: Fri, 16 May 2025 13:22:43 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Daniel Xu <dxu@dxuuu.xyz>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Alexander Shalimov <alex-shalimov@yandex-team.ru>
+Cc: andrew@lunn.ch, 
+ David Miller <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ jacob.e.keller@intel.com, 
+ jasowang@redhat.com, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ linux-kernel@vger.kernel.org, 
+ netdev@vger.kernel.org, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Message-ID: <68277463d4c43_2ba041294cf@willemb.c.googlers.com.notmuch>
+In-Reply-To: <0bcc08e4-9f22-431c-97f3-c7d5784d2652@app.fastmail.com>
+References: <681a63e3c1a6c_18e44b2949d@willemb.c.googlers.com.notmuch>
+ <20250514233931.56961-1-alex-shalimov@yandex-team.ru>
+ <6825f65ae82b5_24bddc29422@willemb.c.googlers.com.notmuch>
+ <0bcc08e4-9f22-431c-97f3-c7d5784d2652@app.fastmail.com>
+Subject: Re: [PATCH] net/tun: expose queue utilization stats via ethtool
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <trinity-925f0b56-c8b6-493e-8d13-e732b3e95f48-1747416032428@trinity-msg-rest-gmx-gmx-live-f4858f84-lcsp7>
-From: Frank Wunderlich <frank-w@public-files.de>
-To: linux@fw-web.de, daniel@makrotopia.org, dqfext@gmail.com,
- SkyLake.Huang@mediatek.com, andrew@lunn.ch, hkallweit1@gmail.com,
- linux@armlinux.org.uk, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, matthias.bgg@gmail.com,
- angelogioacchino.delregno@collabora.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Subject: Aw: [net-next, PATCH v2] net: phy: mediatek: do not require syscon
- compatible for pio property
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 16 May 2025 17:20:32 +0000
-In-Reply-To: <20250510174933.154589-1-linux@fw-web.de>
-References: <20250510174933.154589-1-linux@fw-web.de>
-X-UI-CLIENT-META-MAIL-DROP: W10=
-X-Provags-ID: V03:K1:Rxo8HmPRzSmBNKbQ5rFnl9nKUfxp0rvBKS78WCekuxi9nxeKnhHVYbI2rw9QRRXHQlDqV
- IYTMHz6pk4JWqD/GvNFBTvGJHhnJCHF27OOTXh6RyhDi2CJa8jJBUIpyfaTFJh0pN2oc2JxgWGD3
- qfHa5ILEq2E4RV5f4IfMEiuB7A5af/3s8agff1rkuJJn8qO2PNMqMZb+9aCBXaVTjg2TW7LyXKC9
- tRPgxhfxG+9dlGYHt8WFcObR+j+TFEbKZNwsM1iLUXgIo4hRnSQLxuSsRx31cNFYMpHkTOMPZS7u
- 48xpJ3YeI/mAhHBDyFjEk5Poc7jzN2GtnSYP9c+PYWvO6F4MjNaER0yfZ29tg6jEDk=
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:6Rz5hPyD8c4=;H8zwI7Q3TM3lJJ2HpNOBhs9w9dy
- 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
- 43E=
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Daniel Xu wrote:
+> On Thu, May 15, 2025, at 7:12 AM, Willem de Bruijn wrote:
+> > Alexander Shalimov wrote:
+> >> 06.05.2025, 22:32, "Willem de Bruijn" <willemdebruijn.kernel@gmail.c=
+om>:
+> >> > Perhaps bpftrace with a kfunc at a suitable function entry point t=
+o
+> >> > get access to these ring structures.
+> >> =
 
-i noticed my patch is in state "under review" for 2 days now without any c=
-omment and i want to make sure,=20
-it is not missed somehow.
-Imho it is a trivial patch (not much complex), unlike many other net patch=
-es :)
+> >> Thank you for your responses!
+> >> =
 
-maybe it still has a chance to get into net-next.
+> >> Initially, we implemented such monitoring using bpftrace but we were=
 
-regards Frank
+> >> not satisfied with the need to double-check the structure definition=
+s
+> >> in tun.c for each new kernel version.
+> >> =
+
+> >> We attached kprobe to the "tun_net_xmit()" function. This function
+> >> gets a "struct net_device" as an argument, which is then explicitly
+> >> cast to a tun_struct - "struct tun_struct *tun =3D netdev_priv(dev)"=
+.
+> >> However, performing such a cast within bpftrace is difficult because=
+
+> >> tun_struct is defined in tun.c - meaning the structure definition
+> >> cannot be included directly (not a header file). As a result, we wer=
+e
+> >> forced to add fake "struct tun_struct" and "struct tun_file"
+> >> definitions, whose maintenance across kernel versions became
+> >> cumbersome (see below). The same problems exists even with kfunc and=
+
+> >> btf - we are not able to cast properly netdev to tun_struct.
+> >> =
+
+> >> That=E2=80=99s why we decided to add this functionality directly to =
+the kernel.
+> >
+> > Let's solve this in bpftrace instead. That's no reason to rever to
+> > hardcoded kernel APIs.
+> >
+> > It quite possibly already is. I'm no bpftrace expert. Cc:ing bpf@
+> =
+
+> Yeah, should be possible. You haven't needed to include header
+> files to access type information available in BTF for a while now.
+> This seems to work for me - mind giving this a try?
+> =
+
+> ```
+> fentry:tun:tun_net_xmit {
+>     $tun =3D (struct tun_struct *)args->dev->priv;
+>     print($tun->numqueues);  // or whatever else you want
+> }
+> ```
+> =
+
+> fentry probes are better in general than kprobes if all you're doing
+> is attaching to the entry of a function.
+> =
+
+> You could do the same with kprobes like this if you really want, though=
+:
+> =
+
+> ```
+> kprobe:tun:tun_net_xmit {
+>     $dev =3D (struct net_device *)arg1;
+>     $tun =3D (struct tun_struct *)$dev->priv;
+>     print($tun->numqueues);  // or whatever else you want
+> }
+> ```
+> =
+
+> Although it looks like there's a bug when you omit the module name
+> where bpftrace doesn't find the struct definition. I'll look into that.=
+
+
+Minor: unless tun is built-in.
+
+Thanks a lot for your response, Daniel. Good to know that we can get
+this information without kernel changes. And I learned something new
+:) Replicated your examples.
+
