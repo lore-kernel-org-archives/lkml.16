@@ -1,149 +1,133 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FB522DA15;
-	Fri, 16 May 2025 23:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078BC22DA15;
+	Fri, 16 May 2025 23:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747437655; cv=none; b=Fhi6iWlOvWF2gPkcF055qy+t9lHstHZYQCYBvZCnzSaBssipi72JwrADQHSsC/7u4Pvznjb0ucS7V/LMatWEm/S9uFZdlzvj4jQex1xpdUScBghHQAaW7+5SHSZAnu7tI9qVRG1lwgH95N3XtLvRPwUWFTPooDEdopPTgYu0ZgQ=
+	t=1747437701; cv=none; b=OEwNcswIhwiM+7ac3mi/vXfnnSvxbS2nh5ipeTwcBTM91/D/cGle2VznF6kzDm8YUbk3ZsmJNjGgjIy4u+QFatbZbHzuYCsf0prXD6T01739ES48KfX8g0T9nd4HHbqUF9OuyTX7rkG7aUchZT7vLerCXynVMm/imR2kT46QIvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747437655; c=relaxed/simple;
-	bh=e2F/6StyG52CwA2JYoo0AgukZ0keLwK7GLH8EnBa/DA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UYtInoaV2myeNAYk67Y0HpL7TT4NDpuJtTHH+lapWepb0g3K3y7MV4b7dPZce6cElW1n2p3kDVlpcHCGJREe4l9EV/nsXcI5TfiOe67Nr6qExItKqtr4Ael+5/3SetJRp1rDGOK2l/AwKgJTfsHFAwKuG4EIaL0bXxsziJQNuwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=kUxpfF0T; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1747437701; c=relaxed/simple;
+	bh=OwRlj0tM+iP/0crW1PSRzlCFDkAFzLKKS3A/BV9mA2A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Jtblw81xeFaOpVnM1Ho3JPSvbX8YFoM4Z4DWgkS+iTXZ+f1g5J7bCAAW47K3O09KfhxUXjQFFDnVWKcwjIAVDqEwFfsQgqPIH+aswuVfeJ0PubpFpFcelNhzvgjT+6gDHTUbKz9xnsya2A4Iijt+o12joz+z+eh6KVIVblEt3hA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=obsMl2Qj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="kUxpfF0T"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xp7EErupILxnMLXfB+a4CcMjkMukegAOKV+BDImfBaU=; b=kUxpfF0TrVITUX+ZdAUJOlD4gx
-	7SrKFRysiIniVlUZsaKRDFTkQBFyKkk74wVPIJpgStOuB4sO5QASze1G7O5j3xJjHW+oVoPkDzFOS
-	c+q+dBcXA8W3z6dfJAYWNL0cIK8QoT2Z9yypYcjVLF6uBgboBQxObzsoRiNsAJSs8Jkv0OOtSbUjQ
-	fhKmWPZ17QpjMbFerL0JMf0mtE4y8Y+1gJteh2UhRwdXs4aXi6YQDH3MajyyuQ9GlYgdpfSYMjYUx
-	tKG3Yn6tpNBebVT42RLxrsWP7Bx2rC9443snis91f6dtdrMQEqFyOOFJHbY1C6Q7Xs8CMJdlgisYH
-	2cvZApJQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uG4MA-00000003kwv-1vED;
-	Fri, 16 May 2025 23:20:46 +0000
-Date: Sat, 17 May 2025 00:20:46 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Edward Adam Davis <eadavis@qq.com>
-Cc: syzbot+321477fad98ea6dd35b7@syzkaller.appspotmail.com,
-	brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: [pox on syzbot - again][exfat] exfat_mkdir() breakage on corrupted
- image
-Message-ID: <20250516232046.GT2023217@ZenIV>
-References: <680809f3.050a0220.36a438.0003.GAE@google.com>
- <tencent_55ACA45C1762977206C3B376C36BA96B8305@qq.com>
- <20250516193122.GS2023217@ZenIV>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="obsMl2Qj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EFECC4AF0B;
+	Fri, 16 May 2025 23:21:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747437700;
+	bh=OwRlj0tM+iP/0crW1PSRzlCFDkAFzLKKS3A/BV9mA2A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=obsMl2Qj/M0jALKhFX8su33JKI/fDILbHUAKFbgBNwOXicOKeOUSukI71e3Xn8x3U
+	 zobV0ZMt9YtTApbmnAGXvlblFbdTcVpXUAw1yuc5z/4YO53g/WNrwrjK6EnRSxi4Xc
+	 eyZIzFVdY0IxzIhP89CXPmkWR90EBmhMULqJVjEDELOJDvdCdOgHtTDfbyhq+45Hir
+	 dKEQIG2U+hHyl4985BUe3Nu5PlJcEA/oXIQ4OXiFynFoObxI9AKa2Hnd9xKSLIDxHl
+	 HP7oI+TNxanGWdVKRJvmFHXhYYri4WzG5pAzHv69fZoS7dyP4l+d6A6vbUwDd+HEKi
+	 1uobTrZiUx7QA==
+From: Eric Biggers <ebiggers@kernel.org>
+To: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ayush Jain <Ayush.Jain3@amd.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH 2/3] x86/pm: Use fpu_save_state() in __save_processor_state()
+Date: Fri, 16 May 2025 16:18:57 -0700
+Message-ID: <20250516231858.27899-3-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250516231858.27899-1-ebiggers@kernel.org>
+References: <20250516231858.27899-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250516193122.GS2023217@ZenIV>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 16, 2025 at 08:31:22PM +0100, Al Viro wrote:
-> On Wed, May 14, 2025 at 06:39:40AM +0800, Edward Adam Davis wrote:
-> > In the reproducer, when calling renameat2(), olddirfd and newdirfd passed
-> > are the same value r0, see [1]. This situation should be avoided.
-> > 
-> > [1]
-> > renameat2(r0, &(0x7f0000000240)='./bus/file0\x00', r0, &(0x7f00000001c0)='./file0\x00', 0x0)
-> > 
-> > Reported-by: syzbot+321477fad98ea6dd35b7@syzkaller.appspotmail.com
-> > Closes: https://syzkaller.appspot.com/bug?extid=321477fad98ea6dd35b7
-> > Tested-by: syzbot+321477fad98ea6dd35b7@syzkaller.appspotmail.com
-> > Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-> > ---
-> >  fs/namei.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/namei.c b/fs/namei.c
-> > index 84a0e0b0111c..ff843007ca94 100644
-> > --- a/fs/namei.c
-> > +++ b/fs/namei.c
-> > @@ -5013,7 +5013,7 @@ int vfs_rename(struct renamedata *rd)
-> >  	struct name_snapshot old_name;
-> >  	bool lock_old_subdir, lock_new_subdir;
-> >  
-> > -	if (source == target)
-> > +	if (source == target || old_dir == target)
-> >  		return 0;
-> 
-> What the hell?
-> 
-> 1) olddirfd and newdirfd have nothing to do with vfs_rename() - they are
-> bloody well gone by the time we get there.
-> 
-> 2) there's nothing wrong with having the same value passed in both -
-> and it's certainly not a "quietly do nothing".
-> 
-> 3) the check added in this patch is... odd.  You are checking essentically
-> for rename("foo/bar", "foo").  It should fail (-ENOTEMPTY or -EINVAL, depending
-> upon RENAME_EXCHANGE in flags) without having reached vfs_rename().
+From: Eric Biggers <ebiggers@google.com>
 
-4) it's definitely an exfat bug, since we are getting
-	old_dentry->d_parent != target
-	old_dentry->d_parent->d_inode == target->d_inode
-	S_ISDIR(target->d_inode->i_mode)
-All objects involved are on the same super_block, which has "exfat" for
-->s_type->name, so it's exfat ending up with multiple dentries for
-the same directory inode, and once that kind of thing has happened,
-the system is FUBAR.
+Make __save_processor_state() use fpu_save_state() instead of a
+kernel_fpu_begin() and kernel_fpu_end() pair.  This matches more
+directly what it needs.  This eliminates the need for kernel_fpu_begin()
+and kernel_fpu_end() to support the irqs_disabled() case.
 
-As for the root cause, almost certainly their ->mkdir() is deciding
-that it has just created a new inode - and ending up with existing one,
-already in icache and already with a dentry attached to it.
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ arch/x86/power/cpu.c | 18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
 
-<adds BUG_ON(!hlist_empty(&inode->i_dentry)) into exfat_mkdir()>
+diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
+index 916441f5e85ce..dde4ccbc77f4b 100644
+--- a/arch/x86/power/cpu.c
++++ b/arch/x86/power/cpu.c
+@@ -81,11 +81,17 @@ static void msr_restore_context(struct saved_context *ctxt)
+ static void __save_processor_state(struct saved_context *ctxt)
+ {
+ #ifdef CONFIG_X86_32
+ 	mtrr_save_fixed_ranges(NULL);
+ #endif
+-	kernel_fpu_begin();
++
++	/*
++	 * The FPU registers may be live for the current task, so save them to
++	 * current's memory register state.  The corresponding restore happens
++	 * lazily when returning to userspace, not in restore_processor_state().
++	 */
++	fpu_save_state();
+ 
+ 	/*
+ 	 * descriptor tables
+ 	 */
+ 	store_idt(&ctxt->idt);
+@@ -99,11 +105,10 @@ static void __save_processor_state(struct saved_context *ctxt)
+ 	ctxt->gdt_desc.size = GDT_SIZE - 1;
+ 	ctxt->gdt_desc.address = (unsigned long)get_cpu_gdt_rw(smp_processor_id());
+ 
+ 	store_tr(ctxt->tr);
+ 
+-	/* XMM0..XMM15 should be handled by kernel_fpu_begin(). */
+ 	/*
+ 	 * segment registers
+ 	 */
+ 	savesegment(gs, ctxt->gs);
+ #ifdef CONFIG_X86_64
+@@ -139,18 +144,10 @@ void save_processor_state(void)
+ }
+ #ifdef CONFIG_X86_32
+ EXPORT_SYMBOL(save_processor_state);
+ #endif
+ 
+-static void do_fpu_end(void)
+-{
+-	/*
+-	 * Restore FPU regs if necessary.
+-	 */
+-	kernel_fpu_end();
+-}
+-
+ static void fix_processor_context(void)
+ {
+ 	int cpu = smp_processor_id();
+ #ifdef CONFIG_X86_64
+ 	struct desc_struct *desc = get_cpu_gdt_rw(cpu);
+@@ -272,11 +269,10 @@ static void notrace __restore_processor_state(struct saved_context *ctxt)
+ 	wrmsrq(MSR_KERNEL_GS_BASE, ctxt->usermode_gs_base);
+ #else
+ 	loadsegment(gs, ctxt->gs);
+ #endif
+ 
+-	do_fpu_end();
+ 	tsc_verify_tsc_adjust(true);
+ 	x86_platform.restore_sched_clock_state();
+ 	cache_bp_restore();
+ 	perf_restore_debug_store();
+ 
+-- 
+2.49.0
 
-   [   84.780875] exFAT-fs (loop0): Volume was not properly unmounted. Some data may be corrupt. Please run fsck.
-   [   84.781411] exFAT-fs (loop0): Medium has reported failures. Some data may be lost.
-   [   84.782209] exFAT-fs (loop0): failed to load upcase table (idx : 0x00010000, chksum : 0xe62de5da, utbl_chksum : 0xe619d30d)
-   [   84.783272] ------------[ cut here ]------------
-   [   84.783546] kernel BUG at fs/exfat/namei.c:881!
-
-... and there we go.  exfat_mkdir() getting an existing in-core inode
-and attaching an alias to it, with expected fun results.
-
-For crying out loud, how many times do syzbot folks need to be told that
-getting report to attention of relevant filesystem folks is important?
-
-Subject: [syzbot] [fs?] INFO: task hung in vfs_rename (2)
-
-mentionings of anything exfat-related: 0.
-
-Cc: brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
-	 linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-		 viro@zeniv.linux.org.uk
-
-mentionings of anything exfat-related: 0.
-
-In message body:
-  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=12655204580000)
-
-Why, that does sound like some filesystem bug might be involved
-and presumably the damn thing knows which type had it been.
-<start browser, cut'n'paste the sodding link>
-... and the very first line is
-fsck.exfat -n exited with status code 4
-
-Result: 3 weeks later it *STILL* hasn't reached the relevant fs
-maintainers.  Could that be a sufficient evidence to convince the
-fine fellows working on syzbot that "you just need to click a few
-links" DOES NOT WORK?
-
-We'd been there several times already.  For relatively polite example,
-see https://lore.kernel.org/all/Y5ZDjuSNuSLJd8Mn@ZenIV/ - I can't be arsed
-to explain that again and again, and you don't seem to mind following
-links in email, so...
