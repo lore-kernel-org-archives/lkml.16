@@ -1,126 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C556611E;
-	Fri, 16 May 2025 14:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA64FC1D;
+	Fri, 16 May 2025 14:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747404099; cv=none; b=sIeJxQvOdvLqizk6k9WRx4SVnmK0ECzTynjoxrXejAuizRsFyuP1rbSCz32Ehu9JEJHBE3FiQEeXXkzPQFc1QQ35teQuXqzlAcm8MHmaMnBYPsApXzoZp1JIpX9Mye+020sUHrAXbvg176Vk1aDkYP2VgRRst6fak2N8p5JhrKk=
+	t=1747404177; cv=none; b=aysilkJnywP08va3KnY5kTgM+aNzUrbf6Eze9rFt9F5XuyC9OVBLqRg2hYH1rBsASeaz0nxRvWxQOf9l0zZk/s+tPxyfOjKaHrCkGbjgz0DGFvgbfR+PxAHlQvGkmivpI75rQh6NRTd5m9JQwbm59RHWsFi3iIhEFMigNVqlRNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747404099; c=relaxed/simple;
-	bh=f/ez5+ZlzlIHnsW5duY84m4TJ3zpnI8DqQZmPZ44+lg=;
+	s=arc-20240116; t=1747404177; c=relaxed/simple;
+	bh=XD5LW1X8Za8qYgmHHCMJojUWKp2P7yuhRCd7itD26lo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TgIq41K98Ouw2ozvOAF5WQfcR0EjJECwJjV6i1A7TFb68O/bVKlJKiE1AAodHkZ5kqNB3mD5E0b4Y7JNlMm6UH9GqTSvfR4D9r24SksUlZHRct1zSu1lfHasMEzOK8wSvLao8i63WONQKaSzVmv8k5+oYM9bdyFHAptzkUxgyZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ejfhhv0P; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=U/OqElIWENcUZyQC95gNZJLFCrpys2EEYyRt2SZiTgD7z6Jf32egtPnLoAIQBxxB8/cvNCqVCKl0oQhizaHatAybsrGFsRUG8V2ebz8ZHb5UXftL0EOYW5sdv36ZdMtgrrroE6kV/KoevSXbaYaArpVVf1XsM/s0tnI9dxUARQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JllxqA74; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ejfhhv0P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EF1AC4CEE4;
-	Fri, 16 May 2025 14:01:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747404098;
-	bh=f/ez5+ZlzlIHnsW5duY84m4TJ3zpnI8DqQZmPZ44+lg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ejfhhv0PvBi+SYE4nZFyhMPQxoZT58IYXUs7Uavx8zK4VbTGbh9wBe+AAdDssxgch
-	 LfrHgH0AfjDnEx1At23KQdOwVHaAef5k0//vM9oHxk2Bpc/liZMtui/P40LS1cbPPu
-	 ffpACuH2zLJJNhU2n5o/pxICbMDUw1vJWVPzdX2lWHdRvBvSalH+4zbLK8gH5qpRbJ
-	 PKzCrp+NsDS0FGsgF6gOGt6MJkaE4VdLHqxVw9r5JGe3LWpDYtuBIgYuwJeFzXiRwd
-	 cnEPQeBzZxkYOVDfLtQY8joUBmlw46JCDKLUh5+Pde9cGNodhimfM8GVmoTf4l0hm5
-	 B9YClHzNq4AKA==
-Date: Fri, 16 May 2025 15:01:34 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Alejandro Enrique <alejandroe1@geotab.com>
-Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] riscv: dts: sophgo: add zfh for sg2042
-Message-ID: <20250516-unfasten-submersed-e854fc9a0142@spud>
-References: <20250514-ubx-m9-v1-0-193973a4f3ca@geotab.com>
- <20250514-ubx-m9-v1-1-193973a4f3ca@geotab.com>
- <20250514-saggy-shifter-e4ac7152f823@spud>
- <CAN=L63qsjEAvfocgP0tGrpe-x6Rx1gvTAkPE9i99Ai2zJj6ssA@mail.gmail.com>
- <20250515-varying-swan-31ca63615b43@spud>
- <CAN=L63oc7a6+_e+nhiyCkttX-TSbcjcwBmSzPsSk94m1ebGt4w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JllxqA74"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747404177; x=1778940177;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XD5LW1X8Za8qYgmHHCMJojUWKp2P7yuhRCd7itD26lo=;
+  b=JllxqA74mq/yQjzpbNgf3FK+rzg9hWY+7kjMFUXOPOHQT8CPQyB/GbQr
+   jr2Od9NDw31cOjb+x8t0nQm23S5AqIvXpXZTWrZrvrJisgZJ0QaCy+64D
+   fYIPOs1W/Y1+raWqx/uZcy2DVBEebj3jUJ3sH3gOzoOIvKb2cw2XiKKUh
+   LvIvX7b9AGfwc12eIOxb9oJDdp20YaCQTDicw8rPZq2fxa3auRdQT2kha
+   ljeH8Yky5wlLNK0gB0F3KWM7O/5RHj1PKwTMido0153kAadtJTLnCDEBM
+   p0I6QGmkNNaRITYbMWGo6ukpBErXWh3ZvViGKPfiJQ7WDwML0yTEsa8yQ
+   Q==;
+X-CSE-ConnectionGUID: EdcAXMIaRiWVWSI5ewwPcw==
+X-CSE-MsgGUID: JtsSB7aGQmClbsmOW+U43A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="53049001"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="53049001"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 07:01:48 -0700
+X-CSE-ConnectionGUID: ZTRg3ApCQOeOOdReIf9O4g==
+X-CSE-MsgGUID: OLEkQDUZR2y+jHsqHAwl6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="139101238"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa008.fm.intel.com with ESMTP; 16 May 2025 07:01:42 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 0FE981BC; Fri, 16 May 2025 17:01:20 +0300 (EEST)
+Date: Fri, 16 May 2025 17:01:20 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Jan Kiszka <jan.kiszka@siemens.com>, 
+	Kieran Bingham <kbingham@kernel.org>, Michael Roth <michael.roth@amd.com>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Brijesh Singh <brijesh.singh@amd.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Juergen Gross <jgross@suse.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-efi@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCHv3 2/4] x86/64/mm: Make SPARSEMEM_VMEMMAP the only memory
+ model
+Message-ID: <rqkfqkkli57fbd5zkj3bwko44kmqqwnfdm766snm26y2so52ss@6it24qxv356q>
+References: <20250516123306.3812286-1-kirill.shutemov@linux.intel.com>
+ <20250516123306.3812286-3-kirill.shutemov@linux.intel.com>
+ <30570ca0-8da4-4ebc-84d6-0a4badfb7154@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="igPO54Zv7iTQt/LL"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAN=L63oc7a6+_e+nhiyCkttX-TSbcjcwBmSzPsSk94m1ebGt4w@mail.gmail.com>
+In-Reply-To: <30570ca0-8da4-4ebc-84d6-0a4badfb7154@intel.com>
 
+On Fri, May 16, 2025 at 06:42:03AM -0700, Dave Hansen wrote:
+> On 5/16/25 05:33, Kirill A. Shutemov wrote:
+> > 5-level paging only supports SPARSEMEM_VMEMMAP. CONFIG_X86_5LEVEL is
+> > being phased out, making 5-level paging support mandatory.
+> > 
+> > Make CONFIG_SPARSEMEM_VMEMMAP mandatory for x86-64 and eliminate
+> > any associated conditional statements.
+> I think we have ourselves a catch-22 here.
+> 
+> SPARSEMEM_VMEMMAP was selected because the other sparsemem modes
+> couldn't handle a dynamic MAX_PHYS{MEM,ADDR}_BITS introduced by 5-level
+> paging. Now you're proposing making it static again, but keeping the
+> SPARSEMEM_VMEMMAP dependency.
+> 
+> If you remove the dynamic MAX_PHYS{MEM,ADDR}_BITS, you should also
+> remove the dependency on SPARSEMEM_VMEMMAP. No?
 
---igPO54Zv7iTQt/LL
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I guess. But how?
 
-On Fri, May 16, 2025 at 12:23:35PM +0200, Alejandro Enrique wrote:
-> On Thu, May 15, 2025 at 5:02=E2=80=AFPM Conor Dooley <conor@kernel.org> w=
-rote:
-> >
-> > On Wed, May 14, 2025 at 06:53:25PM +0200, Alejandro Enrique wrote:
-> > > On Wed, May 14, 2025 at 5:49=E2=80=AFPM Conor Dooley <conor@kernel.or=
-g> wrote:
-> > >
-> > > > On Wed, May 14, 2025 at 01:55:54PM +0200, Alejandro Enrique via B4 =
-Relay
-> > > > wrote:
-> > > > > From: Alejandro Enrique <alejandroe1@geotab.com>
-> > > > >
-> > > > > Add compatible for u-blox NEO-9M GPS module.
-> > > > >
-> > > > > Signed-off-by: Alejandro Enrique <alejandroe1@geotab.com>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml | 1 +
-> > > > >  1 file changed, 1 insertion(+)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m=
-=2Eyaml
-> > > > b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-> > > > > index
-> > > > 7d4b6d49e5eea2201ac05ba6d54b1c1721172f26..cf5ff051b9ab03e5bfed8156a=
-72170965929bb7e
-> > > > 100644
-> > > > > --- a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-> > > > > @@ -22,6 +22,7 @@ properties:
-> > > > >        - u-blox,neo-6m
-> > > > >        - u-blox,neo-8
-> > > > >        - u-blox,neo-m8
-> > > > > +      - u-blox,neo-m9
-> > > >
-> > > > No match data in the driver, why is a fallback not sufficient?
-> > > >
-> > >
-> > > I added the match data in the driver in the PATCH 2/2 of this series
-> > > in the same fashion as previously supported modules.
-> >
-> > Did you? When I looked, there was just a compatible and no match data.
->=20
-> You are right. I just added a compatible string, no match data. Sorry,
-> I was not following.
-> I just added the neo-m9 compatible the same way the neo-6m was previously
-> added.
->=20
-> What do you mean by using a fallback? Using one of the existent
-> compatibles (none have match data) or adding a new fallback
-> compatible, something like just "u-blox,neo"?
+And is there any value to support !SPARSEMEM_VMEMMAP?
 
-Falling back to one of the existing ones, like neo-m8.
-
---igPO54Zv7iTQt/LL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCdFPgAKCRB4tDGHoIJi
-0ocGAQDHwFYrWtOhkM7bBrSaY1o6vT9VhtALmzyAvFmHMp5xxgD+JEp+ke3NWLEX
-J/kjxRcrW9CCIDlDo8vL9Kjc4unbngU=
-=hpUU
------END PGP SIGNATURE-----
-
---igPO54Zv7iTQt/LL--
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
