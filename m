@@ -1,92 +1,72 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34AB1242923
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 12:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C48239E69;
+	Fri, 16 May 2025 12:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747399200; cv=none; b=b27ud3kWSO2ktSaf43yJ3NqyEJ5y8i9UgMlACp/yrgNU9WvPUKM6MJmSYcqnapbRfkh1iqI4ySXyYnQmY20Nkq9eZPZo/e41yXBMFx0ZUQe38dzuIL5w7KSGo0gDXiq9c+5gZq98+TZDOrt3aJ4z0nVvBhQREAosGaFn+FZncEk=
+	t=1747399252; cv=none; b=sfEBUmD5vrUIIOpLrW9724oO5LZUK6/MiqCWDrcHSyhQOJAD1/1EpCJ1Onx/ajPAeTKnzzhWqdAA5+GAx2cjXNHHjS3o/p+2OuWuK4TDJv59Vh+7YEWdu52DPDVRyLm5ne5IOoA/OoI58exjHp1/XMmkqx9+GwIRF7qqc6i3qM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747399200; c=relaxed/simple;
-	bh=rdOAlDn565rE1FqMI4nBJDb9BzleRulrsucs0xSkJLA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Na7F/mpAtIaAY5lwDZ3WGLFXmcbdo7f8b1RYGMHElDK9/FE/4aQ/28K0z57Cbiv3g08ykgeQ6ukOcWAsJilYgLYoZiBe7eojMMbEd5huV8NKniWyfj8tHvp54IHA0qwDVu80ocbtYcBjKO8ef/aOVvOSH0xSf8FuCPxZ2fj8b9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a8tg98+G; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747399252; c=relaxed/simple;
+	bh=En/Vw9wTnrV0iiGoqqr5ARsm07NVhMnseucljR4/vtE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EhrOnfwRqrtQbcEkR9vitsSGFaFAPAYh2Bz3+kZCUVA45nkFY/7qiZGHfFN8ssvjj3lBmxfYmEeRpq148Eo6MFBfapv5SOz3IDo4IltoFhoYb+iQt2DAIEy0VkU4GC8gu7JET/3q8FfEqCCg1RzjYWHcUxdPiohJJYFKfCUC9Mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aQbwLBBd; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a8tg98+G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747399198;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hiLZZy7QAtq/50XMExKGpNPia0HeTXt82qBD/QjAX4s=;
-	b=a8tg98+GvyQ4oA8fHZ1RYO2AK4cEYGhr5Dc6etsEV7j+0sehPQLB25vR1xWJw3wuZJ6TOR
-	K+hJqEvCRBdf4HYp61zVi5XArIuX9kO3LwygwQB9pcSquTONY3EOlBQIloDOcK6haDGVyv
-	GoMgXEcrE84eRY8mmbnBXnf//nrQCz4=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-582-E-gcCyCNN6C8ego3w_n8Jg-1; Fri, 16 May 2025 08:39:57 -0400
-X-MC-Unique: E-gcCyCNN6C8ego3w_n8Jg-1
-X-Mimecast-MFC-AGG-ID: E-gcCyCNN6C8ego3w_n8Jg_1747399196
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-442f4a3851fso17436975e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 05:39:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747399196; x=1748003996;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hiLZZy7QAtq/50XMExKGpNPia0HeTXt82qBD/QjAX4s=;
-        b=frtNOoTmf8BdhRxv2VVdj6Ko5YZBaJDsr7Ohb+5bIWGZGwuwON6aTtyA49fiCIJ6UG
-         ZX7gjQ4myv+07OfBHqjpBcuJ+Yp8yE/XaMiXNitXlL0eRKsueF4A2nZpUpqAAfX9tjCX
-         bET3Ffgm5ix6WhBlGjYaPFX1xPlzH/0axrXmn75LiYXMBNfQ0E3eHUY7Yc8kajFZWfmO
-         RExbXKSaKjrihvLK5sSkzEVYPkOkxnVVBdOUsuh5v6LNLONx329XJVN49P1tGXTfapL5
-         Db/yvp/rVdskcbT2AYWL1k9AT/kSIQlRivZIGAsDtbu/5ovmsSV0Vrt4sxg4bi4Fi/FJ
-         s9ig==
-X-Gm-Message-State: AOJu0YzcQSzOxWPvHCZpHjhkDiQRWvRxnDlhbZdxlKwC1+aryL2l3x7U
-	Lp3PoCPMWTPAyzymKbbbPAnwji/r8H2pTuWHEodyc8OTLQZQf4WSTysdp/QJW55UzPG0tMISubb
-	9zEVM5wVF0tp2qMLg5HjW1ZVVbyGbSFK4HWJ61d5H9eWKTvdySC2dTPhOQ5yceTQDmmpJhHr0nt
-	/A7M4oIKZaup4xu3tUFBkoTxKx7rSu+bIxTtBovUJe5g+Mziou
-X-Gm-Gg: ASbGncu1wKMNZ6ZLATI38tszWciChVzkaqVUTlGT5zsjOSXLZ27zDVuGA7uRWM+fXA6
-	nRSLCIMquYiG8mSiFFOQnwWaOqbo7kgLCHrcdku+BNbmnethE0nUGuAssxlXBA4jyKtKCisJmAL
-	xi2TIAO5Xjwv6LJ1/juBtCMok/bMIME7Nr7WTHCbbW8TfKbYXfl3LYmnjNK0AhyLSLvxWfN6d/R
-	TNjjCqgyKqArVwObzXSu/lbHHQdVEf0jvRATkiFTpnyOrxEXsmkgj9/WXtpbkWo2Da12nt07G9r
-	i42tu6dl10IDb9zLovc43kurBsZ++QoE3/9fwRwd7a6Cdf4YbCieyAwOw6cVB8299O5eKIkG
-X-Received: by 2002:a05:600c:c1b:b0:43c:e481:3353 with SMTP id 5b1f17b1804b1-442feffbb8dmr28003505e9.17.1747399195811;
-        Fri, 16 May 2025 05:39:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHPCjYc5Wqc+yI//ttOUMN3UV92gYVHaHXlQYA3K8J/bBkEM9DoFCaA+VbVbF4V9/mI2J6diA==
-X-Received: by 2002:a05:600c:c1b:b0:43c:e481:3353 with SMTP id 5b1f17b1804b1-442feffbb8dmr28002955e9.17.1747399195319;
-        Fri, 16 May 2025 05:39:55 -0700 (PDT)
-Received: from localhost (p200300d82f474700e6f9f4539ece7602.dip0.t-ipconnect.de. [2003:d8:2f47:4700:e6f9:f453:9ece:7602])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442f3380498sm108750375e9.11.2025.05.16.05.39.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 May 2025 05:39:54 -0700 (PDT)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-s390@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-mm@kvack.org,
-	David Hildenbrand <david@redhat.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Thomas Huth <thuth@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Zi Yan <ziy@nvidia.com>,
-	Sebastian Mitterle <smitterl@redhat.com>
-Subject: [PATCH v1 3/3] s390/uv: improve splitting of large folios that cannot be split while dirty
-Date: Fri, 16 May 2025 14:39:46 +0200
-Message-ID: <20250516123946.1648026-4-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aQbwLBBd"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G5unPW012663;
+	Fri, 16 May 2025 12:40:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=gjvxHPL1janfCdvLnHMKKrb2pt2ZDhhBF4Dw2m5P8
+	08=; b=aQbwLBBdvoLAyQApqMLM5JpkZUAjMxnRbYFqFVX4sWinkw/LvZkSGc1Q4
+	QK6YyQr132zU/eNgp1owWpQN20bL3a+MMSPBAfddTpu+Zi21qX0icwIMWheQ3wPP
+	vfMCEVzAPGoJw+qOoLQ/L1R03soUa+xT/42GD8f+oqk2KRcDe8224M2PQTbWd/yd
+	J8r+Uj6L2Bg23bLJi+U3j9mdM5WezY9xdTFVElmbXWVjiH21FoCDDX6hsYkxqMWi
+	lMrRsqJ2IvpTGZRu7KNl52yIu7sYnK61Pl7DwYKtPTppYrkBwKoZz4bFfqb/MWzT
+	7pMnRahrGckA9Xhvg+sOJa0+QU5rA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46nnw943sv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 12:40:36 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54GCFiIg024904;
+	Fri, 16 May 2025 12:40:35 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46nnw943st-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 12:40:35 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54GA5Iwk024273;
+	Fri, 16 May 2025 12:40:34 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46mbfsfgjr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 12:40:34 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54GCeTgU46203192
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 16 May 2025 12:40:29 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4F25A20166;
+	Fri, 16 May 2025 12:12:32 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 10B312015F;
+	Fri, 16 May 2025 12:12:30 +0000 (GMT)
+Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.ibm.com.com (unknown [9.39.30.87])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 16 May 2025 12:12:29 +0000 (GMT)
+From: Gautam Menghani <gautam@linux.ibm.com>
+To: maddy@linux.ibm.com, npiggin@gmail.com, mpe@ellerman.id.au,
+        christophe.leroy@csgroup.eu
+Cc: Gautam Menghani <gautam@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: PPC: Book3S HV: Add H_VIRT mapping for tracing exits
+Date: Fri, 16 May 2025 17:42:24 +0530
+Message-ID: <20250516121225.276466-1-gautam@linux.ibm.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250516123946.1648026-1-david@redhat.com>
-References: <20250516123946.1648026-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -94,146 +74,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDEyMSBTYWx0ZWRfX6Fsbe83ZOFiw s5CTWwsRlm27GUpEoBM0SEvM9NqO+gOHMvAkeDwYpHmh/I+c906Mh6aRdxiiDxYBLhu9xgN3sIy Aovr1iRe9HekIfP53wyQkk/YR4c2NPPKpoU24yLmiyvq2WPeioyJJHBLCWmqW20kGpbhNoIVGb2
+ OIfu0SAiN/dkMq1/cpAXpAUhn28F7rkjNSDbXVUmXf+CrKkaH6RhSM8pQNH2QjR80ltii/O2+DH OkRDOs+uaK26gpH2CAhTyV9GyJiCQN7mycTAfLvUxkoS5zj9qOUBfopiLyQlykb352+W3z57Hxd pABWmNMTuaaH9hH2tWPIzXQpS9GBROakkMQqUWmWSOBVVgZMVHSg3MTYkjoVIDyPDaU5rFFyiug
+ IlTJfTMgdDTVQEXHHwVk+4dQ3OU527lWpvHMHaN8lExjLuUoJTUzW0CcxZ8/QshXuvxWP6CN
+X-Authority-Analysis: v=2.4 cv=b8Ky4sGx c=1 sm=1 tr=0 ts=68273244 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=q7Y8yhldYiaEvS2G40IA:9
+X-Proofpoint-GUID: OivNb5j-I5ywfp3i_xhTq_WXGpHLiA0M
+X-Proofpoint-ORIG-GUID: 7wjkZDfhubc31Ctd_5x_AnMhT8BqEQDA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-16_05,2025-05-16_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
+ spamscore=0 mlxscore=0 suspectscore=0 impostorscore=0 phishscore=0
+ adultscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505160121
 
-Currently, starting a PV VM on an iomap-based filesystem with large
-folio support, such as XFS, will not work. We'll be stuck in
-unpack_one()->gmap_make_secure(), because we can't seem to make progress
-splitting the large folio.
+The macro kvm_trace_symbol_exit is used for providing the mappings
+for the trap vectors and their names. Add mapping for H_VIRT so that
+trap reason is displayed as string instead of a vector number when using
+the kvm_guest_exit tracepoint.
 
-The problem is that we require a writable PTE but a writable PTE under such
-filesystems will imply a dirty folio.
-
-So whenever we have a writable PTE, we'll have a dirty folio, and dirty
-iomap folios cannot currently get split, because
-split_folio()->split_huge_page_to_list_to_order()->filemap_release_folio()
-will fail in iomap_release_folio().
-
-So we will not make any progress splitting such large folios.
-
-Until dirty folios can be split more reliably, let's manually trigger
-writeback of the problematic folio using
-filemap_write_and_wait_range(), and retry the split immediately
-afterwards exactly once, before looking up the folio again.
-
-Should this logic be part of split_folio()? Likely not; most split users
-don't have to split so eagerly to make any progress.
-
-For now, this seems to affect xfs, zonefs and erofs, and this patch
-makes it work again (tested on xfs only).
-
-While this could be considered a fix for 6795801366da ("xfs: Support
-large folios"), df2f9708ff1f ("zonefs: enable support for large folios")
-and ce529cc25b18 ("erofs: enable large folios for iomap mode"), before
-commit eef88fe45ac9 ("s390/uv: Split large folios in gmap_make_secure()"),
-we did not try splitting large folios at all. So it's all rather part of
-making SE compatible with file systems that support large folios. But to
-have some "Fixes:" tag, let's just use eef88fe45ac9.
-
-Not CCing stable, because there are a lot of dependencies, and it simply
-not working is not critical in stable kernels.
-
-Reported-by: Sebastian Mitterle <smitterl@redhat.com>
-Closes: https://issues.redhat.com/browse/RHEL-58218
-Fixes: eef88fe45ac9 ("s390/uv: Split large folios in gmap_make_secure()")
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
 ---
- arch/s390/kernel/uv.c | 66 +++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 60 insertions(+), 6 deletions(-)
+ arch/powerpc/kvm/trace_book3s.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-index f6ddb2b54032e..d278bf0c09d1b 100644
---- a/arch/s390/kernel/uv.c
-+++ b/arch/s390/kernel/uv.c
-@@ -15,6 +15,7 @@
- #include <linux/pagemap.h>
- #include <linux/swap.h>
- #include <linux/pagewalk.h>
-+#include <linux/backing-dev.h>
- #include <asm/facility.h>
- #include <asm/sections.h>
- #include <asm/uv.h>
-@@ -338,22 +339,75 @@ static int make_folio_secure(struct mm_struct *mm, struct folio *folio, struct u
-  */
- static int s390_wiggle_split_folio(struct mm_struct *mm, struct folio *folio)
- {
--	int rc;
-+	int rc, tried_splits;
- 
- 	lockdep_assert_not_held(&mm->mmap_lock);
- 	folio_wait_writeback(folio);
- 	lru_add_drain_all();
- 
--	if (folio_test_large(folio)) {
-+	if (!folio_test_large(folio))
-+		return 0;
-+
-+	for (tried_splits = 0; tried_splits < 2; tried_splits++) {
-+		struct address_space *mapping;
-+		loff_t lstart, lend;
-+		struct inode *inode;
-+
- 		folio_lock(folio);
- 		rc = split_folio(folio);
-+		if (rc != -EBUSY) {
-+			folio_unlock(folio);
-+			return rc;
-+		}
-+
-+		/*
-+		 * Splitting with -EBUSY can fail for various reasons, but we
-+		 * have to handle one case explicitly for now: some mappings
-+		 * don't allow for splitting dirty folios; writeback will
-+		 * mark them clean again, including marking all page table
-+		 * entries mapping the folio read-only, to catch future write
-+		 * attempts.
-+		 *
-+		 * While the system should be writing back dirty folios in the
-+		 * background, we obtained this folio by looking up a writable
-+		 * page table entry. On these problematic mappings, writable
-+		 * page table entries imply dirty folios, preventing the
-+		 * split in the first place.
-+		 *
-+		 * To prevent a livelock when trigger writeback manually and
-+		 * letting the caller look up the folio again in the page
-+		 * table (turning it dirty), immediately try to split again.
-+		 *
-+		 * This is only a problem for some mappings (e.g., XFS);
-+		 * mappings that do not support writeback (e.g., shmem) do not
-+		 * apply.
-+		 */
-+		if (!folio_test_dirty(folio) || folio_test_anon(folio) ||
-+		    !folio->mapping || !mapping_can_writeback(folio->mapping)) {
-+			folio_unlock(folio);
-+			break;
-+		}
-+
-+		/*
-+		 * Ideally, we'd only trigger writeback on this exact folio. But
-+		 * there is no easy way to do that, so we'll stabilize the
-+		 * mapping while we still hold the folio lock, so we can drop
-+		 * the folio lock to trigger writeback on the range currently
-+		 * covered by the folio instead.
-+		 */
-+		mapping = folio->mapping;
-+		lstart = folio_pos(folio);
-+		lend = lstart + folio_size(folio) - 1;
-+		inode = igrab(mapping->host);
- 		folio_unlock(folio);
- 
--		if (rc != -EBUSY)
--			return rc;
--		return -EAGAIN;
-+		if (unlikely(!inode))
-+			break;
-+
-+		filemap_write_and_wait_range(mapping, lstart, lend);
-+		iput(mapping->host);
- 	}
--	return 0;
-+	return -EAGAIN;
- }
- 
- int make_hva_secure(struct mm_struct *mm, unsigned long hva, struct uv_cb_header *uvcb)
+diff --git a/arch/powerpc/kvm/trace_book3s.h b/arch/powerpc/kvm/trace_book3s.h
+index 372a82fa2de3..9260ddbd557f 100644
+--- a/arch/powerpc/kvm/trace_book3s.h
++++ b/arch/powerpc/kvm/trace_book3s.h
+@@ -25,6 +25,7 @@
+ 	{0xe00, "H_DATA_STORAGE"}, \
+ 	{0xe20, "H_INST_STORAGE"}, \
+ 	{0xe40, "H_EMUL_ASSIST"}, \
++	{0xea0, "H_VIRT"}, \
+ 	{0xf00, "PERFMON"}, \
+ 	{0xf20, "ALTIVEC"}, \
+ 	{0xf40, "VSX"}
 -- 
 2.49.0
 
