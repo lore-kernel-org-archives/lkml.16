@@ -1,214 +1,100 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78EC01DDC2B
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DA741760;
+	Fri, 16 May 2025 16:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747414129; cv=none; b=Z3Guc17aAd/yo5m1G22F5+KZVCHvkUr572bMjSdTOR5HJ0UKbc4jLnZCCi0ZDFqVwtPmzRTyE6kIvFaIJ77G8F1pGMaEZ5nAB3nYWVoS6Ww9eBO2I7RGTV9qAJD0l2FdJyoAVApvLEDvzdANqHzeJIMgbvRxq4PUklcWCI2BJzI=
+	t=1747414153; cv=none; b=GwsPe0E89+ztCx/GClLNbrDQwostrvTGMnYGnWEcjugIKs3bIrLb51t9FjulZv+oWcJ1qfSuW+67vY81iHtuqH1rRuUyS3YfujxeyXKQ7m2CX91ov2zgTQHoMXMNAUj6GBhNZtV84nIF2urKgI5m1tly/oMASOfiV/0nZln/bWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747414129; c=relaxed/simple;
-	bh=/f8kyOvNPuischNyTg3IFMOJTDBfi3p3WIMAiKExCd0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=U9MHYKt5WeyyRsbfsppJxJq9eUpUfoUTfwV4bItZh1wRbvH6+SkLN2ycfvpw5KJ67qOPJ8/eUjiZTn/gmbS2gH/cSV12lI0mHX2KCQ11k96gV9Cv1ok2FPuvb49ATJTXnzjL5sQqpMbUa9qctS4mhVTmdi58HhhW+Vtvi1dQ5C0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WitPjM45; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747414153; c=relaxed/simple;
+	bh=/mlq8eQDbKPnb3XOZNN5sgJbyvO/ncRpvHJjF4pxdno=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V8OVsvv/L15rH/i6X41BWRlnkrFsSVKqF4IkS+1YAZLhSSR6vnDh+YUA0yy8u9ZORztQ2YmGx36sH8BNWPywAvWHdSveQUq37l4sWYilnPxWps0RTbcH0QErr6WQbAhkkA4BTt1mqyxhVdXO43iqd0RxeZqgNWyYU5MQHnpx38Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U6QT4B88; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WitPjM45"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F1805439C3;
-	Fri, 16 May 2025 16:48:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747414125;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZQrmPmkpZLcvYwzVyIcePfVAEoL0IdnmeRCnBsVn4Rs=;
-	b=WitPjM45siFcCw96knYm6XtevTudsV5ENtd7wJBmPN4Rc9EoSceN4Zyw9kyMra6Zm+Vder
-	2+UwNe5ork0e99LkrJ6Bm0STiTWKGU3jK1TW+SQrV5KufimwzDUaRWijOU1RAYuXx+GmIN
-	n6e3q1qxSphY+kXRY2G25wZKZyi30MnLtC1fouXotJWGupHM+Tk4aD2587vpM4wujq1jqL
-	BLRBlEHX7cZAHq7y079Iaid+WuuT46o+GHLwRnLOgZQB0P8JYLoetSU/jSCelMH+X7sguG
-	m9cxUwdBr1B+Bgbi2B9l8hhzOt+GvXNcZi16wYZSU2JAFsSve4y8DUOHzzoRjQ==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Fri, 16 May 2025 18:48:39 +0200
-Subject: [PATCH v8 3/3] drm/tests: bridge: add KUnit tests for
- devm_drm_bridge_alloc()
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U6QT4B88"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-73bf5aa95e7so2380253b3a.1;
+        Fri, 16 May 2025 09:49:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747414151; x=1748018951; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LbhWXOd+OEyb1Eiiffm06MaKsnNTsDGXVTdFbUo7D60=;
+        b=U6QT4B88/NFXLfm8ErSoRl7uD6shazAAEg9yjce8uTYzMjAGwvwITd1/91MIZ+t4KW
+         bKNa7yi6q5QIM2J16L6dptSwZTi73magy9AfUemolNsDnrNSaKSNXYgMyQtyk4clsutJ
+         Vv3IshUVlfHyiJSyjFf4TJ0+pVeMl3hDVclR5G01FqmmLd1PjXfwMGDchCL3Yg1iWS7Z
+         XW+yTGtBEfSBh5o5WrQiszad9lJVbU5vQcyUwPtOO79k8XroxDvTi6E/rCni35oRXxVH
+         +iBztZS9xqhZ2Axq9YonyIlXxEzkfY9zjllNuTRyPT9asKcOZqaw8Ug1MB3kfm/JoWI7
+         yuYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747414151; x=1748018951;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LbhWXOd+OEyb1Eiiffm06MaKsnNTsDGXVTdFbUo7D60=;
+        b=LqMQg6FZHA2yQf1huyvHjVbvFxjuVwwBdAlRWgxFKHu3YVNoTh8GPcNuZOztAnRqHL
+         K0NN7edSRwiCCfgI8fI3PczSRIpx0xMC2RyywL14oXN5j7NV7bSc1cA67EInoy0JQYGy
+         GfAfTO5801LVcAzahuKKOFvtAGFbPH6gApke/nykcncIt57MQZfGVfqEr/kVrmNdXxS6
+         O81YNDrdi91i0fAubDd/qndecpJfxvccFgm2aqL/V9XYO/KhPwc1lYRS9KHCsPc1IRaL
+         Afagyk8rPJr5uL+v8EME4BWwhEhMn//cTy+n7clAXD3fNs/KtZMVaoTSSwx0aHfuLZXI
+         0pxw==
+X-Forwarded-Encrypted: i=1; AJvYcCUJ1bjCNlHXq+Ebb2GfAFC9b3fwcYfbkoLMH7nD6hCLUfOu4cr7EhbD8sNNFkk6uPnUt2Ri1uFuSjYv9vs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeM8lq920J96RfrbDAFrujvjOaPhD4PWsgY+FviraU1QS4vk3W
+	ACjY2kOUB56CZQAPWuczhDf6+kZh/y0d9HSn24Pr2PajY6Q3qPnPpG9s
+X-Gm-Gg: ASbGncsayC9ku/FisZWT4vtkddYAUPB3EchPhgZRz9q0+zyvPLfBbYE3tKyVhgBV2P+
+	lwa1SrmZyapSfYhx17lNnSI4uwdYbc+QZuVbkAhr1Dr50zCxqVIepwokvWfXRR+49AD/h+kIcZg
+	IWxJMTkZquszZU8mJIReuQm3Z18gGAB4ThjPD4mnzeLyBTLjd3is3HCCkiF4XqfldrE0itAuY6S
+	XGNG24w9GqWjRolQt6SFt8CrhaCNBji9jSdHfvlAKp9rnS33Njv+2M1hWXPiWMlU/sOGidozV32
+	Ol978+15aLXvkwxEIZDm5XTwjSdZYKbOaz7ZUUdUB4XJBUxWWaW7gg==
+X-Google-Smtp-Source: AGHT+IHgpBkEA5jao8AFZhjUwipXDHq1C0+zdkgS9xg6GlPvl6Hk6Ct9CuoCbeUY4IivC2KsTff4Kg==
+X-Received: by 2002:a05:6a00:21c3:b0:73e:10ea:b1e9 with SMTP id d2e1a72fcca58-742a979672dmr5269786b3a.6.1747414150699;
+        Fri, 16 May 2025 09:49:10 -0700 (PDT)
+Received: from lolcat.. ([2401:4900:1c42:3d25:8f97:4da2:63c3:46c2])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9829ad2sm1807443b3a.93.2025.05.16.09.49.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 09:49:10 -0700 (PDT)
+From: rodgepritesh@gmail.com
+To: skhan@linuxfoundation.org
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	rodgepritesh@gmail.com
+Subject: [PATCH]  [PATCH] Change pidns to pid namespace
+Date: Fri, 16 May 2025 22:19:02 +0530
+Message-ID: <20250516164902.91085-1-rodgepritesh@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250516-drm-bridge-alloc-doc-test-v8-3-7e356fd58ba5@bootlin.com>
-References: <20250516-drm-bridge-alloc-doc-test-v8-0-7e356fd58ba5@bootlin.com>
-In-Reply-To: <20250516-drm-bridge-alloc-doc-test-v8-0-7e356fd58ba5@bootlin.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
-Cc: Anusha Srivatsa <asrivats@redhat.com>, 
- Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
- =?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
- Hui Pu <Hui.Pu@gehealthcare.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefudefvdejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeuvdfftefgueduleehueetgffgjeeitedtteetkeeuueeuueekveevvdeuveenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghloheplgduledvrdduieekrddujeekrdejhegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddtpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtoheplhhumhgrghesk
- hgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepphgruhhlkhesshihshdqsggrshgvrdhiohdprhgtphhtthhopehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Add KUnit tests for the newly introduced devm_drm_bridge_alloc().
+From: Pritesh Rodge <rodgepritesh@gmail.com>
 
-Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Changed a comment in memfd_test.c , Unabbreviated pidns to pid namespace
+for better understanding .
 
+Signed-off-by: Pritesh Rodge <rodgepritesh@gmail.com>
 ---
+ tools/testing/selftests/memfd/memfd_test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changed in v8:
- - rebase on new patch converting drm_bridge_test.c to
-   devm_drm_bridge_alloc()
- - add check that bridge is removed (thanks to the .destroy callback)
- - add a check with get/put
-
-Changed in v7:
- - rebase on current drm-misc-next, which now has a drm_bridge_test.c file
- - cleanup commit message
-
-Changed in v6:
- - update to new devm_drm_bridge_alloc() API
- - remove drm_test_drm_bridge_put test, not straightforward to write with
-   the new API and the current notification mechanism
- - do not allocate a drm_device: a bridge is allocated without one
- - rename some identifiers for easier code reading
-
-This patch was added in v5.
----
- drivers/gpu/drm/tests/drm_bridge_test.c | 84 +++++++++++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
-
-diff --git a/drivers/gpu/drm/tests/drm_bridge_test.c b/drivers/gpu/drm/tests/drm_bridge_test.c
-index f3a625c536f610dc8560b56531056df7c613f564..32db3a82fe6d14a3e9d6536bcf4b19f1bc65969a 100644
---- a/drivers/gpu/drm/tests/drm_bridge_test.c
-+++ b/drivers/gpu/drm/tests/drm_bridge_test.c
-@@ -8,6 +8,7 @@
- #include <drm/drm_bridge_helper.h>
- #include <drm/drm_kunit_helpers.h>
+diff --git a/tools/testing/selftests/memfd/memfd_test.c b/tools/testing/selftests/memfd/memfd_test.c
+index 5b993924cc3f..4e4c46246a4e 100644
+--- a/tools/testing/selftests/memfd/memfd_test.c
++++ b/tools/testing/selftests/memfd/memfd_test.c
+@@ -1359,7 +1359,7 @@ static int sysctl_nested_child(void *arg)
  
-+#include <kunit/device.h>
- #include <kunit/test.h>
+ 	printf("%s nested sysctl 0\n", memfd_str);
+ 	sysctl_assert_write("0");
+-	/* A further nested pidns works the same. */
++	/* A further nested pid-namespace works the same. */
+ 	pid = spawn_thread(CLONE_NEWPID, sysctl_simple_child, NULL);
+ 	join_thread(pid);
  
- /*
-@@ -21,6 +22,7 @@ struct dummy_drm_bridge {
- 	unsigned int enable_count;
- 	unsigned int disable_count;
- 	struct drm_bridge bridge;
-+	void *data;
- };
- 
- struct drm_bridge_init_priv {
-@@ -422,11 +424,93 @@ static struct kunit_suite drm_bridge_helper_reset_crtc_test_suite = {
- 	.test_cases = drm_bridge_helper_reset_crtc_tests,
- };
- 
-+struct drm_bridge_alloc_test_ctx {
-+	struct device *dev;
-+	struct dummy_drm_bridge *dummy_br;
-+	bool destroyed;
-+};
-+
-+static void dummy_drm_bridge_destroy(struct drm_bridge *bridge)
-+{
-+	struct dummy_drm_bridge *dummy_br = bridge_to_dummy_bridge(bridge);
-+	struct drm_bridge_alloc_test_ctx *ctx = (struct drm_bridge_alloc_test_ctx *)dummy_br->data;
-+
-+	ctx->destroyed = true;
-+}
-+
-+static const struct drm_bridge_funcs drm_bridge_dummy_funcs = {
-+	.destroy = dummy_drm_bridge_destroy,
-+};
-+
-+static int drm_test_bridge_alloc_init(struct kunit *test)
-+{
-+	struct drm_bridge_alloc_test_ctx *ctx;
-+
-+	ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
-+
-+	ctx->dev = kunit_device_register(test, "drm-bridge-dev");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->dev);
-+
-+	test->priv = ctx;
-+
-+	ctx->dummy_br = devm_drm_bridge_alloc(ctx->dev, struct dummy_drm_bridge, bridge,
-+					      &drm_bridge_dummy_funcs);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->dummy_br);
-+
-+	ctx->dummy_br->data = ctx;
-+
-+	KUNIT_ASSERT_FALSE(test, ctx->destroyed);
-+
-+	return 0;
-+}
-+
-+static void drm_test_drm_bridge_alloc_basic(struct kunit *test)
-+{
-+	struct drm_bridge_alloc_test_ctx *ctx = test->priv;
-+
-+	KUNIT_ASSERT_FALSE(test, ctx->destroyed);
-+
-+	kunit_device_unregister(test, ctx->dev);
-+	KUNIT_ASSERT_TRUE(test, ctx->destroyed);
-+}
-+
-+static void drm_test_drm_bridge_alloc_get_put(struct kunit *test)
-+{
-+	struct drm_bridge_alloc_test_ctx *ctx = test->priv;
-+
-+	KUNIT_ASSERT_FALSE(test, ctx->destroyed);
-+
-+	drm_bridge_get(&ctx->dummy_br->bridge);
-+	KUNIT_ASSERT_FALSE(test, ctx->destroyed);
-+
-+	kunit_device_unregister(test, ctx->dev);
-+	KUNIT_ASSERT_FALSE(test, ctx->destroyed);
-+
-+	drm_bridge_put(&ctx->dummy_br->bridge);
-+	KUNIT_ASSERT_TRUE(test, ctx->destroyed);
-+}
-+
-+static struct kunit_case drm_bridge_alloc_tests[] = {
-+	KUNIT_CASE(drm_test_drm_bridge_alloc_basic),
-+	KUNIT_CASE(drm_test_drm_bridge_alloc_get_put),
-+	{ }
-+};
-+
-+static struct kunit_suite drm_bridge_alloc_test_suite = {
-+	.name = "drm_bridge_alloc",
-+	.init = drm_test_bridge_alloc_init,
-+	.test_cases = drm_bridge_alloc_tests,
-+};
-+
- kunit_test_suites(
- 	&drm_bridge_get_current_state_test_suite,
- 	&drm_bridge_helper_reset_crtc_test_suite,
-+	&drm_bridge_alloc_test_suite,
- );
- 
- MODULE_AUTHOR("Maxime Ripard <mripard@kernel.org>");
-+MODULE_AUTHOR("Luca Ceresoli <luca.ceresoli@bootlin.com>");
-+
- MODULE_DESCRIPTION("Kunit test for drm_bridge functions");
- MODULE_LICENSE("GPL");
-
 -- 
-2.49.0
+2.43.0
 
