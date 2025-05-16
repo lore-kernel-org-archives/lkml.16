@@ -1,171 +1,160 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA591F461A
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 12:18:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00333158520;
+	Fri, 16 May 2025 12:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747397911; cv=none; b=X3fIkIMYeNwjZoIUfT/NXsTmr4gsxXoOXzdAIWJbcfZ4cuL01LCss1S0gFevA96xwGszRfg5l6RqOJJOhiccfhbKILTRA3tNI9diRcB7VpEhlMIduKnHsYeGlliuzl/+E5wsdYunFLrQpOF/TrKyV7uHSe/2vMNBt5ZGl22De3w=
+	t=1747397961; cv=none; b=X2XPXSWHjBH3s2Az0xgP10ylVEljB/nnnU1BbumQgdEdG2fvtjds2IpuekDkvzCO2J44n1VAzdnvIvnk6btJOZN+k59U7PEHXcPXlAL3NG8mbVfD73l6EW8/1Uu5RQ+hOU7zz8yllxQuRCyEu0jMdurwb1eUNSgy1/aphw0OtMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747397911; c=relaxed/simple;
-	bh=i0ExAqzof2XFCLPmeASsLkrB22kGZnWGGeFJvHlps+g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MPsJ+XfFYFKRmiIn3Lz3iNTzJGZ2EMWd/efdX8I7JiXErwEwtJQsm8e/7yIZ8cMD5dQd0SphAS8UoILfeZTyuTE4jQr+GNB1Yl1twh55YvKxbPQDsSs2Raj4J1Nx8k/FOnlaXVpNZuh8lmYeEUH63+/sZXQFO5+NL1qF6oPUAsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=NhvkQ2Iq; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1747397961; c=relaxed/simple;
+	bh=Fcg+JWkvcZH1Z0cctkokT8yd5m4s1jckd+YU3YEbcG8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=n67TwDIQUQboXZCDFcWrVEGM00B74vGRc11AArhX2UJm0PMurCTNTfsrDs0UajVNPpMsWad4c0OaQZII1CNnbheYzYhMRtzn4Yv0Uq9UJQ78Bfn66ypzD/0mfW06K6xFdmzntsdc4xMnzq9wgOpCuj9kXItSqpoemLkOv2DjH7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RyiCCUvm; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="NhvkQ2Iq"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-85e15dc8035so62904839f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 05:18:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1747397909; x=1748002709; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FXLHJHBQsbaoIB4GIfSa4RhdBp3kCgsZPB8o/GVOJzA=;
-        b=NhvkQ2IqKwboYX75ONSl1R+8ITRnzUgQ7mFaqVNHxEHUg9Erzp6oxYTeJNYz8HPCAx
-         jcXtyAhVQMUNB1ZTazmSb0GANnT256neVUXKUpMK3eLrhqLpHMiKIO75ZOMgAut/oI4Q
-         rYV0qOkOTtUwbWVRTNkyJXR1Q5R5tIpFeGahpa8rIfSAtDcIbe7feseWPbOdg32ZR4kn
-         UCdaxc+oKf8f8kF4BhEoQpqQk5AOy9Z+KN8wO5HtP32qLYRosGWtX1X61iI7KIpc+ytX
-         bUOgy1IIDYaJROuBIYWinDTdNlCe7+mH6z5ltnSdfYaNrbhLidaS0xqmz9FHoWi7eXJx
-         5sgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747397909; x=1748002709;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FXLHJHBQsbaoIB4GIfSa4RhdBp3kCgsZPB8o/GVOJzA=;
-        b=ibA+TbPCii03PYlxADh2gh0UzyaoLdYwK2ko5Grri6DuDtbWoWarW6bpZl2/MdmX9q
-         Vs9JWE0chiflghi/vg5R4JCSe9/CFJ1alyoXPpRhcVLn0+2kV71Ymq+647NXNimNlTxZ
-         PtOb7QMXhxHnS4D6PPyxdejbbvPmNQpL/5XBUxxLK4KnMS0ZK7eL1mw+t7i83i7G698h
-         4Yiw0kEfRX4+mrZnrBtwORPs9mGzxdax5MOp7I5J3FI1WIZC0HNfT/ucx6aKqZw3lr9/
-         AY4DnjzO++JyAUYlU7sGntD4BN7YVjJC7XTBjEUx+Y41FvtHZM4OyKG90xSFX1OnyaNg
-         PKvA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVq4OXLnFegUIvorR8QqUqRl41b2lWfaL+RHLbW0CFTyz7HYI67s+ix7SdrcMpao82FfgV0nwczyJkcpY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynNhDTinFabiGFI5ynj26rUIZiXL5uPJ5IUyxQoTdIeZF9qzc4
-	8bMfuDXd/3JL8wMUCzMS/iU22q23EzZ9IWwqJfuIquro3jWMveUZ9WFysxIh/EuFRa7XpCrnUCY
-	68JH6iJaBQL56kb5Y+HnaZVX/QJnBQnt3kMMfPHD+1g==
-X-Gm-Gg: ASbGncs39cxihTYK80fs7EeH4hcNqNqiEPS+geVeTlCfCSy15NyYP8hDBmNc+r0B/RR
-	HYd4mYmlT+VsL3XS6wQqs8Vnl/ux8CwnSL2mzdAd/QmhzSEPQy1cXn32dUKAuP4ROmDmkMvz3q2
-	VjKShPhWIPubnLgS67wRnVp1ZbjdFRFb+M6Q==
-X-Google-Smtp-Source: AGHT+IHD34D+aR8KNoG6UkMJChpNYbMrPeEL3hYF56R0IoB3miRbKE+gadHVNrNRu+Eu4UN/LJ5mYFMMVGXgscMuLoE=
-X-Received: by 2002:a05:6602:388b:b0:85b:b82f:965b with SMTP id
- ca18e2360f4ac-86a24cd615cmr292088439f.12.1747397908949; Fri, 16 May 2025
- 05:18:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RyiCCUvm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747397960; x=1778933960;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Fcg+JWkvcZH1Z0cctkokT8yd5m4s1jckd+YU3YEbcG8=;
+  b=RyiCCUvmSJAZvWIgJab6P+E3ha0rYUOYqc4GI8cTWHqldXAQZOUqP/fP
+   p0rjwYAw1hOrmS8X2Lujx8Jd/Yjc5xPpkbCsapl1YMSa+Fsoc7wZ3dei4
+   WASTZn3MOBg342K9k1MSk2F9kfQ2kF4sYjdhBa18H8nyU2r/W3vbRabSb
+   L7YvFdOEmTabsnmcW1IaRHbd0xtLwLQVxq62JiSy2o/ZGpSRV0N2mSIhK
+   8eimYEx1X8l4TlI9YZL0k5t25/UMq+zmkp8CkqzIVn0oyw5cUnowfaSF6
+   EGXLkG4lrxTGAXiHui5Cvavv+KvLg7cnrf1a+HajcvD1pHrfxLfU+cXj9
+   g==;
+X-CSE-ConnectionGUID: k7ZSf14gSCKegh79GNteCA==
+X-CSE-MsgGUID: BqbrZWAvTW2/XOyNBjpH7g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49353851"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="49353851"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 05:19:19 -0700
+X-CSE-ConnectionGUID: iA2lZ15ERLmg1Yu/PVRF0g==
+X-CSE-MsgGUID: IvuoMZssTe6Dm2b1qsLgAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="139213792"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.94])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 05:19:15 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 16 May 2025 15:19:11 +0300 (EEST)
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org, 
+    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    platform-driver-x86@vger.kernel.org, 
+    Linus Walleij <linus.walleij@linaro.org>, 
+    Bartosz Golaszewski <brgl@bgdev.pl>, Jonathan Corbet <corbet@lwn.net>, 
+    Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, 
+    Dongliang Mu <dzm91@hust.edu.cn>, Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v1 1/1] gpiolib-acpi: Update file references in the
+ Documentation and MAINTAINERS
+In-Reply-To: <20250516095306.3417798-1-andriy.shevchenko@linux.intel.com>
+Message-ID: <02bdf242-cbfd-18e2-fabc-82f20823dcbb@linux.intel.com>
+References: <20250516095306.3417798-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515-fix_scounteren_vs-v3-1-729dc088943e@rivosinc.com>
-In-Reply-To: <20250515-fix_scounteren_vs-v3-1-729dc088943e@rivosinc.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Fri, 16 May 2025 17:48:18 +0530
-X-Gm-Features: AX0GCFurvQGwK_iA09j5NRc65qTDV-rGIIByVlNf-XtMe4x-bC4mOj899x_A1VI
-Message-ID: <CAAhSdy38s0WWc7Cv4KF+0_pGC3xKU3_PLgeedz7Pu04-xKm4jw@mail.gmail.com>
-Subject: Re: [PATCH v3] RISC-V: KVM: Remove scounteren initialization
-To: Atish Patra <atishp@rivosinc.com>
-Cc: Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="8323328-42645495-1747397951=:1009"
 
-On Fri, May 16, 2025 at 4:41=E2=80=AFAM Atish Patra <atishp@rivosinc.com> w=
-rote:
->
-> Scounteren CSR controls the direct access the hpmcounters and cycle/
-> instret/time from the userspace. It's the supervisor's responsibility
-> to set it up correctly for it's user space. They hypervisor doesn't
-> need to decide the policy on behalf of the supervisor.
->
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-42645495-1747397951=:1009
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Fri, 16 May 2025, Andy Shevchenko wrote:
+
+> The recent changes in the gpiolib-acpi.c need also updates in the Documen=
+tation
+> and MAINTAINERS. Do the necessary changes here.
+>=20
+> Fixes: babb541af627 ("gpiolib: acpi: Move quirks to a separate file")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Closes: https://lore.kernel.org/r/20250516193436.09bdf8cc@canb.auug.org.a=
+u
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
-> Changes in v3:
-> - Removed the redundant declaration
-> - Link to v2: https://lore.kernel.org/r/20250515-fix_scounteren_vs-v2-1-1=
-fd8dc0693e8@rivosinc.com
->
-> Changes in v2:
-> - Remove the scounteren initialization instead of just setting the TM bit=
-.
-> - Link to v1: https://lore.kernel.org/r/20250513-fix_scounteren_vs-v1-1-c=
-1f52af93c79@rivosinc.com
-> ---
->  arch/riscv/kvm/vcpu.c | 4 ----
->  1 file changed, 4 deletions(-)
->
-> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-> index 60d684c76c58..9bfaae9a11ea 100644
-> --- a/arch/riscv/kvm/vcpu.c
-> +++ b/arch/riscv/kvm/vcpu.c
-> @@ -111,7 +111,6 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
->  {
->         int rc;
->         struct kvm_cpu_context *cntx;
-> -       struct kvm_vcpu_csr *reset_csr =3D &vcpu->arch.guest_reset_csr;
->
->         spin_lock_init(&vcpu->arch.mp_state_lock);
->
-> @@ -146,9 +145,6 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
->         if (kvm_riscv_vcpu_alloc_vector_context(vcpu, cntx))
->                 return -ENOMEM;
->
-> -       /* By default, make CY, TM, and IR counters accessible in VU mode=
- */
-> -       reset_csr->scounteren =3D 0x7;
-> -
->         /* Setup VCPU timer */
->         kvm_riscv_vcpu_timer_init(vcpu);
->
->
-> ---
-> base-commit: 01f95500a162fca88cefab9ed64ceded5afabc12
-> change-id: 20250513-fix_scounteren_vs-fdd86255c7b7
-> --
+>  Documentation/driver-api/gpio/index.rst                    | 2 +-
+>  Documentation/translations/zh_CN/driver-api/gpio/index.rst | 2 +-
+>  MAINTAINERS                                                | 2 +-
+>  drivers/platform/x86/intel/int0002_vgpio.c                 | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/Documentation/driver-api/gpio/index.rst b/Documentation/driv=
+er-api/gpio/index.rst
+> index 34b57cee3391..43f6a3afe10b 100644
+> --- a/Documentation/driver-api/gpio/index.rst
+> +++ b/Documentation/driver-api/gpio/index.rst
+> @@ -27,7 +27,7 @@ Core
+>  ACPI support
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+> -.. kernel-doc:: drivers/gpio/gpiolib-acpi.c
+> +.. kernel-doc:: drivers/gpio/gpiolib-acpi-core.c
+>     :export:
+> =20
+>  Device tree support
+> diff --git a/Documentation/translations/zh_CN/driver-api/gpio/index.rst b=
+/Documentation/translations/zh_CN/driver-api/gpio/index.rst
+> index e4d54724a1b5..f64a69f771ca 100644
+> --- a/Documentation/translations/zh_CN/driver-api/gpio/index.rst
+> +++ b/Documentation/translations/zh_CN/driver-api/gpio/index.rst
+> @@ -42,7 +42,7 @@ ACPI=E6=94=AF=E6=8C=81
+> =20
+>  =E8=AF=A5API=E5=9C=A8=E4=BB=A5=E4=B8=8B=E5=86=85=E6=A0=B8=E4=BB=A3=E7=A0=
+=81=E4=B8=AD:
+> =20
+> -drivers/gpio/gpiolib-acpi.c
+> +drivers/gpio/gpiolib-acpi-core.c
+> =20
+>  =E8=AE=BE=E5=A4=87=E6=A0=91=E6=94=AF=E6=8C=81
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 96b827049501..d1290bbb6ac6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10105,7 +10105,7 @@ L:=09linux-acpi@vger.kernel.org
+>  S:=09Supported
+>  T:=09git git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-i=
+ntel.git
+>  F:=09Documentation/firmware-guide/acpi/gpio-properties.rst
+> -F:=09drivers/gpio/gpiolib-acpi.c
+> +F:=09drivers/gpio/gpiolib-acpi-*.c
+>  F:=09drivers/gpio/gpiolib-acpi.h
+> =20
+>  GPIO AGGREGATOR
+> diff --git a/drivers/platform/x86/intel/int0002_vgpio.c b/drivers/platfor=
+m/x86/intel/int0002_vgpio.c
+> index 3b48cd7a4075..b7b98343fdc6 100644
+> --- a/drivers/platform/x86/intel/int0002_vgpio.c
+> +++ b/drivers/platform/x86/intel/int0002_vgpio.c
+> @@ -23,7 +23,7 @@
+>   * ACPI mechanisms, this is not a real GPIO at all.
+>   *
+>   * This driver will bind to the INT0002 device, and register as a GPIO
+> - * controller, letting gpiolib-acpi.c call the _L02 handler as it would
+> + * controller, letting gpiolib-acpi call the _L02 handler as it would
+>   * for a real GPIO controller.
+>   */
+> =20
+>=20
 
-Overall, this looks good.
+Acked-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+I assume this goes through some other tree than pxd86 ?
 
-Currently, the scounteren.TM bit is only set by the Linux SBI PMU
-driver but KVM RISC-V only provides SBI PMU for guest when
-Sscofpmf is available in host so we need the below hunk to
-completely get rid-off scounteren initialization in KVM RISC-V.
+--=20
+ i.
 
-diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-index 356d5397b2a2..bdf3352acf4c 100644
---- a/arch/riscv/kernel/head.S
-+++ b/arch/riscv/kernel/head.S
-@@ -131,6 +131,12 @@ secondary_start_sbi:
-     csrw CSR_IE, zero
-     csrw CSR_IP, zero
-
-+#ifndef CONFIG_RISCV_M_MODE
-+    /* Enable time CSR */
-+    li t0, 0x2
-+    csrw CSR_SCOUNTEREN, t0
-+#endif
-+
-     /* Load the global pointer */
-     load_global_pointer
-
-@@ -226,6 +232,10 @@ SYM_CODE_START(_start_kernel)
-      * to hand it to us.
-      */
-     csrr a0, CSR_MHARTID
-+#else
-+    /* Enable time CSR */
-+    li t0, 0x2
-+    csrw CSR_SCOUNTEREN, t0
- #endif /* CONFIG_RISCV_M_MODE */
-
-     /* Load the global pointer */
-
-I have queued this patch for Linux-6.16 with the above hunk squashed.
-
-Thanks,
-Anup
+--8323328-42645495-1747397951=:1009--
