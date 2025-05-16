@@ -1,60 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82B4624166A
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 13:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A63824166A;
+	Fri, 16 May 2025 13:07:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747400816; cv=none; b=dbqFE/YVEDMyiZ96utnXWaP2gqtyj0xkXFQ54xLsgIhovPp6H7aUiUv7upCoNt6lwo2lXlTfI5VSNMqfvF+WHIsFKYt9HKFeH9D0NUE/mYfrGiBN/YEmam9J+u5gNQ1swBFrZlzb7s5xF49xLXlslIpl3gO8kX+cr+CjpeiHbvU=
+	t=1747400824; cv=none; b=UaThW6lfxadbAMUjrJYEQ+wzh8+Hu3vccvH9dDJw1y7vY8Z11wldwiyJgIZfojNcpT3Cbz5uqwfZlRwFJGnhDNN+YE/qlE+B6LeB4GoGeVDXe9IG3YQ6o+i8cOHlw3YhHaTPwF6+BHM9v1DUsJEW4PV1ovL9ZQssbZsUXjpPRRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747400816; c=relaxed/simple;
-	bh=8oSKT1zoGGaJt0Y1QF5tV3uqLZ+JpzchfT2QI3rX9+g=;
-	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=WQy0qK9w9tPYmfvZBfVMLbHvaEg587I7h7kBhTSV1LBeXrTtLpirOQd3Da8brB4D+Vw7spBxTHxTzn9fSqiwAyKvQ0f3N3naFUkALg81iTY1Sn5N03xz1pDOcCkVuQl6hLZNiGyMV+WU0lTwOhHldvixmNT3JxjAH5lK7WN3sFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FJu47Bgx; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FJu47Bgx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F4BDC4CEE4;
-	Fri, 16 May 2025 13:06:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747400815;
-	bh=8oSKT1zoGGaJt0Y1QF5tV3uqLZ+JpzchfT2QI3rX9+g=;
-	h=Date:From:To:Subject:In-Reply-To:References:Cc:From;
-	b=FJu47Bgx0HDih+jvseKzeex5F1rU8xofJngFv5YOWafYRZc5/Sv9pH8wDVTvFEqmE
-	 7LoAsE1nhqwwohMadn031e1Oy9oGzAq+aA6yFln5JuKZtiZu+HBdyezKqrzKv8gtFe
-	 vyvlZgRFHtZP+1Sho062+czBW4hKZ1wxy60iuMrWSOoR3/VwwTfe0FcNJYsgsnjUne
-	 kbJbARNtskBawzkGTkkNhP9/y/ySs0xCwtVDfQfw8uFzdgkQ3TRN6PUX5SUBL7H3Mg
-	 q+70HYGf6We3EgK+2rIf5M1YdlxWnFB7E+8ctNdVHGfzD4kgRPv28el3rYCFnZwXBT
-	 VZtBDqNpVGVrQ==
-Message-ID: <053e88b7f6416750e303480d996c3245@kernel.org>
-Date: Fri, 16 May 2025 13:06:52 +0000
-From: "Maxime Ripard" <mripard@kernel.org>
-To: "Cristian Ciocaltea" <cristian.ciocaltea@collabora.com>
-Subject: Re: [PATCH v4 10/23] drm/tests: hdmi: Drop unused
- drm_kunit_helper_connector_hdmi_init_funcs()
-In-Reply-To: <20250425-hdmi-conn-yuv-v4-10-5e55e2aaa3fa@collabora.com>
-References: <20250425-hdmi-conn-yuv-v4-10-5e55e2aaa3fa@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, kernel@collabora.com, linux-kernel@vger.kernel.org, "Dave
- Stevenson" <dave.stevenson@raspberrypi.com>, "David Airlie" <airlied@gmail.com>, "Dmitry
- Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>, "Dmitry Baryshkov" <lumag@kernel.org>, "Maarten
- Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>, "Simona
- Vetter" <simona@ffwll.ch>, "Thomas Zimmermann" <tzimmermann@suse.de>
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1747400824; c=relaxed/simple;
+	bh=+0NZ+sWnbKsgSESa5Gbs1b9Q637JaLf6BedosU0Tn8Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UxMKKSUyPRKn4KJS7enNRv+VmuM6ssRp9z6SuPjbEzzH9Qt7JCP9klkS5pagcJJ5te1ARZwhpAj3z4z5CIVcN/QCvtA5C+cRCK7fU+ra+CnolNUs8eW41wjh27KpGzULaqSBy7QcvsPgQ1UE+L09+Oa3d3xwSmehlnxjdsgSssc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-30dfd9e7fa8so2534795a91.2;
+        Fri, 16 May 2025 06:07:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747400822; x=1748005622;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/zp3vgE53Muk/3PW9+/KzJILekMj3FssQTol1diFaQM=;
+        b=Nhy45Gl9c6CmIydc1JUpAyL51gqA/j5FtUbClkIIlWIQTYP5QCek6HsifpMmUQMpNR
+         WaCT3K9FCt1l+KNB+oDXCZ6A99wP2VbsSvjtqNvGBWuKqX1fyusEYPAlcoIWwziiZS3I
+         15pL1B4a98yFdnm6WHQkPpZsc2LyxBgnYNFBue7eW7QlN7SgA/fchvRU6bVPVUBYp1CI
+         i6CjDv10kM5HAvzvXsLlbWbH2nbzKzJXQinS+4WN2q1a0TpyGKspM8CogjvPE7C9ttln
+         Hr0w8m+0zLyKfcUqZbDFFk9yHf7zXJUGwLqcwSDRAbdzbfHMUbRmSbDIbU2Rzx7VgsF1
+         tdJw==
+X-Forwarded-Encrypted: i=1; AJvYcCWe6nGJHjbu+d/tj9B0AafXVVrIOyoElYyHZrpJymmLfgh6EcShLvcuJxGtF3tvBl7beq/iC+I1x94L@vger.kernel.org, AJvYcCXilw99JysMrsqgg2oNEjF4ISlGAL29z5czfVF3kno9b15IJX/tOBu504RImwgzzvcTXpRtMKrTJh/lp9ln@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyGEhhRnbGc1W+GycQLbeUTvXt+kER4MLItePaowRiRdOdoVr8
+	WVeD1zZpgVCrKX0bOTfsaqcYeQFccJvTX3fMs3Ip8pzTx6Lyv5ZOGDve
+X-Gm-Gg: ASbGncuIw7qAzTbeu7TkUWkfYQ6ElytMZ2JciZHTJz7yN5H7i316MrQGPBm8ROfC0hv
+	syVMG8hinxZknUvlaHVTVY7GOTh5gvvLXDj7v/6RZef7iqu8XIFxR21fOplg1QDmMulTOUqXTID
+	BngXaq9pEcmlKlA5096QibD1Rf5X+6jCppdXwQJTNFNk1Lt+USnrILkTyVpillmIlRAg3AKJM9E
+	XI+G+MLdmXbKmvOKaXhQFUMToqOI78hoW8QHtA7kL3qVNjzmn6lRHOnBOmOQBGyL4p8rGQC70Z6
+	x60TFW0OBxBd0saMUhZbtq8imqjh4an1Jc9htEBnpYezM0O0sQSSs5NolOJPiybNm1f5UVDhkC7
+	rKaFcikyGbA==
+X-Google-Smtp-Source: AGHT+IGHRK0J61dIv/5+BajAmQAkgglPYZ06XWswzTNMf5+J5oDjNoiy3nq0yQqotG9du/eupTzXPQ==
+X-Received: by 2002:a17:90b:4c85:b0:2ff:4f04:4261 with SMTP id 98e67ed59e1d1-30e8323efd5mr3100395a91.34.1747400821398;
+        Fri, 16 May 2025 06:07:01 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b26eb084428sm1492402a12.57.2025.05.16.06.07.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 06:07:00 -0700 (PDT)
+Date: Fri, 16 May 2025 22:06:59 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: linux-pci@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] dt-bindings: PCI: microchip,pcie-host: fix dma
+ coherency property
+Message-ID: <20250516130659.GA2084811@rocinante>
+References: <20250516-datebook-senator-ff7a1c30cbd5@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250516-datebook-senator-ff7a1c30cbd5@spud>
 
-On Fri, 25 Apr 2025 13:27:01 +0300, Cristian Ciocaltea wrote:
-> After updating the code to make use of the new EDID setup helper,
-> drm_kunit_helper_connector_hdmi_init_funcs() became unused, hence drop
-> it.
-> 
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-> 
-> [ ... ]
+Hello,
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
+> PolarFire SoC may be configured in a way that requires non-coherent DMA
+> handling. On RISC-V, buses are coherent by default & the dma-noncoherent
+> property is required to denote buses or devices that are non-coherent.
+> For some reason, instead of adding dma-noncoherent to the binding
+> the pointless, NOP, property dma-coherent was. Swap dma-coherent for
+> dma-noncoherent.
 
-Thanks!
-Maxime
+I have favour to ask.  Can you capitalise (so-called "title case") the
+subject when submitting patches that are PCI-specific DT bindings?
+
+This is the preferred style for PCI, at least at the moment.
+
+Also, it would save us the need to do it every time. :)
+
+Thank you!
+
+	Krzysztof
