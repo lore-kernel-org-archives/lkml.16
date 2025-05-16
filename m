@@ -1,141 +1,222 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40CE28136C
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 19:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BDA283C94
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 19:20:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747423210; cv=none; b=eC1KwpSRSV2wxNGN6xzJpQrQ8QkHThMkTsWRPDDvmn+eawrEsWifNalbQwkQCGBkmpNLL9YWMqurzYAl1uWKkcFDeuaY+ZwPMFsttn8M0bQpN5x/4h5oS54qdjplZJbxB7c5jgBtAxaJuzwilTYkVQ/9FtrwCgAPSA1TS2wvtic=
+	t=1747423210; cv=none; b=dDH3+UTEd17Bl7iU6CrzbJcdUyO+aPx3g6Gi6n7YH2my6Cp0y9N4LG5X3UIs1gT0Q09IwklPaDm2vuCopvbnvNiBcnW5NwsUI7iE+2m+3AFMtMC+DoNQvejCNeeFI/sI5SEz9o8Ilv+k1RoiFM6yqhpIeoTUNZiPqizDg3bg4cQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747423210; c=relaxed/simple;
-	bh=yGk5vfAjLaJh07HlSBEUFFWjBHzsGIhNlLk3gY9zhjo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J6hD7LnNeAhOg1YfwSkVGdheI90d8Z/vddEoj/K+M4+N/ENjsSMwzSpcPZwak2RecayjE1WeAcrMQCdQdpEHHTv49ILxHmwiK3/36JeE75W+MRcNcG1vT3QkOytI9BaJdYCqtxblfzcQNshiyAA1POgZAXEbHl+IjWNHxceq1o0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UBNPyR9/; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=286azteypIeGDNxuuOVgHebViNvaqsxBRbBpJ41BQWU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=a6/gFLqmOEkDslk46QhvCT9N9cTrsQfQ1F/b27Y8GKRcE3Mc7TdHTG2o+WvX+ntNlrchL+tQBvAlYPN48hcs0ErEOvq+gX1ZC0DVw0uY4Iji/ggdsCFUPJLfFfK2QIVRQyvOlyynDAr/03zRRUlMcOOha/gAboojQh+PHnp8bzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--afranji.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=muzAEcx3; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--afranji.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UBNPyR9/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747423208; x=1778959208;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yGk5vfAjLaJh07HlSBEUFFWjBHzsGIhNlLk3gY9zhjo=;
-  b=UBNPyR9/VeiOzEA+iQYrBODobD+B85E5DkvKrjZIEU5vs7zxlKRKhFnZ
-   pzTshGUj6d3VMB5tb53CUWDnlclTS0XzcXTRJ41JWMGgW+lxdlUJhyX6S
-   Y1bfuunNRMehI8hhsTwy2n3PZm3ytct0ldYmVO+eZtcf1taaKwjqL3He+
-   cQBPhQ7lBJFZBPiCCMvFZJxqzChjERRJyUtiWVIFhKflhPhHCZGHVnCeb
-   coOhY5j5P4+RptwLACS4rhJkA1W0Hayy2J63lkQMJiYiMd3on6NBW1NPK
-   SPuZbwFrEXxKRNe3VMqhBgD+sZHluVN3ZwWVyMixdGcnZypY7GYUlBfAZ
-   w==;
-X-CSE-ConnectionGUID: j3zJ+cLUTZWBnqedtP81eA==
-X-CSE-MsgGUID: luJVD/YFRjq/nAgSvvn8Jw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49390985"
-X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="49390985"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 12:20:07 -0700
-X-CSE-ConnectionGUID: /ckJGpuoRjCOQwyI3n98lg==
-X-CSE-MsgGUID: cSqBlaGkQoCa3Ca60B9SQQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="138627383"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 12:20:05 -0700
-Date: Fri, 16 May 2025 22:20:02 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: gregkh@linuxfoundation.org, david.m.ertman@intel.com,
-	ira.weiny@intel.com, lee@kernel.org,
-	mika.westerberg@linux.intel.com, heikki.krogerus@linux.intel.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] driver core: auxiliary bus: Introduce auxiliary
- device resource management
-Message-ID: <aCeP4l1VOVfhtQ09@black.fi.intel.com>
-References: <20250514122432.4019606-1-raag.jadav@intel.com>
- <20250514122432.4019606-2-raag.jadav@intel.com>
- <aCSOYRJXaiJpch6u@smile.fi.intel.com>
- <aCXjltG40x9mJ25U@black.fi.intel.com>
- <aCXm566Uyyh45MZD@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="muzAEcx3"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7425efba1a3so2205474b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 12:20:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747423208; x=1748028008; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=o/DXUzrkv3zGlmZlSMCdLZe68HkBWyu2pzyjcV2UND4=;
+        b=muzAEcx35/+br5ctE1QZqiCykknGmCfP7lXVwzcZCervlpEGX5UzDr+8cKlr7NI/MS
+         nzJegQPu/xGt8X0pJsvQjg/pVEsAb502R6432/4gxRRAZ6CH6nwv/ymWNvQIQssfIPOq
+         SzyDIJ8YZbjeI7YKyrUOmeZN+RYy1sWEOYvT3LDWapdo38MHQQ7zrhvq0mjYn77y/Ffe
+         Je2qwLcEdqrAb44tKotAPUCGOi++kUlg80FDp9WDHoTM535vD47VyzN6xmOBzHdP9C6a
+         0eXqJuvDtkilH5xyfg709qdO7TdW6roYniRQstRBFWvp9paHoclMD8iHX7NbOSqeFmBy
+         fUNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747423208; x=1748028008;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o/DXUzrkv3zGlmZlSMCdLZe68HkBWyu2pzyjcV2UND4=;
+        b=wWcX7TtA/QS+7LfWIc62ojpaK0HlOdESo3w8oRAcm6BiJAU+zLfWI6+3W7sfkI9V9S
+         UEVjnpZpRUwHoi9GUCXDC+dt4XX4+YWptUJvvOh+Q1BJ8LektCyC/OBNhh+JSURzB+8m
+         f2InezZ1UkeFtTDGpoSPL+/ysEqfl55OGMI03W+1bVLF8m8fDcxKZBmTAqMIHjRRer4x
+         /XPgErvt4qXqmvupROOq+MbOjqo2Mihzp1/Q75O6nZ/JcIwe5nLkrn9hux+wvFnN6P4a
+         G1m4gOBkBX7+01+7L99MgPGbGodOcnhfIDjghztA8KRak78MoXmGshGgibQ4viCsLS0/
+         ZPww==
+X-Forwarded-Encrypted: i=1; AJvYcCXcp8UFc9q2a7XLKjLBVLmO/FkH34+J1Yc9c6UxHEg8M2eTLV8rj2Q2yMTllGMifoV7UpdHmqx9vC+lFME=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCxzlErIap26A77m7DLS3aLXZC2wVp2iwQs+py3RLxVG6Q1wUs
+	YAtvS5Mo9R1ja6AsdYHCNF7Rk0v944E3FZ799dwJVhJzWjHutUYx7Nti3j0+vVzO5/JBrb+LYvU
+	lG66Rk9J6rg==
+X-Google-Smtp-Source: AGHT+IELettSJSAjPN0ajEgghq8cce8mY33OF/qwq78Jwt00Tyez7vqBw2SJQ3LE86dpcucnhoMJmApM4i8D
+X-Received: from pfdf22.prod.google.com ([2002:aa7:8b16:0:b0:740:63b6:1826])
+ (user=afranji job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:6f96:b0:1f3:26ae:7792
+ with SMTP id adf61e73a8af0-2165f87234fmr5820413637.18.1747423207727; Fri, 16
+ May 2025 12:20:07 -0700 (PDT)
+Date: Fri, 16 May 2025 19:19:33 +0000
+In-Reply-To: <cover.1747368092.git.afranji@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCXm566Uyyh45MZD@smile.fi.intel.com>
+Mime-Version: 1.0
+References: <cover.1747368092.git.afranji@google.com>
+X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
+Message-ID: <4310b9291b9662c1059ebcf50e267760bc8e1c6f.1747368093.git.afranji@google.com>
+Subject: [RFC PATCH v2 13/13] KVM: selftests: Add tests for migration of
+ private mem
+From: Ryan Afranji <afranji@google.com>
+To: afranji@google.com, ackerleytng@google.com, pbonzini@redhat.com, 
+	seanjc@google.com, tglx@linutronix.de, x86@kernel.org, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	tabba@google.com
+Cc: mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	shuah@kernel.org, andrew.jones@linux.dev, ricarkol@google.com, 
+	chao.p.peng@linux.intel.com, jarkko@kernel.org, yu.c.zhang@linux.intel.com, 
+	vannapurve@google.com, erdemaktas@google.com, mail@maciej.szmigiero.name, 
+	vbabka@suse.cz, david@redhat.com, qperret@google.com, michael.roth@amd.com, 
+	wei.w.wang@intel.com, liam.merwick@oracle.com, isaku.yamahata@gmail.com, 
+	kirill.shutemov@linux.intel.com, sagis@google.com, jthoughton@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, May 15, 2025 at 04:06:47PM +0300, Andy Shevchenko wrote:
-> On Thu, May 15, 2025 at 03:52:38PM +0300, Raag Jadav wrote:
-> > On Wed, May 14, 2025 at 03:36:49PM +0300, Andy Shevchenko wrote:
-> > > On Wed, May 14, 2025 at 05:54:31PM +0530, Raag Jadav wrote:
-> 
-> ...
-> 
-> > > > +/**
-> > > > + * auxiliary_get_irq_optional - get an optional IRQ for auxiliary device
-> > > > + * @auxdev: auxiliary device
-> > > > + * @num: IRQ number index
-> > > > + *
-> > > > + * Gets an IRQ for a auxiliary device. Device drivers should check the return value
-> > > > + * for errors so as to not pass a negative integer value to the request_irq()
-> > > > + * APIs. This is the same as auxiliary_get_irq(), except that it does not print an
-> > > > + * error message if an IRQ can not be obtained.
-> > > > + *
-> > > > + * For example::
-> > > > + *
-> > > > + *		int irq = auxiliary_get_irq_optional(auxdev, 0);
-> > > > + *		if (irq < 0)
-> > > > + *			return irq;
-> > > > + *
-> > > > + * Return: non-zero IRQ number on success, negative error number on failure.
-> > > > + */
-> > > > +int auxiliary_get_irq_optional(struct auxiliary_device *auxdev, unsigned int num)
-> > > > +{
-> > > > +	struct resource *r;
-> > > > +	int ret = -ENXIO;
-> > > > +
-> > > > +	r = auxiliary_get_resource(auxdev, IORESOURCE_IRQ, num);
-> > > > +	if (!r)
-> > > > +		goto out;
-> > > > +
-> > > > +	/*
-> > > > +	 * The resources may pass trigger flags to the irqs that need to be
-> > > > +	 * set up. It so happens that the trigger flags for IORESOURCE_BITS
-> > > > +	 * correspond 1-to-1 to the IRQF_TRIGGER* settings.
-> > > > +	 */
-> > > > +	if (r->flags & IORESOURCE_BITS) {
-> > > > +		struct irq_data *irqd;
-> > > > +
-> > > > +		irqd = irq_get_irq_data(r->start);
-> > > > +		if (!irqd)
-> > > > +			goto out;
-> > > > +		irqd_set_trigger_type(irqd, r->flags & IORESOURCE_BITS);
-> > > > +	}
-> > > > +
-> > > > +	ret = r->start;
-> > > > +	if (WARN(!ret, "0 is an invalid IRQ number\n"))
-> > > > +		ret = -EINVAL;
-> > > > +out:
-> > > > +	return ret;
-> > > > +}
-> > > 
-> > > Please, do not inherit the issues that the respective platform device API has.
-> > > And after all, why do you need this? What's wrong with plain fwnode_irq_get()?
-> > 
-> > Can you please elaborate? Are we expecting fwnode to be supported by auxiliary
-> > device?
-> 
-> Platform IRQ getter is legacy for the board files, but it has support for fwnode.
-> Why do you need to inherit all that legacy? What's the point?
+From: Ackerley Tng <ackerleytng@google.com>
 
-This is just to abstract get_resource(IRQ) which has been carved up by the
-parent device. And since this is an auxiliary child device, I'm not sure if
-we have a firmware to work with.
+Tests that private mem (in guest_mem files) can be migrated. Also
+demonstrates the migration flow.
 
-Please correct me if I've misunderstood your question.
+Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+Signed-off-by: Ryan Afranji <afranji@google.com>
+---
+ tools/testing/selftests/kvm/Makefile.kvm      |  1 +
+ .../kvm/x86/private_mem_migrate_tests.c       | 56 ++++++++++---------
+ 2 files changed, 32 insertions(+), 25 deletions(-)
 
-Raag
+diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
+index f62b0a5aba35..e9d53ea6c6c8 100644
+--- a/tools/testing/selftests/kvm/Makefile.kvm
++++ b/tools/testing/selftests/kvm/Makefile.kvm
+@@ -85,6 +85,7 @@ TEST_GEN_PROGS_x86 += x86/platform_info_test
+ TEST_GEN_PROGS_x86 += x86/pmu_counters_test
+ TEST_GEN_PROGS_x86 += x86/pmu_event_filter_test
+ TEST_GEN_PROGS_x86 += x86/private_mem_conversions_test
++TEST_GEN_PROGS_x86 += x86/private_mem_migrate_tests
+ TEST_GEN_PROGS_x86 += x86/private_mem_kvm_exits_test
+ TEST_GEN_PROGS_x86 += x86/set_boot_cpu_id
+ TEST_GEN_PROGS_x86 += x86/set_sregs_test
+diff --git a/tools/testing/selftests/kvm/x86/private_mem_migrate_tests.c b/tools/testing/selftests/kvm/x86/private_mem_migrate_tests.c
+index 4226de3ebd41..4ad94ea04b66 100644
+--- a/tools/testing/selftests/kvm/x86/private_mem_migrate_tests.c
++++ b/tools/testing/selftests/kvm/x86/private_mem_migrate_tests.c
+@@ -1,32 +1,32 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include "kvm_util_base.h"
++#include "kvm_util.h"
+ #include "test_util.h"
+ #include "ucall_common.h"
+ #include <linux/kvm.h>
+ #include <linux/sizes.h>
+ 
+-#define TRANSFER_PRIVATE_MEM_TEST_SLOT 10
+-#define TRANSFER_PRIVATE_MEM_GPA ((uint64_t)(1ull << 32))
+-#define TRANSFER_PRIVATE_MEM_GVA TRANSFER_PRIVATE_MEM_GPA
+-#define TRANSFER_PRIVATE_MEM_VALUE 0xdeadbeef
++#define MIGRATE_PRIVATE_MEM_TEST_SLOT 10
++#define MIGRATE_PRIVATE_MEM_GPA ((uint64_t)(1ull << 32))
++#define MIGRATE_PRIVATE_MEM_GVA MIGRATE_PRIVATE_MEM_GPA
++#define MIGRATE_PRIVATE_MEM_VALUE 0xdeadbeef
+ 
+-static void transfer_private_mem_guest_code_src(void)
++static void migrate_private_mem_data_guest_code_src(void)
+ {
+-	uint64_t volatile *const ptr = (uint64_t *)TRANSFER_PRIVATE_MEM_GVA;
++	uint64_t volatile *const ptr = (uint64_t *)MIGRATE_PRIVATE_MEM_GVA;
+ 
+-	*ptr = TRANSFER_PRIVATE_MEM_VALUE;
++	*ptr = MIGRATE_PRIVATE_MEM_VALUE;
+ 
+ 	GUEST_SYNC1(*ptr);
+ }
+ 
+-static void transfer_private_mem_guest_code_dst(void)
++static void migrate_private_mem_guest_code_dst(void)
+ {
+-	uint64_t volatile *const ptr = (uint64_t *)TRANSFER_PRIVATE_MEM_GVA;
++	uint64_t volatile *const ptr = (uint64_t *)MIGRATE_PRIVATE_MEM_GVA;
+ 
+ 	GUEST_SYNC1(*ptr);
+ }
+ 
+-static void test_transfer_private_mem(void)
++static void test_migrate_private_mem_data(bool migrate)
+ {
+ 	struct kvm_vm *src_vm, *dst_vm;
+ 	struct kvm_vcpu *src_vcpu, *dst_vcpu;
+@@ -40,40 +40,43 @@ static void test_transfer_private_mem(void)
+ 
+ 	/* Build the source VM, use it to write to private memory */
+ 	src_vm = __vm_create_shape_with_one_vcpu(
+-		shape, &src_vcpu, 0, transfer_private_mem_guest_code_src);
++		shape, &src_vcpu, 0, migrate_private_mem_data_guest_code_src);
+ 	src_memfd = vm_create_guest_memfd(src_vm, SZ_4K, 0);
+ 
+-	vm_mem_add(src_vm, DEFAULT_VM_MEM_SRC, TRANSFER_PRIVATE_MEM_GPA,
+-		   TRANSFER_PRIVATE_MEM_TEST_SLOT, 1, KVM_MEM_PRIVATE,
++	vm_mem_add(src_vm, DEFAULT_VM_MEM_SRC, MIGRATE_PRIVATE_MEM_GPA,
++		   MIGRATE_PRIVATE_MEM_TEST_SLOT, 1, KVM_MEM_GUEST_MEMFD,
+ 		   src_memfd, 0);
+ 
+-	virt_map(src_vm, TRANSFER_PRIVATE_MEM_GVA, TRANSFER_PRIVATE_MEM_GPA, 1);
+-	vm_set_memory_attributes(src_vm, TRANSFER_PRIVATE_MEM_GPA, SZ_4K,
++	virt_map(src_vm, MIGRATE_PRIVATE_MEM_GVA, MIGRATE_PRIVATE_MEM_GPA, 1);
++	vm_set_memory_attributes(src_vm, MIGRATE_PRIVATE_MEM_GPA, SZ_4K,
+ 				 KVM_MEMORY_ATTRIBUTE_PRIVATE);
+ 
+ 	vcpu_run(src_vcpu);
+ 	TEST_ASSERT_KVM_EXIT_REASON(src_vcpu, KVM_EXIT_IO);
+ 	get_ucall(src_vcpu, &uc);
+-	TEST_ASSERT(uc.args[0] == TRANSFER_PRIVATE_MEM_VALUE,
++	TEST_ASSERT(uc.args[0] == MIGRATE_PRIVATE_MEM_VALUE,
+ 		    "Source VM should be able to write to private memory");
+ 
+ 	/* Build the destination VM with linked fd */
+ 	dst_vm = __vm_create_shape_with_one_vcpu(
+-		shape, &dst_vcpu, 0, transfer_private_mem_guest_code_dst);
++		shape, &dst_vcpu, 0, migrate_private_mem_guest_code_dst);
+ 	dst_memfd = vm_link_guest_memfd(dst_vm, src_memfd, 0);
+ 
+-	vm_mem_add(dst_vm, DEFAULT_VM_MEM_SRC, TRANSFER_PRIVATE_MEM_GPA,
+-		   TRANSFER_PRIVATE_MEM_TEST_SLOT, 1, KVM_MEM_PRIVATE,
++	vm_mem_add(dst_vm, DEFAULT_VM_MEM_SRC, MIGRATE_PRIVATE_MEM_GPA,
++		   MIGRATE_PRIVATE_MEM_TEST_SLOT, 1, KVM_MEM_GUEST_MEMFD,
+ 		   dst_memfd, 0);
+ 
+-	virt_map(dst_vm, TRANSFER_PRIVATE_MEM_GVA, TRANSFER_PRIVATE_MEM_GPA, 1);
+-	vm_set_memory_attributes(dst_vm, TRANSFER_PRIVATE_MEM_GPA, SZ_4K,
+-				 KVM_MEMORY_ATTRIBUTE_PRIVATE);
++	virt_map(dst_vm, MIGRATE_PRIVATE_MEM_GVA, MIGRATE_PRIVATE_MEM_GPA, 1);
++	if (migrate)
++		vm_migrate_from(dst_vm, src_vm);
++	else
++		vm_set_memory_attributes(dst_vm, MIGRATE_PRIVATE_MEM_GPA, SZ_4K,
++					 KVM_MEMORY_ATTRIBUTE_PRIVATE);
+ 
+ 	vcpu_run(dst_vcpu);
+ 	TEST_ASSERT_KVM_EXIT_REASON(dst_vcpu, KVM_EXIT_IO);
+ 	get_ucall(dst_vcpu, &uc);
+-	TEST_ASSERT(uc.args[0] == TRANSFER_PRIVATE_MEM_VALUE,
++	TEST_ASSERT(uc.args[0] == MIGRATE_PRIVATE_MEM_VALUE,
+ 		    "Destination VM should be able to read value transferred");
+ }
+ 
+@@ -81,7 +84,10 @@ int main(int argc, char *argv[])
+ {
+ 	TEST_REQUIRE(kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM));
+ 
+-	test_transfer_private_mem();
++	test_migrate_private_mem_data(false);
++
++	if (kvm_check_cap(KVM_CAP_VM_MOVE_ENC_CONTEXT_FROM))
++		test_migrate_private_mem_data(true);
+ 
+ 	return 0;
+ }
+-- 
+2.49.0.1101.gccaa498523-goog
+
