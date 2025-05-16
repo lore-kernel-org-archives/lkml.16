@@ -1,194 +1,97 @@
-Received: from e240-10.smtp-out.eu-north-1.amazonses.com (e240-10.smtp-out.eu-north-1.amazonses.com [23.251.240.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88513182
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 00:14:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.240.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C91D17E4;
+	Fri, 16 May 2025 00:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747354462; cv=none; b=gFz138QpiYanLHMYYQXxysAAknMfi1D35D69bG9RoLBF8HW+HWJIn5vkSA14qsAkoSXl4xMiXgwGsiIMYMUUC5XcoB44BaW5k8TFNNoVdRJZ/MY2kMGIoFRtNSm4J9oeH4mK710/eFv0LuKnVWtRgTbpztp19LNS3Ue/UMbqark=
+	t=1747354570; cv=none; b=j7uSjmYLsrI8wpCc/LYuLv7dJChLrfCGJB9U1RZjgaK+jZsFFJUvEMDVk+wrqcKFezvQmiyVy2iuL8VQUtPEWfPo4/AWAPvS/QGBvF6z0wrWxM+9YYfviN0MpZzUlXqc0vOaXn4WXTXP0JL/Xnin2LJ/qIE4W36kNv5ciOCy7cM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747354462; c=relaxed/simple;
-	bh=40YuEF0BXVSPmUd11buss1IDSQh8b3ZUf+t6aV6WdLQ=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=EZGob32oZspAZhajW35Ao7tzRXlz7EdzDa0BqWFWNB1G9hqcK+uS4UB/dOTwE834dVYNTmWcoyOMUXFaDzP59LOLQci5nF2DtbSkhtMJdfgT7cHlVkac6ZTpWFw2mfaDg10Tj8gUQsXwkHOHLt3fOPax2yEELHEwbdEgh9Duevw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com; dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b=AkirRqa7; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=1Saxtj1J; arc=none smtp.client-ip=23.251.240.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goosey.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eu-north-1.amazonses.com
+	s=arc-20240116; t=1747354570; c=relaxed/simple;
+	bh=p5NR/VDZKJ8yjpgeliNA7RHEjb5AW+yTp7x/ak01lxY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ceb1D6LSoFHU7JV7pVlhtgPNBljOn3pcXizBBadupVH05r9YQXWtN4qSsKDgaSaGD0Y7Ayu6SsRP4EV3TviC9Pu4K4uoX0tansEbkC2GwvD4ggdlZcoDzoY3fdyXHwTvRXyMGgpcw2x2tcUbOffu1jF7zgN3caERItyhtNv0oYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=IslUog/D; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=goosey.org header.i=@goosey.org header.b="AkirRqa7";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="1Saxtj1J"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=iuunfi4kzpbzwuqjzrd5q2mr652n55fx; d=goosey.org; t=1747354456;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type;
-	bh=40YuEF0BXVSPmUd11buss1IDSQh8b3ZUf+t6aV6WdLQ=;
-	b=AkirRqa7ccMcRAJx9C0+UL+9e3OiaIZtCrIbo47wbCqtaVP4MbLZ0X6BpjnHWouB
-	i+E1OzBZ/FdTDT5MWWnExhJ63i/b3PfFYPLRE6zmfiu4earK12PEVqPgdWPVNm66FGI
-	PRz7B1XRNSGVDFY41EmppEBPDLe93Gsq8BBHQeJaEgl18DUW4lbkwa1WAmTcpBCUtub
-	fdHMZaeAuwdQK6Se/jyij0NEtP0Hbf5T00fXc6cFWUej/8z/exr3mk98qDK+797BZac
-	FKiRd2gTfWdeGR1eXJ36E36w642VOXZzTW9kWZd634ZfYb7gxndRBlH2t/unWl17CE4
-	JnKaKbouEQ==
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=bw45wyq3hkghdoq32obql4uyexcghmc7; d=amazonses.com; t=1747354456;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type:Feedback-ID;
-	bh=40YuEF0BXVSPmUd11buss1IDSQh8b3ZUf+t6aV6WdLQ=;
-	b=1Saxtj1J/jo+GY/qYgL64/XJmZoF82wJcyGwsnpVjVy3XTUK3/7fh/3rSRnAHLuO
-	cynAnuHaOzont2MW++QsRrkEALDomJYV8L4vTAnEvmlNM6hi6I560Yh7EHzm/emgjEe
-	5t+b6mh+JRwCzUWkpuXTwDEptgY/fEkpDMbhj6OA=
-X-Gm-Message-State: AOJu0YyIYEbO6bp0u37v064P8Tbhyh4wRDesbSWkb26aVncBYohbCU4W
-	f/bArLVS0DZueYGWFVNNsSuxyVlA7tlNwBV/CfPJfCrG3g8wejfPY7SsNsmmlXAQo4Dzj5KlosK
-	uRudxYtpL6pUUYMKLWca4cnc77/XIyUE=
-X-Google-Smtp-Source: AGHT+IFF/ob0ULM/EFw+7iRbeynl416QjfHtIZ7al6OQcTPIz1M2C/WX6VLM0tOQoGzeZKMQ74F+oHde7UU/YtEiVb8=
-X-Received: by 2002:a17:902:ef4e:b0:225:ac99:ae08 with SMTP id
- d9443c01a7336-231de2e6bbfmr6812305ad.5.1747354454200; Thu, 15 May 2025
- 17:14:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IslUog/D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747354565;
+	bh=J4XIcsUxSb8ZfiZj/Iaa/P2J+JIXvoXMCLXM7gI/t1g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=IslUog/Dk4dKnDuiubDEJYEB3/MZO1WhEjgn/7Sz1dNyDuJXb8LnKkudiVusPBuCQ
+	 iCMXsOc3HCO11MAken6AMs8eOIGBxSwOnvyqhH/tc0mXpNTrdKR/S3T8FBho3gT1N0
+	 WDarHTC0DlUI7WxXPUvskUXPxlD1FMQzy+fBZRuUiBPtIsh7PfSW1yJdsg/VSiopYe
+	 iWpyCVYeZlp79IEDllSq1lyXZt8q5UOS0LLRtvI4ltfiDVnilwW8FcNNsWbecYiW+e
+	 o9kAG7RMIyLrxfhYdf3CQd1TiNFX4PqAW6TuamOxzPwREpMN1smugbpRWDttiEGUGE
+	 qe2b/u0i8sqkw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zz70P16W4z4xFt;
+	Fri, 16 May 2025 10:16:05 +1000 (AEST)
+Date: Fri, 16 May 2025 10:16:04 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>
+Cc: Binbin Wu <binbin.wu@linux.intel.com>, Isaku Yamahata
+ <isaku.yamahata@intel.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the kvm tree
+Message-ID: <20250516101604.7261c44a@canb.auug.org.au>
+In-Reply-To: <20250409131356.48683f58@canb.auug.org.au>
+References: <20250409131356.48683f58@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Ozgur Kara <ozgur@goosey.org>
-Date: Fri, 16 May 2025 00:14:16 +0000
-X-Gmail-Original-Message-ID: <CADvZ6EoYpsBBcyxPvFu8OY-0kZEthGw3DPVfMaeNSFM3Gn_f5Q@mail.gmail.com>
-X-Gm-Features: AX0GCFuaN45udZn3fyuvYm8Wz2FD-L2rxcVY9ixGvetLNxOd2AcGm8OdcWZs1Pc
-Message-ID: <01100196d67111b3-13591f7a-0c75-43c1-a45e-5814b193d259-000000@eu-north-1.amazonses.com>
-Subject: CREDITS: fix and update for some formats
-To: linux-kernel@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>, 
-	torvalds@linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
-Feedback-ID: ::1.eu-north-1.jZlAFvO9+f8tc21Z4t7ANdAU3Nw/ALd5VHiFFAqIVOg=:AmazonSES
-X-SES-Outgoing: 2025.05.16-23.251.240.10
+Content-Type: multipart/signed; boundary="Sig_/offU.zWJ54GnTgL4.MCsxi3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-From: Ozgur Karatas <ozgur@goosey.org>
+--Sig_/offU.zWJ54GnTgL4.MCsxi3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi all,
 
-I have corrected some email addresses and website addresses also a
-misspelling for Mr. Ian Murdock, which would be nice to have.
+On Wed, 9 Apr 2025 13:13:56 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>=20
+> After merging the kvm tree, today's linux-next build (htmldocs) produced
+> this warning:
+>=20
+> Documentation/virt/kvm/x86/intel-tdx.rst:255: WARNING: Footnote [1] is no=
+t referenced. [ref.footnote]
+>=20
+> Introduced by commit
+>=20
+>   52f52ea79a4c ("Documentation/virt/kvm: Document on Trust Domain Extensi=
+ons (TDX)")
 
-Regards
+I am still seeing this warning (as of yesterday).
 
-Reported-by: Ozgur Karatas <ozgur@goosey.org>
+--=20
+Cheers,
+Stephen Rothwell
 
----
- CREDITS | 27 +++++++++++++++------------
- 1 file changed, 15 insertions(+), 12 deletions(-)
+--Sig_/offU.zWJ54GnTgL4.MCsxi3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-diff --git a/CREDITS b/CREDITS
-index f74d230992d6..57118d6e7fa2 100644
---- a/CREDITS
-+++ b/CREDITS
-@@ -153,7 +153,7 @@ S: Cambridge, Massachusetts 02139
- S: USA
+-----BEGIN PGP SIGNATURE-----
 
- N: Michel Aubry
--E: giovanni <giovanni@sudfr.com>
-+E: giovanni@sudfr.com
- D: Aladdin 1533/1543(C) chipset IDE
- D: VIA MVP-3/TX Pro III chipset IDE
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgmg8QACgkQAVBC80lX
+0Gy35wf9G9EOsTSoYAqfF2IPKIKxpF2zpc2zruIwVg1LLPN5NxPCk+jzW4fmhPHU
+aKZOzQfbV5ep2Is3QyzxVlLEXeJ5E25HxAPlEv2A1UAtIE7URgMy2bEtxfnVSxb/
+qG1lNFVUb2zjs09+kPk0adwkycfQkys1BTNDMG71vpsz71jemt6Xfoh4d+ecDsSi
+iyTH3gZiSEEq60tXLGwC0fcqGLuM9tCqzzG3TpB2HPzJz407u8Hgz/I9jFOHaFMw
+lodXVTqAty5bvOg8IpclAvPeg017hEOQJW8XYuefHjrzr7UcE3GcuedIzmdp69GU
+zR4bq7D2+3sfnCKKE3NZ//2bnXh95g==
+=pkqc
+-----END PGP SIGNATURE-----
 
-@@ -1025,7 +1025,7 @@ D: Ralink rt2x00 WLAN driver
- S: Haarlem, The Netherlands
-
- N: John G Dorsey
--E: john+@cs.cmu.edu
-+E: jd5q@andrew.cmu.edu
- D: ARM Linux ports to Assabet/Neponset, Spot
- S: Department of Electrical and Computer Engineering
- S: Carnegie Mellon University
-@@ -2128,8 +2128,8 @@ E: knaack.h@gmx.de
- D: IIO subsystem and drivers
-
- N: Thorsten Knabe
--E: Thorsten Knabe <tek@rbg.informatik.tu-darmstadt.de>
--E: Thorsten Knabe <tek01@hrzpub.tu-darmstadt.de>
-+E: tek@rbg.informatik.tu-darmstadt.de
-+E: tek01@hrzpub.tu-darmstadt.de
- W: http://www.student.informatik.tu-darmstadt.de/~tek
- W: http://www.tu-darmstadt.de/~tek01
- P: 1024/3BC8D885 8C 29 C5 0A C0 D1 D6 F4  20 D4 2D AB 29 F6 D0 60
-@@ -2146,9 +2146,9 @@ S: L-1148 Luxembourg-City
- S: Luxembourg
-
- N: Gerd Knorr
--W: http://bytesex.org
- E: kraxel@bytesex.org
- E: kraxel@suse.de
-+W: http://bytesex.org
- D: video4linux, bttv, vesafb, some scsi, misc fixes
-
- N: Hans J. Koch
-@@ -2448,7 +2448,8 @@ S: 75141 Paris Cedex 03
- S: France
-
- N: Siegfried "Frieder" Loeffler (dg1sek)
--E: floeff@tunix.mathematik.uni-stuttgart.de, fl@LF.net
-+E: floeff@tunix.mathematik.uni-stuttgart.de
-+E: fl@LF.net
- W: http://www.mathematik.uni-stuttgart.de/~floeff
- D: Busmaster driver for HP 10/100 Mbit Network Adapters
- S: University of Stuttgart, Germany and
-@@ -2908,6 +2909,7 @@ D: SuperH maintainer
- N: Ian A. Murdock
- E: imurdock@gnu.ai.mit.edu
- D: Creator of Debian distribution
-+D: He passed away in 2015, and will be greatly missed.
- S: 30 White Tail Lane
- S: Lafayette, Indiana 47905
- S: USA
-@@ -3602,7 +3604,7 @@ D: added PCI support to the serial driver
- S: Buckenhof, Germany
-
- N: Michael Schmitz
--E:
-+E: schmitzmic@gmail.com
- D: Macintosh IDE Driver
-
- N: Peter De Schrijver
-@@ -3711,7 +3713,7 @@ S: USA
-
- N: Jaspreet Singh
- E: jaspreet@sangoma.com
--W: www.sangoma.com
-+W: http://www.sangoma.com
- D: WANPIPE drivers & API Support for Sangoma S508/FT1 cards
- S: Sangoma Technologies Inc.,
- S: 1001 Denison Street
-@@ -3720,7 +3722,7 @@ S: Markham, Ontario L3R 2Z6
- S: Canada
-
- N: Haavard Skinnemoen
--M: Haavard Skinnemoen <hskinnemoen@gmail.com>
-+M: hskinnemoen@gmail.com
- D: AVR32 architecture port to Linux and maintainer.
-
- N: Rick Sladkey
-@@ -3980,7 +3982,7 @@ S: Cambridge, Massachusetts 02139
- S: USA
-
- N: Luben Tuikov
--E: Luben Tuikov <ltuikov89@gmail.com>
-+E: ltuikov89@gmail.com
- D: Maintainer of the DRM GPU Scheduler
-
- N: Simmule Turner
-@@ -4273,7 +4275,7 @@ W: ftp://ftp.uk.linux.org/pub/linux/people/willy/
- D: Linux/PARISC hacker.  Filesystem hacker.  Random other hacking.  Custom
- D: PPC port hacking.
-
--N: G\"unter Windau
-+N: Gunter Windau
- E: gunter@mbfys.kun.nl
- D: Some bug fixes in the polling printer driver (lp.c)
- S: University of Nijmegen
-@@ -4455,7 +4457,8 @@ E: tsahee@annapurnalabs.com
- D: Annapurna Labs Alpine Architecture
-
- N: Richard Zidlicky
--E: rz@linux-m68k.org, rdzidlic@geocities.com
-+E: rz@linux-m68k.org
-+E: rdzidlic@geocities.com
- W: http://www.geocities.com/rdzidlic
- D: Q40 port - see arch/m68k/q40/README
- D: various m68k hacks
---
-2.39.5
+--Sig_/offU.zWJ54GnTgL4.MCsxi3--
