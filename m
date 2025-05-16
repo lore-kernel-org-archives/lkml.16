@@ -1,205 +1,232 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1306B22B59A;
-	Fri, 16 May 2025 21:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06FC2275874
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 21:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747429978; cv=none; b=X1WoqRkh1sTs1lJLpfwEbIzrJglqK17xL9wr3ZpadGTY6/0T+8/kOL5m/l4fGnVpu/Z66ybH44tfx9pKXcrlpTFqztrwH0FOeY7MG8XyPkQvt02hSy69EXr5DYyaFbSJIRHg64ZGkBiTpJ6qKRmOFZq68FJ9d5BpAjV/C5pFvV4=
+	t=1747430451; cv=none; b=uXOJGLUVRV/MTxvdoJfYJ2ENSSNDqd+ONoNgOPLTB5xTzGYtH8cHhF7YQLIdnpIVX7gmlTwiAZtYppegvD3MHZRjcKc2lGcTD6Y60tGXbQYbtibmhNnZ5shVCqV5XmrZo+SXR383xDE8H8qCwYMQpYshN41TFtko0QVCp7sqAfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747429978; c=relaxed/simple;
-	bh=Fy4Y8kipSijwELgR6UsjOYS9RkWbQZVC+gC58ePPZLg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MiRBwEkEbqHesITh5I6DeRsMWN7vnPt3JSL83H1rJ8Q/pylBIkdUWvTP4oMf5wbrefrWvseBEnmQg0dyu/4TfdBCN1e6rbshG2R7Hr1Flf5leHjgD9l96lFSB1p7km+cKD76Ti0JwDORro6cDrOpe+PALoI06pbr7mEIzSxulH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SNl6fTz9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747430451; c=relaxed/simple;
+	bh=JPwqfHSCQK/QgH8HqIumIRGFhGuLkPSrhBX2hgPf1Nk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EqNe0NTWYTH5Nb2dG26c3kyYrTrTU8jGd3vDR1FCXfgIfQhUPeHJs3NNCsePHbp3IrYLS7nZIqpDT2CeasNiMBF4rQbrw2JEKW5q8iS9COwOiqE8yvR/YoKKLBmbjc8lLsJuC2IjzP1dU4qsUCfSq19f6gCrzEx1h1PAcXntGh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YMTszi+F; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SNl6fTz9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64B76C4CEE4;
-	Fri, 16 May 2025 21:12:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747429977;
-	bh=Fy4Y8kipSijwELgR6UsjOYS9RkWbQZVC+gC58ePPZLg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=SNl6fTz9uH+SOeIbbcCtvO1w9eJd9Ta1wE5TQMXvNMn0M8vJaFilkyJ3U0RZgBAnJ
-	 PP9D4Hl6Z38j6CSU90HE8SiPq0JkIaDZckRIpqZgQxrcDeQUEh9QPzRvydQg5lHjo2
-	 8NsLdjzzN0viiXyo4i4TpN6kKoRSFWVVoorC5maXf5K+Eg/Av+mfEv8VJys0clMMh7
-	 omAXsSVMuvCgAqnjw8Nc+Vy3cVwBnCIimP02CGVYguSutAG6zqBgDrZZBHV6mEV4Ix
-	 M2p2XZr/3PbpuLW6hc/x4Y8qUC0oWybFiW9BPDDVf42gXaARQM2m7xQK9rnNbm4gIo
-	 /BWNIy/sn2vvw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 6CF7CCE0C93; Fri, 16 May 2025 14:12:56 -0700 (PDT)
-Date: Fri, 16 May 2025 14:12:56 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [paulmckrcu:dev.2025.05.05a] [rcutorture]  54d0803f63:
- WARNING:at_kernel/rcu/rcutorture.c:#rcu_torture_stats_print[rcutorture]
-Message-ID: <7b11b0e1-9c96-4441-8905-a7fc5a3b49a0@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <202505131651.af6e81d7-lkp@intel.com>
- <620852c4-c2ae-4242-9996-1af248afba2c@paulmck-laptop>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YMTszi+F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747430448;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=eCoMavrmaZxJcGW5dsoDotDkap37Rrn/8QZ0fSt1V6w=;
+	b=YMTszi+FLdbKDKH5val3FFymEgJm9Q8f1uR6akWYXf5JAZmX46vnwmLK5E5LjfeR4Xmepk
+	V+rBYqPa44oBNv8Lzth0mxNsxQk7htTQfEdodRjjYhjHhzfr1c9siDgy8srSSpqAIe/nY0
+	bn0Fs5w5nsFXYiJlCSitlGTqP+9rEpg=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-653-FjvPeJtINXyu-kvTxfO_ng-1; Fri, 16 May 2025 17:20:47 -0400
+X-MC-Unique: FjvPeJtINXyu-kvTxfO_ng-1
+X-Mimecast-MFC-AGG-ID: FjvPeJtINXyu-kvTxfO_ng_1747430446
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a363beb5ebso431551f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 14:20:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747430446; x=1748035246;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eCoMavrmaZxJcGW5dsoDotDkap37Rrn/8QZ0fSt1V6w=;
+        b=POhbcscwRVBkrWL54Z94CqJITK/HabQov+G6SjVfKqWDD+aqtdsRuFuUjnEtvfsZq+
+         gJJ3L7/CjEUUx6nx6ClhGIgxRaEjtgBro/cyq1riYFNV+1/WVEsRwyd5hLcGh/yeSddR
+         O0Mu4w5vQqRaH+uBL7BJarX1rJValgRgx+ic90RZljC44j2oKifjL8YnvGjrOvr2M/3O
+         Rv69ml7r7TeHkRRLd/Bk4KNKqclWcmsIkZ4RCi6mvLuSgQpQ+wDq//6hCKzWfpeL4w78
+         xoP/ctjSdXQYv66AC7wVabkiuDsfHw+8vEgCH4Wl1KMTYbqL/J48nrBmk9vadaOiYDVp
+         9gJA==
+X-Gm-Message-State: AOJu0YxK8yQXbJ6okFyUsdl9L71j16BYiLnG5RCP8d9e1pgzOnuxO2WW
+	j4zcb/YQLrRAn/+6BdkyPGFjiP7D83JWksyNZTJx8El08bgW+Xoig4IhCHTj2KctRrkXioHP5Oy
+	sAC3/4ro/4hwa58von3LSSn/3gKy5vFygxXzbH9HL3uekFV4+Brz2EP5PtJ9rev/ZkhsaQR6web
+	W0
+X-Gm-Gg: ASbGncun2J/drVz7IfNO2OKsu+YnxwcIg8JsmCLql8rqWr3b46qegZauDOI5QfI5cWp
+	nMUhegPb4Pp3awqn02vDB0o+KrY2TK8pQj/axw7dOiLKVG3oUtMsApWic7JcEXQRMwJyQtechDd
+	8IzUN+54xXIvZNMcbPq6pggs5ebE1b/qYSgVMLBV0SVArD8w+abrIYaBSg9pJnkmcOTocqHDtY3
+	7p5+xb+BE9HJQYTcBhq5sahKkkecKGdgVZNA2+L58ik1Xkv5tJj+EnZdjczwA3OI3Re36y5xlrb
+	U5xh/h/Fj1xpGd7BBP5sPbpyoL7VfRnFMW3Bqom2zw==
+X-Received: by 2002:a05:6000:3113:b0:3a0:9f24:7749 with SMTP id ffacd0b85a97d-3a35ffd2d38mr3744499f8f.36.1747430446402;
+        Fri, 16 May 2025 14:20:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF9rcafLxS8xgREIjIKFia45brBz+IMR/aurS6hED242W2pTBmnbljKkHgcAvsIcUmFaCJwRQ==
+X-Received: by 2002:a05:6000:3113:b0:3a0:9f24:7749 with SMTP id ffacd0b85a97d-3a35ffd2d38mr3744485f8f.36.1747430446028;
+        Fri, 16 May 2025 14:20:46 -0700 (PDT)
+Received: from [192.168.3.141] (p57a1ac29.dip0.t-ipconnect.de. [87.161.172.41])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca5a79asm3942366f8f.25.2025.05.16.14.20.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 May 2025 14:20:45 -0700 (PDT)
+Message-ID: <0454761b-ec54-4cc8-9d01-b783e2e58f9e@redhat.com>
+Date: Fri, 16 May 2025 23:20:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <620852c4-c2ae-4242-9996-1af248afba2c@paulmck-laptop>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/3] s390/uv: don't return 0 from make_hva_secure() if
+ the operation was not successful
+To: Zi Yan <ziy@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+ kvm@vger.kernel.org, linux-mm@kvack.org,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>, Heiko Carstens
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Thomas Huth <thuth@redhat.com>,
+ Matthew Wilcox <willy@infradead.org>,
+ Sebastian Mitterle <smitterl@redhat.com>, stable@vger.kernel.org
+References: <20250516123946.1648026-1-david@redhat.com>
+ <20250516123946.1648026-2-david@redhat.com>
+ <60DDE99E-E09D-4BD4-AC58-569186E45660@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <60DDE99E-E09D-4BD4-AC58-569186E45660@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 15, 2025 at 05:37:03PM -0700, Paul E. McKenney wrote:
-> On Wed, May 14, 2025 at 10:23:26AM +0800, kernel test robot wrote:
-> > 
-> > hi, Paul,
-> > 
-> > we noticed various issues for both 54d0803f63/parent in this test.
-> > 
-> > =========================================================================================
-> > tbox_group/testcase/rootfs/kconfig/compiler/runtime/test/torture_type:
-> >   vm-snb/rcutorture/debian-11.1-i386-20220923.cgz/i386-randconfig-061-20250510/clang-20/300s/default/trivial
-> > 
-> > ec3f43f72b268d44 54d0803f632b402e519c7d97a6b
-> > ---------------- ---------------------------
-> >        fail:runs  %reproduction    fail:runs
-> >            |             |             |
-> >            :100         71%          71:98    rcutorture.trivial.fail   <--- (1)
-> >            :100         71%          71:98    dmesg.EIP:rcu_torture_stats_print   <--- (2)
-> >          94:100          0%          94:98    dmesg.EIP:synchronize_rcu_trivial
-> >         100:100         -2%          98:98    dmesg.UBSAN:implicit-conversion_in_drivers/firewire/core-transaction.c
-> >         100:100         -2%          98:98    dmesg.UBSAN:negation-overflow_in_lib/sort.c
-> >         100:100         -2%          98:98    dmesg.UBSAN:negation-overflow_in_mm/memcontrol.c
-> >            :100         71%          71:98    dmesg.WARNING:at_kernel/rcu/rcutorture.c:#rcu_torture_stats_print[rcutorture]   <--- (3)
-> >          94:100          0%          94:98    dmesg.WARNING:at_kernel/rcu/rcutorture.c:#synchronize_rcu_trivial[rcutorture]
-> >         100:100         -2%          98:98    dmesg.boot_failures
-> > 
-> > 
-> > but seems (1)(2)(3) are quite persistent on 54d0803f63 and clean on parent.
-> > 
-> > 
-> > Hello,
-> > 
-> > kernel test robot noticed "WARNING:at_kernel/rcu/rcutorture.c:#rcu_torture_stats_print[rcutorture]" on:
-> > 
-> > commit: 54d0803f632b402e519c7d97a6b52d5ffb78ae78 ("rcutorture: Start rcu_torture_writer() after rcu_torture_reader()")
-> > https://github.com/paulmckrcu/linux dev.2025.05.05a
-> > 
-> > in testcase: rcutorture
-> > version: 
-> > with following parameters:
-> > 
-> > 	runtime: 300s
-> > 	test: default
-> > 	torture_type: trivial
+On 16.05.25 23:08, Zi Yan wrote:
+> On 16 May 2025, at 8:39, David Hildenbrand wrote:
 > 
-> Huh.  This is the trivial RCU implementation that is not used in the
-> Linux kernel (aside from rcutorture testing it), but verifies that my
-> slideware/textbook implementation actually works.
+>> If s390_wiggle_split_folio() returns 0 because splitting a large folio
+>> succeeded, we will return 0 from make_hva_secure() even though a retry
+>> is required. Return -EAGAIN in that case.
+>>
+>> Otherwise, we'll return 0 from gmap_make_secure(), and consequently from
+>> unpack_one(). In kvm_s390_pv_unpack(), we assume that unpacking
+>> succeeded and skip unpacking this page. Later on, we run into issues
+>> and fail booting the VM.
+>>
+>> So far, this issue was only observed with follow-up patches where we
+>> split large pagecache XFS folios. Maybe it can also be triggered with
+>> shmem?
+>>
+>> We'll cleanup s390_wiggle_split_folio() a bit next, to also return 0
+>> if no split was required.
+>>
+>> Fixes: d8dfda5af0be ("KVM: s390: pv: fix race when making a page secure")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>>   arch/s390/kernel/uv.c | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
+>> index 9a5d5be8acf41..2cc3b599c7fe3 100644
+>> --- a/arch/s390/kernel/uv.c
+>> +++ b/arch/s390/kernel/uv.c
+>> @@ -393,8 +393,11 @@ int make_hva_secure(struct mm_struct *mm, unsigned long hva, struct uv_cb_header
+>>   	folio_walk_end(&fw, vma);
+>>   	mmap_read_unlock(mm);
+>>
+>> -	if (rc == -E2BIG || rc == -EBUSY)
+>> +	if (rc == -E2BIG || rc == -EBUSY) {
+>>   		rc = s390_wiggle_split_folio(mm, folio, rc == -E2BIG);
+>> +		if (!rc)
+>> +			rc = -EAGAIN;
 > 
-> So you didn't manage to break the Linux kernel, just some of my
-> presentations.  ;-)
-> 
-> Still, this clearly needs to be fixed.
-> 
-> > config: i386-randconfig-061-20250510
-> > compiler: clang-20
-> > test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
-> > 
-> > (please refer to attached dmesg/kmsg for entire log/backtrace)
-> > 
-> > 
-> > 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <oliver.sang@intel.com>
-> > | Closes: https://lore.kernel.org/oe-lkp/202505131651.af6e81d7-lkp@intel.com
-> > 
-> > 
-> > The kernel config and materials to reproduce are available at:
-> > https://download.01.org/0day-ci/archive/20250513/202505131651.af6e81d7-lkp@intel.com
-> > 
-> > 
-> > [  232.971337][  T965] trivial-torture: rtc: ef358cc0 ver: 9677 tfle: 0 rta: 9677 rtaf: 0 rtf: 9668 rtmbe: 0 rtmbkf: 0/0 rtbe: 0 rtbke: 0 rtbf: 0 rtb: 0 nt: 3782 onoff: 0/0:0/0 -1,0:-1,0 0:0 (HZ=300) barrier: 0/0:0 read-exits: 64 nocb-toggles: 0:0 gpwraps: 0
-> > [  232.974503][  T965] trivial-torture: !!! 
-> > [  232.974595][  T965] ------------[ cut here ]------------
-> > [  232.976982][  T965] WARNING: CPU: 0 PID: 965 at kernel/rcu/rcutorture.c:2730 rcu_torture_stats_print+0x8e4/0x8f0 [rcutorture]
-> 
-> And this is a too-short grace period...
-> 
-> > [  232.980999][  T965] Modules linked in: rcutorture torture
-> > [  232.982356][  T965] CPU: 0 UID: 0 PID: 965 Comm: rcu_torture_sta Tainted: G        W       T   6.15.0-rc1-00059-g54d0803f632b #1 PREEMPT(full)  5f9cb9cacb9aba8a18caee0ed4d4cf4452094bc2
-> > [  232.990730][  T965] Tainted: [W]=WARN, [T]=RANDSTRUCT
-> > [  232.992782][  T965] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-> > [  232.995869][  T965] EIP: rcu_torture_stats_print+0x8e4/0x8f0 [rcutorture]
-> > [  232.997526][  T965] Code: ff ff 0f 0b 83 3d 88 8f 35 ef 00 0f 84 b0 fb ff ff 0f 0b 83 3d 8c 8f 35 ef 00 0f 84 ae fb ff ff 0f 0b 84 db 0f 84 ac fb ff ff <0f> 0b e9 a5 fb ff ff 00 00 00 00 00 55 89 e5 53 57 56 83 ec 14 e8
-> > [  233.002674][  T965] EAX: 00000004 EBX: 00000001 ECX: 00000000 EDX: 00000000
-> > [  233.004477][  T965] ESI: 00000000 EDI: 00000000 EBP: 47efbf58 ESP: 47efbedc
-> > [  233.006060][  T965] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00010202
-> > [  233.007496][  T965] CR0: 80050033 CR2: 353667f8 CR3: 7c473000 CR4: 000406d0
-> > [  233.009173][  T965] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-> > [  233.010612][  T965] DR6: fffe0ff0 DR7: 00000400
-> > [  233.011678][  T965] Call Trace:
-> > [  233.012511][  T965]  ? rcu_torture_stats+0x24/0x70 [rcutorture 7eef68a8ad9c4bc219a4bda0dc180602dd9a9416]
-> > [  233.014416][  T965]  ? kthread+0x1af/0x200
-> > [  233.016388][  T965]  ? rcu_nocb_toggle+0x1c0/0x1c0 [rcutorture 7eef68a8ad9c4bc219a4bda0dc180602dd9a9416]
-> > [  233.018427][  T965]  ? schedule_tail+0x79/0xf0
-> > [  233.019297][  T965]  ? kthread_blkcg+0x30/0x30
-> > [  233.020404][  T965]  ? kthread_blkcg+0x30/0x30
-> > [  233.021230][  T965]  ? ret_from_fork+0x2c/0x40
-> > [  233.022315][  T965]  ? ret_from_fork_asm+0x12/0x20
-> > [  233.023169][  T965]  ? entry_INT80_32+0x10d/0x10d
-> > [  233.024178][  T965] irq event stamp: 495
-> > [  233.024991][  T965] hardirqs last  enabled at (509): [<4f981d9b>] __console_unlock+0x5b/0x70
-> > [  233.026606][  T965] hardirqs last disabled at (520): [<4f981d82>] __console_unlock+0x42/0x70
-> > [  233.028125][  T965] softirqs last  enabled at (282): [<51ba356a>] __do_softirq+0xa/0xe
-> > [  233.029924][  T965] softirqs last disabled at (267): [<51ba356a>] __do_softirq+0xa/0xe
-> > [  233.031571][  T965] ---[ end trace 0000000000000000 ]---
-> > [  233.033193][  T965] Reader Pipe:  23875253 3963 1 0 0 0 0 0 0 0 0
-> 
-> ... as further indicated by the "1" after the "3963".  This means that
-> there was one too-short trivial-RCU grace period in not quite four
-> minutes of testing.
-> 
-> > [  233.034030][  T965] trivial-torture: Reader Batch:  23879217 0 0 0 0 0 0 0 0 0 0
-> > [  233.035198][  T965] trivial-torture: Free-Block Circulation:  9676 9676 9675 9674 9673 9672 9671 9670 9669 9668 0
-> > 
-> > ...
-> > 
-> > [  472.316419][ T2339] trivial-torture:--- End of test: FAILURE: nreaders=1 nfakewriters=4 stat_interval=60 verbose=1 test_no_idle_hz=1 shuffle_interval=3 stutter=5 irqreader=1 fqs_duration=0 fqs_holdoff=0 fqs_stutter=3 test_boost=1/0 test_boost_interval=7 test_boost_duration=4 test_boost_holdoff=0 shutdown_secs=0 stall_cpu=0 stall_cpu_holdoff=10 stall_cpu_irqsoff=0 stall_cpu_block=0 stall_cpu_repeat=0 n_barrier_cbs=0 onoff_interval=0 onoff_holdoff=0 read_exit_delay=13 read_exit_burst=16 reader_flavor=1 nocbs_nthreads=0 nocbs_toggle=1000 test_nmis=0 preempt_duration=0 preempt_interval=1000 n_up_down=32
-> 
-> And this is one possible reason why:  "shuffle_interval=3".
-> 
-> The way that trivial RCU works is to schedule itself on each online CPU
-> in turn in this function:
-> 
-> static void synchronize_rcu_trivial(void)
-> {
-> 	int cpu;
-> 
-> 	for_each_online_cpu(cpu) {
-> 		torture_sched_setaffinity(current->pid, cpumask_of(cpu), true);
-> 		WARN_ON_ONCE(raw_smp_processor_id() != cpu);
-> 	}
-> }
-> 
-> If torture_shuffle_tasks() moves this writer kthread just after the above
-> torture_sched_setaffinity() completes, then synchronize_rcu_trivial()
-> might miss its intended CPU, thus failing to wait for RCU readers on
-> that CPU.  This can in turn result in a too-short grace period.
-> 
-> Except that I would expect the WARN_ON_ONCE() to trigger in that scenario.
+> Why not just folio_put() then jump back to the beginning of the
+> function to do the retry? This could avoid going all the way back
+> to kvm_s390_unpack().
 
-Which you do have, now that I actually looked at the dmesg.  ;-)
+Hi, thanks for the review.
 
-> I will play with this a bit.  I don't want to force-disable shuffle
-> in the torture_type=trivial case because it is a useful way of testing
-> rcutorture itself.  But perhaps I can make the complaint more explicit.
+We had a pretty optimized version with such tricks before Claudio 
+refactored it in:
 
-And 200 hours of testing passed.  I am adding a change to splat, but to
-force these kernel boot parameters to zero so as to avoid the spurious
-grace-period failure.  I expect this to reach mainline during the v6.17
-merge window.
+commit 5cbe24350b7d8ef6d466a37d56b07ae643c622ca
+Author: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Date:   Thu Jan 23 15:46:17 2025 +0100
 
-							Thanx, Paul
+     KVM: s390: move pv gmap functions into kvm
+
+
+
+In particular, one relevant hunk was:
+
+-       switch (rc) {
+-       case -E2BIG:
+-               folio_lock(folio);
+-               rc = split_folio(folio);
+-               folio_unlock(folio);
+-               folio_put(folio);
+-
+-               switch (rc) {
+-               case 0:
+-                       /* Splitting succeeded, try again immediately. */
+-                       goto again;
+-               case -EAGAIN:
+-                       /* Additional folio references. */
+-                       if (drain_lru(&drain_lru_called))
+-                               goto again;
+-                       return -EAGAIN;
+
+
+
+Claudio probably had a good reason to rewrite the code -- and I hope 
+we'll be able to rip all of that out soon, so ...
+
+... minimal changes until then :)
+
+
+-- 
+Cheers,
+
+David / dhildenb
+
