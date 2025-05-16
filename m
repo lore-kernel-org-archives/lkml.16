@@ -1,195 +1,122 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F07E221283
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE1F21ABDA
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747390981; cv=none; b=GWZmErtwUI+Ylj1OZe8PdMeYpJ/+TGNoO0gHVPNh8WzT6DTGovd+CbwXlq7AGEZj/LycaToCZqPmIeG5fEKriEe0lm9RtojFxbKD1fTRlaycmQ1vPb1DdDEfNe3OReQRG4achLee+X5yX7aX4vjySFLgTB67B7IqmaBDld81yGk=
+	t=1747391000; cv=none; b=ly+evB3WL9O79+rMrz5PWDpStsmIiw11UcmB4/sWwn0bmZvN7YjrKxKUq8y743r8JXSX67AgQAoEC+Wwgoll0+lHK/QZVfsy5uTZPXo191mrirMFOC1tHLMdiwsHq/ANJMDoLMTO6brXrfK7/7CgG+QoEkhFUEJb7ajCxYBkyRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747390981; c=relaxed/simple;
-	bh=2RML4bc73QeojdsIhKSTiERj8sZUEd792kGhlylelEk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ajkRy9GytpXKOeuL/MQPMROwXLCYlFX1T3s8f97BOkeCmRnJ24g5TheSpDcbNpL65L/Qg706At6//mA4K4dCz9d1Bed43brh4bKtTq0bJtYnAkErgD8WI6Vq/iadAqjqY7la8X++EWAdMEMh2bOb4oTw+tP39vPMDnIB8m0FoVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qs7y4MPx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=NLdK9TgS; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=qs7y4MPx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=NLdK9TgS; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1747391000; c=relaxed/simple;
+	bh=xjHLA3BWSq3W749LUYRSlJVMwRjkGpbKLhKT3AS5O1w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u3kNfuk0J57F3cmI7IMFx7EwmkxQ7oDsqHj2J35/s3zdeqZXLR5ACyHbeJb3piE21kN+qC41ZHsAPpRFi1KQtwtgnrpTPdokrPslQrDBIyEs+cMIt2E0v/Sp8pSBc+x79g0U2ssotZWNiBKDsdMdVe3XeJXl5XqwIFbAwIXV5zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gGHIlBKo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qs7y4MPx";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="NLdK9TgS";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="qs7y4MPx";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="NLdK9TgS"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6F04A2126F;
-	Fri, 16 May 2025 10:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747390978; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OWrJPjWlYuwuMcb4sBTH247o2s/AahWTBVUEKMJk8Ao=;
-	b=qs7y4MPxGbRdL1PI5KsFP/sKCIizSwmP7t50XAKq6TPqxpO8uTrjqsM9MKREie2u8y6Gn0
-	DINBVB6avH8QT/F2qL+tVNUb4b+Hg9/GklsbvlkBryU7pU9E7yXw7MpXzY4pzPi8t4szGV
-	LzsDDeiVwzJzmRrZ/qstSwr88C63w+s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747390978;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OWrJPjWlYuwuMcb4sBTH247o2s/AahWTBVUEKMJk8Ao=;
-	b=NLdK9TgS2yfzomDgInwe0WAHze51rwAvhLcsoXa7lGaKu7KF1MmkL5cNe+ztYgr0Yy/3Cr
-	MjdhEF02MH9GBPAA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=qs7y4MPx;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=NLdK9TgS
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747390978; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OWrJPjWlYuwuMcb4sBTH247o2s/AahWTBVUEKMJk8Ao=;
-	b=qs7y4MPxGbRdL1PI5KsFP/sKCIizSwmP7t50XAKq6TPqxpO8uTrjqsM9MKREie2u8y6Gn0
-	DINBVB6avH8QT/F2qL+tVNUb4b+Hg9/GklsbvlkBryU7pU9E7yXw7MpXzY4pzPi8t4szGV
-	LzsDDeiVwzJzmRrZ/qstSwr88C63w+s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747390978;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OWrJPjWlYuwuMcb4sBTH247o2s/AahWTBVUEKMJk8Ao=;
-	b=NLdK9TgS2yfzomDgInwe0WAHze51rwAvhLcsoXa7lGaKu7KF1MmkL5cNe+ztYgr0Yy/3Cr
-	MjdhEF02MH9GBPAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4B6FF13411;
-	Fri, 16 May 2025 10:22:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zqEeEgISJ2jufgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Fri, 16 May 2025 10:22:58 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 6E823A09DD; Fri, 16 May 2025 12:22:53 +0200 (CEST)
-Date: Fri, 16 May 2025 12:22:53 +0200
-From: Jan Kara <jack@suse.cz>
-To: Andrey Kriulin <kitotavrik.s@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Josef Bacik <josef@toxicpanda.com>, NeilBrown <neilb@suse.de>, 
-	Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH v3] fs: minix: Fix handling of corrupted directories
-Message-ID: <enhxf3daymfubn226ha4ywvh74k3zhacdya2mgfln7g2kzsq6x@llwzvp3vejsk>
-References: <20250515175500.12128-1-kitotavrik.s@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gGHIlBKo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C7F2C4CEF1;
+	Fri, 16 May 2025 10:23:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747391000;
+	bh=xjHLA3BWSq3W749LUYRSlJVMwRjkGpbKLhKT3AS5O1w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gGHIlBKowna1VHP6Fo4OUaUFMDzETqeeQHIOhI2B5Uwmr9o5LCMfJ3wlRMEOVt/jf
+	 cIYUDcekCd4gt5Qq/wyrI8ry7WOjLG6jXv2jyrirx75ZZl3z3yqYj/2bt/hRPjXqwV
+	 CESgQBDqKPnV/OecpdPhd5FpLwWUslsG9MYa7DUW2xk7NduftSGaZ0JF5u75Y2klhR
+	 +WoEGXLFhvWhrhiMcKtM5TlxG3q/zS0zHyZSzDnHEUEuvTcA7e8TL2JSeqzB5J3P1y
+	 Z6X8yl1+K5k5/nHSXawXv9iXg8cI1/N3vs0tIcIE+t2rV3Dbp4OoHX5dOJCpgj921O
+	 UjnTkL21b2o3w==
+Message-ID: <79bd93c0-52b6-45cf-9e65-1e3636b5d95e@kernel.org>
+Date: Fri, 16 May 2025 12:23:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515175500.12128-1-kitotavrik.s@gmail.com>
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 6F04A2126F
-X-Spam-Flag: NO
-X-Spam-Score: -2.51
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Action: no action
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] genirq: Bump the size of the local variable for
+ sprintf()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+ kernel test robot <lkp@intel.com>
+References: <20250515085516.2913290-1-andriy.shevchenko@linux.intel.com>
+ <0e79e48c-f466-41f7-bb60-03f45f6b0628@kernel.org>
+ <aCcAP3eIn5XmNALA@smile.fi.intel.com>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <aCcAP3eIn5XmNALA@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu 15-05-25 20:54:57, Andrey Kriulin wrote:
-> If the directory is corrupted and the number of nlinks is less than 2
-> (valid nlinks have at least 2), then when the directory is deleted, the
-> minix_rmdir will try to reduce the nlinks(unsigned int) to a negative
-> value.
+On 16. 05. 25, 11:07, Andy Shevchenko wrote:
+> On Fri, May 16, 2025 at 06:45:04AM +0200, Jiri Slaby wrote:
+>> On 15. 05. 25, 10:55, Andy Shevchenko wrote:
 > 
-> Make nlinks validity check for directories.
+> ...
 > 
-> Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+>>> -	char name [10];
+>>> +	char name [12];
+>>
+>> The max irq is ~ 512000, if I am counting correctly, so 7 B should be
+>> actually enough for everybody ;).
 > 
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Andrey Kriulin <kitotavrik.s@gmail.com>
+> GCC can't proved it. And FWIW, on current Debian unstable (GCC 14?) I can't
+> reproduce this. In any case this doesn't increase stack usage AFAICT, the array
+> already have reserved 12 or 16 bytes.
 
-This patch is mostly fine (see just one nit below).
+Yes, sure, I am not disputing the fix.
 
-> ---
-> v3: Move nlinks validaty check to minix_rmdir and minix_rename per Jan
-> Kara <jack@suse.cz> request.
-> v2: Move nlinks validaty check to V[12]_minix_iget() per Jan Kara
-> <jack@suse.cz> request. Change return error code to EUCLEAN. Don't block
-> directory in r/o mode per Al Viro <viro@zeniv.linux.org.uk> request.
+>> But well, can we silence the warning in a better way? I doubt that...
 > 
->  fs/minix/namei.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/minix/namei.c b/fs/minix/namei.c
-> index 8938536d8d3c..5a1e5f8ef443 100644
-> --- a/fs/minix/namei.c
-> +++ b/fs/minix/namei.c
-> @@ -161,8 +161,12 @@ static int minix_unlink(struct inode * dir, struct dentry *dentry)
->  static int minix_rmdir(struct inode * dir, struct dentry *dentry)
->  {
->  	struct inode * inode = d_inode(dentry);
-> -	int err = -ENOTEMPTY;
-> +	int err = -EUCLEAN;
->  
-> +	if (inode->i_nlink < 2)
+> With the above said, I think it's pretty much close to the best way.
+> But if you find anything better, I also would like to learn.
 
-This should be <= 2 as well?
+Perhaps next in row would be using snprintf(), but dunno if it's better 
+at all.
 
-								Honza
-
-> +		return err;
-> +
-> +	err = -ENOTEMPTY;
->  	if (minix_empty_dir(inode)) {
->  		err = minix_unlink(dir, dentry);
->  		if (!err) {
-> @@ -235,6 +239,10 @@ static int minix_rename(struct mnt_idmap *idmap,
->  	mark_inode_dirty(old_inode);
->  
->  	if (dir_de) {
-> +		if (old_dir->i_nlink <= 2) {
-> +			err = -EUCLEAN;
-> +			goto out_dir;
-> +		}
->  		err = minix_set_link(dir_de, dir_folio, new_dir);
->  		if (!err)
->  			inode_dec_link_count(old_dir);
-> -- 
-> 2.47.2
-> 
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+js
+suse labs
