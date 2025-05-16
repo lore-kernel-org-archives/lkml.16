@@ -1,122 +1,193 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865FCA32;
-	Fri, 16 May 2025 12:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CF1235063;
+	Fri, 16 May 2025 12:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747398458; cv=none; b=P5oVONDRk5ofQezZrFEy0EhhtTo5jRFIAZFcRZ854PiQg7KNmGNOgXxkGa4zu7UntuxpcIfLzCX6FCmNa7H/nFHdGxACOj6sjlmXMKccG9UPYc/jKoFtz5/gjT8C9me0bSvzOP6ihrMo4MiwKjMW0GUcppjvMIlYHFzjp06mE6I=
+	t=1747398525; cv=none; b=Cqyj38wf/MgI2jfD5S4SMPPHyZBr4cNV9ZWO2Lq3JKPKkP2sLwvwJRPNEIM9hZC010CDXRIEKEOCgDdLPk+fGrOGi7MeWMGsv7XHlLkLMATmfZUKocwRYY+LpNKOPF63uErmY4zxnq84iM/WYE7HzodVora/QOjX99XlWuiuD5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747398458; c=relaxed/simple;
-	bh=msf1u6psXmm5YGgNc/J1e9yKeJ4zJ9sPS2p6grmcTnI=;
+	s=arc-20240116; t=1747398525; c=relaxed/simple;
+	bh=W3K28pAKxl8sf9FQ1cFzRh/S7+lXMOVHJ01qrcT3Epg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iZ33gIeQlarrO8hmZ6eUIGzqmcHnukaJmw0NoPyfMalAN2v1e3fvrEVjkyPBSNglxrFgM+P1LO7Q8EVAzLaxJdFuwb/n8dX6PNyAZIIVfNh0yrYS5wDvHJRbRiQJxIkh0RX201yLKFtjhVslCsa8e7C4+wmOeHpgUK31fAQVMNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=OX8m74ex; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=fRWf8kAevJXsDR3WRpoqfQM26aOTSrFLU0tTI61YeOtrtfZXRN6uW+CSqTug9Dd4jRdv3SfJisy2mQUYJysB/8DNRJJjKV7tNzuEvSkVOGhkcUr1Y6e7kgAipugdNUUzKIW2DG7lTuOUHfrOJBunBq/fCijAUtEApwq24jQPhJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l6txO3wk; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="OX8m74ex"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 57C6D40E0241;
-	Fri, 16 May 2025 12:27:33 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id uwSaCqau6FpN; Fri, 16 May 2025 12:27:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747398447; bh=sG2uaaEQ4UYwgNQ5ATaaMB63qAcs03C2EG0pb4eWOjE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OX8m74expZfER3T0uDYUZICIDGPSBDimfLXl0fR3OhC6yCduNSpf2QC5eX8Rr2Gq8
-	 jWt4NplxvGpKuKhjX7+GliN3GLBAJ9ZpCkhkZ6LEAGhz5kEpW4Bg5eCaW9eIObotoF
-	 VUa8dSBKzkbMjviHTTr+tcvR3ypKNpWipnfjjDQMdkIoS/QveX80eoF6+GahuLDanr
-	 Jx2uBfv2K4teXJMO0mBewwkyy9q0aNCNcKVjMj5RS8eTQLvagFDqmoyzDkiuaZ8xG3
-	 +mqxZf8JpEIJw3QdgslBdtWqqrVZ9iNNIm/7n4+cSFs9gTeqCf6fVuF9rg5QYC1dol
-	 UWA5OvdJv8zjiy2mWJhOoN1QwAB+OlWGLuTslMfyeXdPm1J7Z+sg9hQfAACSy+PyvS
-	 Ngr1jdA3qW0PCW7M3NIKOLYx2DGwFIpWER21u8D9+QSwdFy11ADQBG1nzj4iqC0MHh
-	 bF5eENJpkrCiMnkoR1GE3NH2+0/ogpmJ/zycq553b73j658M8XG195yUJAKZFHbEtJ
-	 FjBAGWtjNQTZHn0a0DglVcqazBEEUXt5LOAgbE3ne2LDJDSHJJP02Zk8z200WTAkI3
-	 7u2f/e+4qXKPZYfC/jtlF3QjbFJvLRAwgjbUgIySb28oIBS1otWhLBUsQE9yObQr33
-	 Im30v/0KYKyoT+Q9wZAdBO8Q=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C178740E0239;
-	Fri, 16 May 2025 12:27:20 +0000 (UTC)
-Date: Fri, 16 May 2025 14:27:15 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Ayush Jain <Ayush.Jain3@amd.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>, x86-ml <x86@kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org,
-	Eric Biggers <ebiggers@google.com>
-Subject: Re: [PATCH] crypto: lib/sha256 - Disable SIMD
-Message-ID: <20250516122715.GCaCcvI7vq-DBzlNtK@fat_crate.local>
-References: <20250516112217.GBaCcf6Yoc6LkIIryP@fat_crate.local>
- <aCcirrsFFrrRqf5A@gondor.apana.org.au>
- <aCcmJGuCnuyHmHbx@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l6txO3wk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747398524; x=1778934524;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=W3K28pAKxl8sf9FQ1cFzRh/S7+lXMOVHJ01qrcT3Epg=;
+  b=l6txO3wkykKEs7nAE5PF1wVltevVJzdYYGsTNDWuo6YzTy+EZibQ9GKB
+   u/JvqXeMjdI7seNlH1nkDwg6QXXsg2fj8vLjTWgCQm8fvc/iUobQmzp3N
+   q7/mGnC8r3+Ry624Yta8cYAtkZdMklSExDHYUHqZTON4xnLYcrmoIebF+
+   rXah43tRKl6zkHUtf2kjZl72f/3u87UW2NJQfKJ3Hz3SY8D3d0IzeVneY
+   bAwwvUiRvI0dDwDQnkavjtzW7w+8zMem8m5hY+Thdy20YZ804XX1xqwWM
+   3+uyvh6ZD6GBT4NC0YcnA4DU2cMfiYzt2hP5iGndWglpZ/ZXIMFhYWT+f
+   g==;
+X-CSE-ConnectionGUID: F8k4Vju2QOysC05C7+L+GA==
+X-CSE-MsgGUID: WRb/hH7/Rcuv/61CRwDFkQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="74767451"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="74767451"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 05:28:43 -0700
+X-CSE-ConnectionGUID: FIv2m/x9Q1GLwkhas4irZg==
+X-CSE-MsgGUID: 3juNk3wcTFaGDejhu/y9CA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="143571042"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 16 May 2025 05:28:40 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uFuB4-000JKV-12;
+	Fri, 16 May 2025 12:28:38 +0000
+Date: Fri, 16 May 2025 20:28:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: Wentao Liang <vulab@iscas.ac.cn>, mustafa.ismail@intel.com,
+	tatyana.e.nikolova@intel.com, jgg@ziepe.ca, leon@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] RDMA/irdma: puda: Clear entries after allocation to
+ ensure clean state
+Message-ID: <202505162002.CUpcFouJ-lkp@intel.com>
+References: <20250515133929.1222-1-vulab@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aCcmJGuCnuyHmHbx@gondor.apana.org.au>
+In-Reply-To: <20250515133929.1222-1-vulab@iscas.ac.cn>
 
-On Fri, May 16, 2025 at 07:48:52PM +0800, Herbert Xu wrote:
-> On Fri, May 16, 2025 at 07:34:06PM +0800, Herbert Xu wrote:
-> > 
-> > So what's happened is that previously if you call sha256_update
-> > from lib/crypto it would only use the generic C code to perform
-> > the operation.
-> > 
-> > This has now been changed to automatically use SIMD instructions
-> > which obviously blew up in your case.
-> 
-> In the interim you can go back to the old ways and disable SIMD
-> for lib/crypto sha256 with this patch:
-> 
-> ---8<---
-> Disable SIMD usage in lib/crypto sha256 as it is causing crashes.
-> 
-> Reported-by: Borislav Petkov <bp@alien8.de>
+Hi Wentao,
 
-Please make that
+kernel test robot noticed the following build errors:
 
-Reported-by: Ayush Jain <Ayush.Jain3@amd.com>
+[auto build test ERROR on rdma/for-next]
+[also build test ERROR on linus/master v6.15-rc6 next-20250516]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I'm just the messenger.
+url:    https://github.com/intel-lab-lkp/linux/commits/Wentao-Liang/RDMA-irdma-puda-Clear-entries-after-allocation-to-ensure-clean-state/20250515-214046
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git for-next
+patch link:    https://lore.kernel.org/r/20250515133929.1222-1-vulab%40iscas.ac.cn
+patch subject: [PATCH] RDMA/irdma: puda: Clear entries after allocation to ensure clean state
+config: sparc-allmodconfig (https://download.01.org/0day-ci/archive/20250516/202505162002.CUpcFouJ-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250516/202505162002.CUpcFouJ-lkp@intel.com/reproduce)
 
-> Fixes: 950e5c84118c ("crypto: sha256 - support arch-optimized lib and expose through shash")
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> 
-> diff --git a/include/crypto/internal/sha2.h b/include/crypto/internal/sha2.h
-> index b9bccd3ff57f..e1b0308c0539 100644
-> --- a/include/crypto/internal/sha2.h
-> +++ b/include/crypto/internal/sha2.h
-> @@ -32,7 +32,7 @@ static inline void sha256_choose_blocks(
->  	if (!IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_SHA256) || force_generic)
->  		sha256_blocks_generic(state, data, nblocks);
->  	else if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_SHA256_SIMD) &&
-> -		 (force_simd || crypto_simd_usable()))
-> +		 force_simd)
->  		sha256_blocks_simd(state, data, nblocks);
->  	else
->  		sha256_blocks_arch(state, data, nblocks);
-> -- 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505162002.CUpcFouJ-lkp@intel.com/
 
-If you end up doing this, that fixes it, obviously:
+All errors (new ones prefixed by >>):
 
-Tested-by: Ayush Jain <Ayush.Jain3@amd.com>
+   drivers/infiniband/hw/irdma/puda.c: In function 'irdma_puda_send':
+>> drivers/infiniband/hw/irdma/puda.c:448:24: error: passing argument 1 of 'irdma_clr_wqes' from incompatible pointer type [-Wincompatible-pointer-types]
+     448 |         irdma_clr_wqes(qp, wqe_idx);
+         |                        ^~
+         |                        |
+         |                        struct irdma_sc_qp *
+   In file included from drivers/infiniband/hw/irdma/type.h:7,
+                    from drivers/infiniband/hw/irdma/puda.c:6:
+   drivers/infiniband/hw/irdma/user.h:412:41: note: expected 'struct irdma_qp_uk *' but argument is of type 'struct irdma_sc_qp *'
+     412 | void irdma_clr_wqes(struct irdma_qp_uk *qp, u32 qp_wqe_idx);
+         |                     ~~~~~~~~~~~~~~~~~~~~^~
 
-Thx.
+
+vim +/irdma_clr_wqes +448 drivers/infiniband/hw/irdma/puda.c
+
+   420	
+   421	/**
+   422	 * irdma_puda_send - complete send wqe for transmit
+   423	 * @qp: puda qp for send
+   424	 * @info: buffer information for transmit
+   425	 */
+   426	int irdma_puda_send(struct irdma_sc_qp *qp, struct irdma_puda_send_info *info)
+   427	{
+   428		__le64 *wqe;
+   429		u32 iplen, l4len;
+   430		u64 hdr[2];
+   431		u32 wqe_idx;
+   432		u8 iipt;
+   433	
+   434		/* number of 32 bits DWORDS in header */
+   435		l4len = info->tcplen >> 2;
+   436		if (info->ipv4) {
+   437			iipt = 3;
+   438			iplen = 5;
+   439		} else {
+   440			iipt = 1;
+   441			iplen = 10;
+   442		}
+   443	
+   444		wqe = irdma_puda_get_next_send_wqe(&qp->qp_uk, &wqe_idx);
+   445		if (!wqe)
+   446			return -ENOMEM;
+   447	
+ > 448		irdma_clr_wqes(qp, wqe_idx);
+   449	
+   450		qp->qp_uk.sq_wrtrk_array[wqe_idx].wrid = (uintptr_t)info->scratch;
+   451		/* Third line of WQE descriptor */
+   452		/* maclen is in words */
+   453	
+   454		if (qp->dev->hw_attrs.uk_attrs.hw_rev >= IRDMA_GEN_2) {
+   455			hdr[0] = 0; /* Dest_QPN and Dest_QKey only for UD */
+   456			hdr[1] = FIELD_PREP(IRDMA_UDA_QPSQ_OPCODE, IRDMA_OP_TYPE_SEND) |
+   457				 FIELD_PREP(IRDMA_UDA_QPSQ_L4LEN, l4len) |
+   458				 FIELD_PREP(IRDMAQPSQ_AHID, info->ah_id) |
+   459				 FIELD_PREP(IRDMA_UDA_QPSQ_SIGCOMPL, 1) |
+   460				 FIELD_PREP(IRDMA_UDA_QPSQ_VALID,
+   461					    qp->qp_uk.swqe_polarity);
+   462	
+   463			/* Forth line of WQE descriptor */
+   464	
+   465			set_64bit_val(wqe, 0, info->paddr);
+   466			set_64bit_val(wqe, 8,
+   467				      FIELD_PREP(IRDMAQPSQ_FRAG_LEN, info->len) |
+   468				      FIELD_PREP(IRDMA_UDA_QPSQ_VALID, qp->qp_uk.swqe_polarity));
+   469		} else {
+   470			hdr[0] = FIELD_PREP(IRDMA_UDA_QPSQ_MACLEN, info->maclen >> 1) |
+   471				 FIELD_PREP(IRDMA_UDA_QPSQ_IPLEN, iplen) |
+   472				 FIELD_PREP(IRDMA_UDA_QPSQ_L4T, 1) |
+   473				 FIELD_PREP(IRDMA_UDA_QPSQ_IIPT, iipt) |
+   474				 FIELD_PREP(IRDMA_GEN1_UDA_QPSQ_L4LEN, l4len);
+   475	
+   476			hdr[1] = FIELD_PREP(IRDMA_UDA_QPSQ_OPCODE, IRDMA_OP_TYPE_SEND) |
+   477				 FIELD_PREP(IRDMA_UDA_QPSQ_SIGCOMPL, 1) |
+   478				 FIELD_PREP(IRDMA_UDA_QPSQ_DOLOOPBACK, info->do_lpb) |
+   479				 FIELD_PREP(IRDMA_UDA_QPSQ_VALID, qp->qp_uk.swqe_polarity);
+   480	
+   481			/* Forth line of WQE descriptor */
+   482	
+   483			set_64bit_val(wqe, 0, info->paddr);
+   484			set_64bit_val(wqe, 8,
+   485				      FIELD_PREP(IRDMAQPSQ_GEN1_FRAG_LEN, info->len));
+   486		}
+   487	
+   488		set_64bit_val(wqe, 16, hdr[0]);
+   489		dma_wmb(); /* make sure WQE is written before valid bit is set */
+   490	
+   491		set_64bit_val(wqe, 24, hdr[1]);
+   492	
+   493		print_hex_dump_debug("PUDA: PUDA SEND WQE", DUMP_PREFIX_OFFSET, 16, 8,
+   494				     wqe, 32, false);
+   495		irdma_uk_qp_post_wr(&qp->qp_uk);
+   496		return 0;
+   497	}
+   498	
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
