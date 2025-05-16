@@ -1,210 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4635786359;
-	Fri, 16 May 2025 16:33:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7CF1B6D06
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747413228; cv=none; b=S8uG3JLAQIaRWR/43GmRC8EgHu7I4p3xGeLUBFrF5KgtsF5T6FFK58uHTBD1fmMq6DetzkUi7oOE04ob8Dji/Mh7/KPZsFqzHDqqYct2YlK2/MnJh5PNVjBZyx+YXdfYgBe22fff7erTsC+5buw9/hFQ89kRO7Bb39pRPjhyDB8=
+	t=1747413323; cv=none; b=QrL99rDRy1Ab+jZX4KvY+yvcXHlrdseCzVaXTZe43IRt18ziVED4WhSg2cJSoXgh/BxN1Ajv+hD+Xu5Gw08AR3mUjxjYYODD794WnBvS+nFEV2x03QmFNJnUHRFRfKpxDU48OgPbGkES90ylZvgGl5JGo1ht5yhFUugX/xiiLmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747413228; c=relaxed/simple;
-	bh=pO+WYUdorIAA/wn5K2BoNtnV+5/Wyl9eJSmmHjfAOtQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d9bewSLKDHQ2QXoOL4KpvTBFxGsOePgY5Pempuy1T7SZMLLTBELSD/tZPvkwQzaCXhy2eh8/bmRYnDP7IWAtROr+hjS7ggtgyKNYpGGiX3bz8+WF2oCFxLSQN2YlpfM8inSuS89XtUBdlX0rwal+QutwnsmSImTVwNQA07koHzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fwAouU+s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747413323; c=relaxed/simple;
+	bh=es/iLpQ7h491Bm1ao/ZtHs92YEBYb8fiiply/JOiIR8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G9jAThNMOVAFEq9rkdqjygnV/VdZZEpVD1r4mH9fudfQQbRexMNaZNBbTs0NB7sX9X4GSPIRaGpvGsKoOSIF0kG5yKarUtIuCBEd1F8n1BD8Ac9dbOkSWKM6A9uY9lQA0922I1YXtWYRwWPEQpNpC2gDeBP240DNyOUd3jDKS7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lzZKB86H; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fwAouU+s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E9E4C4CEE4;
-	Fri, 16 May 2025 16:33:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747413227;
-	bh=pO+WYUdorIAA/wn5K2BoNtnV+5/Wyl9eJSmmHjfAOtQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fwAouU+sJOaCpdzXylMzuVVETwUbdjKXIcrv7boPyM4xY7wt1F0SBLgTsJ6ka1MZT
-	 YV/E/S1vVh7wOQr6PHT58S5ZFs4Rh3ufrLN/ygf7ao1prf+oLtqqZyOGg4wicNEYl7
-	 Om1uD+yKVtG1S8iRFcGDdaLOM/RvrGIEeS4P0WysEtmEg4zqGph29o8tVLqxcpg+CI
-	 DQwiOn3DuaTwm0kWHcc3xGzpkQawksuIeZKEkrckGEIKUuuD+jy02ODf+qKVN58NCl
-	 yJ/v3do3iJFQuA/+XbaftyxkMCrglvWgzAsGtQMHK8KimgDbOjOtyowXL3RQYzNpvW
-	 lpbuk2BkTtsVg==
-Date: Fri, 16 May 2025 09:33:45 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: Re: [RFC/PATCH] perf report: Support latency profiling in
- system-wide mode
-Message-ID: <aCdo6Vz2MVv3N0kk@google.com>
-References: <20250503003620.45072-1-namhyung@kernel.org>
- <CACT4Y+Yr7vffLYG+YmyB=9Vn_oxdQqR_6U4d-_WeQoOtPXZ6iw@mail.gmail.com>
- <aBmei7cMf-MzzX5W@google.com>
- <CACT4Y+ameQFd3n=u+bjd+vKR6svShp3NNQzjsUo_UUBCZPzrBw@mail.gmail.com>
- <aBmvmmRKpeVd6aT3@google.com>
- <CACT4Y+bm4gCO_sGvEkxLQfw8JyrWvCzqV_H5h+oebt8kk1_Hwg@mail.gmail.com>
- <aBm1x2as1fraHXHz@google.com>
- <CACT4Y+aiU-dHVgTKEpyJtn=RUUyYJp8U5BjyWSOHm6b2ODp9cA@mail.gmail.com>
- <aBvwFPRwA2LVQJkO@google.com>
- <CACT4Y+YacgzrUL1uTqxkPOjQm6ryn2R_nPs8dgnrP_iKA9yasQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lzZKB86H"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54GBakq0025636
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:35:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	BTmwEqQ8XcBgL6KMnmGn0Js5nNwnbxm2fJwGxsiwNzw=; b=lzZKB86Hz1wJz1yL
+	SCH9OoTzfYdnDjPGW1XLSuIF1HEvwIcANflxs80nIOLJiWiXIqv5iXpHTy/MepnY
+	ofN4THVwZ4he4iZGIQpcgXnjIbcwYB5FATPK3DILd+0qeQVeH9OzJbjup0V97+UG
+	6HYodvtDQm2qgxlXK5JZNBTFhd3mi3SYFCTbL4+gxemvmETLA5j8VI8uvZWmmMsJ
+	kTlxHqSxnfQNyhQxOFA7hEX3hk3OqIEspRbTisvEEuy/Yq9SyRji4P1uGLgZRYei
+	Uk4jYSogWz+9g9YH9EuA/FNZh6myfh29qTVtm+S9omoqDUEPg/FTC5StCuC7e9ES
+	KXzX4w==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcp2krd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:35:21 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6f2c8929757so5572466d6.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:35:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747413320; x=1748018120;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BTmwEqQ8XcBgL6KMnmGn0Js5nNwnbxm2fJwGxsiwNzw=;
+        b=I737wiqdncBFHsK6S81iqTjDtk5QPDqrh/+s6fUOku6aOQD8LklIiD5nu0OJMaFIQm
+         cQ3TGc2+EHFX04Kxj4ymAQNgcmwumEHoyDwO0U/jw+3d37ueA4GrMI2hzidyTFXhMCg6
+         PGjs2U4LHssvAHMRTb0rHX7Zx4dQhXm1Uqtd0tUUkJo1u6tLO77bCrz0whXtMXEUcST0
+         E6PjrhWmbVojx0apY4XcXg8BtRmKded8fAHSb/Zcw/CzoBgWjfJNTykZ4mqS9kxU+mRV
+         q0ef1tgsijh7kXFv2aJByWMosuaYapOMYD6ZHjitMU5b3bAzeyyBlK8FmSNdivxnRU+8
+         K3WA==
+X-Forwarded-Encrypted: i=1; AJvYcCWhNFnKuUZPTRwyRu+0mLDCbFNVN4xPOax+KZTvlWwyRZ/tcygraUZcWdLaW/3eiLaZN+aOw6BbHjiKcGs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvdeZEm+hHUdIVLLrPWrirsnRUlTby2lpAq5CgM1Ee1r8fwxy7
+	iS0ta7Ze2NXmVZE6k61CHDijaF1eD2yPla15OqdzmWp07xMEcuV8Ai8lLhy2yxtUsnxqUKzWkYD
+	kf1hloUklDC77uIAOcXqzEJAjjMOasU0KbpTuaL/A7YP66Sjd9VRItFpqogy8IDdWHiQ=
+X-Gm-Gg: ASbGnctR7F08uY0nY3tndOmUeBje9IzbvHCjlPqshiJ/saC8tQX48UqrZXWiRWrAh7w
+	D4QrCjyFKQOFKMOIxw+SUo3jq0eigFBl/tLzx1dsmqL0UrXcPE/BvQerYZsuI2pQPV+A8j6y+6C
+	ri2/nSN9OBIFJJsl4xD0FQKdHSM83PPDNHKeMDHPNLgfCAQuTYmYFRZNaLFcpqRqlkUSHClCc90
+	CcqxBZNUJk+OWJSVIT52tCfrl63vJ1tEJk74N8DNuTMqBJPkahbBoL2I3kmbiOkHIO7Bwh1tgoM
+	H+1M9ACEtmgXdoYywWKq4LpRnOMGRqTXJeyusgLkm4jNilriZvXnAEeEb2fWy8e1Rg==
+X-Received: by 2002:a05:6214:21e8:b0:6d8:99b2:63c7 with SMTP id 6a1803df08f44-6f8b09029a2mr22550066d6.9.1747413319520;
+        Fri, 16 May 2025 09:35:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFrejNuXm5xcNzQ2NQrSkT0Ek+i35JQqkBQixmZL/6pvDp3di/K8cA/Ni3c15xUoOUfouZokg==
+X-Received: by 2002:a05:6214:21e8:b0:6d8:99b2:63c7 with SMTP id 6a1803df08f44-6f8b09029a2mr22549896d6.9.1747413319075;
+        Fri, 16 May 2025 09:35:19 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4909e1sm178126666b.125.2025.05.16.09.35.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 May 2025 09:35:18 -0700 (PDT)
+Message-ID: <21bd89b9-9f6e-42d0-bcd3-b6476cf91705@oss.qualcomm.com>
+Date: Fri, 16 May 2025 18:35:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+YacgzrUL1uTqxkPOjQm6ryn2R_nPs8dgnrP_iKA9yasQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/4] watchdog: qcom: add support to read the restart
+ reason from IMEM
+To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck
+ <linux@roeck-us.net>, bod.linux@nxsw.ie,
+        Srinivas Kandagatla <srini@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <20250502-wdt_reset_reason-v3-0-b2dc7ace38ca@oss.qualcomm.com>
+ <20250502-wdt_reset_reason-v3-4-b2dc7ace38ca@oss.qualcomm.com>
+ <2036ef2f-c7ef-4f42-858d-8d95c430c21a@oss.qualcomm.com>
+ <68d280db-f7df-48c8-821d-f7d408c302ad@oss.qualcomm.com>
+ <8a763c70-adcf-4a14-bb68-72ddc61fa045@oss.qualcomm.com>
+ <8c2a53c2-c11b-4d49-bfb5-b948767ba6c7@oss.qualcomm.com>
+ <1e871aed-705f-4142-b72d-4232ae729a37@oss.qualcomm.com>
+ <6274641a-7366-41cd-a0a7-a9e9cc41b8e6@oss.qualcomm.com>
+ <0a73989f-b018-473c-872a-5cbc2e7d1783@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <0a73989f-b018-473c-872a-5cbc2e7d1783@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: OWnWvK-K7OaW-tieRUr31evdeHfExtWq
+X-Authority-Analysis: v=2.4 cv=D8dHKuRj c=1 sm=1 tr=0 ts=68276949 cx=c_pps
+ a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VNoyoka1EbeTPVikYY0A:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=pJ04lnu7RYOZP9TFuWaZ:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDE2MiBTYWx0ZWRfXyr4UkhlSPFt1
+ 39dhMyIG0JCu7M4edNZRamR9zM6a4JkkdMh/UUqs+38SDv6Re/ttR23ViMuAesq0n5sanhxl//m
+ LQxC8gXiyS/I70sDkjlSC6W3tPwy29QwajNua9IaDM+Xx1rMX/qJth8P/9Vq+QD3XyAQIqIBWek
+ avt3CJfOsMfGG/a2T/lISiW1tkOZJEr5pm0gkYLjhCp2OYFl4KRw7SMOdcZE0ZM2YAm5xpvVEu5
+ Ha287QHdXQeJQU+vqzJGVn5n4pMbglD1oiruJdoTPd6O+kD62rKG+wf77fF1DMddwIYXSZ8ETdS
+ hb3VoIE0fdlIMG1Clgk2B1NBFq1pU79RHNuRFMytF3ib36ril5MU3tWXhixsJ4R6T+aUAe4rwHY
+ LviXoPE4N8Z+mgG+UusZ04cLleQTx8z2gQUH741V1yCuR5wZVDFkuIxI+473sgY72NTmsltQ
+X-Proofpoint-GUID: OWnWvK-K7OaW-tieRUr31evdeHfExtWq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-16_05,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=999 spamscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
+ suspectscore=0 malwarescore=0 mlxscore=0 adultscore=0 phishscore=0
+ clxscore=1015 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505160162
 
-Hello,
-
-Sorry for the delay.
-
-On Thu, May 08, 2025 at 02:24:08PM +0200, Dmitry Vyukov wrote:
-> On Thu, 8 May 2025 at 01:43, Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Tue, May 06, 2025 at 09:40:52AM +0200, Dmitry Vyukov wrote:
-> > > On Tue, 6 May 2025 at 09:10, Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > > > Where does the patch check that this mode is used only for system-wide profiles?
-> > > > > > > Is it that PERF_SAMPLE_CPU present only for system-wide profiles?
-> > > > > >
-> > > > > > Basically yes, but you can use --sample-cpu to add it.
-> > > > >
-> > > > > Are you sure? --sample-cpu seems to work for non-system-wide profiles too.
-> > > >
-> > > > Yep, that's why I said "Basically".  So it's not 100% guarantee.
-> > > >
-> > > > We may disable latency column by default in this case and show warning
-> > > > if it's requested.  Or we may add a new attribute to emit sched-switch
-> > > > records only for idle tasks and enable the latency report only if the
-> > > > data has sched-switch records.
-> > > >
-> > > > What do you think?
-> > >
-> > > Depends on what problem we are trying to solve:
-> > >
-> > > 1. Enabling latency profiling for system-wide mode.
-> > >
-> > > 2. Switch events bloating trace too much.
-> > >
-> > > 3. Lost switch events lead to imprecise accounting.
-> > >
-> > > The patch mentions all 3 :)
-> > > But I think 2 and 3 are not really specific to system-wide mode.
-> > > An active single process profile can emit more samples than a
-> > > system-wide profile on a lightly loaded system.
-> >
-> > True.  But we don't need to care about lightly loaded systems as they
-> > won't cause problems.
-> >
-> >
-> > > Similarly, if we rely on switch events for system-wide mode, then it's
-> > > equally subject to the lost events problem.
-> >
-> > Right, but I'm afraid practically it'll increase the chance of lost
-> > in system-wide mode.  The default size of the sample for system-wide
-> > is 56 byte and the size of the switch is 48 byte.  And the default
-> > sample frequency is 4000 Hz but it cannot control the rate of the
-> > switch.  I saw around 10000 Hz of switches per CPU on my work env.
-> >
-> > >
-> > > For problem 1: we can just permit --latency for system wide mode and
-> > > fully rely on switch events.
-> > > It's not any worse than we do now (wrt both profile size and lost events).
-> >
-> > This can be an option and it'd work well on lightly loaded systems.
-> > Maybe we can just try it first.  But I think it's better to have an
-> > option to make it work on heavily loaded systems.
-> >
-> > >
-> > > For problem 2: yes, we could emit only switches to idle tasks. Or
-> > > maybe just a fake CPU sample for an idle task? That's effectively what
-> > > we want, then your current accounting code will work w/o any changes.
-> > > This should help wrt trace size only for system-wide mode (provided
-> > > that user already enables CPU accounting for other reasons, otherwise
-> > > it's unclear what's better -- attaching CPU to each sample, or writing
-> > > switch events).
-> >
-> > I'm not sure how we can add the fake samples.  The switch events will be
-> > from the kernel and we may add the condition in the attribute.
-> >
-> > And PERF_SAMPLE_CPU is on by default in system-wide mode.
-> >
-> > >
-> > > For problem 3: switches to idle task won't really help. There can be
-> > > lots of them, and missing any will lead to wrong accounting.
-> >
-> > I don't know how severe the situation will be.  On heavily loaded
-> > systems, the idle task won't run much and data size won't increase.
-> > On lightly loaded systems, increased data will likely be handled well.
-> >
-> >
-> > > A principled approach would be to attach a per-thread scheduler
-> > > quantum sequence number to each CPU sample. The sequence number would
-> > > be incremented on every context switch. Then any subset of CPU should
-> > > be enough to understand when a task was scheduled in and out
-> > > (scheduled in on the first CPU sample with sequence number N, and
-> > > switched out on the last sample with sequence number N).
-> >
-> > I'm not sure how it can help.  We don't need the switch info itself.
-> > What's needed is when the CPU was idle, right?
+On 5/16/25 2:52 PM, Kathiravan Thirumoorthy wrote:
 > 
-> I mean the following.
-> Each sample has a TID.
-> We add a SEQ field, which is per-thread and is incremented after every
-> rescheduling of the thread.
+> On 5/16/2025 4:48 PM, Konrad Dybcio wrote:
+>> On 5/14/25 3:15 PM, Kathiravan Thirumoorthy wrote:
+>>> On 5/6/2025 4:31 PM, Kathiravan Thirumoorthy wrote:
+>>>> On 5/3/2025 3:53 AM, Konrad Dybcio wrote:
+>>>>> On 5/2/25 6:28 PM, Kathiravan Thirumoorthy wrote:
+>>>>>> On 5/2/2025 7:33 PM, Konrad Dybcio wrote:
+>>>>>>>> +static int qcom_wdt_get_restart_reason(struct qcom_wdt *wdt,
+>>>>>>>> +                    const struct qcom_wdt_match_data *data)
+>>>>>>>> +{
+>>>>>>>> +    struct regmap *imem;
+>>>>>>>> +    unsigned int val;
+>>>>>>>> +    int ret;
+>>>>>>>> +
+>>>>>>>> +    imem = syscon_regmap_lookup_by_compatible(data->imem_compatible);
+>>>>>>> Try syscon_regmap_lookup_by_phandle_args() and pass a phandle, see e.g.
+>>>>>>> drivers/phy/qualcomm/phy-qcom-qmp-pcie.c & phy@1bfc000 in x1e80100.dtsi
+>>>>>>>
+>>>>>>> That way all platform specifics will live in the DT, requiring no
+>>>>>>> hardcode-y driver changes on similar platforms
+>>>>>> Thanks. I thought about this API but it didn't strike that I can use the args to fetch and match the value.
+>>>>>>
+>>>>>> I need a suggestion here. There is a plan to extend this feature to other IPQ targets and also support WDIOF_POWERUNDER and WDIOF_OVERHEAT cause as well. For IPQ5424, all 3 cause will support and for other IPQ platforms, we are exploring how to integrate WDIOF_OVERHEAT. In any case, can I define the DT entry like below
+>>>>>>
+>>>>>>           imem,phandle = <&imem 0x7b0 <Non secure WDT value> <Power Under value> <Overheat value>>;
+>>>>>>
+>>>>>> and store these in values args[1], args[2] and args[3] respectively and use it for manipulation? If any of the platform doesn't support all 3, I can update the bindings and define the number of args as required.
+>>>>> Let's call the property qcom,restart-reason and only pass the register value
+>>>>>
+>>>>> Because we may have any number of crazy combinations of various restart
+>>>>> reasons, we can go two paths:
+>>>>>
+>>>>> 1. promise really really really hard we won't be too crazy with the number
+>>>>>      of possible values and put them in the driver
+>>>>> 2. go all out on DT properties (such as `bootstatus-overheat`,
+>>>>> `bootstatus-fanfault` etc.
+>>>>
+>>>> Thanks Konrad for the suggestions and the offline discussions.
+>>>>
+>>>> @Guenter, I need a suggestion here. Currently as part of this series, we are planning to expose WDIOF_CARDRESET, WDIOF_POWERUNDER, WDIOF_OVERHEAT reasons.
+>>>>
+>>>> Once this is done, we do have the custom reason codes like Kernel Panic, Secure Watchdog Bite, Bus error timeout, Bus error access and few many. Is it okay to expose these values also via the bootstatus sysFS by extending the current list of reasons? Since these are outside the scope of watchdog, need your thoughts on this.
+>>>
+>>> Konrad / Guenter,
+>>>
+>>> We had a further discussion on this internally. Outcome is, it wouldn't be ideal to hook the custom restart reason codes in watchdog framework, since there is no involvement of watchdog in such cases. Also I don't find any references to hook the custom values in watchdog's bootstatus.
+>>>
+>>> If this is fine, I'm planning to resend the series to handle only the non secure watchdog timeout case. In that case, as suggested by Konrad, everything will be handled in DT like below to avoid the device data.
+>>>
+>>> imem,phandle = <&phandle <imem_offset> <value>>;
+>> the part before the comma is a vendor prefix, so that must be qcom,xyz
 > 
-> When we see the last sample for (TID,SEQ), we pretend there is SCHED
-> OUT event for this thread at this timestamp. When we see the first
-> sample for (TID,SEQ+1), we pretend there is SCHED IN event for this
-> thread at this timestamp.
 > 
-> These SCHED IN/OUT events are not injected by the kernel. We just
-> pretend they happen for accounting purposes. We may actually
-> materialize them in the perf tool, or me may just update parallelism
-> as if they happen.
+> Sure, will name it as qcom,imem-phandle. Hope this name is fine.
 
-Thanks for the explanation.  But I don't think it needs the SEQ and
-SCHED IN/OUT generated from it to track lost records.  Please see below.
+just qcom,imem is fine, phandle is a datatype described in dt-bindings
 
+>> what are your plans for the other reboot reasons? are we scrapping them?
 > 
-> With this scheme we can lose absolutely any subset of samples, and
-> still get very precise accounting. When we lose samples, the profile
-> of course becomes a bit less precise, but the effect is local and
-> recoverable.
 > 
-> If we lose the last/first event for (TID,SEQ), then we slightly
-> shorten/postpone the thread accounting in the process parallelism
-> level. If we lose a middle (TID,SEQ), then parallelism is not
-> affected.
+> No, we are not scrapping it. We are exploring further on where to put this. May be we can put those logic in some simple driver named as ipq-restart-reason.c under drivers/soc/qcom/?
 
-I'm afraid it cannot check parallelism by just seeing the current thread.
-I guess it would need information from other threads even if it has same
-SEQ.
+I see drivers/power/reset/at91-reset.c does something like this
 
-Also postpone thread accounting can be complex.  I think it should wait
-for all other threads to get a sample.  Maybe some threads exited and
-lost too.
-
-In my approach, I can clear the current thread from all CPUs when it
-sees a LOST record and restart calculation of parallelism.
-
-> 
-> The switches from a thread to itself is not a problem. We will just
-> inject a SCHED OUT followed by SCHED IN. But exactly the same happens
-> now when the kernel injects these events.
-> 
-> But if we switch to idle task and got no samples for some period of
-> time on the CPU, then we properly inject SCHED OUT/IN that will
-> account for the thread not actually running.
-
-Hmm.. ok.  Maybe we can save the timestamp of the last sample on each
-CPU and clear the current thread after some period (2x of given freq?).
-But it may slow down perf report as it'd check all CPUs for each sample.
-
-Thanks,
-Namhyung
-
+Konrad
