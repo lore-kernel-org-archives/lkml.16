@@ -1,310 +1,238 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B424D1BCA07;
-	Fri, 16 May 2025 15:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CABA77D07D;
+	Fri, 16 May 2025 15:38:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747409917; cv=none; b=OD1Tx0Ke1exQmSOtAeuV4lbbyCJFkjieo9NDMw6pl75liytdMBprQnp4aRlnvhfLBl3wA48uip9HJhU3TAVG3Yxg1qA9fdiYH6YxVW03zuCYd0JleUiS58snFoMm3IaY1JGGatrO24aqUTfDxROdja9ngI/r0sgbPGooKq8WPlw=
+	t=1747409919; cv=none; b=Q58ENvAy0mACFGIcyVWmKlgUAA7iya7mgdEqj3/HGCU2DIVF1FptpRRFJ9xVo1ToyklCtuq8uqtUsdQbyPKiHHsRsLliBvvYItqcLOvUXDV5XnT5PhPHQtAQEIYiiJ2Xj38+64qJ43ToHC7Ssy9RxJWpcc1oaS/udPw9cKdozoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747409917; c=relaxed/simple;
-	bh=p/CJELP+LYI04oeiLrNDf1hN9tbg6iLdso7k5jp9WAA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ke/n88Es03v+YLIImxK5N+y/oxnM5w3ZPRyX6uG74DHbyEloocBmt2bM6KOhjdAqvBX6HX9I6b0CnNj9Gd24ajjjs5uv9ZeBzp/zpggcAnxJwKfh2gx0huilIywShGNm6QMmEE1zapFh4KS2GaRxSQpGsCuCmz3x9LXcVwPaT9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DoyDFv/F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747409919; c=relaxed/simple;
+	bh=s5+6lgtxXAG27zO+fAMLWNdH6pr1ETlmYSxhSB3Vr6Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kcw7b/t5dWvU+ZGmt966Xr/OC4RTuIUqMAvYfdiwlUUggjfrq6E79SbYSCGvIKHm7SAyp7TARmgWVDnqdjq8f3WHPihwrpRSNfT06s74gYESYpSIY+8x1yVyXSu/twdhk7uzh3H8ND4v9aVF/+9Emswn3xqqiFd+mP7Aoq9Qdk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ic8/mJM5; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DoyDFv/F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6742FC4CEE4;
-	Fri, 16 May 2025 15:38:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747409917;
-	bh=p/CJELP+LYI04oeiLrNDf1hN9tbg6iLdso7k5jp9WAA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DoyDFv/F0wQNV4gdc0CpieobyL+iC5qY4+BbOyScBKPO0bV9CgmaWGThPX0tAlTo7
-	 BeFT2e7UnFas36YJjPUxsOT5aToPCQU24HvOwphxe1y+UEjUHoUXKDfQWUvPRFOHga
-	 tKhgKfBHOByXIowU3dqwwu97qu1GDtGlXQM0WxqRyoIbYIvfhIPwlFMz8d3cdC+A8c
-	 l/PY5532VN3tDnOpkIqU0xm/VPAUlavpeg3uMKHcA1LmgFIjn4qcbSxFXMYy5Qxr0K
-	 CQbvzuJAWUCwW0XIbFzF63hnAZaxzXCRUqZm/j4sw1Pbc1ihVMr0nLRaCSbUneu6tp
-	 d03taouRq8H3A==
-Date: Fri, 16 May 2025 17:38:31 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-tip-commits@vger.kernel.org,
-	"Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org
-Subject: [PATCH] x86/bugs: Apply misc stylistic touchups
-Message-ID: <aCdb9wY6YfIXMhT6@gmail.com>
-References: <174740680468.406.372152086131806707.tip-bot2@tip-bot2>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ic8/mJM5"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 76DEB43965;
+	Fri, 16 May 2025 15:38:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747409913;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I+g3IdGvcfrmRH4F4rawwQsSgXUu5S0J2PdLVNQvNPs=;
+	b=ic8/mJM5ChESit1NZjJEPl8fCMX5fTQ9Nv7DTLDz9siekasP2HvEHm/uq/oyGqiJySBvMy
+	5IBHfiZHo/0v9sMM1mhKF/zB8f4Hmhtr8t5HyS3V83CFv4WVuJvRGFCsGVkw2mikxSg8Yh
+	9GkgXILZqtxMfMm15eWMAVWintdVsgl2mYUxjYwyzaTgcNWD1N4c4Axb3gy72Fkv14uK9Q
+	YIs28qPOMogVyCbYfxGolDdG4dWMflTrBpXC3T19jcfPWc6pTGRdHGs5yDDtZPMgQJ9IGY
+	xnHir0H9pmYUhv9qkqi1qgNCGr+YBPL/JJxc/Uex8ymp0dU1bsGqUbuaD7WMxA==
+Date: Fri, 16 May 2025 17:38:28 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, Andrzej Hajda
+ <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Robert Foss <rfoss@kernel.org>, Laurent Pinchart
+ <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Anusha Srivatsa
+ <asrivats@redhat.com>, Paul Kocialkowski <paulk@sys-base.io>, Dmitry
+ Baryshkov <lumag@kernel.org>, =?UTF-8?B?SGVydsOp?= Codina
+ <herve.codina@bootlin.com>, Hui Pu <Hui.Pu@gehealthcare.com>, Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/2] drm/tests: bridge: add a KUnit test for
+ devm_drm_bridge_alloc()
+Message-ID: <20250516173828.7f1aa70c@booty>
+In-Reply-To: <gqe4ov7w54qe7mmfn2ud63g2ema2wh3qvyfvcaycvnh5mts3it@ef7qxryo2ccy>
+References: <20250409-drm-bridge-alloc-doc-test-v7-0-a3ca4b97597f@bootlin.com>
+	<20250409-drm-bridge-alloc-doc-test-v7-2-a3ca4b97597f@bootlin.com>
+	<20250414-misty-hungry-woodlouse-dbbd64@houat>
+	<20250415132214.19b1a4ff@booty>
+	<gqe4ov7w54qe7mmfn2ud63g2ema2wh3qvyfvcaycvnh5mts3it@ef7qxryo2ccy>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174740680468.406.372152086131806707.tip-bot2@tip-bot2>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefudefuddvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheplefhudeuffegvefhvdeuueekkeetgeehffehgeehheetvddtudettedvtefggeeunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdptggrthhirhgtlhhoghhsrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddupdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidri
+ hhnthgvlhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhg
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
+Hi Maxime,
 
-* tip-bot2 for Borislav Petkov (AMD) <tip-bot2@linutronix.de> wrote:
+On Thu, 15 May 2025 10:11:33 +0200
+Maxime Ripard <mripard@kernel.org> wrote:
 
-> The following commit has been merged into the x86/core branch of tip:
+> On Tue, Apr 15, 2025 at 01:22:14PM +0200, Luca Ceresoli wrote:
+> > > > +/*
+> > > > + * Mimick the typical struct defined by a bridge driver, which embeds a
+> > > > + * bridge plus other fields.
+> > > > + */
+> > > > +struct dummy_drm_bridge {
+> > > > +	int dummy; // ensure we test non-zero @bridge offset
+> > > > +	struct drm_bridge bridge;
+> > > > +};    
+> > > 
+> > > drm_bridge_init_priv gives you that already.  
+> > 
+> > On one hand, that's true. On the other hand, looking at
+> > drm_bridge_init_priv I noticed it is allocating a bridge without using
+> > devm_drm_bridge_alloc(). This should be converted, like all bridge
+> > alloctions.
+> >
+> > So I think the we first need to update drm_bridge_test.c to allocate
+> > the bridge using devm_drm_bridge_alloc(), along with the needed changes
+> > to the kunit helpers.  
 > 
-> Commit-ID:     ff8f7a889abd9741abde6e83d33a3a7d9d6e7d83
-> Gitweb:        https://git.kernel.org/tip/ff8f7a889abd9741abde6e83d33a3a7d9d6e7d83
-> Author:        Borislav Petkov (AMD) <bp@alien8.de>
-> AuthorDate:    Fri, 16 May 2025 16:31:38 +02:00
-> Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-> CommitterDate: Fri, 16 May 2025 16:31:38 +02:00
+> Oh, yeah, absolutely.
 > 
-> x86/bugs: Fix indentation due to ITS merge
+> > One way would be allocating the entire drm_bridge_init_priv using
+> > devm_drm_bridge_alloc(), but that does not look like a correct design
+> > and after reading the helpers code I'm not even sure it would be doable.
+> > 
+> > Instead I think we need to change struct drm_bridge_init_priv
+> > to embed a pointer to (a modified version of) struct dummy_drm_bridge:
+> > 
+> >  struct drm_bridge_init_priv {
+> >          struct drm_device drm;
+> >          struct drm_plane *plane;
+> >          struct drm_crtc *crtc;
+> >          struct drm_encoder encoder;
+> > -        struct drm_bridge bridge;
+> > +        struct dummy_drm_bridge *test_bridge;
+> >          struct drm_connector *connector;
+> >          unsigned int enable_count;
+> >          unsigned int disable_count;
+> >  };
+> > 
+> > So that devm_drm_bridge_alloc() can allocate the new test_bridge
+> > dynamically:
+> > 
+> >  priv->test_bridge =
+> >    devm_drm_bridge_alloc(..., struct dummy_drm_bridge, bridge, ...);
+> > 
+> > Do you think this would be the correct approach?  
 > 
-> No functional changes.
+> It's kind of correct, but you're also correct that it's probably too
+> much for those simple tests, so it might not be worth it in the end.
+
+I haven't found any better ways, so I implemented the idea sketched
+above. It will be in v8.
+
+> > > > +static const struct drm_bridge_funcs drm_bridge_dummy_funcs = {
+> > > > +};
+> > > > +
+> > > > +static int drm_test_bridge_alloc_init(struct kunit *test)
+> > > > +{
+> > > > +	struct drm_bridge_alloc_test_ctx *ctx;
+> > > > +
+> > > > +	ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
+> > > > +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
+> > > > +
+> > > > +	ctx->dev = kunit_device_register(test, "drm-bridge-dev");
+> > > > +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->dev);
+> > > > +
+> > > > +	test->priv = ctx;
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > > +/*
+> > > > + * Test that the allocation and initialization of a bridge works as
+> > > > + * expected and doesn't report any error.
+> > > > + */
+> > > > +static void drm_test_drm_bridge_alloc(struct kunit *test)
+> > > > +{
+> > > > +	struct drm_bridge_alloc_test_ctx *ctx = test->priv;
+> > > > +	struct dummy_drm_bridge *dummy;
+> > > > +
+> > > > +	dummy = devm_drm_bridge_alloc(ctx->dev, struct dummy_drm_bridge, bridge,
+> > > > +				      &drm_bridge_dummy_funcs);
+> > > > +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, dummy);    
+> > > 
+> > > Why did you need the dummy value in dummy_drm_bridge if you're not using
+> > > it?  
+> > 
+> > To ensure we test non-zero @bridge offset. Say there is a bug in the
+> > pointer math, e.g. 'bridge = container - offset' instead of 'bridge =
+> > container + offset'. That would not be caught if @bridge is the first
+> > field in the struct.
+> > 
+> > Does this look like a good reason to keep it?  
 > 
-> Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-> ---
->  arch/x86/kernel/cpu/bugs.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Ack, but please document it with a comment
+
+There is one already:
+
+struct dummy_drm_bridge {
+	int dummy; // ensure we test non-zero @bridge offset
+	struct drm_bridge bridge;
+};    
+
+but the v8 code will be different because of the conversion to
+devm_drm_bdirge_alloc(), and anyway I extended the comment.
+
+> > Another way would be adding an optional .destroy a callback in struct
+> > drm_bridge_funcs that is called in __drm_bridge_free(), and only the
+> > kunit test code implements it. Maybe looks cleaner, but it would be
+> > invasive on code that all bridges use. We had discussed a different
+> > idea of .destroy callback in the past, for different reasons, and it
+> > was not solving the problem we had in that case. So kunit would be the
+> > only user for the foreseeable future.  
 > 
-> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-> index dd8b50b..d1a03ff 100644
-> --- a/arch/x86/kernel/cpu/bugs.c
-> +++ b/arch/x86/kernel/cpu/bugs.c
-> @@ -2975,10 +2975,10 @@ static void __init srso_apply_mitigation(void)
->  
->  		if (boot_cpu_data.x86 == 0x19) {
->  			setup_force_cpu_cap(X86_FEATURE_SRSO_ALIAS);
-> -				set_return_thunk(srso_alias_return_thunk);
-> +			set_return_thunk(srso_alias_return_thunk);
->  		} else {
->  			setup_force_cpu_cap(X86_FEATURE_SRSO);
-> -				set_return_thunk(srso_return_thunk);
-> +			set_return_thunk(srso_return_thunk);
->  		}
->  		break;
->  	case SRSO_MITIGATION_IBPB:
+> Sorry, we've had many conversations about all that work so I can't
+> recall (or find) what your objections or concerns (or mine, maybe?) were
+> about thing topic. It looks totally reasonable to me, and consistent
+> with all the other DRM entities.
 
-This reminded me of this bugs.c housekeeping patch I have stashed:
+That was a long story and I also don't remember all the details,
+however here's a summary of what I can recollect:
 
-===================================>
-From: Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH] x86/bugs: Apply misc stylistic touchups
+ 1. initially I proposed a .destroy called in *drm_bridge_free(), i.e.
+    upon the last put [1]
+     * it was used to ask the bridge driver to kfree() the driver struct
+       that embeds the drm_bridge; that was not a good design, putting
+       deallocation duties on each driver's shoulders
+     * it was made unnecessary by devm_drm_bridge_alloc(), which moved
+       the entire kfree into __drm_bridge_free() itself, based on the 
+       .container pointer
+ 2. we re-discussed it as a way to handle the panel_bridge, but in that
+    case it would have been called by drm_bridge_remove() IIRC [2]
+     * you said it was not a good solution (and I agree) and that a much
+       wider rework would be needed for panels, eventually including the
+       panel_bridge
+     * then Anusha sent the patches to start the panel rework
 
- - s/its/it's
+So now we are discussing adding .destroy again, and in
+__drm_bridge_free(), as it was at step 1, but for a different reason.
 
- - Use the pr_fmt 'RETBleed' string consistently in other messages as well
+[1] https://lore.kernel.org/all/20241231-hotplug-drm-bridge-v5-3-173065a1ece1@bootlin.com/
+[2] https://oftc.catirclogs.org/dri-devel/2025-02-14#
 
- - Use the pr_fmt 'Spectre V2' string consistently in other messages as well
+> I'm also not entirely sure how invasive it would be? Add that callback,
+> check if it's set and if it is, call it from __drm_bridge_free(), and
+> you're pretty much done, right?
 
- - Use 'user space' consistently. (vs. 'userspace')
+No much added code indeed. My concern is about the fact that the
+callback would be used only by kunit test and not "real code". It is
+possibly worth doing anyway, so I wrote something for v8 and we'll see
+how it looks.
 
- - Capitalize 'SWAPGS' consistently.
+Luca
 
- - Capitalize 'L1D' consistently.
-
- - Spell '44 bits' consistently.
-
- - Consistently use empty lines before final 'return' statements where justified.
-
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/kernel/cpu/bugs.c | 51 +++++++++++++++++++++++-----------------------
- 1 file changed, 26 insertions(+), 25 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -172,7 +172,7 @@ DEFINE_STATIC_KEY_FALSE(mds_idle_clear);
- EXPORT_SYMBOL_GPL(mds_idle_clear);
- 
- /*
-- * Controls whether l1d flush based mitigations are enabled,
-+ * Controls whether L1D flush based mitigations are enabled,
-  * based on hw features and admin setting via boot parameter
-  * defaults to false
-  */
-@@ -286,7 +286,7 @@ x86_virt_spec_ctrl(u64 guest_virt_spec_ctrl, bool setguest)
- 
- 	/*
- 	 * If the host has SSBD mitigation enabled, force it in the host's
--	 * virtual MSR value. If its not permanently enabled, evaluate
-+	 * virtual MSR value. If it's not permanently enabled, evaluate
- 	 * current's TIF_SSBD thread flag.
- 	 */
- 	if (static_cpu_has(X86_FEATURE_SPEC_STORE_BYPASS_DISABLE))
-@@ -1028,13 +1028,13 @@ static enum spectre_v1_mitigation spectre_v1_mitigation __ro_after_init =
- 		SPECTRE_V1_MITIGATION_AUTO : SPECTRE_V1_MITIGATION_NONE;
- 
- static const char * const spectre_v1_strings[] = {
--	[SPECTRE_V1_MITIGATION_NONE] = "Vulnerable: __user pointer sanitization and usercopy barriers only; no swapgs barriers",
--	[SPECTRE_V1_MITIGATION_AUTO] = "Mitigation: usercopy/swapgs barriers and __user pointer sanitization",
-+	[SPECTRE_V1_MITIGATION_NONE] = "Vulnerable: __user pointer sanitization and usercopy barriers only; no SWAPGS barriers",
-+	[SPECTRE_V1_MITIGATION_AUTO] = "Mitigation: usercopy/SWAPGS barriers and __user pointer sanitization",
- };
- 
- /*
-  * Does SMAP provide full mitigation against speculative kernel access to
-- * userspace?
-+ * user space?
-  */
- static bool smap_works_speculatively(void)
- {
-@@ -1067,7 +1067,7 @@ static void __init spectre_v1_apply_mitigation(void)
- 	if (spectre_v1_mitigation == SPECTRE_V1_MITIGATION_AUTO) {
- 		/*
- 		 * With Spectre v1, a user can speculatively control either
--		 * path of a conditional swapgs with a user-controlled GS
-+		 * path of a conditional SWAPGS with a user-controlled GS
- 		 * value.  The mitigation is to add lfences to both code paths.
- 		 *
- 		 * If FSGSBASE is enabled, the user can put a kernel address in
-@@ -1085,16 +1085,16 @@ static void __init spectre_v1_apply_mitigation(void)
- 			 * is serializing.
- 			 *
- 			 * If neither is there, mitigate with an LFENCE to
--			 * stop speculation through swapgs.
-+			 * stop speculation through SWAPGS.
- 			 */
- 			if (boot_cpu_has_bug(X86_BUG_SWAPGS) &&
- 			    !boot_cpu_has(X86_FEATURE_PTI))
- 				setup_force_cpu_cap(X86_FEATURE_FENCE_SWAPGS_USER);
- 
- 			/*
--			 * Enable lfences in the kernel entry (non-swapgs)
-+			 * Enable lfences in the kernel entry (non-SWAPGS)
- 			 * paths, to prevent user entry from speculatively
--			 * skipping swapgs.
-+			 * skipping SWAPGS.
- 			 */
- 			setup_force_cpu_cap(X86_FEATURE_FENCE_SWAPGS_KERNEL);
- 		}
-@@ -1177,7 +1177,7 @@ static int __init retbleed_parse_cmdline(char *str)
- early_param("retbleed", retbleed_parse_cmdline);
- 
- #define RETBLEED_UNTRAIN_MSG "WARNING: BTB untrained return thunk mitigation is only effective on AMD/Hygon!\n"
--#define RETBLEED_INTEL_MSG "WARNING: Spectre v2 mitigation leaves CPU vulnerable to RETBleed attacks, data leaks possible!\n"
-+#define RETBLEED_INTEL_MSG "WARNING: Spectre V2 mitigation leaves CPU vulnerable to RETBleed attacks, data leaks possible!\n"
- 
- static void __init retbleed_select_mitigation(void)
- {
-@@ -1415,7 +1415,7 @@ static void __init its_select_mitigation(void)
- 		goto out;
- 	}
- 	if (spectre_v2_enabled == SPECTRE_V2_NONE) {
--		pr_err("WARNING: Spectre-v2 mitigation is off, disabling ITS\n");
-+		pr_err("WARNING: Spectre V2 mitigation is off, disabling ITS\n");
- 		its_mitigation = ITS_MITIGATION_OFF;
- 		goto out;
- 	}
-@@ -1466,7 +1466,7 @@ static void __init its_select_mitigation(void)
- 		set_return_thunk(call_depth_return_thunk);
- 		if (retbleed_mitigation == RETBLEED_MITIGATION_NONE) {
- 			retbleed_mitigation = RETBLEED_MITIGATION_STUFF;
--			pr_info("Retbleed mitigation updated to stuffing\n");
-+			pr_info("RETBleed mitigation updated to stuffing\n");
- 		}
- 		break;
- 	}
-@@ -1490,8 +1490,9 @@ bool retpoline_module_ok(bool has_retpoline)
- 	if (spectre_v2_enabled == SPECTRE_V2_NONE || has_retpoline)
- 		return true;
- 
--	pr_err("System may be vulnerable to spectre v2\n");
-+	pr_err("System may be vulnerable to Spectre V2\n");
- 	spectre_v2_bad_module = true;
-+
- 	return false;
- }
- 
-@@ -1504,8 +1505,8 @@ static inline const char *spectre_v2_module_string(void) { return ""; }
- #endif
- 
- #define SPECTRE_V2_LFENCE_MSG "WARNING: LFENCE mitigation is not recommended for this CPU, data leaks possible!\n"
--#define SPECTRE_V2_EIBRS_EBPF_MSG "WARNING: Unprivileged eBPF is enabled with eIBRS on, data leaks possible via Spectre v2 BHB attacks!\n"
--#define SPECTRE_V2_EIBRS_LFENCE_EBPF_SMT_MSG "WARNING: Unprivileged eBPF is enabled with eIBRS+LFENCE mitigation and SMT, data leaks possible via Spectre v2 BHB attacks!\n"
-+#define SPECTRE_V2_EIBRS_EBPF_MSG "WARNING: Unprivileged eBPF is enabled with eIBRS on, data leaks possible via Spectre V2 BHB attacks!\n"
-+#define SPECTRE_V2_EIBRS_LFENCE_EBPF_SMT_MSG "WARNING: Unprivileged eBPF is enabled with eIBRS+LFENCE mitigation and SMT, data leaks possible via Spectre V2 BHB attacks!\n"
- #define SPECTRE_V2_IBRS_PERF_MSG "WARNING: IBRS mitigation selected on Enhanced IBRS CPU, this may cause unnecessary performance loss\n"
- 
- #ifdef CONFIG_BPF_SYSCALL
-@@ -1537,7 +1538,7 @@ static inline bool match_option(const char *arg, int arglen, const char *opt)
- 	return len == arglen && !strncmp(arg, opt, len);
- }
- 
--/* The kernel command line selection for spectre v2 */
-+/* The kernel command line selection for Spectre V2 */
- enum spectre_v2_mitigation_cmd {
- 	SPECTRE_V2_CMD_NONE,
- 	SPECTRE_V2_CMD_AUTO,
-@@ -1697,7 +1698,7 @@ static void __init spectre_v2_user_update_mitigation(void)
- 	 * injection in user-mode as the IBRS bit remains always set which
- 	 * implicitly enables cross-thread protections.  However, in legacy IBRS
- 	 * mode, the IBRS bit is set only on kernel entry and cleared on return
--	 * to userspace.  AMD Automatic IBRS also does not protect userspace.
-+	 * to user space.  AMD Automatic IBRS also does not protect user space.
- 	 * These modes therefore disable the implicit cross-thread protection,
- 	 * so allow for STIBP to be selected in those cases.
- 	 */
-@@ -1714,7 +1715,7 @@ static void __init spectre_v2_user_update_mitigation(void)
- 	     retbleed_mitigation == RETBLEED_MITIGATION_IBPB)) {
- 		if (spectre_v2_user_stibp != SPECTRE_V2_USER_STRICT &&
- 		    spectre_v2_user_stibp != SPECTRE_V2_USER_STRICT_PREFERRED)
--			pr_info("Selecting STIBP always-on mode to complement retbleed mitigation\n");
-+			pr_info("Selecting STIBP always-on mode to complement RETBleed mitigation\n");
- 		spectre_v2_user_stibp = SPECTRE_V2_USER_STRICT_PREFERRED;
- 	}
- 	pr_info("%s\n", spectre_v2_user_strings[spectre_v2_user_stibp]);
-@@ -1923,7 +1924,7 @@ static void __init spectre_v2_select_rsb_mitigation(enum spectre_v2_mitigation m
- 	case SPECTRE_V2_EIBRS_LFENCE:
- 	case SPECTRE_V2_EIBRS_RETPOLINE:
- 		if (boot_cpu_has_bug(X86_BUG_EIBRS_PBRSB)) {
--			pr_info("Spectre v2 / PBRSB-eIBRS: Retire a single CALL on VMEXIT\n");
-+			pr_info("Spectre V2 / PBRSB-eIBRS: Retire a single CALL on VMEXIT\n");
- 			setup_force_cpu_cap(X86_FEATURE_RSB_VMEXIT_LITE);
- 		}
- 		break;
-@@ -1931,13 +1932,13 @@ static void __init spectre_v2_select_rsb_mitigation(enum spectre_v2_mitigation m
- 	case SPECTRE_V2_RETPOLINE:
- 	case SPECTRE_V2_LFENCE:
- 	case SPECTRE_V2_IBRS:
--		pr_info("Spectre v2 / SpectreRSB: Filling RSB on context switch and VMEXIT\n");
-+		pr_info("Spectre V2 / SpectreRSB: Filling RSB on context switch and VMEXIT\n");
- 		setup_force_cpu_cap(X86_FEATURE_RSB_CTXSW);
- 		setup_force_cpu_cap(X86_FEATURE_RSB_VMEXIT);
- 		break;
- 
- 	default:
--		pr_warn_once("Unknown Spectre v2 mode, disabling RSB mitigation\n");
-+		pr_warn_once("Unknown Spectre V2 mode, disabling RSB mitigation\n");
- 		dump_stack();
- 		break;
- 	}
-@@ -1945,7 +1946,7 @@ static void __init spectre_v2_select_rsb_mitigation(enum spectre_v2_mitigation m
- 
- /*
-  * Set BHI_DIS_S to prevent indirect branches in kernel to be influenced by
-- * branch history in userspace. Not needed if BHI_NO is set.
-+ * branch history in user space. Not needed if BHI_NO is set.
-  */
- static bool __init spec_ctrl_bhi_dis(void)
- {
-@@ -2696,7 +2697,7 @@ enum vmx_l1d_flush_state l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_AUTO;
- EXPORT_SYMBOL_GPL(l1tf_vmx_mitigation);
- 
- /*
-- * These CPUs all support 44bits physical address space internally in the
-+ * These CPUs all support 44 bits physical address space internally in the
-  * cache but CPUID can report a smaller number of physical address bits.
-  *
-  * The L1TF mitigation uses the top most address bit for the inversion of
-@@ -2705,9 +2706,9 @@ EXPORT_SYMBOL_GPL(l1tf_vmx_mitigation);
-  * which report 36bits physical address bits and have 32G RAM installed,
-  * then the mitigation range check in l1tf_select_mitigation() triggers.
-  * This is a false positive because the mitigation is still possible due to
-- * the fact that the cache uses 44bit internally. Use the cache bits
-+ * the fact that the cache uses 44 bits internally. Use the cache bits
-  * instead of the reported physical bits and adjust them on the affected
-- * machines to 44bit if the reported bits are less than 44.
-+ * machines to 44 bits if the reported bits are less than 44.
-  */
- static void override_cache_bits(struct cpuinfo_x86 *c)
- {
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
