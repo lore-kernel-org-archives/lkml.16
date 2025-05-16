@@ -1,111 +1,176 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6CBA231837;
-	Fri, 16 May 2025 09:54:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6AA8F58;
+	Fri, 16 May 2025 09:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747389292; cv=none; b=LkMGWC4P6O4nfxXJJK3mYM8jAq8Rw/Y/z91pdVVcau2+f/NRG1qLZ0tAZfbF6epGBnPmRXIwAw3PcQxcv+DAPYgFzOLPQRnzEDw/LwsMsfYh7oLVNbOlhi8pXTqHDQaM0vr1MoGJNs2YvXBH3b0AhZDLeeIoDDE2EthJCJy7Qrw=
+	t=1747389334; cv=none; b=BNLkVeZjLq8Wl6vZ6Ph8E/sS9ISQ6ECYph5q8hdBItxgWs9H3dZSfagK4dsWB1ZENWFqUzWIT07Gg+b/3COPywG3H2ltTksBIECMBtYy3TE3qIFAqkq18abgLOa0f7jnF+nLQohEzBgol1zo9yWp5LXmNlDwDe/LJ4hkD/c/AEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747389292; c=relaxed/simple;
-	bh=c0iIl7dJXWna8S1DBQZPoPO7ke8+5gOze/1BvGwFB/s=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eZjcpHIIUUShdeJiD7Ty9uFYKYEtw1rjRWdGW0VqWsNEPOMVZ3mA4Dy3WkddNezkVUE+aIrMdhxF7l9Dt1OH3LIK/CiRC/dLzo7yln16WND5XHtN7hsSwaAm8vRaYoZJDfOT2RufK76WKfpz7P4hiOPxYU34XKAs2Xv+lXBhru4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Vkudkfw+; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1747389334; c=relaxed/simple;
+	bh=F6ORg0yRnpqLbpE6aw8TDMpSUs9XkjRKy6srRdJ4A2Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LSYnpJO5M41qV2UzqHIoa8hBnu0izD1XEKcFD2Bp7RxQfNEtlfMeDOMm53/zLQh55DZUX6mvrhnLny1BrFvEJMTJdyLZ+ZEFB8E0mvNC0GShVUz5kM4H8cLvcHLcIjhlG4bLfbEcpEbm0CGrVFomxR/crOQFJlg9LXfE7TpRbVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IY1gutf/; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Vkudkfw+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747389287;
-	bh=jDeYi4hO2+10znc75difMvtZmuJ188y5tW3/0jbzEGk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Vkudkfw+ldEnbtby5RDZRxhpw76cbq6ti2Rx10gvpcwcWcRM3xZnbUrhZXyR/jr3g
-	 5AWcKZt5S1I8A38xpWS8Uw8EJCOH+UINRoy6es3WCh/3xAba/5hUrCO1+KJ5Q4420W
-	 oeT7bdswOTv0ugFHZO/GVNygCYlwkQnAj/C3glPjYWT6OQNA+IJxIarbWaKQnHAwDi
-	 SU8lWcjNLMGjZmqpQSvU1c5/BNnDpbb3cp2hDcjQC/zNMGfrbPfcM5EWKT97BBHOs1
-	 njAfgNciLW0UAu6KBmyOjET0y52mfEjozShlHbBgVTOniouuk3DYj8DsPPniORixFR
-	 AnAHc2TN+mr4A==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZzMr65b6Nz4wcd;
-	Fri, 16 May 2025 19:54:46 +1000 (AEST)
-Date: Fri, 16 May 2025 19:54:46 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>, "Rafael J. Wysocki"
- <rjw@rjwysocki.net>, "Ahmed S. Darwish" <darwi@linutronix.de>, Artem
- Bityutskiy <artem.bityutskiy@linux.intel.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, "Rafael J. Wysocki"
- <rafael.j.wysocki@intel.com>
-Subject: Re: linux-next: manual merge of the tip tree with the pm tree
-Message-ID: <20250516195446.1331ac06@canb.auug.org.au>
-In-Reply-To: <aCbvO5Q0B3yYxji4@gmail.com>
-References: <20250516161541.0cff29b8@canb.auug.org.au>
-	<aCbvO5Q0B3yYxji4@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IY1gutf/"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad24677aaf6so255421866b.2;
+        Fri, 16 May 2025 02:55:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747389331; x=1747994131; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Axg7F7QjuzXYT66ePL9GXJ6xq+M+wgyKaCF1Z17Ng8I=;
+        b=IY1gutf/8mB77UbteAaO+qhp13HflZjNqxp+0AdEymZ5pdzlkgEuoOmynyCE5wYDU5
+         fdfztyXnREuTRD2fXuUb5PJW0A9oLxeWBCuJXfqC5hf+4AVHNyybJhM5LTHuRnvHscty
+         WaHbJppFzTYbm5VaYSJmC6hHT1hLbttygRc1yDZT1+VA/hdB4FCq2Na6R9KgbcFt56QP
+         yMslViLmd36IFIkwVre1Pl2MdKul+XmbrYnkyUnMK+KZnQKgdcVjXbtGRX0L5KGgNOkm
+         fNrGi7viCqzW3Me4mgjtszzTQ2yaTVYUXGNn5ShJuaLBM6BzZ+1pgSpscBfQijOKXm8b
+         mmyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747389331; x=1747994131;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Axg7F7QjuzXYT66ePL9GXJ6xq+M+wgyKaCF1Z17Ng8I=;
+        b=bW8sff5WVfQqi017bqMSSYKJXxxS3L3GG11T66jj3l2itXhPUBrn2pU1dMowCUaR4z
+         S5Iv0rEAqB6o0gM8Dky5Q4Zgh3nx6mB4VH2SnpsX3EFqpIAYzEyY/3EQV3lQ2Gwvy0t0
+         Er1VTFfrHT63vlB47Gh/yf9PDy3i3psVJw+2cLbKKVwEl30aYqYZysQ8frGjg3L4BPEH
+         Cw53P+Nxc3DcqVanxZK6SxYltLMN9CDQxFu0m1mISavymXpJJmNeypS0JMGZe1KdE6S1
+         behvpRfYCdzOd3wk1yJ5gQJCu33FsL/80mLpR2kmAr4HT4PLrB6a44BwyYLS38yVa1bQ
+         tUHw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZZZitO/VopdBW4vVopz+PZXDDRL30k4cG5o5NQ4AZMCOi2Hs6Y+EMT7N2yMAocBVQE4tjIAO1mmrAmVM=@vger.kernel.org, AJvYcCXqtY3aLUFMSg55G0DgOA1sb/Z0zl/cFMoUL0IZTNWJ6chfiX9yC8b6cNBczrZxydPNfDECBEpVXbNcvzw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy14EXvo44ufCdRbjHxuJfUW7R2X+gedyieIFo2UAGLpEZQnonM
+	MhP4UUsDTUAIQ2hd0Fjhk4bbyFo7d93pJCf756HNg527C2VOivW/5acXNu8DMw==
+X-Gm-Gg: ASbGncsmEummKQtEQWEDwbI7UWMCze2OnfR3mGMM2aYg+mT4OoZuFihhmlf0KDp5I4R
+	iD9NVYTCnQ9Ww6NNJPyNO8EBW63jcjTlnysn1ZMpUNsWfCf94mQwur4wfPY1tfZ9x0Zdy2r+1qc
+	ri6/XN37uhKr+2cNg0X5HwvwgEvMIFL017OhbQXpheM9o7dDsv0BJyRjPFURTu4+fUCqve2EgEc
+	5w6gHDO6fvYl0sB4buQe2zgX0+Cm0qDIGFFVCHp+EKcM6upXWAVZV/2292lWe7nSH/Ih2LwxnSs
+	4XXclcpfg13EPfq6/TMbtLsQkOMUcRqN36xtABqlzu9id5Xpl2USqI7I1t3maYf8ZQ4Nmk18e8V
+	E3Bmerv9ZQuUPp0D8Eg==
+X-Google-Smtp-Source: AGHT+IGbL/TPBNXrDuxYzIG3AQQgcydYk4efAjQsTWHoUpwrnWH3h6zVQ0RXFqueVJ6EXMmGZdEghw==
+X-Received: by 2002:a17:907:c10:b0:ad5:1f59:96f8 with SMTP id a640c23a62f3a-ad52d50aab1mr214119166b.34.1747389330713;
+        Fri, 16 May 2025 02:55:30 -0700 (PDT)
+Received: from [192.168.6.174] ([92.120.5.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d439639sm128936966b.104.2025.05.16.02.55.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 May 2025 02:55:30 -0700 (PDT)
+Message-ID: <a1466ee2-8931-4ec6-bca8-69c2117d0f6b@gmail.com>
+Date: Fri, 16 May 2025 13:13:16 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/_wVQ2Q4E=Z6=pvU9HE0DJkb";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 1/3] ASoC: re-introduce disable_route_checks flag for
+ OF routes
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org
+References: <20250515153128.147457-1-laurentiumihalcea111@gmail.com>
+ <20250515153128.147457-2-laurentiumihalcea111@gmail.com>
+ <875xi1tkm7.wl-kuninori.morimoto.gx@renesas.com>
+Content-Language: en-GB
+From: Mihalcea Laurentiu <laurentiumihalcea111@gmail.com>
+In-Reply-To: <875xi1tkm7.wl-kuninori.morimoto.gx@renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---Sig_/_wVQ2Q4E=Z6=pvU9HE0DJkb
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Ingo,
-
-On Fri, 16 May 2025 09:54:35 +0200 Ingo Molnar <mingo@kernel.org> wrote:
+On 16.05.2025 04:22, Kuninori Morimoto wrote:
+> Hi Laurentiu
 >
-> So I don't think the <asm/cpuid.h> change is needed - the header still=20
-> fully exists:
->=20
->   starship:~/tip> ls -lh arch/x86/include/asm/cpuid/api.h arch/x86/includ=
-e/asm/cpuid.h =20
->   -rw-rw-r-- 1 mingo mingo 6.1K May 16 09:34 arch/x86/include/asm/cpuid/a=
-pi.h
->   -rw-rw-r-- 1 mingo mingo  149 May 16 09:34 arch/x86/include/asm/cpuid.h
+> Thank you for the patch
+>
+>> The "disable_route_checks" flag was previously removed via commit
+>> dd2395162c07 ("ASoC: remove disable_route_checks") as it wasn't being
+>> used anywhere.
+>>
+>> Re-introduce an OF-specific variant of the flag: "disable_of_route_checks"
+>> as this will be used by audio-graph-card2.
+>>
+>> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+>> ---
+>>  include/sound/soc.h  |  1 +
+>>  sound/soc/soc-core.c | 12 ++++++++++--
+>>  2 files changed, 11 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/include/sound/soc.h b/include/sound/soc.h
+>> index 1fffef311c41..e76da038557d 100644
+>> --- a/include/sound/soc.h
+>> +++ b/include/sound/soc.h
+>> @@ -1077,6 +1077,7 @@ struct snd_soc_card {
+>>  	unsigned int instantiated:1;
+>>  	unsigned int topology_shortname_created:1;
+>>  	unsigned int fully_routed:1;
+>> +	unsigned int disable_of_route_checks:1;
+>>  	unsigned int probed:1;
+>>  	unsigned int component_chaining:1;
+>>  	struct device *devres_dev;
+>> diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+>> index 67bebc339148..b14a52d6f550 100644
+>> --- a/sound/soc/soc-core.c
+>> +++ b/sound/soc/soc-core.c
+>> @@ -2245,8 +2245,16 @@ static int snd_soc_bind_card(struct snd_soc_card *card)
+>>  
+>>  	ret = snd_soc_dapm_add_routes(&card->dapm, card->of_dapm_routes,
+>>  				      card->num_of_dapm_routes);
+>> -	if (ret < 0)
+>> -		goto probe_end;
+>> +	if (ret < 0) {
+>> +		if (card->disable_of_route_checks) {
+>> +			ret = 0;
+>> +			dev_info(card->dev,
+>> +				 "%s: disable_of_route_checks set, ignoring errors on add_routes\n",
+>> +				 __func__);
+>> +		} else {
+>> +			goto probe_end;
+>> +		}
+>> +	}
+> commit dd2395162c07 removed flag from 3 parts (core x2 / topology), but
+> this patch get back only one of them.
 
-That change is in the tip tree and involved in the conflict, so I just
-used it as it was in the tip tree.  This is normal conflict resolution.
 
-> And the <linux/sysfs.h> addition is probably a build fix for the PM=20
-> tree? The <asm/cpuid.h> header's indirect header dependencies did not=20
-> change. Should probably not be carried in -next, as this masks a build=20
-> failure that will then trigger in Linus's tree?
+hm, so the rationale for introducing this OF-specific flag was because
 
-Well, it did not fail building yesterday (without the include) and
-looks like the commit is adding the first sysfs use in this file ..
+audio-graph-card2 is the only user for this feature and this user only
 
-Mind you, if the sysfs.h include had been added a line or 2 higher up -
-or even if there was a blank line between the linux/ and asm/ includes,
-there may have been no conflict reported and git would have produced
-the resulting file with both changes all by itself.
---=20
-Cheers,
-Stephen Rothwell
+needs to disable route checks for OF-based routes. On second thought
 
---Sig_/_wVQ2Q4E=Z6=pvU9HE0DJkb
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+though I think it might be better to have this feature for all routes in case
 
------BEGIN PGP SIGNATURE-----
+someone might need it for non-OF routes as well? (if we go with the current
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgnC2YACgkQAVBC80lX
-0Gwe7gf9E6XyrZUQ/x29fidSris5oEq8H+8IHMlQnVg69w5cmDnpAci+tXVbG7uH
-wjlxT1dNmtELA9s9KxPEqMTWtZvs0E/UwxxYkf5Q/leKR+tDS4DOz7bnBm0gml4z
-+hEQam9ryMYYARwWdYWWsKcJt5UB9AcdS+jDUgwZRap3BxaX6AEiHcrhoyJzDy/r
-KunDG0l9//VQ5gtl2R2PPl1C0TixtGPUK81q/SFTeEa+wL8VeXSjsQmmsG10S/eu
-0hYp/ERPHIQT4efXz5VynC49SIjnbaIk7nZ/m7Otg8w3COJ/KQurqsVGULHT2MUU
-pTVC9kzUshus5R5BEP+mioGWbYIhgg==
-=sDmX
------END PGP SIGNATURE-----
+approach and it turns out someone needs it for non-OF routes you're going
 
---Sig_/_wVQ2Q4E=Z6=pvU9HE0DJkb--
+to need more changes to support that)
+
+
+>
+> I think this flag check should be implemented in snd_soc_dapm_add_route()
+> itself instead of each caller, but what do you think ?
+
+
+good idea, I'll give it a try
+
+
+>
+> And maybe we want to use more easy-to-understand naming, like
+> "ignore route check", etc ?
+
+
+sure
+
+
+>
+> Thank you for your help !!
+>
+> Best regards
+> ---
+> Kuninori Morimoto
