@@ -1,209 +1,152 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E60B21B9E2;
-	Fri, 16 May 2025 11:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8FC481C4
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747395266; cv=none; b=Ionz5xdttznprYnsh9JEHsYsnB+a8QWk3/Gig6H2OYsnq2ynlW08HRceyHy8WkYTd5K1ryoX2OBC94TvGGtLei04jIJ+2glxa0S+5Gt22iXhB57JeIr4GWHzsB6lisIZ6xs4OERjkfYBcdf7HCPPPau4XnJ6Tk9Nw/YIK1H8aBw=
+	t=1747395369; cv=none; b=cenpplFl+n5KkTKG7FNi/TARpqOSnqF0LM9Jv+BLHzVHFC6l2OUXIFQVxmCvs1EBkP7aR43AIl0LR4Tde0kGCS6KD2qG/rgl6vPZmla0nkMXM3u9jc3W6QKNYUOH4XCvt93Q/CxVMVY4ia4fogsMt7/HwDstw9VwkfJvEULiUaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747395266; c=relaxed/simple;
-	bh=teKuzN9dqE6GiOpV8Sf3xVOTYhBmLpkHkrdRiCAicKo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DWTbGmlGlYSJb3H+kQjCyf0sUGTpiuXmnMPMRFhh1+0s2xU7SpgOdZZUQLvZgBwnl+2I8HmO5HHnQWeiq9gdG5b1qYSrcGSYD2bGZDKFj33iTUUahyowJ861zUQSrkez3S2dDynW+Ucn+GSOaH2yoPa+UaS8jhkVrsvx6bNdZpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=mLES8tur; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1747395369; c=relaxed/simple;
+	bh=x71wh9qpjv9m4txcRMSYgEFgU/qLQI3szX4WfGrxJsk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QNEv9q/qBwxV0ZMnEdDb0+oWGd937Ko/NVFH6Ov5rIBgA0LuZrUP5cvrXWUSF7RnSxFWapJrO+LIb4XQ7jjS78vzIYgJOv0AbTuiq1MqZCLTjhDIYJm6X6pP4eWPIvnmTP7GVJKKCseIqXMR3mc/Eo0q7NsldR0GkklRkQvN+vM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Hmd1RQRv; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="mLES8tur"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=shyT/oHeqaQuD+T3lMDlpQH2XhSDj8LDWTYr35IZJco=; b=mLES8turh2PojJZU3K/EBJfuYf
-	MLA7zWMPM5XpWB4rkOQ1Ee03YYUNGMUnfiomp17L3BLdN7Y0Bg1mQJ8oAwArsJSgU1xTEp2mCrUGF
-	r8/jLJqI6DLQhhVTknMixF6Z3hFLLQCp3tI3HRaQYjTXzgnm5P3yFypq44TApJswYV1lwyY3LCpGs
-	jPvspoYZ9m1IMd/vQXfxOWPY+Bxdj7YwlJ03jKVooX2fpiwpYNH+iH3G4+485pBPXD4DxUTNyUNoE
-	wecXcX4VJz0Z7PWgxAU8qkUHyky0PbELhMbN7hDlg20Bv8/ClUkn9dN92PnmqjLC8mab/V0X0tdDk
-	dgJoMG8w==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uFtKI-006ZlJ-11;
-	Fri, 16 May 2025 19:34:07 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 16 May 2025 19:34:06 +0800
-Date: Fri, 16 May 2025 19:34:06 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Jain@formenos.rohan.me.apana.org.au, Ayush <Ayush.Jain3@amd.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>, x86-ml <x86@kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org,
-	Eric Biggers <ebiggers@google.com>
-Subject: Re: cryptodev linux-next splat
-Message-ID: <aCcirrsFFrrRqf5A@gondor.apana.org.au>
-References: <20250516112217.GBaCcf6Yoc6LkIIryP@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Hmd1RQRv"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G3Dm1X007861
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:36:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ekV2UpDnpry6+UbUBtnNG7zgHt6PFpPr1W7ydztSu/k=; b=Hmd1RQRvsa5D2YvH
+	kW0Td15We6WvuB8+hJYTpq0VMz3JPHZvTMXtouBGo3lbrUO3w3sRMx5X5xQHlIP2
+	6GlIQUllUGjBtqGfZr9o8vTFpaWYeEfmkUiborFFuSNIZyQpCWJwP3NcXqjKcVRr
+	Siry3Gyt4lH1fLWNZ02qUjXAhUW6JdWpZcDZLn5Mqz47oQa/1k8vntCwXtxnw6hp
+	LxUS3sroneKyVWUZ1iJRnAWsMYehVOJWwQksmUsrnIoJaRj01k9u2IlZEk19it7L
+	/Paf6Yuxerz5QOjEBryU4iWDcqBHh//JzO5HZgsSVkK+Y3LfeVriUEIRPMEG0txT
+	qsrQsg==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcq1r3a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:36:06 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c76062c513so48450785a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 04:36:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747395366; x=1748000166;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ekV2UpDnpry6+UbUBtnNG7zgHt6PFpPr1W7ydztSu/k=;
+        b=jQBFYvgyE19L+CFEW1G2gOHBDw9VwZpgxvTC0tmD1UXZuH2zT5apACOMIECs2Jc1JZ
+         WeN+DS4YYMPTNgeLeXUNry/KsHZ6iM5GVr7PDp3U+TmZ2ITrclJwEzUlNNE/qf+G7Ktp
+         nsK6FGob/82/BDbGDUCP9AbFqhPjdCSLhjU9eKKhZ/jkmzd2k3l1qh/+7gtEGzb7slG7
+         d4wD5JWAx/lVPK6dfMH0VYze9ubc/Nd9haEkpjLZYf8c45vC2LZJZ3Y4J/WHxbmJ++92
+         s6/a804LyvT6zyilJN+eMjyXKLAAAEkwKgv18b2UbXGij5jZaaGNx1ehvFK8RxDPHO3f
+         W7CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUuaC/EI43qUOWKeuHm/Bse5tVlin07HS7Vl1JVul1/4rdqLkKj3PBMt9QcvjcYFqUIjieE9X0whvq62pM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYgD8/nKpAE+E19Uj+BXs8PjL18zL4GUGu+k3iGgBhumgOWemq
+	3WR5sNkxShSU0q75R0ALL16r5ULP0LvwEkyRmGXSyQErKlNozga7d4+kACwOS2GdsMmmLl0srms
+	gHZsn9YavU+Yb0tUFD5cF38lZeTvzDlV1JrmUoFEZDFTPy9N5t54G+eH6cMtawuuBwyo=
+X-Gm-Gg: ASbGncv8BmvwyEMuWoOL79Yqjm0D/CrFCMcDiSd8aO21su+Nki7WI8RHZEEde/oeus6
+	Tcvkno5NQnvS50phz+tlU1kSfV8NI5OLeC1wyh5PNZFgQe1Yr+lplh3FJJdVCO+cbQ3dlDFe1G3
+	BnJ3r0tfLZr3slF4mLzzt89NvkRkO+4zDIb2HHBJgoMq0A+aBpVJO+KQCT7offQ1iiHn4cW6ReY
+	qR4XIDtcw/k1MvSWWA/TOl755UAVWNUZxx8yQX7m3RsENULQtqra+MMzgL9BtZijLNVwmmb32Jh
+	s4+xl/CskUGcyTTmEfz/lclo4SYWO0l3ZXKcIMsxxRtq4F/fW36YSDJioAHwmYy/yQ==
+X-Received: by 2002:a05:6214:2602:b0:6f8:9a2e:1726 with SMTP id 6a1803df08f44-6f8b0720ba1mr21196886d6.0.1747395365886;
+        Fri, 16 May 2025 04:36:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFQAvfyU/2baVWoHmgKenJhYPlFdeNZN/pq43vpeCxwa5wY8TW2sY5mrUqs5+/uZrvj9eUOwA==
+X-Received: by 2002:a05:6214:2602:b0:6f8:9a2e:1726 with SMTP id 6a1803df08f44-6f8b0720ba1mr21196686d6.0.1747395365458;
+        Fri, 16 May 2025 04:36:05 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d047738sm146675366b.19.2025.05.16.04.36.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 May 2025 04:36:04 -0700 (PDT)
+Message-ID: <fd92ae5f-2caf-408e-8a79-6338e6c8ea07@oss.qualcomm.com>
+Date: Fri, 16 May 2025 13:36:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250516112217.GBaCcf6Yoc6LkIIryP@fat_crate.local>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: sm8750: Add Soundwire nodes
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250424-sm8750-audio-part-2-v1-0-50133a0ec35f@linaro.org>
+ <20250424-sm8750-audio-part-2-v1-1-50133a0ec35f@linaro.org>
+ <e83b58ea-0124-4619-82a5-35134dc0a935@oss.qualcomm.com>
+ <afda790f-0b5e-4569-a92b-904df936df85@linaro.org>
+ <1a0be977-39b8-4089-a37e-dd378c03e476@oss.qualcomm.com>
+ <17b9649d-b788-4a13-b7eb-bf54b7a83b0f@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <17b9649d-b788-4a13-b7eb-bf54b7a83b0f@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: wpWg7Gkiwclp_mnMiwjOeiTtMCkK3rOs
+X-Proofpoint-ORIG-GUID: wpWg7Gkiwclp_mnMiwjOeiTtMCkK3rOs
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDExMCBTYWx0ZWRfX8TESyxdzArrl
+ NrSiTnM71eem36ScsqSmcBfeKsDthKlM2aifnvRGRQwYlrFyq1YFfQVu4BrUkTs/zZxcvQcL8TE
+ tyqvmbx/7DOD1/KF3ztN637zugIaz+E1M8D6VfBWHkEvQNADJaTC6gY2vRe9g20y8EcwTnaiIgN
+ 8FeHYsooQD8zFoy2lnXvABlUwBpkUJr4yYLnjPhQmveVz569aYh/SU4vXd8oKYikBwnIgm46ebg
+ 9rJhNFkyulcedOrX/396ucAYPC9mz73TVnw4EMrHJTKDzbMxwaQqAu8vgbfFcrEYpPkuR1gx7BQ
+ +Mz1q1006WKPu2Namfhz6LwFAaJn/o3gN4PYx06tGjK0tJtvU8txbY5HGlwyd0pjAOBwFMtEljV
+ IYWvS4MBMdArLObMwSE8ggB58rf1zs7FmP3bEaYasXJVaSVW67jh01S3r/ik/jL1AzZnEtcr
+X-Authority-Analysis: v=2.4 cv=KcvSsRYD c=1 sm=1 tr=0 ts=68272326 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=8ckfQZQAI897uWQ1iqcA:9
+ a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-16_05,2025-05-16_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 adultscore=0 phishscore=0
+ lowpriorityscore=0 mlxlogscore=735 spamscore=0 malwarescore=0 impostorscore=0
+ mlxscore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505160110
 
-On Fri, May 16, 2025 at 01:22:17PM +0200, Borislav Petkov wrote:
-> Hi Herbert,
->=20
-> one of our linux-next tests which hotplugs a CPU fails with the below spl=
-at.
->=20
-> Reproducing is very easy:
->=20
-> # echo 0 > /sys/devices/system/cpu/cpu1/online=20
-> # echo 1 > /sys/devices/system/cpu/cpu1/online
->=20
-> Opcode bytes point to:
->=20
-> 02:06:54 [ 3199.416779] Code: 65 c6 05 9a c8 ad 02 01 f7 47 2c 00 40 20 0=
-0 74 4f 65 48 c7 05 95 c8 ad 02 00 00 00 00 f6 c3 02 74 0d c7 44 24 04 80 1=
-f 00 00 <0f> ae 54 24 04 83 e3 01 75 47 48 8b 44 24 08 65 48 2b 05 49 97 ad
-> All code
-> =3D=3D=3D=3D=3D=3D=3D=3D
->    0:   65 c6 05 9a c8 ad 02    movb   $0x1,%gs:0x2adc89a(%rip)        # =
-0x2adc8a2
->    7:   01=20
->    8:   f7 47 2c 00 40 20 00    testl  $0x204000,0x2c(%rdi)
->    f:   74 4f                   je     0x60
->   11:   65 48 c7 05 95 c8 ad    movq   $0x0,%gs:0x2adc895(%rip)        # =
-0x2adc8b2
->   18:   02 00 00 00 00=20
->   1d:   f6 c3 02                test   $0x2,%bl
->   20:   74 0d                   je     0x2f
->   22:   c7 44 24 04 80 1f 00    movl   $0x1f80,0x4(%rsp)
->   29:   00=20
->   2a:*  0f ae 54 24 04          ldmxcsr 0x4(%rsp)               <-- trapp=
-ing instruction
->   2f:   83 e3 01                and    $0x1,%ebx
->   32:   75 47                   jne    0x7b
->   34:   48 8b 44 24 08          mov    0x8(%rsp),%rax
->   39:   65                      gs
->   3a:   48                      rex.W
->   3b:   2b                      .byte 0x2b
->   3c:   05                      .byte 0x5
->   3d:   49 97                   xchg   %rax,%r15
->   3f:   ad                      lods   %ds:(%rsi),%eax
->=20
-> Code starting with the faulting instruction
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->    0:   0f ae 54 24 04          ldmxcsr 0x4(%rsp)
->    5:   83 e3 01                and    $0x1,%ebx
->    8:   75 47                   jne    0x51
->    a:   48 8b 44 24 08          mov    0x8(%rsp),%rax
->    f:   65                      gs
->   10:   48                      rex.W
->   11:   2b                      .byte 0x2b
->   12:   05                      .byte 0x5
->   13:   49 97                   xchg   %rax,%r15
->   15:   ad                      lods   %ds:(%rsi),%eax
->=20
-> And LDMXCSR would #UD for a bunch of conditions.
->=20
-> Reverting cryptodev from linux-next next-20250515 this way:
->=20
-> $ git revert -m 1 ed18a632e45785e3392cf96b9683ca033a74b1f8
->=20
-> fixes the issue so I'm thinking it must be one of the patches you guys ha=
-ve
-> there.
->=20
-> Ideas?
+On 5/13/25 10:26 AM, Krzysztof Kozlowski wrote:
+> On 12/05/2025 21:38, Konrad Dybcio wrote:
+>>>>>  arch/arm64/boot/dts/qcom/sm8750.dtsi | 122 +++++++++++++++++++++++++++++++++++
+>>>>>  1 file changed, 122 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+>>>>> index 149d2ed17641a085d510f3a8eab5a96304787f0c..1e7aa25c675e76ce6aa571e04d7117b8c2ab25f8 100644
+>>>>> --- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
+>>>>> +++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+>>>>> @@ -2257,6 +2257,36 @@ lpass_wsa2macro: codec@6aa0000 {
+>>>>>  			#sound-dai-cells = <1>;
+>>>>>  		};
+>>>>>  
+>>>>> +		swr3: soundwire@6ab0000 {
+>>>>> +			compatible = "qcom,soundwire-v2.0.0";
+>>>>
+>>>> They're v2.1.0, same on 8650, there's a number of new registers
+>>>
+>>> Sorry, but no. This the "generic" compatible and it is correct. Devices
+>>> expose versions, which is perfectly usable, thus changing compatible to
+>>> different one is not useful. We could go with soc specific compatibles
+>>> and new generic one, but what would that solve? This one is generic
+>>> enough - the device is compatible with v2.0.
+>>
+>> Well, I'd expect a "2.1.0", "2.0.0" fallback there..
+> 
+> OK, let's see if any DT maintainer will ack such thing. :)
 
-Yes probably.
+They sure did in e.g.
 
-So what's happened is that previously if you call sha256_update
-=66rom lib/crypto it would only use the generic C code to perform
-the operation.
+83adc98ec0d8 ("dt-bindings: dma: Add support for SM6115 and QCM2290 SoCs")
 
-This has now been changed to automatically use SIMD instructions
-which obviously blew up in your case.
-
-Eric, can you please take a look at this crash? It looks like
-crypto_simd_usable returned true, but kernel_fpu_begin still
-crashed for some reason.  One of them must be wrong :)
-
-Thanks,
-
-> 02:05:36  [ 3129.220448] systemd[1]: systemd-timedated.service: Deactivat=
-ed successfully.
-> 02:05:36  [ 3129.252398] systemd[1]: systemd-hostnamed.service: Deactivat=
-ed successfully.
-> 02:06:54  [ 3199.347946] smpboot: CPU 1 is now offline
-> 02:06:54  [ 3199.375693] smpboot: Booting Node 0 Processor 1 APIC 0x2
-> 02:06:54  [ 3199.381723] Oops: invalid opcode: 0000 [#1] SMP NOPTI
-> 02:06:54  [ 3199.387364] CPU: 1 UID: 0 PID: 0 Comm: swapper/1 Kdump: load=
-ed Not tainted 6.15.0-rc6-next-20250515-484803582c77-1747374910702 #1 PREEM=
-PT(voluntary)=20
-> 02:06:54  [ 3199.402308] Hardware name: AMD Corporation Cinnabar/Cinnabar=
-, BIOS RCB100DB 08/09/2024
-> 02:06:54  [ 3199.411140] RIP: 0010:kernel_fpu_begin_mask+0x58/0xc0
-> 02:06:54  [ 3199.416779] Code: 65 c6 05 9a c8 ad 02 01 f7 47 2c 00 40 20 =
-00 74 4f 65 48 c7 05 95 c8 ad 02 00 00 00 00 f6 c3 02 74 0d c7 44 24 04 80 =
-1f 00 00 <0f> ae 54 24 04 83 e3 01 75 47 48 8b 44 24 08 65 48 2b 05 49 97 ad
-> 02:06:54  [ 3199.437736] RSP: 0000:ff3a2270c019fd98 EFLAGS: 00010002
-> 02:06:54  [ 3199.443568] RAX: 0000000000000046 RBX: 0000000000000002 RCX:=
- 0000000000000000
-> 02:06:54  [ 3199.451528] RDX: 0000000000000057 RSI: ff380c5800eba000 RDI:=
- ff380c5800eec280
-> 02:06:54  [ 3199.459487] RBP: ff3a2270c019fe30 R08: 0000000000000000 R09:=
- ff380c8684245078
-> 02:06:54  [ 3199.467446] R10: 0000000000000000 R11: 0000000000000000 R12:=
- ff380c5800eba000
-> 02:06:54  [ 3199.475405] R13: 0000000000000057 R14: 00000000000015c0 R15:=
- 00000000000015c0
-> 02:06:54  [ 3199.483364] FS:  0000000000000000(0000) GS:ff380c86d4935000(=
-0000) knlGS:0000000000000000
-> 02:06:54  [ 3199.492391] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> 02:06:54  [ 3199.498801] CR2: 0000000000000000 CR3: 000000304b82a000 CR4:=
- 00000000003318b0
-> 02:06:54  [ 3199.506761] Call Trace:
-> 02:06:54  [ 3199.509487]  <TASK>
-> 02:06:54  [ 3199.511825]  sha256_blocks_simd+0x23/0x50
-> 02:06:54  [ 3199.516303]  sha256_update+0x73/0x100
-> 02:06:54  [ 3199.520381]  sha256+0x70/0xa0
-> 02:06:54  [ 3199.523690]  ? __smp_call_single_queue+0xb0/0x120
-> 02:06:54  [ 3199.528939]  ? srso_alias_return_thunk+0x5/0xfbef5
-> 02:06:54  [ 3199.534285]  ? bsearch+0x57/0x90
-> 02:06:54  [ 3199.537884]  ? __pfx_cmp_id+0x10/0x10
-> 02:06:54  [ 3199.541968]  __apply_microcode_amd+0xf1/0x1c0
-> 02:06:54  [ 3199.546827]  ? srso_alias_return_thunk+0x5/0xfbef5
-> 02:06:54  [ 3199.552169]  ? srso_alias_return_thunk+0x5/0xfbef5
-> 02:06:54  [ 3199.557511]  ? cpu_init_exception_handling+0x1fe/0x2c0
-> 02:06:54  [ 3199.563241]  ? srso_alias_return_thunk+0x5/0xfbef5
-> 02:06:54  [ 3199.568584]  apply_microcode_amd+0xca/0x110
-> 02:06:54  [ 3199.573251]  start_secondary+0x24/0x140
-> 02:06:54  [ 3199.577531]  ? srso_alias_return_thunk+0x5/0xfbef5
-> 02:06:54  [ 3199.582872]  common_startup_64+0x13e/0x141
-> 02:06:54  [ 3199.587446]  </TASK>
-> 02:06:54  [ 3199.589877] Modules linked in: iscsi_target_mod target_core_=
-mod binfmt_misc xt_CHECKSUM xt_MASQUERADE xt_conntrack ipt_REJECT nft_compa=
-t nf_nat_tftp nf_conntrack_tftp overlay snd_seq_dummy snd_hrtimer snd_seq s=
-nd_seq_device snd_timer snd soundcore nft_fib_inet nft_fib_ipv4 nft_fib_ipv=
-6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct n=
-ft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 rfkill ip_se=
-t nf_tables nfnetlink sunrpc vfat fat amd_atl intel_rapl_msr intel_rapl_com=
-mon amd64_edac edac_mce_amd kvm_amd ipmi_ssif kvm mlx5_ib irqbypass cdc_eth=
-er ib_uverbs usbnet rapl mii wmi_bmof pcspkr dax_hmem acpi_cpufreq ib_core =
-acpi_ipmi i2c_piix4 k10temp i2c_smbus ipmi_si ipmi_devintf ipmi_msghandler =
-i2c_designware_platform i2c_designware_core sch_fq_codel xfs ast drm_client=
-_lib i2c_algo_bit drm_shmem_helper mlx5_core ahci drm_kms_helper libahci ml=
-xfw tls nvme ghash_clmulni_intel sha512_ssse3 drm tg3 psample pci_hyperv_in=
-tf libata ccp nvme_core sp5100_tco wmi dm_mirror dm_region_hash dm_log
-
---=20
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Konrad
