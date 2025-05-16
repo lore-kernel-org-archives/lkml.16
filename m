@@ -1,168 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF05F2417C6;
-	Fri, 16 May 2025 13:10:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B991F1E521E;
+	Fri, 16 May 2025 13:11:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747401012; cv=none; b=Vuv6loCn9AhloVCRnxcUEKg99TYdGh8Zrx/8HXQvIO41gyCI4rRc9MUUtBR/kivAmuq61DblAR4wrVEhCuTAg3JRtpxy/N/k2bM+M/daDSTwvUp8wO08QhDDlchb/5S6rpcDXz6sqVdTzgluwetbATJuogyaX6g857fAZRfanOM=
+	t=1747401081; cv=none; b=DDNty2SWAp7en8y89iUISDPRHEWh4hhv+Bp/I0Id3QU20P29+JVvatZMKEhrBkpmzWJgxPV7c9Y4VCwftC8dx8wcU+MSTXQVY1uTmDdfhqSctQp4O+ZppLGjreB6owBfZhiH59fT9TghrneuLHJp4UYI3T1X+bcyrgZUpReJwAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747401012; c=relaxed/simple;
-	bh=f3bSpBjDNhpmuG7CwGPUxc40Ow4uGBBx47VJXM4QwWE=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JHE8vlcCHQKkPDOrZNU0p7ZRP8kBr+URWXdltgf4PcjWNPQNGXkCUkQh6+lSzDzmXmGKmTWC1DdKTU6ZHlwyQl9ojGgkg9DBfNzFILCeVMzX5hV5IH0Hy4vvA1eQRKE9Jyo1DpuZfdHTcf13qAz6u8JC3/cFtH/fDtc2gxRmi7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BvOyR4z9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747401081; c=relaxed/simple;
+	bh=Y5IJQArWKZojIwz8YwoWpp+zcmIA7tz4vRRbPRaHX8E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j0MlzmWi4eH/9hJf/gibERIQWQUsf5N39A6JVX4hKjneShrf1fMogPd0cvbLcoYbzpjXJvr0v3mPz58jmL2G1jVBjDPlxmXaIDTv82QURYFYZ+L1ImRz0khllAabIesiJhWrDzpIhKQJRiWk5CP1TURiRdX9atRTjC2Q8869aKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NhJ0nrPV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BvOyR4z9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CF00C4CEE4;
-	Fri, 16 May 2025 13:10:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NhJ0nrPV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2951C4CEE4;
+	Fri, 16 May 2025 13:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747401010;
-	bh=f3bSpBjDNhpmuG7CwGPUxc40Ow4uGBBx47VJXM4QwWE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BvOyR4z9k89vA4LEiLj1r7wo8xfwWz8ngi5XkjnLeTrmDfXKR5LfcHzLx+ICH83tb
-	 fn766OyuVwFC8G7gkvwlOfmWd+rzsMZQQ+c2vyiehlT22B/8VDWocVfqBUvNfrV1oE
-	 IrsAn41sy+W5GsanX+V1llzb4GNl8InClIxuVjtTjIzWGWp1DVPZScn9csjaqpSOV0
-	 pg8TEEW0JLoPrdTPtsZbpO64B/OjtJOnfCoOxutffY9lGhtt/rjmrR7mb7bEY4KvxD
-	 KfxVHthYyX+R0MGIFwFhKd0bc+kBkEiBxeL+nuadmHZ9kiOQoMA0XYw4URmB6d6DE5
-	 iUxQjayLGu+hg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uFupD-00FYsP-P5;
-	Fri, 16 May 2025 14:10:08 +0100
-Date: Fri, 16 May 2025 14:10:06 +0100
-Message-ID: <868qmwg0r5.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	qperret@google.com,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kernel-team@android.com
-Subject: Re: [PATCH v4 03/10] KVM: arm64: Add a range to __pkvm_host_share_guest()
-In-Reply-To: <20250509131706.2336138-4-vdonnefort@google.com>
-References: <20250509131706.2336138-1-vdonnefort@google.com>
-	<20250509131706.2336138-4-vdonnefort@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1747401081;
+	bh=Y5IJQArWKZojIwz8YwoWpp+zcmIA7tz4vRRbPRaHX8E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NhJ0nrPVTAVitrgm8e+OIzyODhuLG8+lk7vnbSiF8TUaEDcDJUtUFjspR3GY8WaPb
+	 HeYn6Le7+IwF+tt4EWa49aucCnxIUlUhIoQAVJZmI8Avq1TF8k90jGf3yO97bVh1cr
+	 fDUMrnicgpvwv7UcsYqgrYn2Y8LspbBOXo9cl+0xCJDFGquOZ1KmBkvyMbTOD0pMi9
+	 JrNbmZv9eNv5B26MyOguTePssoW+Ja8TNdIAQDde4JWZOHE2Z7dcItgUdYQrBOfclM
+	 2eaPL6i1IXfMODxv+2wj2MVuB+ZJBk2vjkWWnIqHQDp301yJD38tF9adtzqFaBdJAy
+	 xmmVyV76bk+rg==
+Date: Fri, 16 May 2025 15:11:14 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Kieran Bingham <kbingham@kernel.org>,
+	Michael Roth <michael.roth@amd.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Brijesh Singh <brijesh.singh@amd.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Juergen Gross <jgross@suse.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-efi@vger.kernel.org, linux-mm@kvack.org,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCHv3 0/4] x86: Make 5-level paging support unconditional for
+ x86-64
+Message-ID: <aCc5cm_ZC-y9OnyA@gmail.com>
+References: <20250516123306.3812286-1-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: vdonnefort@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, qperret@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250516123306.3812286-1-kirill.shutemov@linux.intel.com>
 
-On Fri, 09 May 2025 14:16:59 +0100,
-Vincent Donnefort <vdonnefort@google.com> wrote:
+
+* Kirill A. Shutemov <kirill.shutemov@linux.intel.com> wrote:
+
+> Both Intel and AMD CPUs support 5-level paging, which is expected to
+> become more widely adopted in the future.
 > 
-> In preparation for supporting stage-2 huge mappings for np-guest. Add a
-> nr_pages argument to the __pkvm_host_share_guest hypercall. This range
-> supports only two values: 1 or PMD_SIZE / PAGE_SIZE (that is 512 on a
-> 4K-pages system).
+> Remove CONFIG_X86_5LEVEL.
 > 
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> In preparation to that remove CONFIG_DYNAMIC_MEMORY_LAYOUT and make
+> SPARSEMEM_VMEMMAP the only memory model.
 > 
-> diff --git a/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h b/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h
-> index 26016eb9323f..47aa7b01114f 100644
-> --- a/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h
-> +++ b/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h
-> @@ -39,7 +39,7 @@ int __pkvm_host_donate_hyp(u64 pfn, u64 nr_pages);
->  int __pkvm_hyp_donate_host(u64 pfn, u64 nr_pages);
->  int __pkvm_host_share_ffa(u64 pfn, u64 nr_pages);
->  int __pkvm_host_unshare_ffa(u64 pfn, u64 nr_pages);
-> -int __pkvm_host_share_guest(u64 pfn, u64 gfn, struct pkvm_hyp_vcpu *vcpu,
-> +int __pkvm_host_share_guest(u64 pfn, u64 gfn, u64 nr_pages, struct pkvm_hyp_vcpu *vcpu,
->  			    enum kvm_pgtable_prot prot);
->  int __pkvm_host_unshare_guest(u64 gfn, struct pkvm_hyp_vm *hyp_vm);
->  int __pkvm_host_relax_perms_guest(u64 gfn, struct pkvm_hyp_vcpu *vcpu, enum kvm_pgtable_prot prot);
-> diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> index 59db9606e6e1..4d3d215955c3 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> @@ -245,7 +245,8 @@ static void handle___pkvm_host_share_guest(struct kvm_cpu_context *host_ctxt)
->  {
->  	DECLARE_REG(u64, pfn, host_ctxt, 1);
->  	DECLARE_REG(u64, gfn, host_ctxt, 2);
-> -	DECLARE_REG(enum kvm_pgtable_prot, prot, host_ctxt, 3);
-> +	DECLARE_REG(u64, nr_pages, host_ctxt, 3);
-> +	DECLARE_REG(enum kvm_pgtable_prot, prot, host_ctxt, 4);
->  	struct pkvm_hyp_vcpu *hyp_vcpu;
->  	int ret = -EINVAL;
->  
-> @@ -260,7 +261,7 @@ static void handle___pkvm_host_share_guest(struct kvm_cpu_context *host_ctxt)
->  	if (ret)
->  		goto out;
->  
-> -	ret = __pkvm_host_share_guest(pfn, gfn, hyp_vcpu, prot);
-> +	ret = __pkvm_host_share_guest(pfn, gfn, nr_pages, hyp_vcpu, prot);
->  out:
->  	cpu_reg(host_ctxt, 1) =  ret;
->  }
-> diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-> index 4d269210dae0..f0f7c6f83e57 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-> @@ -696,10 +696,9 @@ static enum pkvm_page_state guest_get_page_state(kvm_pte_t pte, u64 addr)
->  	return pkvm_getstate(kvm_pgtable_stage2_pte_prot(pte));
->  }
->  
-> -static int __guest_check_page_state_range(struct pkvm_hyp_vcpu *vcpu, u64 addr,
-> +static int __guest_check_page_state_range(struct pkvm_hyp_vm *vm, u64 addr,
->  					  u64 size, enum pkvm_page_state state)
->  {
-> -	struct pkvm_hyp_vm *vm = pkvm_hyp_vcpu_to_hyp_vm(vcpu);
->  	struct check_walk_data d = {
->  		.desired	= state,
->  		.get_page_state	= guest_get_page_state,
-> @@ -908,48 +907,81 @@ int __pkvm_host_unshare_ffa(u64 pfn, u64 nr_pages)
->  	return ret;
->  }
->  
-> -int __pkvm_host_share_guest(u64 pfn, u64 gfn, struct pkvm_hyp_vcpu *vcpu,
-> +static int __guest_check_transition_size(u64 phys, u64 ipa, u64 nr_pages, u64 *size)
-> +{
-> +	if (nr_pages == 1) {
-> +		*size = PAGE_SIZE;
-> +		return 0;
-> +	}
-> +
-> +	/* We solely support PMD_SIZE huge-pages */
-> +	if (nr_pages != (1 << (PMD_SHIFT - PAGE_SHIFT)))
-> +		return -EINVAL;
+> v3:
+>  - Drop few "#if CONFIG_PGTABLE_LEVELS >= 5";
+>  - Make PARAVIRT_XXL 64-bit explicitly and drop ifdefs
+>    to support PGTABLE_LEVELS < 5;
+>  - Add Reviewed-by tags from Ard;
+> v2:
+>  - Fix 32-bit build by wrapping p4d_set_huge() and p4d_clear_huge() in
+>    #if CONFIG_PGTABLE_LEVELS > 4;
+>  - Rebased onto current tip/master;
 
-I'm not really keen on the whole PxD nomenclature. What we really care
-about is a mapping level (level 2 in this instance). Can we instead
-use kvm_granule_size()?  Something like:
+Wow, -v1 was sent almost a year ago. :-)
 
-	if ((nr_page * PAGE_SIZE) != kvm_granule_size(2))
-		return -EINVAL;
+> Kirill A. Shutemov (4):
+>   x86/64/mm: Always use dynamic memory layout
+>   x86/64/mm: Make SPARSEMEM_VMEMMAP the only memory model
+>   x86/64/mm: Make 5-level paging support unconditional
+>   x86/paravirt: Restrict PARAVIRT_XXL to 64-bit only
 
-> +
-> +	if (!IS_ALIGNED(phys | ipa, PMD_SIZE))
-> +		return -EINVAL;
-> +
-> +	*size = PMD_SIZE;
+>  24 files changed, 14 insertions(+), 142 deletions(-)
 
-Similar things here. But also, should this level-2 block checking be
-moved to the patch that actually allows block mapping?
+Okay, this series makes a lot of sense, because in practice all major 
+distros have 5-level paging enabled:
+
+  .config.opensuse.default:     CONFIG_X86_5LEVEL=y
+  .config.ubuntu.localinstall:  CONFIG_X86_5LEVEL=y
+  .config.fedora.generic:       CONFIG_X86_5LEVEL=y
+  .config.rhel.generic:         CONFIG_X86_5LEVEL=y
+
+So the !CONFIG_X86_5LEVEL case gets very little runtime testing by 
+distributions and users.
+
+So I've applied the first two patches to tip:x86/core:
+
+  x86/mm/64: Always use dynamic memory layout
+  x86/mm/64: Make SPARSEMEM_VMEMMAP the only memory model
+
+as they are fairly straightforward.
+
+Patch #3:
+
+  x86/64/mm: Make 5-level paging support unconditional
+
+... might have to wait until after v6.16-rc1, as it's a higher risk 
+patch.
+
+  x86/paravirt: Restrict PARAVIRT_XXL to 64-bit only
+
+... and this one depends on patch #3.
+
+Does this approach sound good to everyone?
 
 Thanks,
 
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+	Ingo
