@@ -1,112 +1,161 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B6C282E1;
-	Fri, 16 May 2025 13:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C3F17993
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 13:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747403324; cv=none; b=q4L+EakTWfj6U/CnY0v2bXCILs1o7YeVkB0NP7KkdQMvo8sYYbZh82JN6kG139WZWhAnTNoTfVp/+ZPpbt0v+gpT/YHvsOySVjxTZQSItc2z1ldtn9Pn512DC0tc6HHz15hZ+qFP15ZLJi8tfXCYyfPaPz3arjiKQhrLiNrmQh8=
+	t=1747403394; cv=none; b=uqYffvjocjz+RYXGbEy5cZJyh4LYVZQuwNQfk9uz2fIJkx6+uBddclWjwh5gL2zXZ5pp/fIUaRKiPuxW6eSaUNY5pmFy45yPyLAYhGG235hM5YPcF6eIii0qxsq7YBqo/r9Z6ETnF1oVxwEEiCTnB4JeyRWy0nM4MdaGz+7bRj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747403324; c=relaxed/simple;
-	bh=1seJfpztGifwrs2PlCOfDt1rbHiWcewWmKq+VA0FAF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iKhTqY9c1GNVO7WjRwBUKJZwkdURHiJElnoemK/su1epW+HaX5aVBV04rOmZ9waQkkfdZDNRsjXo8FA/tGQHNUm2uWWi/d77FZr5RHnCW4KQyjHD55tlxvY5YYO65U0y+Ehnvu5nra5Drg4yfmcMoIyfHNM9lJNKH5zi1DHom2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2317d94c9cdso19891565ad.2;
-        Fri, 16 May 2025 06:48:42 -0700 (PDT)
+	s=arc-20240116; t=1747403394; c=relaxed/simple;
+	bh=Nie+wA2lEKwH2I614ELhqO2d8Vq+8E2sjK5/V77zdAE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rqqOXQND24nQjQXflY6Sc3Uif8jQ6RPimgkmNmVP7htyI/fmPj4gRq/jCViTDIfmE1s4lwzQ9rPXKKCbFaOTD3Z2JM49rCw5QBO/9VWzEvXC3csG31aEJiJ9eRmOIRxjIZ4Z1DV0Z/kbfzGLRTSrLUhKFnDJpWZW3xy5ebOn6yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=KTPjnA+b; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="KTPjnA+b"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5f62d3ed994so3984416a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:49:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google; t=1747403391; x=1748008191; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1+uWwuTYRifAYGUlGh3WRUvzHiTmLTWvHkuePmubcIY=;
+        b=KTPjnA+bF2/Q/ezQujB5JOF1TKpjrYvhCdJNfSzyn7G1sCJbG+LRhsmczVGxI6cGHa
+         RxC2uMiIh6oLpFLhMxsEq6tQ/g9opDv9gSHu0n5QxGkjNBeyvnk4D0zxdjdc/bY+y03A
+         ioq+zGV/kTBbPAi4vR0xsjSTASaTMPZd8w32k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747403322; x=1748008122;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GhLr0/qCcOcwsG1cKw2ZSqLBQlNdIjNVQR+oDfOQeX8=;
-        b=dnXl3YDC2Y/7auj+H36TRvjtZFVhRkrZOeQH/AKedb3exq+XfaKzBE9hRrIVpgZx97
-         1HdLmikBqkmbnE+qa1NOPQvr0zUWBMLUyF26a9V5yRLKLqLDe8wTb8N/Og/wWxXu1GEC
-         Dwy5AGNr5DL68lDaYJpTGIY5huw+MUQ6XuRFGYn/GbDnAo0Jtr2MFH/xjmjxb2uYtGGT
-         j6L6u/oflUM72m2jFFf0djS3qA7SQLCdEwpSfzO3e0spnLLBWqoF7iV1z98aeVOUi6PL
-         /SDSZ/QnmxmwWygtRwC5rvWgwrA2LxnQuVwNdxpqVc0F9JpvZRPqPooKmmpdwkWFdXxa
-         JQ0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUC9dPdMBQxIIeL/7bjPyS9wpTHFVqfkFHhsJxJN/2JvOQb9G98YY2Ol+ZtRhHqV7xhaY8QVBb1j/wlpaKI@vger.kernel.org, AJvYcCUrllLYHDNUKqZK24+WfJTrWfXvkPNlHpWQ++RSyXeWULwsEk5ybftEbxPZZagZ5P1Sw6uQImidgvQ=@vger.kernel.org, AJvYcCWMdHu/uNFxvSAErvDcwBPmY0vG9XseVoFj2Vx+C08hdyB/a9sIV1fX0wHwF+uX8KK2nk0CYbfX+EEV@vger.kernel.org
-X-Gm-Message-State: AOJu0YycJGofgvG/SDMql92fqofnsE2F/jKzmZPFJ5gOqlUQy9CxjhGV
-	DIVORAxwKMJraBEIyTh8Fco6ebaIaSZotT+lR+KBLXIlZJDBk/38VxCm6cXtCfcE5g9aSw==
-X-Gm-Gg: ASbGncvvJNLxefEYVppf7kT61OBFY4v4QSjNPOk/bXJdDtEUxje8MSJ2l6Axoi0mphv
-	HOC8Fdzf1kldYPJZlcCdKAc0mzXlTesIJH3adK2x8KoLlIyTOxloBl5CsYMgKkeP1XRv0fwOCbA
-	d1Sgmtu1ek2KuApinL0WOUs4qDP6C4keYG0ytCjtDQ7hqtKBBUyFJK1kNZu9R43A5UY6t7G/a0b
-	we6Tp9GT5aeR3R8sPiz1iUySCElg2Ts2z2XgAmFHmBcUttUxyGhguHyybhKs2QUznvVROAFBjwn
-	abRFTfjMschcIOgj0cL6dHn+yHwmOvSCthF+BAXs44whH6FrYVHXYC9D00vKBD4xK/y0Xf5W15T
-	UPDAxU26lWg==
-X-Google-Smtp-Source: AGHT+IEYfD34EnL3n4BF8sR+tYcouluejWmfRuBRsuFM5XUnqVVI85uppxwbmnFyye5xoQ1triIUXQ==
-X-Received: by 2002:a17:903:2ecd:b0:22c:2492:b96b with SMTP id d9443c01a7336-231d44e642amr45764445ad.15.1747403321674;
-        Fri, 16 May 2025 06:48:41 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-231d4e97537sm14316725ad.115.2025.05.16.06.48.41
+        d=1e100.net; s=20230601; t=1747403391; x=1748008191;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1+uWwuTYRifAYGUlGh3WRUvzHiTmLTWvHkuePmubcIY=;
+        b=DhtWfnRxz8OHxR9x0e+Fwf9eo4Mrl96aB64zY7zqH03Ml2M6D2+4Prbf+cJmAg/aR0
+         vf3PZU7vYUT1c9TXruGnWJCli9bhg3YfpYBUAnnqIpopYtR7PIEz7uHti+il+P5gcM27
+         zUb3uMSeoDX9q7dPLfYt7MQ6Wag44f3RZFnPLVCqYzarcacv6dIhgNEaWXuWMPbHipqy
+         /kLRE3aMp9zeSChobLmOoCUYoVBQhMcoiog5igKfgMyMqpBONh3FBAbQvzHeQFANqojR
+         CdWEKkFqAfsdPLhT72BNmyprxPJi7CIAi67MMkn2gJqGX/5oms3c9RBNbzvdMwPWOdmQ
+         5lAw==
+X-Gm-Message-State: AOJu0Yz+LPCmdQ1QENQUB+Rga2rZAepOJRCFE2OBrXV639Cknyoak2Gm
+	Snje1o/WC8uMC4t7hoJc37I0UClHDuC8sqS7enqAzmldOQEaxYUDLLhqBYXa0YPBHm8AM9K3FAU
+	u15NPO1Y=
+X-Gm-Gg: ASbGncsXB7jZpHYLUN2ovw0cWoKs70TZAZgxN9PyqZRuFy3+y1eQfTo3jpx73QcwGys
+	8cX3g6O877n4sxqNAI/jYBdelZvO5J2gdh5j/dv1shq4LdHjvI+twXUB95uaHuUbtT/1brzmt0/
+	KLMss3q0zMfmamMfbV0qB63H7mu+MtOuEGvT4Y9EdyLTOv3t40gI0hA4mZnzWQdGPyxvGKxyODj
+	ae5Ka8+eUIqzp1DJ4O1XXze1xmr/b0RL5YVwIt9nbDuNw9q7pwSEmi1ue3Q4OoHOk6EjTuH14sm
+	PFwofG2HzOF2X1hHL053qMN+vY+ShaG1uwbpI0HqYUucPq9UKbpbrVQAkUQRWB71W8UlwMszsGG
+	Fak6Adlqx+BPQAi8IHlHny9gAFfU=
+X-Google-Smtp-Source: AGHT+IFoN5V5sXxRw1p11CkmgQLqoxiXH8inT8H8fElyYIKPtuQteQwDowZG6nwQRuFNGWvPp8sSnA==
+X-Received: by 2002:a05:6402:27d1:b0:5fc:966b:23fa with SMTP id 4fb4d7f45d1cf-6008a39c9b8mr2906162a12.4.1747403391082;
+        Fri, 16 May 2025 06:49:51 -0700 (PDT)
+Received: from dario-ThinkPad-T14s-Gen-2i.. ([62.19.60.137])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6005a6e6389sm1562951a12.45.2025.05.16.06.49.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 06:48:41 -0700 (PDT)
-Date: Fri, 16 May 2025 22:48:39 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: phasta@kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Bjorn Helgaas <bhelgaas@google.com>,
+        Fri, 16 May 2025 06:49:50 -0700 (PDT)
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-amarula@amarulasolutions.com,
 	Mark Brown <broonie@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/7] Docu: PCI: Update pcim_enable_device()
-Message-ID: <20250516134839.GA3308019@rocinante>
-References: <20250515124604.184313-2-phasta@kernel.org>
- <20250515124604.184313-4-phasta@kernel.org>
- <aCXk2eDUJF2UbQ47@smile.fi.intel.com>
- <e44d880e842440d51c14f38df1d20176694e0d57.camel@mailbox.org>
- <20250516132811.GB2390647@rocinante>
- <2e80298be4bcb6b17f5b38302d6945306928c6b0.camel@mailbox.org>
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Abel Vesa <abelvesa@kernel.org>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Peng Fan <peng.fan@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Stephen Boyd <sboyd@kernel.org>,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org
+Subject: [linux-next, 1/1] clk: imx: imx8mm-anatop: probe only on i.MX8MM platforms
+Date: Fri, 16 May 2025 15:49:27 +0200
+Message-ID: <20250516134945.14692-1-dario.binacchi@amarulasolutions.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2e80298be4bcb6b17f5b38302d6945306928c6b0.camel@mailbox.org>
 
-Hello,
+Commit 9c1e388af87c ("clk: imx: add support for i.MX8MM anatop clock
+driver") breaks boot on i.MX8M{P,N} platforms.
 
-[...]
-> > > > Is the "Docu" prefix in thew Subject aligned with the git history
-> > > > of this file?
-> > > > 
-> > > 
-> > > Seems its "Documentation: ". Can fix.
-> > 
-> > Has Andy been sending his review off-list?  Or something is broken on
-> > my side...
-> 
-> Nope, it's on-list. Andy's a veteran ;-)
-> 
-> https://lore.kernel.org/linux-pci/aCXnPHy5heHCKVd_@smile.fi.intel.com/
+Here's the log for a board based on the i.MX8MP platform:
 
-Thank you!
+[    1.439320] i.MX clk 1: register failed with -2
+[    1.441014] i.MX clk 2: register failed with -2
+[    1.445610] imx8mm-anatop 30360000.clock-controller: NXP i.MX8MM anatop clock driver probed
+[    1.455068] Unable to handle kernel paging request at virtual address fffffffffffffffe
 
-I should have checked on lore, too.  Time to move to lei, I suppose...
+...
 
-> > Philipp, if you have a v2 ready, then I would love to pull it, while we
-> > await for more reviews, just to get enough soak time and allow for the
-> > 0-day and KernelCI to run their usual tests, etc.
-> > 
-> > Thank you!
-> 
-> I don't have it ready, but should be trivial to do, since it's not
-> fundamental critcism. I'll do my best.
+[    1.634650] Call trace:
+[    1.637102]  __clk_get_hw+0x4/0x18 (P)
+[    1.640862]  imx8mp_clocks_probe+0xdc/0x2f50
+[    1.645152]  platform_probe+0x68/0xc4
+[    1.648827]  really_probe+0xbc/0x298
+[    1.652413]  __driver_probe_device+0x78/0x12c
 
-I would be much obliged.
+In the imx8mp.dtsi device tree, the anatop compatible string is:
 
-Thank you!
+compatible = "fsl,imx8mp-anatop", "fsl,imx8mm-anatop";
 
-	Krzysztof
+So, in configurations like arm64 defconfig, where CONFIG_CLK_IMX8MP and
+CONFIG_CLK_IMX8MM as well as CONFIG_CLK_IMX8MN are enabled, the driver
+for the i.MX8MM anatop is incorrectly loaded.
+
+The patch fixes the regression by ensuring that the i.MX8MM anatop
+driver only probes on i.MX8MM platforms.
+
+Fixes: 9c1e388af87c ("clk: imx: add support for i.MX8MM anatop clock driver")
+Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+
+---
+
+ drivers/clk/imx/clk-imx8mm-anatop.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/drivers/clk/imx/clk-imx8mm-anatop.c b/drivers/clk/imx/clk-imx8mm-anatop.c
+index 4ac870df6370..90ff11a93fe5 100644
+--- a/drivers/clk/imx/clk-imx8mm-anatop.c
++++ b/drivers/clk/imx/clk-imx8mm-anatop.c
+@@ -37,6 +37,19 @@ static const char * const clkout_sels[] = {"audio_pll1_out", "audio_pll2_out", "
+ static struct clk_hw_onecell_data *clk_hw_data;
+ static struct clk_hw **hws;
+ 
++static int is_really_imx8mm(struct device_node *np)
++{
++	const char *compat;
++	struct property *p;
++
++	of_property_for_each_string(np, "compatible", p, compat) {
++		if (strcmp(compat, "fsl,imx8mm-anatop"))
++			return -EFAULT;
++	}
++
++	return 0;
++}
++
+ static int imx8mm_anatop_clocks_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -44,6 +57,10 @@ static int imx8mm_anatop_clocks_probe(struct platform_device *pdev)
+ 	void __iomem *base;
+ 	int ret;
+ 
++	ret = is_really_imx8mm(np);
++	if (ret)
++		return ret;
++
+ 	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base)) {
+ 		dev_err(dev, "failed to get base address\n");
+-- 
+2.43.0
+
+base-commit: 8566fc3b96539e3235909d6bdda198e1282beaed
+branch: fix-imx8mm-probing
