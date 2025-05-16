@@ -1,635 +1,205 @@
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72431194A6C;
-	Fri, 16 May 2025 18:54:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749F327AC4C
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 18:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747421692; cv=none; b=g0GZqglzqI4LeTCsSRXXa7zDu07ooNGFz/iyu0yub6howlqV/PmVtuUQVbg+k/GnTMrSukqov2StEwr1Wy+CYq/5sS02aoCz0E62vs4NydGnrCCysdHYjL+7JqNahq3ddAZ5COaTzKUMAYNFzqxgLejg/W7knW2S91ufeEIAW4s=
+	t=1747421736; cv=none; b=ij5UlQdl6W19GPHWfgsuqJ68X6vqBZk2q3ta535Kb7lAGo+6/KPZ6sc/DZBxMf6z28wlUuq/0Oajo/9xl8f9lh8S5q3jPOOLopAsWvZoY1qWPPZGdCp6pu8gno5V0+0Bp4OweIGmaQ7DmC4kbMZSzN6JEdl4qq+k0jokxTAh9PY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747421692; c=relaxed/simple;
-	bh=orZ/9ixknjV6B7jYgTXHdv0OWLfY21dMZMtGmHzgMWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b//fx2rX0IY26fRglnR4xIAj8m78ilWs1H8AZw+UUzWrffpYQNlIALQSCsBBbztgnCWYkqqPMhDOI1G5I0mH6m+9ULbYX7NLNhRJLGgR35dVTgMRPIh//1XU1lCm6vpIFH8+qRjBHDf9lrd6ZxEDLeaOoNXxJCENQO51QflNsfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=rFrm5qmR; arc=none smtp.client-ip=208.88.110.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
+	s=arc-20240116; t=1747421736; c=relaxed/simple;
+	bh=G3eptgK8Klfl0SQ0qKF2kBePOio3LIT52ROdnYjywmk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ow53ROUNRWv+mWa6PMixWPmiAHtZTTTW4+/WJTm8KyMEV2VY4mIsXx9KfzqcS8vwWfanD8KAJGD5kqrp85q2h2IBO+PQFtzKwejlULNet81S476ZV58+MoCPMzrhjPYx/yVGaaZH77xU5NqAFtfwh5z57dSDTPExD5OGWt5SlPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YzsoAMCv; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="rFrm5qmR"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 6A0199C9014;
-	Fri, 16 May 2025 14:54:49 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id gyaqBsXPLpV5; Fri, 16 May 2025 14:54:48 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id F002F9C9048;
-	Fri, 16 May 2025 14:54:47 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com F002F9C9048
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1747421688; bh=tEtiabgVuCm58NCzU9IY5RYYJP1UfGaqmi7K4Yy6MrA=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=rFrm5qmRkGNbmsKTVNCkg6bNY4E7MiY5PKce2sEnVCwCppc72rrlYuMc1df2mB3eo
-	 ZWsNqUWjNmRFD6LPIskuzAi+R87xUnMJeLDysqCWMjUa9YToh3Rwp9hoIkM0PLaajr
-	 fmaylwo/10LQ4fhwdOfG/Y3v66QJcaMkG3IaDbHAUshCPvUvVkif7lAQU2AR3SUs7N
-	 XXBnu8wN22hlXbfqQzM089RAP4nmQlCLpd3DfoFQWVUrb9vNBgYoWH3792OqbWz+JK
-	 4F7wT523SI8SZVb2UNuOTQ69ygWxBN/DMDNkSp+tUWbJiQIChc0R1hcg+6GCBCpnre
-	 W5zeqviiPnOkw==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id C9BBrA9AWwoa; Fri, 16 May 2025 14:54:47 -0400 (EDT)
-Received: from fedora (unknown [192.168.51.254])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id B0ABD9C9014;
-	Fri, 16 May 2025 14:54:47 -0400 (EDT)
-Date: Fri, 16 May 2025 14:54:46 -0400
-From: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
-To: Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Sebastian Reichel <sre@kernel.org>, Robin Gong <yibin.gong@nxp.com>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-imx@nxp.com, linux-input@vger.kernel.org,
-	Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>,
-	Robin Gong <b38343@freescale.com>,
-	Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: [PATCH v2 5/9] mfd: pf1550: add core mfd driver
-Message-ID: <85004e02a5177aef6334fc30494bb3924a58f1de.1747409892.git.samuel.kayode@savoirfairelinux.com>
-References: <cover.1747409892.git.samuel.kayode@savoirfairelinux.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YzsoAMCv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747421732;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Ncy0IOMN62OZsySnUUO+DO+ffjUqHUwVWIhcHttPrHk=;
+	b=YzsoAMCvKGDZtp00ZQ4KcdKqaiRh3Cfe4m9Wflxss5+DA1ymB/bIZohTFu89K8OFWXSxLh
+	UA9ChMbrAh58cgJwI+/eLwvF7tkLT+rZuq9BOl9T4fBXgEmfOKWOVhqst/zhzk5F6w3d43
+	G3wNF3idzMl4fEcHYFu3laITxwM35CQ=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-32-tYGrDB20OVaYqihL7QL2Jw-1; Fri, 16 May 2025 14:55:31 -0400
+X-MC-Unique: tYGrDB20OVaYqihL7QL2Jw-1
+X-Mimecast-MFC-AGG-ID: tYGrDB20OVaYqihL7QL2Jw_1747421730
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43eed325461so13906905e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:55:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747421730; x=1748026530;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Ncy0IOMN62OZsySnUUO+DO+ffjUqHUwVWIhcHttPrHk=;
+        b=dXcZERPcMU5ED/k6H/JH76iGOCSuYwgLjGIXHCWX6VPCAwrswrUcraVnxff4NiemZE
+         IXsaUtYKV9f3DbMakUd8JjaYIF9I/gceKW5yXhYzcOGI6PIea4Vykh619X8dP2v3x5/5
+         x08B6mJSoZgHQwG1KFdCHy4L/wARGSVYMkW1EzQwtPJCPdOE1SZ4CtWP7TT4Pix/BOFu
+         WE4KHWaLdmm1pH+VV2D+w2ChHqFvpMS/5tR+kag+ltI7L4P5F1F2vW9EDy9wh1u/uiwa
+         4W88h3JlwtIs/tZK9/fYK34ZYKbWh/4i6C2PMkCRDXKEr2LwRkvn/s81PHgf/Hdwb06I
+         phlw==
+X-Gm-Message-State: AOJu0YwrF/DW+9yf6gto5skNG3Aca99PY3qviSPXwxxpW0vX0jsIGI1N
+	QN+xuko0lG9xIfiV4wcBuG5V5I38C4/zU1bl3TiEMU/QabM77f/lJUhncDoFQid0uhMQfHcr/2Z
+	Msh1/+PVfjjBnTovS333dlL9NeYi7V2PMjLB+wZnXBbLkSZYK0iis6YHlSLsIeyUUWQ==
+X-Gm-Gg: ASbGncuI3YeYqvleZL/BTFAqorZc2HIdD0C5QbNEaiAqt7O2zh+0K6kz0sOCfnmjgPP
+	3OkTWVfNZg793En9nwwIUZFF9rpMWmdU/jOll87l3Q8g9e/Jsl8gXD/7J7ZjniHBY3qQHSZdcOT
+	m0Hd+btQ1Ah9QDg8XkPeO2tCKkOpc4QKyeR5Xe9ytD6D9pOA5g6twa39+IzCEElrBLxtoBIxLzf
+	LbCAKlSTh95uk36tigm6h/LYj6xfuJGBSICh3pT4lDj4HuTV2doBVS4ubClMPk0dJNe0GSUsx5k
+	BcOzQ+vL9S9HWIese2HFDbSuzpXrq6igFGHOowIAYg==
+X-Received: by 2002:a05:6000:1acf:b0:3a2:25d3:3912 with SMTP id ffacd0b85a97d-3a3601d0869mr3566035f8f.57.1747421729866;
+        Fri, 16 May 2025 11:55:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFnvFvNMoXbCy664/fMYQNUZNHGmO5/8svXPk9nFJJT/F2j7rlj0r91U2NP66XBmlT+dm2IQA==
+X-Received: by 2002:a05:6000:1acf:b0:3a2:25d3:3912 with SMTP id ffacd0b85a97d-3a3601d0869mr3566005f8f.57.1747421729439;
+        Fri, 16 May 2025 11:55:29 -0700 (PDT)
+Received: from [192.168.3.141] (p57a1ac29.dip0.t-ipconnect.de. [87.161.172.41])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a363d1fba6sm1606167f8f.95.2025.05.16.11.55.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 May 2025 11:55:29 -0700 (PDT)
+Message-ID: <8811fc8a-5f1a-4a1b-883b-f006da844e55@redhat.com>
+Date: Fri, 16 May 2025 20:55:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1747409892.git.samuel.kayode@savoirfairelinux.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/3] s390/uv: handle folios that cannot be split while
+ dirty
+To: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+ kvm@vger.kernel.org, linux-mm@kvack.org,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>,
+ Thomas Huth <thuth@redhat.com>, Matthew Wilcox <willy@infradead.org>,
+ Zi Yan <ziy@nvidia.com>, Sebastian Mitterle <smitterl@redhat.com>
+References: <20250516123946.1648026-1-david@redhat.com>
+ <20250516190755.32917d48@p-imbrenda>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250516190755.32917d48@p-imbrenda>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add the core mfd driver for pf1550 PMIC. There are 3 subdevices for
-which the drivers will be added in subsequent patches.
+On 16.05.25 19:07, Claudio Imbrenda wrote:
+> On Fri, 16 May 2025 14:39:43 +0200
+> David Hildenbrand <david@redhat.com> wrote:
+> 
+>>  From patch #3:
+>>
+>> "
+>> Currently, starting a PV VM on an iomap-based filesystem with large
+>> folio support, such as XFS, will not work. We'll be stuck in
+>> unpack_one()->gmap_make_secure(), because we can't seem to make progress
+>> splitting the large folio.
+>>
+>> The problem is that we require a writable PTE but a writable PTE under such
+>> filesystems will imply a dirty folio.
+>>
+>> So whenever we have a writable PTE, we'll have a dirty folio, and dirty
+>> iomap folios cannot currently get split, because
+>> split_folio()->split_huge_page_to_list_to_order()->filemap_release_folio()
+>> will fail in iomap_release_folio().
+>>
+>> So we will not make any progress splitting such large folios.
+>> "
+>>
+>> Let's fix one related problem during unpack first, to then handle such
+>> folios by triggering writeback before immediately trying to split them
+>> again.
+>>
+>> This makes it work on XFS with large folios again.
+>>
+>> Long-term, we should cleanly supporting splitting such folios even
+>> without writeback, but that's a bit harder to implement and not a quick
+>> fix.
+> 
+> yet another layer of duck tape
+> 
+> I really dislike the current interaction between secure execution and
+> I/O, I hope I can get a cleaner solution as soon as possible
 
-Signed-off-by: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
----
- drivers/mfd/Kconfig        |  14 ++
- drivers/mfd/Makefile       |   2 +
- drivers/mfd/pf1550.c       | 254 +++++++++++++++++++++++++++++++++++++
- include/linux/mfd/pf1550.h | 246 +++++++++++++++++++++++++++++++++++
- 4 files changed, 516 insertions(+)
- create mode 100644 drivers/mfd/pf1550.c
- create mode 100644 include/linux/mfd/pf1550.h
+I'll be more than happy to review such a series -- hoping we can just 
+support large folios naturally :)
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 22b936310039..e2c2d1d798f3 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -558,6 +558,20 @@ config MFD_MX25_TSADC
- 	  i.MX25 processors. They consist of a conversion queue for general
- 	  purpose ADC and a queue for Touchscreens.
- 
-+config MFD_PF1550
-+	tristate "Freescale Semiconductor PF1550 PMIC Support"
-+	depends on I2C=y
-+	select MFD_CORE
-+	select REGMAP_I2C
-+	select REGMAP_IRQ
-+	help
-+	  Say yes here to add support for Freescale Semiconductor PF1550.
-+	  This is a companion Power Management IC with regulators, ONKEY,
-+	  and charger control on chip.
-+	  This driver provides common support for accessing the device;
-+	  additional drivers must be enabled in order to use the functionality
-+	  of the device.
-+
- config MFD_HI6421_PMIC
- 	tristate "HiSilicon Hi6421 PMU/Codec IC"
- 	depends on OF
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 948cbdf42a18..c4f270c5538a 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -120,6 +120,8 @@ obj-$(CONFIG_MFD_MC13XXX)	+= mc13xxx-core.o
- obj-$(CONFIG_MFD_MC13XXX_SPI)	+= mc13xxx-spi.o
- obj-$(CONFIG_MFD_MC13XXX_I2C)	+= mc13xxx-i2c.o
- 
-+obj-$(CONFIG_MFD_PF1550)	+= pf1550.o
-+
- obj-$(CONFIG_MFD_CORE)		+= mfd-core.o
- 
- ocelot-soc-objs			:= ocelot-core.o ocelot-spi.o
-diff --git a/drivers/mfd/pf1550.c b/drivers/mfd/pf1550.c
-new file mode 100644
-index 000000000000..6b5bdd9a1630
---- /dev/null
-+++ b/drivers/mfd/pf1550.c
-@@ -0,0 +1,254 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * pf1550.c - mfd core driver for the PF1550
-+ *
-+ * Copyright (C) 2016 Freescale Semiconductor, Inc.
-+ * Robin Gong <yibin.gong@freescale.com>
-+ *
-+ * This driver is based on max77693.c
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mfd/pf1550.h>
-+#include <linux/of.h>
-+#include <linux/regmap.h>
-+
-+static const struct mfd_cell pf1550_devs[] = {
-+	{
-+		.name = "pf1550-regulator",
-+		.of_compatible = "fsl,pf1550-regulator",
-+	},
-+	{
-+		.name = "pf1550-onkey",
-+		.of_compatible = "fsl,pf1550-onkey",
-+	},
-+	{
-+		.name = "pf1550-charger",
-+		.of_compatible = "fsl,pf1550-charger",
-+	},
-+};
-+
-+static const struct regmap_config pf1550_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = PF1550_PMIC_REG_END,
-+};
-+
-+static const struct regmap_irq pf1550_regulator_irqs[] = {
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_SW1_LS,	       0, PMIC_IRQ_SW1_LS),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_SW2_LS,	       0, PMIC_IRQ_SW2_LS),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_SW3_LS,	       0, PMIC_IRQ_SW3_LS),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_SW1_HS,	       3, PMIC_IRQ_SW1_HS),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_SW2_HS,	       3, PMIC_IRQ_SW2_HS),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_SW3_HS,	       3, PMIC_IRQ_SW3_HS),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_LDO1_FAULT,    16, PMIC_IRQ_LDO1_FAULT),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_LDO2_FAULT,    16, PMIC_IRQ_LDO2_FAULT),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_LDO3_FAULT,    16, PMIC_IRQ_LDO3_FAULT),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_TEMP_110,      22, PMIC_IRQ_TEMP_110),
-+	REGMAP_IRQ_REG(PF1550_PMIC_IRQ_TEMP_125,      22, PMIC_IRQ_TEMP_125),
-+};
-+
-+static const struct regmap_irq_chip pf1550_regulator_irq_chip = {
-+	.name			= "pf1550-regulator",
-+	.status_base		= PF1550_PMIC_REG_SW_INT_STAT0,
-+	.mask_base		= PF1550_PMIC_REG_SW_INT_MASK0,
-+	.num_regs		= 23,
-+	.irqs			= pf1550_regulator_irqs,
-+	.num_irqs		= ARRAY_SIZE(pf1550_regulator_irqs)
-+};
-+
-+static const struct regmap_irq pf1550_onkey_irqs[] = {
-+	REGMAP_IRQ_REG(PF1550_ONKEY_IRQ_PUSHI,  0, ONKEY_IRQ_PUSHI),
-+	REGMAP_IRQ_REG(PF1550_ONKEY_IRQ_1SI,	0, ONKEY_IRQ_1SI),
-+	REGMAP_IRQ_REG(PF1550_ONKEY_IRQ_2SI,	0, ONKEY_IRQ_2SI),
-+	REGMAP_IRQ_REG(PF1550_ONKEY_IRQ_3SI,	0, ONKEY_IRQ_3SI),
-+	REGMAP_IRQ_REG(PF1550_ONKEY_IRQ_4SI,	0, ONKEY_IRQ_4SI),
-+	REGMAP_IRQ_REG(PF1550_ONKEY_IRQ_8SI,    0, ONKEY_IRQ_8SI),
-+};
-+
-+static const struct regmap_irq_chip pf1550_onkey_irq_chip = {
-+	.name			= "pf1550-onkey",
-+	.status_base		= PF1550_PMIC_REG_ONKEY_INT_STAT0,
-+	.ack_base		= PF1550_PMIC_REG_ONKEY_INT_STAT0,
-+	.mask_base		= PF1550_PMIC_REG_ONKEY_INT_MASK0,
-+	.use_ack                = 1,
-+	.init_ack_masked	= 1,
-+	.num_regs		= 1,
-+	.irqs			= pf1550_onkey_irqs,
-+	.num_irqs		= ARRAY_SIZE(pf1550_onkey_irqs),
-+};
-+
-+static const struct regmap_irq pf1550_charger_irqs[] = {
-+	REGMAP_IRQ_REG(PF1550_CHARG_IRQ_BAT2SOCI,	0, CHARG_IRQ_BAT2SOCI),
-+	REGMAP_IRQ_REG(PF1550_CHARG_IRQ_BATI,		0, CHARG_IRQ_BATI),
-+	REGMAP_IRQ_REG(PF1550_CHARG_IRQ_CHGI,		0, CHARG_IRQ_CHGI),
-+	REGMAP_IRQ_REG(PF1550_CHARG_IRQ_VBUSI,		0, CHARG_IRQ_VBUSI),
-+	REGMAP_IRQ_REG(PF1550_CHARG_IRQ_THMI,		0, CHARG_IRQ_THMI),
-+};
-+
-+static const struct regmap_irq_chip pf1550_charger_irq_chip = {
-+	.name			= "pf1550-charger",
-+	.status_base		= PF1550_CHARG_REG_CHG_INT,
-+	.mask_base		= PF1550_CHARG_REG_CHG_INT_MASK,
-+	.num_regs		= 1,
-+	.irqs			= pf1550_charger_irqs,
-+	.num_irqs		= ARRAY_SIZE(pf1550_charger_irqs),
-+};
-+
-+int pf1550_read_otp(struct pf1550_dev *pf1550, unsigned int index,
-+		    unsigned int *val)
-+{
-+	int ret = 0;
-+
-+	ret = regmap_write(pf1550->regmap, PF1550_PMIC_REG_KEY, 0x15);
-+	if (ret)
-+		goto read_err;
-+	ret = regmap_write(pf1550->regmap, PF1550_CHARG_REG_CHGR_KEY2, 0x50);
-+	if (ret)
-+		goto read_err;
-+	ret = regmap_write(pf1550->regmap, PF1550_TEST_REG_KEY3, 0xAB);
-+	if (ret)
-+		goto read_err;
-+	ret = regmap_write(pf1550->regmap, PF1550_TEST_REG_FMRADDR, index);
-+	if (ret)
-+		goto read_err;
-+	ret = regmap_read(pf1550->regmap, PF1550_TEST_REG_FMRDATA, val);
-+	if (ret)
-+		goto read_err;
-+
-+	return 0;
-+
-+read_err:
-+	dev_err(pf1550->dev, "read otp reg %x found!\n", index);
-+	return ret;
-+}
-+
-+static int pf1550_i2c_probe(struct i2c_client *i2c)
-+{
-+	struct pf1550_dev *pf1550;
-+	unsigned int reg_data = 0;
-+	int ret = 0;
-+
-+	pf1550 = devm_kzalloc(&i2c->dev,
-+			      sizeof(struct pf1550_dev), GFP_KERNEL);
-+	if (!pf1550)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(i2c, pf1550);
-+	pf1550->dev = &i2c->dev;
-+	pf1550->i2c = i2c;
-+	pf1550->irq = i2c->irq;
-+
-+	pf1550->regmap = devm_regmap_init_i2c(i2c, &pf1550_regmap_config);
-+	if (IS_ERR(pf1550->regmap)) {
-+		ret = PTR_ERR(pf1550->regmap);
-+		dev_err(pf1550->dev, "failed to allocate register map: %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	ret = regmap_read(pf1550->regmap, PF1550_PMIC_REG_DEVICE_ID, &reg_data);
-+	if (ret < 0 || reg_data != PF1550_DEVICE_ID) {
-+		dev_err(pf1550->dev, "device not found!\n");
-+		return ret;
-+	}
-+
-+	pf1550->type = PF1550;
-+	dev_info(pf1550->dev, "pf1550 found.\n");
-+
-+	ret = devm_regmap_add_irq_chip(pf1550->dev, pf1550->regmap,
-+				       pf1550->irq,
-+				IRQF_ONESHOT | IRQF_SHARED |
-+				IRQF_TRIGGER_FALLING, 0,
-+				&pf1550_regulator_irq_chip,
-+				&pf1550->irq_data_regulator);
-+	if (ret) {
-+		dev_err(pf1550->dev, "failed to add irq1 chip: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = devm_regmap_add_irq_chip(pf1550->dev, pf1550->regmap,
-+				       pf1550->irq,
-+				IRQF_ONESHOT | IRQF_SHARED |
-+				IRQF_TRIGGER_FALLING, 0,
-+				&pf1550_onkey_irq_chip,
-+				&pf1550->irq_data_onkey);
-+	if (ret) {
-+		dev_err(pf1550->dev, "failed to add irq3 chip: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = devm_regmap_add_irq_chip(pf1550->dev, pf1550->regmap,
-+				       pf1550->irq,
-+				IRQF_ONESHOT | IRQF_SHARED |
-+				IRQF_TRIGGER_FALLING, 0,
-+				&pf1550_charger_irq_chip,
-+				&pf1550->irq_data_charger);
-+	if (ret) {
-+		dev_err(pf1550->dev, "failed to add irq4 chip: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return devm_mfd_add_devices(pf1550->dev, -1, pf1550_devs,
-+			      ARRAY_SIZE(pf1550_devs), NULL, 0, NULL);
-+}
-+
-+static const struct i2c_device_id pf1550_i2c_id[] = {
-+	{ "pf1550", PF1550 },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(i2c, pf1550_i2c_id);
-+
-+static int pf1550_suspend(struct device *dev)
-+{
-+	struct i2c_client *i2c = container_of(dev, struct i2c_client, dev);
-+	struct pf1550_dev *pf1550 = i2c_get_clientdata(i2c);
-+
-+	if (device_may_wakeup(dev)) {
-+		enable_irq_wake(pf1550->irq);
-+		disable_irq(pf1550->irq);
-+	}
-+
-+	return 0;
-+}
-+
-+static int pf1550_resume(struct device *dev)
-+{
-+	struct i2c_client *i2c = container_of(dev, struct i2c_client, dev);
-+	struct pf1550_dev *pf1550 = i2c_get_clientdata(i2c);
-+
-+	if (device_may_wakeup(dev)) {
-+		disable_irq_wake(pf1550->irq);
-+		enable_irq(pf1550->irq);
-+	}
-+
-+	return 0;
-+}
-+
-+static DEFINE_SIMPLE_DEV_PM_OPS(pf1550_pm, pf1550_suspend, pf1550_resume);
-+
-+static const struct of_device_id pf1550_dt_match[] = {
-+	{ .compatible = "fsl,pf1550" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, pf1550_dt_match);
-+
-+static struct i2c_driver pf1550_i2c_driver = {
-+	.driver = {
-+		   .name = "pf1550",
-+		   .pm = pm_sleep_ptr(&pf1550_pm),
-+		   .of_match_table = of_match_ptr(pf1550_dt_match),
-+	},
-+	.probe = pf1550_i2c_probe,
-+	.id_table = pf1550_i2c_id,
-+};
-+
-+module_i2c_driver(pf1550_i2c_driver);
-+
-+MODULE_DESCRIPTION("Freescale PF1550 multi-function core driver");
-+MODULE_AUTHOR("Robin Gong <yibin.gong@freescale.com>");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mfd/pf1550.h b/include/linux/mfd/pf1550.h
-new file mode 100644
-index 000000000000..41de05c00b3d
---- /dev/null
-+++ b/include/linux/mfd/pf1550.h
-@@ -0,0 +1,246 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * pf1550.h - mfd head file for PF1550
-+ *
-+ * Copyright (C) 2016 Freescale Semiconductor, Inc.
-+ * Robin Gong <yibin.gong@freescale.com>
-+ */
-+
-+#ifndef __LINUX_MFD_PF1550_H
-+#define __LINUX_MFD_PF1550_H
-+
-+#include <linux/i2c.h>
-+
-+enum chips { PF1550 = 1, };
-+
-+enum pf1550_pmic_reg {
-+	/* PMIC regulator part */
-+	PF1550_PMIC_REG_DEVICE_ID		= 0x00,
-+	PF1550_PMIC_REG_OTP_FLAVOR		= 0x01,
-+	PF1550_PMIC_REG_SILICON_REV		= 0x02,
-+
-+	PF1550_PMIC_REG_INT_CATEGORY		= 0x06,
-+	PF1550_PMIC_REG_SW_INT_STAT0		= 0x08,
-+	PF1550_PMIC_REG_SW_INT_MASK0		= 0x09,
-+	PF1550_PMIC_REG_SW_INT_SENSE0		= 0x0A,
-+	PF1550_PMIC_REG_SW_INT_STAT1		= 0x0B,
-+	PF1550_PMIC_REG_SW_INT_MASK1		= 0x0C,
-+	PF1550_PMIC_REG_SW_INT_SENSE1		= 0x0D,
-+	PF1550_PMIC_REG_SW_INT_STAT2		= 0x0E,
-+	PF1550_PMIC_REG_SW_INT_MASK2		= 0x0F,
-+	PF1550_PMIC_REG_SW_INT_SENSE2		= 0x10,
-+	PF1550_PMIC_REG_LDO_INT_STAT0		= 0x18,
-+	PF1550_PMIC_REG_LDO_INT_MASK0		= 0x19,
-+	PF1550_PMIC_REG_LDO_INT_SENSE0		= 0x1A,
-+	PF1550_PMIC_REG_TEMP_INT_STAT0		= 0x20,
-+	PF1550_PMIC_REG_TEMP_INT_MASK0		= 0x21,
-+	PF1550_PMIC_REG_TEMP_INT_SENSE0		= 0x22,
-+	PF1550_PMIC_REG_ONKEY_INT_STAT0		= 0x24,
-+	PF1550_PMIC_REG_ONKEY_INT_MASK0		= 0x25,
-+	PF1550_PMIC_REG_ONKEY_INT_SENSE0	= 0x26,
-+	PF1550_PMIC_REG_MISC_INT_STAT0		= 0x28,
-+	PF1550_PMIC_REG_MISC_INT_MASK0		= 0x29,
-+	PF1550_PMIC_REG_MISC_INT_SENSE0		= 0x2A,
-+
-+	PF1550_PMIC_REG_COINCELL_CONTROL	= 0x30,
-+
-+	PF1550_PMIC_REG_SW1_VOLT		= 0x32,
-+	PF1550_PMIC_REG_SW1_STBY_VOLT		= 0x33,
-+	PF1550_PMIC_REG_SW1_SLP_VOLT		= 0x34,
-+	PF1550_PMIC_REG_SW1_CTRL		= 0x35,
-+	PF1550_PMIC_REG_SW1_CTRL1		= 0x36,
-+	PF1550_PMIC_REG_SW2_VOLT		= 0x38,
-+	PF1550_PMIC_REG_SW2_STBY_VOLT		= 0x39,
-+	PF1550_PMIC_REG_SW2_SLP_VOLT		= 0x3A,
-+	PF1550_PMIC_REG_SW2_CTRL		= 0x3B,
-+	PF1550_PMIC_REG_SW2_CTRL1		= 0x3C,
-+	PF1550_PMIC_REG_SW3_VOLT		= 0x3E,
-+	PF1550_PMIC_REG_SW3_STBY_VOLT		= 0x3F,
-+	PF1550_PMIC_REG_SW3_SLP_VOLT		= 0x40,
-+	PF1550_PMIC_REG_SW3_CTRL		= 0x41,
-+	PF1550_PMIC_REG_SW3_CTRL1		= 0x42,
-+	PF1550_PMIC_REG_VSNVS_CTRL		= 0x48,
-+	PF1550_PMIC_REG_VREFDDR_CTRL		= 0x4A,
-+	PF1550_PMIC_REG_LDO1_VOLT		= 0x4C,
-+	PF1550_PMIC_REG_LDO1_CTRL		= 0x4D,
-+	PF1550_PMIC_REG_LDO2_VOLT		= 0x4F,
-+	PF1550_PMIC_REG_LDO2_CTRL		= 0x50,
-+	PF1550_PMIC_REG_LDO3_VOLT		= 0x52,
-+	PF1550_PMIC_REG_LDO3_CTRL		= 0x53,
-+	PF1550_PMIC_REG_PWRCTRL0		= 0x58,
-+	PF1550_PMIC_REG_PWRCTRL1		= 0x59,
-+	PF1550_PMIC_REG_PWRCTRL2		= 0x5A,
-+	PF1550_PMIC_REG_PWRCTRL3		= 0x5B,
-+	PF1550_PMIC_REG_SW1_PWRDN_SEQ		= 0x5F,
-+	PF1550_PMIC_REG_SW2_PWRDN_SEQ		= 0x60,
-+	PF1550_PMIC_REG_SW3_PWRDN_SEQ		= 0x61,
-+	PF1550_PMIC_REG_LDO1_PWRDN_SEQ		= 0x62,
-+	PF1550_PMIC_REG_LDO2_PWRDN_SEQ		= 0x63,
-+	PF1550_PMIC_REG_LDO3_PWRDN_SEQ		= 0x64,
-+	PF1550_PMIC_REG_VREFDDR_PWRDN_SEQ	= 0x65,
-+
-+	PF1550_PMIC_REG_STATE_INFO		= 0x67,
-+	PF1550_PMIC_REG_I2C_ADDR		= 0x68,
-+	PF1550_PMIC_REG_IO_DRV0			= 0x69,
-+	PF1550_PMIC_REG_IO_DRV1			= 0x6A,
-+	PF1550_PMIC_REG_RC_16MHZ		= 0x6B,
-+	PF1550_PMIC_REG_KEY			= 0x6F,
-+
-+	/* charger part */
-+	PF1550_CHARG_REG_CHG_INT		= 0x80,
-+	PF1550_CHARG_REG_CHG_INT_MASK		= 0x82,
-+	PF1550_CHARG_REG_CHG_INT_OK		= 0x84,
-+	PF1550_CHARG_REG_VBUS_SNS		= 0x86,
-+	PF1550_CHARG_REG_CHG_SNS		= 0x87,
-+	PF1550_CHARG_REG_BATT_SNS		= 0x88,
-+	PF1550_CHARG_REG_CHG_OPER		= 0x89,
-+	PF1550_CHARG_REG_CHG_TMR		= 0x8A,
-+	PF1550_CHARG_REG_CHG_EOC_CNFG		= 0x8D,
-+	PF1550_CHARG_REG_CHG_CURR_CNFG		= 0x8E,
-+	PF1550_CHARG_REG_BATT_REG		= 0x8F,
-+	PF1550_CHARG_REG_BATFET_CNFG		= 0x91,
-+	PF1550_CHARG_REG_THM_REG_CNFG		= 0x92,
-+	PF1550_CHARG_REG_VBUS_INLIM_CNFG	= 0x94,
-+	PF1550_CHARG_REG_VBUS_LIN_DPM		= 0x95,
-+	PF1550_CHARG_REG_USB_PHY_LDO_CNFG	= 0x96,
-+	PF1550_CHARG_REG_DBNC_DELAY_TIME	= 0x98,
-+	PF1550_CHARG_REG_CHG_INT_CNFG		= 0x99,
-+	PF1550_CHARG_REG_THM_ADJ_SETTING	= 0x9A,
-+	PF1550_CHARG_REG_VBUS2SYS_CNFG		= 0x9B,
-+	PF1550_CHARG_REG_LED_PWM		= 0x9C,
-+	PF1550_CHARG_REG_FAULT_BATFET_CNFG	= 0x9D,
-+	PF1550_CHARG_REG_LED_CNFG		= 0x9E,
-+	PF1550_CHARG_REG_CHGR_KEY2		= 0x9F,
-+
-+	PF1550_TEST_REG_FMRADDR			= 0xC4,
-+	PF1550_TEST_REG_FMRDATA			= 0xC5,
-+	PF1550_TEST_REG_KEY3			= 0xDF,
-+
-+	PF1550_PMIC_REG_END			= 0xff,
-+};
-+
-+#define PF1550_DEVICE_ID		0x7c
-+
-+#define PF1550_CHG_TURNON		0x2
-+
-+#define PF1550_CHG_PRECHARGE		0
-+#define PF1550_CHG_CONSTANT_CURRENT	1
-+#define PF1550_CHG_CONSTANT_VOL		2
-+#define PF1550_CHG_EOC			3
-+#define PF1550_CHG_DONE			4
-+#define PF1550_CHG_TIMER_FAULT		6
-+#define PF1550_CHG_SUSPEND		7
-+#define PF1550_CHG_OFF_INV		8
-+#define PF1550_CHG_BAT_OVER		9
-+#define PF1550_CHG_OFF_TEMP		10
-+#define PF1550_CHG_LINEAR_ONLY		12
-+#define PF1550_CHG_SNS_MASK		0xf
-+#define PF1550_CHG_INT_MASK             0x51
-+
-+#define PF1550_BAT_NO_VBUS		0
-+#define PF1550_BAT_LOW_THAN_PRECHARG	1
-+#define PF1550_BAT_CHARG_FAIL		2
-+#define PF1550_BAT_HIGH_THAN_PRECHARG	4
-+#define PF1550_BAT_OVER_VOL		5
-+#define	PF1550_BAT_NO_DETECT		6
-+#define PF1550_BAT_SNS_MASK		0x7
-+
-+#define PF1550_VBUS_UVLO		BIT(2)
-+#define PF1550_VBUS_IN2SYS		BIT(3)
-+#define PF1550_VBUS_OVLO		BIT(4)
-+#define PF1550_VBUS_VALID		BIT(5)
-+
-+#define PF1550_CHARG_REG_BATT_REG_CHGCV_MASK		0x3f
-+#define PF1550_CHARG_REG_BATT_REG_VMINSYS_SHIFT		6
-+#define PF1550_CHARG_REG_BATT_REG_VMINSYS_MASK		(0x3 << 6)
-+#define PF1550_CHARG_REG_THM_REG_CNFG_REGTEMP_SHIFT	2
-+#define PF1550_CHARG_REG_THM_REG_CNFG_REGTEMP_MASK	(0x3 << 2)
-+
-+#define PMIC_IRQ_SW1_LS		BIT(0)
-+#define PMIC_IRQ_SW2_LS		BIT(1)
-+#define PMIC_IRQ_SW3_LS		BIT(2)
-+#define PMIC_IRQ_SW1_HS		BIT(0)
-+#define PMIC_IRQ_SW2_HS		BIT(1)
-+#define PMIC_IRQ_SW3_HS		BIT(2)
-+#define PMIC_IRQ_LDO1_FAULT	BIT(0)
-+#define PMIC_IRQ_LDO2_FAULT	BIT(1)
-+#define PMIC_IRQ_LDO3_FAULT	BIT(2)
-+#define PMIC_IRQ_TEMP_110	BIT(0)
-+#define PMIC_IRQ_TEMP_125	BIT(1)
-+
-+#define ONKEY_IRQ_PUSHI		BIT(0)
-+#define ONKEY_IRQ_1SI		BIT(1)
-+#define ONKEY_IRQ_2SI		BIT(2)
-+#define ONKEY_IRQ_3SI		BIT(3)
-+#define ONKEY_IRQ_4SI		BIT(4)
-+#define ONKEY_IRQ_8SI		BIT(5)
-+
-+#define CHARG_IRQ_BAT2SOCI	BIT(1)
-+#define CHARG_IRQ_BATI		BIT(2)
-+#define CHARG_IRQ_CHGI		BIT(3)
-+#define CHARG_IRQ_VBUSI		BIT(5)
-+#define CHARG_IRQ_DPMI		BIT(6)
-+#define CHARG_IRQ_THMI		BIT(7)
-+
-+enum pf1550_pmic_irq {
-+	PF1550_PMIC_IRQ_SW1_LS,
-+	PF1550_PMIC_IRQ_SW2_LS,
-+	PF1550_PMIC_IRQ_SW3_LS,
-+	PF1550_PMIC_IRQ_SW1_HS,
-+	PF1550_PMIC_IRQ_SW2_HS,
-+	PF1550_PMIC_IRQ_SW3_HS,
-+	PF1550_PMIC_IRQ_LDO1_FAULT,
-+	PF1550_PMIC_IRQ_LDO2_FAULT,
-+	PF1550_PMIC_IRQ_LDO3_FAULT,
-+	PF1550_PMIC_IRQ_TEMP_110,
-+	PF1550_PMIC_IRQ_TEMP_125,
-+};
-+
-+enum pf1550_onkey_irq {
-+	PF1550_ONKEY_IRQ_PUSHI,
-+	PF1550_ONKEY_IRQ_1SI,
-+	PF1550_ONKEY_IRQ_2SI,
-+	PF1550_ONKEY_IRQ_3SI,
-+	PF1550_ONKEY_IRQ_4SI,
-+	PF1550_ONKEY_IRQ_8SI,
-+};
-+
-+enum pf1550_charg_irq {
-+	PF1550_CHARG_IRQ_BAT2SOCI,
-+	PF1550_CHARG_IRQ_BATI,
-+	PF1550_CHARG_IRQ_CHGI,
-+	PF1550_CHARG_IRQ_VBUSI,
-+	PF1550_CHARG_IRQ_THMI,
-+};
-+
-+enum pf1550_regulators {
-+	PF1550_SW1,
-+	PF1550_SW2,
-+	PF1550_SW3,
-+	PF1550_VREFDDR,
-+	PF1550_LDO1,
-+	PF1550_LDO2,
-+	PF1550_LDO3,
-+};
-+
-+struct pf1550_irq_info {
-+	unsigned int irq;
-+	const char *name;
-+	unsigned int virq;
-+};
-+
-+struct pf1550_dev {
-+	struct device *dev;
-+	struct i2c_client *i2c;
-+	int type;
-+	struct regmap *regmap;
-+	struct regmap_irq_chip_data *irq_data_regulator;
-+	struct regmap_irq_chip_data *irq_data_onkey;
-+	struct regmap_irq_chip_data *irq_data_charger;
-+	int irq;
-+};
-+
-+int pf1550_read_otp(struct pf1550_dev *pf1550, unsigned int index,
-+		    unsigned int *val);
-+
-+#endif /* __LINUX_MFD_PF1550_H */
+> 
+> Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> 
+> 
+
+Thanks!
+
+> David: thanks for fixing this mess!
+
+
+NP; I had a prototype of patch #3 for a long time. But after rebasing on 
+top of your work I saw these weird validation errors and just couldn't 
+find the issue. And I only saw them with patch #3 on ordinary pagecache 
+folios, not with shmem, which severely confused.
+
+... gave it another try today after ~1month and almost immediately 
+spotted the issue.
+
+Some things just need time :)
+
 -- 
-2.49.0
+Cheers,
+
+David / dhildenb
 
