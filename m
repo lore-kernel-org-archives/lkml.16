@@ -1,83 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04BE62629C;
-	Fri, 16 May 2025 15:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14E5414A639;
+	Fri, 16 May 2025 15:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747409461; cv=none; b=PV74D/6+t8XGml/L2W7wHCsjFEwIEtu5B8PAlQFeLHbtPqUr4AO6EK3o+HtUBpJcjR15iSUsnk2NU3ZLa7gTCKVYTT1+iNGDH763ufG8s8OxFSiBcRcO9hIUWh0HeR1jnUZ5tR9E4loCQOBvgJQWyQX+zbD3iW9n9mffG5DsVkQ=
+	t=1747409526; cv=none; b=PkQSFqrIbWsGjyJ13Hq41mCp0nM1Ij8fiE9wwYXPd92aDhu0hBpmRZnsyJ/e19TlPjvXDCROMaa7V2upavVJBq18W10m5d5t+qRbix+M50RXyXz/Ygh2QIgYH1wE1Q07jyG2Bu9EURDR8eknGdMucRZNvTtRqjEIclw1DDXYI34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747409461; c=relaxed/simple;
-	bh=svL/aY79Ecgpjdyn0gTlrY1lFNGI5rcL2sg9dXmNGdM=;
+	s=arc-20240116; t=1747409526; c=relaxed/simple;
+	bh=UGQd2vpEGtZoNWxqSs0iTpV6XWH9Pxv+t8tsGF8k1Ug=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=akOccas/krcSswcJa6fD5rm1GmrHLmtYhc7tQppnrt1aBw2p+fYusjAORcufaUan5HEGEm6MbAYTVyMyjr4HZBODTVpEeQwnMJR4aPhpZAZMew3OKBFsY0LzhZoTE8N3CTH6H1bxBpV9DWXLSABIFlHXYF3Eb71/iW55YjL+ZvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mA8o03Aa; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mA8o03Aa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747409461; x=1778945461;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=svL/aY79Ecgpjdyn0gTlrY1lFNGI5rcL2sg9dXmNGdM=;
-  b=mA8o03AaKd3qWN9PazAkDClGI2XFuk6/Yl4fZVngX6r5lTOsLU1cNXMW
-   6MSQyMJRGmHEwsRCRmit5iYsVtSGETkBPZfM+sJ8FCfMlYvhPaEQ2caQw
-   KpLno1sY7YE80jSiWCo0JD0R2Jxgz+7RQ8VBxiD8HIBX+HvdqSW7QMAJf
-   Efeu9Zz4XT8bMOOvKWDlQHAkp70CB/yzJTs4T9XlpY0Cp5hFnIpl5DCaq
-   JMxXjzIUcjFXuOL1dq/3lNDLh82aHbe//wrFZ6WLTvt0YKFERrM9vy0Hx
-   lNqobbyc3lA8p3/+nLemCSv1ycEOS0Mp412dv5GQHnAXYveUmLrC88VZZ
-   Q==;
-X-CSE-ConnectionGUID: 4BDl6nhuT+ujo1anekK8KQ==
-X-CSE-MsgGUID: p3qGkSDyTk6dGRDqSxuzPA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49286090"
-X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="49286090"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 08:31:00 -0700
-X-CSE-ConnectionGUID: qoEoDJC5SPeYwhmBgWAWtg==
-X-CSE-MsgGUID: N6WibDeCRSGNW+ObP/Vgow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="175850756"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 08:31:00 -0700
-Date: Fri, 16 May 2025 08:30:57 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: "David E. Box" <david.e.box@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-	srinivas.pandruvada@linux.intel.com,
-	andriy.shevchenko@linux.intel.com, ilpo.jarvinen@linux.intel.com,
-	xi.pardee@linux.intel.com, hdegoede@redhat.com
-Subject: Re: [PATCH 00/15] Intel VSEC/PMT: Introduce Discovery Driver
-Message-ID: <aCdaMel-zV8Qir69@agluck-desk3>
-References: <20250430212106.369208-1-david.e.box@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=p2gvZgtte6QaSrnJ4zHVZCfhIOYTUGYjJxYYZz36telj7MPIrhXcOiGhkpdEkTdCHNZfNo4yWeyKxVqKigrZ+DG7My6OzsZ7J3muh/L70Bz5g7NBOAB9wJHtvUU0AAWKi3CDnmqVCvpUYs9/ECoSbPFRhF2L1SXB9VlqqY859uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 338B6169C;
+	Fri, 16 May 2025 08:31:51 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C36823F673;
+	Fri, 16 May 2025 08:32:02 -0700 (PDT)
+Date: Fri, 16 May 2025 16:31:58 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf tests switch-tracking: Fix timestamp comparison
+Message-ID: <20250516153158.GH412060@e132581.arm.com>
+References: <20250331172759.115604-1-leo.yan@arm.com>
+ <CAP-5=fVsgahBhOEOac52PmL0V+n1jqAxzf7n9PVWgWsxq9TvgQ@mail.gmail.com>
+ <20250401091422.GA115840@e132581.arm.com>
+ <CAP-5=fUGLy9xGmMO+6PXvfviB4U8Q8O7H3iTSSqEf72vin8gDA@mail.gmail.com>
+ <20250402090516.GG115840@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250430212106.369208-1-david.e.box@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250402090516.GG115840@e132581.arm.com>
 
-On Wed, Apr 30, 2025 at 02:20:49PM -0700, David E. Box wrote:
-> 4. Discovery Driver and API:  The core of the series is the addition of
-> the PMT Discovery driver. This driver not only implements discovery of
-> telemetry attributes and capability data (exposed via sysfs) but also
-> introduces an API to retrieve telemetry regions by feature, which is
-> essential for features like per-RMID telemetry counters.
+Hi Ian, Namhyung,
 
-This part of the series is the foundation for my telemetry/resctrl
-patches:
+[ - Mailing list ]
 
-https://lore.kernel.org/all/20250429003359.375508-1-tony.luck@intel.com/
+On Wed, Apr 02, 2025 at 10:05:16AM +0100, Leo Yan wrote:
+> On Tue, Apr 01, 2025 at 12:54:12PM -0700, Ian Rogers wrote:
+> > On Tue, Apr 1, 2025 at 2:14 AM Leo Yan <leo.yan@arm.com> wrote:
+> > >
+> > > On Mon, Mar 31, 2025 at 01:18:31PM -0700, Ian Rogers wrote:
+> > >
+> > > [...]
+> > >
+> > > > I'm reminded of a Java check I wrote for this:
+> > >
+> > > Nice short article.
+> > >
+> > > > In clang -Wshorten-64-to-32 looks to cover this. I'll see if we can
+> > > > clean those warnings up a bit.
+> > >
+> > > I checked a bit and seems GCC has no this flag, but it makes sense for
+> > > me to enable the flag for Clang.
+> > >
+> > > > Reviewed-by: Ian Rogers <irogers@google.com>
+> > >
+> > > Thanks a lot, Ian.
+> > 
+> > I made a small variation to the change in:
+> > https://lore.kernel.org/lkml/20250401182347.3422199-10-irogers@google.com/
+> > to avoid a subtract and just directly compare the values.
 
-That series includes a fake place holder for the discovery driver, but
-I've been using David's patches for all my testing on real hardware.
+Do you mind to pick up my this patch? :) Our internal CI reports the
+test case 109_Track_with_sched_switch failure daily, I am just wandering
+if we could apply the fix quickly.
 
-Tested-by: Tony Luck <tony.luck@intel.com>
+Ian is working on a patch series for resolving the Clang warning which
+also includes a fix [1], if Ian could extract the fix for the compar()
+function in switch-tracking.c, this either would be fine for me.
 
--Tony
+Thanks a lot for your helping!
+
+Leo
+
+[1] https://lore.kernel.org/linux-perf-users/20250401182347.3422199-10-irogers@google.com/
