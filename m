@@ -1,159 +1,117 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8FD0149E17;
-	Fri, 16 May 2025 16:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE6B157E99;
+	Fri, 16 May 2025 16:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747411219; cv=none; b=a7M/y2cu+X253GSCLU3Q7scvZv4AZXK2zDlvQroLPLqopfvpZ6hVXVWO4+rRG8xOO8/uK0y0jKGPWUcIYhNLAb5rHV67U4QKCj81PEJH13Id8JLlCsBC+WsNnDk5BtJbYF2CPONBLhcmjd9tJ43Sj7cxcnoXGqZKJKE+8R4V8ww=
+	t=1747411281; cv=none; b=k1Lx/IKoi7hrTo1AUsmk0eRmnIqiJDByllqrtqe6u+k3Y/PC+QC3LXiPR9rpi5vy7PVb+DBaFMBfqT1EUFRA3r6FxibfZlf2w2GR1/2o2/xNcMyFDCd8GFSq3h2zc3DFGThulAslC6LQFFW+33W9jfFCysAJEPdvDWGk1BvntP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747411219; c=relaxed/simple;
-	bh=dlfXNqe7fgW+ic4s5DLoOQjk+cTXyw5CXxEJwqYfkUE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q2mUN9+jZJNHM4QSGMf7bkmdc1PvafpOBiBuXt3g/FFf4AUBs8ja69L8tEOmHalFzk2HV+HFUPQxDZAL/ngsSGK+wHUUPO9ad1aNFRBIB+nrQkXTAnxLRgnRalfdVUHLhr1nWe5qf4FNBJiCiQ25aXN9iFLH6PuXlob36J/QnYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 711D4169C;
-	Fri, 16 May 2025 09:00:05 -0700 (PDT)
-Received: from [10.1.27.17] (e122027.cambridge.arm.com [10.1.27.17])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC4D63F63F;
-	Fri, 16 May 2025 09:00:13 -0700 (PDT)
-Message-ID: <64fd76aa-10b0-4b4f-875c-6c24977464f9@arm.com>
-Date: Fri, 16 May 2025 17:00:11 +0100
+	s=arc-20240116; t=1747411281; c=relaxed/simple;
+	bh=8LXYtup+Ql2ziVjAhu4GTB/LIRRAj34dS331eN8NA98=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gaGKDPZiE6eGbecEh9Fz26hPqr8y0YNXqnD4nkUILop0JMqJFexhd3UqOQ/ilnodXxEJpZ/UbAzqYcmQKhY1oKem2CgxN2/8GzI6V7mxvcaB0Tcqt0O/BbbA22BXdK0mtznHGfZW9dNIDunVM4xGZ12C1+Oj+neUD6Cy+oTSXiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HHZUKtNz; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HHZUKtNz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB418C4CEE4;
+	Fri, 16 May 2025 16:01:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747411280;
+	bh=8LXYtup+Ql2ziVjAhu4GTB/LIRRAj34dS331eN8NA98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HHZUKtNzdkxZeiiPuUQUE0c1/WCTW34kXeCA8JaKpbzmHk6owBYZJQ4HA3dtEHd5y
+	 Ic9HnEAHiU+kmt1Nd98E6jjo/nm/ooW/o7JdmLSJlikFdTpucVILQ2WrfXGy57QESR
+	 X8ltwvTdZ334Xk9bY11atJ+CmfaKoSNAo0pdNd1KsBiZm5fQr4KerhvxoHnOuB9DpM
+	 3XYnHIexf0dwbFKCySrmgaWyMeXk0yAGfS/Je3zAv35I79XYCMw8LtRoHIHIk+EE2k
+	 9oZqiECiZT5/qV4V5rN5ibPJ09ATyOaSfcnjv3TK/KvzqS/n+dcWoxhnO4h+z271yy
+	 h3NRqt1n1eKmg==
+Date: Fri, 16 May 2025 18:01:15 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+	John Hubbard <jhubbard@nvidia.com>, Timur Tabi <timur@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH] rust: add basic ELF sections parser
+Message-ID: <aCdhS10JCh6HRpqV@pollux>
+References: <2025051543-override-rockiness-3ead@gregkh>
+ <D9WLFTPRB9FJ.OL6I760HKALZ@nvidia.com>
+ <D9WP3YU31199.Q8IEDBJZ87LU@nvidia.com>
+ <2025051532-gentleman-reset-58f2@gregkh>
+ <CAOZdJXWKLu0y+kwC+Bm8nBCLizQVpsDdDUoS--hVgz2vnuZJQg@mail.gmail.com>
+ <8b14b078-b899-42e8-8522-599daa65bc63@nvidia.com>
+ <2025051647-urology-think-b8e0@gregkh>
+ <D9XMAV4ERYK7.39TLQBLYTX3TU@nvidia.com>
+ <aCc_PSOPkLWTcTru@pollux>
+ <D9XNS413TVXB.3SWWJE4JGEN8B@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 00/43] arm64: Support for Arm CCA in KVM
-To: Gavin Shan <gshan@redhat.com>, kvm@vger.kernel.org, kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
- <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-References: <20250416134208.383984-1-steven.price@arm.com>
- <fa874ef5-5da5-44de-a9d0-24663eb684a0@redhat.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <fa874ef5-5da5-44de-a9d0-24663eb684a0@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D9XNS413TVXB.3SWWJE4JGEN8B@nvidia.com>
 
-Hi Gavin,
+On Fri, May 16, 2025 at 11:35:42PM +0900, Alexandre Courbot wrote:
+> On Fri May 16, 2025 at 10:35 PM JST, Danilo Krummrich wrote:
+> > I think we should either we get to the conclusion that the desire of parsing (at
+> > least part of) the firmware ELF is valid in the kernel and make it generic
+> > infrastructure, or conclude that there really isn't a reasonable technical
+> > reason to do that.
+> >
+> > Please let's work out the exact technical reasons for doing this in the kernel,
+> > such that we can either conclude one or the other.
+> 
+> I think it's mostly a matter of where we want to draw the line.
+> 
+> We use ELF as a container format to associate binary blobs with named
+> sections. Can we extract these sections into individual files that we
+> load using request_firmware()? Why yes, we could.
+> 
+> Now the GSP firmware for GA102 contains the following sections (skipped
+> the ones that don't need to be extracted):
+> 
+>   [ 1] .fwimage          PROGBITS         0000000000000000  00000040
+>   [ 2] .fwversion        PROGBITS         0000000000000000  02448040
+>   [ 3] .fwsignature[...] PROGBITS         0000000000000000  0244804b
+>   [ 4] .fwsignature[...] PROGBITS         0000000000000000  0244904b
+>   [ 5] .fwsignature[...] PROGBITS         0000000000000000  0244a04b
+>   [ 6] .fwsignature[...] PROGBITS         0000000000000000  0244b04b
+> 
+> That's 6 files instead of 1, for serving the same purpose. And the number of
+> signatures is bound to *increase* as new chips get released, but since they are
+> associated to chipsets, we can maybe limit them to the relevant chipset
+> directory and limit the damage. Still it would clutter linux-firmware a bit
+> more than it is today.
+> 
+> But let's say we do this, and problem solved. Only... let's take a look at the
+> booter binary, which is another innocent-looking firmware file.
+> 
+> It includes a header with offsets to the code and data segments, that the
+> driver loads into the falcon microcontroller. And one offset for the signatures
+> that we need to patch. Reminds you of something? :) Should we split these ones
+> too?
+> 
+> I would push back really hard on that one, unless you agree to go after all the
+> drivers that do the same thing (and I have names).
 
-On 02/05/2025 01:46, Gavin Shan wrote:
-> On 4/16/25 11:41 PM, Steven Price wrote:
-> 
-> [...]
-> 
->>
->> The ABI to the RMM (the RMI) is based on RMM v1.0-rel0 specification[1].
->>
->> This series is based on v6.15-rc1. It is also available as a git
->> repository:
->>
->> https://gitlab.arm.com/linux-arm/linux-cca cca-host/v8
->>
->> Work in progress changes for kvmtool are available from the git
->> repository below:
->>
->> https://gitlab.arm.com/linux-arm/kvmtool-cca cca/v6
->>
->> [1] https://developer.arm.com/documentation/den0137/1-0rel0/
->> [2] https://lore.kernel.org/r/20250408105225.4002637-17-maz%40kernel.org
->>
-> 
-> I got a chance to try the following combination, the guest can boot using
-> qemu/kvmtool except a RCU stall is observed (more details provided below)
-> 
-> host.tf-rmm      https://git.codelinaro.org/linaro/dcap/
-> rmm.git                      (cca/v8)
-> host.edk2        git@github.com:tianocore/
-> edk2.git                                   (edk2-stable202411)
-> host.tf-a        https://git.codelinaro.org/linaro/dcap/tf-a/trusted-
-> firmware-a.git  (cca/v4)
-> host.qemu        https://git.qemu.org/git/
-> qemu.git                                   (stable-9.2)
-> host.linux       https://git.gitlab.arm.com/linux-arm/linux-
-> cca.git                  (cca-host/v8)
-> host.buildroot   https://github.com/buildroot/
-> buildroot                              (master)
-> guest.qemu       https://git.codelinaro.org/linaro/dcap/
-> qemu.git                     (cca/latest)
-> guest.kvmtool    https://gitlab.arm.com/linux-arm/kvmtool-
-> cca                        (cca/latest)
-> guest.buildroot  https://github.com/buildroot/
-> buildroot                              (master)
-> 
-> RCU stall report
-> ----------------
-> 
-> [ 7816.381336] rcu: INFO: rcu_preempt self-detected stall on CPU
-> [ 7816.382816] rcu:     6-....: (5249 ticks this GP)
-> idle=3a4c/1/0x4000000000000000 softirq=6001/6003 fqs=2624
-> [ 7816.384399] rcu:     (t=5250 jiffies g=29821 q=47 ncpus=8)
-> [ 7816.386059] CPU: 6 UID: 0 PID: 203 Comm: qemu-system-aar Not tainted
-> 6.15.0-rc1-gavin-g78b23c56de79 #34 PREEMPT
-> [ 7816.387133] Hardware name: QEMU QEMU Virtual Machine, BIOS unknown
-> 02/02/2022
-> [ 7816.387926] pstate: 61402009 (nZCv daif +PAN -UAO -TCO +DIT -SSBS
-> BTYPE=--)
-> [ 7816.388678] pc : realm_unmap_private_range+0x19c/0x2c0
-> [ 7816.389878] lr : realm_unmap_private_range+0x94/0x2c0
-> [ 7816.390388] sp : ffff80008095bb60
-> [ 7816.390765] x29: ffff80008095bb60 x28: 000000007caef000 x27:
-> ffffba3322764000
-> [ 7816.392321] x26: 00007fffffffffff x25: 000000007caf0000 x24:
-> 0001000000000000
-> [ 7816.393168] x23: 00000000c4000155 x22: ffff8000801b5e98 x21:
-> 0000000106481000
-> [ 7816.393999] x20: 000000007caef000 x19: 0000000000000000 x18:
-> 0000000000000000
-> [ 7816.394833] x17: 0000000000000000 x16: 0000000000000000 x15:
-> 0000ffff8e997058
-> [ 7816.395668] x14: 0000000000000000 x13: 0000000000000000 x12:
-> 0000000000000000
-> [ 7816.396548] x11: 0000000038e38e39 x10: 0000000000000004 x9 :
-> ffffba33218a2564
-> [ 7816.397419] x8 : ffff8000801b5e98 x7 : 000000003fffffff x6 :
-> 0000000000000001
-> [ 7816.398243] x5 : 000000011e795000 x4 : 0000000000000002 x3 :
-> 0000000000000000
-> [ 7816.399062] x2 : 000000007caf0000 x1 : 000000011e796000 x0 :
-> 0000000000000000
-> [ 7816.400021] Call trace:
-> [ 7816.400604]  realm_unmap_private_range+0x19c/0x2c0 (P)
+Great, but then why did you back off in your discussion with Greg? Given that
+you are convinced that this is a valid thing to do for drivers, you should keep
+discussing it with the target to make it common infrastructure.
 
-So I suspect this is because I didn't have a cond_resched_rwlock_write()
-in here - which was (as you pointed out) because I hadn't propagated
-"may_block" down. Finger's crossed this will be fixed with that change.
+I did not argue for or against it -- what I do disagree with is that we seem to
+just agree to disagree and stuff a generic piece of code into nova-core after
+three mails back and forth.
 
-Thanks,
-Steve
+Please keep discussing the above with Greg until we get to a real conclusion.
 
-> [ 7816.401347]  kvm_realm_unmap_range+0x94/0xb0
-> [ 7816.401894]  __unmap_stage2_range+0x70/0xa0
-> [ 7816.402421]  kvm_arch_post_set_memory_attributes+0x68/0xa8
-> [ 7816.403011]  kvm_vm_ioctl+0x6bc/0x1b58
-> [ 7816.403509]  __arm64_sys_ioctl+0xa4/0xe8
-> [ 7816.404020]  invoke_syscall+0x50/0x120
-> [ 7816.404562]  el0_svc_common.constprop.0+0x48/0xf0
-> [ 7816.405113]  do_el0_svc+0x24/0x38
-> [ 7816.405584]  el0_svc+0x34/0xf0
-> [ 7816.406045]  el0t_64_sync_handler+0x10c/0x138
-> [ 7816.406571]  el0t_64_sync+0x1ac/0x1b0
-> 
-> Thanks,
-> Gavin
-> 
-
+- Danilo
