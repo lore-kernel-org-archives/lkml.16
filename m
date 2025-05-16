@@ -1,119 +1,100 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F691494DB
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 14:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E92C219E0;
+	Fri, 16 May 2025 14:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747404492; cv=none; b=LD/nb76sInv+HIau7OvguL2S2eY60+KKhk04SqcbAcOu2UBCRTnPgPupcRIt3EAJHhi5yFkAgHejHL/yTKUOB0Toz4rjvdebbfLB8nSwAm2LviEJptjdrOdVT/VJ2i3ZNMVKHU8EOSJOvOYha3iW1IW3b1tGLh+eh2j1pic7u34=
+	t=1747404502; cv=none; b=Jmz3MQ1sklCLhAOlCy2H/KszPOa8hSL0/Prfkqhiyo/hgQ2FSt7N1APTbaAeXVjGiTjF0GQ6VtK0VjVBMVZRx89UKiMH4bGVUduCFyFCgfq6Wu9Io/DuyI9SWngg2haBMM1/wQ0FlEyCoNIj2J0ttclO3Mg2l/VbzTwPx4myShA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747404492; c=relaxed/simple;
-	bh=DXpfUEqmMwiHoVPoyi3gyAWljWV8OEGPJZUtzaWkZv0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ciSs8XwlMF0j8UEmaTBVZp51S4dwxLSOouZsy6JbFxWjgYaYnjlcEvePnYYXdUqtPg6cwgS7hOPQtAOcuN4E/bBlZYl5uhNN8etcpAkgDHFK4OCobXUteFyccmTNVtgHht3s9q/QetMMI8lsszIMCHX51HxiH52cXQpHLvj9tFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=yB0Sksp9; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1747404502; c=relaxed/simple;
+	bh=S0UMLpnZ2LCy67bBVlX9k8i+8TEK54UopOU4ZIM201E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LfdwOtAz0RJBVr4tBtTpjnkI1N49QFQnPCG7U4WRR8xODMBcxPgM5pgUdpd7TgLCVjAgJytq89DZzovmoNAcSVW5IPKCzXUlOPorC2MyUb9wXzZyzlqcu35TJ0E73kJZQrvv90AEBfeFqDa7AZrCvXzCnRjc9gSU1udS48zcYgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aFue6Bcg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="yB0Sksp9"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-442f5b3c710so16400845e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:08:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747404488; x=1748009288; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=k/BNsmKtmxng+uJwxYfVRzr1UYXziJ1APu78MxCAAdI=;
-        b=yB0Sksp9G24lEji1n0UPBCF92UhV3PWtmTBm7zeweG6J87Bu2sa2A3C2F8GrhCEN3q
-         flHy4VSJs9hA+mu8M5Ee/rLYJz9YvHomDjXQciP/ilxtzE7eh4UOI7t4asxuxN9qgO1H
-         c1WfU8s/eeRjEFOb5tlRTNyYAkIxBKj2rr/RkQ1DDqd9wvzN70RejjTDQn3xdy6evfmJ
-         vbC8yjwhsW3e4nKGTQCXNOMQZ3sttZgn+7U+d6iBLhZpIq2jtWjZxEwlUWwjvWaLeyHU
-         2vysnxWmwwkk0L83OfV7s9q3WeDf9b0C897LLmuL18Ghu+w2tQ/bgnbxk2RwzJCbuexE
-         49IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747404488; x=1748009288;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=k/BNsmKtmxng+uJwxYfVRzr1UYXziJ1APu78MxCAAdI=;
-        b=dVJrk2w4d3Fhlco/jWDIN4JaZ7fQZBw14gO41D3Q5Qay+RnCFXwWyi2QULvp3fL2z1
-         L1Oll/9rQG6JdPkcU/8vcYjpOIZbQTLLnvzwR2S1O8Fwbw5MscT5rOl4XaxE9AUn1NJR
-         82z5SGxXqOBXMJHENjabkASZwjSVWYm4EkrP40QEeePtz9qFKtAQEsbkkrmuJ9r61WLp
-         xigj7cbT2xUyiU4hd0zwTOpZoIg47jVu/RHGK6S78fDVuo9zfOPrOleOen8LrEvMq9IK
-         Sw8rarEQAxy3YFP7VBQcoyntuglpPIvJzDePU3UkVO9WaPGVyvdwBTgABBeTxO1jUbR0
-         kbKg==
-X-Forwarded-Encrypted: i=1; AJvYcCWffEI48oFWQIanxmgDnNzZ1MEZEpUjJxb5lZdlCjSzvlSFW+UDL5OtCS9aLrIDAmqh/74ZqzLoECc9FLs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7K3ps+SKEBKHcwLQBH+Ff/FZD+pCaByBpP0AG0hYcn+oqqSAJ
-	QSgj08t0ZntEVwtyagslBKCDlCMZoFwUtjYtEUFb9SCdJx/rYV/lM/dE4O1HaAzb/Mo=
-X-Gm-Gg: ASbGnctuA0iY9/a77Z53bLGXsX1qLoLKyA0Zyp+fF0I0OEpxYZnmegfXTXsNikG/ev7
-	CHbR/0GJhAZHz1ySBXmv4VjsU79a6ncyubSoDeBfgBOEl1lJH1ogCsmAXtuA+35RU5IlWgZRcQL
-	1cg0xQ4JzuuUZNvQqVZxsyXhEZnpHdUFAK3qMn+ZoUQj3PPqka0X/hE41zwO8UWV9OCkzmvwqco
-	IlfTpuqMC0Y1NVew3VlvJTYUnTlHJBl+J0vB1LJXsCrg5sK7nA2D+r+G4CxSFpzzhZIx6IBQMBc
-	sJy6P6vW4Z+aaMZ70CyCISP8AZfi8vspjsXezJGJgxKdrzV0qJJlz9ApLjkExrgCW00Rx8HH
-X-Google-Smtp-Source: AGHT+IGq36WEEdwcj2F1kc98tOimoY9E+6SHXs/IqyOGwvA6IL+/S0Nt0+GgQYvZ1hvDj9xey6cGow==
-X-Received: by 2002:a05:600c:524d:b0:442:e109:3027 with SMTP id 5b1f17b1804b1-442fd6649bdmr38117515e9.24.1747404487692;
-        Fri, 16 May 2025 07:08:07 -0700 (PDT)
-Received: from alex-rivos.lan ([2001:861:3382:ef90:b6d5:4f19:6a91:78f0])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f39e852fsm113910005e9.27.2025.05.16.07.08.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 07:08:07 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v4 0/3] Move duplicated instructions macros into asm/insn.h
-Date: Fri, 16 May 2025 16:08:02 +0200
-Message-Id: <20250516140805.282770-1-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aFue6Bcg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB7A3C4CEE4;
+	Fri, 16 May 2025 14:08:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747404501;
+	bh=S0UMLpnZ2LCy67bBVlX9k8i+8TEK54UopOU4ZIM201E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aFue6Bcgdymnr+9kcKWC4RHjfE44xDWPRwL4CHK6AsQsUwaC69XLGdW3cVBy2U2+H
+	 FxrcIfKT5s4dD/f912TbUXt9L1wo+WWPBzflWrv66/RQ8yObYQZ+KGKc4PAz8GMgyE
+	 kt3DQqmpyyME/vQQpzZmtLeJV/U2X/TUz+l/20R/Zjo4pUSLokaeDa64Z/qp5ED5Fp
+	 4AzQWH/Tnpa9se76mtKq/jis3M/pVD1vWuoC+nu9l6nSUjg6sdYPzs4GpoDS2KDZXh
+	 0o+TqDdhjCe0GQTBD65y3dkRmK+MNJLqnEk9E6HgCy+URdsDDffaLgPlucPtkQHfmC
+	 Mec8EjpzJL8kg==
+Date: Fri, 16 May 2025 16:08:14 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Kieran Bingham <kbingham@kernel.org>,
+	Michael Roth <michael.roth@amd.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Brijesh Singh <brijesh.singh@amd.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Juergen Gross <jgross@suse.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-efi@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCHv3 2/4] x86/64/mm: Make SPARSEMEM_VMEMMAP the only memory
+ model
+Message-ID: <aCdGzpXSVx15gz90@gmail.com>
+References: <20250516123306.3812286-1-kirill.shutemov@linux.intel.com>
+ <20250516123306.3812286-3-kirill.shutemov@linux.intel.com>
+ <30570ca0-8da4-4ebc-84d6-0a4badfb7154@intel.com>
+ <rqkfqkkli57fbd5zkj3bwko44kmqqwnfdm766snm26y2so52ss@6it24qxv356q>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <rqkfqkkli57fbd5zkj3bwko44kmqqwnfdm766snm26y2so52ss@6it24qxv356q>
 
-The instructions parsing macros were duplicated and one of them had different
-implementations, which is error prone.
 
-So let's consolidate those macros in asm/insn.h.
+* Kirill A. Shutemov <kirill.shutemov@linux.intel.com> wrote:
 
-v1: https://lore.kernel.org/linux-riscv/20250422082545.450453-1-alexghiti@rivosinc.com/
-v2: https://lore.kernel.org/linux-riscv/20250508082215.88658-1-alexghiti@rivosinc.com/
-v3: https://lore.kernel.org/linux-riscv/20250508125202.108613-1-alexghiti@rivosinc.com/
+> On Fri, May 16, 2025 at 06:42:03AM -0700, Dave Hansen wrote:
+> > On 5/16/25 05:33, Kirill A. Shutemov wrote:
+> > > 5-level paging only supports SPARSEMEM_VMEMMAP. CONFIG_X86_5LEVEL is
+> > > being phased out, making 5-level paging support mandatory.
+> > > 
+> > > Make CONFIG_SPARSEMEM_VMEMMAP mandatory for x86-64 and eliminate
+> > > any associated conditional statements.
+> > I think we have ourselves a catch-22 here.
+> > 
+> > SPARSEMEM_VMEMMAP was selected because the other sparsemem modes
+> > couldn't handle a dynamic MAX_PHYS{MEM,ADDR}_BITS introduced by 5-level
+> > paging. Now you're proposing making it static again, but keeping the
+> > SPARSEMEM_VMEMMAP dependency.
+> > 
+> > If you remove the dynamic MAX_PHYS{MEM,ADDR}_BITS, you should also
+> > remove the dependency on SPARSEMEM_VMEMMAP. No?
+> 
+> I guess. But how?
+> 
+> And is there any value to support !SPARSEMEM_VMEMMAP?
 
-Changes in v4:
-- Rebase on top of for-next (on top of 6.15-rc6)
+Not really IMHO:
 
-Changes in v3:
-- Fix patch 2 which caused build failures (linux riscv bot), but the
-  patchset is exactly the same as v2
+  .config.opensuse.default:    CONFIG_SPARSEMEM_VMEMMAP_ENABLE=y
+  .config.ubuntu.localinstall: CONFIG_SPARSEMEM_VMEMMAP_ENABLE=y
+  .config.fedora.generic:      CONFIG_SPARSEMEM_VMEMMAP_ENABLE=y
+  .config.rhel.generic:        CONFIG_SPARSEMEM_VMEMMAP_ENABLE=y
 
-Changes in v2:
-- Rebase on top of 6.15-rc5
-- Add RB tags
-- Define RV_X() using RV_X_mask() (Clément)
-- Remove unused defines (Clément)
-- Fix tabulations (Drew)
+Thanks,
 
-Alexandre Ghiti (3):
-  riscv: Fix typo EXRACT -> EXTRACT
-  riscv: Strengthen duplicate and inconsistent definition of RV_X()
-  riscv: Move all duplicate insn parsing macros into asm/insn.h
-
- arch/riscv/include/asm/insn.h          | 206 ++++++++++++++++++++++---
- arch/riscv/kernel/machine_kexec_file.c |   2 +-
- arch/riscv/kernel/traps_misaligned.c   | 144 +----------------
- arch/riscv/kernel/vector.c             |   2 +-
- arch/riscv/kvm/vcpu_insn.c             | 128 +--------------
- 5 files changed, 188 insertions(+), 294 deletions(-)
-
--- 
-2.39.2
-
+	Ingo
