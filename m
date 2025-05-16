@@ -1,101 +1,162 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5E016A395;
-	Fri, 16 May 2025 17:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340EF1F872A
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 17:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747417881; cv=none; b=ZAN6F0O/bLSy8N/4lvIw+qtE1dqMkodCvA2uTd/qF8hcSpWco1MVWdko3c+gKpa8mCcD4OW4v8UFsznGP92MVjxw2n0fs3mN6EkZuWJGMa7gtRZfeFpCAUmQvPaL3u6OH0XgbhjOVPZn7OWb6lFtheH0d7LKmN40wHK25f2NXq0=
+	t=1747417914; cv=none; b=cBjWygFFB5n2+mX4r30DQUSUIe2843zkQqJ5/zIHALI7AUSdPGJumjaDKFgmSHyQ6YeEh+SVleOMiDyzyRYFoDhh1LTMHiSGpRcJCKUUeXFnu1zSuyCOKM5swgxumttwfsS7x5GrlU+TkdNt71NXM9g7cEEtoGFtmiz5sUE/zUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747417881; c=relaxed/simple;
-	bh=zHXB0XLXOtSEBsz0AAmv751cXGjmMRuUq3Cv9rGTUg8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T4Gne4S18Ykno7lDPdEqBFydazModi2Wn96ZuiewstJufkXkEzKhGZrNiKGc1atrCg+H9npY1BwodJCB/I1GOvREC6h/YQOjJ0/vQ7yYjxb3+E8lVObV/BuFA8LzBibx171TOFLe+wjGdGcproxxRdP42sxcmWLlI+Vd8RBVWYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bq7SPd2r; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747417914; c=relaxed/simple;
+	bh=2Q3t7q7zXPiO9TUpc46lPD0ZwFpz2ZIFeKkfnFOyL64=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=oCiDOq6isLCWUn0v/RTvCCDa6b2e/ji0uYoGAxhtm8yGcCG875iOFr5EwdF2sUPJuQ+NCzv1E0lp/2UxI7JZB1KpcuMZqhkaL9qTX4aHSWL+7+m0NFLpMGs2jfeZWoSlyBh7p96ESTZwzPyMYYG6By40p4koN3bnQdySdO5VbJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tVybtsgY; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bq7SPd2r"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7423df563d6so2729886b3a.0;
-        Fri, 16 May 2025 10:51:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tVybtsgY"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30e9659a391so354340a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 10:51:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747417879; x=1748022679; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XfHx99oh3Dk6Ga6XPceoIpKeilGYWFm/nk4SDrQsRmE=;
-        b=bq7SPd2rtm14bqxzbqp3gxqQc/N3XkH2WJlBpknGfNGHsYrjSbUvH7itcdSExaLfEK
-         O7UGEPGsNR/3Z1Ih6zTbWW9/or7kzgxhI4rNhcocvulYeLpgJZecIP2BYEDKFkrryRVR
-         T4OIpqwoeq0grK9H2DBkJwabgBEKwm+y7kSl54TaPCfuID1zmsYlAGPYUes6Ahe8yTuX
-         tuXVwLTqoOLZ+eWmRFvlJehVKpBmWr0nIu6EOZObSwguVZOk+EhOlmIh7Z/uJnd4MKgO
-         l0SArNMkNiL4gyDTgKgTUq8EmHNx5EpSvdd3T9yF5vJBQVIDFPiUZtkuhuCs5g8Rk2b4
-         cHpw==
+        d=google.com; s=20230601; t=1747417912; x=1748022712; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=V5HQp6kq+X9VHvMiTR+cwYmP5qs8g8pvYOQWqNMSHLc=;
+        b=tVybtsgYeCWwe2RqoWixByGp6XXq0Mpcco8c0dtI956qNccwIqImmJOk5JGqSacjDo
+         G8EROcJ0VV+yds8A5Tde7Nh4Vmg0EzElYePNBLu4BgliKafDlDxxaAfIEGnakaGbomNv
+         OuvOwHOBsuj7D8qWezvmcuYIq+AS0XeHGF4Qaom7uoj6DV/RV4HTHP1Qw7A1iqo0vjht
+         CKbTBf257dtqsRKnnpuUlXpmlOQipzwEk4f5I/C0oDQ4lrfeh/TUPCc2AT5Sj+AZwziq
+         8420bpxkYvF27gQjUZvoqRHsAu7F1HgpNJC6dNVEpAppAVuW1cAKDjAk/JFlimIGmsMQ
+         YQJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747417879; x=1748022679;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XfHx99oh3Dk6Ga6XPceoIpKeilGYWFm/nk4SDrQsRmE=;
-        b=LnAC2uY8ftTz+QIg+JAoWUl/tDeNsZO6dZYHta3ii0WztIg/ugdH0CuAflp5aBtO7S
-         WRDOkD+O7PataNasI8a0UMhT523M5K+/QDVU+FmYv5a0sfEAfhNEUztEOC8csC1FotAn
-         RULGtkrJ4Ty+N3lVCkKv3H0s532S/i4Vt5BwGMv4djM09V2IhCwzg40dE/xaB4pdZRYJ
-         OO12zFRxJo2/t9hU5ictTxnkmlYZTBJ01onal/4koTC6ObCiBJawv+kNl0liVQmYjka7
-         9rpH+cxTSo1rRP4huuL9BNKjf3S66ybSpNInncIrtrhRWZ+HKx0No20xZLVBqCaypMTy
-         Yglw==
-X-Forwarded-Encrypted: i=1; AJvYcCUivAWwpiWyH1U366iOeDoFuljGFXwAGrKyTj03tIyCr7g5Bo+qZ8FZQjLi1nnkwI7PIEx7Rck3sEqznbg=@vger.kernel.org, AJvYcCVtRNZB1go/zEOW/d1Fus0P5zCH/4Jyac2A+DO6aOBrE3X8hbt9c8x8+aoGjw6qd8E63iM4W0NqoH6e6Y67l6Lh@vger.kernel.org
-X-Gm-Message-State: AOJu0YybZk5Mu+DnJhhG74+nxnFTYi46nYPrPEWifmI3/0M7L7DlB01H
-	W3selwCKM3cy1RY2/kxXL8TLagvBW+wc1BnFh0OwuYvJoF9vUBhacCE=
-X-Gm-Gg: ASbGncsGoncPzjov5lmrWlU9Sj3xDQOtATfEdjiKRcil5m3rYAkUgfzR6GkpAxKbbkr
-	NiUZSNf+E0xjx05HSXbaFvaH/hG+JTM8ZtrBfkK/spfbdDJ0dymRuXIrW7kVrbq7MbUVvYBQM5S
-	r6XLMzqgbMJrD6Di+srMjCKwJMRkyWB943ETBNTAeHNOWTX29UYrEQQE+8Q+D/a/uIADvmqleAL
-	o00SMDzsM1cqGVfdn9RaKQXnli3YD8kLnMgGTw0szCB0Jlt/mZ2aAVFX7TgE8t9zeACCLdFumN8
-	he1AnVO95H2IL+pn6XPlMvx97d0xXxsAk3JHAguftGdnHJpOt1b0dlSR0xaI7ikGj8EnozoDKNC
-	uKQjWCP452wwy
-X-Google-Smtp-Source: AGHT+IEh/PdHyupWeb9mFydEjbKSIQ8igSnJ8RAKkuDZvB//ovVqKm+nr+xy+x3+11EOX037an7rdw==
-X-Received: by 2002:a05:6a21:8cc1:b0:216:1ea0:a516 with SMTP id adf61e73a8af0-21621a0a546mr6727031637.41.1747417879217;
-        Fri, 16 May 2025 10:51:19 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-30e3340187dsm5472356a91.5.2025.05.16.10.51.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 10:51:18 -0700 (PDT)
-Date: Fri, 16 May 2025 10:51:18 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	pabeni@redhat.com, andrew+netdev@lunn.ch, horms@kernel.org,
-	jiri@resnulli.us, shuah@kernel.org, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH net] selftests: net: validate team flags propagation
-Message-ID: <aCd7Fj9kr_pbhQaO@mini-arch>
-References: <20250515231332.4120071-1-stfomichev@gmail.com>
- <20250516073556.5983d1d0@kernel.org>
+        d=1e100.net; s=20230601; t=1747417912; x=1748022712;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=V5HQp6kq+X9VHvMiTR+cwYmP5qs8g8pvYOQWqNMSHLc=;
+        b=nB5CUCd1PCZX3sYuZuf0wHswB7BYwKnpXhcXdI2F4crsYWXXaibm/tMMoav+CIh/Bd
+         OoFTI0VPEDNlmgw/2NGI2G01vDsJ7RXE1JIcHOfiz4O9qmDneJ4DEDmAniwv5cM8cVAw
+         I+ng+lIxdcRIacRnyf61lVpDNPDoihKhJQjAjaOxDOzTM7nCdVdSCPlmLW1hLVsT6Csg
+         mytT9Tl9Ect7XTnR9BJP6eCDOkgbOLmaAZ8rIL6H1vaKyJfbpnbG+0B/zEPcogWy3N6A
+         MUA6ctn24MynShxQap6DgzHTaPRL5TUU/SaiQSTG4Dx5B+ORtS4qGE6jZZAb4xNFtb2+
+         NJQg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNPMpLSyco7XidLNdkuiIicoWWGJkY6vCJLv/KqQWoxijYqRZJUPU8sTfWHTukdT1XAVIlgvAFQZJy4G8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAscikLBYd3H9RkzdZq9vNDmue0heEUX++3jrMqJutpmsdXVmg
+	6qdX3rzFF3vRnROtI1gDzO6wtVgW+4QiS/W33H0g7vtXcIqhDiMA9bkUiqCSBnDYZIhe+Voetq3
+	F2EgEyw==
+X-Google-Smtp-Source: AGHT+IFwtvvhEW33lcn8I0JC2VzVOUh9GPDEpoRuyJJmzbZM79EJn+UNnUU3HQ0UiE4FGqM+5/rqg3sdCXQ=
+X-Received: from pjyd7.prod.google.com ([2002:a17:90a:dfc7:b0:2ff:5752:a78f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2b45:b0:30e:823f:ef21
+ with SMTP id 98e67ed59e1d1-30e83228e05mr4391414a91.32.1747417912343; Fri, 16
+ May 2025 10:51:52 -0700 (PDT)
+Date: Fri, 16 May 2025 10:51:50 -0700
+In-Reply-To: <ce15353884bd67cc2608d36ef40a178a8d140333.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250516073556.5983d1d0@kernel.org>
+Mime-Version: 1.0
+References: <cover.1747264138.git.ackerleytng@google.com> <ada87be8b9c06bc0678174b810e441ca79d67980.camel@intel.com>
+ <CAGtprH9CTsVvaS8g62gTuQub4aLL97S7Um66q12_MqTFoRNMxA@mail.gmail.com>
+ <24e8ae7483d0fada8d5042f9cd5598573ca8f1c5.camel@intel.com>
+ <aCaM7LS7Z0L3FoC8@google.com> <7d3b391f3a31396bd9abe641259392fd94b5e72f.camel@intel.com>
+ <CAGtprH8EMnmvvVir6_U+L5S3SEvrU1OzLrvkL58fXgfg59bjoA@mail.gmail.com> <ce15353884bd67cc2608d36ef40a178a8d140333.camel@intel.com>
+Message-ID: <aCd5wZ_Tp863I6pP@google.com>
+Subject: Re: [RFC PATCH v2 00/51] 1G page support for guest_memfd
+From: Sean Christopherson <seanjc@google.com>
+To: Rick P Edgecombe <rick.p.edgecombe@intel.com>
+Cc: Vishal Annapurve <vannapurve@google.com>, "pvorel@suse.cz" <pvorel@suse.cz>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, 
+	Jun Miao <jun.miao@intel.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>, 
+	"pdurrant@amazon.co.uk" <pdurrant@amazon.co.uk>, "vbabka@suse.cz" <vbabka@suse.cz>, 
+	"peterx@redhat.com" <peterx@redhat.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"amoorthy@google.com" <amoorthy@google.com>, "jack@suse.cz" <jack@suse.cz>, "maz@kernel.org" <maz@kernel.org>, 
+	"tabba@google.com" <tabba@google.com>, "vkuznets@redhat.com" <vkuznets@redhat.com>, 
+	"quic_svaddagi@quicinc.com" <quic_svaddagi@quicinc.com>, 
+	"mail@maciej.szmigiero.name" <mail@maciej.szmigiero.name>, "hughd@google.com" <hughd@google.com>, 
+	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, Wei W Wang <wei.w.wang@intel.com>, 
+	"keirf@google.com" <keirf@google.com>, Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>, 
+	Yan Y Zhao <yan.y.zhao@intel.com>, Dave Hansen <dave.hansen@intel.com>, 
+	"ajones@ventanamicro.com" <ajones@ventanamicro.com>, "rppt@kernel.org" <rppt@kernel.org>, 
+	"quic_mnalajal@quicinc.com" <quic_mnalajal@quicinc.com>, "aik@amd.com" <aik@amd.com>, 
+	"usama.arif@bytedance.com" <usama.arif@bytedance.com>, "fvdl@google.com" <fvdl@google.com>, 
+	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, 
+	"quic_cvanscha@quicinc.com" <quic_cvanscha@quicinc.com>, "nsaenz@amazon.es" <nsaenz@amazon.es>, 
+	"willy@infradead.org" <willy@infradead.org>, Fan Du <fan.du@intel.com>, 
+	"anthony.yznaga@oracle.com" <anthony.yznaga@oracle.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "mic@digikod.net" <mic@digikod.net>, 
+	"oliver.upton@linux.dev" <oliver.upton@linux.dev>, Kirill Shutemov <kirill.shutemov@intel.com>, 
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "steven.price@arm.com" <steven.price@arm.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "muchun.song@linux.dev" <muchun.song@linux.dev>, 
+	Zhiquan1 Li <zhiquan1.li@intel.com>, "rientjes@google.com" <rientjes@google.com>, 
+	"mpe@ellerman.id.au" <mpe@ellerman.id.au>, Erdem Aktas <erdemaktas@google.com>, 
+	"david@redhat.com" <david@redhat.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
+	"bfoster@redhat.com" <bfoster@redhat.com>, "jhubbard@nvidia.com" <jhubbard@nvidia.com>, 
+	Haibo1 Xu <haibo1.xu@intel.com>, "anup@brainfault.org" <anup@brainfault.org>, 
+	Isaku Yamahata <isaku.yamahata@intel.com>, "jthoughton@google.com" <jthoughton@google.com>, 
+	"will@kernel.org" <will@kernel.org>, "steven.sistare@oracle.com" <steven.sistare@oracle.com>, 
+	"quic_pheragu@quicinc.com" <quic_pheragu@quicinc.com>, "jarkko@kernel.org" <jarkko@kernel.org>, 
+	"chenhuacai@kernel.org" <chenhuacai@kernel.org>, Kai Huang <kai.huang@intel.com>, 
+	"shuah@kernel.org" <shuah@kernel.org>, "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>, 
+	"pankaj.gupta@amd.com" <pankaj.gupta@amd.com>, Chao P Peng <chao.p.peng@intel.com>, 
+	"nikunj@amd.com" <nikunj@amd.com>, Alexander Graf <graf@amazon.com>, 
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>, "jroedel@suse.de" <jroedel@suse.de>, 
+	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, "jgowans@amazon.com" <jgowans@amazon.com>, 
+	Yilun Xu <yilun.xu@intel.com>, "liam.merwick@oracle.com" <liam.merwick@oracle.com>, 
+	"michael.roth@amd.com" <michael.roth@amd.com>, "quic_tsoni@quicinc.com" <quic_tsoni@quicinc.com>, 
+	"richard.weiyang@gmail.com" <richard.weiyang@gmail.com>, Ira Weiny <ira.weiny@intel.com>, 
+	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, Xiaoyao Li <xiaoyao.li@intel.com>, 
+	"qperret@google.com" <qperret@google.com>, 
+	"kent.overstreet@linux.dev" <kent.overstreet@linux.dev>, "dmatlack@google.com" <dmatlack@google.com>, 
+	"james.morse@arm.com" <james.morse@arm.com>, "brauner@kernel.org" <brauner@kernel.org>, 
+	"ackerleytng@google.com" <ackerleytng@google.com>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "pgonda@google.com" <pgonda@google.com>, 
+	"quic_pderrin@quicinc.com" <quic_pderrin@quicinc.com>, "roypat@amazon.co.uk" <roypat@amazon.co.uk>, 
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "hch@infradead.org" <hch@infradead.org>
+Content-Type: text/plain; charset="us-ascii"
 
-On 05/16, Jakub Kicinski wrote:
-> On Thu, 15 May 2025 16:13:32 -0700 Stanislav Fomichev wrote:
-> > Cover three recent cases:
-> > 1. missing ops locking for the lowers during netdev_sync_lower_features
-> > 2. missing locking for dev_set_promiscuity (plus netdev_ops_assert_locked
-> >    with a comment on why/when it's needed)
-> > 3. rcu lock during team_change_rx_flags
-> > 
-> > Verified that each one triggers when the respective fix is reverted.
-> > Not sure about the placement, but since it all relies on teaming,
-> > added to the teaming directory.
-> > 
-> > One ugly bit is that I add NETIF_F_LRO to netdevsim; there is no way
-> > to trigger netdev_sync_lower_features without it.
+On Fri, May 16, 2025, Rick P Edgecombe wrote:
+> On Fri, 2025-05-16 at 06:11 -0700, Vishal Annapurve wrote:
+> > Google internally uses 1G hugetlb pages to achieve high bandwidth IO,
+> > lower memory footprint using HVO and lower MMU/IOMMU page table memory
+> > footprint among other improvements. These percentages carry a
+> > substantial impact when working at the scale of large fleets of hosts
+> > each carrying significant memory capacity.
 > 
-> Seems to consistently fail in NIPA :(
-> -- 
-> pw-bot: cr
+> There must have been a lot of measuring involved in that. But the numbers I was
+> hoping for were how much does *this* series help upstream.
 
-Cleanup is a bit messy. Will add set +e and retest locally with vng,
-thanks!
+...
+
+> I asked this question assuming there were some measurements for the 1GB part of
+> this series. It sounds like the reasoning is instead that this is how Google
+> does things, which is backed by way more benchmarking than kernel patches are
+> used to getting. So it can just be reasonable assumed to be helpful.
+> 
+> But for upstream code, I'd expect there to be a bit more concrete than "we
+> believe" and "substantial impact". It seems like I'm in the minority here
+> though. So if no one else wants to pressure test the thinking in the usual way,
+> I guess I'll just have to wonder.
+
+From my perspective, 1GiB hugepage support in guest_memfd isn't about improving
+CoCo performance, it's about achieving feature parity on guest_memfd with respect
+to existing backing stores so that it's possible to use guest_memfd to back all
+VM shapes in a fleet.
+
+Let's assume there is significant value in backing non-CoCo VMs with 1GiB pages,
+unless you want to re-litigate the existence of 1GiB support in HugeTLBFS.
+
+If we assume 1GiB support is mandatory for non-CoCo VMs, then it becomes mandatory
+for CoCo VMs as well, because it's the only realistic way to run CoCo VMs and
+non-CoCo VMs on a single host.  Mixing 1GiB HugeTLBFS with any other backing store
+for VMs simply isn't tenable due to the nature of 1GiB allocations.  E.g. grabbing
+sub-1GiB chunks of memory for CoCo VMs quickly fragments memory to the point where
+HugeTLBFS can't allocate memory for non-CoCo VMs.
+
+Teaching HugeTLBFS to play nice with TDX and SNP isn't happening, which leaves
+adding 1GiB support to guest_memfd as the only way forward.
+
+Any boost to TDX (or SNP) performance is purely a bonus.
