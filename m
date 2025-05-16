@@ -1,73 +1,82 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5841D6DBB;
-	Fri, 16 May 2025 08:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DDB22DA1C;
+	Fri, 16 May 2025 08:44:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747384970; cv=none; b=BjpGuG6+Ua7gT/9LjKaE0ElXssELxB+974d1TPhPktAJ3rbxMssMT/1Rbk8X96YpjLe+/v2iZeNPmEcUIT4hd3EsAH5BQP/M2VeHJhqL1BSG/ns6MKS7ueJh8K9u+BV0hFVFM7fwWSyEM8c7CDSHtJrMg0ovEzCXgzYjo+oxe8U=
+	t=1747385043; cv=none; b=j5cLuxK7BemHu4GPNCZ+HQ9RBjYuUxnZh9atvmwkvoIO8/U5YvTsgMMz14Nw0XKXTK8hCaTCVT58Xxe9k8o040O8uvx2BFHF3wHufayBREP+48DLEhd1/MslM8rahwT6wJwChcjWP017PmgbMNu+jgaDhBQaphOHJ9OQ1OlV+JI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747384970; c=relaxed/simple;
-	bh=by5pBvbbYKfPrWlA0s1flVcWPDVxuZa4g6UpvBzbqs0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=pzJaJSRGM5UBx0W3UN97O3Ict0vlVFG2AvcTFzFBRQXtFmF0tAE1uNMngFiDy+NFB/0Eaixgi/y1b1jl2KSV0LUn4gUVfhj1TxCiFry4vw1gKh4sAGk25UkUccbx6HDSYP+0hku/Y/ycDM7zvCtWAIvg6rlznwaDbosS/pAO8f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MopWwZ6j; arc=none smtp.client-ip=209.85.167.49
+	s=arc-20240116; t=1747385043; c=relaxed/simple;
+	bh=PEe/BWeTXTas3wR7l/W/bpH8YZaNXD6PalA0ThrUNZg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BF4iF9P3TPbp8yyPCswxPtWFe7+3lIx71OV93l1aqnKmGFiBKsJXyoIq0MQocfdllDL5eDRjd2xQfmHNjTeWsvRT/Gf5/P1xcRglvK4GgNKw6+dgqt3f511ijVNmjuGOEMNnYmZl+nyEHxjmxZNV0y/AcqnTyt9rC6z+hbW7RFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dj84Ptfj; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MopWwZ6j"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54b1095625dso2146104e87.0;
-        Fri, 16 May 2025 01:42:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dj84Ptfj"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cf257158fso13212605e9.2;
+        Fri, 16 May 2025 01:44:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747384967; x=1747989767; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ozVXZJSiT9O1HxZpbWEc2vaFp9bt9sbgaI+WguSf/+E=;
-        b=MopWwZ6juPcAQLZuzOUfqdrW29Nz/ZL+y6OOonLCZMoLR4PuqdVke+UTtpZ7KQMQV0
-         k83GuhemhzT5dPHTXdGUz0vQUFvWVBoW+Cg9X+5gbASxAerYuK/MyDubXCbIyYznyqCd
-         uw5XS2RJ3b6T4bvfBC69kQrr0Om52rQy6LDxjUeF2n4SJb4/BCJCQ5jeKermXH2BXhzg
-         FigcuPYbYJkeFYSr7Dui3SsPsrgU+aI6zM7Hpz8fhUPuYvBJNJYQC5dYhoReOPzZgA/p
-         qXBaT1IhZxd96GG4ihBm1ziJ/f3bBlAVtV301w2XKRiKN+b4LQgkTynYSD+PjnxdEJtU
-         35Kg==
+        d=gmail.com; s=20230601; t=1747385040; x=1747989840; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wtu7zpoEhIazPVBR9VLrQ2O+ovOuUIuW+9nEGJrTJjc=;
+        b=Dj84PtfjvZS/Q5NV3i06KBdZTUEhBpm3wn8GDOk9qb6ySr6Avbz5x6JzFL+pE7QskY
+         PPK6/erIMm97OqRHdobfvHVJlr8cxT8FxW9aiLAeyKT7KYK2C1KELsaOlz3xGQnoKxhT
+         X5Ky95f75t2NGix6ricmpZRm4OMX7m1fjdcmyLEVN794Avjs+FYsrgBndkHAMrVTRoz3
+         cfSenpPx7a4nKtnjNX80962rVHQLhQmOotMKCSjFsPRdI1RVzdkdTwikWUmMR9z9cSZH
+         jObhu4t014ODbByHh4MR4+mrkGW4gDbeICHEW89kvjM+Adecvgb/b31v2snougubA01m
+         nKYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747384967; x=1747989767;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ozVXZJSiT9O1HxZpbWEc2vaFp9bt9sbgaI+WguSf/+E=;
-        b=ukamgxD6sHJtIYQ21CRgbzuOhTaVTTPoj7XihpSKFV/Z1iV1PS1rXiGXma5t+Nujho
-         6SR/eTmzxApUO8hnHfxKVK1UXhbvkEG3Oq3NsNOXp0QIq00DeO1ioPHEaqYVnPY+RBFX
-         jl0IxT7S+uPQNhcrIgtzEZq7IRlAHz+kyjSmI1kNXmjhjz1n+g69G6+PZ5IFpSB1S66t
-         hK2eg0BBQfCJ5u1crh7MV/LasSKUIQV+VtvJ0yniLovGSbYEcSGk9XIacySEc406kUw4
-         ilgxpYiSQ243LJdPvC8ItdxAsJBteS5RkrK6UduWrrk4sn88ogwGyRX/4zSl53i9UNIb
-         MP6g==
-X-Forwarded-Encrypted: i=1; AJvYcCUKATYGcZPRm7cUSHr3/WvMJzYGAQZSwj2oRzjXoc4RIB1kNvSfB5MnLWmsnkvWTdWn/ts2AhjLrKX8t8g=@vger.kernel.org, AJvYcCVtRPWtUU3hfvM6Yq0AixN4Z4GenMD00OR9DYmuiRzCUBj74qNp4WpEgK1AdJJkxiI4zig1Ye4TTbJK@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXg3tf/qmAXXyS3rVUA3+j+KTxDswqC7c+H1t3K6wMkIxjB1UF
-	kucEZbTaIC5lZv0/MMz1YIO/cDfvf8tc3JIbQ1YuUjxh8ctDvgPH2zta
-X-Gm-Gg: ASbGncveEveV8n5a97JevANj4zkObDYFumGIQ4OskuukQQyhUCVIQ2ff1YXYe3V+KV+
-	mTZsJUBCM+G2+U6i38RAxuv4QM+igMR0R0JUMIHtv6Ht72bdYLvw20J3pGaEcRz+iy+mri2fSGe
-	fqMbDAXE6a9OExLdvOEKgAo/SwWZohBgk/Wjb9szPM5mMhPMEw6Q3qRpTrkzs/i4AL7YZSXbTWc
-	V8QX+sQASOBVNIr5JutscomRUhG0HFYW6veSlaXEkVhpJhUOPpLhoWrayG8EgGZAqsDZA9nzGaF
-	X8rYOfK5Mgyalu/0g0LYqOnx3r1R4nMzeXt1Xuj7B91cfjxK53uiX0RGp8kxh2d34Eiekrgkhc1
-	FggRFFxoZWoV/NLRN2C9vg+C5PzqUuL58K5tHlkUM0uYT0vza
-X-Google-Smtp-Source: AGHT+IFGS+/vRu8QmHS2IfGwI+6i4JVpaDHRHX9D9FFRAFxbB9uqhODsx+sDPiCkOfiV2KRSQftTCg==
-X-Received: by 2002:a05:6512:6604:b0:54f:bf70:7b60 with SMTP id 2adb3069b0e04-550e722f6d5mr584788e87.35.1747384966897;
-        Fri, 16 May 2025 01:42:46 -0700 (PDT)
-Received: from uuba.fritz.box (2001-14ba-53-1500-af87-7c77-739c-7417.rev.dnainternet.fi. [2001:14ba:53:1500:af87:7c77:739c:7417])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e703f6d5sm326931e87.243.2025.05.16.01.42.46
+        d=1e100.net; s=20230601; t=1747385040; x=1747989840;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wtu7zpoEhIazPVBR9VLrQ2O+ovOuUIuW+9nEGJrTJjc=;
+        b=bpjx7RTf/L9J3/jK3s63hoggOgD6FgII6uQeyUsclfASvQWgS+HeebwAhOt7m16fwq
+         t4VEIn+qYkGv0JSAHLNxIiudD9+3yeWKbUJCf/6hKntLhNiWeJKvxFzgj/JlYVYTsx87
+         sn15nTS8R5o1sCV/tD2GoUJr5EraPyhFR+XB477XhAyzRCUAYekL8qXOpc/scLhNgRoC
+         CP9fhEyji7feUvY90TP5lVHsnqkszVF+AF2+JKqdx3b1Ji2S+8ToMcZIJ1l+zBPSUHPo
+         QUIoO6Z2umPCflfnkHZFRUJ5rzX9l1tJVeIB7K2S0/aSXuyMn27hi3kxzErUfDwbuN/u
+         I4Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgC/+Q/H1FsGGyJYxaqp7ofY80tZDWu3dxNSjrdfqfqQM0E6askpaX2Kv05sS5JcDOV0CFTI+7LsltH7Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/azEuUQhT+oJL3fy4nXRUEyCdE8DdlUPC9CWwNtEoBsnyB0Wo
+	s4yL4NYSsvyNP5yDvcadOgLo07v8spK9jdh+ZoKHjpfLe822AqLXyTNoyh9x3ZfK
+X-Gm-Gg: ASbGncvyRDUK/uDn6ZIr79UKMs7roH+AXBl/63FOtgByhZy5sy8DBffmqN95GP+ZpLC
+	cjtg031NaKiYIULTmdbLv//2bWABBLnvl3Q3FLfFOrGzYcFemMoG4J3vFTOOdCxi6B4jZPF35tT
+	0KPLEEih6SO1AacFgXthMqQA3zZVyKcz0NEWq9SShvUvcAfkOaS7LkpaUFwVR58ghDTz4ZRw7LS
+	p6/NM4/iBR7jri0bFVtvRf5of9USOWzpfZ3J8JPnYehey+z9nCeYpbg/jcCSDb3tLfTi++ZQb6F
+	ehpSxsf+BYK5KSglphN/Uv8itxTAoaDFXDqT7d7RreQ8xx9E9aYdt+c55eLQ9GjWRSrh9TVVqH0
+	B
+X-Google-Smtp-Source: AGHT+IEYZb/TzXzZVFqdhqGt3K1l/2137LORafBeymggFrs92Lp+L3YIGu5RsSNqD4chBhDRXMQG/Q==
+X-Received: by 2002:a05:600c:821b:b0:442:ccfa:18c with SMTP id 5b1f17b1804b1-442ff03c671mr12712175e9.32.1747385039900;
+        Fri, 16 May 2025 01:43:59 -0700 (PDT)
+Received: from localhost.localdomain ([213.74.214.99])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd50ee03sm25352005e9.14.2025.05.16.01.43.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 01:42:46 -0700 (PDT)
-From: =?UTF-8?q?Hanne-Lotta=20M=C3=A4enp=C3=A4=C3=A4?= <hannelotta@gmail.com>
-To: skhan@linuxfoundation.org,
-	shuah@kernel.org,
-	alexandre.belloni@bootlin.com
-Cc: linux-kselftest@vger.kernel.org,
+        Fri, 16 May 2025 01:43:59 -0700 (PDT)
+From: Can Ayberk Demir <ayberkdemir@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Michal Simek <michal.simek@amd.com>,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-rtc@vger.kernel.org,
-	=?UTF-8?q?Hanne-Lotta=20M=C3=A4enp=C3=A4=C3=A4?= <hannelotta@gmail.com>
-Subject: [PATCH v2] selftests: Improve test output grammar, code style
-Date: Fri, 16 May 2025 11:42:33 +0300
-Message-Id: <20250516084233.66594-1-hannelotta@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	Can Ayberk DEMIR <ayberkdemir@gmail.com>,
+	Suraj Gupta <suraj.gupta2@amd.com>
+Subject: [PATCH net v4] net: axienet: safely drop oversized RX frames
+Date: Fri, 16 May 2025 11:43:34 +0300
+Message-Id: <20250516084334.2463-1-ayberkdemir@gmail.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250509104755.46464-1-ayberkdemir@gmail.com>
+References: <20250509104755.46464-1-ayberkdemir@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,100 +86,103 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add small grammar fixes in perf events and Real Time Clock tests'
-output messages.
+From: Can Ayberk DEMIR <ayberkdemir@gmail.com>
 
-Include braces around a single if statement, when there are multiple
-statements in the else branch, to align with the kernel coding style.
+In AXI Ethernet (axienet) driver, receiving an Ethernet frame larger
+than the allocated skb buffer may cause memory corruption or kernel panic,
+especially when the interface MTU is small and a jumbo frame is received.
 
-Signed-off-by: Hanne-Lotta Mäenpää <hannelotta@gmail.com>
+This bug was discovered during testing on a Kria K26 platform. When an
+oversized frame is received and `skb_put()` is called without checking
+the tailroom, the following kernel panic occurs:
+
+  skb_panic+0x58/0x5c
+  skb_put+0x90/0xb0
+  axienet_rx_poll+0x130/0x4ec
+  ...
+  Kernel panic - not syncing: Oops - BUG: Fatal exception in interrupt
+
+Fixes: 8a3b7a252dca ("drivers/net/ethernet/xilinx: added Xilinx AXI Ethernet driver")
+
+Signed-off-by: Can Ayberk DEMIR <ayberkdemir@gmail.com>
+Tested-by: Suraj Gupta <suraj.gupta2@amd.com>
 ---
+Changes in v4:
+- Moved Fixes: tag before SOB as requested
+- Added Tested-by tag from Suraj Gupta
 
-Notes:
-    v1 -> v2: Improved wording in RTC tests based on feedback from
-    Alexandre Belloni <alexandre.belloni@bootlin.com>
+Changes in v3:
+- Fixed 'ndev' undeclared error → replaced with 'lp->ndev'
+- Added rx_dropped++ for statistics
+- Added Fixes: tag
 
- tools/testing/selftests/perf_events/watermark_signal.c |  7 ++++---
- tools/testing/selftests/rtc/rtctest.c                  | 10 +++++-----
- 2 files changed, 9 insertions(+), 8 deletions(-)
+Changes in v2:
+- This patch addresses style issues pointed out in v1.
+---
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 47 +++++++++++--------
+ 1 file changed, 28 insertions(+), 19 deletions(-)
 
-diff --git a/tools/testing/selftests/perf_events/watermark_signal.c b/tools/testing/selftests/perf_events/watermark_signal.c
-index 49dc1e831174..6176afd4950b 100644
---- a/tools/testing/selftests/perf_events/watermark_signal.c
-+++ b/tools/testing/selftests/perf_events/watermark_signal.c
-@@ -65,8 +65,9 @@ TEST(watermark_signal)
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index 1b7a653c1f4e..7a12132e2b7c 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -1223,28 +1223,37 @@ static int axienet_rx_poll(struct napi_struct *napi, int budget)
+ 			dma_unmap_single(lp->dev, phys, lp->max_frm_size,
+ 					 DMA_FROM_DEVICE);
  
- 	child = fork();
- 	EXPECT_GE(child, 0);
--	if (child == 0)
-+	if (child == 0) {
- 		do_child();
-+	}
- 	else if (child < 0) {
- 		perror("fork()");
- 		goto cleanup;
-@@ -75,7 +76,7 @@ TEST(watermark_signal)
- 	if (waitpid(child, &child_status, WSTOPPED) != child ||
- 	    !(WIFSTOPPED(child_status) && WSTOPSIG(child_status) == SIGSTOP)) {
- 		fprintf(stderr,
--			"failed to sycnhronize with child errno=%d status=%x\n",
-+			"failed to synchronize with child errno=%d status=%x\n",
- 			errno,
- 			child_status);
- 		goto cleanup;
-@@ -84,7 +85,7 @@ TEST(watermark_signal)
- 	fd = syscall(__NR_perf_event_open, &attr, child, -1, -1,
- 		     PERF_FLAG_FD_CLOEXEC);
- 	if (fd < 0) {
--		fprintf(stderr, "failed opening event %llx\n", attr.config);
-+		fprintf(stderr, "failed to setup performance monitoring %llx\n", attr.config);
- 		goto cleanup;
- 	}
+-			skb_put(skb, length);
+-			skb->protocol = eth_type_trans(skb, lp->ndev);
+-			/*skb_checksum_none_assert(skb);*/
+-			skb->ip_summed = CHECKSUM_NONE;
+-
+-			/* if we're doing Rx csum offload, set it up */
+-			if (lp->features & XAE_FEATURE_FULL_RX_CSUM) {
+-				csumstatus = (cur_p->app2 &
+-					      XAE_FULL_CSUM_STATUS_MASK) >> 3;
+-				if (csumstatus == XAE_IP_TCP_CSUM_VALIDATED ||
+-				    csumstatus == XAE_IP_UDP_CSUM_VALIDATED) {
+-					skb->ip_summed = CHECKSUM_UNNECESSARY;
++			if (unlikely(length > skb_tailroom(skb))) {
++				netdev_warn(lp->ndev,
++					    "Dropping oversized RX frame (len=%u, tailroom=%u)\n",
++					    length, skb_tailroom(skb));
++				dev_kfree_skb(skb);
++				lp->ndev->stats.rx_dropped++;
++				skb = NULL;
++			} else {
++				skb_put(skb, length);
++				skb->protocol = eth_type_trans(skb, lp->ndev);
++				/*skb_checksum_none_assert(skb);*/
++				skb->ip_summed = CHECKSUM_NONE;
++
++				/* if we're doing Rx csum offload, set it up */
++				if (lp->features & XAE_FEATURE_FULL_RX_CSUM) {
++					csumstatus = (cur_p->app2 &
++							XAE_FULL_CSUM_STATUS_MASK) >> 3;
++					if (csumstatus == XAE_IP_TCP_CSUM_VALIDATED ||
++					    csumstatus == XAE_IP_UDP_CSUM_VALIDATED) {
++						skb->ip_summed = CHECKSUM_UNNECESSARY;
++					}
++				} else if (lp->features & XAE_FEATURE_PARTIAL_RX_CSUM) {
++					skb->csum = be32_to_cpu(cur_p->app3 & 0xFFFF);
++					skb->ip_summed = CHECKSUM_COMPLETE;
+ 				}
+-			} else if (lp->features & XAE_FEATURE_PARTIAL_RX_CSUM) {
+-				skb->csum = be32_to_cpu(cur_p->app3 & 0xFFFF);
+-				skb->ip_summed = CHECKSUM_COMPLETE;
+-			}
  
-diff --git a/tools/testing/selftests/rtc/rtctest.c b/tools/testing/selftests/rtc/rtctest.c
-index be175c0e6ae3..930bf0ce4fa6 100644
---- a/tools/testing/selftests/rtc/rtctest.c
-+++ b/tools/testing/selftests/rtc/rtctest.c
-@@ -138,10 +138,10 @@ TEST_F_TIMEOUT(rtc, date_read_loop, READ_LOOP_DURATION_SEC + 2) {
- 		rtc_read = rtc_time_to_timestamp(&rtc_tm);
- 		/* Time should not go backwards */
- 		ASSERT_LE(prev_rtc_read, rtc_read);
--		/* Time should not increase more then 1s at a time */
-+		/* Time should not increase more than 1s per read */
- 		ASSERT_GE(prev_rtc_read + 1, rtc_read);
+-			napi_gro_receive(napi, skb);
++				napi_gro_receive(napi, skb);
  
--		/* Sleep 11ms to avoid killing / overheating the RTC */
-+		/* Sleep 11ms to avoid overheating the RTC */
- 		nanosleep_with_retries(READ_LOOP_SLEEP_MS * 1000000);
+-			size += length;
+-			packets++;
++				size += length;
++				packets++;
++			}
+ 		}
  
- 		prev_rtc_read = rtc_read;
-@@ -236,7 +236,7 @@ TEST_F(rtc, alarm_alm_set) {
- 	if (alarm_state == RTC_ALARM_DISABLED)
- 		SKIP(return, "Skipping test since alarms are not supported.");
- 	if (alarm_state == RTC_ALARM_RES_MINUTE)
--		SKIP(return, "Skipping test since alarms has only minute granularity.");
-+		SKIP(return, "Skipping test since alarm has only minute granularity.");
- 
- 	rc = ioctl(self->fd, RTC_RD_TIME, &tm);
- 	ASSERT_NE(-1, rc);
-@@ -306,7 +306,7 @@ TEST_F(rtc, alarm_wkalm_set) {
- 	if (alarm_state == RTC_ALARM_DISABLED)
- 		SKIP(return, "Skipping test since alarms are not supported.");
- 	if (alarm_state == RTC_ALARM_RES_MINUTE)
--		SKIP(return, "Skipping test since alarms has only minute granularity.");
-+		SKIP(return, "Skipping test since alarm has only minute granularity.");
- 
- 	rc = ioctl(self->fd, RTC_RD_TIME, &alarm.time);
- 	ASSERT_NE(-1, rc);
-@@ -502,7 +502,7 @@ int main(int argc, char **argv)
- 	if (access(rtc_file, R_OK) == 0)
- 		ret = test_harness_run(argc, argv);
- 	else
--		ksft_exit_skip("[SKIP]: Cannot access rtc file %s - Exiting\n",
-+		ksft_exit_skip("Cannot access RTC file %s - exiting\n",
- 						rtc_file);
- 
- 	return ret;
+ 		new_skb = napi_alloc_skb(napi, lp->max_frm_size);
 -- 
-2.39.5
+2.39.5 (Apple Git-154)
 
