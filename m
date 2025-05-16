@@ -1,205 +1,133 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [13.75.44.102])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D10C9231821;
-	Fri, 16 May 2025 09:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.75.44.102
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B0E231826
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747389234; cv=none; b=NiAd744GkSyaJ+6dxQOQyEHS9zhEwcIlb0FcUyDAG9ISJEbmL+bxvYNtKnIOi7YtvBuWIH/C5PvR/R9oWpPBHQ6m0FFbayRgOf0gPS5BE1Y18u5hj+Sxs0GfGYc54B3tCrPhYyR7Lq8NSheQMjLgMyLtcnrS0krUAHDnyUBc2E4=
+	t=1747389233; cv=none; b=giy3Nj1sTlBnv8wohDqf5+4rNsNn+6CcSABGS7paG6yDJFY9/BtJ/Ra9ZoMrc47L1bSCIHyO610bQxwCMjzNlV4E+jTQE/l6ur8vlL5bxu+HEhDr0+nnu5EtfoggE2CFBkQXnDGTRBpBa+cxf7uKgh6ne4fZqIrvUvl4rgukt1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747389234; c=relaxed/simple;
-	bh=bCqTG1438dYtVjz6t2eraDVHWLpId1AIgdo8T587GWU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GWZTZbEv74wdt7G7k0232Z0YTZW6NmyeIUoHvB/G4VBHC7fcHWAVRj+P9jJ6DbRckADrQBCU3fGEuPsyxEGxoBzuZrxGWcBfsUxLCLtI3gGCdrsvkuj35cLgrb3q7DPnRXkIebLBKckOVLnJzoGU9kYXJXH5iDGsr8l9wggKhE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=13.75.44.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0004758DT.eswin.cn (unknown [10.12.96.83])
-	by app2 (Coremail) with SMTP id TQJkCgDXaJIkCydol9V8AA--.41163S2;
-	Fri, 16 May 2025 17:53:42 +0800 (CST)
-From: zhangsenchuan@eswincomputing.com
-To: gregkh@linuxfoundation.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Thinh.Nguyen@synopsys.com,
-	p.zabel@pengutronix.de
-Cc: ningyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	yangwei1@eswincomputing.com,
-	Senchuan Zhang <zhangsenchuan@eswincomputing.com>
-Subject: [PATCH v1 1/2] dt-bindings: usb: Add Eswin EIC7700 Usb controller
-Date: Fri, 16 May 2025 17:53:37 +0800
-Message-ID: <20250516095338.1467-1-zhangsenchuan@eswincomputing.com>
-X-Mailer: git-send-email 2.49.0.windows.1
-In-Reply-To: <20250516095237.1516-1-zhangsenchuan@eswincomputing.com>
-References: <20250516095237.1516-1-zhangsenchuan@eswincomputing.com>
+	s=arc-20240116; t=1747389233; c=relaxed/simple;
+	bh=0T9dXX4j3/xNPrysk0i+Gd7aVj9eRvCOhtMXwW578kM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZYFnJD8Y+thNRgrH2OGSiIkAwpc/ZdDZ7HE1ghdtTMGZh732W1uisbUHMvxaECYJbJhAi2lUGlrZvNyGEtBFqM+VS/17JEajNqy1R3rhPPnne5CR/3x2hZsxTBaOU3dBaMBbBTp4z41b15SXD4j5M1ItZ8IjdqlAYszZBLpm1gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=F/eg2ZxU; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="F/eg2ZxU"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-441d1ed82dbso18670555e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 02:53:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747389230; x=1747994030; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0T9dXX4j3/xNPrysk0i+Gd7aVj9eRvCOhtMXwW578kM=;
+        b=F/eg2ZxUpml2N8mRwZ6n+Ttvvxpi+XTozMO9rt0wxcCEt4+YBa9+K0/oZqK4BCm2vn
+         a4iwU7Wp8NBz34JxO0pEBP5KZopHDm/MBCh41U9xQnaK7PYI13I123gKZ0Bsh9gH/tKg
+         drefYBzrPnr3yC+jHNO0yLnEsh+OZGkXVccmM3X8t6NFxap5LWtvOSptztHGwg0PunWM
+         pGJveWXwosoysGQAxzX7NXKzJvKAB/n7Bm158E9Qg37oOkEMDsagPUmrSnOTp1TnOe3W
+         poP1xD19T4uT9JMeNZrNpDj/9Ynkcuf+fnWEjNN+CLqpi6dxld0FBeYAHepZy2gw8sv+
+         0jjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747389230; x=1747994030;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0T9dXX4j3/xNPrysk0i+Gd7aVj9eRvCOhtMXwW578kM=;
+        b=Z+d579VN43Obc05ad3lN1jK/C7iHb6gyAXXT2n+EzaaAbocPRpJ1i9/iJN18PFxGME
+         qWyzTF7X1wJRCr1OH64dMYIfY9CEKiKvtSRLozFvJO0KE15ubhQvWymWDLRgm4YdscK5
+         wlb14rcgQEp2Q8dFR75JAXs7tlP6G+D/l7kHTrGvhppRaQ/KYpqpXu2cO7v+TNtUgewq
+         b5VRftAUM+onxGwp8yDFLFiPfTOT9d1sX6j9fXnJuSTdfMMuDmlGhttc7Zd+7G7RXWhY
+         PGgaVoMkM2WFIHY8B9RPk4/jBXx/SZoL+Ki4coKfM2W/hB7WctP8u/cVbxr7XESovUSV
+         BA9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWUgbQScgZK6i2ywnWPvmNy1t7We9ErkrHFAPkvxEwR5+4lqZtLekgStK/7OHCsZ8Irog0JOXvmYHSjFoU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyxk0WCD40qY9MT2KFXmMTxoTvdCjSd6fPeSw6/UEtb4qGnawa5
+	eJGkiudokxMHu5DeQLl9upXcpXZacP3JJAL0bBIcDGK8/Yvq681R2LduUQtxLN8Vc70=
+X-Gm-Gg: ASbGnctLue3RXSB11Zo2P2oXfkMx1FKgMGzJPEkxC5mUnj/SIH5qtZ+kmTnHvGqNy76
+	N8Er+Svl5OiCxREZZ7FGN/NoEkZ2BLvAOqNo5XIM3dcVra7+imhamgLxnVMFFAVainkTenxZbhg
+	PDe/EhWk/SuSkzg3I5QoHoAWD70e9T46DRlkqU5hZMMiFe2OBkW7ziyWu2PZMfxhIeskorv9YEe
+	KEjTFlRJfG/daF0gSWfu2AzYEXqn1uXh0nNrVGnPQ2tU48yPrWtH/cwlXIVmRAIrTEkIOB51lFj
+	S7Sthxo/hOGZJng1con6XQGHlTORhgvDoGIvuIsaZruOsbB/udFuIqaERcfzl7yBfDbEE6T4lkZ
+	AD2r5rza7+jPQ8gI98t1n4AuT71Bf
+X-Google-Smtp-Source: AGHT+IGWMqbdmzot88BwoyJkKVlik7hJWWIpAdv/u8TjYPa8JtimIILaeyozEucB70fzns1tTqycTw==
+X-Received: by 2002:a5d:51cd:0:b0:3a3:5cca:a539 with SMTP id ffacd0b85a97d-3a35ccaa7c1mr1995111f8f.20.1747389229889;
+        Fri, 16 May 2025 02:53:49 -0700 (PDT)
+Received: from localhost (p200300f65f00780800000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f00:7808::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a35ca5a87fsm2274308f8f.29.2025.05.16.02.53.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 02:53:49 -0700 (PDT)
+Date: Fri, 16 May 2025 11:53:48 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Vladimir Zapolskiy <vz@mleia.com>, 
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Purva Yeshi <purvayeshi550@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: lpc32xx: Add #pwm-cells property to the two
+ SoC PWMs
+Message-ID: <ss6jqmpz55wz3sb27kg7mu555qowf5enu3fe32zlxgqeix7odi@zhs3ns4euljf>
+References: <20250403104915.251303-2-u.kleine-koenig@baylibre.com>
+ <hbz3gikjqwuqmexzrxis43gmxcviiryihi7pdp3btdb3sopqi4@mssyr62bunxk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TQJkCgDXaJIkCydol9V8AA--.41163S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxZw1kWr45Kr4kKF1UCFyfJFb_yoW5tr43pa
-	93CrW0qr4fXF1fXa18WF10kan3J3Z3CF18Cr92yw17trnaqa4Fqw4akFy5Wa4UCr1xZ34a
-	gFWYv3yftw47C3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBm14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-wCF04
-	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
-	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
-	1lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1U
-	MIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I
-	8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUeZ2-DUUUU
-X-CM-SenderInfo: x2kd0wpvhquxxxdqqvxvzl0uprps33xlqjhudrp/
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="z5nkams7un7oxsws"
+Content-Disposition: inline
+In-Reply-To: <hbz3gikjqwuqmexzrxis43gmxcviiryihi7pdp3btdb3sopqi4@mssyr62bunxk>
 
-From: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
 
-Add Device Tree binding documentation for the ESWIN EIC7700
-usb controller module.
+--z5nkams7un7oxsws
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] ARM: dts: lpc32xx: Add #pwm-cells property to the two
+ SoC PWMs
+MIME-Version: 1.0
 
-Co-developed-by: Wei Yang <yangwei1@eswincomputing.com>
-Signed-off-by: Wei Yang <yangwei1@eswincomputing.com>
-Signed-off-by: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
----
- .../bindings/usb/eswin,eic7700-usb.yaml       | 120 ++++++++++++++++++
- 1 file changed, 120 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/eswin,eic7700-usb.yaml
+Hello,
 
-diff --git a/Documentation/devicetree/bindings/usb/eswin,eic7700-usb.yaml b/Documentation/devicetree/bindings/usb/eswin,eic7700-usb.yaml
-new file mode 100644
-index 000000000000..eb8260069b99
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/eswin,eic7700-usb.yaml
-@@ -0,0 +1,120 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/usb/eswin,eic7700-usb.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Eswin EIC7700 SoC Usb Controller
-+
-+maintainers:
-+  - Wei Yang <yangwei1@eswincomputing.com>
-+  - Senchuan Zhang <zhangsenchuan@eswincomputing.com>
-+
-+description: |
-+  The Usb controller on EIC7700 SoC.
-+
-+properties:
-+  compatible:
-+    const: eswin,eic7700-usb
-+
-+  reg:
-+    maxItems: 3
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-names:
-+    items:
-+      - const: peripheral
-+
-+  clocks:
-+    maxItems: 3
-+    description: handles to clock for the usb controller.
-+
-+  clock-names:
-+    items:
-+      - const: suspend
-+      - const: aclk
-+      - const: cfg_clk
-+    description: the name of each clock.
-+
-+  resets:
-+    description: resets to be used by the controller.
-+
-+  reset-names:
-+    items:
-+      - const: vaux
-+    description: names of the resets listed in resets property in the same order.
-+
-+  eswin,hsp_sp_csr:
-+    description: |
-+      High-speed equipment control register.
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+
-+  ranges: true
-+
-+  dma-noncoherent: true
-+
-+  numa-node-id:
-+    maximum: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-names
-+  - interrupt-parent
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - eswin,hsp_sp_csr
-+  - dma-noncoherent
-+  - ranges
-+  - numa-node-id
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    usb {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        usbdrd3_0: usb0{
-+          compatible = "eswin,eic7700-dwc3";
-+          #address-cells = <2>;
-+          #size-cells = <2>;
-+          clocks = <&clock 270>,
-+                   <&clock 545>,
-+                   <&clock 546>;
-+          clock-names = "suspend","aclk", "cfg_clk";
-+          eswin,hsp_sp_csr = <&hsp_sp_csr 0x800 0x808 0x83c 0x840>;
-+          resets = <&reset 0x07 (1 << 15)>;
-+          reset-names = "vaux";
-+          ranges;
-+          numa-node-id = <0>;
-+          status = "disabled";
-+          usbdrd_dwc3_0: dwc3@50480000 {
-+            compatible = "snps,dwc3";
-+            reg = <0x0 0x50480000 0x0 0x10000>;
-+            #address-cells = <2>;
-+            #size-cells = <2>;
-+            interrupt-parent = <&plic>;
-+            interrupts = <85>;
-+            interrupt-names = "peripheral";
-+            dr_mode = "peripheral";
-+            phy_type = "utmi";
-+            maximum-speed = "high-speed";
-+            eswin,hsp_sp_csr = <&hsp_sp_csr 0x1044>;
-+            snps,dis_enblslpm_quirk;
-+            snps,dis-u2-freeclk-exists-quirk;
-+            snps,dis_u2_susphy_quirk;
-+            snps,dis-del-phy-power-chg-quirk;
-+            snps,parkmode-disable-ss-quirk;
-+            status = "disabled";
-+            numa-node-id = <0>;
-+            dma-noncoherent;
-+          };
-+        };
-+    };
--- 
-2.25.1
+[adding Arnd to To:]
 
+On Thu, Apr 24, 2025 at 05:05:29PM +0200, Uwe Kleine-K=F6nig wrote:
+> On Thu, Apr 03, 2025 at 12:49:14PM +0200, Uwe Kleine-K=F6nig wrote:
+> > If these PWMs are to be used, a #pwm-cells property is necessary. The
+> > right location for that is in the SoC's dtsi file to not make
+> > machine.dts files repeat the value for each usage. Currently the
+> > machines based on nxp/lpc/lpc32xx.dtsi don't make use of the PWMs, so
+> > there are no properties to drop there.
+> >=20
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+>=20
+> I wonder if this patch is still on someone's radar. I didn't hear
+> anything back and it's not in next.
+
+This is still the status quo.=20
+
+There is a patch in next touching arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi
+applied by Arnd. So maybe the problem that my patch wasn't picked up is
+that Arnd wasn't aware?
+
+Best regards
+Uwe
+
+--z5nkams7un7oxsws
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgnCykACgkQj4D7WH0S
+/k4gBQf+MMHEz38OrUBBBQ7bgEtkz9tyZsvJY8TyLqJF1RXpnPhz0boYcprA6rhL
+H3fnPM32zczBLCqyIwIHE79WpttHwN5jm6UK1Gi9na7cF85zHfJnnJCKrb3IDoPP
+Gqb1DTEGHchPSkVI8przpdi/19wzLRhKpNb9RU4ILGtzqhVGjeQYf5mI8P419/JC
+s29FNZjX8+W2sZBsxfxioM6SHVgjpsRP1DfxPYkf/cMKWk6+fPIiYCS2UwGRUKmX
+Utr9tdaw8HsNHBiXGudxAojQiH6HdpZp17ET7SYu7SqRkzhJw6q8pqRrerxJhx6o
+IN6p6ADPdGVEPiG0kp4QiricGqtmnw==
+=xD5v
+-----END PGP SIGNATURE-----
+
+--z5nkams7un7oxsws--
