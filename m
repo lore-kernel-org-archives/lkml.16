@@ -1,105 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A64314B1E4A;
-	Fri, 16 May 2025 13:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D383812E7F;
+	Fri, 16 May 2025 13:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747401422; cv=none; b=Ydbay5Z2Z84eCAqFwV90w9MhQzLQtwC+NSEMjLY7iVKN9SWkr8L0J4Z8lQo6DVogtkT6Ncgr60X3h+lNoFDTTgK1D+OJUAaJAMmGCUlw3W3G9MPNEVnyWQZeKYPaAaU+/8typA0ceKrImFFwxKFz44rqDNLb+9l7xzJtKTLKYZE=
+	t=1747401461; cv=none; b=Exeh6ihxYwQ1Wy1qsEZZ0XxAkWvMl51B6lT1+qLspDcVy1MJkT8J9D3hG2HkqkNLGNADkAmMAx48SCKnbXJLlVkP7TxUED++CuiE3GMJE6TH3B80nxyLSchcNXueV6AQLFuuyGCF2yKdvzTpjh3xZPW722nOYYCeh/fcXhWadTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747401422; c=relaxed/simple;
-	bh=R1rj1kecMietGTIXFY8TxpvZyKXJeN7GH3gGjW8Japc=;
+	s=arc-20240116; t=1747401461; c=relaxed/simple;
+	bh=rVeEmKln0gNTxsxDZ0s6DRl00sLdCRCSPPJjd26+MDE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sSB3obiqFLVL/WKr/GWjo2nI6hT0scG1MbHYvbig1rDTv98ygOEuNxGvIvkYmnWSPjnlX+N7jBKsZJTI1z/GjLrTZBiGSI296ai42mxv+2Uah+le/Pcm8uZihbDvI3Aa0XTSgFCkMGcugQTrql4l0PyME6kuRnmUZw+JWa+2DVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1kY1eeJw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rRrz2GXgxrPyxXWFTgl7oUCO3P+XIQGuFs32APnu3wi/xeeyyfgM+LfTcauGw8dJrOvJYGGxGZUZgjDc7V2I1Q9fKbbyol/JQBFUNAbcKHXYjAZu8hizSCdmbLvq3clPctIqiL1vKHRvoMi8msFBWfbFcMbOiE1pxTKplwSbFpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bTONgGAq; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1kY1eeJw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95A68C4CEE4;
-	Fri, 16 May 2025 13:17:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747401422;
-	bh=R1rj1kecMietGTIXFY8TxpvZyKXJeN7GH3gGjW8Japc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=1kY1eeJwRXp3nr6muCDAiu6Gg+ETTXIHv5AN8XhJzdt0zK4uO1lZgbb3cwaf1janD
-	 tk0WxoA5mlSWVZgI4Er4sRQ6XnqhiX4o36V6790o9Pv1bd8XfNicNBURPAiKc1Vfx6
-	 xJFi3oeMXmo2xGx2ELwaRq+OlST7AJFEq4ton/BE=
-Date: Fri, 16 May 2025 15:15:14 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: John Hubbard <jhubbard@nvidia.com>
-Cc: Timur Tabi <timur@kernel.org>, Alexandre Courbot <acourbot@nvidia.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH] rust: add basic ELF sections parser
-Message-ID: <2025051647-urology-think-b8e0@gregkh>
-References: <20250515-elf-v1-1-4b53745453c0@nvidia.com>
- <2025051543-override-rockiness-3ead@gregkh>
- <D9WLFTPRB9FJ.OL6I760HKALZ@nvidia.com>
- <D9WP3YU31199.Q8IEDBJZ87LU@nvidia.com>
- <2025051532-gentleman-reset-58f2@gregkh>
- <CAOZdJXWKLu0y+kwC+Bm8nBCLizQVpsDdDUoS--hVgz2vnuZJQg@mail.gmail.com>
- <8b14b078-b899-42e8-8522-599daa65bc63@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bTONgGAq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747401460; x=1778937460;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rVeEmKln0gNTxsxDZ0s6DRl00sLdCRCSPPJjd26+MDE=;
+  b=bTONgGAqVQ7ewUyjwdvs+lwBbflSAfsIWlk7cRra1byyQMw9Q8ZmHZip
+   peuam05vfLk18pyN3BzBGXZ4Yzv8L/jifU3EpkjkfmJ1vpMvXoXnjPhaS
+   QhOcDbnf1TrmjFl86j87Cwjzczg6B2yl6OqJSZ0d56Tfoc69uObZh+ilz
+   Kiuw81U39o6Ldp9AA9bcABA9oUavgdr7mvMIK7PNETf6gxp64lXd1P1ua
+   uCpvrDTAXt7bDNXLbqXGYLbxzRDX+X++l8Q09tH88z8bQ2C7l8ozi8eIf
+   NI73bM2uf4r5O7L9H+PKI766yh3jrPZwreWFdiNIzb/0ihvkg74obX7pZ
+   Q==;
+X-CSE-ConnectionGUID: 7otnPEuwRAONIrJ16ZV3Cw==
+X-CSE-MsgGUID: gewe6C/ERRC1ejwdJ2dhdQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="53045003"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="53045003"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 06:17:39 -0700
+X-CSE-ConnectionGUID: 7e9q5ZeFSxW+0LvW/hgXUw==
+X-CSE-MsgGUID: 4VIMYbnlSKqD9Ot6qaED7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="143934000"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa004.fm.intel.com with ESMTP; 16 May 2025 06:17:34 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id BAD1A1BC; Fri, 16 May 2025 16:17:32 +0300 (EEST)
+Date: Fri, 16 May 2025 16:17:32 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Jan Kiszka <jan.kiszka@siemens.com>, 
+	Kieran Bingham <kbingham@kernel.org>, Michael Roth <michael.roth@amd.com>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Brijesh Singh <brijesh.singh@amd.com>, 
+	Sandipan Das <sandipan.das@amd.com>, Juergen Gross <jgross@suse.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-efi@vger.kernel.org, linux-mm@kvack.org, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCHv3 0/4] x86: Make 5-level paging support unconditional for
+ x86-64
+Message-ID: <rdbzqwmbjel6oiy6db5l6tgu5bzbwdni5gi2q7p7nmr24dwo6m@3vciui3f2ws4>
+References: <20250516123306.3812286-1-kirill.shutemov@linux.intel.com>
+ <aCc5cm_ZC-y9OnyA@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8b14b078-b899-42e8-8522-599daa65bc63@nvidia.com>
+In-Reply-To: <aCc5cm_ZC-y9OnyA@gmail.com>
 
-On Thu, May 15, 2025 at 12:17:00PM -0700, John Hubbard wrote:
-> On 5/15/25 7:30 AM, Timur Tabi wrote:
-> > On Thu, May 15, 2025 at 6:43 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >>> Or if ELF is the problem, I don't mind introducing a WAD loader. ;)
-> >>
-> >> The "problem" I'm not understanding is why does the kernel have to do
-> >> any of this parsing at all?
-> > 
-> > Nova will need to parse ELF headers in order to properly load and boot
-> > Nvidia firmware images.  Nouveau does this already:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/nouveau/nvkm/subdev/gsp/r535.c#n2931
-> 
-> Hi Greg!
-> 
-> Nouveau influenced us heavily here, because having firmware that we
-> can post once, and use everywhere (Nouveau and Nova), is very attractive.
-> 
-> Alex and Timur discuss other details that explain why the standard 
-> user-space approach is less simple and clean than it might appear at
-> first glance, but I wanted to emphasize that the firmware re-use point
-> a little bit, too.
-> 
-> Oh, and also: the ELF images are going to remain extremely simple,
-> because there is nothing now (nor can I see anything in the future)
-> that would drive anyone to do complicated things. For example, if
-> there is some exotic new thing in the future, it could be put into
-> its own firmware image if necessary--because we understand that
-> this parser here is intended to be a simple subset of ELF, and
-> left alone really.
+On Fri, May 16, 2025 at 03:11:14PM +0200, Ingo Molnar wrote:
+> Does this approach sound good to everyone?
 
-Ok, then why not just bury this down in the driver that is going to
-actually use it?  This patch series was adding it to ALL kernels, if you
-need/want it or not, and as such would be seen as a generic way to
-handle all ELF images.  But as that's not the case here, just copy what
-you did in the existing C driver and make it private to your code, so
-that no one else has to worry about accidentally thinking it would also
-work for their code :)
+Sounds good to me.
 
-And I still think that having the kernel do this is a mistake, firmware
-should always just be a "pass through" otherwise you open yourself up to
-all sorts of complexity and vulnerabilities in the kernel, both of which
-is generally not a good idea.
-
-thanks,
-
-greg k-h
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
