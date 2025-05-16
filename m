@@ -1,191 +1,170 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52D11DFE8;
-	Fri, 16 May 2025 02:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A032C9A
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 02:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747362789; cv=none; b=PUbYaXhtWdjmtWwQHuQ6BEliuJhbpW2cJgTa1gnzdOZ2T/RggnYBec7wPaz6EH/m64qfWuotukdXmoIN3YO2bGPcv0IR91KH+F4FM/1qJ9rFRKiRz2SsHyoOeJAnqcdpLWexxZ8m0nGZsAj88RBn2N/purKzZcNIysGWBxa6yLg=
+	t=1747362932; cv=none; b=bPizHRmIW38Aew0GRkDqOdsSmt10yKPPwn44LjF0+lEb1sH5JjkQ77gFAVC0ww31SGBK/k99nGJt/rvOoOa3NFYaxci24oY0JU5nM2fS+6tG7S/zg0of3B6IP4ZNR0DXcN1c/s3aXBFWoUMUWwZgzqdOGyVSp4zEhITAdvF8+VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747362789; c=relaxed/simple;
-	bh=T7qM7dRp59Fy5lY4eb20+paUlrx1Lrk82Cxc+XpO064=;
+	s=arc-20240116; t=1747362932; c=relaxed/simple;
+	bh=W5zn7yhRCgSTypR1MNOp6RkPEKp6BkOX/Av7lpF8cYs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JvEO4Fka+5sTGh6IvW0n5rT8G28WFo039COmXfOujGaL4DdNY61odKBMe6Wmea6O0m7UxYfJVqlVFr/dRYs48Lf95KvEpy8XphSi+Ph7ovzZhyfwVJhv/Qt2+Jlum9AAPiXNuZuhRFWiopGDd2IU6SrEl6UsUqZb+2VYmRBQ2dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i1RiMws0; arc=none smtp.client-ip=209.85.166.54
+	 To:Cc:Content-Type; b=pvPr99Dy+0foBPVtCX3M5vqmIBdH2EJXb6pV6bloIMulvnJmcfxJ/38tux8Mr28YVgdwE/mPxWOnNix/eyyONZI81YtiJu56JWAT9zqvCf6MzxmaP3rD4+4Dk6wsOSo7lcPMPp4nM+eAavOM3LNerhueqI1cZ29s3npR2U1MBGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MSsGqaTw; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i1RiMws0"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-86135af1045so173432939f.1;
-        Thu, 15 May 2025 19:33:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MSsGqaTw"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54b166fa41bso2109074e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 19:35:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747362787; x=1747967587; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747362929; x=1747967729; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rVGPAcMbIDDAE+CGMGoNk6Yx5l7mc/llgWDfx/5zSXY=;
-        b=i1RiMws0x11N0AqPAPAsj+YFRadWEsTFj78oiWnPFVeJB3GC21Aeg5ZUzValkkpeO5
-         hftVA3m30Em3GN6T63ScYvGMgZu5PMiooDPu9wY3noVm56F+YD4Jxz7T1j2dvdDb8Bc0
-         zd4AvUl1vRfa9/Q+xYkgR1bVSDsD7dWJceIyS8sskyhXjU3vaHGcARsBBNPYwVDxKGqH
-         6kkSioYFPbnGC5Hvz+qGIuVIRk+uKh6FD9X8lkwQeldVQg94O9EEWpQQKQs7Dkg+Xgon
-         hJ9a0gYGX3m8DSnmpXTJkLqhVprIQIG1ORjibWOljPaauVQTmomar56YASZL0WRt0sBk
-         BhMA==
+        bh=97eSBRvWwlOrFi0Xp4lcOze8Tl5VcCyOGmtZ2nesnIs=;
+        b=MSsGqaTwS+9tfTPHmcs+6nnVrRDVUJ60/Iek3YDEP0jAK30c/jF/ULnyNhfYsRDsTj
+         7bl6ba/gRCYTH5faHX15gt8ojTCOCW14KyQaYiJCktRbmUYgv5Bjf1W+h3N1AlmCGSWP
+         j9qRnxtiNLj8pfvpW49KyVshHirM5ob76mIKQT/xdlJFpJXBPi5phfBFWe7xPUHs8Fuh
+         FbF8r1fMk97qwoDNy+75u5CijZ+hRe2L9dOyBubzXIvJQLApLTPfzRnTajRJypQafLgu
+         GcTSBcCKXqlPgrHVajrwD0vlDXQw4smPPBBRH/vYnt8tgmYkivlKmutxxnFAbdMJhlfg
+         W6VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747362787; x=1747967587;
+        d=1e100.net; s=20230601; t=1747362929; x=1747967729;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rVGPAcMbIDDAE+CGMGoNk6Yx5l7mc/llgWDfx/5zSXY=;
-        b=HLNqnIfCRdDhDipmd1/I5sMwZCZOUXr7yPm3JmsnyX2gP0nTVChUTEsdjj/wIfrbCw
-         H6VgJUpKZSTIaW9yUVFym/bxqWDNTWYHn828cqoivyZzQawVGsdcOp/X0Mz529hyhC5a
-         VGvocTGD464KpA4XOqTzQYwws95N/SK0dV8wpMWQ0l0WeAvO5ZH1w6Hezb5UDC6O2gLf
-         DIyAJDhdehjhqFJ2BkuXHpA1nzs8oGvJbbe3JCzjUuKpmt1E/BFQ/h3iKt41pQz8A4hE
-         S3Sd4ov+oUfIj7XbIP/x5aVZrq+djmjzuLscPQYcVTOQl2xNDNgqMjIJLRtjYnQ7waD6
-         mGXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVmnlhlohjoZhsp9BR6jfUH7SQRzrNME0QGO0mRbdUEqJmVMqG0ze6ymvCXj+e4maUU65MHWhRHXq9DOQ==@vger.kernel.org, AJvYcCX5YKiVyHxl79s1INnRl7r65NYK6GukQURxq81vuJFgdefdK7A3VsJN7vqlXt2/ADt6Yr7hbXs086ToHx3U@vger.kernel.org, AJvYcCXPZjQMQ4VaT2rsrBhtxgnngL0UzmeJMcR0br2qpniz0Uh0OWPeXumce7nOiiBgjK4gk0tzhPs6+WftBCPgacho/dV5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzrz8OUKXOwoQV2fokabqguHZjdEr0t3UrPNBruEi9gs/lYGS0z
-	w7pCmOfTwuBtB48wCNcAPawYsvcJ9OjjPbB3Bi5Bf/uS5cAmJgwYsxPlE+k3QwCfRUX0+71xrND
-	54L5wI2EBX7YgnppS1Iij4JW3B+51Q7A=
-X-Gm-Gg: ASbGncsDQCIzHuenm4e3sJK/C/6RXjdbyC2t0fg7rbZceL0QtyZkrMDjkGTDqaUB3/d
-	67Sw9x5VFeiQvDNYOSk8qSARRs3hz1JJOm8DmBIeY62a7d8FQC9p+kDopvh+X5+pXlP0SeRHW1C
-	RVJPqIefxP91JN4NL22DNIB9alcW/FE5H+
-X-Google-Smtp-Source: AGHT+IEArUWw7fv+2aLvDYNuJ2lUNmN9w0DfhWr7EyePZ0E/QR1dcxoznx1PWONJdRZnCm99AXsqb1zC2xVwpUD4tyU=
-X-Received: by 2002:a05:6602:3e94:b0:864:4a82:15ec with SMTP id
- ca18e2360f4ac-86a231b703amr347766039f.6.1747362786828; Thu, 15 May 2025
- 19:33:06 -0700 (PDT)
+        bh=97eSBRvWwlOrFi0Xp4lcOze8Tl5VcCyOGmtZ2nesnIs=;
+        b=pF6y9ySyD5Rdo9zPjzym+35WNUHdmU8yLmN9eHV0VX8U4ajp/xOvIhKqMO7FsVBWRz
+         aQ9XK1MDmavhq0KkMuxpnb/yT7jrxbnIvx/iVS9FmaTtxTBpkPP7s0HEka0wPjIRT39b
+         qox+X1BzEDN8VcU+6vpmzVgn65MJdCTKaIi1t+YmHGuFmo0pjaPCnwXdo5geTC/TOAOo
+         duaXY1X6PwjRPfyCDYkqr6wgkcDIUBnkTgI/o/azuehVQx0K/t8vn1uIbRbo9CNRUfzT
+         Cj2cNryuhlNagC+4aWM4aTdxX70CF88XnxNYVQW6Xn5O++WTPeGWdbyqv1WuFnZ6+OGf
+         VF/w==
+X-Forwarded-Encrypted: i=1; AJvYcCXB8cpLUgCRfwX2h3in+W6Rk+APB2trQUJhaH0VbU/kUa+c2+Pk+cL0LewnD11a/pTlzLlJ6HV4kYvF7gQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJX9FI+aIW1x/+CbBgMI8EE7ykk2OIAqb+slDNwIQvPSAmz/rp
+	xoGtn4E/GIiQ6J3oaVRzXgUSkR2r8XoTl7H4RpsOQ9TLPpIDuqq2WIJLVtYk0XL5mb3+rufb0bf
+	Rfs0EiT16zIWE1VN2ZbwxleRcDW28cOk=
+X-Gm-Gg: ASbGncspU/G3dXa72Z6gI/B5EmhxeXugldb43eYTM0WBsOhlaKqPWDTQzrOUdzrpj31
+	E4sJDw52eceYbECTjOAcS9bC+XK8lffGc7d3cKUPpFa9AO1HeWVr87MPdLas57RVCcE3BULk/KW
+	b2J/NUyqYMaItXTGlfTgZ+NKkOlXimH0OO
+X-Google-Smtp-Source: AGHT+IGEohsDPf3NZ6sD9c5xqEKRveBataHl0LHi8PdktB/2oe88QR4GcLZC6tkcSuWsKxJIW+5aytWv8kp0WAQB8Lg=
+X-Received: by 2002:a05:6512:641a:b0:54d:67e3:91cd with SMTP id
+ 2adb3069b0e04-550e7242ca6mr420414e87.36.1747362928688; Thu, 15 May 2025
+ 19:35:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515061643.31472-1-kerneljasonxing@gmail.com>
- <20250515061643.31472-3-kerneljasonxing@gmail.com> <20250516110837.355d963224cf74ea2b020d9d@kernel.org>
-In-Reply-To: <20250516110837.355d963224cf74ea2b020d9d@kernel.org>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Fri, 16 May 2025 10:32:30 +0800
-X-Gm-Features: AX0GCFvwEQ1j5Z-FoSMzorQ-dGuNPeoemf9Wczbrn1TtjwBZRE-D6iQkLDrHgM8
-Message-ID: <CAL+tcoB=HYB-EnyYTK=HzpgsosbOwo2VxMw-_mzbkSYnEWAVqw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] relayfs: introduce dump of relayfs statistics function
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: axboe@kernel.dk, rostedt@goodmis.org, mathieu.desnoyers@efficios.com, 
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Jason Xing <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
+References: <20250514201729.48420-1-ryncsn@gmail.com> <20250514201729.48420-25-ryncsn@gmail.com>
+ <flxeg6dxdanixfcfw2sc4qtgisngt22d6ltwkql5hkvx4ixzwe@oyoo4vefepie>
+In-Reply-To: <flxeg6dxdanixfcfw2sc4qtgisngt22d6ltwkql5hkvx4ixzwe@oyoo4vefepie>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Fri, 16 May 2025 10:35:11 +0800
+X-Gm-Features: AX0GCFumbLnuslXGYK9kx0T1AKHDSlFx0F-UW-ydDI3uOdbN3xW8b2P59RwRcXk
+Message-ID: <CAMgjq7DJvHZ-0VztN5axwy4X3z-dKRtp9xHSP4RrE=nQ4G_siA@mail.gmail.com>
+Subject: Re: [PATCH 24/28] mm, swap: implement helpers for reserving data in
+ swap table
+To: Klara Modin <klarasmodin@gmail.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Matthew Wilcox <willy@infradead.org>, Hugh Dickins <hughd@google.com>, Chris Li <chrisl@kernel.org>, 
+	David Hildenbrand <david@redhat.com>, Yosry Ahmed <yosryahmed@google.com>, 
+	"Huang, Ying" <ying.huang@linux.alibaba.com>, Nhat Pham <nphamcs@gmail.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, 
+	Kalesh Singh <kaleshsingh@google.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Tim Chen <tim.c.chen@linux.intel.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 16, 2025 at 10:08=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.=
-org> wrote:
+On Thu, May 15, 2025 at 5:42=E2=80=AFPM Klara Modin <klarasmodin@gmail.com>=
+ wrote:
 >
-> On Thu, 15 May 2025 14:16:41 +0800
-> Jason Xing <kerneljasonxing@gmail.com> wrote:
+> Hi,
 >
-> > From: Jason Xing <kernelxing@tencent.com>
+> On 2025-05-15 04:17:24 +0800, Kairui Song wrote:
+> > From: Kairui Song <kasong@tencent.com>
 > >
-> > In this version, only support dumping the counter for buffer full and
-> > implement the framework of how it works.
+> > To prepare for using swap table as the unified swap layer, introduce
+> > macro and helpers for storing multiple kind of data in an swap table
+> > entry.
 > >
-> > Users can pass certain flag to fetch what field/statistics they expect
-> > to know. Each time it only returns one result. So do not pass multiple
-> > flags.
-> >
-> > Reviewed-by: Yushan Zhou <katrinzhou@tencent.com>
-> > Signed-off-by: Jason Xing <kernelxing@tencent.com>
+> > Signed-off-by: Kairui Song <kasong@tencent.com>
 > > ---
-> > v2
-> > 1. refactor relay_dump() and make it only return a pure size_t result
-> > of the value that users specifies.
-> > 2. revise the commit log.
-> > ---
-> >  include/linux/relay.h |  7 +++++++
-> >  kernel/relay.c        | 31 +++++++++++++++++++++++++++++++
-> >  2 files changed, 38 insertions(+)
+> >  mm/swap_table.h | 130 ++++++++++++++++++++++++++++++++++++++++++++----
+> >  1 file changed, 119 insertions(+), 11 deletions(-)
 > >
-> > diff --git a/include/linux/relay.h b/include/linux/relay.h
-> > index ce7a1b396872..3fb285716e34 100644
-> > --- a/include/linux/relay.h
-> > +++ b/include/linux/relay.h
-> > @@ -31,6 +31,12 @@
+> > diff --git a/mm/swap_table.h b/mm/swap_table.h
+> > index 69a074339444..9356004d211a 100644
+> > --- a/mm/swap_table.h
+> > +++ b/mm/swap_table.h
+> > @@ -5,9 +5,41 @@
+> >  #include "swap.h"
+> >
 > >  /*
-> >   * Relay buffer statistics dump
-> >   */
-> > +enum {
-> > +     RELAY_DUMP_BUF_FULL =3D (1 << 0),
-> > +
-> > +     RELAY_DUMP_LAST =3D RELAY_DUMP_BUF_FULL,
-> > +};
-> > +
-> >  struct rchan_buf_stats
-> >  {
-> >       unsigned int full_count;        /* counter for buffer full */
-> > @@ -167,6 +173,7 @@ struct rchan *relay_open(const char *base_filename,
-> >                        void *private_data);
-> >  extern void relay_close(struct rchan *chan);
-> >  extern void relay_flush(struct rchan *chan);
-> > +extern size_t relay_dump(struct rchan *chan, int flags);
-> >  extern void relay_subbufs_consumed(struct rchan *chan,
-> >                                  unsigned int cpu,
-> >                                  size_t consumed);
-> > diff --git a/kernel/relay.c b/kernel/relay.c
-> > index eb3f630f3896..f47fc750e559 100644
-> > --- a/kernel/relay.c
-> > +++ b/kernel/relay.c
-> > @@ -701,6 +701,37 @@ void relay_flush(struct rchan *chan)
-> >  }
-> >  EXPORT_SYMBOL_GPL(relay_flush);
-> >
-> > +/**
-> > + *   relay_dump - dump channel buffer statistics
->
-> nit: relay_dump() can mislead to dump relay channel contents.
-> Can you rename it to relay_stats() or relay_get_stats()?
-
-Sure, both are good names. I would choose relay_stats().
-
-Thanks,
-Jason
-
->
-> Thanks,
->
-> > + *   @chan: the channel
-> > + *   @flags: select particular information to dump
+> > - * Swap table entry could be a pointer (folio), a XA_VALUE (shadow), o=
+r NULL.
+> > + * Swap table entry type and bit layouts:
 > > + *
-> > + *   Returns the count of certain field that caller specifies.
-> > + */
-> > +size_t relay_dump(struct rchan *chan, int flags)
-> > +{
-> > +     unsigned int i, count =3D 0;
-> > +     struct rchan_buf *rbuf;
-> > +
-> > +     if (!chan || flags > RELAY_DUMP_LAST)
-> > +             return 0;
-> > +
-> > +     if (chan->is_global) {
-> > +             rbuf =3D *per_cpu_ptr(chan->buf, 0);
-> > +             if (flags & RELAY_DUMP_BUF_FULL)
-> > +                     count =3D rbuf->stats.full_count;
-> > +     } else {
-> > +             for_each_online_cpu(i) {
-> > +                     if ((rbuf =3D *per_cpu_ptr(chan->buf, i)))
-> > +                             if (flags & RELAY_DUMP_BUF_FULL)
-> > +                                     count +=3D rbuf->stats.full_count=
-;
-> > +             }
-> > +     }
-> > +
-> > +     return count;
-> > +}
-> > +EXPORT_SYMBOL_GPL(relay_dump);
-> > +
-> >  /**
-> >   *   relay_file_open - open file op for relay files
-> >   *   @inode: the inode
-> > --
-> > 2.43.5
+> > + * NULL:     | ------------    0   -------------|
+> > + * Shadow:   | SWAP_COUNT |---- SHADOW_VAL ---|1|
+> > + * Folio:    | SWAP_COUNT |------ PFN -------|10|
+> > + * Pointer:  |----------- Pointer ----------|100|
+> > + *
+> > + * Usage:
+> > + * - NULL: Swap Entry is unused.
+> > + *
+> > + * - Shadow: Swap Entry is used and not cached (swapped out).
+> > + *   It's reusing XA_VALUE format to be compatible with workingset
+> > + *   shadows. SHADOW_VAL part could be all 0.
+> > + *
+> > + * - Folio: Swap Entry is in cache.
+> > + *
+> > + * - Pointer: Unused yet. Because only the last three bit of a pointer
+> > + *   is usable so now `100` is reserved for potential pointer use.
+> >   */
 > >
+> > +#define ENTRY_COUNT_BITS     BITS_PER_BYTE
+> > +#define ENTRY_SHADOW_MARK    0b1UL
+> > +#define ENTRY_PFN_MARK               0b10UL
+> > +#define ENTRY_PFN_LOW_MASK   0b11UL
+> > +#define ENTRY_PFN_SHIFT              2
+> > +#define ENTRY_PFN_MASK               ((~0UL) >> ENTRY_COUNT_BITS)
+> > +#define ENTRY_COUNT_MASK     (~((~0UL) >> ENTRY_COUNT_BITS))
+> > +#define ENTRY_COUNT_SHIFT    (BITS_PER_LONG - BITS_PER_BYTE)
+> > +#define ENTRY_COUNT_MAX              ((1 << ENTRY_COUNT_BITS) - 2)
+> > +#define ENTRY_COUNT_BAD              ((1 << ENTRY_COUNT_BITS) - 1) /* =
+ENTRY_BAD */
+> > +#define ENTRY_BAD            (~0UL)
+> > +
+> > +/* For shadow offset calculation */
+> > +#define SWAP_COUNT_SHIFT     ENTRY_COUNT_BITS
+> > +
+> >  /*
+> >   * Helpers for casting one type of info into a swap table entry.
+> >   */
+> > @@ -19,17 +51,27 @@ static inline swp_te_t null_swp_te(void)
+> >
+> >  static inline swp_te_t folio_swp_te(struct folio *folio)
+> >  {
+> > -     BUILD_BUG_ON(sizeof(swp_te_t) !=3D sizeof(void *));
+> > -     swp_te_t swp_te =3D { .counter =3D (unsigned long)folio };
 >
+> > +     BUILD_BUG_ON((MAX_POSSIBLE_PHYSMEM_BITS - PAGE_SHIFT) >
+> > +                  (BITS_PER_LONG - ENTRY_PFN_SHIFT - ENTRY_COUNT_BITS)=
+);
 >
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> MAX_POSSIBLE_PHYSMEM_BITS does not seem to be available on all
+> arches/configs.
+>
+> E.g. zsmalloc seems to set it to MAX_PHYSMEM_BITS when this is the case
+> but I don't know if that applies here.
+>
+
+Thanks, I think I'll just copy the snip from zsmalloc, it's basically
+doing the same check to ensure there are still enough bits left after
+embedding a PFN in a LONG.
