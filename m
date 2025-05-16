@@ -1,153 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63BA427CCC4;
-	Fri, 16 May 2025 20:16:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CC727EC9A;
+	Fri, 16 May 2025 20:16:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747426590; cv=none; b=sJZPhKQhALlh2k3PIRRBS05Xvs3/CSfwODlDXD1Ju6s0MZpzpcQTSamX6Z9dqgh+o6sJFb3OMcu39n+h+lHWrnSAjGHpxfaCF0VXFiDecfqmi34TC/O4J8Hb+zhMBQyVRe/ihLnsyaWuibb+zJQT2KIEVGcSKSQ+4GJ5ZKrsa0c=
+	t=1747426613; cv=none; b=hO58BjzZrobL8PthOMYduA/ZJuI7I0Niw3GGIttGCGbNw86WC/HUb95RU0MrRVRkU2Fe8DY+U2bugHUR0/UCJThB1DqWWFU4o734z6LVJ7vpmK0/W6BP4UUxT5IjQQq1bAxD4LXinCRDZfSjWT1IlzTdtyy9CH0V3Lp/yn2e8FE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747426590; c=relaxed/simple;
-	bh=D1Z5w9AYGSfUlSKYqF+jgYYMgx9eNNsKAADS1moCkaw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=dqbP0DcAA4DEhI+WCAWCKgx/gaZUHgYzzpkbv0akLuM8T8wwwthzmNqBiei/xU7AOlyxSDnnDVGWeXjbQcwFaO/jZ+Gsq4reUumUxZMe9QPBXHdmQNzrMnm13+xN1eOuu/5vEuGHbK5HzdwlfEKpMTh3U9Qi4kd5tPNO0AhUWtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pwqCmEeo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747426613; c=relaxed/simple;
+	bh=qFF0calRyniBymu6pWsXocIvfCO34tQjr8bYALVmbiA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U/95dYemKqGpQuqIDmLRjuySNH2eCL6mQNlT1fSp6uHTg8hJtYAgllK4pMbN4RynQkwLMqQtR7of3pYV1FlVYCJTN9XnbjPNJLH9Nmq6nJWm4vmd/fAYdVxljerVs9bEa4Sk2MlQgo4PrWa9LU3pTG9+3WDM6i3+1nUG3qqCiX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tDMK3I8b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pwqCmEeo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D593C4CEE4;
-	Fri, 16 May 2025 20:16:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tDMK3I8b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE39CC4CEEF;
+	Fri, 16 May 2025 20:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747426589;
-	bh=D1Z5w9AYGSfUlSKYqF+jgYYMgx9eNNsKAADS1moCkaw=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=pwqCmEeonx6ZXsuHmxwr0Jq+QDCCSpFRxtVtCeFnTCGBowrq1J/0iVNS+DlBi8lT5
-	 3086VLUmQPO+HjhKKoeuLvHgdKJNjYW7tV11djgzhOesw81NxW4b83xfLL3WK+fRcG
-	 eoA0LtBJgkrc++Tk0L9/C0/IKi3IZLSLwS5Ogyy9RATr+JzkQILJug8DFmCe85v5d/
-	 8XGn6o4w1ZgJD4uipVfaCJAiGijIyz+xLxm1S6/Bve61cO+RXpK5PlweNjUVxB2JOf
-	 7uWXhI4oCgWfRPAAcVHr7rz+6EB7ASHt6F+9GLxKvqQmu4ZJUKxDbASAGOUK2f58Z1
-	 ieYD1QT0BfbYw==
+	s=k20201202; t=1747426613;
+	bh=qFF0calRyniBymu6pWsXocIvfCO34tQjr8bYALVmbiA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tDMK3I8boQcEejsRxDXJqTCEi6T4NZujXSDb8t9AIK+MZRlbYhD3Q3i0JcvQ2i9a4
+	 HQdPz0NUy9EfbG6BkA+/E8iuD0Du+Oz4UVjW1LAGNO7+H/aWiQulL1g5wLh4fZZHo0
+	 U8sF3hxac5XF5SjsZ68pT4NAxk9COp/6sDC7XSrUJy1RDfSKH6MA59HND6URRtXfCn
+	 hXLyjzc0kVoUK7bQSz1z98GhrIOYaLQlijZUuiApAoY/ltvuq+pwFumQNFUFr4g0DS
+	 9GSVbeznufmWECsVbsIMFTd6Id0XqMOe+M3VHbsB4a1FTInVFGc+pPvWrRCQPdfkW3
+	 oQV/mFrSP6Cag==
+Date: Fri, 16 May 2025 21:16:48 +0100
+From: Simon Horman <horms@kernel.org>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v3 4/4] net: airoha: Use dev_err_probe()
+Message-ID: <20250516201648.GJ3339421@horms.kernel.org>
+References: <5c94b9b345017f29ed653e2f05d25620d128c3f0.1746715755.git.christophe.jaillet@wanadoo.fr>
+ <bb64aa1ea0205329c377ad32dde46cdf5c232db9.1746715755.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 16 May 2025 22:16:23 +0200
-Message-Id: <D9XV0Y22JHU5.3T51FVQONVERC@kernel.org>
-Cc: "FUJITA Tomonori" <fujita.tomonori@gmail.com>, <andrew+netdev@lunn.ch>,
- <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
- <pabeni@redhat.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
- <conor+dt@kernel.org>, <hkallweit1@gmail.com>, <linux@armlinux.org.uk>,
- <florian.fainelli@broadcom.com>, <bcm-kernel-feedback-list@broadcom.com>,
- <kabel@kernel.org>, <andrei.botila@oss.nxp.com>, <tmgross@umich.edu>,
- <ojeda@kernel.org>, <alex.gaynor@gmail.com>, <boqun.feng@gmail.com>,
- <gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
- <a.hindborg@kernel.org>, <aliceryhl@google.com>, <dakr@kernel.org>,
- <sd@queasysnail.net>, <michael@fossekall.de>, <daniel@makrotopia.org>,
- <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [net-next PATCH v10 7/7] rust: net::phy sync with
- match_phy_device C changes
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Christian Marangi" <ansuelsmth@gmail.com>
-X-Mailer: aerc 0.20.1
-References: <20250515112721.19323-1-ansuelsmth@gmail.com>
- <20250515112721.19323-8-ansuelsmth@gmail.com>
- <20250516.213005.1257508224493103119.fujita.tomonori@gmail.com>
- <D9XO2721HEQI.3BGSHJXCHPTL@kernel.org>
- <682755d8.050a0220.3c78c8.a604@mx.google.com>
-In-Reply-To: <682755d8.050a0220.3c78c8.a604@mx.google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bb64aa1ea0205329c377ad32dde46cdf5c232db9.1746715755.git.christophe.jaillet@wanadoo.fr>
 
-On Fri May 16, 2025 at 5:12 PM CEST, Christian Marangi wrote:
-> On Fri, May 16, 2025 at 04:48:53PM +0200, Benno Lossin wrote:
->> On Fri May 16, 2025 at 2:30 PM CEST, FUJITA Tomonori wrote:
->> > On Thu, 15 May 2025 13:27:12 +0200
->> > Christian Marangi <ansuelsmth@gmail.com> wrote:
->> >> @@ -574,6 +577,23 @@ pub const fn create_phy_driver<T: Driver>() -> D=
-riverVTable {
->> >>  /// This trait is used to create a [`DriverVTable`].
->> >>  #[vtable]
->> >>  pub trait Driver {
->> >> +    /// # Safety
->> >> +    ///
->> >> +    /// For the duration of `'a`,
->> >> +    /// - the pointer must point at a valid `phy_driver`, and the ca=
-ller
->> >> +    ///   must be in a context where all methods defined on this str=
-uct
->> >> +    ///   are safe to call.
->> >> +    unsafe fn from_raw<'a>(ptr: *const bindings::phy_driver) -> &'a =
-Self
->> >> +    where
->> >> +        Self: Sized,
->> >> +    {
->> >> +        // CAST: `Self` is a `repr(transparent)` wrapper around `bin=
-dings::phy_driver`.
->> >> +        let ptr =3D ptr.cast::<Self>();
->> >> +        // SAFETY: by the function requirements the pointer is valid=
- and we have unique access for
->> >> +        // the duration of `'a`.
->> >> +        unsafe { &*ptr }
->> >> +    }
->> >
->> > We might need to update the comment. phy_driver is const so I think
->> > that we can access to it any time.
->>=20
->> Why is any type implementing `Driver` a transparent wrapper around
->> `bindings::phy_driver`?
->>=20
->
-> Is this referred to a problem with using from_raw or more of a general
-> question on how the rust wrapper are done for phy code?
+On Thu, May 15, 2025 at 09:59:38PM +0200, Christophe JAILLET wrote:
+> Use dev_err_probe() to slightly simplify the code.
+> It is less verbose, more informational and makes error logging more
+> consistent in the probe.
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-I looked at the `phy.rs` file again and now I'm pretty sure the above
-code is wrong. `Self` can be implemented on any type (even types like
-`Infallible` that do not have any valid bit patterns, since it's an
-empty enum). The abstraction for `bindings::phy_driver` is
-`DriverVTable` not an object of type `Self`, so you should cast to that
-pointer instead.
+Reviewed-by: Simon Horman <horms@kernel.org>
 
->> >>      /// Defines certain other features this PHY supports.
->> >>      /// It is a combination of the flags in the [`flags`] module.
->> >>      const FLAGS: u32 =3D 0;
->> >> @@ -602,7 +622,7 @@ fn get_features(_dev: &mut Device) -> Result {
->> >> =20
->> >>      /// Returns true if this is a suitable driver for the given phyd=
-ev.
->> >>      /// If not implemented, matching is based on [`Driver::PHY_DEVIC=
-E_ID`].
->> >> -    fn match_phy_device(_dev: &Device) -> bool {
->> >> +    fn match_phy_device<T: Driver>(_dev: &mut Device, _drv: &T) -> b=
-ool {
->> >>          false
->> >>      }
->> >
->> > I think that it could be a bit simpler:
->> >
->> > fn match_phy_device(_dev: &mut Device, _drv: &Self) -> bool
->> >
->> > Or making it a trait method might be more idiomatic?
->> >
->> > fn match_phy_device(&self, _dev: &mut Device) -> bool
->>=20
->> Yeah that would make most sense.
->>
->
-> I think
->
-> fn match_phy_device(_dev: &mut Device, _drv: &Self) -> bool
->
-> more resemble the C parallel function so I think this suite the best,
-> should make it easier to port if ever (am I wrong?)
-
-I don't understand what you mean by "easier to port if ever". From a
-Rust perspective, it makes much more sense to use the `&self` receiver,
-since the driver is asked if it can take care of the device. If you want
-to keep the order how it is in C that is also fine, but if I were to
-write it, I'd use the receiver.
-
----
-Cheers,
-Benno
