@@ -1,222 +1,353 @@
-Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022113.outbound.protection.outlook.com [52.101.126.113])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B9402C9A;
-	Fri, 16 May 2025 07:30:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.113
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747380662; cv=fail; b=u9tYaIfNG2AETzRpuacgGLjImgDqzNhNm9C+Xmu+ivXkelaoE/T6zFvwfL3ZiTKYIDy82FQkzfHYYng8UqVT/9cLGGprjNjZqtnUlfzJo06Qv40n6c6toGbtm9OHLdQTA735Y9vzzztJXhtXU3+RVlZx7elJ5CB07GP2aztNI3Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747380662; c=relaxed/simple;
-	bh=Ptc8EzBRSluU0Pjj49UvdaaQ2cVaMLRwJpn7NuXWqqY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XpWcYHWRdYKgVXskpHRMyn2jSycUk/BhlIoreOQNLNLI1DrDkN9F6iXCOuxhV2pI3m7XTFROKGI8PxiufRkGL7UUunpD/RuLl8ma78lfH2oZ5kFiA9GisGo07oIjieY4n/HVmu4nEU1SawxNMts4RP7doPWpjgcOawC9y5N4fkk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fibocom.com; spf=pass smtp.mailfrom=fibocom.com; dkim=pass (1024-bit key) header.d=fibocomcorp.onmicrosoft.com header.i=@fibocomcorp.onmicrosoft.com header.b=v4Y+gQUv; arc=fail smtp.client-ip=52.101.126.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fibocom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fibocom.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23F82C9A;
+	Fri, 16 May 2025 07:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747380783; cv=none; b=d4rQFZitXD4B44js/UGbHcsTfKleK2JTeNknFIqpxxrbK359/7dpj11209Swgufl19o1SosvgWfWlvT2KfhaAI5CL70+InxLj771zMHQAx6NERHOlNGxwrrhcon/qp+979eMouMiREpltBDV+EHw1WTmsbT1Kt631XbbiAnKwX4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747380783; c=relaxed/simple;
+	bh=XAyo9CtiYwDcUGxuPtMpI7pT9xtaqISwDisrxPASZaQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G/GPU4Uw3F1P6MdcE0afVHlOiUrNhzLnZRQ7uIrI12YGSjwXpEv37uaKdCdhue6rn6xKvT7sYtDdqyMJUfppsdWpgSR0XQeDR9xAJGF9IM8xxAHhFuy0IRpPGGjxOVHQnai6SIlJinuhU3tcr4IRU8nyuo37DBYmxUVBxPNPPzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=qCULTCBA; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fibocomcorp.onmicrosoft.com header.i=@fibocomcorp.onmicrosoft.com header.b="v4Y+gQUv"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=spkrQPyBMRqS8Vl+5V9RWQxNOmHt8jumLWW4oGPagvmRCm1jTEZAkAUS4XSqGSu2OsN8y+gPEsAdj/YIWcoW0P99DIIjOJdXvjcFEroYhr3/fvY9z36jJ7Zh51vInoffTRTLYQN7CpHcLZ1I2oqqxnE0Sb6FdrDhjRgkHB5ftrkjh0gzYssJ7f+73va7Pa5Ag2EKyjYY/N1cAV1+BT/NGLCmtol364g74+n/HM/X6O8R99j1cS7loXaTj3gI7Enej/isCbwVMWrn+VoL6lYkY8T+HppsKHKgQ8FJdfp4zfV9kkKtclbGGo37h3L19ZYipb2JHmnrPWXBV2TAuPUxMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SH04AcPUq/K8MnElCpiV9Bq9ATRB6A3kg08SBjFjQ04=;
- b=tp0+TbVxwXzctVvqiFcvBoNz256p6ZjSE9Rnug4TGoSwHjr03hIjNEoHhYeQPXog2CeN5ZlfLIiHE87spI4FU6rOYO+/30hxm6z4Mr58Vplb8U33ao70X88aBYscwN6+lV7uQJHbidW1pzh8uUAZVeTDGBce/GO2KjmW/R2pa9Tjf/rRhRKY1EP5a7fdE7LVQj4AdzdrgQgESb945MbH0sxVsFw/y6JyS08Ire/Tsp2FLqELJ6KC0RXNjc4O2dO2hDnlyqqr21ZL4azqOyk0m0PNcrtHMPFrBEAMNbIJM1YJggK6L1d+CeOT04N0/78rAFoyaBc3O2FF+O3SyMmZNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fibocom.com; dmarc=pass action=none header.from=fibocom.com;
- dkim=pass header.d=fibocom.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fibocomcorp.onmicrosoft.com; s=selector1-fibocomcorp-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SH04AcPUq/K8MnElCpiV9Bq9ATRB6A3kg08SBjFjQ04=;
- b=v4Y+gQUvv4oQMKvQGusaTBlOCIyOVRKnyQl+BJP3m2ev1jJ5pO9GcL+XCyU9l42MF1Mn5dsV4rv3xXSJFG7fN8JRTA4inQBxoWROjBN1BlwZpNCRmcw8R8tkxNVOdckUkarvPh+xuxKV4NFn15teM7HN/a0ylrtCrWeYXTD0cMI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fibocom.com;
-Received: from TY0PR02MB5766.apcprd02.prod.outlook.com (2603:1096:400:1b5::6)
- by SEZPR02MB6177.apcprd02.prod.outlook.com (2603:1096:101:a8::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.32; Fri, 16 May
- 2025 07:30:52 +0000
-Received: from TY0PR02MB5766.apcprd02.prod.outlook.com
- ([fe80::f53d:47b:3b04:9a8b]) by TY0PR02MB5766.apcprd02.prod.outlook.com
- ([fe80::f53d:47b:3b04:9a8b%4]) with mapi id 15.20.8722.027; Fri, 16 May 2025
- 07:30:52 +0000
-From: Jinjian Song <jinjian.song@fibocom.com>
-To: kuba@kernel.org
-Cc: andrew+netdev@lunn.ch,
-	angelogioacchino.delregno@collabora.com,
-	chandrashekar.devegowda@intel.com,
-	chiranjeevi.rapolu@linux.intel.com,
-	corbet@lwn.net,
-	danielwinkler@google.com,
-	davem@davemloft.net,
-	edumazet@google.com,
-	haijun.liu@mediatek.com,
-	helgaas@kernel.org,
-	horms@kernel.org,
-	jinjian.song@fibocom.com,
-	johannes@sipsolutions.net,
-	linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	loic.poulain@linaro.org,
-	m.chetan.kumar@linux.intel.com,
-	matthias.bgg@gmail.com,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	ricardo.martinez@linux.intel.com,
-	ryazanov.s.a@gmail.com
-Subject: Re: [net v1] net: wwan: t7xx: Fix napi rx poll issue
-Date: Fri, 16 May 2025 15:30:38 +0800
-Message-ID: <20250515175251.58b5123f@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250515031743.246178-1-jinjian.song@fibocom.com>
-References: <20250515031743.246178-1-jinjian.song@fibocom.com>
-Precedence: bulk
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI2PR02CA0023.apcprd02.prod.outlook.com
- (2603:1096:4:195::11) To TY0PR02MB5766.apcprd02.prod.outlook.com
- (2603:1096:400:1b5::6)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="qCULTCBA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=BYwXGPJqEjCua/FANHW8c62ptBDFOcBMAOJrBegIM48=; b=qCULTCBAQW/1m75ioAeIj6eMRB
+	Hmh/dl3krr+u4uirzh1dRe6sYEiP5d/5Hwlkej4+fEwvMYAAZB/tuEJKTZttEIAIGeMtfEL/NL76C
+	P6nXwX0VKOohiQFOBpWGdK0bQsYKTB5MD+jrQSr2arJSTpnxcodmXKXgSsRGPKqvRjSU6UKpyno8K
+	og3CyztmiJzABoizt64TZqOE/HfyQ3HQx24C5Kou+MJpPHf7jCWMpRhuy8LB7prBloaETFHo3AYZ9
+	14NXF+Sr/4ToiEYo7Kiz4ysxbPQ2gtU6Wd4CLaNYKwCN0AmAhEKq7+ixPpn4OWUJhUsUyc+pjw19m
+	leq7f3TQ==;
+Received: from 39-12-18-146.adsl.fetnet.net ([39.12.18.146] helo=[192.168.238.43])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uFpSt-008yAE-Qb; Fri, 16 May 2025 09:32:42 +0200
+Message-ID: <b6e00e77-4a8c-4e05-ab79-266bf05fcc2d@igalia.com>
+Date: Fri, 16 May 2025 15:32:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY0PR02MB5766:EE_|SEZPR02MB6177:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1be273a2-c0f3-4007-3bc3-08dd944b95fc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|4022899009|366016|376014|7416014|52116014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Ivhm4e4qZX33036nO2TfwBO3Fom6ILt3m8yf+9ZLB7eVK3ydQf6BuE3gkFv8?=
- =?us-ascii?Q?w5nwZvx3Iw4+xfJjHO2Z5Kb/Zlf8S3dQTvErxi/mqwlrXSPvNZr/sekaO9dY?=
- =?us-ascii?Q?twTcGY/wGn7X9wVV2a9NCmLysxht4W34poiTx3oO/ShR2ZJWtqg9ENdVCrZo?=
- =?us-ascii?Q?O3ZWE+40r34Y7NK4HokZDLvhy8Sp22qJWPbHTuVw6mBanQ3PKZeGjSkqA/OQ?=
- =?us-ascii?Q?hFqWCcog2T7n+Zog05YnTXjmLvxRGCVNgoWSp7Pe/ENGZJpMNiBqHxSJbe7B?=
- =?us-ascii?Q?tr1rp+imVrJseuypO9rlNC3/wuf70E9QZ7Dfa+ErBj0+k1o3aDbHoJZA97R2?=
- =?us-ascii?Q?9m6HpRQcs3nBgeYLxicCoTZpGPUHVlb7CRHUT5GPF4HQg52pk7W2QjeLSlB3?=
- =?us-ascii?Q?u/jxm1pEPs74gJMiQAPwIXAryIDbzWKcrxqOuWnqXEGPxD35b6TJalxhdW7L?=
- =?us-ascii?Q?Yxzwt+OSI9NjhTiXVyK6GWkpUBA+zC/6tR9nIUnJkN1mkFPv/ExHt/egOJJZ?=
- =?us-ascii?Q?peDUqyHImw5btUCkeC0MZPlMm9c+SLvHPAPzAsyRJf0FMIrBF58dr+wxdoWC?=
- =?us-ascii?Q?XuHZPeCiemWbQRR3LuNkSQ7UhpHM1mqNwP/v5iap4ARqL1hmefxPmtVeSb+l?=
- =?us-ascii?Q?BYdJvHuEQDEm8XDDKv9vQKIz8X7nkIeb1mxSQyomROguLac3qG+pcpQCQtAA?=
- =?us-ascii?Q?pinGq2SpJJHpMJnGgBEb5PsQqKaFRG5gMjtiKbCQPDPo7xlTNrALRfVNtbMq?=
- =?us-ascii?Q?hhWgOA/uiLdhIqx8PgIEZCoOER1Dwwt2zu/Aunbql/V+gwe3CfPYBHLI1uSP?=
- =?us-ascii?Q?/R/dMrtOmMfebJ99PRj6lw/dy36ceNXKHF2ptqDzczWIKjIUK8ZZT973T2FL?=
- =?us-ascii?Q?lApJWwI1FNsmrPcP9kUHhqlJihsG6DI2dIQNZCEANySQ1k+WbUXpxTB+R9wN?=
- =?us-ascii?Q?ELXvKvYiGpcjlEvD65ejWLLwrqNW9kz8Vb3cwx2IHxodMLWOHEJK75r1EVGL?=
- =?us-ascii?Q?ugd4JiwPzkTiFZwVZEip99R8RBybRcMo9wSQWoyq4yrBayKOcUddfTm2ABZB?=
- =?us-ascii?Q?ATLkUFaxLRNxkHeSC6WY3wstuY7gTwyfBbSgVIvy898JG3Yy7mdP1ez8ejQH?=
- =?us-ascii?Q?6f5Ln1R1YFVc73UM4EHYz4UgvudAhW31N6CG4AfVaazUGcbWuIMQnq84PMFJ?=
- =?us-ascii?Q?44Mh1sGePqK+OD0qc4wQfm7gz3NWL7FpORw2UudsjojOYZOByUeyw7VJqf97?=
- =?us-ascii?Q?YuoyHyWd+04/3kYVYMCKV4ubyMdrLBDa/ZOinK5I7ppUpG6EJD3D5AZblDhE?=
- =?us-ascii?Q?QLB0pd9rE1fkMPU9VoUKkcsW922UhU1F6j37YJ+sdKi5dbmFtaw+G/xyakAf?=
- =?us-ascii?Q?LpiWYV9m2E1X+iZSPXj0vAww9C9sdjawOQ4bR6GyyyYrm72LugjoPduA1otS?=
- =?us-ascii?Q?/6H7e7f3eIN+y4p3J0dVHrLwBoFEUryBhiq7BsF87Hnr83Sl+mYtlQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY0PR02MB5766.apcprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(4022899009)(366016)(376014)(7416014)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?BTpwpAyVvyUkXGz9YcLxu1se7yMmrRZ/uqrdnQKn80e08x5UoXrnFbRXPxP5?=
- =?us-ascii?Q?NF2qkX18tZwe62lQeg6XS9sdLw6Z8x8ZyCkHmbZM9q5SVgSasTDgkvUX1X12?=
- =?us-ascii?Q?9iMkanPZdRkHvhO5SzyYDRMKa1qDHvFgFpXxduCzKouElX+x7crMlnDbLd6b?=
- =?us-ascii?Q?3OaHcdy//4SLmyx+VX+CMBNW5T3edN82xZvOOeE/jl18peWAMb1pbQgebczm?=
- =?us-ascii?Q?t/A8aRYfxL8mo0B8yOyjeuISisLQkbey08Lt/L0Yt4KL9jAgodcDn6x0Yhp3?=
- =?us-ascii?Q?sn21/hh66EaYF+9f/ReBoyCX6zJMkZCrdTxJ2ovOkvHhVeBDxibw7V1j/QtB?=
- =?us-ascii?Q?tskQy1/fCNkQwaLDG9WNuL38lcwrG8hCL2V89u77J0RBdAfHlVpC+QzDcMpi?=
- =?us-ascii?Q?gUtwKU9i07aRVgreRo3mlZlVk4NeX0kV8b77oOG9SChrUVHmGOMPcl7I8Mty?=
- =?us-ascii?Q?m2JXe9cELhT4Cvq3+vL/jMTJjr3afqOqF7srLcibBV918o/5rvRFnaUxqc/v?=
- =?us-ascii?Q?sc9/zXItyJmbtC+cds96rDNAbYHi0iqy3dr0hq5r5mqQKJphPsXf7kju1PmF?=
- =?us-ascii?Q?PDSCq245Y/CvznCnzEWaOBm3EiQK0uE/cnlD7Qud+I2ezbsY1TqIZhsLQUCf?=
- =?us-ascii?Q?r6bRLx4NzDuqQGiZatpnVgFKL5nQRgDQMNMntRHiYxMCZcaqhT8I0tZQRf6a?=
- =?us-ascii?Q?po2+/wwnq+P3Efb2cA0IYs6Q6vPP488XIl6GaJ4rfX/uO3PwthQHrfktdPsm?=
- =?us-ascii?Q?MGBT3/NgerjqA+K9IfIaJzzrlvXwlnUkpjzdEPrp79GwAmPPAlMpFdzb/fjk?=
- =?us-ascii?Q?7MAVjt32aVebryeSUsVd+oDlF8XsKMx3wFo+o1izI5H2wAYBpJ7tmOh18vPV?=
- =?us-ascii?Q?wSL41iGxpODGUz1NiJb88yDqh904b4mZQZpSGRFHVj9E8u6oPIV663A62vRr?=
- =?us-ascii?Q?cMo7pnkDdHBvpfTT0Gn7ee4ecb9CtYSIa+g2Kf0J6pZbbN/qiqkltkLkrEqD?=
- =?us-ascii?Q?VWOlRmE4xgrknX2fb91qSy5/7KBkNJ4iYsSgBGGzRxgdY8YKORMnRB/HKPje?=
- =?us-ascii?Q?HVDw7GvgnLvxWfSXD+deUxbGHht7/hEGRXEmY+vPtBk/FzTBMUDq1xpAOa2H?=
- =?us-ascii?Q?gMzb1kI1NMgXFSeLntX1jAEmGVgi3FhPu0fHD+TOwZiHVVRc0JW1DZpcTxnF?=
- =?us-ascii?Q?ze78IVHIRJF2nJgkkrpJ3uH2g2kdHSPvDnjpP9LbaphTKNJRTZZyVQ8BYEZG?=
- =?us-ascii?Q?WBb+rVhF0JAhFgYgHR2qjax4tRAfZYfMCxdErCzjKxdImYZULyic5a6kYmxd?=
- =?us-ascii?Q?0bvwvzIIDnPxxP1ya70/ewsGSunmx7D/XGTVaj5k5Q6zenB8uh0tkGuN6McD?=
- =?us-ascii?Q?3jPnuppe/g5MHu20CEMt0VCNtO1etxg1ueqPRzTFAW09RtXxm1kBsQ1yhXnD?=
- =?us-ascii?Q?cT5aqZQknqa/ol4oOm0/0DYCYXiRBoNgtrNBRarpPwlWjtG3fL85RIs3cVNq?=
- =?us-ascii?Q?XWpmNjbaEh1PK2d/NtcIJwVEadP5AsIrXFI4FdJWT/UFBdI7LCROHej198KE?=
- =?us-ascii?Q?ZJVMQrEhOm0aSLMLiLwDkg1+DbNZiwEZ0RXU/2Npj0n/oFbMNiZGTjdAdYKb?=
- =?us-ascii?Q?fA=3D=3D?=
-X-OriginatorOrg: fibocom.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1be273a2-c0f3-4007-3bc3-08dd944b95fc
-X-MS-Exchange-CrossTenant-AuthSource: TY0PR02MB5766.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2025 07:30:52.0141
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 889bfe61-8c21-436b-bc07-3908050c8236
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hFA5RvA1kFhVEztvAGpJxJDGhR3vogXaB4N1BpYNxE2FJ+5qhGC7xS18qjmHlAlOxBLuNDLTZTAp2tqc9HjVSj8ZVUfV7ZpZNQNru3Ez0Sg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR02MB6177
-Message-ID: <20250516073038.4aFr2lnLRV7tNDOwELbt_bBreBl3juz5DzwU4P8OCgw@z>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/hugetlb: fix a deadlock with pagecache_folio and
+ hugetlb_fault_mutex_table
+To: Byungchul Park <byungchul@sk.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev,
+ osalvador@suse.de, akpm@linux-foundation.org, mike.kravetz@oracle.com,
+ kernel-dev@igalia.com, stable@vger.kernel.org,
+ Hugh Dickins <hughd@google.com>, Florent Revest <revest@google.com>,
+ Gavin Shan <gshan@redhat.com>, kernel_team@skhynix.com
+References: <20250513093448.592150-1-gavinguo@igalia.com>
+ <20250514064729.GA17622@system.software.com>
+ <075ae729-1d4a-4f12-a2ba-b4f508e5d0a1@igalia.com>
+ <20250516060309.GA51921@system.software.com>
+Content-Language: en-US
+From: Gavin Guo <gavinguo@igalia.com>
+In-Reply-To: <20250516060309.GA51921@system.software.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
->On Thu, 15 May 2025 11:17:42 +0800 Jinjian Song wrote:
->> diff --git a/drivers/net/wwan/t7xx/t7xx_netdev.c b/drivers/net/wwan/t7xx/t7xx_netdev.c
->> index 91fa082e9cab..2116ff81728b 100644
->> --- a/drivers/net/wwan/t7xx/t7xx_netdev.c
->> +++ b/drivers/net/wwan/t7xx/t7xx_netdev.c
->> @@ -324,6 +324,7 @@ static void t7xx_ccmni_wwan_dellink(void *ctxt, struct net_device *dev, struct l
->>  	if (WARN_ON(ctlb->ccmni_inst[if_id] != ccmni))
->>  		return;
->>  
->> +	ctlb->ccmni_inst[if_id] = NULL;
->>  	unregister_netdevice(dev);
->
->I don't see any synchronization between this write and NAPI processing.
->Is this safe? NAPI can be at any point of processing as we set the ptr
->to NULL
+On 5/16/25 14:03, Byungchul Park wrote:
+> On Wed, May 14, 2025 at 04:10:12PM +0800, Gavin Guo wrote:
+>> Hi Byungchul,
+>>
+>> On 5/14/25 14:47, Byungchul Park wrote:
+>>> On Tue, May 13, 2025 at 05:34:48PM +0800, Gavin Guo wrote:
+>>>> The patch fixes a deadlock which can be triggered by an internal
+>>>> syzkaller [1] reproducer and captured by bpftrace script [2] and its log
+>>>
+>>> Hi,
+>>>
+>>> I'm trying to reproduce using the test program [1].  But not yet
+>>> produced.  I see a lot of segfaults while running [1].  I guess
+>>> something goes wrong.  Is there any prerequisite condition to reproduce
+>>> it?  Lemme know if any.  Or can you try DEPT15 with your config and
+>>> environment by the following steps:
+>>>
+>>>      1. Apply the patchset on v6.15-rc6.
+>>>         https://lkml.kernel.org/r/20250513100730.12664-1-byungchul@sk.com
+>>>      2. Turn on CONFIG_DEPT.
+>>>      3. Run test program reproducing the deadlock.
+>>>      4. Check dmesg to see if dept reported the dependency.
+>>>
+>>> 	Byungchul
+>>
+>> I have enabled the patchset and successfully reproduced the bug. It
+>> seems that there is no warning or error log related to the lock. Did I
+>> miss anything? This is the console log:
+>> https://drive.google.com/file/d/1dxWNiO71qE-H-e5NMPqj7W-aW5CkGSSF/view?usp=sharing
+> 
+> My bad.  I think I found the problem that dept didn't report it.  You
+> might see the report with the following patch applied on the top, there
+> might be a lot of false positives along with that might be annoying tho.
+> 
+> Some of my efforts to suppress false positives, suppressed the real one.
+> 
+> Do you mind if I ask you to run the test with the following patch
+> applied?  It'd be appreciated if you do and share the result with me.
+> 
+> 	Byungchul
+> 
+> ---
+> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> index f31cd68f2935..fd7559e663c5 100644
+> --- a/include/linux/pagemap.h
+> +++ b/include/linux/pagemap.h
+> @@ -1138,6 +1138,7 @@ static inline bool trylock_page(struct page *page)
+>   static inline void folio_lock(struct folio *folio)
+>   {
+>   	might_sleep();
+> +	dept_page_wait_on_bit(&folio->page, PG_locked);
+>   	if (!folio_trylock(folio))
+>   		__folio_lock(folio);
+>   }
+> diff --git a/kernel/dependency/dept.c b/kernel/dependency/dept.c
+> index b2fa96d984bc..4e96a6a72d02 100644
+> --- a/kernel/dependency/dept.c
+> +++ b/kernel/dependency/dept.c
+> @@ -931,7 +931,6 @@ static void print_circle(struct dept_class *c)
+>   	dept_outworld_exit();
+>   
+>   	do {
+> -		tc->reported = true;
+>   		tc = fc;
+>   		fc = fc->bfs_parent;
+>   	} while (tc != c);
+> diff --git a/kernel/dependency/dept_unit_test.c b/kernel/dependency/dept_unit_test.c
+> index 88e846b9f876..496149f31fb3 100644
+> --- a/kernel/dependency/dept_unit_test.c
+> +++ b/kernel/dependency/dept_unit_test.c
+> @@ -125,6 +125,8 @@ static int __init dept_ut_init(void)
+>   {
+>   	int i;
+>   
+> +	return 0;
+> +
+>   	lockdep_off();
+>   
+>   	dept_ut_results.ecxt_stack_valid_cnt = 0;
+> --
 
-This panic occured in the scenario where there are frequent disconnect
-and connect WWAN cellular on UI.
-I debug the panic with gdb and found it as caused by an invalid net_device
-during this process:
-1.-> t7xx_dpmaif_napi_rx_poll
-2.-> t7xx_ccmni_recv_skb 
-3.-> napi_gro_receive
-4.-> dev_gro_receive
-5.-> netif_elide_gro
-One way, the net_device using in step 5 is valid, so "dev->features .." panic,
-this net_device pass from t7xx_ccmni_recv_skb:
-void t7xx_ccmni_recv_skb(...) {
-  [...]
-  
-  ccmni = ccmni_ctlb->ccmni_inst[netif_id];
-  if (!ccmni) {
-    dev_kfree_skb(skb);
-    return;
-  }
-  
-  net_dev = ccmni->dev;
-  skb->dev = net_dev;
-  [...]
-  napi_gro_receive(napi, skb);
-  [...]
-}
+Please see the test result:
+https://drive.google.com/file/d/1B20Gu3wLFbAeaXXb7aSQP5T6aeN9Mext/view?usp=sharing
 
-Another way, WWAN disconnect -> wwan_ops.dellink -> t7xx_ccmni_wwan_dellink
--> unregister_netdevice(dev).
-netdevice has been invalid, so t7xx_dpmaif_napi_rx_poll can't use it any more.
-I mark ccmni_inst[if_id] = NULL with netdevice invalid at the same time.
-It seems that a judgment is made every time ccmni_inst[x] is used in the driver,
-and the synchronization on the 2 way might have been done when NAPI triggers
-polling by napi_schedule and when WWAN trigger dellink. 
-So this should be safe.
-
-Jinjian,
-Best Regards.
-
+It seems that after the first round, the deadlock is captured:
+ubuntu@localhost:~$ ./repro_20250402_0225_154f8fb0580000
+executing program
+[   80.425842][ T3416] ===================================================
+[   80.426707][ T3416] DEPT: Circular dependency has been detected.
+[   80.427497][ T3416] 6.15.0-rc6+ #31 Not tainted
+[   80.428084][ T3416] ---------------------------------------------------
+[   80.428964][ T3416] summary
+[   80.429330][ T3416] ---------------------------------------------------
+[   80.430078][ T3416] *** DEADLOCK ***
+[   80.430078][ T3416]
+[   80.430736][ T3416] context A
+[   80.431076][ T3416]    [S] (unknown)(pg_locked_map:0)
+[   80.431637][ T3416]    [W] lock(&hugetlb_fault_mutex_table[i]:0)
+[   80.432312][ T3416]    [E] dept_page_clear_bit(pg_locked_map:0)
+[   80.432977][ T3416]
+[   80.433246][ T3416] context B
+[   80.433595][ T3416]    [S] lock(&hugetlb_fault_mutex_table[i]:0)
+[   80.434245][ T3416]    [W] dept_page_wait_on_bit(pg_locked_map:0)
+[   80.434880][ T3416]    [E] unlock(&hugetlb_fault_mutex_table[i]:0)
+[   80.435592][ T3416]
+[   80.435852][ T3416] [S]: start of the event context
+[   80.436369][ T3416] [W]: the wait blocked
+[   80.436789][ T3416] [E]: the event not reachable
+[   80.437275][ T3416] ---------------------------------------------------
+[   80.437950][ T3416] context A's detail
+[   80.438367][ T3416] ---------------------------------------------------
+[   80.439006][ T3416] context A
+[   80.439337][ T3416]    [S] (unknown)(pg_locked_map:0)
+[   80.439883][ T3416]    [W] lock(&hugetlb_fault_mutex_table[i]:0)
+[   80.440489][ T3416]    [E] dept_page_clear_bit(pg_locked_map:0)
+[   80.441075][ T3416]
+[   80.441318][ T3416] [S] (unknown)(pg_locked_map:0):
+[   80.441816][ T3416] (N/A)
+[   80.442077][ T3416]
+[   80.442309][ T3416] [W] lock(&hugetlb_fault_mutex_table[i]:0):
+[   80.442872][ T3416] [<ffffffff82144644>] hugetlb_wp+0xfa4/0x3490
+[   80.443502][ T3416] stacktrace:
+[   80.443810][ T3416]       hugetlb_wp+0xfa4/0x3490
+[   80.444267][ T3416]       hugetlb_fault+0x1505/0x2c70
+[   80.444776][ T3416]       handle_mm_fault+0x1845/0x1ab0
+[   80.445275][ T3416]       do_user_addr_fault+0x637/0x1450
+[   80.445779][ T3416]       exc_page_fault+0x67/0x110
+[   80.446239][ T3416]       asm_exc_page_fault+0x26/0x30
+[   80.446722][ T3416]       __put_user_4+0xd/0x20
+[   80.447157][ T3416]       copy_process+0x1f64/0x3d80
+[   80.447621][ T3416]       kernel_clone+0x216/0x940
+[   80.448068][ T3416]       __x64_sys_clone+0x18d/0x1f0
+[   80.448548][ T3416]       do_syscall_64+0x6f/0x120
+[   80.448999][ T3416]       entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[   80.449556][ T3416]
+[   80.449765][ T3416] [E] dept_page_clear_bit(pg_locked_map:0):
+[   80.450272][ T3416] [<ffffffff8214263b>] hugetlb_fault+0x1ccb/0x2c70
+[   80.450861][ T3416] stacktrace:
+[   80.451148][ T3416]       hugetlb_fault+0x1ccb/0x2c70
+[   80.451611][ T3416]       handle_mm_fault+0x1845/0x1ab0
+[   80.452080][ T3416]       do_user_addr_fault+0x637/0x1450
+[   80.452566][ T3416]       exc_page_fault+0x67/0x110
+[   80.453014][ T3416]       asm_exc_page_fault+0x26/0x30
+[   80.453497][ T3416]       __put_user_4+0xd/0x20
+[   80.453923][ T3416]       copy_process+0x1f64/0x3d80
+[   80.454379][ T3416]       kernel_clone+0x216/0x940
+[   80.454817][ T3416]       __x64_sys_clone+0x18d/0x1f0
+[   80.455277][ T3416]       do_syscall_64+0x6f/0x120
+[   80.455722][ T3416]       entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[   80.456253][ T3416] ---------------------------------------------------
+[   80.456842][ T3416] context B's detail
+[   80.457198][ T3416] ---------------------------------------------------
+[   80.457842][ T3416] context B
+[   80.458122][ T3416]    [S] lock(&hugetlb_fault_mutex_table[i]:0)
+[   80.458661][ T3416]    [W] dept_page_wait_on_bit(pg_locked_map:0)
+[   80.459187][ T3416]    [E] unlock(&hugetlb_fault_mutex_table[i]:0)
+[   80.459763][ T3416]
+[   80.459988][ T3416] [S] lock(&hugetlb_fault_mutex_table[i]:0):
+[   80.460509][ T3416] [<ffffffff82140d36>] hugetlb_fault+0x3c6/0x2c70
+[   80.461074][ T3416] stacktrace:
+[   80.461374][ T3416]       hugetlb_fault+0x3c6/0x2c70
+[   80.461812][ T3416]       handle_mm_fault+0x1845/0x1ab0
+[   80.462281][ T3416]       do_user_addr_fault+0x637/0x1450
+[   80.462775][ T3416]       exc_page_fault+0x67/0x110
+[   80.463220][ T3416]       asm_exc_page_fault+0x26/0x30
+[   80.463694][ T3416]       __put_user_4+0xd/0x20
+[   80.464129][ T3416]       copy_process+0x1f64/0x3d80
+[   80.464577][ T3416]       kernel_clone+0x216/0x940
+[   80.464994][ T3416]       __x64_sys_clone+0x18d/0x1f0
+[   80.465466][ T3416]       do_syscall_64+0x6f/0x120
+[   80.465909][ T3416]       entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[   80.466457][ T3416]
+[   80.466660][ T3416] [W] dept_page_wait_on_bit(pg_locked_map:0):
+[   80.467177][ T3416] [<ffffffff82141187>] hugetlb_fault+0x817/0x2c70
+[   80.467740][ T3416] stacktrace:
+[   80.468032][ T3416]       hugetlb_fault+0x817/0x2c70
+[   80.468479][ T3416]       handle_mm_fault+0x1845/0x1ab0
+[   80.468947][ T3416]       do_user_addr_fault+0x637/0x1450
+[   80.469428][ T3416]       exc_page_fault+0x67/0x110
+[   80.469865][ T3416]       asm_exc_page_fault+0x26/0x30
+[   80.470332][ T3416]       __put_user_4+0xd/0x20
+[   80.470742][ T3416]       copy_process+0x1f64/0x3d80
+[   80.471186][ T3416]       kernel_clone+0x216/0x940
+[   80.471616][ T3416]       __x64_sys_clone+0x18d/0x1f0
+[   80.472060][ T3416]       do_syscall_64+0x6f/0x120
+[   80.472492][ T3416]       entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[   80.473040][ T3416]
+[   80.473271][ T3416] [E] unlock(&hugetlb_fault_mutex_table[i]:0):
+[   80.473863][ T3416] (N/A)
+[   80.474124][ T3416] ---------------------------------------------------
+[   80.474738][ T3416] information that might be helpful
+[   80.475210][ T3416] ---------------------------------------------------
+[   80.475820][ T3416] CPU: 1 UID: 1000 PID: 3416 Comm: repro_20250402_ 
+Not tainted 6.15.0-rc6+ #31 NONE
+[   80.475831][ T3416] Hardware name: QEMU Standard PC (Q35 + ICH9, 
+2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+[   80.475837][ T3416] Call Trace:
+[   80.475841][ T3416]  <TASK>
+[   80.475845][ T3416]  dump_stack_lvl+0x1ad/0x280
+[   80.475858][ T3416]  ? __pfx_dump_stack_lvl+0x10/0x10
+[   80.475867][ T3416]  ? __pfx__printk+0x10/0x10
+[   80.475883][ T3416]  cb_check_dl+0x24a8/0x2530
+[   80.475897][ T3416]  ? bfs_extend_dep+0x271/0x290
+[   80.475909][ T3416]  bfs+0x464/0x5e0
+[   80.475921][ T3416]  ? __pfx_bfs+0x10/0x10
+[   80.475931][ T3416]  ? add_dep+0x387/0x710
+[   80.475943][ T3416]  add_dep+0x3d0/0x710
+[   80.475953][ T3416]  ? __pfx_from_pool+0x10/0x10
+[   80.475963][ T3416]  ? __pfx_bfs_init_check_dl+0x10/0x10
+[   80.475972][ T3416]  ? __pfx_bfs_extend_dep+0x10/0x10
+[   80.475981][ T3416]  ? __pfx_bfs_dequeue_dep+0x10/0x10
+[   80.475990][ T3416]  ? __pfx_cb_check_dl+0x10/0x10
+[   80.475999][ T3416]  ? __pfx_add_dep+0x10/0x10
+[   80.476011][ T3416]  ? put_ecxt+0xda/0x4b0
+[   80.476024][ T3416]  __dept_event+0xee8/0x1590
+[   80.476038][ T3416]  dept_event+0x166/0x240
+[   80.476047][ T3416]  ? hugetlb_fault+0x1ccb/0x2c70
+[   80.476057][ T3416]  folio_unlock+0xb8/0x190
+[   80.476071][ T3416]  hugetlb_fault+0x1ccb/0x2c70
+[   80.476085][ T3416]  ? __pfx_hugetlb_fault+0x10/0x10
+[   80.476100][ T3416]  ? mt_find+0x15a/0x5f0
+[   80.476110][ T3416]  handle_mm_fault+0x1845/0x1ab0
+[   80.476125][ T3416]  ? handle_mm_fault+0xdb/0x1ab0
+[   80.476142][ T3416]  ? __pfx_handle_mm_fault+0x10/0x10
+[   80.476156][ T3416]  ? find_vma+0xec/0x160
+[   80.476164][ T3416]  ? __pfx_find_vma+0x10/0x10
+[   80.476172][ T3416]  ? dept_on+0x1c/0x30
+[   80.476179][ T3416]  ? dept_exit+0x1c5/0x2c0
+[   80.476186][ T3416]  ? lockdep_hardirqs_on_prepare+0x21/0x280
+[   80.476197][ T3416]  ? lock_mm_and_find_vma+0xa1/0x300
+[   80.476211][ T3416]  do_user_addr_fault+0x637/0x1450
+[   80.476219][ T3416]  ? mntput_no_expire+0xc0/0x870
+[   80.476235][ T3416]  ? __pfx_do_user_addr_fault+0x10/0x10
+[   80.476246][ T3416]  ? trace_irq_disable+0x60/0x180
+[   80.476258][ T3416]  exc_page_fault+0x67/0x110
+[   80.476272][ T3416]  asm_exc_page_fault+0x26/0x30
+[   80.476280][ T3416] RIP: 0010:__put_user_4+0xd/0x20
+[   80.476293][ T3416] Code: 66 89 01 31 c9 0f 1f 00 c3 cc cc cc cc 90 
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 48 89 cb 48 c1 fb 3f 48 09 
+d9 0f 1f 00 <89> 01 31 c9 0
+[   80.476312][ T3416] RSP: 0018:ffffc90004dffa38 EFLAGS: 00010206
+[   80.476322][ T3416] RAX: 000000000000000c RBX: 0000000000000000 RCX: 
+0000200000000200
+[   80.476329][ T3416] RDX: 0000000000000000 RSI: ffff888016abe300 RDI: 
+ffff888017878c20
+[   80.476335][ T3416] RBP: ffffc90004dffc10 R08: 0000000000000000 R09: 
+0000000000000000
+[   80.476340][ T3416] R10: 0000000000000000 R11: ffffffff82034b65 R12: 
+ffff888017c0a1e8
+[   80.476346][ T3416] R13: ffff88800d6a8200 R14: 0000000000000000 R15: 
+ffff888017c08a38
+[   80.476354][ T3416]  ? __might_fault+0xb5/0x130
+[   80.476367][ T3416]  copy_process+0x1f64/0x3d80
+[   80.476375][ T3416]  ? lockdep_hardirqs_on_prepare+0x21/0x280
+[   80.476388][ T3416]  ? copy_process+0x996/0x3d80
+[   80.476399][ T3416]  ? __pfx_copy_process+0x10/0x10
+[   80.476406][ T3416]  ? from_pool+0x1e1/0x750
+[   80.476416][ T3416]  ? handle_mm_fault+0x122e/0x1ab0
+[   80.476432][ T3416]  kernel_clone+0x216/0x940
+[   80.476440][ T3416]  ? __pfx_llist_del_first+0x10/0x10
+[   80.476448][ T3416]  ? check_new_class+0x28a/0xe90
+[   80.476458][ T3416]  ? __pfx_kernel_clone+0x10/0x10
+[   80.476468][ T3416]  ? from_pool+0x1e1/0x750
+[   80.476478][ T3416]  ? __pfx_from_pool+0x10/0x10
+[   80.476487][ T3416]  ? __pfx_from_pool+0x10/0x10
+[   80.476502][ T3416]  __x64_sys_clone+0x18d/0x1f0
+[   80.476512][ T3416]  ? __pfx___x64_sys_clone+0x10/0x10
+[   80.476520][ T3416]  ? llist_add_batch+0x111/0x1f0
+[   80.476532][ T3416]  ? dept_task+0x5/0x20
+[   80.476539][ T3416]  ? dept_on+0x1c/0x30
+[   80.476545][ T3416]  ? dept_exit+0x1c5/0x2c0
+[   80.476553][ T3416]  ? lockdep_hardirqs_on_prepare+0x21/0x280
+[   80.476565][ T3416]  do_syscall_64+0x6f/0x120
+[   80.476573][ T3416]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[   80.476580][ T3416] RIP: 0033:0x41b26d
+[   80.476588][ T3416] Code: b3 66 2e 0f 1f 84 00 00 00 00 00 66 90 f3 
+0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 
+24 08 0f 05 <48> 3d 01 f0 8
+[   80.476595][ T3416] RSP: 002b:00007ffa1ad2d198 EFLAGS: 00000206 
+ORIG_RAX: 0000000000000038
+[   80.476604][ T3416] RAX: ffffffffffffffda RBX: 00007ffa1ad2dcdc RCX: 
+000000000041b26d
+[   80.476610][ T3416] RDX: 0000200000000200 RSI: 0000000000000000 RDI: 
+0000000000001200
+[   80.476616][ T3416] RBP: 00007ffa1ad2d1e0 R08: 0000000000000000 R09: 
+0000000000000000
+[   80.476621][ T3416] R10: 0000000000000000 R11: 0000000000000206 R12: 
+00007ffa1ad2d6c0
+[   80.476626][ T3416] R13: ffffffffffffffb8 R14: 0000000000000002 R15: 
+00007ffd95d76940
+[   80.476638][ T3416]  </TASK>
 
