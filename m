@@ -1,223 +1,125 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A922B9A6;
-	Mon, 19 May 2025 15:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610C128469E
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747667787; cv=none; b=b3jm6Q6/wXlf/DmXBzAFBC0X9SZFwlQ/Oieo1fm1oLHyyTF+/iyfNOC5AGXhGUxsDJPC4w+otBuDZIFplXmypdq8nhK2waKnCmVNVQGEu2EFaKFHFxmfCzJIZgnrHtsWlOWxKAgwuD7fuPjb/TBtoCxj1TD27lYll1iARxIq+rI=
+	t=1747667799; cv=none; b=dIKOvKzGbWdazj3ktBcS1k6R3X3XF0VMN/F2Ru3YiCp6vaCCS8TqH7YjvFkbaQRzRFUnwO8shTldXbRvvkTrBwaCBY+Gy9JXmnJ9rCGXEfK5kvBglVz4Qu0vsmFbMK2FJjSyHZjMkh6NANaBy5bv7CWdKYinnhhI0sne6y6X95s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747667787; c=relaxed/simple;
-	bh=o5D8Duk+Vv3tA+KDzWYeXQ3WdzArCIIB2zu2hTvm1l4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uBpoPoNFEo7w3LOXbXVIwJRJLijA20pKvx8efth7gd54b34F0yfgVTt8Dw+1A0DeIWJYeoevkVr2Bw9h/8N92Jqvf5N9pC4sGBx8s1lnPw4ZwZZSCRtTG8lo5qvSM/3Eho97DcqgQTXyo/zKOB065wpBbw9kFa6PY2CB1akVYAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N44U+WMo; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747667799; c=relaxed/simple;
+	bh=5q3uIgP+yjKH81MVjcSqSMJF1250QvkUhRgQZrFOmts=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=tgVIC28Xn2z6UHti2PbPLrOzOlQ++5Gupo1aiXHvx3guGbRfJiou3Hm0HVl14L67rus3ivawOS7xy56bL/ElMxAXfW6j+S0feusaN+vgSsC2C5lqzicbRelGDvyGSFKFT838ieYVF70Q9Ke+ezvX7VVGQf5DD5mG9szU+7u6LdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=cAGdWTsm; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N44U+WMo"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-7082ad1355bso38509147b3.1;
-        Mon, 19 May 2025 08:16:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747667785; x=1748272585; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5gaIJp7DEmiGONwa5iKv0yKiahtqfMYGddi7S5u0w9E=;
-        b=N44U+WMoeSNl8wn7vLi3blNH/oE4zUealR185CZIe7heVT9wNrcDOo540rjOy4S4ox
-         kMOfnjjSJ/PvMPxzTQm40tufws0a5BPoqgCUbR63BxMjSXHKak7V+NsIqysetsfJI/jM
-         yyG8fOCGCdceEA1B5+FCAnZev5zMRVBhYPloc4uFylNRnf0c978ypGdldUEnL4u3rJCR
-         Rz8uiUvFpP+HgMQApCz7SAV+qJbVmrTMoGds/0wCW2/vJDffzAFGofQ7WYZRXy78t7WE
-         sNwm5m68fyrBbrLFmfdygSMf430ddBoVFd8cB3Q5gDFjucrheV7nP7YQiD4xp+oOl5aJ
-         PuXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747667785; x=1748272585;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5gaIJp7DEmiGONwa5iKv0yKiahtqfMYGddi7S5u0w9E=;
-        b=NMGKGdgAiTp0MWEk6iI69OUWrHgIrC/bgLg5xFAAfDxGPIQELtjZAZC0dgrLaMVGXU
-         E5rBGxZ2LaInYYtvpWrwpteiNhVM3ZlHjXmStZQZRZf6aqPTXhO1uIaPzb9IPaA5cHie
-         4YgvH3LF39lZe2KQTSEpSXhzDsL12yyvVNPNsNEVzQj+8IW1p9CmiUQOX3eVg97cH3GZ
-         dkEgdKm1Ns6z1WWjWFvKgJyr87P4M2YeoyNw/EOFpZDvxBH+Hu0T9F/HSRuto00xYvq7
-         vjg+GWKImNk/vGpfHnYZMuI99F2D5IY5pkjh7fi2FZrPHhacRpLN6TE8G9u6z3F/0Mit
-         qZnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxVZXgxvrne03pUFGfNwsOydwHn1M/pcJqpkBOgn7lyUPpAInwfVJ31Mu6p9p8jC/CeTWGKbzsGoJUK/w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy38UErNDUP1xKSuLUeHxS5KKN8NS3eIKC1cHzRJZ5h+qbflZf+
-	Os+WPNr6CZraN8MQHQfcdyNQvMKv7b9jLQCw8rzke/UhlNYiiquSddVCqKQR5D7D/7dLiaSWxOA
-	KAxI9yfnwvT0vwoMNDDGJj1vmOF0DORA=
-X-Gm-Gg: ASbGncuc9w8jrOg8HChPIStlOf6tFYEDGCvC26mwAppCmEkypRkK/b+k+PUw+YJ/lkL
-	d+1y69vfWE9dCzRwjBXdvwl2TROtYN9PxQybphIrfHmjuoaaaPwFuH/1ZmdDvH3dLFGDnIDW6mG
-	NMqxkDAPJtm/7pUFd86WPGn4hponlMfw==
-X-Google-Smtp-Source: AGHT+IE5FnslhdPzKpqPc7F2k54Mz7YAmogpbFKDQGPxJ9oFMdadV2bYqji9vtSlUsesrO5ZwCeYP3CujkZOHjDVYfY=
-X-Received: by 2002:a05:690c:88c:b0:6f9:4bb6:eb4e with SMTP id
- 00721157ae682-70ca7b8d811mr188852907b3.31.1747667784766; Mon, 19 May 2025
- 08:16:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cAGdWTsm"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250519151635epoutp017b794112a93923984f752d0cd30bdef5~A9pmpOKxw0536305363epoutp01Y
+	for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 15:16:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250519151635epoutp017b794112a93923984f752d0cd30bdef5~A9pmpOKxw0536305363epoutp01Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1747667795;
+	bh=NjSkcG8Ba/+tj528MW2v7RcxXouxjFYRzu2bxrG2VTY=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=cAGdWTsmBTvkJZG4Rh2DK0TdJyhfL2xVFApt7LQTUtNpuQer0CMUAv1iOtsz2W6Lz
+	 sfYawBTRqBcCjbkaQZ2a55kidC+tjQebeLBy0bw+7IOE5Z5QVZRuIROxpKdA6mRKcd
+	 hCY53q/ZdmecxSfJi4PXa5NdEgY/Mto4lZHPD4m4=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250519151634epcas5p3a0e08112510553d5309c072da7dd2c71~A9pmKlQ4x1584715847epcas5p3D;
+	Mon, 19 May 2025 15:16:34 +0000 (GMT)
+Received: from epcas5p2.samsung.com (unknown [182.195.38.180]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4b1Lr06k48z3hhT7; Mon, 19 May
+	2025 15:16:32 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250516101757epcas5p368f98b909ff50c91700358f65228e066~-_pAvExL71920919209epcas5p3O;
+	Fri, 16 May 2025 10:17:57 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250516101757epsmtrp22c1f07f88793cc19be819e06f3b2827b~-_pAt9LXe1867418674epsmtrp21;
+	Fri, 16 May 2025 10:17:57 +0000 (GMT)
+X-AuditID: b6c32a29-566fe7000000223e-37-682710d51bb8
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	33.2F.08766.5D017286; Fri, 16 May 2025 19:17:57 +0900 (KST)
+Received: from bose.samsungds.net (unknown [107.108.83.9]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250516101754epsmtip21f528a17cdd4b1f7f3d12e2cedac85fa~-_o91PBMW2836328363epsmtip2c;
+	Fri, 16 May 2025 10:17:54 +0000 (GMT)
+From: Pritam Manohar Sutar <pritam.sutar@samsung.com>
+To: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com,
+	andre.draszik@linaro.org, peter.griffin@linaro.org, kauschluss@disroot.org,
+	m.szyprowski@samsung.com, s.nawrocki@samsung.com
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, rosa.pila@samsung.com,
+	dev.tailor@samsung.com, faraz.ata@samsung.com, muhammed.ali@samsung.com,
+	selvarasu.g@samsung.com, pritam.sutar@samsung.com
+Subject: [PATCH v2 0/2] initial usbdrd phy support for Exynosautov920 soc
+Date: Fri, 16 May 2025 15:56:48 +0530
+Message-Id: <20250516102650.2144487-1-pritam.sutar@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250516142707.163457-1-stefano.radaelli21@gmail.com> <de1514f8-7612-4a26-a74e-cf87ce3c8819@lunn.ch>
-In-Reply-To: <de1514f8-7612-4a26-a74e-cf87ce3c8819@lunn.ch>
-From: Stefano Radaelli <stefano.radaelli21@gmail.com>
-Date: Mon, 19 May 2025 17:16:08 +0200
-X-Gm-Features: AX0GCFtr1NrvXwdVxf--yfxPhOInMncFJx7SIpWeTMoP8Cz6kvPOGJHuLWFDYbU
-Message-ID: <CAK+owogkvN+Y28YQ9X28QdLo6VXguR-6tY-10an_F02BMqFtew@mail.gmail.com>
-Subject: Re: [PATCH net-next v2] net: phy: add driver for MaxLinear MxL86110 PHY
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Xu Liang <lxu@maxlinear.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHLMWRmVeSWpSXmKPExsWy7bCSvO5VAfUMg9evpSwezNvGZrHl1WYW
+	izV7zzFZ3NuxjN1i/pFzrBbXbixkt/jz7zybxdHW/8wWL2fdY7PY9Pgaq8XlXXPYLCas+sZi
+	MeP8PiaLtUfuslucf9HFarFhxj8Wi2f3VrBZ/N+zg93iy88HzBaH37SzWhxZ/pHJYuedE8wO
+	Yh4n121m8ti0qpPN4861PWwem5fUe/RtWcXo8XmTXABbFJdNSmpOZllqkb5dAlfG2id2BUfZ
+	K6YsvcnawDiJrYuRk0NCwERi0rMPTF2MXBxCArsZJWa3zGWBSMhIPJq2kRXCFpZY+e85O0TR
+	W0aJ72/PAiU4ONgETCUm7kkAiYsI9DBJPL36gw3EYRY4zSSx4eMMdpBuYQFPiZ0X5jCC2CwC
+	qhI3+1qYQGxeAXuJN6fmQW2Ql9h/8CwzRFxQ4uTMJ2BXMAPFm7fOZp7AyDcLSWoWktQCRqZV
+	jJKpBcW56bnFhgWGeanlesWJucWleel6yfm5mxjBUaSluYNx+6oPeocYmTgYDzFKcDArifBe
+	z1LOEOJNSaysSi3Kjy8qzUktPsQozcGiJM4r/qI3RUggPbEkNTs1tSC1CCbLxMEp1cC0o9rK
+	/UOg2+ZsnbwXdjsNGmpDBd6lHt0+scnmW96aT0u2xl1hWi1kutD9R/W1vVMYeA8uudmyepWI
+	pVXqtTkbZUOuzf9jKrTadXqS+LsA0+zJdv332ZYsSf+v9szrxw/5ixcsp/nwF98uWX5C1ci9
+	8+LU98+OM4eIaxVd0Pj3SoC/dlqvclVAZUD2nmOLVNzPTjgvu8W38sCO5cEdvUJ3X95eOevY
+	wq2/ZH8827zm7/5LT3OjzDlyeRfHh04JkmI0q05n9jR7LpeVJMUXGN2af1S7W8qrYV3lmWUB
+	T/3++OsqVEgmLGVgXLJt+fyJiazHeJNUWmVuCnPMdHSYOlPx4XW5O8t7j61okV3QYLRFiaU4
+	I9FQi7moOBEAVMSI6hEDAAA=
+X-CMS-MailID: 20250516101757epcas5p368f98b909ff50c91700358f65228e066
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250516101757epcas5p368f98b909ff50c91700358f65228e066
+References: <CGME20250516101757epcas5p368f98b909ff50c91700358f65228e066@epcas5p3.samsung.com>
 
-Hi Andrew,
+This SoC has a single USB 3.1 DRD combo phy and three USB2.0
+DRD phy controllers that only support the UTMI+ interface. 
+This SoC is very similar to the existing Exynos850 support
+in this driver. We have supported only UTMI+ in this patchset.
 
-Thank you for your patience and valuable feedback.
-I'm learning a lot from your reviews and this process overall.
+The difference is that combo phy supports both UTMI+(HS) and 
+PIPE3(SS) and is out of scope in this patchset.
 
-I'll send v3 shortly with the changes you pointed out.
+changelog
+----------
+Changes in v2:
+- Used standard GENMASK() and FIELD_GET() to get the major version 
+  from controller version register.
+  link for v1: https://lore.kernel.org/linux-phy/20250514134813.380807-1-pritam.sutar@samsung.com/
 
-Best regards,
+Pritam Manohar Sutar (2):
+  dt-bindings: phy: samsung,usb3-drd-phy: add dt-schema for
+    ExynosAutov920
+  phy: exyons5-usbdrd: support HS phy for ExynosAutov920
 
-Stefano
+ .../bindings/phy/samsung,usb3-drd-phy.yaml    | 27 ++++++
+ drivers/phy/samsung/phy-exynos5-usbdrd.c      | 85 +++++++++++++++++++
+ 2 files changed, 112 insertions(+)
 
+-- 
+2.34.1
 
-Il giorno lun 19 mag 2025 alle ore 14:35 Andrew Lunn <andrew@lunn.ch>
-ha scritto:
->
-> > +static int mxl86110_set_wol(struct phy_device *phydev, struct ethtool_wolinfo *wol)
-> > +{
-> > +     struct net_device *netdev;
-> > +     const u8 *mac;
-> > +     int ret = 0;
-> > +
-> > +     phy_lock_mdio_bus(phydev);
-> > +
-> > +     if (wol->wolopts & WAKE_MAGIC) {
-> > +             netdev = phydev->attached_dev;
-> > +             if (!netdev) {
-> > +                     ret = -ENODEV;
-> > +                     goto error;
-> > +             }
->
-> ...
->
-> > +
-> > +     phy_unlock_mdio_bus(phydev);
-> > +     return 0;
-> > +error:
-> > +     phy_unlock_mdio_bus(phydev);
-> > +     return ret;
-> > +}
->
-> You should be able to simplify this. If you have not had an error, ret
-> should be 0. So you can also return ret. You have the same pattern in
-> other places.
->
-> > +/**
-> > + * mxl86110_synce_clk_cfg() - applies syncE/clk output configuration
-> > + * @phydev: pointer to the phy_device
-> > + *
-> > + * Custom settings can be defined in custom config section of the driver
-> > + * returns 0 or negative errno code
-> > + */
->
-> Maybe add a comment that the bus is expected to be locked.
->
-> > +static int mxl86110_synce_clk_cfg(struct phy_device *phydev)
-> > +{
-> > +     u16 mask = 0, value = 0;
-> > +     int ret = 0;
-> > +
-> > +     /*
-> > +      * Configures the clock output to its default setting as per the datasheet.
-> > +      * This results in a 25MHz clock output being selected in the
-> > +      * COM_EXT_SYNCE_CFG register for SyncE configuration.
-> > +      */
-> > +     value = MXL86110_EXT_SYNCE_CFG_EN_SYNC_E |
-> > +                     FIELD_PREP(MXL86110_EXT_SYNCE_CFG_CLK_SRC_SEL_MASK,
-> > +                                MXL86110_EXT_SYNCE_CFG_CLK_SRC_SEL_25M);
-> > +     mask = MXL86110_EXT_SYNCE_CFG_EN_SYNC_E |
-> > +            MXL86110_EXT_SYNCE_CFG_CLK_SRC_SEL_MASK |
-> > +            MXL86110_EXT_SYNCE_CFG_CLK_FRE_SEL;
-> > +
-> > +     /* Write clock output configuration */
-> > +     ret = mxl86110_modify_extended_reg(phydev, MXL86110_EXT_SYNCE_CFG_REG,
-> > +                                        mask, value);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +/**
-> > + * mxl86110_broadcast_cfg - Configure MDIO broadcast setting for PHY
-> > + * @phydev: Pointer to the PHY device structure
-> > + *
-> > + * This function configures the MDIO broadcast behavior of the MxL86110 PHY.
-> > + * Currently, broadcast mode is explicitly disabled by clearing the EPA0 bit
-> > + * in the RGMII_MDIO_CFG extended register.
->
-> here as well.
->
-> > + *
-> > + * Return: 0 on success or a negative errno code on failure.
-> > + */
-> > +static int mxl86110_broadcast_cfg(struct phy_device *phydev)
-> > +{
-> > +     int ret = 0;
-> > +     u16 val;
-> > +
-> > +     val = mxl86110_read_extended_reg(phydev, MXL86110_EXT_RGMII_MDIO_CFG);
-> > +     if (val < 0)
-> > +             return val;
-> > +
-> > +     val &= ~MXL86110_EXT_RGMII_MDIO_CFG_EPA0_MASK;
-> > +     ret = mxl86110_write_extended_reg(phydev, MXL86110_EXT_RGMII_MDIO_CFG, val);
->
-> Could _modify_ be used here?
->
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +/**
-> > + * mxl86110_enable_led_activity_blink - Enable LEDs activity blink on PHY
-> > + * @phydev: Pointer to the PHY device structure
-> > + *
-> > + * Configure all PHY LEDs to blink on traffic activity regardless of their
-> > + * ON or OFF state. This behavior allows each LED to serve as a pure activity
-> > + * indicator, independently of its use as a link status indicator.
-> > + *
-> > + * By default, each LED blinks only when it is also in the ON state. This function
-> > + * modifies the appropriate registers (LABx fields) to enable blinking even
-> > + * when the LEDs are OFF, to allow the LED to be used as a traffic indicator
-> > + * without requiring it to also serve as a link status LED.
-> > + *
-> > + * NOTE: Any further LED customization can be performed via the
-> > + * /sys/class/led interface; the functions led_hw_is_supported, led_hw_control_get, and
-> > + * led_hw_control_set are used to support this mechanism.
-> > + *
-> > + * Return: 0 on success or a negative errno code on failure.
-> > + */
-> > +static int mxl86110_enable_led_activity_blink(struct phy_device *phydev)
-> > +{
-> > +     int ret, index;
-> > +     u16 val = 0;
-> > +
-> > +     for (index = 0; index < MXL86110_MAX_LEDS; index++) {
-> > +             val = mxl86110_read_extended_reg(phydev, MXL86110_LED0_CFG_REG + index);
-> > +             if (val < 0)
-> > +                     return val;
-> > +
-> > +             val |= MXL86110_LEDX_CFG_TRAFFIC_ACT_BLINK_IND;
-> > +             ret = mxl86110_write_extended_reg(phydev, MXL86110_LED0_CFG_REG + index, val);
-> > +             if (ret < 0)
-> > +                     return ret;
->
-> _modify_ ?
->
-> Getting pretty close to finished now. Thanks for keeping working on
-> it.
->
->         Andrew
