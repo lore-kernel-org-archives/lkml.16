@@ -1,150 +1,53 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35BFE46BF
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 22:43:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2159B46BF;
+	Fri, 16 May 2025 22:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747435397; cv=none; b=BIOIybOUJYxGvYpBpxQ1CdqEMTJT9qcfWcuPgL6oCAF7DrMjfgT5l+sV23emH1spQwx8xR4fGz1JM3hJi27ZserJhtyPkx6ElXLQY1SLyRjuk06H6zvsEdskhkBph8CTTu15iP32FchiHGS9frfSPf4BZ0qmM0Upg7wDrVeHIsU=
+	t=1747435431; cv=none; b=SrzGitZiApj0whiwaNpxr4U5IQQQwz5TefiaB8MdmEQOEYblKQ4zQhjt78WHVmTnbT+6eWuayMIuRNRLeq1ZMqamf589jTXe9kBUmFOJefc7HutDWWOoRWKfL4MN2emYyauB9u/HKoHgFGfP4lB6AnQEYk5OXWuBV91ygHGVaMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747435397; c=relaxed/simple;
-	bh=hfabRiLljbl1HANiIdfWAP98Xpico/Kdype+mEpmFZk=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=PYIKVcseeyGJfVZipXIlDW6R21ccZik9hryKykfdtmU1fuHpxw5c4rk1Ba+uH7PBVBFRvr3pqlA/MBYtUU1ssI1YXGcs9TmgLnq5E4q/3H0zrZhnj3X4r7RLuMPaDmxHYAEz7NelSRhNbnwVX1TBJp0+1PBb0sp9BGLKqB3/IzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=swf0vnjs; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="swf0vnjs"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7425fc3357aso3371860b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 15:43:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747435395; x=1748040195; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=UwP/Vx2iaUwHKjVIPmZoWWF77us3LDnzfoBHKI6jETg=;
-        b=swf0vnjsKIMT2fTQe+sqHWGAX7MA6kIAcyVNygFs2ygYb+D4ykhk3aqjHm9t2V0SIO
-         nSX1HuUPwzXuj216CoOV/Iv7RUMahF4PiK+SqFLf6GYzk+ckYmcU4bW45jx9fGqjaidE
-         aNQ5AZie7LkJ7PH5i5ZEGHwLOGnxlkBW4LSZAbrJfs4tb7Vd+84yc+/m0oRFWnDprtoF
-         zl4Q6In/9U7jj42AjavRC6d6RN2uMJkvg6bWmtMPQ3G49vkpIf8gfk/i0FENlRxCeYwQ
-         3pdFqI2ydVnXNXuEMk6u2pXIvrmSiIaqbO37CFvxAqEdN1ASMIGp7HsGiNnt9pAwiPs1
-         Kyvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747435395; x=1748040195;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UwP/Vx2iaUwHKjVIPmZoWWF77us3LDnzfoBHKI6jETg=;
-        b=p5kbJfqDF7ThmH4M5BFQmUV6USrSyfPMti+gCNQBNd0XpdEnqBvxBhVxcMAnZjDhv4
-         IodHr8Wc8Rj9h4SzGacKYbrZv2RFwm+B/6LS6+ydqbaz5S9mdRcr+DbloGBBfNyaqRTT
-         X+rrUH1pz3MLVTCIelluqNfC/2tmFHFLPvG2m/u8awA2irLgMIyzTQ0vCXpRjxkDsS10
-         L6FUYX2VeCMuFVybwbTlMj2AdPNQS++993WyU4VgkR3UoR8dqIWyJUjltXwzbb3ltncz
-         8nlUtQv/5bBiZM3oGm5E9b0tvIXidUiszfUnvXTRdXiq5w1StB1DDq+V9YdWIaHB0tDF
-         F1WA==
-X-Forwarded-Encrypted: i=1; AJvYcCWOaafqK5BAsUgD0+PyA3ZB73gCsyaY3trPzHRhkk8z1lN8pcn3jUiGSbzAMEamw8Bahx0nzZ9IKVMCWVA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBzNDUnF2H1D0dXhO+r+CEGMI4C9H3osszuYC97EwdlHzjLY0p
-	q3ubAglYRDmS7ncmCHugSkWSizbQrVt29p+wNQ1My8N5H3+q/JN1oqg8gOh+LiYMbKVcSG8Xh5f
-	r2PoMuoDAwJjP9arx7qd/hAEu0Q==
-X-Google-Smtp-Source: AGHT+IG6+sFRSJbWE22FTz4ijWTukSwix/9j770r9PlxkRLB52VwmrOJ/kpeM4pmmDos7Oer2aGmJhNogxMLy5V/6g==
-X-Received: from pfbik5.prod.google.com ([2002:a05:6a00:8d05:b0:73c:29d8:b795])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:10c6:b0:740:a52f:9652 with SMTP id d2e1a72fcca58-742a97aa35emr6301726b3a.6.1747435395246;
- Fri, 16 May 2025 15:43:15 -0700 (PDT)
-Date: Fri, 16 May 2025 15:43:14 -0700
-In-Reply-To: <cover.1747264138.git.ackerleytng@google.com> (message from
- Ackerley Tng on Wed, 14 May 2025 16:41:39 -0700)
+	s=arc-20240116; t=1747435431; c=relaxed/simple;
+	bh=PCHcCgQCeojwufgffgqmZUHU4L7xOtj6HmqydT7FEnQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D+Z3T73eOE+aDFgkjCkJqqoOIhak/UER61KwK/QmzYsN1nzCcd1Yv77g48usmGz/hDGvUXfKa4W9j92pilo/wH5PADAD9AI8duvkmWlSPkfnoIklIF37qG/UvMXPMpW1jWs02/M1rEM91VjQpLB/MPeuQOFZppdCGxxkdxwldmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D40C4CEE4;
+	Fri, 16 May 2025 22:43:49 +0000 (UTC)
+Date: Fri, 16 May 2025 18:43:47 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Thomas Richter <tmricht@linux.ibm.com>,
+ linux390-list@tuxmaker.boeblingen.de.ibm.com, sumanthk@linux.ibm.com,
+ hca@linux.ibm.com, agordeev@linux.ibm.com, gor@linux.ibm.com, Alexander
+ Egorenkov <egorenar@linux.ibm.com>, linux-perf-users@vger.kernel.org, Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf ftrace: Use process/session specific trace
+ settings
+Message-ID: <20250516184347.32c0454a@batman.local.home>
+In-Reply-To: <aCeNhagT1CFny8r5@x1>
+References: <20250516131023.357458-1-tmricht@linux.ibm.com>
+	<aCeJcsJnbi7jfVdK@x1>
+	<aCeNhagT1CFny8r5@x1>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <diqzbjrsfa7x.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH v2 00/51] 1G page support for guest_memfd
-From: Ackerley Tng <ackerleytng@google.com>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com, 
-	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
-	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
-	bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org, 
-	catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org, 
-	dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
-	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
-	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
-	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
-	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
-	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
-	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
-	kent.overstreet@linux.dev, kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	thomas.lendacky@amd.com, usama.arif@bytedance.com, vannapurve@google.com, 
-	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
-	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
-	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
-	yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Ackerley Tng <ackerleytng@google.com> writes:
+On Fri, 16 May 2025 16:09:57 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-> <snip>
->
-> Here are some remaining issues/TODOs:
->
-> 1. Memory error handling such as machine check errors have not been
->    implemented.
-> 2. I've not looked into preparedness of pages, only zeroing has been
->    considered.
-> 3. When allocating HugeTLB pages, if two threads allocate indices
->    mapping to the same huge page, the utilization in guest_memfd inode's
->    subpool may momentarily go over the subpool limit (the requested size
->    of the inode at guest_memfd creation time), causing one of the two
->    threads to get -ENOMEM. Suggestions to solve this are appreciated!
-> 4. max_usage_in_bytes statistic (cgroups v1) for guest_memfd HugeTLB
->    pages should be correct but needs testing and could be wrong.
-> 5. memcg charging (charge_memcg()) for cgroups v2 for guest_memfd
->    HugeTLB pages after splitting should be correct but needs testing and
->    could be wrong.
-> 6. Page cache accounting: When a hugetlb page is split, guest_memfd will
->    incur page count in both NR_HUGETLB (counted at hugetlb allocation
->    time) and NR_FILE_PAGES stats (counted when split pages are added to
->    the filemap). Is this aligned with what people expect?
->
+> Yeah, you can just call rmdir and be done with it :-)
 
-For people who might be testing this series with non-Coco VMs (heads up,
-Patrick and Nikita!), this currently splits the folio as long as some
-shareability in the huge folio is shared, which is probably unnecessary?
+Yes. Removing an instance should reset everything about it before it
+removes it. It disables events and sets the current tracer to "nop"
+(stopping function tracing and such if it was present).
 
-IIUC core-mm doesn't support mapping at 1G but from a cursory reading it
-seems like the faulting function calling kvm_gmem_fault_shared() could
-possibly be able to map a 1G page at 4K.
+If there's a file open, then the rmdir should fail with -EBUSY.
 
-Looks like we might need another flag like
-GUEST_MEMFD_FLAG_SUPPORT_CONVERSION, which will gate initialization of
-the shareability maple tree/xarray.
-
-If shareability is NULL for the entire hugepage range, then no splitting
-will occur.
-
-For Coco VMs, this should be safe, since if this flag is not set,
-kvm_gmem_fault_shared() will always not be able to fault (the
-shareability value will be NULL.
-
-> Here are some optimizations that could be explored in future series:
->
-> 1. Pages could be split from 1G to 2M first and only split to 4K if
->    necessary.
-> 2. Zeroing could be skipped for Coco VMs if hardware already zeroes the
->    pages.
->
-> <snip>
+-- Steve
