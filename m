@@ -1,73 +1,70 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C900227E99
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 20:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0669927A450;
+	Fri, 16 May 2025 20:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747426622; cv=none; b=kjV5CPfmUKjl19kYzhJU1sRzGK6cdc49/h17Dh7OzJMQVIpelxcT85v51MrcT7RWM2vombJfoL11t5hv+I6Y9ckpYv4DERgaKgTwvdrDuRdQB2zTySbj5CM/gAiD879wQBMdB2ygwcWOlyNfWyBIHju/v5vJIFSLGSCUgTOwFJ0=
+	t=1747426636; cv=none; b=kP1GtTKckffLi607jgyTm4K0T4c47+1QdiASCRNhipAiyk7xYpNb6YQMtCi0sW1Ao3NfbfhX5BbjmqiOGAcVz4Mqkwygtev6xJo14/T0jWJjCz2ObRdQVZv3IDwo8c+jkCSBI/B3yH9c44rlSFhC/mkR0n5n3j8BIXqWMJdQX2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747426622; c=relaxed/simple;
-	bh=p1mvHlBdKatl+hMMra0+ZlPP255dxOsU82UwTPZKqI0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GbmhCOzn11Mp+lnisNnh08xlI1r0FMrOvCTVqJRco5rBXyPEB0L4yM3vuYzD7nSOyVP0biclIMm4iPm2reVTbg1DRYC4JUcx8df1086bShVCdxjQnN0oCLBkf+DbmISvGMcvqKARGKWvZB22wD37oRfAKzqPxDvZi5PX0reu67g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lYHoXiqM; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747426636; c=relaxed/simple;
+	bh=gdghEq68rS4dPfk9w/Dn9+8ctElaEIgaJKGdi8w2LsI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FEiaoQukLQCTyTDN/WyyqZtagq6YmPerkGp1YNKq6MRzaKzKcpqnzdi2yQRUVhHC1ROAfjVTLutFwx5QCad4xRka36BF3r0COviuG5R9edLLeji7bNd26Vfw54z3L3zP7WwDDd4lXdN+evP/BgOjD+8mSF5g60bc6j+B+gIbUQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cC+TjSS/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lYHoXiqM"
-Message-ID: <b72e8b41-a5ec-4821-a315-8670d7e2e56f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747426607;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eu2L0rYe7eo1oBRvssRRGMqi4mD0VDsTUXJiSleO2/s=;
-	b=lYHoXiqMOdkSm+VkSphX+fMNRj6jPIoLAJdyJGM+76xrriLOEnBwFE66CK2yzosIL49Ft5
-	/TlBWbE4OuGhVhYYt/b8li2xhMo6iQPl2g1bAj8XZTVWVPnf4Wa5wDX9niAqZNsf0SaYiI
-	yPTbjWT0TnlZUEfMWYBt22A56506gCE=
-Date: Fri, 16 May 2025 21:16:45 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cC+TjSS/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C9B1C4CEE4;
+	Fri, 16 May 2025 20:17:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747426635;
+	bh=gdghEq68rS4dPfk9w/Dn9+8ctElaEIgaJKGdi8w2LsI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cC+TjSS/6y17tbIKaZGsUJoPoCD1aU/C16eEMGQPyvJ9FM3znQC7DENjYVkdt70Jh
+	 aFOIkPu/qJkm3eWmq1rZ2IciIRicDngFiXU/dDFBxngh3y8GA6Wvms3mKF9TBmdNFZ
+	 6Ip4GISVjxFV4aqS7OtJ3OWKMATh3yfxhYQfPgtaJF3bvXCNoXjFNAWo1/jWsdwbOj
+	 PKDyYPwhzcuV8TMg9FkaF8jKMQ6Ph4dVqc7AAl881N/gOMY4aLKf74zn5KFQuQnZ5a
+	 mlhX1lzFp+/ApepbLqGVDxBdxj0XGVweXkfe4TRVDRA5JOcUHIvUX7elCJNqi29r4C
+	 fXGzduw+HA5kg==
+Date: Fri, 16 May 2025 21:17:11 +0100
+From: Simon Horman <horms@kernel.org>
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] net: airoha: Fix an error handling path in
+ airoha_alloc_gdm_port()
+Message-ID: <20250516201711.GK3339421@horms.kernel.org>
+References: <5c94b9b345017f29ed653e2f05d25620d128c3f0.1746715755.git.christophe.jaillet@wanadoo.fr>
+ <aCZZyDvp-TZ7AFwS@lore-desk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v5] ptp: ocp: Limit signal/freq counts in summary output
- functions
-To: Sagi Maimon <maimon.sagi@gmail.com>, jonathan.lemon@gmail.com,
- richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20250514073541.35817-1-maimon.sagi@gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20250514073541.35817-1-maimon.sagi@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCZZyDvp-TZ7AFwS@lore-desk>
 
-On 14/05/2025 08:35, Sagi Maimon wrote:
-> The debugfs summary output could access uninitialized elements in
-> the freq_in[] and signal_out[] arrays, causing NULL pointer
-> dereferences and triggering a kernel Oops (page_fault_oops).
-> This patch adds u8 fields (nr_freq_in, nr_signal_out) to track the
-> number of initialized elements, with a maximum of 4 per array.
-> The summary output functions are updated to respect these limits,
-> preventing out-of-bounds access and ensuring safe array handling.
+On Thu, May 15, 2025 at 11:16:56PM +0200, Lorenzo Bianconi wrote:
+> > If register_netdev() fails, the error handling path of the probe will not
+> > free the memory allocated by the previous airoha_metadata_dst_alloc() call
+> > because port->dev->reg_state will not be NETREG_REGISTERED.
+> > 
+> > So, an explicit airoha_metadata_dst_free() call is needed in this case to
+> > avoid a memory leak.
+> > 
+> > Fixes: af3cf757d5c9 ("net: airoha: Move DSA tag in DMA descriptor")
+> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 > 
-> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
-> ---
-> Addressed comments from Vadim Fedorenko:
-> - https://www.spinics.net/lists/kernel/msg5683022.html
-> Addressed comments from Jakub Kicinski:
-> - https://www.spinics.net/lists/netdev/msg1091131.html
-> Changes since v4:
-> - remove fix from signal/freq show/store routines.
-> ---
+> Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
 
-LGTM, Thanks!
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+
