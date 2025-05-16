@@ -1,126 +1,177 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89BE3199FBA
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 14:18:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9844A1632DD;
+	Fri, 16 May 2025 14:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747405100; cv=none; b=Nhmh+4MUxp2mv3gjNv4aRM8/fC0R9AQ3d0mvpasXIz6K5SzYihYp82SwXiwyQthAWlASw/18o/Qp7qFGaWV320nPESKYVoy9rKcvjOqQ42poVMDyQeAOFkxgGT0MF++0rsPgXg7FNR+iO0k0PCYFQlZPMRcOXx9gulR807UzsKs=
+	t=1747405113; cv=none; b=ruvBkkgK3UJ29487jWHqVUMkItZYJLBb+wV1rxa2e1Mzv7Hrt+Ji6gKPbi3mTNIgVX6m8ldJMIUODL83ZNVvCtMKbfICB4NsFcJs3xumexN1iYsXA76Dan06GJx4euElafRFrFexmSk7ZcHrlHQK/A0ovZiiRNx2qiQwSy7HfEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747405100; c=relaxed/simple;
-	bh=Mg6g1/TzH+Xhtn16KUSbRqht0teHBbYz5hWZnb6szNU=;
+	s=arc-20240116; t=1747405113; c=relaxed/simple;
+	bh=wJC6zw4ize8YvwX8KINR0uybINw/Jty0tJPjNkm1idc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fTHwP5v1Owx73GEoR4nBmV2zlN31twApIoT0nUJcFdNUCsc+rwEgxbilMD/+3noYd1GryO8tOvgyo+EWWDLx4xdoz6DOi4hkyGxltQeCUKGSjQRkczmBZAky3jPkR+k4CgMSV2O+InvbR9QneTxkkJHPkyqXvv+d732NYo0GRvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=ZJ1fvfyI; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	 Content-Type:Content-Disposition:In-Reply-To; b=kSaxyY/RULiVrdXI8Ler8aPust1Wqef6qQ03+aVZ6tMJrlgNBwwCoWSE9vrxa9ZlX3FhGwxg+XG1gOD8ef6M1XBOEan+Dloy7XSLH7bS/4zxzAhWOkHn03/75fwLljhaINsQAjVqi8kyS6L1uXFIP3KCcjpIUc43t4N3EL/WTyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SWXG33jt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ZJ1fvfyI"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6ecfbf8fa76so25665796d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:18:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1747405097; x=1748009897; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oku1snLMpD2EhPjxkL/jicRSSroCJrOHGMPvLIw4vjs=;
-        b=ZJ1fvfyIoPLhOUTfFLPr2CV0SxTY9jmFKzOClANqq33HzLbTTit4sVHm3+pv/ET8Nd
-         unQVmiHNboGffcxc0Rp/3UKZyQ9IOugXQ1AtwalwgujlN1gNlXpirN+i81W0rdbMFJfF
-         XgsS3J2RWJVcwqzdQ8n0SlNqakXit4pYwveCXj63pvD3XwDaLWwU9rfrzuyRhucdyvCS
-         xXXe3XUhPmXwMl4S0AEWT5aCNwaj6PxFrEModJVAP/KZgk21sKe7cs9shJeV/C1MV+nC
-         oIOcl9xeFgoWC2Pq4KP8G3fpvdp4RJOWZGJvuGuKdaW4tCPRt9OjQfzbHAXAfeJ4O+hc
-         yedw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747405097; x=1748009897;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oku1snLMpD2EhPjxkL/jicRSSroCJrOHGMPvLIw4vjs=;
-        b=o3IOgR00iay245NhG8BXAZ11VugRN9yTvu5G6MaZYAN+v7ab9kA439qfGLL8pcNdaA
-         Axt+AJ3cQPEzklgLrV5UfncrdDzK6IHgaJEVAEbneaR5FdwjciVev/6pAQoE4vK+Qd9b
-         sg9E1/Qg41XuJPt5KNRnP6THnqfVZSeTPOxspFeH+C1IQktDF4WhBgbJF7rem2U4o8zO
-         0GUXB5wCZRnjPKpNPj8qJGCxRkRLpbFgEVQ6ciG+1r6JP00b0+/uAu8VKP6jW2OyJCqn
-         ie1iUFDAf/5pJcX/0hEZJFCkKm/2ojOm5dqrrUs5KOXktsu3aSaJRPuGvlfiwJNc3Qeo
-         8VWA==
-X-Forwarded-Encrypted: i=1; AJvYcCUw2XITADPaa4RUPbo1eDLrcuFFfGpNMszyLbxlZ1xVmvJ7jkB9uFxSLOxNGFYc11y5J/kYxjI/onXO7C0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxdbHeIO0lx3HBohPW4xWDxLpsNtu2AB0bTVOOv2ZpsGwDa/fG
-	aK+iyhwsTNKnTKvB45Nfs64YVa4m0i5jYIRPrPCVOeYGDa839c9pipflpf1OPX+tg0c=
-X-Gm-Gg: ASbGnctwYYELpClkxc42QljdjC54jts69sFyrartkoJ63fYa93hPFZoRnZRtWtqJ3A+
-	p/d/irPMe2mGpTlsWzor1l/k9csL6pnlxKIWi3Z1V6he6fKUE+lLwk4uBKR1LkDgHhMq1DtBSUV
-	Oj11HU8O5a0Jbs7UjLi3eRkpWZnGnWIeV4UQtgQASdQns92Fj1Mv1xXR9oLPZKzDK9zi68suzwN
-	GHTFdORQgsgk4XToitmSmWZb4FXibo+uwzb+zgCa5kldTiNP6p28QxpIv6b1I/Z49UcyXvcVJ60
-	KFhDyukdfEI7pEdZnU4olW+OYFJthenG2R6sC14+39rs+GwK+1onPAnM6ULybEvHbcHoJO0EXBS
-	1g+4XbV+eCWW1nDIZMkG5seG9v4U=
-X-Google-Smtp-Source: AGHT+IFtHK6p6wGrGRp+/Uark86W3HpnkGxzK5no2sq/+GtMDf7N3+z/MjO6uU/3WYiZf7Bgzm5AWQ==
-X-Received: by 2002:a05:6214:27e2:b0:6f5:4055:83d9 with SMTP id 6a1803df08f44-6f8b2c32c7bmr45344226d6.6.1747405097419;
-        Fri, 16 May 2025 07:18:17 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b096dda9sm12537746d6.71.2025.05.16.07.18.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 07:18:16 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uFvtA-00000002g0J-0A2r;
-	Fri, 16 May 2025 11:18:16 -0300
-Date: Fri, 16 May 2025 11:18:16 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: lizhe.67@bytedance.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, muchun.song@linux.dev,
-	Peter Xu <peterx@redhat.com>
-Subject: Re: [PATCH] vfio/type1: optimize vfio_pin_pages_remote() for
- hugetlbfs folio
-Message-ID: <20250516141816.GB530183@ziepe.ca>
-References: <20250513035730.96387-1-lizhe.67@bytedance.com>
- <20250515151946.1e6edf8b.alex.williamson@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SWXG33jt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD18FC4CEE4;
+	Fri, 16 May 2025 14:18:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747405113;
+	bh=wJC6zw4ize8YvwX8KINR0uybINw/Jty0tJPjNkm1idc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SWXG33jt+z9gQJKbLLztRaIhXu3GxC1mAa0ZSlSKQm4IUJrXys/tLQgoGbEyVpyzM
+	 Qkm/KgG7O9POchBxw24pZSWhDuSVXN8Uq3SJ6t/fpj/U+LZY4DBL6KVdey57i1t107
+	 Wz8m0xxe5beLiFlhw50FKELh6evnhdQeRWIez/HvjJe4JM7SMKb41KReJ1EKkgDVa5
+	 ON3tGUogQzuKCn/x+F8hSYJdrXps3pXqwKiyMCyd74KSJf1heyoHdnUXD1v58AxsAq
+	 DRPJ10U3WnmwNAeUyRM2bJwlqTeCfAfRS9jybP5N90hW04pb0QPs2twM8qtkGgiElS
+	 vgs7yd6MmjdKw==
+Date: Fri, 16 May 2025 15:18:26 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+	Dragos Bogdan <dragos.bogdan@analog.com>,
+	Antoniu Miclaus <antoniu.miclaus@analog.com>,
+	Olivier Moysan <olivier.moysan@foss.st.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Tobias Sperling <tobias.sperling@softing.com>,
+	Alisa-Dariana Roman <alisadariana@gmail.com>,
+	Marcelo Schmitt <marcelo.schmitt@analog.com>,
+	Trevor Gamblin <tgamblin@baylibre.com>,
+	Matteo Martelli <matteomartelli3@gmail.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] dt-bindings: iio: adc: add ad7405
+Message-ID: <20250516-moonshine-engine-006e72665702@spud>
+References: <20250516105810.3028541-1-pop.ioan-daniel@analog.com>
+ <20250516105810.3028541-4-pop.ioan-daniel@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="zCsU3JcOku4xXmfF"
 Content-Disposition: inline
-In-Reply-To: <20250515151946.1e6edf8b.alex.williamson@redhat.com>
+In-Reply-To: <20250516105810.3028541-4-pop.ioan-daniel@analog.com>
 
-On Thu, May 15, 2025 at 03:19:46PM -0600, Alex Williamson wrote:
-> On Tue, 13 May 2025 11:57:30 +0800
-> lizhe.67@bytedance.com wrote:
-> 
-> > From: Li Zhe <lizhe.67@bytedance.com>
-> > 
-> > When vfio_pin_pages_remote() is called with a range of addresses that
-> > includes hugetlbfs folios, the function currently performs individual
-> > statistics counting operations for each page. This can lead to significant
-> > performance overheads, especially when dealing with large ranges of pages.
-> > 
-> > This patch optimize this process by batching the statistics counting
-> > operations.
-> > 
-> > The performance test results for completing the 8G VFIO IOMMU DMA mapping,
-> > obtained through trace-cmd, are as follows. In this case, the 8G virtual
-> > address space has been mapped to physical memory using hugetlbfs with
-> > pagesize=2M.
-> > 
-> > Before this patch:
-> > funcgraph_entry:      # 33813.703 us |  vfio_pin_map_dma();
-> > 
-> > After this patch:
-> > funcgraph_entry:      # 15635.055 us |  vfio_pin_map_dma();
-> > 
-> > Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
-> > ---
-> >  drivers/vfio/vfio_iommu_type1.c | 49 +++++++++++++++++++++++++++++++++
-> >  1 file changed, 49 insertions(+)
-> 
-> Hi,
-> 
-> Thanks for looking at improvements in this area...
 
-Why not just use iommufd? Doesn't it already does all these
-optimizations?
+--zCsU3JcOku4xXmfF
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Indeed today you can use iommufd with a memfd handle which should
-return the huge folios directly from the hugetlbfs and we never
-iterate with 4K pages.
+On Fri, May 16, 2025 at 01:58:03PM +0300, Pop Ioan Daniel wrote:
+> Add devicetree bindings for ad7405/adum770x family.
+>=20
+> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
+> ---
+> changes in v2:
+>  - fix properties: clocks issue
+>  .../bindings/iio/adc/adi,ad7405.yaml          | 60 +++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7405.=
+yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7405.yaml b/=
+Documentation/devicetree/bindings/iio/adc/adi,ad7405.yaml
+> new file mode 100644
+> index 000000000000..939de3bd6f26
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7405.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright 2025 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7405.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD7405 family
+> +
+> +maintainers:
+> +  - Dragos Bogdan <dragos.bogdan@analog.com>
+> +  - Pop Ioan Daniel <pop.ioan-daniel@analog.com>
+> +
+> +description: |
+> +  Analog Devices AD7405 is a high performance isolated ADC, 1-channel,
+> +  16-bit with a second-order =CE=A3-=CE=94 modulator that converts an an=
+alog input signal
+> +  into a high speed, single-bit data stream.
+> +
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad=
+7405.pdf
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad=
+um7701.pdf
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad=
+um7702.pdf
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/AD=
+uM7703.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad7405
+> +      - adi,adum7701
+> +      - adi,adum7702
+> +      - adi,adum7703
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  vdd1-supply: true
+> +
+> +  vdd2-supply: true
+> +
+> +  io-backends:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +  - vdd1-supply
+> +  - vdd2-supply
+> +  - io-backends
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    adc {
+> +        compatible =3D "adi,ad7405";
+> +        clocks =3D <&axi_clk_gen 0>;
 
-Jason
+No reg here, how do you actually access this device?
+Is it entirely via the backend?
+
+> +        vdd1-supply =3D <&vdd1>;
+> +        vdd2-supply =3D <&vdd2>;
+> +        io-backends =3D <&iio_backend>;
+> +    };
+> +...
+> --=20
+> 2.34.1
+>=20
+
+--zCsU3JcOku4xXmfF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCdJMgAKCRB4tDGHoIJi
+0ttWAQCZHPR/d5g4pOwzwPU+IPLwJ/U2F1ULaSQn8yETrxSQWAD+ONIA7VlcVA3U
+hsAHlnrxHmukjdGZA9cYEdL/iJeBug8=
+=hq22
+-----END PGP SIGNATURE-----
+
+--zCsU3JcOku4xXmfF--
