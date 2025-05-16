@@ -1,230 +1,465 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49461D5ACE
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 00:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8404B1E63
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 00:59:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747357081; cv=none; b=oIU1pG2H6sSzbqH0fq0lGoHsL0FgbBsDOl/UyzWt1CKexabaM9z4tgFVO3JValjIcgXXGU7/vLcm0nDReuNlxzwZFw/+xjjiGyQxZOL4jr4k9B214wIQi4f5fHLy0kDlh0p6ahlE2cG4bX7oozfA/5231JEetTWuTfmbCn5y2bo=
+	t=1747357195; cv=none; b=M6CDhmooWCNetEW84HApLWx/H9PTG6GvEmONMlHREzQirKNXPqWQUPLs7Rgit2uSHk6ECUTVwkaTTu6B+iBo8gMYOB+5KzlKn/IATHVzNCVfTIHX3wO6iEux9uLq8ltqSX3lZXnni4Yj+LGDW04zlXBJ0qD39gs7E3wMpg1QkeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747357081; c=relaxed/simple;
-	bh=3ppwua9bFjJRrFYv+cawYE6r12fDV36bQr383ebS5Xo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DsLtgDhqTUBYJUcYfMEADnYYyg3n5y23cQLkbQzVBEfEJ2n64mRPwS43ABjDecA+erZ3v5bPGXWlRJ8pW4946PWN6bXMU0pzQbOAF6cq5t+zwC/rv8MItK9En6Z5dj75at1y+cnYJHDAxP8mRddbAQqW3Bqv1oIRfSuRCSuGdNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E2ARgRjP; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747357195; c=relaxed/simple;
+	bh=QK99jlTxzSrD8GYe8ICI0Cky/DYqE+Sfoh3ij1u3sII=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PLsXw8o7CLsKBgtBPKJceQcAQFX7N7dZO/o6YlqAeliBVyF2plybFEmCQeli+1BTCpaTjFgyrNhaolnwS7J/5XKoZ5ib5QbnUWDsacrGIt5fubWHBvHNPvogYAhUaM6B2Q7Mq41HCHMWRh3xpzO7LA7xNFV7gmvmTF/q/3zDxyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=J9SH2qsu; arc=none smtp.client-ip=209.85.210.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E2ARgRjP"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ab4d56096so1865752a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:57:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="J9SH2qsu"
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-730580b0de8so1808967a34.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 17:59:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747357079; x=1747961879; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T8/qY0LTEjs6FgRExW+zZPRu+s+HGdicfzCVV2cwKQ8=;
-        b=E2ARgRjP9AExbmXZhlwAwh1qYyikRxlRMIZNb7lxNbrwOvSn2Dk0L7/s7IZdMhm5Cl
-         WAr10vyJ6i5FWywUOzT84+RF1sBj2CcrRfCRiqfEPFVu/bKhxxOBIpU0GULyqUvPXfdg
-         8ZLSnA01QFdmk9Gye4/urS7zfDPGOXH1s26kMN+4ozuAw2UWH2Vp9oeKenlrG0KfJ3Yi
-         GJKGP5rJhxkiFY1rHiJYUX6yx7Nmu39JGXMF8nhGLL+p5qXlBSPkISxMnB1mqkcZp4rf
-         C6fJE6lIBq/woOQtKmNRAtHCHKtJuEqZFmfS8Mnw44ajN2Cq1y1MBxZMn2o49kNU5KkZ
-         sHtA==
+        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1747357191; x=1747961991; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6lSVGOCCQRkHI+KN0h6m6NVcznAgAUXi3SggTF2KH/g=;
+        b=J9SH2qsuksebi8F/AMVSjGfh/ndcPZ4y9qKYa6UEYm+L++K/oqicV1+WdTSa8FhKRu
+         JHmSgCykTz/ULoq4wRCGBOP6cvvjfIeG82Zdam57XdjzVfuMK7aubju5m3ozm/O0iyyI
+         ozeMTpYsZywCkepCSxhZk/IotXpbcAlPOTQxp2QpYrti7RzjqInFVMHloFoZx7Is9Tad
+         3hegSu/NyWkoHTRc4F9tM9lE1ItaOH0MejO2bXBuGEmzgZPaUoKXqKo4jAXtF8mXoijf
+         6rQUwOqc8Xwzg6bHAPHl0U7OTMBpm+RrzQVn7xPPX7ZYkdnaLUnsEEcVa0NgrSNFIRA5
+         LqXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747357079; x=1747961879;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=T8/qY0LTEjs6FgRExW+zZPRu+s+HGdicfzCVV2cwKQ8=;
-        b=ghZEPagBMb8D4ea8K53jtqSgxCYJK+5GeFpqrwJtsju4ep1kYiVwhvNhtxR5J+NhwP
-         26hnGFbhhI1/fIiEvaMFVdIDboDzFJxm6AIxBIFrtUwxQrFPxq2vqWNpmMm7SDY+mzdd
-         6lxuEZVFksoWKDIE5wb9WLpUwPACWoP1YqjOpf2Nvm0cTcUhwQkPbAn4c9Wk2m2f4oHw
-         t3Zg5FjJvH7tXklShuWGDJbHYfTFNVcP8+dVUTZPH+JdmCaIFB0P6INKmqQnUku2ILx7
-         sGL8V8Txe3hdkzuXQSdAiUnctrCgaDAjneDPLt70WrwJ7gR3JEdSz5lRfx3IiN6swvlV
-         RoYw==
-X-Forwarded-Encrypted: i=1; AJvYcCXDtnEpL3IgoInz79+1N6690gDCVwJvt22ZO/4nLLHfMOeGdaYmV1xe4sb/VJ8WrLio4cBEWZqYB27b/9E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBWhCyvy7Vhde+rkTLVnpdfleZP4Kd6BbgoiUH2DL59pkDeEqN
-	zPNd/7KOMAwECwKb8vsK0aO2Ewao3RTcs6ZEOMms0y7czEtrel6U0EyF2BGJgxNe7wczabKjRbF
-	yPEQQ3A==
-X-Google-Smtp-Source: AGHT+IF7Bc+1kpTJUwa8ygptmPhSCVf8jmwAYEk8NLvIetBZg+2JsVv2O2B8rcUMCbgag6GZIPMPzybYoNI=
-X-Received: from pjbpt6.prod.google.com ([2002:a17:90b:3d06:b0:30a:7da4:f075])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2e42:b0:2fe:85f0:e115
- with SMTP id 98e67ed59e1d1-30e7d5acb46mr1591612a91.26.1747357078925; Thu, 15
- May 2025 17:57:58 -0700 (PDT)
-Date: Thu, 15 May 2025 17:57:57 -0700
-In-Reply-To: <24e8ae7483d0fada8d5042f9cd5598573ca8f1c5.camel@intel.com>
+        d=1e100.net; s=20230601; t=1747357191; x=1747961991;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6lSVGOCCQRkHI+KN0h6m6NVcznAgAUXi3SggTF2KH/g=;
+        b=UUp7nV+F9BsNVT3dh+8uqSmNIqtR3iZFJWPi7nZ7qXzsiPLs6x1jhOrmIMd5316Wsm
+         MQhExME7bFgDE7wtAH6DwRUmfNA5RcrEVL9GI1cmEK6XRW2jj6aN8bSF6t2cKWqXr/TR
+         sW0USzP6ClU3QSJHdBc5fa65j4eACR5HOdH/gy4aYmYx0mZVuRuQDUsCmGThnscIk+cx
+         zbumS0A6WDp2WBfLef/qoBA/2Tw1gnoqGiLnCGudJIxNddJLEhvRG01d1Xidmy3Tg4ee
+         ZFa7N0gZa2ghwG/aFdwVD4fM3eeP3N70LbjJYFm0PNSyobPFIV04z+AiEb4maOFo56mW
+         Py2w==
+X-Forwarded-Encrypted: i=1; AJvYcCW2QkxmVOS9/NoRNt7LW5rjAVIFHix5QK+7XLAXDrtOVk0nECsDkSNFuabmFEfPePuWLxl3kpNuWBRwOS4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBhXKdv32uto/X2Ikx4v2Z6T7MGztaIcb+SgCPFhQNap6acDqq
+	cmdVqjCbM/pe+6cfRglzewHjyw5ICOWLQq1ed88ZsaTJE9OY4+cy7cwnYdlM0WM775M=
+X-Gm-Gg: ASbGncuxKHPdvfOQDNdbO99U7zVbJzaFQxfwNsdxs/KkLaLV5M/W2+c31uHH411g9/3
+	tILr+BrNWE+xziIvD54ImZ2SaaVJQPAJfySVsrNuYc3qhNg7Lu3c+FBNXWHrs/K8rP7dw/0Ru5q
+	f577cNvQ84k8sliC8Dwioy/QoNnqf9wbRchEgUmpTRVPJqD1z3Q/JPUf8z+IMCtHOEuzUOncj4M
+	qBDOql9AUrKniHBXwqdDg+56Vn0WX+vBXmFdbguurqvaJcmFju3hlzLCkKkyGwdX+nq5f1Y7mpo
+	6vJ8Wziq+RVCVgvB29CEVZnuFeQAAf0iG89pm9nXZOpdqiSyFAa9UM8=
+X-Google-Smtp-Source: AGHT+IEXrn7R9cmcMwEuGNM6Agx5Q+PXzeVpg0mfgBHl3pli4HpMG0xvmYDc+378blHepXiD82F0lA==
+X-Received: by 2002:a05:6830:2a9e:b0:723:7853:8791 with SMTP id 46e09a7af769-734f6d13facmr898942a34.0.1747357190711;
+        Thu, 15 May 2025 17:59:50 -0700 (PDT)
+Received: from mail.minyard.net ([2001:470:b8f6:1b:d0c5:1ce0:9035:258c])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-734f6a9a7adsm171095a34.30.2025.05.15.17.59.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 17:59:50 -0700 (PDT)
+Date: Thu, 15 May 2025 19:59:45 -0500
+From: Corey Minyard <corey@minyard.net>
+To: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Binbin Zhou <zhoubb.aaron@gmail.com>,
+	Huacai Chen <chenhuacai@loongson.cn>, Lee Jones <lee@kernel.org>,
+	Corey Minyard <minyard@acm.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>, loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	openipmi-developer@lists.sourceforge.net,
+	Chong Qiao <qiaochong@loongson.cn>
+Subject: Re: [PATCH v2 2/3] ipmi: Add Loongson-2K BMC support
+Message-ID: <aCaOAVgb8V7_-rLR@mail.minyard.net>
+Reply-To: corey@minyard.net
+References: <cover.1747276047.git.zhoubinbin@loongson.cn>
+ <0963b8274bfe25a21f56da9fcba05830fb43408b.1747276047.git.zhoubinbin@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <ada87be8b9c06bc0678174b810e441ca79d67980.camel@intel.com>
- <CAGtprH9CTsVvaS8g62gTuQub4aLL97S7Um66q12_MqTFoRNMxA@mail.gmail.com> <24e8ae7483d0fada8d5042f9cd5598573ca8f1c5.camel@intel.com>
-Message-ID: <aCaM7LS7Z0L3FoC8@google.com>
-Subject: Re: [RFC PATCH v2 00/51] 1G page support for guest_memfd
-From: Sean Christopherson <seanjc@google.com>
-To: Rick P Edgecombe <rick.p.edgecombe@intel.com>
-Cc: Vishal Annapurve <vannapurve@google.com>, "palmer@dabbelt.com" <palmer@dabbelt.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, 
-	Jun Miao <jun.miao@intel.com>, "nsaenz@amazon.es" <nsaenz@amazon.es>, 
-	"pdurrant@amazon.co.uk" <pdurrant@amazon.co.uk>, "vbabka@suse.cz" <vbabka@suse.cz>, 
-	"peterx@redhat.com" <peterx@redhat.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"tabba@google.com" <tabba@google.com>, "keirf@google.com" <keirf@google.com>, 
-	"quic_svaddagi@quicinc.com" <quic_svaddagi@quicinc.com>, "amoorthy@google.com" <amoorthy@google.com>, 
-	"pvorel@suse.cz" <pvorel@suse.cz>, "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, 
-	"mail@maciej.szmigiero.name" <mail@maciej.szmigiero.name>, "vkuznets@redhat.com" <vkuznets@redhat.com>, 
-	"anthony.yznaga@oracle.com" <anthony.yznaga@oracle.com>, Wei W Wang <wei.w.wang@intel.com>, 
-	"jack@suse.cz" <jack@suse.cz>, Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>, 
-	Yan Y Zhao <yan.y.zhao@intel.com>, Dave Hansen <dave.hansen@intel.com>, 
-	"ajones@ventanamicro.com" <ajones@ventanamicro.com>, 
-	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, 
-	"quic_mnalajal@quicinc.com" <quic_mnalajal@quicinc.com>, "aik@amd.com" <aik@amd.com>, 
-	"usama.arif@bytedance.com" <usama.arif@bytedance.com>, "willy@infradead.org" <willy@infradead.org>, 
-	"rppt@kernel.org" <rppt@kernel.org>, "bfoster@redhat.com" <bfoster@redhat.com>, 
-	"quic_cvanscha@quicinc.com" <quic_cvanscha@quicinc.com>, Fan Du <fan.du@intel.com>, 
-	"fvdl@google.com" <fvdl@google.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "mic@digikod.net" <mic@digikod.net>, 
-	"oliver.upton@linux.dev" <oliver.upton@linux.dev>, 
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "steven.price@arm.com" <steven.price@arm.com>, 
-	"muchun.song@linux.dev" <muchun.song@linux.dev>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, Zhiquan1 Li <zhiquan1.li@intel.com>, 
-	"rientjes@google.com" <rientjes@google.com>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>, 
-	Erdem Aktas <erdemaktas@google.com>, "david@redhat.com" <david@redhat.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
-	"hughd@google.com" <hughd@google.com>, Haibo1 Xu <haibo1.xu@intel.com>, 
-	"jhubbard@nvidia.com" <jhubbard@nvidia.com>, "anup@brainfault.org" <anup@brainfault.org>, 
-	"maz@kernel.org" <maz@kernel.org>, Isaku Yamahata <isaku.yamahata@intel.com>, 
-	"jthoughton@google.com" <jthoughton@google.com>, 
-	"steven.sistare@oracle.com" <steven.sistare@oracle.com>, "jarkko@kernel.org" <jarkko@kernel.org>, 
-	"quic_pheragu@quicinc.com" <quic_pheragu@quicinc.com>, Kirill Shutemov <kirill.shutemov@intel.com>, 
-	"chenhuacai@kernel.org" <chenhuacai@kernel.org>, Kai Huang <kai.huang@intel.com>, 
-	"shuah@kernel.org" <shuah@kernel.org>, "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>, 
-	"pankaj.gupta@amd.com" <pankaj.gupta@amd.com>, Chao Peng <chao.p.peng@intel.com>, 
-	"nikunj@amd.com" <nikunj@amd.com>, Alexander Graf <graf@amazon.com>, 
-	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"yuzenghui@huawei.com" <yuzenghui@huawei.com>, "jroedel@suse.de" <jroedel@suse.de>, 
-	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, "jgowans@amazon.com" <jgowans@amazon.com>, 
-	Yilun Xu <yilun.xu@intel.com>, "liam.merwick@oracle.com" <liam.merwick@oracle.com>, 
-	"michael.roth@amd.com" <michael.roth@amd.com>, "quic_tsoni@quicinc.com" <quic_tsoni@quicinc.com>, 
-	"richard.weiyang@gmail.com" <richard.weiyang@gmail.com>, Ira Weiny <ira.weiny@intel.com>, 
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, Xiaoyao Li <xiaoyao.li@intel.com>, 
-	"qperret@google.com" <qperret@google.com>, 
-	"kent.overstreet@linux.dev" <kent.overstreet@linux.dev>, "dmatlack@google.com" <dmatlack@google.com>, 
-	"james.morse@arm.com" <james.morse@arm.com>, "brauner@kernel.org" <brauner@kernel.org>, 
-	"roypat@amazon.co.uk" <roypat@amazon.co.uk>, "ackerleytng@google.com" <ackerleytng@google.com>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "pgonda@google.com" <pgonda@google.com>, 
-	"quic_pderrin@quicinc.com" <quic_pderrin@quicinc.com>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"will@kernel.org" <will@kernel.org>, "hch@infradead.org" <hch@infradead.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0963b8274bfe25a21f56da9fcba05830fb43408b.1747276047.git.zhoubinbin@loongson.cn>
 
-On Thu, May 15, 2025, Rick P Edgecombe wrote:
-> On Thu, 2025-05-15 at 11:42 -0700, Vishal Annapurve wrote:
-> > On Thu, May 15, 2025 at 11:03=E2=80=AFAM Edgecombe, Rick P
-> > <rick.p.edgecombe@intel.com> wrote:
-> > >=20
-> > > On Wed, 2025-05-14 at 16:41 -0700, Ackerley Tng wrote:
-> > > > Hello,
-> > > >=20
-> > > > This patchset builds upon discussion at LPC 2024 and many guest_mem=
-fd
-> > > > upstream calls to provide 1G page support for guest_memfd by taking
-> > > > pages from HugeTLB.
-> > >=20
-> > > Do you have any more concrete numbers on benefits of 1GB huge pages f=
-or
-> > > guestmemfd/coco VMs? I saw in the LPC talk it has the benefits as:
-> > > - Increase TLB hit rate and reduce page walks on TLB miss
-> > > - Improved IO performance
-> > > - Memory savings of ~1.6% from HugeTLB Vmemmap Optimization (HVO)
-> > > - Bring guest_memfd to parity with existing VMs that use HugeTLB page=
-s for
-> > > backing memory
-> > >=20
-> > > Do you know how often the 1GB TDP mappings get shattered by shared pa=
-ges?
-> > >=20
-> > > Thinking from the TDX perspective, we might have bigger fish to fry t=
-han 1.6%
-> > > memory savings (for example dynamic PAMT), and the rest of the benefi=
-ts don't
-> > > have numbers. How much are we getting for all the complexity, over sa=
-y buddy
-> > > allocated 2MB pages?
+On Thu, May 15, 2025 at 10:32:25AM +0800, Binbin Zhou wrote:
+> This patch adds Loongson-2K BMC IPMI support.
+> 
+> According to the existing design, we use software simulation to
+> implement the KCS interface registers: Stauts/Command/Data_Out/Data_In.
 
-TDX may have bigger fish to fry, but some of us have bigger fish to fry tha=
-n TDX :-)
+This is a strange way to do this.  My preference would be to have a
+separate driver for this and not put it under the ipmi_si driver.
+But it's annoyingly close and it would duplicate a lot of ipmi_si_intf.c
+Anyway, I think I'm ok with this basic design.  But there are problems.
 
-> > This series should work for any page sizes backed by hugetlb memory.
-> > Non-CoCo VMs, pKVM and Confidential VMs all need hugepages that are
-> > essential for certain workloads and will emerge as guest_memfd users.
-> > Features like KHO/memory persistence in addition also depend on
-> > hugepage support in guest_memfd.
-> >=20
-> > This series takes strides towards making guest_memfd compatible with
-> > usecases where 1G pages are essential and non-confidential VMs are
-> > already exercising them.
-> >=20
-> > I think the main complexity here lies in supporting in-place
-> > conversion which applies to any huge page size even for buddy
-> > allocated 2MB pages or THP.
-> >=20
-> > This complexity arises because page structs work at a fixed
-> > granularity, future roadmap towards not having page structs for guest
-> > memory (at least private memory to begin with) should help towards
-> > greatly reducing this complexity.
-> >=20
-> > That being said, DPAMT and huge page EPT mappings for TDX VMs remain
-> > essential and complement this series well for better memory footprint
-> > and overall performance of TDX VMs.
->=20
-> Hmm, this didn't really answer my questions about the concrete benefits.
->=20
-> I think it would help to include this kind of justification for the 1GB
-> guestmemfd pages. "essential for certain workloads and will emerge" is a =
-bit
-> hard to review against...
->=20
-> I think one of the challenges with coco is that it's almost like a sprint=
- to
-> reimplement virtualization. But enough things are changing at once that n=
-ot all
-> of the normal assumptions hold, so it can't copy all the same solutions. =
-The
-> recent example was that for TDX huge pages we found that normal promotion=
- paths
-> weren't actually yielding any benefit for surprising TDX specific reasons=
-.
->=20
-> On the TDX side we are also, at least currently, unmapping private pages =
-while
-> they are mapped shared, so any 1GB pages would get split to 2MB if there =
-are any
-> shared pages in them. I wonder how many 1GB pages there would be after al=
-l the
-> shared pages are converted. At smaller TD sizes, it could be not much.
+> 
+> Also since both host side and BMC side read and write kcs status, I use
+> fifo pointer to ensure data consistency.
 
-You're conflating two different things.  guest_memfd allocating and managin=
-g
-1GiB physical pages, and KVM mapping memory into the guest at 1GiB/2MiB
-granularity.  Allocating memory in 1GiB chunks is useful even if KVM can on=
-ly
-map memory into the guest using 4KiB pages.
+I assume this fifo pointer is part of the interface hardware or the
+implementation on the other side of the interface.
 
-> So for TDX in isolation, it seems like jumping out too far ahead to effec=
-tively
-> consider the value. But presumably you guys are testing this on SEV or
-> something? Have you measured any performance improvement? For what kind o=
-f
-> applications? Or is the idea to basically to make guestmemfd work like ho=
-wever
-> Google does guest memory?
+> 
+> Therefore I made the whole IPMI driver independent.
 
-The longer term goal of guest_memfd is to make it suitable for backing all =
-VMs,
-hence Vishal's "Non-CoCo VMs" comment.  Yes, some of this is useful for TDX=
-, but
-we (and others) want to use guest_memfd for far more than just CoCo VMs.  A=
-nd
-for non-CoCo VMs, 1GiB hugepages are mandatory for various workloads.
+What do you mean by this statement?
+
+More comments inline.
+
+> 
+> Co-developed-by: Chong Qiao <qiaochong@loongson.cn>
+> Signed-off-by: Chong Qiao <qiaochong@loongson.cn>
+> Signed-off-by: Binbin Zhou <zhoubinbin@loongson.cn>
+> ---
+>  drivers/char/ipmi/Makefile       |   1 +
+>  drivers/char/ipmi/ipmi_si.h      |   7 +
+>  drivers/char/ipmi/ipmi_si_intf.c |   3 +
+>  drivers/char/ipmi/ipmi_si_ls2k.c | 250 +++++++++++++++++++++++++++++++
+>  4 files changed, 261 insertions(+)
+>  create mode 100644 drivers/char/ipmi/ipmi_si_ls2k.c
+> 
+> diff --git a/drivers/char/ipmi/Makefile b/drivers/char/ipmi/Makefile
+> index e0944547c9d0..5eb3494f5f39 100644
+> --- a/drivers/char/ipmi/Makefile
+> +++ b/drivers/char/ipmi/Makefile
+> @@ -8,6 +8,7 @@ ipmi_si-y := ipmi_si_intf.o ipmi_kcs_sm.o ipmi_smic_sm.o ipmi_bt_sm.o \
+>  	ipmi_si_mem_io.o
+>  ipmi_si-$(CONFIG_HAS_IOPORT) += ipmi_si_port_io.o
+>  ipmi_si-$(CONFIG_PCI) += ipmi_si_pci.o
+> +ipmi_si-$(CONFIG_LOONGARCH) += ipmi_si_ls2k.o
+
+Shouldn't this be dependent on MFD_LS2K_BMC?  It appears you can disable
+that and still have CONFIG_LOONGARCH enabled.
+
+And this MFD can have multiple things hanging off of it, wouldn't you
+want to make the individual drivers their own CONFIG items?
+
+>  ipmi_si-$(CONFIG_PARISC) += ipmi_si_parisc.o
+>  
+>  obj-$(CONFIG_IPMI_HANDLER) += ipmi_msghandler.o
+> diff --git a/drivers/char/ipmi/ipmi_si.h b/drivers/char/ipmi/ipmi_si.h
+> index a7ead2a4c753..71f1d4e1272c 100644
+> --- a/drivers/char/ipmi/ipmi_si.h
+> +++ b/drivers/char/ipmi/ipmi_si.h
+> @@ -93,6 +93,13 @@ void ipmi_si_pci_shutdown(void);
+>  static inline void ipmi_si_pci_init(void) { }
+>  static inline void ipmi_si_pci_shutdown(void) { }
+>  #endif
+> +#ifdef CONFIG_LOONGARCH
+> +void ipmi_si_ls2k_init(void);
+> +void ipmi_si_ls2k_shutdown(void);
+> +#else
+> +static inline void ipmi_si_ls2k_init(void) { }
+> +static inline void ipmi_si_ls2k_shutdown(void) { }
+> +#endif
+
+I'm not excited about this, but there is history, I guess.
+
+Same comment as the Makefile on CONFIG_LOONGARCH.
+
+>  #ifdef CONFIG_PARISC
+>  void ipmi_si_parisc_init(void);
+>  void ipmi_si_parisc_shutdown(void);
+> diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
+> index 12b0b77eb1cc..323da77698ea 100644
+> --- a/drivers/char/ipmi/ipmi_si_intf.c
+> +++ b/drivers/char/ipmi/ipmi_si_intf.c
+> @@ -2107,6 +2107,7 @@ static int __init init_ipmi_si(void)
+>  
+>  	ipmi_si_pci_init();
+>  
+> +	ipmi_si_ls2k_init();
+>  	ipmi_si_parisc_init();
+>  
+>  	/* We prefer devices with interrupts, but in the case of a machine
+> @@ -2288,6 +2289,8 @@ static void cleanup_ipmi_si(void)
+>  
+>  	ipmi_si_pci_shutdown();
+>  
+> +	ipmi_si_ls2k_shutdown();
+> +
+>  	ipmi_si_parisc_shutdown();
+>  
+>  	ipmi_si_platform_shutdown();
+> diff --git a/drivers/char/ipmi/ipmi_si_ls2k.c b/drivers/char/ipmi/ipmi_si_ls2k.c
+> new file mode 100644
+> index 000000000000..cb31bb989fca
+> --- /dev/null
+> +++ b/drivers/char/ipmi/ipmi_si_ls2k.c
+> @@ -0,0 +1,250 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Driver for Loongson-2K BMC IPMI
+> + *
+> + * Copyright (C) 2024 Loongson Technology Corporation Limited.
+> + *
+> + * Originally written by Chong Qiao <qiaochong@loongson.cn>
+> + * Rewritten for mainline by Binbin Zhou <zhoubinbin@loongson.cn>
+> + */
+> +
+> +#include <linux/ioport.h>
+> +#include <linux/module.h>
+> +#include <linux/types.h>
+> +
+> +#include "ipmi_si.h"
+> +
+> +#define LS2K_KCS_STS_OBF	BIT(0)
+> +#define LS2K_KCS_STS_IBF	BIT(1)
+> +#define LS2K_KCS_STS_SMS_ATN	BIT(2)
+> +#define LS2K_KCS_STS_CMD	BIT(3)
+> +
+> +#define LS2K_KCS_DATA_MASK	(LS2K_KCS_STS_OBF | LS2K_KCS_STS_IBF | LS2K_KCS_STS_CMD)
+> +
+> +/* Read and write fifo pointers for data consistency. */
+> +struct ls2k_fifo_flag {
+> +	u8 ibfh;
+> +	u8 ibft;
+> +	u8 obfh;
+> +	u8 obft;
+> +};
+> +
+> +struct ls2k_kcs_reg {
+> +	u8 status;
+> +	u8 data_out;
+> +	s16 data_in;
+> +	s16 cmd;
+> +};
+> +
+> +struct ls2k_kcs_data {
+> +	struct ls2k_fifo_flag fifo;
+> +	struct ls2k_kcs_reg reg;
+> +	u8 cmd_data;
+> +	u8 version;
+> +	u32 write_req;
+> +	u32 write_ack;
+> +	u32 reserved[2];
+> +};
+
+The above appears to be a memory overlay for registers.  But you aren't
+using readb/writeb and associated functions to read/write it.  That is
+not the right way to do things.  Please read
+Documentation/driver-api/device-io.rst
+
+> +
+> +static void ls2k_set_obf(struct ls2k_kcs_data *ik, u8 sts)
+> +{
+> +	ik->reg.status = (ik->reg.status & ~LS2K_KCS_STS_OBF) | (sts & BIT(0));
+> +}
+> +
+> +static void ls2k_set_ibf(struct ls2k_kcs_data *ik, u8 sts)
+> +{
+> +	ik->reg.status = (ik->reg.status & ~LS2K_KCS_STS_IBF) | ((sts & BIT(0)) << 1);
+> +}
+> +
+> +static u8 ls2k_get_ibf(struct ls2k_kcs_data *ik)
+> +{
+> +	return (ik->reg.status >> 1) & BIT(0);
+> +}
+> +
+> +static unsigned char intf_sim_inb_v0(struct ls2k_kcs_data *ik,
+> +				     unsigned int offset)
+> +{
+> +	u32 inb = 0;
+> +
+> +	switch (offset & BIT(0)) {
+> +	case 0:
+> +		inb = ik->reg.data_out;
+> +		ls2k_set_obf(ik, 0);
+> +		break;
+> +	case 1:
+> +		inb = ik->reg.status;
+> +		break;
+> +	}
+> +
+> +	return inb;
+> +}
+> +
+> +static unsigned char intf_sim_inb_v1(struct ls2k_kcs_data *ik,
+> +				     unsigned int offset)
+> +{
+> +	u32 inb = 0;
+> +	int cmd;
+> +	bool obf, ibf;
+> +
+> +	obf = ik->fifo.obfh != ik->fifo.obft;
+> +	ibf = ik->fifo.ibfh != ik->fifo.ibft;
+> +	cmd = ik->cmd_data;
+> +
+> +	switch (offset & BIT(0)) {
+> +	case 0:
+> +		inb = ik->reg.data_out;
+> +		ik->fifo.obft = ik->fifo.obfh;
+> +		break;
+> +	case 1:
+> +		inb = ik->reg.status & ~LS2K_KCS_DATA_MASK;
+> +		inb |= obf | (ibf << 1) | (cmd << 3);
+> +		break;
+> +	}
+> +
+> +	return inb;
+> +}
+> +
+> +static unsigned char ls2k_mem_inb(const struct si_sm_io *io,
+> +				  unsigned int offset)
+> +{
+> +	struct ls2k_kcs_data *ik = io->addr;
+> +	int inb = 0;
+> +
+> +	if (ik->version == 0)
+> +		inb = intf_sim_inb_v0(ik, offset);
+> +	else if (ik->version == 1)
+> +		inb = intf_sim_inb_v1(ik, offset);
+> +
+> +	return inb;
+> +}
+> +
+> +static void intf_sim_outb_v0(struct ls2k_kcs_data *ik, unsigned int offset,
+> +			     unsigned char val)
+> +{
+> +	if (ls2k_get_ibf(ik))
+> +		return;
+> +
+> +	switch (offset & BIT(0)) {
+> +	case 0:
+> +		ik->reg.data_in = val;
+> +		ik->reg.status &= ~LS2K_KCS_STS_CMD;
+> +		break;
+> +
+> +	case 1:
+> +		ik->reg.cmd = val;
+> +		ik->reg.status |= LS2K_KCS_STS_CMD;
+> +		break;
+> +	}
+> +
+> +	ls2k_set_ibf(ik, 1);
+> +	ik->write_req++;
+> +}
+> +
+> +static void intf_sim_outb_v1(struct ls2k_kcs_data *ik, unsigned int offset,
+> +			     unsigned char val)
+> +{
+> +	if (ik->fifo.ibfh != ik->fifo.ibft)
+> +		return;
+> +
+> +	switch (offset & BIT(0)) {
+> +	case 0:
+> +		ik->reg.data_in = val;
+> +		ik->cmd_data = 0;
+> +		break;
+> +
+> +	case 1:
+> +		ik->reg.cmd = val;
+> +		ik->cmd_data = 1;
+> +		break;
+> +	}
+> +
+> +	ik->fifo.ibfh = !ik->fifo.ibft;
+> +	ik->write_req++;
+> +}
+> +
+> +static void ls2k_mem_outb(const struct si_sm_io *io, unsigned int offset,
+> +			  unsigned char val)
+> +{
+> +	struct ls2k_kcs_data *ik = io->addr;
+> +
+> +	if (ik->version == 0)
+> +		intf_sim_outb_v0(ik, offset, val);
+> +	else if (ik->version == 1)
+> +		intf_sim_outb_v1(ik, offset, val);
+> +}
+> +
+> +static void ls2k_mem_cleanup(struct si_sm_io *io)
+> +{
+> +	if (io->addr)
+> +		iounmap(io->addr);
+> +}
+> +
+> +static int ipmi_ls2k_sim_setup(struct si_sm_io *io)
+> +{
+> +	io->addr = ioremap(io->addr_data, io->regspacing);
+> +	if (!io->addr)
+> +		return -EIO;
+> +
+> +	io->inputb = ls2k_mem_inb;
+> +	io->outputb = ls2k_mem_outb;
+> +	io->io_cleanup = ls2k_mem_cleanup;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ipmi_ls2k_probe(struct platform_device *pdev)
+> +{
+> +	struct si_sm_io io;
+> +
+> +	dev_info(&pdev->dev, "probing via ls2k platform");
+> +	memset(&io, 0, sizeof(io));
+> +
+> +	io.addr_source	= SI_PLATFORM;
+> +	io.si_type	= SI_KCS;
+
+si_type has been reworked recently, the linux next tree has the changes.
+I'll need this modified to work with the linux next changes.
+
+> +	io.addr_space	= IPMI_MEM_ADDR_SPACE;
+> +	io.io_setup	= ipmi_ls2k_sim_setup;
+> +	io.addr_data	= pdev->resource[0].start;
+> +	io.regspacing	= pdev->resource[0].end - pdev->resource[0].start + 1;
+> +	io.regsize	= DEFAULT_REGSIZE;
+> +	io.regshift	= 0;
+
+The above items, except for io_setup,  don't have much meaning for your
+device; there's not much need to set them, and there's no need to
+initialize things to zero.  They are for ipmi_si_port and ipmi_si_mem.
+
+> +	io.dev		= &pdev->dev;
+> +	io.irq		= 0;
+> +	if (io.irq)
+> +		io.irq_setup = ipmi_std_irq_setup;
+
+Just remove the irq thing, don't set it to zero and then check it.
+
+> +
+> +	dev_info(&pdev->dev, "%pR regsize %d spacing %d irq %d\n",
+> +		 &pdev->resource[0], io.regsize, io.regspacing, io.irq);
+> +
+> +	return ipmi_si_add_smi(&io);
+> +}
+> +
+> +static void ipmi_ls2k_remove(struct platform_device *pdev)
+> +{
+> +	ipmi_si_remove_by_dev(&pdev->dev);
+> +}
+> +
+> +struct platform_driver ipmi_ls2k_platform_driver = {
+> +	.driver = {
+> +		.name = "ls2k-ipmi-si",
+> +	},
+> +	.probe	= ipmi_ls2k_probe,
+> +	.remove	= ipmi_ls2k_remove,
+> +};
+> +
+> +static bool platform_registered;
+> +void ipmi_si_ls2k_init(void)
+> +{
+> +	int rv;
+> +
+> +	rv = platform_driver_register(&ipmi_ls2k_platform_driver);
+> +	if (rv)
+> +		pr_err("Unable to register driver: %d\n", rv);
+
+That's far to vague to be useful.
+
+> +	else
+> +		platform_registered = true;
+> +}
+> +
+> +void ipmi_si_ls2k_shutdown(void)
+> +{
+> +	if (platform_registered)
+> +		platform_driver_unregister(&ipmi_ls2k_platform_driver);
+> +}
+> -- 
+> 2.47.1
+> 
