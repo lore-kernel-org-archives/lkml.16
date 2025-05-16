@@ -1,33 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B464D1D6DBB;
-	Fri, 16 May 2025 12:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF11923D2AC
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 12:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747399407; cv=none; b=o4xbAMZUt1tavN0qHtJVxNImMS5sERnQcCtpOTY4/TRz7ei1Nz4I5DK+o1jh6ucMNf9kIpZi4yj6SYO0WuFb0OVDgSl+igHr5dmJJuq41JWDPdOPT+gMXhXxiMP16KpNYEwyAlXAXCnNnVmWTV0Eao9viF5vMy+3Md0XpTNMvKw=
+	t=1747399443; cv=none; b=VEfaw7Vrqu0C95ThNIopn9E3s4gYFRES6zEtsSHRSdicROKDvmt37nkcDhCDIFCH/4kiFZYCI9RrKrUhpV3wrX3sP5bDzi4Qvhdqmui9n410NChFWJSaIbdV4SKMeoutTOI2n3RSCoGK1lj+ecmDah68iJ0NhU+AKQlFoA8SQMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747399407; c=relaxed/simple;
-	bh=v9ZtJ8sJxsnL3ffqP6T+9LtiIYre38Xi4HFD/kzTykg=;
+	s=arc-20240116; t=1747399443; c=relaxed/simple;
+	bh=wHpTo0+tOOdeIjJWi2iz5WOwxz0N86UHcp8BE0mY/9M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dQZfqpGG+ASA4FO1MBN5OroiedScgIMxXy3EN+4twX7yrkMd3VDtBNVPqqSXYZb4dHkyR8xBlUWlXFMQ7tzQrlU963gnlx/TB7pSbUU8Y3Lb//Jv4XZxBPsbkX74N2S/yCchfg0n/l3/M2gZCOvHfzUPXZj55btcftKdN0IUWhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iV2zDf1p; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=KtOr/47g8bqITT1DfYbW8yK0Vsp/7q/to4g6wYiict56qG6ZKDqtbFAeSJQ/c9RabMh2UFkM9YTbLAo2Da9nwrCHD+UIFH3k3FZm736u3ur6AMm1U8IGBeBIFpxEwrgFUG/IM47vgZ0DGFnh6q7kAcgsoGTSneQykQDxyiQc2A0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ReYIP5YC; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iV2zDf1p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77D3FC4CEE4;
-	Fri, 16 May 2025 12:43:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747399407;
-	bh=v9ZtJ8sJxsnL3ffqP6T+9LtiIYre38Xi4HFD/kzTykg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iV2zDf1p4zllck22Zyzc34VFgPiNWbrGRc9ruxfDURChy5fODW5acePJSSWQfK49q
-	 89ITyj86UdAHJSAinL2vBwqG4GM7xVqVhS5CfblUewNS455B0uAYq5cT0G+UYJ3T7S
-	 3jVdFWLkpociLR5o2yQGrHGaHBe/NwiEofI8RiqaEjvKtz5L7l+pRmmnzAEZBLicgn
-	 glPTILsBgA63Jo8EiOcoHEBtL12UhSAJR3BwZmEYWFH4sISq3fCscahiakVXLmJm6G
-	 ktlwFv4DAFJ8679PKZM65HwfHtkzAcm7Ok7pW3sv+an9RSI45i1plfO5zvAh0deYsI
-	 6YndbL96JMeow==
-Message-ID: <b5b39790-2559-41eb-9805-8eed1683d34e@kernel.org>
-Date: Fri, 16 May 2025 14:43:20 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ReYIP5YC"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so15826125e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 05:44:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1747399439; x=1748004239; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wHpTo0+tOOdeIjJWi2iz5WOwxz0N86UHcp8BE0mY/9M=;
+        b=ReYIP5YCP+CjJ9sNSsPbQLAU8WvlVM4pBJmCEWujavm4yV95Q4z4GsVlp8gJIaT9zv
+         JhKGOkgucc1Z55D372LU0PuAqIfu9bFVC47WTJwa7X4/rfc5tbSATZGKN6b8kEufSUxK
+         lmJz3F+5FGgCBX0PVj6ALfe4bazhhk7DXvjrTraFSYZYq6AZOmiF47FlnqPCgEYJDfh6
+         i0VL7mNQqfwNdV6H5Zm/rSFsYNaR3B2YbaoCNzl0dtAqCklP4EzAp26ndC29IGGv3Wdt
+         pKDuYbzNd1X+n7ulS6vxyQv/qn3BHoe4/kqaf3ALbru87CnkJGcT09MY1K9mwFVUb8aN
+         AmNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747399439; x=1748004239;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wHpTo0+tOOdeIjJWi2iz5WOwxz0N86UHcp8BE0mY/9M=;
+        b=DkhZWE8BdPpJ5EY2eq0Za9nyXZwuyonhHsiL4Dd0xKUxriBpGYk14o7ARHhke5mJ4z
+         UX3T2qeD+EfX+YTYMmM41ZinmAHxXqN/CIwNd/heF8hUKbnqW6j3lYGO4WzAUSBi0Au/
+         Wh04iN6S+3BJfWPPJZH1Bnhwhev9xX9JXJJ/i78aR40qrjzvN2F4a9trDOTEUKwtOu2I
+         xXFL1AIITm1lpItOZA6iH/hN6k7nxQ6NEsPrE+Ry2skICresZSN/Si+HD0UB8u1Ym0sX
+         cxFKn7c4/uy/KG1J6EeQUsi4917ZtzojQhG3AgqiXBGLQ/RLysadit8hU97DAYHSQaaQ
+         Bs6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVk2fy0GDrMgFtaGfJmFa9aG5wYrnYdg+x0zMQMD112bdh4/OFfVrWXJDtJqtq2z5SBYGoswE23DXii+ok=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDJ02KRsFBBJY8Q43Vq5kJgQMTyuREmPhiMWpo9zyFBT3aUwQY
+	2UpL00T6LPHx7XgcXBvtOCFkGpww1D/gzTazKjVt8hvw6gFIw0QOEf3WC1pGjnJ1jo8=
+X-Gm-Gg: ASbGncuf0blCnfXfmh6Z7S9klpSg67aYXBl/x3YHyWCMEoJgmfwO554oHZmvptMdNSt
+	6Jqs/uQuvJGzMSDyaLjyDuvM1CqaxsTv2Edzvw5OsmfyOnyJP6c3PYXpROL6Ug4uVLigZAmBe/C
+	q+85FwcdUEnQLAXAz37T2RgtLciW1aAgloLR3QxMUw5tiyc4uM6gVGKxYZVCypgb7tfJXzAa8jb
+	aztEJctB0e6lwCpN0bcrBJo2QZcDkLP/3GcQsLtZuENuARJ3+ywyxUiW1euTErQMnNWPnXcHlgq
+	o4r5tSMlsU4yTPstjJAQ2dKNh3EsiB9p6Pm4aEz87BcEgmDFt42qc6+qBe58Oer89DweFjJk5oU
+	5WlhV7N8yOoeLjjuH4AHPpqubdqSLgbDJ4BRC7AuJ/BbC94g9ygUrrKQo63QlrpYSyrLmW+5dPP
+	DN
+X-Google-Smtp-Source: AGHT+IEMx2rKeXHRSwncbvfN2lmNXuPA3SzyKDAWFZ5mS7vnSOQ0umojgm1MTb4MIyuUTfPB8wY3Gw==
+X-Received: by 2002:a05:600c:a014:b0:43d:ac5:11ed with SMTP id 5b1f17b1804b1-442fd66f08emr33757945e9.24.1747399439134;
+        Fri, 16 May 2025 05:43:59 -0700 (PDT)
+Received: from ?IPV6:2003:e5:872a:8800:5c7b:1ac1:4fa0:423b? (p200300e5872a88005c7b1ac14fa0423b.dip0.t-ipconnect.de. [2003:e5:872a:8800:5c7b:1ac1:4fa0:423b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd4fdc19sm32694835e9.5.2025.05.16.05.43.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 May 2025 05:43:58 -0700 (PDT)
+Message-ID: <b208fa08-a028-4bc8-a455-b37aa016cfb8@suse.com>
+Date: Fri, 16 May 2025 14:43:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,556 +68,174 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/2] PCI: eic7700: Add Eswin eic7700 PCIe host
- controller driver
-To: zhangsenchuan@eswincomputing.com, bhelgaas@google.com,
- lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- linux-pci@vger.kernel.org, devicetree@vger.kernel.or,
- linux-kernel@vger.kernel.org, p.zabel@pengutronix.de,
- johan+linaro@kernel.org, quic_schintav@quicinc.com, shradha.t@samsung.com,
- cassel@kernel.org, thippeswamy.havalige@amd.com
-Cc: ningyu@eswincomputing.com, linmin@eswincomputing.com
-References: <20250516094057.1300-1-zhangsenchuan@eswincomputing.com>
- <20250516094315.179-1-zhangsenchuan@eswincomputing.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCHv3 4/4] x86/paravirt: Restrict PARAVIRT_XXL to 64-bit only
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>,
+ Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>,
+ Michael Roth <michael.roth@amd.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Brijesh Singh <brijesh.singh@amd.com>, Sandipan Das <sandipan.das@amd.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-efi@vger.kernel.org, linux-mm@kvack.org
+References: <20250516123306.3812286-1-kirill.shutemov@linux.intel.com>
+ <20250516123306.3812286-5-kirill.shutemov@linux.intel.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250516094315.179-1-zhangsenchuan@eswincomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <20250516123306.3812286-5-kirill.shutemov@linux.intel.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------Te3kJ0f9tyKynZeXJ78zBYfl"
 
-On 16/05/2025 11:43, zhangsenchuan@eswincomputing.com wrote:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------Te3kJ0f9tyKynZeXJ78zBYfl
+Content-Type: multipart/mixed; boundary="------------UGAGx2sCcO3HYQB1B9io4MeE";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>,
+ Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>,
+ Michael Roth <michael.roth@amd.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Brijesh Singh <brijesh.singh@amd.com>, Sandipan Das <sandipan.das@amd.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-efi@vger.kernel.org, linux-mm@kvack.org
+Message-ID: <b208fa08-a028-4bc8-a455-b37aa016cfb8@suse.com>
+Subject: Re: [PATCHv3 4/4] x86/paravirt: Restrict PARAVIRT_XXL to 64-bit only
+References: <20250516123306.3812286-1-kirill.shutemov@linux.intel.com>
+ <20250516123306.3812286-5-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20250516123306.3812286-5-kirill.shutemov@linux.intel.com>
 
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/gpio.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
+--------------UGAGx2sCcO3HYQB1B9io4MeE
+Content-Type: multipart/mixed; boundary="------------dCI97no869vba6acO80MKIME"
 
-Where do you use it?
+--------------dCI97no869vba6acO80MKIME
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/resource.h>
-> +#include <linux/types.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/reset.h>
-> +#include <linux/gpio/consumer.h>
+T24gMTYuMDUuMjUgMTQ6MzMsIEtpcmlsbCBBLiBTaHV0ZW1vdiB3cm90ZToNCj4gUEFSQVZJ
+UlRfWFhMIGlzIGV4Y2x1c2l2ZWx5IHV0aWxpemVkIGJ5IFhFTl9QViwgd2hpY2ggaXMgb25s
+eSBjb21wYXRpYmxlDQo+IHdpdGggNjQtYml0IG1hY2hpbmVzLg0KPiANCj4gQ2xlYXJseSBk
+ZXNpZ25hdGUgUEFSQVZJUlRfWFhMIGFzIDY0LWJpdCBvbmx5IGFuZCByZW1vdmUgaWZkZWZz
+IHRvDQo+IHN1cHBvcnQgQ09ORklHX1BHVEFCTEVfTEVWRUxTIDwgNS4NCj4gDQo+IFNpZ25l
+ZC1vZmYtYnk6IEtpcmlsbCBBLiBTaHV0ZW1vdiA8a2lyaWxsLnNodXRlbW92QGxpbnV4Lmlu
+dGVsLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IEp1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNv
+bT4NCg0KDQpKdWVyZ2VuDQo=
+--------------dCI97no869vba6acO80MKIME
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-That's mess. Clean up your patches before sending from such trivial
-mistakes.
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-> +#include <linux/property.h>
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
 
-Most of these headers look like unused.
+--------------dCI97no869vba6acO80MKIME--
 
-> +#include "pcie-designware.h"
-> +#include <linux/pm_runtime.h>
-> +struct eswin_pcie {
-> +	struct dw_pcie pci;
-> +	void __iomem *mgmt_base;
-> +	struct gpio_desc *reset;
-> +	struct clk *pcie_aux;
-> +	struct clk *pcie_cfg;
-> +	struct clk *pcie_cr;
-> +	struct clk *pcie_aclk;
-> +	struct reset_control *powerup_rst;
-> +	struct reset_control *cfg_rst;
-> +	struct reset_control *perst;
-> +};
-> +
-> +#define PCIE_PM_SEL_AUX_CLK BIT(16)
-> +#define PCIEMGMT_APP_HOLD_PHY_RST BIT(6)
-> +#define PCIEMGMT_APP_LTSSM_ENABLE BIT(5)
-> +#define PCIEMGMT_DEVICE_TYPE_MASK 0xf
-> +
-> +#define PCIEMGMT_CTRL0_OFFSET 0x0
-> +#define PCIEMGMT_STATUS0_OFFSET 0x100
-> +
-> +#define PCIE_TYPE_DEV_VEND_ID 0x0
-> +#define PCIE_DSP_PF0_MSI_CAP 0x50
-> +#define PCIE_NEXT_CAP_PTR 0x70
-> +#define DEVICE_CONTROL_DEVICE_STATUS 0x78
-> +
-> +#define PCIE_MSI_MULTIPLE_MSG_32 (0x5 << 17)
-> +#define PCIE_MSI_MULTIPLE_MSG_MASK (0x7 << 17)
-> +
-> +#define PCIEMGMT_LINKUP_STATE_VALIDATE ((0x11 << 2) | 0x3)
-> +#define PCIEMGMT_LINKUP_STATE_MASK 0xff
-> +
-> +static void eswin_pcie_shutdown(struct platform_device *pdev)
-> +{
-> +	struct eswin_pcie *pcie = platform_get_drvdata(pdev);
-> +
-> +	/* Bring down link, so bootloader gets clean state in case of reboot */
-> +	reset_control_assert(pcie->perst);
-> +}
-> +
-> +static int eswin_pcie_start_link(struct dw_pcie *pci)
-> +{
-> +	struct device *dev = pci->dev;
-> +	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-> +	u32 val;
-> +
-> +	/* Enable LTSSM */
-> +	val = readl_relaxed(pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-> +	val |= PCIEMGMT_APP_LTSSM_ENABLE;
-> +	writel_relaxed(val, pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-> +	return 0;
-> +}
-> +
-> +static int eswin_pcie_link_up(struct dw_pcie *pci)
-> +{
-> +	struct device *dev = pci->dev;
-> +	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-> +	u32 val;
-> +
-> +	val = readl_relaxed(pcie->mgmt_base + PCIEMGMT_STATUS0_OFFSET);
-> +	if ((val & PCIEMGMT_LINKUP_STATE_MASK) ==
-> +	    PCIEMGMT_LINKUP_STATE_VALIDATE)
-> +		return 1;
-> +	else
-> +		return 0;
-> +}
-> +
-> +static int eswin_pcie_clk_enable(struct eswin_pcie *pcie)
-> +{
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(pcie->pcie_cr);
-> +	if (ret) {
-> +		pr_err("PCIe: failed to enable cr clk: %d\n", ret);
+--------------UGAGx2sCcO3HYQB1B9io4MeE--
 
-No, your driver must use everywhere dev_, not pr_.
+--------------Te3kJ0f9tyKynZeXJ78zBYfl
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(pcie->pcie_aclk);
-> +	if (ret) {
-> +		pr_err("PCIe: failed to enable aclk: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(pcie->pcie_cfg);
-> +	if (ret) {
-> +		pr_err("PCIe: failed to enable cfg_clk: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(pcie->pcie_aux);
-> +	if (ret) {
-> +		pr_err("PCIe: failed to enable aux_clk: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int eswin_pcie_clk_disable(struct eswin_pcie *eswin_pcie)
-> +{
-> +	clk_disable_unprepare(eswin_pcie->pcie_aux);
-> +	clk_disable_unprepare(eswin_pcie->pcie_cfg);
-> +	clk_disable_unprepare(eswin_pcie->pcie_cr);
-> +	clk_disable_unprepare(eswin_pcie->pcie_aclk);
-> +
-> +	return 0;
-> +}
-> +
-> +static int eswin_pcie_power_on(struct eswin_pcie *pcie)
-> +{
-> +	int ret = 0;
-> +
-> +	/* pciet_cfg_rstn */
-> +	ret = reset_control_reset(pcie->cfg_rst);
-> +	WARN_ON(ret != 0);
+-----BEGIN PGP SIGNATURE-----
 
-No, handle the error instead.
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgnMw0FAwAAAAAACgkQsN6d1ii/Ey/1
+Rgf8Dfw9klieTIfSSxXhZ1fVOqPJSPIKODfsEQ7IKY2hhyk5t1WheTcM8/Nzl7OV4xfjjTJZFgIe
+NCqY+CZConnWHRwESBtO+j2N72GxDh4odoF1so9fiMFxUaMBTUBoLUf8h5Zbj4tV5Vk/GEyNldVF
+/aNmC136448wQGaxuPMRLf2TcEwBzJK8ak1t/qCWToMv/hUNC3EKgIyWbpDIM82R4SKDv9PO94/F
+aBvBZuVQYM/O5kCJlbBneAV5ihh7u5t0gtFBZZFUV1eyZ1h/KdzKK1HVD+Y2jFLggMfsVPastexG
+xD6Q8yWfMbMpfefU6ZZdoL0pRHWGJgpqauows+mecw==
+=Gnh1
+-----END PGP SIGNATURE-----
 
-> +
-> +	/* pciet_powerup_rstn */
-> +	ret = reset_control_reset(pcie->powerup_rst);
-> +	WARN_ON(ret != 0);
-
-No, handle the error instead.
-
-> +
-> +	return ret;
-> +}
-> +
-> +static int eswin_pcie_power_off(struct eswin_pcie *eswin_pcie)
-> +{
-> +	reset_control_assert(eswin_pcie->perst);
-> +
-> +	reset_control_assert(eswin_pcie->powerup_rst);
-> +
-> +	reset_control_assert(eswin_pcie->cfg_rst);
-> +
-> +	return 0;
-> +}
-> +
-> +static int eswin_evb_socket_power_on(struct device *dev)
-> +{
-> +	int err_desc = 0;
-> +	struct gpio_desc *gpio;
-> +
-> +	gpio = devm_gpiod_get(dev, "pci-socket", GPIOD_OUT_LOW);
-
-Undocumented ABI. Looks not correct either - see PCI controller bindings.
-
-
-> +	err_desc = IS_ERR(gpio);
-> +
-> +	if (err_desc) {
-> +		pr_debug("No power control gpio found, maybe not needed\n");
-> +		return 0;
-> +	}
-> +
-> +	gpiod_set_value(gpio, 1);
-> +
-> +	return err_desc;
-> +}
-> +
-> +static int eswin_pcie_host_init(struct dw_pcie_rp *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct eswin_pcie *pcie = dev_get_drvdata(pci->dev);
-> +	int ret;
-> +	u32 val;
-> +
-> +	/* pciet_aux_clken, pcie_cfg_clken */
-> +	ret = eswin_pcie_clk_enable(pcie);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = eswin_pcie_power_on(pcie);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* set device type : rc */
-> +	val = readl_relaxed(pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-> +	val &= 0xfffffff0;
-> +	writel_relaxed(val | 0x4, pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-> +
-> +	ret = reset_control_assert(pcie->perst);
-> +	WARN_ON(ret != 0);
-> +
-> +	eswin_evb_socket_power_on(pcie->pci.dev);
-> +	msleep(100);
-> +	ret = reset_control_deassert(pcie->perst);
-> +	WARN_ON(ret != 0);
-> +
-> +	/* app_hold_phy_rst */
-> +	val = readl_relaxed(pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-> +	val &= ~(0x40);
-> +	writel_relaxed(val, pcie->mgmt_base + PCIEMGMT_CTRL0_OFFSET);
-> +
-> +	/* wait pm_sel_aux_clk to 0 */
-> +	for (ret = 50; ret > 0; ret--) {
-> +		val = readl_relaxed(pcie->mgmt_base + PCIEMGMT_STATUS0_OFFSET);
-> +		if (!(val & PCIE_PM_SEL_AUX_CLK))
-> +			break;
-> +		msleep(2);
-> +	}
-> +
-> +	if (!ret) {
-> +		dev_info(pcie->pci.dev, "No clock exist.\n");
-> +		eswin_pcie_power_off(pcie);
-> +		eswin_pcie_clk_disable(pcie);
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* config eswin vendor id and win2030 device id */
-> +	dw_pcie_writel_dbi(pci, PCIE_TYPE_DEV_VEND_ID, 0x20301fe1);
-> +
-> +	/* lane fix config, real driver NOT need, default x4 */
-> +	val = dw_pcie_readl_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL);
-> +	val &= 0xffffff80;
-> +	val |= 0x44;
-> +	dw_pcie_writel_dbi(pci, PCIE_PORT_MULTI_LANE_CTRL, val);
-> +
-> +	val = dw_pcie_readl_dbi(pci, DEVICE_CONTROL_DEVICE_STATUS);
-> +	val &= ~(0x7 << 5);
-> +	val |= (0x2 << 5);
-> +	dw_pcie_writel_dbi(pci, DEVICE_CONTROL_DEVICE_STATUS, val);
-> +
-> +	/*  config support 32 msi vectors */
-> +	val = dw_pcie_readl_dbi(pci, PCIE_DSP_PF0_MSI_CAP);
-> +	val &= ~PCIE_MSI_MULTIPLE_MSG_MASK;
-> +	val |= PCIE_MSI_MULTIPLE_MSG_32;
-> +	dw_pcie_writel_dbi(pci, PCIE_DSP_PF0_MSI_CAP, val);
-> +
-> +	/* disable msix cap */
-> +	val = dw_pcie_readl_dbi(pci, PCIE_NEXT_CAP_PTR);
-> +	val &= 0xffff00ff;
-> +	dw_pcie_writel_dbi(pci, PCIE_NEXT_CAP_PTR, val);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dw_pcie_host_ops eswin_pcie_host_ops = {
-> +	.init = eswin_pcie_host_init,
-> +};
-> +
-> +static const struct dw_pcie_ops dw_pcie_ops = {
-> +	.start_link = eswin_pcie_start_link,
-> +	.link_up = eswin_pcie_link_up,
-> +};
-> +
-> +static int __exit eswin_pcie_remove(struct platform_device *pdev)
-
-Remove goes after probe
-
-> +{
-> +	struct eswin_pcie *pcie = platform_get_drvdata(pdev);
-> +
-> +	dw_pcie_host_deinit(&pcie->pci.pp);
-> +
-> +	pm_runtime_put_sync(&pdev->dev);
-> +	pm_runtime_disable(&pdev->dev);
-> +
-> +	eswin_pcie_power_off(pcie);
-> +	eswin_pcie_clk_disable(pcie);
-> +
-> +	return 0;
-> +}
-> +
-> +static int eswin_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct dw_pcie *pci;
-> +	struct eswin_pcie *pcie;
-> +	int err;
-> +
-> +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> +	if (!pcie)
-> +		return -ENOMEM;
-> +	pci = &pcie->pci;
-> +	pci->dev = dev;
-> +	pci->ops = &dw_pcie_ops;
-> +	pci->pp.ops = &eswin_pcie_host_ops;
-> +
-> +	/* SiFive specific region: mgmt */
-> +	pcie->mgmt_base = devm_platform_ioremap_resource_byname(pdev, "mgmt");
-> +	if (IS_ERR(pcie->mgmt_base))
-> +		return PTR_ERR(pcie->mgmt_base);
-> +
-> +	/* Fetch clocks */
-> +	pcie->pcie_aux = devm_clk_get(dev, "pcie_aux_clk");
-> +	if (IS_ERR(pcie->pcie_aux)) {
-> +		return dev_err_probe(
-> +			dev, PTR_ERR(pcie->pcie_aux),
-> +			"pcie_aux clock source missing or invalid\n");
-
-Messed alignment. This applies eveywhere.
-
-Please run scripts/checkpatch.pl on the patches and fix reported
-warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
-patches and (probably) fix more warnings. Some warnings can be ignored,
-especially from --strict run, but the code here looks like it needs a
-fix. Feel free to get in touch if the warning is not clear.
-
-> +	}
-> +
-> +	pcie->pcie_cfg = devm_clk_get(dev, "pcie_cfg_clk");
-> +	if (IS_ERR(pcie->pcie_cfg)) {
-> +		return dev_err_probe(
-> +			dev, PTR_ERR(pcie->pcie_cfg),
-> +			"pcie_cfg_clk clock source missing or invalid\n");
-> +	}
-> +
-> +	pcie->pcie_cr = devm_clk_get(dev, "pcie_cr_clk");
-> +	if (IS_ERR(pcie->pcie_cr)) {
-> +		return dev_err_probe(
-> +			dev, PTR_ERR(pcie->pcie_cr),
-> +			"pcie_cr_clk clock source missing or invalid\n");
-> +	}
-> +
-> +	pcie->pcie_aclk = devm_clk_get(dev, "pcie_aclk");
-> +
-> +	if (IS_ERR(pcie->pcie_aclk)) {
-> +		return dev_err_probe(
-> +			dev, PTR_ERR(pcie->pcie_aclk),
-> +			"pcie_aclk clock source missing or invalid\n");
-> +	}
-> +
-> +	/* Fetch reset */
-> +	pcie->powerup_rst =
-> +		devm_reset_control_get_optional(&pdev->dev, "pcie_powerup");
-> +	if (IS_ERR_OR_NULL(pcie->powerup_rst))
-> +		dev_err_probe(dev, PTR_ERR(pcie->powerup_rst),
-> +			      "unable to get powerup reset\n");
-> +
-> +	pcie->cfg_rst = devm_reset_control_get_optional(&pdev->dev, "pcie_cfg");
-> +	if (IS_ERR_OR_NULL(pcie->cfg_rst))
-> +		dev_err_probe(dev, PTR_ERR(pcie->cfg_rst),
-> +			      "unable to get cfg reset\n");
-> +
-> +	pcie->perst = devm_reset_control_get_optional(&pdev->dev, "pcie_pwren");
-> +	if (IS_ERR_OR_NULL(pcie->perst))
-> +		dev_err_probe(dev, PTR_ERR(pcie->perst),
-> +			      "unable to get perst\n");
-> +
-> +	platform_set_drvdata(pdev, pcie);
-> +
-> +	pm_runtime_set_active(dev);
-> +	pm_runtime_enable(dev);
-> +	err = pm_runtime_get_sync(dev);
-> +	if (err < 0) {
-> +		dev_err(dev, "pm_runtime_get_sync failed: %d\n", err);
-> +		goto pm_runtime_put;
-> +	}
-> +
-> +	return dw_pcie_host_init(&pci->pp);
-
-Missing cleanup of runtime PM
-
-> +
-> +pm_runtime_put:
-> +	pm_runtime_put_sync(dev);
-> +	pm_runtime_disable(dev);
-> +	return err;
-> +}
-> +
-> +static const struct of_device_id eswin_pcie_of_match[] = {
-> +	{
-> +		.compatible = "eswin,eic7700-pcie",
-> +	},
-> +	{},
-> +};
-> +
-> +static int eswin_pcie_suspend(struct device *dev)
-> +{
-> +	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-> +
-> +	dev_dbg(dev, "suspend %s\n", __func__);
-
-Drop
-
-> +	if (!pm_runtime_status_suspended(dev))
-> +		eswin_pcie_clk_disable(pcie);
-> +
-> +	return 0;
-> +}
-> +
-> +static int eswin_pcie_resume(struct device *dev)
-> +{
-> +	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-> +
-> +	dev_dbg(dev, "resume %s\n", __func__);
-
-Drop
-
-> +	if (!pm_runtime_status_suspended(dev))
-> +		eswin_pcie_clk_enable(pcie);
-> +
-> +	return 0;
-> +}
-> +
-> +static int eswin_pcie_runtime_suspend(struct device *dev)
-> +{
-> +	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-> +
-> +	dev_dbg(dev, "runtime suspend %s\n", __func__);
-
-Drop
-
-> +	return eswin_pcie_clk_disable(pcie);
-> +}
-> +
-> +static int eswin_pcie_runtime_resume(struct device *dev)
-> +{
-> +	struct eswin_pcie *pcie = dev_get_drvdata(dev);
-> +
-> +	dev_dbg(dev, "runtime resume %s\n", __func__);
-
-Drop
-
-> +	return eswin_pcie_clk_enable(pcie);
-> +}
-> +
-> +static const struct dev_pm_ops eswin_pcie_pm_ops = {
-> +	RUNTIME_PM_OPS(eswin_pcie_runtime_suspend, eswin_pcie_runtime_resume,
-> +		       NULL)
-> +		NOIRQ_SYSTEM_SLEEP_PM_OPS(eswin_pcie_suspend, eswin_pcie_resume)
-> +};
-> +
-> +static struct platform_driver eswin_pcie_driver = {
-> +	.driver = {
-> +			.name = "eic7700-pcie",
-> +			.of_match_table = eswin_pcie_of_match,
-> +			.suppress_bind_attrs = true,
-> +			.pm = &eswin_pcie_pm_ops,
-> +	},
-> +	.probe = eswin_pcie_probe,
-> +	.remove = __exit_p(eswin_pcie_remove),
-
-exit and suppress bind attrs feels wrong. Unnecessary and odd, although
-maybe this is something common in PCI?
-
-> +	.shutdown = eswin_pcie_shutdown,
-> +};
-> +
-> +module_platform_driver(eswin_pcie_driver);
-> +
-> +MODULE_DEVICE_TABLE(of, eswin_pcie_of_match);
-> +MODULE_DESCRIPTION("PCIe host controller driver for eic7700 SoCs");
-> +MODULE_AUTHOR("Yu Ning <ningyu@eswincomputing.com>");
-> +MODULE_AUTHOR("Senchuan Zhang <zhangsenchuan@eswincomputing.com>");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.25.1
-> 
-
-
-Best regards,
-Krzysztof
+--------------Te3kJ0f9tyKynZeXJ78zBYfl--
