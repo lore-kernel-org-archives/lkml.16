@@ -1,238 +1,141 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF08228314A
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 19:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40CE28136C
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 19:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747423208; cv=none; b=OaiFXteNI285M603aw9998QeZlxnVYnpz9cVRszz6vBaEIFlC5ag7HdXeF7VWh+Vf9R+/xAg7SIMiBfxTtRQ0hDgciXQAcjR9KVn+LBTpb7XMcGvFNfNGYHelJuiNq7nL0QS/9SKBkndZ9tO6XTrpR5jYjYaLq7Eusd9WmjT/nE=
+	t=1747423210; cv=none; b=eC1KwpSRSV2wxNGN6xzJpQrQ8QkHThMkTsWRPDDvmn+eawrEsWifNalbQwkQCGBkmpNLL9YWMqurzYAl1uWKkcFDeuaY+ZwPMFsttn8M0bQpN5x/4h5oS54qdjplZJbxB7c5jgBtAxaJuzwilTYkVQ/9FtrwCgAPSA1TS2wvtic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747423208; c=relaxed/simple;
-	bh=3na7WazeRc+l31ZBLq7zu/XN2+gl6KLApYKpDXRt1DE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lZxSbOY7N87GjD5AYBIvyqy2iAyK6sFk2eAEJo+cpNQ+unKqwiAAHRmgnc9ll2p7BYylBBD3r1T/0sxvdfviDjDP/+9xEX4LJfzqt3rCYyxMLWfPb0GopoHEqJbyHEHscJGN7hWqzd6CtOmCV2jkQ0O0aBPLsC/VeM+jcrp3hb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--afranji.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G0LJvHI6; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--afranji.bounces.google.com
+	s=arc-20240116; t=1747423210; c=relaxed/simple;
+	bh=yGk5vfAjLaJh07HlSBEUFFWjBHzsGIhNlLk3gY9zhjo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J6hD7LnNeAhOg1YfwSkVGdheI90d8Z/vddEoj/K+M4+N/ENjsSMwzSpcPZwak2RecayjE1WeAcrMQCdQdpEHHTv49ILxHmwiK3/36JeE75W+MRcNcG1vT3QkOytI9BaJdYCqtxblfzcQNshiyAA1POgZAXEbHl+IjWNHxceq1o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UBNPyR9/; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G0LJvHI6"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b1fa2cad5c9so1397461a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 12:20:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747423206; x=1748028006; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EBw7wfCdEYmTTv4xHtm1PEmGnm1jL6beLce2NlL5Vts=;
-        b=G0LJvHI6fg2EFuD7Dgnu6JG410A49xGI5HqV7DEQ6mKGc8bzqRrv9uo7lmWF1xPL/L
-         H4yfefuKxG7dBWnkbajg5zSgAwp4zLNX8xoW9+TRTPdkFfOmFtcAo/nnKgMnI6oJ4Ybf
-         RkAgEg13vy8CMWArUnNn23vAyrdnQq9OPEBigBBvl1d0RIA6pk6YvmZQ0oH33wEQjQcN
-         YRe5EX46ifFBs8t6LwKQrNS0ycFd2u10/0L6Y7tm4wTlSXpmS1mo8krcYqA0L639vc4Y
-         cNSxwC4PsJdGgUJrKUMcJNqx19L2qEMIfFEYPf2mhOi7pzSHGzbn+2WU3edEvprNr5jN
-         6gDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747423206; x=1748028006;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EBw7wfCdEYmTTv4xHtm1PEmGnm1jL6beLce2NlL5Vts=;
-        b=G8xk4vsmWXYPOPuTXx4P+wJfpZGwP8f+b/Lte3Cp3dyVulNDJCMtYSNj/EkV2GmEeI
-         lkzN36t7h0IvloTm0nnI7QBXQ+1piFAgLcviSB0fIn5++IlhROsleMD3hnHXr5n45uIb
-         aNzSjUgd6eI1op+Q9CaqhKxtXvFOz/trG+kkn0n3rNTHmAMhVmsYHv74cviqDBTn1LWe
-         V1jLaiyPTwuiPvNwadZ6zGu+2+qjWZAs3wmdnfz72wnJdp0x7BeCay2lWMQdDu0Y/gvC
-         E0iD8DuyAn8kTqGkiYayU6zpwMjsIiNvSiM1qPDqzT6Ip8gYMw078PKZm/3myZK5OD03
-         sU8A==
-X-Forwarded-Encrypted: i=1; AJvYcCXTeoDqQmoc+be4QWkUzPd4N0GGjJeKz2VInS0Ng6DnHRNpxntPEPPKTwcPMeV8PP7Bch1jZ78vheVeChA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIlC0aV5e8tr0zTKy09vBmrIcTk4FGd9zUccak8xion1QCaWIr
-	wrwJfoe18GEgw0Rf/Q0moUIPpN5gqLOMtsEUBv7MwfHaN08f7uyx9iuCJLSKhU5nMcCaKoY6fr7
-	kivb0K966ww==
-X-Google-Smtp-Source: AGHT+IFy+jT+27vVJgz7R2oehTji+RlKiv3+uUc/6owtg1K9ubfV5NHggyHzsM0M3NoRAMEDy2BAnXhRN7jv
-X-Received: from pjwx4.prod.google.com ([2002:a17:90a:c2c4:b0:2fa:1fac:2695])
- (user=afranji job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4a83:b0:2ee:8e75:4aeb
- with SMTP id 98e67ed59e1d1-30e8313d1d5mr6376058a91.17.1747423206206; Fri, 16
- May 2025 12:20:06 -0700 (PDT)
-Date: Fri, 16 May 2025 19:19:32 +0000
-In-Reply-To: <cover.1747368092.git.afranji@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UBNPyR9/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747423208; x=1778959208;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yGk5vfAjLaJh07HlSBEUFFWjBHzsGIhNlLk3gY9zhjo=;
+  b=UBNPyR9/VeiOzEA+iQYrBODobD+B85E5DkvKrjZIEU5vs7zxlKRKhFnZ
+   pzTshGUj6d3VMB5tb53CUWDnlclTS0XzcXTRJ41JWMGgW+lxdlUJhyX6S
+   Y1bfuunNRMehI8hhsTwy2n3PZm3ytct0ldYmVO+eZtcf1taaKwjqL3He+
+   cQBPhQ7lBJFZBPiCCMvFZJxqzChjERRJyUtiWVIFhKflhPhHCZGHVnCeb
+   coOhY5j5P4+RptwLACS4rhJkA1W0Hayy2J63lkQMJiYiMd3on6NBW1NPK
+   SPuZbwFrEXxKRNe3VMqhBgD+sZHluVN3ZwWVyMixdGcnZypY7GYUlBfAZ
+   w==;
+X-CSE-ConnectionGUID: j3zJ+cLUTZWBnqedtP81eA==
+X-CSE-MsgGUID: luJVD/YFRjq/nAgSvvn8Jw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49390985"
+X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
+   d="scan'208";a="49390985"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 12:20:07 -0700
+X-CSE-ConnectionGUID: /ckJGpuoRjCOQwyI3n98lg==
+X-CSE-MsgGUID: cSqBlaGkQoCa3Ca60B9SQQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
+   d="scan'208";a="138627383"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 12:20:05 -0700
+Date: Fri, 16 May 2025 22:20:02 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: gregkh@linuxfoundation.org, david.m.ertman@intel.com,
+	ira.weiny@intel.com, lee@kernel.org,
+	mika.westerberg@linux.intel.com, heikki.krogerus@linux.intel.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] driver core: auxiliary bus: Introduce auxiliary
+ device resource management
+Message-ID: <aCeP4l1VOVfhtQ09@black.fi.intel.com>
+References: <20250514122432.4019606-1-raag.jadav@intel.com>
+ <20250514122432.4019606-2-raag.jadav@intel.com>
+ <aCSOYRJXaiJpch6u@smile.fi.intel.com>
+ <aCXjltG40x9mJ25U@black.fi.intel.com>
+ <aCXm566Uyyh45MZD@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1747368092.git.afranji@google.com>
-X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <8a479dcaa271976e784d8b592e75d883a2c7721a.1747368093.git.afranji@google.com>
-Subject: [RFC PATCH v2 12/13] KVM: selftests: Generalize migration functions
- from sev_migrate_tests.c
-From: Ryan Afranji <afranji@google.com>
-To: afranji@google.com, ackerleytng@google.com, pbonzini@redhat.com, 
-	seanjc@google.com, tglx@linutronix.de, x86@kernel.org, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	tabba@google.com
-Cc: mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
-	shuah@kernel.org, andrew.jones@linux.dev, ricarkol@google.com, 
-	chao.p.peng@linux.intel.com, jarkko@kernel.org, yu.c.zhang@linux.intel.com, 
-	vannapurve@google.com, erdemaktas@google.com, mail@maciej.szmigiero.name, 
-	vbabka@suse.cz, david@redhat.com, qperret@google.com, michael.roth@amd.com, 
-	wei.w.wang@intel.com, liam.merwick@oracle.com, isaku.yamahata@gmail.com, 
-	kirill.shutemov@linux.intel.com, sagis@google.com, jthoughton@google.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCXm566Uyyh45MZD@smile.fi.intel.com>
 
-From: Ackerley Tng <ackerleytng@google.com>
+On Thu, May 15, 2025 at 04:06:47PM +0300, Andy Shevchenko wrote:
+> On Thu, May 15, 2025 at 03:52:38PM +0300, Raag Jadav wrote:
+> > On Wed, May 14, 2025 at 03:36:49PM +0300, Andy Shevchenko wrote:
+> > > On Wed, May 14, 2025 at 05:54:31PM +0530, Raag Jadav wrote:
+> 
+> ...
+> 
+> > > > +/**
+> > > > + * auxiliary_get_irq_optional - get an optional IRQ for auxiliary device
+> > > > + * @auxdev: auxiliary device
+> > > > + * @num: IRQ number index
+> > > > + *
+> > > > + * Gets an IRQ for a auxiliary device. Device drivers should check the return value
+> > > > + * for errors so as to not pass a negative integer value to the request_irq()
+> > > > + * APIs. This is the same as auxiliary_get_irq(), except that it does not print an
+> > > > + * error message if an IRQ can not be obtained.
+> > > > + *
+> > > > + * For example::
+> > > > + *
+> > > > + *		int irq = auxiliary_get_irq_optional(auxdev, 0);
+> > > > + *		if (irq < 0)
+> > > > + *			return irq;
+> > > > + *
+> > > > + * Return: non-zero IRQ number on success, negative error number on failure.
+> > > > + */
+> > > > +int auxiliary_get_irq_optional(struct auxiliary_device *auxdev, unsigned int num)
+> > > > +{
+> > > > +	struct resource *r;
+> > > > +	int ret = -ENXIO;
+> > > > +
+> > > > +	r = auxiliary_get_resource(auxdev, IORESOURCE_IRQ, num);
+> > > > +	if (!r)
+> > > > +		goto out;
+> > > > +
+> > > > +	/*
+> > > > +	 * The resources may pass trigger flags to the irqs that need to be
+> > > > +	 * set up. It so happens that the trigger flags for IORESOURCE_BITS
+> > > > +	 * correspond 1-to-1 to the IRQF_TRIGGER* settings.
+> > > > +	 */
+> > > > +	if (r->flags & IORESOURCE_BITS) {
+> > > > +		struct irq_data *irqd;
+> > > > +
+> > > > +		irqd = irq_get_irq_data(r->start);
+> > > > +		if (!irqd)
+> > > > +			goto out;
+> > > > +		irqd_set_trigger_type(irqd, r->flags & IORESOURCE_BITS);
+> > > > +	}
+> > > > +
+> > > > +	ret = r->start;
+> > > > +	if (WARN(!ret, "0 is an invalid IRQ number\n"))
+> > > > +		ret = -EINVAL;
+> > > > +out:
+> > > > +	return ret;
+> > > > +}
+> > > 
+> > > Please, do not inherit the issues that the respective platform device API has.
+> > > And after all, why do you need this? What's wrong with plain fwnode_irq_get()?
+> > 
+> > Can you please elaborate? Are we expecting fwnode to be supported by auxiliary
+> > device?
+> 
+> Platform IRQ getter is legacy for the board files, but it has support for fwnode.
+> Why do you need to inherit all that legacy? What's the point?
 
-These functions will be used in private (guest mem) migration tests.
+This is just to abstract get_resource(IRQ) which has been carved up by the
+parent device. And since this is an auxiliary child device, I'm not sure if
+we have a firmware to work with.
 
-Signed-off-by: Ackerley Tng <ackerleytng@google.com>
-Signed-off-by: Ryan Afranji <afranji@google.com>
----
- .../testing/selftests/kvm/include/kvm_util.h  | 13 +++++
- .../selftests/kvm/x86/sev_migrate_tests.c     | 48 +++++++------------
- 2 files changed, 30 insertions(+), 31 deletions(-)
+Please correct me if I've misunderstood your question.
 
-diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-index 68faa658b69e..80375d6456a5 100644
---- a/tools/testing/selftests/kvm/include/kvm_util.h
-+++ b/tools/testing/selftests/kvm/include/kvm_util.h
-@@ -378,6 +378,19 @@ static inline void vm_enable_cap(struct kvm_vm *vm, uint32_t cap, uint64_t arg0)
- 	vm_ioctl(vm, KVM_ENABLE_CAP, &enable_cap);
- }
- 
-+static inline int __vm_migrate_from(struct kvm_vm *dst, struct kvm_vm *src)
-+{
-+	return __vm_enable_cap(dst, KVM_CAP_VM_MOVE_ENC_CONTEXT_FROM, src->fd);
-+}
-+
-+static inline void vm_migrate_from(struct kvm_vm *dst, struct kvm_vm *src)
-+{
-+	int ret;
-+
-+	ret = __vm_migrate_from(dst, src);
-+	TEST_ASSERT(!ret, "Migration failed, ret: %d, errno: %d\n", ret, errno);
-+}
-+
- static inline void vm_set_memory_attributes(struct kvm_vm *vm, uint64_t gpa,
- 					    uint64_t size, uint64_t attributes)
- {
-diff --git a/tools/testing/selftests/kvm/x86/sev_migrate_tests.c b/tools/testing/selftests/kvm/x86/sev_migrate_tests.c
-index 0a6dfba3905b..905cdf9b39b1 100644
---- a/tools/testing/selftests/kvm/x86/sev_migrate_tests.c
-+++ b/tools/testing/selftests/kvm/x86/sev_migrate_tests.c
-@@ -56,20 +56,6 @@ static struct kvm_vm *aux_vm_create(bool with_vcpus)
- 	return vm;
- }
- 
--static int __sev_migrate_from(struct kvm_vm *dst, struct kvm_vm *src)
--{
--	return __vm_enable_cap(dst, KVM_CAP_VM_MOVE_ENC_CONTEXT_FROM, src->fd);
--}
--
--
--static void sev_migrate_from(struct kvm_vm *dst, struct kvm_vm *src)
--{
--	int ret;
--
--	ret = __sev_migrate_from(dst, src);
--	TEST_ASSERT(!ret, "Migration failed, ret: %d, errno: %d", ret, errno);
--}
--
- static void test_sev_migrate_from(bool es)
- {
- 	struct kvm_vm *src_vm;
-@@ -81,13 +67,13 @@ static void test_sev_migrate_from(bool es)
- 		dst_vms[i] = aux_vm_create(true);
- 
- 	/* Initial migration from the src to the first dst. */
--	sev_migrate_from(dst_vms[0], src_vm);
-+	vm_migrate_from(dst_vms[0], src_vm);
- 
- 	for (i = 1; i < NR_MIGRATE_TEST_VMS; i++)
--		sev_migrate_from(dst_vms[i], dst_vms[i - 1]);
-+		vm_migrate_from(dst_vms[i], dst_vms[i - 1]);
- 
- 	/* Migrate the guest back to the original VM. */
--	ret = __sev_migrate_from(src_vm, dst_vms[NR_MIGRATE_TEST_VMS - 1]);
-+	ret = __vm_migrate_from(src_vm, dst_vms[NR_MIGRATE_TEST_VMS - 1]);
- 	TEST_ASSERT(ret == -1 && errno == EIO,
- 		    "VM that was migrated from should be dead. ret %d, errno: %d", ret,
- 		    errno);
-@@ -109,7 +95,7 @@ static void *locking_test_thread(void *arg)
- 
- 	for (i = 0; i < NR_LOCK_TESTING_ITERATIONS; ++i) {
- 		j = i % NR_LOCK_TESTING_THREADS;
--		__sev_migrate_from(input->vm, input->source_vms[j]);
-+		__vm_migrate_from(input->vm, input->source_vms[j]);
- 	}
- 
- 	return NULL;
-@@ -146,7 +132,7 @@ static void test_sev_migrate_parameters(void)
- 
- 	vm_no_vcpu = vm_create_barebones();
- 	vm_no_sev = aux_vm_create(true);
--	ret = __sev_migrate_from(vm_no_vcpu, vm_no_sev);
-+	ret = __vm_migrate_from(vm_no_vcpu, vm_no_sev);
- 	TEST_ASSERT(ret == -1 && errno == EINVAL,
- 		    "Migrations require SEV enabled. ret %d, errno: %d", ret,
- 		    errno);
-@@ -160,25 +146,25 @@ static void test_sev_migrate_parameters(void)
- 	sev_es_vm_init(sev_es_vm_no_vmsa);
- 	__vm_vcpu_add(sev_es_vm_no_vmsa, 1);
- 
--	ret = __sev_migrate_from(sev_vm, sev_es_vm);
-+	ret = __vm_migrate_from(sev_vm, sev_es_vm);
- 	TEST_ASSERT(
- 		ret == -1 && errno == EINVAL,
- 		"Should not be able migrate to SEV enabled VM. ret: %d, errno: %d",
- 		ret, errno);
- 
--	ret = __sev_migrate_from(sev_es_vm, sev_vm);
-+	ret = __vm_migrate_from(sev_es_vm, sev_vm);
- 	TEST_ASSERT(
- 		ret == -1 && errno == EINVAL,
- 		"Should not be able migrate to SEV-ES enabled VM. ret: %d, errno: %d",
- 		ret, errno);
- 
--	ret = __sev_migrate_from(vm_no_vcpu, sev_es_vm);
-+	ret = __vm_migrate_from(vm_no_vcpu, sev_es_vm);
- 	TEST_ASSERT(
- 		ret == -1 && errno == EINVAL,
- 		"SEV-ES migrations require same number of vCPUS. ret: %d, errno: %d",
- 		ret, errno);
- 
--	ret = __sev_migrate_from(vm_no_vcpu, sev_es_vm_no_vmsa);
-+	ret = __vm_migrate_from(vm_no_vcpu, sev_es_vm_no_vmsa);
- 	TEST_ASSERT(
- 		ret == -1 && errno == EINVAL,
- 		"SEV-ES migrations require UPDATE_VMSA. ret %d, errno: %d",
-@@ -331,14 +317,14 @@ static void test_sev_move_copy(void)
- 
- 	sev_mirror_create(mirror_vm, sev_vm);
- 
--	sev_migrate_from(dst_mirror_vm, mirror_vm);
--	sev_migrate_from(dst_vm, sev_vm);
-+	vm_migrate_from(dst_mirror_vm, mirror_vm);
-+	vm_migrate_from(dst_vm, sev_vm);
- 
--	sev_migrate_from(dst2_vm, dst_vm);
--	sev_migrate_from(dst2_mirror_vm, dst_mirror_vm);
-+	vm_migrate_from(dst2_vm, dst_vm);
-+	vm_migrate_from(dst2_mirror_vm, dst_mirror_vm);
- 
--	sev_migrate_from(dst3_mirror_vm, dst2_mirror_vm);
--	sev_migrate_from(dst3_vm, dst2_vm);
-+	vm_migrate_from(dst3_mirror_vm, dst2_mirror_vm);
-+	vm_migrate_from(dst3_vm, dst2_vm);
- 
- 	kvm_vm_free(dst_vm);
- 	kvm_vm_free(sev_vm);
-@@ -360,8 +346,8 @@ static void test_sev_move_copy(void)
- 
- 	sev_mirror_create(mirror_vm, sev_vm);
- 
--	sev_migrate_from(dst_mirror_vm, mirror_vm);
--	sev_migrate_from(dst_vm, sev_vm);
-+	vm_migrate_from(dst_mirror_vm, mirror_vm);
-+	vm_migrate_from(dst_vm, sev_vm);
- 
- 	kvm_vm_free(mirror_vm);
- 	kvm_vm_free(dst_mirror_vm);
--- 
-2.49.0.1101.gccaa498523-goog
-
+Raag
