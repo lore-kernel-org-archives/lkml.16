@@ -1,101 +1,112 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C9E2A1AA;
-	Fri, 16 May 2025 13:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B6C282E1;
+	Fri, 16 May 2025 13:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747403314; cv=none; b=oY+cGW+roIDVR9pxNmUk8a3Fffz7RefoXjpny0Fh+a2uax8UbH1BbMsAafByeK0ccKOH6zl1ATsa6q/YJ0Y0Jp8JA0kIEmLt/0E0qlYtnzYLug/nRpbE6cd7wL1uogKieYoRoyUPODI8mVZBZi9k/xuwfG3KC/IdWpdKwDSCouc=
+	t=1747403324; cv=none; b=q4L+EakTWfj6U/CnY0v2bXCILs1o7YeVkB0NP7KkdQMvo8sYYbZh82JN6kG139WZWhAnTNoTfVp/+ZPpbt0v+gpT/YHvsOySVjxTZQSItc2z1ldtn9Pn512DC0tc6HHz15hZ+qFP15ZLJi8tfXCYyfPaPz3arjiKQhrLiNrmQh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747403314; c=relaxed/simple;
-	bh=TMuT8a4ncnhyl4/VD++TX0W+ECcbOx8qcjaLMl+w3+A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=obtlx/ZXL7b8mfvHFFtka63nBfeD2LLW55wpQJ/bemMDsIcYlwkq8W6OhPl2W7DJWiEiwNlyRF8zg3p0oJl6ApLsM5nw02gLpXxpy0OKy+1Gs1TCGD33dyTN4GGQaN5YuBcadsZGArH6Y3+ZZRiF+C9HKRHFtR1QIumohX5BLdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=UVDhcUvK; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="UVDhcUvK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Hkbeh72Y0ucq/iJdWN5aU8aatswoMTC6+WwiWepvQvA=; b=UVDhcUvKoxA8PncS3akl1v1GSQ
-	b34xI5NT8Q5z28EX3kAMIYvVsVmI7FhwsIf1Z7cV8lfPlW3j0Czw5KNBsxyCjGhBRb8k8i5GjhRov
-	9XljFAjG4qH5+n5mdW7Yw8uxa85a6DHOlSsgXLu8H4SNoNutHNI32bCLN54ayYtUzPW5q6+Kw3drU
-	PJCMKk0YdP7MBl/7+OQoqV3nwodlm7lXpswuu6qxqfro2qOq2SybpiZFHcZNWvIh2xdjAXGFy0NJW
-	wiOMTOTCfteuukjPsd/dQoMIOcRCS4H09pCJ/eHMTIDKlNYM3NvSg1cNxzCxUnmePaHZsazEBn5Dp
-	m+4w9jJg==;
-Received: from [179.180.238.246] (helo=[192.168.68.116])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uFvKL-0096fp-4V; Fri, 16 May 2025 15:48:15 +0200
-Message-ID: <80673b87-792b-49f9-a68e-657c16a9b04a@igalia.com>
-Date: Fri, 16 May 2025 10:48:09 -0300
+	s=arc-20240116; t=1747403324; c=relaxed/simple;
+	bh=1seJfpztGifwrs2PlCOfDt1rbHiWcewWmKq+VA0FAF8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iKhTqY9c1GNVO7WjRwBUKJZwkdURHiJElnoemK/su1epW+HaX5aVBV04rOmZ9waQkkfdZDNRsjXo8FA/tGQHNUm2uWWi/d77FZr5RHnCW4KQyjHD55tlxvY5YYO65U0y+Ehnvu5nra5Drg4yfmcMoIyfHNM9lJNKH5zi1DHom2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2317d94c9cdso19891565ad.2;
+        Fri, 16 May 2025 06:48:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747403322; x=1748008122;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GhLr0/qCcOcwsG1cKw2ZSqLBQlNdIjNVQR+oDfOQeX8=;
+        b=dnXl3YDC2Y/7auj+H36TRvjtZFVhRkrZOeQH/AKedb3exq+XfaKzBE9hRrIVpgZx97
+         1HdLmikBqkmbnE+qa1NOPQvr0zUWBMLUyF26a9V5yRLKLqLDe8wTb8N/Og/wWxXu1GEC
+         Dwy5AGNr5DL68lDaYJpTGIY5huw+MUQ6XuRFGYn/GbDnAo0Jtr2MFH/xjmjxb2uYtGGT
+         j6L6u/oflUM72m2jFFf0djS3qA7SQLCdEwpSfzO3e0spnLLBWqoF7iV1z98aeVOUi6PL
+         /SDSZ/QnmxmwWygtRwC5rvWgwrA2LxnQuVwNdxpqVc0F9JpvZRPqPooKmmpdwkWFdXxa
+         JQ0w==
+X-Forwarded-Encrypted: i=1; AJvYcCUC9dPdMBQxIIeL/7bjPyS9wpTHFVqfkFHhsJxJN/2JvOQb9G98YY2Ol+ZtRhHqV7xhaY8QVBb1j/wlpaKI@vger.kernel.org, AJvYcCUrllLYHDNUKqZK24+WfJTrWfXvkPNlHpWQ++RSyXeWULwsEk5ybftEbxPZZagZ5P1Sw6uQImidgvQ=@vger.kernel.org, AJvYcCWMdHu/uNFxvSAErvDcwBPmY0vG9XseVoFj2Vx+C08hdyB/a9sIV1fX0wHwF+uX8KK2nk0CYbfX+EEV@vger.kernel.org
+X-Gm-Message-State: AOJu0YycJGofgvG/SDMql92fqofnsE2F/jKzmZPFJ5gOqlUQy9CxjhGV
+	DIVORAxwKMJraBEIyTh8Fco6ebaIaSZotT+lR+KBLXIlZJDBk/38VxCm6cXtCfcE5g9aSw==
+X-Gm-Gg: ASbGncvvJNLxefEYVppf7kT61OBFY4v4QSjNPOk/bXJdDtEUxje8MSJ2l6Axoi0mphv
+	HOC8Fdzf1kldYPJZlcCdKAc0mzXlTesIJH3adK2x8KoLlIyTOxloBl5CsYMgKkeP1XRv0fwOCbA
+	d1Sgmtu1ek2KuApinL0WOUs4qDP6C4keYG0ytCjtDQ7hqtKBBUyFJK1kNZu9R43A5UY6t7G/a0b
+	we6Tp9GT5aeR3R8sPiz1iUySCElg2Ts2z2XgAmFHmBcUttUxyGhguHyybhKs2QUznvVROAFBjwn
+	abRFTfjMschcIOgj0cL6dHn+yHwmOvSCthF+BAXs44whH6FrYVHXYC9D00vKBD4xK/y0Xf5W15T
+	UPDAxU26lWg==
+X-Google-Smtp-Source: AGHT+IEYfD34EnL3n4BF8sR+tYcouluejWmfRuBRsuFM5XUnqVVI85uppxwbmnFyye5xoQ1triIUXQ==
+X-Received: by 2002:a17:903:2ecd:b0:22c:2492:b96b with SMTP id d9443c01a7336-231d44e642amr45764445ad.15.1747403321674;
+        Fri, 16 May 2025 06:48:41 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-231d4e97537sm14316725ad.115.2025.05.16.06.48.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 06:48:41 -0700 (PDT)
+Date: Fri, 16 May 2025 22:48:39 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: phasta@kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Yang Yingliang <yangyingliang@huawei.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH 2/7] Docu: PCI: Update pcim_enable_device()
+Message-ID: <20250516134839.GA3308019@rocinante>
+References: <20250515124604.184313-2-phasta@kernel.org>
+ <20250515124604.184313-4-phasta@kernel.org>
+ <aCXk2eDUJF2UbQ47@smile.fi.intel.com>
+ <e44d880e842440d51c14f38df1d20176694e0d57.camel@mailbox.org>
+ <20250516132811.GB2390647@rocinante>
+ <2e80298be4bcb6b17f5b38302d6945306928c6b0.camel@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm: ci: skip msm_mapping@shadow on SM8350
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- Helen Koike <helen.fornazier@gmail.com>,
- Vignesh Raman <vignesh.raman@collabora.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250513-msm-ci-fixes-v1-1-baba185529a2@oss.qualcomm.com>
-Content-Language: en-US
-From: Helen Koike <koike@igalia.com>
-In-Reply-To: <20250513-msm-ci-fixes-v1-1-baba185529a2@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2e80298be4bcb6b17f5b38302d6945306928c6b0.camel@mailbox.org>
 
+Hello,
 
-
-On 5/13/25 15:49, Dmitry Baryshkov wrote:
-> The msm_mapping@shadow test fails on SM8350, which means that the write
-> might get through (hopefully not though). Disable the test completely
-> for now until we can fix the issue.
+[...]
+> > > > Is the "Docu" prefix in thew Subject aligned with the git history
+> > > > of this file?
+> > > > 
+> > > 
+> > > Seems its "Documentation: ". Can fix.
+> > 
+> > Has Andy been sending his review off-list?  Or something is broken on
+> > my side...
 > 
-> Link: https://gitlab.freedesktop.org/drm/msm/-/issues/77
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-
-Acked-by: Helen Koike <koike@igalia.com>
-
-Thanks
-Helen
-
-> ---
->   drivers/gpu/drm/ci/xfails/msm-sm8350-hdk-skips.txt | 5 +++++
->   1 file changed, 5 insertions(+)
+> Nope, it's on-list. Andy's a veteran ;-)
 > 
-> diff --git a/drivers/gpu/drm/ci/xfails/msm-sm8350-hdk-skips.txt b/drivers/gpu/drm/ci/xfails/msm-sm8350-hdk-skips.txt
-> index 9450f2a002fd7e68f0f674ac6ac84aeebf28347f..a8b535abc8ef0d996d0c73ece1c7a9622250928e 100644
-> --- a/drivers/gpu/drm/ci/xfails/msm-sm8350-hdk-skips.txt
-> +++ b/drivers/gpu/drm/ci/xfails/msm-sm8350-hdk-skips.txt
-> @@ -210,3 +210,8 @@ msm/msm_mapping@ring
->   # [  229.752499] CPU features: 0x18,00000017,00200928,4200720b
->   # [  229.758095] Memory Limit: none
->   # [  229.761291] ---[ end Kernel panic - not syncing: softlockup: hung tasks ]---
-> +
-> +# Protection doesn't seem to be enforced, don't perform write which might get through
-> +# https://gitlab.freedesktop.org/drm/msm/-/issues/77
-> +msm/msm_mapping@shadow
-> +
-> 
-> ---
-> base-commit: 8f5264d302e803e7ef82a61f9632a0d2ef67413f
-> change-id: 20250513-msm-ci-fixes-3e7ce259d1d9
-> 
-> Best regards,
+> https://lore.kernel.org/linux-pci/aCXnPHy5heHCKVd_@smile.fi.intel.com/
 
+Thank you!
+
+I should have checked on lore, too.  Time to move to lei, I suppose...
+
+> > Philipp, if you have a v2 ready, then I would love to pull it, while we
+> > await for more reviews, just to get enough soak time and allow for the
+> > 0-day and KernelCI to run their usual tests, etc.
+> > 
+> > Thank you!
+> 
+> I don't have it ready, but should be trivial to do, since it's not
+> fundamental critcism. I'll do my best.
+
+I would be much obliged.
+
+Thank you!
+
+	Krzysztof
