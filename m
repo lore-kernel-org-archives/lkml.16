@@ -1,130 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7589427738
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 04:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49FE635
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 04:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747370708; cv=none; b=sZJApwDgzpFmAWGFGQrXCBOwd+r2EXRFH0HVFbCA7pyxUMTAjnU/fdS2nno2GYlczMGwdJyKHu8HAeBrxCQtQOtDu6WutnreY5y/ZTmox1YWPPdlVMfXd+9oURKF2IwTlAglta9tAoBxAR3ijZGCLfrDcDFxqzuRYIMS1Q5SO2g=
+	t=1747370819; cv=none; b=nA+mRDj5hypzPewv6wTvHaXOzNztkOOp/KqVPQbqo6bW/W8QEObYHUbJkRnEHXusdkQ+f8N1WuSxHqeGdELhQqfBcW6XIPBewsU/T8ddlf/OK9wasB8AE3RJ2cbvc+QD/55cP9xbBX1PjebUWE0PDgAayXGH5YQT7ZfUbByemhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747370708; c=relaxed/simple;
-	bh=ggI813HL1rEYRQQ1CuOzJR0geG67OZc8pBHtJF6PLSA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fsf0vmfkuepRii18hmvK8C+5VgGTigA/G9OIJ8gClq1UJxDUmskiKphZhEIpzTVbvZCBhAH/4rHcdUzeNryJt2e+fkGb2IV0KdZ0UjWbDzisDR9pIe472x+cx+D+ZI76f+HCLOav16UcuUZQw0C5eenJKcH/8NusPPqkXvfAM9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r7m1p7zd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747370819; c=relaxed/simple;
+	bh=YVuTc2bSEf4nvi4SFTWj2WF2nu6sLlHBK3XBb/RYm80=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XrI6d4Lm3SRTRCksqRh1RHD/x9/mhCxVVR0DQrlb5h/+OWhQQS3iNaakCG/IqVpvsjeZM9Y5BLRPA3rZeyqpwoLbWJbMZ0Kd8o+0XJPeE7lUWwY10rexTYR942Z9qpwEG4FOCS609z1g5MipT/hvq8ApD7jZM1ADz3ae43xf/oY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JYrQ7mk1; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r7m1p7zd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 067D6C4CEE4;
-	Fri, 16 May 2025 04:45:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747370708;
-	bh=ggI813HL1rEYRQQ1CuOzJR0geG67OZc8pBHtJF6PLSA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=r7m1p7zdwhfoBvnOAPaFMclCeqBSFTENrDgBwI2JOS2l2JXFFACHdO2jttlY8WdXK
-	 z22rAIewxLgkFEOxVcrbuShTfulCY+9d5Qtpo4/YevbqxUZ13M+j23vCVA0LZisXzq
-	 AzafeW1Zmmom0d7XP3oSdQFwbbf7HDOZxF0vaSpWazev08gLjAaUjgmLzvAVyAMbbO
-	 Ar/2EgE6INONWrwABIz8/V0ZqcSS4iW+Cd+1slGsWxkL9BJBSg9HPAoTqfCq3sMNnp
-	 oU7hGurLCk4C4QOM5XC1g8cirjjKdsbwl3PnLGUH+uNVDP6y0p2nRYsakEkwxKe4OE
-	 QwH/x2IFzpzTQ==
-Message-ID: <0e79e48c-f466-41f7-bb60-03f45f6b0628@kernel.org>
-Date: Fri, 16 May 2025 06:45:04 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JYrQ7mk1"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6000791e832so4373a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 21:46:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747370816; x=1747975616; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2p0J63BoeaEvteCr8KS2NoqHGRsgMBWEa842OReu8K8=;
+        b=JYrQ7mk1ucg2AijvN4hL4ITFM31ibFWr3SRJ027uMMA7uMMJsvWrrLe464PXCzf6aK
+         uqHryffKOQR7BgITf9YT0wDpL49c8RLkcn3pHRQ/DfDDkxr0D8XkFCret+Y4+JUTBLWz
+         v01Tm18if45qqCJDBYgRE/PZ9eASV6If8NRMAq9YTdUR127ozFoIxGOslxHN/IS+m0hB
+         TsWvzc4Wy4nC05UiCRaB6Wv4bVmV1XdyYCegbTwmyBz7+Mrdrhf0xtwmkxtopG/hXqE7
+         mDqnI4TsZVT2VYjL58eyOLQg/LRg4YxG48ZoIFqVdLTNFlrnQk3BeFluQo/y50c86Smz
+         SaiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747370816; x=1747975616;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2p0J63BoeaEvteCr8KS2NoqHGRsgMBWEa842OReu8K8=;
+        b=EjTCLwgJNaInXYtV0bwBMlDJNrtYPnjYcqwjuDUCepRN5uMP++x5ZTo/4k9zikQjqn
+         cESPdKpCOCIcvrouBZGZqAxL9ocec6FgM8EXaWWSErVd/7Do0+TZAFBObxw8X0/Is5bn
+         iBeBzs/wq4ema/M8F0nsv/Eb+XfVRXxklLTWI8684Oc/vowksHN87oJigVuaIfqxCQa5
+         ano9zyutJcDkWAunLXZ3gWEWwr7aWcWuPNgW4eEJuqYudFQHbVrJBbSVrQL16o3lryJE
+         IyC+LxBPo6ZGFdMMROFxt6tzDpzWDrNfeMM/7bk4TgIPuS2dVEfdNWDpetCRrZnFVNpZ
+         f4gw==
+X-Forwarded-Encrypted: i=1; AJvYcCVo0bfitpy3JRloQrxJlvrPmB3EOEvdU0DxyIXftLWnB4qNafnISfL5TYZAz+UO7eKGGio5efFJVoeAC54=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySZ/9opgqpm2RfaM1UMaRHU9OFmXeVRD3FF2rfIm1/sBOjBl3Q
+	HkCaTFM7xAoCrEyR927WmtXA9IEEka8oyxg9Xad+jeLxAECk1Lh+p7CbP1AlzRBZxZ1iBrRXfjq
+	Rjt/D6BDjtY1eMjFHHRBmn1gh0FKhd13NPcJhDaHS
+X-Gm-Gg: ASbGncuFjWKXhKHlIzfhK7V8SbYxwqiKlsK7aORHB08/8xnhYrXiUImG9wllUKA+uNS
+	T7abXoZX69Z3Q4hJv7rHtug1ORs8CiB1Lc0cYXaiJJl7Gfr4HOUp4Ll//0QXQRecU4Z79a1eXDa
+	Tt4mfojBYbvu6kNNIoYdFfP8tb2n6h/YzWozJQCNFYHq8XCE2Y1cnZ8bg=
+X-Google-Smtp-Source: AGHT+IFnmoFOBw17NS2NeC02qMp4/ejkZq6GrfrN6F7Vp/sqYPTFxrI/Eg+hDjqnmiO4OTE0pVaJT9sRsUCUWjBbxJ4=
+X-Received: by 2002:a50:c049:0:b0:5fd:28:c3f6 with SMTP id 4fb4d7f45d1cf-5ffc9dbe5b8mr187295a12.4.1747370815935;
+ Thu, 15 May 2025 21:46:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] genirq: Bump the size of the local variable for
- sprintf()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Cc: kernel test robot <lkp@intel.com>
-References: <20250515085516.2913290-1-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20250515085516.2913290-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250416144917.16822-1-guanyulin@google.com> <20250416144917.16822-3-guanyulin@google.com>
+ <2025042540-implode-yelp-b8e5@gregkh>
+In-Reply-To: <2025042540-implode-yelp-b8e5@gregkh>
+From: Guan-Yu Lin <guanyulin@google.com>
+Date: Fri, 16 May 2025 12:45:00 +0800
+X-Gm-Features: AX0GCFtgmPfhoBhTfthJn2kGFoSwJy9bgtoOW1SPfO4jiDRojCDEDAC7W0affGo
+Message-ID: <CAOuDEK1SUMBdxq49G6UxB_DubbM78xUe3w4V062AJ1Ok1NfCHg@mail.gmail.com>
+Subject: Re: [PATCH v12 2/4] usb: add apis for offload usage tracking
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: mathias.nyman@intel.com, stern@rowland.harvard.edu, sumit.garg@kernel.org, 
+	gargaditya08@live.com, kekrby@gmail.com, jeff.johnson@oss.qualcomm.com, 
+	quic_zijuhu@quicinc.com, andriy.shevchenko@linux.intel.com, 
+	ben@decadent.org.uk, broonie@kernel.org, quic_wcheng@quicinc.com, 
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 15. 05. 25, 10:55, Andy Shevchenko wrote:
-> GCC is not happy about sprintf() call on a buffer that might be too small for
-> the given formatting string.
-> 
-> kernel/irq/debugfs.c:233:26: warning: 'sprintf' may write a terminating nul past the end of the destination [-Wformat-overflow=]
-> 
-> Fix this by bumping the size of the local variable for sprintf().
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202505151057.xbyXAbEn-lkp@intel.com/
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->   kernel/irq/debugfs.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/irq/debugfs.c b/kernel/irq/debugfs.c
-> index 3d6a5b3cfaf3..3527defd2890 100644
-> --- a/kernel/irq/debugfs.c
-> +++ b/kernel/irq/debugfs.c
-> @@ -225,7 +225,7 @@ void irq_debugfs_copy_devname(int irq, struct device *dev)
->   
->   void irq_add_debugfs_entry(unsigned int irq, struct irq_desc *desc)
->   {
-> -	char name [10];
-> +	char name [12];
+On Fri, Apr 25, 2025 at 7:12=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+>
+> On Wed, Apr 16, 2025 at 02:43:02PM +0000, Guan-Yu Lin wrote:
+> > +int usb_offload_put(struct usb_device *udev)
+> > +{
+> > +     int ret;
+> > +
+> > +     if (udev->state =3D=3D USB_STATE_NOTATTACHED ||
+> > +                     udev->state =3D=3D USB_STATE_SUSPENDED)
+> > +             return -EAGAIN;
+>
+> What's to prevent the state of the device from changing right after you
+> check for this?
+>
 
-The max irq is ~ 512000, if I am counting correctly, so 7 B should be 
-actually enough for everybody ;).
+The caller of usb_offload_put() should hold the device lock, so I
+think the state of the usb device will remain the same within
+usb_offload_put().
 
-But well, can we silence the warning in a better way? I doubt that...
+> And why -EAGAIN, you don't mention that in the comment for the function.
+>
+> Also, to pile on, sorry, the coding style needs to be fixed up here :)
+>
 
->   
->   	if (!irq_dir || !desc || desc->debugfs_file)
->   		return;
+I'll separate these 2 states into two error handling checks and
+provide appropriate error code respectively. Thanks for your advice.
 
--- 
-js
-suse labs
+> > +bool usb_offload_check(struct usb_device *udev)
+> > +{
+> > +     struct usb_device *child;
+> > +     bool active;
+> > +     int port1;
+> > +
+> > +     usb_hub_for_each_child(udev, port1, child) {
+>
+> No locking is needed for this loop at all?  What happens if a device is
+> added or removed while it is looping?
+>
 
+Currently the expectation is that all the downstream usb devices
+should either go to suspend or be marked as "offload_at_suspend".
+Based on this, is there still a chance that usb devices are being
+added or removed? My understanding is device addition/removal requires
+locks for the upstream usb device, which we've already acquired before
+entering usb_offload_check().
+
+> > +             device_lock(&child->dev);
+> > +             active =3D usb_offload_check(child);
+> > +             device_unlock(&child->dev);
+> > +             if (active)
+> > +                     return true;
+> > +     }
+> > +
+> > +     return !!udev->offload_usage;
+>
+> But the state can change right afterwards, so no one can do anything
+> with this value, right?  What is is used for?
+>
+> thanks,
+>
+> greg k-h
+
+If we could ensure that all the downstream usb devices satisfy the
+following conditions, could the state still change?
+1. usb devices either are suspended or marked as "offload_at_suspend".
+2. "offload_usage" could only be modified when the usb device is
+neither suspended nor marked as "offload_at_suspend".
+Regarding point 1, I'll update the function description to state the
+function should only be called after we ensure the downstream usb
+devices are either suspended or marked as "offload_at_suspend".
+Regarding point 2, I'll update the usb_offload_get()/usb_offload_put()
+so that "offload_usage" changes only when the device is active and not
+marked as "offload_at_suspend".
+
+Regards,
+Guan-Yu
