@@ -1,504 +1,330 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D9E282E1;
-	Fri, 16 May 2025 08:20:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823421FECB1
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747383625; cv=none; b=YcUgJUoYGdqqT+Xiq5I0oAvZ4tQqJXvXQyBvQvll6qQQRG+wVyiQVAsJUOwMXBlGuR/8Ta5U0EEbJzgjiRqXe1xrFszhYiyQaeWAHef9J/Wk3O3mW1t2lz35HKUySgQC101Tnf2yn15u3TgBKN4sRvdMKUlsOgxWKZZOZ+e//z0=
+	t=1747383642; cv=none; b=ADBTV9utayfeAEFJPrwnZPu8nygJqD5mvaA17tarj4dmkAyWJyy071IEir8LyUkGahW6ekEYD5qyJatQzHoVtqHjl9qwnflsspdHaAUF5JhbGAcHfViz43W9Qyg80p5MLO+eHgTPIzNQ1+dMiCD+6xsNzq576aDVPICQmgpRmWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747383625; c=relaxed/simple;
-	bh=rJCfkpAiwH1Oqjh4q9QJR86Cbsal99PZdsnA/aKfzJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IOFuF4M2Eb6/cWMRMl9AeJqGRCNd+dCbHxEgbeZUQW06LcuCk3hqwCCKCbrH4OCWMxJJxIKzCQPdUy5D8othjGbUC23+6b8BZiQqLPwcLvi5iJa9qd5jff/ChAJm0rzEETrRmS4OKWt7vr8MvA8mRFduEAiERXW6IFoONNa19J4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kFPljMLm; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747383642; c=relaxed/simple;
+	bh=EdACkA6mjQfWqmwa0qBv7PZgBBiq5HlPdqFD9DoELZg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nQTkb5lC50wsQIzgpnHjWbSRznJ8kz9ggJlFnTnbI0bFtVtld2J53RHPeAlSCHEwnA4wz90w7gV5RD1xkENlulTvtFQfLxvDbYGB2RqtpPxLsJq4Y5Az8+QmDE9EHlIrMnDJEk1p3nmuWQs46VZeLwWTC7QM7kTBkn6xqJbZqgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MwU/y4Le; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kFPljMLm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747383624; x=1778919624;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rJCfkpAiwH1Oqjh4q9QJR86Cbsal99PZdsnA/aKfzJA=;
-  b=kFPljMLmZvoNHFu3ASHoPHMYXYEoInLqEGOOi1dOOeUufLmniQgkGcLO
-   BRX8tLP1HYMo4HoPoBF5RReIy9ft0ICIUaZ/4PqwUHxNAG1O2mS+baude
-   08J8wXkVXeFKSpIVuR769OLuX3qeoDpFXzJBJG5fwI7vKF8ufbvROvnuo
-   cy8VquJBgKk5aKyDr6D4qDRhOptGAsrPhbhCQ+pCYIDIcpolEasdJMCdN
-   LzYAokyUtej/YuwMqtN2rKlleb7mNSw3wyehNkXffk4LgDLwZoM8VPjm4
-   edgFa7iPBVzFWpYVFSmTmgLSsEy0gUkbk5XW/tBD59dMSf0R4ooD8iXpB
-   Q==;
-X-CSE-ConnectionGUID: BFsYJDzBRbWKg5cXrwsaCQ==
-X-CSE-MsgGUID: 4kVtMwCfToeAa4FHM5oTwQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="49042024"
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="49042024"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 01:20:23 -0700
-X-CSE-ConnectionGUID: R0BSzaZ8RlK9HFjap/JB/g==
-X-CSE-MsgGUID: RmjeCCAXQgO9d0FDRnc8FQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="169683467"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 16 May 2025 01:20:18 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uFqIh-000J8B-26;
-	Fri, 16 May 2025 08:20:15 +0000
-Date: Fri, 16 May 2025 16:19:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Usama Arif <usamaarif642@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>, david@redhat.com
-Cc: oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	hannes@cmpxchg.org, shakeel.butt@linux.dev, riel@surriel.com,
-	ziy@nvidia.com, laoar.shao@gmail.com, baolin.wang@linux.alibaba.com,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
-	npache@redhat.com, ryan.roberts@arm.com,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	kernel-team@meta.com, Usama Arif <usamaarif642@gmail.com>
-Subject: Re: [PATCH 2/6] prctl: introduce PR_THP_POLICY_DEFAULT_NOHUGE for
- the process
-Message-ID: <202505161626.4OeUVh4j-lkp@intel.com>
-References: <20250515133519.2779639-3-usamaarif642@gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MwU/y4Le"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G5ugQC016684;
+	Fri, 16 May 2025 08:20:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=FOj3ZuKq9IsMVvh7KnBX3N/X5goe
+	E4AUqmzTk5UGGOk=; b=MwU/y4LegwOn7dPzjcyB6ZL808IFDp+H2OyTstklEb6R
+	s0MuUXG7EN6ahZ70U6VCrY2C4UUHgOi/wfc/PDBGjDXeZkGp9lvRePY+gjLuwQMW
+	waTCJ1wrc1cCkhvby5aKsQypFtvAY0DbOrLPhuRa4/d6T94p3FWmTftqo7ejnGLN
+	i5DjIjoMgvIa0vZjQNHPF/KY6WZhYfF7k+7OaPu5a5dDw1Z64IePCZ3pIVCCeYh1
+	idUPsZ5UDQ7JdXG3uvtO6XjLtVQvCd3S2yxz7dHr60mgh9PPCsNCWRR6TdPwOxRn
+	vTyfF7ws5Xp1jpuixfF92oOtGIPYUaw4o92jlg35OA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46nd4gwx2g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 08:20:22 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54G8KMF6002161;
+	Fri, 16 May 2025 08:20:22 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46nd4gwx2c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 08:20:22 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54G67NZr026961;
+	Fri, 16 May 2025 08:20:21 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46mbfppkgt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 16 May 2025 08:20:20 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54G8KJUh12845374
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 16 May 2025 08:20:19 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 35C29201EC;
+	Fri, 16 May 2025 08:20:19 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 84C40201EB;
+	Fri, 16 May 2025 08:20:16 +0000 (GMT)
+Received: from ltczz402-lp1.aus.stglabs.ibm.com (unknown [9.40.194.31])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 16 May 2025 08:20:16 +0000 (GMT)
+From: Donet Tom <donettom@linux.ibm.com>
+To: David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>,
+        Zi Yan <ziy@nvidia.com>
+Cc: Ritesh Harjani <ritesh.list@gmail.com>, rafael@kernel.org,
+        Danilo Krummrich <dakr@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
+        Donet Tom <donettom@linux.ibm.com>
+Subject: [PATCH v4 1/4] driver/base: Optimize memory block registration to reduce boot time
+Date: Fri, 16 May 2025 03:19:51 -0500
+Message-ID: <f94685be9cdc931a026999d236d7e92de29725c7.1747376551.git.donettom@linux.ibm.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515133519.2779639-3-usamaarif642@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: YaEPSMFhGaqrhoP7AYdtJuhUOShA-B-k
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDA3NSBTYWx0ZWRfX4N8W5Hn80c4q +rt+XQQFB8STwM/tahFyINsYT9jyyQYm6+5ekiV0zZZrQsOnQWKVhovz5Qc0BgsRL6lDIhHoYCP QavMbl/DEoQfg7pKlEz0PVdt7gJSE3CCbVFH0/B3pFuZvyt8mKliio90mGY4XS0i0KUYyYaND0M
+ oPYLgfFSPsblwVT7j7nsiMPZOlsZhQ/fDMovDSjKA/WhbYSxGb0kN4aHMBvz5jioZhO8+7PgImO fIWBZaBv9W76uZAe+dRzFKXBcFAE1208BOqMA+vtOx/F6tdBaXIsggnxfZNXYHsneGSI1jyZf+s q5QuT7pUbsUcs8fwbIlbjGZIpjxzdpp10cn8uqLKN/7dtIiGy2XTtE6KpVuaCl0gaWNM3Ue3ii0
+ 7UfQTs5c72SsrwF54wtsJzSzQQeyerJGxqwbgdB7D21K9Dra+fJjTpryPLiQkwrduI7Hmf3q
+X-Proofpoint-ORIG-GUID: b7KtB8zcfvcAoUdxdkNwzOGEEsKnEdW9
+X-Authority-Analysis: v=2.4 cv=OsNPyz/t c=1 sm=1 tr=0 ts=6826f546 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=20KFwNOVAAAA:8 a=Ikd4Dj_1AAAA:8
+ a=jP_1eRF1Qyl1rAf-Wa8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-16_03,2025-05-15_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 malwarescore=0 spamscore=0 lowpriorityscore=0 clxscore=1015
+ impostorscore=0 mlxlogscore=999 mlxscore=0 adultscore=0 bulkscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505160075
 
-Hi Usama,
+During node device initialization, `memory blocks` are registered under
+each NUMA node. The `memory blocks` to be registered are identified using
+the node’s start and end PFNs, which are obtained from the node's pg_data
 
-kernel test robot noticed the following build errors:
+However, not all PFNs within this range necessarily belong to the same
+node—some may belong to other nodes. Additionally, due to the
+discontiguous nature of physical memory, certain sections within a
+`memory block` may be absent.
 
-[auto build test ERROR on akpm-mm/mm-everything]
-[also build test ERROR on perf-tools-next/perf-tools-next tip/perf/core perf-tools/perf-tools linus/master v6.15-rc6]
-[cannot apply to acme/perf/core next-20250515]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+As a result, `memory blocks` that fall between a node’s start and end
+PFNs may span across multiple nodes, and some sections within those blocks
+may be missing. `Memory blocks` have a fixed size, which is architecture
+dependent.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Usama-Arif/prctl-introduce-PR_THP_POLICY_DEFAULT_HUGE-for-the-process/20250515-213850
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20250515133519.2779639-3-usamaarif642%40gmail.com
-patch subject: [PATCH 2/6] prctl: introduce PR_THP_POLICY_DEFAULT_NOHUGE for the process
-config: m68k-allnoconfig (https://download.01.org/0day-ci/archive/20250516/202505161626.4OeUVh4j-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250516/202505161626.4OeUVh4j-lkp@intel.com/reproduce)
+Due to these considerations, the memory block registration is currently
+performed as follows:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505161626.4OeUVh4j-lkp@intel.com/
+for_each_online_node(nid):
+    start_pfn = pgdat->node_start_pfn;
+    end_pfn = pgdat->node_start_pfn + node_spanned_pages;
+    for_each_memory_block_between(PFN_PHYS(start_pfn), PFN_PHYS(end_pfn))
+        mem_blk = memory_block_id(pfn_to_section_nr(pfn));
+        pfn_mb_start=section_nr_to_pfn(mem_blk->start_section_nr)
+        pfn_mb_end = pfn_start + memory_block_pfns - 1
+        for (pfn = pfn_mb_start; pfn < pfn_mb_end; pfn++):
+            if (get_nid_for_pfn(pfn) != nid):
+                continue;
+            else
+                do_register_memory_block_under_node(nid, mem_blk,
+                                                        MEMINIT_EARLY);
 
-All errors (new ones prefixed by >>):
+Here, we derive the start and end PFNs from the node's pg_data, then
+determine the memory blocks that may belong to the node. For each
+`memory block` in this range, we inspect all PFNs it contains and check
+their associated NUMA node ID. If a PFN within the block matches the
+current node, the memory block is registered under that node.
 
-   kernel/sys.c: In function '__do_sys_prctl':
-   kernel/sys.c:2678:25: error: implicit declaration of function 'process_vmas_thp_default_huge' [-Wimplicit-function-declaration]
-    2678 |                         process_vmas_thp_default_huge(me->mm);
-         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> kernel/sys.c:2683:25: error: implicit declaration of function 'process_vmas_thp_default_nohuge' [-Wimplicit-function-declaration]
-    2683 |                         process_vmas_thp_default_nohuge(me->mm);
-         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+If CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, get_nid_for_pfn() performs
+a binary search in the `memblock regions` to determine the NUMA node ID
+for a given PFN. If it is not enabled, the node ID is retrieved directly
+from the struct page.
 
+On large systems, this process can become time-consuming, especially since
+we iterate over each `memory block` and all PFNs within it until a match is
+found. When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, the additional
+overhead of the binary search increases the execution time significantly,
+potentially leading to soft lockups during boot.
 
-vim +/process_vmas_thp_default_nohuge +2683 kernel/sys.c
+In this patch, we iterate over `memblock region` to identify the
+`memory blocks` that belong to the current NUMA node. `memblock regions`
+are contiguous memory ranges, each associated with a single NUMA node, and
+they do not span across multiple nodes.
 
-  2472	
-  2473	SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
-  2474			unsigned long, arg4, unsigned long, arg5)
-  2475	{
-  2476		struct task_struct *me = current;
-  2477		unsigned char comm[sizeof(me->comm)];
-  2478		long error;
-  2479	
-  2480		error = security_task_prctl(option, arg2, arg3, arg4, arg5);
-  2481		if (error != -ENOSYS)
-  2482			return error;
-  2483	
-  2484		error = 0;
-  2485		switch (option) {
-  2486		case PR_SET_PDEATHSIG:
-  2487			if (!valid_signal(arg2)) {
-  2488				error = -EINVAL;
-  2489				break;
-  2490			}
-  2491			me->pdeath_signal = arg2;
-  2492			break;
-  2493		case PR_GET_PDEATHSIG:
-  2494			error = put_user(me->pdeath_signal, (int __user *)arg2);
-  2495			break;
-  2496		case PR_GET_DUMPABLE:
-  2497			error = get_dumpable(me->mm);
-  2498			break;
-  2499		case PR_SET_DUMPABLE:
-  2500			if (arg2 != SUID_DUMP_DISABLE && arg2 != SUID_DUMP_USER) {
-  2501				error = -EINVAL;
-  2502				break;
-  2503			}
-  2504			set_dumpable(me->mm, arg2);
-  2505			break;
-  2506	
-  2507		case PR_SET_UNALIGN:
-  2508			error = SET_UNALIGN_CTL(me, arg2);
-  2509			break;
-  2510		case PR_GET_UNALIGN:
-  2511			error = GET_UNALIGN_CTL(me, arg2);
-  2512			break;
-  2513		case PR_SET_FPEMU:
-  2514			error = SET_FPEMU_CTL(me, arg2);
-  2515			break;
-  2516		case PR_GET_FPEMU:
-  2517			error = GET_FPEMU_CTL(me, arg2);
-  2518			break;
-  2519		case PR_SET_FPEXC:
-  2520			error = SET_FPEXC_CTL(me, arg2);
-  2521			break;
-  2522		case PR_GET_FPEXC:
-  2523			error = GET_FPEXC_CTL(me, arg2);
-  2524			break;
-  2525		case PR_GET_TIMING:
-  2526			error = PR_TIMING_STATISTICAL;
-  2527			break;
-  2528		case PR_SET_TIMING:
-  2529			if (arg2 != PR_TIMING_STATISTICAL)
-  2530				error = -EINVAL;
-  2531			break;
-  2532		case PR_SET_NAME:
-  2533			comm[sizeof(me->comm) - 1] = 0;
-  2534			if (strncpy_from_user(comm, (char __user *)arg2,
-  2535					      sizeof(me->comm) - 1) < 0)
-  2536				return -EFAULT;
-  2537			set_task_comm(me, comm);
-  2538			proc_comm_connector(me);
-  2539			break;
-  2540		case PR_GET_NAME:
-  2541			get_task_comm(comm, me);
-  2542			if (copy_to_user((char __user *)arg2, comm, sizeof(comm)))
-  2543				return -EFAULT;
-  2544			break;
-  2545		case PR_GET_ENDIAN:
-  2546			error = GET_ENDIAN(me, arg2);
-  2547			break;
-  2548		case PR_SET_ENDIAN:
-  2549			error = SET_ENDIAN(me, arg2);
-  2550			break;
-  2551		case PR_GET_SECCOMP:
-  2552			error = prctl_get_seccomp();
-  2553			break;
-  2554		case PR_SET_SECCOMP:
-  2555			error = prctl_set_seccomp(arg2, (char __user *)arg3);
-  2556			break;
-  2557		case PR_GET_TSC:
-  2558			error = GET_TSC_CTL(arg2);
-  2559			break;
-  2560		case PR_SET_TSC:
-  2561			error = SET_TSC_CTL(arg2);
-  2562			break;
-  2563		case PR_TASK_PERF_EVENTS_DISABLE:
-  2564			error = perf_event_task_disable();
-  2565			break;
-  2566		case PR_TASK_PERF_EVENTS_ENABLE:
-  2567			error = perf_event_task_enable();
-  2568			break;
-  2569		case PR_GET_TIMERSLACK:
-  2570			if (current->timer_slack_ns > ULONG_MAX)
-  2571				error = ULONG_MAX;
-  2572			else
-  2573				error = current->timer_slack_ns;
-  2574			break;
-  2575		case PR_SET_TIMERSLACK:
-  2576			if (rt_or_dl_task_policy(current))
-  2577				break;
-  2578			if (arg2 <= 0)
-  2579				current->timer_slack_ns =
-  2580						current->default_timer_slack_ns;
-  2581			else
-  2582				current->timer_slack_ns = arg2;
-  2583			break;
-  2584		case PR_MCE_KILL:
-  2585			if (arg4 | arg5)
-  2586				return -EINVAL;
-  2587			switch (arg2) {
-  2588			case PR_MCE_KILL_CLEAR:
-  2589				if (arg3 != 0)
-  2590					return -EINVAL;
-  2591				current->flags &= ~PF_MCE_PROCESS;
-  2592				break;
-  2593			case PR_MCE_KILL_SET:
-  2594				current->flags |= PF_MCE_PROCESS;
-  2595				if (arg3 == PR_MCE_KILL_EARLY)
-  2596					current->flags |= PF_MCE_EARLY;
-  2597				else if (arg3 == PR_MCE_KILL_LATE)
-  2598					current->flags &= ~PF_MCE_EARLY;
-  2599				else if (arg3 == PR_MCE_KILL_DEFAULT)
-  2600					current->flags &=
-  2601							~(PF_MCE_EARLY|PF_MCE_PROCESS);
-  2602				else
-  2603					return -EINVAL;
-  2604				break;
-  2605			default:
-  2606				return -EINVAL;
-  2607			}
-  2608			break;
-  2609		case PR_MCE_KILL_GET:
-  2610			if (arg2 | arg3 | arg4 | arg5)
-  2611				return -EINVAL;
-  2612			if (current->flags & PF_MCE_PROCESS)
-  2613				error = (current->flags & PF_MCE_EARLY) ?
-  2614					PR_MCE_KILL_EARLY : PR_MCE_KILL_LATE;
-  2615			else
-  2616				error = PR_MCE_KILL_DEFAULT;
-  2617			break;
-  2618		case PR_SET_MM:
-  2619			error = prctl_set_mm(arg2, arg3, arg4, arg5);
-  2620			break;
-  2621		case PR_GET_TID_ADDRESS:
-  2622			error = prctl_get_tid_address(me, (int __user * __user *)arg2);
-  2623			break;
-  2624		case PR_SET_CHILD_SUBREAPER:
-  2625			me->signal->is_child_subreaper = !!arg2;
-  2626			if (!arg2)
-  2627				break;
-  2628	
-  2629			walk_process_tree(me, propagate_has_child_subreaper, NULL);
-  2630			break;
-  2631		case PR_GET_CHILD_SUBREAPER:
-  2632			error = put_user(me->signal->is_child_subreaper,
-  2633					 (int __user *)arg2);
-  2634			break;
-  2635		case PR_SET_NO_NEW_PRIVS:
-  2636			if (arg2 != 1 || arg3 || arg4 || arg5)
-  2637				return -EINVAL;
-  2638	
-  2639			task_set_no_new_privs(current);
-  2640			break;
-  2641		case PR_GET_NO_NEW_PRIVS:
-  2642			if (arg2 || arg3 || arg4 || arg5)
-  2643				return -EINVAL;
-  2644			return task_no_new_privs(current) ? 1 : 0;
-  2645		case PR_GET_THP_DISABLE:
-  2646			if (arg2 || arg3 || arg4 || arg5)
-  2647				return -EINVAL;
-  2648			error = !!test_bit(MMF_DISABLE_THP, &me->mm->flags);
-  2649			break;
-  2650		case PR_SET_THP_DISABLE:
-  2651			if (arg3 || arg4 || arg5)
-  2652				return -EINVAL;
-  2653			if (mmap_write_lock_killable(me->mm))
-  2654				return -EINTR;
-  2655			if (arg2)
-  2656				set_bit(MMF_DISABLE_THP, &me->mm->flags);
-  2657			else
-  2658				clear_bit(MMF_DISABLE_THP, &me->mm->flags);
-  2659			mmap_write_unlock(me->mm);
-  2660			break;
-  2661		case PR_GET_THP_POLICY:
-  2662			if (arg2 || arg3 || arg4 || arg5)
-  2663				return -EINVAL;
-  2664			if (!!test_bit(MMF2_THP_VMA_DEFAULT_HUGE, &me->mm->flags2))
-  2665				error = PR_THP_POLICY_DEFAULT_HUGE;
-  2666			else if (!!test_bit(MMF2_THP_VMA_DEFAULT_NOHUGE, &me->mm->flags2))
-  2667				error = PR_THP_POLICY_DEFAULT_NOHUGE;
-  2668			break;
-  2669		case PR_SET_THP_POLICY:
-  2670			if (arg3 || arg4 || arg5)
-  2671				return -EINVAL;
-  2672			if (mmap_write_lock_killable(me->mm))
-  2673				return -EINTR;
-  2674			switch (arg2) {
-  2675			case PR_THP_POLICY_DEFAULT_HUGE:
-  2676				set_bit(MMF2_THP_VMA_DEFAULT_HUGE, &me->mm->flags2);
-  2677				clear_bit(MMF2_THP_VMA_DEFAULT_NOHUGE, &me->mm->flags2);
-  2678				process_vmas_thp_default_huge(me->mm);
-  2679				break;
-  2680			case PR_THP_POLICY_DEFAULT_NOHUGE:
-  2681				clear_bit(MMF2_THP_VMA_DEFAULT_HUGE, &me->mm->flags2);
-  2682				set_bit(MMF2_THP_VMA_DEFAULT_NOHUGE, &me->mm->flags2);
-> 2683				process_vmas_thp_default_nohuge(me->mm);
-  2684				break;
-  2685			default:
-  2686				return -EINVAL;
-  2687			}
-  2688			mmap_write_unlock(me->mm);
-  2689			break;
-  2690		case PR_MPX_ENABLE_MANAGEMENT:
-  2691		case PR_MPX_DISABLE_MANAGEMENT:
-  2692			/* No longer implemented: */
-  2693			return -EINVAL;
-  2694		case PR_SET_FP_MODE:
-  2695			error = SET_FP_MODE(me, arg2);
-  2696			break;
-  2697		case PR_GET_FP_MODE:
-  2698			error = GET_FP_MODE(me);
-  2699			break;
-  2700		case PR_SVE_SET_VL:
-  2701			error = SVE_SET_VL(arg2);
-  2702			break;
-  2703		case PR_SVE_GET_VL:
-  2704			error = SVE_GET_VL();
-  2705			break;
-  2706		case PR_SME_SET_VL:
-  2707			error = SME_SET_VL(arg2);
-  2708			break;
-  2709		case PR_SME_GET_VL:
-  2710			error = SME_GET_VL();
-  2711			break;
-  2712		case PR_GET_SPECULATION_CTRL:
-  2713			if (arg3 || arg4 || arg5)
-  2714				return -EINVAL;
-  2715			error = arch_prctl_spec_ctrl_get(me, arg2);
-  2716			break;
-  2717		case PR_SET_SPECULATION_CTRL:
-  2718			if (arg4 || arg5)
-  2719				return -EINVAL;
-  2720			error = arch_prctl_spec_ctrl_set(me, arg2, arg3);
-  2721			break;
-  2722		case PR_PAC_RESET_KEYS:
-  2723			if (arg3 || arg4 || arg5)
-  2724				return -EINVAL;
-  2725			error = PAC_RESET_KEYS(me, arg2);
-  2726			break;
-  2727		case PR_PAC_SET_ENABLED_KEYS:
-  2728			if (arg4 || arg5)
-  2729				return -EINVAL;
-  2730			error = PAC_SET_ENABLED_KEYS(me, arg2, arg3);
-  2731			break;
-  2732		case PR_PAC_GET_ENABLED_KEYS:
-  2733			if (arg2 || arg3 || arg4 || arg5)
-  2734				return -EINVAL;
-  2735			error = PAC_GET_ENABLED_KEYS(me);
-  2736			break;
-  2737		case PR_SET_TAGGED_ADDR_CTRL:
-  2738			if (arg3 || arg4 || arg5)
-  2739				return -EINVAL;
-  2740			error = SET_TAGGED_ADDR_CTRL(arg2);
-  2741			break;
-  2742		case PR_GET_TAGGED_ADDR_CTRL:
-  2743			if (arg2 || arg3 || arg4 || arg5)
-  2744				return -EINVAL;
-  2745			error = GET_TAGGED_ADDR_CTRL();
-  2746			break;
-  2747		case PR_SET_IO_FLUSHER:
-  2748			if (!capable(CAP_SYS_RESOURCE))
-  2749				return -EPERM;
-  2750	
-  2751			if (arg3 || arg4 || arg5)
-  2752				return -EINVAL;
-  2753	
-  2754			if (arg2 == 1)
-  2755				current->flags |= PR_IO_FLUSHER;
-  2756			else if (!arg2)
-  2757				current->flags &= ~PR_IO_FLUSHER;
-  2758			else
-  2759				return -EINVAL;
-  2760			break;
-  2761		case PR_GET_IO_FLUSHER:
-  2762			if (!capable(CAP_SYS_RESOURCE))
-  2763				return -EPERM;
-  2764	
-  2765			if (arg2 || arg3 || arg4 || arg5)
-  2766				return -EINVAL;
-  2767	
-  2768			error = (current->flags & PR_IO_FLUSHER) == PR_IO_FLUSHER;
-  2769			break;
-  2770		case PR_SET_SYSCALL_USER_DISPATCH:
-  2771			error = set_syscall_user_dispatch(arg2, arg3, arg4,
-  2772							  (char __user *) arg5);
-  2773			break;
-  2774	#ifdef CONFIG_SCHED_CORE
-  2775		case PR_SCHED_CORE:
-  2776			error = sched_core_share_pid(arg2, arg3, arg4, arg5);
-  2777			break;
-  2778	#endif
-  2779		case PR_SET_MDWE:
-  2780			error = prctl_set_mdwe(arg2, arg3, arg4, arg5);
-  2781			break;
-  2782		case PR_GET_MDWE:
-  2783			error = prctl_get_mdwe(arg2, arg3, arg4, arg5);
-  2784			break;
-  2785		case PR_PPC_GET_DEXCR:
-  2786			if (arg3 || arg4 || arg5)
-  2787				return -EINVAL;
-  2788			error = PPC_GET_DEXCR_ASPECT(me, arg2);
-  2789			break;
-  2790		case PR_PPC_SET_DEXCR:
-  2791			if (arg4 || arg5)
-  2792				return -EINVAL;
-  2793			error = PPC_SET_DEXCR_ASPECT(me, arg2, arg3);
-  2794			break;
-  2795		case PR_SET_VMA:
-  2796			error = prctl_set_vma(arg2, arg3, arg4, arg5);
-  2797			break;
-  2798		case PR_GET_AUXV:
-  2799			if (arg4 || arg5)
-  2800				return -EINVAL;
-  2801			error = prctl_get_auxv((void __user *)arg2, arg3);
-  2802			break;
-  2803	#ifdef CONFIG_KSM
-  2804		case PR_SET_MEMORY_MERGE:
-  2805			if (arg3 || arg4 || arg5)
-  2806				return -EINVAL;
-  2807			if (mmap_write_lock_killable(me->mm))
-  2808				return -EINTR;
-  2809	
-  2810			if (arg2)
-  2811				error = ksm_enable_merge_any(me->mm);
-  2812			else
-  2813				error = ksm_disable_merge_any(me->mm);
-  2814			mmap_write_unlock(me->mm);
-  2815			break;
-  2816		case PR_GET_MEMORY_MERGE:
-  2817			if (arg2 || arg3 || arg4 || arg5)
-  2818				return -EINVAL;
-  2819	
-  2820			error = !!test_bit(MMF_VM_MERGE_ANY, &me->mm->flags);
-  2821			break;
-  2822	#endif
-  2823		case PR_RISCV_V_SET_CONTROL:
-  2824			error = RISCV_V_SET_CONTROL(arg2);
-  2825			break;
-  2826		case PR_RISCV_V_GET_CONTROL:
-  2827			error = RISCV_V_GET_CONTROL();
-  2828			break;
-  2829		case PR_RISCV_SET_ICACHE_FLUSH_CTX:
-  2830			error = RISCV_SET_ICACHE_FLUSH_CTX(arg2, arg3);
-  2831			break;
-  2832		case PR_GET_SHADOW_STACK_STATUS:
-  2833			if (arg3 || arg4 || arg5)
-  2834				return -EINVAL;
-  2835			error = arch_get_shadow_stack_status(me, (unsigned long __user *) arg2);
-  2836			break;
-  2837		case PR_SET_SHADOW_STACK_STATUS:
-  2838			if (arg3 || arg4 || arg5)
-  2839				return -EINVAL;
-  2840			error = arch_set_shadow_stack_status(me, arg2);
-  2841			break;
-  2842		case PR_LOCK_SHADOW_STACK_STATUS:
-  2843			if (arg3 || arg4 || arg5)
-  2844				return -EINVAL;
-  2845			error = arch_lock_shadow_stack_status(me, arg2);
-  2846			break;
-  2847		case PR_TIMER_CREATE_RESTORE_IDS:
-  2848			if (arg3 || arg4 || arg5)
-  2849				return -EINVAL;
-  2850			error = posixtimer_create_prctl(arg2);
-  2851			break;
-  2852		default:
-  2853			trace_task_prctl_unknown(option, arg2, arg3, arg4, arg5);
-  2854			error = -EINVAL;
-  2855			break;
-  2856		}
-  2857		return error;
-  2858	}
-  2859	
+for_each_online_node(nid):
+  for_each_memory_region(r): // r => region
+    if (r->nid != nid):
+      continue;
+    else
+      for_each_memory_block_between(r->base, r->base + r->size - 1):
+        do_register_memory_block_under_node(nid, mem_blk, MEMINIT_EARLY);
 
+We iterate over all `memblock regions` and identify those that belong to
+the current NUMA node. For each `memblock region` associated with the
+current node, we calculate the start and end `memory blocks` based on the
+region's start and end PFNs. We then register all `memory blocks` within
+that range under the current node.
+
+Test Results on My system with 32TB RAM
+=======================================
+1. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT enabled.
+
+Without this patch
+------------------
+Startup finished in 1min 16.528s (kernel)
+
+With this patch
+---------------
+Startup finished in 17.236s (kernel) - 78% Improvement
+
+2. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT disabled.
+
+Without this patch
+------------------
+Startup finished in 28.320s (kernel)
+
+With this patch
+---------------
+Startup finished in 15.621s (kernel) - 46% Improvement
+
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: Zi Yan <ziy@nvidia.com>
+Signed-off-by: Donet Tom <donettom@linux.ibm.com>
+
+---
+v3 -> v4
+
+Addressed Mike's comment by making node_dev_init() call __register_one_node().
+
+V3 - https://lore.kernel.org/all/b49ed289096643ff5b5fbedcf1d1c1be42845a74.1746250339.git.donettom@linux.ibm.com/
+v2 - https://lore.kernel.org/all/fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.1745852397.git.donettom@linux.ibm.com/
+v1 - https://lore.kernel.org/all/50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com/
+---
+ drivers/base/memory.c  |  4 ++--
+ drivers/base/node.c    | 41 ++++++++++++++++++++++++++++++++++++++++-
+ include/linux/memory.h |  2 ++
+ include/linux/node.h   |  3 +++
+ 4 files changed, 47 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 19469e7f88c2..7f1d266ae593 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -60,7 +60,7 @@ static inline unsigned long pfn_to_block_id(unsigned long pfn)
+ 	return memory_block_id(pfn_to_section_nr(pfn));
+ }
+ 
+-static inline unsigned long phys_to_block_id(unsigned long phys)
++unsigned long phys_to_block_id(unsigned long phys)
+ {
+ 	return pfn_to_block_id(PFN_DOWN(phys));
+ }
+@@ -632,7 +632,7 @@ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
+  *
+  * Called under device_hotplug_lock.
+  */
+-static struct memory_block *find_memory_block_by_id(unsigned long block_id)
++struct memory_block *find_memory_block_by_id(unsigned long block_id)
+ {
+ 	struct memory_block *mem;
+ 
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index cd13ef287011..f8cafd8c8fb1 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -20,6 +20,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/swap.h>
+ #include <linux/slab.h>
++#include <linux/memblock.h>
+ 
+ static const struct bus_type node_subsys = {
+ 	.name = "node",
+@@ -850,6 +851,43 @@ void unregister_memory_block_under_nodes(struct memory_block *mem_blk)
+ 			  kobject_name(&node_devices[mem_blk->nid]->dev.kobj));
+ }
+ 
++/*
++ * register_memory_blocks_under_node_early : Register the memory
++ *		  blocks under the current node.
++ * @nid : Current node under registration
++ *
++ * This function iterates over all memblock regions and identifies the regions
++ * that belong to the current node. For each region which belongs to current
++ * node, it calculates the start and end memory blocks based on the region's
++ * start and end PFNs. It then registers all memory blocks within that range
++ * under the current node.
++ */
++static void register_memory_blocks_under_node_early(int nid)
++{
++	struct memblock_region *r;
++
++	for_each_mem_region(r) {
++		if (r->nid != nid)
++			continue;
++
++		const unsigned long start_block_id = phys_to_block_id(r->base);
++		const unsigned long end_block_id = phys_to_block_id(r->base + r->size - 1);
++		unsigned long block_id;
++
++		for (block_id = start_block_id; block_id <= end_block_id; block_id++) {
++			struct memory_block *mem;
++
++			mem = find_memory_block_by_id(block_id);
++			if (!mem)
++				continue;
++
++			do_register_memory_block_under_node(nid, mem, MEMINIT_EARLY);
++			put_device(&mem->dev);
++		}
++
++	}
++}
++
+ void register_memory_blocks_under_node(int nid, unsigned long start_pfn,
+ 				       unsigned long end_pfn,
+ 				       enum meminit_context context)
+@@ -974,8 +1012,9 @@ void __init node_dev_init(void)
+ 	 * to applicable memory block devices and already created cpu devices.
+ 	 */
+ 	for_each_online_node(i) {
+-		ret = register_one_node(i);
++		ret =  __register_one_node(i);
+ 		if (ret)
+ 			panic("%s() failed to add node: %d\n", __func__, ret);
++		register_memory_blocks_under_node_early(i);
+ 	}
+ }
+diff --git a/include/linux/memory.h b/include/linux/memory.h
+index 12daa6ec7d09..cb8579226536 100644
+--- a/include/linux/memory.h
++++ b/include/linux/memory.h
+@@ -171,6 +171,8 @@ struct memory_group *memory_group_find_by_id(int mgid);
+ typedef int (*walk_memory_groups_func_t)(struct memory_group *, void *);
+ int walk_dynamic_memory_groups(int nid, walk_memory_groups_func_t func,
+ 			       struct memory_group *excluded, void *arg);
++unsigned long phys_to_block_id(unsigned long phys);
++struct memory_block *find_memory_block_by_id(unsigned long block_id);
+ #define hotplug_memory_notifier(fn, pri) ({		\
+ 	static __meminitdata struct notifier_block fn##_mem_nb =\
+ 		{ .notifier_call = fn, .priority = pri };\
+diff --git a/include/linux/node.h b/include/linux/node.h
+index 2b7517892230..806e62638cbe 100644
+--- a/include/linux/node.h
++++ b/include/linux/node.h
+@@ -120,6 +120,9 @@ static inline void register_memory_blocks_under_node(int nid, unsigned long star
+ 						     enum meminit_context context)
+ {
+ }
++static inline void register_memory_blocks_under_node_early(int nid)
++{
++}
+ #endif
+ 
+ extern void unregister_node(struct node *node);
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.5
+
