@@ -1,126 +1,76 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46D31635
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 04:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9E0635;
+	Fri, 16 May 2025 04:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747369969; cv=none; b=s5U+5lhThscYzN8A+bVgdGc3Q6VcCR8/KD/J7qPNemCIhlDx9QhAzq24h4pDLKZYEFwiHSVq3scRnxixmo9OY1gd8nNDnoJYuW13AbAhIntJ0vguUgEDdH3Qe/qkFhaNQVcJnVuXBZCJT16tz6peEhKjO+eU1nUe1aOBkgmdBJM=
+	t=1747370134; cv=none; b=cIfc2one1s+wdS3DQ7ncFR98nrzzhJSnzOZEaqIPqGAFPXBThBGznaPgosqM7wOJpjDkC+UH7x+U2Co6Lih+1DcbChPXthKC79PtBWhLsK/Sk7DgQCI4aentSRNvpwfEgy7noZ3kC/48/Sz+2I4Jh+oZI+98LZBB5JZBxEZrQj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747369969; c=relaxed/simple;
-	bh=11Ajc14WG+PRd3VSIyjchaaFNjwic5pzElA8xYz+TCo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ofbl+eSxtM4EqfRrZ3i94tC841im0HBQ04F95SjYuFfx9kvKiXS0W4YCyEMkkX/kV7zAcuyicuKXQlABGzGN7Ec5jwRpLUjJGKwQwKxAIIzrwWLIymk1ZEXans7zIw0LskXN8g8cClBcQKaawDMNcMKlmbbhigYKc5sPU6L3GJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-b9-6826bfe2e9f5
-Date: Fri, 16 May 2025 13:32:29 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Gregory Price <gourry@gourry.net>, kernel_team@skhynix.com
-Subject: Re: [PATCH] MAINTAINERS: add mm memory policy section
-Message-ID: <20250516043229.GA49002@system.software.com>
-References: <20250515191358.205684-1-lorenzo.stoakes@oracle.com>
+	s=arc-20240116; t=1747370134; c=relaxed/simple;
+	bh=4Qu0SXJnde/mV0+isooheXebpYpL/wmYnnV87EyzTHw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=NcLYUo1yOqsQ48wGWu2hwKmzMPNxrAd2wc4YWwlYwgdIn6k8UIeiyjhI6h3JnxblhrqeeD3XQVxkesAQNRyicP8CYJ+TwebFp+1EHDvPLgHs2lWktwxoIEAK1wljTbLoy1ssE2YAITh0hve7oxHDu+FJVoLZhqWUgYQmQUuX7Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=A4xNxreE; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="A4xNxreE"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 54G4Z2sQ3939295
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 15 May 2025 21:35:03 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 54G4Z2sQ3939295
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1747370103;
+	bh=4Qu0SXJnde/mV0+isooheXebpYpL/wmYnnV87EyzTHw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=A4xNxreEeTm3o3i76GLEfq9j/jdCBJkMUxhz4WoOJVjte21rsD9+AtsdukrhXCs8W
+	 gPrYnAoDKiDHTH/uWOUhFnX1FMlFERTNRfNxPDyiMzTLdRSPIjNbTZrrI44X4VhP7T
+	 Y410R41M1ofjA1djek/yLke9jA4droUuxbJ1ybBfx9zp6urgM4NB34ZI3UkRVFEIAC
+	 YMWHvPWKwz2G55qoI0KQX/VkmJMbbNaQceNFZyKNrC3nhQoIiLk7M1tpqlRctTCkzX
+	 fQJ7nKl64Fhqs3x5hcgIcBhxGV5dueKcgqnJsnWUCFKk+Pi8j1FJ7QPhhlnIyUaMj8
+	 TQxnpJ0zKp73A==
+Date: Thu, 15 May 2025 21:35:01 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Willy Tarreau <w@1wt.eu>
+CC: enh <enh@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        libc-alpha@sourceware.org, linux-arch@vger.kernel.org
+Subject: Re: Metalanguage for the Linux UAPI
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250516042246.GA12824@1wt.eu>
+References: <feb98a0f-8d17-495c-b556-b4fe19446d5d@zytor.com> <CAJgzZoqUV6gSfgCWbfe6oSH5k9qt30gpJ0epa+w78WQUgTCqNQ@mail.gmail.com> <e4d114e3-984a-482d-a162-03f896cd2053@zytor.com> <20250516034232.GA12472@1wt.eu> <A89533DF-E2F9-4536-A00D-4E3685565E67@zytor.com> <20250516042246.GA12824@1wt.eu>
+Message-ID: <3913922D-765A-4E54-97E0-37B34F3BE86C@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515191358.205684-1-lorenzo.stoakes@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrGLMWRmVeSWpSXmKPExsXC9ZZnke6j/WoZBh8W6VrMWb+GzWLXjRCL
-	r+t/MVv8vHuc3eL41nnsFpd3zWGzuLfmP6vFyVkrWSy+9UlbzD56j92By2PnrLvsHt1tl9k9
-	Fu95yeSx6dMkdo8TM36zePQ2v2Pz+Pj0FovH+31X2Tw+b5IL4IzisklJzcksSy3St0vgypj5
-	sZOt4IRgxc9pT5gaGK/ydTFyckgImEg82XqZCc7u3sAIYrMIqErcm/QfzGYTUJe4ceMncxcj
-	B4eIgIHE1XMRXYxcHMwCv5gk3p9/ywxSIyxgJ7GyYS+YzStgIXHhznGwXiEBB4lnP64zQsQF
-	JU7OfMICYjMLaEnc+PeSCWQms4C0xPJ/HCBhTgFHicW/HrKC2KICyhIHth2HOu09m8TUb8YQ
-	tqTEwRU3WCYwCsxCMnUWkqmzEKYuYGRexSiUmVeWm5iZY6KXUZmXWaGXnJ+7iREYG8tq/0Tv
-	YPx0IfgQowAHoxIPr8N11Qwh1sSy4srcQ4wSHMxKIrzXs5QzhHhTEiurUovy44tKc1KLDzFK
-	c7AoifMafStPERJITyxJzU5NLUgtgskycXBKNTDO3u6zdc+ZTWn/LkhYTt4Wtk5esGmxs4Ny
-	wYm2lkyl7/8/LZketUvN1VHt8stHDy2u/GhZFRiUf8WTb2mn1P8zE4K2lckk+Tu8v7TZosHl
-	5cWve/gWGi14qKwYPts49p7QRcn7KXZFy0UKTgjEPGKYqVa2bpOphN70IB5DjtMiv9bK2RtP
-	V3ihxFKckWioxVxUnAgAxHnjLYkCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOLMWRmVeSWpSXmKPExsXC5WfdrPtov1qGweYFChZz1q9hs9h1I8Ti
-	6/pfzBY/7x5ntzi+dR67xeG5J1ktLu+aw2Zxb81/VouTs1ayWHzrk7Y4dO05q8Xso/fYHXg8
-	ds66y+7R3XaZ3WPxnpdMHps+TWL3ODHjN4tHb/M7No+PT2+xeLzfd5XN49ttD4/FLz4weXze
-	JBfAHcVlk5Kak1mWWqRvl8CVMfNjJ1vBCcGKn9OeMDUwXuXrYuTkkBAwkXjSvYERxGYRUJW4
-	N+k/mM0moC5x48ZP5i5GDg4RAQOJq+ciuhi5OJgFfjFJvD//lhmkRljATmJlw14wm1fAQuLC
-	neNgvUICDhLPflxnhIgLSpyc+YQFxGYW0JK48e8lE8hMZgFpieX/OEDCnAKOEot/PWQFsUUF
-	lCUObDvONIGRdxaS7llIumchdC9gZF7FKJKZV5abmJljqlecnVGZl1mhl5yfu4kRGPzLav9M
-	3MH45bL7IUYBDkYlHl6H66oZQqyJZcWVuYcYJTiYlUR4r2cpZwjxpiRWVqUW5ccXleakFh9i
-	lOZgURLn9QpPTRASSE8sSc1OTS1ILYLJMnFwSjUw2jxbGf5prm37kmjuz/UTPtw6M/VFwe91
-	BSE1bauvFAfuZJ4019+BqfTfu9QlWtx9vLfK1Qvl25rk5A/d2HDWg0mO8fGymOC0k0whWzSe
-	fXh0hXXTmf7yAytUm7hE36z7eHWz7NaGRZr9LA98pmsyrQkQYZnXXTNNSuToVwsGhxkPL3w9
-	y3PmhRJLcUaioRZzUXEiAMbwg4R6AgAA
-X-CFilter-Loop: Reflected
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2025 at 08:13:58PM +0100, Lorenzo Stoakes wrote:
-> As part of the ongoing efforts to sub-divide memory management
-> maintainership and reviewership, establish a section for memory policy and
-> migration and add appropriate maintainers and reviewers.
-> 
-> Reviewed-by: Rakie Kim <rakie.kim@sk.com>
-> Acked-by: Matthew Brost <matthew.brost@intel.com>
-> Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Acked-by: Zi Yan <ziy@nvidia.com>
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> ---
-> v1:
-> * un-RFC'd as there seems to be consensus.
-> * Added Gregory and Byungchui who kindly offered to be reviewers also!
-> * Removed Alistair as he hasn't been active on-list lately. Alistair - hope
->   you don't mind, We can very easily add you later, just don't want put you
->   here without your positive consent :)
-> 
-> RFC:
-> https://lore.kernel.org/all/20250513160007.132378-1-lorenzo.stoakes@oracle.com/
-> 
->  MAINTAINERS | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 314007e2befd..17403329d76f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15577,6 +15577,25 @@ W:	http://www.linux-mm.org
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
->  F:	mm/gup.c
-> 
-> +MEMORY MANAGEMENT - MEMORY POLICY AND MIGRATION
-> +M:	Andrew Morton <akpm@linux-foundation.org>
-> +M:	David Hildenbrand <david@redhat.com>
-> +R:	Zi Yan <ziy@nvidia.com>
-> +R:	Matthew Brost <matthew.brost@intel.com>
-> +R:	Joshua Hahn <joshua.hahnjy@gmail.com>
-> +R:	Rakie Kim <rakie.kim@sk.com>
-> +R:	Byungchul Park <byungchul@sk.com>
+On May 15, 2025 9:22:46 PM PDT, Willy Tarreau <w@1wt=2Eeu> wrote:
+>On Thu, May 15, 2025 at 09:17:14PM -0700, H=2E Peter Anvin wrote:
+>> Ah yes, nolibc; basically klibc reinvented=2E=2E=2E
+>> <ducks and runs>
+>
+>:-)
+>
+>That was not the initial intent though as it started separately and outsi=
+de
+>the kernel=2E Also the main difference is that klibc is compiled=2E Here =
+we
+>only provide includes so that there's nothing to compile before using it=
+=2E
+>We'll see when this becomes an issue, but for now it stands fine=2E
+>
+>But I agree that both pursue very similar goals=2E
+>
+>Willy
 
-Acked-by: Byungchul Park <byungchul@sk.com>
-
-	Byungchul
-
-> +R:	Gregory Price <gourry@gourry.net>
-> +L:	linux-mm@kvack.org
-> +S:	Maintained
-> +W:	http://www.linux-mm.org
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
-> +F:	include/linux/mempolicy.h
-> +F:	include/linux/migrate.h
-> +F:	mm/mempolicy.c
-> +F:	mm/migrate.c
-> +F:	mm/migrate_device.c
-> +
->  MEMORY MANAGEMENT - NUMA MEMBLOCKS AND NUMA EMULATION
->  M:	Andrew Morton <akpm@linux-foundation.org>
->  M:	Mike Rapoport <rppt@kernel.org>
-> --
-> 2.49.0
+Certainly=2E I'm being snarky, but I'm not upset :)
