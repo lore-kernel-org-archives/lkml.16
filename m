@@ -1,57 +1,57 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B338280A4F
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 21:54:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6529E280306
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 21:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747432473; cv=none; b=qIm0nmEAr3ESzTQweKk9SA7zp331Bc9xS7UCyQ261SPst5mGVeF6WBARjATm5JIf791UiKeEPUOXzqiOwalCBbG3kQYzSscofY5aGNLyY7IpK8KI9NIE+mqdzDgmnfdKJ4AUOF1TDZEKGueyIO76fPF39E4CcjbnYdNo6m8oqT8=
+	t=1747432481; cv=none; b=fhGHls0Ybxol6IW9aj3Jksj3XgGQUt3vY4KmaPg9TZi4Py/mkMgUEQJL5qaduP//ubgR/1Inrtk+HgUkYaQLO/ZccHtQ+x/XuhelUul0QJSWBUl4oyBcM+HzbhQNTW/tQxlsQubknw8SSLD7FjkgRbX6R1SCuXCdYJY6UT0DzTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747432473; c=relaxed/simple;
-	bh=b8X+SZETCA+/r2QlXODqiqz30AodXiz4FkatNip2IL4=;
+	s=arc-20240116; t=1747432481; c=relaxed/simple;
+	bh=nRPieSPOQF3VWwkmferQ1dgFBNyvX49xzQ3/NHlAE9Q=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MqhQV/k5pNXKqr/VsL6DpSkjHZKx55BrzzsYqqJaQkHy1IuluDxgo2DdrlSlziFbCJmTsXVUj6kNDZD1T/RNcuyoCEWDgiXh4ndB+6Nj+1A/z311yj6428YWqqQMcibwhhx558y2rvVNnDiPNZOnehbsVOKLTxg05EftCLVHOaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HDCY8peW; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=hshP2GqIRX5NaKa6OsJVGzpW9XsAY8wY3ZSUtl+XZMXX6yTDhTXnEhdgwuxvkuBDYdw6UhtobesATFJQGNHUua9dlIDNrHzV/heAuEYsExp2GoTCZo+gzbVJS5+fwvel3rVVphWq9W08tz90wswyc2aXDciodl8nP9FjHFQH+YQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mpgAOzN6; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HDCY8peW"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7394772635dso1832838b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 14:54:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mpgAOzN6"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30e6ccd17d6so2370343a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 14:54:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747432471; x=1748037271; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747432479; x=1748037279; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=he9wiLV5uZ6/m/Ubi4LHJ7N+Onl68GiZAuqObi6fPYU=;
-        b=HDCY8peWj93g5yHjAtIF5tcgJPVRrOv2O1aYUHlgcaAyxJfo9tfvg1kKgJhdNT+/el
-         iOzgjlFiDVnUg5tJEYHF8hlX2jSMeptEidk7p4BBMtJixj+8OLQD1bi4mr46sJvT34+k
-         4BV9ebfvDF5k9lUi/VzqwXSbd27bw3yeHVzwvIoObMtjQ/G0mlvM8RaESwg/4cFgCPES
-         mpmCowv6ewqTnKVIJGM9uiCPtHrWWm6NCElVUNPyx4esluYq+K86qjmOnkiIP1WjnR4k
-         FYDGU0b+Xtqgc8y7utEN6nPEOATGPUQhdy9+ylDh2xK1ReFYQLjIln569g2amGI7xvVF
-         ifyw==
+        bh=D0gXvpr2sHdqy9QZLUq/qbAZv7yiyUTA7R6EBW7+pvc=;
+        b=mpgAOzN609xA3+MSbXoT0pRFGc/sGYDtMvWODsOZRp9/SdDIQwxKNRbycdg5iCrscn
+         1UjqFf4KpE+cZh8qwGS3V166rUtCGI0uo4B0t5sLmVzsbf5cepwakJGItZlS3EBZZ8iA
+         yxIno286gtoM1apT3fSWbxtp+TYhI5axFXVbAGihfk/HaW3WpQ6E8D+D9Ww6BBgNKIlq
+         3Pz2l05PIcnBnlwJeaFQ5KEq0yxgkuBu4VqIpG9Dd9Zmz62ehwukxDobK4v/h9bdZvpI
+         zrwySx6zD37w1pEBhalO0BxjeXagDd02FYqRPk7446mTnoUg42JKOk2aqRjPLYD+LBPA
+         ZVzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747432471; x=1748037271;
+        d=1e100.net; s=20230601; t=1747432479; x=1748037279;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=he9wiLV5uZ6/m/Ubi4LHJ7N+Onl68GiZAuqObi6fPYU=;
-        b=WzXcBjKMfmdj0+TEq7P6w5/povWv8ukuHKE9Cv2bUuFHBmoRaX5vpy1G/0/pKkzdoO
-         ySXrNyl/alJPEgvVyb9pM1s4FMMMbiYCXpXtdAFhdO8+GDKxTwd9l8iP9rCMflfbWDml
-         xEUhj07qV4CKSJEJyFOkFvfO72OyU0FBFl+Fjng6gi+H4wJ77IlQv/5NfKveJL9elj9p
-         +VHfTl/Rd6/auRe7PtGcGNNTmiyUiV05MsKjIY/4HH6T8X6cA2eLfvAptv9le+0g/wvO
-         Ap6WcE5nX9BsGpou3Do6jfIh7ZtXT08D2F0ie/Hd7yMpEzYJGP4VEFSqTE+v1bm1TqJJ
-         sX7g==
-X-Forwarded-Encrypted: i=1; AJvYcCU/erDGw84KlVMLoLt/1vHVlF/KvldrMT7VukRu7P2dq1sfiMJdJdutr2Oss1FN/hUnBx+Sj2VQESVfbwE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZ2kPEF2ILX62MrUl1YVulXqsxfcxO3+5eumQRhtHJabTM8nw4
-	xz7ConqsnJwwnbkmLymzdDlR5BvSWeEMadZyDe88YNBL2BStjDR8x5YBSj4bs4BRGDieruR9Ibk
-	+SjctMg==
-X-Google-Smtp-Source: AGHT+IFvdwjKVnl8oB8hg8sThG1n7Y/nnlVTgBb2yxJZPjq66baQbtmAXviN6UxG+4eozQyHW/ONPWfBnpk=
-X-Received: from pfbhe16.prod.google.com ([2002:a05:6a00:6610:b0:730:90b2:dab])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:1591:b0:1f1:432:f4a3
- with SMTP id adf61e73a8af0-2170ccb2dccmr6280425637.23.1747432471453; Fri, 16
- May 2025 14:54:31 -0700 (PDT)
+        bh=D0gXvpr2sHdqy9QZLUq/qbAZv7yiyUTA7R6EBW7+pvc=;
+        b=DZxBjTcjt2BQblM8itu9kvdQT3n4Unu9SiR4w55wH4IJo6Qi4kWfB2t93CrWjuCsC3
+         as1yLZAUVq+T9k0vVOYf9QpDE4D3Ys+LNa2WFhT5FL4pQ8Ty3MjIq7WXpVnRQr8p9iAx
+         A6XR5mqMRLyB3n0DV1IOGRgSgKudEbx670Nd79ukwBqo8bGbOZ68LFOo51bhWTGT7tfQ
+         QZoYGYTTrPKpT+L/9m06S2sNNWednCk40001aaz51zATl4LvcUh1nxM+oW9bM3GDDKv/
+         yO11SWpBElPUGliGFM+MRZ15rHpyPRxKMyFQGRMeagx7ME5LTWOCk5BOHTDGs2zsouHA
+         sStw==
+X-Forwarded-Encrypted: i=1; AJvYcCV7e+9nh4Auli/fZA1c/aI5zgbj5o1OW1XtmpybseNB4b3AOi/RK6i6+h3YwfkcxvxHUviMwZDMM9sSEzo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuI0M9Au0QC+g8tKtcFIc0N4z4rivcxrEYuqcQSNlHCPLiW2GI
+	XXmLjM6Wvp1SWgVLkxmdZlJ3uEorVn2YMyHa4Z4bvZREsQS4uwJ1GBWkOyKkpLeEoAifrQMmzfR
+	gp54vtg==
+X-Google-Smtp-Source: AGHT+IH34nCA0NwEOc5om/HjB7xT1Sgsq7/Owr6ybh70IbeIayMQAkFXjkdzcFi3Zex3eJnI4pnnMU32WEw=
+X-Received: from pjbpt6.prod.google.com ([2002:a17:90b:3d06:b0:30a:7da4:f075])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:28c5:b0:2f2:a664:df1a
+ with SMTP id 98e67ed59e1d1-30e7d4f920dmr8130238a91.2.1747432479652; Fri, 16
+ May 2025 14:54:39 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 16 May 2025 14:54:20 -0700
+Date: Fri, 16 May 2025 14:54:21 -0700
 In-Reply-To: <20250516215422.2550669-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,141 +61,127 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250516215422.2550669-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.1112.g889b7c5bd8-goog
-Message-ID: <20250516215422.2550669-2-seanjc@google.com>
-Subject: [PATCH v3 1/3] KVM: x86/mmu: Dynamically allocate shadow MMU's hashed
- page list
+Message-ID: <20250516215422.2550669-3-seanjc@google.com>
+Subject: [PATCH v3 2/3] KVM: x86: Use kvzalloc() to allocate VM struct
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Vipin Sharma <vipinsh@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Dynamically allocate the (massive) array of hashed lists used to track
-shadow pages, as the array itself is 32KiB, i.e. is an order-3 allocation
-all on its own, and is *exactly* an order-3 allocation.  Dynamically
-allocating the array will allow allocating "struct kvm" using kvmalloc(),
-and will also allow deferring allocation of the array until it's actually
-needed, i.e. until the first shadow root is allocated.
+Allocate VM structs via kvzalloc(), i.e. try to use a contiguous physical
+allocation before falling back to __vmalloc(), to avoid the overhead of
+establishing the virtual mappings.  For non-debug builds, The SVM and VMX
+(and TDX) structures are now just below 7000 bytes in the worst case
+scenario (see below), i.e. are order-1 allocations, and will likely remain
+that way for quite some time.
 
-Opportunistically use kvmalloc() for the hashed lists, as an order-3
-allocation is (stating the obvious) less likely to fail than an order-4
-allocation, and the overhead of vmalloc() is undesirable given that the
-size of the allocation is fixed.
+Add compile-time assertions in vendor code to ensure the size of the
+structures, sans the memslos hash tables, are order-0 allocations, i.e.
+are less than 4KiB.  There's nothing fundamentally wrong with a larger
+kvm_{svm,vmx,tdx} size, but given that the size of the structure (without
+the memslots hash tables) is below 2KiB after 18+ years of existence,
+more than doubling the size would be quite notable.
 
-Cc: Vipin Sharma <vipinsh@google.com>
+Add sanity checks on the memslot hash table sizes, partly to ensure they
+aren't resized without accounting for the impact on VM structure size, and
+partly to document that the majority of the size of VM structures comes
+from the memslots.
+
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/include/asm/kvm_host.h |  4 ++--
- arch/x86/kvm/mmu/mmu.c          | 23 ++++++++++++++++++++++-
- arch/x86/kvm/x86.c              |  5 ++++-
- 3 files changed, 28 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  2 +-
+ arch/x86/kvm/svm/svm.c          |  2 ++
+ arch/x86/kvm/vmx/main.c         |  2 ++
+ arch/x86/kvm/vmx/vmx.c          |  2 ++
+ arch/x86/kvm/x86.h              | 22 ++++++++++++++++++++++
+ 5 files changed, 29 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 330cdcbed1a6..9667d6b929ee 100644
+index 9667d6b929ee..3a985825a945 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -1343,7 +1343,7 @@ struct kvm_arch {
- 	bool has_private_mem;
- 	bool has_protected_state;
- 	bool pre_fault_allowed;
--	struct hlist_head mmu_page_hash[KVM_NUM_MMU_PAGES];
-+	struct hlist_head *mmu_page_hash;
- 	struct list_head active_mmu_pages;
- 	/*
- 	 * A list of kvm_mmu_page structs that, if zapped, could possibly be
-@@ -2006,7 +2006,7 @@ void kvm_mmu_vendor_module_exit(void);
- 
- void kvm_mmu_destroy(struct kvm_vcpu *vcpu);
- int kvm_mmu_create(struct kvm_vcpu *vcpu);
--void kvm_mmu_init_vm(struct kvm *kvm);
-+int kvm_mmu_init_vm(struct kvm *kvm);
- void kvm_mmu_uninit_vm(struct kvm *kvm);
- 
- void kvm_mmu_init_memslot_memory_attributes(struct kvm *kvm,
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index cbc84c6abc2e..41da2cb1e3f1 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -3882,6 +3882,18 @@ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
- 	return r;
+@@ -1961,7 +1961,7 @@ void kvm_x86_vendor_exit(void);
+ #define __KVM_HAVE_ARCH_VM_ALLOC
+ static inline struct kvm *kvm_arch_alloc_vm(void)
+ {
+-	return __vmalloc(kvm_x86_ops.vm_size, GFP_KERNEL_ACCOUNT | __GFP_ZERO);
++	return kvzalloc(kvm_x86_ops.vm_size, GFP_KERNEL_ACCOUNT);
  }
  
-+static int kvm_mmu_alloc_page_hash(struct kvm *kvm)
-+{
-+	typeof(kvm->arch.mmu_page_hash) h;
-+
-+	h = kvcalloc(KVM_NUM_MMU_PAGES, sizeof(*h), GFP_KERNEL_ACCOUNT);
-+	if (!h)
-+		return -ENOMEM;
-+
-+	kvm->arch.mmu_page_hash = h;
-+	return 0;
-+}
-+
- static int mmu_first_shadow_root_alloc(struct kvm *kvm)
+ #define __KVM_HAVE_ARCH_VM_FREE
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 0ad1a6d4fb6d..d13e475c3407 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -5675,6 +5675,8 @@ static int __init svm_init(void)
  {
- 	struct kvm_memslots *slots;
-@@ -6675,13 +6687,19 @@ static void kvm_mmu_zap_all_fast(struct kvm *kvm)
- 		kvm_tdp_mmu_zap_invalidated_roots(kvm, true);
+ 	int r;
+ 
++	KVM_SANITY_CHECK_VM_STRUCT_SIZE(kvm_svm);
++
+ 	__unused_size_checks();
+ 
+ 	if (!kvm_is_svm_supported())
+diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
+index d1e02e567b57..e18dfada2e90 100644
+--- a/arch/x86/kvm/vmx/main.c
++++ b/arch/x86/kvm/vmx/main.c
+@@ -64,6 +64,8 @@ static __init int vt_hardware_setup(void)
+ 		vt_x86_ops.protected_apic_has_interrupt = tdx_protected_apic_has_interrupt;
+ 	}
+ 
++	KVM_SANITY_CHECK_VM_STRUCT_SIZE(kvm_tdx);
++
+ 	return 0;
  }
  
--void kvm_mmu_init_vm(struct kvm *kvm)
-+int kvm_mmu_init_vm(struct kvm *kvm)
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 9ff00ae9f05a..ef58b727d6c8 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -8643,6 +8643,8 @@ int __init vmx_init(void)
  {
-+	int r;
+ 	int r, cpu;
+ 
++	KVM_SANITY_CHECK_VM_STRUCT_SIZE(kvm_vmx);
 +
- 	kvm->arch.shadow_mmio_value = shadow_mmio_value;
- 	INIT_LIST_HEAD(&kvm->arch.active_mmu_pages);
- 	INIT_LIST_HEAD(&kvm->arch.possible_nx_huge_pages);
- 	spin_lock_init(&kvm->arch.mmu_unsync_pages_lock);
+ 	if (!kvm_is_vmx_supported())
+ 		return -EOPNOTSUPP;
  
-+	r = kvm_mmu_alloc_page_hash(kvm);
-+	if (r)
-+		return r;
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 832f0faf4779..0f3046cccb79 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -55,6 +55,28 @@ struct kvm_host_values {
+ 
+ void kvm_spurious_fault(void);
+ 
++#define SIZE_OF_MEMSLOTS_HASHTABLE \
++	(sizeof(((struct kvm_memslots *)0)->id_hash) * 2 * KVM_MAX_NR_ADDRESS_SPACES)
 +
- 	if (tdp_mmu_enabled)
- 		kvm_mmu_init_tdp_mmu(kvm);
- 
-@@ -6692,6 +6710,7 @@ void kvm_mmu_init_vm(struct kvm *kvm)
- 
- 	kvm->arch.split_desc_cache.kmem_cache = pte_list_desc_cache;
- 	kvm->arch.split_desc_cache.gfp_zero = __GFP_ZERO;
-+	return 0;
- }
- 
- static void mmu_free_vm_memory_caches(struct kvm *kvm)
-@@ -6703,6 +6722,8 @@ static void mmu_free_vm_memory_caches(struct kvm *kvm)
- 
- void kvm_mmu_uninit_vm(struct kvm *kvm)
- {
-+	kvfree(kvm->arch.mmu_page_hash);
++/* Sanity check the size of the memslot hash tables. */
++static_assert(SIZE_OF_MEMSLOTS_HASHTABLE ==
++	      (1024 * (1 + IS_ENABLED(CONFIG_X86_64)) * (1 + IS_ENABLED(CONFIG_KVM_SMM))));
 +
- 	if (tdp_mmu_enabled)
- 		kvm_mmu_uninit_tdp_mmu(kvm);
- 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index f9f798f286ce..d204ba9368f8 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -12787,7 +12787,9 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- 	if (ret)
- 		goto out;
- 
--	kvm_mmu_init_vm(kvm);
-+	ret = kvm_mmu_init_vm(kvm);
-+	if (ret)
-+		goto out_cleanup_page_track;
- 
- 	ret = kvm_x86_call(vm_init)(kvm);
- 	if (ret)
-@@ -12840,6 +12842,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- 
- out_uninit_mmu:
- 	kvm_mmu_uninit_vm(kvm);
-+out_cleanup_page_track:
- 	kvm_page_track_cleanup(kvm);
- out:
- 	return ret;
++/*
++ * Assert that "struct kvm_{svm,vmx,tdx}" is an order-0 or order-1 allocation.
++ * Spilling over to an order-2 allocation isn't fundamentally problematic, but
++ * isn't expected to happen in the foreseeable future (O(years)).  Assert that
++ * the size is an order-0 allocation when ignoring the memslot hash tables, to
++ * help detect and debug unexpected size increases.
++ */
++#define KVM_SANITY_CHECK_VM_STRUCT_SIZE(x)						\
++do {											\
++	BUILD_BUG_ON(get_order(sizeof(struct x) - SIZE_OF_MEMSLOTS_HASHTABLE) &&	\
++		     !IS_ENABLED(CONFIG_DEBUG_KERNEL) && !IS_ENABLED(CONFIG_KASAN));	\
++	BUILD_BUG_ON(get_order(sizeof(struct x)) < 2 &&					\
++		     !IS_ENABLED(CONFIG_DEBUG_KERNEL) && !IS_ENABLED(CONFIG_KASAN));	\
++} while (0)
++
+ #define KVM_NESTED_VMENTER_CONSISTENCY_CHECK(consistency_check)		\
+ ({									\
+ 	bool failed = (consistency_check);				\
 -- 
 2.49.0.1112.g889b7c5bd8-goog
 
