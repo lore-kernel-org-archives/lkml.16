@@ -1,160 +1,134 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E7EA32;
-	Fri, 16 May 2025 15:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121D0156237
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 15:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747408348; cv=none; b=I4QUQRqTPRFduziyKgqQxXRVq0qWmYv9uP3tJDoEU1v5z2cJPUj7N8b6pEABeDoTQu1meK/2mU7PHYoKsVpmXuYq9DGgRNDoLsiKdoX1nAe4rXweNW75ma1e6YBY6NHuWbz67JOplxqyDdX1Dx8Zu4qMZcP7h3ljritpZmHZR8M=
+	t=1747408455; cv=none; b=izzoovnTW0qDVpj9y8Oke3YW2mKNJSZR1+jRCEMWEC+4eHsih7sIvmGN7sIFBJPFCtQ/1zRdhcj5Z/2EXJTIpkEdXa822WOwGLfqXobbEpVQdlFZJjKtLNaFcN79t9SadvqFo4Zx3v5pfl6ggX7JLwKcl0MZ8AiMvTgCPRTTknw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747408348; c=relaxed/simple;
-	bh=iC9u+UtHMhHcM+URwVij/yn7NuPdsYomqxWBajHqXe8=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OajFcvbjqnxWx8iOGfn2GaKjGLhYdiHrJEsw49LeIbtmViOCXJ5LpA8DCfCH/wDhH90esBIH+VfeEQTyfSl+Elys4uoXigd/QtE9PNv2fKxSV7a0P2vdKA1W3m1jgpzENdYrAY/RtjlmUrTUBqLl/q1MzO/RrqQyQe1U1unAYMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m03Pc0I9; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747408455; c=relaxed/simple;
+	bh=ji2MsarXRrFl7yeae/YtYv1fow4jjJzCAdklKRqtHLA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Pv7nY2NfAifoX8HYJTmKjbnZJMHI9B3XYo0rkYC0L/fxrqKNnU9joy7cocgWYWpPCMLL8pNN5k2W9nwUCCsym5FQyUs3Ulw4x9dVhqaewLbg1eyIKkyZ23T1Y3FEwiHZsjhSXnlCj54NEE7J6QjbYakRqJmWWFRewzEAIPk4Woc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=UftFdbHh; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m03Pc0I9"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-442eb5d143eso20754745e9.0;
-        Fri, 16 May 2025 08:12:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747408345; x=1748013145; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=zBiYRws7s4bKZ8Cm+jQJAQDlwaYsEKqIVZU0U7DnLVA=;
-        b=m03Pc0I94cDcZGE0CfZYxPZ7Xp8JNZAzxQer0iHfvpuH7xy42LkPHhF89xNdbkeqnl
-         IYwwsAr2tvpmHGniyRk3D2RH8YmEPqtw1vpiHP0TQnHMWts+KAPstRmwKP1923DgRzh5
-         7UV3/9GzfmA9C19PCT3ihnPeAFxKF/WORhduIrRVfnuKKRm9GmmtcGYA+Ng6zLMuLzIs
-         oeccq/hTk6V14/VeTX9G/1jmyGNDoUxTtIJjEEbz3ZuG8QV4dD5IWN9M6RJeP3MxgC+V
-         wdSehkN92YCQs5BsGo+fW8RHSLwe4hGdnPC10zy5hZ3C37vetybR838NtDkc11PPEAy6
-         eXRQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="UftFdbHh"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54GBJFVW020883
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 15:14:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	kLu3+hjcuIIAuWnKsxLgTgUWpF3MmcU4WCdhzBMUVNQ=; b=UftFdbHhwRRRmK2R
+	RSge/Cz5SardokvD2dv2h7OEJs5RtaI5Lw7S4UheU7f6PGsbgehXUeeqZKjfGhUU
+	FKzbGHJOW5B+NmWxKPwIep+BsUitqrno1pvww82d400k6evr9FhXsWd8jkAyIWIz
+	ApaEEYreYINieATWQbV+z4ZWHyVlo+2D30ojN8UIf7yJP3yq4S3o8pVPe7OfeOEN
+	28uveYgRIutobtekJUEvRbewVYaVFycqYo63SQwQE0AGTHTIqWIl7azD/AhtY8fp
+	1fwoZq7mUhCdmj3jKgyshJVtDpLbBGkKqNWlqd3hA7eYdGscVWpcx3ch1qTvbDkq
+	6aen7Q==
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbewa5xf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 15:14:12 +0000 (GMT)
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3da7584d3baso24076065ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:14:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747408345; x=1748013145;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zBiYRws7s4bKZ8Cm+jQJAQDlwaYsEKqIVZU0U7DnLVA=;
-        b=rj+c7sgHb/8AWS+wN1rXuOumSlcrchnDByNMZy4EqfAuHP9tmwajLDbf1NOzztGc7L
-         LqfC2HcbUg8INVCd1xB2SxOHOdJrQk9IhT7dU3uCTt7qsd+pfgPJ1Sl3kvFA3bnCeA/1
-         QTWZVj+ta6lCe3teE9jWwURwkJgGxu+naRCM87L0PS1sttHYT/2tPdnsANozURuzAYTX
-         0MoUP0WgApjs7f5FA2ZMTCQnBCBPHRjaL00UZlXycey7OS2kAum7z8Pn2WOvXyJMu2w6
-         5OXMWXRiFipJrBMz6D3+RHzx7jVh2rtQLeDZL6y7XuwDHEO996OMBJ37aw4QXwBNuzpG
-         HbiA==
-X-Forwarded-Encrypted: i=1; AJvYcCVC5iiRvRM4zCABf5hw1b/d+Pwmi8nVcYj2FSvYX9VSKyOpTkNAgbYPKb7o8HGgt93v38umbnxjBB7QCPd9R6Y=@vger.kernel.org, AJvYcCWLq1SNWHMte2AoBZd6VE7HtEL45Vai89dk72BchH3M5Sw32bk6gT0b82CfkzmNKoWD3aZN+tMTq9GE@vger.kernel.org, AJvYcCXXe2Ozo473dN1AzUUwTqxMyGFAA6QKxVEeGeWmrXqQm7Jv7kcn1vfkaU3KFRXNyJxNhNcRalT/q5ySB+UR@vger.kernel.org, AJvYcCXf5UhcQcZJ9V8Zus2UW1WLBTlkFLAQjCao7FlkeCcz1P5jFlVb3LcTeWjjTkxtTJLXiCdqjnbn@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmmXV5GXDw61haW4RRHAr76ri8tqYcNSZ727G7nJi6QCEzAERx
-	5Qp1Hds0+Uni8lOb5tBcrNoOR2vT4f5nMzlFoaub5dEsSriGXAn9ak1X
-X-Gm-Gg: ASbGncsgSWrvF7oR0bMqrBSCPHI+Xh4vzlCiUwflJW2k9PQoPR86ccLuDgzCqXwjvHB
-	tqcuX5ty0ZCPOjg9p1Of05kANm5r08FBrtaX49RiLkw+8B8hV3M4K3YBly5OgJYOiOX11tayBch
-	uaNHRbV5uynYsuo95AGnY4kks3PI5zU+ic4X+swt2fAYeceXtO8lSTwkilbkJ1sBiSFRIFQgR3e
-	cHuzt4r8kC1cJo4+p68SR7vkrlJwAlnWotWMkS8FQMCyU6ZbPQwhhK3CHUSOSGNO2Cb4NYxOjZK
-	ENGU+VRKnniwUxI2lTub5zGnj9G6ja9plhO7IWgFvXTPlkoNTLuJyRB2slYf7Aod9V8Lxpvc7MT
-	MrtVXBnw=
-X-Google-Smtp-Source: AGHT+IFkdjlxOpJKA2fXMJusp69KEVL/qR+EAPGHX7GlpKULJLzZ1YSEN2N3lpQPZgdyFJk6frkT6g==
-X-Received: by 2002:a05:6000:2af:b0:39d:724f:a8ae with SMTP id ffacd0b85a97d-3a35c8355admr4295266f8f.33.1747408344625;
-        Fri, 16 May 2025 08:12:24 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442fd583fb7sm37168575e9.32.2025.05.16.08.12.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 08:12:24 -0700 (PDT)
-Message-ID: <682755d8.050a0220.3c78c8.a604@mx.google.com>
-X-Google-Original-Message-ID: <aCdV03m-PpI9qHas@Ansuel-XPS.>
-Date: Fri, 16 May 2025 17:12:19 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Benno Lossin <lossin@kernel.org>
-Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, hkallweit1@gmail.com, linux@armlinux.org.uk,
-	florian.fainelli@broadcom.com,
-	bcm-kernel-feedback-list@broadcom.com, kabel@kernel.org,
-	andrei.botila@oss.nxp.com, tmgross@umich.edu, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, dakr@kernel.org,
-	sd@queasysnail.net, michael@fossekall.de, daniel@makrotopia.org,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [net-next PATCH v10 7/7] rust: net::phy sync with
- match_phy_device C changes
-References: <20250515112721.19323-1-ansuelsmth@gmail.com>
- <20250515112721.19323-8-ansuelsmth@gmail.com>
- <20250516.213005.1257508224493103119.fujita.tomonori@gmail.com>
- <D9XO2721HEQI.3BGSHJXCHPTL@kernel.org>
+        d=1e100.net; s=20230601; t=1747408451; x=1748013251;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kLu3+hjcuIIAuWnKsxLgTgUWpF3MmcU4WCdhzBMUVNQ=;
+        b=EOjJMV4EkElYVhM+972g0UVBST1vKm5LhzBlKaj8YSJXC+f0Hu1C1w5xHmdVUrIqq/
+         k8gh6tGFtdRZAsG1yDrb7nn2jHPYWdnU0WnTmA29WxtpU995TIOoHD8qovgrtDfF36ED
+         +fchVr/EPyFqtME7cHzwG7jCslNPWaYx1LcDcSJ1E6rwJ397eR/bCE8Og1RxKUZN14WT
+         wII7srST1LTGa52fEYvhwTY9HkrwMwC3GwJwYh5Tv9aRUHTN4RDjDgSOj1InI/ANGKab
+         rrQtudDnpvjnFf4YNcfE/jdgqdKmyrravrP+gjnUWOqRSDxIyPUNa5xZ5U7j3+hJxJE7
+         Xb8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUpc59BeH+NReqDM6jUp6mgfwN/VWHHWFEsU4j+2uJdKXvCPXierrfrH97Imwq72n4xVMlmhd0ZuneZyeQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQ6vaQvlAq+DBrSjTN4uA998ynxUFADkwJM7QoZFIIL2w+IjVW
+	QqXsokAHe0Ts/mfmyLpzQdK/5AY8WBRmfwHeQxPLwDZbFTqZrKL3rxvB096YSNFk5ewatZzE6ze
+	Elcb5P1DdQ3mnm0IINH285Z8FiJ17Sbq+GqCudxH5LsSpkeFctGmExCVoLz4P0jzNiD9YZRO4WA
+	g=
+X-Gm-Gg: ASbGncsZ9hNuVe1Es+R0mOJAGu4gOmsT+hMQQQ0sXAsL8/+8DYnpaWYACc7L4Eff67M
+	zLcV7TKSrdplhM1WfP6awETgmhpL8JIR60ifCWX2RTwfS0f0Nn4JDnNRg5MN9zCmsQcn+XGBzGS
+	iZ0ByS8/58YNLvujM4KCxu7dIdIFLCy2p9o9le64tjVXNm8cjKTvZqMMi38Ib+uvv7gaxI84c1l
+	RB+lNX8xnp6pblvYQLWKed+Tfdm5CImZn04s2XePGBhkaAshpMDaPG9G65C/0bN9DGHyCDzlEGj
+	2fhD2f30He431rVyNT03nDdzNU/FjLRLWfAWS7M1p94BrTCFTkuKs24u6GLy6A==
+X-Received: by 2002:a17:903:b8f:b0:220:be86:a421 with SMTP id d9443c01a7336-231de3ae560mr39661275ad.38.1747408440880;
+        Fri, 16 May 2025 08:14:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG9PI7SUtWE9rx7ZEEoLHR4WZhmKY8xH8K9phfkI6WzyFtFIQ7RTKmuVc4in7kjhjWVvfhq2w==
+X-Received: by 2002:a05:6a00:391a:b0:740:a879:4f7b with SMTP id d2e1a72fcca58-742acd5115amr3981025b3a.18.1747408430066;
+        Fri, 16 May 2025 08:13:50 -0700 (PDT)
+Received: from [10.226.59.182] (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96dfa9dsm1702805b3a.10.2025.05.16.08.13.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 May 2025 08:13:48 -0700 (PDT)
+Message-ID: <fa6e5f45-a6d9-4f31-ab5a-7c47200a913c@oss.qualcomm.com>
+Date: Fri, 16 May 2025 09:13:46 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D9XO2721HEQI.3BGSHJXCHPTL@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] bus: mhi: host: fix endianness of BHI vector table
+To: Alexander Wilhelm <alexander.wilhelm@westermo.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250515095517.1867846-1-alexander.wilhelm@westermo.com>
+Content-Language: en-US
+From: Jeff Hugo <jeff.hugo@oss.qualcomm.com>
+In-Reply-To: <20250515095517.1867846-1-alexander.wilhelm@westermo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: OFfeO0IUNTLcxWxJnPhhWn1bmBxM5Pc0
+X-Proofpoint-ORIG-GUID: OFfeO0IUNTLcxWxJnPhhWn1bmBxM5Pc0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDE0OCBTYWx0ZWRfXxbqKfBPevSEn
+ wubRsboTRckJiztwWk0ZDmpWj7ruB3bpRTQxJzMIfGmVTfC1gp5Vv+R7IP5bzxEg+qoj6eI6d2n
+ QNrlRVLHV2FNnnrErx/FPTKjCLVr8SY++JFRDyaskoCvV0KQbKw3odcWlpq0cC+2qe7RGdA5Mys
+ jckMh6ZJS20uAuxUxjgEEKSveYgf5Nw2m/HcYNjM+ko3yTwSQi9CYyWqEwIVAuMvoTAAs30WKTl
+ iGloY2iR/RZ4s9Nsm90j51CqRbsIV2OmalJ9inmFYF0G/58Bhm8kalJoOeRlN0qBwLxDqRrI8iT
+ jmZJQnGxdfeJL7b84lM0UgPeuBfTMlGnGqiiPJKbzOdyf4Nnr/q5la18rov/LdWKK9xqgTP4qL/
+ nLvFUzDA+rjC/0pVLIhK+kg++sWEnL2f4dKFdLHllQIjKePRanwg1S2mhAN53gxFvVJjqZwN
+X-Authority-Analysis: v=2.4 cv=LOFmQIW9 c=1 sm=1 tr=0 ts=68275644 cx=c_pps
+ a=vy3nvQW9C2dqy/lMnN3IYg==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=N9GNhs4bAAAA:8 a=EUspDBNiAAAA:8
+ a=mnqbBUabxhxt7vZsbGwA:9 a=QEXdDO2ut3YA:10 a=mHQ74H5e8mo-RpSg_uaF:22
+ a=PZhj9NlD-CKO8hVp7yCs:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-16_05,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 spamscore=0 adultscore=0 priorityscore=1501 suspectscore=0
+ mlxscore=0 malwarescore=0 mlxlogscore=999 impostorscore=0 bulkscore=0
+ clxscore=1015 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505160148
 
-On Fri, May 16, 2025 at 04:48:53PM +0200, Benno Lossin wrote:
-> On Fri May 16, 2025 at 2:30 PM CEST, FUJITA Tomonori wrote:
-> > On Thu, 15 May 2025 13:27:12 +0200
-> > Christian Marangi <ansuelsmth@gmail.com> wrote:
-> >> @@ -574,6 +577,23 @@ pub const fn create_phy_driver<T: Driver>() -> DriverVTable {
-> >>  /// This trait is used to create a [`DriverVTable`].
-> >>  #[vtable]
-> >>  pub trait Driver {
-> >> +    /// # Safety
-> >> +    ///
-> >> +    /// For the duration of `'a`,
-> >> +    /// - the pointer must point at a valid `phy_driver`, and the caller
-> >> +    ///   must be in a context where all methods defined on this struct
-> >> +    ///   are safe to call.
-> >> +    unsafe fn from_raw<'a>(ptr: *const bindings::phy_driver) -> &'a Self
-> >> +    where
-> >> +        Self: Sized,
-> >> +    {
-> >> +        // CAST: `Self` is a `repr(transparent)` wrapper around `bindings::phy_driver`.
-> >> +        let ptr = ptr.cast::<Self>();
-> >> +        // SAFETY: by the function requirements the pointer is valid and we have unique access for
-> >> +        // the duration of `'a`.
-> >> +        unsafe { &*ptr }
-> >> +    }
-> >
-> > We might need to update the comment. phy_driver is const so I think
-> > that we can access to it any time.
+On 5/15/2025 3:55 AM, Alexander Wilhelm wrote:
+> On big endian platforms like PowerPC the DMA address and size are required
+> to be swapped. Otherwise the MHI bus does not start properly. The following
+> example shows the error messages by using qcn9274 wireless radio module
+> with ath12k driver:
 > 
-> Why is any type implementing `Driver` a transparent wrapper around
-> `bindings::phy_driver`?
+>      ath12k_pci 0001:01:00.0: BAR 0: assigned [mem 0xc00000000-0xc001fffff 64bit]
+>      ath12k_pci 0001:01:00.0: MSI vectors: 1
+>      ath12k_pci 0001:01:00.0: Hardware name: qcn9274 hw2.0
+>      ath12k_pci 0001:01:00.0: failed to set mhi state: POWER_ON(2)
+>      ath12k_pci 0001:01:00.0: failed to start mhi: -110
+>      ath12k_pci 0001:01:00.0: failed to power up :-110
+>      ath12k_pci 0001:01:00.0: failed to create soc core: -110
+>      ath12k_pci 0001:01:00.0: failed to init core: -110
+>      ath12k_pci: probe of 0001:01:00.0 failed with error -110
 > 
 
-Is this referred to a problem with using from_raw or more of a general
-question on how the rust wrapper are done for phy code?
+Fixes?
 
-> >>      /// Defines certain other features this PHY supports.
-> >>      /// It is a combination of the flags in the [`flags`] module.
-> >>      const FLAGS: u32 = 0;
-> >> @@ -602,7 +622,7 @@ fn get_features(_dev: &mut Device) -> Result {
-> >>  
-> >>      /// Returns true if this is a suitable driver for the given phydev.
-> >>      /// If not implemented, matching is based on [`Driver::PHY_DEVICE_ID`].
-> >> -    fn match_phy_device(_dev: &Device) -> bool {
-> >> +    fn match_phy_device<T: Driver>(_dev: &mut Device, _drv: &T) -> bool {
-> >>          false
-> >>      }
-> >
-> > I think that it could be a bit simpler:
-> >
-> > fn match_phy_device(_dev: &mut Device, _drv: &Self) -> bool
-> >
-> > Or making it a trait method might be more idiomatic?
-> >
-> > fn match_phy_device(&self, _dev: &mut Device) -> bool
-> 
-> Yeah that would make most sense.
->
+> Signed-off-by: Alexander Wilhelm <alexander.wilhelm@westermo.com>
 
-I think
-
-fn match_phy_device(_dev: &mut Device, _drv: &Self) -> bool
-
-more resemble the C parallel function so I think this suite the best,
-should make it easier to port if ever (am I wrong?)
-
--- 
-	Ansuel
+Reviewed-by: Jeff Hugo <jeff.hugo@oss.qualcomm.com>
