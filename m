@@ -1,113 +1,177 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 858C71DE4CE;
-	Fri, 16 May 2025 16:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256CE24E4C1;
+	Fri, 16 May 2025 16:57:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747414598; cv=none; b=QSVaYlmRJld37C44/QT9RjQJc4Y8N1+srXuQUJjv3fo5zpbXAnKKEQ9Z0yUzQWOAbQSFq6b5Kb8JknIm4k5vzWC/YXEi++eD01Wfs9ykcGEQMttEDz/LrkhSCcI1UwzYrm2EcktXD2yU/9CplyK0RkSmz+15fIF2RR3dLuH9Y3A=
+	t=1747414627; cv=none; b=C8Rp9K/d4abK7YsucJF+VRlBRjFfQBTyOY3wkkDUEKrVH2DsGZ2gb8NxGj/WLpXGFkdGN+GWf6pvemwtIy42sDmfokfNu54BSlnPWpzfNwNaB0No6afbQlwBAhe1GtbeKOdAi+XU9o6fqjEXtxqv6yEyrSqSzmO3Jj6eVdR3ltM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747414598; c=relaxed/simple;
-	bh=sxk47qLZQGS5eU2o2fnvdm0YGf8LXnaJBJAQVWreRlg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sK/Ee1n3JGhPe9vLlHkUdJBszZ/pEI1vc6aES29HAtP7N1Q45uG8mCAAKADY9xpNwlvHo/kwfsy+K6chPMls1B7iuPi3m2MRL5CvdrpewyGMCoFQoTtj9vox3JKwX6SSisEoUVN63eqO0VNqO5WwGs3JeycLCPjSt9pMcJCXi1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=paU10sG4; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747414627; c=relaxed/simple;
+	bh=3OaLhhbnyaFRUsMl6Jn49C7vgfWOS9Skc2umIuHl5kM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MtXNg84k4D5bey6ZioyJqeVABsLA2w3fGQRLtyfsqg0f0PsVKKZb9q6fwXZVDNhBeEP6l6BFneOhx7nGb6oJRYA4yguzaCbp+89zpY+t6zEU0biNk456N6DiIZB62gzTALZgF/9W8kUjb61SxsBaT6VFl/V/rTbNu4oBP0gSBJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=My6CHPVv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="paU10sG4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Ct
-	nFyydU4fr89wS3U8rjM2P3apj75aODrTPV9Nlg/9Q=; b=paU10sG4czve6u6TW9
-	Www1Izjma48yhpYZWV9CNfchPXUSpiDjZvbkroqrtE8hhV9OorB95yW+2PenX1aW
-	LG764BB3rg5xTqRPIetuVVl4qmusY0yWP1lhlzlsfnjLw7eXT5mxblqCnLLoFaK9
-	lfr/pvUHZ1fjlqEBPLoeLkuds=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wB3lOX6bSdoVElgBw--.64634S5;
-	Sat, 17 May 2025 00:55:24 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: bhelgaas@google.com,
-	tglx@linutronix.de,
-	kw@linux.com,
-	manivannan.sadhasivam@linaro.org,
-	mahesh@linux.ibm.com
-Cc: oohall@gmail.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Hans Zhang <hans.zhang@cixtech.com>
-Subject: [PATCH 3/4] PCI/AER: Expose AER panic state via pci_aer_panic_enabled()
-Date: Sat, 17 May 2025 00:55:17 +0800
-Message-Id: <20250516165518.125495-4-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250516165518.125495-1-18255117159@163.com>
-References: <20250516165518.125495-1-18255117159@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="My6CHPVv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A09FDC4CEE4;
+	Fri, 16 May 2025 16:57:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747414626;
+	bh=3OaLhhbnyaFRUsMl6Jn49C7vgfWOS9Skc2umIuHl5kM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=My6CHPVvF21PFuSvisGrbzzRAZMex9cLcoEVbn3FfDU3JKfZBAeBcwW3CXw/y4mgO
+	 C0UCscLFmYgFksVXrWZFw8PkJC2BcfKDex72q/m3VIOiSOcg7Po7JW0RnfMfYt6BfM
+	 ojY5p9djPQDrZOrvKJiGO9yo80H0B7Wc8kUnsNwGFuwXVEtQ4YXcns3Zgs2zVSMhCD
+	 BTBbsFmQB3LO6gYzY/NAmM56Lw/Tx/WYTsVaXLtC8zWoYmOIxg2fzr0qn/Ga7TuI3h
+	 d0a9oB/dmvYjIP39pXqvnrPdx+VJ99g5IK17dGMmOKnIEcA/d2xjHu/s7NIrLMsFMr
+	 5FJ1dkj4dmqEw==
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3fe83c8cbdbso1132522b6e.3;
+        Fri, 16 May 2025 09:57:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVgVyIEa+dK0QSmO+Is50o5kWmu3MZ3CabTsR7+HAgBMDEmbnIxLs7Nb7ab3pf7to9MHFL8G0lY5AXu@vger.kernel.org, AJvYcCX62DFcNAPQd0rBi/oVw6PNQz9M+lX0eJpMlY/RayqcqzZGFpESZ019WSn8qadp4hE5kOGwYeh8jHPwSDyY@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmADdwJSI/bgWi46mADwGeA7pLSv6SO50llzXc8aUtob8ptFPH
+	SKqdE0k1Va8MMgrRJdNOBijrx3PCclvjKOnDRNVAdc0gvA+Z0sMT2FWItg1QnVW1JA1gC3Ay23/
+	yIio1U1GQszTx+fh9MpMKGuWeVjKsubs=
+X-Google-Smtp-Source: AGHT+IF9rWHdjVzlKTbyipJxoGTP8OW1Szm3iv18BWWmjdNbX3F6izSpbQWRnYfinB9TUP4TEKvsLet0zFSjqEcQ8i0=
+X-Received: by 2002:a05:6808:399a:b0:404:766:3129 with SMTP id
+ 5614622812f47-404da70a555mr2201120b6e.1.1747414625999; Fri, 16 May 2025
+ 09:57:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wB3lOX6bSdoVElgBw--.64634S5
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Cr1xCw1UCr4fAr1UZr48tFb_yoW8ZF43pF
-	Z5J34rAr4rGF9YgFWkZ3W8Za4rZ3s7t34rJFWkG395uFnxAa45J3s3AFyUXFn7XrWDuF1a
-	yFy5tr13WF4rAaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jmc_fUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDwlPo2gnaDaNVQAAsj
+References: <20250410165456.4173-1-W_Armin@gmx.de> <91ea8aed-5f98-4e4e-b3ee-fdc86d54f787@gmx.de>
+ <CAJZ5v0jOR9=jA=8XASBpxJyXaB4TvXmxcZQWq1qUgq1J4h_tEg@mail.gmail.com>
+ <90cba8fa-e6a9-4dab-a4ea-fa96d570a870@gmx.de> <c8127d88-194a-4a23-b22e-040e2c6b3e9b@gmx.de>
+ <CAJZ5v0icUnepOwb87k44nAt1ZwfHp_BqSBzS-TrQWJ_4E3Ls=g@mail.gmail.com>
+ <5cec046e-c495-4517-82c8-83ae3cdb63a1@gmx.de> <CAJZ5v0iEni2ie-6sCiZBfwugZ--NmJQX6=2EYKXnHwRCfpqUzQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0iEni2ie-6sCiZBfwugZ--NmJQX6=2EYKXnHwRCfpqUzQ@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 16 May 2025 18:56:53 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0grVpm8MUGYRRhC6VTRRQxvCEmzRJm27F83vJ4a-Wwjhg@mail.gmail.com>
+X-Gm-Features: AX0GCFuz5tlxTSYTkGoJf924BrOs0gzXQsdXvj2unTi0EKN6a7i14_orfifvrS4
+Message-ID: <CAJZ5v0grVpm8MUGYRRhC6VTRRQxvCEmzRJm27F83vJ4a-Wwjhg@mail.gmail.com>
+Subject: Re: [PATCH 0/3] ACPI: thermal: Properly support the _SCP control method
+To: Armin Wolf <w_armin@gmx.de>
+Cc: rui.zhang@intel.com, lenb@kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Hans Zhang <hans.zhang@cixtech.com>
+On Fri, May 16, 2025 at 3:59=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
+g> wrote:
+>
+> On Sat, May 3, 2025 at 12:29=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote=
+:
+> >
+> > Am 28.04.25 um 14:34 schrieb Rafael J. Wysocki:
+> >
+> > > On Mon, Apr 28, 2025 at 2:31=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> w=
+rote:
+> > >> Am 27.04.25 um 00:52 schrieb Armin Wolf:
+> > >>
+> > >>> Am 26.04.25 um 15:12 schrieb Rafael J. Wysocki:
+> > >>>
+> > >>>> On Sat, Apr 26, 2025 at 1:20=E2=80=AFAM Armin Wolf <W_Armin@gmx.de=
+> wrote:
+> > >>>>> Am 10.04.25 um 18:54 schrieb Armin Wolf:
+> > >>>>>
+> > >>>>>> The ACPI specification defines an interface for the operating sy=
+stem
+> > >>>>>> to change the preferred cooling mode of a given ACPI thermal zon=
+e.
+> > >>>>>> This interface takes the form of a special ACPI control method c=
+alled
+> > >>>>>> _SCP (see section 11.4.13 for details) and is already supported =
+by the
+> > >>>>>> ACPI thermal driver.
+> > >>>>>>
+> > >>>>>> However this support as many issues:
+> > >>>>>>
+> > >>>>>>     - the kernel advertises support for the "3.0 _SCP Extensions=
+"
+> > >>>>>> yet the
+> > >>>>>>       ACPI thermal driver does not support those extensions. Thi=
+s may
+> > >>>>>>       confuse the ACPI firmware.
+> > >>>>>>
+> > >>>>>>     - the execution of the _SCP control method happens after the=
+ driver
+> > >>>>>>       retrieved the trip point values. This conflicts with the A=
+CPI
+> > >>>>>>       specification:
+> > >>>>>>
+> > >>>>>>         "OSPM will automatically evaluate _ACx and _PSV objects =
+after
+> > >>>>>>          executing _SCP."
+> > >>>>>>
+> > >>>>>>     - the cooling mode is hardcoded to active cooling and cannot=
+ be
+> > >>>>>>       changed by the user.
+> > >>>>>>
+> > >>>>>> Those issues are fixed in this patch series. In the end the user
+> > >>>>>> will be able to tell the ACPI firmware wether he prefers active =
+or
+> > >>>>>> passive cooling. This setting will also be interesting for
+> > >>>>>> applications like TLP (https://linrunner.de/tlp/index.html).
+> > >>>>>>
+> > >>>>>> The whole series was tested on various devices supporting the _S=
+CP
+> > >>>>>> control method and on a device without the _SCP control method a=
+nd
+> > >>>>>> appears to work flawlessly.
+> > >>>>> Any updates on this? I can proof that the new interface for setti=
+ng
+> > >>>>> the cooling mode
+> > >>>>> works. Additionally the first two patches fix two issues inside t=
+he
+> > >>>>> underlying code
+> > >>>>> itself, so having them inside the mainline tree would be benefici=
+al
+> > >>>>> to users.
+> > >>>> Sure.
+> > >>>>
+> > >>>> I'm going to get to them next week, probably on Monday.
+> > >>> Ok, thanks.
+> > >>>
+> > >>> Armin Wolf
+> > >>>
+> > >> I am a bit ashamed of myself but i think we need to put this patch s=
+eries on hold after all :(.
+> > >>
+> > >> The reason of this is that i am confused by the ACPI specification r=
+egarding _SCP:
+> > >>
+> > >>          11.1.2.1. OSPM Change of Cooling Policy
+> > >>
+> > >>          When OSPM changes the platform=E2=80=99s cooling policy fro=
+m one cooling mode to the other, the following occurs:
+> > >>
+> > >>          1. OSPM notifies the platform of the new cooling mode by ru=
+nning the Set Cooling Policy (_SCP) control method in all thermal zones and=
+ invoking the OS-specific Set Cooling Policy interface to all participating=
+ devices in each thermal zone.
+> > >>
+> > >>          2. Thresholds are updated in the hardware and OSPM is notif=
+ied of the change.
+> > >>
+> > >>          3. OSPM re-evaluates the active and passive cooling tempera=
+ture trip points for the zone and all devices in the zone to obtain the new=
+ temperature thresholds.
+> > >>
+> > >> This section of the ACPI specification tells me that we need to eval=
+uate the _SCP control method of all ACPI thermal zones
+> > >> at the same time, yet section 11.4.13. tells me that each _SCP contr=
+ol methods belongs to the individual thermal zone.
 
-Add pci_aer_panic_enabled() to check if aer_panic is enabled system-wide.
-Export the function for use in error recovery logic.
+It just says "This object may exist under a thermal zone or a device"
+so I don't see any contradiction.  Section 11.4.13 says where it is
+located and Section 11.1.2.1 says when to evaluate it.
 
-Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
----
- drivers/pci/pci.h      |  2 ++
- drivers/pci/pcie/aer.c | 12 ++++++++++++
- 2 files changed, 14 insertions(+)
+However, Section 11.4.13 also says "OSPM will automatically evaluate
+_ACx and _PSV objects after executing _SCP" which is not arranged for
+in your patch [3/3] IIUC.
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 8ddfc1677eeb..f92928dadc6a 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -959,6 +959,7 @@ static inline void of_pci_remove_host_bridge_node(struct pci_host_bridge *bridge
- #ifdef CONFIG_PCIEAER
- void pci_no_aer(void);
- void pci_aer_panic(void);
-+bool pci_aer_panic_enabled(void);
- void pci_aer_init(struct pci_dev *dev);
- void pci_aer_exit(struct pci_dev *dev);
- extern const struct attribute_group aer_stats_attr_group;
-@@ -970,6 +971,7 @@ void pci_restore_aer_state(struct pci_dev *dev);
- #else
- static inline void pci_no_aer(void) { }
- static inline void pci_aer_panic(void) { }
-+static inline bool pci_aer_panic_enabled(void) { return false; }
- static inline void pci_aer_init(struct pci_dev *d) { }
- static inline void pci_aer_exit(struct pci_dev *d) { }
- static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index fa51fb8a5fe7..4fd7db90b77c 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -125,6 +125,18 @@ void pci_aer_panic(void)
- 	pcie_aer_panic = true;
- }
- 
-+/**
-+ * pci_aer_panic_enabled() - Are AER panic enabled system-wide?
-+ *
-+ * Return: true if AER panic has not been globally disabled through ACPI FADT,
-+ * PCI bridge quirks, or the "pci=aer_panic" kernel command-line option.
-+ */
-+bool pci_aer_panic_enabled(void)
-+{
-+	return pcie_aer_panic;
-+}
-+EXPORT_SYMBOL(pci_aer_panic_enabled);
-+
- bool pci_aer_available(void)
- {
- 	return !pcie_aer_disable && pci_msi_enabled();
--- 
-2.25.1
-
+Thanks!
