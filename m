@@ -1,153 +1,200 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A261B145B3F;
-	Fri, 16 May 2025 14:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBFF6145B3F;
+	Fri, 16 May 2025 14:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747404764; cv=none; b=qM8uvMixkUVBKwDBDa7c2d+L+9oBhSJ+VrjI6rEyyYQUpHuv9gjqeahHHQVzclyHaWz2Td8XUmLiqGokPXLh3R1r2sq6H7zCfYuEEjFTU5+o5cX05kuTlWXZkuBG3ntvQriJGtqtMt6EdvLlQX5B9ffcor5mTgfMB+3czIj2xfU=
+	t=1747404778; cv=none; b=ulivxSdPRue1mn27F/S0KjAoADgorAPKZFUoe6ksez2BpwVEgipUZ8iaXC7WK5I9JBZgSdLQX1B8zpeSEp+EHw9C65NxuGOD+p0qq5bX8OtPx9eVkEEJUCQyF0idJZnQ9rVLJWq94vo2g2LSNFIzZWuXPclnONxplojn45F1wDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747404764; c=relaxed/simple;
-	bh=0CSU94FT+xS94/kzp81hGRLzb7zJ0Npr8p6nJ4MCPu8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hnRb7tZaYfBRrq5YPC+zqhLep4ZPF3XQRGBrY69VvZ/NMkheicc48vy/SjvTNbwoKIB95emgW+MhWL/P+zmAT5tG08DJVCUvND1pivdlAbXdU8vo/T018UoLa+zzuYmnsXfFWv9lZRKjyMd+H0IrXqK6DsnglYkQs4RG/XhBT/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=m8bDrcPj; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1747404778; c=relaxed/simple;
+	bh=M40WfWlk5YMTEsDWr5cABgdKxkUNV407DW73Q7i7IeI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YVXSOaYWGSmTSFFngbe45qa84aRJ1L9Rwfk1qZkp3/WUITmhtHJxigXMLRJX5H2bmW2pTXSsnoMGSfO8EJTj20LMxqCtuKu6lqZwcFneiFfxvDBTN7IAep6MKwBAxBP9dAmDaGQA15b3PkPlBS239jOKg1pKXIvStuomF+hR5Ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NAZaY/4C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="m8bDrcPj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1747404755;
-	bh=0CSU94FT+xS94/kzp81hGRLzb7zJ0Npr8p6nJ4MCPu8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=m8bDrcPj92fPYm2aI5X3kkNHKlsbrWcFm9FlUwlVsEyOUa+uvEY5wdByupYCOJ6+T
-	 5/R4m6YpYN084Xu+owhQ1faFtnTPR8F8a/hxOMCKekPeLRD5BTUJuRid4hZ5RUrwQ+
-	 KoKcdydrXaNOf3iTowJqSp1/IYgDSEnu2jVgPkOOqzRoatm5jo2VUE4JJjMAEViMjz
-	 gzz7dYFdg9BL0DVjMsvsOHWmwWEiOJYZfDhCtTI9qEOeeEe0XUks6uC1G8U/FUwEsJ
-	 5Ly0a32GoLQjzYMtLJ/D+mwQnvWSl0LazpoF4ci2rOYa4mlH+s2WlSTu/0hiIA9JIc
-	 GktEs1pgnUCig==
-Received: from 2a01cb0892f2d600c8f85cf092d4af51.ipv6.abo.wanadoo.fr (2a01cb0892F2d600C8F85Cf092D4af51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: jmassot)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id A9F8A17E05F0;
-	Fri, 16 May 2025 16:12:34 +0200 (CEST)
-From: Julien Massot <julien.massot@collabora.com>
-Date: Fri, 16 May 2025 16:12:14 +0200
-Subject: [PATCH v2 2/2] arm64: dts: mediatek: mt8188: Add missing
- #reset-cells property
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NAZaY/4C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EF43C4CEF1;
+	Fri, 16 May 2025 14:12:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747404778;
+	bh=M40WfWlk5YMTEsDWr5cABgdKxkUNV407DW73Q7i7IeI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NAZaY/4CpF0feR2rflVvHns81UR7MQacqaPo/ql/3FOQ/wRMlyVUzX9OLlk8Z780h
+	 NW0WIOojV892uYO1oRts59Uae2uXosWs5rDCcNJrHvPAEzpASW5gRkcO15ihuNQ3at
+	 KX9s3XBPMmzxHMHBJhzxW1hyAiAykGXi7Oh3DnBL2KtsUabczzEcEqWdt6m3ETc+3s
+	 K1FgLClCRQdSGC4eee5Y8D3u8Qr+VT70nEQvZw5aaKYA/R3v5nSxaon5aGmwNFBmcP
+	 rvoHyWrXkkPNIzeBK1/OPZrDi3qTb8d5Q9hxTm5wiIq9YBjh70bAxKmlJsq+5cWVM5
+	 /UhI6clSoea4Q==
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-603f54a6cb5so1431252eaf.0;
+        Fri, 16 May 2025 07:12:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXmis+8997gPAjKzZWwdtmlG2oIveW7fh+Y9CQHDA2M8WWMWL7tNtxkTKfTmcB06gIvlIOryf6S2Fwn@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywod9/svCPZk+Tn3+GkeSznaE2h5letgsfEqtfhAdSNbK0pMq62
+	EGQOMpDEKJOexGoyThXdl3bxDIR4CcHC1h8y16lnkTItoolkE/qdaB1dnIbkNkb/2D2KEdMVAJ0
+	FnUyIUo+cIhY98YyCzQuZok7fDk8gAQ4=
+X-Google-Smtp-Source: AGHT+IGupjLPJfmTwVsmvNg0fAfU7DGdQNDawRspJaseP9wgN7f5DAnJ+5/LOf3oSCS/IGTVEHVkkx5+Ray2I6WcuTI=
+X-Received: by 2002:a05:6820:1908:b0:606:361b:52ad with SMTP id
+ 006d021491bc7-609f3731c3bmr2140452eaf.3.1747404777502; Fri, 16 May 2025
+ 07:12:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250516-dtb-check-mt8188-v2-2-fb60bef1b8e1@collabora.com>
-References: <20250516-dtb-check-mt8188-v2-0-fb60bef1b8e1@collabora.com>
-In-Reply-To: <20250516-dtb-check-mt8188-v2-0-fb60bef1b8e1@collabora.com>
-To: kernel@collabora.com, Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Garmin Chang <garmin.chang@mediatek.com>, 
- Friday Yang <friday.yang@mediatek.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- Julien Massot <julien.massot@collabora.com>
-X-Mailer: b4 0.14.2
+References: <20250514055723.1328557-1-sunilvl@ventanamicro.com> <20250514055723.1328557-2-sunilvl@ventanamicro.com>
+In-Reply-To: <20250514055723.1328557-2-sunilvl@ventanamicro.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 16 May 2025 16:12:46 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hGVYyHX7ZQPQ5XNrHBBy9jfA+WMLu7XaoXAqr3s4dOfg@mail.gmail.com>
+X-Gm-Features: AX0GCFsH-bwqQdQsyTXD9jznFAfsf5DgDdkDatIcIuRAOxRJWF942Z9YbvDa2JI
+Message-ID: <CAJZ5v0hGVYyHX7ZQPQ5XNrHBBy9jfA+WMLu7XaoXAqr3s4dOfg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] ACPICA: actbl2: Add definitions for RIMT
+To: Sunil V L <sunilvl@ventanamicro.com>
+Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-acpi@vger.kernel.org, iommu@lists.linux.dev, 
+	acpica-devel@lists.linux.dev, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Tomasz Jeznach <tjeznach@rivosinc.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Atish Kumar Patra <atishp@rivosinc.com>, 
+	Anup Patel <apatel@ventanamicro.com>, Andrew Jones <ajones@ventanamicro.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The binding now require the '#reset-cells' property but the
-devicetree has not been updated which trigger dtb-check errors.
+On Wed, May 14, 2025 at 7:57=E2=80=AFAM Sunil V L <sunilvl@ventanamicro.com=
+> wrote:
+>
+> ACPICA commit 73c32bc89cad64ab19c1231a202361e917e6823c
+>
+> RISC-V IO Mapping Table (RIMT) is a new static table defined for RISC-V
+> to communicate IOMMU information to the OS. The specification for RIMT
+> is available at [1]. Add structure definitions for RIMT.
+>
+> [1] - https://github.com/riscv-non-isa/riscv-acpi-rimt
+>
+> Link: https://github.com/acpica/acpica/commit/73c32bc8
+> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Julien Massot <julien.massot@collabora.com>
----
- arch/arm64/boot/dts/mediatek/mt8188.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+An analogous patch is present in linux-next already as
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8188.dtsi b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-index 296090fbaf4953db8075f72073509b731dc41e51..dec6ce3e94e92c8e1e2c3680cb3584394d9058bd 100644
---- a/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8188.dtsi
-@@ -2647,36 +2647,42 @@ imgsys1_dip_top: clock-controller@15110000 {
- 			compatible = "mediatek,mt8188-imgsys1-dip-top";
- 			reg = <0 0x15110000 0 0x1000>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
- 		};
- 
- 		imgsys1_dip_nr: clock-controller@15130000 {
- 			compatible = "mediatek,mt8188-imgsys1-dip-nr";
- 			reg = <0 0x15130000 0 0x1000>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
- 		};
- 
- 		imgsys_wpe1: clock-controller@15220000 {
- 			compatible = "mediatek,mt8188-imgsys-wpe1";
- 			reg = <0 0x15220000 0 0x1000>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
- 		};
- 
- 		ipesys: clock-controller@15330000 {
- 			compatible = "mediatek,mt8188-ipesys";
- 			reg = <0 0x15330000 0 0x1000>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
- 		};
- 
- 		imgsys_wpe2: clock-controller@15520000 {
- 			compatible = "mediatek,mt8188-imgsys-wpe2";
- 			reg = <0 0x15520000 0 0x1000>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
- 		};
- 
- 		imgsys_wpe3: clock-controller@15620000 {
- 			compatible = "mediatek,mt8188-imgsys-wpe3";
- 			reg = <0 0x15620000 0 0x1000>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
- 		};
- 
- 		camsys: clock-controller@16000000 {
-@@ -2689,24 +2695,28 @@ camsys_rawa: clock-controller@1604f000 {
- 			compatible = "mediatek,mt8188-camsys-rawa";
- 			reg = <0 0x1604f000 0 0x1000>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
- 		};
- 
- 		camsys_yuva: clock-controller@1606f000 {
- 			compatible = "mediatek,mt8188-camsys-yuva";
- 			reg = <0 0x1606f000 0 0x1000>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
- 		};
- 
- 		camsys_rawb: clock-controller@1608f000 {
- 			compatible = "mediatek,mt8188-camsys-rawb";
- 			reg = <0 0x1608f000 0 0x1000>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
- 		};
- 
- 		camsys_yuvb: clock-controller@160af000 {
- 			compatible = "mediatek,mt8188-camsys-yuvb";
- 			reg = <0 0x160af000 0 0x1000>;
- 			#clock-cells = <1>;
-+			#reset-cells = <1>;
- 		};
- 
- 		ccusys: clock-controller@17200000 {
+ced63370237a ACPICA: actbl2: Add definitions for RIMT
 
--- 
-2.49.0
+No need to send this again.
 
+> ---
+>  include/acpi/actbl2.h | 83 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 83 insertions(+)
+>
+> diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
+> index 2e917a8f8bca..99ea8bfe47de 100644
+> --- a/include/acpi/actbl2.h
+> +++ b/include/acpi/actbl2.h
+> @@ -50,6 +50,7 @@
+>  #define ACPI_SIG_RAS2           "RAS2" /* RAS2 Feature table */
+>  #define ACPI_SIG_RGRT           "RGRT" /* Regulatory Graphics Resource T=
+able */
+>  #define ACPI_SIG_RHCT           "RHCT" /* RISC-V Hart Capabilities Table=
+ */
+> +#define ACPI_SIG_RIMT           "RIMT" /* RISC-V IO Mapping Table */
+>  #define ACPI_SIG_SBST           "SBST" /* Smart Battery Specification Ta=
+ble */
+>  #define ACPI_SIG_SDEI           "SDEI" /* Software Delegated Exception I=
+nterface Table */
+>  #define ACPI_SIG_SDEV           "SDEV" /* Secure Devices table */
+> @@ -3002,6 +3003,88 @@ struct acpi_rhct_hart_info {
+>         u32 uid;                /* ACPI processor UID */
+>  };
+>
+> +/***********************************************************************=
+********
+> + *
+> + * RIMT - RISC-V IO Remapping Table
+> + *
+> + * https://github.com/riscv-non-isa/riscv-acpi-rimt
+> + *
+> + ***********************************************************************=
+*******/
+> +
+> +struct acpi_table_rimt {
+> +       struct acpi_table_header header;        /* Common ACPI table head=
+er */
+> +       u32 num_nodes;          /* Number of RIMT Nodes */
+> +       u32 node_offset;        /* Offset to RIMT Node Array */
+> +       u32 reserved;
+> +};
+> +
+> +struct acpi_rimt_node {
+> +       u8 type;
+> +       u8 revision;
+> +       u16 length;
+> +       u16 reserved;
+> +       u16 id;
+> +       char node_data[];
+> +};
+> +
+> +enum acpi_rimt_node_type {
+> +       ACPI_RIMT_NODE_TYPE_IOMMU =3D 0x0,
+> +       ACPI_RIMT_NODE_TYPE_PCIE_ROOT_COMPLEX =3D 0x1,
+> +       ACPI_RIMT_NODE_TYPE_PLAT_DEVICE =3D 0x2,
+> +};
+> +
+> +struct acpi_rimt_iommu {
+> +       u8 hardware_id[8];      /* Hardware ID */
+> +       u64 base_address;       /* Base Address */
+> +       u32 flags;              /* Flags */
+> +       u32 proximity_domain;   /* Proximity Domain */
+> +       u16 pcie_segment_number;        /* PCIe Segment number */
+> +       u16 pcie_bdf;           /* PCIe B/D/F */
+> +       u16 num_interrupt_wires;        /* Number of interrupt wires */
+> +       u16 interrupt_wire_offset;      /* Interrupt wire array offset */
+> +       u64 interrupt_wire[];   /* Interrupt wire array */
+> +};
+> +
+> +/* IOMMU Node Flags */
+> +#define ACPI_RIMT_IOMMU_FLAGS_PCIE      (1)
+> +#define ACPI_RIMT_IOMMU_FLAGS_PXM_VALID (1 << 1)
+> +
+> +/* Interrupt Wire Structure */
+> +struct acpi_rimt_iommu_wire_gsi {
+> +       u32 irq_num;            /* Interrupt Number */
+> +       u32 flags;              /* Flags */
+> +};
+> +
+> +/* Interrupt Wire Flags */
+> +#define ACPI_RIMT_GSI_LEVEL_TRIGGERRED  (1)
+> +#define ACPI_RIMT_GSI_ACTIVE_HIGH       (1 << 1)
+> +
+> +struct acpi_rimt_id_mapping {
+> +       u32 source_id_base;     /* Source ID Base */
+> +       u32 num_ids;            /* Number of IDs */
+> +       u32 dest_id_base;       /* Destination Device ID Base */
+> +       u32 dest_offset;        /* Destination IOMMU Offset */
+> +       u32 flags;              /* Flags */
+> +};
+> +
+> +struct acpi_rimt_pcie_rc {
+> +       u32 flags;              /* Flags */
+> +       u16 reserved;           /* Reserved */
+> +       u16 pcie_segment_number;        /* PCIe Segment number */
+> +       u16 id_mapping_offset;  /* ID mapping array offset */
+> +       u16 num_id_mappings;    /* Number of ID mappings */
+> +};
+> +
+> +/* PCIe Root Complex Node Flags */
+> +#define ACPI_RIMT_PCIE_ATS_SUPPORTED   (1)
+> +#define ACPI_RIMT_PCIE_PRI_SUPPORTED   (1 << 1)
+> +
+> +struct acpi_rimt_platform_device {
+> +       u16 id_mapping_offset;  /* ID Mapping array offset */
+> +       u16 num_id_mappings;    /* Number of ID mappings */
+> +       char device_name[];     /* Device Object Name */
+> +};
+> +
+>  /***********************************************************************=
+********
+>   *
+>   * SBST - Smart Battery Specification Table
+> --
+> 2.43.0
+>
