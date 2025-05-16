@@ -1,137 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9D922B8AA;
-	Fri, 16 May 2025 20:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB721A704B
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 20:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747426249; cv=none; b=Mnrvn8Zz5t/IvRkaNHCf870dj0fstoGf0sDMfggfMop2h5lwroGuRb5VUSMLBtbOQXFSmf3QS8mJJih3aniTjjBHwRJ58JYfoYqKkGmcwZKdBwc4lpgW+nRApV0V3F9XhhI7UCBfQjAMH2hZPNrw/zQmZTGdKVojmAQzcmWHPGY=
+	t=1747426440; cv=none; b=Xcp6XL7OyNyjQQc84gKE2+i9VCKSDz70JufIYH2pJfjVSiwUeg6x+U1TawInolyqvs9lpcqtVQE7t1yr0RF372qACeElpn3nTGWIKb2Bo1oK2LAJ6/RSXkbdESMr9xbq8I9hb9gIcQPH0JfcqAjx5GH0rWnlnoacEN1Fz+1BsAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747426249; c=relaxed/simple;
-	bh=RsJnEiGMfY8ySPPNgglNSloP9TqnLcQUKwlGcW87ldA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m/lT+2kFjG68ruWR32TsD/CoGKyPK/Y2yH43g4D6JU7LIO5KQHHBabBvV4VYfMzd2aNiit7YR/NlruGbmt+gIjnTTv6NmcJK9L0ZbGpXbLmMmJHQJzYF+BHLbGbjPSRTa2v0+n6l8CU9Dz8BdE9GYScEayOJGK1D/8uYyODal90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dpQ1GXoA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747426440; c=relaxed/simple;
+	bh=MDcSzkqhc+uupgqjf6x+wJl30j3h3JVgcrG8uMivN34=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UJQtLmfbYLkz0HYBgBCS9CpFZQkUlM1yexgx54asTn8VhEB2pCrIQ5vvnPhNk9kP27zA6MBGeTiEIe/L2FuTvnuX5c3yie5s+TUqkHTd+tAvEPriXUAqwX+TyzykcXHtwBLT2L8OQsXOj0sViSjmq9wabe3AYcr5YoiinVcKC3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=npTpxYGA; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dpQ1GXoA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5230C4AF09;
-	Fri, 16 May 2025 20:10:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747426248;
-	bh=RsJnEiGMfY8ySPPNgglNSloP9TqnLcQUKwlGcW87ldA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dpQ1GXoAtxByNY2ZegVsAqN9huV9U6VbzhWIV9j1VvjENDgsosiB/3OefOuneZ4AW
-	 mSLyewjWf6bvu/Yu6fWExozEYiFNqCci8BD2Rk2/DcBa2YLs2Y1c+EZORhvch+z5/g
-	 9VlWiMZRIuB266v+zS1JYIhS/B+s1szWhqhjnrOckY3FuOFy6Iqf/q3Nr88yAk6pzQ
-	 YYJIrUyhF/9tIKD6ypxZYy6r0OMNpe3DfBmXMcPhSb2uXozDsTHKQ53Dsl3Warqnus
-	 kxOjKsEq1pdJmS6mrzMmKe5DX54mKKqzbj9Ds2cLySVQ6gM3jzkFwYk8gcDk4rMwVI
-	 ex1VMxg5Jj1/g==
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3feaedb531dso900248b6e.3;
-        Fri, 16 May 2025 13:10:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU2MkJtG+Lqn6Mkc/cIpFA8bJpGdFB/h0Nu4dIEeY3AM9SSiXOa/ODb7mLC78IlmsacqPkRxUSt/TvIbA8=@vger.kernel.org, AJvYcCUr/L/1xJdchBoqHfwMVevMatFpMH45Cy4cNpj/Q1G89NQvK1rwLZokYjHk/xINeCxAwhBelK5mu14=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/S0v18RphxE0qBGWpN5OKaNkygDO9Z9pnnc6ZRmpBACuZGiYs
-	3gKIc5UuXri/I/ReoQsg2vdWNeU1rgS1L/ndXHB12qj1/UnMu09vkvOHTJBua6D3nkpcA4reETP
-	zcKVHfIyHK1aGxXSPmfLjpGqcVjyWY/M=
-X-Google-Smtp-Source: AGHT+IF3WM6A+G1l0V7kg3GZor06elBl/cpIa0xxStoGLdD/RWX+Anzm256mOdkT+SoLG5OELZwYv0iqxnO//JumcbM=
-X-Received: by 2002:a05:6808:6b98:b0:3f9:aeb6:6eac with SMTP id
- 5614622812f47-404da7debffmr2431834b6e.30.1747426247985; Fri, 16 May 2025
- 13:10:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="npTpxYGA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=C6wHRJOd+zyZK8Y2kGV8x2oebbYnCbgNySLihj4Ucr0=; b=npTpxYGAGPKv0I+PIwOGwCdL9x
+	5AX4Z2TAd6kqZv01z6yCMwjPLpjg5WjwYql8VUbAUBlXLWOQyPd25Swfmcv47CXNvydmvhEcvF1KF
+	c47VmyA+nmCFKNgonYwALMXd2xb0cUbvozOOazTyYZB5t+m4X9fbrOBQM0h9Tw13rKcWk563So8Ji
+	HVJHpluGTtmNwG65HF2hC79fXERxxwEOoxLqvVg/PZhYoZtNNfzakzk+FAuZSAGezCqgxmfkghBz9
+	nFFJm6lvmm++3+H2hTaMrU8SABlCjFwoh3gCEHSZzpgPwVl9cB7kUdwsTtJWGwMOjN3/0Drov1LlF
+	uqF8hiGw==;
+Received: from [191.204.192.64] (helo=[192.168.15.100])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uG1LY-009ESy-1y; Fri, 16 May 2025 22:13:54 +0200
+Message-ID: <1b9b4083-9e09-4499-aa84-1d39f1d3cb19@igalia.com>
+Date: Fri, 16 May 2025 17:13:50 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <b8f0f04d-ce16-4be0-93fe-b2416ee08653@linuxfoundation.org>
-In-Reply-To: <b8f0f04d-ce16-4be0-93fe-b2416ee08653@linuxfoundation.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 16 May 2025 22:10:37 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gEewLNomFKbyDMa523ED3MD9Stx9dpvBF6g4mihCHBTw@mail.gmail.com>
-X-Gm-Features: AX0GCFsxXUTiWWuqOnKuEDb718Hw4Jfanz2ARfvgl3Fepv2GL7-5-l1Aw0fl78o
-Message-ID: <CAJZ5v0gEewLNomFKbyDMa523ED3MD9Stx9dpvBF6g4mihCHBTw@mail.gmail.com>
-Subject: Re: [GIT PULL] cpupower update for Linux 6.16-rc1
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, shuah <shuah@kernel.org>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Thomas Renninger <trenn@suse.com>, 
-	Thomas Renninger <trenn@suse.de>, "John B. Wyatt IV" <jwyatt@redhat.com>, John Kacur <jkacur@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] selftests/futex: Use TAP output in futex_priv_hash
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ linux-kernel@vger.kernel.org
+Cc: Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Valentin Schneider <vschneid@redhat.com>, Waiman Long <longman@redhat.com>
+References: <20250516160339.1022507-1-bigeasy@linutronix.de>
+ <20250516160339.1022507-2-bigeasy@linutronix.de>
+Content-Language: en-US
+From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+In-Reply-To: <20250516160339.1022507-2-bigeasy@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Shuah,
+Em 16/05/2025 13:03, Sebastian Andrzej Siewior escreveu:
+> Use TAP output for easier automated testing.
+> 
+> Suggested-by: André Almeida <andrealmeid@igalia.com>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-On Fri, May 16, 2025 at 10:06=E2=80=AFPM Shuah Khan <skhan@linuxfoundation.=
-org> wrote:
->
-> Hi Rafael,
->
-> Please pull the following cpupower  update for Linux 6.16-rc1.
->
-> Adds systemd service to run cpupower and changes binding's makefile
-> to use -lcpupower.
->
->          cpupower: add a systemd service to run cpupower
->          cpupower: do not write DESTDIR to cpupower.service
->          cpupower: do not call systemctl at install time
->          cpupower: do not install files to /etc/default/
->          cpupower: change binding's makefile to use -lcpupower
->
-> diff is attached.
->
-> thanks,
-> -- Shuah
->
-> ----------------------------------------------------------------
-> The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add53=
-0e:
->
->    Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
->
-> are available in the Git repository at:
->
->    git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux tags/linux-c=
-pupower-6.16-rc1
->
-> for you to fetch changes up to e5174365c13246ed8fd2d40900edec37be6f7a34:
->
->    cpupower: do not install files to /etc/default/ (2025-05-13 16:06:28 -=
-0600)
->
-> ----------------------------------------------------------------
-> linux-cpupower-6.16-rc1
->
-> Adds systemd service to run cpupower and changes binding's makefile
-> to use -lcpupower.
->
->          cpupower: add a systemd service to run cpupower
->          cpupower: do not write DESTDIR to cpupower.service
->          cpupower: do not call systemctl at install time
->          cpupower: do not install files to /etc/default/
->          cpupower: change binding's makefile to use -lcpupower
->
-> ----------------------------------------------------------------
-> Francesco Poli (wintermute) (4):
->        cpupower: add a systemd service to run cpupower
->        cpupower: do not write DESTDIR to cpupower.service
->        cpupower: do not call systemctl at install time
->        cpupower: do not install files to /etc/default/
->
-> John B. Wyatt IV (1):
->        cpupower: change binding's makefile to use -lcpupower
->
->   tools/power/cpupower/Makefile                 | 13 +++++++++++
->   tools/power/cpupower/README                   | 28 ++++++++++++++++++++=
-+++
->   tools/power/cpupower/bindings/python/Makefile |  8 +++----
->   tools/power/cpupower/bindings/python/README   | 13 ++++++-----
->   tools/power/cpupower/cpupower-service.conf    | 32 ++++++++++++++++++++=
-+++++++
->   tools/power/cpupower/cpupower.service.in      | 16 ++++++++++++++
->   tools/power/cpupower/cpupower.sh              | 26 ++++++++++++++++++++=
-++
->   7 files changed, 126 insertions(+), 10 deletions(-)
->   create mode 100644 tools/power/cpupower/cpupower-service.conf
->   create mode 100644 tools/power/cpupower/cpupower.service.in
->   create mode 100644 tools/power/cpupower/cpupower.sh
-> ----------------------------------------------------------------
-
-Pulled and added to linux-pm.git/linux-next, thanks!
+Reviewed-by: André Almeida <andrealmeid@igalia.com>
