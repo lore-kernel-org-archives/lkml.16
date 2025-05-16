@@ -1,73 +1,33 @@
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9561D88AC
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.67
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC7543D69;
+	Fri, 16 May 2025 06:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747375361; cv=none; b=hPMbrxwNTL+pvi0c8EnGt9LVQwdrfmWWKqNeCPjHOY1mFLXD6qSvGUxbNCwoB49wpZa3SvQ5MK8nJ/a3UbcH+oa+efO5l1bQFWIZzYnCdHPl09V40n9AgfmJMJoq1kbLH23oDp7YyK01kFK7/tTfASHjVMISuFMmJQ/bz2L8Mlw=
+	t=1747375406; cv=none; b=F/GR/LQM79BMJTYWHse9mTByex1L+FpH/RLTDSiEmax4yWCEEldOpBji/zjEmYEMiq3wiXwIT4YekWvUP60FtvfASmmsf5aq9ZgxnKTNw0ufj7tijTRK+4jsgRilterNMXtvzXKSxG/sZuQ4peNYUNWLpk3dZmqJLKaiHxvjy9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747375361; c=relaxed/simple;
-	bh=FFW0hqGTqpSSQEt0oM9VrJkvsbPrdiAwXszFH8NO5sc=;
+	s=arc-20240116; t=1747375406; c=relaxed/simple;
+	bh=oOpjNen7QUYebQBY79f3YikSpSsA8ABTeD0DigpqGZI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U74bKw9bHaAk84GhAImUI3Mcxjn9OkJjXJr8NlpbvraSTsJJ7RolcecZp6cekCIZq3AEwNMAO1hSCukfVnunq9Eh2q11jdNxPFbgVafXdWep33dSFcvTDdRHoQf8Kq301TloKm7CuwvK7aFAd6BsOl+bgCoDpOYQMiGD3miqh/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dwOsgyFC; arc=none smtp.client-ip=209.85.128.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dwOsgyFC"
-Received: by mail-wm1-f67.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so13278275e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 23:02:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1747375358; x=1747980158; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YRCpYLM2KigShkSCMx1Qo6LnPBeFu9CM55DsyR/vk34=;
-        b=dwOsgyFCqUtAcxaArAly5u3HlrR0tZeCOZA5XgIZrvlgwqzqD8uisx2IOdMkXBU49w
-         W1DzTjO/Hhg4Av5PY5hNm/SeQ1V5J6IH/7ZLOPBZJJ8g/2ZTcZuxIRqFOJW3J/Z/ZJH4
-         ewH3fpXljxZToAHhvsKJ/AebACnS37CgT1HU8oJz7kNpDCpZF5MiYoJ2kTBkRn/VorzC
-         0bQ0M+wUYBpa0WvNBbk8TJEGU2QItB0RNlqzb20EJ6wQ4dDrwQ5lTTgiWfUGZv0lN5Op
-         ixN7sFbfiuQJONpzX9jtJegEwuserDLS6C233GiEx/Wh2F5fAjCE+IDslThlgd6QQScP
-         HmFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747375358; x=1747980158;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YRCpYLM2KigShkSCMx1Qo6LnPBeFu9CM55DsyR/vk34=;
-        b=vCXXbtCpR8SdJ7IvEmRvgh2nD5FUnJYmuIN46YFvjYXOSF0bDm4BZG3SJ+I05RFxD7
-         PbFGd8qk3ZEn8Gp8M0rt7R+lvBzuNah+41ePUJ4dYWZjfoy1JpMdPon3j6YJEkyIfel2
-         lPAZQigQb22Inp3wLJ7HJxo+qeEnyAiR/Wg1JYKvgcHp2cS2J+CQ+XO2F08jHNIhU6fE
-         gQxbZczYEKiH/jJejHM19W4xoVZEXWa87E8r3As/rh+C/P85w1P+UppOVQOaiRiLJKBG
-         y1I9wwv0LquF+ye94iGm6YFIaI1+HbCScabXC0KgiG8XOTDTB9jUT8Gmeb0Jsh9+zc6S
-         EPcw==
-X-Forwarded-Encrypted: i=1; AJvYcCW+bnC6a0WBZRZ9Xa+yg3J6tjrWTavoXWW6JDDo49xpGSmQPiJ87/dX15YvWrUCx+2Yy1rhoMjQUo9qfEE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx29n4tZH8IER/hOCXk7Yogvm6bKxyzx5R0QVHSPagiLryUncqU
-	ZXNCkvpXV1Hr7ujmrlrd1aP0inTdu2uG8wbXhO+tpSsS24XiuGPt3U7SUCF9BQ0GFzk=
-X-Gm-Gg: ASbGncvhQa40Mfg4QHXnx51+w39PB5CzJBcCgi6IjtNOE5acxfURyaCAlqt4ISdb5YC
-	q4gWhIdLYxVNkjqiXo0yjhsqvKKz7pXE0/LRPwwg1LQDrd0tYUma2N4bhQmAbkGZPCrAnGuBo0W
-	ip8PnSssdttzUhyXpokckYtEXxENIPA8YM1EqV+JojHc8sVZwKJ7p7E6sVHY16H9Akz5cbMwUYO
-	nSt7lfZ5f02WlBj833OFl+2xV2UYz4PtNRP5PgELGjunfjCCr0HAGA7A7JrpMpacv4XYDH6gAkd
-	ua3UfslqDR7tHiKY1U85ZerFSAuJAmmWN2mm9PEs2hRQkx/yT22Rf9rkNjr+ZNh1PaFSRYU=
-X-Google-Smtp-Source: AGHT+IExAX5L6jhpudxoopt/jOxKXl18l7eevqO0BjrQScjyjlt4zB8dW0pf982EIRtAZl2LOgjSqw==
-X-Received: by 2002:a5d:4567:0:b0:391:4999:778b with SMTP id ffacd0b85a97d-3a35c84428fmr1663501f8f.28.1747375357714;
-        Thu, 15 May 2025 23:02:37 -0700 (PDT)
-Received: from u94a (27-51-34-195.adsl.fetnet.net. [27.51.34.195])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87bec12287esm1112560241.10.2025.05.15.23.02.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 May 2025 23:02:37 -0700 (PDT)
-Date: Fri, 16 May 2025 14:02:22 +0800
-From: Shung-Hsi Yu <shung-hsi.yu@suse.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Uladzislau Rezki <urezki@gmail.com>, Erhard Furtner <erhard_f@mailbox.org>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	bpf@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 0/2] mm: vmalloc: Actually use the in-place vrealloc
- region
-Message-ID: <yw7aumjfrefi5cdejjgtjfeusaihfh5yjuhry3xvetjld36fgi@ob4a6lwdlqt4>
-References: <20250515214020.work.519-kees@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=t6uVcgm9wMBA7zaL5ylwMIoNctwN/rD0c+gsO/5KckRzTPM8NgSbk6CWJTrJNJ2kQwgJWcaHPGgucQ3myCDjSH8kOpNCGAfGBSCRGItVVMGe5f5r60kPfqUJBSxjgtMRESIL4rEzWQhJjdsiOl6RI5q46u6GVobLZ9k6d6u5AzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-3f-6826d52339f8
+Date: Fri, 16 May 2025 15:03:09 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Gavin Guo <gavinguo@igalia.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev,
+	osalvador@suse.de, akpm@linux-foundation.org,
+	mike.kravetz@oracle.com, kernel-dev@igalia.com,
+	stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+	Florent Revest <revest@google.com>, Gavin Shan <gshan@redhat.com>,
+	kernel_team@skhynix.com
+Subject: Re: [PATCH] mm/hugetlb: fix a deadlock with pagecache_folio and
+ hugetlb_fault_mutex_table
+Message-ID: <20250516060309.GA51921@system.software.com>
+References: <20250513093448.592150-1-gavinguo@igalia.com>
+ <20250514064729.GA17622@system.software.com>
+ <075ae729-1d4a-4f12-a2ba-b4f508e5d0a1@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,29 +36,110 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250515214020.work.519-kees@kernel.org>
+In-Reply-To: <075ae729-1d4a-4f12-a2ba-b4f508e5d0a1@igalia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpgkeLIzCtJLcpLzFFi42LhesuzUFf5qlqGwdRVAhZz1q9hs1iy9gyz
+	xctd25gsnn7qY7E49+I7k8XlXXPYLO6t+c9q8XF/sMWynQ9ZLM5MK7LonvmD1WLBxkeMDjwe
+	CzaVekyY3c3msenTJHaPEzN+s3gsbJjK7PHx6S0Wj/f7rrJ5bD5d7fF5k1wAZxSXTUpqTmZZ
+	apG+XQJXxsMurYLjYhXnjnUwNzBOEOpi5OSQEDCR2HW9nQXGvrDxBpjNIqAqsXzuCzYQm01A
+	XeLGjZ/MILaIgLLEhykHgWq4OJgFTjBJXJy3iB0kISyQInHtwDawZl4BC4nj+5YzgxQJCcxh
+	lLh59Ss7REJQ4uTMJ2BFzAJaEjf+vWTqYuQAsqUllv/jAAlzCthJ3O/ewwRiiwItO7DtOBPI
+	HAmB12wSDX9eMEJcKilxcMUNlgmMArOQjJ2FZOwshLELGJlXMQpl5pXlJmbmmOhlVOZlVugl
+	5+duYgTGy7LaP9E7GD9dCD7EKMDBqMTD63BdNUOINbGsuDL3EKMEB7OSCO/1LOUMId6UxMqq
+	1KL8+KLSnNTiQ4zSHCxK4rxG38pThATSE0tSs1NTC1KLYLJMHJxSDYzVAn3rz9saqB4VPHhR
+	69aq/lCb7L021tseR7eqdHkwLN/+zaXHRyV/zqufE0Q3SVgVFpxnOnzoxWoPnuybs6J/346T
+	ZUp3tni2+yfHgSwPn9un2i/KcVVMf5oSdEqA7UdPyn+HDq5/tm/d6zZZft7/5Xreug4Bq2+2
+	i4vN1NaqT41sY9Le7abEUpyRaKjFXFScCAAsr5bMkwIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGLMWRmVeSWpSXmKPExsXC5WfdrKt8VS3DoFXZYs76NWwWS9aeYbZ4
+	uWsbk8XTT30sFudefGeyODz3JKvF5V1z2CzurfnPavFxf7DFsp0PWSzOTCuy6J75g9ViwcZH
+	jA68Hgs2lXpMmN3N5rHp0yR2jxMzfrN4LGyYyuzx8ektFo/3+66yeSx+8YHJY/Ppao/Pm+QC
+	uKK4bFJSczLLUov07RK4Mh52aRUcF6s4d6yDuYFxglAXIyeHhICJxIWNN1hAbBYBVYnlc1+w
+	gdhsAuoSN278ZAaxRQSUJT5MOQhUw8XBLHCCSeLivEXsIAlhgRSJawe2gTXzClhIHN+3nBmk
+	SEhgDqPEzatf2SESghInZz4BK2IW0JK48e8lUxcjB5AtLbH8HwdImFPATuJ+9x4mEFsUaNmB
+	bceZJjDyzkLSPQtJ9yyE7gWMzKsYRTLzynITM3NM9YqzMyrzMiv0kvNzNzECQ39Z7Z+JOxi/
+	XHY/xCjAwajEw+twXTVDiDWxrLgy9xCjBAezkgjv9SzlDCHelMTKqtSi/Pii0pzU4kOM0hws
+	SuK8XuGpCUIC6YklqdmpqQWpRTBZJg5OqQbGQwbXnn4RcGZydr7ReDpuw/s3agHMT+61uXC6
+	sr//J37grZbO8rfO7oFVLYvelnSau+mbc+Ve+bnngFXu3kvhB1M9mi1r03eHiwcqrJ8l28aq
+	5XghatGDp0qWS2Q3W3PWP1/z0Z9vAfeqVeFbog98d8n471S5PyPp0cJzd5/cOm7l6P702JvJ
+	SizFGYmGWsxFxYkA9ttclnkCAAA=
+X-CFilter-Loop: Reflected
 
-On Thu, May 15, 2025 at 02:42:14PM -0700, Kees Cook wrote:
-> Hi,
+On Wed, May 14, 2025 at 04:10:12PM +0800, Gavin Guo wrote:
+> Hi Byungchul,
 > 
-> This fixes a performance regression[1] with vrealloc(). This needs to
-> get into v6.15, which is where the regression originates, and then it'll
-> get backport to the -stable releases as well.
+> On 5/14/25 14:47, Byungchul Park wrote:
+> > On Tue, May 13, 2025 at 05:34:48PM +0800, Gavin Guo wrote:
+> > > The patch fixes a deadlock which can be triggered by an internal
+> > > syzkaller [1] reproducer and captured by bpftrace script [2] and its log
+> > 
+> > Hi,
+> > 
+> > I'm trying to reproduce using the test program [1].  But not yet
+> > produced.  I see a lot of segfaults while running [1].  I guess
+> > something goes wrong.  Is there any prerequisite condition to reproduce
+> > it?  Lemme know if any.  Or can you try DEPT15 with your config and
+> > environment by the following steps:
+> > 
+> >     1. Apply the patchset on v6.15-rc6.
+> >        https://lkml.kernel.org/r/20250513100730.12664-1-byungchul@sk.com
+> >     2. Turn on CONFIG_DEPT.
+> >     3. Run test program reproducing the deadlock.
+> >     4. Check dmesg to see if dept reported the dependency.
+> > 
+> > 	Byungchul
 > 
-> Thanks!
-> 
-> -Kees
-> 
-> [1] https://lore.kernel.org/lkml/20250515-bpf-verifier-slowdown-vwo2meju4cgp2su5ckj@6gi6ssxbnfqg/
-> 
-> Kees Cook (2):
->   mm: vmalloc: Actually use the in-place vrealloc region
->   mm: vmalloc: Only zero-init on vrealloc shrink
+> I have enabled the patchset and successfully reproduced the bug. It
+> seems that there is no warning or error log related to the lock. Did I
+> miss anything? This is the console log:
+> https://drive.google.com/file/d/1dxWNiO71qE-H-e5NMPqj7W-aW5CkGSSF/view?usp=sharing
 
-Thank you for the prompt fix! I'll remember to include a more thorough
-note on reproducing the issue next time.
+My bad.  I think I found the problem that dept didn't report it.  You
+might see the report with the following patch applied on the top, there
+might be a lot of false positives along with that might be annoying tho.
 
-With the patchset applied, BPF selftests on both 6.15-rc6 and 6.14.7-rc2
-passes successfully.
+Some of my efforts to suppress false positives, suppressed the real one.
 
-Tested-by: Shung-Hsi Yu <shung-hsi.yu@suse.com>
+Do you mind if I ask you to run the test with the following patch
+applied?  It'd be appreciated if you do and share the result with me.
+
+	Byungchul
+
+---
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index f31cd68f2935..fd7559e663c5 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -1138,6 +1138,7 @@ static inline bool trylock_page(struct page *page)
+ static inline void folio_lock(struct folio *folio)
+ {
+ 	might_sleep();
++	dept_page_wait_on_bit(&folio->page, PG_locked);
+ 	if (!folio_trylock(folio))
+ 		__folio_lock(folio);
+ }
+diff --git a/kernel/dependency/dept.c b/kernel/dependency/dept.c
+index b2fa96d984bc..4e96a6a72d02 100644
+--- a/kernel/dependency/dept.c
++++ b/kernel/dependency/dept.c
+@@ -931,7 +931,6 @@ static void print_circle(struct dept_class *c)
+ 	dept_outworld_exit();
+ 
+ 	do {
+-		tc->reported = true;
+ 		tc = fc;
+ 		fc = fc->bfs_parent;
+ 	} while (tc != c);
+diff --git a/kernel/dependency/dept_unit_test.c b/kernel/dependency/dept_unit_test.c
+index 88e846b9f876..496149f31fb3 100644
+--- a/kernel/dependency/dept_unit_test.c
++++ b/kernel/dependency/dept_unit_test.c
+@@ -125,6 +125,8 @@ static int __init dept_ut_init(void)
+ {
+ 	int i;
+ 
++	return 0;
++
+ 	lockdep_off();
+ 
+ 	dept_ut_results.ecxt_stack_valid_cnt = 0;
+--
