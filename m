@@ -1,145 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20BE9231836;
-	Fri, 16 May 2025 09:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6CBA231837;
+	Fri, 16 May 2025 09:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747389280; cv=none; b=muGvkjV4T9Tz4IPWXGsuNdQrFo+uvDX1oCEcSLA3GOMZxdeuiWQU2YC0bw6Zsn/fKIkP2UvQIF2fZEHPh1PCkMKpn6GD0ObAQQcCW7+/vmHsQ7ZSAeBIdFZMkL64D+YP2gkf0aoMHKcTUdugkFO0otdXYRdTTBlNHTO+E+mE9rA=
+	t=1747389292; cv=none; b=LkMGWC4P6O4nfxXJJK3mYM8jAq8Rw/Y/z91pdVVcau2+f/NRG1qLZ0tAZfbF6epGBnPmRXIwAw3PcQxcv+DAPYgFzOLPQRnzEDw/LwsMsfYh7oLVNbOlhi8pXTqHDQaM0vr1MoGJNs2YvXBH3b0AhZDLeeIoDDE2EthJCJy7Qrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747389280; c=relaxed/simple;
-	bh=cNGzEGia25lZqXsVStZ30M0Gmy1ujfz1B+xpH/pyz5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DyPFDknRmyNbcDxBIHgNjRqu/00Yl6g4M4bpPvzET42JBtK/PToz+wBWnvcgugFrEqhwzY8CvZZHU1o6VFWub+DjKEwO2Y0dylOTPEM6LecOEsQUXLUr6JHQPqcgQoxw2IrnCk9JcbsC+Ec7jcCTI2cP/72FN18oUaEeH6S9W2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uyBoMusI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747389292; c=relaxed/simple;
+	bh=c0iIl7dJXWna8S1DBQZPoPO7ke8+5gOze/1BvGwFB/s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eZjcpHIIUUShdeJiD7Ty9uFYKYEtw1rjRWdGW0VqWsNEPOMVZ3mA4Dy3WkddNezkVUE+aIrMdhxF7l9Dt1OH3LIK/CiRC/dLzo7yln16WND5XHtN7hsSwaAm8vRaYoZJDfOT2RufK76WKfpz7P4hiOPxYU34XKAs2Xv+lXBhru4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Vkudkfw+; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uyBoMusI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F119C4CEEF;
-	Fri, 16 May 2025 09:54:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747389280;
-	bh=cNGzEGia25lZqXsVStZ30M0Gmy1ujfz1B+xpH/pyz5U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uyBoMusII2b45lXUcrViChhqP2cU17fdLv6zVDaxw8Kajvy9Xy27efVSKrlc7/mCZ
-	 rQaK+BzjNKV0+/XLrIACWcbBCkcehhGXdeuP3numrDxQ6bvbUG/NYX4jJGoK02VYL1
-	 WwLFlY5IX22Jf+cGS7H+XMZLPwJIpKIKPf2FyjvmPpD+98eZ0Hop9w691xyyIGAIrL
-	 jFEBwrap/t9Zwf7UkWrwJImzEvaX0/yNGFatq5AQPED4C5uBGIdSnvMmlFceoZ7qfX
-	 nbZ7FR70pp159O4JwpFKLBZXp6/t05ro6vNYmjTeOS7fYtVWEq8AvlwYlWcRwIM2Ww
-	 JvZZtln9UGzgw==
-Date: Fri, 16 May 2025 11:54:31 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jann Horn <jannh@google.com>
-Cc: linux-fsdevel@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Eric Dumazet <edumazet@google.com>, 
-	Oleg Nesterov <oleg@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
-	David Rheinsberg <david@readahead.eu>, Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, Alexander Mikhalitsyn <alexander@mihalicyn.com>
-Subject: Re: [PATCH v7 7/9] coredump: validate socket name as it is written
-Message-ID: <20250516-planen-radar-2131a4b7d9b1@brauner>
-References: <20250515-work-coredump-socket-v7-0-0a1329496c31@kernel.org>
- <20250515-work-coredump-socket-v7-7-0a1329496c31@kernel.org>
- <CAG48ez1wqbOmQMqg6rH4LNjNifHU_WciceO_SQwu8T=tA_KxLw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Vkudkfw+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747389287;
+	bh=jDeYi4hO2+10znc75difMvtZmuJ188y5tW3/0jbzEGk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Vkudkfw+ldEnbtby5RDZRxhpw76cbq6ti2Rx10gvpcwcWcRM3xZnbUrhZXyR/jr3g
+	 5AWcKZt5S1I8A38xpWS8Uw8EJCOH+UINRoy6es3WCh/3xAba/5hUrCO1+KJ5Q4420W
+	 oeT7bdswOTv0ugFHZO/GVNygCYlwkQnAj/C3glPjYWT6OQNA+IJxIarbWaKQnHAwDi
+	 SU8lWcjNLMGjZmqpQSvU1c5/BNnDpbb3cp2hDcjQC/zNMGfrbPfcM5EWKT97BBHOs1
+	 njAfgNciLW0UAu6KBmyOjET0y52mfEjozShlHbBgVTOniouuk3DYj8DsPPniORixFR
+	 AnAHc2TN+mr4A==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZzMr65b6Nz4wcd;
+	Fri, 16 May 2025 19:54:46 +1000 (AEST)
+Date: Fri, 16 May 2025 19:54:46 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, "Rafael J. Wysocki"
+ <rjw@rjwysocki.net>, "Ahmed S. Darwish" <darwi@linutronix.de>, Artem
+ Bityutskiy <artem.bityutskiy@linux.intel.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, "Rafael J. Wysocki"
+ <rafael.j.wysocki@intel.com>
+Subject: Re: linux-next: manual merge of the tip tree with the pm tree
+Message-ID: <20250516195446.1331ac06@canb.auug.org.au>
+In-Reply-To: <aCbvO5Q0B3yYxji4@gmail.com>
+References: <20250516161541.0cff29b8@canb.auug.org.au>
+	<aCbvO5Q0B3yYxji4@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez1wqbOmQMqg6rH4LNjNifHU_WciceO_SQwu8T=tA_KxLw@mail.gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/_wVQ2Q4E=Z6=pvU9HE0DJkb";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Thu, May 15, 2025 at 10:56:51PM +0200, Jann Horn wrote:
-> On Thu, May 15, 2025 at 12:04 AM Christian Brauner <brauner@kernel.org> wrote:
-> > In contrast to other parameters written into
-> > /proc/sys/kernel/core_pattern that never fail we can validate enabling
-> > the new AF_UNIX support. This is obviously racy as hell but it's always
-> > been that way.
-> >
-> > Signed-off-by: Christian Brauner <brauner@kernel.org>
-> 
-> Reviewed-by: Jann Horn <jannh@google.com>
-> 
-> > ---
-> >  fs/coredump.c | 37 ++++++++++++++++++++++++++++++++++---
-> >  1 file changed, 34 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/fs/coredump.c b/fs/coredump.c
-> > index 6ee38e3da108..d4ff08ef03e5 100644
-> > --- a/fs/coredump.c
-> > +++ b/fs/coredump.c
-> > @@ -1228,13 +1228,44 @@ void validate_coredump_safety(void)
-> >         }
-> >  }
-> >
-> > +static inline bool check_coredump_socket(void)
-> > +{
-> > +       if (core_pattern[0] != '@')
-> > +               return true;
-> > +
-> > +       /*
-> > +        * Coredump socket must be located in the initial mount
-> > +        * namespace. Don't give the that impression anything else is
-> > +        * supported right now.
-> > +        */
-> > +       if (current->nsproxy->mnt_ns != init_task.nsproxy->mnt_ns)
-> > +               return false;
-> 
-> (Ah, dereferencing init_task.nsproxy without locks is safe because
-> init_task is actually the boot cpu's swapper/idle task, which never
-> switches namespaces, right?)
+--Sig_/_wVQ2Q4E=Z6=pvU9HE0DJkb
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I would be very worried if it did. It would fsck everyone over that
-relies on copying its credentials and assumes that the set of namespaces
-is stable.
+Hi Ingo,
 
-> 
-> > +       /* Must be an absolute path. */
-> > +       if (*(core_pattern + 1) != '/')
-> > +               return false;
-> > +
-> > +       return true;
-> > +}
-> > +
-> >  static int proc_dostring_coredump(const struct ctl_table *table, int write,
-> >                   void *buffer, size_t *lenp, loff_t *ppos)
-> >  {
-> > -       int error = proc_dostring(table, write, buffer, lenp, ppos);
-> > +       int error;
-> > +       ssize_t retval;
-> > +       char old_core_pattern[CORENAME_MAX_SIZE];
-> > +
-> > +       retval = strscpy(old_core_pattern, core_pattern, CORENAME_MAX_SIZE);
-> > +
-> > +       error = proc_dostring(table, write, buffer, lenp, ppos);
-> > +       if (error)
-> > +               return error;
-> > +       if (!check_coredump_socket()) {
-> 
-> (non-actionable note: This is kiiinda dodgy under
-> SYSCTL_WRITES_LEGACY, but I guess we can assume that new users of the
-> new coredump socket feature aren't actually going to write the
-> coredump path one byte at a time, so I guess it's fine.)
+On Fri, 16 May 2025 09:54:35 +0200 Ingo Molnar <mingo@kernel.org> wrote:
+>
+> So I don't think the <asm/cpuid.h> change is needed - the header still=20
+> fully exists:
+>=20
+>   starship:~/tip> ls -lh arch/x86/include/asm/cpuid/api.h arch/x86/includ=
+e/asm/cpuid.h =20
+>   -rw-rw-r-- 1 mingo mingo 6.1K May 16 09:34 arch/x86/include/asm/cpuid/a=
+pi.h
+>   -rw-rw-r-- 1 mingo mingo  149 May 16 09:34 arch/x86/include/asm/cpuid.h
 
-So this is all kinds of broken already imho. Because there's not really
-mutual exclusion between multiple writers to such sysctls from what I
-remember. Which means that this buffer can be trampled in all kinds of
-ways if multiple tasks decide to update it at the same time. That's
-super unlikely of course but whatever.
+That change is in the tip tree and involved in the conflict, so I just
+used it as it was in the tip tree.  This is normal conflict resolution.
 
-> 
-> > +               strscpy(core_pattern, old_core_pattern, retval + 1);
-> 
-> The third strscpy() argument is semantically supposed to be the
-> destination buffer size, not the amount of data to copy. For trivial
-> invocations like here, strscpy() actually allows you to leave out the
-> third argument.
+> And the <linux/sysfs.h> addition is probably a build fix for the PM=20
+> tree? The <asm/cpuid.h> header's indirect header dependencies did not=20
+> change. Should probably not be carried in -next, as this masks a build=20
+> failure that will then trigger in Linus's tree?
 
-Eeeeewww, that's really implicit behavior. I can use the destination
-buffer size but given that retval will always be smaller than that I
-didn't bother but ok. I'll fix that in-tree.
+Well, it did not fail building yesterday (without the include) and
+looks like the commit is adding the first sysfs use in this file ..
+
+Mind you, if the sysfs.h include had been added a line or 2 higher up -
+or even if there was a blank line between the linux/ and asm/ includes,
+there may have been no conflict reported and git would have produced
+the resulting file with both changes all by itself.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/_wVQ2Q4E=Z6=pvU9HE0DJkb
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgnC2YACgkQAVBC80lX
+0Gwe7gf9E6XyrZUQ/x29fidSris5oEq8H+8IHMlQnVg69w5cmDnpAci+tXVbG7uH
+wjlxT1dNmtELA9s9KxPEqMTWtZvs0E/UwxxYkf5Q/leKR+tDS4DOz7bnBm0gml4z
++hEQam9ryMYYARwWdYWWsKcJt5UB9AcdS+jDUgwZRap3BxaX6AEiHcrhoyJzDy/r
+KunDG0l9//VQ5gtl2R2PPl1C0TixtGPUK81q/SFTeEa+wL8VeXSjsQmmsG10S/eu
+0hYp/ERPHIQT4efXz5VynC49SIjnbaIk7nZ/m7Otg8w3COJ/KQurqsVGULHT2MUU
+pTVC9kzUshus5R5BEP+mioGWbYIhgg==
+=sDmX
+-----END PGP SIGNATURE-----
+
+--Sig_/_wVQ2Q4E=Z6=pvU9HE0DJkb--
