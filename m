@@ -1,337 +1,155 @@
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D8523A989
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 12:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFDFA32;
+	Fri, 16 May 2025 12:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747398319; cv=none; b=TILNzhlid4ZtqUuD+DmGiipZP67PTD8PtlZVHMF7Px8xZpuQJtTIWJFe00+w6NrGJytI3ZE9B7Pi9TpfsYOlUeSDoK3i3YrpL2xbeoQo573cqxgHaEZljqpbBuyAZOM70QhZDERiLR7ha/x5MD+Q0E+wj50b1gSx7UqiuKsorgI=
+	t=1747398416; cv=none; b=hDEZ0DO5EwLO6Uz5YDF25lAh89M53NduC/ficuj0GOMeFIeVGDFcGNctWOfeashhlmCzhn/7MMWYR+8yZbZCp1sA/dstpf7LyofT4SUXolfvL65NzLmwtQwr/o82VBuLmuE+yCeiPazWSBGeb9/bYPgaA4eoeb1w7vkaBs+q0AM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747398319; c=relaxed/simple;
-	bh=IfwHj4hXkENcr27VCiQj43X0I1+ByxSbJW7c3tceRls=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MxwNGCVKt1IKeFxidh+jtbe8wGBb8yhJLmRgzqsG6l093Uw/UM6yFcf2PQQr4o8gXAzqIroGG+Urm3ZIe8RKgXGniWBMZFkHOm5wZJFXS1JpXJ9vwNmzimOIxemA6vUTCwrV8OJKM4+ozK1F4NjAYgbdBvuBM2w5m4/WzApGxSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=lwHqUuEW; arc=none smtp.client-ip=209.85.166.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1747398416; c=relaxed/simple;
+	bh=TX+Wwl4Yd2tT6bg4p7073jpIxrMoUEsu9J9aOBrP3Sg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=imIO3uGjXOGOhHIjULwqVOmuuFJOvz2QdSTBlB923QZlmRL2Py0XnYTuxRTjHyO4AFDRwdxIe++LDcr7P+du/adbQjA07Uzlb4Tfc3K5JgLdxCF+rtIIh1180fESNmElmab8qeBlsOS3JGJQiLNjmuQJ9IEV+Q3tcfqC7ENlVyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dzaRKeVJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="lwHqUuEW"
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-867347b8de9so105051339f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 05:25:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1747398316; x=1748003116; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dtzmSwvWraldTd8lkysDlNoQ1DXQCdHXLloM1BvhiIM=;
-        b=lwHqUuEWmu8+2TWR90qRcRsZQA8SQnqMsDsflSzOUFeempZVG2sIFYA7xT4OfmXZ8G
-         3kXpwsJkHdd3hIjqIutnfgn6YQJ9NaZrtiTkInAKpcyHJtOSFEIEdkD9Q3ZrtpuBLEFw
-         l2qSqID83xXJvTpbRkjjp9spni5qN/07c9a7lzgEZvsm7kofoUoMnuSs+xmJaBs0YygO
-         r4K4a3TUKT1Sm4KFdCChINoHsb3j6zs3ONyfYl/LALOdXJl9mHYEuIgpaYw+K2BcdW7t
-         eY7EbEsR1VZxOuD1i/FRYKhnpvWcMMmIcqbxMCnFFVmQlJr4mL4tdZwc9SaLfkDqCKWP
-         2Q6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747398316; x=1748003116;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dtzmSwvWraldTd8lkysDlNoQ1DXQCdHXLloM1BvhiIM=;
-        b=Jbp3zNCOZbXzPe2MdqDxXDTitUFsZbdFNGHXFfU1SCgejBZKt+1c/5UnhLL9LiBGB7
-         kOH4LSHUQRBNf+DZI55rpvX2jyr1CWNSa07TWufvTEbIxeS2NiOzfOsCepC5KS53VBOU
-         X9JSRIj8O3wFKuaw6docCMTDCdYP7RtGCAoIAb7CWQTOAHuW8BtZcMImbs1PkKtnl1cY
-         22OhxQ0vEMpS4sjkK9wL7bwmfeqNHwdZ42RXJRQ5ZwClRPa5i1YGA4Zo77FOWHNW812B
-         yDexP1k0mDeKsEFXFY2DaQcv+weWiCg5bF4TPuaciihrs+lzTrCEc48un9LC3XXDqkPT
-         qVsw==
-X-Forwarded-Encrypted: i=1; AJvYcCWhz/Wqh/rmubevSyg4fnLFD1eScG5HtjYIlAWeExAuwHh1hVKEjTPUhI/1/w5Orme8BVrBuW+nhjdgpdI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEUtuE3s4ViQSDjDh2M5lzYBVdTY6PHmnbaveF9gaF1xXy0cFz
-	JdNPSKl7t/qGJEjRj54W1UFQYayTGWmPnHgw2r4FhRH3M54besmjSOL4XD8k8ASl54XsmdD1ot7
-	X6TFw17Nql198LZ6Ewlqe4VqpJ1Ah0EUxku2LOPtm4Q==
-X-Gm-Gg: ASbGncurLQlxPLOawd3AAIi2ngutjxfPyCduBCQpBCJnDVfomVphSfTkg/khNWgAxaC
-	YamETX8HvIlGPTyXHycq1C33vQakqnBE3T0eqNEKZ8jCUn6VeWhr84RO16lmiUZdNSmPAw2xsGv
-	tVIpQyGeie8McRN2Lg6RhkE8ARUVJtDprxYQ==
-X-Google-Smtp-Source: AGHT+IHPWwPiAwYxbRgOwbLJ8Wt1LFZ7gCqAZ6zYj80ECcVPBuog5ktr4uSIzb0vvBVZ5Sec9lqalAGFy3YMrIrrsvw=
-X-Received: by 2002:a05:6602:3a81:b0:867:973:f2cb with SMTP id
- ca18e2360f4ac-86a23840913mr446523339f.7.1747398316181; Fri, 16 May 2025
- 05:25:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dzaRKeVJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 220A5C4CEEF;
+	Fri, 16 May 2025 12:26:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747398416;
+	bh=TX+Wwl4Yd2tT6bg4p7073jpIxrMoUEsu9J9aOBrP3Sg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dzaRKeVJ2hDWwNIgqtJRmFC26lWiPQGzMvBW85mTgx+EAiRp/S8r7MRd4VlwD+d1n
+	 CAXBSGdNkbvayF+7EzEx/VnKpbv1n5ZQFwQRQ1pq+uCsKqjt67zRbh9DO2DEyn5zty
+	 LdVlT+PIDPEZWbMMUC7lohMXeRR8/pbovOaTwAPeRpPyZw6HcqXWe+mCOGqfG4qjsO
+	 aA2aw5wZGFay4sJs9e34PMuvX2sgq0RdifJNh9GzZNTvABCATqYAMwMkc8Kgwt7A/8
+	 kVPYHQ/Pj1iJe6CYMUTD5KhrHpTXHv7pz4hWTtJqgYPPETdCpDOyIntIr9ZPvRFrGY
+	 DzKH9iF9x3xww==
+Date: Fri, 16 May 2025 14:26:39 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v3 13/19] gpu: nova-core: add falcon register definitions
+ and base code
+Message-ID: <aCcu_42cM2c-Koxu@pollux>
+References: <20250507-nova-frts-v3-0-fcb02749754d@nvidia.com>
+ <20250507-nova-frts-v3-13-fcb02749754d@nvidia.com>
+ <aCNxFc3Z3TMi5rYt@pollux>
+ <D9XKW0NFY922.5HTPCXGGUGQT@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515143723.2450630-4-rkrcmar@ventanamicro.com> <20250515143723.2450630-5-rkrcmar@ventanamicro.com>
-In-Reply-To: <20250515143723.2450630-5-rkrcmar@ventanamicro.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Fri, 16 May 2025 17:55:05 +0530
-X-Gm-Features: AX0GCFvgO4Z_DUSR0CTeFhf6b_B2_U8BewNneA58JqHvGUyRV6T-_YfvZD5T4C4
-Message-ID: <CAAhSdy1Z43xRC7tGS21-5rcX7uMeuWCHhABSuqNzELbp26aj0Q@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] RISC-V: KVM: add KVM_CAP_RISCV_MP_STATE_RESET
-To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
-Cc: kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D9XKW0NFY922.5HTPCXGGUGQT@nvidia.com>
 
-On Thu, May 15, 2025 at 8:22=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcma=
-r@ventanamicro.com> wrote:
->
-> Add a toggleable VM capability to reset the VCPU from userspace by
-> setting MP_STATE_INIT_RECEIVED through IOCTL.
->
-> Reset through a mp_state to avoid adding a new IOCTL.
-> Do not reset on a transition from STOPPED to RUNNABLE, because it's
-> better to avoid side effects that would complicate userspace adoption.
-> The MP_STATE_INIT_RECEIVED is not a permanent mp_state -- IOCTL resets
-> the VCPU while preserving the original mp_state -- because we wouldn't
-> gain much from having a new state it in the rest of KVM, but it's a very
-> non-standard use of the IOCTL.
->
-> Signed-off-by: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanamicro.com>
-> ---
-> If we want a permanent mp_state, I think that MP_STATE_UNINITIALIZED
-> would be reasonable.  KVM could reset on transition to any other state.
+On Fri, May 16, 2025 at 09:19:45PM +0900, Alexandre Courbot wrote:
+> On Wed May 14, 2025 at 1:19 AM JST, Danilo Krummrich wrote:
+> <snip>
+> >> +        util::wait_on(Duration::from_millis(20), || {
+> >> +            let r = regs::NV_PFALCON_FALCON_HWCFG2::read(bar, E::BASE);
+> >> +            if r.mem_scrubbing() {
+> >> +                Some(())
+> >> +            } else {
+> >> +                None
+> >> +            }
+> >> +        })
+> >> +    }
+> >> +
+> >> +    /// Reset the falcon engine.
+> >> +    fn reset_eng(&self, bar: &Bar0) -> Result<()> {
+> >> +        let _ = regs::NV_PFALCON_FALCON_HWCFG2::read(bar, E::BASE);
+> >> +
+> >> +        // According to OpenRM's `kflcnPreResetWait_GA102` documentation, HW sometimes does not set
+> >> +        // RESET_READY so a non-failing timeout is used.
+> >
+> > Should we still warn about it?
+> 
+> OpenRM does not (as this is apparently a workaround to a HW bug?) so I
+> don't think we need to.
+> 
+> >
+> >> +        let _ = util::wait_on(Duration::from_micros(150), || {
+> >
+> > Do we know for sure that if RESET_READY is not set after 150us, it won't ever be
+> > set? If the answer to that is yes, and we also do not want to warn about
+> > RESET_READY not being set, why even bother trying to read it in the first place?
+> 
+> My guess is because this would the expected behavior if the bug wasn't
+> there. My GPU (Ampere) does wait until the timeout, but we can expect
+> newer GPUs to not have this problem and return earlier.
 
-Yes, MP_STATE_UNINITIALIZED looks better. I also suggest
-that VCPU should be reset when set_mpstate() is called with
-MP_STATE_UNINITIALIZED and the current state is
-MP_STATE_STOPPED.
+Ok, let's keep it then.
 
-Regards,
-Anup
+> >
+> >> +            let r = regs::NV_PFALCON_FALCON_HWCFG2::read(bar, E::BASE);
+> >> +            if r.reset_ready() {
+> >> +                Some(())
+> >> +            } else {
+> >> +                None
+> >> +            }
+> >> +        });
+> >> +
+> >> +        regs::NV_PFALCON_FALCON_ENGINE::alter(bar, E::BASE, |v| v.set_reset(true));
+> >> +
+> >> +        let _: Result<()> = util::wait_on(Duration::from_micros(10), || None);
+> >
+> > Can we please get an abstraction for udelay() for this?
+> 
+> Should it be local to nova-core, or be generally available? I refrained
+> from doing this because there is work going on regarding timer and I
+> thought it would cover things like udelay() as well. I'll add a TODO
+> item for now but please let me know if you have something different in
+> mind.
 
->
-> v3: do not allow allow userspace to set the HSM reset state [Anup]
-> v2: new
-> ---
->  Documentation/virt/kvm/api.rst        | 11 +++++++++++
->  arch/riscv/include/asm/kvm_host.h     |  3 +++
->  arch/riscv/include/asm/kvm_vcpu_sbi.h |  1 +
->  arch/riscv/kvm/vcpu.c                 | 27 ++++++++++++++-------------
->  arch/riscv/kvm/vcpu_sbi.c             | 17 +++++++++++++++++
->  arch/riscv/kvm/vm.c                   | 13 +++++++++++++
->  include/uapi/linux/kvm.h              |  1 +
->  7 files changed, 60 insertions(+), 13 deletions(-)
->
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.=
-rst
-> index 47c7c3f92314..e107694fb41f 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -8496,6 +8496,17 @@ aforementioned registers before the first KVM_RUN.=
- These registers are VM
->  scoped, meaning that the same set of values are presented on all vCPUs i=
-n a
->  given VM.
->
-> +7.43 KVM_CAP_RISCV_MP_STATE_RESET
-> +---------------------------------
-> +
-> +:Architectures: riscv
-> +:Type: VM
-> +:Parameters: None
-> +:Returns: 0 on success, -EINVAL if arg[0] is not zero
-> +
-> +When this capability is enabled, KVM resets the VCPU when setting
-> +MP_STATE_INIT_RECEIVED through IOCTL.  The original MP_STATE is preserve=
-d.
-> +
->  8. Other capabilities.
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/k=
-vm_host.h
-> index f673ebfdadf3..85cfebc32e4c 100644
-> --- a/arch/riscv/include/asm/kvm_host.h
-> +++ b/arch/riscv/include/asm/kvm_host.h
-> @@ -119,6 +119,9 @@ struct kvm_arch {
->
->         /* AIA Guest/VM context */
->         struct kvm_aia aia;
-> +
-> +       /* KVM_CAP_RISCV_MP_STATE_RESET */
-> +       bool mp_state_reset;
->  };
->
->  struct kvm_cpu_trap {
-> diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/include/a=
-sm/kvm_vcpu_sbi.h
-> index da28235939d1..439ab2b3534f 100644
-> --- a/arch/riscv/include/asm/kvm_vcpu_sbi.h
-> +++ b/arch/riscv/include/asm/kvm_vcpu_sbi.h
-> @@ -57,6 +57,7 @@ void kvm_riscv_vcpu_sbi_system_reset(struct kvm_vcpu *v=
-cpu,
->                                      u32 type, u64 flags);
->  void kvm_riscv_vcpu_sbi_request_reset(struct kvm_vcpu *vcpu,
->                                       unsigned long pc, unsigned long a1)=
-;
-> +void kvm_riscv_vcpu_sbi_load_reset_state(struct kvm_vcpu *vcpu);
->  int kvm_riscv_vcpu_sbi_return(struct kvm_vcpu *vcpu, struct kvm_run *run=
-);
->  int kvm_riscv_vcpu_set_reg_sbi_ext(struct kvm_vcpu *vcpu,
->                                    const struct kvm_one_reg *reg);
-> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-> index a78f9ec2fa0e..521cd41bfffa 100644
-> --- a/arch/riscv/kvm/vcpu.c
-> +++ b/arch/riscv/kvm/vcpu.c
-> @@ -51,11 +51,11 @@ const struct kvm_stats_header kvm_vcpu_stats_header =
-=3D {
->                        sizeof(kvm_vcpu_stats_desc),
->  };
->
-> -static void kvm_riscv_vcpu_context_reset(struct kvm_vcpu *vcpu)
-> +static void kvm_riscv_vcpu_context_reset(struct kvm_vcpu *vcpu,
-> +                                        bool kvm_sbi_reset)
->  {
->         struct kvm_vcpu_csr *csr =3D &vcpu->arch.guest_csr;
->         struct kvm_cpu_context *cntx =3D &vcpu->arch.guest_context;
-> -       struct kvm_vcpu_reset_state *reset_state =3D &vcpu->arch.reset_st=
-ate;
->         void *vector_datap =3D cntx->vector.datap;
->
->         memset(cntx, 0, sizeof(*cntx));
-> @@ -65,13 +65,8 @@ static void kvm_riscv_vcpu_context_reset(struct kvm_vc=
-pu *vcpu)
->         /* Restore datap as it's not a part of the guest context. */
->         cntx->vector.datap =3D vector_datap;
->
-> -       /* Load SBI reset values */
-> -       cntx->a0 =3D vcpu->vcpu_id;
-> -
-> -       spin_lock(&reset_state->lock);
-> -       cntx->sepc =3D reset_state->pc;
-> -       cntx->a1 =3D reset_state->a1;
-> -       spin_unlock(&reset_state->lock);
-> +       if (kvm_sbi_reset)
-> +               kvm_riscv_vcpu_sbi_load_reset_state(vcpu);
->
->         /* Setup reset state of shadow SSTATUS and HSTATUS CSRs */
->         cntx->sstatus =3D SR_SPP | SR_SPIE;
-> @@ -84,7 +79,7 @@ static void kvm_riscv_vcpu_context_reset(struct kvm_vcp=
-u *vcpu)
->         csr->scounteren =3D 0x7;
->  }
->
-> -static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
-> +static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu, bool kvm_sbi_res=
-et)
->  {
->         bool loaded;
->
-> @@ -100,7 +95,7 @@ static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu=
-)
->
->         vcpu->arch.last_exit_cpu =3D -1;
->
-> -       kvm_riscv_vcpu_context_reset(vcpu);
-> +       kvm_riscv_vcpu_context_reset(vcpu, kvm_sbi_reset);
->
->         kvm_riscv_vcpu_fp_reset(vcpu);
->
-> @@ -177,7 +172,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
->         kvm_riscv_vcpu_sbi_init(vcpu);
->
->         /* Reset VCPU */
-> -       kvm_riscv_reset_vcpu(vcpu);
-> +       kvm_riscv_reset_vcpu(vcpu, false);
->
->         return 0;
->  }
-> @@ -526,6 +521,12 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu =
-*vcpu,
->         case KVM_MP_STATE_STOPPED:
->                 __kvm_riscv_vcpu_power_off(vcpu);
->                 break;
-> +       case KVM_MP_STATE_INIT_RECEIVED:
-> +               if (vcpu->kvm->arch.mp_state_reset)
-> +                       kvm_riscv_reset_vcpu(vcpu, false);
-> +               else
-> +                       ret =3D -EINVAL;
-> +               break;
->         default:
->                 ret =3D -EINVAL;
->         }
-> @@ -714,7 +715,7 @@ static void kvm_riscv_check_vcpu_requests(struct kvm_=
-vcpu *vcpu)
->                 }
->
->                 if (kvm_check_request(KVM_REQ_VCPU_RESET, vcpu))
-> -                       kvm_riscv_reset_vcpu(vcpu);
-> +                       kvm_riscv_reset_vcpu(vcpu, true);
->
->                 if (kvm_check_request(KVM_REQ_UPDATE_HGATP, vcpu))
->                         kvm_riscv_gstage_update_hgatp(vcpu);
-> diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
-> index 0afef0bb261d..31fd3cc98d66 100644
-> --- a/arch/riscv/kvm/vcpu_sbi.c
-> +++ b/arch/riscv/kvm/vcpu_sbi.c
-> @@ -167,6 +167,23 @@ void kvm_riscv_vcpu_sbi_request_reset(struct kvm_vcp=
-u *vcpu,
->         kvm_make_request(KVM_REQ_VCPU_RESET, vcpu);
->  }
->
-> +void kvm_riscv_vcpu_sbi_load_reset_state(struct kvm_vcpu *vcpu)
-> +{
-> +       struct kvm_vcpu_csr *csr =3D &vcpu->arch.guest_csr;
-> +       struct kvm_cpu_context *cntx =3D &vcpu->arch.guest_context;
-> +       struct kvm_vcpu_reset_state *reset_state =3D &vcpu->arch.reset_st=
-ate;
-> +
-> +       cntx->a0 =3D vcpu->vcpu_id;
-> +
-> +       spin_lock(&vcpu->arch.reset_state.lock);
-> +       cntx->sepc =3D reset_state->pc;
-> +       cntx->a1 =3D reset_state->a1;
-> +       spin_unlock(&vcpu->arch.reset_state.lock);
-> +
-> +       cntx->sstatus &=3D ~SR_SIE;
-> +       csr->vsatp =3D 0;
-> +}
-> +
->  int kvm_riscv_vcpu_sbi_return(struct kvm_vcpu *vcpu, struct kvm_run *run=
-)
->  {
->         struct kvm_cpu_context *cp =3D &vcpu->arch.guest_context;
-> diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
-> index 7396b8654f45..b27ec8f96697 100644
-> --- a/arch/riscv/kvm/vm.c
-> +++ b/arch/riscv/kvm/vm.c
-> @@ -209,6 +209,19 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, lo=
-ng ext)
->         return r;
->  }
->
-> +int kvm_vm_ioctl_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap)
-> +{
-> +       switch (cap->cap) {
-> +       case KVM_CAP_RISCV_MP_STATE_RESET:
-> +               if (cap->flags)
-> +                       return -EINVAL;
-> +               kvm->arch.mp_state_reset =3D true;
-> +               return 0;
-> +       default:
-> +               return -EINVAL;
-> +       }
-> +}
-> +
->  int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned lo=
-ng arg)
->  {
->         return -EINVAL;
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index b6ae8ad8934b..454b7d4a0448 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -930,6 +930,7 @@ struct kvm_enable_cap {
->  #define KVM_CAP_X86_APIC_BUS_CYCLES_NS 237
->  #define KVM_CAP_X86_GUEST_MODE 238
->  #define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
-> +#define KVM_CAP_RISCV_MP_STATE_RESET 240
->
->  struct kvm_irq_routing_irqchip {
->         __u32 irqchip;
-> --
-> 2.49.0
->
+Not local to nova-core, but in the generic abstraction. I don't think the
+generic abstraction posted on the mailing list contains udelay(). Should be
+trivial to add it with a subsequent patch though.
+
+A TODO should be fine for now.
+
+> >> +    let reg_fuse_version = bar.read32(reg_fuse);
+> >
+> > I feel like the calculation of reg_fuse should be abstracted with a dedicated
+> > type in regs.rs. that takes the magic number derived from the engine_id_mask
+> > (which I assume is chip specific) and the ucode_id.
+> 
+> We would need proper support for register arrays to manage the ucode_id
+> offset, so I'm afraid this one will be hard to get rid of. What kind of
+> type did you have in mind?
+> 
+> One thing we can do though, is expose the offset of each register as a
+> register type constant, and use that instead of the hardcoded values
+> currently in this code - that part at least will be cleaner.
+
+Let's do that then for now.
+
+> >> +        let _sec2_falcon = Falcon::<Sec2>::new(pdev.as_ref(), spec.chipset, bar, true)?;
+> >
+> > Just `_` instead? Also, please add a comment why it is important to create this
+> > instance even though it's never used.
+> 
+> It is not really important now, more a way to exercise the code until
+> we need to run Booter. The variable will be renamed to `sec2_falcon`
+> eventually, so I'd like to keep that name in the placeholder.
+
+Ok, seems reasonable.
