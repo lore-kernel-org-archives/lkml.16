@@ -1,314 +1,76 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379B91361
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 12:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ACA721D00A;
+	Fri, 16 May 2025 12:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747397279; cv=none; b=JXcaU5GdJRWVPZRbOn/kg+g67QXaoP1/srYYUA8uP0AG9Z4tgyUCJa5wf44Halyw4/oC2FpG/2cwaTx87JSKJC2BjbxD3XyUhGBAlPisAmfSVw94e/7JF4x8EMpEJXacuCtPaSiJu99g0UVzzGUqhLfugKqh85nxr4OJdUNY6fQ=
+	t=1747397294; cv=none; b=rGXlSFMr8UT6krRDavXc4CNIljej1OXDngU3yfLir6DmNSLmqCaj7oJzUqxdfrf4ekDbp2x0MP+56Hsg97w/Py2ysk706G2POpCWTWzBEu1NIbCLi2HW9n3lGsK0er/XqeoK40fau2wDrhtPot3/ehKSA6A3lghgbTiw9UwgQrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747397279; c=relaxed/simple;
-	bh=wC0JoQ2jtOkGfxIeSX2wwCEjyGoWayjcplNo+j9yLvc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rxnpGajx11JnwvY2VCY7nUb1Ryw8PX+oi/rKZUbKl/tSvk4yrkU1MGUdijvKnr49Xqfj0gbZhH7BlGSw3JV//VeTDd9CTlUTcadDKw9alkQt83J/eZ/gx54RS27KgPEnIPsHoPq7Z56hMOD3LO1LvJ1eAGjQXnZge17rTxcxdeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IV8OkrRB; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747397294; c=relaxed/simple;
+	bh=vvInzG+WhOwuClFT+hBEQCpv3Ilc02wgtTPwylfKFcs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l6cgTNXU8Wh4cE8W5a23ZCDG7z2r+7LgeCdOK3UTKr4HMI/yoGRC+3kGlrw4mrc8x+QA0yczuuxb9BxSHlknZgKN5zZB3edcCg4G7Nxo2eTsihb9MtMXXlND21jSXAe7lGJe0Z/oS/PTK1KKw1ggA3jqNbcAlrflhmab15x8YWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zt08rREA; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IV8OkrRB"
-Date: Fri, 16 May 2025 20:07:08 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747397265;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2PQP4CfvZo5c+28K4YG9Cb+1p+vxFB02sB5cLp2u7Ho=;
-	b=IV8OkrRBrBjRKKc5Fv224BT+fk0nuMYqnz9hYX+d7Np3h5W8T+pHqqj54dla5UpRwu9v4b
-	Y3W3ZSPqHm65PO2s6JLkvcN7KJcDSO9dmjCeKmmlmmYnwI90WmO24Z8VcG3r23SzULDUuk
-	q2mvfkFypOhyyXJ3LDwDAlVwEpxq7fA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Dawei Li <dawei.li@linux.dev>
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: andersson@kernel.org, linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, set_pte_at@outlook.com,
-	dawei.li@linux.dev
-Subject: Re: [PATCH v2 1/3] rpmsg: char: Reuse eptdev logic for anon device
-Message-ID: <20250516120708.GA10474@wendao-VirtualBox>
-References: <20250509155927.109258-1-dawei.li@linux.dev>
- <20250509155927.109258-2-dawei.li@linux.dev>
- <aCZNZPkb5oPZiz9G@p14s>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zt08rREA"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-879d2e419b9so1816790a12.2;
+        Fri, 16 May 2025 05:08:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747397292; x=1748002092; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=vvInzG+WhOwuClFT+hBEQCpv3Ilc02wgtTPwylfKFcs=;
+        b=Zt08rREA6SiuLLxrm4DRz1ooQ7lP2n9VI1h9ss/QeIWNVDE/sPfC2HBVBvVraM4mqu
+         n7jf1BQEHIa2PxHpoBZNPBAg2DRs7hvbKqNx0Wd7j/bGTpA7BLvFry77RSTSZenTC9If
+         6hwfeFrQKy2R1UT+jRMMncTtBrR5e4qC8hrt3DFfr8YsKhzPKP1Wf357qu+xDd+l1oNw
+         0KGzvcS6HhPJu2QDg/pSt49HQqj33eMjx656r+UW0kpo9m/V3DsL9qvLAfXWns17fb2C
+         ebnh/56obAKu/wdVeCxnfzAHzbmq18xH/0JdL8uMuQKtvrdi3dhBDD2imjYEqR3Ki3j7
+         Bz3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747397292; x=1748002092;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vvInzG+WhOwuClFT+hBEQCpv3Ilc02wgtTPwylfKFcs=;
+        b=jLce9OFYVpo89NaKI6DX8OmVANDJ4zyvEIS7PUTdc+rxvUxjMYe4W1wgKJBdyeA/ae
+         q7ZHjxHB8c2zBiGH+U4Xxn+3JDA7kBP5/7kOHV7n3ITFNEQpPp2t4gfa8UdZTgk4//RA
+         T2o6odSpWY+AJFb16ug8bzVM9rSCPuFp8TGrA5RhtTCcc84jiqAgR4moWHONBgPBidfe
+         wJAPebWMVUe+uwHxFzgfrnhOfDVqSZqt5k/ULvxs4hN85ZN/XPmwheXCZz70c0451ZUy
+         8HyMwn7ISKLye1Sy8MAi32pvKMv1pqeS79fBXKZmCGFJ9L0beLR/+morH1xmpCLQ1+j8
+         RGbw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPfz8fFo3vLUq8Odn933ZJcbhjqRdVwknwWk81yMLG76XqvkTI0CHqitY13k9/clxghx+UyHch@vger.kernel.org, AJvYcCWGOyzH/fFaE3NoqLgrrp7RWeXoN4vSbRh7/yPynrzpbb9INJPIfVyJPGktp7o8ToGdfWmGsXuxEdPcp5I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzauKbu5nClB57/mCdcvwtsBdDY6RhPz+Alx0oEf8C0yzQ/9fPC
+	292oBOUYaAQnlI4cmQFWqNv2vlmk1DBB8Ix56AuE6L9gdrNDn4AGwYz2Pl800piNw3n+c1oQZbu
+	mkWApyQUgj6K+53pD2JDSEv8W0ufjEq4=
+X-Gm-Gg: ASbGnct7xSokVEexJ6G5KfRTXWox6VRW20hcAkTTzl98N5dTC5yPp3Jlt4WvOfVHV6z
+	DLMxyYwwSiqJiiEe1qGaX9gK7LEFilqs1SgUWMYnEeY6NZUe30BKSjtEj9+w6cG4vU1QcviC9ry
+	gLTWkCF+d3RF4UyZu2WsFchteAHS1vj6s=
+X-Google-Smtp-Source: AGHT+IHOrDmbHxv5DER6XUzHCdNLptqi6Yl/kppUI/qzVCXsv5Y5EK81JcGT+mIeDr/DOLOoxGm31qXAeLeUTcgBjTE=
+X-Received: by 2002:a17:902:cecf:b0:22d:e57a:279b with SMTP id
+ d9443c01a7336-231d4519b0bmr49246575ad.24.1747397292421; Fri, 16 May 2025
+ 05:08:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCZNZPkb5oPZiz9G@p14s>
-X-Migadu-Flow: FLOW_OUT
+References: <20250515175500.12128-1-kitotavrik.s@gmail.com> <enhxf3daymfubn226ha4ywvh74k3zhacdya2mgfln7g2kzsq6x@llwzvp3vejsk>
+In-Reply-To: <enhxf3daymfubn226ha4ywvh74k3zhacdya2mgfln7g2kzsq6x@llwzvp3vejsk>
+From: Kitotavrik <kitotavrik.s@gmail.com>
+Date: Fri, 16 May 2025 15:08:01 +0300
+X-Gm-Features: AX0GCFtAc7jQ5C9dsDEktognTcJ9Mvl7g7BjNAjuCOqFs1-0YBxSmiPN41nxW4o
+Message-ID: <CAJFzNq5Qwb3o5WHSq2c_k3-Nj1KTbcLQL-L6e03o+nZvRxpoVA@mail.gmail.com>
+Subject: Re: [PATCH v3] fs: minix: Fix handling of corrupted directories
+To: Jan Kara <jack@suse.cz>
+Cc: Christian Brauner <brauner@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Josef Bacik <josef@toxicpanda.com>, NeilBrown <neilb@suse.de>, linux-kernel@vger.kernel.org, 
+	lvc-project@linuxtesting.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Mathieu,
-
-Thanks for reviewing.
-
-On Thu, May 15, 2025 at 02:24:04PM -0600, Mathieu Poirier wrote:
-> Hi,
-> 
-> On Fri, May 09, 2025 at 11:59:25PM +0800, Dawei Li wrote:
-> > Current uAPI implementation for rpmsg ctrl & char device manipulation is
-> > abstracted in procedures below:
-> > 
-> > Current uAPI implementation for rpmsg ctrl & char device manipulation is
-> > abstracted in procedures below:
-> > - fd = open("/dev/rpmsg_ctrlX")
-> > - ioctl(fd, RPMSG_CREATE_EPT_IOCTL, &info); /dev/rpmsgY devnode is
-> >   generated.
-> > - fd_ep = open("/dev/rpmsgY", O_RDWR)
-> > - operations on fd_ep(write, read, poll ioctl)
-> > - ioctl(fd_ep, RPMSG_DESTROY_EPT_IOCTL)
-> > - close(fd_ep)
-> > - close(fd)
-> > 
-> > This /dev/rpmsgY abstraction is less favorable for:
-> > - Performance issue: It's time consuming for some operations are
-> > invovled:
-> >   - Device node creation.
-> >     Depends on specific config, especially CONFIG_DEVTMPFS, the overall
-> >     overhead is based on coordination between DEVTMPFS and userspace
-> >     tools such as udev and mdev.
-> > 
-> >   - Extra kernel-space switch cost.
-> > 
-> >   - Other major costs brought by heavy-weight logic like device_add().
-> > 
-> > - /dev/rpmsgY node can be opened only once. It doesn't make much sense
-> >     that a dynamically created device node can be opened only once.
-> > 
-> > - For some container application such as docker, a client can't access
-> >   host's dev unless specified explicitly. But in case of /dev/rpmsgY, which
-> >   is generated dynamically and whose existence is unknown for clients in
-> >   advance, this uAPI based on device node doesn't fit well.
-> > 
-> > An anon inode based approach is introduced to address the issues above.
-> > Rather than generating device node and opening it, rpmsg code just make
-> > a anon inode representing eptdev and return the fd to userspace.
-> 
-> Please change occurences of "anon" for "anonyous".  "Anon" was used to avoid
-> writing "anonymous" all the time in the code, but description should not use the
-> shorthand.  In the title, this patch and all other patches.
-
-Acked.
-
-> 
-> > 
-> > The legacy abstraction based on struct dev and struct cdev is honored
-> > for:
-> > - Avoid legacy uAPI break(RPMSG_CREATE_EPT_IOCTL)
-> > - Reuse existing logic:
-> >   -- dev_err() and friends.
-> >   -- Life cycle management of struct device.
-> > 
-> > Signed-off-by: Dawei Li <dawei.li@linux.dev>
-> > ---
-> >  drivers/rpmsg/rpmsg_char.c | 80 ++++++++++++++++++++++++++------------
-> >  1 file changed, 56 insertions(+), 24 deletions(-)
-> > 
-> > diff --git a/drivers/rpmsg/rpmsg_char.c b/drivers/rpmsg/rpmsg_char.c
-> > index eec7642d2686..5b2a883d6236 100644
-> > --- a/drivers/rpmsg/rpmsg_char.c
-> > +++ b/drivers/rpmsg/rpmsg_char.c
-> > @@ -91,7 +91,8 @@ int rpmsg_chrdev_eptdev_destroy(struct device *dev, void *data)
-> >  	/* wake up any blocked readers */
-> >  	wake_up_interruptible(&eptdev->readq);
-> >  
-> > -	cdev_device_del(&eptdev->cdev, &eptdev->dev);
-> > +	if (eptdev->dev.devt)
-> > +		cdev_device_del(&eptdev->cdev, &eptdev->dev);
-> >  	put_device(&eptdev->dev);
-> >  
-> >  	return 0;
-> > @@ -132,21 +133,17 @@ static int rpmsg_ept_flow_cb(struct rpmsg_device *rpdev, void *priv, bool enable
-> >  	return 0;
-> >  }
-> >  
-> > -static int rpmsg_eptdev_open(struct inode *inode, struct file *filp)
-> > +static int __rpmsg_eptdev_open(struct rpmsg_eptdev *eptdev)
-> >  {
-> > -	struct rpmsg_eptdev *eptdev = cdev_to_eptdev(inode->i_cdev);
-> >  	struct rpmsg_endpoint *ept;
-> >  	struct rpmsg_device *rpdev = eptdev->rpdev;
-> >  	struct device *dev = &eptdev->dev;
-> >  
-> > -	mutex_lock(&eptdev->ept_lock);
-> >  	if (eptdev->ept) {
-> > -		mutex_unlock(&eptdev->ept_lock);
-> >  		return -EBUSY;
-> >  	}
-> >  
-> >  	if (!eptdev->rpdev) {
-> > -		mutex_unlock(&eptdev->ept_lock);
-> >  		return -ENETRESET;
-> >  	}
-> >  
-> > @@ -164,21 +161,32 @@ static int rpmsg_eptdev_open(struct inode *inode, struct file *filp)
-> >  	if (!ept) {
-> >  		dev_err(dev, "failed to open %s\n", eptdev->chinfo.name);
-> >  		put_device(dev);
-> > -		mutex_unlock(&eptdev->ept_lock);
-> >  		return -EINVAL;
-> >  	}
-> >  
-> >  	ept->flow_cb = rpmsg_ept_flow_cb;
-> >  	eptdev->ept = ept;
-> > -	filp->private_data = eptdev;
-> > -	mutex_unlock(&eptdev->ept_lock);
-> >  
-> >  	return 0;
-> >  }
-> >  
-> > -static int rpmsg_eptdev_release(struct inode *inode, struct file *filp)
-> > +static int rpmsg_eptdev_open(struct inode *inode, struct file *filp)
-> >  {
-> >  	struct rpmsg_eptdev *eptdev = cdev_to_eptdev(inode->i_cdev);
-> > +	int ret;
-> > +
-> > +	mutex_lock(&eptdev->ept_lock);
-> > +	ret = __rpmsg_eptdev_open(eptdev);
-> > +	if (!ret)
-> > +		filp->private_data = eptdev;
-> > +	mutex_unlock(&eptdev->ept_lock);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int rpmsg_eptdev_release(struct inode *inode, struct file *filp)
-> > +{
-> > +	struct rpmsg_eptdev *eptdev = filp->private_data;
-> >  	struct device *dev = &eptdev->dev;
-> >  
-> >  	/* Close the endpoint, if it's not already destroyed by the parent */
-> > @@ -400,12 +408,13 @@ static void rpmsg_eptdev_release_device(struct device *dev)
-> >  	struct rpmsg_eptdev *eptdev = dev_to_eptdev(dev);
-> >  
-> >  	ida_free(&rpmsg_ept_ida, dev->id);
-> > -	ida_free(&rpmsg_minor_ida, MINOR(eptdev->dev.devt));
-> > +	if (eptdev->dev.devt)
-> > +		ida_free(&rpmsg_minor_ida, MINOR(eptdev->dev.devt));
-> >  	kfree(eptdev);
-> >  }
-> >  
-> > -static struct rpmsg_eptdev *rpmsg_chrdev_eptdev_alloc(struct rpmsg_device *rpdev,
-> > -						      struct device *parent)
-> > +static struct rpmsg_eptdev *__rpmsg_chrdev_eptdev_alloc(struct rpmsg_device *rpdev,
-> > +							struct device *parent, bool cdev)
-> 
-> 
-> I would simply rename this rpmsg_eptdev_alloc() and then use is in
-> rpmsg_chrdev_eptdev_alloc() and rpmsg_anonynous_eptdev_alloc()
-
-Agreed. rpmsg_eptdev_alloc() is much better.
-
-> 
-> >  {
-> >  	struct rpmsg_eptdev *eptdev;
-> >  	struct device *dev;
-> > @@ -428,33 +437,50 @@ static struct rpmsg_eptdev *rpmsg_chrdev_eptdev_alloc(struct rpmsg_device *rpdev
-> >  	dev->groups = rpmsg_eptdev_groups;
-> >  	dev_set_drvdata(dev, eptdev);
-> >  
-> > -	cdev_init(&eptdev->cdev, &rpmsg_eptdev_fops);
-> > -	eptdev->cdev.owner = THIS_MODULE;
-> > +	if (cdev) {
-> > +		cdev_init(&eptdev->cdev, &rpmsg_eptdev_fops);
-> > +		eptdev->cdev.owner = THIS_MODULE;
-> > +	}
-> >  
-> >  	return eptdev;
-> >  }
-> >  
-> > -static int rpmsg_chrdev_eptdev_add(struct rpmsg_eptdev *eptdev, struct rpmsg_channel_info chinfo)
-> > +static struct rpmsg_eptdev *rpmsg_chrdev_eptdev_alloc(struct rpmsg_device *rpdev,
-> > +						      struct device *parent)
-> > +{
-> > +	return __rpmsg_chrdev_eptdev_alloc(rpdev, parent, true);
-> > +}
-> > +
-> > +static int __rpmsg_chrdev_eptdev_add(struct rpmsg_eptdev *eptdev,
-> > +				     struct rpmsg_channel_info chinfo, bool cdev)
-> 
-> Same here, rpmsg_eptdev_add()
-
-Acked.
-
-All the issues above, including those for patch 2/3, will be fixed in
-V3.
-
-Thanks,
-
-	Dawei
-
-> 
-> >  {
-> >  	struct device *dev = &eptdev->dev;
-> >  	int ret;
-> >  
-> >  	eptdev->chinfo = chinfo;
-> >  
-> > -	ret = ida_alloc_max(&rpmsg_minor_ida, RPMSG_DEV_MAX - 1, GFP_KERNEL);
-> > -	if (ret < 0)
-> > -		goto free_eptdev;
-> > -	dev->devt = MKDEV(MAJOR(rpmsg_major), ret);
-> > +	if (cdev) {
-> > +		ret = ida_alloc_max(&rpmsg_minor_ida, RPMSG_DEV_MAX - 1, GFP_KERNEL);
-> > +		if (ret < 0)
-> > +			goto free_eptdev;
-> >  
-> > +		dev->devt = MKDEV(MAJOR(rpmsg_major), ret);
-> > +	}
-> > +
-> > +	/* Anon inode device still need dev name for dev_err() and friends */
-> >  	ret = ida_alloc(&rpmsg_ept_ida, GFP_KERNEL);
-> >  	if (ret < 0)
-> >  		goto free_minor_ida;
-> >  	dev->id = ret;
-> >  	dev_set_name(dev, "rpmsg%d", ret);
-> >  
-> > -	ret = cdev_device_add(&eptdev->cdev, &eptdev->dev);
-> > -	if (ret)
-> > -		goto free_ept_ida;
-> > +	ret = 0;
-> > +
-> > +	if (cdev) {
-> > +		ret = cdev_device_add(&eptdev->cdev, &eptdev->dev);
-> > +		if (ret)
-> > +			goto free_ept_ida;
-> > +	}
-> >  
-> >  	/* We can now rely on the release function for cleanup */
-> >  	dev->release = rpmsg_eptdev_release_device;
-> > @@ -464,7 +490,8 @@ static int rpmsg_chrdev_eptdev_add(struct rpmsg_eptdev *eptdev, struct rpmsg_cha
-> >  free_ept_ida:
-> >  	ida_free(&rpmsg_ept_ida, dev->id);
-> >  free_minor_ida:
-> > -	ida_free(&rpmsg_minor_ida, MINOR(dev->devt));
-> > +	if (cdev)
-> > +		ida_free(&rpmsg_minor_ida, MINOR(dev->devt));
-> >  free_eptdev:
-> >  	put_device(dev);
-> >  	kfree(eptdev);
-> > @@ -472,6 +499,11 @@ static int rpmsg_chrdev_eptdev_add(struct rpmsg_eptdev *eptdev, struct rpmsg_cha
-> >  	return ret;
-> >  }
-> >  
-> > +static int rpmsg_chrdev_eptdev_add(struct rpmsg_eptdev *eptdev, struct rpmsg_channel_info chinfo)
-> > +{
-> > +	return __rpmsg_chrdev_eptdev_add(eptdev, chinfo, true);
-> > +}
-> > +
-> >  int rpmsg_chrdev_eptdev_create(struct rpmsg_device *rpdev, struct device *parent,
-> >  			       struct rpmsg_channel_info chinfo)
-> >  {
-> > -- 
-> > 2.25.1
-> > 
+No, because the live directory has nlinks = 2 when deleted. But if I
+understand correctly, it's worth adding a check for parent
+directory(dir->i_nlinks <= 2)
