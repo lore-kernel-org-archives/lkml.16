@@ -1,155 +1,298 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-25.smtpout.orange.fr [80.12.242.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4011B87C0;
-	Fri, 16 May 2025 15:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB9E1C2DB2;
+	Fri, 16 May 2025 15:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747411050; cv=none; b=L9s7jdO0l7ce8BA1M3jpHkePURzr8yP796cqr3j/aWlx+5MJbdmN4uHC5btc6uAR94wkCf1c7tlIbhXOuGDz1Pa32mM8UxqyQXPMpNkaXaAPeESUCPH7jVb0MXyZo8DnyMGiSCnNQlR485XmbFaB6B9JVV6SxcwYVfK/FjDI/ms=
+	t=1747411072; cv=none; b=YHg5fBnJz8Pc5F8vg8/Ru5/hJWzZ+UXv+2spnCWkCrVCUFLOciaZAhMI7k1QOprcEsEuor97SIRw/0x8hbqfrFLyu/ecYXGq10ZNvfCMJa2JjyT4Y2a82w0n8tTs8hzbEphF/zmZJlo2aVk1MK3KvTdBKzSI9DZiq5+GNvsq7ZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747411050; c=relaxed/simple;
-	bh=vmOhw7E5n8ItXJtoI0Qn1bmqPGvIwGI25HVL824vRQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ny2gMgcJqkcypldFIs4NDA2kAJ5lL3vW+27DH3QtcMyC0jbhjmF9fP5sSIFNzr36IOO2HbAS02DRyduL65vIMR3saVcMgCcCQ71ha3S0eTqdAaXOdVOf4s0caqzFhfLlKq8ezijg5hZheW3KxYF0Hb9GBDjRLCYATjoZvdGRI3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=AjJ9cePP reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1747411072; c=relaxed/simple;
+	bh=B5j3ar/jf/AzBKgy257B+T6vkiLJglRIzsGikIcAIs8=;
+	h=Message-ID:Date:MIME-Version:Subject:References:From:To:Cc:
+	 In-Reply-To:Content-Type; b=ll/FAXNpY6jVw6ZGcXQAhMZgD5VH+1EkwazYP/mu1dxn4yPyj6uAUu4Vu6MFMN3y81t1fDKjF0Uj6u53R6OgKuZwumCPLVSzTTDD7aW5zgdgP8Y+DN0RZGsXrhmaWuwQAMAVqnmT/C8GUVp9K5WcA3hwjPGKDhM5lmpvneoZ8Yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=QxMFGWYA; arc=none smtp.client-ip=80.12.242.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="AjJ9cePP"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 766CD40E0196;
-	Fri, 16 May 2025 15:57:25 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
-	reason="fail (body has been altered)" header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id ftRXRXYPH5WN; Fri, 16 May 2025 15:57:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747411039; bh=d43PR9DO7flii+mSU353fCYxRMVTIixhK4mXJVLuqvE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AjJ9cePP7C8WJjPGUBhpAGUIwQSbXvP5Y/KBwNRbCto1Kl6rmnUL8kB7a0K2KaHxn
-	 LGhLp8LxH9qEq8+sFBPRku+hXkZ3PEfcJyvaVCDSUSWQaAn/8+Ltab/SwVA3EYbCND
-	 jGfZkEh3/ebi5b/5ZrGU4PtYGzBn4g9s5F1ZNdQdbY1wbt+3dFKoFQ+i1/PP1UnN/q
-	 NNxdf3jACnj+RGPInrkxbcHDD+g3Ux1CqBCY+Rg1ma8HxxHgbagdPTfOwLKx33QeSW
-	 dNCcDm08qDjhui2empuUurv/RQF624XAvLqcQnljUJWs064HWAagP0sdWnKKaAcrDU
-	 mHnh79jqhtQi+5xKHbj1x+LFg2/Q0A3DEO8r4sH3F+asol1by69VEQxtNeAQf01UrL
-	 bj9unSQqLzM+eQRyFbkem+pG2n0txW88XYnv1vm5dahcoNacRFefKL8byO5zAmj4r3
-	 37XVv3oFzLA+bvCXaNnAznN5GQMrQ240rvo6oEQjFRv14I62aIul3lfp+TWFcmE3HX
-	 W6ILZ3piqRAHkKJM3RXNHAOciA6tlL5YpWNfVEyYPUF6OTmbycA1K2s8ulRssHxsWI
-	 LwsGoMbg3IdSEUybVtvSAS4VZz4i4hScxUGgeFWhLwhoEM+XRFCXqoHFzaPTvKY8qr
-	 SavJA9Mp/Kz9zVtD0quep+QM=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F032F40E0239;
-	Fri, 16 May 2025 15:56:55 +0000 (UTC)
-Date: Fri, 16 May 2025 17:56:49 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Kieran Bingham <kbingham@kernel.org>,
-	Michael Roth <michael.roth@amd.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Brijesh Singh <brijesh.singh@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Juergen Gross <jgross@suse.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-efi@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCHv2 3/3] x86/64/mm: Make 5-level paging support
- unconditional
-Message-ID: <20250516155649.GFaCdgQa7sX75vOLSm@fat_crate.local>
-References: <20250516091534.3414310-1-kirill.shutemov@linux.intel.com>
- <20250516091534.3414310-4-kirill.shutemov@linux.intel.com>
- <20250516153009.GEaCdaAdhCVpjaViSx@fat_crate.local>
- <aCdd60hwRbx207bU@gmail.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="QxMFGWYA"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id FxIcumXKYRPIZFxIcumfp1; Fri, 16 May 2025 17:48:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1747410520;
+	bh=asqRPGZ3Q7GAARmR/KH04DJepcIWDtXLyQJZqo1/rjw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To;
+	b=QxMFGWYAq2wQ4Z31PM1qAWgNZ2ukSYBvDNCpnTHpx8BGrXLYKc6S9IppW2Q+31q7D
+	 Uu7fAosUdLjw28UysSDCa1U+sX6zT7lA8Rje866h947w+SPz9rYYSU4LjI2rjWilpg
+	 MGJodAPG3NbqEA6AKKdHoBgJL9x5WYFAI5OAa3kmoIuQNvVI9optcW0jJ5u8q6d+/t
+	 8m5bP78G744QYZ+jEvyAYcnQWD92jDyOnqF2YJWBNxrUx0yHm5T8LNyDxNHLcwsa2n
+	 BybEJD8kLIW06ADLH+VYN044Rshlsk/1xPtYfBnin7spUXfJ5muCYh09iLJ2pyZ7ND
+	 maZdPGNQS+W7Q==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Fri, 16 May 2025 17:48:40 +0200
+X-ME-IP: 90.11.132.44
+Message-ID: <1fb5c223-fcd7-4789-9cd6-33c712457a0a@wanadoo.fr>
+Date: Fri, 16 May 2025 17:48:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aCdd60hwRbx207bU@gmail.com>
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] reset: eswin: Add eic7700 reset driver
+References: <20250514002945.415-1-dongxuyang@eswincomputing.com>
+ <20250514003209.531-1-dongxuyang@eswincomputing.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: dongxuyang@eswincomputing.com
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org,
+ huangyifeng@eswincomputing.com, krzk+dt@kernel.org,
+ linmin@eswincomputing.com, linux-kernel@vger.kernel.org,
+ ningyu@eswincomputing.com, p.zabel@pengutronix.de, robh@kernel.org
+In-Reply-To: <20250514003209.531-1-dongxuyang@eswincomputing.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 16, 2025 at 05:46:51PM +0200, Ingo Molnar wrote:
->=20
-> * Borislav Petkov <bp@alien8.de> wrote:
->=20
-> > On Fri, May 16, 2025 at 12:15:33PM +0300, Kirill A. Shutemov wrote:
-> > > @@ -173,10 +173,10 @@ For example, when an old kernel is running on=
- new hardware.
-> > >  The kernel disabled support for it at compile-time
-> > >  --------------------------------------------------
-> > > =20
-> > > -For example, if 5-level-paging is not enabled when building (i.e.,
-> > > -CONFIG_X86_5LEVEL is not selected) the flag "la57" will not show u=
-p [#f1]_.
-> > > +For example, if Linear Address Masking (LAM) is not enabled when b=
-uilding (i.e.,
-> > > +CONFIG_ADDRESS_MASKING is not selected) the flag "lam" will not sh=
-ow up.
-> > >  Even though the feature will still be detected via CPUID, the kern=
-el disables
-> > > -it by clearing via setup_clear_cpu_cap(X86_FEATURE_LA57).
-> > > +it by clearing via setup_clear_cpu_cap(X86_FEATURE_LAM).
-> >=20
-> > LOL, good one.
-> >=20
-> > The rest looks nice and good to me. And FWIW, it boots fine on my Zen=
-5 with
-> > 5lvl enabled.
-> >=20
-> > Reviewed-by: Borislav Petkov (AMD) <bp@alien8.de>
+Le 14/05/2025 à 02:32, 
+dongxuyang-sYo9T6QOUuK8M3too/+dENBPR1lH4CV8@public.gmane.org a écrit :
+> From: Xuyang Dong <dongxuyang-sYo9T6QOUuK8M3too/+dENBPR1lH4CV8@public.gmane.org>
+> 
+> Add support for reset controller in eic7700 series chips.
+> Provide functionality for asserting and deasserting resets
+> on the chip.
 
-Bah, and I thought I'm replying to v3. :-\
+...
 
-Anyway...
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset-controller.h>
+> +#include <linux/slab.h>
+> +#include <linux/types.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
 
-> What's your preference on timing? v6.17 or v6.16?
+Would be better if fully alphabetically ordered.
 
-Right, here's what I'm thinking:
+> +
+> +#define SYSCRG_CLEAR_BOOT_INFO_OFFSET (0x30C)
 
-* Kirill's patches would simplify Ard's cleanup a bit
+Unneeded ()
 
-* The 4th one: Kirill A. Shutemov ( :  85|) =E2=94=9C=E2=94=80>[PATCHv3 4=
-/4] x86/paravirt: Restrict PARAVIRT_XXL to 64-bit only
+> +#define CLEAR_BOOT_FLAG_BIT BIT_ULL(0)
 
-looks ok too.
+It is only used as a unsigned int parameter with regmap_set_bits(), so 
+why ULL?
 
-So, I don't see anything speaking against queueing them *now* for the upc=
-oming
-merge window, I am testing the tip lineup on a daily basis this and next =
-week
-and if it all looks good, we could probably send them.
+> +
+> +#define SYSCRG_RESET_OFFSET (0x400)
 
-If not, we delay.
+Unneeded ()
 
-And if there's other issues which get detected later, during the 6.16-rc
-phase, we revert.
+...
 
-So we have an exit route from each scenario.
+> +/**
+> + * eswin_reset_set() - program a device's reset
+> + * @rcdev: reset controller entity
+> + * @id: ID of the reset to toggle
+> + * @assert: boolean flag to indicate assert or deassert
+> + *
+> + * This is a common internal function used to assert or deassert a device's
+> + * reset by clear and set the reset bit. The device's reset is asserted if the
+> + * @assert argument is true, or deasserted if @assert argument is false.
+> + *
+> + * Return: 0 for successful request, else a corresponding error value
+> + */
+> +static int eswin_reset_set(struct reset_controller_dev *rcdev, unsigned long id,
+> +			   bool assert)
+> +{
+> +	struct eswin_reset_data *data = to_eswin_reset_data(rcdev);
+> +	struct eswin_reset_control *control;
+> +	int ret;
+> +
+> +	control = idr_find(&data->idr, id);
+> +
+> +	dev_dbg(rcdev->dev, "dev_id 0x%x reset_bit 0x%x assert 0x%x\r\n",
+> +		control->dev_id, control->reset_bit, assert);
 
-So I guess let's...
+We test of control is NULL the line after. So if it can happen, it would 
+crash here.
 
-Unless I'm missing an aspect.
+> +
+> +	if (!control)
+> +		return -EINVAL;
+> +
+> +	if (assert) {
+> +		ret = regmap_clear_bits(data->regmap,
+> +					SYSCRG_RESET_OFFSET +
+> +						control->dev_id * sizeof(u32),
+> +					control->reset_bit);
+> +	} else {
+> +		ret = regmap_set_bits(data->regmap,
+> +				      SYSCRG_RESET_OFFSET +
+> +					      control->dev_id * sizeof(u32),
+> +				      control->reset_bit);
+> +	}
 
-Thx.
+No need fo { } around each of these branches.
 
---=20
-Regards/Gruss,
-    Boris.
+> +
+> +	return ret;
+> +}
+> +
+> +static int eswin_reset_reset(struct reset_controller_dev *rcdev,
+> +			     unsigned long id)
+> +{
+> +	int ret;
+> +
+> +	ret = eswin_reset_set(rcdev, id, true);
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Would it make sense to use eswin_reset_assert()?
+
+> +	if (ret != 0)
+> +		return ret;
+> +
+> +	usleep_range(10, 15);
+> +	ret = eswin_reset_set(rcdev, id, false);
+
+Would it make sense to use eswin_reset_deassert()?
+
+> +	if (ret != 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int eswin_reset_assert(struct reset_controller_dev *rcdev,
+> +			      unsigned long id)
+> +{
+> +	return eswin_reset_set(rcdev, id, true);
+> +}
+> +
+> +static int eswin_reset_deassert(struct reset_controller_dev *rcdev,
+> +				unsigned long id)
+> +{
+> +	return eswin_reset_set(rcdev, id, false);
+> +}
+
+...
+
+> +static int eswin_reset_of_xlate_lookup_id(int id, void *p, void *data)
+> +{
+> +	struct of_phandle_args *reset_spec = (struct of_phandle_args *)data;
+> +	struct eswin_reset_control *slot_control =
+> +		(struct eswin_reset_control *)p;
+> +
+> +	if (reset_spec->args[0] == slot_control->dev_id &&
+> +	    reset_spec->args[1] == slot_control->reset_bit)
+> +		return id;
+> +	else
+
+Unneeded else.
+
+> +		return 0;
+> +}
+> +
+> +/**
+> + * eswin_reset_of_xlate() - translate a set of OF arguments to a reset ID
+> + * @rcdev: reset controller entity
+> + * @reset_spec: OF reset argument specifier
+> + *
+> + * This function performs the translation of the reset argument specifier
+> + * values defined in a reset consumer device node. The function allocates a
+> + * reset control structure for that device reset, and will be used by the
+> + * driver for performing any reset functions on that reset. An idr structure
+> + * is allocated and used to map to the reset control structure. This idr
+> + * is used by the driver to do reset lookups.
+> + *
+> + * Return: 0 for successful request, else a corresponding error value
+> + */
+> +static int eswin_reset_of_xlate(struct reset_controller_dev *rcdev,
+> +				const struct of_phandle_args *reset_spec)
+> +{
+> +	struct eswin_reset_data *data = to_eswin_reset_data(rcdev);
+> +	struct eswin_reset_control *control;
+> +	int ret;
+> +
+> +	if (WARN_ON(reset_spec->args_count != rcdev->of_reset_n_cells))
+> +		return -EINVAL;
+> +
+> +	ret = idr_for_each(&data->idr, eswin_reset_of_xlate_lookup_id,
+> +			   (void *)reset_spec);
+> +	if (ret != 0)
+
+if (ret)
+
+> +		return ret;
+> +
+> +	control = devm_kzalloc(data->dev, sizeof(*control), GFP_KERNEL);
+> +	if (!control)
+> +		return -ENOMEM;
+> +
+> +	control->dev_id = reset_spec->args[0];
+> +	control->reset_bit = reset_spec->args[1];
+> +
+> +	return idr_alloc(&data->idr, control, 0, 0, GFP_KERNEL);
+> +}
+> +
+> +static const struct of_device_id eswin_reset_dt_ids[] = {
+> +	{
+> +		.compatible = "eswin,eic7700-reset",
+> +	},
+> +	{ /* sentinel */ },
+
+No need for a trailing , after a terminator.
+
+> +};
+> +
+> +static int eswin_reset_probe(struct platform_device *pdev)
+> +{
+> +	struct eswin_reset_data *data;
+> +	struct device *parent;
+> +
+> +	parent = pdev->dev.parent;
+> +	if (!parent) {
+> +		dev_err(&pdev->dev, "no parent\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->regmap = syscon_node_to_regmap(parent->of_node);
+> +	if (IS_ERR(data->regmap)) {
+> +		dev_err(&pdev->dev, "failed to get parent regmap\n");
+> +		return PTR_ERR(data->regmap);
+> +	}
+> +
+> +	platform_set_drvdata(pdev, data);
+> +
+> +	data->rcdev.owner = THIS_MODULE;
+> +	data->rcdev.ops = &eswin_reset_ops;
+> +	data->rcdev.of_node = pdev->dev.of_node;
+> +	data->rcdev.of_reset_n_cells = 2;
+> +	data->rcdev.of_xlate = eswin_reset_of_xlate;
+> +	data->rcdev.dev = &pdev->dev;
+> +	data->dev = &pdev->dev;
+> +	idr_init(&data->idr);
+> +
+> +	/*clear boot flag so u84 and scpu could be reseted by software*/
+
+Missing spaces at the start and the end of the comment.
+
+> +	regmap_set_bits(data->regmap, SYSCRG_CLEAR_BOOT_INFO_OFFSET,
+> +			CLEAR_BOOT_FLAG_BIT);
+> +	msleep(50);
+> +	platform_set_drvdata(pdev, data);
+> +
+> +	return devm_reset_controller_register(&pdev->dev, &data->rcdev);
+> +}
+
+...
+
+CJ
