@@ -1,112 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A705C21ABBF
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9893E227EBE;
+	Fri, 16 May 2025 09:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747386794; cv=none; b=LfLfVHCZHBoFlx41wxHkNFFcM7gadVb7AQ9ePOZAonSic1nh+BfkROD8vTZg1UNH6zrX3hzl+D1g+C8y4/jDz617EdZg3NCk2/lGqWEDncRaEloa4G+44ZVNGqa0JE/QaCvf1AnGRIeq+t7+XCaoS/rCYzsolBGI20dMoNQkrQg=
+	t=1747386814; cv=none; b=ld+ltv6PRnop8hEPKuPe1o3ZIhz4VdfUGkZvQEGnPdXohZXMwEVZFrOI5saMebinGjGU4bqSZn4u9wXdGxe1eSlACGEd1pxHweoIHF6ZXCJQ179lPB35hr8DcXcVdpZTXzP0QBj7zH9FUUBS3FKLTKLMn+3SPAZO1S6ijtgWLOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747386794; c=relaxed/simple;
-	bh=ksekMZVhPXdIuET0lg2g9cXAvBNY/5XmvEQhXStTji0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e3xmtKSFOm6ixp7jYjKEub3ScmEZ4PVvtQK2A/EK42KsH4C+xGlu9+p+mfRPFawlnBZ4H3/xwGASfS6/x2cFuDHgl05xS848Si37amgGH4yLwkrrM8PTh294neouCYKWO28jjzi6rIGpuMjcL0Y1lo0PdtpYoLKAEUoYR/A9OY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-X-CSE-ConnectionGUID: 978PjgOEQTOin37xaoX0Lg==
-X-CSE-MsgGUID: Lmt7C9DnQBaRvgW9/vOBeQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="71856940"
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="71856940"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:13:12 -0700
-X-CSE-ConnectionGUID: Y87Srr0sRye6sqqtksERhw==
-X-CSE-MsgGUID: QazlszgLTlWhAADhp7qgHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
-   d="scan'208";a="142644054"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 02:13:04 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy.shevchenko@gmail.com>)
-	id 1uFr7l-000000025sp-1nBT;
-	Fri, 16 May 2025 12:13:01 +0300
-Date: Fri, 16 May 2025 12:13:01 +0300
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-	Borislav Petkov <bp@alien8.de>, Juergen Gross <jgross@suse.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Kees Cook <keescook@chromium.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Paul Menzel <pmenzel@molgen.mpg.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	David Woodhouse <dwmw@amazon.co.uk>
-Subject: Re: [PATCH 05/29] x86/boot/e820: Print gaps in the E820 table
-Message-ID: <aCcBnWbfKalvndCI@smile.fi.intel.com>
-References: <20250421185210.3372306-1-mingo@kernel.org>
- <20250421185210.3372306-6-mingo@kernel.org>
- <aAc6aj5FVMkwDo06@surfacebook.localdomain>
- <aCXBvRe6PrY_zlvU@gmail.com>
+	s=arc-20240116; t=1747386814; c=relaxed/simple;
+	bh=2LTT0+WmAJtlQ1IqZtUhdjsXEEI+MhON5zg4EbTcuJ4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YX4brUVnuVnX8RN/poXI5hXf6U1K/ylkdZbrzup5Gh7aFZispRntFF9fw4EwCShxu3tDHUiawXccujLPiJWxBmDwLtkzq1ojXoN6kv72oiUNlnnYmWHY5PiEw9gLfamLKZfrf7XieWiZnOHLVLvQXMTMM03Zxtn1iecJZ2S3OZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=209.97.181.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
+	by app2 (Coremail) with SMTP id TQJkCgDXaJKqASdoD9F8AA--.41109S2;
+	Fri, 16 May 2025 17:13:16 +0800 (CST)
+From: dongxuyang@eswincomputing.com
+To: ulf.hansson@linaro.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-mmc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	adrian.hunter@intel.com,
+	p.zabel@pengutronix.de,
+	shanchun1218@gmail.com
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	xuxiang@eswincomputing.com,
+	Xuyang Dong <dongxuyang@eswincomputing.com>
+Subject: [PATCH v1 0/2] Add driver support for ESWIN eic7700 SoC sdhci controller
+Date: Fri, 16 May 2025 17:12:59 +0800
+Message-Id: <20250516091259.774-1-dongxuyang@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCXBvRe6PrY_zlvU@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TQJkCgDXaJKqASdoD9F8AA--.41109S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww4fZFWDGryxuF4rWF17Jrb_yoW8Ary8pa
+	1ruFyFyrsxWFyfJ3s3G3WYk3y5J3WfJrWYkr4fWw1rXFW5ury8Kr4fKFyYqryDXry8Ja93
+	Zr90gr15CFy5AFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-wCF04
+	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
+	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
+	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
+	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUmjgxUUUUU=
+X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
 
-On Thu, May 15, 2025 at 12:28:13PM +0200, Ingo Molnar wrote:
-> * Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > Mon, Apr 21, 2025 at 08:51:45PM +0200, Ingo Molnar kirjoitti:
+From: Xuyang Dong <dongxuyang@eswincomputing.com>
 
-...
+	Add support for the sdhci-emmc and sdhci-sdio functionality in the Linux
+	kernel. The driver provides basic functionality of emmc and sdio for the eic7700
+	series chips, which are part of the	Eswin SoC family.
 
-> > > +		u64 range_start, range_end;
-> > 
-> > struct range (from range.h) and...
-> 
-> Yeah, using those primitives makes sense, but right now the e820 code 
-> isn't using them, and it's better to have similar & unified range 
-> handling code patterns.
-> 
-> In principle I wouldn't be opposed to patches that convert the e820 
-> code to <linux/range.h> types.
+	Features:
+	 Implement support for the ESWIN eic7700 SoC sdhci-emmc controller and
+	 sdhci-sdio controller. Integrate with the Linux sdhci subsystem for consistency and
+	 scalability.
 
-Okay, perhaps a separate cleanup in the future. Not sure if I will have time,
-but let's see...
+	Supported chips:
+	 ESWIN eic7700 series SoC.
 
-...
+	Test:
+	 Test this patch on the Sifive HiFive Premier P550 (which uses the EIC7700 SoC),
+	 including emmc and sdio peripherals. Perform read, write and erase tests on emmc.
+	 Read and write tests after mounting the file system. Verification of kernel support
+	 for emmc device. So this verifies that sdhci driver patch is working properly.
 
-> > > +		if (range_start > range_end_prev) {
-> > > +			pr_info("%s: [gap %#018Lx-%#018Lx]\n",
-> > > +				who,
-> > > +				range_end_prev,
-> > > +				range_start-1);
-> > 
-> > %pra
-> 
-> This would be part of any <linux/range.h> conversion patches.
-> 
-> > with who mentioned the "gap"?
-> 
-> Not sure I understand?
+Xuyang Dong (2):
+  dt-bindings: sdhci: eswin: Documentation for eic7700 SoC
+  sdhci: eswin: Add eic7700 sdhci driver
 
-With the range.h in place and the mentioned specifier, the above will be like
+ .../bindings/mmc/eswin,sdhci-eic7700.yaml     |  131 ++
+ drivers/mmc/host/Kconfig                      |   47 +
+ drivers/mmc/host/Makefile                     |    4 +-
+ drivers/mmc/host/sdhci-eic7700.c              |  353 ++++++
+ drivers/mmc/host/sdhci-eic7700.h              |  237 ++++
+ drivers/mmc/host/sdhci-of-eic7700-sdio.c      |  991 ++++++++++++++++
+ drivers/mmc/host/sdhci-of-eic7700.c           | 1053 +++++++++++++++++
+ 7 files changed, 2816 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/eswin,sdhci-eic7700.yaml
+ create mode 100644 drivers/mmc/host/sdhci-eic7700.c
+ create mode 100644 drivers/mmc/host/sdhci-eic7700.h
+ create mode 100644 drivers/mmc/host/sdhci-of-eic7700-sdio.c
+ create mode 100644 drivers/mmc/host/sdhci-of-eic7700.c
 
-BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
-BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
-BIOS-e820: [range 0x00000000000a0000-0x00000000000effff] gap
-BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+--
+2.17.1
 
