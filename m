@@ -1,133 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D2514884C;
-	Fri, 16 May 2025 14:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE997194C86
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 14:34:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747406036; cv=none; b=kDeY1zaEqkZG77hiIczx2vddIIWBLBuUTRGn6GX6Vn6zHzxLs3a3kD0jFUWjhO2YqZB5hJ3NTZUoNPWsZgVw5nyXyHreSU/83305GPac1wFZlIhzSFbrEJgeRkpJ7hhh1bCyO4M2g5y7HAG1Y6aQqM0dXcXdVeYvuihjdwwYO0k=
+	t=1747406062; cv=none; b=VKPgTCry75zZTyCCfGyyBjlqCqu+sVTxSKlRdafJng4HeIsE7FWb3HdH02QsMT5B0dee1CJ3Z6Yxsnl8e5t+4pB+Zl0eBpCRNzApEfwz5L5+XPVMdCojjjnifFx1cq1XkWtSTqo6Dw/doxI4QGuq2m81d6ypFWT6LuGSCfnD62w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747406036; c=relaxed/simple;
-	bh=Xd2ewTryFT54YmHxelw/SYdFHABh+lnf5nXNyKAWRpA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X1AL/PuBCsNn4vuM+hZGEwrCdr72d3Kc/DIIIRCpHWjKyVlbo0Bf3jHr3/bU9MMMKzbOrEzw6u1A7tP6o7CwBarsl8IDoCz8ur5vOh6KTqTapBqpqZ9bFWt07IGhm/hQyhrJS+wCxaQOy0jXZA2A3RYdV5bJoBvbrxll7ceNl3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Loa/pVCD; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747406062; c=relaxed/simple;
+	bh=jzl/I6bmaZHg+UPF2Q4+lk9TcQHEK2RBu6uj6QAfp48=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u+Oyf9WoOd34yF+pBtgAPirmXpFC9kPIe6dIgOSeS8CzoX4AWrUK1B2h+cslqii9J64dHB3MhPEAq4Yr+AQ5SFhY6aKUGyeTiwEf31Tw8Ka+C/IOMPKyrixoQSeA6bHZ8i9P26yStTMxpuDugl6YQPzhfaYhuTD15ijFW0ATbcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vGuVxTQI; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Loa/pVCD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747406034; x=1778942034;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Xd2ewTryFT54YmHxelw/SYdFHABh+lnf5nXNyKAWRpA=;
-  b=Loa/pVCDxk8CkUNK329onsoCzisJ+HpztNYro8VnX5RuE6qRwwlMgvIQ
-   /k+GNtFKAkwxeBzP1CBkeD+b9/TahpChNsI3TvqAA+giAkPePDrQV0YMZ
-   706ReK97OIfgzyBJgK5RfnKhW0aYVm30Ps+t15q/f46ymQCL7RGeDKrgk
-   1rxj48ZropY5CsVjgaqhviSAEI/6gwm3iUfsy4+DhYKVelbUbKs8pVous
-   9Ox3Y4SvPyfaD2DWpX788rRLNXSi0UVktQzvPjsN22t5mfbfPX6HL8KoK
-   0aSYFneK3AFOwzNehH0rAGEhN4DYEev9VkZwvqicRpd0BgOgvu3bEZXtJ
-   A==;
-X-CSE-ConnectionGUID: tdHyGEvlThCh+oWXFRvdwg==
-X-CSE-MsgGUID: nM0oHVTsQzqhXj8sT2of4g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49486315"
-X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="49486315"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 07:33:53 -0700
-X-CSE-ConnectionGUID: dFyUi+U7QZWinDUfA4SXEg==
-X-CSE-MsgGUID: xPA9VdCZQEa74+kZi1r9aA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
-   d="scan'208";a="162021416"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 16 May 2025 07:33:51 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uFw8C-000JQF-26;
-	Fri, 16 May 2025 14:33:48 +0000
-Date: Fri, 16 May 2025 22:33:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: hehuan1@eswincomputing.com, dlemoal@kernel.org, cassel@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, p.zabel@pengutronix.de
-Cc: oe-kbuild-all@lists.linux.dev, ningyu@eswincomputing.com,
-	linmin@eswincomputing.com, luyulin@eswincomputing.com,
-	Huan He <hehuan1@eswincomputing.com>
-Subject: Re: [PATCH v1 2/2] sata: eswin: Add eic7700 sata driver
-Message-ID: <202505162248.OhCrILxm-lkp@intel.com>
-References: <20250515090018.1720-1-hehuan1@eswincomputing.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vGuVxTQI"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5fce6c7598bso12468a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:34:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747406057; x=1748010857; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jzl/I6bmaZHg+UPF2Q4+lk9TcQHEK2RBu6uj6QAfp48=;
+        b=vGuVxTQIYGn+f+GPputS3WJ9uQtgpFnyZMc9zU0hVE3w1I4meBQumbC+zkmaj5pMWe
+         /dZ/2GJ0+PzCZcZR/PQPexTMpxLls4XG1LTX8Mc3C/i8CG32oIFfgPxVGqdcwchU5zB4
+         waLL9ogKl6fzdnTwNoLduMHTbuvTcTxKFViMrSAH36JaH9xcg8H+evngATmCjuUndS1Q
+         AyBQSmOBIhMjyk8aWV4d+pWVovMq91xkrfFSjlI6R5pYhyDsP6ynrmFd1CfsBwzd71gm
+         kNsReH4HvmeReUdPdQCbQt7EY6p3YBi3CeqZKPedRIR4RMFJfu1wO/izNHE/etK1p/JD
+         YnoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747406057; x=1748010857;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jzl/I6bmaZHg+UPF2Q4+lk9TcQHEK2RBu6uj6QAfp48=;
+        b=NJGINhn4V6PEwOlfZBnfMKcNOLXKTTDOojcug8XBtxmZXwByZ7q93wGJ4CnZ5FbNIZ
+         GPSk9flVy43zicce/M7DLbJ0GbnfQcOFTC9LonXRk8uOIuTKEikxDFKiEiyZMaz/1dzu
+         Zwm4m9i03y/5GH0Ma5anmTunoBaKQS+bphXbE9/NZHgiWaK2d5azHifw7z+BW1yH/+Fp
+         1CDD/U3y6mOx1LBRY7Bj2gO03Q3ZM5FptrPY0yplg1iAaDwaqUNT6F5dq67F7+mYOwY6
+         K7Tvd8zz1ljtnIlShLhESIo7JlKKf/B32dQCTu5MtaFsbUAfJUk5irYsUbD3x14T6zvQ
+         Hm0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUL1D+mms7j1PQWziGkurJL5vtlPyqFfdpxH+bVl3ChRd/7HB6KYmlTyoZZ+4M5lIZHWNh7R53QaFlsgM8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsirGLgET12/5oJaE6T7iAdCgrnOUdBZFs7ERhAur7FRyXe99P
+	iM1F5p4K1RIi46Y0bClNUqJ1NdapcUrwS3Z0CZ6sUyjQRutMRQvMcpgTStkU8F7P2LEylMiYaq9
+	4qcbpuUfq+GNV1i5M6p93aNTJxBRfSQEOQzU1EG/w
+X-Gm-Gg: ASbGnct49svUCoDlZGyNBQEJF31lrdJGcgr2GQTRVT9AVr6Z8DxSeSCK+/AKOHSc5uU
+	g1bNXcvNsx99RvMMDiyCUKXks78phaujHE8QJPpoo4hmGBt36nEG8pRKzsTB6Uvz0Btt9oiGYXD
+	Iu8pBcrObYuba66WEQNnWYvTVOmJYvwZAEwaxhOskcy7tt+MnS5WVgyo99pzJu
+X-Google-Smtp-Source: AGHT+IGCSHxzW91C4A5f0hB+8GzPDiVXw/aNuBqA0vePJ7mSh5UedOWWbXq+/BmaUddB31Y12bkHvm3bpH51L/eGgVg=
+X-Received: by 2002:a50:8e51:0:b0:5e6:15d3:ffe7 with SMTP id
+ 4fb4d7f45d1cf-5ffce29ea75mr210811a12.7.1747406056679; Fri, 16 May 2025
+ 07:34:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515090018.1720-1-hehuan1@eswincomputing.com>
+References: <20250516-work-coredump-socket-v8-0-664f3caf2516@kernel.org> <20250516-work-coredump-socket-v8-4-664f3caf2516@kernel.org>
+In-Reply-To: <20250516-work-coredump-socket-v8-4-664f3caf2516@kernel.org>
+From: Jann Horn <jannh@google.com>
+Date: Fri, 16 May 2025 16:33:40 +0200
+X-Gm-Features: AX0GCFtQVpgNrEjVFvdmdJYYDaEF3VTJ2Dm_tJFrdzJ22BVKOsDvuggvKcRma0U
+Message-ID: <CAG48ez0e+-SdB6AWXFKBy4i2Dy8ducic4aH5=hKQDqpN_G-sRg@mail.gmail.com>
+Subject: Re: [PATCH v8 4/9] coredump: add coredump socket
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Eric Dumazet <edumazet@google.com>, Oleg Nesterov <oleg@redhat.com>, 
+	"David S. Miller" <davem@davemloft.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, David Rheinsberg <david@readahead.eu>, 
+	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <luca.boccassi@gmail.com>, 
+	Mike Yuan <me@yhndnzj.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	=?UTF-8?Q?Zbigniew_J=C4=99drzejewski=2DSzmek?= <zbyszek@in.waw.pl>, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, 
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Fri, May 16, 2025 at 1:26=E2=80=AFPM Christian Brauner <brauner@kernel.o=
+rg> wrote:
+> Coredumping currently supports two modes:
+[..]
+> Acked-by: Luca Boccassi <luca.boccassi@gmail.com>
+> Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+> Reviewed-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on robh/for-next]
-[also build test WARNING on linus/master v6.15-rc6 next-20250516]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/hehuan1-eswincomputing-com/dt-bindings-sata-eswin-Document-for-EIC7700-SoC/20250515-170607
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20250515090018.1720-1-hehuan1%40eswincomputing.com
-patch subject: [PATCH v1 2/2] sata: eswin: Add eic7700 sata driver
-config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20250516/202505162248.OhCrILxm-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250516/202505162248.OhCrILxm-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505162248.OhCrILxm-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/ata/ahci_eic7700.c:206:12: warning: 'eswin_ahci_resume' defined but not used [-Wunused-function]
-     206 | static int eswin_ahci_resume(struct device *dev)
-         |            ^~~~~~~~~~~~~~~~~
->> drivers/ata/ahci_eic7700.c:195:12: warning: 'eswin_ahci_suspend' defined but not used [-Wunused-function]
-     195 | static int eswin_ahci_suspend(struct device *dev)
-         |            ^~~~~~~~~~~~~~~~~~
-
-
-vim +/eswin_ahci_resume +206 drivers/ata/ahci_eic7700.c
-
-   194	
- > 195	static int eswin_ahci_suspend(struct device *dev)
-   196	{
-   197		int ret;
-   198	
-   199		ret = ahci_platform_suspend(dev);
-   200		if (ret)
-   201			return ret;
-   202	
-   203		return 0;
-   204	}
-   205	
- > 206	static int eswin_ahci_resume(struct device *dev)
-   207	{
-   208		int ret;
-   209	
-   210		ret = ahci_platform_resume(dev);
-   211		if (ret)
-   212			return ret;
-   213	
-   214		return 0;
-   215	}
-   216	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Reviewed-by: Jann Horn <jannh@google.com>
