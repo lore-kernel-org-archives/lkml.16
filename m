@@ -1,137 +1,142 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F83E163;
-	Fri, 16 May 2025 09:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C135230BE3
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747388564; cv=none; b=ScPgjDGeA8he1LSROwuAPNy7U4v2v+pK4o3ftXWBkuEhWMjz4QqoXe514vHftydOLQvmy54epBIiRq5fbwyA/zoME5qTM6ajY0iQY7FeWgpXuYGn+1Xza9RTbSOM6t18rPepAV904wh9mGlLrkOQslAsEi7A9sBCVY7O9gJl+Rs=
+	t=1747388589; cv=none; b=dgMdzfbjebQSfpsBIYf/Gq686Pef2b3UOnlanbE8PDlGiV5RCk1v4AgGA3fqM8go3kxfeTvYWAa/WZVG55OgG8x8/ms5veQJaE5JjFhhjhAu763Sq41TxSRA4/9X1KHnCFL+F7crj9aohLUR9QTsxmw/3dCBY3aYV3RjNoRY+/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747388564; c=relaxed/simple;
-	bh=tEeJwceqPhH6rQO5BP/XnO6dPNDzjv4Fb3mwdlwvWhw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ez8N8I/nv2aC2c9NrCI9O2PWRRXaV40Rq758YOOXhdkxegqwPMfFAaSPegP+sMEDwgG/CAvD+5LUUSLvkk9Dbkz7NzM99KWHsZWjCR2wXB0kMijH6fcxFFhKFTIEIasH6TaQTmdFNg2Kz2ZZHrKG5CuAxt2XHrTKPx1dnIozGrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=e3VJLERi; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1747388589; c=relaxed/simple;
+	bh=RPcf8rE/illtLU4XBg4keVfeb7EWgZN+SUx/oGgel1E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tJZxX/MWpYbEhj7d9RhKFZ/PWDYudb/rm17Cm6MHvRCfeUSH3kpCb2t51TAoNHAdgh8TIKp1pEgbHmJV5244uy6CVFYGMdN1f+vXurQxS3mXnnERCKiyqGRaPxPPP4fohqgtm888KFPd6KYREDNycMMExGulSrRT02qkfBL+5/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=a5/QjHPv; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=s1HSFUVs; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=a5/QjHPv; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=s1HSFUVs; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="e3VJLERi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747388558;
-	bh=3bsTN6s/atC4Hle8m6wzHP/e3ZR4IYSXzgWgQ96g304=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=e3VJLERiklN4QZz634EkcUMUXwZ9IWLIVS2uSWqvVMDTw7dCkE/Q69+hnEa+QiBHl
-	 tRI/tqEglBL3wDjIanrEbkhiLyEvKNjqDuBTlqiHiwX3nckb87vsTMxDdGRy9OZclO
-	 F+0MD+/QpVYYp1z3dEc45L3RGpCChn7NqkLUvNl23kudTZ0e/yvYQ+JXNFzy9dKY4j
-	 BMXmRraly0DlUt0xlfJlcQ5KICEIjfW2RsGhDN2HOx/GUD4rxI4BWECMhP97Xn7psQ
-	 VZv4vrq1irt6S5WZVw4NK3Pu6/5FXF6d17Uq9iqtzhU2xuysUjcrKlSsgTdgtZbNtX
-	 hL2SSGs1FENDA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="a5/QjHPv";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="s1HSFUVs";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="a5/QjHPv";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="s1HSFUVs"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZzMZ62BzTz4wcQ;
-	Fri, 16 May 2025 19:42:38 +1000 (AEST)
-Date: Fri, 16 May 2025 19:42:37 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the gpio-intel tree
-Message-ID: <20250516194237.03371ba7@canb.auug.org.au>
-In-Reply-To: <aCcHKK8FflYRhx2m@smile.fi.intel.com>
-References: <20250516193436.09bdf8cc@canb.auug.org.au>
-	<aCcHKK8FflYRhx2m@smile.fi.intel.com>
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 860121F7ED;
+	Fri, 16 May 2025 09:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747388584; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZnGSLuTuPDHBaJa3BHzKadQwMoY8VUpO+ahaXJ4wyv4=;
+	b=a5/QjHPvalNF86Ln/xKlczGcVUIolDFcY/mecGE0wPyiZDJ3IO5jFX4ja3LQceun6GiGlh
+	n+/PJXnIybYYFOqRcfdxFD7foUsrKU7+2+PNvsvEeliVglkOybb68iRo2CljjuO23IyykU
+	dP4+ygRa9mK5SKEERHNHJyIIyN7saug=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747388584;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZnGSLuTuPDHBaJa3BHzKadQwMoY8VUpO+ahaXJ4wyv4=;
+	b=s1HSFUVsiJx86SXMGtuAYNa+CwUIrNGrFYJ/w1OAdPKi8qbmrCJgFAfgf43jiIrqWI6PNr
+	9S1UE5EuNONxcSCA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747388584; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZnGSLuTuPDHBaJa3BHzKadQwMoY8VUpO+ahaXJ4wyv4=;
+	b=a5/QjHPvalNF86Ln/xKlczGcVUIolDFcY/mecGE0wPyiZDJ3IO5jFX4ja3LQceun6GiGlh
+	n+/PJXnIybYYFOqRcfdxFD7foUsrKU7+2+PNvsvEeliVglkOybb68iRo2CljjuO23IyykU
+	dP4+ygRa9mK5SKEERHNHJyIIyN7saug=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747388584;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZnGSLuTuPDHBaJa3BHzKadQwMoY8VUpO+ahaXJ4wyv4=;
+	b=s1HSFUVsiJx86SXMGtuAYNa+CwUIrNGrFYJ/w1OAdPKi8qbmrCJgFAfgf43jiIrqWI6PNr
+	9S1UE5EuNONxcSCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6424513977;
+	Fri, 16 May 2025 09:43:04 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id VNoKGKgIJ2hUcgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 16 May 2025 09:43:04 +0000
+Message-ID: <e859d24a-4619-4214-a3c5-b547b430e525@suse.cz>
+Date: Fri, 16 May 2025 11:43:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/p.qQOCKF0gbsxCDO+Q54S/_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] memcg: nmi safe memcg stats for specific archs
+Content-Language: en-US
+To: Shakeel Butt <shakeel.butt@linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Muchun Song <muchun.song@linux.dev>, Alexei Starovoitov <ast@kernel.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Harry Yoo <harry.yoo@oracle.com>, Yosry Ahmed <yosry.ahmed@linux.dev>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, bpf@vger.kernel.org,
+ linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Meta kernel team <kernel-team@meta.com>
+References: <20250516064912.1515065-1-shakeel.butt@linux.dev>
+ <20250516064912.1515065-3-shakeel.butt@linux.dev>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250516064912.1515065-3-shakeel.butt@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,suse.cz:mid,suse.cz:email]
+X-Spam-Score: -4.30
 
---Sig_/p.qQOCKF0gbsxCDO+Q54S/_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 5/16/25 08:49, Shakeel Butt wrote:
+> There are archs which have NMI but does not support this_cpu_* ops
+> safely in the nmi context but they support safe atomic ops in nmi
+> context. For such archs, let's add infra to use atomic ops for the memcg
+> stats which can be updated in nmi.
+> 
+> At the moment, the memcg stats which get updated in the objcg charging
+> path are MEMCG_KMEM, NR_SLAB_RECLAIMABLE_B & NR_SLAB_UNRECLAIMABLE_B.
+> Rather than adding support for all memcg stats to be nmi safe, let's
+> just add infra to make these three stats nmi safe which this patch is
+> doing.
+> 
+> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 
-Hi Andy,
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-On Fri, 16 May 2025 12:36:40 +0300 Andy Shevchenko <andriy.shevchenko@linux=
-.intel.com> wrote:
->
-> On Fri, May 16, 2025 at 07:34:36PM +1000, Stephen Rothwell wrote:
-> > Hi all,
-> >=20
-> > After merging the gpio-intel tree, today's linux-next build (htmldocs)
-> > failed like this:
-> >=20
-> > Error: Cannot open file /home/sfr/next/next/drivers/gpio/gpiolib-acpi.c
-> >=20
-> > Caused by commit
-> >=20
-> >   babb541af627 ("gpiolib: acpi: Move quirks to a separate file")
-> >=20
-> > I have to run
-> >=20
-> > make KERNELDOC=3D$(pwd)/scripts/kernel-doc.pl htmldocs
-> >=20
-> > as the newer Python version dies without a useful error :-( =20
->=20
-> Thanks for the report! And can you share the output of the above?
-
-make[1]: Entering directory '/home/sfr/next/htmldocs'
-  PARSE   include/uapi/linux/dvb/ca.h
-  PARSE   include/uapi/linux/dvb/dmx.h
-  PARSE   include/uapi/linux/dvb/frontend.h
-  PARSE   include/uapi/linux/dvb/net.h
-  PARSE   include/uapi/linux/videodev2.h
-  PARSE   include/uapi/linux/media.h
-  PARSE   include/uapi/linux/cec.h
-  PARSE   include/uapi/linux/lirc.h
-Using alabaster theme
-Using Python kernel-doc
-/home/sfr/next/next/Documentation/bpf/bpf_iterators.rst:55: WARNING: Bullet=
- list ends without a blank line; unexpected unindent. [docutils]
-WARNING: /home/sfr/next/next/kernel/futex/futex.h:207 struct member 'drop_h=
-b_ref' not described in 'futex_q'
-WARNING: /home/sfr/next/next/kernel/futex/waitwake.c:593 function parameter=
- 'task' not described in 'futex_wait_setup'
-/home/sfr/next/next/Documentation/virt/kvm/x86/intel-tdx.rst:255: WARNING: =
-Footnote [1] is not referenced. [ref.footnote]
-
-Sphinx error:
-Sphinx is unable to load the master document (/home/sfr/next/next/Documenta=
-tion/index.rst). The master document must be within the source directory or=
- a subdirectory of it.
-make[3]: *** [/home/sfr/next/next/Documentation/Makefile:123: htmldocs] Err=
-or 2
-make[2]: *** [/home/sfr/next/next/Makefile:1803: htmldocs] Error 2
-make[1]: *** [/home/sfr/next/next/Makefile:248: __sub-make] Error 2
-make[1]: Leaving directory '/home/sfr/next/htmldocs'
-make: *** [Makefile:248: __sub-make] Error 2
-
-This is already being discussed in another thread.
-
-https://lore.kernel.org/all/20250508184839.656af8f6@canb.auug.org.au/
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/p.qQOCKF0gbsxCDO+Q54S/_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgnCI0ACgkQAVBC80lX
-0Gx72wf/RrklaMn23aAl9HeCpmOol+FdmXKa12a8f+XXuDQKN1U6jbm3LvMFYDO+
-8XSdfwaSL9f9cXpt0UGyWG39XdRfgrdAf9o1co+2IePoVq+wtyTzrSqZfBS4Gi4h
-df5wShHH9MpbPdVwuKI8noEIQia/L5PP5LBNv5axB8gX7+64ZgiuzdqD0Q3DF88H
-lbduuiNPRNoZ2dfreGWW+bGMQ0byiw/ybyxxHNpzBPNYzXek3cTI1fg4Pz9yQuf/
-gUyMZ18wPzkIUwuYlExLIHUMj8jrCgYyoHk1KAXJ0Pv+XiTRBtnI4AVOhhrwIxs5
-Nz7nbNo7Fh5ZIMSKxnb9QYf2HJ1rFA==
-=7H6Y
------END PGP SIGNATURE-----
-
---Sig_/p.qQOCKF0gbsxCDO+Q54S/_--
