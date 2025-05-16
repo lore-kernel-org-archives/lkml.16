@@ -1,79 +1,224 @@
-Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF3D72601;
-	Fri, 16 May 2025 13:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.235.159.17
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E2AF10E9;
+	Fri, 16 May 2025 13:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747403415; cv=none; b=sYNI/5Qjw62UeyYGbdXLXYccEs1nhV+JJCK8CKGSOcy63uIqd4BEe8Q+lV5ee7NSFc6Zk+w8GCX/MZpswaULIKyRNVd8ySym50c74LwRjqkOBvVxXqPS6RRP7sDuIyfP38EQ32ZdSF5ZfZy8KAjwQOw7DCvzaS6mT3jWhWnRyWk=
+	t=1747403424; cv=none; b=mWj78ttmCDSe/0gw4eJ6fSTNRQzuds/knL8tVHhD2UB70cLdNMLFoGwqNo7bFdopfg6gjNIq8o7HML8R3LxGCqJuIqS4tvoD455KrC7FAaQiz8aJHWwVLjJBqFMTiOFFrHhZfrdB7HDLkC28jI9qSc06Z6+WqMojqn4oFG6Mu10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747403415; c=relaxed/simple;
-	bh=EHqziaXxgZ35+O1nOFw6ZeKiJTPk/sgxKRz+uIqS31k=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
-	 MIME-Version:Content-Type; b=LV9hUeyeWzfEpWcGn3lORnyHCpBSGhWsolg/2LeGcx93/m3OyyoqygpSD/s1pCpe/M3FSfEYepQ73aHDYSEMrpKROgCoY56W8HeDJaLZBF7jHfx5om/KQP1yHFUjLJ48iJArVYrCBp9Y794WNuD+OhtOyJBIkIW+M2aR6K/ntjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=j41yxktd; arc=none smtp.client-ip=167.235.159.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="j41yxktd"
-Message-ID: <860a4f7600814b17e48dbabe1ae19f68@manguebit.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-	s=dkim; t=1747403405;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mmzWBrBQb2s1Dtr15zDCHkAoFy2O5uJ5sgPONiWBjy8=;
-	b=j41yxktdbr+Dm7gUXSMeKrfnhWxRgh/SeO1Y/ee64tjOHEYFeZNONI1qllTLKU7j88OV52
-	TT2XZ3jem65KVGA9dZXCU6yxl6SZf8AdyKoedDIEZSWTwmtnxwMBx/zxMrifb9hwKti6e7
-	/S18liezDjx/MXxaAzvP5bpDqiqDmtcv+2rUdKJqohWzQ4i4fAo71f5kRE2fw3W5ezt5w4
-	ZglMenOH+DMzm388dIwvseQH45mtuGWmtBt+LLcCoqJULCeAvlYVbPnBBtVuf216Mrxrz7
-	2RlxeH2vjXFCWL6Czr8/jnT8m0T10UkXShHN9bfnsGOHU6BFNh1q5mgi9o3Rnw==
-From: Paulo Alcantara <pc@manguebit.com>
-To: Wang Zhaolong <wangzhaolong1@huawei.com>, sfrench@samba.org,
- sfrench@us.ibm.com
-Cc: linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
- linux-kernel@vger.kernel.org, chengzhihao1@huawei.com,
- wangzhaolong1@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH V2 0/2] smb: client: Fix use-after-free in readdir
-In-Reply-To: <20250516091256.2756826-1-wangzhaolong1@huawei.com>
-References: <20250516091256.2756826-1-wangzhaolong1@huawei.com>
-Date: Fri, 16 May 2025 10:49:59 -0300
+	s=arc-20240116; t=1747403424; c=relaxed/simple;
+	bh=nf3OQE9ZhNsiJA068uF5vECxBvjjy1drOxz1l/4Kwgc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=exdPULYFtmnHtaKSx62wfFNWdsPvXw6s2kG9p9ystRTQEGkwtHVSsRXguVvaaesJQFBO6fbyjN6XxycMR7x5gjQve/whv4MO+rjZ6e3LLqUGyWxnCwTyrXyXXweaFXoYtAeLUgaM+NV9u8C69OKtZqUxSdpuK0mybNyp4s0nf04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB252169C;
+	Fri, 16 May 2025 06:50:09 -0700 (PDT)
+Received: from [10.1.27.17] (e122027.cambridge.arm.com [10.1.27.17])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73A8F3F673;
+	Fri, 16 May 2025 06:50:17 -0700 (PDT)
+Message-ID: <31bf9eac-a234-44dd-a4a3-0939092da66a@arm.com>
+Date: Fri, 16 May 2025 14:50:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 17/43] arm64: RME: Handle RMI_EXIT_RIPAS_CHANGE
+To: Gavin Shan <gshan@redhat.com>, kvm@vger.kernel.org, kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
+ <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+References: <20250416134208.383984-1-steven.price@arm.com>
+ <20250416134208.383984-18-steven.price@arm.com>
+ <b5770d9b-4f17-4be8-95a7-1549322debb2@redhat.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <b5770d9b-4f17-4be8-95a7-1549322debb2@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Wang Zhaolong <wangzhaolong1@huawei.com> writes:
+On 30/04/2025 13:11, Gavin Shan wrote:
+> On 4/16/25 11:41 PM, Steven Price wrote:
+>> The guest can request that a region of it's protected address space is
+>> switched between RIPAS_RAM and RIPAS_EMPTY (and back) using
+>> RSI_IPA_STATE_SET. This causes a guest exit with the
+>> RMI_EXIT_RIPAS_CHANGE code. We treat this as a request to convert a
+>> protected region to unprotected (or back), exiting to the VMM to make
+>> the necessary changes to the guest_memfd and memslot mappings. On the
+>> next entry the RIPAS changes are committed by making RMI_RTT_SET_RIPAS
+>> calls.
+>>
+>> The VMM may wish to reject the RIPAS change requested by the guest. For
+>> now it can only do with by no longer scheduling the VCPU as we don't
+>> currently have a usecase for returning that rejection to the guest, but
+>> by postponing the RMI_RTT_SET_RIPAS changes to entry we leave the door
+>> open for adding a new ioctl in the future for this purpose.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>> Changes since v7:
+>>   * Rework the loop in realm_set_ipa_state() to make it clear when the
+>>     'next' output value of rmi_rtt_set_ripas() is used.
+>> New patch for v7: The code was previously split awkwardly between two
+>> other patches.
+>> ---
+>>   arch/arm64/kvm/rme.c | 88 ++++++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 88 insertions(+)
+>>
+> 
+> One nitpick below, either way:
+> 
+> Reviewed-by: Gavin Shan <gshan@redhat.com>
+> 
+>> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+>> index bee9dfe12e03..fe0d5b8703d2 100644
+>> --- a/arch/arm64/kvm/rme.c
+>> +++ b/arch/arm64/kvm/rme.c
+>> @@ -624,6 +624,65 @@ void kvm_realm_unmap_range(struct kvm *kvm,
+>> unsigned long start,
+>>           realm_unmap_private_range(kvm, start, end);
+>>   }
+>>   +static int realm_set_ipa_state(struct kvm_vcpu *vcpu,
+>> +                   unsigned long start,
+>> +                   unsigned long end,
+>> +                   unsigned long ripas,
+>> +                   unsigned long *top_ipa)
+>> +{
+>> +    struct kvm *kvm = vcpu->kvm;
+>> +    struct realm *realm = &kvm->arch.realm;
+>> +    struct realm_rec *rec = &vcpu->arch.rec;
+>> +    phys_addr_t rd_phys = virt_to_phys(realm->rd);
+>> +    phys_addr_t rec_phys = virt_to_phys(rec->rec_page);
+>> +    struct kvm_mmu_memory_cache *memcache = &vcpu->arch.mmu_page_cache;
+>> +    unsigned long ipa = start;
+>> +    int ret = 0;
+>> +
+>> +    while (ipa < end) {
+>> +        unsigned long next;
+>> +
+>> +        ret = rmi_rtt_set_ripas(rd_phys, rec_phys, ipa, end, &next);
+>> +
+>> +        if (RMI_RETURN_STATUS(ret) == RMI_SUCCESS) {
+>> +            ipa = next;
+>> +        } else if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT) {
+> 
+> --->
+> 
+>> +            int walk_level = RMI_RETURN_INDEX(ret);
+>> +            int level = find_map_level(realm, ipa, end);
+>> +
+>> +            /*
+>> +             * If the RMM walk ended early then more tables are
+>> +             * needed to reach the required depth to set the RIPAS.
+>> +             */
+>> +            if (walk_level < level) {
+>> +                ret = realm_create_rtt_levels(realm, ipa,
+>> +                                  walk_level,
+>> +                                  level,
+>> +                                  memcache);
+>> +                /* Retry with RTTs created */
+>> +                if (!ret)
+>> +                    continue;
+>> +            } else {
+>> +                ret = -EINVAL;
+>> +            }
+>> +
+> 
+> <--- This block of code have been existing in multiple functions. I guess
+> it would be worthy to introduce a helper for it if you agree.
+> Alternatively,
+> it's definitely something to do in the future, after this series is
+> merged :)
 
-> V2:
->   - Correct spelling mistakes in the commit message, such as 'lopp' -> 'loop'.
->   - The titles of patches follow the same style.
->
-> This patch series addresses a use-after-free vulnerability in the SMB/CIFS
-> client readdir implementation that can be triggered during concurrent
-> directory reads when a signal interrupts directory enumeration.
->
-> The root cause is in the operation sequence in find_cifs_entry():
-> 1. When query_dir_next() fails due to signal interruption (ERESTARTSYS)
-> 2. The code continues to access last_entry pointer before checking the return code
-> 3. This can access freed memory since the buffer may have been released
->
-> The race condition can be triggered by processes accessing the same directory
-> with concurrent readdir operations, especially when signals are involved.
->
-> The fix is straightforward:
-> 1. First patch ensures we check the return code before using any pointers
-> 2. Second patch improves defensiveness by resetting all related buffer pointers
->    when freeing the network buffer
->
-> Wang Zhaolong (2):
->   smb: client: Fix use-after-free in cifs_fill_dirent
->   smb: client: Reset all search buffer pointers when releasing buffer
->
->  fs/smb/client/readdir.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+I believe it's just two functions: realm_set_ipa_state() and
+realm_init_ipa_state(). Those two functions are going basically the same
+thing just at different stages (realm_init before the guest has started,
+and realm_set when it's running).
 
-Reviewed-by: Paulo Alcantara (Red Hat) <pc@manguebit.com>
+I've had a go and combing the two functions, it's a little clunky
+because of the differences, but I think it's an improvement over the
+repeated code.
+
+Thanks,
+Steve
+
+>> +            break;
+>> +        } else {
+>> +            WARN(1, "Unexpected error in %s: %#x\n", __func__,
+>> +                 ret);
+>> +            ret = -ENXIO;
+>> +            break;
+>> +        }
+>> +    }
+>> +
+>> +    *top_ipa = ipa;
+>> +
+>> +    if (ripas == RMI_EMPTY && ipa != start)
+>> +        realm_unmap_private_range(kvm, start, ipa);
+>> +
+>> +    return ret;
+>> +}
+>> +
+>>   static int realm_init_ipa_state(struct realm *realm,
+>>                   unsigned long ipa,
+>>                   unsigned long end)
+>> @@ -863,6 +922,32 @@ void kvm_destroy_realm(struct kvm *kvm)
+>>       kvm_free_stage2_pgd(&kvm->arch.mmu);
+>>   }
+>>   +static void kvm_complete_ripas_change(struct kvm_vcpu *vcpu)
+>> +{
+>> +    struct kvm *kvm = vcpu->kvm;
+>> +    struct realm_rec *rec = &vcpu->arch.rec;
+>> +    unsigned long base = rec->run->exit.ripas_base;
+>> +    unsigned long top = rec->run->exit.ripas_top;
+>> +    unsigned long ripas = rec->run->exit.ripas_value;
+>> +    unsigned long top_ipa;
+>> +    int ret;
+>> +
+>> +    do {
+>> +        kvm_mmu_topup_memory_cache(&vcpu->arch.mmu_page_cache,
+>> +                       kvm_mmu_cache_min_pages(vcpu->arch.hw_mmu));
+>> +        write_lock(&kvm->mmu_lock);
+>> +        ret = realm_set_ipa_state(vcpu, base, top, ripas, &top_ipa);
+>> +        write_unlock(&kvm->mmu_lock);
+>> +
+>> +        if (WARN_RATELIMIT(ret && ret != -ENOMEM,
+>> +                   "Unable to satisfy RIPAS_CHANGE for %#lx - %#lx,
+>> ripas: %#lx\n",
+>> +                   base, top, ripas))
+>> +            break;
+>> +
+>> +        base = top_ipa;
+>> +    } while (top_ipa < top);
+>> +}
+>> +
+>>   int kvm_rec_enter(struct kvm_vcpu *vcpu)
+>>   {
+>>       struct realm_rec *rec = &vcpu->arch.rec;
+>> @@ -873,6 +958,9 @@ int kvm_rec_enter(struct kvm_vcpu *vcpu)
+>>           for (int i = 0; i < REC_RUN_GPRS; i++)
+>>               rec->run->enter.gprs[i] = vcpu_get_reg(vcpu, i);
+>>           break;
+>> +    case RMI_EXIT_RIPAS_CHANGE:
+>> +        kvm_complete_ripas_change(vcpu);
+>> +        break;
+>>       }
+>>         if (kvm_realm_state(vcpu->kvm) != REALM_STATE_ACTIVE)
+> 
+> Thanks,
+> Gavin
+> 
+
