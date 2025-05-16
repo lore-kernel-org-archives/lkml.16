@@ -1,209 +1,136 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80398225A40;
-	Fri, 16 May 2025 08:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1915F220696
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 08:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747383644; cv=none; b=dEOjOWf/Bfw9h05bIvqvr83BPy9i/HsipcJmuPYbLSsDuNds015vC/8wo+tCad7gRWzn8/ta/6D6JYu36CZXl/TkMa9A1AdHt2518VMKFq395WTFBDutljn5pjdjZ9iW1NEEtEVAe77rpuRRFl0fB0zn2VoLux1yuB5iaAKRcR0=
+	t=1747383647; cv=none; b=Nu4XHRSmL8l5m8OxtwZ52nN1lHqYO3nEuDRp98mD86e/069pEE7EGmasEOAt3nfkOhpgPjVxmEIWzuT3vznT8U9AOwKQdPG610PhhIZ+4IrmBVYZA2EPuCE+Zd0uXLlIr7i86fZLjksU42IZh7bLGUcI2dJqiPN9hOusFi+EeC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747383644; c=relaxed/simple;
-	bh=4KxDsjfmuWwumtBSQpxtMjShXqpffTu9yrvlxS6EKGk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Hm0tAfFDW8pteF3vtuAfOGrdKxQYH24/k3xiOotl3EBC7/cnopVcQ+9POaNk+ncx/6kgzsed9mYkf0Ed+KqYnHhmVccwkxGM9jG3vQpbOEnAIuPN4nmnoOXiaoygvNJ3O+LfLGglb7tTP158p6fmu3Ui7fQS6cx4Slc4YP4ODvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OUbyQ1t+; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747383647; c=relaxed/simple;
+	bh=q7KcxdCf754Fm0Sh6Fg6Al5BAVBp19Dlxv08kjo2YD8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lMjNiJWPBx4Cd/BOsHFnNZFPAbEFZ821B4OlBtkMj77aO7WCNH7BLt+BWICzvCTbV5MDVT/xURnlJXGJ60sheW/SDG3Jzq/oduZGkPqd5WNG1edFVUpfk4wTtuP6DQFv7VN9ZAjJQWQ/Dvr98nfCqCdi1tA7c7B/w++Mf8lFW8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f6kV7qxr; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OUbyQ1t+"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G38k3p018185;
-	Fri, 16 May 2025 08:20:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	TAtG8onWHzVbtQpTvV5KpBDQBOr77n6vrrRyZgC1p7I=; b=OUbyQ1t+oEovg1bI
-	jZLYkvLCQynJJpgDoylma9QKO75UvYkmxgrGQ3gn3ELy+yLgYp+/jUQ6KbNwHRzL
-	gycMZZahvawUvOnctmlxrfZeWITkRDYOh7J5i1RCHCxBgATxhPRgO5BriCnsttbK
-	wvHujTVnd/9Hq7e7RX67MVY/BXPkhe3/OhqLADkIquC6w5CRXH/NYZwfOp8mgBU2
-	Tw1qX1Iu+HLUVL49dRYuPxtIxh1cQllaLYhv15U18kwiXGY6fC0xDnUjumhVLU3l
-	Vq9W9CpCOPzRAWwyTlTM1NLDkeVK7MMagpsu50qof6KnqRgeVTGGzmCM4rvPPm+U
-	kSJegg==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcns6a2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 May 2025 08:20:33 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54G8KWHD026533
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 May 2025 08:20:32 GMT
-Received: from [10.151.36.184] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 16 May
- 2025 01:20:29 -0700
-Message-ID: <ee487379-0aab-d2ac-eb24-d38a0b3805ef@quicinc.com>
-Date: Fri, 16 May 2025 13:50:17 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f6kV7qxr"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-44069f5f3aaso958345e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 01:20:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747383643; x=1747988443; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AWiHCyffjsTF/4oBfvkCIkeTDad5rgPB/sxiLylVPuY=;
+        b=f6kV7qxrpvJKaplu59mpvM3LGAny1QXeMKSB+0uPXArGX/56QHqdV94KaTr26tD98q
+         obTmf60rcmHQI5CQq1ebNyQWgQQcmTU1iheYd0dj2J2DfUn78QbwjtHnhZGeCsRfixpi
+         YBPXM0l6d3ffZY4C0mM8kjDn6u2K1cDmMSYuw0toNYgCPR7kbDGijG62gFvSdUZHkOXO
+         OF/B6jk2PQPkc/QOoYUiRtcWoHDMQa7K+2NfHYhNrmI38zu6c8gx8qakkXBl02N99cl6
+         t7zpC+QNuvFeDFBIf6aUseo//S16z3AHlrEQ5qkBogrE7nWYivmwZeJ6jbtNTElQjTtw
+         3rFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747383643; x=1747988443;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AWiHCyffjsTF/4oBfvkCIkeTDad5rgPB/sxiLylVPuY=;
+        b=XUdUr2K6lzcUhzVVmfv7RA7Z81dCyrBrS8ixKZ/KwkJ9Y41QlzvuL4sK2qCtHW6TGR
+         oF8wn6Qgbu9W/xsYVrps5NpRZFHTfMs5Gn19m17ulMHer+4fUejwCBS4QJpl9I7XEaIz
+         82yaCJSGjexvR7k0nFdyyQ9sLVybFrCp6JMomlEBu9pdB6MUKfHadNqrg5h5iHuoGnOM
+         sI8ettWGAl84f2z3103rKyOYnBvjptqsKqxrs2xGVTbn7OWSkRfRM4Col9IoUwj3VxAa
+         M8oH5r+ANkmD7cRwCCO6P3d+z2ivgPK8ApZX7w6GvT2citpEnEmx7acd81Xn7uTBzRb6
+         TGpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV3aRU0DWy+koLcHHYrWilFaTG5p0OUTO/x/HAOUc8TUKvCEm3RYIFHh1WKTmrwgXb7LrNWNdPEvOjBr20=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuQXII+3ft7Glw2g3r2aeok8R8d8ub843IZ/UDgsoJ4WW/vQjf
+	msSt+Wx3fjeQHZPD2SOGFknJQHh8pHHSg9nXe0pa3onxXmL49FbyRJ2tv+wr83NIDJU=
+X-Gm-Gg: ASbGncudUbYzfAP6+WWJQazq9JQMjgxgTUP7dFRZPceSL0UZqL/F08qTAF5JccVai5L
+	snD7D0XcjTwwbvHdUaxv6L1bwxundY/qKV4XqRR47Ic0EhJuPSaZlvV4PDMjEdiuoIO3ksHHo5T
+	vthZ5mlhVX/WBcmwpXGIN+fl9M2o3kTaiZFllo0eOGL6pfV2aX5pf81XgGY05OETyD3zyZMVjAW
+	GzZb9i7+BIIRgF4M3rRNYmNEmLzxgJeSZ+gILxxDkhdZF201skSKSG+r7yt17/t5tezvOOK1I4y
+	757Fi3unmjXC87ud6qzELLZVfx6zlz0YE2NnToWr6mLZT52oOSlYxmAaZho6w4ZcY7T8vCVBDSM
+	nGIT0jwuHKXJz4PQpH6Dq8uBEksXSwoVJPZNQQOw=
+X-Google-Smtp-Source: AGHT+IFaSqFDmfEc/eXrwtep+5lHfw+ciUUyEyM+rhboqdKMEMNhsbsCj3GNPcoF2ibeCQI1/GgRgA==
+X-Received: by 2002:a05:600c:468f:b0:43b:c844:a4ba with SMTP id 5b1f17b1804b1-442fd62fd3amr8485415e9.3.1747383643357;
+        Fri, 16 May 2025 01:20:43 -0700 (PDT)
+Received: from kuoka.c.hoisthospitality.com (110.8.30.213.rev.vodafone.pt. [213.30.8.110])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442eb8c92d9sm66344685e9.2.2025.05.16.01.20.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 01:20:42 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Arnd Bergmann <arnd@arndb.de>,
+	soc@lists.linux.dev
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [GIT PULL] samsung: drivers part two for v6.16
+Date: Fri, 16 May 2025 10:20:38 +0200
+Message-ID: <20250516082037.7248-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 1/2] spi: spi-qpic-snand: use CW_PER_PAGE_MASK bitmask
-Content-Language: en-US
-To: Gabor Juhos <j4g8y7@gmail.com>, Mark Brown <broonie@kernel.org>
-CC: Varadarajan Narayanan <quic_varada@quicinc.com>,
-        Sricharan Ramabadhran
-	<quic_srichara@quicinc.com>,
-        <linux-spi@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250515-qpic-snand-use-bitmasks-v1-0-11729aeae73b@gmail.com>
- <20250515-qpic-snand-use-bitmasks-v1-1-11729aeae73b@gmail.com>
-From: Md Sadre Alam <quic_mdalam@quicinc.com>
-In-Reply-To: <20250515-qpic-snand-use-bitmasks-v1-1-11729aeae73b@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: U4FXvq5EHSmoxfcHHbYDYzz3c4KEsJEH
-X-Authority-Analysis: v=2.4 cv=aIbwqa9m c=1 sm=1 tr=0 ts=6826f551 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=pGLkceISAAAA:8
- a=COk6AnOGAAAA:8 a=llW5jWN4sgg2yBcSlIUA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: U4FXvq5EHSmoxfcHHbYDYzz3c4KEsJEH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDA3NyBTYWx0ZWRfX9bXDlppfeXMx
- VAzR9C8b8eak5YA6TuuJuqW0hY142k0Wf/ebVHUAf0HAtGqnspmXauA3vpjbKABgDL/rv1hvgww
- FgWc3Ad/UcZWHqrCHPK/4bO4w+FfIhvSe5CIUB9zLR9gNSIXoT3jbELQOiljKICKKYlRKeGcdn9
- GGPM6I0F7pHXBVr57xVs5WQVU2OzeIQwggv+vQpx6e8nwRmHn5Wlzw6I1vIO97VGJCHWDa+IRWG
- 2nFrkoHwAJLOrM0jUHn0dkJupIcikDaUlJMi1eoqKS9FwI0xyIpguF93zQtNfBI52FhZaJoO2nx
- CeDq0j78s7U4Eycla5pX7wLlIQMd1tA7fmSr3LXfrf0GEcliOqfCZGqZXriN2P6JeBWb+CXpBKN
- vHo4FfhdQqNR+tME7sAKjGL9+bm6ZdVBgwaPmM0C6w/a85wDqwnmi8qlMOrT0RkHDNsYCCGc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-16_03,2025-05-15_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxlogscore=999 malwarescore=0 bulkscore=0 impostorscore=0
- clxscore=1015 phishscore=0 suspectscore=0 mlxscore=0 spamscore=0
- lowpriorityscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505160077
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1799; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=q7KcxdCf754Fm0Sh6Fg6Al5BAVBp19Dlxv08kjo2YD8=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoJvVWHlLDYQ1S3UC+mjKP1Ml+sn0gSReMD8ON6
+ HvYzvkVZhOJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaCb1VgAKCRDBN2bmhouD
+ 17CvD/40Jeg7IGxWsQFaoCXBN5u2/NbbOnFY2YILEL4HSDeuNA67zO/9cNH9hKKy6qVERpoxlyg
+ lCOAneP3CP+W4sKSxAGsHWP/VLTZ5KmWW8r6/8Hy/4ua3kngRR5OPrJe4xJqgrOM+OqO8w893qp
+ qMv3WhQObxIwP4j9aQ16VFe27x8b3b5jmcpv4DWkBMQmHxWPdfqhI6y05+jG2MK5tk9xoEddcqW
+ XLyIWAt28tGblvzNuOv3nRfinV9TGiXkP2gycA8TNGqraweESwwzEW/kD+EKDkLdGCgXx/Hv77I
+ LD7Rvj3P6cwnHzrtDi1d3XoTAjVhWPqs/7+1wR6fPLPAEMkx7E4n5zWNKnGEvogv6nipmxk+V7p
+ rHvfde6HuqllUI8j4fHkPGq7l0t8zlMdQMye/t4bKPTw2gMP1fd6qDuL/I5BtyISWG6LZicNDKj
+ Sf2tn0bhWROtuwZwqIkN1dInyn952pHbl9Y0rvZBRr1yEtTjGiyuel4GDyFzSEH9dHx5UgWXzFc
+ 17qbuQtA9TF0e222zzyNIY9Qn41PyyEEZOw3BTxF85BExbuTQ/pPISHqyZYj7pA2+3j29hziP0q
+ fLTVEOp8AHGx+5aOJ2I7czWZCMbyNFe5mqHOM27wYxYQKG4IbvTgxHADgc+CH+7lB+D0DJddlRn 75pwPLFgK0OqP4w==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
+
+Hi,
+
+On top of previous drivers pul request.
+
+Best regards,
+Krzysztof
 
 
+The following changes since commit 2c2e5e908ea2b53aa0d21fbfe4d1dab527a7703e:
 
-On 5/16/2025 12:28 AM, Gabor Juhos wrote:
-> Change the code to use the already defined CW_PER_PAGE_MASK
-> bitmask along with the FIELD_PREP() macro instead of using
-> magic values.
-> 
-> This makes the code more readable. It also syncs the affected
-> codes with their counterparts in the 'qcom_nandc' driver, so it
-> makes it easier to spot the differences between the two
-> implementations.
-> 
-> No functional changes intended.
-> 
-> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
-> ---
->   drivers/spi/spi-qpic-snand.c | 31 ++++++++++++++++---------------
->   1 file changed, 16 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-qpic-snand.c b/drivers/spi/spi-qpic-snand.c
-> index 7207bbb57802ce53dfab4d9689113e7f9ba8f131..bc45b834fadc5456eda1fe778e5ca8b16177465e 100644
-> --- a/drivers/spi/spi-qpic-snand.c
-> +++ b/drivers/spi/spi-qpic-snand.c
-> @@ -483,7 +483,8 @@ static int qcom_spi_block_erase(struct qcom_nand_controller *snandc)
->   	snandc->regs->cmd = snandc->qspi->cmd;
->   	snandc->regs->addr0 = snandc->qspi->addr1;
->   	snandc->regs->addr1 = snandc->qspi->addr2;
-> -	snandc->regs->cfg0 = cpu_to_le32(ecc_cfg->cfg0_raw & ~(7 << CW_PER_PAGE));
-> +	snandc->regs->cfg0 = cpu_to_le32((ecc_cfg->cfg0_raw & ~CW_PER_PAGE_MASK) |
-> +					 FIELD_PREP(CW_PER_PAGE_MASK, 0));
->   	snandc->regs->cfg1 = cpu_to_le32(ecc_cfg->cfg1_raw);
->   	snandc->regs->exec = cpu_to_le32(1);
->   
-> @@ -544,8 +545,8 @@ static int qcom_spi_read_last_cw(struct qcom_nand_controller *snandc,
->   	snandc->regs->addr0 = (snandc->qspi->addr1 | cpu_to_le32(col));
->   	snandc->regs->addr1 = snandc->qspi->addr2;
->   
-> -	cfg0 = (ecc_cfg->cfg0_raw & ~(7U << CW_PER_PAGE)) |
-> -		0 << CW_PER_PAGE;
-> +	cfg0 = (ecc_cfg->cfg0_raw & ~CW_PER_PAGE_MASK) |
-> +	       FIELD_PREP(CW_PER_PAGE_MASK, 0);
->   	cfg1 = ecc_cfg->cfg1_raw;
->   	ecc_bch_cfg = ECC_CFG_ECC_DISABLE;
->   
-> @@ -687,8 +688,8 @@ static int qcom_spi_read_cw_raw(struct qcom_nand_controller *snandc, u8 *data_bu
->   	qcom_clear_bam_transaction(snandc);
->   	raw_cw = num_cw - 1;
->   
-> -	cfg0 = (ecc_cfg->cfg0_raw & ~(7U << CW_PER_PAGE)) |
-> -				0 << CW_PER_PAGE;
-> +	cfg0 = (ecc_cfg->cfg0_raw & ~CW_PER_PAGE_MASK) |
-> +	       FIELD_PREP(CW_PER_PAGE_MASK, 0);
->   	cfg1 = ecc_cfg->cfg1_raw;
->   	ecc_bch_cfg = ECC_CFG_ECC_DISABLE;
->   
-> @@ -808,8 +809,8 @@ static int qcom_spi_read_page_ecc(struct qcom_nand_controller *snandc,
->   	snandc->buf_start = 0;
->   	qcom_clear_read_regs(snandc);
->   
-> -	cfg0 = (ecc_cfg->cfg0 & ~(7U << CW_PER_PAGE)) |
-> -				(num_cw - 1) << CW_PER_PAGE;
-> +	cfg0 = (ecc_cfg->cfg0 & ~CW_PER_PAGE_MASK) |
-> +	       FIELD_PREP(CW_PER_PAGE_MASK, num_cw - 1);
->   	cfg1 = ecc_cfg->cfg1;
->   	ecc_bch_cfg = ecc_cfg->ecc_bch_cfg;
->   
-> @@ -904,8 +905,8 @@ static int qcom_spi_read_page_oob(struct qcom_nand_controller *snandc,
->   	qcom_clear_read_regs(snandc);
->   	qcom_clear_bam_transaction(snandc);
->   
-> -	cfg0 = (ecc_cfg->cfg0 & ~(7U << CW_PER_PAGE)) |
-> -				(num_cw - 1) << CW_PER_PAGE;
-> +	cfg0 = (ecc_cfg->cfg0 & ~CW_PER_PAGE_MASK) |
-> +	       FIELD_PREP(CW_PER_PAGE_MASK, num_cw - 1);
->   	cfg1 = ecc_cfg->cfg1;
->   	ecc_bch_cfg = ecc_cfg->ecc_bch_cfg;
->   
-> @@ -1015,8 +1016,8 @@ static int qcom_spi_program_raw(struct qcom_nand_controller *snandc,
->   	int num_cw = snandc->qspi->num_cw;
->   	u32 cfg0, cfg1, ecc_bch_cfg;
->   
-> -	cfg0 = (ecc_cfg->cfg0_raw & ~(7U << CW_PER_PAGE)) |
-> -			(num_cw - 1) << CW_PER_PAGE;
-> +	cfg0 = (ecc_cfg->cfg0_raw & ~CW_PER_PAGE_MASK) |
-> +	       FIELD_PREP(CW_PER_PAGE_MASK, num_cw - 1);
->   	cfg1 = ecc_cfg->cfg1_raw;
->   	ecc_bch_cfg = ECC_CFG_ECC_DISABLE;
->   
-> @@ -1098,8 +1099,8 @@ static int qcom_spi_program_ecc(struct qcom_nand_controller *snandc,
->   	int num_cw = snandc->qspi->num_cw;
->   	u32 cfg0, cfg1, ecc_bch_cfg, ecc_buf_cfg;
->   
-> -	cfg0 = (ecc_cfg->cfg0 & ~(7U << CW_PER_PAGE)) |
-> -				(num_cw - 1) << CW_PER_PAGE;
-> +	cfg0 = (ecc_cfg->cfg0 & ~CW_PER_PAGE_MASK) |
-> +	       FIELD_PREP(CW_PER_PAGE_MASK, num_cw - 1);
->   	cfg1 = ecc_cfg->cfg1;
->   	ecc_bch_cfg = ecc_cfg->ecc_bch_cfg;
->   	ecc_buf_cfg = ecc_cfg->ecc_buf_cfg;
-> @@ -1175,8 +1176,8 @@ static int qcom_spi_program_oob(struct qcom_nand_controller *snandc,
->   	int num_cw = snandc->qspi->num_cw;
->   	u32 cfg0, cfg1, ecc_bch_cfg, ecc_buf_cfg;
->   
-> -	cfg0 = (ecc_cfg->cfg0 & ~(7U << CW_PER_PAGE)) |
-> -				(num_cw - 1) << CW_PER_PAGE;
-> +	cfg0 = (ecc_cfg->cfg0 & ~CW_PER_PAGE_MASK) |
-> +	       FIELD_PREP(CW_PER_PAGE_MASK, num_cw - 1);
->   	cfg1 = ecc_cfg->cfg1;
->   	ecc_bch_cfg = ecc_cfg->ecc_bch_cfg;
->   	ecc_buf_cfg = ecc_cfg->ecc_buf_cfg;
->
+  firmware: exynos-acpm: Correct kerneldoc and use typical np argument name (2025-04-25 11:41:03 +0200)
 
-Reviewed-by: Md Sadre Alam <quic_mdalam@quicinc.com>
+are available in the Git repository at:
 
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-drivers-6.16-2
+
+for you to fetch changes up to 598995027b9181ada81789bf01fb8ef30d93c9dc:
+
+  soc: samsung: exynos-pmu: enable CPU hotplug support for gs101 (2025-05-13 10:02:29 +0200)
+
+----------------------------------------------------------------
+Samsung SoC drivers for v6.16, part two
+
+Add CPU hotplug support on Google GS101 by toggling respective bits in
+secondary PMU intr block (Power Management Unit (PMU) Interrupt
+Generation) from the main PMU driver.
+
+----------------------------------------------------------------
+Peter Griffin (4):
+      dt-bindings: soc: google: Add gs101-pmu-intr-gen binding documentation
+      dt-bindings: soc: samsung: exynos-pmu: gs101: add google,pmu-intr-gen phandle
+      MAINTAINERS: Add google,gs101-pmu-intr-gen.yaml binding file
+      soc: samsung: exynos-pmu: enable CPU hotplug support for gs101
+
+ .../soc/google/google,gs101-pmu-intr-gen.yaml      | 35 ++++++++++
+ .../bindings/soc/samsung/exynos-pmu.yaml           | 15 +++++
+ MAINTAINERS                                        |  1 +
+ drivers/soc/samsung/exynos-pmu.c                   | 78 +++++++++++++++++++++-
+ drivers/soc/samsung/exynos-pmu.h                   |  1 +
+ include/linux/soc/samsung/exynos-regs-pmu.h        | 11 +++
+ 6 files changed, 140 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/google/google,gs101-pmu-intr-gen.yaml
