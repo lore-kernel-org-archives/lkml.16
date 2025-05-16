@@ -1,50 +1,73 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08EA9182;
-	Fri, 16 May 2025 06:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D3A221728;
+	Fri, 16 May 2025 06:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747375619; cv=none; b=pyTwaLQY5WChmMFW9L1IwYzyenEpVIjHsQNZ3eBfFnrwvr2PBOYXY7k0z+DUBj343028H0xJdj0mDyEaF9mpfYPa3xQ+kApOcoKLF6iz4Q4V08qWOAz5i6tzGeERyOcnmFbQYU8xZfFumNbacXML56XwOYk4AAAxDeirZNz+prU=
+	t=1747375782; cv=none; b=jdhpopBLndEuK5PiaVpD3UPmMMKjNefuTmIiBtIyuvSLQybSe7rzpXsLQhztFCR7GicX7MTxdYj5Mxsd+t7Pqa7SUtnojH5/yq0MNEkAqwQDl6yCD9e91uxEXpQ9TODg4Ne4zizT12GWkB2fILFYbiLoQJYY7FHc1lI8N3hx8uM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747375619; c=relaxed/simple;
-	bh=bphX/GG0yt3pLwRkZmQgU8fQ3GT9eblq3Ugq5jkFSHs=;
+	s=arc-20240116; t=1747375782; c=relaxed/simple;
+	bh=qyhT7n431vXM4anrRMDRMlFCdybdA0lFKBwmzpN5FDQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jHC+RpkCHH4fp6gfDEUPxEW/s3aHht1VwyxmPjomP8fkxhX6URYL2lslwLI4Kyz9W7si6gNaaLgJNllrEpZMyJ4ptsFKNYIHvsDgjSr+AeAYQs6zKNk7pjaWDEaaXd9XMEA3+Us9FQIbY0PmzmpJlPwd/RLeaKHEf0IQ0/WM3fQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=yt+5jJa6; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=PXTYlCcwFk5EwYnjvSbTGZMeAlzgasmf9vzv/s/ZWC90hPFsIGf7tyrAP+r2gQLCs/omnDRSc8Oe3A+CJ+LtCkU2jQG306KcYHBWiSMEgsd1TLoNb7QPy/o1eLI49EmbAlgcwTBd+kBNzTYhtR3nKqfljkiHbbTRmiz8VMzVhNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bLLhv56b; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yt+5jJa6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=1Nlt9/4135T4D0vircx++glsUBcW07iUUxenPSOo4Sw=; b=yt+5jJa61woMS4PHEVz5wv60CM
-	xX4cABvvQxaO3OhveUsivvZY5K0J3oZLPBy6gZhjCtOxklctzBIW+3+1FTKzYYrdCUUlpizm4qUhu
-	cDa4SQp1+A5k/w6WvVqoUgktgWyXGgdv9Yq7X99chK7gFpQ6270y2TvGUm0Agysc7Wky38j/q5/Xf
-	pCNsFgOXFp6FfJ/g54J3+26fTXaiGlvwXhOh2DSZFNK/8jPwFFuUGR6PJyE1/VYcScSTo2KtSwFYi
-	YgcdEBwfAdRI0npXhaUphSXjnR1vjLs37vfjLbktu/o5WrL1F2GUclW/S/CjSd2oAxI5XH4j8h1qm
-	vRHG+7Qg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uFoDg-00000002YDl-3XSv;
-	Fri, 16 May 2025 06:06:56 +0000
-Date: Thu, 15 May 2025 23:06:56 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
-	linux-nvme@lists.infradead.org, linux-sctp@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Sagi Grimberg <sagi@grimberg.me>, Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH net-next 09/10] nvme-tcp: use crc32c() and
- skb_copy_and_crc32c_datagram_iter()
-Message-ID: <aCbWAFNoBUjci7HG@infradead.org>
-References: <20250511004110.145171-1-ebiggers@kernel.org>
- <20250511004110.145171-10-ebiggers@kernel.org>
- <aCbAsCkTPMNE6Ogb@infradead.org>
- <20250516053100.GA10488@sol>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bLLhv56b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747375781; x=1778911781;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qyhT7n431vXM4anrRMDRMlFCdybdA0lFKBwmzpN5FDQ=;
+  b=bLLhv56bCqW/6CxhMzAFF0KIWqp5SQqV4M+hRZsJ35NcwEUEz8UtqG1C
+   x88tqzEg9IIOqkP1TSuAqm2YhrR6GgWEQCu/TQVAB5VgpN6wY4a8vAWIO
+   qo5epaYnt28HlKaWfPGNtSgU1SRTZsAtY/8bKOWprSH75oLLkySR8i0jM
+   mQuE5urIBhI6t9iPXT9+9fP5d1uYu9thfKptE9x+N7hEmq/+pqCtdKj9W
+   poQoC3+IBS7mznJ/o70YS7f5lZQhx459N/ZiyvahOqZJMfT2YVKG5DADS
+   9FVO0k355/DOz/d89vNUzACitFDHhKs6QN8dfdjcrDyMcHELt6mikuOS6
+   A==;
+X-CSE-ConnectionGUID: e5u9mQvqRPKUlfmF3N95gw==
+X-CSE-MsgGUID: 5yBI/D7FT3q2rGwKRR64ow==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="36955275"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="36955275"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2025 23:09:40 -0700
+X-CSE-ConnectionGUID: 3mdypJMGTIagJOxBJAReOw==
+X-CSE-MsgGUID: wT2fZ/BCRcqrCSFZ3R6eGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="139087544"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa010.fm.intel.com with ESMTP; 15 May 2025 23:09:34 -0700
+Date: Fri, 16 May 2025 14:03:55 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Alexey Kardashevskiy <aik@amd.com>, kvm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+	linaro-mm-sig@lists.linaro.org, sumit.semwal@linaro.org,
+	christian.koenig@amd.com, pbonzini@redhat.com, seanjc@google.com,
+	alex.williamson@redhat.com, vivek.kasireddy@intel.com,
+	dan.j.williams@intel.com, yilun.xu@intel.com,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
+	lukas@wunner.de, yan.y.zhao@intel.com, daniel.vetter@ffwll.ch,
+	leon@kernel.org, baolu.lu@linux.intel.com, zhenzhong.duan@intel.com,
+	tao1.su@intel.com
+Subject: Re: [RFC PATCH 00/12] Private MMIO support for private assigned dev
+Message-ID: <aCbVSxg0wS3wJXWB@yilunxu-OptiPlex-7050>
+References: <aB3jLmlUKKziwdeG@yilunxu-OptiPlex-7050>
+ <aB4tQHmHzHooDeTE@yilunxu-OptiPlex-7050>
+ <20250509184318.GD5657@nvidia.com>
+ <aB7Ma84WXATiu5O1@yilunxu-OptiPlex-7050>
+ <2c4713b0-3d6c-4705-841b-1cb58cd9a0f5@amd.com>
+ <20250512140617.GA285583@nvidia.com>
+ <aCRAHRCKP1s0Oi0c@yilunxu-OptiPlex-7050>
+ <20250514163339.GD382960@nvidia.com>
+ <aCYQdDrYYZRAgsen@yilunxu-OptiPlex-7050>
+ <20250515175658.GR382960@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,20 +76,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250516053100.GA10488@sol>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20250515175658.GR382960@nvidia.com>
 
-On Thu, May 15, 2025 at 10:31:00PM -0700, Eric Biggers wrote:
-> +static inline __le32 nvme_tcp_hdgst(const void *pdu, size_t len)
-> +{
-> +	return cpu_to_le32(~crc32c(NVME_TCP_CRC_SEED, pdu, len));
->  }
+On Thu, May 15, 2025 at 02:56:58PM -0300, Jason Gunthorpe wrote:
+> On Fri, May 16, 2025 at 12:04:04AM +0800, Xu Yilun wrote:
+> > > arches this was mostly invisible to the hypervisor?
+> > 
+> > Attest & Accept can be invisible to hypervisor, or host just help pass
+> > data blobs between guest, firmware & device.
+> > 
+> > Bind cannot be host agnostic, host should be aware not to touch device
+> > after Bind.
+> 
+> I'm not sure this is fully true, this could be a Intel thing. When the
+> vPCI is created the host can already know it shouldn't touch the PCI
+> device anymore and the secure world would enforce that when it gets a
+> bind command.
+> 
+> The fact it hasn't been locked out immediately at vPCI creation time
+> is sort of a detail that doesn't matter, IMHO.
 
-This drops the unaligned handling.  Now in the NVMe protocol it will
-always be properly aligned, but my TCP-foo is not good enough to
-remember if the networking code will also guarantee 32-bit alignment
-for the start of the packet?
+I see, SW can define the lock out in a wider range. I suddenly understand
+you are considering finish all host side CC setup on viommu_alloc &
+vdevice_alloc before KVM run, then "Bind" could host agnostic, and TDISP
+LOCK/STOP could also be a guest_request.
 
-Otherwise this looks great:
+Now the problem is for TDX, host cannot be agnostic to LOCK/STOP because
+of the KVM MMIO mapping ...
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+I still have to make VFIO uAPIs for "Bind"/"Unbind"
+
+> 
+> > > It might be reasonable to have VFIO reach into iommufd to do that on
+> > > an already existing iommufd VDEVICE object. A little weird, but we
+> > > could probably make that work.
+> > 
+> > Mm, Are you proposing an uAPI in VFIO, and a kAPI from VFIO -> IOMMUFD like:
+> >
+> >  ioctl(vfio_fd, VFIO_DEVICE_ATTACH_VDEV, vdev_id)
+> >  -> iommufd_device_attach_vdev()
+> >     -> tsm_tdi_bind()
+> 
+> Not ATTACH, you wanted BIND. You could have a VFIO_DEVICE_BIND(iommufd
+> vdevice id)
+
+Yes.
+
+> 
+> > > sees VFIO remove the S-EPT and release the KVM, then have iommufd
+> > > destroy the VDEVICE object.
+> > 
+> > Regarding VM destroy, TDX Connect has more enforcement, VM could only be
+> > destroyed after all assigned CC vPCI devices are destroyed.
+> 
+> And KVM destroys the VM?
+
+Yes.
+
+>  
+> > Nowadays, VFIO already holds KVM reference, so we need
+> > 
+> > close(vfio_fd)
+> > -> iommufd_device_detach_vdev()
+> 
+> This doesn't happen though, it destroys the normal device (idev) which
+> the vdevice is stacked on top of. You'd have to make normal device
+> destruction trigger vdevice destruction
+> 
+> >    -> tsm_tdi_unbind()
+> >       -> tdi stop
+> >       -> callback to VFIO, dmabuf_move_notify(revoke)
+> >          -> KVM unmap MMIO
+> >       -> tdi metadata remove
+> 
+> This omits the viommu. It won't get destroyed until the iommufd
+> closes, so iommufd will be holding the kvm and it will do the final
+> put.
+
+I see.
+
+https://lore.kernel.org/all/20250319233111.GE126678@ziepe.ca/
+
+Thanks,
+Yilun
+
+> 
+> Jason
