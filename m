@@ -1,41 +1,72 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54330288DA
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5166E22C328
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747394267; cv=none; b=t00xVrBT+lugLZZt1Um6eDaXiFjnJJUw8o312b+mMDTr9+SoZ6mhhYlObqOeYVF9ZMPjbEovqpwisAO0iEmEz3xGDZzvVYFTj+McIyw+b0LSF067WbjcjF/rcyXnfk9l94GiEox7fktlmPeUGQHE+izbVkSFuR/9Im1oBV5/LTo=
+	t=1747394293; cv=none; b=qUd1SYpbxthqynUA+YID/HOg7SF3H/DN0HIvSQ1RTrQ3aZmKY1bzWCoFeVA9yztniEKvqoZNO1bjVWqznixIMK+1C6AQe2Tkyf87FCstnOp6NPe0QEAK61wBjNEuoTF3JZ9SmMRkXHrKOuQkD8fb4/d9H7RlL8//82s7LJLvZKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747394267; c=relaxed/simple;
-	bh=DVqwDtcCWBl7UTuRuXRA8ctOOQGibZdxGhys65KoJHc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=jKsIkZFvW8eWAiwUnv65+nwmOXwXIH5ycQxC7Jy4BjODid2oY8KPdw6tyJ9Zh26+lawmgt9lEtYYy0L4jvdJx7hjnDVJm0ZrwaD+3kLJmieQjRH56kpzWobnGjxUJ5EERDznuchc97NntPWdWqwYfYIpi6bxETL9ZYGxvffKG/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=twivDTwL; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1747394293; c=relaxed/simple;
+	bh=2j5qkobccot9LL1RM0m5iDEPEb8bSMGKA6Syb6/7mEU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FdosiBvQQYZJR0PnQWR1JqbzlGybeahUk9lxGwfClzjoX/pHhWzPlyoh0bgC/dhsRXx60Qrq1+egdxWN2WYMLx4D1N5ASnMfFd3bwYh/GonO3Sg3uXTTXvDrqBVjIl9mqQdAya+vIfbCQ+sq5aMfSykeHTjnkfTSOztEcitgZEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=G9dlIQuW; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="twivDTwL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1747394262; x=1747999062; i=wahrenst@gmx.net;
-	bh=DVqwDtcCWBl7UTuRuXRA8ctOOQGibZdxGhys65KoJHc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=twivDTwLlDLsTBXJHjtn/svTMr9a4mvDCIiuh5rVqH0ukYcY71h7zTq5CVdWuJ7x
-	 ClO50Qy92PeIXGoefwjmfMShwlXumOnZ3QTasCAJAV7eysu3Z2ZBX9mzi7Hrtp56I
-	 BSS2G5qcMRMLE4J+w7Hweq4YdR6+Da/bOXkCVi+ZbKlUhvTKBm5LmPAUgWrrL3bqg
-	 Y1UAih/oN/bGiMH8B2TOwEejKIJTbvnugwr67yw1p06V7UJYX1PLFdB/8I8wlwesa
-	 OvneQVqYx9QAjRCPZYhvlSLbo4VuPXBX1A1B9SN7Wiglmy5GdRX5Xf/V9lIDlLJRg
-	 dueDUwYTmvTa+6ARuA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.103] ([91.41.216.208]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MgNcz-1utrib1OHf-00ej5f; Fri, 16
- May 2025 13:17:42 +0200
-Message-ID: <77f25ee5-1079-4729-866c-cfdeeff1ad9a@gmx.net>
-Date: Fri, 16 May 2025 13:17:41 +0200
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="G9dlIQuW"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G4Mh9u014002
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:18:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	3I2uY5YtBknRZgs8vRXNey7xsxmE+I1qZE/v1ysmnR8=; b=G9dlIQuWI1U5kXYF
+	bfOSZgrRVn7CQZW7eBn5Z/2HgDKBRXwiHibG0WUNAAmj7pZ6Rw+BDKjfp0M8HoMI
+	BqSApYwq88Uq7Aiba2k5ujcYI+56peCzsPl4bSmXc1TVIvcZTGwOGH4FNfoiTR0y
+	GEOahr+90WUdNaqGtwgCjqtW2hCm1coUVzp0EUWFae4AuGMd8tfuRGGv18i4rX0h
+	g4IHY7sURdf20ijRqFJC3Q2vL9vReNSuDXOseAjQgAWBSdGaQshQKgw4yroRwDat
+	Zl5Xb3UbwrwhRfgInxtvd89Y+/S6sBo4ZAVNwwJoHMcNwO2xaoYU1ZKGDt+Ksu1G
+	Ak65lw==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46nx9js632-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:18:08 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6f0c76e490cso4874056d6.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 04:18:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747394285; x=1747999085;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3I2uY5YtBknRZgs8vRXNey7xsxmE+I1qZE/v1ysmnR8=;
+        b=nHlpRANdAWHrYchVrOuZvICqNBHFO8QjvxBL3hQ/rTFMnqp1WKqltGMsfg9yqyvFbk
+         Whxjm4kDVehjuD5KoyT7SI1oYXax1/35RFNDwsVHjonYuW42WCGElswC/oCrSy7yNvvt
+         RheZKFyYw2MOztgkZ8H3/dm0uXFK2MQs/tfXzMN7cvp7PjLJG34nyQ6KrWnH5QObWG+T
+         MKrPRJbTyIbnKY8AH4cWptRAX5gdS3OVLv2jVJsGk6z7GNlM1QrzOvAF7aAm/7tl3vQZ
+         NWT8gT3YsyqQZtYL/HsQVvkC45YJ1ZbSq45a3oUooOnsi8fs7WQiwXnEbqvllB7Csv7K
+         LXFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlEYkNrYgQWnO/mNVP7SD31lKtZRn8jPvAPzunXDvbLG5V9LQqAZGGcnXer+DR8sdN+YE4ZiOhA7VaB2M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNxg8wFxt4ot93nACJkGzpdovNiPNm0uiU1uehCfjmPxlh7rck
+	LlNGIGAzeOiNThmBjnJF5Wh8nF22kOex5wsPhdyAqE6kjNIICz/S6/moy9kAL4IRSRIHRRAwY/9
+	+dYduDTni2gq/VTpLbMS7XCgBHdX7cNkBpXh/2eZQCjqNeld2AiAr+WDT8tdg9QOihqc=
+X-Gm-Gg: ASbGnctRIx8w5EjMmKr+7zkMccThgTysGPHRmdHl3JrUgxUUYXzeRqfNehd8NZlXMYM
+	ANMAESqJdiERjlCegiMPrf9hJfq10GLTH2gNyfTcjEpzwDMxhGijw/p3CPwDGgsPQ32hDlHHr0P
+	bO9KteSwcAMie1IshNfYKEkclgkxZlTAlt4Qbg9ywEMEyYVZGSwDll2ezey2OTElF6IWjAhJsLa
+	bJgm6yGI2yNnxThhs5F8BpLTG/MwCpj1EndF4ShMTNsqS8mAQNdXlDN8E7NwQ5Z+1TbvKwrxx8e
+	QnbuYX0Z+CK3Ypbd60cP5pCONADb9AEXkB1f74n4BvCpOY2Pzn2B5yKkdiYQqoj91w==
+X-Received: by 2002:a05:6214:1c09:b0:6f2:c10b:db04 with SMTP id 6a1803df08f44-6f8b0835130mr20320836d6.1.1747394284660;
+        Fri, 16 May 2025 04:18:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGYedXsXWaYRFu3TMFMA0Ooxjh8cjz2T+AoU7nKygC1w6HBVJRE7mCkn7yTavhKYax2hXyneQ==
+X-Received: by 2002:a05:6214:1c09:b0:6f2:c10b:db04 with SMTP id 6a1803df08f44-6f8b0835130mr20320616d6.1.1747394284092;
+        Fri, 16 May 2025 04:18:04 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6004d502b03sm1287390a12.29.2025.05.16.04.18.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 May 2025 04:18:03 -0700 (PDT)
+Message-ID: <6274641a-7366-41cd-a0a7-a9e9cc41b8e6@oss.qualcomm.com>
+Date: Fri, 16 May 2025 13:18:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,196 +74,113 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] firmware/raspberrypi: raise timeout to 3s
-To: Etienne Buira <etienne.buira@free.fr>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- bcm-kernel-feedback-list@broadcom.com,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org
-References: <aCIiEp3CXD2o9dTw@Z926fQmE5jqhFMgp6>
- <048fd6c5-9f09-4c06-9a23-e5821dc291d5@gmx.net>
- <aCWMrJcldfrsNTQq@Z926fQmE5jqhFMgp6>
- <ffeb860f-5522-4130-ae47-45a6068b17ea@gmx.net>
- <aCW3d7tc27Awj62K@Z926fQmE5jqhFMgp6>
- <cecda824-4f47-4e4c-bee9-1a59cd5d801c@gmx.net>
- <aCXUeOmy28tqg6Oy@Z926fQmE5jqhFMgp6>
- <0703ff48-e781-49b6-8a8d-7cdbec73bb92@gmx.net>
- <aCZqVzM5h9lwbfpQ@Z926fQmE5jqhFMgp6>
+Subject: Re: [PATCH v3 4/4] watchdog: qcom: add support to read the restart
+ reason from IMEM
+To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Rob Herring
+ <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck
+ <linux@roeck-us.net>, bod.linux@nxsw.ie,
+        Srinivas Kandagatla <srini@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <20250502-wdt_reset_reason-v3-0-b2dc7ace38ca@oss.qualcomm.com>
+ <20250502-wdt_reset_reason-v3-4-b2dc7ace38ca@oss.qualcomm.com>
+ <2036ef2f-c7ef-4f42-858d-8d95c430c21a@oss.qualcomm.com>
+ <68d280db-f7df-48c8-821d-f7d408c302ad@oss.qualcomm.com>
+ <8a763c70-adcf-4a14-bb68-72ddc61fa045@oss.qualcomm.com>
+ <8c2a53c2-c11b-4d49-bfb5-b948767ba6c7@oss.qualcomm.com>
+ <1e871aed-705f-4142-b72d-4232ae729a37@oss.qualcomm.com>
 Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-Autocrypt: addr=wahrenst@gmx.net; keydata=
- xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
- IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
- NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
- JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
- TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
- f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
- V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
- aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
-In-Reply-To: <aCZqVzM5h9lwbfpQ@Z926fQmE5jqhFMgp6>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:/5QlBpXfawZjhqctYTy/lPDxEfavvKrpt71RkPFushWFfjs0AUk
- q4lNEDGkU5gzNnO0ORg986ggbZr9BoYTTtHXxyi1Sf/feUplakbuBgXpomlBvyD1lNIGjrU
- cngrfJGa0J/kXarintpBcy1VZYp7x+CbkffZhlSgBxuP/pNoUTzAUma9Oe66Y6MYUUy4uNT
- 1AwpkP+1UZGuU8hoXK+rw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:B6SZw/f9dY8=;a+rIg0fElLTftbgu53ff8rMlwJW
- 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
- +e7+jSKzQWr+77wB/q/oww=
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <1e871aed-705f-4142-b72d-4232ae729a37@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: paANxhTMUxBHmVaAMIxD6cmiQklxZbis
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDEwNyBTYWx0ZWRfXylECb2h0wZ1/
+ YRLiyHTwkcfEerYW4IxkLLi7rlQ1Ia9CkfFaYp9imE1l+h9suceE9o2lAD7Q6TJkNpGfGQJeO2O
+ E0AIeWFX8H/NpZpJvkNKglamQBYWr3moZ0XEx863mzTfJ6BG8hb/xOz+YAlcpjBY8xgdhIpf5pn
+ ro5G56dfbK4HrwUmHo5gjYJlSD0bT5gKtTFsogZOhP70K3npEFWOYuWWpoZSEZrByH/ingvuVAK
+ atorR/Dx2dhcqAbL+WjsT+kqnjoJN+X2vkZF8QJFrv/ZIRUPp8dWpC5aBNFYnap0NVVd96o7iFb
+ MsvvX148jkxbdytYE8XsK9EGeb48U7CCJPDASiqoKwws1O3S+DBTOJi6pLklk/yOCDp7mD7ulT2
+ g0InwQsAYp0cB9XqA6m6aYcCbhFHvml5Xp+KC4SpN9T8GYx9TvUurAvPNjQsKbQNADPd0YQa
+X-Authority-Analysis: v=2.4 cv=CIIqXQrD c=1 sm=1 tr=0 ts=68271ef2 cx=c_pps
+ a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=IBNWLNMZBAz7KTYeBUwA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=pJ04lnu7RYOZP9TFuWaZ:22
+X-Proofpoint-GUID: paANxhTMUxBHmVaAMIxD6cmiQklxZbis
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-16_04,2025-05-16_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 mlxscore=0 suspectscore=0 lowpriorityscore=0
+ phishscore=0 mlxlogscore=999 spamscore=0 impostorscore=0 clxscore=1015
+ priorityscore=1501 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505160107
 
-Am 16.05.25 um 00:27 schrieb Etienne Buira:
-> Hi Stefan
->
-> On Thu, May 15, 2025 at 07:48:04PM +0200, Stefan Wahren wrote:
->> Hi Etienne,
+On 5/14/25 3:15 PM, Kathiravan Thirumoorthy wrote:
+> 
+> On 5/6/2025 4:31 PM, Kathiravan Thirumoorthy wrote:
 >>
->> Am 15.05.25 um 13:48 schrieb Etienne Buira:
->>> On Thu, May 15, 2025 at 12:31:38PM +0200, Stefan Wahren wrote:
->>>> Am 15.05.25 um 11:44 schrieb Etienne Buira:
->>>>> Hi Stefan, and thank you for your interest.
+>> On 5/3/2025 3:53 AM, Konrad Dybcio wrote:
+>>> On 5/2/25 6:28 PM, Kathiravan Thirumoorthy wrote:
+>>>> On 5/2/2025 7:33 PM, Konrad Dybcio wrote:
+>>>>>> +static int qcom_wdt_get_restart_reason(struct qcom_wdt *wdt,
+>>>>>> +                    const struct qcom_wdt_match_data *data)
+>>>>>> +{
+>>>>>> +    struct regmap *imem;
+>>>>>> +    unsigned int val;
+>>>>>> +    int ret;
+>>>>>> +
+>>>>>> +    imem = syscon_regmap_lookup_by_compatible(data->imem_compatible);
+>>>>> Try syscon_regmap_lookup_by_phandle_args() and pass a phandle, see e.g.
+>>>>> drivers/phy/qualcomm/phy-qcom-qmp-pcie.c & phy@1bfc000 in x1e80100.dtsi
 >>>>>
->>>>> On Thu, May 15, 2025 at 09:42:43AM +0200, Stefan Wahren wrote:
->>>>>> Hi Etienne,
->>>>>>
->>>>>> Am 15.05.25 um 08:41 schrieb Etienne Buira:
->>>>>>> On Wed, May 14, 2025 at 06:20:32PM +0200, Stefan Wahren wrote:
->>>>>>>> Hi Etienne,
->>>>>>>>
->>>>>>>> Am 12.05.25 um 18:30 schrieb Etienne Buira:
->>>>>>> ../..
->>>>>>>> Out of curiosity and because i never saw this issue, could you pl=
-ease
->>>>>>>> provide more details?
->>>>>>>> There is nothing connected to HDMI 0 & 1 ?
->>>>>>>> Which firmware version are you running?
->>>>>> Please provide the dmesg output, so we can extract the firmware ver=
-sion.
->>>>> Firmware version is 2025-02-17T20:03:07, i also attach the full gzip=
-ped
->>>>> dmesg, as long as a patch of extra traces used.
->>>>> I did not specifically test other firmware versions for the timeout
->>>>> issue (but i did for video output).
->>>> Thanks, i'll try to reproduce.
+>>>>> That way all platform specifics will live in the DT, requiring no
+>>>>> hardcode-y driver changes on similar platforms
 >>>>
->>>> Sorry, i forgot but is this reproducible with a recent stable 6.12.x =
-kernel?
->>> Just reproduced with pristine 6.12.28.
+>>>> Thanks. I thought about this API but it didn't strike that I can use the args to fetch and match the value.
+>>>>
+>>>> I need a suggestion here. There is a plan to extend this feature to other IPQ targets and also support WDIOF_POWERUNDER and WDIOF_OVERHEAT cause as well. For IPQ5424, all 3 cause will support and for other IPQ platforms, we are exploring how to integrate WDIOF_OVERHEAT. In any case, can I define the DT entry like below
+>>>>
+>>>>          imem,phandle = <&imem 0x7b0 <Non secure WDT value> <Power Under value> <Overheat value>>;
+>>>>
+>>>> and store these in values args[1], args[2] and args[3] respectively and use it for manipulation? If any of the platform doesn't support all 3, I can update the bindings and define the number of args as required.
+>>> Let's call the property qcom,restart-reason and only pass the register value
 >>>
->> okay, i've update the firmware on my older Raspberry Pi 4 to the same
->> version as yours. But even with your configuration i don't see this kin=
-d
->> of fallout. So I think we shouldn't apply this patch until we really
->> know what's going on.
-> Ok, thank you, did you make sure a powered hdmi sink were connected? I
-> noticed there is no timeout if no hdmi is plugged (but there were when
-> monitor were powered off, maybe specific to my monitor).
-Yes, HDMI monitor was connected to HDMI 0 and powered on. Raspberry Pi=20
-OS started as expected.
+>>> Because we may have any number of crazy combinations of various restart
+>>> reasons, we can go two paths:
+>>>
+>>> 1. promise really really really hard we won't be too crazy with the number
+>>>     of possible values and put them in the driver
+>>> 2. go all out on DT properties (such as `bootstatus-overheat`,
+>>> `bootstatus-fanfault` etc.
+>>
+>>
+>> Thanks Konrad for the suggestions and the offline discussions.
+>>
+>> @Guenter, I need a suggestion here. Currently as part of this series, we are planning to expose WDIOF_CARDRESET, WDIOF_POWERUNDER, WDIOF_OVERHEAT reasons.
+>>
+>> Once this is done, we do have the custom reason codes like Kernel Panic, Secure Watchdog Bite, Bus error timeout, Bus error access and few many. Is it okay to expose these values also via the bootstatus sysFS by extending the current list of reasons? Since these are outside the scope of watchdog, need your thoughts on this.
+> 
+> 
+> Konrad / Guenter,
+> 
+> We had a further discussion on this internally. Outcome is, it wouldn't be ideal to hook the custom restart reason codes in watchdog framework, since there is no involvement of watchdog in such cases. Also I don't find any references to hook the custom values in watchdog's bootstatus.
+> 
+> If this is fine, I'm planning to resend the series to handle only the non secure watchdog timeout case. In that case, as suggested by Konrad, everything will be handled in DT like below to avoid the device data.
+> 
+> imem,phandle = <&phandle <imem_offset> <value>>;
 
-The fact that your SDIO interface triggers a warning, which I also don't=
-=20
-get let me think this is not just related to HDMI interface.
+the part before the comma is a vendor prefix, so that must be qcom,xyz
 
-[=C2=A0=C2=A0=C2=A0 3.603736] mmc0: sdhci: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D SDHCI REGISTER DUMP =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[=C2=A0=C2=A0=C2=A0 3.603739] mmc0: sdhci: Sys addr:=C2=A0 0x00000000 | Ve=
-rsion: 0x00009902
-[=C2=A0=C2=A0=C2=A0 3.646852] mmc0: sdhci: Blk size:=C2=A0 0x00000000 | Bl=
-k cnt: 0x00000000
-[=C2=A0=C2=A0=C2=A0 3.646856] mmc0: sdhci: Argument:=C2=A0 0x00000000 | Tr=
-n mode: 0x00000000
-[=C2=A0=C2=A0=C2=A0 3.646859] mmc0: sdhci: Present:=C2=A0=C2=A0 0x01ff0001=
- | Host ctl: 0x00000000
-[=C2=A0=C2=A0=C2=A0 3.665697] mmc0: sdhci: Power:=C2=A0=C2=A0=C2=A0=C2=A0 =
-0x0000000f | Blk gap: 0x00000000
-[=C2=A0=C2=A0=C2=A0 3.672214] mmc0: sdhci: Wake-up:=C2=A0=C2=A0 0x00000000=
- | Clock: 0x00003947
-[=C2=A0=C2=A0=C2=A0 3.678736] mmc0: sdhci: Timeout:=C2=A0=C2=A0 0x00000000=
- | Int stat: 0x00000000
-[=C2=A0=C2=A0=C2=A0 3.685254] mmc0: sdhci: Int enab:=C2=A0 0x00ff0003 | Si=
-g enab: 0x00ff0003
-[=C2=A0=C2=A0=C2=A0 3.685257] mmc0: sdhci: ACmd stat: 0x00000000 | Slot in=
-t: 0x00000000
-[=C2=A0=C2=A0=C2=A0 3.685260] mmc0: sdhci: Caps:=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 0x00000000 | Caps_1: 0x00000000
-[=C2=A0=C2=A0=C2=A0 3.712672] mmc0: sdhci: Cmd:=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 0x00000000 | Max curr: 0x00000001
-[=C2=A0=C2=A0=C2=A0 3.719186] mmc0: sdhci: Resp[0]:=C2=A0=C2=A0 0x00000000=
- | Resp[1]: 0x00000000
-[=C2=A0=C2=A0=C2=A0 3.725708] mmc0: sdhci: Resp[2]:=C2=A0=C2=A0 0x00000000=
- | Resp[3]: 0x00000000
-[=C2=A0=C2=A0=C2=A0 3.732230] mmc0: sdhci: Host ctl2: 0x00000000
-[=C2=A0=C2=A0=C2=A0 3.736724] mmc0: sdhci: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[=C2=A0=C2=A0=C2=A0 3.819205] mmc0: new high speed SDIO card at address 00=
-01
->
->> You don't have another Raspberry Pi 4 by any chance?
-> No, i don't.
->
->> Another cause might be the toolchain. Currently I use a not so fresh gc=
-c
->> 11.3.1 from Linaro.
-> Previous tries were cross built. I tried a native build with (Gentoo
-> packages) gcc 14.2.1_p20241221, binutils 2.44, and glibc 2.40-r8; but
-> got same result.
-> Will do a software upgrade overnight to try with more up to date build
-> system.
-I will try to update my toolchain, but this will take some time.
->
->> Except of this, I noticed that your configuration doesn't enable
->> DWC2_DUAL_ROLE and the LEDS_TRIGGER.
-> I have no use of them (and i have a lot of things to disable, but i
-> prefer to do that starting with a working system).
-I this case you can disable DWC2 completely, because USB host is=20
-provided by xhci driver. LEDS_TRIGGER is used for the ACT LED as heartbeat=
-.
->
-> Regards.
->
+what are your plans for the other reboot reasons? are we scrapping them?
 
+Konrad
