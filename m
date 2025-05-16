@@ -1,297 +1,307 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25732242D8B
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 13:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1B5F243946;
+	Fri, 16 May 2025 13:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747401131; cv=none; b=stGIWAneqhkxqg7WqXXcjKyfG5rysmytABTL6mQULHMFAgq8lNrL7GTCnY1kW61gtoCCo5R0lZvz3yel8f1QTvmbn5ykOq7XMCDPENMpErVyYEBTx7+e8xIB01THqUtmO6dauTB8Rcya4CVfaphQWXPsZqZle5QYTlBQI7MP08s=
+	t=1747401135; cv=none; b=d+iNuHA33UESa23bWTqBTrUTN7QmrWXHfdl+3YKCZlvCFAqivBvn332LLjU6EJxoQS1PLRCaWLj/DbDw+WkRBH0y0dlZu8dbeHg5XyA1/AT9fVAx0Z/RPzvuYes8airpTeBPdN+Z0+pjTWcKbuzN7RZxl7692q7qtR8ZEmAjyD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747401131; c=relaxed/simple;
-	bh=NiiFqWZZg0iu28D3kw6sHBbg2+Jj2+n51oesFaRNgac=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iaGoMehW9GmHIo7dUCkFVV+8K01axQKX5L3d7jBG5HMMeit10JMScuR6dsvT+oalGr5+nS0AqiyWCWWHXQWKFSj7qtyxQNLyztAqqlf/SX2kJb7JHXTj1uLhGRcNBTqlsOMDLyiMnEWoap83+hMmeq6vgbVG4sN15A0qwKrVblE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TGx+AlKw; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747401135; c=relaxed/simple;
+	bh=LIxhz0Ikkb6uhXfsYATNN0zoJH5c6DUtaKMEfAc+aBk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pDAcH/2FHlHwwzb6uTWYUPew8Z/7QiwPABich0Q1c+Go0agsrZiMiMvl/Z1w0xW/UvBtPBh+q7WmRV0WSC0z36M/B2ZXHTxBSPi0fDuwhtLcG+z68RENEg24w3OfCUfw5wlGBgxQ89EzyifII4x02AShYzJN4xJOv5CQGm5FAxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vPDrwwwv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TGx+AlKw"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-231f37e114eso28525ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 06:12:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747401129; x=1748005929; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vRZigz65utFUqAMmPQfonu5ixQiHldB3hpjMC8Trs54=;
-        b=TGx+AlKwJ6gbZZEmFAXDxe5HPuo19khYCyz1xRT1A1Q7OKjGPgkn30nMumeH1/w3Q9
-         ukicbC8TP8lHNl0A/6DAegQpD7ev0WU2x7G8t9WL5UUS99r6DVv4r/D4vBZQKeHuc+tw
-         89D7P3RBR3VNj6N5X9TZiqA5nrU3NvdTFN1cTJ9k3l166XTRB2TGKxnHp421NqwDh25W
-         5FF5ro8Y4QzJfTwrLNGRgFbZmL8bvaeSdFsOg0jZZKrjQy4RUMzdaEwvSKLACbGACNId
-         gFpr73ChCRM08u7ZAUiMa7eeibvNlGsYRcYh+2mICeg1U9IPWruE245lF+ylszjDfTJ+
-         +n7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747401129; x=1748005929;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vRZigz65utFUqAMmPQfonu5ixQiHldB3hpjMC8Trs54=;
-        b=iWpKxnZe2CmF8+qDSj9PSAzzFy5A9woaxCt5isOZEzJeIvLPbg5Vmno24ZQXcXS4B0
-         0EPBdLzFalo+4xAUvaHy5P76h/IdxObWFXiO+QFHSQiZCyxDO4FWyTK9PSrwKjej5wIS
-         Ie7izCV68LoomHISytz6i/kdFYCbvcFTkgndWvhc8g/36Lj9ZdPQgVw9GMcAoFQiqEKX
-         XFqGeCwK/fV8nUF2PquhLyX2t0vlGzs2RrWbd/icBR1anOriJYRyXC7Pja0ql7gIo2VN
-         Cmk5SsKsn3cZYmrCtj78k3pmAxZB7MBGPtmfPKGj3AhALUfWsd/l5nlNjztzAliUKysU
-         8Fwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUrBzxM5cukhKwwk54bWVwshV3+Kb7wCLx5Ek6JLg1DX2ymkYOTehNgJU+8upbndEYpZSs3QGJH4/ago8Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFQOwj/RdfqaBj0zB4MDgX8KzsJmoTl/APQ/a2OFdfaJxHWmg/
-	U4h9TG0nj5Mu/XhquxHOAfKCuOpsE5qK2MY5vuI95q1qdl00sQvjU3MmO/BE1qU3tHbjTXIPUh7
-	D5svBaWNLWtriDtUYhbZdqrk+vwzT110eefbsKSsV
-X-Gm-Gg: ASbGncv/V58ZpAR2I3MT1Y4oOWXiDzyND3IFuQ3c+XMq6jZAJ+9gTWEbH0VYjm4q0vk
-	x4Keewmc/k1l0sKkLhcssNQoGvfDI8Cn1xXltPgysA8NpsUqornb0V6xMWx8KmQOqNq7XfqVEnx
-	KtQrz1rIbGAnl3zegJgthEzXhYprBDWE2JqY7BNN1j13kYJLcFCGEevZ+h3wwSadAu
-X-Google-Smtp-Source: AGHT+IHWzQxgLF5GinQQAT7heQR9B/bnByY6NVpp33fJcRw7lCpA5vIJ/aZyc6R8k4XwPwfMJ4BqgdEyoxgbu+RiAgI=
-X-Received: by 2002:a17:902:d2c6:b0:223:37ec:63be with SMTP id
- d9443c01a7336-231b497f774mr6867365ad.4.1747401128820; Fri, 16 May 2025
- 06:12:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vPDrwwwv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F614C4CEF4;
+	Fri, 16 May 2025 13:12:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747401135;
+	bh=LIxhz0Ikkb6uhXfsYATNN0zoJH5c6DUtaKMEfAc+aBk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vPDrwwwvQ2xDcxDXAL8gNsaOcLAvIqyIE1CtyizfeMQCuNT0TZdcbI6vhnQvTvroQ
+	 cr1PtUfweGB9rPToytDxG7ZxJNAEyy3xnOF/JxQrs/BfvZNVwSAe3cVmrudQlTw3Y7
+	 YxTJk99uj3ZyE0fQ4NK7jk/5jNfItWApA+iC5fgU/U9lNzT9L4mwTW/jEMzrNihOkB
+	 ednVZsTF11dT1ttteIgBdwIEu+Kz0A7fgHQdPKXVfHVadUF2b9RGTVoIvXbqh28e18
+	 cw4ZL4GwbsDvpdhecizHs2wM8I2k8eOwZ5sBqRqjk2OFYbnh7D4WTB9CSlHHCZSRyK
+	 0lw9OFm5y53ww==
+Message-ID: <f13fe182-b5e5-4938-8260-24f8f60e8f83@kernel.org>
+Date: Fri, 16 May 2025 15:12:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <ada87be8b9c06bc0678174b810e441ca79d67980.camel@intel.com>
- <CAGtprH9CTsVvaS8g62gTuQub4aLL97S7Um66q12_MqTFoRNMxA@mail.gmail.com>
- <24e8ae7483d0fada8d5042f9cd5598573ca8f1c5.camel@intel.com>
- <aCaM7LS7Z0L3FoC8@google.com> <7d3b391f3a31396bd9abe641259392fd94b5e72f.camel@intel.com>
-In-Reply-To: <7d3b391f3a31396bd9abe641259392fd94b5e72f.camel@intel.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Fri, 16 May 2025 06:11:56 -0700
-X-Gm-Features: AX0GCFs6I9TXzPWCzzMaQ_r47X6z5Mtwr_vfS-VvWPoNm6giHe9GgjB_h50xjcU
-Message-ID: <CAGtprH8EMnmvvVir6_U+L5S3SEvrU1OzLrvkL58fXgfg59bjoA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 00/51] 1G page support for guest_memfd
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc: "seanjc@google.com" <seanjc@google.com>, "pvorel@suse.cz" <pvorel@suse.cz>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, 
-	"Miao, Jun" <jun.miao@intel.com>, "Shutemov, Kirill" <kirill.shutemov@intel.com>, 
-	"pdurrant@amazon.co.uk" <pdurrant@amazon.co.uk>, "steven.price@arm.com" <steven.price@arm.com>, 
-	"peterx@redhat.com" <peterx@redhat.com>, "x86@kernel.org" <x86@kernel.org>, 
-	"amoorthy@google.com" <amoorthy@google.com>, "tabba@google.com" <tabba@google.com>, 
-	"quic_svaddagi@quicinc.com" <quic_svaddagi@quicinc.com>, "maz@kernel.org" <maz@kernel.org>, 
-	"vkuznets@redhat.com" <vkuznets@redhat.com>, "quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, 
-	"keirf@google.com" <keirf@google.com>, "hughd@google.com" <hughd@google.com>, 
-	"mail@maciej.szmigiero.name" <mail@maciej.szmigiero.name>, "palmer@dabbelt.com" <palmer@dabbelt.com>, 
-	"Wieczor-Retman, Maciej" <maciej.wieczor-retman@intel.com>, "Zhao, Yan Y" <yan.y.zhao@intel.com>, 
-	"ajones@ventanamicro.com" <ajones@ventanamicro.com>, "willy@infradead.org" <willy@infradead.org>, 
-	"jack@suse.cz" <jack@suse.cz>, "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>, "aik@amd.com" <aik@amd.com>, 
-	"usama.arif@bytedance.com" <usama.arif@bytedance.com>, 
-	"quic_mnalajal@quicinc.com" <quic_mnalajal@quicinc.com>, "fvdl@google.com" <fvdl@google.com>, 
-	"rppt@kernel.org" <rppt@kernel.org>, "quic_cvanscha@quicinc.com" <quic_cvanscha@quicinc.com>, 
-	"nsaenz@amazon.es" <nsaenz@amazon.es>, "vbabka@suse.cz" <vbabka@suse.cz>, "Du, Fan" <fan.du@intel.com>, 
-	"anthony.yznaga@oracle.com" <anthony.yznaga@oracle.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "mic@digikod.net" <mic@digikod.net>, 
-	"oliver.upton@linux.dev" <oliver.upton@linux.dev>, 
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, "bfoster@redhat.com" <bfoster@redhat.com>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "muchun.song@linux.dev" <muchun.song@linux.dev>, 
-	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "rientjes@google.com" <rientjes@google.com>, 
-	"mpe@ellerman.id.au" <mpe@ellerman.id.au>, "Aktas, Erdem" <erdemaktas@google.com>, 
-	"david@redhat.com" <david@redhat.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>, 
-	"jhubbard@nvidia.com" <jhubbard@nvidia.com>, "Xu, Haibo1" <haibo1.xu@intel.com>, 
-	"anup@brainfault.org" <anup@brainfault.org>, "Hansen, Dave" <dave.hansen@intel.com>, 
-	"Yamahata, Isaku" <isaku.yamahata@intel.com>, "jthoughton@google.com" <jthoughton@google.com>, 
-	"Wang, Wei W" <wei.w.wang@intel.com>, 
-	"steven.sistare@oracle.com" <steven.sistare@oracle.com>, "jarkko@kernel.org" <jarkko@kernel.org>, 
-	"quic_pheragu@quicinc.com" <quic_pheragu@quicinc.com>, "chenhuacai@kernel.org" <chenhuacai@kernel.org>, 
-	"Huang, Kai" <kai.huang@intel.com>, "shuah@kernel.org" <shuah@kernel.org>, 
-	"dwmw@amazon.co.uk" <dwmw@amazon.co.uk>, "pankaj.gupta@amd.com" <pankaj.gupta@amd.com>, 
-	"Peng, Chao P" <chao.p.peng@intel.com>, "nikunj@amd.com" <nikunj@amd.com>, 
-	"Graf, Alexander" <graf@amazon.com>, "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>, 
-	"jroedel@suse.de" <jroedel@suse.de>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, 
-	"jgowans@amazon.com" <jgowans@amazon.com>, "Xu, Yilun" <yilun.xu@intel.com>, 
-	"liam.merwick@oracle.com" <liam.merwick@oracle.com>, "michael.roth@amd.com" <michael.roth@amd.com>, 
-	"quic_tsoni@quicinc.com" <quic_tsoni@quicinc.com>, 
-	"richard.weiyang@gmail.com" <richard.weiyang@gmail.com>, "Weiny, Ira" <ira.weiny@intel.com>, 
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
-	"qperret@google.com" <qperret@google.com>, 
-	"kent.overstreet@linux.dev" <kent.overstreet@linux.dev>, "dmatlack@google.com" <dmatlack@google.com>, 
-	"james.morse@arm.com" <james.morse@arm.com>, "brauner@kernel.org" <brauner@kernel.org>, 
-	"ackerleytng@google.com" <ackerleytng@google.com>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "pgonda@google.com" <pgonda@google.com>, 
-	"quic_pderrin@quicinc.com" <quic_pderrin@quicinc.com>, "roypat@amazon.co.uk" <roypat@amazon.co.uk>, 
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "will@kernel.org" <will@kernel.org>, 
-	"hch@infradead.org" <hch@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dt-bindings: sdhci: eswin: Documentation for
+ eic7700 SoC
+To: dongxuyang@eswincomputing.com, ulf.hansson@linaro.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, linux-mmc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ adrian.hunter@intel.com, p.zabel@pengutronix.de, shanchun1218@gmail.com
+Cc: ningyu@eswincomputing.com, linmin@eswincomputing.com,
+ xuxiang@eswincomputing.com
+References: <20250516091259.774-1-dongxuyang@eswincomputing.com>
+ <20250516091650.832-1-dongxuyang@eswincomputing.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250516091650.832-1-dongxuyang@eswincomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 15, 2025 at 7:12=E2=80=AFPM Edgecombe, Rick P
-<rick.p.edgecombe@intel.com> wrote:
->
-> On Thu, 2025-05-15 at 17:57 -0700, Sean Christopherson wrote:
-> > > > > Thinking from the TDX perspective, we might have bigger fish to f=
-ry than
-> > > > > 1.6% memory savings (for example dynamic PAMT), and the rest of t=
-he
-> > > > > benefits don't have numbers. How much are we getting for all the
-> > > > > complexity, over say buddy allocated 2MB pages?
-> >
-> > TDX may have bigger fish to fry, but some of us have bigger fish to fry=
- than
-> > TDX :-)
->
-> Fair enough. But TDX is on the "roadmap". So it helps to say what the tar=
-get of
-> this series is.
->
-> >
-> > > > This series should work for any page sizes backed by hugetlb memory=
-.
-> > > > Non-CoCo VMs, pKVM and Confidential VMs all need hugepages that are
-> > > > essential for certain workloads and will emerge as guest_memfd user=
-s.
-> > > > Features like KHO/memory persistence in addition also depend on
-> > > > hugepage support in guest_memfd.
-> > > >
-> > > > This series takes strides towards making guest_memfd compatible wit=
-h
-> > > > usecases where 1G pages are essential and non-confidential VMs are
-> > > > already exercising them.
-> > > >
-> > > > I think the main complexity here lies in supporting in-place
-> > > > conversion which applies to any huge page size even for buddy
-> > > > allocated 2MB pages or THP.
-> > > >
-> > > > This complexity arises because page structs work at a fixed
-> > > > granularity, future roadmap towards not having page structs for gue=
-st
-> > > > memory (at least private memory to begin with) should help towards
-> > > > greatly reducing this complexity.
-> > > >
-> > > > That being said, DPAMT and huge page EPT mappings for TDX VMs remai=
-n
-> > > > essential and complement this series well for better memory footpri=
-nt
-> > > > and overall performance of TDX VMs.
-> > >
-> > > Hmm, this didn't really answer my questions about the concrete benefi=
-ts.
-> > >
-> > > I think it would help to include this kind of justification for the 1=
-GB
-> > > guestmemfd pages. "essential for certain workloads and will emerge" i=
-s a bit
-> > > hard to review against...
-> > >
-> > > I think one of the challenges with coco is that it's almost like a sp=
-rint to
-> > > reimplement virtualization. But enough things are changing at once th=
-at not
-> > > all of the normal assumptions hold, so it can't copy all the same sol=
-utions.
-> > > The recent example was that for TDX huge pages we found that normal
-> > > promotion paths weren't actually yielding any benefit for surprising =
-TDX
-> > > specific reasons.
-> > >
-> > > On the TDX side we are also, at least currently, unmapping private pa=
-ges
-> > > while they are mapped shared, so any 1GB pages would get split to 2MB=
- if
-> > > there are any shared pages in them. I wonder how many 1GB pages there=
- would
-> > > be after all the shared pages are converted. At smaller TD sizes, it =
-could
-> > > be not much.
-> >
-> > You're conflating two different things.  guest_memfd allocating and man=
-aging
-> > 1GiB physical pages, and KVM mapping memory into the guest at 1GiB/2MiB
-> > granularity.  Allocating memory in 1GiB chunks is useful even if KVM ca=
-n only
-> > map memory into the guest using 4KiB pages.
->
-> I'm aware of the 1.6% vmemmap benefits from the LPC talk. Is there more? =
-The
-> list quoted there was more about guest performance. Or maybe the clever p=
-age
-> table walkers that find contiguous small mappings could benefit guest
-> performance too? It's the kind of thing I'd like to see at least broadly =
-called
-> out.
+On 16/05/2025 11:16, dongxuyang@eswincomputing.com wrote:
+> From: Xuyang Dong <dongxuyang@eswincomputing.com>
+> 
+> Add device tree binding documentation for the ESWIN
+> eic7700 sdhci controller module.
+> 
+> Signed-off-by: Xiang Xu <xuxiang@eswincomputing.com>
+> Signed-off-by: Xuyang Dong <dongxuyang@eswincomputing.com>
+> ---
 
-The crux of this series really is hugetlb backing support for
-guest_memfd and handling CoCo VMs irrespective of the page size as I
-suggested earlier, so 2M page sizes will need to handle similar
-complexity of in-place conversion.
 
-Google internally uses 1G hugetlb pages to achieve high bandwidth IO,
-lower memory footprint using HVO and lower MMU/IOMMU page table memory
-footprint among other improvements. These percentages carry a
-substantial impact when working at the scale of large fleets of hosts
-each carrying significant memory capacity.
+Folks,you need to slow down because you are sending patchsets with the
+same issues, thus we need to repeat the same review comments. Learn from
+the review first.
 
-guest_memfd hugepage support + hugepage EPT mapping support for TDX
-VMs significantly help:
-1) ~70% decrease in TDX VM boot up time
-2) ~65% decrease in TDX VM shutdown time
-3) ~90% decrease in TDX VM PAMT memory overhead
-4) Improvement in TDX SEPT memory overhead
+>  .../bindings/mmc/eswin,sdhci-eic7700.yaml     | 131 ++++++++++++++++++
+>  1 file changed, 131 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/eswin,sdhci-eic7700.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/eswin,sdhci-eic7700.yaml b/Documentation/devicetree/bindings/mmc/eswin,sdhci-eic7700.yaml
+> new file mode 100644
+> index 000000000000..d4826f2aa619
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/eswin,sdhci-eic7700.yaml
+> @@ -0,0 +1,131 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mmc/eswin,sdhci-eic7700.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ESWIN EIC7700 SoC SDHCI controller
+> +
+> +maintainers:
+> +  - Shuang Liang <liangshuang@eswincomputing.com>
+> +  - Xuyang Dong <dongxuyang@eswincomputing.com>
+> +
+> +allOf:
+> +  - $ref: /schemas/mmc/mmc-controller.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: eswin,eic7700-emmc-sdhci
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: Common configuration registers
 
-And we believe this combination should also help achieve better
-performance with TDX connect in future.
+Blank line, drop description
 
-Hugetlb huge pages are preferred as they are statically carved out at
-boot and so provide much better guarantees of availability. Once the
-pages are carved out, any VMs scheduled on such a host will need to
-work with the same hugetlb memory sizes. This series attempts to use
-hugetlb pages with in-place conversion, avoiding the double allocation
-problem that otherwise results in significant memory overheads for
-CoCo VMs.
+> +  "#address-cells":
+> +    const: 1
 
->
-> I'm thinking that Google must have a ridiculous amount of learnings about=
- VM
-> memory management. And this is probably designed around those learnings. =
-But
-> reviewers can't really evaluate it if they don't know the reasons and tra=
-deoffs
-> taken. If it's going upstream, I think it should have at least the high l=
-evel
-> reasoning explained.
->
-> I don't mean to harp on the point so hard, but I didn't expect it to be
-> controversial either.
->
-> >
-> > > So for TDX in isolation, it seems like jumping out too far ahead to
-> > > effectively consider the value. But presumably you guys are testing t=
-his on
-> > > SEV or something? Have you measured any performance improvement? For =
-what
-> > > kind of applications? Or is the idea to basically to make guestmemfd =
-work
-> > > like however Google does guest memory?
-> >
-> > The longer term goal of guest_memfd is to make it suitable for backing =
-all
-> > VMs, hence Vishal's "Non-CoCo VMs" comment.
->
-> Oh, I actually wasn't aware of this. Or maybe I remember now. I thought h=
-e was
-> talking about pKVM.
->
-> >   Yes, some of this is useful for TDX, but we (and others) want to use
-> > guest_memfd for far more than just CoCo VMs.
->
->
-> >  And for non-CoCo VMs, 1GiB hugepages are mandatory for various workloa=
-ds.
-> I've heard this a lot. It must be true, but I've never seen the actual nu=
-mbers.
-> For a long time people believed 1GB huge pages on the direct map were cri=
-tical,
-> but then benchmarking on a contemporary CPU couldn't find much difference
-> between 2MB and 1GB. I'd expect TDP huge pages to be different than that =
-because
-> the combined walks are huge, iTLB, etc, but I'd love to see a real number=
-.
+Blank line
+
+> +  "#size-cells":
+> +    const: 1
+
+This is wrong.
+
+Why do you need these properties?  You are duplicating (and wrongly) MMC
+schema.
+
+
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  assigned-clocks:
+> +    maxItems: 1
+> +    description: should contain "core_clk" phandle + clock-specifier pairs.
+> +
+> +  assigned-clock-rates:
+> +    maxItems: 1
+
+Drop both properties. Do you see this anywhere in the bindings?
+
+> +
+> +  clocks:
+> +    minItems: 2
+
+No list items instead.
+
+> +    description: handles to clock for the sdhci controller.
+
+Drop description
+
+> +
+> +  clock-names:
+> +    minItems: 2
+> +    description: the name of each clock.
+
+No, list items instead. Do you see any bindings written like that?
+
+> +
+> +  clock-output-names:
+> +    maxItems: 1
+> +
+> +  '#clock-cells':
+> +    enum: [0]
+> +    description:
+> +      With this property in place we will export one clock
+> +      representing the Card Clock. These clocks are expected to be
+> +      consumed by our PHY.
+> +
+> +  resets:
+> +    description: resets to be used by the controller.
+
+Missing constraints. Drop description, useless.
+
+> +
+> +  reset-names:
+> +    description: names of the resets listed in resets property in the same order.
+
+Drop property
+
+> +
+> +  bus-width:
+> +    enum: [4, 8]
+> +    description: for emmc bus-width is 8, for sdio bus-width is 4.
+
+Why do you need it? Look at other bindings.
+
+> +
+> +  eswin,hsp_sp_csr:
+
+Look at DTS coding style first. What characters are allowed in properties?
+
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: hsp_sp_csr regs to be used by the controller.
+
+For what purpose?
+
+> +    items:
+> +      - description: phandle to HSP_SP_CSR register block
+> +      - description: status register offset
+> +      - description: control register offset
+> +      - description: configuration register offset
+> +
+> +  eswin,syscrg_csr:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: syscrg_csr regs to be used by the controller.
+
+For what purpose?
+
+
+> +    items:
+> +      - description: phandle to SYS_CRG_CSR register block
+> +      - description: status register offset
+> +      - description: control register offset
+> +      - description: configuration register offset
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - assigned-clocks
+> +  - assigned-clock-rates
+> +  - clocks
+> +  - clock-names
+> +  - clock-output-names
+> +  - resets
+> +  - reset-names
+> +  - bus-width
+> +  - eswin,hsp_sp_csr
+> +  - eswin,syscrg_csr
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +
+
+Drop blank line
+
+> +    sdhci_emmc: mmc@50450000 {
+
+Drop label
+
+> +      compatible = "eswin,eic7700-emmc-sdhci";
+> +      reg = <0x50450000 0x10000>;
+> +      interrupt-parent = <&plic>;
+> +      interrupts = <79>;
+> +      clocks = <&clock 554>, <&clock 546>;
+> +      clock-names = "clk_xin", "clk_ahb";
+> +      assigned-clocks = <&clock 554>;
+> +      assigned-clock-rates = <200000000>;
+> +      clock-output-names = "emmc_cardclock";
+> +      #clock-cells = <0>;
+> +
+> +      resets = <&reset 7 (1 << 6)>,
+> +        <&reset 7 (1 << 3)>,
+> +        <&reset 7 (1 << 19)>,
+> +        <&reset 7 (1 << 23)>;
+> +      reset-names = "txrx_rst", "phy_rst", "prstn", "arstn";
+> +
+> +      core-clk-reg = <0x51828160>;
+> +      disable-cqe-dcmd;
+> +      bus-width = <8>;
+> +      non-removable;
+> +      mmc-hs400-1_8v;
+> +      max-frequency = <200000000>;
+> +      eswin,hsp_sp_csr = <&hsp_sp_csr 0x1038 0x508 0x50c>;
+> +      eswin,syscrg_csr = <&sys_crg 0x160 0x148 0x14c>;
+> +      status = "disabled";
+
+No, drop.
+
+
+Best regards,
+Krzysztof
