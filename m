@@ -1,156 +1,146 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9835F2116FE
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7081C19D09C
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747388743; cv=none; b=EKZgzN9xpysjB6wt5awE/iP23G0O2rkSuXAUf0HUauK4WxMHJF3H22j+5BCt5lS0IG7YDbuHu6yEbVXs3TSA8YMr95kxygmaN1fS/XKeVNukDz51M5+D/cDRNFPIWEjykgxejqdpoqbacyzO/SLZYYYYURESjhGNTl600oD9Ljs=
+	t=1747388887; cv=none; b=G1evqsRhB7FDZDAnmrmHdZXAw7+19xQKjTbAdM28ZnXmuHDBPg8AA+nboICaQwY9RhGeYSxw50gLI/wX5v2RNfjtTblA9hiE56CPbMBsePkhw+IhLCtxi1ulwAWNDD9Ox4gdFCjc9s90wYCm2gpK1NDz+J3SI9tcBY0W/cd8jeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747388743; c=relaxed/simple;
-	bh=7Bm6yd3q8eDSmAsfS/jyh5v4JWHukmbzYQSdpoEoWk8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C4hQY3KECH547zHrKv+6ZCnwMAj0nU+xo1oGW2WD6fnyqPH89YnbfYMxCd8UkC1/93Yn8bIZgxzmm9MG6WucAVPaNFwcRQMuSdCPT6VOQ7zWJtuHJ7GAwbJXGv/wAadHJEQO+ne5ishIP0urMVZaGCu+dOkfxKbk8FayMIP1pmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=E2LiSY9t; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=fjtGVKr2; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=E2LiSY9t; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=fjtGVKr2; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1747388887; c=relaxed/simple;
+	bh=W9yiciXbWFwESLz4lZbhQMYlRO09ym6rv1NxjEABbXM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=En3uD6cLi8lcJaA/eYT7EP0i9B8KWeJPKKkdhJc3hvMZcdebQR55XEvDx11ISleQInDeZJZfut9ixu+B3C9WEiMoXHnzBGarrKmceMUvg6Z6PWcvWXHk0I100dei2hURjF1YvHrE4GfLrxv7KigE6/otv4gfHJxCg3jpEGUkiDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Wl7ExH/k; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="E2LiSY9t";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="fjtGVKr2";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="E2LiSY9t";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="fjtGVKr2"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 8F1741F809;
-	Fri, 16 May 2025 09:45:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747388739; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8WpIKKHmGcTGOMiGo191FHS/rzC9luV4pcbmSleL9Ho=;
-	b=E2LiSY9t77zhDLEU1dEtdR2SAbSyz4VGtl58X+O5YgnxrT+1L9rxIHXtgrB0gUYWT1RRqq
-	GnaxN9s4I6VyB3LdBTDrUYchAzxfRs+IWxvrTn7v37CdXe9R6TkzQWZyH2PBmMNtWKnk4h
-	YYX9SJGoyls65x7+RNdnMk6amRaNNMg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747388739;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8WpIKKHmGcTGOMiGo191FHS/rzC9luV4pcbmSleL9Ho=;
-	b=fjtGVKr2fc1C6/15gm6kiGUDTtJyh0ooLIMWiEZaKh4n3chdDAihT41/TTk4iW//2o/Mbp
-	D6gvzpf0rp2C8SCQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=E2LiSY9t;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=fjtGVKr2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747388739; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8WpIKKHmGcTGOMiGo191FHS/rzC9luV4pcbmSleL9Ho=;
-	b=E2LiSY9t77zhDLEU1dEtdR2SAbSyz4VGtl58X+O5YgnxrT+1L9rxIHXtgrB0gUYWT1RRqq
-	GnaxN9s4I6VyB3LdBTDrUYchAzxfRs+IWxvrTn7v37CdXe9R6TkzQWZyH2PBmMNtWKnk4h
-	YYX9SJGoyls65x7+RNdnMk6amRaNNMg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747388739;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8WpIKKHmGcTGOMiGo191FHS/rzC9luV4pcbmSleL9Ho=;
-	b=fjtGVKr2fc1C6/15gm6kiGUDTtJyh0ooLIMWiEZaKh4n3chdDAihT41/TTk4iW//2o/Mbp
-	D6gvzpf0rp2C8SCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7181613977;
-	Fri, 16 May 2025 09:45:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ACVmG0MJJ2hGcwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 16 May 2025 09:45:39 +0000
-Message-ID: <8114231b-ec06-44a9-9075-9ccf0809de4a@suse.cz>
-Date: Fri, 16 May 2025 11:45:39 +0200
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Wl7ExH/k"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-441d437cfaaso11224105e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 02:48:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747388882; x=1747993682; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1o7lm4gr/IyiRMX/+f11iAYJHPvnzys+snbbXOa+wNA=;
+        b=Wl7ExH/kpVn6SDZrUcCa346cA1azAB2FRz6InUXniVc3Mm4Lvs+Bzk6fxfnuPniFvA
+         0WjqTP3mpN9cfoY93zfeE21TOYjjEhQAvve0GfNZjkJ73A5YYGbbb/grIL5B4M9spQfA
+         7r74sDAIrgeLgbBCAXhTe4tdZuM61xTkBtXgWUU6FI2bY8KbmMbngv9t0qq7E9zMESvz
+         uD7P/nX184ZOQM5tKb9wobuNVMWCVLFx3ZUW8/v1CwkgxZK98AIzKWcJmvmraGd0vUaG
+         dWCWWBr4TINBO63lpAcWtRDVzb4z8yIYHqKnfGNlyiF07/USPWcGot9+96d6hvmyeosz
+         cKeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747388882; x=1747993682;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1o7lm4gr/IyiRMX/+f11iAYJHPvnzys+snbbXOa+wNA=;
+        b=v4ElshAeQOTtNGj/894aOuNAj9g4pBZXpG8r+CnQiMolrs4sqX/CQZZ45rXkQrdQkY
+         URvIX/AsGhKnizsfBQraPEo6xBf2SKGR822nkBlkx+o6DevpumlYmicFuZUrYXn6jI2g
+         PmMW0V9mW/6aG3gnfhiBX5LGs3etahyUWw8Brzee83XTmR9rMW1/dlvu0XLpYvVLD6iT
+         sccpYOdYm3X8rw6DXEhMiFcGb7JZboIE50GKHe4sg/I4MeAApRV26+9kAcQhpHpkfooy
+         rCIyfM9tM5fgL5bTMppBmJPlajZE+3T5UVWRrWeK/MjXA6uqMZeQ8JeaXCwJVaYSQinL
+         uaXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUjKCoLVhiWnrEBu+kB78a4KSll+IRsrgFAkvz8Q9x21gBzkCpj1k14GDuE8TaTK+r0VG3Ezhcqbrni/dU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwerQQAZgf+cAjftbMSum8fCafvG/kuVuUr8ASpddMs1IEh+InX
+	OPWrwphW47nZ26tS1EFfd5g5+VAXmQXHtNTnq91WUareiR7XVM/ipiVqcaqIWROzudksAjSFN3o
+	7hVrv
+X-Gm-Gg: ASbGncuYSBknTBPPKsWNEUOKf6h7tmg003Mjz+SPtRUIn3zgRhGP//+PfPokhUxWXfy
+	s28V0xbCfMNSZ4DeO3COcGXQWSREzcaUabijxbo269n9+72zIBQfubvah7SAZjrkNLGMCLE2tuc
+	PqXSB+gEe/pfTNvmSRza/g3kx5SVyWWL6vrnHl1oVHjYuRShY1B1S0IiR/w2QBgtLV94nv593FY
+	1L+V0pGyB8v5v33SfiZ41Sd8tEBUR5D/d4Ip4ANKIwCSxJF3WSO1L4bxnasffp+7Cg+Al1ZMw9I
+	WquofhKAL8z1qKSwHCeJDb+l8cCxPJ4HvbcxxfM3l+bE8k5AHa8drA6mp6SiR+04iUnDTm8TxdA
+	XPaY3CCxw1oLeZ6Aczw==
+X-Google-Smtp-Source: AGHT+IEa9rVKVe/qm3F1BdozCJUZfiqzDLgpfCsXae50LbSS8/KfRVMyVFH3BkKinN0aJYn/T+9iaw==
+X-Received: by 2002:a05:600c:4f51:b0:43c:fffc:7886 with SMTP id 5b1f17b1804b1-442fefedff9mr16219475e9.8.1747388881641;
+        Fri, 16 May 2025 02:48:01 -0700 (PDT)
+Received: from localhost (p200300f65f00780800000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f00:7808::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442f39e8578sm105125315e9.29.2025.05.16.02.48.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 May 2025 02:48:01 -0700 (PDT)
+Date: Fri, 16 May 2025 11:47:58 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	linux-kernel@vger.kernel.org, Nicolas Pitre <npitre@baylibre.com>, 
+	Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [PATCH next 0/3] lib: Implement mul_u64_u64_div_u64_roundup()
+Message-ID: <5e7mp3nreaadppjhxhpffyff2d2ccwcjf2suonxe43eofngddu@qfufr2wiw7yn>
+References: <20250405204530.186242-1-david.laight.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] memcg: make memcg_rstat_updated nmi safe
-Content-Language: en-US
-To: Shakeel Butt <shakeel.butt@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Muchun Song <muchun.song@linux.dev>, Alexei Starovoitov <ast@kernel.org>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Harry Yoo <harry.yoo@oracle.com>, Yosry Ahmed <yosry.ahmed@linux.dev>,
- Peter Zijlstra <peterz@infradead.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, bpf@vger.kernel.org,
- linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
- Meta kernel team <kernel-team@meta.com>
-References: <20250516064912.1515065-1-shakeel.butt@linux.dev>
- <20250516064912.1515065-6-shakeel.butt@linux.dev>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250516064912.1515065-6-shakeel.butt@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 8F1741F809
-X-Spam-Flag: NO
-X-Spam-Score: -4.51
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim,suse.cz:mid,linux.dev:email]
-X-Rspamd-Action: no action
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="muvmm3ueazlwdz6b"
+Content-Disposition: inline
+In-Reply-To: <20250405204530.186242-1-david.laight.linux@gmail.com>
 
-On 5/16/25 08:49, Shakeel Butt wrote:
-> memcg: convert stats_updates to atomic_t
 
-You have two subjects, I guess delete the second one?
+--muvmm3ueazlwdz6b
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH next 0/3] lib: Implement mul_u64_u64_div_u64_roundup()
+MIME-Version: 1.0
 
-> Currently kernel maintains memory related stats updates per-cgroup to
-> optimize stats flushing. The stats_updates is defined as atomic64_t
-> which is not nmi-safe on some archs. Actually we don't really need 64bit
-> atomic as the max value stats_updates can get should be less than
-> nr_cpus * MEMCG_CHARGE_BATCH. A normal atomic_t should suffice.
-> 
-> Also the function cgroup_rstat_updated() is still not nmi-safe but there
-> is parallel effort to make it nmi-safe, so until then let's ignore it in
-> the nmi context.
-> 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+Hello David,
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+On Sat, Apr 05, 2025 at 09:45:27PM +0100, David Laight wrote:
+> The pwm-stm32.c code wants a 'rounding up' version of mul_u64_u64_div_u64=
+().
+> This can be done simply by adding 'divisor - 1' to the 128bit product.
+> Implement mul_u64_add_u64_div_u64(a, b, c, d) =3D (a * b + c)/d based on =
+the
+> existing code.
+> Define mul_u64_u64_div_u64(a, b, d) as mul_u64_add_u64_div_u64(a, b, 0, d=
+) and
+> mul_u64_u64_div_u64_roundup(a, b, d) as mul_u64_add_u64_div_u64(a, b, d-1=
+, d).
+>=20
+> Only x86-64 has an optimsed (asm) version of the function.
+> That is optimised to avoid the 'add c' when c is known to be zero.
+> In all other cases the extra code will be noise compared to the software
+> divide code.
+>=20
+> I've updated the test module to test mul_u64_u64_div_u64_roundup() and
+> also enhanced it to verify the C division code on x86-64.
+>=20
+> Note that the code generated by gcc (eg for 32bit x86) just for the multi=
+ply
+> is rather more horrid than one would expect (clang does better).
+> I dread to think how long the divide loop takes.
+> And I'm not at all sure the call in kernel/sched/cputime.c isn't in a
+> relatively common path (rather than just hardware initialisation).
+>=20
+> David Laight (3):
+>   lib: Add mul_u64_add_u64_div_u64() and mul_u64_u64_div_u64_roundup()
+>   lib: Add tests for mul_u64_u64_div_u64_roundup()
+>   lib: Update the muldiv64 tests to verify the C on x86-64
 
+I wonder what happend to this series. I'd like to make use of
+mul_u64_u64_div_u64_roundup() so I'd be interested to get this into the
+mainline.
+
+Best regards
+Uwe
+
+--muvmm3ueazlwdz6b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgnCcoACgkQj4D7WH0S
+/k6J/wgAt0QlUI211RhaxikR09Mc04wMY0JBljO9vugTluirsnJiZl1k7p3b4oVe
+gSS/l5pfQQDopT+5tQlXVIb1uy4SQP+1ToUcTNUTcaJAP48oRdF0C7ggvYyGmyM+
+qB0Fg21wqIQBtqHZK+DU2JV/CLpQBc8xbf51CcZ7ut9ayfpRuDKi/A8QjIJsLmRg
+aq/JEjS/chl2noJ8JYRjAC8L6FInzhigdIQfVaDe9HsC0RhYhtFHcFz948KnpEjN
+/BWDNfZOn91rArQ1fw2s/vEi6Lx4GXc/oR1kCHm7q8zW/TYd13RixybR7p1BZl9+
+OUXdD8xQ2WHfU62LGUiBA1YJajrycg==
+=pgnw
+-----END PGP SIGNATURE-----
+
+--muvmm3ueazlwdz6b--
