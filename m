@@ -1,306 +1,368 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC436229B0E
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 07:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C88C319CC3D;
+	Fri, 16 May 2025 07:43:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747381202; cv=none; b=BemVpSzQKHDkSZU6akq2klis2mq7vQ/7ooy4QkxIO1naXOEuG6+XeJ3i5Ny2jwS4Ok+GiPDLEPoJY16l1X7MQ74y9l/mIyZu3y6nTqU6BH5zg9rNUu727OcJ2FsVJoh8PTEPtVsRcTut06+xsQiHgLwcUNsfVnXf3AIymuIuvdQ=
+	t=1747381431; cv=none; b=HeNfT/peE1dyrXDj3hA3n7hSpG0jEeUdbTB50g/nfTKW4On9Dinu7OfD5z+TU7GUcWYwiqqvHEXDZwMevBSLxD6PMcrbLIBYGggQl7r+6AyJHGCZlvy7lwlpUe7GLBv1iPb4+pqSsxsdyisVXfhJ+HUDirMLdWGTIat++LEYsVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747381202; c=relaxed/simple;
-	bh=J+piJ5Bk7W8Rg19D1Zr8uL6Y6MbbwJla5D4YwVjlEYs=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=FmS33v6QkYngE5NjsgzHcLv19wYBxCmhR18LxrjSf3fNFtfPo46aaiIefn0wc1k1mmo7qE0nEtTvx6iWb54tv4po98wzIFSzS0LHf0liX41SBm4rBGSpjO/kiirqVxSIRpzpwy2KiofQYTKgyjD8cZ7C3nlfwjxmBZki4V6LPoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZzJqw4RhMz4f3jR5
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 15:39:24 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 74FB41A07C0
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 15:39:49 +0800 (CST)
-Received: from [10.174.178.129] (unknown [10.174.178.129])
-	by APP2 (Coremail) with SMTP id Syh0CgBncWTA6yZokLDfMQ--.26021S2;
-	Fri, 16 May 2025 15:39:45 +0800 (CST)
-Subject: Re: [linus:master] [mm, swap] b487a2da35:
- BUG:soft_lockup-CPU##stuck_for#s![stress-ng-swap:#]
-To: Kairui Song <ryncsn@gmail.com>, kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, Baoquan He <bhe@redhat.com>,
- Barry Song <v-songbaohua@oppo.com>, Chris Li <chrisl@kernel.org>,
- "Huang, Ying" <ying.huang@linux.alibaba.com>, Hugh Dickins
- <hughd@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Kalesh Singh <kaleshsingh@google.com>, Matthew Wilcow <willy@infradead.org>,
- Nhat Pham <nphamcs@gmail.com>, Yosry Ahmed <yosryahmed@google.com>,
- linux-mm@kvack.org
-References: <202505161438.9009cf47-lkp@intel.com>
- <CAMgjq7C4oX2nCPHzoWC1LXrxwybMDswYoovJ+hGhxwPXs5u_XA@mail.gmail.com>
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-Message-ID: <c4e7cb39-7c2e-9507-d7e4-dff4ac542be3@huaweicloud.com>
-Date: Fri, 16 May 2025 15:39:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1747381431; c=relaxed/simple;
+	bh=pUB8kWmfTQwWnJKNexiTqVZZyq1E6kxuFyWU6pyDkn4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U9qr2KHLmDlwX7bLXgCuYxMy8DfmU49RRmHmVphdDTEiwwa6Jmb8qTCWHcEOEBRbkUAMRKTyaDXSENHw/Y33Pf7dKRiyOTVuwDVefpCqoZW6CX6AaJDa6vTb3QMUKFP46N1EM5Yhepm+X442nysxcXbU8JQnU8kvHvj9iZVafok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-d3-6826ecadf50a
+Date: Fri, 16 May 2025 16:43:36 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Gavin Guo <gavinguo@igalia.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev,
+	osalvador@suse.de, akpm@linux-foundation.org,
+	mike.kravetz@oracle.com, kernel-dev@igalia.com,
+	stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+	Florent Revest <revest@google.com>, Gavin Shan <gshan@redhat.com>,
+	kernel_team@skhynix.com
+Subject: Re: [PATCH] mm/hugetlb: fix a deadlock with pagecache_folio and
+ hugetlb_fault_mutex_table
+Message-ID: <20250516074336.GA42829@system.software.com>
+References: <20250513093448.592150-1-gavinguo@igalia.com>
+ <20250514064729.GA17622@system.software.com>
+ <075ae729-1d4a-4f12-a2ba-b4f508e5d0a1@igalia.com>
+ <20250516060309.GA51921@system.software.com>
+ <b6e00e77-4a8c-4e05-ab79-266bf05fcc2d@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAMgjq7C4oX2nCPHzoWC1LXrxwybMDswYoovJ+hGhxwPXs5u_XA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgBncWTA6yZokLDfMQ--.26021S2
-X-Coremail-Antispam: 1UD129KBjvAXoWfGF4DAFW5Cr15Xr45tr15CFg_yoW8JrWkCo
-	W5tr1fCr4xGFW5ZFy8Aa1DXryrA34vvFnrJrW2kr45GFnFq3yUJrZayw4UZ34ayF4rta15
-	Zr1jqFWxJ3yDAwn7n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUYv7kC6x804xWl14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK
-	8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7
-	CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8C
-	rVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4
-	IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCYjI0SjxkI
-	62AI1cAE67vIY487MxkF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026x
-	CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
-	JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
-	1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
-	Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
-	UvcSsGvfC2KfnxnUUI43ZEXa7IU0s2-5UUUUU==
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b6e00e77-4a8c-4e05-ab79-266bf05fcc2d@igalia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpkkeLIzCtJLcpLzFFi42LhesuzSHfdG7UMgw/bOCzmrF/DZrFk7Rlm
+	i5e7tjFZPP3Ux2Jx7sV3JovLu+awWdxb85/V4uP+YItlOx+yWJyZVmTRPfMHq8WCjY8YHXg8
+	Fmwq9Zgwu5vNY9OnSeweJ2b8ZvFY2DCV2ePj01ssHu/3XWXz2Hy62uPzJrkAzigum5TUnMyy
+	1CJ9uwSujAunZ7EVNJVXzH7VyNTAuDW+i5GTQ0LAROL91sdsMPaxpvesIDaLgKrEo+99LCA2
+	m4C6xI0bP5lBbBEBZYkPUw4Cxbk4mAVOMElcnLeIHSQhLJAice3ANrAGXgELiTkN1xhBioQE
+	/jNKfGnfBZUQlDg58wmYzSygJXHj30umLkYOIFtaYvk/DpAwp4CdxMf2FUwgtijQsgPbjjOB
+	zJEQeM0msfLcVWaISyUlDq64wTKBUWAWkrGzkIydhTB2ASPzKkahzLyy3MTMHBO9jMq8zAq9
+	5PzcTYzAiFlW+yd6B+OnC8GHGAU4GJV4eB2uq2YIsSaWFVfmHmKU4GBWEuG9nqWcIcSbklhZ
+	lVqUH19UmpNafIhRmoNFSZzX6Ft5ipBAemJJanZqakFqEUyWiYNTqoFR8f8zo1872Z8cLpM2
+	7nj5L2rF3PIZVyJaH4s/EvM1knGT89CdtaGXN6Yuatfne/kdbiLvWP/N/SNd9JNtq4POSr2H
+	7/nm8zkeE9knITDjU2ek5+uP/19k6Po0SS3PTY9ySVz8OPkNQ1Fzp/ijt7JuLLtlJ7E3u62P
+	Ocb7s4hLZbWFfMS3d5xKLMUZiYZazEXFiQAeGEKBlAIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsXC5WfdrLv2jVqGwfef5hZz1q9hs1iy9gyz
+	xctd25gsnn7qY7E49+I7k8XhuSdZLS7vmsNmcW/Nf1aLj/uDLZbtfMhicWZakUX3zB+sFgs2
+	PmJ04PVYsKnUY8LsbjaPTZ8msXucmPGbxWNhw1Rmj49Pb7F4vN93lc1j8YsPTB6bT1d7fN4k
+	F8AVxWWTkpqTWZZapG+XwJVx4fQstoKm8orZrxqZGhi3xncxcnJICJhIHGt6zwpiswioSjz6
+	3scCYrMJqEvcuPGTGcQWEVCW+DDlIFCci4NZ4ASTxMV5i9hBEsICKRLXDmwDa+AVsJCY03CN
+	EaRISOA/o8SX9l1QCUGJkzOfgNnMAloSN/69ZOpi5ACypSWW/+MACXMK2El8bF/BBGKLAi07
+	sO040wRG3llIumch6Z6F0L2AkXkVo0hmXlluYmaOqV5xdkZlXmaFXnJ+7iZGYPgvq/0zcQfj
+	l8vuhxgFOBiVeHgdrqtmCLEmlhVX5h5ilOBgVhLhvZ6lnCHEm5JYWZValB9fVJqTWnyIUZqD
+	RUmc1ys8NUFIID2xJDU7NbUgtQgmy8TBKdXAyHZm1+HY4xJldqv+hxoJ/j64d2Js6ERN7fmy
+	rclLnb9LCFvEfutSOLvn5GH+1e/ZZpzsWn9zd4Zy196EBf4zr8/UW3PTfaVZ3u6OIinLSG9n
+	+aBV7zQK99YcitO/qvc8OlRO7ne2yLcTfzMEZhvsUtj0YPutKUJ72i9vandSTy5YYBGZonFO
+	W4mlOCPRUIu5qDgRAN2BIR97AgAA
+X-CFilter-Loop: Reflected
 
-
-
-on 5/16/2025 3:19 PM, Kairui Song wrote:
-> On Fri, May 16, 2025 at 2:37 PM kernel test robot <oliver.sang@intel.com> wrote:
->>
->>
->>
->> Hello,
->>
->> kernel test robot noticed "BUG:soft_lockup-CPU##stuck_for#s![stress-ng-swap:#]" on:
->>
->> commit: b487a2da3575b6cdfb6d6559311830c8fea70bb9 ("mm, swap: simplify folio swap allocation")
->> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
->>
->> [test failed on linus/master      fee3e843b309444f48157e2188efa6818bae85cf]
->> [test failed on linux-next/master 484803582c77061b470ac64a634f25f89715be3f]
->>
->> in testcase: stress-ng
->> version: stress-ng-x86_64-f76f86ffb-1_20250412
->> with following parameters:
->>
->>         nr_threads: 100%
->>         disk: 1HDD
->>         testtime: 60s
->>         fs: xfs
->>         test: swap
->>         cpufreq_governor: performance
->>
->>
->>
->> config: x86_64-rhel-9.4
->> compiler: gcc-12
->> test machine: 64 threads 2 sockets Intel(R) Xeon(R) Gold 6346 CPU @ 3.10GHz (Ice Lake) with 256G memory
->>
->> (please refer to attached dmesg/kmsg for entire log/backtrace)
->>
->>
->>
->> If you fix the issue in a separate patch/commit (i.e. not just a new version of
->> the same patch/commit), kindly add following tags
->> | Reported-by: kernel test robot <oliver.sang@intel.com>
->> | Closes: https://lore.kernel.org/oe-lkp/202505161438.9009cf47-lkp@intel.com
->>
->>
->> [   76.825919][   C17] watchdog: BUG: soft lockup - CPU#17 stuck for 26s! [stress-ng-swap:3017]
->> [   76.825921][   C17] Modules linked in: xfs ipmi_ssif intel_rapl_msr intel_rapl_common intel_uncore_frequency intel_uncore_frequency_common i10nm_edac skx_edac_common nfit libnvdimm x86_pkg_temp_thermal coretemp kvm_intel btrfs kvm sd_mod sg snd_pcm blake2b_generic ghash_clmulni_intel xor dax_hmem ast raid6_pq snd_timer rapl cxl_acpi drm_client_lib ahci intel_cstate cxl_port drm_shmem_helper snd libahci cxl_core intel_th_gth nvme acpi_power_meter isst_if_mbox_pci isst_if_mmio soundcore intel_th_pci mei_me intel_uncore ioatdma i2c_i801 megaraid_sas ipmi_si einj acpi_ipmi pcspkr libata drm_kms_helper nvme_core mei isst_if_common intel_th intel_pch_thermal i2c_smbus intel_vsec dca wmi ipmi_devintf ipmi_msghandler joydev binfmt_misc drm fuse dm_mod loop ip_tables
->> [   76.825949][   C17] CPU: 17 UID: 0 PID: 3017 Comm: stress-ng-swap Not tainted 6.14.0-rc6-00228-gb487a2da3575 #1
->> [   76.825951][   C17] Hardware name: Inspur NF5180M6/NF5180M6, BIOS 06.00.04 04/12/2022
->> [ 76.825952][ C17] RIP: 0010:shmem_unuse (include/linux/list.h:119 include/linux/list.h:215 include/linux/list.h:287 mm/shmem.c:1497)
->> [ 76.825959][ C17] Code: 30 48 8d 6b 30 4c 8d 60 d0 48 81 fd 20 e3 26 83 0f 84 8a 00 00 00 48 83 7b 18 00 75 89 48 8b 43 38 48 8b 53 30 48 39 28 75 6c <48> 39 6a 08 75 66 48 89 42 08 48 89 10 48 89 6b 30 48 89 6b 38 4c
->> All code
->> ========
->>    0:   30 48 8d                xor    %cl,-0x73(%rax)
->>    3:   6b 30 4c                imul   $0x4c,(%rax),%esi
->>    6:   8d 60 d0                lea    -0x30(%rax),%esp
->>    9:   48 81 fd 20 e3 26 83    cmp    $0xffffffff8326e320,%rbp
->>   10:   0f 84 8a 00 00 00       je     0xa0
->>   16:   48 83 7b 18 00          cmpq   $0x0,0x18(%rbx)
->>   1b:   75 89                   jne    0xffffffffffffffa6
->>   1d:   48 8b 43 38             mov    0x38(%rbx),%rax
->>   21:   48 8b 53 30             mov    0x30(%rbx),%rdx
->>   25:   48 39 28                cmp    %rbp,(%rax)
->>   28:   75 6c                   jne    0x96
->>   2a:*  48 39 6a 08             cmp    %rbp,0x8(%rdx)           <-- trapping instruction
->>   2e:   75 66                   jne    0x96
->>   30:   48 89 42 08             mov    %rax,0x8(%rdx)
->>   34:   48 89 10                mov    %rdx,(%rax)
->>   37:   48 89 6b 30             mov    %rbp,0x30(%rbx)
->>   3b:   48 89 6b 38             mov    %rbp,0x38(%rbx)
->>   3f:   4c                      rex.WR
->>
->> Code starting with the faulting instruction
->> ===========================================
->>    0:   48 39 6a 08             cmp    %rbp,0x8(%rdx)
->>    4:   75 66                   jne    0x6c
->>    6:   48 89 42 08             mov    %rax,0x8(%rdx)
->>    a:   48 89 10                mov    %rdx,(%rax)
->>    d:   48 89 6b 30             mov    %rbp,0x30(%rbx)
->>   11:   48 89 6b 38             mov    %rbp,0x38(%rbx)
->>   15:   4c                      rex.WR
->> [   76.825961][   C17] RSP: 0018:ffa00000232ffce0 EFLAGS: 00000246
->> [   76.825964][   C17] RAX: ff110020c063bde0 RBX: ff110020c063bdb0 RCX: 0000000000000006
->> [   76.825965][   C17] RDX: ff110020c063bde0 RSI: 0000000000000000 RDI: ff110020c063be2c
->> [   76.825966][   C17] RBP: ff110020c063bde0 R08: ffffffffffffffc0 R09: 0000000000000000
->> [   76.825967][   C17] R10: 000000000000ffff R11: ffa000000cafa000 R12: ff110020c063bdb0
->> [   76.825968][   C17] R13: ff110020c063be2c R14: 0000000000000014 R15: ff110020c063bdb0
->> [   76.825969][   C17] FS:  00007fcb691d2580(0000) GS:ff11003fbac80000(0000) knlGS:0000000000000000
->> [   76.825970][   C17] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [   76.825971][   C17] CR2: 00007fcb6490f000 CR3: 00000001897e4006 CR4: 0000000000773ef0
->> [   76.825972][   C17] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> [   76.825973][   C17] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->> [   76.825973][   C17] PKRU: 55555554
->> [   76.825974][   C17] Call Trace:
->> [   76.825975][   C17]  <IRQ>
->> [ 76.825976][ C17] ? watchdog_timer_fn (kernel/watchdog.c:770)
->> [ 76.825980][ C17] ? __pfx_watchdog_timer_fn (kernel/watchdog.c:685)
->> [ 76.825981][ C17] ? __hrtimer_run_queues (kernel/time/hrtimer.c:1801 kernel/time/hrtimer.c:1865)
->> [ 76.825985][ C17] ? hrtimer_interrupt (kernel/time/hrtimer.c:1930)
->> [ 76.825986][ C17] ? __sysvec_apic_timer_interrupt (arch/x86/kernel/apic/apic.c:1038 arch/x86/kernel/apic/apic.c:1055)
->> [ 76.825989][ C17] ? sysvec_apic_timer_interrupt (arch/x86/kernel/apic/apic.c:1049 arch/x86/kernel/apic/apic.c:1049)
->> [   76.825992][   C17]  </IRQ>
->> [   76.825992][   C17]  <TASK>
->> [ 76.825993][ C17] ? asm_sysvec_apic_timer_interrupt (arch/x86/include/asm/idtentry.h:702)
->> [ 76.825997][ C17] ? shmem_unuse (include/linux/list.h:119 include/linux/list.h:215 include/linux/list.h:287 mm/shmem.c:1497)
->> [ 76.825999][ C17] try_to_unuse (mm/swapfile.c:2295)
->> [ 76.826003][ C17] __do_sys_swapoff (mm/swapfile.c:2736)
->> [ 76.826005][ C17] do_syscall_64 (arch/x86/entry/common.c:52 arch/x86/entry/common.c:83)
->> [ 76.826008][ C17] ? __rseq_handle_notify_resume (kernel/rseq.c:420)
->> [ 76.826012][ C17] ? syscall_exit_to_user_mode (include/linux/rseq.h:38 include/linux/resume_user_mode.h:62 kernel/entry/common.c:114 include/linux/entry-common.h:329 kernel/entry/common.c:207 kernel/entry/common.c:218)
->> [ 76.826013][ C17] ? do_syscall_64 (arch/x86/entry/common.c:102)
->> [ 76.826015][ C17] ? __perf_sw_event (kernel/events/internal.h:229 kernel/events/core.c:10210 kernel/events/core.c:10235)
->> [ 76.826016][ C17] ? handle_mm_fault (include/linux/perf_event.h:1503 mm/memory.c:6106 mm/memory.c:6233)
->> [ 76.826020][ C17] ? do_user_addr_fault (arch/x86/mm/fault.c:1338)
->> [ 76.826022][ C17] ? clear_bhb_loop (arch/x86/entry/entry_64.S:1538)
->> [ 76.826024][ C17] ? clear_bhb_loop (arch/x86/entry/entry_64.S:1538)
->> [ 76.826026][ C17] ? clear_bhb_loop (arch/x86/entry/entry_64.S:1538)
->> [ 76.826028][ C17] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
->> [   76.826030][   C17] RIP: 0033:0x7fcb69976fc7
->> [ 76.826031][ C17] Code: 73 01 c3 48 8b 0d 39 2e 0d 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 a8 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 09 2e 0d 00 f7 d8 64 89 01 48
->> All code
->> ========
->>    0:   73 01                   jae    0x3
->>    2:   c3                      ret
->>    3:   48 8b 0d 39 2e 0d 00    mov    0xd2e39(%rip),%rcx        # 0xd2e43
->>    a:   f7 d8                   neg    %eax
->>    c:   64 89 01                mov    %eax,%fs:(%rcx)
->>    f:   48 83 c8 ff             or     $0xffffffffffffffff,%rax
->>   13:   c3                      ret
->>   14:   66 2e 0f 1f 84 00 00    cs nopw 0x0(%rax,%rax,1)
->>   1b:   00 00 00
->>   1e:   0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
->>   23:   b8 a8 00 00 00          mov    $0xa8,%eax
->>   28:   0f 05                   syscall
->>   2a:*  48 3d 01 f0 ff ff       cmp    $0xfffffffffffff001,%rax         <-- trapping instruction
->>   30:   73 01                   jae    0x33
->>   32:   c3                      ret
->>   33:   48 8b 0d 09 2e 0d 00    mov    0xd2e09(%rip),%rcx        # 0xd2e43
->>   3a:   f7 d8                   neg    %eax
->>   3c:   64 89 01                mov    %eax,%fs:(%rcx)
->>   3f:   48                      rex.W
->>
->> Code starting with the faulting instruction
->> ===========================================
->>    0:   48 3d 01 f0 ff ff       cmp    $0xfffffffffffff001,%rax
->>    6:   73 01                   jae    0x9
->>    8:   c3                      ret
->>    9:   48 8b 0d 09 2e 0d 00    mov    0xd2e09(%rip),%rcx        # 0xd2e19
->>   10:   f7 d8                   neg    %eax
->>   12:   64 89 01                mov    %eax,%fs:(%rcx)
->>   15:   48                      rex.W
->> [   76.826032][   C17] RSP: 002b:00007ffd6d92dbd8 EFLAGS: 00000206 ORIG_RAX: 00000000000000a8
->> [   76.826033][   C17] RAX: ffffffffffffffda RBX: 0000000000000019 RCX: 00007fcb69976fc7
->> [   76.826034][   C17] RDX: fffffffffffffccc RSI: 000000000003d000 RDI: 00007ffd6d92e690
->> [   76.826035][   C17] RBP: 00007fcb64910000 R08: 0000000000000007 R09: 0000559500e1f530
->> [   76.826036][   C17] R10: c7c9ff097bf742d3 R11: 0000000000000206 R12: 00007fcb691d2180
->> [   76.826036][   C17] R13: 00007ffd6d92e690 R14: 0000000000000001 R15: 0000000000000000
->> [   76.826037][   C17]  </TASK>
->> [   76.826038][   C17] Kernel panic - not syncing: softlockup: hung tasks
->> [   77.239533][   C17] CPU: 17 UID: 0 PID: 3017 Comm: stress-ng-swap Tainted: G             L     6.14.0-rc6-00228-gb487a2da3575 #1
->> [   77.251353][   C17] Tainted: [L]=SOFTLOCKUP
->> [   77.255672][   C17] Hardware name: Inspur NF5180M6/NF5180M6, BIOS 06.00.04 04/12/2022
->> [   77.263635][   C17] Call Trace:
->> [   77.266915][   C17]  <IRQ>
->> [ 77.269756][ C17] panic (kernel/panic.c:354)
->> [ 77.273643][ C17] watchdog_timer_fn (kernel/watchdog.c:735)
->> [ 77.278568][ C17] ? __pfx_watchdog_timer_fn (kernel/watchdog.c:685)
->> [ 77.284015][ C17] __hrtimer_run_queues (kernel/time/hrtimer.c:1801 kernel/time/hrtimer.c:1865)
->> [ 77.289201][ C17] hrtimer_interrupt (kernel/time/hrtimer.c:1930)
->> [ 77.294040][ C17] __sysvec_apic_timer_interrupt (arch/x86/kernel/apic/apic.c:1038 arch/x86/kernel/apic/apic.c:1055)
->> [ 77.299835][ C17] sysvec_apic_timer_interrupt (arch/x86/kernel/apic/apic.c:1049 arch/x86/kernel/apic/apic.c:1049)
->> [   77.305454][   C17]  </IRQ>
->> [   77.308382][   C17]  <TASK>
->> [ 77.311313][ C17] asm_sysvec_apic_timer_interrupt (arch/x86/include/asm/idtentry.h:702)
->> [ 77.317275][ C17] RIP: 0010:shmem_unuse (include/linux/list.h:119 include/linux/list.h:215 include/linux/list.h:287 mm/shmem.c:1497)
->> [ 77.322373][ C17] Code: 30 48 8d 6b 30 4c 8d 60 d0 48 81 fd 20 e3 26 83 0f 84 8a 00 00 00 48 83 7b 18 00 75 89 48 8b 43 38 48 8b 53 30 48 39 28 75 6c <48> 39 6a 08 75 66 48 89 42 08 48 89 10 48 89 6b 30 48 89 6b 38 4c
->> All code
->> ========
->>    0:   30 48 8d                xor    %cl,-0x73(%rax)
->>    3:   6b 30 4c                imul   $0x4c,(%rax),%esi
->>    6:   8d 60 d0                lea    -0x30(%rax),%esp
->>    9:   48 81 fd 20 e3 26 83    cmp    $0xffffffff8326e320,%rbp
->>   10:   0f 84 8a 00 00 00       je     0xa0
->>   16:   48 83 7b 18 00          cmpq   $0x0,0x18(%rbx)
->>   1b:   75 89                   jne    0xffffffffffffffa6
->>   1d:   48 8b 43 38             mov    0x38(%rbx),%rax
->>   21:   48 8b 53 30             mov    0x30(%rbx),%rdx
->>   25:   48 39 28                cmp    %rbp,(%rax)
->>   28:   75 6c                   jne    0x96
->>   2a:*  48 39 6a 08             cmp    %rbp,0x8(%rdx)           <-- trapping instruction
->>   2e:   75 66                   jne    0x96
->>   30:   48 89 42 08             mov    %rax,0x8(%rdx)
->>   34:   48 89 10                mov    %rdx,(%rax)
->>   37:   48 89 6b 30             mov    %rbp,0x30(%rbx)
->>   3b:   48 89 6b 38             mov    %rbp,0x38(%rbx)
->>   3f:   4c                      rex.WR
->>
->>
->> The kernel config and materials to reproduce are available at:
->> https://download.01.org/0day-ci/archive/20250516/202505161438.9009cf47-lkp@intel.com
->>
->>
->>
->> --
->> 0-DAY CI Kernel Test Service
->> https://github.com/intel/lkp-tests/wiki
->>
->>
+On Fri, May 16, 2025 at 03:32:35PM +0800, Gavin Guo wrote:
+> On 5/16/25 14:03, Byungchul Park wrote:
+> > On Wed, May 14, 2025 at 04:10:12PM +0800, Gavin Guo wrote:
+> > > Hi Byungchul,
+> > > 
+> > > On 5/14/25 14:47, Byungchul Park wrote:
+> > > > On Tue, May 13, 2025 at 05:34:48PM +0800, Gavin Guo wrote:
+> > > > > The patch fixes a deadlock which can be triggered by an internal
+> > > > > syzkaller [1] reproducer and captured by bpftrace script [2] and its log
+> > > > 
+> > > > Hi,
+> > > > 
+> > > > I'm trying to reproduce using the test program [1].  But not yet
+> > > > produced.  I see a lot of segfaults while running [1].  I guess
+> > > > something goes wrong.  Is there any prerequisite condition to reproduce
+> > > > it?  Lemme know if any.  Or can you try DEPT15 with your config and
+> > > > environment by the following steps:
+> > > > 
+> > > >      1. Apply the patchset on v6.15-rc6.
+> > > >         https://lkml.kernel.org/r/20250513100730.12664-1-byungchul@sk.com
+> > > >      2. Turn on CONFIG_DEPT.
+> > > >      3. Run test program reproducing the deadlock.
+> > > >      4. Check dmesg to see if dept reported the dependency.
+> > > > 
+> > > > 	Byungchul
+> > > 
+> > > I have enabled the patchset and successfully reproduced the bug. It
+> > > seems that there is no warning or error log related to the lock. Did I
+> > > miss anything? This is the console log:
+> > > https://drive.google.com/file/d/1dxWNiO71qE-H-e5NMPqj7W-aW5CkGSSF/view?usp=sharing
+> > 
+> > My bad.  I think I found the problem that dept didn't report it.  You
+> > might see the report with the following patch applied on the top, there
+> > might be a lot of false positives along with that might be annoying tho.
+> > 
+> > Some of my efforts to suppress false positives, suppressed the real one.
+> > 
+> > Do you mind if I ask you to run the test with the following patch
+> > applied?  It'd be appreciated if you do and share the result with me.
+> > 
+> > 	Byungchul
+> > 
+> > ---
+> > diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> > index f31cd68f2935..fd7559e663c5 100644
+> > --- a/include/linux/pagemap.h
+> > +++ b/include/linux/pagemap.h
+> > @@ -1138,6 +1138,7 @@ static inline bool trylock_page(struct page *page)
+> >   static inline void folio_lock(struct folio *folio)
+> >   {
+> >   	might_sleep();
+> > +	dept_page_wait_on_bit(&folio->page, PG_locked);
+> >   	if (!folio_trylock(folio))
+> >   		__folio_lock(folio);
+> >   }
+> > diff --git a/kernel/dependency/dept.c b/kernel/dependency/dept.c
+> > index b2fa96d984bc..4e96a6a72d02 100644
+> > --- a/kernel/dependency/dept.c
+> > +++ b/kernel/dependency/dept.c
+> > @@ -931,7 +931,6 @@ static void print_circle(struct dept_class *c)
+> >   	dept_outworld_exit();
+> >   	do {
+> > -		tc->reported = true;
+> >   		tc = fc;
+> >   		fc = fc->bfs_parent;
+> >   	} while (tc != c);
+> > diff --git a/kernel/dependency/dept_unit_test.c b/kernel/dependency/dept_unit_test.c
+> > index 88e846b9f876..496149f31fb3 100644
+> > --- a/kernel/dependency/dept_unit_test.c
+> > +++ b/kernel/dependency/dept_unit_test.c
+> > @@ -125,6 +125,8 @@ static int __init dept_ut_init(void)
+> >   {
+> >   	int i;
+> > +	return 0;
+> > +
+> >   	lockdep_off();
+> >   	dept_ut_results.ecxt_stack_valid_cnt = 0;
+> > --
 > 
-> It seems this is exactly the problem "mm/shmem: Fix potential dead
-> loop in shmem_unuse" trying to fix?
-> https://lore.kernel.org/linux-mm/20250515154758.956521-4-shikemeng@huaweicloud.com/
+> Please see the test result:
+> https://drive.google.com/file/d/1B20Gu3wLFbAeaXXb7aSQP5T6aeN9Mext/view?usp=sharing
 > 
-> Hi Kemeng,
-> 
-> Can you help take a look? And maybe add a "Closes:
-> https://lore.kernel.org/oe-lkp/202505161438.9009cf47-lkp@intel.com" in
-> your patch?
-> 
-> BTW I also just found there is another potential problem with shmem,
-> the "list_del_init(&info->swaplist);" in shmem_writepage could lead to
-> leaked shmem inode on swapoff, it's unrelated to this problem though,
-> I can fix it posting one patch for that after double checking.
-> 
-Hi Kairui,
-The "list_del_init(&info->swaplist);" issue is also fixed in my patchset, see
-https://lore.kernel.org/linux-mm/20250515154758.956521-5-shikemeng@huaweicloud.com/.
-This issue could also lead to a dead loop.
+> It seems that after the first round, the deadlock is captured:
 
-I have not taken a deep look, but I think the "list_del_init(&info->swaplist);" issue
-is more likely to blame as it happens to be introduced in
-b487a2da3575b6cdfb6d6559311830c8fea70bb9 ("mm,  swap: simplify folio swap allocation").
+Thank you for the testing again!
 
-With these information helps.
+Yeah, dept works well as I expected.  I shouldn't have suppressed dept
+reports too aggressively, but.. I (or we if any) need to deal with the
+existing false positives one by one by using dept annotations.
 
+Thanks again for confirming it.
+
+	Byungchul
+
+> ubuntu@localhost:~$ ./repro_20250402_0225_154f8fb0580000
+> executing program
+> [   80.425842][ T3416] ===================================================
+> [   80.426707][ T3416] DEPT: Circular dependency has been detected.
+> [   80.427497][ T3416] 6.15.0-rc6+ #31 Not tainted
+> [   80.428084][ T3416] ---------------------------------------------------
+> [   80.428964][ T3416] summary
+> [   80.429330][ T3416] ---------------------------------------------------
+> [   80.430078][ T3416] *** DEADLOCK ***
+> [   80.430078][ T3416]
+> [   80.430736][ T3416] context A
+> [   80.431076][ T3416]    [S] (unknown)(pg_locked_map:0)
+> [   80.431637][ T3416]    [W] lock(&hugetlb_fault_mutex_table[i]:0)
+> [   80.432312][ T3416]    [E] dept_page_clear_bit(pg_locked_map:0)
+> [   80.432977][ T3416]
+> [   80.433246][ T3416] context B
+> [   80.433595][ T3416]    [S] lock(&hugetlb_fault_mutex_table[i]:0)
+> [   80.434245][ T3416]    [W] dept_page_wait_on_bit(pg_locked_map:0)
+> [   80.434880][ T3416]    [E] unlock(&hugetlb_fault_mutex_table[i]:0)
+> [   80.435592][ T3416]
+> [   80.435852][ T3416] [S]: start of the event context
+> [   80.436369][ T3416] [W]: the wait blocked
+> [   80.436789][ T3416] [E]: the event not reachable
+> [   80.437275][ T3416] ---------------------------------------------------
+> [   80.437950][ T3416] context A's detail
+> [   80.438367][ T3416] ---------------------------------------------------
+> [   80.439006][ T3416] context A
+> [   80.439337][ T3416]    [S] (unknown)(pg_locked_map:0)
+> [   80.439883][ T3416]    [W] lock(&hugetlb_fault_mutex_table[i]:0)
+> [   80.440489][ T3416]    [E] dept_page_clear_bit(pg_locked_map:0)
+> [   80.441075][ T3416]
+> [   80.441318][ T3416] [S] (unknown)(pg_locked_map:0):
+> [   80.441816][ T3416] (N/A)
+> [   80.442077][ T3416]
+> [   80.442309][ T3416] [W] lock(&hugetlb_fault_mutex_table[i]:0):
+> [   80.442872][ T3416] [<ffffffff82144644>] hugetlb_wp+0xfa4/0x3490
+> [   80.443502][ T3416] stacktrace:
+> [   80.443810][ T3416]       hugetlb_wp+0xfa4/0x3490
+> [   80.444267][ T3416]       hugetlb_fault+0x1505/0x2c70
+> [   80.444776][ T3416]       handle_mm_fault+0x1845/0x1ab0
+> [   80.445275][ T3416]       do_user_addr_fault+0x637/0x1450
+> [   80.445779][ T3416]       exc_page_fault+0x67/0x110
+> [   80.446239][ T3416]       asm_exc_page_fault+0x26/0x30
+> [   80.446722][ T3416]       __put_user_4+0xd/0x20
+> [   80.447157][ T3416]       copy_process+0x1f64/0x3d80
+> [   80.447621][ T3416]       kernel_clone+0x216/0x940
+> [   80.448068][ T3416]       __x64_sys_clone+0x18d/0x1f0
+> [   80.448548][ T3416]       do_syscall_64+0x6f/0x120
+> [   80.448999][ T3416]       entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [   80.449556][ T3416]
+> [   80.449765][ T3416] [E] dept_page_clear_bit(pg_locked_map:0):
+> [   80.450272][ T3416] [<ffffffff8214263b>] hugetlb_fault+0x1ccb/0x2c70
+> [   80.450861][ T3416] stacktrace:
+> [   80.451148][ T3416]       hugetlb_fault+0x1ccb/0x2c70
+> [   80.451611][ T3416]       handle_mm_fault+0x1845/0x1ab0
+> [   80.452080][ T3416]       do_user_addr_fault+0x637/0x1450
+> [   80.452566][ T3416]       exc_page_fault+0x67/0x110
+> [   80.453014][ T3416]       asm_exc_page_fault+0x26/0x30
+> [   80.453497][ T3416]       __put_user_4+0xd/0x20
+> [   80.453923][ T3416]       copy_process+0x1f64/0x3d80
+> [   80.454379][ T3416]       kernel_clone+0x216/0x940
+> [   80.454817][ T3416]       __x64_sys_clone+0x18d/0x1f0
+> [   80.455277][ T3416]       do_syscall_64+0x6f/0x120
+> [   80.455722][ T3416]       entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [   80.456253][ T3416] ---------------------------------------------------
+> [   80.456842][ T3416] context B's detail
+> [   80.457198][ T3416] ---------------------------------------------------
+> [   80.457842][ T3416] context B
+> [   80.458122][ T3416]    [S] lock(&hugetlb_fault_mutex_table[i]:0)
+> [   80.458661][ T3416]    [W] dept_page_wait_on_bit(pg_locked_map:0)
+> [   80.459187][ T3416]    [E] unlock(&hugetlb_fault_mutex_table[i]:0)
+> [   80.459763][ T3416]
+> [   80.459988][ T3416] [S] lock(&hugetlb_fault_mutex_table[i]:0):
+> [   80.460509][ T3416] [<ffffffff82140d36>] hugetlb_fault+0x3c6/0x2c70
+> [   80.461074][ T3416] stacktrace:
+> [   80.461374][ T3416]       hugetlb_fault+0x3c6/0x2c70
+> [   80.461812][ T3416]       handle_mm_fault+0x1845/0x1ab0
+> [   80.462281][ T3416]       do_user_addr_fault+0x637/0x1450
+> [   80.462775][ T3416]       exc_page_fault+0x67/0x110
+> [   80.463220][ T3416]       asm_exc_page_fault+0x26/0x30
+> [   80.463694][ T3416]       __put_user_4+0xd/0x20
+> [   80.464129][ T3416]       copy_process+0x1f64/0x3d80
+> [   80.464577][ T3416]       kernel_clone+0x216/0x940
+> [   80.464994][ T3416]       __x64_sys_clone+0x18d/0x1f0
+> [   80.465466][ T3416]       do_syscall_64+0x6f/0x120
+> [   80.465909][ T3416]       entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [   80.466457][ T3416]
+> [   80.466660][ T3416] [W] dept_page_wait_on_bit(pg_locked_map:0):
+> [   80.467177][ T3416] [<ffffffff82141187>] hugetlb_fault+0x817/0x2c70
+> [   80.467740][ T3416] stacktrace:
+> [   80.468032][ T3416]       hugetlb_fault+0x817/0x2c70
+> [   80.468479][ T3416]       handle_mm_fault+0x1845/0x1ab0
+> [   80.468947][ T3416]       do_user_addr_fault+0x637/0x1450
+> [   80.469428][ T3416]       exc_page_fault+0x67/0x110
+> [   80.469865][ T3416]       asm_exc_page_fault+0x26/0x30
+> [   80.470332][ T3416]       __put_user_4+0xd/0x20
+> [   80.470742][ T3416]       copy_process+0x1f64/0x3d80
+> [   80.471186][ T3416]       kernel_clone+0x216/0x940
+> [   80.471616][ T3416]       __x64_sys_clone+0x18d/0x1f0
+> [   80.472060][ T3416]       do_syscall_64+0x6f/0x120
+> [   80.472492][ T3416]       entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [   80.473040][ T3416]
+> [   80.473271][ T3416] [E] unlock(&hugetlb_fault_mutex_table[i]:0):
+> [   80.473863][ T3416] (N/A)
+> [   80.474124][ T3416] ---------------------------------------------------
+> [   80.474738][ T3416] information that might be helpful
+> [   80.475210][ T3416] ---------------------------------------------------
+> [   80.475820][ T3416] CPU: 1 UID: 1000 PID: 3416 Comm: repro_20250402_ Not
+> tainted 6.15.0-rc6+ #31 NONE
+> [   80.475831][ T3416] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+> BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> [   80.475837][ T3416] Call Trace:
+> [   80.475841][ T3416]  <TASK>
+> [   80.475845][ T3416]  dump_stack_lvl+0x1ad/0x280
+> [   80.475858][ T3416]  ? __pfx_dump_stack_lvl+0x10/0x10
+> [   80.475867][ T3416]  ? __pfx__printk+0x10/0x10
+> [   80.475883][ T3416]  cb_check_dl+0x24a8/0x2530
+> [   80.475897][ T3416]  ? bfs_extend_dep+0x271/0x290
+> [   80.475909][ T3416]  bfs+0x464/0x5e0
+> [   80.475921][ T3416]  ? __pfx_bfs+0x10/0x10
+> [   80.475931][ T3416]  ? add_dep+0x387/0x710
+> [   80.475943][ T3416]  add_dep+0x3d0/0x710
+> [   80.475953][ T3416]  ? __pfx_from_pool+0x10/0x10
+> [   80.475963][ T3416]  ? __pfx_bfs_init_check_dl+0x10/0x10
+> [   80.475972][ T3416]  ? __pfx_bfs_extend_dep+0x10/0x10
+> [   80.475981][ T3416]  ? __pfx_bfs_dequeue_dep+0x10/0x10
+> [   80.475990][ T3416]  ? __pfx_cb_check_dl+0x10/0x10
+> [   80.475999][ T3416]  ? __pfx_add_dep+0x10/0x10
+> [   80.476011][ T3416]  ? put_ecxt+0xda/0x4b0
+> [   80.476024][ T3416]  __dept_event+0xee8/0x1590
+> [   80.476038][ T3416]  dept_event+0x166/0x240
+> [   80.476047][ T3416]  ? hugetlb_fault+0x1ccb/0x2c70
+> [   80.476057][ T3416]  folio_unlock+0xb8/0x190
+> [   80.476071][ T3416]  hugetlb_fault+0x1ccb/0x2c70
+> [   80.476085][ T3416]  ? __pfx_hugetlb_fault+0x10/0x10
+> [   80.476100][ T3416]  ? mt_find+0x15a/0x5f0
+> [   80.476110][ T3416]  handle_mm_fault+0x1845/0x1ab0
+> [   80.476125][ T3416]  ? handle_mm_fault+0xdb/0x1ab0
+> [   80.476142][ T3416]  ? __pfx_handle_mm_fault+0x10/0x10
+> [   80.476156][ T3416]  ? find_vma+0xec/0x160
+> [   80.476164][ T3416]  ? __pfx_find_vma+0x10/0x10
+> [   80.476172][ T3416]  ? dept_on+0x1c/0x30
+> [   80.476179][ T3416]  ? dept_exit+0x1c5/0x2c0
+> [   80.476186][ T3416]  ? lockdep_hardirqs_on_prepare+0x21/0x280
+> [   80.476197][ T3416]  ? lock_mm_and_find_vma+0xa1/0x300
+> [   80.476211][ T3416]  do_user_addr_fault+0x637/0x1450
+> [   80.476219][ T3416]  ? mntput_no_expire+0xc0/0x870
+> [   80.476235][ T3416]  ? __pfx_do_user_addr_fault+0x10/0x10
+> [   80.476246][ T3416]  ? trace_irq_disable+0x60/0x180
+> [   80.476258][ T3416]  exc_page_fault+0x67/0x110
+> [   80.476272][ T3416]  asm_exc_page_fault+0x26/0x30
+> [   80.476280][ T3416] RIP: 0010:__put_user_4+0xd/0x20
+> [   80.476293][ T3416] Code: 66 89 01 31 c9 0f 1f 00 c3 cc cc cc cc 90 90 90
+> 90 90 90 90 90 90 90 90 90 90 90 90 90 48 89 cb 48 c1 fb 3f 48 09 d9 0f 1f
+> 00 <89> 01 31 c9 0
+> [   80.476312][ T3416] RSP: 0018:ffffc90004dffa38 EFLAGS: 00010206
+> [   80.476322][ T3416] RAX: 000000000000000c RBX: 0000000000000000 RCX:
+> 0000200000000200
+> [   80.476329][ T3416] RDX: 0000000000000000 RSI: ffff888016abe300 RDI:
+> ffff888017878c20
+> [   80.476335][ T3416] RBP: ffffc90004dffc10 R08: 0000000000000000 R09:
+> 0000000000000000
+> [   80.476340][ T3416] R10: 0000000000000000 R11: ffffffff82034b65 R12:
+> ffff888017c0a1e8
+> [   80.476346][ T3416] R13: ffff88800d6a8200 R14: 0000000000000000 R15:
+> ffff888017c08a38
+> [   80.476354][ T3416]  ? __might_fault+0xb5/0x130
+> [   80.476367][ T3416]  copy_process+0x1f64/0x3d80
+> [   80.476375][ T3416]  ? lockdep_hardirqs_on_prepare+0x21/0x280
+> [   80.476388][ T3416]  ? copy_process+0x996/0x3d80
+> [   80.476399][ T3416]  ? __pfx_copy_process+0x10/0x10
+> [   80.476406][ T3416]  ? from_pool+0x1e1/0x750
+> [   80.476416][ T3416]  ? handle_mm_fault+0x122e/0x1ab0
+> [   80.476432][ T3416]  kernel_clone+0x216/0x940
+> [   80.476440][ T3416]  ? __pfx_llist_del_first+0x10/0x10
+> [   80.476448][ T3416]  ? check_new_class+0x28a/0xe90
+> [   80.476458][ T3416]  ? __pfx_kernel_clone+0x10/0x10
+> [   80.476468][ T3416]  ? from_pool+0x1e1/0x750
+> [   80.476478][ T3416]  ? __pfx_from_pool+0x10/0x10
+> [   80.476487][ T3416]  ? __pfx_from_pool+0x10/0x10
+> [   80.476502][ T3416]  __x64_sys_clone+0x18d/0x1f0
+> [   80.476512][ T3416]  ? __pfx___x64_sys_clone+0x10/0x10
+> [   80.476520][ T3416]  ? llist_add_batch+0x111/0x1f0
+> [   80.476532][ T3416]  ? dept_task+0x5/0x20
+> [   80.476539][ T3416]  ? dept_on+0x1c/0x30
+> [   80.476545][ T3416]  ? dept_exit+0x1c5/0x2c0
+> [   80.476553][ T3416]  ? lockdep_hardirqs_on_prepare+0x21/0x280
+> [   80.476565][ T3416]  do_syscall_64+0x6f/0x120
+> [   80.476573][ T3416]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [   80.476580][ T3416] RIP: 0033:0x41b26d
+> [   80.476588][ T3416] Code: b3 66 2e 0f 1f 84 00 00 00 00 00 66 90 f3 0f 1e
+> fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f
+> 05 <48> 3d 01 f0 8
+> [   80.476595][ T3416] RSP: 002b:00007ffa1ad2d198 EFLAGS: 00000206 ORIG_RAX:
+> 0000000000000038
+> [   80.476604][ T3416] RAX: ffffffffffffffda RBX: 00007ffa1ad2dcdc RCX:
+> 000000000041b26d
+> [   80.476610][ T3416] RDX: 0000200000000200 RSI: 0000000000000000 RDI:
+> 0000000000001200
+> [   80.476616][ T3416] RBP: 00007ffa1ad2d1e0 R08: 0000000000000000 R09:
+> 0000000000000000
+> [   80.476621][ T3416] R10: 0000000000000000 R11: 0000000000000206 R12:
+> 00007ffa1ad2d6c0
+> [   80.476626][ T3416] R13: ffffffffffffffb8 R14: 0000000000000002 R15:
+> 00007ffd95d76940
+> [   80.476638][ T3416]  </TASK>
