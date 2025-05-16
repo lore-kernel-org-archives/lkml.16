@@ -1,137 +1,94 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99677233D88
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 604BC21B9E7
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:58:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747389400; cv=none; b=Fm8/6BXuB2DxgRmLUAJnZfALeLgMNzF+E4LiOt7AF1S0l37A4EUcDpkrf1HN6IN7iKA0vK1Wrsfc+raFL36ZXs5dH1bKs8eO9kg3l4oz9sHeBoD+sHisuJ2qo54KX2Qf2CzIFPEGlqSGNGsi7I594x/3adYTcn8pWVQvsJmp0HE=
+	t=1747389538; cv=none; b=RwB4CWf/HY/uGkI8QN8j23VisAO5lzcsDWRb67fy8geGLjYZEG2wU+br0RgrD26TSrodnRMMLpvJbrU6QvnMx7FqzBwdc7azEJ6ap+QpTokS7JM+SdcEJ/jOWpc3wZnQujnJ6kqImlQMAub/eVJz4S7v/4d/gfNf4GZQlbWFdpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747389400; c=relaxed/simple;
-	bh=4X67REA9r+ghn/5V4fyB008xDYh4aHfUgGG1zyzi+Bo=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=sZf8tMd6zp7yz8NXcJchkBy76lL+mQ1qIAUUv+LGk0ZDlf+NW97rVU1lpUQr3JKmD532ax450ZICIIwAM92il5S6aKJIPAU/3K+lsfGO2LJNSyH2FtXhFbAk1lO7w5hJ3spdyzrH9fKxCVtx76GEYwUUic3Kv0zympVy7NV/58o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=mYujRaZn; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1747389538; c=relaxed/simple;
+	bh=QVfxvrCQXv1stWTNGX4NXG+vcy75UugbfRcy9FAUof4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rjekoEPOdLHi51nxORweFQJCHS5BL9K1TFyxTt52B7Jr2+z3xlw4HZEArfBppo4paSBaMQkPoPOCE5/v9JP0KqXAr97Yj9VIpExZNW9eqT8Z2OCO/3/Na2fxlH8XKqTKQHKT8dXrdWdz63hadZkABexyaPHs6KCJlIpJ398OYAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=KyESI/2J; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="mYujRaZn"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad1b94382b8so335189966b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 02:56:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1747389397; x=1747994197; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ti4ZqP+Hl0JDcB2DFZd59wj7uwh2SBcukM1irTJ/QT8=;
-        b=mYujRaZnfFY5Ob8SR8TqUhIyw3i8/O6QwYISyT9+6QY2+EmU/Sg3Se2zy04gz+D69z
-         SvFUHeNp/FPYVFFYSpjp9wptFA3SM5FoALJueDlY7vS7GvJP1mv+DRxy7ecMLPJyVjtw
-         ZUGupVNzoCo1nZ6lIT3NpX6uXGR/yZRbJ3g07W4IEZDbTUuH1r77uobB00e4zWgfBDrO
-         b9D4RVvVXQfLN7LkB2GCBE/HQXsGKpzHV/1R6jzNFJCNqTK5swl1sf2a0DaHCvuUpY7z
-         NeKk+WD8c1hJlha+4HTc20dMNBB86S0c7/4zUK0xa3UsRw1lI26xJCqQtIjTxpJ2uxAB
-         SIOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747389397; x=1747994197;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ti4ZqP+Hl0JDcB2DFZd59wj7uwh2SBcukM1irTJ/QT8=;
-        b=Gacwob4+aU4LFSGASBth+ojyBQxHqiJQn2NUrxpqmVnLSMvPPHO1eoGoq8bRLIbkqT
-         i9NJp9zqi+4/CWByhObQaUp2SynhZDKNkwZFS2zSbr6H3R7LHuWBvP3ypylZw1D/G+UJ
-         yKVM7ScgyzqsgQ5SjZCOmZqAmgttVvuTwpRk8dh5HOq9SMEr9Wd0scVSHqMfOKydzyRH
-         NwRJm5gpNY3rJMiTxjsxPp8Kfnq+vfw9hFXk7gcIDLISpsbsc3AQYLMGi/iUAJzOSl7Y
-         op+L8BsDUNAL4XVjHnyM0OI0OFI0rkOu5QBqDB3VZY8XbQY1/PXEmqpDO+v5cT6K4yAf
-         FL8g==
-X-Forwarded-Encrypted: i=1; AJvYcCWcxFiwiVmtg6re7Va8jOTKpZ9X6kyeeJ35A12JP8JKOCtpH9OuxHVJwl8qM8r7eXiZQ2x/rOUyUhGC4ek=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymSidxHw758YQYQ2E3Sl8OObZ1VMWydHx4/9iYWIxOTZZMat/b
-	FbLtZG6FLpWuAdfdvkpboPFkWPrOWfW5UD6Cxgj1saGdaRgydypdDL05WdiRvpIxW3Q=
-X-Gm-Gg: ASbGnctInCgDbZchBGM7kDyTEpBYaVnGOp8x5BIahWKt4Ru4LU0L51JEAGk1btVz91Q
-	360X17Hrv3SAl40tGEBl1xSrpbAY7AmUbw5W9I2eWgApK6GQkNhRMfL6UayzHviJFSwLeWUsPez
-	7BxEcVYSHv5JomtOD9OVoZBS920uLay6fyV/kwdyucGJhZ8rOeY46PD0PfUzf4H0Lh774QgbdXC
-	Sdm6PjFCltt1rPhRjoyjmKBKIchQMg9fRbgJQaq9MrzksiKBL5fltjkrINH1vYri9dv3GTmNNG4
-	KeYBkVPZNw9DY356YabYax6PjPkWv833wVfvz5WgYKc6LuptomSwJHai8VVG6KnSXneG
-X-Google-Smtp-Source: AGHT+IFh2zAJl1Uj5Dr32GIK/RqZ9T0owi1RiR8KLA1E0llsHrNCCqszm3h/QZEbyvFvfkdXsmjKfg==
-X-Received: by 2002:a17:907:9624:b0:ad2:4da6:f573 with SMTP id a640c23a62f3a-ad52d5ba810mr300923366b.41.1747389396719;
-        Fri, 16 May 2025 02:56:36 -0700 (PDT)
-Received: from ?IPv6:::1? ([2a00:11b1:101e:447e:2959:9e3d:ac05:c19d])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d490789sm127955866b.130.2025.05.16.02.56.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 May 2025 02:56:36 -0700 (PDT)
-Date: Fri, 16 May 2025 11:56:31 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: kvm-riscv@lists.infradead.org, Atish Patra <atishp@rivosinc.com>,
- Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>
-CC: kvm@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] RISC-V: KVM: Remove scounteren initialization
-In-Reply-To: <20250515-fix_scounteren_vs-v3-1-729dc088943e@rivosinc.com>
-References: <20250515-fix_scounteren_vs-v3-1-729dc088943e@rivosinc.com>
-Message-ID: <C74B29B0-FB1F-4E67-AFDF-FAD7C86FB329@ventanamicro.com>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="KyESI/2J"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=QVfxvrCQXv1stWTNGX4NXG+vcy75UugbfRcy9FAUof4=; b=KyESI/2J9ezWNblBEXm8WCY5Vx
+	N0U6K8cowUXXXmvRS21Yz3CFNQF01H2tUlXEnlpnSymSWijOPM4wuA18OBysE8g3XQMj4yFYRJTBs
+	VJ6WcqCkCQK2BXggU71M67bIiMNvzg//sKECW9IUOuIFZUkbzkZWfB3XyM4iG4H+RPlX0Yw12AXFi
+	VAZkVGylkbqpe+685ZOX7YOaL+MSIrvGMk95uxNPsNxtRG18D3YZ+a5Z/HFWL1yQI+BDxJmln1pl/
+	Mtk/ViNcfB4w0c47ve5aE54sxZ+w9iBxM0roTDImQ4HzIYBlmWBVfBcx1S7RreM67pjt4/poXXeBG
+	ZqDNxL9w==;
+Received: from i53875a50.versanet.de ([83.135.90.80] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uFrpU-00016q-Dg; Fri, 16 May 2025 11:58:12 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: long.yunjian@zte.com.cn, hjc@rock-chips.com,
+ Krzysztof Kozlowski <krzk@kernel.org>
+Cc: andy.yan@rock-chips.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+ dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ fang.yumeng@zte.com.cn, mou.yi@zte.com.cn, xu.lifeng1@zte.com.cn,
+ ouyang.maochun@zte.com.cn
+Subject: Re: [PATCH] drm/rockchip: Use dev_err_probe() to simplify code
+Date: Fri, 16 May 2025 11:58:11 +0200
+Message-ID: <2022996.jZfb76A358@diego>
+In-Reply-To: <94e0951b-46e1-439b-9dbc-c2009a78b04b@kernel.org>
+References:
+ <20250515203554564-j1jBXUXR6bdiN6zARicC@zte.com.cn>
+ <94e0951b-46e1-439b-9dbc-c2009a78b04b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On May 16, 2025 1:11:18 AM GMT+02:00, Atish Patra <atishp@rivosinc=2Ecom> w=
-rote:
->Scounteren CSR controls the direct access the hpmcounters and cycle/
->instret/time from the userspace=2E It's the supervisor's responsibility
->to set it up correctly for it's user space=2E They hypervisor doesn't
->need to decide the policy on behalf of the supervisor=2E
->
->Signed-off-by: Atish Patra <atishp@rivosinc=2Ecom>
->---
->Changes in v3:
->- Removed the redundant declaration=20
->- Link to v2: https://lore=2Ekernel=2Eorg/r/20250515-fix_scounteren_vs-v2=
--1-1fd8dc0693e8@rivosinc=2Ecom
->
->Changes in v2:
->- Remove the scounteren initialization instead of just setting the TM bit=
-=2E=20
->- Link to v1: https://lore=2Ekernel=2Eorg/r/20250513-fix_scounteren_vs-v1=
--1-c1f52af93c79@rivosinc=2Ecom
->---
-> arch/riscv/kvm/vcpu=2Ec | 4 ----
-> 1 file changed, 4 deletions(-)
->
->diff --git a/arch/riscv/kvm/vcpu=2Ec b/arch/riscv/kvm/vcpu=2Ec
->index 60d684c76c58=2E=2E9bfaae9a11ea 100644
->--- a/arch/riscv/kvm/vcpu=2Ec
->+++ b/arch/riscv/kvm/vcpu=2Ec
->@@ -111,7 +111,6 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
-> {
-> 	int rc;
-> 	struct kvm_cpu_context *cntx;
->-	struct kvm_vcpu_csr *reset_csr =3D &vcpu->arch=2Eguest_reset_csr;
+Am Donnerstag, 15. Mai 2025, 17:54:20 Mitteleurop=C3=A4ische Sommerzeit sch=
+rieb Krzysztof Kozlowski:
+> On 15/05/2025 14:35, long.yunjian@zte.com.cn wrote:
+> > From: Yumeng Fang <fang.yumeng@zte.com.cn>
+> >=20
+> > In the probe path, dev_err() can be replaced with dev_err_probe()
 >=20
-> 	spin_lock_init(&vcpu->arch=2Emp_state_lock);
->=20
->@@ -146,9 +145,6 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
-> 	if (kvm_riscv_vcpu_alloc_vector_context(vcpu, cntx))
-> 		return -ENOMEM;
->=20
->-	/* By default, make CY, TM, and IR counters accessible in VU mode */
->-	reset_csr->scounteren =3D 0x7;
->-
-> 	/* Setup VCPU timer */
-> 	kvm_riscv_vcpu_timer_init(vcpu);
->=20
->
->---
->base-commit: 01f95500a162fca88cefab9ed64ceded5afabc12
->change-id: 20250513-fix_scounteren_vs-fdd86255c7b7
->--
->Regards,
->Atish patra
->
->
+> That's not probe path. I am not sure if you really understand this code.
 
-Signed-off-by: Andrew Jones <ajones@ventanamicro=2Ecom>
+I think that is somewhat debateable.
+
+dw_hdmi_rockchip_bind() is part of the rockchip-drm component device,
+so part of its probe-path. Also I think just the presence of EPROBE_DEFER
+which causes the device to re-try probing later is a nice indicator that the
+code in question is _a_ probe path. (and usage of EPROBE_DEFER is an
+established pattern to make that component device re-try probing later)
+
+And the parse_dt function itself is part of that path too.
+
+
+> > which will check if error code is -EPROBE_DEFER and prints the
+> > error name. It also sets the defer probe reason which can be
+> > checked later through debugfs.
+> >=20
+> > Signed-off-by: Yumeng Fang <fang.yumeng@zte.com.cn>
+>=20
+> Incomplete chain.
+
+Yep, the patch needs a 2nd Signed-off-by line from
+long.yunjian@zte.com.cn please.
+
+
+Heiko
+
+
