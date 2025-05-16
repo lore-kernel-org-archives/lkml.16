@@ -1,102 +1,114 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D06A13FD86;
-	Fri, 16 May 2025 14:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069CA2B9A7;
+	Fri, 16 May 2025 14:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747404899; cv=none; b=ZwUEYL/6Rm4kIQ94hS2IspetPBPKay4eHBYrQ+A9hOxkYTNDTxrMHy1NfANiNLTVbbw1oVINfwYQrXwxXUt6L9JNE6bA5fqMIrrt9Mvt6UmZ1pwQU6z+BazYo9MaJqRphLs4l3kkovzsrJ4I/7+eaiIJnF7kSgj7pQc5fdxmVkU=
+	t=1747404956; cv=none; b=D5FbGsQGqUbt1FsQy4wY3tNdIiDfgYN3Xl9X6JIQY15RKa1v4lSWwE5T5hKUbTkniKsmYJBhftn3YHEALDMKA4VzRLhxaEHXWiuXAnCZ4F5rX0wUl4u01rept/GvJbREY6YbsV2M7srt5Xa/1gUR/ApHC9ltfrkRIo1kkHzOQ5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747404899; c=relaxed/simple;
-	bh=xoNEu7nlqt0Uzf5QdINb8sbgrCfpe8hWPCqdZRSYtDM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=srlZdRpCHg/TstENFAqpcF31CWVEaSNCWMZcXxYehLwYEuqORHS86btzQLIzicJqeaIazAbPPT0QO/grEz+R3wt8shOHk3X567fJqqFukaAYrjF6GsCP0J0OOJTAgwfKoorGym+AYpwMykeFe/qTFjm2wHpgYDpDWLLDIDAaqIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=LfOh5ag5; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1747404956; c=relaxed/simple;
+	bh=JPP6PZVPCyPpBi7NX7odUW7qXIUoGkCGhRHKl7+rxGk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qNWiACblEO8OV+EoVJsm2VTLYafGOb59ZqNtE6NueZacRLoUrzHMmURsg0lmlFd2EsKQ3M9EG6AkB4osyJqHuD78jYBG/NXNrPdIz/UR4N4FRR3Iy11qOQVxLoQZkacy+kPBG73Pf4DKF8pDsAf9MU+nImq6VndGOG9/sX4zNco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dw1gTVs/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="LfOh5ag5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1747404895;
-	bh=xoNEu7nlqt0Uzf5QdINb8sbgrCfpe8hWPCqdZRSYtDM=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=LfOh5ag5Xzifqx/OH6UpSuEIMv+WLdumB0zh3Y8sZcRVu9KUkf2UsHDl56iTm3jrZ
-	 xplKT+L8HgbIOmX9NE3nzuuMtsrBpsNJ/SphLX3CvFk6B21YkB0dVDossIQwNGt7oP
-	 NEjYSV4NnnzO58Wv7TsBORQTJRZc9EQhMFDvjbtjJ1Jpn8u+JCy/rHAcdck88u4UP4
-	 Qi5QzkLa8QiX9GhugT3h+n6jyGGR06EMumjbOmVIZJKOk49M9HD+aK0vCPyL4JR0Rk
-	 QxLYu8hEPz/Wgo2cntM/mC2nPIGa8i0YeM2ZBhwxrhaIiXzecmNzlAenL7vF19cHn3
-	 bKXnMLbPOo6Yg==
-Received: from 2a01cb0892f2d600c8f85cf092d4af51.ipv6.abo.wanadoo.fr (2a01cb0892f2D600C8F85cF092d4af51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: jmassot)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id C921317E07E4;
-	Fri, 16 May 2025 16:14:54 +0200 (CEST)
-Message-ID: <dcc085b131ec0b8769630bee6ee89ca0b6eacc73.camel@collabora.com>
-Subject: Re: [PATCH 1/3] dt-bindings: clock: mediatek: Add #reset-cells
- property for MT8188
-From: Julien Massot <julien.massot@collabora.com>
-To: Conor Dooley <conor@kernel.org>, AngeloGioacchino Del Regno
-	 <angelogioacchino.delregno@collabora.com>
-Cc: kernel@collabora.com, Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, Garmin Chang	
- <garmin.chang@mediatek.com>, Friday Yang <friday.yang@mediatek.com>, Conor
- Dooley <conor.dooley@microchip.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, 	linux-mediatek@lists.infradead.org
-Date: Fri, 16 May 2025 16:14:54 +0200
-In-Reply-To: <20250515-deploy-wiring-5829acc3d82e@spud>
-References: <20250515-dtb-check-mt8188-v1-0-cda383cbeb4f@collabora.com>
-	 <20250515-dtb-check-mt8188-v1-1-cda383cbeb4f@collabora.com>
-	 <20250515-playpen-dislodge-80245fb8b7a9@spud>
-	 <cbd170a3-cbfe-4b4f-a059-efe33fed0e5d@collabora.com>
-	 <20250515-deploy-wiring-5829acc3d82e@spud>
-Organization: Collabora Ltd.
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dw1gTVs/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDFE4C4CEED;
+	Fri, 16 May 2025 14:15:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747404955;
+	bh=JPP6PZVPCyPpBi7NX7odUW7qXIUoGkCGhRHKl7+rxGk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dw1gTVs/jf57SCOW6Wymkm1DyWIU7m/KHmweRe48yAnCuwGNkrr+xIx9LK8fX1j0V
+	 7yFdIZnwEJ7TLBP8M+buGhUc+/6YNsrYA8yZnxcxY38ddJQSFb4ivK0M6ADp4Cs44W
+	 3i013u1Qd7zcOk1Tiu2IZDmJSRXNoL4ElfJTsIWgkVjeK0P+hZBgADKD4VjulusLQd
+	 a0nMqe5bBzYUcDa0j00Mkbk24yoVfzHVGNIM8msBTvyezmkC0zmvEzAHpBIr8PgJVI
+	 UQC30myGs6a9R3Js4QfEEmHKNRPoUT6nH5Z1U5WfP30NFfoswM/FFvYtL/xWIlSd2s
+	 B6d1r2+IW0Nag==
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-404da7584adso484098b6e.3;
+        Fri, 16 May 2025 07:15:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWKjW302dGKehL6J9xWv/oSwmd09csOOOuO5pN860SYOF97phZNnyDr3FiYMuVqPJiSCYf3Qvo9a1yM@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcBjWgcxYs3ZXHYJaqafmVHGqkNfB1495hitw8lq9Myjw99tkH
+	mVxwKTnhxXD6hTMv7WPISCKzz67V8RT8Uqg8oWe8ahN9PNig2e6SjqeHL/29PUrH+MF2ZJ40JRp
+	RErtd9hSSKJx1vGvUeFcS0uhrfdsLMs0=
+X-Google-Smtp-Source: AGHT+IEifMgJi4I9KIB7g9la5wpxkudYHh/KMp5hArruRNgMVIpvFmFB7Kl/JfKlT61P+OJfapZDeIhIDy2BsGE64us=
+X-Received: by 2002:a05:6808:6a89:b0:402:862:93ae with SMTP id
+ 5614622812f47-404d86e321bmr2322505b6e.16.1747404955135; Fri, 16 May 2025
+ 07:15:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250514055723.1328557-1-sunilvl@ventanamicro.com> <20250514055723.1328557-4-sunilvl@ventanamicro.com>
+In-Reply-To: <20250514055723.1328557-4-sunilvl@ventanamicro.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 16 May 2025 16:15:44 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0iVvDZJFxcHG6x23G4_88DE_A9JLx0o7ejypNv=M2Qg6g@mail.gmail.com>
+X-Gm-Features: AX0GCFtlXnPveldiowmA4mqsiA61H-XtjgSSx2COK0UFQUnxxpWloVNNJI4sskQ
+Message-ID: <CAJZ5v0iVvDZJFxcHG6x23G4_88DE_A9JLx0o7ejypNv=M2Qg6g@mail.gmail.com>
+Subject: Re: [PATCH 3/4] ACPI: scan: Add support for RISC-V in acpi_iommu_configure_id()
+To: Sunil V L <sunilvl@ventanamicro.com>
+Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-acpi@vger.kernel.org, iommu@lists.linux.dev, 
+	acpica-devel@lists.linux.dev, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Tomasz Jeznach <tjeznach@rivosinc.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Atish Kumar Patra <atishp@rivosinc.com>, 
+	Anup Patel <apatel@ventanamicro.com>, Andrew Jones <ajones@ventanamicro.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, May 14, 2025 at 7:57=E2=80=AFAM Sunil V L <sunilvl@ventanamicro.com=
+> wrote:
+>
+> acpi_iommu_configure_id() currently supports only IORT (ARM) and VIOT.
+> Add support for RISC-V as well.
+>
+> Signed-off-by: Sunil V L <sunilvl@ventanamicro.com>
 
-Hi Conor, Angelo,
-On Thu, 2025-05-15 at 17:17 +0100, Conor Dooley wrote:
-> On Thu, May 15, 2025 at 05:11:13PM +0200, AngeloGioacchino Del Regno wrot=
-e:
-> > Il 15/05/25 17:03, Conor Dooley ha scritto:
-> > > On Thu, May 15, 2025 at 03:31:43PM +0200, Julien Massot wrote:
-> > > > The '#reset-cells' property is required for some of the MT8188
-> > > > clock controllers, but not listed as a valid property.
-> > >=20
-> > > "required for some" but not marked required on those platforms.
-> > > Why not?
-> > >=20
-> >=20
-> > Yeah now that I read that for the third time, the wording is a bit inco=
-rrect.
-> >=20
-> > It's not "required", some clock controllers do have reset controllers, =
-but it
-> > is facultative to actually use the latter.
->=20
-> I don't think I've ever seen this word before.
->=20
-> > I'm not sure if the ones that do have reset controllers inside should h=
-ave the
-> > #reset-cells property as required...
-> >=20
-> > Conor, what do you think?
->=20
-> If "required for some" in the OP was meant as "permitted for some",
-> change the wording to that and it is fine.
-Changed 'required' by 'permitted' in v2.
+This is fine by me, so
 
-Thanks,
-Julien
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+and please route it via RISC-V, but remember about the dependency on
+the new ACPICA change.
+
+> ---
+>  drivers/acpi/scan.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index fb1fe9f3b1a3..70f57d58fd61 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/acpi.h>
+>  #include <linux/acpi_iort.h>
+> +#include <linux/acpi_rimt.h>
+>  #include <linux/acpi_viot.h>
+>  #include <linux/iommu.h>
+>  #include <linux/signal.h>
+> @@ -1628,8 +1629,12 @@ static int acpi_iommu_configure_id(struct device *=
+dev, const u32 *id_in)
+>         }
+>
+>         err =3D iort_iommu_configure_id(dev, id_in);
+> -       if (err && err !=3D -EPROBE_DEFER)
+> -               err =3D viot_iommu_configure(dev);
+> +       if (err && err !=3D -EPROBE_DEFER) {
+> +               err =3D rimt_iommu_configure_id(dev, id_in);
+> +               if (err && err !=3D -EPROBE_DEFER)
+> +                       err =3D viot_iommu_configure(dev);
+> +       }
+> +
+>         mutex_unlock(&iommu_probe_device_lock);
+>
+>         return err;
+> --
+> 2.43.0
+>
