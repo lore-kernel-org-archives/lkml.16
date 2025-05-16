@@ -1,251 +1,101 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312EC6A8D2;
-	Fri, 16 May 2025 22:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38811231841;
+	Fri, 16 May 2025 22:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747434934; cv=none; b=iVCVRB17IEwBycAEVdc0b3NKfrXCRJifKOX+e2v1RDboQlogEYf18u/E/t79psV6P9SpLwCytanOIyOyyOHG2C1uJTtRUKJjpBMDvFf/z5SQnBFfNTLfsxGNdtrygNySPJXQQvNWPrvdlF06WYHtHuu/huvBePgZM7cCP9ngj4w=
+	t=1747434973; cv=none; b=iFMCv7PEs7RM3sN0nNrEKw157yyQdS8QoWwyBZUJkVbZOltH+5/eLP+iVZuxLFoh54acePl+nim6oUb5V685VeP3h/qqfsPtfZWj19co8WZOd/9YiZteGcKFmtnIyk1+I9+0NyjSSs8AGLvtN/SOEy5q5rv3AyCs090TOJv9TmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747434934; c=relaxed/simple;
-	bh=cMw4UsOINRnDBGrLZw8A/tkg1qlBAC7P1rGGcrLjJuY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fCn1ZJC6mt1oYsv6P4XTYUrJ1sRmbPcWHh+wmU4PIOndzRyx+1K25YGwCUpXCChwQPAIWLSuh9TGeioiS6t902MyMus+n6nNQDIjjK3pqgh9LcTm48deEb2gX1h9h3jcklnNJRFH7eRUkocxol+ZUxvtLAAUwvcl86W8JhM3uQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=EDhrE9S1; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747434973; c=relaxed/simple;
+	bh=S8VqnsRWmVgpbWGtGj+EFiFExcvjj76012BsLEMWG8A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SjTcEFHmGNUFzuJOGM1WlqsjeKBzNRD1Spy9B1JSCVj0JFcAb3SKY9na8ng3JR7yPEyXE7/jUlSKP5+Ppp+IXz0mUEHDoJceahAN9NrO3y3U71WU1BYzyj6heUr+1dTFLcFHNyFJuDgLrorsoiyfoFDzdhxtVm+FglPBSLNv7Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=L4d1Vxmv; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="EDhrE9S1"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4CF4143137;
-	Fri, 16 May 2025 22:35:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747434929;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ypgk7XZohQ5Mo5azVnaHdOVehBPBVRry66ULOrpPDPI=;
-	b=EDhrE9S15SmIv1BUv1fKwGYuyNZdoxIckQf2PeRoi/QD12Nx8TePdCSkb3j/KDPqYDInw4
-	iLE6Rk0xxf676bV5/ZeUgtEoNaS1oEXBi68IuCQ2nrWcMA0urVB/v/MB6j7HGChsS9sD8+
-	YhJ9+gAH82OPTs2ZcEvcDE98DTBv5e3TpjEzYqWxYyTZt+vM53s6s9blVF5TuJYzioAlkn
-	UqN4S0jch6WZ4gUKBsIj/sOnYa2HPpvhqkrjdthaohCydHjva/X4JkjdUF/NpxGepU1UJd
-	bdBHUCHL6XL5OXKlC40GG9GyE9kyZtGIhYZFIHf7hzfAiy/wwqMCqMM60tq2UA==
-Date: Sat, 17 May 2025 00:35:25 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Piotr Kubik <piotr.kubik@adtran.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Oleksij Rempel
- <o.rempel@pengutronix.de>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXTERNAL]Re: [PATCH net-next 1/2] dt-bindings: net: pse-pd:
- Add bindings for Si3474 PSE controller
-Message-ID: <20250517003525.2f6a5005@kmaincent-XPS-13-7390>
-In-Reply-To: <dccd0e78-81c6-422c-9f8e-11d3e5d55715@adtran.com>
-References: <bf9e5c77-512d-4efb-ad1d-f14120c4e06b@adtran.com>
-	<259ad93b-9cc2-4b5d-8323-b427417af747@adtran.com>
-	<f8eb7131-5a5d-47ec-8f3b-d30cdb1364b5@kernel.org>
-	<dccd0e78-81c6-422c-9f8e-11d3e5d55715@adtran.com>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="L4d1Vxmv"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54GMa3UZ419051;
+	Fri, 16 May 2025 17:36:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1747434963;
+	bh=ApFBcOWG2ieHiTUYXnkfHS3k7Kt6Hoxe9udfT1lGPaU=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=L4d1VxmvTUJDq2EFONO7jt0pi7rMHt/MtBucl1TBizYEbCt5qBh1Ed/qJQ3pAlUh1
+	 WV82mGPqYzhrHz0MC8CDOnqm2ExeiP1iRCVnGLovZIDf7Tu3uSOSYA4ENCVmX8Jjyk
+	 tEv7iZVfGPro3+ckEuRsZgNN3UyYxU94e63Pyn0o=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54GMa3PX202875
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Fri, 16 May 2025 17:36:03 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 16
+ May 2025 17:36:03 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 16 May 2025 17:36:02 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54GMa2EU095804;
+	Fri, 16 May 2025 17:36:02 -0500
+Message-ID: <5cede33c-664c-488a-aef7-4619368c24d6@ti.com>
+Date: Fri, 16 May 2025 17:36:02 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefudefleeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudeimeejtgemfegrtdehmegviegvvdemugelgehfmeegleehugemugdugeegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduieemjegtmeefrgdtheemvgeivgdvmeguleegfhemgeelhegumeguudeggedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtohepphhiohhtrhdrkhhusghikhesrgguthhrrghnrdgtohhmpdhrtghpthhtohepkhhriihksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehordhrvghmphgvl
- hesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomh
-X-GND-Sasl: kory.maincent@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/7] serial: 8250: Add PRUSS UART driver
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Vignesh
+ Raghavendra <vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>, Bin Liu
+	<b-liu@ti.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew
+ Davis <afd@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20250513215934.933807-1-jm@ti.com>
+ <20250513215934.933807-4-jm@ti.com>
+ <2025051408-discolor-backwash-5574@gregkh>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <2025051408-discolor-backwash-5574@gregkh>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Thu, 15 May 2025 15:20:40 +0000
-Piotr Kubik <piotr.kubik@adtran.com> wrote:
+Hi Greg,
 
-> On 5/13/25 10:24, Krzysztof Kozlowski wrote:
-> > On 13/05/2025 00:05, Piotr Kubik wrote: =20
-> >> +
-> >> +maintainers:
-> >> +  - Piotr Kubik <piotr.kubik@adtran.com>
-> >> +
-> >> +allOf:
-> >> +  - $ref: pse-controller.yaml#
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    enum:
-> >> +      - skyworks,si3474
-> >> +
-> >> +  reg-names:
-> >> +    items:
-> >> +      - const: main
-> >> +      - const: slave =20
-> >=20
-> > s/slave/secondary/ (or whatever is there in recommended names in coding
-> > style)
-> >  =20
->=20
-> Well I was thinking about it and decided to use 'slave' for at least two
-> reasons:
-> - si3474 datasheet calls the second part of IC (we configure it here) thi=
-s way
-> - description of i2c_new_ancillary_device() calls this device explicitly
-> slave multiple times
+On 5/14/25 2:36 AM, Greg Kroah-Hartman wrote:
+> On Tue, May 13, 2025 at 04:59:30PM -0500, Judith Mendez wrote:
+>> From: Bin Liu <b-liu@ti.com>
+>>
+>> This adds a new serial 8250 driver that supports the UART in PRUSS or
+>> PRU_ICSS*.
+>>
+>> The UART sub-module is based on the industry standard TL16C550 UART
+>> controller, which has 16-bytes FIFO and supports 16x and 13x over
+>> samplings.
+> 
+> If it is based on an existing controller, why do we need a new driver
+> for this?  Please explain in detail why this code is needed at all, and
+> not just a new "quirk" for the existing driver?
 
-It is better to avoid the usage of such word in new code. Secondary suits w=
-ell
-for replacement.
+This was explained in RFC [0] but the patch description can be improved
+so will fix for v2.
 
-> >> +
-> >> +  reg: =20
-> >=20
-> > First reg, then reg-names. Please follow other bindings/examples.
-> >  =20
-> >> +    maxItems: 2
-> >> +
-> >> +  channels:
-> >> +    description: The Si3474 is a single-chip PoE PSE controller manag=
-ing
-> >> +      8 physical power delivery channels. Internally, it's structured
-> >> +      into two logical "Quads".
-> >> +      Quad 0 Manages physical channels ('ports' in datasheet) 0, 1, 2=
-, 3
-> >> +      Quad 1 Manages physical channels ('ports' in datasheet) 4, 5, 6=
-, 7.
-> >> +      This parameter describes the relationship between the logical a=
-nd
-> >> +      the physical power channels. =20
-> >=20
-> > How exactly this maps here logical and physical channels? You just
-> > listed channels one after another... =20
->=20
-> yes, here in this example it is 1 to 1 simple mapping, but in a real worl=
-d,
-> depending on hw connections, there is a possibility that=20
-> e.g. "pse_pi0" will use "<&phys0_4>, <&phys0_5>" pairset for lan port 3.
+[0] https://lore.kernel.org/all/ba88a5c0-a8b8-4e48-9752-76881fa8e94e@ti.com/
 
-But here you should describe the channels of the controller and the channel=
- has
-no link to the relationship between logical and physical power channels. Th=
-is
-relationship rather is described in the "pairsets" parameter of PSE PI.
-
-Maybe something like that:
-
-The Si3474 is a single-chip PoE PSE controller managing 8 physical power
-delivery channels. Internally, it's structured into two logical "Quads".
-Quad 0 Manages physical channels ('ports' in datasheet) 0, 1, 2, 3
-Quad 1 Manages physical channels ('ports' in datasheet) 4, 5, 6, 7.
-This parameter defines the 8 physical delivery channels on the controller t=
-hat
-can be referenced by PSE PIs through their "pairsets" property. The actual =
-port
-matrix mapping is created when PSE PIs reference these channels in their
-pairsets. For 4-pair operation, two channels from the same group (0-3 or 4-=
-7)
-must be referenced by a single PSE PI.
-
-Similarly the description I used on the tps23881 is also not correct. I hav=
-e to
-change it.
-=20
-I didn't look into the datasheet, could we have parameters specific to a
-quad? If that the case we maybe should have something like that:
-          quad0: quad@0 {                                                =20
-            reg =3D <0>;                                                   =
-      =20
-            #address-cells =3D <1>;                                        =
-      =20
-            #size-cells =3D <0>;                                           =
-                                           =20
-                                                                           =
-    =20
-            phys0: port@0 {                                                =
-    =20
-              reg =3D <0>;                                                 =
-      =20
-            };                                                             =
-    =20
-                                                                           =
-    =20
-            phys1: port@1 {                                                =
-    =20
-              reg =3D <1>;                                                 =
-      =20
-            };                                                             =
-    =20
-                                                                           =
-    =20
-            phys2: port@2 {                                                =
-    =20
-              reg =3D <2>;                                                 =
-      =20
-            };                                                             =
-    =20
-                                                                           =
-    =20
-            phys3: port@3 {                                                =
-    =20
-              reg =3D <3>;                                                 =
-      =20
-            };                                                             =
-    =20
-          };                                                               =
-    =20
-                                                                           =
-    =20
-          quad@1 {                                                         =
- =20
-            reg =3D <1>;                                                   =
-      =20
-            #address-cells =3D <1>;                                        =
-      =20
-            #size-cells =3D <0>;                                           =
-      =20
-                                                                           =
-    =20
-            phys4: port@0 {                                                =
-    =20
-              reg =3D <0>;                                                 =
-      =20
-            };                                                             =
-    =20
-                                                                           =
-    =20
-            phys5: port@1 {                                                =
-    =20
-              reg =3D <1>;                                                 =
-      =20
-            };                                                             =
-    =20
-                                                                           =
-    =20
-            phys6: port@2 {                                                =
-    =20
-              reg =3D <2>;                                                 =
-      =20
-            };                                                             =
-    =20
-                                                                           =
-    =20
-            phys7: port@3 {                                                =
-    =20
-              reg =3D <3>;                                                 =
-      =20
-            };                                                             =
-    =20
-          };                                                               =
-    =20
-        };
-
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Thanks
+~ Judith
