@@ -1,72 +1,81 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D819A27CCC4
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 18:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF4FC221FC9
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 18:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747421105; cv=none; b=pb9/B4vZjmnn+qDgYonLLNUVy21sxPsJ0q8rFCsCPNONREY3zVvo5er+wEEdePjQTbixaSamE1gZbf+Um4Tw2FYwGVhYZEYRS3PkMUyVfeLsLyKPkCCmdLjSwC17Px5KBYJhy4hBXeB2ZoE8/FkLck5a0XwbFXkeYDev5HpBD8o=
+	t=1747421228; cv=none; b=TUzstTLwMDSqSoca6SWCJgLuG6CRr2R5gIuanUvN/VUL6PKFtrgzOoTZQx8V1TNaDRwayF//fyWa8ip6E6Yqb7aqzc33j02SEnJoshPidX8m03DDSWNc86uDd5ZbS/qkk5DGN3AsJdNffhLZ5kGyKyGbcZISVvzoBsqcIjMZ2LU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747421105; c=relaxed/simple;
-	bh=3zU5lccxYisa2c0Xm+1YCDe5bhQDtMkyttxk/rAVZk0=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=UNzbjzXtDnRkwMygZV9R9pFK1gLV+0P2NwlS/KgWlmLI9z73tQpsOQFmtMnOxkL5ZDHsZHpJinUKhVSDvQZzDx+iZjFspN6hRuHVTuFqZFZObLrS25+GJnTvGZvNWdFHg2EldcdZChn1XHOoXcncLiLTEbDCRzjNTeXJ5gjs96M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3db7fba1219so32242595ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:45:03 -0700 (PDT)
+	s=arc-20240116; t=1747421228; c=relaxed/simple;
+	bh=XQzr/P8LSzc1fGmKf5TzJFNWuKpMYhmvBe/dgZKthmA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=cNamipeSbHn2mVtilvz6hk7zUQqdFW8fOoCdIKtOMhUcND8MEbAs6k1njZhPlEoViOfqNH6VLQO6F8cRoXHKvXD3OQ1VDjEFuThVKWbvBIraSqz/lASfOaPiVbopRWZ1qPasb4bp880nmZkbuYlF4WcKF/Df3aZyQSL+v6DcjYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xmoktlVs; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xmoktlVs"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-231e8ec895bso5155275ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 11:47:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747421226; x=1748026026; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qmq5yOzKEYHGMlWUHQrdCglzBtv7bOn/Y4UXiljdeIs=;
+        b=xmoktlVs5hMz9PDKC8NIaTrKDZRwzdbCk4gj1oH3op/wJ9crQFte+iJl8WtOSDuW13
+         j+55aZFs4lVQU9VNhg7Puk38H7HQzqFnYeE/flXuxOqrx44kNm5juM/5NumeacWOgIUn
+         h5w8RJVRgSd1/7WYX2PNff7ySpEYsZLkqPMIO0LVRl1yQVaOkQKHX3Ttq7vE0mKBSER7
+         YQ/blYHQtfhLUMod6mfVDb+/Ls8SdB2zAlLvc2HjnyiNMtZcBCRmJe5VGxotqkF+JLGV
+         RYRB55wwxrqy7yCl+RzR9g84g0pObt5boQBp8jfig4xSZqf/PHZCuKpc0UaIIJjp33kY
+         K90w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747421103; x=1748025903;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SWK0DMruRfzJJrvDKUJQJO/B2fDC4JRex327zZ+JgOQ=;
-        b=OgAZEpW20w/6927aCWGiIrgQbOq/htDqxenKy5sIui3IO0mKNHNaGiptMEwDbcPnIQ
-         4bqSa5++293cD4y/6ms0zOoo2kiwinm+vqnZbE/O+L0lfvevrzD6f+pu33y2wPdvGCGu
-         VSl2uVMc802lzwGwgEVk7Wl3N9WJ8LS8B7q4IzLE0bMtQfEtqXB7xadXKt4COEO0OT/v
-         JC72QuwsheKkIi9+BlSMhZbHWekAJFF4FIsLdRjd0tIAOTes0pHMPoPX95taexur+Bp3
-         VucdoNTqpAKeGlfp0Pruf7P6Z43NNbxYXvC+Ywvvwy2chNEjxbdeJlN4L7xzJSPK/fGg
-         3XoA==
-X-Forwarded-Encrypted: i=1; AJvYcCVu9OZgJ2SLmw+ofkb5A2wtLnFhsKfEYt2tH79+YP8PsRmVHjvEpcwnWCxmDLGigxha5mW8PEbopcaOd94=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPkcjzwJfIQhN9JAC66fE+UKsiPNMt7cXaOhWBI+GCjSvTyTgL
-	FxBZ1PiqQktRll1M1uMon3vrnFJ/Rl1XvSKlXMPXDqojvfiRVU9Oiyi49WXododjMVYhX0plVMD
-	q//661cvoNXbS+nZj3Dc6yESpNlZ6dk9shZ8CyRidIhNNjsqegvoS31PwO1A=
-X-Google-Smtp-Source: AGHT+IEZGdBh2jj7st6w0Qn0GagFq2h0HfkJfGl8dHN1/CGdCJN73hMHWpECKCzRhYJwsaNFF4T3ENJLALeaB/qO0iLv7ypEQ1zt
+        d=1e100.net; s=20230601; t=1747421226; x=1748026026;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qmq5yOzKEYHGMlWUHQrdCglzBtv7bOn/Y4UXiljdeIs=;
+        b=dXDdbiHqcFY673Qutn/n8FzPjS9LhJfu/q1kaM62xs8DGEIK1oBqL1bf7WEpQuh41U
+         EBmZbuO1DADaIdBziObmGsG3xRU/KDOtP+cdqedrX38PylKGvKuIh3ilHMINMG0M+Q0M
+         NqN55KHuYzHVDhP/QRkiW7jYGbwmXYghYNw5st9H+TUsvtm3jSK5ebRVrpbnYKuLbVFw
+         E4bjPXPepRMCk998TEUDGXQzymQwarT9h/n8LWNx3hMmALOshIXmaAExC19wzb0mI2Hs
+         zG0TV/uwEJ+ZQAj6HRPFJYi0NMOIVydkzEgOU5VexK1u6KJSVsF7Oa3Y6tq4iDGHPgAi
+         UWvw==
+X-Forwarded-Encrypted: i=1; AJvYcCV6do6is6MEenNxVTfpY5MLbfG9BdEh3otqWGWGek1J5iI4Wukj2PHAONsGr7q45HxdbVR1+fopOjJzhY4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzu2MwLEzC7ATn3Jxs1IPK7ec12EAXtAUBjjuoqacl7eRorDG0U
+	98UYGPkzTg9iKs8xxAPlQ8gbAtTPaxqufUWR+l/WaWTv+GrzTnThhQwL/xI/Av0GG7DYi4VAcET
+	y1Frwpg==
+X-Google-Smtp-Source: AGHT+IEoABAHTdXlaeskcgYJu03drz+RNn79bIJemm7dWQc6taI6oQUGfiZBOrFd1GdJMi2Hp8JwioagtxQ=
+X-Received: from pllb5.prod.google.com ([2002:a17:902:e945:b0:231:e3f0:e373])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d4d2:b0:231:faf5:c1d0
+ with SMTP id d9443c01a7336-231faf5c3ecmr19177195ad.24.1747421226086; Fri, 16
+ May 2025 11:47:06 -0700 (PDT)
+Date: Fri, 16 May 2025 11:47:04 -0700
+In-Reply-To: <20250508184649.2576210-8-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:7:b0:3da:71ea:91c2 with SMTP id
- e9e14a558f8ab-3db843350f5mr56687795ab.22.1747421102945; Fri, 16 May 2025
- 11:45:02 -0700 (PDT)
-Date: Fri, 16 May 2025 11:45:02 -0700
-In-Reply-To: <20250512150134.GB200944@mit.edu>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <682787ae.a00a0220.398d88.021d.GAE@google.com>
-Subject: Re: [syzbot] [ext4?] general protection fault in jbd2_journal_dirty_metadata
-From: syzbot <syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com>
-To: aha310510@gmail.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20250508184649.2576210-1-jthoughton@google.com> <20250508184649.2576210-8-jthoughton@google.com>
+Message-ID: <aCeIKDbwVIlBLtGz@google.com>
+Subject: Re: [PATCH v4 7/7] KVM: selftests: access_tracking_perf_test: Use
+ MGLRU for access tracking
+From: Sean Christopherson <seanjc@google.com>
+To: James Houghton <jthoughton@google.com>
+Cc: kvm@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Tejun Heo <tj@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, mkoutny@suse.com, Yosry Ahmed <yosry.ahmed@linux.dev>, 
+	Yu Zhao <yuzhao@google.com>, David Matlack <dmatlack@google.com>, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-Hello,
+On Thu, May 08, 2025, James Houghton wrote:
+> @@ -372,7 +501,7 @@ static void help(char *name)
+>  	printf(" -v: specify the number of vCPUs to run.\n");
+>  	printf(" -o: Overlap guest memory accesses instead of partitioning\n"
+>  	       "     them into a separate region of memory for each vCPU.\n");
+> -	printf(" -w: Control whether the test warns or fails if more than 10%\n"
+> +	printf(" -w: Control whether the test warns or fails if more than 10%%\n"
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
-
-Reported-by: syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com
-Tested-by: syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com
-
-Tested on:
-
-commit:         3c21441e Merge tag 'acpi-6.15-rc7' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1630ae70580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=97ce7f89bb9ce135
-dashboard link: https://syzkaller.appspot.com/bug?extid=de24c3fe3c4091051710
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
+This belongs in patch 2.  I'll fixup when applying.
