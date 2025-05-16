@@ -1,113 +1,98 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBED323D
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D2F323D
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:13:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747412009; cv=none; b=iBxMKrHNQ7N7BKTbprCr1eQtW2ZteZWBcxotT/PaHvkmTERry6OwmZKJ1xJGlet21rGt9tuNYGEdo79bsS/E91o7L34YZpv812ba8lpeGiyHBHfKnjAh0xGLmLoyq/cv07YTm7bj77WECiqw9Sfdj8kFklAvMh4lyFwDd4MrVE4=
+	t=1747412017; cv=none; b=I4vhQ1bkcseiI5m5hcxStu7INoxs7HS5/Z4Pb5AaLsNJGyrY2e36ZgHbqihAy0+W+dqtRvN4P/QTKHrh/HA+HPJ3iWMeHNlVT+6ZZucYP6BvuQRLzpypqyMtEqdj9RKaMMDly9KA6XlEzIi0JYgouc5qDTFsPlQsOJ+WbOgIFcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747412009; c=relaxed/simple;
-	bh=Jl7PZMVZyZYqkHZm8fEKqNok0zI8bgPv8dDYVJLvz4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=h4vyz9Zsx70ze/ZM3TUR8LciYsKiijEhE4XFg+VTTlo72w2gFZEraj9/oMyCiGZX1WQk6kTznchENsW8itpnI4zb9dDpBgJSZarI5ekdvRR9VwtfU/LpheBImhtcNv3lmyx6EYVU/Ktc0dZjPR7n7wVlAWwyzI5CBlhdT6yADd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T4CCE6P4; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747412017; c=relaxed/simple;
+	bh=9P1+jTbwVXosxLyIAH8N3hBYwS2bNN24xtek80rU0xc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XveEwNlnObk5FfACaYh91T1W1K+QkxCspmtl+buVDYoV9uZO4cj/Z+S6L6IFPHEzcKGRh7u6XgnZB42iv6IHUOzP/g12vPWtvXQG7n2y1QHQfR5Bt99m7PCuKWOVorUbdlvSMyQ1ROeGxQ2FhNFl34bu25nk5pMOZF5lwIS6Rzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=OWrQ/E9y; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4CCE6P4"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5fbeadf2275so4305324a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:13:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="OWrQ/E9y"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-acacb8743a7so377588466b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:13:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747412006; x=1748016806; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hLJmovg9plUQcWnyMDtPPXJApgKGoEewf0WKlQ2WBJ4=;
-        b=T4CCE6P4czBQKfA84CH4hy6L8D9NfF+xQ2R/Z2N/hLpYwpKZemg01AipuR+lm4qkGM
-         ++rR83IOOlyN02LmlSAMVR9qo1iPSvRB6CXTg60eVbbsKz3f166tvVvXZshkbWrPGdvZ
-         C7ww7aMB2iuvpNZTDfww2ucKPW01KIQo6twY987hYHXXIeDxxvolq9ccBCSGGkA9A5Ob
-         GtNo1gkSCztmvpsW+1qmydq0urjrUiWGP+ehebvdrmZoSELnTx8mOEwfKGY8F2Fr6fHv
-         aLKXmEZWEpp/+EmpZ1nv6GN2Z0GGa1RaNtrrN6cWJ8ibjav91xIUJSxDmxtvyIeWQ0PB
-         jjEg==
+        d=linux-foundation.org; s=google; t=1747412013; x=1748016813; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GUHk+mLN9wCUmOIy98ic92M1EtSWfUZlafBbykfM/JM=;
+        b=OWrQ/E9y7IH7qjGeyT7eNPV5xD3LjKpARztKm/4zMh04iF3/m1hKW5NNfNjKVkgscV
+         L8/6U0WGyFZvW8tKyhRAimn3m7T6scTRlvHLa1g66Lck2DXl4pgAzJnrOihj9oNBtTVd
+         lCATgjfACA28hIbZ3dL5LsoGccN/wIB+hQnzg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747412006; x=1748016806;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hLJmovg9plUQcWnyMDtPPXJApgKGoEewf0WKlQ2WBJ4=;
-        b=YmBGjTov1NpJxiZUlSWCyMIOj/MxxPhSAOvWxGchk42ruJkbPk+joK0vYBFpWBazFm
-         x21DFDN7+nvukTFXonfpESICP2hbtW5yNBJvjozSwBDMRqZI5LKDlFTQOtBftU6nnVcY
-         BrrX7oZk9m2ePPnb8sX5ZHEPPQs8KoPDrpeMsAcTt+o5DcsxaXI+9sibxtk5DA56UqHw
-         OLP7XsYrjGAqaBwmrXcjDjZ4EdzOuo83J9DbWyd9RQiAn1cG3N8omrxIrDbATn+kKm6C
-         0m2vG7pLS3WhoLUpsHvwEt8803sOsFE3Yyu0iL8b1LNsrazhBoLoWsWeIWEfcfcmq4CO
-         YmcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvGMsdMK/ZD7GiSunZa9Rj+9mK4K9DM2mF1e98ty++tirxjw3x1wVBylwV/Xs2QA6ev22GPnBAq+sFFf8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4YM9tMczS2T4y0LYrE9UaGrl7PTdF5r3SH1OdAl6WxR4HCOv2
-	iOXhV3mgfpPfURjsRypvH5TF76aZbc8skp330KLpN0t9A8DguDeWrnL3
-X-Gm-Gg: ASbGncsGT/ccmJaJ1n/qVB1QpQL4dDbiNBcNRoYsptZWiQifZmi7q2Mg92PKMilbHDy
-	p/EWrnCDju+kE2UonTR7E4Hds03BSBQ6P7GjLHa4w2/yZw3Ww9DFuRdkn/N/kmam4kU8PE9G5uf
-	zNCpUlTLJPtyi8tVft8c1Zbqdccbxt8aPb0xFhfckI//OcpGlDTJRCwL9p1tXEOaTK+xTwF32XN
-	XhsLQZMdvL/EyKyBYniCFPiXoqeFDUd2EbVackVe86xuNTjZ3/psTRAmNz2K3IJT7RJ0+3Gx69I
-	W3ivEeYwc42je/WEO/RLe/J1OqG6Sapw+h5EFkQ=
-X-Google-Smtp-Source: AGHT+IHNN4EPAuY1cd4IMbE8HdxTl2O6RmOg1nWALDwkNAMDfdDvrOuPS2dn2gOhqkvwH1ifaGmjtA==
-X-Received: by 2002:a05:6402:5cd:b0:5f6:4a5b:9305 with SMTP id 4fb4d7f45d1cf-60119cd4192mr2838792a12.33.1747412005973;
-        Fri, 16 May 2025 09:13:25 -0700 (PDT)
-Received: from pc ([165.51.5.169])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6005ae3888esm1616084a12.65.2025.05.16.09.13.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 09:13:25 -0700 (PDT)
-Date: Fri, 16 May 2025 17:13:22 +0100
-From: Salah Triki <salah.triki@gmail.com>
-To: Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: salah.triki@gmail.com
-Subject: [PATCH] drm/amdgpu: check return value of xa_store()
-Message-ID: <aCdkIkNOQgnA5Pou@pc>
+        d=1e100.net; s=20230601; t=1747412013; x=1748016813;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GUHk+mLN9wCUmOIy98ic92M1EtSWfUZlafBbykfM/JM=;
+        b=HJdM+dnQwhD9MAC4erqX8ZCxn9CxHCwUSyU4zAkYS7XDfAe6abpwNCg9GRxnq9Y7W8
+         EMZLUokzhXBa1r68ipK9RKXhFsRUJ0oYtMNpYg9pUf9fLGYwsYT/QhZSMAYoVoB9a9BJ
+         00Wr4t8ANJ9M2G4wHXQsy6mOv59AtOzRPOk69KkWuw1GQVrrnLGuelQ0cRAeQY0rHREc
+         mIQZMpTObktpwB4P+46hPrUg02yqbQDcNJ2e7ZKsQwTurPDQs4Yz58vPsjg5AqEOEwTg
+         X+Y1ek5LweMMlwGqDjxGJEuJTpclm8zE2GAw8WIObdiebOfEsmKIEUxJ4wavBTLWk9LG
+         eVjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWWD+519hpAPT0X0ELiR+Qbs3qlUi31YWcq8pV44OjAD5QeNqKGaMRhWaDIohpvE5dc2L6pmOQ3w/DSe78=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxr1RtLC+5m/wSzvAeDSVpM4/DeTl2xaH5PYZ2n756iYe1KUFyS
+	akt681ab6x4GeqfEARdTMrq1BK/kdNBswfDHLFitKadnondmJr+FQ4uy/9PRWQyFhVzn33oPztM
+	PgjNqmeQ=
+X-Gm-Gg: ASbGncte9gGGTQYP+/QR6MAP1gYK8clIBw+oUpSVfVylha3INB599HquZMc/0I24IM6
+	6ggZfQ8ODAFfkEoUAHpI5GB8/unyJgS4tdB0ZrxHF2vU8KPlxYyrZQu1YUmLYJu0WLxvBOCWNsi
+	1fzmbANNSCQjkmpMPg/2xe4A1ySveHJDYncRzyqoJugEgC+2xckxrz1h0NpiywipoiGDriOqOjr
+	Mk67vj5vfzMGfpIhbc9Ubia1nC2t5tC3ONMOH3e9f0MraMIeROKb93TkM+FnJq5cpIeCUX2b9cy
+	bD2SwU73Dzi4upJAbWYs0W2q3sQIv27AtLrv/r0z9ZbXHkfOilmsBdFD5OWGAmxYkH3L0trFJLU
+	GQyejAu0bPlDd4gk3m453IppbHw==
+X-Google-Smtp-Source: AGHT+IFTGunhkRP0W87ga/JD8v982IgvO5K6O7/l4ytFym8Foo0MX9PCrfFmVgKuIshAl3wV8P35lw==
+X-Received: by 2002:a17:907:960a:b0:ad3:e742:69ea with SMTP id a640c23a62f3a-ad52f86c635mr331428066b.14.1747412013468;
+        Fri, 16 May 2025 09:13:33 -0700 (PDT)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d047bd6sm177171066b.29.2025.05.16.09.13.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 May 2025 09:13:32 -0700 (PDT)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f63ac6ef0fso515947a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 09:13:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVaaGre508Xw+7ixsJb9XHQHWvRHL7ujUxvlyXBE4pTb54tK4TSsmb1lafb6CCMOuDwnhfEx4Av1d6JHHw=@vger.kernel.org
+X-Received: by 2002:a05:6402:210b:b0:601:9586:8fe3 with SMTP id
+ 4fb4d7f45d1cf-6019586930emr978668a12.16.1747412012273; Fri, 16 May 2025
+ 09:13:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <871psp56yb.fsf@kernel.org>
+In-Reply-To: <871psp56yb.fsf@kernel.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 16 May 2025 09:13:15 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whXcQu-TcP8q7xpYsADyXSN8GSX8sV3-chjQOo-SK59Ng@mail.gmail.com>
+X-Gm-Features: AX0GCFtELJDcm4uocIJ51dUy47z0Fuppeouo-29gMxYswtmtUoCWpz6c6Jgr0Ns
+Message-ID: <CAHk-=whXcQu-TcP8q7xpYsADyXSN8GSX8sV3-chjQOo-SK59Ng@mail.gmail.com>
+Subject: Re: [GIT PULL] configfs for v6.16
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Breno Leitao <leitao@debian.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>, Christian Brauner <brauner@kernel.org>, 
+	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-xa_store() may fail so check its return value and if error occurred free
-numa_info and return NULL.
+On Fri, 16 May 2025 at 00:51, Andreas Hindborg <a.hindborg@kernel.org> wrote:
+>
+> This is my first pull request after picking up configfs [1], and my
+> first pull request to you. I hope I got everything right!
 
-Signed-off-by: Salah Triki <salah.triki@gmail.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+From a quick look everything looks fine. Proper signed tag that
+verifies ok, and the pull request looks good.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c
-index 707e131f89d2..bff82ac651f4 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c
-@@ -876,7 +876,7 @@ static inline uint64_t amdgpu_acpi_get_numa_size(int nid)
- 
- static struct amdgpu_numa_info *amdgpu_acpi_get_numa_info(uint32_t pxm)
- {
--	struct amdgpu_numa_info *numa_info;
-+	struct amdgpu_numa_info *numa_info, *old;
- 	int nid;
- 
- 	numa_info = xa_load(&numa_info_xa, pxm);
-@@ -898,7 +898,11 @@ static struct amdgpu_numa_info *amdgpu_acpi_get_numa_info(uint32_t pxm)
- 		} else {
- 			numa_info->size = amdgpu_acpi_get_numa_size(nid);
- 		}
--		xa_store(&numa_info_xa, numa_info->pxm, numa_info, GFP_KERNEL);
-+		old  = xa_store(&numa_info_xa, numa_info->pxm, numa_info, GFP_KERNEL);
-+		if (xa_is_err(old)) {
-+			kfree(numa_info);
-+			return NULL;
-+		}
- 	}
- 
- 	return numa_info;
--- 
-2.43.0
+I've obviously not actually merged it, but it's in my queue for when
+the merge window opens.
 
+Thanks,
+               Linus
