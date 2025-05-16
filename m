@@ -1,86 +1,100 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDBE21C9ED;
-	Fri, 16 May 2025 07:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D471215F56;
+	Fri, 16 May 2025 07:18:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747379431; cv=none; b=hvGO+ubHTJBud+TMbThvlcor/7ey0EFFkCU2xP5pE+kgs9sg/ENVLmBR1N1+HkfiAhrY+wzZ3VUa4sBeXB/S8XagdRI4eLFyj+KZp6bhPw87VTxAHicEcn/p2YDsqI+me9IWHO9YKSlFvC5Bz8EZHUmVF6XN4xBNL31IuZcWh4U=
+	t=1747379926; cv=none; b=Hh4D2zKGJWD3UatqlAXOzltICchibQ2mDWWalX3pqlV31IPOy1NMh1/oSPkyEfHFE9G1z0AWKz78A0qocflaaUSjmqEIqeCAQsPLhuNa/+pj4tq0K2LfEk1uhoXYhkpDlsbHiQHf4L4Qa7JrouzLZJwyN0M+WtO4kASzBgfuDus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747379431; c=relaxed/simple;
-	bh=I8iLFlQmg+9+FAgKrv6+9S6J0jdLMq3gv0x1NRlnUeA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bW3g7G23fYzwmv/lO/TMaVGRx8AFxSuNP8F5U6gZiX03/ekMzXhiFDX0jTsPN0eRxXTT8QvGlg1t4EQlf+aSFayp0BJQWNAgQZ7sHmBINk+LAFATfp724fUtAC2BERdYoXBltsqCUrLigFFLvCOqFI5gFRJp1qQksARGOV78wFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowAAXvDjb5CZouGpVFg--.47114S2;
-	Fri, 16 May 2025 15:10:19 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: g@b4.vu,
-	perex@perex.cz,
-	tiwai@suse.com
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] ALSA: usb: fcp: Use USB API functions rather than constants
-Date: Fri, 16 May 2025 15:09:38 +0800
-Message-Id: <20250516070938.12520-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1747379926; c=relaxed/simple;
+	bh=nwBsT22w/K1MZAlFL6jnYXmqMbinibQckfsxPHwloXM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Jqb1wTlTxl2a0VlpkfFfhHTcwYARy4YOvyZMMNcTe7nNWtVbhVeiVtQXpVXTpXUNx7ngGX7gvcpjeyy81kaYQleNY/2M7FYwfVCXkz4kZ58PG5f4NSZxolUC8WRV8HfPyIPBeTw2/ipYdbd0bLft2xsthJ7Mzqp9b2Zvo1gLhTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IDJPpFc4; arc=none smtp.client-ip=209.85.217.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IDJPpFc4"
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4df9c028968so384632137.2;
+        Fri, 16 May 2025 00:18:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747379924; x=1747984724; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=nwBsT22w/K1MZAlFL6jnYXmqMbinibQckfsxPHwloXM=;
+        b=IDJPpFc4rcqd2lQdZDYsMRg63QQfgb1Ns6GYDU/KlW1Gdzczc8u2hC7FuJ5oFruEgX
+         rbbrR6WTevOKmNs4yn1I6IgbpGCfl7SiPD20sNfG2QLg0aA0pnUvFwNqa2ZTq7DoM0TH
+         q5X5BZAHlfjt+RlKNj3AwanXBNnPzGDogJZKRDSuziCCtc2iaa8FhzPdJu4q7VhWDWCk
+         KBWxEmxEQNeyvJSaE5tc2dapBTXuEvCoIuCUs4UIOCumMrZTWAj8VdNils3fxnN5lVAO
+         INK0IgexxpOGq6xfXNBTXCSwiXY+Fo3RBG1Y7raMhF+iVaBhhSuI69lxP3+ejlWOTrM+
+         EYKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747379924; x=1747984724;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nwBsT22w/K1MZAlFL6jnYXmqMbinibQckfsxPHwloXM=;
+        b=P2pdN/hM+KLbBx4umiMfZpGd+klsFpeoq2hM26v1AkYa4rITdkzEWSMVj6qaAb2wLy
+         J+kfjmuLHFFZhJUrloGOqaLhkhbtHDyIRQ06fAqBvhwAevrFCVYeyXLhGQoTVsdRuyU4
+         cWfIEmus9l0Mx1WDVL8hOU5y5SswkJv+jAg0xHObir7jlhmX9AjDaFVB77bJolT6aAti
+         2vOFktzl7E+d2652Z70fMwPSpPRc2cW1vnQrMylEYXUozQC6eIAQpuX2b0VAUdkTlhw9
+         PJQZBegInJR1LCFPnX7bNQa1Ucn7fKz5RmbqXvcZU7IopT+hjGfU3jpFJg5U9sGu9ATA
+         zUvg==
+X-Forwarded-Encrypted: i=1; AJvYcCWHIFxORcFVgcMFdXFPlMxFBgSUKStY1iQUKLc0wB9Ix+xa5IRZV7Zfj4FASN2IUL4V6Ecz9MKQ@vger.kernel.org, AJvYcCWmYTEX26Q+Hgzrkp7owhWrSEdPsx8ytx6OOssmYTK6JLwKn8g3Bhew1g+92uSIEtiO1SC1/6vwyEGYZ5s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbNl+SPFhrSMDDPMUKohYQCu7spenEmZmcg7SDJnmuMTJR1Tcw
+	piGNBx60Xm9Ls5sANqwf6QdV7piC4n5XaMaCuNYvNrGzwPIOf8PZ7+eHrcdvhB2Xpl9zpM08oqU
+	6IMr04mGO3EZ4iWdGandC+9RBth2cOIh0J2Ht
+X-Gm-Gg: ASbGncseRVZdlzefrYEkiZlaRfpe2NwmIJnuP0mZIw/YhBK/aDdRlDx6AvP4PEO3m7h
+	3okmGO8NJN87xZz8LeZ+5w6YcjhzORIh9v/H2Fd4qBCpM5bSHbMWaPDmsaz/Ld+xhwthZgbfjoW
+	Kqg/Bob+Z4WFQLGIePX105/pj/W6xwnJh+HA==
+X-Google-Smtp-Source: AGHT+IE4A1XRxjveKlRweStMHozjka1jSrZKewno38SO+0w8lawmEziz2A92/CVhErkLuo49FrZNL4er5g8c7tmfbQg=
+X-Received: by 2002:a05:6102:3593:b0:4dd:b037:d23f with SMTP id
+ ada2fe7eead31-4dfa6bd2eedmr3272891137.15.1747379923929; Fri, 16 May 2025
+ 00:18:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAAXvDjb5CZouGpVFg--.47114S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7JrWfur1UJr4ktr4fCr15urg_yoWDWrb_Xa
-	y0gw4DWrsFgr9Fk34jvw43tFW0k3W7X3WSvr4SgayfAF9FqFZ8AwsFyFWkWFn7uF40yryD
-	XrWjyrZYgFyftjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbVxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AK
-	xVWUAVWUtwCY02Avz4vE14v_GF4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-	17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
-	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-	73UjIFyTuYvjfUePfHUUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+From: Harriet W <wangxianying546@gmail.com>
+Date: Fri, 16 May 2025 15:18:32 +0800
+X-Gm-Features: AX0GCFtXE2hO2hM04aKOLNwIKDE62wy7lJnxeBWKv9PWDmSettCeegh1O2DpT5I
+Message-ID: <CAOU40uA0EXVrZMLA76DErFjT4Op5_JUse_Sv=ncX+dgemiGFTg@mail.gmail.com>
+Subject: [BUG] general protection fault in ipv6_renew_options
+To: davem@davemloft.net
+Cc: edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use the function usb_endpoint_num() rather than constants.
+Hi,
 
-The Coccinelle semantic patch is as follows:
+When I test the Linux kernel (commit
+0c3836482481200ead7b416ca80c68a29cfdaabd), I encountered a kernel
+panic issue related to improper protocol family handling in socket
+operations, specifically in the sock_kmalloc(=EF=BC=89function
+(net/core/sock.c:2686).
 
-@@ struct usb_endpoint_descriptor *epd; @@
+The issue is that the sendmsg() call interprets the accepted TCPv6
+socket as a TIPC socket, and the kernel proceeds without validating
+the socket's protocol family, leading to access of uninitialized
+sk_prot fields.This leads to a null-ptr dereference in sock_kmalloc().
 
-- (epd->bEndpointAddress & \(USB_ENDPOINT_NUMBER_MASK\|0x0f\))
-+ usb_endpoint_num(epd)
+This crash can be triggered by executing the C reproducer for multiple
+times.The full crash report is attached to this email. Please feel
+free to contact me for additional information or steps to reproduce.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- sound/usb/fcp.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+This can be reproduced on:
 
-diff --git a/sound/usb/fcp.c b/sound/usb/fcp.c
-index 7df65041ace5..98f9964311a7 100644
---- a/sound/usb/fcp.c
-+++ b/sound/usb/fcp.c
-@@ -1092,8 +1092,7 @@ static int fcp_find_fc_interface(struct usb_mixer_interface *mixer)
- 
- 		epd = get_endpoint(intf->altsetting, 0);
- 		private->bInterfaceNumber = desc->bInterfaceNumber;
--		private->bEndpointAddress = epd->bEndpointAddress &
--			USB_ENDPOINT_NUMBER_MASK;
-+		private->bEndpointAddress = usb_endpoint_num(epd);
- 		private->wMaxPacketSize = le16_to_cpu(epd->wMaxPacketSize);
- 		private->bInterval = epd->bInterval;
- 		return 0;
--- 
-2.25.1
+HEAD commit:
 
+0c3836482481200ead7b416ca80c68a29cfdaabd
+
+report: https://pastebin.com/raw/Fh27JF8p
+
+console output : https://pastebin.com/raw/46Gj5gPm
+
+kernel config : https://pastebin.com/raw/cdj4sjkD
+
+C reproducer : https://pastebin.com/raw/R5AQ1PG4
