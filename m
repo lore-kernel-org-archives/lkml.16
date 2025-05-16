@@ -1,153 +1,101 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D37F7D07D;
-	Fri, 16 May 2025 15:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863BE149C64;
+	Fri, 16 May 2025 15:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747410015; cv=none; b=ZIkHV0HiYrqYNR35498qImmai5V1Wdfc6kwsNyfe5HXDcPS0Jje47lQNZ6kR2MLs8SSuvKbtiMRd/t9F0+jGSvhGqnZpF6QHskNEb2S+OdB/eW/zq6lMCQXIxorGxPKhfhxGZwcgTzaurIe5MjtMiD05AYg5O9UvUD1Ru14fEV0=
+	t=1747410058; cv=none; b=afrEQ8psd1V+RT4sDfvQjAyDW4mZXl0fA046dCoLWniA6pJMg4lRc8z9dPjDd10b9sNZQuTX9lxS/aqkfGa6QzYQwEIpvAl31Y+pcGeWiFrM2W3nksu7eQhoQqNVZ/TKXV7XkZAUjKMnc3DP44EeEy7Y2zKN2LZiF+vDjsAlU4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747410015; c=relaxed/simple;
-	bh=OkmWPTjquT7Em9YA1xUAAyJ9lTFW7kG9d9lFkrcF1xg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U4FYiyLp668SRmNTTqdSyJZk6/wCMtLRM5tRuh8Ste9mCrWMJXH8jEl6wdSZooYN2LMX1zGAd5qVGmLZUmBy7tcARB5LI1ueG7EpJU6bgcdsW6fNfM80LCL7ocSJHRZ7z28J+3tjfu9OCpZHoKaUixN7iWf7q2VbdXpKRiB364c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JvFcTsIx; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747410058; c=relaxed/simple;
+	bh=3gVahgVvh24z8R88A7UN/LS9CeC5yvoSzkDRbxORIkY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XPh+My2p85hIsfzQ8MToyotR8ZE9CCQBTH5ckNKvWXqmf+MBCLOUKXClRyql793qsrqIjzUNq3hgxVohS/T2C9mFfkwYfxxa2erAdUdpGQJbFE8QcWaUAA8IvCS3vb6GZ1XlSr5UwT//4ESZg1OECxmOXsMVG4w0nM6xURTrXeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=ZW/QTdDU; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvFcTsIx"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22e16234307so24780615ad.0;
-        Fri, 16 May 2025 08:40:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747410013; x=1748014813; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oVa+nx7ZX9lU3h4aLIs2hsaIJXIw40eNIECVbp/jk1M=;
-        b=JvFcTsIx9m74abvjn0g2gark2qNR8C/EBOA/GK4LIRBLZBEzXWRTtSJXlOzOfuWGVX
-         mC/+b0KcdYpeEgxHXJW+cPaofa6wWDkkb2QS3GQvxiEdGJagv4uWpoLpmZVqx35b3Rkx
-         NHxDCwb9lqF6QjnlnbeWKlZbAaHhKsEGpPucdRavoeXS/yUlRAgDRgfXkPOQwZtc1wLx
-         tdYV5yxkqfrZAAji5Kv1iro4uWIvvIGPLCAwROiQ/oexjyi9Wp7qkH5lbCFymkuXPlA1
-         xLNf22NVBCcpBQxarDiktXMPWQMKvNZLCOvmcm0UnwSlGXDFkk8XWZBjA+rib6liCJEb
-         2Qtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747410013; x=1748014813;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oVa+nx7ZX9lU3h4aLIs2hsaIJXIw40eNIECVbp/jk1M=;
-        b=bQ2Z+78hgkTF3eY7E5WUdsbPH7znX/XIvVfHaTnRVZkmCUdMxekhM6jwaAUHNcqKLb
-         sqpQ75LQlwkEwiUFuSURCjvTT6rqjXyBQqyTtXFzhCpWAllNSkploT8/XtUdJF5YorkZ
-         gkIH/lAW+RwVnQXJD91TKk5ZT5IySkPay52Xh3CxfyQBN5chYdJfvXuY8kfHhCY444pJ
-         FL2p/n8xUtVZYxRGOUz1suO2JJIWUqWQz2vur462fdzm3ohT1fSXew3IhDRnpeAeQoK1
-         v2TRMZey3vuASYNnsPC4YpZupkfIEHxEJtFZ6CeZP3K4hAKzwClHbogTuIKlRMtpY5fx
-         +0rA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUXiu37b/eeU2MJSm6XdzwHaFsWslIvOiOELW1CpAeIR6zDR1rsKAXLpNR/IpKDXgo5iLbIsHRIcNE7BBbgc6X@vger.kernel.org, AJvYcCVJnRZKtTP0o6Dzy0z+8B2GlGiOjTxEV4MutRsXb76z39nT10tmcBNreQ1lG4DNCMxqHJNEC/rwflcpX+o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIXH+3OWKf2sz0jO6mpV5QHgTaaKuaOdXMq1dtNrbevNoUcGS4
-	60obWkvc79lMqpWcsrkk9fh/Fl61561AAm6DoDHdpClOl437rvXr83lq
-X-Gm-Gg: ASbGncvBXtGOET8Mn9ysUYCwvn6JvFl/n+Rl4ux4/EDNmO563DO4HZ9rF1aRY9VzGBt
-	O0YcicNryi9CpSWO/eyBU4FS1jzk/j4eC8XOjlrb2/S8ACNkI9WUOUsE/n3LZidTDVG5upCdPhp
-	MOsWBHSywXpM9huETVhbnbYRItVEXHuPG8VCyUOo/HKywdQNMp1Yzf/AdVikG8f2TaaoxUYGFzn
-	JW6PIc6D4Lc3GeTM2ZSeopw6jqRPwycrm1awGFEZRtFhYdlpU8W9a/O66FbXNQ2iXYMG+Oday2s
-	Kljixz/qhZeAtsng8zGAw+O0DLIcDkzDt9f7ulLSK6CMSSzGhvHIrkM=
-X-Google-Smtp-Source: AGHT+IHy1MRjqcETdIo/u3ddZC5u7do+au8+0mzwwoELqO0h9122LYf6ihu0l2hPu6Hx0SNxBvRd7g==
-X-Received: by 2002:a17:902:c202:b0:231:c89f:4e94 with SMTP id d9443c01a7336-231c89f4f9amr57706715ad.21.1747410013439;
-        Fri, 16 May 2025 08:40:13 -0700 (PDT)
-Received: from harshPC.. ([2405:201:400a:31fb:ab0a:c20e:fff6:2111])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e980c0sm15779495ad.126.2025.05.16.08.40.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 08:40:13 -0700 (PDT)
-From: Harshal <embedkari167@gmail.com>
-To: shuah@kernel.org,
-	skhan@linuxfoundation.org
-Cc: Harshal <embedkari167@gmail.com>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: [PATCH] selftests: firmware: Add details in error logging
-Date: Fri, 16 May 2025 21:09:53 +0530
-Message-ID: <20250516153955.111815-1-embedkari167@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZW/QTdDU"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A366140E01ED;
+	Fri, 16 May 2025 15:40:53 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 0MjL6LvCWYJp; Fri, 16 May 2025 15:40:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747410050; bh=OwcTzx3fY+Hh1bkSXKFzEScUpfUJaZijnEP7fGg+4co=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZW/QTdDU2S2/hl0uW6zz2aZxJJ9bSXI5wCMrQvatpHaKOLMYfK7FxpRwq+CklO2B8
+	 GWM5ynznfm4e1lMRTtB0YIhLrU1Tmz37IGz9XM45tuUVhDIOgBpkxRmaLrvBdIk66R
+	 hcXO9FebG5Af03zItUDezJaxlnBCF/sjiurtCOzzI2b2IHSEm+tBH5XHTXFIpeEo1C
+	 2uDUuXwqOQAp0MczKd6Xw19c7UOmeUV/bVWs5q6epXJRcnYdhnN//EiIiUAoEm7t8P
+	 W3zZ9pgDdha2djDAmgslhkKZmqPA2ZORNuJwzyQs1RpZi/RI/wmqSRWnhC25fdwf4S
+	 tb3exQMZw1672pF1Ez1Gj1xjy8IXJL4AlSaI46iRO/wmT9Vhg97m3lnT6KnPLz75Gc
+	 pOKnML3qrlVK049ZSsX5OpMTsOf2R5+NkW5J61NcKjphi5xaTK3byc+HUUiVmR2Jc9
+	 R9KGmSFbhwrbpjz0eEjkrPnclngYEsPWUo/inLFIxhDrQ8W2mEsJxm4aDpCe2Tj52e
+	 uqJUQjzmIvtlFPzlVV1//gLy1+b31jtjOVl8itQz3NLo36z+KMY/2kIq3KtWnVfpXs
+	 qw+c1aaUOo2+Ub04PzxyJHh5B+s+3IMjpovZHngNdFie4fLu2I4zQCJ88XDAvEtcuk
+	 sP9XFVpovyKn6cMKBQHr9L9s=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D4BD640E0196;
+	Fri, 16 May 2025 15:40:38 +0000 (UTC)
+Date: Fri, 16 May 2025 17:40:34 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Kaplan, David" <David.Kaplan@amd.com>
+Cc: Suraj Jitindar Singh <surajjs@amazon.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 2/2] x86/bugs: Don't WARN() when overwriting
+ retbleed_return_thunk with srso_return_thunk
+Message-ID: <20250516154034.GEaCdccm27F_hgZ8c9@fat_crate.local>
+References: <20250515173830.uulahmrm37vyjopx@desk>
+ <20250515233433.105054-1-surajjs@amazon.com>
+ <20250515233433.105054-2-surajjs@amazon.com>
+ <20250516074806.GAaCbttptX_H2Gn8OZ@fat_crate.local>
+ <LV3PR12MB926587E1175B9450C34C17829493A@LV3PR12MB9265.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <LV3PR12MB926587E1175B9450C34C17829493A@LV3PR12MB9265.namprd12.prod.outlook.com>
 
-Specify details in logs of failed cases
+On Fri, May 16, 2025 at 03:18:30PM +0000, Kaplan, David wrote:
+> Hmm.  Since SRSO is kind of a superset of retbleed, it might make sense to
+> create a new mitigation, RETBLEED_MITIGATION_SAFE_RET.
+> 
+> retbleed_update_mitigation() can change its mitigation to this if
+> srso_mitigation is SAFE_RET (or SAFE_RET_UCODE_NEEDED).
+> RETBLEED_MITIGATION_SAFE_RET can do nothing in retbleed_apply_mitigation()
+> because it means that srso is taking care of things.  Thoughts?
+> 
+> This also made me realize there's another minor missing interaction here,
+> which is that if spec_rstack_overflow=ibpb, then that should set
+> retbleed_mitigation to IBPB as well.
 
-Use die() instead of exit() when write to
-sys_path fails
+Ok, this sounds like we should expedite our srso mitigation cleanup
+intentions. :-)
 
-Signed-off-by: Harshal <embedkari167@gmail.com>
----
- tools/testing/selftests/firmware/fw_namespace.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+Lemme find you on chat...
 
-diff --git a/tools/testing/selftests/firmware/fw_namespace.c b/tools/testing/selftests/firmware/fw_namespace.c
-index 04757dc7e546..deff7f57b694 100644
---- a/tools/testing/selftests/firmware/fw_namespace.c
-+++ b/tools/testing/selftests/firmware/fw_namespace.c
-@@ -38,10 +38,11 @@ static void trigger_fw(const char *fw_name, const char *sys_path)
- 
- 	fd = open(sys_path, O_WRONLY);
- 	if (fd < 0)
--		die("open failed: %s\n",
-+		die("open of sys_path failed: %s\n",
- 		    strerror(errno));
- 	if (write(fd, fw_name, strlen(fw_name)) != strlen(fw_name))
--		exit(EXIT_FAILURE);
-+		die("write to sys_path failed: %s\n",
-+		    strerror(errno));
- 	close(fd);
- }
- 
-@@ -52,10 +53,10 @@ static void setup_fw(const char *fw_path)
- 
- 	fd = open(fw_path, O_WRONLY | O_CREAT, 0600);
- 	if (fd < 0)
--		die("open failed: %s\n",
-+		die("open of firmware file failed: %s\n",
- 		    strerror(errno));
- 	if (write(fd, fw, sizeof(fw) -1) != sizeof(fw) -1)
--		die("write failed: %s\n",
-+		die("write to firmware file failed: %s\n",
- 		    strerror(errno));
- 	close(fd);
- }
-@@ -66,7 +67,7 @@ static bool test_fw_in_ns(const char *fw_name, const char *sys_path, bool block_
- 
- 	if (block_fw_in_parent_ns)
- 		if (mount("test", "/lib/firmware", "tmpfs", MS_RDONLY, NULL) == -1)
--			die("blocking firmware in parent ns failed\n");
-+			die("blocking firmware in parent namespace failed\n");
- 
- 	child = fork();
- 	if (child == -1) {
-@@ -99,11 +100,11 @@ static bool test_fw_in_ns(const char *fw_name, const char *sys_path, bool block_
- 			strerror(errno));
- 	}
- 	if (mount(NULL, "/", NULL, MS_SLAVE|MS_REC, NULL) == -1)
--		die("remount root in child ns failed\n");
-+		die("remount root in child namespace failed\n");
- 
- 	if (!block_fw_in_parent_ns) {
- 		if (mount("test", "/lib/firmware", "tmpfs", MS_RDONLY, NULL) == -1)
--			die("blocking firmware in child ns failed\n");
-+			die("blocking firmware in child namespace failed\n");
- 	} else
- 		umount("/lib/firmware");
- 
-@@ -129,8 +130,8 @@ int main(int argc, char **argv)
- 		die("error: failed to build full fw_path\n");
- 
- 	setup_fw(fw_path);
--
- 	setvbuf(stdout, NULL, _IONBF, 0);
-+
- 	/* Positive case: firmware in PID1 mount namespace */
- 	printf("Testing with firmware in parent namespace (assumed to be same file system as PID1)\n");
- 	if (!test_fw_in_ns(fw_name, sys_path, false))
 -- 
-2.43.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
