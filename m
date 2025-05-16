@@ -1,208 +1,90 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABCB485626;
-	Fri, 16 May 2025 13:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842E2189B80;
+	Fri, 16 May 2025 13:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747403095; cv=none; b=ET58akayerFOxwjPTllZe7HUdbRNkdUSSxUN0d0twdEimW+pBQSBPo2g5lIJO19FYKC/LOrPEcI2XcFL2C1glbxe1Yfm4oMqT70T4KW+Cih5gLPEis+di9Nv1FKIO13yXSZ55Lz9dMLsKCli8Ejd0Jqc5FoW8SGsIAnYdGwjP/o=
+	t=1747403111; cv=none; b=QtPjnSZNCCVCjnrs0U1SrGM10n4asR4aJkLIfZMXrx/T8vRCAXBwI7Qu/b1qtn8bvP0eaa1Byk6JQ6KnljPcahIO3AjBGBv2ugw0/1B7rBpNQ2NKAU5h9NNlQbhvc0NSCTvo/di3WdzmNeKgEPQ4UrLLoS0UJC2xIY69KJgMSJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747403095; c=relaxed/simple;
-	bh=74nDVqKBhBCs/QGZuvkqx34RtV6ZhfKSpTepUWjzrCU=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=YpSQLleJTtz+PJMDtzAJMsMfyJ42KMfE9AQlYR1AN1D+RsLBsmOalACh68OXJz1Mgmh0zKNkK/FUmRrDSxgX5+G2XrUR/ziHPATTx9BhBMM3uav04w/yMXnZKIM0fnC3QOpxjrSAIfJVqV1qC4ZcZ8pkmrNlhqsE0tmoRYKDgFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ESNj+Ov6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gvdMKcau; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747403111; c=relaxed/simple;
+	bh=NqMcz7kAbb5aJvvP9l+89oIjYYRsc8K6gsRCG9+3gWs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k51nsvR/oS6f4m0LoEMwvF710qfoJlhtWUMdHMS+bFuF6wV+T0JAwwfG9VZrEkcRAHi+4Tw4mjdLbHOLqgUv11CAaPEiQV+sTpMXx7nhEtSW+HFeP7K/3hVnMe6pOf/uOszdgx4K0TQdlXpOSe8DWmBReViCkxuKodkoFjDXZVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C57zkcZH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ESNj+Ov6";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gvdMKcau"
-Date: Fri, 16 May 2025 13:44:50 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747403091;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PbNzyLOQObSOaL7Xn0U5iI7XfW8VqcHp5Fxlah95OF4=;
-	b=ESNj+Ov6ocNIdxh3hkyel3SgZUcjHQDs2Ly9EOXSnNqHfxmiI9cjze+oaMznYV/FgFNp96
-	AgjcWDGjri46othN1YqXTIPutyQGJphD70wRJfulPTdH3NcNqjIE7v4CvGTi1dXz+TNFbA
-	yBlw6bovP4DhubqkeznQXBpV/ZpGRe4/896QXkHSxWNfosIO2XmAh4Dc+d3zZYo6yydHbh
-	atWHW0ieoGndWnebIVL2WRs8hoiTQywR843hj808eGnVCRuaXzmUgOB+fBGfGVazt7EJEo
-	zbRaPZMCXTmgouZnmCx8e//pmdCv3NoyLOrmuSEtdGSgb/fssyP8NeDkEbL8YA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747403091;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PbNzyLOQObSOaL7Xn0U5iI7XfW8VqcHp5Fxlah95OF4=;
-	b=gvdMKcauNBxmfiHb9F6YDBqfi3yoBRMlZ90sJQczG68RMMAYi4hkFigS25vFUQkkazGGoz
-	sfE+rcb9WvDSwXAw==
-From: "tip-bot2 for Kirill A. Shutemov" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/mm/64: Always use dynamic memory layout
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C57zkcZH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0045FC4CEE4;
+	Fri, 16 May 2025 13:45:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747403111;
+	bh=NqMcz7kAbb5aJvvP9l+89oIjYYRsc8K6gsRCG9+3gWs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C57zkcZHNxG39QzOBfiEQ5WVx5ny025ebHd7sSzDUPiXhD27xhutnCvPaPkakmlkh
+	 EXRxTfnBntaPu//y0dnmPUBkLvyS5lUFyCrjo2uHghm3CRPSmK7aEOk0XAEkeAZUzo
+	 NHr+5yTNdNKt4C1afkELV2RPT5+Dm6jSLXJjEnbe/ox6fEz/B4NGfz7VWGzb6y+nFb
+	 RjeUDOkFjicEyfzWtqrZJSnXrEasrtFPHyZf65TXn27Kih4RmXxKcAREFvYfeB1L5H
+	 ljf/u1Er13BfgSNLEjzBe2WAEe8A2Y8IMBiX+GhzFx6BZOlhyaqTk0o5Rfr/b3eKXJ
+	 6Uw1Q3DeDT1rA==
+Date: Fri, 16 May 2025 15:45:03 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Dave Hansen <dave.hansen@intel.com>
 Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Ingo Molnar <mingo@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
- Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250516123306.3812286-2-kirill.shutemov@linux.intel.com>
-References: <20250516123306.3812286-2-kirill.shutemov@linux.intel.com>
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Kieran Bingham <kbingham@kernel.org>,
+	Michael Roth <michael.roth@amd.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Brijesh Singh <brijesh.singh@amd.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Juergen Gross <jgross@suse.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-efi@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCHv3 2/4] x86/64/mm: Make SPARSEMEM_VMEMMAP the only memory
+ model
+Message-ID: <aCdBXxPNO4NtZ_Wl@gmail.com>
+References: <20250516123306.3812286-1-kirill.shutemov@linux.intel.com>
+ <20250516123306.3812286-3-kirill.shutemov@linux.intel.com>
+ <30570ca0-8da4-4ebc-84d6-0a4badfb7154@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174740309038.406.16951438567277617753.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <30570ca0-8da4-4ebc-84d6-0a4badfb7154@intel.com>
 
-The following commit has been merged into the x86/core branch of tip:
 
-Commit-ID:     c309b2705a4684e5c8e97e21bc9b14e2b539b87a
-Gitweb:        https://git.kernel.org/tip/c309b2705a4684e5c8e97e21bc9b14e2b539b87a
-Author:        Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-AuthorDate:    Fri, 16 May 2025 15:33:03 +03:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 16 May 2025 15:12:45 +02:00
+* Dave Hansen <dave.hansen@intel.com> wrote:
 
-x86/mm/64: Always use dynamic memory layout
+> On 5/16/25 05:33, Kirill A. Shutemov wrote:
+> > 5-level paging only supports SPARSEMEM_VMEMMAP. CONFIG_X86_5LEVEL is
+> > being phased out, making 5-level paging support mandatory.
+> > 
+> > Make CONFIG_SPARSEMEM_VMEMMAP mandatory for x86-64 and eliminate
+> > any associated conditional statements.
+> I think we have ourselves a catch-22 here.
+> 
+> SPARSEMEM_VMEMMAP was selected because the other sparsemem modes
+> couldn't handle a dynamic MAX_PHYS{MEM,ADDR}_BITS introduced by 5-level
+> paging. Now you're proposing making it static again, but keeping the
+> SPARSEMEM_VMEMMAP dependency.
+> 
+> If you remove the dynamic MAX_PHYS{MEM,ADDR}_BITS, you should also
+> remove the dependency on SPARSEMEM_VMEMMAP. No?
 
-Dynamic memory layout is used by KASLR and 5-level paging.
+Isn't it the other way around? MAX_PHYS{MEM,ADDR}_BITS are now *always* 
+dynamic, their value depending on whether LA57 is available and used.
 
-CONFIG_X86_5LEVEL is going to be removed, making 5-level paging support
-unconditional which requires unconditional support of dynamic memory
-layout.
+Thanks,
 
-Remove CONFIG_DYNAMIC_MEMORY_LAYOUT.
-
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Cc: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Kieran Bingham <kbingham@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250516123306.3812286-2-kirill.shutemov@linux.intel.com
----
- arch/x86/Kconfig                        | 8 --------
- arch/x86/include/asm/page_64_types.h    | 4 ----
- arch/x86/include/asm/pgtable_64_types.h | 6 ------
- arch/x86/kernel/head64.c                | 2 --
- scripts/gdb/linux/pgtable.py            | 4 +---
- 5 files changed, 1 insertion(+), 23 deletions(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 90570e3..22c60be 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1467,7 +1467,6 @@ config X86_PAE
- config X86_5LEVEL
- 	bool "Enable 5-level page tables support"
- 	default y
--	select DYNAMIC_MEMORY_LAYOUT
- 	select SPARSEMEM_VMEMMAP
- 	depends on X86_64
- 	help
-@@ -2168,17 +2167,10 @@ config PHYSICAL_ALIGN
- 
- 	  Don't change this unless you know what you are doing.
- 
--config DYNAMIC_MEMORY_LAYOUT
--	bool
--	help
--	  This option makes base addresses of vmalloc and vmemmap as well as
--	  __PAGE_OFFSET movable during boot.
--
- config RANDOMIZE_MEMORY
- 	bool "Randomize the kernel memory sections"
- 	depends on X86_64
- 	depends on RANDOMIZE_BASE
--	select DYNAMIC_MEMORY_LAYOUT
- 	default RANDOMIZE_BASE
- 	help
- 	  Randomizes the base virtual address of kernel memory sections
-diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
-index 1faa8f8..6b8c816 100644
---- a/arch/x86/include/asm/page_64_types.h
-+++ b/arch/x86/include/asm/page_64_types.h
-@@ -41,11 +41,7 @@
- #define __PAGE_OFFSET_BASE_L5	_AC(0xff11000000000000, UL)
- #define __PAGE_OFFSET_BASE_L4	_AC(0xffff888000000000, UL)
- 
--#ifdef CONFIG_DYNAMIC_MEMORY_LAYOUT
- #define __PAGE_OFFSET           page_offset_base
--#else
--#define __PAGE_OFFSET           __PAGE_OFFSET_BASE_L4
--#endif /* CONFIG_DYNAMIC_MEMORY_LAYOUT */
- 
- #define __START_KERNEL_map	_AC(0xffffffff80000000, UL)
- 
-diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
-index e83721d..eee06f7 100644
---- a/arch/x86/include/asm/pgtable_64_types.h
-+++ b/arch/x86/include/asm/pgtable_64_types.h
-@@ -128,15 +128,9 @@ extern unsigned int ptrs_per_p4d;
- #define __VMEMMAP_BASE_L4	0xffffea0000000000UL
- #define __VMEMMAP_BASE_L5	0xffd4000000000000UL
- 
--#ifdef CONFIG_DYNAMIC_MEMORY_LAYOUT
- # define VMALLOC_START		vmalloc_base
- # define VMALLOC_SIZE_TB	(pgtable_l5_enabled() ? VMALLOC_SIZE_TB_L5 : VMALLOC_SIZE_TB_L4)
- # define VMEMMAP_START		vmemmap_base
--#else
--# define VMALLOC_START		__VMALLOC_BASE_L4
--# define VMALLOC_SIZE_TB	VMALLOC_SIZE_TB_L4
--# define VMEMMAP_START		__VMEMMAP_BASE_L4
--#endif /* CONFIG_DYNAMIC_MEMORY_LAYOUT */
- 
- #ifdef CONFIG_RANDOMIZE_MEMORY
- # define DIRECT_MAP_PHYSMEM_END	direct_map_physmem_end
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 14f7dda..9f617be 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -59,14 +59,12 @@ unsigned int ptrs_per_p4d __ro_after_init = 1;
- EXPORT_SYMBOL(ptrs_per_p4d);
- #endif
- 
--#ifdef CONFIG_DYNAMIC_MEMORY_LAYOUT
- unsigned long page_offset_base __ro_after_init = __PAGE_OFFSET_BASE_L4;
- EXPORT_SYMBOL(page_offset_base);
- unsigned long vmalloc_base __ro_after_init = __VMALLOC_BASE_L4;
- EXPORT_SYMBOL(vmalloc_base);
- unsigned long vmemmap_base __ro_after_init = __VMEMMAP_BASE_L4;
- EXPORT_SYMBOL(vmemmap_base);
--#endif
- 
- /* Wipe all early page tables except for the kernel symbol map */
- static void __init reset_early_page_tables(void)
-diff --git a/scripts/gdb/linux/pgtable.py b/scripts/gdb/linux/pgtable.py
-index 30d837f..09aac24 100644
---- a/scripts/gdb/linux/pgtable.py
-+++ b/scripts/gdb/linux/pgtable.py
-@@ -29,11 +29,9 @@ def page_mask(level=1):
-         raise Exception(f'Unknown page level: {level}')
- 
- 
--#page_offset_base in case CONFIG_DYNAMIC_MEMORY_LAYOUT is disabled
--POB_NO_DYNAMIC_MEM_LAYOUT = '0xffff888000000000'
- def _page_offset_base():
-     pob_symbol = gdb.lookup_global_symbol('page_offset_base')
--    pob = pob_symbol.name if pob_symbol else POB_NO_DYNAMIC_MEM_LAYOUT
-+    pob = pob_symbol.name
-     return gdb.parse_and_eval(pob)
- 
- 
+	Ingo
