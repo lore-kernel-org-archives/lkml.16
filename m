@@ -1,57 +1,57 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183F723098D
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 23:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4D0280A2B
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 23:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747436861; cv=none; b=k2i+uYNu1ctLpFycSwUywgZX5SGVsC52NjJTFLlDkum8/7fkif8GnysqKUAyIZ6AgyiPjRWS18qO/B4vOng+1hXWp17fZLGeq2gZQDl2GKaDmslWDI0jiEot4D1pW92roMeTZ11RZQaORyU+49gQ/ZuC1e70J6zNGt+dedPcjg8=
+	t=1747436864; cv=none; b=LwBhweqws+b49LooWewiP4o8o+nrSsEWPEaGdLfWN94bHk3e1ZaNbaVwzMKAs9lMvVPLwXvam2SIPktTnUH4LqcDnClbw0m1DAPu58jrX6tSEc40wxRboBTUG97Nw3Kudv09/r9UCre2+u5eoXGqPQXJYLgzWfvD+7Y3wtIPxzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747436861; c=relaxed/simple;
-	bh=I1ALcWIwC8w2ZTqFEjmPzQUw5bLz7mdjqS6Qdf0kmJ0=;
+	s=arc-20240116; t=1747436864; c=relaxed/simple;
+	bh=53lKZIp0QEDIxAnbUsZj0HBAIqsGZWy+CnuC9aywW/o=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VOP0TdihIAbnUCmdnNWxBckRrTA9WY1o7RhajH4dDlOR5mfkSuF75dIekq5/NBQJkn3hM7Z0mXE0pMHS0jtRjHRdmO/r+OPTgMVKsYmHGLFtF2sj75VsmplkmH5+sKzeY1VvTpZVarEj5fO92Ce4O0KnBy99mVWt7bIl0cFvre4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q3VauYOt; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=hqFJ/kRv4QWpI0QmCRn30iZlMGWxVWU/2p4NUpWOiFbDF+szVQ4f+i2Y5AU1YACmG27v61S/dDD41izgIoTY6o6m/qaPnlHYF8N5NRP4WitAcReIlc4YgQFWnR/rKcix7lgwT7CixFYug8kjHyt4NRCpSo/BE3khLs9GprPi6cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1SJwF6jV; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q3VauYOt"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30c9b0aa4ccso2378795a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:07:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1SJwF6jV"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-740270e168aso2422455b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:07:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747436859; x=1748041659; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747436861; x=1748041661; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=8kDa/puR8zC/TVy/ii11k+vGNrXdae9yxfqU/1udF6g=;
-        b=q3VauYOtN04RZ0hh3sol0uU4/jLOh+yA68XJ3uItKyLT3IGd+IUTszJX85M7o6zT0D
-         7qy0tqgNdqvp1wmKi2BFS+nrWhz4T0xENqoVxul4ie15EgDjHQij82WJa/3Z1IB4PT7V
-         rT8v+FuB8kKWm2gxY70LBr7Br2/n95XjlOV9kVGaUDbPS5vaxCttCDLJ1TFmX6j/g7OC
-         0I17Ed9BzisZ1vSGkvxDzJmZN8rFAYUqeSRDCtz3qE/jZgzeKU687JXaGKnp/BuV6eCq
-         amyWSsLC908LB5kFMPQtclFcR/1whoRqCGHVG67bUjTwOweZ/N+3j8pM8JsQhLG5pmVh
-         mTzQ==
+        bh=NfgqeidfxQ2kyf1sJo8U3YZ4JNEzadROFUB65CCKoYo=;
+        b=1SJwF6jVGsvJoqd7rhdiq8l+du2JROSxasleJXx2a1zJBqZXLji5/fkOVoQd8NqSxH
+         pNbdrk+mTqX9TtvCsHE9HjJx4j4svaV/P+xtnm5hvPCBHWSCe+8YF0ryxYnvVk396c7P
+         HqRhRQUNx4qcWu4S8rhczJaraF8RFGo49QbbzrwurKLMl/mra89bohu8veF+4h79eTtg
+         aRCSabpnOqgoyKNFKPk+nuxLMYD3KSBxT7XUxuY/37Txi6a9jsNwgpHMKs6QCiP74kor
+         hQtv0ZfL9YKNKqgbmc27MPeh6w3DYczy0gSFLlu1Sw4zg+pwyaniaaaC29hA6smVkhGk
+         1gBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747436859; x=1748041659;
+        d=1e100.net; s=20230601; t=1747436861; x=1748041661;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8kDa/puR8zC/TVy/ii11k+vGNrXdae9yxfqU/1udF6g=;
-        b=OLUK16MNlFGdnKYvmVVkunatSrm7Ytz8CnnfbpmzHrdCLpz07kF/nLHV4RDN3IpyCS
-         JhxyrKpDrjUmRlSrjk+eudRmtevE6K83TU5haKzpzvY1+h3za+s5EecnhIrjjcNVCzVh
-         5ejBNu0sB1xX1N6ydx6Dey77xCLH0sz6A7zWdvpfqEwNIbpc2MJYjWVTvoN3sEK9ZnWl
-         vmcBxRpWN33HMwsQmg1CvaF2bHtoJUPp3kxNke5x7fSokr66AR1LliVN+J22TTPMXGOD
-         hoMcinOPftUfVTR69Z4AYjdMxelxOiFvrI49LdwEu6+AEDUAJ7MR1866u3JtidCzLO2/
-         y6YA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPqKyFJDQ1I0abT+QpIi/0CzVOSUnazjhmbgEu/9MBRP/zRwKTYBab0Lx2Ci/+YGb4KIH6Wp/4yyzCedE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzudkQamxAsuKHIJxg7vr1KXOu77P4/LTDSSG+3zTjnfWhJeJw9
-	hpc0lENOzjCFjUm+Jn+DJXNRQL+2RHpFN4OgLIwH3rjgyd2sB/UT/mU5Ad2EbapHPaR6YReymIT
-	5dvqtfA==
-X-Google-Smtp-Source: AGHT+IGms52EOzdUpeUySel370WkLvf5qcqXwBrssv6N0gEIpnS2oZ+4XnP+3IKYtmrBjEsQ2ftNzRdpjys=
-X-Received: from pjbsb5.prod.google.com ([2002:a17:90b:50c5:b0:301:2679:9d9])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3e8e:b0:301:1bce:c255
- with SMTP id 98e67ed59e1d1-30e7d5a93bamr7142197a91.27.1747436859419; Fri, 16
- May 2025 16:07:39 -0700 (PDT)
+        bh=NfgqeidfxQ2kyf1sJo8U3YZ4JNEzadROFUB65CCKoYo=;
+        b=ijUJGHkBhaToVI8wjrHINtRVKKVEk0NcpN+J58pDSGXbyRmi7HSOjk3KkjfRG3Lr/D
+         HfXQV9fgm/v52TVJT5c/2ltQWlwd4YYWfJea6BYX2dE0IylxfLMmXkyVJqvFOJQPkYMj
+         BR59AdHMa2GG9MMYbAFqkVuGd4PgmBbMQ+wcvAY0a354qhiod0mbHZprU6lpltWXwfqw
+         7Cvh+GyMIyV4E+94pwJgzeUdBwPKRElnxVck4mDNFuuMA1GTCeC11IMici6ILJWEqbSg
+         e8L7sHtyb5ga8exLEVUr/xLlro16fZ6KesA4SjZR0MXA5ah7kFXCiZZIxgQ1SE1OwKTK
+         rT2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUHSIXDvYxwA0nsLRnBDRuSqkQ+3nl9tE0aptHGu+tvGBkdJSpT7HLwMIexe+pRt0iVJqcsHiibeMSzWic=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZrLUsjp+xHr9HJZaYZXzFHDU13Jm5XKgRk8pouexYVoHJ/JtP
+	jnkMWCA+ss8KMJ9YhJoceKkTxWOQYjLVQUh6e/EIFw/kCoSMe1sPOq05jIi246FZbDEl+i9oewj
+	sP2x9LQ==
+X-Google-Smtp-Source: AGHT+IEpuk3JhFswrcOYHhuNZFtNFDjaC6SxgeOCtP19MsiXoVMuiAOEkn9SRzfq0mcswFVBZevjQHeWqN0=
+X-Received: from pfst15.prod.google.com ([2002:aa7:8f8f:0:b0:742:aa0f:2420])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:ac6:b0:736:32d2:aa8e
+ with SMTP id d2e1a72fcca58-742a97a16bbmr6249072b3a.6.1747436860987; Fri, 16
+ May 2025 16:07:40 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Fri, 16 May 2025 16:07:27 -0700
+Date: Fri, 16 May 2025 16:07:28 -0700
 In-Reply-To: <20250516230734.2564775-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,8 +61,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250516230734.2564775-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.1112.g889b7c5bd8-goog
-Message-ID: <20250516230734.2564775-2-seanjc@google.com>
-Subject: [PATCH v2 1/8] irqbypass: Drop pointless and misleading THIS_MODULE get/put
+Message-ID: <20250516230734.2564775-3-seanjc@google.com>
+Subject: [PATCH v2 2/8] irqbypass: Drop superfluous might_sleep() annotations
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
@@ -74,108 +74,56 @@ Cc: kvm@vger.kernel.org, virtualization@lists.linux.dev,
 	Binbin Wu <binbin.wu@linux.intel.com>, Yong He <alexyonghe@tencent.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Drop irqbypass.ko's superfluous and misleading get/put calls on
-THIS_MODULE.  A module taking a reference to itself is useless; no amount
-of checks will prevent doom and destruction if the caller hasn't already
-guaranteed the liveliness of the module (this goes for any module).  E.g.
-if try_module_get() fails because irqbypass.ko is being unloaded, then the
-kernel has already hit a use-after-free by virtue of executing code whose
-lifecycle is tied to irqbypass.ko.
+Drop superfluous might_sleep() annotations from irqbypass, mutex_lock()
+provides all of the necessary tracking.
 
 Reviewed-by: Kevin Tian <kevin.tian@intel.com>
 Acked-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- virt/lib/irqbypass.c | 20 --------------------
- 1 file changed, 20 deletions(-)
+ virt/lib/irqbypass.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
 diff --git a/virt/lib/irqbypass.c b/virt/lib/irqbypass.c
-index 28fda42e471b..080c706f3b01 100644
+index 080c706f3b01..28a4d933569a 100644
 --- a/virt/lib/irqbypass.c
 +++ b/virt/lib/irqbypass.c
-@@ -92,9 +92,6 @@ int irq_bypass_register_producer(struct irq_bypass_producer *producer)
+@@ -90,8 +90,6 @@ int irq_bypass_register_producer(struct irq_bypass_producer *producer)
+ 	if (!producer->token)
+ 		return -EINVAL;
  
- 	might_sleep();
- 
--	if (!try_module_get(THIS_MODULE))
--		return -ENODEV;
+-	might_sleep();
 -
  	mutex_lock(&lock);
  
  	list_for_each_entry(tmp, &producers, node) {
-@@ -120,7 +117,6 @@ int irq_bypass_register_producer(struct irq_bypass_producer *producer)
- 	return 0;
- out_err:
- 	mutex_unlock(&lock);
--	module_put(THIS_MODULE);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(irq_bypass_register_producer);
-@@ -142,9 +138,6 @@ void irq_bypass_unregister_producer(struct irq_bypass_producer *producer)
+@@ -136,8 +134,6 @@ void irq_bypass_unregister_producer(struct irq_bypass_producer *producer)
+ 	if (!producer->token)
+ 		return;
  
- 	might_sleep();
- 
--	if (!try_module_get(THIS_MODULE))
--		return; /* nothing in the list anyway */
+-	might_sleep();
 -
  	mutex_lock(&lock);
  
  	list_for_each_entry(tmp, &producers, node) {
-@@ -159,13 +152,10 @@ void irq_bypass_unregister_producer(struct irq_bypass_producer *producer)
- 		}
+@@ -176,8 +172,6 @@ int irq_bypass_register_consumer(struct irq_bypass_consumer *consumer)
+ 	    !consumer->add_producer || !consumer->del_producer)
+ 		return -EINVAL;
  
- 		list_del(&producer->node);
--		module_put(THIS_MODULE);
- 		break;
- 	}
- 
- 	mutex_unlock(&lock);
--
--	module_put(THIS_MODULE);
- }
- EXPORT_SYMBOL_GPL(irq_bypass_unregister_producer);
- 
-@@ -188,9 +178,6 @@ int irq_bypass_register_consumer(struct irq_bypass_consumer *consumer)
- 
- 	might_sleep();
- 
--	if (!try_module_get(THIS_MODULE))
--		return -ENODEV;
+-	might_sleep();
 -
  	mutex_lock(&lock);
  
  	list_for_each_entry(tmp, &consumers, node) {
-@@ -216,7 +203,6 @@ int irq_bypass_register_consumer(struct irq_bypass_consumer *consumer)
- 	return 0;
- out_err:
- 	mutex_unlock(&lock);
--	module_put(THIS_MODULE);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(irq_bypass_register_consumer);
-@@ -238,9 +224,6 @@ void irq_bypass_unregister_consumer(struct irq_bypass_consumer *consumer)
+@@ -222,8 +216,6 @@ void irq_bypass_unregister_consumer(struct irq_bypass_consumer *consumer)
+ 	if (!consumer->token)
+ 		return;
  
- 	might_sleep();
- 
--	if (!try_module_get(THIS_MODULE))
--		return; /* nothing in the list anyway */
+-	might_sleep();
 -
  	mutex_lock(&lock);
  
  	list_for_each_entry(tmp, &consumers, node) {
-@@ -255,12 +238,9 @@ void irq_bypass_unregister_consumer(struct irq_bypass_consumer *consumer)
- 		}
- 
- 		list_del(&consumer->node);
--		module_put(THIS_MODULE);
- 		break;
- 	}
- 
- 	mutex_unlock(&lock);
--
--	module_put(THIS_MODULE);
- }
- EXPORT_SYMBOL_GPL(irq_bypass_unregister_consumer);
 -- 
 2.49.0.1112.g889b7c5bd8-goog
 
