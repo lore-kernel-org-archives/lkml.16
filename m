@@ -1,69 +1,44 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from trager.us (trager.us [52.5.81.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DA741760;
-	Fri, 16 May 2025 16:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA21BE49;
+	Fri, 16 May 2025 16:51:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.5.81.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747414153; cv=none; b=GwsPe0E89+ztCx/GClLNbrDQwostrvTGMnYGnWEcjugIKs3bIrLb51t9FjulZv+oWcJ1qfSuW+67vY81iHtuqH1rRuUyS3YfujxeyXKQ7m2CX91ov2zgTQHoMXMNAUj6GBhNZtV84nIF2urKgI5m1tly/oMASOfiV/0nZln/bWA=
+	t=1747414312; cv=none; b=XdyENGlacsYQJ8B3EfM25ozuP72OcKUnL4b1SQeneP4BRdLoGYD7Hu8js8CG71O4wPM6w6OVIxNGAmGpxdyiNvQb6iPm4qLYmWn4/4Wxw8Rsmnws/eEBnMmXwQptSc9ga4U92Vb3Of1x/afRTpSQ5DGkjlVIaK9RRjxgNJvBe/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747414153; c=relaxed/simple;
-	bh=/mlq8eQDbKPnb3XOZNN5sgJbyvO/ncRpvHJjF4pxdno=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V8OVsvv/L15rH/i6X41BWRlnkrFsSVKqF4IkS+1YAZLhSSR6vnDh+YUA0yy8u9ZORztQ2YmGx36sH8BNWPywAvWHdSveQUq37l4sWYilnPxWps0RTbcH0QErr6WQbAhkkA4BTt1mqyxhVdXO43iqd0RxeZqgNWyYU5MQHnpx38Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U6QT4B88; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U6QT4B88"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-73bf5aa95e7so2380253b3a.1;
-        Fri, 16 May 2025 09:49:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747414151; x=1748018951; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LbhWXOd+OEyb1Eiiffm06MaKsnNTsDGXVTdFbUo7D60=;
-        b=U6QT4B88/NFXLfm8ErSoRl7uD6shazAAEg9yjce8uTYzMjAGwvwITd1/91MIZ+t4KW
-         bKNa7yi6q5QIM2J16L6dptSwZTi73magy9AfUemolNsDnrNSaKSNXYgMyQtyk4clsutJ
-         Vv3IshUVlfHyiJSyjFf4TJ0+pVeMl3hDVclR5G01FqmmLd1PjXfwMGDchCL3Yg1iWS7Z
-         XW+yTGtBEfSBh5o5WrQiszad9lJVbU5vQcyUwPtOO79k8XroxDvTi6E/rCni35oRXxVH
-         +iBztZS9xqhZ2Axq9YonyIlXxEzkfY9zjllNuTRyPT9asKcOZqaw8Ug1MB3kfm/JoWI7
-         yuYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747414151; x=1748018951;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LbhWXOd+OEyb1Eiiffm06MaKsnNTsDGXVTdFbUo7D60=;
-        b=LqMQg6FZHA2yQf1huyvHjVbvFxjuVwwBdAlRWgxFKHu3YVNoTh8GPcNuZOztAnRqHL
-         K0NN7edSRwiCCfgI8fI3PczSRIpx0xMC2RyywL14oXN5j7NV7bSc1cA67EInoy0JQYGy
-         GfAfTO5801LVcAzahuKKOFvtAGFbPH6gApke/nykcncIt57MQZfGVfqEr/kVrmNdXxS6
-         O81YNDrdi91i0fAubDd/qndecpJfxvccFgm2aqL/V9XYO/KhPwc1lYRS9KHCsPc1IRaL
-         Afagyk8rPJr5uL+v8EME4BWwhEhMn//cTy+n7clAXD3fNs/KtZMVaoTSSwx0aHfuLZXI
-         0pxw==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ1bjCNlHXq+Ebb2GfAFC9b3fwcYfbkoLMH7nD6hCLUfOu4cr7EhbD8sNNFkk6uPnUt2Ri1uFuSjYv9vs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeM8lq920J96RfrbDAFrujvjOaPhD4PWsgY+FviraU1QS4vk3W
-	ACjY2kOUB56CZQAPWuczhDf6+kZh/y0d9HSn24Pr2PajY6Q3qPnPpG9s
-X-Gm-Gg: ASbGncsayC9ku/FisZWT4vtkddYAUPB3EchPhgZRz9q0+zyvPLfBbYE3tKyVhgBV2P+
-	lwa1SrmZyapSfYhx17lNnSI4uwdYbc+QZuVbkAhr1Dr50zCxqVIepwokvWfXRR+49AD/h+kIcZg
-	IWxJMTkZquszZU8mJIReuQm3Z18gGAB4ThjPD4mnzeLyBTLjd3is3HCCkiF4XqfldrE0itAuY6S
-	XGNG24w9GqWjRolQt6SFt8CrhaCNBji9jSdHfvlAKp9rnS33Njv+2M1hWXPiWMlU/sOGidozV32
-	Ol978+15aLXvkwxEIZDm5XTwjSdZYKbOaz7ZUUdUB4XJBUxWWaW7gg==
-X-Google-Smtp-Source: AGHT+IHgpBkEA5jao8AFZhjUwipXDHq1C0+zdkgS9xg6GlPvl6Hk6Ct9CuoCbeUY4IivC2KsTff4Kg==
-X-Received: by 2002:a05:6a00:21c3:b0:73e:10ea:b1e9 with SMTP id d2e1a72fcca58-742a979672dmr5269786b3a.6.1747414150699;
-        Fri, 16 May 2025 09:49:10 -0700 (PDT)
-Received: from lolcat.. ([2401:4900:1c42:3d25:8f97:4da2:63c3:46c2])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9829ad2sm1807443b3a.93.2025.05.16.09.49.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 May 2025 09:49:10 -0700 (PDT)
-From: rodgepritesh@gmail.com
-To: skhan@linuxfoundation.org
-Cc: linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rodgepritesh@gmail.com
-Subject: [PATCH]  [PATCH] Change pidns to pid namespace
-Date: Fri, 16 May 2025 22:19:02 +0530
-Message-ID: <20250516164902.91085-1-rodgepritesh@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1747414312; c=relaxed/simple;
+	bh=Tt2r9xz8sdUiv4K9lYnzrHLicK9+65q1WYWpfLsk8d4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lMvePdWmZECnq3uls/vdfkdaUUUcuCGPP3GI0kAGyYUni6GQjysEJRf8Agg+ym09oDsvQyYfW8FdjcJ/w3eTZXYj3WeuttNLIcKZ+6IY7N/fI0dot+rdJn1yOtq/ERm30ZSyw4MfsthclT6/h3tM/F8kxiAeh5RBh7dEECk4Ecg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us; spf=pass smtp.mailfrom=trager.us; arc=none smtp.client-ip=52.5.81.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=trager.us
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trager.us
+Received: from c-76-104-255-50.hsd1.wa.comcast.net ([76.104.255.50] helo=localhost)
+	by trager.us with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92.3)
+	(envelope-from <lee@trager.us>)
+	id 1uFyHS-00021S-7A; Fri, 16 May 2025 16:51:30 +0000
+From: Lee Trager <lee@trager.us>
+To: Alexander Duyck <alexanderduyck@fb.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	kernel-team@meta.com,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Lee Trager <lee@trager.us>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Simon Horman <horms@kernel.org>,
+	Sanman Pradhan <sanmanpradhan@meta.com>,
+	Su Hui <suhui@nfschina.com>,
+	Mohsin Bashir <mohsin.bashr@gmail.com>
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] eth: fbnic: Replace kzalloc/fbnic_fw_init_cmpl with fbnic_fw_alloc_cmpl
+Date: Fri, 16 May 2025 09:46:41 -0700
+Message-ID: <20250516164804.741348-1-lee@trager.us>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,29 +47,109 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Pritesh Rodge <rodgepritesh@gmail.com>
+Replace the pattern of calling and validating kzalloc then
+fbnic_fw_init_cmpl with a single function, fbnic_fw_alloc_cmpl.
 
-Changed a comment in memfd_test.c , Unabbreviated pidns to pid namespace
-for better understanding .
-
-Signed-off-by: Pritesh Rodge <rodgepritesh@gmail.com>
+Signed-off-by: Lee Trager <lee@trager.us>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 ---
- tools/testing/selftests/memfd/memfd_test.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/meta/fbnic/fbnic_devlink.c |  6 ++----
+ drivers/net/ethernet/meta/fbnic/fbnic_fw.c      | 17 ++++++++++++-----
+ drivers/net/ethernet/meta/fbnic/fbnic_fw.h      |  3 +--
+ drivers/net/ethernet/meta/fbnic/fbnic_mac.c     |  5 +----
+ 4 files changed, 16 insertions(+), 15 deletions(-)
 
-diff --git a/tools/testing/selftests/memfd/memfd_test.c b/tools/testing/selftests/memfd/memfd_test.c
-index 5b993924cc3f..4e4c46246a4e 100644
---- a/tools/testing/selftests/memfd/memfd_test.c
-+++ b/tools/testing/selftests/memfd/memfd_test.c
-@@ -1359,7 +1359,7 @@ static int sysctl_nested_child(void *arg)
- 
- 	printf("%s nested sysctl 0\n", memfd_str);
- 	sysctl_assert_write("0");
--	/* A further nested pidns works the same. */
-+	/* A further nested pid-namespace works the same. */
- 	pid = spawn_thread(CLONE_NEWPID, sysctl_simple_child, NULL);
- 	join_thread(pid);
- 
--- 
-2.43.0
+diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c b/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c
+index 71d9461a0d1b..4c4938eedd7b 100644
+--- a/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c
++++ b/drivers/net/ethernet/meta/fbnic/fbnic_devlink.c
+@@ -166,11 +166,10 @@ fbnic_flash_start(struct fbnic_dev *fbd, struct pldmfw_component *component)
+ 	struct fbnic_fw_completion *cmpl;
+ 	int err;
 
+-	cmpl = kzalloc(sizeof(*cmpl), GFP_KERNEL);
++	cmpl = fbnic_fw_alloc_cmpl(FBNIC_TLV_MSG_ID_FW_START_UPGRADE_REQ);
+ 	if (!cmpl)
+ 		return -ENOMEM;
+
+-	fbnic_fw_init_cmpl(cmpl, FBNIC_TLV_MSG_ID_FW_START_UPGRADE_REQ);
+ 	err = fbnic_fw_xmit_fw_start_upgrade(fbd, cmpl,
+ 					     component->identifier,
+ 					     component->component_size);
+@@ -237,11 +236,10 @@ fbnic_flash_component(struct pldmfw *context,
+ 	 * Setup completions for write before issuing the start message so
+ 	 * the driver can catch both messages.
+ 	 */
+-	cmpl = kzalloc(sizeof(*cmpl), GFP_KERNEL);
++	cmpl = fbnic_fw_alloc_cmpl(FBNIC_TLV_MSG_ID_FW_WRITE_CHUNK_REQ);
+ 	if (!cmpl)
+ 		return -ENOMEM;
+
+-	fbnic_fw_init_cmpl(cmpl, FBNIC_TLV_MSG_ID_FW_WRITE_CHUNK_REQ);
+ 	err = fbnic_mbx_set_cmpl(fbd, cmpl);
+ 	if (err)
+ 		goto cmpl_free;
+diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_fw.c b/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
+index 6a803a59dc25..e2368075ab8c 100644
+--- a/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
++++ b/drivers/net/ethernet/meta/fbnic/fbnic_fw.c
+@@ -1232,12 +1232,19 @@ void fbnic_get_fw_ver_commit_str(struct fbnic_dev *fbd, char *fw_version,
+ 				 fw_version, str_sz);
+ }
+
+-void fbnic_fw_init_cmpl(struct fbnic_fw_completion *fw_cmpl,
+-			u32 msg_type)
++struct fbnic_fw_completion *fbnic_fw_alloc_cmpl(u32 msg_type)
+ {
+-	fw_cmpl->msg_type = msg_type;
+-	init_completion(&fw_cmpl->done);
+-	kref_init(&fw_cmpl->ref_count);
++	struct fbnic_fw_completion *cmpl;
++
++	cmpl = kzalloc(sizeof(*cmpl), GFP_KERNEL);
++	if (!cmpl)
++		return NULL;
++
++	cmpl->msg_type = msg_type;
++	init_completion(&cmpl->done);
++	kref_init(&cmpl->ref_count);
++
++	return cmpl;
+ }
+
+ void fbnic_fw_clear_cmpl(struct fbnic_dev *fbd,
+diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_fw.h b/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
+index 6baac10fd688..08bc4b918de7 100644
+--- a/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
++++ b/drivers/net/ethernet/meta/fbnic/fbnic_fw.h
+@@ -80,8 +80,7 @@ int fbnic_fw_xmit_fw_write_chunk(struct fbnic_dev *fbd,
+ 				 int cancel_error);
+ int fbnic_fw_xmit_tsene_read_msg(struct fbnic_dev *fbd,
+ 				 struct fbnic_fw_completion *cmpl_data);
+-void fbnic_fw_init_cmpl(struct fbnic_fw_completion *cmpl_data,
+-			u32 msg_type);
++struct fbnic_fw_completion *fbnic_fw_alloc_cmpl(u32 msg_type);
+ void fbnic_fw_clear_cmpl(struct fbnic_dev *fbd,
+ 			 struct fbnic_fw_completion *cmpl_data);
+ void fbnic_fw_put_cmpl(struct fbnic_fw_completion *cmpl_data);
+diff --git a/drivers/net/ethernet/meta/fbnic/fbnic_mac.c b/drivers/net/ethernet/meta/fbnic/fbnic_mac.c
+index 4ba6f8d10775..10e108c1fcd0 100644
+--- a/drivers/net/ethernet/meta/fbnic/fbnic_mac.c
++++ b/drivers/net/ethernet/meta/fbnic/fbnic_mac.c
+@@ -687,13 +687,10 @@ static int fbnic_mac_get_sensor_asic(struct fbnic_dev *fbd, int id,
+ 	int err = 0, retries = 5;
+ 	s32 *sensor;
+
+-	fw_cmpl = kzalloc(sizeof(*fw_cmpl), GFP_KERNEL);
++	fw_cmpl = fbnic_fw_alloc_cmpl(FBNIC_TLV_MSG_ID_TSENE_READ_RESP);
+ 	if (!fw_cmpl)
+ 		return -ENOMEM;
+
+-	/* Initialize completion and queue it for FW to process */
+-	fbnic_fw_init_cmpl(fw_cmpl, FBNIC_TLV_MSG_ID_TSENE_READ_RESP);
+-
+ 	switch (id) {
+ 	case FBNIC_SENSOR_TEMP:
+ 		sensor = &fw_cmpl->u.tsene.millidegrees;
+--
+2.47.1
