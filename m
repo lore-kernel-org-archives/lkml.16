@@ -1,108 +1,83 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B429125634;
-	Fri, 16 May 2025 15:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04BE62629C;
+	Fri, 16 May 2025 15:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747409447; cv=none; b=H4R9yMKPAYxJ7oCeS4Fpx0Xk8WzkyGRbWCRBqtQJJws/MI8MqIuiEUYs6APr3QUj4nb+VYrHDWZTaLNLH5ad4yUilGOn0CoqfY7b++i7MBtcOoe8gbn1BeMnj4FOrZp1PArlGcnBUbTH1WVvGhg6ilatBzfECfyQ3sVPJTaYwY0=
+	t=1747409461; cv=none; b=PV74D/6+t8XGml/L2W7wHCsjFEwIEtu5B8PAlQFeLHbtPqUr4AO6EK3o+HtUBpJcjR15iSUsnk2NU3ZLa7gTCKVYTT1+iNGDH763ufG8s8OxFSiBcRcO9hIUWh0HeR1jnUZ5tR9E4loCQOBvgJQWyQX+zbD3iW9n9mffG5DsVkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747409447; c=relaxed/simple;
-	bh=aiZxNYn+tgkHmM3iNy65IGnhdwpMLD9DL48fqn5EZPc=;
+	s=arc-20240116; t=1747409461; c=relaxed/simple;
+	bh=svL/aY79Ecgpjdyn0gTlrY1lFNGI5rcL2sg9dXmNGdM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lxLrUcWxATXFFrIBFCI6brX6cM6G173Yu3pgdUj0pYHcSyg47fE1DlLUj5nu47ku3zn24Fk1wFYVFePllQOwLbEkb0Cfq66obRth4HZ62DwOY7gRbbeUmK1Y3KlEy3juU9MeqbkWoA4Q/OV2lwMqzXz6aOJyGyE5JrmKvy1Bqc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=d05oGczZ; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=akOccas/krcSswcJa6fD5rm1GmrHLmtYhc7tQppnrt1aBw2p+fYusjAORcufaUan5HEGEm6MbAYTVyMyjr4HZBODTVpEeQwnMJR4aPhpZAZMew3OKBFsY0LzhZoTE8N3CTH6H1bxBpV9DWXLSABIFlHXYF3Eb71/iW55YjL+ZvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mA8o03Aa; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="d05oGczZ"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2775140E01ED;
-	Fri, 16 May 2025 15:30:42 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id t1smUWOis_Vl; Fri, 16 May 2025 15:30:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747409437; bh=McVGoq+UtKCdfvFYOGPlL/OvNduF+f0TrshIhzY75bc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d05oGczZmarekC1JZiZ/c6VsK4Kmz72h37LMtuKtAwme8iUtaZjf7Fg16pArdatyY
-	 G+d75nGrln5L5EzHoK37wlmTwAGKtNauH+0D2lj206Os79aCObuaaUpxzEBoHqj8wQ
-	 YNZjbGdaCAb/0lqppESMuehhHr01VT3NIkhcPXITn+GNbqpnB6VTpV0PnDKUUG7cPG
-	 3YxT4Z8CXQH+/AofnFmux2zBgl8U+/tZOvqbZBDjvHpIirVD3uEtImAbxOrgMxDlrX
-	 TKDfPRwteJ0lhDIbGcZPUhO3YleUQTOeT8LBvJ8k+AaXbil33YdMTCw9rWzMHFU9mh
-	 rT8+0hsCXuLrXDau1wjllWWZLMlc4D/FftqxoqtA6A79nSHfgpIKeulGU0dZap1f0v
-	 G5d1xiy8jDqc9KFm8L16cRQZU6XkJzvmje05RxbvnD3fAogP6CO+RsGwO7hEGxBMiu
-	 DM6JkfPNhwbsiGiA2CDPEzx6mlNu2ip6auGZQpSMRSJrrOutAjJ5vJr3bUWc4poiHx
-	 8mJ2nnr0p6MYsjGDbKmh3mJFJDvn0ntIGi/2X+mdZuJWX9TlhP0ioxgTwWSnlLisVC
-	 ktQGZQkjCaxw0tsN6J+cgKh09BepsyIHcsjE03SrF0jfW6Ejr72mJCq8Qr23iucSOw
-	 n64fAEeWmAWkEeqGudIhn62Q=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2D01F40E0196;
-	Fri, 16 May 2025 15:30:15 +0000 (UTC)
-Date: Fri, 16 May 2025 17:30:09 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Kieran Bingham <kbingham@kernel.org>,
-	Michael Roth <michael.roth@amd.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Brijesh Singh <brijesh.singh@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Juergen Gross <jgross@suse.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-efi@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCHv2 3/3] x86/64/mm: Make 5-level paging support
- unconditional
-Message-ID: <20250516153009.GEaCdaAdhCVpjaViSx@fat_crate.local>
-References: <20250516091534.3414310-1-kirill.shutemov@linux.intel.com>
- <20250516091534.3414310-4-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mA8o03Aa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747409461; x=1778945461;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=svL/aY79Ecgpjdyn0gTlrY1lFNGI5rcL2sg9dXmNGdM=;
+  b=mA8o03AaKd3qWN9PazAkDClGI2XFuk6/Yl4fZVngX6r5lTOsLU1cNXMW
+   6MSQyMJRGmHEwsRCRmit5iYsVtSGETkBPZfM+sJ8FCfMlYvhPaEQ2caQw
+   KpLno1sY7YE80jSiWCo0JD0R2Jxgz+7RQ8VBxiD8HIBX+HvdqSW7QMAJf
+   Efeu9Zz4XT8bMOOvKWDlQHAkp70CB/yzJTs4T9XlpY0Cp5hFnIpl5DCaq
+   JMxXjzIUcjFXuOL1dq/3lNDLh82aHbe//wrFZ6WLTvt0YKFERrM9vy0Hx
+   lNqobbyc3lA8p3/+nLemCSv1ycEOS0Mp412dv5GQHnAXYveUmLrC88VZZ
+   Q==;
+X-CSE-ConnectionGUID: 4BDl6nhuT+ujo1anekK8KQ==
+X-CSE-MsgGUID: p3qGkSDyTk6dGRDqSxuzPA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11435"; a="49286090"
+X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
+   d="scan'208";a="49286090"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 08:31:00 -0700
+X-CSE-ConnectionGUID: qoEoDJC5SPeYwhmBgWAWtg==
+X-CSE-MsgGUID: N6WibDeCRSGNW+ObP/Vgow==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,294,1739865600"; 
+   d="scan'208";a="175850756"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 08:31:00 -0700
+Date: Fri, 16 May 2025 08:30:57 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: "David E. Box" <david.e.box@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	srinivas.pandruvada@linux.intel.com,
+	andriy.shevchenko@linux.intel.com, ilpo.jarvinen@linux.intel.com,
+	xi.pardee@linux.intel.com, hdegoede@redhat.com
+Subject: Re: [PATCH 00/15] Intel VSEC/PMT: Introduce Discovery Driver
+Message-ID: <aCdaMel-zV8Qir69@agluck-desk3>
+References: <20250430212106.369208-1-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250516091534.3414310-4-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20250430212106.369208-1-david.e.box@linux.intel.com>
 
-On Fri, May 16, 2025 at 12:15:33PM +0300, Kirill A. Shutemov wrote:
-> @@ -173,10 +173,10 @@ For example, when an old kernel is running on new hardware.
->  The kernel disabled support for it at compile-time
->  --------------------------------------------------
->  
-> -For example, if 5-level-paging is not enabled when building (i.e.,
-> -CONFIG_X86_5LEVEL is not selected) the flag "la57" will not show up [#f1]_.
-> +For example, if Linear Address Masking (LAM) is not enabled when building (i.e.,
-> +CONFIG_ADDRESS_MASKING is not selected) the flag "lam" will not show up.
->  Even though the feature will still be detected via CPUID, the kernel disables
-> -it by clearing via setup_clear_cpu_cap(X86_FEATURE_LA57).
-> +it by clearing via setup_clear_cpu_cap(X86_FEATURE_LAM).
+On Wed, Apr 30, 2025 at 02:20:49PM -0700, David E. Box wrote:
+> 4. Discovery Driver and API:  The core of the series is the addition of
+> the PMT Discovery driver. This driver not only implements discovery of
+> telemetry attributes and capability data (exposed via sysfs) but also
+> introduces an API to retrieve telemetry regions by feature, which is
+> essential for features like per-RMID telemetry counters.
 
-LOL, good one.
+This part of the series is the foundation for my telemetry/resctrl
+patches:
 
-The rest looks nice and good to me. And FWIW, it boots fine on my Zen5 with
-5lvl enabled.
+https://lore.kernel.org/all/20250429003359.375508-1-tony.luck@intel.com/
 
-Reviewed-by: Borislav Petkov (AMD) <bp@alien8.de>
+That series includes a fake place holder for the discovery driver, but
+I've been using David's patches for all my testing on real hardware.
 
-Thx.
+Tested-by: Tony Luck <tony.luck@intel.com>
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+-Tony
