@@ -1,121 +1,85 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF9A157E6B;
-	Fri, 16 May 2025 03:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC61E157E6B;
+	Fri, 16 May 2025 03:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747366906; cv=none; b=J2geOovr+6XVxDlLJF0O9fqIVmhKWe7HKQwO7lub1TK/uK3ujD1MfRhzs8QKi/CvZaf6AgLofjmwRXJw507Nw6wxIjxA+OIJz4iMOt18qfJyohzBV9+ab+ztZQXTDJZAz9s+EE6AaDygZnQpIZsbwepCn/tbib71peQUqlQvlZY=
+	t=1747366980; cv=none; b=CEClNoo70gIVk4zgrvw004i6SdS9qiQpZZiO4HrRy3Dk+cTtkitFp4beM6S0SE5pUSiuTnnYhQaTMpoIFLT0pvKmWTIquluFEfxjDl/oyKTQ6EnKauGSAbnPAMFSvwftEMDGnAemYzlweyuLzza/ChcURqeK9t3NUYih0q5fjLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747366906; c=relaxed/simple;
-	bh=WyVN/f3JMKOQ48HmDKOEVVs++v/H2ZPMhA4CZ9WQfqc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DuWWiii6UiZ7rkG1EHCpLfFqCCZDuuUZNwh+Sne64EGst/Og52WJaAWuZn0ZH0igmYiLBc6Lf+TJol+VL6G9j6+CXIRJCY7q4gd6smdCJ1CqmakYdYi2JHBZWzxhLDv9k5YAFxrO+oLKO5qcFHZOTvhdggCCYmNl5e4kYyBij1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LpNeCEYM; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LpNeCEYM"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54ea69e9352so2208565e87.2;
-        Thu, 15 May 2025 20:41:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747366901; x=1747971701; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cv+Z5EyhamaRdEUyPKUKKXRXh2hCvdemmvs6xDGcfz0=;
-        b=LpNeCEYMjDBWnYg7fd1DSAwDbA+L2rGlhSVAmHgP3S0TBAVB7AHlGz+sUFO+BS3wq/
-         Vz+2MnkHYEaQ+hN94JX7NAb/fR2yNYxsfkY7i8UAyHiiFb3rRbxWeLSDEbXOOf3uYrbH
-         7BBEt0zImi4wk9IG2sTIVCXaVFE9wyWaPtCicqWQK/XCkuB76925INEhIuTmidy+B5/o
-         1qfvmSVvvArDr66+50++5cZ6PZEnvDIu/zNUSdrgrcyTbIZjAFWL3cyiT7WrTYhCwTMm
-         rt/tNRLUUvChr0fNi+FhJ8Qtlfp59w6PAyLmw8b56vjfXczaBPoTt0WHy6bLidwIUvrj
-         kvlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747366901; x=1747971701;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cv+Z5EyhamaRdEUyPKUKKXRXh2hCvdemmvs6xDGcfz0=;
-        b=oigZOvtFoyO6HtKAoHWlGSKj7qHVIZnimGfIsFklf0r+/+mV1XLPvdX/CmTkxtIIQw
-         28Esuk1deqn1qU2m/T+HVdeREL9Jz//uSDMXU98MpjZOh9NzHL7+F3TwsMuTR9etP/Rb
-         FYXse33lbO/ArPxehUNRz68yy6s3uPfDeuXCxtf6UHuNlyblBh2JCG1edhAYC7r4IBN2
-         zm5vkvB1s2cRh7+VHuHXJtC4wnAuMHdUL8PI+AWY4e7ARKT1Vt9PWOHUJAeNeKcLojtP
-         ghWNeD6OQ899G2W1XDjnYRAe2F2fz7c2T3JjC+0YRQe/IDZwIT8xkgVGuxqqkGqWmmRz
-         WvEA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZlxc4IbgvP2tk1ppvqs6s1ED6dYh1l7Hr2RnLirVi+dwB/wq6Lr52AJDrhK5845Zf1GWDik4iqxzqZNU=@vger.kernel.org, AJvYcCVNvbIu6VSFEdF8e+mrO5Srb1/RSKHeXp4at/SYGdYe3hXRy/P9Ln3B6nBODm9gVwipZS9Qi19nuQXX@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxqnrwd/UPEQMQHX/019MZjRTpN44eq3iN/7PYShVb3KuY4+61X
-	83IMYKOi34Hn4XCE+bsQRsjoBqqaq4Wd3XfqfzLuIN+RUm416x86LOCf0RCQdJfAWByKzRg6iVM
-	avp8AlMWjOQWVCw8Nu6HNNpnP3zR6r+o=
-X-Gm-Gg: ASbGncstVR4N2DszSjJTAUnhi6vwguuS5iQBKKcJqzvCm26qe/wc5TT3QAp28miMhfy
-	aGoFuTWampk/VDAv1sAO+l0AkTMAvh55KSCfZqolP4R0h0FNMkKiwL4nFPjlqh6/4AX4SB4AZ4g
-	Nnxr5gAZaAkvudvwRlxGFpV2S4z34lr5SBPHDiHCSC3o53aoCy+gP53Rs+oxkpTsjrzlc=
-X-Google-Smtp-Source: AGHT+IEYUFZ8fuKrx/1pcVQ6FEvGvLjYdBQdtB8zshOOJU4Yd+djbgw8jzpXtv1Xkjh3nzmr/oJYjoiNaMpJGWIccKE=
-X-Received: by 2002:a05:6512:228a:b0:549:8d16:7267 with SMTP id
- 2adb3069b0e04-550e962697cmr235202e87.10.1747366900677; Thu, 15 May 2025
- 20:41:40 -0700 (PDT)
+	s=arc-20240116; t=1747366980; c=relaxed/simple;
+	bh=OVkUQi0BOxewrN/TcrPE7P8qoc+l5nR7NbzjdSJwhTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ly5DA6mFIhYYUvnuf8rMyqDJzi1+8riQUuWLYSuuzhZnCWovOcTiRPasiEmz4Px8ix8se9roryTPa1blmtYL/y0slvxntwQdvgYwP6r1XVHjmseZlWH615iIpYcwyP297Vkz3xGTv1Xf93aviqWTnieDrpm7Q7+rOlvrPxmd6Fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
+Received: (from willy@localhost)
+	by pcw.home.local (8.15.2/8.15.2/Submit) id 54G3gWRw012606;
+	Fri, 16 May 2025 05:42:32 +0200
+Date: Fri, 16 May 2025 05:42:32 +0200
+From: Willy Tarreau <w@1wt.eu>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: enh <enh@google.com>, Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        libc-alpha@sourceware.org, linux-arch@vger.kernel.org
+Subject: Re: Metalanguage for the Linux UAPI
+Message-ID: <20250516034232.GA12472@1wt.eu>
+References: <feb98a0f-8d17-495c-b556-b4fe19446d5d@zytor.com>
+ <CAJgzZoqUV6gSfgCWbfe6oSH5k9qt30gpJ0epa+w78WQUgTCqNQ@mail.gmail.com>
+ <e4d114e3-984a-482d-a162-03f896cd2053@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514134011.16285-1-shawn2000100@gmail.com> <2025051444-among-posh-afcb@gregkh>
-In-Reply-To: <2025051444-among-posh-afcb@gregkh>
-From: =?UTF-8?B?6Zmz5a2Q5r2U?= <shawn2000100@gmail.com>
-Date: Fri, 16 May 2025 11:41:29 +0800
-X-Gm-Features: AX0GCFvQ2npPTUqwgxDkpb5F4pgkUEaZ5qECP3wQm-QLOHQh80mchMkIrgmMY7U
-Message-ID: <CAPwXWsD2JHO+MQS5+5+Zi8ic4uFY6G24Ug2Jd2dZ3zfSDvuxtQ@mail.gmail.com>
-Subject: Re: [PATCH] usb: xhci: Set avg_trb_len = 8 for EP0 during Address
- Device Command
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: mathias.nyman@intel.com, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e4d114e3-984a-482d-a162-03f896cd2053@zytor.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hi Greg,
+On Thu, May 15, 2025 at 02:24:29PM -0700, H. Peter Anvin wrote:
+> On 5/15/25 13:26, enh wrote:
+> > On Thu, May 15, 2025 at 4:05 PM H. Peter Anvin <hpa@zytor.com> wrote:
+> > > 
+> > > OK, so this is something I have been thinking about for quite a while.
+> > > It would be a quite large project, so I would like to hear people's
+> > > opinions on it before even starting.
+> > > 
+> > > We have finally succeeded in divorcing the Linux UAPI from the general
+> > > kernel headers, but even so, there are a lot of things in the UAPI that
+> > > means it is not possible for an arbitrary libc to use it directly; for
+> > > example "struct termios" is not the glibc "struct termios", but
+> > > redefining it breaks the ioctl numbering unless the ioctl headers are
+> > > changed as well, and so on. However, other libcs want to use the struct
+> > > termios as defined in the kernel, or, more likely, struct termios2.
+> > 
+> > bionic is a ("the only"?) libc that tries to not duplicate _anything_
+> > and always defer to the uapi headers. we have quite an extensive list
+> > of hacks we need to apply to rewrite the uapi headers into something
+> > directly usable (and a lot of awful python to apply those hacks):
+> > 
+> > https://cs.android.com/android/platform/superproject/main/+/main:bionic/libc/kernel/tools/defaults.py
+> > 
+> 
+> Not "the only".
 
-I got it, thank you so much for the effort!
+Indeed, nolibc (/tools/include/nolibc) directly includes uapi as well, and
+since nolibc doesn't compile anything but only exposes include files, these
+appear as-is in the application. So far the headers look clean enough for
+our use cases and have not caused problems. But admittedly, applications
+are small and limited (selftests and init code).
 
-I already patched a newer version
-Link: https://lore.kernel.org/linux-usb/20250516033908.7386-1-shawn2000100@=
-gmail.com/T/#u
+One thing we've been considering which we would find convenient there
+would be to generate an indirection layer for all files that would include
+the right one depending on the detected arch so as to ease compilation for
+any arch with all the uapi files available, as it seems totally feasible
+right now (i.e. each .h file would just have "#if defined(__arch_xxx__)
+#include <arch_xxx/foo.h>" etc). We could imagine having a
+"make install-all-headers" target to produce that thing for example. I'm
+sharing this so that you can also have this in mind to consider whether or
+not your chosen approach would break that possibility.
 
-
-On Wed, May 14, 2025 at 10:46=E2=80=AFPM Greg KH <gregkh@linuxfoundation.or=
-g> wrote:
->
-> On Wed, May 14, 2025 at 09:40:08PM +0800, jay.chen wrote:
-> > According to the xHCI 1.2 spec (Section 6.2.3, p.454), the Average
-> > TRB Length (avg_trb_len) for control endpoints should be set to 8.
-> >
-> > Currently, during the Address Device Command, EP0's avg_trb_len remains=
- 0,
-> > which may cause some xHCI hardware to reject the Input Context, resulti=
-ng
-> > in device enumeration failures. In extreme cases, using a zero avg_trb_=
-len
-> > in calculations may lead to division-by-zero errors and unexpected syst=
-em
-> > crashes.
-> >
-> > This patch sets avg_trb_len to 8 for EP0 in
-> > xhci_setup_addressable_virt_dev(), ensuring compliance with the spec
-> > and improving compatibility across various host controller implementati=
-ons.
-> >
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D220033
-> > Signed-off-by: jay.chen <shawn2000100@gmail.com>
->
-> Please use your name, not your email alias.
->
-> And as you are now using a gmail account, please set the "From:" line at
-> the top of the patch properly as is documented.  Please work with others
-> at your company that know how to do all of this if you have questions.
->
-> Also, this is a v2 patch, so always document what changed to warrant a
-> new version.
->
-> thanks,
->
-> greg k-h
+Just my two cents,
+Willy
