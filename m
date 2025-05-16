@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D27D2857D7;
-	Fri, 16 May 2025 21:36:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2032857D7;
+	Fri, 16 May 2025 21:36:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747431362; cv=none; b=eMZJT4tXpu/1ULlrrghkQCjOtyAtB8jT66VvWXbE0FGOXgaBs5TPM8aTdNumQz78FzlLaYoEL29exs0FO9tarQZf60ka7AgClyZyoXhMwCcaDb04xsj4fEFC54A4o8AYWET4dPYRjyCEdqOWT1BnsCMwAdjST9k8GkZmNgMVzgc=
+	t=1747431367; cv=none; b=FkjBdjO0IS1CFqr4jK6Wmlwob2wQ4cdWbMYTtb6wNEKbviEbcutNCsrH81UE1sySb4seKOXgTUCkHpU7IHEXt9e/WSwQsnbF8ZdhpSGlOCjfgNdXGOrRveD/w74d1ciBKGk2FEprQcyYmSI8Ith7ay/1lH7YLD1vhVhcttNtTNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747431362; c=relaxed/simple;
-	bh=RPD/bLLACqb+T6X64CUsRDGl+msceaKHRJ1aENDoN+k=;
+	s=arc-20240116; t=1747431367; c=relaxed/simple;
+	bh=9YGGE1TGeazcVqzIHxmvNTlfgSH6mcicVrtP9HboPiE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F4YczLxhIYXDMxTPz0PfYc6oSSxZm0YC61JcrKitF33CFepTesIBhUEMwqOR7ZIR1BcBbcSpp6JNAjXQgrVBvRLH98Iz/N7V7GfCZy4tW9gtoGPF/RgcisFeGmd4eAKreT+bxc51q/1mLcCZzjjZpplJiuCm5vauH1mQ0cVMv5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZGzaQp+C; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=c+0wwpzTRu+YCQAVl07dPDCbCJJEmKMVNa59w9TxIf5ggemiaU7Rz8oXV3jUiipYEc3drGiAYFK0wuYRBEV9Cvd2kuHSbFiig6FnymEZCYJr/NWB71aSZv3byBkMVSSkodTVFVE9pLQDpJwQd3YZySe0E1rehE8AXqKT1mO01u8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OqExve53; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZGzaQp+C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90816C4CEE4;
-	Fri, 16 May 2025 21:35:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OqExve53"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25692C4CEE4;
+	Fri, 16 May 2025 21:36:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747431362;
-	bh=RPD/bLLACqb+T6X64CUsRDGl+msceaKHRJ1aENDoN+k=;
+	s=k20201202; t=1747431366;
+	bh=9YGGE1TGeazcVqzIHxmvNTlfgSH6mcicVrtP9HboPiE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZGzaQp+CjKtPqwdWtNZ8G3KAiXE2pCgPYWd8Bzx0MIus7bmgjhnYwaAdyVddSARso
-	 Q2m5uGniT1DNjCZpMlv8CNC9+3V8EdURoIDuZvBrguU1v7e6d0Trzrm3P7TCmRb8V9
-	 5p3LU3oQd74HDJrj+UxtXxJHONcqJ+yYs8T707BUZpBMw2eGNiqY1DSoCTy5pUCa9l
-	 db4DvmsPypHn1CqXKEx9bCF3NSLzAp1nwmVUqURm6mqXvdEl56gnwnszgNrBqdFFZi
-	 B9RibjquHzvQzrVq1M9cnzKkJyIXnCLA7bpAGaWO6HE9dFhf4NTY/Na5+qEySLTHoC
-	 K5FJMUb3nVfwg==
-Message-ID: <c4eb1999-66f8-4249-b5e8-f9cbd1aa9531@kernel.org>
-Date: Fri, 16 May 2025 21:48:43 +0200
+	b=OqExve53AUId7CcYAYsq3yvOShvbSRMnWurpBIqDQ9be8HuLhEhq72gZNMsbkVvXf
+	 Hz2seqzq5p6okMtoXWw/oAkxH1yJ26ou+r+3MF+xzEkv1GkxK/FKdfTEvm1nIb5Whp
+	 Lk/epm6eCpoE6NK++0eogoFO0Cui0u7gECK160Af7SKOKTxkI5AMYrZclRU3of70nt
+	 MRiQlSvY/y183DbFxHHO+iUrkhSmOlE9y61hRjcxXrrN719y+EoZHDB/QaYb/bKXlV
+	 jp/7kcZ1V+lqSTXz/XGGAQnHYQAkKTc5C11x2GZ7GHQJzpgPumSNR3AtFr13Yj42j1
+	 XoM4lZM3uCmJQ==
+Message-ID: <4a55adff-7d68-47fe-9995-afa30b9857a6@kernel.org>
+Date: Fri, 16 May 2025 21:49:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: vendor-prefixes: Add SakuraPi prefix
+Subject: Re: [PATCH v2 2/3] dt-bindings: arm: rockchip: Add Sakura Pi RK3308B
 To: Hsun Lai <i@chainsx.cn>, robh@kernel.org
 Cc: conor+dt@kernel.org, heiko@sntech.de, krzk+dt@kernel.org,
  sfr@canb.auug.org.au, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
  linux-rockchip@lists.infradead.org
 References: <20250514075914.194651-1-i@chainsx.cn>
- <20250514075914.194651-2-i@chainsx.cn>
+ <20250514075914.194651-3-i@chainsx.cn>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -88,39 +88,42 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20250514075914.194651-2-i@chainsx.cn>
+In-Reply-To: <20250514075914.194651-3-i@chainsx.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 On 14/05/2025 09:59, Hsun Lai wrote:
-> Add vendor prefix for SakuraPi.org, which produces
-> development boards like the SakuraPi-RK3308B.
+> This patch adds device tree binding support for
+> Sakura Pi RK3308B, with compatibility for the
+> Rockchip RK3308 SoC.
+> 
+> Link: https://docs.sakurapi.org/article/sakurapi-rk3308b/introduce
 > 
 > Signed-off-by: Hsun Lai <i@chainsx.cn>
 > ---
 > 
 > (no changes since v1)
-> 
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index 3e7450c3f..744d01a76 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -1299,6 +1299,8 @@ patternProperties:
->    "^rve,.*":
->      description: Recharge Véhicule Électrique (RVE) inc.
->    "^saef,.*":
-> +    description: SakuraPi.org
-> +  "^sakurapi,.*":
->      description: Saef Technology Limited
+Really? And the tag?
 
-Still broken / nothing improved.
+<form letter>
+This is a friendly reminder during the review process.
 
->    "^samsung,.*":
->      description: Samsung Semiconductor
+It looks like you received a tag and forgot to add it.
 
+If you do not know the process, here is a short explanation:
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
+of patchset, under or above your Signed-off-by tag, unless patch changed
+significantly (e.g. new properties added to the DT bindings). Tag is
+"received", when provided in a message replied to you on the mailing
+list. Tools like b4 can help here. However, there's no need to repost
+patches *only* to add the tags. The upstream maintainer will do that for
+tags received on the version they apply.
+
+Please read:
+https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+
+If a tag was not added on purpose, please state why and what changed.
+</form letter>
 
 Best regards,
 Krzysztof
