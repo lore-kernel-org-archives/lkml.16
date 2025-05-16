@@ -1,65 +1,93 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28309206F23;
-	Fri, 16 May 2025 04:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0625C635;
+	Fri, 16 May 2025 04:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747370265; cv=none; b=jrkuPrZnKZvZ+V4JZLtGebJf58lP553urj/F4eqD3PVvRF/FwphxbXvmBt+8oaJUcQ+bXg6k9XjQtZdTlQi/Avf7qcF3KXkWrKrwyC8Kl4r2qv/MkXt2UX3MZtN75BcwA9tb+ZpmXgpkF98cASdX1777HW1g+wFrloS43mMnL68=
+	t=1747370268; cv=none; b=iCM1JYW63EDdDFHhoXZWfo/KVW3wKC/nYKj+TJ4qLXgDozjM8IpscI110nwOXnee2PNVNsLLZVALnQFFcHeVOu8xyvRyNvhqb5LzQtLUsqZhPXKlEQhd4CBAu5HianfvRHrfafcNpLDKBg+9OZirN9Nzkz/3LSBF3vzRsRkpNLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747370265; c=relaxed/simple;
-	bh=WaKI9gNXth+mQA/2U4+nsTBmttlOm2HrhL0YToOrOkI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mONitQtpsoo5VSyErl+fEVexpaEkILx9al8O48c4a4jAwuy/CDNXdA9t9FM/fXQoGi46GjVirVFztnijk5VsZxCbBqn82kIfVILmZK47yQK3doMWsGcM8Rrm+6IOPKLZbo/GDGNZWEtjezRYrY+r42BTjoMukBa0mAbi/qkzS1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RfW1QzMK; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RfW1QzMK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=WaKI9gNXth+mQA/2U4+nsTBmttlOm2HrhL0YToOrOkI=; b=RfW1QzMKc75AW7TEflla3wEgfl
-	m0x+kMNPyZO1ExmhXAV12X4wt6xym4lpyr4TTTsuRcYA+svQfX/rYB/LjQMtXtJxf4TCv7hoXK9+o
-	ilsKNNc2RsYlm1H/1rcPIhhA956INYNfv2cKVDH2KAXDTks5Apztw+gPCD1zcajrOONqJlluUrB6c
-	d2BDa12XC0VEcFwgmNeL9/lq2DXYRl6iw17OGBQNpndJSySup2qWfxevW07k1hO9VzVdaUC412bBD
-	tdCVWyB8nw59VZ6bofhBn8MKt6UmI2c45VJYdKp8h55R+3Ara9e9lud1RgD/nCo/v+QYyYAi0ydpa
-	ktF1qfNQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uFmpG-00000002T2z-1yhX;
-	Fri, 16 May 2025 04:37:38 +0000
-Date: Thu, 15 May 2025 21:37:38 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Jason Xing <kerneljasonxing@gmail.com>
-Cc: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Jason Xing <kernelxing@tencent.com>,
-	Yushan Zhou <katrinzhou@tencent.com>
-Subject: Re: [PATCH v2 2/4] relayfs: introduce dump of relayfs statistics
- function
-Message-ID: <aCbBEg-DFYvx0Dpa@infradead.org>
-References: <20250515061643.31472-1-kerneljasonxing@gmail.com>
- <20250515061643.31472-3-kerneljasonxing@gmail.com>
+	s=arc-20240116; t=1747370268; c=relaxed/simple;
+	bh=oUR/Vyyy5jkz6oI8KlHpxl1LYLVxP+UCkAjxtCLMq84=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=AlzbzkUECL0sQTXW3Q655gHVLG7WSG/nQ5E+EBjFfKFNozHGNBK0OUxZpNxqlgU3CkSanlbyQ5AJOeIIrlN1V8lm84st04+3j5PaV6C5o1jIpKPLU6cs2f6PdLv0fkky7UNdoVdF3ACdSh02FRBSqXZ8MGbEsqeDGc5eIzK2f5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-ed-6826c1131c3e
+Message-ID: <7cf5da27-4542-49f9-90e2-88ba0eaba682@sk.com>
+Date: Fri, 16 May 2025 13:37:39 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515061643.31472-3-kerneljasonxing@gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Cc: kernel_team@skhynix.com, Andrew Morton <akpm@linux-foundation.org>,
+ "Huang, Ying" <ying.huang@linux.alibaba.com>, gourry@gourry.net,
+ yunjeong.mun@sk.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+ lenb@kernel.org, dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
+ dave.jiang@intel.com, horen.chuang@linux.dev, hannes@cmpxchg.org,
+ osalvador@suse.de, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-mm@kvack.org, kernel-team@meta.com
+Subject: Re: [PATCH v8] mm/mempolicy: Weighted Interleave Auto-tuning
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
+References: <20250512141412.3792050-1-joshua.hahnjy@gmail.com>
+Content-Language: ko
+From: Honggyu Kim <honggyu.kim@sk.com>
+In-Reply-To: <20250512141412.3792050-1-joshua.hahnjy@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBIsWRmVeSWpSXmKPExsXC9ZZnoa7wQbUMg/OfjC3mrF/DZjF96gVG
+	ixM3G9ksft49zm7RvHg9m8XqTb4Wt/vPsVqsWniNzeL41nnsFvsuAtXufPiWzWL5vn5Gi8u7
+	5rBZ3Fvzn9XizLQii7lfpjJbrF6T4SDocfjNe2aPnbPusnt0t11m92g58pbVY/Gel0wem1Z1
+	snls+jSJ3ePEjN8sHjsfWnosbJjK7LF/7hp2j3MXKzw2n672+LxJLoAvissmJTUnsyy1SN8u
+	gSujYfl79oI3bBWHlrSzNTCeZe1iZOeQEDCReFTUxcgJYf14zQxi8wpYSqw43AVmswioSvyc
+	2s8IEReUODnzCQuILSogL3H/1gz2LkYuDmaBG8wSHfvmgiWEBVwlbq87BtYgIqApcaJ1Etgg
+	IQE7ibbpG1hBbGYBEYnZnW1gcTYBNYkrLycxgdicAvYSt1f8YIOoMZPo2trFCGHLS2x/O4cZ
+	ZJmEwCl2iRXLlzNDXC0pcXDFDZYJjIKzkBw4C8mOWUhmzUIyawEjyypGocy8stzEzBwTvYzK
+	vMwKveT83E2MwPhdVvsnegfjpwvBhxgFOBiVeHgdrqtmCLEmlhVX5h5ilOBgVhLhvZ6lnCHE
+	m5JYWZValB9fVJqTWnyIUZqDRUmc1+hbeYqQQHpiSWp2ampBahFMlomDU6qBUern3pRaHcWD
+	NeXixfyfAtUPC8kJGazblJ+23Hjz8Ree23if/7z10vJzdOLtZb6zjlvlLJ9yJ7BX2rNm6p0n
+	G5bFd9dLz3OsfjHNZof/pr98glKXti52Y560f7XjtyWK9ouubTpntkJwz5fL7IHhF87/fs0w
+	g9t0l239zbgWV975vnIldRvW/1FiKc5INNRiLipOBAAUxezm2wIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsXCNUNLT1f4oFqGwfTVqhZz1q9hs5g+9QKj
+	xYmbjWwWP+8eZ7doXryezWL1Jl+L2/3nWC1WLbzGZnF86zx2i30XgWoPzz3JarHz4Vs2i+X7
+	+hktLu+aw2Zxb81/Vosz04os5n6Zymyxek2Gxe9tK9gchD0Ov3nP7LFz1l12j+62y+weLUfe
+	snos3vOSyWPTqk42j02fJrF7nJjxm8Vj50NLj4UNU5k99s9dw+5x7mKFx7fbHh6LX3xg8th8
+	utrj8ya5AIEoLpuU1JzMstQifbsEroyG5e/ZC96wVRxa0s7WwHiWtYuRk0NCwETi0Y/XzCA2
+	r4ClxIrDXWA2i4CqxM+p/YwQcUGJkzOfsIDYogLyEvdvzWDvYuTiYBa4wSzRsW8uWEJYwFXi
+	9rpjYA0iApoSJ1ongQ0SErCTaJu+AWwZs4CIxOzONrA4m4CaxJWXk5hAbE4Be4nbK36wQdSY
+	SXRt7WKEsOUltr+dwzyBkW8WkjtmIRk1C0nLLCQtCxhZVjGKZOaV5SZm5pjqFWdnVOZlVugl
+	5+duYgTG6LLaPxN3MH657H6IUYCDUYmH1+G6aoYQa2JZcWXuIUYJDmYlEd7rWcoZQrwpiZVV
+	qUX58UWlOanFhxilOViUxHm9wlMThATSE0tSs1NTC1KLYLJMHJxSDYxbJijHyn10iRepad7l
+	P+vjL5Hkvecjvzac3tyTZRyw5c7rPZJnbp57uPBbteGO1HY77YfTvP8wLnHPEd6fvOzUmZLX
+	a1mF3B0Dn/k+Dg2cJFHD5pa+Zgu7uPJX0wlhytN2NP+6oVw/xaBqr/bbhexRJ5t2TjjPLCV7
+	/aiHYwZ35tx1PwKaj5QpsRRnJBpqMRcVJwIASyQiE80CAAA=
+X-CFilter-Loop: Reflected
 
-On Thu, May 15, 2025 at 02:16:41PM +0800, Jason Xing wrote:
-> +extern size_t relay_dump(struct rchan *chan, int flags);
+Hi Joshua,
 
-Please don't add pointless externs for function prototypes.
+On 5/12/2025 11:14 PM, Joshua Hahn wrote:
+> Hi Honggyu, thank you for reviewing & testing my patch (again)!
 
-> +EXPORT_SYMBOL_GPL(relay_dump);
+[...snip...]
 
-This export seems unused even with the entire series applied.
+>> Hi Andrew,
+>>
+>> I'm not sure if Joshua is better to post v9, but if you want to fold and update,
+>> then could you please add my tags as follows when you fold this change?
+>>
+>>     Reviewed-by: Honggyu Kim <honggyu.kim@sk.com>
+>>     Tested-by: Honggyu Kim <honggyu.kim@sk.com>
+>>
+>> I added the same tags in v7 but not included in v8 somehow.
+>> https://lore.kernel.org/linux-mm/5fdd7db9-96fb-49ea-9803-977158cb0132@sk.com
+> 
+> I must have missed including these tags. Sorry about the confusion --
+> hopefully we can incorporate them into v8!
 
+I found it wasn't again :)
+https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/commit/?h=mm-new&id=c021f31a3b73d8e5ae2abdd658d837c44929cad7
+
+Thanks,
+Honggyu
