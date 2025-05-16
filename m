@@ -1,204 +1,117 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0956F21ADC6
-	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 05:10:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E127710E4;
+	Fri, 16 May 2025 05:13:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747372245; cv=none; b=Y6tlBUKtDUc9ILqUXqFVafdO/kUXtin4bIH6MaTDfQSiU5ajPr9wURmsW5A+WUFO8ePXOR85Q0seGu8M1DOtjTH8WBTTNOctCv2e5sLOmOaBwibQl7ren8yoaj5m89Qo15hn67FGRSX8PcLhLNdualA+PvZxQTGy1hRSnrVoz3A=
+	t=1747372431; cv=none; b=X9PR7WxxZpdznO+mF41+PmZt4zmBpsQXq1UTyGM30mC+akwgi7vdZG37hpfQOlRDAoElJ/NuWX2jg5JBmFZUQ6AxFmIbx6g7CYQkDIx3o1kCu6i/hKpj/oEHK/DOpGy11EkMst97RGy4d1cSp6qTtxzPUOnkh1mhY5X4q83Vtcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747372245; c=relaxed/simple;
-	bh=PBgrfDfjGMRv2RNzmim1ZNyY5R2PME9uUKJ/LS6bXtI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IDleFrrdAv4lW20fnN/+uPPA7rNuTurtgARHEnNLleBzQo5KtvED0qekt9yLjoFFw8avOeO1X5GZimvwdX/NZiDaYAe/PgTJptoibfmbMQPY93xlR1EDbF6Wp+ZaoC1widDyQmuhueC7ELFI63No/0UCgiN9m8TYZ5E8eBtiUlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hoUxlBPg; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hoUxlBPg"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-72ecb4d9a10so2154223a34.3
-        for <linux-kernel@vger.kernel.org>; Thu, 15 May 2025 22:10:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747372243; x=1747977043; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rS14ehsKTRh0Yu2NCsmeKqi7C6zemUJM36Ay6+7ClPM=;
-        b=hoUxlBPgFMFWuvqAR+h3ExrVFQW3YwCJq8ua0+txH0fNV0EQ94vuZ5ECFk7ltBkefI
-         IeyFS2SmRrZyvK8r80z3s3JX6tSGvmRkjQHxFR4RbU5ARRm5tiIXc1aHVCLYHbfE3lIE
-         0cnhJm+QZ9fbFhpUwocBxET4Xc2Hc3ZGh7A5lIko26N//IsFtgJrPtc2CHznWP+mQ3Rx
-         HOEokBD+OkSmL/3S2d9vLVpOAHbAlCbYS5WlMprPtUnyWDFbO5vvgprIbqSKlQWS5Ljj
-         hODEXAsX4NhuUIr2Alj0uEZECFG9PA7DMxq1LM7j13PMj2zg/ltdo+qPC1VTlvuOBP76
-         at5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747372243; x=1747977043;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rS14ehsKTRh0Yu2NCsmeKqi7C6zemUJM36Ay6+7ClPM=;
-        b=F+6rym/T+I6x9s9JpI48nav0EcaVeKPnWTmm8BklM84766MYUplb1ANG8ZqbmypvB2
-         3IBkEaLnrGIdTb7Fjk2/Th+R7tDjWG6PSTyq3W+/SLt87HazxoKYVgDUatQgjiQygE46
-         p07geJeWiE/teSSdkx1GKZoRJXdUzMXkO/Y6CqnI52yZXXrP9WRertI1cNs4bJ46Qv6T
-         ahe+7SDNdoPxKbgkrFxxWNc/SOCjIC7ZDZ8IrocDtgqj5YEKfLRtxG+J7NtkiDdua1QH
-         oJdgKbp3BGst7pkKF+nbVVMO9AutW2yZh+d0fXJDOINlMckCjx00Z6Q2WWdGmNQlR4Ed
-         pi2w==
-X-Forwarded-Encrypted: i=1; AJvYcCW2PpT++hrKnbOxomcVuh8FOGDK6mHu1CzvFZzaZZIdZU8RNBdd18i2lWb961IUeq7lRnZIVzZFtB42/dE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXDlOEHRNPnoDx67ZxmfHL7VLcjyToKmH9qVDtKF2rbHVMB+Xr
-	PnSr9y0tEpLJIdZh8Qvhs8SgyOc2JoLI0K1PUPjFAvuXVKtgeJxfaHkds+WsMTasbw+Bd/9vkSc
-	jgQKWbxnZB/y6h3yXTbK3X1EfQlTC/q2dDmz06q1c
-X-Gm-Gg: ASbGnctAjaszlHxSiQmGEz5dqWp5g8zhWWwmlyFNR+St+HPp8RdAACJBxvsho3x6/P+
-	2T+I8KOkhZ4qjMSawCM5iDvB9O2kjxM5dFrld9L2xJEhKUeXmsuH1do0zBf4Cz+5my9Fs7IZPk8
-	YCnBc/PNTm+ifmF6IJOokLu7GCyOrpetU5N8VJkk95Lf28O0+2uSL9oACW2SikD8bEAcJR/a8O/
-	PasCbKaJutXbcM=
-X-Google-Smtp-Source: AGHT+IG+EBPZr1Odrxpf1BvUc8QTj8b6UyQ5Vr/g6q7DusGK32UF2knRIwviRux7xsAeZ0mZs0vqZ6oxPUhtdWbBVBA=
-X-Received: by 2002:a05:6870:a7a5:b0:2c8:361a:da77 with SMTP id
- 586e51a60fabf-2e3c1ed9f95mr1231548fac.26.1747372242630; Thu, 15 May 2025
- 22:10:42 -0700 (PDT)
+	s=arc-20240116; t=1747372431; c=relaxed/simple;
+	bh=eKp8lo6Qx6V1arvqE+jB4ho2QnzrhvvpIh/jHeGunvs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M6WfcDrZDvsiKdAXUnlDpjkDr65tmrfFuEJZtbkZIXMvO43X/2qDCxp6TyjG0F0BEYpTTpxRXO/wREQKtPkPZl+UDRxVbGnRk7vA//T+9+TcS98WZLcennSO5BAn6wtSBng5VTdFWiEBlIPxMNBolXn01Va4P0q85H9Aiq0ZLcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 82f30d08321411f0b29709d653e92f7d-20250516
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:34f36f89-905d-4fcc-bcc8-b818c3493781,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:a8be6d281134e9d6791eb22432fcdf2d,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
+	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
+	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 82f30d08321411f0b29709d653e92f7d-20250516
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <zhangzihuan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1035424688; Fri, 16 May 2025 13:13:32 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 6F392E003505;
+	Fri, 16 May 2025 13:13:32 +0800 (CST)
+X-ns-mid: postfix-6826C97C-3723227
+Received: from [172.25.120.24] (unknown [172.25.120.24])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 1327CE006100;
+	Fri, 16 May 2025 13:13:31 +0800 (CST)
+Message-ID: <74beaec6-eae5-4456-9202-f77c71456682@kylinos.cn>
+Date: Fri, 16 May 2025 13:13:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513130834.1612602-1-chou.cosmo@gmail.com>
- <aCNLeX1k34BSgPOV@kuha.fi.intel.com> <aCNOOXcAuA_1B-0Z@kuha.fi.intel.com>
- <CAOeEDyuFmFqacy1N8TtpuJRdv-3K2f1DzXNwR1MpyNn4Nrug7A@mail.gmail.com>
- <aCRQbRCHFdFOCNw2@kuha.fi.intel.com> <4245c9da-cb81-4494-93c6-224883057410@google.com>
-In-Reply-To: <4245c9da-cb81-4494-93c6-224883057410@google.com>
-From: Badhri Jagan Sridharan <badhri@google.com>
-Date: Thu, 15 May 2025 22:10:05 -0700
-X-Gm-Features: AX0GCFtsjDRTU_pVx4L7jEmXjCCPPMdleg_78CjSDC1A9ysVADujU6X9sZe26tg
-Message-ID: <CAPTae5+GFX7HpB6Vp68LQtFgy+iMCj8cCOuHUPyn8nZPBt7+zQ@mail.gmail.com>
-Subject: Re: [PATCH v2] usb: typec: tcpm: Use configured PD revision for negotiation
-To: Amit Sunil Dhamne <amitsd@google.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Cosmo Chou <chou.cosmo@gmail.com>, 
-	gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, cosmo.chou@quantatw.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] ACPI: battery: Reduce unnecessary calls to
+ acpi_battery_update()
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: lenb@kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250422091056.972734-1-zhangzihuan@kylinos.cn>
+ <CAJZ5v0guh4MGJpaCoh3Guc8BL_37=KHWW10wvK+iD6jZLvZWwg@mail.gmail.com>
+From: zhangzihuan <zhangzihuan@kylinos.cn>
+In-Reply-To: <CAJZ5v0guh4MGJpaCoh3Guc8BL_37=KHWW10wvK+iD6jZLvZWwg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2025 at 12:15=E2=80=AFAM Amit Sunil Dhamne <amitsd@google.c=
-om> wrote:
->
-> Hi Heikki,
->
-> On 5/14/25 1:12 AM, Heikki Krogerus wrote:
-> > On Tue, May 13, 2025 at 10:14:32PM +0800, Cosmo Chou wrote:
-> >> On Tue, May 13, 2025 at 04:50:49PM +0300, Heikki Krogerus wrote:
-> >>> On Tue, May 13, 2025 at 04:39:09PM +0300, Heikki Krogerus wrote:
-> >>>> On Tue, May 13, 2025 at 09:08:34PM +0800, Cosmo Chou wrote:
-> >>>>> Initialize negotiated_rev and negotiated_rev_prime based on the por=
-t's
-> >>>>> configured PD revision (rev_major) rather than always defaulting to
-> >>>>> PD_MAX_REV. This ensures ports start PD communication using their
-> >>>>> appropriate revision level.
-> >>>>>
-> >>>>> This allows proper communication with devices that require specific
-> >>>>> PD revision levels, especially for the hardware designed for PD 1.0
-> >>>>> or 2.0 specifications.
-> >>>>>
-> >>>>> Signed-off-by: Cosmo Chou <chou.cosmo@gmail.com>
+Hi Rafael,
+Thank you for the review!
 
-Reviewed-by: Badhri Jagan Sridharan <badhri@google.com>
-
-> >>>>> ---
-> >>>>> Change log:
-> >>>>>
-> >>>>> v2:
-> >>>>>   - Add PD_CAP_REVXX macros and use switch-case for better readabil=
-ity.
-> >>>>>
-> >>>>> ---
-> >>>>>  drivers/usb/typec/tcpm/tcpm.c | 29 +++++++++++++++++++++++++----
-> >>>>>  1 file changed, 25 insertions(+), 4 deletions(-)
-> >>>>>
-> >>>>> diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm=
-/tcpm.c
-> >>>>> index 8adf6f954633..48e9cfc2b49a 100644
-> >>>>> --- a/drivers/usb/typec/tcpm/tcpm.c
-> >>>>> +++ b/drivers/usb/typec/tcpm/tcpm.c
-> >>>>> @@ -313,6 +313,10 @@ struct pd_data {
-> >>>>>     unsigned int operating_snk_mw;
-> >>>>>  };
-> >>>>>
-> >>>>> +#define PD_CAP_REV10       0x1
-> >>>>> +#define PD_CAP_REV20       0x2
-> >>>>> +#define PD_CAP_REV30       0x3
-> >>>>> +
-> >>>>>  struct pd_revision_info {
-> >>>>>     u8 rev_major;
-> >>>>>     u8 rev_minor;
-> >>>>> @@ -4665,6 +4669,25 @@ static void tcpm_set_initial_svdm_version(st=
-ruct tcpm_port *port)
-> >>>>>     }
-> >>>>>  }
-> >>>>>
-> >>>>> +static void tcpm_set_initial_negotiated_rev(struct tcpm_port *port=
-)
-> >>>>> +{
-> >>>>> +   switch (port->pd_rev.rev_major) {
-> >>>>> +   case PD_CAP_REV10:
-> >>>>> +           port->negotiated_rev =3D PD_REV10;
-> >>>>> +           break;
-> >>>>> +   case PD_CAP_REV20:
-> >>>>> +           port->negotiated_rev =3D PD_REV20;
-> >>>>> +           break;
-> >>>>> +   case PD_CAP_REV30:
-> >>>>> +           port->negotiated_rev =3D PD_REV30;
-> >>>>> +           break;
-> >>>>> +   default:
-> >>>>> +           port->negotiated_rev =3D PD_MAX_REV;
-> >>>>> +           break;
-> >>>>> +   }
-> >>>>> +   port->negotiated_rev_prime =3D port->negotiated_rev;
-> >>>>> +}
-
-IMHO this looks better in terms of readability although V1 is more concise.
-
-Thanks,
-Badhri
-
-> >>>> Do we need this? Couldn't you just add one to rev_major?
-> >>>>
-> >>>>         port->negotiated_rev =3D port->pd_rev.rev_major + 1;
-> >>>>         port->negotiated_rev_prime =3D port->pd_rev.rev_major + 1;
-> >>>>
-> >>>> Or am I missing something?
-> >>> Sorry, I mean minus one :-)
-> >>>
-> >>>         port->negotiated_rev =3D port->pd_rev.rev_major - 1;
-> >>>         port->negotiated_rev_prime =3D port->pd_rev.rev_major - 1;
+=E5=9C=A8 2025/5/10 02:23, Rafael J. Wysocki =E5=86=99=E9=81=93:
+> On Tue, Apr 22, 2025 at 11:11=E2=80=AFAM zhangzihuan <zhangzihuan@kylin=
+os.cn> wrote:
+>> When entering the acpi_mattery_notify function, no matter what the eve=
+nt
+>> is, acpi_mattery_update will definitely be called.
+> I think you mean acpi_battery_update().
+Right.
+>> Use the acpi_listen command to listen, sometimes the log looks like th=
+is:
+>>
+>> battery xxx:00 00000081 00000001
+>> battery xxx:00 00000000 00000001
+>> battery xxx:00 00000080 00000001
+>>
+>> Firmware manufacturers will customize some events like 0x0, so
+>> non-matching events will be ignored.
+> I don't quite get what you are trying to achieve here.
 >
-> The only reason I asked for macros is that in the case of Spec Revision
-> for header, the value for PD 3.0 is 0x2, PD 2.0 is 0x1 & so on. While
-> for PD max revisions, it's the exact values. Having a clear distinction
-> may be easier to follow. If you want to go with the +/- approach you can
-> add a comment stating the above.
+While the laptop is charging, acpi_battery_notify() receives a steady=20
+stream of 0x81 events, and only receives 0x80 events
+when the battery is almost fully charged or the adapter is plugged in.=20
+If acpi_battery_update() is just to
+update the battery status,=C2=A0 it didn't need to be called frequently.
+>> Signed-off-by: zhangzihuan <zhangzihuan@kylinos.cn>
+>> ---
+>>   drivers/acpi/battery.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/acpi/battery.c b/drivers/acpi/battery.c
+>> index 6760330a8af5..9446c57b77e7 100644
+>> --- a/drivers/acpi/battery.c
+>> +++ b/drivers/acpi/battery.c
+>> @@ -1083,7 +1083,8 @@ static void acpi_battery_notify(acpi_handle hand=
+le, u32 event, void *data)
+>>                  msleep(battery_notification_delay_ms);
+>>          if (event =3D=3D ACPI_BATTERY_NOTIFY_INFO)
+>>                  acpi_battery_refresh(battery);
+>> -       acpi_battery_update(battery, false);
+>> +       if (event =3D=3D ACPI_BATTERY_NOTIFY_STATUS)
+>> +               acpi_battery_update(battery, false);
+> So only call acpi_battery_update() for ACPI_BATTERY_NOTIFY_STATUS.
 >
-> I don't have a hard opinion on either approach :).
->
-> Thanks,
->
-> Amit
->
-> >>>
-> >>> --
-> >>> heikki
-> >> It seems to be the PATCH v1:
-> >> https://lore.kernel.org/all/20250508174756.1300942-1-chou.cosmo@gmail.=
-com/
-> >>
-> >> if (port->pd_rev.rev_major > 0 && port->pd_rev.rev_major <=3D PD_MAX_R=
-EV + 1) {
-> >>         port->negotiated_rev =3D port->pd_rev.rev_major - 1;
-> >>         port->negotiated_rev_prime =3D port->pd_rev.rev_major - 1
-> >> } else {
-> >>         port->negotiated_rev =3D PD_MAX_REV;
-> >>         port->negotiated_rev_prime =3D PD_MAX_REV;
-> >> }
-> > Okay, sorry I missed that. I still don't like the extra definitions,
-> > but I don't have any better idea (I guess macro is not an option?).
-> > Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> >
-> > thanks,
-> >
+> Why do you think this is the only case in which acpi_battery_update()
+> needs to be called?
+acpi_battery_update() calls acpi_battery_get_status() to get the battery=20
+update status. It will only be updated
+if it receives an event that the battery status has changed.
+>>          acpi_bus_generate_netlink_event(device->pnp.device_class,
+>>                                          dev_name(&device->dev), event=
+,
+>>                                          acpi_battery_present(battery)=
+);
+>> --
