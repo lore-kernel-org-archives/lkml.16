@@ -1,69 +1,177 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDCD24167F;
-	Fri, 16 May 2025 12:57:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059601DFDE;
+	Fri, 16 May 2025 12:57:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747400270; cv=none; b=lBAp64iHRIAZFRXhdlKIPSynBcZXRnbWtnwz+9+j9G2jxEzaYzuMypEeQipiJs5i1ejECpaNr7dRF2FZ2+uDxmEU5oDFbfr2Jczgz9IIMlxS2iR+ckEqAGTGZIy6YG35Byi37l8e1eJgkKa/QQRoGS3hzGfpxNcLmiS2FDRox7M=
+	t=1747400275; cv=none; b=VvvO/PQyJQXexHxQcFcawK1lN8f9bEDwWy3QYZHj2B7Z4Dx5fSh8RiV9SRJohE0iGXqtBj4EfiCqumRC+rm570nxzfdnWtNnL99Yb7LK2BBWkG1mzpWPv5NgPdwR0NuLJeoHUpbexvRenOIb7MPEpxDvH5vIeYjSG6R1+BtDqPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747400270; c=relaxed/simple;
-	bh=CDLNoimx0vQw/PJHszEc6cc1jXi/roULCzRSmz61Cd8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RFhz/ywNMl07SlVFKF+ocl2HhuZP5qyX3tJ/b+Crj7oLbZoDxJ/t62PpygDM1GVz2W+1Jc2umDNuTEXlFiVmJDqiQNeybJs1wLe3/8HfhQRq+FQzRHwuVXwp53qeQxujzDN7KwldIfHYqc8+Nn/44H8pDBkrB0jtuC/GmK4e6j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q1+TY3+2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747400275; c=relaxed/simple;
+	bh=YZxxILgmfc1qF1rrNWG6/WtUXq2234pqpZt+RioE+Oc=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Yd2LRPCHzD9ZvFtsfPeDE6r2ZO96Q67AN3/G+5OAx2oSg43xfoUXX6EoiXSah0SL406/AtbmgwRMHZqqt18GUUmgvwUT9eDy0z8oI6oNHUmbdc+1fyCidqvm2Hjdk5zxffUofDjyot1tYDJjUe8/RaTShyEU/qFfRvXy2vHClVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3wJ9KUe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q1+TY3+2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5413C4CEE4;
-	Fri, 16 May 2025 12:57:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3wJ9KUe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2798C4CEE4;
+	Fri, 16 May 2025 12:57:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747400269;
-	bh=CDLNoimx0vQw/PJHszEc6cc1jXi/roULCzRSmz61Cd8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q1+TY3+2gaXVqmWEukihQjznIEvGIVbeSarhOyMbn6u3iYhIcfMU1R9TJmOpws15z
-	 iA0rRV3OiEZO1KI/HGdCGUxuIGjMvy7VNw8Y0sT8z6GapsTFhbLmd/60eUD7YNNV2T
-	 l55mUrB1h6wEpYqYVUASv/4jjA1NVFol2pRIZm7WMjhcdZvWnPI44gou1kuSQC07Gf
-	 lQLG5NNnqLfOJELl0eF45Iyk7/4x3KaU7qwloDpIpS86oJiROkln2/g7wB1TjpjXPN
-	 EmjnFFJcz5ytMLMNajtrpWZ3O7Gh9EJG8SuXnQw9tL7J5F3EbL6IX0Qo24apX2l5EF
-	 EKBM7mOy/LfYQ==
-Date: Fri, 16 May 2025 13:57:45 +0100
-From: Simon Horman <horms@kernel.org>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH net-next v4 3/4] net: selftests: add checksum mode
- support and SW checksum handling
-Message-ID: <20250516125745.GE3339421@horms.kernel.org>
-References: <20250515083100.2653102-1-o.rempel@pengutronix.de>
- <20250515083100.2653102-4-o.rempel@pengutronix.de>
+	s=k20201202; t=1747400274;
+	bh=YZxxILgmfc1qF1rrNWG6/WtUXq2234pqpZt+RioE+Oc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=c3wJ9KUewGkliyK1GQc3uMF2StFwkDkd44yXnLyqtpOXcMZY+iFDdhz1CMgJvR1JS
+	 QnxWz3HQ7VsoXpbIiUeguYfzo+JHtEjj1Sp3o7PjYG4oOGzi2thZ8XU1Sg2c9wX10g
+	 pzPgsVc5yKRXhPo0LRSO+smBm9BVkKmLcZWORBURWZO4i7gHN+Nd05jXe8PbfFPdrL
+	 IB5xV8xKWoJ5Dl6qdc69cCSvEBJK6we9xOT2fCMDD+AP/O6gT7aBINVnCXv80Jl3RU
+	 E4BSWm+viNGiy5iex/O5cn6lomBwWInw/9XIA9yJe03a3bTxekkYEPg1LjmXgzJ2IO
+	 FukrHGfuxqiVw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uFudM-00FYgz-LR;
+	Fri, 16 May 2025 13:57:52 +0100
+Date: Fri, 16 May 2025 13:57:52 +0100
+Message-ID: <86a57cg1bj.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	qperret@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kernel-team@android.com
+Subject: Re: [PATCH v4 02/10] KVM: arm64: Introduce for_each_hyp_page
+In-Reply-To: <20250509131706.2336138-3-vdonnefort@google.com>
+References: <20250509131706.2336138-1-vdonnefort@google.com>
+	<20250509131706.2336138-3-vdonnefort@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515083100.2653102-4-o.rempel@pengutronix.de>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: vdonnefort@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, qperret@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Thu, May 15, 2025 at 10:30:59AM +0200, Oleksij Rempel wrote:
-> Introduce `enum net_test_checksum_mode` to support both CHECKSUM_COMPLETE
-> and CHECKSUM_PARTIAL modes in selftest packet generation.
+On Fri, 09 May 2025 14:16:58 +0100,
+Vincent Donnefort <vdonnefort@google.com> wrote:
 > 
-> Add helpers to calculate and apply software checksums for TCP/UDP in
-> CHECKSUM_COMPLETE mode, and refactor checksum handling into a dedicated
-> function `net_test_set_checksum()`.
+> Add a helper to iterate over the hypervisor vmemmap. This will be
+> particularly handy with the introduction of huge mapping support
+> for the np-guest stage-2.
 > 
-> Update PHY loopback tests to use CHECKSUM_COMPLETE by default to avoid
-> hardware offload dependencies and improve reliability.
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 > 
-> Also rename loopback test names to clarify checksum type and transport.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> diff --git a/arch/arm64/kvm/hyp/include/nvhe/memory.h b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> index eb0c2ebd1743..676a0a13c741 100644
+> --- a/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> +++ b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> @@ -96,24 +96,24 @@ static inline struct hyp_page *hyp_phys_to_page(phys_addr_t phys)
+>  #define hyp_page_to_virt(page)	__hyp_va(hyp_page_to_phys(page))
+>  #define hyp_page_to_pool(page)	(((struct hyp_page *)page)->pool)
+>  
+> -static inline enum pkvm_page_state get_host_state(phys_addr_t phys)
+> +static inline enum pkvm_page_state get_host_state(struct hyp_page *p)
+>  {
+> -	return (enum pkvm_page_state)hyp_phys_to_page(phys)->__host_state;
+> +	return (enum pkvm_page_state)p->__host_state;
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+I'm not quite sure why we have this cast the first place. If we are so
+keen on type consistency, why isn't __host_state an enum pkvm_page_state
+the first place?
 
+>  }
+>  
+> -static inline void set_host_state(phys_addr_t phys, enum pkvm_page_state state)
+> +static inline void set_host_state(struct hyp_page *p, enum pkvm_page_state state)
+>  {
+> -	hyp_phys_to_page(phys)->__host_state = state;
+> +	p->__host_state = state;
+>  }
+>  
+> -static inline enum pkvm_page_state get_hyp_state(phys_addr_t phys)
+> +static inline enum pkvm_page_state get_hyp_state(struct hyp_page *p)
+>  {
+> -	return hyp_phys_to_page(phys)->__hyp_state_comp ^ PKVM_PAGE_STATE_MASK;
+> +	return p->__hyp_state_comp ^ PKVM_PAGE_STATE_MASK;
+
+And we don't seem that bothered here.
+
+>  }
+>  
+> -static inline void set_hyp_state(phys_addr_t phys, enum pkvm_page_state state)
+> +static inline void set_hyp_state(struct hyp_page *p, enum pkvm_page_state state)
+>  {
+> -	hyp_phys_to_page(phys)->__hyp_state_comp = state ^ PKVM_PAGE_STATE_MASK;
+> +	p->__hyp_state_comp = state ^ PKVM_PAGE_STATE_MASK;
+>  }
+>  
+>  /*
+> diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> index 23544928a637..4d269210dae0 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> @@ -60,6 +60,9 @@ static void hyp_unlock_component(void)
+>  	hyp_spin_unlock(&pkvm_pgd_lock);
+>  }
+>  
+> +#define for_each_hyp_page(start, size, page)   \
+> +	for (page = hyp_phys_to_page(start); page < hyp_phys_to_page((start) + (size)); page++)
+> +
+
+Huh. This really should be something like:
+
+#define for_each_hyp_page(__p, __st, __sz)   			\
+	for (struct hyp_page *__p = hyp_phys_to_page(__st),	\
+	     *__e = __p + ((__sz) >> PAGE_SHIFT);		\
+	     __p < __e; __p++)
+
+so that:
+
+- the iterator variable comes first and looks like a normal for-loop
+- the iterator has a scope limited to the loop
+- we don't evaluate parameters multiple times
+- we don't evaluate the end of the loop multiple times
+- we try not to reuse common variable names
+
+>  static void *host_s2_zalloc_pages_exact(size_t size)
+>  {
+>  	void *addr = hyp_alloc_pages(&host_s2_pool, get_order(size));
+> @@ -481,7 +484,8 @@ static int host_stage2_adjust_range(u64 addr, struct kvm_mem_range *range)
+>  		return -EAGAIN;
+>  
+>  	if (pte) {
+> -		WARN_ON(addr_is_memory(addr) && get_host_state(addr) != PKVM_NOPAGE);
+> +		WARN_ON(addr_is_memory(addr) &&
+> +			get_host_state(hyp_phys_to_page(addr)) != PKVM_NOPAGE);
+>  		return -EPERM;
+>  	}
+>  
+> @@ -507,10 +511,10 @@ int host_stage2_idmap_locked(phys_addr_t addr, u64 size,
+>  
+>  static void __host_update_page_state(phys_addr_t addr, u64 size, enum pkvm_page_state state)
+>  {
+> -	phys_addr_t end = addr + size;
+> +	struct hyp_page *page;
+
+and then these extra declarations can go.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
