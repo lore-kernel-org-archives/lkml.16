@@ -1,117 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE6B157E99;
-	Fri, 16 May 2025 16:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFCF22A1A4
+	for <linux-kernel@vger.kernel.org>; Fri, 16 May 2025 16:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747411281; cv=none; b=k1Lx/IKoi7hrTo1AUsmk0eRmnIqiJDByllqrtqe6u+k3Y/PC+QC3LXiPR9rpi5vy7PVb+DBaFMBfqT1EUFRA3r6FxibfZlf2w2GR1/2o2/xNcMyFDCd8GFSq3h2zc3DFGThulAslC6LQFFW+33W9jfFCysAJEPdvDWGk1BvntP0=
+	t=1747411376; cv=none; b=LgNolh3076NfQYxzxJoBC1M9GSDbbEKhKKX9Z0LYo3HWljXFfZV510GW9fP8x6be1t8zlMOL1G51OZ2+pGIvcFh9wnPrd5tUOQxkWpofC1ZIgH0RNHQnG1V1pTn8NQggJHtdx4uCXjn2FhEc524wxgao+v1upA0Ac4Ov59crRNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747411281; c=relaxed/simple;
-	bh=8LXYtup+Ql2ziVjAhu4GTB/LIRRAj34dS331eN8NA98=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gaGKDPZiE6eGbecEh9Fz26hPqr8y0YNXqnD4nkUILop0JMqJFexhd3UqOQ/ilnodXxEJpZ/UbAzqYcmQKhY1oKem2CgxN2/8GzI6V7mxvcaB0Tcqt0O/BbbA22BXdK0mtznHGfZW9dNIDunVM4xGZ12C1+Oj+neUD6Cy+oTSXiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HHZUKtNz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747411376; c=relaxed/simple;
+	bh=2sRpjTjXUI2i074c5+izzfCmO5OrPoSU+VPMCR9Tems=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E8DvFntXQiT5IGfUZ3V8ZW/9lsJnCCp0Xemcuuidogh4GbKN9/y2FEPsOxZQM8Oj5kcSMA7vG0YpyjkQZu3fGyin9SPANK0kJHV29axz0sIG1LxeldrozVqSi88i7dqivRVrexrM5P3tDNN7+1OUAcgFBMzhX5uem8uZET2elU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JvFL2HNW; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HHZUKtNz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB418C4CEE4;
-	Fri, 16 May 2025 16:01:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747411280;
-	bh=8LXYtup+Ql2ziVjAhu4GTB/LIRRAj34dS331eN8NA98=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HHZUKtNzdkxZeiiPuUQUE0c1/WCTW34kXeCA8JaKpbzmHk6owBYZJQ4HA3dtEHd5y
-	 Ic9HnEAHiU+kmt1Nd98E6jjo/nm/ooW/o7JdmLSJlikFdTpucVILQ2WrfXGy57QESR
-	 X8ltwvTdZ334Xk9bY11atJ+CmfaKoSNAo0pdNd1KsBiZm5fQr4KerhvxoHnOuB9DpM
-	 3XYnHIexf0dwbFKCySrmgaWyMeXk0yAGfS/Je3zAv35I79XYCMw8LtRoHIHIk+EE2k
-	 9oZqiECiZT5/qV4V5rN5ibPJ09ATyOaSfcnjv3TK/KvzqS/n+dcWoxhnO4h+z271yy
-	 h3NRqt1n1eKmg==
-Date: Fri, 16 May 2025 18:01:15 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>,
-	John Hubbard <jhubbard@nvidia.com>, Timur Tabi <timur@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH] rust: add basic ELF sections parser
-Message-ID: <aCdhS10JCh6HRpqV@pollux>
-References: <2025051543-override-rockiness-3ead@gregkh>
- <D9WLFTPRB9FJ.OL6I760HKALZ@nvidia.com>
- <D9WP3YU31199.Q8IEDBJZ87LU@nvidia.com>
- <2025051532-gentleman-reset-58f2@gregkh>
- <CAOZdJXWKLu0y+kwC+Bm8nBCLizQVpsDdDUoS--hVgz2vnuZJQg@mail.gmail.com>
- <8b14b078-b899-42e8-8522-599daa65bc63@nvidia.com>
- <2025051647-urology-think-b8e0@gregkh>
- <D9XMAV4ERYK7.39TLQBLYTX3TU@nvidia.com>
- <aCc_PSOPkLWTcTru@pollux>
- <D9XNS413TVXB.3SWWJE4JGEN8B@nvidia.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JvFL2HNW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1747411372;
+	bh=2sRpjTjXUI2i074c5+izzfCmO5OrPoSU+VPMCR9Tems=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JvFL2HNWYLPg3wIq9VGjlr8j7PGoNnrPsL7NLMjEbTcnr+A9T5w2t1xfLVdStnWFe
+	 xPcKE9VEX3T/qyg7PsLJpZcn5vf+SWJFp3y3d9BoqQaVHbgoA7Fbd2vt8zqz2JQD1a
+	 SO+IvTLLUsxs6ljvQ2BGVDYt1OGHvJ0bo6ITkl/fkVs99atWXVT0uTmBMDL8zluUyB
+	 8MGFvFVH2nXLI5J37vxShVzoAMNfeCa8HrCUV3Dsd5ymg+KZDU/CoJbM++bLUxjBKy
+	 B9HALIY/CnPzin2CvKocUrKPwNwRAMEuszvAc+Zz4zR0iHHZ4meZPvZHo5lPASNUMG
+	 WHiR8SeMKSNNw==
+Received: from [192.168.1.90] (unknown [82.76.59.134])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4B63817E07C9;
+	Fri, 16 May 2025 18:02:52 +0200 (CEST)
+Message-ID: <9e29ef0e-c373-4f48-8f37-7111987d2dd0@collabora.com>
+Date: Fri, 16 May 2025 19:02:51 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D9XNS413TVXB.3SWWJE4JGEN8B@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] phy: phy-rockchip-samsung-hdptx: Fix PHY PLL output
+ 50.25MHz error
+To: Diederik de Haas <didi.debian@cknow.org>,
+ Algea Cao <algea.cao@rock-chips.com>, vkoul@kernel.org, kishon@kernel.org,
+ heiko@sntech.de, andy.yan@rock-chips.com
+Cc: linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250427095124.3354439-1-algea.cao@rock-chips.com>
+ <D9XP2BH2CU02.1R9E1GSXQD9JB@cknow.org>
+Content-Language: en-US
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <D9XP2BH2CU02.1R9E1GSXQD9JB@cknow.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 16, 2025 at 11:35:42PM +0900, Alexandre Courbot wrote:
-> On Fri May 16, 2025 at 10:35 PM JST, Danilo Krummrich wrote:
-> > I think we should either we get to the conclusion that the desire of parsing (at
-> > least part of) the firmware ELF is valid in the kernel and make it generic
-> > infrastructure, or conclude that there really isn't a reasonable technical
-> > reason to do that.
-> >
-> > Please let's work out the exact technical reasons for doing this in the kernel,
-> > such that we can either conclude one or the other.
-> 
-> I think it's mostly a matter of where we want to draw the line.
-> 
-> We use ELF as a container format to associate binary blobs with named
-> sections. Can we extract these sections into individual files that we
-> load using request_firmware()? Why yes, we could.
-> 
-> Now the GSP firmware for GA102 contains the following sections (skipped
-> the ones that don't need to be extracted):
-> 
->   [ 1] .fwimage          PROGBITS         0000000000000000  00000040
->   [ 2] .fwversion        PROGBITS         0000000000000000  02448040
->   [ 3] .fwsignature[...] PROGBITS         0000000000000000  0244804b
->   [ 4] .fwsignature[...] PROGBITS         0000000000000000  0244904b
->   [ 5] .fwsignature[...] PROGBITS         0000000000000000  0244a04b
->   [ 6] .fwsignature[...] PROGBITS         0000000000000000  0244b04b
-> 
-> That's 6 files instead of 1, for serving the same purpose. And the number of
-> signatures is bound to *increase* as new chips get released, but since they are
-> associated to chipsets, we can maybe limit them to the relevant chipset
-> directory and limit the damage. Still it would clutter linux-firmware a bit
-> more than it is today.
-> 
-> But let's say we do this, and problem solved. Only... let's take a look at the
-> booter binary, which is another innocent-looking firmware file.
-> 
-> It includes a header with offsets to the code and data segments, that the
-> driver loads into the falcon microcontroller. And one offset for the signatures
-> that we need to patch. Reminds you of something? :) Should we split these ones
-> too?
-> 
-> I would push back really hard on that one, unless you agree to go after all the
-> drivers that do the same thing (and I have names).
+Hi Diederik,
 
-Great, but then why did you back off in your discussion with Greg? Given that
-you are convinced that this is a valid thing to do for drivers, you should keep
-discussing it with the target to make it common infrastructure.
+On 5/16/25 6:36 PM, Diederik de Haas wrote:
+> Hi,
+> 
+> On Sun Apr 27, 2025 at 11:51 AM CEST, Algea Cao wrote:
+>> When using HDMI PLL frequency division coefficient at 50.25MHz
+>> that is calculated by rk_hdptx_phy_clk_pll_calc(), it fails to
+>> get PHY LANE lock. Although the calculated values are within the
+>> allowable range of PHY PLL configuration.
+>>
+>> In order to fix the PHY LANE lock error and provide the expected
+>> 50.25MHz output, manually compute the required PHY PLL frequency
+>> division coefficient and add it to ropll_tmds_cfg configuration
+>> table.
+>>
+>> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
+>> Reviewed-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+>>
+>> ---
+>>  drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
+>> index fe7c05748356..77236f012a1f 100644
+>> --- a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
+>> +++ b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
+>> @@ -476,6 +476,8 @@ static const struct ropll_config ropll_tmds_cfg[] = {
+>>  	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
+>>  	{ 650000, 162, 162, 1, 1, 11, 1, 1, 1, 1, 1, 1, 1, 54, 0, 16, 4, 1,
+>>  	  1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
+>> +	{ 502500, 84, 84, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 11, 1, 4, 5,
+>> +	  4, 11, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
+>>  	{ 337500, 0x70, 0x70, 1, 1, 0xf, 1, 1, 1, 1, 1, 1, 1, 0x2, 0, 0x01, 5,
+>>  	  1, 1, 1, 0, 0x20, 0x0c, 1, 0x0e, 0, 0, },
+>>  	{ 400000, 100, 100, 1, 1, 11, 1, 1, 0, 1, 0, 1, 1, 0x9, 0, 0x05, 0,
+> 
+> I found this patch in the 'fixes' branch in linux-phy:
+> https://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git/commit/?h=fixes&id=f9475055b11c0c70979bd1667a76b2ebae638eb7
+> 
+> In the 'next' branch in linux-phy, I found this commit:
+> 0edf9d2bb9b4 ("phy: rockchip: samsung-hdptx: Avoid Hz<->hHz unit conversion overhead")
+> https://git.kernel.org/pub/scm/linux/kernel/git/phy/linux-phy.git/commit/?h=next&id=0edf9d2bb9b4ba7566dfdc7605883e04575129d9
+> 
+> Where the values in ropll_tmds_cfg are converted from hHz to Hz and the
+> data type changes from u32 to unsigned long long.
+> But AFAICT it does NOT convert this '502500' value, which IIUC means
+> most values are in Hz, while this one is in hHz.
+> 
+> Am I missing something or should this new value also be converted?
 
-I did not argue for or against it -- what I do disagree with is that we seem to
-just agree to disagree and stuff a generic piece of code into nova-core after
-three mails back and forth.
+Yeah, the conversion is necessary. FWIW, this has been already fixed by
+Stephen Rothwell in linux-next, while Vinod will handle it before
+sending the PR:
 
-Please keep discussing the above with Greg until we get to a real conclusion.
+https://lore.kernel.org/all/aCXEOGUDcnaoGKWW@vaman/
 
-- Danilo
+Regards,
+Cristian
