@@ -1,473 +1,229 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21CF2153D8;
-	Fri, 16 May 2025 08:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747385135; cv=none; b=dlHhK6pAg01wvdOwmfz7SKn+22TsOLfioezls/V4mPk5PJSWGKDDjPxDfaSh0qJB2J8IIVx120b+JOQEu9F3sewg5c59ci9A/STGgG8O9iBfv3/5n47XoP7Ds5J3U1nULb6ALWPV/ozXxIJNzXVfm3Bm4xzviT3qycc5sZKJoPA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747385135; c=relaxed/simple;
-	bh=uwTXcKBle6TeUfwmY9rwgAWSy7S72kwaL8YkThSLPCM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k95d5vO05ex+1Rn9h7j98MM8xVBc+4xFz9tgBy2w0F90KUa6YpoSHnjNtb2ce+4mT60H1pf7VpcgU1HwR+TDSW6J7aptO0Wh/R6rMEA2IwG44raFx/248SXwdLE9Ix+e+QQv5WaBwWq9mmBuvctU/FcuZkbAMVuh47b7XulWN0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Ufjgs29O; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1455922FDF2;
+	Fri, 16 May 2025 08:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747385142; cv=fail; b=pGMlRVyjp+1PRuNgKdviE1wBGu4cK80M/yMPaEMeSajfMwx2pokxFx4VbdLlKisfPAtIaGc1GkPOB17KwhPUCOHFBHqg/J7FR7T518EmgmsdnpSf6XMWhnqtJjSUgNyjZIeooH52Hvsa9+Oi7Op1Jc8MTV6wanrfYt+K9rMSnqw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747385142; c=relaxed/simple;
+	bh=SY6unMug0x3YetJbMoMN/qw9+UsviSECRuAtT8c3tFM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=KBKTXoWx4LHy77jTc4xrnpLpzLcf9mo3AZXQZJktHj0hZQztGkhgBewQTQEAFDSfiboBS7FTp0k2qZ4C+nC7jP/8ZeTpMn7bMqReNKL1Ud82I9tsZbjM3IRo/K29eyNrrnrT2ItGN8HwUJA2DbJFB7i9XNTVenE4k0NZlreB3no=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cbRhw4y2; arc=fail smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Ufjgs29O"
-Received: from pps.filterd (m0431383.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54G6AflL018907;
-	Fri, 16 May 2025 01:45:11 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=G
-	4fvIMceU4IYKEdY6Ins1sd5W47APHupY6T23gpUctk=; b=Ufjgs29OloT8w8jia
-	xL8MhS8ER/LIIhvvgS/WQdXMq0Nf4D+wSonimlgjHyGv6Hd2/D3+lGL2bS+G2W3g
-	kEfgrhNG/PaXHjtosJ9f1ITJ5NzrngTzBH8uBaopK6yaonpguCoNHTMlI15rFyUT
-	85LoCGa2GSf75F4TIWCzWi4x+1L9g6s7gtRgsEpxTSwBGphJSNRcuzy0FhBZ0sFi
-	hU26fHD9hfYU73/wnqQzN8xyzxF0KdOVo5vPMOh0FBO5s7jLwWXPKN+Ng3iOKm3U
-	mN58RSxLkbL2axL/UlAWMftPPRY8fUmHT5Ho15JgrYcpLXHuVFE63FG01fIcYyN9
-	NV9ig==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 46nyv4re8d-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 16 May 2025 01:45:10 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cbRhw4y2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747385140; x=1778921140;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=SY6unMug0x3YetJbMoMN/qw9+UsviSECRuAtT8c3tFM=;
+  b=cbRhw4y2xnzcff+34n9p/oXUQzwPbAVuFyXweNYZBvQF2zI/28jOjUqX
+   w8r0itqMupJO7jHZR5S7y75JjO24EBTfjBvoHRzMTdEok3CiL8FYZWClJ
+   QdNMH4a+YPUdin7zc/bqVVZ0QZrCd7IlnwAL9LMDci6Sj8wEENuPE/Iq5
+   I3q/O79T+quXov6L1OkS4yvLW77cFnHKg/G6o/vPNyRv28/NtuKeLUHFb
+   q9D6CcV8Pj5vKv+k/DeNfTZbF8UbD0U2JLHx5ELkqzDM85wTUWPt9vzNg
+   KB1kD6ueopJ0VhAAKxoiLTDZyHL9AZKv+ceqaGgA7iZA77WcAp7WcC+SK
+   w==;
+X-CSE-ConnectionGUID: w+uDNztpTiCUP1U4ridmZQ==
+X-CSE-MsgGUID: byBlmJoaTIOAVkDTTKv6Xw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11434"; a="48602537"
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="48602537"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 01:45:39 -0700
+X-CSE-ConnectionGUID: rjhy7Vu8Rui3JqhfIbvYeg==
+X-CSE-MsgGUID: TCHBrb/XQsWRKM87dupEpw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,293,1739865600"; 
+   d="scan'208";a="143583883"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2025 01:45:39 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Fri, 16 May 2025 01:44:57 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Fri, 16 May 2025 01:44:57 -0700
-Received: from bharat-OptiPlex-Tower-Plus-7020.. (unknown [10.28.34.254])
-	by maili.marvell.com (Postfix) with ESMTP id AC9FD3F707C;
-	Fri, 16 May 2025 01:44:52 -0700 (PDT)
-From: Bharat Bhushan <bbhushan2@marvell.com>
-To: <bbrezillon@kernel.org>, <schalla@marvell.com>,
-        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <giovanni.cabiddu@intel.com>, <linux@treblig.org>,
-        <bharatb.linux@gmail.com>, <linux-crypto@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <stable@vger.kernel.org>, Bharat Bhushan <bbhushan2@marvell.com>
-Subject: [PATCH v2 2/2] crypto: octeontx2: Use dynamic allocated memory region for lmtst
-Date: Fri, 16 May 2025 14:14:41 +0530
-Message-ID: <20250516084441.3721548-3-bbhushan2@marvell.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250516084441.3721548-1-bbhushan2@marvell.com>
-References: <20250516084441.3721548-1-bbhushan2@marvell.com>
+ 15.2.1544.14; Fri, 16 May 2025 01:45:38 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Fri, 16 May 2025 01:45:38 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.44) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Fri, 16 May 2025 01:45:38 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cFSg8Tr2YP7byI0X/bEUjZmA5TrLdM5+doIwMcHXdFJ3n0li02avdq5EgGGWCr4F7kZm01n4PCBkSQVPWk21eK8Hufa8DRyI0fjz5tnpBfalX/VhAlBdi9ijXNisHUDNajVqXRV7v3qI8sYhBwIKFAA5VhCvgtWi/V+r9K7Rpg54VsC9q96RoIDPVIxRYpxmUTu4vKdgWxFaM30tDk9AuLajCrD5l+RafWL4eF9VwNjIwTarR+Ad+lZ1JoctVhfAkcPiWDuKT+cFhjwkgpSl4YPGvKBoSRiu2ILwJQLyHcFX4hW89AFArhreX4G24JUcVl7WLe2OT2J6A3wm8XVvTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xTO/qJtYuzdZ/1brGGl3rK6pHRvo8hF8YYMwAsfAcnc=;
+ b=gUddm6uJq4h1Ds2b4Atme8A49IeAF4qIacSirQfezj5xTT1qAPe1Xm3iC2Y6iyMFQ/8X0wT3GXrwiDzwpr79B+ma3dNFo0zux6vVZvcEYHH6+7K/AqGcwDlI9395SqxTuy/k4SzrwXvhn3UUO/wwCzgYV0MTyUQtCihsEFeZ+tpdh9hvAPQQck5aHW1l40KYfI8FxsZRkjvvgSH5qB2/xV80wYTPYC6ua5ccUWnx9dWsCcoC45HWC+KVnje+xjo23Bakg3rHMRhXmb7EVrQ/PEIqxbRf4N4pWEbx+a5hzYIWKV1BOQQnnvfjNwjgezhZkFiTpDw+VgRcSANPC61iPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
+ DM4PR11MB6430.namprd11.prod.outlook.com (2603:10b6:8:b6::15) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8722.33; Fri, 16 May 2025 08:45:21 +0000
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca]) by DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca%6]) with mapi id 15.20.8722.031; Fri, 16 May 2025
+ 08:45:21 +0000
+Date: Fri, 16 May 2025 16:43:11 +0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+CC: "pbonzini@redhat.com" <pbonzini@redhat.com>, "seanjc@google.com"
+	<seanjc@google.com>, "Shutemov, Kirill" <kirill.shutemov@intel.com>,
+	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao"
+	<xiaoyao.li@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Hansen,
+ Dave" <dave.hansen@intel.com>, "david@redhat.com" <david@redhat.com>,
+	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "tabba@google.com"
+	<tabba@google.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>, "Du, Fan"
+	<fan.du@intel.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "michael.roth@amd.com"
+	<michael.roth@amd.com>, "Weiny, Ira" <ira.weiny@intel.com>, "vbabka@suse.cz"
+	<vbabka@suse.cz>, "binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>,
+	"ackerleytng@google.com" <ackerleytng@google.com>, "Yamahata, Isaku"
+	<isaku.yamahata@intel.com>, "Peng, Chao P" <chao.p.peng@intel.com>,
+	"Annapurve, Vishal" <vannapurve@google.com>, "jroedel@suse.de"
+	<jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, "pgonda@google.com"
+	<pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [RFC PATCH 20/21] KVM: x86: Force a prefetch fault's max mapping
+ level to 4KB for TDX
+Message-ID: <aCb6nyioDduLCuHv@yzhao56-desk.sh.intel.com>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20250424030033.32635-1-yan.y.zhao@intel.com>
+ <20250424030913.535-1-yan.y.zhao@intel.com>
+ <1e6ced6acc5c733c88879a3febe09942d32175d6.camel@intel.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1e6ced6acc5c733c88879a3febe09942d32175d6.camel@intel.com>
+X-ClientProxiedBy: SI2PR01CA0032.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:192::18) To DS7PR11MB5966.namprd11.prod.outlook.com
+ (2603:10b6:8:71::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=S6bZwJsP c=1 sm=1 tr=0 ts=6826fb16 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=dt9VzEwgFbYA:10 a=M5GUcnROAAAA:8 a=VwQbUJbxAAAA:8 a=dRNrYt_hAAAA:8 a=mqmjYYuR6NFFZE5yN6QA:9 a=OBjm3rFKGHvpk9ecZwUJ:22
- a=UH8RX7gv5XnRAaf1WCu2:22
-X-Proofpoint-GUID: 3kBBxP4jp6JoH8uzWLzGFPSh0WP9aCSo
-X-Proofpoint-ORIG-GUID: 3kBBxP4jp6JoH8uzWLzGFPSh0WP9aCSo
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE2MDA4MiBTYWx0ZWRfXzVhnLpBCgLKC GpsGW3o3m8Qw75khua08wIgSE0r/VuynbxEDT5jBtub4OBCUVjo/Si51ZjFO5VJSIJFSlQVHLoB XPiT1NWI/tYWo1ufVeRNOVqiCiXBRGu8l4vSFGQPDA6jYAyw53bR8BzbduMbFghIpdHF8g/WqAw
- KyGxgczBvStDE2S07PMNzEcC1uwrb0SzX5wAJaGNuj/SvhHgKYSqKqu5z3y0cRD4OtIyl59/4mT pm2A50nkGaa2vEd4NoYk5krnDNXRMpv4/zai0nQwJ1U1V5H1nj6KR337zUqhPeAwuj0JZ2SWqZY xNW5p1cqgAS7WWMhySWEao74b2TwPwQWtDsscakFkwa9Ws3zDhoE4hlXFxa6yAmHZaTbcS9TgjQ
- IaRJvY9ImGal6MsgsvkpyABPW7mM4IkIf0fNMxR3e9+aFgNVONQyOWVLFLkvsMCdPPkzKVSB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-16_03,2025-05-15_01,2025-03-28_01
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|DM4PR11MB6430:EE_
+X-MS-Office365-Filtering-Correlation-Id: 23986fd6-0283-4f91-fba5-08dd9455fe07
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?NLhyq7bnXPtPF4zEO9o8Ig/+E9ipqff3J3oNdAXUBr3Rc0XyKlxyyUtQVm?=
+ =?iso-8859-1?Q?ZE+M26vmu2XKkSQ9ae1dMdB/EbVzwuVgHkzSD2iZDMPWaE3e64gHVink42?=
+ =?iso-8859-1?Q?KJvQen6ZOLRiSzhDzls4Mk3DggJ5igI7EA9QHqMKqaUNLINB9Ig/wdG96P?=
+ =?iso-8859-1?Q?8DKBv1vQksPvnHUO0uK41xXSZf7AeRGkLrTz32WSWXcmkR/AOEEUQ9evBY?=
+ =?iso-8859-1?Q?lz3vumZbRTTehH7JoCFriFFmRBA8lNVjJoizGp1hBXXWOVEoh+oSPLLepk?=
+ =?iso-8859-1?Q?bfiv65DWfLrvwExtGx0nZjZkGIJmvCp2ZEzh6d5EKyVlogowa4gwTD1Id9?=
+ =?iso-8859-1?Q?GwmJtrGlrBe+bokUdmOHhaiXNWCcao25n7stTMe8s0l/mqSFNhNASYzmUY?=
+ =?iso-8859-1?Q?1Psc02JgTWBmXR5u0wSnIbE40aOqZofgEkSUpN6dkhMnAtBT/Pk4WA9/PN?=
+ =?iso-8859-1?Q?tf3AZdiPJjGWF5G4BCga+OYtp5rw/jrjNLpUXNmX11VA3P/AeqXfii8BPb?=
+ =?iso-8859-1?Q?6O+wc3/JMB1DL4hamJW8Juvoa28QRt5RM5pi9l0v6DoLMd/sC7i9jI6SiG?=
+ =?iso-8859-1?Q?/rf1+Dbtxz3nGmVPapEgk8XzCNsf2d1b3JKLbo3bHuu/60xYoDuDlC5dm5?=
+ =?iso-8859-1?Q?anddqYBgTBjtTXeb0LH/BOdqvRqFKylWckxCXNPlTbv5MUtiQpFO9ne9k+?=
+ =?iso-8859-1?Q?BGvl/qEkqx4CgOp/N2IoHeMNHBX5aUNOeu5wqpzmZZ07/7qQ7chQH7HRF9?=
+ =?iso-8859-1?Q?JytAFzXq+pvE8wOW1QQcX0Jnhbna5mpKn9xp+XxTDZT57/7eMNNa3q0OjZ?=
+ =?iso-8859-1?Q?Z7zzN/AjcjsRqWoGXHTB5fhSjOayY0hAOsxR+1+uhGjKxVbU2xkYv9uGqb?=
+ =?iso-8859-1?Q?zyZUF7xaZJC2g3LxaLdI3FGYj5wVvpm6KzADcNwfVm6W8teY8HAmWJo7Kr?=
+ =?iso-8859-1?Q?DsDknQNl5aPqaOjFHhbsaGC2+XL4D/BeyrXWUmmscEqzU0RaH9WlU5laNs?=
+ =?iso-8859-1?Q?BZZmLftj1vQycZ2Xtmecs3ZUpZ+TW3thNGGJwDt0KxZ2vWF5nes6MyhTcn?=
+ =?iso-8859-1?Q?9TLRf7bxMNty68h1xLNnHQLrUD4vkVHPvWU/CxNVusIcPMUlp7jvP94rMj?=
+ =?iso-8859-1?Q?xDzOkTTo8eUHCgmjcDit6xRXh6USFd6l/mLswvieGQiuKXVH3yY11qM54I?=
+ =?iso-8859-1?Q?Fhhs5SIhuKyt73Dlh4YC2aHM7m63azCjnWNnt6R2sblK+HZPe0HNsDaDtM?=
+ =?iso-8859-1?Q?usGfQ6tJMedQZXqtX4FAn62C/XpZaXFRYziHf7Jwdk9Sg5sxPR+NNkEPo4?=
+ =?iso-8859-1?Q?osT8KFIrEmiuFwh6aQCFqYc6iZ131zLLDFQY3XVgivnkPnITO+VQnPNcw7?=
+ =?iso-8859-1?Q?3YKtHudKQ4OkAC3xw8UttSqZIIyh0el/nuB91keOtn0jZThTPT8BGxUnyt?=
+ =?iso-8859-1?Q?An5n+BrPJefu8uSmcwFoaq74HDqqFhh6KVJyrr3qnXv/uqTGe9lAa6iFTp?=
+ =?iso-8859-1?Q?I=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?SR7ZSMw6L82yF4qZrEzLcNimV8ACKKpSQ3y/t4nrmFJxXZO3jeFBahdl+y?=
+ =?iso-8859-1?Q?1iUzKXMBTGceihYe4tXogHtgTy5QK9JBx1T4gah1S6nPBCPfIXa0Eu7m9m?=
+ =?iso-8859-1?Q?qhztPG667Tzgbe7tgNK+Udf6w6/2HvnB3qsi/PTHnB+qCQhTsfuS36ksUz?=
+ =?iso-8859-1?Q?rHhLTR7KmxqvGRXqc7/jGhcYK5qvxhRYDJ+nQPv4RfGx61u6mTr8ZTojOp?=
+ =?iso-8859-1?Q?FOXKDCHIBo2zl2o9GUyUFA/jUjKuQS2/BPEWOn1mdUtLmvjTKcpCF6J0Xj?=
+ =?iso-8859-1?Q?PL8N0RjJ++zwtP+02bpFPcqItahfu9N26ONXN2tzgiP1pg5uQef8WZzOIh?=
+ =?iso-8859-1?Q?OJMv7l9lcsN+SW/833mjqljROyfQ3B8KGxyhW0U/I507D7KAz678pW1SuC?=
+ =?iso-8859-1?Q?m1Vf7Rnmn30UuekYg5Ja+dD58uIV4G0WCYYkqmm5kRVvjSwLI7EWLW2Lsw?=
+ =?iso-8859-1?Q?McsmiF+7EQxJeyuWJFZufnJEPSeok6EboqV+aPPsmWHj6709ZwXVE/UxT8?=
+ =?iso-8859-1?Q?dF6QU6P4TZeJUjMZ9xXMFn3W+Cb/wD1hBx7plLroq6jrE07DZoqWJCdT2d?=
+ =?iso-8859-1?Q?QzQfzv7AJK5F72AYTHIkcCWj0lvLRIhAhDX3m5phlThja+mIj4xNBjvNmN?=
+ =?iso-8859-1?Q?aI2ZJHaVLNW8B42CbgLjjkML0qmoafzab+JybT2G1waOKA6+wLYTuri8di?=
+ =?iso-8859-1?Q?7CDGUhvl3KBVYIpK2UPNA01Er3j5C+C/hPRSv/GhM0tHvhjF2PUAGjRvp3?=
+ =?iso-8859-1?Q?sW9p9AQdj+kgXSwo5VJz1+5054WDjfS4eeaFkHBByq4+cNzNg7KeMU8QzB?=
+ =?iso-8859-1?Q?UqQNOXSd373DbkGIntjQBs1aCKpJi12a6tPjs5rgCIhLlS7zekYo7Re07Q?=
+ =?iso-8859-1?Q?hhUfRzumG44vePlUfLcMtGy874imnoJ3lkrJ8SFU1BC9WJT4JPqXt1bdh/?=
+ =?iso-8859-1?Q?KmInomWBxrWrCEf5DzeE29/8UQcK4az6olTPxX3mcQfyx1gBL2HCCj9SLq?=
+ =?iso-8859-1?Q?zN2kdzPcJyKett3C+dVT83FRpnPvOA/A9TUESZAMAoJrKQ9ZopVFZfWrdL?=
+ =?iso-8859-1?Q?cPK/RpnAtbLtjpLW6JmSOo/IQBHcKmmkkM7oQk6z0cxZDPU10/nCI0Of4d?=
+ =?iso-8859-1?Q?DS+LqQdrYTf6/0Nr2gdfc96c1myT3TGQJOV8D/qO7t3AdpKfAwF5Qv0jn0?=
+ =?iso-8859-1?Q?aSNmruerWjFc6yS1irjGJGdgfAY9/gAf38jcurmNpO4vx6OG/OO3A9Msbx?=
+ =?iso-8859-1?Q?ivMstwMjIekjp262nM8lBzAKkxMwnFgli74qcPMZyVCC3qawvb9yrEX9C7?=
+ =?iso-8859-1?Q?QynQuX2w1yZitt9qD99rQUhZpfzeDjv1Yk2Pu4lBc/adIZQZAchvtzlChm?=
+ =?iso-8859-1?Q?l0KvIExARphuyF6x462G92sPr4bBNwCtZWUUZWi2qfUewEgL0iWIc1XiMB?=
+ =?iso-8859-1?Q?AB1w5Xbnrt1zJXkf2DdyTgQS8E7jxCPErHl28SRccheEy+0RUx6dpBD+Xq?=
+ =?iso-8859-1?Q?oOhDVRaHRFpYBd03jEvhF5EVi6guXVjwlkPHUjKY97aamf+WwX5MxGIOhL?=
+ =?iso-8859-1?Q?CJOsbdJ2A1FmHv12Lm/nEt8A+onWbpbvfAvtUFHwEBsKjhK7CizqXQ3LO8?=
+ =?iso-8859-1?Q?0FVGiEvQYczJQih5CHseSjCIQXURSkd2lm?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23986fd6-0283-4f91-fba5-08dd9455fe07
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2025 08:45:21.3260
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /LGj+GdUHwlcWwH59vB5UNFLvKWd7c7QinWWK1ew5u49ROgr4Qg29aBJSJrIkvvHEWpeOxWL/gdPjFmqqKh8Jg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6430
+X-OriginatorOrg: intel.com
 
-Current driver uses static LMTST region allocated by firmware.
-Firmware allocated memory for LMTST is available in PF/VF BAR2.
-Using this memory have performance impact as this is mapped as
-device memory. There is another option to allocate contiguous
-memory at run time and map this in LMT MAP table with the
-help of AF driver. With this patch dynamic allocated memory
-is used for LMTST.
+On Wed, May 14, 2025 at 07:20:18AM +0800, Edgecombe, Rick P wrote:
+> On Thu, 2025-04-24 at 11:09 +0800, Yan Zhao wrote:
+> > Introduce a "prefetch" parameter to the private_max_mapping_level hook and
+> > enforce the max mapping level of a prefetch fault for private memory to be
+> > 4KB. This is a preparation to enable the ignoring huge page splitting in
+> > the fault path.
+> > 
+> > If a prefetch fault results in a 2MB huge leaf in the mirror page table,
+> > there may not be a vCPU available to accept the corresponding 2MB huge leaf
+> > in the S-EPT if the TD is not configured to receive #VE for page
+> > acceptance. 
+> > 
+> 
+> Can you elaborate on this case more. A vCPU may not be available? What does that
+> mean?
+Sorry. I didn't express it clearly.
 
-Also add myself as maintainer for crypto octeontx2 driver
+If a prefetch fault results in a 2MB mapping, as the guest is not aware of the
+prefetched mapping, it may accept at 4KB later, triggering a demotion.
 
-Signed-off-by: Bharat Bhushan <bbhushan2@marvell.com>
----
-v1->v2:
- -  Removed changes in pci-host-common.c, those were comitted
-    by mistake.
+> > Consequently, if a vCPU accepts the page at 4KB level, it will
+> > trigger an EPT violation to split the 2MB huge leaf generated by the
+> > prefetch fault.
+> 
+> The case is KVM_PRE_FAULT_MEMORY faults in 2MB, then guest accepts at 4k (which
+> it is not supposed to do)?
+Actually, the guest is innocent to accept at 4KB.
 
- MAINTAINERS                                   |  1 +
- drivers/crypto/marvell/octeontx2/cn10k_cpt.c  | 89 ++++++++++++++-----
- drivers/crypto/marvell/octeontx2/cn10k_cpt.h  |  1 +
- .../marvell/octeontx2/otx2_cpt_common.h       |  1 +
- .../marvell/octeontx2/otx2_cpt_mbox_common.c  | 25 ++++++
- drivers/crypto/marvell/octeontx2/otx2_cptlf.c |  5 +-
- drivers/crypto/marvell/octeontx2/otx2_cptlf.h | 12 ++-
- .../marvell/octeontx2/otx2_cptpf_main.c       | 12 ++-
- .../marvell/octeontx2/otx2_cptpf_mbox.c       |  1 +
- .../marvell/octeontx2/otx2_cptvf_main.c       | 14 +--
- .../marvell/octeontx2/otx2_cptvf_mbox.c       |  1 +
- 11 files changed, 124 insertions(+), 38 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f21f1dabb5fe..652dd271e0ae 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14292,6 +14292,7 @@ MARVELL CRYPTO DRIVER
- M:	Boris Brezillon <bbrezillon@kernel.org>
- M:	Arnaud Ebalard <arno@natisbad.org>
- M:	Srujana Challa <schalla@marvell.com>
-+M:	Bharat Bhushan <bbhushan2@marvell.com>
- L:	linux-crypto@vger.kernel.org
- S:	Maintained
- F:	drivers/crypto/marvell/
-diff --git a/drivers/crypto/marvell/octeontx2/cn10k_cpt.c b/drivers/crypto/marvell/octeontx2/cn10k_cpt.c
-index 5cae8fafa151..d4aab9e20f2a 100644
---- a/drivers/crypto/marvell/octeontx2/cn10k_cpt.c
-+++ b/drivers/crypto/marvell/octeontx2/cn10k_cpt.c
-@@ -6,6 +6,7 @@
- #include "otx2_cptvf.h"
- #include "otx2_cptlf.h"
- #include "cn10k_cpt.h"
-+#include "otx2_cpt_common.h"
+> Then maybe the kvm_vm_dead() case I suggested in the other patch could handle
+> this case too, and this patch could be dropped?
  
- static void cn10k_cpt_send_cmd(union otx2_cpt_inst_s *cptinst, u32 insts_num,
- 			       struct otx2_cptlf_info *lf);
-@@ -27,7 +28,7 @@ static struct cpt_hw_ops cn10k_hw_ops = {
- static void cn10k_cpt_send_cmd(union otx2_cpt_inst_s *cptinst, u32 insts_num,
- 			       struct otx2_cptlf_info *lf)
- {
--	void __iomem *lmtline = lf->lmtline;
-+	void *lmtline = lf->lfs->lmt_info.base + (lf->slot * LMTLINE_SIZE);
- 	u64 val = (lf->slot & 0x7FF);
- 	u64 tar_addr = 0;
+This patch is not required if we decide to support demotion in the fault path.
  
-@@ -41,15 +42,49 @@ static void cn10k_cpt_send_cmd(union otx2_cpt_inst_s *cptinst, u32 insts_num,
- 	dma_wmb();
- 
- 	/* Copy CPT command to LMTLINE */
--	memcpy_toio(lmtline, cptinst, insts_num * OTX2_CPT_INST_SIZE);
-+	memcpy(lmtline, cptinst, insts_num * OTX2_CPT_INST_SIZE);
- 	cn10k_lmt_flush(val, tar_addr);
- }
- 
-+void cn10k_cpt_lmtst_free(struct pci_dev *pdev, struct otx2_cptlfs_info *lfs)
-+{
-+	struct otx2_lmt_info *lmt_info = &lfs->lmt_info;
-+
-+	if (!lmt_info->base)
-+		return;
-+
-+	dma_free_attrs(&pdev->dev, lmt_info->size,
-+		       lmt_info->base - lmt_info->align,
-+		       lmt_info->iova - lmt_info->align,
-+		       DMA_ATTR_FORCE_CONTIGUOUS);
-+}
-+EXPORT_SYMBOL_NS_GPL(cn10k_cpt_lmtst_free, "CRYPTO_DEV_OCTEONTX2_CPT");
-+
-+static int cn10k_cpt_lmtst_alloc(struct pci_dev *pdev,
-+				 struct otx2_cptlfs_info *lfs, u32 size)
-+{
-+	struct otx2_lmt_info *lmt_info = &lfs->lmt_info;
-+	dma_addr_t align_iova;
-+	dma_addr_t iova;
-+
-+	lmt_info->base = dma_alloc_attrs(&pdev->dev, size, &iova, GFP_KERNEL,
-+					 DMA_ATTR_FORCE_CONTIGUOUS);
-+	if (!lmt_info->base)
-+		return -ENOMEM;
-+
-+	align_iova = ALIGN((u64)iova, LMTLINE_ALIGN);
-+	lmt_info->iova = align_iova;
-+	lmt_info->align = align_iova - iova;
-+	lmt_info->size = size;
-+	lmt_info->base += lmt_info->align;
-+	return 0;
-+}
-+
- int cn10k_cptpf_lmtst_init(struct otx2_cptpf_dev *cptpf)
- {
- 	struct pci_dev *pdev = cptpf->pdev;
--	resource_size_t size;
--	u64 lmt_base;
-+	u32 size;
-+	int ret;
- 
- 	if (!test_bit(CN10K_LMTST, &cptpf->cap_flag)) {
- 		cptpf->lfs.ops = &otx2_hw_ops;
-@@ -57,18 +92,19 @@ int cn10k_cptpf_lmtst_init(struct otx2_cptpf_dev *cptpf)
- 	}
- 
- 	cptpf->lfs.ops = &cn10k_hw_ops;
--	lmt_base = readq(cptpf->reg_base + RVU_PF_LMTLINE_ADDR);
--	if (!lmt_base) {
--		dev_err(&pdev->dev, "PF LMTLINE address not configured\n");
--		return -ENOMEM;
-+	size = OTX2_CPT_MAX_VFS_NUM * LMTLINE_SIZE + LMTLINE_ALIGN;
-+	ret = cn10k_cpt_lmtst_alloc(pdev, &cptpf->lfs, size);
-+	if (ret) {
-+		dev_err(&pdev->dev, "PF-%d LMTLINE memory allocation failed\n",
-+			cptpf->pf_id);
-+		return ret;
- 	}
--	size = pci_resource_len(pdev, PCI_MBOX_BAR_NUM);
--	size -= ((1 + cptpf->max_vfs) * MBOX_SIZE);
--	cptpf->lfs.lmt_base = devm_ioremap_wc(&pdev->dev, lmt_base, size);
--	if (!cptpf->lfs.lmt_base) {
--		dev_err(&pdev->dev,
--			"Mapping of PF LMTLINE address failed\n");
--		return -ENOMEM;
-+
-+	ret = otx2_cpt_lmtst_tbl_setup_msg(&cptpf->lfs);
-+	if (ret) {
-+		dev_err(&pdev->dev, "PF-%d: LMTST Table setup failed\n",
-+		cptpf->pf_id);
-+		cn10k_cpt_lmtst_free(pdev, &cptpf->lfs);
- 	}
- 
- 	return 0;
-@@ -78,18 +114,25 @@ EXPORT_SYMBOL_NS_GPL(cn10k_cptpf_lmtst_init, "CRYPTO_DEV_OCTEONTX2_CPT");
- int cn10k_cptvf_lmtst_init(struct otx2_cptvf_dev *cptvf)
- {
- 	struct pci_dev *pdev = cptvf->pdev;
--	resource_size_t offset, size;
-+	u32 size;
-+	int ret;
- 
- 	if (!test_bit(CN10K_LMTST, &cptvf->cap_flag))
- 		return 0;
- 
--	offset = pci_resource_start(pdev, PCI_MBOX_BAR_NUM);
--	size = pci_resource_len(pdev, PCI_MBOX_BAR_NUM);
--	/* Map VF LMILINE region */
--	cptvf->lfs.lmt_base = devm_ioremap_wc(&pdev->dev, offset, size);
--	if (!cptvf->lfs.lmt_base) {
--		dev_err(&pdev->dev, "Unable to map BAR4\n");
--		return -ENOMEM;
-+	size = cptvf->lfs.lfs_num * LMTLINE_SIZE + LMTLINE_ALIGN;
-+	ret = cn10k_cpt_lmtst_alloc(pdev, &cptvf->lfs, size);
-+	if (ret) {
-+		dev_err(&pdev->dev, "VF-%d LMTLINE memory allocation failed\n",
-+			cptvf->vf_id);
-+		return ret;
-+	}
-+
-+	ret = otx2_cpt_lmtst_tbl_setup_msg(&cptvf->lfs);
-+	if (ret) {
-+		dev_err(&pdev->dev, "VF-%d: LMTST Table setup failed\n",
-+			cptvf->vf_id);
-+		cn10k_cpt_lmtst_free(pdev, &cptvf->lfs);
- 	}
- 
- 	return 0;
-diff --git a/drivers/crypto/marvell/octeontx2/cn10k_cpt.h b/drivers/crypto/marvell/octeontx2/cn10k_cpt.h
-index 92be3ecf570f..ea5990048c21 100644
---- a/drivers/crypto/marvell/octeontx2/cn10k_cpt.h
-+++ b/drivers/crypto/marvell/octeontx2/cn10k_cpt.h
-@@ -50,6 +50,7 @@ static inline u8 otx2_cpt_get_uc_compcode(union otx2_cpt_res_s *result)
- 
- int cn10k_cptpf_lmtst_init(struct otx2_cptpf_dev *cptpf);
- int cn10k_cptvf_lmtst_init(struct otx2_cptvf_dev *cptvf);
-+void cn10k_cpt_lmtst_free(struct pci_dev *pdev, struct otx2_cptlfs_info *lfs);
- void cn10k_cpt_ctx_flush(struct pci_dev *pdev, u64 cptr, bool inval);
- int cn10k_cpt_hw_ctx_init(struct pci_dev *pdev,
- 			  struct cn10k_cpt_errata_ctx *er_ctx);
-diff --git a/drivers/crypto/marvell/octeontx2/otx2_cpt_common.h b/drivers/crypto/marvell/octeontx2/otx2_cpt_common.h
-index c5b7c57574ef..44ef33a6c071 100644
---- a/drivers/crypto/marvell/octeontx2/otx2_cpt_common.h
-+++ b/drivers/crypto/marvell/octeontx2/otx2_cpt_common.h
-@@ -223,5 +223,6 @@ int otx2_cpt_detach_rsrcs_msg(struct otx2_cptlfs_info *lfs);
- int otx2_cpt_msix_offset_msg(struct otx2_cptlfs_info *lfs);
- int otx2_cpt_sync_mbox_msg(struct otx2_mbox *mbox);
- int otx2_cpt_lf_reset_msg(struct otx2_cptlfs_info *lfs, int slot);
-+int otx2_cpt_lmtst_tbl_setup_msg(struct otx2_cptlfs_info *lfs);
- 
- #endif /* __OTX2_CPT_COMMON_H */
-diff --git a/drivers/crypto/marvell/octeontx2/otx2_cpt_mbox_common.c b/drivers/crypto/marvell/octeontx2/otx2_cpt_mbox_common.c
-index b8b7c8a3c0ca..95f3de3a34eb 100644
---- a/drivers/crypto/marvell/octeontx2/otx2_cpt_mbox_common.c
-+++ b/drivers/crypto/marvell/octeontx2/otx2_cpt_mbox_common.c
-@@ -255,3 +255,28 @@ int otx2_cpt_lf_reset_msg(struct otx2_cptlfs_info *lfs, int slot)
- 	return ret;
- }
- EXPORT_SYMBOL_NS_GPL(otx2_cpt_lf_reset_msg, "CRYPTO_DEV_OCTEONTX2_CPT");
-+
-+int otx2_cpt_lmtst_tbl_setup_msg(struct otx2_cptlfs_info *lfs)
-+{
-+	struct otx2_mbox *mbox = lfs->mbox;
-+	struct pci_dev *pdev = lfs->pdev;
-+	struct lmtst_tbl_setup_req *req;
-+
-+	req = (struct lmtst_tbl_setup_req *)
-+	       otx2_mbox_alloc_msg_rsp(mbox, 0, sizeof(*req),
-+				       sizeof(struct msg_rsp));
-+	if (!req) {
-+		dev_err(&pdev->dev, "RVU MBOX failed to alloc message.\n");
-+		return -EFAULT;
-+	}
-+
-+	req->hdr.id = MBOX_MSG_LMTST_TBL_SETUP;
-+	req->hdr.sig = OTX2_MBOX_REQ_SIG;
-+	req->hdr.pcifunc = 0;
-+
-+	req->use_local_lmt_region = true;
-+	req->lmt_iova = lfs->lmt_info.iova;
-+
-+	return otx2_cpt_send_mbox_msg(mbox, pdev);
-+}
-+EXPORT_SYMBOL_NS_GPL(otx2_cpt_lmtst_tbl_setup_msg, "CRYPTO_DEV_OCTEONTX2_CPT");
-diff --git a/drivers/crypto/marvell/octeontx2/otx2_cptlf.c b/drivers/crypto/marvell/octeontx2/otx2_cptlf.c
-index b5d66afcc030..dc7c7a2650a5 100644
---- a/drivers/crypto/marvell/octeontx2/otx2_cptlf.c
-+++ b/drivers/crypto/marvell/octeontx2/otx2_cptlf.c
-@@ -433,10 +433,7 @@ int otx2_cptlf_init(struct otx2_cptlfs_info *lfs, u8 eng_grp_mask, int pri,
- 	for (slot = 0; slot < lfs->lfs_num; slot++) {
- 		lfs->lf[slot].lfs = lfs;
- 		lfs->lf[slot].slot = slot;
--		if (lfs->lmt_base)
--			lfs->lf[slot].lmtline = lfs->lmt_base +
--						(slot * LMTLINE_SIZE);
--		else
-+		if (!lfs->lmt_info.base)
- 			lfs->lf[slot].lmtline = lfs->reg_base +
- 				OTX2_CPT_RVU_FUNC_ADDR_S(BLKADDR_LMT, slot,
- 						 OTX2_CPT_LMT_LF_LMTLINEX(0));
-diff --git a/drivers/crypto/marvell/octeontx2/otx2_cptlf.h b/drivers/crypto/marvell/octeontx2/otx2_cptlf.h
-index bd8604be2952..6e004a5568d8 100644
---- a/drivers/crypto/marvell/octeontx2/otx2_cptlf.h
-+++ b/drivers/crypto/marvell/octeontx2/otx2_cptlf.h
-@@ -105,11 +105,19 @@ struct cpt_hw_ops {
- 			      gfp_t gfp);
- };
- 
-+#define LMTLINE_SIZE  128
-+#define LMTLINE_ALIGN 128
-+struct otx2_lmt_info {
-+	void *base;
-+	dma_addr_t iova;
-+	u32 size;
-+	u8 align;
-+};
-+
- struct otx2_cptlfs_info {
- 	/* Registers start address of VF/PF LFs are attached to */
- 	void __iomem *reg_base;
--#define LMTLINE_SIZE  128
--	void __iomem *lmt_base;
-+	struct otx2_lmt_info lmt_info;
- 	struct pci_dev *pdev;   /* Device LFs are attached to */
- 	struct otx2_cptlf_info lf[OTX2_CPT_MAX_LFS_NUM];
- 	struct otx2_mbox *mbox;
-diff --git a/drivers/crypto/marvell/octeontx2/otx2_cptpf_main.c b/drivers/crypto/marvell/octeontx2/otx2_cptpf_main.c
-index 687b6c7d7674..1c5c262af48d 100644
---- a/drivers/crypto/marvell/octeontx2/otx2_cptpf_main.c
-+++ b/drivers/crypto/marvell/octeontx2/otx2_cptpf_main.c
-@@ -792,19 +792,19 @@ static int otx2_cptpf_probe(struct pci_dev *pdev,
- 	cptpf->max_vfs = pci_sriov_get_totalvfs(pdev);
- 	cptpf->kvf_limits = 1;
- 
--	err = cn10k_cptpf_lmtst_init(cptpf);
-+	/* Initialize CPT PF device */
-+	err = cptpf_device_init(cptpf);
- 	if (err)
- 		goto unregister_intr;
- 
--	/* Initialize CPT PF device */
--	err = cptpf_device_init(cptpf);
-+	err = cn10k_cptpf_lmtst_init(cptpf);
- 	if (err)
- 		goto unregister_intr;
- 
- 	/* Initialize engine groups */
- 	err = otx2_cpt_init_eng_grps(pdev, &cptpf->eng_grps);
- 	if (err)
--		goto unregister_intr;
-+		goto free_lmtst;
- 
- 	err = sysfs_create_group(&dev->kobj, &cptpf_sysfs_group);
- 	if (err)
-@@ -820,6 +820,8 @@ static int otx2_cptpf_probe(struct pci_dev *pdev,
- 	sysfs_remove_group(&dev->kobj, &cptpf_sysfs_group);
- cleanup_eng_grps:
- 	otx2_cpt_cleanup_eng_grps(pdev, &cptpf->eng_grps);
-+free_lmtst:
-+	cn10k_cpt_lmtst_free(pdev, &cptpf->lfs);
- unregister_intr:
- 	cptpf_disable_afpf_mbox_intr(cptpf);
- destroy_afpf_mbox:
-@@ -854,6 +856,8 @@ static void otx2_cptpf_remove(struct pci_dev *pdev)
- 	cptpf_disable_afpf_mbox_intr(cptpf);
- 	/* Destroy AF-PF mbox */
- 	cptpf_afpf_mbox_destroy(cptpf);
-+	/* Free LMTST memory */
-+	cn10k_cpt_lmtst_free(pdev, &cptpf->lfs);
- 	pci_set_drvdata(pdev, NULL);
- }
- 
-diff --git a/drivers/crypto/marvell/octeontx2/otx2_cptpf_mbox.c b/drivers/crypto/marvell/octeontx2/otx2_cptpf_mbox.c
-index 3eb45bb91296..12c0e966fa65 100644
---- a/drivers/crypto/marvell/octeontx2/otx2_cptpf_mbox.c
-+++ b/drivers/crypto/marvell/octeontx2/otx2_cptpf_mbox.c
-@@ -502,6 +502,7 @@ static void process_afpf_mbox_msg(struct otx2_cptpf_dev *cptpf,
- 	case MBOX_MSG_CPT_INLINE_IPSEC_CFG:
- 	case MBOX_MSG_NIX_INLINE_IPSEC_CFG:
- 	case MBOX_MSG_CPT_LF_RESET:
-+	case MBOX_MSG_LMTST_TBL_SETUP:
- 		break;
- 
- 	default:
-diff --git a/drivers/crypto/marvell/octeontx2/otx2_cptvf_main.c b/drivers/crypto/marvell/octeontx2/otx2_cptvf_main.c
-index 11e351a48efe..56904bdfd6e8 100644
---- a/drivers/crypto/marvell/octeontx2/otx2_cptvf_main.c
-+++ b/drivers/crypto/marvell/octeontx2/otx2_cptvf_main.c
-@@ -376,10 +376,6 @@ static int otx2_cptvf_probe(struct pci_dev *pdev,
- 
- 	otx2_cpt_set_hw_caps(pdev, &cptvf->cap_flag);
- 
--	ret = cn10k_cptvf_lmtst_init(cptvf);
--	if (ret)
--		goto clear_drvdata;
--
- 	/* Initialize PF<=>VF mailbox */
- 	ret = cptvf_pfvf_mbox_init(cptvf);
- 	if (ret)
-@@ -405,13 +401,19 @@ static int otx2_cptvf_probe(struct pci_dev *pdev,
- 	if (cptvf->eng_caps[OTX2_CPT_SE_TYPES] & BIT_ULL(35))
- 		cptvf->lfs.ops->cpt_sg_info_create = cn10k_sgv2_info_create;
- 
-+	ret = cn10k_cptvf_lmtst_init(cptvf);
-+	if (ret)
-+		goto unregister_interrupts;
-+
- 	/* Initialize CPT LFs */
- 	ret = cptvf_lf_init(cptvf);
- 	if (ret)
--		goto unregister_interrupts;
-+		goto free_lmtst;
- 
- 	return 0;
- 
-+free_lmtst:
-+	cn10k_cpt_lmtst_free(pdev, &cptvf->lfs);
- unregister_interrupts:
- 	cptvf_disable_pfvf_mbox_intrs(cptvf);
- destroy_pfvf_mbox:
-@@ -435,6 +437,8 @@ static void otx2_cptvf_remove(struct pci_dev *pdev)
- 	cptvf_disable_pfvf_mbox_intrs(cptvf);
- 	/* Destroy PF-VF mbox */
- 	cptvf_pfvf_mbox_destroy(cptvf);
-+	/* Free LMTST memory */
-+	cn10k_cpt_lmtst_free(pdev, &cptvf->lfs);
- 	pci_set_drvdata(pdev, NULL);
- }
- 
-diff --git a/drivers/crypto/marvell/octeontx2/otx2_cptvf_mbox.c b/drivers/crypto/marvell/octeontx2/otx2_cptvf_mbox.c
-index d9fa5f6e204d..931b72580fd9 100644
---- a/drivers/crypto/marvell/octeontx2/otx2_cptvf_mbox.c
-+++ b/drivers/crypto/marvell/octeontx2/otx2_cptvf_mbox.c
-@@ -134,6 +134,7 @@ static void process_pfvf_mbox_mbox_msg(struct otx2_cptvf_dev *cptvf,
- 		       sizeof(cptvf->eng_caps));
- 		break;
- 	case MBOX_MSG_CPT_LF_RESET:
-+	case MBOX_MSG_LMTST_TBL_SETUP:
- 		break;
- 	default:
- 		dev_err(&cptvf->pdev->dev, "Unsupported msg %d received.\n",
--- 
-2.34.1
-
+> > Since handling the BUSY error from SEAMCALLs for huge page splitting is
+> > more comprehensive in the fault path, which is with kvm->mmu_lock held for
+> > reading, force the max mapping level of a prefetch fault of private memory
+> > to be 4KB to prevent potential splitting.
+> 
